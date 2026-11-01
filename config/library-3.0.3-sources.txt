@@ -10,3 +10,9 @@
 # only under 3.0.3-020716; all 15 other recorded matches in the file still
 # match under 3.0.3.
 src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Fragment.c
+#
+# PS2GL_Lists.c: impPS2glCallLists matches 384/384 only under 3.0.3 (inline
+# float-to-unsigned; 3.0 and 3.0.1 call fptoui). 2026-11-01 whole-file probe:
+# +1, 0 lost. PS2glListAllocNode needed '(int)pCurCalls->aNodes + cbNode'
+# because 3.0.3 folds the (char*) cast form into the store offset.
+src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c

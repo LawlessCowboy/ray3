@@ -38,10 +38,44 @@ def entry_for(name: str) -> dict:
     return match.find_entry(name, match.cached_source_index(symbols, main))
 
 
-def find_definition(source: str, name: str) -> tuple[re.Match, int]:
-    """Return the name occurrence that starts the definition and its body
-    brace, skipping prototypes and calls that precede it."""
-    for occurrence in re.finditer(rf'\b{re.escape(name)}\s*\(', source):
+def demangle(name: str) -> str | None:
+    """Source spelling of a CodeWarrior-mangled function name, or None.
+
+    `Display__23AGO3_LinkChainComputingFP...` is `AGO3_LinkChainComputing::Display`,
+    `__ct__3FooFv` is `Foo::Foo`, `Q24usnd3Foo` nests and `Bar__Fi` is plain `Bar`."""
+    for split in re.finditer(r'__(?=\d|Q\d|F)', name):
+        method, rest = name[:split.start()], name[split.end():]
+        if not method:
+            continue
+        if rest.startswith('F'):
+            return None if method.startswith('__') else method
+        parts = []
+        count = 1
+        if rest.startswith('Q'):
+            count = int(rest[1])
+            rest = rest[2:]
+        for _ in range(count):
+            digits = re.match(r'\d+', rest)
+            if digits is None:
+                break
+            end = digits.end() + int(digits.group())
+            parts.append(rest[digits.end():end])
+            rest = rest[end:]
+        else:
+            if method == '__ct':
+                method = parts[-1]
+            elif method == '__dt':
+                method = '~' + parts[-1]
+            elif method.startswith('__'):
+                return None
+            return '::'.join(parts + [method])
+    return None
+
+
+def definition_occurrences(source: str, name: str) -> list[tuple[re.Match, int]]:
+    """Every definition of exactly this spelling, as (name match, body brace)."""
+    found = []
+    for occurrence in re.finditer(rf'(?<![\w:~]){re.escape(name)}\s*\(', source):
         depth = 0
         pos = occurrence.end() - 1
         while pos < len(source):
@@ -54,7 +88,24 @@ def find_definition(source: str, name: str) -> tuple[re.Match, int]:
             pos += 1
         rest = re.match(r'\s*\{', source[pos + 1:])
         if rest is not None:
-            return occurrence, pos + 1 + rest.end() - 1
+            found.append((occurrence, pos + 1 + rest.end() - 1))
+    return found
+
+
+def find_definition(source: str, name: str) -> tuple[re.Match, int]:
+    """Return the name occurrence that starts the definition and its body
+    brace, skipping prototypes and calls that precede it.  A mangled name not
+    spelled in the source is looked up by its demangled spelling."""
+    found = definition_occurrences(source, name)
+    if found:
+        return found[0]
+    spelled = demangle(name)
+    found = definition_occurrences(source, spelled) if spelled else []
+    if len(found) > 1:
+        raise ValueError(f'{name}: {len(found)} overloads of {spelled} in the source; '
+                         'the permuter cannot tell them apart')
+    if found:
+        return found[0]
     raise ValueError(f'could not find definition for {name}')
 
 
@@ -144,6 +195,171 @@ def pycparser_source(source: str) -> str:
     return prelude + source
 
 
+def strip_comments(source: str) -> str:
+    return re.sub(r'"(?:\\.|[^"\\\n])*"|\'(?:\\.|[^\'\\\n])*\'|/\*.*?\*/|//[^\n]*',
+                  lambda m: m.group(0) if m.group(0)[0] in '"\'' else ' ',
+                  source, flags=re.S)
+
+
+def split_statements(text: str) -> list[str]:
+    """Split comment-free declarations into preprocessor lines and statements.
+    A statement ends at a depth-zero `;`, or at the closing brace of a function."""
+    items = []
+    pos = 0
+    start = None
+    depth = 0
+    while pos < len(text):
+        char = text[pos]
+        if start is None:
+            if char.isspace():
+                pos += 1
+                continue
+            if char == '#':
+                end = pos
+                while True:
+                    end = text.find('\n', end)
+                    if end < 0:
+                        end = len(text)
+                        break
+                    if text[end - 1] != '\\':
+                        break
+                    end += 1
+                items.append(text[pos:end])
+                pos = end
+                continue
+            start = pos
+        if char == '"':
+            pos = re.compile(r'"(?:\\.|[^"\\])*"').match(text, pos).end()
+            continue
+        if char == '{':
+            depth += 1
+        elif char == '}':
+            depth -= 1
+            if depth == 0 and '(' in text[start:text.index('{', start)]:
+                items.append(text[start:pos + 1])
+                start = None
+        elif char == ';' and depth == 0:
+            items.append(text[start:pos + 1])
+            start = None
+        pos += 1
+    return items
+
+
+AGGREGATE = re.compile(r'(typedef\s+)?(struct|class|union)\s*(\w+)?\s*(:[^{]*)?\{')
+
+
+def clean_aggregate(statement: str, bases: dict[str, str], members: dict[str, list[str]]) -> str:
+    """Reduce a C++ struct to a C one: no base list, methods or static members.
+    The data members of the class and of its bases are recorded for the target."""
+    head = AGGREGATE.match(statement)
+    close = statement.rindex('}')
+    tag = head.group(3)
+    if tag and head.group(4):
+        base = re.search(r'(\w+)\s*$', head.group(4).strip())
+        if base:
+            bases[tag] = base.group(1)
+    kept = []
+    fields = []
+    for member in split_statements(statement[head.end():close]):
+        member = re.sub(r'^(?:public|protected|private)\s*:\s*', '', member)
+        if member.startswith('#') or re.match(r'(virtual|friend|typedef|using|template)\b', member):
+            continue
+        if '(' in member and '(*' not in member:
+            continue
+        if member.startswith('static '):
+            fields.append(member[len('static '):])
+            continue
+        if AGGREGATE.match(member):
+            member = clean_aggregate(member, bases, members)
+        else:
+            fields.append(member)
+        kept.append(member)
+    if tag:
+        members[tag] = fields
+    return (f"{head.group(1) or ''}{'struct' if head.group(2) == 'class' else head.group(2)} "
+            f"{tag or ''} {{\n" + '\n'.join(kept or ['int _unused;'])
+            + '\n' + statement[close:])
+
+
+def cleaned_cxx_source(source: str, name: str) -> str:
+    """Reduce a C++ unit with classes to what pycparser needs to permute `name`.
+
+    Only the target is ever compiled back (see splice_candidate), so every
+    other function becomes a prototype or is dropped.  A method becomes a free
+    function under its mangled name, and the data members it reaches implicitly
+    become file-scope variables, which gives upstream their types."""
+    spelled = demangle(name)
+    method = spelled if spelled and '::' in spelled and not definition_occurrences(source, name) else None
+    text = strip_comments(source.replace('extern "C" ', ''))
+    text = re.sub(r'__attribute__\s*\(\([^()]*(?:\([^()]*\))?[^()]*\)\)', '', text)
+    target_name = method or spelled if not definition_occurrences(source, name) else name
+    kept = []
+    target = None
+    bases: dict[str, str] = {}
+    members: dict[str, list[str]] = {}
+    for statement in split_statements(text):
+        if statement.startswith('#'):
+            kept.append(statement)
+            continue
+        brace = statement.find('{')
+        header = statement if brace < 0 else statement[:brace]
+        if brace >= 0 and '(' in header:
+            if re.search(rf'(?<![\w:~]){re.escape(target_name)}\s*\(', header):
+                target = statement
+            elif '::' not in header and '&' not in header:
+                kept.append(strip_asm_blocks(header).rstrip() + ';')
+            continue
+        if AGGREGATE.match(statement):
+            kept.append(clean_aggregate(statement, bases, members))
+        elif brace >= 0:
+            if re.match(r'(typedef\s+)?enum\b', statement):
+                kept.append(statement)
+        elif not re.search(r'::|&|\b(template|using|operator)\b', statement):
+            if '(' in statement and '=' in statement:
+                continue
+            kept.append(re.sub(r'^class\b', 'struct', statement))
+    if target is None:
+        raise ValueError(f'could not find definition for {name}')
+    if has_asm_blocks(target):
+        raise ValueError(f'{name} contains an asm block')
+    if method:
+        cls = method.rsplit('::', 1)[0].rsplit('::', 1)[-1]
+        target = target.replace(method, name, 1)
+        if '::' in target:
+            raise ValueError(f'{name}: a qualified name in the body cannot be permuted')
+        joined = '\n'.join(kept)
+        typedefs = set(re.findall(r'typedef\s+(?:struct|union|enum)\s+\w+\s+(\w+)\s*;', joined))
+        typedefs |= set(re.findall(r'\}\s*(\w+)\s*;', joined))
+        chain = []
+        while cls in members or cls in bases:
+            chain.extend(members.get(cls, []))
+            cls = bases.get(cls, '')
+        for field in chain:
+            field = re.sub(r':\s*\d+\s*;$', ';', field)
+            declared = re.search(r'(\w+)\s*(?:\[[^\]]*\]\s*)*;$', field)
+            if declared and declared.group(1) not in typedefs:
+                kept.append(field)
+        kept.append(f"{method.rsplit('::', 1)[0].rsplit('::', 1)[-1]} *this;")
+    kept.append(target)
+    tags: dict[str, str] = {}
+    joined = '\n'.join(kept)
+    typedefs = set(re.findall(r'typedef\s+(?:struct|union|enum)\s+\w+\s+(\w+)\s*;', joined))
+    typedefs |= set(re.findall(r'\}\s*(\w+)\s*;', joined))
+    for tag in re.finditer(r'\b(struct|union)\s+(\w+)\s*[;{]', joined):
+        if tag.group(2) not in typedefs:
+            tags.setdefault(tag.group(2), tag.group(1))
+    prelude = ''.join(f'typedef {kind} {tag} {tag};\n' for tag, kind in tags.items())
+    if 'bool' not in typedefs and re.search(r'\bbool\b', joined):
+        prelude += 'typedef int bool;\n'
+    return prelude + joined + '\n'
+
+
+def needs_cleaned_cxx(source: str, name: str) -> bool:
+    """Whether pycparser needs the reduced form: a method, or a unit with classes."""
+    return not definition_occurrences(source, name) or re.search(
+        r'^\s*(?:struct|class)\s+\w+\s*:\s*\w', source, flags=re.M) is not None
+
+
 def splice_candidate(entry: dict, candidate: Path, output_dir: Path) -> Path:
     """Put the candidate's definition of the target into the canonical source.
 
@@ -158,8 +374,13 @@ def splice_candidate(entry: dict, candidate: Path, output_dir: Path) -> Path:
     cand_start, cand_end = find_function_span(text, entry['name'])
     output_dir.mkdir(parents=True, exist_ok=True)
     result = output_dir / f'{candidate.stem}-spliced{original_path.suffix}'
-    result.write_text(original[:start] + text[cand_start:cand_end] + original[end:],
-                      encoding='utf-8')
+    definition = text[cand_start:cand_end]
+    if not definition_occurrences(original, entry['name']):
+        # A renamed method: keep the canonical qualified signature, take the body.
+        _, original_brace = find_definition(original, entry['name'])
+        _, candidate_brace = find_definition(text, entry['name'])
+        definition = original[start:original_brace] + text[candidate_brace:cand_end]
+    result.write_text(original[:start] + definition + original[end:], encoding='utf-8')
     return result
 
 
@@ -215,7 +436,10 @@ def prepare(entry: dict) -> Path:
     permuter_source = source.replace(
         '#include <stddef.h>', 'typedef unsigned int size_t;\n#define NULL ((void *)0)')
     if is_cxx(entry):
-        permuter_source = pycparser_source(permuter_source)
+        if needs_cleaned_cxx(source, entry['name']):
+            permuter_source = cleaned_cxx_source(permuter_source, entry['name'])
+        else:
+            permuter_source = pycparser_source(permuter_source)
     elif has_asm_blocks(permuter_source):
         permuter_source = strip_asm_blocks(permuter_source)
     (job / 'base.c').write_text(permuter_source, encoding='utf-8')

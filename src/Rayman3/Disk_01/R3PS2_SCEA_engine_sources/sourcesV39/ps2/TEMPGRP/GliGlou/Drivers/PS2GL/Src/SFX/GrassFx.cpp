@@ -863,7 +863,7 @@ struct C_BaseFx {
     int m_pSearchKey; /* +0x20 */
     /* vtable pointer at +0x24 (retail __vt__8C_BaseFx: ~C_BaseFx, DeleteSDLs). */
     C_BaseFx() {}
-    virtual ~C_BaseFx();
+    virtual ~C_BaseFx() {}
     virtual void DeleteSDLs(void);
 };
 
@@ -888,9 +888,10 @@ struct C_GrassFx : C_BaseFx {
         m_NbVertices = 0;
         m_pVNew = 0;
     }
+    virtual ~C_GrassFx();
     void Init(GEO_tdstElementIndexedTriangles_* p_stEIT, SDC_VertexArrays_* pSDC);
     void Display(void);
-    void DisplayGrassLayer(float X, float Y, float Z, float* a16_fWorldMatrix);
+    void DisplayGrassLayer(float X, float Y, float Z, float* a16_fWorldMatrix, int iPass);
 };
 
 struct sceGsFogcol {
@@ -929,15 +930,16 @@ struct sceGsXyzf {
 };
 
 struct sceGsTest {
-    unsigned long ATE : 1; /* bit 0, byte +0x0 */
-    unsigned long ATST : 3; /* bit 1, byte +0x0 */
-    unsigned long AREF : 8; /* bit 4, byte +0x0 */
-    unsigned long AFAIL : 2; /* bit 12, byte +0x0 */
-    unsigned long DATE : 1; /* bit 14, byte +0x0 */
-    unsigned long DATM : 1; /* bit 15, byte +0x0 */
-    unsigned long ZTE : 1; /* bit 16, byte +0x0 */
-    unsigned long ZTST : 2; /* bit 17, byte +0x0 */
-    unsigned long pad19 : 45; /* bit 19, byte +0x0 */
+    unsigned short ATE : 1; /* bit 0, byte +0x0 */
+    unsigned short ATST : 3; /* bit 1, byte +0x0 */
+    unsigned short AREF : 8; /* bit 4, byte +0x0 */
+    unsigned short AFAIL : 2; /* bit 12, byte +0x0 */
+    unsigned short DATE : 1; /* bit 14, byte +0x0 */
+    unsigned short DATM : 1; /* bit 15, byte +0x0 */
+    unsigned char ZTE : 1; /* bit 16, byte +0x2 */
+    unsigned char ZTST : 2; /* bit 17, byte +0x2 */
+    unsigned char _pad19 : 5;
+    unsigned char _pad24[5];
 };
 
 struct MTH3D_tdstVector_ {
@@ -1164,16 +1166,17 @@ struct sceGsXyoffset {
 };
 
 struct sceGsPrmode {
-    unsigned long pad00 : 3; /* bit 0, byte +0x0 */
-    unsigned long IIP : 1; /* bit 3, byte +0x0 */
-    unsigned long TME : 1; /* bit 4, byte +0x0 */
-    unsigned long FGE : 1; /* bit 5, byte +0x0 */
-    unsigned long ABE : 1; /* bit 6, byte +0x0 */
-    unsigned long AA1 : 1; /* bit 7, byte +0x0 */
-    unsigned long FST : 1; /* bit 8, byte +0x0 */
-    unsigned long CTXT : 1; /* bit 9, byte +0x0 */
-    unsigned long FIX : 1; /* bit 10, byte +0x0 */
-    unsigned long pad11 : 53; /* bit 11, byte +0x0 */
+    unsigned char pad00 : 3; /* bit 0, byte +0x0 */
+    unsigned char IIP : 1; /* bit 3, byte +0x0 */
+    unsigned char TME : 1; /* bit 4, byte +0x0 */
+    unsigned char FGE : 1; /* bit 5, byte +0x0 */
+    unsigned char ABE : 1; /* bit 6, byte +0x0 */
+    unsigned char AA1 : 1; /* bit 7, byte +0x0 */
+    unsigned char FST : 1; /* bit 8, byte +0x1 */
+    unsigned char CTXT : 1; /* bit 9, byte +0x1 */
+    unsigned char FIX : 1; /* bit 10, byte +0x1 */
+    unsigned char _pad11 : 5;
+    unsigned char _pad16[6];
 };
 
 struct sceGsTexclut {
@@ -1249,6 +1252,64 @@ struct sceGsLabel {
     unsigned int IDMSK; /* +0x4 */
 };
 
+struct GS_tdstModFlgs {
+    unsigned char PRIM_Modified : 1; /* bit 0, byte +0x0 */
+    unsigned char RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
+    unsigned char ST_Modified : 1; /* bit 2, byte +0x0 */
+    unsigned char UV_Modified : 1; /* bit 3, byte +0x0 */
+    unsigned char XYZF2_Modified : 1; /* bit 4, byte +0x0 */
+    unsigned char XYZ2_Modified : 1; /* bit 5, byte +0x0 */
+    unsigned char TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
+    unsigned char TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
+    unsigned char CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
+    unsigned char CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
+    unsigned char FOG_Modified : 1; /* bit 10, byte +0x0 */
+    unsigned char XYZF3_Modified : 1; /* bit 11, byte +0x0 */
+    unsigned char XYZ3_Modified : 1; /* bit 12, byte +0x0 */
+    unsigned char TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
+    unsigned char TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
+    unsigned char TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
+    unsigned char TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
+    unsigned char XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
+    unsigned char XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
+    unsigned char PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
+    unsigned char PRMODE_Modified : 1; /* bit 20, byte +0x0 */
+    unsigned char TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
+    unsigned char SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
+    unsigned char MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
+    unsigned char MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
+    unsigned char MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
+    unsigned char MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
+    unsigned char TEXA_Modified : 1; /* bit 27, byte +0x0 */
+    unsigned char FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
+    unsigned char TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
+    unsigned char SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
+    unsigned char SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
+    unsigned char ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
+    unsigned char ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
+    unsigned char DIMX_Modified : 1; /* bit 34, byte +0x0 */
+    unsigned char DTHE_Modified : 1; /* bit 35, byte +0x0 */
+    unsigned char COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
+    unsigned char TEST_1_Modified : 1; /* bit 37, byte +0x0 */
+    unsigned char TEST_2_Modified : 1; /* bit 38, byte +0x0 */
+    unsigned char PABE_Modified : 1; /* bit 39, byte +0x0 */
+    unsigned char FBA_1_Modified : 1; /* bit 40, byte +0x0 */
+    unsigned char FBA_2_Modified : 1; /* bit 41, byte +0x0 */
+    unsigned char FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
+    unsigned char FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
+    unsigned char ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
+    unsigned char ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
+    unsigned char BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
+    unsigned char TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
+    unsigned char TRXREG_Modified : 1; /* bit 48, byte +0x0 */
+    unsigned char TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
+    unsigned char HWREG_Modified : 1; /* bit 50, byte +0x0 */
+    unsigned char SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
+    unsigned char FINISH_Modified : 1; /* bit 52, byte +0x0 */
+    unsigned char LABEL_Modified : 1; /* bit 53, byte +0x6 */
+    unsigned char _extractor_padding_00[1];
+};
+
 struct tagGScontext {
     sceGsPrim PRIM; /* +0x0 */
     sceGsRgbaq RGBAQ; /* +0x8 */
@@ -1304,9 +1365,9 @@ struct tagGScontext {
     sceGsSignal SIGNAL; /* +0x198 */
     tagsceGsReg FINISH; /* +0x1a0 */
     sceGsLabel LABEL; /* +0x1a8 */
-    /* aggregate */ int ModFlgs; /* +0x1b0 */
+    GS_tdstModFlgs ModFlgs; /* +0x1b0 */
     unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x1b4..0x1b7 */
-    /* aggregate */ int GlobalModFlgs; /* +0x1b8 */
+    GS_tdstModFlgs GlobalModFlgs; /* +0x1b8 */
     unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0x1bc..0x1bf */
     QWORD PackageBuffer[518]; /* +0x1c0 */
     int iBufCount; /* +0x2220 */
@@ -1413,7 +1474,7 @@ unsigned int GLI_g_ProjectionMode;
 float GLI_BIG_GLOBALS_xGlobalAlpha;
 float GLI_g_NegVect[4];
 int g_p_stCurrentViewport;
-int PS2glLiberator;
+extern void (*PS2glLiberator)(void* ptr);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\GrassFx.cpp lines 38–65 */
 /* addr: 0x002dc1b0  size: 248 bytes */
@@ -1524,6 +1585,8 @@ void GrassFx_vDesinit(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma opt_loop_invariants off
+#pragma opt_strength_reduction off
 void GrassFx_vProcessAndDisplay(void)
 {
     tdstBaseFxListElement_* p;
@@ -1541,6 +1604,8 @@ void GrassFx_vProcessAndDisplay(void)
 
     GrassFx_g_ListToDisplay.DeleteAllNoFree();
 }
+#pragma opt_loop_invariants reset
+#pragma opt_strength_reduction reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\GrassFx.cpp lines 532–539 */
 /* addr: 0x002dc330  size: 52 bytes */
@@ -1769,18 +1834,200 @@ void GrassFx_vCreateEffectFromObjectAndEIT(GEO_tdstGeometricObject_* pObj, GEO_t
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" void sceVu0UnitMatrix(float m0[4][4]);
+extern "C" void sceVu0MulMatrix(float m0[4][4], float* m1, float m2[4][4]);
+extern "C" void PS2glMatrixMode(unsigned int mode);
+extern "C" void PS2glLoadMatrixf(float* m);
+extern "C" void GLI_AddNormalInterpolation(float m[4][4], SDC_VertexArrays_* pSDC);
+extern "C" void PS2glDepthMask(unsigned char flag);
+extern "C" void PS2glHint(unsigned int target, unsigned int mode);
+extern "C" void impPS2glHint(unsigned int target, unsigned int mode);
+extern "C" void PS2glNormalPointer(unsigned int type, int stride, void* ptr);
+extern "C" void PS2glTexCoordPointer(unsigned int size, unsigned int type, int stride, void* ptr);
+extern "C" void impPS2glColorPointer(unsigned int size, unsigned int type, int stride, void* ptr);
+extern "C" void PS2glVertexPointer(unsigned int size, unsigned int type, int stride, void* ptr);
+extern "C" void PS2glDrawArrays(unsigned int mode, int first, unsigned int count);
+
+inline void GrassFx_vClearCop0Register24(void)
+{
+    asm { mtbpc zero }
+}
+
+extern "C" void PS2glColorMask(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
+extern "C" void PS2glSetGsRegister(unsigned int reg, unsigned long value, unsigned int context);
+extern "C" void GLI_DRV_SendMaterialToViewport(GLI_tdstMaterial_* hMaterial);
+extern "C" void GLI_vClearSendMatStates(void);
+extern "C" void GLI_vInitGLProjectionMatrix(void);
+
+#define PS2_M_vMulMatrixColumnsByVector(_dst, _vec, _src) \
+    asm { lqc2 vf5, 0x0(_vec); lqc2 vf1, 0x0(_src); lqc2 vf2, 0x10(_src); lqc2 vf3, 0x20(_src); lqc2 vf4, 0x30(_src); vmul.xyzw vf1, vf1, vf5; vmul.xyzw vf2, vf2, vf5; vmul.xyzw vf3, vf3, vf5; vmul.xyzw vf4, vf4, vf5; sqc2 vf1, 0x0(_dst); sqc2 vf2, 0x10(_dst); sqc2 vf3, 0x20(_dst); sqc2 vf4, 0x30(_dst); }
+
+inline void GrassFx_vMulMatrixByVector(float (*_pDst)[4], float* _pVec, float (*_pSrc)[4])
+{
+    PS2_M_vMulMatrixColumnsByVector(_pDst, _pVec, _pSrc);
+}
+
+#pragma opt_loop_invariants off
+#pragma opt_strength_reduction off
 void C_GrassFx::Display(void)
 {
-    unsigned char zTst;
-    float Ref;
-    float fADC;
-    int i;
-    float DY;
-    float DX;
-    float ZOffset;
     float a16_fWorldMatrix[4][4];
-    /* TODO: decompile from asm/... */
+    float ZOffset;
+    float DX;
+    float DY;
+    int i;
+    float fADC;
+    float Ref;
+    unsigned char zTst;
+    unsigned int uiTexBit;
+    int iBit;
+    volatile int iZero;
+
+    GrassFx_vClearCop0Register24();
+    if (m_hGrassVisualMaterial)
+    {
+        float* pVec;
+        float (*pDst)[4];
+        float (*pSrc)[4];
+        iZero = 0x8000;
+        pSrc = (float (*)[4])(**(char***)(g_p_stCurrentViewport + 0x68) + 0x20);
+        pDst = a16_fWorldMatrix;
+        pVec = GLI_g_NegVect;
+        GrassFx_vMulMatrixByVector(pDst, pVec, pSrc);
+        a16_fWorldMatrix[3][3] = 1.0f;
+        GLI_g_CurrentStage = 0;
+        GLI_BIG_GLOBALS_xGlobalAlpha = 1.0f;
+        GLI_g_ProjectionMode = 2;
+        GLI_DRV_SendMaterialToViewport(m_hGrassVisualMaterial);
+        if (g_PS2glContext.uiDmaOmitDataBits & 0x600)
+        {
+            *(unsigned int*)g_PS2glContext.pnColorMatMasks &= ~0x200;
+            *(unsigned int*)g_PS2glContext.pnColorMatMasks &= ~0x100;
+        }
+        g_PS2glContext.uiDmaOmitDataBits = 0;
+        g_PS2glContext.nLightBits &= ~0x400;
+        PS2glHint(0xF40, (unsigned int)myColorRange2);
+        PS2glHint(0xF41, (unsigned int)(float*)myColorRange2);
+        PS2glColorMask(1, 1, 1, 0);
+        GLI_vInitGLProjectionMatrix();
+
+        if (g_PS2glContext.iCurTextureSet == 0)
+                uiTexBit = 2;
+            else
+                uiTexBit = 0x200;
+            g_PS2glContext.nTextureEnableBits |= uiTexBit;
+    g_gsContext.PRMODE.TME = 1;
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        g_PS2glContext.nEnableBits |= 0x800;
+    g_gsContext.TEST_1.ZTE = 1;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    zTst = 1;
+    switch (g_PS2glContext.eDepthFunc)
+    {
+        case 0x200: zTst = 0; break;
+        case 0x207: zTst = 1; break;
+        case 0x203: zTst = 2; break;
+        case 0x201: zTst = 3; break;
+        case 0x202: case 0x204: case 0x205: case 0x206: break;
+    }
+    g_gsContext.TEST_1.ZTST = zTst;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+        PS2glDepthMask(1);
+        g_PS2glContext.nEnableBits &= ~0x400;
+    g_gsContext.TEST_1.ATE = 0;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+        g_gsContext.PRMODE.ABE = 0;
+    g_PS2glContext.nEnableBits &= ~0x100;
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        PS2glColorMask(1, 1, 1, 0);
+        g_PS2glContext.nEnableBits |= 0x100;
+    g_gsContext.PRMODE.ABE = 1;
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        PS2glSetGsRegister(0x42, 0x44, 0);
+        g_PS2glContext.nEnableBits &= ~0x100;
+    g_gsContext.PRMODE.ABE = 0;
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        ZOffset = 0.05f;
+        GLI_vClearSendMatStates();
+        GLI_g_CurrentStage = 0;
+        GLI_DRV_SendMaterialToViewport(m_hGrassVisualMaterial);
+
+        for (i = 0; i < 4; i++)
+        {
+            DY = DX = fADC = 0.0f;
+            Ref = (10.0f + (230.0f * i) / 4.0f) * 0.5019608f;
+            GLI_vClearSendMatStates();
+            GLI_g_CurrentStage = 0;
+            GLI_DRV_SendMaterialToViewport(m_hGrassVisualMaterial);
+            PS2glColorMask(1, 1, 1, 0);
+            if (g_PS2glContext.iCurTextureSet == 0)
+                uiTexBit = 2;
+            else
+                uiTexBit = 0x200;
+            g_PS2glContext.nTextureEnableBits |= uiTexBit;
+    g_gsContext.PRMODE.TME = 1;
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+            g_PS2glContext.nEnableBits &= ~0x100;
+    g_gsContext.PRMODE.ABE = 0;
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+            g_PS2glContext.nEnableBits |= 0x400;
+    g_gsContext.TEST_1.ATE = 1;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+            PS2glDepthMask(1);
+            PS2glDepthMask(1);
+            g_PS2glContext.nEnableBits |= 0x800;
+    g_gsContext.TEST_1.ZTE = 1;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    zTst = 1;
+    switch (g_PS2glContext.eDepthFunc)
+    {
+        case 0x200: zTst = 0; break;
+        case 0x207: zTst = 1; break;
+        case 0x203: zTst = 2; break;
+        case 0x201: zTst = 3; break;
+        case 0x202: case 0x204: case 0x205: case 0x206: break;
+    }
+    g_gsContext.TEST_1.ZTST = zTst;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+            PS2glSetGsRegister(0x47, ((unsigned long)(unsigned int)Ref << 4) | 0x5000D, 0);
+            iBit = 0;
+            if (i != 0)
+                iBit = 1;
+            DisplayGrassLayer(DX, DY, ZOffset, &a16_fWorldMatrix[0][0], iBit);
+            ZOffset += 0.05f;
+        }
+
+        PS2glSetGsRegister(0x47, 0x5800C, 0);
+        g_PS2glContext.nEnableBits &= ~0x400;
+    g_gsContext.TEST_1.ATE = 0;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+        g_PS2glContext.nEnableBits |= 0x100;
+    g_gsContext.PRMODE.ABE = 1;
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        g_PS2glContext.nEnableBits |= 0x800;
+    g_gsContext.TEST_1.ZTE = 1;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    zTst = 1;
+    switch (g_PS2glContext.eDepthFunc)
+    {
+        case 0x200: zTst = 0; break;
+        case 0x207: zTst = 1; break;
+        case 0x203: zTst = 2; break;
+        case 0x201: zTst = 3; break;
+        case 0x202: case 0x204: case 0x205: case 0x206: break;
+    }
+    g_gsContext.TEST_1.ZTST = zTst;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+        PS2glDepthMask(1);
+        PS2glHint(0xF40, (unsigned int)myColorRange);
+        PS2glHint(0xF41, (unsigned int)(float*)myColorRange);
+    }
+    GLI_vClearSendMatStates();
+    PS2glColorMask(1, 1, 1, 0);
+    GrassFx_vClearCop0Register24();
 }
+#pragma opt_loop_invariants reset
+#pragma opt_strength_reduction reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\GrassFx.cpp lines 147–205 */
 /* addr: 0x002dce40  size: 368 bytes */
@@ -1813,15 +2060,52 @@ void C_GrassFx::Display(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void C_GrassFx::DisplayGrassLayer(float X, float Y, float Z, float* a16_fWorldMatrix)
+void C_GrassFx::DisplayGrassLayer(float X, float Y, float Z, float* a16_fWorldMatrix, int iPass)
 {
-    unsigned int NbVertices;
-    float (*pColors)[4];
-    float (*pUVChrome)[4];
-    float (*pUV2)[4];
-    float (*pUV1)[4];
-    float (*pVOrg)[4];
-    float NewMatrix[4][4];
     float ZOffsetMatrix[4][4];
-    /* TODO: decompile from asm/... */
+    float NewMatrix[4][4];
+    float (*pVOrg)[4] __attribute__((aligned(16)));
+    float (*pUV1)[4] __attribute__((aligned(16)));
+    float (*pUV2)[4] __attribute__((aligned(16)));
+    float (*pUVChrome)[4] __attribute__((aligned(16)));
+    float (*pColors)[4] __attribute__((aligned(16)));
+    unsigned int NbVertices;
+
+    sceVu0UnitMatrix(ZOffsetMatrix);
+    ZOffsetMatrix[3][0] = X;
+    ZOffsetMatrix[3][1] = Y;
+    ZOffsetMatrix[3][2] = Z;
+    sceVu0MulMatrix(NewMatrix, a16_fWorldMatrix, ZOffsetMatrix);
+    PS2glMatrixMode(0x1700);
+    PS2glLoadMatrixf(&NewMatrix[0][0]);
+    if (((*(unsigned int*)m_pSDC & 0xF) == 4) || ((*(unsigned int*)m_pSDC & 0xF) == 5))
+    {
+        NbVertices = *(unsigned int*)m_pSDC->pArrayOfVertexArrays[0][0];
+        GLI_AddNormalInterpolation(ZOffsetMatrix, m_pSDC);
+        GLI_vGetVertexPointersFromSDCStructure(m_pSDC, 0, &pVOrg, &pUV1, &pUV2, &pUVChrome, &pColors);
+        PS2glDepthMask(1);
+        PS2glDepthMask(1);
+        PS2glHint(0xF10, 0x341);
+        PS2glNormalPointer(0x1406, -2, pVOrg);
+        PS2glTexCoordPointer(NbVertices, 0x1406, -2, pUV1);
+        impPS2glColorPointer(NbVertices, 0x1406, -2, pColors);
+        PS2glVertexPointer(NbVertices, 0x1406, -2, pVOrg);
+        PS2glDrawArrays(5, 0, NbVertices);
+        impPS2glHint(0xF10, 0);
+        PS2glHint(0xF10, 0);
+    }
+}
+
+
+C_GrassFx::~C_GrassFx()
+{
+    if (m_pVNew)
+        PS2glLiberator(m_pVNew);
+    m_pVNew = 0;
+    m_p_stEIT = 0;
+    m_pSDC = 0;
+    m_hGrassVisualMaterial = 0;
+    m_hFootVisualMaterial = 0;
+    m_NbVertices = 0;
+    m_pVNew = 0;
 }

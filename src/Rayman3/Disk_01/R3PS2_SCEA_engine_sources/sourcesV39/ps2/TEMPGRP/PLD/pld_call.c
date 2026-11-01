@@ -4126,8 +4126,7 @@ struct tdstEngineStructure_ {
     unsigned char bEngineIsInSaveGamePart; /* +0x706 */
     char a_szLevelName[150][30]; /* +0x707 */
     char a_szDemoName[30][12]; /* +0x189b */
-    int a_szDemoLevelName; /* +0x1a03 */
-    unsigned char _extractor_padding_02[356]; /* implicitly added by extractor; +0x1a07..0x1b6a */
+    char a_szDemoLevelName[30][12]; /* +0x1a03 */
     unsigned char ucNumberOfDemos; /* +0x1b6b */
     unsigned char ucNumberOfLevels; /* +0x1b6c */
     unsigned char ucCurrentLevel; /* +0x1b6d */
@@ -4620,12 +4619,12 @@ int g_ax_pQuaternions[100];
 int g_ax_pVectors[100];
 tdstStackInfos_ g_tdstStackInfos[100][13];
 FON_tdstGeneral_ FON_g_stGeneral;
-_tdstBinarizedDataForMenu g_aBinDataForMenu;
+_tdstBinarizedDataForMenu g_aBinDataForMenu[105];
 VID_tdstGeneral_ VID_g_stGeneralVideos;
 tdst_EntryActions_ g_st_3DOS_EntryActions;
 IPT_tdstInput_ IPT_g_hInputStructure;
 unsigned char g_ucNbFontBitmap;
-_tdstBitmapFont g_TabBitmapFont;
+_tdstBitmapFont g_TabBitmapFont[50];
 _tdstFont g_ListOfFonts;
 unsigned char g_NbFont;
 RND_tdstRandom_ RND_g_stRandomStructure;
@@ -5226,7 +5225,7 @@ void CheckPS2GLMem(void);
 void SetAllocMode(int Mode);
 void CheckAllocMode(int Mode);
 unsigned char fn_bDoTransition(void);
-void LS_Create(int Mode);
+void LS_Create(void);
 char* PLD_szLocationFromAreaId(_tdeAreaName eAreaId, char* szName);
 int fn_lGetTransitionBloc(void);
 MNC_tfnAllocator_ fn_pfnCurrentTransitionAllocator(void);
@@ -5238,7 +5237,7 @@ void HMU_fn_vInitNormalLevelMemory(unsigned int _ulNormalMemSize);
 void HMU_fn_vInitTempLevelMemory(unsigned int _ulTempMemSize);
 void HMU_fn_vSetMemoriesInLevelMode(void);
 unsigned char HMU_fn_ucGetLevelNormalMemoryBlock(void);
-void GLI_vSignalCurrentMemoryChannel(int ucCurrentChannel);
+void GLI_vSignalCurrentMemoryChannel(unsigned char ucCurrentChannel);
 void HMU_fn_vInitNormalTransition1Memory(unsigned int _ulNormalMemSize);
 void HMU_fn_vInitTempTransition1Memory(unsigned int _ulTempMemSize);
 void HMU_fn_vInitNormalTransition2Memory(unsigned int _ulNormalMemSize);
@@ -5266,7 +5265,7 @@ int printf(const char* format, ...);
 int sprintf(char* s, const char* format, ...);
 void CheckForTutorial(char* Name);
 char* PLD_fn_pcLoadArea(_tdeAreaName _eAreaId, char* _szAreaName);
-void PLD_fn_vReadAnimationsBanks(char** _ppcCMBAddress, int iStartBank, int iNumberOfBanks);
+void PLD_fn_vReadAnimationsBanks(char** _ppcCMBAddress, unsigned short iStartBank, int iNumberOfBanks);
 void fn_v_Transition_CorrectTextureChannelTable(void);
 
 /* The target writes COP0 register 24 (mtc0 zero, $24); C cannot express it.
@@ -5287,13 +5286,28 @@ inline void PLD_vClearCop0Register24Open(void)
 }
 
 #define M_READ(type) (*((type*)pcCMBAddress)++)
-#define M_READ_STRUCT(dst, id) { stStructDef_* p_stDef = &g_stStructArray[id]; if (dst) memcpy((dst), pcCMBAddress, p_stDef->u32ActualSize); pcCMBAddress += p_stDef->u32ActualSize; }
+#define M_READ_AT(type, lv) { char* pcNew; char* pcSrc; type* pDst; type xV; pcSrc = pcCMBAddress; pcNew = pcSrc + sizeof(type); pDst = (type*)&(lv); pcCMBAddress = pcNew; xV = *(type*)pcSrc; *pDst = xV; }
+#define M_READ_STRUCT(dst, id) { volatile stStructDef_* p_stDef = &g_stStructArray[id]; if (dst) memcpy((dst), pcCMBAddress, p_stDef->u32ActualSize); { unsigned int uS = p_stDef->u32ActualSize; pcCMBAddress += uS; } }
 
+inline tdstEngineObject_* PLD_fn_pstGetPerso(HIE_tdstSuperObject_* h)
+{ tdstEngineObject_* p; if (h->ulTypeOfLinkedObject != 2) p = NULL; else p = h->hLinkedObject.p_stCharacter; return p; }
+
+inline void PLD_vClearCop0Register24Plain(void)
+{
+    asm { mtc0 zero, $24 }
+}
+
+#pragma opt_propagation off
+#pragma opt_dead_assignments off
 void PLD_fn_vLoadLevel(char* _szLevelName)
 {
     static char szTransitIdentifier[9] = "transit ";
     char* pcStartCMBAddress;
     char* pcTransitStartCMBAddress;
+    char* pcAreaName;
+    char* pcCur;
+    int iTemp;
+    unsigned int u32Area;
     char* volatile pcCMBAddress;
     char* pcAnimCMBAddress;
     volatile unsigned int ulIndex;
@@ -5309,7 +5323,7 @@ void PLD_fn_vLoadLevel(char* _szLevelName)
     unsigned int u32NbSoundEventForTransit;
     unsigned int u32NbSoundEventForLevel;
     unsigned int* volatile pu32SoundEventIdArray;
-    HIE_tdstSuperObject_** volatile dummy;
+    HIE_tdstSuperObject_** dummy;
     unsigned int u32TextureChannel;
     HIE_tdstSuperObject_* hNextCharacter;
     tdstBrain_* h_Brain;
@@ -5317,11 +5331,11 @@ void PLD_fn_vLoadLevel(char* _szLevelName)
     char ch_Buffer[1024];
     char* pch_Next;
     tdstFamilyList_* p_stThisFamily;
+    int i;
     unsigned char ucFamilyId;
     HIE_tdstSuperObject_* hCharacter;
-    int i;
-    unsigned char ucCharacterId;
 
+    { void* pvT = (void*)&dummy; }
     GLI_vSetProgressCallBack(0);
     GLI_vSetProgressCallBack(11000000);
 
@@ -5329,7 +5343,7 @@ void PLD_fn_vLoadLevel(char* _szLevelName)
     CTL_SetCurrentMap(_szLevelName);
     GLI_HysteresisLevelStart(_szLevelName);
 
-    PLD_vClearCop0Register24Open();
+    PLD_vClearCop0Register24Plain();
     CheckForTutorial(_szLevelName);
 
     GLI_vResetTempList();
@@ -5347,9 +5361,10 @@ void PLD_fn_vLoadLevel(char* _szLevelName)
     {
         for (ulIndex = 0; ulIndex < g_stFixInfo.ulNbObject; ulIndex++)
         {
-            h_Brain = ((HIE_tdstSuperObject_*)g_stFixInfo.a20_stObjects[ulIndex])->hLinkedObject.p_stCharacter->h_Brain;
+            unsigned int u = ulIndex;
+            h_Brain = ((HIE_tdstSuperObject_*)((void**)((char*)&g_stFixInfo + 4))[u])->hLinkedObject.p_stCharacter->h_Brain;
             if (h_Brain)
-                memcpy((char*)h_Brain + 8, (char*)g_a_LinksOfSuperObjectInFix + ulIndex * 0x18, 0x18);
+                memcpy((char*)h_Brain + 8, (char*)g_a_LinksOfSuperObjectInFix + u * 0x18, 0x18);
         }
     }
 
@@ -5360,13 +5375,15 @@ void PLD_fn_vLoadLevel(char* _szLevelName)
         CheckAllocMode(G_DMM_CurrentAllocMode - 1);
 
     if (!fn_bDoTransition())
-        LS_Create(2);
+        LS_Create();
 
     gp_stNewActualWorld = 0;
     gp_stNewDynamicWorld = 0;
     gp_stNewInactiveDynamicWorld = 0;
 
-    if ((pcTransitStartCMBAddress = pcCMBAddress = MNC_fn_pcLoadAreaWithAllocator(PLD_szLocationFromAreaId(2, _szLevelName), fn_lGetTransitionBloc() == 2 ? 2 : 3, fn_pfnCurrentTransitionAllocator())) != NULL)
+    pcAreaName = PLD_szLocationFromAreaId(2, _szLevelName);
+    u32Area = fn_lGetTransitionBloc() == 2 ? 2 : 3;
+    if ((pcTransitStartCMBAddress = pcCMBAddress = MNC_fn_pcLoadAreaWithAllocator(pcAreaName, u32Area, fn_pfnCurrentTransitionAllocator())) != NULL)
     {
         if (g_iLinkNumberA > 50)
             g_bLevelHasTransitionMemory = 1;
@@ -5396,7 +5413,9 @@ void PLD_fn_vLoadLevel(char* _szLevelName)
     }
 
     printf("%s\n", PLD_szLocationFromAreaId(1, _szLevelName));
-    pcStartCMBAddress = pcCMBAddress = MNC_fn_pcLoadArea(PLD_szLocationFromAreaId(1, _szLevelName), 1);
+    pcAreaName = PLD_szLocationFromAreaId(1, _szLevelName);
+    u32Area = 1;
+    pcStartCMBAddress = pcCMBAddress = MNC_fn_pcLoadArea(pcAreaName, u32Area);
     printf("level@%08x\n", pcStartCMBAddress);
 
     u32FixChecksum = M_READ(unsigned int);
@@ -5416,7 +5435,7 @@ void PLD_fn_vLoadLevel(char* _szLevelName)
             ;
     }
 
-    g_pcLvlTimeStamp = (int)pcCMBAddress; pcCMBAddress += 40;
+    pcCMBAddress = (char*)(g_pcLvlTimeStamp = (int)pcCMBAddress) + 40;
     pcCMBAddress += 4;
     pcCMBAddress += 4;
 
@@ -5443,11 +5462,9 @@ void PLD_fn_vLoadLevel(char* _szLevelName)
         }
     }
 
-    s32NumberOfTexturesNotInFix = M_READ(int);
-    gs_lNumberOfTextureToCreate = g_lNumberOfTexturesInFix + s32NumberOfTexturesNotInFix;
-
-    for (ulIndex = g_lNumberOfTexturesInFix; ulIndex < gs_lNumberOfTextureToCreate; ulIndex++)
-        ((int*)gs_aDEFTableOfTextureAlreadyRead)[ulIndex] = M_READ(int);
+    { int iF; char* pS = pcCMBAddress; iF = g_lNumberOfTexturesInFix; pcCMBAddress = pS + 4; gs_lNumberOfTextureToCreate = iF + *(int*)pS; ulIndex = iF; }
+    for (; ulIndex < gs_lNumberOfTextureToCreate; ulIndex++)
+        M_READ_AT(int, ((int*)gs_aDEFTableOfTextureAlreadyRead)[ulIndex]);
 
     if (fn_lGetTransitionBloc() == 1)
         g_ucIdOfNextTransitionbloc = HMU_fn_ucGetTransition2NormalMemoryBlock();
@@ -5494,7 +5511,7 @@ void PLD_fn_vLoadLevel(char* _szLevelName)
     if (!g_bLevelHasTransitionMemory)
         g_stEngineStructure.a_hViewportArray = M_READ(tdstViewportManagement_*);
 
-    M_READ_STRUCT(NULL, 177);
+    { void* pvNull = NULL; M_READ_STRUCT(pvNull, 177); }
     M_READ_STRUCT(&g_stEngineStructure.hFamilyList, 89);
     M_READ_STRUCT(&g_stEngineStructure.hAlwaysActiveCharactersList, 179);
 
@@ -5508,8 +5525,10 @@ void PLD_fn_vLoadLevel(char* _szLevelName)
 
     IPO_g_ucNumberOfRLITables = M_READ(unsigned char);
     g_stEngineStructure.ucCurrentLevel = M_READ(unsigned char);
-    if ((int)pcCMBAddress & 3)
-        pcCMBAddress += 4 - ((int)pcCMBAddress & 3);
+    pcCur = pcCMBAddress;
+    iTemp = (int)pcCur & 3;
+    if (iTemp)
+        pcCMBAddress = pcCur + (4 - iTemp);
     g_stEngineStructure.ulNumberOfSOLAllocated = M_READ(unsigned int);
     g_stEngineStructure.ulNumberOfSOLLoaded = M_READ(unsigned int);
     g_stEngineStructure.p_hSOL = M_READ(tdstSuperObjectLinks_**);
@@ -5525,15 +5544,17 @@ void PLD_fn_vLoadLevel(char* _szLevelName)
     M_READ_STRUCT(&SAI_g_stInternalStructure, 185);
 
     g_NbPersoWithSettingsInFix = M_READ(unsigned int);
-    for (ulIndex = 0; ulIndex < g_NbPersoWithSettingsInFix; ulIndex++)
+    for (ulIndex = 0; ulIndex < g_NbPersoWithSettingsInFix; )
     {
-        g_a_SettingsOfPerso[ulIndex].hCharacter = M_READ(HIE_tdstSuperObject_*);
-        if ((int)pcCMBAddress & 15)
-            pcCMBAddress += 16 - ((int)pcCMBAddress & 15);
-        M_READ_STRUCT(&g_a_SettingsOfPerso[ulIndex].tdstMatrix, 190);
-        g_a_SettingsOfPerso[ulIndex].ulFlags = M_READ(unsigned int);
-        g_a_SettingsOfPerso[ulIndex].ucTransparency = M_READ(unsigned char);
-        pcCMBAddress += 3;
+        M_READ_AT(HIE_tdstSuperObject_*, g_a_SettingsOfPerso[ulIndex].hCharacter);
+        pcCur = pcCMBAddress;
+        iTemp = (int)pcCur & 15;
+        if (iTemp)
+            pcCMBAddress = pcCur + (16 - iTemp);
+        { MAT_tdstTransformation_* pM = &g_a_SettingsOfPerso[ulIndex].tdstMatrix; M_READ_STRUCT(pM, 190); }
+        { unsigned long* pDst = (unsigned long*)((char*)&g_a_SettingsOfPerso[0].ulFlags + ulIndex * 128); char* pcSrc = pcCMBAddress; char* pcNew = pcSrc + sizeof(unsigned int); unsigned int xV; pcCMBAddress = pcNew; xV = *(unsigned int*)pcSrc; *pDst = xV; }
+        M_READ_AT(unsigned char, ((unsigned char*)&g_a_SettingsOfPerso[0].ucTransparency)[ulIndex * 128]);
+        { unsigned int uI; char* pcS; pcS = pcCMBAddress; uI = ulIndex; pcS += 3; uI++; pcCMBAddress = pcS; ulIndex = uI; }
     }
 
     fn_vTVS();
@@ -5543,34 +5564,44 @@ void PLD_fn_vLoadLevel(char* _szLevelName)
         if (!fn_bLevelHadTransitionMemory())
         {
             g_iNbPersoOfFixInDynamicHierarchy = 0;
-            for (ulIndex = 0, h_SupObject = ((HIE_tdstSuperObject_*)gp_stDynamicWorld)->hFirstElementDyn, hNextCharacter = HIE_fn_hForceGetSuperObjectNextBrother(h_SupObject); h_SupObject; ulIndex++, h_SupObject = hNextCharacter, hNextCharacter = HIE_fn_hForceGetSuperObjectNextBrother(h_SupObject))
+            ulIndex = 0;
+            h_SupObject = ((HIE_tdstSuperObject_*)gp_stDynamicWorld)->hFirstElementDyn;
+            hNextCharacter = HIE_fn_hForceGetSuperObjectNextBrother(h_SupObject);
+            goto L_HieTest;
+L_HieBody:
             {
                 if (h_SupObject->ulTypeOfLinkedObject == 2)
                 {
                     gp_stPersoInDynamicHierarchy[g_iNbPersoOfFixInDynamicHierarchy] = (int)h_SupObject;
                     g_iNbPersoOfFixInDynamicHierarchy++;
-                    { HIE_tdstSuperObject_* hFather = (HIE_tdstSuperObject_*)gp_stNewDynamicWorld; if (h_SupObject->hNextBrotherDyn) h_SupObject->hNextBrotherDyn->hPrevBrotherDyn = h_SupObject->hPrevBrotherDyn; if (h_SupObject->hPrevBrotherDyn) h_SupObject->hPrevBrotherDyn->hNextBrotherDyn = h_SupObject->hNextBrotherDyn; if (h_SupObject->hFatherDyn) { h_SupObject->hFatherDyn->lNumberOfElementsDyn--; if (h_SupObject->hFatherDyn->hFirstElementDyn == h_SupObject) h_SupObject->hFatherDyn->hFirstElementDyn = h_SupObject->hNextBrotherDyn; if (h_SupObject->hFatherDyn->hLastElementDyn == h_SupObject) h_SupObject->hFatherDyn->hLastElementDyn = h_SupObject->hPrevBrotherDyn; } h_SupObject->hNextBrotherDyn = NULL; h_SupObject->hPrevBrotherDyn = NULL; h_SupObject->hFatherDyn = NULL; h_SupObject->hNextBrotherDyn = NULL; h_SupObject->hPrevBrotherDyn = hFather->hLastElementDyn; h_SupObject->hFatherDyn = hFather; if (hFather->hFirstElementDyn == NULL) hFather->hFirstElementDyn = h_SupObject; else hFather->hLastElementDyn->hNextBrotherDyn = h_SupObject; hFather->hLastElementDyn = h_SupObject; hFather->lNumberOfElementsDyn++; }
+                    { HIE_tdstSuperObject_* hFather = (HIE_tdstSuperObject_*)gp_stNewDynamicWorld; if (h_SupObject->hNextBrotherDyn) h_SupObject->hNextBrotherDyn->hPrevBrotherDyn = h_SupObject->hPrevBrotherDyn; if (h_SupObject->hPrevBrotherDyn) h_SupObject->hPrevBrotherDyn->hNextBrotherDyn = h_SupObject->hNextBrotherDyn; if (h_SupObject->hFatherDyn) { h_SupObject->hFatherDyn->lNumberOfElementsDyn--; { HIE_tdstSuperObject_* hF = h_SupObject->hFatherDyn; if (hF->hFirstElementDyn == h_SupObject) hF->hFirstElementDyn = h_SupObject->hNextBrotherDyn; } { HIE_tdstSuperObject_* hF = h_SupObject->hFatherDyn; if (hF->hLastElementDyn == h_SupObject) hF->hLastElementDyn = h_SupObject->hPrevBrotherDyn; } } h_SupObject->hNextBrotherDyn = NULL; h_SupObject->hPrevBrotherDyn = NULL; h_SupObject->hFatherDyn = NULL; h_SupObject->hNextBrotherDyn = NULL; h_SupObject->hPrevBrotherDyn = hFather->hLastElementDyn; h_SupObject->hFatherDyn = hFather; if (hFather->hFirstElementDyn == NULL) hFather->hFirstElementDyn = h_SupObject; else hFather->hLastElementDyn->hNextBrotherDyn = h_SupObject; hFather->hLastElementDyn = h_SupObject; hFather->lNumberOfElementsDyn++; }
                 }
             }
+            ulIndex++;
+            h_SupObject = hNextCharacter;
+            hNextCharacter = HIE_fn_hForceGetSuperObjectNextBrother(h_SupObject);
+L_HieTest:
+            if (h_SupObject)
+                goto L_HieBody;
 
             gp_stDynamicWorld = gp_stNewDynamicWorld;
 
             for (ulIndex = 0; ulIndex < g_NbPersoWithSettingsInFix; ulIndex++)
             {
-                g_a_SettingsOfPerso[ulIndex].hCharacter->hLinkedObject.p_stCharacter->h_3dData->stGLIObjectMatrix = g_a_SettingsOfPerso[ulIndex].tdstMatrix;
-                g_a_SettingsOfPerso[ulIndex].hCharacter->ulFlags = g_a_SettingsOfPerso[ulIndex].ulFlags;
-                g_a_SettingsOfPerso[ulIndex].hCharacter->fTransparenceLevel = g_a_SettingsOfPerso[ulIndex].ucTransparency;
-                p_stObject = g_a_SettingsOfPerso[ulIndex].hCharacter->ulTypeOfLinkedObject == 2 ? g_a_SettingsOfPerso[ulIndex].hCharacter->hLinkedObject.p_stCharacter : NULL;
-                p_stObject->h_3dData->ucTransparency = g_a_SettingsOfPerso[ulIndex].ucTransparency;
+                { stCharSettings* pS = &g_a_SettingsOfPerso[ulIndex]; pS->hCharacter->hLinkedObject.p_stCharacter->h_3dData->stGLIObjectMatrix = pS->tdstMatrix; }
+                { int o = ulIndex * 128; ((stCharSettings*)((char*)g_a_SettingsOfPerso + o))->hCharacter->ulFlags = *(unsigned long*)((char*)&g_a_SettingsOfPerso[0].ulFlags + o); }
+                g_a_SettingsOfPerso[ulIndex].hCharacter->fTransparenceLevel = ((unsigned char*)&g_a_SettingsOfPerso[0].ucTransparency)[ulIndex * 128];
+                p_stObject = PLD_fn_pstGetPerso(g_a_SettingsOfPerso[ulIndex].hCharacter);
+                p_stObject->h_3dData->ucTransparency = ((unsigned char*)&g_a_SettingsOfPerso[0].ucTransparency)[ulIndex * 128];
             }
         }
         else
         {
             for (ulIndex = 0; ulIndex < g_NbPersoWithSettingsInFix; ulIndex++)
             {
-                p_stObject = g_a_SettingsOfPerso[ulIndex].hCharacter->hLinkedObject.p_stCharacter;
+                { stCharSettings* pS = &g_a_SettingsOfPerso[ulIndex]; p_stObject = pS->hCharacter->hLinkedObject.p_stCharacter;
                 if (p_stObject->h_Brain && !p_stObject->h_Brain->bActiveDuringTransition)
-                    p_stObject->h_3dData->stGLIObjectMatrix = g_a_SettingsOfPerso[ulIndex].tdstMatrix;
+                    p_stObject->h_3dData->stGLIObjectMatrix = pS->tdstMatrix; }
 
                 fn_v3dDataInitValueSAI(g_a_SettingsOfPerso[ulIndex].hCharacter->hLinkedObject.p_stCharacter->h_3dData);
             }
@@ -5580,11 +5611,11 @@ void PLD_fn_vLoadLevel(char* _szLevelName)
     {
         for (ulIndex = 0; ulIndex < g_NbPersoWithSettingsInFix; ulIndex++)
         {
-            g_a_SettingsOfPerso[ulIndex].hCharacter->hLinkedObject.p_stCharacter->h_3dData->stGLIObjectMatrix = g_a_SettingsOfPerso[ulIndex].tdstMatrix;
-            g_a_SettingsOfPerso[ulIndex].hCharacter->ulFlags = g_a_SettingsOfPerso[ulIndex].ulFlags;
-            g_a_SettingsOfPerso[ulIndex].hCharacter->fTransparenceLevel = g_a_SettingsOfPerso[ulIndex].ucTransparency;
-            p_stObject = g_a_SettingsOfPerso[ulIndex].hCharacter->ulTypeOfLinkedObject == 2 ? g_a_SettingsOfPerso[ulIndex].hCharacter->hLinkedObject.p_stCharacter : NULL;
-            p_stObject->h_3dData->ucTransparency = g_a_SettingsOfPerso[ulIndex].ucTransparency;
+            { stCharSettings* pS = &g_a_SettingsOfPerso[ulIndex]; pS->hCharacter->hLinkedObject.p_stCharacter->h_3dData->stGLIObjectMatrix = pS->tdstMatrix; }
+            { int o = ulIndex * 128; ((stCharSettings*)((char*)g_a_SettingsOfPerso + o))->hCharacter->ulFlags = *(unsigned long*)((char*)&g_a_SettingsOfPerso[0].ulFlags + o); }
+            g_a_SettingsOfPerso[ulIndex].hCharacter->fTransparenceLevel = ((unsigned char*)&g_a_SettingsOfPerso[0].ucTransparency)[ulIndex * 128];
+            p_stObject = PLD_fn_pstGetPerso(g_a_SettingsOfPerso[ulIndex].hCharacter);
+            p_stObject->h_3dData->ucTransparency = ((unsigned char*)&g_a_SettingsOfPerso[0].ucTransparency)[ulIndex * 128];
         }
     }
 
@@ -5607,11 +5638,14 @@ void PLD_fn_vLoadLevel(char* _szLevelName)
 
     SND_fn_vStartLoad();
 
-    { char szLevelBank[1024]; GLI_PrintDebugString("SND LEVEL BANK"); strcpy(szLevelBank, fn_p_szGetLevelName()); Strrchr(szLevelBank, 0); PLD_vClearCop0Register24Open(); SND_fn_bLoadBank(szLevelBank); GLI_PrintDebugString("SND LEVEL BANK END"); }
+    { char szLevelBank[1024]; GLI_PrintDebugString("SND LEVEL BANK"); strcpy(szLevelBank, fn_p_szGetLevelName()); Strrchr(szLevelBank, 0); PLD_vClearCop0Register24Plain(); SND_fn_bLoadBank(szLevelBank); GLI_PrintDebugString("SND LEVEL BANK END"); }
 
     GLI_PrintDebugString("OPTIONAL BANKS");
 
-    for (i = 0, p_stThisFamily = g_stEngineStructure.hFamilyList.hFirstElementDyn; p_stThisFamily; p_stThisFamily = p_stThisFamily->hNextBrotherDyn, i++)
+    i = 0;
+    p_stThisFamily = g_stEngineStructure.hFamilyList.hFirstElementDyn;
+    goto L_FamTest;
+L_FamBody:
     {
         if (fn_bGetFamilyProperty(p_stThisFamily, 1))
         {
@@ -5619,30 +5653,43 @@ void PLD_fn_vLoadLevel(char* _szLevelName)
             if (!g_ax_pA3dGENERAL[p_stThisFamily->ucStorageBank] &&
                 GAM_fn_bIsFamilyToLoad(ucFamilyId))
             {
-                { unsigned char ucBank = p_stThisFamily->ucStorageBank; char szAnimName[40]; char* pcFamilyAnimCMBAddress; sprintf(szAnimName, "%s\\ani%d", _szLevelName, ucBank - 5); pcFamilyAnimCMBAddress = PLD_fn_pcLoadArea(ucBank + 102, szAnimName); if (pcFamilyAnimCMBAddress) { g_pcAnimationsTimeStamp = (int)pcFamilyAnimCMBAddress; pcFamilyAnimCMBAddress += 40; pcFamilyAnimCMBAddress += 4; PLD_fn_vReadAnimationsBanks(&pcFamilyAnimCMBAddress, ucBank, 1); } }
+                { unsigned char ucBank = p_stThisFamily->ucStorageBank; char szAnimName[40]; char* pcFamilyAnimCMBAddress; sprintf(szAnimName, "%s\\ani%d", _szLevelName, ucBank - 5); pcFamilyAnimCMBAddress = PLD_fn_pcLoadArea((unsigned char)ucBank + 102, szAnimName); if (pcFamilyAnimCMBAddress) { g_pcAnimationsTimeStamp = (int)pcFamilyAnimCMBAddress; pcFamilyAnimCMBAddress += 40; pcFamilyAnimCMBAddress += 4; PLD_fn_vReadAnimationsBanks(&pcFamilyAnimCMBAddress, ucBank, 1); } }
 
                 { static char s_szNumericName[4]; sprintf(s_szNumericName, "%d", ucFamilyId); SND_fn_bLoadBank(s_szNumericName); }
             }
         }
     }
+    p_stThisFamily = p_stThisFamily->hNextBrotherDyn;
+    i++;
+L_FamTest:
+    if (p_stThisFamily)
+        goto L_FamBody;
 
     printf("End of optional families load / Start of optional instances load\n");
 
-    for (i = 0, hCharacter = ((HIE_tdstSuperObject_*)gp_stDynamicWorld)->hFirstElementDyn; hCharacter; hCharacter = hCharacter->hNextBrotherDyn, i++)
+    i = 0;
+    hCharacter = ((HIE_tdstSuperObject_*)gp_stDynamicWorld)->hFirstElementDyn;
+    goto L_ChrTest;
+L_ChrBody:
     {
         if (hCharacter->ulTypeOfLinkedObject == 2)
         {
             if (hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->ucOptional & 1)
             {
-                ucCharacterId = fn_ucFindPersonalIdOfPersonalType(hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->otObjectPersonalType);
+                ucFamilyId = fn_ucFindPersonalIdOfPersonalType(hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->otObjectPersonalType);
 
-                if (GAM_fn_bIsActorToLoad(ucCharacterId))
+                if (GAM_fn_bIsActorToLoad(ucFamilyId))
                 {
-                    static char s_szNumericName[5] = "I"; sprintf(s_szNumericName + 1, "%d", ucCharacterId); SND_fn_bLoadBank(s_szNumericName);
+                    static char s_szNumericName[5] = "I"; sprintf(s_szNumericName + 1, "%d", ucFamilyId); SND_fn_bLoadBank(s_szNumericName);
                 }
             }
         }
     }
+    hCharacter = hCharacter->hNextBrotherDyn;
+    i++;
+L_ChrTest:
+    if (hCharacter)
+        goto L_ChrBody;
 
     printf("End of optional instances load\n");
 
@@ -5655,11 +5702,11 @@ void PLD_fn_vLoadLevel(char* _szLevelName)
 
     for (ulIndex = 0; ulIndex < u32NbSoundEventForTransit; ulIndex++)
     {
-        unsigned int* p_u32Event = (unsigned int*)(pcTransitStartCMBAddress + pu32SoundEventIdArray[ulIndex]); *p_u32Event = (unsigned int)SND_fn_pstGetBlockEventFromId(*p_u32Event);
+        unsigned int* p_u32Event = (unsigned int*)(pcTransitStartCMBAddress + pu32SoundEventIdArray[iTemp = ulIndex]); *p_u32Event = (unsigned int)SND_fn_pstGetBlockEventFromId(*p_u32Event);
     }
     for (ulIndex = u32NbSoundEventForTransit; ulIndex < u32NbSoundEvent; ulIndex++)
     {
-        unsigned int* p_u32Event = (unsigned int*)(pcStartCMBAddress + pu32SoundEventIdArray[ulIndex]); *p_u32Event = (unsigned int)SND_fn_pstGetBlockEventFromId(*p_u32Event);
+        unsigned int* p_u32Event = (unsigned int*)(pcStartCMBAddress + pu32SoundEventIdArray[iTemp = ulIndex]); *p_u32Event = (unsigned int)SND_fn_pstGetBlockEventFromId(*p_u32Event);
     }
 
     GLI_PrintDebugString("SND REFERENCE FINISHED");
@@ -5670,6 +5717,8 @@ void PLD_fn_vLoadLevel(char* _szLevelName)
     if (!fn_bDoTransition())
         g_stEngineStructure.stCineManager = (CINE_Manager_*)g_stNewCineManager;
 }
+#pragma opt_dead_assignments reset
+#pragma opt_propagation reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 1445–1482 */
 /* addr: 0x0012dd70  size: 240 bytes */
@@ -6038,7 +6087,7 @@ void PLD_fn_vClearAnimationsBanks(int iStartBank, int iNumberOfBanks)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PLD_fn_vReadAnimationsBanks(char** _ppcCMBAddress, int iStartBank, int iNumberOfBanks)
+void PLD_fn_vReadAnimationsBanks(char** _ppcCMBAddress, unsigned short iStartBank, int iNumberOfBanks)
 {
     char* pcCMBStartAddress;
     int iEndBank;
@@ -6194,23 +6243,187 @@ void PLD_fn_vReadAnimationsBanks(char** _ppcCMBAddress, int iStartBank, int iNum
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#define M_READ_STRUCTSP(dst, n) { if (dst) { unsigned int uN = p_stDef->u32ActualSize; memcpy((dst), pcCMBAddress, uN * (n)); } { unsigned int uS = p_stDef->u32ActualSize * (n); pcCMBAddress += uS; } }
+#define M_READ_STRUCTS(dst, id, n) { volatile stStructDef_* p_stDef = &g_stStructArray[id]; if (dst) { unsigned int uN = p_stDef->u32ActualSize; memcpy((dst), pcCMBAddress, uN * (n)); } { unsigned int uS = p_stDef->u32ActualSize * (n); pcCMBAddress += uS; } }
+
+#pragma opt_strength_reduction off
+#pragma opt_lifetimes off
 void PLD_fn_vLoadFix(void)
 {
-    int iTemp;
-    char LangageValue;
-    unsigned int* pu32SoundEventIdArray;
-    unsigned int u32NbSoundEvent;
-    HIE_tdstSuperObject_* h_SupObject;
-    unsigned int u32DataClass;
-    unsigned int u32NbCond;
-    unsigned int u32NbFunc;
-    unsigned int u32NbProc;
-    char* pcAnimCMBAddress;
-    char* pcCMBAddress;
-    char* pcStartCMBAddress;
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    char* pcStartCMBAddress;
+    char* volatile pcCMBAddress;
+    char* pcAnimCMBAddress;
+    unsigned int* volatile pu32SoundEventIdArray;
+    char* szFilename;
+    unsigned int u32NbProc;
+    unsigned int u32NbFunc;
+    unsigned int u32NbCond;
+    unsigned int u32DataClass;
+    unsigned int u32NbSoundEvent;
+    unsigned int* pulEvent;
+    unsigned int uwLanguage;
+    char szLanguage[32];
+    char* pcLanguage;
+    char* pcCur;
+    unsigned int ucNbFont;
+    char* pcDst;
+    unsigned int iIndex;
+    int iTemp;
+
+    PLD_vClearCop0Register24Sched();
+    ChosenLanguage = 1;
+    g_stEngineStructure.ucCurrentLanguage = *(unsigned char*)&ChosenLanguage;
+    printf("Loading fix\n");
+    GLI_PrintDebugString("Loading FIX");
+    GLI_vSetProgressCallBack(24000000);
+
+    szFilename = PLD_szLocationFromAreaId(0, 0);
+    strcpy(szLastFixLoaded, szFilename);
+    pcStartCMBAddress = pcCMBAddress = MNC_fn_pcLoadArea(szFilename, 0);
+    printf("fix@%08x\n", pcStartCMBAddress);
+
+    g_ulFixChecksum = MNC_fn_ulGetAreaChecksum();
+    printf("fix checksum: 0x%08x\n", g_ulFixChecksum);
+
+    u32NbProc = M_READ(unsigned int);
+    u32NbFunc = M_READ(unsigned int);
+    u32NbCond = M_READ(unsigned int);
+    if (u32NbProc != 876) printf("\nCurrent NbProc = %d instead of %d\n", 876, u32NbProc);
+    if (u32NbFunc != 446) printf("\nCurrent NbFunc = %d instead of %d\n", 446, u32NbFunc);
+    if (u32NbCond != 178) printf("\nCurrent Nbcond = %d instead of %d\n", 178, u32NbCond);
+
+    u32DataClass = M_READ(unsigned int);
+    if (u32DataClass != g_ulEngineClass)
+    {
+        printf("fix data class (0x%08x) not equal to engine class (0x%08x)\n", u32DataClass, g_ulEngineClass);
+        while (1)
+            ;
+    }
+
+    pcCMBAddress = (char*)(g_pcFixTimeStamp = (int)pcCMBAddress) + 40;
+    pcCMBAddress += 4;
+    pcCMBAddress += 4;
+    pcCMBAddress += 4;
+
+    M_READ_STRUCT(&FON_g_stGeneral, 171);
+
+    g_stEngineStructure.ucNumberOfLevels = M_READ(unsigned char);
+    g_stEngineStructure.ucNumberOfDemos = M_READ(unsigned char);
+    pcCur = pcCMBAddress;
+    iTemp = (int)pcCur & 3;
+    if (iTemp)
+        pcCMBAddress = pcCur + (4 - iTemp);
+
+    for (i = 0; i < g_stEngineStructure.ucNumberOfLevels; i++)
+        { volatile stStructDef_* p_stDef = &g_stStructArray[114]; iIndex = i * 30; pcDst = (char*)&g_stEngineStructure + iIndex + 0x707; M_READ_STRUCTSP(pcDst, 30); }
+    M_READ_STRUCTS(g_stEngineStructure.szFirstLevelName, 114, 30);
+    for (i = 0; i < g_stEngineStructure.ucNumberOfDemos; i++)
+        { volatile stStructDef_* p_stDef = &g_stStructArray[114]; iIndex = i * 12; pcDst = (char*)&g_stEngineStructure + iIndex + 0x189b; M_READ_STRUCTSP(pcDst, 12); }
+    for (i = 0; i < g_stEngineStructure.ucNumberOfDemos; i++)
+        { volatile stStructDef_* p_stDef = &g_stStructArray[114]; iIndex = i * 12; pcDst = (char*)&g_stEngineStructure + iIndex + 0x1a03; M_READ_STRUCTSP(pcDst, 12); }
+    pcCur = pcCMBAddress;
+    iTemp = (int)pcCur & 3;
+    if (iTemp)
+        pcCMBAddress = pcCur + (4 - iTemp);
+
+    g_stEngineStructure.ucNbLanguages = M_READ(unsigned int);
+    if (ChosenLanguage >= g_stEngineStructure.ucNbLanguages)
+    {
+        ChosenLanguage = 0;
+        g_stEngineStructure.ucCurrentLanguage = *(unsigned char*)&ChosenLanguage;
+    }
+    g_stEngineStructure.p_stLanguageTable = M_READ(tdstLanguageStructure_*);
+
+    gs_lNumberOfTextureToCreate = M_READ(int);
+    for (i = 0; i < gs_lNumberOfTextureToCreate; i++)
+        ((int*)gs_aDEFTableOfTextureAlreadyRead)[i] = M_READ(int);
+    for (i = 0; i < gs_lNumberOfTextureToCreate; i++)
+        ((int*)gs_aDEFTableOfTextureMemoryChannels)[i] = M_READ(int);
+    g_lNumberOfTexturesInFix = gs_lNumberOfTextureToCreate;
+
+    g_stFixInfo.ulNbObject = M_READ(unsigned int);
+    g_a_LinksOfSuperObjectInFix = (int)malloc(g_stFixInfo.ulNbObject * 0x18);
+    memset((void*)g_a_LinksOfSuperObjectInFix, 0, g_stFixInfo.ulNbObject * 0x18);
+    for (i = 0; i < g_stFixInfo.ulNbObject; i++)
+    {
+        tdstBrain_* h_Brain;
+        { void** ppv = &g_stFixInfo.a20_stObjects[i]; *ppv = M_READ(void*); }
+        h_Brain = ((HIE_tdstSuperObject_*)((void**)((char*)&g_stFixInfo + 4))[i])->hLinkedObject.p_stCharacter->h_Brain;
+        if (h_Brain)
+            memcpy((char*)g_a_LinksOfSuperObjectInFix + i * 0x18, (char*)h_Brain + 8, 0x18);
+    }
+
+    M_READ_STRUCT(&RND_g_stRandomStructure, 183);
+    GLI_PrintDebugString("INIT DATA SND");
+    PLD_vClearCop0Register24Open();
+    SND_fn_bInitDataLoadSnd("Rayman3");
+    SND_fn_vStartLoad();
+    SND_fn_bLoadBank("fixe");
+    SND_fn_vFinishLoad("fixe");
+
+    u32NbSoundEvent = M_READ(unsigned int);
+    printf("Nb Sound Events in fix = %d\n", u32NbSoundEvent);
+    pu32SoundEventIdArray = M_READ(unsigned int*);
+    i = 0;
+    goto L_SndTest;
+L_SndBody:
+    {
+        pulEvent = (unsigned int*)(pcStartCMBAddress + pu32SoundEventIdArray[iIndex = i]);
+        *pulEvent = (unsigned int)SND_fn_pstGetBlockEventFromId(*pulEvent);
+        i++;
+    }
+L_SndTest:
+    if (i < u32NbSoundEvent)
+        goto L_SndBody;
+
+    g_ucNbFontBitmap = M_READ(unsigned char);
+    g_NbFont = M_READ(unsigned char);
+    ucNbFont = g_NbFont;
+    M_READ_STRUCTS(&g_ListOfFonts, 213, ucNbFont);
+    pcCur = pcCMBAddress;
+    iTemp = (int)pcCur & 3;
+    if (iTemp)
+        pcCMBAddress = pcCur + (4 - iTemp);
+    for (i = 0; i < g_ucNbFontBitmap; i++)
+        ((int*)&g_TabBitmapFont)[i] = M_READ(int);
+
+    M_READ_STRUCT(&IPT_g_hInputStructure, 113);
+    M_READ_STRUCT(&g_st_3DOS_EntryActions, 111);
+
+    memcpy(&PLD_Saved_stNextVideoToPlay, &VID_g_stGeneralVideos.stNextVideoToPlay, 4);
+    M_READ_STRUCT(&VID_g_stGeneralVideos, 214);
+    if (PLD_Saved_stNextVideoToPlay.bPlayAfterLevel == 1 && PLD_Saved_stNextVideoToPlay.ucVideoNumber < VID_g_stGeneralVideos.ulTrueNumberOfVideos)
+    {
+        VID_g_stGeneralVideos.stNextVideoToPlay.ucVideoNumber = PLD_Saved_stNextVideoToPlay.ucVideoNumber;
+        VID_g_stGeneralVideos.stNextVideoToPlay.bPlayAfterLevel = PLD_Saved_stNextVideoToPlay.bPlayAfterLevel;
+        VID_g_stGeneralVideos.stNextVideoToPlay.bCanBeInterrupt = PLD_Saved_stNextVideoToPlay.bCanBeInterrupt;
+        VID_g_stGeneralVideos.stNextVideoToPlay.bLoop = PLD_Saved_stNextVideoToPlay.bLoop;
+    }
+
+    SND_fn_iSetNbMusicMarkerSlots(M_READ(int));
+    if (SND_fn_iGetNbMusicMarkerSlots())
+    {
+        SND_fn_p_stSetMusicMarkerSlots(pcCMBAddress);
+        pcCMBAddress += SND_fn_iGetNbMusicMarkerSlots() * 40;
+    }
+
+    M_READ_STRUCTS(&g_aBinDataForMenu, 223, 105);
+
+    pcAnimCMBAddress = M_READ(char*);
+    PLD_fn_vReadAnimationsBanks(&pcAnimCMBAddress, 0, 1);
+    GLI_PrintDebugString("FIX LOADED");
+
+    uwLanguage = (unsigned short)ChosenLanguage;
+    sprintf(szLanguage, "lang%d", uwLanguage);
+    pcLanguage = PLD_fn_pcLoadArea((_tdeAreaName)((unsigned short)uwLanguage + 207), szLanguage);
+    pcLanguage = (char*)(g_pcLanguageTimeStamp = (int)pcLanguage) + 40;
+    { stStructDef_* p_stDef; char* pcDest; p_stDef = &g_stStructArray[172]; pcDest = (char*)&FON_g_stGeneral.d_sLanguageArray[(unsigned short)uwLanguage]; if (pcDest) memcpy(pcDest, pcLanguage, p_stDef->u32ActualSize); }
+
+    HMU_fn_vSetMemoriesInFixMode();
 }
+#pragma opt_strength_reduction reset
+#pragma opt_lifetimes reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 564–601 */
 /* addr: 0x0012efb0  size: 172 bytes */

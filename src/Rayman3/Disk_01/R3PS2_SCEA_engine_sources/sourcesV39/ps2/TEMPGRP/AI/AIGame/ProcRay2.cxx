@@ -60,7 +60,6 @@ struct MTH4D_tdstMatrix_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
-    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -432,6 +431,12 @@ struct tdstEngineStructureFade_ {
     char _pad_00[0x360];
     char stViewport[0xc];
     unsigned int ulWidth;
+    char _pad_370[0x528 - 0x370];
+    unsigned int ulViewportWidth; /* +0x528 */
+    unsigned int ulViewportHeight; /* +0x52c */
+    unsigned int ulViewportX; /* +0x530 */
+    unsigned int _pad_534; /* +0x534 */
+    unsigned int ulViewportY; /* +0x538 */
 };
 extern "C" tdstEngineStructureFade_ g_stEngineStructure;
 extern "C" void HIE_fn_SO_vSetSuperimposedFlag(HIE_tdstSuperObject_*);
@@ -647,7 +652,7 @@ tdstNodeInterpret_* fn_p_stCode4InternalLights(HIE_tdstSuperObject_* p_SuperObjP
  * compare a candidate object's line table as an extra checkpoint.
  */
 #define DSG_VAR_INFO_FIELD(mind, id, field, type) \
-    (*(type*)((char*)&(*(mind)->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo->field + (id) * (int)sizeof(tdstDsgVarInfo_)))
+    (*(type*)((int)&(*(mind)->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo->field + (id) * (int)sizeof(tdstDsgVarInfo_)))
 tdstNodeInterpret_* fn_p_stCallSubRoutine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     AI_tdstMind_* p_stMind;
@@ -974,17 +979,100 @@ tdstNodeInterpret_* fn_p_stSetCharacterMaskedForResearch(HIE_tdstSuperObject_* p
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+struct tdstSuperObjectLinks_ {
+    HIE_tdstSuperObject_* h_SPORef; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* +0x4..0xf */
+    MAT_tdstTransformation_ POS_SPO_Init; /* +0x10 */
+    unsigned int ulNbLinkedObjects; /* +0x70 */
+    unsigned int ulNbLinksAllocated; /* +0x74 */
+    int LinkedObj; /* +0x78 */
+    void* eTypeOfLinkedObj; /* +0x7c */
+    MAT_tdstTransformation_* POS_InitOfLinkedObj; /* +0x80 */
+    int* ePersistenceOfLinkedObj; /* +0x84 */
+};
+extern "C" void MAT_fn_vSetIdentity(MAT_tdstTransformation_*);
+extern "C" void GAM_fn_vAddObjetToSOLinks(tdstSuperObjectLinks_*, void*, int, MAT_tdstTransformation_*, int);
+extern "C" unsigned int GAM_AlreadyReferencedInSOLinks(tdstSuperObjectLinks_*, void*);
+extern "C" void GAM_fn_vDeleteObjetFromSOLinks(tdstSuperObjectLinks_*, unsigned int);
+
+inline void AI_vCopyVectorFloats(MTH3D_tdstVector_* _p_stDst, MTH3D_tdstVector_* _p_stSrc)
+{
+    float _xX = _p_stSrc->xX;
+    float _xY = _p_stSrc->xY;
+    float _xZ = _p_stSrc->xZ;
+    _p_stDst->xX = _xX;
+    _p_stDst->xY = _xY;
+    _p_stDst->xZ = _xZ;
+}
+
+/* Whole-quadword copy of a transformation: C++ copies its fields one by one. */
+struct AI_tdstRawMatrix_ { MTH4D_tdstVector_ a_stRow[6]; };
+
 tdstNodeInterpret_* fn_p_stSOLEdit(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    HIE_tdstSuperObject_* hPerso;
-    WP_tdstWayPoint_* hWP;
-    MTH3D_tdstVector_ Vect;
-    unsigned int ulRef;
-    MAT_tdstTransformation_ MatrixInit;
-    tdstSuperObjectLinks_* hSOL;
-    tdstGetSetParam_ stParam;
     tdeProcedureId_ eProcId;
-    /* TODO: decompile from asm/... */
+    tdstGetSetParam_ stParam;
+    tdstSuperObjectLinks_* hSOL;
+    MAT_tdstTransformation_ MatrixInit;
+    unsigned int ulRef;
+    MTH3D_tdstVector_ Vect;
+    WP_tdstWayPoint_* hWP;
+    HIE_tdstSuperObject_* hPerso;
+
+    eProcId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    hSOL = (tdstSuperObjectLinks_*)stParam.uParam.pValue;
+    switch ((int)eProcId)
+    {
+    case 0x1e7:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        hPerso = fn_h_StandardGameGetSuperObject(((tdstEngineObject_*)stParam.uParam.pValue)->h_StandardGame);
+        *(AI_tdstRawMatrix_*)&MatrixInit = *(AI_tdstRawMatrix_*)hPerso->hLocalMatrix;
+        GAM_fn_vAddObjetToSOLinks(hSOL, (void*)hPerso->hLinkedObject.p_stCharacter, 2, &MatrixInit, 2);
+        return p_stTree;
+    case 0x1e8:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        hWP = (WP_tdstWayPoint_*)stParam.uParam.pValue;
+        AI_vCopyVectorFloats(&Vect, (MTH3D_tdstVector_*)hWP); /* m_stVertex, +0x0 */
+        MAT_fn_vSetIdentity(&MatrixInit);
+        if (MatrixInit.eType == MAT_eTransform_Identity)
+            MatrixInit.eType = MAT_eTransform_Translation;
+        {
+            int* piCol = (int*)&MatrixInit.stTransformMatrix.stCol_3;
+            piCol[0] = ((int*)&Vect)[0];
+            piCol[1] = ((int*)&Vect)[1];
+            piCol[2] = ((int*)&Vect)[2];
+        }
+        MatrixInit.stTransformMatrix.stCol_3.xW = 1.0f;
+        GAM_fn_vAddObjetToSOLinks(hSOL, hWP, 3, &MatrixInit, 2);
+        break;
+    case 0x1e9:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        hPerso = (HIE_tdstSuperObject_*)stParam.uParam.pValue;
+        *(AI_tdstRawMatrix_*)&MatrixInit = *(AI_tdstRawMatrix_*)hPerso->hLocalMatrix;
+        GAM_fn_vAddObjetToSOLinks(hSOL, hPerso, 1, &MatrixInit, 2);
+        break;
+    case 0x1ea:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        hPerso = fn_h_StandardGameGetSuperObject(((tdstEngineObject_*)stParam.uParam.pValue)->h_StandardGame);
+        ulRef = GAM_AlreadyReferencedInSOLinks(hSOL, (void*)hPerso->hLinkedObject.p_stCharacter);
+        if ((ulRef != 0) && (*(int*)((int)hSOL->ePersistenceOfLinkedObj - 4 + ulRef * 4) == 2))
+            GAM_fn_vDeleteObjetFromSOLinks(hSOL, ulRef);
+        break;
+    case 0x1eb:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        ulRef = GAM_AlreadyReferencedInSOLinks(hSOL, stParam.uParam.pValue);
+        if ((ulRef != 0) && (*(int*)((int)hSOL->ePersistenceOfLinkedObj - 4 + ulRef * 4) == 2))
+            GAM_fn_vDeleteObjetFromSOLinks(hSOL, ulRef);
+        break;
+    case 0x1ec:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        ulRef = GAM_AlreadyReferencedInSOLinks(hSOL, stParam.uParam.pValue);
+        if ((ulRef != 0) && (*(int*)((int)hSOL->ePersistenceOfLinkedObj - 4 + ulRef * 4) == 2))
+            GAM_fn_vDeleteObjetFromSOLinks(hSOL, ulRef);
+        break;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcRay2.cxx lines 3586–3736 */
@@ -1050,15 +1138,73 @@ tdstNodeInterpret_* fn_p_stSOLEdit(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNo
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" void fn_vAddSubAnimation(HIE_tdstSuperObject_*, unsigned int, unsigned char, unsigned int, unsigned char, float);
+extern "C" void fn_vRemoveSubAnimation(HIE_tdstSuperObject_*, unsigned int);
+extern "C" void fn_vStopSubAnimationAtEnd(HIE_tdstSuperObject_*, unsigned int);
+extern "C" void fn_vSetCustombitSubAnim(HIE_tdstSuperObject_*, unsigned int, unsigned int, int);
+
 tdstNodeInterpret_* fn_p_stSubAnimProc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    unsigned int ulBitNumber;
-    unsigned int ulLoopNb;
-    unsigned int ulSubAnimNumber;
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    tdstGetSetParam_ stParam;
     tdeProcedureId_ eProcedureId;
-    /* TODO: decompile from asm/... */
+    tdstGetSetParam_ stParam;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    unsigned int ulSubAnimNumber;
+    unsigned int ulLoopNb;
+    unsigned int ulBitNumber;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    ulSubAnimNumber = stParam.uParam.ulValue;
+    switch ((int)eProcedureId)
+    {
+    case 0x226:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        ulLoopNb = stParam.uParam.lValue ? 1 : 0;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        fn_vAddSubAnimation(hNewSuperObjPerso, ulSubAnimNumber, (unsigned char)ulLoopNb, stParam.uParam.ulValue, 0, 0.0f);
+        return p_stTree;
+    case 0x228:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        ulBitNumber = stParam.uParam.lValue ? 1 : 0;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        ulLoopNb = stParam.uParam.ulValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        fn_vAddSubAnimation(hNewSuperObjPerso, ulSubAnimNumber, (unsigned char)ulBitNumber, ulLoopNb, *(unsigned char*)&stParam.uParam.lValue, 0.0f);
+        return p_stTree;
+    case 0x227:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        ulBitNumber = stParam.uParam.lValue ? 1 : 0;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        ulLoopNb = stParam.uParam.ulValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        fn_vAddSubAnimation(hNewSuperObjPerso, ulSubAnimNumber, (unsigned char)ulBitNumber, ulLoopNb, 0, stParam.uParam.xValue);
+        return p_stTree;
+    case 0x229:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        ulBitNumber = stParam.uParam.lValue ? 1 : 0;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        ulLoopNb = stParam.uParam.ulValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        fn_vAddSubAnimation(hNewSuperObjPerso, ulSubAnimNumber, (unsigned char)ulBitNumber, ulLoopNb, 3, stParam.uParam.xValue);
+        return p_stTree;
+    case 0x22a:
+        fn_vRemoveSubAnimation(hNewSuperObjPerso, ulSubAnimNumber);
+        return p_stTree;
+    case 0x22c:
+        fn_vStopSubAnimationAtEnd(hNewSuperObjPerso, ulSubAnimNumber);
+        return p_stTree;
+    case 0x22b:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        ulBitNumber = stParam.uParam.ulValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        fn_vSetCustombitSubAnim(hNewSuperObjPerso, ulSubAnimNumber, ulBitNumber, stParam.uParam.lValue);
+        return p_stTree;
+    default:
+        fn_vOnAIErm_M_UpdateLastError(39, 0);
+        break;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcRay2.cxx lines 3548–3568 */
@@ -1178,11 +1324,62 @@ tdstNodeInterpret_* fn_p_stSetSOLCoordinates_SPOParam(HIE_tdstSuperObject_* p_Su
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+extern "C" void fn_vReinitSOL(tdstSuperObjectLinks_*);
+extern "C" void fn_v_TranslateSOL(tdstSuperObjectLinks_*, MTH3D_tdstVector_*);
+
 void fn_v_TranslateSOL_FromWhere(tdstSuperObjectLinks_* _hSOL, MTH3D_tdstVector_* _p_stCoordinatesAfter, tdeProcedureId_ _eProcId)
 {
-    MTH3D_tdstVector_ stPosition;
     MTH3D_tdstVector_ stRealTranslation;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_ stPosition;
+
+    MAT_tdstTransformation_* hMatrix = _hSOL->h_SPORef->hGlobalMatrix;
+    ((int*)&stPosition)[0] = ((int*)&hMatrix->stTransformMatrix.stCol_3)[0];
+    ((int*)&stPosition)[1] = ((int*)&hMatrix->stTransformMatrix.stCol_3)[1];
+    ((int*)&stPosition)[2] = ((int*)&hMatrix->stTransformMatrix.stCol_3)[2];
+    switch ((int)_eProcId)
+    {
+    case 0x1dd:
+    case 0x1e2:
+        stRealTranslation.xX = _p_stCoordinatesAfter->xX - stPosition.xX;
+        stRealTranslation.xY = _p_stCoordinatesAfter->xY - stPosition.xY;
+        stRealTranslation.xZ = _p_stCoordinatesAfter->xZ - stPosition.xZ;
+        break;
+    case 0x1de:
+    case 0x1e3:
+        ((int*)&stRealTranslation)[0] = ((int*)&_hSOL->POS_SPO_Init.stTransformMatrix.stCol_3)[0];
+        ((int*)&stRealTranslation)[1] = ((int*)&_hSOL->POS_SPO_Init.stTransformMatrix.stCol_3)[1];
+        ((int*)&stRealTranslation)[2] = ((int*)&_hSOL->POS_SPO_Init.stTransformMatrix.stCol_3)[2];
+        stRealTranslation.xX = stRealTranslation.xX + _p_stCoordinatesAfter->xX;
+        stRealTranslation.xY = *(&stRealTranslation.xY) + _p_stCoordinatesAfter->xY;
+        stRealTranslation.xZ = *(&stRealTranslation.xZ) + _p_stCoordinatesAfter->xZ;
+        stRealTranslation.xX = stRealTranslation.xX - stPosition.xX;
+        stRealTranslation.xY = *(&stRealTranslation.xY) - stPosition.xY;
+        stRealTranslation.xZ = *(&stRealTranslation.xZ) - stPosition.xZ;
+        break;
+    case 0x1df:
+    case 0x1e4:
+        ((int*)&stRealTranslation)[0] = ((int*)_p_stCoordinatesAfter)[0];
+        ((int*)&stRealTranslation)[1] = ((int*)_p_stCoordinatesAfter)[1];
+        ((int*)&stRealTranslation)[2] = ((int*)_p_stCoordinatesAfter)[2];
+        break;
+    case 0x1e0:
+    case 0x1e5:
+        ((int*)&stRealTranslation)[0] = ((int*)&_hSOL->POS_SPO_Init.stTransformMatrix.stCol_3)[0];
+        ((int*)&stRealTranslation)[1] = ((int*)&_hSOL->POS_SPO_Init.stTransformMatrix.stCol_3)[1];
+        ((int*)&stRealTranslation)[2] = ((int*)&_hSOL->POS_SPO_Init.stTransformMatrix.stCol_3)[2];
+        stRealTranslation.xX = stRealTranslation.xX - stPosition.xX;
+        stRealTranslation.xY = *(&stRealTranslation.xY) - stPosition.xY;
+        stRealTranslation.xZ = *(&stRealTranslation.xZ) - stPosition.xZ;
+        break;
+    case 0x1e1:
+    case 0x1e6:
+        fn_vReinitSOL(_hSOL);
+        return;
+    default:
+        return;
+    }
+    fn_v_TranslateSOL(_hSOL, &stRealTranslation);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcRay2.cxx lines 3247–3443 */
@@ -1295,23 +1492,251 @@ void fn_v_TranslateSOL_FromWhere(tdstSuperObjectLinks_* _hSOL, MTH3D_tdstVector_
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" void MAT_fn_vGetRotationVectorBaseI(MAT_tdstTransformation_*, MTH3D_tdstVector_*);
+extern "C" void MAT_fn_vGetRotationVectorBaseJ(MAT_tdstTransformation_*, MTH3D_tdstVector_*);
+extern "C" void MAT_fn_vGetRotationVectorBaseK(MAT_tdstTransformation_*, MTH3D_tdstVector_*);
+extern "C" void MAT_fn_vInvert(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hSrc);
+extern "C" void MAT_fn_vSetIdentity(MAT_tdstTransformation_*);
+extern "C" void HIE_fn_vComputeNewRelativeMatrix(HIE_tdstSuperObject_*);
+
+inline float SPO_xAbs(float _xValue)
+{
+    float _xResult;
+    asm { abs.s _xResult, _xValue }
+    return _xResult;
+}
+
+inline float SPO_xCross(float _xA, float _xB, float _xC, float _xD)
+{
+    float _xResult;
+    asm { mula.s _xA, _xB }
+    asm { msub.s _xResult, _xC, _xD }
+    return _xResult;
+}
+
+#define AI_M_vCopyWords(_d, _s) \
+    { \
+        int _iZ, _iY, _iX; \
+        _iX = ((int*)(_s))[0]; \
+        _iY = ((int*)(_s))[1]; \
+        _iZ = ((int*)(_s))[2]; \
+        ((int*)(_d))[2] = _iZ; \
+        ((int*)(_d))[0] = _iX; \
+        ((int*)(_d))[1] = _iY; \
+    }
+
 tdstNodeInterpret_* fn_p_stSPOChangeSighting(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    float xNorm;
-    MTH3D_tdstVector_ stTmpVector3;
-    MTH3D_tdstVector_ stTmpVector2;
-    MTH3D_tdstVector_ stTmpVector1;
-    tdeProcedureId_ eProcedureId;
-    unsigned char ucNbArrays;
-    MAT_tdstTransformation_ stMatrixBefore;
-    MAT_tdstTransformation_ stRotationMatrix;
-    MTH3D_tdstVector_ stV3;
-    MTH3D_tdstVector_ stV2;
-    MTH3D_tdstVector_ stV1;
-    MTH3D_tdstVector_ stSightVector;
-    HIE_tdstSuperObject_* hSpo;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hSpo;
+    MTH3D_tdstVector_ stSightVector;
+    MTH3D_tdstVector_ stV1;
+    MTH3D_tdstVector_ stV2;
+    MTH3D_tdstVector_ stV3;
+    MAT_tdstTransformation_ stRotationMatrix;
+    MAT_tdstTransformation_ stMatrixBefore;
+    unsigned char ucNbArrays;
+    tdeProcedureId_ eProcedureId;
+    MTH3D_tdstVector_ stTmpVector1;
+    MTH3D_tdstVector_ stTmpVector2;
+    MTH3D_tdstVector_ stTmpVector3;
+    float xNorm;
+    MAT_tdstTransformation_* hMatrix;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    hSpo = (HIE_tdstSuperObject_*)stParam.uParam.pValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    { unsigned long long* pDst = (unsigned long long*)&stSightVector; unsigned long long* pSrc = (unsigned long long*)&stParam.uParam; *pDst = *pSrc; ((float*)pDst)[2] = ((float*)pSrc)[2]; }
+    hMatrix = hSpo->hGlobalMatrix;
+    MAT_fn_vGetRotationVectorBaseI(hMatrix, &stV1);
+    MAT_fn_vGetRotationVectorBaseJ(hMatrix, &stV2);
+    MAT_fn_vGetRotationVectorBaseK(hMatrix, &stV3);
+    *(AI_tdstRawMatrix_*)&stMatrixBefore = *(AI_tdstRawMatrix_*)hMatrix;
+    switch ((int)eProcedureId)
+    {
+    case 0x203: case 0x204: case 0x205: case 0x206: case 0x207:
+        stSightVector.xZ = 0.0f;
+        if ((stSightVector.xX == 0.0f) && (stSightVector.xY == 0.0f) && (stSightVector.xZ == 0.0f))
+        {
+            stSightVector.xX = -stV2.xX;
+            stSightVector.xY = -stV2.xY;
+            stSightVector.xZ = -stV2.xZ;
+            stSightVector.xZ = 0.0f;
+            if ((stSightVector.xX == 0.0f) && (stSightVector.xY == 0.0f) && (stSightVector.xZ == 0.0f))
+                AI_M_vCopyWords(&stSightVector, &stV3);
+        }
+        {
+            float xSq;
+            float xX = stSightVector.xX;
+            float xY = stSightVector.xY;
+            float xZ = stSightVector.xZ;
+            MTH_SQR3_TO(xSq, xX, xY, xZ);
+            MTH_SQRT_TO(xNorm, xSq);
+            if (xNorm != 0.0f)
+            {
+                xNorm = 1.0f / xNorm;
+                stSightVector.xX = xNorm * xX;
+                stSightVector.xY = xNorm * stSightVector.xY;
+                stSightVector.xZ = xNorm * stSightVector.xZ;
+            }
+        }
+        stV1.xX = -stSightVector.xY;
+        stV1.xY = stSightVector.xX;
+        stV1.xZ = 0.0f;
+        stV2.xX = -stSightVector.xX;
+        stV2.xY = -stSightVector.xY;
+        stV2.xZ = 0.0f;
+        stV3.xX = 0.0f;
+        stV3.xY = 0.0f;
+        stV3.xZ = 1.0f;
+        MAT_fn_vSetRotationVectors(hMatrix, &stV1, &stV2, &stV3);
+        hSpo->lLastComputeFrame = HIE_gs_lCurrentFrame;
+        HIE_fn_vComputeNewRelativeMatrix(hSpo);
+        break;
+    case 0x208: case 0x209: case 0x20a: case 0x20b: case 0x20c:
+        if ((stSightVector.xX == 0.0f) && (stSightVector.xY == 0.0f) && (stSightVector.xZ == 0.0f))
+        {
+            stSightVector.xX = -stV2.xX;
+            stSightVector.xY = -stV2.xY;
+            stSightVector.xZ = -stV2.xZ;
+        }
+        {
+            float xSq;
+            float xX = stSightVector.xX;
+            float xY = stSightVector.xY;
+            float xZ = stSightVector.xZ;
+            MTH_SQR3_TO(xSq, xX, xY, xZ);
+            MTH_SQRT_TO(xNorm, xSq);
+            if (xNorm != 0.0f)
+            {
+                xNorm = 1.0f / xNorm;
+                stSightVector.xX = xNorm * xX;
+                stSightVector.xY = xNorm * stSightVector.xY;
+                stSightVector.xZ = xNorm * stSightVector.xZ;
+            }
+        }
+        if ((SPO_xAbs(stSightVector.xX) < 0.001f) && (SPO_xAbs(stSightVector.xY) < 0.001f))
+        {
+            stTmpVector1.xX = -stV2.xX;
+            stTmpVector1.xY = -stV2.xY;
+            stTmpVector1.xZ = -stV2.xZ;
+            if ((SPO_xAbs(stTmpVector1.xX) < 0.001f) && (SPO_xAbs(stTmpVector1.xY) < 0.001f))
+                AI_M_vCopyWords(&stTmpVector1, &stV3);
+        }
+        else
+        {
+            stTmpVector1.xX = 0.0f;
+            stTmpVector1.xY = 0.0f;
+            stTmpVector1.xZ = 1.0f;
+        }
+        stTmpVector2.xX = SPO_xCross(stTmpVector1.xY, stSightVector.xZ, stTmpVector1.xZ, stSightVector.xY);
+        stTmpVector2.xY = SPO_xCross(stTmpVector1.xZ, stSightVector.xX, stTmpVector1.xX, stSightVector.xZ);
+        stTmpVector2.xZ = SPO_xCross(stTmpVector1.xX, stSightVector.xY, stTmpVector1.xY, stSightVector.xX);
+        stTmpVector2.xZ = 0.0f;
+        stTmpVector3.xX = SPO_xCross(stSightVector.xY, stTmpVector2.xZ, stSightVector.xZ, stTmpVector2.xY);
+        stTmpVector3.xY = SPO_xCross(stSightVector.xZ, stTmpVector2.xX, stSightVector.xX, stTmpVector2.xZ);
+        stTmpVector3.xZ = SPO_xCross(stSightVector.xX, stTmpVector2.xY, stSightVector.xY, stTmpVector2.xX);
+        if (stV3.xX * stTmpVector3.xX + stV3.xY * stTmpVector3.xY + stV3.xZ * stTmpVector3.xZ < 0.0f)
+        {
+            stV1.xX = -stTmpVector2.xX;
+            stV1.xY = -stTmpVector2.xY;
+            stV1.xZ = -stTmpVector2.xZ;
+            stV2.xX = -stSightVector.xX;
+            stV2.xY = -stSightVector.xY;
+            stV2.xZ = -stSightVector.xZ;
+            stV3.xX = -stTmpVector3.xX;
+            stV3.xY = -stTmpVector3.xY;
+            stV3.xZ = -stTmpVector3.xZ;
+        }
+        else
+        {
+            AI_M_vCopyWords(&stV1, &stTmpVector2);
+            stV2.xX = -stSightVector.xX;
+            stV2.xY = -stSightVector.xY;
+            stV2.xZ = -stSightVector.xZ;
+            AI_M_vCopyWords(&stV3, &stTmpVector3);
+        }
+        {
+            float xSq;
+            float xX = stV1.xX;
+            float xY = stV1.xY;
+            float xZ = stV1.xZ;
+            MTH_SQR3_TO(xSq, xX, xY, xZ);
+            MTH_SQRT_TO(xNorm, xSq);
+            if (xNorm != 0.0f)
+            {
+                xNorm = 1.0f / xNorm;
+                stV1.xX = xNorm * xX;
+                stV1.xY = xNorm * stV1.xY;
+                stV1.xZ = xNorm * stV1.xZ;
+            }
+        }
+        {
+            float xSq;
+            float xX = stV2.xX;
+            float xY = stV2.xY;
+            float xZ = stV2.xZ;
+            MTH_SQR3_TO(xSq, xX, xY, xZ);
+            MTH_SQRT_TO(xNorm, xSq);
+            if (xNorm != 0.0f)
+            {
+                xNorm = 1.0f / xNorm;
+                stV2.xX = xNorm * xX;
+                stV2.xY = xNorm * stV2.xY;
+                stV2.xZ = xNorm * stV2.xZ;
+            }
+        }
+        {
+            float xSq;
+            float xX = stV3.xX;
+            float xY = stV3.xY;
+            float xZ = stV3.xZ;
+            MTH_SQR3_TO(xSq, xX, xY, xZ);
+            MTH_SQRT_TO(xNorm, xSq);
+            if (xNorm != 0.0f)
+            {
+                xNorm = 1.0f / xNorm;
+                stV3.xX = xNorm * xX;
+                stV3.xY = xNorm * stV3.xY;
+                stV3.xZ = xNorm * stV3.xZ;
+            }
+        }
+        MAT_fn_vSetRotationVectors(hMatrix, &stV1, &stV2, &stV3);
+        MAT_fn_vNormalize(hMatrix);
+        hSpo->lLastComputeFrame = HIE_gs_lCurrentFrame;
+        HIE_fn_vComputeNewRelativeMatrix(hSpo);
+        break;
+    }
+    MAT_fn_vInvert(&stMatrixBefore, &stMatrixBefore);
+    MAT_fn_vCompose(&stMatrixBefore, &stMatrixBefore, hMatrix);
+    MAT_fn_vNormalize(&stMatrixBefore);
+    MAT_fn_vGetRotationVectorBaseI(&stMatrixBefore, &stV1);
+    MAT_fn_vGetRotationVectorBaseJ(&stMatrixBefore, &stV2);
+    MAT_fn_vGetRotationVectorBaseK(&stMatrixBefore, &stV3);
+    MAT_fn_vSetIdentity(&stRotationMatrix);
+    MAT_fn_vSetRotationVectors(&stRotationMatrix, &stV1, &stV2, &stV3);
+    ucNbArrays = 0;
+    switch ((int)eProcedureId)
+    {
+    case 0x203: case 0x208:
+        return p_stTree;
+    case 0x204: case 0x209:
+        ucNbArrays = 1;
+        break;
+    case 0x205: case 0x20a:
+        ucNbArrays = 2;
+        break;
+    case 0x206: case 0x20b:
+        ucNbArrays = 3;
+        break;
+    case 0x207: case 0x20c:
+        ucNbArrays = 4;
+        break;
+    }
+    if (ucNbArrays > 4)
+        ucNbArrays = 4;
+    return fn_v_RotateObjectsLinkedToSpos(p_SuperObjPerso, p_stTree, &stParam, &stRotationMatrix, hSpo, ucNbArrays);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcRay2.cxx lines 3211–3235 */
@@ -1434,8 +1859,8 @@ extern "C" tdstNodeInterpret_* fn_p_stSPORotate(HIE_tdstSuperObject_* p_SuperObj
     case 0x200:
     case 0x201:
         p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        { unsigned long long* pDst = (unsigned long long*)&stAxis; unsigned long long* pSrc = (unsigned long long*)&stParam.uParam; *pDst = *pSrc; ((float*)pDst)[2] = ((float*)pSrc)[2]; }
-        { float x = stAxis.xX; float y = stAxis.xY; float z = stAxis.xZ; MTH_SQR3_TO(xNorm, x, y, z); MTH_SQRT_TO(xNorm, xNorm); if (xNorm != 0.0f) { xNorm = 1.0f / xNorm; stAxis.xX = xNorm * stAxis.xX; stAxis.xY = xNorm * stAxis.xY; stAxis.xZ = xNorm * stAxis.xZ; } }
+        { unsigned long long* pSrc = (unsigned long long*)&stParam.uParam; unsigned long long* pDst = (unsigned long long*)&stAxis; float z = ((float*)pSrc)[2]; *pDst = *pSrc; ((float*)pDst)[2] = z; }
+        { float x = stAxis.xX; float y = stAxis.xY; float z = stAxis.xZ; float xS; MTH_SQR3_TO(xS, x, y, z); MTH_SQRT_TO(xNorm, xS); if (xNorm != 0.0f) { xNorm = 1.0f / xNorm; stAxis.xX = xNorm * stAxis.xX; stAxis.xY = xNorm * stAxis.xY; stAxis.xZ = xNorm * stAxis.xZ; } }
         break;
     }
     fn_vComputeRotationMatrix(eProcId, xRelativeAngle, &stAxis, &stRotationMatrix);
@@ -1587,23 +2012,109 @@ extern "C" tdstNodeInterpret_* fn_p_stSPORotate(HIE_tdstSuperObject_* p_SuperObj
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" float cosf(float);
+extern "C" float sinf(float);
+extern "C" void MAT_fn_vSetIdentity(MAT_tdstTransformation_*);
+extern "C" void MAT_fn_vInvert(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hSrc);
+
+inline float AI_xAbs(float _xValue)
+{
+    float _xResult;
+    asm { abs.s _xResult, _xValue }
+    return _xResult;
+}
+
+inline float AI_xSqr2(float _xA, float _xB)
+{
+    float _xResult;
+    asm { mula.s _xA, _xA }
+    asm { madd.s _xResult, _xB, _xB }
+    return _xResult;
+}
+
 void fn_vComputeRotationMatrix(int iProcId, float xRelativeAngle, MTH3D_tdstVector_* pstAxis, MAT_tdstTransformation_* hRotationMatrix)
 {
-    MAT_tdstTransformation_ stAxisRotationMatrix;
-    MAT_tdstTransformation_ stAxisToLocalMatrix;
-    MAT_tdstTransformation_ stLocalToAxisMatrix;
-    MTH3D_tdstVector_ stAxis3;
-    MTH3D_tdstVector_ stAxis2;
-    float c;
-    float b;
-    float a;
-    MTH3D_tdstVector_ stV3;
-    MTH3D_tdstVector_ stV2;
-    MTH3D_tdstVector_ stV1;
-    float xSin;
     float xCos;
-    tdeProcedureId_ eProcId;
-    /* TODO: decompile from asm/... */
+    float xSin;
+    MTH3D_tdstVector_ stV1;
+    MTH3D_tdstVector_ stV2;
+    MTH3D_tdstVector_ stV3;
+    float a;
+    float b;
+    float c;
+    MTH3D_tdstVector_ stAxis2;
+    MTH3D_tdstVector_ stAxis3;
+    MAT_tdstTransformation_ stLocalToAxisMatrix;
+    MAT_tdstTransformation_ stAxisToLocalMatrix;
+    MAT_tdstTransformation_ stAxisRotationMatrix;
+
+    xCos = cosf(xRelativeAngle);
+    xSin = sinf(xRelativeAngle);
+    switch (iProcId)
+    {
+    case 0x1EE: case 0x1EF: case 0x1F0: case 0x1F1: case 0x1F2:
+        stV1.xX = 1.0f; stV1.xY = 0.0f; stV1.xZ = 0.0f;
+        stV2.xX = 0.0f; stV2.xY = xCos; stV2.xZ = xSin;
+        stV3.xX = 0.0f; stV3.xY = -xSin; stV3.xZ = xCos;
+        MAT_fn_vSetIdentity(hRotationMatrix);
+        MAT_fn_vSetRotationVectors(hRotationMatrix, &stV1, &stV2, &stV3);
+        break;
+    case 0x1F3: case 0x1F4: case 0x1F5: case 0x1F6: case 0x1F7:
+        stV1.xX = xCos; stV1.xY = 0.0f; stV1.xZ = -xSin;
+        stV2.xX = 0.0f; stV2.xY = 1.0f; stV2.xZ = 0.0f;
+        stV3.xX = xSin; stV3.xY = 0.0f; stV3.xZ = xCos;
+        MAT_fn_vSetIdentity(hRotationMatrix);
+        MAT_fn_vSetRotationVectors(hRotationMatrix, &stV1, &stV2, &stV3);
+        break;
+    case 0x1F8: case 0x1F9: case 0x1FA: case 0x1FB: case 0x1FC:
+        stV1.xX = xCos; stV1.xY = xSin; stV1.xZ = 0.0f;
+        stV2.xX = -xSin; stV2.xY = xCos; stV2.xZ = 0.0f;
+        stV3.xX = 0.0f; stV3.xY = 0.0f; stV3.xZ = 1.0f;
+        MAT_fn_vSetIdentity(hRotationMatrix);
+        MAT_fn_vSetRotationVectors(hRotationMatrix, &stV1, &stV2, &stV3);
+        break;
+    case 0x1FD: case 0x1FE: case 0x1FF: case 0x200: case 0x201:
+        a = pstAxis->xX;
+        b = pstAxis->xY;
+        c = pstAxis->xZ;
+        if ((AI_xAbs(a) < 0.001f) && (AI_xAbs(b) < 0.001f))
+        {
+            if (c > 0.0f)
+            {
+                stV1.xX = xCos; stV1.xY = xSin; stV1.xZ = 0.0f;
+                stV2.xX = -xSin; stV2.xY = xCos; stV2.xZ = 0.0f;
+                stV3.xX = 0.0f; stV3.xY = 0.0f; stV3.xZ = 1.0f;
+            }
+            else
+            {
+                stV1.xX = xCos; stV1.xY = -xSin; stV1.xZ = 0.0f;
+                stV2.xX = xSin; stV2.xY = xCos; stV2.xZ = 0.0f;
+                stV3.xX = 0.0f; stV3.xY = 0.0f; stV3.xZ = 1.0f;
+            }
+            MAT_fn_vSetIdentity(hRotationMatrix);
+            MAT_fn_vSetRotationVectors(hRotationMatrix, &stV1, &stV2, &stV3);
+        }
+        else
+        {
+            { float xN = -a; float xS = AI_xSqr2(a, b); stAxis2.xX = b; stAxis2.xY = xN; stAxis2.xZ = 0.0f;
+            stAxis3.xX = a * c; stAxis3.xY = b * c; stAxis3.xZ = -xS; }
+            MAT_fn_vSetIdentity(&stAxisToLocalMatrix);
+            MAT_fn_vSetRotationVectors(&stAxisToLocalMatrix, &stAxis2, &stAxis3, pstAxis);
+            MAT_fn_vNormalize(&stAxisToLocalMatrix);
+            MAT_fn_vSetIdentity(&stLocalToAxisMatrix);
+            MAT_fn_vInvert(&stLocalToAxisMatrix, &stAxisToLocalMatrix);
+            stV1.xX = xCos; stV1.xY = xSin; stV1.xZ = 0.0f;
+            stV2.xX = -xSin; stV2.xY = xCos; stV2.xZ = 0.0f;
+            stV3.xX = 0.0f; stV3.xY = 0.0f; stV3.xZ = 1.0f;
+            MAT_fn_vSetIdentity(&stAxisRotationMatrix);
+            MAT_fn_vSetRotationVectors(&stAxisRotationMatrix, &stV1, &stV2, &stV3);
+            MAT_fn_vSetIdentity(hRotationMatrix);
+            MAT_fn_vCompose(hRotationMatrix, &stAxisRotationMatrix, &stLocalToAxisMatrix);
+            MAT_fn_vCompose(hRotationMatrix, &stAxisToLocalMatrix, hRotationMatrix);
+            MAT_fn_vNormalize(hRotationMatrix);
+        }
+        break;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcRay2.cxx lines 2830–2930 */
@@ -1780,25 +2291,110 @@ tdstNodeInterpret_* fn_p_stSetSPOCoordinates(HIE_tdstSuperObject_* p_SuperObjPer
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" unsigned char fn_ucGetDsgVar(unsigned char, unsigned char, AI_tdstMind_*, tdstGetSetParam_*);
+extern "C" unsigned char fn_b_ObjectAlreadyTreatedWithSPO(int, int*, void*);
+extern "C" int WPG_fn_lNumberOfWaypointOfGraph(WP_tdstGraph_*);
+extern "C" WP_tdstWayPoint_* WPG_fn_hGetWaypointOfGraph(WP_tdstGraph_*, int, int*);
+extern "C" void fn_v_TranslateOneSpoImmediateTeleportation(HIE_tdstSuperObject_*, MTH3D_tdstVector_*);
+extern "C" void fn_v_TranslateOneWaypointImmediateTeleportation(WP_tdstWayPoint_*, MTH3D_tdstVector_*);
+extern "C" void fn_v_TranslateOneCharacterImmediateTeleportation(HIE_tdstSuperObject_*, MTH3D_tdstVector_*);
+extern "C" void fn_v_RotateOneSpoLinkedToOneSPO(HIE_tdstSuperObject_*, MAT_tdstTransformation_*);
+extern "C" void fn_v_RotateOneWayPointLinkedToOneSPO(WP_tdstWayPoint_*, MAT_tdstTransformation_*);
+extern "C" void fn_v_RotateOneCharacterLinkedToOneSPO(HIE_tdstSuperObject_*, MAT_tdstTransformation_*);
+
 tdstNodeInterpret_* fn_v_RotateObjectsLinkedToSpos(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stParam, MAT_tdstTransformation_* p_stLocalSPORotation, HIE_tdstSuperObject_* _hSpo, unsigned char _ucNbArrays)
 {
-    HIE_tdstSuperObject_* hPerso;
-    WP_tdstWayPoint_* hWP;
-    int TypeOfWP;
-    int nb;
-    int ulNumberOfWP;
-    WP_tdstGraph_* hGraph;
-    HIE_tdstSuperObject_* hLinkedSpo;
-    MAT_tdstTransformation_ Transformation;
-    tdeDsgVarTypeId_ eDsgVarTypeId;
-    unsigned char uc;
-    unsigned int ul;
-    unsigned int ulMyVarSize;
-    unsigned char ucVarId;
-    tdstArray_* p_stArray;
-    int NbOfTreatedObjects;
     int TreatedObjects[1020];
-    /* TODO: decompile from asm/... */
+    int NbOfTreatedObjects;
+    tdstArray_* p_stArray;
+    unsigned char ucVarId;
+    unsigned int ulMyVarSize;
+    unsigned int ul;
+    unsigned char uc;
+    tdeDsgVarTypeId_ eDsgVarTypeId;
+    MAT_tdstTransformation_ Transformation;
+    HIE_tdstSuperObject_* hLinkedSpo;
+    WP_tdstGraph_* hGraph;
+    int ulNumberOfWP;
+    int nb;
+    int TypeOfWP;
+    WP_tdstWayPoint_* hWP;
+    HIE_tdstSuperObject_* hPerso;
+
+    {
+        MAT_tdstTransformation_* hGlobal = _hSpo->hGlobalMatrix;
+        MAT_fn_vNormalize(hGlobal);
+        MAT_fn_vInvert(&Transformation, hGlobal);
+        MAT_fn_vCompose(&Transformation, p_stLocalSPORotation, &Transformation);
+        MAT_fn_vCompose(&Transformation, hGlobal, &Transformation);
+        MAT_fn_vNormalize(&Transformation);
+    }
+    NbOfTreatedObjects = 0;
+    TreatedObjects[NbOfTreatedObjects] = (int)_hSpo;
+    NbOfTreatedObjects++;
+    for (uc = 0; uc < _ucNbArrays; uc++)
+    {
+        ucVarId = p_stTree->uDummy.uParam.ucValue;
+        p_stTree++;
+        {
+            AI_tdstMind_* p_stMind = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind;
+            p_stArray = (tdstArray_*)((char*)p_stMind->p_stDsgMem->p_cDsgMemBuffer + DSG_VAR_INFO_FIELD(p_stMind, ucVarId, ulOffsetInDsgMem, unsigned int));
+        }
+        ulMyVarSize = p_stArray->ucMaxSize;
+        eDsgVarTypeId = p_stArray->eType;
+        for (ul = 0; ul < ulMyVarSize; ul++)
+        {
+            if (fn_ucGetDsgVar(ucVarId, (unsigned char)ul, p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind, p_stParam) == 1)
+            {
+                switch ((int)eDsgVarTypeId)
+                {
+                case 0x16:
+                    hLinkedSpo = (HIE_tdstSuperObject_*)p_stParam->uParam.pValue;
+                    if ((hLinkedSpo != NULL) && !fn_b_ObjectAlreadyTreatedWithSPO(NbOfTreatedObjects, TreatedObjects, hLinkedSpo))
+                    {
+                        TreatedObjects[NbOfTreatedObjects] = (int)hLinkedSpo;
+                        NbOfTreatedObjects++;
+                        fn_v_RotateOneSpoLinkedToOneSPO(hLinkedSpo, &Transformation);
+                    }
+                    break;
+                case 0x13:
+                    hWP = (WP_tdstWayPoint_*)p_stParam->uParam.pValue;
+                    if ((hWP != NULL) && !fn_b_ObjectAlreadyTreatedWithSPO(NbOfTreatedObjects, TreatedObjects, hWP))
+                    {
+                        TreatedObjects[NbOfTreatedObjects] = (int)hWP;
+                        NbOfTreatedObjects++;
+                        fn_v_RotateOneWayPointLinkedToOneSPO(hWP, &Transformation);
+                    }
+                    break;
+                case 0x14:
+                    hGraph = (WP_tdstGraph_*)p_stParam->uParam.pValue;
+                    if ((hGraph != NULL) && !fn_b_ObjectAlreadyTreatedWithSPO(NbOfTreatedObjects, TreatedObjects, hGraph))
+                    {
+                        TreatedObjects[NbOfTreatedObjects] = (int)hGraph;
+                        NbOfTreatedObjects++;
+                        ulNumberOfWP = WPG_fn_lNumberOfWaypointOfGraph(hGraph);
+                        for (nb = 0; nb < ulNumberOfWP; nb++)
+                        {
+                            hWP = WPG_fn_hGetWaypointOfGraph(hGraph, nb, &TypeOfWP);
+                            if (hWP != NULL)
+                                fn_v_RotateOneWayPointLinkedToOneSPO(hWP, &Transformation);
+                        }
+                    }
+                    break;
+                case 0x12:
+                    hPerso = fn_h_StandardGameGetSuperObject(((tdstEngineObject_*)p_stParam->uParam.pValue)->h_StandardGame);
+                    if ((hPerso != NULL) && !fn_b_ObjectAlreadyTreatedWithSPO(NbOfTreatedObjects, TreatedObjects, hPerso))
+                    {
+                        TreatedObjects[NbOfTreatedObjects] = (int)hPerso;
+                        NbOfTreatedObjects++;
+                        fn_v_RotateOneCharacterLinkedToOneSPO(hPerso, &Transformation);
+                    }
+                    break;
+                }
+            }
+        }
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcRay2.cxx lines 2550–2668 */
@@ -1867,22 +2463,88 @@ tdstNodeInterpret_* fn_v_RotateObjectsLinkedToSpos(HIE_tdstSuperObject_* p_Super
  */
 tdstNodeInterpret_* fn_v_TranslateObjectsLinkedToSpos(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stParam, MTH3D_tdstVector_* _p_stTranslation, HIE_tdstSuperObject_* _hSpo, unsigned char _ucNbArrays)
 {
-    HIE_tdstSuperObject_* hPerso;
-    WP_tdstWayPoint_* hWP;
-    int TypeOfWP;
-    int nb;
-    int ulNumberOfWP;
-    WP_tdstGraph_* hGraph;
-    HIE_tdstSuperObject_* hLinkedSpo;
-    tdeDsgVarTypeId_ eDsgVarTypeId;
-    unsigned char uc;
-    unsigned int ul;
-    unsigned int ulMyVarSize;
-    unsigned char ucVarId;
-    tdstArray_* p_stArray;
-    int NbOfTreatedObjects;
     int TreatedObjects[1020];
-    /* TODO: decompile from asm/... */
+    int NbOfTreatedObjects;
+    tdstArray_* p_stArray;
+    unsigned char ucVarId;
+    unsigned int ulMyVarSize;
+    unsigned int ul;
+    unsigned char uc;
+    tdeDsgVarTypeId_ eDsgVarTypeId;
+    HIE_tdstSuperObject_* hLinkedSpo;
+    WP_tdstGraph_* hGraph;
+    int ulNumberOfWP;
+    int nb;
+    int TypeOfWP;
+    WP_tdstWayPoint_* hWP;
+    HIE_tdstSuperObject_* hPerso;
+
+    NbOfTreatedObjects = 0;
+    TreatedObjects[NbOfTreatedObjects] = (int)_hSpo;
+    NbOfTreatedObjects++;
+    for (uc = 0; uc < _ucNbArrays; uc++)
+    {
+        ucVarId = p_stTree->uDummy.uParam.ucValue;
+        p_stTree++;
+        {
+            AI_tdstMind_* p_stMind = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind;
+            p_stArray = (tdstArray_*)((char*)p_stMind->p_stDsgMem->p_cDsgMemBuffer + DSG_VAR_INFO_FIELD(p_stMind, ucVarId, ulOffsetInDsgMem, unsigned int));
+        }
+        ulMyVarSize = p_stArray->ucMaxSize;
+        eDsgVarTypeId = p_stArray->eType;
+        for (ul = 0; ul < ulMyVarSize; ul++)
+        {
+            if (fn_ucGetDsgVar(ucVarId, (unsigned char)ul, p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind, p_stParam) == 1)
+            {
+                switch ((int)eDsgVarTypeId)
+                {
+                case 0x16:
+                    hLinkedSpo = (HIE_tdstSuperObject_*)p_stParam->uParam.pValue;
+                    if ((hLinkedSpo != NULL) && !fn_b_ObjectAlreadyTreatedWithSPO(NbOfTreatedObjects, TreatedObjects, hLinkedSpo))
+                    {
+                        TreatedObjects[NbOfTreatedObjects] = (int)hLinkedSpo;
+                        NbOfTreatedObjects++;
+                        fn_v_TranslateOneSpoImmediateTeleportation(hLinkedSpo, _p_stTranslation);
+                    }
+                    break;
+                case 0x13:
+                    hWP = (WP_tdstWayPoint_*)p_stParam->uParam.pValue;
+                    if ((hWP != NULL) && !fn_b_ObjectAlreadyTreatedWithSPO(NbOfTreatedObjects, TreatedObjects, hWP))
+                    {
+                        TreatedObjects[NbOfTreatedObjects] = (int)hWP;
+                        NbOfTreatedObjects++;
+                        fn_v_TranslateOneWaypointImmediateTeleportation(hWP, _p_stTranslation);
+                    }
+                    break;
+                case 0x14:
+                    hGraph = (WP_tdstGraph_*)p_stParam->uParam.pValue;
+                    if ((hGraph != NULL) && !fn_b_ObjectAlreadyTreatedWithSPO(NbOfTreatedObjects, TreatedObjects, hGraph))
+                    {
+                        TreatedObjects[NbOfTreatedObjects] = (int)hGraph;
+                        NbOfTreatedObjects++;
+                        ulNumberOfWP = WPG_fn_lNumberOfWaypointOfGraph(hGraph);
+                        for (nb = 0; nb < ulNumberOfWP; nb++)
+                        {
+                            hWP = WPG_fn_hGetWaypointOfGraph(hGraph, nb, &TypeOfWP);
+                            if (hWP != NULL)
+                                fn_v_TranslateOneWaypointImmediateTeleportation(hWP, _p_stTranslation);
+                        }
+                    }
+                    break;
+                case 0x12:
+                    hPerso = fn_h_StandardGameGetSuperObject(((tdstEngineObject_*)p_stParam->uParam.pValue)->h_StandardGame);
+                    if ((hPerso != NULL) && !fn_b_ObjectAlreadyTreatedWithSPO(NbOfTreatedObjects, TreatedObjects, hPerso))
+                    {
+                        TreatedObjects[NbOfTreatedObjects] = (int)hPerso;
+                        NbOfTreatedObjects++;
+                        fn_v_TranslateOneCharacterImmediateTeleportation(hPerso, _p_stTranslation);
+                    }
+                    break;
+                }
+            }
+        }
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcRay2.cxx lines 2504–2515 */
@@ -2062,21 +2724,111 @@ tdstNodeInterpret_* fn_p_stSetTooFarLimit(HIE_tdstSuperObject_* p_SuperObjPerso,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" char* fn_szGetStringFromTextOrStringParam(tdstGetSetParam_*);
+extern "C" int fn_lGetSubMapNumber(void);
+extern "C" char* fn_p_szGetLevelName(void);
+extern "C" char* Strchr(const char*, int);
+extern "C" char* strcpy(char*, const char*);
+extern "C" int strcasecmp(const char*, const char*);
+extern "C" long atol(const char*);
+extern "C" int sprintf(char*, const char*, ...);
+extern "C" void DEMO_fn_vAllocateMemory(void);
+extern "C" void DEMO_fn_vLoadFromFile(char*);
+extern "C" void DEMO_fn_vSetTestInputDuringDemo(int);
+extern "C" void DEMO_fn_vSetMapToLoadWhenDemoFinished(char*);
+extern "C" void DEMO_fn_vPrepareForRead(int);
+
 tdstNodeInterpret_* fn_p_stPlayDemo(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    char szName[40];
-    int lCurrentSubMapNumber;
-    char* p_cMapName;
-    int lSubMapNumber;
-    char* p_cNextMapName;
-    char* p_cDelimiter;
-    char szDemoCompleteFileName[40];
-    char szNextMapName[40];
-    int bTestInput;
-    char* szDemoFileName;
-    char szMapName[40];
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    char szMapName[40];
+    char* szDemoFileName;
+    int bTestInput;
+    char szNextMapName[40];
+    char szDemoCompleteFileName[40];
+    char* p_cDelimiter;
+    char* p_cNextMapName;
+    int lSubMapNumber;
+    char* p_cMapName;
+    int lCurrentSubMapNumber;
+    char szName[40];
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    p_cMapName = fn_szGetStringFromTextOrStringParam(&stParam);
+    lCurrentSubMapNumber = fn_lGetSubMapNumber();
+    if (*p_cMapName == '*')
+    {
+        strcpy(szMapName, fn_p_szGetLevelName());
+        p_cDelimiter = Strchr(p_cMapName, '$');
+        if ((p_cDelimiter == NULL) || (p_cDelimiter[1] == '*'))
+            lSubMapNumber = lCurrentSubMapNumber;
+        else
+            lSubMapNumber = (int)atol(p_cDelimiter + 1);
+    }
+    else
+    {
+        strcpy(szMapName, p_cMapName);
+        p_cDelimiter = Strchr(szMapName, '$');
+        if (p_cDelimiter == NULL)
+            lSubMapNumber = 0;
+        else
+        {
+            *p_cDelimiter = 0;
+            if (p_cDelimiter[1] == '*')
+                lSubMapNumber = lCurrentSubMapNumber;
+            else
+                lSubMapNumber = (int)atol(p_cDelimiter + 1);
+        }
+    }
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    szDemoFileName = fn_szGetStringFromTextOrStringParam(&stParam);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    bTestInput = *(unsigned char*)&stParam.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    p_cNextMapName = fn_szGetStringFromTextOrStringParam(&stParam);
+    if (*p_cNextMapName == '*')
+    {
+        p_cDelimiter = Strchr(p_cNextMapName, '$');
+        if ((p_cDelimiter == NULL) || (p_cDelimiter[1] == '*'))
+        {
+            if (lCurrentSubMapNumber != 0)
+                sprintf(szNextMapName, "%s$%02d", fn_p_szGetLevelName(), lCurrentSubMapNumber);
+            else
+                strcpy(szNextMapName, fn_p_szGetLevelName());
+        }
+        else
+            sprintf(szNextMapName, "%s%s", fn_p_szGetLevelName(), p_cDelimiter);
+    }
+    else
+    {
+        strcpy(szNextMapName, p_cNextMapName);
+        p_cDelimiter = Strchr(szNextMapName, '$');
+        if ((p_cDelimiter != NULL) && (p_cDelimiter[1] == '*'))
+        {
+            if (lCurrentSubMapNumber != 0)
+                sprintf(p_cDelimiter + 1, "%02d", lCurrentSubMapNumber);
+            else
+                *p_cDelimiter = 0;
+        }
+    }
+    if ((strcasecmp(szMapName, fn_p_szGetLevelName()) != 0) || (lSubMapNumber != lCurrentSubMapNumber))
+    {
+        if (lSubMapNumber != 0)
+            sprintf(szName, "%s$%02d", szMapName, lSubMapNumber);
+        else
+            strcpy(szName, szMapName);
+        GAM_fn_vAskToChangeLevel(szName, 1);
+    }
+    if (lSubMapNumber == 0)
+        sprintf(szDemoCompleteFileName, "Demos\\%s\\%s", szMapName, szDemoFileName);
+    else
+        sprintf(szDemoCompleteFileName, "Demos\\%s\\%02d\\%s", szMapName, lSubMapNumber, szDemoFileName);
+    DEMO_fn_vAllocateMemory();
+    DEMO_fn_vLoadFromFile(szDemoCompleteFileName);
+    DEMO_fn_vSetTestInputDuringDemo(bTestInput);
+    DEMO_fn_vSetMapToLoadWhenDemoFinished(szNextMapName);
+    DEMO_fn_vPrepareForRead(2);
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcRay2.cxx lines 2179–2224 */
@@ -2402,16 +3154,18 @@ int fni_CompareIntegerLess(void* _pv_Elem1, void* _pv_Elem2)
  */
 tdstNodeInterpret_* fn_p_stFixePositionFade(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    int lY;
     int lX;
+    int lY;
     float xX;
+    float xY;
     MTH3D_tdstVector_ stVertex;
     MTH3D_tdstVector_ stScale;
     HIE_tdstSuperObject_* hSpo;
     tdstGetSetParam_ stParam;
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
     hSpo = (HIE_tdstSuperObject_*)stParam.uParam.pValue;
-    HIE_fn_SO_vSetSuperimposedFlag(hSpo);
+    /* Permuter match: rereading the parameter keeps hSpo out of a0 across the load. */
+    HIE_fn_SO_vSetSuperimposedFlag((HIE_tdstSuperObject_*)stParam.uParam.pValue);
     fn_vRemoveObjectInSectorList(hSpo);
     MAT_tdstTransformation_* hMatrix = hSpo->hLocalMatrix;
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
@@ -2419,7 +3173,9 @@ tdstNodeInterpret_* fn_p_stFixePositionFade(HIE_tdstSuperObject_* p_SuperObjPers
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
     lY = stParam.uParam.lValue;
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    GLI_vGet3DVertexFromScreenPos((GLD_tdstViewportAttributes_*)g_stEngineStructure.stViewport, &stVertex, (float)lX / 100.0f, (float)lY / 100.0f, (float)stParam.uParam.lValue / 1000.0f);
+    xX = (float)lX / 100.0f;
+    xY = (float)lY / 100.0f;
+    GLI_vGet3DVertexFromScreenPos((GLD_tdstViewportAttributes_*)g_stEngineStructure.stViewport, &stVertex, xX, xY, (float)stParam.uParam.lValue / 1000.0f);
     if (hMatrix->eType == MAT_eTransform_Identity)
         hMatrix->eType = MAT_eTransform_Translation;
     /* Not original source: retail copies the vertex as three integer words. */
@@ -2521,17 +3277,93 @@ tdstNodeInterpret_* fn_p_stFreezeAnim(HIE_tdstSuperObject_* p_SuperObjPerso, tds
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" float acosf(float);
+extern "C" unsigned char fn_ucInternalTurn(HIE_tdstSuperObject_*, float);
+extern "C" void fn_vSetProcedureActionReturn(unsigned char);
+void MAT_fn_vApplyOnVertex(MTH3D_tdstVector_* VectDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* VectA);
+
+inline float AI_xMin(float _xA, float _xB)
+{
+    float _xResult;
+    asm { min.s _xResult, _xA, _xB }
+    return _xResult;
+}
+
+inline float AI_xCrossComponent(float _xA, float _xB, float _xC, float _xD)
+{
+    float _xResult;
+    asm { mula.s _xA, _xB }
+    asm { msub.s _xResult, _xC, _xD }
+    return _xResult;
+}
+
+inline float AI_xNorm3(float _xX, float _xY, float _xZ)
+{
+    float _xResult;
+    MTH_SQR3_TO(_xResult, _xX, _xY, _xZ);
+    MTH_SQRT_TO(_xResult, _xResult);
+    return _xResult;
+}
+
+inline float AI_xDot3(float _xAX, float _xBX, float _xAY, float _xBY, float _xAZ, float _xBZ)
+{
+    float _xResult;
+    asm { mula.s _xAX, _xBX }
+    asm { madda.s _xAY, _xBY }
+    asm { madd.s _xResult, _xAZ, _xBZ }
+    return _xResult;
+}
+
 tdstNodeInterpret_* fn_p_stTurnToPosition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    MAT_tdstTransformation_ mGlobalToPerso;
-    float xAngle;
-    float xMaxAngle;
-    MTH3D_tdstVector_ stLocalPosition;
-    MTH3D_tdstVector_ stPosition;
-    tdstGetSetParam_ stParam;
     tdeProcedureId_ eProcId;
-    /* TODO: decompile from asm/... */
+    tdstGetSetParam_ stParam;
+    MTH3D_tdstVector_ stPosition;
+    MTH3D_tdstVector_ stLocalPosition;
+    float xMaxAngle;
+    float xAngle;
+    MAT_tdstTransformation_ mGlobalToPerso;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    float xRefX;
+    float xRefY;
+
+    eProcId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcId), p_SuperObjPerso, &hNewSuperObjPerso);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    { unsigned long long* pSrc = (unsigned long long*)&stParam.uParam; unsigned long long* pDst = (unsigned long long*)&stPosition; float z = ((float*)pSrc)[2]; *pDst = *pSrc; ((float*)pDst)[2] = z; }
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    xMaxAngle = stParam.eType == 8 ? stParam.uParam.xValue : (float)stParam.uParam.lValue;
+    xMaxAngle = 0.017453292f * AI_xAbs(xMaxAngle);
+    MAT_fn_vInvert(&mGlobalToPerso, hNewSuperObjPerso->hGlobalMatrix);
+    MAT_fn_vApplyOnVertex(&stLocalPosition, &mGlobalToPerso, &stPosition);
+    xRefX = 0.0f;
+    if ((xRefX == stLocalPosition.xX) && (xRefX == stLocalPosition.xY) && (xRefX == stLocalPosition.xZ))
+        return p_stTree;
+    stLocalPosition.xZ = 0.0f;
+    xRefY = -1.0f;
+    {
+        float xX = stLocalPosition.xX;
+        float xY = stLocalPosition.xY;
+        float xZ = stLocalPosition.xZ;
+        float xSq;
+        float xDot = AI_xDot3(xRefX, xX, xRefY, xY, xRefX, xZ);
+        xSq = AI_xNorm3(xX, xY, xZ);
+        xDot = xDot / xSq; { float xA = acosf(xDot); xAngle = xA; }
+    }
+    if ((int)eProcId == 0x20F)
+        { float xK; float xK2; xK = xK2 = 0.001f; xMaxAngle = xMaxAngle * (xK * (float)*(unsigned int*)((char*)&g_stEngineStructure + 0xb8)); }
+    xAngle = AI_xMin(xAngle, xMaxAngle);
+    {
+        float xZ;
+        AI_xCrossComponent(xRefY, stLocalPosition.xZ, xRefX, stLocalPosition.xY);
+        AI_xCrossComponent(xRefX, stLocalPosition.xX, xRefX, stLocalPosition.xZ);
+        xZ = AI_xCrossComponent(xRefX, stLocalPosition.xY, xRefY, stLocalPosition.xX);
+        if (xZ < 0.0f)
+            xAngle = -xAngle;
+    }
+    if (!fn_ucInternalTurn(hNewSuperObjPerso, xAngle))
+        fn_vSetProcedureActionReturn(1);
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcRay2.cxx lines 1746–1780 */
@@ -2615,16 +3447,78 @@ tdstNodeInterpret_* fn_p_stTractionFactorProcedure(HIE_tdstSuperObject_* p_Super
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+struct WP_tdstGraphNode_ {
+    WP_tdstGraphNode_* hNextBrotherDyn; /* +0x0 */
+    WP_tdstGraphNode_* hPrevBrotherDyn; /* +0x4 */
+    void* hFatherDyn; /* +0x8 */
+    WP_tdstWayPoint_* m_hWayPoint; /* +0xc */
+    int m_lTypeOfWP; /* +0x10 */
+    int m_lTypeOfWPInit; /* +0x14 */
+    void* m_hListOfArc; /* +0x18 */
+};
+
+struct WP_tdstGraph_ {
+    WP_tdstGraphNode_* m_hFirstNode; /* +0x0, m_hListOfNode.hFirstElementDyn */
+};
+
 tdstNodeInterpret_* fn_p_stMiscProcOnTypeOfWP(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    int lValue;
-    WP_tdstGraphNode_* hTheNode;
-    WP_tdstGraphNode_* param0;
-    WP_tdstWayPoint_* hWayPoint;
-    WP_tdstGraph_* hGraph;
-    int lTypeOfWP;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    int lTypeOfWP;
+    WP_tdstGraph_* hGraph;
+    WP_tdstWayPoint_* hWayPoint;
+    WP_tdstGraphNode_* param0;
+    WP_tdstGraphNode_* hTheNode;
+    int lValue;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    hGraph = (WP_tdstGraph_*)stParam.uParam.pValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    hWayPoint = (WP_tdstWayPoint_*)stParam.uParam.pValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    lTypeOfWP = stParam.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    lValue = *(unsigned char*)&stParam.uParam.lValue;
+
+    hTheNode = NULL;
+    for (param0 = hGraph->m_hFirstNode; param0 != NULL; param0 = param0->hNextBrotherDyn)
+    {
+        if (param0->m_hWayPoint == hWayPoint)
+        {
+            hTheNode = param0;
+            break;
+        }
+    }
+    if (lValue == 2)
+    {
+        for (param0 = hGraph->m_hFirstNode; param0 != NULL; param0 = param0->hNextBrotherDyn)
+            param0->m_lTypeOfWP &= ~lTypeOfWP;
+    }
+    if (lValue == 3)
+    {
+        for (param0 = hGraph->m_hFirstNode; param0 != NULL; param0 = param0->hNextBrotherDyn)
+            param0->m_lTypeOfWP = 0;
+    }
+    if (hTheNode == NULL)
+        return p_stTree;
+    switch (lValue)
+    {
+        case 0:
+        case 2:
+            hTheNode->m_lTypeOfWP |= lTypeOfWP;
+            break;
+        case 1:
+        case 3:
+            hTheNode->m_lTypeOfWP = lTypeOfWP;
+            break;
+        case 4:
+            hTheNode->m_lTypeOfWP &= ~lTypeOfWP;
+            break;
+        case 5:
+            hTheNode->m_lTypeOfWP = 0;
+            break;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcRay2.cxx lines 1626–1638 */
@@ -2743,7 +3637,7 @@ inline void MAT_fn_vApplyOnVertex(MTH3D_tdstVector_* VectDest, MAT_tdstTransform
         nop
         sqc2 vf6, 0x0(p_stVtmp)
     }
-    *(unsigned int*)&VectDest->xX = *(unsigned int*)&Vtmp.xX; *(unsigned int*)&VectDest->xY = *(unsigned int*)&Vtmp.xY; *(unsigned int*)&VectDest->xZ = *(unsigned int*)&Vtmp.xZ;
+    ((unsigned int*)VectDest)[0] = *(unsigned int*)&Vtmp.xX; ((unsigned int*)VectDest)[1] = *(unsigned int*)&Vtmp.xY; ((unsigned int*)VectDest)[2] = *(unsigned int*)&Vtmp.xZ;
 }
 
 tdstNodeInterpret_* fn_p_stSetCoordWP(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
@@ -2919,23 +3813,147 @@ tdstNodeInterpret_* fn_p_stSetRadiusWP(HIE_tdstSuperObject_* p_SuperObjPerso, td
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" void HIE_fn_SO_vClearSuperimposedFlag(HIE_tdstSuperObject_*);
+extern "C" void* MC_fn_hGetFirstMainCharNode(void);
+extern "C" HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(void*);
+extern "C" void* fn_h_SectInfoGetCurrentSector(void*);
+extern "C" void fn_vSectInfoSetCurrentSector(void*, void*);
+extern "C" void fn_vInsertObjectInSectorList(void*, HIE_tdstSuperObject_*);
+extern "C" void HIE_fn_SO_SwitchSuperImposedTab(int);
+extern "C" void HIE_fn_SO_SetSuperImposedClipping(HIE_tdstSuperObject_*, int, int, int, int);
+extern "C" void HIE_fn_SO_UnsetSuperImposedClipping(HIE_tdstSuperObject_*);
+extern "C" void MEC_vInitTranslation(DNM_stDynamics*, HIE_tdstSuperObject_*, MTH3D_tdstVector_*);
+extern "C" void HIE_fn_vComputeNewRelativeMatrix(HIE_tdstSuperObject_*);
+extern "C" DNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_*);
+
 tdstNodeInterpret_* fn_p_stSPOSuperimpoed(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    float fRate;
-    int lBottom;
-    int lLeft;
-    int lTop;
-    DNM_stDynamics* p_stDynamics;
-    tdstDynam_* h_Dynam;
-    MTH3D_tdstVector_ stVertex;
-    int lY;
-    int lX;
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    unsigned char ViewportIndex;
-    unsigned char DestinationViewport;
-    tdstGetSetParam_ stParam;
     tdeProcedureId_ eProcedureId;
-    /* TODO: decompile from asm/... */
+    tdstGetSetParam_ stParam;
+    unsigned char DestinationViewport;
+    unsigned char ViewportIndex;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    int lX;
+    int lY;
+    MTH3D_tdstVector_ stVertex;
+    tdstDynam_* h_Dynam;
+    DNM_stDynamics* p_stDynamics;
+    int lTop;
+    int lLeft;
+    int lBottom;
+    float fRate;
+    MAT_tdstTransformation_* hMatrix;
+    MTH3D_tdstVector_ stLocalVertex;
+
+    DestinationViewport = 0xff;
+    ViewportIndex = 4;
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+    switch ((int)eProcedureId)
+    {
+    case 0x1ce:
+        HIE_fn_SO_vClearSuperimposedFlag(hNewSuperObjPerso);
+        {
+            HIE_tdstSuperObject_* hMain = MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode());
+            char* pOwner = (char*)hNewSuperObjPerso->hLinkedObject.p_stCharacter;
+            void* hSector = fn_h_SectInfoGetCurrentSector(*(void**)((char*)hMain->hLinkedObject.p_stCharacter + 0x20));
+            fn_vSectInfoSetCurrentSector(*(void**)(pOwner + 0x20), hSector);
+        }
+        fn_vInsertObjectInSectorList(fn_h_SectInfoGetCurrentSector(*(void**)((char*)hNewSuperObjPerso->hLinkedObject.p_stCharacter + 0x20)), hNewSuperObjPerso);
+        return p_stTree;
+    case 0x1cc:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        if (*(unsigned char*)&stParam.uParam.lValue == 0)
+        {
+            DestinationViewport = 0xff;
+            ViewportIndex = 4;
+        }
+        else
+        {
+            DestinationViewport = *(unsigned char*)&stParam.uParam.lValue - 1;
+            if (DestinationViewport >= 4)
+                DestinationViewport = 0;
+            ViewportIndex = DestinationViewport;
+        }
+    case 0x1cb:
+        h_Dynam = hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;
+        HIE_fn_SO_vSetSuperimposedFlag(hNewSuperObjPerso);
+        *((unsigned char*)p_SuperObjPerso + 0x7c) = DestinationViewport;
+        *((unsigned char*)hNewSuperObjPerso + 0x7c) = DestinationViewport;
+        fn_vRemoveObjectInSectorList(hNewSuperObjPerso);
+        hMatrix = hNewSuperObjPerso->hGlobalMatrix;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        lX = stParam.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        lY = stParam.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        {
+            float xX = (float)lX / 1000.0f;
+            float xY = (float)lY / 1000.0f;
+            GLI_vGet3DVertexFromScreenPos((GLD_tdstViewportAttributes_*)((char*)&g_stEngineStructure + ViewportIndex * 0x70 + 0x360), &stVertex, xX, xY, (float)stParam.uParam.lValue / 1000.0f);
+        }
+        if (hMatrix->eType == MAT_eTransform_Identity)
+            hMatrix->eType = MAT_eTransform_Translation;
+        *(int*)&hMatrix->stTransformMatrix.stCol_3.xX = ((int*)&stVertex)[0];
+        *(int*)&hMatrix->stTransformMatrix.stCol_3.xY = ((int*)&stVertex)[1];
+        *(int*)&hMatrix->stTransformMatrix.stCol_3.xZ = ((int*)&stVertex)[2];
+        hMatrix->stTransformMatrix.stCol_3.xW = 1.0f;
+        if ((h_Dynam != NULL) && ((p_stDynamics = fn_p_stDynamGetDynamics(h_Dynam)) != NULL))
+            MEC_vInitTranslation(p_stDynamics, hNewSuperObjPerso, &stVertex);
+        HIE_fn_vComputeNewRelativeMatrix(hNewSuperObjPerso);
+        return p_stTree;
+    case 0x1cd:
+        {
+        tdstDynam_* h_D2;
+        MAT_tdstTransformation_* hM2;
+        h_D2 = hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;
+        HIE_fn_SO_vSetSuperimposedFlag(hNewSuperObjPerso);
+        fn_vRemoveObjectInSectorList(hNewSuperObjPerso);
+        hM2 = hNewSuperObjPerso->hGlobalMatrix;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        stLocalVertex.xX = stParam.uParam.xValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        stLocalVertex.xY = stParam.uParam.xValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        stLocalVertex.xZ = stParam.uParam.xValue;
+        if (hM2->eType == MAT_eTransform_Identity)
+            hM2->eType = MAT_eTransform_Translation;
+        *(int*)&hM2->stTransformMatrix.stCol_3.xX = ((int*)&stLocalVertex)[0];
+        *(int*)&hM2->stTransformMatrix.stCol_3.xY = ((int*)&stLocalVertex)[1];
+        *(int*)&hM2->stTransformMatrix.stCol_3.xZ = ((int*)&stLocalVertex)[2];
+        hM2->stTransformMatrix.stCol_3.xW = 1.0f;
+        if ((h_D2 != NULL) && ((p_stDynamics = fn_p_stDynamGetDynamics(h_D2)) != NULL))
+            MEC_vInitTranslation(p_stDynamics, hNewSuperObjPerso, &stLocalVertex);
+        HIE_fn_vComputeNewRelativeMatrix(hNewSuperObjPerso);
+        return p_stTree;
+        }
+    case 0x1ed:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        HIE_fn_SO_SwitchSuperImposedTab(stParam.uParam.lValue);
+        return p_stTree;
+    case 0x1cf:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        lLeft = stParam.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        lTop = stParam.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        lBottom = stParam.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        fRate = (float)lLeft / 1000.0f;
+        lLeft = (int)((float)g_stEngineStructure.ulViewportX + (float)g_stEngineStructure.ulViewportWidth * fRate);
+        fRate = (float)lBottom / 1000.0f;
+        lBottom = (int)((float)g_stEngineStructure.ulViewportX + (float)g_stEngineStructure.ulViewportWidth * fRate);
+        lTop = (int)((float)g_stEngineStructure.ulViewportHeight * ((float)lTop / 1000.0f) + (float)g_stEngineStructure.ulViewportY);
+        fRate = (float)stParam.uParam.lValue / 1000.0f;
+        HIE_fn_SO_SetSuperImposedClipping(hNewSuperObjPerso, lLeft, lTop, lBottom, (int)((float)g_stEngineStructure.ulViewportY + (float)g_stEngineStructure.ulViewportHeight * fRate));
+        return p_stTree;
+    case 0x1d0:
+        HIE_fn_SO_UnsetSuperImposedClipping(hNewSuperObjPerso);
+        return p_stTree;
+    default:
+        fn_vOnAIErm_M_UpdateLastError(39, 0);
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcRay2.cxx lines 1302–1340 */
@@ -3792,29 +4810,136 @@ tdstNodeInterpret_* fn_p_stCode4ChangeCaractere(HIE_tdstSuperObject_* p_SuperObj
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" char* fn_szGetStringFromTextOrStringParam(tdstGetSetParam_*);
+extern "C" char* strcpy(char*, const char*);
+extern "C" int strcasecmp(const char*, const char*);
+extern "C" int sprintf(char*, const char*, ...);
+extern "C" char* Strcat(char*, const char*);
+
 tdstNodeInterpret_* fn_p_stCode4FormateTexte(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    char szTmpString[255];
-    char* pszStringDestination;
-    char* pszStringSource;
-    char* pszStringFormat;
-    unsigned int ulDay;
-    unsigned int ulMounth;
-    unsigned int ulYear;
-    unsigned int ulComplexDate;
-    unsigned int ulMilliSecond;
-    unsigned int ulSecond;
-    unsigned int ulMinute;
-    unsigned int ulHour;
-    unsigned int ulTimeInSec;
-    unsigned int ulTimeInMilli;
-    char szTempString[5];
-    char* p_szStringModif;
-    char* p_szStringDestination;
-    char* p_szStringFormat;
-    tdeProcedureId_ eProcedureId;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    tdeProcedureId_ eProcedureId;
+    char* p_szStringFormat;
+    char* p_szStringDestination;
+    char* p_szStringModif;
+    char szTempString[5];
+    unsigned int ulTimeInMilli;
+    unsigned int ulTimeInSec;
+    unsigned int ulHour;
+    unsigned int ulMinute;
+    unsigned int ulSecond;
+    unsigned int ulMilliSecond;
+    unsigned int ulComplexDate;
+    unsigned int ulYear;
+    unsigned int ulMounth;
+    unsigned int ulDay;
+    char* pszStringFormat;
+    char* pszStringSource;
+    char* pszStringDestination;
+    char szTmpString[255];
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    switch ((int)eProcedureId)
+    {
+    case 0x217:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        p_szStringModif = fn_szGetStringFromTextOrStringParam(&stParam);
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        ulComplexDate = stParam.uParam.ulValue;
+        ulTimeInSec = ulComplexDate / 1000;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        p_szStringFormat = fn_szGetStringFromTextOrStringParam(&stParam);
+        strcpy(p_szStringFormat, p_szStringModif);
+        ulHour = ulTimeInSec / 3600;
+        ulMinute = (ulTimeInSec % 3600) / 60;
+        ulSecond = ulTimeInSec % 60;
+        ulMilliSecond = ulComplexDate % 1000;
+        ulYear = ulComplexDate / 372;
+        ulMounth = (ulComplexDate / 31) % 12;
+        ulDay = ulComplexDate % 31;
+        while (*p_szStringFormat != 0)
+        {
+            if (*p_szStringFormat == '%')
+            {
+                if (((p_szStringFormat[1] == 'y') || (p_szStringFormat[1] == 'Y')) && ((p_szStringFormat[2] == 'y') || (p_szStringFormat[2] == 'Y')) && ((p_szStringFormat[3] == 'y') || (p_szStringFormat[3] == 'Y')))
+                {
+                    sprintf(szTempString, "%04d", ulYear);
+                    p_szStringFormat[0] = szTempString[0];
+                    p_szStringFormat[1] = szTempString[1];
+                    p_szStringFormat[2] = szTempString[2];
+                    p_szStringFormat[3] = szTempString[3];
+                }
+                if ((p_szStringFormat[1] == 'y') || (p_szStringFormat[1] == 'Y'))
+                {
+                    sprintf(szTempString, "%04d", ulYear);
+                    p_szStringFormat[0] = szTempString[2];
+                    p_szStringFormat[1] = szTempString[3];
+                }
+                else if ((p_szStringFormat[1] == 'n') || (p_szStringFormat[1] == 'N'))
+                {
+                    sprintf(szTempString, "%02d", ulMounth);
+                    p_szStringFormat[0] = szTempString[0];
+                    p_szStringFormat[1] = szTempString[1];
+                }
+                else if ((p_szStringFormat[1] == 'd') || (p_szStringFormat[1] == 'D'))
+                {
+                    sprintf(szTempString, "%02d", ulDay);
+                    p_szStringFormat[0] = szTempString[0];
+                    p_szStringFormat[1] = szTempString[1];
+                }
+                else if ((p_szStringFormat[1] == 'h') || (p_szStringFormat[1] == 'H'))
+                {
+                    sprintf(szTempString, "%02d", ulHour);
+                    p_szStringFormat[0] = szTempString[0];
+                    p_szStringFormat[1] = szTempString[1];
+                }
+                else if ((p_szStringFormat[1] == 'm') || (p_szStringFormat[1] == 'M'))
+                {
+                    sprintf(szTempString, "%02d", ulMinute);
+                    p_szStringFormat[0] = szTempString[0];
+                    p_szStringFormat[1] = szTempString[1];
+                }
+                else if ((p_szStringFormat[1] == 's') || (p_szStringFormat[1] == 'S'))
+                {
+                    sprintf(szTempString, "%02d", ulSecond);
+                    p_szStringFormat[0] = szTempString[0];
+                    p_szStringFormat[1] = szTempString[1];
+                }
+                else
+                {
+                    if (((p_szStringFormat[1] == 'i') || (p_szStringFormat[1] == 'I')) && ((p_szStringFormat[2] == 'i') || (p_szStringFormat[2] == 'I')))
+                    {
+                        sprintf(szTempString, "%03d", ulMilliSecond);
+                        p_szStringFormat[0] = szTempString[0];
+                        p_szStringFormat[1] = szTempString[1];
+                        p_szStringFormat[2] = szTempString[2];
+                    }
+                    else if ((p_szStringFormat[1] == 'i') || (p_szStringFormat[1] == 'I'))
+                    {
+                        sprintf(szTempString, "%02d", ulMilliSecond);
+                        p_szStringFormat[0] = szTempString[0];
+                        p_szStringFormat[1] = szTempString[1];
+                    }
+                }
+            }
+            p_szStringFormat++;
+        }
+        break;
+    case 0x216:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        pszStringSource = fn_szGetStringFromTextOrStringParam(&stParam);
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        pszStringFormat = fn_szGetStringFromTextOrStringParam(&stParam);
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        pszStringDestination = fn_szGetStringFromTextOrStringParam(&stParam);
+        strcpy(szTmpString, pszStringSource);
+        if (strcasecmp(pszStringFormat, "\\0") != 0)
+            Strcat(szTmpString, pszStringFormat);
+        strcpy(pszStringDestination, szTmpString);
+        break;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcRay2.cxx lines 252–271 */

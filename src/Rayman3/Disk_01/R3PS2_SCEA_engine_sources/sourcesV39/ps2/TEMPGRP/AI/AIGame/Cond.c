@@ -4819,6 +4819,8 @@ tdstNodeInterpret_* fn_p_stButtonCondition(HIE_tdstSuperObject_* p_SuperObjPerso
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma opt_lifetimes off
+#pragma opt_strength_reduction off
 tdstNodeInterpret_* fn_p_stBooleanCondition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
     int l1;
@@ -4873,6 +4875,8 @@ tdstNodeInterpret_* fn_p_stBooleanCondition(HIE_tdstSuperObject_* p_SuperObjPers
         return p_stTree;
     }
 }
+#pragma opt_lifetimes reset
+#pragma opt_strength_reduction reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond.c lines 115–242 */
 /* addr: 0x002111b0  size: 888 bytes */

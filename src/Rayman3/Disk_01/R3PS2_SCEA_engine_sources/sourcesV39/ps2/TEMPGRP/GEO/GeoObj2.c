@@ -300,19 +300,154 @@ struct GEO_tdstIndexedAlignedBox_ {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+
+/* The R5900 accumulator ops and sqrt.s have no C form under the baseline. */
+#define MTH_SQRT_TO(_result, _value) \
+    asm { .set noreorder; sqrt.s _result, _value; nop; nop; .set reorder }
+#define MTH_SQR3_TO(_result, _x, _y, _z) \
+    asm { mula.s _x, _x }                  \
+    asm { madda.s _y, _y }                 \
+    asm { madd.s _result, _z, _z }
+
+#define GEO_M_vFaceNormal(_n, _p0, _p1, _p2)                        \
+    {                                                                \
+        float _xAX = (_p1)->xX - (_p0)->xX;                          \
+        float _xAY = (_p1)->xY - (_p0)->xY;                          \
+        float _xAZ = (_p1)->xZ - (_p0)->xZ;                          \
+        float _xBX = (_p2)->xX - (_p0)->xX;                          \
+        float _xBY = (_p2)->xY - (_p0)->xY;                          \
+        float _xBZ = (_p2)->xZ - (_p0)->xZ;                          \
+        float _xResult;                                              \
+        asm { mula.s _xAY, _xBZ }                                    \
+        asm { msub.s _xResult, _xAZ, _xBY }                          \
+        (_n)->xX = _xResult;                                         \
+        asm { mula.s _xAZ, _xBX }                                    \
+        asm { msub.s _xResult, _xAX, _xBZ }                          \
+        (_n)->xY = _xResult;                                         \
+        asm { mula.s _xAX, _xBY }                                    \
+        asm { msub.s _xResult, _xAY, _xBX }                          \
+        (_n)->xZ = _xResult;                                         \
+    }
+
 void GEO_xComputeObjectNormals(GEO_tdstGeometricObject_* p_stObj)
 {
     float xNorm;
+    float xX, xY, xZ;
     short xIndex;
+    int xFace;
     GEO_tdstElementFaceMapDescriptors_* p_stLocalElementFMD;
     GEO_tdstFaceMapTriangle_* p_stITLastFMD;
-    GEO_tdstFaceMapTriangle_* param0;
+    GEO_tdstFaceMapTriangle_* p_stITCurFMD;
     GEO_tdstElementIndexedTriangles_* p_stLocalElement;
     GEO_tdstTripledIndex_* p_stITLast;
+    GEO_tdstTripledIndex_* p_stITCur;
     MTH3D_tdstVector_ stNormalResult;
     MTH3D_tdstVector_* p_stVertex;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_* p_stVertexLast;
+    MTH3D_tdstVector_* p_stV0;
+    MTH3D_tdstVector_* p_stV1;
+    MTH3D_tdstVector_* p_stV2;
+
+    if (p_stObj->xNbPoints != 0) {
+        if (p_stObj->d_stListOfPointsNormals == 0) {
+            p_stObj->d_stListOfPointsNormals = (MTH3D_tdstVector_*)HMU_fn_p_vMalloc(p_stObj->xNbPoints * sizeof(MTH3D_tdstVector_), 0);
+        }
+        p_stVertexLast = p_stObj->d_stListOfPointsNormals + p_stObj->xNbPoints;
+        for (p_stVertex = p_stObj->d_stListOfPointsNormals; p_stVertex < p_stVertexLast; p_stVertex++) {
+            p_stVertex->xX = 0;
+            p_stVertex->xY = 0;
+            p_stVertex->xZ = 0;
+        }
+        for (xIndex = 0; xIndex < p_stObj->xNbElements; xIndex++) {
+            if (((short*)p_stObj->d_xListOfElementsTypes)[xIndex] == 1) {
+                p_stLocalElement = ((GEO_tdstElementIndexedTriangles_**)p_stObj->d_stListOfElements)[xIndex];
+                p_stITLast = p_stLocalElement->d_stListOfFacesTripled + p_stLocalElement->xNbFaces;
+                xFace = 0;
+                for (p_stITCur = p_stLocalElement->d_stListOfFacesTripled; p_stITCur < p_stITLast; p_stITCur++, xFace++) {
+                    p_stV2 = &p_stObj->d_stListOfPoints[p_stITCur->a3_xIndex[2]];
+                    p_stV1 = &p_stObj->d_stListOfPoints[p_stITCur->a3_xIndex[1]];
+                    p_stV0 = &p_stObj->d_stListOfPoints[p_stITCur->a3_xIndex[0]];
+                    GEO_M_vFaceNormal(&stNormalResult, p_stV0, p_stV1, p_stV2);
+                    p_stLocalElement->d_stListOfFacesNormals[xFace] = stNormalResult;
+                    if (!(stNormalResult.xX == 0 && stNormalResult.xY == 0 && stNormalResult.xZ == 0)) {
+                        p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[0]].xX = stNormalResult.xX + p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[0]].xX;
+                        p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[0]].xY = stNormalResult.xY + p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[0]].xY;
+                        p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[0]].xZ = stNormalResult.xZ + p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[0]].xZ;
+                        p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[1]].xX = stNormalResult.xX + p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[1]].xX;
+                        p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[1]].xY = stNormalResult.xY + p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[1]].xY;
+                        p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[1]].xZ = stNormalResult.xZ + p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[1]].xZ;
+                        p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[2]].xX = stNormalResult.xX + p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[2]].xX;
+                        p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[2]].xY = stNormalResult.xY + p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[2]].xY;
+                        p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[2]].xZ = stNormalResult.xZ + p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[2]].xZ;
+                        xX = p_stLocalElement->d_stListOfFacesNormals[xFace].xX; xY = p_stLocalElement->d_stListOfFacesNormals[xFace].xY; xZ = p_stLocalElement->d_stListOfFacesNormals[xFace].xZ;
+                        MTH_SQR3_TO(xNorm, xX, xY, xZ);
+                        MTH_SQRT_TO(xNorm, xNorm);
+                        if (xNorm != 0) {
+                            xNorm = 1.0f / xNorm;
+                            p_stLocalElement->d_stListOfFacesNormals[xFace].xX = xNorm * xX;
+                            p_stLocalElement->d_stListOfFacesNormals[xFace].xY *= xNorm;
+                            p_stLocalElement->d_stListOfFacesNormals[xFace].xZ *= xNorm;
+                        }
+                    }
+                }
+            } else if (((short*)p_stObj->d_xListOfElementsTypes)[xIndex] == 2) {
+                p_stLocalElementFMD = ((GEO_tdstElementFaceMapDescriptors_**)p_stObj->d_stListOfElements)[xIndex];
+                p_stITLastFMD = p_stLocalElementFMD->d_stListOfFacesQuadrupled + p_stLocalElementFMD->xNbFaces;
+                xFace = 0;
+                for (p_stITCurFMD = p_stLocalElementFMD->d_stListOfFacesQuadrupled; p_stITCurFMD < p_stITLastFMD; p_stITCurFMD++, xFace++) {
+                    p_stV2 = &p_stObj->d_stListOfPoints[p_stITCurFMD->stFaceTripled.a3_xIndex[2]];
+                    p_stV1 = &p_stObj->d_stListOfPoints[p_stITCurFMD->stFaceTripled.a3_xIndex[1]];
+                    p_stV0 = &p_stObj->d_stListOfPoints[p_stITCurFMD->stFaceTripled.a3_xIndex[0]];
+                    GEO_M_vFaceNormal(&stNormalResult, p_stV0, p_stV1, p_stV2);
+                    p_stLocalElementFMD->d_stListOfFacesNormals[xFace] = stNormalResult;
+                    if (!(stNormalResult.xX == 0 && stNormalResult.xY == 0 && stNormalResult.xZ == 0)) {
+                        p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[0]].xX = stNormalResult.xX + p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[0]].xX;
+                        p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[0]].xY = stNormalResult.xY + p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[0]].xY;
+                        p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[0]].xZ = stNormalResult.xZ + p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[0]].xZ;
+                        p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[1]].xX = stNormalResult.xX + p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[1]].xX;
+                        p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[1]].xY = stNormalResult.xY + p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[1]].xY;
+                        p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[1]].xZ = stNormalResult.xZ + p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[1]].xZ;
+                        p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[2]].xX = stNormalResult.xX + p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[2]].xX;
+                        p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[2]].xY = stNormalResult.xY + p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[2]].xY;
+                        p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[2]].xZ = stNormalResult.xZ + p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[2]].xZ;
+                        xX = p_stLocalElementFMD->d_stListOfFacesNormals[xFace].xX; xY = p_stLocalElementFMD->d_stListOfFacesNormals[xFace].xY; xZ = p_stLocalElementFMD->d_stListOfFacesNormals[xFace].xZ;
+                        MTH_SQR3_TO(xNorm, xX, xY, xZ);
+                        MTH_SQRT_TO(xNorm, xNorm);
+                        if (xNorm != 0) {
+                            xNorm = 1.0f / xNorm;
+                            p_stLocalElementFMD->d_stListOfFacesNormals[xFace].xX = xNorm * xX;
+                            p_stLocalElementFMD->d_stListOfFacesNormals[xFace].xY *= xNorm;
+                            p_stLocalElementFMD->d_stListOfFacesNormals[xFace].xZ *= xNorm;
+                        }
+                    }
+                }
+            }
+        }
+        p_stVertexLast = p_stObj->d_stListOfPointsNormals + p_stObj->xNbPoints;
+        for (p_stVertex = p_stObj->d_stListOfPointsNormals; p_stVertex < p_stVertexLast; p_stVertex++) {
+            if (p_stVertex->xX == 0 && p_stVertex->xY == 0 && p_stVertex->xZ == 0) {
+                p_stVertex->xX = 0;
+                p_stVertex->xY = 0;
+                p_stVertex->xZ = 1.0f;
+            } else {
+                xX = p_stVertex->xX; xY = p_stVertex->xY; xZ = p_stVertex->xZ;
+                        MTH_SQR3_TO(xNorm, xX, xY, xZ);
+                MTH_SQRT_TO(xNorm, xNorm);
+                if (xNorm != 0) {
+                    xNorm = 1.0f / xNorm;
+                    p_stVertex->xX = xNorm * xX;
+                    p_stVertex->xY *= xNorm;
+                    p_stVertex->xZ *= xNorm;
+                }
+            }
+        }
+    }
 }
+
+GEO_tdstParallelBox_* GEO_hGetParallelBox(GEO_tdstGeometricObject_* hObject, short xParallelBox);
+short GEO_xGetParallelBoxIndexOfElement(GEO_tdstGeometricObject_* hObject, short xIndexElement);
+void GEO_fn_vUpdateMinMaxBoxWithPoint(MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, MTH3D_tdstVector_* p_stPoint);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj2.c lines 60–214 */
 /* addr: 0x002a30e0  size: 3568 bytes */
@@ -443,19 +578,158 @@ void GEO_xComputeObjectNormals(GEO_tdstGeometricObject_* p_stObj)
  */
 void GEO_vComputeObjectParallelBox(GEO_tdstGeometricObject_* hObject, short xParallelBox)
 {
-    int bInit;
-    GEO_tdstParallelBox_* hParallelBox;
-    MTH3D_tdstVector_* p_stMaxPoint;
-    MTH3D_tdstVector_* p_stMinPoint;
-    short xIndexInElement;
-    short xIndexElement;
-    GEO_tdstElementSprite_* p_stESt;
-    GEO_tdstElementCones_* p_stEC;
-    GEO_tdstElementAlignedBoxes_* p_stEAB;
-    GEO_tdstElementSpheres_* p_stES;
-    GEO_tdstElementLines_* p_stEL;
-    GEO_tdstElementPoints_* p_stEIP;
-    GEO_tdstElementFaceMapDescriptors_* p_stEFMD;
     GEO_tdstElementIndexedTriangles_* p_stETIT;
-    /* TODO: decompile from asm/... */
+    GEO_tdstElementFaceMapDescriptors_* p_stEFMD;
+    GEO_tdstElementPoints_* p_stEIP;
+    GEO_tdstElementLines_* p_stEL;
+    GEO_tdstElementSpheres_* p_stES;
+    GEO_tdstElementAlignedBoxes_* p_stEAB;
+    GEO_tdstElementCones_* p_stEC;
+    GEO_tdstElementSprite_* p_stESt;
+    short xIndexElement;
+    short xIndexInElement;
+    MTH3D_tdstVector_* p_stMinPoint;
+    MTH3D_tdstVector_* p_stMaxPoint;
+    GEO_tdstParallelBox_* hParallelBox;
+    int bInit;
+
+    bInit = 0;
+    hParallelBox = GEO_hGetParallelBox(hObject, xParallelBox);
+    if (hParallelBox) {
+        p_stMinPoint = (MTH3D_tdstVector_*)&hParallelBox->stMinPoint;
+        p_stMaxPoint = (MTH3D_tdstVector_*)&hParallelBox->stMaxPoint;
+        for (xIndexElement = 0; xIndexElement < hObject->xNbElements; xIndexElement++) {
+            if (GEO_xGetParallelBoxIndexOfElement(hObject, xIndexElement) != xParallelBox)
+                continue;
+            switch (((short*)hObject->d_xListOfElementsTypes)[xIndexElement]) {
+            case 1:
+                p_stETIT = ((GEO_tdstElementIndexedTriangles_**)hObject->d_stListOfElements)[xIndexElement];
+                if (!bInit && p_stETIT->xNbFaces) {
+                    *(int*)&p_stMinPoint->xX = *(int*)&hObject->d_stListOfPoints[p_stETIT->d_stListOfFacesTripled[0].a3_xIndex[0]].xX;
+                    *(int*)&p_stMinPoint->xY = *(int*)&hObject->d_stListOfPoints[p_stETIT->d_stListOfFacesTripled[0].a3_xIndex[0]].xY;
+                    *(int*)&p_stMinPoint->xZ = *(int*)&hObject->d_stListOfPoints[p_stETIT->d_stListOfFacesTripled[0].a3_xIndex[0]].xZ;
+                    *(int*)&p_stMaxPoint->xX = *(int*)&hObject->d_stListOfPoints[p_stETIT->d_stListOfFacesTripled[0].a3_xIndex[0]].xX;
+                    *(int*)&p_stMaxPoint->xY = *(int*)&hObject->d_stListOfPoints[p_stETIT->d_stListOfFacesTripled[0].a3_xIndex[0]].xY;
+                    *(int*)&p_stMaxPoint->xZ = *(int*)&hObject->d_stListOfPoints[p_stETIT->d_stListOfFacesTripled[0].a3_xIndex[0]].xZ;
+                    bInit = 1;
+                }
+                for (xIndexInElement = 0; xIndexInElement < p_stETIT->xNbFaces; xIndexInElement++) {
+                    GEO_fn_vUpdateMinMaxBoxWithPoint(p_stMinPoint, p_stMaxPoint, &hObject->d_stListOfPoints[p_stETIT->d_stListOfFacesTripled[xIndexInElement].a3_xIndex[0]]);
+                    GEO_fn_vUpdateMinMaxBoxWithPoint(p_stMinPoint, p_stMaxPoint, &hObject->d_stListOfPoints[p_stETIT->d_stListOfFacesTripled[xIndexInElement].a3_xIndex[1]]);
+                    GEO_fn_vUpdateMinMaxBoxWithPoint(p_stMinPoint, p_stMaxPoint, &hObject->d_stListOfPoints[p_stETIT->d_stListOfFacesTripled[xIndexInElement].a3_xIndex[2]]);
+                }
+                break;
+                    case 2:
+                p_stEFMD = ((GEO_tdstElementFaceMapDescriptors_**)hObject->d_stListOfElements)[xIndexElement];
+                if (!bInit && p_stEFMD->xNbFaces) {
+                    *(int*)&p_stMinPoint->xX = *(int*)&hObject->d_stListOfPoints[p_stEFMD->d_stListOfFacesQuadrupled[0].stFaceTripled.a3_xIndex[0]].xX;
+                    *(int*)&p_stMinPoint->xY = *(int*)&hObject->d_stListOfPoints[p_stEFMD->d_stListOfFacesQuadrupled[0].stFaceTripled.a3_xIndex[0]].xY;
+                    *(int*)&p_stMinPoint->xZ = *(int*)&hObject->d_stListOfPoints[p_stEFMD->d_stListOfFacesQuadrupled[0].stFaceTripled.a3_xIndex[0]].xZ;
+                    *(int*)&p_stMaxPoint->xX = *(int*)&hObject->d_stListOfPoints[p_stEFMD->d_stListOfFacesQuadrupled[0].stFaceTripled.a3_xIndex[0]].xX;
+                    *(int*)&p_stMaxPoint->xY = *(int*)&hObject->d_stListOfPoints[p_stEFMD->d_stListOfFacesQuadrupled[0].stFaceTripled.a3_xIndex[0]].xY;
+                    *(int*)&p_stMaxPoint->xZ = *(int*)&hObject->d_stListOfPoints[p_stEFMD->d_stListOfFacesQuadrupled[0].stFaceTripled.a3_xIndex[0]].xZ;
+                    bInit = 1;
+                }
+                for (xIndexInElement = 0; xIndexInElement < p_stEFMD->xNbFaces; xIndexInElement++) {
+                    GEO_fn_vUpdateMinMaxBoxWithPoint(p_stMinPoint, p_stMaxPoint, &hObject->d_stListOfPoints[p_stEFMD->d_stListOfFacesQuadrupled[xIndexInElement].stFaceTripled.a3_xIndex[0]]);
+                    GEO_fn_vUpdateMinMaxBoxWithPoint(p_stMinPoint, p_stMaxPoint, &hObject->d_stListOfPoints[p_stEFMD->d_stListOfFacesQuadrupled[xIndexInElement].stFaceTripled.a3_xIndex[1]]);
+                    GEO_fn_vUpdateMinMaxBoxWithPoint(p_stMinPoint, p_stMaxPoint, &hObject->d_stListOfPoints[p_stEFMD->d_stListOfFacesQuadrupled[xIndexInElement].stFaceTripled.a3_xIndex[2]]);
+                }
+                break;
+                    case 3:
+                p_stESt = ((GEO_tdstElementSprite_**)hObject->d_stListOfElements)[xIndexElement];
+                if (!bInit && p_stESt->xNbSprites) {
+                    *(int*)&p_stMinPoint->xX = *(int*)&hObject->d_stListOfPoints[p_stESt->d_stListOfSprites[0].xCenterPoint].xX;
+                    *(int*)&p_stMinPoint->xY = *(int*)&hObject->d_stListOfPoints[p_stESt->d_stListOfSprites[0].xCenterPoint].xY;
+                    *(int*)&p_stMinPoint->xZ = *(int*)&hObject->d_stListOfPoints[p_stESt->d_stListOfSprites[0].xCenterPoint].xZ;
+                    *(int*)&p_stMaxPoint->xX = *(int*)&hObject->d_stListOfPoints[p_stESt->d_stListOfSprites[0].xCenterPoint].xX;
+                    *(int*)&p_stMaxPoint->xY = *(int*)&hObject->d_stListOfPoints[p_stESt->d_stListOfSprites[0].xCenterPoint].xY;
+                    *(int*)&p_stMaxPoint->xZ = *(int*)&hObject->d_stListOfPoints[p_stESt->d_stListOfSprites[0].xCenterPoint].xZ;
+                    bInit = 1;
+                }
+                for (xIndexInElement = 0; xIndexInElement < p_stESt->xNbSprites; xIndexInElement++) {
+                    GEO_fn_vUpdateMinMaxBoxWithPoint(p_stMinPoint, p_stMaxPoint, &hObject->d_stListOfPoints[p_stESt->d_stListOfSprites[xIndexInElement].xCenterPoint]);
+                }
+                break;
+                    case 5:
+                p_stEIP = ((GEO_tdstElementPoints_**)hObject->d_stListOfElements)[xIndexElement];
+                if (!bInit && p_stEIP->xNbPoints) {
+                    *(int*)&p_stMinPoint->xX = *(int*)&hObject->d_stListOfPoints[((short*)p_stEIP->d_xListOfPointIndex)[0]].xX;
+                    *(int*)&p_stMinPoint->xY = *(int*)&hObject->d_stListOfPoints[((short*)p_stEIP->d_xListOfPointIndex)[0]].xY;
+                    *(int*)&p_stMinPoint->xZ = *(int*)&hObject->d_stListOfPoints[((short*)p_stEIP->d_xListOfPointIndex)[0]].xZ;
+                    *(int*)&p_stMaxPoint->xX = *(int*)&hObject->d_stListOfPoints[((short*)p_stEIP->d_xListOfPointIndex)[0]].xX;
+                    *(int*)&p_stMaxPoint->xY = *(int*)&hObject->d_stListOfPoints[((short*)p_stEIP->d_xListOfPointIndex)[0]].xY;
+                    *(int*)&p_stMaxPoint->xZ = *(int*)&hObject->d_stListOfPoints[((short*)p_stEIP->d_xListOfPointIndex)[0]].xZ;
+                    bInit = 1;
+                }
+                for (xIndexInElement = 0; xIndexInElement < p_stEIP->xNbPoints; xIndexInElement++) {
+                    GEO_fn_vUpdateMinMaxBoxWithPoint(p_stMinPoint, p_stMaxPoint, &hObject->d_stListOfPoints[((short*)p_stEIP->d_xListOfPointIndex)[xIndexInElement]]);
+                }
+                break;
+                    case 6:
+                p_stEL = ((GEO_tdstElementLines_**)hObject->d_stListOfElements)[xIndexElement];
+                if (!bInit && p_stEL->xNbLines) {
+                    *(int*)&p_stMinPoint->xX = *(int*)&hObject->d_stListOfPoints[p_stEL->d_stListOfLineIndex[0].a2_xIndex[0]].xX;
+                    *(int*)&p_stMinPoint->xY = *(int*)&hObject->d_stListOfPoints[p_stEL->d_stListOfLineIndex[0].a2_xIndex[0]].xY;
+                    *(int*)&p_stMinPoint->xZ = *(int*)&hObject->d_stListOfPoints[p_stEL->d_stListOfLineIndex[0].a2_xIndex[0]].xZ;
+                    *(int*)&p_stMaxPoint->xX = *(int*)&hObject->d_stListOfPoints[p_stEL->d_stListOfLineIndex[0].a2_xIndex[0]].xX;
+                    *(int*)&p_stMaxPoint->xY = *(int*)&hObject->d_stListOfPoints[p_stEL->d_stListOfLineIndex[0].a2_xIndex[0]].xY;
+                    *(int*)&p_stMaxPoint->xZ = *(int*)&hObject->d_stListOfPoints[p_stEL->d_stListOfLineIndex[0].a2_xIndex[0]].xZ;
+                    bInit = 1;
+                }
+                for (xIndexInElement = 0; xIndexInElement < p_stEL->xNbLines; xIndexInElement++) {
+                    GEO_fn_vUpdateMinMaxBoxWithPoint(p_stMinPoint, p_stMaxPoint, &hObject->d_stListOfPoints[p_stEL->d_stListOfLineIndex[xIndexInElement].a2_xIndex[0]]);
+                    GEO_fn_vUpdateMinMaxBoxWithPoint(p_stMinPoint, p_stMaxPoint, &hObject->d_stListOfPoints[p_stEL->d_stListOfLineIndex[xIndexInElement].a2_xIndex[1]]);
+                }
+                break;
+                    case 7:
+                p_stES = ((GEO_tdstElementSpheres_**)hObject->d_stListOfElements)[xIndexElement];
+                if (!bInit && p_stES->xNbSpheres) {
+                    *(int*)&p_stMinPoint->xX = *(int*)&hObject->d_stListOfPoints[p_stES->d_stListOfSpheres[0].xCenterPoint].xX;
+                    *(int*)&p_stMinPoint->xY = *(int*)&hObject->d_stListOfPoints[p_stES->d_stListOfSpheres[0].xCenterPoint].xY;
+                    *(int*)&p_stMinPoint->xZ = *(int*)&hObject->d_stListOfPoints[p_stES->d_stListOfSpheres[0].xCenterPoint].xZ;
+                    *(int*)&p_stMaxPoint->xX = *(int*)&hObject->d_stListOfPoints[p_stES->d_stListOfSpheres[0].xCenterPoint].xX;
+                    *(int*)&p_stMaxPoint->xY = *(int*)&hObject->d_stListOfPoints[p_stES->d_stListOfSpheres[0].xCenterPoint].xY;
+                    *(int*)&p_stMaxPoint->xZ = *(int*)&hObject->d_stListOfPoints[p_stES->d_stListOfSpheres[0].xCenterPoint].xZ;
+                    bInit = 1;
+                }
+                for (xIndexInElement = 0; xIndexInElement < p_stES->xNbSpheres; xIndexInElement++) {
+                    GEO_fn_vUpdateMinMaxBoxWithPoint(p_stMinPoint, p_stMaxPoint, &hObject->d_stListOfPoints[p_stES->d_stListOfSpheres[xIndexInElement].xCenterPoint]);
+                }
+                break;
+                    case 8:
+                p_stEAB = ((GEO_tdstElementAlignedBoxes_**)hObject->d_stListOfElements)[xIndexElement];
+                if (!bInit && p_stEAB->xNbAlignedBoxes) {
+                    *(int*)&p_stMinPoint->xX = *(int*)&hObject->d_stListOfPoints[p_stEAB->d_stListOfAlignedBoxes[0].xMinPoint].xX;
+                    *(int*)&p_stMinPoint->xY = *(int*)&hObject->d_stListOfPoints[p_stEAB->d_stListOfAlignedBoxes[0].xMinPoint].xY;
+                    *(int*)&p_stMinPoint->xZ = *(int*)&hObject->d_stListOfPoints[p_stEAB->d_stListOfAlignedBoxes[0].xMinPoint].xZ;
+                    *(int*)&p_stMaxPoint->xX = *(int*)&hObject->d_stListOfPoints[p_stEAB->d_stListOfAlignedBoxes[0].xMinPoint].xX;
+                    *(int*)&p_stMaxPoint->xY = *(int*)&hObject->d_stListOfPoints[p_stEAB->d_stListOfAlignedBoxes[0].xMinPoint].xY;
+                    *(int*)&p_stMaxPoint->xZ = *(int*)&hObject->d_stListOfPoints[p_stEAB->d_stListOfAlignedBoxes[0].xMinPoint].xZ;
+                    bInit = 1;
+                }
+                for (xIndexInElement = 0; xIndexInElement < p_stEAB->xNbAlignedBoxes; xIndexInElement++) {
+                    GEO_fn_vUpdateMinMaxBoxWithPoint(p_stMinPoint, p_stMaxPoint, &hObject->d_stListOfPoints[p_stEAB->d_stListOfAlignedBoxes[xIndexInElement].xMinPoint]);
+                    GEO_fn_vUpdateMinMaxBoxWithPoint(p_stMinPoint, p_stMaxPoint, &hObject->d_stListOfPoints[p_stEAB->d_stListOfAlignedBoxes[xIndexInElement].xMaxPoint]);
+                }
+                break;
+                    case 9:
+                p_stEC = ((GEO_tdstElementCones_**)hObject->d_stListOfElements)[xIndexElement];
+                if (!bInit && p_stEC->xNbCones) {
+                    *(int*)&p_stMinPoint->xX = *(int*)&hObject->d_stListOfPoints[p_stEC->d_stListOfCones[0].xTopPoint].xX;
+                    *(int*)&p_stMinPoint->xY = *(int*)&hObject->d_stListOfPoints[p_stEC->d_stListOfCones[0].xTopPoint].xY;
+                    *(int*)&p_stMinPoint->xZ = *(int*)&hObject->d_stListOfPoints[p_stEC->d_stListOfCones[0].xTopPoint].xZ;
+                    *(int*)&p_stMaxPoint->xX = *(int*)&hObject->d_stListOfPoints[p_stEC->d_stListOfCones[0].xTopPoint].xX;
+                    *(int*)&p_stMaxPoint->xY = *(int*)&hObject->d_stListOfPoints[p_stEC->d_stListOfCones[0].xTopPoint].xY;
+                    *(int*)&p_stMaxPoint->xZ = *(int*)&hObject->d_stListOfPoints[p_stEC->d_stListOfCones[0].xTopPoint].xZ;
+                    bInit = 1;
+                }
+                for (xIndexInElement = 0; xIndexInElement < p_stEC->xNbCones; xIndexInElement++) {
+                    GEO_fn_vUpdateMinMaxBoxWithPoint(p_stMinPoint, p_stMaxPoint, &hObject->d_stListOfPoints[p_stEC->d_stListOfCones[xIndexInElement].xTopPoint]);
+                    GEO_fn_vUpdateMinMaxBoxWithPoint(p_stMinPoint, p_stMaxPoint, &hObject->d_stListOfPoints[p_stEC->d_stListOfCones[xIndexInElement].xBasePoint]);
+                }
+                break;
+            }
+        }
+    }
 }

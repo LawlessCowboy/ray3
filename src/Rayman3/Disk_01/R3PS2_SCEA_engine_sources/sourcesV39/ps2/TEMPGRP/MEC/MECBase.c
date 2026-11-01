@@ -1220,6 +1220,15 @@ float acosf(float x);
 #define MTH3D_M_vCopyVector(_d, _s) { *(int*)&(_d)->xX = *(int*)&(_s)->xX; *(int*)&(_d)->xY = *(int*)&(_s)->xY; *(int*)&(_d)->xZ = *(int*)&(_s)->xZ; }
 #define MTH3D_M_vSetVectorElements(_d, _x, _y, _z) { (_d)->xX = (_x); (_d)->xY = (_y); (_d)->xZ = (_z); }
 
+/* Retail copies these vectors word by word with the local's offset folded into
+ * the access and the pointed-to member's address held in a register. */
+inline void MEC_vCopyVectorWords(MTH3D_tdstVector_* _p_stDst, MTH3D_tdstVector_* _p_stSrc)
+{
+    ((int*)_p_stDst)[0] = ((int*)_p_stSrc)[0];
+    ((int*)_p_stDst)[1] = ((int*)_p_stSrc)[1];
+    ((int*)_p_stDst)[2] = ((int*)_p_stSrc)[2];
+}
+
 /* R5900 accumulator and min.s/max.s forms have no C equivalent under the
  * baseline (see MECOpt.c and DNMCame.c). */
 inline float MTH3D_M_xDotProductVector(MTH3D_tdstVector_* _p_stA, MTH3D_tdstVector_* _p_stB)
@@ -1234,21 +1243,13 @@ inline float MTH3D_M_xDotProductVector(MTH3D_tdstVector_* _p_stA, MTH3D_tdstVect
     return _xResult;
 }
 
-#define MTH3D_M_vCrossProductVector(_d, _a, _b)                 \
-    {                                                            \
-        float _xAX, _xAY, _xAZ, _xBX, _xBY, _xBZ, _xResult;      \
-        _xBX = (_b)->xX; _xBY = (_b)->xY; _xBZ = (_b)->xZ;       \
-        _xAX = (_a)->xX; _xAY = (_a)->xY; _xAZ = (_a)->xZ;       \
-        asm { mula.s _xAY, _xBZ }                                \
-        asm { msub.s _xResult, _xAZ, _xBY }                      \
-        (_d)->xX = _xResult;                                     \
-        asm { mula.s _xAZ, _xBX }                                \
-        asm { msub.s _xResult, _xAX, _xBZ }                      \
-        (_d)->xY = _xResult;                                     \
-        asm { mula.s _xAX, _xBY }                                \
-        asm { msub.s _xResult, _xAY, _xBX }                      \
-        (_d)->xZ = _xResult;                                     \
-    }
+inline float MEC_M_xCrossComponent(float _xA, float _xB, float _xC, float _xD)
+{
+    float _xResult;
+    asm { mula.s _xA, _xB }
+    asm { msub.s _xResult, _xC, _xD }
+    return _xResult;
+}
 
 inline float MTH_M_xMin(float _xA, float _xB)
 {
@@ -1297,9 +1298,10 @@ void MEC_fn_vUpdateSpeed(HIE_tdstSuperObject_* hSupObj)
 {
     float xAngle;
     MTH_stMove* p_stMove;
-    MTH3D_tdstVector_ stAxis;
-    MTH3D_tdstVector_ stPreviousY;
     MTH3D_tdstVector_ stCurrentY;
+    MTH3D_tdstVector_ stPreviousY;
+    MTH3D_tdstVector_ stAxis;
+    MTH3D_tdstVector_ stCross;
     DNM_stDynamics* p_stDynamic;
     tdstDynam_* h_Dynam;
 
@@ -1314,21 +1316,25 @@ void MEC_fn_vUpdateSpeed(HIE_tdstSuperObject_* hSupObj)
             MAT_fn_vGetRotationVectorBaseJ(&p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix, &stCurrentY);
 
             p_stMove = &p_stDynamic->m_tdstDynamicsBaseBlock.m_pstReport->m_stAbsoluteCurrSpeed;
-            MTH3D_M_vCopyVector(&stPreviousY, &p_stMove->m_stAngular.m_stAxis);
+            MEC_vCopyVectorWords(&stPreviousY, &p_stMove->m_stAngular.m_stAxis);
 
             xAngle = MTH3D_M_xDotProductVector(&stPreviousY, &stCurrentY);
-            MTH3D_M_vCrossProductVector(&stAxis, &stPreviousY, &stCurrentY);
+            stCross.xX = MEC_M_xCrossComponent(stPreviousY.xY, stCurrentY.xZ, stPreviousY.xZ, stCurrentY.xY);
+            stCross.xY = MEC_M_xCrossComponent(stPreviousY.xZ, stCurrentY.xX, stPreviousY.xX, stCurrentY.xZ);
+            stCross.xZ = MEC_M_xCrossComponent(stPreviousY.xX, stCurrentY.xY, stPreviousY.xY, stCurrentY.xX);
 
             xAngle = MTH_M_xMin(MTH_M_xMax(xAngle, -1.0f), 1.0f);
 
-            if (stAxis.xZ > 0.0f)
+            if (stCross.xZ > 0.0f)
                 xAngle = acosf(xAngle);
             else
                 xAngle = -acosf(xAngle);
 
-            MTH3D_M_vSetVectorElements(&stAxis, 0.0f, 0.0f, 1.0f);
+            stAxis.xX = 0.0f;
+            stAxis.xY = 0.0f;
+            stAxis.xZ = 1.0f;
             p_stMove->m_stAngular.m_xAngle = xAngle;
-            MTH3D_M_vCopyVector(&p_stMove->m_stAngular.m_stAxis, &stAxis);
+            MEC_vCopyVectorWords(&p_stMove->m_stAngular.m_stAxis, &stAxis);
         }
     }
 }
@@ -1376,13 +1382,79 @@ void DNM_fn_vSetHangingLimit(DNM_stDynamics* p_stDynamic, float xValue)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#define MTH_SQRT_TO(_result, _value) \
+    asm { sqrt.s _result, _value }
+#define MTH_SQR3_TO(_result, _x, _y, _z) \
+    asm { mula.s _x, _x }                  \
+    asm { madda.s _y, _y }                 \
+    asm { madd.s _result, _z, _z }
+
+extern void MAT_fn_vInitTransformationAndType(MAT_tdstTransformation_* _hTransform, MAT_tdeTranformationType_ _eType, MTH3D_tdstVector_* _p_stI, MTH3D_tdstVector_* _p_stJ, MTH3D_tdstVector_* _p_stK, MTH3D_tdstVector_* _p_stTranslation);
+extern void MAT_fn_vGetRotationMatrix(MAT_tdstTransformation_* _hTransform, MTH3D_tdstMatrix_* _p_stRotationMatrix);
+extern void MAT_fn_vSetScale(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stScale);
+extern void MEC_fn_vCancelTilt(DNM_stDynamics* p_stDynamic);
+
+#define MEC_M_vCrossWithoutBuffer(_d, _a, _b)                                 \
+    {                                                                          \
+        (_d)->xX = MEC_M_xCrossComponent((_a)->xY, (_b)->xZ, (_a)->xZ, (_b)->xY); \
+        (_d)->xY = MEC_M_xCrossComponent((_a)->xZ, (_b)->xX, (_a)->xX, (_b)->xZ); \
+        (_d)->xZ = MEC_M_xCrossComponent((_a)->xX, (_b)->xY, (_a)->xY, (_b)->xX); \
+    }
+
 void MEC_vTurnAbsolute(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stVector)
 {
-    MTH3D_tdstVector_ VectTmp;
-    float xNorm;
-    MTH3D_tdstMatrix_ stMatrix;
     MAT_tdstTransformation_* hCurrentMatrix;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstMatrix_ stMatrix;
+    float xNorm;
+    MTH3D_tdstVector_ VectTmp;
+    float xX, xY, xZ, xSquare;
+
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x80) ? 1 : 0)
+        return;
+    if ((p_stVector->xX == 0.0f) && (p_stVector->xY == 0.0f) && (p_stVector->xZ == 0.0f))
+        return;
+
+    hCurrentMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix;
+    MAT_fn_vGetRotationMatrix(hCurrentMatrix, &stMatrix);
+
+    xX = p_stVector->xX;
+    xY = p_stVector->xY;
+    xZ = p_stVector->xZ;
+    MTH_SQR3_TO(xSquare, xX, xY, xZ);
+    MTH_SQRT_TO(xNorm, xSquare);
+    if (xNorm != 0.0f)
+    {
+        xNorm = 1.0f / xNorm;
+        stMatrix.stCol_1.xX = xNorm * xX;
+        stMatrix.stCol_1.xY = xNorm * p_stVector->xY;
+        stMatrix.stCol_1.xZ = xNorm * p_stVector->xZ;
+    }
+    else
+    {
+        stMatrix.stCol_1 = *p_stVector;
+    }
+
+    stMatrix.stCol_1.xX = -stMatrix.stCol_1.xX;
+    stMatrix.stCol_1.xY = -stMatrix.stCol_1.xY;
+    stMatrix.stCol_1.xZ = -stMatrix.stCol_1.xZ;
+
+    MEC_M_vCrossWithoutBuffer(&stMatrix.stCol_0, &stMatrix.stCol_1, &stMatrix.stCol_2);
+    if (&stMatrix.stCol_1 == &stMatrix.stCol_2)
+    {
+        MEC_M_vCrossWithoutBuffer(&VectTmp, &stMatrix.stCol_2, &stMatrix.stCol_0);
+        ((int*)&stMatrix.stCol_1)[0] = ((int*)&VectTmp)[0];
+        ((int*)&stMatrix.stCol_1)[1] = ((int*)&VectTmp)[1];
+        ((int*)&stMatrix.stCol_1)[2] = ((int*)&VectTmp)[2];
+    }
+    else
+    {
+        MEC_M_vCrossWithoutBuffer(&stMatrix.stCol_1, &stMatrix.stCol_2, &stMatrix.stCol_0);
+    }
+
+    MAT_fn_vInitTransformationAndType(hCurrentMatrix, MAT_eTransform_Rotation, &stMatrix.stCol_0, &stMatrix.stCol_1, &stMatrix.stCol_2, (MTH3D_tdstVector_*)&hCurrentMatrix->stTransformMatrix.stCol_3);
+    MAT_fn_vSetScale(hCurrentMatrix, &p_stDynamic->m_tdstDynamicsBaseBlock.m_stScale);
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0)
+        MEC_fn_vCancelTilt(p_stDynamic);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECBase.c lines 968–1011 */
@@ -1434,6 +1506,21 @@ extern float sinf(float _xValue);
 
 #define MTH3D_M_vCopyVector(_d, _s) { *(int*)&(_d)->xX = *(int*)&(_s)->xX; *(int*)&(_d)->xY = *(int*)&(_s)->xY; *(int*)&(_d)->xZ = *(int*)&(_s)->xZ; }
 
+/* An inline copy, so the address of each member stays in a register. */
+inline void MEC_vCopyCol3ToVector(MTH3D_tdstVector_* _p_stDst, MTH4D_tdstVector_* _p_stSrc)
+{
+    *(int*)&_p_stDst->xX = *(int*)&_p_stSrc->xX;
+    *(int*)&_p_stDst->xY = *(int*)&_p_stSrc->xY;
+    *(int*)&_p_stDst->xZ = *(int*)&_p_stSrc->xZ;
+}
+
+inline void MEC_vCopyVectorToCol3(MTH4D_tdstVector_* _p_stDst, MTH3D_tdstVector_* _p_stSrc)
+{
+    *(int*)&_p_stDst->xX = *(int*)&_p_stSrc->xX;
+    *(int*)&_p_stDst->xY = *(int*)&_p_stSrc->xY;
+    *(int*)&_p_stDst->xZ = *(int*)&_p_stSrc->xZ;
+}
+
 void MEC_vTurnAroundZAxis(DNM_stDynamics* p_stDynamic, float xAngle)
 {
     MAT_tdstTransformation_ stMatrix;
@@ -1454,7 +1541,7 @@ void MEC_vTurnAroundZAxis(DNM_stDynamics* p_stDynamic, float xAngle)
         {
             xCos = cosf(xAngle);
             xSin = sinf(xAngle);
-            MTH3D_M_vCopyVector(&stMove, &hCurrentMatrix->stTransformMatrix.stCol_3);
+            MEC_vCopyCol3ToVector(&stMove, &hCurrentMatrix->stTransformMatrix.stCol_3);
             MAT_fn_vSetIdentity(&stMatrix);
             stI.xX = xCos; stI.xY = xSin; stI.xZ = 0.0f;
             stJ.xX = -xSin; stJ.xY = xCos; stJ.xZ = 0.0f;
@@ -1462,15 +1549,15 @@ void MEC_vTurnAroundZAxis(DNM_stDynamics* p_stDynamic, float xAngle)
             MAT_fn_vSetRotationVectors(&stMatrix, &stI, &stJ, &stK);
             MAT_fn_vCompose(hCurrentMatrix, &stMatrix, hCurrentMatrix);
             if (hCurrentMatrix->eType == MAT_eTransform_Identity) { hCurrentMatrix->eType = MAT_eTransform_Translation; }
-            MTH3D_M_vCopyVector(&hCurrentMatrix->stTransformMatrix.stCol_3, &stMove); hCurrentMatrix->stTransformMatrix.stCol_3.xW = 1.0f;
+            MEC_vCopyVectorToCol3(&hCurrentMatrix->stTransformMatrix.stCol_3, &stMove); hCurrentMatrix->stTransformMatrix.stCol_3.xW = 1.0f;
         }
         else
         {
-            MTH3D_M_vCopyVector(&stMove, &hCurrentMatrix->stTransformMatrix.stCol_3);
+            MEC_vCopyCol3ToVector(&stMove, &hCurrentMatrix->stTransformMatrix.stCol_3);
             stVectorZ.xX = 0.0f; stVectorZ.xY = 0.0f; stVectorZ.xZ = -1.0f;
             MAT_fn_vRotateAroundAxis(hCurrentMatrix, &stVectorZ, xAngle);
             if (hCurrentMatrix->eType == MAT_eTransform_Identity) { hCurrentMatrix->eType = MAT_eTransform_Translation; }
-            MTH3D_M_vCopyVector(&hCurrentMatrix->stTransformMatrix.stCol_3, &stMove); hCurrentMatrix->stTransformMatrix.stCol_3.xW = 1.0f;
+            MEC_vCopyVectorToCol3(&hCurrentMatrix->stTransformMatrix.stCol_3, &stMove); hCurrentMatrix->stTransformMatrix.stCol_3.xW = 1.0f;
         }
     }
 }
@@ -1555,13 +1642,58 @@ void MEC_fn_vImposeActorMatrix(HIE_tdstSuperObject_* hSupObj)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void HIE_fn_vComputeNewRelativeMatrix(HIE_tdstSuperObject_* _hSprObj);
+
+inline void MEC_vSetTranslation(MAT_tdstTransformation_* _hMatrix, MTH3D_tdstVector_* _p_stVector)
+{
+    if (_hMatrix->eType == MAT_eTransform_Identity)
+        _hMatrix->eType = MAT_eTransform_Translation;
+    *(int*)&_hMatrix->stTransformMatrix.stCol_3.xX = ((int*)_p_stVector)[0];
+    *(int*)&_hMatrix->stTransformMatrix.stCol_3.xY = ((int*)_p_stVector)[1];
+    *(int*)&_hMatrix->stTransformMatrix.stCol_3.xZ = ((int*)_p_stVector)[2];
+    _hMatrix->stTransformMatrix.stCol_3.xW = 1.0f;
+}
+
 void MEC_vInitTranslation(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, MTH3D_tdstVector_* p_stVector)
 {
-    MAT_tdstTransformation_* hPrevPreviousMatrix;
-    MAT_tdstTransformation_* hAbsolutePreviousMatrix;
-    MAT_tdstTransformation_* hPreviousMatrix;
     MAT_tdstTransformation_* hCurrentMatrix;
-    /* TODO: decompile from asm/... */
+    MAT_tdstTransformation_* hPreviousMatrix;
+    MAT_tdstTransformation_* hAbsolutePreviousMatrix;
+    MAT_tdstTransformation_* hPrevPreviousMatrix;
+
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x80) ? 1 : 0)
+    {
+        MEC_vSetTranslation(hSupObj->hGlobalMatrix, p_stVector);
+    }
+    else
+    {
+        hCurrentMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix;
+        hPreviousMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix;
+        hPrevPreviousMatrix = hSupObj->hGlobalMatrix;
+        MEC_vSetTranslation(hCurrentMatrix, p_stVector);
+        MEC_vSetTranslation(hPreviousMatrix, p_stVector);
+        *hPrevPreviousMatrix = *hCurrentMatrix;
+        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0)
+        {
+            hAbsolutePreviousMatrix = &p_stDynamic->m_tdstDynamicsComplexBlock.m_stAbsolutePreviousMatrix;
+            hPreviousMatrix = &p_stDynamic->m_tdstDynamicsComplexBlock.m_stPrevPreviousMatrix;
+            MEC_vSetTranslation(hAbsolutePreviousMatrix, p_stVector);
+            MEC_vSetTranslation(hPreviousMatrix, p_stVector);
+        }
+    }
+    HIE_fn_vComputeNewRelativeMatrix(hSupObj);
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xX = 0.0f;
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xY = 0.0f;
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xZ = 0.0f;
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_stAddTranslation.xX = 0.0f;
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_stAddTranslation.xY = 0.0f;
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_stAddTranslation.xZ = 0.0f;
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 2) ? 1 : 0)
+    {
+        p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stInertiaTranslation.xX = 0.0f;
+        p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stInertiaTranslation.xY = 0.0f;
+        p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stInertiaTranslation.xZ = 0.0f;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECBase.c lines 868–875 */
@@ -2061,13 +2193,6 @@ void MEC_vImposeRotationMatrix(DNM_stDynamics* p_stDynamic, MAT_tdstTransformati
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-#define MTH_SQRT_TO(_result, _value) \
-    asm { sqrt.s _result, _value }
-#define MTH_SQR3_TO(_result, _x, _y, _z) \
-    asm { mula.s _x, _x }                  \
-    asm { madda.s _y, _y }                 \
-    asm { madd.s _result, _z, _z }
 
 extern void MAT_fn_vSetIdentity(MAT_tdstTransformation_* _hTransform);
 extern void MAT_fn_vSetRotationMatrix(MAT_tdstTransformation_* _hTransform, MTH3D_tdstMatrix_* _p_stRotationMatrix);

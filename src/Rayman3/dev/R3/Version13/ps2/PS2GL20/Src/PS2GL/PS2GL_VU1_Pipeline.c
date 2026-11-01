@@ -1272,6 +1272,8 @@ void PS2glBufferTriangleStripToTriangle(float (*pBuf)[4], int iSrcStart, int iDs
 void PS2glBufferTriangleFanToTriangle(float (*pBuf)[4], int iSrcStart, int iDstStart);
 void PS2glVU1TexCoordsCubeMappingVectorTo2D(tagGLcontext* pctx);
 void PS2glVIFSendBuffer(unsigned char bEOP);
+#pragma opt_lifetimes off
+#pragma opt_strength_reduction off
 void PS2glFlushBuffer(unsigned char EOP)
 {
     int iDst;
@@ -1330,6 +1332,8 @@ void PS2glFlushBuffer(unsigned char EOP)
     }
     PS2glVIFSendBuffer(EOP);
 }
+#pragma opt_lifetimes reset
+#pragma opt_strength_reduction reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 2081–2428 */
 /* addr: 0x00182250  size: 3056 bytes */

@@ -2,7 +2,8 @@
 
 Read this before making any matching change. The project uses the Korean PS2
 ELF with CodeWarrior PS2 through Wibo: game sources build with 3.0.1
-(2002-01-23), or 3.0.3 (2002-07-16) for the files in
+(2002-01-23), or a patched 3.0.3 (2002-07-16; padloop limit 7, built by
+`tools/patch_mwcc_303.py`) for the files in
 `config/compiler-3.0.3-sources.txt`, and the PS2GL library with 3.0
 (2001-11-26), or 3.0.1 for the files in `config/library-3.0.1-sources.txt`. Game sources also take `-pragma "dividefix on" -inline deferred
 -O3,p`. The only accepted baseline profile is encoded in `tools/match.py` and
@@ -131,6 +132,10 @@ For cross-project Metrowerks context, read `docs/mwcc-reference.md`; it is
 methodology only. Never copy another project's compiler version or flags into
 this project's baseline without a local reproduction.
 
+`check` also reports `EQUIVALENT` when the code is identical apart from removable
+`nop` padding (never a delay-slot `nop` or one after a hazard instruction), with
+branches compared by target position; the size may then differ.
+
 `check` may also report `EQUIVALENT`: the code is identical except for a
 consistent per-value register renaming, verified by dataflow with EABI
 registers fixed at calls and returns. It is not a match and does not count in
@@ -199,12 +204,34 @@ from function reconstruction changes so it can be reviewed independently.
 
 Shared types live in `include/r3/`, one header per engine module (`MTH.h`,
 `MAT.h`, `HIE.h`, `LST2.h`, `GEO.h`, `SECT.h`, ...; `ENG.h` holds the rest),
-each including the headers its types need by value. A completed translation unit may drop its own copy of a
-type and include the header only when its copy is identical to the header's;
-keep differing copies, function prototypes and global declarations local,
-since matches can depend on them. Run `verify-recorded` after such a change.
-`tools/match.py` hashes `include/r3/*.h` into its object cache key, so header
-edits rebuild every object.
+each including the headers its types need by value.
+
+### Grouping typedefs into shared headers
+
+Grouping a `DONE` unit's extracted typedefs into these headers is part of its
+cleanup. Make it a cleanup-only change, kept apart from matching work like
+the comment removal above:
+
+- Replace a local type with an `#include "r3/<MODULE>.h"` only when the local
+  copy is identical to the header's. A type not yet in a header may move into
+  its module's header only when it is identical in every completed unit that
+  defines it.
+- In headers, write pointer members to other types as `struct X*` tags, so a
+  header pulls in other headers only for types it holds by value.
+- Keep these local: copies that differ, function prototypes, global
+  declarations, `anon_N` types, anonymous `typedef struct { ... } Name;`
+  copies (they clash with a header's tagged definition), types that need a
+  non-shared type by value, and C++ library types (the usnd STL, `CIdObjPtr`
+  and the like). Matches can depend on them.
+- Treat a `} __attribute__((aligned(16)));` struct and a
+  `typedef enum X { ... } X;` as whole blocks when comparing or moving them;
+  a partial move skips the header or redefines the enumerators ("illegal name
+  overloading").
+- Extracted types and forward typedefs that nothing in the unit uses may be
+  deleted outright.
+- Compile-check each touched unit, then run `verify-recorded`; the recorded
+  match count must not drop. `tools/match.py` hashes `include/r3/*.h` into its
+  object cache key, so header edits rebuild every object.
 
 ## Large and advanced functions
 
@@ -221,7 +248,7 @@ Before writing anything, check what is already there:
   worker's reconstruction);
 - recorded attempts in `config/matches.json` (their `reason` names the
   known residuals);
-- `build/large-match/FUNCTION/` history and `insight list`.
+- `build/large-match/FUNCTION/` history and `insight search`.
 
 If a compilable reconstruction exists, keep it as the baseline and refine it.
 Do not regenerate it from scratch.
@@ -273,12 +300,77 @@ Recurring causes seen so far:
 - a global reloaded where MWCC reuses the value (evidence for `volatile`);
 - statement order at a loop head changing the delay-slot fill.
 
-Check `insight list` for the specific idioms.
+### First things to try, by symptom
 
-Run quick variant sweeps from a scratch script that rewrites the canonical
-file, runs `check`, and restores it afterwards. Change one construct per
-variant, and keep only changes the diff confirms. Prefer the most natural
-spelling that matches.
+These have all produced matches in this project, though some on only a few
+functions. Try the matching one before sweeping or running the permuter, and
+use `insight search` for details.
+
+Registers:
+
+- Register-only residual: reverse the scaffold's local declarations. The debug
+  list is usually the reverse of source order.
+- Still register-only: try block-scoping a local, or assigning it after its
+  declaration instead of initialising it. Then hand off to the permuter.
+- A sequence of flag or value updates in the wrong register: split one
+  expression into statements (`x &= ~m; x |= v & m;`).
+
+Control flow:
+
+- Compare-chain switch: the `beq` tests run in the reverse order of the case
+  labels, so write the cases in the reverse of retail's test order.
+- Switch tail wrong: compare `default: return p;`, `default: err; return p;`,
+  no `default`, and `break` versus `return` in a case. The first case to reach
+  the epilogue often gets `move v0` in its delay slot.
+- `movz` where retail branches, or the reverse: move between a ternary and
+  `if`/`else`, or assign through a local.
+- Branch to an arm that looks empty: try `if (x == 0) { } else { ... }`.
+
+Data access:
+
+- Retail keeps an address in a register where we fold the offset: use an inline
+  helper with pointer parameters, or `*(float*)(int)&v.y`.
+- `lwc1`/`swc1` where retail uses `lw`/`sw`, or the reverse: copy through
+  `unsigned int` words, or use a helper taking pointers.
+- Unfolded offset on an array element (`addiu base,OFF; addu base,i*size`):
+  search `unfolded`.
+- Two stores of the same value to one field: `p->f = (p->f |= m);`.
+- A pad or byte value read with `lw` and then `andi`: cast the whole word,
+  `(unsigned char)u.lValue`, rather than reading `u.ucValue`.
+- A global re-read where we reuse the value: try `volatile`.
+
+Size and source shape:
+
+- A run of the line map on one source line: an inlined helper, not hand-expanded
+  code. Write it as `inline` above the caller.
+- A file matches some functions under 3.0.1 and others under 3.0.3: check which
+  compiler the residual suggests (`fptoui` call versus inline conversion, loop
+  padding nops) before changing the source.
+
+For anything else:
+
+```sh
+python3 tools/match.py insight search "unfolded offset"
+python3 tools/match.py insight search "delay slot" --category compiler --limit 5
+```
+
+All terms must match, case-insensitive, newest first. Long entries are shortened
+unless you pass `--full`. Avoid `insight list`: it prints the whole doc, about
+600 KB.
+
+Run variant sweeps with `python3 tools/sweep.py FUNCTION variants.py`. It
+compiles scratch copies through `check FUNCTION --candidate FILE` (the owner's
+compiler and flags, never records, never touches the canonical file), and
+reports the rows each variant fixes and introduces by class. Do not judge a
+variant by its row count: a correct fix can add rows until the next fix lands.
+Change one construct per variant, and keep only changes the diff confirms.
+Prefer the most natural spelling that matches.
+
+To choose what to work on, `python3 tools/rank_patterns.py` ranks unmatched
+functions by how much of their retail code has precedent in matched functions
+and names the closest example; `--function NAME` shows the code with no
+precedent. Compare scores within a similar size (`--min-size`): size alone
+predicts a match better than this score does (`--validate`).
 
 Use `python3 tools/large_match.py start FUNCTION` for the source snapshot,
 seed and baseline, then `python3 tools/large_match.py check FUNCTION --note
@@ -328,12 +420,25 @@ threshold can be reconstructed directly.
 - Work source-file by source-file so the cached object and local context are
   reused and concurrent workers do not edit the same translation unit.
 
+## Data objects
+
+`python3 tools/match.py check-data SOURCE` compiles a unit and compares its
+initialised data objects with the retail bytes (`--verbose` lists every row,
+`--record` records the matches, `--recorded` rechecks all recorded data).
+Pointer words compare by linked address; `@N` literals pair by content, so a
+relocated `@N` table such as a switch table reports a mismatch for now. Owners
+come from `.relmain`: objects only out-of-scope code refers to are excluded
+from coverage. BSS is not checked. Defining data can change code generation,
+so run `verify-recorded` after adding initialisers.
+
 ## Shared findings
 
-Before reporting a reusable compiler or code-generation observation, check:
+Before recording a reusable compiler or code-generation observation, search for
+it, and do not add it if it is already there or listed under *First things to
+try*:
 
 ```sh
-python3 tools/match.py insight list
+python3 tools/match.py insight search "declaration order"
 ```
 
 Record a concise, reproduced insight with:

@@ -3251,58 +3251,415 @@ void fn_vSetUltraOperatorPerso(HIE_tdstSuperObject_* hCurrentSuperObjPerso, HIE_
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+inline int MTH_M_xRealToLong(float xValue)
+{
+    int lResult;
+    asm
+    {
+        cvt.w.s f30, xValue
+        mfc1 lResult, f30
+    }
+    return lResult;
+}
+
+inline float MTH_xAbsInPlace(float xValue)
+{
+    asm { abs.s xValue, xValue }
+    return xValue;
+}
+
+unsigned char fn_ucGetDsgVar(unsigned char ucId, unsigned char ucIndex, AI_tdstMind_* p_stPerso, tdstGetSetParam_* p_stGetSetParam);
+unsigned char fn_ucGetFieldValue(tdeFieldId_ eFieldId, HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam);
+void fn_vOnAIErm_M_UpdateLastError(int FatalErrorNum, char* szMsg);
+void fn_vSetVectorComponentForAffectOperator(unsigned char ucXYZflag, MTH3D_tdstVector_* p_stVector, float xReal);
+unsigned char fn_ucSetDsgVar(unsigned char ucId, unsigned char ucIndex, AI_tdstMind_* p_stPerso, tdstGetSetParam_* p_stGetSetParam);
+unsigned char fn_ucSetFieldValue(tdeFieldId_ eFieldId, HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam);
+
 tdstNodeInterpret_* fn_p_stAffectOperator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
+    unsigned char ucOk;
     unsigned char ucIsThereFloat;
     float xReal;
     MTH3D_tdstVector_* p_stVector2;
     MTH3D_tdstVector_* p_stVector1;
     unsigned char ucIsVector;
-    tdeOperatorId_ param0;
     tdeTypeInterpret_ eTypeInterpret;
-    tdeOperatorId_ eOperatorId;
+    unsigned char ucIndex;
     HIE_tdstSuperObject_* hSuperObjPerso;
     unsigned char ucNbParam;
     unsigned char ucXYZflag;
-    unsigned char ucIndex;
-    unsigned char ucVarId;
+    tdeOperatorId_ eOperatorId;
     tdeFieldId_ eFieldId;
+    unsigned char ucVarId;
     tdstGetSetParam_ stParam2;
     tdstGetSetParam_ stParam1;
 
+    ucXYZflag = 0;
+    hSuperObjPerso = p_SuperObjPerso;
+    ucNbParam = 0;
+    eFieldId = (tdeFieldId_)20;
+    ucVarId = 255;
     eOperatorId = p_stTree[-1].uDummy.uId.eOperatorId;
     eTypeInterpret = (tdeTypeInterpret_)p_stTree->eType;
-    ucNbParam = 0;
-    if (eOperatorId == eOperator_Affect)
-    {
-        ucNbParam = (unsigned char)(fn_ucGetTreeNbParam(p_stTree) - 1);
-    }
     ucIndex = 0;
-    if (eTypeInterpret == E_ti_Function)
+    if (eOperatorId == eOperator_AffectArray)
+        ucNbParam = (char)fn_ucGetTreeNbParam(p_stTree) - 1;
+
+    if (eTypeInterpret == E_ti_Operator)
     {
-        switch (p_stTree->uDummy.uId.eFuncId)
+        if (p_stTree->uDummy.uId.eOperatorId == eOperator_GetVectorX)
+            ucXYZflag = 1;
+        else if (p_stTree->uDummy.uId.eOperatorId == eOperator_GetVectorY)
+            ucXYZflag = 2;
+        else if (p_stTree->uDummy.uId.eOperatorId == eOperator_GetVectorZ)
+            ucXYZflag = 3;
+        if (ucXYZflag)
         {
-        case eFunc_GetPersoAbsolutePosition:
-            ucNbParam = 1;
-            break;
-        case eFunc_GetMyAbsolutePosition:
-            ucNbParam = 2;
-            break;
-        case eFunc_GetAngleAroundZToPerso:
-            ucNbParam = 3;
-            break;
-        default:
-            break;
+            p_stTree++;
+            eTypeInterpret = (tdeTypeInterpret_)p_stTree->eType;
         }
     }
-    if (ucNbParam != 0)
+
+    if (eTypeInterpret == E_ti_Operator)
     {
-        p_stTree++;
-        eTypeInterpret = (tdeTypeInterpret_)p_stTree->eType;
+        if (p_stTree->uDummy.uId.eOperatorId == eOperator_Dot)
+        {
+            p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree + 1, &hSuperObjPerso);
+            eTypeInterpret = (tdeTypeInterpret_)p_stTree->eType;
+        }
+        else
+        {
+            p_stTree++;
+            if (p_stTree->eType == E_ti_Operator && p_stTree->uDummy.uId.eOperatorId == eOperator_Dot)
+                p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree + 1, &hSuperObjPerso);
+            ucVarId = p_stTree->uDummy.uParam.ucValue;
+            eTypeInterpret = E_ti_Operator;
+            p_stTree++;
+        }
     }
-    /* TODO: the remaining operator-specific handling (DsgVar/Field get and set,
-     * vector component set, and the eOperator_Affect dispatch) is not
-     * reconstructed yet; see the target line map for the statement boundaries. */
+
+    if (eTypeInterpret == E_ti_DsgVarRef)
+    {
+        ucVarId = p_stTree->uDummy.uParam.ucValue;
+        p_stTree++;
+    }
+    else if (eTypeInterpret == E_ti_Field)
+    {
+        eFieldId = p_stTree->uDummy.uId.eFieldId;
+        p_stTree++;
+    }
+    else if (eTypeInterpret == E_ti_Operator)
+    {
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        ucIndex = (p_stValue->eType == E_vt_Float) ? MTH_M_xRealToLong(p_stValue->uDummy.uParam.xValue) : p_stValue->uDummy.uParam.lValue;
+        eTypeInterpret = E_ti_DsgVarRef;
+    }
+
+    if (eOperatorId == eOperator_Affect)
+    {
+        if (ucXYZflag)
+        {
+            if (eTypeInterpret == E_ti_DsgVarRef)
+                fn_ucGetDsgVar(ucVarId, ucIndex, hSuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind, p_stValue);
+            else if (eTypeInterpret == E_ti_Field)
+            {
+                ucOk = fn_ucGetFieldValue(eFieldId, hSuperObjPerso, p_stValue);
+                if (!ucOk)
+                    fn_vOnAIErm_M_UpdateLastError(0x22, 0);
+            }
+            p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam2);
+            if (stParam2.eType == E_vt_Float)
+                xReal = stParam2.uDummy.uParam.xValue;
+            else
+                xReal = (float)stParam2.uDummy.uParam.lValue;
+            switch (ucXYZflag)
+            {
+            case 1:
+                p_stValue->uDummy.uParam.stVectorValue.xX = xReal;
+                break;
+            case 2:
+                p_stValue->uDummy.uParam.stVectorValue.xY = xReal;
+                break;
+            case 3:
+                p_stValue->uDummy.uParam.stVectorValue.xZ = xReal;
+                break;
+            }
+        }
+        else if (p_stTree->eType == E_ti_MacroRef)
+        {
+            p_stValue->eType = E_vt_Comport;
+            p_stValue->uDummy.uParam.lValue = p_stTree->uDummy.uParam.lValue;
+            p_stTree++;
+        }
+        else
+        {
+            p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        }
+    }
+    else if (eOperatorId == eOperator_AffectArray)
+    {
+        if (ucNbParam > 0)
+        {
+            do
+            {
+                p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+                fn_ucSetDsgVar(ucVarId, ucIndex, hSuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind, p_stValue);
+                ucIndex++;
+                ucNbParam--;
+            } while (ucNbParam != 0);
+        }
+        p_stValue->uDummy.uParam.lValue = 0;
+        p_stValue->eType = E_vt_MetaActionReturn;
+        return p_stTree;
+    }
+    else
+    {
+        if (eTypeInterpret == E_ti_DsgVarRef)
+            fn_ucGetDsgVar(ucVarId, ucIndex, hSuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind, &stParam1);
+        else if (eTypeInterpret == E_ti_Field)
+        {
+            ucOk = fn_ucGetFieldValue(eFieldId, hSuperObjPerso, &stParam1);
+            if (!ucOk)
+                fn_vOnAIErm_M_UpdateLastError(0x22, 0);
+        }
+
+        if (eOperatorId == eOperator_MinusMinusAffect || eOperatorId == eOperator_PlusPlusAffect)
+        {
+            if (!ucXYZflag)
+            {
+                stParam2.uDummy.uParam.lValue = 1;
+                stParam2.eType = E_vt_Integer;
+            }
+            else
+            {
+                stParam2.uDummy.uParam.stVectorValue.xX = 0.0f;
+                stParam2.uDummy.uParam.stVectorValue.xY = 0.0f;
+                stParam2.uDummy.uParam.stVectorValue.xZ = 0.0f;
+                fn_vSetVectorComponentForAffectOperator(ucXYZflag, &stParam2.uDummy.uParam.stVectorValue, 1.0f);
+                stParam2.eType = E_vt_Vector;
+            }
+        }
+        else
+        {
+            p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam2);
+            if (ucXYZflag)
+            {
+                if (stParam2.eType == E_vt_Float)
+                    xReal = stParam2.uDummy.uParam.xValue;
+                else
+                    xReal = (float)stParam2.uDummy.uParam.lValue;
+                stParam2.uDummy.uParam.stVectorValue.xX = 0.0f;
+                stParam2.uDummy.uParam.stVectorValue.xY = 0.0f;
+                stParam2.uDummy.uParam.stVectorValue.xZ = 0.0f;
+                fn_vSetVectorComponentForAffectOperator(ucXYZflag, &stParam2.uDummy.uParam.stVectorValue, xReal);
+                stParam2.eType = E_vt_Vector;
+            }
+        }
+
+        ucIsVector = stParam1.eType == E_vt_Vector;
+        if (ucIsVector)
+        {
+            ucIsVector = 2;
+            if (stParam2.eType != E_vt_Vector)
+            {
+                if ((unsigned int)(eOperatorId - eOperator_SetVectorX) <= 2 || (unsigned int)(eOperatorId - eOperator_MulAffect) <= 1 || ucXYZflag)
+                    ucIsVector = 1;
+                else
+                {
+                    stParam2.uDummy.uParam.stVectorValue.xX = 0.0f;
+                    stParam2.uDummy.uParam.stVectorValue.xY = 0.0f;
+                    stParam2.uDummy.uParam.stVectorValue.xZ = 0.0f;
+                }
+            }
+        }
+        else if (stParam2.eType == E_vt_Vector)
+        {
+            stParam2.uDummy.uParam.xValue = 0.0f;
+            stParam2.eType = E_vt_Float;
+        }
+
+        if (ucIsVector)
+        {
+            p_stVector2 = 0;
+            xReal = 0.0f;
+            p_stValue->eType = E_vt_Vector;
+            p_stVector1 = &stParam1.uDummy.uParam.stVectorValue;
+            if (ucIsVector == 1)
+            {
+                if (stParam2.eType == E_vt_Float)
+                    xReal = stParam2.uDummy.uParam.xValue;
+                else
+                    xReal = (float)stParam2.uDummy.uParam.lValue;
+                ((unsigned int*)&p_stValue->uDummy.uParam.stVectorValue)[0] = ((unsigned int*)p_stVector1)[0];
+                ((unsigned int*)&p_stValue->uDummy.uParam.stVectorValue)[1] = ((unsigned int*)p_stVector1)[1];
+                ((unsigned int*)&p_stValue->uDummy.uParam.stVectorValue)[2] = ((unsigned int*)p_stVector1)[2];
+            }
+            else
+            {
+                p_stVector2 = &stParam2.uDummy.uParam.stVectorValue;
+            }
+            switch (eOperatorId)
+            {
+            case eOperator_SetVectorX:
+                p_stValue->uDummy.uParam.stVectorValue.xX = xReal;
+                break;
+            case eOperator_SetVectorY:
+                p_stValue->uDummy.uParam.stVectorValue.xY = xReal;
+                break;
+            case eOperator_SetVectorZ:
+                p_stValue->uDummy.uParam.stVectorValue.xZ = xReal;
+                break;
+            case eOperator_MulAffect:
+                if (!ucXYZflag)
+                {
+                    p_stValue->uDummy.uParam.stVectorValue.xX = xReal * p_stVector1->xX;
+                    p_stValue->uDummy.uParam.stVectorValue.xY = xReal * p_stVector1->xY;
+                    p_stValue->uDummy.uParam.stVectorValue.xZ = xReal * p_stVector1->xZ;
+                }
+                else
+                {
+                    ((unsigned int*)&p_stValue->uDummy.uParam.stVectorValue)[0] = ((unsigned int*)p_stVector1)[0];
+                    ((unsigned int*)&p_stValue->uDummy.uParam.stVectorValue)[1] = ((unsigned int*)p_stVector1)[1];
+                    ((unsigned int*)&p_stValue->uDummy.uParam.stVectorValue)[2] = ((unsigned int*)p_stVector1)[2];
+                    switch (ucXYZflag)
+                    {
+                    case 1:
+                        xReal = p_stVector2->xX;
+                        p_stValue->uDummy.uParam.stVectorValue.xX = p_stVector1->xX * xReal;
+                        break;
+                    case 2:
+                        xReal = p_stVector2->xY;
+                        p_stValue->uDummy.uParam.stVectorValue.xY = p_stVector1->xY * xReal;
+                        break;
+                    case 3:
+                        xReal = p_stVector2->xZ;
+                        p_stValue->uDummy.uParam.stVectorValue.xZ = p_stVector1->xZ * xReal;
+                        break;
+                    }
+                }
+                break;
+            case eOperator_DivAffect:
+                if (!ucXYZflag)
+                {
+                    p_stValue->uDummy.uParam.stVectorValue.xX = p_stVector1->xX / xReal;
+                    p_stValue->uDummy.uParam.stVectorValue.xY = p_stVector1->xY / xReal;
+                    p_stValue->uDummy.uParam.stVectorValue.xZ = p_stVector1->xZ / xReal;
+                }
+                else
+                {
+                    ((unsigned int*)&p_stValue->uDummy.uParam.stVectorValue)[0] = ((unsigned int*)p_stVector1)[0];
+                    ((unsigned int*)&p_stValue->uDummy.uParam.stVectorValue)[1] = ((unsigned int*)p_stVector1)[1];
+                    ((unsigned int*)&p_stValue->uDummy.uParam.stVectorValue)[2] = ((unsigned int*)p_stVector1)[2];
+                    switch (ucXYZflag)
+                    {
+                    case 1:
+                        xReal = p_stVector2->xX;
+                        p_stValue->uDummy.uParam.stVectorValue.xX = p_stVector1->xX / xReal;
+                        break;
+                    case 2:
+                        xReal = p_stVector2->xY;
+                        p_stValue->uDummy.uParam.stVectorValue.xY = p_stVector1->xY / xReal;
+                        break;
+                    case 3:
+                        xReal = p_stVector2->xZ;
+                        p_stValue->uDummy.uParam.stVectorValue.xZ = p_stVector1->xZ / xReal;
+                        break;
+                    }
+                }
+                break;
+            case eOperator_PlusAffect:
+            case eOperator_PlusPlusAffect:
+                p_stValue->uDummy.uParam.stVectorValue.xX = p_stVector1->xX + p_stVector2->xX;
+                p_stValue->uDummy.uParam.stVectorValue.xY = p_stVector1->xY + p_stVector2->xY;
+                p_stValue->uDummy.uParam.stVectorValue.xZ = p_stVector1->xZ + p_stVector2->xZ;
+                break;
+            case eOperator_MinusAffect:
+            case eOperator_MinusMinusAffect:
+                p_stValue->uDummy.uParam.stVectorValue.xX = p_stVector1->xX - p_stVector2->xX;
+                p_stValue->uDummy.uParam.stVectorValue.xY = p_stVector1->xY - p_stVector2->xY;
+                p_stValue->uDummy.uParam.stVectorValue.xZ = p_stVector1->xZ - p_stVector2->xZ;
+                break;
+            default:
+                p_stValue->uDummy.uParam.stVectorValue.xX = 0.0f;
+                p_stValue->uDummy.uParam.stVectorValue.xY = 0.0f;
+                p_stValue->uDummy.uParam.stVectorValue.xZ = 0.0f;
+                break;
+            }
+        }
+        else
+        {
+            ucIsThereFloat = fn_ucAreThereFloatIfYesConvertThem(&stParam2, &stParam1);
+            p_stValue->uDummy.uParam.lValue = 0;
+            p_stValue->eType = E_vt_Integer;
+            switch (eOperatorId)
+            {
+            case eOperator_PlusAffect:
+            case eOperator_PlusPlusAffect:
+                if (ucIsThereFloat)
+                {
+                    p_stValue->uDummy.uParam.xValue = stParam1.uDummy.uParam.xValue + stParam2.uDummy.uParam.xValue;
+                    p_stValue->eType = E_vt_Float;
+                }
+                else
+                {
+                    p_stValue->uDummy.uParam.lValue = stParam1.uDummy.uParam.lValue + stParam2.uDummy.uParam.lValue;
+                    p_stValue->eType = E_vt_Integer;
+                }
+                break;
+            case eOperator_MinusAffect:
+            case eOperator_MinusMinusAffect:
+                if (ucIsThereFloat)
+                {
+                    p_stValue->uDummy.uParam.xValue = stParam1.uDummy.uParam.xValue - stParam2.uDummy.uParam.xValue;
+                    p_stValue->eType = E_vt_Float;
+                }
+                else
+                {
+                    p_stValue->uDummy.uParam.lValue = stParam1.uDummy.uParam.lValue - stParam2.uDummy.uParam.lValue;
+                    p_stValue->eType = E_vt_Integer;
+                }
+                break;
+            case eOperator_MulAffect:
+                if (ucIsThereFloat)
+                {
+                    p_stValue->uDummy.uParam.xValue = stParam1.uDummy.uParam.xValue * stParam2.uDummy.uParam.xValue;
+                    p_stValue->eType = E_vt_Float;
+                }
+                else
+                {
+                    p_stValue->uDummy.uParam.lValue = stParam1.uDummy.uParam.lValue * stParam2.uDummy.uParam.lValue;
+                    p_stValue->eType = E_vt_Integer;
+                }
+                break;
+            case eOperator_DivAffect:
+                if ((ucIsThereFloat && MTH_xAbsInPlace(stParam2.uDummy.uParam.xValue) > 1.1754951e-38f) || (!ucIsThereFloat && stParam2.uDummy.uParam.lValue != 0))
+                {
+                    if (ucIsThereFloat)
+                    {
+                        p_stValue->uDummy.uParam.xValue = stParam1.uDummy.uParam.xValue / stParam2.uDummy.uParam.xValue;
+                        p_stValue->eType = E_vt_Float;
+                    }
+                    else
+                    {
+                        p_stValue->uDummy.uParam.lValue = stParam1.uDummy.uParam.lValue / stParam2.uDummy.uParam.lValue;
+                        p_stValue->eType = E_vt_Integer;
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    if (eTypeInterpret == E_ti_DsgVarRef)
+        fn_ucSetDsgVar(ucVarId, ucIndex, hSuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind, p_stValue);
+    else if (eTypeInterpret == E_ti_Field)
+    {
+        ucOk = fn_ucSetFieldValue(eFieldId, hSuperObjPerso, p_stValue);
+        if (!ucOk)
+            fn_vOnAIErm_M_UpdateLastError(0x22, 0);
+    }
+    p_stValue->uDummy.uParam.lValue = 0;
+    p_stValue->eType = E_vt_MetaActionReturn;
     return p_stTree;
 }
 
@@ -3413,19 +3770,18 @@ tdstNodeInterpret_* fn_p_stDotOperator(HIE_tdstSuperObject_* p_SuperObjPerso, td
     tdeTypeInterpret_ eTypeInterpret;
     tdstNodeInterpret_* p_stNext;
 
-    p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree, &hSuperObjPerso);
-    p_stNext = p_stTree;
-    eTypeInterpret = (tdeTypeInterpret_)p_stTree->eType;
+    p_stNext = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree, &hSuperObjPerso);
+    p_stTree = p_stNext;
+    eTypeInterpret = (tdeTypeInterpret_)p_stNext->eType;
     if (eTypeInterpret == E_ti_DsgVarRef)
     {
-        fn_ucGetDsgVar(p_stTree->uDummy.uParam.ucValue, 0, hSuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind, p_stValue);
-        p_stNext = p_stTree + 1;
-        return p_stNext;
+        p_stTree = p_stNext + 1;
+        fn_ucGetDsgVar(p_stNext->uDummy.uParam.ucValue, 0, hSuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind, p_stValue);
     }
     else if (eTypeInterpret == E_ti_Field)
     {
-        p_stNext = p_stTree + 1;
-        ucOk = fn_ucGetFieldValue(p_stTree->uDummy.uId.eFieldId, hSuperObjPerso, p_stValue);
+        p_stTree = p_stNext + 1;
+        ucOk = fn_ucGetFieldValue(p_stNext->uDummy.uId.eFieldId, hSuperObjPerso, p_stValue);
         if (!ucOk)
         {
             fn_vOnAIErm_M_UpdateLastError(0x22, 0);
@@ -3433,12 +3789,12 @@ tdstNodeInterpret_* fn_p_stDotOperator(HIE_tdstSuperObject_* p_SuperObjPerso, td
     }
     else if (eTypeInterpret == E_ti_Operator)
     {
-        if (p_stTree->uDummy.uId.eFuncId == eFunc_Cosinus)
+        if (p_stNext->uDummy.uId.eFuncId == eFunc_Cosinus)
         {
-            p_stNext = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+            p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stNext, p_stValue);
         }
     }
-    return p_stNext;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Operator.c lines 427–454 */
@@ -3704,12 +4060,6 @@ tdstNodeInterpret_* fn_p_stVectorScalarOperator(HIE_tdstSuperObject_* p_SuperObj
  * compare a candidate object's line table as an extra checkpoint.
  */
 /* abs.s in place: MWCC cannot emit abs.s from C; only that instruction is asm. */
-inline float MTH_xAbsInPlace(float xValue)
-{
-    asm { abs.s xValue, xValue }
-    return xValue;
-}
-
 tdstNodeInterpret_* fn_p_stScalarOperator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     unsigned char ucIsThereFloat;
@@ -3789,31 +4139,23 @@ tdstNodeInterpret_* fn_p_stScalarOperator(HIE_tdstSuperObject_* p_SuperObjPerso,
         }
         return p_stTree;
     case eOperator_ScalarDivScalar:
-        if (ucIsThereFloat)
+        if ((ucIsThereFloat && MTH_xAbsInPlace(stParam2.uDummy.uParam.xValue) > 1.1754951e-38f) || (!ucIsThereFloat && stParam2.uDummy.uParam.lValue != 0))
         {
-            if (MTH_xAbsInPlace(stParam2.uDummy.uParam.xValue) > 1.1754951e-38f)
+            if (ucIsThereFloat)
             {
                 p_stValue->uDummy.uParam.xValue = p_stValue->uDummy.uParam.xValue / stParam2.uDummy.uParam.xValue;
                 p_stValue->eType = E_vt_Float;
             }
             else
             {
-                p_stValue->uDummy.uParam.lValue = 0;
+                p_stValue->uDummy.uParam.lValue = p_stValue->uDummy.uParam.lValue / stParam2.uDummy.uParam.lValue;
                 p_stValue->eType = E_vt_Integer;
             }
         }
         else
         {
-            if (stParam2.uDummy.uParam.lValue != 0)
-            {
-                p_stValue->uDummy.uParam.lValue = p_stValue->uDummy.uParam.lValue / stParam2.uDummy.uParam.lValue;
-                p_stValue->eType = E_vt_Integer;
-            }
-            else
-            {
-                p_stValue->uDummy.uParam.lValue = 0;
-                p_stValue->eType = E_vt_Integer;
-            }
+            p_stValue->uDummy.uParam.lValue = 0;
+            p_stValue->eType = E_vt_Integer;
         }
         return p_stTree;
     default:
