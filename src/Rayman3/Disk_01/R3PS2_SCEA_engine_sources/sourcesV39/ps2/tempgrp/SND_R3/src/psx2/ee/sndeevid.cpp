@@ -18,6 +18,9 @@ typedef enum ESTATE {
 extern "C" void* usnd_malloc(unsigned int ui_Size);
 extern "C" void usnd_free(void* pBlock);
 extern "C" void usnd_vDeleteCritSect(unsigned int uiCritSect);
+extern "C" void usnd_vEnterCritSect(unsigned int uiCritSect);
+extern "C" void usnd_vLeaveCritSect(unsigned int uiCritSect);
+extern "C" void* memcpy(void* pvDest, const void* pvSrc, size_t uiSize);
 extern "C" void* fn_pvMallocInBinaryPreservingTheCurrentMode(unsigned int uiSize);
 extern "C" void fn_vFreeInBinaryPreservingTheCurrentMode(void* pBlock);
 
@@ -29,7 +32,7 @@ struct CPS2Renderer {
     virtual unsigned int vUnknown2(void);
     virtual void vUnknown3(void);
     virtual void vUnknown4(void);
-    virtual void vUnknown5(void);
+    virtual void vUnknown5(unsigned int ui_Channel);
     virtual void vStop(unsigned int);
     virtual void fv_vPause(unsigned int ui_Channel);
     virtual void fv_vResume(unsigned int ui_Channel);
@@ -131,14 +134,14 @@ public:
 };
 
 int g_pxBufferAudio;
-static unsigned int gs_PosRead;
-static unsigned int gs_NbBytesInBuffer;
+static volatile unsigned int gs_PosRead;
+static volatile unsigned int gs_NbBytesInBuffer;
 static CPS2IOPPullDMA* gs_poBox;
 static CPS2Renderer* gs_poRenderer;
 static unsigned int gs_uiChannel;
-static unsigned int gs_uiSndVidCritSect;
+static volatile unsigned int gs_uiSndVidCritSect;
 static unsigned int gs_TotalSizeReceived;
-static unsigned int gs_SoundStarted;
+static volatile unsigned int gs_SoundStarted;
 static volatile unsigned int gs_SoundRunning;
 int SND_g_iEnoughSound;
 extern volatile int gv_iCD_Opened;
@@ -315,7 +318,140 @@ void SND_VID_fn_vResumeVideoSound(void)
 int SND_VID_fn_iAddIOPData(void* SoundData, unsigned int uiSize)
 {
     int iPosWrite;
-    int iLength;
-    int iTransfered;
-    /* TODO: decompile from asm/... */
+    int iTransfered = 0;
+    unsigned int iLength;
+
+    usnd_vEnterCritSect(gs_uiSndVidCritSect);
+    if (gs_NbBytesInBuffer + uiSize > 0x40000)
+    {
+        usnd_vLeaveCritSect(gs_uiSndVidCritSect);
+        return -1;
+    }
+
+    while ((int)uiSize != 0)
+    {
+        iPosWrite = (gs_PosRead + gs_NbBytesInBuffer) & 0x3FFFF;
+        if (uiSize + iPosWrite <= 0x40000)
+        {
+            iLength = uiSize;
+        }
+        else
+        {
+            iLength = 0x40000 - iPosWrite;
+        }
+
+        memcpy((void*)((g_pxBufferAudio + iPosWrite) | 0x30000000), (char*)SoundData + iTransfered, iLength);
+
+        uiSize -= iLength;
+        iTransfered += iLength;
+        gs_NbBytesInBuffer += iLength;
+    }
+
+    gs_TotalSizeReceived += iTransfered;
+    if (!gs_SoundStarted && gs_TotalSizeReceived >= 0x10000)
+    {
+        while (gv_iCD_Opened)
+            SND_VID_vClearCop0Register24();
+        gs_poRenderer->vUnknown5(gs_uiChannel);
+        gs_poRenderer->fv_vPause(gs_uiChannel);
+        gs_SoundStarted = 1;
+        gs_SoundRunning = 0;
+    }
+
+    usnd_vLeaveCritSect(gs_uiSndVidCritSect);
+    return iTransfered;
+}
+
+extern "C" void FlushCache(int operation);
+extern "C" unsigned int sceSifSetDma(sceSifDmaData* sdd, int len);
+extern "C" int sceSifDmaStat(unsigned int id);
+
+/* The retail debug attributes this to sndcextraeventactor.cpp lines 83-138, but
+   it follows this unit's code in the ELF, its line numbers continue this unit's
+   descending order, and it uses this unit's static globals. */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcextraeventactor.cpp lines 83–138 */
+/* addr: 0x001cd970  size: 384 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 83
+ *   +0x0024 -> line 90
+ *   +0x0030 -> line 92
+ *   +0x0038 -> line 94
+ *   +0x0048 -> line 97
+ *   +0x0050 -> line 105
+ *   +0x0054 -> line 101
+ *   +0x0058 -> line 110
+ *   +0x0074 -> line 112
+ *   +0x007c -> line 115
+ *   +0x0090 -> line 112
+ *   +0x0094 -> line 115
+ *   +0x00d4 -> line 119
+ *   +0x00e0 -> line 124
+ *   +0x0110 -> line 127
+ *   +0x0114 -> line 128
+ *   +0x0118 -> line 129
+ *   +0x011c -> line 127
+ *   +0x0124 -> line 130
+ *   +0x0130 -> line 131
+ *   +0x013c -> line 132
+ *   +0x0148 -> line 134
+ *   +0x0154 -> line 135
+ *   +0x015c -> line 137
+ *   +0x0160 -> line 138
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+unsigned int fn_iTransferIOPData(void* pvData, unsigned int uiSize)
+{
+    unsigned int iTransfered = 0;
+    unsigned int iLength;
+    sceSifDmaData oDmaEnd;
+    sceSifDmaData oDma;
+
+    usnd_vEnterCritSect(gs_uiSndVidCritSect);
+    while (uiSize)
+    {
+        if (gs_NbBytesInBuffer >= uiSize)
+        {
+            iLength = uiSize;
+        }
+        else
+        {
+            iLength = uiSize;
+            SND_g_iEnoughSound = 0;
+        }
+
+        if (gs_PosRead + uiSize > 0x40000)
+        {
+            unsigned int uiId;
+
+            iLength = 0x40000 - gs_PosRead;
+            oDma.data = g_pxBufferAudio + (int)gs_PosRead;
+            oDma.addr = (unsigned int)pvData;
+            oDma.size = iLength;
+            oDma.mode = 0;
+            FlushCache(0);
+            uiId = sceSifSetDma(&oDma, 1);
+            while (sceSifDmaStat(uiId) >= 0)
+            {
+            }
+        }
+        else
+        {
+            oDmaEnd.data = g_pxBufferAudio + (int)gs_PosRead;
+            oDmaEnd.addr = (unsigned int)pvData;
+            oDmaEnd.size = iLength;
+            oDmaEnd.mode = 0;
+            FlushCache(0);
+            sceSifSetDma(&oDmaEnd, 1);
+        }
+
+        uiSize -= iLength;
+        iTransfered += iLength;
+        gs_NbBytesInBuffer -= iLength;
+        gs_PosRead += iLength;
+        gs_PosRead &= 0x3FFFF;
+    }
+    gs_SoundRunning++;
+    usnd_vLeaveCritSect(gs_uiSndVidCritSect);
+    return iTransfered;
 }

@@ -47716,6 +47716,72 @@
       "status": "MISMATCH",
       "target_size": 1060,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x001ce790",
+      "candidate_size": 564,
+      "first_difference": 102,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "mfn_bApplyPositionAndVelocity__16CExtraEventActorFv",
+      "reason": "564/564, all instructions and relocs match; only FP registers differ: retail holds the position floats in f12-f14 where MWCC picks f1-f3 for the first comparison (velocity comparison f1-f3 already matches). Inline helper with float params gives everything else.",
+      "size": 564,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcextraeventactor.cpp",
+      "status": "MISMATCH",
+      "target_size": 564,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001ce9d0",
+      "candidate_size": 576,
+      "first_difference": 236,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "mfn_bApplyAllParams__16CExtraEventActorFb",
+      "reason": "576/576, relocs and registers all match; only residual is stack layout: retail has the temporary CRolloffParam at sp+0x70 and the _RollOffParam callback buffer at sp+0x80, MWCC lays them out the other way because the buffer's declaration comes first. Placement new adds a null guard; explicit ctor calls add a temporary.",
+      "size": 576,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcextraeventactor.cpp",
+      "status": "MISMATCH",
+      "target_size": 576,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001cdd90",
+      "candidate_size": 1352,
+      "first_difference": 44,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "mfn_bPlay__16CExtraEventActorFRCQ24usnd13CEventResDataiPFi_v",
+      "reason": "1352/1336 with all calls, data, and control flow reconstructed. switch() gives the retail beq+b shapes for the event type and marker flag. Remaining: 16 bytes of extra moves/li (delay-slot fills at ResObj null test, marker address, and the CResObjParams new), plus a register cycle (retail this=s2, res=s1, context=s0; candidate this=s1, res=s0, context=s2).",
+      "size": 1336,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcextraeventactor.cpp",
+      "status": "MISMATCH",
+      "target_size": 1336,
+      "unresolved_relocations": [
+        {
+          "offset": 640,
+          "symbol": "@79",
+          "type": 5
+        },
+        {
+          "offset": 652,
+          "symbol": "@79",
+          "type": 6
+        },
+        {
+          "offset": 644,
+          "symbol": "@664",
+          "type": 5
+        },
+        {
+          "offset": 736,
+          "symbol": "@664",
+          "type": 6
+        }
+      ]
     }
   ],
   "data": {},
@@ -59088,6 +59154,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeevid.cpp",
       "status": "MATCH"
     },
+    "0x001cd630": {
+      "address": "0x001cd630",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SND_VID_fn_vInitVideoSound",
+      "size": 272,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeevid.cpp",
+      "status": "MATCH"
+    },
     "0x001cd740": {
       "address": "0x001cd740",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -59104,11 +59178,35 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeevid.cpp",
       "status": "MATCH"
     },
+    "0x001cd7f0": {
+      "address": "0x001cd7f0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SND_VID_fn_iAddIOPData",
+      "size": 380,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeevid.cpp",
+      "status": "MATCH"
+    },
+    "0x001cd970": {
+      "address": "0x001cd970",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_iTransferIOPData__FPvUi",
+      "size": 384,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeevid.cpp",
+      "status": "MATCH"
+    },
     "0x001cdaf0": {
       "address": "0x001cdaf0",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "f_vSalvageActor__20CExtraEventActorPoolFP16CExtraEventActor",
       "size": 68,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcextraeventactor.cpp",
+      "status": "MATCH"
+    },
+    "0x001cdb40": {
+      "address": "0x001cdb40",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "fs_poGetAnActor__20CExtraEventActorPoolFi",
+      "size": 244,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcextraeventactor.cpp",
       "status": "MATCH"
     },
@@ -59173,6 +59271,14 @@
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "__dt__16CExtraEventActorFv",
       "size": 264,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcextraeventactor.cpp",
+      "status": "MATCH"
+    },
+    "0x001cef60": {
+      "address": "0x001cef60",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "f_vInit__16CExtraEventActorFRC14CLinkTypeActoriiPCQ24usnd13CEventResData",
+      "size": 632,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcextraeventactor.cpp",
       "status": "MATCH"
     },
@@ -59253,6 +59359,14 @@
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "SND_fn_p_stGetMusicMarkerSlots",
       "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcextraeventactor.cpp",
+      "status": "MATCH"
+    },
+    "0x001cf460": {
+      "address": "0x001cf460",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "fv_vVarChanged__23CMusicMarkerNotifTargetFRQ24usnd4CVar",
+      "size": 412,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcextraeventactor.cpp",
       "status": "MATCH"
     },
