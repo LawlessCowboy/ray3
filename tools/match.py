@@ -67,6 +67,10 @@ GAME_MWCC = ROOT / 'Compiler' / 'mwcps2-3.0.1-020123' / 'mwccps2.exe'
 # never released. Built by tools/patch_mwcc_303.py.
 LATE_GAME_MWCC = ROOT / 'Compiler' / 'mwcps2-3.0.3-pad7b' / 'mwccps2.exe'
 LATE_GAME_SOURCES_PATH = ROOT / 'config' / 'compiler-3.0.3-sources.txt'
+# pad7b that also keeps array member offsets unfolded, including retail's
+# 'addiu r,r,0' (tools/patch_mwcc_303.py). The list takes priority over all others.
+UNFOLD_MWCC = ROOT / 'Compiler' / 'mwcps2-3.0.3-pad7b-unfold' / 'mwccps2.exe'
+UNFOLD_SOURCES_PATH = ROOT / 'config' / 'compiler-3.0.3-unfold-sources.txt'
 # Library files that additionally take '-O3,p' (see that file for evidence).
 LIBRARY_O3P_SOURCES_PATH = ROOT / 'config' / 'library-O3p-sources.txt'
 # Library files built with 3.0.1 (2002-01-23) instead of 3.0 (see that file).
@@ -141,6 +145,18 @@ def late_game_sources() -> set[str]:
     return _LATE_GAME_SOURCES
 
 
+_UNFOLD_SOURCES: set[str] | None = None
+
+
+def unfold_sources() -> set[str]:
+    """Files built with pad7b-unfold (config/compiler-3.0.3-unfold-sources.txt)."""
+    global _UNFOLD_SOURCES
+    if _UNFOLD_SOURCES is None:
+        lines = UNFOLD_SOURCES_PATH.read_text().splitlines() if UNFOLD_SOURCES_PATH.exists() else []
+        _UNFOLD_SOURCES = {line.strip() for line in lines if line.strip() and not line.startswith('#')}
+    return _UNFOLD_SOURCES
+
+
 _LIBRARY_O3P_SOURCES: set[str] | None = None
 
 
@@ -179,6 +195,9 @@ def library_303_sources() -> set[str]:
 
 def owner_compiler(owner: Path | str) -> tuple[Path, str]:
     """(compiler, profile name) for a translation unit's owning source."""
+    if _relative_owner(owner) in unfold_sources():
+        suffix = 'o3' if is_game_source(owner) else 'lib'
+        return UNFOLD_MWCC, f'mwccps2-3.0.3-pad7b-unfold-{suffix}'
     if not is_game_source(owner):
         if _relative_owner(owner) in library_303_sources():
             return LATE_GAME_MWCC, 'mwccps2-3.0.3-pad7b-lib'
@@ -1159,6 +1178,15 @@ def compare(entry: dict, verbose: bool = False, source_override: Path | None = N
             target_symbol = (target_names.get(symbol.name)
                              if symbol and symbol.name and not symbol.name.startswith('@')
                              else None)
+            # Local functions can share a name across units (a static copy of a
+            # header function, such as GLI_vTransformToGLMatrix): a call binds
+            # to the definition of that name the retail jal actually targets.
+            if target_symbol is not None and reloc_type == 4 and relative + 4 <= len(target_bytes):
+                retail_address = (struct.unpack_from('<I', target_bytes, relative)[0] & 0x03FFFFFF) << 2
+                if retail_address != target_symbol.value:
+                    target_symbol = next((other for other in target_symbols
+                                          if other.name == symbol.name and other.value == retail_address),
+                                         target_symbol)
             if target_symbol is None and symbol and '$' in symbol.name[1:]:
                 pair_offset = None
                 if reloc_type in (5, 6):

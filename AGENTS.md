@@ -4,7 +4,9 @@ Read this before making any matching change. The project uses the Korean PS2
 ELF with CodeWarrior PS2 through Wibo: game sources build with 3.0.1
 (2002-01-23), or a patched 3.0.3 (2002-07-16; padloop limit 7, built by
 `tools/patch_mwcc_303.py`) for the files in
-`config/compiler-3.0.3-sources.txt`, and the PS2GL library with 3.0
+`config/compiler-3.0.3-sources.txt`, or that build further patched to keep array
+member offsets unfolded (including retail's `addiu r,r,0`; same script) for the
+files in `config/compiler-3.0.3-unfold-sources.txt`, and the PS2GL library with 3.0
 (2001-11-26), or 3.0.1 for the files in `config/library-3.0.1-sources.txt`. Game sources also take `-pragma "dividefix on" -inline deferred
 -O3,p`. The only accepted baseline profile is encoded in `tools/match.py` and
 the Makefile.

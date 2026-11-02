@@ -1,0 +1,28 @@
+# Files compiled with MWCC 3.0.3-pad7b-unfold, built by tools/patch_mwcc_303.py. This
+# list takes priority over the other compiler lists, and its files keep their usual
+# flags. Retail computes A[a][b] and A[a].f[b] as 'base + row; addiu r,r,field; addu
+# index', keeping a zero offset as 'addiu r,r,0' (about 92 global sites, none matchable
+# on a released build). Evidence for the patch, forced on every file: 0 of 4407
+# recorded functions newly fail against plain 3.0.3 forced the same way, 50 failures
+# fixed, 21 unmatched functions gain a match that plain 3.0.3 and the owner compiler
+# miss. Retail's real rule may be narrower: in a probe p->a[i] through a pointer also
+# unfolds, while retail folds p->abGrayed[i]. So adopt per file.
+# Trade-off: most files stay on their compiler; u_effects.c (-3), PS2GL_DataInput.c
+# (-77) and PS2GL_Matrix.c (-2) gain under this build but lose recorded matches, so
+# they are not listed. Add a file only if every recorded match in it still MATCHes
+# and at least one more function matches. Paths are repo-relative.
+src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_PixelOperation.c
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/AiFuncSound.c
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Shooter.c
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ProcOptim.cxx
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/CollSet.c
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/ChanList.c
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_SPGArray.cpp
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/ino/ps2/FFB.c
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_kwan.c
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_main.c
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MOR/specif/morph.c
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/PS2MC/PS2MC_Messages.cpp
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeethrd.cpp

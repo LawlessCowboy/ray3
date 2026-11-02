@@ -48385,6 +48385,219 @@
       "status": "MISMATCH",
       "target_size": 2256,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x0027c5b0",
+      "candidate_size": 448,
+      "first_difference": 13,
+      "implementation": "void fn_vComputeFinalFrameMatrix(HIE_tdstSuperObject_* p_stSuperObject, tdstAnim3d_* _p_stAnim3d, float _xFrame)\n{\n    unsigned short uwCnt1;\n    tdstA3dGENERAL_* p_stCurrentA3dGENERAL;\n    tdstChannel_* p_stCurrentChannel;\n    tdstAChannel_* hArrayOfChannels;\n    unsigned short uwT_NTTO;\n    unsigned char bHierarchized;\n\n    uwT_NTTO = (unsigned short)fn_ulFrameFromFloat(_xFrame);\n    if (uwT_NTTO < _p_stAnim3d->uwNumberOfFrames)\n    {\n        if (_p_stAnim3d->ucFlagMergeAnim)\n        {\n            fn_vComputeFinalFrameMatrixForInterAnim(p_stSuperObject, _p_stAnim3d);\n            return;\n        }\n\n        hArrayOfChannels = p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData->hArrayOfChannels;\n\n        p_stCurrentA3dGENERAL = fn_p_GetA3dGENERAL(_p_stAnim3d->uwNumOfA3dGENERAL, 0);\n        p_stCurrentChannel = &gp_stChannels[p_stCurrentA3dGENERAL->uwNumOfFirstChannel];\n        uwT_NTTO = *(unsigned short*)((int)&gp_stOnlyFrames->uwNumOfSavedFrame + (p_stCurrentA3dGENERAL->uwNumOfFirstOnlyFrame + uwT_NTTO) * sizeof(tdstOnlyFrame_));\n\n        for (uwCnt1 = 0; uwCnt1 < p_stCurrentA3dGENERAL->uwNumberOfChannels; uwCnt1++, p_stCurrentChannel++)\n        {\n            if ((p_stCurrentChannel->uwChannelNumber != 0xFFFF) && !hArrayOfChannels[p_stCurrentChannel->uwChannelNumber].bControlledChannel && !hArrayOfChannels[p_stCurrentChannel->uwChannelNumber].bLipsChannel)\n            {\n                bHierarchized = (gp_stNTTO[gp_FramesNumOfNTTO[p_stCurrentChannel->uwNumOfFirstFrame + uwT_NTTO]].uwTypeOfObject != 0xFFFF) ? (unsigned char)(gp_stNTTO[gp_FramesNumOfNTTO[p_stCurrentChannel->uwNumOfFirstFrame + uwT_NTTO]].uwTypeOfObject & 0x800) : 0;\n\n                fn_v_MergePositions(p_stCurrentChannel, &hArrayOfChannels[p_stCurrentChannel->uwChannelNumber], bHierarchized);\n            }\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_vComputeFinalFrameMatrix",
+      "reason": "Under 3.0.3 the inline float-to-unsigned shape is right. Residual: retail copies _xFrame to f0 with mov.s (candidate uses f12 directly, 4 bytes shorter after the unfolded OnlyFrame load) and s3/s4 swapped between frame and channel array.",
+      "size": 444,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/Interpol/a3x_intn.c",
+      "status": "MISMATCH",
+      "target_size": 444,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0027d740",
+      "candidate_size": 552,
+      "first_difference": 126,
+      "implementation": "void fn_vUpdateFrameForSubAnim(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame, unsigned char _ucAnimLevel)\n{\n    tdstA3dGENERAL_* p_stCurrentA3dGENERAL;\n    tdstChannel_* p_stCurrentChannel;\n    unsigned short uwT_NTTO;\n    unsigned short uwCnt1;\n    unsigned short uwCnt2;\n    tdstElement3d_* p_stCurrentElement3d;\n    unsigned short* p_CurrentFrameNumOfNTTO;\n    int iMaxElements;\n\n    p_stCurrentA3dGENERAL = fn_p_GetA3dGENERAL(_p_stAnim3d->uwNumOfA3dGENERAL, _uwFrame);\n    p_stCurrentChannel = &gp_stChannels[p_stCurrentA3dGENERAL->uwNumOfFirstChannel];\n    uwT_NTTO = gp_stOnlyFrames[p_stCurrentA3dGENERAL->uwNumOfFirstOnlyFrame + _uwFrame].uwNumOfSavedFrame;\n\n    for (uwCnt1 = 0; uwCnt1 < p_stCurrentA3dGENERAL->uwNumberOfChannels; p_stCurrentChannel++, uwCnt1++)\n    {\n        p_CurrentFrameNumOfNTTO = &gp_FramesNumOfNTTO[p_stCurrentChannel->uwNumOfFirstFrame + uwT_NTTO];\n        p_stCurrentElement3d = _p_stFrame->p_stArrayOfElts3d;\n        iMaxElements = _p_stFrame->p_stAnim->ucMaxNumberOfElements;\n        for (uwCnt2 = 0; uwCnt2 < iMaxElements; uwCnt2++)\n        {\n            if (p_stCurrentChannel->uwChannelNumber == p_stCurrentElement3d[uwCnt2].ucChannelNumber)\n            {\n                if (*p_CurrentFrameNumOfNTTO != 0xFFFF)\n                {\n                    p_stCurrentElement3d = &p_stCurrentElement3d[uwCnt2];\n                    p_stCurrentElement3d->wElement = gp_stNTTO[*p_CurrentFrameNumOfNTTO].ucNumberInTable;\n                    p_stCurrentElement3d->ucChannelNumber = p_stCurrentChannel->uwChannelNumber;\n                    p_stCurrentElement3d->bf1ActiveStatus = 1;\n                    p_stCurrentElement3d->eTypeOfElement = gp_stNTTO[*p_CurrentFrameNumOfNTTO].uwTypeOfObject;\n                    p_stCurrentElement3d->ucTransparency = gp_stNTTO[*p_CurrentFrameNumOfNTTO].ucTransparency;\n                    p_stCurrentElement3d->ucAnimLevel = _ucAnimLevel;\n                }\n                else\n                {\n                    p_stCurrentElement3d = &p_stCurrentElement3d[uwCnt2];\n                    p_stCurrentElement3d->wElement = 0xFFFF;\n                    p_stCurrentElement3d->ucChannelNumber = p_stCurrentChannel->uwChannelNumber;\n                    p_stCurrentElement3d->bf1ActiveStatus = 1;\n                    p_stCurrentElement3d->eTypeOfElement = 2;\n                    p_stCurrentElement3d->ucTransparency = 0;\n                    p_stCurrentElement3d->ucAnimLevel = 0xFF;\n                }\n                break;\n            }\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_vUpdateFrameForSubAnim",
+      "reason": "552/552, relocs right; signature needs a leading _p_stSuperObject (a1=frame, a2=anim). Residual: retail loads gp_stNTTO and scales the NTTO index before the element pointer in the active branch, plus register numbering.",
+      "size": 552,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/Interpol/a3x_intn.c",
+      "status": "MISMATCH",
+      "target_size": 552,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0027c5b0",
+      "candidate_size": 440,
+      "first_difference": 13,
+      "implementation": "void fn_vComputeFinalFrameMatrix(HIE_tdstSuperObject_* p_stSuperObject, tdstAnim3d_* _p_stAnim3d, float _xFrame)\n{\n    unsigned short uwCnt1;\n    tdstA3dGENERAL_* p_stCurrentA3dGENERAL;\n    tdstChannel_* p_stCurrentChannel;\n    tdstAChannel_* hArrayOfChannels;\n    unsigned short uwT_NTTO;\n    unsigned char bHierarchized;\n\n    uwT_NTTO = (unsigned short)fn_ulFrameFromFloat(_xFrame);\n    if (uwT_NTTO < _p_stAnim3d->uwNumberOfFrames)\n    {\n        if (_p_stAnim3d->ucFlagMergeAnim)\n        {\n            fn_vComputeFinalFrameMatrixForInterAnim(p_stSuperObject, _p_stAnim3d);\n            return;\n        }\n\n        hArrayOfChannels = p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData->hArrayOfChannels;\n\n        p_stCurrentA3dGENERAL = fn_p_GetA3dGENERAL(_p_stAnim3d->uwNumOfA3dGENERAL, 0);\n        p_stCurrentChannel = &gp_stChannels[p_stCurrentA3dGENERAL->uwNumOfFirstChannel];\n        uwT_NTTO = *(unsigned short*)((int)gp_stOnlyFrames + (p_stCurrentA3dGENERAL->uwNumOfFirstOnlyFrame + uwT_NTTO) * sizeof(tdstOnlyFrame_) + 0xc);\n\n        for (uwCnt1 = 0; uwCnt1 < p_stCurrentA3dGENERAL->uwNumberOfChannels; uwCnt1++, p_stCurrentChannel++)\n        {\n            if ((p_stCurrentChannel->uwChannelNumber != 0xFFFF) && !hArrayOfChannels[p_stCurrentChannel->uwChannelNumber].bControlledChannel && !hArrayOfChannels[p_stCurrentChannel->uwChannelNumber].bLipsChannel)\n            {\n                bHierarchized = (gp_stNTTO[gp_FramesNumOfNTTO[p_stCurrentChannel->uwNumOfFirstFrame + uwT_NTTO]].uwTypeOfObject != 0xFFFF) ? (unsigned char)(gp_stNTTO[gp_FramesNumOfNTTO[p_stCurrentChannel->uwNumOfFirstFrame + uwT_NTTO]].uwTypeOfObject & 0x800) : 0;\n\n                fn_v_MergePositions(p_stCurrentChannel, &hArrayOfChannels[p_stCurrentChannel->uwChannelNumber], bHierarchized);\n            }\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_vComputeFinalFrameMatrix",
+      "reason": "440/444 under 3.0.3. Missing retail mov.s f0,f12 (+4 bytes) and s3/s4 swap. Tried 12 UB and copy forms for the mov.s (uninitialised float, self-assignment, assignment in expression, punning): none reproduce it.",
+      "size": 444,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/Interpol/a3x_intn.c",
+      "status": "MISMATCH",
+      "target_size": 444,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002b9960",
+      "candidate_size": 1984,
+      "first_difference": 46,
+      "implementation": "void GLI_vSendEITToSpriteGeneratorNewSimple(GEO_tdstElementIndexedTriangles_* p_stEIT, ISI_tdstColor_* pRLIs, float* pLightMap, float (*pV1)[4], float (*pU1)[4], float** pVertexTransparency)\n{\n    unsigned int i;\n    float fAddU;\n    float fAddV;\n    unsigned int bAdditive;\n    float DU;\n    float DV;\n    J_New_ParticleFace_ Face;\n    unsigned int NbGenerated;\n    unsigned int* pNbGenSave;\n    unsigned int I1[3];\n    GLI_SpecificPS2GL_Structure_* pSpecif;\n    GEO_tdstTripledIndex_* p_stListOfFacesTripled;\n    float NoiseLevel;\n    unsigned int NoScroll;\n    float LM1;\n    float LM2;\n    float LM3;\n    float (*pParticles)[4];\n    float (*pV)[4];\n    int j;\n    float fr;\n    float fg;\n    float fb;\n    float fa;\n    ISI_tdstColor_* p_SRCColors;\n\n    NbGenerated = 0;\n    NoScroll = 0;\n    pSpecif = GLI_pstGetSpecificStructureFromEIT(p_stEIT);\n    GLI_vClearCop0Register24();\n    bAdditive = GLI_bIsMaterialAdditive(p_stEIT->hVisualMaterial);\n    GLI_BIG_GLOBALS_hCurrentMaterial = (int)p_stEIT->hVisualMaterial;\n    if (((GLI_tdstMaterial_*)GLI_BIG_GLOBALS_hCurrentMaterial)->fConstantAddU == 0.0f && ((GLI_tdstMaterial_*)GLI_BIG_GLOBALS_hCurrentMaterial)->fConstantAddV == 0.0f)\n        NoScroll = 1;\n\n    if (!pSpecif->SpriteGenArray || !NoScroll)\n    {\n        if (NoScroll)\n        {\n            pSpecif->SpriteGenArray = ((unsigned int (*)(unsigned int))PS2glAllocator64)(0x20010);\n            pNbGenSave = (unsigned int*)pSpecif->SpriteGenArray;\n            pParticles = (float (*)[4])((unsigned int)pNbGenSave + 0x10);\n            if (pNbGenSave == NULL)\n            {\n                GLI_vClearCop0Register24();\n                return;\n            }\n            else\n            {\n            }\n        }\n        else\n        {\n            pParticles = GLI_pGetFastSpriteGenBuffer();\n        }\n        if (pParticles == NULL)\n        {\n            GLI_vClearCop0Register24();\n            return;\n        }\n\n        DU = ((GLI_tdstMaterial_*)GLI_BIG_GLOBALS_hCurrentMaterial)->stDiffuse.xR;\n        DV = ((GLI_tdstMaterial_*)GLI_BIG_GLOBALS_hCurrentMaterial)->stDiffuse.xG;\n        NoiseLevel = ((GLI_tdstMaterial_*)GLI_BIG_GLOBALS_hCurrentMaterial)->stAmbient.xB;\n        if (DU <= 0.1f)\n            DU = 0.1f;\n        if (DV <= 0.1f)\n            DV = 0.1f;\n\n        pV = pV1;\n        p_stListOfFacesTripled = p_stEIT->d_stListOfFacesTripled;\n        fAddV = 1000.0f * g_ffFrameTime;\n        fAddU = fAddV * ((GLI_tdstMaterial_*)GLI_BIG_GLOBALS_hCurrentMaterial)->fConstantAddU;\n        fAddV = fAddV * ((GLI_tdstMaterial_*)GLI_BIG_GLOBALS_hCurrentMaterial)->fConstantAddV;\n\n        for (i = 0; i < p_stEIT->xNbFaces; i++)\n        {\n            I1[0] = p_stListOfFacesTripled->a3_xIndex[0];\n            I1[1] = p_stListOfFacesTripled->a3_xIndex[1];\n            I1[2] = p_stListOfFacesTripled->a3_xIndex[2];\n            if (pLightMap)\n            {\n                LM1 = pLightMap[I1[0]];\n                LM2 = pLightMap[I1[1]];\n                LM3 = pLightMap[I1[2]];\n                LM1 = (LM1 > 1.0f) ? 1.0f : ((LM1 < 0.0f) ? 0.0f : LM1);\n                LM2 = (LM2 > 1.0f) ? 1.0f : ((LM2 < 0.0f) ? 0.0f : LM2);\n                LM3 = (LM3 > 1.0f) ? 1.0f : ((LM3 < 0.0f) ? 0.0f : LM3);\n            }\n            else\n            {\n                LM1 = LM2 = LM3 = 1.0f;\n            }\n\n            Face.pPoints[0][0] = pV[0][0];\n            Face.pPoints[0][1] = pV[0][1];\n            Face.pPoints[0][2] = pV[0][2];\n            Face.pPoints[1][0] = pV[1][0];\n            Face.pPoints[1][1] = pV[1][1];\n            Face.pPoints[1][2] = pV[1][2];\n            Face.pPoints[2][0] = pV[2][0];\n            Face.pPoints[2][1] = pV[2][1];\n            Face.pPoints[2][2] = pV[2][2];\n            pV += 3;\n\n            if (!pRLIs || pRLIs == NULL)\n            {\n                Face.pColors[0][0] = 1.0f; Face.pColors[0][1] = 1.0f; Face.pColors[0][2] = 1.0f; Face.pColors[0][3] = 0.1f;\n                Face.pColors[1][0] = 1.0f; Face.pColors[1][1] = 1.0f; Face.pColors[1][2] = 1.0f; Face.pColors[1][3] = 0.1f;\n                Face.pColors[2][0] = 1.0f; Face.pColors[2][1] = 1.0f; Face.pColors[2][2] = 1.0f; Face.pColors[2][3] = 0.1f;\n            }\n            else\n            {\n                for (j = 0; j < 3; j++)\n                {\n                    p_SRCColors = &pRLIs[*(unsigned int*)((int)I1 + j * 4)];\n                    if (bAdditive)\n                    {\n                        fr = 1.0f;\n                        fg = fr;\n                        fb = fr;\n                    }\n                    else\n                    {\n                        fr = 0.003921569f * (float)p_SRCColors->xRed;\n                        fg = 0.003921569f * (float)p_SRCColors->xGreen;\n                        fb = 0.003921569f * (float)p_SRCColors->xBlue;\n                        if (fr < 0.0f) fr = 0.0f;\n                        if (fg < 0.0f) fg = 0.0f;\n                        if (fb < 0.0f) fb = 0.0f;\n                        if (fr > 1.0f) fr = 1.0f;\n                        if (fg > 1.0f) fg = 1.0f;\n                        if (fb > 1.0f) fb = 1.0f;\n\n                        LM1 = pLightMap[*(unsigned int*)((int)I1 + j * 4)];\n                        if (LM1 < 0.0f) LM1 = 0.0f;\n                        if (LM1 > 1.0f) LM1 = 1.0f;\n\n                        fr = fr * (fr * LM1);\n                        fg = fg * (fg * LM1);\n                        fb = fb * (fb * LM1);\n                        if (fr < 0.0f) fr = 0.0f;\n                        if (fr > 1.0f) fr = 1.0f;\n                        if (fg < 0.0f) fg = 0.0f;\n                        if (fg > 1.0f) fg = 1.0f;\n                        if (fb < 0.0f) fb = 0.0f;\n                        if (fb > 1.0f) fb = 1.0f;\n                    }\n                    *(float*)((int)&Face.pColors[0][0] + j * 16) = fr;\n                    *(float*)((int)&Face.pColors[0][1] + j * 16) = fg;\n                    *(float*)((int)&Face.pColors[0][2] + j * 16) = fb;\n                    *(float*)((int)&Face.pColors[0][3] + j * 16) = 1.0f + 0.003921569f * (float)p_SRCColors->xAlpha;\n                    if (pVertexTransparency && *pVertexTransparency)\n                        *(float*)((int)&Face.pColors[0][3] + j * 16) *= (*pVertexTransparency)[*(unsigned int*)((int)I1 + j * 4)];\n                    if (*(float*)((int)&Face.pColors[0][3] + j * 16) < 0.0f)\n                        *(float*)((int)&Face.pColors[0][3] + j * 16) = 0.0f;\n                    if (*(float*)((int)&Face.pColors[0][3] + j * 16) > 0.5f)\n                        *(float*)((int)&Face.pColors[0][3] + j * 16) = 1.0f;\n                }\n            }\n\n            Face.pUVs[0][0] = pU1[0][0] + fAddU;\n            Face.pUVs[0][1] = pU1[0][1] + fAddV;\n            Face.pUVs[1][0] = pU1[1][0] + fAddU;\n            Face.pUVs[1][1] = pU1[1][1] + fAddV;\n            Face.pUVs[2][0] = pU1[2][0] + fAddU;\n            Face.pUVs[2][1] = pU1[2][1] + fAddV;\n            pU1 += 3;\n\n            NbGenerated += J_New_CreateParticlesOnFace(&pParticles[NbGenerated * 2], 0xFFF - NbGenerated, &Face, DU, DV, NoiseLevel);\n            p_stListOfFacesTripled++;\n        }\n\n        if (NoScroll)\n        {\n            pParticles = (float (*)[4])(pSpecif->SpriteGenArray + 0x10);\n            *pNbGenSave = NbGenerated;\n        }\n    }\n    else\n    {\n        NbGenerated = *(unsigned int*)pSpecif->SpriteGenArray;\n        pParticles = (float (*)[4])(pSpecif->SpriteGenArray + 0x10);\n    }\n\n    GLI_BIG_GLOBALS_xGlobalAlpha = 1.0f;\n    GLI_SpriteGenMustDisplayEvery = NbGenerated;\n    J_New_DrawSpriteGenList((GLI_tdstMaterial_*)GLI_BIG_GLOBALS_hCurrentMaterial, pParticles, NbGenerated);\n    GLI_vClearCop0Register24();\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "GLI_vSendEITToSpriteGeneratorNewSimple",
+      "reason": "1984/1992 under 3.0.3. Control flow and VU-free colour loop right (ternary LM clamps, int-cast unfolded I1/pColors, inline buffer helper). Residual: retail keeps an unthreaded 'b' at +0x120 (line 1404) and 'addiu a1,a1,0' at +0x158, plus pV1/pU1/pVertexTransparency rotated across s1-s3 and the 1000*time temp in f2.",
+      "size": 1992,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawSpriteGen.c",
+      "status": "MISMATCH",
+      "target_size": 1992,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002b9540",
+      "candidate_size": 1044,
+      "first_difference": 220,
+      "implementation": "void J_New_DrawSpriteGenList(GLI_tdstMaterial_* pMat, float (*pParticleList)[4], unsigned int NbSprites)\n{\n    float CosValAdd;\n    float CosVal;\n    unsigned char zTst;\n    void* pAnimaterTextureToUseSaved;\n    int RemainingNbSprites;\n    unsigned int i;\n    float ModelView[4][4];\n    float sx;\n    float sy;\n    float* pNeg;\n    float* pSrc;\n    float* pDst;\n\n    RemainingNbSprites = NbSprites - (NbSprites / 20) * 20;\n    if (RemainingNbSprites < 4)\n        NbSprites -= RemainingNbSprites;\n    if (NbSprites < 4)\n        return;\n\n    sx = 10.0f * pMat->stAmbient.xR;\n    sy = 10.0f * pMat->stAmbient.xG;\n    if (sx <= 0.0f)\n        sx = 0.01f;\n    if (sy <= 0.0f)\n        sy = 0.01f;\n\n    GLI_vInitGLProjectionMatrix();\n    PS2glMatrixMode(0x1700);\n\n    pSrc = (float*)(GLI_BIG_GLOBALS_gs_st_CurrentMatrix + 0x10);\n    pNeg = GLI_g_NegVect;\n    pDst = (float*)ModelView;\n    asm {\n        lqc2 $vf5, 0x0(pNeg)\n        lqc2 $vf1, 0x0(pSrc)\n        lqc2 $vf2, 0x10(pSrc)\n        lqc2 $vf3, 0x20(pSrc)\n        lqc2 $vf4, 0x30(pSrc)\n        vmul.xyzw $vf1, $vf1, $vf5\n        vmul.xyzw $vf2, $vf2, $vf5\n        vmul.xyzw $vf3, $vf3, $vf5\n        vmul.xyzw $vf4, $vf4, $vf5\n        sqc2 $vf1, 0x0(pDst)\n        sqc2 $vf2, 0x10(pDst)\n        sqc2 $vf3, 0x20(pDst)\n        sqc2 $vf4, 0x30(pDst)\n    }\n    ModelView[3][3] = 1.0f;\n    PS2glLoadMatrixf(ModelView);\n    GLI_AddNormalInterpolation(GLI_BIG_GLOBALS_gs_st_CurrentMatrix + 0x10);\n\n    if (pMat != NULL)\n    {\n        pAnimaterTextureToUseSaved = (void*)GLI_g_AnimatedTextureToUse;\n        GLI_g_AnimatedTextureToUse = 0;\n        if (GLI_DRV_IsMaterialTransparent(pMat))\n            GLI_BIG_GLOBALS_xGlobalAlpha = 0.2f;\n        else\n            GLI_BIG_GLOBALS_xGlobalAlpha = 1.0f;\n        GLI_vClearSendMatStates();\n        GLI_DRV_SendMaterialToViewport(pMat);\n        GLI_BIG_GLOBALS_xGlobalAlpha = 1.0f;\n        GLI_g_AnimatedTextureToUse = (int)pAnimaterTextureToUseSaved;\n\n        g_PS2glContext.nEnableBits |= 0x800;\n        g_gsContext.TEST_1.ZTE = 1;\n        g_gsContext.ModFlgs.TEST_1_Modified = 1;\n        zTst = 1;\n        switch (g_PS2glContext.eDepthFunc)\n        {\n        case 0x200: zTst = 0; break;\n        case 0x207: zTst = 1; break;\n        case 0x203: zTst = 2; break;\n        case 0x201: zTst = 3; break;\n        case 0x202:\n        case 0x204:\n        case 0x205:\n        case 0x206:\n            break;\n        }\n        g_gsContext.TEST_1.ZTST = zTst;\n        g_gsContext.ModFlgs.TEST_1_Modified = 1;\n        g_PS2glContext.nLightBits &= ~0x400;\n    }\n\n    g_PS2glContext.eClippingFunction = 3;\n    if (g_PS2glContext.uiDmaOmitDataBits & 0x600)\n    {\n        *(int*)g_PS2glContext.pnColorMatMasks &= ~0x200;\n        *(int*)g_PS2glContext.pnColorMatMasks &= ~0x100;\n    }\n    g_PS2glContext.uiDmaOmitDataBits = 0;\n    g_PS2glContext.uiFastPathBits = 1;\n\n    pParticleList[0][3] = sx * XRESf;\n    pParticleList[2][3] = sy * YRESf;\n\n    CosValAdd = 5.0f * pMat->stDiffuse.xR;\n    CosVal = 6.0f * (g_ffFrameTime * (4.0f + pMat->stDiffuse.xR * pMat->stDiffuse.xG));\n    for (i = 0; i < NbSprites; i += 20)\n    {\n        pParticleList[(i << 1) + 4][3] = 2.5f * a64_fSinTable[(unsigned int)CosVal & 0x1FF];\n        CosVal += CosValAdd;\n    }\n\n    PS2glVertexPointer(NbSprites, 0x1406, -2, pParticleList);\n    PS2glInternalDrawSpriteArray(NbSprites);\n    g_PS2glContext.eClippingFunction = 3;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "J_New_DrawSpriteGenList",
+      "reason": "1044/1044 under 3.0.3, needs inline float-to-unsigned. Only residual: 'addiu a0,sp,0x60' and 'addiu v1,%lo(GLI_g_NegVect)' swapped at +0xdc before the VU block; pointer order, block scope and inline helper forms did not move it.",
+      "size": 1044,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawSpriteGen.c",
+      "status": "MISMATCH",
+      "target_size": 1044,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002bc4a0",
+      "candidate_size": 452,
+      "first_difference": 178,
+      "implementation": "void GLI_v_CalculateVectorsFor3DSpriteGen(MAT_tdstTransformation_* param0, J_ParticleSprite_* p, float sx, float sy);\n/* retail keeps pParticleList in a 16-byte aligned stack slot */\nvoid J_Draw3DSpriteGenList(GLI_tdstMaterial_* pMat, J_ParticleSprite_* pParticleList __attribute__((aligned(16))), unsigned int NbSprites)\n{\n    MAT_tdstTransformation_ InvertedCam;\n    float M[4][4];\n    MAT_tdstTransformation_ stMat;\n    unsigned int i;\n    float sx;\n    float sy;\n    J_ParticleSprite_* p;\n    unsigned int NbSpritesReal;\n    float (*pUV)[4];\n    float (*pColor)[4];\n    float (*pV)[4];\n    float PosX;\n    float PosY;\n    float PosZ;\n    float SumX;\n    float SumY;\n    float SumZ;\n    float DifX;\n    float DifY;\n    float DifZ;\n    unsigned int FirstCheck;\n    unsigned int j;\n\n    NbSpritesReal = 0;\n    if (NbSprites == 0)\n        return;\n\n    sx = 10.0f * pMat->stAmbient.xR;\n    sy = 10.0f * pMat->stAmbient.xG;\n    if (sx <= 0.0f)\n        sx = 0.01f;\n    if (sy <= 0.0f)\n        sy = 0.01f;\n\n    MAT_fn_vInvert(&InvertedCam, (GLI_g_p_stCurrentCam = *(int*)((GLD_tdstViewportAttributes_*)g_p_stCurrentViewport)->p_vSpecificToXD) + 0x10);\n    GLI_g_p_stCurrentCam = *(int*)((GLD_tdstViewportAttributes_*)g_p_stCurrentViewport)->p_vSpecificToXD;\n    if (g_UseFullMatrix)\n    {\n        GLI_vTransformToGLMatrix(M, &GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix);\n        MAT_fn_vInvert(&stMat);\n    }\n    else\n    {\n        GLI_vTransformToGLMatrix(M, GLI_g_p_stCurrentCam + 0x20);\n        MAT_fn_vInvert(&stMat, GLI_g_p_stCurrentCam + 0x10);\n    }\n    VAC_Acquire(GLI_g_hVAContainer, M, pMat);\n\n    GLI_g_stXVect.xX = stMat.stTransformMatrix.stCol_0.xX * sx;\n    GLI_g_stXVect.xY = stMat.stTransformMatrix.stCol_0.xY * sx;\n    GLI_g_stXVect.xZ = stMat.stTransformMatrix.stCol_0.xZ * sx;\n    GLI_g_stYVect.xX = stMat.stTransformMatrix.stCol_1.xX * sy;\n    GLI_g_stYVect.xY = stMat.stTransformMatrix.stCol_1.xY * sy;\n    GLI_g_stYVect.xZ = stMat.stTransformMatrix.stCol_1.xZ * sy;\n\n    NbSprites = (NbSprites < VAC_g_NbSpritesLefts) ? NbSprites : VAC_g_NbSpritesLefts;\n    if (NbSprites == 0)\n    {\n        VAC_UnAcquireAndDraw(GLI_g_hVAContainer, 0);\n        return;\n    }\n\n    FirstCheck = 1;\n    pUV = (float (*)[4])VAC_g_CurrentpT;\n    pColor = (float (*)[4])VAC_g_CurrentpC;\n    pV = (float (*)[4])VAC_g_CurrentpV;\n    for (i = 0; i < NbSprites; i++)\n    {\n        p = &pParticleList[i];\n        GLI_vPrefetch(&pParticleList[i + 4]);\n        if (FirstCheck)\n        {\n            FirstCheck = 0;\n            GLI_v_CalculateVectorsFor3DSpriteGen(&InvertedCam, p, sx, sy);\n            SumX = GLI_g_stXVect.xX + GLI_g_stYVect.xX;\n            SumY = GLI_g_stXVect.xY + GLI_g_stYVect.xY;\n            SumZ = GLI_g_stXVect.xZ + GLI_g_stYVect.xZ;\n            DifX = GLI_g_stXVect.xX - GLI_g_stYVect.xX;\n            DifY = GLI_g_stXVect.xY - GLI_g_stYVect.xY;\n            DifZ = GLI_g_stXVect.xZ - GLI_g_stYVect.xZ;\n        }\n\n        if (p->Flags != 2)\n        {\n            NbSpritesReal++;\n            PosX = p->Pos[0];\n            PosY = p->Pos[1];\n            PosZ = p->Pos[2];\n\n            pColor[0][0] = pColor[1][0] = pColor[2][0] = pColor[3][0] = pColor[4][0] = pColor[5][0] = p->Color[0];\n            pColor[0][1] = pColor[1][1] = pColor[2][1] = pColor[3][1] = pColor[4][1] = pColor[5][1] = p->Color[1];\n            pColor[0][2] = pColor[1][2] = pColor[2][2] = pColor[3][2] = pColor[4][2] = pColor[5][2] = p->Color[2];\n            pColor[0][3] = pColor[1][3] = pColor[2][3] = pColor[3][3] = pColor[4][3] = pColor[5][3] = p->Color[3];\n            pColor += 6;\n\n            pUV[0][0] = pUV[0][1] = pUV[1][1] = pUV[3][0] = pUV[3][1] = pUV[5][0] = 0.0f;\n            pUV[1][0] = pUV[2][0] = pUV[2][1] = pUV[4][0] = pUV[4][1] = pUV[5][1] = 1.0f;\n            pUV += 6;\n\n            pV[0][0] = PosX - SumX;\n            pV[0][1] = PosY - SumY;\n            pV[0][2] = PosZ - SumZ;\n            pV[0][3] = 1.0f;\n\n            pV[1][0] = PosX + DifX;\n            pV[1][1] = PosY + DifY;\n            pV[1][2] = PosZ + DifZ;\n            pV[1][3] = 1.0f;\n\n            pV[2][0] = PosX + SumX;\n            pV[2][1] = PosY + SumY;\n            pV[2][2] = PosZ + SumZ;\n            pV[2][3] = 1.0f;\n\n            pV[3][0] = PosX - SumX;\n            pV[3][1] = PosY - SumY;\n            pV[3][2] = PosZ - SumZ;\n            pV[3][3] = 1.0f;\n\n            pV[4][0] = PosX + SumX;\n            pV[4][1] = PosY + SumY;\n            pV[4][2] = PosZ + SumZ;\n            pV[4][3] = 1.0f;\n\n            pV[5][0] = PosX - DifX;\n            pV[5][1] = PosY - DifY;\n            pV[5][2] = PosZ - DifZ;\n            pV[5][3] = 1.0f;\n            pV += 6;\n        }\n\n        for (j = i + 1; j <= i + 1; j++)\n        {\n            if (pParticleList[j].bFirst)\n                FirstCheck = 1;\n        }\n    }\n\n    VAC_g_NbSpritesLefts -= NbSpritesReal;\n    VAC_g_CurrentNbSprites += NbSpritesReal;\n    VAC_g_CurrentpV += NbSpritesReal * 96;\n    VAC_g_CurrentpC += NbSpritesReal * 96;\n    VAC_g_CurrentpT += NbSpritesReal * 96;\n    VAC_UnAcquireAndDraw(GLI_g_hVAContainer, 0);\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "GLI_v_CalculateVectorsFor3DSpriteGen",
+      "reason": "452/452. Residual: V3.x in f1 and sqrt result in f2 where retail uses f5 and f1, and retail stores X.x before computing xInv*V3.y; inline normalize helpers shift more registers. Likely permuter.",
+      "size": 452,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawSpriteGen.c",
+      "status": "MISMATCH",
+      "target_size": 452,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00261970",
+      "candidate_size": 440,
+      "first_difference": 130,
+      "implementation": "void fn_vTreatDynamicHierarchyOfPlatForms(HIE_tdstSuperObject_* hSuperObj);\nvoid fn_vTreatDynamicHierarchy(HIE_tdstSuperObject_* hSuperObj, HIE_tdstSuperObject_* hMainChar, MTH3D_tdstVector_* p_stMainCharTranslation);\nvoid MAT_fn_vCompose(MAT_tdstTransformation_*, MAT_tdstTransformation_*, MAT_tdstTransformation_*);\nint CAM_fn_bSuperObjectIsACamera(HIE_tdstSuperObject_*);\nvoid fn_vSectInfoSetCurrentSector(tdstSectInfo_*, HIE_tdstSuperObject_*);\nHIE_tdstSuperObject_* fn_h_SectInfoGetCurrentSector(tdstSectInfo_*);\nvoid fn_vInsertObjectInSectorList(HIE_tdstSuperObject_*, HIE_tdstSuperObject_*);\nDNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_*);\nvoid GAM_fn_vSectInfoTestChangeSectorForCharacter(HIE_tdstSuperObject_*);\nvoid CAM_fn_vCameraManagement(void);\nvoid GLI_vRefreshAllCyclingTextures(float);\nstatic inline int fn_bDynamicEndFlag2(DNM_stDynamics* p_stDyn)\n{\n    return (p_stDyn->m_tdstDynamicsBaseBlock.ulEndFlags & 2) ? 1 : 0;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_vTreatDynamicHierarchyOfPlatForms",
+      "reason": "Size and control flow right under 3.0.3. Only the flag test registers differ (a0/a1 swapped around the movz); about 26 spellings, 60 declaration orders and a 500 s permuter run (best stayed at the base score 35) did not clear it.",
+      "size": 440,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameEng.c",
+      "status": "MISMATCH",
+      "target_size": 440,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00261b30",
+      "candidate_size": 732,
+      "first_difference": 82,
+      "implementation": "void fn_vTreatDynamicHierarchy(HIE_tdstSuperObject_* hSuperObj, HIE_tdstSuperObject_* hMainChar, MTH3D_tdstVector_* p_stMainCharTranslation);\nvoid MAT_fn_vCompose(MAT_tdstTransformation_*, MAT_tdstTransformation_*, MAT_tdstTransformation_*);\nint CAM_fn_bSuperObjectIsACamera(HIE_tdstSuperObject_*);\nvoid fn_vSectInfoSetCurrentSector(tdstSectInfo_*, HIE_tdstSuperObject_*);\nHIE_tdstSuperObject_* fn_h_SectInfoGetCurrentSector(tdstSectInfo_*);\nvoid fn_vInsertObjectInSectorList(HIE_tdstSuperObject_*, HIE_tdstSuperObject_*);\nDNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_*);\nvoid GAM_fn_vSectInfoTestChangeSectorForCharacter(HIE_tdstSuperObject_*);\nvoid CAM_fn_vCameraManagement(void);\nvoid GLI_vRefreshAllCyclingTextures(float);\nstatic inline int fn_bDynamicEndFlag2(DNM_stDynamics* p_stDyn)\n{\n    return (p_stDyn->m_tdstDynamicsBaseBlock.ulEndFlags & 2) ? 1 : 0;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_vTreatDynamicHierarchy",
+      "reason": "Size and control flow right under 3.0.3. Only the flag test registers differ (a0/a1 swapped around the movz); about 26 spellings, 60 declaration orders and a 500 s permuter run (best stayed at the base score 35) did not clear it.",
+      "size": 732,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameEng.c",
+      "status": "MISMATCH",
+      "target_size": 732,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002608e0",
+      "candidate_size": 740,
+      "first_difference": 57,
+      "implementation": "void GAM_fn_vUpdateDynamicHierarchy_New(void)\n{\n    int hMCN;\n    unsigned char bIsAnInit;\n    unsigned char bMustRebuildSectorList;\n    HIE_tdstSuperObject_* hMainActor;\n    HIE_tdstSuperObject_* hCurrentSector;\n    unsigned char ucIndex;\n\n    bMustRebuildSectorList = 0;\n    bIsAnInit = 0;\n    hMCN = MC_fn_hGetFirstMainCharNode();\n    if (fn_bIsTransitionInProgress())\n        return;\n    for (ucIndex = 0; hMCN != 0; ucIndex++)\n    {\n        hMainActor = MC_fn_hGetCharacterInMainCharacterNode(hMCN);\n        hCurrentSector = fn_h_SectInfoGetCurrentSector(hMainActor->hLinkedObject.p_stCharacter->h_SectInfo);\n        if (hCurrentSector != g_a_hSOCurrentMainSector[ucIndex])\n            bMustRebuildSectorList = 1;\n        if (g_a_hSOCurrentMainSector[ucIndex] == NULL)\n            bIsAnInit = 1;\n        hMCN = MC_fn_hGetNextMainCharNode(hMCN);\n    }\n    if (bIsAnInit && !fn_bIsTransitionInProgress())\n        fn_vClearDynamicHierarchy(NULL);\n    if (bIsAnInit || bMustRebuildSectorList)\n    {\n        hMCN = MC_fn_hGetFirstMainCharNode();\n        for (ucIndex = 0; hMCN != 0; ucIndex++)\n        {\n            hMainActor = MC_fn_hGetCharacterInMainCharacterNode(hMCN);\n            hCurrentSector = fn_h_SectInfoGetCurrentSector(hMainActor->hLinkedObject.p_stCharacter->h_SectInfo);\n            if (hCurrentSector != g_a_hSOCurrentMainSector[ucIndex])\n            {\n                if (g_a_hSOCurrentMainSector[ucIndex] != NULL)\n                    GAM_vSetSectorActivity(g_a_hSOCurrentMainSector[ucIndex], 0);\n                g_a_hSOCurrentMainSector[ucIndex] = hCurrentSector;\n            }\n            hMCN = MC_fn_hGetNextMainCharNode(hMCN);\n        }\n        hMCN = MC_fn_hGetFirstMainCharNode();\n        for (ucIndex = 0; hMCN != 0; )\n        {\n            hMainActor = MC_fn_hGetCharacterInMainCharacterNode(hMCN);\n            if ((unsigned char)((hMainActor->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 1) ? 1 : 0))\n            {\n                hMCN = MC_fn_hGetNextMainCharNode(hMCN);\n                ucIndex++;\n                continue;\n            }\n            GAM_vSetSectorActivity(g_a_hSOCurrentMainSector[ucIndex], 1);\n            hMCN = MC_fn_hGetNextMainCharNode(hMCN);\n            ucIndex++;\n        }\n        GAM_fn_vRemoveActorsFromNewlyInactiveSectors();\n        GAM_fn_vAddActorsFromNewlyActiveSectors();\n        GAM_fn_vAddAlwaysActiveActors(bIsAnInit);\n        fn_vDesinitInactivePerso();\n        for (hCurrentSector = SECT_fn_hGetActiveSectorListHead(); hCurrentSector != NULL; )\n            hCurrentSector = SECT_fn_hResolveSectorNextActivity(hCurrentSector);\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "GAM_fn_vUpdateDynamicHierarchy_New",
+      "reason": "740/740 under 3.0.3; saved-register numbering only. Best of 90 declaration orders leaves 41 register rows.",
+      "size": 740,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameEng.c",
+      "status": "MISMATCH",
+      "target_size": 740,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002c4ee0",
+      "candidate_size": 776,
+      "first_difference": 60,
+      "implementation": "void GLI_vFreeTextureBloc(unsigned int TextureBlocId)\n{\n    unsigned int Channel;\n    GLI_tdstTexture_* p_stTexture;\n    unsigned int lTextureCounter;\n    int ChannelHigh;\n    int ChannelLow;\n\n    if (GLI_g_NbTexturesAllocatedForThisBloc[TextureBlocId] == 0)\n        return;\n    ChannelLow = GLI_g_BaseChannelForThisBloc[TextureBlocId];\n    ChannelHigh = ChannelLow + 1;\n    if (ChannelLow >= 4)\n    {\n        Channel = (ChannelLow - 4) >> 1;\n        for (lTextureCounter = 0; lTextureCounter < GLI_g_NbTransitionTextures[Channel]; lTextureCounter++)\n        {\n            p_stTexture = (GLI_tdstTexture_*)GLI_g_TransitionTextureInformation[Channel][lTextureCounter];\n            if (p_stTexture)\n            {\n                if (p_stTexture->bIsAvailable && p_stTexture->p_stSpecParam)\n                {\n                    PS2_fn_vEnterGLCriticalSection();\n                    PS2glLiberator(p_stTexture->p_stSpecParam);\n                    PS2_fn_vLeaveGLCriticalSection();\n                }\n                p_stTexture->p_stSpecParam = NULL;\n                p_stTexture->bIsAvailable = 0;\n            }\n        }\n        GLI_g_NbTransitionTextures[Channel] = 0;\n    }\n    else\n    {\n        for (lTextureCounter = 0; lTextureCounter < 400; lTextureCounter++)\n        {\n            if (((int*)gs_aDEFTableOfTextureMemoryChannels)[lTextureCounter] != 0xC0DE0005 && (((int*)gs_aDEFTableOfTextureMemoryChannels)[lTextureCounter] == ChannelLow || ((int*)gs_aDEFTableOfTextureMemoryChannels)[lTextureCounter] == ChannelHigh))\n            {\n                p_stTexture = ((GLI_tdstTexture_**)gs_aDEFTableOfTextureAlreadyRead)[lTextureCounter];\n                if (p_stTexture)\n                {\n                    if (p_stTexture->bIsAvailable && p_stTexture->p_stSpecParam)\n                    {\n                        PS2_fn_vEnterGLCriticalSection();\n                        PS2glLiberator(p_stTexture->p_stSpecParam);\n                        PS2_fn_vLeaveGLCriticalSection();\n                    }\n                    p_stTexture->p_stSpecParam = NULL;\n                    p_stTexture->bIsAvailable = 0;\n                }\n            }\n        }\n    }\n    PS2_fn_vEnterGLCriticalSection();\n    PS2glDeleteTextures(GLI_g_NbTexturesAllocatedForThisBloc[TextureBlocId], GLI_g_TextureNames[TextureBlocId]);\n    PS2_fn_vLeaveGLCriticalSection();\n    GLI_g_NbTexturesAllocatedForThisBloc[TextureBlocId] = 0;\n    if (TextureBlocId == 2 || TextureBlocId == 3)\n        fn_pfnCurrentTransitionDeallocator()((void*)GLI_g_TextureMemSpace[TextureBlocId]);\n    else\n        fn_vFreeInBinaryPreservingTheCurrentMode((void*)GLI_g_TextureMemSpace[TextureBlocId]);\n    GLI_g_TextureMemSpace[TextureBlocId] = 0;\n    if (TextureBlocId == 0 && GLI_g_RasterFont)\n        GLI_vUnLoadRasterFontMaterial();\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "GLI_vFreeTextureBloc",
+      "reason": "Only structural residual is retail's 'addiu v0,v0,0' after base+Channel*100 in the GLI_g_TransitionTextureInformation access (the loop-pad nop at +0xdc follows from that 4-byte shift); ~50 array, struct, cast, inline and offsetof spellings under 3.0.1 and 3.0.3 all fold it. Rest is register numbering.",
+      "size": 784,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
+      "status": "MISMATCH",
+      "target_size": 784,
+      "unresolved_relocations": [
+        {
+          "offset": 648,
+          "symbol": "@496",
+          "type": 5
+        },
+        {
+          "offset": 672,
+          "symbol": "@496",
+          "type": 6
+        }
+      ]
+    },
+    {
+      "address": "0x002c51f0",
+      "candidate_size": 1500,
+      "first_difference": 93,
+      "implementation": "void LoadTextureBlocInternal(int DestTextureBlocID, int ChannelId)\n{\n    unsigned int Flag;\n    unsigned int GL_iTextureFormat;\n    int i;\n    GLI_tdstTexturePS2GL_* p_stSpecParam;\n    GLI_tdstTexture_* p_stTexture;\n    unsigned int NbTexturesInBloc;\n    unsigned int ChannelHigh;\n    unsigned int ChannelLow;\n    unsigned int lTextureCounter;\n\n    if (ChannelId < 0 || ChannelId > 7)\n    {\n        printf(\"Wrong channel\\n\");\n        return;\n    }\n    ChannelLow = ChannelId & ~1;\n    ChannelHigh = ChannelLow + 1;\n    GLI_g_BaseChannelForThisBloc[DestTextureBlocID] = ChannelLow;\n    NbTexturesInBloc = 0;\n    for (lTextureCounter = 0; lTextureCounter < 400; lTextureCounter++)\n    {\n        unsigned int Channel = ((unsigned int*)gs_aDEFTableOfTextureMemoryChannels)[lTextureCounter];\n        if (Channel != 0xC0DE0005 && ((int*)gs_aDEFTableOfTextureAlreadyRead)[lTextureCounter] != 0)\n        {\n            if (ChannelLow == Channel || ChannelHigh == Channel)\n                NbTexturesInBloc++;\n        }\n    }\n    if (ChannelLow == 0)\n        NbTexturesInBloc = NbTexturesInBloc + 3 + M2D_fn_iNbTexturesNeededForMenu();\n    GLI_g_NbTexturesAllocatedForThisBloc[DestTextureBlocID] = NbTexturesInBloc;\n    PS2_fn_vEnterGLCriticalSection();\n    PS2glGenTextures(GLI_g_NbTexturesAllocatedForThisBloc[DestTextureBlocID], GLI_g_TextureNames[DestTextureBlocID]);\n    PS2_fn_vLeaveGLCriticalSection();\n    if (GLI_g_CreatingTBF)\n    {\n        GLI_g_TextureMemSpace[DestTextureBlocID] = (int)fn_pvMallocInBinaryPreservingTheCurrentMode(0x400000);\n        GLI_g_CurrentTexture = GLI_g_CurrentTextureBuffer = GLI_g_TextureMemSpace[DestTextureBlocID];\n    }\n    else\n    {\n        GLI_g_CurrentTexture = GLI_g_CurrentTextureBuffer = GLI_g_TextureMemSpace[DestTextureBlocID];\n    }\n    GLI_g_NbTexturesForThisBloc[DestTextureBlocID] = 0;\n    for (lTextureCounter = 0; lTextureCounter < 400; lTextureCounter++)\n    {\n        unsigned int Channel = ((unsigned int*)gs_aDEFTableOfTextureMemoryChannels)[lTextureCounter];\n        if (Channel != 0xC0DE0005 && (ChannelLow == Channel || ChannelHigh == Channel))\n        {\n            p_stTexture = ((GLI_tdstTexture_**)gs_aDEFTableOfTextureAlreadyRead)[lTextureCounter];\n            if (p_stTexture)\n            {\n                if (ChannelLow >= 4)\n                {\n                    unsigned int Transition = (ChannelLow - 4) >> 1;\n                    GLI_g_TransitionTextureInformation[Transition][GLI_g_NbTransitionTextures[Transition]++] = (int)p_stTexture;\n                }\n                PS2_fn_vEnterGLCriticalSection();\n                p_stTexture->p_stSpecParam = (GLI_tdstTexturePS2GL_*)PS2glAllocator64(4);\n                PS2_fn_vLeaveGLCriticalSection();\n                p_stSpecParam = p_stTexture->p_stSpecParam;\n                p_stSpecParam->TextureID = GLI_g_TextureNames[DestTextureBlocID][GLI_g_NbTexturesForThisBloc[DestTextureBlocID]++];\n                for (i = 0; p_stTexture->a255_cFileName[i] != 0; i++)\n                    p_stTexture->a255_cFileName[i] = toupper(p_stTexture->a255_cFileName[i]);\n                GLI_vLoadTextureFile(p_stTexture);\n                p_stTexture->bIsAvailable = ChannelHigh;\n                if (strstr(p_stTexture->a255_cFileName, \"_AD\"))\n                {\n                    p_stTexture->lTextureCaps |= 0x20;\n                }\n                else if (strstr(p_stTexture->a255_cFileName, \"_NZ\"))\n                {\n                    p_stTexture->lTextureCaps &= ~8;\n                    p_stTexture->lTextureCaps |= 2;\n                }\n                switch (*(unsigned char*)&GLI_g_ExternalTextureHeader)\n                {\n                case 1:\n                    p_stTexture->lTextureCaps &= ~0xA;\n                    break;\n                case 2:\n                    p_stTexture->lTextureCaps &= ~0x22;\n                    p_stTexture->lTextureCaps |= 8;\n                    break;\n                case 4:\n                    p_stTexture->lTextureCaps &= ~0x28;\n                    p_stTexture->lTextureCaps |= 2;\n                    break;\n                case 8:\n                    p_stTexture->lTextureCaps &= ~0xA;\n                    p_stTexture->lTextureCaps |= 0x20;\n                    break;\n                }\n                p_stTexture->lTextureCaps &= ~4;\n                if (GLI_g_ExternalTextureHeader & 0x100)\n                    p_stTexture->lTextureCaps |= 4;\n                if ((p_stTexture->lTextureCaps & 8) == 8 || (p_stTexture->lTextureCaps & 2) == 2)\n                    GL_iTextureFormat = 0x1908;\n                else\n                    GL_iTextureFormat = 0x1907;\n                g_LevelTextureLoaded++;\n                Flag = GLI_g_GlobalBpp;\n                if (GL_iTextureFormat == 0x1908)\n                    Flag |= 0x10000000;\n                GLI_vRegisterTextureWithFlags(GLI_g_CurrentTexture, p_stSpecParam->TextureID, Flag, p_stTexture);\n            }\n        }\n    }\n    if (ChannelLow == 0)\n        GLI_vLoadRasterFontMaterial();\n    printf(\"Loaded %d texture in bloc %d\\n\", GLI_g_NbTexturesForThisBloc[DestTextureBlocID], DestTextureBlocID);\n    printf(\"Textures Loaded : %d\\n\", g_LevelTextureLoaded);\n    GLI_vCloseTXCFile();\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "LoadTextureBlocInternal",
+      "reason": "Size matches, same unreproduced 'addiu v0,v0,0' on GLI_g_TransitionTextureInformation as GLI_vFreeTextureBloc at +0x290 (ours has an extra nop at +0xe4 instead), s2/s3 register reuse and pad nops shifted, lhu/sh order of lRealWidth at +0x340.",
+      "size": 1500,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
+      "status": "MISMATCH",
+      "target_size": 1500,
+      "unresolved_relocations": [
+        {
+          "offset": 428,
+          "symbol": "@496",
+          "type": 5
+        },
+        {
+          "offset": 452,
+          "symbol": "@496",
+          "type": 6
+        }
+      ]
+    },
+    {
+      "address": "0x002c4ee0",
+      "candidate_size": 776,
+      "first_difference": 60,
+      "implementation": "void GLI_vFreeTextureBloc(unsigned int TextureBlocId)\n{\n    unsigned int Channel;\n    GLI_tdstTexture_* p_stTexture;\n    unsigned int lTextureCounter;\n    int ChannelHigh;\n    int ChannelLow;\n\n    if (GLI_g_NbTexturesAllocatedForThisBloc[TextureBlocId] == 0)\n        return;\n    ChannelLow = GLI_g_BaseChannelForThisBloc[TextureBlocId];\n    ChannelHigh = ChannelLow + 1;\n    if (ChannelLow >= 4)\n    {\n        Channel = (ChannelLow - 4) >> 1;\n        for (lTextureCounter = 0; lTextureCounter < GLI_g_NbTransitionTextures[Channel]; lTextureCounter++)\n        {\n            p_stTexture = (GLI_tdstTexture_*)GLI_g_TransitionTextureInformation[Channel][lTextureCounter];\n            if (p_stTexture)\n            {\n                if (p_stTexture->bIsAvailable && p_stTexture->p_stSpecParam)\n                {\n                    PS2_fn_vEnterGLCriticalSection();\n                    PS2glLiberator(p_stTexture->p_stSpecParam);\n                    PS2_fn_vLeaveGLCriticalSection();\n                }\n                p_stTexture->p_stSpecParam = NULL;\n                p_stTexture->bIsAvailable = 0;\n            }\n        }\n        GLI_g_NbTransitionTextures[Channel] = 0;\n    }\n    else\n    {\n        for (lTextureCounter = 0; lTextureCounter < 400; lTextureCounter++)\n        {\n            if (((int*)gs_aDEFTableOfTextureMemoryChannels)[lTextureCounter] != 0xC0DE0005 && (((int*)gs_aDEFTableOfTextureMemoryChannels)[lTextureCounter] == ChannelLow || ((int*)gs_aDEFTableOfTextureMemoryChannels)[lTextureCounter] == ChannelHigh))\n            {\n                p_stTexture = ((GLI_tdstTexture_**)gs_aDEFTableOfTextureAlreadyRead)[lTextureCounter];\n                if (p_stTexture)\n                {\n                    if (p_stTexture->bIsAvailable && p_stTexture->p_stSpecParam)\n                    {\n                        PS2_fn_vEnterGLCriticalSection();\n                        PS2glLiberator(p_stTexture->p_stSpecParam);\n                        PS2_fn_vLeaveGLCriticalSection();\n                    }\n                    p_stTexture->p_stSpecParam = NULL;\n                    p_stTexture->bIsAvailable = 0;\n                }\n            }\n        }\n    }\n    PS2_fn_vEnterGLCriticalSection();\n    PS2glDeleteTextures(GLI_g_NbTexturesAllocatedForThisBloc[TextureBlocId], GLI_g_TextureNames[TextureBlocId]);\n    PS2_fn_vLeaveGLCriticalSection();\n    GLI_g_NbTexturesAllocatedForThisBloc[TextureBlocId] = 0;\n    if (TextureBlocId == 2 || TextureBlocId == 3)\n        fn_pfnCurrentTransitionDeallocator()((void*)GLI_g_TextureMemSpace[TextureBlocId]);\n    else\n        fn_vFreeInBinaryPreservingTheCurrentMode((void*)GLI_g_TextureMemSpace[TextureBlocId]);\n    GLI_g_TextureMemSpace[TextureBlocId] = 0;\n    if (TextureBlocId == 0 && GLI_g_RasterFont)\n        GLI_vUnLoadRasterFontMaterial();\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "GLI_vFreeTextureBloc",
+      "reason": "Retail 'addiu v0,v0,0' after base+Channel*100 on GLI_g_TransitionTextureInformation still unreproduced after ~170 forms under 3.0.1/3.0.3: subscripts reversed, out-of-bounds rows, null-pointer offsets, uninitialised locals, late-propagated zeros, side effects in the index, long long/short casts, struct-pointer inlines. No form gives the +4 byte size (780); long long and short casts add two shift instructions and an uninitialised offset adds an addu. Rest is register numbering.",
+      "size": 784,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
+      "status": "MISMATCH",
+      "target_size": 784,
+      "unresolved_relocations": [
+        {
+          "offset": 648,
+          "symbol": "@496",
+          "type": 5
+        },
+        {
+          "offset": 672,
+          "symbol": "@496",
+          "type": 6
+        }
+      ]
     }
   ],
   "data": {},
@@ -57013,6 +57226,14 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_PixelOperation.c",
       "status": "MATCH"
     },
+    "0x00162860": {
+      "address": "0x00162860",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-lib",
+      "name": "AE_InternalGetBPandPSMFromID",
+      "size": 296,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_PixelOperation.c",
+      "status": "MATCH"
+    },
     "0x00162990": {
       "address": "0x00162990",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -59405,10 +59626,26 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeefile.cpp",
       "status": "MATCH"
     },
+    "0x0018a1b0": {
+      "address": "0x0018a1b0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "usnd_vLeaveCritSect",
+      "size": 100,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeethrd.cpp",
+      "status": "MATCH"
+    },
     "0x0018a220": {
       "address": "0x0018a220",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "usnd_uiTryToEnterCritSect",
+      "size": 164,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeethrd.cpp",
+      "status": "MATCH"
+    },
+    "0x0018a2d0": {
+      "address": "0x0018a2d0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "usnd_vEnterCritSect",
       "size": 164,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeethrd.cpp",
       "status": "MATCH"
@@ -66301,6 +66538,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c",
       "status": "MATCH"
     },
+    "0x00228a10": {
+      "address": "0x00228a10",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "fn_vUpdateCharacterSkinList",
+      "size": 128,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c",
+      "status": "MATCH"
+    },
     "0x00228a90": {
       "address": "0x00228a90",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
@@ -66338,6 +66583,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_p_stSetCheapCharacterListAura",
       "size": 264,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ProcOptim.cxx",
+      "status": "MATCH"
+    },
+    "0x00229290": {
+      "address": "0x00229290",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "fn_p_stActivateCheapCharacter",
+      "size": 176,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ProcOptim.cxx",
       "status": "MATCH"
     },
@@ -66418,6 +66671,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "TestPositionOfCheapCharacter",
       "size": 476,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ProcOptim.cxx",
+      "status": "MATCH"
+    },
+    "0x00229da0": {
+      "address": "0x00229da0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "ActivateCheapCharacter",
+      "size": 60,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ProcOptim.cxx",
       "status": "MATCH"
     },
@@ -67709,6 +67970,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Shooter.c",
       "status": "MATCH"
     },
+    "0x00249750": {
+      "address": "0x00249750",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "fn_p_GetViewFinderDistance",
+      "size": 212,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Shooter.c",
+      "status": "MATCH"
+    },
     "0x00249830": {
       "address": "0x00249830",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -67891,6 +68160,14 @@
       "name": "fn_p_stSoundProcedureChangeVolumeId",
       "size": 228,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/AiProcSound.c",
+      "status": "MATCH"
+    },
+    "0x0024b980": {
+      "address": "0x0024b980",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "fn_p_stMusicMarkerSlotControlFunction",
+      "size": 228,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/AiFuncSound.c",
       "status": "MATCH"
     },
     "0x0024ba70": {
@@ -69261,6 +69538,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/ChanList.c",
       "status": "MATCH"
     },
+    "0x0025dd20": {
+      "address": "0x0025dd20",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "fn_vTakeControlOfLipChannel",
+      "size": 112,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/ChanList.c",
+      "status": "MATCH"
+    },
     "0x0025dd90": {
       "address": "0x0025dd90",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -69463,7 +69748,7 @@
     },
     "0x0025ff20": {
       "address": "0x0025ff20",
-      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
       "name": "fn_vToggleCinemascope",
       "size": 84,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameEng.c",
@@ -69525,11 +69810,27 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameEng.c",
       "status": "MATCH"
     },
+    "0x00261100": {
+      "address": "0x00261100",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vDestructAllFatherSonLinks",
+      "size": 468,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameEng.c",
+      "status": "MATCH"
+    },
     "0x002612e0": {
       "address": "0x002612e0",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "fn_vReputCharacterSuperObjectAtTheWorld",
       "size": 20,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameEng.c",
+      "status": "MATCH"
+    },
+    "0x00261300": {
+      "address": "0x00261300",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "fn_vEngine",
+      "size": 1208,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameEng.c",
       "status": "MATCH"
     },
@@ -71245,6 +71546,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/CollSet.c",
       "status": "MATCH"
     },
+    "0x0026efd0": {
+      "address": "0x0026efd0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "fn_vCollSetSetColliderVector",
+      "size": 76,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/CollSet.c",
+      "status": "MATCH"
+    },
     "0x0026f020": {
       "address": "0x0026f020",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -71274,6 +71583,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_stCollSetGetColliderVector",
       "size": 120,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/CollSet.c",
+      "status": "MATCH"
+    },
+    "0x0026f100": {
+      "address": "0x0026f100",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "fn_stCollSetGetColliderActor",
+      "size": 68,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/CollSet.c",
       "status": "MATCH"
     },
@@ -72733,6 +73050,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/Interpol/a3x_int.c",
       "status": "MATCH"
     },
+    "0x0027c260": {
+      "address": "0x0027c260",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "fn_v_InitSinTab",
+      "size": 468,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/Interpol/a3x_intn.c",
+      "status": "MATCH"
+    },
+    "0x0027d740": {
+      "address": "0x0027d740",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "fn_vUpdateFrameForSubAnim",
+      "size": 552,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/Interpol/a3x_intn.c",
+      "status": "MATCH"
+    },
     "0x0027dce0": {
       "address": "0x0027dce0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -72778,6 +73111,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_p_stGetLinearSpeedVector",
       "size": 176,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/Interpol/a3x_intn.c",
+      "status": "MATCH"
+    },
+    "0x0027f010": {
+      "address": "0x0027f010",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "fn_vUpdateFrame",
+      "size": 804,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/Interpol/a3x_intn.c",
       "status": "MATCH"
     },
@@ -77157,6 +77498,30 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawSpriteGen.c",
       "status": "MATCH"
     },
+    "0x002bb460": {
+      "address": "0x002bb460",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "J_DrawSpriteGenListAnimated",
+      "size": 1524,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawSpriteGen.c",
+      "status": "MATCH"
+    },
+    "0x002bbab0": {
+      "address": "0x002bbab0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "J_Draw3DSpriteGenListAnimated",
+      "size": 1308,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawSpriteGen.c",
+      "status": "MATCH"
+    },
+    "0x002bbfd0": {
+      "address": "0x002bbfd0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "J_Draw3DSpriteGenList",
+      "size": 1220,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawSpriteGen.c",
+      "status": "MATCH"
+    },
     "0x002bc670": {
       "address": "0x002bc670",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -77469,6 +77834,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
       "status": "MATCH"
     },
+    "0x002c4980": {
+      "address": "0x002c4980",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vUncompressScreenShotIntoMaterial",
+      "size": 700,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
+      "status": "MATCH"
+    },
     "0x002c4c40": {
       "address": "0x002c4c40",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -77549,6 +77922,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
       "status": "MATCH"
     },
+    "0x002c58f0": {
+      "address": "0x002c58f0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_iLoadTexture",
+      "size": 500,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
+      "status": "MATCH"
+    },
+    "0x002c5af0": {
+      "address": "0x002c5af0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vLoadRasterFontMaterial",
+      "size": 584,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
+      "status": "MATCH"
+    },
     "0x002c6280": {
       "address": "0x002c6280",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -77573,11 +77962,27 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
       "status": "MATCH"
     },
+    "0x002c6560": {
+      "address": "0x002c6560",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CTL_Load_Ini_File",
+      "size": 608,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
+      "status": "MATCH"
+    },
     "0x002c67c0": {
       "address": "0x002c67c0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "CTL_ReadLine",
       "size": 328,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
+      "status": "MATCH"
+    },
+    "0x002c6910": {
+      "address": "0x002c6910",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "GLI_v_SendTextureBitmapToPS2GL",
+      "size": 972,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
       "status": "MATCH"
     },
@@ -77634,6 +78039,22 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "GLI_vSetLoadingFix",
       "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
+      "status": "MATCH"
+    },
+    "0x002c7080": {
+      "address": "0x002c7080",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vFreeInBinaryPreservingTheCurrentMode",
+      "size": 152,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
+      "status": "MATCH"
+    },
+    "0x002c7120": {
+      "address": "0x002c7120",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_pvMallocInBinaryPreservingTheCurrentMode",
+      "size": 156,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
       "status": "MATCH"
     },
@@ -77954,6 +78375,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "VAC_Create",
       "size": 56,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_SPGArray.cpp",
+      "status": "MATCH"
+    },
+    "0x002cf140": {
+      "address": "0x002cf140",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "UnAcquireAndDraw__22C_VertexArrayContainerFUi",
+      "size": 748,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_SPGArray.cpp",
       "status": "MATCH"
     },
@@ -80125,6 +80554,30 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/ino/ps2/FFB.c",
       "status": "MATCH"
     },
+    "0x002f0bb0": {
+      "address": "0x002f0bb0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "INO_fn_vStopAllFFBEffectForDevice",
+      "size": 172,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/ino/ps2/FFB.c",
+      "status": "MATCH"
+    },
+    "0x002f13d0": {
+      "address": "0x002f13d0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "INO_fn_vDeleteAllPreCreatedConstantFFBEffectForAllDevices",
+      "size": 156,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/ino/ps2/FFB.c",
+      "status": "MATCH"
+    },
+    "0x002f1470": {
+      "address": "0x002f1470",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "INO_fn_vDeleteAllPreCreatedConstantFFBEffectForDevice",
+      "size": 172,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/ino/ps2/FFB.c",
+      "status": "MATCH"
+    },
     "0x002f1b60": {
       "address": "0x002f1b60",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -80269,6 +80722,30 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/IPO/IPO_Opt.c",
       "status": "MATCH"
     },
+    "0x002f3270": {
+      "address": "0x002f3270",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "IPT_fn_bIsKeyWordValid_SequencePadEnd",
+      "size": 224,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_kwan.c",
+      "status": "MATCH"
+    },
+    "0x002f3350": {
+      "address": "0x002f3350",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "IPT_fn_bIsKeyWordValid_SequencePad",
+      "size": 232,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_kwan.c",
+      "status": "MATCH"
+    },
+    "0x002f3440": {
+      "address": "0x002f3440",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "IPT_fn_bIsKeyWordValid_Sequence",
+      "size": 264,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_kwan.c",
+      "status": "MATCH"
+    },
     "0x002f3550": {
       "address": "0x002f3550",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -80301,11 +80778,51 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_kwan.c",
       "status": "MATCH"
     },
+    "0x002f36d0": {
+      "address": "0x002f36d0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "IPT_fn_bIsKeyWordValid_JoystickOrPadReleased",
+      "size": 736,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_kwan.c",
+      "status": "MATCH"
+    },
+    "0x002f39b0": {
+      "address": "0x002f39b0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "IPT_fn_bIsKeyWordValid_JoystickOrPadPressed",
+      "size": 736,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_kwan.c",
+      "status": "MATCH"
+    },
     "0x002f3c90": {
       "address": "0x002f3c90",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "IPT_fn_bIsKeyWordValid_JoystickOrPadJustReleased",
       "size": 424,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_kwan.c",
+      "status": "MATCH"
+    },
+    "0x002f3e40": {
+      "address": "0x002f3e40",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "IPT_fn_bIsKeyWordValid_JoystickOrPadJustPressed",
+      "size": 444,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_kwan.c",
+      "status": "MATCH"
+    },
+    "0x002f4000": {
+      "address": "0x002f4000",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "IPT_fn_bIsKeyWordValid_JoystickReleased",
+      "size": 260,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_kwan.c",
+      "status": "MATCH"
+    },
+    "0x002f4110": {
+      "address": "0x002f4110",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "IPT_fn_bIsKeyWordValid_JoystickPressed",
+      "size": 260,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_kwan.c",
       "status": "MATCH"
     },
@@ -80325,11 +80842,91 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_kwan.c",
       "status": "MATCH"
     },
+    "0x002f4420": {
+      "address": "0x002f4420",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "IPT_fn_bIsKeyWordValid_JoystickCorrectedNormValue",
+      "size": 768,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_kwan.c",
+      "status": "MATCH"
+    },
+    "0x002f4720": {
+      "address": "0x002f4720",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "IPT_fn_bIsKeyWordValid_JoystickTrueNormValue",
+      "size": 528,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_kwan.c",
+      "status": "MATCH"
+    },
+    "0x002f4930": {
+      "address": "0x002f4930",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "IPT_fn_bIsKeyWordValid_JoystickAngularValue",
+      "size": 632,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_kwan.c",
+      "status": "MATCH"
+    },
+    "0x002f4bb0": {
+      "address": "0x002f4bb0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "IPT_fn_bIsKeyWordValid_JoystickAxeValue",
+      "size": 348,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_kwan.c",
+      "status": "MATCH"
+    },
+    "0x002f4d10": {
+      "address": "0x002f4d10",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "IPT_fn_bIsKeyWordValid_PadReleased",
+      "size": 728,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_kwan.c",
+      "status": "MATCH"
+    },
+    "0x002f4ff0": {
+      "address": "0x002f4ff0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "IPT_fn_bIsKeyWordValid_PadPressed",
+      "size": 720,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_kwan.c",
+      "status": "MATCH"
+    },
     "0x002f52c0": {
       "address": "0x002f52c0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "IPT_fn_bIsKeyWordValid_PadJustReleased",
       "size": 424,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_kwan.c",
+      "status": "MATCH"
+    },
+    "0x002f5470": {
+      "address": "0x002f5470",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "IPT_fn_bIsKeyWordValid_PadJustPressed",
+      "size": 444,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_kwan.c",
+      "status": "MATCH"
+    },
+    "0x002f5630": {
+      "address": "0x002f5630",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "IPT_fn_bIsKeyWordValid_Not",
+      "size": 148,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_kwan.c",
+      "status": "MATCH"
+    },
+    "0x002f56d0": {
+      "address": "0x002f56d0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "IPT_fn_bIsKeyWordValid_Or",
+      "size": 280,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_kwan.c",
+      "status": "MATCH"
+    },
+    "0x002f57f0": {
+      "address": "0x002f57f0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "IPT_fn_bIsKeyWordValid_And",
+      "size": 280,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_kwan.c",
       "status": "MATCH"
     },
@@ -80533,6 +81130,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_main.c",
       "status": "MATCH"
     },
+    "0x002f6e20": {
+      "address": "0x002f6e20",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "IPT_fn_bModifyIPTAction",
+      "size": 100,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_main.c",
+      "status": "MATCH"
+    },
     "0x002f6e90": {
       "address": "0x002f6e90",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -80642,6 +81247,22 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "IPT_fn_vSetJoystickAxesForPadNumber2",
       "size": 84,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
+      "status": "MATCH"
+    },
+    "0x002f7530": {
+      "address": "0x002f7530",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "IPT_fn_bIsInvalidatedPadButton",
+      "size": 144,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
+      "status": "MATCH"
+    },
+    "0x002f76d0": {
+      "address": "0x002f76d0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "IPT_fn_bIsValidatedPadButton",
+      "size": 140,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
       "status": "MATCH"
     },
@@ -81930,6 +82551,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "MOR_fn_vMorphTo2",
       "size": 588,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MOR/specif/morph.c",
+      "status": "MATCH"
+    },
+    "0x003170a0": {
+      "address": "0x003170a0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "MOR_fn_xMorphing",
+      "size": 1648,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MOR/specif/morph.c",
       "status": "MATCH"
     },
@@ -83538,6 +84167,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "GetAnswer__15C_PS2MC_MessageFv",
       "size": 444,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/PS2MC/PS2MC_Messages.cpp",
+      "status": "MATCH"
+    },
+    "0x003321c0": {
+      "address": "0x003321c0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "Display__15C_PS2MC_MessageFv",
+      "size": 572,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/PS2MC/PS2MC_Messages.cpp",
       "status": "MATCH"
     }
