@@ -3,6 +3,7 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/MTH.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct GLI_tdstLight_ GLI_tdstLight_;
@@ -24,7 +25,6 @@ typedef struct tdstParticleGenerator_ tdstParticleGenerator_;
 typedef struct tdstPhysicalCollSet_ tdstPhysicalCollSet_;
 typedef struct tdstSectInfo_ tdstSectInfo_;
 typedef struct tdstSuperObjectLinks_ tdstSuperObjectLinks_;
-typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 typedef struct stInterpolatedPosition stInterpolatedPosition;
 typedef struct tdstAChannel_ tdstAChannel_;
 typedef struct tdstSubAnim_ tdstSubAnim_;
@@ -42,7 +42,6 @@ typedef union RGBAStruct_ RGBAStruct_;
 typedef union tduGetSetParamForNode_ tduGetSetParamForNode_;
 typedef union anon_0 anon_0;
 typedef struct tdstNodeInterpret_ tdstNodeInterpret_;
-typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
 typedef struct GEO_tdstGeometricObject_ GEO_tdstGeometricObject_;
 typedef struct LST2_tdstAnchorToCINE_tdxHandleToCineActorDyn LST2_tdstAnchorToCINE_tdxHandleToCineActorDyn;
 typedef struct tdstSubAnimInUse_ tdstSubAnimInUse_;
@@ -52,7 +51,6 @@ typedef struct anon_1 anon_1;
 typedef struct tdstGetSetParam_ tdstGetSetParam_;
 typedef struct LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn;
 typedef struct SECT_tdstListOfDNMLights_ SECT_tdstListOfDNMLights_;
-typedef struct MTH4D_tdstMatrix_ MTH4D_tdstMatrix_;
 typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;
 typedef struct tdstPLA_DeformationLink_ tdstPLA_DeformationLink_;
 typedef struct SECT_tdstListOfSOCharacters_ SECT_tdstListOfSOCharacters_;
@@ -106,7 +104,6 @@ typedef struct tdstAnim3d_ tdstAnim3d_;
 typedef struct tdstPLA_Hierarchy_ tdstPLA_Hierarchy_;
 typedef struct tdstFrame3d_ tdstFrame3d_;
 typedef struct tdstMSSound_ tdstMSSound_;
-typedef struct MTH3D_tdstMatrix_ MTH3D_tdstMatrix_;
 typedef struct tdstLipsSynchValue_ tdstLipsSynchValue_;
 typedef struct MOR_stMorphVector_ MOR_stMorphVector_;
 typedef struct LST2_tdstAnchorTotdxHandleToFamilyListDyn LST2_tdstAnchorTotdxHandleToFamilyListDyn;
@@ -1937,12 +1934,6 @@ typedef enum tdeMetaActionId_ {
     eNbMetaAction = 13,
 } tdeMetaActionId_;
 
-struct MTH3D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
-};
-
 struct stInterpolatedPosition {
     float stRot[4]; /* +0x0 */
     float stRotSca[4]; /* +0x10 */
@@ -2156,13 +2147,6 @@ struct tdstNodeInterpret_ {
     unsigned char eType; /* +0x7 */
 };
 
-struct MTH4D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
-    float xW; /* +0xc */
-} __attribute__((aligned(16)));
-
 struct GEO_tdstGeometricObject_ {
     MTH3D_tdstVector_* d_stListOfPoints; /* +0x0 */
     MTH3D_tdstVector_* d_stListOfPointsNormals; /* +0x4 */
@@ -2276,13 +2260,6 @@ struct SECT_tdstListOfDNMLights_ {
     SECT_tdstListOfDNMLights_* hNextBrotherDyn; /* +0x4 */
     SECT_tdstListOfDNMLights_* hPrevBrotherDyn; /* +0x8 */
     LST2_tdstAnchorToSECT_tdxHandleOfElementLstDNMLightsDyn* hFatherDyn; /* +0xc */
-};
-
-struct MTH4D_tdstMatrix_ {
-    MTH4D_tdstVector_ stCol_0; /* +0x0 */
-    MTH4D_tdstVector_ stCol_1; /* +0x10 */
-    MTH4D_tdstVector_ stCol_2; /* +0x20 */
-    MTH4D_tdstVector_ stCol_3; /* +0x30 */
 };
 
 struct MAT_tdstTransformation_ {
@@ -2734,12 +2711,6 @@ struct tdstFrame3d_ {
 struct tdstMSSound_ {
     _RollOffParam stRollOff; /* +0x0 */
     HIE_tdstSuperObject_* hMechaCharacter; /* +0xc */
-};
-
-struct MTH3D_tdstMatrix_ {
-    MTH3D_tdstVector_ stCol_0; /* +0x0 */
-    MTH3D_tdstVector_ stCol_1; /* +0xc */
-    MTH3D_tdstVector_ stCol_2; /* +0x18 */
 };
 
 struct tdstLipsSynchValue_ {

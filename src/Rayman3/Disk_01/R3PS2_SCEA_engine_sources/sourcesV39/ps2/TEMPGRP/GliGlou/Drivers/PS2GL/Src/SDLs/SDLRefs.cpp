@@ -3,18 +3,18 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/GEO.h"
+#include "r3/GLI.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct _SDC_Instance_ _SDC_Instance_;
 typedef struct tdstSDLCacheEntry_ tdstSDLCacheEntry_;
 typedef struct C_Sdl C_Sdl;
 typedef struct tagGLlistdatas tagGLlistdatas;
-typedef struct GLI_tdstTexture_ GLI_tdstTexture_;
 typedef struct AGO_Light_ AGO_Light_;
 typedef struct C_SdlRef_LocalMatrix C_SdlRef_LocalMatrix;
 typedef struct C_SdlRef_TextureIdMatrix C_SdlRef_TextureIdMatrix;
 typedef struct GLI_tdstUVTransformation GLI_tdstUVTransformation;
-typedef struct GLI_tdstAnimatedTextureNode_ GLI_tdstAnimatedTextureNode_;
 typedef struct tagListData tagListData;
 typedef struct C_SdlRef_LocalMatrixForCheap C_SdlRef_LocalMatrixForCheap;
 typedef struct C_SdlRef_PointLighting C_SdlRef_PointLighting;
@@ -30,7 +30,6 @@ typedef struct sceGifTag sceGifTag;
 typedef struct tagGLprimbuf tagGLprimbuf;
 typedef struct C_SdlRef_TextureOffset C_SdlRef_TextureOffset;
 typedef struct tag_stVU1Parameters tag_stVU1Parameters;
-typedef struct GEO_tdstColor_ GEO_tdstColor_;
 typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
 
 struct C_Sdl {
@@ -63,32 +62,6 @@ struct tdstSDLCacheEntry_ {
 struct tagGLlistdatas {
     tagGLlistdatas* pNext; /* +0x0 */
     int apData[3]; /* +0x4 */
-};
-
-struct GLI_tdstTexture_ {
-    int bIsAvailable; /* +0x0 */
-    int lTextureQuality; /* +0x4 */
-    int p_vBitMap; /* +0x8 */
-    int p_vColorTable; /* +0xc */
-    int p_stSpecParam; /* +0x10 */
-    int lTextureCaps; /* +0x14 */
-    unsigned short lHeight; /* +0x18 */
-    unsigned short lWidth; /* +0x1a */
-    unsigned short lRealHeight; /* +0x1c */
-    unsigned short lRealWidth; /* +0x1e */
-    float fAddU; /* +0x20 */
-    float fAddV; /* +0x24 */
-    int lIncrementIsEnable; /* +0x28 */
-    unsigned int lChromakeyColorRGBA; /* +0x2c */
-    unsigned int ulBlendColorRGBA; /* +0x30 */
-    int lNumberOfLod; /* +0x34 */
-    unsigned int lCompressionCounter; /* +0x38 */
-    unsigned int lTypeOfCompression; /* +0x3c */
-    unsigned int lTypeOfMipMapping; /* +0x40 */
-    GLI_tdstTexture_* p_TextureOfSubstitution; /* +0x44 */
-    unsigned char ucBilinearMode; /* +0x48 */
-    unsigned char ucCylingMode; /* +0x49 */
-    char a255_cFileName[128]; /* +0x4a */
 };
 
 struct AGO_Light_ {
@@ -133,12 +106,6 @@ struct C_SdlRef_TextureIdMatrix : C_SdlRef {
 struct GLI_tdstUVTransformation {
     float stMat[2][2]; /* +0x0 */
     float stTrans[2]; /* +0x10 */
-};
-
-struct GLI_tdstAnimatedTextureNode_ {
-    GLI_tdstTexture_* p_stTexture; /* +0x0 */
-    float xDisplayTime; /* +0x4 */
-    GLI_tdstAnimatedTextureNode_* p_stNextDisplayNode; /* +0x8 */
 };
 
 struct tagListData {
@@ -304,13 +271,6 @@ struct tag_stVU1Parameters {
     unsigned int ui_TandL_Entrance; /* +0x94 */
     unsigned int uiNurbsRowCount; /* +0x98 */
     unsigned int eClippingMode; /* +0x9c */
-};
-
-struct GEO_tdstColor_ {
-    float xR; /* +0x0 */
-    float xG; /* +0x4 */
-    float xB; /* +0x8 */
-    float xA; /* +0xc */
 };
 
 struct GLI_tdstMaterial_ {

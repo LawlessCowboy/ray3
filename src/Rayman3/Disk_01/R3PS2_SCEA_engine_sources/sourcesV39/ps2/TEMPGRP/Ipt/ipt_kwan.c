@@ -3,6 +3,7 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/MTH.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct ISI_tdstColor_ ISI_tdstColor_;
@@ -10,7 +11,6 @@ typedef struct stDevice stDevice;
 typedef union tdu_KeyWordElementUnion_ tdu_KeyWordElementUnion_;
 typedef struct IPT_tdstKeyWordElement_ IPT_tdstKeyWordElement_;
 typedef struct anon_0 anon_0;
-typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 typedef struct IPT_tdstPadReadingOutput_ IPT_tdstPadReadingOutput_;
 typedef struct IPT_tdstDevice_ IPT_tdstDevice_;
 typedef struct IPT_tdstEntryElement_ IPT_tdstEntryElement_;
@@ -60,12 +60,6 @@ struct IPT_tdstKeyWordElement_ {
 
 struct anon_0 {
     unsigned char m_ucStatus; /* +0x0 */
-};
-
-struct MTH3D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
 };
 
 struct IPT_tdstPadReadingOutput_ {

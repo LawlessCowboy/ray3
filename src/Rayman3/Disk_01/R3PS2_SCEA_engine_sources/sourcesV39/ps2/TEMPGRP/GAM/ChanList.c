@@ -3,6 +3,7 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/MTH.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct GLI_tdstLight_ GLI_tdstLight_;
@@ -28,13 +29,8 @@ typedef struct tdstSubAnim_ tdstSubAnim_;
 typedef struct LST2_tdstAnchorToCINE_tdxHandleToChannelLinkDyn LST2_tdstAnchorToCINE_tdxHandleToChannelLinkDyn;
 typedef struct CINE_tdstCineActor_ CINE_tdstCineActor_;
 typedef struct stMorphData stMorphData;
-typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
-typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 typedef struct DNM_stObstacle DNM_stObstacle;
-typedef struct MTH_stRotation MTH_stRotation;
-typedef struct MTH_stMove MTH_stMove;
 typedef struct DNM_stReport DNM_stReport;
-typedef struct MTH4D_tdstMatrix_ MTH4D_tdstMatrix_;
 typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;
 typedef struct tdstPLA_Hierarchy_ tdstPLA_Hierarchy_;
 typedef struct tdstPLA_Deformation_ tdstPLA_Deformation_;
@@ -62,7 +58,6 @@ typedef struct tdstTransition_ tdstTransition_;
 typedef struct LST2_tdstAnchorToCINE_tdxHandleToCineActorDyn LST2_tdstAnchorToCINE_tdxHandleToCineActorDyn;
 typedef struct CINE_tdstCine_ CINE_tdstCine_;
 typedef struct tdstCouple_ tdstCouple_;
-typedef struct MTH3D_tdstMatrix_ MTH3D_tdstMatrix_;
 typedef struct LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn;
 typedef struct _RollOffParam _RollOffParam;
 typedef struct tdstMSSound_ tdstMSSound_;
@@ -238,19 +233,6 @@ struct stMorphData {
     unsigned char a_ucMorphingAmountMT[10]; /* +0x1c */
 };
 
-struct MTH4D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
-    float xW; /* +0xc */
-} __attribute__((aligned(16)));
-
-struct MTH3D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
-};
-
 struct DNM_stObstacle {
     float m_xRate; /* +0x0 */
     MTH3D_tdstVector_ m_stNorm; /* +0x4 */
@@ -258,16 +240,6 @@ struct DNM_stObstacle {
     GMT_tdstGameMaterial_* hMyMaterial; /* +0x1c */
     GMT_tdstGameMaterial_* hCollidedMaterial; /* +0x20 */
     HIE_tdstSuperObject_* mp_stSupObj; /* +0x24 */
-};
-
-struct MTH_stRotation {
-    float m_xAngle; /* +0x0 */
-    MTH3D_tdstVector_ m_stAxis; /* +0x4 */
-};
-
-struct MTH_stMove {
-    MTH3D_tdstVector_ m_stLinear; /* +0x0 */
-    MTH_stRotation m_stAngular; /* +0xc */
 };
 
 struct DNM_stReport {
@@ -284,13 +256,6 @@ struct DNM_stReport {
     MTH_stMove m_stAbsolutePrevPosition; /* +0x130 */
     MTH_stMove m_stAbsoluteCurrPosition; /* +0x14c */
     char m_cBitField; /* +0x168 */
-};
-
-struct MTH4D_tdstMatrix_ {
-    MTH4D_tdstVector_ stCol_0; /* +0x0 */
-    MTH4D_tdstVector_ stCol_1; /* +0x10 */
-    MTH4D_tdstVector_ stCol_2; /* +0x20 */
-    MTH4D_tdstVector_ stCol_3; /* +0x30 */
 };
 
 struct MAT_tdstTransformation_ {
@@ -601,12 +566,6 @@ struct CINE_tdstCine_ {
 struct tdstCouple_ {
     unsigned short wChild; /* +0x0 */
     unsigned short wFather; /* +0x2 */
-};
-
-struct MTH3D_tdstMatrix_ {
-    MTH3D_tdstVector_ stCol_0; /* +0x0 */
-    MTH3D_tdstVector_ stCol_1; /* +0xc */
-    MTH3D_tdstVector_ stCol_2; /* +0x18 */
 };
 
 struct LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn {

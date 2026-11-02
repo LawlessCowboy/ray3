@@ -3,6 +3,7 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/MTH.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct GLI_tdstLight_ GLI_tdstLight_;
@@ -23,14 +24,10 @@ typedef struct tdstPhysicalCollSet_ tdstPhysicalCollSet_;
 typedef struct tdstScriptAI_ tdstScriptAI_;
 typedef struct tdstState_ tdstState_;
 typedef struct LST2_tdstAnchorToCINE_tdxHandleToCineDyn LST2_tdstAnchorToCINE_tdxHandleToCineDyn;
-typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
 typedef struct COL_tdstCollideObject_ COL_tdstCollideObject_;
 typedef union HIE_tduLinkedObject_ HIE_tduLinkedObject_;
-typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
 typedef struct DNM_stObstacle DNM_stObstacle;
-typedef struct MTH_stRotation MTH_stRotation;
-typedef struct MTH_stMove MTH_stMove;
 typedef struct DNM_stReport DNM_stReport;
 typedef struct stColliderInfo_ stColliderInfo_;
 typedef struct tdstCollSet_ tdstCollSet_;
@@ -55,7 +52,6 @@ typedef struct tdstZoneSetList_ tdstZoneSetList_;
 typedef struct tdstTransparentSuperObjectForCamera_ tdstTransparentSuperObjectForCamera_;
 typedef struct tdstEventInTable_ tdstEventInTable_;
 typedef struct tdstBrain_ tdstBrain_;
-typedef struct MTH3D_tdstMatrix_ MTH3D_tdstMatrix_;
 typedef struct GEO_tdstDoubledIndex_ GEO_tdstDoubledIndex_;
 typedef struct AI_tdstMind_ AI_tdstMind_;
 typedef struct tdstAnim3d_ tdstAnim3d_;
@@ -74,7 +70,6 @@ typedef struct LST2_tdstAnchorToWP_tdhGraphNodeDyn LST2_tdstAnchorToWP_tdhGraphN
 typedef struct LST2_tdstAnchorTotdxHandleToSubAnimInUseDyn LST2_tdstAnchorTotdxHandleToSubAnimInUseDyn;
 typedef struct tdstSubAnim_ tdstSubAnim_;
 typedef struct WP_tdstGraphNode_ WP_tdstGraphNode_;
-typedef struct MTH4D_tdstMatrix_ MTH4D_tdstMatrix_;
 typedef struct tdstAveragePosition_ tdstAveragePosition_;
 typedef struct tdstCineinfo_ tdstCineinfo_;
 typedef struct LST2_tdstAnchorToZDX_tdxHandleToZoneSetEncapsulationOpt LST2_tdstAnchorToZDX_tdxHandleToZoneSetEncapsulationOpt;
@@ -185,13 +180,6 @@ struct LST2_tdstAnchorToCINE_tdxHandleToCineDyn {
     int lNumberOfElementsDyn; /* +0x8 */
 };
 
-struct MTH4D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
-    float xW; /* +0xc */
-} __attribute__((aligned(16)));
-
 struct COL_tdstCollideObject_ {
     short xNbPoints; /* +0x0 */
     short xNbElements; /* +0x2 */
@@ -215,12 +203,6 @@ union HIE_tduLinkedObject_ {
     GLI_tdstLight_* p_stLight; /* +0x0 */
     HIE_tdstModifierObject_* p_stModifierObject; /* +0x0 */
     int p_Void; /* +0x0 */
-};
-
-struct MTH3D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
 };
 
 struct HIE_tdstSuperObject_ {
@@ -259,16 +241,6 @@ struct DNM_stObstacle {
     GMT_tdstGameMaterial_* hMyMaterial; /* +0x1c */
     GMT_tdstGameMaterial_* hCollidedMaterial; /* +0x20 */
     HIE_tdstSuperObject_* mp_stSupObj; /* +0x24 */
-};
-
-struct MTH_stRotation {
-    float m_xAngle; /* +0x0 */
-    MTH3D_tdstVector_ m_stAxis; /* +0x4 */
-};
-
-struct MTH_stMove {
-    MTH3D_tdstVector_ m_stLinear; /* +0x0 */
-    MTH_stRotation m_stAngular; /* +0xc */
 };
 
 struct DNM_stReport {
@@ -514,12 +486,6 @@ struct tdstBrain_ {
     unsigned char bActiveDuringTransition; /* +0x9 */
 };
 
-struct MTH3D_tdstMatrix_ {
-    MTH3D_tdstVector_ stCol_0; /* +0x0 */
-    MTH3D_tdstVector_ stCol_1; /* +0xc */
-    MTH3D_tdstVector_ stCol_2; /* +0x18 */
-};
-
 struct GEO_tdstDoubledIndex_ {
     short a2_xIndex[2]; /* +0x0 */
 };
@@ -643,13 +609,6 @@ struct WP_tdstGraphNode_ {
     int m_lTypeOfWP; /* +0x10 */
     int m_lTypeOfWPInit; /* +0x14 */
     WP_tdstListOfArc_* m_hListOfArc; /* +0x18 */
-};
-
-struct MTH4D_tdstMatrix_ {
-    MTH4D_tdstVector_ stCol_0; /* +0x0 */
-    MTH4D_tdstVector_ stCol_1; /* +0x10 */
-    MTH4D_tdstVector_ stCol_2; /* +0x20 */
-    MTH4D_tdstVector_ stCol_3; /* +0x30 */
 };
 
 struct tdstAveragePosition_ {
