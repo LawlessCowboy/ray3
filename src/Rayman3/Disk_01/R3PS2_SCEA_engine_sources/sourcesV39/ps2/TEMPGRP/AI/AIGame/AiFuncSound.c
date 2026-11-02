@@ -2972,28 +2972,6 @@ int SND_fn_iGetNbMusicMarkerSlots(void);
 stMusicMarkerSlot* SND_fn_p_stGetMusicMarkerSlots(void);
 void fn_vOnAIErm_M_UpdateLastError(int FatalErrorNum, char* szMsg);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiFuncSound.c lines 137–162 */
-/* addr: 0x0024b980  size: 228 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 137
- *   +0x0004 -> line 142
- *   +0x0008 -> line 137
- *   +0x0020 -> line 138
- *   +0x0024 -> line 142
- *   +0x0034 -> line 147
- *   +0x003c -> line 148
- *   +0x0040 -> line 147
- *   +0x0044 -> line 148
- *   +0x0070 -> line 151
- *   +0x008c -> line 153
- *   +0x0094 -> line 154
- *   +0x00b4 -> line 157
- *   +0x00bc -> line 159
- *   +0x00c4 -> line 161
- *   +0x00c8 -> line 162
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 tdstNodeInterpret_* fn_p_stMusicMarkerSlotControlFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     tdeFuncId_ eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
@@ -3003,11 +2981,9 @@ tdstNodeInterpret_* fn_p_stMusicMarkerSlotControlFunction(HIE_tdstSuperObject_* 
     switch (eFuncId)
     {
 
-
         case eProc_SND_GetMusicMarker:
             p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
             lSlotId = (p_stValue->eType == E_vt_Float ? MTH_M_xRealToLong(p_stValue->uDummy.uParam.xValue) : p_stValue->uDummy.uParam.lValue) - 1;
-
 
             if (lSlotId < SND_fn_iGetNbMusicMarkerSlots() && lSlotId >= 0)
             {
@@ -3025,19 +3001,6 @@ tdstNodeInterpret_* fn_p_stMusicMarkerSlotControlFunction(HIE_tdstSuperObject_* 
 tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
 int SND_fn_bIsSoundPlaying(_SND_tduRefEvt u_RefEvt);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiFuncSound.c lines 114–130 */
-/* addr: 0x0024ba70  size: 88 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 114
- *   +0x0014 -> line 120
- *   +0x0020 -> line 121
- *   +0x0028 -> line 125
- *   +0x0034 -> line 128
- *   +0x0040 -> line 129
- *   +0x0044 -> line 130
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 tdstNodeInterpret_* fn_p_stIsSoundPlaying(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     _SND_tduRefEvt u_RefEvt;
@@ -3047,35 +3010,13 @@ tdstNodeInterpret_* fn_p_stIsSoundPlaying(HIE_tdstSuperObject_* p_SuperObjPerso,
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
     u_RefEvt.Id = st_Param.uDummy.uParam.ulValue;
 
-
-
     bIsPlaying = SND_fn_bIsSoundPlaying(u_RefEvt);
-
 
     p_stValue->uDummy.uParam.lValue = bIsPlaying;
     p_stValue->eType = E_vt_Integer;
     return p_stTree;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiFuncSound.c lines 78–108 */
-/* addr: 0x0024bad0  size: 168 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 78
- *   +0x0004 -> line 82
- *   +0x0008 -> line 78
- *   +0x0018 -> line 79
- *   +0x001c -> line 82
- *   +0x0054 -> line 85
- *   +0x005c -> line 89
- *   +0x0064 -> line 93
- *   +0x006c -> line 97
- *   +0x0074 -> line 100
- *   +0x007c -> line 106
- *   +0x0090 -> line 107
- *   +0x0094 -> line 108
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int SND_fn_s32GetVolumeLineSound(int s32_LineId);
 
 tdstNodeInterpret_* fn_p_stOptionGetTypeVolume(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
@@ -3113,26 +3054,6 @@ tdstNodeInterpret_* fn_p_stOptionGetTypeVolume(HIE_tdstSuperObject_* p_SuperObjP
 
 int SND_fn_s32GetSoundHandleState(int s32_ObjectId, int s32_TypeId, int s32_HandleId);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiFuncSound.c lines 37–73 */
-/* addr: 0x0024bb80  size: 212 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 37
- *   +0x0004 -> line 45
- *   +0x0008 -> line 37
- *   +0x0024 -> line 38
- *   +0x0028 -> line 45
- *   +0x0060 -> line 48
- *   +0x0068 -> line 52
- *   +0x0070 -> line 56
- *   +0x0078 -> line 60
- *   +0x0080 -> line 63
- *   +0x0088 -> line 69
- *   +0x0094 -> line 71
- *   +0x00b4 -> line 72
- *   +0x00b8 -> line 73
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 tdstNodeInterpret_* fn_p_stOptionGetHandleState(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     tdeFuncId_ eFuncId;
@@ -3171,16 +3092,6 @@ tdstNodeInterpret_* fn_p_stOptionGetHandleState(HIE_tdstSuperObject_* p_SuperObj
     return p_stTree;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiFuncSound.c lines 29–32 */
-/* addr: 0x0024bc60  size: 64 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 29
- *   +0x0014 -> line 30
- *   +0x0028 -> line 31
- *   +0x002c -> line 32
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 tdstNodeInterpret_* fn_p_stOptionGetHandle(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     (void)p_SuperObjPerso;
