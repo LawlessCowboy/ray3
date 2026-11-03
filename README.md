@@ -28,8 +28,8 @@ Checked with `python3 tools/match.py coverage` at each matching commit:
   library functions built without debug info (Sony SDK, C/C++ runtime, most
   of the harmonx `usnd` sound middleware, memory-card library). Library code
   above is only the PS2GL and harmonx sources with recovered debug info.
-- Translation units (`python3 tools/match.py tus --summary`): **162 / 354**
-  fully matched (game 156 / 332, library 6 / 22), with 183 more partially
+- Translation units (`python3 tools/match.py tus --summary`): **163 / 355**
+  fully matched (game 157 / 333, library 6 / 22), with 183 more partially
   matched. Only sources recovered into `src/Rayman3/` are counted, so SDK and
   runtime code without a source file is excluded.
 - Data: **0 / 141,992 bytes** (**0.0000%**) in scope, 500 third-party objects

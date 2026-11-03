@@ -1340,23 +1340,6 @@ int GLI_g_OldTV;
 float YRESf;
 float XRESf;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 110–122 */
-/* addr: 0x002dcfb0  size: 156 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 110
- *   +0x0028 -> line 111
- *   +0x0034 -> line 113
- *   +0x0040 -> line 115
- *   +0x0044 -> line 116
- *   +0x0048 -> line 117
- *   +0x004c -> line 118
- *   +0x0050 -> line 119
- *   +0x0054 -> line 120
- *   +0x0058 -> line 121
- *   +0x0088 -> line 122
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 6135–6263 */
 /* addr: 0x002dd050  size: 2420 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):

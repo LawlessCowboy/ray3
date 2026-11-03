@@ -79588,10 +79588,10 @@
     },
     "0x002dcfb0": {
       "address": "0x002dcfb0",
-      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
       "name": "__dt__9C_GrassFxFv",
       "size": 156,
-      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/GrassFx.cpp",
       "status": "MATCH"
     },
     "0x002de970": {
@@ -83692,7 +83692,7 @@
     },
     "0x003236e0": {
       "address": "0x003236e0",
-      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
       "name": "TXT_vAfficheSpecialWithTransparency",
       "size": 1068,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/TXT/DisplayText.c",

@@ -77,6 +77,9 @@ LIBRARY_O3P_SOURCES_PATH = ROOT / 'config' / 'library-O3p-sources.txt'
 LIBRARY_301_SOURCES_PATH = ROOT / 'config' / 'library-3.0.1-sources.txt'
 
 LIBRARY_303_SOURCES_PATH = ROOT / 'config' / 'library-3.0.3-sources.txt'
+# Single functions verified with another compiler than their unit's, where no
+# one compiler matches the whole unit (see that file for evidence).
+FUNCTION_COMPILERS_PATH = ROOT / 'config' / 'compiler-function-overrides.txt'
 DEFAULT_INCLUDES = ROOT / 'include' / 'mwcc'
 MODEL_ORDER = {
     'gpt-5.4-mini': 0,
@@ -209,8 +212,35 @@ def owner_compiler(owner: Path | str) -> tuple[Path, str]:
     return GAME_MWCC, 'mwccps2-3.0.1-020123-o3'
 
 
-def compiler_profile(owner: Path | str) -> str:
-    return owner_compiler(owner)[1]
+def compiler_profile(owner: Path | str, function: str | None = None) -> str:
+    override = function_compiler(function, owner) if function else None
+    return override[1] if override else owner_compiler(owner)[1]
+
+
+_FUNCTION_COMPILERS: dict[str, str] | None = None
+FUNCTION_COMPILER_NAMES = {
+    '3.0.1': (GAME_MWCC, 'mwccps2-3.0.1-020123'),
+    '3.0.3-pad7b': (LATE_GAME_MWCC, 'mwccps2-3.0.3-pad7b'),
+    '3.0.3-pad7b-unfold': (UNFOLD_MWCC, 'mwccps2-3.0.3-pad7b-unfold'),
+}
+
+
+def function_compiler(function: str | None, owner: Path | str) -> tuple[Path, str] | None:
+    """(compiler, profile) for a function listed in compiler-function-overrides.txt."""
+    global _FUNCTION_COMPILERS
+    if _FUNCTION_COMPILERS is None:
+        lines = FUNCTION_COMPILERS_PATH.read_text().splitlines() if FUNCTION_COMPILERS_PATH.exists() else []
+        _FUNCTION_COMPILERS = {}
+        for line in lines:
+            fields = line.split('#', 1)[0].split()
+            if len(fields) == 2:
+                _FUNCTION_COMPILERS[fields[0]] = fields[1]
+    name = _FUNCTION_COMPILERS.get(function or '')
+    if name is None:
+        return None
+    compiler, profile = FUNCTION_COMPILER_NAMES[name]
+    suffix = 'o3' if is_game_source(owner) else 'lib'
+    return compiler, f'{profile}-{suffix}'
 
 
 @dataclass
@@ -596,9 +626,10 @@ def prefer_recorded_owner(entry: dict) -> dict:
     return entry
 
 
-def tool_paths(owner: Path | str | None = None) -> tuple[Path, Path, Path]:
+def tool_paths(owner: Path | str | None = None,
+               compiler: Path | None = None) -> tuple[Path, Path, Path]:
     wibo = Path(os.environ.get('WIBO', DEFAULT_WIBO))
-    default = owner_compiler(owner)[0] if owner is not None else DEFAULT_MWCC
+    default = compiler or (owner_compiler(owner)[0] if owner is not None else DEFAULT_MWCC)
     mwcc = Path(os.environ.get('MWCC', default))
     includes = Path(os.environ.get('MWC_INCLUDES', DEFAULT_INCLUDES))
     return wibo, mwcc, includes
@@ -619,11 +650,13 @@ def is_header_owned(entry: dict) -> bool:
     return bool(source) and Path(source).suffix.lower() in HEADER_SUFFIXES
 
 
-def compile_source(source: Path, owner: Path | str | None = None) -> tuple[Path | None, str]:
+def compile_source(source: Path, owner: Path | str | None = None,
+                   compiler: Path | None = None) -> tuple[Path | None, str]:
     """Compile a source file; ``owner`` (the canonical source path) selects
-    the flags when ``source`` is a candidate copy such as a permuter output."""
+    the flags when ``source`` is a candidate copy such as a permuter output.
+    ``compiler`` replaces the owner's compiler (a per-function override)."""
     flags = mwcc_flags(owner if owner is not None else source)
-    wibo, mwcc, includes = tool_paths(owner if owner is not None else source)
+    wibo, mwcc, includes = tool_paths(owner if owner is not None else source, compiler)
     for path, label in ((wibo, 'Wibo'), (mwcc, 'MWCC'), (includes, 'MWC include directory')):
         if not path.exists():
             return None, f'{label} missing: {path}'
@@ -1132,7 +1165,9 @@ def compare(entry: dict, verbose: bool = False, source_override: Path | None = N
             # canonical owner so check --source gives the same answer as the
             # real unit.
             owner = entry.get('source') or source
-    obj_path, build_state = compile_source(source, owner=owner)
+    override = function_compiler(entry.get('name'), owner)
+    obj_path, build_state = compile_source(source, owner=owner,
+                                           compiler=override[0] if override else None)
     if obj_path is None:
         return {'status': 'COMPILE_ERROR', 'entry': entry, 'detail': build_state}
     obj_sections = read_sections(obj_path)
@@ -2162,7 +2197,7 @@ def command_check(args: argparse.Namespace) -> int:
         manifest.setdefault('functions', {})[f"0x{entry['address']:08x}"] = {
             'address': f"0x{entry['address']:08x}", 'name': entry['name'], 'size': entry['size'],
             'source': entry['source'], 'status': 'MATCH',
-            'compiler_profile': compiler_profile(entry['source']),
+            'compiler_profile': compiler_profile(entry['source'], entry['name']),
         }
         save_manifest(manifest)
         print('recorded verified match')
@@ -2177,7 +2212,7 @@ def command_check(args: argparse.Namespace) -> int:
                 manifest['functions'][key] = {
                     'address': key, 'name': entry['name'], 'size': entry['size'],
                     'source': entry['source'], 'status': 'EQUIVALENT',
-                    'compiler_profile': compiler_profile(entry['source']),
+                    'compiler_profile': compiler_profile(entry['source'], entry['name']),
                 }
                 save_manifest(manifest)
                 print('recorded verified register-equivalent function')
