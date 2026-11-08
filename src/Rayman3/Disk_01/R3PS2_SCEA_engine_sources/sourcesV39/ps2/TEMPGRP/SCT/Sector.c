@@ -340,6 +340,37 @@ typedef union {
 #define MTH_SQRT_TO(_result, _value) \
     asm { sqrt.s _result, _value }
 
+#define MTH3D_M_vSetVectorElements(_d, _x, _y, _z) { (_d)->xX = (_x); (_d)->xY = (_y); (_d)->xZ = (_z); }
+#define MTH3D_M_vSubVector(_d, _a, _b) { (_d)->xX = (_a)->xX - (_b)->xX; (_d)->xY = (_a)->xY - (_b)->xY; (_d)->xZ = (_a)->xZ - (_b)->xZ; }
+#define MTH3D_M_vAddVector(_d, _a, _b) { (_d)->xX = (_a)->xX + (_b)->xX; (_d)->xY = (_a)->xY + (_b)->xY; (_d)->xZ = (_a)->xZ + (_b)->xZ; }
+#define MTH3D_M_vMulScalarVector(_d, _s, _a) { (_d)->xX = (_s) * (_a)->xX; (_d)->xY = (_s) * (_a)->xY; (_d)->xZ = (_s) * (_a)->xZ; }
+#define MTH3D_M_vCopyVector(_d, _s) { *(int*)&(_d)->xX = *(int*)&(_s)->xX; *(int*)&(_d)->xY = *(int*)&(_s)->xY; *(int*)&(_d)->xZ = *(int*)&(_s)->xZ; }
+inline void MAT_M_vGetTranslation(MAT_tdstTransformation_* _hMatrix, MTH3D_tdstVector_* _p_stTrans)
+{
+    ((int*)_p_stTrans)[0] = *(int*)&((MTH3D_tdstVector_*)&_hMatrix->stTransformMatrix.stCol_3)->xX; ((int*)_p_stTrans)[1] = *(int*)&((MTH3D_tdstVector_*)&_hMatrix->stTransformMatrix.stCol_3)->xY; ((int*)_p_stTrans)[2] = *(int*)&((MTH3D_tdstVector_*)&_hMatrix->stTransformMatrix.stCol_3)->xZ;
+}
+inline void MAT_M_vSetTranslation(MAT_tdstTransformation_* _hMatrix, MTH3D_tdstVector_* _p_stTrans)
+{
+    if (_hMatrix->eType == MAT_eTransform_Identity) _hMatrix->eType = MAT_eTransform_Translation;
+    *(int*)&((MTH3D_tdstVector_*)&_hMatrix->stTransformMatrix.stCol_3)->xX = ((int*)_p_stTrans)[0]; *(int*)&((MTH3D_tdstVector_*)&_hMatrix->stTransformMatrix.stCol_3)->xY = ((int*)_p_stTrans)[1]; *(int*)&((MTH3D_tdstVector_*)&_hMatrix->stTransformMatrix.stCol_3)->xZ = ((int*)_p_stTrans)[2];
+    _hMatrix->stTransformMatrix.stCol_3.xW = 1.0f;
+}
+
+void MAT_fn_vSetIdentity(MAT_tdstTransformation_* _hMatrix);
+void MAT_fn_vInvert(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hSource);
+void MAT_fn_vCompose(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hA, MAT_tdstTransformation_* _hB);
+void MAT_fn_vSetRotationVectors(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stVecI, MTH3D_tdstVector_* _p_stVecJ, MTH3D_tdstVector_* _p_stVecK);
+
+inline float MTH3D_xDotProductVector(MTH3D_tdstVector_* _p_stA, MTH3D_tdstVector_* _p_stB)
+{
+    float xResult, xBZ, xAZ, xBY, xAY, xBX, xAX;
+    xBX = _p_stB->xX; xAX = _p_stA->xX; xBY = _p_stB->xY; xAY = _p_stA->xY; xBZ = _p_stB->xZ; xAZ = _p_stA->xZ;
+    asm { mula.s xAX, xBX }
+    asm { madda.s xAY, xBY }
+    asm { madd.s xResult, xAZ, xBZ }
+    return xResult;
+}
+
 unsigned char g_ucSCTModuleId;
 short SCT_xNbChange;
 int SCT_a10_hSectorChangeHistory[10];
@@ -410,19 +441,63 @@ HIE_tdstSuperObject_* SECT_fn_hResearchInWhatSectorIAm(HIE_tdstSuperObject_* SEC
  */
 void SCT_fn_vGetSymMatrixOfCameraInMirror(MAT_tdstTransformation_* hMatrixOfCamera, MAT_tdstTransformation_* hMatrixOfSymCamera, MTH3D_tdstVector_* pstGlobalPositionOfSymCamera, MTH3D_tdstVector_* pstGlobalNormalOfMirror, MTH3D_tdstVector_* pstGlobalPointOfMirror)
 {
-    float a23;
-    float a13;
-    float a12;
-    float a33;
-    float a22;
-    MTH3D_tdstVector_ pstModuleAxes[3];
-    MTH3D_tdstVector_ stTransVectorOfCamera;
-    float xTemp;
-    MTH3D_tdstVector_ stTransVector;
-    MAT_tdstTransformation_ stTempMatrixForMultiplication;
-    MAT_tdstTransformation_ stMulMatrixScale;
     MAT_tdstTransformation_ stGlobalMatrixOfCamera;
-    /* TODO: decompile from asm/... */
+    MAT_tdstTransformation_ stMulMatrixScale;
+    MAT_tdstTransformation_ stTempMatrixForMultiplication;
+    MTH3D_tdstVector_ stTransVector;
+    float xTemp;
+    MTH3D_tdstVector_ stTransVectorOfCamera;
+    MTH3D_tdstVector_ pstModuleAxes[3];
+    float a22;
+    float a33;
+    float a12;
+    float a13;
+    float a23;
+
+    /* Compute the global matrix of the camera */
+    MAT_fn_vSetIdentity(&stGlobalMatrixOfCamera);
+    MAT_fn_vInvert(&stGlobalMatrixOfCamera, hMatrixOfCamera);
+
+    /* Compute the symmetry matrix */
+    MAT_fn_vSetIdentity(&stMulMatrixScale);
+
+
+    a22 = 1.0f - 2.0f * (pstGlobalNormalOfMirror->xY * pstGlobalNormalOfMirror->xY);
+    a33 = 1.0f - 2.0f * (pstGlobalNormalOfMirror->xZ * pstGlobalNormalOfMirror->xZ);
+    a12 = -2.0f * (pstGlobalNormalOfMirror->xX * pstGlobalNormalOfMirror->xY);
+    a13 = -2.0f * (pstGlobalNormalOfMirror->xX * pstGlobalNormalOfMirror->xZ);
+    a23 = -2.0f * (pstGlobalNormalOfMirror->xY * pstGlobalNormalOfMirror->xZ);
+
+    MTH3D_M_vSetVectorElements(&pstModuleAxes[0], 1.0f - 2.0f * (pstGlobalNormalOfMirror->xX * pstGlobalNormalOfMirror->xX), a12, a13);
+    MTH3D_M_vSetVectorElements(&pstModuleAxes[1], a12, a22, a23);
+    MTH3D_M_vSetVectorElements(&pstModuleAxes[2], a13, a23, a33);
+
+    MAT_fn_vSetRotationVectors(&stMulMatrixScale, &pstModuleAxes[0], &pstModuleAxes[1], &pstModuleAxes[2]);
+
+
+
+
+
+
+    MAT_M_vGetTranslation(&stGlobalMatrixOfCamera, &stTransVectorOfCamera);
+    MTH3D_M_vSubVector(&stTransVector, &stTransVectorOfCamera, pstGlobalPointOfMirror);
+
+    xTemp = -2.0f * MTH3D_xDotProductVector(&stTransVector, pstGlobalNormalOfMirror);
+
+    MTH3D_M_vMulScalarVector(&stTransVector, xTemp, pstGlobalNormalOfMirror);
+
+    MTH3D_M_vAddVector(&stTransVector, &stTransVector, &stTransVectorOfCamera);
+
+
+    stTempMatrixForMultiplication = stGlobalMatrixOfCamera;
+    MAT_fn_vCompose(&stGlobalMatrixOfCamera, &stMulMatrixScale, &stTempMatrixForMultiplication);
+
+    MAT_M_vSetTranslation(&stGlobalMatrixOfCamera, &stTransVector);
+    *(int*)&pstGlobalPositionOfSymCamera->xX = ((int*)&stTransVector)[0]; *(int*)&pstGlobalPositionOfSymCamera->xY = ((int*)&stTransVector)[1]; *(int*)&pstGlobalPositionOfSymCamera->xZ = ((int*)&stTransVector)[2];
+
+
+    MAT_fn_vSetIdentity(hMatrixOfSymCamera);
+    MAT_fn_vInvert(hMatrixOfSymCamera, &stGlobalMatrixOfCamera);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 1025–1025 */
@@ -737,77 +812,43 @@ void SECT_fn_vIsolateCharListNode(SECT_tdstListOfSOCharacters_* hNode)
  */
 void SCT_fn_vTestChangeSectorWithHistory(void* _pUnused, MTH3D_tdstVector_* _p_stAfterAbsolutePosition, HIE_tdstSuperObject_** _p_hSectorSOWhereIWas)
 {
-    int iInd;
-    HIE_tdstSuperObject_* param0;
-    SECT_tdstSector_* hCurrentSectorObject;
+    SECT_tdstListOfSOSectorsInCollisionInteraction_* hCollisionNode;
     SECT_tdstSector_* hSectorObject;
-    HIE_tdstSuperObject_* hCollisionNode;
-    HIE_tdstSuperObject_** aCollisionList;
-    SECT_tduVectorWords_ stMax;
-    SECT_tduVectorWords_ stMin;
-    int bInside;
+    SECT_tdstSector_* hCurrentSectorObject;
+    HIE_tdstSuperObject_* param0;
+    int iInd;
 
     param0 = *_p_hSectorSOWhereIWas;
     hCurrentSectorObject = param0->hLinkedObject.p_stSector;
-    stMin.i[0] = *(unsigned int*)&hCurrentSectorObject->stMinMaxPoints[0].xX; stMin.i[1] = *(unsigned int*)&hCurrentSectorObject->stMinMaxPoints[0].xY; stMin.i[2] = *(unsigned int*)&hCurrentSectorObject->stMinMaxPoints[0].xZ;
-    stMax.i[0] = *(unsigned int*)&hCurrentSectorObject->stMinMaxPoints[1].xX; stMax.i[1] = *(unsigned int*)&hCurrentSectorObject->stMinMaxPoints[1].xY; stMax.i[2] = *(unsigned int*)&hCurrentSectorObject->stMinMaxPoints[1].xZ;
-    if ((_p_stAfterAbsolutePosition->xX < stMin.v.xX) || (_p_stAfterAbsolutePosition->xX > stMax.v.xX))
-        bInside = 0;
-    else if ((_p_stAfterAbsolutePosition->xY < stMin.v.xY) || (_p_stAfterAbsolutePosition->xY > stMax.v.xY))
-        bInside = 0;
-    else if ((_p_stAfterAbsolutePosition->xZ < stMin.v.xZ) || (_p_stAfterAbsolutePosition->xZ > stMax.v.xZ))
-        bInside = 0;
-    else
-        bInside = 1;
-    if (!bInside || hCurrentSectorObject->xVirtual)
+
+    if (SECT_M_bIsInBorderBox(_p_stAfterAbsolutePosition, hCurrentSectorObject) && !hCurrentSectorObject->xVirtual)
     {
-        aCollisionList = (HIE_tdstSuperObject_**)hCurrentSectorObject->stListOfSectorsInCollisionInteraction.hFirstElementOpt;
-        for (iInd = hCurrentSectorObject->stListOfSectorsInCollisionInteraction.lNumberOfElementsOpt; iInd > 0; iInd--, aCollisionList++)
+        for (iInd = param0->hLinkedObject.p_stSector->stListOfSectorsInCollisionInteraction.lNumberOfElementsOpt, hCollisionNode = param0->hLinkedObject.p_stSector->stListOfSectorsInCollisionInteraction.hFirstElementOpt; iInd > 0; iInd--, hCollisionNode++)
         {
-            SECT_tduVectorWords_ stNodeMax;
-            SECT_tduVectorWords_ stNodeMin;
-            hCollisionNode = *aCollisionList;
-            hSectorObject = hCollisionNode->hLinkedObject.p_stSector;
-            if (!hSectorObject->xVirtual)
+            HIE_tdstSuperObject_* hSectorSO = hCollisionNode->hPointerOfSectorSO;
+            hSectorObject = hSectorSO->hLinkedObject.p_stSector;
+            if (hSectorObject->cPriority <= hCurrentSectorObject->cPriority)
+                return;
+            if (!hSectorObject->xVirtual && SECT_M_bIsInBorderBox(_p_stAfterAbsolutePosition, hSectorObject))
             {
-                stNodeMin.i[0] = *(unsigned int*)&hSectorObject->stMinMaxPoints[0].xX; stNodeMin.i[1] = *(unsigned int*)&hSectorObject->stMinMaxPoints[0].xY; stNodeMin.i[2] = *(unsigned int*)&hSectorObject->stMinMaxPoints[0].xZ;
-                stNodeMax.i[0] = *(unsigned int*)&hSectorObject->stMinMaxPoints[1].xX; stNodeMax.i[1] = *(unsigned int*)&hSectorObject->stMinMaxPoints[1].xY; stNodeMax.i[2] = *(unsigned int*)&hSectorObject->stMinMaxPoints[1].xZ;
-                if ((_p_stAfterAbsolutePosition->xX >= stNodeMin.v.xX) && (_p_stAfterAbsolutePosition->xX <= stNodeMax.v.xX) &&
-                    (_p_stAfterAbsolutePosition->xY >= stNodeMin.v.xY) && (_p_stAfterAbsolutePosition->xY <= stNodeMax.v.xY) &&
-                    (_p_stAfterAbsolutePosition->xZ >= stNodeMin.v.xZ) && (_p_stAfterAbsolutePosition->xZ <= stNodeMax.v.xZ))
-                {
-                    *_p_hSectorSOWhereIWas = hCollisionNode;
-                    return;
-                }
-            }
-        }
-        *_p_hSectorSOWhereIWas = SECT_fn_hResearchInWhatSectorIAm(param0->hFatherDyn, _p_stAfterAbsolutePosition);
-        return;
-    }
-    aCollisionList = (HIE_tdstSuperObject_**)hCurrentSectorObject->stListOfSectorsInCollisionInteraction.hFirstElementOpt;
-    for (iInd = hCurrentSectorObject->stListOfSectorsInCollisionInteraction.lNumberOfElementsOpt; iInd > 0; iInd--, aCollisionList++)
-    {
-        SECT_tduVectorWords_ stNodeMax;
-        SECT_tduVectorWords_ stNodeMin;
-        hCollisionNode = *aCollisionList;
-        hSectorObject = hCollisionNode->hLinkedObject.p_stSector;
-        if (hCurrentSectorObject->cPriority >= hSectorObject->cPriority)
-        {
-            break;
-        }
-        if (!hSectorObject->xVirtual)
-        {
-            stNodeMin.i[0] = *(unsigned int*)&hSectorObject->stMinMaxPoints[0].xX; stNodeMin.i[1] = *(unsigned int*)&hSectorObject->stMinMaxPoints[0].xY; stNodeMin.i[2] = *(unsigned int*)&hSectorObject->stMinMaxPoints[0].xZ;
-            stNodeMax.i[0] = *(unsigned int*)&hSectorObject->stMinMaxPoints[1].xX; stNodeMax.i[1] = *(unsigned int*)&hSectorObject->stMinMaxPoints[1].xY; stNodeMax.i[2] = *(unsigned int*)&hSectorObject->stMinMaxPoints[1].xZ;
-            if ((_p_stAfterAbsolutePosition->xX >= stNodeMin.v.xX) && (_p_stAfterAbsolutePosition->xX <= stNodeMax.v.xX) &&
-                (_p_stAfterAbsolutePosition->xY >= stNodeMin.v.xY) && (_p_stAfterAbsolutePosition->xY <= stNodeMax.v.xY) &&
-                (_p_stAfterAbsolutePosition->xZ >= stNodeMin.v.xZ) && (_p_stAfterAbsolutePosition->xZ <= stNodeMax.v.xZ))
-            {
-                *_p_hSectorSOWhereIWas = hCollisionNode;
+                *_p_hSectorSOWhereIWas = hSectorSO;
                 return;
             }
         }
+        return;
     }
+
+    for (iInd = param0->hLinkedObject.p_stSector->stListOfSectorsInCollisionInteraction.lNumberOfElementsOpt, hCollisionNode = param0->hLinkedObject.p_stSector->stListOfSectorsInCollisionInteraction.hFirstElementOpt; iInd > 0; iInd--, hCollisionNode++)
+    {
+        HIE_tdstSuperObject_* hSectorSO = hCollisionNode->hPointerOfSectorSO;
+        hSectorObject = hSectorSO->hLinkedObject.p_stSector;
+        if (!hSectorObject->xVirtual && SECT_M_bIsInBorderBox(_p_stAfterAbsolutePosition, hSectorObject))
+        {
+            *_p_hSectorSOWhereIWas = hSectorSO;
+            return;
+        }
+    }
+    *_p_hSectorSOWhereIWas = SECT_fn_hResearchInWhatSectorIAm(param0->hFatherDyn, _p_stAfterAbsolutePosition);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 277–352 */
@@ -859,68 +900,70 @@ void SCT_fn_vTestChangeSectorWithHistory(void* _pUnused, MTH3D_tdstVector_* _p_s
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#define MTH3D_M_vMiddleVector(_d, _a, _b) { (_d)->xX = (_a)->xX + (_b)->xX; (_d)->xY = (_a)->xY + (_b)->xY; (_d)->xZ = (_a)->xZ + (_b)->xZ; (_d)->xX /= 2.0f; (_d)->xY /= 2.0f; (_d)->xZ /= 2.0f; }
+
+inline float MTH3D_M_xNormVector(MTH3D_tdstVector_* _p_stV)
+{
+    float xX, xY, xZ, xResult;
+    xX = _p_stV->xX; xY = _p_stV->xY; xZ = _p_stV->xZ;
+    asm { mula.s xX, xX }
+    asm { madda.s xY, xY }
+    asm { madd.s xResult, xZ, xZ }
+    asm { sqrt.s xResult, xResult }
+    return xResult;
+}
+
+inline int SECT_M_bIsInBorderBox(MTH3D_tdstVector_* _p_stPosition, SECT_tdstSector_* _hSector)
+{
+    MTH3D_tdstVector_ stMin;
+    MTH3D_tdstVector_ stMax;
+    ((int*)&stMin)[0] = ((int*)&_hSector->stMinMaxPoints[0])[0]; ((int*)&stMin)[1] = ((int*)&_hSector->stMinMaxPoints[0])[1]; ((int*)&stMin)[2] = ((int*)&_hSector->stMinMaxPoints[0])[2];
+    ((int*)&stMax)[0] = ((int*)&_hSector->stMinMaxPoints[1])[0]; ((int*)&stMax)[1] = ((int*)&_hSector->stMinMaxPoints[1])[1]; ((int*)&stMax)[2] = ((int*)&_hSector->stMinMaxPoints[1])[2];
+    if (_p_stPosition->xX < stMin.xX || _p_stPosition->xX > stMax.xX)
+        return 0;
+    if (_p_stPosition->xY < stMin.xY || _p_stPosition->xY > stMax.xY)
+        return 0;
+    if (_p_stPosition->xZ < stMin.xZ || _p_stPosition->xZ > stMax.xZ)
+        return 0;
+    return 1;
+}
+
 HIE_tdstSuperObject_* SECT_fn_hResearchInWhatSectorIAm(HIE_tdstSuperObject_* SECT_hFatherSector, MTH3D_tdstVector_* p_stAbsolutePosition)
 {
-    char cVirtualPriority;
-    char cCurrentPriority;
+    SECT_tdstSector_* param0;
+    HIE_tdstSuperObject_* hSectorWhereIAm;
+    HIE_tdstSuperObject_* hVirtualSectorWhereIAm;
+    HIE_tdstSuperObject_* hCurrentSector;
+    HIE_tdstSuperObject_* hLastSector = NULL;
     float xVirtualDistance;
     float xCurrentDistance;
-    HIE_tdstSuperObject_* hLastSector;
-    HIE_tdstSuperObject_* hCurrentSector;
-    HIE_tdstSuperObject_* hVirtualSectorWhereIAm;
-    HIE_tdstSuperObject_* hSectorWhereIAm;
-    SECT_tdstSector_* param0;
-    SECT_tduVectorWords_ stMax;
-    SECT_tduVectorWords_ stMin;
-    float xDeltaX;
-    float xDeltaY;
-    float xDeltaZ;
+    char cCurrentPriority;
+    char cVirtualPriority;
+    MTH3D_tdstVector_ stCenter;
     float xDistance;
-    float xCenterX;
-    float xCenterY;
-    float xCenterZ;
-    int bInside;
 
-    hLastSector = NULL;
     cCurrentPriority = 0;
     cVirtualPriority = 0;
-    xCurrentDistance = 3.40282347e+38f;
+    xCurrentDistance = xVirtualDistance = 3.402822e+38f;
     hSectorWhereIAm = NULL;
     hVirtualSectorWhereIAm = NULL;
-    hCurrentSector = SECT_hFatherSector->hFirstElementDyn;
-    xVirtualDistance = 3.40282347e+38f;
 
-    while (hCurrentSector)
+    for (hCurrentSector = SECT_hFatherSector->hFirstElementDyn; hCurrentSector; hCurrentSector = hCurrentSector->hNextBrotherDyn)
     {
         param0 = hCurrentSector->hLinkedObject.p_stSector;
         hLastSector = hCurrentSector;
-        stMin.i[0] = *(unsigned int*)&param0->stMinMaxPoints[0].xX; stMin.i[1] = *(unsigned int*)&param0->stMinMaxPoints[0].xY; stMin.i[2] = *(unsigned int*)&param0->stMinMaxPoints[0].xZ;
-        stMax.i[0] = *(unsigned int*)&param0->stMinMaxPoints[1].xX; stMax.i[1] = *(unsigned int*)&param0->stMinMaxPoints[1].xY; stMax.i[2] = *(unsigned int*)&param0->stMinMaxPoints[1].xZ;
-        if ((p_stAbsolutePosition->xX < stMin.v.xX) || (p_stAbsolutePosition->xX > stMax.v.xX))
-            bInside = 0;
-        else if ((p_stAbsolutePosition->xY < stMin.v.xY) || (p_stAbsolutePosition->xY > stMax.v.xY))
-            bInside = 0;
-        else if ((p_stAbsolutePosition->xZ < stMin.v.xZ) || (p_stAbsolutePosition->xZ > stMax.v.xZ))
-            bInside = 0;
-        else
-            bInside = 1;
-        if (bInside)
+        if (SECT_M_bIsInBorderBox(p_stAbsolutePosition, param0))
         {
-            xCenterX = (param0->stMinMaxPoints[0].xX + param0->stMinMaxPoints[1].xX) / 2.0f;
-            xCenterY = (param0->stMinMaxPoints[0].xY + param0->stMinMaxPoints[1].xY) / 2.0f;
-            xCenterZ = (param0->stMinMaxPoints[0].xZ + param0->stMinMaxPoints[1].xZ) / 2.0f;
-            xDeltaX = xCenterX - p_stAbsolutePosition->xX;
-            xDeltaY = xCenterY - p_stAbsolutePosition->xY;
-            xDeltaZ = xCenterZ - p_stAbsolutePosition->xZ;
-            MTH_SQR3_TO(xDistance, xDeltaX, xDeltaY, xDeltaZ);
-            MTH_SQRT_TO(xDistance, xDistance);
+            MTH3D_M_vMiddleVector(&stCenter, &param0->stMinMaxPoints[0], &param0->stMinMaxPoints[1]);
+            MTH3D_M_vSubVector(&stCenter, &stCenter, p_stAbsolutePosition);
+            xDistance = MTH3D_M_xNormVector(&stCenter);
             if (!param0->xVirtual)
             {
                 if (param0->cPriority > cCurrentPriority)
                 {
+                    xCurrentDistance = xDistance;
                     cCurrentPriority = param0->cPriority;
                     hSectorWhereIAm = hCurrentSector;
-                    xCurrentDistance = xDistance;
                 }
                 else if ((param0->cPriority == cCurrentPriority) && (xDistance < xCurrentDistance))
                 {
@@ -932,9 +975,9 @@ HIE_tdstSuperObject_* SECT_fn_hResearchInWhatSectorIAm(HIE_tdstSuperObject_* SEC
             {
                 if (param0->cPriority > cVirtualPriority)
                 {
+                    xVirtualDistance = xDistance;
                     cVirtualPriority = param0->cPriority;
                     hVirtualSectorWhereIAm = hCurrentSector;
-                    xVirtualDistance = xDistance;
                 }
                 else if ((param0->cPriority == cVirtualPriority) && (xDistance < xVirtualDistance))
                 {
@@ -943,7 +986,6 @@ HIE_tdstSuperObject_* SECT_fn_hResearchInWhatSectorIAm(HIE_tdstSuperObject_* SEC
                 }
             }
         }
-        hCurrentSector = hCurrentSector->hNextBrotherDyn;
     }
     if (!hSectorWhereIAm)
         hSectorWhereIAm = hVirtualSectorWhereIAm;

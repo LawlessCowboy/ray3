@@ -1276,7 +1276,7 @@ long atol(const char* szString);
 int atoi(const char* szString);
 
 int TFMT_lProcessFormater(stTfmtStatus_* p_stStatus, char* szString, unsigned char* p_bLineBreak, unsigned char* p_bStartLine);
-void TFMT_pszReadNextChar(stTfmtStatus_* p_stStatus, HIE_tdstSuperObject_* hSuperObjPerso, char* pszCurrentChar, unsigned char* p_ucReturnedChar, unsigned char* p_bLineBreak);
+char* TFMT_pszReadNextChar(stTfmtStatus_* p_stStatus, HIE_tdstSuperObject_* hSuperObjPerso, char* pszCurrentChar, unsigned char* p_ucReturnedChar, unsigned char* p_bLineBreak);
 
 /* R5900 min.s/max.s; MWCC compiles the C comparison as compare-and-branch.
    The result stays in the register of the first operand, which is also the
@@ -1575,14 +1575,40 @@ void TFMT_vChangeLetter(HIE_tdstSuperObject_* hSuperObjPerso, unsigned char ucPo
     }
     if (wSourceObject >= 0 && wSourceObject < wNbObjectsInSourceTable)
     {
-        int iIndex;
-        char* pc;
-        pc = (char*)&d_stCurrentObjectsTable[0];
-        pc = pc + 4;
         p_stChannel = &hChannelArray[ucPosLetter];
-        p_stChannel->hSupObject->ulTypeOfLinkedObject = ((int*)pc)[iIndex = wSourceObject * 5] ? 8 : 1;
-        p_stChannel->hSupObject->hLinkedObject.p_Void = ((int*)pc)[iIndex = wSourceObject * 5];
+        p_stChannel->hSupObject->ulTypeOfLinkedObject = d_stCurrentObjectsTable[wSourceObject].h_Target ? 8 : 1;
+        p_stChannel->hSupObject->hLinkedObject.p_Void = d_stCurrentObjectsTable[wSourceObject].h_Target;
     }
+}
+
+unsigned int RND_fn_hReserveANewHandleIndex(void);
+void fn_vInitCSOList(tdstAChannel_** p_hChannelArray, unsigned int ulNumberOfChannels);
+size_t strlen(const char* szString);
+/* The recovered debug signature lists ten parameters, but both the caller
+   (a1 = the perso super-object, text in a2, three stack arguments) and the
+   callee (a1 never read, text taken from a2) show eleven. */
+char* TFMT_pszReadNextChar2(stTfmtStatus_* _p_stStatus, HIE_tdstSuperObject_* _hSuperObjPerso, char* _pszCurrentChar, unsigned char* _p_ucReturnedChar, unsigned char* _p_bLineBreak, int bDisplayFullString, short* wCurrentChar, unsigned int* ulEvent, unsigned int** ulDelay, short* wCurrentChar4Channels, unsigned short* p_uwIndexOfChar);
+void fn_vImplementChannelUpdate(HIE_tdstSuperObject_* _hSuperObjPerso, short _wCurrentChar4Channels, short _wSourceObject, float _xBaseCharX, float _xBaseCharZ, float _xCurCharWidth, float _xRandomPosRadius, float _xCurCharZoom);
+
+/* Shared by both TFMT_wPositionModulesAccordingToText variants: retail
+   attributes the whole block to the one source line of the call. */
+inline void TFMT_vInitStatus(stTfmtStatus_* _p_stStatus, HIE_tdstSuperObject_* _hSuperObjPerso, float _xScreenWidth)
+{
+    OffsetObjectTable = 0;
+    if (gs_hRandomHandleForTFMT == (unsigned int)-1)
+        gs_hRandomHandleForTFMT = RND_fn_hReserveANewHandleIndex();
+
+    _p_stStatus->xScreenWidth = _xScreenWidth;
+    _p_stStatus->xBaseCharZ = 0.0f;
+    _p_stStatus->xBaseCharX = 0.0f;
+    _p_stStatus->xBaseToAddX = 0.0f;
+    _p_stStatus->xCharWidth = g_stDefaultValuesForCharacter.m_xCharWidth;
+    _p_stStatus->xLineHeight = g_stDefaultValuesForCharacter.m_xLineHeight;
+    _p_stStatus->xCharZoom = g_stDefaultValuesForCharacter.m_xCharZoom;
+    _p_stStatus->xCurCharZoom = 0.0f;
+    _p_stStatus->cJustificationMode = 'l';
+    _p_stStatus->hSourceObjectTable = fn_hGetObjectsTableOfFamilyByIndex(_hSuperObjPerso->hLinkedObject.p_stCharacter->h_3dData->h_Family, 0);
+    _p_stStatus->xRandomPosRadius = 0.0f;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\TextFrmt.c lines 935–1054 */
@@ -1641,25 +1667,112 @@ void TFMT_vChangeLetter(HIE_tdstSuperObject_* hSuperObjPerso, unsigned char ucPo
  */
 unsigned int TFMT_wPositionModulesAccordingToText2(stTfmtStatus_* _p_stStatus, HIE_tdstSuperObject_* _hSuperObjPerso, char* _pszText, int _lStart, int _lEnd, unsigned char* bFirstTimeZ, short* pwCurrentChar, unsigned int* ulDelay)
 {
-    unsigned char ucTemp;
-    short wNbObjectsInSourceTable;
-    short wSourceObject;
-    unsigned char ucChar;
-    unsigned char bLineBreak;
-    char* pszEndText;
-    int bDisplayFullString;
-    unsigned int ulEvent;
-    unsigned short uwIndexOfChar;
-    unsigned short uwLenOfString;
-    short wCurrentChar4Channels;
-    short wCurrentChar;
     tdst3dData_* h_Current3dData;
-    /* TODO: decompile from asm/...
-       720-byte body with 8 register parameters (a0-a3 plus t0-t3), a 0x100-byte
-       frame and s0-s7/fp saved.  The prologue clamps the string with strlen,
-       reserves a handle through RND_fn_hReserveANewHandleIndex, zeroes four
-       status fields and then drives the per-character placement loop; the bulk
-       of the body has not been reconstructed. */
+    short wCurrentChar;
+    short wCurrentChar4Channels;
+    unsigned short uwLenOfString;
+    unsigned short uwIndexOfChar;
+    unsigned int ulEvent;
+    int bDisplayFullString;
+    char* pszEndText;
+    unsigned char bLineBreak;
+    unsigned char ucChar;
+    short wSourceObject;
+    short wNbObjectsInSourceTable;
+    unsigned char ucTemp;
+
+    wCurrentChar = 0;
+    uwLenOfString = 0;
+    wCurrentChar4Channels = 0;
+    bDisplayFullString = 0;
+    ulEvent = 0;
+
+    _lEnd = (_lEnd >= 0) ? _lEnd : strlen(_pszText);
+
+    pszEndText = _pszText + _lEnd;
+    if (*bFirstTimeZ == 1)
+        uwLenOfString = strlen(_pszText);
+
+    wCurrentChar = *pwCurrentChar;
+    if (wCurrentChar == -1)
+    {
+        bDisplayFullString = 1;
+        wCurrentChar = 0;
+    }
+
+    _pszText += _lStart;
+    uwIndexOfChar = _lStart;
+
+    TFMT_vInitStatus(_p_stStatus, _hSuperObjPerso, 0.0f);
+
+    h_Current3dData = _hSuperObjPerso->hLinkedObject.p_stCharacter->h_3dData;
+
+    while (_pszText < pszEndText && *_pszText)
+    {
+        while (_pszText < pszEndText)
+        {
+            _pszText = TFMT_pszReadNextChar2(_p_stStatus, _hSuperObjPerso, _pszText, &ucChar, &bLineBreak, bDisplayFullString, &wCurrentChar, &ulEvent, &ulDelay, &wCurrentChar4Channels, &uwIndexOfChar);
+
+            wNbObjectsInSourceTable = fn_uwGetObjectTableNumberOfelements(_p_stStatus->hSourceObjectTable);
+            if (ucChar < 32)
+            {
+                wSourceObject = -1;
+            }
+            else
+            {
+                ucTemp = fn_ucToTableElement(ucChar);
+                wSourceObject = (short)(ucTemp + OffsetObjectTable);
+            }
+
+            if (wSourceObject < 0 || wSourceObject >= wNbObjectsInSourceTable)
+            {
+                *pwCurrentChar = wCurrentChar;
+                return ulEvent;
+            }
+
+            if (*bFirstTimeZ == 1)
+            {
+                tdstAChannel_* hChannelArray;
+
+                h_Current3dData->ulNumberOfChannels = uwLenOfString;
+                fn_vInitCSOList(&hChannelArray, uwLenOfString);
+                h_Current3dData->hArrayOfChannels = hChannelArray;
+                h_Current3dData->hFirstActiveChannel = hChannelArray;
+                *bFirstTimeZ = 0;
+            }
+
+            fn_vImplementChannelUpdate(_hSuperObjPerso, wCurrentChar4Channels, wSourceObject, _p_stStatus->xBaseCharX, _p_stStatus->xBaseCharZ, _p_stStatus->xCurCharWidth, _p_stStatus->xRandomPosRadius, _p_stStatus->xCurCharZoom);
+
+            wCurrentChar4Channels++;
+            *pwCurrentChar = ++wCurrentChar;
+        }
+    }
+
+    return ulEvent;
+}
+
+HIE_tdstSuperObject_* PLA_fn_hFindNextFreeSupObj(void);
+void MAT_fn_vSetIdentity(MAT_tdstTransformation_* p_stMatrix);
+void MAT_fn_vSetScale(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stScale);
+float RND_fn_xGetRealRandomValue(unsigned int _lIndexNumber, float _xMin, float _xMax);
+
+inline float MTH_xAbs(float _x) { float _r; asm { abs.s _r, _x } return _r; }
+
+/* Word view of a vector: retail copies the components with lw/sw. */
+typedef union { MTH3D_tdstVector_ v; int i[3]; } tduTfmtV;
+inline void TFMT_vSetTranslation(MAT_tdstTransformation_* _hMatrix, tduTfmtV* _p_stVector)
+{
+    int* p_lDst;
+
+    if (_hMatrix->eType == 1)
+    {
+        _hMatrix->eType = 2;
+    }
+    p_lDst = (int*)&_hMatrix->stTransformMatrix.stCol_3;
+    p_lDst[0] = _p_stVector->i[0];
+    p_lDst[1] = _p_stVector->i[1];
+    p_lDst[2] = _p_stVector->i[2];
+    _hMatrix->stTransformMatrix.stCol_3.xW = 1.0f;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\TextFrmt.c lines 862–923 */
@@ -1711,13 +1824,58 @@ unsigned int TFMT_wPositionModulesAccordingToText2(stTfmtStatus_* _p_stStatus, H
  */
 void fn_vImplementChannelUpdate(HIE_tdstSuperObject_* _hSuperObjPerso, short _wCurrentChar4Channels, short _wSourceObject, float _xBaseCharX, float _xBaseCharZ, float _xCurCharWidth, float _xRandomPosRadius, float _xCurCharZoom)
 {
-    MTH3D_tdstVector_ stTransformation;
-    HIE_tdstSuperObject_* p_stSO_Child;
-    tdstAChannel_* hChannelArray;
-    tdstObjectsTableElement_* d_stCurrentObjectsTable;
-    tdst3dData_* h_Current3dData;
     tdstAChannel_* p_stChannel;
-    /* TODO: decompile from asm/... */
+    tdst3dData_* h_Current3dData;
+    tdstObjectsTableElement_* d_stCurrentObjectsTable;
+    tdstAChannel_* hChannelArray;
+    HIE_tdstSuperObject_* p_stSO_Child;
+    MTH3D_tdstVector_ stTransformation;
+
+    h_Current3dData = _hSuperObjPerso->hLinkedObject.p_stCharacter->h_3dData;
+    d_stCurrentObjectsTable = h_Current3dData->h_CurrentObjectsTable->d_stObjectsTable;
+    hChannelArray = h_Current3dData->hArrayOfChannels;
+
+    p_stSO_Child = PLA_fn_hFindNextFreeSupObj();
+
+    if (p_stSO_Child->hNextBrotherDyn) p_stSO_Child->hNextBrotherDyn->hPrevBrotherDyn = p_stSO_Child->hPrevBrotherDyn; if (p_stSO_Child->hPrevBrotherDyn) p_stSO_Child->hPrevBrotherDyn->hNextBrotherDyn = p_stSO_Child->hNextBrotherDyn; if (p_stSO_Child->hFatherDyn) { p_stSO_Child->hFatherDyn->lNumberOfElementsDyn--; if (p_stSO_Child->hFatherDyn->hFirstElementDyn == p_stSO_Child) p_stSO_Child->hFatherDyn->hFirstElementDyn = p_stSO_Child->hNextBrotherDyn; if (p_stSO_Child->hFatherDyn->hLastElementDyn == p_stSO_Child) p_stSO_Child->hFatherDyn->hLastElementDyn = p_stSO_Child->hPrevBrotherDyn; } p_stSO_Child->hNextBrotherDyn = NULL; p_stSO_Child->hPrevBrotherDyn = NULL; p_stSO_Child->hFatherDyn = NULL; p_stSO_Child->hNextBrotherDyn = NULL; p_stSO_Child->hPrevBrotherDyn = _hSuperObjPerso->hLastElementDyn; p_stSO_Child->hFatherDyn = _hSuperObjPerso; if (!_hSuperObjPerso->hFirstElementDyn) { _hSuperObjPerso->hFirstElementDyn = p_stSO_Child; } else { _hSuperObjPerso->hLastElementDyn->hNextBrotherDyn = p_stSO_Child; } _hSuperObjPerso->hLastElementDyn = p_stSO_Child; _hSuperObjPerso->lNumberOfElementsDyn++;
+
+    p_stChannel = &hChannelArray[_wCurrentChar4Channels];
+
+    p_stChannel->bControlledChannel = 1;
+
+    MAT_fn_vSetIdentity(p_stSO_Child->hLocalMatrix);
+
+    p_stChannel->hSupObject = p_stSO_Child;
+
+    p_stSO_Child->ulTypeOfLinkedObject = d_stCurrentObjectsTable[_wSourceObject].h_Target ? 8 : 1; p_stSO_Child->hLinkedObject.p_stPhysicalObject = (PO_tdstPhysicalObject_*)d_stCurrentObjectsTable[_wSourceObject].h_Target;
+    p_stSO_Child->fTransparenceLevel = 255.0f;
+
+    if (_wCurrentChar4Channels)
+    {
+        hChannelArray[_wCurrentChar4Channels - 1].p_stNextActiveChannel = p_stChannel;
+    }
+
+    if (p_stSO_Child)
+    {
+        MAT_tdstTransformation_* hMatrix = p_stSO_Child->hLocalMatrix;
+
+        stTransformation.xX = _xBaseCharX + RND_fn_xGetRealRandomValue(gs_hRandomHandleForTFMT, -_xRandomPosRadius, _xRandomPosRadius) + 0.5f * _xCurCharWidth;
+        stTransformation.xY = 0.0f;
+        /* Not original source, needs cleaning up: the self-assignment stops MWCC
+           reusing -_xRandomPosRadius across the call; retail negates it again. */
+        _xRandomPosRadius = _xRandomPosRadius;
+        stTransformation.xZ = _xBaseCharZ + RND_fn_xGetRealRandomValue(gs_hRandomHandleForTFMT, -_xRandomPosRadius, _xRandomPosRadius);
+
+        TFMT_vSetTranslation(hMatrix, (tduTfmtV*)&stTransformation);
+
+        if (MTH_xAbs(_xCurCharZoom - 1.0f) > 0.0001f)
+        {
+            stTransformation.xX = _xCurCharZoom;
+            stTransformation.xY = _xCurCharZoom;
+            stTransformation.xZ = _xCurCharZoom;
+            MAT_fn_vSetScale(hMatrix, &stTransformation);
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\TextFrmt.c lines 628–823 */
@@ -1832,19 +1990,182 @@ void fn_vImplementChannelUpdate(HIE_tdstSuperObject_* _hSuperObjPerso, short _wC
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void TFMT_pszReadNextChar2(stTfmtStatus_* _p_stStatus, char* _pszCurrentChar, unsigned char* _p_ucReturnedChar, unsigned char* _p_bLineBreak, int bDisplayFullString, short* wCurrentChar, unsigned int* ulEvent, unsigned int** ulDelay, short* wCurrentChar4Channels, unsigned short* p_uwIndexOfChar)
+char* TFMT_pszReadNextChar2(stTfmtStatus_* _p_stStatus, HIE_tdstSuperObject_* _hSuperObjPerso, char* _pszCurrentChar, unsigned char* _p_ucReturnedChar, unsigned char* _p_bLineBreak, int bDisplayFullString, short* wCurrentChar, unsigned int* ulEvent, unsigned int** ulDelay, short* wCurrentChar4Channels, unsigned short* p_uwIndexOfChar)
 {
-    unsigned char ucTemp;
-    int i;
-    unsigned char bStartLine;
+    unsigned char ucChar;
+    unsigned short uwLenString;
+    int lNbChar;
+    float xPrevZoom;
+    /* Not original source, needs cleaning up: permuter-found temporary that
+       gives retail's xWidth/xPrevWidth register assignment. */
+    stTfmtStatus_* p_stStatus;
+    float xPrevWidth;
     float xZoom;
     float xWidth;
-    float xPrevWidth;
-    float xPrevZoom;
-    int lNbChar;
-    unsigned short uwLenString;
-    unsigned char ucChar;
-    /* TODO: decompile from asm/... */
+    unsigned char bStartLine;
+    int i;
+    unsigned char ucTemp;
+
+    lNbChar = 0;
+    xPrevWidth = 0.0f;
+    xWidth = 0.0f;
+    xZoom = 0.0f;
+    xPrevZoom = 0.0f;
+    *_p_bLineBreak = 0;
+
+    if (!bDisplayFullString)
+    {
+        bStartLine = 1;
+        i = 0;
+        uwLenString = strlen(_pszCurrentChar);
+        ucChar = _pszCurrentChar[*wCurrentChar];
+
+        if (*ulEvent)
+        {
+            if (ucChar == '/')
+            {
+                /* Retail tests the slash itself plus one, not the next character. */
+                if ((unsigned char)(_pszCurrentChar[*wCurrentChar] + 1) == 'E' || (unsigned char)(_pszCurrentChar[*wCurrentChar] + 1) == 'e')
+                {
+                    (*wCurrentChar)++;
+                    *ulEvent = atoi(_pszCurrentChar + ++(*wCurrentChar));
+                    while (_pszCurrentChar[(*wCurrentChar)++] != ':')
+                        ;
+                }
+                else
+                {
+                    *ulEvent = 0;
+                }
+            }
+            else
+            {
+                *ulEvent = 0;
+            }
+            *_p_ucReturnedChar = 0;
+            _pszCurrentChar += uwLenString;
+            return _pszCurrentChar;
+        }
+
+        while (ucChar == '/')
+        {
+            ucChar = _pszCurrentChar[++(*wCurrentChar)];
+
+            if (ucChar == 'E' || ucChar == 'e')
+            {
+                *ulEvent = atoi(_pszCurrentChar + ++(*wCurrentChar));
+                while (_pszCurrentChar[(*wCurrentChar)++] != ':')
+                    ;
+                *_p_ucReturnedChar = 0;
+                _pszCurrentChar += uwLenString;
+                return _pszCurrentChar;
+            }
+
+            if (ucChar == 'D' || ucChar == 'd' || ucChar == 'P' || ucChar == 'p')
+            {
+                **ulDelay = atoi(_pszCurrentChar + ++(*wCurrentChar));
+                if (ucChar == 'P' || ucChar == 'p')
+                    **ulDelay = -**ulDelay;
+                while (_pszCurrentChar[(*wCurrentChar)++] != ':')
+                    ;
+                *_p_ucReturnedChar = 0;
+                _pszCurrentChar += uwLenString;
+                return _pszCurrentChar;
+            }
+
+            while (_pszCurrentChar[(*wCurrentChar)++] != ':')
+                ;
+            ucChar = _pszCurrentChar[*wCurrentChar];
+        }
+
+        *wCurrentChar4Channels = -1;
+
+        for (; i <= *wCurrentChar; i++)
+        {
+            ucChar = _pszCurrentChar[i];
+            if (ucChar == '/')
+            {
+                i += TFMT_lProcessFormater(_p_stStatus, _pszCurrentChar + i + 1, _p_bLineBreak, &bStartLine);
+                continue;
+            }
+
+            xZoom = _p_stStatus->xCharZoom;
+            if (xZoom == 0.0f)
+            {
+                if (TFMT_ga_ulNbScale)
+                    xZoom = TFMT_ga_fLetterScale[lNbChar % TFMT_ga_ulNbScale];
+                else
+                    xZoom = 1.0f;
+            }
+            _p_stStatus->xCurCharZoom = xZoom;
+
+            if (_p_stStatus->xCharWidth)
+            {
+                xWidth = (p_stStatus = _p_stStatus)->xCharWidth;
+            }
+            else
+            {
+                ucTemp = fn_ucToTableElement(ucChar);
+                xWidth = TFMT_ga_fLetterSpacing[ucTemp];
+            }
+
+            (*wCurrentChar4Channels)++;
+            if (!bStartLine)
+                _p_stStatus->xBaseToAddX += xPrevZoom * xPrevWidth;
+            else
+                bStartLine = 0;
+
+            lNbChar++;
+            xPrevZoom = xZoom;
+            xPrevWidth = xWidth;
+        }
+
+        _p_stStatus->xCurCharWidth = xZoom * xWidth;
+        _p_stStatus->xBaseCharX += _p_stStatus->xBaseToAddX;
+    }
+    else
+    {
+        bStartLine = 0;
+        uwLenString = strlen(_pszCurrentChar);
+        lNbChar = *p_uwIndexOfChar;
+
+        while (*_pszCurrentChar++ == '/')
+            _pszCurrentChar += TFMT_lProcessFormater(_p_stStatus, _pszCurrentChar, _p_bLineBreak, &bStartLine);
+        ucChar = _pszCurrentChar[-1];
+
+        xZoom = _p_stStatus->xCharZoom;
+        if (xZoom == 0.0f)
+        {
+            if (TFMT_ga_ulNbScale)
+                xZoom = TFMT_ga_fLetterScale[lNbChar % TFMT_ga_ulNbScale];
+            else
+                xZoom = 1.0f;
+        }
+        _p_stStatus->xCurCharZoom = xZoom;
+
+        if (!bStartLine)
+            _p_stStatus->xBaseCharX += _p_stStatus->xBaseToAddX;
+        else
+            bStartLine = 0;
+
+        if (_p_stStatus->xCharWidth)
+        {
+            _p_stStatus->xBaseToAddX = xZoom * _p_stStatus->xCharWidth;
+        }
+        else
+        {
+            ucTemp = fn_ucToTableElement(ucChar);
+            _p_stStatus->xBaseToAddX = xZoom * TFMT_ga_fLetterSpacing[ucTemp];
+        }
+
+        _p_stStatus->xCurCharWidth = _p_stStatus->xBaseToAddX;
+        lNbChar++;
+    }
+
+    *_p_ucReturnedChar = ucChar;
+    if (!bDisplayFullString)
+        _pszCurrentChar += uwLenString;
+    *p_uwIndexOfChar = lNbChar;
+    return _pszCurrentChar;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\TextFrmt.c lines 567–608 */
@@ -2019,6 +2340,15 @@ int TFMT_lProcessFormater(stTfmtStatus_* p_stStatus, char* szString, unsigned ch
     return ++iRet;
 }
 
+void fn_vCopyObjectFromObjectTabletoAnother(tdstObjectsTablesList_* _hTargetTable, tdstObjectsTablesList_* _hSourceTable, unsigned short _uwTargetObject, unsigned short _uwSourceObject);
+unsigned short TFMT_uwGetNbCharsFillingALine(stTfmtStatus_* p_stStatus, HIE_tdstSuperObject_* hSuperObjPerso, char* pszText, float* p_xActualWidth);
+
+inline HIE_tdstSuperObject_* fn_hGetChannelSuperObject(tdst3dData_* h_3dData, unsigned short uwChannel)
+{
+    tdstAChannel_* a_hArrayOfChannels = h_3dData->hArrayOfChannels;
+    return a_hArrayOfChannels ? a_hArrayOfChannels[uwChannel].hSupObject : NULL;
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\TextFrmt.c lines 340–482 */
 /* addr: 0x00269700  size: 1316 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -2106,20 +2436,143 @@ int TFMT_lProcessFormater(stTfmtStatus_* p_stStatus, char* szString, unsigned ch
  */
 short TFMT_wPositionModulesAccordingToText(stTfmtStatus_* _p_stStatus, HIE_tdstSuperObject_* _hSuperObjPerso, char* _pszText, int _lStart, int _lEnd, float _xScreenWidth, stTfmtLineResults_* _d_stLineResults, short _wNbLines)
 {
+    float xJustificationShift;
+    short wNbCharsInCurrentLine;
+    short wCurrentChar;
+    short wCurrentLine;
+    short wNbObjectsInTargetTable;
+    char* pszInitText;
+    char* pszEndText;
+    short wSourceObject;
+    short wNbObjectsInSourceTable;
+    unsigned char ucTemp;
+    MTH3D_tdstVector_ stTransformation;
     unsigned char ucChar;
     unsigned char bLineBreak;
-    MTH3D_tdstVector_ stTransformation;
-    unsigned char ucTemp;
-    short wNbObjectsInSourceTable;
-    short wSourceObject;
-    char* pszEndText;
-    char* pszInitText;
-    short wNbObjectsInTargetTable;
-    short wCurrentLine;
-    short wCurrentChar;
-    short wNbCharsInCurrentLine;
-    float xJustificationShift;
-    /* TODO: decompile from asm/... */
+    /* Not in the debug locals: retail loads the target table once and keeps it
+       in a saved register for every copy below. */
+    tdstObjectsTablesList_* hTargetObjectsTable;
+
+    wCurrentLine = 0;
+    wCurrentChar = 0;
+    hTargetObjectsTable = _hSuperObjPerso->hLinkedObject.p_stCharacter->h_3dData->h_CurrentObjectsTable;
+    wNbObjectsInTargetTable = fn_uwGetObjectTableNumberOfelements(hTargetObjectsTable);
+    pszInitText = _pszText;
+
+    _lEnd = (_lEnd >= 0) ? _lEnd : strlen(_pszText);
+
+    pszEndText = _pszText + _lEnd;
+    _pszText += _lStart;
+
+    TFMT_vInitStatus(_p_stStatus, _hSuperObjPerso, _xScreenWidth);
+
+    while (_pszText < pszEndText && *_pszText)
+    {
+        wNbCharsInCurrentLine = TFMT_uwGetNbCharsFillingALine(_p_stStatus, _hSuperObjPerso, _pszText, &xJustificationShift);
+
+        switch (_p_stStatus->cJustificationMode)
+        {
+            case 'r':
+                xJustificationShift = _p_stStatus->xScreenWidth - xJustificationShift;
+                break;
+
+            case 'c':
+                xJustificationShift = (_p_stStatus->xScreenWidth - xJustificationShift) / 2.0f;
+                break;
+
+            default:
+                xJustificationShift = 0.0f;
+                break;
+        }
+
+        if (_d_stLineResults && _wNbLines >= 0)
+            _d_stLineResults[wCurrentLine].wStartChar = _pszText - pszInitText;
+
+        while (wNbCharsInCurrentLine-- && _pszText < pszEndText)
+        {
+            _pszText = TFMT_pszReadNextChar(_p_stStatus, _hSuperObjPerso, _pszText, &ucChar, &bLineBreak);
+            if (!_d_stLineResults)
+            {
+                if (ucChar < 32)
+                {
+                    wSourceObject = -1;
+                }
+                else
+                {
+                    ucTemp = fn_ucToTableElement(ucChar);
+                    wSourceObject = (short)(ucTemp + OffsetObjectTable);
+                }
+
+                wNbObjectsInSourceTable = fn_uwGetObjectTableNumberOfelements(_p_stStatus->hSourceObjectTable);
+                if (wSourceObject >= 0 && wSourceObject < wNbObjectsInSourceTable)
+                {
+                    HIE_tdstSuperObject_* hChild;
+
+                    fn_vCopyObjectFromObjectTabletoAnother(hTargetObjectsTable, _p_stStatus->hSourceObjectTable, wCurrentChar, wSourceObject);
+
+                    hChild = fn_hGetChannelSuperObject(_hSuperObjPerso->hLinkedObject.p_stCharacter->h_3dData, wCurrentChar);
+                    if (hChild)
+                    {
+                        MAT_tdstTransformation_* hMatrix = hChild->hLocalMatrix;
+
+                        stTransformation.xX = xJustificationShift + (_p_stStatus->xBaseCharX + RND_fn_xGetRealRandomValue(gs_hRandomHandleForTFMT, -_p_stStatus->xRandomPosRadius, _p_stStatus->xRandomPosRadius));
+                        stTransformation.xY = 0.0f;
+                        stTransformation.xZ = _p_stStatus->xBaseCharZ + RND_fn_xGetRealRandomValue(gs_hRandomHandleForTFMT, -_p_stStatus->xRandomPosRadius, _p_stStatus->xRandomPosRadius);
+
+                        TFMT_vSetTranslation(hMatrix, (tduTfmtV*)&stTransformation);
+
+                        if (MTH_xAbs(_p_stStatus->xCharZoom - 1.0f) > 0.0001f)
+                        {
+                            stTransformation.xX = _p_stStatus->xCharZoom;
+                            stTransformation.xY = _p_stStatus->xCharZoom;
+                            stTransformation.xZ = _p_stStatus->xCharZoom;
+                            MAT_fn_vSetScale(hMatrix, &stTransformation);
+                        }
+                    }
+                }
+            }
+            wCurrentChar++;
+        }
+
+        if (_d_stLineResults && _wNbLines >= 0)
+        {
+            _d_stLineResults[wCurrentLine].wEndChar = _pszText - pszInitText;
+            _d_stLineResults[wCurrentLine].stLineOrigin.xX = xJustificationShift;
+            _d_stLineResults[wCurrentLine].stLineOrigin.xY = 0.0f;
+            _d_stLineResults[wCurrentLine].stLineOrigin.xZ = _p_stStatus->xBaseCharZ;
+        }
+
+        if (_pszText < pszEndText)
+        {
+            if (*_pszText == '/')
+            {
+                unsigned char bFormatLineBreak;
+                unsigned char ucFormatChar;
+
+                do
+                {
+                    _pszText = TFMT_pszReadNextChar(_p_stStatus, _hSuperObjPerso, _pszText, &ucFormatChar, &bFormatLineBreak);
+                } while (!bFormatLineBreak);
+            }
+            else
+            {
+                _p_stStatus->xBaseCharZ -= _p_stStatus->xLineHeight;
+                _p_stStatus->xBaseToAddX = 0.0f;
+                _p_stStatus->xBaseCharX = 0.0f;
+            }
+        }
+
+        _wNbLines--;
+        wCurrentLine++;
+    }
+
+    while (wCurrentChar < wNbObjectsInTargetTable)
+    {
+        fn_vCopyObjectFromObjectTabletoAnother(hTargetObjectsTable, _p_stStatus->hSourceObjectTable, wCurrentChar, 0);
+        wCurrentChar++;
+    }
+
+    return wCurrentLine;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\TextFrmt.c lines 289–323 */
@@ -2157,37 +2610,41 @@ short TFMT_wPositionModulesAccordingToText(stTfmtStatus_* _p_stStatus, HIE_tdstS
 unsigned short TFMT_uwGetNbCharsFillingALine(stTfmtStatus_* p_stStatus, HIE_tdstSuperObject_* hSuperObjPerso, char* pszText, float* p_xActualWidth)
 {
     stTfmtStatus_ stTfmtStatusSave;
-    unsigned char bLineBreak;
-    short wCharIndex;
     unsigned char ucCurrentChar;
+    short wCharIndex;
+    unsigned char bLineBreak;
     {
         float xCurrentWidth;
         float xScreenWidth;
         float xNewWidth;
 
-        stTfmtStatusSave = *p_stStatus;
-        xScreenWidth = p_stStatus->xScreenWidth;
-        if (xScreenWidth < 0.0f)
-        {
-            xScreenWidth = 1000.0f;
-        }
         wCharIndex = 0;
-        xCurrentWidth = 0.0f;
-        while (bLineBreak == 0)
+
+        xScreenWidth = p_stStatus->xScreenWidth; xCurrentWidth = 0.0f;
+
+        stTfmtStatusSave = *p_stStatus;
+
+        if (xScreenWidth < 0.0f)
+            xScreenWidth = 1000.0f;
+
+        do
         {
-            TFMT_pszReadNextChar(p_stStatus, hSuperObjPerso, (char*)&stTfmtStatusSave, &ucCurrentChar, &bLineBreak);
-            if (bLineBreak == 0)
+            pszText = TFMT_pszReadNextChar(p_stStatus, hSuperObjPerso, pszText, &ucCurrentChar, &bLineBreak);
+            if (!bLineBreak)
             {
                 xNewWidth = xCurrentWidth + p_stStatus->xCharWidth;
                 if (xNewWidth < xScreenWidth)
                 {
-                    wCharIndex++;
                     xCurrentWidth = xNewWidth;
-                    continue;
+                    wCharIndex++;
+                }
+                else
+                {
+                    bLineBreak = 1;
                 }
             }
-            bLineBreak = 1;
-        }
+        } while (!bLineBreak);
+
         *p_stStatus = stTfmtStatusSave;
         *p_xActualWidth = xCurrentWidth;
     }
@@ -2260,13 +2717,136 @@ unsigned short TFMT_uwGetNbCharsFillingALine(stTfmtStatus_* p_stStatus, HIE_tdst
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void TFMT_pszReadNextChar(stTfmtStatus_* _p_stStatus, HIE_tdstSuperObject_* _hSuperObjPerso, char* _pszCurrentChar, unsigned char* _p_ucReturnedChar, unsigned char* _p_bLineBreak)
+inline tdstFamilyList_* fn_h3dDataGetFamily(tdst3dData_* h_3dData) { return h_3dData->h_Family; }
+
+void RDN_fn_vSetRandomSeed(unsigned int _lIndexNumber, int _lSeed);
+
+char* TFMT_pszReadNextChar(stTfmtStatus_* _p_stStatus, HIE_tdstSuperObject_* _hSuperObjPerso, char* _pszCurrentChar, unsigned char* _p_ucReturnedChar, unsigned char* _p_bLineBreak)
 {
-    unsigned char ucTemp;
-    float xZoom;
-    int lValue;
     unsigned char ucChar;
-    /* TODO: decompile from asm/... */
+    int lValue;
+    float xZoom;
+    unsigned char ucTemp;
+
+    *_p_bLineBreak = 0;
+    if (_pszCurrentChar != NULL && (ucChar = *_pszCurrentChar++) != 0)
+    {
+        while (ucChar == '/')
+        {
+            switch (*_pszCurrentChar)
+            {
+                case 'L':
+                case 'l':
+                    *_p_bLineBreak = 1;
+                    _p_stStatus->xBaseToAddX = 0.0f;
+                    _p_stStatus->xBaseCharX = 0.0f;
+                    _p_stStatus->xBaseCharZ -= _p_stStatus->xLineHeight;
+                    break;
+
+                case 'Z':
+                case 'z':
+                    _pszCurrentChar++;
+                    _p_stStatus->xCharZoom = (float)atoi(_pszCurrentChar) / 1000.0f;
+                    break;
+
+                case 'W':
+                case 'w':
+                    _pszCurrentChar++;
+                    _p_stStatus->xCharWidth = _p_stStatus->xCharZoom * ((float)atoi(_pszCurrentChar) / 1000.0f);
+                    break;
+
+                case 'H':
+                case 'h':
+                    _pszCurrentChar++;
+                    _p_stStatus->xLineHeight = _p_stStatus->xCharZoom * ((float)atoi(_pszCurrentChar) / 1000.0f);
+                    break;
+
+                case 'C':
+                case 'c':
+                    _pszCurrentChar++;
+                    _p_stStatus->hSourceObjectTable = fn_hGetObjectsTableOfFamilyByIndex(fn_h3dDataGetFamily(_hSuperObjPerso->hLinkedObject.p_stCharacter->h_3dData), (short)atoi(_pszCurrentChar));
+                    break;
+
+                case 'o':
+                case 'O':
+                    _pszCurrentChar++;
+                    OffsetObjectTable = atoi(_pszCurrentChar);
+                    break;
+
+                case 'J':
+                case 'j':
+                    _pszCurrentChar++;
+                    _p_stStatus->cJustificationMode = *_pszCurrentChar;
+                    break;
+
+                case 'R':
+                case 'r':
+                    _pszCurrentChar++;
+                    lValue = atoi(_pszCurrentChar);
+                    _p_stStatus->xRandomPosRadius = (float)lValue / 1000.0f;
+                    RDN_fn_vSetRandomSeed(gs_hRandomHandleForTFMT, lValue);
+                    break;
+
+                case '/':
+                    _pszCurrentChar++;
+                    break;
+
+                case ':':
+                    _pszCurrentChar++;
+                    break;
+            }
+
+            do
+            {
+                _pszCurrentChar++;
+            } while (*_pszCurrentChar != ':');
+            _pszCurrentChar++;
+
+            ucChar = *_pszCurrentChar;
+            if (!*_p_bLineBreak)
+                _pszCurrentChar++;
+        }
+
+        if (_p_stStatus->xBaseCharX == 0.0f && ucChar == ' ')
+        {
+            do
+            {
+                ucChar = *_pszCurrentChar++;
+            } while (ucChar == ' ');
+        }
+
+        _p_stStatus->xBaseCharX += _p_stStatus->xBaseToAddX;
+
+        if (!*_p_bLineBreak)
+        {
+            if (_p_stStatus->xCharWidth)
+            {
+                _p_stStatus->xBaseToAddX = _p_stStatus->xCharWidth;
+            }
+            else
+            {
+                xZoom = _p_stStatus->xCharZoom;
+                if (xZoom == 0.0f)
+                {
+                    if (TFMT_ga_ulNbScale)
+                        xZoom = TFMT_ga_fLetterScale[0];
+                    else
+                        xZoom = 1.0f;
+                }
+                ucTemp = fn_ucToTableElement(ucChar);
+                _p_stStatus->xBaseToAddX = xZoom * TFMT_ga_fLetterSpacing[ucTemp];
+            }
+        }
+    }
+    else
+    {
+        *_p_bLineBreak = 1;
+        *_p_ucReturnedChar = 0;
+        return NULL;
+    }
+
+    *_p_ucReturnedChar = ucChar;
+    return _pszCurrentChar;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\TextFrmt.c lines 99–106 */

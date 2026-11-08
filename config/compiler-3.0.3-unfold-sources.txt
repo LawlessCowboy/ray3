@@ -26,3 +26,10 @@ src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MOR/specif/morph.c
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/PS2MC/PS2MC_Messages.cpp
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeethrd.cpp
+# GAM/ZdxStuff.c: +1 (fn_vGetAllCharactersInContactWithThisModuleZde, retail keeps the
+# hZoomSupObject +4 unfolded); all 21 other recorded matches still MATCH, 0 lost.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/ZdxStuff.c
+# GAM/TextFrmt.c: +1 (fn_vImplementChannelUpdate, retail keeps the objects-table
+# h_Target +4 and the previous channel's -0x84 unfolded); all 11 other recorded
+# matches still MATCH, 0 lost.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/TextFrmt.c

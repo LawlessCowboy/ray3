@@ -1317,6 +1317,128 @@ int g_a_p_stMmgModuleBlocksInfo[255];
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+typedef struct stInterpolatedPosition {
+    float stRot[4]; /* +0x0 */
+    float stRotSca[4]; /* +0x10 */
+    MTH3D_tdstVector_ stPos; /* +0x20 */
+    MTH3D_tdstVector_ stVecSca; /* +0x2c */
+    float xPercent; /* +0x38 */
+} stInterpolatedPosition;
+
+struct tdstAChannel_ {
+    HIE_tdstSuperObject_* hSupObject; /* +0x0 */
+    HIE_tdstSuperObject_* hZoomSupObject; /* +0x4 */
+    tdstAChannel_* p_stNextActiveChannel; /* +0x8 */
+    tdstAChannel_* p_stFatherChannel; /* +0xc */
+    stInterpolatedPosition ax_InterpolatedPositions[2]; /* +0x10 */
+    unsigned char ucNbInterpolatedPositions; /* +0x88 */
+    unsigned char bControlledChannel; /* +0x89 */
+    unsigned char bLipsChannel; /* +0x8a */
+    unsigned char bActiveChannel; /* +0x8b */
+};
+
+typedef struct tdstPLA_DeformationLink_ {
+    unsigned short wChannel1; /* +0x0 */
+    unsigned short wBorder1; /* +0x2 */
+    unsigned short wChannel2; /* +0x4 */
+    unsigned short wBorder2; /* +0x6 */
+} tdstPLA_DeformationLink_;
+
+struct tdstPLA_Deformation_ {
+    unsigned int ulNbOfDeformationLinks; /* +0x0 */
+    tdstPLA_DeformationLink_* d_stDeformationLinks; /* +0x4 */
+};
+
+struct GEO_tdstDeformationInfluence_ {
+    unsigned short uwInfluence; /* +0x0 */
+    unsigned char ucLinkNumber; /* +0x2 */
+    unsigned char Align; /* +0x3 */
+};
+
+struct GEO_tdstDeformationVertex_ {
+    GEO_tdstDeformationInfluence_* p_stInfluenceTable; /* +0x0 */
+    short xVertexIndex; /* +0x4 */
+    unsigned char ucNumberOfInfluences; /* +0x6 */
+    unsigned char Align; /* +0x7 */
+};
+
+typedef struct MTH3D_tdstMatrix_ {
+    MTH3D_tdstVector_ stCol_0; /* +0x0 */
+    MTH3D_tdstVector_ stCol_1; /* +0xc */
+    MTH3D_tdstVector_ stCol_2; /* +0x18 */
+} MTH3D_tdstMatrix_;
+
+typedef struct GEO_tdstDeformationBorder_ {
+    MTH3D_tdstVector_ stLinkNeutralPosition; /* +0x0 */
+    MTH3D_tdstMatrix_ stLinkNeutralOrientation; /* +0xc */
+    int p_xVertexTable; /* +0x30 */
+    unsigned short uwNumberOfVertices; /* +0x34 */
+    unsigned char ucLinkIndex; /* +0x36 */
+    unsigned char Align; /* +0x37 */
+} GEO_tdstDeformationBorder_;
+
+struct GEO_tdstElementDeformationSetInfo_ {
+    GEO_tdstDeformationVertex_* p_stDeformationVertexTable; /* +0x0 */
+    GEO_tdstDeformationBorder_* p_stBorderTable; /* +0x4 */
+    short xNumberOfDeformationVertex; /* +0x8 */
+    unsigned char ucNumberOfLinks; /* +0xa */
+    unsigned char Align; /* +0xb */
+};
+
+typedef struct tdstPLA_Hierarchy_ {
+    unsigned int ulNbOfCouples; /* +0x0 */
+    struct tdstCouple_* d_stCouples; /* +0x4 */
+} tdstPLA_Hierarchy_;
+
+typedef struct tdstFrame3d_ {
+    struct tdstElement3d_* p_stArrayOfElts3d; /* +0x0 */
+    MTH3D_tdstMatrix_* p_stAngularSpeedMatrix; /* +0x4 */
+    MTH3D_tdstVector_* p_stLinearSpeedVector; /* +0x8 */
+    tdstPLA_Hierarchy_ stHierarchy; /* +0xc */
+    tdstPLA_Deformation_ stDeformation; /* +0x14 */
+    struct tdstAnim3d_* p_stAnim; /* +0x1c */
+    unsigned short uwFrameNumber; /* +0x20 */
+    unsigned char ucMatrixUpdated; /* +0x22 */
+    unsigned char ucCacheEntry; /* +0x23 */
+} tdstFrame3d_;
+
+typedef struct tdst3dData_ {
+    struct tdstState_* h_InitialState; /* +0x0 */
+    struct tdstState_* h_CurrentState; /* +0x4 */
+    struct tdstState_* h_FirstStateOfAction; /* +0x8 */
+    struct tdstObjectsTablesList_* h_InitialObjectsTable; /* +0xc */
+    struct tdstObjectsTablesList_* h_CurrentObjectsTable; /* +0x10 */
+    struct tdstFamilyList_* h_Family; /* +0x14 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x18..0x1f */
+    MAT_tdstTransformation_ stGLIObjectMatrix; /* +0x20 */
+    MAT_tdstTransformation_* p_stGLIObjectAbsoluteMatrix; /* +0x80 */
+    float xCurrentFrame; /* +0x84 */
+    unsigned char ucRepeatAnimation; /* +0x88 */
+    unsigned char ucNextEvent; /* +0x89 */
+    int d_ucEventActivation; /* +0x8c */
+    struct tdstCouple_* p_stCurrentHieCouples; /* +0x90 */
+    unsigned short wCurrentHieNbCouples; /* +0x94 */
+    unsigned short wSizeOfArrayOfElts3d; /* +0x96 */
+    struct tdstState_* h_StateInLastFrame; /* +0x98 */
+    struct tdstState_* h_WantedState; /* +0x9c */
+    float xForcedFrame; /* +0xa0 */
+    unsigned char ucFlagEndState; /* +0xa4 */
+    unsigned char ucFlagEndOfAnim; /* +0xa5 */
+    tdstAChannel_* hArrayOfChannels; /* +0xa8 */
+    unsigned int ulNumberOfChannels; /* +0xac */
+    tdstAChannel_* hFirstActiveChannel; /* +0xb0 */
+    tdstFrame3d_ stFrame3d; /* +0xb4 */
+} tdst3dData_;
+
+extern tdst3dData_* gh_st3dData;
+extern int g_iArraySizes;
+extern int no_optim;
+void VU0_fn_vLoadPrgPlayAnim(void);
+void VU0_fn_vWaitEndLoadVU0(void);
+void MAT_fn_vFastInvert(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hSource);
+
+#define SPR_M_ul(off) (*(unsigned int*)(0x70000000 + (off)))
+
 void fn_vComputeDeformationPS2(GEO_tdstGeometricObject_* p_stGeoObj, unsigned int ulNbVertices, unsigned int ulChannelNumber, tdstPLA_Deformation_* p_stDeformation, GEO_tdstElementDeformationSetInfo_* p_stDeformationSetInfo)
 {
     int* p;
@@ -1339,7 +1461,241 @@ void fn_vComputeDeformationPS2(GEO_tdstGeometricObject_* p_stGeoObj, unsigned in
     unsigned int ulIndex;
     MTH3D_tdstVector_* pLastVectorToUpdate;
     MTH3D_tdstVector_* p_stVectorInObject;
-    /* TODO: decompile from asm/... */
+    GEO_tdstDeformationBorder_* p_stBorder;
+
+    pref3 = 0; pref2 = 0; pref1 = 0;
+
+    VU0_fn_vLoadPrgPlayAnim();
+
+    ChannelArray = gh_st3dData->hArrayOfChannels; p_stChannel = &ChannelArray[(unsigned short)ulChannelNumber];
+    if (p_stChannel->hZoomSupObject != NULL)
+        p_stObjectGlobalMatrix = p_stChannel->hZoomSupObject->hGlobalMatrix;
+    else
+        p_stObjectGlobalMatrix = p_stChannel->hSupObject->hGlobalMatrix;
+
+    MAT_fn_vFastInvert((MAT_tdstTransformation_*)0x70000100, p_stObjectGlobalMatrix);
+
+    *(MTH4D_tdstMatrix_*)0x70000000 = ((MAT_tdstTransformation_*)0x70000100)->stTransformMatrix;
+
+    VU0_fn_vWaitEndLoadVU0();
+
+    asm {
+        li t0, 2
+        ctc2 t0, vi7
+        ctc2 zero, vi6
+        lui t0, 0x7000
+
+        lqc2 vf14, 0x0(t0)
+        lqc2 vf15, 0x10(t0)
+        lqc2 vf16, 0x20(t0)
+        lqc2 vf17, 0x30(t0)
+
+        vcallms 0
+    }
+
+    ulIndex2 = 0;
+    ulIndex3 = p_stDeformation->d_stDeformationLinks[p_stDeformation->ulNbOfDeformationLinks - 1].wBorder1 + 1;
+    if (ulIndex3 >= p_stDeformationSetInfo->ucNumberOfLinks)
+        ulIndex3 = p_stDeformationSetInfo->ucNumberOfLinks;
+    p_stChannel = &ChannelArray[p_stDeformation->d_stDeformationLinks[ulIndex2].wChannel2];
+    for (ulIndex = 0; ulIndex < ulIndex3; ulIndex++)
+    {
+        if (p_stChannel->hZoomSupObject != NULL)
+            p_stMyGlobalMatrix = p_stChannel->hZoomSupObject->hGlobalMatrix;
+        else
+            p_stMyGlobalMatrix = p_stChannel->hSupObject->hGlobalMatrix;
+
+        pref3 = p_stDeformation->d_stDeformationLinks[ulIndex2 + 2].wChannel2;
+
+        if (ulIndex != p_stDeformation->d_stDeformationLinks[ulIndex2].wBorder1)
+        {
+            SPR_M_ul(0x1000 + ulIndex * 4) = 0;
+            asm {
+                sync
+              wait1:
+                cfc2 t0, vi6
+                nop
+                nop
+                nop
+                nop
+                nop
+                bnez t0, wait1
+                nop
+                li t0, 1
+                ctc2 t0, vi6
+                sync
+            }
+            p_stChannel = &ChannelArray[p_stDeformation->d_stDeformationLinks[ulIndex2 + 1].wChannel2];
+        }
+        else
+        {
+            p = (int*)&p_stMyGlobalMatrix->stTransformMatrix;
+            asm {
+                lqc2 vf10, 0x0(p)
+                lqc2 vf11, 0x10(p)
+                lqc2 vf12, 0x20(p)
+                lqc2 vf13, 0x30(p)
+            }
+            p_stBorder = &p_stDeformationSetInfo->p_stBorderTable[ulIndex];
+            pref2 = *(int*)&p_stDeformationSetInfo->p_stBorderTable[ulIndex + 1].stLinkNeutralOrientation;
+            SPR_M_ul(0x40) = *(unsigned int*)&p_stBorder->stLinkNeutralOrientation.stCol_0.xX;
+            SPR_M_ul(0x44) = *(unsigned int*)&p_stBorder->stLinkNeutralOrientation.stCol_0.xY;
+            SPR_M_ul(0x48) = *(unsigned int*)&p_stBorder->stLinkNeutralOrientation.stCol_0.xZ;
+            SPR_M_ul(0x4c) = 0x3f800000;
+            SPR_M_ul(0x50) = *(unsigned int*)&p_stBorder->stLinkNeutralOrientation.stCol_1.xX;
+            SPR_M_ul(0x54) = *(unsigned int*)&p_stBorder->stLinkNeutralOrientation.stCol_1.xY;
+            SPR_M_ul(0x58) = *(unsigned int*)&p_stBorder->stLinkNeutralOrientation.stCol_1.xZ;
+            SPR_M_ul(0x5c) = 0x3f800000;
+            SPR_M_ul(0x60) = *(unsigned int*)&p_stBorder->stLinkNeutralOrientation.stCol_2.xX;
+            SPR_M_ul(0x64) = *(unsigned int*)&p_stBorder->stLinkNeutralOrientation.stCol_2.xY;
+            SPR_M_ul(0x68) = *(unsigned int*)&p_stBorder->stLinkNeutralOrientation.stCol_2.xZ;
+            SPR_M_ul(0x6c) = 0x3f800000;
+            SPR_M_ul(0x70) = 0;
+            SPR_M_ul(0x74) = 0;
+            SPR_M_ul(0x78) = 0;
+            SPR_M_ul(0x7c) = 0x3f800000;
+            p_stBorder = &p_stDeformationSetInfo->p_stBorderTable[ulIndex];
+            SPR_M_ul(0x70) = *(unsigned int*)&p_stBorder->stLinkNeutralPosition.xX;
+            SPR_M_ul(0x74) = *(unsigned int*)&p_stBorder->stLinkNeutralPosition.xY;
+            SPR_M_ul(0x78) = *(unsigned int*)&p_stBorder->stLinkNeutralPosition.xZ;
+            SPR_M_ul(0x7c) = 0x3f800000;
+
+            p_stChannel = &ChannelArray[p_stDeformation->d_stDeformationLinks[ulIndex2 + 1].wChannel2];
+            p = (int*)&p_stChannel->hZoomSupObject;
+            asm {
+                lw pref1, 0x0(p)
+                lui t0, 0x7000
+                lqc2 vf18, 0x40(t0)
+                lqc2 vf19, 0x50(t0)
+                lqc2 vf20, 0x60(t0)
+                lqc2 vf21, 0x70(t0)
+                li t0, 1
+                ctc2 t0, vi6
+            }
+            SPR_M_ul(0x1000 + ulIndex * 4) = 0xFFFFFFFF;
+            ulIndex2++;
+        }
+    }
+    no_optim += pref2 + pref1 + pref3;
+
+    for (; ulIndex < p_stDeformationSetInfo->ucNumberOfLinks; ulIndex++)
+        SPR_M_ul(0x1000 + ulIndex * 4) = 0;
+
+    asm {
+      wait2:
+        cfc2 t0, vi6
+        nop
+        nop
+        nop
+        nop
+        nop
+        bnez t0, wait2
+        li t0, 2
+        ctc2 t0, vi7
+        ctc2 t0, vi6
+    }
+
+    SPR_M_ul(0x2c) = 0x3f800000;
+    pLastVectorToUpdate = (MTH3D_tdstVector_*)0x70000200;
+    p_stDeformationVertex = p_stDeformationSetInfo->p_stDeformationVertexTable;
+    p_stDeformationVertexEnd = p_stDeformationVertex + p_stDeformationSetInfo->xNumberOfDeformationVertex;
+    p_stDeformationInfluence = p_stDeformationVertex->p_stInfluenceTable;
+    p_stVectorInObject = p_stGeoObj->d_stListOfPoints + p_stDeformationVertex->xVertexIndex;
+    while (p_stDeformationVertex != p_stDeformationVertexEnd)
+    {
+        if ((unsigned int)p_stDeformationVertex->xVertexIndex >= ulNbVertices)
+            break;
+        pref2 = *(int*)&p_stDeformationInfluence[4];
+        f1 = *(int*)&p_stVectorInObject->xX;
+        f2 = *(int*)&p_stVectorInObject->xY;
+        f3 = *(int*)&p_stVectorInObject->xZ;
+        asm {
+            lui t0, 0x7000
+            sq zero, 0x10(t0)
+        }
+        SPR_M_ul(0x20) = f1;
+        SPR_M_ul(0x24) = f2;
+        SPR_M_ul(0x28) = f3;
+        pref1 = *(int*)&p_stDeformationVertex[3];
+        switch (p_stDeformationVertex->ucNumberOfInfluences)
+        {
+        case 4:
+            ulIndex4 = (p_stDeformationInfluence[3].ucLinkNumber - 1) * 4;
+            f1 = (p_stDeformationInfluence[3].uwInfluence >> 1) & SPR_M_ul(0x1000 + ulIndex4);
+            SPR_M_ul(0xc) = ulIndex4;
+            SPR_M_ul(0x1c) = f1;
+        case 3:
+            ulIndex4 = (p_stDeformationInfluence[2].ucLinkNumber - 1) * 4;
+            f1 = (p_stDeformationInfluence[2].uwInfluence >> 1) & SPR_M_ul(0x1000 + ulIndex4);
+            SPR_M_ul(0x8) = ulIndex4;
+            SPR_M_ul(0x18) = f1;
+        case 2:
+            ulIndex4 = (p_stDeformationInfluence[1].ucLinkNumber - 1) * 4;
+            f1 = (p_stDeformationInfluence[1].uwInfluence >> 1) & SPR_M_ul(0x1000 + ulIndex4);
+            SPR_M_ul(0x4) = ulIndex4;
+            SPR_M_ul(0x14) = f1;
+        case 1:
+            ulIndex4 = (p_stDeformationInfluence[0].ucLinkNumber - 1) * 4;
+            f1 = (p_stDeformationInfluence[0].uwInfluence >> 1) & SPR_M_ul(0x1000 + ulIndex4);
+            SPR_M_ul(0x0) = ulIndex4;
+            SPR_M_ul(0x10) = f1;
+        }
+        asm {
+            lw pref3, 0x20(p_stVectorInObject)
+        }
+        asm {
+            lui t0, 0x7000
+            lqc2 vf3, 0x0(t0)
+            lqc2 vf2, 0x10(t0)
+            lqc2 vf15, 0x20(t0)
+            sqc2 vf1, 0x30(t0)
+            li t0, 1
+            ctc2 t0, vi6
+        }
+        f1 = SPR_M_ul(0x30);
+        f2 = SPR_M_ul(0x34);
+        f3 = SPR_M_ul(0x38);
+        *(int*)&pLastVectorToUpdate->xX = f1;
+        *(int*)&pLastVectorToUpdate->xY = f2;
+        *(int*)&pLastVectorToUpdate->xZ = f3;
+        pLastVectorToUpdate = p_stVectorInObject;
+        p_stDeformationInfluence = p_stDeformationVertex[1].p_stInfluenceTable;
+        p_stDeformationVertex++;
+        p_stVectorInObject = p_stGeoObj->d_stListOfPoints + p_stDeformationVertex->xVertexIndex;
+    }
+    no_optim += pref2 + pref1 + pref3;
+
+    if (pLastVectorToUpdate != NULL)
+    {
+        asm {
+          wait3:
+            cfc2 t0, vi6
+            nop
+            nop
+            nop
+            nop
+            nop
+            bnez t0, wait3
+            nop
+            lui t0, 0x7000
+            sqc2 vf1, 0x20(t0)
+            sync
+        }
+        *(int*)&pLastVectorToUpdate->xX = SPR_M_ul(0x20);
+        *(int*)&pLastVectorToUpdate->xY = SPR_M_ul(0x24);
+        *(int*)&pLastVectorToUpdate->xZ = SPR_M_ul(0x28);
+    }
+
+    if (g_iArraySizes != 0)
+        g_iArraySizes--;
+    if (g_iArraySizes != 1)
+    {
+        asm {
+            li t0, 2
+            ctc2 t0, vi7
+            ctc2 t0, vi6
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 1597–1662 */
@@ -1414,12 +1770,13 @@ void GAM_fn_vSetVolumeVoice(int iVolume);
 void GAM_fn_vSetVolumeMusic(int iVolume);
 void GAM_fn_vSetVolumeAmbiance(int iVolume);
 void fn_vUpdatePlayerGameName(void);
-void fn_vR3StoreInitScore(void* p_dst, void* p_src, int iCount, int iSize);
+void fn_vR3StoreInitScore(void);
 
 void SAV2_fn_vActualizeMenuOptionsAfterLoad(void)
 {
     SAV2_MenuOptionHeader_* p;
     int i;
+    unsigned int ulCurrentTime;
 
     p = &SAV2_g_stList.stListHeader.stMenuOptions;
     GLI_g_ScreenPos_DX = p->fCenteringX;
@@ -1437,7 +1794,7 @@ void SAV2_fn_vActualizeMenuOptionsAfterLoad(void)
     GAM_fn_vSetVolumeAmbiance(g_stGameOptions.s32VolumeAmbiance);
     fn_vUpdatePlayerGameName();
     for (i = 0; i < 10; i++) { g_aEnvValue[i] = SAV2_g_stList.stListHeader.aEnvValue[i]; }
-    fn_vR3StoreInitScore(g_aEnvValue, &SAV2_g_stList.stListHeader.aEnvValue[0], i, i * 8);
+    fn_vR3StoreInitScore();
     g_aForKeyAlgo[0] = SAV2_g_stList.stListHeader.aForKeyAlgo[0];
     g_aForKeyAlgo[1] = SAV2_g_stList.stListHeader.aForKeyAlgo[1];
     g_aForKeyAlgo[2] = SAV2_g_stList.stListHeader.aForKeyAlgo[2];
@@ -1451,9 +1808,13 @@ void SAV2_fn_vActualizeMenuOptionsAfterLoad(void)
     g_RevisitGlobalScoreAtBeginingOfLevel = SAV2_g_stList.stListHeader.RevisitGlobalScore;
     g_RevisitCurrentEnvScore = g_RevisitEnvScoreAtBeginingOfLevel;
     g_RevisitCurrentGlobalScore = g_RevisitGlobalScoreAtBeginingOfLevel;
-    strcpy(SAV2_g_LevelNameAfterReinitToSave, SAV2_g_stList.stListHeader.szLevelNameAfterRevisit);
     g_IndCurrentEnv = g_RevisitIndCurrentEnv;
-    if (MENU_g_bVibration) { IPT_fn_vResumeAllConstantFFBEffectForAllDevices(PS2_g_SaveBloc); } else { IPT_fn_vPauseAllConstantFFBEffectForAllDevices(PS2_g_SaveBloc); }
+    strcpy(SAV2_g_LevelNameAfterReinitToSave, SAV2_g_stList.stListHeader.szLevelNameAfterRevisit);
+    ulCurrentTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+    if (MENU_g_bVibration)
+        IPT_fn_vResumeAllConstantFFBEffectForAllDevices(ulCurrentTime);
+    else
+        IPT_fn_vPauseAllConstantFFBEffectForAllDevices(ulCurrentTime);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 1581–1592 */
@@ -1675,6 +2036,30 @@ unsigned char SAV2_fn_bRemoveSaveFromDisk(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void* PS2MC_fn_pGetLoadGameBuffer(void);
+void SAV2_fn_vFreeAnElement(SAV2_tdstElement_* p_stElement);
+void SAV2_fn_vDeclareAField(char* p_szElementName, int ucType, unsigned int ulNumberOfElement, unsigned char bStatic, unsigned char bSave);
+static SAV2_tdstElement_* SAV2_fn_p_stFindElementByNameExpanded(char* p_szElementName);
+extern void Mmg_fn_v_SetModeAlloc(unsigned char ucModuleId, unsigned char ucNewMode, unsigned char ucChannel);
+extern void* fn_p_vGenAlloc(unsigned int ulSize, unsigned char ucChannel);
+
+#define SAV2_M_ReadData(p_vDest, ulSize) if (((int)pData - (int)pStartAddress) < 0x1000) { memcpy((p_vDest), pData, (ulSize)); pData += (ulSize); }
+
+/* The "SAV2_fn_p_vMalloc" trace names the allocator; retail expands it into
+ * its callers. */
+#pragma auto_inline on
+static void* SAV2_fn_p_vMalloc(unsigned int ulSize)
+{
+    void* p_vPtr;
+    Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0);
+    p_vPtr = fn_p_vGenAlloc(ulSize, 0);
+    printf("SAV2_fn_p_vMalloc %d\n", ulSize);
+    if (p_vPtr != NULL)
+        memset(p_vPtr, 0, ulSize);
+    return p_vPtr;
+}
+#pragma auto_inline reset
+
 unsigned char SAV2_fn_bUpdateAllDataFromLoadedFile(void)
 {
     unsigned char* pStartAddress;
@@ -1683,7 +2068,100 @@ unsigned char SAV2_fn_bUpdateAllDataFromLoadedFile(void)
     unsigned char ucElementNumber;
     unsigned char ucDataInformation;
     unsigned char ucTempU8;
-    /* TODO: decompile from asm/... */
+    SAV2_tdstElement_* p_stElement;
+    SAV2_tdstElement_* p_stNextElement;
+
+    ucElementNumber = 0;
+    ucDataInformation = 0;
+    ucTempU8 = 0;
+
+    pData = (signed char*)PS2MC_fn_pGetLoadGameBuffer();
+
+    p_stElement = SAV2_g_stList.SAV2_ListAnchor.hFirstElementDyn; p_stNextElement = (p_stElement != NULL) ? p_stElement->hNextBrotherDyn : NULL; while (p_stElement != NULL) { if ((unsigned char)(p_stElement->ucDataInformation & 0x20)) SAV2_fn_vFreeAnElement(p_stElement); else printf("\nVar name: %s", (char*)p_stElement->p_szElementName); p_stElement = p_stNextElement; p_stNextElement = (p_stNextElement != NULL) ? p_stNextElement->hNextBrotherDyn : NULL; }
+
+    pStartAddress = (unsigned char*)pData; SAV2_M_ReadData(&SAV2_g_stList.stListHeader, sizeof(SAV2_tdstHeader_));
+
+    g_UserWarnedAboutAutoSave = SAV2_g_stList.stListHeader.ulWarnedUserAboutAutoSave;
+
+    SAV2_M_ReadData(&g_stGameOptions, sizeof(tdstGameOptions_));
+
+    SAV2_M_ReadData(&ucElementNumber, 1);
+
+    SAV2_fn_vActualizeMenuOptionsAfterLoad();
+
+    while (ucElementNumber != 0)
+    {
+        SAV2_M_ReadData(szElementName, ucElementNumber);
+        SAV2_M_ReadData(&ucDataInformation, 1);
+        SAV2_M_ReadData(&ucTempU8, 1);
+        SAV2_fn_vDeclareAField(szElementName, ucDataInformation & 0x0F, ucTempU8, 1, 1);
+        p_stElement = SAV2_fn_p_stFindElementByNameExpanded(szElementName);
+        if (p_stElement->ucNumberOfData == 1)
+        {
+            switch (p_stElement->ucDataInformation & 0x0F)
+            {
+            case SAV2_eU8:
+                SAV2_M_ReadData(&p_stElement->uData.u8Data, 1);
+                break;
+            case SAV2_eU16:
+                SAV2_M_ReadData(&p_stElement->uData.u16Data, 2);
+                break;
+            case SAV2_eU32:
+                SAV2_M_ReadData(&p_stElement->uData.u32Data, 4);
+                break;
+            case SAV2_eFloat:
+                SAV2_M_ReadData(&p_stElement->uData.fFloat, 4);
+                break;
+            case SAV2_eVector:
+                p_stElement->uData.p_stVector = (MTH3D_tdstVector_*)SAV2_fn_p_vMalloc(sizeof(MTH3D_tdstVector_));
+                SAV2_M_ReadData(p_stElement->uData.p_stVector, sizeof(MTH3D_tdstVector_));
+                break;
+            case SAV2_eString:
+                SAV2_M_ReadData(&ucElementNumber, 1);
+                p_stElement->uData.p_szString = (int)SAV2_fn_p_vMalloc(ucElementNumber);
+                SAV2_M_ReadData((char*)p_stElement->uData.p_szString, ucElementNumber);
+                break;
+            }
+        }
+        else
+        {
+            switch (p_stElement->ucDataInformation & 0x0F)
+            {
+            case SAV2_eU8:
+                SAV2_M_ReadData((void*)p_stElement->uData.p_vArray, p_stElement->ucNumberOfData);
+                break;
+            case SAV2_eU16:
+                SAV2_M_ReadData((void*)p_stElement->uData.p_vArray, p_stElement->ucNumberOfData * 2);
+                break;
+            case SAV2_eU32:
+                SAV2_M_ReadData((void*)p_stElement->uData.p_vArray, p_stElement->ucNumberOfData * 4);
+                break;
+            case SAV2_eFloat:
+                SAV2_M_ReadData((void*)p_stElement->uData.p_vArray, p_stElement->ucNumberOfData * 4);
+                break;
+            case SAV2_eVector:
+                for (ucTempU8 = 0; ucTempU8 < p_stElement->ucNumberOfData; ucTempU8++)
+                {
+                    ((MTH3D_tdstVector_**)p_stElement->uData.p_vArray)[ucTempU8] = (MTH3D_tdstVector_*)SAV2_fn_p_vMalloc(sizeof(MTH3D_tdstVector_));
+                    SAV2_M_ReadData(((MTH3D_tdstVector_**)p_stElement->uData.p_vArray)[ucTempU8], sizeof(MTH3D_tdstVector_) * p_stElement->ucNumberOfData);
+                }
+                break;
+            case SAV2_eString:
+                for (ucTempU8 = 0; ucTempU8 < p_stElement->ucNumberOfData; ucTempU8++)
+                {
+                    SAV2_M_ReadData(&ucElementNumber, 1);
+                    ((char**)p_stElement->uData.p_vArray)[ucTempU8] = (char*)SAV2_fn_p_vMalloc(ucElementNumber);
+                    SAV2_M_ReadData(((char**)p_stElement->uData.p_vArray)[ucTempU8], ucElementNumber);
+                }
+                break;
+            }
+        }
+
+        SAV2_M_ReadData(&ucElementNumber, 1);
+    }
+
+    SAV2_ExitCode = 1;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 1018–1284 */
@@ -1809,6 +2287,11 @@ unsigned char SAV2_fn_bReadAllFromDisk(char* p_szSaveName)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void PS2MC_fn_vSaveGame(char* _pData, char* _pFileName, unsigned int SaveGameSizeInBytes);
+
+/* The trace format is empty in this build. */
+#define SAV2_M_WriteData(p_vSource, ulSize) if (((int)pData - (int)pStartAddress) < 0x1000) { memcpy(pData, (p_vSource), (ulSize)); pData += (ulSize); printf("", (int)pData - (int)pStartAddress); }
+
 unsigned char SAV2_fn_bSaveAllOnDisk(char* p_szSaveName)
 {
     unsigned char* pStartAddress;
@@ -1817,7 +2300,128 @@ unsigned char SAV2_fn_bSaveAllOnDisk(char* p_szSaveName)
     unsigned char ucTempU8;
     int i;
     SAV2_tdstElement_* p_stElement;
-    /* TODO: decompile from asm/... */
+    SAV2_MenuOptionHeader_* p;
+
+    if (strlen(p_szSaveName) == 0)
+        strcpy(p_szSaveName, "ODI");
+
+    pStartAddress = (unsigned char*)PS2_g_SaveBloc;
+    pData = (signed char*)pStartAddress; memset(pStartAddress, 0, 0x1000);
+
+    p = &SAV2_g_stList.stListHeader.stMenuOptions; p->fCenteringX = GLI_g_ScreenPos_DX; p->fCenteringY = GLI_g_ScreenPos_DY; p->bWideScreen = GLI_g_bWideScreenMode; p->bVibration = MENU_g_bVibration; p->bInversionHor = MENU_g_bInversionHor; p->bInversionVert = MENU_g_bInversionVert; g_stGameOptions.s32VolumeMenu = SND_fn_bGetStereoSound();
+    SAV2_g_stList.stListHeader.ulWarnedUserAboutAutoSave = g_UserWarnedAboutAutoSave;
+
+
+
+
+    for (i = 0; i < 10; i++)
+        SAV2_g_stList.stListHeader.aEnvValue[i] = g_aEnvValue[i];
+
+    strcpy(SAV2_g_stList.stListHeader.szLevelName, SAV2_g_LevelNameToSave);
+
+    strcpy(SAV2_g_stList.stListHeader.szLevelNameAfterRevisit, SAV2_g_LevelNameAfterReinitToSave);
+
+
+    SAV2_g_stList.stListHeader.aForKeyAlgo[0] = g_aForKeyAlgo[0]; SAV2_g_stList.stListHeader.aForKeyAlgo[1] = g_aForKeyAlgo[1]; SAV2_g_stList.stListHeader.aForKeyAlgo[2] = g_aForKeyAlgo[2]; SAV2_g_stList.stListHeader.aForKeyAlgo[3] = g_aForKeyAlgo[3];
+
+    SAV2_g_stList.stListHeader.EndOfGameIsDone = g_EndOfGameIsDone;
+
+
+    SAV2_g_stList.stListHeader.MaxIndCurrentEnv = g_MaxIndCurrentEnv;
+    SAV2_g_stList.stListHeader.RevisitEnvironment = g_RevisitIndCurrentEnv;
+    SAV2_g_stList.stListHeader.RevisitOriginEnvironment = g_RevisitIndEnvironementFromWhereWeCome;
+
+
+    SAV2_g_stList.stListHeader.RevisitMode = g_RevisitMode;
+    SAV2_g_stList.stListHeader.RevisitEnvScore = g_RevisitEnvScoreAtBeginingOfLevel;
+    SAV2_g_stList.stListHeader.RevisitGlobalScore = g_RevisitGlobalScoreAtBeginingOfLevel;
+
+
+
+
+
+    SAV2_M_WriteData(&SAV2_g_stList.stListHeader, sizeof(SAV2_tdstHeader_));
+
+    SAV2_M_WriteData(&g_stGameOptions, sizeof(tdstGameOptions_));
+
+
+    for (p_stElement = SAV2_g_stList.SAV2_ListAnchor.hFirstElementDyn, i = 0; p_stElement != NULL; p_stElement = p_stElement->hNextBrotherDyn, i++)
+    {
+        if (p_stElement->ucDataInformation & 0x20)
+        {
+            ucElementNumber = strlen((char*)p_stElement->p_szElementName) + 1;
+            SAV2_M_WriteData(&ucElementNumber, 1);
+            SAV2_M_WriteData((char*)p_stElement->p_szElementName, ucElementNumber);
+            SAV2_M_WriteData(&p_stElement->ucDataInformation, 1);
+            SAV2_M_WriteData(&p_stElement->ucNumberOfData, 1);
+            if (p_stElement->ucNumberOfData == 1)
+            {
+                switch (p_stElement->ucDataInformation & 0x0F)
+                {
+                case SAV2_eU8:
+                    SAV2_M_WriteData(&p_stElement->uData.u8Data, 1);
+                    break;
+                case SAV2_eU16:
+                    SAV2_M_WriteData(&p_stElement->uData.u16Data, 2);
+                    break;
+                case SAV2_eU32:
+                    SAV2_M_WriteData(&p_stElement->uData.u32Data, 4);
+                    break;
+                case SAV2_eFloat:
+                    SAV2_M_WriteData(&p_stElement->uData.fFloat, 4);
+                    break;
+                case SAV2_eVector:
+                    SAV2_M_WriteData(p_stElement->uData.p_stVector, sizeof(MTH3D_tdstVector_));
+                    break;
+                case SAV2_eString:
+                    ucElementNumber = strlen((char*)p_stElement->uData.p_szString) + 1;
+                    SAV2_M_WriteData(&ucElementNumber, 1);
+                    SAV2_M_WriteData((char*)p_stElement->uData.p_szString, ucElementNumber);
+                    break;
+                }
+            }
+            else
+            {
+                switch (p_stElement->ucDataInformation & 0x0F)
+                {
+                case SAV2_eU8:
+                    SAV2_M_WriteData((void*)p_stElement->uData.p_vArray, p_stElement->ucNumberOfData);
+                    break;
+                case SAV2_eU16:
+                    SAV2_M_WriteData((void*)p_stElement->uData.p_vArray, p_stElement->ucNumberOfData * 2);
+                    break;
+                case SAV2_eU32:
+                    SAV2_M_WriteData((void*)p_stElement->uData.p_vArray, p_stElement->ucNumberOfData * 4);
+                    break;
+                case SAV2_eFloat:
+                    SAV2_M_WriteData((void*)p_stElement->uData.p_vArray, p_stElement->ucNumberOfData * 4);
+                    break;
+                case SAV2_eVector:
+                    for (ucTempU8 = 0; ucTempU8 < p_stElement->ucNumberOfData; ucTempU8++)
+                    {
+                        SAV2_M_WriteData(((MTH3D_tdstVector_**)p_stElement->uData.p_vArray)[ucTempU8], sizeof(MTH3D_tdstVector_) * p_stElement->ucNumberOfData);
+                    }
+                    break;
+                case SAV2_eString:
+                    for (ucTempU8 = 0; ucTempU8 < p_stElement->ucNumberOfData; ucTempU8++)
+                    {
+                        ucElementNumber = strlen(((char**)p_stElement->uData.p_vArray)[ucTempU8]) + 1;
+                        SAV2_M_WriteData(&ucElementNumber, 1);
+                        SAV2_M_WriteData(((char**)p_stElement->uData.p_vArray)[ucTempU8], ucElementNumber);
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    ucElementNumber = 0;
+    SAV2_M_WriteData(&ucElementNumber, 1);
+
+    printf("Saving %d bytes\n", (int)pData - (int)pStartAddress);
+    PS2MC_fn_vSaveGame((char*)pStartAddress, p_szSaveName, (int)pData - (int)pStartAddress);
+
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 641–644 */
@@ -1847,6 +2451,9 @@ void SAV2_fn_vFreeAnElement(SAV2_tdstElement_* p_stElement);
  * expandable copy is a separate static helper. */
 SAV2_tdstElement_* SAV2_fn_p_stFindElementByName(char* p_szElementName);
 static SAV2_tdstElement_* SAV2_fn_p_stFindElementByNameExpanded(char* p_szElementName);
+char* fn_szGetStringFromTextOrStringParam(tdstGetSetParam_* p_stValue);
+extern void fn_vGenFree(void* p_vMemBlock, unsigned char ucChannel);
+char* Strchr(char* p_cString, int cChar);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 591–596 */
 /* addr: 0x0028bcc0  size: 92 bytes */
@@ -1977,8 +2584,88 @@ void SAV2_fn_vSetASingleValue(char* p_szElementName, void* p_stParam)
 void SAV2_fn_xGetAValueAtIndex(char* p_szElementName, unsigned int ulElementNumber, void* p_stParam)
 {
     char* p_szString;
-    tdstGetSetParam_* p_stParamAI;
-    /* TODO: decompile from asm/... */
+    tdstGetSetParam_* p_stParamAI = (tdstGetSetParam_*)p_stParam;
+    SAV2_tdstElement_* p_stElement;
+
+    p_stElement = SAV2_fn_p_stFindElementByNameExpanded(p_szElementName);
+    if (p_stElement != NULL)
+    {
+        if (ulElementNumber < p_stElement->ucNumberOfData)
+        {
+            if (p_stElement->ucNumberOfData == 1)
+            {
+                switch (p_stElement->ucDataInformation & 0x0F)
+                {
+                case SAV2_eU8:
+                    p_stParamAI->uDummy.uParam.ucValue = p_stElement->uData.u8Data;
+                    p_stParamAI->eType = E_vt_0To255;
+                    break;
+                case SAV2_eU16:
+                    p_stParamAI->uDummy.uParam.uwValue = p_stElement->uData.u16Data;
+                    p_stParamAI->eType = E_vt_0To65535;
+                    break;
+                case SAV2_eU32:
+                    p_stParamAI->uDummy.uParam.ulValue = p_stElement->uData.u32Data;
+                    p_stParamAI->eType = E_vt_Integer;
+                    break;
+                case SAV2_eFloat:
+                    p_stParamAI->uDummy.uParam.xValue = p_stElement->uData.fFloat;
+                    p_stParamAI->eType = E_vt_Float;
+                    break;
+                case SAV2_eVector:
+                    *(MTH3D_tdstVector_*)&p_stParamAI->uDummy = *p_stElement->uData.p_stVector;
+                    p_stParamAI->eType = E_vt_Vector;
+                    break;
+                case SAV2_eString:
+                    if (p_stParamAI->eType == E_vt_Text)
+                    {
+                        if (p_stElement->uData.p_szString != 0)
+                        {
+                            p_szString = fn_szGetStringFromTextOrStringParam(p_stParamAI);
+                            strcpy(p_szString, (char*)p_stElement->uData.p_szString);
+                        }
+                    }
+                    break;
+                }
+            }
+            else
+            {
+                switch (p_stElement->ucDataInformation & 0x0F)
+                {
+                case SAV2_eU8:
+                    p_stParamAI->uDummy.uParam.ucValue = ((unsigned char*)p_stElement->uData.p_vArray)[ulElementNumber];
+                    p_stParamAI->eType = E_vt_0To255;
+                    break;
+                case SAV2_eU16:
+                    p_stParamAI->uDummy.uParam.uwValue = ((unsigned short*)p_stElement->uData.p_vArray)[ulElementNumber];
+                    p_stParamAI->eType = E_vt_0To65535;
+                    break;
+                case SAV2_eU32:
+                    p_stParamAI->uDummy.uParam.ulValue = ((unsigned int*)p_stElement->uData.p_vArray)[ulElementNumber];
+                    p_stParamAI->eType = E_vt_Integer;
+                    break;
+                case SAV2_eFloat:
+                    p_stParamAI->uDummy.uParam.xValue = ((float*)p_stElement->uData.p_vArray)[ulElementNumber];
+                    p_stParamAI->eType = E_vt_Float;
+                    break;
+                case SAV2_eVector:
+                    *(MTH3D_tdstVector_*)&p_stParamAI->uDummy = *((MTH3D_tdstVector_**)p_stElement->uData.p_vArray)[ulElementNumber];
+                    p_stParamAI->eType = E_vt_Vector;
+                    break;
+                case SAV2_eString:
+                    if (p_stParamAI->eType == E_vt_Text)
+                    {
+                        if (((char**)p_stElement->uData.p_vArray)[ulElementNumber] != NULL)
+                        {
+                            p_szString = fn_szGetStringFromTextOrStringParam(p_stParamAI);
+                            strcpy(p_szString, ((char**)p_stElement->uData.p_vArray)[ulElementNumber]);
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 369–476 */
@@ -2041,12 +2728,109 @@ void SAV2_fn_xGetAValueAtIndex(char* p_szElementName, unsigned int ulElementNumb
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
+static SAV2_tdeDataType_ SAV2_fn_eGetType(SAV2_tdstElement_* p_stElement)
+{
+    return (SAV2_tdeDataType_)(p_stElement->ucDataInformation & 0x0F);
+}
+#pragma auto_inline reset
+
+#define SAV2_M_Free(p) { void* p_vPtr = (void*)(p); if (p_vPtr != NULL) { Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0); fn_vGenFree(p_vPtr, 0); } }
+
 void SAV2_fn_vSetAValueAtIndex(char* p_szElementName, unsigned int ulElementNumber, void* p_stParam)
 {
     char* p_szString;
-    tdstGetSetParam_* p_stParamAI;
-    /* TODO: decompile from asm/... */
+    tdstGetSetParam_* p_stParamAI = (tdstGetSetParam_*)p_stParam;
+    SAV2_tdstElement_* p_stElement;
+    unsigned char bOk;
+
+    p_stElement = SAV2_fn_p_stFindElementByNameExpanded(p_szElementName);
+    if (p_stElement == NULL)
+        return;
+
+    bOk = 0;
+    if (SAV2_fn_eGetType(p_stElement) == SAV2_fn_eGiveElementTypeFromAIType(p_stParamAI->eType))
+        bOk = 1;
+    if (bOk)
+    {
+        if (ulElementNumber < p_stElement->ucNumberOfData)
+        {
+            if (p_stElement->ucNumberOfData == 1)
+            {
+                switch (p_stElement->ucDataInformation & 0x0F)
+                {
+                case SAV2_eU8:
+                    p_stElement->uData.u8Data = p_stParamAI->uDummy.uParam.ucValue;
+                    break;
+                case SAV2_eU16:
+                    p_stElement->uData.u16Data = p_stParamAI->uDummy.uParam.uwValue;
+                    break;
+                case SAV2_eU32:
+                    p_stElement->uData.u32Data = p_stParamAI->uDummy.uParam.ulValue;
+                    break;
+                case SAV2_eFloat:
+                    p_stElement->uData.fFloat = p_stParamAI->uDummy.uParam.xValue;
+                    break;
+                case SAV2_eVector:
+                    if (p_stElement->uData.p_stVector != NULL) SAV2_M_Free(p_stElement->uData.p_stVector);
+                    p_stElement->uData.p_stVector = (MTH3D_tdstVector_*)SAV2_fn_p_vMalloc(sizeof(MTH3D_tdstVector_));
+                    *p_stElement->uData.p_stVector = *(MTH3D_tdstVector_*)&p_stParamAI->uDummy;
+                    break;
+                case SAV2_eString:
+                    p_szString = fn_szGetStringFromTextOrStringParam(p_stParamAI);
+                    if (p_stElement->uData.p_szString != 0)
+                        SAV2_M_Free(p_stElement->uData.p_szString);
+                    p_stElement->uData.p_szString = (int)SAV2_fn_p_vMalloc(strlen(p_szString) + 1);
+                    strcpy((char*)p_stElement->uData.p_szString, p_szString);
+
+                    if (strstr(p_szElementName, "sg_names") || strstr(p_szElementName, "currentgamename"))
+                    {
+                        if (Strchr((char*)p_stElement->uData.p_szString, '\\') != NULL)
+                            *Strchr((char*)p_stElement->uData.p_szString, '\\') = 0;
+                    }
+                    break;
+                }
+            }
+            else
+            {
+                switch (p_stElement->ucDataInformation & 0x0F)
+                {
+                case SAV2_eU8:
+                    ((unsigned char*)p_stElement->uData.p_vArray)[ulElementNumber] = p_stParamAI->uDummy.uParam.ucValue;
+                    break;
+                case SAV2_eU16:
+                    ((unsigned short*)p_stElement->uData.p_vArray)[ulElementNumber] = p_stParamAI->uDummy.uParam.uwValue;
+                    break;
+                case SAV2_eU32:
+                    ((unsigned int*)p_stElement->uData.p_vArray)[ulElementNumber] = p_stParamAI->uDummy.uParam.ulValue;
+                    break;
+                case SAV2_eFloat:
+                    ((float*)p_stElement->uData.p_vArray)[ulElementNumber] = p_stParamAI->uDummy.uParam.xValue;
+                    break;
+                case SAV2_eVector:
+                    if (((MTH3D_tdstVector_**)p_stElement->uData.p_vArray)[ulElementNumber] != NULL) SAV2_M_Free(((MTH3D_tdstVector_**)p_stElement->uData.p_vArray)[ulElementNumber]);
+                    ((MTH3D_tdstVector_**)p_stElement->uData.p_vArray)[ulElementNumber] = (MTH3D_tdstVector_*)SAV2_fn_p_vMalloc(sizeof(MTH3D_tdstVector_));
+                    *((MTH3D_tdstVector_**)p_stElement->uData.p_vArray)[ulElementNumber] = *(MTH3D_tdstVector_*)&p_stParamAI->uDummy;
+                    break;
+                case SAV2_eString:
+                    p_szString = fn_szGetStringFromTextOrStringParam(p_stParamAI);
+                    if (((char**)p_stElement->uData.p_vArray)[ulElementNumber] != NULL)
+                        SAV2_M_Free(((char**)p_stElement->uData.p_vArray)[ulElementNumber]);
+                    ((char**)p_stElement->uData.p_vArray)[ulElementNumber] = (char*)SAV2_fn_p_vMalloc(strlen(p_szString) + 1);
+                    strcpy(((char**)p_stElement->uData.p_vArray)[ulElementNumber], p_szString);
+
+                    if (strstr(p_szElementName, "sg_names") || strstr(p_szElementName, "currentgamename"))
+                    {
+                        if (Strchr(((char**)p_stElement->uData.p_vArray)[ulElementNumber], '\\') != NULL)
+                            *Strchr(((char**)p_stElement->uData.p_vArray)[ulElementNumber], '\\') = 0;
+                    }
+                    break;
+                }
+            }
+        }
+    }
 }
+
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 357–366 */
 /* addr: 0x0028c550  size: 120 bytes */

@@ -328,8 +328,8 @@ struct HIE_tdstSuperObject_ {
     int lLastComputeFrame; /* +0x28 */
     int lDrawModeMask; /* +0x2c */
     unsigned int ulFlags; /* +0x30 */
-    int hVisualBoundingVolume; /* +0x34 */
-    int hCollideBoundingVolume; /* +0x38 */
+    COL_tdstBoundingSphere_* hVisualBoundingVolume; /* +0x34 */
+    COL_tdstBoundingSphere_* hCollideBoundingVolume; /* +0x38 */
     MTH3D_tdstVector_ stSemiLookAtVector; /* +0x3c */
     float fTransparenceLevel; /* +0x48 */
     unsigned int ulOutlineColor; /* +0x4c */
@@ -1696,11 +1696,90 @@ void GAM_fn_vInitFamiliesToLoad(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void HIE_fn_vPushMatrix(HIE_tdstSuperObject_* _hSprObj);
+static inline unsigned char fn_ucGetInitFlagWhenDeadOrTaken(tdstStandardGame_* h_StdGame)
+{
+    return h_StdGame->eInitFlagWhenDeadOrTaken;
+}
+extern void HIE_fn_vInvalidateOneGlobalMatrix(HIE_tdstSuperObject_* _hSprObj);
+extern void fn_vDynamInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjIniType);
+extern void Erm_fn_ClearLastError();
+extern void Erm_fn_v_UpdateLastError(unsigned short uwStartOfWarningsId, unsigned char ucModuleId, unsigned int ulChannelId, unsigned short uwErrNum, int lDebugInfo, unsigned char ucOpenInfoWindow, unsigned char ucStopForDebug, char* szPersonalMsg);
+void fn_vInitOneObject(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjIniType);
+void fn_vDesinitOneObject(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjIniType);
+
 void fn_vInitAllObjectTree(tdeObjectTreeInit_ eObjIniType, HIE_tdstSuperObject_* p_stSupObject)
 {
     tdstEngineObject_* p_stObject;
     HIE_tdstSuperObject_* p_stChild;
-    /* TODO: decompile from asm/... */
+    unsigned int ulType;
+
+    HIE_fn_vPushMatrix(p_stSupObject);
+    *p_stSupObject->hGlobalMatrix = *(MAT_tdstTransformation_*)g_p_stCurrentMatrix;
+    HIE_fn_vInvalidateOneGlobalMatrix(p_stSupObject);
+
+    for (p_stChild = p_stSupObject->hFirstElementDyn; p_stChild; p_stChild = p_stChild->hNextBrotherDyn)
+    {
+        fn_vInitAllObjectTree(eObjIniType, p_stChild);
+    }
+
+    if (HIE_g_lNbMatrixInStack != 0) { HIE_g_lNbMatrixInStack--; g_p_stCurrentMatrix = HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1]; }
+
+    p_stObject = p_stSupObject->hLinkedObject.p_stCharacter;
+    ulType = p_stSupObject->ulTypeOfLinkedObject;
+
+    if (!p_stObject && !(ulType & 0x101))
+    {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(0x30, g_ucGameModuleId, 0, 0xA, -1, 0xFF, 0xFF, NULL);
+    }
+
+    if (ulType == 2)
+    {
+        switch (eObjIniType)
+        {
+        case OTI_ReinitTheMap:
+            fn_vInitOneObject(p_stObject, eObjIniType);
+            break;
+        case OTI_MapLoaded:
+        case OTI_LoadSavedGame:
+            if (fn_ucGetInitFlagWhenDeadOrTaken(p_stObject->h_StandardGame) == 0 || fn_ucGetInitFlagWhenDeadOrTaken(p_stObject->h_StandardGame) == 1 || fn_ucGetInitFlagWhenDeadOrTaken(p_stObject->h_StandardGame) == 2 || fn_ucGetInitFlagWhenDeadOrTaken(p_stObject->h_StandardGame) == 3 || fn_ucGetInitFlagWhenDeadOrTaken(p_stObject->h_StandardGame) == 4 || (fn_ucGetInitFlagWhenDeadOrTaken(p_stObject->h_StandardGame) == 5 && !(unsigned char)((p_stObject->h_StandardGame->ucMiscFlags & 1) ? 1 : 0)))
+            {
+                if (eObjIniType == OTI_LoadSavedGame && fn_ucGetInitFlagWhenDeadOrTaken(p_stObject->h_StandardGame) == 4)
+                    fn_vInitOneObject(p_stObject, OTI_ReinitTheMap);
+                else
+                    fn_vInitOneObject(p_stObject, eObjIniType);
+            }
+            else
+            {
+                fn_vDesinitOneObject(p_stObject, eObjIniType);
+            }
+            {
+                tdstFamilyList_* h_Family = p_stSupObject->hLinkedObject.p_stCharacter->h_3dData->h_Family;
+
+                p_stSupObject->hVisualBoundingVolume = h_Family->hBoundingSphere;
+                p_stSupObject->hCollideBoundingVolume = h_Family->hBoundingSphere;
+            }
+            break;
+        case OTI_AlwaysCreated:
+        case OTI_PlayerDead:
+            if (fn_ucGetInitFlagWhenDeadOrTaken(p_stObject->h_StandardGame) == 0 || fn_ucGetInitFlagWhenDeadOrTaken(p_stObject->h_StandardGame) == 1 || fn_ucGetInitFlagWhenDeadOrTaken(p_stObject->h_StandardGame) == 2 || (p_stObject->h_StandardGame->eInitFlagWhenDeadOrTaken == 5 && !(unsigned char)((p_stObject->h_StandardGame->ucMiscFlags & 1) ? 1 : 0)) || (p_stObject->h_StandardGame->eInitFlagWhenDeadOrTaken == 3 && !(unsigned char)((p_stObject->h_StandardGame->ucMiscFlags & 1) ? 1 : 0)))
+            {
+                fn_vInitOneObject(p_stObject, eObjIniType);
+            }
+            else
+            {
+                fn_vDesinitOneObject(p_stObject, eObjIniType);
+            }
+            break;
+        default:
+            Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(0x30, g_ucGameModuleId, 0, 0xB, -1, 0xFF, 0xFF, NULL);
+            break;
+        }
+        HIE_fn_vPushMatrix(p_stSupObject);
+        if (HIE_g_lNbMatrixInStack != 0) { HIE_g_lNbMatrixInStack--; g_p_stCurrentMatrix = HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1]; }
+        if (p_stSupObject->hLinkedObject.p_stCharacter->h_Dynam)
+            fn_vDynamInit(p_stObject, eObjIniType);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 737–741 */
@@ -2133,11 +2212,102 @@ void fn_vDesactiveAnObject(tdstEngineObject_* p_stObject)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void fn_vSectInfoInitForSingleCharacter(HIE_tdstSuperObject_* hCharacter, MTH3D_tdstVector_* p_stPosition);
+extern void fn_vAllocArrayOfElts3d(tdst3dData_* h_3dData, unsigned char ucNbElts);
+
+static inline void HIE_vChangeFatherAsFirstChild(HIE_tdstSuperObject_* hFatherSupObj, HIE_tdstSuperObject_* hSupObj)
+{
+    if (hSupObj->hNextBrotherDyn) hSupObj->hNextBrotherDyn->hPrevBrotherDyn = hSupObj->hPrevBrotherDyn; if (hSupObj->hPrevBrotherDyn) hSupObj->hPrevBrotherDyn->hNextBrotherDyn = hSupObj->hNextBrotherDyn; if (hSupObj->hFatherDyn) { hSupObj->hFatherDyn->lNumberOfElementsDyn--; if (hSupObj->hFatherDyn->hFirstElementDyn == hSupObj) hSupObj->hFatherDyn->hFirstElementDyn = hSupObj->hNextBrotherDyn; if (hSupObj->hFatherDyn->hLastElementDyn == hSupObj) hSupObj->hFatherDyn->hLastElementDyn = hSupObj->hPrevBrotherDyn; } hSupObj->hNextBrotherDyn = NULL; hSupObj->hPrevBrotherDyn = NULL; hSupObj->hFatherDyn = NULL; hSupObj->hPrevBrotherDyn = NULL; hSupObj->hNextBrotherDyn = hFatherSupObj->hFirstElementDyn; hSupObj->hFatherDyn = hFatherSupObj; if (hFatherSupObj->hLastElementDyn == NULL) hFatherSupObj->hLastElementDyn = hSupObj; else hFatherSupObj->hFirstElementDyn->hPrevBrotherDyn = hSupObj; hFatherSupObj->hFirstElementDyn = hSupObj; hFatherSupObj->lNumberOfElementsDyn++;
+}
+
+static inline void HIE_vChangeFatherAsLastChild(HIE_tdstSuperObject_* hFatherSupObj, HIE_tdstSuperObject_* hSupObj)
+{
+    if (hSupObj->hNextBrotherDyn) hSupObj->hNextBrotherDyn->hPrevBrotherDyn = hSupObj->hPrevBrotherDyn; if (hSupObj->hPrevBrotherDyn) hSupObj->hPrevBrotherDyn->hNextBrotherDyn = hSupObj->hNextBrotherDyn; if (hSupObj->hFatherDyn) { hSupObj->hFatherDyn->lNumberOfElementsDyn--; if (hSupObj->hFatherDyn->hFirstElementDyn == hSupObj) hSupObj->hFatherDyn->hFirstElementDyn = hSupObj->hNextBrotherDyn; if (hSupObj->hFatherDyn->hLastElementDyn == hSupObj) hSupObj->hFatherDyn->hLastElementDyn = hSupObj->hPrevBrotherDyn; } hSupObj->hNextBrotherDyn = NULL; hSupObj->hPrevBrotherDyn = NULL; hSupObj->hFatherDyn = NULL; hSupObj->hNextBrotherDyn = NULL; hSupObj->hPrevBrotherDyn = hFatherSupObj->hLastElementDyn; hSupObj->hFatherDyn = hFatherSupObj; if (hFatherSupObj->hFirstElementDyn == NULL) hFatherSupObj->hFirstElementDyn = hSupObj; else hFatherSupObj->hLastElementDyn->hNextBrotherDyn = hSupObj; hFatherSupObj->hLastElementDyn = hSupObj; hFatherSupObj->lNumberOfElementsDyn++;
+}
+
+/* MatSp.h inline: the VU0 macro-mode instructions have no C form. */
+inline void MAT_fn_vApplyOnVertex(MTH3D_tdstVector_* VectDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* VectA)
+{
+    MTH4D_tdstVector_ Vtmp;
+    MTH4D_tdstVector_* p_stVtmp;
+    MTH4D_tdstMatrix_* p_stMatrix;
+
+    p_stMatrix = &_hTransform->stTransformMatrix; p_stVtmp = &Vtmp;
+    *(unsigned int*)&Vtmp.xX = *(unsigned int*)&VectA->xX; *(unsigned int*)&Vtmp.xY = *(unsigned int*)&VectA->xY; *(unsigned int*)&Vtmp.xZ = *(unsigned int*)&VectA->xZ;
+    asm {
+        lqc2 vf1, 0x0(p_stVtmp)
+        lqc2 vf2, 0x0(p_stMatrix)
+        lqc2 vf3, 0x10(p_stMatrix)
+        lqc2 vf4, 0x20(p_stMatrix)
+        lqc2 vf5, 0x30(p_stMatrix)
+        vmulax.xyzw ACC, vf2, vf1x
+        vmadday.xyzw ACC, vf3, vf1y
+        vmaddaz.xyzw ACC, vf4, vf1z
+        vmaddw.xyzw vf6, vf5, vf0w
+        nop
+        nop
+        sqc2 vf6, 0x0(p_stVtmp)
+    }
+    *(unsigned int*)&VectDest->xX = *(unsigned int*)&Vtmp.xX; *(unsigned int*)&VectDest->xY = *(unsigned int*)&Vtmp.xY; *(unsigned int*)&VectDest->xZ = *(unsigned int*)&Vtmp.xZ;
+}
+
+inline void MTH3D_M_vCopyVector(MTH3D_tdstVector_* VectDest, MTH3D_tdstVector_* VectA)
+{
+    *(unsigned int*)&VectDest->xX = *(unsigned int*)&VectA->xX; *(unsigned int*)&VectDest->xY = *(unsigned int*)&VectA->xY; *(unsigned int*)&VectDest->xZ = *(unsigned int*)&VectA->xZ;
+}
+
+static inline tdstFrame3d_* fn_p_stGetFrame3d(tdst3dData_* h_3dData)
+{
+    return &h_3dData->stFrame3d;
+}
+
+inline MTH3D_tdstVector_* POS_fn_p_stGetTranslationVector(MAT_tdstTransformation_* hMatrix)
+{
+    return (MTH3D_tdstVector_*)&hMatrix->stTransformMatrix.stCol_3;
+}
+
 void fn_vForceActiveAnObject(tdstEngineObject_* p_stObject)
 {
     tdstAnim3d_* p_stCurrentAnim;
     MTH3D_tdstVector_ hPosition;
-    /* TODO: decompile from asm/... */
+
+    if (fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame)->hFatherDyn == (HIE_tdstSuperObject_*)gp_stInactiveDynamicWorld)
+    {
+        if (fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame)->hLinkedObject.p_stCharacter->h_StandardGame->ucPlatFormType)
+        {
+            HIE_vChangeFatherAsFirstChild((HIE_tdstSuperObject_*)gp_stDynamicWorld, fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame));
+        }
+        else
+        {
+            HIE_vChangeFatherAsLastChild((HIE_tdstSuperObject_*)gp_stDynamicWorld, fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame));
+        }
+    }
+
+    {
+        MAT_tdstTransformation_* hFatherMatrix = fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame)->hFatherDyn->hGlobalMatrix;
+        MTH3D_M_vCopyVector(&hPosition, POS_fn_p_stGetTranslationVector(fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame)->hLocalMatrix));
+        MAT_fn_vApplyOnVertex(&hPosition, hFatherMatrix, &hPosition);
+    }
+    fn_vSectInfoInitForSingleCharacter(fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame), &hPosition);
+    p_stObject->h_StandardGame->ucMiscFlags |= 2;
+    p_stObject->h_StandardGame->ucMiscFlags |= 4;
+
+    p_stObject->h_3dData->ulStartTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+    p_stObject->h_3dData->ulTimePreviousFrame = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+
+    if (fn_p_stGetFrame3d(p_stObject->h_3dData)->p_stArrayOfElts3d == NULL)
+    {
+        if (p_stObject->h_3dData->h_CurrentState)
+        {
+            p_stCurrentAnim = p_stObject->h_3dData->h_CurrentState->p_stAnim;
+            if (p_stCurrentAnim)
+            {
+                fn_p_stGetFrame3d(p_stObject->h_3dData)->p_stAnim = NULL;
+                fn_vAllocArrayOfElts3d(p_stObject->h_3dData, p_stCurrentAnim->ucMaxNumberOfElements);
+            }
+        }
+        p_stObject->h_3dData->stFrame3d.p_stAnim = NULL;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 343–356 */
@@ -2243,13 +2413,33 @@ void fn_vInitOneObject(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjIni
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+static inline void fn_vFreeOneObject(HIE_tdstSuperObject_* p_stSuperObject)
+{
+    int i;
+    tdstEngineObject_* p_stObject;
+
+    if (p_stSuperObject->ulTypeOfLinkedObject == 2)
+    {
+        p_stObject = p_stSuperObject->hLinkedObject.p_stCharacter;
+        for (i = 10; i >= 0; i--)
+        {
+            if (((void**)p_stObject)[i] != 0)
+            {
+                g_a_stStructureHandleFunction[i].p_fn_vFreeFunction(p_stObject);
+            }
+        }
+    }
+    else
+    {
+        Erm_fn_v_UpdateLastError(0x30, g_ucGameModuleId, 0, 0x39, -1, 0xFF, 0xFF, NULL);
+    }
+}
+
 void fn_vPartiallyDestroyHierarchy(HIE_tdstSuperObject_* p_stSuperObject)
 {
     int type;
     HIE_tdstSuperObject_* p_stNextChild;
     HIE_tdstSuperObject_* p_stChild;
-    tdstEngineObject_* p_stObject;
-    int i;
     extern int fn_bIsInFix(tdstEngineObject_* p_stObject);
     extern int fn_otFindFamilyTypeOfFamilyTypeName(char* szFamilyName);
     extern void fn_vRemoveObjectInSectorList(HIE_tdstSuperObject_* p_stSuperObject);
@@ -2287,8 +2477,9 @@ void fn_vPartiallyDestroyHierarchy(HIE_tdstSuperObject_* p_stSuperObject)
         return;
     }
     HIE_fn_vIsolate(p_stSuperObject);
-    if (p_stSuperObject->ulTypeOfLinkedObject == 2)
+    switch (p_stSuperObject->ulTypeOfLinkedObject)
     {
+    case 2:
         if (!fn_ucIsAnAlwaysObject(p_stSuperObject->ulTypeOfLinkedObject != 2 ? 0 : p_stSuperObject->hLinkedObject.p_stCharacter))
         {
             if (fn_bIsInFix(p_stSuperObject->ulTypeOfLinkedObject != 2 ? 0 : p_stSuperObject->hLinkedObject.p_stCharacter))
@@ -2297,23 +2488,10 @@ void fn_vPartiallyDestroyHierarchy(HIE_tdstSuperObject_* p_stSuperObject)
             }
             else
             {
-                if (p_stSuperObject->ulTypeOfLinkedObject == 2)
-                {
-                    p_stObject = p_stSuperObject->hLinkedObject.p_stCharacter;
-                    for (i = 10; i >= 0; i--)
-                    {
-                        if (((void**)p_stObject)[i] != 0)
-                        {
-                            g_a_stStructureHandleFunction[i].p_fn_vFreeFunction(p_stObject);
-                        }
-                    }
-                }
-                else
-                {
-                    Erm_fn_v_UpdateLastError(0x30, g_ucGameModuleId, 0, 0x39, -1, 0xFF, 0xFF, NULL);
-                }
+                fn_vFreeOneObject(p_stSuperObject);
             }
         }
+        break;
     }
     if (p_stSuperObject->ulTypeOfLinkedObject == 2)
     {
@@ -2381,10 +2559,48 @@ void fn_vRemoveWorldSectInfo(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern int fn_bIsInFix(tdstEngineObject_* p_stObject);
+
+static inline void fn_vKillEngineObject(tdstEngineObject_* p_stObject)
+{
+    PLA_fn_vDesInitAllChildOfCharacter(fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame), p_stObject);
+    if (!(unsigned char)((p_stObject->h_StandardGame->ucMiscFlags & 1) ? 1 : 0))
+    {
+        p_stObject->h_StandardGame->ucMiscFlags |= 1;
+        if (p_stObject->h_StandardGame->eInitFlagWhenDeadOrTaken == 5)
+            p_stObject->h_StandardGame->ucMiscFlags &= 0xFD;
+        else
+            p_stObject->h_StandardGame->ucMiscFlags |= 2;
+        if (p_stObject->h_StandardGame->eInitFlagWhenDeadOrTaken == 1)
+            fn_vInitOneObject(p_stObject, 4);
+        else
+            p_stObject->h_StandardGame->ucMiscFlags &= 0xFB;
+    }
+    SND_fn_vKillObjectSound2(fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame), g_lSoundObjectTypeAnim);
+}
+
 void fn_vRemoveCharactersFromTransitionSector(HIE_tdstSuperObject_* _hSprObjSector)
 {
-    HIE_tdstSuperObject_* hCharacterSO;
-    SECT_tdstListOfSOCharacters_* hPrevChar;
     SECT_tdstListOfSOCharacters_* hCharacter;
-    /* TODO: decompile from asm/... */
+    SECT_tdstListOfSOCharacters_* hPrevChar;
+    HIE_tdstSuperObject_* hCharacterSO;
+
+    hPrevChar = NULL;
+    for (hCharacter = _hSprObjSector->hLinkedObject.p_stSector->stListOfCharacters.hFirstElementDyn; hCharacter; hCharacter = hCharacter->hNextBrotherDyn)
+    {
+        if (hPrevChar)
+        {
+            if (hPrevChar->hNextBrotherDyn) hPrevChar->hNextBrotherDyn->hPrevBrotherDyn = hPrevChar->hPrevBrotherDyn; if (hPrevChar->hPrevBrotherDyn) hPrevChar->hPrevBrotherDyn->hNextBrotherDyn = hPrevChar->hNextBrotherDyn; if (hPrevChar->hFatherDyn) { hPrevChar->hFatherDyn->lNumberOfElementsDyn--; if (hPrevChar->hFatherDyn->hFirstElementDyn == hPrevChar) hPrevChar->hFatherDyn->hFirstElementDyn = hPrevChar->hNextBrotherDyn; if (hPrevChar->hFatherDyn->hLastElementDyn == hPrevChar) hPrevChar->hFatherDyn->hLastElementDyn = hPrevChar->hPrevBrotherDyn; } hPrevChar->hNextBrotherDyn = NULL; hPrevChar->hPrevBrotherDyn = NULL; hPrevChar->hFatherDyn = NULL;
+        }
+        hPrevChar = hCharacter;
+        hCharacterSO = hCharacter->hPointerOfCharacter;
+        if (fn_bIsInFix(hCharacterSO->ulTypeOfLinkedObject != 2 ? 0 : hCharacterSO->hLinkedObject.p_stCharacter))
+            hPrevChar = NULL;
+        else
+            fn_vKillEngineObject(hCharacterSO->ulTypeOfLinkedObject != 2 ? 0 : hCharacterSO->hLinkedObject.p_stCharacter);
+    }
+    if (hPrevChar)
+    {
+        if (hPrevChar->hNextBrotherDyn) hPrevChar->hNextBrotherDyn->hPrevBrotherDyn = hPrevChar->hPrevBrotherDyn; if (hPrevChar->hPrevBrotherDyn) hPrevChar->hPrevBrotherDyn->hNextBrotherDyn = hPrevChar->hNextBrotherDyn; if (hPrevChar->hFatherDyn) { hPrevChar->hFatherDyn->lNumberOfElementsDyn--; if (hPrevChar->hFatherDyn->hFirstElementDyn == hPrevChar) hPrevChar->hFatherDyn->hFirstElementDyn = hPrevChar->hNextBrotherDyn; if (hPrevChar->hFatherDyn->hLastElementDyn == hPrevChar) hPrevChar->hFatherDyn->hLastElementDyn = hPrevChar->hPrevBrotherDyn; } hPrevChar->hNextBrotherDyn = NULL; hPrevChar->hPrevBrotherDyn = NULL; hPrevChar->hFatherDyn = NULL;
+    }
 }

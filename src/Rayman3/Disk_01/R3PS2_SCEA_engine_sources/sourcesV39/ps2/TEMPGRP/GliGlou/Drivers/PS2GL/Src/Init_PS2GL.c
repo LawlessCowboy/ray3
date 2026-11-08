@@ -2391,8 +2391,8 @@ unsigned int TR_IAMecaPlusDisp1;
 unsigned int TR_EndDisp1VU1;
 unsigned int TR_IAMeca;
 unsigned char rdata[32];
-unsigned int EndFrame;
-unsigned int StartFrame;
+volatile unsigned int EndFrame;
+volatile unsigned int StartFrame;
 unsigned int NbElementComputed[2];
 float g_xVideoFrameDurationInSeconds;
 int g_BlackScreenUntilNextMap;
@@ -2720,9 +2720,38 @@ void GLI_fn_vSwitchTo60Hz(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void PS2glDepthRange(double zNear, double zFar);
+extern void PS2glEnable(unsigned int cap);
+extern void PS2glDepthMask(unsigned char flag);
+extern void PS2glFinish(void);
+extern void PS2auxSwapBuffers(void);
+
 void GLIPS2_vInitOtherVideoStuff(void)
 {
-    /* TODO: decompile from asm/... */
+    PS2glDepthRange(0.0, 1.0);
+    PS2glEnable(0xF02);
+    PS2glEnable(0xF04);
+    g_PS2glContext.bAlphaChannelReduce = 0;
+    g_PS2glContext.nEnableBits &= ~0x200; g_gsContext.DTHE.DTHE = 0; g_gsContext.ModFlgs.DTHE_Modified = 1;
+    PS2glDepthMask(1);
+    g_PS2glContext.nTextureEnableBits &= (g_PS2glContext.iCurTextureSet == 0) ? ~2 : ~0x200; g_gsContext.PRMODE.TME = (g_PS2glContext.nTextureEnableBits & 0xF) ? 1 : 0; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    g_PS2glContext.nEnableBits &= ~0x100; g_gsContext.PRMODE.ABE = 0; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    g_PS2glContext.nEnableBits &= ~0x400; g_gsContext.TEST_1.ATE = 0; g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    g_PS2glContext.nEnableBits &= ~0x800; g_gsContext.TEST_1.ZTE = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1; g_gsContext.TEST_1.ZTST = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    g_PS2glContext.nLightBits &= ~0x400;
+    g_PS2glContext.nEnableBits &= ~0x80; g_gsContext.PRMODE.FGE = 0; g_gsContext.ModFlgs.PRMODE_Modified = 1; *(unsigned char*)g_PS2glContext.pbFogging = 0;
+
+    PS2glColorMask(1, 1, 1, 1);
+    PS2glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    PS2glClear(0x4100);
+    PS2glFinish();
+    PS2auxSwapBuffers();
+    PS2glClear(0x4100);
+    PS2glColorMask(1, 1, 1, 1);
+    PS2glFinish();
+    PS2auxSwapBuffers();
+    PS2auxSwapBuffers();
+    PS2auxSwapBuffers();
 }
 
 void GLI_vUpdateAllRefs(int iMode);
@@ -3436,13 +3465,187 @@ void GLI_vEndOfAI(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void PS2glBlendFunc(unsigned int sfactor, unsigned int dfactor);
+extern void PS2glBegin(unsigned int mode);
+extern void PS2glEnd(void);
+extern void PS2glColor4f(float red, float green, float blue, float alpha);
+extern void PS2glVertex2f(float x, float y);
+
+extern void GLI_vDisplayLogo(void);
+extern int scePadRead(int port, int slot, unsigned char* rdata);
+extern char* AskForLevelStartWithName(void);
+void GLI_vProcessColoredFade(void);
+
+static inline unsigned int TR_ulDeltaSE(unsigned int s, unsigned int e)
+{
+    if (e < s) return e;
+    return e - s;
+}
+
+#define GLI_M_READ_PAD() Oldpaddata = paddata; if (scePadRead(0, 0, rdata) > 0) { paddata = 0xffff ^ ((rdata[2] << 8) | rdata[3]); CheckData(); } else { paddata = 0; }
+
 void GLI_vManageStuffForRasters(void)
 {
     unsigned char zTst;
-    unsigned int OldStartFrame;
-    float VUVBLPercent;
-    float VBLPercent;
-    /* TODO: decompile from asm/... */
+    static unsigned int OldStartFrame;
+    static float VUVBLPercent;
+    static float VBLPercent;
+
+    GLI_vDisplayLogo();
+
+    EndFrame = TR_ulGetCount();
+
+    GLI_M_READ_PAD();
+
+    if (GLI_g_OkToTestCC)
+    {
+        if (((paddata & 0x100) == 0x100) && ((Oldpaddata & 0x100) != 0x100))
+        {
+            if (paddata == 0x4943)
+            {
+                GLI_g_AgingTestTimeMarker ^= 1;
+            }
+        }
+    }
+
+    if ((GLI_g_bInMenu || GLI_g_bInExpertRasters) && ((paddata & 0x100) == 0x100) && ((Oldpaddata & 0x100) != 0x100))
+    {
+        if (GLI_g_bInMenu)
+            GLI_g_bInMenu = 0;
+        else if (GLI_g_DisplayRasters == 1)
+            GLI_g_bInMenu = 1;
+        do
+        {
+            GLI_M_READ_PAD();
+        } while (paddata & 0x100);
+    }
+
+    EndFrame = TR_ulGetCount();
+
+    VBLPercent = (float)TR_ulDeltaSE(StartFrame, EndFrame) / 4915200.0f;
+
+    VUVBLPercent = (float)TR_ulDeltaSE(StartFrame, VU1FinishCounter) / 4915200.0f;
+
+    OldStartFrame = StartFrame;
+
+    if (g_BlackScreenUntilNextMap > 0)
+    {
+        g_BlackScreenUntilNextMap--;
+
+        PS2glMatrixMode(0x1701);
+        PS2glLoadIdentity();
+        PS2glOrtho(0.0f, 100.0f, 100.0f, 0.0f, -1.0f, 1.0f);
+        PS2glMatrixMode(0x1700);
+        PS2glLoadIdentity();
+
+        GLI_DRV_vSetCommonGLRenderStates();
+
+        g_PS2glContext.nEnableBits &= ~0x800; g_gsContext.TEST_1.ZTE = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1; g_gsContext.TEST_1.ZTST = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1;
+        g_PS2glContext.nLightBits &= ~0x200; *(unsigned int*)g_PS2glContext.pnColorMatMasks &= ~1;
+        { unsigned int m; unsigned char t; if (g_PS2glContext.iCurTextureSet) m = ~0x200; else m = ~2; g_PS2glContext.nTextureEnableBits &= m; if (g_PS2glContext.nTextureEnableBits & 0xF) t = 1; else t = 0; g_gsContext.PRMODE.TME = t; } g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        g_PS2glContext.nEnableBits &= ~0x400; g_gsContext.TEST_1.ATE = 0; g_gsContext.ModFlgs.TEST_1_Modified = 1;
+        g_PS2glContext.nLightBits &= ~0x400;
+        g_PS2glContext.nEnableBits &= ~0x80; g_gsContext.PRMODE.FGE = 0; g_gsContext.ModFlgs.PRMODE_Modified = 1; *(unsigned char*)g_PS2glContext.pbFogging = 0;
+        
+        g_PS2glContext.bCullfaceChanged = 1; g_PS2glContext.nEnableBits &= ~0x2000;
+        PS2glColorMask(1, 1, 1, 1);
+        PS2glDepthMask(0);
+        g_PS2glContext.nEnableBits |= 0x100; g_gsContext.PRMODE.ABE = 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        PS2glBlendFunc(0x302, 0x303);
+
+        g_PS2glContext.nEnableBits |= 0x100; g_gsContext.PRMODE.ABE = 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        PS2glBegin(4);
+        PS2glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+        PS2glVertex2f(0.0f, 0.0f);
+        PS2glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+        PS2glVertex2f(100.0f, 0.0f);
+        PS2glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+        PS2glVertex2f(100.0f, 100.0f);
+        PS2glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+        PS2glVertex2f(0.0f, 0.0f);
+        PS2glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+        PS2glVertex2f(100.0f, 100.0f);
+        PS2glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+        PS2glVertex2f(0.0f, 100.0f);
+        PS2glEnd();
+
+        PS2glColorMask(1, 1, 1, 0);
+    }
+
+    if (GLI_g_CompleteFadeDirection != 0.0f)
+    {
+        GLI_g_CompleteFadeCurrentValue += GLI_g_CompleteFadeDirection;
+        if (GLI_g_CompleteFadeDirection > 0.0f)
+        {
+            if (GLI_g_CompleteFadeCurrentValue > 1.0f)
+            {
+                GLI_g_CompleteFadeCurrentValue = 1.0f;
+                GLI_g_CompleteFadeDirection = 0.0f;
+            }
+        }
+        else if (GLI_g_CompleteFadeDirection < 0.0f)
+        {
+            if (GLI_g_CompleteFadeCurrentValue < 0.0f)
+            {
+                GLI_g_CompleteFadeCurrentValue = 0.0f;
+                GLI_g_CompleteFadeDirection = 0.0f;
+            }
+        }
+
+        PS2glMatrixMode(0x1701);
+        PS2glLoadIdentity();
+        PS2glOrtho(0.0f, 100.0f, 100.0f, 0.0f, -1.0f, 1.0f);
+        PS2glMatrixMode(0x1700);
+        PS2glLoadIdentity();
+
+        GLI_DRV_vSetCommonGLRenderStates();
+
+        g_PS2glContext.nEnableBits &= ~0x800; g_gsContext.TEST_1.ZTE = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1; g_gsContext.TEST_1.ZTST = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1;
+        g_PS2glContext.nLightBits &= ~0x200; *(unsigned int*)g_PS2glContext.pnColorMatMasks &= ~1;
+        { unsigned int m; unsigned char t; if (g_PS2glContext.iCurTextureSet) m = ~0x200; else m = ~2; g_PS2glContext.nTextureEnableBits &= m; if (g_PS2glContext.nTextureEnableBits & 0xF) t = 1; else t = 0; g_gsContext.PRMODE.TME = t; } g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        g_PS2glContext.nEnableBits &= ~0x400; g_gsContext.TEST_1.ATE = 0; g_gsContext.ModFlgs.TEST_1_Modified = 1;
+        g_PS2glContext.nLightBits &= ~0x400;
+        g_PS2glContext.nEnableBits &= ~0x80; g_gsContext.PRMODE.FGE = 0; g_gsContext.ModFlgs.PRMODE_Modified = 1; *(unsigned char*)g_PS2glContext.pbFogging = 0;
+        
+        g_PS2glContext.bCullfaceChanged = 1; g_PS2glContext.nEnableBits &= ~0x2000;
+        PS2glColorMask(1, 1, 1, 0);
+        PS2glDepthMask(0);
+        g_PS2glContext.nEnableBits |= 0x100; g_gsContext.PRMODE.ABE = 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        PS2glBlendFunc(0x302, 0x303);
+
+        g_PS2glContext.nEnableBits |= 0x100; g_gsContext.PRMODE.ABE = 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        PS2glBegin(4);
+        PS2glColor4f(0.0f, 0.0f, 0.0f, GLI_g_CompleteFadeCurrentValue);
+        PS2glVertex2f(0.0f, 0.0f);
+        PS2glColor4f(0.0f, 0.0f, 0.0f, GLI_g_CompleteFadeCurrentValue);
+        PS2glVertex2f(100.0f, 0.0f);
+        PS2glColor4f(0.0f, 0.0f, 0.0f, GLI_g_CompleteFadeCurrentValue);
+        PS2glVertex2f(100.0f, 100.0f);
+        PS2glColor4f(0.0f, 0.0f, 0.0f, GLI_g_CompleteFadeCurrentValue);
+        PS2glVertex2f(0.0f, 0.0f);
+        PS2glColor4f(0.0f, 0.0f, 0.0f, GLI_g_CompleteFadeCurrentValue);
+        PS2glVertex2f(100.0f, 100.0f);
+        PS2glColor4f(0.0f, 0.0f, 0.0f, GLI_g_CompleteFadeCurrentValue);
+        PS2glVertex2f(0.0f, 100.0f);
+        PS2glEnd();
+
+        PS2glColorMask(1, 1, 1, 0);
+    }
+
+    GLI_vProcessColoredFade();
+
+    g_PS2glContext.nEnableBits |= 0x800; g_gsContext.TEST_1.ZTE = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1; zTst = 1; switch (g_PS2glContext.eDepthFunc) { case 0x200: zTst = 0; break; case 0x207: zTst = 1; break; case 0x203: zTst = 2; break; case 0x201: zTst = 3; break; case 0x202: case 0x204: case 0x205: case 0x206: break; } g_gsContext.TEST_1.ZTST = zTst; g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    PS2glDepthMask(1);
+
+    GLI_g_ulDynShadowCpt = 0;
+    if (GLI_g_iWasAskedToChangeLevel)
+    {
+        GLI_g_iWasAskedToChangeLevel = 0;
+        if (!GLI_g_bInExpertRasters)
+        {
+            GAM_fn_vAskToChangeLevel(AskForLevelStartWithName(), 0);
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 1690–1757 */
@@ -3556,19 +3759,44 @@ void GLI_vProcessColoredFade(void)
             {
                 GLI_g_fCurrentColoredFadeValue = 1.0f;
             }
-            if ((GLI_g_fCurrentColoredFadeValue > 1.0f) || (GLI_g_fCurrentColoredFadeValue <= 0.0f))
-            {
-                GLI_g_fCurrentColoredFadeValue = -1.0f;
-            }
-            else
+            if ((GLI_g_fCurrentColoredFadeValue <= 1.0f) && (GLI_g_fCurrentColoredFadeValue > 0.0f))
             {
                 PS2glMatrixMode(0x1701);
                 PS2glLoadIdentity();
-                PS2glOrtho(100.0f, 0.0f, 100.0f, 0.0f, -1.0f, 1.0f);
+                PS2glOrtho(0.0f, 100.0f, 100.0f, 0.0f, -1.0f, 1.0f);
                 PS2glMatrixMode(0x1700);
                 PS2glLoadIdentity();
                 GLI_DRV_vSetCommonGLRenderStates();
-                /* TODO: GS/PS2GL state restore and the fade quad */
+
+                g_PS2glContext.nEnableBits &= ~0x800; g_gsContext.TEST_1.ZTE = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1;
+                g_PS2glContext.nLightBits &= ~0x200; g_gsContext.TEST_1.ZTST = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1; *(unsigned int*)g_PS2glContext.pnColorMatMasks &= ~1;
+                g_PS2glContext.nTextureEnableBits &= (g_PS2glContext.iCurTextureSet == 0) ? ~2 : ~0x200; g_gsContext.PRMODE.TME = (g_PS2glContext.nTextureEnableBits & 0xF) ? 1 : 0; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+                g_PS2glContext.nEnableBits &= ~0x400; g_gsContext.TEST_1.ATE = 0; g_gsContext.ModFlgs.TEST_1_Modified = 1;
+                g_PS2glContext.nLightBits &= ~0x400;
+                g_PS2glContext.nEnableBits &= ~0x80; g_gsContext.PRMODE.FGE = 0; g_gsContext.ModFlgs.PRMODE_Modified = 1; *(unsigned char*)g_PS2glContext.pbFogging = 0;
+
+                g_PS2glContext.bCullfaceChanged = 1; g_PS2glContext.nEnableBits &= ~0x2000;
+                PS2glColorMask(1, 1, 1, 0);
+                PS2glDepthMask(0);
+                g_PS2glContext.nEnableBits |= 0x100; g_gsContext.PRMODE.ABE = 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+                PS2glBlendFunc(0x302, 0x303);
+
+                g_PS2glContext.nEnableBits |= 0x100; g_gsContext.PRMODE.ABE = 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+                PS2glBegin(4);
+                PS2glColor4f(GLI_g_a3_fFadeColor[0], GLI_g_a3_fFadeColor[1], GLI_g_a3_fFadeColor[2], GLI_g_fCurrentColoredFadeValue);
+                PS2glVertex2f(0.0f, 0.0f);
+                PS2glVertex2f(100.0f, 0.0f);
+                PS2glVertex2f(100.0f, 100.0f);
+                PS2glVertex2f(0.0f, 0.0f);
+                PS2glVertex2f(100.0f, 100.0f);
+                PS2glVertex2f(0.0f, 100.0f);
+                PS2glEnd();
+
+                PS2glColorMask(1, 1, 1, 0);
+            }
+            else
+            {
+                GLI_g_fCurrentColoredFadeValue = -1.0f;
             }
         }
     }
@@ -3709,13 +3937,18 @@ void GLI_vCleanInterpolData(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+static inline unsigned int TR_ulDiff(unsigned int e, unsigned int s)
+{
+    if (s > e) return e;
+    return e - s;
+}
 void TR_Report(void)
 {
     static int Wait;
     unsigned int ulNbFrames;
     unsigned int ulTime;
 
-    ulTime = (TR_EndFrame < TR_StartFrame) ? TR_EndFrame : (TR_EndFrame - TR_StartFrame); ulNbFrames = (unsigned int)((float)ulTime / 4915200.0f);
+    ulTime = TR_ulDiff(TR_EndFrame, TR_StartFrame);ulNbFrames = (unsigned int)((float)ulTime / 4915200.0f);
     if ((ulNbFrames < 2) || (ulNbFrames > 2))
     {
         Wait = 20;
@@ -3825,7 +4058,55 @@ void TR_Report(void)
 void GLI_v_InformJustLoadedLevel(void)
 {
     unsigned char zTst;
-    /* TODO: decompile from asm/... */
+
+    if (LoadingInProgress)
+        return;
+
+    GLI_g_FadeIsOn = 1;
+    GLI_g_FadeTransparency = 1.0f;
+    g_BlackScreenUntilNextMap = 5;
+
+    PS2glMatrixMode(0x1701);
+    PS2glLoadIdentity();
+    PS2glOrtho(0.0f, 100.0f, 100.0f, 0.0f, -1.0f, 1.0f);
+    PS2glMatrixMode(0x1700);
+    PS2glLoadIdentity();
+
+    g_PS2glContext.nEnableBits |= 0x800; g_gsContext.TEST_1.ZTE = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1; zTst = 1; switch (g_PS2glContext.eDepthFunc) { case 0x200: zTst = 0; break; case 0x207: zTst = 1; break; case 0x203: zTst = 2; break; case 0x201: zTst = 3; break; case 0x202: case 0x204: case 0x205: case 0x206: break; } g_gsContext.TEST_1.ZTST = zTst; g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    g_PS2glContext.nEnableBits |= 0x100; g_gsContext.PRMODE.ABE = 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    PS2glBlendFunc(0x302, 0x303);
+    g_PS2glContext.nTextureEnableBits &= (g_PS2glContext.iCurTextureSet == 0) ? ~2 : ~0x200; g_gsContext.PRMODE.TME = (g_PS2glContext.nTextureEnableBits & 0xF) ? 1 : 0; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    g_PS2glContext.nEnableBits &= ~0x400; g_gsContext.TEST_1.ATE = 0; g_gsContext.ModFlgs.TEST_1_Modified = 1;
+
+    g_PS2glContext.bCullfaceChanged = 1; g_PS2glContext.nEnableBits &= ~0x2000;
+    PS2glDepthMask(0);
+    PS2glBegin(4);
+
+    PS2glColor4f(0.0f, 0.0f, 0.0f, GLI_g_FadeTransparency);
+    PS2glVertex2f(0.0f, 0.0f);
+    PS2glVertex2f(100.0f, 0.0f);
+    PS2glVertex2f(100.0f, 100.0f);
+
+    PS2glVertex2f(0.0f, 0.0f);
+    PS2glVertex2f(100.0f, 100.0f);
+    PS2glVertex2f(0.0f, 100.0f);
+    PS2glEnd();
+
+    PS2auxSwapBuffers();
+
+    PS2glBegin(4);
+
+    PS2glColor4f(0.0f, 0.0f, 0.0f, GLI_g_FadeTransparency);
+    PS2glVertex2f(0.0f, 0.0f);
+    PS2glVertex2f(100.0f, 0.0f);
+    PS2glVertex2f(100.0f, 100.0f);
+
+    PS2glVertex2f(0.0f, 0.0f);
+    PS2glVertex2f(100.0f, 100.0f);
+    PS2glVertex2f(0.0f, 100.0f);
+    PS2glEnd();
+
+    PS2auxSwapBuffers();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 802–802 */
@@ -3881,9 +4162,25 @@ void GLI_vSecondInitPS2GL(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern int GLI_xIsGliInit(void);
+extern void PS2glDepthMask(unsigned char flag);
+
 void GLI_DRV_vClearDevice(int ZBuffer, int ColorBuffer, unsigned int Color)
 {
-    /* TODO: decompile from asm/... */
+    if (GLI_xIsGliInit())
+    {
+        PS2glDepthMask(1);
+        g_PS2glContext.nEnableBits &= ~0x400; g_gsContext.TEST_1.ATE = 0; g_gsContext.ModFlgs.TEST_1_Modified = 1;
+        g_PS2glContext.nLightBits &= ~0x400;
+        g_PS2glContext.nEnableBits &= ~0x80; g_gsContext.PRMODE.FGE = 0; g_gsContext.ModFlgs.PRMODE_Modified = 1; *(unsigned char*)g_PS2glContext.pbFogging = 0;
+
+        PS2glColorMask(1, 1, 1, 1);
+        PS2glClearColor((float)(Color & 0xFF) / 255.0f, (float)((Color >> 8) & 0xFF) / 255.0f, (float)((Color >> 16) & 0xFF) / 255.0f, 0.0f);
+        if (GLI_g_RecoverMode)
+            PS2glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        PS2glClear((ZBuffer ? 0x100 : 0) | (ColorBuffer ? 0x4000 : 0));
+        PS2glColorMask(1, 1, 1, 0);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 638–645 */
@@ -4078,9 +4375,79 @@ void GLI_fn_vSwapBufferCallback(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void HIE_fn_vInitPS2MatStack(void);
+extern void InitNormalPacker(void);
+extern void GLI_vInitDelayedFrees(void);
+extern void GLI_vInitSpriteController(void);
+extern void impPS2glScissor(int x, int y, int width, int height);
+extern void PS2glScissor(int x, int y, int width, int height);
+extern void PS2glHint(unsigned int target, unsigned int mode);
+extern int AddDmacHandler(int channel, int (*handler)(int), int next);
+extern int EnableDmac(int channel);
+extern int printf(const char* format, ...);
+int DummyDMAHandler(void);
+int MyDMAInterruptHandler(void);
+
 void GLI_fn_vFirstInitOpenGL(void)
 {
-    /* TODO: decompile from asm/... */
+    HIE_fn_vInitPS2MatStack();
+    InitNormalPacker();
+    GLI_vInitDelayedFrees();
+    PS2auxInitDisplayMode(0x992);
+    PS2GL_SetProgressiveScanMode(0);
+    PS2auxInitPosition(100, 100, 640, 448);
+    PS2auxInitWindow("Stencil Test");
+    PS2glEnable(0xF02);
+    PS2glEnable(0xF04);
+    PS2glEnable(0xF03);
+    PS2glViewport(0, 0, 640, 448);
+    PS2glDepthRange(0.0, 1.0);
+    g_PS2glContext.bAlphaChannelReduce = 0;
+    g_PS2glContext.nEnableBits &= ~0x200; g_gsContext.DTHE.DTHE = 0; g_gsContext.ModFlgs.DTHE_Modified = 1;
+    g_PS2glContext.uiFastPathBits = 1;
+    PS2glDepthMask(1);
+    g_PS2glContext.nTextureEnableBits &= (g_PS2glContext.iCurTextureSet == 0) ? ~2 : ~0x200; g_gsContext.PRMODE.TME = (g_PS2glContext.nTextureEnableBits & 0xF) ? 1 : 0; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    g_PS2glContext.nEnableBits &= ~0x100; g_gsContext.PRMODE.ABE = 0; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    g_PS2glContext.nEnableBits &= ~0x400; g_gsContext.TEST_1.ATE = 0; g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    g_PS2glContext.nEnableBits &= ~0x800; g_gsContext.TEST_1.ZTE = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1; g_gsContext.TEST_1.ZTST = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    g_PS2glContext.nLightBits &= ~0x400;
+    g_PS2glContext.nEnableBits &= ~0x80; g_gsContext.PRMODE.FGE = 0; g_gsContext.ModFlgs.PRMODE_Modified = 1; *(unsigned char*)g_PS2glContext.pbFogging = 0;
+
+    g_PS2glContext.nEnableBits |= 0x20; impPS2glScissor((int)g_PS2glContext.vScissorBox[0], (int)g_PS2glContext.vScissorBox[1], (int)g_PS2glContext.vScissorBox[2], (int)g_PS2glContext.vScissorBox[3]);
+    PS2glScissor(0, 0, (int)XRESf, (int)YRESf);
+
+    PS2glColorMask(1, 1, 1, 1);
+    PS2glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    PS2glClear(0x4100);
+    PS2glColorMask(1, 1, 1, 0);
+    PS2glFinish();
+    PS2auxSwapBuffers();
+    PS2glColorMask(1, 1, 1, 1);
+    PS2glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    PS2glClear(0x4100);
+    PS2glColorMask(1, 1, 1, 0);
+    PS2glFinish();
+    PS2auxSwapBuffers();
+    PS2glFinish();
+
+    PS2glHint(0x441, 0x180000);
+    PS2glHint(0x443, 0);
+    PS2glHint(0x442, 0);
+    PS2glDepthMask(0);
+    g_PS2glContext.eTexConvMode = 0;
+    PS2glHint(0xF40, (unsigned int)myColorRange);
+    PS2glHint(0xF41, (unsigned int)myColorRange);
+
+    GLI_vInitSpriteController();
+
+    if ((gs_iIH_VIF1 = AddDmacHandler(1, (int (*)(int))MyDMAInterruptHandler, 0)) == -1)
+        printf("Couldn't set DMA handler\n");
+    gs_iIH_BEIS = AddDmacHandler(0xF, (int (*)(int))DummyDMAHandler, -1);
+    EnableDmac(0xF);
+    EnableDmac(1);
+
+    GLI_g_ScreenPos_DXBase = (float)PS2glInternalGetScreenCalebration(0xf43);
+    GLI_g_ScreenPos_DYBase = (float)PS2glInternalGetScreenCalebration(0xf44);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 437–441 */
