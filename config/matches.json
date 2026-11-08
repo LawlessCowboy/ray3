@@ -49226,6 +49226,438 @@
       "status": "MISMATCH",
       "target_size": 2036,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x00296710",
+      "candidate_size": 640,
+      "first_difference": 20,
+      "implementation": "void fn_vDisplayScrollTextMenu2D(float X, float Y, float W, char* szText, unsigned int ulTextColor)\n{\n    char szTmp[30];\n    int N;\n    int ulLen;\n    float fL;\n    float fH;\n\n    TXT_vAfficheSimpleWithColor(g_p_stVpt, szText + g_NumFirstCharForScroll, X - g_OffsetXForScroll, Y, 0.0f, ulTextColor);\n\n    g_OffsetXForScroll = g_OffsetXForScroll + g_OffsetStepForScroll;\n\n    if (g_OffsetXForScroll <= 20.0f)\n    {\n        return;\n    }\n\n    N = 0;\n    while (szText[g_NumFirstCharForScroll + N] == '\\\\')\n    {\n        N++;\n        if (szText[g_NumFirstCharForScroll + N] == 'f')\n        {\n            N++;\n            while (szText[g_NumFirstCharForScroll + N] != ':')\n            {\n                N++;\n            }\n            N++;\n        }\n        else if (szText[g_NumFirstCharForScroll + N] == 'c')\n        {\n            N++;\n            while (szText[g_NumFirstCharForScroll + N] != ':')\n            {\n                N++;\n            }\n            N++;\n            while (szText[g_NumFirstCharForScroll + N] != ':')\n            {\n                N++;\n            }\n            N++;\n            while (szText[g_NumFirstCharForScroll + N] != ':')\n            {\n                N++;\n            }\n            N++;\n        }\n    }\n\n    ulLen = N + 1;\n\n    strncpy(szTmp, szText + g_NumFirstCharForScroll, ulLen);\n    szTmp[ulLen] = 0;\n\n    TXT_fn_fComputePixelLengthOfString(szTmp, &fL, &fH);\n\n    fL = 100.0f * (fL / (float)g_p_stVpt->dwWidth);\n    fH = 100.0f * (fH / (float)g_p_stVpt->dwHeight);\n\n    g_OffsetXForScroll = g_OffsetXForScroll - 10.0f * fL;\n    g_NumFirstCharForScroll += N + 1;\n\n    if (g_NumFirstCharForScroll > strlen(szText))\n    {\n        g_NumFirstCharForScroll = 0;\n        g_OffsetXForScroll = -W;\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_vDisplayScrollTextMenu2D",
+      "reason": "640/640, 19/19 relocs on 3.0.3-pad7b-unfold (same under 3.0.1/pad7b). Fixed: line-map order puts the g_OffsetXForScroll update (201) before g_NumFirstCharForScroll += (202), and the 203 test is 'g_NumFirstCharForScroll > strlen(szText)' (global loaded into s0 before the call). Residuals: (1) szTmp[ulLen]=0 - retail binds ulLen into v0 ('move v0,s1'), materialises szTmp as a0=sp+0x50 and stores 0(v0) where ours folds 'addu v0,ulLen,sp; sb 0x50(v0)'; inline helpers, pointer locals, '*(szTmp+ulLen)', ulLen types all unchanged; (2) retail CSEs N+1 into ulLen's s1 for the +=, ours recomputes it, and '+= ulLen' instead lets N die (t0, 0x70 frame); (3) s1/s2 swap of szText vs ulLen.",
+      "size": 640,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
+      "status": "MISMATCH",
+      "target_size": 640,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002994c0",
+      "candidate_size": 1116,
+      "first_difference": 670,
+      "implementation": "         * fn_vGotoSubMenu / ReturnFromSubMenu / fn_vChangeCurrentValue\n         * dispatch on the IPT_fn_bIsJustValidated pad entries) is not\n         * reconstructed yet. */\n    }\n}\n\n/* E:\\Rayman3\\Disk_01\\R3PS2_SCEA_engine_sources\\sourcesV39\\ps2\\TEMPGRP\\GAM\\GameMenu2D\\DefineMenu2D.c lines 1905\u20131982 */\n/* addr: 0x00299280  size: 508 bytes */\n/* Target MWCC statement boundaries (code offset -> source line):\n *   +0x0000 -> line 1905\n *   +0x0004 -> line 1907\n *   +0x0008 -> line 1905\n *   +0x000c -> line 1907\n *   +0x0010 -> line 1905\n *   +0x001c -> line 1907\n *   +0x0058 -> line 1909\n *   +0x0060 -> line 1910\n *   +0x0094 -> line 1913\n *   +0x00e4 -> line 1917\n *   +0x00fc -> line 1926\n *   +0x0104 -> line 1930\n *   +0x012c -> line 1934\n *   +0x0134 -> line 1937\n *   +0x013c -> line 1939\n *   +0x0148 -> line 1942\n *   +0x0150 -> line 1945\n *   +0x0160 -> line 1947\n *   +0x0178 -> line 1951\n *   +0x0180 -> line 1954\n *   +0x018c -> line 1955\n *   +0x01c0 -> line 1964\n *   +0x01c8 -> line 1967\n *   +0x01d4 -> line 1973\n *   +0x01dc -> line 1978\n *   +0x01e8 -> line 1982\n * Place reconstructed statements at these boundaries;\n * compare a candidate object's line table as an extra checkpoint.\n */\nextern void fn_vSetStereoGameMenu2D(unsigned int uiSet);\nextern void IPT_fn_vStopFFBEffect(unsigned int ulCurrentTime, unsigned char ucPadNumber, signed char cEffectNumber);\nextern void IPT_fn_vResumeAllConstantFFBEffectForAllDevices(unsigned int ulTime);\nextern void IPT_fn_vPauseAllConstantFFBEffectForAllDevices(unsigned int ulTime);\nextern signed char IPT_fn_cCreateAndLaunchConstantFFBEffect(unsigned int ulCurrentTime, unsigned char ucPadNumber, float xFadeInStartValue, float xFadeInTime, float xConstantValue, float xConstantTime, float xFadeOutStopValue, float xFadeOutTime);\n\nvoid fn_vChangeCurrentValue(char Value)\n{\n    if (aMenu2DPages[g_CurrentMenu2DPage].aValue[g_CurrentSelection] != Value)\n    {\n        fn_vPlaySoundInGameMenu2D(3);\n        aMenu2DPages[g_CurrentMenu2DPage].aValue[g_CurrentSelection] = Value;\n    }\n\n    switch (aMenu2DPages[g_CurrentMenu2DPage].eTypePage)\n    {\n    case eVideoOptionTypePage:\n        if (g_CurrentSelection == 1)\n        {\n            GLI_g_bWideScreenMode = Value;\n        }\n        break;\n\n    case eControlOptionTypePage:\n        if (g_CurrentSelection == 0)\n        {\n            MENU_g_bInversionVert = Value;\n        }\n        else if (g_CurrentSelection == 1)\n        {\n            MENU_g_bInversionHor = Value;\n        }\n        else if (g_CurrentSelection == 2)\n        {\n            if (MENU_g_bVibration != Value)\n            {\n                MENU_g_bVibration = Value;\n\n                if (Value != 0)\n                {\n                    if (g_MenuVibrationEffect != -1)\n                    {\n                        IPT_fn_vStopFFBEffect(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount, 0, g_MenuVibrationEffect);\n                        g_MenuVibrationEffect = -1;\n                    }\n\n                    IPT_fn_vResumeAllConstantFFBEffectForAllDevices(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);\n                    g_MenuVibrationEffect = IPT_fn_cCreateAndLaunchConstantFFBEffect(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount, 0, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f);\n                }\n                else\n                {\n                    IPT_fn_vPauseAllConstantFFBEffectForAllDevices(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);\n                }\n            }\n        }\n        break;\n\n    case eAudioOptionTypePage:\n        fn_vSetStereoGameMenu2D(Value);\n        break;\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "ReturnFromSubMenu",
+      "reason": "1116/1116 on 3.0.3-pad7b-unfold; only the abGrayed clear loop differs (page row in a0 vs retail a1, i in a1 vs a0, lui scheduled early). Fixed this pass: local prototype GAM_fn_vAskToChangeLevel(char*, int) with ', 0' (retail passes a1=0), g_IsSaveOK=0 before VID_fn_vNextVideoToPlay, g_GotoRight=1 before g_CurrentActionMenu2D=2, 'g_CurrentIndSubMenu > -1' (slti/bnez), 'else if (g_2DMenuID != 1 && !g_ExitForbidden)', the timer count read once into a local before the vibration if/else, and an inline 'unsigned char fn_bIsSaveOK()' (gives retail's daddiu 1). The loop+GamePage+BonusPage+g_MustCheckMC tail is fn_vReinitGrayedEntries(g_NextPage) inlined: with an inline prototype it MATCHes but the out-of-line copy disappears; '#pragma auto_inline on' does not inline the hand-unrolled body (too large for the budget) but does inline a plain 'i=0; p=&aMenu2DPages[PageNumber]; for(;i<10;i++) p->abGrayed[i]=0;' body, which leaves fn_vReinitGrayedEntries 2 rows off (move i,zero scheduled after the row sll) and ReturnFromSubMenu with this same register swap.",
+      "size": 1116,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
+      "status": "MISMATCH",
+      "target_size": 1116,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00296990",
+      "candidate_size": 10444,
+      "first_difference": 20,
+      "implementation": "void fn_vManageMenu2D(void)\n{\n    switch (fn_vSpecificManageMenu2D())\n    {\n    default:\n        if ((g_CurrentActionMenu2D != 2 && g_CurrentActionMenu2D != 3) ||\n            IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_NextPage) == 1 ||\n            IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_PrevPage) == 1)\n        {\n            if (g_CurrentActionMenu2D == 8)\n            {\n                if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_CloseSubMenu) == 1)\n                {\n                    g_CurrentActionMenu2D = 0;\n                }\n                else if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_Enter) == 1)\n                {\n                    g_CurrentActionMenu2D = 0;\n                }\n                return;\n            }\n            else if (g_CurrentActionMenu2D == 7)\n            {\n                if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_CloseSubMenu) == 1)\n                {\n                    g_CurrentActionMenu2D = 0;\n                }\n                else if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_Left) == 1 ||\n                         IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_Right) == 1)\n                {\n                    fn_vPlaySoundInGameMenu2D(2);\n                    fn_vChangeAreYouSureValue();\n                }\n                else if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_Enter) == 1)\n                {\n                    g_CurrentActionMenu2D = 0;\n                    if (fn_GetAreYouSureValue())\n                    {\n                        fn_vPlaySoundInGameMenu2D(3);\n                        switch (aMenu2DPages[g_CurrentMenu2DPage].eTypePage)\n                        {\n                        case 9:\n                            {\n                                char* szLevelName = (char*)g_aBonusMapName[g_CurrentSelection + aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry];\n                                CloseInGameMenu2D();\n                                GAM_fn_vAskToChangeLevel(szLevelName, 0);\n                            }\n                            break;\n                        case 10:\n                            VID_fn_vNextVideoToPlay((char*)g_aCinematicName[g_CurrentColForSelection + g_NbColForSelection * g_CurrentLineForSelection], 1, 0);\n                            VID_fn_vPlayVideoAfterLevel();\n                            CloseInGameMenu2D();\n                            GAM_fn_vAskToChangeLevel(g_szLevelForBonusMenu, 0);\n                            break;\n                        case 11:\n                            VID_fn_vNextVideoToPlay((char*)g_aXtraVideoName[g_CurrentSelection + aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry], 1, 0);\n                            VID_fn_vPlayVideoAfterLevel();\n                            CloseInGameMenu2D();\n                            GAM_fn_vAskToChangeLevel(g_szLevelForBonusMenu, 0);\n                            break;\n                        case 2:\n                            if (g_EndRevisit)\n                            {\n                                g_RevisitMode = 0;\n\n                                /* fn_vR3StoreInitScore */\n                                fn_vR3InlineRecomputeGlobalScore();\n                                if (g_RevisitMode != 0)\n                                {\n                                    g_RevisitEnvScoreAtBeginingOfLevel = g_RevisitCurrentEnvScore;\n                                    g_RevisitGlobalScoreAtBeginingOfLevel = g_RevisitCurrentGlobalScore;\n                                    if (g_RevisitEnvScoreAtBeginingOfLevel > M2D_fn_ulGetEnvScore(g_IndCurrentEnv))\n                                        M2D_fn_vSetEnvScore(g_IndCurrentEnv, g_RevisitEnvScoreAtBeginingOfLevel);\n                                    if (M2D_fn_ulGetEnvScore(0) < g_RevisitGlobalScoreAtBeginingOfLevel)\n                                        M2D_fn_vSetEnvScore(0, g_RevisitGlobalScoreAtBeginingOfLevel);\n                                }\n                                g_GlobalScoreAtBeginingOfLevel = M2D_fn_ulGetEnvScore(0);\n                                g_CurrentEnvScoreAtBeginingOfLevel = M2D_fn_ulGetEnvScore(g_IndCurrentEnv);\n                                g_CurrentEnvInit = g_IndCurrentEnv;\n\n                                g_CurrentEnvScoreAtBeginingOfLevel = g_RevisitCurrentEnvScore = g_RevisitEnvScoreAtBeginingOfLevel = g_aEnvValue[g_RevisitIndEnvironementFromWhereWeCome].ulScore;\n                                g_CurrentEnvInit = g_RevisitIndEnvironementFromWhereWeCome;\n                                g_RevisitIndCurrentEnv = 0;\n                                CloseInGameMenu2D();\n                                GAM_fn_vAskToChangeLevel(SAV2_g_LevelNameAfterReinitToSave, 0);\n                            }\n                            else\n                            {\n                                /* fn_vR3ReInitScore */\n                                if (g_RevisitMode != 0)\n                                {\n                                    g_RevisitCurrentEnvScore = g_RevisitEnvScoreAtBeginingOfLevel;\n                                    g_RevisitCurrentGlobalScore = g_RevisitGlobalScoreAtBeginingOfLevel;\n                                }\n                                M2D_fn_vSetEnvScore(0, g_GlobalScoreAtBeginingOfLevel);\n                                M2D_fn_vSetEnvScore(g_IndCurrentEnv, g_CurrentEnvScoreAtBeginingOfLevel);\n                                g_IndCurrentEnv = g_CurrentEnvInit;\n                                fn_vR3InlineRecomputeGlobalScore();\n\n                                if (g_RevisitMode == 0)\n                                {\n                                    strcpy(SAV2_g_LevelNameAfterReinitToSave, SAV2_g_LevelNameToSave);\n                                    g_RevisitMode = 1;\n                                    g_RevisitIndEnvironementFromWhereWeCome = g_IndCurrentEnv;\n                                }\n                                g_RevisitEnvScoreAtBeginingOfLevel = 0;\n                                g_RevisitCurrentEnvScore = 0;\n                                g_RevisitIndCurrentEnv = g_CurrentMenu2DPage + 1;\n                                g_CurrentEnvScoreAtBeginingOfLevel = fn_ulR3InlineGetEnvScore(g_RevisitIndCurrentEnv);\n                                {\n                                    char* szLevelName = (char*)g_aMapName[g_CurrentMenu2DPage + 1];\n                                    CloseInGameMenu2D();\n                                    GAM_fn_vAskToChangeLevel(szLevelName, 0);\n                                }\n                            }\n                            break;\n                        case 1:\n                            SAV2_fn_bReadAllFromDisk(g_aFileEntryArray[g_CurrentSelection + aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry].Name, 1);\n                            g_LoadingGame = 1;\n                            break;\n                        case 3:\n                            g_RevisitMode = 0;\n                            g_RevisitEnvScoreAtBeginingOfLevel = 0;\n                            g_RevisitCurrentEnvScore = 0;\n                            PS2MC_DisableAutoSave();\n                            {\n                                int i;\n                                for (i = 0; i < 10; i++)\n                                {\n                                    g_aEnvValue[i].ulNbCage = 0;\n                                    g_aEnvValue[i].ulScore = 0;\n                                }\n                            }\n                            g_CurrentEnvInit = 1;\n                            g_MaxIndCurrentEnv = 1;\n                            g_GlobalScoreAtBeginingOfLevel = 0;\n                            g_CurrentEnvScoreAtBeginingOfLevel = 0;\n                            g_RevisitGlobalScoreAtBeginingOfLevel = 0;\n                            g_RevisitEnvScoreAtBeginingOfLevel = 0;\n                            g_RevisitCurrentEnvScore = 0;\n                            g_EndOfGameIsDone = 0;\n                            {\n                                char* szLevelName = (char*)g_aMapName[0];\n                                CloseInGameMenu2D();\n                                GAM_fn_vAskToChangeLevel(szLevelName, 0);\n                            }\n                            break;\n                        }\n                    }\n                    else\n                    {\n                        fn_vPlaySoundInGameMenu2D(3);\n                    }\n                }\n                return;\n            }\n            else\n            {\n                if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_Display) == 1)\n                {\n                    if (g_2DMenuID != 1 && !g_ExitForbidden)\n                    {\n                        unsigned int ulTime;\n\n                        DesinitGameMenu2D();\n                        if (g_stEngineStructure.bEngineFrozen)\n                        {\n                            fn_vLoadEngineClock();\n                        }\n                        g_stEngineStructure.bEngineFrozen = 0;\n                        g_InGameMenu2DActivated = 0;\n                        ulTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;\n                        if (MENU_g_bVibration)\n                        {\n                            IPT_fn_vResumeAllConstantFFBEffectForAllDevices(ulTime);\n                        }\n                        else\n                        {\n                            IPT_fn_vPauseAllConstantFFBEffectForAllDevices(ulTime);\n                        }\n                    }\n                }\n                else if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_Help) == 1)\n                {\n                    g_CurrentActionMenu2D = 8;\n                    g_szHelp = (int)FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[81].hText);\n                }\n                else if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_Shortcut1) == 1)\n                {\n                    if (!g_NoBonusShortcut)\n                    {\n                        M2D_fn_vGotoShortcutPage(g_BonusPage);\n                    }\n                }\n                else if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_Shortcut2) == 1)\n                {\n                    if (!g_NoGameShortcut)\n                    {\n                        M2D_fn_vGotoShortcutPage(g_GamePage);\n                    }\n                }\n                else if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_Left) == 1)\n                {\n                    if (g_CurrentMenu2DPage == g_SavePage || g_CurrentMenu2DPage == g_CinematicPage)\n                    {\n                        fn_vPlaySoundInGameMenu2D(2);\n                        if (g_CurrentColForSelection > 0)\n                            g_CurrentColForSelection = g_CurrentColForSelection - 1;\n                        else\n                            g_CurrentColForSelection = g_NbColForSelection - 1;\n                        fn_vReinitSpriteScale();\n                    }\n                    else if (g_CurrentMenu2DPage == g_AudioOptionPage)\n                    {\n                        if (g_CurrentSelection == 3)\n                            fn_vChangeCurrentValue(1);\n                        else\n                            fn_vDecreaseGrad();\n                    }\n                    else if (g_CurrentMenu2DPage == g_VideoOptionPage)\n                    {\n                        if (g_CurrentSelection == 1)\n                            fn_vChangeCurrentValue(1);\n                    }\n                    else if (g_CurrentMenu2DPage == g_ControlOptionPage)\n                    {\n                        fn_vChangeCurrentValue(1);\n                    }\n                    else if (g_CurrentMenu2DPage == g_AlbumPage)\n                    {\n                        fn_vPreviousSnapShot();\n                    }\n\n                    switch (aMenu2DPages[g_CurrentMenu2DPage].eTypePage)\n                    {\n                    case 15:\n                        if ((GLI_g_ScreenPos_DX -= 10.0f) < -100.0f)\n                            GLI_g_ScreenPos_DX = -100.0f;\n                        break;\n                    case 21:\n                    case 18:\n                        fn_vPlaySoundInGameMenu2D(2);\n                        g_CurrentSelection = 1;\n                        break;\n                    }\n                }\n                else if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_Right) == 1)\n                {\n                    if (g_CurrentMenu2DPage == g_SavePage || g_CurrentMenu2DPage == g_CinematicPage)\n                    {\n                        fn_vPlaySoundInGameMenu2D(2);\n                        if (g_CurrentColForSelection < g_NbColForSelection - 1)\n                            g_CurrentColForSelection = g_CurrentColForSelection + 1;\n                        else\n                            g_CurrentColForSelection = 0;\n                        fn_vReinitSpriteScale();\n                    }\n                    else if (g_CurrentMenu2DPage == g_AudioOptionPage)\n                    {\n                        if (g_CurrentSelection == 3)\n                            fn_vChangeCurrentValue(0);\n                        else\n                            fn_vIncreaseGrad();\n                    }\n                    else if (g_CurrentMenu2DPage == g_VideoOptionPage)\n                    {\n                        if (g_CurrentSelection == 1)\n                            fn_vChangeCurrentValue(0);\n                    }\n                    else if (g_CurrentMenu2DPage == g_ControlOptionPage)\n                    {\n                        fn_vChangeCurrentValue(0);\n                    }\n                    else if (g_CurrentMenu2DPage == g_AlbumPage)\n                    {\n                        fn_vNextSnapShot();\n                    }\n\n                    switch (aMenu2DPages[g_CurrentMenu2DPage].eTypePage)\n                    {\n                    case 15:\n                        if ((GLI_g_ScreenPos_DX += 10.0f) > 150.0f)\n                            GLI_g_ScreenPos_DX = 150.0f;\n                        break;\n                    case 21:\n                    case 18:\n                        fn_vPlaySoundInGameMenu2D(2);\n                        g_CurrentSelection = 2;\n                        break;\n                    }\n                }\n                else if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_NextPage) == 1)\n                {\n                    if (!g_NotLeft)\n                    {\n                        fn_vPlaySoundInGameMenu2D(4);\n                        g_GotoRight = 1;\n                        g_CurrentActionMenu2D = 2;\n                        if (g_CurrentMenu2DPage == 0)\n                            g_NextPage = g_NbMenu2DPages - 1;\n                        else\n                            g_NextPage = g_CurrentMenu2DPage - 1;\n                        if (g_NextPage > g_MaxIndCurrentEnv - 1 && g_NextPage < 9)\n                        {\n                            if (g_2DMenuID == 3)\n                                g_NextPage = g_GamePage;\n                            else\n                                g_NextPage = g_MaxIndCurrentEnv - 1;\n                        }\n                        fn_vReinitGrayedEntries(g_NextPage);\n                    }\n                }\n                else if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_PrevPage) == 1)\n                {\n                    if (!g_NotRight)\n                    {\n                        fn_vPlaySoundInGameMenu2D(4);\n                        g_CurrentActionMenu2D = 2;\n                        g_GotoRight = 0;\n                        if (g_CurrentMenu2DPage == g_NbMenu2DPages - 1)\n                        {\n                            if (g_2DMenuID == 3)\n                                g_NextPage = g_BonusPage;\n                            else\n                                g_NextPage = 0;\n                        }\n                        else\n                        {\n                            g_NextPage = g_CurrentMenu2DPage + 1;\n                        }\n                        if (g_NextPage > g_MaxIndCurrentEnv - 1 && g_NextPage < 9)\n                        {\n                            g_NextPage = 9;\n                        }\n                        fn_vReinitGrayedEntries(g_NextPage);\n                    }\n                }\n                else if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_Up) == 1)\n                {\n                    if (g_CurrentMenu2DPage == g_LoadPage || g_CurrentMenu2DPage == g_ArcadePage || g_CurrentMenu2DPage == g_XTraPage)\n                    {\n                        unsigned int u32Sound2Play;\n\n                        u32Sound2Play = 2;\n                        if (g_CurrentSelection == 0)\n                        {\n                            if (aMenu2DPages[g_CurrentMenu2DPage].NbSelection == aMenu2DPages[g_CurrentMenu2DPage].NbEntry)\n                            {\n                                u32Sound2Play = 10;\n                            }\n                            else\n                            {\n                                if (aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry == 0)\n                                {\n                                    u32Sound2Play = 10;\n                                }\n                                else\n                                {\n                                    aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry--;\n                                }\n                            }\n                        }\n                        else\n                        {\n                            g_CurrentSelection--;\n                        }\n                        fn_vPlaySoundInGameMenu2D(u32Sound2Play);\n                        if (aMenu2DPages[g_CurrentMenu2DPage].abGrayed[g_CurrentSelection] != 0)\n                        {\n                            fn_vPreviousSelectionNoWrap();\n                        }\n                    }\n                    else if (g_CurrentMenu2DPage != g_PAL60Page3 && g_CurrentMenu2DPage != g_PScanPage3)\n                    {\n                        fn_vPreviousSelection();\n                        if (g_CurrentMenu2DPage == g_SavePage || g_CurrentMenu2DPage == g_CinematicPage)\n                        {\n                            fn_vPlaySoundInGameMenu2D(2);\n                            if (g_CurrentLineForSelection > 0)\n                                g_CurrentLineForSelection = g_CurrentLineForSelection - 1;\n                            else\n                                g_CurrentLineForSelection = g_NbLineForSelection - 1;\n                        }\n                    }\n\n                    switch (aMenu2DPages[g_CurrentMenu2DPage].eTypePage)\n                    {\n                    case 15:\n                        if ((GLI_g_ScreenPos_DY -= 2.0f) < -25.0f)\n                            GLI_g_ScreenPos_DY = -25.0f;\n                        break;\n                    }\n                }\n                else if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_Down) == 1)\n                {\n                    if (g_CurrentMenu2DPage == g_LoadPage || g_CurrentMenu2DPage == g_ArcadePage || g_CurrentMenu2DPage == g_XTraPage)\n                    {\n                        unsigned int u32Sound2Play;\n\n                        u32Sound2Play = 2;\n                        if (g_CurrentSelection == aMenu2DPages[g_CurrentMenu2DPage].NbSelection - 1)\n                        {\n                            if (aMenu2DPages[g_CurrentMenu2DPage].NbSelection == aMenu2DPages[g_CurrentMenu2DPage].NbEntry)\n                            {\n                                u32Sound2Play = 10;\n                            }\n                            else\n                            {\n                                if (aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry !=\n                                    aMenu2DPages[g_CurrentMenu2DPage].NbEntry - aMenu2DPages[g_CurrentMenu2DPage].NbSelection)\n                                {\n                                    aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry++;\n                                }\n                                else\n                                {\n                                    u32Sound2Play = 10;\n                                }\n                            }\n                        }\n                        else\n                        {\n                            g_CurrentSelection++;\n                        }\n                        fn_vPlaySoundInGameMenu2D(u32Sound2Play);\n                        if (aMenu2DPages[g_CurrentMenu2DPage].abGrayed[g_CurrentSelection] != 0)\n                        {\n                            fn_vNextSelectionNoWrap();\n                        }\n                    }\n                    else if (g_CurrentMenu2DPage != g_PAL60Page3 && g_CurrentMenu2DPage != g_PScanPage3)\n                    {\n                        fn_vNextSelection();\n                        if (g_CurrentMenu2DPage == g_SavePage || g_CurrentMenu2DPage == g_CinematicPage)\n                        {\n                            fn_vPlaySoundInGameMenu2D(2);\n                            if (g_CurrentLineForSelection < g_NbLineForSelection - 1)\n                                g_CurrentLineForSelection = g_CurrentLineForSelection + 1;\n                            else\n                                g_CurrentLineForSelection = 0;\n                        }\n                    }\n\n                    switch (aMenu2DPages[g_CurrentMenu2DPage].eTypePage)\n                    {\n                    case 15:\n                        if ((GLI_g_ScreenPos_DY += 2.0f) > 25.0f)\n                            GLI_g_ScreenPos_DY = 25.0f;\n                        break;\n                    }\n                }\n                else if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_Enter) == 1)\n                {\n                    switch (aMenu2DPages[g_CurrentMenu2DPage].eTypePage)\n                    {\n                    case 10:\n                        {\n                            int lIndex = g_CurrentColForSelection + g_NbColForSelection * g_CurrentLineForSelection;\n                            if (lIndex < g_NbCinematicOpen)\n                            {\n                                if (!g_ExitForbidden)\n                                {\n                                    g_CurrentActionMenu2D = 7;\n                                    g_szAreYouSureQuestion = (int)FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[75].hText);\n                                    SetAreYouSureValue(0);\n                                }\n                                else\n                                {\n                                    VID_fn_vNextVideoToPlay((char*)g_aCinematicName[lIndex], 1, 0);\n                                    VID_fn_vPlayVideoAfterLevel();\n                                    CloseInGameMenu2D();\n                                    GAM_fn_vAskToChangeLevel(g_szLevelForBonusMenu, 0);\n                                }\n                            }\n                        }\n                        break;\n                    case 22:\n                        ReturnFromSubMenu();\n                        break;\n                    case 9:\n                        {\n                            unsigned int lIndex = g_CurrentSelection + aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry;\n                            if (lIndex < g_NbArcadeOpen)\n                            {\n                                if (!g_ExitForbidden)\n                                {\n                                    g_CurrentActionMenu2D = 7;\n                                    g_szAreYouSureQuestion = (int)FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[74].hText);\n                                    SetAreYouSureValue(0);\n                                }\n                                else\n                                {\n                                    char* szLevelName = (char*)g_aBonusMapName[lIndex];\n                                    CloseInGameMenu2D();\n                                    GAM_fn_vAskToChangeLevel(szLevelName, 0);\n                                }\n                            }\n                        }\n                        break;\n                    case 11:\n                        {\n                            unsigned int lIndex = g_CurrentSelection + aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry;\n                            if (lIndex < g_NbArcadeOpen)\n                            {\n                                if (!g_ExitForbidden)\n                                {\n                                    g_CurrentActionMenu2D = 7;\n                                    g_szAreYouSureQuestion = (int)FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[76].hText);\n                                    SetAreYouSureValue(0);\n                                }\n                                else\n                                {\n                                    VID_fn_vNextVideoToPlay((char*)g_aXtraVideoName[lIndex], 1, 0);\n                                    VID_fn_vPlayVideoAfterLevel();\n                                    CloseInGameMenu2D();\n                                    GAM_fn_vAskToChangeLevel(g_szLevelForBonusMenu, 0);\n                                }\n                            }\n                        }\n                        break;\n                    case 2:\n                        g_EndRevisit = 0;\n                        if (g_CurrentMenu2DPage == g_MaxIndCurrentEnv - 1)\n                        {\n                            if (g_EndOfGameIsDone)\n                            {\n                                g_szAreYouSureQuestion = (int)FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[78].hText);\n                                g_CurrentActionMenu2D = 7;\n                                SetAreYouSureValue(0);\n                            }\n                            else if (g_RevisitMode)\n                            {\n                                g_EndRevisit = 1;\n                                g_szAreYouSureQuestion = (int)FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[79].hText);\n                                g_CurrentActionMenu2D = 7;\n                                SetAreYouSureValue(0);\n                            }\n                        }\n                        else\n                        {\n                            g_szAreYouSureQuestion = (int)FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[78].hText);\n                            g_CurrentActionMenu2D = 7;\n                            SetAreYouSureValue(0);\n                        }\n                        break;\n                    case 1:\n                        if (g_2DMenuID == 1)\n                        {\n                            SAV2_fn_bReadAllFromDisk(g_aFileEntryArray[g_CurrentSelection + aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry].Name, 1);\n                            g_LoadingGame = 1;\n                        }\n                        else\n                        {\n                            g_CurrentActionMenu2D = 7;\n                            g_szAreYouSureQuestion = (int)FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[77].hText);\n                            SetAreYouSureValue(0);\n                        }\n                        fn_vPlaySoundInGameMenu2D(3);\n                        break;\n                    case 3:\n                        switch (g_CurrentSelection)\n                        {\n                        case 0:\n                            if (g_CurrentLanguage == 2)\n                            {\n                                strcpy(aMenu2DPages[g_OptionsPage].aText[0], \"Opciones del control\");\n                                strcpy(aMenu2DPages[g_ControlOptionPage].Title, \"Opciones del control\");\n                            }\n                            fn_vGotoSubMenu(g_OptionsPage);\n                            break;\n                        case 1:\n                            PS2MC_vClearFlag(6);\n                            PS2MC_g_NbFilesFound = 0;\n                            PS2MC_fn_vGetMemoryCardFileHeaders(g_aFileEntryArray, 100, &PS2MC_g_NbFilesFound, 0);\n                            aMenu2DPages[g_LoadPage].NbSelection = 0;\n                            aMenu2DPages[g_LoadPage].NbEntry = 0;\n                            aMenu2DPages[g_LoadPage].CurrentFirstEntry = 0;\n                            fn_vGotoSubMenu(g_LoadPage);\n                            break;\n                        case 2:\n                            g_CurrentColForSelection = 6;\n                            g_CurrentLineForSelection = 4;\n                            g_NbColForSelection = 10;\n                            g_NbLineForSelection = 5;\n                            g_NbCharForSaveName = 5;\n                            g_CurrentSelectedCharNumber = 0;\n                            PS2MC_vClearFlag(0);\n                            PS2MC_vClearFlag(5);\n                            fn_vGotoSubMenu(g_SavePage);\n                            {\n                                unsigned int i;\n                                for (i = 0; i < 10; i++)\n                                    g_CurrentNameForSavePage[i] = 0;\n                            }\n                            strcpy(g_CurrentNameForSavePage, g_CurrentSaveName);\n                            g_CurrentSelectedCharNumber = strlen(g_CurrentNameForSavePage);\n                            if (g_CurrentSelectedCharNumber == g_NbCharForSaveName)\n                                g_CurrentSelectedCharNumber--;\n                            break;\n                        case 3:\n                            g_CurrentActionMenu2D = 7;\n                            g_szAreYouSureQuestion = (int)FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[80].hText);\n                            SetAreYouSureValue(0);\n                            break;\n                        }\n                        break;\n                    case 4:\n                        switch (g_CurrentSelection)\n                        {\n                        case 0:\n                            aMenu2DPages[g_ControlOptionPage].aValue[0] = MENU_g_bInversionVert;\n                            aMenu2DPages[g_ControlOptionPage].aValue[1] = MENU_g_bInversionHor;\n                            aMenu2DPages[g_ControlOptionPage].aValue[2] = MENU_g_bVibration;\n                            MENU_g_bInversionVertSaved = MENU_g_bInversionVert;\n                            MENU_g_bInversionHorSaved = MENU_g_bInversionHor;\n                            MENU_g_bVibrationSaved = MENU_g_bVibration;\n                            fn_vGotoSubMenu(g_ControlOptionPage);\n                            break;\n                        case 1:\n                            g_aNbGradOn[0] = (g_stGameOptions.s32VolumeMusic + 6) * 10 / 127;\n                            g_aNbGradOn[1] = (g_stGameOptions.s32VolumeSound + 6) * 10 / 127;\n                            g_aNbGradOn[2] = (g_stGameOptions.s32VolumeVoice + 6) * 10 / 127;\n                            aMenu2DPages[g_AudioOptionPage].aValue[3] = SND_fn_bGetStereoSound();\n                            g_aNbGradOnSaved[0] = g_aNbGradOn[0];\n                            g_aNbGradOnSaved[1] = g_aNbGradOn[1];\n                            g_aNbGradOnSaved[2] = g_aNbGradOn[2];\n                            gStereoMode_Saved = SND_fn_bGetStereoSound();\n                            fn_vGotoSubMenu(g_AudioOptionPage);\n                            break;\n                        case 2:\n                            aMenu2DPages[g_VideoOptionPage].aValue[1] = GLI_g_bWideScreenMode;\n                            fn_vGotoSubMenu(g_VideoOptionPage);\n                            break;\n                        }\n                        break;\n                    case 8:\n                        switch (g_CurrentSelection)\n                        {\n                        case 0:\n                            fn_vGotoSubMenu(g_ArcadePage);\n                            aMenu2DPages[g_ArcadePage].CurrentFirstEntry = 0;\n                            break;\n                        case 1:\n                            fn_vGotoSubMenu(g_CinematicPage);\n                            g_CurrentColForSelection = 0;\n                            g_CurrentLineForSelection = 0;\n                            g_NbColForSelection = 3;\n                            g_NbLineForSelection = 3;\n                            break;\n                        case 2:\n                            fn_vGotoSubMenu(g_XTraPage);\n                            aMenu2DPages[g_XTraPage].CurrentFirstEntry = 0;\n                            break;\n                        case 3:\n                            fn_vGotoSubMenu(g_HallOfFamePage);\n                            break;\n                        }\n                        break;\n                    case 0:\n                        if (g_CurrentLineForSelection < g_NbLineForSelection - 1)\n                        {\n                            fn_vPlaySoundInGameMenu2D(3);\n                            fn_vChangeCurrentSelectedChar();\n                        }\n                        else\n                        {\n                            if (g_2DMenuID == 0 || g_2DMenuID == 1)\n                            {\n                                strcpy(g_CurrentSaveName, g_CurrentNameForSavePage);\n                                if (strlen(g_CurrentSaveName) != 0)\n                                {\n                                    fn_vPlaySoundInGameMenu2D(3);\n                                    if (g_2DMenuID == 1)\n                                    {\n                                        fn_uiGetSomeBytes(g_aForKeyAlgo, 4, 0);\n                                        strcpy(g_stEngineStructure.szLevelName, (char*)g_aMapName[1]);\n                                        strcpy(SAV2_g_LevelNameToSave, (char*)g_aMapName[1]);\n                                        g_IsSaveOK = 1;\n                                    }\n                                    {\n                                        unsigned int ulGlobalScore;\n                                        unsigned int ulEnvScore;\n\n                                        fn_vR3InlineRecomputeGlobalScore();\n                                        ulGlobalScore = M2D_fn_ulGetEnvScore(0);\n                                        ulEnvScore = M2D_fn_ulGetEnvScore(g_IndCurrentEnv);\n                                        M2D_fn_vSetEnvScore(0, g_GlobalScoreAtBeginingOfLevel);\n                                        M2D_fn_vSetEnvScore(g_IndCurrentEnv, g_CurrentEnvScoreAtBeginingOfLevel);\n                                        fn_vR3InlineRecomputeGlobalScore();\n                                        SAV2_fn_bSaveAllOnDisk(g_CurrentSaveName);\n                                        M2D_fn_vSetEnvScore(0, ulGlobalScore);\n                                        M2D_fn_vSetEnvScore(g_IndCurrentEnv, ulEnvScore);\n                                        fn_vR3InlineRecomputeGlobalScore();\n                                    }\n                                    g_CurrentActionMenu2D = 1;\n                                }\n                                else\n                                {\n                                    fn_vPlaySoundInGameMenu2D(10);\n                                }\n                            }\n                            else if (g_2DMenuID == 2)\n                            {\n                                if (strlen(g_CurrentNameForSavePage) != 0)\n                                {\n                                    fn_vPlaySoundInGameMenu2D(3);\n                                    GLI_vSavePicture(g_CurrentNameForSavePage);\n                                    g_CurrentActionMenu2D = 1;\n                                }\n                                else\n                                {\n                                    fn_vPlaySoundInGameMenu2D(10);\n                                }\n                            }\n                        }\n                        break;\n                    case 5:\n                    case 6:\n                        ReturnFromSubMenu();\n                        break;\n                    case 7:\n                        switch (g_CurrentSelection)\n                        {\n                        case 0:\n                            GLI_g_ScreenPos_DX_Saved = GLI_g_ScreenPos_DX;\n                            GLI_g_ScreenPos_DY_Saved = GLI_g_ScreenPos_DY;\n                            fn_vGotoSubMenu(g_CenterScreenPage);\n                            break;\n                        case 1:\n                            break;\n                        case 2:\n                            g_PreviousVideoMode = GLI_g_50_or_60_HzMode;\n                            if (g_PreviousVideoMode == 70)\n                            {\n                                fn_vPlaySoundInGameMenu2D(3);\n                                GLI_fn_vSwitchTo60Hz();\n                                strcpy(aMenu2DPages[g_VideoOptionPage].aText[2], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[97].hText));\n                            }\n                            else\n                            {\n                                fn_vGotoSubMenu(g_PScanPage1);\n                            }\n                            break;\n                        }\n                        break;\n                    case 15:\n                        ReturnFromSubMenu();\n                        break;\n                    case 14:\n                        switch (g_CurrentSelection)\n                        {\n                        case 0:\n                            PS2MC_vClearFlag(0);\n                            PS2MC_vClearFlag(5);\n                            g_CurrentColForSelection = 0;\n                            g_NbColForSelection = 10;\n                            g_CurrentLineForSelection = 0;\n                            g_NbLineForSelection = 5;\n                            g_CurrentSelectedCharNumber = 0;\n                            {\n                                unsigned int i;\n                                for (i = 0; i < 10; i++)\n                                    g_CurrentNameForSavePage[i] = 0;\n                            }\n                            g_CurrentSelectedCharNumber = 0;\n                            PS2MC_vClearFlag(0);\n                            PS2MC_vClearFlag(5);\n                            fn_vGotoSubMenu(g_SavePage);\n                            break;\n                        case 1:\n                            PS2MC_vClearFlag(6);\n                            PS2MC_g_NbFilesFound = 0;\n                            PS2MC_fn_vGetMemoryCardFileHeaders(g_aFileEntryArray, 100, &PS2MC_g_NbFilesFound, 0);\n                            aMenu2DPages[g_LoadPage].NbSelection = 0;\n                            aMenu2DPages[g_LoadPage].NbEntry = 0;\n                            aMenu2DPages[g_LoadPage].CurrentFirstEntry = 0;\n                            fn_vGotoSubMenu(g_LoadPage);\n                            break;\n                        case 2:\n                            if (g_CurrentLanguage == 2)\n                            {\n                                strcpy(aMenu2DPages[g_OptionsPage].aText[0], \"Opciones del control\");\n                                strcpy(aMenu2DPages[g_ControlOptionPage].Title, \"Opciones del control\");\n                            }\n                            fn_vGotoSubMenu(g_OptionsPage);\n                            break;\n                        case 3:\n                            PS2MC_g_NbFilesFound = 0;\n                            g_AlbumHadMemoryCardAtInit = PS2MC_GetCurrentMemoryCardStatus();\n                            PS2MC_fn_vGetMemoryCardScreenShotsHeaders(g_aFileEntryArray, 100, &PS2MC_g_NbFilesFound);\n                            aMenu2DPages[g_AlbumPage].NbSelection = 0;\n                            aMenu2DPages[g_AlbumPage].NbEntry = 0;\n                            aMenu2DPages[g_AlbumPage].CurrentFirstEntry = 0;\n                            g_stAlbum.lSnapID = 0;\n                            g_bAlbumInitialized = 0;\n                            g_stAlbum.lSnapID2 = 0;\n                            fn_vGotoSubMenu(g_AlbumPage);\n                            break;\n                        }\n                        break;\n                    default:\n                        fn_vManageValidatePalAndProgressiveVideoPage();\n                        break;\n                    }\n                }\n                else if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_CloseSubMenu) == 1)\n                {\n                    if (g_CurrentMenu2DPage == g_ControlOptionPage)\n                    {\n                        MENU_g_bVibration = MENU_g_bVibrationSaved;\n                        MENU_g_bInversionVert = MENU_g_bInversionVertSaved;\n                        MENU_g_bInversionHor = MENU_g_bInversionHorSaved;\n                        if (MENU_g_bVibration)\n                        {\n                            if (g_MenuVibrationEffect != -1)\n                            {\n                                IPT_fn_vStopFFBEffect(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount, 0, g_MenuVibrationEffect);\n                                g_MenuVibrationEffect = -1;\n                            }\n                            IPT_fn_vResumeAllConstantFFBEffectForAllDevices(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);\n                        }\n                        else\n                        {\n                            if (g_MenuVibrationEffect != -1)\n                            {\n                                IPT_fn_vStopFFBEffect(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount, 0, g_MenuVibrationEffect);\n                                g_MenuVibrationEffect = -1;\n                            }\n                            IPT_fn_vPauseAllConstantFFBEffectForAllDevices(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);\n                        }\n                    }\n                    if (g_CurrentMenu2DPage == g_AudioOptionPage)\n                    {\n                        g_aNbGradOn[0] = g_aNbGradOnSaved[0];\n                        g_aNbGradOn[1] = g_aNbGradOnSaved[1];\n                        g_aNbGradOn[2] = g_aNbGradOnSaved[2];\n                        aMenu2DPages[g_AudioOptionPage].aValue[3] = SND_fn_bGetStereoSound();\n                        fn_vSetStereoGameMenu2D(gStereoMode_Saved);\n                        GAM_fn_vSetVolumeMusic(g_aNbGradOn[0] * 127 / 10);\n                        GAM_fn_vSetVolumeSound(g_aNbGradOn[1] * 127 / 10);\n                        GAM_fn_vSetVolumeMenu(g_aNbGradOn[1] * 127 / 10);\n                        GAM_fn_vSetVolumeAmbiance(g_aNbGradOn[1] * 127 / 10);\n                        GAM_fn_vSetVolumeVoice(g_aNbGradOn[2] * 127 / 10);\n                    }\n                    switch (aMenu2DPages[g_CurrentMenu2DPage].eTypePage)\n                    {\n                    case 15:\n                        GLI_g_ScreenPos_DX = GLI_g_ScreenPos_DX_Saved;\n                        GLI_g_ScreenPos_DY = GLI_g_ScreenPos_DY_Saved;\n                        break;\n                    }\n                    if (g_CurrentMenu2DPage != g_PAL60Page2 && g_CurrentMenu2DPage != g_PScanPage2)\n                    {\n                        ReturnFromSubMenu();\n                    }\n                }\n                fn_vManagePalAndProgressiveVideoPage();\n            }\n        }\n        break;\n    case 0:\n        break;\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_vManageMenu2D",
+      "reason": "10444/10476, 1103/1111 relocs on 3.0.3-pad7b-unfold, full reconstruction (pad-entry else-if chain, action 8/7 blocks ending in 'return;', Enter switch with cases in reverse compare order and default last, inlined fn_vR3StoreInitScore/fn_vR3ReInitScore whose get/set helpers call fn_vR3RecomputeGlobalScore for real at the third inline level). Retail leaves every conditional delay slot empty; reproduced by wrapping the body in 'switch (fn_vSpecificManageMenu2D()) { default: ... break; case 0: break; }' (the default-first insight; not original). Residuals: (1) the four GLI_g_ScreenPos_DX/DY clamps - retail stores the new value before the test, keeps a 'mov.s f0,f0' copy and leaves the bc1f slot empty, ours sinks the swc1 into the slot (statement, compound-in-if, locals, pointer and value inline helpers all the same; '-100.0f > x' gets the store+copy but flips to c.le.s/bc1t); (2) the CloseSubMenu restore of MENU_g_bInversionHor is scheduled before the vibration reload where retail stores it in the beqz slot. Remaining i rows are gp-symbol aliases.",
+      "size": 10476,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
+      "status": "MISMATCH",
+      "target_size": 10476,
+      "unresolved_relocations": [
+        {
+          "offset": 6244,
+          "symbol": "@2205",
+          "type": 5
+        },
+        {
+          "offset": 6252,
+          "symbol": "@2205",
+          "type": 6
+        },
+        {
+          "offset": 6296,
+          "symbol": "@2205",
+          "type": 5
+        },
+        {
+          "offset": 6304,
+          "symbol": "@2205",
+          "type": 6
+        },
+        {
+          "offset": 9488,
+          "symbol": "@2205",
+          "type": 5
+        },
+        {
+          "offset": 9496,
+          "symbol": "@2205",
+          "type": 6
+        },
+        {
+          "offset": 9540,
+          "symbol": "@2205",
+          "type": 5
+        },
+        {
+          "offset": 9548,
+          "symbol": "@2205",
+          "type": 6
+        }
+      ]
+    },
+    {
+      "address": "0x00320e90",
+      "candidate_size": 1832,
+      "first_difference": 0,
+      "implementation": "   fn_xIntersectSegmentWithRepositioningSuperObject and calls this unit's\n   out-of-line copy (0x00320ad0) at the other; MWCC cannot split one function\n   that way, so the expanded site uses this static copy. */\nstatic inline void MAT_M_vApplyOnVertex(MTH3D_tdstVector_* VectDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* VectA)\n{\n    MTH4D_tdstVector_ Vtmp;\n    MTH4D_tdstMatrix_* p_stMatrix;\n    MTH4D_tdstVector_* p_stVtmp;\n\n    p_stMatrix = &_hTransform->stTransformMatrix; p_stVtmp = &Vtmp;\n    *(unsigned int*)&Vtmp.xX = ((unsigned int*)VectA)[0]; *(unsigned int*)&Vtmp.xY = ((unsigned int*)VectA)[1]; *(unsigned int*)&Vtmp.xZ = ((unsigned int*)VectA)[2];\n    asm {\n        lqc2 vf1, 0x0(p_stVtmp)\n        lqc2 vf2, 0x0(p_stMatrix)\n        lqc2 vf3, 0x10(p_stMatrix)\n        lqc2 vf4, 0x20(p_stMatrix)\n        lqc2 vf5, 0x30(p_stMatrix)\n        vmulax.xyzw ACC, vf2, vf1x\n        vmadday.xyzw ACC, vf3, vf1y\n        vmaddaz.xyzw ACC, vf4, vf1z\n        vmaddw.xyzw vf6, vf5, vf0w\n        nop\n        nop\n        sqc2 vf6, 0x0(p_stVtmp)\n    }\n    *(unsigned int*)&VectDest->xX = *(unsigned int*)&Vtmp.xX; *(unsigned int*)&VectDest->xY = *(unsigned int*)&Vtmp.xY; *(unsigned int*)&VectDest->xZ = *(unsigned int*)&Vtmp.xZ;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_xIntersectSegmentWithRepositioningSuperObject",
+      "reason": "Full natural reconstruction (function-local statics, inlined pop, MatSp.h VU0 inline at line 811). Two retail-compiler behaviours block it: (1) retail calls HIE_fn_vPushMatrix out of line here but inlines it in HIE_fn_vRefreshHierarchy; deferred auto_inline is callee-side, and Refresh's match needs Push auto-inlinable, so Push expands here (+244 B). With Push non-inlinable (scratch) the function is 1584/1580. (2) retail keeps t2/a2 live across the jal to this unit's MAT_fn_vApplyOnVertex copy (0x320ad0) and reads the radius into f20 before the scale test, which adds the f20 save and a 0x10 larger frame; no MWCC build reproduces this (cf. SOL.c insight). Remaining: stVectAB copy is lw/sw in retail vs lwc1/swc1.",
+      "size": 1580,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SPO/HieSpObj.c",
+      "status": "MISMATCH",
+      "target_size": 1580,
+      "unresolved_relocations": [
+        {
+          "offset": 96,
+          "symbol": "lType$18",
+          "type": 7
+        },
+        {
+          "offset": 172,
+          "symbol": "hBoundingSphere$11",
+          "type": 7
+        },
+        {
+          "offset": 176,
+          "symbol": "hParallelBox$12",
+          "type": 7
+        },
+        {
+          "offset": 440,
+          "symbol": "bBoxBoundingVolume$16",
+          "type": 7
+        },
+        {
+          "offset": 444,
+          "symbol": "bBoxBoundingVolume$16",
+          "type": 7
+        },
+        {
+          "offset": 460,
+          "symbol": "hParallelBox$12",
+          "type": 7
+        },
+        {
+          "offset": 464,
+          "symbol": "hParallelBox$12",
+          "type": 7
+        },
+        {
+          "offset": 484,
+          "symbol": "hParallelBox$12",
+          "type": 7
+        },
+        {
+          "offset": 504,
+          "symbol": "stMinPoint$14",
+          "type": 5
+        },
+        {
+          "offset": 516,
+          "symbol": "stMinPoint$14",
+          "type": 6
+        },
+        {
+          "offset": 524,
+          "symbol": "stMinPoint$14",
+          "type": 5
+        },
+        {
+          "offset": 536,
+          "symbol": "stMinPoint$14",
+          "type": 6
+        },
+        {
+          "offset": 544,
+          "symbol": "stMinPoint$14",
+          "type": 5
+        },
+        {
+          "offset": 556,
+          "symbol": "stMinPoint$14",
+          "type": 6
+        },
+        {
+          "offset": 564,
+          "symbol": "stMaxPoint$15",
+          "type": 5
+        },
+        {
+          "offset": 576,
+          "symbol": "stMaxPoint$15",
+          "type": 6
+        },
+        {
+          "offset": 584,
+          "symbol": "stMaxPoint$15",
+          "type": 5
+        },
+        {
+          "offset": 596,
+          "symbol": "stMaxPoint$15",
+          "type": 6
+        },
+        {
+          "offset": 604,
+          "symbol": "stMaxPoint$15",
+          "type": 5
+        },
+        {
+          "offset": 620,
+          "symbol": "stMaxPoint$15",
+          "type": 6
+        },
+        {
+          "offset": 628,
+          "symbol": "hBoundingSphere$11",
+          "type": 7
+        },
+        {
+          "offset": 632,
+          "symbol": "hBoundingSphere$11",
+          "type": 7
+        },
+        {
+          "offset": 644,
+          "symbol": "hParallelBox$12",
+          "type": 7
+        },
+        {
+          "offset": 660,
+          "symbol": "bIntersect$17",
+          "type": 7
+        },
+        {
+          "offset": 664,
+          "symbol": "bBoxBoundingVolume$16",
+          "type": 7
+        },
+        {
+          "offset": 740,
+          "symbol": "hBoundingSphere$11",
+          "type": 7
+        },
+        {
+          "offset": 752,
+          "symbol": "hBoundingSphere$11",
+          "type": 7
+        },
+        {
+          "offset": 784,
+          "symbol": "bIntersect$17",
+          "type": 7
+        },
+        {
+          "offset": 788,
+          "symbol": "stMinPoint$14",
+          "type": 5
+        },
+        {
+          "offset": 804,
+          "symbol": "stMinPoint$14",
+          "type": 6
+        },
+        {
+          "offset": 792,
+          "symbol": "stMaxPoint$15",
+          "type": 5
+        },
+        {
+          "offset": 808,
+          "symbol": "stMaxPoint$15",
+          "type": 6
+        },
+        {
+          "offset": 820,
+          "symbol": "bIntersect$17",
+          "type": 7
+        },
+        {
+          "offset": 824,
+          "symbol": "bIntersect$17",
+          "type": 7
+        },
+        {
+          "offset": 836,
+          "symbol": "lType$18",
+          "type": 7
+        },
+        {
+          "offset": 1032,
+          "symbol": "stVertexALocal$19",
+          "type": 5
+        },
+        {
+          "offset": 1044,
+          "symbol": "stVertexALocal$19",
+          "type": 6
+        },
+        {
+          "offset": 1056,
+          "symbol": "stVertexALocal$19",
+          "type": 5
+        },
+        {
+          "offset": 1068,
+          "symbol": "stVertexALocal$19",
+          "type": 6
+        },
+        {
+          "offset": 1080,
+          "symbol": "stVertexALocal$19",
+          "type": 5
+        },
+        {
+          "offset": 1092,
+          "symbol": "stVertexALocal$19",
+          "type": 6
+        },
+        {
+          "offset": 1100,
+          "symbol": "stVectAB$20",
+          "type": 5
+        },
+        {
+          "offset": 1104,
+          "symbol": "stVectAB$20",
+          "type": 6
+        },
+        {
+          "offset": 1112,
+          "symbol": "stVectAB$20",
+          "type": 5
+        },
+        {
+          "offset": 1116,
+          "symbol": "stVectAB$20",
+          "type": 6
+        },
+        {
+          "offset": 1124,
+          "symbol": "stVectAB$20",
+          "type": 5
+        },
+        {
+          "offset": 1132,
+          "symbol": "stVectAB$20",
+          "type": 6
+        },
+        {
+          "offset": 1140,
+          "symbol": "stInvMatrix$21",
+          "type": 5
+        },
+        {
+          "offset": 1148,
+          "symbol": "stInvMatrix$21",
+          "type": 6
+        },
+        {
+          "offset": 1160,
+          "symbol": "stInvMatrix$21",
+          "type": 5
+        },
+        {
+          "offset": 1172,
+          "symbol": "stInvMatrix$21",
+          "type": 6
+        },
+        {
+          "offset": 1248,
+          "symbol": "stVertexALocal$19",
+          "type": 5
+        },
+        {
+          "offset": 1252,
+          "symbol": "stVertexALocal$19",
+          "type": 6
+        },
+        {
+          "offset": 1256,
+          "symbol": "stVertexALocal$19",
+          "type": 5
+        },
+        {
+          "offset": 1268,
+          "symbol": "stVertexALocal$19",
+          "type": 6
+        },
+        {
+          "offset": 1260,
+          "symbol": "stVectAB$20",
+          "type": 5
+        },
+        {
+          "offset": 1272,
+          "symbol": "stVectAB$20",
+          "type": 6
+        },
+        {
+          "offset": 1264,
+          "symbol": "stInvMatrix$21",
+          "type": 5
+        },
+        {
+          "offset": 1276,
+          "symbol": "stInvMatrix$21",
+          "type": 6
+        },
+        {
+          "offset": 1288,
+          "symbol": "stVertexALocal$19",
+          "type": 5
+        },
+        {
+          "offset": 1296,
+          "symbol": "stVertexALocal$19",
+          "type": 6
+        },
+        {
+          "offset": 1320,
+          "symbol": "stVertexALocal$19",
+          "type": 5
+        },
+        {
+          "offset": 1332,
+          "symbol": "stVertexALocal$19",
+          "type": 6
+        },
+        {
+          "offset": 1324,
+          "symbol": "stVectAB$20",
+          "type": 5
+        },
+        {
+          "offset": 1336,
+          "symbol": "stVectAB$20",
+          "type": 6
+        },
+        {
+          "offset": 1648,
+          "symbol": "bIntersect$17",
+          "type": 7
+        }
+      ]
     }
   ],
   "data": {},
@@ -70472,7 +70904,7 @@
     },
     "0x0025df30": {
       "address": "0x0025df30",
-      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_vLoadEngineClock",
       "size": 116,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Clock.c",
@@ -75718,17 +76150,65 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DisplayMenu2D.c",
       "status": "MATCH"
     },
+    "0x00299280": {
+      "address": "0x00299280",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "fn_vChangeCurrentValue",
+      "size": 508,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
+      "status": "MATCH"
+    },
     "0x00299480": {
       "address": "0x00299480",
-      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
       "name": "fn_vInterruptMenu2D",
       "size": 60,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
       "status": "MATCH"
     },
+    "0x00299920": {
+      "address": "0x00299920",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "fn_vGotoSubMenu",
+      "size": 580,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
+      "status": "MATCH"
+    },
+    "0x00299b70": {
+      "address": "0x00299b70",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "fn_vPreviousSelection",
+      "size": 304,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
+      "status": "MATCH"
+    },
+    "0x00299ca0": {
+      "address": "0x00299ca0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "fn_vNextSelection",
+      "size": 252,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
+      "status": "MATCH"
+    },
+    "0x00299da0": {
+      "address": "0x00299da0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "fn_vPreviousSelectionNoWrap",
+      "size": 404,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
+      "status": "MATCH"
+    },
+    "0x00299f40": {
+      "address": "0x00299f40",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "fn_vNextSelectionNoWrap",
+      "size": 428,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
+      "status": "MATCH"
+    },
     "0x0029a0f0": {
       "address": "0x0029a0f0",
-      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
       "name": "fn_vReinitGrayedEntries",
       "size": 256,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
@@ -75742,9 +76222,17 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
       "status": "MATCH"
     },
+    "0x0029a220": {
+      "address": "0x0029a220",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "fn_vInitMenuPages",
+      "size": 4360,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
+      "status": "MATCH"
+    },
     "0x0029b330": {
       "address": "0x0029b330",
-      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
       "name": "fn_vInitMaterialForMenu",
       "size": 1780,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
@@ -75768,7 +76256,7 @@
     },
     "0x0029bc60": {
       "address": "0x0029bc60",
-      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
       "name": "ActivateInGameMenu2D",
       "size": 232,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
@@ -75784,7 +76272,7 @@
     },
     "0x0029be80": {
       "address": "0x0029be80",
-      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
       "name": "ActivateInGameMenu2DPhoto",
       "size": 452,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
@@ -75792,7 +76280,7 @@
     },
     "0x0029c050": {
       "address": "0x0029c050",
-      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
       "name": "M2D_fn_vDisplayEndOfGameRecapPage",
       "size": 228,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
@@ -75800,7 +76288,7 @@
     },
     "0x0029c140": {
       "address": "0x0029c140",
-      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
       "name": "ActivateInGameMenu2DBonus",
       "size": 304,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
@@ -75808,7 +76296,7 @@
     },
     "0x0029c270": {
       "address": "0x0029c270",
-      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
       "name": "fn_vR3SetNbCineOpen",
       "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
@@ -75816,7 +76304,7 @@
     },
     "0x0029c280": {
       "address": "0x0029c280",
-      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
       "name": "fn_vR3SetNbBonusOpen",
       "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
@@ -75824,7 +76312,7 @@
     },
     "0x0029c290": {
       "address": "0x0029c290",
-      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
       "name": "fn_vR3SetCurrentEnvNumber",
       "size": 72,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
@@ -75832,15 +76320,31 @@
     },
     "0x0029c2e0": {
       "address": "0x0029c2e0",
-      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
       "name": "fn_vUpdatePlayerGameName",
       "size": 96,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
       "status": "MATCH"
     },
+    "0x0029c340": {
+      "address": "0x0029c340",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "fn_vR3ReInitScore",
+      "size": 1016,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
+      "status": "MATCH"
+    },
+    "0x0029c740": {
+      "address": "0x0029c740",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "fn_vR3StoreInitScore",
+      "size": 2372,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
+      "status": "MATCH"
+    },
     "0x0029d090": {
       "address": "0x0029d090",
-      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
       "name": "fn_ulR3GetEnvNbCage",
       "size": 24,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
@@ -75848,7 +76352,7 @@
     },
     "0x0029d0b0": {
       "address": "0x0029d0b0",
-      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
       "name": "fn_ulR3GetEnvScoreWithRevisit",
       "size": 712,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
@@ -75856,7 +76360,7 @@
     },
     "0x0029d380": {
       "address": "0x0029d380",
-      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
       "name": "fn_ulR3GetEnvScore",
       "size": 360,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
@@ -75864,7 +76368,7 @@
     },
     "0x0029d4f0": {
       "address": "0x0029d4f0",
-      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
       "name": "fn_vR3SetEnvNbCage",
       "size": 36,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
@@ -75872,7 +76376,7 @@
     },
     "0x0029d520": {
       "address": "0x0029d520",
-      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
       "name": "fn_vR3SetEnvScoreWithRevisit",
       "size": 736,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
@@ -75880,7 +76384,7 @@
     },
     "0x0029d800": {
       "address": "0x0029d800",
-      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
       "name": "fn_vR3RecomputeGlobalScore",
       "size": 320,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
@@ -75888,7 +76392,7 @@
     },
     "0x0029d940": {
       "address": "0x0029d940",
-      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
       "name": "M2D_fn_ulGetRevisitEnvironmentNumber",
       "size": 36,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
@@ -75896,7 +76400,7 @@
     },
     "0x0029d970": {
       "address": "0x0029d970",
-      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
       "name": "M2D_fn_vForbidExitFromMenu",
       "size": 12,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
@@ -75904,7 +76408,7 @@
     },
     "0x0029d980": {
       "address": "0x0029d980",
-      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
       "name": "fn_vR3SetEndOfGame",
       "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
@@ -82366,11 +82870,35 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
       "status": "MATCH"
     },
+    "0x002f75c0": {
+      "address": "0x002f75c0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "IPT_fn_bIsJustInvalidatedPadButton",
+      "size": 272,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
+      "status": "MATCH"
+    },
     "0x002f76d0": {
       "address": "0x002f76d0",
       "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
       "name": "IPT_fn_bIsValidatedPadButton",
       "size": 140,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
+      "status": "MATCH"
+    },
+    "0x002f7760": {
+      "address": "0x002f7760",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "IPT_fn_bIsJustValidatedPadButton",
+      "size": 272,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
+      "status": "MATCH"
+    },
+    "0x002f7870": {
+      "address": "0x002f7870",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "IPT_fn_vSetKeyAndPadButtonForPadNumber",
+      "size": 76,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
       "status": "MATCH"
     },
@@ -84526,6 +85054,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SPO/HieSpObj.c",
       "status": "MATCH"
     },
+    "0x00321860": {
+      "address": "0x00321860",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "HIE_fn_vRefreshHierarchy",
+      "size": 800,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SPO/HieSpObj.c",
+      "status": "MATCH"
+    },
     "0x00321b80": {
       "address": "0x00321b80",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -84627,6 +85163,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "HIE_fn_vIsolate",
       "size": 136,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SPO/HieSpObj.c",
+      "status": "MATCH"
+    },
+    "0x003223c0": {
+      "address": "0x003223c0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "HIE_fn_SO_SwitchSuperImposedTab",
+      "size": 716,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SPO/HieSpObj.c",
       "status": "MATCH"
     },

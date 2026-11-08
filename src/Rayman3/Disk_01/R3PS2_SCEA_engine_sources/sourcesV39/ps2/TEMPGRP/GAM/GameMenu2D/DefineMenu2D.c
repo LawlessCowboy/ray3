@@ -1835,10 +1835,10 @@ void fn_vDisplayScrollTextMenu2D(float X, float Y, float W, char* szText, unsign
     fL = 100.0f * (fL / (float)g_p_stVpt->dwWidth);
     fH = 100.0f * (fH / (float)g_p_stVpt->dwHeight);
 
-    g_NumFirstCharForScroll += N + 1;
     g_OffsetXForScroll = g_OffsetXForScroll - 10.0f * fL;
+    g_NumFirstCharForScroll += N + 1;
 
-    if (strlen(szText) < g_NumFirstCharForScroll)
+    if (g_NumFirstCharForScroll > strlen(szText))
     {
         g_NumFirstCharForScroll = 0;
         g_OffsetXForScroll = -W;
@@ -2237,25 +2237,981 @@ void fn_vDisplayScrollTextMenu2D(float X, float Y, float W, char* szText, unsign
  */
 extern int fn_vSpecificManageMenu2D(void);
 
-void fn_vManageMenu2D(void)
+static inline void fn_vR3InlineRecomputeGlobalScore(void)
 {
-    if (fn_vSpecificManageMenu2D())
+    int i;
+
+    g_aEnvValue[0].ulScore = 0;
+    for (i = 1; i < 10; i++)
     {
-        if (g_CurrentActionMenu2D == 2)
-        {
-            /* TODO: the "action 2" menu handling is not reconstructed yet. */
-        }
-        else if (g_CurrentActionMenu2D == 3)
-        {
-            /* TODO: the "action 3" menu handling is not reconstructed yet. */
-        }
+        g_aEnvValue[0].ulScore += g_aEnvValue[i].ulScore;
+    }
+    g_RevisitCurrentGlobalScore = g_aEnvValue[0].ulScore;
+}
+
+static inline unsigned int fn_ulR3InlineGetEnvScore(unsigned int ulIndE)
+{
+    fn_vR3InlineRecomputeGlobalScore();
+    if (ulIndE < 10)
+        return g_aEnvValue[ulIndE].ulScore;
+    return 0;
+}
+
+static inline void fn_vR3InlineSetEnvScore(unsigned int ulIndE, unsigned int ulScore)
+{
+    if (ulIndE < 10)
+        g_aEnvValue[ulIndE].ulScore = ulScore;
+    fn_vR3InlineRecomputeGlobalScore();
+}
+
+extern void PS2MC_vClearFlag(int FlagID);
+extern void VID_fn_vNextVideoToPlay(char* p_szVideoName, unsigned char bCanBeInterrupt, unsigned char bLoop);
+extern void VID_fn_vPlayVideoAfterLevel(void);
+extern void GAM_fn_vAskToChangeLevel(char* szNewLevelName, int lParameter);
+extern void DesinitGameMenu2D(void);
+extern void CloseInGameMenu2D(void);
+extern void fn_vLoadEngineClock(void);
+extern char* FON_fn_szGetTextPointerForHandle(int hString);
+extern unsigned char IPT_fn_bIsJustValidated(IPT_tdstEntryElement_* hEntry);
+extern int fn_vSpecificManageMenu2D(void);
+extern int fn_GetAreYouSureValue(void);
+extern void SetAreYouSureValue(int Value);
+extern void fn_vChangeAreYouSureValue(void);
+extern void fn_vManagePalAndProgressiveVideoPage(void);
+extern void fn_vManageValidatePalAndProgressiveVideoPage(void);
+extern void fn_vR3RecomputeGlobalScore(void);
+extern void PS2MC_DisableAutoSave(void);
+extern unsigned char SAV2_fn_bReadAllFromDisk(char* szName, int bSomething);
+extern unsigned char SAV2_fn_bSaveAllOnDisk(char* szName);
+extern void PS2MC_fn_vGetMemoryCardFileHeaders(anon_1* pEntries, int lMax, unsigned int* pNbFound, int lFlag);
+extern void PS2MC_fn_vGetMemoryCardScreenShotsHeaders(anon_1* pEntries, int lMax, unsigned int* pNbFound);
+extern int PS2MC_GetCurrentMemoryCardStatus(void);
+extern int SND_fn_bGetStereoSound(void);
+extern void GLI_vSavePicture(char* szName);
+extern void GLI_fn_vSwitchTo60Hz(void);
+extern void fn_vChangeCurrentSelectedChar(void);
+extern void fn_vDecreaseGrad(void);
+extern void fn_vIncreaseGrad(void);
+extern void fn_vPreviousSnapShot(void);
+extern void fn_vNextSnapShot(void);
+extern void fn_vReinitSpriteScale(void);
+extern unsigned int fn_uiGetSomeBytes(unsigned int* pBuffer, int lNb, int lFlag);
+extern void ReturnFromSubMenu(void);
+extern void fn_vGotoSubMenu(int SubPage);
+extern void fn_vReinitGrayedEntries(int PageNumber);
+extern void fn_vPreviousSelection(void);
+extern void fn_vNextSelection(void);
+extern void fn_vPreviousSelectionNoWrap(void);
+extern void fn_vNextSelectionNoWrap(void);
+extern void fn_vChangeCurrentValue(char Value);
+extern void fn_vSetStereoGameMenu2D(unsigned int uiSet);
+extern void GAM_fn_vSetVolumeMusic(int s32_Value);
+extern void GAM_fn_vSetVolumeSound(int s32_Value);
+extern void GAM_fn_vSetVolumeMenu(int s32_Value);
+extern void GAM_fn_vSetVolumeAmbiance(int s32_Value);
+extern void GAM_fn_vSetVolumeVoice(int s32_Value);
+extern void IPT_fn_vStopFFBEffect(unsigned int ulCurrentTime, unsigned char ucPadNumber, signed char cEffectNumber);
+extern void IPT_fn_vResumeAllConstantFFBEffectForAllDevices(unsigned int ulTime);
+extern void IPT_fn_vPauseAllConstantFFBEffectForAllDevices(unsigned int ulTime);
+
+static inline unsigned int M2D_fn_ulGetEnvScore(unsigned int ulIndE)
+{
+    fn_vR3RecomputeGlobalScore();
+    if (ulIndE < 10)
+        return g_aEnvValue[ulIndE].ulScore;
+    return 0;
+}
+
+static inline void M2D_fn_vSetEnvScore(unsigned int ulIndE, unsigned int ulScore)
+{
+    if (ulIndE < 10)
+        g_aEnvValue[ulIndE].ulScore = ulScore;
+    fn_vR3RecomputeGlobalScore();
+}
+
+static inline void M2D_fn_vGotoShortcutPage(int Page)
+{
+    if (g_CurrentMenu2DPage != Page)
+    {
+        fn_vPlaySoundInGameMenu2D(4);
+        g_CurrentActionMenu2D = 2;
+        g_GotoRight = 1;
+        g_CurrentIndSubMenu = -1;
+        g_MustCheckMC = 1;
+        g_NextPage = Page;
+        g_NotRight = 0;
+        g_NotLeft = 0;
+        g_NoBonusShortcut = 0;
+        g_NoGameShortcut = 0;
+        fn_vReinitGrayedEntries(Page);
     }
     else
     {
-        /* TODO: the main menu state machine (the ~10 kB body with the
-         * fn_vGotoSubMenu / ReturnFromSubMenu / fn_vChangeCurrentValue
-         * dispatch on the IPT_fn_bIsJustValidated pad entries) is not
-         * reconstructed yet. */
+        fn_vPlaySoundInGameMenu2D(10);
+    }
+}
+
+void fn_vManageMenu2D(void)
+{
+    switch (fn_vSpecificManageMenu2D())
+    {
+    default:
+        if ((g_CurrentActionMenu2D != 2 && g_CurrentActionMenu2D != 3) ||
+            IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_NextPage) == 1 ||
+            IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_PrevPage) == 1)
+        {
+            if (g_CurrentActionMenu2D == 8)
+            {
+                if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_CloseSubMenu) == 1)
+                {
+                    g_CurrentActionMenu2D = 0;
+                }
+                else if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_Enter) == 1)
+                {
+                    g_CurrentActionMenu2D = 0;
+                }
+                return;
+            }
+            else if (g_CurrentActionMenu2D == 7)
+            {
+                if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_CloseSubMenu) == 1)
+                {
+                    g_CurrentActionMenu2D = 0;
+                }
+                else if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_Left) == 1 ||
+                         IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_Right) == 1)
+                {
+                    fn_vPlaySoundInGameMenu2D(2);
+                    fn_vChangeAreYouSureValue();
+                }
+                else if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_Enter) == 1)
+                {
+                    g_CurrentActionMenu2D = 0;
+                    if (fn_GetAreYouSureValue())
+                    {
+                        fn_vPlaySoundInGameMenu2D(3);
+                        switch (aMenu2DPages[g_CurrentMenu2DPage].eTypePage)
+                        {
+                        case 9:
+                            {
+                                char* szLevelName = (char*)g_aBonusMapName[g_CurrentSelection + aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry];
+                                CloseInGameMenu2D();
+                                GAM_fn_vAskToChangeLevel(szLevelName, 0);
+                            }
+                            break;
+                        case 10:
+                            VID_fn_vNextVideoToPlay((char*)g_aCinematicName[g_CurrentColForSelection + g_NbColForSelection * g_CurrentLineForSelection], 1, 0);
+                            VID_fn_vPlayVideoAfterLevel();
+                            CloseInGameMenu2D();
+                            GAM_fn_vAskToChangeLevel(g_szLevelForBonusMenu, 0);
+                            break;
+                        case 11:
+                            VID_fn_vNextVideoToPlay((char*)g_aXtraVideoName[g_CurrentSelection + aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry], 1, 0);
+                            VID_fn_vPlayVideoAfterLevel();
+                            CloseInGameMenu2D();
+                            GAM_fn_vAskToChangeLevel(g_szLevelForBonusMenu, 0);
+                            break;
+                        case 2:
+                            if (g_EndRevisit)
+                            {
+                                g_RevisitMode = 0;
+
+                                /* fn_vR3StoreInitScore */
+                                fn_vR3InlineRecomputeGlobalScore();
+                                if (g_RevisitMode != 0)
+                                {
+                                    g_RevisitEnvScoreAtBeginingOfLevel = g_RevisitCurrentEnvScore;
+                                    g_RevisitGlobalScoreAtBeginingOfLevel = g_RevisitCurrentGlobalScore;
+                                    if (g_RevisitEnvScoreAtBeginingOfLevel > M2D_fn_ulGetEnvScore(g_IndCurrentEnv))
+                                        M2D_fn_vSetEnvScore(g_IndCurrentEnv, g_RevisitEnvScoreAtBeginingOfLevel);
+                                    if (M2D_fn_ulGetEnvScore(0) < g_RevisitGlobalScoreAtBeginingOfLevel)
+                                        M2D_fn_vSetEnvScore(0, g_RevisitGlobalScoreAtBeginingOfLevel);
+                                }
+                                g_GlobalScoreAtBeginingOfLevel = M2D_fn_ulGetEnvScore(0);
+                                g_CurrentEnvScoreAtBeginingOfLevel = M2D_fn_ulGetEnvScore(g_IndCurrentEnv);
+                                g_CurrentEnvInit = g_IndCurrentEnv;
+
+                                g_CurrentEnvScoreAtBeginingOfLevel = g_RevisitCurrentEnvScore = g_RevisitEnvScoreAtBeginingOfLevel = g_aEnvValue[g_RevisitIndEnvironementFromWhereWeCome].ulScore;
+                                g_CurrentEnvInit = g_RevisitIndEnvironementFromWhereWeCome;
+                                g_RevisitIndCurrentEnv = 0;
+                                CloseInGameMenu2D();
+                                GAM_fn_vAskToChangeLevel(SAV2_g_LevelNameAfterReinitToSave, 0);
+                            }
+                            else
+                            {
+                                /* fn_vR3ReInitScore */
+                                if (g_RevisitMode != 0)
+                                {
+                                    g_RevisitCurrentEnvScore = g_RevisitEnvScoreAtBeginingOfLevel;
+                                    g_RevisitCurrentGlobalScore = g_RevisitGlobalScoreAtBeginingOfLevel;
+                                }
+                                M2D_fn_vSetEnvScore(0, g_GlobalScoreAtBeginingOfLevel);
+                                M2D_fn_vSetEnvScore(g_IndCurrentEnv, g_CurrentEnvScoreAtBeginingOfLevel);
+                                g_IndCurrentEnv = g_CurrentEnvInit;
+                                fn_vR3InlineRecomputeGlobalScore();
+
+                                if (g_RevisitMode == 0)
+                                {
+                                    strcpy(SAV2_g_LevelNameAfterReinitToSave, SAV2_g_LevelNameToSave);
+                                    g_RevisitMode = 1;
+                                    g_RevisitIndEnvironementFromWhereWeCome = g_IndCurrentEnv;
+                                }
+                                g_RevisitEnvScoreAtBeginingOfLevel = 0;
+                                g_RevisitCurrentEnvScore = 0;
+                                g_RevisitIndCurrentEnv = g_CurrentMenu2DPage + 1;
+                                g_CurrentEnvScoreAtBeginingOfLevel = fn_ulR3InlineGetEnvScore(g_RevisitIndCurrentEnv);
+                                {
+                                    char* szLevelName = (char*)g_aMapName[g_CurrentMenu2DPage + 1];
+                                    CloseInGameMenu2D();
+                                    GAM_fn_vAskToChangeLevel(szLevelName, 0);
+                                }
+                            }
+                            break;
+                        case 1:
+                            SAV2_fn_bReadAllFromDisk(g_aFileEntryArray[g_CurrentSelection + aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry].Name, 1);
+                            g_LoadingGame = 1;
+                            break;
+                        case 3:
+                            g_RevisitMode = 0;
+                            g_RevisitEnvScoreAtBeginingOfLevel = 0;
+                            g_RevisitCurrentEnvScore = 0;
+                            PS2MC_DisableAutoSave();
+                            {
+                                int i;
+                                for (i = 0; i < 10; i++)
+                                {
+                                    g_aEnvValue[i].ulNbCage = 0;
+                                    g_aEnvValue[i].ulScore = 0;
+                                }
+                            }
+                            g_CurrentEnvInit = 1;
+                            g_MaxIndCurrentEnv = 1;
+                            g_GlobalScoreAtBeginingOfLevel = 0;
+                            g_CurrentEnvScoreAtBeginingOfLevel = 0;
+                            g_RevisitGlobalScoreAtBeginingOfLevel = 0;
+                            g_RevisitEnvScoreAtBeginingOfLevel = 0;
+                            g_RevisitCurrentEnvScore = 0;
+                            g_EndOfGameIsDone = 0;
+                            {
+                                char* szLevelName = (char*)g_aMapName[0];
+                                CloseInGameMenu2D();
+                                GAM_fn_vAskToChangeLevel(szLevelName, 0);
+                            }
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        fn_vPlaySoundInGameMenu2D(3);
+                    }
+                }
+                return;
+            }
+            else
+            {
+                if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_Display) == 1)
+                {
+                    if (g_2DMenuID != 1 && !g_ExitForbidden)
+                    {
+                        unsigned int ulTime;
+
+                        DesinitGameMenu2D();
+                        if (g_stEngineStructure.bEngineFrozen)
+                        {
+                            fn_vLoadEngineClock();
+                        }
+                        g_stEngineStructure.bEngineFrozen = 0;
+                        g_InGameMenu2DActivated = 0;
+                        ulTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+                        if (MENU_g_bVibration)
+                        {
+                            IPT_fn_vResumeAllConstantFFBEffectForAllDevices(ulTime);
+                        }
+                        else
+                        {
+                            IPT_fn_vPauseAllConstantFFBEffectForAllDevices(ulTime);
+                        }
+                    }
+                }
+                else if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_Help) == 1)
+                {
+                    g_CurrentActionMenu2D = 8;
+                    g_szHelp = (int)FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[81].hText);
+                }
+                else if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_Shortcut1) == 1)
+                {
+                    if (!g_NoBonusShortcut)
+                    {
+                        M2D_fn_vGotoShortcutPage(g_BonusPage);
+                    }
+                }
+                else if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_Shortcut2) == 1)
+                {
+                    if (!g_NoGameShortcut)
+                    {
+                        M2D_fn_vGotoShortcutPage(g_GamePage);
+                    }
+                }
+                else if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_Left) == 1)
+                {
+                    if (g_CurrentMenu2DPage == g_SavePage || g_CurrentMenu2DPage == g_CinematicPage)
+                    {
+                        fn_vPlaySoundInGameMenu2D(2);
+                        if (g_CurrentColForSelection > 0)
+                            g_CurrentColForSelection = g_CurrentColForSelection - 1;
+                        else
+                            g_CurrentColForSelection = g_NbColForSelection - 1;
+                        fn_vReinitSpriteScale();
+                    }
+                    else if (g_CurrentMenu2DPage == g_AudioOptionPage)
+                    {
+                        if (g_CurrentSelection == 3)
+                            fn_vChangeCurrentValue(1);
+                        else
+                            fn_vDecreaseGrad();
+                    }
+                    else if (g_CurrentMenu2DPage == g_VideoOptionPage)
+                    {
+                        if (g_CurrentSelection == 1)
+                            fn_vChangeCurrentValue(1);
+                    }
+                    else if (g_CurrentMenu2DPage == g_ControlOptionPage)
+                    {
+                        fn_vChangeCurrentValue(1);
+                    }
+                    else if (g_CurrentMenu2DPage == g_AlbumPage)
+                    {
+                        fn_vPreviousSnapShot();
+                    }
+
+                    switch (aMenu2DPages[g_CurrentMenu2DPage].eTypePage)
+                    {
+                    case 15:
+                        if ((GLI_g_ScreenPos_DX -= 10.0f) < -100.0f)
+                            GLI_g_ScreenPos_DX = -100.0f;
+                        break;
+                    case 21:
+                    case 18:
+                        fn_vPlaySoundInGameMenu2D(2);
+                        g_CurrentSelection = 1;
+                        break;
+                    }
+                }
+                else if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_Right) == 1)
+                {
+                    if (g_CurrentMenu2DPage == g_SavePage || g_CurrentMenu2DPage == g_CinematicPage)
+                    {
+                        fn_vPlaySoundInGameMenu2D(2);
+                        if (g_CurrentColForSelection < g_NbColForSelection - 1)
+                            g_CurrentColForSelection = g_CurrentColForSelection + 1;
+                        else
+                            g_CurrentColForSelection = 0;
+                        fn_vReinitSpriteScale();
+                    }
+                    else if (g_CurrentMenu2DPage == g_AudioOptionPage)
+                    {
+                        if (g_CurrentSelection == 3)
+                            fn_vChangeCurrentValue(0);
+                        else
+                            fn_vIncreaseGrad();
+                    }
+                    else if (g_CurrentMenu2DPage == g_VideoOptionPage)
+                    {
+                        if (g_CurrentSelection == 1)
+                            fn_vChangeCurrentValue(0);
+                    }
+                    else if (g_CurrentMenu2DPage == g_ControlOptionPage)
+                    {
+                        fn_vChangeCurrentValue(0);
+                    }
+                    else if (g_CurrentMenu2DPage == g_AlbumPage)
+                    {
+                        fn_vNextSnapShot();
+                    }
+
+                    switch (aMenu2DPages[g_CurrentMenu2DPage].eTypePage)
+                    {
+                    case 15:
+                        if ((GLI_g_ScreenPos_DX += 10.0f) > 150.0f)
+                            GLI_g_ScreenPos_DX = 150.0f;
+                        break;
+                    case 21:
+                    case 18:
+                        fn_vPlaySoundInGameMenu2D(2);
+                        g_CurrentSelection = 2;
+                        break;
+                    }
+                }
+                else if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_NextPage) == 1)
+                {
+                    if (!g_NotLeft)
+                    {
+                        fn_vPlaySoundInGameMenu2D(4);
+                        g_GotoRight = 1;
+                        g_CurrentActionMenu2D = 2;
+                        if (g_CurrentMenu2DPage == 0)
+                            g_NextPage = g_NbMenu2DPages - 1;
+                        else
+                            g_NextPage = g_CurrentMenu2DPage - 1;
+                        if (g_NextPage > g_MaxIndCurrentEnv - 1 && g_NextPage < 9)
+                        {
+                            if (g_2DMenuID == 3)
+                                g_NextPage = g_GamePage;
+                            else
+                                g_NextPage = g_MaxIndCurrentEnv - 1;
+                        }
+                        fn_vReinitGrayedEntries(g_NextPage);
+                    }
+                }
+                else if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_PrevPage) == 1)
+                {
+                    if (!g_NotRight)
+                    {
+                        fn_vPlaySoundInGameMenu2D(4);
+                        g_CurrentActionMenu2D = 2;
+                        g_GotoRight = 0;
+                        if (g_CurrentMenu2DPage == g_NbMenu2DPages - 1)
+                        {
+                            if (g_2DMenuID == 3)
+                                g_NextPage = g_BonusPage;
+                            else
+                                g_NextPage = 0;
+                        }
+                        else
+                        {
+                            g_NextPage = g_CurrentMenu2DPage + 1;
+                        }
+                        if (g_NextPage > g_MaxIndCurrentEnv - 1 && g_NextPage < 9)
+                        {
+                            g_NextPage = 9;
+                        }
+                        fn_vReinitGrayedEntries(g_NextPage);
+                    }
+                }
+                else if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_Up) == 1)
+                {
+                    if (g_CurrentMenu2DPage == g_LoadPage || g_CurrentMenu2DPage == g_ArcadePage || g_CurrentMenu2DPage == g_XTraPage)
+                    {
+                        unsigned int u32Sound2Play;
+
+                        u32Sound2Play = 2;
+                        if (g_CurrentSelection == 0)
+                        {
+                            if (aMenu2DPages[g_CurrentMenu2DPage].NbSelection == aMenu2DPages[g_CurrentMenu2DPage].NbEntry)
+                            {
+                                u32Sound2Play = 10;
+                            }
+                            else
+                            {
+                                if (aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry == 0)
+                                {
+                                    u32Sound2Play = 10;
+                                }
+                                else
+                                {
+                                    aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry--;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            g_CurrentSelection--;
+                        }
+                        fn_vPlaySoundInGameMenu2D(u32Sound2Play);
+                        if (aMenu2DPages[g_CurrentMenu2DPage].abGrayed[g_CurrentSelection] != 0)
+                        {
+                            fn_vPreviousSelectionNoWrap();
+                        }
+                    }
+                    else if (g_CurrentMenu2DPage != g_PAL60Page3 && g_CurrentMenu2DPage != g_PScanPage3)
+                    {
+                        fn_vPreviousSelection();
+                        if (g_CurrentMenu2DPage == g_SavePage || g_CurrentMenu2DPage == g_CinematicPage)
+                        {
+                            fn_vPlaySoundInGameMenu2D(2);
+                            if (g_CurrentLineForSelection > 0)
+                                g_CurrentLineForSelection = g_CurrentLineForSelection - 1;
+                            else
+                                g_CurrentLineForSelection = g_NbLineForSelection - 1;
+                        }
+                    }
+
+                    switch (aMenu2DPages[g_CurrentMenu2DPage].eTypePage)
+                    {
+                    case 15:
+                        if ((GLI_g_ScreenPos_DY -= 2.0f) < -25.0f)
+                            GLI_g_ScreenPos_DY = -25.0f;
+                        break;
+                    }
+                }
+                else if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_Down) == 1)
+                {
+                    if (g_CurrentMenu2DPage == g_LoadPage || g_CurrentMenu2DPage == g_ArcadePage || g_CurrentMenu2DPage == g_XTraPage)
+                    {
+                        unsigned int u32Sound2Play;
+
+                        u32Sound2Play = 2;
+                        if (g_CurrentSelection == aMenu2DPages[g_CurrentMenu2DPage].NbSelection - 1)
+                        {
+                            if (aMenu2DPages[g_CurrentMenu2DPage].NbSelection == aMenu2DPages[g_CurrentMenu2DPage].NbEntry)
+                            {
+                                u32Sound2Play = 10;
+                            }
+                            else
+                            {
+                                if (aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry !=
+                                    aMenu2DPages[g_CurrentMenu2DPage].NbEntry - aMenu2DPages[g_CurrentMenu2DPage].NbSelection)
+                                {
+                                    aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry++;
+                                }
+                                else
+                                {
+                                    u32Sound2Play = 10;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            g_CurrentSelection++;
+                        }
+                        fn_vPlaySoundInGameMenu2D(u32Sound2Play);
+                        if (aMenu2DPages[g_CurrentMenu2DPage].abGrayed[g_CurrentSelection] != 0)
+                        {
+                            fn_vNextSelectionNoWrap();
+                        }
+                    }
+                    else if (g_CurrentMenu2DPage != g_PAL60Page3 && g_CurrentMenu2DPage != g_PScanPage3)
+                    {
+                        fn_vNextSelection();
+                        if (g_CurrentMenu2DPage == g_SavePage || g_CurrentMenu2DPage == g_CinematicPage)
+                        {
+                            fn_vPlaySoundInGameMenu2D(2);
+                            if (g_CurrentLineForSelection < g_NbLineForSelection - 1)
+                                g_CurrentLineForSelection = g_CurrentLineForSelection + 1;
+                            else
+                                g_CurrentLineForSelection = 0;
+                        }
+                    }
+
+                    switch (aMenu2DPages[g_CurrentMenu2DPage].eTypePage)
+                    {
+                    case 15:
+                        if ((GLI_g_ScreenPos_DY += 2.0f) > 25.0f)
+                            GLI_g_ScreenPos_DY = 25.0f;
+                        break;
+                    }
+                }
+                else if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_Enter) == 1)
+                {
+                    switch (aMenu2DPages[g_CurrentMenu2DPage].eTypePage)
+                    {
+                    case 10:
+                        {
+                            int lIndex = g_CurrentColForSelection + g_NbColForSelection * g_CurrentLineForSelection;
+                            if (lIndex < g_NbCinematicOpen)
+                            {
+                                if (!g_ExitForbidden)
+                                {
+                                    g_CurrentActionMenu2D = 7;
+                                    g_szAreYouSureQuestion = (int)FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[75].hText);
+                                    SetAreYouSureValue(0);
+                                }
+                                else
+                                {
+                                    VID_fn_vNextVideoToPlay((char*)g_aCinematicName[lIndex], 1, 0);
+                                    VID_fn_vPlayVideoAfterLevel();
+                                    CloseInGameMenu2D();
+                                    GAM_fn_vAskToChangeLevel(g_szLevelForBonusMenu, 0);
+                                }
+                            }
+                        }
+                        break;
+                    case 22:
+                        ReturnFromSubMenu();
+                        break;
+                    case 9:
+                        {
+                            unsigned int lIndex = g_CurrentSelection + aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry;
+                            if (lIndex < g_NbArcadeOpen)
+                            {
+                                if (!g_ExitForbidden)
+                                {
+                                    g_CurrentActionMenu2D = 7;
+                                    g_szAreYouSureQuestion = (int)FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[74].hText);
+                                    SetAreYouSureValue(0);
+                                }
+                                else
+                                {
+                                    char* szLevelName = (char*)g_aBonusMapName[lIndex];
+                                    CloseInGameMenu2D();
+                                    GAM_fn_vAskToChangeLevel(szLevelName, 0);
+                                }
+                            }
+                        }
+                        break;
+                    case 11:
+                        {
+                            unsigned int lIndex = g_CurrentSelection + aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry;
+                            if (lIndex < g_NbArcadeOpen)
+                            {
+                                if (!g_ExitForbidden)
+                                {
+                                    g_CurrentActionMenu2D = 7;
+                                    g_szAreYouSureQuestion = (int)FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[76].hText);
+                                    SetAreYouSureValue(0);
+                                }
+                                else
+                                {
+                                    VID_fn_vNextVideoToPlay((char*)g_aXtraVideoName[lIndex], 1, 0);
+                                    VID_fn_vPlayVideoAfterLevel();
+                                    CloseInGameMenu2D();
+                                    GAM_fn_vAskToChangeLevel(g_szLevelForBonusMenu, 0);
+                                }
+                            }
+                        }
+                        break;
+                    case 2:
+                        g_EndRevisit = 0;
+                        if (g_CurrentMenu2DPage == g_MaxIndCurrentEnv - 1)
+                        {
+                            if (g_EndOfGameIsDone)
+                            {
+                                g_szAreYouSureQuestion = (int)FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[78].hText);
+                                g_CurrentActionMenu2D = 7;
+                                SetAreYouSureValue(0);
+                            }
+                            else if (g_RevisitMode)
+                            {
+                                g_EndRevisit = 1;
+                                g_szAreYouSureQuestion = (int)FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[79].hText);
+                                g_CurrentActionMenu2D = 7;
+                                SetAreYouSureValue(0);
+                            }
+                        }
+                        else
+                        {
+                            g_szAreYouSureQuestion = (int)FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[78].hText);
+                            g_CurrentActionMenu2D = 7;
+                            SetAreYouSureValue(0);
+                        }
+                        break;
+                    case 1:
+                        if (g_2DMenuID == 1)
+                        {
+                            SAV2_fn_bReadAllFromDisk(g_aFileEntryArray[g_CurrentSelection + aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry].Name, 1);
+                            g_LoadingGame = 1;
+                        }
+                        else
+                        {
+                            g_CurrentActionMenu2D = 7;
+                            g_szAreYouSureQuestion = (int)FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[77].hText);
+                            SetAreYouSureValue(0);
+                        }
+                        fn_vPlaySoundInGameMenu2D(3);
+                        break;
+                    case 3:
+                        switch (g_CurrentSelection)
+                        {
+                        case 0:
+                            if (g_CurrentLanguage == 2)
+                            {
+                                strcpy(aMenu2DPages[g_OptionsPage].aText[0], "Opciones del control");
+                                strcpy(aMenu2DPages[g_ControlOptionPage].Title, "Opciones del control");
+                            }
+                            fn_vGotoSubMenu(g_OptionsPage);
+                            break;
+                        case 1:
+                            PS2MC_vClearFlag(6);
+                            PS2MC_g_NbFilesFound = 0;
+                            PS2MC_fn_vGetMemoryCardFileHeaders(g_aFileEntryArray, 100, &PS2MC_g_NbFilesFound, 0);
+                            aMenu2DPages[g_LoadPage].NbSelection = 0;
+                            aMenu2DPages[g_LoadPage].NbEntry = 0;
+                            aMenu2DPages[g_LoadPage].CurrentFirstEntry = 0;
+                            fn_vGotoSubMenu(g_LoadPage);
+                            break;
+                        case 2:
+                            g_CurrentColForSelection = 6;
+                            g_CurrentLineForSelection = 4;
+                            g_NbColForSelection = 10;
+                            g_NbLineForSelection = 5;
+                            g_NbCharForSaveName = 5;
+                            g_CurrentSelectedCharNumber = 0;
+                            PS2MC_vClearFlag(0);
+                            PS2MC_vClearFlag(5);
+                            fn_vGotoSubMenu(g_SavePage);
+                            {
+                                unsigned int i;
+                                for (i = 0; i < 10; i++)
+                                    g_CurrentNameForSavePage[i] = 0;
+                            }
+                            strcpy(g_CurrentNameForSavePage, g_CurrentSaveName);
+                            g_CurrentSelectedCharNumber = strlen(g_CurrentNameForSavePage);
+                            if (g_CurrentSelectedCharNumber == g_NbCharForSaveName)
+                                g_CurrentSelectedCharNumber--;
+                            break;
+                        case 3:
+                            g_CurrentActionMenu2D = 7;
+                            g_szAreYouSureQuestion = (int)FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[80].hText);
+                            SetAreYouSureValue(0);
+                            break;
+                        }
+                        break;
+                    case 4:
+                        switch (g_CurrentSelection)
+                        {
+                        case 0:
+                            aMenu2DPages[g_ControlOptionPage].aValue[0] = MENU_g_bInversionVert;
+                            aMenu2DPages[g_ControlOptionPage].aValue[1] = MENU_g_bInversionHor;
+                            aMenu2DPages[g_ControlOptionPage].aValue[2] = MENU_g_bVibration;
+                            MENU_g_bInversionVertSaved = MENU_g_bInversionVert;
+                            MENU_g_bInversionHorSaved = MENU_g_bInversionHor;
+                            MENU_g_bVibrationSaved = MENU_g_bVibration;
+                            fn_vGotoSubMenu(g_ControlOptionPage);
+                            break;
+                        case 1:
+                            g_aNbGradOn[0] = (g_stGameOptions.s32VolumeMusic + 6) * 10 / 127;
+                            g_aNbGradOn[1] = (g_stGameOptions.s32VolumeSound + 6) * 10 / 127;
+                            g_aNbGradOn[2] = (g_stGameOptions.s32VolumeVoice + 6) * 10 / 127;
+                            aMenu2DPages[g_AudioOptionPage].aValue[3] = SND_fn_bGetStereoSound();
+                            g_aNbGradOnSaved[0] = g_aNbGradOn[0];
+                            g_aNbGradOnSaved[1] = g_aNbGradOn[1];
+                            g_aNbGradOnSaved[2] = g_aNbGradOn[2];
+                            gStereoMode_Saved = SND_fn_bGetStereoSound();
+                            fn_vGotoSubMenu(g_AudioOptionPage);
+                            break;
+                        case 2:
+                            aMenu2DPages[g_VideoOptionPage].aValue[1] = GLI_g_bWideScreenMode;
+                            fn_vGotoSubMenu(g_VideoOptionPage);
+                            break;
+                        }
+                        break;
+                    case 8:
+                        switch (g_CurrentSelection)
+                        {
+                        case 0:
+                            fn_vGotoSubMenu(g_ArcadePage);
+                            aMenu2DPages[g_ArcadePage].CurrentFirstEntry = 0;
+                            break;
+                        case 1:
+                            fn_vGotoSubMenu(g_CinematicPage);
+                            g_CurrentColForSelection = 0;
+                            g_CurrentLineForSelection = 0;
+                            g_NbColForSelection = 3;
+                            g_NbLineForSelection = 3;
+                            break;
+                        case 2:
+                            fn_vGotoSubMenu(g_XTraPage);
+                            aMenu2DPages[g_XTraPage].CurrentFirstEntry = 0;
+                            break;
+                        case 3:
+                            fn_vGotoSubMenu(g_HallOfFamePage);
+                            break;
+                        }
+                        break;
+                    case 0:
+                        if (g_CurrentLineForSelection < g_NbLineForSelection - 1)
+                        {
+                            fn_vPlaySoundInGameMenu2D(3);
+                            fn_vChangeCurrentSelectedChar();
+                        }
+                        else
+                        {
+                            if (g_2DMenuID == 0 || g_2DMenuID == 1)
+                            {
+                                strcpy(g_CurrentSaveName, g_CurrentNameForSavePage);
+                                if (strlen(g_CurrentSaveName) != 0)
+                                {
+                                    fn_vPlaySoundInGameMenu2D(3);
+                                    if (g_2DMenuID == 1)
+                                    {
+                                        fn_uiGetSomeBytes(g_aForKeyAlgo, 4, 0);
+                                        strcpy(g_stEngineStructure.szLevelName, (char*)g_aMapName[1]);
+                                        strcpy(SAV2_g_LevelNameToSave, (char*)g_aMapName[1]);
+                                        g_IsSaveOK = 1;
+                                    }
+                                    {
+                                        unsigned int ulGlobalScore;
+                                        unsigned int ulEnvScore;
+
+                                        fn_vR3InlineRecomputeGlobalScore();
+                                        ulGlobalScore = M2D_fn_ulGetEnvScore(0);
+                                        ulEnvScore = M2D_fn_ulGetEnvScore(g_IndCurrentEnv);
+                                        M2D_fn_vSetEnvScore(0, g_GlobalScoreAtBeginingOfLevel);
+                                        M2D_fn_vSetEnvScore(g_IndCurrentEnv, g_CurrentEnvScoreAtBeginingOfLevel);
+                                        fn_vR3InlineRecomputeGlobalScore();
+                                        SAV2_fn_bSaveAllOnDisk(g_CurrentSaveName);
+                                        M2D_fn_vSetEnvScore(0, ulGlobalScore);
+                                        M2D_fn_vSetEnvScore(g_IndCurrentEnv, ulEnvScore);
+                                        fn_vR3InlineRecomputeGlobalScore();
+                                    }
+                                    g_CurrentActionMenu2D = 1;
+                                }
+                                else
+                                {
+                                    fn_vPlaySoundInGameMenu2D(10);
+                                }
+                            }
+                            else if (g_2DMenuID == 2)
+                            {
+                                if (strlen(g_CurrentNameForSavePage) != 0)
+                                {
+                                    fn_vPlaySoundInGameMenu2D(3);
+                                    GLI_vSavePicture(g_CurrentNameForSavePage);
+                                    g_CurrentActionMenu2D = 1;
+                                }
+                                else
+                                {
+                                    fn_vPlaySoundInGameMenu2D(10);
+                                }
+                            }
+                        }
+                        break;
+                    case 5:
+                    case 6:
+                        ReturnFromSubMenu();
+                        break;
+                    case 7:
+                        switch (g_CurrentSelection)
+                        {
+                        case 0:
+                            GLI_g_ScreenPos_DX_Saved = GLI_g_ScreenPos_DX;
+                            GLI_g_ScreenPos_DY_Saved = GLI_g_ScreenPos_DY;
+                            fn_vGotoSubMenu(g_CenterScreenPage);
+                            break;
+                        case 1:
+                            break;
+                        case 2:
+                            g_PreviousVideoMode = GLI_g_50_or_60_HzMode;
+                            if (g_PreviousVideoMode == 70)
+                            {
+                                fn_vPlaySoundInGameMenu2D(3);
+                                GLI_fn_vSwitchTo60Hz();
+                                strcpy(aMenu2DPages[g_VideoOptionPage].aText[2], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[97].hText));
+                            }
+                            else
+                            {
+                                fn_vGotoSubMenu(g_PScanPage1);
+                            }
+                            break;
+                        }
+                        break;
+                    case 15:
+                        ReturnFromSubMenu();
+                        break;
+                    case 14:
+                        switch (g_CurrentSelection)
+                        {
+                        case 0:
+                            PS2MC_vClearFlag(0);
+                            PS2MC_vClearFlag(5);
+                            g_CurrentColForSelection = 0;
+                            g_NbColForSelection = 10;
+                            g_CurrentLineForSelection = 0;
+                            g_NbLineForSelection = 5;
+                            g_CurrentSelectedCharNumber = 0;
+                            {
+                                unsigned int i;
+                                for (i = 0; i < 10; i++)
+                                    g_CurrentNameForSavePage[i] = 0;
+                            }
+                            g_CurrentSelectedCharNumber = 0;
+                            PS2MC_vClearFlag(0);
+                            PS2MC_vClearFlag(5);
+                            fn_vGotoSubMenu(g_SavePage);
+                            break;
+                        case 1:
+                            PS2MC_vClearFlag(6);
+                            PS2MC_g_NbFilesFound = 0;
+                            PS2MC_fn_vGetMemoryCardFileHeaders(g_aFileEntryArray, 100, &PS2MC_g_NbFilesFound, 0);
+                            aMenu2DPages[g_LoadPage].NbSelection = 0;
+                            aMenu2DPages[g_LoadPage].NbEntry = 0;
+                            aMenu2DPages[g_LoadPage].CurrentFirstEntry = 0;
+                            fn_vGotoSubMenu(g_LoadPage);
+                            break;
+                        case 2:
+                            if (g_CurrentLanguage == 2)
+                            {
+                                strcpy(aMenu2DPages[g_OptionsPage].aText[0], "Opciones del control");
+                                strcpy(aMenu2DPages[g_ControlOptionPage].Title, "Opciones del control");
+                            }
+                            fn_vGotoSubMenu(g_OptionsPage);
+                            break;
+                        case 3:
+                            PS2MC_g_NbFilesFound = 0;
+                            g_AlbumHadMemoryCardAtInit = PS2MC_GetCurrentMemoryCardStatus();
+                            PS2MC_fn_vGetMemoryCardScreenShotsHeaders(g_aFileEntryArray, 100, &PS2MC_g_NbFilesFound);
+                            aMenu2DPages[g_AlbumPage].NbSelection = 0;
+                            aMenu2DPages[g_AlbumPage].NbEntry = 0;
+                            aMenu2DPages[g_AlbumPage].CurrentFirstEntry = 0;
+                            g_stAlbum.lSnapID = 0;
+                            g_bAlbumInitialized = 0;
+                            g_stAlbum.lSnapID2 = 0;
+                            fn_vGotoSubMenu(g_AlbumPage);
+                            break;
+                        }
+                        break;
+                    default:
+                        fn_vManageValidatePalAndProgressiveVideoPage();
+                        break;
+                    }
+                }
+                else if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_CloseSubMenu) == 1)
+                {
+                    if (g_CurrentMenu2DPage == g_ControlOptionPage)
+                    {
+                        MENU_g_bVibration = MENU_g_bVibrationSaved;
+                        MENU_g_bInversionVert = MENU_g_bInversionVertSaved;
+                        MENU_g_bInversionHor = MENU_g_bInversionHorSaved;
+                        if (MENU_g_bVibration)
+                        {
+                            if (g_MenuVibrationEffect != -1)
+                            {
+                                IPT_fn_vStopFFBEffect(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount, 0, g_MenuVibrationEffect);
+                                g_MenuVibrationEffect = -1;
+                            }
+                            IPT_fn_vResumeAllConstantFFBEffectForAllDevices(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+                        }
+                        else
+                        {
+                            if (g_MenuVibrationEffect != -1)
+                            {
+                                IPT_fn_vStopFFBEffect(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount, 0, g_MenuVibrationEffect);
+                                g_MenuVibrationEffect = -1;
+                            }
+                            IPT_fn_vPauseAllConstantFFBEffectForAllDevices(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+                        }
+                    }
+                    if (g_CurrentMenu2DPage == g_AudioOptionPage)
+                    {
+                        g_aNbGradOn[0] = g_aNbGradOnSaved[0];
+                        g_aNbGradOn[1] = g_aNbGradOnSaved[1];
+                        g_aNbGradOn[2] = g_aNbGradOnSaved[2];
+                        aMenu2DPages[g_AudioOptionPage].aValue[3] = SND_fn_bGetStereoSound();
+                        fn_vSetStereoGameMenu2D(gStereoMode_Saved);
+                        GAM_fn_vSetVolumeMusic(g_aNbGradOn[0] * 127 / 10);
+                        GAM_fn_vSetVolumeSound(g_aNbGradOn[1] * 127 / 10);
+                        GAM_fn_vSetVolumeMenu(g_aNbGradOn[1] * 127 / 10);
+                        GAM_fn_vSetVolumeAmbiance(g_aNbGradOn[1] * 127 / 10);
+                        GAM_fn_vSetVolumeVoice(g_aNbGradOn[2] * 127 / 10);
+                    }
+                    switch (aMenu2DPages[g_CurrentMenu2DPage].eTypePage)
+                    {
+                    case 15:
+                        GLI_g_ScreenPos_DX = GLI_g_ScreenPos_DX_Saved;
+                        GLI_g_ScreenPos_DY = GLI_g_ScreenPos_DY_Saved;
+                        break;
+                    }
+                    if (g_CurrentMenu2DPage != g_PAL60Page2 && g_CurrentMenu2DPage != g_PScanPage2)
+                    {
+                        ReturnFromSubMenu();
+                    }
+                }
+                fn_vManagePalAndProgressiveVideoPage();
+            }
+        }
+        break;
+    case 0:
+        break;
     }
 }
 
@@ -2308,23 +3264,24 @@ void fn_vChangeCurrentValue(char Value)
     switch (aMenu2DPages[g_CurrentMenu2DPage].eTypePage)
     {
     case eVideoOptionTypePage:
-        if (g_CurrentSelection == 1)
+        switch (g_CurrentSelection)
         {
+        case 1:
             GLI_g_bWideScreenMode = Value;
+            break;
         }
         break;
 
     case eControlOptionTypePage:
-        if (g_CurrentSelection == 0)
+        switch (g_CurrentSelection)
         {
+        case 0:
             MENU_g_bInversionVert = Value;
-        }
-        else if (g_CurrentSelection == 1)
-        {
+            break;
+        case 1:
             MENU_g_bInversionHor = Value;
-        }
-        else if (g_CurrentSelection == 2)
-        {
+            break;
+        case 2:
             if (MENU_g_bVibration != Value)
             {
                 MENU_g_bVibration = Value;
@@ -2345,6 +3302,7 @@ void fn_vChangeCurrentValue(char Value)
                     IPT_fn_vPauseAllConstantFFBEffectForAllDevices(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
                 }
             }
+            break;
         }
         break;
 
@@ -2433,7 +3391,7 @@ extern unsigned int PS2MC_fn_iGetFunctionResult(int FlagID);
 extern void PS2MC_vClearFlag(int FlagID);
 extern void VID_fn_vNextVideoToPlay(char* p_szVideoName, unsigned char bCanBeInterrupt, unsigned char bLoop);
 extern void VID_fn_vPlayVideoAfterLevel(void);
-extern void GAM_fn_vAskToChangeLevel(char* szNewLevelName);
+extern void GAM_fn_vAskToChangeLevel(char* szNewLevelName, int lParameter);
 extern void DesinitGameMenu2D(void);
 extern void CloseInGameMenu2D(void);
 extern void fn_vLoadEngineClock(void);
@@ -2441,10 +3399,28 @@ extern void IPT_fn_vResumeAllConstantFFBEffectForAllDevices(unsigned int ulTime)
 extern void IPT_fn_vPauseAllConstantFFBEffectForAllDevices(unsigned int ulTime);
 extern void GLI_vFreeTempMaterial(int* ppMaterial);
 
+static inline unsigned char fn_bIsSaveOK(void)
+{
+    switch (PS2MC_fn_iGetFunctionResult(0))
+    {
+    case 1:
+        PS2MC_vClearFlag(0);
+        return 1;
+    case 2:
+        PS2MC_vClearFlag(0);
+        return 0;
+    default:
+        printf("ERROR ! fn_bIsSaveOK called when save still in progress \n");
+        return 0;
+    }
+}
+
 void ReturnFromSubMenu(void)
 {
+    int i;
+    tdstMenu2DPages_* p;
     unsigned int ulResult;
-    long bPlayVideo;
+    unsigned char bPlayVideo;
     char* szLevelName;
 
     fn_vPlaySoundInGameMenu2D(4);
@@ -2470,41 +3446,25 @@ void ReturnFromSubMenu(void)
 
     if (g_2DMenuID == 1 && g_CurrentMenu2DPage == g_SavePage)
     {
-        ulResult = PS2MC_fn_iGetFunctionResult(0);
-
-        switch (ulResult)
-        {
-        case 1:
-            PS2MC_vClearFlag(0);
-            bPlayVideo = 1;
-            break;
-        case 2:
-            PS2MC_vClearFlag(0);
-            bPlayVideo = 0;
-            break;
-        default:
-            printf("ERROR ! fn_bIsSaveOK called when save still in progress \n");
-            bPlayVideo = 0;
-            break;
-        }
+        bPlayVideo = fn_bIsSaveOK();
 
         if (bPlayVideo)
         {
-            VID_fn_vNextVideoToPlay((char *)g_aCinematicName[0], 1, 0);
             g_IsSaveOK = 0;
+            VID_fn_vNextVideoToPlay((char *)g_aCinematicName[0], 1, 0);
             VID_fn_vPlayVideoAfterLevel();
             szLevelName = (char *)g_aMapName[1];
             CloseInGameMenu2D();
-            GAM_fn_vAskToChangeLevel(szLevelName);
+            GAM_fn_vAskToChangeLevel(szLevelName, 0);
         }
     }
 
-    if (g_CurrentIndSubMenu >= 0)
+    if (g_CurrentIndSubMenu > -1)
     {
         g_NextPage = g_aSubMenuReturn[g_CurrentIndSubMenu];
         g_CurrentIndSubMenu--;
-        g_CurrentActionMenu2D = 2;
         g_GotoRight = 1;
+        g_CurrentActionMenu2D = 2;
 
         if (g_CurrentIndSubMenu == -1)
         {
@@ -2519,34 +3479,10 @@ void ReturnFromSubMenu(void)
 
         g_MustCheckMC = 1;
 
+        p = &aMenu2DPages[g_NextPage];
+        for (i = 0; i < 10; i++)
         {
-            int i;
-            tdstMenu2DPages_* p;
-
-            i = 0;
-            do
-            {
-                p = &aMenu2DPages[g_NextPage];
-                p->abGrayed[i] = 0;
-                p->abGrayed[i + 1] = 0;
-                p->abGrayed[i + 2] = 0;
-                p->abGrayed[i + 3] = 0;
-                p->abGrayed[i + 4] = 0;
-                p->abGrayed[i + 5] = 0;
-                p->abGrayed[i + 6] = 0;
-                p->abGrayed[i + 7] = 0;
-                i += 8;
-            } while (i < 2);
-
-            if (i < 10)
-            {
-                do
-                {
-                    p = &aMenu2DPages[g_NextPage];
-                    p->abGrayed[i] = 0;
-                    i++;
-                } while (i < 10);
-            }
+            p->abGrayed[i] = 0;
         }
 
         if (g_2DMenuID == 3)
@@ -2561,8 +3497,7 @@ void ReturnFromSubMenu(void)
 
         g_MustCheckMC = 1;
     }
-
-    if (g_2DMenuID != 1 && !g_ExitForbidden)
+    else if (g_2DMenuID != 1 && !g_ExitForbidden)
     {
         if (g_2DMenuID != 3 || g_BonusWithExit == 1)
         {
@@ -2576,13 +3511,14 @@ void ReturnFromSubMenu(void)
             g_stEngineStructure.bEngineFrozen = 0;
             g_InGameMenu2DActivated = 0;
 
+            ulResult = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
             if (MENU_g_bVibration)
             {
-                IPT_fn_vResumeAllConstantFFBEffectForAllDevices(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+                IPT_fn_vResumeAllConstantFFBEffectForAllDevices(ulResult);
             }
             else
             {
-                IPT_fn_vPauseAllConstantFFBEffectForAllDevices(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+                IPT_fn_vPauseAllConstantFFBEffectForAllDevices(ulResult);
             }
         }
     }
@@ -2627,7 +3563,6 @@ void ReturnFromSubMenu(void)
  */
 void fn_vGotoSubMenu(int SubPage)
 {
-    unsigned int uNb;
     int i;
     tdstMenu2DPages_* p;
 
@@ -2657,15 +3592,11 @@ void fn_vGotoSubMenu(int SubPage)
         {
             if (g_2DMenuID == 1)
             {
-                uNb = 3;
-                aMenu2DPages[g_VideoOptionPage].NbSelection = uNb;
-                aMenu2DPages[g_VideoOptionPage].NbEntry = uNb;
+                aMenu2DPages[g_VideoOptionPage].NbEntry = aMenu2DPages[g_VideoOptionPage].NbSelection = 3;
             }
             else
             {
-                uNb = 2;
-                aMenu2DPages[g_VideoOptionPage].NbSelection = uNb;
-                aMenu2DPages[g_VideoOptionPage].NbEntry = uNb;
+                aMenu2DPages[g_VideoOptionPage].NbEntry = aMenu2DPages[g_VideoOptionPage].NbSelection = 2;
             }
         }
 
@@ -2759,7 +3690,7 @@ void fn_vPreviousSelection(void)
         fn_vPlaySoundInGameMenu2D(2);
     }
 
-    if (((signed char*)aMenu2DPages[g_CurrentMenu2DPage].abGrayed)[g_CurrentSelection] != 0)
+    if (aMenu2DPages[g_CurrentMenu2DPage].abGrayed[g_CurrentSelection] != 0)
     {
         fn_vPreviousSelection();
     }
@@ -2819,7 +3750,7 @@ void fn_vNextSelection(void)
         fn_vPlaySoundInGameMenu2D(2);
     }
 
-    if (((signed char*)aMenu2DPages[g_CurrentMenu2DPage].abGrayed)[g_CurrentSelection] != 0)
+    if (aMenu2DPages[g_CurrentMenu2DPage].abGrayed[g_CurrentSelection] != 0)
     {
         fn_vNextSelection();
     }
@@ -2894,14 +3825,12 @@ void fn_vPreviousSelectionNoWrap(void)
                 else
                 {
                     aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry--;
-                    u32Sound2Play = 2;
                 }
             }
         }
         else
         {
             g_CurrentSelection--;
-            u32Sound2Play = 2;
         }
 
         fn_vPlaySoundInGameMenu2D(u32Sound2Play);
@@ -2966,7 +3895,7 @@ void fn_vNextSelectionNoWrap(void)
 
     fn_vPlaySoundInGameMenu2D(u32Sound2Play);
 
-    if (((signed char*)aMenu2DPages[g_CurrentMenu2DPage].abGrayed)[g_CurrentSelection] != 0)
+    if (aMenu2DPages[g_CurrentMenu2DPage].abGrayed[g_CurrentSelection] != 0)
     {
         u32Sound2Play = 2;
 
@@ -2996,7 +3925,7 @@ void fn_vNextSelectionNoWrap(void)
 
         fn_vPlaySoundInGameMenu2D(u32Sound2Play);
 
-        if (((signed char*)aMenu2DPages[g_CurrentMenu2DPage].abGrayed)[g_CurrentSelection] != 0)
+        if (aMenu2DPages[g_CurrentMenu2DPage].abGrayed[g_CurrentSelection] != 0)
         {
             fn_vNextSelectionNoWrap();
         }
@@ -3291,31 +4220,29 @@ void fn_vInitInGameMenu2D(void)
  * compare a candidate object's line table as an extra checkpoint.
  */
 
+extern char* FON_fn_szGetTextPointerForHandle(int hString);
+extern int fn_vDefinePalVideoPages(int IndSubMenuPage);
+extern int fn_vDefineProgressiveScanPages(int IndSubMenuPage);
+
 void fn_vInitMenuPages(void)
 {
     GEO_tdstColor_ stColor;
     int IndSubMenuPage;
     int i;
     int j;
-    tdstMenu2DPages_* p;
 
     g_FirstCineNameText = 9;
     g_FirstArcadeNameText = 18;
 
-    IndSubMenuPage = 1;
-    i = 592;
-    j = 4;
-    p = &aMenu2DPages[0];
-
+    stColor.xA = 0.5f;
     stColor.xR = 0.1f;
     stColor.xG = 0.7f;
     stColor.xB = 0.7f;
-    stColor.xA = 0.5f;
 
     GLI_xCreateMaterial(&g_hSelectedFrameMaterialForMenu2D);
-    GLI_xSetMaterialAmbientCoef(&g_hSelectedFrameMaterialForMenu2D, &stColor);
-    GLI_xSetMaterialDiffuseCoef(&g_hSelectedFrameMaterialForMenu2D, &stColor);
-    GLI_Material_fn_lSetTextureOp(&g_hSelectedFrameMaterialForMenu2D, 0, 3);
+    GLI_xSetMaterialAmbientCoef(g_hSelectedFrameMaterialForMenu2D, &stColor);
+    GLI_xSetMaterialDiffuseCoef(g_hSelectedFrameMaterialForMenu2D, &stColor);
+    GLI_Material_fn_lSetTextureOp(g_hSelectedFrameMaterialForMenu2D, 0, 3);
 
     for (i = 0; i < 10; i++)
     {
@@ -3331,8 +4258,130 @@ void fn_vInitMenuPages(void)
     g_EndOfGameIsDone = 0;
     g_CurrentEnvInit = 1;
 
-    /* TODO: the remaining page titles, texts and selection setup
-     * (35 aMenu2DPages entries) are not reconstructed yet. */
+    for (j = 1; j < 10; j++)
+    {
+        aMenu2DPages[j - 1].eTypePage = 2;
+        strcpy(aMenu2DPages[j - 1].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[j - 1].hText));
+        aMenu2DPages[j - 1].NbSelection = 0;
+        aMenu2DPages[j - 1].NbEntry = 0;
+    }
+
+    g_BonusPage = 9;
+    aMenu2DPages[g_BonusPage].eTypePage = 8;
+    strcpy(aMenu2DPages[g_BonusPage].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[43].hText));
+    aMenu2DPages[g_BonusPage].NbEntry = aMenu2DPages[g_BonusPage].NbSelection = 4;
+    strcpy(aMenu2DPages[g_BonusPage].aText[0], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[44].hText));
+    strcpy(aMenu2DPages[g_BonusPage].aText[1], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[45].hText));
+    strcpy(aMenu2DPages[g_BonusPage].aText[2], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[47].hText));
+    strcpy(aMenu2DPages[g_BonusPage].aText[3], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[49].hText));
+    if (!g_EndOfGameIsDone)
+    {
+        aMenu2DPages[g_BonusPage].abGrayed[3] = 1;
+    }
+
+    g_GamePage = 10;
+    aMenu2DPages[10].eTypePage = 3;
+    strcpy(aMenu2DPages[10].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[55].hText));
+    aMenu2DPages[10].NbEntry = aMenu2DPages[10].NbSelection = 4;
+    strcpy(aMenu2DPages[10].aText[0], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[51].hText));
+    strcpy(aMenu2DPages[10].aText[1], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[37].hText));
+    strcpy(aMenu2DPages[10].aText[2], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[30].hText));
+    strcpy(aMenu2DPages[10].aText[3], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[56].hText));
+
+    g_CurrentActionMenu2D = 3;
+    IndSubMenuPage = g_NbMenu2DPages = 11;
+
+    g_OptionsPage = 11;
+    aMenu2DPages[g_OptionsPage].eTypePage = 4;
+    strcpy(aMenu2DPages[g_OptionsPage].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[51].hText));
+    aMenu2DPages[g_OptionsPage].NbEntry = aMenu2DPages[g_OptionsPage].NbSelection = 3;
+    i = 0;
+    strcpy(aMenu2DPages[g_OptionsPage].aText[i++], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[52].hText));
+    strcpy(aMenu2DPages[g_OptionsPage].aText[i++], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[53].hText));
+    strcpy(aMenu2DPages[g_OptionsPage].aText[i++], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[54].hText));
+
+    g_LoadPage = IndSubMenuPage + 1;
+    aMenu2DPages[g_LoadPage].eTypePage = 1;
+    strcpy(aMenu2DPages[g_LoadPage].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[37].hText));
+
+    g_SavePage = IndSubMenuPage + 2;
+    g_PhotoMenuPage = g_SavePage;
+    aMenu2DPages[g_SavePage].eTypePage = 0;
+    strcpy(aMenu2DPages[g_SavePage].Title, "");
+
+    g_ControlOptionPage = IndSubMenuPage + 3;
+    aMenu2DPages[g_ControlOptionPage].eTypePage = 5;
+    strcpy(aMenu2DPages[g_ControlOptionPage].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[52].hText));
+    aMenu2DPages[g_ControlOptionPage].NbEntry = aMenu2DPages[g_ControlOptionPage].NbSelection = 3;
+    i = 0;
+    strcpy(aMenu2DPages[g_ControlOptionPage].aText[i++], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[65].hText));
+    strcpy(aMenu2DPages[g_ControlOptionPage].aText[i++], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[66].hText));
+    strcpy(aMenu2DPages[g_ControlOptionPage].aText[i++], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[67].hText));
+
+    g_AudioOptionPage = IndSubMenuPage + 4;
+    aMenu2DPages[g_AudioOptionPage].eTypePage = 6;
+    strcpy(aMenu2DPages[g_AudioOptionPage].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[53].hText));
+    aMenu2DPages[g_AudioOptionPage].NbEntry = aMenu2DPages[g_AudioOptionPage].NbSelection = 4;
+    strcpy(aMenu2DPages[g_AudioOptionPage].aText[0], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[62].hText));
+    strcpy(aMenu2DPages[g_AudioOptionPage].aText[1], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[63].hText));
+    strcpy(aMenu2DPages[g_AudioOptionPage].aText[2], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[64].hText));
+    strcpy(aMenu2DPages[g_AudioOptionPage].aText[3], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[70].hText));
+
+    g_VideoOptionPage = IndSubMenuPage + 5;
+    aMenu2DPages[g_VideoOptionPage].eTypePage = 7;
+    strcpy(aMenu2DPages[g_VideoOptionPage].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[54].hText));
+    aMenu2DPages[g_VideoOptionPage].NbEntry = aMenu2DPages[g_VideoOptionPage].NbSelection = 3;
+    strcpy(aMenu2DPages[g_VideoOptionPage].aText[0], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[87].hText));
+    strcpy(aMenu2DPages[g_VideoOptionPage].aText[1], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[86].hText));
+    strcpy(aMenu2DPages[g_VideoOptionPage].aText[2], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[97].hText));
+
+    g_ArcadePage = IndSubMenuPage + 6;
+    aMenu2DPages[g_ArcadePage].eTypePage = 9;
+    strcpy(aMenu2DPages[g_ArcadePage].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[44].hText));
+    aMenu2DPages[g_ArcadePage].NbSelection = 4;
+    aMenu2DPages[g_ArcadePage].NbEntry = 9;
+
+    g_CinematicPage = IndSubMenuPage + 7;
+    aMenu2DPages[g_CinematicPage].eTypePage = 10;
+    strcpy(aMenu2DPages[g_CinematicPage].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[45].hText));
+
+    g_XTraPage = IndSubMenuPage + 8;
+    aMenu2DPages[g_XTraPage].eTypePage = 11;
+    strcpy(aMenu2DPages[g_XTraPage].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[47].hText));
+    aMenu2DPages[g_XTraPage].NbSelection = 4;
+    aMenu2DPages[g_XTraPage].NbEntry = 9;
+
+    g_AlbumPage = IndSubMenuPage + 9;
+    aMenu2DPages[g_AlbumPage].eTypePage = 12;
+    strcpy(aMenu2DPages[g_AlbumPage].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[46].hText));
+
+    g_HallOfFamePage = IndSubMenuPage + 10;
+    aMenu2DPages[g_HallOfFamePage].eTypePage = 13;
+    strcpy(aMenu2DPages[g_HallOfFamePage].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[49].hText));
+
+    g_StartMenuPage = IndSubMenuPage + 11;
+    aMenu2DPages[g_StartMenuPage].eTypePage = 14;
+    strcpy(aMenu2DPages[g_StartMenuPage].Title, "");
+    aMenu2DPages[g_StartMenuPage].NbEntry = aMenu2DPages[g_StartMenuPage].NbSelection = 4;
+    strcpy(aMenu2DPages[g_StartMenuPage].aText[0], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[71].hText));
+    strcpy(aMenu2DPages[g_StartMenuPage].aText[1], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[31].hText));
+    strcpy(aMenu2DPages[g_StartMenuPage].aText[2], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[51].hText));
+    strcpy(aMenu2DPages[g_StartMenuPage].aText[3], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[46].hText));
+
+    g_CenterScreenPage = IndSubMenuPage + 12;
+    aMenu2DPages[g_CenterScreenPage].eTypePage = 15;
+    strcpy(aMenu2DPages[g_CenterScreenPage].Title, "");
+    aMenu2DPages[g_CenterScreenPage].NbEntry = aMenu2DPages[g_CenterScreenPage].NbSelection = 0;
+    strcpy(aMenu2DPages[g_CenterScreenPage].aText[0], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[89].hText));
+
+    IndSubMenuPage = fn_vDefinePalVideoPages(IndSubMenuPage + 13);
+    IndSubMenuPage = fn_vDefineProgressiveScanPages(IndSubMenuPage);
+
+    g_RecapMenuPage = IndSubMenuPage;
+    strcpy(aMenu2DPages[g_RecapMenuPage].Title, "");
+    aMenu2DPages[g_RecapMenuPage].eTypePage = 22;
+    aMenu2DPages[g_CenterScreenPage].NbSelection = 0;
+    aMenu2DPages[g_RecapMenuPage].NbEntry = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 897–975 */
@@ -4189,7 +5238,16 @@ void fn_vUpdatePlayerGameName(void)
  */
 void fn_vR3ReInitScore(void)
 {
-    /* TODO: decompile from asm/... */
+    if (g_RevisitMode != 0)
+    {
+        g_RevisitCurrentEnvScore = g_RevisitEnvScoreAtBeginingOfLevel;
+        g_RevisitCurrentGlobalScore = g_RevisitGlobalScoreAtBeginingOfLevel;
+    }
+
+    fn_vR3InlineRecomputeGlobalScore();
+    fn_vR3InlineSetEnvScore(g_IndCurrentEnv, g_CurrentEnvScoreAtBeginingOfLevel);
+    g_IndCurrentEnv = g_CurrentEnvInit;
+    fn_vR3InlineRecomputeGlobalScore();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 335–361 */
@@ -4217,7 +5275,19 @@ void fn_vR3ReInitScore(void)
  */
 void fn_vR3StoreInitScore(void)
 {
-    /* TODO: decompile from asm/... */
+    fn_vR3InlineRecomputeGlobalScore();
+    if (g_RevisitMode != 0)
+    {
+        g_RevisitEnvScoreAtBeginingOfLevel = g_RevisitCurrentEnvScore;
+        g_RevisitGlobalScoreAtBeginingOfLevel = g_RevisitCurrentGlobalScore;
+        if (g_RevisitEnvScoreAtBeginingOfLevel > fn_ulR3InlineGetEnvScore(g_IndCurrentEnv))
+            fn_vR3InlineSetEnvScore(g_IndCurrentEnv, g_RevisitEnvScoreAtBeginingOfLevel);
+        if (fn_ulR3InlineGetEnvScore(0) < g_RevisitGlobalScoreAtBeginingOfLevel)
+            fn_vR3InlineSetEnvScore(0, g_RevisitGlobalScoreAtBeginingOfLevel);
+    }
+    g_GlobalScoreAtBeginingOfLevel = fn_ulR3InlineGetEnvScore(0);
+    g_CurrentEnvScoreAtBeginingOfLevel = fn_ulR3InlineGetEnvScore(g_IndCurrentEnv);
+    g_CurrentEnvInit = g_IndCurrentEnv;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 327–328 */
