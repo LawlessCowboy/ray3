@@ -3,20 +3,14 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
-#include "r3/MTH.h"
+#include "r3/IPT.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct ISI_tdstColor_ ISI_tdstColor_;
 typedef struct stDevice stDevice;
-typedef union tdu_KeyWordElementUnion_ tdu_KeyWordElementUnion_;
-typedef struct IPT_tdstKeyWordElement_ IPT_tdstKeyWordElement_;
 typedef struct anon_0 anon_0;
-typedef struct IPT_tdstPadReadingOutput_ IPT_tdstPadReadingOutput_;
 typedef struct IPT_tdstDevice_ IPT_tdstDevice_;
-typedef struct IPT_tdstEntryElement_ IPT_tdstEntryElement_;
 typedef struct IPT_tdstInput_ IPT_tdstInput_;
-typedef struct IPT_tdstHistoricElement_ IPT_tdstHistoricElement_;
-typedef struct IPT_tdstCommandElement_ IPT_tdstCommandElement_;
 
 struct ISI_tdstColor_ {
     short xRed; /* +0x0 */
@@ -34,42 +28,8 @@ struct stDevice {
     short (*m_pfnRead)(stDevice*); /* +0x10 */
 };
 
-union tdu_KeyWordElementUnion_ {
-    short swJoyNumber; /* +0x0 */
-    short swJoyAction; /* +0x0 */
-    short swJoyValueMin; /* +0x0 */
-    short swJoyValueMax; /* +0x0 */
-    short swPadNumber; /* +0x0 */
-    short swPadAction; /* +0x0 */
-    short swKey; /* +0x0 */
-    short swKeyWord; /* +0x0 */
-    short swMouseAction; /* +0x0 */
-    short swMouseValueMin; /* +0x0 */
-    short swMouseValueMax; /* +0x0 */
-    IPT_tdstEntryElement_* hEntryElement; /* +0x0 */
-    unsigned int ulNumberOfSequence; /* +0x0 */
-};
-
-struct IPT_tdstKeyWordElement_ {
-    tdu_KeyWordElementUnion_ u_ElementUnion; /* +0x0 */
-    tdu_KeyWordElementUnion_ u_ElementUnionDefault; /* +0x4 */
-    unsigned char ucResult; /* +0x8 */
-    unsigned char ucMinCounterInput; /* +0x9 */
-    unsigned char ucMaxCounterInput; /* +0xa */
-};
-
 struct anon_0 {
     unsigned char m_ucStatus; /* +0x0 */
-};
-
-struct IPT_tdstPadReadingOutput_ {
-    MTH3D_tdstVector_ stGlobalVector; /* +0x0 */
-    short wHorizontalAxis; /* +0xc */
-    short wVerticalAxis; /* +0xe */
-    float xAnalogForce; /* +0x10 */
-    float xTrueAnalogForce; /* +0x14 */
-    float xRotationAngle; /* +0x18 */
-    int lSector; /* +0x1c */
 };
 
 struct IPT_tdstDevice_ {
@@ -97,16 +57,6 @@ struct IPT_tdstDevice_ {
     IPT_tdstPadReadingOutput_ stPadReadingOutput; /* +0xe4 */
 };
 
-struct IPT_tdstEntryElement_ {
-    unsigned int ulNumberOfKeyWordElement; /* +0x0 */
-    IPT_tdstKeyWordElement_* d_stKeyWordElementArray; /* +0x4 */
-    int p_szActionName; /* +0x8 */
-    int p_szEntryName; /* +0xc */
-    int lState; /* +0x10 */
-    float xAnalogicValue; /* +0x14 */
-    unsigned char bIsActivate; /* +0x18 */
-};
-
 struct IPT_tdstInput_ {
     unsigned char ucOnePadActivate; /* +0x0 */
     IPT_tdstDevice_ a_stDevice[18]; /* +0x4 */
@@ -128,22 +78,6 @@ struct IPT_tdstInput_ {
     IPT_tdstCommandElement_* hSearchedCommand; /* +0x176c */
     IPT_tdstEntryElement_* hSwapCommandMode; /* +0x1770 */
     IPT_tdstEntryElement_* hClearCommandMode; /* +0x1774 */
-};
-
-struct IPT_tdstHistoricElement_ {
-    unsigned char bf2State; /* +0x0 */
-    unsigned char bf6DeviceType; /* +0x1 */
-    unsigned char ucCounter; /* +0x2 */
-    short swDeviceValue; /* +0x4 */
-};
-
-struct IPT_tdstCommandElement_ {
-    int p_szCommandName; /* +0x0 */
-    int p_szCommand; /* +0x4 */
-    int p_szHelpLine; /* +0x8 */
-    unsigned char ucNumberOfParamMin; /* +0xc */
-    unsigned char ucNumberOfParamMax; /* +0xd */
-    unsigned char ucState; /* +0xe */
 };
 
 ISI_tdstColor_ IPO_g_tdstBlack;
