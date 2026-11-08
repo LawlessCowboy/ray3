@@ -19,17 +19,17 @@ Checked with `python3 tools/match.py coverage` at each matching commit:
 
 | Scope | Functions | Code bytes |
 | --- | --- | --- |
-| **Game code** | **3,260 / 4,134** (+2 register-equivalent) | **581,352 / 1,507,864** (**38.5547%**) |
-| Library code | 1,132 / 1,200 | 147,904 / 298,548 (49.5411%) |
-| **Total** | **4,392 / 5,334** (+2 register-equivalent) | **729,256 / 1,806,412** (**40.3704%**) |
+| **Game code** | **3,373 / 4,134** (+3 register-equivalent) | **655,912 / 1,507,864** (**43.4994%**) |
+| Library code | 1,133 / 1,200 | 148,200 / 298,548 (49.6403%) |
+| **Total** | **4,506 / 5,334** (+3 register-equivalent) | **804,112 / 1,806,412** (**44.5143%**) |
 
 - Out of scope and excluded from these totals: 177 library header functions
   (Pustl STL, `CIdObjPtr`, MTH/PS2GL support headers) and 2,321 third-party
   library functions built without debug info (Sony SDK, C/C++ runtime, most
   of the harmonx `usnd` sound middleware, memory-card library). Library code
   above is only the PS2GL and harmonx sources with recovered debug info.
-- Translation units (`python3 tools/match.py tus --summary`): **158 / 356**
-  fully matched (game 152 / 334, library 6 / 22), with 189 more partially
+- Translation units (`python3 tools/match.py tus --summary`): **164 / 355**
+  fully matched (game 158 / 333, library 6 / 22), with 182 more partially
   matched. Only sources recovered into `src/Rayman3/` are counted, so SDK and
   runtime code without a source file is excluded.
 - Data: **0 / 141,992 bytes** (**0.0000%**) in scope, 500 third-party objects

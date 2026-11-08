@@ -3,21 +3,18 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
-
-
-
+#include "r3/GEO.h"
+#include "r3/GLI.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct _SDC_Instance_ _SDC_Instance_;
 typedef struct tdstSDLCacheEntry_ tdstSDLCacheEntry_;
 typedef struct C_Sdl C_Sdl;
 typedef struct tagGLlistdatas tagGLlistdatas;
-typedef struct GLI_tdstTexture_ GLI_tdstTexture_;
 typedef struct AGO_Light_ AGO_Light_;
 typedef struct C_SdlRef_LocalMatrix C_SdlRef_LocalMatrix;
 typedef struct C_SdlRef_TextureIdMatrix C_SdlRef_TextureIdMatrix;
 typedef struct GLI_tdstUVTransformation GLI_tdstUVTransformation;
-typedef struct GLI_tdstAnimatedTextureNode_ GLI_tdstAnimatedTextureNode_;
 typedef struct tagListData tagListData;
 typedef struct C_SdlRef_LocalMatrixForCheap C_SdlRef_LocalMatrixForCheap;
 typedef struct C_SdlRef_PointLighting C_SdlRef_PointLighting;
@@ -33,7 +30,6 @@ typedef struct sceGifTag sceGifTag;
 typedef struct tagGLprimbuf tagGLprimbuf;
 typedef struct C_SdlRef_TextureOffset C_SdlRef_TextureOffset;
 typedef struct tag_stVU1Parameters tag_stVU1Parameters;
-typedef struct GEO_tdstColor_ GEO_tdstColor_;
 typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
 
 struct C_Sdl {
@@ -66,32 +62,6 @@ struct tdstSDLCacheEntry_ {
 struct tagGLlistdatas {
     tagGLlistdatas* pNext; /* +0x0 */
     int apData[3]; /* +0x4 */
-};
-
-struct GLI_tdstTexture_ {
-    int bIsAvailable; /* +0x0 */
-    int lTextureQuality; /* +0x4 */
-    int p_vBitMap; /* +0x8 */
-    int p_vColorTable; /* +0xc */
-    int p_stSpecParam; /* +0x10 */
-    int lTextureCaps; /* +0x14 */
-    unsigned short lHeight; /* +0x18 */
-    unsigned short lWidth; /* +0x1a */
-    unsigned short lRealHeight; /* +0x1c */
-    unsigned short lRealWidth; /* +0x1e */
-    float fAddU; /* +0x20 */
-    float fAddV; /* +0x24 */
-    int lIncrementIsEnable; /* +0x28 */
-    unsigned int lChromakeyColorRGBA; /* +0x2c */
-    unsigned int ulBlendColorRGBA; /* +0x30 */
-    int lNumberOfLod; /* +0x34 */
-    unsigned int lCompressionCounter; /* +0x38 */
-    unsigned int lTypeOfCompression; /* +0x3c */
-    unsigned int lTypeOfMipMapping; /* +0x40 */
-    GLI_tdstTexture_* p_TextureOfSubstitution; /* +0x44 */
-    unsigned char ucBilinearMode; /* +0x48 */
-    unsigned char ucCylingMode; /* +0x49 */
-    char a255_cFileName[128]; /* +0x4a */
 };
 
 struct AGO_Light_ {
@@ -136,12 +106,6 @@ struct C_SdlRef_TextureIdMatrix : C_SdlRef {
 struct GLI_tdstUVTransformation {
     float stMat[2][2]; /* +0x0 */
     float stTrans[2]; /* +0x10 */
-};
-
-struct GLI_tdstAnimatedTextureNode_ {
-    GLI_tdstTexture_* p_stTexture; /* +0x0 */
-    float xDisplayTime; /* +0x4 */
-    GLI_tdstAnimatedTextureNode_* p_stNextDisplayNode; /* +0x8 */
 };
 
 struct tagListData {
@@ -309,13 +273,6 @@ struct tag_stVU1Parameters {
     unsigned int eClippingMode; /* +0x9c */
 };
 
-struct GEO_tdstColor_ {
-    float xR; /* +0x0 */
-    float xG; /* +0x4 */
-    float xB; /* +0x8 */
-    float xA; /* +0xc */
-};
-
 struct GLI_tdstMaterial_ {
     unsigned int xMaterialType; /* +0x0 */
     GEO_tdstColor_ stAmbient; /* +0x4 */
@@ -346,32 +303,6 @@ struct C_SdlCache {
     tdstSDLCacheEntry_* m_pList; /* +0x0 */
     void AddSdlInstance(_SDC_Instance_* pInstance);
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* The cache class is declared in SDLInstance.cpp; this TU also defines one
  * of its out-of-line methods, so retain the owning object layout here. */
@@ -426,18 +357,6 @@ AGO_Light_ AGO_g_pLightList[8];
 int PS2glLiberator;
 int PS2glAllocator64;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 42–50 */
-/* addr: 0x002d7720  size: 72 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 42
- *   +0x0014 -> line 46
- *   +0x0024 -> line 47
- *   +0x0028 -> line 48
- *   +0x0030 -> line 49
- *   +0x0034 -> line 50
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void C_SdlCache::AddSdlInstance(_SDC_Instance_* pInstance)
 {
     tdstSDLCacheEntry_* p;
@@ -448,18 +367,6 @@ void C_SdlCache::AddSdlInstance(_SDC_Instance_* pInstance)
     m_pList = p;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 464–475 */
-/* addr: 0x002d7770  size: 100 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 464
- *   +0x0014 -> line 466
- *   +0x001c -> line 468
- *   +0x0030 -> line 469
- *   +0x003c -> line 470
- *   +0x0050 -> line 475
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_vUpdateAllSPORefs(void)
 {
     unsigned int i;
@@ -471,55 +378,22 @@ void GLI_vUpdateAllSPORefs(void)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 459–461 */
-/* addr: 0x002d77e0  size: 52 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 459
- *   +0x0010 -> line 460
- *   +0x002c -> line 461
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vAddSdlToProcessLater(C_Sdl* pSdl)
 {
     if (GLI_G_iNbSdlsInThisFrame < 2048)
         GLI_G_pProcessSDLs[GLI_G_iNbSdlsInThisFrame++] = (int)pSdl;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 441–441 */
-/* addr: 0x002d7820  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 441
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void C_SdlRef_FogParameters::ProcessNoInterpol(void)
 {
     Process();
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 436–436 */
-/* addr: 0x002d7830  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 436
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void C_SdlRef_FogParameters::ProcessWithInterpol(void)
 {
     Process();
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 429–432 */
-/* addr: 0x002d7840  size: 40 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 429
- *   +0x000c -> line 430
- *   +0x0018 -> line 431
- *   +0x0020 -> line 432
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void C_SdlRef_FogParameters::Process(void)
 {
     *(unsigned int*)m_pDestFogColor = GLI_g_CurrentSDLFogColor;
@@ -527,38 +401,11 @@ void C_SdlRef_FogParameters::Process(void)
     *(float*)m_pDestFogEnd = g_fFogEnd;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 421–421 */
-/* addr: 0x002d7870  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 421
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void C_SdlRef_TextureOffset::ProcessNoInterpol(void)
 {
     Process();
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 400–417 */
-/* addr: 0x002d7880  size: 152 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 400
- *   +0x000c -> line 402
- *   +0x0028 -> line 405
- *   +0x002c -> line 406
- *   +0x0034 -> line 409
- *   +0x0044 -> line 410
- *   +0x0048 -> line 409
- *   +0x0050 -> line 411
- *   +0x0054 -> line 409
- *   +0x0064 -> line 410
- *   +0x0068 -> line 411
- *   +0x006c -> line 413
- *   +0x007c -> line 414
- *   +0x0090 -> line 417
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void C_SdlRef_TextureOffset::ProcessWithInterpol(void)
 {
     float fU;
@@ -582,25 +429,6 @@ void C_SdlRef_TextureOffset::ProcessWithInterpol(void)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 377–393 */
-/* addr: 0x002d7920  size: 128 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 377
- *   +0x000c -> line 379
- *   +0x0028 -> line 382
- *   +0x002c -> line 383
- *   +0x0034 -> line 386
- *   +0x0040 -> line 387
- *   +0x0044 -> line 388
- *   +0x0048 -> line 386
- *   +0x004c -> line 387
- *   +0x0050 -> line 388
- *   +0x0054 -> line 390
- *   +0x0064 -> line 391
- *   +0x0078 -> line 393
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void C_SdlRef_TextureOffset::Process(void)
 {
     float fU;
@@ -624,48 +452,16 @@ void C_SdlRef_TextureOffset::Process(void)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 365–365 */
-/* addr: 0x002d79a0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 365
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void C_SdlRef_TextureIdMatrix::ProcessNoInterpol(void)
 {
     Process();
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 359–359 */
-/* addr: 0x002d79b0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 359
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void C_SdlRef_TextureIdMatrix::ProcessWithInterpol(void)
 {
     Process();
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 340–355 */
-/* addr: 0x002d79c0  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 340
- *   +0x0004 -> line 342
- *   +0x000c -> line 344
- *   +0x0010 -> line 345
- *   +0x0014 -> line 346
- *   +0x0018 -> line 347
- *   +0x001c -> line 348
- *   +0x0020 -> line 349
- *   +0x0024 -> line 350
- *   +0x0028 -> line 351
- *   +0x002c -> line 352
- *   +0x0030 -> line 355
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void C_SdlRef_TextureIdMatrix::Process(void)
 {
     float (*param0)[4] = (float (*)[4])m_vpDestinationPointer;
@@ -684,73 +480,16 @@ void C_SdlRef_TextureIdMatrix::Process(void)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 334–334 */
-/* addr: 0x002d7a00  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 334
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void C_SdlRef_TextureMatrix::ProcessNoInterpol(void)
 {
     Process();
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 329–329 */
-/* addr: 0x002d7a10  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 329
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void C_SdlRef_TextureMatrix::ProcessWithInterpol(void)
 {
     Process();
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 258–325 */
-/* addr: 0x002d7a20  size: 172 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 258
- *   +0x0018 -> line 262
- *   +0x002c -> line 263
- *   +0x0030 -> line 264
- *   +0x0034 -> line 265
- *   +0x0038 -> line 266
- *   +0x003c -> line 268
- *   +0x0040 -> line 269
- *   +0x0044 -> line 270
- *   +0x0048 -> line 272
- *   +0x004c -> line 273
- *   +0x0050 -> line 274
- *   +0x0054 -> line 277
- *   +0x0058 -> line 278
- *   +0x005c -> line 279
- *   +0x0060 -> line 281
- *   +0x0064 -> line 282
- *   +0x0068 -> line 283
- *   +0x006c -> line 285
- *   +0x0070 -> line 286
- *   +0x0074 -> line 287
- *   +0x0078 -> line 289
- *   +0x007c -> line 290
- *   +0x0080 -> line 291
- *   +0x0084 -> line 293
- *   +0x0088 -> line 294
- *   +0x008c -> line 295
- *   +0x0090 -> line 299
- *   +0x009c -> line 300
- *   +0x00a4 -> line 325
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- *
- * The two address locals share one source line because the retail line map
- * has a single row covering +0x0018..+0x0028 (the pHalf address setup and
- * the origin pointer load).  The tail stores a float constant, so MWCC
- * materialises 0.5f with "lui a1,0x3f00" and stores it with "sw"; MWCC
- * 3.0.1-020123 lowers the store the other way round (address load first),
- * MWCC 3.0.3-020716 matches the retail exactly.
- */
 void C_SdlRef_TextureMatrix::Process(void)
 {
     if (m_vpDestinationPointer && GLI_g_SDL_pInterpolatedCameraMatrix)
@@ -791,19 +530,6 @@ void C_SdlRef_TextureMatrix::Process(void)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 235–250 */
-/* addr: 0x002d7ad0  size: 96 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 235
- *   +0x0010 -> line 237
- *   +0x0014 -> line 240
- *   +0x001c -> line 242
- *   +0x0024 -> line 244
- *   +0x0034 -> line 246
- *   +0x0050 -> line 250
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void C_SdlRef_LocalMatrixForCheap::ProcessWithInterpol(void)
 {
     float* pDest = (float*)m_vpDestinationPointer;
@@ -816,23 +542,6 @@ void C_SdlRef_LocalMatrixForCheap::ProcessWithInterpol(void)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 218–231 */
-/* addr: 0x002d7b30  size: 116 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 218
- *   +0x0004 -> line 221
- *   +0x000c -> line 223
- *   +0x0040 -> line 225
- *   +0x0050 -> line 227
- *   +0x006c -> line 231
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- *
- * The null test uses the member while the copy uses the local: that keeps
- * the destination pointer in $a2 and &OldMat in $a1, as the retail does, and
- * gives the six-row line map (the load on its own line, the branch on the
- * next).  Testing the local instead allocates $a1/$a2 the other way round.
- */
 void C_SdlRef_LocalMatrixForCheap::ProcessNoInterpol(void)
 {
     float (*pSrc)[4] = (float (*)[4])m_vpOriginPointer;
@@ -845,18 +554,6 @@ void C_SdlRef_LocalMatrixForCheap::ProcessNoInterpol(void)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 200–211 */
-/* addr: 0x002d7bb0  size: 96 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 200
- *   +0x0004 -> line 202
- *   +0x000c -> line 204
- *   +0x002c -> line 206
- *   +0x003c -> line 208
- *   +0x0058 -> line 211
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void C_SdlRef_LocalMatrixForCheap::Process(void)
 {
     float (*pDest)[4] = (float (*)[4])m_vpDestinationPointer;
@@ -868,21 +565,6 @@ void C_SdlRef_LocalMatrixForCheap::Process(void)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 149–159 */
-/* addr: 0x002d7c10  size: 136 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 150
- *   +0x0004 -> line 149
- *   +0x0008 -> line 150
- *   +0x000c -> line 152
- *   +0x0010 -> line 150
- *   +0x0014 -> line 152
- *   +0x0044 -> line 154
- *   +0x0064 -> line 156
- *   +0x0080 -> line 159
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void C_SdlRef_LocalMatrix::ProcessNoInterpol(void)
 {
     char* pOrigin = (char*)m_vpOriginPointer;
@@ -892,20 +574,6 @@ void C_SdlRef_LocalMatrix::ProcessNoInterpol(void)
         pDest[3][2] -= 50000.0f;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 126–143 */
-/* addr: 0x002d7ca0  size: 152 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 126
- *   +0x000c -> line 128
- *   +0x0018 -> line 130
- *   +0x0028 -> line 132
- *   +0x0030 -> line 135
- *   +0x0048 -> line 137
- *   +0x006c -> line 139
- *   +0x0088 -> line 143
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void C_SdlRef_LocalMatrix::ProcessWithInterpol(void)
 {
     if (m_bNoInterpolation)
@@ -921,16 +589,6 @@ void C_SdlRef_LocalMatrix::ProcessWithInterpol(void)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 110–120 */
-/* addr: 0x002d7d40  size: 112 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 110
- *   +0x0028 -> line 116
- *   +0x004c -> line 118
- *   +0x0068 -> line 120
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void C_SdlRef_LocalMatrix::Process(void)
 {
     float (*pDest)[4] = (float (*)[4])m_vpDestinationPointer;
@@ -939,50 +597,16 @@ void C_SdlRef_LocalMatrix::Process(void)
         pDest[3][2] -= 50000.0f;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 81–81 */
-/* addr: 0x002d7db0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 81
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void C_SdlRef_PointLighting::ProcessNoInterpol(void)
 {
     Process();
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 76–76 */
-/* addr: 0x002d7dc0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 76
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void C_SdlRef_PointLighting::ProcessWithInterpol(void)
 {
     Process();
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 58–72 */
-/* addr: 0x002d7dd0  size: 176 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 58
- *   +0x0004 -> line 62
- *   +0x0010 -> line 59
- *   +0x0014 -> line 62
- *   +0x001c -> line 70
- *   +0x0020 -> line 66
- *   +0x0024 -> line 69
- *   +0x0028 -> line 66
- *   +0x003c -> line 67
- *   +0x0044 -> line 68
- *   +0x0064 -> line 69
- *   +0x0068 -> line 70
- *   +0x0078 -> line 71
- *   +0x00a8 -> line 72
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void C_SdlRef_PointLighting::Process(void)
 {
     float* pDest;
@@ -1008,49 +632,21 @@ void C_SdlRef_PointLighting::Process(void)
         *pDest++ = 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 44–44 */
-/* addr: 0x002d7e80  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 44
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void C_SdlRef::ProcessNoInterpol(void)
 {
     printf("Dummy interpol reference called !!\n");
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 39–39 */
-/* addr: 0x002d7e90  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 39
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void C_SdlRef::ProcessWithInterpol(void)
 {
     printf("Dummy interpol reference called !!\n");
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 34–34 */
-/* addr: 0x002d7ea0  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 34
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void C_SdlRef::Process(void)
 {
     printf("Dummy reference called !!\n");
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 23–23 */
-/* addr: 0x002d7eb0  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 23
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void C_SdlRef::operator delete(void* ptr)
 {
     ((void (*)(void*))PS2glLiberator)(ptr);

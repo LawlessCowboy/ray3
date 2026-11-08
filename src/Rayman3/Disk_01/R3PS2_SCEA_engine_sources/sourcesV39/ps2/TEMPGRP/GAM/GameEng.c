@@ -2268,14 +2268,33 @@ int GAM_fn_lGetNbPersoActive(void)
  */
 extern HIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectNextBrother(HIE_tdstSuperObject_* hSuperObject);
 extern void HIE_fn_vChangeFather(HIE_tdstSuperObject_* hSuperObject, HIE_tdstSuperObject_* hNewFather, int lFlag);
+inline void fn_vDestructFatherSonLinksOfWorld(HIE_tdstSuperObject_* hWorld)
+{
+    HIE_tdstSuperObject_* hChild;
+    HIE_tdstSuperObject_* hNextChild;
+    HIE_tdstSuperObject_* hGrandChild;
+    HIE_tdstSuperObject_* hNextGrandChild;
+
+    for (hChild = hWorld->hFirstElementDyn, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hChild); hChild != NULL; hChild = hNextChild, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hNextChild))
+    {
+        if (hChild->ulTypeOfLinkedObject == 2)
+        {
+            if (!hChild->hLinkedObject.p_stCharacter->h_StandardGame->ucPlatFormType)
+                break;
+            for (hGrandChild = hChild->hFirstElementDyn, hNextGrandChild = HIE_fn_hForceGetSuperObjectNextBrother(hGrandChild); hGrandChild != NULL; hGrandChild = hNextGrandChild, hNextGrandChild = HIE_fn_hForceGetSuperObjectNextBrother(hNextGrandChild))
+            {
+                if (hGrandChild->ulTypeOfLinkedObject == 2)
+                    HIE_fn_vChangeFather(hGrandChild, hWorld, 0);
+            }
+        }
+    }
+}
+
 void fn_vDestructAllFatherSonLinks(void)
 {
     HIE_tdstSuperObject_* hMainCharacter;
     HIE_tdstSuperObject_* hNextChild;
     HIE_tdstSuperObject_* hChild;
-    HIE_tdstSuperObject_* hGrandChild;
-    HIE_tdstSuperObject_* hNextGrandChild;
-    HIE_tdstSuperObject_* hWorld;
 
     hMainCharacter = MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode());
     for (hChild = hMainCharacter->hFirstElementDyn, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hChild); hChild != NULL; hChild = hNextChild, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hNextChild))
@@ -2283,34 +2302,8 @@ void fn_vDestructAllFatherSonLinks(void)
         if (hChild->ulTypeOfLinkedObject == 2)
             HIE_fn_vChangeFather(hChild, (HIE_tdstSuperObject_*)gp_stDynamicWorld, hChild->hLinkedObject.p_stCharacter->h_StandardGame->ucPlatFormType);
     }
-    hWorld = (HIE_tdstSuperObject_*)gp_stDynamicWorld;
-    for (hChild = hWorld->hFirstElementDyn, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hChild); hChild != NULL; hChild = hNextChild, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hNextChild))
-    {
-        if (hChild->ulTypeOfLinkedObject == 2)
-        {
-            if (!hChild->hLinkedObject.p_stCharacter->h_StandardGame->ucPlatFormType)
-                break;
-            for (hGrandChild = hChild->hFirstElementDyn, hNextGrandChild = HIE_fn_hForceGetSuperObjectNextBrother(hGrandChild); hGrandChild != NULL; hGrandChild = hNextGrandChild, hNextGrandChild = HIE_fn_hForceGetSuperObjectNextBrother(hNextGrandChild))
-            {
-                if (hGrandChild->ulTypeOfLinkedObject == 2)
-                    HIE_fn_vChangeFather(hGrandChild, hWorld, 0);
-            }
-        }
-    }
-    hWorld = (HIE_tdstSuperObject_*)gp_stInactiveDynamicWorld;
-    for (hChild = hWorld->hFirstElementDyn, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hChild); hChild != NULL; hChild = hNextChild, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hNextChild))
-    {
-        if (hChild->ulTypeOfLinkedObject == 2)
-        {
-            if (!hChild->hLinkedObject.p_stCharacter->h_StandardGame->ucPlatFormType)
-                break;
-            for (hGrandChild = hChild->hFirstElementDyn, hNextGrandChild = HIE_fn_hForceGetSuperObjectNextBrother(hGrandChild); hGrandChild != NULL; hGrandChild = hNextGrandChild, hNextGrandChild = HIE_fn_hForceGetSuperObjectNextBrother(hNextGrandChild))
-            {
-                if (hGrandChild->ulTypeOfLinkedObject == 2)
-                    HIE_fn_vChangeFather(hGrandChild, hWorld, 0);
-            }
-        }
-    }
+    fn_vDestructFatherSonLinksOfWorld((HIE_tdstSuperObject_*)gp_stDynamicWorld);
+    fn_vDestructFatherSonLinksOfWorld((HIE_tdstSuperObject_*)gp_stInactiveDynamicWorld);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 1476–1476 */
@@ -2331,7 +2324,7 @@ void fn_vReputCharacterSuperObjectAtTheWorld(HIE_tdstSuperObject_* h_SupObject)
 void GAM_fn_vInitTableOfMovedOnes(void);
 void SND_fn_vSynchroSound(void);
 int fn_bIsEngineInPause(void);
-void HIE_fn_vInvalidateAllGlobalMatrices(int);
+void HIE_fn_vInvalidateAllGlobalMatrices(void);
 int MC_fn_hGetFirstMainCharNode(void);
 int MC_fn_hGetNewMainCharacter(int);
 void MC_fn_vSetCharacterInMainCharacterNode(int, int);
@@ -2341,7 +2334,7 @@ unsigned char fn_bIsTransitionInProgress(void);
 void fn_vKillAllAlwaysInNonActiveSectors(void);
 void fn_vClearUnusedAlwaysInDemoMode(void);
 void HIE_fn_vInitMatrixStack(void);
-int DEMO_fn_bUpdateDynamicHierarchy(int);
+int DEMO_fn_bUpdateDynamicHierarchy(void);
 HIE_tdstSuperObject_* CAM_fn_hGetActiveCamera(int);
 HIE_tdstSuperObject_* CAM_fn_hCineInfoGetSuperObjectTargeted(tdstInternalStructurCineinfo_*);
 void fn_vTreatDynamicHierarchyOfPlatForms(HIE_tdstSuperObject_* hSuperObj);
@@ -2357,15 +2350,11 @@ void CAM_fn_vCameraManagement(void);
 void GLI_vRefreshAllCyclingTextures(float);
 static inline int fn_bDynamicEndFlag2(DNM_stDynamics* p_stDyn)
 {
-    int bFlag = 0;
-    if (p_stDyn->m_tdstDynamicsBaseBlock.ulEndFlags & 2) bFlag = 1;
-    return bFlag;
+    return (p_stDyn->m_tdstDynamicsBaseBlock.ulEndFlags & 2) ? 1 : 0;
 }
 static inline int fn_bDynamicFlag2(DNM_stDynamics* p_stDyn)
 {
-    int bFlag = 0;
-    if (p_stDyn->m_tdstDynamicsBaseBlock.ulFlags & 2) bFlag = 1;
-    return bFlag;
+    return (p_stDyn->m_tdstDynamicsBaseBlock.ulFlags & 2) ? 1 : 0;
 }
 static inline int fn_hGetFixedCamera(void)
 {
@@ -2463,6 +2452,10 @@ inline void GAM_vClearCop0Register24(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+static inline void GAM_vCopyCurrentSector(tdstEngineObject_* p_stDest, HIE_tdstSuperObject_* hSource)
+{
+    fn_vSectInfoSetCurrentSector(p_stDest->h_SectInfo, fn_h_SectInfoGetCurrentSector(hSource->hLinkedObject.p_stCharacter->h_SectInfo));
+}
 void fn_vEngine(void)
 {
     unsigned char bSectorChange = 1;
@@ -2479,7 +2472,7 @@ void fn_vEngine(void)
     SND_fn_vSynchroSound();
     if (!fn_bIsEngineInPause())
     {
-        HIE_fn_vInvalidateAllGlobalMatrices(0);
+        HIE_fn_vInvalidateAllGlobalMatrices();
         if (MC_fn_hGetNewMainCharacter(MC_fn_hGetFirstMainCharNode()) != 0)
         {
             MC_fn_vSetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode(), MC_fn_hGetNewMainCharacter(MC_fn_hGetFirstMainCharNode()));
@@ -2498,7 +2491,7 @@ void fn_vEngine(void)
         HIE_fn_vInitMatrixStack();
         if (g_DEMO_KeybTest == 2)
         {
-            if (!(unsigned char)DEMO_fn_bUpdateDynamicHierarchy(0))
+            if (!(unsigned char)DEMO_fn_bUpdateDynamicHierarchy())
                 return;
         }
         else
@@ -2526,7 +2519,7 @@ void fn_vEngine(void)
                     MAT_fn_vCompose(hSprObjCamera->hGlobalMatrix, &g_stEngineStructure.stCineManager->gp_stFixedCameraMatrix, &stTransform);
                     if (g_ucIsEdInGhostMode && CAM_fn_bSuperObjectIsACamera(hSprObjCamera))
                     {
-                        fn_vSectInfoSetCurrentSector(hSprObjCamera->hLinkedObject.p_stCharacter->h_SectInfo, fn_h_SectInfoGetCurrentSector(MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode())->hLinkedObject.p_stCharacter->h_SectInfo));
+                        GAM_vCopyCurrentSector(hSprObjCamera->hLinkedObject.p_stCharacter, MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode()));
                         fn_vInsertObjectInSectorList(fn_h_SectInfoGetCurrentSector(hSprObjCamera->hLinkedObject.p_stCharacter->h_SectInfo), hSprObjCamera);
                     }
                     else if (!(unsigned char)(hSprObjCamera->ulFlags & 0x20) && (!CAM_fn_bSuperObjectIsACamera(hSprObjCamera) || g_stEngineStructure.cCameraMode != 1 || !(hSprObjCamera->hLinkedObject.p_stCharacter->h_Cineinfo->hWork->uwDNMFlags & 0x40)))
@@ -2537,14 +2530,10 @@ void fn_vEngine(void)
                             p_stDynamic = fn_p_stDynamGetDynamics(h_Dynam);
                             if (p_stDynamic != NULL)
                             {
-                                bSectorChange = 1;
-                                if (fn_bDynamicEndFlag2(p_stDynamic))
-                                {
-                                    if (fn_bDynamicFlag2(p_stDynamic))
-                                        bSectorChange = p_stDynamic->m_tdstDynamicsAdvancedBlock.m_cCollideCounter == 0;
-                                    else
-                                        bSectorChange = 1;
-                                }
+                                if (fn_bDynamicEndFlag2(p_stDynamic) && fn_bDynamicFlag2(p_stDynamic))
+                                    bSectorChange = p_stDynamic->m_tdstDynamicsAdvancedBlock.m_cCollideCounter == 0;
+                                else
+                                    bSectorChange = 1;
                             }
                         }
                         if (!fn_bIsTransitionInProgress() && bSectorChange)
@@ -2565,6 +2554,7 @@ void fn_vEngine(void)
         HIE_tdstSuperObject_* hSprObjCamera;
         tdstCineinfo_* hCineInfo;
         float xScale;
+        MAT_tdstTransformation_* hGlobalMatrix;
 
         hSprObjCamera = CAM_fn_hGetActiveCamera(0);
         if (hSprObjCamera != NULL)
@@ -2580,7 +2570,8 @@ void fn_vEngine(void)
                     hCineInfo->hWork->xFocal = -xScale;
                     g_stEngineStructure.stCineManager->gp_stFixedCameraMatrix.stScaleVector.xX = 1.0f;
                 }
-                MAT_fn_vCompose(hSprObjCamera->hGlobalMatrix, &g_stEngineStructure.stCineManager->gp_stFixedCameraMatrix, &stTransform);
+                hGlobalMatrix = hSprObjCamera->hGlobalMatrix;
+                MAT_fn_vCompose(hGlobalMatrix, &g_stEngineStructure.stCineManager->gp_stFixedCameraMatrix, &stTransform);
             }
         }
     }

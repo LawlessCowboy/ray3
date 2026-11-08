@@ -22,6 +22,10 @@ GAME_MWCC ?= $(MWCC)
 # tools/patch_mwcc_303.py (Compiler/mwcps2-3.0.3-pad7b); see the file header.
 LATE_GAME_MWCC ?= $(GAME_MWCC)
 LATE_GAME_SOURCES := $(patsubst src/Rayman3/%,%,$(shell grep -v '^\#' config/compiler-3.0.3-sources.txt))
+# Files listed here build with pad7b-unfold (Compiler/mwcps2-3.0.3-pad7b-unfold,
+# same script); this list takes priority over the other compiler lists.
+UNFOLD_MWCC ?= $(LATE_GAME_MWCC)
+UNFOLD_SOURCES := $(patsubst src/Rayman3/%,%,$(shell grep -v '^\#' config/compiler-3.0.3-unfold-sources.txt))
 # Library files that also take -O3,p (evidence in the list file).
 comma := ,
 LIBRARY_O3P_SOURCES := $(patsubst src/Rayman3/%,%,$(shell grep -v '^\#' config/library-O3p-sources.txt))
@@ -85,7 +89,7 @@ objects: $(OBJECTS)
 # makes one pattern rule work for C, CPP, and CXX paths without collisions.
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%
 	@mkdir -p "$(@D)"
-	$(MWCC_ENV) $(WIBO) $(if $(filter $(LATE_GAME_SOURCES),$(patsubst $(SRC_DIR)/%,%,$<)),$(LATE_GAME_MWCC),$(if $(findstring /$(GAME_SOURCE_ROOT)/,/$<),$(GAME_MWCC),$(if $(filter $(LIBRARY_301_SOURCES),$(patsubst $(SRC_DIR)/%,%,$<)),$(GAME_MWCC),$(MWCC)))) $(CPPFLAGS) $(MWCC_FLAGS) $(if $(findstring /$(GAME_SOURCE_ROOT)/,/$<),$(GAME_MWCC_FLAGS)) $(if $(filter $(LIBRARY_O3P_SOURCES),$(patsubst $(SRC_DIR)/%,%,$<)),-O3$(comma)p) "$<" -o "$@"
+	$(MWCC_ENV) $(WIBO) $(if $(filter $(UNFOLD_SOURCES),$(patsubst $(SRC_DIR)/%,%,$<)),$(UNFOLD_MWCC),$(if $(filter $(LATE_GAME_SOURCES),$(patsubst $(SRC_DIR)/%,%,$<)),$(LATE_GAME_MWCC),$(if $(findstring /$(GAME_SOURCE_ROOT)/,/$<),$(GAME_MWCC),$(if $(filter $(LIBRARY_301_SOURCES),$(patsubst $(SRC_DIR)/%,%,$<)),$(GAME_MWCC),$(MWCC))))) $(CPPFLAGS) $(MWCC_FLAGS) $(if $(findstring /$(GAME_SOURCE_ROOT)/,/$<),$(GAME_MWCC_FLAGS)) $(if $(filter $(LIBRARY_O3P_SOURCES),$(patsubst $(SRC_DIR)/%,%,$<)),-O3$(comma)p) "$<" -o "$@"
 
 extract:
 	@test -n "$(TARGET)" || (echo "Set TARGET=/path/to/SLKA_250.78"; exit 2)

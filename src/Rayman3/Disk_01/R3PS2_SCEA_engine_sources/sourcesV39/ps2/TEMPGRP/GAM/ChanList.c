@@ -3,6 +3,7 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/MTH.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct GLI_tdstLight_ GLI_tdstLight_;
@@ -28,13 +29,8 @@ typedef struct tdstSubAnim_ tdstSubAnim_;
 typedef struct LST2_tdstAnchorToCINE_tdxHandleToChannelLinkDyn LST2_tdstAnchorToCINE_tdxHandleToChannelLinkDyn;
 typedef struct CINE_tdstCineActor_ CINE_tdstCineActor_;
 typedef struct stMorphData stMorphData;
-typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
-typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 typedef struct DNM_stObstacle DNM_stObstacle;
-typedef struct MTH_stRotation MTH_stRotation;
-typedef struct MTH_stMove MTH_stMove;
 typedef struct DNM_stReport DNM_stReport;
-typedef struct MTH4D_tdstMatrix_ MTH4D_tdstMatrix_;
 typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;
 typedef struct tdstPLA_Hierarchy_ tdstPLA_Hierarchy_;
 typedef struct tdstPLA_Deformation_ tdstPLA_Deformation_;
@@ -62,7 +58,6 @@ typedef struct tdstTransition_ tdstTransition_;
 typedef struct LST2_tdstAnchorToCINE_tdxHandleToCineActorDyn LST2_tdstAnchorToCINE_tdxHandleToCineActorDyn;
 typedef struct CINE_tdstCine_ CINE_tdstCine_;
 typedef struct tdstCouple_ tdstCouple_;
-typedef struct MTH3D_tdstMatrix_ MTH3D_tdstMatrix_;
 typedef struct LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn;
 typedef struct _RollOffParam _RollOffParam;
 typedef struct tdstMSSound_ tdstMSSound_;
@@ -238,19 +233,6 @@ struct stMorphData {
     unsigned char a_ucMorphingAmountMT[10]; /* +0x1c */
 };
 
-struct MTH4D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
-    float xW; /* +0xc */
-} __attribute__((aligned(16)));
-
-struct MTH3D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
-};
-
 struct DNM_stObstacle {
     float m_xRate; /* +0x0 */
     MTH3D_tdstVector_ m_stNorm; /* +0x4 */
@@ -258,16 +240,6 @@ struct DNM_stObstacle {
     GMT_tdstGameMaterial_* hMyMaterial; /* +0x1c */
     GMT_tdstGameMaterial_* hCollidedMaterial; /* +0x20 */
     HIE_tdstSuperObject_* mp_stSupObj; /* +0x24 */
-};
-
-struct MTH_stRotation {
-    float m_xAngle; /* +0x0 */
-    MTH3D_tdstVector_ m_stAxis; /* +0x4 */
-};
-
-struct MTH_stMove {
-    MTH3D_tdstVector_ m_stLinear; /* +0x0 */
-    MTH_stRotation m_stAngular; /* +0xc */
 };
 
 struct DNM_stReport {
@@ -284,13 +256,6 @@ struct DNM_stReport {
     MTH_stMove m_stAbsolutePrevPosition; /* +0x130 */
     MTH_stMove m_stAbsoluteCurrPosition; /* +0x14c */
     char m_cBitField; /* +0x168 */
-};
-
-struct MTH4D_tdstMatrix_ {
-    MTH4D_tdstVector_ stCol_0; /* +0x0 */
-    MTH4D_tdstVector_ stCol_1; /* +0x10 */
-    MTH4D_tdstVector_ stCol_2; /* +0x20 */
-    MTH4D_tdstVector_ stCol_3; /* +0x30 */
 };
 
 struct MAT_tdstTransformation_ {
@@ -601,12 +566,6 @@ struct CINE_tdstCine_ {
 struct tdstCouple_ {
     unsigned short wChild; /* +0x0 */
     unsigned short wFather; /* +0x2 */
-};
-
-struct MTH3D_tdstMatrix_ {
-    MTH3D_tdstVector_ stCol_0; /* +0x0 */
-    MTH3D_tdstVector_ stCol_1; /* +0xc */
-    MTH3D_tdstVector_ stCol_2; /* +0x18 */
 };
 
 struct LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn {
@@ -1185,29 +1144,11 @@ struct MOR_stMorphVector_ {
 
 unsigned short g_DEMO_KeybTest;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ChanList.c lines 34–35 */
-/* addr: 0x0025d5b0  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 34
- *   +0x0004 -> line 35
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vSetCapabilities(tdstEngineObject_* _p_stObject, unsigned int _ubf32Capabilities)
 {
     _p_stObject->h_StandardGame->ubf32Capabilities = _ubf32Capabilities;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ChanList.c lines 543–546 */
-/* addr: 0x0025d5c0  size: 132 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 543
- *   +0x0004 -> line 544
- *   +0x005c -> line 545
- *   +0x0078 -> line 546
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 PO_tdstPhysicalObject_* MOR_fn_hGetMorphedObject(short _xIndex);
 
 /* Not original source, needs cleaning up: retail inlines fn_hMorphListIndex
@@ -1239,21 +1180,6 @@ PO_tdstPhysicalObject_* fn_hGetMorphedObjectInChannel(LST2_tdstAnchorToCHN_tdxHa
     return NULL;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ChanList.c lines 513–528 */
-/* addr: 0x0025d650  size: 92 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 513
- *   +0x0010 -> line 515
- *   +0x001c -> line 517
- *   +0x002c -> line 519
- *   +0x0034 -> line 521
- *   +0x003c -> line 523
- *   +0x0044 -> line 525
- *   +0x0050 -> line 527
- *   +0x0054 -> line 528
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 short fn_hMorphListIndex(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn* hMorphList, unsigned short uwChannel)
 {
     tdstMorphChannelList_* p_stMorph;
@@ -1273,26 +1199,6 @@ short fn_hMorphListIndex(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn* hMorph
     return -1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ChanList.c lines 478–494 */
-/* addr: 0x0025d6b0  size: 260 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 478
- *   +0x0004 -> line 482
- *   +0x000c -> line 484
- *   +0x0028 -> line 486
- *   +0x0034 -> line 488
- *   +0x0040 -> line 489
- *   +0x00b8 -> line 490
- *   +0x00bc -> line 489
- *   +0x00c0 -> line 490
- *   +0x00c4 -> line 489
- *   +0x00c8 -> line 490
- *   +0x00d0 -> line 491
- *   +0x00d8 -> line 493
- *   +0x00f8 -> line 494
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vRemoveChannelFromMorphList(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn* hMorphList, unsigned short uwChannel)
 {
     tdstMorphChannelList_* p_stMorph;
@@ -1315,31 +1221,6 @@ void fn_vRemoveChannelFromMorphList(LST2_tdstAnchorToCHN_tdxHandleToMorphElement
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ChanList.c lines 425–463 */
-/* addr: 0x0025d7c0  size: 628 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 425
- *   +0x0020 -> line 429
- *   +0x0028 -> line 432
- *   +0x0034 -> line 434
- *   +0x0040 -> line 437
- *   +0x0048 -> line 439
- *   +0x0050 -> line 443
- *   +0x0060 -> line 444
- *   +0x0068 -> line 447
- *   +0x007c -> line 448
- *   +0x0080 -> line 449
- *   +0x0084 -> line 450
- *   +0x013c -> line 451
- *   +0x0144 -> line 454
- *   +0x0154 -> line 457
- *   +0x0168 -> line 458
- *   +0x016c -> line 459
- *   +0x0170 -> line 460
- *   +0x0258 -> line 463
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void* HMU_fn_p_vMalloc(unsigned int ulSize, unsigned char ucChannel);
 
 void fn_vPutMorphElementInChannel(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn* hMorphList, unsigned short uwChannel, short IndexOfMorphList)
@@ -1383,23 +1264,6 @@ void fn_vPutMorphElementInChannel(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDy
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ChanList.c lines 394–409 */
-/* addr: 0x0025da40  size: 236 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 394
- *   +0x000c -> line 395
- *   +0x0020 -> line 399
- *   +0x0024 -> line 401
- *   +0x00a8 -> line 403
- *   +0x00ac -> line 401
- *   +0x00b0 -> line 403
- *   +0x00bc -> line 404
- *   +0x00d0 -> line 406
- *   +0x00d8 -> line 407
- *   +0x00dc -> line 409
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vFreeMorphList(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn** p_hMorphList)
 {
     tdstMorphChannelList_* p_hMorphElt;
@@ -1419,17 +1283,6 @@ void fn_vFreeMorphList(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn** p_hMorp
 
 void* HMU_fn_p_vMalloc(unsigned int ulSize, unsigned char ucChannel);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ChanList.c lines 376–383 */
-/* addr: 0x0025db30  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 376
- *   +0x000c -> line 377
- *   +0x0018 -> line 381
- *   +0x0028 -> line 382
- *   +0x0040 -> line 383
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vInitMorphList(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn** p_hMorphList)
 {
     if (*p_hMorphList == NULL)
@@ -1441,30 +1294,6 @@ void fn_vInitMorphList(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn** p_hMorp
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ChanList.c lines 279–321 */
-/* addr: 0x0025db80  size: 288 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 279
- *   +0x0008 -> line 284
- *   +0x000c -> line 286
- *   +0x0014 -> line 291
- *   +0x0018 -> line 293
- *   +0x0028 -> line 297
- *   +0x0040 -> line 298
- *   +0x0044 -> line 299
- *   +0x0060 -> line 300
- *   +0x0094 -> line 305
- *   +0x009c -> line 310
- *   +0x00a8 -> line 315
- *   +0x00b0 -> line 312
- *   +0x00b4 -> line 313
- *   +0x00b8 -> line 314
- *   +0x00d8 -> line 315
- *   +0x0108 -> line 319
- *   +0x0118 -> line 321
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* Not original source, needs cleaning up: retail inlines
  * fn_vUpdateSPOFlagsOfChannelForActivation (defined below) into
  * fn_vActivateChannel; this inline copy reproduces that while keeping the
@@ -1523,19 +1352,6 @@ void fn_vActivateChannel(HIE_tdstSuperObject_* _hPerso, unsigned short _uwChanne
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ChanList.c lines 257–274 */
-/* addr: 0x0025dca0  size: 64 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 257
- *   +0x0010 -> line 260
- *   +0x0018 -> line 263
- *   +0x0020 -> line 266
- *   +0x0028 -> line 267
- *   +0x0030 -> line 271
- *   +0x0038 -> line 274
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vUpdateSPOFlagsOfChannelForActivation(HIE_tdstSuperObject_* _hSOChannel, unsigned char _bActivate)
 {
     unsigned int ulSpoFlags;
@@ -1550,16 +1366,6 @@ void fn_vUpdateSPOFlagsOfChannelForActivation(HIE_tdstSuperObject_* _hSOChannel,
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ChanList.c lines 230–241 */
-/* addr: 0x0025dce0  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 230
- *   +0x0008 -> line 232
- *   +0x0010 -> line 240
- *   +0x0034 -> line 241
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vLooseControlOfLipChannel(tdstEngineObject_* _hActor, unsigned short _uwChannel)
 {
     tdstAChannel_* p_stChannel;
@@ -1574,23 +1380,6 @@ void fn_vLooseControlOfLipChannel(tdstEngineObject_* _hActor, unsigned short _uw
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ChanList.c lines 194–214 */
-/* addr: 0x0025dd20  size: 112 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 194
- *   +0x0010 -> line 197
- *   +0x0018 -> line 201
- *   +0x0020 -> line 202
- *   +0x0028 -> line 210
- *   +0x0034 -> line 211
- *   +0x0038 -> line 212
- *   +0x005c -> line 213
- *   +0x0060 -> line 212
- *   +0x0064 -> line 213
- *   +0x0068 -> line 214
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vTakeControlOfLipChannel(tdstEngineObject_* _hActor, unsigned short _uwChannel)
 {
     static tdstAChannel_* p_stLastControlledChannel = NULL;
@@ -1620,24 +1409,6 @@ void fn_vTakeControlOfLipChannel(tdstEngineObject_* _hActor, unsigned short _uwC
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ChanList.c lines 147–173 */
-/* addr: 0x0025dd90  size: 120 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 147
- *   +0x0004 -> line 148
- *   +0x0008 -> line 150
- *   +0x0010 -> line 155
- *   +0x0014 -> line 157
- *   +0x0024 -> line 161
- *   +0x0040 -> line 162
- *   +0x0048 -> line 168
- *   +0x0050 -> line 171
- *   +0x0054 -> line 170
- *   +0x0058 -> line 171
- *   +0x0070 -> line 173
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* Not original source, needs cleaning up: permuter-found. The inline helper
  * fixes the operand order of the channel address, as in retail. */
 inline unsigned char* inline_fn(unsigned char* arg0, unsigned int arg1)
@@ -1676,18 +1447,6 @@ void fn_vTakeControlOfChannel(tdstEngineObject_* _hActor, unsigned short _uwChan
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ChanList.c lines 102–126 */
-/* addr: 0x0025de10  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 102
- *   +0x0008 -> line 108
- *   +0x0010 -> line 109
- *   +0x001c -> line 121
- *   +0x0028 -> line 122
- *   +0x002c -> line 126
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vFreeCSOList(tdstAChannel_** p_hChannelArray)
 {
     tdstAChannel_* hArray;

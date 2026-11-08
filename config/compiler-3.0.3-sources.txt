@@ -27,6 +27,7 @@ src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAni
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/SOL.c
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GEO/Culling.c
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/Domat_PS2GL.c
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLLights.cpp
 # SDLCheap.cpp: moved to 3.0.3 on 2026-10-21 (user-approved trade, +2/-1).
 # Gains CHEAP_DrawActorInstance and HIE_fn_vFastPS2ForcedPushMatrix (3.0.1
@@ -236,3 +237,23 @@ src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/P
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Proc.c
 # matsp.c: +MAT_fn_vInitTransformationAndType (scheduling of the sqrt.s asm blocks), none of its 4 recorded matches lost.
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matsp.c
+# a3x_intn.c: +fn_v_InitSinTab (delay-slot scheduling around the f30 float-to-int helper; 3.0.1 leaves 4 register rows), inline (unsigned)float in fn_vComputeFinalFrameMatrix; none of its 7 recorded matches lost.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/Interpol/a3x_intn.c
+# GAM/GameEng.c: +fn_vToggleCinemascope (store scheduling) on the patched build, and fn_vEngine reaches retail's size; none of its 11 recorded matches lost.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameEng.c
+# u_drawSpriteGen.c: +J_Draw3DSpriteGenList (with the local GLI_vTransformToGLMatrix resolved by retail call target), inline float-to-unsigned in J_New_DrawSpriteGenList; none of its 3 recorded matches lost.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawSpriteGen.c
+# SCT/Sector.c: +SCT_fn_vTestChangeSectorWithHistory (3.0.1 keeps a different schedule), and
+# SCT_fn_vGetSymMatrixOfCameraInMirror reaches EQUIVALENT only here: 3.0.3 folds &v.xX of an
+# int-copied stack vector while keeping &v.xY/&v.xZ in registers, as retail does. All 21
+# recorded matches still MATCH under both builds (-0/+1).
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/Sector.c
+# GAM/Objinit.c: +fn_vForceActiveAnObject (3.0.3 folds &v.xX of the int-copied stack vectors
+# around the VU0 MAT_fn_vApplyOnVertex inline while keeping &v.xY/&v.xZ in registers, as
+# retail does; 3.0.1 is 4 bytes longer). All 22 recorded matches still MATCH under both (-0/+1).
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Objinit.c
+# GAM/GamSave2.c: +SAV2_fn_xGetAValueAtIndex (3.0.3 allocates the array element address
+# base-first, addu a0,a0,a1, as retail; 3.0.1 swaps the registers under every index spelling)
+# and +SAV2_fn_bUpdateAllDataFromLoadedFile (register allocation; 3.0.1 misses it). The 23
+# matches recorded before the move still MATCH under both builds (-0/+2).
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GamSave2.c

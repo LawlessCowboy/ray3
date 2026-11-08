@@ -2097,6 +2097,7 @@ void C_GrassFx::DisplayGrassLayer(float X, float Y, float Z, float* a16_fWorldMa
 }
 
 
+/* addr: 0x002dcfb0  size: 156 bytes */
 C_GrassFx::~C_GrassFx()
 {
     if (m_pVNew)

@@ -1418,12 +1418,14 @@ void fn_vTurnMatrixX(MAT_tdstTransformation_* _p_stMatrix, float _xAngle)
  */
 tdstZdxList_* CS_fn_hGetZdxList(unsigned char ucZoneType, HIE_tdstSuperObject_* hSuperObj);
 
+#pragma auto_inline on
 int fn_lGetZdxListNumberOfElements(unsigned char ucZoneType, HIE_tdstSuperObject_* hSuperObj)
 {
     tdstZdxList_* hZdxList;
     hZdxList = CS_fn_hGetZdxList(ucZoneType, hSuperObj);
     return hZdxList ? hZdxList->hGeoZdxList.lNumberOfElementsOpt : 0;
 }
+#pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 2349–2393 */
 /* addr: 0x0026ad60  size: 132 bytes */
@@ -1496,14 +1498,72 @@ void fn_vFirstTimeInitCollisionGeometricObject(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+tdstZoneSetList_* fn_hGetCurrentZoneSetOfType(unsigned char _ucZoneType, tdstCollSet_* _hCollSet);
+unsigned int CS_fn_ulGetPrivilegedActivationZoneInCollSet(unsigned char _ucZoneType, tdstCollSet_* _hCollSet);
+unsigned char CS_fn_eGetPrivilegedActivationZone(unsigned char _ucZoneType, tdstCollSet_* _hCollSet, short _wIndex);
+COL_tdstCollideObject_* fn_hGetCollideZdxOfTypeAtIndex(unsigned char ucZoneType, unsigned short uwIndex, HIE_tdstSuperObject_* hSuperObj);
+COL_tdstCollideObject_* COL_fn_hTransformTableOfObjectInOneObjectForGAM(COL_tdstCollideObject_* _hGeoObj, COL_tdstCollideObject_** a_hTableOfGeoObj, short xNbOfObjects);
+
+inline tdstZoneSetList_* ZDX_hGetZoneSet(HIE_tdstSuperObject_* _hCharacter, unsigned char _ucType)
+{
+    return _hCharacter->hLinkedObject.p_stCharacter->h_CollSet ? fn_hGetCurrentZoneSetOfType(_ucType, _hCharacter->hLinkedObject.p_stCharacter->h_CollSet) : NULL;
+}
+
 COL_tdstCollideObject_* fn_hMakeOneObjectFromManyOthers(unsigned char _ucZoneType, HIE_tdstSuperObject_* _hCharacter, COL_tdstCollideObject_* _hTargetObject)
 {
     unsigned short uwCurrentIndexInActivation;
-    tdstZdxIndexList_* p_stZdxIndex;
     short xI;
-    int a10_hTable[10];
+    tdstZdxIndexList_* p_stZdxIndex;
     short xIndex;
-    /* TODO: decompile from asm/... */
+    int a10_hTable[10];
+    tdstZoneSetList_* hZoneSet;
+    COL_tdstCollideObject_* hGeoObj;
+    unsigned char ePriv;
+
+    xIndex = 0;
+    hZoneSet = ZDX_hGetZoneSet(_hCharacter, _ucZoneType);
+
+    if ((unsigned char)(_hCharacter->hLinkedObject.p_stCharacter->h_CollSet ? CS_fn_ulGetPrivilegedActivationZoneInCollSet(_ucZoneType, _hCharacter->hLinkedObject.p_stCharacter->h_CollSet) == 0 : 1))
+    {
+        if (hZoneSet)
+        {
+            for (xI = 0, p_stZdxIndex = hZoneSet->hZdxIndexList.hFirstElementOpt; xI < hZoneSet->hZdxIndexList.lNumberOfElementsOpt; xI++, p_stZdxIndex++)
+            {
+                uwCurrentIndexInActivation = p_stZdxIndex->uwZdxIndex;
+                hGeoObj = fn_hGetCollideZdxOfTypeAtIndex(_ucZoneType, uwCurrentIndexInActivation, _hCharacter);
+                if (hGeoObj && xIndex < 10)
+                    ((int*)(int)a10_hTable)[xIndex++] = (int)hGeoObj;
+            }
+        }
+    }
+    else
+    {
+        xI = 0;
+        p_stZdxIndex = hZoneSet ? hZoneSet->hZdxIndexList.hFirstElementOpt : NULL;
+        uwCurrentIndexInActivation = (unsigned short)(p_stZdxIndex == NULL ? -1 : p_stZdxIndex->uwZdxIndex);
+        while (xI < fn_lGetZdxListNumberOfElements(_ucZoneType, _hCharacter))
+        {
+            if (_hCharacter->hLinkedObject.p_stCharacter->h_CollSet)
+                ePriv = CS_fn_eGetPrivilegedActivationZone(_ucZoneType, _hCharacter->hLinkedObject.p_stCharacter->h_CollSet, xI);
+            else
+                ePriv = 3;
+            if (ePriv == 1 || (ePriv == 0 && uwCurrentIndexInActivation == xI))
+            {
+                hGeoObj = fn_hGetCollideZdxOfTypeAtIndex(_ucZoneType, xI, _hCharacter);
+                if (hGeoObj && xIndex < 10)
+                    ((int*)(int)a10_hTable)[xIndex++] = (int)hGeoObj;
+            }
+            xI++;
+            if (p_stZdxIndex && uwCurrentIndexInActivation < xI)
+            {
+                p_stZdxIndex++;
+                uwCurrentIndexInActivation = (unsigned short)(p_stZdxIndex == NULL ? -1 : p_stZdxIndex->uwZdxIndex);
+            }
+        }
+    }
+
+    COL_fn_hTransformTableOfObjectInOneObjectForGAM(_hTargetObject, (COL_tdstCollideObject_**)a10_hTable, xIndex);
+    return _hTargetObject;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 2279–2279 */
@@ -1573,11 +1633,7 @@ void fn_vGetAllObjectsInZdd(HIE_tdstSuperObject_* _hSuperObj, unsigned char _ucM
         hModuleIfZoom = hModule;
         if (hModule)
         {
-            if (8 != hModule->ulTypeOfLinkedObject)
-            {
-                hModuleIfZoom = a_hArrayOfChannels ? a_hArrayOfChannels[(_ucChannelNumber + 32768) & 0xFFFF].hSupObject : NULL;
-            }
-            if (hModuleIfZoom)
+            if (8 == hModule->ulTypeOfLinkedObject || (hModuleIfZoom = a_hArrayOfChannels ? a_hArrayOfChannels[(_ucChannelNumber + 32768) & 0xFFFF].hSupObject : NULL) != NULL)
             {
                 hGeoObj = PCS_fn_hGetZddGeoObjOfPhysicalCollSet(PO_fn_hGetCollideSet(hModuleIfZoom->hLinkedObject.p_stPhysicalObject));
                 if (hGeoObj)
@@ -1627,12 +1683,73 @@ void fn_vGetAllObjectsInZdd(HIE_tdstSuperObject_* _hSuperObj, unsigned char _ucM
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+HIE_tdstSuperObject_* fn_h_SectInfoGetCurrentSector(tdstSectInfo_* h_SectInfo);
+void MAT_fn_vInvert(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hSource);
+void MAT_fn_vApplyOnVertex(MTH3D_tdstVector_* VectDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* VectA);
+unsigned char INT_fn_bGetInclusionPointInCollideObject(MTH3D_tdstVector_* _p_stPoint, COL_tdstCollideObject_* _hGeoObj);
+
+inline unsigned char fn_bIsCharacterInGeoObj(HIE_tdstSuperObject_* _hCharacter, COL_tdstCollideObject_* _hGeoObj, MAT_tdstTransformation_* _p_stMatrix)
+{
+    MTH3D_tdstVector_ stPoint;
+    MAT_tdstTransformation_ stMatrix;
+
+    if ((unsigned char)((_hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 4) ? 1 : 0) != 1)
+        return 0;
+    MAT_fn_vInvert(&stMatrix, _p_stMatrix);
+    MAT_fn_vApplyOnVertex(&stPoint, &stMatrix, (MTH3D_tdstVector_*)&_hCharacter->hGlobalMatrix->stTransformMatrix.stCol_3);
+    return INT_fn_bGetInclusionPointInCollideObject(&stPoint, _hGeoObj);
+}
+
 void fn_vDetectAllObjectsInThisModule(HIE_tdstSuperObject_* _hCharacter, COL_tdstCollideObject_* _hModule, MAT_tdstTransformation_* _p_stMatrix, HIE_tdstSuperObject_** _p_hSuperObjTable, int _lMaxNumberOfObjects, int* _lCurrentNumberOfObjects)
 {
     int i;
     SECT_tdstListOfSOSectorsInActivityInteraction_* hActivityList;
     SECT_tdstListOfSOCharacters_* hCharacterList;
-    /* TODO: decompile from asm/... */
+
+    for (i = 0, hCharacterList = fn_h_SectInfoGetCurrentSector(_hCharacter->hLinkedObject.p_stCharacter->h_SectInfo)->hLinkedObject.p_stSector->stListOfCharacters.hFirstElementDyn; hCharacterList != NULL; hCharacterList = hCharacterList->hNextBrotherDyn, i++)
+    {
+        HIE_tdstSuperObject_* hOther = hCharacterList->hPointerOfCharacter;
+        if (_hCharacter != hOther)
+        {
+            if ((unsigned char)((hOther->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 4) ? 1 : 0) == 1)
+            {
+                if (fn_bIsCharacterInGeoObj(hOther, _hModule, _p_stMatrix))
+                {
+                    if (*_lCurrentNumberOfObjects < _lMaxNumberOfObjects)
+                    {
+                        _p_hSuperObjTable[(*_lCurrentNumberOfObjects)++] = hOther;
+                    }
+                    else
+                        break;
+                }
+            }
+        }
+    }
+
+    if (*_lCurrentNumberOfObjects < _lMaxNumberOfObjects)
+    {
+        for (i = fn_h_SectInfoGetCurrentSector(_hCharacter->hLinkedObject.p_stCharacter->h_SectInfo)->hLinkedObject.p_stSector->stListOfSectorsInActivityInteraction.lNumberOfElementsOpt, hActivityList = fn_h_SectInfoGetCurrentSector(_hCharacter->hLinkedObject.p_stCharacter->h_SectInfo)->hLinkedObject.p_stSector->stListOfSectorsInActivityInteraction.hFirstElementOpt; i > 0; i--, hActivityList++)
+        {
+            if (*_lCurrentNumberOfObjects >= _lMaxNumberOfObjects)
+                break;
+            for (hCharacterList = hActivityList->hPointerOfSectorSO->hLinkedObject.p_stSector->stListOfCharacters.hFirstElementDyn; hCharacterList != NULL; hCharacterList = hCharacterList->hNextBrotherDyn)
+            {
+                HIE_tdstSuperObject_* hOther = hCharacterList->hPointerOfCharacter;
+                if ((unsigned char)((hOther->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 4) ? 1 : 0) == 1)
+                {
+                    if (fn_bIsCharacterInGeoObj(hOther, _hModule, _p_stMatrix))
+                    {
+                        if (*_lCurrentNumberOfObjects < _lMaxNumberOfObjects)
+                        {
+                            _p_hSuperObjTable[(*_lCurrentNumberOfObjects)++] = hOther;
+                        }
+                        else
+                            break;
+                    }
+                }
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 1961–2039 */
@@ -1682,9 +1799,54 @@ unsigned char fn_bIsCharacterTWODetectedByCharacterOne(HIE_tdstSuperObject_* _hC
     tdstAChannel_* hChannel;
     tdstPhysicalCollSet_* hPhyCollSet;
     COL_tdstCollideObject_* hGeoObj1;
-    tdstZdxIndexList_* p_stZdxIndex;
     short xI;
-    /* TODO: decompile from asm/... */
+    tdstZdxIndexList_* p_stZdxIndex;
+    tdstZoneSetList_* hZoneSet;
+    unsigned char ePriv;
+
+    xI = 0;
+    hModule = NULL;
+    hZoneSet = ZDX_hGetZoneSet(_hCharacterONE, 0);
+    p_stZdxIndex = hZoneSet ? hZoneSet->hZdxIndexList.hFirstElementOpt : NULL;
+    uwCurrentIndexInActivation = (unsigned short)(p_stZdxIndex == NULL ? -1 : p_stZdxIndex->uwZdxIndex);
+    while (xI < fn_lGetZdxListNumberOfElements(0, _hCharacterONE))
+    {
+        if (_hCharacterONE->hLinkedObject.p_stCharacter->h_CollSet)
+            ePriv = CS_fn_eGetPrivilegedActivationZone(0, _hCharacterONE->hLinkedObject.p_stCharacter->h_CollSet, xI);
+        else
+            ePriv = 3;
+        if (ePriv == 1 || (ePriv == 0 && uwCurrentIndexInActivation == xI))
+        {
+            hGeoObj1 = fn_hGetCollideZdxOfTypeAtIndex(0, xI, _hCharacterONE);
+            if (hGeoObj1 && fn_bIsCharacterInGeoObj(_hCharacterTWO, hGeoObj1, _hCharacterONE->hGlobalMatrix))
+                return 1;
+        }
+        xI++;
+        if (p_stZdxIndex && uwCurrentIndexInActivation < xI)
+        {
+            p_stZdxIndex++;
+            uwCurrentIndexInActivation = (unsigned short)(p_stZdxIndex == NULL ? -1 : p_stZdxIndex->uwZdxIndex);
+        }
+    }
+
+    for (hChannel = _hCharacterONE->hLinkedObject.p_stCharacter->h_3dData->hFirstActiveChannel; hChannel; hChannel = hChannel->p_stNextActiveChannel)
+    {
+        if (hModule && hChannel->hZoomSupObject)
+            hModule = hChannel->hZoomSupObject;
+        else
+            hModule = hChannel->hSupObject;
+        if (hModule->ulTypeOfLinkedObject & 0x18)
+        {
+            hPhyCollSet = PO_fn_hGetCollideSet(hModule->hLinkedObject.p_stPhysicalObject);
+            if (hPhyCollSet)
+            {
+                hGeoObj1 = PCS_fn_hGetZddGeoObjOfPhysicalCollSet(hPhyCollSet);
+                if (hGeoObj1 && fn_bIsCharacterInGeoObj(_hCharacterTWO, hGeoObj1, hModule->hGlobalMatrix))
+                    return 1;
+            }
+        }
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 1942–1950 */
@@ -1718,8 +1880,7 @@ unsigned char fn_bIsCharacterTWODetectedByThisZddOfCharacterOne(HIE_tdstSuperObj
     if (!hGeoObj)
         return 0;
 
-    bFlag = (_hCharacterTWO->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 4) ? 1 : 0;
-    if (bFlag == 1) { MAT_fn_vInvert(&stMatrix, p_stMatrix); MAT_fn_vApplyOnVertex(&stPoint, &stMatrix, (MTH3D_tdstVector_*)&_hCharacterTWO->hGlobalMatrix->stTransformMatrix.stCol_3); return INT_fn_bGetInclusionPointInCollideObject(&stPoint, hGeoObj); } else { return 0; }
+    return fn_bIsCharacterInGeoObj(_hCharacterTWO, hGeoObj, p_stMatrix);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 1827–1924 */
@@ -1771,6 +1932,10 @@ unsigned char fn_bIsCharacterTWODetectedByThisZddOfCharacterOne(HIE_tdstSuperObj
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+GMT_tdstGameMaterial_* fn_hIsTypeExistsInGeoObj(COL_tdstCollideObject_* _hGeoObj, unsigned short _wMaterialMask);
+unsigned char fn_bIsThisZdeInClashWithCharacterZdeOfTypes(COL_tdstCollideObject_* _hGeoObj, MAT_tdstTransformation_* _hMatrix, HIE_tdstSuperObject_* _hCharacter, unsigned short _wMaterialMask);
+COL_tdstCollideObject_* PCS_fn_hGetZdeGeoObjOfPhysicalCollSet(tdstPhysicalCollSet_* _hPhyCollSet);
+
 unsigned char fn_bThisTypeFromOneVsThisTypeFromTwo(HIE_tdstSuperObject_* _hCharacterONE, unsigned short _wMaterialMaskOfONE, HIE_tdstSuperObject_* _hCharacterTWO, unsigned short _wMaterialMaskOfTWO)
 {
     unsigned short uwCurrentIndexInActivation;
@@ -1778,9 +1943,80 @@ unsigned char fn_bThisTypeFromOneVsThisTypeFromTwo(HIE_tdstSuperObject_* _hChara
     tdstAChannel_* hChannel;
     tdstPhysicalCollSet_* hPhyCollSet;
     COL_tdstCollideObject_* hGeoObj1;
-    tdstZdxIndexList_* p_stZdxIndex;
     short xI;
-    /* TODO: decompile from asm/... */
+    tdstZdxIndexList_* p_stZdxIndex;
+    tdstZoneSetList_* hZoneSet;
+    unsigned char ePriv;
+
+    xI = 0;
+    hModule = NULL;
+    hZoneSet = ZDX_hGetZoneSet(_hCharacterONE, 2);
+
+    if ((unsigned char)(_hCharacterONE->hLinkedObject.p_stCharacter->h_CollSet ? CS_fn_ulGetPrivilegedActivationZoneInCollSet(2, _hCharacterONE->hLinkedObject.p_stCharacter->h_CollSet) == 0 : 1))
+    {
+        if (hZoneSet)
+        {
+            for (xI = 0, p_stZdxIndex = hZoneSet->hZdxIndexList.hFirstElementOpt; xI < hZoneSet->hZdxIndexList.lNumberOfElementsOpt; xI++, p_stZdxIndex++)
+            {
+                uwCurrentIndexInActivation = p_stZdxIndex->uwZdxIndex;
+                hGeoObj1 = fn_hGetCollideZdxOfTypeAtIndex(2, uwCurrentIndexInActivation, _hCharacterONE);
+                if (hGeoObj1 && fn_hIsTypeExistsInGeoObj(hGeoObj1, _wMaterialMaskOfONE))
+                {
+                    if (fn_bIsThisZdeInClashWithCharacterZdeOfTypes(hGeoObj1, _hCharacterONE->hGlobalMatrix, _hCharacterTWO, _wMaterialMaskOfTWO))
+                        return 1;
+                }
+            }
+        }
+    }
+    else
+    {
+        p_stZdxIndex = hZoneSet ? hZoneSet->hZdxIndexList.hFirstElementOpt : NULL;
+        uwCurrentIndexInActivation = (unsigned short)(p_stZdxIndex == NULL ? -1 : p_stZdxIndex->uwZdxIndex);
+        while (xI < fn_lGetZdxListNumberOfElements(2, _hCharacterONE))
+        {
+            if (_hCharacterONE->hLinkedObject.p_stCharacter->h_CollSet)
+                ePriv = CS_fn_eGetPrivilegedActivationZone(2, _hCharacterONE->hLinkedObject.p_stCharacter->h_CollSet, xI);
+            else
+                ePriv = 3;
+            if (ePriv == 1 || (ePriv == 0 && uwCurrentIndexInActivation == xI))
+            {
+                hGeoObj1 = fn_hGetCollideZdxOfTypeAtIndex(2, xI, _hCharacterONE);
+                if (hGeoObj1 && fn_hIsTypeExistsInGeoObj(hGeoObj1, _wMaterialMaskOfONE))
+                {
+                    if (fn_bIsThisZdeInClashWithCharacterZdeOfTypes(hGeoObj1, _hCharacterONE->hGlobalMatrix, _hCharacterTWO, _wMaterialMaskOfTWO))
+                        return 1;
+                }
+            }
+            xI++;
+            if (p_stZdxIndex && uwCurrentIndexInActivation < xI)
+            {
+                p_stZdxIndex++;
+                uwCurrentIndexInActivation = (unsigned short)(p_stZdxIndex == NULL ? -1 : p_stZdxIndex->uwZdxIndex);
+            }
+        }
+    }
+
+    for (hChannel = _hCharacterONE->hLinkedObject.p_stCharacter->h_3dData->hFirstActiveChannel; hChannel; hChannel = hChannel->p_stNextActiveChannel)
+    {
+        if (hModule && hChannel->hZoomSupObject)
+            hModule = hChannel->hZoomSupObject;
+        else
+            hModule = hChannel->hSupObject;
+        if (hModule->ulTypeOfLinkedObject & 0x18)
+        {
+            hPhyCollSet = PO_fn_hGetCollideSet(hModule->hLinkedObject.p_stPhysicalObject);
+            if (hPhyCollSet)
+            {
+                hGeoObj1 = PCS_fn_hGetZdeGeoObjOfPhysicalCollSet(hPhyCollSet);
+                if (hGeoObj1 && fn_hIsTypeExistsInGeoObj(hGeoObj1, _wMaterialMaskOfONE))
+                {
+                    if (fn_bIsThisZdeInClashWithCharacterZdeOfTypes(hGeoObj1, hModule->hGlobalMatrix, _hCharacterTWO, _wMaterialMaskOfTWO))
+                        return 1;
+                }
+            }
+        }
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 1756–1812 */
@@ -1819,6 +2055,8 @@ unsigned char fn_bThisTypeFromOneVsThisTypeFromTwo(HIE_tdstSuperObject_* _hChara
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+HIE_tdstSuperObject_* fn_h_SectInfoGetCurrentSector(tdstSectInfo_* h_SectInfo);
+
 void fn_vThisTypeVsThisType(HIE_tdstSuperObject_* _hCharacter, unsigned short _wCharacterMask, unsigned short _wOthersMask, HIE_tdstSuperObject_** _p_hObjectTable, unsigned short* _p_uwNumber)
 {
     unsigned short uwMaxNumber;
@@ -1826,7 +2064,59 @@ void fn_vThisTypeVsThisType(HIE_tdstSuperObject_* _hCharacter, unsigned short _w
     unsigned int ulI;
     SECT_tdstListOfSOSectorsInCollisionInteraction_* hCollisionList;
     SECT_tdstListOfSOCharacters_* hCharacterList;
-    /* TODO: decompile from asm/... */
+
+    uwMaxNumber = *_p_uwNumber;
+    uwCurrentNumber = 0;
+
+    for (ulI = 0, hCharacterList = fn_h_SectInfoGetCurrentSector(_hCharacter->hLinkedObject.p_stCharacter->h_SectInfo)->hLinkedObject.p_stSector->stListOfCharacters.hFirstElementDyn; hCharacterList != NULL; hCharacterList = hCharacterList->hNextBrotherDyn, ulI++)
+    {
+        HIE_tdstSuperObject_* hOther = hCharacterList->hPointerOfCharacter;
+        if (_hCharacter != hOther)
+        {
+            if ((unsigned char)((hOther->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 4) ? 1 : 0) == 1)
+            {
+                if (uwCurrentNumber < uwMaxNumber)
+                {
+                    if (fn_bThisTypeFromOneVsThisTypeFromTwo(_hCharacter, _wCharacterMask, hOther, _wOthersMask))
+                    {
+                        _p_hObjectTable[uwCurrentNumber] = hOther;
+                        uwCurrentNumber++;
+                    }
+                }
+                else
+                {
+                    *_p_uwNumber = uwMaxNumber;
+                    return;
+                }
+            }
+        }
+    }
+
+    for (ulI = fn_h_SectInfoGetCurrentSector(_hCharacter->hLinkedObject.p_stCharacter->h_SectInfo)->hLinkedObject.p_stSector->stListOfSectorsInCollisionInteraction.lNumberOfElementsOpt, hCollisionList = fn_h_SectInfoGetCurrentSector(_hCharacter->hLinkedObject.p_stCharacter->h_SectInfo)->hLinkedObject.p_stSector->stListOfSectorsInCollisionInteraction.hFirstElementOpt; ulI > 0; ulI--, hCollisionList++)
+    {
+        for (hCharacterList = hCollisionList->hPointerOfSectorSO->hLinkedObject.p_stSector->stListOfCharacters.hFirstElementDyn; hCharacterList != NULL; hCharacterList = hCharacterList->hNextBrotherDyn)
+        {
+            if (uwCurrentNumber < uwMaxNumber)
+            {
+                HIE_tdstSuperObject_* hOther = hCharacterList->hPointerOfCharacter;
+                if ((unsigned char)((hOther->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 4) ? 1 : 0) == 1)
+                {
+                    if (fn_bThisTypeFromOneVsThisTypeFromTwo(_hCharacter, _wCharacterMask, hOther, _wOthersMask))
+                    {
+                        _p_hObjectTable[uwCurrentNumber] = hOther;
+                        uwCurrentNumber++;
+                    }
+                }
+            }
+            else
+            {
+                *_p_uwNumber = uwMaxNumber;
+                return;
+            }
+        }
+    }
+
+    *_p_uwNumber = uwCurrentNumber;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 1728–1741 */
@@ -1969,8 +2259,9 @@ COL_tdstCollideObject_* ZDX_fn_hGetGeoObjOfTypeAndMatrixFromZdxInfos(HIE_tdstSup
         if (hGeoObj)
         {
             *_p_hMatrix = _hCharacter->hGlobalMatrix;
+            return hGeoObj;
         }
-        return hGeoObj;
+        return 0;
     }
 }
 
@@ -2034,19 +2325,112 @@ COL_tdstCollideObject_* ZDX_fn_hGetGeoObjOfTypeAndMatrixFromZdxInfos(HIE_tdstSup
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+unsigned char fn_bObjectTableHasZde(tdstObjectsTablesList_* _hObjectTableList);
+inline HIE_tdstSuperObject_* fn_hGetChannelModule(tdstAChannel_* _hChannel)
+{
+    return _hChannel->hZoomSupObject ? _hChannel->hZoomSupObject : _hChannel->hSupObject;
+}
+
+int GMT_fn_xMultipleTestCollideIdentifierFromGameMaterial(GMT_tdstGameMaterial_* hGameMat, unsigned short xMask);
+
 unsigned char fn_bIsThisZdeInClashWithCharacterZdeOfTypes(COL_tdstCollideObject_* _hGeoObj, MAT_tdstTransformation_* _hMatrix, HIE_tdstSuperObject_* _hCharacter, unsigned short _wMaterialMask)
 {
     tdstObjectsTablesList_* hObjectTable;
     unsigned short uwCurrentIndexInActivation;
     HIE_tdstSuperObject_* hModule;
-    tdstAChannel_* hChannel;
-    GMT_tdstGameMaterial_* hMat2;
-    GMT_tdstGameMaterial_* hMat1;
-    tdstPhysicalCollSet_* hPhyCollSet;
     COL_tdstCollideObject_* hStaticGeoObj;
-    tdstZdxIndexList_* p_stZdxIndex;
+    tdstAChannel_* hChannel;
+    GMT_tdstGameMaterial_* hMat1;
+    GMT_tdstGameMaterial_* hMat2;
+    tdstPhysicalCollSet_* hPhyCollSet;
     short xI;
-    /* TODO: decompile from asm/... */
+    tdstZdxIndexList_* p_stZdxIndex;
+    tdstZoneSetList_* hZoneSet;
+    unsigned char ePriv;
+
+    if ((unsigned char)((_hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 4) ? 1 : 0) != 1)
+        return 0;
+
+    hMat1 = NULL;
+    hMat2 = NULL;
+    xI = 0;
+    hZoneSet = ZDX_hGetZoneSet(_hCharacter, 2);
+
+    if ((unsigned char)(_hCharacter->hLinkedObject.p_stCharacter->h_CollSet ? CS_fn_ulGetPrivilegedActivationZoneInCollSet(2, _hCharacter->hLinkedObject.p_stCharacter->h_CollSet) == 0 : 1))
+    {
+        if (hZoneSet)
+        {
+            for (xI = 0, p_stZdxIndex = hZoneSet->hZdxIndexList.hFirstElementOpt; xI < hZoneSet->hZdxIndexList.lNumberOfElementsOpt; xI++, p_stZdxIndex++)
+            {
+                uwCurrentIndexInActivation = p_stZdxIndex->uwZdxIndex;
+                hStaticGeoObj = fn_hGetCollideZdxOfTypeAtIndex(2, uwCurrentIndexInActivation, _hCharacter);
+                if (hStaticGeoObj && (_wMaterialMask == 0 || fn_hIsTypeExistsInGeoObj(hStaticGeoObj, _wMaterialMask)))
+                {
+                    if (INT_fn_bDetectIntersectGeomObjWithGeomObj(_hGeoObj, _hMatrix, hStaticGeoObj, _hCharacter->hGlobalMatrix, &hMat1, &hMat2))
+                    {
+                        if (_wMaterialMask == 0 || GMT_fn_xMultipleTestCollideIdentifierFromGameMaterial(hMat2, _wMaterialMask))
+                            return 1;
+                    }
+                }
+            }
+        }
+    }
+    else
+    {
+        p_stZdxIndex = hZoneSet ? hZoneSet->hZdxIndexList.hFirstElementOpt : NULL;
+        uwCurrentIndexInActivation = (unsigned short)(p_stZdxIndex == NULL ? -1 : p_stZdxIndex->uwZdxIndex);
+        while (xI < fn_lGetZdxListNumberOfElements(2, _hCharacter))
+        {
+            if (_hCharacter->hLinkedObject.p_stCharacter->h_CollSet)
+                ePriv = CS_fn_eGetPrivilegedActivationZone(2, _hCharacter->hLinkedObject.p_stCharacter->h_CollSet, xI);
+            else
+                ePriv = 3;
+            if (ePriv == 1 || (ePriv == 0 && uwCurrentIndexInActivation == xI))
+            {
+                hStaticGeoObj = fn_hGetCollideZdxOfTypeAtIndex(2, xI, _hCharacter);
+                if (hStaticGeoObj && (_wMaterialMask == 0 || fn_hIsTypeExistsInGeoObj(hStaticGeoObj, _wMaterialMask)))
+                {
+                    if (INT_fn_bDetectIntersectGeomObjWithGeomObj(_hGeoObj, _hMatrix, hStaticGeoObj, _hCharacter->hGlobalMatrix, &hMat1, &hMat2))
+                    {
+                        if (_wMaterialMask == 0 || GMT_fn_xMultipleTestCollideIdentifierFromGameMaterial(hMat2, _wMaterialMask))
+                            return 1;
+                    }
+                }
+            }
+            xI++;
+            if (p_stZdxIndex && uwCurrentIndexInActivation < xI)
+            {
+                p_stZdxIndex++;
+                uwCurrentIndexInActivation = (unsigned short)(p_stZdxIndex == NULL ? -1 : p_stZdxIndex->uwZdxIndex);
+            }
+        }
+    }
+
+    hObjectTable = _hCharacter->hLinkedObject.p_stCharacter->h_3dData->h_CurrentObjectsTable;
+    if (!hObjectTable || fn_bObjectTableHasZde(hObjectTable) == 0)
+        return 0;
+
+    for (hChannel = _hCharacter->hLinkedObject.p_stCharacter->h_3dData->hFirstActiveChannel; hChannel; hChannel = hChannel->p_stNextActiveChannel)
+    {
+        hModule = fn_hGetChannelModule(hChannel);
+        if (hModule->ulTypeOfLinkedObject & 0x18)
+        {
+            hPhyCollSet = PO_fn_hGetCollideSet(hModule->hLinkedObject.p_stPhysicalObject);
+            if (hPhyCollSet)
+            {
+                hStaticGeoObj = PCS_fn_hGetZdeGeoObjOfPhysicalCollSet(hPhyCollSet);
+                if (hStaticGeoObj && (_wMaterialMask == 0 || fn_hIsTypeExistsInGeoObj(hStaticGeoObj, _wMaterialMask)))
+                {
+                    if (INT_fn_bDetectIntersectGeomObjWithGeomObj(_hGeoObj, _hMatrix, hStaticGeoObj, hModule->hGlobalMatrix, &hMat1, &hMat2))
+                    {
+                        if (_wMaterialMask == 0 || GMT_fn_xMultipleTestCollideIdentifierFromGameMaterial(hMat2, _wMaterialMask))
+                            return 1;
+                    }
+                }
+            }
+        }
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 1454–1479 */
@@ -2079,23 +2463,19 @@ void fn_vGetAllCharactersInContactWithThisModuleZde(HIE_tdstSuperObject_* _hSupe
 
     a_hArrayOfChannels = _hSuperObj->hLinkedObject.p_stCharacter->h_3dData->hArrayOfChannels;
     hModule = a_hArrayOfChannels ? a_hArrayOfChannels[_ucChannelNumber].hSupObject : NULL;
-    if (hModule)
+    if (!hModule || hModule->ulTypeOfLinkedObject != 8)
     {
-        if (hModule->ulTypeOfLinkedObject != 8)
+        hModule = a_hArrayOfChannels ? a_hArrayOfChannels[_ucChannelNumber].hZoomSupObject : NULL;
+        if (!hModule || hModule->ulTypeOfLinkedObject != 8)
+            return;
+    }
+    hPhyCollSet = PO_fn_hGetCollideSet(hModule->hLinkedObject.p_stPhysicalObject);
+    if (hPhyCollSet)
+    {
+        hGeoObj = PCS_fn_hGetZdeGeoObjOfPhysicalCollSet(hPhyCollSet);
+        if (hGeoObj)
         {
-            hModule = a_hArrayOfChannels ? a_hArrayOfChannels[_ucChannelNumber].hZoomSupObject : NULL;
-        }
-        if (hModule && hModule->ulTypeOfLinkedObject == 8)
-        {
-            hPhyCollSet = PO_fn_hGetCollideSet(hModule->hLinkedObject.p_stPhysicalObject);
-            if (hPhyCollSet)
-            {
-                hGeoObj = PCS_fn_hGetZdeGeoObjOfPhysicalCollSet(hPhyCollSet);
-                if (hGeoObj)
-                {
-                    fn_vGetAllCharacterInContactWithThisGeoObj(_hSuperObj, hGeoObj, hModule->hGlobalMatrix, _hSuperObjTable, _wMaterialMask, _lMaxNumberOfObjects, _p_lCurrentNumberofObjects);
-                }
-            }
+            fn_vGetAllCharacterInContactWithThisGeoObj(_hSuperObj, hGeoObj, hModule->hGlobalMatrix, _hSuperObjTable, _wMaterialMask, _lMaxNumberOfObjects, _p_lCurrentNumberofObjects);
         }
     }
 }
@@ -2142,15 +2522,67 @@ void fn_vGetAllCharactersInContactWithThisModuleZde(HIE_tdstSuperObject_* _hSupe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+unsigned char fn_bCollSetGetCharacterNoCollisionZdeWithProjectile(tdstCollSet_* _hCollSet);
+
 void fn_vGetAllCharacterInContactWithThisGeoObj(HIE_tdstSuperObject_* _hSuperObj, COL_tdstCollideObject_* _hGeoObj, MAT_tdstTransformation_* _hMatrix, HIE_tdstSuperObject_** _hSuperObjTable, unsigned short _wMaterialMask, int _lMaxNumberOfObjects, int* _p_lCurrentNumberOfObjects)
 {
     tdstCollSet_* hCollSet;
-    int bNoCollisionWithProjectile;
     int bThisActorIsAProjectile;
+    int bNoCollisionWithProjectile;
     unsigned int ulI;
     SECT_tdstListOfSOSectorsInCollisionInteraction_* hCollisionList;
     SECT_tdstListOfSOCharacters_* hCharacterList;
-    /* TODO: decompile from asm/... */
+
+    bThisActorIsAProjectile = _hSuperObj->hLinkedObject.p_stCharacter->h_StandardGame->ulCustomBits & 8;
+    bNoCollisionWithProjectile = fn_bCollSetGetCharacterNoCollisionZdeWithProjectile(_hSuperObj->hLinkedObject.p_stCharacter->h_CollSet);
+
+    for (ulI = 0, hCharacterList = fn_h_SectInfoGetCurrentSector(_hSuperObj->hLinkedObject.p_stCharacter->h_SectInfo)->hLinkedObject.p_stSector->stListOfCharacters.hFirstElementDyn; hCharacterList != NULL; hCharacterList = hCharacterList->hNextBrotherDyn, ulI++)
+    {
+        HIE_tdstSuperObject_* hOther;
+
+        if (*_p_lCurrentNumberOfObjects < _lMaxNumberOfObjects)
+        {
+            hOther = hCharacterList->hPointerOfCharacter;
+            if (_hSuperObj == hOther)
+                continue;
+            if ((unsigned char)((hOther->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 4) ? 1 : 0) != 1)
+                continue;
+            if (bThisActorIsAProjectile && hOther->hLinkedObject.p_stCharacter->h_CollSet && fn_bCollSetGetCharacterNoCollisionZdeWithProjectile(hOther->hLinkedObject.p_stCharacter->h_CollSet))
+                continue;
+            if (bNoCollisionWithProjectile && (hOther->hLinkedObject.p_stCharacter->h_StandardGame->ulCustomBits & 8))
+                continue;
+            if (fn_bIsThisZdeInClashWithCharacterZdeOfTypes(_hGeoObj, _hMatrix, hOther, _wMaterialMask))
+                _hSuperObjTable[(*_p_lCurrentNumberOfObjects)++] = hOther;
+        }
+        else
+            return;
+    }
+
+    if (*_p_lCurrentNumberOfObjects < _lMaxNumberOfObjects)
+    {
+        for (ulI = fn_h_SectInfoGetCurrentSector(_hSuperObj->hLinkedObject.p_stCharacter->h_SectInfo)->hLinkedObject.p_stSector->stListOfSectorsInCollisionInteraction.lNumberOfElementsOpt, hCollisionList = fn_h_SectInfoGetCurrentSector(_hSuperObj->hLinkedObject.p_stCharacter->h_SectInfo)->hLinkedObject.p_stSector->stListOfSectorsInCollisionInteraction.hFirstElementOpt; ulI > 0; ulI--, hCollisionList++)
+        {
+            for (hCharacterList = hCollisionList->hPointerOfSectorSO->hLinkedObject.p_stSector->stListOfCharacters.hFirstElementDyn; hCharacterList != NULL; hCharacterList = hCharacterList->hNextBrotherDyn)
+            {
+                HIE_tdstSuperObject_* hOther;
+
+                if (*_p_lCurrentNumberOfObjects < _lMaxNumberOfObjects)
+                {
+                    hOther = hCharacterList->hPointerOfCharacter;
+                    if ((unsigned char)((hOther->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 4) ? 1 : 0) != 1)
+                        continue;
+                    if (bThisActorIsAProjectile && hOther->hLinkedObject.p_stCharacter->h_CollSet && fn_bCollSetGetCharacterNoCollisionZdeWithProjectile(hOther->hLinkedObject.p_stCharacter->h_CollSet))
+                        continue;
+                    if (bNoCollisionWithProjectile && (hOther->hLinkedObject.p_stCharacter->h_StandardGame->ulCustomBits & 8))
+                        continue;
+                    if (fn_bIsThisZdeInClashWithCharacterZdeOfTypes(_hGeoObj, _hMatrix, hOther, _wMaterialMask))
+                        _hSuperObjTable[(*_p_lCurrentNumberOfObjects)++] = hOther;
+                }
+                else
+                    return;
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 1319–1337 */
@@ -2209,12 +2641,14 @@ void fn_vGetAllCharactersInContactWithThisZde(HIE_tdstSuperObject_* _hSuperObj, 
  */
 tdstZdxList_* CS_fn_hGetZdxList(unsigned char ucZoneType, HIE_tdstSuperObject_* hSuperObj);
 
+#pragma auto_inline on
 COL_tdstCollideObject_* fn_hGetCollideZdxOfTypeAtIndex(unsigned char ucZoneType, unsigned short uwIndex, HIE_tdstSuperObject_* hSuperObj)
 {
     tdstZdxList_* p_stZdxList;
     p_stZdxList = CS_fn_hGetZdxList(ucZoneType, hSuperObj);
     return p_stZdxList->hGeoZdxList.hFirstElementOpt[uwIndex].hGeoObj;
 }
+#pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 537–655 */
 /* addr: 0x0026ca30  size: 172 bytes */

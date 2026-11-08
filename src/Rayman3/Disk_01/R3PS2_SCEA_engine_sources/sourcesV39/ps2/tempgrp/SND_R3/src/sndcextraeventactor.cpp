@@ -161,6 +161,7 @@ typedef enum tdeBaseType {
 
 struct usnd::CStringIsLess {
     /* C++ base binary_function at +0x0. */
+    bool operator()(const char* pc_Left, const char* pc_Right) const;
 };
 
 struct streebase {
@@ -384,7 +385,7 @@ struct usnd::CRefIdObj : CIdObj {
 struct usnd::CResData : CRefIdObj {
     unsigned int m_uiVersionId; /* +0x10 */
     sstring m_strName; /* +0x14 */
-    virtual CResType& fv_roGetResType(void);
+    virtual CResType& fv_roGetResType(void) const;
     virtual CResObj* fv_poCreateResObj(void);
     virtual void fv_vUpdateData(unsigned int uiVersionId, CSrcFlow& roFlow);
 };
@@ -633,40 +634,14 @@ struct sTreeLink {
     _Redbl m_eColor; /* +0xc */
 };
 
-struct usnd::CProgramHdr {
-    unsigned int m_uiConstHdrSize; /* +0x0 */
-    unsigned int m_uiSectionNb; /* +0x4 */
-    unsigned int m_uiMainStackSize; /* +0x8 */
-    unsigned int m_uiInitStackSize; /* +0xc */
-    unsigned int m_uiDestrStackSize; /* +0x10 */
-    unsigned int m_uiHdlrNb; /* +0x14 */
-    unsigned int m_uiLocalFnNb; /* +0x18 */
-    unsigned int m_uiProgVarSize; /* +0x1c */
-    unsigned int m_uiConstVarPos; /* +0x20 */
-    unsigned int m_uiConstVarSize; /* +0x24 */
-    unsigned int m_uiDestrCodePos; /* +0x28 */
-    unsigned int m_uiDestrCodeSize; /* +0x2c */
-    unsigned int m_uiInitCodePos; /* +0x30 */
-    unsigned int m_uiInitCodeSize; /* +0x34 */
-    unsigned int m_uiMainPos; /* +0x38 */
-    unsigned int m_uiMainSize; /* +0x3c */
-    unsigned int m_uiFnDescrPos; /* +0x40 */
-    unsigned int m_uiFnDescrSize; /* +0x44 */
-    unsigned int m_uiPrivCodePos; /* +0x48 */
-    unsigned int m_uiPrivCodeSize; /* +0x4c */
-    unsigned int m_uiVarDescrPos; /* +0x50 */
-    unsigned int m_uiVarDescrSize; /* +0x54 */
-    unsigned int m_uiPreDestrCodePos; /* +0x58 */
-    unsigned int m_uiPreDestrCodeSize; /* +0x5c */
-    unsigned int m_uiObjectVarNb; /* +0x60 */
-    smap m_oHandlerIds; /* +0x64 */
-    int m_aiStdHandlerIds[33]; /* +0x74 */
-};
+/* usnd::CProgramHdr is defined before fn_bIsResourcesAllowed, after the
+ * usnd STL templates its handler map needs. */
 
 union _SND_tduRefEvt {
     unsigned int Id; /* +0x0 */
     _SND_tdstBlockEvent* pstPtr; /* +0x0 */
 };
+
 
 struct usnd::CSrcFlow {
     /* C++ base CFlow at +0x0. */
@@ -883,6 +858,8 @@ CExtraEventActor* CExtraEventActorPool::fs_poGetAnActor(int s32_ACPObjectId)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
+
 unsigned char CExtraEventActor::mfn_bExecute(int s32_CmdId, const CUUID& roId)
 {
     unsigned char bAnswer;
@@ -903,6 +880,8 @@ unsigned char CExtraEventActor::mfn_bExecute(int s32_CmdId, const CUUID& roId)
     }
     return bAnswer | PostponedPlay::fs_bExecute(s32_CmdId, roId, this);
 }
+
+#pragma auto_inline reset
 
 namespace usnd {
 template <class T> struct CIdObjPtr {
@@ -985,15 +964,15 @@ extern CMarkerNotifTarget g_oMarkerNotifTarget;
  */
 unsigned char CExtraEventActor::mfn_bPlay(const CEventResData& ro_EventResData, int s32_EventId, void (*pfn_Proc)(int))
 {
-    CProgramContext* poContext;
-    unsigned char b_Answer;
     CResObj* po_ResObj;
     CResData* po_ResData;
     CSwitchResData* pSwitchResData;
     unsigned int uiInfoType;
     const CEventResData* po_EventResData;
+    unsigned char b_Answer;
     CResObjParams* poParams;
     CResObjState* pState;
+    CProgramContext* poContext;
 
     if (mbAllSoundPaused)
         return 0;
@@ -1080,22 +1059,13 @@ unsigned char CExtraEventActor::mfn_bPlay(const CEventResData& ro_EventResData, 
         o_PlayId.m_uiLowWord = s32_PlayLowWord;
         po_EventResData = (const CEventResData*)usnd::CIdObjPtrMgr::fs_roGetInst().f_poGetIdObj(o_PlayId);
 
-        b_Answer = 0;
-        poParams = m_oResObjParams.m_poNext;
-        while (poParams)
-        {
-            if (poParams->m_poResData->m_oId == o_StopId)
-            {
-                pState = mpoActorObj->m_oProgramContext.m_oObjStates.m_poNext; while (pState) { if (pState->f_bHasUserData(poParams, -1)) pState->f_vExecCmd(1, NULL); pState = pState->m_poNext; }
-                b_Answer = 1;
-            }
-            poParams = poParams->m_poNext;
-        }
-        b_Answer |= PostponedPlay::fs_bExecute(1, o_StopId, this);
+        b_Answer = mfn_bExecute(1, o_StopId);
         if (po_EventResData)
-            return mfn_bPlay(*po_EventResData, s32_EventId, pfn_Proc) && b_Answer;
-        return 0;
+            b_Answer = mfn_bPlay(*po_EventResData, s32_EventId, pfn_Proc) && b_Answer;
+        else
+            b_Answer = 0;
     }
+    break;
     default:
     {
         if (ro_EventResData.m_fCoeffA != 0.0f)
@@ -1106,9 +1076,10 @@ unsigned char CExtraEventActor::mfn_bPlay(const CEventResData& ro_EventResData, 
             po_ResObj->fv_vExecCmd(0xC, &fNewPitch);
         }
         po_ResObj->fv_vExecCmd(0, 0);
-        return 1;
+        b_Answer = 1;
     }
     }
+    return b_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcextraeventactor.cpp lines 815–815 */
@@ -1251,6 +1222,145 @@ unsigned char CExtraEventActor::fn_bIsSoundPlaying(CResData* po_ResData)
     return PostponedPlay::fs_bIsSoundPlaying(po_ResData, this);
 }
 
+/* The Pustl map of handler names (C4_R3 harmonx stree.h/smap.h). Only the
+ * members this function needs are declared; those defined in the class body
+ * are inline, the others stay out of line to keep the retail calls. */
+namespace usnd {
+struct streebase {
+    struct sTreeLink {
+        sTreeLink* m_poLeft; /* +0x0 */
+        sTreeLink* m_poParent; /* +0x4 */
+        sTreeLink* m_poRight; /* +0x8 */
+        int m_eColor; /* +0xc */
+    };
+    struct iterator_base {
+        iterator_base(void) {}
+        iterator_base(sTreeLink* po_Link);
+        void _Inc(void);
+        bool operator==(const iterator_base& ro_It) const;
+        sTreeLink* _Ptr; /* +0x0 */
+    };
+    sTreeLink* _HeadLink; /* +0x0 */
+    unsigned char _Multi; /* +0x4 */
+    unsigned int _Size; /* +0x8 */
+};
+
+template <class T> struct sallocator {
+};
+
+template <class T> struct less {
+    bool operator()(const T& ro_Left, const T& ro_Right) const;
+};
+
+template <class T1, class T2> struct spair {
+    T1 first;
+    T2 second;
+};
+
+template <class K, class V, class KFN, class CMP, class ALLOC>
+struct stree : streebase {
+    struct sTreeNode : sTreeLink {
+        V m_oValue; /* +0x10 */
+    };
+    struct iterator : iterator_base {
+        iterator(void) {}
+        iterator(sTreeLink* po_Link) : iterator_base(po_Link) {}
+        V& operator*(void) const { return ((sTreeNode*)_Ptr)->m_oValue; }
+        iterator& operator++(void) { _Inc(); return *this; }
+        bool operator==(const iterator& ro_It) const { return _Ptr == ro_It._Ptr; }
+        bool operator!=(const iterator& ro_It) const { return !(_Ptr == ro_It._Ptr); }
+    };
+    struct const_iterator : iterator_base {
+        const_iterator(sTreeNode* po_Node);
+        const_iterator(const const_iterator& ro_It);
+        const V& operator*(void) const { return ((sTreeNode*)_Ptr)->m_oValue; }
+        bool operator!=(const const_iterator& ro_It) const { return !(_Ptr == ro_It._Ptr); }
+        sTreeNode* _Mynode(void) const;
+    };
+    sTreeNode* _GetHead(void) const;
+    sTreeLink*& _Lmost(void) { return _GetHead()->m_poLeft; }
+    iterator begin(void) { return iterator(_Lmost()); }
+    iterator end(void) { return iterator(_HeadLink); }
+    static const K& _Key(sTreeNode* po_Node);
+    unsigned int size(void) const { return _Size; }
+    const_iterator end(void) const;
+    const_iterator lower_bound(const K& ro_Key) const;
+    const_iterator find(const K& ro_Key) const
+    {
+        const_iterator oIt = lower_bound(ro_Key);
+        return (oIt == end() || key_compare(ro_Key, _Key(oIt._Mynode()))) ? end() : oIt;
+    }
+    ALLOC allocator; /* +0xc */
+    CMP key_compare; /* +0xd */
+};
+
+template <class K, class T, class CMP, class ALLOC>
+struct smap {
+    struct _Kfn {
+    };
+    typedef stree<K, spair<const K, T>, _Kfn, CMP, ALLOC> _Imp;
+    typedef typename _Imp::iterator iterator;
+    typedef typename _Imp::const_iterator const_iterator;
+    iterator begin(void) { return _Tr.begin(); }
+    iterator end(void) { return _Tr.end(); }
+    const_iterator end(void) const { return const_iterator(_Tr._GetHead()); }
+    const_iterator find(const K& ro_Key) const { return _Tr.find(ro_Key); }
+    unsigned int size(void) const { return _Tr.size(); }
+    _Imp _Tr; /* +0x0 */
+};
+
+struct CProgramHdr {
+    typedef smap<const char*, unsigned int, CStringIsLess, sallocator<unsigned int> > tdHandlerMap;
+    unsigned int m_uiConstHdrSize; /* +0x0 */
+    unsigned int m_uiSectionNb; /* +0x4 */
+    unsigned int m_uiMainStackSize; /* +0x8 */
+    unsigned int m_uiInitStackSize; /* +0xc */
+    unsigned int m_uiDestrStackSize; /* +0x10 */
+    unsigned int m_uiHdlrNb; /* +0x14 */
+    unsigned int m_uiLocalFnNb; /* +0x18 */
+    unsigned int m_uiProgVarSize; /* +0x1c */
+    unsigned int m_uiConstVarPos; /* +0x20 */
+    unsigned int m_uiConstVarSize; /* +0x24 */
+    unsigned int m_uiDestrCodePos; /* +0x28 */
+    unsigned int m_uiDestrCodeSize; /* +0x2c */
+    unsigned int m_uiInitCodePos; /* +0x30 */
+    unsigned int m_uiInitCodeSize; /* +0x34 */
+    unsigned int m_uiMainPos; /* +0x38 */
+    unsigned int m_uiMainSize; /* +0x3c */
+    unsigned int m_uiFnDescrPos; /* +0x40 */
+    unsigned int m_uiFnDescrSize; /* +0x44 */
+    unsigned int m_uiPrivCodePos; /* +0x48 */
+    unsigned int m_uiPrivCodeSize; /* +0x4c */
+    unsigned int m_uiVarDescrPos; /* +0x50 */
+    unsigned int m_uiVarDescrSize; /* +0x54 */
+    unsigned int m_uiPreDestrCodePos; /* +0x58 */
+    unsigned int m_uiPreDestrCodeSize; /* +0x5c */
+    unsigned int m_uiObjectVarNb; /* +0x60 */
+    tdHandlerMap m_oHandlerIds; /* +0x64 */
+    int m_aiStdHandlerIds[33]; /* +0x74 */
+    unsigned int f_uiGetHandlerId(const char* pcName) const
+    {
+        tdHandlerMap::const_iterator it = m_oHandlerIds.find(pcName);
+        return it != m_oHandlerIds.end() ? (*it).second : m_oHandlerIds.size();
+    }
+};
+
+/* Not in the recovered debug; the header sits at +0x20 in the retail code. */
+struct CProgramResData : CResData {
+    unsigned int m_auiUnknown[2]; /* +0x18 */
+    CProgramHdr m_oHdr; /* +0x20 */
+};
+
+struct CProgramResType {
+    static CResType& fs_roGetInst(void);
+};
+}
+
+struct CLinkMicro;
+struct CLinkMicroCont : usnd::smap<int, CLinkMicro*, usnd::less<int>, usnd::sallocator<CLinkMicro*> > {
+    static CLinkMicroCont& mfn_roGetInstance(void);
+};
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcextraeventactor.cpp lines 650–698 */
 /* addr: 0x001ce550  size: 572 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1286,14 +1396,42 @@ unsigned char CExtraEventActor::fn_bIsSoundPlaying(CResData* po_ResData)
  */
 unsigned char CExtraEventActor::fn_bIsResourcesAllowed(const CResData& ro_ResData)
 {
-    CBoolRefParam oBoolRef;
     unsigned int uiObjNum;
     unsigned int uiResult;
     CResObjParams* pParams;
     char* czStrTheme;
     CProgramHdr* ro_ProgHdr;
-    int apObjects[100];
-    /* TODO: decompile from asm/... */
+    static CResObj* apObjects[100];
+
+    ro_ResData.fv_roGetClassInfo();
+
+    if (ms32ACPObjectId == -1)
+        return 1;
+
+    if (&ro_ResData.fv_roGetResType() != &usnd::CProgramResType::fs_roGetInst())
+        return 1;
+
+    ro_ProgHdr = &((usnd::CProgramResData&)ro_ResData).m_oHdr;
+    czStrTheme = "OnIsTheme";
+
+    if (ro_ProgHdr->f_uiGetHandlerId(czStrTheme) == ro_ProgHdr->m_oHandlerIds.size())
+        return 1;
+
+    pParams = m_oResObjParams.m_poNext;
+    while (pParams && pParams->m_poResData != &ro_ResData)
+        pParams = pParams->m_poNext;
+    if (pParams)
+    {
+        uiObjNum = mpoActorObj->m_oProgramContext.fv_uiGetRunningObjsWithUserData(pParams, -1, apObjects, 100);
+        for (uiResult = 0; uiResult < uiObjNum; uiResult++)
+        {
+            CBoolRefParam oBoolRef;
+            apObjects[uiResult]->fv_vExecCmd(4, &oBoolRef);
+            if (oBoolRef.f_bGetValue() == true)
+                return 0;
+        }
+    }
+    return 1;
 }
 
 namespace usnd {
@@ -1501,9 +1639,31 @@ unsigned char CExtraEventActor::mfn_bApplyAllParams(bool bforce)
  */
 unsigned char CExtraEventActor::mfn_bApplySectorActivation(void)
 {
-    iterator it;
+    CLinkMicroCont::iterator it;
     unsigned char b_Answer;
-    /* TODO: decompile from asm/... */
+
+    b_Answer = 1;
+    if (ms32ACPObjectId != -1)
+    {
+        b_Answer = 0;
+        for (it = CLinkMicroCont::mfn_roGetInstance().begin(); !b_Answer && it != CLinkMicroCont::mfn_roGetInstance().end(); ++it)
+            b_Answer = (char)b_Answer | (char)(unsigned char)(mpoActorType->mstIActor.pfnMicroLink(ms32ACPObjectId, ms32ACPChannelId, (*it).first) ? 1 : 0);
+
+        if (CLinkMicroCont::mfn_roGetInstance().begin() == CLinkMicroCont::mfn_roGetInstance().end())
+            b_Answer = 1;
+
+        if (!b_Answer && !mbAllSoundPaused)
+        {
+            mpoActorObj->fv_vExecCmd(2, 0);
+            mbAllSoundPaused = 1;
+        }
+        else if (b_Answer && mbAllSoundPaused)
+        {
+            mpoActorObj->fv_vExecCmd(3, 0);
+            mbAllSoundPaused = 0;
+        }
+    }
+    return b_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcextraeventactor.cpp lines 436–448 */
