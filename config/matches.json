@@ -82366,11 +82366,35 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
       "status": "MATCH"
     },
+    "0x002f75c0": {
+      "address": "0x002f75c0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "IPT_fn_bIsJustInvalidatedPadButton",
+      "size": 272,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
+      "status": "MATCH"
+    },
     "0x002f76d0": {
       "address": "0x002f76d0",
       "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
       "name": "IPT_fn_bIsValidatedPadButton",
       "size": 140,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
+      "status": "MATCH"
+    },
+    "0x002f7760": {
+      "address": "0x002f7760",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "IPT_fn_bIsJustValidatedPadButton",
+      "size": 272,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
+      "status": "MATCH"
+    },
+    "0x002f7870": {
+      "address": "0x002f7870",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "IPT_fn_vSetKeyAndPadButtonForPadNumber",
+      "size": 76,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
       "status": "MATCH"
     },

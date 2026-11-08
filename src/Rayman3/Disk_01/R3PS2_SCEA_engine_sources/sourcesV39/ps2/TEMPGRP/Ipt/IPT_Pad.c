@@ -267,14 +267,7 @@ unsigned char IPT_fn_bIsJustInvalidatedPadButton(unsigned char ucPadNumber, unsi
 
     if (hPadButton && param0)
     {
-        if (hPadButton->lState == -1)
-        {
-            if (param0->lState < 0)
-            {
-                return 1;
-            }
-        }
-        return (hPadButton->lState < 0) ? ((param0->lState == -1) ? 1 : 0) : 0;
+        return (((hPadButton->lState == -1) && (param0->lState < 0)) || ((hPadButton->lState < 0) && (param0->lState == -1))) ? (unsigned char)1 : (unsigned char)0;
     }
     else if (hPadButton != NULL)
     {
@@ -346,14 +339,7 @@ unsigned char IPT_fn_bIsJustValidatedPadButton(unsigned char ucPadNumber, unsign
 
     if (hPadButton && param0)
     {
-        if (hPadButton->lState == 1)
-        {
-            if (param0->lState <= 0)
-            {
-                return 1;
-            }
-        }
-        return (hPadButton->lState > 0) ? 0 : ((param0->lState == 1) ? 1 : 0);
+        return (((hPadButton->lState == 1) && (param0->lState <= 0)) || ((hPadButton->lState <= 0) && (param0->lState == 1))) ? (unsigned char)1 : (unsigned char)0;
     }
     else if (hPadButton != NULL)
     {
@@ -383,15 +369,8 @@ unsigned char IPT_fn_bIsJustValidatedPadButton(unsigned char ucPadNumber, unsign
  */
 void IPT_fn_vSetKeyAndPadButtonForPadNumber(unsigned char ucPadNumber, unsigned char ucButtonNumber, IPT_tdstEntryElement_* hPadButton, IPT_tdstEntryElement_* hKeyButton)
 {
-    char* pcJoy;
-    char* pcKey;
-
-    pcJoy = (char*)&IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hJoystickButtons;
-    pcKey = (char*)&IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hKeyButtons;
-    pcJoy = pcJoy + 0;
-    pcKey = pcKey + 0;
-    *(int*)(pcJoy + ucButtonNumber * 4) = (int)hPadButton;
-    *(int*)(pcKey + ucButtonNumber * 4) = (int)hKeyButton;
+    IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hJoystickButtons[ucButtonNumber] = (int)hPadButton;
+    IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hKeyButtons[ucButtonNumber] = (int)hKeyButton;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 220–221 */
