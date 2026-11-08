@@ -94,46 +94,46 @@ void GLI_vGsStoreFrameBufferInto128x128x16__FPUssiis(unsigned short* _Destinatio
     /* TODO: decompile from asm/... */
 }
 
-void HMU_fn_vSndFree(void** p_vPointer)
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void HMU_fn_vSndFree(void** p_vPointer);
+void* HMU_fn_pvSndMalloc(unsigned int u32Size);
+void HMU_fn_vFree(void** p_vPointer, unsigned char bTempMalloc);
+
+void HMU_fn_vFree(void** p_vPointer, unsigned char bTempMalloc)
 {
-    unsigned char bDirectFreeDone;
-    unsigned int i;
-    unsigned char ucOldHMUTempBloc;
     void* p_vBeginBloc;
     unsigned short uwBlocId;
+    e_ucHMUStaticBlocks eMemoryBlockUse;
 
-    bDirectFreeDone = 0;
     HMU_fn_vEnterCriticalSection();
-    Mmg_fn_vWhereIs(*p_vPointer, &uwBlocId, &p_vBeginBloc);
-    if (HMU_fn_bIsInitialized() && uwBlocId != 0xFFFF)
+    if (!HMU_fn_bIsInitialized())
     {
-        /* The pointer belongs to a static memory block, so it is not one of
-           the direct sound allocations: there is nothing to look up. */
+        HMU_fn_vLeaveCriticalSection();
+        return;
+    }
+    Mmg_fn_vWhereIs(*p_vPointer, &uwBlocId, &p_vBeginBloc);
+    if (uwBlocId == 0xFFFF)
+    {
+        if (bTempMalloc)
+            eMemoryBlockUse = (e_ucHMUStaticBlocks)(HMU_fn_ucGetActualTempMemoryBlockUsed() & 0xFF);
+        else
+            eMemoryBlockUse = (e_ucHMUStaticBlocks)(HMU_fn_ucGetActualNormalMemoryBlockUsed() & 0xFF);
+        Mmg_fn_v_SetModeAlloc(g_ucHMUModuleId, 0xFF, 0);
     }
     else
     {
-        for (i = 0; i <= HMU_g_ulLastSndDirectAlloc && !bDirectFreeDone; i++)
+        eMemoryBlockUse = (e_ucHMUStaticBlocks)(uwBlocId & 0xFF);
+        if (!HMU_g_stMemoryStructure.bIsInitialized[eMemoryBlockUse])
         {
-            if (HMU_g_p_vSndDirectSoundAlloc[i] == *p_vPointer)
-            {
-                free(*p_vPointer);
-                *p_vPointer = NULL;
-                HMU_g_p_vSndDirectSoundAlloc[i] = NULL;
-                bDirectFreeDone = 1;
-            }
+            HMU_fn_vLeaveCriticalSection();
+            return;
         }
+        Mmg_fn_v_SetModeAlloc(g_ucHMUModuleId, (unsigned char)eMemoryBlockUse, 0);
     }
-    if (HMU_fn_bIsInitialized() && !bDirectFreeDone)
-    {
-        ucOldHMUTempBloc = (unsigned char)HMU_fn_ucGetActualTempMemoryBlockUsed();
-        /* Both branches select the same temporary block, as in the retail code. */
-        if (HMU_g_stMemoryStructure.bIsInitialized[1])
-            HMU_fn_vSetActualTempMemoryBlock(1);
-        else
-            HMU_fn_vSetActualTempMemoryBlock(1);
-        HMU_fn_vFree(p_vPointer, 1);
-        HMU_fn_vSetActualTempMemoryBlock(ucOldHMUTempBloc);
-    }
+    HMU_g_stMemoryStructure.u32NumberOfAllocation[eMemoryBlockUse]--;
+    fn_vGenFree(*p_vPointer, 0);
+    *p_vPointer = NULL;
     HMU_fn_vLeaveCriticalSection();
 }
 
@@ -181,39 +181,45 @@ void* HMU_fn_pvSndMalloc(unsigned int u32Size)
     return p_vReturn;
 }
 
-void HMU_fn_vFree(void** p_vPointer, unsigned char bTempMalloc)
+void HMU_fn_vSndFree(void** p_vPointer)
 {
+    unsigned char bDirectFreeDone;
+    unsigned int i;
+    unsigned char ucOldHMUTempBloc;
     void* p_vBeginBloc;
     unsigned short uwBlocId;
-    e_ucHMUStaticBlocks eMemoryBlockUse;
 
+    bDirectFreeDone = 0;
     HMU_fn_vEnterCriticalSection();
-    if (!HMU_fn_bIsInitialized())
-    {
-        HMU_fn_vLeaveCriticalSection();
-        return;
-    }
     Mmg_fn_vWhereIs(*p_vPointer, &uwBlocId, &p_vBeginBloc);
-    if (uwBlocId == 0xFFFF)
+    if (HMU_fn_bIsInitialized() && uwBlocId != 0xFFFF)
     {
-        if (bTempMalloc)
-            eMemoryBlockUse = (e_ucHMUStaticBlocks)(HMU_fn_ucGetActualTempMemoryBlockUsed() & 0xFF);
-        else
-            eMemoryBlockUse = (e_ucHMUStaticBlocks)(HMU_fn_ucGetActualNormalMemoryBlockUsed() & 0xFF);
-        Mmg_fn_v_SetModeAlloc(g_ucHMUModuleId, 0xFF, 0);
+        /* The pointer belongs to a static memory block, so it is not one of
+           the direct sound allocations: there is nothing to look up. */
     }
     else
     {
-        eMemoryBlockUse = (e_ucHMUStaticBlocks)(uwBlocId & 0xFF);
-        if (!HMU_g_stMemoryStructure.bIsInitialized[eMemoryBlockUse])
+        for (i = 0; i <= HMU_g_ulLastSndDirectAlloc && !bDirectFreeDone; i++)
         {
-            HMU_fn_vLeaveCriticalSection();
-            return;
+            if (HMU_g_p_vSndDirectSoundAlloc[i] == *p_vPointer)
+            {
+                free(*p_vPointer);
+                *p_vPointer = NULL;
+                HMU_g_p_vSndDirectSoundAlloc[i] = NULL;
+                bDirectFreeDone = 1;
+            }
         }
-        Mmg_fn_v_SetModeAlloc(g_ucHMUModuleId, (unsigned char)eMemoryBlockUse, 0);
     }
-    HMU_g_stMemoryStructure.u32NumberOfAllocation[eMemoryBlockUse]--;
-    fn_vGenFree(*p_vPointer, 0);
-    *p_vPointer = NULL;
+    if (HMU_fn_bIsInitialized() && !bDirectFreeDone)
+    {
+        ucOldHMUTempBloc = (unsigned char)HMU_fn_ucGetActualTempMemoryBlockUsed();
+        /* Both branches select the same temporary block, as in the retail code. */
+        if (HMU_g_stMemoryStructure.bIsInitialized[1])
+            HMU_fn_vSetActualTempMemoryBlock(1);
+        else
+            HMU_fn_vSetActualTempMemoryBlock(1);
+        HMU_fn_vFree(p_vPointer, 1);
+        HMU_fn_vSetActualTempMemoryBlock(ucOldHMUTempBloc);
+    }
     HMU_fn_vLeaveCriticalSection();
 }

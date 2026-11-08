@@ -2962,51 +2962,21 @@ extern tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_*, tdstNodeInterp
 extern HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_*);
 tdstNodeInterpret_* fn_p_stOperatorGetPerso(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, HIE_tdstSuperObject_** hSuperObjPersoFound);
 
-tdstNodeInterpret_* fn_p_stModelCastOperator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    HIE_tdstSuperObject_* hSuperObjPersoToCast;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
-    p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree, &hSuperObjPersoToCast);
-
-    p_stValue->uDummy.uParam.p_stEngObjValue = hSuperObjPersoToCast == 0 ? 0 : (hSuperObjPersoToCast->ulTypeOfLinkedObject != 2 ? 0 : hSuperObjPersoToCast->hLinkedObject.p_stCharacter); p_stValue->eType = E_vt_Perso;
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stUltraOperator(HIE_tdstSuperObject_* hCurrentSuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    HIE_tdstSuperObject_* hNewCurrentSuperObjPerso;
-    struct { tdstEngineObject_* p_stEngObjValue; unsigned char pad[12]; } stValue;
-    tdstNodeInterpret_* p_stNext;
-
-    p_stNext = fn_p_stEvalTree(hCurrentSuperObjPerso, p_stTree, (tdstGetSetParam_ *)&stValue); hNewCurrentSuperObjPerso = fn_h_StandardGameGetSuperObject(stValue.p_stEngObjValue->h_StandardGame);
-
-    if (hCurrentSuperObjPerso == hNewCurrentSuperObjPerso) g_hCurrentSuperObjPerso = NULL; else g_hCurrentSuperObjPerso = hNewCurrentSuperObjPerso;
-    return fn_p_stEvalTree(hCurrentSuperObjPerso, p_stNext, p_stValue);
-
-}
-
-void fn_vGetUltraOperatorPerso(int bYouHaveRightToUseThisFunction, HIE_tdstSuperObject_* hCurrentSuperObjPerso, HIE_tdstSuperObject_** hNewSuperObjPerso)
-{
-    if (g_hCurrentSuperObjPerso != 0)
-    {
-        if (bYouHaveRightToUseThisFunction != 0)
-        {
-            *hNewSuperObjPerso = g_hCurrentSuperObjPerso;
-            g_hCurrentSuperObjPerso = 0;
-        }
-    }
-    else
-        *hNewSuperObjPerso = hCurrentSuperObjPerso;
-}
-
-void fn_vSetUltraOperatorPerso(HIE_tdstSuperObject_* hCurrentSuperObjPerso, HIE_tdstSuperObject_* hNewCurrentSuperObjPerso)
-{
-    if (hCurrentSuperObjPerso == hNewCurrentSuperObjPerso)
-        g_hCurrentSuperObjPerso = 0;
-    else
-        g_hCurrentSuperObjPerso = hNewCurrentSuperObjPerso;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+tdstNodeInterpret_* fn_p_stModelCastOperator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stUltraOperator(HIE_tdstSuperObject_* hCurrentSuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+void fn_vGetUltraOperatorPerso(int bYouHaveRightToUseThisFunction, HIE_tdstSuperObject_* hCurrentSuperObjPerso, HIE_tdstSuperObject_** hNewSuperObjPerso);
+void fn_vSetUltraOperatorPerso(HIE_tdstSuperObject_* hCurrentSuperObjPerso, HIE_tdstSuperObject_* hNewCurrentSuperObjPerso);
+tdstNodeInterpret_* fn_p_stAffectOperator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+void fn_vSetVectorComponentForAffectOperator(unsigned char ucXYZflag, MTH3D_tdstVector_* p_stVector, float xReal);
+tdstNodeInterpret_* fn_p_stVectorDotOperator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stDotOperator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stArrayOperator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stOperatorGetPerso(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, HIE_tdstSuperObject_** hSuperObjPersoFound);
+tdstNodeInterpret_* fn_p_stVectorOperator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stVectorScalarOperator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stScalarOperator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
 
 inline int MTH_M_xRealToLong(float xValue)
 {
@@ -3031,6 +3001,335 @@ void fn_vOnAIErm_M_UpdateLastError(int FatalErrorNum, char* szMsg);
 void fn_vSetVectorComponentForAffectOperator(unsigned char ucXYZflag, MTH3D_tdstVector_* p_stVector, float xReal);
 unsigned char fn_ucSetDsgVar(unsigned char ucId, unsigned char ucIndex, AI_tdstMind_* p_stPerso, tdstGetSetParam_* p_stGetSetParam);
 unsigned char fn_ucSetFieldValue(tdeFieldId_ eFieldId, HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam);
+
+tdstNodeInterpret_* fn_p_stOperatorGetPerso(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, HIE_tdstSuperObject_** hSuperObjPersoFound);
+unsigned char fn_ucGetDsgVar(unsigned char ucId, unsigned char ucIndex, AI_tdstMind_* p_stPerso, tdstGetSetParam_* p_stGetSetParam);
+unsigned char fn_ucGetFieldValue(tdeFieldId_ eFieldId, HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam);
+void fn_vOnAIErm_M_UpdateLastError(int FatalErrorNum, char* szMsg);
+
+#pragma auto_inline on
+
+#pragma auto_inline reset
+
+/* abs.s has no C form under MWCC; only that instruction is asm. */
+inline float MTH_xAbs(float xValue)
+{
+    float xResult;
+    asm { abs.s xResult, xValue }
+    return xResult;
+}
+
+/* abs.s in place: MWCC cannot emit abs.s from C; only that instruction is asm. */
+
+tdstNodeInterpret_* fn_p_stScalarOperator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    unsigned char ucIsThereFloat;
+    float xReal;
+    tdeOperatorId_ eOperatorId;
+    tdstGetSetParam_ stParam2;
+
+    eOperatorId = p_stTree[-1].uDummy.uId.eOperatorId;
+    if (eOperatorId == eOperator_ScalarUnaryMinus)
+    {
+        p_stValue->uDummy.uParam.lValue = 0;
+        p_stValue->eType = E_vt_Integer;
+    }
+    else
+    {
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        if ((eOperatorId == eOperator_ScalarMulScalar) || (eOperatorId == eOperator_ScalarDivScalar))
+        {
+            if (p_stValue->eType == E_vt_Float)
+            {
+                xReal = p_stValue->uDummy.uParam.xValue;
+            }
+            else
+            {
+                xReal = (float)p_stValue->uDummy.uParam.lValue;
+            }
+            if (xReal == 0.0f)
+            {
+                fn_p_stSkipThisArgument(p_stTree);
+                return;
+            }
+        }
+    }
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam2);
+    ucIsThereFloat = fn_ucAreThereFloatIfYesConvertThem(p_stValue, &stParam2);
+    switch (eOperatorId)
+    {
+    case eOperator_ScalarModulo:
+        p_stValue->uDummy.uParam.lValue = p_stValue->uDummy.uParam.lValue % stParam2.uDummy.uParam.lValue;
+        p_stValue->eType = E_vt_Integer;
+        return p_stTree;
+    case eOperator_ScalarPlusScalar:
+        if (ucIsThereFloat)
+        {
+            p_stValue->uDummy.uParam.xValue = p_stValue->uDummy.uParam.xValue + stParam2.uDummy.uParam.xValue;
+            p_stValue->eType = E_vt_Float;
+        }
+        else
+        {
+            p_stValue->uDummy.uParam.lValue = p_stValue->uDummy.uParam.lValue + stParam2.uDummy.uParam.lValue;
+            p_stValue->eType = E_vt_Integer;
+        }
+        return p_stTree;
+    case eOperator_ScalarMinusScalar:
+    case eOperator_ScalarUnaryMinus:
+        if (ucIsThereFloat)
+        {
+            p_stValue->uDummy.uParam.xValue = p_stValue->uDummy.uParam.xValue - stParam2.uDummy.uParam.xValue;
+            p_stValue->eType = E_vt_Float;
+        }
+        else
+        {
+            p_stValue->uDummy.uParam.lValue = p_stValue->uDummy.uParam.lValue - stParam2.uDummy.uParam.lValue;
+            p_stValue->eType = E_vt_Integer;
+        }
+        return p_stTree;
+    case eOperator_ScalarMulScalar:
+        if (ucIsThereFloat)
+        {
+            p_stValue->uDummy.uParam.xValue = p_stValue->uDummy.uParam.xValue * stParam2.uDummy.uParam.xValue;
+            p_stValue->eType = E_vt_Float;
+        }
+        else
+        {
+            p_stValue->uDummy.uParam.lValue = p_stValue->uDummy.uParam.lValue * stParam2.uDummy.uParam.lValue;
+            p_stValue->eType = E_vt_Integer;
+        }
+        return p_stTree;
+    case eOperator_ScalarDivScalar:
+        if ((ucIsThereFloat && MTH_xAbsInPlace(stParam2.uDummy.uParam.xValue) > 1.1754951e-38f) || (!ucIsThereFloat && stParam2.uDummy.uParam.lValue != 0))
+        {
+            if (ucIsThereFloat)
+            {
+                p_stValue->uDummy.uParam.xValue = p_stValue->uDummy.uParam.xValue / stParam2.uDummy.uParam.xValue;
+                p_stValue->eType = E_vt_Float;
+            }
+            else
+            {
+                p_stValue->uDummy.uParam.lValue = p_stValue->uDummy.uParam.lValue / stParam2.uDummy.uParam.lValue;
+                p_stValue->eType = E_vt_Integer;
+            }
+        }
+        else
+        {
+            p_stValue->uDummy.uParam.lValue = 0;
+            p_stValue->eType = E_vt_Integer;
+        }
+        return p_stTree;
+    default:
+        p_stValue->uDummy.uParam.lValue = 0;
+        p_stValue->eType = E_vt_Integer;
+        return p_stTree;
+    }
+}
+
+tdstNodeInterpret_* fn_p_stVectorScalarOperator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    tdstGetSetParam_ stParam1;
+    tdstGetSetParam_ stParam2;
+    tdeOperatorId_ eOperatorId;
+    MTH3D_tdstVector_* p_stVector1;
+    float xFactor;
+    MTH3D_tdstVector_* p_stResult;
+
+    eOperatorId = p_stTree[-1].uDummy.uId.eOperatorId;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam2);
+    if (stParam1.eType != E_vt_Vector)
+    {
+        p_stVector1 = &stParam2.uDummy.uParam.stVectorValue;
+        xFactor = (stParam1.eType == E_vt_Float) ? stParam1.uDummy.uParam.xValue : (float)stParam1.uDummy.uParam.lValue;
+    }
+    else
+    {
+        p_stVector1 = &stParam1.uDummy.uParam.stVectorValue;
+        xFactor = (stParam2.eType == E_vt_Float) ? stParam2.uDummy.uParam.xValue : (float)stParam2.uDummy.uParam.lValue;
+    }
+    p_stResult = &p_stValue->uDummy.uParam.stVectorValue;
+    p_stValue->eType = E_vt_Vector;
+    switch (eOperatorId)
+    {
+    case eOperator_VectorMulScalar:
+        p_stResult->xX = xFactor * p_stVector1->xX;
+        p_stResult->xY = xFactor * p_stVector1->xY;
+        p_stResult->xZ = xFactor * p_stVector1->xZ;
+        return p_stTree;
+    case eOperator_VectorDivScalar:
+        if (MTH_xAbs(xFactor) > 1.1754951e-38f)
+        {
+            p_stResult->xX = p_stVector1->xX / xFactor;
+            p_stResult->xY = p_stVector1->xY / xFactor;
+            p_stResult->xZ = p_stVector1->xZ / xFactor;
+        }
+        else
+        {
+            p_stResult->xX = 0;
+            p_stResult->xY = 0;
+            p_stResult->xZ = 0;
+        }
+        return p_stTree;
+    default:
+        p_stResult->xX = 0;
+        p_stResult->xY = 0;
+        p_stResult->xZ = 0;
+        return p_stTree;
+    }
+}
+
+tdstNodeInterpret_* fn_p_stVectorOperator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    tdstGetSetParam_ stParam1;
+    tdstGetSetParam_ stParam2;
+    tdeOperatorId_ eOperatorId;
+    MTH3D_tdstVector_* p_stVector1;
+    MTH3D_tdstVector_* p_stVector2;
+    MTH3D_tdstVector_* p_stResult;
+
+    eOperatorId = p_stTree[-1].uDummy.uId.eOperatorId;
+    p_stVector2 = NULL;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
+    p_stVector1 = &stParam1.uDummy.uParam.stVectorValue;
+    if (eOperatorId != eOperator_VectorUnaryMinus)
+    {
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam2);
+        p_stVector2 = &stParam2.uDummy.uParam.stVectorValue;
+    }
+    p_stResult = &p_stValue->uDummy.uParam.stVectorValue;
+    p_stValue->eType = E_vt_Vector;
+    switch (eOperatorId)
+    {
+    case eOperator_VectorPlusVector:
+        p_stResult->xX = p_stVector1->xX + p_stVector2->xX;
+        p_stResult->xY = p_stVector1->xY + p_stVector2->xY;
+        p_stResult->xZ = p_stVector1->xZ + p_stVector2->xZ;
+        return p_stTree;
+    case eOperator_VectorMinusVector:
+        p_stResult->xX = p_stVector1->xX - p_stVector2->xX;
+        p_stResult->xY = p_stVector1->xY - p_stVector2->xY;
+        p_stResult->xZ = p_stVector1->xZ - p_stVector2->xZ;
+        return p_stTree;
+    case eOperator_VectorUnaryMinus:
+        p_stResult->xX = -p_stVector1->xX;
+        p_stResult->xY = -p_stVector1->xY;
+        p_stResult->xZ = -p_stVector1->xZ;
+        return p_stTree;
+    default:
+        p_stResult->xX = 0;
+        p_stResult->xY = 0;
+        p_stResult->xZ = 0;
+        return p_stTree;
+    }
+}
+
+#pragma auto_inline on
+tdstNodeInterpret_* fn_p_stOperatorGetPerso(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, HIE_tdstSuperObject_** hSuperObjPersoFound)
+{
+    struct { tdstEngineObject_* p_stEngObjValue; unsigned char pad[12]; } stValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, (tdstGetSetParam_ *)&stValue);
+    *hSuperObjPersoFound = fn_h_StandardGameGetSuperObject(stValue.p_stEngObjValue->h_StandardGame);
+    return p_stTree;
+}
+#pragma auto_inline reset
+
+tdstNodeInterpret_* fn_p_stArrayOperator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    unsigned char ucVarId;
+    HIE_tdstSuperObject_* hSuperObjPerso;
+    tdeTypeInterpret_ eTypeInterpret;
+
+    hSuperObjPerso = p_SuperObjPerso;
+    if (p_stTree->eType == 2)
+    {
+        p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree + 1, &hSuperObjPerso);
+    }
+    ucVarId = p_stTree->uDummy.uParam.ucValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree + 1, p_stValue);
+    fn_ucGetDsgVar(ucVarId, p_stValue->uDummy.uParam.ucValue, hSuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind, p_stValue);
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stDotOperator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    unsigned char ucOk;
+    HIE_tdstSuperObject_* hSuperObjPerso;
+    tdeTypeInterpret_ eTypeInterpret;
+    tdstNodeInterpret_* p_stNext;
+
+    p_stNext = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree, &hSuperObjPerso);
+    p_stTree = p_stNext;
+    eTypeInterpret = (tdeTypeInterpret_)p_stNext->eType;
+    if (eTypeInterpret == E_ti_DsgVarRef)
+    {
+        p_stTree = p_stNext + 1;
+        fn_ucGetDsgVar(p_stNext->uDummy.uParam.ucValue, 0, hSuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind, p_stValue);
+    }
+    else if (eTypeInterpret == E_ti_Field)
+    {
+        p_stTree = p_stNext + 1;
+        ucOk = fn_ucGetFieldValue(p_stNext->uDummy.uId.eFieldId, hSuperObjPerso, p_stValue);
+        if (!ucOk)
+        {
+            fn_vOnAIErm_M_UpdateLastError(0x22, 0);
+        }
+    }
+    else if (eTypeInterpret == E_ti_Operator)
+    {
+        if (p_stNext->uDummy.uId.eFuncId == eFunc_Cosinus)
+        {
+            p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stNext, p_stValue);
+        }
+    }
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stVectorDotOperator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    tdeOperatorId_ eOperatorId;
+    tdstNodeInterpret_* p_stNext;
+
+    eOperatorId = p_stTree[-1].uDummy.uId.eOperatorId;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    p_stNext = p_stTree;
+    if (p_stValue->eType == E_vt_Vector)
+    {
+        switch (eOperatorId)
+        {
+        case eOperator_GetVectorX:
+            p_stValue->uDummy.uParam.xValue = p_stValue->uDummy.uParam.stVectorValue.xX; p_stValue->eType = E_vt_Float;
+            return p_stNext;
+        case eOperator_GetVectorY:
+            p_stValue->uDummy.uParam.xValue = p_stValue->uDummy.uParam.stVectorValue.xY; p_stValue->eType = E_vt_Float;
+            return p_stNext;
+        case eOperator_GetVectorZ:
+            p_stValue->uDummy.uParam.xValue = p_stValue->uDummy.uParam.stVectorValue.xZ; p_stValue->eType = E_vt_Float;
+            return p_stNext;
+        default:
+            break;
+        }
+    }
+    return p_stNext;
+}
+
+void fn_vSetVectorComponentForAffectOperator(unsigned char ucXYZflag, MTH3D_tdstVector_* p_stVector, float xReal)
+{
+    switch (ucXYZflag)
+    {
+    case 1:
+        p_stVector->xX = xReal;
+        break;
+    case 2:
+        p_stVector->xY = xReal;
+        break;
+    case 3:
+        p_stVector->xZ = xReal;
+        break;
+    default:
+        break;
+    }
+}
 
 tdstNodeInterpret_* fn_p_stAffectOperator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
@@ -3420,326 +3719,48 @@ tdstNodeInterpret_* fn_p_stAffectOperator(HIE_tdstSuperObject_* p_SuperObjPerso,
     return p_stTree;
 }
 
-void fn_vSetVectorComponentForAffectOperator(unsigned char ucXYZflag, MTH3D_tdstVector_* p_stVector, float xReal)
+void fn_vSetUltraOperatorPerso(HIE_tdstSuperObject_* hCurrentSuperObjPerso, HIE_tdstSuperObject_* hNewCurrentSuperObjPerso)
 {
-    switch (ucXYZflag)
-    {
-    case 1:
-        p_stVector->xX = xReal;
-        break;
-    case 2:
-        p_stVector->xY = xReal;
-        break;
-    case 3:
-        p_stVector->xZ = xReal;
-        break;
-    default:
-        break;
-    }
+    if (hCurrentSuperObjPerso == hNewCurrentSuperObjPerso)
+        g_hCurrentSuperObjPerso = 0;
+    else
+        g_hCurrentSuperObjPerso = hNewCurrentSuperObjPerso;
 }
 
-tdstNodeInterpret_* fn_p_stVectorDotOperator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+void fn_vGetUltraOperatorPerso(int bYouHaveRightToUseThisFunction, HIE_tdstSuperObject_* hCurrentSuperObjPerso, HIE_tdstSuperObject_** hNewSuperObjPerso)
 {
-    tdeOperatorId_ eOperatorId;
-    tdstNodeInterpret_* p_stNext;
-
-    eOperatorId = p_stTree[-1].uDummy.uId.eOperatorId;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
-    p_stNext = p_stTree;
-    if (p_stValue->eType == E_vt_Vector)
+    if (g_hCurrentSuperObjPerso != 0)
     {
-        switch (eOperatorId)
+        if (bYouHaveRightToUseThisFunction != 0)
         {
-        case eOperator_GetVectorX:
-            p_stValue->uDummy.uParam.xValue = p_stValue->uDummy.uParam.stVectorValue.xX; p_stValue->eType = E_vt_Float;
-            return p_stNext;
-        case eOperator_GetVectorY:
-            p_stValue->uDummy.uParam.xValue = p_stValue->uDummy.uParam.stVectorValue.xY; p_stValue->eType = E_vt_Float;
-            return p_stNext;
-        case eOperator_GetVectorZ:
-            p_stValue->uDummy.uParam.xValue = p_stValue->uDummy.uParam.stVectorValue.xZ; p_stValue->eType = E_vt_Float;
-            return p_stNext;
-        default:
-            break;
+            *hNewSuperObjPerso = g_hCurrentSuperObjPerso;
+            g_hCurrentSuperObjPerso = 0;
         }
     }
-    return p_stNext;
+    else
+        *hNewSuperObjPerso = hCurrentSuperObjPerso;
 }
 
-tdstNodeInterpret_* fn_p_stOperatorGetPerso(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, HIE_tdstSuperObject_** hSuperObjPersoFound);
-unsigned char fn_ucGetDsgVar(unsigned char ucId, unsigned char ucIndex, AI_tdstMind_* p_stPerso, tdstGetSetParam_* p_stGetSetParam);
-unsigned char fn_ucGetFieldValue(tdeFieldId_ eFieldId, HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam);
-void fn_vOnAIErm_M_UpdateLastError(int FatalErrorNum, char* szMsg);
-
-tdstNodeInterpret_* fn_p_stDotOperator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stUltraOperator(HIE_tdstSuperObject_* hCurrentSuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    unsigned char ucOk;
-    HIE_tdstSuperObject_* hSuperObjPerso;
-    tdeTypeInterpret_ eTypeInterpret;
-    tdstNodeInterpret_* p_stNext;
-
-    p_stNext = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree, &hSuperObjPerso);
-    p_stTree = p_stNext;
-    eTypeInterpret = (tdeTypeInterpret_)p_stNext->eType;
-    if (eTypeInterpret == E_ti_DsgVarRef)
-    {
-        p_stTree = p_stNext + 1;
-        fn_ucGetDsgVar(p_stNext->uDummy.uParam.ucValue, 0, hSuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind, p_stValue);
-    }
-    else if (eTypeInterpret == E_ti_Field)
-    {
-        p_stTree = p_stNext + 1;
-        ucOk = fn_ucGetFieldValue(p_stNext->uDummy.uId.eFieldId, hSuperObjPerso, p_stValue);
-        if (!ucOk)
-        {
-            fn_vOnAIErm_M_UpdateLastError(0x22, 0);
-        }
-    }
-    else if (eTypeInterpret == E_ti_Operator)
-    {
-        if (p_stNext->uDummy.uId.eFuncId == eFunc_Cosinus)
-        {
-            p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stNext, p_stValue);
-        }
-    }
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stArrayOperator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    unsigned char ucVarId;
-    HIE_tdstSuperObject_* hSuperObjPerso;
-    tdeTypeInterpret_ eTypeInterpret;
-
-    hSuperObjPerso = p_SuperObjPerso;
-    if (p_stTree->eType == 2)
-    {
-        p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree + 1, &hSuperObjPerso);
-    }
-    ucVarId = p_stTree->uDummy.uParam.ucValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree + 1, p_stValue);
-    fn_ucGetDsgVar(ucVarId, p_stValue->uDummy.uParam.ucValue, hSuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind, p_stValue);
-    return p_stTree;
-}
-
-#pragma auto_inline on
-tdstNodeInterpret_* fn_p_stOperatorGetPerso(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, HIE_tdstSuperObject_** hSuperObjPersoFound)
-{
+    HIE_tdstSuperObject_* hNewCurrentSuperObjPerso;
     struct { tdstEngineObject_* p_stEngObjValue; unsigned char pad[12]; } stValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, (tdstGetSetParam_ *)&stValue);
-    *hSuperObjPersoFound = fn_h_StandardGameGetSuperObject(stValue.p_stEngObjValue->h_StandardGame);
+    tdstNodeInterpret_* p_stNext;
+
+    p_stNext = fn_p_stEvalTree(hCurrentSuperObjPerso, p_stTree, (tdstGetSetParam_ *)&stValue); hNewCurrentSuperObjPerso = fn_h_StandardGameGetSuperObject(stValue.p_stEngObjValue->h_StandardGame);
+
+    if (hCurrentSuperObjPerso == hNewCurrentSuperObjPerso) g_hCurrentSuperObjPerso = NULL; else g_hCurrentSuperObjPerso = hNewCurrentSuperObjPerso;
+    return fn_p_stEvalTree(hCurrentSuperObjPerso, p_stNext, p_stValue);
+
+}
+
+tdstNodeInterpret_* fn_p_stModelCastOperator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    HIE_tdstSuperObject_* hSuperObjPersoToCast;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree, &hSuperObjPersoToCast);
+
+    p_stValue->uDummy.uParam.p_stEngObjValue = hSuperObjPersoToCast == 0 ? 0 : (hSuperObjPersoToCast->ulTypeOfLinkedObject != 2 ? 0 : hSuperObjPersoToCast->hLinkedObject.p_stCharacter); p_stValue->eType = E_vt_Perso;
     return p_stTree;
-}
-#pragma auto_inline reset
-
-tdstNodeInterpret_* fn_p_stVectorOperator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    tdstGetSetParam_ stParam1;
-    tdstGetSetParam_ stParam2;
-    tdeOperatorId_ eOperatorId;
-    MTH3D_tdstVector_* p_stVector1;
-    MTH3D_tdstVector_* p_stVector2;
-    MTH3D_tdstVector_* p_stResult;
-
-    eOperatorId = p_stTree[-1].uDummy.uId.eOperatorId;
-    p_stVector2 = NULL;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
-    p_stVector1 = &stParam1.uDummy.uParam.stVectorValue;
-    if (eOperatorId != eOperator_VectorUnaryMinus)
-    {
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam2);
-        p_stVector2 = &stParam2.uDummy.uParam.stVectorValue;
-    }
-    p_stResult = &p_stValue->uDummy.uParam.stVectorValue;
-    p_stValue->eType = E_vt_Vector;
-    switch (eOperatorId)
-    {
-    case eOperator_VectorPlusVector:
-        p_stResult->xX = p_stVector1->xX + p_stVector2->xX;
-        p_stResult->xY = p_stVector1->xY + p_stVector2->xY;
-        p_stResult->xZ = p_stVector1->xZ + p_stVector2->xZ;
-        return p_stTree;
-    case eOperator_VectorMinusVector:
-        p_stResult->xX = p_stVector1->xX - p_stVector2->xX;
-        p_stResult->xY = p_stVector1->xY - p_stVector2->xY;
-        p_stResult->xZ = p_stVector1->xZ - p_stVector2->xZ;
-        return p_stTree;
-    case eOperator_VectorUnaryMinus:
-        p_stResult->xX = -p_stVector1->xX;
-        p_stResult->xY = -p_stVector1->xY;
-        p_stResult->xZ = -p_stVector1->xZ;
-        return p_stTree;
-    default:
-        p_stResult->xX = 0;
-        p_stResult->xY = 0;
-        p_stResult->xZ = 0;
-        return p_stTree;
-    }
-}
-
-/* abs.s has no C form under MWCC; only that instruction is asm. */
-inline float MTH_xAbs(float xValue)
-{
-    float xResult;
-    asm { abs.s xResult, xValue }
-    return xResult;
-}
-
-tdstNodeInterpret_* fn_p_stVectorScalarOperator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    tdstGetSetParam_ stParam1;
-    tdstGetSetParam_ stParam2;
-    tdeOperatorId_ eOperatorId;
-    MTH3D_tdstVector_* p_stVector1;
-    float xFactor;
-    MTH3D_tdstVector_* p_stResult;
-
-    eOperatorId = p_stTree[-1].uDummy.uId.eOperatorId;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam2);
-    if (stParam1.eType != E_vt_Vector)
-    {
-        p_stVector1 = &stParam2.uDummy.uParam.stVectorValue;
-        xFactor = (stParam1.eType == E_vt_Float) ? stParam1.uDummy.uParam.xValue : (float)stParam1.uDummy.uParam.lValue;
-    }
-    else
-    {
-        p_stVector1 = &stParam1.uDummy.uParam.stVectorValue;
-        xFactor = (stParam2.eType == E_vt_Float) ? stParam2.uDummy.uParam.xValue : (float)stParam2.uDummy.uParam.lValue;
-    }
-    p_stResult = &p_stValue->uDummy.uParam.stVectorValue;
-    p_stValue->eType = E_vt_Vector;
-    switch (eOperatorId)
-    {
-    case eOperator_VectorMulScalar:
-        p_stResult->xX = xFactor * p_stVector1->xX;
-        p_stResult->xY = xFactor * p_stVector1->xY;
-        p_stResult->xZ = xFactor * p_stVector1->xZ;
-        return p_stTree;
-    case eOperator_VectorDivScalar:
-        if (MTH_xAbs(xFactor) > 1.1754951e-38f)
-        {
-            p_stResult->xX = p_stVector1->xX / xFactor;
-            p_stResult->xY = p_stVector1->xY / xFactor;
-            p_stResult->xZ = p_stVector1->xZ / xFactor;
-        }
-        else
-        {
-            p_stResult->xX = 0;
-            p_stResult->xY = 0;
-            p_stResult->xZ = 0;
-        }
-        return p_stTree;
-    default:
-        p_stResult->xX = 0;
-        p_stResult->xY = 0;
-        p_stResult->xZ = 0;
-        return p_stTree;
-    }
-}
-
-/* abs.s in place: MWCC cannot emit abs.s from C; only that instruction is asm. */
-tdstNodeInterpret_* fn_p_stScalarOperator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    unsigned char ucIsThereFloat;
-    float xReal;
-    tdeOperatorId_ eOperatorId;
-    tdstGetSetParam_ stParam2;
-
-    eOperatorId = p_stTree[-1].uDummy.uId.eOperatorId;
-    if (eOperatorId == eOperator_ScalarUnaryMinus)
-    {
-        p_stValue->uDummy.uParam.lValue = 0;
-        p_stValue->eType = E_vt_Integer;
-    }
-    else
-    {
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
-        if ((eOperatorId == eOperator_ScalarMulScalar) || (eOperatorId == eOperator_ScalarDivScalar))
-        {
-            if (p_stValue->eType == E_vt_Float)
-            {
-                xReal = p_stValue->uDummy.uParam.xValue;
-            }
-            else
-            {
-                xReal = (float)p_stValue->uDummy.uParam.lValue;
-            }
-            if (xReal == 0.0f)
-            {
-                fn_p_stSkipThisArgument(p_stTree);
-                return;
-            }
-        }
-    }
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam2);
-    ucIsThereFloat = fn_ucAreThereFloatIfYesConvertThem(p_stValue, &stParam2);
-    switch (eOperatorId)
-    {
-    case eOperator_ScalarModulo:
-        p_stValue->uDummy.uParam.lValue = p_stValue->uDummy.uParam.lValue % stParam2.uDummy.uParam.lValue;
-        p_stValue->eType = E_vt_Integer;
-        return p_stTree;
-    case eOperator_ScalarPlusScalar:
-        if (ucIsThereFloat)
-        {
-            p_stValue->uDummy.uParam.xValue = p_stValue->uDummy.uParam.xValue + stParam2.uDummy.uParam.xValue;
-            p_stValue->eType = E_vt_Float;
-        }
-        else
-        {
-            p_stValue->uDummy.uParam.lValue = p_stValue->uDummy.uParam.lValue + stParam2.uDummy.uParam.lValue;
-            p_stValue->eType = E_vt_Integer;
-        }
-        return p_stTree;
-    case eOperator_ScalarMinusScalar:
-    case eOperator_ScalarUnaryMinus:
-        if (ucIsThereFloat)
-        {
-            p_stValue->uDummy.uParam.xValue = p_stValue->uDummy.uParam.xValue - stParam2.uDummy.uParam.xValue;
-            p_stValue->eType = E_vt_Float;
-        }
-        else
-        {
-            p_stValue->uDummy.uParam.lValue = p_stValue->uDummy.uParam.lValue - stParam2.uDummy.uParam.lValue;
-            p_stValue->eType = E_vt_Integer;
-        }
-        return p_stTree;
-    case eOperator_ScalarMulScalar:
-        if (ucIsThereFloat)
-        {
-            p_stValue->uDummy.uParam.xValue = p_stValue->uDummy.uParam.xValue * stParam2.uDummy.uParam.xValue;
-            p_stValue->eType = E_vt_Float;
-        }
-        else
-        {
-            p_stValue->uDummy.uParam.lValue = p_stValue->uDummy.uParam.lValue * stParam2.uDummy.uParam.lValue;
-            p_stValue->eType = E_vt_Integer;
-        }
-        return p_stTree;
-    case eOperator_ScalarDivScalar:
-        if ((ucIsThereFloat && MTH_xAbsInPlace(stParam2.uDummy.uParam.xValue) > 1.1754951e-38f) || (!ucIsThereFloat && stParam2.uDummy.uParam.lValue != 0))
-        {
-            if (ucIsThereFloat)
-            {
-                p_stValue->uDummy.uParam.xValue = p_stValue->uDummy.uParam.xValue / stParam2.uDummy.uParam.xValue;
-                p_stValue->eType = E_vt_Float;
-            }
-            else
-            {
-                p_stValue->uDummy.uParam.lValue = p_stValue->uDummy.uParam.lValue / stParam2.uDummy.uParam.lValue;
-                p_stValue->eType = E_vt_Integer;
-            }
-        }
-        else
-        {
-            p_stValue->uDummy.uParam.lValue = 0;
-            p_stValue->eType = E_vt_Integer;
-        }
-        return p_stTree;
-    default:
-        p_stValue->uDummy.uParam.lValue = 0;
-        p_stValue->eType = E_vt_Integer;
-        return p_stTree;
-    }
 }

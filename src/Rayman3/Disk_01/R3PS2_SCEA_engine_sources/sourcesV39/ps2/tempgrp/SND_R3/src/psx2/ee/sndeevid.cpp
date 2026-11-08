@@ -134,105 +134,18 @@ inline void SND_VID_vClearCop0Register24(void)
     asm { mtbpc zero }
 }
 
-CLinkActor::CLinkActor(void) : mpoType(0)
-{
-    m_poNext = 0;
-    m_poPrevious = 0;
-}
-
-void SND_VID_fn_vDesinitVideoSound(void)
-{
-    gs_poRenderer->vStop(gs_uiChannel);
-    gs_SoundStarted = 0;
-    delete gs_poRenderer;
-    gs_poRenderer = 0;
-    gs_poBox->~CPS2IOPPullDMA(); usnd_free(gs_poBox);
-    gs_poBox = 0;
-    usnd_vDeleteCritSect(gs_uiSndVidCritSect);
-    fn_vFreeInBinaryPreservingTheCurrentMode((void*)g_pxBufferAudio);
-    g_pxBufferAudio = 0;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+extern "C" void SND_VID_fn_vDesinitVideoSound(void);
+extern "C" void SND_VID_fn_vInitVideoSound(unsigned int _nbVoices, unsigned int _iFrequency, float _fLinearVolume);
+extern "C" void SND_VID_fn_vStopVideoSound(void);
+extern "C" void SND_VID_fn_vResumeVideoSound(void);
+extern "C" int SND_VID_fn_iAddIOPData(void* SoundData, unsigned int uiSize);
+unsigned int fn_iTransferIOPData(void* pvData, unsigned int uiSize);
 
 extern "C" void* fn_pvMallocInBinaryPreservingTheCurrentMode(unsigned int uiSize);
 extern "C" unsigned int usnd_uiCreateCritSect(void);
 unsigned int fn_iTransferIOPData(void* pvData, unsigned int uiSize);
-
-void SND_VID_fn_vInitVideoSound(unsigned int _nbVoices, unsigned int _iFrequency, float _fLinearVolume)
-{
-    g_pxBufferAudio = (int)fn_pvMallocInBinaryPreservingTheCurrentMode(0x40000);
-    gs_PosRead = 0; gs_NbBytesInBuffer = 0; gs_TotalSizeReceived = 0;
-    gs_SoundStarted = 0;
-    while (gv_iCD_Opened)
-        SND_VID_vClearCop0Register24();
-    gs_uiSndVidCritSect = usnd_uiCreateCritSect();
-    gs_poBox = new CPS2IOPPullDMA(fn_iTransferIOPData);
-    gs_poRenderer = new CPS2StreamVBRenderer(_nbVoices, _iFrequency);
-    gs_poRenderer->vUnknown0((void*)gs_poBox, 0, 0);
-    gs_uiChannel = gs_poRenderer->vUnknown2();
-    gs_poRenderer->vUnknown10(gs_uiChannel, _fLinearVolume);
-}
-
-void SND_VID_fn_vStopVideoSound(void)
-{
-    gs_poRenderer->vStop(gs_uiChannel);
-    gs_SoundStarted = 0;
-}
-
-void SND_VID_fn_vResumeVideoSound(void)
-{
-    while (gv_iCD_Opened)
-        SND_VID_vClearCop0Register24();
-    gs_poRenderer->fv_vResume(gs_uiChannel);
-    while (!gs_SoundRunning)
-        SND_VID_vClearCop0Register24();
-}
-
-int SND_VID_fn_iAddIOPData(void* SoundData, unsigned int uiSize)
-{
-    int iPosWrite;
-    int iTransfered = 0;
-    unsigned int iLength;
-
-    usnd_vEnterCritSect(gs_uiSndVidCritSect);
-    if (gs_NbBytesInBuffer + uiSize > 0x40000)
-    {
-        usnd_vLeaveCritSect(gs_uiSndVidCritSect);
-        return -1;
-    }
-
-    while ((int)uiSize != 0)
-    {
-        iPosWrite = (gs_PosRead + gs_NbBytesInBuffer) & 0x3FFFF;
-        if (uiSize + iPosWrite <= 0x40000)
-        {
-            iLength = uiSize;
-        }
-        else
-        {
-            iLength = 0x40000 - iPosWrite;
-        }
-
-        memcpy((void*)((g_pxBufferAudio + iPosWrite) | 0x30000000), (char*)SoundData + iTransfered, iLength);
-
-        uiSize -= iLength;
-        iTransfered += iLength;
-        gs_NbBytesInBuffer += iLength;
-    }
-
-    gs_TotalSizeReceived += iTransfered;
-    if (!gs_SoundStarted && gs_TotalSizeReceived >= 0x10000)
-    {
-        while (gv_iCD_Opened)
-            SND_VID_vClearCop0Register24();
-        gs_poRenderer->vUnknown5(gs_uiChannel);
-        gs_poRenderer->fv_vPause(gs_uiChannel);
-        gs_SoundStarted = 1;
-        gs_SoundRunning = 0;
-    }
-
-    usnd_vLeaveCritSect(gs_uiSndVidCritSect);
-    return iTransfered;
-}
 
 extern "C" void FlushCache(int operation);
 extern "C" unsigned int sceSifSetDma(sceSifDmaData* sdd, int len);
@@ -295,4 +208,100 @@ unsigned int fn_iTransferIOPData(void* pvData, unsigned int uiSize)
     gs_SoundRunning++;
     usnd_vLeaveCritSect(gs_uiSndVidCritSect);
     return iTransfered;
+}
+
+int SND_VID_fn_iAddIOPData(void* SoundData, unsigned int uiSize)
+{
+    int iPosWrite;
+    int iTransfered = 0;
+    unsigned int iLength;
+
+    usnd_vEnterCritSect(gs_uiSndVidCritSect);
+    if (gs_NbBytesInBuffer + uiSize > 0x40000)
+    {
+        usnd_vLeaveCritSect(gs_uiSndVidCritSect);
+        return -1;
+    }
+
+    while ((int)uiSize != 0)
+    {
+        iPosWrite = (gs_PosRead + gs_NbBytesInBuffer) & 0x3FFFF;
+        if (uiSize + iPosWrite <= 0x40000)
+        {
+            iLength = uiSize;
+        }
+        else
+        {
+            iLength = 0x40000 - iPosWrite;
+        }
+
+        memcpy((void*)((g_pxBufferAudio + iPosWrite) | 0x30000000), (char*)SoundData + iTransfered, iLength);
+
+        uiSize -= iLength;
+        iTransfered += iLength;
+        gs_NbBytesInBuffer += iLength;
+    }
+
+    gs_TotalSizeReceived += iTransfered;
+    if (!gs_SoundStarted && gs_TotalSizeReceived >= 0x10000)
+    {
+        while (gv_iCD_Opened)
+            SND_VID_vClearCop0Register24();
+        gs_poRenderer->vUnknown5(gs_uiChannel);
+        gs_poRenderer->fv_vPause(gs_uiChannel);
+        gs_SoundStarted = 1;
+        gs_SoundRunning = 0;
+    }
+
+    usnd_vLeaveCritSect(gs_uiSndVidCritSect);
+    return iTransfered;
+}
+
+void SND_VID_fn_vResumeVideoSound(void)
+{
+    while (gv_iCD_Opened)
+        SND_VID_vClearCop0Register24();
+    gs_poRenderer->fv_vResume(gs_uiChannel);
+    while (!gs_SoundRunning)
+        SND_VID_vClearCop0Register24();
+}
+
+void SND_VID_fn_vStopVideoSound(void)
+{
+    gs_poRenderer->vStop(gs_uiChannel);
+    gs_SoundStarted = 0;
+}
+
+void SND_VID_fn_vInitVideoSound(unsigned int _nbVoices, unsigned int _iFrequency, float _fLinearVolume)
+{
+    g_pxBufferAudio = (int)fn_pvMallocInBinaryPreservingTheCurrentMode(0x40000);
+    gs_PosRead = 0; gs_NbBytesInBuffer = 0; gs_TotalSizeReceived = 0;
+    gs_SoundStarted = 0;
+    while (gv_iCD_Opened)
+        SND_VID_vClearCop0Register24();
+    gs_uiSndVidCritSect = usnd_uiCreateCritSect();
+    gs_poBox = new CPS2IOPPullDMA(fn_iTransferIOPData);
+    gs_poRenderer = new CPS2StreamVBRenderer(_nbVoices, _iFrequency);
+    gs_poRenderer->vUnknown0((void*)gs_poBox, 0, 0);
+    gs_uiChannel = gs_poRenderer->vUnknown2();
+    gs_poRenderer->vUnknown10(gs_uiChannel, _fLinearVolume);
+}
+
+void SND_VID_fn_vDesinitVideoSound(void)
+{
+    gs_poRenderer->vStop(gs_uiChannel);
+    gs_SoundStarted = 0;
+    delete gs_poRenderer;
+    gs_poRenderer = 0;
+    gs_poBox->~CPS2IOPPullDMA(); usnd_free(gs_poBox);
+    gs_poBox = 0;
+    usnd_vDeleteCritSect(gs_uiSndVidCritSect);
+    fn_vFreeInBinaryPreservingTheCurrentMode((void*)g_pxBufferAudio);
+    g_pxBufferAudio = 0;
+}
+
+CLinkActor::CLinkActor(void) : mpoType(0)
+{
+    m_poNext = 0;
+    m_poPrevious = 0;
 }

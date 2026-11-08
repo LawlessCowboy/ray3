@@ -19,9 +19,9 @@ Checked with `python3 tools/match.py coverage` at each matching commit:
 
 | Scope | Functions | Code bytes |
 | --- | --- | --- |
-| **Game code** | **3,387 / 4,134** (+3 register-equivalent) | **668,272 / 1,507,864** (**44.3191%**) |
+| **Game code** | **3,392 / 4,134** (+3 register-equivalent) | **669,800 / 1,507,864** (**44.4205%**) |
 | Library code | 1,133 / 1,200 | 148,200 / 298,548 (49.6403%) |
-| **Total** | **4,520 / 5,334** (+3 register-equivalent) | **816,472 / 1,806,412** (**45.1985%**) |
+| **Total** | **4,525 / 5,334** (+3 register-equivalent) | **818,000 / 1,806,412** (**45.2831%**) |
 
 - Out of scope and excluded from these totals: 177 library header functions
   (Pustl STL, `CIdObjPtr`, MTH/PS2GL support headers) and 2,321 third-party
@@ -113,19 +113,20 @@ The evidence-backed baseline compiler profile is:
 
 ```text
 -g -opt level=3 -farcall off -sdatathreshold 8 \
-   -inline on -strings reuse,nopool,readonly -enum int \
+   -inline on -inline deferred -strings reuse,nopool,readonly -enum int \
    -Cpp_exceptions off -pragma "fast_fptosi on" -pragma "padloop on" \
    -pragma "optimize_for_size off"
 ```
 
+Deferred inlining applies to game and library code alike: retail emits every
+unit's functions last-defined-first, and the sources keep that original
+definition order (reverse retail address order).
+
 Game sources (`Disk_01/R3PS2_SCEA_engine_sources`) additionally use
-`-pragma "dividefix on" -inline deferred -O3,p`:
+`-pragma "dividefix on" -O3,p`:
 
 - retail game code pads a `div.s` followed by a branch or call with two nops,
   while the PS2GL library code does not;
-- retail game objects list functions in reverse source order, which is what
-  deferred inlining emits (it also lets a function inline a helper defined
-  later in our address-ordered sources);
 - `-O3,p` is not equivalent to `-opt level=3` plus the `optimize_for_size`
   pragma: it pads loop-head branch targets to 8 bytes with a nop and changes
   some scheduling, exactly as retail game code does (+48 game matches, none

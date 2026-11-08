@@ -156,60 +156,30 @@ extern int g_ax_pEvents[100];
 extern int g_ax_pMorphData[100];
 extern int g_ax_pDeformations[100];
 
-void fn_vChangeStorageBank(unsigned char ucStorageBank)
-{
-    g_i_CurrentStorageBank = ucStorageBank;
-    gp_stA3dGENERAL = g_ax_pA3dGENERAL[g_i_CurrentStorageBank];
-    gp_a3_xVectors = g_ax_pVectors[g_i_CurrentStorageBank];
-    gp_a4_xQuaternions = g_ax_pQuaternions[g_i_CurrentStorageBank];
-    gp_stHierarchies = g_ax_pHierarchies[g_i_CurrentStorageBank];
-    gp_stNTTO = g_ax_pNTTO[g_i_CurrentStorageBank];
-    gp_stOnlyFrames = g_ax_pOnlyFrames[g_i_CurrentStorageBank];
-    gp_stChannels = g_ax_pChannels[g_i_CurrentStorageBank];
-    gp_FramesNumOfNTTO = g_ax_pFramesNumOfNTTO[g_i_CurrentStorageBank];
-    gp_FramesKFIndex = g_ax_pFramesKFIndex[g_i_CurrentStorageBank];
-    gp_stKeyFrames = g_ax_pKeyFrames[g_i_CurrentStorageBank];
-    gp_stEvents = g_ax_pEvents[g_i_CurrentStorageBank];
-    gp_stMorphData = g_ax_pMorphData[g_i_CurrentStorageBank];
-    gp_stDeformations = g_ax_pDeformations[g_i_CurrentStorageBank];
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void fn_vChangeStorageBank(unsigned char ucStorageBank);
+void fn_vRedrawPauseStringIfRequired(void);
+void fn_vUnpauseFromMemoryCard(void);
+void fn_vPauseFromMemoryCard(void);
+int fn_bHasBeenPausedForController(void);
+void fn_vManageControlerDisconnection(void);
+void GAM_fn_vCheckJoyConnections(void);
+int GAM_fn_iIsGamePaused(void);
+int fn_bLoadGameOptions(char* szFileName);
+int fn_bLoadCurrentGameOptions(void);
+void fn_vInitDefaultValuesForSoundVolumes(void);
+void GAM_fn_vSetVolumeMenu(int s32_Value);
+void GAM_fn_vSetVolumeAmbiance(int s32_Value);
+void GAM_fn_vSetVolumeVoice(int s32_Value);
+void GAM_fn_vSetVolumeSound(int s32_Value);
+void GAM_fn_vSetVolumeMusic(int s32_Value);
+void fn_vChangeDetailsValue(unsigned int _ulValue);
 
 unsigned char fn_bIsEngineInPause(void);
 void TXT_vRedrawStringByNumber(int Num);
 
-void fn_vRedrawPauseStringIfRequired(void)
-{
-    if (fn_bIsEngineInPause()) {
-        if (PAUSE_g_ucPauseCause & 5)
-            TXT_vRedrawStringByNumber(g_PauseStringNumber);
-    }
-}
-
-void fn_vUnpauseFromMemoryCard(void)
-{
-    PAUSE_g_ucPauseCause &= ~2;
-    if ((PAUSE_g_ucPauseCause == 0) && g_EngineWasPausedAutomatically)
-    {
-        fn_vResetEngineFromPaused();
-        g_EngineWasPausedAutomatically = 0;
-    }
-}
-
 extern void fn_vSetEngineInPaused(void);
-
-void fn_vPauseFromMemoryCard(void)
-{
-    if (!fn_bIsEngineInPause()) {
-        g_EngineWasPausedAutomatically = 1;
-        fn_vSetEngineInPaused();
-    }
-    PAUSE_g_ucPauseCause |= 2;
-}
-
-int fn_bHasBeenPausedForController(void)
-{
-    return ((PAUSE_g_ucPauseCause & 5) != 0);
-}
 
 /* The retail calls the fast connection check through an int result: the
  * function itself returns a short, but declaring it int keeps the sign
@@ -220,6 +190,170 @@ extern void fn_vSetMenuPausePad(void);
 extern void fn_vInterruptMenu2D(int _bPauseMenu);
 /* Only three arguments are passed by the retail code (the size is left in a3). */
 extern int scePadRead(int port, int slot, char* rdata);
+
+#define M_Min(a, b) (((a) > (b)) ? (b) : (a))
+#define M_Max(a, b) (((a) > (b)) ? (a) : (b))
+#define M_Clamp(x, lo, hi) M_Max(lo, M_Min(x, hi))
+
+extern int fn_lCheckVMSConnexion(unsigned char _bFullCheck);
+extern char* SVG_fn_szGetSonyCompliantDirName(char* _szName);
+extern char* strcpy(char* _pDst, const char* _pSrc);
+extern tdstSaveBuffer_* VMS_fn_p_stFopenR(char* _szFileName);
+extern int VMS_fn_bFread(void* _p_vData, int _lNumber, int _lSize, tdstSaveBuffer_* _p_stBuffer);
+extern int VMS_fn_bFclose(tdstSaveBuffer_* _p_stBuffer);
+extern void SetPal60(void);
+extern void SetPal50(void);
+extern void GLI_fn_vSetBrightness(int _lValue);
+extern void SND_fn_vSetStereoSound(int _bStereo);
+extern void SND_fn_vSetVolumeLineSound(int s32_LineId, int s32_VolValue);
+extern void VID_fn_vSetVideoSoundVolume(unsigned int ulVideoSoundVolume);
+
+unsigned char GAM_fn_bUpdateSavingFile(void);
+
+extern void SND_fn_vSetVolumeLineSound(int s32_LineId, int s32_VolValue);
+extern void VID_fn_vSetVideoSoundVolume(unsigned int ulVideoSoundVolume);
+
+void fn_vChangeDetailsValue(unsigned int _ulValue)
+{
+    g_stGameOptions.ulDetails = _ulValue;
+}
+
+void GAM_fn_vSetVolumeMusic(int s32_Value)
+{
+    g_stGameOptions.s32VolumeMusic = 0 > (127 < s32_Value ? 127 : s32_Value) ? 0 : (127 < s32_Value ? 127 : s32_Value);
+    SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineMusic, g_stGameOptions.s32VolumeMusic);
+}
+
+void GAM_fn_vSetVolumeSound(int s32_Value)
+{
+    g_stGameOptions.s32VolumeSound = 0 > (127 < s32_Value ? 127 : s32_Value) ? 0 : (127 < s32_Value ? 127 : s32_Value);
+    SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineSound, g_stGameOptions.s32VolumeSound);
+    VID_fn_vSetVideoSoundVolume(g_stGameOptions.s32VolumeSound);
+}
+
+void GAM_fn_vSetVolumeVoice(int s32_Value)
+{
+    g_stGameOptions.s32VolumeVoice = 0 > (127 < s32_Value ? 127 : s32_Value) ? 0 : (127 < s32_Value ? 127 : s32_Value);
+    SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineVoices, g_stGameOptions.s32VolumeVoice);
+}
+
+void GAM_fn_vSetVolumeAmbiance(int s32_Value)
+{
+    g_stGameOptions.s32VolumeAmbiance = 0 > (127 < s32_Value ? 127 : s32_Value) ? 0 : (127 < s32_Value ? 127 : s32_Value);
+    SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineAmbiance, g_stGameOptions.s32VolumeAmbiance);
+}
+
+void GAM_fn_vSetVolumeMenu(int s32_Value)
+{
+    g_stGameOptions.s32VolumeMenu = (0 > (s32_Value > 127 ? 127 : s32_Value)) ? 0 : (s32_Value > 127 ? 127 : s32_Value);
+    SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineMenu, g_stGameOptions.s32VolumeMenu);
+}
+
+void fn_vInitDefaultValuesForSoundVolumes(void)
+{
+    g_stGameOptions.s32VolumeMusic = 90; SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineMusic, g_stGameOptions.s32VolumeMusic);
+    g_stGameOptions.s32VolumeSound = 90; SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineSound, g_stGameOptions.s32VolumeSound); VID_fn_vSetVideoSoundVolume(g_stGameOptions.s32VolumeSound);
+    g_stGameOptions.s32VolumeVoice = 127; SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineVoices, g_stGameOptions.s32VolumeVoice);
+    g_stGameOptions.s32VolumeAmbiance = 90; SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineAmbiance, g_stGameOptions.s32VolumeAmbiance);
+    g_stGameOptions.s32VolumeMenu = 90; SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineMenu, g_stGameOptions.s32VolumeMenu);
+}
+
+int fn_bLoadCurrentGameOptions(void)
+{
+    unsigned char bReturn;
+
+    bReturn = 1;
+
+    GAM_fn_bUpdateSavingFile();
+
+    if (!fn_bLoadGameOptions(g_stGameOptions.szCurrentFileName))
+    {
+        if (!(unsigned char)fn_bLoadGameOptions("__ Error __"))
+            bReturn = 0;
+    }
+
+    if (!bReturn)
+    {
+        g_stGameOptions.s32VolumeSound = 0x5A;
+        g_stGameOptions.s32VolumeVoice = 0x7F;
+        g_stGameOptions.s32VolumeMusic = 0x5A;
+        g_stGameOptions.s32VolumeAmbiance = 0x5A;
+        g_stGameOptions.s32VolumeMenu = 0x5A;
+        g_stGameOptions.ulDetails = 0;
+        g_stGameOptions.ulScreenSize = 0;
+
+        g_ulMoviesBit1 = 0;
+        g_ulMoviesBit2 = 0;
+    }
+
+    return bReturn;
+}
+
+int fn_bLoadGameOptions(char* szFileName)
+{
+    unsigned char ucTmp;
+    int lIndex;
+    tdstSaveBuffer_* p_stTempFile;
+    int lReturn;
+
+    lReturn = fn_lCheckVMSConnexion(1);
+    if (lReturn <= 0)
+    {
+        return lReturn;
+    }
+
+    strcpy(g_stGameOptions.szCurrentFileName, SVG_fn_szGetSonyCompliantDirName("OPTIONS"));
+
+    p_stTempFile = VMS_fn_p_stFopenR(g_stGameOptions.szCurrentFileName);
+    if (p_stTempFile != NULL)
+    {
+        VMS_fn_bFread(&g_stGameOptions.ulScreenSize, 1, 4, p_stTempFile);
+        VMS_fn_bFread(&lIndex, 1, 4, p_stTempFile);
+        if (lIndex == 1) { SetPal60(); } else { SetPal50(); }
+        VMS_fn_bFread(&lIndex, 1, 4, p_stTempFile);
+        GLI_fn_vSetBrightness(lIndex);
+
+        VMS_fn_bFread(&ucTmp, 1, 4, p_stTempFile);
+        g_stGameOptions.s32VolumeSound = M_Clamp(ucTmp, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineSound, g_stGameOptions.s32VolumeSound); VID_fn_vSetVideoSoundVolume(g_stGameOptions.s32VolumeSound);
+
+        VMS_fn_bFread(&ucTmp, 1, 4, p_stTempFile);
+        g_stGameOptions.s32VolumeMusic = M_Clamp(ucTmp, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineMusic, g_stGameOptions.s32VolumeMusic);
+
+        VMS_fn_bFread(&ucTmp, 1, 4, p_stTempFile);
+        g_stGameOptions.s32VolumeVoice = M_Clamp(ucTmp, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineVoices, g_stGameOptions.s32VolumeVoice);
+
+        VMS_fn_bFread(&g_ulMoviesBit1, 1, 4, p_stTempFile);
+        VMS_fn_bFread(&g_ulMoviesBit2, 1, 4, p_stTempFile);
+
+        ucTmp = 0;
+        VMS_fn_bFread(&ucTmp, 1, 1, p_stTempFile);
+        SND_fn_vSetStereoSound(ucTmp);
+
+        if (VMS_fn_bFclose(p_stTempFile) != 0)
+        {
+            g_stGameOptions.s32VolumeSound = M_Clamp(g_stGameOptions.s32VolumeSound, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineSound, g_stGameOptions.s32VolumeSound); VID_fn_vSetVideoSoundVolume(g_stGameOptions.s32VolumeSound); g_stGameOptions.s32VolumeVoice = M_Clamp(g_stGameOptions.s32VolumeVoice, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineVoices, g_stGameOptions.s32VolumeVoice); g_stGameOptions.s32VolumeMusic = M_Clamp(g_stGameOptions.s32VolumeMusic, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineMusic, g_stGameOptions.s32VolumeMusic); g_stGameOptions.s32VolumeAmbiance = M_Clamp(g_stGameOptions.s32VolumeAmbiance, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineAmbiance, g_stGameOptions.s32VolumeAmbiance); g_stGameOptions.s32VolumeMenu = M_Clamp(g_stGameOptions.s32VolumeAmbiance, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineMenu, g_stGameOptions.s32VolumeMenu);
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int GAM_fn_iIsGamePaused(void)
+{
+    return PAUSE_g_ucPauseCause != 0;
+}
+
+void GAM_fn_vCheckJoyConnections(void)
+{
+    int i;
+
+    i = 0;
+    do
+    {
+        INOPS2_fn_wJoyCheckConnection(i);
+        i++;
+    } while (i <= 0);
+}
 
 void fn_vManageControlerDisconnection(void)
 {
@@ -320,166 +454,52 @@ void fn_vManageControlerDisconnection(void)
     }
 }
 
-void GAM_fn_vCheckJoyConnections(void)
+int fn_bHasBeenPausedForController(void)
 {
-    int i;
-
-    i = 0;
-    do
-    {
-        INOPS2_fn_wJoyCheckConnection(i);
-        i++;
-    } while (i <= 0);
+    return ((PAUSE_g_ucPauseCause & 5) != 0);
 }
 
-int GAM_fn_iIsGamePaused(void)
+void fn_vPauseFromMemoryCard(void)
 {
-    return PAUSE_g_ucPauseCause != 0;
-}
-
-#define M_Min(a, b) (((a) > (b)) ? (b) : (a))
-#define M_Max(a, b) (((a) > (b)) ? (a) : (b))
-#define M_Clamp(x, lo, hi) M_Max(lo, M_Min(x, hi))
-
-extern int fn_lCheckVMSConnexion(unsigned char _bFullCheck);
-extern char* SVG_fn_szGetSonyCompliantDirName(char* _szName);
-extern char* strcpy(char* _pDst, const char* _pSrc);
-extern tdstSaveBuffer_* VMS_fn_p_stFopenR(char* _szFileName);
-extern int VMS_fn_bFread(void* _p_vData, int _lNumber, int _lSize, tdstSaveBuffer_* _p_stBuffer);
-extern int VMS_fn_bFclose(tdstSaveBuffer_* _p_stBuffer);
-extern void SetPal60(void);
-extern void SetPal50(void);
-extern void GLI_fn_vSetBrightness(int _lValue);
-extern void SND_fn_vSetStereoSound(int _bStereo);
-extern void SND_fn_vSetVolumeLineSound(int s32_LineId, int s32_VolValue);
-extern void VID_fn_vSetVideoSoundVolume(unsigned int ulVideoSoundVolume);
-
-int fn_bLoadGameOptions(char* szFileName)
-{
-    unsigned char ucTmp;
-    int lIndex;
-    tdstSaveBuffer_* p_stTempFile;
-    int lReturn;
-
-    lReturn = fn_lCheckVMSConnexion(1);
-    if (lReturn <= 0)
-    {
-        return lReturn;
+    if (!fn_bIsEngineInPause()) {
+        g_EngineWasPausedAutomatically = 1;
+        fn_vSetEngineInPaused();
     }
+    PAUSE_g_ucPauseCause |= 2;
+}
 
-    strcpy(g_stGameOptions.szCurrentFileName, SVG_fn_szGetSonyCompliantDirName("OPTIONS"));
-
-    p_stTempFile = VMS_fn_p_stFopenR(g_stGameOptions.szCurrentFileName);
-    if (p_stTempFile != NULL)
+void fn_vUnpauseFromMemoryCard(void)
+{
+    PAUSE_g_ucPauseCause &= ~2;
+    if ((PAUSE_g_ucPauseCause == 0) && g_EngineWasPausedAutomatically)
     {
-        VMS_fn_bFread(&g_stGameOptions.ulScreenSize, 1, 4, p_stTempFile);
-        VMS_fn_bFread(&lIndex, 1, 4, p_stTempFile);
-        if (lIndex == 1) { SetPal60(); } else { SetPal50(); }
-        VMS_fn_bFread(&lIndex, 1, 4, p_stTempFile);
-        GLI_fn_vSetBrightness(lIndex);
-
-        VMS_fn_bFread(&ucTmp, 1, 4, p_stTempFile);
-        g_stGameOptions.s32VolumeSound = M_Clamp(ucTmp, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineSound, g_stGameOptions.s32VolumeSound); VID_fn_vSetVideoSoundVolume(g_stGameOptions.s32VolumeSound);
-
-        VMS_fn_bFread(&ucTmp, 1, 4, p_stTempFile);
-        g_stGameOptions.s32VolumeMusic = M_Clamp(ucTmp, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineMusic, g_stGameOptions.s32VolumeMusic);
-
-        VMS_fn_bFread(&ucTmp, 1, 4, p_stTempFile);
-        g_stGameOptions.s32VolumeVoice = M_Clamp(ucTmp, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineVoices, g_stGameOptions.s32VolumeVoice);
-
-        VMS_fn_bFread(&g_ulMoviesBit1, 1, 4, p_stTempFile);
-        VMS_fn_bFread(&g_ulMoviesBit2, 1, 4, p_stTempFile);
-
-        ucTmp = 0;
-        VMS_fn_bFread(&ucTmp, 1, 1, p_stTempFile);
-        SND_fn_vSetStereoSound(ucTmp);
-
-        if (VMS_fn_bFclose(p_stTempFile) != 0)
-        {
-            g_stGameOptions.s32VolumeSound = M_Clamp(g_stGameOptions.s32VolumeSound, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineSound, g_stGameOptions.s32VolumeSound); VID_fn_vSetVideoSoundVolume(g_stGameOptions.s32VolumeSound); g_stGameOptions.s32VolumeVoice = M_Clamp(g_stGameOptions.s32VolumeVoice, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineVoices, g_stGameOptions.s32VolumeVoice); g_stGameOptions.s32VolumeMusic = M_Clamp(g_stGameOptions.s32VolumeMusic, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineMusic, g_stGameOptions.s32VolumeMusic); g_stGameOptions.s32VolumeAmbiance = M_Clamp(g_stGameOptions.s32VolumeAmbiance, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineAmbiance, g_stGameOptions.s32VolumeAmbiance); g_stGameOptions.s32VolumeMenu = M_Clamp(g_stGameOptions.s32VolumeAmbiance, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineMenu, g_stGameOptions.s32VolumeMenu);
-            return 1;
-        }
+        fn_vResetEngineFromPaused();
+        g_EngineWasPausedAutomatically = 0;
     }
-    return 0;
 }
 
-unsigned char GAM_fn_bUpdateSavingFile(void);
-
-int fn_bLoadCurrentGameOptions(void)
+void fn_vRedrawPauseStringIfRequired(void)
 {
-    unsigned char bReturn;
-
-    bReturn = 1;
-
-    GAM_fn_bUpdateSavingFile();
-
-    if (!fn_bLoadGameOptions(g_stGameOptions.szCurrentFileName))
-    {
-        if (!(unsigned char)fn_bLoadGameOptions("__ Error __"))
-            bReturn = 0;
+    if (fn_bIsEngineInPause()) {
+        if (PAUSE_g_ucPauseCause & 5)
+            TXT_vRedrawStringByNumber(g_PauseStringNumber);
     }
-
-    if (!bReturn)
-    {
-        g_stGameOptions.s32VolumeSound = 0x5A;
-        g_stGameOptions.s32VolumeVoice = 0x7F;
-        g_stGameOptions.s32VolumeMusic = 0x5A;
-        g_stGameOptions.s32VolumeAmbiance = 0x5A;
-        g_stGameOptions.s32VolumeMenu = 0x5A;
-        g_stGameOptions.ulDetails = 0;
-        g_stGameOptions.ulScreenSize = 0;
-
-        g_ulMoviesBit1 = 0;
-        g_ulMoviesBit2 = 0;
-    }
-
-    return bReturn;
 }
 
-extern void SND_fn_vSetVolumeLineSound(int s32_LineId, int s32_VolValue);
-extern void VID_fn_vSetVideoSoundVolume(unsigned int ulVideoSoundVolume);
-
-void fn_vInitDefaultValuesForSoundVolumes(void)
+void fn_vChangeStorageBank(unsigned char ucStorageBank)
 {
-    g_stGameOptions.s32VolumeMusic = 90; SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineMusic, g_stGameOptions.s32VolumeMusic);
-    g_stGameOptions.s32VolumeSound = 90; SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineSound, g_stGameOptions.s32VolumeSound); VID_fn_vSetVideoSoundVolume(g_stGameOptions.s32VolumeSound);
-    g_stGameOptions.s32VolumeVoice = 127; SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineVoices, g_stGameOptions.s32VolumeVoice);
-    g_stGameOptions.s32VolumeAmbiance = 90; SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineAmbiance, g_stGameOptions.s32VolumeAmbiance);
-    g_stGameOptions.s32VolumeMenu = 90; SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineMenu, g_stGameOptions.s32VolumeMenu);
-}
-
-void GAM_fn_vSetVolumeMenu(int s32_Value)
-{
-    g_stGameOptions.s32VolumeMenu = (0 > (s32_Value > 127 ? 127 : s32_Value)) ? 0 : (s32_Value > 127 ? 127 : s32_Value);
-    SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineMenu, g_stGameOptions.s32VolumeMenu);
-}
-
-void GAM_fn_vSetVolumeAmbiance(int s32_Value)
-{
-    g_stGameOptions.s32VolumeAmbiance = 0 > (127 < s32_Value ? 127 : s32_Value) ? 0 : (127 < s32_Value ? 127 : s32_Value);
-    SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineAmbiance, g_stGameOptions.s32VolumeAmbiance);
-}
-
-void GAM_fn_vSetVolumeVoice(int s32_Value)
-{
-    g_stGameOptions.s32VolumeVoice = 0 > (127 < s32_Value ? 127 : s32_Value) ? 0 : (127 < s32_Value ? 127 : s32_Value);
-    SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineVoices, g_stGameOptions.s32VolumeVoice);
-}
-
-void GAM_fn_vSetVolumeSound(int s32_Value)
-{
-    g_stGameOptions.s32VolumeSound = 0 > (127 < s32_Value ? 127 : s32_Value) ? 0 : (127 < s32_Value ? 127 : s32_Value);
-    SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineSound, g_stGameOptions.s32VolumeSound);
-    VID_fn_vSetVideoSoundVolume(g_stGameOptions.s32VolumeSound);
-}
-
-void GAM_fn_vSetVolumeMusic(int s32_Value)
-{
-    g_stGameOptions.s32VolumeMusic = 0 > (127 < s32_Value ? 127 : s32_Value) ? 0 : (127 < s32_Value ? 127 : s32_Value);
-    SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineMusic, g_stGameOptions.s32VolumeMusic);
-}
-
-void fn_vChangeDetailsValue(unsigned int _ulValue)
-{
-    g_stGameOptions.ulDetails = _ulValue;
+    g_i_CurrentStorageBank = ucStorageBank;
+    gp_stA3dGENERAL = g_ax_pA3dGENERAL[g_i_CurrentStorageBank];
+    gp_a3_xVectors = g_ax_pVectors[g_i_CurrentStorageBank];
+    gp_a4_xQuaternions = g_ax_pQuaternions[g_i_CurrentStorageBank];
+    gp_stHierarchies = g_ax_pHierarchies[g_i_CurrentStorageBank];
+    gp_stNTTO = g_ax_pNTTO[g_i_CurrentStorageBank];
+    gp_stOnlyFrames = g_ax_pOnlyFrames[g_i_CurrentStorageBank];
+    gp_stChannels = g_ax_pChannels[g_i_CurrentStorageBank];
+    gp_FramesNumOfNTTO = g_ax_pFramesNumOfNTTO[g_i_CurrentStorageBank];
+    gp_FramesKFIndex = g_ax_pFramesKFIndex[g_i_CurrentStorageBank];
+    gp_stKeyFrames = g_ax_pKeyFrames[g_i_CurrentStorageBank];
+    gp_stEvents = g_ax_pEvents[g_i_CurrentStorageBank];
+    gp_stMorphData = g_ax_pMorphData[g_i_CurrentStorageBank];
+    gp_stDeformations = g_ax_pDeformations[g_i_CurrentStorageBank];
 }

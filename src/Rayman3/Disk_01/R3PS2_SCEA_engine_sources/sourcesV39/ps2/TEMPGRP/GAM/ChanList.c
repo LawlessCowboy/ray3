@@ -1144,10 +1144,21 @@ struct MOR_stMorphVector_ {
 
 unsigned short g_DEMO_KeybTest;
 
-void fn_vSetCapabilities(tdstEngineObject_* _p_stObject, unsigned int _ubf32Capabilities)
-{
-    _p_stObject->h_StandardGame->ubf32Capabilities = _ubf32Capabilities;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void fn_vSetCapabilities(tdstEngineObject_* _p_stObject, unsigned int _ubf32Capabilities);
+PO_tdstPhysicalObject_* fn_hGetMorphedObjectInChannel(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn* hMorphList, unsigned short uwChannel);
+short fn_hMorphListIndex(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn* hMorphList, unsigned short uwChannel);
+void fn_vRemoveChannelFromMorphList(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn* hMorphList, unsigned short uwChannel);
+void fn_vPutMorphElementInChannel(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn* hMorphList, unsigned short uwChannel, short IndexOfMorphList);
+void fn_vFreeMorphList(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn** p_hMorphList);
+void fn_vInitMorphList(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn** p_hMorphList);
+void fn_vActivateChannel(HIE_tdstSuperObject_* _hPerso, unsigned short _uwChannel, unsigned char _bActivate);
+void fn_vUpdateSPOFlagsOfChannelForActivation(HIE_tdstSuperObject_* _hSOChannel, unsigned char _bActivate);
+void fn_vLooseControlOfLipChannel(tdstEngineObject_* _hActor, unsigned short _uwChannel);
+void fn_vTakeControlOfLipChannel(tdstEngineObject_* _hActor, unsigned short _uwChannel);
+void fn_vTakeControlOfChannel(tdstEngineObject_* _hActor, unsigned short _uwChannel, unsigned char _bControlled);
+void fn_vFreeCSOList(tdstAChannel_** p_hChannelArray);
 
 PO_tdstPhysicalObject_* MOR_fn_hGetMorphedObject(short _xIndex);
 
@@ -1173,132 +1184,121 @@ inline short CHN_fn_hMorphListIndexInline(LST2_tdstAnchorToCHN_tdxHandleToMorphE
     return -1;
 }
 
-PO_tdstPhysicalObject_* fn_hGetMorphedObjectInChannel(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn* hMorphList, unsigned short uwChannel)
-{
-    short lIndex = CHN_fn_hMorphListIndexInline(hMorphList, uwChannel);
-    if (lIndex != -1) { return MOR_fn_hGetMorphedObject(lIndex); }
-    return NULL;
-}
-
-short fn_hMorphListIndex(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn* hMorphList, unsigned short uwChannel)
-{
-    tdstMorphChannelList_* p_stMorph;
-
-    if (hMorphList == NULL) { return -1; }
-    for (p_stMorph = hMorphList->hFirstElementDyn; p_stMorph != NULL; p_stMorph = p_stMorph->hNextBrotherDyn)
-    {
-        if (p_stMorph->uwChannelNumber == uwChannel)
-        {
-            return p_stMorph->MorphListIndex;
-        }
-        if (uwChannel < p_stMorph->uwChannelNumber)
-        {
-            return -1;
-        }
-    }
-    return -1;
-}
-
-void fn_vRemoveChannelFromMorphList(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn* hMorphList, unsigned short uwChannel)
-{
-    tdstMorphChannelList_* p_stMorph;
-    tdstMorphChannelList_* p_stMorph_Next;
-
-    if (hMorphList == NULL)
-        return;
-
-    for (p_stMorph = hMorphList->hFirstElementDyn, p_stMorph_Next = p_stMorph ? p_stMorph->hNextBrotherDyn : NULL; p_stMorph != NULL; p_stMorph = p_stMorph_Next, p_stMorph_Next = p_stMorph ? p_stMorph->hNextBrotherDyn : NULL)
-    {
-        if (p_stMorph->uwChannelNumber == uwChannel)
-        {
-            if (hMorphList->lNumberOfElementsDyn != 0)
-            {
-                if (p_stMorph->hNextBrotherDyn) p_stMorph->hNextBrotherDyn->hPrevBrotherDyn = p_stMorph->hPrevBrotherDyn; if (p_stMorph->hPrevBrotherDyn) p_stMorph->hPrevBrotherDyn->hNextBrotherDyn = p_stMorph->hNextBrotherDyn; if (p_stMorph->hFatherDyn) { p_stMorph->hFatherDyn->lNumberOfElementsDyn--; if (p_stMorph->hFatherDyn->hFirstElementDyn == p_stMorph) p_stMorph->hFatherDyn->hFirstElementDyn = p_stMorph->hNextBrotherDyn; if (p_stMorph->hFatherDyn->hLastElementDyn == p_stMorph) p_stMorph->hFatherDyn->hLastElementDyn = p_stMorph->hPrevBrotherDyn; } p_stMorph->hNextBrotherDyn = NULL; p_stMorph->hPrevBrotherDyn = NULL; p_stMorph->hFatherDyn = NULL;
-                { void* p_vPointer = p_stMorph; HMU_fn_vFree(&p_vPointer, 1); }
-            }
-            break;
-        }
-    }
-}
-
 void* HMU_fn_p_vMalloc(unsigned int ulSize, unsigned char ucChannel);
 
-void fn_vPutMorphElementInChannel(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn* hMorphList, unsigned short uwChannel, short IndexOfMorphList)
-{
-    tdstMorphChannelList_* p_stMorph2;
-
-    if (hMorphList == NULL)
-        return;
-
-    p_stMorph2 = hMorphList->hFirstElementDyn;
-    while (p_stMorph2 != NULL)
-    {
-        if (p_stMorph2->uwChannelNumber == uwChannel)
-        {
-            p_stMorph2->MorphListIndex = IndexOfMorphList;
-            break;
-        }
-        if (p_stMorph2->uwChannelNumber > uwChannel)
-        {
-            break;
-        }
-        p_stMorph2 = p_stMorph2->hNextBrotherDyn;
-    }
-    if (p_stMorph2 == NULL)
-    {
-        tdstMorphChannelList_* p_stMorph;
-
-        p_stMorph = (tdstMorphChannelList_*)HMU_fn_p_vMalloc(sizeof(tdstMorphChannelList_), 1); p_stMorph->hNextBrotherDyn = NULL; p_stMorph->hPrevBrotherDyn = NULL; p_stMorph->hFatherDyn = NULL;
-        p_stMorph->uwChannelNumber = uwChannel;
-        p_stMorph->MorphListIndex = IndexOfMorphList;
-        if (p_stMorph->hNextBrotherDyn) p_stMorph->hNextBrotherDyn->hPrevBrotherDyn = p_stMorph->hPrevBrotherDyn; if (p_stMorph->hPrevBrotherDyn) p_stMorph->hPrevBrotherDyn->hNextBrotherDyn = p_stMorph->hNextBrotherDyn; if (p_stMorph->hFatherDyn) { p_stMorph->hFatherDyn->lNumberOfElementsDyn--; if (p_stMorph->hFatherDyn->hFirstElementDyn == p_stMorph) p_stMorph->hFatherDyn->hFirstElementDyn = p_stMorph->hNextBrotherDyn; if (p_stMorph->hFatherDyn->hLastElementDyn == p_stMorph) p_stMorph->hFatherDyn->hLastElementDyn = p_stMorph->hPrevBrotherDyn; } p_stMorph->hNextBrotherDyn = NULL; p_stMorph->hPrevBrotherDyn = NULL; p_stMorph->hFatherDyn = NULL; p_stMorph->hNextBrotherDyn = NULL; p_stMorph->hPrevBrotherDyn = hMorphList->hLastElementDyn; p_stMorph->hFatherDyn = hMorphList; if (hMorphList->hFirstElementDyn == NULL) hMorphList->hFirstElementDyn = p_stMorph; else hMorphList->hLastElementDyn->hNextBrotherDyn = p_stMorph; hMorphList->hLastElementDyn = p_stMorph; hMorphList->lNumberOfElementsDyn++;
-    }
-    else if (p_stMorph2->uwChannelNumber != uwChannel)
-    {
-        tdstMorphChannelList_* p_stMorph;
-
-        p_stMorph = (tdstMorphChannelList_*)HMU_fn_p_vMalloc(sizeof(tdstMorphChannelList_), 1); p_stMorph->hNextBrotherDyn = NULL; p_stMorph->hPrevBrotherDyn = NULL; p_stMorph->hFatherDyn = NULL;
-        p_stMorph->uwChannelNumber = uwChannel;
-        p_stMorph->MorphListIndex = IndexOfMorphList;
-        if (p_stMorph->hNextBrotherDyn) p_stMorph->hNextBrotherDyn->hPrevBrotherDyn = p_stMorph->hPrevBrotherDyn; if (p_stMorph->hPrevBrotherDyn) p_stMorph->hPrevBrotherDyn->hNextBrotherDyn = p_stMorph->hNextBrotherDyn; if (p_stMorph->hFatherDyn) { p_stMorph->hFatherDyn->lNumberOfElementsDyn--; if (p_stMorph->hFatherDyn->hFirstElementDyn == p_stMorph) p_stMorph->hFatherDyn->hFirstElementDyn = p_stMorph->hNextBrotherDyn; if (p_stMorph->hFatherDyn->hLastElementDyn == p_stMorph) p_stMorph->hFatherDyn->hLastElementDyn = p_stMorph->hPrevBrotherDyn; } p_stMorph->hNextBrotherDyn = NULL; p_stMorph->hPrevBrotherDyn = NULL; p_stMorph->hFatherDyn = NULL; p_stMorph->hNextBrotherDyn = p_stMorph2; p_stMorph->hPrevBrotherDyn = p_stMorph2->hPrevBrotherDyn; if (p_stMorph2->hPrevBrotherDyn) { p_stMorph2->hPrevBrotherDyn->hNextBrotherDyn = p_stMorph; p_stMorph->hFatherDyn = p_stMorph2->hPrevBrotherDyn->hFatherDyn; } else p_stMorph2->hFatherDyn->hFirstElementDyn = p_stMorph; if (p_stMorph2) { p_stMorph2->hPrevBrotherDyn = p_stMorph; p_stMorph->hFatherDyn = p_stMorph2->hFatherDyn; } else p_stMorph2->hPrevBrotherDyn->hFatherDyn->hLastElementDyn = p_stMorph; p_stMorph->hFatherDyn->lNumberOfElementsDyn++;
-    }
-}
-
-void fn_vFreeMorphList(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn** p_hMorphList)
-{
-    tdstMorphChannelList_* p_hMorphElt;
-
-    if (*p_hMorphList == NULL)
-        return;
-
-    while ((*p_hMorphList)->lNumberOfElementsDyn > 0)
-    {
-        p_hMorphElt = (*p_hMorphList)->hFirstElementDyn;
-        if (p_hMorphElt->hNextBrotherDyn) p_hMorphElt->hNextBrotherDyn->hPrevBrotherDyn = p_hMorphElt->hPrevBrotherDyn; if (p_hMorphElt->hPrevBrotherDyn) p_hMorphElt->hPrevBrotherDyn->hNextBrotherDyn = p_hMorphElt->hNextBrotherDyn; if (p_hMorphElt->hFatherDyn) { p_hMorphElt->hFatherDyn->lNumberOfElementsDyn--; if (p_hMorphElt->hFatherDyn->hFirstElementDyn == p_hMorphElt) p_hMorphElt->hFatherDyn->hFirstElementDyn = p_hMorphElt->hNextBrotherDyn; if (p_hMorphElt->hFatherDyn->hLastElementDyn == p_hMorphElt) p_hMorphElt->hFatherDyn->hLastElementDyn = p_hMorphElt->hPrevBrotherDyn; } p_hMorphElt->hNextBrotherDyn = NULL; p_hMorphElt->hPrevBrotherDyn = NULL; p_hMorphElt->hFatherDyn = NULL;
-        { void* p_vPointer = p_hMorphElt; HMU_fn_vFree(&p_vPointer, 1); }
-    }
-    HMU_fn_vFree((void**)p_hMorphList, 1);
-    *p_hMorphList = NULL;
-}
-
 void* HMU_fn_p_vMalloc(unsigned int ulSize, unsigned char ucChannel);
-
-void fn_vInitMorphList(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn** p_hMorphList)
-{
-    if (*p_hMorphList == NULL)
-    {
-        *p_hMorphList = (LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn*)HMU_fn_p_vMalloc(sizeof(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn), 1);
-        (*p_hMorphList)->hFirstElementDyn = NULL;
-        (*p_hMorphList)->hLastElementDyn = NULL;
-        (*p_hMorphList)->lNumberOfElementsDyn = 0;
-    }
-}
 
 /* Not original source, needs cleaning up: retail inlines
  * fn_vUpdateSPOFlagsOfChannelForActivation (defined below) into
  * fn_vActivateChannel; this inline copy reproduces that while keeping the
  * out-of-line definition. */
 inline void CHN_fn_vUpdateSPOFlagsInline(HIE_tdstSuperObject_* _hSOChannel, unsigned char _bActivate)
+{
+    unsigned int ulSpoFlags;
+
+    if (g_DEMO_KeybTest != 2 && _hSOChannel)
+    {
+        ulSpoFlags = _hSOChannel->ulFlags;
+        if (_bActivate)
+            _hSOChannel->ulFlags = ulSpoFlags & ~0x83;
+        else
+            _hSOChannel->ulFlags = ulSpoFlags | 0x83;
+    }
+}
+
+/* Not original source, needs cleaning up: permuter-found. The inline helper
+ * fixes the operand order of the channel address, as in retail. */
+inline unsigned char* inline_fn(unsigned char* arg0, unsigned int arg1)
+{
+    return ((unsigned char*)arg0) + arg1;
+}
+
+void fn_vFreeCSOList(tdstAChannel_** p_hChannelArray)
+{
+    tdstAChannel_* hArray;
+    hArray = *p_hChannelArray;
+    if (hArray != NULL)
+    {
+        HMU_fn_vFree((void**)&hArray, 1);
+        hArray = NULL;
+    }
+}
+
+void fn_vTakeControlOfChannel(tdstEngineObject_* _hActor, unsigned short _uwChannel, unsigned char _bControlled)
+{
+    char* new_var;
+    unsigned int ulI;
+    tdstAChannel_* p_stChannel;
+    tdst3dData_* hCurrent3dData;
+    unsigned int ulNumberOfChannels;
+    unsigned int ulOffset;
+
+    hCurrent3dData = _hActor->h_3dData;
+    p_stChannel = *(tdstAChannel_**)((char*)hCurrent3dData + 0xa8);
+    if (p_stChannel != NULL)
+    {
+        new_var = (char*)hCurrent3dData + 0xac;
+        ulNumberOfChannels = *(unsigned int*)new_var;
+        if (_uwChannel != 0xffff)
+        {
+            /* Not original source, needs cleaning up: the offset assignment inside
+             * the address keeps bControlledChannel's offset unfolded. */
+            *inline_fn(&p_stChannel->bControlledChannel, ulOffset = (unsigned int)_uwChannel * sizeof(tdstAChannel_)) = _bControlled;
+        }
+        else
+        {
+            for (ulI = 0; ulI < ulNumberOfChannels; ulI++, p_stChannel++)
+            {
+                p_stChannel->bControlledChannel = _bControlled;
+            }
+        }
+    }
+}
+
+void fn_vTakeControlOfLipChannel(tdstEngineObject_* _hActor, unsigned short _uwChannel)
+{
+    static tdstAChannel_* p_stLastControlledChannel = NULL;
+    tdstAChannel_* p_stChannel;
+    unsigned int iIndex;
+
+    if (_hActor == NULL && _uwChannel == 0)
+    {
+        p_stLastControlledChannel = NULL;
+    }
+    else
+    {
+        p_stChannel = _hActor->h_3dData->hArrayOfChannels;
+        if (p_stChannel != NULL)
+        {
+            if (p_stLastControlledChannel != NULL)
+            {
+                p_stLastControlledChannel->bLipsChannel = 0;
+            }
+            /* Not original source, needs cleaning up: the split index keeps the
+             * bLipsChannel offset unfolded and shared with the channel pointer. */
+            iIndex = _uwChannel;
+            iIndex *= sizeof(tdstAChannel_);
+            *((unsigned char*)&p_stChannel->bLipsChannel + iIndex) = 1;
+            p_stLastControlledChannel = (tdstAChannel_*)((char*)p_stChannel + iIndex);
+        }
+    }
+}
+
+void fn_vLooseControlOfLipChannel(tdstEngineObject_* _hActor, unsigned short _uwChannel)
+{
+    tdstAChannel_* p_stChannel;
+    int iIndex;
+
+    p_stChannel = _hActor->h_3dData->hArrayOfChannels;
+    if (p_stChannel != NULL)
+    {
+        /* Not original source, needs cleaning up: the scaled-index assignment
+         * keeps the bLipsChannel offset unfolded, as retail does. */
+        *((unsigned char*)&p_stChannel->bLipsChannel + (iIndex = _uwChannel * sizeof(tdstAChannel_))) = 0;
+    }
+}
+
+void fn_vUpdateSPOFlagsOfChannelForActivation(HIE_tdstSuperObject_* _hSOChannel, unsigned char _bActivate)
 {
     unsigned int ulSpoFlags;
 
@@ -1352,108 +1352,124 @@ void fn_vActivateChannel(HIE_tdstSuperObject_* _hPerso, unsigned short _uwChanne
     }
 }
 
-void fn_vUpdateSPOFlagsOfChannelForActivation(HIE_tdstSuperObject_* _hSOChannel, unsigned char _bActivate)
+void fn_vInitMorphList(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn** p_hMorphList)
 {
-    unsigned int ulSpoFlags;
-
-    if (g_DEMO_KeybTest != 2 && _hSOChannel)
+    if (*p_hMorphList == NULL)
     {
-        ulSpoFlags = _hSOChannel->ulFlags;
-        if (_bActivate)
-            _hSOChannel->ulFlags = ulSpoFlags & ~0x83;
-        else
-            _hSOChannel->ulFlags = ulSpoFlags | 0x83;
+        *p_hMorphList = (LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn*)HMU_fn_p_vMalloc(sizeof(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn), 1);
+        (*p_hMorphList)->hFirstElementDyn = NULL;
+        (*p_hMorphList)->hLastElementDyn = NULL;
+        (*p_hMorphList)->lNumberOfElementsDyn = 0;
     }
 }
 
-void fn_vLooseControlOfLipChannel(tdstEngineObject_* _hActor, unsigned short _uwChannel)
+void fn_vFreeMorphList(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn** p_hMorphList)
 {
-    tdstAChannel_* p_stChannel;
-    int iIndex;
+    tdstMorphChannelList_* p_hMorphElt;
 
-    p_stChannel = _hActor->h_3dData->hArrayOfChannels;
-    if (p_stChannel != NULL)
+    if (*p_hMorphList == NULL)
+        return;
+
+    while ((*p_hMorphList)->lNumberOfElementsDyn > 0)
     {
-        /* Not original source, needs cleaning up: the scaled-index assignment
-         * keeps the bLipsChannel offset unfolded, as retail does. */
-        *((unsigned char*)&p_stChannel->bLipsChannel + (iIndex = _uwChannel * sizeof(tdstAChannel_))) = 0;
+        p_hMorphElt = (*p_hMorphList)->hFirstElementDyn;
+        if (p_hMorphElt->hNextBrotherDyn) p_hMorphElt->hNextBrotherDyn->hPrevBrotherDyn = p_hMorphElt->hPrevBrotherDyn; if (p_hMorphElt->hPrevBrotherDyn) p_hMorphElt->hPrevBrotherDyn->hNextBrotherDyn = p_hMorphElt->hNextBrotherDyn; if (p_hMorphElt->hFatherDyn) { p_hMorphElt->hFatherDyn->lNumberOfElementsDyn--; if (p_hMorphElt->hFatherDyn->hFirstElementDyn == p_hMorphElt) p_hMorphElt->hFatherDyn->hFirstElementDyn = p_hMorphElt->hNextBrotherDyn; if (p_hMorphElt->hFatherDyn->hLastElementDyn == p_hMorphElt) p_hMorphElt->hFatherDyn->hLastElementDyn = p_hMorphElt->hPrevBrotherDyn; } p_hMorphElt->hNextBrotherDyn = NULL; p_hMorphElt->hPrevBrotherDyn = NULL; p_hMorphElt->hFatherDyn = NULL;
+        { void* p_vPointer = p_hMorphElt; HMU_fn_vFree(&p_vPointer, 1); }
     }
+    HMU_fn_vFree((void**)p_hMorphList, 1);
+    *p_hMorphList = NULL;
 }
 
-void fn_vTakeControlOfLipChannel(tdstEngineObject_* _hActor, unsigned short _uwChannel)
+void fn_vPutMorphElementInChannel(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn* hMorphList, unsigned short uwChannel, short IndexOfMorphList)
 {
-    static tdstAChannel_* p_stLastControlledChannel = NULL;
-    tdstAChannel_* p_stChannel;
-    unsigned int iIndex;
+    tdstMorphChannelList_* p_stMorph2;
 
-    if (_hActor == NULL && _uwChannel == 0)
+    if (hMorphList == NULL)
+        return;
+
+    p_stMorph2 = hMorphList->hFirstElementDyn;
+    while (p_stMorph2 != NULL)
     {
-        p_stLastControlledChannel = NULL;
-    }
-    else
-    {
-        p_stChannel = _hActor->h_3dData->hArrayOfChannels;
-        if (p_stChannel != NULL)
+        if (p_stMorph2->uwChannelNumber == uwChannel)
         {
-            if (p_stLastControlledChannel != NULL)
+            p_stMorph2->MorphListIndex = IndexOfMorphList;
+            break;
+        }
+        if (p_stMorph2->uwChannelNumber > uwChannel)
+        {
+            break;
+        }
+        p_stMorph2 = p_stMorph2->hNextBrotherDyn;
+    }
+    if (p_stMorph2 == NULL)
+    {
+        tdstMorphChannelList_* p_stMorph;
+
+        p_stMorph = (tdstMorphChannelList_*)HMU_fn_p_vMalloc(sizeof(tdstMorphChannelList_), 1); p_stMorph->hNextBrotherDyn = NULL; p_stMorph->hPrevBrotherDyn = NULL; p_stMorph->hFatherDyn = NULL;
+        p_stMorph->uwChannelNumber = uwChannel;
+        p_stMorph->MorphListIndex = IndexOfMorphList;
+        if (p_stMorph->hNextBrotherDyn) p_stMorph->hNextBrotherDyn->hPrevBrotherDyn = p_stMorph->hPrevBrotherDyn; if (p_stMorph->hPrevBrotherDyn) p_stMorph->hPrevBrotherDyn->hNextBrotherDyn = p_stMorph->hNextBrotherDyn; if (p_stMorph->hFatherDyn) { p_stMorph->hFatherDyn->lNumberOfElementsDyn--; if (p_stMorph->hFatherDyn->hFirstElementDyn == p_stMorph) p_stMorph->hFatherDyn->hFirstElementDyn = p_stMorph->hNextBrotherDyn; if (p_stMorph->hFatherDyn->hLastElementDyn == p_stMorph) p_stMorph->hFatherDyn->hLastElementDyn = p_stMorph->hPrevBrotherDyn; } p_stMorph->hNextBrotherDyn = NULL; p_stMorph->hPrevBrotherDyn = NULL; p_stMorph->hFatherDyn = NULL; p_stMorph->hNextBrotherDyn = NULL; p_stMorph->hPrevBrotherDyn = hMorphList->hLastElementDyn; p_stMorph->hFatherDyn = hMorphList; if (hMorphList->hFirstElementDyn == NULL) hMorphList->hFirstElementDyn = p_stMorph; else hMorphList->hLastElementDyn->hNextBrotherDyn = p_stMorph; hMorphList->hLastElementDyn = p_stMorph; hMorphList->lNumberOfElementsDyn++;
+    }
+    else if (p_stMorph2->uwChannelNumber != uwChannel)
+    {
+        tdstMorphChannelList_* p_stMorph;
+
+        p_stMorph = (tdstMorphChannelList_*)HMU_fn_p_vMalloc(sizeof(tdstMorphChannelList_), 1); p_stMorph->hNextBrotherDyn = NULL; p_stMorph->hPrevBrotherDyn = NULL; p_stMorph->hFatherDyn = NULL;
+        p_stMorph->uwChannelNumber = uwChannel;
+        p_stMorph->MorphListIndex = IndexOfMorphList;
+        if (p_stMorph->hNextBrotherDyn) p_stMorph->hNextBrotherDyn->hPrevBrotherDyn = p_stMorph->hPrevBrotherDyn; if (p_stMorph->hPrevBrotherDyn) p_stMorph->hPrevBrotherDyn->hNextBrotherDyn = p_stMorph->hNextBrotherDyn; if (p_stMorph->hFatherDyn) { p_stMorph->hFatherDyn->lNumberOfElementsDyn--; if (p_stMorph->hFatherDyn->hFirstElementDyn == p_stMorph) p_stMorph->hFatherDyn->hFirstElementDyn = p_stMorph->hNextBrotherDyn; if (p_stMorph->hFatherDyn->hLastElementDyn == p_stMorph) p_stMorph->hFatherDyn->hLastElementDyn = p_stMorph->hPrevBrotherDyn; } p_stMorph->hNextBrotherDyn = NULL; p_stMorph->hPrevBrotherDyn = NULL; p_stMorph->hFatherDyn = NULL; p_stMorph->hNextBrotherDyn = p_stMorph2; p_stMorph->hPrevBrotherDyn = p_stMorph2->hPrevBrotherDyn; if (p_stMorph2->hPrevBrotherDyn) { p_stMorph2->hPrevBrotherDyn->hNextBrotherDyn = p_stMorph; p_stMorph->hFatherDyn = p_stMorph2->hPrevBrotherDyn->hFatherDyn; } else p_stMorph2->hFatherDyn->hFirstElementDyn = p_stMorph; if (p_stMorph2) { p_stMorph2->hPrevBrotherDyn = p_stMorph; p_stMorph->hFatherDyn = p_stMorph2->hFatherDyn; } else p_stMorph2->hPrevBrotherDyn->hFatherDyn->hLastElementDyn = p_stMorph; p_stMorph->hFatherDyn->lNumberOfElementsDyn++;
+    }
+}
+
+void fn_vRemoveChannelFromMorphList(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn* hMorphList, unsigned short uwChannel)
+{
+    tdstMorphChannelList_* p_stMorph;
+    tdstMorphChannelList_* p_stMorph_Next;
+
+    if (hMorphList == NULL)
+        return;
+
+    for (p_stMorph = hMorphList->hFirstElementDyn, p_stMorph_Next = p_stMorph ? p_stMorph->hNextBrotherDyn : NULL; p_stMorph != NULL; p_stMorph = p_stMorph_Next, p_stMorph_Next = p_stMorph ? p_stMorph->hNextBrotherDyn : NULL)
+    {
+        if (p_stMorph->uwChannelNumber == uwChannel)
+        {
+            if (hMorphList->lNumberOfElementsDyn != 0)
             {
-                p_stLastControlledChannel->bLipsChannel = 0;
+                if (p_stMorph->hNextBrotherDyn) p_stMorph->hNextBrotherDyn->hPrevBrotherDyn = p_stMorph->hPrevBrotherDyn; if (p_stMorph->hPrevBrotherDyn) p_stMorph->hPrevBrotherDyn->hNextBrotherDyn = p_stMorph->hNextBrotherDyn; if (p_stMorph->hFatherDyn) { p_stMorph->hFatherDyn->lNumberOfElementsDyn--; if (p_stMorph->hFatherDyn->hFirstElementDyn == p_stMorph) p_stMorph->hFatherDyn->hFirstElementDyn = p_stMorph->hNextBrotherDyn; if (p_stMorph->hFatherDyn->hLastElementDyn == p_stMorph) p_stMorph->hFatherDyn->hLastElementDyn = p_stMorph->hPrevBrotherDyn; } p_stMorph->hNextBrotherDyn = NULL; p_stMorph->hPrevBrotherDyn = NULL; p_stMorph->hFatherDyn = NULL;
+                { void* p_vPointer = p_stMorph; HMU_fn_vFree(&p_vPointer, 1); }
             }
-            /* Not original source, needs cleaning up: the split index keeps the
-             * bLipsChannel offset unfolded and shared with the channel pointer. */
-            iIndex = _uwChannel;
-            iIndex *= sizeof(tdstAChannel_);
-            *((unsigned char*)&p_stChannel->bLipsChannel + iIndex) = 1;
-            p_stLastControlledChannel = (tdstAChannel_*)((char*)p_stChannel + iIndex);
+            break;
         }
     }
 }
 
-/* Not original source, needs cleaning up: permuter-found. The inline helper
- * fixes the operand order of the channel address, as in retail. */
-inline unsigned char* inline_fn(unsigned char* arg0, unsigned int arg1)
+short fn_hMorphListIndex(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn* hMorphList, unsigned short uwChannel)
 {
-    return ((unsigned char*)arg0) + arg1;
-}
+    tdstMorphChannelList_* p_stMorph;
 
-void fn_vTakeControlOfChannel(tdstEngineObject_* _hActor, unsigned short _uwChannel, unsigned char _bControlled)
-{
-    char* new_var;
-    unsigned int ulI;
-    tdstAChannel_* p_stChannel;
-    tdst3dData_* hCurrent3dData;
-    unsigned int ulNumberOfChannels;
-    unsigned int ulOffset;
-
-    hCurrent3dData = _hActor->h_3dData;
-    p_stChannel = *(tdstAChannel_**)((char*)hCurrent3dData + 0xa8);
-    if (p_stChannel != NULL)
+    if (hMorphList == NULL) { return -1; }
+    for (p_stMorph = hMorphList->hFirstElementDyn; p_stMorph != NULL; p_stMorph = p_stMorph->hNextBrotherDyn)
     {
-        new_var = (char*)hCurrent3dData + 0xac;
-        ulNumberOfChannels = *(unsigned int*)new_var;
-        if (_uwChannel != 0xffff)
+        if (p_stMorph->uwChannelNumber == uwChannel)
         {
-            /* Not original source, needs cleaning up: the offset assignment inside
-             * the address keeps bControlledChannel's offset unfolded. */
-            *inline_fn(&p_stChannel->bControlledChannel, ulOffset = (unsigned int)_uwChannel * sizeof(tdstAChannel_)) = _bControlled;
+            return p_stMorph->MorphListIndex;
         }
-        else
+        if (uwChannel < p_stMorph->uwChannelNumber)
         {
-            for (ulI = 0; ulI < ulNumberOfChannels; ulI++, p_stChannel++)
-            {
-                p_stChannel->bControlledChannel = _bControlled;
-            }
+            return -1;
         }
     }
+    return -1;
 }
 
-void fn_vFreeCSOList(tdstAChannel_** p_hChannelArray)
+PO_tdstPhysicalObject_* fn_hGetMorphedObjectInChannel(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn* hMorphList, unsigned short uwChannel)
 {
-    tdstAChannel_* hArray;
-    hArray = *p_hChannelArray;
-    if (hArray != NULL)
-    {
-        HMU_fn_vFree((void**)&hArray, 1);
-        hArray = NULL;
-    }
+    short lIndex = CHN_fn_hMorphListIndexInline(hMorphList, uwChannel);
+    if (lIndex != -1) { return MOR_fn_hGetMorphedObject(lIndex); }
+    return NULL;
+}
+
+void fn_vSetCapabilities(tdstEngineObject_* _p_stObject, unsigned int _ubf32Capabilities)
+{
+    _p_stObject->h_StandardGame->ubf32Capabilities = _ubf32Capabilities;
 }

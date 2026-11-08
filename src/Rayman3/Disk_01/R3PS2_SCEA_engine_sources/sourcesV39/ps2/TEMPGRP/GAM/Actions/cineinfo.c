@@ -1437,10 +1437,43 @@ void fn_vInitAveragePositionDatasIfNecessary(tdstCineinfo_* _hCineinfo);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned int fn_ulBrainSizeOf(void)
-{
-    return 0xC;
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+unsigned int fn_ulBrainSizeOf(void);
+void CAM_fn_vSetLightComputation(tdstCineinfo_* _hCineinfo, unsigned char _bLightComputation);
+unsigned char CAM_fn_bGetLightComputation(tdstCineinfo_* _hCineinfo);
+unsigned char CAM_fn_bGetMirrorFlag(tdstCineinfo_* _hCineinfo);
+void CAM_fn_vSetMirrorFlag(tdstCineinfo_* _hCineinfo, unsigned char _bFlag);
+unsigned char CAM_fn_ucGetTransparencyFlag(tdstCineinfo_* _hCineinfo);
+void CAM_fn_vSetTransparencyFlag(tdstCineinfo_* _hCineinfo, unsigned char _ucValue);
+void CAM_fn_vRestoreTransparencyOnSuperObject(tdstCineinfo_* _hCineinfo);
+void CAM_fn_vApplyTransparencyOnSuperObject(tdstCineinfo_* _hCineinfo);
+void CAM_fn_vResetArrayOfTransparentSuperObject(tdstCineinfo_* _hCineinfo);
+void CAM_fn_vCineInfoSetSuperObjectTargeted(tdstInternalStructurCineinfo_* _hIntCineinfo, HIE_tdstSuperObject_* _hSuperObject);
+void CAM_fn_vAveragePosition(tdstCineinfo_* _hCineinfo, float xTimeWindow, MTH3D_tdstVector_* p_result);
+void CAM_fn_vAverageSpeed(tdstCineinfo_* _hCineinfo, float xTimeWindow, MTH3D_tdstVector_* p_result);
+void CAM_fn_vRemindTime(tdstCineinfo_* _hCineinfo, float _dt);
+void CAM_fn_vRemindPos(tdstCineinfo_* _hCineinfo, MTH_stMove* _p_Pos);
+void CAM_fn_vRemindSpeed(tdstCineinfo_* _hCineinfo, MTH_stMove* _p_Speed);
+void fn_vInitAveragePositionDatasIfNecessary(tdstCineinfo_* _hCineinfo);
+void fn_vGetPersoSightAxisSystem(tdstCineinfo_* _hCineinfo, MTH3D_tdstVector_* _p_stSightAxis, MTH3D_tdstVector_* _p_stFirstComplementaryAxis, MTH3D_tdstVector_* _p_stSecondComplementaryAxis);
+void CAM_fn_vSetCameraInList(HIE_tdstSuperObject_* _hSupObjectCamera);
+void CAM_fn_vSetCineinfoWorkFromVisibility(tdstCineinfo_* param0);
+void CAM_fn_vSetCineinfoCurrentFromVisibility(tdstCineinfo_* _hCineinfo);
+void CAM_fn_vSetCineinfoVisibilityFromCurrent(tdstCineinfo_* _hCineinfo);
+void CAM_fn_vSetCineinfoWorkFromCurrent(tdstCineinfo_* _hCineinfo);
+unsigned char CAM_fn_bCineInfoGetIsDebugCamera(tdstInternalStructurCineinfo_* _hIntCineinfo);
+char CAM_fn_cCineInfoGetChannel(tdstInternalStructurCineinfo_* _hIntCineinfo);
+HIE_tdstSuperObject_* CAM_fn_hCineInfoGetSuperObjectTargeted(tdstInternalStructurCineinfo_* _hIntCineinfo);
+void CAM_fn_vCineinfoCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc);
+void CAM_fn_vCineinfoDesinit(tdstEngineObject_* _p_stObject);
+void CAM_fn_vCineinfoInit(tdstEngineObject_* _p_stObject, tdeObjectTreeInit_ eObjectInit);
+void CAM_fn_vUpdateTargetPosition(tdstCineinfo_* _hCineinfo);
+void CAM_fn_vInitCompleteCineinfo(tdstCineinfo_* _hCineinfo);
+void CAM_fn_vCineinfoFree(tdstEngineObject_* _p_stObject);
+void CAM_fn_vCineinfoAlloc(tdstEngineObject_* _p_stObject);
+unsigned int CAM_fn_ulCineinfoSizeOf(void);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1278–1278 */
 /* addr: 0x0026d3f0  size: 8 bytes */
@@ -1449,10 +1482,6 @@ unsigned int fn_ulBrainSizeOf(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vSetLightComputation(tdstCineinfo_* _hCineinfo, unsigned char _bLightComputation)
-{
-    _hCineinfo->bLightComputation = _bLightComputation;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1272–1272 */
 /* addr: 0x0026d400  size: 8 bytes */
@@ -1461,10 +1490,6 @@ void CAM_fn_vSetLightComputation(tdstCineinfo_* _hCineinfo, unsigned char _bLigh
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char CAM_fn_bGetLightComputation(tdstCineinfo_* _hCineinfo)
-{
-    return _hCineinfo->bLightComputation;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1264–1264 */
 /* addr: 0x0026d410  size: 8 bytes */
@@ -1473,10 +1498,6 @@ unsigned char CAM_fn_bGetLightComputation(tdstCineinfo_* _hCineinfo)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char CAM_fn_bGetMirrorFlag(tdstCineinfo_* _hCineinfo)
-{
-    return _hCineinfo->bCameraIsMirrored;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1259–1259 */
 /* addr: 0x0026d420  size: 8 bytes */
@@ -1485,10 +1506,6 @@ unsigned char CAM_fn_bGetMirrorFlag(tdstCineinfo_* _hCineinfo)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vSetMirrorFlag(tdstCineinfo_* _hCineinfo, unsigned char _bFlag)
-{
-    _hCineinfo->bCameraIsMirrored = _bFlag;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1254–1254 */
 /* addr: 0x0026d430  size: 8 bytes */
@@ -1497,10 +1514,6 @@ void CAM_fn_vSetMirrorFlag(tdstCineinfo_* _hCineinfo, unsigned char _bFlag)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char CAM_fn_ucGetTransparencyFlag(tdstCineinfo_* _hCineinfo)
-{
-    return _hCineinfo->ucTransparencyFlag;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1249–1249 */
 /* addr: 0x0026d440  size: 8 bytes */
@@ -1509,10 +1522,6 @@ unsigned char CAM_fn_ucGetTransparencyFlag(tdstCineinfo_* _hCineinfo)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vSetTransparencyFlag(tdstCineinfo_* _hCineinfo, unsigned char _ucValue)
-{
-    _hCineinfo->ucTransparencyFlag = _ucValue;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1233–1244 */
 /* addr: 0x0026d450  size: 96 bytes */
@@ -1529,22 +1538,6 @@ void CAM_fn_vSetTransparencyFlag(tdstCineinfo_* _hCineinfo, unsigned char _ucVal
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vRestoreTransparencyOnSuperObject(tdstCineinfo_* _hCineinfo)
-{
-    tdstTransparentSuperObjectForCamera_* param0;
-    tdstTransparentSuperObjectForCamera_* p_stFirst;
-    p_stFirst = _hCineinfo->a10_stTransparentSuperObjectForCamera;
-    param0 = p_stFirst + _hCineinfo->xNumberOfTransparentSuperObjectForCamera;
-    if (p_stFirst < param0) {
-        do {
-            if (p_stFirst->hSuperObject) {
-                p_stFirst->hSuperObject->lDrawModeMask = p_stFirst->lInitialDrawMask;
-                p_stFirst->hSuperObject->fTransparenceLevel = p_stFirst->fInitialTransparenceLevel;
-            }
-            p_stFirst++;
-        } while (p_stFirst < param0);
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1197–1229 */
 /* addr: 0x0026d4b0  size: 320 bytes */
@@ -1577,42 +1570,6 @@ void CAM_fn_vRestoreTransparencyOnSuperObject(tdstCineinfo_* _hCineinfo)
 /* Not original source, needs cleaning up: stand-ins for the engine min/max macros. */
 #define MAXF(a, b) ((a) > (b) ? (a) : (b))
 #define MINF(a, b) ((a) < (b) ? (a) : (b))
-void CAM_fn_vApplyTransparencyOnSuperObject(tdstCineinfo_* _hCineinfo)
-{
-    float fDelta;
-    tdstTransparentSuperObjectForCamera_* p_stFirst;
-    tdstTransparentSuperObjectForCamera_* p_stEnd;
-
-    p_stFirst = _hCineinfo->a10_stTransparentSuperObjectForCamera;
-    p_stEnd = p_stFirst + _hCineinfo->xNumberOfTransparentSuperObjectForCamera;
-
-    fDelta = (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime * _hCineinfo->fTransparencySpeed;
-
-    while (p_stFirst < p_stEnd)
-    {
-        if (p_stFirst->hSuperObject)
-        {
-            if (p_stFirst->bIncrease)
-            {
-                p_stFirst->fCurrentTransparencyLevel = MAXF(p_stFirst->fCurrentTransparencyLevel - fDelta, _hCineinfo->fTransparency);
-            }
-            else
-            {
-                p_stFirst->fCurrentTransparencyLevel = MINF(p_stFirst->fCurrentTransparencyLevel + fDelta, 255.0f);
-                if (!(p_stFirst->fCurrentTransparencyLevel < 255.0f))
-                {
-                    p_stFirst->hSuperObject = NULL;
-                    break;
-                }
-            }
-            p_stFirst->lInitialDrawMask = p_stFirst->hSuperObject->lDrawModeMask;
-            p_stFirst->fInitialTransparenceLevel = p_stFirst->hSuperObject->fTransparenceLevel;
-            p_stFirst->hSuperObject->lDrawModeMask &= ~8;
-            p_stFirst->hSuperObject->fTransparenceLevel = p_stFirst->fCurrentTransparencyLevel;
-        }
-        p_stFirst++;
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1185–1192 */
 /* addr: 0x0026d5f0  size: 80 bytes */
@@ -1626,19 +1583,6 @@ void CAM_fn_vApplyTransparencyOnSuperObject(tdstCineinfo_* _hCineinfo)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vResetArrayOfTransparentSuperObject(tdstCineinfo_* _hCineinfo)
-{
-    tdstTransparentSuperObjectForCamera_* param0;
-    tdstTransparentSuperObjectForCamera_* p_stFirst;
-    p_stFirst = _hCineinfo->a10_stTransparentSuperObjectForCamera;
-    param0 = p_stFirst + _hCineinfo->xNumberOfTransparentSuperObjectForCamera;
-    if (p_stFirst < param0) {
-        do {
-            p_stFirst->bIncrease = 0;
-            p_stFirst++;
-        } while (p_stFirst < param0);
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1156–1156 */
 /* addr: 0x0026d640  size: 8 bytes */
@@ -1647,10 +1591,6 @@ void CAM_fn_vResetArrayOfTransparentSuperObject(tdstCineinfo_* _hCineinfo)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vCineInfoSetSuperObjectTargeted(tdstInternalStructurCineinfo_* _hIntCineinfo, HIE_tdstSuperObject_* _hSuperObject)
-{
-    _hIntCineinfo->hSuperObjectTargeted = _hSuperObject;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 951–977 */
 /* addr: 0x0026d650  size: 344 bytes */
@@ -1683,27 +1623,6 @@ void CAM_fn_vCineInfoSetSuperObjectTargeted(tdstInternalStructurCineinfo_* _hInt
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vAveragePosition(tdstCineinfo_* _hCineinfo, float xTimeWindow, MTH3D_tdstVector_* p_result)
-{
-    unsigned int ulIndex;
-    float xSum;
-    float xTime;
-    MTH3D_tdstVector_* p_stPos;
-    fn_vInitAveragePositionDatasIfNecessary(_hCineinfo);
-    xSum = 0.0f;
-    p_result->xX = 0.0f; p_result->xY = 0.0f; p_result->xZ = 0.0f;
-    for (ulIndex = 0; ulIndex < 8; ulIndex++) {
-        xTime = _hCineinfo->AveragePosition.a_CheckedTime[ulIndex];
-        p_stPos = &_hCineinfo->AveragePosition.a_CheckedPos[ulIndex];
-        if ((xTime == 0.0f) || ((p_stPos->xX == 0.0f) && (p_stPos->xY == 0.0f) && (p_stPos->xZ == 0.0f))) continue;
-        xSum += xTime;
-        p_result->xX += xTime * p_stPos->xX; p_result->xY += xTime * p_stPos->xY; p_result->xZ += xTime * p_stPos->xZ;
-        if (xSum >= xTimeWindow) break;
-    }
-    if (xSum != 0.0f) {
-        p_result->xX /= xSum; p_result->xY /= xSum; p_result->xZ /= xSum;
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 919–946 */
 /* addr: 0x0026d7b0  size: 344 bytes */
@@ -1736,27 +1655,6 @@ void CAM_fn_vAveragePosition(tdstCineinfo_* _hCineinfo, float xTimeWindow, MTH3D
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vAverageSpeed(tdstCineinfo_* _hCineinfo, float xTimeWindow, MTH3D_tdstVector_* p_result)
-{
-    MTH3D_tdstVector_* p_stTmp;
-    unsigned int ulIndex;
-    float tmpTime;
-    float xCurrentTime;
-    fn_vInitAveragePositionDatasIfNecessary(_hCineinfo);
-    xCurrentTime = 0.0f;
-    p_result->xX = 0.0f; p_result->xY = 0.0f; p_result->xZ = 0.0f;
-    for (ulIndex = 0; ulIndex < 8; ulIndex++) {
-        tmpTime = _hCineinfo->AveragePosition.a_CheckedTime[ulIndex];
-        p_stTmp = &_hCineinfo->AveragePosition.a_CheckedSpeed[ulIndex];
-        if ((tmpTime == 0.0f) || ((p_stTmp->xX == 0.0f) && (p_stTmp->xY == 0.0f) && (p_stTmp->xZ == 0.0f))) continue;
-        xCurrentTime += tmpTime;
-        p_result->xX += tmpTime * p_stTmp->xX; p_result->xY += tmpTime * p_stTmp->xY; p_result->xZ += tmpTime * p_stTmp->xZ;
-        if (xCurrentTime >= xTimeWindow) break;
-    }
-    if (xCurrentTime != 0.0f) {
-        p_result->xX /= xCurrentTime; p_result->xY /= xCurrentTime; p_result->xZ /= xCurrentTime;
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 911–914 */
 /* addr: 0x0026d910  size: 64 bytes */
@@ -1770,11 +1668,6 @@ void CAM_fn_vAverageSpeed(tdstCineinfo_* _hCineinfo, float xTimeWindow, MTH3D_td
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vRemindTime(tdstCineinfo_* _hCineinfo, float _dt)
-{
-    memcpy(&_hCineinfo->AveragePosition.a_CheckedTime[0], &_hCineinfo->AveragePosition.a_CheckedTime[1], 7 * sizeof(float));
-    _hCineinfo->AveragePosition.a_CheckedTime[7] = _dt;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 902–905 */
 /* addr: 0x0026d950  size: 84 bytes */
@@ -1794,12 +1687,6 @@ void CAM_fn_vRemindTime(tdstCineinfo_* _hCineinfo, float _dt)
     *(unsigned int*)&(dst).xZ = *(unsigned int*)&(src).xZ; \
 } while (0)
 
-void CAM_fn_vRemindPos(tdstCineinfo_* _hCineinfo, MTH_stMove* _p_Pos)
-{
-    memcpy(&_hCineinfo->AveragePosition.a_CheckedPos[0], &_hCineinfo->AveragePosition.a_CheckedPos[1], 7 * sizeof(MTH3D_tdstVector_));
-    CAM_M_vCopyHistoryVector(_hCineinfo->AveragePosition.a_CheckedPos[7], _p_Pos->m_stLinear);
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 893–896 */
 /* addr: 0x0026d9b0  size: 84 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1812,11 +1699,6 @@ void CAM_fn_vRemindPos(tdstCineinfo_* _hCineinfo, MTH_stMove* _p_Pos)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vRemindSpeed(tdstCineinfo_* _hCineinfo, MTH_stMove* _p_Speed)
-{
-    memcpy(&_hCineinfo->AveragePosition.a_CheckedSpeed[0], &_hCineinfo->AveragePosition.a_CheckedSpeed[1], 7 * sizeof(MTH3D_tdstVector_));
-    CAM_M_vCopyHistoryVector(_hCineinfo->AveragePosition.a_CheckedSpeed[7], _p_Speed->m_stLinear);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 868–886 */
 /* addr: 0x0026da10  size: 180 bytes */
@@ -1843,22 +1725,6 @@ void CAM_fn_vRemindSpeed(tdstCineinfo_* _hCineinfo, MTH_stMove* _p_Speed)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vInitAveragePositionDatasIfNecessary(tdstCineinfo_* _hCineinfo)
-{
-    unsigned int ulIndex;
-    for (ulIndex = 0; ulIndex < 8; ulIndex++) {
-        if (_hCineinfo->AveragePosition.a_CheckedTime[ulIndex] != 0.0f)
-            break;
-    }
-    if (ulIndex >= 8) {
-        MTH4D_tdstVector_* p_stPosition = &_hCineinfo->hWork->hSuperObjectTargeted->hGlobalMatrix->stTransformMatrix.stCol_3;
-        for (ulIndex = 0; ulIndex < 8; ulIndex++) {
-            _hCineinfo->AveragePosition.a_CheckedTime[ulIndex] = 0.03;
-            _hCineinfo->AveragePosition.a_CheckedSpeed[ulIndex].xX = 0.0f; _hCineinfo->AveragePosition.a_CheckedSpeed[ulIndex].xY = 0.0f; _hCineinfo->AveragePosition.a_CheckedSpeed[ulIndex].xZ = 0.0f;
-            CAM_M_vCopyHistoryVector(_hCineinfo->AveragePosition.a_CheckedPos[ulIndex], *p_stPosition);
-        }
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 855–858 */
 /* addr: 0x0026dad0  size: 76 bytes */
@@ -1870,18 +1736,6 @@ void fn_vInitAveragePositionDatasIfNecessary(tdstCineinfo_* _hCineinfo)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vGetPersoSightAxisSystem(tdstCineinfo_* _hCineinfo, MTH3D_tdstVector_* _p_stSightAxis, MTH3D_tdstVector_* _p_stFirstComplementaryAxis, MTH3D_tdstVector_* _p_stSecondComplementaryAxis)
-{
-    *(unsigned int*)&_p_stSightAxis->xX = *(unsigned int*)&_hCineinfo->stSightAxisSystem.SightAxis.xX;
-    *(unsigned int*)&_p_stSightAxis->xY = *(unsigned int*)&_hCineinfo->stSightAxisSystem.SightAxis.xY;
-    *(unsigned int*)&_p_stSightAxis->xZ = *(unsigned int*)&_hCineinfo->stSightAxisSystem.SightAxis.xZ;
-    *(unsigned int*)&_p_stFirstComplementaryAxis->xX = *(unsigned int*)&_hCineinfo->stSightAxisSystem.FirstComplementaryAxis.xX;
-    *(unsigned int*)&_p_stFirstComplementaryAxis->xY = *(unsigned int*)&_hCineinfo->stSightAxisSystem.FirstComplementaryAxis.xY;
-    *(unsigned int*)&_p_stFirstComplementaryAxis->xZ = *(unsigned int*)&_hCineinfo->stSightAxisSystem.FirstComplementaryAxis.xZ;
-    *(unsigned int*)&_p_stSecondComplementaryAxis->xX = *(unsigned int*)&_hCineinfo->stSightAxisSystem.SecondComplementaryAxis.xX;
-    *(unsigned int*)&_p_stSecondComplementaryAxis->xY = *(unsigned int*)&_hCineinfo->stSightAxisSystem.SecondComplementaryAxis.xY;
-    *(unsigned int*)&_p_stSecondComplementaryAxis->xZ = *(unsigned int*)&_hCineinfo->stSightAxisSystem.SecondComplementaryAxis.xZ;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 750–759 */
 /* addr: 0x0026db20  size: 280 bytes */
@@ -1898,15 +1752,6 @@ void fn_vGetPersoSightAxisSystem(tdstCineinfo_* _hCineinfo, MTH3D_tdstVector_* _
  * compare a candidate object's line table as an extra checkpoint.
  */
 void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
-void CAM_fn_vSetCameraInList(HIE_tdstSuperObject_* _hSupObjectCamera)
-{
-    tdstNodeCamera_* p_stTempNodeCamera;
-
-    p_stTempNodeCamera = (tdstNodeCamera_*)HMU_fn_p_vMalloc(0x10, 0);
-    p_stTempNodeCamera->p_stSuperObjectCamera = _hSupObjectCamera;
-    p_stTempNodeCamera->hNextBrotherDyn = NULL; p_stTempNodeCamera->hPrevBrotherDyn = NULL; p_stTempNodeCamera->hFatherDyn = NULL;
-    if (p_stTempNodeCamera->hNextBrotherDyn) p_stTempNodeCamera->hNextBrotherDyn->hPrevBrotherDyn = p_stTempNodeCamera->hPrevBrotherDyn; if (p_stTempNodeCamera->hPrevBrotherDyn) p_stTempNodeCamera->hPrevBrotherDyn->hNextBrotherDyn = p_stTempNodeCamera->hNextBrotherDyn; if (p_stTempNodeCamera->hFatherDyn) { p_stTempNodeCamera->hFatherDyn->lNumberOfElementsDyn--; if (p_stTempNodeCamera->hFatherDyn->hFirstElementDyn == p_stTempNodeCamera) p_stTempNodeCamera->hFatherDyn->hFirstElementDyn = p_stTempNodeCamera->hNextBrotherDyn; if (p_stTempNodeCamera->hFatherDyn->hLastElementDyn == p_stTempNodeCamera) p_stTempNodeCamera->hFatherDyn->hLastElementDyn = p_stTempNodeCamera->hPrevBrotherDyn; } p_stTempNodeCamera->hNextBrotherDyn = NULL; p_stTempNodeCamera->hPrevBrotherDyn = NULL; p_stTempNodeCamera->hFatherDyn = NULL; p_stTempNodeCamera->hNextBrotherDyn = NULL; p_stTempNodeCamera->hPrevBrotherDyn = g_stEngineStructure.hCameraList.hLastElementDyn; p_stTempNodeCamera->hFatherDyn = &g_stEngineStructure.hCameraList; if (g_stEngineStructure.hCameraList.hFirstElementDyn == NULL) g_stEngineStructure.hCameraList.hFirstElementDyn = p_stTempNodeCamera; else g_stEngineStructure.hCameraList.hLastElementDyn->hNextBrotherDyn = p_stTempNodeCamera; g_stEngineStructure.hCameraList.hLastElementDyn = p_stTempNodeCamera; g_stEngineStructure.hCameraList.lNumberOfElementsDyn++;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 732–732 */
 /* addr: 0x0026dc40  size: 16 bytes */
@@ -1915,10 +1760,6 @@ void CAM_fn_vSetCameraInList(HIE_tdstSuperObject_* _hSupObjectCamera)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vSetCineinfoWorkFromVisibility(tdstCineinfo_* param0)
-{
-    memcpy(param0->hWork, param0->hVisibility, sizeof(tdstInternalStructurCineinfo_));
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 725–728 */
 /* addr: 0x0026dc50  size: 60 bytes */
@@ -1930,11 +1771,6 @@ void CAM_fn_vSetCineinfoWorkFromVisibility(tdstCineinfo_* param0)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vSetCineinfoCurrentFromVisibility(tdstCineinfo_* _hCineinfo)
-{
-    memcpy(_hCineinfo->hCurrent, _hCineinfo->hVisibility, sizeof(tdstInternalStructurCineinfo_));
-    _hCineinfo->ucPerIAFlags &= 0xfd;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 716–722 */
 /* addr: 0x0026dc90  size: 72 bytes */
@@ -1947,13 +1783,6 @@ void CAM_fn_vSetCineinfoCurrentFromVisibility(tdstCineinfo_* _hCineinfo)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vSetCineinfoVisibilityFromCurrent(tdstCineinfo_* _hCineinfo)
-{
-    if (!(_hCineinfo->ucPerIAFlags & 2)) {
-        memcpy(_hCineinfo->hVisibility, _hCineinfo->hCurrent, sizeof(tdstInternalStructurCineinfo_));
-        _hCineinfo->ucPerIAFlags |= 2;
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 706–713 */
 /* addr: 0x0026dce0  size: 64 bytes */
@@ -1966,13 +1795,6 @@ void CAM_fn_vSetCineinfoVisibilityFromCurrent(tdstCineinfo_* _hCineinfo)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vSetCineinfoWorkFromCurrent(tdstCineinfo_* _hCineinfo)
-{
-    if (!(_hCineinfo->ucVolIAFlags & 1)) {
-        _hCineinfo->ucVolIAFlags |= 1;
-        memcpy(_hCineinfo->hWork, _hCineinfo->hCurrent, sizeof(tdstInternalStructurCineinfo_));
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 669–669 */
 /* addr: 0x0026dd20  size: 8 bytes */
@@ -1981,10 +1803,6 @@ void CAM_fn_vSetCineinfoWorkFromCurrent(tdstCineinfo_* _hCineinfo)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char CAM_fn_bCineInfoGetIsDebugCamera(tdstInternalStructurCineinfo_* _hIntCineinfo)
-{
-    return _hIntCineinfo->bDebugCamera;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 650–650 */
 /* addr: 0x0026dd30  size: 8 bytes */
@@ -1993,10 +1811,6 @@ unsigned char CAM_fn_bCineInfoGetIsDebugCamera(tdstInternalStructurCineinfo_* _h
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-char CAM_fn_cCineInfoGetChannel(tdstInternalStructurCineinfo_* _hIntCineinfo)
-{
-    return _hIntCineinfo->cChannel;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 632–632 */
 /* addr: 0x0026dd40  size: 8 bytes */
@@ -2005,10 +1819,6 @@ char CAM_fn_cCineInfoGetChannel(tdstInternalStructurCineinfo_* _hIntCineinfo)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-HIE_tdstSuperObject_* CAM_fn_hCineInfoGetSuperObjectTargeted(tdstInternalStructurCineinfo_* _hIntCineinfo)
-{
-    return _hIntCineinfo->hSuperObjectTargeted;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 614–614 */
 /* addr: 0x0026dd50  size: 24 bytes */
@@ -2017,10 +1827,6 @@ HIE_tdstSuperObject_* CAM_fn_hCineInfoGetSuperObjectTargeted(tdstInternalStructu
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vCineinfoCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc)
-{
-    memcpy(_p_stObjectDest->h_Cineinfo->hInit, _p_stObjectSrc->h_Cineinfo->hInit, sizeof(tdstInternalStructurCineinfo_));
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 584–605 */
 /* addr: 0x0026dd70  size: 140 bytes */
@@ -2034,15 +1840,6 @@ void CAM_fn_vCineinfoCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObj
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vCineinfoDesinit(tdstEngineObject_* _p_stObject)
-{
-    if (!_p_stObject) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
-    }
-    if (!_p_stObject->h_Cineinfo) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 526–576 */
 /* addr: 0x0026de00  size: 340 bytes */
@@ -2073,50 +1870,6 @@ void CAM_fn_vInitCompleteCineinfo(tdstCineinfo_* _hCineinfo);
 HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* _hStdGame);
 void* MC_fn_hGetFirstMainCharNode(void);
 HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(void* hMainCharNode);
-void CAM_fn_vCineinfoInit(tdstEngineObject_* _p_stObject, tdeObjectTreeInit_ eObjectInit)
-{
-    HIE_tdstSuperObject_* hSupObjectCamera;
-    HIE_tdstSuperObject_* hTarget;
-    tdstCineinfo_* hCineinfo;
-
-    if (!_p_stObject)
-    {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
-    }
-    hCineinfo = _p_stObject->h_Cineinfo;
-    if (!hCineinfo)
-    {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
-    }
-
-    switch (eObjectInit)
-    {
-    case OTI_WhenGameStart:
-        break;
-
-    case OTI_ReinitTheMap:
-    case OTI_LoadSavedGame:
-    case OTI_PlayerDead:
-    case OTI_AlwaysCreated:
-        hTarget = MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode());
-        hCineinfo->hInit->hSuperObjectTargeted = hTarget;
-        CAM_fn_vInitCompleteCineinfo(hCineinfo);
-        break;
-
-    case OTI_MapLoaded:
-        hSupObjectCamera = fn_h_StandardGameGetSuperObject(_p_stObject->h_StandardGame);
-        if (!hSupObjectCamera)
-        {
-            Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 16, -1, 255, 255, NULL);
-        }
-        CAM_fn_vSetCameraInList(hSupObjectCamera);
-
-        hTarget = MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode());
-        hCineinfo->hInit->hSuperObjectTargeted = hTarget;
-        CAM_fn_vInitCompleteCineinfo(hCineinfo);
-        break;
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 500–518 */
 /* addr: 0x0026df60  size: 212 bytes */
@@ -2140,25 +1893,6 @@ void CAM_fn_vCineinfoInit(tdstEngineObject_* _p_stObject, tdeObjectTreeInit_ eOb
 #define MTH3D_M_vCopyVector(_d, _s) { *(int*)&(_d)->xX = *(int*)&(_s)->xX; *(int*)&(_d)->xY = *(int*)&(_s)->xY; *(int*)&(_d)->xZ = *(int*)&(_s)->xZ; }
 void* memset(void* dst, int c, unsigned int n);
 void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
-
-void CAM_fn_vUpdateTargetPosition(tdstCineinfo_* _hCineinfo)
-{
-    MTH3D_tdstVector_ Axis;
-
-    if (_hCineinfo->hWork->hSuperObjectTargeted)
-    {
-        memset(_hCineinfo->AveragePosition.a_CheckedSpeed, 0, sizeof(_hCineinfo->AveragePosition.a_CheckedSpeed));
-        memset(_hCineinfo->AveragePosition.a_CheckedPos, 0, sizeof(_hCineinfo->AveragePosition.a_CheckedPos));
-        memset(_hCineinfo->AveragePosition.a_CheckedTime, 0, sizeof(_hCineinfo->AveragePosition.a_CheckedTime));
-
-        MTH3D_M_vSetVectorElements(&Axis, 0.0f, -1.0f, 0.0f);
-        MTH3D_M_vCopyVector(&_hCineinfo->stSightAxisSystem.SightAxis, &Axis);
-        MTH3D_M_vSetVectorElements(&Axis, -1.0f, 0.0f, 0.0f);
-        MTH3D_M_vCopyVector(&_hCineinfo->stSightAxisSystem.FirstComplementaryAxis, &Axis);
-        MTH3D_M_vSetVectorElements(&Axis, 0.0f, 0.0f, -1.0f);
-        MTH3D_M_vCopyVector(&_hCineinfo->stSightAxisSystem.SecondComplementaryAxis, &Axis);
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 456–493 */
 /* addr: 0x0026e040  size: 304 bytes */
@@ -2190,42 +1924,6 @@ void CAM_fn_vUpdateTargetPosition(tdstCineinfo_* _hCineinfo)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vInitCompleteCineinfo(tdstCineinfo_* _hCineinfo)
-{
-    if (g_ucIsEdInGhostMode)
-        return;
-
-    _hCineinfo->stLastFailedOrigin.xX = 0.0f; _hCineinfo->stLastFailedOrigin.xY = 0.0f; _hCineinfo->stLastFailedOrigin.xZ = 0.0f;
-    _hCineinfo->stLastFailedWanted.xX = 0.0f; _hCineinfo->stLastFailedWanted.xY = 0.0f; _hCineinfo->stLastFailedWanted.xZ = 0.0f;
-
-    _hCineinfo->stForceTarget.xX = 0.0f; _hCineinfo->stForceTarget.xY = 0.0f; _hCineinfo->stForceTarget.xZ = 0.0f;
-    _hCineinfo->stForcePosition.xX = 0.0f; _hCineinfo->stForcePosition.xY = 0.0f; _hCineinfo->stForcePosition.xZ = 0.0f;
-    _hCineinfo->stForceRefAxisY.xX = 0.0f; _hCineinfo->stForceRefAxisY.xY = 0.0f; _hCineinfo->stForceRefAxisY.xZ = 0.0f;
-    _hCineinfo->stForceRefAxisZ.xX = 0.0f; _hCineinfo->stForceRefAxisZ.xY = 0.0f; _hCineinfo->stForceRefAxisZ.xZ = 0.0f;
-
-    _hCineinfo->xApexRatio = 0.0f;
-    _hCineinfo->xLastDeltaCut = 0.0f;
-
-    _hCineinfo->eState = 0;
-
-    _hCineinfo->xCounter1 = 0.0f;
-    _hCineinfo->xCounter2 = 0.0f;
-    _hCineinfo->xCounter3 = 0.0f;
-    _hCineinfo->xCounter4 = 0.0f;
-
-    _hCineinfo->ucVolIAFlags = 0;
-    _hCineinfo->ucPerIAFlags = 0;
-
-    _hCineinfo->cLastCutAngleSens = 0;
-
-    _hCineinfo->bCanDoBestPos = 1;
-
-    CAM_fn_vUpdateTargetPosition(_hCineinfo);
-
-    { tdstTransparentSuperObjectForCamera_* pEnd; tdstTransparentSuperObjectForCamera_* p; p = _hCineinfo->a10_stTransparentSuperObjectForCamera; pEnd = p + 10; for (; p < pEnd; p++) { p->hSuperObject = NULL; p->lInitialDrawMask = 0; p->fInitialTransparenceLevel = 0.0f; p->fCurrentTransparencyLevel = 255.0f; p->bIncrease = 0; } _hCineinfo->xNumberOfTransparentSuperObjectForCamera = 0; }
-
-    { HIE_tdstSuperObject_* hSave = NULL; if (g_ucIsEdInGhostMode) hSave = _hCineinfo->hCurrent->hSuperObjectTargeted; memcpy(_hCineinfo->hCurrent, _hCineinfo->hInit, sizeof(tdstInternalStructurCineinfo_)); _hCineinfo->ucVolIAFlags |= 2; if (g_ucIsEdInGhostMode) _hCineinfo->hCurrent->hSuperObjectTargeted = hSave; }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 409–448 */
 /* addr: 0x0026e170  size: 380 bytes */
@@ -2247,31 +1945,6 @@ void CAM_fn_vInitCompleteCineinfo(tdstCineinfo_* _hCineinfo)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-/* Only the null checks survive in retail: the function never frees anything,
- * it only reports the six error cases (14 for the missing object, 15 for a
- * missing cineinfo or one of its four internal structures).
- */
-void CAM_fn_vCineinfoFree(tdstEngineObject_* _p_stObject)
-{
-    if (!_p_stObject) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
-    }
-    if (!_p_stObject->h_Cineinfo) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
-    }
-    if (!_p_stObject->h_Cineinfo->hInit) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
-    }
-    if (!_p_stObject->h_Cineinfo->hCurrent) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
-    }
-    if (!_p_stObject->h_Cineinfo->hVisibility) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
-    }
-    if (!_p_stObject->h_Cineinfo->hWork) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 317–385 */
 /* addr: 0x0026e2f0  size: 780 bytes */
@@ -2339,6 +2012,20 @@ void CAM_fn_vCineinfoFree(tdstEngineObject_* _p_stObject)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 303–303 */
+/* addr: 0x0026e600  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 303
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+unsigned int CAM_fn_ulCineinfoSizeOf(void)
+{
+    return 0x258;
+}
+
 /* The retail loop over a10_stTransparentSuperObjectForCamera is a rolled
  * pointer walk (sltu against base + 0xC8): an index loop is unrolled by the
  * -O3,p game baseline, so the source walks the array with p_stFirst/p_stEnd.
@@ -2397,14 +2084,396 @@ void CAM_fn_vCineinfoAlloc(tdstEngineObject_* _p_stObject)
     _p_stObject->h_Cineinfo->bLightComputation = 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 303–303 */
-/* addr: 0x0026e600  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 303
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
+/* Only the null checks survive in retail: the function never frees anything,
+ * it only reports the six error cases (14 for the missing object, 15 for a
+ * missing cineinfo or one of its four internal structures).
  */
-unsigned int CAM_fn_ulCineinfoSizeOf(void)
+void CAM_fn_vCineinfoFree(tdstEngineObject_* _p_stObject)
 {
-    return 0x258;
+    if (!_p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!_p_stObject->h_Cineinfo) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+    if (!_p_stObject->h_Cineinfo->hInit) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+    if (!_p_stObject->h_Cineinfo->hCurrent) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+    if (!_p_stObject->h_Cineinfo->hVisibility) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+    if (!_p_stObject->h_Cineinfo->hWork) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+}
+
+void CAM_fn_vInitCompleteCineinfo(tdstCineinfo_* _hCineinfo)
+{
+    if (g_ucIsEdInGhostMode)
+        return;
+
+    _hCineinfo->stLastFailedOrigin.xX = 0.0f; _hCineinfo->stLastFailedOrigin.xY = 0.0f; _hCineinfo->stLastFailedOrigin.xZ = 0.0f;
+    _hCineinfo->stLastFailedWanted.xX = 0.0f; _hCineinfo->stLastFailedWanted.xY = 0.0f; _hCineinfo->stLastFailedWanted.xZ = 0.0f;
+
+    _hCineinfo->stForceTarget.xX = 0.0f; _hCineinfo->stForceTarget.xY = 0.0f; _hCineinfo->stForceTarget.xZ = 0.0f;
+    _hCineinfo->stForcePosition.xX = 0.0f; _hCineinfo->stForcePosition.xY = 0.0f; _hCineinfo->stForcePosition.xZ = 0.0f;
+    _hCineinfo->stForceRefAxisY.xX = 0.0f; _hCineinfo->stForceRefAxisY.xY = 0.0f; _hCineinfo->stForceRefAxisY.xZ = 0.0f;
+    _hCineinfo->stForceRefAxisZ.xX = 0.0f; _hCineinfo->stForceRefAxisZ.xY = 0.0f; _hCineinfo->stForceRefAxisZ.xZ = 0.0f;
+
+    _hCineinfo->xApexRatio = 0.0f;
+    _hCineinfo->xLastDeltaCut = 0.0f;
+
+    _hCineinfo->eState = 0;
+
+    _hCineinfo->xCounter1 = 0.0f;
+    _hCineinfo->xCounter2 = 0.0f;
+    _hCineinfo->xCounter3 = 0.0f;
+    _hCineinfo->xCounter4 = 0.0f;
+
+    _hCineinfo->ucVolIAFlags = 0;
+    _hCineinfo->ucPerIAFlags = 0;
+
+    _hCineinfo->cLastCutAngleSens = 0;
+
+    _hCineinfo->bCanDoBestPos = 1;
+
+    CAM_fn_vUpdateTargetPosition(_hCineinfo);
+
+    { tdstTransparentSuperObjectForCamera_* pEnd; tdstTransparentSuperObjectForCamera_* p; p = _hCineinfo->a10_stTransparentSuperObjectForCamera; pEnd = p + 10; for (; p < pEnd; p++) { p->hSuperObject = NULL; p->lInitialDrawMask = 0; p->fInitialTransparenceLevel = 0.0f; p->fCurrentTransparencyLevel = 255.0f; p->bIncrease = 0; } _hCineinfo->xNumberOfTransparentSuperObjectForCamera = 0; }
+
+    { HIE_tdstSuperObject_* hSave = NULL; if (g_ucIsEdInGhostMode) hSave = _hCineinfo->hCurrent->hSuperObjectTargeted; memcpy(_hCineinfo->hCurrent, _hCineinfo->hInit, sizeof(tdstInternalStructurCineinfo_)); _hCineinfo->ucVolIAFlags |= 2; if (g_ucIsEdInGhostMode) _hCineinfo->hCurrent->hSuperObjectTargeted = hSave; }
+}
+
+void CAM_fn_vUpdateTargetPosition(tdstCineinfo_* _hCineinfo)
+{
+    MTH3D_tdstVector_ Axis;
+
+    if (_hCineinfo->hWork->hSuperObjectTargeted)
+    {
+        memset(_hCineinfo->AveragePosition.a_CheckedSpeed, 0, sizeof(_hCineinfo->AveragePosition.a_CheckedSpeed));
+        memset(_hCineinfo->AveragePosition.a_CheckedPos, 0, sizeof(_hCineinfo->AveragePosition.a_CheckedPos));
+        memset(_hCineinfo->AveragePosition.a_CheckedTime, 0, sizeof(_hCineinfo->AveragePosition.a_CheckedTime));
+
+        MTH3D_M_vSetVectorElements(&Axis, 0.0f, -1.0f, 0.0f);
+        MTH3D_M_vCopyVector(&_hCineinfo->stSightAxisSystem.SightAxis, &Axis);
+        MTH3D_M_vSetVectorElements(&Axis, -1.0f, 0.0f, 0.0f);
+        MTH3D_M_vCopyVector(&_hCineinfo->stSightAxisSystem.FirstComplementaryAxis, &Axis);
+        MTH3D_M_vSetVectorElements(&Axis, 0.0f, 0.0f, -1.0f);
+        MTH3D_M_vCopyVector(&_hCineinfo->stSightAxisSystem.SecondComplementaryAxis, &Axis);
+    }
+}
+
+void CAM_fn_vCineinfoInit(tdstEngineObject_* _p_stObject, tdeObjectTreeInit_ eObjectInit)
+{
+    HIE_tdstSuperObject_* hSupObjectCamera;
+    HIE_tdstSuperObject_* hTarget;
+    tdstCineinfo_* hCineinfo;
+
+    if (!_p_stObject)
+    {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    hCineinfo = _p_stObject->h_Cineinfo;
+    if (!hCineinfo)
+    {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+
+    switch (eObjectInit)
+    {
+    case OTI_WhenGameStart:
+        break;
+
+    case OTI_ReinitTheMap:
+    case OTI_LoadSavedGame:
+    case OTI_PlayerDead:
+    case OTI_AlwaysCreated:
+        hTarget = MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode());
+        hCineinfo->hInit->hSuperObjectTargeted = hTarget;
+        CAM_fn_vInitCompleteCineinfo(hCineinfo);
+        break;
+
+    case OTI_MapLoaded:
+        hSupObjectCamera = fn_h_StandardGameGetSuperObject(_p_stObject->h_StandardGame);
+        if (!hSupObjectCamera)
+        {
+            Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 16, -1, 255, 255, NULL);
+        }
+        CAM_fn_vSetCameraInList(hSupObjectCamera);
+
+        hTarget = MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode());
+        hCineinfo->hInit->hSuperObjectTargeted = hTarget;
+        CAM_fn_vInitCompleteCineinfo(hCineinfo);
+        break;
+    }
+}
+
+void CAM_fn_vCineinfoDesinit(tdstEngineObject_* _p_stObject)
+{
+    if (!_p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!_p_stObject->h_Cineinfo) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+}
+
+void CAM_fn_vCineinfoCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc)
+{
+    memcpy(_p_stObjectDest->h_Cineinfo->hInit, _p_stObjectSrc->h_Cineinfo->hInit, sizeof(tdstInternalStructurCineinfo_));
+}
+
+HIE_tdstSuperObject_* CAM_fn_hCineInfoGetSuperObjectTargeted(tdstInternalStructurCineinfo_* _hIntCineinfo)
+{
+    return _hIntCineinfo->hSuperObjectTargeted;
+}
+
+char CAM_fn_cCineInfoGetChannel(tdstInternalStructurCineinfo_* _hIntCineinfo)
+{
+    return _hIntCineinfo->cChannel;
+}
+
+unsigned char CAM_fn_bCineInfoGetIsDebugCamera(tdstInternalStructurCineinfo_* _hIntCineinfo)
+{
+    return _hIntCineinfo->bDebugCamera;
+}
+
+void CAM_fn_vSetCineinfoWorkFromCurrent(tdstCineinfo_* _hCineinfo)
+{
+    if (!(_hCineinfo->ucVolIAFlags & 1)) {
+        _hCineinfo->ucVolIAFlags |= 1;
+        memcpy(_hCineinfo->hWork, _hCineinfo->hCurrent, sizeof(tdstInternalStructurCineinfo_));
+    }
+}
+
+void CAM_fn_vSetCineinfoVisibilityFromCurrent(tdstCineinfo_* _hCineinfo)
+{
+    if (!(_hCineinfo->ucPerIAFlags & 2)) {
+        memcpy(_hCineinfo->hVisibility, _hCineinfo->hCurrent, sizeof(tdstInternalStructurCineinfo_));
+        _hCineinfo->ucPerIAFlags |= 2;
+    }
+}
+
+void CAM_fn_vSetCineinfoCurrentFromVisibility(tdstCineinfo_* _hCineinfo)
+{
+    memcpy(_hCineinfo->hCurrent, _hCineinfo->hVisibility, sizeof(tdstInternalStructurCineinfo_));
+    _hCineinfo->ucPerIAFlags &= 0xfd;
+}
+
+void CAM_fn_vSetCineinfoWorkFromVisibility(tdstCineinfo_* param0)
+{
+    memcpy(param0->hWork, param0->hVisibility, sizeof(tdstInternalStructurCineinfo_));
+}
+
+void CAM_fn_vSetCameraInList(HIE_tdstSuperObject_* _hSupObjectCamera)
+{
+    tdstNodeCamera_* p_stTempNodeCamera;
+
+    p_stTempNodeCamera = (tdstNodeCamera_*)HMU_fn_p_vMalloc(0x10, 0);
+    p_stTempNodeCamera->p_stSuperObjectCamera = _hSupObjectCamera;
+    p_stTempNodeCamera->hNextBrotherDyn = NULL; p_stTempNodeCamera->hPrevBrotherDyn = NULL; p_stTempNodeCamera->hFatherDyn = NULL;
+    if (p_stTempNodeCamera->hNextBrotherDyn) p_stTempNodeCamera->hNextBrotherDyn->hPrevBrotherDyn = p_stTempNodeCamera->hPrevBrotherDyn; if (p_stTempNodeCamera->hPrevBrotherDyn) p_stTempNodeCamera->hPrevBrotherDyn->hNextBrotherDyn = p_stTempNodeCamera->hNextBrotherDyn; if (p_stTempNodeCamera->hFatherDyn) { p_stTempNodeCamera->hFatherDyn->lNumberOfElementsDyn--; if (p_stTempNodeCamera->hFatherDyn->hFirstElementDyn == p_stTempNodeCamera) p_stTempNodeCamera->hFatherDyn->hFirstElementDyn = p_stTempNodeCamera->hNextBrotherDyn; if (p_stTempNodeCamera->hFatherDyn->hLastElementDyn == p_stTempNodeCamera) p_stTempNodeCamera->hFatherDyn->hLastElementDyn = p_stTempNodeCamera->hPrevBrotherDyn; } p_stTempNodeCamera->hNextBrotherDyn = NULL; p_stTempNodeCamera->hPrevBrotherDyn = NULL; p_stTempNodeCamera->hFatherDyn = NULL; p_stTempNodeCamera->hNextBrotherDyn = NULL; p_stTempNodeCamera->hPrevBrotherDyn = g_stEngineStructure.hCameraList.hLastElementDyn; p_stTempNodeCamera->hFatherDyn = &g_stEngineStructure.hCameraList; if (g_stEngineStructure.hCameraList.hFirstElementDyn == NULL) g_stEngineStructure.hCameraList.hFirstElementDyn = p_stTempNodeCamera; else g_stEngineStructure.hCameraList.hLastElementDyn->hNextBrotherDyn = p_stTempNodeCamera; g_stEngineStructure.hCameraList.hLastElementDyn = p_stTempNodeCamera; g_stEngineStructure.hCameraList.lNumberOfElementsDyn++;
+}
+
+void fn_vGetPersoSightAxisSystem(tdstCineinfo_* _hCineinfo, MTH3D_tdstVector_* _p_stSightAxis, MTH3D_tdstVector_* _p_stFirstComplementaryAxis, MTH3D_tdstVector_* _p_stSecondComplementaryAxis)
+{
+    *(unsigned int*)&_p_stSightAxis->xX = *(unsigned int*)&_hCineinfo->stSightAxisSystem.SightAxis.xX;
+    *(unsigned int*)&_p_stSightAxis->xY = *(unsigned int*)&_hCineinfo->stSightAxisSystem.SightAxis.xY;
+    *(unsigned int*)&_p_stSightAxis->xZ = *(unsigned int*)&_hCineinfo->stSightAxisSystem.SightAxis.xZ;
+    *(unsigned int*)&_p_stFirstComplementaryAxis->xX = *(unsigned int*)&_hCineinfo->stSightAxisSystem.FirstComplementaryAxis.xX;
+    *(unsigned int*)&_p_stFirstComplementaryAxis->xY = *(unsigned int*)&_hCineinfo->stSightAxisSystem.FirstComplementaryAxis.xY;
+    *(unsigned int*)&_p_stFirstComplementaryAxis->xZ = *(unsigned int*)&_hCineinfo->stSightAxisSystem.FirstComplementaryAxis.xZ;
+    *(unsigned int*)&_p_stSecondComplementaryAxis->xX = *(unsigned int*)&_hCineinfo->stSightAxisSystem.SecondComplementaryAxis.xX;
+    *(unsigned int*)&_p_stSecondComplementaryAxis->xY = *(unsigned int*)&_hCineinfo->stSightAxisSystem.SecondComplementaryAxis.xY;
+    *(unsigned int*)&_p_stSecondComplementaryAxis->xZ = *(unsigned int*)&_hCineinfo->stSightAxisSystem.SecondComplementaryAxis.xZ;
+}
+
+void fn_vInitAveragePositionDatasIfNecessary(tdstCineinfo_* _hCineinfo)
+{
+    unsigned int ulIndex;
+    for (ulIndex = 0; ulIndex < 8; ulIndex++) {
+        if (_hCineinfo->AveragePosition.a_CheckedTime[ulIndex] != 0.0f)
+            break;
+    }
+    if (ulIndex >= 8) {
+        MTH4D_tdstVector_* p_stPosition = &_hCineinfo->hWork->hSuperObjectTargeted->hGlobalMatrix->stTransformMatrix.stCol_3;
+        for (ulIndex = 0; ulIndex < 8; ulIndex++) {
+            _hCineinfo->AveragePosition.a_CheckedTime[ulIndex] = 0.03;
+            _hCineinfo->AveragePosition.a_CheckedSpeed[ulIndex].xX = 0.0f; _hCineinfo->AveragePosition.a_CheckedSpeed[ulIndex].xY = 0.0f; _hCineinfo->AveragePosition.a_CheckedSpeed[ulIndex].xZ = 0.0f;
+            CAM_M_vCopyHistoryVector(_hCineinfo->AveragePosition.a_CheckedPos[ulIndex], *p_stPosition);
+        }
+    }
+}
+
+void CAM_fn_vRemindSpeed(tdstCineinfo_* _hCineinfo, MTH_stMove* _p_Speed)
+{
+    memcpy(&_hCineinfo->AveragePosition.a_CheckedSpeed[0], &_hCineinfo->AveragePosition.a_CheckedSpeed[1], 7 * sizeof(MTH3D_tdstVector_));
+    CAM_M_vCopyHistoryVector(_hCineinfo->AveragePosition.a_CheckedSpeed[7], _p_Speed->m_stLinear);
+}
+
+void CAM_fn_vRemindPos(tdstCineinfo_* _hCineinfo, MTH_stMove* _p_Pos)
+{
+    memcpy(&_hCineinfo->AveragePosition.a_CheckedPos[0], &_hCineinfo->AveragePosition.a_CheckedPos[1], 7 * sizeof(MTH3D_tdstVector_));
+    CAM_M_vCopyHistoryVector(_hCineinfo->AveragePosition.a_CheckedPos[7], _p_Pos->m_stLinear);
+}
+
+void CAM_fn_vRemindTime(tdstCineinfo_* _hCineinfo, float _dt)
+{
+    memcpy(&_hCineinfo->AveragePosition.a_CheckedTime[0], &_hCineinfo->AveragePosition.a_CheckedTime[1], 7 * sizeof(float));
+    _hCineinfo->AveragePosition.a_CheckedTime[7] = _dt;
+}
+
+void CAM_fn_vAverageSpeed(tdstCineinfo_* _hCineinfo, float xTimeWindow, MTH3D_tdstVector_* p_result)
+{
+    MTH3D_tdstVector_* p_stTmp;
+    unsigned int ulIndex;
+    float tmpTime;
+    float xCurrentTime;
+    fn_vInitAveragePositionDatasIfNecessary(_hCineinfo);
+    xCurrentTime = 0.0f;
+    p_result->xX = 0.0f; p_result->xY = 0.0f; p_result->xZ = 0.0f;
+    for (ulIndex = 0; ulIndex < 8; ulIndex++) {
+        tmpTime = _hCineinfo->AveragePosition.a_CheckedTime[ulIndex];
+        p_stTmp = &_hCineinfo->AveragePosition.a_CheckedSpeed[ulIndex];
+        if ((tmpTime == 0.0f) || ((p_stTmp->xX == 0.0f) && (p_stTmp->xY == 0.0f) && (p_stTmp->xZ == 0.0f))) continue;
+        xCurrentTime += tmpTime;
+        p_result->xX += tmpTime * p_stTmp->xX; p_result->xY += tmpTime * p_stTmp->xY; p_result->xZ += tmpTime * p_stTmp->xZ;
+        if (xCurrentTime >= xTimeWindow) break;
+    }
+    if (xCurrentTime != 0.0f) {
+        p_result->xX /= xCurrentTime; p_result->xY /= xCurrentTime; p_result->xZ /= xCurrentTime;
+    }
+}
+
+void CAM_fn_vAveragePosition(tdstCineinfo_* _hCineinfo, float xTimeWindow, MTH3D_tdstVector_* p_result)
+{
+    unsigned int ulIndex;
+    float xSum;
+    float xTime;
+    MTH3D_tdstVector_* p_stPos;
+    fn_vInitAveragePositionDatasIfNecessary(_hCineinfo);
+    xSum = 0.0f;
+    p_result->xX = 0.0f; p_result->xY = 0.0f; p_result->xZ = 0.0f;
+    for (ulIndex = 0; ulIndex < 8; ulIndex++) {
+        xTime = _hCineinfo->AveragePosition.a_CheckedTime[ulIndex];
+        p_stPos = &_hCineinfo->AveragePosition.a_CheckedPos[ulIndex];
+        if ((xTime == 0.0f) || ((p_stPos->xX == 0.0f) && (p_stPos->xY == 0.0f) && (p_stPos->xZ == 0.0f))) continue;
+        xSum += xTime;
+        p_result->xX += xTime * p_stPos->xX; p_result->xY += xTime * p_stPos->xY; p_result->xZ += xTime * p_stPos->xZ;
+        if (xSum >= xTimeWindow) break;
+    }
+    if (xSum != 0.0f) {
+        p_result->xX /= xSum; p_result->xY /= xSum; p_result->xZ /= xSum;
+    }
+}
+
+void CAM_fn_vCineInfoSetSuperObjectTargeted(tdstInternalStructurCineinfo_* _hIntCineinfo, HIE_tdstSuperObject_* _hSuperObject)
+{
+    _hIntCineinfo->hSuperObjectTargeted = _hSuperObject;
+}
+
+void CAM_fn_vResetArrayOfTransparentSuperObject(tdstCineinfo_* _hCineinfo)
+{
+    tdstTransparentSuperObjectForCamera_* param0;
+    tdstTransparentSuperObjectForCamera_* p_stFirst;
+    p_stFirst = _hCineinfo->a10_stTransparentSuperObjectForCamera;
+    param0 = p_stFirst + _hCineinfo->xNumberOfTransparentSuperObjectForCamera;
+    if (p_stFirst < param0) {
+        do {
+            p_stFirst->bIncrease = 0;
+            p_stFirst++;
+        } while (p_stFirst < param0);
+    }
+}
+
+void CAM_fn_vApplyTransparencyOnSuperObject(tdstCineinfo_* _hCineinfo)
+{
+    float fDelta;
+    tdstTransparentSuperObjectForCamera_* p_stFirst;
+    tdstTransparentSuperObjectForCamera_* p_stEnd;
+
+    p_stFirst = _hCineinfo->a10_stTransparentSuperObjectForCamera;
+    p_stEnd = p_stFirst + _hCineinfo->xNumberOfTransparentSuperObjectForCamera;
+
+    fDelta = (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime * _hCineinfo->fTransparencySpeed;
+
+    while (p_stFirst < p_stEnd)
+    {
+        if (p_stFirst->hSuperObject)
+        {
+            if (p_stFirst->bIncrease)
+            {
+                p_stFirst->fCurrentTransparencyLevel = MAXF(p_stFirst->fCurrentTransparencyLevel - fDelta, _hCineinfo->fTransparency);
+            }
+            else
+            {
+                p_stFirst->fCurrentTransparencyLevel = MINF(p_stFirst->fCurrentTransparencyLevel + fDelta, 255.0f);
+                if (!(p_stFirst->fCurrentTransparencyLevel < 255.0f))
+                {
+                    p_stFirst->hSuperObject = NULL;
+                    break;
+                }
+            }
+            p_stFirst->lInitialDrawMask = p_stFirst->hSuperObject->lDrawModeMask;
+            p_stFirst->fInitialTransparenceLevel = p_stFirst->hSuperObject->fTransparenceLevel;
+            p_stFirst->hSuperObject->lDrawModeMask &= ~8;
+            p_stFirst->hSuperObject->fTransparenceLevel = p_stFirst->fCurrentTransparencyLevel;
+        }
+        p_stFirst++;
+    }
+}
+
+void CAM_fn_vRestoreTransparencyOnSuperObject(tdstCineinfo_* _hCineinfo)
+{
+    tdstTransparentSuperObjectForCamera_* param0;
+    tdstTransparentSuperObjectForCamera_* p_stFirst;
+    p_stFirst = _hCineinfo->a10_stTransparentSuperObjectForCamera;
+    param0 = p_stFirst + _hCineinfo->xNumberOfTransparentSuperObjectForCamera;
+    if (p_stFirst < param0) {
+        do {
+            if (p_stFirst->hSuperObject) {
+                p_stFirst->hSuperObject->lDrawModeMask = p_stFirst->lInitialDrawMask;
+                p_stFirst->hSuperObject->fTransparenceLevel = p_stFirst->fInitialTransparenceLevel;
+            }
+            p_stFirst++;
+        } while (p_stFirst < param0);
+    }
+}
+
+void CAM_fn_vSetTransparencyFlag(tdstCineinfo_* _hCineinfo, unsigned char _ucValue)
+{
+    _hCineinfo->ucTransparencyFlag = _ucValue;
+}
+
+unsigned char CAM_fn_ucGetTransparencyFlag(tdstCineinfo_* _hCineinfo)
+{
+    return _hCineinfo->ucTransparencyFlag;
+}
+
+void CAM_fn_vSetMirrorFlag(tdstCineinfo_* _hCineinfo, unsigned char _bFlag)
+{
+    _hCineinfo->bCameraIsMirrored = _bFlag;
+}
+
+unsigned char CAM_fn_bGetMirrorFlag(tdstCineinfo_* _hCineinfo)
+{
+    return _hCineinfo->bCameraIsMirrored;
+}
+
+unsigned char CAM_fn_bGetLightComputation(tdstCineinfo_* _hCineinfo)
+{
+    return _hCineinfo->bLightComputation;
+}
+
+void CAM_fn_vSetLightComputation(tdstCineinfo_* _hCineinfo, unsigned char _bLightComputation)
+{
+    _hCineinfo->bLightComputation = _bLightComputation;
+}
+
+unsigned int fn_ulBrainSizeOf(void)
+{
+    return 0xC;
 }

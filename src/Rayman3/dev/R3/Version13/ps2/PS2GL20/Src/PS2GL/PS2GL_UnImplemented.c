@@ -4,6 +4,298 @@
 
 #include <stddef.h>
 
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+int BlockConv4to32(unsigned char* p_input, unsigned char* p_output);
+void impPS2glSelectBuffer(void);
+int impPS2glRenderMode(void);
+void impPS2glPushName(void);
+void impPS2glPushClientAttrib(void);
+void impPS2glPopName(void);
+void impPS2glPopClientAttrib(void);
+void impPS2glPolygonStipple(void);
+void impPS2glPolygonOffset(void);
+void impPS2glPolygonMode(void);
+void impPS2glPassThrough(void);
+void impPS2glMapGrid2f(void);
+void impPS2glMapGrid2d(void);
+void impPS2glMapGrid1f(void);
+void impPS2glMapGrid1d(void);
+void impPS2glMap2f(void);
+void impPS2glMap2d(void);
+void impPS2glMap1f(void);
+void impPS2glMap1d(void);
+void impPS2glLoadName(void);
+void impPS2glLineWidth(void);
+void impPS2glLineStipple(void);
+void impPS2glInitNames(void);
+void impPS2glIndexubv(void);
+void impPS2glIndexub(void);
+void impPS2glIndexsv(void);
+void impPS2glIndexs(void);
+void impPS2glIndexiv(void);
+void impPS2glIndexi(void);
+void impPS2glIndexfv(void);
+void impPS2glIndexf(void);
+void impPS2glIndexdv(void);
+void impPS2glIndexd(void);
+void impPS2glIndexMask(void);
+void impPS2glFeedbackBuffer(void);
+void impPS2glEvalPoint2(void);
+void impPS2glEvalPoint1(void);
+void impPS2glEvalMesh2(void);
+void impPS2glEvalMesh1(void);
+void impPS2glEvalCoord2fv(void);
+void impPS2glEvalCoord2f(void);
+void impPS2glEvalCoord2dv(void);
+void impPS2glEvalCoord2d(void);
+void impPS2glEvalCoord1fv(void);
+void impPS2glEvalCoord1f(void);
+void impPS2glEvalCoord1dv(void);
+void impPS2glEvalCoord1d(void);
+void impPS2glEdgeFlagv(void);
+void impPS2glEdgeFlag(void);
+
+void impPS2glEdgeFlag(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glEdgeFlagv(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glEvalCoord1d(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glEvalCoord1dv(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glEvalCoord1f(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glEvalCoord1fv(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glEvalCoord2d(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glEvalCoord2dv(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glEvalCoord2f(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glEvalCoord2fv(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glEvalMesh1(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glEvalMesh2(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glEvalPoint1(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glEvalPoint2(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glFeedbackBuffer(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glIndexMask(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glIndexd(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glIndexdv(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glIndexf(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glIndexfv(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glIndexi(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glIndexiv(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glIndexs(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glIndexsv(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glIndexub(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glIndexubv(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glInitNames(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glLineStipple(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glLineWidth(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glLoadName(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glMap1d(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glMap1f(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glMap2d(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glMap2f(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glMapGrid1d(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glMapGrid1f(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glMapGrid2d(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glMapGrid2f(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glPassThrough(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glPolygonMode(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glPolygonOffset(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glPolygonStipple(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glPopClientAttrib(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glPopName(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glPushClientAttrib(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glPushName(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+int impPS2glRenderMode(void)
+{
+    return 0;
+}
+
+void impPS2glSelectBuffer(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
 int BlockConv4to32(unsigned char* p_input, unsigned char* p_output)
 {
     unsigned int i, j, k, i0, i2;
@@ -55,244 +347,4 @@ int BlockConv4to32(unsigned char* p_input, unsigned char* p_output)
         pIn += 64;
     }
     return 0;
-}
-
-void impPS2glSelectBuffer(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-int impPS2glRenderMode(void)
-{
-    return 0;
-}
-
-void impPS2glPushName(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glPushClientAttrib(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glPopName(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glPopClientAttrib(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glPolygonStipple(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glPolygonOffset(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glPolygonMode(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glPassThrough(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glMapGrid2f(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glMapGrid2d(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glMapGrid1f(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glMapGrid1d(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glMap2f(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glMap2d(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glMap1f(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glMap1d(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glLoadName(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glLineWidth(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glLineStipple(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glInitNames(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glIndexubv(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glIndexub(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glIndexsv(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glIndexs(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glIndexiv(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glIndexi(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glIndexfv(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glIndexf(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glIndexdv(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glIndexd(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glIndexMask(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glFeedbackBuffer(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glEvalPoint2(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glEvalPoint1(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glEvalMesh2(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glEvalMesh1(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glEvalCoord2fv(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glEvalCoord2f(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glEvalCoord2dv(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glEvalCoord2d(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glEvalCoord1fv(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glEvalCoord1f(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glEvalCoord1dv(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glEvalCoord1d(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glEdgeFlagv(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glEdgeFlag(void)
-{
-    /* TODO: decompile from asm/... */
 }

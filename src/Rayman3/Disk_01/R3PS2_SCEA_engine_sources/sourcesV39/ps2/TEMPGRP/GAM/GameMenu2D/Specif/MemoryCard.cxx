@@ -175,211 +175,17 @@ void GLI_fn_vSwitchTo60Hz(void);
 void GLI_fn_vSwitchToProgressive60Hz(void);
 unsigned char SAV2_fn_bSaveAllOnDisk(char* szFileName);
 
-void GAM_fn_vSaveGameAfterVideoIfNeeded(void)
-{
-    int i;
-    int offset;
-    unsigned int ulIndE;
-    anon_2* p;
-
-    if (GLI_g_PerformAutosaveAfterVideo)
-    {
-        SAV2_fn_bSaveAllOnDisk(g_CurrentSaveName);
-        g_aEnvValue[0].ulScore = 0; i = 1; offset = 8; do { p = (anon_2 *)((char *)g_aEnvValue + offset); g_aEnvValue[0].ulScore += p[0].ulScore; g_aEnvValue[0].ulScore += p[1].ulScore; g_aEnvValue[0].ulScore += p[2].ulScore; g_aEnvValue[0].ulScore += p[3].ulScore; g_aEnvValue[0].ulScore += p[4].ulScore; g_aEnvValue[0].ulScore += p[5].ulScore; g_aEnvValue[0].ulScore += p[6].ulScore; g_aEnvValue[0].ulScore += p[7].ulScore; i += 8; offset += 64; } while (i < 2); offset = i * 8; if (i < 10) { do { p = (anon_2 *)((char *)g_aEnvValue + offset); g_aEnvValue[0].ulScore += p->ulScore; i++; offset += 8; } while (i < 10); } g_RevisitCurrentGlobalScore = g_aEnvValue[0].ulScore; if (g_RevisitMode != 0) { ulIndE = g_IndCurrentEnv; g_RevisitEnvScoreAtBeginingOfLevel = g_RevisitCurrentEnvScore; g_RevisitGlobalScoreAtBeginingOfLevel = g_RevisitCurrentGlobalScore; fn_vR3RecomputeGlobalScore(); if (g_RevisitEnvScoreAtBeginingOfLevel > (ulIndE < 10 ? g_aEnvValue[ulIndE].ulScore : 0)) { if (g_IndCurrentEnv < 10) { g_aEnvValue[g_IndCurrentEnv].ulScore = g_RevisitEnvScoreAtBeginingOfLevel; } fn_vR3RecomputeGlobalScore(); } fn_vR3RecomputeGlobalScore(); if (g_aEnvValue[0].ulScore < g_RevisitGlobalScoreAtBeginingOfLevel) { g_aEnvValue[0].ulScore = g_RevisitGlobalScoreAtBeginingOfLevel; fn_vR3RecomputeGlobalScore(); } } fn_vR3RecomputeGlobalScore(); ulIndE = g_IndCurrentEnv; g_GlobalScoreAtBeginingOfLevel = g_aEnvValue[0].ulScore; fn_vR3RecomputeGlobalScore(); g_CurrentEnvScoreAtBeginingOfLevel = (ulIndE < 10) ? g_aEnvValue[ulIndE].ulScore : 0; g_CurrentEnvInit = g_IndCurrentEnv;
-    }
-    GLI_g_PerformAutosaveAfterVideo = 0;
-}
-
-void fn_vInterruptPalAndProgressiveVideoPages(void)
-{
-    if (g_CurrentMenu2DPage == g_PAL60Page2)
-    {
-        g_CurrentMenu2DPage = g_PAL60Page3;
-        g_CurrentSelection = 2;
-        switch (g_PreviousVideoMode)
-        {
-        case 0x32:
-            GLI_fn_vSwitchTo50Hz();
-            break;
-        case 0x46:
-            GLI_fn_vSwitchToProgressive60Hz();
-            break;
-        }
-        ReturnFromSubMenu();
-    }
-    if (g_CurrentMenu2DPage == g_PScanPage2)
-    {
-        g_CurrentMenu2DPage = g_PScanPage3;
-        g_CurrentSelection = 2;
-        switch (g_PreviousVideoMode)
-        {
-        case 0x32:
-            GLI_fn_vSwitchTo50Hz();
-            break;
-        case 0x3C:
-            GLI_fn_vSwitchTo60Hz();
-            break;
-        }
-        ReturnFromSubMenu();
-    }
-}
-
-void fn_vManagePalAndProgressiveVideoPage(void)
-{
-    if (g_CurrentMenu2DPage == g_PAL60Page2)
-    {
-        if (g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - g_SelectedTime >= 5000)
-        {
-            g_CurrentMenu2DPage = g_PAL60Page3;
-            g_CurrentSelection = 2;
-            switch (g_PreviousVideoMode)
-            {
-            case 0x32:
-                GLI_fn_vSwitchTo50Hz();
-                break;
-            case 0x46:
-                GLI_fn_vSwitchToProgressive60Hz();
-                break;
-            }
-        }
-    }
-    if (g_CurrentMenu2DPage == g_PScanPage2)
-    {
-        if (g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - g_SelectedTime >= 5000)
-        {
-            g_CurrentMenu2DPage = g_PScanPage3;
-            g_CurrentSelection = 2;
-            switch (g_PreviousVideoMode)
-            {
-            case 0x32:
-                GLI_fn_vSwitchTo50Hz();
-                break;
-            case 0x3C:
-                GLI_fn_vSwitchTo60Hz();
-                break;
-            }
-        }
-    }
-}
-
-void fn_vManageValidatePalAndProgressiveVideoPage(void)
-{
-    switch (aMenu2DPages[g_CurrentMenu2DPage].eTypePage)
-    {
-    case ePal60_1_TypePage:
-        fn_vPlaySoundInGameMenu2D(3);
-        GLI_fn_vSwitchTo60Hz();
-        g_SelectedTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
-        g_CurrentMenu2DPage = g_PAL60Page2;
-        break;
-    case ePal60_3_TypePage:
-        if (g_CurrentSelection == 1)
-        {
-            GLI_fn_vSwitchTo60Hz();
-            strcpy(aMenu2DPages[g_VideoOptionPage].aText[2], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[96].hText));
-            strcpy(aMenu2DPages[g_VideoOptionPage].aText[3], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[88].hText));
-        }
-        ReturnFromSubMenu();
-        break;
-    case eProgressive_1_TypePage:
-        fn_vPlaySoundInGameMenu2D(3);
-        GLI_fn_vSwitchToProgressive60Hz();
-        g_SelectedTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
-        g_CurrentMenu2DPage = g_PScanPage2;
-        break;
-    case eProgressive_3_TypePage:
-        if (g_CurrentSelection == 1)
-        {
-            GLI_fn_vSwitchToProgressive60Hz();
-            strcpy(aMenu2DPages[g_VideoOptionPage].aText[2], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[98].hText));
-        }
-        ReturnFromSubMenu();
-        break;
-    }
-}
-
-int fn_vDefineProgressiveScanPages(int IndSubMenuPage)
-{
-    g_PScanPage1 = IndSubMenuPage;
-    aMenu2DPages[g_PScanPage1].eTypePage = eProgressive_1_TypePage;
-    strcpy(aMenu2DPages[g_PScanPage1].Title, "");
-    aMenu2DPages[g_PScanPage1].NbSelection = 0;
-    aMenu2DPages[g_PScanPage1].NbEntry = 0;
-    strcpy(aMenu2DPages[g_PScanPage1].aText[0], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[94].hText));
-
-    g_PScanPage2 = IndSubMenuPage + 1;
-    aMenu2DPages[g_PScanPage2].eTypePage = eProgressive_2_TypePage;
-    strcpy(aMenu2DPages[g_PScanPage2].Title, "");
-    aMenu2DPages[g_PScanPage2].NbSelection = 0;
-    aMenu2DPages[g_PScanPage2].NbEntry = 0;
-    strcpy(aMenu2DPages[g_PScanPage2].aText[0], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[92].hText));
-
-    g_PScanPage3 = IndSubMenuPage + 2;
-    aMenu2DPages[g_PScanPage3].eTypePage = eProgressive_3_TypePage;
-    strcpy(aMenu2DPages[g_PScanPage3].Title, "");
-    aMenu2DPages[g_PScanPage3].NbEntry = aMenu2DPages[g_PScanPage3].NbSelection = 2;
-    strcpy(aMenu2DPages[g_PScanPage3].aText[0], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[93].hText));
-
-    return IndSubMenuPage + 3;
-}
-
-int fn_vDefinePalVideoPages(int IndSubMenuPage)
-{
-    g_PAL60Page1 = IndSubMenuPage;
-    aMenu2DPages[g_PAL60Page1].eTypePage = ePal60_1_TypePage;
-    strcpy(aMenu2DPages[g_PAL60Page1].Title, "");
-    aMenu2DPages[g_PAL60Page1].NbSelection = 0;
-    aMenu2DPages[g_PAL60Page1].NbEntry = 0;
-    strcpy(aMenu2DPages[g_PAL60Page1].aText[0], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[91].hText));
-
-    g_PAL60Page2 = IndSubMenuPage + 1;
-    aMenu2DPages[g_PAL60Page2].eTypePage = ePal60_2_TypePage;
-    strcpy(aMenu2DPages[g_PAL60Page2].Title, "");
-    aMenu2DPages[g_PAL60Page2].NbSelection = 0;
-    aMenu2DPages[g_PAL60Page2].NbEntry = 0;
-    strcpy(aMenu2DPages[g_PAL60Page2].aText[0], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[92].hText));
-
-    g_PAL60Page3 = IndSubMenuPage + 2;
-    aMenu2DPages[g_PAL60Page3].eTypePage = ePal60_3_TypePage;
-    strcpy(aMenu2DPages[g_PAL60Page3].Title, "");
-    aMenu2DPages[g_PAL60Page3].NbEntry = aMenu2DPages[g_PAL60Page3].NbSelection = 2;
-    strcpy(aMenu2DPages[g_PAL60Page3].aText[0], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[93].hText));
-
-    return IndSubMenuPage + 3;
-}
-
-int fn_dwFindNextSnappedPicture(int lSnapID, char* _szFileName)
-{
-    if (aMenu2DPages[g_AlbumPage].NbEntry && ((unsigned int)lSnapID < aMenu2DPages[g_AlbumPage].NbEntry))
-    {
-        lSnapID++;
-        strcpy(_szFileName, g_aFileEntryArray[lSnapID].Name);
-    }
-    else if (lSnapID == aMenu2DPages[g_AlbumPage].NbEntry)
-    {
-        lSnapID = 0;
-        strcpy(_szFileName, g_aFileEntryArray[0].Name);
-    }
-    else
-    {
-        lSnapID = aMenu2DPages[g_AlbumPage].NbEntry;
-    }
-    return lSnapID;
-}
-
-int fn_dwFindPreviousSnappedPicture(int lSnapID, char* _szFileName)
-{
-    if (lSnapID > 0)
-    {
-        lSnapID--;
-        strcpy(_szFileName, g_aFileEntryArray[lSnapID].Name);
-    }
-    else
-    {
-        lSnapID = aMenu2DPages[g_AlbumPage].NbEntry;
-    }
-    return lSnapID;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void GAM_fn_vSaveGameAfterVideoIfNeeded(void);
+void fn_vInterruptPalAndProgressiveVideoPages(void);
+void fn_vManagePalAndProgressiveVideoPage(void);
+void fn_vManageValidatePalAndProgressiveVideoPage(void);
+int fn_vDefineProgressiveScanPages(int IndSubMenuPage);
+int fn_vDefinePalVideoPages(int IndSubMenuPage);
+int fn_dwFindNextSnappedPicture(int lSnapID, char* _szFileName);
+int fn_dwFindPreviousSnappedPicture(int lSnapID, char* _szFileName);
+int fn_vSpecificManageMenu2D(void);
 
 #define M_vGrayLoadEntry(_Page) { aMenu2DPages[_Page].abGrayed[1] = 1; if (g_CurrentSelection == 1) fn_vPreviousSelection(); }
 
@@ -684,4 +490,210 @@ int fn_vSpecificManageMenu2D(void)
     }
 
     return 1;
+}
+
+int fn_dwFindPreviousSnappedPicture(int lSnapID, char* _szFileName)
+{
+    if (lSnapID > 0)
+    {
+        lSnapID--;
+        strcpy(_szFileName, g_aFileEntryArray[lSnapID].Name);
+    }
+    else
+    {
+        lSnapID = aMenu2DPages[g_AlbumPage].NbEntry;
+    }
+    return lSnapID;
+}
+
+int fn_dwFindNextSnappedPicture(int lSnapID, char* _szFileName)
+{
+    if (aMenu2DPages[g_AlbumPage].NbEntry && ((unsigned int)lSnapID < aMenu2DPages[g_AlbumPage].NbEntry))
+    {
+        lSnapID++;
+        strcpy(_szFileName, g_aFileEntryArray[lSnapID].Name);
+    }
+    else if (lSnapID == aMenu2DPages[g_AlbumPage].NbEntry)
+    {
+        lSnapID = 0;
+        strcpy(_szFileName, g_aFileEntryArray[0].Name);
+    }
+    else
+    {
+        lSnapID = aMenu2DPages[g_AlbumPage].NbEntry;
+    }
+    return lSnapID;
+}
+
+int fn_vDefinePalVideoPages(int IndSubMenuPage)
+{
+    g_PAL60Page1 = IndSubMenuPage;
+    aMenu2DPages[g_PAL60Page1].eTypePage = ePal60_1_TypePage;
+    strcpy(aMenu2DPages[g_PAL60Page1].Title, "");
+    aMenu2DPages[g_PAL60Page1].NbSelection = 0;
+    aMenu2DPages[g_PAL60Page1].NbEntry = 0;
+    strcpy(aMenu2DPages[g_PAL60Page1].aText[0], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[91].hText));
+
+    g_PAL60Page2 = IndSubMenuPage + 1;
+    aMenu2DPages[g_PAL60Page2].eTypePage = ePal60_2_TypePage;
+    strcpy(aMenu2DPages[g_PAL60Page2].Title, "");
+    aMenu2DPages[g_PAL60Page2].NbSelection = 0;
+    aMenu2DPages[g_PAL60Page2].NbEntry = 0;
+    strcpy(aMenu2DPages[g_PAL60Page2].aText[0], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[92].hText));
+
+    g_PAL60Page3 = IndSubMenuPage + 2;
+    aMenu2DPages[g_PAL60Page3].eTypePage = ePal60_3_TypePage;
+    strcpy(aMenu2DPages[g_PAL60Page3].Title, "");
+    aMenu2DPages[g_PAL60Page3].NbEntry = aMenu2DPages[g_PAL60Page3].NbSelection = 2;
+    strcpy(aMenu2DPages[g_PAL60Page3].aText[0], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[93].hText));
+
+    return IndSubMenuPage + 3;
+}
+
+int fn_vDefineProgressiveScanPages(int IndSubMenuPage)
+{
+    g_PScanPage1 = IndSubMenuPage;
+    aMenu2DPages[g_PScanPage1].eTypePage = eProgressive_1_TypePage;
+    strcpy(aMenu2DPages[g_PScanPage1].Title, "");
+    aMenu2DPages[g_PScanPage1].NbSelection = 0;
+    aMenu2DPages[g_PScanPage1].NbEntry = 0;
+    strcpy(aMenu2DPages[g_PScanPage1].aText[0], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[94].hText));
+
+    g_PScanPage2 = IndSubMenuPage + 1;
+    aMenu2DPages[g_PScanPage2].eTypePage = eProgressive_2_TypePage;
+    strcpy(aMenu2DPages[g_PScanPage2].Title, "");
+    aMenu2DPages[g_PScanPage2].NbSelection = 0;
+    aMenu2DPages[g_PScanPage2].NbEntry = 0;
+    strcpy(aMenu2DPages[g_PScanPage2].aText[0], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[92].hText));
+
+    g_PScanPage3 = IndSubMenuPage + 2;
+    aMenu2DPages[g_PScanPage3].eTypePage = eProgressive_3_TypePage;
+    strcpy(aMenu2DPages[g_PScanPage3].Title, "");
+    aMenu2DPages[g_PScanPage3].NbEntry = aMenu2DPages[g_PScanPage3].NbSelection = 2;
+    strcpy(aMenu2DPages[g_PScanPage3].aText[0], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[93].hText));
+
+    return IndSubMenuPage + 3;
+}
+
+void fn_vManageValidatePalAndProgressiveVideoPage(void)
+{
+    switch (aMenu2DPages[g_CurrentMenu2DPage].eTypePage)
+    {
+    case ePal60_1_TypePage:
+        fn_vPlaySoundInGameMenu2D(3);
+        GLI_fn_vSwitchTo60Hz();
+        g_SelectedTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+        g_CurrentMenu2DPage = g_PAL60Page2;
+        break;
+    case ePal60_3_TypePage:
+        if (g_CurrentSelection == 1)
+        {
+            GLI_fn_vSwitchTo60Hz();
+            strcpy(aMenu2DPages[g_VideoOptionPage].aText[2], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[96].hText));
+            strcpy(aMenu2DPages[g_VideoOptionPage].aText[3], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[88].hText));
+        }
+        ReturnFromSubMenu();
+        break;
+    case eProgressive_1_TypePage:
+        fn_vPlaySoundInGameMenu2D(3);
+        GLI_fn_vSwitchToProgressive60Hz();
+        g_SelectedTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+        g_CurrentMenu2DPage = g_PScanPage2;
+        break;
+    case eProgressive_3_TypePage:
+        if (g_CurrentSelection == 1)
+        {
+            GLI_fn_vSwitchToProgressive60Hz();
+            strcpy(aMenu2DPages[g_VideoOptionPage].aText[2], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[98].hText));
+        }
+        ReturnFromSubMenu();
+        break;
+    }
+}
+
+void fn_vManagePalAndProgressiveVideoPage(void)
+{
+    if (g_CurrentMenu2DPage == g_PAL60Page2)
+    {
+        if (g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - g_SelectedTime >= 5000)
+        {
+            g_CurrentMenu2DPage = g_PAL60Page3;
+            g_CurrentSelection = 2;
+            switch (g_PreviousVideoMode)
+            {
+            case 0x32:
+                GLI_fn_vSwitchTo50Hz();
+                break;
+            case 0x46:
+                GLI_fn_vSwitchToProgressive60Hz();
+                break;
+            }
+        }
+    }
+    if (g_CurrentMenu2DPage == g_PScanPage2)
+    {
+        if (g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - g_SelectedTime >= 5000)
+        {
+            g_CurrentMenu2DPage = g_PScanPage3;
+            g_CurrentSelection = 2;
+            switch (g_PreviousVideoMode)
+            {
+            case 0x32:
+                GLI_fn_vSwitchTo50Hz();
+                break;
+            case 0x3C:
+                GLI_fn_vSwitchTo60Hz();
+                break;
+            }
+        }
+    }
+}
+
+void fn_vInterruptPalAndProgressiveVideoPages(void)
+{
+    if (g_CurrentMenu2DPage == g_PAL60Page2)
+    {
+        g_CurrentMenu2DPage = g_PAL60Page3;
+        g_CurrentSelection = 2;
+        switch (g_PreviousVideoMode)
+        {
+        case 0x32:
+            GLI_fn_vSwitchTo50Hz();
+            break;
+        case 0x46:
+            GLI_fn_vSwitchToProgressive60Hz();
+            break;
+        }
+        ReturnFromSubMenu();
+    }
+    if (g_CurrentMenu2DPage == g_PScanPage2)
+    {
+        g_CurrentMenu2DPage = g_PScanPage3;
+        g_CurrentSelection = 2;
+        switch (g_PreviousVideoMode)
+        {
+        case 0x32:
+            GLI_fn_vSwitchTo50Hz();
+            break;
+        case 0x3C:
+            GLI_fn_vSwitchTo60Hz();
+            break;
+        }
+        ReturnFromSubMenu();
+    }
+}
+
+void GAM_fn_vSaveGameAfterVideoIfNeeded(void)
+{
+    int i;
+    int offset;
+    unsigned int ulIndE;
+    anon_2* p;
+
+    if (GLI_g_PerformAutosaveAfterVideo)
+    {
+        SAV2_fn_bSaveAllOnDisk(g_CurrentSaveName);
+        g_aEnvValue[0].ulScore = 0; i = 1; offset = 8; do { p = (anon_2 *)((char *)g_aEnvValue + offset); g_aEnvValue[0].ulScore += p[0].ulScore; g_aEnvValue[0].ulScore += p[1].ulScore; g_aEnvValue[0].ulScore += p[2].ulScore; g_aEnvValue[0].ulScore += p[3].ulScore; g_aEnvValue[0].ulScore += p[4].ulScore; g_aEnvValue[0].ulScore += p[5].ulScore; g_aEnvValue[0].ulScore += p[6].ulScore; g_aEnvValue[0].ulScore += p[7].ulScore; i += 8; offset += 64; } while (i < 2); offset = i * 8; if (i < 10) { do { p = (anon_2 *)((char *)g_aEnvValue + offset); g_aEnvValue[0].ulScore += p->ulScore; i++; offset += 8; } while (i < 10); } g_RevisitCurrentGlobalScore = g_aEnvValue[0].ulScore; if (g_RevisitMode != 0) { ulIndE = g_IndCurrentEnv; g_RevisitEnvScoreAtBeginingOfLevel = g_RevisitCurrentEnvScore; g_RevisitGlobalScoreAtBeginingOfLevel = g_RevisitCurrentGlobalScore; fn_vR3RecomputeGlobalScore(); if (g_RevisitEnvScoreAtBeginingOfLevel > (ulIndE < 10 ? g_aEnvValue[ulIndE].ulScore : 0)) { if (g_IndCurrentEnv < 10) { g_aEnvValue[g_IndCurrentEnv].ulScore = g_RevisitEnvScoreAtBeginingOfLevel; } fn_vR3RecomputeGlobalScore(); } fn_vR3RecomputeGlobalScore(); if (g_aEnvValue[0].ulScore < g_RevisitGlobalScoreAtBeginingOfLevel) { g_aEnvValue[0].ulScore = g_RevisitGlobalScoreAtBeginingOfLevel; fn_vR3RecomputeGlobalScore(); } } fn_vR3RecomputeGlobalScore(); ulIndE = g_IndCurrentEnv; g_GlobalScoreAtBeginingOfLevel = g_aEnvValue[0].ulScore; fn_vR3RecomputeGlobalScore(); g_CurrentEnvScoreAtBeginingOfLevel = (ulIndE < 10) ? g_aEnvValue[ulIndE].ulScore : 0; g_CurrentEnvInit = g_IndCurrentEnv;
+    }
+    GLI_g_PerformAutosaveAfterVideo = 0;
 }

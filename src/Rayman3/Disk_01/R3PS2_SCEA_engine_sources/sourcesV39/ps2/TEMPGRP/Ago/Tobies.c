@@ -38,11 +38,68 @@ extern float AGO2_g_pfCosTable[512];
 void AGO2_MEM_Init(void);
 float PS2_dl_cosf(float x);
 
-void AGO2_vReInit(void)
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void AGO2_vReInit(void);
+void Toby_AddSegment(unsigned int IDNumber, MTH3D_tdstVector_* pPos1, MTH3D_tdstVector_* pPos2);
+void Toby_Allocate(unsigned int IDNumber, unsigned int NumberOfSegments);
+void Toby_SetTransparency(unsigned int IDNumber, float fAlphaValue);
+void Toby_SetMaterial(void* unused, GLI_tdstMaterial_* hVisualMaterial);
+void Toby_Destroy(unsigned int IDNumber);
+
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+
+void Toby_Destroy(unsigned int IDNumber)
 {
-    g_ulNumberOfAgos2 = 0;
-    AGO2_MEM_Init();
-    { int i; float fAngle = 0.0f; for (i = 0; i < 512; i++) { AGO2_g_pfCosTable[i] = PS2_dl_cosf(fAngle); fAngle += 6.2831855f / 512.0f; } }
+    int iIndex;
+    /* Matching idiom for the unfolded member offset (byte/char* base plus offset, dead scaled-index
+       assignment); found by scanning matched functions. Not original source and needs cleaning up. */
+    iIndex = IDNumber * sizeof(_Toby_);
+    if (*(int*)((char*)&((_Toby_*)Toby_g_Container)->pSegments + iIndex))
+    {
+        HMU_fn_vFree((void**)&((_Toby_*)((char*)Toby_g_Container + iIndex))->pSegments, 1);
+        *(int*)((char*)Toby_g_Container + iIndex) = 0;
+        *(int*)((char*)&((_Toby_*)Toby_g_Container)->NbActualSegments + iIndex) = 0;
+        *(int*)((char*)&((_Toby_*)Toby_g_Container)->fTransparency + iIndex) = 0;
+        *(int*)((char*)&((_Toby_*)Toby_g_Container)->pSegments + iIndex) = 0;
+    }
+}
+
+void Toby_SetMaterial(void* unused, GLI_tdstMaterial_* hVisualMaterial)
+{
+    AGO_g_TobyMaterial = (int)hVisualMaterial;
+}
+
+void Toby_SetTransparency(unsigned int IDNumber, float fAlphaValue)
+{
+    char* pc;
+    int iIndex;
+    /* Matching idiom for the unfolded member offset (byte/char* base plus offset, dead scaled-index
+       assignment); found by scanning matched functions. Not original source and needs cleaning up. */
+    if (fAlphaValue < 0.0f)
+        fAlphaValue = 0.0f;
+    if (fAlphaValue > 1.0f)
+        fAlphaValue = 1.0f;
+    pc = (char*)&((_Toby_*)Toby_g_Container)->fTransparency;
+    *(float*)(pc + (iIndex = IDNumber * sizeof(_Toby_))) = fAlphaValue;
+}
+
+void Toby_Allocate(unsigned int IDNumber, unsigned int NumberOfSegments)
+{
+    int iIndex;
+    /* Matching idiom for the unfolded member offset (byte/char* base plus offset, dead scaled-index
+       assignment); found by scanning matched functions. Not original source and needs cleaning up. */
+    if (!bIsInitAllDone)
+    {
+        Toby_g_Container = (int)HMU_fn_p_vMalloc(0x50, 1); ((int*)Toby_g_Container)[0] = 0; ((int*)Toby_g_Container)[1] = 0; ((int*)Toby_g_Container)[2] = 0; ((int*)Toby_g_Container)[3] = 0; ((int*)Toby_g_Container)[4] = 0; ((int*)Toby_g_Container)[5] = 0; ((int*)Toby_g_Container)[6] = 0; ((int*)Toby_g_Container)[7] = 0; ((int*)Toby_g_Container)[8] = 0; ((int*)Toby_g_Container)[9] = 0; ((int*)Toby_g_Container)[10] = 0; ((int*)Toby_g_Container)[11] = 0; ((int*)Toby_g_Container)[12] = 0; ((int*)Toby_g_Container)[13] = 0; ((int*)Toby_g_Container)[14] = 0; ((int*)Toby_g_Container)[15] = 0; ((int*)Toby_g_Container)[16] = 0; ((int*)Toby_g_Container)[17] = 0; ((int*)Toby_g_Container)[18] = 0; ((int*)Toby_g_Container)[19] = 0; bIsInitAllDone = 1;
+    }
+
+    iIndex = IDNumber * sizeof(_Toby_); if (*(int*)((char*)&((_Toby_*)Toby_g_Container)->pSegments + iIndex)) if (*(void**)((char*)&((_Toby_*)Toby_g_Container)->pSegments + iIndex)) { HMU_fn_vFree((void**)&((_Toby_*)((char*)Toby_g_Container + iIndex))->pSegments, 1); *(int*)((char*)Toby_g_Container + iIndex) = 0; *(int*)((char*)&((_Toby_*)Toby_g_Container)->NbActualSegments + iIndex) = 0; *(int*)((char*)&((_Toby_*)Toby_g_Container)->fTransparency + iIndex) = 0; *(int*)((char*)&((_Toby_*)Toby_g_Container)->pSegments + iIndex) = 0; }
+
+    *(void**)((char*)&((_Toby_*)Toby_g_Container)->pSegments + iIndex) = HMU_fn_p_vMalloc(NumberOfSegments * 32, 1);
+    *(int*)((char*)Toby_g_Container + iIndex) = NumberOfSegments;
+    *(int*)((char*)&((_Toby_*)Toby_g_Container)->NbActualSegments + iIndex) = 0;
+    *(float*)((char*)&((_Toby_*)Toby_g_Container)->fTransparency + iIndex) = 1.0f;
 }
 
 void Toby_AddSegment(unsigned int IDNumber, MTH3D_tdstVector_* pPos1, MTH3D_tdstVector_* pPos2)
@@ -66,56 +123,9 @@ void Toby_AddSegment(unsigned int IDNumber, MTH3D_tdstVector_* pPos1, MTH3D_tdst
     }
 }
 
-void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
-void Toby_Allocate(unsigned int IDNumber, unsigned int NumberOfSegments)
+void AGO2_vReInit(void)
 {
-    int iIndex;
-    /* Matching idiom for the unfolded member offset (byte/char* base plus offset, dead scaled-index
-       assignment); found by scanning matched functions. Not original source and needs cleaning up. */
-    if (!bIsInitAllDone)
-    {
-        Toby_g_Container = (int)HMU_fn_p_vMalloc(0x50, 1); ((int*)Toby_g_Container)[0] = 0; ((int*)Toby_g_Container)[1] = 0; ((int*)Toby_g_Container)[2] = 0; ((int*)Toby_g_Container)[3] = 0; ((int*)Toby_g_Container)[4] = 0; ((int*)Toby_g_Container)[5] = 0; ((int*)Toby_g_Container)[6] = 0; ((int*)Toby_g_Container)[7] = 0; ((int*)Toby_g_Container)[8] = 0; ((int*)Toby_g_Container)[9] = 0; ((int*)Toby_g_Container)[10] = 0; ((int*)Toby_g_Container)[11] = 0; ((int*)Toby_g_Container)[12] = 0; ((int*)Toby_g_Container)[13] = 0; ((int*)Toby_g_Container)[14] = 0; ((int*)Toby_g_Container)[15] = 0; ((int*)Toby_g_Container)[16] = 0; ((int*)Toby_g_Container)[17] = 0; ((int*)Toby_g_Container)[18] = 0; ((int*)Toby_g_Container)[19] = 0; bIsInitAllDone = 1;
-    }
-
-    iIndex = IDNumber * sizeof(_Toby_); if (*(int*)((char*)&((_Toby_*)Toby_g_Container)->pSegments + iIndex)) if (*(void**)((char*)&((_Toby_*)Toby_g_Container)->pSegments + iIndex)) { HMU_fn_vFree((void**)&((_Toby_*)((char*)Toby_g_Container + iIndex))->pSegments, 1); *(int*)((char*)Toby_g_Container + iIndex) = 0; *(int*)((char*)&((_Toby_*)Toby_g_Container)->NbActualSegments + iIndex) = 0; *(int*)((char*)&((_Toby_*)Toby_g_Container)->fTransparency + iIndex) = 0; *(int*)((char*)&((_Toby_*)Toby_g_Container)->pSegments + iIndex) = 0; }
-
-    *(void**)((char*)&((_Toby_*)Toby_g_Container)->pSegments + iIndex) = HMU_fn_p_vMalloc(NumberOfSegments * 32, 1);
-    *(int*)((char*)Toby_g_Container + iIndex) = NumberOfSegments;
-    *(int*)((char*)&((_Toby_*)Toby_g_Container)->NbActualSegments + iIndex) = 0;
-    *(float*)((char*)&((_Toby_*)Toby_g_Container)->fTransparency + iIndex) = 1.0f;
-}
-
-void Toby_SetTransparency(unsigned int IDNumber, float fAlphaValue)
-{
-    char* pc;
-    int iIndex;
-    /* Matching idiom for the unfolded member offset (byte/char* base plus offset, dead scaled-index
-       assignment); found by scanning matched functions. Not original source and needs cleaning up. */
-    if (fAlphaValue < 0.0f)
-        fAlphaValue = 0.0f;
-    if (fAlphaValue > 1.0f)
-        fAlphaValue = 1.0f;
-    pc = (char*)&((_Toby_*)Toby_g_Container)->fTransparency;
-    *(float*)(pc + (iIndex = IDNumber * sizeof(_Toby_))) = fAlphaValue;
-}
-
-void Toby_SetMaterial(void* unused, GLI_tdstMaterial_* hVisualMaterial)
-{
-    AGO_g_TobyMaterial = (int)hVisualMaterial;
-}
-
-void Toby_Destroy(unsigned int IDNumber)
-{
-    int iIndex;
-    /* Matching idiom for the unfolded member offset (byte/char* base plus offset, dead scaled-index
-       assignment); found by scanning matched functions. Not original source and needs cleaning up. */
-    iIndex = IDNumber * sizeof(_Toby_);
-    if (*(int*)((char*)&((_Toby_*)Toby_g_Container)->pSegments + iIndex))
-    {
-        HMU_fn_vFree((void**)&((_Toby_*)((char*)Toby_g_Container + iIndex))->pSegments, 1);
-        *(int*)((char*)Toby_g_Container + iIndex) = 0;
-        *(int*)((char*)&((_Toby_*)Toby_g_Container)->NbActualSegments + iIndex) = 0;
-        *(int*)((char*)&((_Toby_*)Toby_g_Container)->fTransparency + iIndex) = 0;
-        *(int*)((char*)&((_Toby_*)Toby_g_Container)->pSegments + iIndex) = 0;
-    }
+    g_ulNumberOfAgos2 = 0;
+    AGO2_MEM_Init();
+    { int i; float fAngle = 0.0f; for (i = 0; i < 512; i++) { AGO2_g_pfCosTable[i] = PS2_dl_cosf(fAngle); fAngle += 6.2831855f / 512.0f; } }
 }

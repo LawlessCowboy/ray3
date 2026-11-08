@@ -1677,10 +1677,34 @@ inline void MAT_M_vSetTranslation(MAT_tdstTransformation_* _hMatrix, MTH3D_tdstV
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GAM_fn_vWriteStringInUbiIniFile(void)
-{
-    /* TODO: decompile from asm/... */
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void GAM_fn_vWriteStringInUbiIniFile(void);
+void fn_vReinitSOL(tdstSuperObjectLinks_* _hSOL);
+void fn_vReinitSOLRotation(tdstSuperObjectLinks_* _hSOL);
+void fn_vReinitSOLTranslation(tdstSuperObjectLinks_* _hSOL);
+void fn_v_TranslateSOL(tdstSuperObjectLinks_* _hSOL, MTH3D_tdstVector_* _p_stTranslation);
+void fn_v_RotateOneCharacterLinkedToOneSPO(HIE_tdstSuperObject_* _hPerso, MAT_tdstTransformation_* _p_Transformation);
+void fn_v_TranslateOneCharacterImmediateTeleportation(HIE_tdstSuperObject_* _hPerso, MTH3D_tdstVector_* _p_stTranslation);
+void fn_v_TranslateOneCharacterWithMechanicsImmediateTeleportation(HIE_tdstSuperObject_* _hPerso, MTH3D_tdstVector_* _p_stTranslation);
+void fn_v_RotateMechanicsLinkedToOneSPO(DNM_stDynamics* _p_stDynamic, MAT_tdstTransformation_* _p_Transformation);
+void fn_v_TranslateMechanicsImmediateTeleportation(DNM_stDynamics* _p_stDynamic, MTH3D_tdstVector_* _p_stVector);
+void fn_v_RotateOneWayPointLinkedToOneSPO(WP_tdstWayPoint_* _hWP, MAT_tdstTransformation_* p_Transformation);
+void fn_v_TranslateOneWaypointImmediateTeleportation(WP_tdstWayPoint_* _hWP, MTH3D_tdstVector_* _p_stTranslation);
+void fn_v_RotateOneSpoLinkedToOneSPO(HIE_tdstSuperObject_* _hLinkedSpo, MAT_tdstTransformation_* p_Transformation);
+void fn_v_TranslateOneSpoImmediateTeleportation(HIE_tdstSuperObject_* _hLinkedSpo, MTH3D_tdstVector_* _p_stTranslation);
+void fn_v_SetRotationOneCharacterImmediateTeleportation(HIE_tdstSuperObject_* _hPerso, MTH3D_tdstVector_* _p_stI, MTH3D_tdstVector_* _p_stJ, MTH3D_tdstVector_* _p_stK);
+void fn_v_SetRotationMechanicsImmediateTeleportation(DNM_stDynamics* _p_stDynamic, HIE_tdstSuperObject_* _p_stSpo, MTH3D_tdstVector_* _p_stI, MTH3D_tdstVector_* _p_stJ, MTH3D_tdstVector_* _p_stK);
+void fn_v_SetOneSpoImmediateTeleportation(HIE_tdstSuperObject_* _hLinkedSpo, MTH3D_tdstVector_* _p_stTranslation);
+int fn_b_ObjectAlreadyTreatedWithSPO(int _iNbOfTreatedObjects, void** _p_a_TreatedObjects, void* hObject);
+tdstSuperObjectLinks_* SOL_SearchSOLFromSPO(HIE_tdstSuperObject_* _hSPO);
+void GAM_fn_vDeleteObjetFromSOLinks(tdstSuperObjectLinks_* _hSOL, unsigned int ulPos);
+void GAM_fn_vAddObjetToSOLinks(tdstSuperObjectLinks_* _hSOL, void* _pLinkedObj, tdeSOL_ObjType_ _eType, MAT_tdstTransformation_* p_MatrixInit, tdeSOL_ObjPersistence_ _ePersistence);
+unsigned int GAM_AlreadyReferencedInSOLinks(tdstSuperObjectLinks_* _hSOL, void* _pLinkedObj);
+void GAM_fn_vReAllocSOL(tdstSuperObjectLinks_* _hSOL, unsigned int Increment);
+unsigned char GAM_fn_bIsMovedOne(HIE_tdstSuperObject_* _hSpo, MTH3D_tdstVector_* _p_stMove);
+void GAM_fn_vAddMovedOneToTable(HIE_tdstSuperObject_* _hSpo, MTH3D_tdstVector_* _p_stMove);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 1117–1120 */
 /* addr: 0x00280f10  size: 44 bytes */
@@ -1694,12 +1718,6 @@ void GAM_fn_vWriteStringInUbiIniFile(void)
  */
 void fn_vReinitSOLRotation(tdstSuperObjectLinks_* _hSOL);
 void fn_vReinitSOLTranslation(tdstSuperObjectLinks_* _hSOL);
-
-void fn_vReinitSOL(tdstSuperObjectLinks_* _hSOL)
-{
-    fn_vReinitSOLTranslation(_hSOL);
-    fn_vReinitSOLRotation(_hSOL);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 1084–1113 */
 /* addr: 0x00280f40  size: 444 bytes */
@@ -1731,31 +1749,6 @@ void fn_vReinitSOL(tdstSuperObjectLinks_* _hSOL)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vReinitSOLRotation(tdstSuperObjectLinks_* _hSOL)
-{
-    MTH4D_tdstVector_ stI;
-    MTH4D_tdstVector_ stJ;
-    MTH4D_tdstVector_ stK;
-    unsigned int ul;
-    HIE_tdstSuperObject_* hSuperObj;
-    MAT_fn_vGetRotationVectors(&_hSOL->POS_SPO_Init, (MTH3D_tdstVector_*)&stI, (MTH3D_tdstVector_*)&stJ, (MTH3D_tdstVector_*)&stK);
-    MAT_fn_vSetRotationVectors(_hSOL->h_SPORef->hLocalMatrix, (MTH3D_tdstVector_*)&stI, (MTH3D_tdstVector_*)&stJ, (MTH3D_tdstVector_*)&stK);
-    for (ul = 0; ul < _hSOL->ulNbLinkedObjects; ul++) {
-        switch (_hSOL->eTypeOfLinkedObj[ul]) {
-        case eSOL_SPO:
-            MAT_fn_vGetRotationVectors(&_hSOL->POS_InitOfLinkedObj[ul], (MTH3D_tdstVector_*)&stI, (MTH3D_tdstVector_*)&stJ, (MTH3D_tdstVector_*)&stK);
-            MAT_fn_vSetRotationVectors(((HIE_tdstSuperObject_*)((void**)_hSOL->LinkedObj)[ul])->hLocalMatrix, (MTH3D_tdstVector_*)&stI, (MTH3D_tdstVector_*)&stJ, (MTH3D_tdstVector_*)&stK);
-            break;
-        case eSOL_Character:
-            hSuperObj = fn_h_StandardGameGetSuperObject(((HIE_tdstSuperObject_*)((void**)_hSOL->LinkedObj)[ul])->hLinkedObject.p_stCharacter);
-            if (hSuperObj) {
-                MAT_fn_vGetRotationVectors(&_hSOL->POS_InitOfLinkedObj[ul], (MTH3D_tdstVector_*)&stI, (MTH3D_tdstVector_*)&stJ, (MTH3D_tdstVector_*)&stK);
-                if (hSuperObj->hLinkedObject.p_stCharacter->h_Dynam) { DNM_stDynamics* p_stDynamics = fn_p_stDynamGetDynamics(hSuperObj->hLinkedObject.p_stCharacter->h_Dynam); MAT_fn_vSetRotationVectors(hSuperObj->hGlobalMatrix, (MTH3D_tdstVector_*)&stI, (MTH3D_tdstVector_*)&stJ, (MTH3D_tdstVector_*)&stK); HIE_fn_vComputeNewRelativeMatrix(hSuperObj); fn_v_SetRotationMechanicsImmediateTeleportation(p_stDynamics, hSuperObj, (MTH3D_tdstVector_*)&stI, (MTH3D_tdstVector_*)&stJ, (MTH3D_tdstVector_*)&stK); } else { MAT_fn_vSetRotationVectors(hSuperObj->hGlobalMatrix, (MTH3D_tdstVector_*)&stI, (MTH3D_tdstVector_*)&stJ, (MTH3D_tdstVector_*)&stK); HIE_fn_vComputeNewRelativeMatrix(hSuperObj); }
-            }
-            break;
-        }
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 1044–1080 */
 /* addr: 0x00281100  size: 860 bytes */
@@ -1791,56 +1784,6 @@ void fn_vReinitSOLRotation(tdstSuperObjectLinks_* _hSOL)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vReinitSOLTranslation(tdstSuperObjectLinks_* _hSOL)
-{
-    MAT_tdstTransformation_ stInverse;
-    MTH4D_tdstVector_ stPosition;
-    MTH4D_tdstVector_ stWayResult;
-    MTH3D_tdstVector_ stDiff;
-    HIE_tdstSuperObject_* hSuperObj;
-    DNM_stDynamics* p_stDynamics;
-    unsigned int ul;
-    MAT_M_vGetTranslation(&_hSOL->POS_SPO_Init, (MTH3D_tdstVector_*)&stPosition);
-    hSuperObj = _hSOL->h_SPORef;
-    MAT_M_vSetTranslation(hSuperObj->hGlobalMatrix, (MTH3D_tdstVector_*)&stPosition);
-    hSuperObj->lLastComputeFrame = HIE_gs_lCurrentFrame; HIE_fn_vComputeNewRelativeMatrix(hSuperObj);
-    for (ul = 0; ul < _hSOL->ulNbLinkedObjects; ul++) {
-        switch (_hSOL->eTypeOfLinkedObj[ul]) {
-        case eSOL_SPO:
-            MAT_M_vGetTranslation(&_hSOL->POS_InitOfLinkedObj[ul], (MTH3D_tdstVector_*)&stPosition);
-            hSuperObj = ((HIE_tdstSuperObject_*)((void**)_hSOL->LinkedObj)[ul]);
-            MAT_M_vSetTranslation(hSuperObj->hGlobalMatrix, (MTH3D_tdstVector_*)&stPosition);
-            hSuperObj->lLastComputeFrame = HIE_gs_lCurrentFrame; HIE_fn_vComputeNewRelativeMatrix(hSuperObj);
-            break;
-        case eSOL_Character:
-            /* Not original source: temporary found by the permuter (register allocation). */
-            { HIE_tdstSuperObject_* hFound = fn_h_StandardGameGetSuperObject(((HIE_tdstSuperObject_*)((void**)_hSOL->LinkedObj)[ul])->hLinkedObject.p_stCharacter);
-            hSuperObj = hFound; }
-            if (hSuperObj) {
-                MAT_M_vGetTranslation(&_hSOL->POS_InitOfLinkedObj[ul], (MTH3D_tdstVector_*)&stPosition);
-                if (hSuperObj->hLinkedObject.p_stCharacter->h_Dynam) {
-                    p_stDynamics = fn_p_stDynamGetDynamics(hSuperObj->hLinkedObject.p_stCharacter->h_Dynam);
-                    { MAT_tdstTransformation_* pGlobal = hSuperObj->hGlobalMatrix; if (pGlobal->eType == MAT_eTransform_Identity) pGlobal->eType = MAT_eTransform_Translation; MTH4D_fn_vCopy3DTo4DVector(&pGlobal->stTransformMatrix.stCol_3, (MTH3D_tdstVector_*)&stPosition); }
-                    HIE_fn_vComputeNewRelativeMatrix(hSuperObj);
-                    MTH4D_fn_vCopy4DTo3DVector(&stDiff, &p_stDynamics->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3);
-                    stDiff.xX = stPosition.xX - stDiff.xX; stDiff.xY = stPosition.xY - stDiff.xY; stDiff.xZ = stPosition.xZ - stDiff.xZ;
-                    fn_v_TranslateMechanicsImmediateTeleportation(p_stDynamics, &stDiff);
-                } else {
-                    { MAT_tdstTransformation_* pGlobal = hSuperObj->hGlobalMatrix; if (pGlobal->eType == MAT_eTransform_Identity) pGlobal->eType = MAT_eTransform_Translation; MTH4D_fn_vCopy3DTo4DVector(&pGlobal->stTransformMatrix.stCol_3, (MTH3D_tdstVector_*)&stPosition); }
-                    HIE_fn_vComputeNewRelativeMatrix(hSuperObj);
-                }
-            }
-            break;
-        case eSOL_Waypoint:
-            MAT_M_vGetTranslation(&_hSOL->POS_InitOfLinkedObj[ul], (MTH3D_tdstVector_*)&stPosition);
-            { WP_tdstWayPoint_* hWaypoint = ((WP_tdstWayPoint_*)((void**)_hSOL->LinkedObj)[ul]);
-              if (hWaypoint->m_hSuperObject) { MAT_fn_vInvert(&stInverse, hWaypoint->m_hSuperObject->hGlobalMatrix); MAT_fn_vApplyOnVertex((MTH3D_tdstVector_*)&stWayResult, &stInverse, (MTH3D_tdstVector_*)&stPosition); hWaypoint->m_stVertex = *(MTH3D_tdstVector_*)&stWayResult; } else { hWaypoint->m_stVertex = *(MTH3D_tdstVector_*)&stPosition; } }
-            break;
-        default:
-            return;
-        }
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 1009–1039 */
 /* addr: 0x00281530  size: 860 bytes */
@@ -1866,41 +1809,6 @@ void fn_vReinitSOLTranslation(tdstSuperObjectLinks_* _hSOL)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_v_TranslateSOL(tdstSuperObjectLinks_* _hSOL, MTH3D_tdstVector_* _p_stTranslation)
-{
-    MAT_tdstTransformation_ stInverse;
-    MTH4D_tdstVector_ stV1;
-    MTH4D_tdstVector_ stBefore;
-    MTH4D_tdstVector_ stV1Spo;
-    MTH4D_tdstVector_ stBeforeSpo;
-    MTH4D_tdstVector_ stV1Way;
-    MTH4D_tdstVector_ stWayLoc;
-    MTH4D_tdstVector_ stV1Char;
-    MTH4D_tdstVector_ stBeforeChar;
-    MTH3D_tdstVector_ stLocalWay;
-    HIE_tdstSuperObject_* hSuperObj;
-    HIE_tdstSuperObject_* hCharacter;
-    MAT_tdstTransformation_* p_stGlobalMatrix;
-    unsigned int ul;
-    hSuperObj = _hSOL->h_SPORef; { MAT_tdstTransformation_* pGlobal = hSuperObj->hGlobalMatrix; MTH3D_M_vCopyVector((MTH3D_tdstVector_*)&stBefore, (MTH3D_tdstVector_*)&pGlobal->stTransformMatrix.stCol_3); } if (g_bNoInterpolationForThisSPOMove) GLIPS2_vSetNoInterpolationForSPO(hSuperObj); stV1.xX = stBefore.xX + _p_stTranslation->xX; stV1.xY = stBefore.xY + _p_stTranslation->xY; stV1.xZ = stBefore.xZ + _p_stTranslation->xZ; { MAT_tdstTransformation_* pGlobal = hSuperObj->hGlobalMatrix; if (pGlobal->eType == MAT_eTransform_Identity) pGlobal->eType = MAT_eTransform_Translation; MTH4D_fn_vCopy3DTo4DVector(&pGlobal->stTransformMatrix.stCol_3, (MTH3D_tdstVector_*)&stV1); } hSuperObj->lLastComputeFrame = HIE_gs_lCurrentFrame; HIE_fn_vComputeNewRelativeMatrix(hSuperObj);
-    for (ul = 0; ul < _hSOL->ulNbLinkedObjects; ul++) {
-        switch (_hSOL->eTypeOfLinkedObj[ul]) {
-        case eSOL_SPO:
-            hSuperObj = ((HIE_tdstSuperObject_*)((void**)_hSOL->LinkedObj)[ul]); { MAT_tdstTransformation_* pGlobal = hSuperObj->hGlobalMatrix; MTH3D_M_vCopyVector((MTH3D_tdstVector_*)&stBeforeSpo, (MTH3D_tdstVector_*)&pGlobal->stTransformMatrix.stCol_3); } if (g_bNoInterpolationForThisSPOMove) GLIPS2_vSetNoInterpolationForSPO(hSuperObj); stV1Spo.xX = stBeforeSpo.xX + _p_stTranslation->xX; stV1Spo.xY = stBeforeSpo.xY + _p_stTranslation->xY; stV1Spo.xZ = stBeforeSpo.xZ + _p_stTranslation->xZ; { MAT_tdstTransformation_* pGlobal = hSuperObj->hGlobalMatrix; if (pGlobal->eType == MAT_eTransform_Identity) pGlobal->eType = MAT_eTransform_Translation; MTH4D_fn_vCopy3DTo4DVector(&pGlobal->stTransformMatrix.stCol_3, (MTH3D_tdstVector_*)&stV1Spo); } hSuperObj->lLastComputeFrame = HIE_gs_lCurrentFrame; HIE_fn_vComputeNewRelativeMatrix(hSuperObj);
-            break;
-        case eSOL_Character:
-            hCharacter = fn_h_StandardGameGetSuperObject(((HIE_tdstSuperObject_*)((void**)_hSOL->LinkedObj)[ul])->hLinkedObject.p_stCharacter);
-            if (hCharacter) {
-                if (hCharacter->hLinkedObject.p_stCharacter->h_Dynam) { fn_v_TranslateOneCharacterWithMechanicsImmediateTeleportation(hCharacter, _p_stTranslation); } else { p_stGlobalMatrix = hCharacter->hGlobalMatrix; MTH4D_fn_vCopy4DTo3DVector((MTH3D_tdstVector_*)&stBeforeChar, &p_stGlobalMatrix->stTransformMatrix.stCol_3); stV1Char.xX = stBeforeChar.xX + _p_stTranslation->xX; stV1Char.xY = stBeforeChar.xY + _p_stTranslation->xY; stV1Char.xZ = stBeforeChar.xZ + _p_stTranslation->xZ; if (p_stGlobalMatrix->eType == MAT_eTransform_Identity) p_stGlobalMatrix->eType = MAT_eTransform_Translation; MTH4D_fn_vCopy3DTo4DVector(&p_stGlobalMatrix->stTransformMatrix.stCol_3, (MTH3D_tdstVector_*)&stV1Char); hCharacter->lLastComputeFrame = HIE_gs_lCurrentFrame; HIE_fn_vComputeNewRelativeMatrix(hCharacter); } }
-            break;
-        case eSOL_Waypoint:
-            { WP_tdstWayPoint_* hWaypoint = ((WP_tdstWayPoint_*)((void**)_hSOL->LinkedObj)[ul]); WP_fnv_WayPoint_ComputeLocation(hWaypoint, (MTH3D_tdstVector_*)&stWayLoc); stV1Way.xX = stWayLoc.xX + _p_stTranslation->xX; stV1Way.xY = stWayLoc.xY + _p_stTranslation->xY; stV1Way.xZ = stWayLoc.xZ + _p_stTranslation->xZ; if (hWaypoint->m_hSuperObject) { MAT_fn_vInvert(&stInverse, hWaypoint->m_hSuperObject->hGlobalMatrix); MAT_fn_vApplyOnVertex(&stLocalWay, &stInverse, (MTH3D_tdstVector_*)&stV1Way); hWaypoint->m_stVertex = stLocalWay; } else { hWaypoint->m_stVertex = *(MTH3D_tdstVector_*)&stV1Way; } }
-            break;
-        default:
-            return;
-        }
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 994–1001 */
 /* addr: 0x00281890  size: 188 bytes */
@@ -1913,13 +1821,6 @@ void fn_v_TranslateSOL(tdstSuperObjectLinks_* _hSOL, MTH3D_tdstVector_* _p_stTra
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_v_RotateOneCharacterLinkedToOneSPO(HIE_tdstSuperObject_* _hPerso, MAT_tdstTransformation_* _p_Transformation)
-{
-    if (_hPerso->hLinkedObject.p_stCharacter->h_Dynam) {
-        DNM_stDynamics* pDynamic = fn_p_stDynamGetDynamics(_hPerso->hLinkedObject.p_stCharacter->h_Dynam); MAT_tdstTransformation_* pGlobal = _hPerso->hGlobalMatrix; MAT_fn_vCompose(pGlobal, _p_Transformation, pGlobal); MAT_fn_vNormalize(pGlobal); _hPerso->lLastComputeFrame = HIE_gs_lCurrentFrame; HIE_fn_vComputeNewRelativeMatrix(_hPerso); fn_v_RotateMechanicsLinkedToOneSPO(pDynamic, _p_Transformation); } else {
-        MAT_tdstTransformation_* pGlobal = _hPerso->hGlobalMatrix; MAT_fn_vCompose(pGlobal, _p_Transformation, pGlobal); MAT_fn_vNormalize(pGlobal); _hPerso->lLastComputeFrame = HIE_gs_lCurrentFrame; HIE_fn_vComputeNewRelativeMatrix(_hPerso);
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 984–991 */
 /* addr: 0x00281950  size: 400 bytes */
@@ -1932,15 +1833,6 @@ void fn_v_RotateOneCharacterLinkedToOneSPO(HIE_tdstSuperObject_* _hPerso, MAT_td
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_v_TranslateOneCharacterImmediateTeleportation(HIE_tdstSuperObject_* _hPerso, MTH3D_tdstVector_* _p_stTranslation)
-{
-    DNM_stDynamics* p_stDynamics;
-    if (_hPerso->hLinkedObject.p_stCharacter->h_Dynam) {
-        MTH3D_tdstVector_ stCoordinatesAfter; MTH3D_tdstVector_ stCoordinatesBefore; p_stDynamics = fn_p_stDynamGetDynamics(_hPerso->hLinkedObject.p_stCharacter->h_Dynam); { MAT_tdstTransformation_* pGlobal = _hPerso->hGlobalMatrix; MTH3D_M_vCopyVector((MTH3D_tdstVector_*)&stCoordinatesBefore, (MTH3D_tdstVector_*)&pGlobal->stTransformMatrix.stCol_3); stCoordinatesAfter.xX = stCoordinatesBefore.xX + _p_stTranslation->xX; stCoordinatesAfter.xY = stCoordinatesBefore.xY + _p_stTranslation->xY; stCoordinatesAfter.xZ = stCoordinatesBefore.xZ + _p_stTranslation->xZ; if (pGlobal->eType == MAT_eTransform_Identity) pGlobal->eType = MAT_eTransform_Translation; MTH3D_M_vCopyVector((MTH3D_tdstVector_*)&pGlobal->stTransformMatrix.stCol_3, (MTH3D_tdstVector_*)&stCoordinatesAfter); pGlobal->stTransformMatrix.stCol_3.xW = 1.0f; } _hPerso->lLastComputeFrame = HIE_gs_lCurrentFrame; HIE_fn_vComputeNewRelativeMatrix(_hPerso); fn_v_TranslateMechanicsImmediateTeleportation(p_stDynamics, _p_stTranslation); }
-    else {
-        MTH3D_tdstVector_ stCoordinatesAfter; MTH3D_tdstVector_ stCoordinatesBefore; { MAT_tdstTransformation_* pGlobal = _hPerso->hGlobalMatrix; MTH3D_M_vCopyVector((MTH3D_tdstVector_*)&stCoordinatesBefore, (MTH3D_tdstVector_*)&pGlobal->stTransformMatrix.stCol_3); stCoordinatesAfter.xX = stCoordinatesBefore.xX + _p_stTranslation->xX; stCoordinatesAfter.xY = stCoordinatesBefore.xY + _p_stTranslation->xY; stCoordinatesAfter.xZ = stCoordinatesBefore.xZ + _p_stTranslation->xZ; if (pGlobal->eType == MAT_eTransform_Identity) pGlobal->eType = MAT_eTransform_Translation; MTH3D_M_vCopyVector((MTH3D_tdstVector_*)&pGlobal->stTransformMatrix.stCol_3, (MTH3D_tdstVector_*)&stCoordinatesAfter); pGlobal->stTransformMatrix.stCol_3.xW = 1.0f; } _hPerso->lLastComputeFrame = HIE_gs_lCurrentFrame; HIE_fn_vComputeNewRelativeMatrix(_hPerso);
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 925–940 */
 /* addr: 0x00281ae0  size: 232 bytes */
@@ -1966,21 +1858,6 @@ void fn_v_TranslateOneCharacterImmediateTeleportation(HIE_tdstSuperObject_* _hPe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_v_TranslateOneCharacterWithMechanicsImmediateTeleportation(HIE_tdstSuperObject_* _hPerso, MTH3D_tdstVector_* _p_stTranslation)
-{
-    DNM_stDynamics* p_stDynamics;
-    MTH3D_tdstVector_ stCoordinatesBefore;
-    MTH3D_tdstVector_ stCoordinatesAfter;
-    p_stDynamics = fn_p_stDynamGetDynamics(_hPerso->hLinkedObject.p_stCharacter->h_Dynam);
-    { MAT_tdstTransformation_* pGlobal = _hPerso->hGlobalMatrix;
-    MAT_M_vGetTranslation(pGlobal, (MTH3D_tdstVector_*)&stCoordinatesBefore);
-    MTH3D_M_vAddVector(&stCoordinatesAfter, &stCoordinatesBefore, _p_stTranslation);
-    MAT_M_vSetTranslation(pGlobal, (MTH3D_tdstVector_*)&stCoordinatesAfter);
-    }
-    _hPerso->lLastComputeFrame = HIE_gs_lCurrentFrame;
-    HIE_fn_vComputeNewRelativeMatrix(_hPerso);
-    fn_v_TranslateMechanicsImmediateTeleportation(p_stDynamics, _p_stTranslation);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 894–921 */
 /* addr: 0x00281bd0  size: 200 bytes */
@@ -2005,33 +1882,6 @@ void fn_v_TranslateOneCharacterWithMechanicsImmediateTeleportation(HIE_tdstSuper
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_v_RotateMechanicsLinkedToOneSPO(DNM_stDynamics* _p_stDynamic, MAT_tdstTransformation_* _p_Transformation)
-{
-    MAT_tdstTransformation_* hCurrentMatrix;
-    MAT_tdstTransformation_* hAbsolutePreviousMatrix;
-    MAT_tdstTransformation_* hPrevPreviousMatrix;
-    MAT_tdstTransformation_* hPreviousMatrix;
-    if (!((_p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x80) ? 1 : 0)) {
-        hCurrentMatrix = &_p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix;
-        MAT_fn_vCompose(hCurrentMatrix, _p_Transformation, hCurrentMatrix);
-        MAT_fn_vNormalize(hCurrentMatrix);
-        hPreviousMatrix = &_p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix;
-        /* Not original source: redundant block and re-assignment found by the permuter. */
-        if (1) {
-        MAT_fn_vCompose(hPreviousMatrix, _p_Transformation, hPreviousMatrix);
-        MAT_fn_vNormalize(hPreviousMatrix);
-        hAbsolutePreviousMatrix = &_p_stDynamic->m_tdstDynamicsComplexBlock.m_stAbsolutePreviousMatrix;
-        }
-        if ((_p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0) {
-            hAbsolutePreviousMatrix = &_p_stDynamic->m_tdstDynamicsComplexBlock.m_stAbsolutePreviousMatrix;
-            MAT_fn_vCompose(hAbsolutePreviousMatrix, _p_Transformation, hAbsolutePreviousMatrix);
-            MAT_fn_vNormalize(hAbsolutePreviousMatrix);
-            hPrevPreviousMatrix = &_p_stDynamic->m_tdstDynamicsComplexBlock.m_stPrevPreviousMatrix;
-            MAT_fn_vCompose(hPrevPreviousMatrix, _p_Transformation, hPrevPreviousMatrix);
-            MAT_fn_vNormalize(hPrevPreviousMatrix);
-        }
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 864–891 */
 /* addr: 0x00281ca0  size: 608 bytes */
@@ -2073,38 +1923,6 @@ void fn_v_RotateMechanicsLinkedToOneSPO(DNM_stDynamics* _p_stDynamic, MAT_tdstTr
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_v_TranslateMechanicsImmediateTeleportation(DNM_stDynamics* _p_stDynamic, MTH3D_tdstVector_* _p_stVector)
-{
-    MAT_tdstTransformation_* hCurrentMatrix;
-    MAT_tdstTransformation_* hPreviousMatrix;
-    MAT_tdstTransformation_* hAbsolutePreviousMatrix;
-    MAT_tdstTransformation_* hPrevPreviousMatrix;
-    MTH3D_tdstVector_ tmpVector;
-
-    if (!((_p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x80) ? 1 : 0)) {
-        hCurrentMatrix = &_p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix;
-        MAT_M_vGetTranslation(hCurrentMatrix, &tmpVector);
-        MTH3D_M_vAddVector(&tmpVector, &tmpVector, _p_stVector);
-        MAT_M_vSetTranslation(hCurrentMatrix, &tmpVector);
-
-        hPreviousMatrix = &_p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix;
-        MAT_M_vGetTranslation(hPreviousMatrix, &tmpVector);
-        MTH3D_M_vAddVector(&tmpVector, &tmpVector, _p_stVector);
-        MAT_M_vSetTranslation(hPreviousMatrix, &tmpVector);
-
-        if ((_p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0) {
-            hAbsolutePreviousMatrix = &_p_stDynamic->m_tdstDynamicsComplexBlock.m_stAbsolutePreviousMatrix;
-            MAT_M_vGetTranslation(hAbsolutePreviousMatrix, &tmpVector);
-            MTH3D_M_vAddVector(&tmpVector, &tmpVector, _p_stVector);
-            MAT_M_vSetTranslation(hAbsolutePreviousMatrix, &tmpVector);
-
-            hPrevPreviousMatrix = &_p_stDynamic->m_tdstDynamicsComplexBlock.m_stPrevPreviousMatrix;
-            MAT_M_vGetTranslation(hPrevPreviousMatrix, &tmpVector);
-            MTH3D_M_vAddVector(&tmpVector, &tmpVector, _p_stVector);
-            MAT_M_vSetTranslation(hPrevPreviousMatrix, &tmpVector);
-        }
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 828–854 */
 /* addr: 0x00281f00  size: 400 bytes */
@@ -2159,29 +1977,6 @@ inline void MAT_vApplyOnVertexOnVU0(MTH3D_tdstVector_* VectDest, MAT_tdstTransfo
     *(unsigned int*)&VectDest->xX = *(unsigned int*)&Vtmp.xX; *(unsigned int*)&VectDest->xY = *(unsigned int*)&Vtmp.xY; *(unsigned int*)&VectDest->xZ = *(unsigned int*)&Vtmp.xZ;
 }
 
-void fn_v_RotateOneWayPointLinkedToOneSPO(WP_tdstWayPoint_* _hWP, MAT_tdstTransformation_* p_Transformation)
-{
-    MAT_tdstTransformation_ stTemp;
-    MTH3D_tdstVector_ stV1;
-    WP_fnv_WayPoint_ComputeLocation(_hWP, &stV1);
-    MAT_fn_vSetIdentity(&stTemp);
-    if (stTemp.eType == MAT_eTransform_Identity) stTemp.eType = MAT_eTransform_Translation;
-    MTH3D_M_vCopyVector((MTH3D_tdstVector_*)&stTemp.stTransformMatrix.stCol_3, &stV1); stTemp.stTransformMatrix.stCol_3.xW = 1.0f;
-    MAT_fn_vCompose(&stTemp, p_Transformation, &stTemp);
-    MTH3D_M_vCopyVector(&stV1, (MTH3D_tdstVector_*)&stTemp.stTransformMatrix.stCol_3);
-    if (_hWP->m_hSuperObject) {
-        MAT_tdstTransformation_ stInverse;
-        MTH4D_tdstVector_ stVtmp;
-        MTH4D_tdstMatrix_* p_stMatrix;
-        MTH4D_tdstVector_* p_stVtmp;
-        MAT_fn_vInvert(&stInverse, _hWP->m_hSuperObject->hGlobalMatrix);
-        p_stVtmp = &stVtmp; p_stMatrix = &stInverse.stTransformMatrix; *(unsigned int*)&stVtmp.xX = *(unsigned int*)&stV1.xX; *(unsigned int*)&stVtmp.xY = *(unsigned int*)&stV1.xY; *(unsigned int*)&stVtmp.xZ = *(unsigned int*)&stV1.xZ; asm { lqc2 vf1, 0x0(p_stVtmp); lqc2 vf2, 0x0(p_stMatrix); lqc2 vf3, 0x10(p_stMatrix); lqc2 vf4, 0x20(p_stMatrix); lqc2 vf5, 0x30(p_stMatrix); vmulax.xyzw ACC, vf2, vf1x; vmadday.xyzw ACC, vf3, vf1y; vmaddaz.xyzw ACC, vf4, vf1z; vmaddw.xyzw vf6, vf5, vf0w; nop; nop; sqc2 vf6, 0x0(p_stVtmp); } *(unsigned int*)&stV1.xX = *(unsigned int*)&stVtmp.xX; *(unsigned int*)&stV1.xY = *(unsigned int*)&stVtmp.xY; *(unsigned int*)&stV1.xZ = *(unsigned int*)&stVtmp.xZ;
-        _hWP->m_stVertex = stV1;
-    } else {
-        _hWP->m_stVertex = stV1;
-    }
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 820–825 */
 /* addr: 0x00282090  size: 200 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -2193,14 +1988,6 @@ void fn_v_RotateOneWayPointLinkedToOneSPO(WP_tdstWayPoint_* _hWP, MAT_tdstTransf
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_v_TranslateOneWaypointImmediateTeleportation(WP_tdstWayPoint_* _hWP, MTH3D_tdstVector_* _p_stTranslation)
-{
-    MTH3D_tdstVector_ stV1;
-    MTH3D_tdstVector_ stV2;
-    WP_fnv_WayPoint_ComputeLocation(_hWP, &stV1);
-    stV2.xX = stV1.xX + _p_stTranslation->xX; stV2.xY = stV1.xY + _p_stTranslation->xY; stV2.xZ = stV1.xZ + _p_stTranslation->xZ;
-    if (_hWP->m_hSuperObject) { MAT_tdstTransformation_ stInverse; MTH3D_tdstVector_ stLocal; MTH3D_tdstVector_* pLocal; MAT_fn_vInvert(&stInverse, _hWP->m_hSuperObject->hGlobalMatrix); pLocal = &stLocal; MAT_fn_vApplyOnVertex(pLocal, &stInverse, &stV2); _hWP->m_stVertex = *pLocal; } else { _hWP->m_stVertex = stV2; }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 807–817 */
 /* addr: 0x00282160  size: 80 bytes */
@@ -2215,14 +2002,6 @@ void fn_v_TranslateOneWaypointImmediateTeleportation(WP_tdstWayPoint_* _hWP, MTH
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_v_RotateOneSpoLinkedToOneSPO(HIE_tdstSuperObject_* _hLinkedSpo, MAT_tdstTransformation_* p_Transformation)
-{
-    MAT_tdstTransformation_* pGlobal = _hLinkedSpo->hGlobalMatrix;
-    MAT_fn_vCompose(pGlobal, p_Transformation, pGlobal);
-    MAT_fn_vNormalize(pGlobal);
-    _hLinkedSpo->lLastComputeFrame = HIE_gs_lCurrentFrame;
-    HIE_fn_vComputeNewRelativeMatrix(_hLinkedSpo);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 790–804 */
 /* addr: 0x002821b0  size: 208 bytes */
@@ -2240,16 +2019,6 @@ void fn_v_RotateOneSpoLinkedToOneSPO(HIE_tdstSuperObject_* _hLinkedSpo, MAT_tdst
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_v_TranslateOneSpoImmediateTeleportation(HIE_tdstSuperObject_* _hLinkedSpo, MTH3D_tdstVector_* _p_stTranslation)
-{
-    MTH3D_tdstVector_ stV1;
-    MTH3D_tdstVector_ stV2;
-    { MAT_tdstTransformation_* pGlobal = _hLinkedSpo->hGlobalMatrix; MTH3D_M_vCopyVector((MTH3D_tdstVector_*)&stV1, (MTH3D_tdstVector_*)&pGlobal->stTransformMatrix.stCol_3); }
-    if (g_bNoInterpolationForThisSPOMove)
-        GLIPS2_vSetNoInterpolationForSPO(_hLinkedSpo);
-    stV2.xX = stV1.xX + _p_stTranslation->xX; stV2.xY = stV1.xY + _p_stTranslation->xY; stV2.xZ = stV1.xZ + _p_stTranslation->xZ;
-    { MAT_tdstTransformation_* pGlobal = _hLinkedSpo->hGlobalMatrix; if (pGlobal->eType == MAT_eTransform_Identity) pGlobal->eType = MAT_eTransform_Translation; MTH3D_M_vCopyVector((MTH3D_tdstVector_*)&pGlobal->stTransformMatrix.stCol_3, (MTH3D_tdstVector_*)&stV2); pGlobal->stTransformMatrix.stCol_3.xW = 1.0f; _hLinkedSpo->lLastComputeFrame = HIE_gs_lCurrentFrame; HIE_fn_vComputeNewRelativeMatrix(_hLinkedSpo); }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 756–763 */
 /* addr: 0x00282280  size: 176 bytes */
@@ -2262,11 +2031,6 @@ void fn_v_TranslateOneSpoImmediateTeleportation(HIE_tdstSuperObject_* _hLinkedSp
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_v_SetRotationOneCharacterImmediateTeleportation(HIE_tdstSuperObject_* _hPerso, MTH3D_tdstVector_* _p_stI, MTH3D_tdstVector_* _p_stJ, MTH3D_tdstVector_* _p_stK)
-{
-    DNM_stDynamics* p_stDynamics;
-    if (_hPerso->hLinkedObject.p_stCharacter->h_Dynam) { p_stDynamics = fn_p_stDynamGetDynamics(_hPerso->hLinkedObject.p_stCharacter->h_Dynam); MAT_fn_vSetRotationVectors(_hPerso->hGlobalMatrix, _p_stI, _p_stJ, _p_stK); HIE_fn_vComputeNewRelativeMatrix(_hPerso); fn_v_SetRotationMechanicsImmediateTeleportation(p_stDynamics, _hPerso, _p_stI, _p_stJ, _p_stK); } else { MAT_fn_vSetRotationVectors(_hPerso->hGlobalMatrix, _p_stI, _p_stJ, _p_stK); HIE_fn_vComputeNewRelativeMatrix(_hPerso); }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 707–730 */
 /* addr: 0x00282330  size: 188 bytes */
@@ -2284,17 +2048,6 @@ void fn_v_SetRotationOneCharacterImmediateTeleportation(HIE_tdstSuperObject_* _h
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_v_SetRotationMechanicsImmediateTeleportation(DNM_stDynamics* _p_stDynamic, HIE_tdstSuperObject_* _p_stSpo, MTH3D_tdstVector_* _p_stI, MTH3D_tdstVector_* _p_stJ, MTH3D_tdstVector_* _p_stK)
-{
-    if (!((_p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x80) ? 1 : 0)) {
-        MAT_fn_vSetRotationVectors(&_p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix, _p_stI, _p_stJ, _p_stK);
-        MAT_fn_vSetRotationVectors(&_p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix, _p_stI, _p_stJ, _p_stK);
-        if ((_p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0) {
-            MAT_fn_vSetRotationVectors(&_p_stDynamic->m_tdstDynamicsComplexBlock.m_stAbsolutePreviousMatrix, _p_stI, _p_stJ, _p_stK);
-            MAT_fn_vSetRotationVectors(&_p_stDynamic->m_tdstDynamicsComplexBlock.m_stPrevPreviousMatrix, _p_stI, _p_stJ, _p_stK);
-        }
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 624–626 */
 /* addr: 0x002823f0  size: 68 bytes */
@@ -2305,12 +2058,6 @@ void fn_v_SetRotationMechanicsImmediateTeleportation(DNM_stDynamics* _p_stDynami
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_v_SetOneSpoImmediateTeleportation(HIE_tdstSuperObject_* _hLinkedSpo, MTH3D_tdstVector_* _p_stTranslation)
-{
-    unsigned int* pMatrix = (unsigned int*)_hLinkedSpo->hGlobalMatrix; if (pMatrix[0] == MAT_eTransform_Identity) pMatrix[0] = MAT_eTransform_Translation; pMatrix[16] = ((unsigned int*)_p_stTranslation)[0]; pMatrix[17] = ((unsigned int*)_p_stTranslation)[1]; pMatrix[18] = ((unsigned int*)_p_stTranslation)[2]; pMatrix[19] = 0x3f800000;
-    _hLinkedSpo->lLastComputeFrame = HIE_gs_lCurrentFrame;
-    HIE_fn_vComputeNewRelativeMatrix(_hLinkedSpo);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 607–616 */
 /* addr: 0x00282440  size: 72 bytes */
@@ -2326,18 +2073,6 @@ void fn_v_SetOneSpoImmediateTeleportation(HIE_tdstSuperObject_* _hLinkedSpo, MTH
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_b_ObjectAlreadyTreatedWithSPO(int _iNbOfTreatedObjects, void** _p_a_TreatedObjects, void* hObject)
-{
-    int n_obj;
-    int bAlreadyDone;
-    bAlreadyDone = 0;
-    for (n_obj = 0; !bAlreadyDone && n_obj < _iNbOfTreatedObjects; n_obj++) {
-        if (hObject == _p_a_TreatedObjects[n_obj]) {
-            bAlreadyDone = 1;
-        }
-    }
-    return bAlreadyDone;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 576–592 */
 /* addr: 0x00282490  size: 88 bytes */
@@ -2355,17 +2090,6 @@ int fn_b_ObjectAlreadyTreatedWithSPO(int _iNbOfTreatedObjects, void** _p_a_Treat
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstSuperObjectLinks_* SOL_SearchSOLFromSPO(HIE_tdstSuperObject_* _hSPO)
-{
-    tdstSuperObjectLinks_* hSOL;
-    unsigned int i;
-    for (i = 0; i < g_stEngineStructure.ulNumberOfSOLLoaded; i++) {
-        hSOL = g_stEngineStructure.p_hSOL[i];
-        if (hSOL->h_SPORef == _hSPO)
-            return hSOL;
-    }
-    return NULL;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 226–241 */
 /* addr: 0x002824f0  size: 208 bytes */
@@ -2388,21 +2112,6 @@ tdstSuperObjectLinks_* SOL_SearchSOLFromSPO(HIE_tdstSuperObject_* _hSPO)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GAM_fn_vDeleteObjetFromSOLinks(tdstSuperObjectLinks_* _hSOL, unsigned int ulPos)
-{
-    unsigned int ul;
-    unsigned int* p_ulNbLinkedObjects;
-    p_ulNbLinkedObjects = &_hSOL->ulNbLinkedObjects;
-    if (ulPos) {
-        for (ul = ulPos; ul < *p_ulNbLinkedObjects; ul++) {
-            ((void**)_hSOL->LinkedObj)[ul - 1] = ((void**)_hSOL->LinkedObj)[ul];
-            _hSOL->eTypeOfLinkedObj[ul - 1] = _hSOL->eTypeOfLinkedObj[ul];
-            _hSOL->ePersistenceOfLinkedObj[ul - 1] = _hSOL->ePersistenceOfLinkedObj[ul];
-            MAT_M_vCopyMatrix(&_hSOL->POS_InitOfLinkedObj[ul - 1], &_hSOL->POS_InitOfLinkedObj[ul]);
-        }
-        (*p_ulNbLinkedObjects)--;
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 190–216 */
 /* addr: 0x002825c0  size: 416 bytes */
@@ -2427,33 +2136,6 @@ void GAM_fn_vDeleteObjetFromSOLinks(tdstSuperObjectLinks_* _hSOL, unsigned int u
  */
 unsigned int GAM_AlreadyReferencedInSOLinks(tdstSuperObjectLinks_* _hSOL, void* _pLinkedObj);
 void GAM_fn_vReAllocSOL(tdstSuperObjectLinks_* _hSOL, unsigned int Increment);
-void GAM_fn_vAddObjetToSOLinks(tdstSuperObjectLinks_* _hSOL, void* _pLinkedObj, tdeSOL_ObjType_ _eType, MAT_tdstTransformation_* p_MatrixInit, tdeSOL_ObjPersistence_ _ePersistence)
-{
-    unsigned int* p_ulNbLinkedObjects;
-    unsigned int i;
-    unsigned int ulFound;
-
-    p_ulNbLinkedObjects = &_hSOL->ulNbLinkedObjects;
-    if (GAM_AlreadyReferencedInSOLinks(_hSOL, _pLinkedObj))
-        return;
-    switch (_ePersistence)
-    {
-    case eSOL_Persistent:
-        GAM_fn_vReAllocSOL(_hSOL, 1);
-        break;
-    case eSOL_NonPersistent:
-        if (_hSOL->ulNbLinksAllocated <= _hSOL->ulNbLinkedObjects)
-            return;
-        (*p_ulNbLinkedObjects)++;
-        break;
-    default:
-        return;
-    }
-    (((void**)_hSOL->LinkedObj) - 1)[*p_ulNbLinkedObjects] = _pLinkedObj;
-    (_hSOL->eTypeOfLinkedObj - 1)[*p_ulNbLinkedObjects] = _eType;
-    (_hSOL->ePersistenceOfLinkedObj - 1)[*p_ulNbLinkedObjects] = _ePersistence;
-    MAT_M_vCopyMatrix(&_hSOL->POS_InitOfLinkedObj[*p_ulNbLinkedObjects - 1], p_MatrixInit);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 178–184 */
 /* addr: 0x00282760  size: 76 bytes */
@@ -2467,15 +2149,6 @@ void GAM_fn_vAddObjetToSOLinks(tdstSuperObjectLinks_* _hSOL, void* _pLinkedObj, 
  * compare a candidate object's line table as an extra checkpoint.
  */
 #pragma auto_inline on
-unsigned int GAM_AlreadyReferencedInSOLinks(tdstSuperObjectLinks_* _hSOL, void* _pLinkedObj)
-{
-    unsigned int ul;
-    for (ul = 0; ul < _hSOL->ulNbLinkedObjects; ul++) {
-        if (((void**)_hSOL->LinkedObj)[ul] == _pLinkedObj)
-            return ul + 1;
-    }
-    return 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 133–168 */
 /* addr: 0x002827b0  size: 460 bytes */
@@ -2516,6 +2189,69 @@ unsigned int GAM_AlreadyReferencedInSOLinks(tdstSuperObjectLinks_* _hSOL, void* 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 56–67 */
+/* addr: 0x00282980  size: 132 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 56
+ *   +0x0018 -> line 58
+ *   +0x0024 -> line 62
+ *   +0x0038 -> line 63
+ *   +0x003c -> line 62
+ *   +0x0058 -> line 63
+ *   +0x0064 -> line 65
+ *   +0x0078 -> line 66
+ *   +0x007c -> line 67
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+#pragma optimize_for_size off
+
+#pragma optimize_for_size reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 42–50 */
+/* addr: 0x00282a10  size: 144 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 42
+ *   +0x0010 -> line 44
+ *   +0x0020 -> line 47
+ *   +0x0024 -> line 44
+ *   +0x0028 -> line 47
+ *   +0x007c -> line 48
+ *   +0x0088 -> line 50
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+#pragma auto_inline reset
+#pragma auto_inline on
+void GAM_fn_vAddMovedOneToTable(HIE_tdstSuperObject_* _hSpo, MTH3D_tdstVector_* _p_stMove)
+{
+    if (GAM_g_ucNbMovedOnes < 150) {
+        GAM_a_hSolTableOfMovedOnesInTrame[GAM_g_ucNbMovedOnes] = (int)_hSpo;
+        MTH3D_M_vCopyVector(&GAM_a_stSolTableOfMoves[GAM_g_ucNbMovedOnes], _p_stMove);
+        GAM_g_ucNbMovedOnes++;
+    }
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+#pragma optimize_for_size off
+unsigned char GAM_fn_bIsMovedOne(HIE_tdstSuperObject_* _hSpo, MTH3D_tdstVector_* _p_stMove)
+{
+    unsigned char i;
+    for (i = 0; i < GAM_g_ucNbMovedOnes; i++) {
+        if ((int)_hSpo == GAM_a_hSolTableOfMovedOnesInTrame[i]) {
+            MTH3D_M_vCopyVector(_p_stMove, &GAM_a_stSolTableOfMoves[i]);
+            return 1;
+        }
+    }
+    return 0;
+}
+#pragma optimize_for_size reset
+#pragma auto_inline reset
+
+#pragma auto_inline on
 void GAM_fn_vReAllocSOL(tdstSuperObjectLinks_* _hSOL, unsigned int Increment)
 {
     unsigned int* p_ulNbLinkedObjects;
@@ -2548,54 +2284,381 @@ void GAM_fn_vReAllocSOL(tdstSuperObjectLinks_* _hSOL, unsigned int Increment)
     *p_ulNbLinkedObjects += Increment;
     *p_ulNbLinksAllocated += Increment;
 }
+#pragma auto_inline reset
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 56–67 */
-/* addr: 0x00282980  size: 132 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 56
- *   +0x0018 -> line 58
- *   +0x0024 -> line 62
- *   +0x0038 -> line 63
- *   +0x003c -> line 62
- *   +0x0058 -> line 63
- *   +0x0064 -> line 65
- *   +0x0078 -> line 66
- *   +0x007c -> line 67
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-#pragma optimize_for_size off
-unsigned char GAM_fn_bIsMovedOne(HIE_tdstSuperObject_* _hSpo, MTH3D_tdstVector_* _p_stMove)
+#pragma auto_inline on
+unsigned int GAM_AlreadyReferencedInSOLinks(tdstSuperObjectLinks_* _hSOL, void* _pLinkedObj)
 {
-    unsigned char i;
-    for (i = 0; i < GAM_g_ucNbMovedOnes; i++) {
-        if ((int)_hSpo == GAM_a_hSolTableOfMovedOnesInTrame[i]) {
-            MTH3D_M_vCopyVector(_p_stMove, &GAM_a_stSolTableOfMoves[i]);
-            return 1;
-        }
+    unsigned int ul;
+    for (ul = 0; ul < _hSOL->ulNbLinkedObjects; ul++) {
+        if (((void**)_hSOL->LinkedObj)[ul] == _pLinkedObj)
+            return ul + 1;
     }
     return 0;
 }
-#pragma optimize_for_size reset
+#pragma auto_inline reset
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 42–50 */
-/* addr: 0x00282a10  size: 144 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 42
- *   +0x0010 -> line 44
- *   +0x0020 -> line 47
- *   +0x0024 -> line 44
- *   +0x0028 -> line 47
- *   +0x007c -> line 48
- *   +0x0088 -> line 50
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GAM_fn_vAddMovedOneToTable(HIE_tdstSuperObject_* _hSpo, MTH3D_tdstVector_* _p_stMove)
+void GAM_fn_vAddObjetToSOLinks(tdstSuperObjectLinks_* _hSOL, void* _pLinkedObj, tdeSOL_ObjType_ _eType, MAT_tdstTransformation_* p_MatrixInit, tdeSOL_ObjPersistence_ _ePersistence)
 {
-    if (GAM_g_ucNbMovedOnes < 150) {
-        GAM_a_hSolTableOfMovedOnesInTrame[GAM_g_ucNbMovedOnes] = (int)_hSpo;
-        MTH3D_M_vCopyVector(&GAM_a_stSolTableOfMoves[GAM_g_ucNbMovedOnes], _p_stMove);
-        GAM_g_ucNbMovedOnes++;
+    unsigned int* p_ulNbLinkedObjects;
+    unsigned int i;
+    unsigned int ulFound;
+
+    p_ulNbLinkedObjects = &_hSOL->ulNbLinkedObjects;
+    if (GAM_AlreadyReferencedInSOLinks(_hSOL, _pLinkedObj))
+        return;
+    switch (_ePersistence)
+    {
+    case eSOL_Persistent:
+        GAM_fn_vReAllocSOL(_hSOL, 1);
+        break;
+    case eSOL_NonPersistent:
+        if (_hSOL->ulNbLinksAllocated <= _hSOL->ulNbLinkedObjects)
+            return;
+        (*p_ulNbLinkedObjects)++;
+        break;
+    default:
+        return;
     }
+    (((void**)_hSOL->LinkedObj) - 1)[*p_ulNbLinkedObjects] = _pLinkedObj;
+    (_hSOL->eTypeOfLinkedObj - 1)[*p_ulNbLinkedObjects] = _eType;
+    (_hSOL->ePersistenceOfLinkedObj - 1)[*p_ulNbLinkedObjects] = _ePersistence;
+    MAT_M_vCopyMatrix(&_hSOL->POS_InitOfLinkedObj[*p_ulNbLinkedObjects - 1], p_MatrixInit);
+}
+
+void GAM_fn_vDeleteObjetFromSOLinks(tdstSuperObjectLinks_* _hSOL, unsigned int ulPos)
+{
+    unsigned int ul;
+    unsigned int* p_ulNbLinkedObjects;
+    p_ulNbLinkedObjects = &_hSOL->ulNbLinkedObjects;
+    if (ulPos) {
+        for (ul = ulPos; ul < *p_ulNbLinkedObjects; ul++) {
+            ((void**)_hSOL->LinkedObj)[ul - 1] = ((void**)_hSOL->LinkedObj)[ul];
+            _hSOL->eTypeOfLinkedObj[ul - 1] = _hSOL->eTypeOfLinkedObj[ul];
+            _hSOL->ePersistenceOfLinkedObj[ul - 1] = _hSOL->ePersistenceOfLinkedObj[ul];
+            MAT_M_vCopyMatrix(&_hSOL->POS_InitOfLinkedObj[ul - 1], &_hSOL->POS_InitOfLinkedObj[ul]);
+        }
+        (*p_ulNbLinkedObjects)--;
+    }
+}
+
+tdstSuperObjectLinks_* SOL_SearchSOLFromSPO(HIE_tdstSuperObject_* _hSPO)
+{
+    tdstSuperObjectLinks_* hSOL;
+    unsigned int i;
+    for (i = 0; i < g_stEngineStructure.ulNumberOfSOLLoaded; i++) {
+        hSOL = g_stEngineStructure.p_hSOL[i];
+        if (hSOL->h_SPORef == _hSPO)
+            return hSOL;
+    }
+    return NULL;
+}
+
+int fn_b_ObjectAlreadyTreatedWithSPO(int _iNbOfTreatedObjects, void** _p_a_TreatedObjects, void* hObject)
+{
+    int n_obj;
+    int bAlreadyDone;
+    bAlreadyDone = 0;
+    for (n_obj = 0; !bAlreadyDone && n_obj < _iNbOfTreatedObjects; n_obj++) {
+        if (hObject == _p_a_TreatedObjects[n_obj]) {
+            bAlreadyDone = 1;
+        }
+    }
+    return bAlreadyDone;
+}
+
+void fn_v_SetOneSpoImmediateTeleportation(HIE_tdstSuperObject_* _hLinkedSpo, MTH3D_tdstVector_* _p_stTranslation)
+{
+    unsigned int* pMatrix = (unsigned int*)_hLinkedSpo->hGlobalMatrix; if (pMatrix[0] == MAT_eTransform_Identity) pMatrix[0] = MAT_eTransform_Translation; pMatrix[16] = ((unsigned int*)_p_stTranslation)[0]; pMatrix[17] = ((unsigned int*)_p_stTranslation)[1]; pMatrix[18] = ((unsigned int*)_p_stTranslation)[2]; pMatrix[19] = 0x3f800000;
+    _hLinkedSpo->lLastComputeFrame = HIE_gs_lCurrentFrame;
+    HIE_fn_vComputeNewRelativeMatrix(_hLinkedSpo);
+}
+
+void fn_v_SetRotationMechanicsImmediateTeleportation(DNM_stDynamics* _p_stDynamic, HIE_tdstSuperObject_* _p_stSpo, MTH3D_tdstVector_* _p_stI, MTH3D_tdstVector_* _p_stJ, MTH3D_tdstVector_* _p_stK)
+{
+    if (!((_p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x80) ? 1 : 0)) {
+        MAT_fn_vSetRotationVectors(&_p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix, _p_stI, _p_stJ, _p_stK);
+        MAT_fn_vSetRotationVectors(&_p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix, _p_stI, _p_stJ, _p_stK);
+        if ((_p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0) {
+            MAT_fn_vSetRotationVectors(&_p_stDynamic->m_tdstDynamicsComplexBlock.m_stAbsolutePreviousMatrix, _p_stI, _p_stJ, _p_stK);
+            MAT_fn_vSetRotationVectors(&_p_stDynamic->m_tdstDynamicsComplexBlock.m_stPrevPreviousMatrix, _p_stI, _p_stJ, _p_stK);
+        }
+    }
+}
+
+void fn_v_SetRotationOneCharacterImmediateTeleportation(HIE_tdstSuperObject_* _hPerso, MTH3D_tdstVector_* _p_stI, MTH3D_tdstVector_* _p_stJ, MTH3D_tdstVector_* _p_stK)
+{
+    DNM_stDynamics* p_stDynamics;
+    if (_hPerso->hLinkedObject.p_stCharacter->h_Dynam) { p_stDynamics = fn_p_stDynamGetDynamics(_hPerso->hLinkedObject.p_stCharacter->h_Dynam); MAT_fn_vSetRotationVectors(_hPerso->hGlobalMatrix, _p_stI, _p_stJ, _p_stK); HIE_fn_vComputeNewRelativeMatrix(_hPerso); fn_v_SetRotationMechanicsImmediateTeleportation(p_stDynamics, _hPerso, _p_stI, _p_stJ, _p_stK); } else { MAT_fn_vSetRotationVectors(_hPerso->hGlobalMatrix, _p_stI, _p_stJ, _p_stK); HIE_fn_vComputeNewRelativeMatrix(_hPerso); }
+}
+
+void fn_v_TranslateOneSpoImmediateTeleportation(HIE_tdstSuperObject_* _hLinkedSpo, MTH3D_tdstVector_* _p_stTranslation)
+{
+    MTH3D_tdstVector_ stV1;
+    MTH3D_tdstVector_ stV2;
+    { MAT_tdstTransformation_* pGlobal = _hLinkedSpo->hGlobalMatrix; MTH3D_M_vCopyVector((MTH3D_tdstVector_*)&stV1, (MTH3D_tdstVector_*)&pGlobal->stTransformMatrix.stCol_3); }
+    if (g_bNoInterpolationForThisSPOMove)
+        GLIPS2_vSetNoInterpolationForSPO(_hLinkedSpo);
+    stV2.xX = stV1.xX + _p_stTranslation->xX; stV2.xY = stV1.xY + _p_stTranslation->xY; stV2.xZ = stV1.xZ + _p_stTranslation->xZ;
+    { MAT_tdstTransformation_* pGlobal = _hLinkedSpo->hGlobalMatrix; if (pGlobal->eType == MAT_eTransform_Identity) pGlobal->eType = MAT_eTransform_Translation; MTH3D_M_vCopyVector((MTH3D_tdstVector_*)&pGlobal->stTransformMatrix.stCol_3, (MTH3D_tdstVector_*)&stV2); pGlobal->stTransformMatrix.stCol_3.xW = 1.0f; _hLinkedSpo->lLastComputeFrame = HIE_gs_lCurrentFrame; HIE_fn_vComputeNewRelativeMatrix(_hLinkedSpo); }
+}
+
+void fn_v_RotateOneSpoLinkedToOneSPO(HIE_tdstSuperObject_* _hLinkedSpo, MAT_tdstTransformation_* p_Transformation)
+{
+    MAT_tdstTransformation_* pGlobal = _hLinkedSpo->hGlobalMatrix;
+    MAT_fn_vCompose(pGlobal, p_Transformation, pGlobal);
+    MAT_fn_vNormalize(pGlobal);
+    _hLinkedSpo->lLastComputeFrame = HIE_gs_lCurrentFrame;
+    HIE_fn_vComputeNewRelativeMatrix(_hLinkedSpo);
+}
+
+void fn_v_TranslateOneWaypointImmediateTeleportation(WP_tdstWayPoint_* _hWP, MTH3D_tdstVector_* _p_stTranslation)
+{
+    MTH3D_tdstVector_ stV1;
+    MTH3D_tdstVector_ stV2;
+    WP_fnv_WayPoint_ComputeLocation(_hWP, &stV1);
+    stV2.xX = stV1.xX + _p_stTranslation->xX; stV2.xY = stV1.xY + _p_stTranslation->xY; stV2.xZ = stV1.xZ + _p_stTranslation->xZ;
+    if (_hWP->m_hSuperObject) { MAT_tdstTransformation_ stInverse; MTH3D_tdstVector_ stLocal; MTH3D_tdstVector_* pLocal; MAT_fn_vInvert(&stInverse, _hWP->m_hSuperObject->hGlobalMatrix); pLocal = &stLocal; MAT_fn_vApplyOnVertex(pLocal, &stInverse, &stV2); _hWP->m_stVertex = *pLocal; } else { _hWP->m_stVertex = stV2; }
+}
+
+void fn_v_RotateOneWayPointLinkedToOneSPO(WP_tdstWayPoint_* _hWP, MAT_tdstTransformation_* p_Transformation)
+{
+    MAT_tdstTransformation_ stTemp;
+    MTH3D_tdstVector_ stV1;
+    WP_fnv_WayPoint_ComputeLocation(_hWP, &stV1);
+    MAT_fn_vSetIdentity(&stTemp);
+    if (stTemp.eType == MAT_eTransform_Identity) stTemp.eType = MAT_eTransform_Translation;
+    MTH3D_M_vCopyVector((MTH3D_tdstVector_*)&stTemp.stTransformMatrix.stCol_3, &stV1); stTemp.stTransformMatrix.stCol_3.xW = 1.0f;
+    MAT_fn_vCompose(&stTemp, p_Transformation, &stTemp);
+    MTH3D_M_vCopyVector(&stV1, (MTH3D_tdstVector_*)&stTemp.stTransformMatrix.stCol_3);
+    if (_hWP->m_hSuperObject) {
+        MAT_tdstTransformation_ stInverse;
+        MTH4D_tdstVector_ stVtmp;
+        MTH4D_tdstMatrix_* p_stMatrix;
+        MTH4D_tdstVector_* p_stVtmp;
+        MAT_fn_vInvert(&stInverse, _hWP->m_hSuperObject->hGlobalMatrix);
+        p_stVtmp = &stVtmp; p_stMatrix = &stInverse.stTransformMatrix; *(unsigned int*)&stVtmp.xX = *(unsigned int*)&stV1.xX; *(unsigned int*)&stVtmp.xY = *(unsigned int*)&stV1.xY; *(unsigned int*)&stVtmp.xZ = *(unsigned int*)&stV1.xZ; asm { lqc2 vf1, 0x0(p_stVtmp); lqc2 vf2, 0x0(p_stMatrix); lqc2 vf3, 0x10(p_stMatrix); lqc2 vf4, 0x20(p_stMatrix); lqc2 vf5, 0x30(p_stMatrix); vmulax.xyzw ACC, vf2, vf1x; vmadday.xyzw ACC, vf3, vf1y; vmaddaz.xyzw ACC, vf4, vf1z; vmaddw.xyzw vf6, vf5, vf0w; nop; nop; sqc2 vf6, 0x0(p_stVtmp); } *(unsigned int*)&stV1.xX = *(unsigned int*)&stVtmp.xX; *(unsigned int*)&stV1.xY = *(unsigned int*)&stVtmp.xY; *(unsigned int*)&stV1.xZ = *(unsigned int*)&stVtmp.xZ;
+        _hWP->m_stVertex = stV1;
+    } else {
+        _hWP->m_stVertex = stV1;
+    }
+}
+
+void fn_v_TranslateMechanicsImmediateTeleportation(DNM_stDynamics* _p_stDynamic, MTH3D_tdstVector_* _p_stVector)
+{
+    MAT_tdstTransformation_* hCurrentMatrix;
+    MAT_tdstTransformation_* hPreviousMatrix;
+    MAT_tdstTransformation_* hAbsolutePreviousMatrix;
+    MAT_tdstTransformation_* hPrevPreviousMatrix;
+    MTH3D_tdstVector_ tmpVector;
+
+    if (!((_p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x80) ? 1 : 0)) {
+        hCurrentMatrix = &_p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix;
+        MAT_M_vGetTranslation(hCurrentMatrix, &tmpVector);
+        MTH3D_M_vAddVector(&tmpVector, &tmpVector, _p_stVector);
+        MAT_M_vSetTranslation(hCurrentMatrix, &tmpVector);
+
+        hPreviousMatrix = &_p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix;
+        MAT_M_vGetTranslation(hPreviousMatrix, &tmpVector);
+        MTH3D_M_vAddVector(&tmpVector, &tmpVector, _p_stVector);
+        MAT_M_vSetTranslation(hPreviousMatrix, &tmpVector);
+
+        if ((_p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0) {
+            hAbsolutePreviousMatrix = &_p_stDynamic->m_tdstDynamicsComplexBlock.m_stAbsolutePreviousMatrix;
+            MAT_M_vGetTranslation(hAbsolutePreviousMatrix, &tmpVector);
+            MTH3D_M_vAddVector(&tmpVector, &tmpVector, _p_stVector);
+            MAT_M_vSetTranslation(hAbsolutePreviousMatrix, &tmpVector);
+
+            hPrevPreviousMatrix = &_p_stDynamic->m_tdstDynamicsComplexBlock.m_stPrevPreviousMatrix;
+            MAT_M_vGetTranslation(hPrevPreviousMatrix, &tmpVector);
+            MTH3D_M_vAddVector(&tmpVector, &tmpVector, _p_stVector);
+            MAT_M_vSetTranslation(hPrevPreviousMatrix, &tmpVector);
+        }
+    }
+}
+
+void fn_v_RotateMechanicsLinkedToOneSPO(DNM_stDynamics* _p_stDynamic, MAT_tdstTransformation_* _p_Transformation)
+{
+    MAT_tdstTransformation_* hCurrentMatrix;
+    MAT_tdstTransformation_* hAbsolutePreviousMatrix;
+    MAT_tdstTransformation_* hPrevPreviousMatrix;
+    MAT_tdstTransformation_* hPreviousMatrix;
+    if (!((_p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x80) ? 1 : 0)) {
+        hCurrentMatrix = &_p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix;
+        MAT_fn_vCompose(hCurrentMatrix, _p_Transformation, hCurrentMatrix);
+        MAT_fn_vNormalize(hCurrentMatrix);
+        hPreviousMatrix = &_p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix;
+        /* Not original source: redundant block and re-assignment found by the permuter. */
+        if (1) {
+        MAT_fn_vCompose(hPreviousMatrix, _p_Transformation, hPreviousMatrix);
+        MAT_fn_vNormalize(hPreviousMatrix);
+        hAbsolutePreviousMatrix = &_p_stDynamic->m_tdstDynamicsComplexBlock.m_stAbsolutePreviousMatrix;
+        }
+        if ((_p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0) {
+            hAbsolutePreviousMatrix = &_p_stDynamic->m_tdstDynamicsComplexBlock.m_stAbsolutePreviousMatrix;
+            MAT_fn_vCompose(hAbsolutePreviousMatrix, _p_Transformation, hAbsolutePreviousMatrix);
+            MAT_fn_vNormalize(hAbsolutePreviousMatrix);
+            hPrevPreviousMatrix = &_p_stDynamic->m_tdstDynamicsComplexBlock.m_stPrevPreviousMatrix;
+            MAT_fn_vCompose(hPrevPreviousMatrix, _p_Transformation, hPrevPreviousMatrix);
+            MAT_fn_vNormalize(hPrevPreviousMatrix);
+        }
+    }
+}
+
+void fn_v_TranslateOneCharacterWithMechanicsImmediateTeleportation(HIE_tdstSuperObject_* _hPerso, MTH3D_tdstVector_* _p_stTranslation)
+{
+    DNM_stDynamics* p_stDynamics;
+    MTH3D_tdstVector_ stCoordinatesBefore;
+    MTH3D_tdstVector_ stCoordinatesAfter;
+    p_stDynamics = fn_p_stDynamGetDynamics(_hPerso->hLinkedObject.p_stCharacter->h_Dynam);
+    { MAT_tdstTransformation_* pGlobal = _hPerso->hGlobalMatrix;
+    MAT_M_vGetTranslation(pGlobal, (MTH3D_tdstVector_*)&stCoordinatesBefore);
+    MTH3D_M_vAddVector(&stCoordinatesAfter, &stCoordinatesBefore, _p_stTranslation);
+    MAT_M_vSetTranslation(pGlobal, (MTH3D_tdstVector_*)&stCoordinatesAfter);
+    }
+    _hPerso->lLastComputeFrame = HIE_gs_lCurrentFrame;
+    HIE_fn_vComputeNewRelativeMatrix(_hPerso);
+    fn_v_TranslateMechanicsImmediateTeleportation(p_stDynamics, _p_stTranslation);
+}
+
+void fn_v_TranslateOneCharacterImmediateTeleportation(HIE_tdstSuperObject_* _hPerso, MTH3D_tdstVector_* _p_stTranslation)
+{
+    DNM_stDynamics* p_stDynamics;
+    if (_hPerso->hLinkedObject.p_stCharacter->h_Dynam) {
+        MTH3D_tdstVector_ stCoordinatesAfter; MTH3D_tdstVector_ stCoordinatesBefore; p_stDynamics = fn_p_stDynamGetDynamics(_hPerso->hLinkedObject.p_stCharacter->h_Dynam); { MAT_tdstTransformation_* pGlobal = _hPerso->hGlobalMatrix; MTH3D_M_vCopyVector((MTH3D_tdstVector_*)&stCoordinatesBefore, (MTH3D_tdstVector_*)&pGlobal->stTransformMatrix.stCol_3); stCoordinatesAfter.xX = stCoordinatesBefore.xX + _p_stTranslation->xX; stCoordinatesAfter.xY = stCoordinatesBefore.xY + _p_stTranslation->xY; stCoordinatesAfter.xZ = stCoordinatesBefore.xZ + _p_stTranslation->xZ; if (pGlobal->eType == MAT_eTransform_Identity) pGlobal->eType = MAT_eTransform_Translation; MTH3D_M_vCopyVector((MTH3D_tdstVector_*)&pGlobal->stTransformMatrix.stCol_3, (MTH3D_tdstVector_*)&stCoordinatesAfter); pGlobal->stTransformMatrix.stCol_3.xW = 1.0f; } _hPerso->lLastComputeFrame = HIE_gs_lCurrentFrame; HIE_fn_vComputeNewRelativeMatrix(_hPerso); fn_v_TranslateMechanicsImmediateTeleportation(p_stDynamics, _p_stTranslation); }
+    else {
+        MTH3D_tdstVector_ stCoordinatesAfter; MTH3D_tdstVector_ stCoordinatesBefore; { MAT_tdstTransformation_* pGlobal = _hPerso->hGlobalMatrix; MTH3D_M_vCopyVector((MTH3D_tdstVector_*)&stCoordinatesBefore, (MTH3D_tdstVector_*)&pGlobal->stTransformMatrix.stCol_3); stCoordinatesAfter.xX = stCoordinatesBefore.xX + _p_stTranslation->xX; stCoordinatesAfter.xY = stCoordinatesBefore.xY + _p_stTranslation->xY; stCoordinatesAfter.xZ = stCoordinatesBefore.xZ + _p_stTranslation->xZ; if (pGlobal->eType == MAT_eTransform_Identity) pGlobal->eType = MAT_eTransform_Translation; MTH3D_M_vCopyVector((MTH3D_tdstVector_*)&pGlobal->stTransformMatrix.stCol_3, (MTH3D_tdstVector_*)&stCoordinatesAfter); pGlobal->stTransformMatrix.stCol_3.xW = 1.0f; } _hPerso->lLastComputeFrame = HIE_gs_lCurrentFrame; HIE_fn_vComputeNewRelativeMatrix(_hPerso);
+    }
+}
+
+void fn_v_RotateOneCharacterLinkedToOneSPO(HIE_tdstSuperObject_* _hPerso, MAT_tdstTransformation_* _p_Transformation)
+{
+    if (_hPerso->hLinkedObject.p_stCharacter->h_Dynam) {
+        DNM_stDynamics* pDynamic = fn_p_stDynamGetDynamics(_hPerso->hLinkedObject.p_stCharacter->h_Dynam); MAT_tdstTransformation_* pGlobal = _hPerso->hGlobalMatrix; MAT_fn_vCompose(pGlobal, _p_Transformation, pGlobal); MAT_fn_vNormalize(pGlobal); _hPerso->lLastComputeFrame = HIE_gs_lCurrentFrame; HIE_fn_vComputeNewRelativeMatrix(_hPerso); fn_v_RotateMechanicsLinkedToOneSPO(pDynamic, _p_Transformation); } else {
+        MAT_tdstTransformation_* pGlobal = _hPerso->hGlobalMatrix; MAT_fn_vCompose(pGlobal, _p_Transformation, pGlobal); MAT_fn_vNormalize(pGlobal); _hPerso->lLastComputeFrame = HIE_gs_lCurrentFrame; HIE_fn_vComputeNewRelativeMatrix(_hPerso);
+    }
+}
+
+void fn_v_TranslateSOL(tdstSuperObjectLinks_* _hSOL, MTH3D_tdstVector_* _p_stTranslation)
+{
+    MAT_tdstTransformation_ stInverse;
+    MTH4D_tdstVector_ stV1;
+    MTH4D_tdstVector_ stBefore;
+    MTH4D_tdstVector_ stV1Spo;
+    MTH4D_tdstVector_ stBeforeSpo;
+    MTH4D_tdstVector_ stV1Way;
+    MTH4D_tdstVector_ stWayLoc;
+    MTH4D_tdstVector_ stV1Char;
+    MTH4D_tdstVector_ stBeforeChar;
+    MTH3D_tdstVector_ stLocalWay;
+    HIE_tdstSuperObject_* hSuperObj;
+    HIE_tdstSuperObject_* hCharacter;
+    MAT_tdstTransformation_* p_stGlobalMatrix;
+    unsigned int ul;
+    hSuperObj = _hSOL->h_SPORef; { MAT_tdstTransformation_* pGlobal = hSuperObj->hGlobalMatrix; MTH3D_M_vCopyVector((MTH3D_tdstVector_*)&stBefore, (MTH3D_tdstVector_*)&pGlobal->stTransformMatrix.stCol_3); } if (g_bNoInterpolationForThisSPOMove) GLIPS2_vSetNoInterpolationForSPO(hSuperObj); stV1.xX = stBefore.xX + _p_stTranslation->xX; stV1.xY = stBefore.xY + _p_stTranslation->xY; stV1.xZ = stBefore.xZ + _p_stTranslation->xZ; { MAT_tdstTransformation_* pGlobal = hSuperObj->hGlobalMatrix; if (pGlobal->eType == MAT_eTransform_Identity) pGlobal->eType = MAT_eTransform_Translation; MTH4D_fn_vCopy3DTo4DVector(&pGlobal->stTransformMatrix.stCol_3, (MTH3D_tdstVector_*)&stV1); } hSuperObj->lLastComputeFrame = HIE_gs_lCurrentFrame; HIE_fn_vComputeNewRelativeMatrix(hSuperObj);
+    for (ul = 0; ul < _hSOL->ulNbLinkedObjects; ul++) {
+        switch (_hSOL->eTypeOfLinkedObj[ul]) {
+        case eSOL_SPO:
+            hSuperObj = ((HIE_tdstSuperObject_*)((void**)_hSOL->LinkedObj)[ul]); { MAT_tdstTransformation_* pGlobal = hSuperObj->hGlobalMatrix; MTH3D_M_vCopyVector((MTH3D_tdstVector_*)&stBeforeSpo, (MTH3D_tdstVector_*)&pGlobal->stTransformMatrix.stCol_3); } if (g_bNoInterpolationForThisSPOMove) GLIPS2_vSetNoInterpolationForSPO(hSuperObj); stV1Spo.xX = stBeforeSpo.xX + _p_stTranslation->xX; stV1Spo.xY = stBeforeSpo.xY + _p_stTranslation->xY; stV1Spo.xZ = stBeforeSpo.xZ + _p_stTranslation->xZ; { MAT_tdstTransformation_* pGlobal = hSuperObj->hGlobalMatrix; if (pGlobal->eType == MAT_eTransform_Identity) pGlobal->eType = MAT_eTransform_Translation; MTH4D_fn_vCopy3DTo4DVector(&pGlobal->stTransformMatrix.stCol_3, (MTH3D_tdstVector_*)&stV1Spo); } hSuperObj->lLastComputeFrame = HIE_gs_lCurrentFrame; HIE_fn_vComputeNewRelativeMatrix(hSuperObj);
+            break;
+        case eSOL_Character:
+            hCharacter = fn_h_StandardGameGetSuperObject(((HIE_tdstSuperObject_*)((void**)_hSOL->LinkedObj)[ul])->hLinkedObject.p_stCharacter);
+            if (hCharacter) {
+                if (hCharacter->hLinkedObject.p_stCharacter->h_Dynam) { fn_v_TranslateOneCharacterWithMechanicsImmediateTeleportation(hCharacter, _p_stTranslation); } else { p_stGlobalMatrix = hCharacter->hGlobalMatrix; MTH4D_fn_vCopy4DTo3DVector((MTH3D_tdstVector_*)&stBeforeChar, &p_stGlobalMatrix->stTransformMatrix.stCol_3); stV1Char.xX = stBeforeChar.xX + _p_stTranslation->xX; stV1Char.xY = stBeforeChar.xY + _p_stTranslation->xY; stV1Char.xZ = stBeforeChar.xZ + _p_stTranslation->xZ; if (p_stGlobalMatrix->eType == MAT_eTransform_Identity) p_stGlobalMatrix->eType = MAT_eTransform_Translation; MTH4D_fn_vCopy3DTo4DVector(&p_stGlobalMatrix->stTransformMatrix.stCol_3, (MTH3D_tdstVector_*)&stV1Char); hCharacter->lLastComputeFrame = HIE_gs_lCurrentFrame; HIE_fn_vComputeNewRelativeMatrix(hCharacter); } }
+            break;
+        case eSOL_Waypoint:
+            { WP_tdstWayPoint_* hWaypoint = ((WP_tdstWayPoint_*)((void**)_hSOL->LinkedObj)[ul]); WP_fnv_WayPoint_ComputeLocation(hWaypoint, (MTH3D_tdstVector_*)&stWayLoc); stV1Way.xX = stWayLoc.xX + _p_stTranslation->xX; stV1Way.xY = stWayLoc.xY + _p_stTranslation->xY; stV1Way.xZ = stWayLoc.xZ + _p_stTranslation->xZ; if (hWaypoint->m_hSuperObject) { MAT_fn_vInvert(&stInverse, hWaypoint->m_hSuperObject->hGlobalMatrix); MAT_fn_vApplyOnVertex(&stLocalWay, &stInverse, (MTH3D_tdstVector_*)&stV1Way); hWaypoint->m_stVertex = stLocalWay; } else { hWaypoint->m_stVertex = *(MTH3D_tdstVector_*)&stV1Way; } }
+            break;
+        default:
+            return;
+        }
+    }
+}
+
+void fn_vReinitSOLTranslation(tdstSuperObjectLinks_* _hSOL)
+{
+    MAT_tdstTransformation_ stInverse;
+    MTH4D_tdstVector_ stPosition;
+    MTH4D_tdstVector_ stWayResult;
+    MTH3D_tdstVector_ stDiff;
+    HIE_tdstSuperObject_* hSuperObj;
+    DNM_stDynamics* p_stDynamics;
+    unsigned int ul;
+    MAT_M_vGetTranslation(&_hSOL->POS_SPO_Init, (MTH3D_tdstVector_*)&stPosition);
+    hSuperObj = _hSOL->h_SPORef;
+    MAT_M_vSetTranslation(hSuperObj->hGlobalMatrix, (MTH3D_tdstVector_*)&stPosition);
+    hSuperObj->lLastComputeFrame = HIE_gs_lCurrentFrame; HIE_fn_vComputeNewRelativeMatrix(hSuperObj);
+    for (ul = 0; ul < _hSOL->ulNbLinkedObjects; ul++) {
+        switch (_hSOL->eTypeOfLinkedObj[ul]) {
+        case eSOL_SPO:
+            MAT_M_vGetTranslation(&_hSOL->POS_InitOfLinkedObj[ul], (MTH3D_tdstVector_*)&stPosition);
+            hSuperObj = ((HIE_tdstSuperObject_*)((void**)_hSOL->LinkedObj)[ul]);
+            MAT_M_vSetTranslation(hSuperObj->hGlobalMatrix, (MTH3D_tdstVector_*)&stPosition);
+            hSuperObj->lLastComputeFrame = HIE_gs_lCurrentFrame; HIE_fn_vComputeNewRelativeMatrix(hSuperObj);
+            break;
+        case eSOL_Character:
+            /* Not original source: temporary found by the permuter (register allocation). */
+            { HIE_tdstSuperObject_* hFound = fn_h_StandardGameGetSuperObject(((HIE_tdstSuperObject_*)((void**)_hSOL->LinkedObj)[ul])->hLinkedObject.p_stCharacter);
+            hSuperObj = hFound; }
+            if (hSuperObj) {
+                MAT_M_vGetTranslation(&_hSOL->POS_InitOfLinkedObj[ul], (MTH3D_tdstVector_*)&stPosition);
+                if (hSuperObj->hLinkedObject.p_stCharacter->h_Dynam) {
+                    p_stDynamics = fn_p_stDynamGetDynamics(hSuperObj->hLinkedObject.p_stCharacter->h_Dynam);
+                    { MAT_tdstTransformation_* pGlobal = hSuperObj->hGlobalMatrix; if (pGlobal->eType == MAT_eTransform_Identity) pGlobal->eType = MAT_eTransform_Translation; MTH4D_fn_vCopy3DTo4DVector(&pGlobal->stTransformMatrix.stCol_3, (MTH3D_tdstVector_*)&stPosition); }
+                    HIE_fn_vComputeNewRelativeMatrix(hSuperObj);
+                    MTH4D_fn_vCopy4DTo3DVector(&stDiff, &p_stDynamics->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3);
+                    stDiff.xX = stPosition.xX - stDiff.xX; stDiff.xY = stPosition.xY - stDiff.xY; stDiff.xZ = stPosition.xZ - stDiff.xZ;
+                    fn_v_TranslateMechanicsImmediateTeleportation(p_stDynamics, &stDiff);
+                } else {
+                    { MAT_tdstTransformation_* pGlobal = hSuperObj->hGlobalMatrix; if (pGlobal->eType == MAT_eTransform_Identity) pGlobal->eType = MAT_eTransform_Translation; MTH4D_fn_vCopy3DTo4DVector(&pGlobal->stTransformMatrix.stCol_3, (MTH3D_tdstVector_*)&stPosition); }
+                    HIE_fn_vComputeNewRelativeMatrix(hSuperObj);
+                }
+            }
+            break;
+        case eSOL_Waypoint:
+            MAT_M_vGetTranslation(&_hSOL->POS_InitOfLinkedObj[ul], (MTH3D_tdstVector_*)&stPosition);
+            { WP_tdstWayPoint_* hWaypoint = ((WP_tdstWayPoint_*)((void**)_hSOL->LinkedObj)[ul]);
+              if (hWaypoint->m_hSuperObject) { MAT_fn_vInvert(&stInverse, hWaypoint->m_hSuperObject->hGlobalMatrix); MAT_fn_vApplyOnVertex((MTH3D_tdstVector_*)&stWayResult, &stInverse, (MTH3D_tdstVector_*)&stPosition); hWaypoint->m_stVertex = *(MTH3D_tdstVector_*)&stWayResult; } else { hWaypoint->m_stVertex = *(MTH3D_tdstVector_*)&stPosition; } }
+            break;
+        default:
+            return;
+        }
+    }
+}
+
+void fn_vReinitSOLRotation(tdstSuperObjectLinks_* _hSOL)
+{
+    MTH4D_tdstVector_ stI;
+    MTH4D_tdstVector_ stJ;
+    MTH4D_tdstVector_ stK;
+    unsigned int ul;
+    HIE_tdstSuperObject_* hSuperObj;
+    MAT_fn_vGetRotationVectors(&_hSOL->POS_SPO_Init, (MTH3D_tdstVector_*)&stI, (MTH3D_tdstVector_*)&stJ, (MTH3D_tdstVector_*)&stK);
+    MAT_fn_vSetRotationVectors(_hSOL->h_SPORef->hLocalMatrix, (MTH3D_tdstVector_*)&stI, (MTH3D_tdstVector_*)&stJ, (MTH3D_tdstVector_*)&stK);
+    for (ul = 0; ul < _hSOL->ulNbLinkedObjects; ul++) {
+        switch (_hSOL->eTypeOfLinkedObj[ul]) {
+        case eSOL_SPO:
+            MAT_fn_vGetRotationVectors(&_hSOL->POS_InitOfLinkedObj[ul], (MTH3D_tdstVector_*)&stI, (MTH3D_tdstVector_*)&stJ, (MTH3D_tdstVector_*)&stK);
+            MAT_fn_vSetRotationVectors(((HIE_tdstSuperObject_*)((void**)_hSOL->LinkedObj)[ul])->hLocalMatrix, (MTH3D_tdstVector_*)&stI, (MTH3D_tdstVector_*)&stJ, (MTH3D_tdstVector_*)&stK);
+            break;
+        case eSOL_Character:
+            hSuperObj = fn_h_StandardGameGetSuperObject(((HIE_tdstSuperObject_*)((void**)_hSOL->LinkedObj)[ul])->hLinkedObject.p_stCharacter);
+            if (hSuperObj) {
+                MAT_fn_vGetRotationVectors(&_hSOL->POS_InitOfLinkedObj[ul], (MTH3D_tdstVector_*)&stI, (MTH3D_tdstVector_*)&stJ, (MTH3D_tdstVector_*)&stK);
+                if (hSuperObj->hLinkedObject.p_stCharacter->h_Dynam) { DNM_stDynamics* p_stDynamics = fn_p_stDynamGetDynamics(hSuperObj->hLinkedObject.p_stCharacter->h_Dynam); MAT_fn_vSetRotationVectors(hSuperObj->hGlobalMatrix, (MTH3D_tdstVector_*)&stI, (MTH3D_tdstVector_*)&stJ, (MTH3D_tdstVector_*)&stK); HIE_fn_vComputeNewRelativeMatrix(hSuperObj); fn_v_SetRotationMechanicsImmediateTeleportation(p_stDynamics, hSuperObj, (MTH3D_tdstVector_*)&stI, (MTH3D_tdstVector_*)&stJ, (MTH3D_tdstVector_*)&stK); } else { MAT_fn_vSetRotationVectors(hSuperObj->hGlobalMatrix, (MTH3D_tdstVector_*)&stI, (MTH3D_tdstVector_*)&stJ, (MTH3D_tdstVector_*)&stK); HIE_fn_vComputeNewRelativeMatrix(hSuperObj); }
+            }
+            break;
+        }
+    }
+}
+
+void fn_vReinitSOL(tdstSuperObjectLinks_* _hSOL)
+{
+    fn_vReinitSOLTranslation(_hSOL);
+    fn_vReinitSOLRotation(_hSOL);
+}
+
+void GAM_fn_vWriteStringInUbiIniFile(void)
+{
+    /* TODO: decompile from asm/... */
 }

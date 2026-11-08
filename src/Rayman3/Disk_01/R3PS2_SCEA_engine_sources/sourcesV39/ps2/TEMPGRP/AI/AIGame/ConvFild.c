@@ -75,19 +75,17 @@ struct tdstFieldEntry_ {
 tdstFieldEntry_ a_stFieldTable[20];
 tdstFieldTypeEntry_ a_stFieldTypeTable[5];
 
-unsigned char (*fn_p_fn_pGetFieldSetFunctionPtr(tdeFieldId_ eFieldId))(HIE_tdstSuperObject_*, tdstGetSetParam_*)
-{
-    return a_stFieldTable[eFieldId].p_fn_cSetFieldFunction;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+unsigned char (*fn_p_fn_pGetFieldSetFunctionPtr(tdeFieldId_ eFieldId))(HIE_tdstSuperObject_*, tdstGetSetParam_*);
+unsigned char (*fn_p_fn_pGetFieldGetFunctionPtr(tdeFieldId_ eFieldId))(HIE_tdstSuperObject_*, tdstGetSetParam_*);
+tdeFieldTypeId_ fn_eGetEngineFieldType(tdeFieldId_ eFieldId);
+void (*fn_p_fn_pGetFieldTypeSetFunctionPtr(tdeFieldTypeId_ eFieldTypeId))(tdstGetSetParam_*);
+void (*fn_p_fn_pGetFieldTypeGetFunctionPtr(tdeFieldTypeId_ eFieldTypeId))(tdstGetSetParam_*);
 
-unsigned char (*fn_p_fn_pGetFieldGetFunctionPtr(tdeFieldId_ eFieldId))(HIE_tdstSuperObject_*, tdstGetSetParam_*)
+void (*fn_p_fn_pGetFieldTypeGetFunctionPtr(tdeFieldTypeId_ eFieldTypeId))(tdstGetSetParam_*)
 {
-    return a_stFieldTable[eFieldId].p_fn_cGetFieldFunction;
-}
-
-tdeFieldTypeId_ fn_eGetEngineFieldType(tdeFieldId_ eFieldId)
-{
-    return a_stFieldTable[eFieldId].eType;
+    return a_stFieldTypeTable[eFieldTypeId].fn_p_fn_vGetTypeFunction;
 }
 
 void (*fn_p_fn_pGetFieldTypeSetFunctionPtr(tdeFieldTypeId_ eFieldTypeId))(tdstGetSetParam_*)
@@ -95,7 +93,17 @@ void (*fn_p_fn_pGetFieldTypeSetFunctionPtr(tdeFieldTypeId_ eFieldTypeId))(tdstGe
     return a_stFieldTypeTable[eFieldTypeId].fn_p_fn_vSetTypeFunction;
 }
 
-void (*fn_p_fn_pGetFieldTypeGetFunctionPtr(tdeFieldTypeId_ eFieldTypeId))(tdstGetSetParam_*)
+tdeFieldTypeId_ fn_eGetEngineFieldType(tdeFieldId_ eFieldId)
 {
-    return a_stFieldTypeTable[eFieldTypeId].fn_p_fn_vGetTypeFunction;
+    return a_stFieldTable[eFieldId].eType;
+}
+
+unsigned char (*fn_p_fn_pGetFieldGetFunctionPtr(tdeFieldId_ eFieldId))(HIE_tdstSuperObject_*, tdstGetSetParam_*)
+{
+    return a_stFieldTable[eFieldId].p_fn_cGetFieldFunction;
+}
+
+unsigned char (*fn_p_fn_pGetFieldSetFunctionPtr(tdeFieldId_ eFieldId))(HIE_tdstSuperObject_*, tdstGetSetParam_*)
+{
+    return a_stFieldTable[eFieldId].p_fn_cSetFieldFunction;
 }

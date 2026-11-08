@@ -541,6 +541,56 @@ struct tagGLcontext {
 tagListVertexBuffer g_PS2glListVBuf;
 tagGLcontext g_PS2glContext;
 
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void PS2glUpdateNormalMatrix(void);
+void PS2glBufferTriangleFanToTriangle(float (*pBuf)[4], int iSrcStart, int iDstStart);
+void PS2glListBufferTriangleStripToTriangle(float (*pBuf)[4], int iSrcStart, int iDstStart);
+
+void PS2glListBufferTriangleStripToTriangle(float (*pBuf)[4], int iSrcStart, int iDstStart)
+{
+    float (*pDst)[4];
+    float (*param0)[4];
+    int i;
+
+    pDst = pBuf + iDstStart;
+    param0 = pBuf + iSrcStart;
+    for (i = iSrcStart; i > 0; i--)
+    {
+        if (i & 1)
+        {
+            *(__int128*)pDst[1] = *(__int128*)param0[2];
+            *(__int128*)pDst[2] = *(__int128*)param0[1];
+        }
+        else
+        {
+            *(__int128*)pDst[2] = *(__int128*)param0[2];
+            *(__int128*)pDst[1] = *(__int128*)param0[1];
+        }
+        *(__int128*)pDst[0] = *(__int128*)param0[0];
+        param0--;
+        pDst -= 3;
+    }
+}
+
+void PS2glBufferTriangleFanToTriangle(float (*pBuf)[4], int iSrcStart, int iDstStart)
+{
+    int i;
+    float (*pSrc)[4];
+    float (*pDst)[4];
+
+    pDst = pBuf + iDstStart;
+    pSrc = pBuf + iSrcStart;
+    for (i = 0; i < iSrcStart; i++)
+    {
+        *(__int128*)pDst[2] = *(__int128*)pSrc[2];
+        *(__int128*)pDst[1] = *(__int128*)pSrc[1];
+        *(__int128*)pDst[0] = *(__int128*)pBuf[0];
+        pSrc--;
+        pDst -= 3;
+    }
+}
+
 void PS2glUpdateNormalMatrix(void)
 {
     float IMMV;
@@ -567,48 +617,4 @@ void PS2glUpdateNormalMatrix(void)
     g_PS2glContext.NormalMatrix[0][3] = g_PS2glContext.NormalMatrix[1][3] = g_PS2glContext.NormalMatrix[2][3] = 0.0f;
     g_PS2glContext.NormalMatrix[3][0] = g_PS2glContext.NormalMatrix[3][1] = g_PS2glContext.NormalMatrix[3][2] = 0.0f;
     g_PS2glContext.NormalMatrix[3][3] = 1.0f;
-}
-
-void PS2glBufferTriangleFanToTriangle(float (*pBuf)[4], int iSrcStart, int iDstStart)
-{
-    int i;
-    float (*pSrc)[4];
-    float (*pDst)[4];
-
-    pDst = pBuf + iDstStart;
-    pSrc = pBuf + iSrcStart;
-    for (i = 0; i < iSrcStart; i++)
-    {
-        *(__int128*)pDst[2] = *(__int128*)pSrc[2];
-        *(__int128*)pDst[1] = *(__int128*)pSrc[1];
-        *(__int128*)pDst[0] = *(__int128*)pBuf[0];
-        pSrc--;
-        pDst -= 3;
-    }
-}
-
-void PS2glListBufferTriangleStripToTriangle(float (*pBuf)[4], int iSrcStart, int iDstStart)
-{
-    float (*pDst)[4];
-    float (*param0)[4];
-    int i;
-
-    pDst = pBuf + iDstStart;
-    param0 = pBuf + iSrcStart;
-    for (i = iSrcStart; i > 0; i--)
-    {
-        if (i & 1)
-        {
-            *(__int128*)pDst[1] = *(__int128*)param0[2];
-            *(__int128*)pDst[2] = *(__int128*)param0[1];
-        }
-        else
-        {
-            *(__int128*)pDst[2] = *(__int128*)param0[2];
-            *(__int128*)pDst[1] = *(__int128*)param0[1];
-        }
-        *(__int128*)pDst[0] = *(__int128*)param0[0];
-        param0--;
-        pDst -= 3;
-    }
 }

@@ -1101,63 +1101,70 @@ AGO2_Part_* AGO2_bIsTypeAlreadyExists(unsigned int PartType);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned int AGO2_MEM_Alloc(unsigned int Size)
-{
-    unsigned int Difference;
-    unsigned int j;
-    unsigned int MinDifference;
-    unsigned int MinZone;
-    unsigned int* Pointer;
-    unsigned int TempSize;
-    unsigned int i;
 
-    if (g_AGO2_MEM_NbOfAllocatedBlocs >= 5000)
-    {
-        printf("AGO2 : Too many allocations done !!\n");
-        return 0;
-    }
-
-    TempSize = (Size + 0x1F) & 0xFFFFFFF0;
-
-    for (i = 0; i < g_AGO2_MEM_NumberOfFreeZones && g_AGO2_MEM_FreeZones[i].Size < TempSize; i++);
-
-    if (i == g_AGO2_MEM_NumberOfFreeZones)
-    {
-        if (g_AGO2_MEM_NumberOfFreeZones < 2)
-            return 0;
-        AGO2_MEM_Shrink();
-        return AGO2_MEM_Alloc(Size);
-    }
-
-    MinDifference = g_AGO2_MEM_FreeZones[i].Size - TempSize;
-    MinZone = i;
-    for (j = i + 1; j < g_AGO2_MEM_NumberOfFreeZones; j++)
-    {
-        if (g_AGO2_MEM_FreeZones[j].Size < TempSize)
-        {
-            Difference = g_AGO2_MEM_FreeZones[j].Size - TempSize;
-            if (Difference < MinDifference)
-            {
-                MinDifference = Difference;
-                MinZone = j;
-            }
-        }
-    }
-
-    g_AGO2_MEM_HandleDescriptors[g_AGO2_MEM_NbOfAllocatedBlocs].Pointer = g_AGO2_MEM_FreeZones[MinZone].pStart;
-    memset((void*)g_AGO2_MEM_HandleDescriptors[g_AGO2_MEM_NbOfAllocatedBlocs].Pointer, 0, TempSize);
-    g_AGO2_MEM_HandleDescriptors[g_AGO2_MEM_NbOfAllocatedBlocs].Handle = g_AGO2_MEM_CurrentHandle;
-    g_AGO2_MEM_HandleDescriptors[g_AGO2_MEM_NbOfAllocatedBlocs].Size = TempSize;
-    Pointer = (unsigned int*)g_AGO2_MEM_HandleDescriptors[g_AGO2_MEM_NbOfAllocatedBlocs].Pointer;
-    *Pointer = g_AGO2_MEM_CurrentHandle;
-    *(Pointer + 1) = TempSize;
-    g_AGO2_MEM_FreeZones[MinZone].pStart += TempSize;
-    g_AGO2_MEM_FreeZones[MinZone].Size -= TempSize;
-    g_AGO2_MEM_CurrentHandle++;
-    g_AGO2_MEM_NbOfAllocatedBlocs++;
-    return g_AGO2_MEM_CurrentHandle - 1;
-}
-
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+unsigned int AGO2_MEM_Alloc(unsigned int Size);
+void AGO2_vTestExploseWall(void);
+void AGO2_vTestWall(void);
+void AGO2_DisplayAuraStorm(AGO2_Part_* p);
+void AGO2_DisplayCylinder(AGO2_Part_* p);
+void AGO2_ProcessDieAtOnce(AGO2_Part_* p);
+unsigned char AGO2_CreateCylinder(int unused, AGO2_Part_* p, float xParam1, float xParam2);
+void AGO2_ProcessForceField(AGO2_Part_* p);
+unsigned char AGO2_CreateForceField(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber);
+void AGO2_DisplayIce(AGO2_Part_* p);
+void DisplayIcePic(AGO2_Part_* p, float radius, float smallRadius, MTH3D_tdstVector_* Temp1, MTH3D_tdstVector_* Temp2, MTH3D_tdstVector_* Temp3);
+void AGO2_ProcessIce(AGO2_Part_* p);
+unsigned char AGO2_CreateIce(int unused, AGO2_Part_* p, float xParam1);
+void AGO2_DisplayBalloon(AGO2_Part_* p);
+void AGO2_DisplayForceField(AGO2_Part_* p);
+void AGO2_ProcessBalloon(AGO2_Part_* p);
+unsigned char AGO2_CreateBalloon(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber);
+void AGO2_DisplayFFWhirl(AGO2_Part_* p);
+void AGO2_DisplayFFRing(AGO2_Part_* p);
+unsigned char AGO2_CreateFFRing(int unused, AGO2_Part_* p, float xParam1);
+void AGO2_DisplayFireWall2(AGO2_Part_* p);
+void AGO2_DisplayFireWall(AGO2_Part_* p);
+unsigned char AGO2_CreateFireWall(int unused, AGO2_Part_* p, float xParam1);
+void AGO2_ProcessEmpty(void);
+void AGO2_ShrinkFire(AGO2_Part_* p);
+void AGO2_FadeFire(AGO2_Part_* p);
+void AGO2_ProcessFire(AGO2_Part_* p);
+unsigned char AGO2_CreateFire(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber);
+void AGO2_DisplayBees(AGO2_Part_* p);
+void AGO2_ProcessBees(AGO2_Part_* p);
+unsigned char AGO2_CreateBees(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber);
+void AGO2_DisplayLeaves(AGO2_Part_* p);
+void AGO2_ProcessLeavesParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit(AGO2_Part_* p);
+unsigned char AGO2_CreateSerialCameraParticleLeaves(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, unsigned int ParticleNumber);
+void AGO2_ProcessSnowParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit(AGO2_Part_* p);
+unsigned char AGO2_CreateSerialCameraParticleSnow(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber);
+void AGO2_DisplayRainParticleSpriteGroup(AGO2_Part_* p);
+void AGO2_ProcessRainNearCameraParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit(AGO2_Part_* p);
+void AGO2_ProcessRainParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit(AGO2_Part_* p);
+unsigned char AGO2_CreateSerialCameraParticleRain(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber);
+void AGO2_DisplayLightning(AGO2_Part_* p);
+void AGO2_ProcessLightning(void);
+unsigned char AGO2_CreateLightning(unsigned int _unused, AGO2_Part_* p);
+void AGO2_FadeFlow(AGO2_Part_* p);
+void AGO2_DisplayFlowMotionBlur(AGO2_Part_* p);
+void AGO2_DisplayFlow(AGO2_Part_* p);
+void AGO2_ProcessFlow(AGO2_Part_* p);
+unsigned char AGO2_CreateFlow(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber);
+void AGO2_ShrinkNormal(AGO2_Part_* p);
+void AGO2_FadeNormal(AGO2_Part_* p);
+unsigned char AGO2_CreateOrdinaryParticle(void);
+void AGO2_ProcessSimpleParticleWithSpeedAndGravity(AGO2_Part_* p);
+void AGO2_DisplayOrdinarySprite(AGO2_Part_* p);
+void AGO2_vClearParticlesOfThatTypeWithChannel(unsigned int PartType, unsigned int Channel);
+void AGO2_vClearParticlesOfThatType(unsigned int PartType);
+AGO2_Part_* AGO2_bIsTypeAlreadyExists(unsigned int PartType);
+void AGO2_vDisplayAllParts(GLD_tdstViewportAttributes_* _p_stViewport);
+void AGO2_vProcessAllParts(void);
+void AGO2_vDestroyAllParts(void);
+AGO2_Part_* AGO2_vCreatePart(unsigned int ulParticleType, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber);
+void AGO2_vFirstInitAndRegisterAGO2Types(void);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 4276–4312 */
 /* addr: 0x001e0fe0  size: 372 bytes */
@@ -1225,47 +1232,6 @@ unsigned int AGO2_MEM_Alloc(unsigned int Size)
  * compare a candidate object's line table as an extra checkpoint.
  */
 
-void AGO2_vTestExploseWall(void)
-{
-    AGO2_WallExplosionPart_ OriginalPart;
-    AGO2_WallExplosionPart_* pp;
-    AGO2_WallExplosion_* p;
-    static int Firstime = 1;
-
-    if (AGO2_g_NbWalls == 1)
-    {
-        if (g_PadCircle || Firstime)
-        {
-            Firstime = 0;
-            p = (AGO2_WallExplosion_*)AGO2_MEM_GetPointerFromHandle(AGO2_g_Walls[0]);
-            pp = &p->Parts[0];
-            OriginalPart = *pp;
-            {
-                MTH3D_tdstVector_ A;
-                MTH3D_tdstVector_ B;
-                MTH3D_M_vAddVector(&A, (MTH3D_tdstVector_*)&OriginalPart.Vertices[0], (MTH3D_tdstVector_*)&OriginalPart.Vertices[1]);
-                MTH3D_M_vAddVector(&A, &A, (MTH3D_tdstVector_*)&OriginalPart.Vertices[4]);
-                MTH3D_M_vAddVector(&A, &A, (MTH3D_tdstVector_*)&OriginalPart.Vertices[5]);
-                MTH3D_M_vMulScalarVector(&A, 0.25f, &A);
-
-                MTH3D_M_vAddVector(&B, (MTH3D_tdstVector_*)&OriginalPart.Vertices[2], (MTH3D_tdstVector_*)&OriginalPart.Vertices[3]);
-                MTH3D_M_vAddVector(&B, &B, (MTH3D_tdstVector_*)&OriginalPart.Vertices[6]);
-                MTH3D_M_vAddVector(&B, &B, (MTH3D_tdstVector_*)&OriginalPart.Vertices[7]);
-                MTH3D_M_vMulScalarVector(&B, 0.25f, &B);
-
-
-                pp->Vertices[0].xX = A.xX;
-                pp->Vertices[0].xY = A.xY;
-                pp->Vertices[0].xZ = A.xZ;
-
-                pp->Vertices[3].xX = B.xX;
-                pp->Vertices[3].xY = B.xY;
-                pp->Vertices[3].xZ = B.xZ;
-            }
-        }
-    }
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 4270–4270 */
 /* addr: 0x001e1160  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1273,9 +1239,6 @@ void AGO2_vTestExploseWall(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_vTestWall(void)
-{
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3932–4057 */
 /* addr: 0x001e1170  size: 1484 bytes */
@@ -1443,34 +1406,6 @@ void AGO2_vTestWall(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_DisplayAuraStorm(AGO2_Part_* p)
-{
-    int HalfSphere;
-    float* p_fCosTable;
-    float fi;
-    float basey;
-    float basex;
-    float time;
-    float s4;
-    float c4;
-    float s3;
-    float c3;
-    float s2;
-    float c2;
-    float s1;
-    float c1;
-    float anglez2;
-    float anglex2;
-    float anglez;
-    float anglex;
-    float radius;
-    unsigned int i;
-    MTH3D_tdstVector_ PMIDHIGH;
-    MTH3D_tdstVector_ PMID;
-    MTH3D_tdstVector_ P4;
-    MTH3D_tdstVector_ P3;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3826–3912 */
 /* addr: 0x001e1740  size: 980 bytes */
@@ -1554,57 +1489,6 @@ static inline void AGO2_vCylinderPoint(MTH3D_tdstVector_* pDst, MTH3D_tdstVector
     pDst->xZ = pBase->xZ + c * pV1->xZ + s * pV2->xZ;
 }
 
-void AGO2_DisplayCylinder(AGO2_Part_* p)
-{
-    float radius;
-    float angle;
-    float c1;
-    float s1;
-    AGO_V4D_ DirVect;
-    AGO_V4D_ V1;
-    AGO_V4D_ V2;
-    AGO_V4D_ P1;
-    AGO_V4D_ P2;
-    AGO_V4D_ P3;
-    AGO_V4D_ P4;
-    AGO_V4D_ FirstP1;
-    AGO_V4D_ FirstP2;
-    float CurrentV;
-    float OldV;
-    float xNorm;
-
-    radius = p->Vector1.xX;
-    DirVect.xX = p->Direction.xX - p->Position.xX;
-    DirVect.xY = p->Direction.xY - p->Position.xY;
-    DirVect.xZ = p->Direction.xZ - p->Position.xZ;
-    AGO2_vNormalizeVector((MTH3D_tdstVector_*)&DirVect);
-    AGO_Define_OrthogonalVectors((MTH3D_tdstVector_*)&DirVect, (MTH3D_tdstVector_*)&V1, (MTH3D_tdstVector_*)&V2);
-    angle = 0.0f;
-    c1 = radius * PS2_dl_cosf(angle);
-    s1 = radius * PS2_dl_sinf(angle);
-    OldV = 0.0f;
-    CurrentV = OldV;
-    angle = 0.628f;
-    AGO2_vCylinderPoint((MTH3D_tdstVector_*)&P1, (MTH3D_tdstVector_*)&p->Position, c1, (MTH3D_tdstVector_*)&V1, s1, (MTH3D_tdstVector_*)&V2);
-    FirstP1 = P1;
-    AGO2_vCylinderPoint((MTH3D_tdstVector_*)&P2, (MTH3D_tdstVector_*)&p->Direction, c1, (MTH3D_tdstVector_*)&V1, s1, (MTH3D_tdstVector_*)&V2);
-    FirstP2 = P2;
-    while (angle < 6.0f)
-    {
-        CurrentV += 0.1f;
-        c1 = radius * PS2_dl_cosf(angle);
-        s1 = radius * PS2_dl_sinf(angle);
-        AGO2_vCylinderPoint((MTH3D_tdstVector_*)&P3, (MTH3D_tdstVector_*)&p->Position, c1, (MTH3D_tdstVector_*)&V1, s1, (MTH3D_tdstVector_*)&V2);
-        AGO2_vCylinderPoint((MTH3D_tdstVector_*)&P4, (MTH3D_tdstVector_*)&p->Direction, c1, (MTH3D_tdstVector_*)&V1, s1, (MTH3D_tdstVector_*)&V2);
-        GLI_vDrawWorldQuadWithUVsOpt((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, (float*)&P3, (float*)&P1, (float*)&P2, (float*)&P4, CurrentV, 0.0f, OldV, 1.0f, (GLI_tdstMaterial_*)p->pMaterial1);
-        OldV = CurrentV;
-        angle += 0.628f;
-        P1 = P3;
-        P2 = P4;
-    }
-    GLI_vDrawWorldQuadWithUVsOpt((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, (float*)&FirstP1, (float*)&P1, (float*)&P2, (float*)&FirstP2, CurrentV + 0.1f, 0.0f, CurrentV, 1.0f, (GLI_tdstMaterial_*)p->pMaterial1);
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3822–3823 */
 /* addr: 0x001e1b20  size: 16 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1613,10 +1497,6 @@ void AGO2_DisplayCylinder(AGO2_Part_* p)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_ProcessDieAtOnce(AGO2_Part_* p)
-{
-    p->ulType |= 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3815–3818 */
 /* addr: 0x001e1b30  size: 16 bytes */
@@ -1627,12 +1507,6 @@ void AGO2_ProcessDieAtOnce(AGO2_Part_* p)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char AGO2_CreateCylinder(int unused, AGO2_Part_* p, float xParam1, float xParam2)
-{
-    p->Vector1.xX = xParam1;
-    p->Vector1.xY = xParam2;
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3740–3804 */
 /* addr: 0x001e1b40  size: 572 bytes */
@@ -1682,55 +1556,6 @@ unsigned char AGO2_CreateCylinder(int unused, AGO2_Part_* p, float xParam1, floa
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_ProcessForceField(AGO2_Part_* p)
-{
-    AGO2_BalloonPart_* pParticleArray;
-    unsigned int i;
-    unsigned int j;
-    AGO2_BalloonPart_* pParticleArrayOrg;
-    int FoundOneValidParticle;
-    MTH3D_tdstVector_ CenteredPoints[4];
-    float cos1;
-    float sin1;
-    float y;
-
-    pParticleArrayOrg = (AGO2_BalloonPart_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-    pParticleArray = pParticleArrayOrg;
-    FoundOneValidParticle = 0;
-    if (!pParticleArray)
-    {
-        printf("AGO2MEM DECONNE UN MAX !!!\n");
-        p->ulType |= 1;
-        return;
-    }
-    for (i = 0; i < p->GroupNumber; pParticleArray++, i++)
-    {
-        pParticleArray->fTransparency -= pParticleArray->fTransparencySpeed * g_fTimeDifference;
-        cos1 = PS2_dl_cosf(pParticleArray->f_GSpeed * g_fTimeDifference);
-        sin1 = PS2_dl_sinf(pParticleArray->f_GSpeed * g_fTimeDifference);
-        if (pParticleArray->fTransparency > 0.0f)
-        {
-            FoundOneValidParticle = 1;
-            for (j = 0; j < 4; j++)
-            {
-                ((MTH3D_tdstVector_*)((int)CenteredPoints + j * sizeof(MTH3D_tdstVector_)))->xX = pParticleArray->Points[j].xX - p->Position.xX;
-                ((MTH3D_tdstVector_*)((int)CenteredPoints + j * sizeof(MTH3D_tdstVector_)))->xY = pParticleArray->Points[j].xY - p->Position.xY;
-                ((MTH3D_tdstVector_*)((int)CenteredPoints + j * sizeof(MTH3D_tdstVector_)))->xZ = pParticleArray->Points[j].xZ - p->Position.xZ;
-                y = sin1 * -((MTH3D_tdstVector_*)((int)CenteredPoints + j * sizeof(MTH3D_tdstVector_)))->xX + cos1 * ((MTH3D_tdstVector_*)((int)CenteredPoints + j * sizeof(MTH3D_tdstVector_)))->xY;
-                ((MTH3D_tdstVector_*)((int)CenteredPoints + j * sizeof(MTH3D_tdstVector_)))->xX = cos1 * ((MTH3D_tdstVector_*)((int)CenteredPoints + j * sizeof(MTH3D_tdstVector_)))->xX + sin1 * ((MTH3D_tdstVector_*)((int)CenteredPoints + j * sizeof(MTH3D_tdstVector_)))->xY;
-                ((MTH3D_tdstVector_*)((int)CenteredPoints + j * sizeof(MTH3D_tdstVector_)))->xY = y;
-            }
-            for (j = 0; j < 4; j++)
-            {
-                pParticleArray->Points[j].xX = p->Position.xX + CenteredPoints[j].xX;
-                pParticleArray->Points[j].xY = p->Position.xY + CenteredPoints[j].xY;
-                pParticleArray->Points[j].xZ = p->Position.xZ + CenteredPoints[j].xZ;
-            }
-        }
-    }
-    if (!FoundOneValidParticle)
-        p->ulType |= 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3608–3736 */
 /* addr: 0x001e1d80  size: 1220 bytes */
@@ -1838,96 +1663,6 @@ void AGO2_ProcessForceField(AGO2_Part_* p)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-/* Same parameter list as AGO2_CreateFlow: retail reads ParticleNumber from
-   the 16th-argument stack slot. */
-unsigned char AGO2_CreateForceField(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber)
-{
-    unsigned int i;
-    unsigned int NumberOfParticlesCreated;
-    AGO2_BalloonPart_* pParticleArray;
-    AGO2_BalloonPart_* pParticleArrayOrg;
-    float AngleNumSteps;
-    float ZStep;
-    float AngleStep;
-    float delta;
-    float cos1;
-    float sin1;
-    float cos2;
-    float sin2;
-    float z;
-    float z2;
-    float SqrtOneMinusSquaredZ;
-    float SqrtOneMinusSquaredZ2;
-
-    p->GroupNumber = ParticleNumber;
-    p->hGroup = AGO2_MEM_Alloc(ParticleNumber * sizeof(AGO2_BalloonPart_));
-    if (p->hGroup == 0)
-    {
-        p->GroupNumber = 0;
-        p->ulType |= 1;
-        return 0;
-    }
-    pParticleArrayOrg = (AGO2_BalloonPart_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-    if (pParticleArrayOrg == NULL)
-    {
-        printf("AGO2MEM DECONNE UN MAX !!!\n");
-        return 0;
-    }
-    NumberOfParticlesCreated = 0;
-    pParticleArray = pParticleArrayOrg;
-    AngleNumSteps = Direction->xZ;
-    ZStep = 0.02f * (25.0f - AngleNumSteps);
-    if (ZStep < 0.1f)
-        ZStep = 0.1f;
-    AngleStep = 6.2831855f / AngleNumSteps;
-    for (z = -0.9f; z < 0.8f; z += ZStep)
-    {
-        z2 = z + ZStep;
-        delta = 0.0f;
-        SqrtOneMinusSquaredZ = PS2SQRTF(1.0f - z * z);
-        SqrtOneMinusSquaredZ2 = PS2SQRTF(1.0f - z2 * z2);
-        for (i = 0; (float)i < AngleNumSteps; i++, delta += AngleStep)
-        {
-            if (NumberOfParticlesCreated < p->GroupNumber)
-            {
-                cos1 = PS2_dl_cosf(delta);
-                sin1 = PS2_dl_sinf(delta);
-                cos2 = PS2_dl_cosf(delta + AngleStep);
-                sin2 = PS2_dl_sinf(delta + AngleStep);
-                pParticleArray->Points[0].xX = p->Position.xX + xParam1 * (cos1 * SqrtOneMinusSquaredZ);
-                pParticleArray->Points[0].xY = p->Position.xY + xParam1 * (sin1 * SqrtOneMinusSquaredZ);
-                pParticleArray->Points[0].xZ = p->Position.xZ + z * xParam1;
-                pParticleArray->Points[1].xX = p->Position.xX + xParam1 * (cos2 * SqrtOneMinusSquaredZ);
-                pParticleArray->Points[1].xY = p->Position.xY + xParam1 * (sin2 * SqrtOneMinusSquaredZ);
-                pParticleArray->Points[1].xZ = p->Position.xZ + z * xParam1;
-                pParticleArray->Points[2].xX = p->Position.xX + xParam1 * (cos2 * SqrtOneMinusSquaredZ2);
-                pParticleArray->Points[2].xY = p->Position.xY + xParam1 * (sin2 * SqrtOneMinusSquaredZ2);
-                pParticleArray->Points[2].xZ = p->Position.xZ + z2 * xParam1;
-                pParticleArray->Points[3].xX = p->Position.xX + xParam1 * (cos1 * SqrtOneMinusSquaredZ2);
-                pParticleArray->Points[3].xY = p->Position.xY + xParam1 * (sin1 * SqrtOneMinusSquaredZ2);
-                pParticleArray->Points[3].xZ = p->Position.xZ + z2 * xParam1;
-                pParticleArray->CenterPosition.xX = 0.5f * (pParticleArray->Points[0].xX + pParticleArray->Points[1].xX);
-                pParticleArray->CenterPosition.xY = 0.5f * (pParticleArray->Points[0].xY + pParticleArray->Points[1].xY);
-                pParticleArray->CenterPosition.xZ = 0.5f * (pParticleArray->Points[0].xZ + pParticleArray->Points[2].xZ);
-                pParticleArray->VertexUVs[0][0] = 0.5f * (1.0f + cos1);
-                pParticleArray->VertexUVs[0][1] = 0.5f * (1.0f + z);
-                pParticleArray->VertexUVs[1][0] = 0.5f * (1.0f + cos2);
-                pParticleArray->VertexUVs[1][1] = 0.5f * (1.0f + z2);
-                pParticleArray->RotationAngles.xX = AGO2_M_xRand(-30.0f, 30.0f);
-                pParticleArray->RotationAngles.xY = AGO2_M_xRand(-30.0f, 30.0f);
-                pParticleArray->RotationAngles.xZ = AGO2_M_xRand(-30.0f, 30.0f);
-                pParticleArray->fTransparency = xParam2;
-                pParticleArray->fTransparencySpeed = xParam3;
-                pParticleArray->HasBeenDisplayed = 0;
-                pParticleArray->f_GSpeed = xParam4;
-                pParticleArray++;
-                NumberOfParticlesCreated++;
-            }
-        }
-    }
-    p->GroupNumber = NumberOfParticlesCreated;
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3459–3603 */
 /* addr: 0x001e2250  size: 856 bytes */
@@ -2028,66 +1763,6 @@ unsigned char AGO2_CreateForceField(unsigned int ulParticleType, AGO2_Part_* p, 
  * compare a candidate object's line table as an extra checkpoint.
  */
 
-void AGO2_DisplayIce(AGO2_Part_* p)
-{
-    float radius;
-    float smallRadius;
-    MTH3D_tdstVector_ Temp1;
-    MTH3D_tdstVector_ Temp2;
-    MTH3D_tdstVector_ Temp3;
-
-    radius = 1.5f * p->Vector1.xX;
-    smallRadius = 0.25f * radius;
-
-    MTH3D_M_vSetVectorElements(&Temp1, 0.0f, 0.0f, 1.0f);
-    AGO_Define_OrthogonalVectors(&Temp1, &Temp2, &Temp3);
-    DisplayIcePic(p, radius, smallRadius, &Temp1, &Temp2, &Temp3);
-
-    MTH3D_M_vSetVectorElements(&Temp1, 1.0f, 0.0f, 0.0f);
-    AGO_Define_OrthogonalVectors(&Temp1, &Temp2, &Temp3);
-    DisplayIcePic(p, radius, smallRadius, &Temp1, &Temp2, &Temp3);
-
-    MTH3D_M_vSetVectorElements(&Temp1, -1.0f, 0.0f, 0.0f);
-    AGO_Define_OrthogonalVectors(&Temp1, &Temp2, &Temp3);
-    DisplayIcePic(p, radius, smallRadius, &Temp1, &Temp2, &Temp3);
-
-    MTH3D_M_vSetVectorElements(&Temp1, 0.0f, 1.0f, 0.0f);
-    AGO_Define_OrthogonalVectors(&Temp1, &Temp2, &Temp3);
-    DisplayIcePic(p, radius, smallRadius, &Temp1, &Temp2, &Temp3);
-
-    MTH3D_M_vSetVectorElements(&Temp1, 0.0f, -1.0f, 0.0f);
-    AGO_Define_OrthogonalVectors(&Temp1, &Temp2, &Temp3);
-    DisplayIcePic(p, radius, smallRadius, &Temp1, &Temp2, &Temp3);
-
-    radius = 0.9f * p->Vector1.xX;
-
-    MTH3D_M_vSetVectorElements(&Temp1, 0.707f, 0.707f, 0.707f);
-    AGO_Define_OrthogonalVectors(&Temp1, &Temp2, &Temp3);
-    DisplayIcePic(p, radius, smallRadius, &Temp1, &Temp2, &Temp3);
-
-    MTH3D_M_vSetVectorElements(&Temp1, -0.707f, 0.707f, 0.707f);
-    AGO_Define_OrthogonalVectors(&Temp1, &Temp2, &Temp3);
-    DisplayIcePic(p, radius, smallRadius, &Temp1, &Temp2, &Temp3);
-
-    MTH3D_M_vSetVectorElements(&Temp1, 0.707f, -0.707f, 0.707f);
-    AGO_Define_OrthogonalVectors(&Temp1, &Temp2, &Temp3);
-    DisplayIcePic(p, radius, smallRadius, &Temp1, &Temp2, &Temp3);
-
-    MTH3D_M_vSetVectorElements(&Temp1, -0.707f, -0.707f, 0.707f);
-    AGO_Define_OrthogonalVectors(&Temp1, &Temp2, &Temp3);
-    DisplayIcePic(p, radius, smallRadius, &Temp1, &Temp2, &Temp3);
-
-    radius = 1.2f * p->Vector1.xX;
-
-    MTH3D_M_vSetVectorElements(&Temp1, 0.707f, 0.707f, -0.707f);
-    AGO_Define_OrthogonalVectors(&Temp1, &Temp2, &Temp3);
-    DisplayIcePic(p, radius, smallRadius, &Temp1, &Temp2, &Temp3);
-
-    MTH3D_M_vSetVectorElements(&Temp1, -0.707f, -0.707f, -0.707f);
-    AGO_Define_OrthogonalVectors(&Temp1, &Temp2, &Temp3);
-    DisplayIcePic(p, radius, smallRadius, &Temp1, &Temp2, &Temp3);
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3380–3453 */
 /* addr: 0x001e25b0  size: 552 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -2170,40 +1845,6 @@ static inline void AGO2_vRotateIceVector(MTH3D_tdstVector_* pDst, MTH3D_tdstVect
     pDst->xZ = -0.8959621f * -pSrc->xX - -0.4441306f * z;
 }
 
-void DisplayIcePic(AGO2_Part_* p, float radius, float smallRadius, MTH3D_tdstVector_* Temp1, MTH3D_tdstVector_* Temp2, MTH3D_tdstVector_* Temp3)
-{
-    MTH3D_tdstVector_ DestVtx;
-    MTH3D_tdstVector_ SourceVtx1;
-    MTH3D_tdstVector_ SourceVtx2;
-    MTH3D_tdstVector_ SourceVtx3;
-    MTH3D_tdstVector_ R1;
-    MTH3D_tdstVector_ R2;
-    MTH3D_tdstVector_ R3;
-
-    AGO2_vRotateIceVector(&R1, Temp1);
-    AGO2_vRotateIceVector(&R2, Temp2);
-    AGO2_vRotateIceVector(&R3, Temp3);
-
-    SourceVtx1.xX = p->Position.xX - smallRadius * R2.xX - smallRadius * R3.xX;
-    SourceVtx1.xY = p->Position.xY - smallRadius * R2.xY - smallRadius * R3.xY;
-    SourceVtx1.xZ = p->Position.xZ - smallRadius * R2.xZ - smallRadius * R3.xZ;
-
-    SourceVtx2.xX = p->Position.xX - smallRadius * R2.xX + smallRadius * R3.xX;
-    SourceVtx2.xY = p->Position.xY - smallRadius * R2.xY + smallRadius * R3.xY;
-    SourceVtx2.xZ = p->Position.xZ - smallRadius * R2.xZ + smallRadius * R3.xZ;
-
-    SourceVtx3.xX = p->Position.xX + smallRadius * R2.xX;
-    SourceVtx3.xY = p->Position.xY + smallRadius * R2.xY;
-    SourceVtx3.xZ = p->Position.xZ + smallRadius * R2.xZ;
-
-    DestVtx.xX = p->Position.xX + radius * R1.xX;
-    DestVtx.xY = p->Position.xY + radius * R1.xY;
-    DestVtx.xZ = p->Position.xZ + radius * R1.xZ;
-
-    GLI_vDrawWorldQuadWithUVsOpt((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, (float*)&SourceVtx1, (float*)&SourceVtx2, (float*)&SourceVtx3, (float*)&DestVtx, 0.0f, 0.0f, 1.0f, 1.0f, (GLI_tdstMaterial_*)p->pMaterial1);
-    GLI_vDrawWorldQuadWithUVsOpt((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, (float*)&SourceVtx2, (float*)&SourceVtx1, (float*)&DestVtx, (float*)&SourceVtx3, 0.0f, 0.0f, 1.0f, 1.0f, (GLI_tdstMaterial_*)p->pMaterial1);
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3356–3357 */
 /* addr: 0x001e27e0  size: 16 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -2212,10 +1853,6 @@ void DisplayIcePic(AGO2_Part_* p, float radius, float smallRadius, MTH3D_tdstVec
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_ProcessIce(AGO2_Part_* p)
-{
-    p->ulType |= 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3349–3351 */
 /* addr: 0x001e27f0  size: 12 bytes */
@@ -2225,11 +1862,6 @@ void AGO2_ProcessIce(AGO2_Part_* p)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char AGO2_CreateIce(int unused, AGO2_Part_* p, float xParam1)
-{
-    p->Vector1.xX = xParam1;
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3300–3345 */
 /* addr: 0x001e2800  size: 216 bytes */
@@ -2251,43 +1883,6 @@ unsigned char AGO2_CreateIce(int unused, AGO2_Part_* p, float xParam1)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_DisplayBalloon(AGO2_Part_* p)
-{
-    AGO2_BalloonPart_* pParticleArrayOrg;
-    unsigned int i;
-    AGO2_BalloonPart_* pParticleArray;
-
-    pParticleArrayOrg = (AGO2_BalloonPart_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-    if (!pParticleArrayOrg)
-    {
-        printf("AGO2MEM DECONNE UN MAX !!!\n");
-        p->ulType |= 1;
-    }
-    else
-    {
-        i = 0;
-        pParticleArray = pParticleArrayOrg;
-        while (i < p->GroupNumber)
-        {
-            if (pParticleArray->fTransparency > 0.0f)
-            {
-                GLI_vSetGlobalAlpha(pParticleArray->fTransparency);
-                GLI_vDrawWorldQuadWithUVsOpt((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport,
-                                             &pParticleArray->Points[0].xX,
-                                             &pParticleArray->Points[1].xX,
-                                             &pParticleArray->Points[2].xX,
-                                             &pParticleArray->Points[3].xX,
-                                             pParticleArray->VertexUVs[0][0],
-                                             pParticleArray->VertexUVs[0][1],
-                                             pParticleArray->VertexUVs[1][0],
-                                             pParticleArray->VertexUVs[1][1],
-                                             (GLI_tdstMaterial_*)p->pMaterial1);
-                pParticleArray->HasBeenDisplayed = 1;
-            }
-            pParticleArray++;
-            i++; }
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3254–3296 */
 /* addr: 0x001e28e0  size: 224 bytes */
@@ -2309,43 +1904,6 @@ void AGO2_DisplayBalloon(AGO2_Part_* p)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_DisplayForceField(AGO2_Part_* p)
-{
-    AGO2_BalloonPart_* pParticleArrayOrg;
-    unsigned int i;
-    AGO2_BalloonPart_* pParticleArray;
-
-    pParticleArrayOrg = (AGO2_BalloonPart_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-    if (!pParticleArrayOrg)
-    {
-        printf("AGO2MEM DECONNE UN MAX !!!\n");
-        p->ulType |= 1;
-    }
-    else
-    {
-        i = 0;
-        pParticleArray = pParticleArrayOrg;
-        while (i < p->GroupNumber)
-        {
-            if (pParticleArray->fTransparency > 0.0f)
-            {
-                GLI_vSetGlobalAlpha(255.0f * pParticleArray->fTransparency);
-                GLI_vDrawWorldQuadWithUVsOpt((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport,
-                                             &pParticleArray->Points[0].xX,
-                                             &pParticleArray->Points[1].xX,
-                                             &pParticleArray->Points[2].xX,
-                                             &pParticleArray->Points[3].xX,
-                                             pParticleArray->VertexUVs[0][0],
-                                             pParticleArray->VertexUVs[0][1],
-                                             pParticleArray->VertexUVs[1][0],
-                                             pParticleArray->VertexUVs[1][1],
-                                             (GLI_tdstMaterial_*)p->pMaterial1);
-                pParticleArray->HasBeenDisplayed = 1;
-            }
-            pParticleArray++;
-            i++; }
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3162–3250 */
 /* addr: 0x001e29c0  size: 1096 bytes */
@@ -2453,84 +2011,6 @@ void AGO2_DisplayForceField(AGO2_Part_* p)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_ProcessBalloon(AGO2_Part_* p)
-{
-    AGO2_BalloonPart_* pParticleArray;
-    unsigned int i;
-    unsigned int j;
-    AGO2_BalloonPart_* pParticleArrayOrg;
-    int FoundOneValidParticle;
-    MTH3D_tdstVector_ CenteredPoints[4];
-    float x;
-    float yy;
-    float y;
-    float z;
-    float cos1;
-    float sin1;
-    float zz;
-    float delta;
-    float xx;
-
-    pParticleArrayOrg = (AGO2_BalloonPart_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-    pParticleArray = pParticleArrayOrg;
-    FoundOneValidParticle = 0;
-    if (!pParticleArray)
-    {
-        printf("AGO2MEM DECONNE UN MAX !!!\n");
-        p->ulType |= 1;
-        return;
-    }
-    for (i = 0; i < p->GroupNumber; pParticleArray++, i++)
-    {
-        pParticleArray->fTransparency -= pParticleArray->fTransparencySpeed * g_fTimeDifference;
-        if (pParticleArray->fTransparency > 0.0f)
-        {
-            FoundOneValidParticle = 1;
-            for (j = 0; j < 4; j++)
-            {
-                CenteredPoints[j].xX = pParticleArray->Points[j].xX - pParticleArray->CenterPosition.xX;
-                CenteredPoints[j].xY = pParticleArray->Points[j].xY - pParticleArray->CenterPosition.xY;
-                CenteredPoints[j].xZ = pParticleArray->Points[j].xZ - pParticleArray->CenterPosition.xZ;
-            }
-            pParticleArray->Direction.xZ -= 9.81f * g_fTimeDifference * pParticleArray->f_GSpeed;
-            pParticleArray->CenterPosition.xX += pParticleArray->Direction.xX * g_fTimeDifference;
-            pParticleArray->CenterPosition.xY += pParticleArray->Direction.xY * g_fTimeDifference;
-            pParticleArray->CenterPosition.xZ += pParticleArray->Direction.xZ * g_fTimeDifference;
-            for (j = 0; j < 4; j++)
-            {
-                x = ((MTH3D_tdstVector_*)((int)CenteredPoints + j * sizeof(MTH3D_tdstVector_)))->xX;
-                y = ((MTH3D_tdstVector_*)((int)CenteredPoints + j * sizeof(MTH3D_tdstVector_)))->xY;
-                z = ((MTH3D_tdstVector_*)((int)CenteredPoints + j * sizeof(MTH3D_tdstVector_)))->xZ;
-                delta = pParticleArray->RotationAngles.xX * g_fTimeDifference;
-                cos1 = PS2_dl_cosf(delta);
-                sin1 = PS2_dl_sinf(delta);
-                yy = cos1 * y + sin1 * z;
-                zz = -sin1 * y + cos1 * z;
-                delta = pParticleArray->RotationAngles.xY * g_fTimeDifference;
-                cos1 = PS2_dl_cosf(delta);
-                sin1 = PS2_dl_sinf(delta);
-                xx = cos1 * x + sin1 * zz;
-                z = -sin1 * x + cos1 * zz;
-                delta = pParticleArray->RotationAngles.xZ * g_fTimeDifference;
-                cos1 = PS2_dl_cosf(delta);
-                sin1 = PS2_dl_sinf(delta);
-                x = cos1 * xx + sin1 * yy;
-                y = -sin1 * xx + cos1 * yy;
-                ((MTH3D_tdstVector_*)((int)CenteredPoints + j * sizeof(MTH3D_tdstVector_)))->xX = x;
-                ((MTH3D_tdstVector_*)((int)CenteredPoints + j * sizeof(MTH3D_tdstVector_)))->xY = y;
-                ((MTH3D_tdstVector_*)((int)CenteredPoints + j * sizeof(MTH3D_tdstVector_)))->xZ = z;
-            }
-            for (j = 0; j < 4; j++)
-            {
-                pParticleArray->Points[j].xX = pParticleArray->CenterPosition.xX + CenteredPoints[j].xX;
-                pParticleArray->Points[j].xY = pParticleArray->CenterPosition.xY + CenteredPoints[j].xY;
-                pParticleArray->Points[j].xZ = pParticleArray->CenterPosition.xZ + CenteredPoints[j].xZ;
-            }
-        }
-    }
-    if (!FoundOneValidParticle)
-        p->ulType |= 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2962–3158 */
 /* addr: 0x001e2e10  size: 2388 bytes */
@@ -2701,141 +2181,6 @@ void AGO2_ProcessBalloon(AGO2_Part_* p)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-/* Same parameter list as AGO2_CreateFlow: retail reads ParticleNumber from
-   the 16th-argument stack slot. */
-unsigned char AGO2_CreateBalloon(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber)
-{
-    unsigned int i;
-    unsigned int NumberOfParticlesCreated;
-    AGO2_BalloonPart_* pParticleArray;
-    AGO2_BalloonPart_* pParticleArrayOrg;
-    float AngleNumSteps;
-    float ZStep;
-    float AngleStep;
-    float delta;
-    float cos1;
-    float sin1;
-    float cos2;
-    float sin2;
-    float z;
-    float z2;
-    float SqrtOneMinusSquaredZ;
-    float SqrtOneMinusSquaredZ2;
-    int j;
-    int x;
-    int y;
-    float xNorm;
-
-    p->GroupNumber = ParticleNumber;
-    p->hGroup = AGO2_MEM_Alloc(ParticleNumber * sizeof(AGO2_BalloonPart_));
-    if (p->hGroup == 0)
-    {
-        p->GroupNumber = 0;
-        p->ulType |= 1;
-        return 0;
-    }
-    pParticleArrayOrg = (AGO2_BalloonPart_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-    if (pParticleArrayOrg == NULL)
-    {
-        printf("AGO2MEM DECONNE UN MAX !!!\n");
-        return 0;
-    }
-    NumberOfParticlesCreated = 0;
-    pParticleArray = pParticleArrayOrg;
-    AngleNumSteps = Direction->xZ;
-    ZStep = 0.02f * (25.0f - AngleNumSteps);
-    if (ZStep < 0.1f)
-        ZStep = 0.1f;
-    AngleStep = 6.2831855f / AngleNumSteps;
-    for (z = -0.9f; z < 0.8f; z += ZStep)
-    {
-        z2 = z + ZStep;
-        delta = 0.0f;
-        SqrtOneMinusSquaredZ = PS2SQRTF(1.0f - z * z);
-        SqrtOneMinusSquaredZ2 = PS2SQRTF(1.0f - z2 * z2);
-        for (i = 0; (float)i < AngleNumSteps; i++, delta += AngleStep)
-        {
-            if (10.0f * (float)rand() / 2147483648.0f < 3.0f && NumberOfParticlesCreated < p->GroupNumber)
-            {
-                cos1 = PS2_dl_cosf(delta);
-                sin1 = PS2_dl_sinf(delta);
-                cos2 = PS2_dl_cosf(delta + AngleStep);
-                sin2 = PS2_dl_sinf(delta + AngleStep);
-                pParticleArray->Points[0].xX = p->Position.xX + xParam1 * (cos1 * SqrtOneMinusSquaredZ);
-                pParticleArray->Points[0].xY = p->Position.xY + xParam1 * (sin1 * SqrtOneMinusSquaredZ);
-                pParticleArray->Points[0].xZ = p->Position.xZ + z * xParam1;
-                pParticleArray->Points[1].xX = p->Position.xX + xParam1 * (cos2 * SqrtOneMinusSquaredZ);
-                pParticleArray->Points[1].xY = p->Position.xY + xParam1 * (sin2 * SqrtOneMinusSquaredZ);
-                pParticleArray->Points[1].xZ = p->Position.xZ + z * xParam1;
-                pParticleArray->Points[2].xX = p->Position.xX + xParam1 * (cos2 * SqrtOneMinusSquaredZ2);
-                pParticleArray->Points[2].xY = p->Position.xY + xParam1 * (sin2 * SqrtOneMinusSquaredZ2);
-                pParticleArray->Points[2].xZ = p->Position.xZ + z2 * xParam1;
-                pParticleArray->Points[3].xX = p->Position.xX + xParam1 * (cos1 * SqrtOneMinusSquaredZ2);
-                pParticleArray->Points[3].xY = p->Position.xY + xParam1 * (sin1 * SqrtOneMinusSquaredZ2);
-                pParticleArray->Points[3].xZ = p->Position.xZ + z2 * xParam1;
-                pParticleArray->CenterPosition.xX = 0.5f * (pParticleArray->Points[0].xX + pParticleArray->Points[1].xX);
-                pParticleArray->CenterPosition.xY = 0.5f * (pParticleArray->Points[0].xY + pParticleArray->Points[1].xY);
-                pParticleArray->CenterPosition.xZ = 0.5f * (pParticleArray->Points[0].xZ + pParticleArray->Points[2].xZ);
-                for (j = 0; j < 4; j++)
-                {
-                    pParticleArray->Points[j].xX = pParticleArray->CenterPosition.xX + Direction->xY * (pParticleArray->Points[j].xX - pParticleArray->CenterPosition.xX);
-                    pParticleArray->Points[j].xY = pParticleArray->CenterPosition.xY + Direction->xY * (pParticleArray->Points[j].xY - pParticleArray->CenterPosition.xY);
-                    pParticleArray->Points[j].xZ = pParticleArray->CenterPosition.xZ + Direction->xY * (pParticleArray->Points[j].xZ - pParticleArray->CenterPosition.xZ);
-                }
-                if (xParam2 == 0.0f)
-                {
-                    pParticleArray->VertexUVs[0][0] = 0.9f * (float)rand() / 2147483648.0f;
-                    pParticleArray->VertexUVs[0][1] = 0.9f * (float)rand() / 2147483648.0f;
-                    pParticleArray->VertexUVs[1][0] = 0.1f + pParticleArray->VertexUVs[0][0];
-                    pParticleArray->VertexUVs[1][1] = 0.1f + pParticleArray->VertexUVs[0][1];
-                }
-                else if (xParam2 == 1.0f)
-                {
-                    pParticleArray->VertexUVs[0][0] = 0.0f;
-                    pParticleArray->VertexUVs[0][1] = 0.0f;
-                    pParticleArray->VertexUVs[1][0] = 1.0f;
-                    pParticleArray->VertexUVs[1][1] = 1.0f;
-                }
-                else if (xParam2 == 2.0f)
-                {
-                    x = (int)(2.0f * (float)rand() / 2147483648.0f);
-                    y = (int)(2.0f * (float)rand() / 2147483648.0f);
-                    pParticleArray->VertexUVs[0][0] = 0.5f * (float)x;
-                    pParticleArray->VertexUVs[0][1] = 0.5f * (float)y;
-                    pParticleArray->VertexUVs[1][0] = 0.5f + 0.5f * (float)x;
-                    pParticleArray->VertexUVs[1][1] = 0.5f + 0.5f * (float)y;
-                }
-                else if (xParam2 == 3.0f)
-                {
-                    x = (int)(4.0f * (float)rand() / 2147483648.0f);
-                    y = (int)(4.0f * (float)rand() / 2147483648.0f);
-                    pParticleArray->VertexUVs[0][0] = 0.25f * (float)x;
-                    pParticleArray->VertexUVs[0][1] = 0.25f * (float)y;
-                    pParticleArray->VertexUVs[1][0] = 0.25f + 0.25f * (float)x;
-                    pParticleArray->VertexUVs[1][1] = 0.25f + 0.25f * (float)y;
-                }
-                pParticleArray->RotationAngles.xX = AGO2_M_xRand(-5.0f, 5.0f);
-                pParticleArray->RotationAngles.xY = AGO2_M_xRand(-5.0f, 5.0f);
-                pParticleArray->RotationAngles.xZ = AGO2_M_xRand(-5.0f, 5.0f);
-                xNorm = AGO2_M_xRand(0.5f, 3.0f);
-                xNorm = xParam3 * xNorm;
-                pParticleArray->Direction.xX = pParticleArray->CenterPosition.xX - p->Position.xX;
-                pParticleArray->Direction.xY = pParticleArray->CenterPosition.xY - p->Position.xY;
-                pParticleArray->Direction.xZ = pParticleArray->CenterPosition.xZ - p->Position.xZ;
-                AGO2_vNormalizeVector(&pParticleArray->Direction);
-                MTH3D_M_vMulScalarVector(&pParticleArray->Direction, xNorm, &pParticleArray->Direction);
-                pParticleArray->fTransparency = 512.0f;
-                pParticleArray->fTransparencySpeed = AGO2_M_xRand(255.0f, 512.0f);
-                pParticleArray->HasBeenDisplayed = 0;
-                pParticleArray->f_GSpeed = AGO2_M_xRand(1.0f, 3.0f);
-                pParticleArray++;
-                NumberOfParticlesCreated++;
-            }
-        }
-    }
-    p->GroupNumber = NumberOfParticlesCreated;
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2782–2935 */
 /* addr: 0x001e3770  size: 1896 bytes */
@@ -3023,126 +2368,6 @@ unsigned char AGO2_CreateBalloon(unsigned int ulParticleType, AGO2_Part_* p, AGO
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_DisplayFFWhirl(AGO2_Part_* p)
-{
-    int i;
-    int j;
-    float p1b[3];
-    float p1h[3];
-    float p2b[3];
-    float p2h[3];
-    float cos1;
-    float sin1;
-    float CurrentHeight;
-    float DiameterMul;
-    float AlphaVal;
-    float CurrentAngle;
-
-    p->Direction.xX *= 0.5f;
-    CurrentHeight = 0.0f;
-    AlphaVal = 255.0f;
-    CurrentAngle = 30.75f * -g_ffFrameTime;
-    for (j = 0; (float)j < 5.0f; j++)
-    {
-        cos1 = 0.25f * PS2_dl_cosf(CurrentAngle);
-        sin1 = 0.25f * PS2_dl_sinf(CurrentAngle);
-        for (i = 0; (float)i < 12.0f; i++)
-        {
-            p1b[0] = p->Position.xX + p->Direction.xY * cos1;
-            p1b[1] = p->Position.xY + p->Direction.xY * sin1;
-            p1b[2] = 3.3f + (p->Position.xZ + CurrentHeight);
-            p1h[0] = p->Position.xX + p->Direction.xY * cos1;
-            p1h[1] = p->Position.xY + p->Direction.xY * sin1;
-            p1h[2] = p->Position.xZ + CurrentHeight;
-            CurrentAngle += 0.5235988f;
-            cos1 = 0.25f * PS2_dl_cosf(CurrentAngle);
-            sin1 = 0.25f * PS2_dl_sinf(CurrentAngle);
-            CurrentHeight += 0.2f;
-            p2b[0] = p->Position.xX + p->Direction.xY * cos1;
-            p2b[1] = p->Position.xY + p->Direction.xY * sin1;
-            p2b[2] = 3.3f + (p->Position.xZ + CurrentHeight);
-            p2h[0] = p->Position.xX + p->Direction.xY * cos1;
-            p2h[1] = p->Position.xY + p->Direction.xY * sin1;
-            p2h[2] = p->Position.xZ + CurrentHeight;
-            GLI_vSetGlobalAlpha(AlphaVal);
-            AlphaVal -= 5.0f;
-            if (AlphaVal <= 0.0f)
-                AlphaVal = 0.0f;
-            GLI_vDrawWorldQuadOpt((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, p2b, p1b, p1h, p2h, (GLI_tdstMaterial_*)p->pMaterial1);
-        }
-    }
-
-    CurrentHeight = 0.0f;
-    AlphaVal = 255.0f;
-    CurrentAngle = 12.55f * g_ffFrameTime;
-    DiameterMul = 1.0f;
-    for (j = 0; (float)j < 5.0f; j++)
-    {
-        cos1 = DiameterMul * (0.25f * PS2_dl_cosf(CurrentAngle));
-        sin1 = DiameterMul * (0.25f * PS2_dl_sinf(CurrentAngle));
-        for (i = 0; (float)i < 12.0f; i++)
-        {
-            p1b[0] = p->Position.xX + p->Direction.xY * sin1;
-            p1b[1] = p->Position.xY + p->Direction.xY * cos1;
-            p1b[2] = 3.2f + (p->Position.xZ + CurrentHeight);
-            p1h[0] = p->Position.xX + p->Direction.xY * sin1;
-            p1h[1] = p->Position.xY + p->Direction.xY * cos1;
-            p1h[2] = p->Position.xZ + CurrentHeight;
-            CurrentAngle += 0.5235988f;
-            cos1 = DiameterMul * (0.25f * PS2_dl_cosf(CurrentAngle));
-            sin1 = DiameterMul * (0.25f * PS2_dl_sinf(CurrentAngle));
-            CurrentHeight += 0.15f;
-            DiameterMul += 0.013f;
-            p2b[0] = p->Position.xX + p->Direction.xY * sin1;
-            p2b[1] = p->Position.xY + p->Direction.xY * cos1;
-            p2b[2] = 3.2f + (p->Position.xZ + CurrentHeight);
-            p2h[0] = p->Position.xX + p->Direction.xY * sin1;
-            p2h[1] = p->Position.xY + p->Direction.xY * cos1;
-            p2h[2] = p->Position.xZ + CurrentHeight;
-            GLI_vSetGlobalAlpha(AlphaVal);
-            AlphaVal -= 4.5f;
-            if (AlphaVal <= 0.0f)
-                AlphaVal = 0.0f;
-            GLI_vDrawWorldQuadOpt((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, p2b, p1b, p1h, p2h, (GLI_tdstMaterial_*)p->pMaterial1);
-        }
-    }
-
-    CurrentHeight = 0.0f;
-    AlphaVal = 255.0f;
-    CurrentAngle = 20.55f * g_ffFrameTime;
-    DiameterMul = 1.0f;
-    for (j = 0; (float)j < 5.0f; j++)
-    {
-        cos1 = DiameterMul * (0.25f * PS2_dl_cosf(CurrentAngle));
-        sin1 = DiameterMul * (0.25f * PS2_dl_sinf(CurrentAngle));
-        for (i = 0; (float)i < 12.0f; i++)
-        {
-            p1b[0] = p->Position.xX + p->Direction.xY * sin1;
-            p1b[1] = p->Position.xY + p->Direction.xY * cos1;
-            p1b[2] = 3.2f + (p->Position.xZ + CurrentHeight);
-            p1h[0] = p->Position.xX + p->Direction.xY * sin1;
-            p1h[1] = p->Position.xY + p->Direction.xY * cos1;
-            p1h[2] = p->Position.xZ + CurrentHeight;
-            CurrentAngle += 0.5235988f;
-            cos1 = DiameterMul * (0.25f * PS2_dl_cosf(CurrentAngle));
-            sin1 = DiameterMul * (0.25f * PS2_dl_sinf(CurrentAngle));
-            CurrentHeight += 0.175f;
-            DiameterMul += 0.01f;
-            p2b[0] = p->Position.xX + p->Direction.xY * sin1;
-            p2b[1] = p->Position.xY + p->Direction.xY * cos1;
-            p2b[2] = 3.2f + (p->Position.xZ + CurrentHeight);
-            p2h[0] = p->Position.xX + p->Direction.xY * sin1;
-            p2h[1] = p->Position.xY + p->Direction.xY * cos1;
-            p2h[2] = p->Position.xZ + CurrentHeight;
-            GLI_vSetGlobalAlpha(AlphaVal);
-            AlphaVal -= 4.0f;
-            if (AlphaVal <= 0.0f)
-                AlphaVal = 0.0f;
-            GLI_vDrawWorldQuadOpt((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, p2b, p1b, p1h, p2h, (GLI_tdstMaterial_*)p->pMaterial1);
-        }
-    }
-    p->ulType |= 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2656–2778 */
 /* addr: 0x001e3ee0  size: 1652 bytes */
@@ -3303,101 +2528,6 @@ void AGO2_DisplayFFWhirl(AGO2_Part_* p)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_DisplayFFRing(AGO2_Part_* p)
-{
-    int i;
-    int j;
-    float p1b[3];
-    float p1h[3];
-    float p2b[3];
-    float p2h[3];
-    float cos1;
-    float sin1;
-    float CurrentHeight;
-    float AlphaVal;
-    float CurrentAngle;
-
-    CurrentAngle = 5.0f * g_ffFrameTime;
-    p->Direction.xX *= 0.5f;
-    cos1 = 0.25f * PS2_dl_cosf(CurrentAngle);
-    sin1 = 0.25f * PS2_dl_sinf(CurrentAngle);
-    for (i = 0; (float)i < 12.0f; i++)
-    {
-        p1b[0] = p->Position.xX + p->Direction.xY * cos1;
-        p1b[1] = p->Position.xY + p->Direction.xY * sin1;
-        p1b[2] = p->Position.xZ;
-        p1h[0] = p->Position.xX + 1.1f * (p->Direction.xZ * cos1);
-        p1h[1] = p->Position.xY + 1.1f * (p->Direction.xZ * sin1);
-        p1h[2] = p->Position.xZ + 2.0f * p->Direction.xX;
-        CurrentAngle += 0.5235988f;
-        cos1 = 0.25f * PS2_dl_cosf(CurrentAngle);
-        sin1 = 0.25f * PS2_dl_sinf(CurrentAngle);
-        p2b[0] = p->Position.xX + p->Direction.xY * cos1;
-        p2b[1] = p->Position.xY + p->Direction.xY * sin1;
-        p2b[2] = p->Position.xZ;
-        p2h[0] = p->Position.xX + 1.1f * (p->Direction.xZ * cos1);
-        p2h[1] = p->Position.xY + 1.1f * (p->Direction.xZ * sin1);
-        p2h[2] = p->Position.xZ + 2.0f * p->Direction.xX;
-        GLI_vDrawWorldQuadOpt((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, p2b, p1b, p1h, p2h, (GLI_tdstMaterial_*)p->pMaterial1);
-    }
-
-    CurrentAngle = -5.6549869f * g_ffFrameTime;
-    cos1 = PS2_dl_cosf(CurrentAngle);
-    sin1 = PS2_dl_sinf(CurrentAngle);
-    for (i = 0; (float)i < 12.0f; i++)
-    {
-        p1b[0] = p->Position.xX + 0.25f * (p->Direction.xY * cos1);
-        p1b[1] = p->Position.xY + 0.25f * (p->Direction.xY * sin1);
-        p1b[2] = p->Position.xZ;
-        p1h[0] = p->Position.xX + 0.3f * (1.1f * (p->Direction.xZ * cos1));
-        p1h[1] = p->Position.xY + 0.3f * (1.1f * (p->Direction.xZ * sin1));
-        p1h[2] = p->Position.xZ + p->Direction.xX;
-        CurrentAngle += 0.5235988f;
-        cos1 = PS2_dl_cosf(CurrentAngle);
-        sin1 = PS2_dl_sinf(CurrentAngle);
-        p2b[0] = p->Position.xX + 0.25f * (p->Direction.xY * cos1);
-        p2b[1] = p->Position.xY + 0.25f * (p->Direction.xY * sin1);
-        p2b[2] = p->Position.xZ;
-        p2h[0] = p->Position.xX + 0.3f * (1.1f * (p->Direction.xZ * cos1));
-        p2h[1] = p->Position.xY + 0.3f * (1.1f * (p->Direction.xZ * sin1));
-        p2h[2] = p->Position.xZ + p->Direction.xX;
-        GLI_vDrawWorldQuadOpt((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, p2b, p1b, p1h, p2h, (GLI_tdstMaterial_*)p->pMaterial1);
-    }
-
-    CurrentHeight = -1.0f;
-    AlphaVal = 255.0f;
-    CurrentAngle = 30.75f * -g_ffFrameTime;
-    for (j = 0; (float)j < 5.0f; j++)
-    {
-        cos1 = 0.25f * PS2_dl_cosf(CurrentAngle);
-        sin1 = 0.25f * PS2_dl_sinf(CurrentAngle);
-        for (i = 0; (float)i < 12.0f; i++)
-        {
-            p1b[0] = p->Position.xX + p->Direction.xY * cos1;
-            p1b[1] = p->Position.xY + p->Direction.xY * sin1;
-            p1b[2] = 2.3f + (p->Position.xZ + CurrentHeight);
-            p1h[0] = p->Position.xX + p->Direction.xY * cos1;
-            p1h[1] = p->Position.xY + p->Direction.xY * sin1;
-            p1h[2] = p->Position.xZ + CurrentHeight;
-            CurrentAngle += 0.5235988f;
-            cos1 = 0.25f * PS2_dl_cosf(CurrentAngle);
-            sin1 = 0.25f * PS2_dl_sinf(CurrentAngle);
-            CurrentHeight += 0.2f;
-            p2b[0] = p->Position.xX + p->Direction.xY * cos1;
-            p2b[1] = p->Position.xY + p->Direction.xY * sin1;
-            p2b[2] = 2.3f + (p->Position.xZ + CurrentHeight);
-            p2h[0] = p->Position.xX + p->Direction.xY * cos1;
-            p2h[1] = p->Position.xY + p->Direction.xY * sin1;
-            p2h[2] = p->Position.xZ + CurrentHeight;
-            GLI_vSetGlobalAlpha(AlphaVal);
-            AlphaVal -= 5.0f;
-            if (AlphaVal <= 0.0f)
-                AlphaVal = 0.0f;
-            GLI_vDrawWorldQuadOpt((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, p2b, p1b, p1h, p2h, (GLI_tdstMaterial_*)p->pMaterial1);
-        }
-    }
-    p->ulType |= 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2646–2650 */
 /* addr: 0x001e4560  size: 28 bytes */
@@ -3410,14 +2540,6 @@ void AGO2_DisplayFFRing(AGO2_Part_* p)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char AGO2_CreateFFRing(int unused, AGO2_Part_* p, float xParam1)
-{
-    (void)unused;
-    p->xSize[0] = xParam1;
-    p->xSize[1] = 1.0f;
-    p->xTransparency = 255.0f;
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2553–2640 */
 /* addr: 0x001e4580  size: 1072 bytes */
@@ -3501,60 +2623,6 @@ unsigned char AGO2_CreateFFRing(int unused, AGO2_Part_* p, float xParam1)
  */
 extern int GLI_vDrawWorldSpriteWithUVsOpt(MTH3D_tdstVector_* param0, GLI_tdstMaterial_* hVisualMaterial, float SizeX, float SizeY, float U1, float V1, float U2, float V2, GLD_tdstViewportAttributes_* _p_stViewport, unsigned int AnimTime);
 
-void AGO2_DisplayFireWall2(AGO2_Part_* p)
-{
-    MTH3D_tdstVector_ pdir;
-    MTH3D_tdstVector_ v1;
-    MTH3D_tdstVector_ v2;
-    float xNorm;
-    MTH3D_tdstVector_ Pos;
-    int i;
-    int CurrentAnim;
-    float U1;
-    float V1;
-    float TimeDif;
-    int y;
-
-    MTH3D_M_vSubVector((MTH3D_tdstVector_*)&pdir, (MTH3D_tdstVector_*)&p->Direction, (MTH3D_tdstVector_*)&p->Position);
-    AGO2_vNormalizeVector((MTH3D_tdstVector_*)&pdir);
-    MTH3D_M_vSetVectorElements(&Pos, 0.0f, 0.0f, 1.0f);
-    ((MTH3D_tdstVector_*)&v2)->xX = Pos.xY * ((MTH3D_tdstVector_*)&pdir)->xZ - Pos.xZ * ((MTH3D_tdstVector_*)&pdir)->xY;
-    ((MTH3D_tdstVector_*)&v2)->xY = Pos.xZ * ((MTH3D_tdstVector_*)&pdir)->xX - Pos.xX * ((MTH3D_tdstVector_*)&pdir)->xZ;
-    ((MTH3D_tdstVector_*)&v2)->xZ = Pos.xX * ((MTH3D_tdstVector_*)&pdir)->xY - Pos.xY * ((MTH3D_tdstVector_*)&pdir)->xX;
-    MTH3D_M_vAddVector((MTH3D_tdstVector_*)&v1, &Pos, (MTH3D_tdstVector_*)&v2);
-    ((MTH3D_tdstVector_*)&v2)->xX = Pos.xX - ((MTH3D_tdstVector_*)&v2)->xX;
-    ((MTH3D_tdstVector_*)&v2)->xY = Pos.xY - ((MTH3D_tdstVector_*)&v2)->xY;
-    ((MTH3D_tdstVector_*)&v2)->xZ = ((MTH3D_tdstVector_*)&v1)->xZ;
-    AGO2_vNormalizeVector((MTH3D_tdstVector_*)&v1);
-    AGO2_vNormalizeVector((MTH3D_tdstVector_*)&v2);
-    MTH3D_M_vMulScalarVector((MTH3D_tdstVector_*)&pdir, 10.0f, (MTH3D_tdstVector_*)&pdir);
-    MTH3D_M_vSubVector((MTH3D_tdstVector_*)&v1, (MTH3D_tdstVector_*)&p->Position, (MTH3D_tdstVector_*)&pdir);
-    MTH3D_M_vAddVector((MTH3D_tdstVector_*)&v2, (MTH3D_tdstVector_*)&p->Position, (MTH3D_tdstVector_*)&pdir);
-    TimeDif = 0.0f;
-    ((MTH3D_tdstVector_*)&pdir)->xX = (1.0f / 30.0f) * (((MTH3D_tdstVector_*)&v2)->xX - ((MTH3D_tdstVector_*)&v1)->xX);
-    ((MTH3D_tdstVector_*)&pdir)->xY = (1.0f / 30.0f) * (((MTH3D_tdstVector_*)&v2)->xY - ((MTH3D_tdstVector_*)&v1)->xY);
-    ((MTH3D_tdstVector_*)&pdir)->xZ = (1.0f / 30.0f) * (((MTH3D_tdstVector_*)&v2)->xZ - ((MTH3D_tdstVector_*)&v1)->xZ);
-    Pos.xX = ((MTH3D_tdstVector_*)&v1)->xX + ((MTH3D_tdstVector_*)&pdir)->xX * TimeDif;
-    Pos.xY = ((MTH3D_tdstVector_*)&v1)->xY + ((MTH3D_tdstVector_*)&pdir)->xY * TimeDif;
-    Pos.xZ = 2.0f + (((MTH3D_tdstVector_*)&v1)->xZ + ((MTH3D_tdstVector_*)&pdir)->xZ * TimeDif);
-    CurrentAnim = (int)(16.0f * (1.3333334f * (g_ffFrameTime - (float)p->AnimTime) - (float)(int)(1.3333334f * (g_ffFrameTime - (float)p->AnimTime))));
-    for (i = 0; i < 30; i++)
-    {
-        y = CurrentAnim >> 2;
-        U1 = (float)(CurrentAnim - (y << 2)) / 4.0f;
-        V1 = (float)y / 4.0f;
-        GLI_vSetGlobalAlpha(255.0f);
-        GLI_vDrawWorldSpriteWithUVsOpt(&Pos, (GLI_tdstMaterial_*)p->pMaterial1, 3.0f, 3.0f, U1, V1, 0.25f + U1, 0.25f + V1, (GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, p->AnimTime);
-        CurrentAnim += i + 10;
-        while (CurrentAnim >= 16)
-            CurrentAnim -= 16;
-        Pos.xX += ((MTH3D_tdstVector_*)&pdir)->xX;
-        Pos.xY += ((MTH3D_tdstVector_*)&pdir)->xY;
-        Pos.xZ += ((MTH3D_tdstVector_*)&pdir)->xZ;
-    }
-    p->ulType |= 1;
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2462–2549 */
 /* addr: 0x001e49b0  size: 1136 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3632,21 +2700,6 @@ void AGO2_DisplayFireWall2(AGO2_Part_* p)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_DisplayFireWall(AGO2_Part_* p)
-{
-    int y;
-    float TimeDif;
-    float V1;
-    float U1;
-    int CurrentAnim;
-    int i;
-    MTH3D_tdstVector_ Pos;
-    float xNorm;
-    MTH3D_tdstVector_ v2;
-    MTH3D_tdstVector_ v1;
-    MTH3D_tdstVector_ pdir;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2334–2364 */
 /* addr: 0x001e4e20  size: 276 bytes */
@@ -3676,47 +2729,6 @@ void AGO2_DisplayFireWall(AGO2_Part_* p)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char AGO2_CreateFireWall(int unused, AGO2_Part_* p, float xParam1)
-{
-    float* p2;
-    float* p1;
-    AGO2_Part_* pp;
-    unsigned int Found;
-    unsigned int i;
-
-    Found = 0;
-    i = 0;
-    while (i < g_ulNumberOfAgos2 && !Found)
-    {
-        if (p->ulBaseID == g_pAGO2Parts[i].ulBaseID && (int)xParam1 == (int)g_pAGO2Parts[i].Vector4.xX)
-            Found = 1;
-        else
-            i++;
-    }
-    if (Found)
-    {
-        pp = &g_pAGO2Parts[i];
-        p1 = (float*)&p->Position;
-        p2 = (float*)&pp->Position;
-        p2[0] = p1[0];
-        p2[1] = p1[1];
-        p2[2] = p1[2];
-        p2[3] = p1[3];
-        p2[4] = p1[4];
-        p2[5] = p1[5];
-        p2[6] = p1[6];
-        p2[7] = p1[7];
-        p = pp;
-        p->ulType = 0;
-    }
-    p->Vector4.xX = xParam1;
-    p->xSize[0] = 1.0f;
-    p->xSize[1] = 1.0f;
-    p->xTransparency = 255.0f;
-    if (Found)
-        return 0;
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2330–2330 */
 /* addr: 0x001e4f40  size: 8 bytes */
@@ -3725,9 +2737,6 @@ unsigned char AGO2_CreateFireWall(int unused, AGO2_Part_* p, float xParam1)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_ProcessEmpty(void)
-{
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2306–2316 */
 /* addr: 0x001e4f50  size: 100 bytes */
@@ -3744,20 +2753,6 @@ void AGO2_ProcessEmpty(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_ShrinkFire(AGO2_Part_* p)
-{
-    float Value;
-
-    Value = 1.0f - g_fTimeDifference * p->xShrinkingSpeed;
-
-    p->xSize[0] *= Value;
-    p->xSize[1] *= Value;
-
-    if (p->xSize[0] < 0.01f)
-
-
-        p->ulType |= 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2251–2300 */
 /* addr: 0x001e4fc0  size: 244 bytes */
@@ -3791,49 +2786,6 @@ void AGO2_ShrinkFire(AGO2_Part_* p)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_FadeFire(AGO2_Part_* p)
-{
-    AGO2_FlowParticle_* param0;
-    unsigned int i;
-    unsigned int OneIsAlive;
-    float TimeDiffTrsp;
-
-    if (!p->hGroup)
-    {
-        p->GroupNumber = 0;
-        p->ulType |= 1;
-        return;
-    }
-    param0 = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-    if (!param0)
-    {
-        printf("AGO2MEM DECONNE UN MAX !!!\n");
-        return;
-    }
-    OneIsAlive = 0;
-    TimeDiffTrsp = g_fTimeDifference * p->xTransparencySpeed;
-    for (i = 0; i < p->GroupNumber; i++)
-    {
-        if (!(param0->Flags & 1))
-        {
-            param0->xTransparency -= TimeDiffTrsp;
-            if (param0->xTransparency < 0.0f)
-            {
-                param0->xTransparency = 0.0f;
-                param0->Flags |= 1;
-            }
-            else
-            {
-                OneIsAlive = 1;
-            }
-        }
-        param0++;
-    }
-    if (!OneIsAlive)
-    {
-        p->ulType |= 1;
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2200–2248 */
 /* addr: 0x001e50c0  size: 280 bytes */
@@ -3863,39 +2815,6 @@ void AGO2_FadeFire(AGO2_Part_* p)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_ProcessFire(AGO2_Part_* p)
-{
-    AGO2_FlowParticle_* param0;
-    unsigned int i;
-    float TimeDiff;
-    float LocalG;
-
-    if (!p->hGroup)
-    {
-        p->GroupNumber = 0;
-        p->ulType |= 1;
-        return;
-    }
-    param0 = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-    if (!param0)
-    {
-        printf("AGO2MEM DECONNE UN MAX !!!\n");
-        return;
-    }
-    LocalG = (g_fTimeDifference > 0.033333335f) ? 0.033333335f : g_fTimeDifference;
-    TimeDiff = 9.81f * LocalG;
-    for (i = 0; i < p->GroupNumber; i++)
-    {
-        if (!(param0->Flags & 1))
-        {
-            param0->Direction.xZ += TimeDiff;
-            param0->Position.xX += param0->Direction.xX * LocalG;
-            param0->Position.xY += param0->Direction.xY * LocalG;
-            param0->Position.xZ += param0->Direction.xZ * LocalG;
-        }
-        param0++;
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2145–2197 */
 /* addr: 0x001e51e0  size: 644 bytes */
@@ -3937,47 +2856,6 @@ void AGO2_ProcessFire(AGO2_Part_* p)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-/* Same parameter list as AGO2_CreateFlow: retail reads ParticleNumber from
-   the 16th-argument stack slot. */
-unsigned char AGO2_CreateFire(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber)
-{
-    AGO2_FlowParticle_* pParticleArrayOrg;
-    unsigned int i;
-    AGO2_FlowParticle_* pParticleArray;
-
-    p->GroupNumber = ParticleNumber * 2;
-    p->hGroup = AGO2_MEM_Alloc(ParticleNumber * 2 * sizeof(AGO2_FlowParticle_));
-    if (p->hGroup == 0)
-    {
-        p->GroupNumber = 0;
-        p->ulType |= 1;
-        return 0;
-    }
-    pParticleArrayOrg = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-    if (pParticleArrayOrg == NULL)
-    {
-        printf("AGO2MEM DECONNE UN MAX !!!\n");
-        return 0;
-    }
-    p->xTransparencySpeed = 400.0f;
-    p->xSize[0] = 0.3f;
-    p->xSize[1] = 0.3f;
-    p->xShrinkingSpeed = 0.1f;
-    pParticleArray = pParticleArrayOrg;
-    for (i = 0; i < ParticleNumber * 2; i++)
-    {
-        pParticleArray->Position.xX = Position->xX + (-1.3f + (1.3f - -1.3f) * (float)rand() / 2147483648.0f);
-        pParticleArray->Position.xY = Position->xY + (-1.3f + (1.3f - -1.3f) * (float)rand() / 2147483648.0f);
-        pParticleArray->Position.xZ = Position->xZ + (-1.3f + (1.3f - -1.3f) * (float)rand() / 2147483648.0f);
-        pParticleArray->xTransparency = 255.0f;
-        pParticleArray->Direction.xX = -0.5f + (0.5f - -0.5f) * (float)rand() / 2147483648.0f;
-        pParticleArray->Direction.xY = -0.5f + (0.5f - -0.5f) * (float)rand() / 2147483648.0f;
-        pParticleArray->Direction.xZ = 1.5f + (1.6f - 1.5f) * (float)rand() / 2147483648.0f;
-        pParticleArray->Flags = 0;
-        pParticleArray++;
-    }
-    return 1;
-}
 
 extern char* AGO2_MEM_GetPointerFromHandle(unsigned int Handle);
 /* Callers pass the viewport first and the two sizes in f12/f13; the recovered
@@ -4003,21 +2881,6 @@ extern void GLI_vDisplaySerialParticleRain(GLD_tdstViewportAttributes_* param0, 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_DisplayBees(AGO2_Part_* p)
-{
-    AGO2_FlowParticle_* pParticleArray;
-
-    if (p->hGroup)
-    {
-        pParticleArray = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-        if (!pParticleArray)
-        {
-            printf("AGO2MEM DECONNE UN MAX !!!\n");
-            return;
-        }
-        GLI_vDisplaySerialBees((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, (AGO2_BeeParticle_*)pParticleArray, p->GroupNumber, (void*)p->pMaterial1, (void*)p->pMaterial2, p->xSize[0], p->xSize[1]);
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2056–2112 */
 /* addr: 0x001e54e0  size: 1104 bytes */
@@ -4077,52 +2940,6 @@ static inline void AGO2_vAddToVector(AGO_V4D_* p_stVector, float xX, float xY, f
 static inline float AGO2_xSqrDistance(MTH3D_tdstVector_* p_stA, MTH3D_tdstVector_* p_stB)
 {
     return AGO2_xSqrNorm(p_stA->xX - p_stB->xX, p_stA->xY - p_stB->xY, p_stA->xZ - p_stB->xZ);
-}
-
-void AGO2_ProcessBees(AGO2_Part_* p)
-{
-    AGO2_BeeParticle_* pParticleArray;
-    unsigned int i;
-    float TimeDiff;
-    float Val;
-    MTH3D_tdstVector_ v2;
-    float xNorm;
-
-    if (!p->hGroup)
-    {
-        p->GroupNumber = 0;
-        p->ulType |= 1;
-        return;
-    }
-    pParticleArray = (AGO2_BeeParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-    if (!pParticleArray)
-    {
-        printf("AGO2MEM DECONNE UN MAX !!!\n");
-        return;
-    }
-    TimeDiff = g_fTimeDifference;
-    for (i = 0; i < p->GroupNumber; pParticleArray++, i++)
-    {
-        if (pParticleArray->Flags & 1)
-            continue;
-        Val = AGO2_xSqrDistance((MTH3D_tdstVector_*)&AGO_g_BeeTargetPosition, (MTH3D_tdstVector_*)&pParticleArray->Position) / 150.0f;
-        if (Val > 3.0f)
-            Val = 3.0f;
-        Val += 0.1f;
-        ((int*)&v2)[0] = ((int*)&AGO_g_BeeTargetPosition)[0];
-        ((int*)&v2)[1] = ((int*)&AGO_g_BeeTargetPosition)[1];
-        ((int*)&v2)[2] = ((int*)&AGO_g_BeeTargetPosition)[2];
-        v2.xX += (0.3f + Val) * AGO2_M_xRand(-2.0f, 2.0f) + (float)pParticleArray->Pads[0] * Val;
-        v2.xY += (0.3f + Val) * AGO2_M_xRand(-2.0f, 2.0f) + (float)pParticleArray->Pads[1] * Val;
-        v2.xZ += (0.3f + Val) * AGO2_M_xRand(-2.0f, 2.0f) + pParticleArray->xTransparency * Val;
-        AGO2_vAddToVector(&pParticleArray->Direction, v2.xX - ((MTH3D_tdstVector_*)&pParticleArray->Position)->xX, v2.xY - ((MTH3D_tdstVector_*)&pParticleArray->Position)->xY, v2.xZ - ((MTH3D_tdstVector_*)&pParticleArray->Position)->xZ);
-        MTH3D_M_vSubVector((MTH3D_tdstVector_*)&pParticleArray->PreviousPosition, (MTH3D_tdstVector_*)&AGO_g_BeeTargetPosition, (MTH3D_tdstVector_*)&pParticleArray->Position);
-        pParticleArray->Position.xX += pParticleArray->Parameters.xX * (pParticleArray->Direction.xX * TimeDiff);
-        pParticleArray->Position.xY += pParticleArray->Parameters.xX * (pParticleArray->Direction.xY * TimeDiff);
-        pParticleArray->Position.xZ += pParticleArray->Parameters.xX * (pParticleArray->Direction.xZ * TimeDiff);
-        AGO2_vNormalizeVector((MTH3D_tdstVector_*)&pParticleArray->Direction);
-        AGO2_vNormalizeVector((MTH3D_tdstVector_*)&pParticleArray->PreviousPosition);
-    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1987–2052 */
@@ -4193,67 +3010,6 @@ void AGO2_ProcessBees(AGO2_Part_* p)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-/* Same parameter list as AGO2_CreateFlow: retail reads ParticleNumber from
-   the 16th-argument stack slot. */
-unsigned char AGO2_CreateBees(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber)
-{
-    unsigned int i;
-    float RandomValue;
-    float RandomValueX;
-    float RandomValueY;
-    float RandomValueZ;
-    AGO2_BeeParticle_* pParticleArray;
-    AGO2_BeeParticle_* pParticleArrayOrg;
-    float* p1;
-    float* p2;
-
-    Position->xZ += 1.0f;
-    p1 = (float*)&AGO_g_BeeTargetPosition; p2 = (float*)Position; p1[0] = p2[0]; p1[1] = p2[1]; p1[2] = p2[2]; p1[3] = p2[3];
-
-    if (AGO2_bIsTypeAlreadyExists(ulParticleType))
-        return 0;
-
-    p->GroupNumber = ParticleNumber;
-    p->hGroup = AGO2_MEM_Alloc(ParticleNumber * sizeof(AGO2_BeeParticle_));
-    if (p->hGroup == 0)
-    {
-        p->GroupNumber = 0;
-        p->ulType |= 1;
-        return 0;
-    }
-    pParticleArrayOrg = (AGO2_BeeParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-    if (pParticleArrayOrg == NULL)
-    {
-        printf("AGO2MEM DECONNE UN MAX !!!\n");
-        return 0;
-    }
-    p->xTransparencySpeed = 100.0f;
-    p->xSize[0] = 0.03f;
-    p->xSize[1] = 0.03f;
-    p->xShrinkingSpeed = 0.1f;
-    pParticleArray = pParticleArrayOrg;
-    for (i = 0; i < ParticleNumber; i++)
-    {
-        RandomValue = AGO2_M_xRand(60.0f, 150.0f);
-        RandomValueX = AGO2_M_xRand(-RandomValue, RandomValue);
-        RandomValueY = AGO2_M_xRand(-RandomValue, RandomValue);
-        RandomValueZ = AGO2_M_xRand(-RandomValue, RandomValue);
-        pParticleArray->Pads[0] = (int)AGO2_M_xRand(-5.0f, 5.0f);
-        pParticleArray->Pads[1] = (int)AGO2_M_xRand(-5.0f, 5.0f);
-        pParticleArray->xTransparency = AGO2_M_xRand(-5.0f, 5.0f);
-        pParticleArray->Position.xX = Position->xX + RandomValueX;
-        pParticleArray->Position.xY = Position->xY + RandomValueY;
-        pParticleArray->Position.xZ = Position->xZ + RandomValueZ;
-        pParticleArray->Direction.xX = AGO2_M_xRand(-5.0f, 5.0f);
-        pParticleArray->Direction.xY = AGO2_M_xRand(-5.0f, 5.0f);
-        pParticleArray->Direction.xZ = AGO2_M_xRand(-6.5f, 25.5f);
-        pParticleArray->Parameters.xX = AGO2_M_xRand(0.5f, 2.0f);
-        pParticleArray->Flags = 0;
-        pParticleArray++;
-    }
-    return 1;
-}
-
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1958–1975 */
 /* addr: 0x001e5db0  size: 104 bytes */
@@ -4269,21 +3025,6 @@ unsigned char AGO2_CreateBees(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_DisplayLeaves(AGO2_Part_* p)
-{
-    AGO2_LeavesParticle_* pParticleArray;
-
-    if (p->hGroup)
-    {
-        pParticleArray = (AGO2_LeavesParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-        if (!pParticleArray)
-        {
-            printf("AGO2MEM DECONNE UN MAX !!!\n");
-            return;
-        }
-        GLI_vDisplaySerialLeaves((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, pParticleArray, p->GroupNumber, (void*)p->pMaterial1, p->xSize[0], p->xSize[1]);
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1799–1954 */
 /* addr: 0x001e5e20  size: 3104 bytes */
@@ -4398,25 +3139,6 @@ void AGO2_DisplayLeaves(AGO2_Part_* p)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_ProcessLeavesParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit(AGO2_Part_* p)
-{
-    float xNorm;
-    MTH3D_tdstVector_ V2;
-    float RandomValueZ;
-    float RandomValueY;
-    float RandomValueX;
-    float RandomValue;
-    float sin1;
-    float cos1;
-    MTH3D_tdstVector_ Norm;
-    float Dot2;
-    float Dot1;
-    AGO_V4D_ v1;
-    float TimeDiff;
-    int i;
-    AGO2_LeavesParticle_* pParticleArray;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1694–1796 */
 /* addr: 0x001e6a40  size: 2288 bytes */
@@ -4512,20 +3234,6 @@ void AGO2_ProcessLeavesParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit(AG
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char AGO2_CreateSerialCameraParticleLeaves(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, unsigned int ParticleNumber)
-{
-    float xNorm;
-    float* p2;
-    float* p1;
-    MTH3D_tdstVector_ V2;
-    AGO2_LeavesParticle_* pParticleArrayOrg;
-    AGO2_LeavesParticle_* pParticleArray;
-    float RandomValueY;
-    float RandomValueX;
-    float RandomValue;
-    unsigned int i;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1602–1681 */
 /* addr: 0x001e7330  size: 1404 bytes */
@@ -4588,20 +3296,6 @@ unsigned char AGO2_CreateSerialCameraParticleLeaves(unsigned int ulParticleType,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_ProcessSnowParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit(AGO2_Part_* p)
-{
-    float RandomValueZ;
-    float RandomValueY;
-    float RandomValueX;
-    float RandomValue;
-    float xNorm;
-    AGO_V4D_ v1;
-    float TimeDiff;
-    float LocalG;
-    int i;
-    AGO2_RainParticle_* pParticleArray;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1532–1599 */
 /* addr: 0x001e78b0  size: 1176 bytes */
@@ -4666,69 +3360,6 @@ void AGO2_ProcessSnowParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit(AGO2
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-/* Same parameter list as AGO2_CreateFlow: retail reads ParticleNumber from
-   the 16th-argument stack slot. */
-unsigned char AGO2_CreateSerialCameraParticleSnow(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber)
-{
-    unsigned int i;
-    float RandomValue;
-    float RandomValueX;
-    float RandomValueY;
-    AGO2_RainParticle_* pParticleArray;
-    AGO2_RainParticle_* pParticleArrayOrg;
-    float* p1;
-    float* p2;
-
-    if (ParticleNumber > 200)
-        ParticleNumber = 200;
-
-    p1 = (float*)&AGO_g_CameraCoordinatesForRain; p2 = (float*)&AGO_g_CameraDirectionForRain;
-    p1[0] = Position->xX; p1[1] = Position->xY; p1[2] = Position->xZ; p1[3] = Position->xW;
-    p2[0] = Direction->xX; p2[1] = Direction->xY; p2[2] = Direction->xZ; p2[3] = Direction->xW;
-
-    if (AGO2_bIsTypeAlreadyExists(ulParticleType))
-        return 0;
-
-    p->GroupNumber = ParticleNumber;
-    p->hGroup = AGO2_MEM_Alloc(ParticleNumber * sizeof(AGO2_RainParticle_));
-    if (p->hGroup == 0)
-    {
-        p->GroupNumber = 0;
-        p->ulType |= 1;
-        return 0;
-    }
-    pParticleArrayOrg = (AGO2_RainParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-    if (pParticleArrayOrg == NULL)
-    {
-        printf("AGO2MEM DECONNE UN MAX !!!\n");
-        return 0;
-    }
-    pParticleArray = pParticleArrayOrg;
-    i = 0;
-    p->xLimit = AGO_g_CameraCoordinatesForRain.xZ - 20.0f;
-    p->xTransparencySpeed = 0.0f;
-    p->xSize[0] = 0.15f;
-    p->xSize[1] = 0.15f;
-    p->xShrinkingSpeed = 0.0f;
-    for (; i < ParticleNumber; i++)
-    {
-        RandomValue = AGO2_M_xRand(10.0f, 100.0f);
-        RandomValueX = AGO2_M_xRand(-RandomValue, RandomValue);
-        RandomValueY = AGO2_M_xRand(-RandomValue, RandomValue);
-        pParticleArray->Pads[0] = (unsigned int)AGO2_M_xRand(0.2f, 1.2f);
-        pParticleArray->Pads[1] = (unsigned int)AGO2_M_xRand(-10.0f, 10.0f);
-        pParticleArray->Position.xX = RandomValueX + (Position->xX + RandomValue * Direction->xX);
-        pParticleArray->Position.xY = RandomValueY + (Position->xY + RandomValue * Direction->xY);
-        pParticleArray->Position.xZ = 15.0f + (Position->xZ + RandomValue * Direction->xZ);
-        pParticleArray->xTransparency = 150.0f;
-        pParticleArray->Direction.xX = AGO2_M_xRand(-6.0f, 6.0f);
-        pParticleArray->Direction.xY = AGO2_M_xRand(-6.0f, 6.0f);
-        pParticleArray->Direction.xZ = AGO2_M_xRand(-15.0f, -2.0f);
-        pParticleArray->Flags = 0;
-        pParticleArray++;
-    }
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1502–1520 */
 /* addr: 0x001e7d50  size: 112 bytes */
@@ -4745,22 +3376,6 @@ unsigned char AGO2_CreateSerialCameraParticleSnow(unsigned int ulParticleType, A
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_DisplayRainParticleSpriteGroup(AGO2_Part_* p)
-{
-    AGO2_RainParticle_* pParticleArray;
-
-    if (p->hGroup)
-    {
-        pParticleArray = (AGO2_RainParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-        if (!pParticleArray)
-        {
-            printf("AGO2MEM DECONNE UN MAX !!!\n");
-            return;
-        }
-        if (p->GroupNumber)
-            GLI_vDisplaySerialParticleRain((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, pParticleArray, p->GroupNumber, (void*)p->pMaterial1, p->xSize[0], p->xSize[1]);
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1418–1499 */
 /* addr: 0x001e7dc0  size: 1092 bytes */
@@ -4826,20 +3441,6 @@ void AGO2_DisplayRainParticleSpriteGroup(AGO2_Part_* p)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_ProcessRainNearCameraParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit(AGO2_Part_* p)
-{
-    float RandomValueZ;
-    float RandomValueY;
-    float RandomValueX;
-    float RandomValue;
-    float xNorm;
-    AGO_V4D_ v1;
-    float TimeDiff;
-    float LocalG;
-    unsigned int i;
-    AGO2_RainParticle_* pParticleArray;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1333–1414 */
 /* addr: 0x001e8210  size: 1092 bytes */
@@ -4905,62 +3506,6 @@ void AGO2_ProcessRainNearCameraParticleGroupWithSpeedAndGravityAndKillWithLowerZ
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_ProcessRainParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit(AGO2_Part_* p)
-{
-    AGO2_RainParticle_* pParticleArray;
-    unsigned int i;
-    float LocalG;
-    float TimeDiff;
-    AGO_V4D_ v1;
-    float xNorm;
-    float RandomValue;
-    float RandomValueX;
-    float RandomValueY;
-    float RandomValueZ;
-
-    if (!p->hGroup)
-    {
-        p->GroupNumber = 0;
-        p->ulType |= 1;
-        return;
-    }
-    pParticleArray = (AGO2_RainParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-    if (!pParticleArray)
-    {
-        printf("AGO2MEM DECONNE UN MAX !!!\n");
-        return;
-    }
-    TimeDiff = g_fTimeDifference;
-    if (TimeDiff > 0.033333335f)
-        TimeDiff = 0.033333335f;
-    LocalG = 9.81f * TimeDiff;
-    for (i = 0; i < p->GroupNumber; pParticleArray++, i++)
-    {
-        if (pParticleArray->Flags & 1)
-            continue;
-        pParticleArray->Direction.xZ -= LocalG;
-        pParticleArray->Position.xX += pParticleArray->Direction.xX * TimeDiff;
-        pParticleArray->Position.xY += pParticleArray->Direction.xY * TimeDiff;
-        pParticleArray->Position.xZ += pParticleArray->Direction.xZ * TimeDiff;
-        MTH3D_M_vSubVector((MTH3D_tdstVector_*)&v1, (MTH3D_tdstVector_*)&pParticleArray->Position, (MTH3D_tdstVector_*)&AGO_g_CameraCoordinatesForRain);
-        AGO2_vNormalizeVector((MTH3D_tdstVector_*)&v1);
-        xNorm = AGO2_xDotVector((MTH3D_tdstVector_*)&v1, (MTH3D_tdstVector_*)&AGO_g_CameraDirectionForRain);
-        if (pParticleArray->Position.xZ < p->xLimit || xNorm < 0.85f)
-        {
-            RandomValue = AGO2_M_xRand(10.0f, 100.0f);
-            RandomValueX = AGO2_M_xRand(-RandomValue, RandomValue);
-            RandomValueY = AGO2_M_xRand(-RandomValue, RandomValue);
-            RandomValueZ = AGO2_M_xRand(-RandomValue, RandomValue);
-            pParticleArray->Position.xX = RandomValueX + (AGO_g_CameraCoordinatesForRain.xX + RandomValue * AGO_g_CameraDirectionForRain.xX);
-            pParticleArray->Position.xY = RandomValueY + (AGO_g_CameraCoordinatesForRain.xY + RandomValue * AGO_g_CameraDirectionForRain.xY);
-            pParticleArray->Position.xZ = RandomValueZ + (AGO_g_CameraCoordinatesForRain.xZ + RandomValue * AGO_g_CameraDirectionForRain.xZ);
-            pParticleArray->xTransparency = 85.0f;
-            pParticleArray->Direction.xX = AGO2_M_xRand(0.5f, 30.5f);
-            pParticleArray->Direction.xY = AGO2_M_xRand(0.5f, 30.5f);
-            pParticleArray->Direction.xZ = AGO2_M_xRand(-60.0f, -30.0f);
-        }
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1268–1330 */
 /* addr: 0x001e8660  size: 920 bytes */
@@ -5037,63 +3582,6 @@ void AGO2_ProcessRainParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit(AGO2
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-/* Same parameter list as AGO2_CreateFlow: retail reads ParticleNumber from
-   the 16th-argument stack slot. */
-unsigned char AGO2_CreateSerialCameraParticleRain(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber)
-{
-    unsigned int i;
-    float RandomValue;
-    float RandomValueX;
-    float RandomValueY;
-    AGO2_RainParticle_* pParticleArray;
-    AGO2_RainParticle_* pParticleArrayOrg;
-    float* p1;
-    float* p2;
-
-    p1 = (float*)&AGO_g_CameraCoordinatesForRain; p2 = (float*)&AGO_g_CameraDirectionForRain;
-    p1[0] = Position->xX; p1[1] = Position->xY; p1[2] = Position->xZ; p1[3] = Position->xW;
-    p2[0] = Direction->xX; p2[1] = Direction->xY; p2[2] = Direction->xZ; p2[3] = Direction->xW;
-
-    if (AGO2_bIsTypeAlreadyExists(ulParticleType))
-        return 0;
-
-    p->GroupNumber = ParticleNumber;
-    p->hGroup = AGO2_MEM_Alloc(ParticleNumber * sizeof(AGO2_RainParticle_));
-    if (p->hGroup == 0)
-    {
-        p->GroupNumber = 0;
-        p->ulType |= 1;
-        return 0;
-    }
-    pParticleArrayOrg = (AGO2_RainParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-    if (pParticleArrayOrg == NULL)
-    {
-        printf("AGO2MEM DECONNE UN MAX !!!\n");
-        return 0;
-    }
-    p->xLimit = AGO_g_CameraCoordinatesForRain.xZ - 6.0f;
-    p->xTransparencySpeed = 0.0f;
-    p->xSize[0] = 0.15f;
-    p->xSize[1] = 1.0f;
-    p->xShrinkingSpeed = 0.0f;
-    pParticleArray = pParticleArrayOrg;
-    for (i = 0; i < ParticleNumber; i++)
-    {
-        RandomValue = AGO2_M_xRand(10.0f, 50.0f);
-        RandomValueX = AGO2_M_xRand(-RandomValue, RandomValue);
-        RandomValueY = AGO2_M_xRand(-RandomValue, RandomValue);
-        pParticleArray->Position.xX = RandomValueX + (Position->xX + RandomValue * Direction->xX);
-        pParticleArray->Position.xY = RandomValueY + (Position->xY + RandomValue * Direction->xY);
-        pParticleArray->Position.xZ = 15.0f + (Position->xZ + RandomValue * Direction->xZ);
-        pParticleArray->xTransparency = 85.0f;
-        pParticleArray->Direction.xX = AGO2_M_xRand(10.5f, 20.5f);
-        pParticleArray->Direction.xY = AGO2_M_xRand(10.5f, 20.5f);
-        pParticleArray->Direction.xZ = AGO2_M_xRand(-60.0f, -30.0f);
-        pParticleArray->Flags = 0;
-        pParticleArray++;
-    }
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1253–1256 */
 /* addr: 0x001e8a00  size: 68 bytes */
@@ -5105,17 +3593,6 @@ unsigned char AGO2_CreateSerialCameraParticleRain(unsigned int ulParticleType, A
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_DisplayLightning(AGO2_Part_* p)
-{
-    AGO2_Part_* pPart;
-
-    pPart = p;
-    GLI_v_DisplayLightning((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport,
-                            (MTH3D_tdstVector_*)&pPart->Position,
-                            (MTH3D_tdstVector_*)&pPart->Direction,
-                            pPart->pMaterial1, pPart->xSize[0]);
-    pPart->ulType |= 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1250–1250 */
 /* addr: 0x001e8a50  size: 8 bytes */
@@ -5124,9 +3601,6 @@ void AGO2_DisplayLightning(AGO2_Part_* p)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_ProcessLightning(void)
-{
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1238–1245 */
 /* addr: 0x001e8a60  size: 40 bytes */
@@ -5141,15 +3615,6 @@ void AGO2_ProcessLightning(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char AGO2_CreateLightning(unsigned int _unused, AGO2_Part_* p)
-{
-    p->xTransparencySpeed = 0.0f;
-    p->xSize[0] = 2.5f;
-    p->xSize[1] = 2.0f;
-    p->xShrinkingSpeed = 0.0f;
-    p->xTransparency = 255.0f;
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1174–1223 */
 /* addr: 0x001e8a90  size: 244 bytes */
@@ -5183,49 +3648,6 @@ unsigned char AGO2_CreateLightning(unsigned int _unused, AGO2_Part_* p)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_FadeFlow(AGO2_Part_* p)
-{
-    AGO2_FlowParticle_* param0;
-    unsigned int i;
-    unsigned int OneIsAlive;
-    float TimeDiffTrsp;
-
-    if (!p->hGroup)
-    {
-        p->GroupNumber = 0;
-        p->ulType |= 1;
-        return;
-    }
-    param0 = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-    if (!param0)
-    {
-        printf("AGO2MEM DECONNE UN MAX !!!\n");
-        return;
-    }
-    OneIsAlive = 0;
-    TimeDiffTrsp = g_fTimeDifference * p->xTransparencySpeed;
-    for (i = 0; i < p->GroupNumber; i++)
-    {
-        if (!(param0->Flags & 1))
-        {
-            param0->xTransparency -= TimeDiffTrsp;
-            if (param0->xTransparency < 0.0f)
-            {
-                param0->xTransparency = 0.0f;
-                param0->Flags |= 1;
-            }
-            else
-            {
-                OneIsAlive = 1;
-            }
-        }
-        param0++;
-    }
-    if (!OneIsAlive)
-    {
-        p->ulType |= 1;
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1154–1171 */
 /* addr: 0x001e8b90  size: 104 bytes */
@@ -5241,21 +3663,6 @@ void AGO2_FadeFlow(AGO2_Part_* p)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_DisplayFlowMotionBlur(AGO2_Part_* p)
-{
-    AGO2_FlowParticle_* pParticleArray;
-
-    if (p->hGroup)
-    {
-        pParticleArray = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-        if (!pParticleArray)
-        {
-            printf("AGO2MEM DECONNE UN MAX !!!\n");
-            return;
-        }
-        GLI_vDisplaySerialFlowBlured((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, pParticleArray, p->GroupNumber, (void*)p->pMaterial1, p->xSize[0], p->xSize[1]);
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1134–1151 */
 /* addr: 0x001e8c00  size: 104 bytes */
@@ -5271,21 +3678,6 @@ void AGO2_DisplayFlowMotionBlur(AGO2_Part_* p)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_DisplayFlow(AGO2_Part_* p)
-{
-    AGO2_FlowParticle_* pParticleArray;
-
-    if (p->hGroup)
-    {
-        pParticleArray = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-        if (!pParticleArray)
-        {
-            printf("AGO2MEM DECONNE UN MAX !!!\n");
-            return;
-        }
-        GLI_vDisplaySerialFlow((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, pParticleArray, p->GroupNumber, (void*)p->pMaterial1, p->xSize[0], p->xSize[1]);
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1082–1131 */
 /* addr: 0x001e8c70  size: 344 bytes */
@@ -5322,47 +3714,6 @@ void AGO2_DisplayFlow(AGO2_Part_* p)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_ProcessFlow(AGO2_Part_* p)
-{
-{
-    AGO2_FlowParticle_* param0;
-    unsigned int i;
-    float LocalG;
-    float TimeDiff;
-
-    if (!p->hGroup)
-    {
-        p->GroupNumber = 0;
-        p->ulType |= 1;
-        return;
-    }
-    param0 = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-    if (!param0)
-    {
-        printf("AGO2MEM DECONNE UN MAX !!!\n");
-        return;
-    }
-    TimeDiff = g_fTimeDifference;
-    LocalG = 2.0f * (9.81f * TimeDiff);
-    for (i = 0; i < p->GroupNumber; i++)
-    {
-        if (!(param0->Flags & 1))
-        {
-            param0->Direction.xZ -= LocalG;
-            param0->PreviousPosition.xX = param0->Position.xX;
-            param0->PreviousPosition.xY = param0->Position.xY;
-            param0->PreviousPosition.xZ = param0->Position.xZ;
-            param0->PreviousPosition.xX -= param0->Direction.xX * TimeDiff;
-            param0->PreviousPosition.xY -= param0->Direction.xY * TimeDiff;
-            param0->PreviousPosition.xZ -= param0->Direction.xZ * TimeDiff;
-            param0->Position.xX += param0->Direction.xX * TimeDiff;
-            param0->Position.xY += param0->Direction.xY * TimeDiff;
-            param0->Position.xZ += param0->Direction.xZ * TimeDiff;
-        }
-        param0++;
-    }
-}
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1026–1079 */
 /* addr: 0x001e8dd0  size: 480 bytes */
@@ -5412,48 +3763,6 @@ void AGO2_ProcessFlow(AGO2_Part_* p)
  * g_pAGO2Types[].pCreationFunction; the debug record only keeps the
  * parameters this function actually reads (ulParticleType, Vector1..4,
  * pMaterial1/2, xParam1..4 and pLaunchingCharacter are unused here). */
-unsigned char AGO2_CreateFlow(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber)
-{
-    AGO2_FlowParticle_* pParticleArrayOrg;
-    unsigned int i;
-    AGO2_FlowParticle_* pParticleArray;
-
-    p->GroupNumber = ParticleNumber;
-    p->hGroup = AGO2_MEM_Alloc(ParticleNumber * sizeof(AGO2_FlowParticle_));
-    if (p->hGroup == 0)
-    {
-        p->GroupNumber = 0;
-        p->ulType |= 1;
-        return 0;
-    }
-    pParticleArrayOrg = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-    if (pParticleArrayOrg == NULL)
-    {
-        printf("AGO2MEM DECONNE UN MAX !!!\n");
-        return 0;
-    }
-    p->xTransparencySpeed = 100.0f;
-    p->xSize[0] = 0.1f;
-    p->xSize[1] = 0.1f;
-    p->xShrinkingSpeed = 0.1f;
-    pParticleArray = pParticleArrayOrg;
-    for (i = 0; i < ParticleNumber; i++)
-    {
-        rand();
-        rand();
-        rand();
-        pParticleArray->Position.xX = Position->xX;
-        pParticleArray->Position.xY = Position->xY;
-        pParticleArray->Position.xZ = Position->xZ;
-        pParticleArray->xTransparency = 255.0f;
-        pParticleArray->Direction.xX = Direction->xX + (-5.0f + 10.0f * (float)rand() / 2147483648.0f);
-        pParticleArray->Direction.xY = Direction->xY + (-5.0f + 10.0f * (float)rand() / 2147483648.0f);
-        pParticleArray->Direction.xZ = Direction->xZ + (-6.5f + 32.0f * (float)rand() / 2147483648.0f);
-        pParticleArray->Flags = 0;
-        pParticleArray++;
-    }
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1005–1011 */
 /* addr: 0x001e8fb0  size: 116 bytes */
@@ -5468,14 +3777,6 @@ unsigned char AGO2_CreateFlow(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_ShrinkNormal(AGO2_Part_* p)
-{
-    p->xSize[0] -= g_fTimeDifference * p->xShrinkingSpeed;
-    p->xSize[1] -= g_fTimeDifference * p->xShrinkingSpeed;
-    if (p->xSize[0] <= 0.0f || p->xSize[1] <= 0.0f)
-
-        p->ulType |= 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 950–960 */
 /* addr: 0x001e9030  size: 104 bytes */
@@ -5493,18 +3794,6 @@ void AGO2_ShrinkNormal(AGO2_Part_* p)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_FadeNormal(AGO2_Part_* p)
-{
-    p->xTransparency -= g_fTimeDifference * p->xTransparencySpeed;
-    if (p->xTransparency < 0.0f)
-    {
-        p->xTransparency = 0.0f;
-        p->ulType |= 1;
-    }
-    else if (p->xTransparency >= 255.0f)
-
-        p->xTransparency = 255.0f;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 937–937 */
 /* addr: 0x001e90a0  size: 8 bytes */
@@ -5513,10 +3802,6 @@ void AGO2_FadeNormal(AGO2_Part_* p)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char AGO2_CreateOrdinaryParticle(void)
-{
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 921–925 */
 /* addr: 0x001e90b0  size: 108 bytes */
@@ -5529,13 +3814,6 @@ unsigned char AGO2_CreateOrdinaryParticle(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_ProcessSimpleParticleWithSpeedAndGravity(AGO2_Part_* p)
-{
-    p->Direction.xZ -= 9.81f * g_fTimeDifference;
-    p->Position.xX += p->Direction.xX * g_fTimeDifference;
-    p->Position.xY += p->Direction.xY * g_fTimeDifference;
-    p->Position.xZ += p->Direction.xZ * g_fTimeDifference;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 896–907 */
 /* addr: 0x001e9120  size: 88 bytes */
@@ -5553,19 +3831,6 @@ void AGO2_ProcessSimpleParticleWithSpeedAndGravity(AGO2_Part_* p)
 extern int GLI_vDrawWorldSpriteOpt(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMaterial, float SizeX, float SizeY, GLD_tdstViewportAttributes_* p_stViewport, unsigned int AnimTime);
 extern void GLI_vSetGlobalAlpha(float Alpha);
 
-void AGO2_DisplayOrdinarySprite(AGO2_Part_* p)
-{
-    GLI_vSetGlobalAlpha(p->xTransparency);
-    if (GLI_vDrawWorldSpriteOpt((MTH3D_tdstVector_*)&p->Position, (GLI_tdstMaterial_*)p->pMaterial1, p->xSize[0], p->xSize[1], (GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, p->AnimTime))
-
-
-
-
-
-
-        p->ulType |= 1;
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 804–813 */
 /* addr: 0x001e9180  size: 88 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -5580,18 +3845,6 @@ void AGO2_DisplayOrdinarySprite(AGO2_Part_* p)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_vClearParticlesOfThatTypeWithChannel(unsigned int PartType, unsigned int Channel)
-{
-    unsigned int i;
-    for (i = 0; i < g_ulNumberOfAgos2; i++)
-    {
-
-        if ((PartType == g_pAGO2Parts[i].ulBaseID) && (Channel == g_pAGO2Parts[i].Channel))
-
-            g_pAGO2Parts[i].ulType |= 1;
-
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 790–799 */
 /* addr: 0x001e91e0  size: 80 bytes */
@@ -5609,18 +3862,6 @@ void AGO2_vClearParticlesOfThatTypeWithChannel(unsigned int PartType, unsigned i
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_vClearParticlesOfThatType(unsigned int PartType)
-{
-    unsigned int i;
-    unsigned int Offset;
-    AGO2_Part_* pParticle;
-    for (i = 0, Offset = 0; i < g_ulNumberOfAgos2; Offset += sizeof(AGO2_Part_), i++) {
-        pParticle = (AGO2_Part_*)((char*)g_pAGO2Parts + Offset);
-        if (PartType == pParticle->ulBaseID) {
-            pParticle->ulType |= 1;
-        }
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 782–786 */
 /* addr: 0x001e9230  size: 108 bytes */
@@ -5635,14 +3876,7 @@ void AGO2_vClearParticlesOfThatType(unsigned int PartType)
  * compare a candidate object's line table as an extra checkpoint.
  */
 #pragma auto_inline on
-AGO2_Part_* AGO2_bIsTypeAlreadyExists(unsigned int PartType)
-{
-    unsigned int i;
-    i = 0;
-    for (; i < g_ulNumberOfAgos2 && g_pAGO2Parts[i].ulBaseID != PartType; i++);
-    if (i == g_ulNumberOfAgos2) return NULL;
-    return &g_pAGO2Parts[i];
-}
+
 #pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 675–776 */
@@ -5706,87 +3940,6 @@ void GLI_vEndWorldSprites(void);
 /* Called with the viewport and the wall; the recovered definition takes none. */
 extern void AGO2_vDisplayWall(GLD_tdstViewportAttributes_* p_stViewport, AGO2_WallExplosion_* p);
 
-void AGO2_vDisplayAllParts(GLD_tdstViewportAttributes_* _p_stViewport)
-{
-    unsigned int i;
-    unsigned int j;
-    AGO2_Part_* p;
-    float xAlphaTemp;
-    int Found;
-    unsigned int BaseID;
-    void* pCurrentMaterial;
-    unsigned int NextMaterialIndex;
-    unsigned int DisplayPending;
-    unsigned int SkipThisOne;
-
-    g_AGO2_p_stViewport = (int)_p_stViewport;
-    xAlphaTemp = GLI_vGetGlobalAlpha();
-    for (i = 0; i < 50; i++)
-        g_pAGO2TypesDisplayed[i] = 0;
-    for (i = 0; i < g_ulNumberOfAgos2; i++)
-        g_pAGO2Parts[i].InternalHasBeenDisplayed = 0;
-    GLI_vEndWorldSprites();
-    for (i = 0; i < AGO2_g_NbWalls; i++)
-    {
-        AGO2_WallExplosion_* pWall = (AGO2_WallExplosion_*)AGO2_MEM_GetPointerFromHandle(AGO2_g_Walls[i]);
-        if (!pWall)
-            printf("AGO2MEM DECONNE UN MAX !!!\n");
-        else
-            AGO2_vDisplayWall((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, pWall);
-    }
-    AGO2_vTestExploseWall();
-    do
-    {
-        Found = 0;
-        for (i = 0; i < g_ulNumberOfAgos2 && g_pAGO2TypesDisplayed[g_pAGO2Parts[i].ulBaseID] == 1; i++);
-        if (i < g_ulNumberOfAgos2)
-        {
-            Found = 1;
-            BaseID = g_pAGO2Parts[i].ulBaseID;
-            g_pAGO2TypesDisplayed[BaseID] = Found;
-            do
-            {
-                j = i;
-                NextMaterialIndex = g_ulNumberOfAgos2;
-                pCurrentMaterial = NULL;
-                DisplayPending = 0;
-                for (; j < g_ulNumberOfAgos2; j++)
-                {
-                    p = &g_pAGO2Parts[j];
-                    if (p->ulBaseID == BaseID && !p->InternalHasBeenDisplayed)
-                    {
-                        SkipThisOne = 0;
-                        if (!DisplayPending)
-                        {
-                            if (g_pAGO2Types[BaseID].pStartDisplayFunction)
-                                g_pAGO2Types[BaseID].pStartDisplayFunction(_p_stViewport);
-                            pCurrentMaterial = (void*)p->pMaterial1;
-                            DisplayPending = 1;
-                        }
-                        else if ((void*)p->pMaterial1 != pCurrentMaterial)
-                        {
-                            NextMaterialIndex = j;
-                            SkipThisOne = 1;
-                        }
-                        g_AGO_AnimTimeScale = p->fAnimTimeScale;
-                        if (!SkipThisOne)
-                        {
-                            if (p->pDisplayFnct)
-                                p->pDisplayFnct(p);
-                            p->InternalHasBeenDisplayed = 1;
-                        }
-                    }
-                }
-                if (DisplayPending && g_pAGO2Types[BaseID].pEndDisplayFunction)
-                    g_pAGO2Types[BaseID].pEndDisplayFunction(_p_stViewport);
-            } while (NextMaterialIndex != g_ulNumberOfAgos2);
-        }
-    } while (Found);
-    GLI_vEndWorldSprites();
-    g_AGO_AnimTimeScale = 1.0f;
-    GLI_vSetGlobalAlpha(xAlphaTemp);
-}
-
 void AGO2_vDestroyAllParts(void);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 634–656 */
@@ -5806,27 +3959,6 @@ void AGO2_vDestroyAllParts(void);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_vProcessAllParts(void)
-{
-    unsigned int i;
-    AGO2_Part_* p;
-
-    AGO2_vDestroyAllParts();
-
-    for (i = 0; i < g_ulNumberOfAgos2; i++)
-    {
-        p = &g_pAGO2Parts[i];
-
-        if (p->pProcessFnct)
-            p->pProcessFnct(p);
-
-        if (p->pTransparencyFunction)
-            p->pTransparencyFunction(p);
-
-        if (p->pSizingFunction)
-            p->pSizingFunction(p);
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 590–622 */
 /* addr: 0x001e9730  size: 196 bytes */
@@ -5856,42 +3988,6 @@ void AGO2_vProcessAllParts(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_vDestroyAllParts(void)
-{
-    unsigned int Source;
-    unsigned int NumToSkip;
-    AGO2_Part_* psrc;
-    AGO2_Part_* pdst;
-    unsigned int Limit;
-
-    Source = 0;
-    NumToSkip = 0;
-    Limit = g_ulNumberOfAgos2;
-    pdst = g_pAGO2Parts;
-    psrc = pdst;
-    while (Source < Limit)
-    {
-        if (psrc->ulType & 1)
-        {
-            if (psrc->hGroup)
-            {
-                AGO2_MEM_FreeFromHandle(psrc->hGroup);
-            }
-            NumToSkip++;
-        }
-        else
-        {
-            if (psrc != pdst)
-            {
-                memcpy(pdst, psrc, sizeof(AGO2_Part_));
-            }
-            pdst++;
-        }
-        psrc++;
-        Source++;
-    }
-    g_ulNumberOfAgos2 -= NumToSkip;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 523–578 */
 /* addr: 0x001e9800  size: 700 bytes */
@@ -5948,45 +4044,6 @@ void AGO2_vDestroyAllParts(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-AGO2_Part_* AGO2_vCreatePart(unsigned int ulParticleType, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber)
-{
-    float* p2;
-    float* p1;
-    AGO2_Part_* p;
-
-    if (g_ulNumberOfAgos2 == 300 || ulParticleType >= 50)
-        return NULL;
-
-    if (!g_pAGO2Types[ulParticleType].pDisplayFunction || !g_pAGO2Types[ulParticleType].pProcessFunction || !g_pAGO2Types[ulParticleType].pCreationFunction)
-        return NULL;
-
-    p = &g_pAGO2Parts[g_ulNumberOfAgos2];
-
-    memset(p, 0, sizeof(AGO2_Part_));
-    p->ulType = 0;
-    p->AnimTime = (unsigned int)g_ffFrameTime;
-    p->fAnimTimeScale = 1.0f;
-    p->ulBaseID = ulParticleType;
-    p1 = (float*)&p->Position; p2 = (float*)Position; p1[0] = p2[0]; p1[1] = p2[1]; p1[2] = p2[2]; p1[3] = p2[3];
-    p1 = (float*)&p->Direction; p2 = (float*)Direction; p1[0] = p2[0]; p1[1] = p2[1]; p1[2] = p2[2]; p1[3] = p2[3];
-    p->pMaterial1 = (int)pMaterial1;
-    p->pMaterial2 = (int)pMaterial2;
-    p->pDisplayFnct = g_pAGO2Types[ulParticleType].pDisplayFunction;
-    p->pProcessFnct = g_pAGO2Types[ulParticleType].pProcessFunction;
-    p->pTransparencyFunction = g_pAGO2Types[ulParticleType].pTransparencyFunction;
-    p->pSizingFunction = g_pAGO2Types[ulParticleType].pSizingFunction;
-    p->pLauchingCharacter = pLaunchingCharacter;
-    p->xTransparencySpeed = 100.0f;
-    p->xShrinkingSpeed = 1.0f;
-    p->xTransparency = 255.0f;
-    p->xLimit = 0.0f;
-    p->Channel = 0;
-
-    if (g_pAGO2Types[ulParticleType].pCreationFunction(ulParticleType, p, Position, Direction, Vector1, Vector2, Vector3, Vector4, pMaterial1, pMaterial2, xParam1, xParam2, xParam3, xParam4, pLaunchingCharacter, ParticleNumber))
-        g_ulNumberOfAgos2++;
-
-    return p;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 416–489 */
 /* addr: 0x001e9ac0  size: 1668 bytes */
@@ -6302,4 +4359,2057 @@ void AGO2_vFirstInitAndRegisterAGO2Types(void)
     g_pAGO2Types[19].pTransparencyFunction = NULL;
     g_pAGO2Types[19].pSizingFunction = NULL;
     g_pAGO2Types[19].pCreationFunction = AGO2_CreateSerialCameraParticleRain;
+}
+
+AGO2_Part_* AGO2_vCreatePart(unsigned int ulParticleType, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber)
+{
+    float* p2;
+    float* p1;
+    AGO2_Part_* p;
+
+    if (g_ulNumberOfAgos2 == 300 || ulParticleType >= 50)
+        return NULL;
+
+    if (!g_pAGO2Types[ulParticleType].pDisplayFunction || !g_pAGO2Types[ulParticleType].pProcessFunction || !g_pAGO2Types[ulParticleType].pCreationFunction)
+        return NULL;
+
+    p = &g_pAGO2Parts[g_ulNumberOfAgos2];
+
+    memset(p, 0, sizeof(AGO2_Part_));
+    p->ulType = 0;
+    p->AnimTime = (unsigned int)g_ffFrameTime;
+    p->fAnimTimeScale = 1.0f;
+    p->ulBaseID = ulParticleType;
+    p1 = (float*)&p->Position; p2 = (float*)Position; p1[0] = p2[0]; p1[1] = p2[1]; p1[2] = p2[2]; p1[3] = p2[3];
+    p1 = (float*)&p->Direction; p2 = (float*)Direction; p1[0] = p2[0]; p1[1] = p2[1]; p1[2] = p2[2]; p1[3] = p2[3];
+    p->pMaterial1 = (int)pMaterial1;
+    p->pMaterial2 = (int)pMaterial2;
+    p->pDisplayFnct = g_pAGO2Types[ulParticleType].pDisplayFunction;
+    p->pProcessFnct = g_pAGO2Types[ulParticleType].pProcessFunction;
+    p->pTransparencyFunction = g_pAGO2Types[ulParticleType].pTransparencyFunction;
+    p->pSizingFunction = g_pAGO2Types[ulParticleType].pSizingFunction;
+    p->pLauchingCharacter = pLaunchingCharacter;
+    p->xTransparencySpeed = 100.0f;
+    p->xShrinkingSpeed = 1.0f;
+    p->xTransparency = 255.0f;
+    p->xLimit = 0.0f;
+    p->Channel = 0;
+
+    if (g_pAGO2Types[ulParticleType].pCreationFunction(ulParticleType, p, Position, Direction, Vector1, Vector2, Vector3, Vector4, pMaterial1, pMaterial2, xParam1, xParam2, xParam3, xParam4, pLaunchingCharacter, ParticleNumber))
+        g_ulNumberOfAgos2++;
+
+    return p;
+}
+
+void AGO2_vDestroyAllParts(void)
+{
+    unsigned int Source;
+    unsigned int NumToSkip;
+    AGO2_Part_* psrc;
+    AGO2_Part_* pdst;
+    unsigned int Limit;
+
+    Source = 0;
+    NumToSkip = 0;
+    Limit = g_ulNumberOfAgos2;
+    pdst = g_pAGO2Parts;
+    psrc = pdst;
+    while (Source < Limit)
+    {
+        if (psrc->ulType & 1)
+        {
+            if (psrc->hGroup)
+            {
+                AGO2_MEM_FreeFromHandle(psrc->hGroup);
+            }
+            NumToSkip++;
+        }
+        else
+        {
+            if (psrc != pdst)
+            {
+                memcpy(pdst, psrc, sizeof(AGO2_Part_));
+            }
+            pdst++;
+        }
+        psrc++;
+        Source++;
+    }
+    g_ulNumberOfAgos2 -= NumToSkip;
+}
+
+void AGO2_vProcessAllParts(void)
+{
+    unsigned int i;
+    AGO2_Part_* p;
+
+    AGO2_vDestroyAllParts();
+
+    for (i = 0; i < g_ulNumberOfAgos2; i++)
+    {
+        p = &g_pAGO2Parts[i];
+
+        if (p->pProcessFnct)
+            p->pProcessFnct(p);
+
+        if (p->pTransparencyFunction)
+            p->pTransparencyFunction(p);
+
+        if (p->pSizingFunction)
+            p->pSizingFunction(p);
+    }
+}
+
+void AGO2_vDisplayAllParts(GLD_tdstViewportAttributes_* _p_stViewport)
+{
+    unsigned int i;
+    unsigned int j;
+    AGO2_Part_* p;
+    float xAlphaTemp;
+    int Found;
+    unsigned int BaseID;
+    void* pCurrentMaterial;
+    unsigned int NextMaterialIndex;
+    unsigned int DisplayPending;
+    unsigned int SkipThisOne;
+
+    g_AGO2_p_stViewport = (int)_p_stViewport;
+    xAlphaTemp = GLI_vGetGlobalAlpha();
+    for (i = 0; i < 50; i++)
+        g_pAGO2TypesDisplayed[i] = 0;
+    for (i = 0; i < g_ulNumberOfAgos2; i++)
+        g_pAGO2Parts[i].InternalHasBeenDisplayed = 0;
+    GLI_vEndWorldSprites();
+    for (i = 0; i < AGO2_g_NbWalls; i++)
+    {
+        AGO2_WallExplosion_* pWall = (AGO2_WallExplosion_*)AGO2_MEM_GetPointerFromHandle(AGO2_g_Walls[i]);
+        if (!pWall)
+            printf("AGO2MEM DECONNE UN MAX !!!\n");
+        else
+            AGO2_vDisplayWall((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, pWall);
+    }
+    AGO2_vTestExploseWall();
+    do
+    {
+        Found = 0;
+        for (i = 0; i < g_ulNumberOfAgos2 && g_pAGO2TypesDisplayed[g_pAGO2Parts[i].ulBaseID] == 1; i++);
+        if (i < g_ulNumberOfAgos2)
+        {
+            Found = 1;
+            BaseID = g_pAGO2Parts[i].ulBaseID;
+            g_pAGO2TypesDisplayed[BaseID] = Found;
+            do
+            {
+                j = i;
+                NextMaterialIndex = g_ulNumberOfAgos2;
+                pCurrentMaterial = NULL;
+                DisplayPending = 0;
+                for (; j < g_ulNumberOfAgos2; j++)
+                {
+                    p = &g_pAGO2Parts[j];
+                    if (p->ulBaseID == BaseID && !p->InternalHasBeenDisplayed)
+                    {
+                        SkipThisOne = 0;
+                        if (!DisplayPending)
+                        {
+                            if (g_pAGO2Types[BaseID].pStartDisplayFunction)
+                                g_pAGO2Types[BaseID].pStartDisplayFunction(_p_stViewport);
+                            pCurrentMaterial = (void*)p->pMaterial1;
+                            DisplayPending = 1;
+                        }
+                        else if ((void*)p->pMaterial1 != pCurrentMaterial)
+                        {
+                            NextMaterialIndex = j;
+                            SkipThisOne = 1;
+                        }
+                        g_AGO_AnimTimeScale = p->fAnimTimeScale;
+                        if (!SkipThisOne)
+                        {
+                            if (p->pDisplayFnct)
+                                p->pDisplayFnct(p);
+                            p->InternalHasBeenDisplayed = 1;
+                        }
+                    }
+                }
+                if (DisplayPending && g_pAGO2Types[BaseID].pEndDisplayFunction)
+                    g_pAGO2Types[BaseID].pEndDisplayFunction(_p_stViewport);
+            } while (NextMaterialIndex != g_ulNumberOfAgos2);
+        }
+    } while (Found);
+    GLI_vEndWorldSprites();
+    g_AGO_AnimTimeScale = 1.0f;
+    GLI_vSetGlobalAlpha(xAlphaTemp);
+}
+
+#pragma auto_inline on
+AGO2_Part_* AGO2_bIsTypeAlreadyExists(unsigned int PartType)
+{
+    unsigned int i;
+    i = 0;
+    for (; i < g_ulNumberOfAgos2 && g_pAGO2Parts[i].ulBaseID != PartType; i++);
+    if (i == g_ulNumberOfAgos2) return NULL;
+    return &g_pAGO2Parts[i];
+}
+#pragma auto_inline reset
+
+void AGO2_vClearParticlesOfThatType(unsigned int PartType)
+{
+    unsigned int i;
+    unsigned int Offset;
+    AGO2_Part_* pParticle;
+    for (i = 0, Offset = 0; i < g_ulNumberOfAgos2; Offset += sizeof(AGO2_Part_), i++) {
+        pParticle = (AGO2_Part_*)((char*)g_pAGO2Parts + Offset);
+        if (PartType == pParticle->ulBaseID) {
+            pParticle->ulType |= 1;
+        }
+    }
+}
+
+void AGO2_vClearParticlesOfThatTypeWithChannel(unsigned int PartType, unsigned int Channel)
+{
+    unsigned int i;
+    for (i = 0; i < g_ulNumberOfAgos2; i++)
+    {
+
+        if ((PartType == g_pAGO2Parts[i].ulBaseID) && (Channel == g_pAGO2Parts[i].Channel))
+
+            g_pAGO2Parts[i].ulType |= 1;
+
+    }
+}
+
+void AGO2_DisplayOrdinarySprite(AGO2_Part_* p)
+{
+    GLI_vSetGlobalAlpha(p->xTransparency);
+    if (GLI_vDrawWorldSpriteOpt((MTH3D_tdstVector_*)&p->Position, (GLI_tdstMaterial_*)p->pMaterial1, p->xSize[0], p->xSize[1], (GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, p->AnimTime))
+
+        p->ulType |= 1;
+}
+
+void AGO2_ProcessSimpleParticleWithSpeedAndGravity(AGO2_Part_* p)
+{
+    p->Direction.xZ -= 9.81f * g_fTimeDifference;
+    p->Position.xX += p->Direction.xX * g_fTimeDifference;
+    p->Position.xY += p->Direction.xY * g_fTimeDifference;
+    p->Position.xZ += p->Direction.xZ * g_fTimeDifference;
+}
+
+unsigned char AGO2_CreateOrdinaryParticle(void)
+{
+    return 1;
+}
+
+void AGO2_FadeNormal(AGO2_Part_* p)
+{
+    p->xTransparency -= g_fTimeDifference * p->xTransparencySpeed;
+    if (p->xTransparency < 0.0f)
+    {
+        p->xTransparency = 0.0f;
+        p->ulType |= 1;
+    }
+    else if (p->xTransparency >= 255.0f)
+
+        p->xTransparency = 255.0f;
+}
+
+void AGO2_ShrinkNormal(AGO2_Part_* p)
+{
+    p->xSize[0] -= g_fTimeDifference * p->xShrinkingSpeed;
+    p->xSize[1] -= g_fTimeDifference * p->xShrinkingSpeed;
+    if (p->xSize[0] <= 0.0f || p->xSize[1] <= 0.0f)
+
+        p->ulType |= 1;
+}
+
+unsigned char AGO2_CreateFlow(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber)
+{
+    AGO2_FlowParticle_* pParticleArrayOrg;
+    unsigned int i;
+    AGO2_FlowParticle_* pParticleArray;
+
+    p->GroupNumber = ParticleNumber;
+    p->hGroup = AGO2_MEM_Alloc(ParticleNumber * sizeof(AGO2_FlowParticle_));
+    if (p->hGroup == 0)
+    {
+        p->GroupNumber = 0;
+        p->ulType |= 1;
+        return 0;
+    }
+    pParticleArrayOrg = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+    if (pParticleArrayOrg == NULL)
+    {
+        printf("AGO2MEM DECONNE UN MAX !!!\n");
+        return 0;
+    }
+    p->xTransparencySpeed = 100.0f;
+    p->xSize[0] = 0.1f;
+    p->xSize[1] = 0.1f;
+    p->xShrinkingSpeed = 0.1f;
+    pParticleArray = pParticleArrayOrg;
+    for (i = 0; i < ParticleNumber; i++)
+    {
+        rand();
+        rand();
+        rand();
+        pParticleArray->Position.xX = Position->xX;
+        pParticleArray->Position.xY = Position->xY;
+        pParticleArray->Position.xZ = Position->xZ;
+        pParticleArray->xTransparency = 255.0f;
+        pParticleArray->Direction.xX = Direction->xX + (-5.0f + 10.0f * (float)rand() / 2147483648.0f);
+        pParticleArray->Direction.xY = Direction->xY + (-5.0f + 10.0f * (float)rand() / 2147483648.0f);
+        pParticleArray->Direction.xZ = Direction->xZ + (-6.5f + 32.0f * (float)rand() / 2147483648.0f);
+        pParticleArray->Flags = 0;
+        pParticleArray++;
+    }
+    return 1;
+}
+
+void AGO2_ProcessFlow(AGO2_Part_* p)
+{
+{
+    AGO2_FlowParticle_* param0;
+    unsigned int i;
+    float LocalG;
+    float TimeDiff;
+
+    if (!p->hGroup)
+    {
+        p->GroupNumber = 0;
+        p->ulType |= 1;
+        return;
+    }
+    param0 = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+    if (!param0)
+    {
+        printf("AGO2MEM DECONNE UN MAX !!!\n");
+        return;
+    }
+    TimeDiff = g_fTimeDifference;
+    LocalG = 2.0f * (9.81f * TimeDiff);
+    for (i = 0; i < p->GroupNumber; i++)
+    {
+        if (!(param0->Flags & 1))
+        {
+            param0->Direction.xZ -= LocalG;
+            param0->PreviousPosition.xX = param0->Position.xX;
+            param0->PreviousPosition.xY = param0->Position.xY;
+            param0->PreviousPosition.xZ = param0->Position.xZ;
+            param0->PreviousPosition.xX -= param0->Direction.xX * TimeDiff;
+            param0->PreviousPosition.xY -= param0->Direction.xY * TimeDiff;
+            param0->PreviousPosition.xZ -= param0->Direction.xZ * TimeDiff;
+            param0->Position.xX += param0->Direction.xX * TimeDiff;
+            param0->Position.xY += param0->Direction.xY * TimeDiff;
+            param0->Position.xZ += param0->Direction.xZ * TimeDiff;
+        }
+        param0++;
+    }
+}
+}
+
+void AGO2_DisplayFlow(AGO2_Part_* p)
+{
+    AGO2_FlowParticle_* pParticleArray;
+
+    if (p->hGroup)
+    {
+        pParticleArray = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+        if (!pParticleArray)
+        {
+            printf("AGO2MEM DECONNE UN MAX !!!\n");
+            return;
+        }
+        GLI_vDisplaySerialFlow((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, pParticleArray, p->GroupNumber, (void*)p->pMaterial1, p->xSize[0], p->xSize[1]);
+    }
+}
+
+void AGO2_DisplayFlowMotionBlur(AGO2_Part_* p)
+{
+    AGO2_FlowParticle_* pParticleArray;
+
+    if (p->hGroup)
+    {
+        pParticleArray = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+        if (!pParticleArray)
+        {
+            printf("AGO2MEM DECONNE UN MAX !!!\n");
+            return;
+        }
+        GLI_vDisplaySerialFlowBlured((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, pParticleArray, p->GroupNumber, (void*)p->pMaterial1, p->xSize[0], p->xSize[1]);
+    }
+}
+
+void AGO2_FadeFlow(AGO2_Part_* p)
+{
+    AGO2_FlowParticle_* param0;
+    unsigned int i;
+    unsigned int OneIsAlive;
+    float TimeDiffTrsp;
+
+    if (!p->hGroup)
+    {
+        p->GroupNumber = 0;
+        p->ulType |= 1;
+        return;
+    }
+    param0 = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+    if (!param0)
+    {
+        printf("AGO2MEM DECONNE UN MAX !!!\n");
+        return;
+    }
+    OneIsAlive = 0;
+    TimeDiffTrsp = g_fTimeDifference * p->xTransparencySpeed;
+    for (i = 0; i < p->GroupNumber; i++)
+    {
+        if (!(param0->Flags & 1))
+        {
+            param0->xTransparency -= TimeDiffTrsp;
+            if (param0->xTransparency < 0.0f)
+            {
+                param0->xTransparency = 0.0f;
+                param0->Flags |= 1;
+            }
+            else
+            {
+                OneIsAlive = 1;
+            }
+        }
+        param0++;
+    }
+    if (!OneIsAlive)
+    {
+        p->ulType |= 1;
+    }
+}
+
+unsigned char AGO2_CreateLightning(unsigned int _unused, AGO2_Part_* p)
+{
+    p->xTransparencySpeed = 0.0f;
+    p->xSize[0] = 2.5f;
+    p->xSize[1] = 2.0f;
+    p->xShrinkingSpeed = 0.0f;
+    p->xTransparency = 255.0f;
+    return 1;
+}
+
+void AGO2_ProcessLightning(void)
+{
+}
+
+void AGO2_DisplayLightning(AGO2_Part_* p)
+{
+    AGO2_Part_* pPart;
+
+    pPart = p;
+    GLI_v_DisplayLightning((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport,
+                            (MTH3D_tdstVector_*)&pPart->Position,
+                            (MTH3D_tdstVector_*)&pPart->Direction,
+                            pPart->pMaterial1, pPart->xSize[0]);
+    pPart->ulType |= 1;
+}
+
+/* Same parameter list as AGO2_CreateFlow: retail reads ParticleNumber from
+   the 16th-argument stack slot. */
+unsigned char AGO2_CreateSerialCameraParticleRain(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber)
+{
+    unsigned int i;
+    float RandomValue;
+    float RandomValueX;
+    float RandomValueY;
+    AGO2_RainParticle_* pParticleArray;
+    AGO2_RainParticle_* pParticleArrayOrg;
+    float* p1;
+    float* p2;
+
+    p1 = (float*)&AGO_g_CameraCoordinatesForRain; p2 = (float*)&AGO_g_CameraDirectionForRain;
+    p1[0] = Position->xX; p1[1] = Position->xY; p1[2] = Position->xZ; p1[3] = Position->xW;
+    p2[0] = Direction->xX; p2[1] = Direction->xY; p2[2] = Direction->xZ; p2[3] = Direction->xW;
+
+    if (AGO2_bIsTypeAlreadyExists(ulParticleType))
+        return 0;
+
+    p->GroupNumber = ParticleNumber;
+    p->hGroup = AGO2_MEM_Alloc(ParticleNumber * sizeof(AGO2_RainParticle_));
+    if (p->hGroup == 0)
+    {
+        p->GroupNumber = 0;
+        p->ulType |= 1;
+        return 0;
+    }
+    pParticleArrayOrg = (AGO2_RainParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+    if (pParticleArrayOrg == NULL)
+    {
+        printf("AGO2MEM DECONNE UN MAX !!!\n");
+        return 0;
+    }
+    p->xLimit = AGO_g_CameraCoordinatesForRain.xZ - 6.0f;
+    p->xTransparencySpeed = 0.0f;
+    p->xSize[0] = 0.15f;
+    p->xSize[1] = 1.0f;
+    p->xShrinkingSpeed = 0.0f;
+    pParticleArray = pParticleArrayOrg;
+    for (i = 0; i < ParticleNumber; i++)
+    {
+        RandomValue = AGO2_M_xRand(10.0f, 50.0f);
+        RandomValueX = AGO2_M_xRand(-RandomValue, RandomValue);
+        RandomValueY = AGO2_M_xRand(-RandomValue, RandomValue);
+        pParticleArray->Position.xX = RandomValueX + (Position->xX + RandomValue * Direction->xX);
+        pParticleArray->Position.xY = RandomValueY + (Position->xY + RandomValue * Direction->xY);
+        pParticleArray->Position.xZ = 15.0f + (Position->xZ + RandomValue * Direction->xZ);
+        pParticleArray->xTransparency = 85.0f;
+        pParticleArray->Direction.xX = AGO2_M_xRand(10.5f, 20.5f);
+        pParticleArray->Direction.xY = AGO2_M_xRand(10.5f, 20.5f);
+        pParticleArray->Direction.xZ = AGO2_M_xRand(-60.0f, -30.0f);
+        pParticleArray->Flags = 0;
+        pParticleArray++;
+    }
+    return 1;
+}
+
+void AGO2_ProcessRainParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit(AGO2_Part_* p)
+{
+    AGO2_RainParticle_* pParticleArray;
+    unsigned int i;
+    float LocalG;
+    float TimeDiff;
+    AGO_V4D_ v1;
+    float xNorm;
+    float RandomValue;
+    float RandomValueX;
+    float RandomValueY;
+    float RandomValueZ;
+
+    if (!p->hGroup)
+    {
+        p->GroupNumber = 0;
+        p->ulType |= 1;
+        return;
+    }
+    pParticleArray = (AGO2_RainParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+    if (!pParticleArray)
+    {
+        printf("AGO2MEM DECONNE UN MAX !!!\n");
+        return;
+    }
+    TimeDiff = g_fTimeDifference;
+    if (TimeDiff > 0.033333335f)
+        TimeDiff = 0.033333335f;
+    LocalG = 9.81f * TimeDiff;
+    for (i = 0; i < p->GroupNumber; pParticleArray++, i++)
+    {
+        if (pParticleArray->Flags & 1)
+            continue;
+        pParticleArray->Direction.xZ -= LocalG;
+        pParticleArray->Position.xX += pParticleArray->Direction.xX * TimeDiff;
+        pParticleArray->Position.xY += pParticleArray->Direction.xY * TimeDiff;
+        pParticleArray->Position.xZ += pParticleArray->Direction.xZ * TimeDiff;
+        MTH3D_M_vSubVector((MTH3D_tdstVector_*)&v1, (MTH3D_tdstVector_*)&pParticleArray->Position, (MTH3D_tdstVector_*)&AGO_g_CameraCoordinatesForRain);
+        AGO2_vNormalizeVector((MTH3D_tdstVector_*)&v1);
+        xNorm = AGO2_xDotVector((MTH3D_tdstVector_*)&v1, (MTH3D_tdstVector_*)&AGO_g_CameraDirectionForRain);
+        if (pParticleArray->Position.xZ < p->xLimit || xNorm < 0.85f)
+        {
+            RandomValue = AGO2_M_xRand(10.0f, 100.0f);
+            RandomValueX = AGO2_M_xRand(-RandomValue, RandomValue);
+            RandomValueY = AGO2_M_xRand(-RandomValue, RandomValue);
+            RandomValueZ = AGO2_M_xRand(-RandomValue, RandomValue);
+            pParticleArray->Position.xX = RandomValueX + (AGO_g_CameraCoordinatesForRain.xX + RandomValue * AGO_g_CameraDirectionForRain.xX);
+            pParticleArray->Position.xY = RandomValueY + (AGO_g_CameraCoordinatesForRain.xY + RandomValue * AGO_g_CameraDirectionForRain.xY);
+            pParticleArray->Position.xZ = RandomValueZ + (AGO_g_CameraCoordinatesForRain.xZ + RandomValue * AGO_g_CameraDirectionForRain.xZ);
+            pParticleArray->xTransparency = 85.0f;
+            pParticleArray->Direction.xX = AGO2_M_xRand(0.5f, 30.5f);
+            pParticleArray->Direction.xY = AGO2_M_xRand(0.5f, 30.5f);
+            pParticleArray->Direction.xZ = AGO2_M_xRand(-60.0f, -30.0f);
+        }
+    }
+}
+
+void AGO2_ProcessRainNearCameraParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit(AGO2_Part_* p)
+{
+    float RandomValueZ;
+    float RandomValueY;
+    float RandomValueX;
+    float RandomValue;
+    float xNorm;
+    AGO_V4D_ v1;
+    float TimeDiff;
+    float LocalG;
+    unsigned int i;
+    AGO2_RainParticle_* pParticleArray;
+    /* TODO: decompile from asm/... */
+}
+
+void AGO2_DisplayRainParticleSpriteGroup(AGO2_Part_* p)
+{
+    AGO2_RainParticle_* pParticleArray;
+
+    if (p->hGroup)
+    {
+        pParticleArray = (AGO2_RainParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+        if (!pParticleArray)
+        {
+            printf("AGO2MEM DECONNE UN MAX !!!\n");
+            return;
+        }
+        if (p->GroupNumber)
+            GLI_vDisplaySerialParticleRain((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, pParticleArray, p->GroupNumber, (void*)p->pMaterial1, p->xSize[0], p->xSize[1]);
+    }
+}
+
+/* Same parameter list as AGO2_CreateFlow: retail reads ParticleNumber from
+   the 16th-argument stack slot. */
+unsigned char AGO2_CreateSerialCameraParticleSnow(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber)
+{
+    unsigned int i;
+    float RandomValue;
+    float RandomValueX;
+    float RandomValueY;
+    AGO2_RainParticle_* pParticleArray;
+    AGO2_RainParticle_* pParticleArrayOrg;
+    float* p1;
+    float* p2;
+
+    if (ParticleNumber > 200)
+        ParticleNumber = 200;
+
+    p1 = (float*)&AGO_g_CameraCoordinatesForRain; p2 = (float*)&AGO_g_CameraDirectionForRain;
+    p1[0] = Position->xX; p1[1] = Position->xY; p1[2] = Position->xZ; p1[3] = Position->xW;
+    p2[0] = Direction->xX; p2[1] = Direction->xY; p2[2] = Direction->xZ; p2[3] = Direction->xW;
+
+    if (AGO2_bIsTypeAlreadyExists(ulParticleType))
+        return 0;
+
+    p->GroupNumber = ParticleNumber;
+    p->hGroup = AGO2_MEM_Alloc(ParticleNumber * sizeof(AGO2_RainParticle_));
+    if (p->hGroup == 0)
+    {
+        p->GroupNumber = 0;
+        p->ulType |= 1;
+        return 0;
+    }
+    pParticleArrayOrg = (AGO2_RainParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+    if (pParticleArrayOrg == NULL)
+    {
+        printf("AGO2MEM DECONNE UN MAX !!!\n");
+        return 0;
+    }
+    pParticleArray = pParticleArrayOrg;
+    i = 0;
+    p->xLimit = AGO_g_CameraCoordinatesForRain.xZ - 20.0f;
+    p->xTransparencySpeed = 0.0f;
+    p->xSize[0] = 0.15f;
+    p->xSize[1] = 0.15f;
+    p->xShrinkingSpeed = 0.0f;
+    for (; i < ParticleNumber; i++)
+    {
+        RandomValue = AGO2_M_xRand(10.0f, 100.0f);
+        RandomValueX = AGO2_M_xRand(-RandomValue, RandomValue);
+        RandomValueY = AGO2_M_xRand(-RandomValue, RandomValue);
+        pParticleArray->Pads[0] = (unsigned int)AGO2_M_xRand(0.2f, 1.2f);
+        pParticleArray->Pads[1] = (unsigned int)AGO2_M_xRand(-10.0f, 10.0f);
+        pParticleArray->Position.xX = RandomValueX + (Position->xX + RandomValue * Direction->xX);
+        pParticleArray->Position.xY = RandomValueY + (Position->xY + RandomValue * Direction->xY);
+        pParticleArray->Position.xZ = 15.0f + (Position->xZ + RandomValue * Direction->xZ);
+        pParticleArray->xTransparency = 150.0f;
+        pParticleArray->Direction.xX = AGO2_M_xRand(-6.0f, 6.0f);
+        pParticleArray->Direction.xY = AGO2_M_xRand(-6.0f, 6.0f);
+        pParticleArray->Direction.xZ = AGO2_M_xRand(-15.0f, -2.0f);
+        pParticleArray->Flags = 0;
+        pParticleArray++;
+    }
+    return 1;
+}
+
+void AGO2_ProcessSnowParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit(AGO2_Part_* p)
+{
+    float RandomValueZ;
+    float RandomValueY;
+    float RandomValueX;
+    float RandomValue;
+    float xNorm;
+    AGO_V4D_ v1;
+    float TimeDiff;
+    float LocalG;
+    int i;
+    AGO2_RainParticle_* pParticleArray;
+    /* TODO: decompile from asm/... */
+}
+
+unsigned char AGO2_CreateSerialCameraParticleLeaves(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, unsigned int ParticleNumber)
+{
+    float xNorm;
+    float* p2;
+    float* p1;
+    MTH3D_tdstVector_ V2;
+    AGO2_LeavesParticle_* pParticleArrayOrg;
+    AGO2_LeavesParticle_* pParticleArray;
+    float RandomValueY;
+    float RandomValueX;
+    float RandomValue;
+    unsigned int i;
+    /* TODO: decompile from asm/... */
+}
+
+void AGO2_ProcessLeavesParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit(AGO2_Part_* p)
+{
+    float xNorm;
+    MTH3D_tdstVector_ V2;
+    float RandomValueZ;
+    float RandomValueY;
+    float RandomValueX;
+    float RandomValue;
+    float sin1;
+    float cos1;
+    MTH3D_tdstVector_ Norm;
+    float Dot2;
+    float Dot1;
+    AGO_V4D_ v1;
+    float TimeDiff;
+    int i;
+    AGO2_LeavesParticle_* pParticleArray;
+    /* TODO: decompile from asm/... */
+}
+
+void AGO2_DisplayLeaves(AGO2_Part_* p)
+{
+    AGO2_LeavesParticle_* pParticleArray;
+
+    if (p->hGroup)
+    {
+        pParticleArray = (AGO2_LeavesParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+        if (!pParticleArray)
+        {
+            printf("AGO2MEM DECONNE UN MAX !!!\n");
+            return;
+        }
+        GLI_vDisplaySerialLeaves((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, pParticleArray, p->GroupNumber, (void*)p->pMaterial1, p->xSize[0], p->xSize[1]);
+    }
+}
+
+/* Same parameter list as AGO2_CreateFlow: retail reads ParticleNumber from
+   the 16th-argument stack slot. */
+unsigned char AGO2_CreateBees(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber)
+{
+    unsigned int i;
+    float RandomValue;
+    float RandomValueX;
+    float RandomValueY;
+    float RandomValueZ;
+    AGO2_BeeParticle_* pParticleArray;
+    AGO2_BeeParticle_* pParticleArrayOrg;
+    float* p1;
+    float* p2;
+
+    Position->xZ += 1.0f;
+    p1 = (float*)&AGO_g_BeeTargetPosition; p2 = (float*)Position; p1[0] = p2[0]; p1[1] = p2[1]; p1[2] = p2[2]; p1[3] = p2[3];
+
+    if (AGO2_bIsTypeAlreadyExists(ulParticleType))
+        return 0;
+
+    p->GroupNumber = ParticleNumber;
+    p->hGroup = AGO2_MEM_Alloc(ParticleNumber * sizeof(AGO2_BeeParticle_));
+    if (p->hGroup == 0)
+    {
+        p->GroupNumber = 0;
+        p->ulType |= 1;
+        return 0;
+    }
+    pParticleArrayOrg = (AGO2_BeeParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+    if (pParticleArrayOrg == NULL)
+    {
+        printf("AGO2MEM DECONNE UN MAX !!!\n");
+        return 0;
+    }
+    p->xTransparencySpeed = 100.0f;
+    p->xSize[0] = 0.03f;
+    p->xSize[1] = 0.03f;
+    p->xShrinkingSpeed = 0.1f;
+    pParticleArray = pParticleArrayOrg;
+    for (i = 0; i < ParticleNumber; i++)
+    {
+        RandomValue = AGO2_M_xRand(60.0f, 150.0f);
+        RandomValueX = AGO2_M_xRand(-RandomValue, RandomValue);
+        RandomValueY = AGO2_M_xRand(-RandomValue, RandomValue);
+        RandomValueZ = AGO2_M_xRand(-RandomValue, RandomValue);
+        pParticleArray->Pads[0] = (int)AGO2_M_xRand(-5.0f, 5.0f);
+        pParticleArray->Pads[1] = (int)AGO2_M_xRand(-5.0f, 5.0f);
+        pParticleArray->xTransparency = AGO2_M_xRand(-5.0f, 5.0f);
+        pParticleArray->Position.xX = Position->xX + RandomValueX;
+        pParticleArray->Position.xY = Position->xY + RandomValueY;
+        pParticleArray->Position.xZ = Position->xZ + RandomValueZ;
+        pParticleArray->Direction.xX = AGO2_M_xRand(-5.0f, 5.0f);
+        pParticleArray->Direction.xY = AGO2_M_xRand(-5.0f, 5.0f);
+        pParticleArray->Direction.xZ = AGO2_M_xRand(-6.5f, 25.5f);
+        pParticleArray->Parameters.xX = AGO2_M_xRand(0.5f, 2.0f);
+        pParticleArray->Flags = 0;
+        pParticleArray++;
+    }
+    return 1;
+}
+
+void AGO2_ProcessBees(AGO2_Part_* p)
+{
+    AGO2_BeeParticle_* pParticleArray;
+    unsigned int i;
+    float TimeDiff;
+    float Val;
+    MTH3D_tdstVector_ v2;
+    float xNorm;
+
+    if (!p->hGroup)
+    {
+        p->GroupNumber = 0;
+        p->ulType |= 1;
+        return;
+    }
+    pParticleArray = (AGO2_BeeParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+    if (!pParticleArray)
+    {
+        printf("AGO2MEM DECONNE UN MAX !!!\n");
+        return;
+    }
+    TimeDiff = g_fTimeDifference;
+    for (i = 0; i < p->GroupNumber; pParticleArray++, i++)
+    {
+        if (pParticleArray->Flags & 1)
+            continue;
+        Val = AGO2_xSqrDistance((MTH3D_tdstVector_*)&AGO_g_BeeTargetPosition, (MTH3D_tdstVector_*)&pParticleArray->Position) / 150.0f;
+        if (Val > 3.0f)
+            Val = 3.0f;
+        Val += 0.1f;
+        ((int*)&v2)[0] = ((int*)&AGO_g_BeeTargetPosition)[0];
+        ((int*)&v2)[1] = ((int*)&AGO_g_BeeTargetPosition)[1];
+        ((int*)&v2)[2] = ((int*)&AGO_g_BeeTargetPosition)[2];
+        v2.xX += (0.3f + Val) * AGO2_M_xRand(-2.0f, 2.0f) + (float)pParticleArray->Pads[0] * Val;
+        v2.xY += (0.3f + Val) * AGO2_M_xRand(-2.0f, 2.0f) + (float)pParticleArray->Pads[1] * Val;
+        v2.xZ += (0.3f + Val) * AGO2_M_xRand(-2.0f, 2.0f) + pParticleArray->xTransparency * Val;
+        AGO2_vAddToVector(&pParticleArray->Direction, v2.xX - ((MTH3D_tdstVector_*)&pParticleArray->Position)->xX, v2.xY - ((MTH3D_tdstVector_*)&pParticleArray->Position)->xY, v2.xZ - ((MTH3D_tdstVector_*)&pParticleArray->Position)->xZ);
+        MTH3D_M_vSubVector((MTH3D_tdstVector_*)&pParticleArray->PreviousPosition, (MTH3D_tdstVector_*)&AGO_g_BeeTargetPosition, (MTH3D_tdstVector_*)&pParticleArray->Position);
+        pParticleArray->Position.xX += pParticleArray->Parameters.xX * (pParticleArray->Direction.xX * TimeDiff);
+        pParticleArray->Position.xY += pParticleArray->Parameters.xX * (pParticleArray->Direction.xY * TimeDiff);
+        pParticleArray->Position.xZ += pParticleArray->Parameters.xX * (pParticleArray->Direction.xZ * TimeDiff);
+        AGO2_vNormalizeVector((MTH3D_tdstVector_*)&pParticleArray->Direction);
+        AGO2_vNormalizeVector((MTH3D_tdstVector_*)&pParticleArray->PreviousPosition);
+    }
+}
+
+void AGO2_DisplayBees(AGO2_Part_* p)
+{
+    AGO2_FlowParticle_* pParticleArray;
+
+    if (p->hGroup)
+    {
+        pParticleArray = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+        if (!pParticleArray)
+        {
+            printf("AGO2MEM DECONNE UN MAX !!!\n");
+            return;
+        }
+        GLI_vDisplaySerialBees((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, (AGO2_BeeParticle_*)pParticleArray, p->GroupNumber, (void*)p->pMaterial1, (void*)p->pMaterial2, p->xSize[0], p->xSize[1]);
+    }
+}
+
+/* Same parameter list as AGO2_CreateFlow: retail reads ParticleNumber from
+   the 16th-argument stack slot. */
+unsigned char AGO2_CreateFire(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber)
+{
+    AGO2_FlowParticle_* pParticleArrayOrg;
+    unsigned int i;
+    AGO2_FlowParticle_* pParticleArray;
+
+    p->GroupNumber = ParticleNumber * 2;
+    p->hGroup = AGO2_MEM_Alloc(ParticleNumber * 2 * sizeof(AGO2_FlowParticle_));
+    if (p->hGroup == 0)
+    {
+        p->GroupNumber = 0;
+        p->ulType |= 1;
+        return 0;
+    }
+    pParticleArrayOrg = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+    if (pParticleArrayOrg == NULL)
+    {
+        printf("AGO2MEM DECONNE UN MAX !!!\n");
+        return 0;
+    }
+    p->xTransparencySpeed = 400.0f;
+    p->xSize[0] = 0.3f;
+    p->xSize[1] = 0.3f;
+    p->xShrinkingSpeed = 0.1f;
+    pParticleArray = pParticleArrayOrg;
+    for (i = 0; i < ParticleNumber * 2; i++)
+    {
+        pParticleArray->Position.xX = Position->xX + (-1.3f + (1.3f - -1.3f) * (float)rand() / 2147483648.0f);
+        pParticleArray->Position.xY = Position->xY + (-1.3f + (1.3f - -1.3f) * (float)rand() / 2147483648.0f);
+        pParticleArray->Position.xZ = Position->xZ + (-1.3f + (1.3f - -1.3f) * (float)rand() / 2147483648.0f);
+        pParticleArray->xTransparency = 255.0f;
+        pParticleArray->Direction.xX = -0.5f + (0.5f - -0.5f) * (float)rand() / 2147483648.0f;
+        pParticleArray->Direction.xY = -0.5f + (0.5f - -0.5f) * (float)rand() / 2147483648.0f;
+        pParticleArray->Direction.xZ = 1.5f + (1.6f - 1.5f) * (float)rand() / 2147483648.0f;
+        pParticleArray->Flags = 0;
+        pParticleArray++;
+    }
+    return 1;
+}
+
+void AGO2_ProcessFire(AGO2_Part_* p)
+{
+    AGO2_FlowParticle_* param0;
+    unsigned int i;
+    float TimeDiff;
+    float LocalG;
+
+    if (!p->hGroup)
+    {
+        p->GroupNumber = 0;
+        p->ulType |= 1;
+        return;
+    }
+    param0 = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+    if (!param0)
+    {
+        printf("AGO2MEM DECONNE UN MAX !!!\n");
+        return;
+    }
+    LocalG = (g_fTimeDifference > 0.033333335f) ? 0.033333335f : g_fTimeDifference;
+    TimeDiff = 9.81f * LocalG;
+    for (i = 0; i < p->GroupNumber; i++)
+    {
+        if (!(param0->Flags & 1))
+        {
+            param0->Direction.xZ += TimeDiff;
+            param0->Position.xX += param0->Direction.xX * LocalG;
+            param0->Position.xY += param0->Direction.xY * LocalG;
+            param0->Position.xZ += param0->Direction.xZ * LocalG;
+        }
+        param0++;
+    }
+}
+
+void AGO2_FadeFire(AGO2_Part_* p)
+{
+    AGO2_FlowParticle_* param0;
+    unsigned int i;
+    unsigned int OneIsAlive;
+    float TimeDiffTrsp;
+
+    if (!p->hGroup)
+    {
+        p->GroupNumber = 0;
+        p->ulType |= 1;
+        return;
+    }
+    param0 = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+    if (!param0)
+    {
+        printf("AGO2MEM DECONNE UN MAX !!!\n");
+        return;
+    }
+    OneIsAlive = 0;
+    TimeDiffTrsp = g_fTimeDifference * p->xTransparencySpeed;
+    for (i = 0; i < p->GroupNumber; i++)
+    {
+        if (!(param0->Flags & 1))
+        {
+            param0->xTransparency -= TimeDiffTrsp;
+            if (param0->xTransparency < 0.0f)
+            {
+                param0->xTransparency = 0.0f;
+                param0->Flags |= 1;
+            }
+            else
+            {
+                OneIsAlive = 1;
+            }
+        }
+        param0++;
+    }
+    if (!OneIsAlive)
+    {
+        p->ulType |= 1;
+    }
+}
+
+void AGO2_ShrinkFire(AGO2_Part_* p)
+{
+    float Value;
+
+    Value = 1.0f - g_fTimeDifference * p->xShrinkingSpeed;
+
+    p->xSize[0] *= Value;
+    p->xSize[1] *= Value;
+
+    if (p->xSize[0] < 0.01f)
+
+        p->ulType |= 1;
+}
+
+void AGO2_ProcessEmpty(void)
+{
+}
+
+unsigned char AGO2_CreateFireWall(int unused, AGO2_Part_* p, float xParam1)
+{
+    float* p2;
+    float* p1;
+    AGO2_Part_* pp;
+    unsigned int Found;
+    unsigned int i;
+
+    Found = 0;
+    i = 0;
+    while (i < g_ulNumberOfAgos2 && !Found)
+    {
+        if (p->ulBaseID == g_pAGO2Parts[i].ulBaseID && (int)xParam1 == (int)g_pAGO2Parts[i].Vector4.xX)
+            Found = 1;
+        else
+            i++;
+    }
+    if (Found)
+    {
+        pp = &g_pAGO2Parts[i];
+        p1 = (float*)&p->Position;
+        p2 = (float*)&pp->Position;
+        p2[0] = p1[0];
+        p2[1] = p1[1];
+        p2[2] = p1[2];
+        p2[3] = p1[3];
+        p2[4] = p1[4];
+        p2[5] = p1[5];
+        p2[6] = p1[6];
+        p2[7] = p1[7];
+        p = pp;
+        p->ulType = 0;
+    }
+    p->Vector4.xX = xParam1;
+    p->xSize[0] = 1.0f;
+    p->xSize[1] = 1.0f;
+    p->xTransparency = 255.0f;
+    if (Found)
+        return 0;
+    return 1;
+}
+
+void AGO2_DisplayFireWall(AGO2_Part_* p)
+{
+    int y;
+    float TimeDif;
+    float V1;
+    float U1;
+    int CurrentAnim;
+    int i;
+    MTH3D_tdstVector_ Pos;
+    float xNorm;
+    MTH3D_tdstVector_ v2;
+    MTH3D_tdstVector_ v1;
+    MTH3D_tdstVector_ pdir;
+    /* TODO: decompile from asm/... */
+}
+
+void AGO2_DisplayFireWall2(AGO2_Part_* p)
+{
+    MTH3D_tdstVector_ pdir;
+    MTH3D_tdstVector_ v1;
+    MTH3D_tdstVector_ v2;
+    float xNorm;
+    MTH3D_tdstVector_ Pos;
+    int i;
+    int CurrentAnim;
+    float U1;
+    float V1;
+    float TimeDif;
+    int y;
+
+    MTH3D_M_vSubVector((MTH3D_tdstVector_*)&pdir, (MTH3D_tdstVector_*)&p->Direction, (MTH3D_tdstVector_*)&p->Position);
+    AGO2_vNormalizeVector((MTH3D_tdstVector_*)&pdir);
+    MTH3D_M_vSetVectorElements(&Pos, 0.0f, 0.0f, 1.0f);
+    ((MTH3D_tdstVector_*)&v2)->xX = Pos.xY * ((MTH3D_tdstVector_*)&pdir)->xZ - Pos.xZ * ((MTH3D_tdstVector_*)&pdir)->xY;
+    ((MTH3D_tdstVector_*)&v2)->xY = Pos.xZ * ((MTH3D_tdstVector_*)&pdir)->xX - Pos.xX * ((MTH3D_tdstVector_*)&pdir)->xZ;
+    ((MTH3D_tdstVector_*)&v2)->xZ = Pos.xX * ((MTH3D_tdstVector_*)&pdir)->xY - Pos.xY * ((MTH3D_tdstVector_*)&pdir)->xX;
+    MTH3D_M_vAddVector((MTH3D_tdstVector_*)&v1, &Pos, (MTH3D_tdstVector_*)&v2);
+    ((MTH3D_tdstVector_*)&v2)->xX = Pos.xX - ((MTH3D_tdstVector_*)&v2)->xX;
+    ((MTH3D_tdstVector_*)&v2)->xY = Pos.xY - ((MTH3D_tdstVector_*)&v2)->xY;
+    ((MTH3D_tdstVector_*)&v2)->xZ = ((MTH3D_tdstVector_*)&v1)->xZ;
+    AGO2_vNormalizeVector((MTH3D_tdstVector_*)&v1);
+    AGO2_vNormalizeVector((MTH3D_tdstVector_*)&v2);
+    MTH3D_M_vMulScalarVector((MTH3D_tdstVector_*)&pdir, 10.0f, (MTH3D_tdstVector_*)&pdir);
+    MTH3D_M_vSubVector((MTH3D_tdstVector_*)&v1, (MTH3D_tdstVector_*)&p->Position, (MTH3D_tdstVector_*)&pdir);
+    MTH3D_M_vAddVector((MTH3D_tdstVector_*)&v2, (MTH3D_tdstVector_*)&p->Position, (MTH3D_tdstVector_*)&pdir);
+    TimeDif = 0.0f;
+    ((MTH3D_tdstVector_*)&pdir)->xX = (1.0f / 30.0f) * (((MTH3D_tdstVector_*)&v2)->xX - ((MTH3D_tdstVector_*)&v1)->xX);
+    ((MTH3D_tdstVector_*)&pdir)->xY = (1.0f / 30.0f) * (((MTH3D_tdstVector_*)&v2)->xY - ((MTH3D_tdstVector_*)&v1)->xY);
+    ((MTH3D_tdstVector_*)&pdir)->xZ = (1.0f / 30.0f) * (((MTH3D_tdstVector_*)&v2)->xZ - ((MTH3D_tdstVector_*)&v1)->xZ);
+    Pos.xX = ((MTH3D_tdstVector_*)&v1)->xX + ((MTH3D_tdstVector_*)&pdir)->xX * TimeDif;
+    Pos.xY = ((MTH3D_tdstVector_*)&v1)->xY + ((MTH3D_tdstVector_*)&pdir)->xY * TimeDif;
+    Pos.xZ = 2.0f + (((MTH3D_tdstVector_*)&v1)->xZ + ((MTH3D_tdstVector_*)&pdir)->xZ * TimeDif);
+    CurrentAnim = (int)(16.0f * (1.3333334f * (g_ffFrameTime - (float)p->AnimTime) - (float)(int)(1.3333334f * (g_ffFrameTime - (float)p->AnimTime))));
+    for (i = 0; i < 30; i++)
+    {
+        y = CurrentAnim >> 2;
+        U1 = (float)(CurrentAnim - (y << 2)) / 4.0f;
+        V1 = (float)y / 4.0f;
+        GLI_vSetGlobalAlpha(255.0f);
+        GLI_vDrawWorldSpriteWithUVsOpt(&Pos, (GLI_tdstMaterial_*)p->pMaterial1, 3.0f, 3.0f, U1, V1, 0.25f + U1, 0.25f + V1, (GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, p->AnimTime);
+        CurrentAnim += i + 10;
+        while (CurrentAnim >= 16)
+            CurrentAnim -= 16;
+        Pos.xX += ((MTH3D_tdstVector_*)&pdir)->xX;
+        Pos.xY += ((MTH3D_tdstVector_*)&pdir)->xY;
+        Pos.xZ += ((MTH3D_tdstVector_*)&pdir)->xZ;
+    }
+    p->ulType |= 1;
+}
+
+unsigned char AGO2_CreateFFRing(int unused, AGO2_Part_* p, float xParam1)
+{
+    (void)unused;
+    p->xSize[0] = xParam1;
+    p->xSize[1] = 1.0f;
+    p->xTransparency = 255.0f;
+    return 1;
+}
+
+void AGO2_DisplayFFRing(AGO2_Part_* p)
+{
+    int i;
+    int j;
+    float p1b[3];
+    float p1h[3];
+    float p2b[3];
+    float p2h[3];
+    float cos1;
+    float sin1;
+    float CurrentHeight;
+    float AlphaVal;
+    float CurrentAngle;
+
+    CurrentAngle = 5.0f * g_ffFrameTime;
+    p->Direction.xX *= 0.5f;
+    cos1 = 0.25f * PS2_dl_cosf(CurrentAngle);
+    sin1 = 0.25f * PS2_dl_sinf(CurrentAngle);
+    for (i = 0; (float)i < 12.0f; i++)
+    {
+        p1b[0] = p->Position.xX + p->Direction.xY * cos1;
+        p1b[1] = p->Position.xY + p->Direction.xY * sin1;
+        p1b[2] = p->Position.xZ;
+        p1h[0] = p->Position.xX + 1.1f * (p->Direction.xZ * cos1);
+        p1h[1] = p->Position.xY + 1.1f * (p->Direction.xZ * sin1);
+        p1h[2] = p->Position.xZ + 2.0f * p->Direction.xX;
+        CurrentAngle += 0.5235988f;
+        cos1 = 0.25f * PS2_dl_cosf(CurrentAngle);
+        sin1 = 0.25f * PS2_dl_sinf(CurrentAngle);
+        p2b[0] = p->Position.xX + p->Direction.xY * cos1;
+        p2b[1] = p->Position.xY + p->Direction.xY * sin1;
+        p2b[2] = p->Position.xZ;
+        p2h[0] = p->Position.xX + 1.1f * (p->Direction.xZ * cos1);
+        p2h[1] = p->Position.xY + 1.1f * (p->Direction.xZ * sin1);
+        p2h[2] = p->Position.xZ + 2.0f * p->Direction.xX;
+        GLI_vDrawWorldQuadOpt((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, p2b, p1b, p1h, p2h, (GLI_tdstMaterial_*)p->pMaterial1);
+    }
+
+    CurrentAngle = -5.6549869f * g_ffFrameTime;
+    cos1 = PS2_dl_cosf(CurrentAngle);
+    sin1 = PS2_dl_sinf(CurrentAngle);
+    for (i = 0; (float)i < 12.0f; i++)
+    {
+        p1b[0] = p->Position.xX + 0.25f * (p->Direction.xY * cos1);
+        p1b[1] = p->Position.xY + 0.25f * (p->Direction.xY * sin1);
+        p1b[2] = p->Position.xZ;
+        p1h[0] = p->Position.xX + 0.3f * (1.1f * (p->Direction.xZ * cos1));
+        p1h[1] = p->Position.xY + 0.3f * (1.1f * (p->Direction.xZ * sin1));
+        p1h[2] = p->Position.xZ + p->Direction.xX;
+        CurrentAngle += 0.5235988f;
+        cos1 = PS2_dl_cosf(CurrentAngle);
+        sin1 = PS2_dl_sinf(CurrentAngle);
+        p2b[0] = p->Position.xX + 0.25f * (p->Direction.xY * cos1);
+        p2b[1] = p->Position.xY + 0.25f * (p->Direction.xY * sin1);
+        p2b[2] = p->Position.xZ;
+        p2h[0] = p->Position.xX + 0.3f * (1.1f * (p->Direction.xZ * cos1));
+        p2h[1] = p->Position.xY + 0.3f * (1.1f * (p->Direction.xZ * sin1));
+        p2h[2] = p->Position.xZ + p->Direction.xX;
+        GLI_vDrawWorldQuadOpt((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, p2b, p1b, p1h, p2h, (GLI_tdstMaterial_*)p->pMaterial1);
+    }
+
+    CurrentHeight = -1.0f;
+    AlphaVal = 255.0f;
+    CurrentAngle = 30.75f * -g_ffFrameTime;
+    for (j = 0; (float)j < 5.0f; j++)
+    {
+        cos1 = 0.25f * PS2_dl_cosf(CurrentAngle);
+        sin1 = 0.25f * PS2_dl_sinf(CurrentAngle);
+        for (i = 0; (float)i < 12.0f; i++)
+        {
+            p1b[0] = p->Position.xX + p->Direction.xY * cos1;
+            p1b[1] = p->Position.xY + p->Direction.xY * sin1;
+            p1b[2] = 2.3f + (p->Position.xZ + CurrentHeight);
+            p1h[0] = p->Position.xX + p->Direction.xY * cos1;
+            p1h[1] = p->Position.xY + p->Direction.xY * sin1;
+            p1h[2] = p->Position.xZ + CurrentHeight;
+            CurrentAngle += 0.5235988f;
+            cos1 = 0.25f * PS2_dl_cosf(CurrentAngle);
+            sin1 = 0.25f * PS2_dl_sinf(CurrentAngle);
+            CurrentHeight += 0.2f;
+            p2b[0] = p->Position.xX + p->Direction.xY * cos1;
+            p2b[1] = p->Position.xY + p->Direction.xY * sin1;
+            p2b[2] = 2.3f + (p->Position.xZ + CurrentHeight);
+            p2h[0] = p->Position.xX + p->Direction.xY * cos1;
+            p2h[1] = p->Position.xY + p->Direction.xY * sin1;
+            p2h[2] = p->Position.xZ + CurrentHeight;
+            GLI_vSetGlobalAlpha(AlphaVal);
+            AlphaVal -= 5.0f;
+            if (AlphaVal <= 0.0f)
+                AlphaVal = 0.0f;
+            GLI_vDrawWorldQuadOpt((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, p2b, p1b, p1h, p2h, (GLI_tdstMaterial_*)p->pMaterial1);
+        }
+    }
+    p->ulType |= 1;
+}
+
+void AGO2_DisplayFFWhirl(AGO2_Part_* p)
+{
+    int i;
+    int j;
+    float p1b[3];
+    float p1h[3];
+    float p2b[3];
+    float p2h[3];
+    float cos1;
+    float sin1;
+    float CurrentHeight;
+    float DiameterMul;
+    float AlphaVal;
+    float CurrentAngle;
+
+    p->Direction.xX *= 0.5f;
+    CurrentHeight = 0.0f;
+    AlphaVal = 255.0f;
+    CurrentAngle = 30.75f * -g_ffFrameTime;
+    for (j = 0; (float)j < 5.0f; j++)
+    {
+        cos1 = 0.25f * PS2_dl_cosf(CurrentAngle);
+        sin1 = 0.25f * PS2_dl_sinf(CurrentAngle);
+        for (i = 0; (float)i < 12.0f; i++)
+        {
+            p1b[0] = p->Position.xX + p->Direction.xY * cos1;
+            p1b[1] = p->Position.xY + p->Direction.xY * sin1;
+            p1b[2] = 3.3f + (p->Position.xZ + CurrentHeight);
+            p1h[0] = p->Position.xX + p->Direction.xY * cos1;
+            p1h[1] = p->Position.xY + p->Direction.xY * sin1;
+            p1h[2] = p->Position.xZ + CurrentHeight;
+            CurrentAngle += 0.5235988f;
+            cos1 = 0.25f * PS2_dl_cosf(CurrentAngle);
+            sin1 = 0.25f * PS2_dl_sinf(CurrentAngle);
+            CurrentHeight += 0.2f;
+            p2b[0] = p->Position.xX + p->Direction.xY * cos1;
+            p2b[1] = p->Position.xY + p->Direction.xY * sin1;
+            p2b[2] = 3.3f + (p->Position.xZ + CurrentHeight);
+            p2h[0] = p->Position.xX + p->Direction.xY * cos1;
+            p2h[1] = p->Position.xY + p->Direction.xY * sin1;
+            p2h[2] = p->Position.xZ + CurrentHeight;
+            GLI_vSetGlobalAlpha(AlphaVal);
+            AlphaVal -= 5.0f;
+            if (AlphaVal <= 0.0f)
+                AlphaVal = 0.0f;
+            GLI_vDrawWorldQuadOpt((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, p2b, p1b, p1h, p2h, (GLI_tdstMaterial_*)p->pMaterial1);
+        }
+    }
+
+    CurrentHeight = 0.0f;
+    AlphaVal = 255.0f;
+    CurrentAngle = 12.55f * g_ffFrameTime;
+    DiameterMul = 1.0f;
+    for (j = 0; (float)j < 5.0f; j++)
+    {
+        cos1 = DiameterMul * (0.25f * PS2_dl_cosf(CurrentAngle));
+        sin1 = DiameterMul * (0.25f * PS2_dl_sinf(CurrentAngle));
+        for (i = 0; (float)i < 12.0f; i++)
+        {
+            p1b[0] = p->Position.xX + p->Direction.xY * sin1;
+            p1b[1] = p->Position.xY + p->Direction.xY * cos1;
+            p1b[2] = 3.2f + (p->Position.xZ + CurrentHeight);
+            p1h[0] = p->Position.xX + p->Direction.xY * sin1;
+            p1h[1] = p->Position.xY + p->Direction.xY * cos1;
+            p1h[2] = p->Position.xZ + CurrentHeight;
+            CurrentAngle += 0.5235988f;
+            cos1 = DiameterMul * (0.25f * PS2_dl_cosf(CurrentAngle));
+            sin1 = DiameterMul * (0.25f * PS2_dl_sinf(CurrentAngle));
+            CurrentHeight += 0.15f;
+            DiameterMul += 0.013f;
+            p2b[0] = p->Position.xX + p->Direction.xY * sin1;
+            p2b[1] = p->Position.xY + p->Direction.xY * cos1;
+            p2b[2] = 3.2f + (p->Position.xZ + CurrentHeight);
+            p2h[0] = p->Position.xX + p->Direction.xY * sin1;
+            p2h[1] = p->Position.xY + p->Direction.xY * cos1;
+            p2h[2] = p->Position.xZ + CurrentHeight;
+            GLI_vSetGlobalAlpha(AlphaVal);
+            AlphaVal -= 4.5f;
+            if (AlphaVal <= 0.0f)
+                AlphaVal = 0.0f;
+            GLI_vDrawWorldQuadOpt((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, p2b, p1b, p1h, p2h, (GLI_tdstMaterial_*)p->pMaterial1);
+        }
+    }
+
+    CurrentHeight = 0.0f;
+    AlphaVal = 255.0f;
+    CurrentAngle = 20.55f * g_ffFrameTime;
+    DiameterMul = 1.0f;
+    for (j = 0; (float)j < 5.0f; j++)
+    {
+        cos1 = DiameterMul * (0.25f * PS2_dl_cosf(CurrentAngle));
+        sin1 = DiameterMul * (0.25f * PS2_dl_sinf(CurrentAngle));
+        for (i = 0; (float)i < 12.0f; i++)
+        {
+            p1b[0] = p->Position.xX + p->Direction.xY * sin1;
+            p1b[1] = p->Position.xY + p->Direction.xY * cos1;
+            p1b[2] = 3.2f + (p->Position.xZ + CurrentHeight);
+            p1h[0] = p->Position.xX + p->Direction.xY * sin1;
+            p1h[1] = p->Position.xY + p->Direction.xY * cos1;
+            p1h[2] = p->Position.xZ + CurrentHeight;
+            CurrentAngle += 0.5235988f;
+            cos1 = DiameterMul * (0.25f * PS2_dl_cosf(CurrentAngle));
+            sin1 = DiameterMul * (0.25f * PS2_dl_sinf(CurrentAngle));
+            CurrentHeight += 0.175f;
+            DiameterMul += 0.01f;
+            p2b[0] = p->Position.xX + p->Direction.xY * sin1;
+            p2b[1] = p->Position.xY + p->Direction.xY * cos1;
+            p2b[2] = 3.2f + (p->Position.xZ + CurrentHeight);
+            p2h[0] = p->Position.xX + p->Direction.xY * sin1;
+            p2h[1] = p->Position.xY + p->Direction.xY * cos1;
+            p2h[2] = p->Position.xZ + CurrentHeight;
+            GLI_vSetGlobalAlpha(AlphaVal);
+            AlphaVal -= 4.0f;
+            if (AlphaVal <= 0.0f)
+                AlphaVal = 0.0f;
+            GLI_vDrawWorldQuadOpt((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, p2b, p1b, p1h, p2h, (GLI_tdstMaterial_*)p->pMaterial1);
+        }
+    }
+    p->ulType |= 1;
+}
+
+/* Same parameter list as AGO2_CreateFlow: retail reads ParticleNumber from
+   the 16th-argument stack slot. */
+unsigned char AGO2_CreateBalloon(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber)
+{
+    unsigned int i;
+    unsigned int NumberOfParticlesCreated;
+    AGO2_BalloonPart_* pParticleArray;
+    AGO2_BalloonPart_* pParticleArrayOrg;
+    float AngleNumSteps;
+    float ZStep;
+    float AngleStep;
+    float delta;
+    float cos1;
+    float sin1;
+    float cos2;
+    float sin2;
+    float z;
+    float z2;
+    float SqrtOneMinusSquaredZ;
+    float SqrtOneMinusSquaredZ2;
+    int j;
+    int x;
+    int y;
+    float xNorm;
+
+    p->GroupNumber = ParticleNumber;
+    p->hGroup = AGO2_MEM_Alloc(ParticleNumber * sizeof(AGO2_BalloonPart_));
+    if (p->hGroup == 0)
+    {
+        p->GroupNumber = 0;
+        p->ulType |= 1;
+        return 0;
+    }
+    pParticleArrayOrg = (AGO2_BalloonPart_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+    if (pParticleArrayOrg == NULL)
+    {
+        printf("AGO2MEM DECONNE UN MAX !!!\n");
+        return 0;
+    }
+    NumberOfParticlesCreated = 0;
+    pParticleArray = pParticleArrayOrg;
+    AngleNumSteps = Direction->xZ;
+    ZStep = 0.02f * (25.0f - AngleNumSteps);
+    if (ZStep < 0.1f)
+        ZStep = 0.1f;
+    AngleStep = 6.2831855f / AngleNumSteps;
+    for (z = -0.9f; z < 0.8f; z += ZStep)
+    {
+        z2 = z + ZStep;
+        delta = 0.0f;
+        SqrtOneMinusSquaredZ = PS2SQRTF(1.0f - z * z);
+        SqrtOneMinusSquaredZ2 = PS2SQRTF(1.0f - z2 * z2);
+        for (i = 0; (float)i < AngleNumSteps; i++, delta += AngleStep)
+        {
+            if (10.0f * (float)rand() / 2147483648.0f < 3.0f && NumberOfParticlesCreated < p->GroupNumber)
+            {
+                cos1 = PS2_dl_cosf(delta);
+                sin1 = PS2_dl_sinf(delta);
+                cos2 = PS2_dl_cosf(delta + AngleStep);
+                sin2 = PS2_dl_sinf(delta + AngleStep);
+                pParticleArray->Points[0].xX = p->Position.xX + xParam1 * (cos1 * SqrtOneMinusSquaredZ);
+                pParticleArray->Points[0].xY = p->Position.xY + xParam1 * (sin1 * SqrtOneMinusSquaredZ);
+                pParticleArray->Points[0].xZ = p->Position.xZ + z * xParam1;
+                pParticleArray->Points[1].xX = p->Position.xX + xParam1 * (cos2 * SqrtOneMinusSquaredZ);
+                pParticleArray->Points[1].xY = p->Position.xY + xParam1 * (sin2 * SqrtOneMinusSquaredZ);
+                pParticleArray->Points[1].xZ = p->Position.xZ + z * xParam1;
+                pParticleArray->Points[2].xX = p->Position.xX + xParam1 * (cos2 * SqrtOneMinusSquaredZ2);
+                pParticleArray->Points[2].xY = p->Position.xY + xParam1 * (sin2 * SqrtOneMinusSquaredZ2);
+                pParticleArray->Points[2].xZ = p->Position.xZ + z2 * xParam1;
+                pParticleArray->Points[3].xX = p->Position.xX + xParam1 * (cos1 * SqrtOneMinusSquaredZ2);
+                pParticleArray->Points[3].xY = p->Position.xY + xParam1 * (sin1 * SqrtOneMinusSquaredZ2);
+                pParticleArray->Points[3].xZ = p->Position.xZ + z2 * xParam1;
+                pParticleArray->CenterPosition.xX = 0.5f * (pParticleArray->Points[0].xX + pParticleArray->Points[1].xX);
+                pParticleArray->CenterPosition.xY = 0.5f * (pParticleArray->Points[0].xY + pParticleArray->Points[1].xY);
+                pParticleArray->CenterPosition.xZ = 0.5f * (pParticleArray->Points[0].xZ + pParticleArray->Points[2].xZ);
+                for (j = 0; j < 4; j++)
+                {
+                    pParticleArray->Points[j].xX = pParticleArray->CenterPosition.xX + Direction->xY * (pParticleArray->Points[j].xX - pParticleArray->CenterPosition.xX);
+                    pParticleArray->Points[j].xY = pParticleArray->CenterPosition.xY + Direction->xY * (pParticleArray->Points[j].xY - pParticleArray->CenterPosition.xY);
+                    pParticleArray->Points[j].xZ = pParticleArray->CenterPosition.xZ + Direction->xY * (pParticleArray->Points[j].xZ - pParticleArray->CenterPosition.xZ);
+                }
+                if (xParam2 == 0.0f)
+                {
+                    pParticleArray->VertexUVs[0][0] = 0.9f * (float)rand() / 2147483648.0f;
+                    pParticleArray->VertexUVs[0][1] = 0.9f * (float)rand() / 2147483648.0f;
+                    pParticleArray->VertexUVs[1][0] = 0.1f + pParticleArray->VertexUVs[0][0];
+                    pParticleArray->VertexUVs[1][1] = 0.1f + pParticleArray->VertexUVs[0][1];
+                }
+                else if (xParam2 == 1.0f)
+                {
+                    pParticleArray->VertexUVs[0][0] = 0.0f;
+                    pParticleArray->VertexUVs[0][1] = 0.0f;
+                    pParticleArray->VertexUVs[1][0] = 1.0f;
+                    pParticleArray->VertexUVs[1][1] = 1.0f;
+                }
+                else if (xParam2 == 2.0f)
+                {
+                    x = (int)(2.0f * (float)rand() / 2147483648.0f);
+                    y = (int)(2.0f * (float)rand() / 2147483648.0f);
+                    pParticleArray->VertexUVs[0][0] = 0.5f * (float)x;
+                    pParticleArray->VertexUVs[0][1] = 0.5f * (float)y;
+                    pParticleArray->VertexUVs[1][0] = 0.5f + 0.5f * (float)x;
+                    pParticleArray->VertexUVs[1][1] = 0.5f + 0.5f * (float)y;
+                }
+                else if (xParam2 == 3.0f)
+                {
+                    x = (int)(4.0f * (float)rand() / 2147483648.0f);
+                    y = (int)(4.0f * (float)rand() / 2147483648.0f);
+                    pParticleArray->VertexUVs[0][0] = 0.25f * (float)x;
+                    pParticleArray->VertexUVs[0][1] = 0.25f * (float)y;
+                    pParticleArray->VertexUVs[1][0] = 0.25f + 0.25f * (float)x;
+                    pParticleArray->VertexUVs[1][1] = 0.25f + 0.25f * (float)y;
+                }
+                pParticleArray->RotationAngles.xX = AGO2_M_xRand(-5.0f, 5.0f);
+                pParticleArray->RotationAngles.xY = AGO2_M_xRand(-5.0f, 5.0f);
+                pParticleArray->RotationAngles.xZ = AGO2_M_xRand(-5.0f, 5.0f);
+                xNorm = AGO2_M_xRand(0.5f, 3.0f);
+                xNorm = xParam3 * xNorm;
+                pParticleArray->Direction.xX = pParticleArray->CenterPosition.xX - p->Position.xX;
+                pParticleArray->Direction.xY = pParticleArray->CenterPosition.xY - p->Position.xY;
+                pParticleArray->Direction.xZ = pParticleArray->CenterPosition.xZ - p->Position.xZ;
+                AGO2_vNormalizeVector(&pParticleArray->Direction);
+                MTH3D_M_vMulScalarVector(&pParticleArray->Direction, xNorm, &pParticleArray->Direction);
+                pParticleArray->fTransparency = 512.0f;
+                pParticleArray->fTransparencySpeed = AGO2_M_xRand(255.0f, 512.0f);
+                pParticleArray->HasBeenDisplayed = 0;
+                pParticleArray->f_GSpeed = AGO2_M_xRand(1.0f, 3.0f);
+                pParticleArray++;
+                NumberOfParticlesCreated++;
+            }
+        }
+    }
+    p->GroupNumber = NumberOfParticlesCreated;
+    return 1;
+}
+
+void AGO2_ProcessBalloon(AGO2_Part_* p)
+{
+    AGO2_BalloonPart_* pParticleArray;
+    unsigned int i;
+    unsigned int j;
+    AGO2_BalloonPart_* pParticleArrayOrg;
+    int FoundOneValidParticle;
+    MTH3D_tdstVector_ CenteredPoints[4];
+    float x;
+    float yy;
+    float y;
+    float z;
+    float cos1;
+    float sin1;
+    float zz;
+    float delta;
+    float xx;
+
+    pParticleArrayOrg = (AGO2_BalloonPart_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+    pParticleArray = pParticleArrayOrg;
+    FoundOneValidParticle = 0;
+    if (!pParticleArray)
+    {
+        printf("AGO2MEM DECONNE UN MAX !!!\n");
+        p->ulType |= 1;
+        return;
+    }
+    for (i = 0; i < p->GroupNumber; pParticleArray++, i++)
+    {
+        pParticleArray->fTransparency -= pParticleArray->fTransparencySpeed * g_fTimeDifference;
+        if (pParticleArray->fTransparency > 0.0f)
+        {
+            FoundOneValidParticle = 1;
+            for (j = 0; j < 4; j++)
+            {
+                CenteredPoints[j].xX = pParticleArray->Points[j].xX - pParticleArray->CenterPosition.xX;
+                CenteredPoints[j].xY = pParticleArray->Points[j].xY - pParticleArray->CenterPosition.xY;
+                CenteredPoints[j].xZ = pParticleArray->Points[j].xZ - pParticleArray->CenterPosition.xZ;
+            }
+            pParticleArray->Direction.xZ -= 9.81f * g_fTimeDifference * pParticleArray->f_GSpeed;
+            pParticleArray->CenterPosition.xX += pParticleArray->Direction.xX * g_fTimeDifference;
+            pParticleArray->CenterPosition.xY += pParticleArray->Direction.xY * g_fTimeDifference;
+            pParticleArray->CenterPosition.xZ += pParticleArray->Direction.xZ * g_fTimeDifference;
+            for (j = 0; j < 4; j++)
+            {
+                x = ((MTH3D_tdstVector_*)((int)CenteredPoints + j * sizeof(MTH3D_tdstVector_)))->xX;
+                y = ((MTH3D_tdstVector_*)((int)CenteredPoints + j * sizeof(MTH3D_tdstVector_)))->xY;
+                z = ((MTH3D_tdstVector_*)((int)CenteredPoints + j * sizeof(MTH3D_tdstVector_)))->xZ;
+                delta = pParticleArray->RotationAngles.xX * g_fTimeDifference;
+                cos1 = PS2_dl_cosf(delta);
+                sin1 = PS2_dl_sinf(delta);
+                yy = cos1 * y + sin1 * z;
+                zz = -sin1 * y + cos1 * z;
+                delta = pParticleArray->RotationAngles.xY * g_fTimeDifference;
+                cos1 = PS2_dl_cosf(delta);
+                sin1 = PS2_dl_sinf(delta);
+                xx = cos1 * x + sin1 * zz;
+                z = -sin1 * x + cos1 * zz;
+                delta = pParticleArray->RotationAngles.xZ * g_fTimeDifference;
+                cos1 = PS2_dl_cosf(delta);
+                sin1 = PS2_dl_sinf(delta);
+                x = cos1 * xx + sin1 * yy;
+                y = -sin1 * xx + cos1 * yy;
+                ((MTH3D_tdstVector_*)((int)CenteredPoints + j * sizeof(MTH3D_tdstVector_)))->xX = x;
+                ((MTH3D_tdstVector_*)((int)CenteredPoints + j * sizeof(MTH3D_tdstVector_)))->xY = y;
+                ((MTH3D_tdstVector_*)((int)CenteredPoints + j * sizeof(MTH3D_tdstVector_)))->xZ = z;
+            }
+            for (j = 0; j < 4; j++)
+            {
+                pParticleArray->Points[j].xX = pParticleArray->CenterPosition.xX + CenteredPoints[j].xX;
+                pParticleArray->Points[j].xY = pParticleArray->CenterPosition.xY + CenteredPoints[j].xY;
+                pParticleArray->Points[j].xZ = pParticleArray->CenterPosition.xZ + CenteredPoints[j].xZ;
+            }
+        }
+    }
+    if (!FoundOneValidParticle)
+        p->ulType |= 1;
+}
+
+void AGO2_DisplayForceField(AGO2_Part_* p)
+{
+    AGO2_BalloonPart_* pParticleArrayOrg;
+    unsigned int i;
+    AGO2_BalloonPart_* pParticleArray;
+
+    pParticleArrayOrg = (AGO2_BalloonPart_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+    if (!pParticleArrayOrg)
+    {
+        printf("AGO2MEM DECONNE UN MAX !!!\n");
+        p->ulType |= 1;
+    }
+    else
+    {
+        i = 0;
+        pParticleArray = pParticleArrayOrg;
+        while (i < p->GroupNumber)
+        {
+            if (pParticleArray->fTransparency > 0.0f)
+            {
+                GLI_vSetGlobalAlpha(255.0f * pParticleArray->fTransparency);
+                GLI_vDrawWorldQuadWithUVsOpt((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport,
+                                             &pParticleArray->Points[0].xX,
+                                             &pParticleArray->Points[1].xX,
+                                             &pParticleArray->Points[2].xX,
+                                             &pParticleArray->Points[3].xX,
+                                             pParticleArray->VertexUVs[0][0],
+                                             pParticleArray->VertexUVs[0][1],
+                                             pParticleArray->VertexUVs[1][0],
+                                             pParticleArray->VertexUVs[1][1],
+                                             (GLI_tdstMaterial_*)p->pMaterial1);
+                pParticleArray->HasBeenDisplayed = 1;
+            }
+            pParticleArray++;
+            i++; }
+    }
+}
+
+void AGO2_DisplayBalloon(AGO2_Part_* p)
+{
+    AGO2_BalloonPart_* pParticleArrayOrg;
+    unsigned int i;
+    AGO2_BalloonPart_* pParticleArray;
+
+    pParticleArrayOrg = (AGO2_BalloonPart_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+    if (!pParticleArrayOrg)
+    {
+        printf("AGO2MEM DECONNE UN MAX !!!\n");
+        p->ulType |= 1;
+    }
+    else
+    {
+        i = 0;
+        pParticleArray = pParticleArrayOrg;
+        while (i < p->GroupNumber)
+        {
+            if (pParticleArray->fTransparency > 0.0f)
+            {
+                GLI_vSetGlobalAlpha(pParticleArray->fTransparency);
+                GLI_vDrawWorldQuadWithUVsOpt((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport,
+                                             &pParticleArray->Points[0].xX,
+                                             &pParticleArray->Points[1].xX,
+                                             &pParticleArray->Points[2].xX,
+                                             &pParticleArray->Points[3].xX,
+                                             pParticleArray->VertexUVs[0][0],
+                                             pParticleArray->VertexUVs[0][1],
+                                             pParticleArray->VertexUVs[1][0],
+                                             pParticleArray->VertexUVs[1][1],
+                                             (GLI_tdstMaterial_*)p->pMaterial1);
+                pParticleArray->HasBeenDisplayed = 1;
+            }
+            pParticleArray++;
+            i++; }
+    }
+}
+
+unsigned char AGO2_CreateIce(int unused, AGO2_Part_* p, float xParam1)
+{
+    p->Vector1.xX = xParam1;
+    return 1;
+}
+
+void AGO2_ProcessIce(AGO2_Part_* p)
+{
+    p->ulType |= 1;
+}
+
+void DisplayIcePic(AGO2_Part_* p, float radius, float smallRadius, MTH3D_tdstVector_* Temp1, MTH3D_tdstVector_* Temp2, MTH3D_tdstVector_* Temp3)
+{
+    MTH3D_tdstVector_ DestVtx;
+    MTH3D_tdstVector_ SourceVtx1;
+    MTH3D_tdstVector_ SourceVtx2;
+    MTH3D_tdstVector_ SourceVtx3;
+    MTH3D_tdstVector_ R1;
+    MTH3D_tdstVector_ R2;
+    MTH3D_tdstVector_ R3;
+
+    AGO2_vRotateIceVector(&R1, Temp1);
+    AGO2_vRotateIceVector(&R2, Temp2);
+    AGO2_vRotateIceVector(&R3, Temp3);
+
+    SourceVtx1.xX = p->Position.xX - smallRadius * R2.xX - smallRadius * R3.xX;
+    SourceVtx1.xY = p->Position.xY - smallRadius * R2.xY - smallRadius * R3.xY;
+    SourceVtx1.xZ = p->Position.xZ - smallRadius * R2.xZ - smallRadius * R3.xZ;
+
+    SourceVtx2.xX = p->Position.xX - smallRadius * R2.xX + smallRadius * R3.xX;
+    SourceVtx2.xY = p->Position.xY - smallRadius * R2.xY + smallRadius * R3.xY;
+    SourceVtx2.xZ = p->Position.xZ - smallRadius * R2.xZ + smallRadius * R3.xZ;
+
+    SourceVtx3.xX = p->Position.xX + smallRadius * R2.xX;
+    SourceVtx3.xY = p->Position.xY + smallRadius * R2.xY;
+    SourceVtx3.xZ = p->Position.xZ + smallRadius * R2.xZ;
+
+    DestVtx.xX = p->Position.xX + radius * R1.xX;
+    DestVtx.xY = p->Position.xY + radius * R1.xY;
+    DestVtx.xZ = p->Position.xZ + radius * R1.xZ;
+
+    GLI_vDrawWorldQuadWithUVsOpt((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, (float*)&SourceVtx1, (float*)&SourceVtx2, (float*)&SourceVtx3, (float*)&DestVtx, 0.0f, 0.0f, 1.0f, 1.0f, (GLI_tdstMaterial_*)p->pMaterial1);
+    GLI_vDrawWorldQuadWithUVsOpt((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, (float*)&SourceVtx2, (float*)&SourceVtx1, (float*)&DestVtx, (float*)&SourceVtx3, 0.0f, 0.0f, 1.0f, 1.0f, (GLI_tdstMaterial_*)p->pMaterial1);
+}
+
+void AGO2_DisplayIce(AGO2_Part_* p)
+{
+    float radius;
+    float smallRadius;
+    MTH3D_tdstVector_ Temp1;
+    MTH3D_tdstVector_ Temp2;
+    MTH3D_tdstVector_ Temp3;
+
+    radius = 1.5f * p->Vector1.xX;
+    smallRadius = 0.25f * radius;
+
+    MTH3D_M_vSetVectorElements(&Temp1, 0.0f, 0.0f, 1.0f);
+    AGO_Define_OrthogonalVectors(&Temp1, &Temp2, &Temp3);
+    DisplayIcePic(p, radius, smallRadius, &Temp1, &Temp2, &Temp3);
+
+    MTH3D_M_vSetVectorElements(&Temp1, 1.0f, 0.0f, 0.0f);
+    AGO_Define_OrthogonalVectors(&Temp1, &Temp2, &Temp3);
+    DisplayIcePic(p, radius, smallRadius, &Temp1, &Temp2, &Temp3);
+
+    MTH3D_M_vSetVectorElements(&Temp1, -1.0f, 0.0f, 0.0f);
+    AGO_Define_OrthogonalVectors(&Temp1, &Temp2, &Temp3);
+    DisplayIcePic(p, radius, smallRadius, &Temp1, &Temp2, &Temp3);
+
+    MTH3D_M_vSetVectorElements(&Temp1, 0.0f, 1.0f, 0.0f);
+    AGO_Define_OrthogonalVectors(&Temp1, &Temp2, &Temp3);
+    DisplayIcePic(p, radius, smallRadius, &Temp1, &Temp2, &Temp3);
+
+    MTH3D_M_vSetVectorElements(&Temp1, 0.0f, -1.0f, 0.0f);
+    AGO_Define_OrthogonalVectors(&Temp1, &Temp2, &Temp3);
+    DisplayIcePic(p, radius, smallRadius, &Temp1, &Temp2, &Temp3);
+
+    radius = 0.9f * p->Vector1.xX;
+
+    MTH3D_M_vSetVectorElements(&Temp1, 0.707f, 0.707f, 0.707f);
+    AGO_Define_OrthogonalVectors(&Temp1, &Temp2, &Temp3);
+    DisplayIcePic(p, radius, smallRadius, &Temp1, &Temp2, &Temp3);
+
+    MTH3D_M_vSetVectorElements(&Temp1, -0.707f, 0.707f, 0.707f);
+    AGO_Define_OrthogonalVectors(&Temp1, &Temp2, &Temp3);
+    DisplayIcePic(p, radius, smallRadius, &Temp1, &Temp2, &Temp3);
+
+    MTH3D_M_vSetVectorElements(&Temp1, 0.707f, -0.707f, 0.707f);
+    AGO_Define_OrthogonalVectors(&Temp1, &Temp2, &Temp3);
+    DisplayIcePic(p, radius, smallRadius, &Temp1, &Temp2, &Temp3);
+
+    MTH3D_M_vSetVectorElements(&Temp1, -0.707f, -0.707f, 0.707f);
+    AGO_Define_OrthogonalVectors(&Temp1, &Temp2, &Temp3);
+    DisplayIcePic(p, radius, smallRadius, &Temp1, &Temp2, &Temp3);
+
+    radius = 1.2f * p->Vector1.xX;
+
+    MTH3D_M_vSetVectorElements(&Temp1, 0.707f, 0.707f, -0.707f);
+    AGO_Define_OrthogonalVectors(&Temp1, &Temp2, &Temp3);
+    DisplayIcePic(p, radius, smallRadius, &Temp1, &Temp2, &Temp3);
+
+    MTH3D_M_vSetVectorElements(&Temp1, -0.707f, -0.707f, -0.707f);
+    AGO_Define_OrthogonalVectors(&Temp1, &Temp2, &Temp3);
+    DisplayIcePic(p, radius, smallRadius, &Temp1, &Temp2, &Temp3);
+}
+
+/* Same parameter list as AGO2_CreateFlow: retail reads ParticleNumber from
+   the 16th-argument stack slot. */
+unsigned char AGO2_CreateForceField(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber)
+{
+    unsigned int i;
+    unsigned int NumberOfParticlesCreated;
+    AGO2_BalloonPart_* pParticleArray;
+    AGO2_BalloonPart_* pParticleArrayOrg;
+    float AngleNumSteps;
+    float ZStep;
+    float AngleStep;
+    float delta;
+    float cos1;
+    float sin1;
+    float cos2;
+    float sin2;
+    float z;
+    float z2;
+    float SqrtOneMinusSquaredZ;
+    float SqrtOneMinusSquaredZ2;
+
+    p->GroupNumber = ParticleNumber;
+    p->hGroup = AGO2_MEM_Alloc(ParticleNumber * sizeof(AGO2_BalloonPart_));
+    if (p->hGroup == 0)
+    {
+        p->GroupNumber = 0;
+        p->ulType |= 1;
+        return 0;
+    }
+    pParticleArrayOrg = (AGO2_BalloonPart_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+    if (pParticleArrayOrg == NULL)
+    {
+        printf("AGO2MEM DECONNE UN MAX !!!\n");
+        return 0;
+    }
+    NumberOfParticlesCreated = 0;
+    pParticleArray = pParticleArrayOrg;
+    AngleNumSteps = Direction->xZ;
+    ZStep = 0.02f * (25.0f - AngleNumSteps);
+    if (ZStep < 0.1f)
+        ZStep = 0.1f;
+    AngleStep = 6.2831855f / AngleNumSteps;
+    for (z = -0.9f; z < 0.8f; z += ZStep)
+    {
+        z2 = z + ZStep;
+        delta = 0.0f;
+        SqrtOneMinusSquaredZ = PS2SQRTF(1.0f - z * z);
+        SqrtOneMinusSquaredZ2 = PS2SQRTF(1.0f - z2 * z2);
+        for (i = 0; (float)i < AngleNumSteps; i++, delta += AngleStep)
+        {
+            if (NumberOfParticlesCreated < p->GroupNumber)
+            {
+                cos1 = PS2_dl_cosf(delta);
+                sin1 = PS2_dl_sinf(delta);
+                cos2 = PS2_dl_cosf(delta + AngleStep);
+                sin2 = PS2_dl_sinf(delta + AngleStep);
+                pParticleArray->Points[0].xX = p->Position.xX + xParam1 * (cos1 * SqrtOneMinusSquaredZ);
+                pParticleArray->Points[0].xY = p->Position.xY + xParam1 * (sin1 * SqrtOneMinusSquaredZ);
+                pParticleArray->Points[0].xZ = p->Position.xZ + z * xParam1;
+                pParticleArray->Points[1].xX = p->Position.xX + xParam1 * (cos2 * SqrtOneMinusSquaredZ);
+                pParticleArray->Points[1].xY = p->Position.xY + xParam1 * (sin2 * SqrtOneMinusSquaredZ);
+                pParticleArray->Points[1].xZ = p->Position.xZ + z * xParam1;
+                pParticleArray->Points[2].xX = p->Position.xX + xParam1 * (cos2 * SqrtOneMinusSquaredZ2);
+                pParticleArray->Points[2].xY = p->Position.xY + xParam1 * (sin2 * SqrtOneMinusSquaredZ2);
+                pParticleArray->Points[2].xZ = p->Position.xZ + z2 * xParam1;
+                pParticleArray->Points[3].xX = p->Position.xX + xParam1 * (cos1 * SqrtOneMinusSquaredZ2);
+                pParticleArray->Points[3].xY = p->Position.xY + xParam1 * (sin1 * SqrtOneMinusSquaredZ2);
+                pParticleArray->Points[3].xZ = p->Position.xZ + z2 * xParam1;
+                pParticleArray->CenterPosition.xX = 0.5f * (pParticleArray->Points[0].xX + pParticleArray->Points[1].xX);
+                pParticleArray->CenterPosition.xY = 0.5f * (pParticleArray->Points[0].xY + pParticleArray->Points[1].xY);
+                pParticleArray->CenterPosition.xZ = 0.5f * (pParticleArray->Points[0].xZ + pParticleArray->Points[2].xZ);
+                pParticleArray->VertexUVs[0][0] = 0.5f * (1.0f + cos1);
+                pParticleArray->VertexUVs[0][1] = 0.5f * (1.0f + z);
+                pParticleArray->VertexUVs[1][0] = 0.5f * (1.0f + cos2);
+                pParticleArray->VertexUVs[1][1] = 0.5f * (1.0f + z2);
+                pParticleArray->RotationAngles.xX = AGO2_M_xRand(-30.0f, 30.0f);
+                pParticleArray->RotationAngles.xY = AGO2_M_xRand(-30.0f, 30.0f);
+                pParticleArray->RotationAngles.xZ = AGO2_M_xRand(-30.0f, 30.0f);
+                pParticleArray->fTransparency = xParam2;
+                pParticleArray->fTransparencySpeed = xParam3;
+                pParticleArray->HasBeenDisplayed = 0;
+                pParticleArray->f_GSpeed = xParam4;
+                pParticleArray++;
+                NumberOfParticlesCreated++;
+            }
+        }
+    }
+    p->GroupNumber = NumberOfParticlesCreated;
+    return 1;
+}
+
+void AGO2_ProcessForceField(AGO2_Part_* p)
+{
+    AGO2_BalloonPart_* pParticleArray;
+    unsigned int i;
+    unsigned int j;
+    AGO2_BalloonPart_* pParticleArrayOrg;
+    int FoundOneValidParticle;
+    MTH3D_tdstVector_ CenteredPoints[4];
+    float cos1;
+    float sin1;
+    float y;
+
+    pParticleArrayOrg = (AGO2_BalloonPart_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+    pParticleArray = pParticleArrayOrg;
+    FoundOneValidParticle = 0;
+    if (!pParticleArray)
+    {
+        printf("AGO2MEM DECONNE UN MAX !!!\n");
+        p->ulType |= 1;
+        return;
+    }
+    for (i = 0; i < p->GroupNumber; pParticleArray++, i++)
+    {
+        pParticleArray->fTransparency -= pParticleArray->fTransparencySpeed * g_fTimeDifference;
+        cos1 = PS2_dl_cosf(pParticleArray->f_GSpeed * g_fTimeDifference);
+        sin1 = PS2_dl_sinf(pParticleArray->f_GSpeed * g_fTimeDifference);
+        if (pParticleArray->fTransparency > 0.0f)
+        {
+            FoundOneValidParticle = 1;
+            for (j = 0; j < 4; j++)
+            {
+                ((MTH3D_tdstVector_*)((int)CenteredPoints + j * sizeof(MTH3D_tdstVector_)))->xX = pParticleArray->Points[j].xX - p->Position.xX;
+                ((MTH3D_tdstVector_*)((int)CenteredPoints + j * sizeof(MTH3D_tdstVector_)))->xY = pParticleArray->Points[j].xY - p->Position.xY;
+                ((MTH3D_tdstVector_*)((int)CenteredPoints + j * sizeof(MTH3D_tdstVector_)))->xZ = pParticleArray->Points[j].xZ - p->Position.xZ;
+                y = sin1 * -((MTH3D_tdstVector_*)((int)CenteredPoints + j * sizeof(MTH3D_tdstVector_)))->xX + cos1 * ((MTH3D_tdstVector_*)((int)CenteredPoints + j * sizeof(MTH3D_tdstVector_)))->xY;
+                ((MTH3D_tdstVector_*)((int)CenteredPoints + j * sizeof(MTH3D_tdstVector_)))->xX = cos1 * ((MTH3D_tdstVector_*)((int)CenteredPoints + j * sizeof(MTH3D_tdstVector_)))->xX + sin1 * ((MTH3D_tdstVector_*)((int)CenteredPoints + j * sizeof(MTH3D_tdstVector_)))->xY;
+                ((MTH3D_tdstVector_*)((int)CenteredPoints + j * sizeof(MTH3D_tdstVector_)))->xY = y;
+            }
+            for (j = 0; j < 4; j++)
+            {
+                pParticleArray->Points[j].xX = p->Position.xX + CenteredPoints[j].xX;
+                pParticleArray->Points[j].xY = p->Position.xY + CenteredPoints[j].xY;
+                pParticleArray->Points[j].xZ = p->Position.xZ + CenteredPoints[j].xZ;
+            }
+        }
+    }
+    if (!FoundOneValidParticle)
+        p->ulType |= 1;
+}
+
+unsigned char AGO2_CreateCylinder(int unused, AGO2_Part_* p, float xParam1, float xParam2)
+{
+    p->Vector1.xX = xParam1;
+    p->Vector1.xY = xParam2;
+    return 1;
+}
+
+void AGO2_ProcessDieAtOnce(AGO2_Part_* p)
+{
+    p->ulType |= 1;
+}
+
+void AGO2_DisplayCylinder(AGO2_Part_* p)
+{
+    float radius;
+    float angle;
+    float c1;
+    float s1;
+    AGO_V4D_ DirVect;
+    AGO_V4D_ V1;
+    AGO_V4D_ V2;
+    AGO_V4D_ P1;
+    AGO_V4D_ P2;
+    AGO_V4D_ P3;
+    AGO_V4D_ P4;
+    AGO_V4D_ FirstP1;
+    AGO_V4D_ FirstP2;
+    float CurrentV;
+    float OldV;
+    float xNorm;
+
+    radius = p->Vector1.xX;
+    DirVect.xX = p->Direction.xX - p->Position.xX;
+    DirVect.xY = p->Direction.xY - p->Position.xY;
+    DirVect.xZ = p->Direction.xZ - p->Position.xZ;
+    AGO2_vNormalizeVector((MTH3D_tdstVector_*)&DirVect);
+    AGO_Define_OrthogonalVectors((MTH3D_tdstVector_*)&DirVect, (MTH3D_tdstVector_*)&V1, (MTH3D_tdstVector_*)&V2);
+    angle = 0.0f;
+    c1 = radius * PS2_dl_cosf(angle);
+    s1 = radius * PS2_dl_sinf(angle);
+    OldV = 0.0f;
+    CurrentV = OldV;
+    angle = 0.628f;
+    AGO2_vCylinderPoint((MTH3D_tdstVector_*)&P1, (MTH3D_tdstVector_*)&p->Position, c1, (MTH3D_tdstVector_*)&V1, s1, (MTH3D_tdstVector_*)&V2);
+    FirstP1 = P1;
+    AGO2_vCylinderPoint((MTH3D_tdstVector_*)&P2, (MTH3D_tdstVector_*)&p->Direction, c1, (MTH3D_tdstVector_*)&V1, s1, (MTH3D_tdstVector_*)&V2);
+    FirstP2 = P2;
+    while (angle < 6.0f)
+    {
+        CurrentV += 0.1f;
+        c1 = radius * PS2_dl_cosf(angle);
+        s1 = radius * PS2_dl_sinf(angle);
+        AGO2_vCylinderPoint((MTH3D_tdstVector_*)&P3, (MTH3D_tdstVector_*)&p->Position, c1, (MTH3D_tdstVector_*)&V1, s1, (MTH3D_tdstVector_*)&V2);
+        AGO2_vCylinderPoint((MTH3D_tdstVector_*)&P4, (MTH3D_tdstVector_*)&p->Direction, c1, (MTH3D_tdstVector_*)&V1, s1, (MTH3D_tdstVector_*)&V2);
+        GLI_vDrawWorldQuadWithUVsOpt((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, (float*)&P3, (float*)&P1, (float*)&P2, (float*)&P4, CurrentV, 0.0f, OldV, 1.0f, (GLI_tdstMaterial_*)p->pMaterial1);
+        OldV = CurrentV;
+        angle += 0.628f;
+        P1 = P3;
+        P2 = P4;
+    }
+    GLI_vDrawWorldQuadWithUVsOpt((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, (float*)&FirstP1, (float*)&P1, (float*)&P2, (float*)&FirstP2, CurrentV + 0.1f, 0.0f, CurrentV, 1.0f, (GLI_tdstMaterial_*)p->pMaterial1);
+}
+
+void AGO2_DisplayAuraStorm(AGO2_Part_* p)
+{
+    int HalfSphere;
+    float* p_fCosTable;
+    float fi;
+    float basey;
+    float basex;
+    float time;
+    float s4;
+    float c4;
+    float s3;
+    float c3;
+    float s2;
+    float c2;
+    float s1;
+    float c1;
+    float anglez2;
+    float anglex2;
+    float anglez;
+    float anglex;
+    float radius;
+    unsigned int i;
+    MTH3D_tdstVector_ PMIDHIGH;
+    MTH3D_tdstVector_ PMID;
+    MTH3D_tdstVector_ P4;
+    MTH3D_tdstVector_ P3;
+    /* TODO: decompile from asm/... */
+}
+
+void AGO2_vTestWall(void)
+{
+}
+
+void AGO2_vTestExploseWall(void)
+{
+    AGO2_WallExplosionPart_ OriginalPart;
+    AGO2_WallExplosionPart_* pp;
+    AGO2_WallExplosion_* p;
+    static int Firstime = 1;
+
+    if (AGO2_g_NbWalls == 1)
+    {
+        if (g_PadCircle || Firstime)
+        {
+            Firstime = 0;
+            p = (AGO2_WallExplosion_*)AGO2_MEM_GetPointerFromHandle(AGO2_g_Walls[0]);
+            pp = &p->Parts[0];
+            OriginalPart = *pp;
+            {
+                MTH3D_tdstVector_ A;
+                MTH3D_tdstVector_ B;
+                MTH3D_M_vAddVector(&A, (MTH3D_tdstVector_*)&OriginalPart.Vertices[0], (MTH3D_tdstVector_*)&OriginalPart.Vertices[1]);
+                MTH3D_M_vAddVector(&A, &A, (MTH3D_tdstVector_*)&OriginalPart.Vertices[4]);
+                MTH3D_M_vAddVector(&A, &A, (MTH3D_tdstVector_*)&OriginalPart.Vertices[5]);
+                MTH3D_M_vMulScalarVector(&A, 0.25f, &A);
+
+                MTH3D_M_vAddVector(&B, (MTH3D_tdstVector_*)&OriginalPart.Vertices[2], (MTH3D_tdstVector_*)&OriginalPart.Vertices[3]);
+                MTH3D_M_vAddVector(&B, &B, (MTH3D_tdstVector_*)&OriginalPart.Vertices[6]);
+                MTH3D_M_vAddVector(&B, &B, (MTH3D_tdstVector_*)&OriginalPart.Vertices[7]);
+                MTH3D_M_vMulScalarVector(&B, 0.25f, &B);
+
+                pp->Vertices[0].xX = A.xX;
+                pp->Vertices[0].xY = A.xY;
+                pp->Vertices[0].xZ = A.xZ;
+
+                pp->Vertices[3].xX = B.xX;
+                pp->Vertices[3].xY = B.xY;
+                pp->Vertices[3].xZ = B.xZ;
+            }
+        }
+    }
+}
+
+unsigned int AGO2_MEM_Alloc(unsigned int Size)
+{
+    unsigned int Difference;
+    unsigned int j;
+    unsigned int MinDifference;
+    unsigned int MinZone;
+    unsigned int* Pointer;
+    unsigned int TempSize;
+    unsigned int i;
+
+    if (g_AGO2_MEM_NbOfAllocatedBlocs >= 5000)
+    {
+        printf("AGO2 : Too many allocations done !!\n");
+        return 0;
+    }
+
+    TempSize = (Size + 0x1F) & 0xFFFFFFF0;
+
+    for (i = 0; i < g_AGO2_MEM_NumberOfFreeZones && g_AGO2_MEM_FreeZones[i].Size < TempSize; i++);
+
+    if (i == g_AGO2_MEM_NumberOfFreeZones)
+    {
+        if (g_AGO2_MEM_NumberOfFreeZones < 2)
+            return 0;
+        AGO2_MEM_Shrink();
+        return AGO2_MEM_Alloc(Size);
+    }
+
+    MinDifference = g_AGO2_MEM_FreeZones[i].Size - TempSize;
+    MinZone = i;
+    for (j = i + 1; j < g_AGO2_MEM_NumberOfFreeZones; j++)
+    {
+        if (g_AGO2_MEM_FreeZones[j].Size < TempSize)
+        {
+            Difference = g_AGO2_MEM_FreeZones[j].Size - TempSize;
+            if (Difference < MinDifference)
+            {
+                MinDifference = Difference;
+                MinZone = j;
+            }
+        }
+    }
+
+    g_AGO2_MEM_HandleDescriptors[g_AGO2_MEM_NbOfAllocatedBlocs].Pointer = g_AGO2_MEM_FreeZones[MinZone].pStart;
+    memset((void*)g_AGO2_MEM_HandleDescriptors[g_AGO2_MEM_NbOfAllocatedBlocs].Pointer, 0, TempSize);
+    g_AGO2_MEM_HandleDescriptors[g_AGO2_MEM_NbOfAllocatedBlocs].Handle = g_AGO2_MEM_CurrentHandle;
+    g_AGO2_MEM_HandleDescriptors[g_AGO2_MEM_NbOfAllocatedBlocs].Size = TempSize;
+    Pointer = (unsigned int*)g_AGO2_MEM_HandleDescriptors[g_AGO2_MEM_NbOfAllocatedBlocs].Pointer;
+    *Pointer = g_AGO2_MEM_CurrentHandle;
+    *(Pointer + 1) = TempSize;
+    g_AGO2_MEM_FreeZones[MinZone].pStart += TempSize;
+    g_AGO2_MEM_FreeZones[MinZone].Size -= TempSize;
+    g_AGO2_MEM_CurrentHandle++;
+    g_AGO2_MEM_NbOfAllocatedBlocs++;
+    return g_AGO2_MEM_CurrentHandle - 1;
 }

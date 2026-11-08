@@ -4,12 +4,17 @@
 
 #include <stddef.h>
 
-void Erm_fn_v_PrintErrMsgWithPersonalMsg(char* param0, char* p_cTxt2, char* p_cTxt3)
-{
-    printf("Erm_fn_v_PrintErrMsgWithPersonalMsg(%s,%s,%s)\n", param0, p_cTxt2, p_cTxt3);
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void Erm_fn_v_PrintErrMsgWithPersonalMsg(char* param0, char* p_cTxt2, char* p_cTxt3);
+void Erm_fn_v_PrintErrMsg(char* p_cTxt1, char* p_cTxt2);
 
 void Erm_fn_v_PrintErrMsg(char* p_cTxt1, char* p_cTxt2)
 {
     printf("Erm_fn_v_PrintErrMsg(%s,%s)\n", p_cTxt1, p_cTxt2);
+}
+
+void Erm_fn_v_PrintErrMsgWithPersonalMsg(char* param0, char* p_cTxt2, char* p_cTxt3)
+{
+    printf("Erm_fn_v_PrintErrMsgWithPersonalMsg(%s,%s,%s)\n", param0, p_cTxt2, p_cTxt3);
 }

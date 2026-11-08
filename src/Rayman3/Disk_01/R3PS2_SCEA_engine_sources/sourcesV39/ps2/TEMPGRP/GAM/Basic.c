@@ -1574,15 +1574,39 @@ char SAV2_g_LevelNameToSave[20];
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vLastDesinitAlwaysStructure(void)
-{
-    fn_vKillAllAlways();
-    if (g_stAlways.ulMaxNumberOfAlways != 0) {
-        g_stAlways.d_stAlwaysEngineObjectInit = NULL;
-        g_stAlways.d_stAlwaysSuperObject = NULL;
-        g_stAlways.d_hAlwaysGenerator = NULL;
-    }
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void fn_vLastDesinitAlwaysStructure(void);
+unsigned char GAM_fn_bLoadBitmapForAGO(void);
+void GAM_fn_vGetRandomMapAndDemoName(char** pp_cMapName, char** pp_cDemoName);
+void fn_vResetEngineFromPaused(void);
+void fn_vSetEngineInPaused(void);
+unsigned char fn_bIsEngineInPause(void);
+void GAM_fn_vTreatExeParameters(void);
+unsigned char GAM_fn_vGetLoadingLevel(unsigned int _uiLevelTag);
+void GAM_fn_vSetLoadingLevel(char* _szLevelTag);
+void GAM_fn_vPopAllocMode(void);
+void GAM_fn_vPushAllocMode(GAM_eLoadingMode eMode);
+void GAM_fn_vSetEngineInTransitionMode(void);
+void GAM_fn_vSetEngineInLevelMode(void);
+void GAM_fn_vSetEngineInFixMode(void);
+unsigned char GAM_fn_bIsEngineInTransitionMode(void);
+unsigned char GAM_fn_bIsEngineInLevelMode(void);
+unsigned char GAM_fn_bIsEngineInFixMode(void);
+unsigned short GAM_fn_uwGetEngineLoading(void);
+void GAM_fn_vAskToChangeLevelWithTransition(char* szNewLevelName);
+void GAM_fn_vAskToChangeLevel(char* szNewLevelName);
+void fn_vSetGLIDisplayFlag(unsigned int* p_DisplayMode, unsigned int ulFlag, unsigned char ucValue);
+void fn_vSetDisplayFlag(unsigned int ulFlag, unsigned char ucValue);
+unsigned char fn_bIsNextLevelNameValid(void);
+void fn_vFreeNextLevelName(void);
+char* fn_p_szGetNextLevelName(void);
+int fn_lGetSubMapNumber(void);
+char* fn_p_szGetLevelName(void);
+void fn_vSetLevelName(char* _szName);
+char* fn_p_szGetFirstLevelName(void);
+void fn_vInitAndRegisterAllScriptSections(void);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 2111–2111 */
 /* addr: 0x0025bfc0  size: 8 bytes */
@@ -1591,10 +1615,6 @@ void fn_vLastDesinitAlwaysStructure(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char GAM_fn_bLoadBitmapForAGO(void)
-{
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1868–1878 */
 /* addr: 0x0025bfd0  size: 128 bytes */
@@ -1617,18 +1637,6 @@ unsigned char GAM_fn_bLoadBitmapForAGO(void)
  * compare a candidate object's line table as an extra checkpoint.
  */
 int RND_fn_lGetLongRandomValue(unsigned int ulChannel, int lMin, int lMax);
-void GAM_fn_vGetRandomMapAndDemoName(char** pp_cMapName, char** pp_cDemoName)
-{
-    long lRandomValue;
-    *pp_cMapName = 0;
-    *pp_cDemoName = 0;
-    if (g_stEngineStructure.ucNumberOfDemos > 0)
-    {
-        lRandomValue = RND_fn_lGetLongRandomValue(0, 0, g_stEngineStructure.ucNumberOfDemos - 1);
-        *pp_cMapName = g_stEngineStructure.a_szDemoLevelName[lRandomValue];
-        *pp_cDemoName = g_stEngineStructure.a_szDemoName[lRandomValue];
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1844–1865 */
 /* addr: 0x0025c050  size: 48 bytes */
@@ -1644,13 +1652,6 @@ void GAM_fn_vGetRandomMapAndDemoName(char** pp_cMapName, char** pp_cDemoName)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vResetEngineFromPaused(void)
-{
-    HIE_gs_lCurrentFrame = g_lCurrentFrameSave;
-    g_stEngineStructure.bEngineIsInPaused = 0;
-    fn_vLoadEngineClock();
-    SND_fn_vResumeSound();
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1827–1840 */
 /* addr: 0x0025c080  size: 52 bytes */
@@ -1666,13 +1667,6 @@ void fn_vResetEngineFromPaused(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vSetEngineInPaused(void)
-{
-    g_stEngineStructure.bEngineIsInPaused = 1;
-    g_lCurrentFrameSave = HIE_gs_lCurrentFrame;
-    fn_vSaveEngineClock();
-    SND_fn_vPauseSound();
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1791–1792 */
 /* addr: 0x0025c0c0  size: 12 bytes */
@@ -1682,10 +1676,6 @@ void fn_vSetEngineInPaused(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_bIsEngineInPause(void)
-{
-    return g_stEngineStructure.bEngineIsInPaused;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1292–1429 */
 /* addr: 0x0025c0d0  size: 68 bytes */
@@ -1701,14 +1691,6 @@ unsigned char fn_bIsEngineInPause(void)
 int GLI_fnl_InitDll(void);
 int Erm_fn_iMessageBox();
 void exit(int);
-void GAM_fn_vTreatExeParameters(void)
-{
-    g_cIsLevelOk = 0;
-    if (!GLI_fnl_InitDll()) {
-        Erm_fn_iMessageBox("Graphics Dll not found, run install", "Setup problem", 0x40010);
-        exit(-1);
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1284–1287 */
 /* addr: 0x0025c120  size: 16 bytes */
@@ -1718,10 +1700,6 @@ void GAM_fn_vTreatExeParameters(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char GAM_fn_vGetLoadingLevel(unsigned int _uiLevelTag)
-{
-    return (GAM_g_uwLoadingLevel & _uiLevelTag) != 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1264–1279 */
 /* addr: 0x0025c130  size: 164 bytes */
@@ -1738,24 +1716,6 @@ unsigned char GAM_fn_vGetLoadingLevel(unsigned int _uiLevelTag)
  * compare a candidate object's line table as an extra checkpoint.
  */
 int strcasecmp(const char* p_cS1, const char* p_cS2);
-void GAM_fn_vSetLoadingLevel(char* _szLevelTag)
-{
-    char cI;
-    unsigned short uwMask;
-
-    GAM_g_uwLoadingLevel = 0;
-    if (_szLevelTag == NULL) return;
-    cI = 0;
-    for (cI = 0; cI < 2; cI++)
-    {
-        if (strcasecmp(GAM_g_a_stLoadingLevel_Properties[cI].szScriptTag, _szLevelTag) == 0)
-        {
-            uwMask = GAM_g_a_stLoadingLevel_Properties[cI].uwMaskValue;
-            GAM_g_uwLoadingLevel = uwMask;
-            break;
-        }
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1252–1260 */
 /* addr: 0x0025c1e0  size: 172 bytes */
@@ -1777,13 +1737,6 @@ int HMU_fn_ucGetFixNormalMemoryBlock(void);
 int HMU_fn_ucGetLevelNormalMemoryBlock(void);
 void GLI_vSignalCurrentMemoryChannel(int ucCurrentChannel);
 void GAM_fn_vSetEngineInTransitionMode(void);
-void GAM_fn_vPopAllocMode(void)
-{
-    unsigned short usMode;
-
-    usMode = g_a_cAllocModeStack[--g_iAllocModePos];
-    if (GAM_gs_tdeLoadingMode != usMode) switch (usMode) { case GAM_eFixLoading: GAM_gs_tdeLoadingMode = GAM_eFixLoading; HMU_fn_vSetMemoriesInFixMode(); GLI_vSignalCurrentMemoryChannel(HMU_fn_ucGetFixNormalMemoryBlock()); break; case GAM_eLevelLoading: GAM_gs_tdeLoadingMode = GAM_eLevelLoading; HMU_fn_vSetMemoriesInLevelMode(); GLI_vSignalCurrentMemoryChannel(HMU_fn_ucGetLevelNormalMemoryBlock()); break; case GAM_eTransitionLoading: GAM_fn_vSetEngineInTransitionMode(); break; }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1241–1248 */
 /* addr: 0x0025c290  size: 180 bytes */
@@ -1801,11 +1754,6 @@ void GAM_fn_vPopAllocMode(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GAM_fn_vPushAllocMode(GAM_eLoadingMode eMode)
-{
-    g_a_cAllocModeStack[g_iAllocModePos++] = GAM_gs_tdeLoadingMode;
-    if (GAM_gs_tdeLoadingMode != (unsigned short)eMode) switch ((unsigned short)eMode) { case GAM_eFixLoading: GAM_gs_tdeLoadingMode = GAM_eFixLoading; HMU_fn_vSetMemoriesInFixMode(); GLI_vSignalCurrentMemoryChannel(HMU_fn_ucGetFixNormalMemoryBlock()); break; case GAM_eLevelLoading: GAM_gs_tdeLoadingMode = GAM_eLevelLoading; HMU_fn_vSetMemoriesInLevelMode(); GLI_vSignalCurrentMemoryChannel(HMU_fn_ucGetLevelNormalMemoryBlock()); break; case GAM_eTransitionLoading: GAM_fn_vSetEngineInTransitionMode(); break; }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1205–1226 */
 /* addr: 0x0025c350  size: 112 bytes */
@@ -1829,23 +1777,6 @@ void HMU_fn_vSetMemoriesInTransition2Mode(void);
 int HMU_fn_ucGetTransition1NormalMemoryBlock(void);
 int HMU_fn_ucGetTransition2NormalMemoryBlock(void);
 void GLI_vSignalCurrentMemoryChannel(int ucCurrentChannel);
-void GAM_fn_vSetEngineInTransitionMode(void)
-{
-    if (g_bLevelHasTransitionMemory)
-    {
-        GAM_gs_tdeLoadingMode = GAM_eTransitionLoading;
-        if (fn_lGetTransitionBloc() != 1)
-        {
-            HMU_fn_vSetMemoriesInTransition1Mode();
-            GLI_vSignalCurrentMemoryChannel(HMU_fn_ucGetTransition1NormalMemoryBlock());
-        }
-        else
-        {
-            HMU_fn_vSetMemoriesInTransition2Mode();
-            GLI_vSignalCurrentMemoryChannel(HMU_fn_ucGetTransition2NormalMemoryBlock());
-        }
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1167–1199 */
 /* addr: 0x0025c3c0  size: 48 bytes */
@@ -1866,13 +1797,6 @@ int HMU_fn_ucGetLevelNormalMemoryBlock(void);
 int HMU_fn_ucGetFixNormalMemoryBlock(void);
 void GLI_vSignalCurrentMemoryChannel(int ucCurrentChannel);
 
-void GAM_fn_vSetEngineInLevelMode(void)
-{
-    GAM_gs_tdeLoadingMode = GAM_eLevelLoading;
-    HMU_fn_vSetMemoriesInLevelMode();
-    GLI_vSignalCurrentMemoryChannel(HMU_fn_ucGetLevelNormalMemoryBlock());
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1135–1164 */
 /* addr: 0x0025c3f0  size: 44 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1883,12 +1807,6 @@ void GAM_fn_vSetEngineInLevelMode(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GAM_fn_vSetEngineInFixMode(void)
-{
-    GAM_gs_tdeLoadingMode = GAM_eFixLoading;
-    HMU_fn_vSetMemoriesInFixMode();
-    GLI_vSignalCurrentMemoryChannel(HMU_fn_ucGetFixNormalMemoryBlock());
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1130–1131 */
 /* addr: 0x0025c420  size: 28 bytes */
@@ -1898,10 +1816,6 @@ void GAM_fn_vSetEngineInFixMode(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char GAM_fn_bIsEngineInTransitionMode(void)
-{
-    return GAM_gs_tdeLoadingMode == GAM_eTransitionLoading ? 1 : 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1124–1125 */
 /* addr: 0x0025c440  size: 40 bytes */
@@ -1911,10 +1825,6 @@ unsigned char GAM_fn_bIsEngineInTransitionMode(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char GAM_fn_bIsEngineInLevelMode(void)
-{
-    return (GAM_gs_tdeLoadingMode == GAM_eLevelLoading) ? (char)1 : (char)0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1118–1119 */
 /* addr: 0x0025c470  size: 20 bytes */
@@ -1924,10 +1834,6 @@ unsigned char GAM_fn_bIsEngineInLevelMode(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char GAM_fn_bIsEngineInFixMode(void)
-{
-    return GAM_gs_tdeLoadingMode == GAM_eFixLoading ? 1 : 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1089–1089 */
 /* addr: 0x0025c490  size: 8 bytes */
@@ -1936,10 +1842,6 @@ unsigned char GAM_fn_bIsEngineInFixMode(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned short GAM_fn_uwGetEngineLoading(void)
-{
-    return (unsigned short)GAM_gs_tdeLoadingMode;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 893–1081 */
 /* addr: 0x0025c4a0  size: 1520 bytes */
@@ -1997,22 +1899,6 @@ unsigned short GAM_fn_uwGetEngineLoading(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GAM_fn_vAskToChangeLevelWithTransition(char* szNewLevelName)
-{
-    HIE_tdstSuperObject_* _hCamera;
-    unsigned char uc_ViewPortIndex;
-    HIE_tdstSuperObject_* hSectorAfterTeleport;
-    HIE_tdstSuperObject_* hSectorBeforeTeleport;
-    MTH3D_tdstVector_ stZAxis;
-    MTH3D_tdstVector_ stCameraPos;
-    int lEntryNumber;
-    MAT_tdstTransformation_* hNewPosition;
-    HIE_tdstSuperObject_* hMaincharacter;
-    char* p_cDelimiter;
-    char szLevelName[80];
-    int FirstTime;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 724–889 */
 /* addr: 0x0025ca90  size: 1464 bytes */
@@ -2101,6 +1987,297 @@ void fn_vInitAveragePositionDatasIfNecessary(int lHandle);
 void CAM_fn_vForceCameraPos(HIE_tdstSuperObject_* p_stCamera, MTH4D_tdstVector_* p_vPosition, float* p_fY, float* p_fZ);
 void CAM_fn_vForceCameraTgt(HIE_tdstSuperObject_* p_stCamera, void* p_vTarget, MTH4D_tdstVector_* p_vDirection);
 void CAM_fn_vForceBestPosition(HIE_tdstSuperObject_* p_stCamera);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 667–716 */
+/* addr: 0x0025d050  size: 412 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 667
+ *   +0x0008 -> line 669
+ *   +0x0018 -> line 670
+ *   +0x002c -> line 673
+ *   +0x0034 -> line 674
+ *   +0x003c -> line 676
+ *   +0x004c -> line 677
+ *   +0x005c -> line 679
+ *   +0x0068 -> line 680
+ *   +0x0070 -> line 681
+ *   +0x0078 -> line 683
+ *   +0x0084 -> line 684
+ *   +0x0094 -> line 686
+ *   +0x00a0 -> line 687
+ *   +0x00a8 -> line 688
+ *   +0x00b0 -> line 690
+ *   +0x00bc -> line 691
+ *   +0x00cc -> line 693
+ *   +0x00dc -> line 694
+ *   +0x00e4 -> line 695
+ *   +0x00f0 -> line 697
+ *   +0x00fc -> line 698
+ *   +0x010c -> line 700
+ *   +0x0118 -> line 701
+ *   +0x0120 -> line 702
+ *   +0x0128 -> line 704
+ *   +0x0134 -> line 705
+ *   +0x0144 -> line 707
+ *   +0x0150 -> line 708
+ *   +0x0158 -> line 709
+ *   +0x0164 -> line 711
+ *   +0x016c -> line 712
+ *   +0x0180 -> line 714
+ *   +0x0194 -> line 716
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 662–662 */
+/* addr: 0x0025d1f0  size: 24 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0008 -> line 662
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 605–608 */
+/* addr: 0x0025d210  size: 24 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 605
+ *   +0x0010 -> line 608
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 599–600 */
+/* addr: 0x0025d230  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 599
+ *   +0x0004 -> line 600
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 594–595 */
+/* addr: 0x0025d240  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 594
+ *   +0x0004 -> line 595
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 584–585 */
+/* addr: 0x0025d250  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 584
+ *   +0x0004 -> line 585
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 561–580 */
+/* addr: 0x0025d260  size: 48 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 561
+ *   +0x0008 -> line 569
+ *   +0x0014 -> line 575
+ *   +0x001c -> line 580
+ *   +0x0020 -> line 579
+ *   +0x0028 -> line 580
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 527–553 */
+/* addr: 0x0025d290  size: 404 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 527
+ *   +0x000c -> line 530
+ *   +0x0010 -> line 527
+ *   +0x0014 -> line 530
+ *   +0x0020 -> line 531
+ *   +0x0034 -> line 532
+ *   +0x003c -> line 535
+ *   +0x0044 -> line 540
+ *   +0x0048 -> line 541
+ *   +0x0058 -> line 542
+ *   +0x0060 -> line 544
+ *   +0x00cc -> line 546
+ *   +0x00d8 -> line 547
+ *   +0x00e8 -> line 548
+ *   +0x0154 -> line 549
+ *   +0x016c -> line 552
+ *   +0x0180 -> line 553
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 520–521 */
+/* addr: 0x0025d430  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 520
+ *   +0x0004 -> line 521
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 508–508 */
+/* addr: 0x0025d440  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 508
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void fn_vInitAndRegisterAllScriptSections(void)
+{
+    TXT_fn_vLoadInit();
+}
+
+char* fn_p_szGetFirstLevelName(void)
+{
+    return g_stEngineStructure.szFirstLevelName;
+}
+
+void fn_vSetLevelName(char* _szName)
+{
+    char* p_cDelimiter;
+    char* p_cEntry;
+    int lSubMap;
+    int lEntry;
+    char cChar;
+
+    strcpy(g_stEngineStructure.szLevelName, _szName);
+    p_cDelimiter = Strchr(g_stEngineStructure.szLevelName, '$');
+    if (p_cDelimiter == NULL)
+    {
+        g_stEngineStructure.lSubMapNumber = 0;
+    }
+    else
+    {
+        *p_cDelimiter = 0;
+        if (g_stEngineStructure.lSubMapNumber == 0)
+        {
+            lSubMap = 0;
+        }
+        else
+        {
+            cChar = p_cDelimiter[1];
+            if (cChar < '0' && cChar > '9' && cChar != '+' && cChar != '-')
+            {
+                Erm_fn_ClearLastError(0);
+                Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 24, -1, 255, 255, NULL);
+            }
+            lSubMap = atoi(p_cDelimiter + 1);
+        }
+        p_cEntry = Strchr(p_cDelimiter + 1, '$');
+        if (p_cEntry == NULL)
+        {
+            lEntry = 0;
+        }
+        else
+        {
+            p_cEntry++;
+            cChar = *p_cEntry;
+            if (cChar < '0' && cChar > '9' && cChar != '+' && cChar != '-')
+            {
+                Erm_fn_ClearLastError(0);
+                Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 24, -1, 255, 255, NULL);
+            }
+            lEntry = atoi(p_cEntry);
+        }
+        g_stEngineStructure.lSubMapNumber = ((unsigned short)lSubMap << 16) + (unsigned short)lEntry;
+    }
+    strcpy(SAV2_g_LevelNameToSave, g_stEngineStructure.szLevelName);
+}
+
+char* fn_p_szGetLevelName(void)
+{
+    static int FirstTime = 1;
+    if (FirstTime != 0)
+    {
+        FirstTime = 0;
+        AskForLevelStart();
+    }
+    return g_stEngineStructure.szLevelName;
+}
+
+int fn_lGetSubMapNumber(void)
+{
+    return g_stEngineStructure.lSubMapNumber;
+}
+
+char* fn_p_szGetNextLevelName(void)
+{
+    return g_stEngineStructure.szNextLevelName;
+}
+
+void fn_vFreeNextLevelName(void)
+{
+    g_stEngineStructure.szNextLevelName[0] = 0;
+}
+
+unsigned char fn_bIsNextLevelNameValid(void)
+{
+    return (unsigned char)((g_stEngineStructure.szNextLevelName[0] == 0u) ^ 1u);
+}
+
+void fn_vSetDisplayFlag(unsigned int ulFlag, unsigned char ucValue)
+{
+    fn_vSetGLIDisplayFlag(&g_stEngineStructure.ulDisplayMode, ulFlag, ucValue);
+}
+
+void fn_vSetGLIDisplayFlag(unsigned int* p_DisplayMode, unsigned int ulFlag, unsigned char ucValue)
+{
+    if (ulFlag == 0)
+    {
+        if (ucValue == 1)
+            *p_DisplayMode |= 0xFFFFFFFF;
+        else
+            *p_DisplayMode &= 0;
+    }
+    else if (ulFlag == 2)
+    {
+        if (ucValue == 1)
+            *p_DisplayMode |= 1;
+        else
+            *p_DisplayMode &= ~1;
+    }
+    else if (ulFlag == 1)
+    {
+        if (ucValue == 1)
+            *p_DisplayMode |= 2;
+        else
+            *p_DisplayMode &= ~2;
+    }
+    else if (ulFlag == 3)
+    {
+        if (ucValue == 0)
+            *p_DisplayMode |= 0x8000;
+        else
+            *p_DisplayMode &= ~0x8000;
+    }
+    else if (ulFlag == 4)
+    {
+        if (ucValue == 1)
+            *p_DisplayMode |= 0x1000;
+        else
+            *p_DisplayMode &= ~0x1000;
+    }
+    else if (ulFlag == 5)
+    {
+        if (ucValue == 0)
+            *p_DisplayMode |= 4;
+        else
+            *p_DisplayMode &= ~4;
+    }
+    else if (ulFlag == 6)
+    {
+        if (ucValue == 0)
+            *p_DisplayMode |= 0x400000;
+        else
+            *p_DisplayMode &= ~0x400000;
+    }
+}
+
 void GAM_fn_vAskToChangeLevel(char* szNewLevelName)
 {
     HIE_tdstSuperObject_* hMaincharacter;
@@ -2316,282 +2493,167 @@ void GAM_fn_vAskToChangeLevel(char* szNewLevelName)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 667–716 */
-/* addr: 0x0025d050  size: 412 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 667
- *   +0x0008 -> line 669
- *   +0x0018 -> line 670
- *   +0x002c -> line 673
- *   +0x0034 -> line 674
- *   +0x003c -> line 676
- *   +0x004c -> line 677
- *   +0x005c -> line 679
- *   +0x0068 -> line 680
- *   +0x0070 -> line 681
- *   +0x0078 -> line 683
- *   +0x0084 -> line 684
- *   +0x0094 -> line 686
- *   +0x00a0 -> line 687
- *   +0x00a8 -> line 688
- *   +0x00b0 -> line 690
- *   +0x00bc -> line 691
- *   +0x00cc -> line 693
- *   +0x00dc -> line 694
- *   +0x00e4 -> line 695
- *   +0x00f0 -> line 697
- *   +0x00fc -> line 698
- *   +0x010c -> line 700
- *   +0x0118 -> line 701
- *   +0x0120 -> line 702
- *   +0x0128 -> line 704
- *   +0x0134 -> line 705
- *   +0x0144 -> line 707
- *   +0x0150 -> line 708
- *   +0x0158 -> line 709
- *   +0x0164 -> line 711
- *   +0x016c -> line 712
- *   +0x0180 -> line 714
- *   +0x0194 -> line 716
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vSetGLIDisplayFlag(unsigned int* p_DisplayMode, unsigned int ulFlag, unsigned char ucValue)
+void GAM_fn_vAskToChangeLevelWithTransition(char* szNewLevelName)
 {
-    if (ulFlag == 0)
-    {
-        if (ucValue == 1)
-            *p_DisplayMode |= 0xFFFFFFFF;
-        else
-            *p_DisplayMode &= 0;
-    }
-    else if (ulFlag == 2)
-    {
-        if (ucValue == 1)
-            *p_DisplayMode |= 1;
-        else
-            *p_DisplayMode &= ~1;
-    }
-    else if (ulFlag == 1)
-    {
-        if (ucValue == 1)
-            *p_DisplayMode |= 2;
-        else
-            *p_DisplayMode &= ~2;
-    }
-    else if (ulFlag == 3)
-    {
-        if (ucValue == 0)
-            *p_DisplayMode |= 0x8000;
-        else
-            *p_DisplayMode &= ~0x8000;
-    }
-    else if (ulFlag == 4)
-    {
-        if (ucValue == 1)
-            *p_DisplayMode |= 0x1000;
-        else
-            *p_DisplayMode &= ~0x1000;
-    }
-    else if (ulFlag == 5)
-    {
-        if (ucValue == 0)
-            *p_DisplayMode |= 4;
-        else
-            *p_DisplayMode &= ~4;
-    }
-    else if (ulFlag == 6)
-    {
-        if (ucValue == 0)
-            *p_DisplayMode |= 0x400000;
-        else
-            *p_DisplayMode &= ~0x400000;
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 662–662 */
-/* addr: 0x0025d1f0  size: 24 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0008 -> line 662
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vSetDisplayFlag(unsigned int ulFlag, unsigned char ucValue)
-{
-    fn_vSetGLIDisplayFlag(&g_stEngineStructure.ulDisplayMode, ulFlag, ucValue);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 605–608 */
-/* addr: 0x0025d210  size: 24 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 605
- *   +0x0010 -> line 608
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned char fn_bIsNextLevelNameValid(void)
-{
-    return (unsigned char)((g_stEngineStructure.szNextLevelName[0] == 0u) ^ 1u);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 599–600 */
-/* addr: 0x0025d230  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 599
- *   +0x0004 -> line 600
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vFreeNextLevelName(void)
-{
-    g_stEngineStructure.szNextLevelName[0] = 0;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 594–595 */
-/* addr: 0x0025d240  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 594
- *   +0x0004 -> line 595
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-char* fn_p_szGetNextLevelName(void)
-{
-    return g_stEngineStructure.szNextLevelName;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 584–585 */
-/* addr: 0x0025d250  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 584
- *   +0x0004 -> line 585
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int fn_lGetSubMapNumber(void)
-{
-    return g_stEngineStructure.lSubMapNumber;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 561–580 */
-/* addr: 0x0025d260  size: 48 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 561
- *   +0x0008 -> line 569
- *   +0x0014 -> line 575
- *   +0x001c -> line 580
- *   +0x0020 -> line 579
- *   +0x0028 -> line 580
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-char* fn_p_szGetLevelName(void)
-{
-    static int FirstTime = 1;
-    if (FirstTime != 0)
-    {
-        FirstTime = 0;
-        AskForLevelStart();
-    }
-    return g_stEngineStructure.szLevelName;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 527–553 */
-/* addr: 0x0025d290  size: 404 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 527
- *   +0x000c -> line 530
- *   +0x0010 -> line 527
- *   +0x0014 -> line 530
- *   +0x0020 -> line 531
- *   +0x0034 -> line 532
- *   +0x003c -> line 535
- *   +0x0044 -> line 540
- *   +0x0048 -> line 541
- *   +0x0058 -> line 542
- *   +0x0060 -> line 544
- *   +0x00cc -> line 546
- *   +0x00d8 -> line 547
- *   +0x00e8 -> line 548
- *   +0x0154 -> line 549
- *   +0x016c -> line 552
- *   +0x0180 -> line 553
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vSetLevelName(char* _szName)
-{
+    HIE_tdstSuperObject_* _hCamera;
+    unsigned char uc_ViewPortIndex;
+    HIE_tdstSuperObject_* hSectorAfterTeleport;
+    HIE_tdstSuperObject_* hSectorBeforeTeleport;
+    MTH3D_tdstVector_ stZAxis;
+    MTH3D_tdstVector_ stCameraPos;
+    int lEntryNumber;
+    MAT_tdstTransformation_* hNewPosition;
+    HIE_tdstSuperObject_* hMaincharacter;
     char* p_cDelimiter;
-    char* p_cEntry;
-    int lSubMap;
-    int lEntry;
-    char cChar;
+    char szLevelName[80];
+    int FirstTime;
+    /* TODO: decompile from asm/... */
+}
 
-    strcpy(g_stEngineStructure.szLevelName, _szName);
-    p_cDelimiter = Strchr(g_stEngineStructure.szLevelName, '$');
-    if (p_cDelimiter == NULL)
+unsigned short GAM_fn_uwGetEngineLoading(void)
+{
+    return (unsigned short)GAM_gs_tdeLoadingMode;
+}
+
+unsigned char GAM_fn_bIsEngineInFixMode(void)
+{
+    return GAM_gs_tdeLoadingMode == GAM_eFixLoading ? 1 : 0;
+}
+
+unsigned char GAM_fn_bIsEngineInLevelMode(void)
+{
+    return (GAM_gs_tdeLoadingMode == GAM_eLevelLoading) ? (char)1 : (char)0;
+}
+
+unsigned char GAM_fn_bIsEngineInTransitionMode(void)
+{
+    return GAM_gs_tdeLoadingMode == GAM_eTransitionLoading ? 1 : 0;
+}
+
+void GAM_fn_vSetEngineInFixMode(void)
+{
+    GAM_gs_tdeLoadingMode = GAM_eFixLoading;
+    HMU_fn_vSetMemoriesInFixMode();
+    GLI_vSignalCurrentMemoryChannel(HMU_fn_ucGetFixNormalMemoryBlock());
+}
+
+void GAM_fn_vSetEngineInLevelMode(void)
+{
+    GAM_gs_tdeLoadingMode = GAM_eLevelLoading;
+    HMU_fn_vSetMemoriesInLevelMode();
+    GLI_vSignalCurrentMemoryChannel(HMU_fn_ucGetLevelNormalMemoryBlock());
+}
+
+void GAM_fn_vSetEngineInTransitionMode(void)
+{
+    if (g_bLevelHasTransitionMemory)
     {
-        g_stEngineStructure.lSubMapNumber = 0;
-    }
-    else
-    {
-        *p_cDelimiter = 0;
-        if (g_stEngineStructure.lSubMapNumber == 0)
+        GAM_gs_tdeLoadingMode = GAM_eTransitionLoading;
+        if (fn_lGetTransitionBloc() != 1)
         {
-            lSubMap = 0;
+            HMU_fn_vSetMemoriesInTransition1Mode();
+            GLI_vSignalCurrentMemoryChannel(HMU_fn_ucGetTransition1NormalMemoryBlock());
         }
         else
         {
-            cChar = p_cDelimiter[1];
-            if (cChar < '0' && cChar > '9' && cChar != '+' && cChar != '-')
-            {
-                Erm_fn_ClearLastError(0);
-                Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 24, -1, 255, 255, NULL);
-            }
-            lSubMap = atoi(p_cDelimiter + 1);
+            HMU_fn_vSetMemoriesInTransition2Mode();
+            GLI_vSignalCurrentMemoryChannel(HMU_fn_ucGetTransition2NormalMemoryBlock());
         }
-        p_cEntry = Strchr(p_cDelimiter + 1, '$');
-        if (p_cEntry == NULL)
-        {
-            lEntry = 0;
-        }
-        else
-        {
-            p_cEntry++;
-            cChar = *p_cEntry;
-            if (cChar < '0' && cChar > '9' && cChar != '+' && cChar != '-')
-            {
-                Erm_fn_ClearLastError(0);
-                Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 24, -1, 255, 255, NULL);
-            }
-            lEntry = atoi(p_cEntry);
-        }
-        g_stEngineStructure.lSubMapNumber = ((unsigned short)lSubMap << 16) + (unsigned short)lEntry;
     }
-    strcpy(SAV2_g_LevelNameToSave, g_stEngineStructure.szLevelName);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 520–521 */
-/* addr: 0x0025d430  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 520
- *   +0x0004 -> line 521
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-char* fn_p_szGetFirstLevelName(void)
+void GAM_fn_vPushAllocMode(GAM_eLoadingMode eMode)
 {
-    return g_stEngineStructure.szFirstLevelName;
+    g_a_cAllocModeStack[g_iAllocModePos++] = GAM_gs_tdeLoadingMode;
+    if (GAM_gs_tdeLoadingMode != (unsigned short)eMode) switch ((unsigned short)eMode) { case GAM_eFixLoading: GAM_gs_tdeLoadingMode = GAM_eFixLoading; HMU_fn_vSetMemoriesInFixMode(); GLI_vSignalCurrentMemoryChannel(HMU_fn_ucGetFixNormalMemoryBlock()); break; case GAM_eLevelLoading: GAM_gs_tdeLoadingMode = GAM_eLevelLoading; HMU_fn_vSetMemoriesInLevelMode(); GLI_vSignalCurrentMemoryChannel(HMU_fn_ucGetLevelNormalMemoryBlock()); break; case GAM_eTransitionLoading: GAM_fn_vSetEngineInTransitionMode(); break; }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 508–508 */
-/* addr: 0x0025d440  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 508
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vInitAndRegisterAllScriptSections(void)
+void GAM_fn_vPopAllocMode(void)
 {
-    TXT_fn_vLoadInit();
+    unsigned short usMode;
+
+    usMode = g_a_cAllocModeStack[--g_iAllocModePos];
+    if (GAM_gs_tdeLoadingMode != usMode) switch (usMode) { case GAM_eFixLoading: GAM_gs_tdeLoadingMode = GAM_eFixLoading; HMU_fn_vSetMemoriesInFixMode(); GLI_vSignalCurrentMemoryChannel(HMU_fn_ucGetFixNormalMemoryBlock()); break; case GAM_eLevelLoading: GAM_gs_tdeLoadingMode = GAM_eLevelLoading; HMU_fn_vSetMemoriesInLevelMode(); GLI_vSignalCurrentMemoryChannel(HMU_fn_ucGetLevelNormalMemoryBlock()); break; case GAM_eTransitionLoading: GAM_fn_vSetEngineInTransitionMode(); break; }
+}
+
+void GAM_fn_vSetLoadingLevel(char* _szLevelTag)
+{
+    char cI;
+    unsigned short uwMask;
+
+    GAM_g_uwLoadingLevel = 0;
+    if (_szLevelTag == NULL) return;
+    cI = 0;
+    for (cI = 0; cI < 2; cI++)
+    {
+        if (strcasecmp(GAM_g_a_stLoadingLevel_Properties[cI].szScriptTag, _szLevelTag) == 0)
+        {
+            uwMask = GAM_g_a_stLoadingLevel_Properties[cI].uwMaskValue;
+            GAM_g_uwLoadingLevel = uwMask;
+            break;
+        }
+    }
+}
+
+unsigned char GAM_fn_vGetLoadingLevel(unsigned int _uiLevelTag)
+{
+    return (GAM_g_uwLoadingLevel & _uiLevelTag) != 0;
+}
+
+void GAM_fn_vTreatExeParameters(void)
+{
+    g_cIsLevelOk = 0;
+    if (!GLI_fnl_InitDll()) {
+        Erm_fn_iMessageBox("Graphics Dll not found, run install", "Setup problem", 0x40010);
+        exit(-1);
+    }
+}
+
+unsigned char fn_bIsEngineInPause(void)
+{
+    return g_stEngineStructure.bEngineIsInPaused;
+}
+
+void fn_vSetEngineInPaused(void)
+{
+    g_stEngineStructure.bEngineIsInPaused = 1;
+    g_lCurrentFrameSave = HIE_gs_lCurrentFrame;
+    fn_vSaveEngineClock();
+    SND_fn_vPauseSound();
+}
+
+void fn_vResetEngineFromPaused(void)
+{
+    HIE_gs_lCurrentFrame = g_lCurrentFrameSave;
+    g_stEngineStructure.bEngineIsInPaused = 0;
+    fn_vLoadEngineClock();
+    SND_fn_vResumeSound();
+}
+
+void GAM_fn_vGetRandomMapAndDemoName(char** pp_cMapName, char** pp_cDemoName)
+{
+    long lRandomValue;
+    *pp_cMapName = 0;
+    *pp_cDemoName = 0;
+    if (g_stEngineStructure.ucNumberOfDemos > 0)
+    {
+        lRandomValue = RND_fn_lGetLongRandomValue(0, 0, g_stEngineStructure.ucNumberOfDemos - 1);
+        *pp_cMapName = g_stEngineStructure.a_szDemoLevelName[lRandomValue];
+        *pp_cDemoName = g_stEngineStructure.a_szDemoName[lRandomValue];
+    }
+}
+
+unsigned char GAM_fn_bLoadBitmapForAGO(void)
+{
+    return 1;
+}
+
+void fn_vLastDesinitAlwaysStructure(void)
+{
+    fn_vKillAllAlways();
+    if (g_stAlways.ulMaxNumberOfAlways != 0) {
+        g_stAlways.d_stAlwaysEngineObjectInit = NULL;
+        g_stAlways.d_stAlwaysSuperObject = NULL;
+        g_stAlways.d_hAlwaysGenerator = NULL;
+    }
 }

@@ -640,60 +640,6 @@ static void mfn_vNameCSoundSemaphoreInfoContainer(void)
     usnd::smap<int, CSoundSemaphoreInfo*, usnd::less<int>, usnd::sallocator<CSoundSemaphoreInfo*> > o_Container;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 static _tdstAllRetObjectSound gst_IGhostActor;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinktypeactorcont.cpp lines 521–526 */
@@ -734,16 +680,9 @@ sTreeNode* ms_czNil__Q24usnd7sstring(sTreeLink* _pParent, _Redbl _eColor)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CLinkTypeActorCont::mfn_vSetDefaultRolloff(const _RollOffParam* pst_RollOff)
-{
-    moACPRolloff.rDistSatur = pst_RollOff->rDistSatur;
-    moACPRolloff.rDistBackGround = pst_RollOff->rDistBackGround;
-    moACPRolloff.ucBackgroundVol = 0;
 
-    moRolloff.m_fSaturationDistance = (float)pst_RollOff->rDistSatur / 65536.0f;
-    moRolloff.m_fStabilisationDistance = (float)pst_RollOff->rDistBackGround / 65536.0f;
-    moRolloff.m_fStabilisationVolume = int2dB(moACPRolloff.ucBackgroundVol);
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinktypeactorcont.cpp lines 260–269 */
 /* addr: 0x001cc620  size: 240 bytes */
@@ -761,17 +700,6 @@ void CLinkTypeActorCont::mfn_vSetDefaultRolloff(const _RollOffParam* pst_RollOff
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-CLinkTypeActor* CLinkTypeActorCont::mfn_poGetActorTypeFromId(int s32_TypeId)
-{
-    CLinkTypeActor* po_Answer = NULL;
-    iterator oIt = find(s32_TypeId);
-
-    if (oIt != end())
-    {
-        po_Answer = (*oIt).second;
-    }
-    return po_Answer;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinktypeactorcont.cpp lines 148–254 */
 /* addr: 0x001cc710  size: 548 bytes */
@@ -813,48 +741,6 @@ CLinkTypeActor* CLinkTypeActorCont::mfn_poGetActorTypeFromId(int s32_TypeId)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char CLinkTypeActorCont::mfn_bInitActorResData(void)
-{
-    usnd::CUUID oId2Load[2];
-    unsigned char bOk;
-    usnd::CPS2IdObjLoader* gro_BankLoader;
-    char szDataPath[1024];
-    signed char init;
-
-    if (m_poMusicActorResData != NULL)
-    {
-        return 1;
-    }
-
-    sprintf(szDataPath, "\\DRIVERS\\THEMEPRO.HX2;1");
-    strcpy(szDataPath, FMN_SCE_AddBaseDirectory(szDataPath));
-    fs_vUppercase(szDataPath);
-
-    bOk = gro_BankLoader->f_bLoadBank(szDataPath);
-    if (!bOk)
-    {
-        return 0;
-    }
-
-    oId2Load[0].f_bSetIdFromString("2ACB4039-11EC-579D");
-    oId2Load[1].f_bSetIdFromString("2ACA41B9-C913-8EA1");
-    gro_BankLoader->f_vPreloadObjects(&oId2Load[0], 2);
-
-    m_poMusicActorResData = (CActorResData*)gro_BankLoader->f_poLoadIdObj(oId2Load[0]);
-    m_poMusicProgramResData = (CResData*)gro_BankLoader->f_poLoadIdObj(oId2Load[1]);
-    if ((m_poMusicActorResData == NULL) || (m_poMusicProgramResData == NULL))
-    {
-        return 0;
-    }
-
-    m_poStandardActorResData = (CActorResData*)(unsigned int)usnd::CClassFactory::fs_roGetInst().f_poCreateObj("CActorResData");
-    SND_fn_s32AddVolumeLineSound(m_poStandardActorResData);
-    mfn_s32AddActorType((int)(unsigned int)m_poStandardActorResData, NULL);
-
-    gro_BankLoader->f_vClearIndex();
-    gro_BankLoader->fv_FlushCache();
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinktypeactorcont.cpp lines 109–111 */
 /* addr: 0x001cc940  size: 44 bytes */
@@ -995,4 +881,70 @@ void fn_vGhostObjectExtraCoef__Fi14_SND_tduRefEvtPiPiPi(int Object, _SND_tduRefE
 unsigned char fn_u8GhostObjectReverb__Fi(void)
 {
     return 0;
+}
+
+unsigned char CLinkTypeActorCont::mfn_bInitActorResData(void)
+{
+    usnd::CUUID oId2Load[2];
+    unsigned char bOk;
+    usnd::CPS2IdObjLoader* gro_BankLoader;
+    char szDataPath[1024];
+    signed char init;
+
+    if (m_poMusicActorResData != NULL)
+    {
+        return 1;
+    }
+
+    sprintf(szDataPath, "\\DRIVERS\\THEMEPRO.HX2;1");
+    strcpy(szDataPath, FMN_SCE_AddBaseDirectory(szDataPath));
+    fs_vUppercase(szDataPath);
+
+    bOk = gro_BankLoader->f_bLoadBank(szDataPath);
+    if (!bOk)
+    {
+        return 0;
+    }
+
+    oId2Load[0].f_bSetIdFromString("2ACB4039-11EC-579D");
+    oId2Load[1].f_bSetIdFromString("2ACA41B9-C913-8EA1");
+    gro_BankLoader->f_vPreloadObjects(&oId2Load[0], 2);
+
+    m_poMusicActorResData = (CActorResData*)gro_BankLoader->f_poLoadIdObj(oId2Load[0]);
+    m_poMusicProgramResData = (CResData*)gro_BankLoader->f_poLoadIdObj(oId2Load[1]);
+    if ((m_poMusicActorResData == NULL) || (m_poMusicProgramResData == NULL))
+    {
+        return 0;
+    }
+
+    m_poStandardActorResData = (CActorResData*)(unsigned int)usnd::CClassFactory::fs_roGetInst().f_poCreateObj("CActorResData");
+    SND_fn_s32AddVolumeLineSound(m_poStandardActorResData);
+    mfn_s32AddActorType((int)(unsigned int)m_poStandardActorResData, NULL);
+
+    gro_BankLoader->f_vClearIndex();
+    gro_BankLoader->fv_FlushCache();
+    return 1;
+}
+
+CLinkTypeActor* CLinkTypeActorCont::mfn_poGetActorTypeFromId(int s32_TypeId)
+{
+    CLinkTypeActor* po_Answer = NULL;
+    iterator oIt = find(s32_TypeId);
+
+    if (oIt != end())
+    {
+        po_Answer = (*oIt).second;
+    }
+    return po_Answer;
+}
+
+void CLinkTypeActorCont::mfn_vSetDefaultRolloff(const _RollOffParam* pst_RollOff)
+{
+    moACPRolloff.rDistSatur = pst_RollOff->rDistSatur;
+    moACPRolloff.rDistBackGround = pst_RollOff->rDistBackGround;
+    moACPRolloff.ucBackgroundVol = 0;
+
+    moRolloff.m_fSaturationDistance = (float)pst_RollOff->rDistSatur / 65536.0f;
+    moRolloff.m_fStabilisationDistance = (float)pst_RollOff->rDistBackGround / 65536.0f;
+    moRolloff.m_fStabilisationVolume = int2dB(moACPRolloff.ucBackgroundVol);
 }

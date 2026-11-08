@@ -30,13 +30,17 @@ struct anon_0 {
 
 short (*INOPS2_fn_wReadJoystick)(stDevice*);
 
-void HMU_fn_vCreateCriticalSection(void)
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void HMU_fn_vCreateCriticalSection(void);
+short INO_fn_wIsJoystickConnectedFast(stDevice* _hDev);
+short INO_fn_wIsJoystickConnected(stDevice* _hDev);
+
+short INO_fn_wIsJoystickConnected(stDevice* _hDev)
 {
-    if (HMU_g_bHMU_CS_Created == 0)
-    {
-        PS2_fn_vCreateCriticalSection(&g_stHMU_CS);
-        HMU_g_bHMU_CS_Created = 1;
-    }
+    if (_hDev->m_uwType == 0x10)
+        return INOPS2_fn_wJoyCheckConnection(_hDev->m_wPort);
+    return -1;
 }
 
 short INO_fn_wIsJoystickConnectedFast(stDevice* _hDev)
@@ -46,9 +50,11 @@ short INO_fn_wIsJoystickConnectedFast(stDevice* _hDev)
     return -1;
 }
 
-short INO_fn_wIsJoystickConnected(stDevice* _hDev)
+void HMU_fn_vCreateCriticalSection(void)
 {
-    if (_hDev->m_uwType == 0x10)
-        return INOPS2_fn_wJoyCheckConnection(_hDev->m_wPort);
-    return -1;
+    if (HMU_g_bHMU_CS_Created == 0)
+    {
+        PS2_fn_vCreateCriticalSection(&g_stHMU_CS);
+        HMU_g_bHMU_CS_Created = 1;
+    }
 }

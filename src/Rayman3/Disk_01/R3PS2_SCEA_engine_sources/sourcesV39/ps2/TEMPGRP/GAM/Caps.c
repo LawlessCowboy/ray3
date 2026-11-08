@@ -709,19 +709,28 @@ struct tdstEngineStructure_ {
 extern struct tdstEngineStructure_ g_stEngineStructure;
 extern unsigned char g_ucGameModuleId;
 
-void fn_vChangeEngineMode(unsigned char eNewMode)
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void fn_vChangeEngineMode(unsigned char eNewMode);
+void fn_vChangeCapabilities(tdstEngineObject_* _p_stObject, unsigned int _ubf32Capabilities, int lValue);
+void fn_vSubCapabilities(tdstEngineObject_* _p_stObject, unsigned int _ubf32Capabilities);
+void fn_vAddCapabilities(tdstEngineObject_* _p_stObject, unsigned int _ubf32Capabilities);
+unsigned int fn_ulGetCapabilities(tdstEngineObject_* _p_stObject);
+
+unsigned int fn_ulGetCapabilities(tdstEngineObject_* _p_stObject)
 {
-    if (g_stEngineStructure.eEngineMode == 0)
+    return _p_stObject->h_StandardGame->ubf32Capabilities;
+}
 
-        Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 49, -1, 255, 255, NULL);
+void fn_vAddCapabilities(tdstEngineObject_* _p_stObject, unsigned int _ubf32Capabilities)
+{
+    _p_stObject->h_StandardGame->ubf32Capabilities |= _ubf32Capabilities;
+}
 
-    if (eNewMode == 0 || eNewMode >= 12)
-
-    {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 19, -1, 255, 255, NULL);
-    }
-
-    g_stEngineStructure.eEngineMode = eNewMode;
+void fn_vSubCapabilities(tdstEngineObject_* _p_stObject, unsigned int _ubf32Capabilities)
+{
+    tdstStandardGame_* p_stStandardGame = _p_stObject->h_StandardGame;
+    p_stStandardGame->ubf32Capabilities -= p_stStandardGame->ubf32Capabilities & _ubf32Capabilities;
 }
 
 void fn_vChangeCapabilities(tdstEngineObject_* _p_stObject, unsigned int _ubf32Capabilities, int lValue)
@@ -745,18 +754,17 @@ void fn_vChangeCapabilities(tdstEngineObject_* _p_stObject, unsigned int _ubf32C
     }
 }
 
-void fn_vSubCapabilities(tdstEngineObject_* _p_stObject, unsigned int _ubf32Capabilities)
+void fn_vChangeEngineMode(unsigned char eNewMode)
 {
-    tdstStandardGame_* p_stStandardGame = _p_stObject->h_StandardGame;
-    p_stStandardGame->ubf32Capabilities -= p_stStandardGame->ubf32Capabilities & _ubf32Capabilities;
-}
+    if (g_stEngineStructure.eEngineMode == 0)
 
-void fn_vAddCapabilities(tdstEngineObject_* _p_stObject, unsigned int _ubf32Capabilities)
-{
-    _p_stObject->h_StandardGame->ubf32Capabilities |= _ubf32Capabilities;
-}
+        Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 49, -1, 255, 255, NULL);
 
-unsigned int fn_ulGetCapabilities(tdstEngineObject_* _p_stObject)
-{
-    return _p_stObject->h_StandardGame->ubf32Capabilities;
+    if (eNewMode == 0 || eNewMode >= 12)
+
+    {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 19, -1, 255, 255, NULL);
+    }
+
+    g_stEngineStructure.eEngineMode = eNewMode;
 }

@@ -758,24 +758,20 @@ struct tdstEngineStructure_ {
 
 extern tdstEngineStructure_ g_stEngineStructure;
 
-unsigned char GAM_MultiVP_fn_ucGetNumberOfPlayers(void)
-{
-    return g_stEngineStructure.ucNumberOfPlayersInMultiMode;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+unsigned char GAM_MultiVP_fn_ucGetNumberOfPlayers(void);
+unsigned char fn_bObjectTableHasZde(tdstObjectsTablesList_* _hObjectTableList);
+tdstObjectsTableElement_* fn_d_hGetInitObjectsTable(tdstObjectsTablesList_* h_ObjectsTablesListElement);
+void fn_vReInitObjectTable(tdstObjectsTablesList_* param0);
+unsigned short fn_uwGetObjectTableNumberOfelements(tdstObjectsTablesList_* _hTargetTable);
+void fn_vCopyObjectFromObjectTabletoAnother(tdstObjectsTablesList_* _hTargetTable, tdstObjectsTablesList_* _hSourceTable, unsigned short _uwTargetObject, unsigned short _uwSourceObject);
 
-unsigned char fn_bObjectTableHasZde(tdstObjectsTablesList_* _hObjectTableList)
+void fn_vCopyObjectFromObjectTabletoAnother(tdstObjectsTablesList_* _hTargetTable, tdstObjectsTablesList_* _hSourceTable, unsigned short _uwTargetObject, unsigned short _uwSourceObject)
 {
-    return (_hObjectTableList->wZDxUsed & 2) != 0;
-}
+    if (!_hTargetTable || !_hSourceTable) return;
 
-tdstObjectsTableElement_* fn_d_hGetInitObjectsTable(tdstObjectsTablesList_* h_ObjectsTablesListElement)
-{
-    return h_ObjectsTablesListElement->d_stInitObjectsTable;
-}
-
-void fn_vReInitObjectTable(tdstObjectsTablesList_* param0)
-{
-    memcpy(param0->d_stObjectsTable, param0->d_stInitObjectsTable, param0->wNumberOfElement * 20);
+    _hTargetTable->d_stObjectsTable[_uwTargetObject] = _hSourceTable->d_stObjectsTable[_uwSourceObject];
 }
 
 unsigned short fn_uwGetObjectTableNumberOfelements(tdstObjectsTablesList_* _hTargetTable)
@@ -785,9 +781,22 @@ unsigned short fn_uwGetObjectTableNumberOfelements(tdstObjectsTablesList_* _hTar
     return 0;
 }
 
-void fn_vCopyObjectFromObjectTabletoAnother(tdstObjectsTablesList_* _hTargetTable, tdstObjectsTablesList_* _hSourceTable, unsigned short _uwTargetObject, unsigned short _uwSourceObject)
+void fn_vReInitObjectTable(tdstObjectsTablesList_* param0)
 {
-    if (!_hTargetTable || !_hSourceTable) return;
+    memcpy(param0->d_stObjectsTable, param0->d_stInitObjectsTable, param0->wNumberOfElement * 20);
+}
 
-    _hTargetTable->d_stObjectsTable[_uwTargetObject] = _hSourceTable->d_stObjectsTable[_uwSourceObject];
+tdstObjectsTableElement_* fn_d_hGetInitObjectsTable(tdstObjectsTablesList_* h_ObjectsTablesListElement)
+{
+    return h_ObjectsTablesListElement->d_stInitObjectsTable;
+}
+
+unsigned char fn_bObjectTableHasZde(tdstObjectsTablesList_* _hObjectTableList)
+{
+    return (_hObjectTableList->wZDxUsed & 2) != 0;
+}
+
+unsigned char GAM_MultiVP_fn_ucGetNumberOfPlayers(void)
+{
+    return g_stEngineStructure.ucNumberOfPlayersInMultiMode;
 }

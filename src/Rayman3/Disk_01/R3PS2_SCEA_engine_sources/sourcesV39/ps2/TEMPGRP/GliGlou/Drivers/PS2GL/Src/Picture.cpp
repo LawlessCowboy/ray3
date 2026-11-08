@@ -1118,13 +1118,13 @@ tagGLcontext g_PS2glContext;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void C_BaseFx::SetCurrentFog(void)
-{
-    m_FogColor = GLI_g_CurrentSDLFogColor;
-    m_fFogOOStartMinusEnd = GLI_g_OOStartMinusEnd;
-    m_fFogEnd = g_fFogEnd;
-    m_FogIsOn = GLI_BIG_GLOBALS_xFogIsOn;
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+extern "C" void GLI_vSavePicture(char* Name);
+extern "C" void GLI_vTakePicture(void);
+extern "C" void GLI_vAskToTakePicture(void);
+extern "C" void GLI_vUncompress_256x256_Screenshot(unsigned char* pUncompressed, unsigned char* pCompressed);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Picture.cpp lines 555–555 */
 /* addr: 0x002ece90  size: 16 bytes */
@@ -1133,10 +1133,6 @@ void C_BaseFx::SetCurrentFog(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vSavePicture(char* Name)
-{
-    PS2MC_fn_vSaveScreenShot((char*)GLI_g_aPictureData, Name);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Picture.cpp lines 549–551 */
 /* addr: 0x002ecea0  size: 172 bytes */
@@ -1155,16 +1151,6 @@ extern "C" unsigned short* PS2MC_GetScreenShotPreviewData(void);
 void GLI_vGsStoreFrameBufferIntoCompressed256x256(unsigned char* _pDestinationBuffer, short _ScreenRam, int _WIDTH, int _HEIGHT, short _CurrentPSM);
 void GLI_vGsStoreFrameBufferInto128x128x16(unsigned short* _pDestinationBuffer, short _ScreenRam, int _WIDTH, int _HEIGHT, short _CurrentPSM);
 
-void GLI_vTakePicture(void)
-{
-    GLI_vReduceBackBufferTo256x256();
-    sceGsSyncPath(0, 0);
-    PS2auxSwapBuffers();
-    sceGsSyncPath(0, 0);
-    GLI_vGsStoreFrameBufferIntoCompressed256x256(GLI_g_aPictureData, AE_GetZBufferBase() * 32, XRES, YRES, g_gsContext.FRAME_1.PSM);
-    GLI_vGsStoreFrameBufferInto128x128x16(PS2MC_GetScreenShotPreviewData(), AE_GetZBufferBase() * 32, XRES, YRES, g_gsContext.FRAME_1.PSM);
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Picture.cpp lines 542–543 */
 /* addr: 0x002ecf50  size: 12 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1173,10 +1159,6 @@ void GLI_vTakePicture(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vAskToTakePicture(void)
-{
-    GLI_g_bAskedToTakeAPicture = 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Picture.cpp lines 398–482 */
 /* addr: 0x002ecf60  size: 580 bytes */
@@ -1260,23 +1242,6 @@ void GLI_vAskToTakePicture(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vUncompress_256x256_Screenshot(unsigned char* pUncompressed, unsigned char* pCompressed)
-{
-    float VRGB[4];
-    float VYUV[4];
-    float V5[4];
-    float V4[4];
-    float V3[4];
-    float V2[4];
-    float V1[4];
-    int U;
-    unsigned char* pDest;
-    unsigned char* pSrcUV;
-    unsigned char* pSrcY;
-    int y;
-    int x;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Picture.cpp lines 291–394 */
 /* addr: 0x002ed1b0  size: 940 bytes */
@@ -1386,4 +1351,50 @@ void GLI_vGsStoreFrameBufferIntoCompressed256x256__FPUcsiis(unsigned char* _pDes
     unsigned char* pUV;
     sceGsStoreImage gssi;
     /* TODO: decompile from asm/... */
+}
+
+void GLI_vUncompress_256x256_Screenshot(unsigned char* pUncompressed, unsigned char* pCompressed)
+{
+    float VRGB[4];
+    float VYUV[4];
+    float V5[4];
+    float V4[4];
+    float V3[4];
+    float V2[4];
+    float V1[4];
+    int U;
+    unsigned char* pDest;
+    unsigned char* pSrcUV;
+    unsigned char* pSrcY;
+    int y;
+    int x;
+    /* TODO: decompile from asm/... */
+}
+
+void GLI_vAskToTakePicture(void)
+{
+    GLI_g_bAskedToTakeAPicture = 1;
+}
+
+void GLI_vTakePicture(void)
+{
+    GLI_vReduceBackBufferTo256x256();
+    sceGsSyncPath(0, 0);
+    PS2auxSwapBuffers();
+    sceGsSyncPath(0, 0);
+    GLI_vGsStoreFrameBufferIntoCompressed256x256(GLI_g_aPictureData, AE_GetZBufferBase() * 32, XRES, YRES, g_gsContext.FRAME_1.PSM);
+    GLI_vGsStoreFrameBufferInto128x128x16(PS2MC_GetScreenShotPreviewData(), AE_GetZBufferBase() * 32, XRES, YRES, g_gsContext.FRAME_1.PSM);
+}
+
+void GLI_vSavePicture(char* Name)
+{
+    PS2MC_fn_vSaveScreenShot((char*)GLI_g_aPictureData, Name);
+}
+
+void C_BaseFx::SetCurrentFog(void)
+{
+    m_FogColor = GLI_g_CurrentSDLFogColor;
+    m_fFogOOStartMinusEnd = GLI_g_OOStartMinusEnd;
+    m_fFogEnd = g_fFogEnd;
+    m_FogIsOn = GLI_BIG_GLOBALS_xFogIsOn;
 }

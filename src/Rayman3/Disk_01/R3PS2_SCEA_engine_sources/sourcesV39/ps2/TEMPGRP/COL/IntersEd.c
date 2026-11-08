@@ -357,6 +357,93 @@ inline float MTH_M_xMax(float _xA, float _xB)
 unsigned char INT_fn_bFastRejectIntersectSemiaxeWithSphere(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius);
 short INT_fn_xTrinomeResolution(float xA, float xB, float xC, float* p_xT1, float* p_xT2);
 
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+unsigned char INT_fn_bIntersectSemiAxeWithSphere(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius, unsigned char* bBack, float* p_xT, MTH3D_tdstVector_* p_stHit, MTH3D_tdstVector_* p_stNormal);
+unsigned char INT_fn_bFastRejectIntersectSemiaxeWithSphere(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\IntersEd.c lines 439–490 */
+/* addr: 0x002555f0  size: 244 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 439
+ *   +0x001c -> line 442
+ *   +0x0020 -> line 441
+ *   +0x0024 -> line 443
+ *   +0x002c -> line 446
+ *   +0x0030 -> line 447
+ *   +0x0034 -> line 446
+ *   +0x0038 -> line 450
+ *   +0x0048 -> line 452
+ *   +0x0050 -> line 456
+ *   +0x006c -> line 459
+ *   +0x0070 -> line 458
+ *   +0x0074 -> line 460
+ *   +0x007c -> line 463
+ *   +0x0080 -> line 464
+ *   +0x0084 -> line 463
+ *   +0x0088 -> line 467
+ *   +0x0098 -> line 469
+ *   +0x00a0 -> line 473
+ *   +0x00bc -> line 476
+ *   +0x00c0 -> line 475
+ *   +0x00c4 -> line 477
+ *   +0x00cc -> line 480
+ *   +0x00d0 -> line 481
+ *   +0x00d4 -> line 480
+ *   +0x00d8 -> line 484
+ *   +0x00e8 -> line 486
+ *   +0x00ec -> line 490
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+unsigned char INT_fn_bFastRejectIntersectSemiaxeWithSphere(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius)
+{
+    float xMin;
+    float xMax;
+
+    if (p_stVect12->xX > 0.0f)
+    {
+        xMin = p_stVertex1->xX;
+        xMax = p_stSphereCenter->xX + xSphereRadius;
+    }
+    else
+    {
+        xMin = p_stSphereCenter->xX - xSphereRadius;
+        xMax = p_stVertex1->xX;
+    }
+    if (xMax < xMin)
+        return 0;
+
+    if (p_stVect12->xY > 0.0f)
+    {
+        xMin = p_stVertex1->xY;
+        xMax = p_stSphereCenter->xY + xSphereRadius;
+    }
+    else
+    {
+        xMin = p_stSphereCenter->xY - xSphereRadius;
+        xMax = p_stVertex1->xY;
+    }
+    if (xMax < xMin)
+        return 0;
+
+    if (p_stVect12->xZ > 0.0f)
+    {
+        xMin = p_stVertex1->xZ;
+        xMax = p_stSphereCenter->xZ + xSphereRadius;
+    }
+    else
+    {
+        xMin = p_stSphereCenter->xZ - xSphereRadius;
+        xMax = p_stVertex1->xZ;
+    }
+    if (xMax < xMin)
+        return 0;
+
+    return 1;
+}
+
 unsigned char INT_fn_bIntersectSemiAxeWithSphere(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius, unsigned char* bBack, float* p_xT, MTH3D_tdstVector_* p_stHit, MTH3D_tdstVector_* p_stNormal)
 {
     float xInvR;
@@ -438,85 +525,4 @@ unsigned char INT_fn_bIntersectSemiAxeWithSphere(MTH3D_tdstVector_* p_stVertex1,
         }
         return 0;
     }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\IntersEd.c lines 439–490 */
-/* addr: 0x002555f0  size: 244 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 439
- *   +0x001c -> line 442
- *   +0x0020 -> line 441
- *   +0x0024 -> line 443
- *   +0x002c -> line 446
- *   +0x0030 -> line 447
- *   +0x0034 -> line 446
- *   +0x0038 -> line 450
- *   +0x0048 -> line 452
- *   +0x0050 -> line 456
- *   +0x006c -> line 459
- *   +0x0070 -> line 458
- *   +0x0074 -> line 460
- *   +0x007c -> line 463
- *   +0x0080 -> line 464
- *   +0x0084 -> line 463
- *   +0x0088 -> line 467
- *   +0x0098 -> line 469
- *   +0x00a0 -> line 473
- *   +0x00bc -> line 476
- *   +0x00c0 -> line 475
- *   +0x00c4 -> line 477
- *   +0x00cc -> line 480
- *   +0x00d0 -> line 481
- *   +0x00d4 -> line 480
- *   +0x00d8 -> line 484
- *   +0x00e8 -> line 486
- *   +0x00ec -> line 490
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned char INT_fn_bFastRejectIntersectSemiaxeWithSphere(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius)
-{
-    float xMin;
-    float xMax;
-
-    if (p_stVect12->xX > 0.0f)
-    {
-        xMin = p_stVertex1->xX;
-        xMax = p_stSphereCenter->xX + xSphereRadius;
-    }
-    else
-    {
-        xMin = p_stSphereCenter->xX - xSphereRadius;
-        xMax = p_stVertex1->xX;
-    }
-    if (xMax < xMin)
-        return 0;
-
-    if (p_stVect12->xY > 0.0f)
-    {
-        xMin = p_stVertex1->xY;
-        xMax = p_stSphereCenter->xY + xSphereRadius;
-    }
-    else
-    {
-        xMin = p_stSphereCenter->xY - xSphereRadius;
-        xMax = p_stVertex1->xY;
-    }
-    if (xMax < xMin)
-        return 0;
-
-    if (p_stVect12->xZ > 0.0f)
-    {
-        xMin = p_stVertex1->xZ;
-        xMax = p_stSphereCenter->xZ + xSphereRadius;
-    }
-    else
-    {
-        xMin = p_stSphereCenter->xZ - xSphereRadius;
-        xMax = p_stVertex1->xZ;
-    }
-    if (xMax < xMin)
-        return 0;
-
-    return 1;
 }

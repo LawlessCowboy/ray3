@@ -1412,10 +1412,15 @@ DNM_stDynamics* DNM_p_stDynamicsCameraMechanics(DNM_stDynamics*, HIE_tdstSuperOb
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetHitPoints(tdstEngineObject_* _p_stObject)
-{
-    return _p_stObject->h_StandardGame->ucHitPoints;
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+unsigned char fn_ucGetHitPoints(tdstEngineObject_* _p_stObject);
+void fn_vMakeCharacterReact(HIE_tdstSuperObject_* p_stSuperObj);
+void fn_vMakeCharacterThink(HIE_tdstSuperObject_* p_stSuperObj);
+void fn_vTransferSpeedInformationPLA_DNM(HIE_tdstSuperObject_* p_SuperObjPerso, float xLastFrame);
+int fn_h_GetCurrentDNMIdCard(HIE_tdstSuperObject_* p_SuperObjPerso);
+void InitArrayOfDynamicFunction(DNM_stDynamics* (**p_fnDynamicFunction)(DNM_stDynamics*, HIE_tdstSuperObject_*, DNM_stParsingDatas*, void*, float));
 
 int PLA_fn_bTestIfEndOfAction(HIE_tdstSuperObject_*);
 void fn_vKillEngineObjectOrAlwaysByPointer(tdstEngineObject_*);
@@ -1512,6 +1517,166 @@ if (h_Dynam != NULL) \
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+void fn_v3dDataUpdateBrainCounter(HIE_tdstSuperObject_*);
+int fn_b3dDataCanComputeBrain(HIE_tdstSuperObject_*);
+void fn_vInitDistanceWaypoint(void);
+void fn_vInitDistanceAct(void);
+void fn_vInitRecherchePerso(void);
+int fn_bDoReflexPerso(HIE_tdstSuperObject_*);
+int fn_bDoIntelligencePerso(HIE_tdstSuperObject_*);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ia_dnm.c lines 139–222 */
+/* addr: 0x00262910  size: 256 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 139
+ *   +0x000c -> line 151
+ *   +0x0014 -> line 153
+ *   +0x0024 -> line 155
+ *   +0x0034 -> line 157
+ *   +0x0040 -> line 160
+ *   +0x005c -> line 167
+ *   +0x0078 -> line 168
+ *   +0x009c -> line 193
+ *   +0x00a4 -> line 194
+ *   +0x00ac -> line 195
+ *   +0x00b4 -> line 197
+ *   +0x00c4 -> line 200
+ *   +0x00d4 -> line 201
+ *   +0x00e0 -> line 202
+ *   +0x00e8 -> line 207
+ *   +0x00f0 -> line 222
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+static inline unsigned short fn_uwGetBrainMainCounter(tdstEngineObject_* p_stObject)
+{
+    unsigned short uwCounter = 0;
+    if (p_stObject->h_3dData != NULL) uwCounter = p_stObject->h_3dData->uwBrainMainCounter;
+    return uwCounter;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ia_dnm.c lines 100–122 */
+/* addr: 0x00262a10  size: 156 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 100
+ *   +0x0018 -> line 107
+ *   +0x0028 -> line 109
+ *   +0x0038 -> line 112
+ *   +0x0044 -> line 113
+ *   +0x0054 -> line 115
+ *   +0x005c -> line 117
+ *   +0x0074 -> line 120
+ *   +0x007c -> line 121
+ *   +0x0084 -> line 122
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+int fn_hGetStateMechanicsIdCard(tdstState_* h_State);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ia_dnm.c lines 77–85 */
+/* addr: 0x00262ab0  size: 56 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 77
+ *   +0x0008 -> line 81
+ *   +0x0014 -> line 83
+ *   +0x002c -> line 85
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ia_dnm.c lines 61–63 */
+/* addr: 0x00262af0  size: 28 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 61
+ *   +0x000c -> line 62
+ *   +0x0014 -> line 63
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void InitArrayOfDynamicFunction(DNM_stDynamics* (**p_fnDynamicFunction)(DNM_stDynamics*, HIE_tdstSuperObject_*, DNM_stParsingDatas*, void*, float))
+{
+    p_fnDynamicFunction[0] = DNM_p_stDynamicsCameraMechanics;
+    p_fnDynamicFunction[1] = MEC_p_stDynamicsBaseMechanics;
+}
+
+/* Debug info says void, but the callee's handle is returned in $v0. */
+int fn_h_GetCurrentDNMIdCard(HIE_tdstSuperObject_* p_SuperObjPerso)
+{
+    tdstState_* h_State;
+
+    h_State = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_3dData->h_CurrentState;
+
+    if (h_State == NULL) return 0;
+
+    return fn_hGetStateMechanicsIdCard(h_State);
+}
+
+void fn_vTransferSpeedInformationPLA_DNM(HIE_tdstSuperObject_* p_SuperObjPerso, float xLastFrame)
+{
+    tdstDynam_* h_Dynam;
+    DNM_stDynamics* p_stDynamics;
+    MTH3D_tdstVector_* p_MthVector;
+    MTH3D_tdstMatrix_* p_MthRotationMatrix;
+
+    if ((h_Dynam = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam) != NULL)
+    {
+        if ((p_stDynamics = fn_p_stDynamGetDynamics(h_Dynam)) != NULL)
+        {
+            p_MthVector = PLA_fn_stGetLinearSpeedVector(p_SuperObjPerso, xLastFrame);
+            p_MthRotationMatrix = PLA_fn_stGetAngularSpeedMatrix(p_SuperObjPerso, xLastFrame);
+            if (p_MthVector != NULL)
+            {
+                *(int*)&p_stDynamics->m_tdstDynamicsBaseBlock.m_stSpeedAnim.xX = *(int*)&p_MthVector->xX; *(int*)&p_stDynamics->m_tdstDynamicsBaseBlock.m_stSpeedAnim.xY = *(int*)&p_MthVector->xY; *(int*)&p_stDynamics->m_tdstDynamicsBaseBlock.m_stSpeedAnim.xZ = *(int*)&p_MthVector->xZ;
+            }
+            if (p_MthRotationMatrix != NULL)
+            {
+                MEC_vImposeRelativeRotation(p_stDynamics, p_MthRotationMatrix);
+            }
+        }
+    }
+}
+
+void fn_vMakeCharacterThink(HIE_tdstSuperObject_* p_stSuperObj)
+{
+    AI_tdstAIModel_* p_stAIModel;
+    tdstBrain_* h_Brain;
+    AI_tdstMind_* p_stMind;
+
+    fn_v3dDataUpdateBrainCounter(p_stSuperObj);
+    if (fn_b3dDataCanComputeBrain(p_stSuperObj))
+    {
+        if ((h_Brain = p_stSuperObj->hLinkedObject.p_stCharacter->h_Brain) != NULL)
+        {
+            if ((p_stMind = h_Brain->p_stMind) != NULL)
+            {
+                if (h_Brain->bActiveDuringTransition || !fn_bIsTransitionInProgress())
+                {
+                    if (p_stSuperObj->hLinkedObject.p_stCharacter->h_3dData != NULL) p_stSuperObj->hLinkedObject.p_stCharacter->h_3dData->uwBrainMainCounter++;
+                    gcGlobAleat = (p_stSuperObj->hLinkedObject.p_stCharacter->h_3dData != NULL ? p_stSuperObj->hLinkedObject.p_stCharacter->h_3dData->uwBrainMainCounter : 0) & 0xffff;
+                    GAM_vClearCop0Register24Sync();
+                    fn_vInitDistanceWaypoint();
+                    fn_vInitDistanceAct();
+                    fn_vInitRecherchePerso();
+                    if (!fn_bDoReflexPerso(p_stSuperObj))
+                    {
+                        if ((h_Brain = p_stSuperObj->hLinkedObject.p_stCharacter->h_Brain) != NULL)
+                        {
+                            if (h_Brain->p_stMind != NULL)
+                            {
+                                fn_bDoIntelligencePerso(p_stSuperObj);
+                            }
+                        }
+                    }
+                    GAM_vClearCop0Register24Sync();
+                }
+            }
+        }
+    }
+}
+
 void fn_vMakeCharacterReact(HIE_tdstSuperObject_* p_stSuperObj)
 {
     tdstStandardGame_* hStdGame;
@@ -1565,160 +1730,7 @@ void fn_vMakeCharacterReact(HIE_tdstSuperObject_* p_stSuperObj)
     }
 }
 
-void fn_v3dDataUpdateBrainCounter(HIE_tdstSuperObject_*);
-int fn_b3dDataCanComputeBrain(HIE_tdstSuperObject_*);
-void fn_vInitDistanceWaypoint(void);
-void fn_vInitDistanceAct(void);
-void fn_vInitRecherchePerso(void);
-int fn_bDoReflexPerso(HIE_tdstSuperObject_*);
-int fn_bDoIntelligencePerso(HIE_tdstSuperObject_*);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ia_dnm.c lines 139–222 */
-/* addr: 0x00262910  size: 256 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 139
- *   +0x000c -> line 151
- *   +0x0014 -> line 153
- *   +0x0024 -> line 155
- *   +0x0034 -> line 157
- *   +0x0040 -> line 160
- *   +0x005c -> line 167
- *   +0x0078 -> line 168
- *   +0x009c -> line 193
- *   +0x00a4 -> line 194
- *   +0x00ac -> line 195
- *   +0x00b4 -> line 197
- *   +0x00c4 -> line 200
- *   +0x00d4 -> line 201
- *   +0x00e0 -> line 202
- *   +0x00e8 -> line 207
- *   +0x00f0 -> line 222
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-static inline unsigned short fn_uwGetBrainMainCounter(tdstEngineObject_* p_stObject)
+unsigned char fn_ucGetHitPoints(tdstEngineObject_* _p_stObject)
 {
-    unsigned short uwCounter = 0;
-    if (p_stObject->h_3dData != NULL) uwCounter = p_stObject->h_3dData->uwBrainMainCounter;
-    return uwCounter;
-}
-
-void fn_vMakeCharacterThink(HIE_tdstSuperObject_* p_stSuperObj)
-{
-    AI_tdstAIModel_* p_stAIModel;
-    tdstBrain_* h_Brain;
-    AI_tdstMind_* p_stMind;
-
-    fn_v3dDataUpdateBrainCounter(p_stSuperObj);
-    if (fn_b3dDataCanComputeBrain(p_stSuperObj))
-    {
-        if ((h_Brain = p_stSuperObj->hLinkedObject.p_stCharacter->h_Brain) != NULL)
-        {
-            if ((p_stMind = h_Brain->p_stMind) != NULL)
-            {
-                if (h_Brain->bActiveDuringTransition || !fn_bIsTransitionInProgress())
-                {
-                    if (p_stSuperObj->hLinkedObject.p_stCharacter->h_3dData != NULL) p_stSuperObj->hLinkedObject.p_stCharacter->h_3dData->uwBrainMainCounter++;
-                    gcGlobAleat = (p_stSuperObj->hLinkedObject.p_stCharacter->h_3dData != NULL ? p_stSuperObj->hLinkedObject.p_stCharacter->h_3dData->uwBrainMainCounter : 0) & 0xffff;
-                    GAM_vClearCop0Register24Sync();
-                    fn_vInitDistanceWaypoint();
-                    fn_vInitDistanceAct();
-                    fn_vInitRecherchePerso();
-                    if (!fn_bDoReflexPerso(p_stSuperObj))
-                    {
-                        if ((h_Brain = p_stSuperObj->hLinkedObject.p_stCharacter->h_Brain) != NULL)
-                        {
-                            if (h_Brain->p_stMind != NULL)
-                            {
-                                fn_bDoIntelligencePerso(p_stSuperObj);
-                            }
-                        }
-                    }
-                    GAM_vClearCop0Register24Sync();
-                }
-            }
-        }
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ia_dnm.c lines 100–122 */
-/* addr: 0x00262a10  size: 156 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 100
- *   +0x0018 -> line 107
- *   +0x0028 -> line 109
- *   +0x0038 -> line 112
- *   +0x0044 -> line 113
- *   +0x0054 -> line 115
- *   +0x005c -> line 117
- *   +0x0074 -> line 120
- *   +0x007c -> line 121
- *   +0x0084 -> line 122
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vTransferSpeedInformationPLA_DNM(HIE_tdstSuperObject_* p_SuperObjPerso, float xLastFrame)
-{
-    tdstDynam_* h_Dynam;
-    DNM_stDynamics* p_stDynamics;
-    MTH3D_tdstVector_* p_MthVector;
-    MTH3D_tdstMatrix_* p_MthRotationMatrix;
-
-    if ((h_Dynam = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam) != NULL)
-    {
-        if ((p_stDynamics = fn_p_stDynamGetDynamics(h_Dynam)) != NULL)
-        {
-            p_MthVector = PLA_fn_stGetLinearSpeedVector(p_SuperObjPerso, xLastFrame);
-            p_MthRotationMatrix = PLA_fn_stGetAngularSpeedMatrix(p_SuperObjPerso, xLastFrame);
-            if (p_MthVector != NULL)
-            {
-                *(int*)&p_stDynamics->m_tdstDynamicsBaseBlock.m_stSpeedAnim.xX = *(int*)&p_MthVector->xX; *(int*)&p_stDynamics->m_tdstDynamicsBaseBlock.m_stSpeedAnim.xY = *(int*)&p_MthVector->xY; *(int*)&p_stDynamics->m_tdstDynamicsBaseBlock.m_stSpeedAnim.xZ = *(int*)&p_MthVector->xZ;
-            }
-            if (p_MthRotationMatrix != NULL)
-            {
-                MEC_vImposeRelativeRotation(p_stDynamics, p_MthRotationMatrix);
-            }
-        }
-    }
-}
-
-int fn_hGetStateMechanicsIdCard(tdstState_* h_State);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ia_dnm.c lines 77–85 */
-/* addr: 0x00262ab0  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 77
- *   +0x0008 -> line 81
- *   +0x0014 -> line 83
- *   +0x002c -> line 85
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-/* Debug info says void, but the callee's handle is returned in $v0. */
-int fn_h_GetCurrentDNMIdCard(HIE_tdstSuperObject_* p_SuperObjPerso)
-{
-    tdstState_* h_State;
-
-
-
-    h_State = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_3dData->h_CurrentState;
-
-    if (h_State == NULL) return 0;
-
-    return fn_hGetStateMechanicsIdCard(h_State);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ia_dnm.c lines 61–63 */
-/* addr: 0x00262af0  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 61
- *   +0x000c -> line 62
- *   +0x0014 -> line 63
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void InitArrayOfDynamicFunction(DNM_stDynamics* (**p_fnDynamicFunction)(DNM_stDynamics*, HIE_tdstSuperObject_*, DNM_stParsingDatas*, void*, float))
-{
-    p_fnDynamicFunction[0] = DNM_p_stDynamicsCameraMechanics;
-    p_fnDynamicFunction[1] = MEC_p_stDynamicsBaseMechanics;
+    return _p_stObject->h_StandardGame->ucHitPoints;
 }

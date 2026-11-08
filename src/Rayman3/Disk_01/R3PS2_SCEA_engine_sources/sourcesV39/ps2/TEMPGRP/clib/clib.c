@@ -6,35 +6,25 @@
 
 int LogPassages[1000];
 
-asm float PS2SQRTF(float x)
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+asm float PS2SQRTF(float x);
+char* itoa(long value, char* buffer, int radix);
+char* Strcat(char* s1, char* s2);
+char* Strrchr(char* string, int ch);
+char* Strchr(char* s, int c);
+
+char* Strchr(char* s, int c)
 {
-    jr ra
-    sqrt.s f0, f12
-}
-
-/* Debug info says void, but the buffer (or NULL) is returned in $v0, and
- * callers pass the value as a long. */
-char* itoa(long value, char* buffer, int radix)
-{
-    if (radix == 10)
-    {
-        sprintf(buffer, "%i", value);
-        return buffer;
-    }
-
-
-    printf("jt : itoa partiellement impl\xe9ment\xe9 dans clibc.c");
-    return NULL;
-}
-
-char* Strcat(char* s1, char* s2)
 {
     char* pcIndex;
-    pcIndex = s1;
-    while (*pcIndex != '\0')
+    pcIndex = s;
+    while (*pcIndex != '\0' && *pcIndex != (char)c)
         pcIndex++;
-    strcpy(pcIndex, s2);
-    return s1;
+    if (*pcIndex == '\0')
+        return NULL;
+    return pcIndex;
+}
 }
 
 char* Strrchr(char* string, int ch)
@@ -52,15 +42,32 @@ char* Strrchr(char* string, int ch)
 }
 }
 
-char* Strchr(char* s, int c)
-{
+char* Strcat(char* s1, char* s2)
 {
     char* pcIndex;
-    pcIndex = s;
-    while (*pcIndex != '\0' && *pcIndex != (char)c)
+    pcIndex = s1;
+    while (*pcIndex != '\0')
         pcIndex++;
-    if (*pcIndex == '\0')
-        return NULL;
-    return pcIndex;
+    strcpy(pcIndex, s2);
+    return s1;
 }
+
+/* Debug info says void, but the buffer (or NULL) is returned in $v0, and
+ * callers pass the value as a long. */
+char* itoa(long value, char* buffer, int radix)
+{
+    if (radix == 10)
+    {
+        sprintf(buffer, "%i", value);
+        return buffer;
+    }
+
+    printf("jt : itoa partiellement impl\xe9ment\xe9 dans clibc.c");
+    return NULL;
+}
+
+asm float PS2SQRTF(float x)
+{
+    jr ra
+    sqrt.s f0, f12
 }

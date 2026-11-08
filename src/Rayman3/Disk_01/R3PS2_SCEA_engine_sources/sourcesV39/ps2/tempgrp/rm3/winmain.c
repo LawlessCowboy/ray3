@@ -97,6 +97,28 @@ void PS2_fn_v_CreateTransitionThread(void);
 void PS2_fn_v_CreateEngineThread(void);
 void PS2_fn_vThreadSwitch(void);
 
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+int main(void);
+void SetPal60(void);
+void SetPal50(void);
+
+void SetPal50(void)
+{
+    if (g_eVideoMode == PAL_60) {
+        g_eVideoMode = PAL_50;
+        DISP_fMonitorfrequency = 50.0f;
+    }
+}
+
+void SetPal60(void)
+{
+    if (g_eVideoMode == PAL_50) {
+        g_eVideoMode = PAL_60;
+        DISP_fMonitorfrequency = 60.0f;
+    }
+}
+
 int main(void)
 {
     int i;
@@ -183,21 +205,4 @@ int main(void)
         PS2_fn_vThreadSwitch();
     }
 }
-
-void SetPal60(void)
-{
-    if (g_eVideoMode == PAL_50) {
-        g_eVideoMode = PAL_60;
-        DISP_fMonitorfrequency = 60.0f;
-    }
-}
-
-void SetPal50(void)
-{
-    if (g_eVideoMode == PAL_60) {
-        g_eVideoMode = PAL_50;
-        DISP_fMonitorfrequency = 50.0f;
-    }
-}
-
 } /* extern "C" */

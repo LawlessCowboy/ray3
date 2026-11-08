@@ -66,8 +66,10 @@ TOOLS_DIR := tools
 #   '-opt level=3' with the optimize_for_size pragma, pads loop-head branch
 #   targets to 8 bytes with a nop as retail game code does (+48 matches, none
 #   lost; the PS2GL library loses 89 with it).
+# Game and library code both use deferred inlining (retail emits every unit
+# last-defined-first); see mwcc_flags in tools/match.py.
 MWCC_FLAGS := -c -g -opt level=3 -farcall off -sdatathreshold 8 \
-              -inline on -strings reuse,nopool,readonly -enum int \
+              -inline on -inline deferred -strings reuse,nopool,readonly -enum int \
               -Cpp_exceptions off -pragma "fast_fptosi on" -pragma "padloop on" \
               -pragma "optimize_for_size off"
 GAME_SOURCE_ROOT := Disk_01/R3PS2_SCEA_engine_sources

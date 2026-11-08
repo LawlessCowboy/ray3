@@ -55,11 +55,17 @@ char g_cCDResetEnable;
 int FMN_ax_lFileIsOpened[8];
 anon_1 FMN_ax_stFiles[8];
 
-void FIL_fn_vFirstInit(void)
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void FIL_fn_vFirstInit(void);
+char* FMN_SCE_AddBaseDirectory(char* buffer);
+void FMN_SCE_ConvertPath2DVD(char* buffer);
+
+void FMN_SCE_ConvertPath2DVD(char* buffer)
 {
-    if (g_ucFILModuleId == 255)
-        g_ucFILModuleId = Erm_fn_ucInitErrMsg(g_ucFILModuleId);
-    g_stInternalGeneral.ucDisplayInformation = 255;
+    GLI_PrintDebugString();
+    sceCdDiskReady(0);
+    FMN_SCE_ConvertPathDos2Unix(buffer);
 }
 
 char* FMN_SCE_AddBaseDirectory(char* buffer)
@@ -69,9 +75,9 @@ char* FMN_SCE_AddBaseDirectory(char* buffer)
     return s_szFileName;
 }
 
-void FMN_SCE_ConvertPath2DVD(char* buffer)
+void FIL_fn_vFirstInit(void)
 {
-    GLI_PrintDebugString();
-    sceCdDiskReady(0);
-    FMN_SCE_ConvertPathDos2Unix(buffer);
+    if (g_ucFILModuleId == 255)
+        g_ucFILModuleId = Erm_fn_ucInitErrMsg(g_ucFILModuleId);
+    g_stInternalGeneral.ucDisplayInformation = 255;
 }

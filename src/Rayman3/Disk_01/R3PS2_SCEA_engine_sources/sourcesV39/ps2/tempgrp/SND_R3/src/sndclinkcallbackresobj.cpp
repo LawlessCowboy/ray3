@@ -289,35 +289,6 @@ struct sTreeLink {
     _Redbl m_eColor; /* +0xc */
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinkcallbackresobj.cpp lines 49–67 */
 /* addr: 0x001c9830  size: 244 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -337,22 +308,9 @@ struct sTreeLink {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char CLinkCallbackResObjCont::mfn_bSynchroCallbackInstance(void)
-{
-    CLinkCallbackResObj* ro_LinkCallback;
-    iterator it;
 
-    for (it = begin(); it != end(); ++it)
-    {
-        ro_LinkCallback = *it;
-        if (!ro_LinkCallback->mfn_bSynchroCallbackResObj())
-        {
-            erase(it);
-            delete ro_LinkCallback;
-        }
-    }
-    return 1;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinkcallbackresobj.cpp lines 57–100 */
 /* addr: 0x001c9930  size: 172 bytes */
@@ -376,6 +334,7 @@ unsigned char CLinkCallbackResObjCont::mfn_bSynchroCallbackInstance(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
 unsigned char CLinkCallbackResObj::mfn_bSynchroCallbackResObj(void)
 {
     int i;
@@ -395,4 +354,21 @@ unsigned char CLinkCallbackResObj::mfn_bSynchroCallbackResObj(void)
     if (!b_Answer && mpfnProc)
         mpfnProc(ms32Param);
     return b_Answer;
+}
+
+unsigned char CLinkCallbackResObjCont::mfn_bSynchroCallbackInstance(void)
+{
+    CLinkCallbackResObj* ro_LinkCallback;
+    iterator it;
+
+    for (it = begin(); it != end(); ++it)
+    {
+        ro_LinkCallback = *it;
+        if (!ro_LinkCallback->mfn_bSynchroCallbackResObj())
+        {
+            erase(it);
+            delete ro_LinkCallback;
+        }
+    }
+    return 1;
 }

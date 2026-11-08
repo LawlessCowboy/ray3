@@ -1793,20 +1793,15 @@ float matIdentity[4][4];
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glGet(unsigned int type, unsigned int pname, void* params)
-{
-    tagListData** ppListData;
-    tagListData* pListData;
-    float ViewPort[4];
-    int I;
-    int length;
-    unsigned int rawType;
-    void* pValues;
-    unsigned int uiValue;
-    int iValue;
-    signed char Values[16];
-    /* TODO: decompile from asm/... */
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void PS2glGet(unsigned int type, unsigned int pname, void* params);
+void* PS2GL_fn_pvEndOfDMABuffer(int BufferNb);
+void PS2glInit(void);
+int MyGsSyncV(void);
+int VBLCallback(void);
+void InitVU1Package(tagGLcontext* pCtx);
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_InitContext.c lines 898–899 */
 /* addr: 0x0017fd90  size: 40 bytes */
@@ -1816,11 +1811,6 @@ void PS2glGet(unsigned int type, unsigned int pname, void* params)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void* PS2GL_fn_pvEndOfDMABuffer(int BufferNb)
-{
-    return (void*)((unsigned int)(g_PS2glContext.pVIFDMABuf +
-        (BufferNb + 1) * uiMaxVifDmaBufLength) & 0x0FFFFFFF);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_InitContext.c lines 837–891 */
 /* addr: 0x0017fdc0  size: 252 bytes */
@@ -1860,27 +1850,6 @@ void impPS2glShadeModel(unsigned int uiMode);
 void impPS2glDepthFunc(unsigned int uiFunc);
 int CreateSema(SemaParam* pParam);
 
-void PS2glInit(void)
-{
-    anon_16 denv;
-    SemaParam sema;
-
-    printf("\n\n                       Open GL for PS2\n\n");
-    printf("                   Version %s  on SCE %s\n", "2.3 for Rayman3", "2.1.4");
-    printf("      Copyright by Ubisoft 1999-2001, all rights reserved\n\n");
-    sceDmaReset(1);
-    sceDmaGetEnv(&denv);
-    denv.notify = 0x100;
-    sceDmaPutEnv(&denv);
-    sceGsResetPath();
-    PS2glInitContext(&g_PS2glContext);
-    memset(&g_gsContext, 0, sizeof(g_gsContext)); GsResetBuffer();
-    g_gsContext.PRMODECONT.AC = 0; g_gsContext.ModFlgs.PRMODECONT_Modified = 1;
-    impPS2glShadeModel(0x1D01);
-    impPS2glDepthFunc(0x201);
-    sema.initCount = 0; sema.maxCount = 0; VBL_Sid = CreateSema(&sema);
-}
-
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_InitContext.c lines 803–828 */
 /* addr: 0x0017fec0  size: 60 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1898,14 +1867,6 @@ void PS2glInit(void)
  * compare a candidate object's line table as an extra checkpoint.
  */
 int WaitSema(int sid);
-int MyGsSyncV(void)
-{
-    g_waiting = 1;
-    if (PS2GL_thingsToDoWhenYoureDead)
-        ((void (*)(void))PS2GL_thingsToDoWhenYoureDead)();
-    WaitSema(VBL_Sid);
-    return g_FIELD;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_InitContext.c lines 770–783 */
 /* addr: 0x0017ff00  size: 84 bytes */
@@ -1924,19 +1885,6 @@ int MyGsSyncV(void)
  * compare a candidate object's line table as an extra checkpoint.
  */
 int iSignalSema(int sid);
-int VBLCallback(void)
-{
-    g_FIELD = (int)((*(volatile unsigned long*)0x12001000 >> 13) & 1);
-    if (g_waiting)
-    {
-        g_waiting = 0;
-        iSignalSema(VBL_Sid);
-    }
-    /* ExitHandler(): sync/ei have no C form. */
-    asm { sync }
-    asm { ei }
-    return 0;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_InitContext.c lines 649–749 */
 /* addr: 0x0017ff60  size: 1064 bytes */
@@ -2162,4 +2110,69 @@ void InitVU1Package(tagGLcontext* pCtx)
     pCtx->pMSCAL = (tagstVIFCode*)((int)&MSCAL_Code + iOffset);
     gifSetTag(pCtx->pGifTagBuf0, 0, 1, 1, 0, 0, 3, regs);
     gifSetTag(pCtx->pGifTagBuf1, 0, 1, 1, 0, 0, 3, regs);
+}
+
+int VBLCallback(void)
+{
+    g_FIELD = (int)((*(volatile unsigned long*)0x12001000 >> 13) & 1);
+    if (g_waiting)
+    {
+        g_waiting = 0;
+        iSignalSema(VBL_Sid);
+    }
+    /* ExitHandler(): sync/ei have no C form. */
+    asm { sync }
+    asm { ei }
+    return 0;
+}
+
+int MyGsSyncV(void)
+{
+    g_waiting = 1;
+    if (PS2GL_thingsToDoWhenYoureDead)
+        ((void (*)(void))PS2GL_thingsToDoWhenYoureDead)();
+    WaitSema(VBL_Sid);
+    return g_FIELD;
+}
+
+void PS2glInit(void)
+{
+    anon_16 denv;
+    SemaParam sema;
+
+    printf("\n\n                       Open GL for PS2\n\n");
+    printf("                   Version %s  on SCE %s\n", "2.3 for Rayman3", "2.1.4");
+    printf("      Copyright by Ubisoft 1999-2001, all rights reserved\n\n");
+    sceDmaReset(1);
+    sceDmaGetEnv(&denv);
+    denv.notify = 0x100;
+    sceDmaPutEnv(&denv);
+    sceGsResetPath();
+    PS2glInitContext(&g_PS2glContext);
+    memset(&g_gsContext, 0, sizeof(g_gsContext)); GsResetBuffer();
+    g_gsContext.PRMODECONT.AC = 0; g_gsContext.ModFlgs.PRMODECONT_Modified = 1;
+    impPS2glShadeModel(0x1D01);
+    impPS2glDepthFunc(0x201);
+    sema.initCount = 0; sema.maxCount = 0; VBL_Sid = CreateSema(&sema);
+}
+
+void* PS2GL_fn_pvEndOfDMABuffer(int BufferNb)
+{
+    return (void*)((unsigned int)(g_PS2glContext.pVIFDMABuf +
+        (BufferNb + 1) * uiMaxVifDmaBufLength) & 0x0FFFFFFF);
+}
+
+void PS2glGet(unsigned int type, unsigned int pname, void* params)
+{
+    tagListData** ppListData;
+    tagListData* pListData;
+    float ViewPort[4];
+    int I;
+    int length;
+    unsigned int rawType;
+    void* pValues;
+    unsigned int uiValue;
+    int iValue;
+    signed char Values[16];
+    /* TODO: decompile from asm/... */
 }

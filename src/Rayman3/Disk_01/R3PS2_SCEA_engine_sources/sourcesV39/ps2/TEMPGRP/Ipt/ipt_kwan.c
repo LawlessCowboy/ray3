@@ -134,255 +134,64 @@ inline float IPT_xSumOfSquares(float _xA, float _xB)
     return _xResult;
 }
 
-unsigned char IPT_fn_bIsKeyWordValid_SequencePadEnd(IPT_tdstKeyWordElement_* _hKeyWordElement)
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+unsigned char IPT_fn_bIsKeyWordValid_SequencePadEnd(IPT_tdstKeyWordElement_* _hKeyWordElement);
+unsigned char IPT_fn_bIsKeyWordValid_SequencePad(IPT_tdstKeyWordElement_* _hKeyWordElement);
+unsigned char IPT_fn_bIsKeyWordValid_Sequence(IPT_tdstKeyWordElement_* _hKeyWordElement);
+unsigned char IPT_fn_bIsKeyWordValid_ActionInvalidated(IPT_tdstKeyWordElement_* _hKeyWordElement);
+unsigned char IPT_fn_bIsKeyWordValid_ActionJustInvalidated(IPT_tdstKeyWordElement_* _hKeyWordElement);
+unsigned char IPT_fn_bIsKeyWordValid_ActionValidated(IPT_tdstKeyWordElement_* _hKeyWordElement);
+unsigned char IPT_fn_bIsKeyWordValid_ActionJustValidated(IPT_tdstKeyWordElement_* _hKeyWordElement);
+unsigned char IPT_fn_bIsKeyWordValid_JoystickOrPadReleased(IPT_tdstKeyWordElement_* _hKeyWordElement);
+unsigned char IPT_fn_bIsKeyWordValid_JoystickOrPadPressed(IPT_tdstKeyWordElement_* _hKeyWordElement);
+unsigned char IPT_fn_bIsKeyWordValid_JoystickOrPadJustReleased(IPT_tdstKeyWordElement_* _hKeyWordElement);
+unsigned char IPT_fn_bIsKeyWordValid_JoystickOrPadJustPressed(IPT_tdstKeyWordElement_* _hKeyWordElement);
+unsigned char IPT_fn_bIsKeyWordValid_JoystickReleased(IPT_tdstKeyWordElement_* _hKeyWordElement);
+unsigned char IPT_fn_bIsKeyWordValid_JoystickPressed(IPT_tdstKeyWordElement_* _hKeyWordElement);
+unsigned char IPT_fn_bIsKeyWordValid_JoystickJustReleased(IPT_tdstKeyWordElement_* _hKeyWordElement);
+unsigned char IPT_fn_bIsKeyWordValid_JoystickJustPressed(IPT_tdstKeyWordElement_* _hKeyWordElement);
+unsigned char IPT_fn_bIsKeyWordValid_JoystickCorrectedNormValue(IPT_tdstKeyWordElement_* _hKeyWordElement);
+unsigned char IPT_fn_bIsKeyWordValid_JoystickTrueNormValue(IPT_tdstKeyWordElement_* _hKeyWordElement);
+unsigned char IPT_fn_bIsKeyWordValid_JoystickAngularValue(IPT_tdstKeyWordElement_* _hKeyWordElement);
+unsigned char IPT_fn_bIsKeyWordValid_JoystickAxeValue(IPT_tdstKeyWordElement_* _hKeyWordElement);
+unsigned char IPT_fn_bIsKeyWordValid_PadReleased(IPT_tdstKeyWordElement_* _hKeyWordElement);
+unsigned char IPT_fn_bIsKeyWordValid_PadPressed(IPT_tdstKeyWordElement_* _hKeyWordElement);
+unsigned char IPT_fn_bIsKeyWordValid_PadJustReleased(IPT_tdstKeyWordElement_* _hKeyWordElement);
+unsigned char IPT_fn_bIsKeyWordValid_PadJustPressed(IPT_tdstKeyWordElement_* _hKeyWordElement);
+unsigned char IPT_fn_bIsKeyWordValid_Not(IPT_tdstKeyWordElement_* _hKeyWordElement);
+unsigned char IPT_fn_bIsKeyWordValid_Or(IPT_tdstKeyWordElement_* _hKeyWordElement);
+unsigned char IPT_fn_bIsKeyWordValid_And(IPT_tdstKeyWordElement_* _hKeyWordElement);
+
+unsigned char IPT_fn_bIsKeyWordValid_And(IPT_tdstKeyWordElement_* _hKeyWordElement)
 {
-    unsigned char ucReturn;
-    short swPadNumber;
+    unsigned char ucFirst;
+    unsigned char ucSecond;
 
     IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
-    swPadNumber = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swPadNumber;
-    IPT_g_hNextParameter = (int)(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter) + 1);
-    ucReturn = (IPT_g_hInputStructure.hEventHistoric[IPT_g_ulSequenceAnalyseNumber].bf6DeviceType == swPadNumber + 2 &&
-                IPT_g_hInputStructure.hEventHistoric[IPT_g_ulSequenceAnalyseNumber].bf2State == 1 &&
-                IPT_g_hInputStructure.hEventHistoric[IPT_g_ulSequenceAnalyseNumber].swDeviceValue == ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord &&
-                IPT_g_hInputStructure.hEventHistoric[IPT_g_ulSequenceAnalyseNumber].ucCounter >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput &&
-                IPT_g_hInputStructure.hEventHistoric[IPT_g_ulSequenceAnalyseNumber].ucCounter <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput) ? (unsigned char)1 : (unsigned char)0;
-    IPT_g_hNextParameter += 12;
-    IPT_g_ulSequenceAnalyseNumber++;
-    return ucReturn;
+    ucFirst = IPT_fn_bIsNextKeyWordValid((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter);
+    ucSecond = IPT_fn_bIsNextKeyWordValid((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter);
+    return ((ucFirst == 1) & (ucSecond == 1)) ? (unsigned char)1 : (unsigned char)0;
 }
 
-unsigned char IPT_fn_bIsKeyWordValid_SequencePad(IPT_tdstKeyWordElement_* _hKeyWordElement)
+unsigned char IPT_fn_bIsKeyWordValid_Or(IPT_tdstKeyWordElement_* _hKeyWordElement)
 {
-    unsigned char ucReturn;
-    short swPadNumber;
+    unsigned char ucFirst;
+    unsigned char ucSecond;
 
     IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
-    swPadNumber = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swPadNumber;
-    IPT_g_hNextParameter = (int)(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter) + 1);
-    ucReturn = (IPT_g_hInputStructure.hEventHistoric[IPT_g_ulSequenceAnalyseNumber].bf6DeviceType == swPadNumber + 2 &&
-                IPT_g_hInputStructure.hEventHistoric[IPT_g_ulSequenceAnalyseNumber].bf2State == 0 &&
-                IPT_g_hInputStructure.hEventHistoric[IPT_g_ulSequenceAnalyseNumber].swDeviceValue == ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord &&
-                IPT_g_hInputStructure.hEventHistoric[IPT_g_ulSequenceAnalyseNumber].ucCounter >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput &&
-                IPT_g_hInputStructure.hEventHistoric[IPT_g_ulSequenceAnalyseNumber].ucCounter <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput) ? (unsigned char)1 : (unsigned char)0;
-    IPT_g_hNextParameter += 12;
-    IPT_g_ulSequenceAnalyseNumber++;
-    return ucReturn;
+    ucFirst = IPT_fn_bIsNextKeyWordValid((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter);
+    ucSecond = IPT_fn_bIsNextKeyWordValid((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter);
+    return ((ucFirst == 1) | (ucSecond == 1)) ? (unsigned char)1 : (unsigned char)0;
 }
 
-unsigned char IPT_fn_bIsKeyWordValid_Sequence(IPT_tdstKeyWordElement_* _hKeyWordElement)
+unsigned char IPT_fn_bIsKeyWordValid_Not(IPT_tdstKeyWordElement_* _hKeyWordElement)
 {
-    unsigned char ucReturn;
-    unsigned int i;
-
-    IPT_g_hNextParameter = (int)(_hKeyWordElement + 2);
-    IPT_g_ulSequenceAnalyseNumber = 0;
-    ucReturn = 1;
-    i = 0;
-    while (ucReturn && i < ((IPT_tdstKeyWordElement_*)_hKeyWordElement + 1)->u_ElementUnion.ulNumberOfSequence)
-    {
-        ucReturn &= (IPT_fn_bIsNextKeyWordValid((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter) == 1 ? (unsigned char)1 : (unsigned char)0);
-        i++;
-    }
-    return ucReturn;
-}
-
-unsigned char IPT_fn_bIsKeyWordValid_ActionInvalidated(IPT_tdstKeyWordElement_* _hKeyWordElement)
-{
-    unsigned char ucReturn;
     IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
-    if ((unsigned char)IPT_fn_bIsInvalidated(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.hEntryElement) == 1)
-        ucReturn = 1;
-    else
-        ucReturn = 0;
-    IPT_g_hNextParameter += 12;
-    return ucReturn;
+    return IPT_fn_bIsNextKeyWordValid((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter) ? (unsigned char)0 : (unsigned char)1;
 }
 
-unsigned char IPT_fn_bIsKeyWordValid_ActionJustInvalidated(IPT_tdstKeyWordElement_* _hKeyWordElement)
-{
-    unsigned char ucReturn;
-    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
-    if ((unsigned char)IPT_fn_bIsJustInvalidated(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.hEntryElement) == 1)
-        ucReturn = 1;
-    else
-        ucReturn = 0;
-    IPT_g_hNextParameter += 12;
-    return ucReturn;
-}
-
-unsigned char IPT_fn_bIsKeyWordValid_ActionValidated(IPT_tdstKeyWordElement_* _hKeyWordElement)
-{
-    unsigned char ucReturn;
-    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
-    if ((unsigned char)IPT_fn_bIsValidated(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.hEntryElement) == 1)
-        ucReturn = 1;
-    else
-        ucReturn = 0;
-    IPT_g_hNextParameter += 12;
-    return ucReturn;
-}
-
-unsigned char IPT_fn_bIsKeyWordValid_ActionJustValidated(IPT_tdstKeyWordElement_* _hKeyWordElement)
-{
-    unsigned char ucReturn;
-    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
-    if ((unsigned char)IPT_fn_bIsJustValidated(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.hEntryElement) == 1)
-        ucReturn = 1;
-    else
-        ucReturn = 0;
-    IPT_g_hNextParameter += 12;
-    return ucReturn;
-}
-
-unsigned char IPT_fn_bIsKeyWordValid_JoystickOrPadReleased(IPT_tdstKeyWordElement_* _hKeyWordElement)
-{
-    stDevice* hPad;
-    unsigned char ucReturn = 0;
-    short swPadNumber;
-    short swKeyWord;
-    unsigned int ulMask;
-
-    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
-    swPadNumber = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
-    hPad = IPT_g_hInputStructure.a_stDevice[swPadNumber + 2].hDeviceHandle;
-    IPT_g_hNextParameter = (int)(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter) + 1);
-    if (IPT_g_hInputStructure.a_stDevice[swPadNumber + 2].ucValideAndActiveDevice == 2)
-    {
-        swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
-        switch (swKeyWord)
-        {
-        case 0:
-            ucReturn = (!((unsigned short)((IPT_tdstJoystickState_*)hPad->m_p_stState)->sDirections & 4) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
-            break;
-        case 1:
-            ucReturn = (!((unsigned short)((IPT_tdstJoystickState_*)hPad->m_p_stState)->sDirections & 8) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
-            break;
-        case 2:
-            ucReturn = (!((unsigned short)((IPT_tdstJoystickState_*)hPad->m_p_stState)->sDirections & 1) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
-            break;
-        case 3:
-            ucReturn = (!((unsigned short)((IPT_tdstJoystickState_*)hPad->m_p_stState)->sDirections & 2) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
-            break;
-        default:
-            if (swKeyWord >= 12 && swKeyWord < 28)
-            {
-                ulMask = IPT_g_ulPadAndJoyButtonFlag[swKeyWord - 12];
-                ucReturn = (!(unsigned char)((ulMask & ((IPT_tdstJoystickState_*)hPad->m_p_stState)->ulButtons) == ulMask) &&
-                            (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
-            }
-        }
-    }
-    IPT_g_hNextParameter += 12;
-    return ucReturn;
-}
-
-unsigned char IPT_fn_bIsKeyWordValid_JoystickOrPadPressed(IPT_tdstKeyWordElement_* _hKeyWordElement)
-{
-    stDevice* hPad;
-    unsigned char ucReturn = 0;
-    short swPadNumber;
-    short swKeyWord;
-    unsigned int ulMask;
-
-    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
-    swPadNumber = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
-    hPad = IPT_g_hInputStructure.a_stDevice[swPadNumber + 2].hDeviceHandle;
-    IPT_g_hNextParameter = (int)(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter) + 1);
-    if (IPT_g_hInputStructure.a_stDevice[swPadNumber + 2].ucValideAndActiveDevice == 2)
-    {
-        swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
-        switch (swKeyWord)
-        {
-        case 0:
-            ucReturn = (((unsigned short)((IPT_tdstJoystickState_*)hPad->m_p_stState)->sDirections & 4) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
-            break;
-        case 1:
-            ucReturn = (((unsigned short)((IPT_tdstJoystickState_*)hPad->m_p_stState)->sDirections & 8) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
-            break;
-        case 2:
-            ucReturn = (((unsigned short)((IPT_tdstJoystickState_*)hPad->m_p_stState)->sDirections & 1) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
-            break;
-        case 3:
-            ucReturn = (((unsigned short)((IPT_tdstJoystickState_*)hPad->m_p_stState)->sDirections & 2) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
-            break;
-        default:
-            if (swKeyWord >= 12 && swKeyWord < 28)
-            {
-                ulMask = IPT_g_ulPadAndJoyButtonFlag[swKeyWord - 12];
-                ucReturn = ((unsigned char)((ulMask & ((IPT_tdstJoystickState_*)hPad->m_p_stState)->ulButtons) == ulMask) &&
-                            (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
-            }
-        }
-    }
-    IPT_g_hNextParameter += 12;
-    return ucReturn;
-}
-
-unsigned char IPT_fn_bIsKeyWordValid_JoystickOrPadJustReleased(IPT_tdstKeyWordElement_* _hKeyWordElement)
-{
-    unsigned short uwJustReleasedDirections;
-    stDevice* hPad;
-    unsigned char ucReturn = 0;
-    short swKeyWord;
-    unsigned int ulMask;
-
-    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
-    swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
-    hPad = IPT_g_hInputStructure.a_stDevice[swKeyWord + 2].hDeviceHandle;
-    IPT_g_hNextParameter = (int)((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter + 1);
-    if (IPT_g_hInputStructure.a_stDevice[swKeyWord + 2].ucValideAndActiveDevice == 2)
-    {
-        uwJustReleasedDirections = ~((IPT_tdstJoystickState_*)hPad->m_p_stState)->sDirections & (short)INO_fn_uwJoyPreviousDirections(hPad);
-        swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
-        switch (swKeyWord)
-        {
-        case 0:
-            ucReturn = (uwJustReleasedDirections & 4) ? 1 : 0;
-            break;
-        case 1:
-            ucReturn = (uwJustReleasedDirections & 8) ? 1 : 0;
-            break;
-        case 2:
-            ucReturn = (uwJustReleasedDirections & 1) ? 1 : 0;
-            break;
-        case 3:
-            ucReturn = (uwJustReleasedDirections & 2) ? 1 : 0;
-            break;
-        default:
-            if (swKeyWord >= 12 && swKeyWord < 28)
-            {
-                ulMask = IPT_g_ulPadAndJoyButtonFlag[swKeyWord - 12];
-                /* The (unsigned char) casts materialise each mask test before the
-                   && branches, as retail does. Not original source, needs cleaning up. */
-                ucReturn = (!((unsigned char)((ulMask & ((IPT_tdstJoystickState_*)hPad->m_p_stState)->ulButtons) == ulMask)) &&
-                            (unsigned char)((ulMask & INO_fn_ulJoyPreviousButtons(hPad)) == ulMask)) ? 1 : 0;
-            }
-        }
-    }
-    IPT_g_hNextParameter += 12;
-    return ucReturn;
-}
-
-unsigned char IPT_fn_bIsKeyWordValid_JoystickOrPadJustPressed(IPT_tdstKeyWordElement_* _hKeyWordElement)
+unsigned char IPT_fn_bIsKeyWordValid_PadJustPressed(IPT_tdstKeyWordElement_* _hKeyWordElement)
 {
     unsigned short uwNewDirections;
     short swKeyWord;
@@ -430,8 +239,54 @@ unsigned char IPT_fn_bIsKeyWordValid_JoystickOrPadJustPressed(IPT_tdstKeyWordEle
     return ucReturn;
 }
 
-unsigned char IPT_fn_bIsKeyWordValid_JoystickReleased(IPT_tdstKeyWordElement_* _hKeyWordElement)
+unsigned char IPT_fn_bIsKeyWordValid_PadJustReleased(IPT_tdstKeyWordElement_* _hKeyWordElement)
 {
+    unsigned short uwJustReleasedDirections;
+    stDevice* hPad;
+    unsigned char ucReturn = 0;
+    short swKeyWord;
+    unsigned int ulMask;
+
+    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
+    swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+    hPad = IPT_g_hInputStructure.a_stDevice[swKeyWord + 2].hDeviceHandle;
+    IPT_g_hNextParameter = (int)((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter + 1);
+    if (IPT_g_hInputStructure.a_stDevice[swKeyWord + 2].ucValideAndActiveDevice == 2)
+    {
+        uwJustReleasedDirections = ~((IPT_tdstJoystickState_*)hPad->m_p_stState)->sDirections & (short)INO_fn_uwJoyPreviousDirections(hPad);
+        swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+        switch (swKeyWord)
+        {
+        case 0:
+            ucReturn = (uwJustReleasedDirections & 4) ? 1 : 0;
+            break;
+        case 1:
+            ucReturn = (uwJustReleasedDirections & 8) ? 1 : 0;
+            break;
+        case 2:
+            ucReturn = (uwJustReleasedDirections & 1) ? 1 : 0;
+            break;
+        case 3:
+            ucReturn = (uwJustReleasedDirections & 2) ? 1 : 0;
+            break;
+        default:
+            if (swKeyWord >= 12 && swKeyWord < 28)
+            {
+                ulMask = IPT_g_ulPadAndJoyButtonFlag[swKeyWord - 12];
+                /* The (unsigned char) casts materialise each mask test before the
+                   && branches, as retail does. Not original source, needs cleaning up. */
+                ucReturn = (!((unsigned char)((ulMask & ((IPT_tdstJoystickState_*)hPad->m_p_stState)->ulButtons) == ulMask)) &&
+                            (unsigned char)((ulMask & INO_fn_ulJoyPreviousButtons(hPad)) == ulMask)) ? 1 : 0;
+            }
+        }
+    }
+    IPT_g_hNextParameter += 12;
+    return ucReturn;
+}
+
+unsigned char IPT_fn_bIsKeyWordValid_PadPressed(IPT_tdstKeyWordElement_* _hKeyWordElement)
+{
+    unsigned short uwDirection;
     stDevice* hPad;
     unsigned char ucReturn = 0;
     short swPadNumber;
@@ -444,21 +299,47 @@ unsigned char IPT_fn_bIsKeyWordValid_JoystickReleased(IPT_tdstKeyWordElement_* _
     IPT_g_hNextParameter = (int)(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter) + 1);
     if (IPT_g_hInputStructure.a_stDevice[swPadNumber + 2].ucValideAndActiveDevice == 2)
     {
+        uwDirection = ((IPT_tdstJoystickState_*)hPad->m_p_stState)->sDirections;
         swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
-        if (swKeyWord >= 0x1C && swKeyWord <= 0x2B)
+        switch (swKeyWord)
         {
-            ulMask = IPT_g_ulPadAndJoyButtonFlag[swKeyWord - 28];
-            ucReturn = (!(unsigned char)((ulMask & ((IPT_tdstJoystickState_*)hPad->m_p_stState)->ulButtons) == ulMask) &&
+        case 0:
+            ucReturn = ((uwDirection & 4) &&
                         (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
                         (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+            break;
+        case 1:
+            ucReturn = ((uwDirection & 8) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+            break;
+        case 2:
+            ucReturn = ((uwDirection & 1) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+            break;
+        case 3:
+            ucReturn = ((uwDirection & 2) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+            break;
+        default:
+            if (swKeyWord >= 12 && swKeyWord < 28)
+            {
+                ulMask = IPT_g_ulPadAndJoyButtonFlag[swKeyWord - 12];
+                ucReturn = ((unsigned char)((ulMask & ((IPT_tdstJoystickState_*)hPad->m_p_stState)->ulButtons) == ulMask) &&
+                            (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+            }
         }
     }
     IPT_g_hNextParameter += 12;
     return ucReturn;
 }
 
-unsigned char IPT_fn_bIsKeyWordValid_JoystickPressed(IPT_tdstKeyWordElement_* _hKeyWordElement)
+unsigned char IPT_fn_bIsKeyWordValid_PadReleased(IPT_tdstKeyWordElement_* _hKeyWordElement)
 {
+    unsigned short uwInvertedDirection;
     stDevice* hPad;
     unsigned char ucReturn = 0;
     short swPadNumber;
@@ -471,233 +352,93 @@ unsigned char IPT_fn_bIsKeyWordValid_JoystickPressed(IPT_tdstKeyWordElement_* _h
     IPT_g_hNextParameter = (int)(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter) + 1);
     if (IPT_g_hInputStructure.a_stDevice[swPadNumber + 2].ucValideAndActiveDevice == 2)
     {
+        uwInvertedDirection = ~((IPT_tdstJoystickState_*)hPad->m_p_stState)->sDirections;
         swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
-        if (swKeyWord >= 0x1C && swKeyWord <= 0x2B)
+        switch (swKeyWord)
         {
-            ulMask = IPT_g_ulPadAndJoyButtonFlag[swKeyWord - 28];
-            ucReturn = ((unsigned char)((ulMask & ((IPT_tdstJoystickState_*)hPad->m_p_stState)->ulButtons) == ulMask) &&
+        case 0:
+            ucReturn = ((uwInvertedDirection & 4) &&
                         (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
                         (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+            break;
+        case 1:
+            ucReturn = ((uwInvertedDirection & 8) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+            break;
+        case 2:
+            ucReturn = ((uwInvertedDirection & 1) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+            break;
+        case 3:
+            ucReturn = ((uwInvertedDirection & 2) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+            break;
+        default:
+            if (swKeyWord >= 12 && swKeyWord < 28)
+            {
+                ulMask = IPT_g_ulPadAndJoyButtonFlag[swKeyWord - 12];
+                ucReturn = (!(unsigned char)((ulMask & ((IPT_tdstJoystickState_*)hPad->m_p_stState)->ulButtons) == ulMask) &&
+                            (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+            }
         }
     }
     IPT_g_hNextParameter += 12;
     return ucReturn;
 }
 
-unsigned char IPT_fn_bIsKeyWordValid_JoystickJustReleased(IPT_tdstKeyWordElement_* _hKeyWordElement)
+unsigned char IPT_fn_bIsKeyWordValid_JoystickAxeValue(IPT_tdstKeyWordElement_* _hKeyWordElement)
 {
-    stDevice* hPad;
-    unsigned char ucReturn = 0;
-    short swKeyWord;
-    unsigned int ulMask;
-
-    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
-    swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
-    hPad = IPT_g_hInputStructure.a_stDevice[swKeyWord + 2].hDeviceHandle;
-    IPT_g_hNextParameter = (int)((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter + 1);
-    if (IPT_g_hInputStructure.a_stDevice[swKeyWord + 2].ucValideAndActiveDevice == 2)
-    {
-        swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
-        if (swKeyWord >= 0x1C && swKeyWord <= 0x2B)
-        {
-            ulMask = IPT_g_ulPadAndJoyButtonFlag[swKeyWord - 28];
-            /* See IPT_fn_bIsKeyWordValid_PadJustReleased. Not original source, needs cleaning up. */
-            ucReturn = (!((unsigned char)((ulMask & *(unsigned int*)((char*)hPad->m_p_stState + 4)) == ulMask)) &&
-                        (unsigned char)((ulMask & INO_fn_ulJoyPreviousButtons(hPad)) == ulMask)) ? 1 : 0;
-        }
-    }
-    IPT_g_hNextParameter += 12;
-    return ucReturn;
-}
-
-unsigned char IPT_fn_bIsKeyWordValid_JoystickJustPressed(IPT_tdstKeyWordElement_* _hKeyWordElement)
-{
-    stDevice* hPad;
-    unsigned char ucReturn = 0;
-    short swKeyWord;
-    unsigned int ulMask;
-
-    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
-    swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
-    hPad = IPT_g_hInputStructure.a_stDevice[swKeyWord + 2].hDeviceHandle;
-    IPT_g_hNextParameter = (int)((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter + 1);
-    if (IPT_g_hInputStructure.a_stDevice[swKeyWord + 2].ucValideAndActiveDevice == 2)
-    {
-        swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
-        if (swKeyWord >= 0x1C && swKeyWord <= 0x2B)
-        {
-            ulMask = IPT_g_ulPadAndJoyButtonFlag[swKeyWord - 28];
-            /* See IPT_fn_bIsKeyWordValid_PadJustReleased. Not original source, needs cleaning up. */
-            ucReturn = ((unsigned char)((ulMask & *(unsigned int*)((char*)hPad->m_p_stState + 4)) == ulMask) &&
-                        !((unsigned char)((ulMask & INO_fn_ulJoyPreviousButtons(hPad)) == ulMask))) ? 1 : 0;
-        }
-    }
-    IPT_g_hNextParameter += 12;
-    return ucReturn;
-}
-
-unsigned char IPT_fn_bIsKeyWordValid_JoystickCorrectedNormValue(IPT_tdstKeyWordElement_* _hKeyWordElement)
-{
-    float fAngle;
-    float fNorm;
-    int lMinValue;
     int lMaxValue;
-    unsigned int ulSecondAxes;
-    unsigned int ulFirstAxes;
-    stDevice* param0;
+    int lMinValue;
+    stDevice* hPad;
+    unsigned int ulActionNumber;
     short swPadNumber;
     int lValue;
-    float fFirstPosition = 0.0f;
-    float fSecondPosition = 0.0f;
+    float fPosition = 0.0f;
     unsigned char ucReturn = 0;
 
     IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
     swPadNumber = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
-    param0 = IPT_g_hInputStructure.a_stDevice[swPadNumber + 2].hDeviceHandle;
-    IPT_g_hNextParameter += 12;
-    ulFirstAxes = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swJoyAction;
-    IPT_g_hNextParameter += 12;
-    ulSecondAxes = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swJoyAction;
-    IPT_g_hNextParameter += 12;
+    hPad = IPT_g_hInputStructure.a_stDevice[swPadNumber + 2].hDeviceHandle;
+    IPT_g_hNextParameter = (int)(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter) + 1);
+    ulActionNumber = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swJoyAction;
+    IPT_g_hNextParameter = (int)(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter) + 1);
     lMinValue = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swJoyValueMin;
-    IPT_g_hNextParameter += 12;
+    IPT_g_hNextParameter = (int)(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter) + 1);
     lMaxValue = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swJoyValueMax;
     if (IPT_g_hInputStructure.a_stDevice[swPadNumber + 2].ucValideAndActiveDevice == 2)
     {
-        switch (ulFirstAxes)
+        switch (ulActionNumber)
         {
-        case 4:
-            fFirstPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[0];
+    case 4:
+            fPosition = ((IPT_tdstJoystickState_*)hPad->m_p_stState)->xAxe[0];
             break;
-        case 5:
-            fFirstPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[1];
+    case 5:
+            fPosition = ((IPT_tdstJoystickState_*)hPad->m_p_stState)->xAxe[1];
             break;
-        case 6:
-            fFirstPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[2];
+    case 6:
+            fPosition = ((IPT_tdstJoystickState_*)hPad->m_p_stState)->xAxe[2];
             break;
-        case 7:
-            fFirstPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[3];
+    case 7:
+            fPosition = ((IPT_tdstJoystickState_*)hPad->m_p_stState)->xAxe[3];
             break;
-        case 8:
-            fFirstPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[4];
+    case 8:
+            fPosition = ((IPT_tdstJoystickState_*)hPad->m_p_stState)->xAxe[4];
             break;
-        case 9:
-            fFirstPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[5];
+    case 9:
+            fPosition = ((IPT_tdstJoystickState_*)hPad->m_p_stState)->xAxe[5];
             break;
         }
-        switch (ulSecondAxes)
-        {
-        case 4:
-            fSecondPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[0];
-            break;
-        case 5:
-            fSecondPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[1];
-            break;
-        case 6:
-            fSecondPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[2];
-            break;
-        case 7:
-            fSecondPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[3];
-            break;
-        case 8:
-            fSecondPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[4];
-            break;
-        case 9:
-            fSecondPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[5];
-            break;
-        }
-        fNorm = PS2SQRTF(IPT_xSumOfSquares(fFirstPosition, fSecondPosition));
-        fNorm = 100.0f * fNorm;
-        fAngle = atan2f(fabsf(fSecondPosition), fabsf(fFirstPosition));
-        fAngle = 0.7853982f - fabsf(fAngle - 0.7853982f);
-        fNorm = fNorm / IPT_g_fNormCorrectionTable[(int)(57.29578f * fAngle)];
-        fNorm = (100.0f < (0.0f > fNorm ? 0.0f : fNorm)) ? 100.0f : (0.0f > fNorm ? 0.0f : fNorm);
-        lValue = (int)fNorm;
+        fPosition = 100.0f * fPosition;
+        lValue = (int)fPosition;
         ucReturn = (lValue >= lMinValue && lValue <= lMaxValue) ? (unsigned char)1 : (unsigned char)0;
         if (ucReturn == 1)
         {
-            ((IPT_tdstEntryElement_*)g_h_ActualEntryInput)->xAnalogicValue = fNorm;
-        }
-    }
-    IPT_g_hNextParameter += 12;
-    return ucReturn;
-}
-
-unsigned char IPT_fn_bIsKeyWordValid_JoystickTrueNormValue(IPT_tdstKeyWordElement_* _hKeyWordElement)
-{
-    float fNorm;
-    int lMinValue;
-    int lMaxValue;
-    unsigned int ulSecondAxes;
-    unsigned int ulFirstAxes;
-    stDevice* param0;
-    short swPadNumber;
-    int lValue;
-    float fFirstPosition = 0.0f;
-    float fSecondPosition = 0.0f;
-    unsigned char ucReturn = 0;
-
-    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
-    swPadNumber = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
-    param0 = IPT_g_hInputStructure.a_stDevice[swPadNumber + 2].hDeviceHandle;
-    IPT_g_hNextParameter += 12;
-    ulFirstAxes = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swJoyAction;
-    IPT_g_hNextParameter += 12;
-    ulSecondAxes = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swJoyAction;
-    IPT_g_hNextParameter += 12;
-    lMinValue = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swJoyValueMin;
-    IPT_g_hNextParameter += 12;
-    lMaxValue = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swJoyValueMax;
-    if (IPT_g_hInputStructure.a_stDevice[swPadNumber + 2].ucValideAndActiveDevice == 2)
-    {
-        switch (ulFirstAxes)
-        {
-        case 4:
-            fFirstPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[0];
-            break;
-        case 5:
-            fFirstPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[1];
-            break;
-        case 6:
-            fFirstPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[2];
-            break;
-        case 7:
-            fFirstPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[3];
-            break;
-        case 8:
-            fFirstPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[4];
-            break;
-        case 9:
-            fFirstPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[5];
-            break;
-        }
-        switch (ulSecondAxes)
-        {
-        case 4:
-            fSecondPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[0];
-            break;
-        case 5:
-            fSecondPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[1];
-            break;
-        case 6:
-            fSecondPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[2];
-            break;
-        case 7:
-            fSecondPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[3];
-            break;
-        case 8:
-            fSecondPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[4];
-            break;
-        case 9:
-            fSecondPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[5];
-            break;
-        }
-        fNorm = 100.0f * PS2SQRTF(IPT_xSumOfSquares(fFirstPosition, fSecondPosition));
-        lValue = (int)fNorm;
-        ucReturn = (lValue >= lMinValue && lValue <= lMaxValue) ? (unsigned char)1 : (unsigned char)0;
-        if (ucReturn == 1)
-        {
-            ((IPT_tdstEntryElement_*)g_h_ActualEntryInput)->xAnalogicValue = fNorm;
+            ((IPT_tdstEntryElement_*)g_h_ActualEntryInput)->xAnalogicValue = fPosition;
         }
     }
     IPT_g_hNextParameter += 12;
@@ -793,170 +534,176 @@ unsigned char IPT_fn_bIsKeyWordValid_JoystickAngularValue(IPT_tdstKeyWordElement
     return ucReturn;
 }
 
-unsigned char IPT_fn_bIsKeyWordValid_JoystickAxeValue(IPT_tdstKeyWordElement_* _hKeyWordElement)
+unsigned char IPT_fn_bIsKeyWordValid_JoystickTrueNormValue(IPT_tdstKeyWordElement_* _hKeyWordElement)
 {
-    int lMaxValue;
+    float fNorm;
     int lMinValue;
-    stDevice* hPad;
-    unsigned int ulActionNumber;
+    int lMaxValue;
+    unsigned int ulSecondAxes;
+    unsigned int ulFirstAxes;
+    stDevice* param0;
     short swPadNumber;
     int lValue;
-    float fPosition = 0.0f;
+    float fFirstPosition = 0.0f;
+    float fSecondPosition = 0.0f;
     unsigned char ucReturn = 0;
 
     IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
     swPadNumber = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
-    hPad = IPT_g_hInputStructure.a_stDevice[swPadNumber + 2].hDeviceHandle;
-    IPT_g_hNextParameter = (int)(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter) + 1);
-    ulActionNumber = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swJoyAction;
-    IPT_g_hNextParameter = (int)(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter) + 1);
+    param0 = IPT_g_hInputStructure.a_stDevice[swPadNumber + 2].hDeviceHandle;
+    IPT_g_hNextParameter += 12;
+    ulFirstAxes = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swJoyAction;
+    IPT_g_hNextParameter += 12;
+    ulSecondAxes = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swJoyAction;
+    IPT_g_hNextParameter += 12;
     lMinValue = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swJoyValueMin;
-    IPT_g_hNextParameter = (int)(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter) + 1);
+    IPT_g_hNextParameter += 12;
     lMaxValue = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swJoyValueMax;
     if (IPT_g_hInputStructure.a_stDevice[swPadNumber + 2].ucValideAndActiveDevice == 2)
     {
-        switch (ulActionNumber)
+        switch (ulFirstAxes)
         {
-    case 4:
-            fPosition = ((IPT_tdstJoystickState_*)hPad->m_p_stState)->xAxe[0];
+        case 4:
+            fFirstPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[0];
             break;
-    case 5:
-            fPosition = ((IPT_tdstJoystickState_*)hPad->m_p_stState)->xAxe[1];
+        case 5:
+            fFirstPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[1];
             break;
-    case 6:
-            fPosition = ((IPT_tdstJoystickState_*)hPad->m_p_stState)->xAxe[2];
+        case 6:
+            fFirstPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[2];
             break;
-    case 7:
-            fPosition = ((IPT_tdstJoystickState_*)hPad->m_p_stState)->xAxe[3];
+        case 7:
+            fFirstPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[3];
             break;
-    case 8:
-            fPosition = ((IPT_tdstJoystickState_*)hPad->m_p_stState)->xAxe[4];
+        case 8:
+            fFirstPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[4];
             break;
-    case 9:
-            fPosition = ((IPT_tdstJoystickState_*)hPad->m_p_stState)->xAxe[5];
+        case 9:
+            fFirstPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[5];
             break;
         }
-        fPosition = 100.0f * fPosition;
-        lValue = (int)fPosition;
+        switch (ulSecondAxes)
+        {
+        case 4:
+            fSecondPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[0];
+            break;
+        case 5:
+            fSecondPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[1];
+            break;
+        case 6:
+            fSecondPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[2];
+            break;
+        case 7:
+            fSecondPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[3];
+            break;
+        case 8:
+            fSecondPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[4];
+            break;
+        case 9:
+            fSecondPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[5];
+            break;
+        }
+        fNorm = 100.0f * PS2SQRTF(IPT_xSumOfSquares(fFirstPosition, fSecondPosition));
+        lValue = (int)fNorm;
         ucReturn = (lValue >= lMinValue && lValue <= lMaxValue) ? (unsigned char)1 : (unsigned char)0;
         if (ucReturn == 1)
         {
-            ((IPT_tdstEntryElement_*)g_h_ActualEntryInput)->xAnalogicValue = fPosition;
+            ((IPT_tdstEntryElement_*)g_h_ActualEntryInput)->xAnalogicValue = fNorm;
         }
     }
     IPT_g_hNextParameter += 12;
     return ucReturn;
 }
 
-unsigned char IPT_fn_bIsKeyWordValid_PadReleased(IPT_tdstKeyWordElement_* _hKeyWordElement)
+unsigned char IPT_fn_bIsKeyWordValid_JoystickCorrectedNormValue(IPT_tdstKeyWordElement_* _hKeyWordElement)
 {
-    unsigned short uwInvertedDirection;
-    stDevice* hPad;
-    unsigned char ucReturn = 0;
+    float fAngle;
+    float fNorm;
+    int lMinValue;
+    int lMaxValue;
+    unsigned int ulSecondAxes;
+    unsigned int ulFirstAxes;
+    stDevice* param0;
     short swPadNumber;
-    short swKeyWord;
-    unsigned int ulMask;
+    int lValue;
+    float fFirstPosition = 0.0f;
+    float fSecondPosition = 0.0f;
+    unsigned char ucReturn = 0;
 
     IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
     swPadNumber = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
-    hPad = IPT_g_hInputStructure.a_stDevice[swPadNumber + 2].hDeviceHandle;
-    IPT_g_hNextParameter = (int)(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter) + 1);
+    param0 = IPT_g_hInputStructure.a_stDevice[swPadNumber + 2].hDeviceHandle;
+    IPT_g_hNextParameter += 12;
+    ulFirstAxes = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swJoyAction;
+    IPT_g_hNextParameter += 12;
+    ulSecondAxes = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swJoyAction;
+    IPT_g_hNextParameter += 12;
+    lMinValue = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swJoyValueMin;
+    IPT_g_hNextParameter += 12;
+    lMaxValue = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swJoyValueMax;
     if (IPT_g_hInputStructure.a_stDevice[swPadNumber + 2].ucValideAndActiveDevice == 2)
     {
-        uwInvertedDirection = ~((IPT_tdstJoystickState_*)hPad->m_p_stState)->sDirections;
-        swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
-        switch (swKeyWord)
+        switch (ulFirstAxes)
         {
-        case 0:
-            ucReturn = ((uwInvertedDirection & 4) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+        case 4:
+            fFirstPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[0];
             break;
-        case 1:
-            ucReturn = ((uwInvertedDirection & 8) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+        case 5:
+            fFirstPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[1];
             break;
-        case 2:
-            ucReturn = ((uwInvertedDirection & 1) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+        case 6:
+            fFirstPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[2];
             break;
-        case 3:
-            ucReturn = ((uwInvertedDirection & 2) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+        case 7:
+            fFirstPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[3];
             break;
-        default:
-            if (swKeyWord >= 12 && swKeyWord < 28)
-            {
-                ulMask = IPT_g_ulPadAndJoyButtonFlag[swKeyWord - 12];
-                ucReturn = (!(unsigned char)((ulMask & ((IPT_tdstJoystickState_*)hPad->m_p_stState)->ulButtons) == ulMask) &&
-                            (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
-            }
+        case 8:
+            fFirstPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[4];
+            break;
+        case 9:
+            fFirstPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[5];
+            break;
+        }
+        switch (ulSecondAxes)
+        {
+        case 4:
+            fSecondPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[0];
+            break;
+        case 5:
+            fSecondPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[1];
+            break;
+        case 6:
+            fSecondPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[2];
+            break;
+        case 7:
+            fSecondPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[3];
+            break;
+        case 8:
+            fSecondPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[4];
+            break;
+        case 9:
+            fSecondPosition = ((IPT_tdstJoystickState_*)param0->m_p_stState)->xAxe[5];
+            break;
+        }
+        fNorm = PS2SQRTF(IPT_xSumOfSquares(fFirstPosition, fSecondPosition));
+        fNorm = 100.0f * fNorm;
+        fAngle = atan2f(fabsf(fSecondPosition), fabsf(fFirstPosition));
+        fAngle = 0.7853982f - fabsf(fAngle - 0.7853982f);
+        fNorm = fNorm / IPT_g_fNormCorrectionTable[(int)(57.29578f * fAngle)];
+        fNorm = (100.0f < (0.0f > fNorm ? 0.0f : fNorm)) ? 100.0f : (0.0f > fNorm ? 0.0f : fNorm);
+        lValue = (int)fNorm;
+        ucReturn = (lValue >= lMinValue && lValue <= lMaxValue) ? (unsigned char)1 : (unsigned char)0;
+        if (ucReturn == 1)
+        {
+            ((IPT_tdstEntryElement_*)g_h_ActualEntryInput)->xAnalogicValue = fNorm;
         }
     }
     IPT_g_hNextParameter += 12;
     return ucReturn;
 }
 
-unsigned char IPT_fn_bIsKeyWordValid_PadPressed(IPT_tdstKeyWordElement_* _hKeyWordElement)
+unsigned char IPT_fn_bIsKeyWordValid_JoystickJustPressed(IPT_tdstKeyWordElement_* _hKeyWordElement)
 {
-    unsigned short uwDirection;
-    stDevice* hPad;
-    unsigned char ucReturn = 0;
-    short swPadNumber;
-    short swKeyWord;
-    unsigned int ulMask;
-
-    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
-    swPadNumber = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
-    hPad = IPT_g_hInputStructure.a_stDevice[swPadNumber + 2].hDeviceHandle;
-    IPT_g_hNextParameter = (int)(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter) + 1);
-    if (IPT_g_hInputStructure.a_stDevice[swPadNumber + 2].ucValideAndActiveDevice == 2)
-    {
-        uwDirection = ((IPT_tdstJoystickState_*)hPad->m_p_stState)->sDirections;
-        swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
-        switch (swKeyWord)
-        {
-        case 0:
-            ucReturn = ((uwDirection & 4) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
-            break;
-        case 1:
-            ucReturn = ((uwDirection & 8) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
-            break;
-        case 2:
-            ucReturn = ((uwDirection & 1) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
-            break;
-        case 3:
-            ucReturn = ((uwDirection & 2) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
-            break;
-        default:
-            if (swKeyWord >= 12 && swKeyWord < 28)
-            {
-                ulMask = IPT_g_ulPadAndJoyButtonFlag[swKeyWord - 12];
-                ucReturn = ((unsigned char)((ulMask & ((IPT_tdstJoystickState_*)hPad->m_p_stState)->ulButtons) == ulMask) &&
-                            (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
-                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
-            }
-        }
-    }
-    IPT_g_hNextParameter += 12;
-    return ucReturn;
-}
-
-unsigned char IPT_fn_bIsKeyWordValid_PadJustReleased(IPT_tdstKeyWordElement_* _hKeyWordElement)
-{
-    unsigned short uwJustReleasedDirections;
     stDevice* hPad;
     unsigned char ucReturn = 0;
     short swKeyWord;
@@ -968,38 +715,100 @@ unsigned char IPT_fn_bIsKeyWordValid_PadJustReleased(IPT_tdstKeyWordElement_* _h
     IPT_g_hNextParameter = (int)((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter + 1);
     if (IPT_g_hInputStructure.a_stDevice[swKeyWord + 2].ucValideAndActiveDevice == 2)
     {
-        uwJustReleasedDirections = ~((IPT_tdstJoystickState_*)hPad->m_p_stState)->sDirections & (short)INO_fn_uwJoyPreviousDirections(hPad);
         swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
-        switch (swKeyWord)
+        if (swKeyWord >= 0x1C && swKeyWord <= 0x2B)
         {
-        case 0:
-            ucReturn = (uwJustReleasedDirections & 4) ? 1 : 0;
-            break;
-        case 1:
-            ucReturn = (uwJustReleasedDirections & 8) ? 1 : 0;
-            break;
-        case 2:
-            ucReturn = (uwJustReleasedDirections & 1) ? 1 : 0;
-            break;
-        case 3:
-            ucReturn = (uwJustReleasedDirections & 2) ? 1 : 0;
-            break;
-        default:
-            if (swKeyWord >= 12 && swKeyWord < 28)
-            {
-                ulMask = IPT_g_ulPadAndJoyButtonFlag[swKeyWord - 12];
-                /* The (unsigned char) casts materialise each mask test before the
-                   && branches, as retail does. Not original source, needs cleaning up. */
-                ucReturn = (!((unsigned char)((ulMask & ((IPT_tdstJoystickState_*)hPad->m_p_stState)->ulButtons) == ulMask)) &&
-                            (unsigned char)((ulMask & INO_fn_ulJoyPreviousButtons(hPad)) == ulMask)) ? 1 : 0;
-            }
+            ulMask = IPT_g_ulPadAndJoyButtonFlag[swKeyWord - 28];
+            /* See IPT_fn_bIsKeyWordValid_PadJustReleased. Not original source, needs cleaning up. */
+            ucReturn = ((unsigned char)((ulMask & *(unsigned int*)((char*)hPad->m_p_stState + 4)) == ulMask) &&
+                        !((unsigned char)((ulMask & INO_fn_ulJoyPreviousButtons(hPad)) == ulMask))) ? 1 : 0;
         }
     }
     IPT_g_hNextParameter += 12;
     return ucReturn;
 }
 
-unsigned char IPT_fn_bIsKeyWordValid_PadJustPressed(IPT_tdstKeyWordElement_* _hKeyWordElement)
+unsigned char IPT_fn_bIsKeyWordValid_JoystickJustReleased(IPT_tdstKeyWordElement_* _hKeyWordElement)
+{
+    stDevice* hPad;
+    unsigned char ucReturn = 0;
+    short swKeyWord;
+    unsigned int ulMask;
+
+    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
+    swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+    hPad = IPT_g_hInputStructure.a_stDevice[swKeyWord + 2].hDeviceHandle;
+    IPT_g_hNextParameter = (int)((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter + 1);
+    if (IPT_g_hInputStructure.a_stDevice[swKeyWord + 2].ucValideAndActiveDevice == 2)
+    {
+        swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+        if (swKeyWord >= 0x1C && swKeyWord <= 0x2B)
+        {
+            ulMask = IPT_g_ulPadAndJoyButtonFlag[swKeyWord - 28];
+            /* See IPT_fn_bIsKeyWordValid_PadJustReleased. Not original source, needs cleaning up. */
+            ucReturn = (!((unsigned char)((ulMask & *(unsigned int*)((char*)hPad->m_p_stState + 4)) == ulMask)) &&
+                        (unsigned char)((ulMask & INO_fn_ulJoyPreviousButtons(hPad)) == ulMask)) ? 1 : 0;
+        }
+    }
+    IPT_g_hNextParameter += 12;
+    return ucReturn;
+}
+
+unsigned char IPT_fn_bIsKeyWordValid_JoystickPressed(IPT_tdstKeyWordElement_* _hKeyWordElement)
+{
+    stDevice* hPad;
+    unsigned char ucReturn = 0;
+    short swPadNumber;
+    short swKeyWord;
+    unsigned int ulMask;
+
+    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
+    swPadNumber = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+    hPad = IPT_g_hInputStructure.a_stDevice[swPadNumber + 2].hDeviceHandle;
+    IPT_g_hNextParameter = (int)(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter) + 1);
+    if (IPT_g_hInputStructure.a_stDevice[swPadNumber + 2].ucValideAndActiveDevice == 2)
+    {
+        swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+        if (swKeyWord >= 0x1C && swKeyWord <= 0x2B)
+        {
+            ulMask = IPT_g_ulPadAndJoyButtonFlag[swKeyWord - 28];
+            ucReturn = ((unsigned char)((ulMask & ((IPT_tdstJoystickState_*)hPad->m_p_stState)->ulButtons) == ulMask) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+        }
+    }
+    IPT_g_hNextParameter += 12;
+    return ucReturn;
+}
+
+unsigned char IPT_fn_bIsKeyWordValid_JoystickReleased(IPT_tdstKeyWordElement_* _hKeyWordElement)
+{
+    stDevice* hPad;
+    unsigned char ucReturn = 0;
+    short swPadNumber;
+    short swKeyWord;
+    unsigned int ulMask;
+
+    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
+    swPadNumber = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+    hPad = IPT_g_hInputStructure.a_stDevice[swPadNumber + 2].hDeviceHandle;
+    IPT_g_hNextParameter = (int)(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter) + 1);
+    if (IPT_g_hInputStructure.a_stDevice[swPadNumber + 2].ucValideAndActiveDevice == 2)
+    {
+        swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+        if (swKeyWord >= 0x1C && swKeyWord <= 0x2B)
+        {
+            ulMask = IPT_g_ulPadAndJoyButtonFlag[swKeyWord - 28];
+            ucReturn = (!(unsigned char)((ulMask & ((IPT_tdstJoystickState_*)hPad->m_p_stState)->ulButtons) == ulMask) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+        }
+    }
+    IPT_g_hNextParameter += 12;
+    return ucReturn;
+}
+
+unsigned char IPT_fn_bIsKeyWordValid_JoystickOrPadJustPressed(IPT_tdstKeyWordElement_* _hKeyWordElement)
 {
     unsigned short uwNewDirections;
     short swKeyWord;
@@ -1047,30 +856,250 @@ unsigned char IPT_fn_bIsKeyWordValid_PadJustPressed(IPT_tdstKeyWordElement_* _hK
     return ucReturn;
 }
 
-unsigned char IPT_fn_bIsKeyWordValid_Not(IPT_tdstKeyWordElement_* _hKeyWordElement)
+unsigned char IPT_fn_bIsKeyWordValid_JoystickOrPadJustReleased(IPT_tdstKeyWordElement_* _hKeyWordElement)
 {
+    unsigned short uwJustReleasedDirections;
+    stDevice* hPad;
+    unsigned char ucReturn = 0;
+    short swKeyWord;
+    unsigned int ulMask;
+
     IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
-    return IPT_fn_bIsNextKeyWordValid((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter) ? (unsigned char)0 : (unsigned char)1;
+    swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+    hPad = IPT_g_hInputStructure.a_stDevice[swKeyWord + 2].hDeviceHandle;
+    IPT_g_hNextParameter = (int)((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter + 1);
+    if (IPT_g_hInputStructure.a_stDevice[swKeyWord + 2].ucValideAndActiveDevice == 2)
+    {
+        uwJustReleasedDirections = ~((IPT_tdstJoystickState_*)hPad->m_p_stState)->sDirections & (short)INO_fn_uwJoyPreviousDirections(hPad);
+        swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+        switch (swKeyWord)
+        {
+        case 0:
+            ucReturn = (uwJustReleasedDirections & 4) ? 1 : 0;
+            break;
+        case 1:
+            ucReturn = (uwJustReleasedDirections & 8) ? 1 : 0;
+            break;
+        case 2:
+            ucReturn = (uwJustReleasedDirections & 1) ? 1 : 0;
+            break;
+        case 3:
+            ucReturn = (uwJustReleasedDirections & 2) ? 1 : 0;
+            break;
+        default:
+            if (swKeyWord >= 12 && swKeyWord < 28)
+            {
+                ulMask = IPT_g_ulPadAndJoyButtonFlag[swKeyWord - 12];
+                /* The (unsigned char) casts materialise each mask test before the
+                   && branches, as retail does. Not original source, needs cleaning up. */
+                ucReturn = (!((unsigned char)((ulMask & ((IPT_tdstJoystickState_*)hPad->m_p_stState)->ulButtons) == ulMask)) &&
+                            (unsigned char)((ulMask & INO_fn_ulJoyPreviousButtons(hPad)) == ulMask)) ? 1 : 0;
+            }
+        }
+    }
+    IPT_g_hNextParameter += 12;
+    return ucReturn;
 }
 
-unsigned char IPT_fn_bIsKeyWordValid_Or(IPT_tdstKeyWordElement_* _hKeyWordElement)
+unsigned char IPT_fn_bIsKeyWordValid_JoystickOrPadPressed(IPT_tdstKeyWordElement_* _hKeyWordElement)
 {
-    unsigned char ucFirst;
-    unsigned char ucSecond;
+    stDevice* hPad;
+    unsigned char ucReturn = 0;
+    short swPadNumber;
+    short swKeyWord;
+    unsigned int ulMask;
 
     IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
-    ucFirst = IPT_fn_bIsNextKeyWordValid((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter);
-    ucSecond = IPT_fn_bIsNextKeyWordValid((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter);
-    return ((ucFirst == 1) | (ucSecond == 1)) ? (unsigned char)1 : (unsigned char)0;
+    swPadNumber = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+    hPad = IPT_g_hInputStructure.a_stDevice[swPadNumber + 2].hDeviceHandle;
+    IPT_g_hNextParameter = (int)(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter) + 1);
+    if (IPT_g_hInputStructure.a_stDevice[swPadNumber + 2].ucValideAndActiveDevice == 2)
+    {
+        swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+        switch (swKeyWord)
+        {
+        case 0:
+            ucReturn = (((unsigned short)((IPT_tdstJoystickState_*)hPad->m_p_stState)->sDirections & 4) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+            break;
+        case 1:
+            ucReturn = (((unsigned short)((IPT_tdstJoystickState_*)hPad->m_p_stState)->sDirections & 8) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+            break;
+        case 2:
+            ucReturn = (((unsigned short)((IPT_tdstJoystickState_*)hPad->m_p_stState)->sDirections & 1) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+            break;
+        case 3:
+            ucReturn = (((unsigned short)((IPT_tdstJoystickState_*)hPad->m_p_stState)->sDirections & 2) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+            break;
+        default:
+            if (swKeyWord >= 12 && swKeyWord < 28)
+            {
+                ulMask = IPT_g_ulPadAndJoyButtonFlag[swKeyWord - 12];
+                ucReturn = ((unsigned char)((ulMask & ((IPT_tdstJoystickState_*)hPad->m_p_stState)->ulButtons) == ulMask) &&
+                            (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+            }
+        }
+    }
+    IPT_g_hNextParameter += 12;
+    return ucReturn;
 }
 
-unsigned char IPT_fn_bIsKeyWordValid_And(IPT_tdstKeyWordElement_* _hKeyWordElement)
+unsigned char IPT_fn_bIsKeyWordValid_JoystickOrPadReleased(IPT_tdstKeyWordElement_* _hKeyWordElement)
 {
-    unsigned char ucFirst;
-    unsigned char ucSecond;
+    stDevice* hPad;
+    unsigned char ucReturn = 0;
+    short swPadNumber;
+    short swKeyWord;
+    unsigned int ulMask;
 
     IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
-    ucFirst = IPT_fn_bIsNextKeyWordValid((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter);
-    ucSecond = IPT_fn_bIsNextKeyWordValid((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter);
-    return ((ucFirst == 1) & (ucSecond == 1)) ? (unsigned char)1 : (unsigned char)0;
+    swPadNumber = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+    hPad = IPT_g_hInputStructure.a_stDevice[swPadNumber + 2].hDeviceHandle;
+    IPT_g_hNextParameter = (int)(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter) + 1);
+    if (IPT_g_hInputStructure.a_stDevice[swPadNumber + 2].ucValideAndActiveDevice == 2)
+    {
+        swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+        switch (swKeyWord)
+        {
+        case 0:
+            ucReturn = (!((unsigned short)((IPT_tdstJoystickState_*)hPad->m_p_stState)->sDirections & 4) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+            break;
+        case 1:
+            ucReturn = (!((unsigned short)((IPT_tdstJoystickState_*)hPad->m_p_stState)->sDirections & 8) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+            break;
+        case 2:
+            ucReturn = (!((unsigned short)((IPT_tdstJoystickState_*)hPad->m_p_stState)->sDirections & 1) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+            break;
+        case 3:
+            ucReturn = (!((unsigned short)((IPT_tdstJoystickState_*)hPad->m_p_stState)->sDirections & 2) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+            break;
+        default:
+            if (swKeyWord >= 12 && swKeyWord < 28)
+            {
+                ulMask = IPT_g_ulPadAndJoyButtonFlag[swKeyWord - 12];
+                ucReturn = (!(unsigned char)((ulMask & ((IPT_tdstJoystickState_*)hPad->m_p_stState)->ulButtons) == ulMask) &&
+                            (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+            }
+        }
+    }
+    IPT_g_hNextParameter += 12;
+    return ucReturn;
+}
+
+unsigned char IPT_fn_bIsKeyWordValid_ActionJustValidated(IPT_tdstKeyWordElement_* _hKeyWordElement)
+{
+    unsigned char ucReturn;
+    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
+    if ((unsigned char)IPT_fn_bIsJustValidated(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.hEntryElement) == 1)
+        ucReturn = 1;
+    else
+        ucReturn = 0;
+    IPT_g_hNextParameter += 12;
+    return ucReturn;
+}
+
+unsigned char IPT_fn_bIsKeyWordValid_ActionValidated(IPT_tdstKeyWordElement_* _hKeyWordElement)
+{
+    unsigned char ucReturn;
+    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
+    if ((unsigned char)IPT_fn_bIsValidated(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.hEntryElement) == 1)
+        ucReturn = 1;
+    else
+        ucReturn = 0;
+    IPT_g_hNextParameter += 12;
+    return ucReturn;
+}
+
+unsigned char IPT_fn_bIsKeyWordValid_ActionJustInvalidated(IPT_tdstKeyWordElement_* _hKeyWordElement)
+{
+    unsigned char ucReturn;
+    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
+    if ((unsigned char)IPT_fn_bIsJustInvalidated(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.hEntryElement) == 1)
+        ucReturn = 1;
+    else
+        ucReturn = 0;
+    IPT_g_hNextParameter += 12;
+    return ucReturn;
+}
+
+unsigned char IPT_fn_bIsKeyWordValid_ActionInvalidated(IPT_tdstKeyWordElement_* _hKeyWordElement)
+{
+    unsigned char ucReturn;
+    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
+    if ((unsigned char)IPT_fn_bIsInvalidated(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.hEntryElement) == 1)
+        ucReturn = 1;
+    else
+        ucReturn = 0;
+    IPT_g_hNextParameter += 12;
+    return ucReturn;
+}
+
+unsigned char IPT_fn_bIsKeyWordValid_Sequence(IPT_tdstKeyWordElement_* _hKeyWordElement)
+{
+    unsigned char ucReturn;
+    unsigned int i;
+
+    IPT_g_hNextParameter = (int)(_hKeyWordElement + 2);
+    IPT_g_ulSequenceAnalyseNumber = 0;
+    ucReturn = 1;
+    i = 0;
+    while (ucReturn && i < ((IPT_tdstKeyWordElement_*)_hKeyWordElement + 1)->u_ElementUnion.ulNumberOfSequence)
+    {
+        ucReturn &= (IPT_fn_bIsNextKeyWordValid((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter) == 1 ? (unsigned char)1 : (unsigned char)0);
+        i++;
+    }
+    return ucReturn;
+}
+
+unsigned char IPT_fn_bIsKeyWordValid_SequencePad(IPT_tdstKeyWordElement_* _hKeyWordElement)
+{
+    unsigned char ucReturn;
+    short swPadNumber;
+
+    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
+    swPadNumber = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swPadNumber;
+    IPT_g_hNextParameter = (int)(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter) + 1);
+    ucReturn = (IPT_g_hInputStructure.hEventHistoric[IPT_g_ulSequenceAnalyseNumber].bf6DeviceType == swPadNumber + 2 &&
+                IPT_g_hInputStructure.hEventHistoric[IPT_g_ulSequenceAnalyseNumber].bf2State == 0 &&
+                IPT_g_hInputStructure.hEventHistoric[IPT_g_ulSequenceAnalyseNumber].swDeviceValue == ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord &&
+                IPT_g_hInputStructure.hEventHistoric[IPT_g_ulSequenceAnalyseNumber].ucCounter >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput &&
+                IPT_g_hInputStructure.hEventHistoric[IPT_g_ulSequenceAnalyseNumber].ucCounter <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput) ? (unsigned char)1 : (unsigned char)0;
+    IPT_g_hNextParameter += 12;
+    IPT_g_ulSequenceAnalyseNumber++;
+    return ucReturn;
+}
+
+unsigned char IPT_fn_bIsKeyWordValid_SequencePadEnd(IPT_tdstKeyWordElement_* _hKeyWordElement)
+{
+    unsigned char ucReturn;
+    short swPadNumber;
+
+    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
+    swPadNumber = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swPadNumber;
+    IPT_g_hNextParameter = (int)(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter) + 1);
+    ucReturn = (IPT_g_hInputStructure.hEventHistoric[IPT_g_ulSequenceAnalyseNumber].bf6DeviceType == swPadNumber + 2 &&
+                IPT_g_hInputStructure.hEventHistoric[IPT_g_ulSequenceAnalyseNumber].bf2State == 1 &&
+                IPT_g_hInputStructure.hEventHistoric[IPT_g_ulSequenceAnalyseNumber].swDeviceValue == ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord &&
+                IPT_g_hInputStructure.hEventHistoric[IPT_g_ulSequenceAnalyseNumber].ucCounter >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput &&
+                IPT_g_hInputStructure.hEventHistoric[IPT_g_ulSequenceAnalyseNumber].ucCounter <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput) ? (unsigned char)1 : (unsigned char)0;
+    IPT_g_hNextParameter += 12;
+    IPT_g_ulSequenceAnalyseNumber++;
+    return ucReturn;
 }

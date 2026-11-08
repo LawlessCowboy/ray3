@@ -112,34 +112,41 @@ extern unsigned int fn_ulTimerWaitTicksPerSecond(void);
 extern void fn_vTimerWait(unsigned int ulTicksToWait);
 
 #pragma peephole on
-void SVG_fn_vCheckStatusChangeInMC0(void)
-{
-    int iType;
-    unsigned int iResultInfo;
-    unsigned int bResult;
-    unsigned int u32RetryCount;
 
-    u32RetryCount = 5;
-    bResult = 0;
-    iType = 0;
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void SVG_fn_vCheckStatusChangeInMC0(void);
+int SVG_fn_iGetChangeInMC0AndReset(void);
+int SVG_fn_iGetChangeInMC0(void);
+void SVG_fn_vSetMC0AsChanged(void);
+char* SVG_fn_szGetSonyCompliantDirName(char* _szUserName);
+int SVG_fn_s32Format(int _iPort, int _iSlot);
+int SVG_fn_s32GetFileInfo(int _iPort, int _iSlot, char* _szFileName, anon_0* _pRes);
+int SVG_fn_s32GetFileAttributes(int _iPort, int _iSlot, char* _szFileName, int _iUnused);
+int SVG_fn_s32GetFileSize(int _iPort, int _iSlot, char* _szFileName);
+int SVG_fn_SetAsCurrentMemoryCard(int cmc);
+int SVG_fn_s32GetFileCoherence(int _iPort, int _iSlot, char* _szFileName);
+int SVG_fn_s32GetFileCoherence2(int _iPort, int _iSlot, char* _szFileName);
+int SVG_fn_s32SetFileCoherence(int _iPort, int _iSlot, char* _szFileName);
+int SVG_fn_s32SetFileCoherence2(int _iPort, int _iSlot, char* _szFileName);
+int SVG_fn_s32WriteToFile(int _iPort, int _iSlot, char* _szFileName, void* _pData, unsigned int _u32DataSize);
+int SVG_fn_s32ReadFromFile(int _iPort, int _iSlot, char* _szFileName, void* _pData, unsigned int _u32DataSize);
+int SVG_fn_s32ReadUnknownFile(int _iPort, int _iSlot, char* _szFileName, void** _ppData, unsigned int* _pu32DataSize);
+int SVG_fn_s32Query(int _iPort, int _iSlot, int* _p_iFreeClusters);
+int SVG_fn_s32QueryAndCheckSpace(int _iPort, int _iSlot, int* _p_iFreeClusters, int _iUnused1, int _iUnused2);
+void SVG_fn_szAsciiToSJIS(char* _szOutSJIS, unsigned short _u16MaxNbChars, char* _szInASCII, unsigned short* _p_u16OffsLF);
+int SVG_fn_s32CreateIconFilesForSave(int _iPort, int _iSlot, char* _szSonyCompliantDirName, char* _szTitleName);
+int SVG_fn_s32MakeDir(int _iPort, int _iSlot, char* _szSonyCompliantDirName);
+int SVG_fn_s32DestroySaveGame(int _iPort, int _iSlot, char* _szSonyCompliantDirName);
+int SVG_fn_s32SaveGame(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize);
+int SVG_fn_s32SaveGameReal(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize);
+int SVG_fn_s32LoadGameReal(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize);
+unsigned char SVG_fn_bIsVmsConnected(int _lVmsNumber);
+unsigned char SVG_fn_bIsActivVmsConnected(void);
+int SVG_fn_bGetActiveVms(void);
+int SVG_fn_s32ReadNextFileInfo(int _iPort, int _iSlot, char* _szFileName, int _not_first, anon_0* _pTable);
+int SVG_fn_s32ReadNextName(int _iPort, int _iSlot, char* _szFileName, int _not_first, char* _pRes);
 
-    while (u32RetryCount && !(bResult = (sceMcGetInfo(0, 0, &iType, 0, 0) != 0) ? 0 : 1))
-    {
-        if (--u32RetryCount)
-            fn_vTimerWait((unsigned int)(5.0f * fn_ulTimerWaitTicksPerSecond() / 1000.0f));
-    }
-
-    if (bResult)
-    {
-        sceMcSync(0, 0, &iResultInfo);
-        if (iResultInfo != gs_iSceMcOpStatus && (iType == 2 || iType == 0))
-        {
-            gs_iSceMcOpChanged = 1;
-            gs_iSceMcOpWarned = 0;
-            gs_iSceMcOpStatus = iResultInfo;
-        }
-    }
-}
 #pragma peephole reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 171–178 */
@@ -155,16 +162,6 @@ void SVG_fn_vCheckStatusChangeInMC0(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int SVG_fn_iGetChangeInMC0AndReset(void)
-{
-    register int iReturn;
-
-    SVG_fn_vCheckStatusChangeInMC0();
-    iReturn = gs_iSceMcOpChanged;
-    gs_iSceMcOpChanged = 0;
-    gs_iSceMcOpWarned = 0;
-    return iReturn;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 181–184 */
 /* addr: 0x00133b40  size: 36 bytes */
@@ -176,11 +173,6 @@ int SVG_fn_iGetChangeInMC0AndReset(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int SVG_fn_iGetChangeInMC0(void)
-{
-    SVG_fn_vCheckStatusChangeInMC0();
-    return gs_iSceMcOpChanged;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 188–190 */
 /* addr: 0x00133b70  size: 20 bytes */
@@ -191,11 +183,6 @@ int SVG_fn_iGetChangeInMC0(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SVG_fn_vSetMC0AsChanged(void)
-{
-    gs_iSceMcOpChanged = 1;
-    gs_iSceMcOpWarned = 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 224–267 */
 /* addr: 0x00133b90  size: 124 bytes */
@@ -210,21 +197,6 @@ void SVG_fn_vSetMC0AsChanged(void)
  * compare a candidate object's line table as an extra checkpoint.
  */
 extern size_t strlen(const char*);
-
-/* The debug record says void, but retail returns the static buffer (or NULL) in v0. */
-char* SVG_fn_szGetSonyCompliantDirName(char* _szUserName)
-{
-    static char s_szCompliantName[21];
-
-    if (strlen(_szUserName) <= 8)
-    {
-        sprintf(s_szCompliantName, "%s%s-%s%s", "BK", "SLKA", "25078", _szUserName);
-
-        return s_szCompliantName;
-    }
-
-    return NULL;
-}
 
 extern unsigned int fn_ulTimerWaitTicksPerSecond(void);
 extern void fn_vTimerWait(unsigned int ulTicksToWait);
@@ -251,24 +223,7 @@ extern int sceMcFormat();
  * compare a candidate object's line table as an extra checkpoint.
  */
 #pragma peephole on
-int SVG_fn_s32Format(int _iPort, int _iSlot)
-{
-    unsigned int u32RetryCount;
-    int iResult;
 
-    SVG_M_vRetrySceMcOperation(sceMcFormat(_iPort, _iSlot));
-
-    if (gs_bSceMcOpIsSuccessful)
-    {
-        sceMcSync(0, 0, &iResult);
-        if (iResult)
-            return 0;
-
-        return 1;
-    }
-
-    return 0;
-}
 #pragma peephole reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 317–327 */
@@ -289,23 +244,7 @@ extern int sceMcGetDir();
 extern int sceMcSync();
 
 #pragma peephole on
-int SVG_fn_s32GetFileInfo(int _iPort, int _iSlot, char* _szFileName, anon_0* _pRes)
-{
-    unsigned int u32RetryCount;
-    int iFd;
 
-    iFd = -1;
-    SVG_M_vRetrySceMcOperation(sceMcGetDir(_iPort, _iSlot, _szFileName, 0, 99, _pRes));
-
-    if (gs_bSceMcOpIsSuccessful)
-    {
-        sceMcSync(0, 0, &iFd);
-        if (iFd > 0)
-            return 1;
-    }
-
-    return 0;
-}
 #pragma peephole reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 330–356 */
@@ -331,41 +270,6 @@ int SVG_fn_s32GetFileInfo(int _iPort, int _iSlot, char* _szFileName, anon_0* _pR
  */
 extern int SVG_fn_s32ReadNextName(int, int, char*, int, char*);
 
-/* The retail frame reserves four parameter slots (0x40 bytes) but only stores
-   a0/a1/a2, so the original took a fourth, unused argument. */
-int SVG_fn_s32GetFileAttributes(int _iPort, int _iSlot, char* _szFileName, int _iUnused)
-{
-    anon_0 Res;
-    int iFd;
-    unsigned short t;
-    int i;
-    unsigned int u32RetryCount;
-
-    iFd = -1;
-    i = 0;
-    while ((char)_szFileName[i++] != '/')
-        ;
-
-    if (!SVG_fn_s32ReadNextName(0, 0, _szFileName, 0, 0))
-        return 0;
-
-    SVG_M_vRetrySceMcOperation(sceMcGetDir(_iPort, _iSlot, _szFileName, 0, 1, &Res));
-
-    if (gs_bSceMcOpIsSuccessful)
-    {
-        sceMcSync(0, 0, &iFd);
-        /* The retail code keeps the unsigned-short -> int mask here. */
-        while (Res.AttrFile == 0)
-            ;
-        t = (unsigned short)((short)Res.AttrFile & 0x80);
-        if (t != 0)
-            return 1;
-        return 0;
-    }
-
-    return 0;
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 408–420 */
 /* addr: 0x00134170  size: 116 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -378,19 +282,6 @@ int SVG_fn_s32GetFileAttributes(int _iPort, int _iSlot, char* _szFileName, int _
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int SVG_fn_s32GetFileSize(int _iPort, int _iSlot, char* _szFileName)
-{
-    anon_0 Res;
-    char CompleteFilename[255];
-
-    sprintf(CompleteFilename, "%s", _szFileName, _szFileName);
-
-    if (SVG_fn_s32GetFileInfo(_iPort, _iSlot, CompleteFilename, &Res) == 1)
-
-        return Res.FileSizeByte;
-
-    return 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 424–426 */
 /* addr: 0x001341f0  size: 28 bytes */
@@ -401,10 +292,6 @@ int SVG_fn_s32GetFileSize(int _iPort, int _iSlot, char* _szFileName)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int SVG_fn_SetAsCurrentMemoryCard(int cmc)
-{
-    gUpdateFielInfo = cmc;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 434–468 */
 /* addr: 0x00134210  size: 428 bytes */
@@ -422,31 +309,6 @@ int SVG_fn_SetAsCurrentMemoryCard(int cmc)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int SVG_fn_s32GetFileCoherence(int _iPort, int _iSlot, char* _szFileName)
-{
-    anon_0 Res;
-    char CompleteFilename[255];
-
-    sprintf(CompleteFilename, "%s", _szFileName, _szFileName);
-
-    if (gFileInfo._Create.Sec == 0 && gFileInfo._Create.Min == 0 && gFileInfo._Create.Hour == 0 && gFileInfo._Create.Day == 0 && gFileInfo._Create.Month == 0 && gFileInfo._Create.Year == 0)
-    {
-
-        return 1;
-    }
-
-    if (SVG_fn_s32GetFileInfo(_iPort, _iSlot, CompleteFilename, &Res) == 1)
-    {
-        if (gFileInfo._Create.Sec == Res._Create.Sec && gFileInfo._Create.Min == Res._Create.Min && gFileInfo._Create.Hour == Res._Create.Hour && gFileInfo._Create.Day == Res._Create.Day && gFileInfo._Create.Month == Res._Create.Month && gFileInfo._Create.Year == Res._Create.Year)
-        {
-            return 1;
-        }
-        else
-            return 0;
-    }
-
-    return 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 471–505 */
 /* addr: 0x001343c0  size: 296 bytes */
@@ -462,25 +324,6 @@ int SVG_fn_s32GetFileCoherence(int _iPort, int _iSlot, char* _szFileName)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int SVG_fn_s32GetFileCoherence2(int _iPort, int _iSlot, char* _szFileName)
-{
-    anon_0 Res;
-    char CompleteFilename[255];
-
-    sprintf(CompleteFilename, "%s/%s", _szFileName, _szFileName);
-
-    if (SVG_fn_s32GetFileInfo(_iPort, _iSlot, CompleteFilename, &Res) == 1)
-    {
-        if (gFileInfo2._Create.Sec == Res._Create.Sec && gFileInfo2._Create.Min == Res._Create.Min && gFileInfo2._Create.Hour == Res._Create.Hour && gFileInfo2._Create.Day == Res._Create.Day && gFileInfo2._Create.Month == Res._Create.Month && gFileInfo2._Create.Year == Res._Create.Year)
-        {
-            return 1;
-        }
-        else
-            return 0;
-    }
-
-    return 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 512–537 */
 /* addr: 0x001344f0  size: 196 bytes */
@@ -502,30 +345,6 @@ int SVG_fn_s32GetFileCoherence2(int _iPort, int _iSlot, char* _szFileName)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int SVG_fn_s32SetFileCoherence(int _iPort, int _iSlot, char* _szFileName)
-{
-    anon_0 Res;
-    char CompleteFilename[255];
-
-    sprintf(CompleteFilename, "%s", _szFileName, _szFileName);
-
-    if (SVG_fn_s32GetFileInfo(_iPort, _iSlot, CompleteFilename, &Res) == 1)
-    {
-
-        gFileInfo._Create.Sec = Res._Create.Sec;
-        gFileInfo._Create.Min = Res._Create.Min;
-        gFileInfo._Create.Hour = Res._Create.Hour;
-        gFileInfo._Create.Day = Res._Create.Day;
-        gFileInfo._Create.Month = Res._Create.Month;
-        gFileInfo._Create.Year = Res._Create.Year;
-
-
-        bSetMC = 0;
-        return 1;
-    }
-    bSetMC = 0;
-    return 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 540–565 */
 /* addr: 0x001345c0  size: 196 bytes */
@@ -547,30 +366,6 @@ int SVG_fn_s32SetFileCoherence(int _iPort, int _iSlot, char* _szFileName)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int SVG_fn_s32SetFileCoherence2(int _iPort, int _iSlot, char* _szFileName)
-{
-    anon_0 Res;
-    char CompleteFilename[255];
-
-    sprintf(CompleteFilename, "%s/%s", _szFileName, _szFileName);
-
-    if (SVG_fn_s32GetFileInfo(_iPort, _iSlot, CompleteFilename, &Res) == 1)
-    {
-
-        gFileInfo2._Create.Sec = Res._Create.Sec;
-        gFileInfo2._Create.Min = Res._Create.Min;
-        gFileInfo2._Create.Hour = Res._Create.Hour;
-        gFileInfo2._Create.Day = Res._Create.Day;
-        gFileInfo2._Create.Month = Res._Create.Month;
-        gFileInfo2._Create.Year = Res._Create.Year;
-
-
-        bSetMC = 0;
-        return 1;
-    }
-    bSetMC = 0;
-    return 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 572–608 */
 /* addr: 0x00134690  size: 1672 bytes */
@@ -603,55 +398,7 @@ extern int sceMcClose();
 extern int sceMcDelete();
 
 #pragma peephole on
-int SVG_fn_s32WriteToFile(int _iPort, int _iSlot, char* _szFileName, void* _pData, unsigned int _u32DataSize)
-{
-    unsigned int u32RetryCount;
-    int iResult;
-    int iFd;
 
-    iFd = -1;
-    SVG_M_vRetrySceMcOperationScoped(sceMcOpen(_iPort, _iSlot, _szFileName, 0x202));
-
-    if (gs_bSceMcOpIsSuccessful)
-    {
-        sceMcSync(0, 0, &iFd);
-        if (iFd >= 0)
-        {
-            SVG_M_vRetrySceMcOperationScoped(sceMcWrite(iFd, _pData, (int)_u32DataSize));
-
-            if (gs_bSceMcOpIsSuccessful)
-            {
-                sceMcSync(0, 0, &iResult);
-                if (iResult == _u32DataSize)
-                {
-                    SVG_M_vRetrySceMcOperationScoped(sceMcClose(iFd));
-
-                    if (gs_bSceMcOpIsSuccessful)
-                    {
-                        sceMcSync(0, 0, &iResult);
-                        if (iResult == 0)
-                            return 1;
-                    }
-                }
-            }
-        }
-    }
-
-    if (iFd >= 0)
-    {
-        SVG_M_vRetrySceMcOperationScoped(sceMcClose(iFd));
-
-        if (gs_bSceMcOpIsSuccessful)
-            sceMcSync(0, 0, &iResult);
-
-        SVG_M_vRetrySceMcOperationScoped(sceMcDelete(_iPort, _iSlot, _szFileName));
-
-        if (gs_bSceMcOpIsSuccessful)
-            sceMcSync(0, 0, &iResult);
-    }
-
-    return 0;
-}
 #pragma peephole reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 616–647 */
@@ -678,45 +425,7 @@ int SVG_fn_s32WriteToFile(int _iPort, int _iSlot, char* _szFileName, void* _pDat
 extern int sceMcRead();
 
 #pragma peephole on
-int SVG_fn_s32ReadFromFile(int _iPort, int _iSlot, char* _szFileName, void* _pData, unsigned int _u32DataSize)
-{
-    unsigned int u32RetryCount;
-    char real_name[256];
-    int iResult;
-    int iFd;
 
-    iFd = -1;
-    sprintf(real_name, "%s", _szFileName);
-
-    SVG_M_vRetrySceMcOperationScoped(sceMcOpen(_iPort, _iSlot, real_name, 1));
-
-    if (gs_bSceMcOpIsSuccessful)
-    {
-        sceMcSync(0, 0, &iFd);
-        if (iFd >= 0)
-        {
-            SVG_M_vRetrySceMcOperationScoped(sceMcRead(iFd, _pData, (int)_u32DataSize));
-
-            if (gs_bSceMcOpIsSuccessful)
-            {
-                sceMcSync(0, 0, &iResult);
-                if (iResult == _u32DataSize)
-                {
-                    SVG_M_vRetrySceMcOperationScoped(sceMcClose(iFd));
-
-                    if (gs_bSceMcOpIsSuccessful)
-                    {
-                        sceMcSync(0, 0, &iResult);
-                        if (iResult == 0)
-                            return 1;
-                    }
-                }
-            }
-        }
-    }
-
-    return 0;
-}
 #pragma peephole reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 654–682 */
@@ -744,39 +453,6 @@ int SVG_fn_s32ReadFromFile(int _iPort, int _iSlot, char* _szFileName, void* _pDa
 extern void* malloc();
 extern void free();
 
-int SVG_fn_s32ReadUnknownFile(int _iPort, int _iSlot, char* _szFileName, void** _ppData, unsigned int* _pu32DataSize)
-{
-    anon_0 FileInfo;
-    char real_name[256];
-    int iFd;
-    int iResult;
-
-    iFd = -1;
-
-    sprintf(real_name, "%s/%s", _szFileName, _szFileName);
-    iResult = SVG_fn_s32GetFileInfo(_iPort, _iSlot, real_name, &FileInfo);
-
-    if (iResult == 1)
-    {
-        *_pu32DataSize = FileInfo.FileSizeByte;
-        *_ppData = malloc(*_pu32DataSize);
-
-        if (*_ppData == NULL)
-            return 0;
-
-        iResult = SVG_fn_s32ReadFromFile(_iPort, _iSlot, _szFileName, *_ppData, *_pu32DataSize);
-        if (iResult != 1)
-        {
-            free(*_ppData);
-            *_ppData = NULL;
-            *_pu32DataSize = 0;
-        }
-    }
-
-
-    return iResult;
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 690–714 */
 /* addr: 0x00135270  size: 552 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -800,33 +476,7 @@ int SVG_fn_s32ReadUnknownFile(int _iPort, int _iSlot, char* _szFileName, void** 
  * compare a candidate object's line table as an extra checkpoint.
  */
 #pragma peephole on
-int SVG_fn_s32Query(int _iPort, int _iSlot, int* _p_iFreeClusters)
-{
-    unsigned int u32RetryCount;
-    int iType;
-    int iFormat;
-    int iResult;
 
-    SVG_M_vRetrySceMcOperationN(99, sceMcGetInfo(_iPort, _iSlot, &iType, _p_iFreeClusters, &iFormat));
-
-    if (gs_bSceMcOpIsSuccessful)
-    {
-        sceMcSync(0, 0, &iResult);
-        if (iType != 2)
-            return 0;
-        if (iResult < -9)
-            return 0;
-        if (iResult == -2)
-            return 3;
-        if (iResult == -1)
-            return 2;
-        if (iResult == 0)
-            return iFormat ? 2 : 3;
-    }
-
-    sceMcSync(0, 0, &iResult);
-    return 0;
-}
 #pragma peephole reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 731–811 */
@@ -852,36 +502,7 @@ int SVG_fn_s32Query(int _iPort, int _iSlot, int* _p_iFreeClusters)
  * compare a candidate object's line table as an extra checkpoint.
  */
 #pragma peephole on
-int SVG_fn_s32QueryAndCheckSpace(int _iPort, int _iSlot, int* _p_iFreeClusters, int _iUnused1, int _iUnused2)
-{
-    int iFreeSpace; /* dead load kept by the volatile read below; retail has the lw into s2 */
-    unsigned int u32RetryCount;
-    int iType;
-    int iFormat;
-    int iResult;
 
-    SVG_M_vRetrySceMcOperation(sceMcGetInfo(_iPort, _iSlot, &iType, _p_iFreeClusters, &iFormat));
-
-    if (gs_bSceMcOpIsSuccessful)
-    {
-        sceMcSync(0, 0, &iResult);
-        if (iResult < -2)
-            return -1;
-        if (iType != 2)
-            return -5;
-        if (iResult == -2)
-            return -11;
-        if (iResult == -1 || iResult == 0)
-        {
-            iFreeSpace = *(volatile int*)_p_iFreeClusters;
-            if (iFormat == 0)
-                return -11;
-            return 1;
-        }
-    }
-
-    return -5;
-}
 #pragma peephole reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 872–987 */
@@ -930,6 +551,482 @@ int SVG_fn_s32QueryAndCheckSpace(int _iPort, int _iSlot, int* _p_iFreeClusters, 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 994–1077 */
+/* addr: 0x001359f0  size: 960 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 994
+ *   +0x0028 -> line 999
+ *   +0x0054 -> line 1006
+ *   +0x0078 -> line 1012
+ *   +0x009c -> line 1018
+ *   +0x00b0 -> line 1023
+ *   +0x00c4 -> line 1026
+ *   +0x00d8 -> line 1030
+ *   +0x00f8 -> line 1031
+ *   +0x011c -> line 1033
+ *   +0x0134 -> line 1036
+ *   +0x013c -> line 1038
+ *   +0x0150 -> line 1039
+ *   +0x0164 -> line 1040
+ *   +0x0178 -> line 1041
+ *   +0x018c -> line 1046
+ *   +0x01a0 -> line 1048
+ *   +0x01e0 -> line 1049
+ *   +0x0220 -> line 1052
+ *   +0x0238 -> line 1053
+ *   +0x0260 -> line 1054
+ *   +0x026c -> line 1058
+ *   +0x0278 -> line 1060
+ *   +0x02b0 -> line 1063
+ *   +0x02dc -> line 1065
+ *   +0x0330 -> line 1071
+ *   +0x0378 -> line 1072
+ *   +0x0388 -> line 1075
+ *   +0x039c -> line 1076
+ *   +0x03a0 -> line 1077
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+extern void SVG_fn_szAsciiToSJIS(char*, unsigned short, char*, unsigned short*);
+extern int SVG_fn_s32GetFileSize(int, int, char*);
+
+#pragma peephole on
+
+#pragma peephole reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 1125–1135 */
+/* addr: 0x00135db0  size: 400 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1125
+ *   +0x0020 -> line 1127
+ *   +0x0134 -> line 1130
+ *   +0x0148 -> line 1131
+ *   +0x0170 -> line 1134
+ *   +0x0174 -> line 1135
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+extern int sceMcMkdir();
+
+#pragma peephole on
+
+#pragma peephole reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 1142–1176 */
+/* addr: 0x00135f40  size: 1164 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1142
+ *   +0x0030 -> line 1150
+ *   +0x0154 -> line 1151
+ *   +0x0170 -> line 1153
+ *   +0x017c -> line 1154
+ *   +0x0188 -> line 1155
+ *   +0x0194 -> line 1157
+ *   +0x02bc -> line 1159
+ *   +0x02d0 -> line 1160
+ *   +0x02dc -> line 1161
+ *   +0x02e8 -> line 1164
+ *   +0x02f8 -> line 1165
+ *   +0x0310 -> line 1167
+ *   +0x0424 -> line 1169
+ *   +0x0438 -> line 1170
+ *   +0x0444 -> line 1171
+ *   +0x0450 -> line 1174
+ *   +0x045c -> line 1175
+ *   +0x0460 -> line 1176
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 1202–1234 */
+/* addr: 0x001363d0  size: 108 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1202
+ *   +0x0028 -> line 1204
+ *   +0x002c -> line 1227
+ *   +0x0054 -> line 1234
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+#pragma peephole on
+
+#pragma peephole reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 1252–1292 */
+/* addr: 0x00136440  size: 664 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1252
+ *   +0x0028 -> line 1259
+ *   +0x003c -> line 1262
+ *   +0x015c -> line 1263
+ *   +0x0178 -> line 1265
+ *   +0x0184 -> line 1268
+ *   +0x0194 -> line 1271
+ *   +0x01b4 -> line 1272
+ *   +0x01c0 -> line 1276
+ *   +0x01e4 -> line 1278
+ *   +0x01f8 -> line 1279
+ *   +0x0204 -> line 1283
+ *   +0x0220 -> line 1284
+ *   +0x0248 -> line 1286
+ *   +0x025c -> line 1287
+ *   +0x0268 -> line 1290
+ *   +0x027c -> line 1291
+ *   +0x0280 -> line 1292
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+#pragma peephole on
+
+#pragma peephole reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 1295–1324 */
+/* addr: 0x001366e0  size: 280 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1295
+ *   +0x0020 -> line 1302
+ *   +0x0034 -> line 1305
+ *   +0x005c -> line 1306
+ *   +0x0070 -> line 1307
+ *   +0x0078 -> line 1308
+ *   +0x0084 -> line 1313
+ *   +0x00a0 -> line 1315
+ *   +0x00b8 -> line 1317
+ *   +0x00e0 -> line 1319
+ *   +0x00ec -> line 1322
+ *   +0x0100 -> line 1323
+ *   +0x0104 -> line 1324
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+extern int sceMcGetDir();
+extern int sceMcSync();
+
+#pragma peephole on
+
+#pragma peephole reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 1588–1596 */
+/* addr: 0x00136800  size: 104 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1588
+ *   +0x0008 -> line 1590
+ *   +0x0024 -> line 1591
+ *   +0x0030 -> line 1593
+ *   +0x005c -> line 1596
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 1604–1613 */
+/* addr: 0x00136870  size: 76 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1604
+ *   +0x0008 -> line 1607
+ *   +0x0024 -> line 1608
+ *   +0x0030 -> line 1611
+ *   +0x003c -> line 1613
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 1668–1669 */
+/* addr: 0x001368c0  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1668
+ *   +0x0004 -> line 1669
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 1701–1713 */
+/* addr: 0x001368d0  size: 392 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1701
+ *   +0x0024 -> line 1702
+ *   +0x002c -> line 1706
+ *   +0x014c -> line 1708
+ *   +0x0160 -> line 1710
+ *   +0x016c -> line 1712
+ *   +0x0170 -> line 1713
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+#pragma peephole on
+
+#pragma peephole reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 1717–1741 */
+/* addr: 0x00136a60  size: 152 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1717
+ *   +0x0020 -> line 1718
+ *   +0x0024 -> line 1724
+ *   +0x004c -> line 1727
+ *   +0x0058 -> line 1729
+ *   +0x0060 -> line 1730
+ *   +0x0074 -> line 1735
+ *   +0x0080 -> line 1740
+ *   +0x0084 -> line 1741
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+int SVG_fn_s32ReadNextName(int _iPort, int _iSlot, char* _szFileName, int _not_first, char* _pRes)
+{
+    anon_0 table;
+    int iFd;
+
+    iFd = -1;
+
+    if ((iFd = SVG_fn_s32ReadNextFileInfo(_iPort, _iSlot, _szFileName, _not_first, &table)) > 0)
+    {
+        if (_pRes)
+        {
+            _pRes[32] = 0;
+            memcpy(_pRes, table.EntryName, 32);
+        }
+
+        return iFd;
+    }
+
+    return 0;
+}
+
+#pragma peephole on
+int SVG_fn_s32ReadNextFileInfo(int _iPort, int _iSlot, char* _szFileName, int _not_first, anon_0* _pTable)
+{
+    unsigned int u32RetryCount;
+    int iFd;
+
+    iFd = -1;
+    SVG_M_vRetrySceMcOperation(sceMcGetDir(_iPort, _iSlot, _szFileName, (unsigned)_not_first, 99, _pTable));
+
+    if (gs_bSceMcOpIsSuccessful)
+    {
+        sceMcSync(0, 0, &iFd);
+        return iFd;
+    }
+
+    return -1;
+}
+#pragma peephole reset
+
+int SVG_fn_bGetActiveVms(void)
+{
+    return SVG_gs_lActiveVmsNumber;
+}
+
+unsigned char SVG_fn_bIsActivVmsConnected(void)
+{
+    if ((SVG_gs_lActiveVmsNumber < 0) || (SVG_gs_lActiveVmsNumber > 7))
+        return 0;
+    return SVG_fn_bIsVmsConnected(SVG_gs_lActiveVmsNumber);
+}
+
+unsigned char SVG_fn_bIsVmsConnected(int _lVmsNumber)
+{
+    if ((_lVmsNumber < 0) || (_lVmsNumber > 7))
+        return 0;
+    return gs_a_stCardStatus[_lVmsNumber].iStatus != -1;
+}
+
+#pragma peephole on
+/* Retail takes _pData in t0 and the size in t1 (spill slots 0xb0/0xc0, with a3's 0xa0 unused):
+   there is an unused fourth parameter, as in SVG_fn_s32SaveGameReal, that the debug record drops. */
+int SVG_fn_s32LoadGameReal(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
+{
+    char szFileName[64];
+    int ret;
+    int iResult;
+    static anon_0 stGetDirTable[99];
+
+    SVG_fn_s32Query(_iPort, _iSlot, &SVG_g_iFreeClustersBefore);
+
+    ret = sceMcGetDir(_iPort, _iSlot, _szSonyCompliantName, 0, 99, stGetDirTable);
+    sceMcSync(0, 0, &iResult);
+    if (ret)
+        return 0;
+
+    sprintf(szFileName, "%s/%s", _szSonyCompliantName, _szSonyCompliantName);
+
+    _u32DataSize = SVG_fn_s32GetFileSize(_iPort, _iSlot, szFileName);
+
+    if (SVG_fn_s32ReadFromFile(_iPort, _iSlot, szFileName, _pData, _u32DataSize) != 1)
+
+        return 0;
+
+    SVG_fn_s32Query(_iPort, _iSlot, &SVG_g_iFreeClustersAfter);
+    return 1;
+}
+#pragma peephole reset
+
+#pragma peephole on
+int SVG_fn_s32SaveGameReal(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
+{
+    unsigned int u32RetryCount;
+    char szFileName[64];
+    int iResult;
+    static anon_0 stGetDirTable[99];
+
+    SVG_fn_s32Query(_iPort, _iSlot, &SVG_g_iFreeClustersBefore);
+
+    SVG_M_vRetrySceMcOperation(sceMcGetDir(_iPort, _iSlot, _szSonyCompliantName, 0, 99, stGetDirTable));
+
+    if (gs_bSceMcOpIsSuccessful)
+        sceMcSync(0, 0, &iResult);
+    else
+        return 0;
+
+    if (iResult != 1)
+    {
+        if (SVG_fn_s32MakeDir(_iPort, _iSlot, _szSonyCompliantName) != 1)
+            return 0;
+    }
+
+    if (SVG_fn_s32CreateIconFilesForSave(_iPort, _iSlot, _szSonyCompliantName, _szTitle) != 1)
+    {
+        SVG_fn_s32DestroySaveGame(_iPort, _iSlot, _szSonyCompliantName);
+        return 0;
+    }
+
+    sprintf(szFileName, "%s/%s", _szSonyCompliantName, _szSonyCompliantName);
+
+    if (SVG_fn_s32WriteToFile(_iPort, _iSlot, szFileName, _pData, _u32DataSize) != 1)
+    {
+        SVG_fn_s32DestroySaveGame(_iPort, _iSlot, _szSonyCompliantName);
+        return 0;
+    }
+
+    SVG_fn_s32Query(_iPort, _iSlot, &SVG_g_iFreeClustersAfter);
+    return 1;
+}
+#pragma peephole reset
+
+#pragma peephole on
+int SVG_fn_s32SaveGame(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
+{
+    int bSavingOptions;
+    char* Name;
+
+    bSavingOptions = 0;
+    return SauvePartieMenu(_iPort, _iSlot, _szSonyCompliantName, _szTitle, _pData, _u32DataSize, Name, bSavingOptions);
+}
+#pragma peephole reset
+
+int SVG_fn_s32DestroySaveGame(int _iPort, int _iSlot, char* _szSonyCompliantDirName)
+{
+    int iResult;
+    int s32Count;
+    anon_0 a18_stGetDirTable[18];
+    unsigned int u32RetryCount;
+
+    SVG_M_vRetrySceMcOperationScoped(sceMcGetDir(_iPort, _iSlot, _szSonyCompliantDirName, 0, 99, a18_stGetDirTable));
+
+    if (gs_bSceMcOpIsSuccessful)
+        sceMcSync(0, 0, &iResult);
+    else
+        return 0;
+
+    if (iResult >= 0)
+    {
+        for (s32Count = 0; s32Count < iResult; s32Count++)
+        {
+            SVG_M_vRetrySceMcOperationScoped(sceMcDelete(_iPort, _iSlot, (char*)a18_stGetDirTable[s32Count].EntryName));
+
+            if (gs_bSceMcOpIsSuccessful)
+            {
+                sceMcSync(0, 0, &iResult);
+                if (iResult)
+                    return 0;
+            }
+            else
+                return 0;
+        }
+    }
+
+    SVG_M_vRetrySceMcOperationScoped(sceMcDelete(_iPort, _iSlot, _szSonyCompliantDirName));
+
+    if (gs_bSceMcOpIsSuccessful)
+    {
+        sceMcSync(0, 0, &iResult);
+        if (iResult)
+            return 0;
+    }
+    else
+        return 0;
+
+    return 1;
+}
+
+#pragma peephole on
+int SVG_fn_s32MakeDir(int _iPort, int _iSlot, char* _szSonyCompliantDirName)
+{
+    int iResult;
+    unsigned int u32RetryCount;
+
+    SVG_M_vRetrySceMcOperation(sceMcMkdir(_iPort, _iSlot, _szSonyCompliantDirName));
+
+    if (gs_bSceMcOpIsSuccessful)
+    {
+        sceMcSync(0, 0, &iResult);
+        return (iResult != 0) ? 0 : 1;
+    }
+
+    return 0;
+}
+#pragma peephole reset
+
+#pragma peephole on
+int SVG_fn_s32CreateIconFilesForSave(int _iPort, int _iSlot, char* _szSonyCompliantDirName, char* _szTitleName)
+{
+    int s32Count;
+    anon_3 stIcon;
+    char szFileName[64];
+    char Title[66];
+    int bgcolor[4][4] = { { 128, 0, 0, 0 }, { 0, 128, 0, 0 }, { 0, 0, 128, 0 }, { 128, 128, 128, 0 } };
+    float lightdir[3][4] = { { 0.5f, 0.5f, 0.5f, 0.0f }, { 0.0f, -0.4f, -0.1f, 0.0f }, { -0.5f, -0.5f, 0.5f, 0.0f } };
+    float lightcol[3][4] = { { 0.48f, 0.48f, 0.03f, 0.0f }, { 0.5f, 0.33f, 0.2f, 0.0f }, { 0.14f, 0.14f, 0.38f, 0.0f } };
+    float ambient[4] = { 0.5f, 0.5f, 0.5f, 0.0f };
+
+    memset(&stIcon, 0, sizeof(anon_3));
+    strcpy((char*)stIcon.Head, "PS2D");
+    sprintf(Title, "%s\n%s", "Rayman 3", _szTitleName);
+    sprintf(Title, "%s\n%s", "Rayman 3", "Saved Data");
+    SVG_fn_szAsciiToSJIS((char*)stIcon.TitleName, 33, Title, &stIcon.OffsLF);
+    stIcon.TransRate = 0x60;
+    memcpy(stIcon.BgColor, bgcolor, sizeof(bgcolor));
+    memcpy(stIcon.LightDir, lightdir, sizeof(lightdir));
+    memcpy(stIcon.LightColor, lightcol, sizeof(lightcol));
+    memcpy(stIcon.Ambient, ambient, sizeof(ambient));
+    strcpy((char*)stIcon.FnameView, (char*)SVG_gs_a3_stIconDesc[0].szFileNameSave);
+    strcpy((char*)stIcon.FnameCopy, (char*)SVG_gs_a3_stIconDesc[SVG_gs_a3_stIconDesc[1].u32Size ? 1 : 0].szFileNameSave);
+    strcpy((char*)stIcon.FnameDel, (char*)SVG_gs_a3_stIconDesc[SVG_gs_a3_stIconDesc[2].u32Size ? 2 : 0].szFileNameSave);
+
+    sprintf(szFileName, "%s/icon.sys", _szSonyCompliantDirName);
+
+    if (SVG_fn_s32WriteToFile(_iPort, _iSlot, szFileName, &stIcon, sizeof(anon_3)) != 1)
+        return 0;
+
+    for (s32Count = 0; s32Count < 3; s32Count++)
+    {
+        if (SVG_gs_a3_stIconDesc[s32Count].u32Size && SVG_gs_a3_stIconDesc[s32Count].pData)
+        {
+            sprintf(szFileName, "%s/%s", _szSonyCompliantDirName, SVG_gs_a3_stIconDesc[s32Count].szFileNameSave);
+
+            if (!SVG_fn_s32ReadNextName(_iPort, _iSlot, szFileName, 0, 0) || SVG_gs_a3_stIconDesc[s32Count].u32Size != SVG_fn_s32GetFileSize(_iPort, _iSlot, szFileName))
+            {
+                if (SVG_fn_s32WriteToFile(_iPort, _iSlot, szFileName, (void*)SVG_gs_a3_stIconDesc[s32Count].pData, SVG_gs_a3_stIconDesc[s32Count].u32Size) != 1)
+                    return 0;
+            }
+        }
+    }
+
+    return 1;
+}
+#pragma peephole reset
+
 void SVG_fn_szAsciiToSJIS(char* _szOutSJIS, unsigned short _u16MaxNbChars, char* _szInASCII, unsigned short* _p_u16OffsLF)
 {
     int iASCII;
@@ -999,448 +1096,449 @@ void SVG_fn_szAsciiToSJIS(char* _szOutSJIS, unsigned short _u16MaxNbChars, char*
     *_szOutSJIS++ = 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 994–1077 */
-/* addr: 0x001359f0  size: 960 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 994
- *   +0x0028 -> line 999
- *   +0x0054 -> line 1006
- *   +0x0078 -> line 1012
- *   +0x009c -> line 1018
- *   +0x00b0 -> line 1023
- *   +0x00c4 -> line 1026
- *   +0x00d8 -> line 1030
- *   +0x00f8 -> line 1031
- *   +0x011c -> line 1033
- *   +0x0134 -> line 1036
- *   +0x013c -> line 1038
- *   +0x0150 -> line 1039
- *   +0x0164 -> line 1040
- *   +0x0178 -> line 1041
- *   +0x018c -> line 1046
- *   +0x01a0 -> line 1048
- *   +0x01e0 -> line 1049
- *   +0x0220 -> line 1052
- *   +0x0238 -> line 1053
- *   +0x0260 -> line 1054
- *   +0x026c -> line 1058
- *   +0x0278 -> line 1060
- *   +0x02b0 -> line 1063
- *   +0x02dc -> line 1065
- *   +0x0330 -> line 1071
- *   +0x0378 -> line 1072
- *   +0x0388 -> line 1075
- *   +0x039c -> line 1076
- *   +0x03a0 -> line 1077
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-extern void SVG_fn_szAsciiToSJIS(char*, unsigned short, char*, unsigned short*);
-extern int SVG_fn_s32GetFileSize(int, int, char*);
-
 #pragma peephole on
-int SVG_fn_s32CreateIconFilesForSave(int _iPort, int _iSlot, char* _szSonyCompliantDirName, char* _szTitleName)
+int SVG_fn_s32QueryAndCheckSpace(int _iPort, int _iSlot, int* _p_iFreeClusters, int _iUnused1, int _iUnused2)
 {
-    int s32Count;
-    anon_3 stIcon;
-    char szFileName[64];
-    char Title[66];
-    int bgcolor[4][4] = { { 128, 0, 0, 0 }, { 0, 128, 0, 0 }, { 0, 0, 128, 0 }, { 128, 128, 128, 0 } };
-    float lightdir[3][4] = { { 0.5f, 0.5f, 0.5f, 0.0f }, { 0.0f, -0.4f, -0.1f, 0.0f }, { -0.5f, -0.5f, 0.5f, 0.0f } };
-    float lightcol[3][4] = { { 0.48f, 0.48f, 0.03f, 0.0f }, { 0.5f, 0.33f, 0.2f, 0.0f }, { 0.14f, 0.14f, 0.38f, 0.0f } };
-    float ambient[4] = { 0.5f, 0.5f, 0.5f, 0.0f };
-
-    memset(&stIcon, 0, sizeof(anon_3));
-    strcpy((char*)stIcon.Head, "PS2D");
-    sprintf(Title, "%s\n%s", "Rayman 3", _szTitleName);
-    sprintf(Title, "%s\n%s", "Rayman 3", "Saved Data");
-    SVG_fn_szAsciiToSJIS((char*)stIcon.TitleName, 33, Title, &stIcon.OffsLF);
-    stIcon.TransRate = 0x60;
-    memcpy(stIcon.BgColor, bgcolor, sizeof(bgcolor));
-    memcpy(stIcon.LightDir, lightdir, sizeof(lightdir));
-    memcpy(stIcon.LightColor, lightcol, sizeof(lightcol));
-    memcpy(stIcon.Ambient, ambient, sizeof(ambient));
-    strcpy((char*)stIcon.FnameView, (char*)SVG_gs_a3_stIconDesc[0].szFileNameSave);
-    strcpy((char*)stIcon.FnameCopy, (char*)SVG_gs_a3_stIconDesc[SVG_gs_a3_stIconDesc[1].u32Size ? 1 : 0].szFileNameSave);
-    strcpy((char*)stIcon.FnameDel, (char*)SVG_gs_a3_stIconDesc[SVG_gs_a3_stIconDesc[2].u32Size ? 2 : 0].szFileNameSave);
-
-    sprintf(szFileName, "%s/icon.sys", _szSonyCompliantDirName);
-
-    if (SVG_fn_s32WriteToFile(_iPort, _iSlot, szFileName, &stIcon, sizeof(anon_3)) != 1)
-        return 0;
-
-    for (s32Count = 0; s32Count < 3; s32Count++)
-    {
-        if (SVG_gs_a3_stIconDesc[s32Count].u32Size && SVG_gs_a3_stIconDesc[s32Count].pData)
-        {
-            sprintf(szFileName, "%s/%s", _szSonyCompliantDirName, SVG_gs_a3_stIconDesc[s32Count].szFileNameSave);
-
-            if (!SVG_fn_s32ReadNextName(_iPort, _iSlot, szFileName, 0, 0) || SVG_gs_a3_stIconDesc[s32Count].u32Size != SVG_fn_s32GetFileSize(_iPort, _iSlot, szFileName))
-            {
-                if (SVG_fn_s32WriteToFile(_iPort, _iSlot, szFileName, (void*)SVG_gs_a3_stIconDesc[s32Count].pData, SVG_gs_a3_stIconDesc[s32Count].u32Size) != 1)
-                    return 0;
-            }
-        }
-    }
-
-    return 1;
-}
-#pragma peephole reset
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 1125–1135 */
-/* addr: 0x00135db0  size: 400 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1125
- *   +0x0020 -> line 1127
- *   +0x0134 -> line 1130
- *   +0x0148 -> line 1131
- *   +0x0170 -> line 1134
- *   +0x0174 -> line 1135
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-extern int sceMcMkdir();
-
-#pragma peephole on
-int SVG_fn_s32MakeDir(int _iPort, int _iSlot, char* _szSonyCompliantDirName)
-{
-    int iResult;
+    int iFreeSpace; /* dead load kept by the volatile read below; retail has the lw into s2 */
     unsigned int u32RetryCount;
+    int iType;
+    int iFormat;
+    int iResult;
 
-    SVG_M_vRetrySceMcOperation(sceMcMkdir(_iPort, _iSlot, _szSonyCompliantDirName));
+    SVG_M_vRetrySceMcOperation(sceMcGetInfo(_iPort, _iSlot, &iType, _p_iFreeClusters, &iFormat));
 
     if (gs_bSceMcOpIsSuccessful)
     {
         sceMcSync(0, 0, &iResult);
-        return (iResult != 0) ? 0 : 1;
+        if (iResult < -2)
+            return -1;
+        if (iType != 2)
+            return -5;
+        if (iResult == -2)
+            return -11;
+        if (iResult == -1 || iResult == 0)
+        {
+            iFreeSpace = *(volatile int*)_p_iFreeClusters;
+            if (iFormat == 0)
+                return -11;
+            return 1;
+        }
+    }
+
+    return -5;
+}
+#pragma peephole reset
+
+#pragma peephole on
+int SVG_fn_s32Query(int _iPort, int _iSlot, int* _p_iFreeClusters)
+{
+    unsigned int u32RetryCount;
+    int iType;
+    int iFormat;
+    int iResult;
+
+    SVG_M_vRetrySceMcOperationN(99, sceMcGetInfo(_iPort, _iSlot, &iType, _p_iFreeClusters, &iFormat));
+
+    if (gs_bSceMcOpIsSuccessful)
+    {
+        sceMcSync(0, 0, &iResult);
+        if (iType != 2)
+            return 0;
+        if (iResult < -9)
+            return 0;
+        if (iResult == -2)
+            return 3;
+        if (iResult == -1)
+            return 2;
+        if (iResult == 0)
+            return iFormat ? 2 : 3;
+    }
+
+    sceMcSync(0, 0, &iResult);
+    return 0;
+}
+#pragma peephole reset
+
+int SVG_fn_s32ReadUnknownFile(int _iPort, int _iSlot, char* _szFileName, void** _ppData, unsigned int* _pu32DataSize)
+{
+    anon_0 FileInfo;
+    char real_name[256];
+    int iFd;
+    int iResult;
+
+    iFd = -1;
+
+    sprintf(real_name, "%s/%s", _szFileName, _szFileName);
+    iResult = SVG_fn_s32GetFileInfo(_iPort, _iSlot, real_name, &FileInfo);
+
+    if (iResult == 1)
+    {
+        *_pu32DataSize = FileInfo.FileSizeByte;
+        *_ppData = malloc(*_pu32DataSize);
+
+        if (*_ppData == NULL)
+            return 0;
+
+        iResult = SVG_fn_s32ReadFromFile(_iPort, _iSlot, _szFileName, *_ppData, *_pu32DataSize);
+        if (iResult != 1)
+        {
+            free(*_ppData);
+            *_ppData = NULL;
+            *_pu32DataSize = 0;
+        }
+    }
+
+    return iResult;
+}
+
+#pragma peephole on
+int SVG_fn_s32ReadFromFile(int _iPort, int _iSlot, char* _szFileName, void* _pData, unsigned int _u32DataSize)
+{
+    unsigned int u32RetryCount;
+    char real_name[256];
+    int iResult;
+    int iFd;
+
+    iFd = -1;
+    sprintf(real_name, "%s", _szFileName);
+
+    SVG_M_vRetrySceMcOperationScoped(sceMcOpen(_iPort, _iSlot, real_name, 1));
+
+    if (gs_bSceMcOpIsSuccessful)
+    {
+        sceMcSync(0, 0, &iFd);
+        if (iFd >= 0)
+        {
+            SVG_M_vRetrySceMcOperationScoped(sceMcRead(iFd, _pData, (int)_u32DataSize));
+
+            if (gs_bSceMcOpIsSuccessful)
+            {
+                sceMcSync(0, 0, &iResult);
+                if (iResult == _u32DataSize)
+                {
+                    SVG_M_vRetrySceMcOperationScoped(sceMcClose(iFd));
+
+                    if (gs_bSceMcOpIsSuccessful)
+                    {
+                        sceMcSync(0, 0, &iResult);
+                        if (iResult == 0)
+                            return 1;
+                    }
+                }
+            }
+        }
     }
 
     return 0;
 }
 #pragma peephole reset
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 1142–1176 */
-/* addr: 0x00135f40  size: 1164 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1142
- *   +0x0030 -> line 1150
- *   +0x0154 -> line 1151
- *   +0x0170 -> line 1153
- *   +0x017c -> line 1154
- *   +0x0188 -> line 1155
- *   +0x0194 -> line 1157
- *   +0x02bc -> line 1159
- *   +0x02d0 -> line 1160
- *   +0x02dc -> line 1161
- *   +0x02e8 -> line 1164
- *   +0x02f8 -> line 1165
- *   +0x0310 -> line 1167
- *   +0x0424 -> line 1169
- *   +0x0438 -> line 1170
- *   +0x0444 -> line 1171
- *   +0x0450 -> line 1174
- *   +0x045c -> line 1175
- *   +0x0460 -> line 1176
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int SVG_fn_s32DestroySaveGame(int _iPort, int _iSlot, char* _szSonyCompliantDirName)
+#pragma peephole on
+int SVG_fn_s32WriteToFile(int _iPort, int _iSlot, char* _szFileName, void* _pData, unsigned int _u32DataSize)
 {
-    int iResult;
-    int s32Count;
-    anon_0 a18_stGetDirTable[18];
     unsigned int u32RetryCount;
+    int iResult;
+    int iFd;
 
-    SVG_M_vRetrySceMcOperationScoped(sceMcGetDir(_iPort, _iSlot, _szSonyCompliantDirName, 0, 99, a18_stGetDirTable));
+    iFd = -1;
+    SVG_M_vRetrySceMcOperationScoped(sceMcOpen(_iPort, _iSlot, _szFileName, 0x202));
 
     if (gs_bSceMcOpIsSuccessful)
-        sceMcSync(0, 0, &iResult);
-    else
-        return 0;
-
-    if (iResult >= 0)
     {
-        for (s32Count = 0; s32Count < iResult; s32Count++)
+        sceMcSync(0, 0, &iFd);
+        if (iFd >= 0)
         {
-            SVG_M_vRetrySceMcOperationScoped(sceMcDelete(_iPort, _iSlot, (char*)a18_stGetDirTable[s32Count].EntryName));
+            SVG_M_vRetrySceMcOperationScoped(sceMcWrite(iFd, _pData, (int)_u32DataSize));
 
             if (gs_bSceMcOpIsSuccessful)
             {
                 sceMcSync(0, 0, &iResult);
-                if (iResult)
-                    return 0;
+                if (iResult == _u32DataSize)
+                {
+                    SVG_M_vRetrySceMcOperationScoped(sceMcClose(iFd));
+
+                    if (gs_bSceMcOpIsSuccessful)
+                    {
+                        sceMcSync(0, 0, &iResult);
+                        if (iResult == 0)
+                            return 1;
+                    }
+                }
             }
-            else
-                return 0;
         }
     }
 
-    SVG_M_vRetrySceMcOperationScoped(sceMcDelete(_iPort, _iSlot, _szSonyCompliantDirName));
+    if (iFd >= 0)
+    {
+        SVG_M_vRetrySceMcOperationScoped(sceMcClose(iFd));
+
+        if (gs_bSceMcOpIsSuccessful)
+            sceMcSync(0, 0, &iResult);
+
+        SVG_M_vRetrySceMcOperationScoped(sceMcDelete(_iPort, _iSlot, _szFileName));
+
+        if (gs_bSceMcOpIsSuccessful)
+            sceMcSync(0, 0, &iResult);
+    }
+
+    return 0;
+}
+#pragma peephole reset
+
+int SVG_fn_s32SetFileCoherence2(int _iPort, int _iSlot, char* _szFileName)
+{
+    anon_0 Res;
+    char CompleteFilename[255];
+
+    sprintf(CompleteFilename, "%s/%s", _szFileName, _szFileName);
+
+    if (SVG_fn_s32GetFileInfo(_iPort, _iSlot, CompleteFilename, &Res) == 1)
+    {
+
+        gFileInfo2._Create.Sec = Res._Create.Sec;
+        gFileInfo2._Create.Min = Res._Create.Min;
+        gFileInfo2._Create.Hour = Res._Create.Hour;
+        gFileInfo2._Create.Day = Res._Create.Day;
+        gFileInfo2._Create.Month = Res._Create.Month;
+        gFileInfo2._Create.Year = Res._Create.Year;
+
+        bSetMC = 0;
+        return 1;
+    }
+    bSetMC = 0;
+    return 0;
+}
+
+int SVG_fn_s32SetFileCoherence(int _iPort, int _iSlot, char* _szFileName)
+{
+    anon_0 Res;
+    char CompleteFilename[255];
+
+    sprintf(CompleteFilename, "%s", _szFileName, _szFileName);
+
+    if (SVG_fn_s32GetFileInfo(_iPort, _iSlot, CompleteFilename, &Res) == 1)
+    {
+
+        gFileInfo._Create.Sec = Res._Create.Sec;
+        gFileInfo._Create.Min = Res._Create.Min;
+        gFileInfo._Create.Hour = Res._Create.Hour;
+        gFileInfo._Create.Day = Res._Create.Day;
+        gFileInfo._Create.Month = Res._Create.Month;
+        gFileInfo._Create.Year = Res._Create.Year;
+
+        bSetMC = 0;
+        return 1;
+    }
+    bSetMC = 0;
+    return 0;
+}
+
+int SVG_fn_s32GetFileCoherence2(int _iPort, int _iSlot, char* _szFileName)
+{
+    anon_0 Res;
+    char CompleteFilename[255];
+
+    sprintf(CompleteFilename, "%s/%s", _szFileName, _szFileName);
+
+    if (SVG_fn_s32GetFileInfo(_iPort, _iSlot, CompleteFilename, &Res) == 1)
+    {
+        if (gFileInfo2._Create.Sec == Res._Create.Sec && gFileInfo2._Create.Min == Res._Create.Min && gFileInfo2._Create.Hour == Res._Create.Hour && gFileInfo2._Create.Day == Res._Create.Day && gFileInfo2._Create.Month == Res._Create.Month && gFileInfo2._Create.Year == Res._Create.Year)
+        {
+            return 1;
+        }
+        else
+            return 0;
+    }
+
+    return 0;
+}
+
+int SVG_fn_s32GetFileCoherence(int _iPort, int _iSlot, char* _szFileName)
+{
+    anon_0 Res;
+    char CompleteFilename[255];
+
+    sprintf(CompleteFilename, "%s", _szFileName, _szFileName);
+
+    if (gFileInfo._Create.Sec == 0 && gFileInfo._Create.Min == 0 && gFileInfo._Create.Hour == 0 && gFileInfo._Create.Day == 0 && gFileInfo._Create.Month == 0 && gFileInfo._Create.Year == 0)
+    {
+
+        return 1;
+    }
+
+    if (SVG_fn_s32GetFileInfo(_iPort, _iSlot, CompleteFilename, &Res) == 1)
+    {
+        if (gFileInfo._Create.Sec == Res._Create.Sec && gFileInfo._Create.Min == Res._Create.Min && gFileInfo._Create.Hour == Res._Create.Hour && gFileInfo._Create.Day == Res._Create.Day && gFileInfo._Create.Month == Res._Create.Month && gFileInfo._Create.Year == Res._Create.Year)
+        {
+            return 1;
+        }
+        else
+            return 0;
+    }
+
+    return 0;
+}
+
+int SVG_fn_SetAsCurrentMemoryCard(int cmc)
+{
+    gUpdateFielInfo = cmc;
+}
+
+int SVG_fn_s32GetFileSize(int _iPort, int _iSlot, char* _szFileName)
+{
+    anon_0 Res;
+    char CompleteFilename[255];
+
+    sprintf(CompleteFilename, "%s", _szFileName, _szFileName);
+
+    if (SVG_fn_s32GetFileInfo(_iPort, _iSlot, CompleteFilename, &Res) == 1)
+
+        return Res.FileSizeByte;
+
+    return 0;
+}
+
+/* The retail frame reserves four parameter slots (0x40 bytes) but only stores
+   a0/a1/a2, so the original took a fourth, unused argument. */
+int SVG_fn_s32GetFileAttributes(int _iPort, int _iSlot, char* _szFileName, int _iUnused)
+{
+    anon_0 Res;
+    int iFd;
+    unsigned short t;
+    int i;
+    unsigned int u32RetryCount;
+
+    iFd = -1;
+    i = 0;
+    while ((char)_szFileName[i++] != '/')
+        ;
+
+    if (!SVG_fn_s32ReadNextName(0, 0, _szFileName, 0, 0))
+        return 0;
+
+    SVG_M_vRetrySceMcOperation(sceMcGetDir(_iPort, _iSlot, _szFileName, 0, 1, &Res));
+
+    if (gs_bSceMcOpIsSuccessful)
+    {
+        sceMcSync(0, 0, &iFd);
+        /* The retail code keeps the unsigned-short -> int mask here. */
+        while (Res.AttrFile == 0)
+            ;
+        t = (unsigned short)((short)Res.AttrFile & 0x80);
+        if (t != 0)
+            return 1;
+        return 0;
+    }
+
+    return 0;
+}
+
+#pragma peephole on
+int SVG_fn_s32GetFileInfo(int _iPort, int _iSlot, char* _szFileName, anon_0* _pRes)
+{
+    unsigned int u32RetryCount;
+    int iFd;
+
+    iFd = -1;
+    SVG_M_vRetrySceMcOperation(sceMcGetDir(_iPort, _iSlot, _szFileName, 0, 99, _pRes));
+
+    if (gs_bSceMcOpIsSuccessful)
+    {
+        sceMcSync(0, 0, &iFd);
+        if (iFd > 0)
+            return 1;
+    }
+
+    return 0;
+}
+#pragma peephole reset
+
+#pragma peephole on
+int SVG_fn_s32Format(int _iPort, int _iSlot)
+{
+    unsigned int u32RetryCount;
+    int iResult;
+
+    SVG_M_vRetrySceMcOperation(sceMcFormat(_iPort, _iSlot));
 
     if (gs_bSceMcOpIsSuccessful)
     {
         sceMcSync(0, 0, &iResult);
         if (iResult)
             return 0;
-    }
-    else
-        return 0;
 
-    return 1;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 1202–1234 */
-/* addr: 0x001363d0  size: 108 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1202
- *   +0x0028 -> line 1204
- *   +0x002c -> line 1227
- *   +0x0054 -> line 1234
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-#pragma peephole on
-int SVG_fn_s32SaveGame(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
-{
-    int bSavingOptions;
-    char* Name;
-
-    bSavingOptions = 0;
-    return SauvePartieMenu(_iPort, _iSlot, _szSonyCompliantName, _szTitle, _pData, _u32DataSize, Name, bSavingOptions);
-}
-#pragma peephole reset
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 1252–1292 */
-/* addr: 0x00136440  size: 664 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1252
- *   +0x0028 -> line 1259
- *   +0x003c -> line 1262
- *   +0x015c -> line 1263
- *   +0x0178 -> line 1265
- *   +0x0184 -> line 1268
- *   +0x0194 -> line 1271
- *   +0x01b4 -> line 1272
- *   +0x01c0 -> line 1276
- *   +0x01e4 -> line 1278
- *   +0x01f8 -> line 1279
- *   +0x0204 -> line 1283
- *   +0x0220 -> line 1284
- *   +0x0248 -> line 1286
- *   +0x025c -> line 1287
- *   +0x0268 -> line 1290
- *   +0x027c -> line 1291
- *   +0x0280 -> line 1292
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-#pragma peephole on
-int SVG_fn_s32SaveGameReal(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
-{
-    unsigned int u32RetryCount;
-    char szFileName[64];
-    int iResult;
-    static anon_0 stGetDirTable[99];
-
-    SVG_fn_s32Query(_iPort, _iSlot, &SVG_g_iFreeClustersBefore);
-
-    SVG_M_vRetrySceMcOperation(sceMcGetDir(_iPort, _iSlot, _szSonyCompliantName, 0, 99, stGetDirTable));
-
-    if (gs_bSceMcOpIsSuccessful)
-        sceMcSync(0, 0, &iResult);
-    else
-        return 0;
-
-    if (iResult != 1)
-    {
-        if (SVG_fn_s32MakeDir(_iPort, _iSlot, _szSonyCompliantName) != 1)
-            return 0;
-    }
-
-    if (SVG_fn_s32CreateIconFilesForSave(_iPort, _iSlot, _szSonyCompliantName, _szTitle) != 1)
-    {
-        SVG_fn_s32DestroySaveGame(_iPort, _iSlot, _szSonyCompliantName);
-        return 0;
-    }
-
-    sprintf(szFileName, "%s/%s", _szSonyCompliantName, _szSonyCompliantName);
-
-    if (SVG_fn_s32WriteToFile(_iPort, _iSlot, szFileName, _pData, _u32DataSize) != 1)
-    {
-        SVG_fn_s32DestroySaveGame(_iPort, _iSlot, _szSonyCompliantName);
-        return 0;
-    }
-
-    SVG_fn_s32Query(_iPort, _iSlot, &SVG_g_iFreeClustersAfter);
-    return 1;
-}
-#pragma peephole reset
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 1295–1324 */
-/* addr: 0x001366e0  size: 280 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1295
- *   +0x0020 -> line 1302
- *   +0x0034 -> line 1305
- *   +0x005c -> line 1306
- *   +0x0070 -> line 1307
- *   +0x0078 -> line 1308
- *   +0x0084 -> line 1313
- *   +0x00a0 -> line 1315
- *   +0x00b8 -> line 1317
- *   +0x00e0 -> line 1319
- *   +0x00ec -> line 1322
- *   +0x0100 -> line 1323
- *   +0x0104 -> line 1324
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-extern int sceMcGetDir();
-extern int sceMcSync();
-
-#pragma peephole on
-/* Retail takes _pData in t0 and the size in t1 (spill slots 0xb0/0xc0, with a3's 0xa0 unused):
-   there is an unused fourth parameter, as in SVG_fn_s32SaveGameReal, that the debug record drops. */
-int SVG_fn_s32LoadGameReal(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
-{
-    char szFileName[64];
-    int ret;
-    int iResult;
-    static anon_0 stGetDirTable[99];
-
-    SVG_fn_s32Query(_iPort, _iSlot, &SVG_g_iFreeClustersBefore);
-
-    ret = sceMcGetDir(_iPort, _iSlot, _szSonyCompliantName, 0, 99, stGetDirTable);
-    sceMcSync(0, 0, &iResult);
-    if (ret)
-        return 0;
-
-    sprintf(szFileName, "%s/%s", _szSonyCompliantName, _szSonyCompliantName);
-
-    _u32DataSize = SVG_fn_s32GetFileSize(_iPort, _iSlot, szFileName);
-
-    if (SVG_fn_s32ReadFromFile(_iPort, _iSlot, szFileName, _pData, _u32DataSize) != 1)
-
-        return 0;
-
-    SVG_fn_s32Query(_iPort, _iSlot, &SVG_g_iFreeClustersAfter);
-    return 1;
-}
-#pragma peephole reset
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 1588–1596 */
-/* addr: 0x00136800  size: 104 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1588
- *   +0x0008 -> line 1590
- *   +0x0024 -> line 1591
- *   +0x0030 -> line 1593
- *   +0x005c -> line 1596
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned char SVG_fn_bIsVmsConnected(int _lVmsNumber)
-{
-    if ((_lVmsNumber < 0) || (_lVmsNumber > 7))
-        return 0;
-    return gs_a_stCardStatus[_lVmsNumber].iStatus != -1;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 1604–1613 */
-/* addr: 0x00136870  size: 76 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1604
- *   +0x0008 -> line 1607
- *   +0x0024 -> line 1608
- *   +0x0030 -> line 1611
- *   +0x003c -> line 1613
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned char SVG_fn_bIsActivVmsConnected(void)
-{
-    if ((SVG_gs_lActiveVmsNumber < 0) || (SVG_gs_lActiveVmsNumber > 7))
-        return 0;
-    return SVG_fn_bIsVmsConnected(SVG_gs_lActiveVmsNumber);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 1668–1669 */
-/* addr: 0x001368c0  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1668
- *   +0x0004 -> line 1669
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int SVG_fn_bGetActiveVms(void)
-{
-    return SVG_gs_lActiveVmsNumber;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 1701–1713 */
-/* addr: 0x001368d0  size: 392 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1701
- *   +0x0024 -> line 1702
- *   +0x002c -> line 1706
- *   +0x014c -> line 1708
- *   +0x0160 -> line 1710
- *   +0x016c -> line 1712
- *   +0x0170 -> line 1713
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-#pragma peephole on
-int SVG_fn_s32ReadNextFileInfo(int _iPort, int _iSlot, char* _szFileName, int _not_first, anon_0* _pTable)
-{
-    unsigned int u32RetryCount;
-    int iFd;
-
-    iFd = -1;
-    SVG_M_vRetrySceMcOperation(sceMcGetDir(_iPort, _iSlot, _szFileName, (unsigned)_not_first, 99, _pTable));
-
-    if (gs_bSceMcOpIsSuccessful)
-    {
-        sceMcSync(0, 0, &iFd);
-        return iFd;
-    }
-
-    return -1;
-}
-#pragma peephole reset
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 1717–1741 */
-/* addr: 0x00136a60  size: 152 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1717
- *   +0x0020 -> line 1718
- *   +0x0024 -> line 1724
- *   +0x004c -> line 1727
- *   +0x0058 -> line 1729
- *   +0x0060 -> line 1730
- *   +0x0074 -> line 1735
- *   +0x0080 -> line 1740
- *   +0x0084 -> line 1741
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int SVG_fn_s32ReadNextName(int _iPort, int _iSlot, char* _szFileName, int _not_first, char* _pRes)
-{
-    anon_0 table;
-    int iFd;
-
-    iFd = -1;
-
-    if ((iFd = SVG_fn_s32ReadNextFileInfo(_iPort, _iSlot, _szFileName, _not_first, &table)) > 0)
-    {
-        if (_pRes)
-        {
-            _pRes[32] = 0;
-            memcpy(_pRes, table.EntryName, 32);
-        }
-
-        return iFd;
+        return 1;
     }
 
     return 0;
 }
+#pragma peephole reset
+
+/* The debug record says void, but retail returns the static buffer (or NULL) in v0. */
+char* SVG_fn_szGetSonyCompliantDirName(char* _szUserName)
+{
+    static char s_szCompliantName[21];
+
+    if (strlen(_szUserName) <= 8)
+    {
+        sprintf(s_szCompliantName, "%s%s-%s%s", "BK", "SLKA", "25078", _szUserName);
+
+        return s_szCompliantName;
+    }
+
+    return NULL;
+}
+
+void SVG_fn_vSetMC0AsChanged(void)
+{
+    gs_iSceMcOpChanged = 1;
+    gs_iSceMcOpWarned = 0;
+}
+
+int SVG_fn_iGetChangeInMC0(void)
+{
+    SVG_fn_vCheckStatusChangeInMC0();
+    return gs_iSceMcOpChanged;
+}
+
+int SVG_fn_iGetChangeInMC0AndReset(void)
+{
+    register int iReturn;
+
+    SVG_fn_vCheckStatusChangeInMC0();
+    iReturn = gs_iSceMcOpChanged;
+    gs_iSceMcOpChanged = 0;
+    gs_iSceMcOpWarned = 0;
+    return iReturn;
+}
+
+#pragma peephole on
+void SVG_fn_vCheckStatusChangeInMC0(void)
+{
+    int iType;
+    unsigned int iResultInfo;
+    unsigned int bResult;
+    unsigned int u32RetryCount;
+
+    u32RetryCount = 5;
+    bResult = 0;
+    iType = 0;
+
+    while (u32RetryCount && !(bResult = (sceMcGetInfo(0, 0, &iType, 0, 0) != 0) ? 0 : 1))
+    {
+        if (--u32RetryCount)
+            fn_vTimerWait((unsigned int)(5.0f * fn_ulTimerWaitTicksPerSecond() / 1000.0f));
+    }
+
+    if (bResult)
+    {
+        sceMcSync(0, 0, &iResultInfo);
+        if (iResultInfo != gs_iSceMcOpStatus && (iType == 2 || iType == 0))
+        {
+            gs_iSceMcOpChanged = 1;
+            gs_iSceMcOpWarned = 0;
+            gs_iSceMcOpStatus = iResultInfo;
+        }
+    }
+}
+#pragma peephole reset

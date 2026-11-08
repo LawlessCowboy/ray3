@@ -54,23 +54,12 @@ anon_1 last_video_fd;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int strFileRead(anon_0* file, void* buff, int size)
-{
-    unsigned int err;
-    int count;
-    if (file->isOnCD)
-    {
-        count = sceCdStRead(size >> 11, buff, 1, &err);
-        count <<= 11;
-        if (err != 0)
-            count = -1;
-    }
-    else
-    {
-        count = sceRead(file->fd, buff, size);
-    }
-    return count;
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+int strFileRead(anon_0* file, void* buff, int size);
+int strFileClose(anon_0* file);
+int strFileOpen(anon_0* file, char* filename);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\strfile.c lines 193–201 */
 /* addr: 0x001314c0  size: 76 bytes */
@@ -87,16 +76,6 @@ int strFileRead(anon_0* file, void* buff, int size)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int strFileClose(anon_0* file)
-{
-    if (file->isOnCD) {
-        sceCdStStop();
-        sceSifFreeIopHeap(file->iopBuf);
-    } else {
-        sceClose(file->fd);
-    }
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\strfile.c lines 55–186 */
 /* addr: 0x00131510  size: 804 bytes */
@@ -287,4 +266,33 @@ int strFileOpen(anon_0* file, char* filename)
         }
     }
     return 1;
+}
+
+int strFileClose(anon_0* file)
+{
+    if (file->isOnCD) {
+        sceCdStStop();
+        sceSifFreeIopHeap(file->iopBuf);
+    } else {
+        sceClose(file->fd);
+    }
+    return 1;
+}
+
+int strFileRead(anon_0* file, void* buff, int size)
+{
+    unsigned int err;
+    int count;
+    if (file->isOnCD)
+    {
+        count = sceCdStRead(size >> 11, buff, 1, &err);
+        count <<= 11;
+        if (err != 0)
+            count = -1;
+    }
+    else
+    {
+        count = sceRead(file->fd, buff, size);
+    }
+    return count;
 }

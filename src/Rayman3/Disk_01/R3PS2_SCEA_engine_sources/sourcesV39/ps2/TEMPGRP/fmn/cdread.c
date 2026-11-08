@@ -82,48 +82,18 @@ extern int tolower(int c);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-char* FMN_SCE_ConvertPathDos2Unix(char* buffer)
-{
-    char* p_cConverted;
-    char* p_cToConvert;
-    static char s_szFileName[512];
 
-    if ((p_cToConvert = Strchr(buffer, ':')) != NULL)
-    {
-        p_cToConvert++;
-    }
-    else
-    {
-        p_cToConvert = buffer;
-    }
-    strcpy(s_szFileName, "cdrom0:");
-    p_cConverted = s_szFileName + strlen(s_szFileName);
-    if (*p_cToConvert != '\\' && *p_cToConvert != '/')
-    {
-        *p_cConverted++ = '\\';
-    }
-    do
-    {
-        if (*p_cToConvert == '/')
-        {
-            *p_cConverted = '\\';
-            if (p_cConverted > s_szFileName) { if (p_cConverted[-1] == '\\')
-                p_cConverted--;
-            }
-        }
-        else if (*p_cToConvert == '\xE9' || *p_cToConvert == '\xE8')
-            *p_cConverted = 'e';
-        else if (*p_cToConvert == ' ')
-            *p_cConverted = '_';
-        else
-            *p_cConverted = tolower(*p_cToConvert);
-        p_cConverted++; } while (*p_cToConvert++);
-    p_cConverted = Strchr(s_szFileName, ':');
-    strupr(p_cConverted);
-    if (strstr(p_cConverted, ";1") == NULL)
-        Strcat(p_cConverted, ";1");
-    return s_szFileName;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+char* FMN_SCE_ConvertPathDos2Unix(char* buffer);
+int PS2_fn_iGetCDMediaMode(void);
+int CD_OpenFileWithNameConversion(char* RawFileName);
+void CD_Close(int FileHandle);
+int CD_Read(int FileHandle, char* Buffer, int Size);
+unsigned int CD_Seek(int FileHandle, int Position, int WhereFrom);
+unsigned int CD_Length(int FileHandle);
+int CD_OpenFile(char* FileName);
+void CD_Init(void);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\fmn\cdread.c lines 949–949 */
 /* addr: 0x002586c0  size: 8 bytes */
@@ -132,10 +102,6 @@ char* FMN_SCE_ConvertPathDos2Unix(char* buffer)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int PS2_fn_iGetCDMediaMode(void)
-{
-    return 2;
-}
 
 /* Debug info says void, but the result is passed on to CD_OpenFile. */
 char* FMN_SCE_ConvertPath2DVD(char* buffer);
@@ -149,10 +115,6 @@ char* FMN_SCE_ConvertPath2DVD(char* buffer);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int CD_OpenFileWithNameConversion(char* RawFileName)
-{
-    return CD_OpenFile(FMN_SCE_ConvertPath2DVD(RawFileName));
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\fmn\cdread.c lines 455–456 */
 /* addr: 0x00258700  size: 24 bytes */
@@ -162,10 +124,6 @@ int CD_OpenFileWithNameConversion(char* RawFileName)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CD_Close(int FileHandle)
-{
-    gs_CD_Files[FileHandle].FirstLogicalSector = 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\fmn\cdread.c lines 288–450 */
 /* addr: 0x00258720  size: 620 bytes */
@@ -240,24 +198,6 @@ void CD_Close(int FileHandle)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int CD_Read(int FileHandle, char* Buffer, int Size)
-{
-    unsigned int Toto;
-    int TempSizeOfTheChunkIHaveJustRead;
-    char* AlignedBuffer;
-    int NbSectorsToReadThisTime;
-    int SizeIHaveRead;
-    anon_0 ReadMode;
-    int FirstSectorToRead;
-    int SizeOfTheChunkIHaveJustRead;
-    int NumberOfSectorsIHaveRead;
-    int NumberOfSectorsToRead;
-    int SizeToRead;
-    int OffsetInDestBuffer;
-    int OffsetInSectorBuffer;
-    _CD_FILE_Internal_* p;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\fmn\cdread.c lines 252–269 */
 /* addr: 0x00258990  size: 136 bytes */
@@ -274,31 +214,6 @@ int CD_Read(int FileHandle, char* Buffer, int Size)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned int CD_Seek(int FileHandle, int Position, int WhereFrom)
-{
-    _CD_FILE_Internal_* p;
-
-    p = &gs_CD_Files[FileHandle];
-    switch (WhereFrom)
-    {
-    case 1:
-        p->CurrentPosition += Position;
-        break;
-    case 0:
-        p->CurrentPosition = Position;
-        break;
-    case 2:
-        p->CurrentPosition = p->FileSize - Position - 1;
-        break;
-    }
-
-    if (p->CurrentPosition < 0)
-        p->CurrentPosition = 0;
-    if (p->CurrentPosition >= p->FileSize)
-        p->CurrentPosition = p->FileSize - 1;
-
-    return p->CurrentPosition;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\fmn\cdread.c lines 244–245 */
 /* addr: 0x00258a20  size: 24 bytes */
@@ -308,10 +223,6 @@ unsigned int CD_Seek(int FileHandle, int Position, int WhereFrom)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned int CD_Length(int FileHandle)
-{
-    return gs_CD_Files[FileHandle].FileSize;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\fmn\cdread.c lines 82–234 */
 /* addr: 0x00258a40  size: 508 bytes */
@@ -361,19 +272,6 @@ unsigned int CD_Length(int FileHandle)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int CD_OpenFile(char* FileName)
-{
-    int Count;
-    int Ret;
-    char TempString2[1024];
-    int i;
-    char* pName;
-    char pTempName[1024];
-    anon_1 SearchHeaderSpecial;
-    _CD_FILE_Internal_* p;
-    int Handle;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\fmn\cdread.c lines 64–79 */
 /* addr: 0x00258c40  size: 172 bytes */
@@ -392,6 +290,7 @@ int CD_OpenFile(char* FileName)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
 void CD_Init(void)
 {
     int Handle;
@@ -403,4 +302,126 @@ void CD_Init(void)
     for (Handle = 0; Handle < 20; Handle++) {
         gs_CD_Files[Handle].FirstLogicalSector = 0;
     }
+}
+
+int CD_OpenFile(char* FileName)
+{
+    int Count;
+    int Ret;
+    char TempString2[1024];
+    int i;
+    char* pName;
+    char pTempName[1024];
+    anon_1 SearchHeaderSpecial;
+    _CD_FILE_Internal_* p;
+    int Handle;
+    /* TODO: decompile from asm/... */
+}
+
+unsigned int CD_Length(int FileHandle)
+{
+    return gs_CD_Files[FileHandle].FileSize;
+}
+
+unsigned int CD_Seek(int FileHandle, int Position, int WhereFrom)
+{
+    _CD_FILE_Internal_* p;
+
+    p = &gs_CD_Files[FileHandle];
+    switch (WhereFrom)
+    {
+    case 1:
+        p->CurrentPosition += Position;
+        break;
+    case 0:
+        p->CurrentPosition = Position;
+        break;
+    case 2:
+        p->CurrentPosition = p->FileSize - Position - 1;
+        break;
+    }
+
+    if (p->CurrentPosition < 0)
+        p->CurrentPosition = 0;
+    if (p->CurrentPosition >= p->FileSize)
+        p->CurrentPosition = p->FileSize - 1;
+
+    return p->CurrentPosition;
+}
+
+int CD_Read(int FileHandle, char* Buffer, int Size)
+{
+    unsigned int Toto;
+    int TempSizeOfTheChunkIHaveJustRead;
+    char* AlignedBuffer;
+    int NbSectorsToReadThisTime;
+    int SizeIHaveRead;
+    anon_0 ReadMode;
+    int FirstSectorToRead;
+    int SizeOfTheChunkIHaveJustRead;
+    int NumberOfSectorsIHaveRead;
+    int NumberOfSectorsToRead;
+    int SizeToRead;
+    int OffsetInDestBuffer;
+    int OffsetInSectorBuffer;
+    _CD_FILE_Internal_* p;
+    /* TODO: decompile from asm/... */
+}
+
+void CD_Close(int FileHandle)
+{
+    gs_CD_Files[FileHandle].FirstLogicalSector = 0;
+}
+
+int CD_OpenFileWithNameConversion(char* RawFileName)
+{
+    return CD_OpenFile(FMN_SCE_ConvertPath2DVD(RawFileName));
+}
+
+int PS2_fn_iGetCDMediaMode(void)
+{
+    return 2;
+}
+
+char* FMN_SCE_ConvertPathDos2Unix(char* buffer)
+{
+    char* p_cConverted;
+    char* p_cToConvert;
+    static char s_szFileName[512];
+
+    if ((p_cToConvert = Strchr(buffer, ':')) != NULL)
+    {
+        p_cToConvert++;
+    }
+    else
+    {
+        p_cToConvert = buffer;
+    }
+    strcpy(s_szFileName, "cdrom0:");
+    p_cConverted = s_szFileName + strlen(s_szFileName);
+    if (*p_cToConvert != '\\' && *p_cToConvert != '/')
+    {
+        *p_cConverted++ = '\\';
+    }
+    do
+    {
+        if (*p_cToConvert == '/')
+        {
+            *p_cConverted = '\\';
+            if (p_cConverted > s_szFileName) { if (p_cConverted[-1] == '\\')
+                p_cConverted--;
+            }
+        }
+        else if (*p_cToConvert == '\xE9' || *p_cToConvert == '\xE8')
+            *p_cConverted = 'e';
+        else if (*p_cToConvert == ' ')
+            *p_cConverted = '_';
+        else
+            *p_cConverted = tolower(*p_cToConvert);
+        p_cConverted++; } while (*p_cToConvert++);
+    p_cConverted = Strchr(s_szFileName, ':');
+    strupr(p_cConverted);
+    if (strstr(p_cConverted, ";1") == NULL)
+        Strcat(p_cConverted, ";1");
+    return s_szFileName;
 }

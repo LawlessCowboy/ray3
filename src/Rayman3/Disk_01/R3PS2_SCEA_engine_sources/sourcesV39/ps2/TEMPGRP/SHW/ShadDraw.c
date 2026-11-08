@@ -886,12 +886,16 @@ int HIE_g_lNbMatrixInStack;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SECT_fn_vGetMinPointInBorder(SECT_tdstSector_* _hSector, MTH3D_tdstVector_* _p_stMinPoint)
-{
-    *(unsigned int*)&_p_stMinPoint->xX = *(unsigned int*)&_hSector->stMinMaxPoints[0].xX;
-    *(unsigned int*)&_p_stMinPoint->xY = *(unsigned int*)&_hSector->stMinMaxPoints[0].xY;
-    *(unsigned int*)&_p_stMinPoint->xZ = *(unsigned int*)&_hSector->stMinMaxPoints[0].xZ;
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void SECT_fn_vGetMinPointInBorder(SECT_tdstSector_* _hSector, MTH3D_tdstVector_* _p_stMinPoint);
+void shw_fn_vInternalDrawShadow(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hHandleOfCharacter, HIE_tdstSuperObject_* _hSprObjSector, int _lSectorDrawmask);
+void SHW_fn_vDrawShadow(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hHandleOfCharacter, HIE_tdstSuperObject_* _hSprObjSector, int _lSectorDrawmask);
+unsigned char SHW_bDidCharacterHaveAShadowLastFrame(HIE_tdstSuperObject_* _hHandleOfCharacter);
+void SHW_fn_vSentToViewPort(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hHandleOfCharacter, void* _p_vUnused, int _lSectorDrawmask, GEO_tdstGeometricObject_* _hHandleOfGeometricShadowObject);
+void SHW_fn_vInitShadowCounter(void);
+void SHW_fn_vGlobalInitShadowCounter(void);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SHW\ShadDraw.c lines 802–1214 */
 /* addr: 0x0031d090  size: 2740 bytes */
@@ -1112,36 +1116,6 @@ void SECT_fn_vGetMinPointInBorder(SECT_tdstSector_* _hSector, MTH3D_tdstVector_*
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void shw_fn_vInternalDrawShadow(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hHandleOfCharacter, HIE_tdstSuperObject_* _hSprObjSector, int _lSectorDrawmask)
-{
-    float xNorm;
-    float xInvGlobalNormalxZ;
-    float xBY;
-    float xBX;
-    float xAY;
-    float xAX;
-    ACP_tdst2DUVValues_ stUV;
-    MTH3D_tdstVector_ stCharacterRotation;
-    MTH3D_tdstVector_ stPointOfShadowRectangle;
-    SECT_tdstSector_* hSectorObject;
-    MTH3D_tdstVector_ stMax;
-    MTH3D_tdstVector_ stMin;
-    int bFound;
-    int i;
-    SECT_tdstListOfSOSectorsInActivityInteraction_* hInteractionElement;
-    SECT_tdstListOfSOSectorsInCollisionInteraction_* hCollisionElement;
-    SECT_tdstListOfSOCharacters_* hCharacterList;
-    HIE_tdstSuperObject_* hTest;
-    GEO_tdstGeometricObject_* hHandleOfGeometricShadowObject;
-    float xScaleY;
-    float xScaleX;
-    float xCoefAltitude;
-    MTH3D_tdstVector_ stPickedPoint;
-    MTH3D_tdstVector_ stVertexAB;
-    MTH3D_tdstVector_ stStartPicking;
-    MTH3D_tdstVector_ stGlobalNormalOfPickedFace;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SHW\ShadDraw.c lines 717–773 */
 /* addr: 0x0031db50  size: 148 bytes */
@@ -1179,19 +1153,6 @@ inline void SHW_vClearCop0Register24Sync(void)
     nop
     }
 }
-void SHW_fn_vDrawShadow(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hHandleOfCharacter, HIE_tdstSuperObject_* _hSprObjSector, int _lSectorDrawmask)
-{
-    short xLevelOfQualityOfShadows;
-    int bTransitionInProgress;
-    unsigned long ulCustomBits;
-    ulCustomBits = fn_ulStandardGameGetCustomBitsSO(_hHandleOfCharacter);
-    bTransitionInProgress = fn_bIsTransitionInProgress();
-    if ((ulCustomBits & 0x100) && !bTransitionInProgress) {
-        SHW_vClearCop0Register24();
-        shw_fn_vInternalDrawShadow(_p_stVpt, _hHandleOfCharacter, _hSprObjSector, _lSectorDrawmask);
-        SHW_vClearCop0Register24Sync();
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SHW\ShadDraw.c lines 684–695 */
 /* addr: 0x0031dbf0  size: 80 bytes */
@@ -1208,18 +1169,6 @@ void SHW_fn_vDrawShadow(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObje
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char SHW_bDidCharacterHaveAShadowLastFrame(HIE_tdstSuperObject_* _hHandleOfCharacter)
-{
-    int i;
-    i = 0;
-    while (i < g_xIndexOfShadow) {
-        if ((HIE_tdstSuperObject_*)p_hHandleOfShadowedSuperObject[i] == _hHandleOfCharacter) {
-            return 1;
-        }
-        i++;
-    }
-    return 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SHW\ShadDraw.c lines 559–648 */
 /* addr: 0x0031dc40  size: 392 bytes */
@@ -1271,6 +1220,32 @@ void GLI_vSetGlobalAlpha(float Alpha);
 void GLI_fn_vApplyChangesToObjectVerticesAndUvs(GEO_tdstGeometricObject_* _p_stObj);
 void GLI_SendShadowElementToViewport(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstGeometricObject_* p_stObj, int lDrawModeMask);
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SHW\ShadDraw.c lines 543–543 */
+/* addr: 0x0031ddd0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 543
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SHW\ShadDraw.c lines 527–527 */
+/* addr: 0x0031dde0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 527
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void SHW_fn_vGlobalInitShadowCounter(void)
+{
+    g_xIndexOfShadow = 0;
+}
+
+void SHW_fn_vInitShadowCounter(void)
+{
+    g_xIndexOfShadow = 0;
+}
+
 /* Retail reads the draw mask from a3 and the shadow object from t0: the debug
  * definition drops an unreferenced third parameter. */
 void SHW_fn_vSentToViewPort(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hHandleOfCharacter, void* _p_vUnused, int _lSectorDrawmask, GEO_tdstGeometricObject_* _hHandleOfGeometricShadowObject)
@@ -1320,26 +1295,67 @@ void SHW_fn_vSentToViewPort(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuper
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SHW\ShadDraw.c lines 543–543 */
-/* addr: 0x0031ddd0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 543
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void SHW_fn_vInitShadowCounter(void)
+unsigned char SHW_bDidCharacterHaveAShadowLastFrame(HIE_tdstSuperObject_* _hHandleOfCharacter)
 {
-    g_xIndexOfShadow = 0;
+    int i;
+    i = 0;
+    while (i < g_xIndexOfShadow) {
+        if ((HIE_tdstSuperObject_*)p_hHandleOfShadowedSuperObject[i] == _hHandleOfCharacter) {
+            return 1;
+        }
+        i++;
+    }
+    return 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SHW\ShadDraw.c lines 527–527 */
-/* addr: 0x0031dde0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 527
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void SHW_fn_vGlobalInitShadowCounter(void)
+void SHW_fn_vDrawShadow(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hHandleOfCharacter, HIE_tdstSuperObject_* _hSprObjSector, int _lSectorDrawmask)
 {
-    g_xIndexOfShadow = 0;
+    short xLevelOfQualityOfShadows;
+    int bTransitionInProgress;
+    unsigned long ulCustomBits;
+    ulCustomBits = fn_ulStandardGameGetCustomBitsSO(_hHandleOfCharacter);
+    bTransitionInProgress = fn_bIsTransitionInProgress();
+    if ((ulCustomBits & 0x100) && !bTransitionInProgress) {
+        SHW_vClearCop0Register24();
+        shw_fn_vInternalDrawShadow(_p_stVpt, _hHandleOfCharacter, _hSprObjSector, _lSectorDrawmask);
+        SHW_vClearCop0Register24Sync();
+    }
+}
+
+void shw_fn_vInternalDrawShadow(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hHandleOfCharacter, HIE_tdstSuperObject_* _hSprObjSector, int _lSectorDrawmask)
+{
+    float xNorm;
+    float xInvGlobalNormalxZ;
+    float xBY;
+    float xBX;
+    float xAY;
+    float xAX;
+    ACP_tdst2DUVValues_ stUV;
+    MTH3D_tdstVector_ stCharacterRotation;
+    MTH3D_tdstVector_ stPointOfShadowRectangle;
+    SECT_tdstSector_* hSectorObject;
+    MTH3D_tdstVector_ stMax;
+    MTH3D_tdstVector_ stMin;
+    int bFound;
+    int i;
+    SECT_tdstListOfSOSectorsInActivityInteraction_* hInteractionElement;
+    SECT_tdstListOfSOSectorsInCollisionInteraction_* hCollisionElement;
+    SECT_tdstListOfSOCharacters_* hCharacterList;
+    HIE_tdstSuperObject_* hTest;
+    GEO_tdstGeometricObject_* hHandleOfGeometricShadowObject;
+    float xScaleY;
+    float xScaleX;
+    float xCoefAltitude;
+    MTH3D_tdstVector_ stPickedPoint;
+    MTH3D_tdstVector_ stVertexAB;
+    MTH3D_tdstVector_ stStartPicking;
+    MTH3D_tdstVector_ stGlobalNormalOfPickedFace;
+    /* TODO: decompile from asm/... */
+}
+
+void SECT_fn_vGetMinPointInBorder(SECT_tdstSector_* _hSector, MTH3D_tdstVector_* _p_stMinPoint)
+{
+    *(unsigned int*)&_p_stMinPoint->xX = *(unsigned int*)&_hSector->stMinMaxPoints[0].xX;
+    *(unsigned int*)&_p_stMinPoint->xY = *(unsigned int*)&_hSector->stMinMaxPoints[0].xY;
+    *(unsigned int*)&_p_stMinPoint->xZ = *(unsigned int*)&_hSector->stMinMaxPoints[0].xZ;
 }

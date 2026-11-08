@@ -12,43 +12,53 @@ SAI_tdstInternalStructure_ SAI_g_stInternalStructure;
 extern unsigned char g_ucSAIModuleId;
 void Erm_fn_ClearLastError();
 
-unsigned short SAI_fn_eVerifyFlags(unsigned short eFlags)
-{
-    eFlags &= 0x3FF;
-
-    if (((eFlags & 0x40) && (eFlags & 0x80)) || ((eFlags & 0x100) && (eFlags & 0x200)))
-    {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(8, g_ucSAIModuleId, 0, 5, -1, 255, 255, NULL);
-    }
-
-    if ((eFlags & 0x40) || (eFlags & 0x80))
-        eFlags |= 4;
-
-    if ((eFlags & 0x100) || (eFlags & 0x200))
-        eFlags |= 8;
-
-    if ((eFlags & 0x80) || (eFlags & 0x200))
-    {
-        if (eFlags & 0x32)
-            Erm_fn_v_UpdateLastError(8, g_ucSAIModuleId, 0, 9, -1, 255, 255, NULL);
-    }
-
-    return eFlags;
-}
-
-int SAI_fn_bInitAllWhen(int _eUserFlags)
-{
-    return SAI_fn_bInitAllTableWhen(&SAI_g_stInternalStructure, _eUserFlags);
-}
-
-int SAI_fn_bInsertArrayInTable(void* param0, unsigned int _ulSize, int _eFlags)
-{
-    return SAI_fn_bInsertAnElementInList(&SAI_g_stInternalStructure, param0, _ulSize, 0x5000, _eFlags);
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+unsigned short SAI_fn_eVerifyFlags(unsigned short eFlags);
+int SAI_fn_bInitAllWhen(int _eUserFlags);
+int SAI_fn_bInsertArrayInTable(void* param0, unsigned int _ulSize, int _eFlags);
+void* SAI_fn_p_vGetTableValuePointerOf(void* _p_vValue, unsigned short _eFlags);
+int SAI_fn_bRemoveValueFromTable(void* _p_vValue, int _eFlags);
+int SAI_fn_bInsertMTHVectorInTable(void* _p_vValue, int _eFlags);
+int SAI_fn_bInsertMTHRealInTable(void* _p_vValue, int _eFlags);
+int SAI_fn_bInsertPointerInTable(void* _p_vValue, int _eFlags);
+int SAI_fn_bInsertLongInTable(void* _p_vValue, int _eFlags);
+int SAI_fn_bInsertCharInTable(void* _p_vValue, int _eFlags);
 
 SAI_tdstListEntry_* fn_hSearchAnElementInList(SAI_tdstInternalStructure_* p_stInternalStructure, void* p_vData, unsigned short eUserFlags);
 
 /* Debug signature records no return type; the target returns p_vReturn in v0. */
+
+int SAI_fn_bInsertCharInTable(void* _p_vValue, int _eFlags)
+{
+    return SAI_fn_bInsertAnElementInList(&SAI_g_stInternalStructure, _p_vValue, 1, 0x1000, _eFlags);
+}
+
+int SAI_fn_bInsertLongInTable(void* _p_vValue, int _eFlags)
+{
+    return SAI_fn_bInsertAnElementInList(&SAI_g_stInternalStructure, _p_vValue, 4, 0x3000, _eFlags);
+}
+
+int SAI_fn_bInsertPointerInTable(void* _p_vValue, int _eFlags)
+{
+    return SAI_fn_bInsertAnElementInList(&SAI_g_stInternalStructure, _p_vValue, 8, 0x7000, _eFlags);
+}
+
+int SAI_fn_bInsertMTHRealInTable(void* _p_vValue, int _eFlags)
+{
+    return SAI_fn_bInsertAnElementInList(&SAI_g_stInternalStructure, _p_vValue, 4, 0x3000, _eFlags);
+}
+
+int SAI_fn_bInsertMTHVectorInTable(void* _p_vValue, int _eFlags)
+{
+    return SAI_fn_bInsertAnElementInList(&SAI_g_stInternalStructure, _p_vValue, 0xC, 0x5000, _eFlags);
+}
+
+int SAI_fn_bRemoveValueFromTable(void* _p_vValue, int _eFlags)
+{
+    return SAI_fn_bFreeAnElementFromList(&SAI_g_stInternalStructure, _p_vValue, _eFlags);
+}
+
 void* SAI_fn_p_vGetTableValuePointerOf(void* _p_vValue, unsigned short _eFlags)
 {
     unsigned short eIntarnalFlags;
@@ -89,32 +99,36 @@ void* SAI_fn_p_vGetTableValuePointerOf(void* _p_vValue, unsigned short _eFlags)
     return p_vReturn;
 }
 
-int SAI_fn_bRemoveValueFromTable(void* _p_vValue, int _eFlags)
+int SAI_fn_bInsertArrayInTable(void* param0, unsigned int _ulSize, int _eFlags)
 {
-    return SAI_fn_bFreeAnElementFromList(&SAI_g_stInternalStructure, _p_vValue, _eFlags);
+    return SAI_fn_bInsertAnElementInList(&SAI_g_stInternalStructure, param0, _ulSize, 0x5000, _eFlags);
 }
 
-int SAI_fn_bInsertMTHVectorInTable(void* _p_vValue, int _eFlags)
+int SAI_fn_bInitAllWhen(int _eUserFlags)
 {
-    return SAI_fn_bInsertAnElementInList(&SAI_g_stInternalStructure, _p_vValue, 0xC, 0x5000, _eFlags);
+    return SAI_fn_bInitAllTableWhen(&SAI_g_stInternalStructure, _eUserFlags);
 }
 
-int SAI_fn_bInsertMTHRealInTable(void* _p_vValue, int _eFlags)
+unsigned short SAI_fn_eVerifyFlags(unsigned short eFlags)
 {
-    return SAI_fn_bInsertAnElementInList(&SAI_g_stInternalStructure, _p_vValue, 4, 0x3000, _eFlags);
-}
+    eFlags &= 0x3FF;
 
-int SAI_fn_bInsertPointerInTable(void* _p_vValue, int _eFlags)
-{
-    return SAI_fn_bInsertAnElementInList(&SAI_g_stInternalStructure, _p_vValue, 8, 0x7000, _eFlags);
-}
+    if (((eFlags & 0x40) && (eFlags & 0x80)) || ((eFlags & 0x100) && (eFlags & 0x200)))
+    {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(8, g_ucSAIModuleId, 0, 5, -1, 255, 255, NULL);
+    }
 
-int SAI_fn_bInsertLongInTable(void* _p_vValue, int _eFlags)
-{
-    return SAI_fn_bInsertAnElementInList(&SAI_g_stInternalStructure, _p_vValue, 4, 0x3000, _eFlags);
-}
+    if ((eFlags & 0x40) || (eFlags & 0x80))
+        eFlags |= 4;
 
-int SAI_fn_bInsertCharInTable(void* _p_vValue, int _eFlags)
-{
-    return SAI_fn_bInsertAnElementInList(&SAI_g_stInternalStructure, _p_vValue, 1, 0x1000, _eFlags);
+    if ((eFlags & 0x100) || (eFlags & 0x200))
+        eFlags |= 8;
+
+    if ((eFlags & 0x80) || (eFlags & 0x200))
+    {
+        if (eFlags & 0x32)
+            Erm_fn_v_UpdateLastError(8, g_ucSAIModuleId, 0, 9, -1, 255, 255, NULL);
+    }
+
+    return eFlags;
 }

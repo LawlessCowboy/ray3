@@ -73,32 +73,8 @@ usnd::CResData& usnd::CIdObjPtr<usnd::CResData>::operator*(void) const
 
 template struct usnd::CIdObjPtr<usnd::CResData>;
 
-int Jingle::fs_uGetOldVolume(int uVol, int iVolumeLine)
-{
-    JingleList* pList;
-
-    for (pList = ms_pFirst; pList && (pList->m_iVolumeLine != iVolumeLine); pList = pList->m_pNext)
-        ;
-    if (pList)
-    {
-        uVol = pList->m_uOldVol;
-    }
-    return uVol;
-}
-
-int Jingle::fs_uGetVolume(int uVol, int iVolumeLine)
-{
-    JingleList* pList;
-
-    for (pList = ms_pFirst; pList && (pList->m_iVolumeLine != iVolumeLine); pList = pList->m_pNext)
-        ;
-    if (pList)
-    {
-        pList->m_uOldVol = uVol;
-        uVol = (unsigned char)(unsigned int)(pList->m_uOldVol * ms_fVolReduction);
-    }
-    return uVol;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
 
 void Jingle::fs_vSynchronise(void)
 {
@@ -149,4 +125,31 @@ void Jingle::fs_vSynchronise(void)
             pList = pList->m_pNext;
         }
     }
+}
+
+int Jingle::fs_uGetVolume(int uVol, int iVolumeLine)
+{
+    JingleList* pList;
+
+    for (pList = ms_pFirst; pList && (pList->m_iVolumeLine != iVolumeLine); pList = pList->m_pNext)
+        ;
+    if (pList)
+    {
+        pList->m_uOldVol = uVol;
+        uVol = (unsigned char)(unsigned int)(pList->m_uOldVol * ms_fVolReduction);
+    }
+    return uVol;
+}
+
+int Jingle::fs_uGetOldVolume(int uVol, int iVolumeLine)
+{
+    JingleList* pList;
+
+    for (pList = ms_pFirst; pList && (pList->m_iVolumeLine != iVolumeLine); pList = pList->m_pNext)
+        ;
+    if (pList)
+    {
+        uVol = pList->m_uOldVol;
+    }
+    return uVol;
 }

@@ -84,9 +84,22 @@ static tdstDsgVarTypeTableEntry_ a_stDsgVarTypeTable[35];
 tdstSaveTypeEntry_ a_st_SaveTypeTable[3];
 tdstInitTypeEntry_ a_st_InitTypeTable[4];
 
- tdeVariableType_ fn_GetDsgVarType(tdeDsgVarTypeId_ eDsgVarTypeId)
+ 
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+tdeVariableType_ fn_GetDsgVarType(tdeDsgVarTypeId_ eDsgVarTypeId);
+tdstNodeInterpret_* fn_p_stEvalDsgVarRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+unsigned char (*fn_p_fn_pGetDsgVarSetFunctionPtr(tdeDsgVarTypeId_ eDsgVarTypeId))(void*, unsigned char, tdstGetSetParam_*);
+unsigned char (*fn_p_fn_pGetDsgVarGetFunctionPtr(tdeDsgVarTypeId_ eDsgVarTypeId))(void*, unsigned char, tdstGetSetParam_*);
+
+unsigned char (*fn_p_fn_pGetDsgVarGetFunctionPtr(tdeDsgVarTypeId_ eDsgVarTypeId))(void*, unsigned char, tdstGetSetParam_*)
 {
-    return a_stDsgVarTypeTable[eDsgVarTypeId].eVariableType;
+    return a_stDsgVarTypeTable[eDsgVarTypeId].p_fn_ucGetDsgVarFunction;
+}
+
+unsigned char (*fn_p_fn_pGetDsgVarSetFunctionPtr(tdeDsgVarTypeId_ eDsgVarTypeId))(void*, unsigned char, tdstGetSetParam_*)
+{
+    return a_stDsgVarTypeTable[eDsgVarTypeId].p_fn_ucSetDsgVarFunction;
 }
 
 tdstNodeInterpret_* fn_p_stEvalDsgVarRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
@@ -109,12 +122,7 @@ tdstNodeInterpret_* fn_p_stEvalDsgVarRef(HIE_tdstSuperObject_* p_SuperObjPerso, 
     return ++p_stTree;
 }
 
-unsigned char (*fn_p_fn_pGetDsgVarSetFunctionPtr(tdeDsgVarTypeId_ eDsgVarTypeId))(void*, unsigned char, tdstGetSetParam_*)
+tdeVariableType_ fn_GetDsgVarType(tdeDsgVarTypeId_ eDsgVarTypeId)
 {
-    return a_stDsgVarTypeTable[eDsgVarTypeId].p_fn_ucSetDsgVarFunction;
-}
-
-unsigned char (*fn_p_fn_pGetDsgVarGetFunctionPtr(tdeDsgVarTypeId_ eDsgVarTypeId))(void*, unsigned char, tdstGetSetParam_*)
-{
-    return a_stDsgVarTypeTable[eDsgVarTypeId].p_fn_ucGetDsgVarFunction;
+    return a_stDsgVarTypeTable[eDsgVarTypeId].eVariableType;
 }

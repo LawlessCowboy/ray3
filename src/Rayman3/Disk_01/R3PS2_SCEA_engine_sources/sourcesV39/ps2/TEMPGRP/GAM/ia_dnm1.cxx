@@ -55,6 +55,34 @@ struct HIE_tdstSuperObject_ {
 
 extern "C" DNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_* h_Dynam);
 
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+extern "C" HIE_tdstSuperObject_* fn_hSuperObjectGetLastCollidedCharacter(HIE_tdstSuperObject_* hCharacter);
+extern "C" void fn_vSuperObjectSetLastCollidedCharacter(HIE_tdstSuperObject_* hCharacter, HIE_tdstSuperObject_* _h_LastCollidedCharacter);
+
+extern "C" void fn_vSuperObjectSetLastCollidedCharacter(HIE_tdstSuperObject_* hCharacter, HIE_tdstSuperObject_* _h_LastCollidedCharacter)
+{
+    DNM_stDynamics* p_stDynamics;
+    tdstDynam_* h_Dynam;
+    DNM_stReport* p_stDynamReport;
+
+    h_Dynam = hCharacter->hLinkedObject.p_stCharacter->h_Dynam;
+    if (h_Dynam)
+    {
+        p_stDynamics = fn_p_stDynamGetDynamics(h_Dynam);
+        if (p_stDynamics)
+        {
+            p_stDynamReport = p_stDynamics->m_pstReport;
+            if (p_stDynamReport)
+            {
+                p_stDynamReport->m_stCharacter.mp_stSupObj = _h_LastCollidedCharacter;
+                if (_h_LastCollidedCharacter == NULL)
+                    p_stDynamReport->m_ulCurrSurfaceState &= ~0x00010000;
+            }
+        }
+    }
+}
+
 extern "C" HIE_tdstSuperObject_* fn_hSuperObjectGetLastCollidedCharacter(HIE_tdstSuperObject_* hCharacter)
 {
     HIE_tdstSuperObject_* p_stObjectCollided;
@@ -82,27 +110,4 @@ extern "C" HIE_tdstSuperObject_* fn_hSuperObjectGetLastCollidedCharacter(HIE_tds
         p_stObjectCollided = NULL;
     }
     return p_stObjectCollided;
-}
-
-extern "C" void fn_vSuperObjectSetLastCollidedCharacter(HIE_tdstSuperObject_* hCharacter, HIE_tdstSuperObject_* _h_LastCollidedCharacter)
-{
-    DNM_stDynamics* p_stDynamics;
-    tdstDynam_* h_Dynam;
-    DNM_stReport* p_stDynamReport;
-
-    h_Dynam = hCharacter->hLinkedObject.p_stCharacter->h_Dynam;
-    if (h_Dynam)
-    {
-        p_stDynamics = fn_p_stDynamGetDynamics(h_Dynam);
-        if (p_stDynamics)
-        {
-            p_stDynamReport = p_stDynamics->m_pstReport;
-            if (p_stDynamReport)
-            {
-                p_stDynamReport->m_stCharacter.mp_stSupObj = _h_LastCollidedCharacter;
-                if (_h_LastCollidedCharacter == NULL)
-                    p_stDynamReport->m_ulCurrSurfaceState &= ~0x00010000;
-            }
-        }
-    }
 }

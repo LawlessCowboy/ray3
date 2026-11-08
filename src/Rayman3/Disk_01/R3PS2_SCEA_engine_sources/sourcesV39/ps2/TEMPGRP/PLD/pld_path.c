@@ -246,27 +246,83 @@ char PLD_g_szAreaFileName[256];
 tdstDataPath_ g_stDataPath;
 
 #pragma auto_inline on
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+char* MNC_fn_pcGetCurrentDirectory(void);
+char* PLD_szPrependGamedataName(char* szName);
+char* PLD_szLocationFromAreaId(_tdeAreaName eAreaId, char* szName);
+char* PLD_szLanguageName(char* szName);
+char* PLD_szKeyFramesName(char* szName);
+char* PLD_szLvlKeyFramesName(char* szName);
+void PLD_szFixKeyFramesName(void);
+char* PLD_szAnimationName(char* szName);
+char* PLD_szVertexBufferName(char* szName);
+char* PLD_szTransitionName(char* szName);
+char* PLD_szLevelName(char* szName);
+void PLD_szFixName(void);
+
+#pragma auto_inline reset
+
+#pragma auto_inline on
+void PLD_szFixName(void)
+{
+    strcpy(PLD_g_szAreaFileName, "fix");
+}
+
+char* PLD_szLevelName(char* szName)
+{
+    sprintf(PLD_g_szAreaFileName, "%s\\%s", szName, szName);
+    return PLD_g_szAreaFileName;
+}
+
+char* PLD_szTransitionName(char* szName)
+{
+    sprintf(PLD_g_szAreaFileName, "%s\\transit", szName);
+    return PLD_g_szAreaFileName;
+}
+
+char* PLD_szVertexBufferName(char* szName)
+{
+    sprintf(PLD_g_szAreaFileName, "%s\\%s_vb", szName, szName);
+    return PLD_g_szAreaFileName;
+}
+
+char* PLD_szAnimationName(char* szName)
+{
+    sprintf(PLD_g_szAreaFileName, "%s", szName);
+    return PLD_g_szAreaFileName;
+}
+
+void PLD_szFixKeyFramesName(void)
+{
+    strcpy(PLD_g_szAreaFileName, "FixKf");
+}
+
+char* PLD_szLvlKeyFramesName(char* szName)
+{
+    sprintf(PLD_g_szAreaFileName, "%s/%sKf", szName, szName);
+    return PLD_g_szAreaFileName;
+}
+
+char* PLD_szKeyFramesName(char* szName)
+{
+    sprintf(PLD_g_szAreaFileName, "%sKf", szName, szName);
+    return PLD_g_szAreaFileName;
+}
+
+char* PLD_szLanguageName(char* szName)
+{
+    sprintf(PLD_g_szAreaFileName, "Texts/%s", szName);
+    return PLD_g_szAreaFileName;
+}
+
 char* MNC_fn_pcGetCurrentDirectory(void)
 {
     static char str[256];
     /* The PC build's directory lookup occupied these lines. */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     sprintf(str, "%s%s", bUseMultiPath ? g_stDataPath.szGameData : "DATA", "BIN");
-
 
     return str;
 }
@@ -280,61 +336,8 @@ char* PLD_szPrependGamedataName(char* szName)
 
     return PLD_g_szAreaFileName;
 }
-#pragma auto_inline reset
 
 char* PLD_szLocationFromAreaId(_tdeAreaName eAreaId, char* szName)
 {
     char* str = a_p_fn_szNameFunction[eAreaId](szName); if (GAM_fn_vGetLoadingLevel(2)) Strcat(str, "MP"); return PLD_szPrependGamedataName(str);
-}
-
-char* PLD_szLanguageName(char* szName)
-{
-    sprintf(PLD_g_szAreaFileName, "Texts/%s", szName);
-    return PLD_g_szAreaFileName;
-}
-
-char* PLD_szKeyFramesName(char* szName)
-{
-    sprintf(PLD_g_szAreaFileName, "%sKf", szName, szName);
-    return PLD_g_szAreaFileName;
-}
-
-char* PLD_szLvlKeyFramesName(char* szName)
-{
-    sprintf(PLD_g_szAreaFileName, "%s/%sKf", szName, szName);
-    return PLD_g_szAreaFileName;
-}
-
-void PLD_szFixKeyFramesName(void)
-{
-    strcpy(PLD_g_szAreaFileName, "FixKf");
-}
-
-char* PLD_szAnimationName(char* szName)
-{
-    sprintf(PLD_g_szAreaFileName, "%s", szName);
-    return PLD_g_szAreaFileName;
-}
-
-char* PLD_szVertexBufferName(char* szName)
-{
-    sprintf(PLD_g_szAreaFileName, "%s\\%s_vb", szName, szName);
-    return PLD_g_szAreaFileName;
-}
-
-char* PLD_szTransitionName(char* szName)
-{
-    sprintf(PLD_g_szAreaFileName, "%s\\transit", szName);
-    return PLD_g_szAreaFileName;
-}
-
-char* PLD_szLevelName(char* szName)
-{
-    sprintf(PLD_g_szAreaFileName, "%s\\%s", szName, szName);
-    return PLD_g_szAreaFileName;
-}
-
-void PLD_szFixName(void)
-{
-    strcpy(PLD_g_szAreaFileName, "fix");
 }

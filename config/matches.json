@@ -62846,6 +62846,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
       "status": "MATCH"
     },
+    "0x001f94d0": {
+      "address": "0x001f94d0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "Display__30AGO3_GrowingUVAnimatedFireBallFP27GLD_tdstViewportAttributes_",
+      "size": 128,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
+    "0x001f9550": {
+      "address": "0x001f9550",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "Display__36AGO3_GrowingUVAnimatedFireBallMovingFP27GLD_tdstViewportAttributes_",
+      "size": 128,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
     "0x001f96f0": {
       "address": "0x001f96f0",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
@@ -70926,11 +70942,27 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Clock.c",
       "status": "MATCH"
     },
+    "0x0025e1f0": {
+      "address": "0x0025e1f0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "fn_vFakeTimer",
+      "size": 272,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Clock.c",
+      "status": "MATCH"
+    },
     "0x0025e300": {
       "address": "0x0025e300",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "fn_vStartEngineClock",
       "size": 276,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Clock.c",
+      "status": "MATCH"
+    },
+    "0x0025e420": {
+      "address": "0x0025e420",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "fn_ulDetermineUsefulDT",
+      "size": 604,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Clock.c",
       "status": "MATCH"
     },
@@ -78531,6 +78563,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "GLI_vDMASendObject",
       "size": 44,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_draw.c",
+      "status": "MATCH"
+    },
+    "0x002ae5a0": {
+      "address": "0x002ae5a0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vSetFIXFullScreenOrthoProjection",
+      "size": 396,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_draw.c",
       "status": "MATCH"
     },

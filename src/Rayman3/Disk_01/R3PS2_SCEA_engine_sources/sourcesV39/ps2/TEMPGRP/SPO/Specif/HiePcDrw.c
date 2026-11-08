@@ -32,16 +32,10 @@ extern short g_xFixIndex;
 extern short g_xFixIndexSave;
 extern unsigned char g_ucContext;
 
-void SPO_ReinitSuperimposedArray(void)
-{
-    short xIndex;
-
-    for (xIndex = 0; xIndex < g_xFixIndex; xIndex++)
-        gd_hFixSPO[xIndex]->ulFlags &= ~0x21;
-    g_xFixIndex = 0;
-    g_ucContext = 0;
-    g_xFixIndexSave = 0;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void SPO_ReinitSuperimposedArray(void);
+void fn_vSendOneModuleToViewPort(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _lDrawMask);
 
 float GLI_vGetGlobalAlpha(void);
 float GEO_xGetZFarTransparencyLevel(void);
@@ -133,4 +127,15 @@ void fn_vSendOneModuleToViewPort(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSup
     }
 
     GLI_vSetGlobalAlpha(fGlobalAlphaTemp);
+}
+
+void SPO_ReinitSuperimposedArray(void)
+{
+    short xIndex;
+
+    for (xIndex = 0; xIndex < g_xFixIndex; xIndex++)
+        gd_hFixSPO[xIndex]->ulFlags &= ~0x21;
+    g_xFixIndex = 0;
+    g_ucContext = 0;
+    g_xFixIndexSave = 0;
 }

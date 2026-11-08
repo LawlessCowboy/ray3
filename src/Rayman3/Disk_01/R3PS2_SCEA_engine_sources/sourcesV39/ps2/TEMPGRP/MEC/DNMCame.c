@@ -204,7 +204,6 @@ typedef union CAM_tduVectorCopy_ {
     unsigned int auWords[3];
 } CAM_tduVectorCopy_;
 
-
 /* Word-wise vector copies: the retail code copies the three components as
    32-bit words rather than as floats. */
 #define MTH_COPY_VECTOR_WORDS(_dst, _src) \
@@ -1209,111 +1208,19 @@ int g_a_stObstacle;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-/* Hand-written assembly in the retail ELF: the VU0 matrix/vector product
-   below uses the R5900 prefetch hints and the VU0 accumulator ops, which MWCC
-   cannot emit from C, and the retail line table has one entry per instruction.
-   The arguments arrive in a0 (destination), a1 (matrix), a2 (vector) and a3
-   (vertex count). */
-asm void MTH4D_fn_vSerialMul4DMatrix3DVertexTo4DAlignedDest_VU0(void)
-{
-    pref 0x0, 0x0($a1);
-    pref 0x0, 0x0($a2);
-    paddub $t2, $a2, $zero;
-    paddub $t0, $a0, $zero;
-    pref 0x0, 0x0($t2);
-    paddub $t3, $a3, $zero;
-    paddub $t4, $a3, $zero;
-    lui $t1, 0x7000;
-    lui $v1, 0x3F80;
-    lwc1 $f1, 0x0($a1);
-    lwc1 $f2, 0x4($a1);
-    lwc1 $f3, 0x8($a1);
-    lwc1 $f4, 0x10($a1);
-    lwc1 $f5, 0x14($a1);
-    lwc1 $f6, 0x18($a1);
-    lwc1 $f7, 0x20($a1);
-    lwc1 $f8, 0x24($a1);
-    lwc1 $f9, 0x28($a1);
-    lwc1 $f10, 0x30($a1);
-    lwc1 $f11, 0x34($a1);
-    lwc1 $f12, 0x38($a1);
-    srl $t4, $t4, 1;
-    andi $t3, $a3, 1;
-    swc1 $f1, 0x0($t1);
-    swc1 $f2, 0x4($t1);
-    swc1 $f3, 0x8($t1);
-    sw $zero, 0xC($t1);
-    swc1 $f4, 0x10($t1);
-    swc1 $f5, 0x14($t1);
-    swc1 $f6, 0x18($t1);
-    sw $zero, 0x1C($t1);
-    swc1 $f7, 0x20($t1);
-    swc1 $f8, 0x24($t1);
-    swc1 $f9, 0x28($t1);
-    sw $zero, 0x2C($t1);
-    swc1 $f10, 0x30($t1);
-    swc1 $f11, 0x34($t1);
-    swc1 $f12, 0x38($t1);
-    sw $v1, 0x3C($t1);
-    lqc2 $vf1, 0x0($t1);
-    lqc2 $vf2, 0x10($t1);
-    lqc2 $vf3, 0x20($t1);
-    lqc2 $vf4, 0x30($t1);
-    sw $v1, 0x4C($t1);
-    sw $v1, 0x5C($t1);
-    beqz $t4, LCheck;
-    nop
-LLoop:
-    lwc1 $f13, 0x0($t2);
-    lwc1 $f14, 0x4($t2);
-    lwc1 $f15, 0x8($t2);
-    lwc1 $f16, 0xC($t2);
-    lwc1 $f17, 0x10($t2);
-    lwc1 $f18, 0x14($t2);
-    pref 0x0, 0x18($t2);
-    swc1 $f13, 0x40($t1);
-    swc1 $f14, 0x44($t1);
-    swc1 $f15, 0x48($t1);
-    swc1 $f16, 0x50($t1);
-    swc1 $f17, 0x54($t1);
-    swc1 $f18, 0x58($t1);
-    lqc2 $vf5, 0x40($t1);
-    lqc2 $vf6, 0x50($t1);
-    vmulax.xyzw $ACC, $vf1, $vf5x;
-    vmadday.xyzw $ACC, $vf2, $vf5y;
-    vmaddaz.xyzw $ACC, $vf3, $vf5z;
-    vmaddw.xyzw $vf9, $vf4, $vf5w;
-    vmulax.xyzw $ACC, $vf1, $vf6x;
-    vmadday.xyzw $ACC, $vf2, $vf6y;
-    vmaddaz.xyzw $ACC, $vf3, $vf6z;
-    vmaddw.xyzw $vf10, $vf4, $vf6w;
-    addiu $t4, $t4, -1;
-    addiu $t2, $t2, 0x18;
-    sqc2 $vf9, 0x0($t0);
-    sqc2 $vf10, 0x10($t0);
-    bnez $t4, LLoop;
-    addiu $t0, $t0, 0x20;
-LCheck:
-    beqz $t3, LEnd;
-    nop
-LOdd:
-    lwc1 $f13, 0x0($t2);
-    lwc1 $f14, 0x4($t2);
-    lwc1 $f15, 0x8($t2);
-    swc1 $f13, 0x40($t1);
-    swc1 $f14, 0x44($t1);
-    swc1 $f15, 0x48($t1);
-    sw $v1, 0x4C($t1);
-    lqc2 $vf5, 0x40($t1);
-    vmulax.xyzw $ACC, $vf1, $vf5x;
-    vmadday.xyzw $ACC, $vf2, $vf5y;
-    vmaddaz.xyzw $ACC, $vf3, $vf5z;
-    vmaddw.xyzw $vf9, $vf4, $vf5w;
-    sqc2 $vf9, 0x0($t0);
-LEnd:
-    jr $ra;
-    nop
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+asm void MTH4D_fn_vSerialMul4DMatrix3DVertexTo4DAlignedDest_VU0(void);
+DNM_stDynamics* DNM_p_stDynamicsCameraMechanics(DNM_stDynamics* _p_stDynamics, HIE_tdstSuperObject_* _hSupObj, DNM_stParsingDatas* _p_stParsingDatas, void* _h_MecIdCard, float _xDT);
+void CAM_fn_vComputeCameraSystemAxis(DNM_stDynamics* _p_stDynamics, HIE_tdstSuperObject_* _h_SupObj, MTH3D_tdstVector_* _p_stNewPosition, MTH3D_tdstVector_* _p_stNewTarget, MTH3D_tdstVector_* _p_stAxisX, MTH3D_tdstVector_* _p_stAxisY, MTH3D_tdstVector_* _p_stAxisZ);
+DNM_stMecObstacle* DNM_p_stObstacleCameraObstacle(DNM_stMecObstacle* _p_stObstacle, DNM_stDynamics* _p_stDynamics, DNM_stParsingDatas* _p_stExternData, HIE_tdstSuperObject_* _hSupObj, MTH3D_tdstVector_* _p_stWantedPosition, MTH3D_tdstVector_* _p_stNewPosition);
+int CAM_lHaveITakeSThgIntoTheMug(DNM_stMecObstacle* _p_stResultObstacle, HIE_tdstSuperObject_* _p_stSupObj, MAT_tdstTransformation_* _p_stStartPosition, MAT_tdstTransformation_* _p_stEndPosition);
+DNM_stDynamics* DNM_p_stDynamicsCameraParsing(DNM_stDynamics* _p_stDynamics, HIE_tdstSuperObject_* _h_SupObj, DNM_stParsingDatas* _p_stExternData, float _xDT);
+float DNM_fn_xDynamicsCameraAngleParsing(float _xSpeed, float _xIncSpeed, float _xDecSpeed, float _xRequestAngle, float _xLastAngle, char _cIgnoreParsing, char _cIgnoreInertia);
+void DNM_fn_vDynamicsCameraPositionParsing(float _xSpeed, float _xIncSpeed, float _xDecSpeed, float _xLastNorm, char _cIgnoreParsing, char _cIgnoreInertia, MTH3D_tdstVector_* _p_stActualPos, MTH3D_tdstVector_* _p_stShiftingSrc, MTH3D_tdstVector_* _p_stDestPos, MTH3D_tdstVector_* _p_stShiftingResult);
+void DNM_fn_vDynamicsTakeCareOfLastMove(MTH3D_tdstVector_* _p_stShiftingResult, MTH3D_tdstVector_* _p_stLastShifting, float _xCutAngleFactor);
+float CAM_fn_xComputeVerticalAngle(MTH3D_tdstVector_* _p_stOrgVector, MTH3D_tdstVector_* _p_stDestVector, MTH3D_tdstVector_* _p_stAxisZ);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 1359–1432 */
 /* addr: 0x002feb80  size: 520 bytes */
@@ -1338,14 +1245,6 @@ LEnd:
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-DNM_stDynamics* DNM_p_stDynamicsCameraMechanics(DNM_stDynamics* _p_stDynamics, HIE_tdstSuperObject_* _hSupObj, DNM_stParsingDatas* _p_stParsingDatas, void* _h_MecIdCard, float _xDT)
-{
-    MTH3D_tdstVector_ stPosition1;
-    MTH3D_tdstVector_ stTarget;
-    MTH3D_tdstVector_ stPosition;
-    DNM_stMecObstacle stObstacle;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 1236–1265 */
 /* addr: 0x002fed90  size: 1016 bytes */
@@ -1375,152 +1274,6 @@ DNM_stDynamics* DNM_p_stDynamicsCameraMechanics(DNM_stDynamics* _p_stDynamics, H
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vComputeCameraSystemAxis(DNM_stDynamics* _p_stDynamics, HIE_tdstSuperObject_* _h_SupObj, MTH3D_tdstVector_* _p_stNewPosition, MTH3D_tdstVector_* _p_stNewTarget, MTH3D_tdstVector_* _p_stAxisX, MTH3D_tdstVector_* _p_stAxisY, MTH3D_tdstVector_* _p_stAxisZ)
-{
-    float xYValue;
-    float xZValue;
-    float xAbsoluteValue;
-    float xValue;
-    float xSquaredNorm;
-    float xEpsilon;
-    float xLimit;
-    float xFinalZ;
-    int var_v1;
-    int temp_v1;
-    int var_v0;
-    int var_v1_2;
-    CAM_tduVectorCopy_ stYVector;
-    MTH3D_tdstVector_* p_stAxisY;
-
-    MTH_EPSILON_TO(xEpsilon);
-    _p_stAxisY->xX = _p_stNewPosition->xX - _p_stNewTarget->xX;
-    _p_stAxisY->xY = _p_stNewPosition->xY - _p_stNewTarget->xY;
-    _p_stAxisY->xZ = _p_stNewPosition->xZ - _p_stNewTarget->xZ;
-
-    stYVector.auWords[0] = ((CAM_tduVectorCopy_*)_p_stAxisY)->auWords[0];
-    stYVector.auWords[1] = ((CAM_tduVectorCopy_*)_p_stAxisY)->auWords[1];
-    stYVector.auWords[2] = ((CAM_tduVectorCopy_*)_p_stAxisY)->auWords[2];
-    xValue = _p_stAxisY->xX;
-    p_stAxisY = _p_stAxisY;
-    MTH_ABS_TO(xAbsoluteValue, xValue);
-    var_v1 = 1;
-    if (!(xAbsoluteValue < xEpsilon)) {
-        var_v1 = 0;
-    }
-    if (var_v1 != 0) {
-        float xLocalEpsilon;
-        var_v1 = 1;
-        xAbsoluteValue = p_stAxisY->xY;
-        MTH_EPSILON_TO(xLocalEpsilon);
-        MTH_ABS_TO(xAbsoluteValue, xAbsoluteValue);
-        if (!(xAbsoluteValue < xLocalEpsilon)) {
-            var_v1 = 0;
-        }
-    }
-    temp_v1 = var_v1 != 0;
-    var_v0 = temp_v1 & 0xFF;
-    if (temp_v1 != 0) {
-        float xLocalEpsilon;
-        var_v1_2 = 1;
-        xAbsoluteValue = p_stAxisY->xZ;
-        MTH_EPSILON_TO(xLocalEpsilon);
-        MTH_ABS_TO(xAbsoluteValue, xAbsoluteValue);
-        if (!(xAbsoluteValue < xLocalEpsilon)) {
-            var_v1_2 = 0;
-        }
-        var_v0 = var_v1_2 & 0xFF;
-    }
-    if (var_v0 == 0) {
-        xYValue = p_stAxisY->xY;
-        xZValue = p_stAxisY->xZ;
-        MTH_SQR3_TO(xSquaredNorm, xValue, xYValue, xZValue);
-        MTH_SQRT_TO_SYNC(xZValue, xSquaredNorm);
-        if (xZValue != 0.0f) {
-            xZValue = 1.0f / xZValue;
-            p_stAxisY->xX = xZValue * xValue;
-            p_stAxisY->xY = xZValue * p_stAxisY->xY;
-            p_stAxisY->xZ = xZValue * p_stAxisY->xZ;
-        }
-    }
-
-    MTH_fn_vVectorPlaneProjection(&stYVector.stVector, &stYVector.stVector, _p_stAxisZ, _p_stAxisZ);
-    {
-        float xX = stYVector.stVector.xX;
-        float xY = stYVector.stVector.xY;
-        float xZ = stYVector.stVector.xZ;
-        unsigned long ulLimitBits;
-        MTH_SQR3_TO(xSquaredNorm, xX, xY, xZ);
-        asm { lui ulLimitBits, 0x3E4C }
-        MTH_SQRT_TO(xY, xSquaredNorm);
-        asm { ori ulLimitBits, ulLimitBits, 0xCCCD }
-        asm { mtc1 ulLimitBits, xLimit }
-        if (xY < xLimit) {
-            MAT_fn_vGetRotationVectorBaseK(_h_SupObj->hGlobalMatrix, _p_stAxisZ);
-        }
-    }
-
-    MTH_CROSS_COMPONENT_TO(_p_stAxisX->xX, p_stAxisY->xY, _p_stAxisZ->xZ,
-                          p_stAxisY->xZ, _p_stAxisZ->xY);
-    MTH_CROSS_COMPONENT_TO(_p_stAxisX->xY, p_stAxisY->xZ, _p_stAxisZ->xX,
-                          p_stAxisY->xX, _p_stAxisZ->xZ);
-    MTH_CROSS_COMPONENT_TO(_p_stAxisX->xZ, p_stAxisY->xX, _p_stAxisZ->xY,
-                          p_stAxisY->xY, _p_stAxisZ->xX);
-
-    if ((_p_stAxisX->xX == 0.0f) && (_p_stAxisX->xY == 0.0f) && (_p_stAxisX->xZ == 0.0f)) {
-        MAT_fn_vGetRotationVectorBaseK(_h_SupObj->hGlobalMatrix, _p_stAxisZ);
-        MTH_CROSS_COMPONENT_TO(_p_stAxisX->xX, p_stAxisY->xY, _p_stAxisZ->xZ,
-                              p_stAxisY->xZ, _p_stAxisZ->xY);
-        MTH_CROSS_COMPONENT_TO(_p_stAxisX->xY, p_stAxisY->xZ, _p_stAxisZ->xX,
-                              p_stAxisY->xX, _p_stAxisZ->xZ);
-        MTH_CROSS_COMPONENT_TO(_p_stAxisX->xZ, p_stAxisY->xX, _p_stAxisZ->xY,
-                              p_stAxisY->xY, _p_stAxisZ->xX);
-    }
-
-    {
-        float xY = _p_stAxisX->xY;
-        float xZ = _p_stAxisX->xZ;
-        float xX = _p_stAxisX->xX;
-        MTH_SQR3_TO(xSquaredNorm, xX, xY, xZ);
-        MTH_SQRT_TO_SYNC(xZ, xSquaredNorm);
-        if (xZ != 0.0f) {
-            xZ = 1.0f / xZ;
-            _p_stAxisX->xX = xZ * xX;
-            _p_stAxisX->xY = xZ * _p_stAxisX->xY;
-            _p_stAxisX->xZ = xZ * _p_stAxisX->xZ;
-        }
-    }
-
-    MTH_CROSS_COMPONENT_TO(_p_stAxisZ->xX, _p_stAxisX->xY, p_stAxisY->xZ,
-                          _p_stAxisX->xZ, p_stAxisY->xY);
-    MTH_CROSS_COMPONENT_TO(_p_stAxisZ->xY, _p_stAxisX->xZ, p_stAxisY->xX,
-                          _p_stAxisX->xX, p_stAxisY->xZ);
-    {
-        float xLeftA;
-        float xRightB;
-        float xLeftC;
-        float xRightD;
-        xRightB = p_stAxisY->xY;
-        xLeftA = _p_stAxisX->xX;
-        xRightD = p_stAxisY->xX;
-        xLeftC = _p_stAxisX->xY;
-        MTH_CROSS_TO(xFinalZ, xLeftA, xRightB, xLeftC, xRightD);
-        _p_stAxisZ->xZ = xFinalZ;
-    }
-
-    {
-        float xY = _p_stAxisZ->xY;
-        float xZ = xFinalZ;
-        float xX = _p_stAxisZ->xX;
-        MTH_SQR3_TO(xSquaredNorm, xX, xY, xZ);
-        MTH_SQRT_TO_SYNC(xZ, xSquaredNorm);
-        if (xZ != 0.0f) {
-            xZ = 1.0f / xZ;
-            _p_stAxisZ->xX = xZ * xX;
-            _p_stAxisZ->xY = xZ * _p_stAxisZ->xY;
-            _p_stAxisZ->xZ = xZ * _p_stAxisZ->xZ;
-        }
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 829–1209 */
 /* addr: 0x002ff190  size: 5772 bytes */
@@ -1734,32 +1487,6 @@ void CAM_fn_vComputeCameraSystemAxis(DNM_stDynamics* _p_stDynamics, HIE_tdstSupe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-DNM_stMecObstacle* DNM_p_stObstacleCameraObstacle(DNM_stMecObstacle* _p_stObstacle, DNM_stDynamics* _p_stDynamics, DNM_stParsingDatas* _p_stExternData, HIE_tdstSuperObject_* _hSupObj, MTH3D_tdstVector_* _p_stWantedPosition, MTH3D_tdstVector_* _p_stNewPosition)
-{
-    float xNorm;
-    MTH3D_tdstVector_ VectTmp;
-    MAT_tdstTransformation_ stEndMatrix;
-    MAT_tdstTransformation_ stBeginMatrix;
-    MTH3D_tdstVector_* p_stProjectedVector;
-    MTH3D_tdstVector_* p_stImpactVector;
-    MTH3D_tdstVector_* p_stComputedCurrentPosition;
-    MTH3D_tdstVector_* p_stTempVector1;
-    MTH3D_tdstVector_* p_stTempVector;
-    MTH3D_tdstVector_* p_stProjectionVector;
-    MTH3D_tdstVector_* p_stObstacleNorm;
-    MTH3D_tdstVector_ a_stVectors[11];
-    char cWantSecond;
-    unsigned int uiNumCross;
-    unsigned int uiNumNormals;
-    MTH3D_tdstVector_ a_stCross[5];
-    MTH3D_tdstVector_ a_stNormals[5];
-    float xAngle;
-    int lNbCollisions;
-    MTH_stRotation stRotation;
-    stMACDPID* p_stMACDPID;
-    DNM_stReport* p_stReport;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 691–757 */
 /* addr: 0x00300820  size: 568 bytes */
@@ -1802,21 +1529,6 @@ DNM_stMecObstacle* DNM_p_stObstacleCameraObstacle(DNM_stMecObstacle* _p_stObstac
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int CAM_lHaveITakeSThgIntoTheMug(DNM_stMecObstacle* _p_stResultObstacle, HIE_tdstSuperObject_* _p_stSupObj, MAT_tdstTransformation_* _p_stStartPosition, MAT_tdstTransformation_* _p_stEndPosition)
-{
-    MTH3D_tdstVector_ stTempVec;
-    MTH3D_tdstVector_ stStartVec;
-    char bLessDetected;
-    unsigned char bWater;
-    unsigned short xCollMask;
-    GMT_tdstCollideMaterial_* hCollMat;
-    GMT_tdstGameMaterial_* hGameMat;
-    DNM_stMecObstacle* p_stReturnObstacle;
-    DNM_stMecObstacle* p_stObstacle;
-    int lCollision;
-    int lCounter;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 444–666 */
 /* addr: 0x00300a60  size: 1884 bytes */
@@ -1918,23 +1630,6 @@ int CAM_lHaveITakeSThgIntoTheMug(DNM_stMecObstacle* _p_stResultObstacle, HIE_tds
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-DNM_stDynamics* DNM_p_stDynamicsCameraParsing(DNM_stDynamics* _p_stDynamics, HIE_tdstSuperObject_* _h_SupObj, DNM_stParsingDatas* _p_stExternData, float _xDT)
-{
-    float xNorm;
-    MTH3D_tdstVector_ stDNMTempVector;
-    MTH_stRotation stRotation;
-    MTH3D_tdstVector_ stTempVector2;
-    MTH3D_tdstVector_ stTempVector1;
-    float xSpeed;
-    MTH3D_tdstVector_ stYVector;
-    MTH3D_tdstVector_ stTempVector;
-    MTH3D_tdstVector_ stShiftingResult;
-    MTH3D_tdstVector_ stShiftingSrc;
-    MTH3D_tdstVector_ stPreviousPos;
-    DNM_stReport* p_stReport;
-    stMACDPID* p_stDNMMACDPID;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 380–417 */
 /* addr: 0x003011c0  size: 184 bytes */
@@ -1954,33 +1649,6 @@ DNM_stDynamics* DNM_p_stDynamicsCameraParsing(DNM_stDynamics* _p_stDynamics, HIE
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-float DNM_fn_xDynamicsCameraAngleParsing(float _xSpeed, float _xIncSpeed, float _xDecSpeed, float _xRequestAngle, float _xLastAngle, char _cIgnoreParsing, char _cIgnoreInertia)
-{
-    float xAngle;
-    float xRetAngle;
-
-    if (_cIgnoreParsing || _xRequestAngle < 0.001f)
-    {
-        return _xRequestAngle;
-    }
-    xAngle = _xRequestAngle;
-    if (_xRequestAngle > _xSpeed)
-        xAngle = _xSpeed;
-    if (!_cIgnoreInertia)
-    {
-        if (_xRequestAngle < _xSpeed * _xDecSpeed)
-        {
-            _xRequestAngle = _xRequestAngle / _xDecSpeed;
-            if (xAngle > _xRequestAngle)
-                xAngle = _xRequestAngle;
-        }
-        xRetAngle = _xLastAngle + _xSpeed / _xIncSpeed; if (xAngle > xRetAngle)
-        {
-            xAngle = xRetAngle;
-        }
-    }
-    return xAngle;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 262–354 */
 /* addr: 0x00301280  size: 552 bytes */
@@ -2020,6 +1688,140 @@ float DNM_fn_xDynamicsCameraAngleParsing(float _xSpeed, float _xIncSpeed, float 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 207–237 */
+/* addr: 0x003014b0  size: 496 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 207
+ *   +0x0004 -> line 214
+ *   +0x0008 -> line 207
+ *   +0x000c -> line 214
+ *   +0x0010 -> line 207
+ *   +0x0028 -> line 214
+ *   +0x0038 -> line 217
+ *   +0x0054 -> line 218
+ *   +0x006c -> line 220
+ *   +0x0070 -> line 218
+ *   +0x0074 -> line 220
+ *   +0x00b8 -> line 229
+ *   +0x00c4 -> line 228
+ *   +0x00cc -> line 230
+ *   +0x00d4 -> line 228
+ *   +0x00f8 -> line 229
+ *   +0x0118 -> line 230
+ *   +0x0124 -> line 232
+ *   +0x0128 -> line 233
+ *   +0x0134 -> line 232
+ *   +0x0140 -> line 233
+ *   +0x0148 -> line 234
+ *   +0x01ac -> line 235
+ *   +0x01d0 -> line 237
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 113–186 */
+/* addr: 0x003016a0  size: 1256 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 113
+ *   +0x0018 -> line 127
+ *   +0x001c -> line 113
+ *   +0x0020 -> line 127
+ *   +0x0024 -> line 113
+ *   +0x0028 -> line 125
+ *   +0x002c -> line 113
+ *   +0x0030 -> line 125
+ *   +0x0034 -> line 113
+ *   +0x0038 -> line 120
+ *   +0x0050 -> line 125
+ *   +0x0068 -> line 127
+ *   +0x00b0 -> line 128
+ *   +0x00bc -> line 131
+ *   +0x00d0 -> line 134
+ *   +0x0170 -> line 136
+ *   +0x01d8 -> line 137
+ *   +0x023c -> line 139
+ *   +0x024c -> line 140
+ *   +0x0250 -> line 143
+ *   +0x0260 -> line 145
+ *   +0x0284 -> line 147
+ *   +0x028c -> line 150
+ *   +0x0290 -> line 157
+ *   +0x02a8 -> line 159
+ *   +0x02e4 -> line 160
+ *   +0x02ec -> line 163
+ *   +0x02fc -> line 164
+ *   +0x039c -> line 166
+ *   +0x0404 -> line 167
+ *   +0x0468 -> line 169
+ *   +0x0478 -> line 170
+ *   +0x047c -> line 173
+ *   +0x048c -> line 175
+ *   +0x04b0 -> line 177
+ *   +0x04b8 -> line 180
+ *   +0x04bc -> line 185
+ *   +0x04c0 -> line 186
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+float CAM_fn_xComputeVerticalAngle(MTH3D_tdstVector_* _p_stOrgVector, MTH3D_tdstVector_* _p_stDestVector, MTH3D_tdstVector_* _p_stAxisZ)
+{
+    float xNorm;
+    MTH_stRotation stRotation;
+    float xDestAngle;
+    float xOrgAngle;
+    MTH3D_tdstVector_ stProj;
+    MTH3D_tdstVector_ stAxisZ;
+    MTH3D_tdstVector_ stVector;
+    /* TODO: decompile from asm/... */
+}
+
+void DNM_fn_vDynamicsTakeCareOfLastMove(MTH3D_tdstVector_* _p_stShiftingResult, MTH3D_tdstVector_* _p_stLastShifting, float _xCutAngleFactor)
+{
+    MTH_stRotation stRotation;
+    MTH3D_tdstVector_ stTempVector1;
+    MTH3D_tdstVector_ stTempVector;
+    {
+        float xNorm;
+        float xNormLast;
+        float xNormRot;
+        float xInv;
+        float xSqrNorm;
+        float aX, aY, aZ;
+        float xX, xY, xZ;
+
+        if (_xCutAngleFactor == 1.0f)
+        {
+            return;
+        }
+        xX = _p_stShiftingResult->xX; xY = _p_stShiftingResult->xY; xZ = _p_stShiftingResult->xZ;
+        MTH_SQR3_TO(xSqrNorm, xX, xY, xZ);
+        MTH_SQRT_TO(xNorm, xSqrNorm);
+        aX = _p_stLastShifting->xX; aY = _p_stLastShifting->xY; aZ = _p_stLastShifting->xZ;
+        MTH_SQR3_TO(xSqrNorm, aX, aY, aZ);
+        MTH_SQRT_TO(xNormLast, xSqrNorm);
+        if (xNorm <= 0.1f) return;
+        if (xNormLast <= 0.1f) return;
+        if (_xCutAngleFactor <= 0.0f) return;
+        xInv = 1.0f / xNorm;
+        stTempVector1.xX = xInv * xX; stTempVector1.xY = xInv * _p_stShiftingResult->xY; stTempVector1.xZ = xInv * _p_stShiftingResult->xZ;
+        xInv = 1.0f / xNormLast;
+        stTempVector.xX = xInv * _p_stLastShifting->xX; stTempVector.xY = xInv * _p_stLastShifting->xY; stTempVector.xZ = xInv * _p_stLastShifting->xZ;
+        MTH_p_stRotationComputeRotationWith2Vectors(&stRotation, &stTempVector, &stTempVector1);
+        stRotation.m_xAngle = stRotation.m_xAngle / _xCutAngleFactor;
+        MTH_p_stRotationMulVector(&stRotation, &stTempVector, &stTempVector1);
+        MTH_NORM3_TO(xSqrNorm, &stTempVector1);
+        MTH_SQRT_TO(xNormRot, xSqrNorm);
+        if (xNormRot != 0.0f)
+        {
+            xInv = 1.0f / xNormRot;
+            stTempVector1.xX = xInv * stTempVector1.xX; stTempVector1.xY = xInv * stTempVector1.xY; stTempVector1.xZ = xInv * stTempVector1.xZ;
+        }
+        _p_stShiftingResult->xX = xNorm * stTempVector1.xX; _p_stShiftingResult->xY = xNorm * stTempVector1.xY; _p_stShiftingResult->xZ = xNorm * stTempVector1.xZ;
+    }
+}
+
 void DNM_fn_vDynamicsCameraPositionParsing(float _xSpeed, float _xIncSpeed, float _xDecSpeed, float _xLastNorm, char _cIgnoreParsing, char _cIgnoreInertia, MTH3D_tdstVector_* _p_stActualPos, MTH3D_tdstVector_* _p_stShiftingSrc, MTH3D_tdstVector_* _p_stDestPos, MTH3D_tdstVector_* _p_stShiftingResult)
 {
     unsigned char bNormWantedIsModified;
@@ -2082,133 +1884,353 @@ void DNM_fn_vDynamicsCameraPositionParsing(float _xSpeed, float _xIncSpeed, floa
     _p_stDestPos->xX = _p_stActualPos->xX + _p_stShiftingResult->xX; _p_stDestPos->xY = _p_stActualPos->xY + _p_stShiftingResult->xY; _p_stDestPos->xZ = _p_stActualPos->xZ + _p_stShiftingResult->xZ;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 207–237 */
-/* addr: 0x003014b0  size: 496 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 207
- *   +0x0004 -> line 214
- *   +0x0008 -> line 207
- *   +0x000c -> line 214
- *   +0x0010 -> line 207
- *   +0x0028 -> line 214
- *   +0x0038 -> line 217
- *   +0x0054 -> line 218
- *   +0x006c -> line 220
- *   +0x0070 -> line 218
- *   +0x0074 -> line 220
- *   +0x00b8 -> line 229
- *   +0x00c4 -> line 228
- *   +0x00cc -> line 230
- *   +0x00d4 -> line 228
- *   +0x00f8 -> line 229
- *   +0x0118 -> line 230
- *   +0x0124 -> line 232
- *   +0x0128 -> line 233
- *   +0x0134 -> line 232
- *   +0x0140 -> line 233
- *   +0x0148 -> line 234
- *   +0x01ac -> line 235
- *   +0x01d0 -> line 237
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void DNM_fn_vDynamicsTakeCareOfLastMove(MTH3D_tdstVector_* _p_stShiftingResult, MTH3D_tdstVector_* _p_stLastShifting, float _xCutAngleFactor)
+float DNM_fn_xDynamicsCameraAngleParsing(float _xSpeed, float _xIncSpeed, float _xDecSpeed, float _xRequestAngle, float _xLastAngle, char _cIgnoreParsing, char _cIgnoreInertia)
 {
-    MTH_stRotation stRotation;
-    MTH3D_tdstVector_ stTempVector1;
-    MTH3D_tdstVector_ stTempVector;
-    {
-        float xNorm;
-        float xNormLast;
-        float xNormRot;
-        float xInv;
-        float xSqrNorm;
-        float aX, aY, aZ;
-        float xX, xY, xZ;
+    float xAngle;
+    float xRetAngle;
 
-        if (_xCutAngleFactor == 1.0f)
+    if (_cIgnoreParsing || _xRequestAngle < 0.001f)
+    {
+        return _xRequestAngle;
+    }
+    xAngle = _xRequestAngle;
+    if (_xRequestAngle > _xSpeed)
+        xAngle = _xSpeed;
+    if (!_cIgnoreInertia)
+    {
+        if (_xRequestAngle < _xSpeed * _xDecSpeed)
         {
-            return;
+            _xRequestAngle = _xRequestAngle / _xDecSpeed;
+            if (xAngle > _xRequestAngle)
+                xAngle = _xRequestAngle;
         }
-        xX = _p_stShiftingResult->xX; xY = _p_stShiftingResult->xY; xZ = _p_stShiftingResult->xZ;
-        MTH_SQR3_TO(xSqrNorm, xX, xY, xZ);
-        MTH_SQRT_TO(xNorm, xSqrNorm);
-        aX = _p_stLastShifting->xX; aY = _p_stLastShifting->xY; aZ = _p_stLastShifting->xZ;
-        MTH_SQR3_TO(xSqrNorm, aX, aY, aZ);
-        MTH_SQRT_TO(xNormLast, xSqrNorm);
-        if (xNorm <= 0.1f) return;
-        if (xNormLast <= 0.1f) return;
-        if (_xCutAngleFactor <= 0.0f) return;
-        xInv = 1.0f / xNorm;
-        stTempVector1.xX = xInv * xX; stTempVector1.xY = xInv * _p_stShiftingResult->xY; stTempVector1.xZ = xInv * _p_stShiftingResult->xZ;
-        xInv = 1.0f / xNormLast;
-        stTempVector.xX = xInv * _p_stLastShifting->xX; stTempVector.xY = xInv * _p_stLastShifting->xY; stTempVector.xZ = xInv * _p_stLastShifting->xZ;
-        MTH_p_stRotationComputeRotationWith2Vectors(&stRotation, &stTempVector, &stTempVector1);
-        stRotation.m_xAngle = stRotation.m_xAngle / _xCutAngleFactor;
-        MTH_p_stRotationMulVector(&stRotation, &stTempVector, &stTempVector1);
-        MTH_NORM3_TO(xSqrNorm, &stTempVector1);
-        MTH_SQRT_TO(xNormRot, xSqrNorm);
-        if (xNormRot != 0.0f)
+        xRetAngle = _xLastAngle + _xSpeed / _xIncSpeed; if (xAngle > xRetAngle)
         {
-            xInv = 1.0f / xNormRot;
-            stTempVector1.xX = xInv * stTempVector1.xX; stTempVector1.xY = xInv * stTempVector1.xY; stTempVector1.xZ = xInv * stTempVector1.xZ;
+            xAngle = xRetAngle;
         }
-        _p_stShiftingResult->xX = xNorm * stTempVector1.xX; _p_stShiftingResult->xY = xNorm * stTempVector1.xY; _p_stShiftingResult->xZ = xNorm * stTempVector1.xZ;
+    }
+    return xAngle;
+}
+
+DNM_stDynamics* DNM_p_stDynamicsCameraParsing(DNM_stDynamics* _p_stDynamics, HIE_tdstSuperObject_* _h_SupObj, DNM_stParsingDatas* _p_stExternData, float _xDT)
+{
+    float xNorm;
+    MTH3D_tdstVector_ stDNMTempVector;
+    MTH_stRotation stRotation;
+    MTH3D_tdstVector_ stTempVector2;
+    MTH3D_tdstVector_ stTempVector1;
+    float xSpeed;
+    MTH3D_tdstVector_ stYVector;
+    MTH3D_tdstVector_ stTempVector;
+    MTH3D_tdstVector_ stShiftingResult;
+    MTH3D_tdstVector_ stShiftingSrc;
+    MTH3D_tdstVector_ stPreviousPos;
+    DNM_stReport* p_stReport;
+    stMACDPID* p_stDNMMACDPID;
+    /* TODO: decompile from asm/... */
+}
+
+int CAM_lHaveITakeSThgIntoTheMug(DNM_stMecObstacle* _p_stResultObstacle, HIE_tdstSuperObject_* _p_stSupObj, MAT_tdstTransformation_* _p_stStartPosition, MAT_tdstTransformation_* _p_stEndPosition)
+{
+    MTH3D_tdstVector_ stTempVec;
+    MTH3D_tdstVector_ stStartVec;
+    char bLessDetected;
+    unsigned char bWater;
+    unsigned short xCollMask;
+    GMT_tdstCollideMaterial_* hCollMat;
+    GMT_tdstGameMaterial_* hGameMat;
+    DNM_stMecObstacle* p_stReturnObstacle;
+    DNM_stMecObstacle* p_stObstacle;
+    int lCollision;
+    int lCounter;
+    /* TODO: decompile from asm/... */
+}
+
+DNM_stMecObstacle* DNM_p_stObstacleCameraObstacle(DNM_stMecObstacle* _p_stObstacle, DNM_stDynamics* _p_stDynamics, DNM_stParsingDatas* _p_stExternData, HIE_tdstSuperObject_* _hSupObj, MTH3D_tdstVector_* _p_stWantedPosition, MTH3D_tdstVector_* _p_stNewPosition)
+{
+    float xNorm;
+    MTH3D_tdstVector_ VectTmp;
+    MAT_tdstTransformation_ stEndMatrix;
+    MAT_tdstTransformation_ stBeginMatrix;
+    MTH3D_tdstVector_* p_stProjectedVector;
+    MTH3D_tdstVector_* p_stImpactVector;
+    MTH3D_tdstVector_* p_stComputedCurrentPosition;
+    MTH3D_tdstVector_* p_stTempVector1;
+    MTH3D_tdstVector_* p_stTempVector;
+    MTH3D_tdstVector_* p_stProjectionVector;
+    MTH3D_tdstVector_* p_stObstacleNorm;
+    MTH3D_tdstVector_ a_stVectors[11];
+    char cWantSecond;
+    unsigned int uiNumCross;
+    unsigned int uiNumNormals;
+    MTH3D_tdstVector_ a_stCross[5];
+    MTH3D_tdstVector_ a_stNormals[5];
+    float xAngle;
+    int lNbCollisions;
+    MTH_stRotation stRotation;
+    stMACDPID* p_stMACDPID;
+    DNM_stReport* p_stReport;
+    /* TODO: decompile from asm/... */
+}
+
+void CAM_fn_vComputeCameraSystemAxis(DNM_stDynamics* _p_stDynamics, HIE_tdstSuperObject_* _h_SupObj, MTH3D_tdstVector_* _p_stNewPosition, MTH3D_tdstVector_* _p_stNewTarget, MTH3D_tdstVector_* _p_stAxisX, MTH3D_tdstVector_* _p_stAxisY, MTH3D_tdstVector_* _p_stAxisZ)
+{
+    float xYValue;
+    float xZValue;
+    float xAbsoluteValue;
+    float xValue;
+    float xSquaredNorm;
+    float xEpsilon;
+    float xLimit;
+    float xFinalZ;
+    int var_v1;
+    int temp_v1;
+    int var_v0;
+    int var_v1_2;
+    CAM_tduVectorCopy_ stYVector;
+    MTH3D_tdstVector_* p_stAxisY;
+
+    MTH_EPSILON_TO(xEpsilon);
+    _p_stAxisY->xX = _p_stNewPosition->xX - _p_stNewTarget->xX;
+    _p_stAxisY->xY = _p_stNewPosition->xY - _p_stNewTarget->xY;
+    _p_stAxisY->xZ = _p_stNewPosition->xZ - _p_stNewTarget->xZ;
+
+    stYVector.auWords[0] = ((CAM_tduVectorCopy_*)_p_stAxisY)->auWords[0];
+    stYVector.auWords[1] = ((CAM_tduVectorCopy_*)_p_stAxisY)->auWords[1];
+    stYVector.auWords[2] = ((CAM_tduVectorCopy_*)_p_stAxisY)->auWords[2];
+    xValue = _p_stAxisY->xX;
+    p_stAxisY = _p_stAxisY;
+    MTH_ABS_TO(xAbsoluteValue, xValue);
+    var_v1 = 1;
+    if (!(xAbsoluteValue < xEpsilon)) {
+        var_v1 = 0;
+    }
+    if (var_v1 != 0) {
+        float xLocalEpsilon;
+        var_v1 = 1;
+        xAbsoluteValue = p_stAxisY->xY;
+        MTH_EPSILON_TO(xLocalEpsilon);
+        MTH_ABS_TO(xAbsoluteValue, xAbsoluteValue);
+        if (!(xAbsoluteValue < xLocalEpsilon)) {
+            var_v1 = 0;
+        }
+    }
+    temp_v1 = var_v1 != 0;
+    var_v0 = temp_v1 & 0xFF;
+    if (temp_v1 != 0) {
+        float xLocalEpsilon;
+        var_v1_2 = 1;
+        xAbsoluteValue = p_stAxisY->xZ;
+        MTH_EPSILON_TO(xLocalEpsilon);
+        MTH_ABS_TO(xAbsoluteValue, xAbsoluteValue);
+        if (!(xAbsoluteValue < xLocalEpsilon)) {
+            var_v1_2 = 0;
+        }
+        var_v0 = var_v1_2 & 0xFF;
+    }
+    if (var_v0 == 0) {
+        xYValue = p_stAxisY->xY;
+        xZValue = p_stAxisY->xZ;
+        MTH_SQR3_TO(xSquaredNorm, xValue, xYValue, xZValue);
+        MTH_SQRT_TO_SYNC(xZValue, xSquaredNorm);
+        if (xZValue != 0.0f) {
+            xZValue = 1.0f / xZValue;
+            p_stAxisY->xX = xZValue * xValue;
+            p_stAxisY->xY = xZValue * p_stAxisY->xY;
+            p_stAxisY->xZ = xZValue * p_stAxisY->xZ;
+        }
+    }
+
+    MTH_fn_vVectorPlaneProjection(&stYVector.stVector, &stYVector.stVector, _p_stAxisZ, _p_stAxisZ);
+    {
+        float xX = stYVector.stVector.xX;
+        float xY = stYVector.stVector.xY;
+        float xZ = stYVector.stVector.xZ;
+        unsigned long ulLimitBits;
+        MTH_SQR3_TO(xSquaredNorm, xX, xY, xZ);
+        asm { lui ulLimitBits, 0x3E4C }
+        MTH_SQRT_TO(xY, xSquaredNorm);
+        asm { ori ulLimitBits, ulLimitBits, 0xCCCD }
+        asm { mtc1 ulLimitBits, xLimit }
+        if (xY < xLimit) {
+            MAT_fn_vGetRotationVectorBaseK(_h_SupObj->hGlobalMatrix, _p_stAxisZ);
+        }
+    }
+
+    MTH_CROSS_COMPONENT_TO(_p_stAxisX->xX, p_stAxisY->xY, _p_stAxisZ->xZ,
+                          p_stAxisY->xZ, _p_stAxisZ->xY);
+    MTH_CROSS_COMPONENT_TO(_p_stAxisX->xY, p_stAxisY->xZ, _p_stAxisZ->xX,
+                          p_stAxisY->xX, _p_stAxisZ->xZ);
+    MTH_CROSS_COMPONENT_TO(_p_stAxisX->xZ, p_stAxisY->xX, _p_stAxisZ->xY,
+                          p_stAxisY->xY, _p_stAxisZ->xX);
+
+    if ((_p_stAxisX->xX == 0.0f) && (_p_stAxisX->xY == 0.0f) && (_p_stAxisX->xZ == 0.0f)) {
+        MAT_fn_vGetRotationVectorBaseK(_h_SupObj->hGlobalMatrix, _p_stAxisZ);
+        MTH_CROSS_COMPONENT_TO(_p_stAxisX->xX, p_stAxisY->xY, _p_stAxisZ->xZ,
+                              p_stAxisY->xZ, _p_stAxisZ->xY);
+        MTH_CROSS_COMPONENT_TO(_p_stAxisX->xY, p_stAxisY->xZ, _p_stAxisZ->xX,
+                              p_stAxisY->xX, _p_stAxisZ->xZ);
+        MTH_CROSS_COMPONENT_TO(_p_stAxisX->xZ, p_stAxisY->xX, _p_stAxisZ->xY,
+                              p_stAxisY->xY, _p_stAxisZ->xX);
+    }
+
+    {
+        float xY = _p_stAxisX->xY;
+        float xZ = _p_stAxisX->xZ;
+        float xX = _p_stAxisX->xX;
+        MTH_SQR3_TO(xSquaredNorm, xX, xY, xZ);
+        MTH_SQRT_TO_SYNC(xZ, xSquaredNorm);
+        if (xZ != 0.0f) {
+            xZ = 1.0f / xZ;
+            _p_stAxisX->xX = xZ * xX;
+            _p_stAxisX->xY = xZ * _p_stAxisX->xY;
+            _p_stAxisX->xZ = xZ * _p_stAxisX->xZ;
+        }
+    }
+
+    MTH_CROSS_COMPONENT_TO(_p_stAxisZ->xX, _p_stAxisX->xY, p_stAxisY->xZ,
+                          _p_stAxisX->xZ, p_stAxisY->xY);
+    MTH_CROSS_COMPONENT_TO(_p_stAxisZ->xY, _p_stAxisX->xZ, p_stAxisY->xX,
+                          _p_stAxisX->xX, p_stAxisY->xZ);
+    {
+        float xLeftA;
+        float xRightB;
+        float xLeftC;
+        float xRightD;
+        xRightB = p_stAxisY->xY;
+        xLeftA = _p_stAxisX->xX;
+        xRightD = p_stAxisY->xX;
+        xLeftC = _p_stAxisX->xY;
+        MTH_CROSS_TO(xFinalZ, xLeftA, xRightB, xLeftC, xRightD);
+        _p_stAxisZ->xZ = xFinalZ;
+    }
+
+    {
+        float xY = _p_stAxisZ->xY;
+        float xZ = xFinalZ;
+        float xX = _p_stAxisZ->xX;
+        MTH_SQR3_TO(xSquaredNorm, xX, xY, xZ);
+        MTH_SQRT_TO_SYNC(xZ, xSquaredNorm);
+        if (xZ != 0.0f) {
+            xZ = 1.0f / xZ;
+            _p_stAxisZ->xX = xZ * xX;
+            _p_stAxisZ->xY = xZ * _p_stAxisZ->xY;
+            _p_stAxisZ->xZ = xZ * _p_stAxisZ->xZ;
+        }
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 113–186 */
-/* addr: 0x003016a0  size: 1256 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 113
- *   +0x0018 -> line 127
- *   +0x001c -> line 113
- *   +0x0020 -> line 127
- *   +0x0024 -> line 113
- *   +0x0028 -> line 125
- *   +0x002c -> line 113
- *   +0x0030 -> line 125
- *   +0x0034 -> line 113
- *   +0x0038 -> line 120
- *   +0x0050 -> line 125
- *   +0x0068 -> line 127
- *   +0x00b0 -> line 128
- *   +0x00bc -> line 131
- *   +0x00d0 -> line 134
- *   +0x0170 -> line 136
- *   +0x01d8 -> line 137
- *   +0x023c -> line 139
- *   +0x024c -> line 140
- *   +0x0250 -> line 143
- *   +0x0260 -> line 145
- *   +0x0284 -> line 147
- *   +0x028c -> line 150
- *   +0x0290 -> line 157
- *   +0x02a8 -> line 159
- *   +0x02e4 -> line 160
- *   +0x02ec -> line 163
- *   +0x02fc -> line 164
- *   +0x039c -> line 166
- *   +0x0404 -> line 167
- *   +0x0468 -> line 169
- *   +0x0478 -> line 170
- *   +0x047c -> line 173
- *   +0x048c -> line 175
- *   +0x04b0 -> line 177
- *   +0x04b8 -> line 180
- *   +0x04bc -> line 185
- *   +0x04c0 -> line 186
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-float CAM_fn_xComputeVerticalAngle(MTH3D_tdstVector_* _p_stOrgVector, MTH3D_tdstVector_* _p_stDestVector, MTH3D_tdstVector_* _p_stAxisZ)
+DNM_stDynamics* DNM_p_stDynamicsCameraMechanics(DNM_stDynamics* _p_stDynamics, HIE_tdstSuperObject_* _hSupObj, DNM_stParsingDatas* _p_stParsingDatas, void* _h_MecIdCard, float _xDT)
 {
-    float xNorm;
-    MTH_stRotation stRotation;
-    float xDestAngle;
-    float xOrgAngle;
-    MTH3D_tdstVector_ stProj;
-    MTH3D_tdstVector_ stAxisZ;
-    MTH3D_tdstVector_ stVector;
+    MTH3D_tdstVector_ stPosition1;
+    MTH3D_tdstVector_ stTarget;
+    MTH3D_tdstVector_ stPosition;
+    DNM_stMecObstacle stObstacle;
     /* TODO: decompile from asm/... */
+}
+
+/* Hand-written assembly in the retail ELF: the VU0 matrix/vector product
+   below uses the R5900 prefetch hints and the VU0 accumulator ops, which MWCC
+   cannot emit from C, and the retail line table has one entry per instruction.
+   The arguments arrive in a0 (destination), a1 (matrix), a2 (vector) and a3
+   (vertex count). */
+asm void MTH4D_fn_vSerialMul4DMatrix3DVertexTo4DAlignedDest_VU0(void)
+{
+    pref 0x0, 0x0($a1);
+    pref 0x0, 0x0($a2);
+    paddub $t2, $a2, $zero;
+    paddub $t0, $a0, $zero;
+    pref 0x0, 0x0($t2);
+    paddub $t3, $a3, $zero;
+    paddub $t4, $a3, $zero;
+    lui $t1, 0x7000;
+    lui $v1, 0x3F80;
+    lwc1 $f1, 0x0($a1);
+    lwc1 $f2, 0x4($a1);
+    lwc1 $f3, 0x8($a1);
+    lwc1 $f4, 0x10($a1);
+    lwc1 $f5, 0x14($a1);
+    lwc1 $f6, 0x18($a1);
+    lwc1 $f7, 0x20($a1);
+    lwc1 $f8, 0x24($a1);
+    lwc1 $f9, 0x28($a1);
+    lwc1 $f10, 0x30($a1);
+    lwc1 $f11, 0x34($a1);
+    lwc1 $f12, 0x38($a1);
+    srl $t4, $t4, 1;
+    andi $t3, $a3, 1;
+    swc1 $f1, 0x0($t1);
+    swc1 $f2, 0x4($t1);
+    swc1 $f3, 0x8($t1);
+    sw $zero, 0xC($t1);
+    swc1 $f4, 0x10($t1);
+    swc1 $f5, 0x14($t1);
+    swc1 $f6, 0x18($t1);
+    sw $zero, 0x1C($t1);
+    swc1 $f7, 0x20($t1);
+    swc1 $f8, 0x24($t1);
+    swc1 $f9, 0x28($t1);
+    sw $zero, 0x2C($t1);
+    swc1 $f10, 0x30($t1);
+    swc1 $f11, 0x34($t1);
+    swc1 $f12, 0x38($t1);
+    sw $v1, 0x3C($t1);
+    lqc2 $vf1, 0x0($t1);
+    lqc2 $vf2, 0x10($t1);
+    lqc2 $vf3, 0x20($t1);
+    lqc2 $vf4, 0x30($t1);
+    sw $v1, 0x4C($t1);
+    sw $v1, 0x5C($t1);
+    beqz $t4, LCheck;
+    nop
+LLoop:
+    lwc1 $f13, 0x0($t2);
+    lwc1 $f14, 0x4($t2);
+    lwc1 $f15, 0x8($t2);
+    lwc1 $f16, 0xC($t2);
+    lwc1 $f17, 0x10($t2);
+    lwc1 $f18, 0x14($t2);
+    pref 0x0, 0x18($t2);
+    swc1 $f13, 0x40($t1);
+    swc1 $f14, 0x44($t1);
+    swc1 $f15, 0x48($t1);
+    swc1 $f16, 0x50($t1);
+    swc1 $f17, 0x54($t1);
+    swc1 $f18, 0x58($t1);
+    lqc2 $vf5, 0x40($t1);
+    lqc2 $vf6, 0x50($t1);
+    vmulax.xyzw $ACC, $vf1, $vf5x;
+    vmadday.xyzw $ACC, $vf2, $vf5y;
+    vmaddaz.xyzw $ACC, $vf3, $vf5z;
+    vmaddw.xyzw $vf9, $vf4, $vf5w;
+    vmulax.xyzw $ACC, $vf1, $vf6x;
+    vmadday.xyzw $ACC, $vf2, $vf6y;
+    vmaddaz.xyzw $ACC, $vf3, $vf6z;
+    vmaddw.xyzw $vf10, $vf4, $vf6w;
+    addiu $t4, $t4, -1;
+    addiu $t2, $t2, 0x18;
+    sqc2 $vf9, 0x0($t0);
+    sqc2 $vf10, 0x10($t0);
+    bnez $t4, LLoop;
+    addiu $t0, $t0, 0x20;
+LCheck:
+    beqz $t3, LEnd;
+    nop
+LOdd:
+    lwc1 $f13, 0x0($t2);
+    lwc1 $f14, 0x4($t2);
+    lwc1 $f15, 0x8($t2);
+    swc1 $f13, 0x40($t1);
+    swc1 $f14, 0x44($t1);
+    swc1 $f15, 0x48($t1);
+    sw $v1, 0x4C($t1);
+    lqc2 $vf5, 0x40($t1);
+    vmulax.xyzw $ACC, $vf1, $vf5x;
+    vmadday.xyzw $ACC, $vf2, $vf5y;
+    vmaddaz.xyzw $ACC, $vf3, $vf5z;
+    vmaddw.xyzw $vf9, $vf4, $vf5w;
+    sqc2 $vf9, 0x0($t0);
+LEnd:
+    jr $ra;
+    nop
 }

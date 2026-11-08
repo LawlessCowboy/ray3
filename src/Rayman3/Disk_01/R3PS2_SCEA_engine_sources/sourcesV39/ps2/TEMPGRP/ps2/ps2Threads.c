@@ -175,316 +175,27 @@ void fn_v_EngMain_VBLCallback(void);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int PS2_fn_lInit(void)
-{
-    int i;
-    int MTid;
-    char* mes;
 
-
-    sceSifInitRpc(0);
-
-
-    GLI_PrintDebugString("Initialisation CD");
-    sceCdInit(0);
-
-
-
-
-
-    GLI_PrintDebugString("REBOOT IOP");
-
-
-
-
-    do { } while (sceSifRebootIop((int)FMN_SCE_AddBaseDirectory("cdrom0:\\IRX252\\IOPRP252.IMG;1")) == 0);
-
-
-    do { } while (sceSifSyncIop() == 0);
-
-
-
-
-
-
-
-    sceGsResetPath();
-    i = sceDmaGetChan(2);
-
-
-    dmaGIF = i;
-
-
-
-    ClearVRAM(0, 0, 0, 0);
-    for (i = 0; i < 5; i++) sceGsSyncV(0);
-
-
-
-    GLI_fn_vFirstInitOpenGL();
-    GLI_fn_vSetSwapBufferCallback(fn_v_EngMain_VBLCallback);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    FlushCache(0);
-
-
-
-
-    i = 0;
-    for (; i < 5; i++) sceGsSyncV(0);
-
-
-
-
-
-
-
-
-
-
-
-
-    GLIPS2_vDisplayFirstLoadingBar(0.0f);
-
-    sceSifInitRpc(0);
-    sceSifLoadFileReset();
-    sceFsReset();
-
-    GLIPS2_vDisplayFirstLoadingBar(10.0f);
-
-
-    GLI_PrintDebugString("CD Mode");
-    sceCdInit(0);
-    sceCdMmode(PS2_fn_iGetCDMediaMode());
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    GLI_PrintDebugString("SIO2MAN");
-    sceCdDiskReady(0);
-    if (sceSifLoadModule((int)FMN_SCE_AddBaseDirectory("cdrom0:\\IRX252\\SIO2MAN.IRX;1"), 0, NULL) < 0)
-
-
-
-
-
-
-        return 0;
-
-
-    GLIPS2_vDisplayFirstLoadingBar(15.0f);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    mes = "thpri=9,10";
-
-
-
-
-    sceTtyInit();
-
-
-    GLIPS2_vDisplayFirstLoadingBar(25.0f);
-
-
-
-
-
-
-
-
-    GLI_PrintDebugString("PADMAN");
-    sceCdDiskReady(0);
-    if (sceSifLoadModule((int)FMN_SCE_AddBaseDirectory("cdrom0:\\IRX252\\PADMAN.IRX;1"), strlen(mes) + 1, mes) < 0)
-
-
-
-
-
-
-        return 0;
-
-
-
-
-
-    GLIPS2_vDisplayFirstLoadingBar(30.0f);
-
-
-    mes = "thpri=9";
-
-
-
-
-
-
-
-
-
-    GLI_PrintDebugString("MCMAN");
-    sceCdDiskReady(0);
-    if (sceSifLoadModule((int)FMN_SCE_AddBaseDirectory("cdrom0:\\IRX252\\MCMAN.IRX;1"), strlen(mes) + 1, mes) < 0)
-
-
-
-
-
-        return 0;
-
-
-
-
-    GLIPS2_vDisplayFirstLoadingBar(40.0f);
-
-
-
-
-
-
-
-
-
-    GLI_PrintDebugString("MCSERV");
-    sceCdDiskReady(0);
-    if (sceSifLoadModule((int)FMN_SCE_AddBaseDirectory("cdrom0:\\IRX252\\MCSERV.IRX;1"), strlen(mes) + 1, mes) < 0)
-
-
-
-
-
-        return 0;
-
-
-
-
-    GLIPS2_vDisplayFirstLoadingBar(50.0f);
-
-    PS2MC_fn_uiInit(0, 0);
-    GLIPS2_vDisplayFirstLoadingBar(60.0f);
-    PS2MC_fn_vStartMachine();
-
-
-
-
-
-    GLIPS2_vDisplayFirstLoadingBar(70.0f);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    GLIPS2_vDisplayFirstLoadingBar(80.0f);
-
-    INOPS2_fn_wInit();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    GLI_PrintDebugString("CDInit");
-
-    CD_Init();
-
-    GLI_PrintDebugString("Fin PS2init");
-
-
-
-    MTid = GetThreadId();
-    ChangeThreadPriority(MTid, 100);
-
-
-
-    GLIPS2_vDisplayFirstLoadingBar(100.0f);
-
-
-    GLI_vSecondInitPS2GL();
-
-
-    GAM_vAllocateSaveBloc();
-
-
-    return 1;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+int PS2_fn_lInit(void);
+void PS2_fn_vFlipThreadsPriority(void);
+void PS2_fn_vWakeupMainThread(void);
+void PS2_fn_vThreadSwitch(void);
+void PS2_fn_v_CreateTransitionThread(void);
+void PS2_fn_vCreateSwitchSemaphores(void);
+void PS2_fn_vSignalEndOfDisplay(void);
+void PS2_fn_vCreateDisplaySemaphore(void);
+void PS2_fn_vWaitTransitionOff(void);
+void PS2_fn_vWaitTransitionOn(void);
+void PS2_fn_vTriggerTransitionOff(void);
+void PS2_fn_vTriggerTransitionOn(void);
+void PS2_fn_vCreateTransitionSemaphores(void);
+void PS2_fn_vLeaveGLCriticalSection(void);
+void PS2_fn_vEnterGLCriticalSection(void);
+void PS2_fn_vCreateGLCriticalSection(void);
+void PS2_fn_v_CreateEngineThread(void);
+unsigned int PS2_fn_uiGetStackBaseAddress(void);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 530–568 */
 /* addr: 0x003187b0  size: 216 bytes */
@@ -513,6 +224,387 @@ int PS2_fn_lInit(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 505–526 */
+/* addr: 0x00318890  size: 76 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 505
+ *   +0x0008 -> line 518
+ *   +0x001c -> line 520
+ *   +0x0024 -> line 522
+ *   +0x0038 -> line 524
+ *   +0x0040 -> line 526
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 441–501 */
+/* addr: 0x003188e0  size: 212 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 441
+ *   +0x0008 -> line 444
+ *   +0x0010 -> line 450
+ *   +0x0024 -> line 452
+ *   +0x003c -> line 454
+ *   +0x0048 -> line 457
+ *   +0x0050 -> line 461
+ *   +0x0058 -> line 465
+ *   +0x0070 -> line 471
+ *   +0x007c -> line 473
+ *   +0x0088 -> line 479
+ *   +0x00a0 -> line 485
+ *   +0x00ac -> line 496
+ *   +0x00b4 -> line 500
+ *   +0x00c8 -> line 501
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 400–422 */
+/* addr: 0x003189c0  size: 164 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 400
+ *   +0x0004 -> line 403
+ *   +0x0008 -> line 400
+ *   +0x000c -> line 403
+ *   +0x0014 -> line 404
+ *   +0x0018 -> line 406
+ *   +0x001c -> line 404
+ *   +0x0020 -> line 406
+ *   +0x0024 -> line 405
+ *   +0x0028 -> line 407
+ *   +0x002c -> line 404
+ *   +0x0030 -> line 405
+ *   +0x0034 -> line 409
+ *   +0x0040 -> line 411
+ *   +0x004c -> line 413
+ *   +0x005c -> line 414
+ *   +0x0080 -> line 418
+ *   +0x008c -> line 420
+ *   +0x0098 -> line 422
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 341–357 */
+/* addr: 0x00318a70  size: 92 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 341
+ *   +0x0004 -> line 345
+ *   +0x0008 -> line 341
+ *   +0x000c -> line 347
+ *   +0x0010 -> line 341
+ *   +0x0018 -> line 345
+ *   +0x001c -> line 344
+ *   +0x0024 -> line 347
+ *   +0x0030 -> line 354
+ *   +0x0034 -> line 352
+ *   +0x0038 -> line 351
+ *   +0x003c -> line 354
+ *   +0x0048 -> line 357
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 315–315 */
+/* addr: 0x00318ad0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 315
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 289–298 */
+/* addr: 0x00318ae0  size: 44 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 289
+ *   +0x0004 -> line 293
+ *   +0x0008 -> line 289
+ *   +0x000c -> line 295
+ *   +0x0010 -> line 293
+ *   +0x0014 -> line 295
+ *   +0x0020 -> line 298
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 282–282 */
+/* addr: 0x00318b10  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 282
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 272–272 */
+/* addr: 0x00318b20  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 272
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 262–262 */
+/* addr: 0x00318b30  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 262
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 252–252 */
+/* addr: 0x00318b40  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 252
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 229–245 */
+/* addr: 0x00318b50  size: 92 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 229
+ *   +0x0004 -> line 233
+ *   +0x0008 -> line 229
+ *   +0x000c -> line 235
+ *   +0x0010 -> line 229
+ *   +0x0018 -> line 233
+ *   +0x001c -> line 232
+ *   +0x0024 -> line 235
+ *   +0x0030 -> line 242
+ *   +0x0034 -> line 240
+ *   +0x0038 -> line 239
+ *   +0x003c -> line 242
+ *   +0x0048 -> line 245
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 224–224 */
+/* addr: 0x00318bb0  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 224
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 218–218 */
+/* addr: 0x00318bc0  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 218
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 211–211 */
+/* addr: 0x00318bd0  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 211
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 168–204 */
+/* addr: 0x00318be0  size: 200 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 168
+ *   +0x0004 -> line 173
+ *   +0x0008 -> line 168
+ *   +0x000c -> line 173
+ *   +0x0014 -> line 174
+ *   +0x0018 -> line 176
+ *   +0x001c -> line 174
+ *   +0x0020 -> line 176
+ *   +0x0024 -> line 175
+ *   +0x0028 -> line 177
+ *   +0x002c -> line 174
+ *   +0x0030 -> line 175
+ *   +0x0034 -> line 179
+ *   +0x0040 -> line 181
+ *   +0x004c -> line 183
+ *   +0x005c -> line 184
+ *   +0x0080 -> line 188
+ *   +0x0090 -> line 190
+ *   +0x009c -> line 196
+ *   +0x00a4 -> line 200
+ *   +0x00b0 -> line 202
+ *   +0x00bc -> line 204
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+int GetThreadId(void);
+int ReferThreadStatus(int tid, ThreadParam* info);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 155–164 */
+/* addr: 0x00318cb0  size: 44 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 155
+ *   +0x0008 -> line 159
+ *   +0x0010 -> line 161
+ *   +0x001c -> line 163
+ *   +0x0020 -> line 164
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* Debug info says void, but the stack base is returned in $v0 (ui prefix). */
+unsigned int PS2_fn_uiGetStackBaseAddress(void)
+{
+    ThreadParam T;
+    int Tid;
+
+    Tid = GetThreadId();
+
+    ReferThreadStatus(Tid, &T);
+
+    return T.stack;
+}
+
+void PS2_fn_v_CreateEngineThread(void)
+{
+    ThreadParam T;
+    T.entry = (void (*)(void*))fn_v_EngMain_MainLoop;
+    T.stack = (int)ETStack;
+    T.stackSize = sizeof(ETStack);
+    T.initPriority = 32;
+    T.gpReg = (int)&_gp;
+    memset(ETStack, 0xCD, sizeof(ETStack));
+    ETid = CreateThread(&T);
+    printf("Engine Thread: Id :%d\n", ETid);
+    printf("stack size:0x%08x\t\tstack 0x%08x -> 0x%08x; priority: %d\n", sizeof(ETStack), ETStack, ETStack + sizeof(ETStack) - 1, 32);
+    printf("switching main thread to priority: %d\n", 33);
+    ChangeThreadPriority(MTid, 33);
+    fn_vHandleMemoryBlockSwitch(0);
+    printf("launching engine thread\n");
+    StartThread(ETid, 0);
+}
+
+void PS2_fn_vCreateGLCriticalSection(void)
+{
+    PS2_fn_vCreateCriticalSection(&stGL_CS);
+}
+
+void PS2_fn_vEnterGLCriticalSection(void)
+{
+    PS2_fn_vEnterCriticalSection(&stGL_CS);
+}
+
+void PS2_fn_vLeaveGLCriticalSection(void)
+{
+    PS2_fn_vLeaveCriticalSection(&stGL_CS);
+}
+
+void PS2_fn_vCreateTransitionSemaphores(void)
+{
+    SemaParam S;
+    S.initCount = 0;
+    S.maxCount = 1;
+    TOnSid = CreateSema(&S);
+    S.initCount = 0;
+    S.maxCount = 1;
+    TOffSid = CreateSema(&S);
+}
+
+void PS2_fn_vTriggerTransitionOn(void)
+{
+    SignalSema(TOnSid);
+}
+
+void PS2_fn_vTriggerTransitionOff(void)
+{
+    SignalSema(TOffSid);
+}
+
+void PS2_fn_vWaitTransitionOn(void)
+{
+    WaitSema(TOnSid);
+}
+
+void PS2_fn_vWaitTransitionOff(void)
+{
+    WaitSema(TOffSid);
+}
+
+void PS2_fn_vCreateDisplaySemaphore(void)
+{
+    SemaParam S;
+    S.maxCount = 1;
+    S.initCount = 0;
+    DisplaySid = CreateSema(&S);
+}
+
+void PS2_fn_vSignalEndOfDisplay(void)
+{
+    SignalSema(DisplaySid);
+}
+
+void PS2_fn_vCreateSwitchSemaphores(void)
+{
+    SemaParam S;
+    S.initCount = 0;
+    S.maxCount = 1;
+    LoadSuspendSid = CreateSema(&S);
+    S.initCount = 0;
+    S.maxCount = 1;
+    ContextSaveSid = CreateSema(&S);
+}
+
+void PS2_fn_v_CreateTransitionThread(void)
+{
+    ThreadParam T;
+    T.entry = (void (*)(void*))fn_vOneTrameThread;
+    T.stack = (int)LTStack;
+    T.stackSize = sizeof(LTStack);
+    T.initPriority = 34;
+    T.gpReg = (int)&_gp;
+    memset(LTStack, 0xCD, sizeof(LTStack));
+    LTid = CreateThread(&T);
+    printf("Transition Thread: Id :%d\n", LTid);
+    printf("stack size:0x%08x\t\tstack 0x%08x -> 0x%08x; priority: %d\n", sizeof(LTStack), LTStack, LTStack + sizeof(LTStack) - 1, 34);
+    printf("launching transition thread\n");
+    StartThread(LTid, 0);
+}
+
+void PS2_fn_vThreadSwitch(void)
+{
+    WaitSema(DisplaySid);
+
+    if (g_iThreadDebugOutput) printf("MT: draw T blocked on VBL wait\n");
+
+    if (g_iThreadDebugOutput) printf("MT: memory switch: -> restore load mode; sleep\n");
+
+    fn_vHandleMemoryBlockSwitch(1);
+
+    GAM_fn_vCheckJoyConnections();
+
+    WaitSema(LoadSuspendSid);
+
+    if (g_iThreadDebugOutput) printf("MT: waken up\n");
+
+    PS2_fn_vEnterCriticalSection(&stGL_CS);
+
+    PS2_fn_vLeaveCriticalSection(&stGL_CS);
+
+    if (g_iThreadDebugOutput) printf("memory switch: -> save load mode; wake draw T up\n");
+
+    fn_vHandleMemoryBlockSwitch(0);
+
+    SignalSema(ContextSaveSid);
+
+    if (g_iThreadDebugOutput) printf("MT: end of thread switch\n");
+}
+
+void PS2_fn_vWakeupMainThread(void)
+{
+    if (g_iThreadDebugOutput)
+        printf("draw T :waking up main thread\n");
+    SignalSema(LoadSuspendSid);
+    if (g_iThreadDebugOutput)
+        printf("draw T :sleeping\n");
+    WaitSema(ContextSaveSid);
+}
+
 void PS2_fn_vFlipThreadsPriority(void)
 {
     int ft_id;
@@ -547,368 +639,115 @@ void PS2_fn_vFlipThreadsPriority(void)
     ChangeThreadPriority(bt_id, bt_priority);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 505–526 */
-/* addr: 0x00318890  size: 76 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 505
- *   +0x0008 -> line 518
- *   +0x001c -> line 520
- *   +0x0024 -> line 522
- *   +0x0038 -> line 524
- *   +0x0040 -> line 526
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void PS2_fn_vWakeupMainThread(void)
+int PS2_fn_lInit(void)
 {
-    if (g_iThreadDebugOutput)
-        printf("draw T :waking up main thread\n");
-    SignalSema(LoadSuspendSid);
-    if (g_iThreadDebugOutput)
-        printf("draw T :sleeping\n");
-    WaitSema(ContextSaveSid);
-}
+    int i;
+    int MTid;
+    char* mes;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 441–501 */
-/* addr: 0x003188e0  size: 212 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 441
- *   +0x0008 -> line 444
- *   +0x0010 -> line 450
- *   +0x0024 -> line 452
- *   +0x003c -> line 454
- *   +0x0048 -> line 457
- *   +0x0050 -> line 461
- *   +0x0058 -> line 465
- *   +0x0070 -> line 471
- *   +0x007c -> line 473
- *   +0x0088 -> line 479
- *   +0x00a0 -> line 485
- *   +0x00ac -> line 496
- *   +0x00b4 -> line 500
- *   +0x00c8 -> line 501
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void PS2_fn_vThreadSwitch(void)
-{
-    WaitSema(DisplaySid);
+    sceSifInitRpc(0);
 
-    if (g_iThreadDebugOutput) printf("MT: draw T blocked on VBL wait\n");
+    GLI_PrintDebugString("Initialisation CD");
+    sceCdInit(0);
 
-    if (g_iThreadDebugOutput) printf("MT: memory switch: -> restore load mode; sleep\n");
+    GLI_PrintDebugString("REBOOT IOP");
 
-    fn_vHandleMemoryBlockSwitch(1);
+    do { } while (sceSifRebootIop((int)FMN_SCE_AddBaseDirectory("cdrom0:\\IRX252\\IOPRP252.IMG;1")) == 0);
 
-    GAM_fn_vCheckJoyConnections();
+    do { } while (sceSifSyncIop() == 0);
 
-    WaitSema(LoadSuspendSid);
+    sceGsResetPath();
+    i = sceDmaGetChan(2);
 
-    if (g_iThreadDebugOutput) printf("MT: waken up\n");
+    dmaGIF = i;
 
-    PS2_fn_vEnterCriticalSection(&stGL_CS);
+    ClearVRAM(0, 0, 0, 0);
+    for (i = 0; i < 5; i++) sceGsSyncV(0);
 
-    PS2_fn_vLeaveCriticalSection(&stGL_CS);
+    GLI_fn_vFirstInitOpenGL();
+    GLI_fn_vSetSwapBufferCallback(fn_v_EngMain_VBLCallback);
 
-    if (g_iThreadDebugOutput) printf("memory switch: -> save load mode; wake draw T up\n");
+    FlushCache(0);
 
-    fn_vHandleMemoryBlockSwitch(0);
+    i = 0;
+    for (; i < 5; i++) sceGsSyncV(0);
 
-    SignalSema(ContextSaveSid);
+    GLIPS2_vDisplayFirstLoadingBar(0.0f);
 
-    if (g_iThreadDebugOutput) printf("MT: end of thread switch\n");
-}
+    sceSifInitRpc(0);
+    sceSifLoadFileReset();
+    sceFsReset();
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 400–422 */
-/* addr: 0x003189c0  size: 164 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 400
- *   +0x0004 -> line 403
- *   +0x0008 -> line 400
- *   +0x000c -> line 403
- *   +0x0014 -> line 404
- *   +0x0018 -> line 406
- *   +0x001c -> line 404
- *   +0x0020 -> line 406
- *   +0x0024 -> line 405
- *   +0x0028 -> line 407
- *   +0x002c -> line 404
- *   +0x0030 -> line 405
- *   +0x0034 -> line 409
- *   +0x0040 -> line 411
- *   +0x004c -> line 413
- *   +0x005c -> line 414
- *   +0x0080 -> line 418
- *   +0x008c -> line 420
- *   +0x0098 -> line 422
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void PS2_fn_v_CreateTransitionThread(void)
-{
-    ThreadParam T;
-    T.entry = (void (*)(void*))fn_vOneTrameThread;
-    T.stack = (int)LTStack;
-    T.stackSize = sizeof(LTStack);
-    T.initPriority = 34;
-    T.gpReg = (int)&_gp;
-    memset(LTStack, 0xCD, sizeof(LTStack));
-    LTid = CreateThread(&T);
-    printf("Transition Thread: Id :%d\n", LTid);
-    printf("stack size:0x%08x\t\tstack 0x%08x -> 0x%08x; priority: %d\n", sizeof(LTStack), LTStack, LTStack + sizeof(LTStack) - 1, 34);
-    printf("launching transition thread\n");
-    StartThread(LTid, 0);
-}
+    GLIPS2_vDisplayFirstLoadingBar(10.0f);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 341–357 */
-/* addr: 0x00318a70  size: 92 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 341
- *   +0x0004 -> line 345
- *   +0x0008 -> line 341
- *   +0x000c -> line 347
- *   +0x0010 -> line 341
- *   +0x0018 -> line 345
- *   +0x001c -> line 344
- *   +0x0024 -> line 347
- *   +0x0030 -> line 354
- *   +0x0034 -> line 352
- *   +0x0038 -> line 351
- *   +0x003c -> line 354
- *   +0x0048 -> line 357
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void PS2_fn_vCreateSwitchSemaphores(void)
-{
-    SemaParam S;
-    S.initCount = 0;
-    S.maxCount = 1;
-    LoadSuspendSid = CreateSema(&S);
-    S.initCount = 0;
-    S.maxCount = 1;
-    ContextSaveSid = CreateSema(&S);
-}
+    GLI_PrintDebugString("CD Mode");
+    sceCdInit(0);
+    sceCdMmode(PS2_fn_iGetCDMediaMode());
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 315–315 */
-/* addr: 0x00318ad0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 315
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void PS2_fn_vSignalEndOfDisplay(void)
-{
-    SignalSema(DisplaySid);
-}
+    GLI_PrintDebugString("SIO2MAN");
+    sceCdDiskReady(0);
+    if (sceSifLoadModule((int)FMN_SCE_AddBaseDirectory("cdrom0:\\IRX252\\SIO2MAN.IRX;1"), 0, NULL) < 0)
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 289–298 */
-/* addr: 0x00318ae0  size: 44 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 289
- *   +0x0004 -> line 293
- *   +0x0008 -> line 289
- *   +0x000c -> line 295
- *   +0x0010 -> line 293
- *   +0x0014 -> line 295
- *   +0x0020 -> line 298
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void PS2_fn_vCreateDisplaySemaphore(void)
-{
-    SemaParam S;
-    S.maxCount = 1;
-    S.initCount = 0;
-    DisplaySid = CreateSema(&S);
-}
+        return 0;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 282–282 */
-/* addr: 0x00318b10  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 282
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void PS2_fn_vWaitTransitionOff(void)
-{
-    WaitSema(TOffSid);
-}
+    GLIPS2_vDisplayFirstLoadingBar(15.0f);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 272–272 */
-/* addr: 0x00318b20  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 272
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void PS2_fn_vWaitTransitionOn(void)
-{
-    WaitSema(TOnSid);
-}
+    mes = "thpri=9,10";
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 262–262 */
-/* addr: 0x00318b30  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 262
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void PS2_fn_vTriggerTransitionOff(void)
-{
-    SignalSema(TOffSid);
-}
+    sceTtyInit();
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 252–252 */
-/* addr: 0x00318b40  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 252
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void PS2_fn_vTriggerTransitionOn(void)
-{
-    SignalSema(TOnSid);
-}
+    GLIPS2_vDisplayFirstLoadingBar(25.0f);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 229–245 */
-/* addr: 0x00318b50  size: 92 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 229
- *   +0x0004 -> line 233
- *   +0x0008 -> line 229
- *   +0x000c -> line 235
- *   +0x0010 -> line 229
- *   +0x0018 -> line 233
- *   +0x001c -> line 232
- *   +0x0024 -> line 235
- *   +0x0030 -> line 242
- *   +0x0034 -> line 240
- *   +0x0038 -> line 239
- *   +0x003c -> line 242
- *   +0x0048 -> line 245
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void PS2_fn_vCreateTransitionSemaphores(void)
-{
-    SemaParam S;
-    S.initCount = 0;
-    S.maxCount = 1;
-    TOnSid = CreateSema(&S);
-    S.initCount = 0;
-    S.maxCount = 1;
-    TOffSid = CreateSema(&S);
-}
+    GLI_PrintDebugString("PADMAN");
+    sceCdDiskReady(0);
+    if (sceSifLoadModule((int)FMN_SCE_AddBaseDirectory("cdrom0:\\IRX252\\PADMAN.IRX;1"), strlen(mes) + 1, mes) < 0)
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 224–224 */
-/* addr: 0x00318bb0  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 224
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void PS2_fn_vLeaveGLCriticalSection(void)
-{
-    PS2_fn_vLeaveCriticalSection(&stGL_CS);
-}
+        return 0;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 218–218 */
-/* addr: 0x00318bc0  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 218
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void PS2_fn_vEnterGLCriticalSection(void)
-{
-    PS2_fn_vEnterCriticalSection(&stGL_CS);
-}
+    GLIPS2_vDisplayFirstLoadingBar(30.0f);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 211–211 */
-/* addr: 0x00318bd0  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 211
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void PS2_fn_vCreateGLCriticalSection(void)
-{
-    PS2_fn_vCreateCriticalSection(&stGL_CS);
-}
+    mes = "thpri=9";
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 168–204 */
-/* addr: 0x00318be0  size: 200 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 168
- *   +0x0004 -> line 173
- *   +0x0008 -> line 168
- *   +0x000c -> line 173
- *   +0x0014 -> line 174
- *   +0x0018 -> line 176
- *   +0x001c -> line 174
- *   +0x0020 -> line 176
- *   +0x0024 -> line 175
- *   +0x0028 -> line 177
- *   +0x002c -> line 174
- *   +0x0030 -> line 175
- *   +0x0034 -> line 179
- *   +0x0040 -> line 181
- *   +0x004c -> line 183
- *   +0x005c -> line 184
- *   +0x0080 -> line 188
- *   +0x0090 -> line 190
- *   +0x009c -> line 196
- *   +0x00a4 -> line 200
- *   +0x00b0 -> line 202
- *   +0x00bc -> line 204
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void PS2_fn_v_CreateEngineThread(void)
-{
-    ThreadParam T;
-    T.entry = (void (*)(void*))fn_v_EngMain_MainLoop;
-    T.stack = (int)ETStack;
-    T.stackSize = sizeof(ETStack);
-    T.initPriority = 32;
-    T.gpReg = (int)&_gp;
-    memset(ETStack, 0xCD, sizeof(ETStack));
-    ETid = CreateThread(&T);
-    printf("Engine Thread: Id :%d\n", ETid);
-    printf("stack size:0x%08x\t\tstack 0x%08x -> 0x%08x; priority: %d\n", sizeof(ETStack), ETStack, ETStack + sizeof(ETStack) - 1, 32);
-    printf("switching main thread to priority: %d\n", 33);
-    ChangeThreadPriority(MTid, 33);
-    fn_vHandleMemoryBlockSwitch(0);
-    printf("launching engine thread\n");
-    StartThread(ETid, 0);
-}
+    GLI_PrintDebugString("MCMAN");
+    sceCdDiskReady(0);
+    if (sceSifLoadModule((int)FMN_SCE_AddBaseDirectory("cdrom0:\\IRX252\\MCMAN.IRX;1"), strlen(mes) + 1, mes) < 0)
 
-int GetThreadId(void);
-int ReferThreadStatus(int tid, ThreadParam* info);
+        return 0;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 155–164 */
-/* addr: 0x00318cb0  size: 44 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 155
- *   +0x0008 -> line 159
- *   +0x0010 -> line 161
- *   +0x001c -> line 163
- *   +0x0020 -> line 164
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-/* Debug info says void, but the stack base is returned in $v0 (ui prefix). */
-unsigned int PS2_fn_uiGetStackBaseAddress(void)
-{
-    ThreadParam T;
-    int Tid;
+    GLIPS2_vDisplayFirstLoadingBar(40.0f);
 
+    GLI_PrintDebugString("MCSERV");
+    sceCdDiskReady(0);
+    if (sceSifLoadModule((int)FMN_SCE_AddBaseDirectory("cdrom0:\\IRX252\\MCSERV.IRX;1"), strlen(mes) + 1, mes) < 0)
 
+        return 0;
 
-    Tid = GetThreadId();
+    GLIPS2_vDisplayFirstLoadingBar(50.0f);
 
-    ReferThreadStatus(Tid, &T);
+    PS2MC_fn_uiInit(0, 0);
+    GLIPS2_vDisplayFirstLoadingBar(60.0f);
+    PS2MC_fn_vStartMachine();
 
-    return T.stack;
+    GLIPS2_vDisplayFirstLoadingBar(70.0f);
+
+    GLIPS2_vDisplayFirstLoadingBar(80.0f);
+
+    INOPS2_fn_wInit();
+
+    GLI_PrintDebugString("CDInit");
+
+    CD_Init();
+
+    GLI_PrintDebugString("Fin PS2init");
+
+    MTid = GetThreadId();
+    ChangeThreadPriority(MTid, 100);
+
+    GLIPS2_vDisplayFirstLoadingBar(100.0f);
+
+    GLI_vSecondInitPS2GL();
+
+    GAM_vAllocateSaveBloc();
+
+    return 1;
 }

@@ -98,27 +98,14 @@ void GLI_TEX_vKillMemoryChannel(unsigned char ucCurrentChannel);
 void PLD_fn_vUnLoadLevel(void);
 void HMU_fn_vSetMemoriesInFixMode(void);
 
-void fn_vFreeLevelAllowedMemory(void)
-{
-    GLI_TEX_vKillMemoryChannel(HMU_fn_ucGetLevelNormalMemoryBlock());
-    PLD_fn_vUnLoadLevel();
-    HMU_fn_vSetMemoriesInFixMode();
-}
-
-void fn_vBrainCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc)
-{
-    fn_vSimulateMindAllocationFromAnotherMind(_p_stObjectSrc->h_Brain->p_stMind, _p_stObjectDest->h_Brain->p_stMind);
-}
-
-void fn_vBrainDesinit(tdstEngineObject_* p_stObject)
-{
-    if (!p_stObject) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
-    }
-    if (!p_stObject->h_Brain) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
-    }
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void fn_vFreeLevelAllowedMemory(void);
+void fn_vBrainCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc);
+void fn_vBrainDesinit(tdstEngineObject_* p_stObject);
+void fn_vBrainInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit);
+void fn_vBrainFree(void);
+void fn_vBrainAlloc(tdstEngineObject_* p_stObject);
 
 unsigned char fn_bLevelHadTransitionMemory(void);
 void* MC_fn_hGetFirstMainCharNode(void);
@@ -133,6 +120,31 @@ void AI_fn_vInsertDsgVarInSAI(AI_tdstMind_* p_stMind);
  * calling fn_bIsInFix for fn_vSecondPassOfMindLoading's arguments, which MWCC
  * only does when both arguments are calls; a plain field chain is loaded after. */
 static inline AI_tdstMind_* AI_M_p_stGetMind(tdstEngineObject_* p_stObject) { return p_stObject->h_Brain->p_stMind; }
+
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+AI_tdstMind_* fn_pstAllocMind(void);
+
+void fn_vBrainAlloc(tdstEngineObject_* p_stObject)
+{
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (p_stObject->h_Brain) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 13, -1, 255, 255, NULL);
+    }
+
+    {
+        tdstBrain_* hBrain = (tdstBrain_*)HMU_fn_p_vMalloc(sizeof(tdstBrain_), 0);
+        hBrain->p_stMind = fn_pstAllocMind();
+        hBrain->hLastCollidedGoThroughMaterial = (GMT_tdstGameMaterial_*)0xCDCDCDCD;
+        hBrain->bWarnMechanicsFlag = 0;
+        p_stObject->h_Brain = hBrain;
+    }
+}
+
+void fn_vBrainFree(void)
+{
+}
 
 void fn_vBrainInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
 {
@@ -173,27 +185,24 @@ void fn_vBrainInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit
     }
 }
 
-void fn_vBrainFree(void)
-{
-}
-
-void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
-AI_tdstMind_* fn_pstAllocMind(void);
-
-void fn_vBrainAlloc(tdstEngineObject_* p_stObject)
+void fn_vBrainDesinit(tdstEngineObject_* p_stObject)
 {
     if (!p_stObject) {
         Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
     }
-    if (p_stObject->h_Brain) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 13, -1, 255, 255, NULL);
+    if (!p_stObject->h_Brain) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
     }
+}
 
-    {
-        tdstBrain_* hBrain = (tdstBrain_*)HMU_fn_p_vMalloc(sizeof(tdstBrain_), 0);
-        hBrain->p_stMind = fn_pstAllocMind();
-        hBrain->hLastCollidedGoThroughMaterial = (GMT_tdstGameMaterial_*)0xCDCDCDCD;
-        hBrain->bWarnMechanicsFlag = 0;
-        p_stObject->h_Brain = hBrain;
-    }
+void fn_vBrainCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc)
+{
+    fn_vSimulateMindAllocationFromAnotherMind(_p_stObjectSrc->h_Brain->p_stMind, _p_stObjectDest->h_Brain->p_stMind);
+}
+
+void fn_vFreeLevelAllowedMemory(void)
+{
+    GLI_TEX_vKillMemoryChannel(HMU_fn_ucGetLevelNormalMemoryBlock());
+    PLD_fn_vUnLoadLevel();
+    HMU_fn_vSetMemoriesInFixMode();
 }

@@ -1254,111 +1254,6 @@ struct tdstEngineObject_ {
     tdstMSSound_* h_MSSound; /* +0x28 */
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 C_FxList FireFx_g_List;
 C_FxList FireFx_g_ListToDisplay;
 anon_1 __vt__8C_FireFx;
@@ -1419,23 +1314,13 @@ struct C_WaterFx : C_BaseFx {
     C_WaterFx();
 };
 
-C_WaterFx::C_WaterFx()
-{
-    m_pGrids[0] = 0;
-    m_pGrids[1] = 0;
-    m_pIndices = 0;
-    m_pV = 0;
-    m_pT = 0;
-    m_pC = 0;
-    m_pSDL = 0;
-    m_ulCurrentBuffer = 0;
-    m_bPerturbated = 0;
-    m_bTransparent = 0;
-    m_pSearchKey = 0;
-
-    m_bPerturbated = 0;
-    m_fPerturbationStrength = 50.0f;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+extern "C" void FireFx_vAddObject(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* hVisualMaterial, GEO_tdstGeometricObject_* pObj);
+extern "C" void FireFx_vAddObjectToDisplay(GEO_tdstGeometricObject_* pObj);
+extern "C" void FireFx_vDesinit(void);
+extern "C" void FireFx_vDisplay(void);
+extern "C" void FireFx_vProcess(void);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FireFx.cpp lines 364–373 */
 /* addr: 0x002ec4c0  size: 308 bytes */
@@ -1448,10 +1333,6 @@ C_WaterFx::C_WaterFx()
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void FireFx_vAddObject(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* hVisualMaterial, GEO_tdstGeometricObject_* pObj)
-{
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FireFx.cpp lines 350–360 */
 /* addr: 0x002ec600  size: 68 bytes */
@@ -1465,17 +1346,6 @@ void FireFx_vAddObject(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* hVisualM
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void FireFx_vAddObjectToDisplay(GEO_tdstGeometricObject_* pObj)
-{
-    C_FireFx* p;
-
-    p = (C_FireFx*)FireFx_g_List.SearchElement(pObj);
-    if (p)
-    {
-        FireFx_g_ListToDisplay.vAddElement(p);
-        p->SetCurrentFog();
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FireFx.cpp lines 345–345 */
 /* addr: 0x002ec650  size: 8 bytes */
@@ -1484,10 +1354,6 @@ void FireFx_vAddObjectToDisplay(GEO_tdstGeometricObject_* pObj)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void FireFx_vDesinit(void)
-{
-    FireFx_g_List.DeleteAll();
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FireFx.cpp lines 317–339 */
 /* addr: 0x002ec660  size: 120 bytes */
@@ -1509,29 +1375,6 @@ void FireFx_vDesinit(void)
 extern "C" void GLI_vDrawFireSpriteGroup(GLI_tdstMaterial_* param0, C_Vector* pData, unsigned int NbParticles);
 extern "C" void GLI_vEndWorldSprites(void);
 
-void FireFx_vDisplay(void)
-{
-    tdstBaseFxListElement_* p;
-    C_FireFx* pFx;
-
-    p = FireFx_g_ListToDisplay.pFirst;
-    if (p)
-    {
-        FireFx_vClearCop0Register24();
-        goto test;
-loop:
-        pFx = (C_FireFx*)p->pFx;
-        GLI_BIG_GLOBALS_xGlobalAlpha = 0.9f;
-        GLI_vDrawFireSpriteGroup(pFx->m_pMat1, pFx->m_pData, pFx->m_NbParticles);
-        p = p->pNext;
-test:
-        if (p) goto loop;
-        FireFx_g_ListToDisplay.DeleteAllNoFree();
-        GLI_vEndWorldSprites();
-        FireFx_vClearCop0Register24();
-    }
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FireFx.cpp lines 295–313 */
 /* addr: 0x002ec6e0  size: 88 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1547,23 +1390,6 @@ test:
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void FireFx_vProcess(void)
-{
-    tdstBaseFxListElement_* p;
-
-    p = FireFx_g_ListToDisplay.pFirst;
-    if (p)
-    {
-        FireFx_vClearCop0Register24();
-        goto test;
-loop:
-        ((C_FireFx*)p->pFx)->Process();
-        p = p->pNext;
-test:
-        if (p) goto loop;
-        FireFx_vClearCop0Register24();
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FireFx.cpp lines 191–244 */
 /* addr: 0x002ec740  size: 616 bytes */
@@ -1621,17 +1447,6 @@ test:
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void C_FireFx::Process(void)
-{
-    unsigned int i;
-    float fSizeReductor;
-    float ReturnStrength;
-    float fGravity;
-    float TimeDiff;
-    C_Vector* pWork;
-    C_Vector* pVect;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FireFx.cpp lines 112–130 */
 /* addr: 0x002ec9b0  size: 352 bytes */
@@ -1671,8 +1486,102 @@ void C_FireFx::Process(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
 void C_FireFx::InitOneParticle(C_Vector* p)
 {
     C_Vector* pWork;
     /* TODO: decompile from asm/... */
+}
+
+void C_FireFx::Process(void)
+{
+    unsigned int i;
+    float fSizeReductor;
+    float ReturnStrength;
+    float fGravity;
+    float TimeDiff;
+    C_Vector* pWork;
+    C_Vector* pVect;
+    /* TODO: decompile from asm/... */
+}
+
+void FireFx_vProcess(void)
+{
+    tdstBaseFxListElement_* p;
+
+    p = FireFx_g_ListToDisplay.pFirst;
+    if (p)
+    {
+        FireFx_vClearCop0Register24();
+        goto test;
+loop:
+        ((C_FireFx*)p->pFx)->Process();
+        p = p->pNext;
+test:
+        if (p) goto loop;
+        FireFx_vClearCop0Register24();
+    }
+}
+
+void FireFx_vDisplay(void)
+{
+    tdstBaseFxListElement_* p;
+    C_FireFx* pFx;
+
+    p = FireFx_g_ListToDisplay.pFirst;
+    if (p)
+    {
+        FireFx_vClearCop0Register24();
+        goto test;
+loop:
+        pFx = (C_FireFx*)p->pFx;
+        GLI_BIG_GLOBALS_xGlobalAlpha = 0.9f;
+        GLI_vDrawFireSpriteGroup(pFx->m_pMat1, pFx->m_pData, pFx->m_NbParticles);
+        p = p->pNext;
+test:
+        if (p) goto loop;
+        FireFx_g_ListToDisplay.DeleteAllNoFree();
+        GLI_vEndWorldSprites();
+        FireFx_vClearCop0Register24();
+    }
+}
+
+void FireFx_vDesinit(void)
+{
+    FireFx_g_List.DeleteAll();
+}
+
+void FireFx_vAddObjectToDisplay(GEO_tdstGeometricObject_* pObj)
+{
+    C_FireFx* p;
+
+    p = (C_FireFx*)FireFx_g_List.SearchElement(pObj);
+    if (p)
+    {
+        FireFx_g_ListToDisplay.vAddElement(p);
+        p->SetCurrentFog();
+    }
+}
+
+void FireFx_vAddObject(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* hVisualMaterial, GEO_tdstGeometricObject_* pObj)
+{
+    /* TODO: decompile from asm/... */
+}
+
+C_WaterFx::C_WaterFx()
+{
+    m_pGrids[0] = 0;
+    m_pGrids[1] = 0;
+    m_pIndices = 0;
+    m_pV = 0;
+    m_pT = 0;
+    m_pC = 0;
+    m_pSDL = 0;
+    m_ulCurrentBuffer = 0;
+    m_bPerturbated = 0;
+    m_bTransparent = 0;
+    m_pSearchKey = 0;
+
+    m_bPerturbated = 0;
+    m_fPerturbationStrength = 50.0f;
 }

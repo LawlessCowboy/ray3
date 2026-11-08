@@ -119,11 +119,17 @@ def mwcc_flags(owner: Path | str) -> list[str]:
     """Return the compiler flags for a translation unit, by its owning source."""
     if is_game_source(owner):
         return MWCC_FLAGS + GAME_MWCC_FLAGS
+    # The library was built with deferred inlining too: in every PS2GL unit
+    # the retail debug lines descend as addresses rise (last-defined-first
+    # emission), and with the units in that original order deferral lets a
+    # wrapper inline a helper defined after it (PS2GL_ListsRecPly.c's double
+    # wrappers).  Measured over all 22 library units: 1133 matches before and
+    # after, none gained or lost.
     if _relative_owner(owner) in library_o3p_sources():
         # '-O3,p' also turns on the R5900 divide fix (a nop after div.s); the
         # retail library has none, so switch it back off.
-        return MWCC_FLAGS + ['-pragma', 'dividefix off', '-O3,p']
-    return list(MWCC_FLAGS)
+        return MWCC_FLAGS + ['-inline', 'deferred', '-pragma', 'dividefix off', '-O3,p']
+    return MWCC_FLAGS + ['-inline', 'deferred']
 
 
 def _relative_owner(owner: Path | str) -> str:
@@ -1222,7 +1228,12 @@ def compare(entry: dict, verbose: bool = False, source_override: Path | None = N
                     target_symbol = next((other for other in target_symbols
                                           if other.name == symbol.name and other.value == retail_address),
                                          target_symbol)
-            if target_symbol is None and symbol and '$' in symbol.name[1:]:
+            # A function-local static (``name$N``) is numbered per compilation,
+            # so its exact name can belong to an unrelated retail static
+            # (``init$33`` in another unit).  Pair it through the address the
+            # retail instruction uses, not the name, whenever that address is
+            # recoverable and the same-named symbol is not there.
+            if symbol and '$' in symbol.name[1:]:
                 pair_offset = None
                 if reloc_type in (5, 6):
                     others = [other[0] for other in section_relocations
@@ -1233,7 +1244,8 @@ def compare(entry: dict, verbose: bool = False, source_override: Path | None = N
                         pair_offset = (min(others) if reloc_type == 5 else max(others)) - candidate.value
                 address = relocation_target_address(target_bytes, section.data[candidate.value:candidate.value + candidate.size],
                                                     relative, reloc_type, pair_offset, gp)
-                target_symbol = local_static_target(symbol, target_symbols, address)
+                if target_symbol is None or (address is not None and target_symbol.value != address):
+                    target_symbol = local_static_target(symbol, target_symbols, address)
             record = {'offset': relative, 'type': reloc_type,
                       'symbol': symbol.name if symbol else ''}
             relocations.append(record)

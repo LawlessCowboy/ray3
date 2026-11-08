@@ -22,15 +22,28 @@ char* strcpy(char*, const char*);
 unsigned int movie(char* name, int interruptable, float fVolume);
 int printf(const char*, ...);
 
-void VIDSPE_fn_vSetVideoSoundVolume(unsigned int ulVideoSoundVolume)
-{
-    gs_fVideoVolume = (1.0f / 127.0f) * ulVideoSoundVolume;
-    if (gs_fVideoVolume < 0.0f)
-        gs_fVideoVolume = 0.0f;
-    else if (gs_fVideoVolume > 1.0f)
-        gs_fVideoVolume = 1.0f;
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void VIDSPE_fn_vSetVideoSoundVolume(unsigned int ulVideoSoundVolume);
+void VIDSPE_fn_vPlayVideoNow(char* p_szDirectFileName);
+void VIDSPE_fn_vSetVideoQuality(unsigned char ucBPP, unsigned char ucVideoQuality);
 
-    printf("Video Volume Set to %d\n", ulVideoSoundVolume);
+/* VID_fn_vSetVideoQuality tail-forwards both arguments; ucBPP is unused. */
+
+void VIDSPE_fn_vSetVideoQuality(unsigned char ucBPP, unsigned char ucVideoQuality)
+{
+    switch (ucVideoQuality)
+    {
+    case 0:
+        g_stVideoQuality.ucTransfertQuality = 0;
+        break;
+    case 1:
+        break;
+    case 3:
+        break;
+    case 4:
+        break;
+    }
 }
 
 void VIDSPE_fn_vPlayVideoNow(char* p_szDirectFileName)
@@ -62,19 +75,13 @@ void VIDSPE_fn_vPlayVideoNow(char* p_szDirectFileName)
 }
 }
 
-/* VID_fn_vSetVideoQuality tail-forwards both arguments; ucBPP is unused. */
-void VIDSPE_fn_vSetVideoQuality(unsigned char ucBPP, unsigned char ucVideoQuality)
+void VIDSPE_fn_vSetVideoSoundVolume(unsigned int ulVideoSoundVolume)
 {
-    switch (ucVideoQuality)
-    {
-    case 0:
-        g_stVideoQuality.ucTransfertQuality = 0;
-        break;
-    case 1:
-        break;
-    case 3:
-        break;
-    case 4:
-        break;
-    }
+    gs_fVideoVolume = (1.0f / 127.0f) * ulVideoSoundVolume;
+    if (gs_fVideoVolume < 0.0f)
+        gs_fVideoVolume = 0.0f;
+    else if (gs_fVideoVolume > 1.0f)
+        gs_fVideoVolume = 1.0f;
+
+    printf("Video Volume Set to %d\n", ulVideoSoundVolume);
 }

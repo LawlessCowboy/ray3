@@ -79,6 +79,134 @@ struct tdstNodeInterpret_ {
     unsigned char eType; /* +0x7 */
 };
 
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+unsigned int fn_ulSizeOfDsgVar(tdeDsgVarTypeId_ eDsgVarTypeId, unsigned char ucNbElt);
+unsigned char fn_ucGetFieldValue(tdeFieldId_ eFieldId, HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam);
+void fn_vGetFieldType0To255(tdstGetSetParam_* p_stGetSetParam);
+void fn_vGetFieldTypeInteger(tdstGetSetParam_* p_stGetSetParam);
+void fn_vGetFieldTypeFloat(tdstGetSetParam_* p_stGetSetParam);
+void fn_vGetFieldTypeVector(void);
+void fn_vGetFieldTypeComport(void);
+unsigned char fn_ucSetFieldValue(tdeFieldId_ eFieldId, HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam);
+void fn_vSetFieldType0To255(tdstGetSetParam_* p_stGetSetParam);
+void fn_vSetFieldTypeInteger(tdstGetSetParam_* p_stGetSetParam);
+void fn_vSetFieldTypeFloat(tdstGetSetParam_* p_stGetSetParam);
+void fn_vSetFieldTypeVector(void);
+
+tdeFieldTypeId_ fn_eGetEngineFieldType(tdeFieldId_ eFieldId);
+unsigned char (*fn_p_fn_pGetFieldGetFunctionPtr(tdeFieldId_ eFieldId))(HIE_tdstSuperObject_*, tdstGetSetParam_*);
+void (*fn_p_fn_pGetFieldTypeGetFunctionPtr(tdeFieldTypeId_ eFieldTypeId))(tdstGetSetParam_*);
+
+/* Engine float-to-int conversion: retail converts through $f30 at 164 sites
+ * in 77 game functions ("cvt.w.s $f30, x; mfc1 r, $f30"), a register MWCC
+ * never picks for its own conversions. */
+inline long MTH_M_xRealToLong(float _xValue)
+{
+    long _lResult;
+    asm
+    {
+        cvt.w.s f30, _xValue
+        mfc1 _lResult, f30
+    }
+    return _lResult;
+}
+
+unsigned char (*fn_p_fn_pGetFieldSetFunctionPtr(tdeFieldId_ eFieldId))(HIE_tdstSuperObject_*, tdstGetSetParam_*);
+void (*fn_p_fn_pGetFieldTypeSetFunctionPtr(tdeFieldTypeId_ eFieldTypeId))(tdstGetSetParam_*);
+
+void fn_vSetFieldTypeVector(void)
+{
+    return;
+}
+
+void fn_vSetFieldTypeFloat(tdstGetSetParam_* p_stGetSetParam)
+{
+    if (p_stGetSetParam->eType != E_vt_Float) {
+        p_stGetSetParam->uDummy.xValue = p_stGetSetParam->uDummy.lValue;
+        p_stGetSetParam->eType = E_vt_Float;
+    }
+}
+
+void fn_vSetFieldTypeInteger(tdstGetSetParam_* p_stGetSetParam)
+{
+    fn_ucIsThereFloatIfYesConvertItToInteger(p_stGetSetParam);
+}
+
+void fn_vSetFieldType0To255(tdstGetSetParam_* p_stGetSetParam)
+{
+    fn_ucIsThereFloatIfYesConvertItToInteger(p_stGetSetParam);
+}
+
+unsigned char fn_ucSetFieldValue(tdeFieldId_ eFieldId, HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam)
+{
+    void (*p_fn_vSetFieldTypeFunction)(tdstGetSetParam_*);
+    unsigned char (*p_fn_cSetFieldFunction)(HIE_tdstSuperObject_*, tdstGetSetParam_*);
+    tdeFieldTypeId_ eFieldType;
+
+    eFieldType = fn_eGetEngineFieldType(eFieldId);
+    p_fn_cSetFieldFunction = fn_p_fn_pGetFieldSetFunctionPtr(eFieldId);
+    p_fn_vSetFieldTypeFunction = fn_p_fn_pGetFieldTypeSetFunctionPtr(eFieldType);
+    p_fn_vSetFieldTypeFunction(p_stGetSetParam);
+    return p_fn_cSetFieldFunction(hSuperObjPerso, p_stGetSetParam);
+}
+
+void fn_vGetFieldTypeComport(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void fn_vGetFieldTypeVector(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void fn_vGetFieldTypeFloat(tdstGetSetParam_* p_stGetSetParam)
+{
+    if (p_stGetSetParam->eType != E_vt_Float) {
+        p_stGetSetParam->uDummy.xValue = p_stGetSetParam->uDummy.lValue;
+        p_stGetSetParam->eType = E_vt_Float;
+    }
+}
+
+void fn_vGetFieldTypeInteger(tdstGetSetParam_* p_stGetSetParam)
+{
+    if (p_stGetSetParam->eType == E_vt_Float) {
+        p_stGetSetParam->uDummy.lValue = MTH_M_xRealToLong(p_stGetSetParam->uDummy.xValue);
+        p_stGetSetParam->eType = E_vt_Integer;
+    }
+}
+
+void fn_vGetFieldType0To255(tdstGetSetParam_* p_stGetSetParam)
+{
+    if (p_stGetSetParam->eType == E_vt_Float) {
+        p_stGetSetParam->uDummy.lValue = MTH_M_xRealToLong(p_stGetSetParam->uDummy.xValue); p_stGetSetParam->eType = E_vt_Integer;
+    }
+}
+
+unsigned char fn_ucGetFieldValue(tdeFieldId_ eFieldId, HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam)
+{
+    char ret;
+    void (*p_fn_vGetFieldTypeFunction)(tdstGetSetParam_*);
+    unsigned char (*p_fn_cGetFieldFunction)(HIE_tdstSuperObject_*, tdstGetSetParam_*);
+    tdeFieldTypeId_ eFieldType;
+
+    eFieldType = fn_eGetEngineFieldType(eFieldId);
+    p_fn_cGetFieldFunction = fn_p_fn_pGetFieldGetFunctionPtr(eFieldId);
+    p_fn_vGetFieldTypeFunction = fn_p_fn_pGetFieldTypeGetFunctionPtr(eFieldType);
+
+    p_stGetSetParam->uDummy.stVectorValue.xX = 0.0f;
+    p_stGetSetParam->uDummy.stVectorValue.xY = 0.0f;
+    p_stGetSetParam->uDummy.stVectorValue.xZ = 0.0f;
+    p_stGetSetParam->eType = E_vt_None;
+
+    ret = p_fn_cGetFieldFunction(hSuperObjPerso, p_stGetSetParam);
+    if (ret == 1)
+        p_fn_vGetFieldTypeFunction(p_stGetSetParam);
+
+    return ret;
+}
+
 unsigned int fn_ulSizeOfDsgVar(tdeDsgVarTypeId_ eDsgVarTypeId, unsigned char ucNbElt)
 {
     switch (eDsgVarTypeId) {
@@ -121,117 +249,4 @@ unsigned int fn_ulSizeOfDsgVar(tdeDsgVarTypeId_ eDsgVarTypeId, unsigned char ucN
     default:
         return 0;
     }
-}
-
-tdeFieldTypeId_ fn_eGetEngineFieldType(tdeFieldId_ eFieldId);
-unsigned char (*fn_p_fn_pGetFieldGetFunctionPtr(tdeFieldId_ eFieldId))(HIE_tdstSuperObject_*, tdstGetSetParam_*);
-void (*fn_p_fn_pGetFieldTypeGetFunctionPtr(tdeFieldTypeId_ eFieldTypeId))(tdstGetSetParam_*);
-
-unsigned char fn_ucGetFieldValue(tdeFieldId_ eFieldId, HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam)
-{
-    char ret;
-    void (*p_fn_vGetFieldTypeFunction)(tdstGetSetParam_*);
-    unsigned char (*p_fn_cGetFieldFunction)(HIE_tdstSuperObject_*, tdstGetSetParam_*);
-    tdeFieldTypeId_ eFieldType;
-
-    eFieldType = fn_eGetEngineFieldType(eFieldId);
-    p_fn_cGetFieldFunction = fn_p_fn_pGetFieldGetFunctionPtr(eFieldId);
-    p_fn_vGetFieldTypeFunction = fn_p_fn_pGetFieldTypeGetFunctionPtr(eFieldType);
-
-    p_stGetSetParam->uDummy.stVectorValue.xX = 0.0f;
-    p_stGetSetParam->uDummy.stVectorValue.xY = 0.0f;
-    p_stGetSetParam->uDummy.stVectorValue.xZ = 0.0f;
-    p_stGetSetParam->eType = E_vt_None;
-
-    ret = p_fn_cGetFieldFunction(hSuperObjPerso, p_stGetSetParam);
-    if (ret == 1)
-        p_fn_vGetFieldTypeFunction(p_stGetSetParam);
-
-    return ret;
-}
-
-/* Engine float-to-int conversion: retail converts through $f30 at 164 sites
- * in 77 game functions ("cvt.w.s $f30, x; mfc1 r, $f30"), a register MWCC
- * never picks for its own conversions. */
-inline long MTH_M_xRealToLong(float _xValue)
-{
-    long _lResult;
-    asm
-    {
-        cvt.w.s f30, _xValue
-        mfc1 _lResult, f30
-    }
-    return _lResult;
-}
-
-void fn_vGetFieldType0To255(tdstGetSetParam_* p_stGetSetParam)
-{
-    if (p_stGetSetParam->eType == E_vt_Float) {
-        p_stGetSetParam->uDummy.lValue = MTH_M_xRealToLong(p_stGetSetParam->uDummy.xValue); p_stGetSetParam->eType = E_vt_Integer;
-    }
-}
-
-void fn_vGetFieldTypeInteger(tdstGetSetParam_* p_stGetSetParam)
-{
-    if (p_stGetSetParam->eType == E_vt_Float) {
-        p_stGetSetParam->uDummy.lValue = MTH_M_xRealToLong(p_stGetSetParam->uDummy.xValue);
-        p_stGetSetParam->eType = E_vt_Integer;
-    }
-}
-
-void fn_vGetFieldTypeFloat(tdstGetSetParam_* p_stGetSetParam)
-{
-    if (p_stGetSetParam->eType != E_vt_Float) {
-        p_stGetSetParam->uDummy.xValue = p_stGetSetParam->uDummy.lValue;
-        p_stGetSetParam->eType = E_vt_Float;
-    }
-}
-
-void fn_vGetFieldTypeVector(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void fn_vGetFieldTypeComport(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-unsigned char (*fn_p_fn_pGetFieldSetFunctionPtr(tdeFieldId_ eFieldId))(HIE_tdstSuperObject_*, tdstGetSetParam_*);
-void (*fn_p_fn_pGetFieldTypeSetFunctionPtr(tdeFieldTypeId_ eFieldTypeId))(tdstGetSetParam_*);
-
-unsigned char fn_ucSetFieldValue(tdeFieldId_ eFieldId, HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam)
-{
-    void (*p_fn_vSetFieldTypeFunction)(tdstGetSetParam_*);
-    unsigned char (*p_fn_cSetFieldFunction)(HIE_tdstSuperObject_*, tdstGetSetParam_*);
-    tdeFieldTypeId_ eFieldType;
-
-    eFieldType = fn_eGetEngineFieldType(eFieldId);
-    p_fn_cSetFieldFunction = fn_p_fn_pGetFieldSetFunctionPtr(eFieldId);
-    p_fn_vSetFieldTypeFunction = fn_p_fn_pGetFieldTypeSetFunctionPtr(eFieldType);
-    p_fn_vSetFieldTypeFunction(p_stGetSetParam);
-    return p_fn_cSetFieldFunction(hSuperObjPerso, p_stGetSetParam);
-}
-
-void fn_vSetFieldType0To255(tdstGetSetParam_* p_stGetSetParam)
-{
-    fn_ucIsThereFloatIfYesConvertItToInteger(p_stGetSetParam);
-}
-
-void fn_vSetFieldTypeInteger(tdstGetSetParam_* p_stGetSetParam)
-{
-    fn_ucIsThereFloatIfYesConvertItToInteger(p_stGetSetParam);
-}
-
-void fn_vSetFieldTypeFloat(tdstGetSetParam_* p_stGetSetParam)
-{
-    if (p_stGetSetParam->eType != E_vt_Float) {
-        p_stGetSetParam->uDummy.xValue = p_stGetSetParam->uDummy.lValue;
-        p_stGetSetParam->eType = E_vt_Float;
-    }
-}
-
-void fn_vSetFieldTypeVector(void)
-{
-    return;
 }

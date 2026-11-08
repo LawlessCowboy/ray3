@@ -184,14 +184,12 @@ int gs_hVisualMaterial;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GEO_vSetFaceOfIndexedTriangles(GEO_tdstGeometricObject_* hObject, short hElement, short xIndexOfFace, short xPoint1, short xPoint2, short xPoint3)
-{
-    GEO_tdstElementIndexedTriangles_* param0;
-    param0 = hObject->d_stListOfElements[hElement];
-    ((GEO_tdstTripledIndex_*)(param0->d_stListOfFacesTripled->a3_xIndex + 0))[xIndexOfFace].a3_xIndex[0] = xPoint1;
-    ((GEO_tdstTripledIndex_*)(param0->d_stListOfFacesTripled->a3_xIndex + 1))[xIndexOfFace].a3_xIndex[0] = xPoint2;
-    ((GEO_tdstTripledIndex_*)(param0->d_stListOfFacesTripled->a3_xIndex + 2))[xIndexOfFace].a3_xIndex[0] = xPoint3;
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void GEO_vSetFaceOfIndexedTriangles(GEO_tdstGeometricObject_* hObject, short hElement, short xIndexOfFace, short xPoint1, short xPoint2, short xPoint3);
+void GEO_fn_vAddObjectToSphere(GEO_tdstGeometricObject_* _hGeometricObject, MTH3D_tdstVector_* _p_stSphereCenter, float* _p_xSphereRadius);
+void GEO_fn_vComputeBoundingSphereOfOneSphereAndOnePoint(MTH3D_tdstVector_* _p_stReturnedSphereCenter, float* _p_xReturnedSphereRadius, MTH3D_tdstVector_* _p_stFirstSphereCenter, float _xFirstSphereRadius, MTH3D_tdstVector_* _p_stSecondSphereCenter);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\GeoBdvEd.c lines 273–342 */
 /* addr: 0x002a41d0  size: 632 bytes */
@@ -247,6 +245,55 @@ void GEO_vSetFaceOfIndexedTriangles(GEO_tdstGeometricObject_* hObject, short hEl
 void GEO_fn_vComputeBoundingSphereOfOneSphereAndOnePoint(MTH3D_tdstVector_* _p_stReturnedSphereCenter, float* _p_xReturnedSphereRadius, MTH3D_tdstVector_* _p_stFirstSphereCenter, float _xFirstSphereRadius, MTH3D_tdstVector_* _p_stSecondSphereCenter);
 void GEO_fn_vComputeBoundingSphereOfTwoSpheres(MTH3D_tdstVector_* _p_stReturnedSphereCenter, float* _p_xReturnedSphereRadius, MTH3D_tdstVector_* _p_stFirstSphereCenter, float _xFirstSphereRadius, MTH3D_tdstVector_* _p_stSecondSphereCenter, float _xSecondSphereRadius);
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\GeoBdvEd.c lines 227–241 */
+/* addr: 0x002a4450  size: 216 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 227
+ *   +0x0024 -> line 228
+ *   +0x003c -> line 229
+ *   +0x004c -> line 231
+ *   +0x0064 -> line 233
+ *   +0x006c -> line 237
+ *   +0x0084 -> line 238
+ *   +0x0090 -> line 239
+ *   +0x0094 -> line 238
+ *   +0x00a0 -> line 239
+ *   +0x00a4 -> line 238
+ *   +0x00cc -> line 239
+ *   +0x00d0 -> line 241
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+/* Recovered PS2 MTH scalar helpers: sqrt.s and the R5900 accumulator ops
+   have no C form under the baseline. */
+#define MTH_SQR3_TO(_result, _x, _y, _z) \
+    asm { mula.s _x, _x }                  \
+    asm { madda.s _y, _y }                 \
+    asm { madd.s _result, _z, _z }
+
+void GEO_fn_vComputeBoundingSphereOfOneSphereAndOnePoint(MTH3D_tdstVector_* _p_stReturnedSphereCenter, float* _p_xReturnedSphereRadius, MTH3D_tdstVector_* _p_stFirstSphereCenter, float _xFirstSphereRadius, MTH3D_tdstVector_* _p_stSecondSphereCenter)
+{
+    float xAlpha;
+    float xX, xY, xZ;
+    float xSqrNorm;
+    float xNorm;
+
+    xX = _p_stFirstSphereCenter->xX - _p_stSecondSphereCenter->xX; xY = _p_stFirstSphereCenter->xY - _p_stSecondSphereCenter->xY; xZ = _p_stFirstSphereCenter->xZ - _p_stSecondSphereCenter->xZ;
+    MTH_SQR3_TO(xSqrNorm, xX, xY, xZ) MTH_SQRT_TO(xNorm, xSqrNorm)
+    if (xNorm <= _xFirstSphereRadius)
+    {
+        *(int*)&_p_stReturnedSphereCenter->xX = *(int*)&_p_stFirstSphereCenter->xX; *(int*)&_p_stReturnedSphereCenter->xY = *(int*)&_p_stFirstSphereCenter->xY; *(int*)&_p_stReturnedSphereCenter->xZ = *(int*)&_p_stFirstSphereCenter->xZ;
+
+        *_p_xReturnedSphereRadius = _xFirstSphereRadius;
+    }
+    else
+    {
+        xAlpha = (1.0f - _xFirstSphereRadius / xNorm) / 2.0f;
+        _p_stReturnedSphereCenter->xX = _p_stFirstSphereCenter->xX + xAlpha * (_p_stSecondSphereCenter->xX - _p_stFirstSphereCenter->xX); _p_stReturnedSphereCenter->xY = _p_stFirstSphereCenter->xY + xAlpha * (_p_stSecondSphereCenter->xY - _p_stFirstSphereCenter->xY); _p_stReturnedSphereCenter->xZ = _p_stFirstSphereCenter->xZ + xAlpha * (_p_stSecondSphereCenter->xZ - _p_stFirstSphereCenter->xZ);
+        *_p_xReturnedSphereRadius = (xNorm + _xFirstSphereRadius) / 2.0f;
+    }
+}
+
 void GEO_fn_vAddObjectToSphere(GEO_tdstGeometricObject_* _hGeometricObject, MTH3D_tdstVector_* _p_stSphereCenter, float* _p_xSphereRadius)
 {
     MTH3D_tdstVector_ stSphereCenterLocal;
@@ -297,51 +344,11 @@ void GEO_fn_vAddObjectToSphere(GEO_tdstGeometricObject_* _hGeometricObject, MTH3
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\GeoBdvEd.c lines 227–241 */
-/* addr: 0x002a4450  size: 216 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 227
- *   +0x0024 -> line 228
- *   +0x003c -> line 229
- *   +0x004c -> line 231
- *   +0x0064 -> line 233
- *   +0x006c -> line 237
- *   +0x0084 -> line 238
- *   +0x0090 -> line 239
- *   +0x0094 -> line 238
- *   +0x00a0 -> line 239
- *   +0x00a4 -> line 238
- *   +0x00cc -> line 239
- *   +0x00d0 -> line 241
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-/* Recovered PS2 MTH scalar helpers: sqrt.s and the R5900 accumulator ops
-   have no C form under the baseline. */
-#define MTH_SQR3_TO(_result, _x, _y, _z) \
-    asm { mula.s _x, _x }                  \
-    asm { madda.s _y, _y }                 \
-    asm { madd.s _result, _z, _z }
-
-void GEO_fn_vComputeBoundingSphereOfOneSphereAndOnePoint(MTH3D_tdstVector_* _p_stReturnedSphereCenter, float* _p_xReturnedSphereRadius, MTH3D_tdstVector_* _p_stFirstSphereCenter, float _xFirstSphereRadius, MTH3D_tdstVector_* _p_stSecondSphereCenter)
+void GEO_vSetFaceOfIndexedTriangles(GEO_tdstGeometricObject_* hObject, short hElement, short xIndexOfFace, short xPoint1, short xPoint2, short xPoint3)
 {
-    float xAlpha;
-    float xX, xY, xZ;
-    float xSqrNorm;
-    float xNorm;
-
-    xX = _p_stFirstSphereCenter->xX - _p_stSecondSphereCenter->xX; xY = _p_stFirstSphereCenter->xY - _p_stSecondSphereCenter->xY; xZ = _p_stFirstSphereCenter->xZ - _p_stSecondSphereCenter->xZ;
-    MTH_SQR3_TO(xSqrNorm, xX, xY, xZ) MTH_SQRT_TO(xNorm, xSqrNorm)
-    if (xNorm <= _xFirstSphereRadius)
-    {
-        *(int*)&_p_stReturnedSphereCenter->xX = *(int*)&_p_stFirstSphereCenter->xX; *(int*)&_p_stReturnedSphereCenter->xY = *(int*)&_p_stFirstSphereCenter->xY; *(int*)&_p_stReturnedSphereCenter->xZ = *(int*)&_p_stFirstSphereCenter->xZ;
-
-        *_p_xReturnedSphereRadius = _xFirstSphereRadius;
-    }
-    else
-    {
-        xAlpha = (1.0f - _xFirstSphereRadius / xNorm) / 2.0f;
-        _p_stReturnedSphereCenter->xX = _p_stFirstSphereCenter->xX + xAlpha * (_p_stSecondSphereCenter->xX - _p_stFirstSphereCenter->xX); _p_stReturnedSphereCenter->xY = _p_stFirstSphereCenter->xY + xAlpha * (_p_stSecondSphereCenter->xY - _p_stFirstSphereCenter->xY); _p_stReturnedSphereCenter->xZ = _p_stFirstSphereCenter->xZ + xAlpha * (_p_stSecondSphereCenter->xZ - _p_stFirstSphereCenter->xZ);
-        *_p_xReturnedSphereRadius = (xNorm + _xFirstSphereRadius) / 2.0f;
-    }
+    GEO_tdstElementIndexedTriangles_* param0;
+    param0 = hObject->d_stListOfElements[hElement];
+    ((GEO_tdstTripledIndex_*)(param0->d_stListOfFacesTripled->a3_xIndex + 0))[xIndexOfFace].a3_xIndex[0] = xPoint1;
+    ((GEO_tdstTripledIndex_*)(param0->d_stListOfFacesTripled->a3_xIndex + 1))[xIndexOfFace].a3_xIndex[0] = xPoint2;
+    ((GEO_tdstTripledIndex_*)(param0->d_stListOfFacesTripled->a3_xIndex + 2))[xIndexOfFace].a3_xIndex[0] = xPoint3;
 }

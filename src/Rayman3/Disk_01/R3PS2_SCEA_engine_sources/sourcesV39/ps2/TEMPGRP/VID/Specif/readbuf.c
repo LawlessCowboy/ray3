@@ -14,10 +14,44 @@ struct anon_0 {
     int size; /* +0x28008 */
 };
 
-int readBufEndGet(anon_0* b, int size)
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+int readBufEndGet(anon_0* b, int size);
+int readBufBeginGet(anon_0* b, unsigned char** ptr);
+int readBufEndPut(anon_0* b, int size);
+int readBufBeginPut(anon_0* b, unsigned char** ptr);
+void readBufDelete(void);
+int readBufCreate(anon_0* b);
+
+int readBufCreate(anon_0* b)
 {
-    size = size < b->count ? size : b->count;
-    b->count -= size;
+    b->count = 0;
+    b->put = 0;
+    b->size = 0x28000;
+}
+
+void readBufDelete(void)
+{
+}
+
+int readBufBeginPut(anon_0* b, unsigned char** ptr)
+{
+    int size;
+
+    size = b->size - b->count;
+    if (size != 0)
+        *ptr = b->data + b->put;
+    return size;
+}
+
+int readBufEndPut(anon_0* b, int size)
+{
+    int available;
+
+    available = b->size - b->count;
+    size = available > size ? size : available;
+    b->put = (b->put + size) % b->size;
+    b->count += size;
     return size;
 }
 
@@ -33,34 +67,9 @@ int readBufBeginGet(anon_0* b, unsigned char** ptr)
     return b->count;
 }
 
-int readBufEndPut(anon_0* b, int size)
+int readBufEndGet(anon_0* b, int size)
 {
-    int available;
-
-    available = b->size - b->count;
-    size = available > size ? size : available;
-    b->put = (b->put + size) % b->size;
-    b->count += size;
+    size = size < b->count ? size : b->count;
+    b->count -= size;
     return size;
-}
-
-int readBufBeginPut(anon_0* b, unsigned char** ptr)
-{
-    int size;
-
-    size = b->size - b->count;
-    if (size != 0)
-        *ptr = b->data + b->put;
-    return size;
-}
-
-void readBufDelete(void)
-{
-}
-
-int readBufCreate(anon_0* b)
-{
-    b->count = 0;
-    b->put = 0;
-    b->size = 0x28000;
 }

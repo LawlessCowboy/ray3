@@ -55,7 +55,6 @@ void PS2glHint(unsigned int target, unsigned int mode);
 /* Debug info says void; the allocation is returned in $v0. */
 void* fn_pvMallocInBinaryPreservingTheCurrentMode(unsigned int size);
 
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\disp.c lines 519–579 */
 /* addr: 0x0012f6f0  size: 796 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -90,70 +89,14 @@ void* fn_pvMallocInBinaryPreservingTheCurrentMode(unsigned int size);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vDisplayImage(void* _p_ImageBuffer, unsigned int _ulWidth, unsigned int _ulHeight)
-{
-    char* p_cTextures;
-    int i;
-    float fImage2ScreenRatioX;
-    int iSync;
-    int iTexWidth;
-    int nbTex;
 
-    fImage2ScreenRatioX = 640.0f / (float)_ulWidth;
-    PS2MC_fn_vUpdateStatus();
-    if (vagSynchroToWait() < 0)
-    {
-        OldStart = StartFrame;
-        GLI_fn_vTimerPS2Counter(&StartFrame);
-        return;
-    }
-    nbTex = (int)((_ulWidth + 0x3F) >> 6);
-    p_cTextures = (char*)(((int)gs_pOrg + 0x3F) & ~0x3F);
-    PS2glHint(0xF09, 1);
-    PS2glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    PS2glColorMask(1, 1, 1, 1);
-    PS2glDepthMask(1);
-    PS2glDisable(0xB50);
-    PS2glClear(0x4100);
-    PS2glDepthMask(0);
-    PS2glMatrixMode(0x1701);
-    PS2glLoadIdentity();
-    PS2glOrtho(0.0f, 640.0f, 480.0f, 0.0f, -1.0f, 1.0f);
-    PS2glMatrixMode(0x1700);
-    PS2glLoadIdentity();
-    FlushCache(0);
-    for (i = 0; i < nbTex; i++)
-    {
-        iTexWidth = (int)(_ulWidth - i * 64);
-        if ((unsigned int)(_ulWidth - i * 64) > 64)
-        {
-            iTexWidth = 64;
-        }
-        fn_vConvertIpuToTex(p_cTextures, (char*)_p_ImageBuffer, 64, (int)_ulHeight, iTexWidth, i * 64);
-        fn_vFeedTexToGl((unsigned char)i, p_cTextures, (unsigned int)iTexWidth, (unsigned int)_ulHeight,
-                        (int)(fImage2ScreenRatioX * (float)(i * 64)), 0,
-                        (int)(fImage2ScreenRatioX * (float)(i * 64 + iTexWidth)), 448);
-    }
-    PS2glDepthMask(1);
-    iSync = vagSynchroToWait();
-    if (iSync >= 0)
-    {
-        do
-        {
-            switchThread();
-            GLI_fn_vTimerPS2Counter(&EndFrame);
-        } while (((float)(EndFrame - StartFrame) / 4915200.0f) < ((float)iSync + 1.1f));
-        PS2glFlush();
-        PS2glFinish();
-        PS2auxSwapBuffers();
-    }
-    OldStart = StartFrame;
-    GLI_fn_vTimerPS2Counter(&StartFrame);
-    if (VID_g_iHasAudio)
-    {
-        vagUpdateSound();
-    }
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void fn_vDisplayImage(void* _p_ImageBuffer, unsigned int _ulWidth, unsigned int _ulHeight);
+void fn_vConvertIpuToTex(char* dst, char* src, int width, int height, int width_to_copy, unsigned int x0);
+void fn_vFeedTexToGl(unsigned char _ucTexNumber, void* _p_vTexture, unsigned int _ulWidth, unsigned int _ulHeight, int x0, int y0f, int x1, int y1f);
+void DesinitGlDevice(void);
+void InitGlDevice(void);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\disp.c lines 425–509 */
 /* addr: 0x0012fa10  size: 2364 bytes */
@@ -227,52 +170,6 @@ void fn_vDisplayImage(void* _p_ImageBuffer, unsigned int _ulWidth, unsigned int 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vConvertIpuToTex(char* dst, char* src, int width, int height, int width_to_copy, unsigned int x0)
-{
-    char* olddest;
-    char* spraddrold;
-    char* spraddr;
-    int h_leftold;
-    int h_left;
-    int j;
-    int i;
-    int h;
-    int w;
-
-    /* The destination carries the IPU tag in its top bits. */
-    olddest = dst;
-    dst = (char*)((unsigned int)dst | 0x30000000);
-    w = width_to_copy / 16;
-    h_left = height / 16;
-    FlushCache(0);
-    memset((void*)0x70000000, 0, 0x3FFF);
-    /* GS DMA tag block used to upload the converted picture. */
-    spraddrold = (char*)0x1000D400;
-    spraddr = (char*)0x1000D410;
-    h_leftold = h_left;
-    *(unsigned int*)0x1000D410 = ((unsigned int)src + (((x0 >> 4) * h_left) << 10)) & 0x0FFFFFF0;
-    *(unsigned int*)0x1000D480 = 0;
-    *(unsigned int*)0x1000D420 = ((h_left < 8 ? h_left : 8) << 10) >> 4;
-    *(unsigned int*)0x1000D400 = 0x100;
-    for (i = 0; i < w; i++)
-    {
-        for (j = 0; j < h_left; j++)
-        {
-            h = h_left - j;
-            if (h > 8)
-            {
-                h = 8;
-            }
-            *(unsigned int*)0x1000D410 = ((unsigned int)src + ((j + h_left * (i + (x0 >> 4))) << 10)) & 0x0FFFFFF0;
-            *(unsigned int*)0x1000D480 = (h_left * 0x400) & 0x3FF0;
-            *(unsigned int*)0x1000D420 = (h << 10) >> 4;
-            *(unsigned int*)0x1000D400 = 0x100;
-            /* TODO: the IPU tag chain and the per-pixel dither table update
-               (gs_keepit1 / gs_keepit2) are still missing here. */
-        }
-    }
-    /* TODO: the GS FIFO wait loops and the final dither table update. */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\disp.c lines 328–378 */
 /* addr: 0x00130350  size: 728 bytes */
@@ -312,39 +209,6 @@ void fn_vConvertIpuToTex(char* dst, char* src, int width, int height, int width_
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vFeedTexToGl(unsigned char _ucTexNumber, void* _p_vTexture, unsigned int _ulWidth, unsigned int _ulHeight, int x0, int y0f, int x1, int y1f)
-{
-    PS2glEnable(0xDE1);
-    PS2glBindTexture(0xDE1, s_iTexGlTable[_ucTexNumber]);
-    PS2glTexImage2D(0xDE1, 0, 0x1908, 0x40, 0x200, 0, 0x1908, 0x1401, _p_vTexture);
-    PS2glTexParameteri(0xDE1, 0x2802, 0x2900);
-    PS2glTexParameteri(0xDE1, 0x2803, 0x2900);
-    PS2glTexParameteri(0xDE1, 0x2800, 0x2601);
-    PS2glTexParameteri(0xDE1, 0x2801, 0x2601);
-    PS2glDisable(0xB44);
-    PS2glDisable(0xBC0);
-    PS2glDisable(0xB71);
-    PS2glDisable(0xB50);
-    PS2glDisable(0xBE2);
-    PS2glDepthMask(0);
-    PS2glMatrixMode(0x1702);
-    PS2glLoadIdentity();
-    PS2glBegin(4);
-    PS2glColor3f(0.5f, 0.5f, 0.5f);
-    PS2glTexCoord2f(0.0f, 0.0f);
-    PS2glVertex2f((float)x0, (float)y0f);
-    PS2glTexCoord2f(0.0f, (float)_ulHeight / 512.0f);
-    PS2glVertex2f((float)x0, (float)y1f);
-    PS2glTexCoord2f((float)_ulWidth / 64.0f, (float)_ulHeight / 512.0f);
-    PS2glVertex2f((float)x1, (float)y1f);
-    PS2glTexCoord2f(0.0f, 0.0f);
-    PS2glVertex2f((float)x0, (float)y0f);
-    PS2glTexCoord2f((float)_ulWidth / 64.0f, (float)_ulHeight / 512.0f);
-    PS2glVertex2f((float)x1, (float)y1f);
-    PS2glTexCoord2f((float)_ulWidth / 64.0f, 0.0f);
-    PS2glVertex2f((float)x1, (float)y0f);
-    PS2glEnd();
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\disp.c lines 124–196 */
 /* addr: 0x00130630  size: 576 bytes */
@@ -396,6 +260,36 @@ void fn_vFeedTexToGl(unsigned char _ucTexNumber, void* _p_vTexture, unsigned int
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\disp.c lines 92–119 */
+/* addr: 0x00130870  size: 84 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 92
+ *   +0x0008 -> line 108
+ *   +0x0010 -> line 110
+ *   +0x001c -> line 111
+ *   +0x0028 -> line 114
+ *   +0x0034 -> line 118
+ *   +0x0038 -> line 114
+ *   +0x003c -> line 118
+ *   +0x0048 -> line 119
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void InitGlDevice(void)
+{
+
+    GLI_vChangeVideoModeForVideos();
+
+    PS2glHint(0x450, 3);
+    PS2glHint(0x444, 0);
+
+    gs_pOrg = (int)fn_pvMallocInBinaryPreservingTheCurrentMode(0x20040);
+
+    PS2glGenTextures(16, s_iTexGlTable);
+}
+
 void DesinitGlDevice(void)
 {
     int i;
@@ -447,47 +341,149 @@ void DesinitGlDevice(void)
     GLI_vRestoreVideoModeAfterVideos();
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\disp.c lines 92–119 */
-/* addr: 0x00130870  size: 84 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 92
- *   +0x0008 -> line 108
- *   +0x0010 -> line 110
- *   +0x001c -> line 111
- *   +0x0028 -> line 114
- *   +0x0034 -> line 118
- *   +0x0038 -> line 114
- *   +0x003c -> line 118
- *   +0x0048 -> line 119
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void InitGlDevice(void)
+void fn_vFeedTexToGl(unsigned char _ucTexNumber, void* _p_vTexture, unsigned int _ulWidth, unsigned int _ulHeight, int x0, int y0f, int x1, int y1f)
 {
+    float fz = 0.0f;
+    PS2glEnable(0xDE1);
+    PS2glBindTexture(0xDE1, s_iTexGlTable[_ucTexNumber]);
+    PS2glTexImage2D(0xDE1, 0, 0x1908, 0x40, 0x200, 0, 0x1908, 0x1401, _p_vTexture);
+    PS2glTexParameteri(0xDE1, 0x2802, 0x2900);
+    PS2glTexParameteri(0xDE1, 0x2803, 0x2900);
+    PS2glTexParameteri(0xDE1, 0x2800, 0x2601);
+    PS2glTexParameteri(0xDE1, 0x2801, 0x2601);
+    PS2glDisable(0xB44);
+    PS2glDisable(0xBC0);
+    PS2glDisable(0xB71);
+    PS2glDisable(0xB50);
+    PS2glDisable(0xBE2);
+    PS2glDepthMask(0);
+    PS2glMatrixMode(0x1702);
+    PS2glLoadIdentity();
+    PS2glBegin(4);
+    PS2glColor3f(0.5f, 0.5f, 0.5f);
+    PS2glTexCoord2f(fz, fz);
+    PS2glVertex2f((float)x0, (float)y0f);
+    PS2glTexCoord2f(fz, (float)_ulHeight / 512.0f);
+    PS2glVertex2f((float)x0, (float)y1f);
+    PS2glTexCoord2f((float)_ulWidth / 64.0f, (float)_ulHeight / 512.0f);
+    PS2glVertex2f((float)x1, (float)y1f);
+    PS2glTexCoord2f(fz, fz);
+    PS2glVertex2f((float)x0, (float)y0f);
+    PS2glTexCoord2f((float)_ulWidth / 64.0f, (float)_ulHeight / 512.0f);
+    PS2glVertex2f((float)x1, (float)y1f);
+    PS2glTexCoord2f((float)_ulWidth / 64.0f, 0.0f);
+    PS2glVertex2f((float)x1, (float)y0f);
+    PS2glEnd();
+}
 
+void fn_vConvertIpuToTex(char* dst, char* src, int width, int height, int width_to_copy, unsigned int x0)
+{
+    char* olddest;
+    char* spraddrold;
+    char* spraddr;
+    int h_leftold;
+    int h_left;
+    int j;
+    int i;
+    int h;
+    int w;
 
+    /* The destination carries the IPU tag in its top bits. */
+    olddest = dst;
+    dst = (char*)((unsigned int)dst | 0x30000000);
+    w = width_to_copy / 16;
+    h_left = height / 16;
+    FlushCache(0);
+    memset((void*)0x70000000, 0, 0x3FFF);
+    /* GS DMA tag block used to upload the converted picture. */
+    spraddrold = (char*)0x1000D400;
+    spraddr = (char*)0x1000D410;
+    h_leftold = h_left;
+    *(unsigned int*)0x1000D410 = ((unsigned int)src + (((x0 >> 4) * h_left) << 10)) & 0x0FFFFFF0;
+    *(unsigned int*)0x1000D480 = 0;
+    *(unsigned int*)0x1000D420 = ((h_left < 8 ? h_left : 8) << 10) >> 4;
+    *(unsigned int*)0x1000D400 = 0x100;
+    for (i = 0; i < w; i++)
+    {
+        for (j = 0; j < h_left; j++)
+        {
+            h = h_left - j;
+            if (h > 8)
+            {
+                h = 8;
+            }
+            *(unsigned int*)0x1000D410 = ((unsigned int)src + ((j + h_left * (i + (x0 >> 4))) << 10)) & 0x0FFFFFF0;
+            *(unsigned int*)0x1000D480 = (h_left * 0x400) & 0x3FF0;
+            *(unsigned int*)0x1000D420 = (h << 10) >> 4;
+            *(unsigned int*)0x1000D400 = 0x100;
+            /* TODO: the IPU tag chain and the per-pixel dither table update
+               (gs_keepit1 / gs_keepit2) are still missing here. */
+        }
+    }
+    /* TODO: the GS FIFO wait loops and the final dither table update. */
+}
 
+void fn_vDisplayImage(void* _p_ImageBuffer, unsigned int _ulWidth, unsigned int _ulHeight)
+{
+    char* p_cTextures;
+    int i;
+    float fImage2ScreenRatioX;
+    int iSync;
+    int iTexWidth;
+    int nbTex;
 
-
-
-
-
-
-
-
-
-
-
-
-    GLI_vChangeVideoModeForVideos();
-
-    PS2glHint(0x450, 3);
-    PS2glHint(0x444, 0);
-
-
-    gs_pOrg = (int)fn_pvMallocInBinaryPreservingTheCurrentMode(0x20040);
-
-
-
-    PS2glGenTextures(16, s_iTexGlTable);
+    fImage2ScreenRatioX = 640.0f / (float)_ulWidth;
+    PS2MC_fn_vUpdateStatus();
+    if (vagSynchroToWait() < 0)
+    {
+        OldStart = StartFrame;
+        GLI_fn_vTimerPS2Counter(&StartFrame);
+        return;
+    }
+    nbTex = (int)((_ulWidth + 0x3F) >> 6);
+    p_cTextures = (char*)(((int)gs_pOrg + 0x3F) & ~0x3F);
+    PS2glHint(0xF09, 1);
+    PS2glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    PS2glColorMask(1, 1, 1, 1);
+    PS2glDepthMask(1);
+    PS2glDisable(0xB50);
+    PS2glClear(0x4100);
+    PS2glDepthMask(0);
+    PS2glMatrixMode(0x1701);
+    PS2glLoadIdentity();
+    PS2glOrtho(0.0f, 640.0f, 480.0f, 0.0f, -1.0f, 1.0f);
+    PS2glMatrixMode(0x1700);
+    PS2glLoadIdentity();
+    FlushCache(0);
+    for (i = 0; i < nbTex; i++)
+    {
+        iTexWidth = (int)(_ulWidth - i * 64);
+        if ((unsigned int)(_ulWidth - i * 64) > 64)
+        {
+            iTexWidth = 64;
+        }
+        fn_vConvertIpuToTex(p_cTextures, (char*)_p_ImageBuffer, 64, (int)_ulHeight, iTexWidth, i * 64);
+        fn_vFeedTexToGl((unsigned char)i, p_cTextures, (unsigned int)iTexWidth, (unsigned int)_ulHeight,
+                        (int)(fImage2ScreenRatioX * (float)(i * 64)), 0,
+                        (int)(fImage2ScreenRatioX * (float)(i * 64 + iTexWidth)), 448);
+    }
+    PS2glDepthMask(1);
+    iSync = vagSynchroToWait();
+    if (iSync >= 0)
+    {
+        do
+        {
+            switchThread();
+            GLI_fn_vTimerPS2Counter(&EndFrame);
+        } while (((float)(EndFrame - StartFrame) / 4915200.0f) < ((float)iSync + 1.1f));
+        PS2glFlush();
+        PS2glFinish();
+        PS2auxSwapBuffers();
+    }
+    OldStart = StartFrame;
+    GLI_fn_vTimerPS2Counter(&StartFrame);
+    if (VID_g_iHasAudio)
+    {
+        vagUpdateSound();
+    }
 }

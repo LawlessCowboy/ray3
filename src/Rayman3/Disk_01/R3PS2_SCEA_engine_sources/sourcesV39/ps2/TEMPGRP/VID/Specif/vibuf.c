@@ -114,48 +114,22 @@ static const int bpShift = 3;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int viBufGetTs(anon_3* f, anon_2* ts)
-{
-    unsigned int d4madr = *(volatile unsigned int*)0x1000B410;
-    unsigned int ipubp = *(volatile unsigned int*)0x10002020;
-    int bp = f->env.ipubp & 0x7f;
-    unsigned int stop;
-    int datasize = f->n * 2048;
-    int isEnd = 0;
-    int tscount;
-    int wt;
-    int i;
-    int rd;
 
-    WaitSema(f->sema);
-
-    ts->pts = -1;
-    ts->dts = -1;
-
-    stop = (datasize + (d4madr - ((((ipubp >> 16) & 3) + ((ipubp >> 8) & 0xf)) << 4) + (bp >> bpShift)) - f->data) % datasize;
-
-    tscount = f->count_ts;
-    wt = f->wt_ts;
-
-    for (i = 0; i < tscount && !isEnd; i++)
-    {
-        rd = (i + (f->n_ts + (wt - tscount))) % f->n_ts;
-
-        if ((int)(stop + datasize - f->ts[rd].pos) % datasize < f->ts[rd].len)
-        {
-            ts->pts = f->ts[rd].pts;
-            ts->dts = f->ts[rd].dts;
-            f->ts[rd].pts = -1;
-            f->ts[rd].dts = -1;
-            isEnd = 1;
-            f->count_ts -= (f->count_ts < 1) ? f->count_ts : 1;
-        }
-    }
-
-    SignalSema(f->sema);
-
-    return 1;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+int viBufGetTs(anon_3* f, anon_2* ts);
+int viBufPutTs(anon_3* f, anon_2* ts);
+int viBufModifyPts(anon_3* f, anon_2* new_ts);
+void viBufFlush(anon_3* f);
+int viBufCount(anon_3* f);
+int viBufDelete(anon_3* f);
+int viBufRestartDMA(anon_3* f);
+int viBufStopDMA(anon_3* f);
+int viBufAddDMA(anon_3* f);
+void viBufEndPut(anon_3* f, int size);
+void viBufBeginPut(anon_3* f, unsigned char** ptr0, int* len0, unsigned char** ptr1, int* len1);
+int viBufReset(anon_3* f);
+int viBufCreate(anon_3* f, long double* data, long double* tag, int size, anon_2* ts, int n_ts);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\vibuf.c lines 574–599 */
 /* addr: 0x00131a10  size: 312 bytes */
@@ -180,29 +154,6 @@ int viBufGetTs(anon_3* f, anon_2* ts)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int viBufPutTs(anon_3* f, anon_2* ts)
-{
-    int ret;
-
-    ret = 0;
-    WaitSema(f->sema);
-    if (f->count_ts < f->n_ts)
-    {
-        viBufModifyPts(f, ts);
-        if (ts->pts >= 0 || ts->dts >= 0)
-        {
-            f->ts[f->wt_ts].pts = ts->pts;
-            ((anon_2*)((char*)f->ts + 8))[f->wt_ts].pts = ts->dts;
-            ((anon_2*)((char*)f->ts + 0x10))[f->wt_ts].pts = ts->pos;
-            ((anon_2*)((char*)f->ts + 0x14))[f->wt_ts].pos = ts->len;
-            f->count_ts++;
-            f->wt_ts = (f->wt_ts + 1) % f->n_ts;
-        }
-        ret = 1;
-    }
-    SignalSema(f->sema);
-    return ret;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\vibuf.c lines 530–567 */
 /* addr: 0x00131b50  size: 336 bytes */
@@ -237,55 +188,6 @@ int viBufPutTs(anon_3* f, anon_2* ts)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int viBufModifyPts(anon_3* f, anon_2* new_ts)
-{
-    anon_2* ts;
-    int rd = (f->n_ts + (f->wt_ts - f->count_ts)) % f->n_ts;
-    int datasize = f->n * 2048;
-    int loop = 1;
-
-    if (f->count_ts > 0)
-    {
-        do
-        {
-            ts = f->ts + rd;
-
-            if (ts->len == 0 || new_ts->len == 0)
-            {
-                break;
-            }
-
-            if ((ts->pos + datasize - new_ts->pos) % datasize < new_ts->len)
-            {
-                int len = new_ts->pos + new_ts->len - ts->pos;
-                len = (ts->len < len) ? ts->len : len;
-
-                ts->pos = (ts->pos + len) % datasize;
-                ts->len -= len;
-
-                if (ts->len == 0)
-                {
-                    if (ts->pts >= 0)
-                    {
-                        ts->pts = -1;
-                        ts->dts = -1;
-                        ts->pos = 0;
-                        ts->len = 0;
-                    }
-                    f->count_ts = (f->count_ts - 1 < 0) ? 0 : f->count_ts - 1;
-                }
-            }
-            else
-            {
-                loop = 0;
-            }
-
-            rd = (rd + 1) % f->n_ts;
-        } while (loop);
-    }
-
-    return 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\vibuf.c lines 515–521 */
 /* addr: 0x00131ca0  size: 80 bytes */
@@ -298,14 +200,6 @@ int viBufModifyPts(anon_3* f, anon_2* new_ts)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void viBufFlush(anon_3* f)
-{
-    WaitSema(f->sema);
-
-    f->readBytes = (f->readBytes + 0x7ff) / 0x800 * 0x800;
-
-    SignalSema(f->sema);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\vibuf.c lines 498–508 */
 /* addr: 0x00131cf0  size: 68 bytes */
@@ -321,14 +215,6 @@ void viBufFlush(anon_3* f)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int viBufCount(anon_3* f)
-{
-    int ret;
-    WaitSema(f->sema);
-    ret = f->readBytes + (f->dmaN << 11);
-    SignalSema(f->sema);
-    return ret;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\vibuf.c lines 466–474 */
 /* addr: 0x00131d40  size: 144 bytes */
@@ -345,15 +231,6 @@ int viBufCount(anon_3* f)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int viBufDelete(anon_3* f)
-{
-    DIntr(); *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 | 0x10000; *(volatile unsigned int*)0x1000B400 = 5; *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 & 0xFFFEFFFF; EIntr();
-    *(volatile unsigned int*)0x1000B420 = 0;
-    *(volatile unsigned int*)0x1000B410 = 0;
-    *(volatile unsigned int*)0x1000B430 = 0;
-    DeleteSema(f->sema);
-    return 1;
-}
 
 static inline void setD3_CHCR(unsigned int val)
 {
@@ -444,6 +321,374 @@ static inline void setD4_CHCR(unsigned int val)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\vibuf.c lines 344–372 */
+/* addr: 0x00132180  size: 356 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 344
+ *   +0x0010 -> line 345
+ *   +0x0018 -> line 349
+ *   +0x0068 -> line 351
+ *   +0x0074 -> line 352
+ *   +0x0080 -> line 353
+ *   +0x008c -> line 354
+ *   +0x0098 -> line 358
+ *   +0x00c0 -> line 361
+ *   +0x010c -> line 362
+ *   +0x0118 -> line 363
+ *   +0x0124 -> line 364
+ *   +0x0130 -> line 366
+ *   +0x013c -> line 367
+ *   +0x0148 -> line 369
+ *   +0x0150 -> line 372
+ *   +0x0154 -> line 371
+ *   +0x0158 -> line 372
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\vibuf.c lines 247–337 */
+/* addr: 0x001322f0  size: 756 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 247
+ *   +0x0018 -> line 257
+ *   +0x0024 -> line 259
+ *   +0x0030 -> line 260
+ *   +0x0038 -> line 261
+ *   +0x0040 -> line 273
+ *   +0x0090 -> line 274
+ *   +0x0094 -> line 280
+ *   +0x0098 -> line 274
+ *   +0x009c -> line 280
+ *   +0x00c0 -> line 281
+ *   +0x00f8 -> line 282
+ *   +0x0110 -> line 283
+ *   +0x011c -> line 289
+ *   +0x0128 -> line 290
+ *   +0x012c -> line 289
+ *   +0x0140 -> line 290
+ *   +0x0150 -> line 291
+ *   +0x0168 -> line 297
+ *   +0x0170 -> line 298
+ *   +0x0174 -> line 299
+ *   +0x0178 -> line 298
+ *   +0x017c -> line 299
+ *   +0x0180 -> line 298
+ *   +0x0184 -> line 305
+ *   +0x0188 -> line 299
+ *   +0x0190 -> line 298
+ *   +0x01ac -> line 299
+ *   +0x01d0 -> line 309
+ *   +0x01dc -> line 311
+ *   +0x021c -> line 318
+ *   +0x0220 -> line 311
+ *   +0x0224 -> line 317
+ *   +0x0228 -> line 311
+ *   +0x022c -> line 318
+ *   +0x0230 -> line 311
+ *   +0x0238 -> line 317
+ *   +0x024c -> line 318
+ *   +0x0258 -> line 320
+ *   +0x0264 -> line 326
+ *   +0x0270 -> line 327
+ *   +0x0278 -> line 329
+ *   +0x0284 -> line 331
+ *   +0x02d0 -> line 334
+ *   +0x02d8 -> line 336
+ *   +0x02dc -> line 337
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\vibuf.c lines 233–240 */
+/* addr: 0x001325f0  size: 92 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 233
+ *   +0x0014 -> line 234
+ *   +0x0020 -> line 236
+ *   +0x0024 -> line 237
+ *   +0x002c -> line 236
+ *   +0x0034 -> line 237
+ *   +0x0040 -> line 239
+ *   +0x0048 -> line 240
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\vibuf.c lines 199–226 */
+/* addr: 0x00132650  size: 244 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 199
+ *   +0x002c -> line 205
+ *   +0x0038 -> line 210
+ *   +0x0048 -> line 211
+ *   +0x004c -> line 210
+ *   +0x005c -> line 211
+ *   +0x006c -> line 210
+ *   +0x0070 -> line 213
+ *   +0x0080 -> line 214
+ *   +0x008c -> line 215
+ *   +0x0090 -> line 216
+ *   +0x0094 -> line 218
+ *   +0x009c -> line 219
+ *   +0x00a8 -> line 220
+ *   +0x00b4 -> line 221
+ *   +0x00bc -> line 222
+ *   +0x00cc -> line 225
+ *   +0x00d4 -> line 226
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\vibuf.c lines 149–191 */
+/* addr: 0x00132750  size: 404 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 149
+ *   +0x0004 -> line 155
+ *   +0x0008 -> line 149
+ *   +0x000c -> line 159
+ *   +0x0010 -> line 152
+ *   +0x0018 -> line 153
+ *   +0x001c -> line 159
+ *   +0x0020 -> line 154
+ *   +0x0024 -> line 155
+ *   +0x0028 -> line 157
+ *   +0x002c -> line 159
+ *   +0x0034 -> line 160
+ *   +0x0038 -> line 164
+ *   +0x003c -> line 160
+ *   +0x0044 -> line 161
+ *   +0x0050 -> line 162
+ *   +0x005c -> line 163
+ *   +0x006c -> line 164
+ *   +0x0080 -> line 170
+ *   +0x0094 -> line 171
+ *   +0x0098 -> line 177
+ *   +0x009c -> line 171
+ *   +0x00c4 -> line 177
+ *   +0x00d8 -> line 178
+ *   +0x00ec -> line 185
+ *   +0x00f0 -> line 178
+ *   +0x010c -> line 185
+ *   +0x0110 -> line 186
+ *   +0x0124 -> line 187
+ *   +0x0134 -> line 188
+ *   +0x0184 -> line 191
+ *   +0x0188 -> line 190
+ *   +0x018c -> line 191
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\vibuf.c lines 114–142 */
+/* addr: 0x001328f0  size: 116 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 114
+ *   +0x0004 -> line 118
+ *   +0x0008 -> line 114
+ *   +0x000c -> line 120
+ *   +0x0010 -> line 114
+ *   +0x0014 -> line 117
+ *   +0x001c -> line 118
+ *   +0x002c -> line 129
+ *   +0x0030 -> line 119
+ *   +0x0034 -> line 120
+ *   +0x0038 -> line 122
+ *   +0x003c -> line 123
+ *   +0x0040 -> line 129
+ *   +0x0044 -> line 131
+ *   +0x0054 -> line 137
+ *   +0x005c -> line 139
+ *   +0x0060 -> line 141
+ *   +0x0064 -> line 142
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int CreateSema(SemaParam* param);
+
+int viBufCreate(anon_3* f, long double* data, long double* tag, int size, anon_2* ts, int n_ts)
+{
+    SemaParam param;
+
+    f->data = (int)data;
+    f->tag = ((unsigned int)tag & 0x0fffffff) | 0x20000000;
+    f->n = size;
+    f->buffSize = size << 11;
+    f->ts = ts;
+    f->n_ts = n_ts;
+
+    param.initCount = 1;
+    param.maxCount = 1;
+    f->sema = CreateSema(&param);
+
+    viBufReset(f);
+
+    f->totalBytes = 0;
+
+    return 1;
+}
+
+int viBufReset(anon_3* f)
+{
+    int i;
+
+    f->dmaStart = 0;
+    f->dmaN = 0;
+    f->readBytes = 0;
+    f->isActive = 1;
+
+    f->count_ts = 0;
+    f->wt_ts = 0;
+    for (i = 0; i < f->n_ts; i++)
+    {
+        f->ts[i].pts = -1;
+        f->ts[i].dts = -1;
+        f->ts[i].pos = 0;
+        f->ts[i].len = 0;
+    }
+
+    for (i = 0; i < f->n; i++)
+    {
+        ((unsigned long*)f->tag)[i * 2] = (((unsigned long)(unsigned int)(f->data + i * 2048) & 0x0fffffff) << 32) | 0x30000080;
+    }
+
+    ((unsigned long*)f->tag)[i * 2] = ((unsigned long)((unsigned int)f->tag & 0x0fffffff) << 32) | 0x20000000;
+
+    *(volatile unsigned int*)0x1000B420 = 0;
+    *(volatile unsigned int*)0x1000B410 = (unsigned int)f->data & 0x0fffffff;
+    *(volatile unsigned int*)0x1000B430 = (unsigned int)f->tag & 0x0fffffff;
+    DIntr(); *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 | 0x10000; *(volatile unsigned int*)0x1000B400 = 5; *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 & 0xFFFEFFFF; EIntr();
+
+    return 1;
+}
+
+void viBufBeginPut(anon_3* f, unsigned char** ptr0, int* len0, unsigned char** ptr1, int* len1)
+{
+    int en;
+    int es;
+
+    WaitSema(f->sema);
+
+    en = (((f->dmaStart + f->dmaN) << 11) + f->readBytes) % f->buffSize;
+    es = (((f->n - 2) - f->dmaN) << 11) - f->readBytes;
+
+    if (es <= f->buffSize - en)
+    {
+        *ptr0 = (unsigned char*)(f->data + en);
+        *len0 = es;
+        *ptr1 = 0;
+        *len1 = 0;
+    }
+    else
+    {
+        *ptr0 = (unsigned char*)(f->data + en);
+        *len0 = f->buffSize - en;
+        *ptr1 = (unsigned char*)f->data;
+        *len1 = es - (f->buffSize - en);
+    }
+
+    SignalSema(f->sema);
+}
+
+void viBufEndPut(anon_3* f, int size)
+{
+    WaitSema(f->sema);
+    f->readBytes += size;
+    f->totalBytes += (long)size;
+    SignalSema(f->sema);
+}
+
+int viBufAddDMA(anon_3* f)
+{
+    int i;
+    int index;
+    int last;
+    unsigned int d4chcr;
+    int isNewData = 0;
+    int consume;
+    int read_start;
+    int read_n;
+    unsigned long addr;
+
+    WaitSema(f->sema);
+
+    if (!f->isActive)
+    {
+        ErrMessage("DMA ADD not active\n");
+        return 0;
+    }
+
+    DIntr(); *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 | 0x10000; *(volatile unsigned int*)0x1000B400 = 5; *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 & 0xFFFEFFFF; EIntr();
+    d4chcr = *(volatile unsigned int*)0x1000B400;
+
+    index = (*(unsigned int*)0x1000B410 == ((unsigned int)(f->tag + (f->n + 1) * 16) & 0x0fffffff)) ? 0 : (*(unsigned int*)0x1000B410 - f->data) / 2048;
+    consume = (index + f->n - f->dmaStart) % f->n;
+    f->dmaStart = (f->dmaStart + consume) % f->n;
+    f->dmaN -= consume;
+
+    read_start = (f->dmaStart + f->dmaN) % f->n;
+    read_n = f->readBytes / 2048;
+    f->readBytes %= 2048;
+
+    if (read_n > 0)
+    {
+        index = (f->n + (f->dmaStart + f->dmaN - 1)) % f->n;
+        *(unsigned long*)(f->tag + index * 16) = ((unsigned long)(unsigned int)(f->data + index * 2048) << 32) | 0x30000080;
+        isNewData = 1;
+    }
+
+    for (i = 0; i < read_n; i++)
+    {
+        addr = (unsigned long)(unsigned int)(f->data + read_start * 2048) << 32;
+        *(unsigned long*)(f->tag + read_start * 16) = addr | ((unsigned long)(unsigned int)((i == read_n - 1) ? 0 : 3) << 28) | 0x80;
+        read_start = (read_start + 1) % f->n;
+    }
+
+    f->dmaN += read_n;
+
+    if (f->dmaN)
+    {
+        if (isNewData)
+        {
+            d4chcr = (d4chcr & 0x0fffffff) | 0x30000000;
+        }
+        DIntr(); *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 | 0x10000; *(volatile unsigned int*)0x1000B400 = d4chcr | 0x100; *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 & 0xFFFEFFFF; EIntr();
+    }
+
+    SignalSema(f->sema);
+
+    return 1;
+}
+
+int viBufStopDMA(anon_3* f)
+{
+    WaitSema(f->sema);
+
+    f->isActive = 0;
+
+    DIntr(); *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 | 0x10000; *(volatile unsigned int*)0x1000B400 = 5; *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 & 0xFFFEFFFF; EIntr();
+
+    f->env.d4madr = *(volatile unsigned int*)0x1000B410;
+    f->env.d4tadr = *(volatile unsigned int*)0x1000B430;
+    f->env.d4qwc = *(volatile unsigned int*)0x1000B420;
+    f->env.d4chcr = *(volatile unsigned int*)0x1000B400;
+
+    while (*(volatile unsigned int*)0x10002010 & 0xF0)
+        ;
+
+    DIntr(); *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 | 0x10000; *(volatile unsigned int*)0x1000B000 = 0; *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 & 0xFFFEFFFF; EIntr();
+    f->env.d3madr = *(volatile unsigned int*)0x1000B010;
+    f->env.d3qwc = *(volatile unsigned int*)0x1000B020;
+    f->env.d3chcr = *(volatile unsigned int*)0x1000B000;
+
+    f->env.ipubp = *(volatile unsigned int*)0x10002020;
+    f->env.ipuctrl = *(volatile unsigned int*)0x10002010;
+
+    SignalSema(f->sema);
+
+    return 1;
+}
+
 int viBufRestartDMA(anon_3* f)
 {
     int index_next;
@@ -530,364 +775,147 @@ int viBufRestartDMA(anon_3* f)
     return 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\vibuf.c lines 344–372 */
-/* addr: 0x00132180  size: 356 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 344
- *   +0x0010 -> line 345
- *   +0x0018 -> line 349
- *   +0x0068 -> line 351
- *   +0x0074 -> line 352
- *   +0x0080 -> line 353
- *   +0x008c -> line 354
- *   +0x0098 -> line 358
- *   +0x00c0 -> line 361
- *   +0x010c -> line 362
- *   +0x0118 -> line 363
- *   +0x0124 -> line 364
- *   +0x0130 -> line 366
- *   +0x013c -> line 367
- *   +0x0148 -> line 369
- *   +0x0150 -> line 372
- *   +0x0154 -> line 371
- *   +0x0158 -> line 372
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int viBufStopDMA(anon_3* f)
+int viBufDelete(anon_3* f)
 {
-    WaitSema(f->sema);
-
-    f->isActive = 0;
-
     DIntr(); *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 | 0x10000; *(volatile unsigned int*)0x1000B400 = 5; *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 & 0xFFFEFFFF; EIntr();
-
-    f->env.d4madr = *(volatile unsigned int*)0x1000B410;
-    f->env.d4tadr = *(volatile unsigned int*)0x1000B430;
-    f->env.d4qwc = *(volatile unsigned int*)0x1000B420;
-    f->env.d4chcr = *(volatile unsigned int*)0x1000B400;
-
-    while (*(volatile unsigned int*)0x10002010 & 0xF0)
-        ;
-
-    DIntr(); *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 | 0x10000; *(volatile unsigned int*)0x1000B000 = 0; *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 & 0xFFFEFFFF; EIntr();
-    f->env.d3madr = *(volatile unsigned int*)0x1000B010;
-    f->env.d3qwc = *(volatile unsigned int*)0x1000B020;
-    f->env.d3chcr = *(volatile unsigned int*)0x1000B000;
-
-    f->env.ipubp = *(volatile unsigned int*)0x10002020;
-    f->env.ipuctrl = *(volatile unsigned int*)0x10002010;
-
-    SignalSema(f->sema);
-
-    return 1;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\vibuf.c lines 247–337 */
-/* addr: 0x001322f0  size: 756 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 247
- *   +0x0018 -> line 257
- *   +0x0024 -> line 259
- *   +0x0030 -> line 260
- *   +0x0038 -> line 261
- *   +0x0040 -> line 273
- *   +0x0090 -> line 274
- *   +0x0094 -> line 280
- *   +0x0098 -> line 274
- *   +0x009c -> line 280
- *   +0x00c0 -> line 281
- *   +0x00f8 -> line 282
- *   +0x0110 -> line 283
- *   +0x011c -> line 289
- *   +0x0128 -> line 290
- *   +0x012c -> line 289
- *   +0x0140 -> line 290
- *   +0x0150 -> line 291
- *   +0x0168 -> line 297
- *   +0x0170 -> line 298
- *   +0x0174 -> line 299
- *   +0x0178 -> line 298
- *   +0x017c -> line 299
- *   +0x0180 -> line 298
- *   +0x0184 -> line 305
- *   +0x0188 -> line 299
- *   +0x0190 -> line 298
- *   +0x01ac -> line 299
- *   +0x01d0 -> line 309
- *   +0x01dc -> line 311
- *   +0x021c -> line 318
- *   +0x0220 -> line 311
- *   +0x0224 -> line 317
- *   +0x0228 -> line 311
- *   +0x022c -> line 318
- *   +0x0230 -> line 311
- *   +0x0238 -> line 317
- *   +0x024c -> line 318
- *   +0x0258 -> line 320
- *   +0x0264 -> line 326
- *   +0x0270 -> line 327
- *   +0x0278 -> line 329
- *   +0x0284 -> line 331
- *   +0x02d0 -> line 334
- *   +0x02d8 -> line 336
- *   +0x02dc -> line 337
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int viBufAddDMA(anon_3* f)
-{
-    int i;
-    int index;
-    int last;
-    unsigned int d4chcr;
-    int isNewData = 0;
-    int consume;
-    int read_start;
-    int read_n;
-    unsigned long addr;
-
-    WaitSema(f->sema);
-
-    if (!f->isActive)
-    {
-        ErrMessage("DMA ADD not active\n");
-        return 0;
-    }
-
-    DIntr(); *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 | 0x10000; *(volatile unsigned int*)0x1000B400 = 5; *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 & 0xFFFEFFFF; EIntr();
-    d4chcr = *(volatile unsigned int*)0x1000B400;
-
-    index = (*(unsigned int*)0x1000B410 == ((unsigned int)(f->tag + (f->n + 1) * 16) & 0x0fffffff)) ? 0 : (*(unsigned int*)0x1000B410 - f->data) / 2048;
-    consume = (index + f->n - f->dmaStart) % f->n;
-    f->dmaStart = (f->dmaStart + consume) % f->n;
-    f->dmaN -= consume;
-
-    read_start = (f->dmaStart + f->dmaN) % f->n;
-    read_n = f->readBytes / 2048;
-    f->readBytes %= 2048;
-
-    if (read_n > 0)
-    {
-        index = (f->n + (f->dmaStart + f->dmaN - 1)) % f->n;
-        *(unsigned long*)(f->tag + index * 16) = ((unsigned long)(unsigned int)(f->data + index * 2048) << 32) | 0x30000080;
-        isNewData = 1;
-    }
-
-    for (i = 0; i < read_n; i++)
-    {
-        addr = (unsigned long)(unsigned int)(f->data + read_start * 2048) << 32;
-        *(unsigned long*)(f->tag + read_start * 16) = addr | ((unsigned long)(unsigned int)((i == read_n - 1) ? 0 : 3) << 28) | 0x80;
-        read_start = (read_start + 1) % f->n;
-    }
-
-    f->dmaN += read_n;
-
-    if (f->dmaN)
-    {
-        if (isNewData)
-        {
-            d4chcr = (d4chcr & 0x0fffffff) | 0x30000000;
-        }
-        DIntr(); *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 | 0x10000; *(volatile unsigned int*)0x1000B400 = d4chcr | 0x100; *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 & 0xFFFEFFFF; EIntr();
-    }
-
-    SignalSema(f->sema);
-
-    return 1;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\vibuf.c lines 233–240 */
-/* addr: 0x001325f0  size: 92 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 233
- *   +0x0014 -> line 234
- *   +0x0020 -> line 236
- *   +0x0024 -> line 237
- *   +0x002c -> line 236
- *   +0x0034 -> line 237
- *   +0x0040 -> line 239
- *   +0x0048 -> line 240
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void viBufEndPut(anon_3* f, int size)
-{
-    WaitSema(f->sema);
-    f->readBytes += size;
-    f->totalBytes += (long)size;
-    SignalSema(f->sema);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\vibuf.c lines 199–226 */
-/* addr: 0x00132650  size: 244 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 199
- *   +0x002c -> line 205
- *   +0x0038 -> line 210
- *   +0x0048 -> line 211
- *   +0x004c -> line 210
- *   +0x005c -> line 211
- *   +0x006c -> line 210
- *   +0x0070 -> line 213
- *   +0x0080 -> line 214
- *   +0x008c -> line 215
- *   +0x0090 -> line 216
- *   +0x0094 -> line 218
- *   +0x009c -> line 219
- *   +0x00a8 -> line 220
- *   +0x00b4 -> line 221
- *   +0x00bc -> line 222
- *   +0x00cc -> line 225
- *   +0x00d4 -> line 226
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void viBufBeginPut(anon_3* f, unsigned char** ptr0, int* len0, unsigned char** ptr1, int* len1)
-{
-    int en;
-    int es;
-
-    WaitSema(f->sema);
-
-    en = (((f->dmaStart + f->dmaN) << 11) + f->readBytes) % f->buffSize;
-    es = (((f->n - 2) - f->dmaN) << 11) - f->readBytes;
-
-    if (es <= f->buffSize - en)
-    {
-        *ptr0 = (unsigned char*)(f->data + en);
-        *len0 = es;
-        *ptr1 = 0;
-        *len1 = 0;
-    }
-    else
-    {
-        *ptr0 = (unsigned char*)(f->data + en);
-        *len0 = f->buffSize - en;
-        *ptr1 = (unsigned char*)f->data;
-        *len1 = es - (f->buffSize - en);
-    }
-
-    SignalSema(f->sema);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\vibuf.c lines 149–191 */
-/* addr: 0x00132750  size: 404 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 149
- *   +0x0004 -> line 155
- *   +0x0008 -> line 149
- *   +0x000c -> line 159
- *   +0x0010 -> line 152
- *   +0x0018 -> line 153
- *   +0x001c -> line 159
- *   +0x0020 -> line 154
- *   +0x0024 -> line 155
- *   +0x0028 -> line 157
- *   +0x002c -> line 159
- *   +0x0034 -> line 160
- *   +0x0038 -> line 164
- *   +0x003c -> line 160
- *   +0x0044 -> line 161
- *   +0x0050 -> line 162
- *   +0x005c -> line 163
- *   +0x006c -> line 164
- *   +0x0080 -> line 170
- *   +0x0094 -> line 171
- *   +0x0098 -> line 177
- *   +0x009c -> line 171
- *   +0x00c4 -> line 177
- *   +0x00d8 -> line 178
- *   +0x00ec -> line 185
- *   +0x00f0 -> line 178
- *   +0x010c -> line 185
- *   +0x0110 -> line 186
- *   +0x0124 -> line 187
- *   +0x0134 -> line 188
- *   +0x0184 -> line 191
- *   +0x0188 -> line 190
- *   +0x018c -> line 191
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int viBufReset(anon_3* f)
-{
-    int i;
-
-    f->dmaStart = 0;
-    f->dmaN = 0;
-    f->readBytes = 0;
-    f->isActive = 1;
-
-    f->count_ts = 0;
-    f->wt_ts = 0;
-    for (i = 0; i < f->n_ts; i++)
-    {
-        f->ts[i].pts = -1;
-        f->ts[i].dts = -1;
-        f->ts[i].pos = 0;
-        f->ts[i].len = 0;
-    }
-
-    for (i = 0; i < f->n; i++)
-    {
-        ((unsigned long*)f->tag)[i * 2] = (((unsigned long)(unsigned int)(f->data + i * 2048) & 0x0fffffff) << 32) | 0x30000080;
-    }
-
-    ((unsigned long*)f->tag)[i * 2] = ((unsigned long)((unsigned int)f->tag & 0x0fffffff) << 32) | 0x20000000;
-
     *(volatile unsigned int*)0x1000B420 = 0;
-    *(volatile unsigned int*)0x1000B410 = (unsigned int)f->data & 0x0fffffff;
-    *(volatile unsigned int*)0x1000B430 = (unsigned int)f->tag & 0x0fffffff;
-    DIntr(); *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 | 0x10000; *(volatile unsigned int*)0x1000B400 = 5; *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 & 0xFFFEFFFF; EIntr();
-
+    *(volatile unsigned int*)0x1000B410 = 0;
+    *(volatile unsigned int*)0x1000B430 = 0;
+    DeleteSema(f->sema);
     return 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\vibuf.c lines 114–142 */
-/* addr: 0x001328f0  size: 116 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 114
- *   +0x0004 -> line 118
- *   +0x0008 -> line 114
- *   +0x000c -> line 120
- *   +0x0010 -> line 114
- *   +0x0014 -> line 117
- *   +0x001c -> line 118
- *   +0x002c -> line 129
- *   +0x0030 -> line 119
- *   +0x0034 -> line 120
- *   +0x0038 -> line 122
- *   +0x003c -> line 123
- *   +0x0040 -> line 129
- *   +0x0044 -> line 131
- *   +0x0054 -> line 137
- *   +0x005c -> line 139
- *   +0x0060 -> line 141
- *   +0x0064 -> line 142
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int CreateSema(SemaParam* param);
-
-int viBufCreate(anon_3* f, long double* data, long double* tag, int size, anon_2* ts, int n_ts)
+int viBufCount(anon_3* f)
 {
-    SemaParam param;
+    int ret;
+    WaitSema(f->sema);
+    ret = f->readBytes + (f->dmaN << 11);
+    SignalSema(f->sema);
+    return ret;
+}
 
-    f->data = (int)data;
-    f->tag = ((unsigned int)tag & 0x0fffffff) | 0x20000000;
-    f->n = size;
-    f->buffSize = size << 11;
-    f->ts = ts;
-    f->n_ts = n_ts;
+void viBufFlush(anon_3* f)
+{
+    WaitSema(f->sema);
 
-    param.initCount = 1;
-    param.maxCount = 1;
-    f->sema = CreateSema(&param);
+    f->readBytes = (f->readBytes + 0x7ff) / 0x800 * 0x800;
 
-    viBufReset(f);
+    SignalSema(f->sema);
+}
 
-    f->totalBytes = 0;
+int viBufModifyPts(anon_3* f, anon_2* new_ts)
+{
+    anon_2* ts;
+    int rd = (f->n_ts + (f->wt_ts - f->count_ts)) % f->n_ts;
+    int datasize = f->n * 2048;
+    int loop = 1;
+
+    if (f->count_ts > 0)
+    {
+        do
+        {
+            ts = f->ts + rd;
+
+            if (ts->len == 0 || new_ts->len == 0)
+            {
+                break;
+            }
+
+            if ((ts->pos + datasize - new_ts->pos) % datasize < new_ts->len)
+            {
+                int len = new_ts->pos + new_ts->len - ts->pos;
+                len = (ts->len < len) ? ts->len : len;
+
+                ts->pos = (ts->pos + len) % datasize;
+                ts->len -= len;
+
+                if (ts->len == 0)
+                {
+                    if (ts->pts >= 0)
+                    {
+                        ts->pts = -1;
+                        ts->dts = -1;
+                        ts->pos = 0;
+                        ts->len = 0;
+                    }
+                    f->count_ts = (f->count_ts - 1 < 0) ? 0 : f->count_ts - 1;
+                }
+            }
+            else
+            {
+                loop = 0;
+            }
+
+            rd = (rd + 1) % f->n_ts;
+        } while (loop);
+    }
+
+    return 0;
+}
+
+int viBufPutTs(anon_3* f, anon_2* ts)
+{
+    int ret;
+
+    ret = 0;
+    WaitSema(f->sema);
+    if (f->count_ts < f->n_ts)
+    {
+        viBufModifyPts(f, ts);
+        if (ts->pts >= 0 || ts->dts >= 0)
+        {
+            f->ts[f->wt_ts].pts = ts->pts;
+            ((anon_2*)((char*)f->ts + 8))[f->wt_ts].pts = ts->dts;
+            ((anon_2*)((char*)f->ts + 0x10))[f->wt_ts].pts = ts->pos;
+            ((anon_2*)((char*)f->ts + 0x14))[f->wt_ts].pos = ts->len;
+            f->count_ts++;
+            f->wt_ts = (f->wt_ts + 1) % f->n_ts;
+        }
+        ret = 1;
+    }
+    SignalSema(f->sema);
+    return ret;
+}
+
+int viBufGetTs(anon_3* f, anon_2* ts)
+{
+    unsigned int d4madr = *(volatile unsigned int*)0x1000B410;
+    unsigned int ipubp = *(volatile unsigned int*)0x10002020;
+    int bp = f->env.ipubp & 0x7f;
+    unsigned int stop;
+    int datasize = f->n * 2048;
+    int isEnd = 0;
+    int tscount;
+    int wt;
+    int i;
+    int rd;
+
+    WaitSema(f->sema);
+
+    ts->pts = -1;
+    ts->dts = -1;
+
+    stop = (datasize + (d4madr - ((((ipubp >> 16) & 3) + ((ipubp >> 8) & 0xf)) << 4) + (bp >> bpShift)) - f->data) % datasize;
+
+    tscount = f->count_ts;
+    wt = f->wt_ts;
+
+    for (i = 0; i < tscount && !isEnd; i++)
+    {
+        rd = (i + (f->n_ts + (wt - tscount))) % f->n_ts;
+
+        if ((int)(stop + datasize - f->ts[rd].pos) % datasize < f->ts[rd].len)
+        {
+            ts->pts = f->ts[rd].pts;
+            ts->dts = f->ts[rd].dts;
+            f->ts[rd].pts = -1;
+            f->ts[rd].dts = -1;
+            isEnd = 1;
+            f->count_ts -= (f->count_ts < 1) ? f->count_ts : 1;
+        }
+    }
+
+    SignalSema(f->sema);
 
     return 1;
 }

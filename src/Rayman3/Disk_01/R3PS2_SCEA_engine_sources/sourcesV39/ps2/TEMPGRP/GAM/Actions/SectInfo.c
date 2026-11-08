@@ -1140,10 +1140,25 @@ unsigned char g_ucGameModuleId;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned int fn_ulMicroSizeOf(void)
-{
-    return sizeof(tdstMicro_);
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+unsigned int fn_ulMicroSizeOf(void);
+void GAM_fn_vSetObjectSectorSynchro(HIE_tdstSuperObject_* hCharacter, HIE_tdstSuperObject_* hSynchroCharacter);
+void GAM_fn_vSectInfoTestChangeSectorForCharacter(HIE_tdstSuperObject_* _hCharacter);
+HIE_tdstSuperObject_* GAM_fn_hGetCurrentSector(HIE_tdstSuperObject_* _hCharacter);
+void fn_vSectInfoSetCurrentSector(tdstSectInfo_* h_SectInfo, HIE_tdstSuperObject_* hCurrentSector);
+HIE_tdstSuperObject_* fn_h_SectInfoGetCurrentSector(tdstSectInfo_* h_SectInfo);
+void fn_vRemoveObjectInSectorList(HIE_tdstSuperObject_* hCharacter);
+void fn_vInsertLightInSectorList(HIE_tdstSuperObject_* hSector, HIE_tdstSuperObject_* hCharacter);
+void fn_vInsertObjectInSectorList(HIE_tdstSuperObject_* hSector, HIE_tdstSuperObject_* hCharacter);
+void fn_vSectInfoInitForSingleCharacter(HIE_tdstSuperObject_* hCharacter, MTH3D_tdstVector_* hPosition);
+void fn_vSectInfoCopyClone(void);
+void fn_vSectInfoDesinit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit);
+void fn_vSectInfoInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit);
+int fn_bIsInFix(tdstEngineObject_* p_stObject);
+void fn_vSectInfoFree(tdstEngineObject_* p_stObject);
+void fn_vSectInfoAlloc(tdstEngineObject_* p_stObject);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 634–644 */
 /* addr: 0x00273340  size: 260 bytes */
@@ -1167,22 +1182,6 @@ void fn_vSectInfoInitForSingleCharacter(HIE_tdstSuperObject_* hCharacter, MTH3D_
 static inline MTH3D_tdstVector_* POS_fn_p_stGetTranslationVector(MAT_tdstTransformation_* p_stMatrix)
 {
     return (MTH3D_tdstVector_*)((char*)p_stMatrix + 0x40);
-}
-
-void GAM_fn_vSetObjectSectorSynchro(HIE_tdstSuperObject_* hCharacter, HIE_tdstSuperObject_* hSynchroCharacter)
-{
-    MTH3D_tdstVector_* p_stPosition;
-
-    hCharacter->hLinkedObject.p_stCharacter->h_SectInfo->hSectorSynchroCharacter = hSynchroCharacter;
-
-    if (hSynchroCharacter == NULL)
-    {
-        p_stPosition = POS_fn_p_stGetTranslationVector(&hCharacter->hLinkedObject.p_stCharacter->h_3dData->stGLIObjectMatrix);
-        fn_vSectInfoInitForSingleCharacter(hCharacter, p_stPosition);
-        *(int*)&hCharacter->hLinkedObject.p_stCharacter->h_SectInfo->stPreviousPosition.xX = *(int*)&p_stPosition->xX;
-        *(int*)&hCharacter->hLinkedObject.p_stCharacter->h_SectInfo->stPreviousPosition.xY = *(int*)&p_stPosition->xY;
-        *(int*)&hCharacter->hLinkedObject.p_stCharacter->h_SectInfo->stPreviousPosition.xZ = *(int*)&p_stPosition->xZ;
-    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 560–631 */
@@ -1255,6 +1254,398 @@ unsigned char fn_bGetIfCharacterIsInAlwaysActiveCharacterListAndDynamicallyActiv
 unsigned char MC_fn_ucIsCharacterInMainCharacterList(HIE_tdstSuperObject_* hCharacter);
 void fn_vInitObjectsWhenPlayerChangeSector(HIE_tdstSuperObject_* hCharacter, HIE_tdstSuperObject_* hSector, HIE_tdstSuperObject_* hPreviousSector);
 void fn_vInsertLightInSectorList(HIE_tdstSuperObject_* hSector, HIE_tdstSuperObject_* hCharacter);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 488–493 */
+/* addr: 0x00273910  size: 60 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 488
+ *   +0x0010 -> line 489
+ *   +0x0018 -> line 491
+ *   +0x0034 -> line 493
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 485–485 */
+/* addr: 0x00273950  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 485
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 481–481 */
+/* addr: 0x00273960  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 481
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 460–466 */
+/* addr: 0x00273970  size: 80 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 460
+ *   +0x000c -> line 461
+ *   +0x0020 -> line 462
+ *   +0x0030 -> line 464
+ *   +0x0040 -> line 466
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+#pragma auto_inline on
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 431–443 */
+/* addr: 0x002739c0  size: 176 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 431
+ *   +0x0018 -> line 434
+ *   +0x0024 -> line 436
+ *   +0x0034 -> line 437
+ *   +0x006c -> line 438
+ *   +0x0074 -> line 441
+ *   +0x0084 -> line 442
+ *   +0x0098 -> line 443
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 401–416 */
+/* addr: 0x00273a70  size: 248 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 401
+ *   +0x0018 -> line 405
+ *   +0x0020 -> line 406
+ *   +0x002c -> line 408
+ *   +0x0040 -> line 409
+ *   +0x0054 -> line 411
+ *   +0x0060 -> line 413
+ *   +0x0070 -> line 414
+ *   +0x00e0 -> line 416
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+HIE_tdstSuperObject_* SECT_fn_hResearchInWhatSectorIAm(HIE_tdstSuperObject_* hFatherSector, MTH3D_tdstVector_* p_stPosition);
+HIE_tdstSuperObject_* HIE_fn_hGetChildNumber(HIE_tdstSuperObject_* hFather, int lChildNumber);
+void SECT_fn_vSetCharacterPointerInCharacterList(SECT_tdstListOfSOCharacters_* hNode, HIE_tdstSuperObject_* hCharacter);
+void SECT_fn_vSetHandleOfLightsInDNMLightsList();
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 354–386 */
+/* addr: 0x00273b70  size: 256 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 354
+ *   +0x0018 -> line 364
+ *   +0x001c -> line 366
+ *   +0x0028 -> line 369
+ *   +0x004c -> line 371
+ *   +0x0058 -> line 374
+ *   +0x0068 -> line 376
+ *   +0x0088 -> line 383
+ *   +0x00e8 -> line 386
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 340–340 */
+/* addr: 0x00273c70  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 340
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* _hStdGame);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 300–322 */
+/* addr: 0x00273c80  size: 284 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 300
+ *   +0x0014 -> line 301
+ *   +0x001c -> line 302
+ *   +0x0048 -> line 304
+ *   +0x0054 -> line 305
+ *   +0x0080 -> line 307
+ *   +0x00bc -> line 314
+ *   +0x00cc -> line 316
+ *   +0x0108 -> line 322
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+#pragma auto_inline reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 229–287 */
+/* addr: 0x00273da0  size: 712 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 229
+ *   +0x0020 -> line 235
+ *   +0x0028 -> line 238
+ *   +0x0030 -> line 239
+ *   +0x005c -> line 241
+ *   +0x0068 -> line 242
+ *   +0x0094 -> line 246
+ *   +0x00d0 -> line 249
+ *   +0x00d8 -> line 253
+ *   +0x00e8 -> line 255
+ *   +0x00f0 -> line 256
+ *   +0x00f4 -> line 257
+ *   +0x0184 -> line 258
+ *   +0x01a4 -> line 260
+ *   +0x01ac -> line 262
+ *   +0x01bc -> line 264
+ *   +0x01c4 -> line 265
+ *   +0x01cc -> line 266
+ *   +0x01d0 -> line 265
+ *   +0x01d4 -> line 267
+ *   +0x01dc -> line 266
+ *   +0x01e0 -> line 267
+ *   +0x023c -> line 268
+ *   +0x024c -> line 269
+ *   +0x0270 -> line 270
+ *   +0x0280 -> line 272
+ *   +0x02a0 -> line 285
+ *   +0x02a8 -> line 287
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vPushAllocModeAccordingToEngineObject(tdstEngineObject_* p_stObject);
+void GAM_fn_vPopAllocMode(void);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 220–220 */
+/* addr: 0x00274070  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 220
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 190–190 */
+/* addr: 0x00274080  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 190
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+SECT_tdstListOfSOCharacters_* SECT_fn_hCreateElementLstCharacter(void);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 143–153 */
+/* addr: 0x00274090  size: 172 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 143
+ *   +0x0010 -> line 144
+ *   +0x0018 -> line 145
+ *   +0x0044 -> line 147
+ *   +0x0050 -> line 148
+ *   +0x007c -> line 151
+ *   +0x0098 -> line 153
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void fn_vSectInfoAlloc(tdstEngineObject_* p_stObject)
+{
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (p_stObject->h_SectInfo) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 13, -1, 255, 255, NULL);
+    }
+
+    {
+        tdstSectInfo_* hSectInfo = (tdstSectInfo_*)HMU_fn_p_vMalloc(sizeof(tdstSectInfo_), 0);
+        hSectInfo->hNodeInSector = SECT_fn_hCreateElementLstCharacter();
+        p_stObject->h_SectInfo = hSectInfo;
+    }
+}
+
+void fn_vSectInfoFree(tdstEngineObject_* p_stObject)
+{
+    p_stObject->h_SectInfo = NULL;
+}
+
+int fn_bIsInFix(tdstEngineObject_* p_stObject)
+{
+    return PLD_fn_bIsInFix(p_stObject);
+}
+
+void fn_vSectInfoInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
+{
+    tdstMSLight_* hLight;
+    HIE_tdstSuperObject_* h_SO;
+    MTH3D_tdstVector_* p_stPosition;
+
+    fn_vPushAllocModeAccordingToEngineObject(p_stObject);
+
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!p_stObject->h_SectInfo) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+
+    switch (eObjectInit)
+    {
+    case OTI_MapLoaded:
+        p_stObject->h_SectInfo->hCurrentSector = NULL;
+    case OTI_LoadSavedGame:
+    case OTI_ReinitTheMap:
+    case OTI_PlayerDead:
+        if (fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame))
+        {
+            p_stObject->h_SectInfo->hSectorSynchroCharacter = NULL;
+            p_stPosition = (MTH3D_tdstVector_*)&p_stObject->h_3dData->stGLIObjectMatrix.stTransformMatrix.stCol_3;
+            h_SO = fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame);
+            fn_vSectInfoInitForSingleCharacter(h_SO, p_stPosition);
+            *(int*)&p_stObject->h_SectInfo->stPreviousPosition.xX = *(int*)&p_stPosition->xX;
+            *(int*)&p_stObject->h_SectInfo->stPreviousPosition.xY = *(int*)&p_stPosition->xY;
+            *(int*)&p_stObject->h_SectInfo->stPreviousPosition.xZ = *(int*)&p_stPosition->xZ;
+        }
+        break;
+    case OTI_AlwaysCreated:
+        if (fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame))
+        {
+            p_stObject->h_SectInfo->hSectorSynchroCharacter = NULL;
+            h_SO = fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame);
+            p_stPosition = (MTH3D_tdstVector_*)&h_SO->hGlobalMatrix->stTransformMatrix.stCol_3;
+            fn_vInsertObjectInSectorList(p_stObject->h_SectInfo->hCurrentSector, h_SO);
+            SECT_fn_vSetCharacterPointerInCharacterList(p_stObject->h_SectInfo->hNodeInSector, h_SO);
+            *(int*)&p_stObject->h_SectInfo->stPreviousPosition.xX = *(int*)&p_stPosition->xX;
+            *(int*)&p_stObject->h_SectInfo->stPreviousPosition.xY = *(int*)&p_stPosition->xY;
+            *(int*)&p_stObject->h_SectInfo->stPreviousPosition.xZ = *(int*)&p_stPosition->xZ;
+            hLight = h_SO->hLinkedObject.p_stCharacter->h_MSLight;
+            if (hLight)
+                SECT_fn_vSetHandleOfLightsInDNMLightsList(fn_hMSLightGetLightNodeInSector(hLight), fn_p_stMSLightGetLight(hLight));
+        }
+        break;
+    }
+
+    GAM_fn_vPopAllocMode();
+}
+
+#pragma auto_inline on
+void fn_vSectInfoDesinit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
+{
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!p_stObject->h_SectInfo) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+
+    switch (eObjectInit)
+    {
+    case OTI_MapLoaded:
+    case OTI_ReinitTheMap:
+    case OTI_LoadSavedGame:
+    case OTI_AlwaysCreated:
+    case OTI_PlayerDead:
+        if (fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame))
+            fn_vRemoveObjectInSectorList(fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame));
+        break;
+    }
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+void fn_vSectInfoCopyClone(void)
+{
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+void fn_vSectInfoInitForSingleCharacter(HIE_tdstSuperObject_* hCharacter, MTH3D_tdstVector_* hPosition)
+{
+    tdstMSLight_* hLight;
+    tdstSectInfo_* hSectInfo;
+    HIE_tdstSuperObject_* testSO;
+
+    hSectInfo = hCharacter->hLinkedObject.p_stCharacter->h_SectInfo;
+
+    testSO = SECT_fn_hResearchInWhatSectorIAm(SECT_hFatherSector, hPosition);
+    if (testSO)
+        hSectInfo->hCurrentSector = testSO;
+    else
+        hSectInfo->hCurrentSector = HIE_fn_hGetChildNumber(SECT_hFatherSector, SECT_hFatherSector->lNumberOfElementsDyn - 1);
+
+    SECT_fn_vSetCharacterPointerInCharacterList(hSectInfo->hNodeInSector, hCharacter);
+
+    hLight = hCharacter->hLinkedObject.p_stCharacter->h_MSLight;
+    if (hLight)
+        SECT_fn_vSetHandleOfLightsInDNMLightsList(fn_hMSLightGetLightNodeInSector(hLight), fn_p_stMSLightGetLight(hLight));
+
+    fn_vInsertObjectInSectorList(hSectInfo->hCurrentSector, hCharacter);
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+void fn_vInsertObjectInSectorList(HIE_tdstSuperObject_* hSector, HIE_tdstSuperObject_* hCharacter)
+{
+    tdstSectInfo_* p_stSectInfo;
+
+    p_stSectInfo = hCharacter->hLinkedObject.p_stCharacter->h_SectInfo;
+    SECT_fn_vIsolateCharListNode(p_stSectInfo->hNodeInSector);
+
+    if (hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->ucPlatFormType)
+        SECT_fn_vAddHeadCharListNode(hSector, p_stSectInfo->hNodeInSector);
+    else
+        SECT_fn_vAddTailCharListNode(hSector, p_stSectInfo->hNodeInSector);
+
+    if (hCharacter->hLinkedObject.p_stCharacter->h_MSLight)
+        fn_vInsertLightInSectorList(hSector, hCharacter);
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+void fn_vInsertLightInSectorList(HIE_tdstSuperObject_* hSector, HIE_tdstSuperObject_* hCharacter)
+{
+    tdstMSLight_* hMSLight;
+
+    hMSLight = hCharacter->hLinkedObject.p_stCharacter->h_MSLight;
+
+    if (fn_bMSLightGetLocalLight(hMSLight))
+    {
+        if (fn_bMSLightGetOnlyLocalLight(hMSLight)) hCharacter->ulFlags |= 0x20000; else hCharacter->ulFlags &= ~0x20000;
+        return;
+    }
+
+    SECT_fn_vIsolateDNMLightsListNode(fn_hMSLightGetLightNodeInSector(hMSLight));
+    SECT_fn_vAddTailDNMLightsListNode(hSector, fn_hMSLightGetLightNodeInSector(hMSLight));
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+void fn_vRemoveObjectInSectorList(HIE_tdstSuperObject_* hCharacter)
+{
+    SECT_fn_vIsolateCharListNode(hCharacter->hLinkedObject.p_stCharacter->h_SectInfo->hNodeInSector);
+
+    if (hCharacter->hLinkedObject.p_stCharacter->h_MSLight != NULL)
+    {
+        SECT_fn_vIsolateDNMLightsListNode(fn_hMSLightGetLightNodeInSector(hCharacter->hLinkedObject.p_stCharacter->h_MSLight));
+    }
+}
+#pragma auto_inline reset
+
+HIE_tdstSuperObject_* fn_h_SectInfoGetCurrentSector(tdstSectInfo_* h_SectInfo)
+{
+    return h_SectInfo->hCurrentSector;
+}
+
+void fn_vSectInfoSetCurrentSector(tdstSectInfo_* h_SectInfo, HIE_tdstSuperObject_* hCurrentSector)
+{
+    h_SectInfo->hCurrentSector = hCurrentSector;
+}
+
+HIE_tdstSuperObject_* GAM_fn_hGetCurrentSector(HIE_tdstSuperObject_* _hCharacter)
+{
+    if (_hCharacter->ulTypeOfLinkedObject != 2)
+        return 0;
+    else
+        return _hCharacter->hLinkedObject.p_stCharacter->h_SectInfo ? _hCharacter->hLinkedObject.p_stCharacter->h_SectInfo->hCurrentSector : 0;
+}
+
 void GAM_fn_vSectInfoTestChangeSectorForCharacter(HIE_tdstSuperObject_* _hCharacter)
 {
     MTH3D_tdstVector_ a2_stColons[2];
@@ -1412,368 +1803,23 @@ void GAM_fn_vSectInfoTestChangeSectorForCharacter(HIE_tdstSuperObject_* _hCharac
     *(int*)&p_stSectInfo->stPreviousPosition.xZ = *(int*)&stCurrentPosition.xZ;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 488–493 */
-/* addr: 0x00273910  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 488
- *   +0x0010 -> line 489
- *   +0x0018 -> line 491
- *   +0x0034 -> line 493
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-HIE_tdstSuperObject_* GAM_fn_hGetCurrentSector(HIE_tdstSuperObject_* _hCharacter)
+void GAM_fn_vSetObjectSectorSynchro(HIE_tdstSuperObject_* hCharacter, HIE_tdstSuperObject_* hSynchroCharacter)
 {
-    if (_hCharacter->ulTypeOfLinkedObject != 2)
-        return 0;
-    else
-        return _hCharacter->hLinkedObject.p_stCharacter->h_SectInfo ? _hCharacter->hLinkedObject.p_stCharacter->h_SectInfo->hCurrentSector : 0;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 485–485 */
-/* addr: 0x00273950  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 485
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vSectInfoSetCurrentSector(tdstSectInfo_* h_SectInfo, HIE_tdstSuperObject_* hCurrentSector)
-{
-    h_SectInfo->hCurrentSector = hCurrentSector;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 481–481 */
-/* addr: 0x00273960  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 481
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-HIE_tdstSuperObject_* fn_h_SectInfoGetCurrentSector(tdstSectInfo_* h_SectInfo)
-{
-    return h_SectInfo->hCurrentSector;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 460–466 */
-/* addr: 0x00273970  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 460
- *   +0x000c -> line 461
- *   +0x0020 -> line 462
- *   +0x0030 -> line 464
- *   +0x0040 -> line 466
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-#pragma auto_inline on
-void fn_vRemoveObjectInSectorList(HIE_tdstSuperObject_* hCharacter)
-{
-    SECT_fn_vIsolateCharListNode(hCharacter->hLinkedObject.p_stCharacter->h_SectInfo->hNodeInSector);
-
-    if (hCharacter->hLinkedObject.p_stCharacter->h_MSLight != NULL)
-    {
-        SECT_fn_vIsolateDNMLightsListNode(fn_hMSLightGetLightNodeInSector(hCharacter->hLinkedObject.p_stCharacter->h_MSLight));
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 431–443 */
-/* addr: 0x002739c0  size: 176 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 431
- *   +0x0018 -> line 434
- *   +0x0024 -> line 436
- *   +0x0034 -> line 437
- *   +0x006c -> line 438
- *   +0x0074 -> line 441
- *   +0x0084 -> line 442
- *   +0x0098 -> line 443
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vInsertLightInSectorList(HIE_tdstSuperObject_* hSector, HIE_tdstSuperObject_* hCharacter)
-{
-    tdstMSLight_* hMSLight;
-
-    hMSLight = hCharacter->hLinkedObject.p_stCharacter->h_MSLight;
-
-    if (fn_bMSLightGetLocalLight(hMSLight))
-    {
-        if (fn_bMSLightGetOnlyLocalLight(hMSLight)) hCharacter->ulFlags |= 0x20000; else hCharacter->ulFlags &= ~0x20000;
-        return;
-    }
-
-    SECT_fn_vIsolateDNMLightsListNode(fn_hMSLightGetLightNodeInSector(hMSLight));
-    SECT_fn_vAddTailDNMLightsListNode(hSector, fn_hMSLightGetLightNodeInSector(hMSLight));
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 401–416 */
-/* addr: 0x00273a70  size: 248 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 401
- *   +0x0018 -> line 405
- *   +0x0020 -> line 406
- *   +0x002c -> line 408
- *   +0x0040 -> line 409
- *   +0x0054 -> line 411
- *   +0x0060 -> line 413
- *   +0x0070 -> line 414
- *   +0x00e0 -> line 416
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vInsertObjectInSectorList(HIE_tdstSuperObject_* hSector, HIE_tdstSuperObject_* hCharacter)
-{
-    tdstSectInfo_* p_stSectInfo;
-
-    p_stSectInfo = hCharacter->hLinkedObject.p_stCharacter->h_SectInfo;
-    SECT_fn_vIsolateCharListNode(p_stSectInfo->hNodeInSector);
-
-    if (hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->ucPlatFormType)
-        SECT_fn_vAddHeadCharListNode(hSector, p_stSectInfo->hNodeInSector);
-    else
-        SECT_fn_vAddTailCharListNode(hSector, p_stSectInfo->hNodeInSector);
-
-    if (hCharacter->hLinkedObject.p_stCharacter->h_MSLight)
-        fn_vInsertLightInSectorList(hSector, hCharacter);
-}
-
-HIE_tdstSuperObject_* SECT_fn_hResearchInWhatSectorIAm(HIE_tdstSuperObject_* hFatherSector, MTH3D_tdstVector_* p_stPosition);
-HIE_tdstSuperObject_* HIE_fn_hGetChildNumber(HIE_tdstSuperObject_* hFather, int lChildNumber);
-void SECT_fn_vSetCharacterPointerInCharacterList(SECT_tdstListOfSOCharacters_* hNode, HIE_tdstSuperObject_* hCharacter);
-void SECT_fn_vSetHandleOfLightsInDNMLightsList();
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 354–386 */
-/* addr: 0x00273b70  size: 256 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 354
- *   +0x0018 -> line 364
- *   +0x001c -> line 366
- *   +0x0028 -> line 369
- *   +0x004c -> line 371
- *   +0x0058 -> line 374
- *   +0x0068 -> line 376
- *   +0x0088 -> line 383
- *   +0x00e8 -> line 386
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vSectInfoInitForSingleCharacter(HIE_tdstSuperObject_* hCharacter, MTH3D_tdstVector_* hPosition)
-{
-    tdstMSLight_* hLight;
-    tdstSectInfo_* hSectInfo;
-    HIE_tdstSuperObject_* testSO;
-
-    hSectInfo = hCharacter->hLinkedObject.p_stCharacter->h_SectInfo;
-
-    testSO = SECT_fn_hResearchInWhatSectorIAm(SECT_hFatherSector, hPosition);
-    if (testSO)
-        hSectInfo->hCurrentSector = testSO;
-    else
-        hSectInfo->hCurrentSector = HIE_fn_hGetChildNumber(SECT_hFatherSector, SECT_hFatherSector->lNumberOfElementsDyn - 1);
-
-    SECT_fn_vSetCharacterPointerInCharacterList(hSectInfo->hNodeInSector, hCharacter);
-
-    hLight = hCharacter->hLinkedObject.p_stCharacter->h_MSLight;
-    if (hLight)
-        SECT_fn_vSetHandleOfLightsInDNMLightsList(fn_hMSLightGetLightNodeInSector(hLight), fn_p_stMSLightGetLight(hLight));
-
-    fn_vInsertObjectInSectorList(hSectInfo->hCurrentSector, hCharacter);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 340–340 */
-/* addr: 0x00273c70  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 340
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vSectInfoCopyClone(void)
-{
-}
-
-HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* _hStdGame);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 300–322 */
-/* addr: 0x00273c80  size: 284 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 300
- *   +0x0014 -> line 301
- *   +0x001c -> line 302
- *   +0x0048 -> line 304
- *   +0x0054 -> line 305
- *   +0x0080 -> line 307
- *   +0x00bc -> line 314
- *   +0x00cc -> line 316
- *   +0x0108 -> line 322
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vSectInfoDesinit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
-{
-    if (!p_stObject) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
-    }
-    if (!p_stObject->h_SectInfo) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
-    }
-
-    switch (eObjectInit)
-    {
-    case OTI_MapLoaded:
-    case OTI_ReinitTheMap:
-    case OTI_LoadSavedGame:
-    case OTI_AlwaysCreated:
-    case OTI_PlayerDead:
-        if (fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame))
-            fn_vRemoveObjectInSectorList(fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame));
-        break;
-    }
-}
-#pragma auto_inline reset
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 229–287 */
-/* addr: 0x00273da0  size: 712 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 229
- *   +0x0020 -> line 235
- *   +0x0028 -> line 238
- *   +0x0030 -> line 239
- *   +0x005c -> line 241
- *   +0x0068 -> line 242
- *   +0x0094 -> line 246
- *   +0x00d0 -> line 249
- *   +0x00d8 -> line 253
- *   +0x00e8 -> line 255
- *   +0x00f0 -> line 256
- *   +0x00f4 -> line 257
- *   +0x0184 -> line 258
- *   +0x01a4 -> line 260
- *   +0x01ac -> line 262
- *   +0x01bc -> line 264
- *   +0x01c4 -> line 265
- *   +0x01cc -> line 266
- *   +0x01d0 -> line 265
- *   +0x01d4 -> line 267
- *   +0x01dc -> line 266
- *   +0x01e0 -> line 267
- *   +0x023c -> line 268
- *   +0x024c -> line 269
- *   +0x0270 -> line 270
- *   +0x0280 -> line 272
- *   +0x02a0 -> line 285
- *   +0x02a8 -> line 287
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vPushAllocModeAccordingToEngineObject(tdstEngineObject_* p_stObject);
-void GAM_fn_vPopAllocMode(void);
-
-void fn_vSectInfoInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
-{
-    tdstMSLight_* hLight;
-    HIE_tdstSuperObject_* h_SO;
     MTH3D_tdstVector_* p_stPosition;
 
-    fn_vPushAllocModeAccordingToEngineObject(p_stObject);
+    hCharacter->hLinkedObject.p_stCharacter->h_SectInfo->hSectorSynchroCharacter = hSynchroCharacter;
 
-    if (!p_stObject) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
-    }
-    if (!p_stObject->h_SectInfo) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
-    }
-
-    switch (eObjectInit)
+    if (hSynchroCharacter == NULL)
     {
-    case OTI_MapLoaded:
-        p_stObject->h_SectInfo->hCurrentSector = NULL;
-    case OTI_LoadSavedGame:
-    case OTI_ReinitTheMap:
-    case OTI_PlayerDead:
-        if (fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame))
-        {
-            p_stObject->h_SectInfo->hSectorSynchroCharacter = NULL;
-            p_stPosition = (MTH3D_tdstVector_*)&p_stObject->h_3dData->stGLIObjectMatrix.stTransformMatrix.stCol_3;
-            h_SO = fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame);
-            fn_vSectInfoInitForSingleCharacter(h_SO, p_stPosition);
-            *(int*)&p_stObject->h_SectInfo->stPreviousPosition.xX = *(int*)&p_stPosition->xX;
-            *(int*)&p_stObject->h_SectInfo->stPreviousPosition.xY = *(int*)&p_stPosition->xY;
-            *(int*)&p_stObject->h_SectInfo->stPreviousPosition.xZ = *(int*)&p_stPosition->xZ;
-        }
-        break;
-    case OTI_AlwaysCreated:
-        if (fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame))
-        {
-            p_stObject->h_SectInfo->hSectorSynchroCharacter = NULL;
-            h_SO = fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame);
-            p_stPosition = (MTH3D_tdstVector_*)&h_SO->hGlobalMatrix->stTransformMatrix.stCol_3;
-            fn_vInsertObjectInSectorList(p_stObject->h_SectInfo->hCurrentSector, h_SO);
-            SECT_fn_vSetCharacterPointerInCharacterList(p_stObject->h_SectInfo->hNodeInSector, h_SO);
-            *(int*)&p_stObject->h_SectInfo->stPreviousPosition.xX = *(int*)&p_stPosition->xX;
-            *(int*)&p_stObject->h_SectInfo->stPreviousPosition.xY = *(int*)&p_stPosition->xY;
-            *(int*)&p_stObject->h_SectInfo->stPreviousPosition.xZ = *(int*)&p_stPosition->xZ;
-            hLight = h_SO->hLinkedObject.p_stCharacter->h_MSLight;
-            if (hLight)
-                SECT_fn_vSetHandleOfLightsInDNMLightsList(fn_hMSLightGetLightNodeInSector(hLight), fn_p_stMSLightGetLight(hLight));
-        }
-        break;
+        p_stPosition = POS_fn_p_stGetTranslationVector(&hCharacter->hLinkedObject.p_stCharacter->h_3dData->stGLIObjectMatrix);
+        fn_vSectInfoInitForSingleCharacter(hCharacter, p_stPosition);
+        *(int*)&hCharacter->hLinkedObject.p_stCharacter->h_SectInfo->stPreviousPosition.xX = *(int*)&p_stPosition->xX;
+        *(int*)&hCharacter->hLinkedObject.p_stCharacter->h_SectInfo->stPreviousPosition.xY = *(int*)&p_stPosition->xY;
+        *(int*)&hCharacter->hLinkedObject.p_stCharacter->h_SectInfo->stPreviousPosition.xZ = *(int*)&p_stPosition->xZ;
     }
-
-    GAM_fn_vPopAllocMode();
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 220–220 */
-/* addr: 0x00274070  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 220
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int fn_bIsInFix(tdstEngineObject_* p_stObject)
+unsigned int fn_ulMicroSizeOf(void)
 {
-    return PLD_fn_bIsInFix(p_stObject);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 190–190 */
-/* addr: 0x00274080  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 190
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vSectInfoFree(tdstEngineObject_* p_stObject)
-{
-    p_stObject->h_SectInfo = NULL;
-}
-
-void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
-SECT_tdstListOfSOCharacters_* SECT_fn_hCreateElementLstCharacter(void);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 143–153 */
-/* addr: 0x00274090  size: 172 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 143
- *   +0x0010 -> line 144
- *   +0x0018 -> line 145
- *   +0x0044 -> line 147
- *   +0x0050 -> line 148
- *   +0x007c -> line 151
- *   +0x0098 -> line 153
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vSectInfoAlloc(tdstEngineObject_* p_stObject)
-{
-    if (!p_stObject) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
-    }
-    if (p_stObject->h_SectInfo) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 13, -1, 255, 255, NULL);
-    }
-
-    {
-        tdstSectInfo_* hSectInfo = (tdstSectInfo_*)HMU_fn_p_vMalloc(sizeof(tdstSectInfo_), 0);
-        hSectInfo->hNodeInSector = SECT_fn_hCreateElementLstCharacter();
-        p_stObject->h_SectInfo = hSectInfo;
-    }
+    return sizeof(tdstMicro_);
 }

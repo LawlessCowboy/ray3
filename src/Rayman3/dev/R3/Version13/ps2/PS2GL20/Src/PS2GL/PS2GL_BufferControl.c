@@ -1332,10 +1332,21 @@ void impPS2glFinish(void);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glSwapBufferNotifyFunc(void (*Func)(void))
-{
-    SwapBufferNotifyFunc = (int)Func;
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void PS2glSwapBufferNotifyFunc(void (*Func)(void));
+void PS2glSwapBuffers(void);
+void PS2glFakeSwapBuffers(void);
+void PS2glFlushNotify(void);
+void PS2glExecSwapBuffers(void);
+unsigned int PS2glInternalGetScreenCalebration(unsigned int target);
+void PS2glInternalSetScreenCalebration(unsigned int target, unsigned int uiNewValue);
+void PS2glMotionBlur(void);
+void MySwapBuff3Dc(anon_33* db, int bufferNum);
+unsigned int PS2glInitBuffers(_GL_BUFFERINFO* pBufferInfo);
+void PS2glClearBuffers(void);
+void PS2GL_SetProgressiveScanMode(int bOnOff);
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 1492–1548 */
 /* addr: 0x00140570  size: 452 bytes */
@@ -1400,51 +1411,6 @@ void PS2glSwapBufferNotifyFunc(void (*Func)(void))
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glSwapBuffers(void)
-{
-    if (g_stBufferInfo.bDoubleBufferMode)
-    {
-        impPS2glFlush();
-
-        if (g_PS2glContext.nEnableBits & 0x20000)
-        {
-            bNeedSwapBuffer = 1;
-
-            if (g_stBufferInfo.bPlainBufferMode)
-            {
-                if (g_iFrame & 1)
-                {
-                    g_gsContext.FRAME_1.FBP = g_stDoubleBuf.draw01.frame1.FBP;
-                    g_gsContext.FRAME_2.FBP = g_stDoubleBuf.draw02.frame2.FBP;
-                }
-                else
-                {
-                    g_gsContext.FRAME_1.FBP = g_stDoubleBuf.draw11.frame1.FBP;
-                    g_gsContext.FRAME_2.FBP = g_stDoubleBuf.draw12.frame2.FBP;
-                }
-            }
-            else
-            {
-                if ((g_iFrame & 1) == 0)
-                {
-                    g_gsContext.FRAME_1.FBP = g_stDoubleBuf.draw01.frame1.FBP;
-                    g_gsContext.FRAME_2.FBP = g_stDoubleBuf.draw02.frame2.FBP;
-                }
-                else
-                {
-                    g_gsContext.FRAME_1.FBP = g_stDoubleBuf.draw11.frame1.FBP;
-                    g_gsContext.FRAME_2.FBP = g_stDoubleBuf.draw12.frame2.FBP;
-                }
-            }
-
-            PS2glSetInteger(0x420, g_iFrame);
-        }
-        else
-        {
-            PS2glExecSwapBuffers();
-        }
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 1401–1487 */
 /* addr: 0x00140740  size: 632 bytes */
@@ -1518,84 +1484,6 @@ void PS2glSwapBuffers(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glFakeSwapBuffers(void)
-{
-    static short odev;
-    void* pOffset;
-
-    if (PS2GLBufferIsInverted)
-    {
-        PS2GLBufferIsInverted = 0;
-        g_iFrame--;
-    }
-
-    if (g_PS2glContext.nEnableBits & 0x20000)
-    {
-        if (g_stBufferInfo.bPlainBufferMode)
-        {
-            if (g_iFrame & 1)
-            {
-                g_gsContext.FRAME_1.FBP = g_stDoubleBuf.draw01.frame1.FBP;
-                g_gsContext.FRAME_2.FBP = g_stDoubleBuf.draw02.frame2.FBP;
-            }
-            else
-            {
-                g_gsContext.FRAME_1.FBP = g_stDoubleBuf.draw11.frame1.FBP;
-                g_gsContext.FRAME_2.FBP = g_stDoubleBuf.draw12.frame2.FBP;
-            }
-        }
-        else
-        {
-            if ((g_iFrame & 1) == 0)
-            {
-                g_gsContext.FRAME_1.FBP = g_stDoubleBuf.draw01.frame1.FBP;
-                g_gsContext.FRAME_2.FBP = g_stDoubleBuf.draw02.frame2.FBP;
-            }
-            else
-            {
-                g_gsContext.FRAME_1.FBP = g_stDoubleBuf.draw11.frame1.FBP;
-                g_gsContext.FRAME_2.FBP = g_stDoubleBuf.draw12.frame2.FBP;
-            }
-        }
-
-        PS2glSetInteger(0x420, g_iFrame);
-    }
-
-    FlushCache(NULL);
-    PS2glGsSyncPath();
-    odev = MyGsSyncV(0);
-
-    if (g_iFrame & 1)
-    {
-        pOffset = &g_stDoubleBuf.draw11.frame1;
-    }
-    else
-    {
-        pOffset = &g_stDoubleBuf.draw01.frame1;
-    }
-    sceGsSetHalfOffset(pOffset, 0x800, 0x800, odev);
-
-    if (g_iFrame & 1)
-    {
-        pOffset = &g_stDoubleBuf.draw12.frame2;
-    }
-    else
-    {
-        pOffset = &g_stDoubleBuf.draw02.frame2;
-    }
-    sceGsSetHalfOffset2(pOffset, 0x800, 0x800, odev);
-
-    MySwapBuff3Dc(&g_stDoubleBuf, g_iFrame);
-    VU1StartWorkingOnFakeSwapBuffer();
-    AE_CopyBackBufferOnScreen();
-    VU1FlushFakeSwapBuffer();
-    VU1StopWorkingOnFakeSwapBuffer();
-
-    if (SwapBufferNotifyFunc)
-    {
-        ((void (*)(void))SwapBufferNotifyFunc)();
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 1384–1392 */
 /* addr: 0x001409c0  size: 76 bytes */
@@ -1611,18 +1499,6 @@ void PS2glFakeSwapBuffers(void)
  * compare a candidate object's line table as an extra checkpoint.
  */
 void PS2glExecSwapBuffers(void);
-
-void PS2glFlushNotify(void)
-{
-    if (g_stBufferInfo.bDoubleBufferMode)
-    {
-        if (bNeedSwapBuffer && (g_PS2glContext.nEnableBits & 0x20000))
-        {
-            bNeedSwapBuffer = 0;
-            PS2glExecSwapBuffers();
-        }
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 1115–1381 */
 /* addr: 0x00140a10  size: 2952 bytes */
@@ -2076,11 +1952,6 @@ void PS2glFlushNotify(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glExecSwapBuffers(void)
-{
-    short odev;
-    /* TODO: decompile from asm/... */
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 1088–1110 */
 /* addr: 0x001415a0  size: 152 bytes */
@@ -2099,34 +1970,6 @@ void PS2glExecSwapBuffers(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned int PS2glInternalGetScreenCalebration(unsigned int target)
-{
-    unsigned int uiReturn;
-
-    switch (target)
-    {
-        case 0xF43:
-            uiReturn = g_stDoubleBuf.disp[0].display.DX;
-            break;
-        case 0xF44:
-            uiReturn = g_stDoubleBuf.disp[0].display.DY;
-            break;
-        case 0xF45:
-            uiReturn = g_stDoubleBuf.disp[0].display.DW;
-            break;
-        case 0xF46:
-            if (g_stBufferInfo.bPlainBufferMode)
-                uiReturn = g_stDoubleBufAdd.disp.display1[0].DH;
-            else
-                uiReturn = g_stDoubleBuf.disp[0].display.DH;
-            break;
-        default:
-            uiReturn = 0;
-            break;
-    }
-
-    return uiReturn;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 1050–1082 */
 /* addr: 0x00141640  size: 720 bytes */
@@ -2158,32 +2001,6 @@ unsigned int PS2glInternalGetScreenCalebration(unsigned int target)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glInternalSetScreenCalebration(unsigned int target, unsigned int uiNewValue)
-{
-    switch (target)
-    {
-        case 0xF43:
-            g_stDoubleBufAdd.disp.display1[0].DX = g_stDoubleBufAdd.disp.display1[1].DX = g_stDoubleBuf.disp[0].display.DX = g_stDoubleBuf.disp[1].display.DX = uiNewValue;
-            break;
-        case 0xF44:
-            g_stDoubleBufAdd.disp.display1[0].DY = g_stDoubleBufAdd.disp.display1[1].DY = g_stDoubleBuf.disp[0].display.DY = g_stDoubleBuf.disp[1].display.DY = uiNewValue;
-            break;
-        case 0xF45:
-            g_stDoubleBufAdd.disp.display1[0].DW = g_stDoubleBufAdd.disp.display1[1].DW = g_stDoubleBuf.disp[0].display.DW = g_stDoubleBuf.disp[1].display.DW = uiNewValue;
-            break;
-        case 0xF46:
-            g_stDoubleBufAdd.disp.display1[0].DH = g_stDoubleBufAdd.disp.display1[1].DH = g_stDoubleBuf.disp[0].display.DH = g_stDoubleBuf.disp[1].display.DH = uiNewValue;
-            if (g_stBufferInfo.bPlainBufferMode)
-            {
-                if (g_stDoubleBuf.disp[0].display.DH != 0)
-                {
-                    g_stDoubleBuf.disp[0].display.DH = (int)g_stDoubleBuf.disp[0].display.DH - 1;
-                    g_stDoubleBuf.disp[1].display.DH = (int)g_stDoubleBuf.disp[1].display.DH - 1;
-                }
-            }
-            break;
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 1016–1046 */
 /* addr: 0x00141910  size: 700 bytes */
@@ -2234,53 +2051,6 @@ void PS2glInternalSetScreenCalebration(unsigned int target, unsigned int uiNewVa
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glMotionBlur(void)
-{
-    anon_47 qword;
-    anon_47 qOldAlpha;
-    unsigned long ullGs;
-
-    qOldAlpha = *(anon_47*)&g_gsContext.ALPHA_1;
-    qword.u64Data[0] = 0x60;
-
-    g_gsContext.ALPHA_1.A = 0;
-    g_gsContext.ModFlgs.ALPHA_1_Modified = 1;
-    g_gsContext.ALPHA_1.B = 1;
-    g_gsContext.ModFlgs.ALPHA_1_Modified = 1;
-    g_gsContext.ALPHA_1.C = 0;
-    g_gsContext.ModFlgs.ALPHA_1_Modified = 1;
-    g_gsContext.ALPHA_1.D = 1;
-    g_gsContext.ModFlgs.ALPHA_1_Modified = 1;
-    qword.ubData[8] = 0x14;
-
-    GsSendData(0xE, (void*)&qword);
-
-    ullGs = (unsigned long)g_PS2glContext.iFrameBufferFront
-          | ((unsigned long)(g_stBufferInfo.iScreenWidth / 64) << 14)
-          | ((unsigned long)g_gsContext.FRAME_1.PSM << 20)
-          | ((unsigned long)10 << 26) | ((unsigned long)9 << 30);
-    qword.u64Data[0] = ullGs;
-    qword.ubData[8] = 6;
-
-    GsSendData(0xE, (void*)&qword);
-
-    g_gsContext.ModFlgs.TEXFLUSH_Modified = 1;
-    g_gsContext.TEXFLUSH.DATA = 1;
-
-    internalFullScreenQuad(0x4000, 0.5f, 0.5f, 0.5f, 0.001f * (float)g_PS2glContext.uiMotionBlurIntensity, 0.0f,
-                           (float)(g_stBufferInfo.bPlainBufferMode ? g_stBufferInfo.iScreenHeight << 4 : g_stBufferInfo.iScreenHeight << 3),
-                           (float)(g_stBufferInfo.iScreenWidth << 4), 0.0f, 1);
-
-    qOldAlpha.ubData[8] = 0x42;
-
-    GsSendData(0xE, (void*)&qOldAlpha);
-
-    g_PS2glContext.bTexCubeChanged = 1;
-    g_PS2glContext.abTex2DChanged[0] = 1;
-    g_PS2glContext.abTex1DChanged[0] = 1;
-
-    impPS2glFinish();
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 949–990 */
 /* addr: 0x00141bd0  size: 516 bytes */
@@ -2318,61 +2088,6 @@ void PS2glMotionBlur(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void MySwapBuff3Dc(anon_33* db, int bufferNum)
-{
-    if (bufferNum & 1)
-    {
-        if (g_PS2glContext.nEnableBits & 0x10000)
-        {
-            db->disp[1].pmode.EN1 = 1;
-        }
-        else
-        {
-            db->disp[1].pmode.EN1 = 0;
-        }
-
-        *(volatile unsigned long*)0x12000000 = *(unsigned long*)&db->disp[1].pmode;
-        *(volatile unsigned long*)0x12000020 = *(unsigned long*)&db->disp[1].smode2;
-        *(volatile unsigned long*)0x12000090 = *(unsigned long*)&db->disp[1].dispfb;
-        *(volatile unsigned long*)0x120000A0 = *(unsigned long*)&db->disp[1].display;
-        *(volatile unsigned long*)0x120000E0 = *(unsigned long*)&db->disp[1].bgcolor;
-        *(volatile unsigned long*)0x12000000 = *(unsigned long*)&db->disp[1].pmode;
-        *(volatile unsigned long*)0x12000020 = *(unsigned long*)&db->disp[1].smode2;
-        *(volatile unsigned long*)0x12000070 = *(unsigned long*)&db->disp[1].dispfb;
-        *(volatile unsigned long*)0x12000080 = *(unsigned long*)&db->disp[1].display;
-        *(volatile unsigned long*)0x120000E0 = *(unsigned long*)&db->disp[1].bgcolor;
-        *(volatile unsigned long*)0x12000070 = g_stDoubleBufAdd.fb.dispfb1q[1];
-        *(volatile unsigned long*)0x12000080 = g_stDoubleBufAdd.disp.display1q[1];
-
-        sceGsPutDrawEnv(&db->giftag0, (void*)0x12000020, (void*)0x120000E0, (void*)0x12000070, (void*)0x12000080);
-    }
-    else
-    {
-        if (g_PS2glContext.nEnableBits & 0x10000)
-        {
-            db->disp[0].pmode.EN1 = 1;
-        }
-        else
-        {
-            db->disp[0].pmode.EN1 = 0;
-        }
-
-        *(volatile unsigned long*)0x12000000 = *(unsigned long*)&db->disp[0].pmode;
-        *(volatile unsigned long*)0x12000020 = *(unsigned long*)&db->disp[0].smode2;
-        *(volatile unsigned long*)0x12000070 = *(unsigned long*)&db->disp[0].dispfb;
-        *(volatile unsigned long*)0x12000080 = *(unsigned long*)&db->disp[0].display;
-        *(volatile unsigned long*)0x120000E0 = *(unsigned long*)&db->disp[0].bgcolor;
-        *(volatile unsigned long*)0x12000000 = *(unsigned long*)&db->disp[0].pmode;
-        *(volatile unsigned long*)0x12000020 = *(unsigned long*)&db->disp[0].smode2;
-        *(volatile unsigned long*)0x12000090 = *(unsigned long*)&db->disp[0].dispfb;
-        *(volatile unsigned long*)0x120000A0 = *(unsigned long*)&db->disp[0].display;
-        *(volatile unsigned long*)0x120000E0 = *(unsigned long*)&db->disp[0].bgcolor;
-        *(volatile unsigned long*)0x12000070 = g_stDoubleBufAdd.fb.dispfb1q[0];
-        *(volatile unsigned long*)0x12000080 = g_stDoubleBufAdd.disp.display1q[0];
-
-        sceGsPutDrawEnv(&db->giftag1, (void*)0x12000020, (void*)0x120000E0, (void*)0x12000070, (void*)0x12000080);
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 194–878 */
 /* addr: 0x00141de0  size: 6208 bytes */
@@ -3083,23 +2798,6 @@ void MySwapBuff3Dc(anon_33* db, int bufferNum)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned int PS2glInitBuffers(_GL_BUFFERINFO* pBufferInfo)
-{
-    unsigned int uiOldMontionBlurIntensity;
-    int j;
-    int i;
-    char* pEmptyMemory;
-    unsigned char bEnlarge;
-    unsigned char bInterlace;
-    unsigned char bPAL;
-    int iSecondBufferSpan32;
-    int iSecondBufferSpan;
-    int iBufferSpanEnlarged;
-    int iBufferSpan32;
-    int iBufferSpan;
-    int iTextureBase;
-    /* TODO: decompile from asm/... */
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 114–167 */
 /* addr: 0x00143620  size: 908 bytes */
@@ -3167,12 +2865,6 @@ unsigned int PS2glInitBuffers(_GL_BUFFERINFO* pBufferInfo)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glClearBuffers(void)
-{
-    tagGLtexblock theDefaultTexBlock;
-    int i;
-    /* TODO: decompile from asm/... */
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 49–49 */
 /* addr: 0x001439b0  size: 8 bytes */
@@ -3181,7 +2873,341 @@ void PS2glClearBuffers(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
 void PS2GL_SetProgressiveScanMode(int bOnOff)
 {
     PS2GL_g_bProgressiveScan = bOnOff;
+}
+
+void PS2glClearBuffers(void)
+{
+    tagGLtexblock theDefaultTexBlock;
+    int i;
+    /* TODO: decompile from asm/... */
+}
+
+unsigned int PS2glInitBuffers(_GL_BUFFERINFO* pBufferInfo)
+{
+    unsigned int uiOldMontionBlurIntensity;
+    int j;
+    int i;
+    char* pEmptyMemory;
+    unsigned char bEnlarge;
+    unsigned char bInterlace;
+    unsigned char bPAL;
+    int iSecondBufferSpan32;
+    int iSecondBufferSpan;
+    int iBufferSpanEnlarged;
+    int iBufferSpan32;
+    int iBufferSpan;
+    int iTextureBase;
+    /* TODO: decompile from asm/... */
+}
+
+void MySwapBuff3Dc(anon_33* db, int bufferNum)
+{
+    if (bufferNum & 1)
+    {
+        if (g_PS2glContext.nEnableBits & 0x10000)
+        {
+            db->disp[1].pmode.EN1 = 1;
+        }
+        else
+        {
+            db->disp[1].pmode.EN1 = 0;
+        }
+
+        *(volatile unsigned long*)0x12000000 = *(unsigned long*)&db->disp[1].pmode;
+        *(volatile unsigned long*)0x12000020 = *(unsigned long*)&db->disp[1].smode2;
+        *(volatile unsigned long*)0x12000090 = *(unsigned long*)&db->disp[1].dispfb;
+        *(volatile unsigned long*)0x120000A0 = *(unsigned long*)&db->disp[1].display;
+        *(volatile unsigned long*)0x120000E0 = *(unsigned long*)&db->disp[1].bgcolor;
+        *(volatile unsigned long*)0x12000000 = *(unsigned long*)&db->disp[1].pmode;
+        *(volatile unsigned long*)0x12000020 = *(unsigned long*)&db->disp[1].smode2;
+        *(volatile unsigned long*)0x12000070 = *(unsigned long*)&db->disp[1].dispfb;
+        *(volatile unsigned long*)0x12000080 = *(unsigned long*)&db->disp[1].display;
+        *(volatile unsigned long*)0x120000E0 = *(unsigned long*)&db->disp[1].bgcolor;
+        *(volatile unsigned long*)0x12000070 = g_stDoubleBufAdd.fb.dispfb1q[1];
+        *(volatile unsigned long*)0x12000080 = g_stDoubleBufAdd.disp.display1q[1];
+
+        sceGsPutDrawEnv(&db->giftag0, (void*)0x12000020, (void*)0x120000E0, (void*)0x12000070, (void*)0x12000080);
+    }
+    else
+    {
+        if (g_PS2glContext.nEnableBits & 0x10000)
+        {
+            db->disp[0].pmode.EN1 = 1;
+        }
+        else
+        {
+            db->disp[0].pmode.EN1 = 0;
+        }
+
+        *(volatile unsigned long*)0x12000000 = *(unsigned long*)&db->disp[0].pmode;
+        *(volatile unsigned long*)0x12000020 = *(unsigned long*)&db->disp[0].smode2;
+        *(volatile unsigned long*)0x12000070 = *(unsigned long*)&db->disp[0].dispfb;
+        *(volatile unsigned long*)0x12000080 = *(unsigned long*)&db->disp[0].display;
+        *(volatile unsigned long*)0x120000E0 = *(unsigned long*)&db->disp[0].bgcolor;
+        *(volatile unsigned long*)0x12000000 = *(unsigned long*)&db->disp[0].pmode;
+        *(volatile unsigned long*)0x12000020 = *(unsigned long*)&db->disp[0].smode2;
+        *(volatile unsigned long*)0x12000090 = *(unsigned long*)&db->disp[0].dispfb;
+        *(volatile unsigned long*)0x120000A0 = *(unsigned long*)&db->disp[0].display;
+        *(volatile unsigned long*)0x120000E0 = *(unsigned long*)&db->disp[0].bgcolor;
+        *(volatile unsigned long*)0x12000070 = g_stDoubleBufAdd.fb.dispfb1q[0];
+        *(volatile unsigned long*)0x12000080 = g_stDoubleBufAdd.disp.display1q[0];
+
+        sceGsPutDrawEnv(&db->giftag1, (void*)0x12000020, (void*)0x120000E0, (void*)0x12000070, (void*)0x12000080);
+    }
+}
+
+void PS2glMotionBlur(void)
+{
+    anon_47 qword;
+    anon_47 qOldAlpha;
+    unsigned long ullGs;
+
+    qOldAlpha = *(anon_47*)&g_gsContext.ALPHA_1;
+    qword.u64Data[0] = 0x60;
+
+    g_gsContext.ALPHA_1.A = 0;
+    g_gsContext.ModFlgs.ALPHA_1_Modified = 1;
+    g_gsContext.ALPHA_1.B = 1;
+    g_gsContext.ModFlgs.ALPHA_1_Modified = 1;
+    g_gsContext.ALPHA_1.C = 0;
+    g_gsContext.ModFlgs.ALPHA_1_Modified = 1;
+    g_gsContext.ALPHA_1.D = 1;
+    g_gsContext.ModFlgs.ALPHA_1_Modified = 1;
+    qword.ubData[8] = 0x14;
+
+    GsSendData(0xE, (void*)&qword);
+
+    ullGs = (unsigned long)g_PS2glContext.iFrameBufferFront
+          | ((unsigned long)(g_stBufferInfo.iScreenWidth / 64) << 14)
+          | ((unsigned long)g_gsContext.FRAME_1.PSM << 20)
+          | ((unsigned long)10 << 26) | ((unsigned long)9 << 30);
+    qword.u64Data[0] = ullGs;
+    qword.ubData[8] = 6;
+
+    GsSendData(0xE, (void*)&qword);
+
+    g_gsContext.ModFlgs.TEXFLUSH_Modified = 1;
+    g_gsContext.TEXFLUSH.DATA = 1;
+
+    internalFullScreenQuad(0x4000, 0.5f, 0.5f, 0.5f, 0.001f * (float)g_PS2glContext.uiMotionBlurIntensity, 0.0f,
+                           (float)(g_stBufferInfo.bPlainBufferMode ? g_stBufferInfo.iScreenHeight << 4 : g_stBufferInfo.iScreenHeight << 3),
+                           (float)(g_stBufferInfo.iScreenWidth << 4), 0.0f, 1);
+
+    qOldAlpha.ubData[8] = 0x42;
+
+    GsSendData(0xE, (void*)&qOldAlpha);
+
+    g_PS2glContext.bTexCubeChanged = 1;
+    g_PS2glContext.abTex2DChanged[0] = 1;
+    g_PS2glContext.abTex1DChanged[0] = 1;
+
+    impPS2glFinish();
+}
+
+void PS2glInternalSetScreenCalebration(unsigned int target, unsigned int uiNewValue)
+{
+    switch (target)
+    {
+        case 0xF43:
+            g_stDoubleBufAdd.disp.display1[0].DX = g_stDoubleBufAdd.disp.display1[1].DX = g_stDoubleBuf.disp[0].display.DX = g_stDoubleBuf.disp[1].display.DX = uiNewValue;
+            break;
+        case 0xF44:
+            g_stDoubleBufAdd.disp.display1[0].DY = g_stDoubleBufAdd.disp.display1[1].DY = g_stDoubleBuf.disp[0].display.DY = g_stDoubleBuf.disp[1].display.DY = uiNewValue;
+            break;
+        case 0xF45:
+            g_stDoubleBufAdd.disp.display1[0].DW = g_stDoubleBufAdd.disp.display1[1].DW = g_stDoubleBuf.disp[0].display.DW = g_stDoubleBuf.disp[1].display.DW = uiNewValue;
+            break;
+        case 0xF46:
+            g_stDoubleBufAdd.disp.display1[0].DH = g_stDoubleBufAdd.disp.display1[1].DH = g_stDoubleBuf.disp[0].display.DH = g_stDoubleBuf.disp[1].display.DH = uiNewValue;
+            if (g_stBufferInfo.bPlainBufferMode)
+            {
+                if (g_stDoubleBuf.disp[0].display.DH != 0)
+                {
+                    g_stDoubleBuf.disp[0].display.DH = (int)g_stDoubleBuf.disp[0].display.DH - 1;
+                    g_stDoubleBuf.disp[1].display.DH = (int)g_stDoubleBuf.disp[1].display.DH - 1;
+                }
+            }
+            break;
+    }
+}
+
+unsigned int PS2glInternalGetScreenCalebration(unsigned int target)
+{
+    unsigned int uiReturn;
+
+    switch (target)
+    {
+        case 0xF43:
+            uiReturn = g_stDoubleBuf.disp[0].display.DX;
+            break;
+        case 0xF44:
+            uiReturn = g_stDoubleBuf.disp[0].display.DY;
+            break;
+        case 0xF45:
+            uiReturn = g_stDoubleBuf.disp[0].display.DW;
+            break;
+        case 0xF46:
+            if (g_stBufferInfo.bPlainBufferMode)
+                uiReturn = g_stDoubleBufAdd.disp.display1[0].DH;
+            else
+                uiReturn = g_stDoubleBuf.disp[0].display.DH;
+            break;
+        default:
+            uiReturn = 0;
+            break;
+    }
+
+    return uiReturn;
+}
+
+void PS2glExecSwapBuffers(void)
+{
+    short odev;
+    /* TODO: decompile from asm/... */
+}
+
+void PS2glFlushNotify(void)
+{
+    if (g_stBufferInfo.bDoubleBufferMode)
+    {
+        if (bNeedSwapBuffer && (g_PS2glContext.nEnableBits & 0x20000))
+        {
+            bNeedSwapBuffer = 0;
+            PS2glExecSwapBuffers();
+        }
+    }
+}
+
+void PS2glFakeSwapBuffers(void)
+{
+    static short odev;
+    void* pOffset;
+
+    if (PS2GLBufferIsInverted)
+    {
+        PS2GLBufferIsInverted = 0;
+        g_iFrame--;
+    }
+
+    if (g_PS2glContext.nEnableBits & 0x20000)
+    {
+        if (g_stBufferInfo.bPlainBufferMode)
+        {
+            if (g_iFrame & 1)
+            {
+                g_gsContext.FRAME_1.FBP = g_stDoubleBuf.draw01.frame1.FBP;
+                g_gsContext.FRAME_2.FBP = g_stDoubleBuf.draw02.frame2.FBP;
+            }
+            else
+            {
+                g_gsContext.FRAME_1.FBP = g_stDoubleBuf.draw11.frame1.FBP;
+                g_gsContext.FRAME_2.FBP = g_stDoubleBuf.draw12.frame2.FBP;
+            }
+        }
+        else
+        {
+            if ((g_iFrame & 1) == 0)
+            {
+                g_gsContext.FRAME_1.FBP = g_stDoubleBuf.draw01.frame1.FBP;
+                g_gsContext.FRAME_2.FBP = g_stDoubleBuf.draw02.frame2.FBP;
+            }
+            else
+            {
+                g_gsContext.FRAME_1.FBP = g_stDoubleBuf.draw11.frame1.FBP;
+                g_gsContext.FRAME_2.FBP = g_stDoubleBuf.draw12.frame2.FBP;
+            }
+        }
+
+        PS2glSetInteger(0x420, g_iFrame);
+    }
+
+    FlushCache(NULL);
+    PS2glGsSyncPath();
+    odev = MyGsSyncV(0);
+
+    if (g_iFrame & 1)
+    {
+        pOffset = &g_stDoubleBuf.draw11.frame1;
+    }
+    else
+    {
+        pOffset = &g_stDoubleBuf.draw01.frame1;
+    }
+    sceGsSetHalfOffset(pOffset, 0x800, 0x800, odev);
+
+    if (g_iFrame & 1)
+    {
+        pOffset = &g_stDoubleBuf.draw12.frame2;
+    }
+    else
+    {
+        pOffset = &g_stDoubleBuf.draw02.frame2;
+    }
+    sceGsSetHalfOffset2(pOffset, 0x800, 0x800, odev);
+
+    MySwapBuff3Dc(&g_stDoubleBuf, g_iFrame);
+    VU1StartWorkingOnFakeSwapBuffer();
+    AE_CopyBackBufferOnScreen();
+    VU1FlushFakeSwapBuffer();
+    VU1StopWorkingOnFakeSwapBuffer();
+
+    if (SwapBufferNotifyFunc)
+    {
+        ((void (*)(void))SwapBufferNotifyFunc)();
+    }
+}
+
+void PS2glSwapBuffers(void)
+{
+    if (g_stBufferInfo.bDoubleBufferMode)
+    {
+        impPS2glFlush();
+
+        if (g_PS2glContext.nEnableBits & 0x20000)
+        {
+            bNeedSwapBuffer = 1;
+
+            if (g_stBufferInfo.bPlainBufferMode)
+            {
+                if (g_iFrame & 1)
+                {
+                    g_gsContext.FRAME_1.FBP = g_stDoubleBuf.draw01.frame1.FBP;
+                    g_gsContext.FRAME_2.FBP = g_stDoubleBuf.draw02.frame2.FBP;
+                }
+                else
+                {
+                    g_gsContext.FRAME_1.FBP = g_stDoubleBuf.draw11.frame1.FBP;
+                    g_gsContext.FRAME_2.FBP = g_stDoubleBuf.draw12.frame2.FBP;
+                }
+            }
+            else
+            {
+                if ((g_iFrame & 1) == 0)
+                {
+                    g_gsContext.FRAME_1.FBP = g_stDoubleBuf.draw01.frame1.FBP;
+                    g_gsContext.FRAME_2.FBP = g_stDoubleBuf.draw02.frame2.FBP;
+                }
+                else
+                {
+                    g_gsContext.FRAME_1.FBP = g_stDoubleBuf.draw11.frame1.FBP;
+                    g_gsContext.FRAME_2.FBP = g_stDoubleBuf.draw12.frame2.FBP;
+                }
+            }
+
+            PS2glSetInteger(0x420, g_iFrame);
+        }
+        else
+        {
+            PS2glExecSwapBuffers();
+        }
+    }
+}
+
+void PS2glSwapBufferNotifyFunc(void (*Func)(void))
+{
+    SwapBufferNotifyFunc = (int)Func;
 }

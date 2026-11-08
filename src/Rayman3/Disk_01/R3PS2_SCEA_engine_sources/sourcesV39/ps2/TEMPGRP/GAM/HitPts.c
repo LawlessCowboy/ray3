@@ -179,39 +179,40 @@ void fn_vTreatCharactersInSector(HIE_tdstSuperObject_* hCharacter)
     /* TODO: decompile from asm/... */
 }
 
-unsigned char fn_ucSubHitPointsMax(tdstEngineObject_* _p_stObject, unsigned char _ucValue)
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+unsigned char fn_ucSubHitPointsMax(tdstEngineObject_* _p_stObject, unsigned char _ucValue);
+void fn_vAddHitPointsMax(tdstEngineObject_* _p_stObject, unsigned char _ucValue);
+void fn_vSetHitPointsMaxToMaxValue(tdstEngineObject_* _p_stObject);
+void fn_vSetHitPointsMax(tdstEngineObject_* _p_stObject, unsigned char _ucValue);
+unsigned char fn_ucGetHitPointsMax(tdstEngineObject_* _p_stObject);
+unsigned char fn_ucSubHitPoints(tdstEngineObject_* _p_stObject, unsigned char _ucValue);
+void fn_vAddHitPoints(tdstEngineObject_* _p_stObject, unsigned char _ucValue);
+void fn_vSetHitPointsToMaxValue(tdstEngineObject_* _p_stObject);
+void fn_vSetHitPoints(tdstEngineObject_* _p_stObject, unsigned char _ucValue);
+void fn_vSetHitPointsInit(tdstEngineObject_* _p_stObject, unsigned char _ucValue);
+
+void fn_vSetHitPointsInit(tdstEngineObject_* _p_stObject, unsigned char _ucValue)
 {
-    int value = _ucValue; unsigned char* p = &_p_stObject->h_StandardGame->ucHitPointsMax; if (*p - value > 0)
-        *p = (char)*p - value;
-    else
-
-        *p = 0;
-
-    { unsigned char m = _p_stObject->h_StandardGame->ucHitPointsMax; unsigned char* p2 = &_p_stObject->h_StandardGame->ucHitPoints; unsigned char hp = *p2; if (hp <= m) *p2 = hp; else *p2 = m; }
-    return _p_stObject->h_StandardGame->ucHitPointsMax;
+    _p_stObject->h_StandardGame->ucSaveHitPoints = _ucValue;
 }
 
-void fn_vAddHitPointsMax(tdstEngineObject_* _p_stObject, unsigned char _ucValue)
+void fn_vSetHitPoints(tdstEngineObject_* _p_stObject, unsigned char _ucValue)
 {
-    int value = _ucValue; tdstStandardGame_* h = _p_stObject->h_StandardGame; unsigned char m = h->ucHitPointsMaxMax; unsigned char* p = &h->ucHitPointsMax; if (value + *p <= m)
+    _p_stObject->h_StandardGame->ucHitPoints = _ucValue;
+}
+
+void fn_vSetHitPointsToMaxValue(tdstEngineObject_* _p_stObject)
+{
+    _p_stObject->h_StandardGame->ucHitPoints = _p_stObject->h_StandardGame->ucHitPointsMax;
+}
+
+void fn_vAddHitPoints(tdstEngineObject_* _p_stObject, unsigned char _ucValue)
+{
+    int value = _ucValue; tdstStandardGame_* h = _p_stObject->h_StandardGame; unsigned char m = h->ucHitPointsMax; unsigned char* p = &h->ucHitPoints; if (value + *p <= m)
         *p = value + (char)*p;
     else
         *p = m;
-}
-
-void fn_vSetHitPointsMaxToMaxValue(tdstEngineObject_* _p_stObject)
-{
-    _p_stObject->h_StandardGame->ucHitPointsMax = _p_stObject->h_StandardGame->ucHitPointsMaxMax;
-}
-
-void fn_vSetHitPointsMax(tdstEngineObject_* _p_stObject, unsigned char _ucValue)
-{
-    _p_stObject->h_StandardGame->ucHitPointsMax = _ucValue;
-}
-
-unsigned char fn_ucGetHitPointsMax(tdstEngineObject_* _p_stObject)
-{
-    return _p_stObject->h_StandardGame->ucHitPointsMax;
 }
 
 unsigned char fn_ucSubHitPoints(tdstEngineObject_* _p_stObject, unsigned char _ucValue)
@@ -224,25 +225,37 @@ unsigned char fn_ucSubHitPoints(tdstEngineObject_* _p_stObject, unsigned char _u
     return _p_stObject->h_StandardGame->ucHitPoints;
 }
 
-void fn_vAddHitPoints(tdstEngineObject_* _p_stObject, unsigned char _ucValue)
+unsigned char fn_ucGetHitPointsMax(tdstEngineObject_* _p_stObject)
 {
-    int value = _ucValue; tdstStandardGame_* h = _p_stObject->h_StandardGame; unsigned char m = h->ucHitPointsMax; unsigned char* p = &h->ucHitPoints; if (value + *p <= m)
+    return _p_stObject->h_StandardGame->ucHitPointsMax;
+}
+
+void fn_vSetHitPointsMax(tdstEngineObject_* _p_stObject, unsigned char _ucValue)
+{
+    _p_stObject->h_StandardGame->ucHitPointsMax = _ucValue;
+}
+
+void fn_vSetHitPointsMaxToMaxValue(tdstEngineObject_* _p_stObject)
+{
+    _p_stObject->h_StandardGame->ucHitPointsMax = _p_stObject->h_StandardGame->ucHitPointsMaxMax;
+}
+
+void fn_vAddHitPointsMax(tdstEngineObject_* _p_stObject, unsigned char _ucValue)
+{
+    int value = _ucValue; tdstStandardGame_* h = _p_stObject->h_StandardGame; unsigned char m = h->ucHitPointsMaxMax; unsigned char* p = &h->ucHitPointsMax; if (value + *p <= m)
         *p = value + (char)*p;
     else
         *p = m;
 }
 
-void fn_vSetHitPointsToMaxValue(tdstEngineObject_* _p_stObject)
+unsigned char fn_ucSubHitPointsMax(tdstEngineObject_* _p_stObject, unsigned char _ucValue)
 {
-    _p_stObject->h_StandardGame->ucHitPoints = _p_stObject->h_StandardGame->ucHitPointsMax;
-}
+    int value = _ucValue; unsigned char* p = &_p_stObject->h_StandardGame->ucHitPointsMax; if (*p - value > 0)
+        *p = (char)*p - value;
+    else
 
-void fn_vSetHitPoints(tdstEngineObject_* _p_stObject, unsigned char _ucValue)
-{
-    _p_stObject->h_StandardGame->ucHitPoints = _ucValue;
-}
+        *p = 0;
 
-void fn_vSetHitPointsInit(tdstEngineObject_* _p_stObject, unsigned char _ucValue)
-{
-    _p_stObject->h_StandardGame->ucSaveHitPoints = _ucValue;
+    { unsigned char m = _p_stObject->h_StandardGame->ucHitPointsMax; unsigned char* p2 = &_p_stObject->h_StandardGame->ucHitPoints; unsigned char hp = *p2; if (hp <= m) *p2 = hp; else *p2 = m; }
+    return _p_stObject->h_StandardGame->ucHitPointsMax;
 }

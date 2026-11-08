@@ -12,20 +12,23 @@ static int g_s_SoundIsPlaying;
 void SND_VID_fn_vStopVideoSound(void);
 void SND_VID_fn_vDesinitVideoSound(void);
 
-int vagStop(void)
-{
-    SND_VID_fn_vStopVideoSound();
-    g_s_SoundIsPlaying = 0;
-    SND_VID_fn_vDesinitVideoSound();
-}
-
-int vagSynchroToWait(void)
-{
-    return 0;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+int vagStop(void);
+int vagSynchroToWait(void);
+int vagUpdateSound(void);
+int vagInit(float fVolume);
 
 void GLI_fn_vTimerPS2Counter(unsigned int* pCount);
 void SND_VID_fn_vResumeVideoSound(void);
+
+int vagInit(float fVolume)
+{
+    SND_VID_fn_vInitVideoSound(2, 0xAC44);
+    g_s_SoundIsPlaying = 0;
+    g_s_CurrentFrame = 0;
+    return 0;
+}
 
 int vagUpdateSound(void)
 {
@@ -48,10 +51,14 @@ int vagUpdateSound(void)
     return 0;
 }
 
-int vagInit(float fVolume)
+int vagSynchroToWait(void)
 {
-    SND_VID_fn_vInitVideoSound(2, 0xAC44);
-    g_s_SoundIsPlaying = 0;
-    g_s_CurrentFrame = 0;
     return 0;
+}
+
+int vagStop(void)
+{
+    SND_VID_fn_vStopVideoSound();
+    g_s_SoundIsPlaying = 0;
+    SND_VID_fn_vDesinitVideoSound();
 }

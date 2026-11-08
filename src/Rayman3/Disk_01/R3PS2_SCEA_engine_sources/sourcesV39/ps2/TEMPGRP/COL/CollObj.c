@@ -193,6 +193,348 @@ void COL_fn_vUpdateMinMaxBoxWithPoint(MTH3D_tdstVector_* p_stMinPoint, MTH3D_tds
 void COL_fn_vComputeBoundingSphereOfOneSphereAndOnePoint(MTH3D_tdstVector_* p_stReturnedSphereCenter, float* p_xReturnedSphereRadius, MTH3D_tdstVector_* p_stFirstSphereCenter, float xFirstSphereRadius, MTH3D_tdstVector_* p_stSecondSphereCenter);
 void COL_fn_vComputeBoundingSphereOfTwoSpheres(MTH3D_tdstVector_* p_stReturnedSphereCenter, float* p_xReturnedSphereRadius, MTH3D_tdstVector_* p_stFirstSphereCenter, float xFirstSphereRadius, MTH3D_tdstVector_* p_stSecondSphereCenter, float xSecondSphereRadius);
 
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+COL_tdstCollideObject_* COL_fn_hTransformTableOfObjectInOneObjectForGAM(COL_tdstCollideObject_* _hGeoObj, COL_tdstCollideObject_** a_hTableOfGeoObj, short xNbOfObjects);
+void COL_fn_vAddObjectToSphere(COL_tdstCollideObject_* _hGeometricObject, MTH4D_tdstVector_* _p_stSphereCenter, float* _p_xSphereRadius);
+void COL_fn_vComputeBoundingSphereOfTwoSpheres(MTH3D_tdstVector_* _p_stReturnedSphereCenter, float* _p_xReturnedSphereRadius, MTH3D_tdstVector_* _p_stFirstSphereCenter, float _xFirstSphereRadius, MTH3D_tdstVector_* _p_stSecondSphereCenter, float _xSecondSphereRadius);
+void COL_fn_vComputeBoundingSphereOfOneSphereAndOnePoint(MTH3D_tdstVector_* _p_stReturnedSphereCenter, float* _p_xReturnedSphereRadius, MTH3D_tdstVector_* _p_stFirstSphereCenter, float _xFirstSphereRadius, MTH3D_tdstVector_* _p_stSecondSphereCenter);
+void COL_fn_vGetInfoFromGeometricSphere(MTH3D_tdstVector_* _p_stSphereCenter, float* _p_xSphereRadius, COL_tdstCollideObject_* _hBoundingVolume);
+MTH3D_tdstVector_* COL_fn_pGetMaxPointOfParallelBox(COL_tdstParallelBox_* _p_stParallelBox);
+MTH3D_tdstVector_* COL_fn_pGetMinPointOfParallelBox(COL_tdstParallelBox_* _p_stParallelBox);
+void COL_vGetNormalOfGeometricObjectElement(COL_tdstCollideObject_* hObject, short xElementIndex, short xDataElementIndex, MTH3D_tdstVector_* p_stNormal);
+short COL_xGetParallelBoxIndexOfElement(COL_tdstCollideObject_* hObject, short xIndexElement);
+short COL_xGetCollideObjectNumberOfElementsMax(COL_tdstCollideObject_* hObject);
+short COL_xGetCollideObjectNumberOfPoints(COL_tdstCollideObject_* hObject);
+void COL_vCreateCollideObject(COL_tdstCollideObject_** p_hObject, short xNbPoints, short xNbElements);
+void COL_vGetPointOfObject(COL_tdstCollideObject_* hObject, MTH3D_tdstVector_* p_stPoint, short xIndexOfPoint);
+void COL_vSetPointOfObject(COL_tdstCollideObject_* hObject, MTH3D_tdstVector_* p_stPoint, short xIndexOfPoint);
+short COL_xGetElementType(COL_tdstCollideObject_* hObject, short xElement);
+void COL_vEndModifyObject(COL_tdstCollideObject_* hObject);
+void COL_vComputeObjectParallelBox(COL_tdstCollideObject_* hObject, short xParallelBox);
+void COL_vCreateObjectListOfParallelBox(COL_tdstCollideObject_* hObject, short xNumberOfParallelBoxes);
+void COL_fn_vUpdateMinMaxBoxWithPoint(MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, MTH3D_tdstVector_* p_stPoint);
+
+#define MTH3D_M_vCopyVector(_d, _s) { *(int*)&(_d)->xX = *(int*)&(_s)->xX; *(int*)&(_d)->xY = *(int*)&(_s)->xY; *(int*)&(_d)->xZ = *(int*)&(_s)->xZ; }
+
+#pragma auto_inline on
+
+#pragma auto_inline reset
+
+void COL_fn_vUpdateMinMaxBoxWithPoint(MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, MTH3D_tdstVector_* p_stPoint)
+{
+    if (p_stPoint->xX < p_stMinPoint->xX)
+    {
+        p_stMinPoint->xX = p_stPoint->xX;
+    }
+    else if (p_stPoint->xX > p_stMaxPoint->xX)
+    {
+        p_stMaxPoint->xX = p_stPoint->xX;
+    }
+    if (p_stPoint->xY < p_stMinPoint->xY)
+    {
+        p_stMinPoint->xY = p_stPoint->xY;
+    }
+    else if (p_stPoint->xY > p_stMaxPoint->xY)
+    {
+        p_stMaxPoint->xY = p_stPoint->xY;
+    }
+    if (p_stPoint->xZ < p_stMinPoint->xZ)
+    {
+        p_stMinPoint->xZ = p_stPoint->xZ;
+    }
+    else if (p_stPoint->xZ > p_stMaxPoint->xZ)
+    {
+        p_stMaxPoint->xZ = p_stPoint->xZ;
+    }
+}
+
+void COL_vCreateObjectListOfParallelBox(COL_tdstCollideObject_* hObject, short xNumberOfParallelBoxes)
+{
+    short xIndex;
+
+    hObject->xNbParallelBoxes = xNumberOfParallelBoxes;
+    if (hObject->xNbParallelBoxes != 0)
+    {
+        if (hObject->d_stListOfParallelBoxes == NULL)
+        {
+            hObject->d_stListOfParallelBoxes = (COL_tdstParallelBox_*)HMU_fn_p_vMalloc(hObject->xNbParallelBoxes * sizeof(COL_tdstParallelBox_), 0);
+            for (xIndex = 0; xIndex < hObject->xNbParallelBoxes; xIndex++)
+            {
+                hObject->d_stListOfParallelBoxes[xIndex].stMinPoint.xX = 3.402822e38f; hObject->d_stListOfParallelBoxes[xIndex].stMinPoint.xY = 3.402822e38f; hObject->d_stListOfParallelBoxes[xIndex].stMinPoint.xZ = 3.402822e38f;
+                hObject->d_stListOfParallelBoxes[xIndex].stMaxPoint.xX = -3.402822e38f; hObject->d_stListOfParallelBoxes[xIndex].stMaxPoint.xY = -3.402822e38f; hObject->d_stListOfParallelBoxes[xIndex].stMaxPoint.xZ = -3.402822e38f;
+            }
+        }
+    }
+}
+
+void COL_vComputeObjectParallelBox(COL_tdstCollideObject_* hObject, short xParallelBox)
+{
+    COL_tdstElementIndexedTriangles_* p_stETIT;
+    COL_tdstElementSpheres_* p_stES;
+    COL_tdstElementAlignedBoxes_* p_stEAB;
+    short xIndexElement;
+    short xIndexInElement;
+    MTH3D_tdstVector_* p_stMinPoint;
+    MTH3D_tdstVector_* p_stMaxPoint;
+    COL_tdstParallelBox_* hParallelBox;
+    int bInit;
+
+    hParallelBox = hObject->d_stListOfParallelBoxes + xParallelBox;
+    p_stMinPoint = (MTH3D_tdstVector_*)&hParallelBox->stMinPoint;
+    p_stMaxPoint = (MTH3D_tdstVector_*)&hParallelBox->stMaxPoint;
+
+    bInit = 0;
+
+    for (xIndexElement = 0; xIndexElement < hObject->xNbElements; xIndexElement++)
+    {
+        if (COL_xGetParallelBoxIndexOfElement(hObject, xIndexElement) == xParallelBox)
+        {
+            switch (((short*)hObject->d_xListOfElementsTypes)[xIndexElement])
+            {
+            case 1:
+                p_stETIT = ((COL_tdstElementIndexedTriangles_**)hObject->d_stListOfElements)[xIndexElement];
+                if (!bInit && p_stETIT->xNbFaces)
+                {
+                    *(int*)&p_stMinPoint->xX = *(int*)&hObject->d_stListOfPoints[p_stETIT->d_stListOfFacesTripled[0].a3_xIndex[0]].xX;
+                    *(int*)&p_stMinPoint->xY = *(int*)&hObject->d_stListOfPoints[p_stETIT->d_stListOfFacesTripled[0].a3_xIndex[0]].xY;
+                    *(int*)&p_stMinPoint->xZ = *(int*)&hObject->d_stListOfPoints[p_stETIT->d_stListOfFacesTripled[0].a3_xIndex[0]].xZ;
+                    *(int*)&p_stMaxPoint->xX = *(int*)&hObject->d_stListOfPoints[p_stETIT->d_stListOfFacesTripled[0].a3_xIndex[0]].xX;
+                    *(int*)&p_stMaxPoint->xY = *(int*)&hObject->d_stListOfPoints[p_stETIT->d_stListOfFacesTripled[0].a3_xIndex[0]].xY;
+                    *(int*)&p_stMaxPoint->xZ = *(int*)&hObject->d_stListOfPoints[p_stETIT->d_stListOfFacesTripled[0].a3_xIndex[0]].xZ;
+                    bInit = 1;
+                }
+                for (xIndexInElement = 0; xIndexInElement < p_stETIT->xNbFaces; xIndexInElement++)
+                {
+                    COL_fn_vUpdateMinMaxBoxWithPoint(p_stMinPoint, p_stMaxPoint, &hObject->d_stListOfPoints[p_stETIT->d_stListOfFacesTripled[xIndexInElement].a3_xIndex[0]]);
+                    COL_fn_vUpdateMinMaxBoxWithPoint(p_stMinPoint, p_stMaxPoint, &hObject->d_stListOfPoints[p_stETIT->d_stListOfFacesTripled[xIndexInElement].a3_xIndex[1]]);
+                    COL_fn_vUpdateMinMaxBoxWithPoint(p_stMinPoint, p_stMaxPoint, &hObject->d_stListOfPoints[p_stETIT->d_stListOfFacesTripled[xIndexInElement].a3_xIndex[2]]);
+                }
+                break;
+
+            case 7:
+                p_stES = ((COL_tdstElementSpheres_**)hObject->d_stListOfElements)[xIndexElement];
+                if (!bInit && p_stES->xNbSpheres)
+                {
+                    *(int*)&p_stMinPoint->xX = *(int*)&hObject->d_stListOfPoints[p_stES->d_stListOfSpheres[0].xCenterPoint].xX;
+                    *(int*)&p_stMinPoint->xY = *(int*)&hObject->d_stListOfPoints[p_stES->d_stListOfSpheres[0].xCenterPoint].xY;
+                    *(int*)&p_stMinPoint->xZ = *(int*)&hObject->d_stListOfPoints[p_stES->d_stListOfSpheres[0].xCenterPoint].xZ;
+                    *(int*)&p_stMaxPoint->xX = *(int*)&hObject->d_stListOfPoints[p_stES->d_stListOfSpheres[0].xCenterPoint].xX;
+                    *(int*)&p_stMaxPoint->xY = *(int*)&hObject->d_stListOfPoints[p_stES->d_stListOfSpheres[0].xCenterPoint].xY;
+                    *(int*)&p_stMaxPoint->xZ = *(int*)&hObject->d_stListOfPoints[p_stES->d_stListOfSpheres[0].xCenterPoint].xZ;
+                    bInit = 1;
+                }
+                for (xIndexInElement = 0; xIndexInElement < p_stES->xNbSpheres; xIndexInElement++)
+                {
+                    COL_fn_vUpdateMinMaxBoxWithPoint(p_stMinPoint, p_stMaxPoint, &hObject->d_stListOfPoints[p_stES->d_stListOfSpheres[xIndexInElement].xCenterPoint]);
+                }
+                break;
+
+            case 8:
+                p_stEAB = ((COL_tdstElementAlignedBoxes_**)hObject->d_stListOfElements)[xIndexElement];
+                if (!bInit && p_stEAB->xNbAlignedBoxes)
+                {
+                    *(int*)&p_stMinPoint->xX = *(int*)&hObject->d_stListOfPoints[p_stEAB->d_stListOfAlignedBoxes[0].xMinPoint].xX;
+                    *(int*)&p_stMinPoint->xY = *(int*)&hObject->d_stListOfPoints[p_stEAB->d_stListOfAlignedBoxes[0].xMinPoint].xY;
+                    *(int*)&p_stMinPoint->xZ = *(int*)&hObject->d_stListOfPoints[p_stEAB->d_stListOfAlignedBoxes[0].xMinPoint].xZ;
+                    *(int*)&p_stMaxPoint->xX = *(int*)&hObject->d_stListOfPoints[p_stEAB->d_stListOfAlignedBoxes[0].xMinPoint].xX;
+                    *(int*)&p_stMaxPoint->xY = *(int*)&hObject->d_stListOfPoints[p_stEAB->d_stListOfAlignedBoxes[0].xMinPoint].xY;
+                    *(int*)&p_stMaxPoint->xZ = *(int*)&hObject->d_stListOfPoints[p_stEAB->d_stListOfAlignedBoxes[0].xMinPoint].xZ;
+                    bInit = 1;
+                }
+                for (xIndexInElement = 0; xIndexInElement < p_stEAB->xNbAlignedBoxes; xIndexInElement++)
+                {
+                    COL_fn_vUpdateMinMaxBoxWithPoint(p_stMinPoint, p_stMaxPoint, &hObject->d_stListOfPoints[p_stEAB->d_stListOfAlignedBoxes[xIndexInElement].xMinPoint]);
+                    COL_fn_vUpdateMinMaxBoxWithPoint(p_stMinPoint, p_stMaxPoint, &hObject->d_stListOfPoints[p_stEAB->d_stListOfAlignedBoxes[xIndexInElement].xMaxPoint]);
+                }
+                break;
+            }
+        }
+    }
+}
+
+void COL_vEndModifyObject(COL_tdstCollideObject_* hObject)
+{
+    short xIndex;
+
+    if (hObject->xNbParallelBoxes != 0) { if (hObject->d_stListOfParallelBoxes == NULL) { COL_vCreateObjectListOfParallelBox(hObject, hObject->xNbParallelBoxes); xIndex = 0; } for (xIndex = 0; xIndex < hObject->xNbParallelBoxes; xIndex++) { COL_vComputeObjectParallelBox(hObject, xIndex); } }
+
+    hObject->xBoudingSphereCenter.xX = hObject->d_stListOfPoints[0].xX;
+    hObject->xBoudingSphereCenter.xY = hObject->d_stListOfPoints[0].xY;
+    hObject->xBoudingSphereCenter.xZ = hObject->d_stListOfPoints[0].xZ;
+    hObject->xBoudingSphereCenter.xW = 1.0f;
+    hObject->xBoudingSphereRadius = 0.0f;
+    COL_fn_vAddObjectToSphere(hObject, &hObject->xBoudingSphereCenter, &hObject->xBoudingSphereRadius);
+}
+
+short COL_xGetElementType(COL_tdstCollideObject_* hObject, short xElement)
+{
+    return *(short*)(hObject->d_xListOfElementsTypes + xElement * 2);
+}
+
+void COL_vSetPointOfObject(COL_tdstCollideObject_* hObject, MTH3D_tdstVector_* p_stPoint, short xIndexOfPoint)
+{
+    hObject->d_stListOfPoints[xIndexOfPoint] = *p_stPoint;
+}
+
+void COL_vGetPointOfObject(COL_tdstCollideObject_* hObject, MTH3D_tdstVector_* p_stPoint, short xIndexOfPoint)
+{
+    *p_stPoint = hObject->d_stListOfPoints[xIndexOfPoint];
+}
+
+void COL_vCreateCollideObject(COL_tdstCollideObject_** p_hObject, short xNbPoints, short xNbElements)
+{
+    COL_tdstCollideObject_* hObject;
+    short xNb;
+    short i;
+    COL_tdstCollideObject_* p_stObj;
+
+    hObject = (COL_tdstCollideObject_*)HMU_fn_p_vMalloc(sizeof(COL_tdstCollideObject_), 0); hObject->xNbElements = xNbElements; hObject->xNbPoints = xNbPoints; hObject->d_xListOfElementsTypes = (int)HMU_fn_p_vMalloc(xNbElements * sizeof(short), 0); hObject->d_stListOfElements = (int)HMU_fn_p_vMalloc(xNbElements * 4, 0); hObject->d_stListOfPoints = (MTH3D_tdstVector_*)HMU_fn_p_vMalloc(xNbPoints * sizeof(MTH3D_tdstVector_), 0); *p_hObject = hObject;
+    p_stObj = *p_hObject; xNb = p_stObj->xNbElements; for (i = 0; i < xNb; i++) { ((short*)p_stObj->d_xListOfElementsTypes)[i] = 0; } p_stObj->p_stOctree = NULL; p_stObj->xNbParallelBoxes = 0; p_stObj->d_stListOfParallelBoxes = NULL; p_stObj->xBoudingSphereRadius = 0.0f; p_stObj->xBoudingSphereCenter.xX = 0.0f; p_stObj->xBoudingSphereCenter.xY = 0.0f; p_stObj->xBoudingSphereCenter.xZ = 0.0f;
+}
+
+short COL_xGetCollideObjectNumberOfPoints(COL_tdstCollideObject_* hObject)
+{
+    return hObject->xNbPoints;
+}
+
+short COL_xGetCollideObjectNumberOfElementsMax(COL_tdstCollideObject_* hObject)
+{
+    return hObject->xNbElements;
+}
+
+#pragma auto_inline on
+short COL_xGetParallelBoxIndexOfElement(COL_tdstCollideObject_* hObject, short xIndexElement)
+{
+    switch (((short*)hObject->d_xListOfElementsTypes)[xIndexElement])
+    {
+    case 1:
+        return ((COL_tdstElementIndexedTriangles_**)hObject->d_stListOfElements)[xIndexElement]->xIndexOfParallelBox;
+    case 7:
+        return ((COL_tdstElementAlignedBoxes_**)hObject->d_stListOfElements)[xIndexElement]->xIndexOfParallelBox;
+    case 8:
+        return ((COL_tdstElementSpheres_**)hObject->d_stListOfElements)[xIndexElement]->xIndexOfParallelBox;
+    }
+    return -1;
+}
+#pragma auto_inline reset
+
+void COL_vGetNormalOfGeometricObjectElement(COL_tdstCollideObject_* hObject, short xElementIndex, short xDataElementIndex, MTH3D_tdstVector_* p_stNormal)
+{
+    COL_tdstElementIndexedTriangles_* param0;
+
+    p_stNormal->xX = 0.0f; p_stNormal->xY = 0.0f; p_stNormal->xZ = 0.0f;
+
+    switch (*(short*)(hObject->d_xListOfElementsTypes + xElementIndex * 2)) {
+        case 1:
+            param0 = *(COL_tdstElementIndexedTriangles_**)(hObject->d_stListOfElements + xElementIndex * 4);
+            MTH3D_M_vCopyVector(p_stNormal, &param0->d_stListOfFacesNormals[xDataElementIndex]);
+            break;
+    }
+}
+
+MTH3D_tdstVector_* COL_fn_pGetMinPointOfParallelBox(COL_tdstParallelBox_* _p_stParallelBox)
+{
+    return (MTH3D_tdstVector_*)_p_stParallelBox;
+}
+
+MTH3D_tdstVector_* COL_fn_pGetMaxPointOfParallelBox(COL_tdstParallelBox_* _p_stParallelBox)
+{
+    return (MTH3D_tdstVector_*)((unsigned char*)_p_stParallelBox + 0x10);
+}
+
+void COL_fn_vGetInfoFromGeometricSphere(MTH3D_tdstVector_* _p_stSphereCenter, float* _p_xSphereRadius, COL_tdstCollideObject_* _hBoundingVolume)
+{
+    COL_tdstIndexedSphere_* p_stOneSphere;
+    MTH3D_tdstVector_* p_stCenter;
+    p_stOneSphere = (*(COL_tdstElementSpheres_***)&_hBoundingVolume->d_stListOfElements)[0]->d_stListOfSpheres;
+    p_stCenter = &_hBoundingVolume->d_stListOfPoints[p_stOneSphere->xCenterPoint];
+    ((int*)_p_stSphereCenter)[0] = ((int*)p_stCenter)[0];
+    ((int*)_p_stSphereCenter)[1] = ((int*)p_stCenter)[1];
+    ((int*)_p_stSphereCenter)[2] = ((int*)p_stCenter)[2];
+    *_p_xSphereRadius = p_stOneSphere->xRadius;
+}
+
+void COL_fn_vComputeBoundingSphereOfOneSphereAndOnePoint(MTH3D_tdstVector_* _p_stReturnedSphereCenter, float* _p_xReturnedSphereRadius, MTH3D_tdstVector_* _p_stFirstSphereCenter, float _xFirstSphereRadius, MTH3D_tdstVector_* _p_stSecondSphereCenter)
+{
+    float xAlpha;
+    float xX, xY, xZ;
+    float xSqrNorm;
+    float xNorm;
+
+    xX = _p_stFirstSphereCenter->xX - _p_stSecondSphereCenter->xX; xY = _p_stFirstSphereCenter->xY - _p_stSecondSphereCenter->xY; xZ = _p_stFirstSphereCenter->xZ - _p_stSecondSphereCenter->xZ;
+    MTH_SQR3_TO(xSqrNorm, xX, xY, xZ) MTH_SQRT_TO(xNorm, xSqrNorm)
+    if (xNorm <= _xFirstSphereRadius)
+    {
+        *(int*)&_p_stReturnedSphereCenter->xX = *(int*)&_p_stFirstSphereCenter->xX; *(int*)&_p_stReturnedSphereCenter->xY = *(int*)&_p_stFirstSphereCenter->xY; *(int*)&_p_stReturnedSphereCenter->xZ = *(int*)&_p_stFirstSphereCenter->xZ;
+
+        *_p_xReturnedSphereRadius = _xFirstSphereRadius;
+    }
+    else
+    {
+        xAlpha = (1.0f - _xFirstSphereRadius / xNorm) / 2.0f;
+        _p_stReturnedSphereCenter->xX = _p_stFirstSphereCenter->xX + xAlpha * (_p_stSecondSphereCenter->xX - _p_stFirstSphereCenter->xX); _p_stReturnedSphereCenter->xY = _p_stFirstSphereCenter->xY + xAlpha * (_p_stSecondSphereCenter->xY - _p_stFirstSphereCenter->xY); _p_stReturnedSphereCenter->xZ = _p_stFirstSphereCenter->xZ + xAlpha * (_p_stSecondSphereCenter->xZ - _p_stFirstSphereCenter->xZ);
+        *_p_xReturnedSphereRadius = (xNorm + _xFirstSphereRadius) / 2.0f;
+    }
+}
+
+void COL_fn_vComputeBoundingSphereOfTwoSpheres(MTH3D_tdstVector_* _p_stReturnedSphereCenter, float* _p_xReturnedSphereRadius, MTH3D_tdstVector_* _p_stFirstSphereCenter, float _xFirstSphereRadius, MTH3D_tdstVector_* _p_stSecondSphereCenter, float _xSecondSphereRadius)
+{
+    float xAlpha;
+    float xX, xY, xZ;
+    float xSqrNorm;
+    float xNorm;
+
+    xX = _p_stFirstSphereCenter->xX - _p_stSecondSphereCenter->xX; xY = _p_stFirstSphereCenter->xY - _p_stSecondSphereCenter->xY; xZ = _p_stFirstSphereCenter->xZ - _p_stSecondSphereCenter->xZ;
+    MTH_SQR3_TO(xSqrNorm, xX, xY, xZ) MTH_SQRT_TO(xNorm, xSqrNorm)
+    if (xNorm + _xFirstSphereRadius <= _xSecondSphereRadius)
+    {
+        *(int*)&_p_stReturnedSphereCenter->xX = *(int*)&_p_stSecondSphereCenter->xX; *(int*)&_p_stReturnedSphereCenter->xY = *(int*)&_p_stSecondSphereCenter->xY; *(int*)&_p_stReturnedSphereCenter->xZ = *(int*)&_p_stSecondSphereCenter->xZ;
+
+        *_p_xReturnedSphereRadius = _xSecondSphereRadius;
+    }
+    else if (xNorm + _xSecondSphereRadius < _xFirstSphereRadius)
+    {
+        *(int*)&_p_stReturnedSphereCenter->xX = *(int*)&_p_stFirstSphereCenter->xX; *(int*)&_p_stReturnedSphereCenter->xY = *(int*)&_p_stFirstSphereCenter->xY; *(int*)&_p_stReturnedSphereCenter->xZ = *(int*)&_p_stFirstSphereCenter->xZ;
+
+        *_p_xReturnedSphereRadius = _xFirstSphereRadius;
+    }
+    else
+    {
+        xAlpha = (1.0f - (_xFirstSphereRadius - _xSecondSphereRadius) / xNorm) / 2.0f;
+        _p_stReturnedSphereCenter->xX = _p_stFirstSphereCenter->xX + xAlpha * (_p_stSecondSphereCenter->xX - _p_stFirstSphereCenter->xX); _p_stReturnedSphereCenter->xY = _p_stFirstSphereCenter->xY + xAlpha * (_p_stSecondSphereCenter->xY - _p_stFirstSphereCenter->xY); _p_stReturnedSphereCenter->xZ = _p_stFirstSphereCenter->xZ + xAlpha * (_p_stSecondSphereCenter->xZ - _p_stFirstSphereCenter->xZ);
+        *_p_xReturnedSphereRadius = (xNorm + _xFirstSphereRadius + _xSecondSphereRadius) / 2.0f;
+    }
+}
+
+void COL_fn_vAddObjectToSphere(COL_tdstCollideObject_* _hGeometricObject, MTH4D_tdstVector_* _p_stSphereCenter, float* _p_xSphereRadius)
+{
+    MTH3D_tdstVector_ stSphereCenterLocal;
+    int lElementCounter;
+    COL_tdstElementSpheres_* p_stLocalElementSphere;
+    MTH3D_tdstVector_* p_stVertex;
+    int i;
+
+    p_stVertex = _hGeometricObject->d_stListOfPoints;
+    for (i = 0; i < _hGeometricObject->xNbPoints; i++, p_stVertex++)
+    {
+        COL_fn_vComputeBoundingSphereOfOneSphereAndOnePoint((MTH3D_tdstVector_*)_p_stSphereCenter, _p_xSphereRadius, (MTH3D_tdstVector_*)_p_stSphereCenter, *_p_xSphereRadius, p_stVertex);
+    }
+
+    for (lElementCounter = 0; lElementCounter < _hGeometricObject->xNbElements; lElementCounter++)
+    {
+        if (((short*)_hGeometricObject->d_xListOfElementsTypes)[lElementCounter] == 7)
+        {
+            p_stLocalElementSphere = ((COL_tdstElementSpheres_**)_hGeometricObject->d_stListOfElements)[lElementCounter];
+            for (i = 0; i < p_stLocalElementSphere->xNbSpheres; i++)
+            {
+                stSphereCenterLocal = _hGeometricObject->d_stListOfPoints[p_stLocalElementSphere->d_stListOfSpheres[i].xCenterPoint];
+                COL_fn_vComputeBoundingSphereOfTwoSpheres((MTH3D_tdstVector_*)_p_stSphereCenter, _p_xSphereRadius, (MTH3D_tdstVector_*)_p_stSphereCenter, *_p_xSphereRadius, &stSphereCenterLocal, p_stLocalElementSphere->d_stListOfSpheres[i].xRadius);
+            }
+        }
+    }
+}
+
 COL_tdstCollideObject_* COL_fn_hTransformTableOfObjectInOneObjectForGAM(COL_tdstCollideObject_* _hGeoObj, COL_tdstCollideObject_** a_hTableOfGeoObj, short xNbOfObjects)
 {
     short xNbPoints;
@@ -282,320 +624,4 @@ COL_tdstCollideObject_* COL_fn_hTransformTableOfObjectInOneObjectForGAM(COL_tdst
     }
     _hGeoObj->xNbPoints = xNbPoints;
     return _hGeoObj;
-}
-
-void COL_fn_vAddObjectToSphere(COL_tdstCollideObject_* _hGeometricObject, MTH4D_tdstVector_* _p_stSphereCenter, float* _p_xSphereRadius)
-{
-    MTH3D_tdstVector_ stSphereCenterLocal;
-    int lElementCounter;
-    COL_tdstElementSpheres_* p_stLocalElementSphere;
-    MTH3D_tdstVector_* p_stVertex;
-    int i;
-
-    p_stVertex = _hGeometricObject->d_stListOfPoints;
-    for (i = 0; i < _hGeometricObject->xNbPoints; i++, p_stVertex++)
-    {
-        COL_fn_vComputeBoundingSphereOfOneSphereAndOnePoint((MTH3D_tdstVector_*)_p_stSphereCenter, _p_xSphereRadius, (MTH3D_tdstVector_*)_p_stSphereCenter, *_p_xSphereRadius, p_stVertex);
-    }
-
-    for (lElementCounter = 0; lElementCounter < _hGeometricObject->xNbElements; lElementCounter++)
-    {
-        if (((short*)_hGeometricObject->d_xListOfElementsTypes)[lElementCounter] == 7)
-        {
-            p_stLocalElementSphere = ((COL_tdstElementSpheres_**)_hGeometricObject->d_stListOfElements)[lElementCounter];
-            for (i = 0; i < p_stLocalElementSphere->xNbSpheres; i++)
-            {
-                stSphereCenterLocal = _hGeometricObject->d_stListOfPoints[p_stLocalElementSphere->d_stListOfSpheres[i].xCenterPoint];
-                COL_fn_vComputeBoundingSphereOfTwoSpheres((MTH3D_tdstVector_*)_p_stSphereCenter, _p_xSphereRadius, (MTH3D_tdstVector_*)_p_stSphereCenter, *_p_xSphereRadius, &stSphereCenterLocal, p_stLocalElementSphere->d_stListOfSpheres[i].xRadius);
-            }
-        }
-    }
-}
-
-void COL_fn_vComputeBoundingSphereOfTwoSpheres(MTH3D_tdstVector_* _p_stReturnedSphereCenter, float* _p_xReturnedSphereRadius, MTH3D_tdstVector_* _p_stFirstSphereCenter, float _xFirstSphereRadius, MTH3D_tdstVector_* _p_stSecondSphereCenter, float _xSecondSphereRadius)
-{
-    float xAlpha;
-    float xX, xY, xZ;
-    float xSqrNorm;
-    float xNorm;
-
-    xX = _p_stFirstSphereCenter->xX - _p_stSecondSphereCenter->xX; xY = _p_stFirstSphereCenter->xY - _p_stSecondSphereCenter->xY; xZ = _p_stFirstSphereCenter->xZ - _p_stSecondSphereCenter->xZ;
-    MTH_SQR3_TO(xSqrNorm, xX, xY, xZ) MTH_SQRT_TO(xNorm, xSqrNorm)
-    if (xNorm + _xFirstSphereRadius <= _xSecondSphereRadius)
-    {
-        *(int*)&_p_stReturnedSphereCenter->xX = *(int*)&_p_stSecondSphereCenter->xX; *(int*)&_p_stReturnedSphereCenter->xY = *(int*)&_p_stSecondSphereCenter->xY; *(int*)&_p_stReturnedSphereCenter->xZ = *(int*)&_p_stSecondSphereCenter->xZ;
-
-        *_p_xReturnedSphereRadius = _xSecondSphereRadius;
-    }
-    else if (xNorm + _xSecondSphereRadius < _xFirstSphereRadius)
-    {
-        *(int*)&_p_stReturnedSphereCenter->xX = *(int*)&_p_stFirstSphereCenter->xX; *(int*)&_p_stReturnedSphereCenter->xY = *(int*)&_p_stFirstSphereCenter->xY; *(int*)&_p_stReturnedSphereCenter->xZ = *(int*)&_p_stFirstSphereCenter->xZ;
-
-        *_p_xReturnedSphereRadius = _xFirstSphereRadius;
-    }
-    else
-    {
-        xAlpha = (1.0f - (_xFirstSphereRadius - _xSecondSphereRadius) / xNorm) / 2.0f;
-        _p_stReturnedSphereCenter->xX = _p_stFirstSphereCenter->xX + xAlpha * (_p_stSecondSphereCenter->xX - _p_stFirstSphereCenter->xX); _p_stReturnedSphereCenter->xY = _p_stFirstSphereCenter->xY + xAlpha * (_p_stSecondSphereCenter->xY - _p_stFirstSphereCenter->xY); _p_stReturnedSphereCenter->xZ = _p_stFirstSphereCenter->xZ + xAlpha * (_p_stSecondSphereCenter->xZ - _p_stFirstSphereCenter->xZ);
-        *_p_xReturnedSphereRadius = (xNorm + _xFirstSphereRadius + _xSecondSphereRadius) / 2.0f;
-    }
-}
-
-void COL_fn_vComputeBoundingSphereOfOneSphereAndOnePoint(MTH3D_tdstVector_* _p_stReturnedSphereCenter, float* _p_xReturnedSphereRadius, MTH3D_tdstVector_* _p_stFirstSphereCenter, float _xFirstSphereRadius, MTH3D_tdstVector_* _p_stSecondSphereCenter)
-{
-    float xAlpha;
-    float xX, xY, xZ;
-    float xSqrNorm;
-    float xNorm;
-
-    xX = _p_stFirstSphereCenter->xX - _p_stSecondSphereCenter->xX; xY = _p_stFirstSphereCenter->xY - _p_stSecondSphereCenter->xY; xZ = _p_stFirstSphereCenter->xZ - _p_stSecondSphereCenter->xZ;
-    MTH_SQR3_TO(xSqrNorm, xX, xY, xZ) MTH_SQRT_TO(xNorm, xSqrNorm)
-    if (xNorm <= _xFirstSphereRadius)
-    {
-        *(int*)&_p_stReturnedSphereCenter->xX = *(int*)&_p_stFirstSphereCenter->xX; *(int*)&_p_stReturnedSphereCenter->xY = *(int*)&_p_stFirstSphereCenter->xY; *(int*)&_p_stReturnedSphereCenter->xZ = *(int*)&_p_stFirstSphereCenter->xZ;
-
-        *_p_xReturnedSphereRadius = _xFirstSphereRadius;
-    }
-    else
-    {
-        xAlpha = (1.0f - _xFirstSphereRadius / xNorm) / 2.0f;
-        _p_stReturnedSphereCenter->xX = _p_stFirstSphereCenter->xX + xAlpha * (_p_stSecondSphereCenter->xX - _p_stFirstSphereCenter->xX); _p_stReturnedSphereCenter->xY = _p_stFirstSphereCenter->xY + xAlpha * (_p_stSecondSphereCenter->xY - _p_stFirstSphereCenter->xY); _p_stReturnedSphereCenter->xZ = _p_stFirstSphereCenter->xZ + xAlpha * (_p_stSecondSphereCenter->xZ - _p_stFirstSphereCenter->xZ);
-        *_p_xReturnedSphereRadius = (xNorm + _xFirstSphereRadius) / 2.0f;
-    }
-}
-
-void COL_fn_vGetInfoFromGeometricSphere(MTH3D_tdstVector_* _p_stSphereCenter, float* _p_xSphereRadius, COL_tdstCollideObject_* _hBoundingVolume)
-{
-    COL_tdstIndexedSphere_* p_stOneSphere;
-    MTH3D_tdstVector_* p_stCenter;
-    p_stOneSphere = (*(COL_tdstElementSpheres_***)&_hBoundingVolume->d_stListOfElements)[0]->d_stListOfSpheres;
-    p_stCenter = &_hBoundingVolume->d_stListOfPoints[p_stOneSphere->xCenterPoint];
-    ((int*)_p_stSphereCenter)[0] = ((int*)p_stCenter)[0];
-    ((int*)_p_stSphereCenter)[1] = ((int*)p_stCenter)[1];
-    ((int*)_p_stSphereCenter)[2] = ((int*)p_stCenter)[2];
-    *_p_xSphereRadius = p_stOneSphere->xRadius;
-}
-
-MTH3D_tdstVector_* COL_fn_pGetMaxPointOfParallelBox(COL_tdstParallelBox_* _p_stParallelBox)
-{
-    return (MTH3D_tdstVector_*)((unsigned char*)_p_stParallelBox + 0x10);
-}
-
-MTH3D_tdstVector_* COL_fn_pGetMinPointOfParallelBox(COL_tdstParallelBox_* _p_stParallelBox)
-{
-    return (MTH3D_tdstVector_*)_p_stParallelBox;
-}
-
-#define MTH3D_M_vCopyVector(_d, _s) { *(int*)&(_d)->xX = *(int*)&(_s)->xX; *(int*)&(_d)->xY = *(int*)&(_s)->xY; *(int*)&(_d)->xZ = *(int*)&(_s)->xZ; }
-
-void COL_vGetNormalOfGeometricObjectElement(COL_tdstCollideObject_* hObject, short xElementIndex, short xDataElementIndex, MTH3D_tdstVector_* p_stNormal)
-{
-    COL_tdstElementIndexedTriangles_* param0;
-
-    p_stNormal->xX = 0.0f; p_stNormal->xY = 0.0f; p_stNormal->xZ = 0.0f;
-
-    switch (*(short*)(hObject->d_xListOfElementsTypes + xElementIndex * 2)) {
-        case 1:
-            param0 = *(COL_tdstElementIndexedTriangles_**)(hObject->d_stListOfElements + xElementIndex * 4);
-            MTH3D_M_vCopyVector(p_stNormal, &param0->d_stListOfFacesNormals[xDataElementIndex]);
-            break;
-    }
-}
-
-#pragma auto_inline on
-short COL_xGetParallelBoxIndexOfElement(COL_tdstCollideObject_* hObject, short xIndexElement)
-{
-    switch (((short*)hObject->d_xListOfElementsTypes)[xIndexElement])
-    {
-    case 1:
-        return ((COL_tdstElementIndexedTriangles_**)hObject->d_stListOfElements)[xIndexElement]->xIndexOfParallelBox;
-    case 7:
-        return ((COL_tdstElementAlignedBoxes_**)hObject->d_stListOfElements)[xIndexElement]->xIndexOfParallelBox;
-    case 8:
-        return ((COL_tdstElementSpheres_**)hObject->d_stListOfElements)[xIndexElement]->xIndexOfParallelBox;
-    }
-    return -1;
-}
-#pragma auto_inline reset
-
-short COL_xGetCollideObjectNumberOfElementsMax(COL_tdstCollideObject_* hObject)
-{
-    return hObject->xNbElements;
-}
-
-short COL_xGetCollideObjectNumberOfPoints(COL_tdstCollideObject_* hObject)
-{
-    return hObject->xNbPoints;
-}
-
-void COL_vCreateCollideObject(COL_tdstCollideObject_** p_hObject, short xNbPoints, short xNbElements)
-{
-    COL_tdstCollideObject_* hObject;
-    short xNb;
-    short i;
-    COL_tdstCollideObject_* p_stObj;
-
-    hObject = (COL_tdstCollideObject_*)HMU_fn_p_vMalloc(sizeof(COL_tdstCollideObject_), 0); hObject->xNbElements = xNbElements; hObject->xNbPoints = xNbPoints; hObject->d_xListOfElementsTypes = (int)HMU_fn_p_vMalloc(xNbElements * sizeof(short), 0); hObject->d_stListOfElements = (int)HMU_fn_p_vMalloc(xNbElements * 4, 0); hObject->d_stListOfPoints = (MTH3D_tdstVector_*)HMU_fn_p_vMalloc(xNbPoints * sizeof(MTH3D_tdstVector_), 0); *p_hObject = hObject;
-    p_stObj = *p_hObject; xNb = p_stObj->xNbElements; for (i = 0; i < xNb; i++) { ((short*)p_stObj->d_xListOfElementsTypes)[i] = 0; } p_stObj->p_stOctree = NULL; p_stObj->xNbParallelBoxes = 0; p_stObj->d_stListOfParallelBoxes = NULL; p_stObj->xBoudingSphereRadius = 0.0f; p_stObj->xBoudingSphereCenter.xX = 0.0f; p_stObj->xBoudingSphereCenter.xY = 0.0f; p_stObj->xBoudingSphereCenter.xZ = 0.0f;
-}
-
-void COL_vGetPointOfObject(COL_tdstCollideObject_* hObject, MTH3D_tdstVector_* p_stPoint, short xIndexOfPoint)
-{
-    *p_stPoint = hObject->d_stListOfPoints[xIndexOfPoint];
-}
-
-void COL_vSetPointOfObject(COL_tdstCollideObject_* hObject, MTH3D_tdstVector_* p_stPoint, short xIndexOfPoint)
-{
-    hObject->d_stListOfPoints[xIndexOfPoint] = *p_stPoint;
-}
-
-short COL_xGetElementType(COL_tdstCollideObject_* hObject, short xElement)
-{
-    return *(short*)(hObject->d_xListOfElementsTypes + xElement * 2);
-}
-
-void COL_vEndModifyObject(COL_tdstCollideObject_* hObject)
-{
-    short xIndex;
-
-    if (hObject->xNbParallelBoxes != 0) { if (hObject->d_stListOfParallelBoxes == NULL) { COL_vCreateObjectListOfParallelBox(hObject, hObject->xNbParallelBoxes); xIndex = 0; } for (xIndex = 0; xIndex < hObject->xNbParallelBoxes; xIndex++) { COL_vComputeObjectParallelBox(hObject, xIndex); } }
-
-    hObject->xBoudingSphereCenter.xX = hObject->d_stListOfPoints[0].xX;
-    hObject->xBoudingSphereCenter.xY = hObject->d_stListOfPoints[0].xY;
-    hObject->xBoudingSphereCenter.xZ = hObject->d_stListOfPoints[0].xZ;
-    hObject->xBoudingSphereCenter.xW = 1.0f;
-    hObject->xBoudingSphereRadius = 0.0f;
-    COL_fn_vAddObjectToSphere(hObject, &hObject->xBoudingSphereCenter, &hObject->xBoudingSphereRadius);
-}
-
-void COL_vComputeObjectParallelBox(COL_tdstCollideObject_* hObject, short xParallelBox)
-{
-    COL_tdstElementIndexedTriangles_* p_stETIT;
-    COL_tdstElementSpheres_* p_stES;
-    COL_tdstElementAlignedBoxes_* p_stEAB;
-    short xIndexElement;
-    short xIndexInElement;
-    MTH3D_tdstVector_* p_stMinPoint;
-    MTH3D_tdstVector_* p_stMaxPoint;
-    COL_tdstParallelBox_* hParallelBox;
-    int bInit;
-
-    hParallelBox = hObject->d_stListOfParallelBoxes + xParallelBox;
-    p_stMinPoint = (MTH3D_tdstVector_*)&hParallelBox->stMinPoint;
-    p_stMaxPoint = (MTH3D_tdstVector_*)&hParallelBox->stMaxPoint;
-
-    bInit = 0;
-
-    for (xIndexElement = 0; xIndexElement < hObject->xNbElements; xIndexElement++)
-    {
-        if (COL_xGetParallelBoxIndexOfElement(hObject, xIndexElement) == xParallelBox)
-        {
-            switch (((short*)hObject->d_xListOfElementsTypes)[xIndexElement])
-            {
-            case 1:
-                p_stETIT = ((COL_tdstElementIndexedTriangles_**)hObject->d_stListOfElements)[xIndexElement];
-                if (!bInit && p_stETIT->xNbFaces)
-                {
-                    *(int*)&p_stMinPoint->xX = *(int*)&hObject->d_stListOfPoints[p_stETIT->d_stListOfFacesTripled[0].a3_xIndex[0]].xX;
-                    *(int*)&p_stMinPoint->xY = *(int*)&hObject->d_stListOfPoints[p_stETIT->d_stListOfFacesTripled[0].a3_xIndex[0]].xY;
-                    *(int*)&p_stMinPoint->xZ = *(int*)&hObject->d_stListOfPoints[p_stETIT->d_stListOfFacesTripled[0].a3_xIndex[0]].xZ;
-                    *(int*)&p_stMaxPoint->xX = *(int*)&hObject->d_stListOfPoints[p_stETIT->d_stListOfFacesTripled[0].a3_xIndex[0]].xX;
-                    *(int*)&p_stMaxPoint->xY = *(int*)&hObject->d_stListOfPoints[p_stETIT->d_stListOfFacesTripled[0].a3_xIndex[0]].xY;
-                    *(int*)&p_stMaxPoint->xZ = *(int*)&hObject->d_stListOfPoints[p_stETIT->d_stListOfFacesTripled[0].a3_xIndex[0]].xZ;
-                    bInit = 1;
-                }
-                for (xIndexInElement = 0; xIndexInElement < p_stETIT->xNbFaces; xIndexInElement++)
-                {
-                    COL_fn_vUpdateMinMaxBoxWithPoint(p_stMinPoint, p_stMaxPoint, &hObject->d_stListOfPoints[p_stETIT->d_stListOfFacesTripled[xIndexInElement].a3_xIndex[0]]);
-                    COL_fn_vUpdateMinMaxBoxWithPoint(p_stMinPoint, p_stMaxPoint, &hObject->d_stListOfPoints[p_stETIT->d_stListOfFacesTripled[xIndexInElement].a3_xIndex[1]]);
-                    COL_fn_vUpdateMinMaxBoxWithPoint(p_stMinPoint, p_stMaxPoint, &hObject->d_stListOfPoints[p_stETIT->d_stListOfFacesTripled[xIndexInElement].a3_xIndex[2]]);
-                }
-                break;
-
-            case 7:
-                p_stES = ((COL_tdstElementSpheres_**)hObject->d_stListOfElements)[xIndexElement];
-                if (!bInit && p_stES->xNbSpheres)
-                {
-                    *(int*)&p_stMinPoint->xX = *(int*)&hObject->d_stListOfPoints[p_stES->d_stListOfSpheres[0].xCenterPoint].xX;
-                    *(int*)&p_stMinPoint->xY = *(int*)&hObject->d_stListOfPoints[p_stES->d_stListOfSpheres[0].xCenterPoint].xY;
-                    *(int*)&p_stMinPoint->xZ = *(int*)&hObject->d_stListOfPoints[p_stES->d_stListOfSpheres[0].xCenterPoint].xZ;
-                    *(int*)&p_stMaxPoint->xX = *(int*)&hObject->d_stListOfPoints[p_stES->d_stListOfSpheres[0].xCenterPoint].xX;
-                    *(int*)&p_stMaxPoint->xY = *(int*)&hObject->d_stListOfPoints[p_stES->d_stListOfSpheres[0].xCenterPoint].xY;
-                    *(int*)&p_stMaxPoint->xZ = *(int*)&hObject->d_stListOfPoints[p_stES->d_stListOfSpheres[0].xCenterPoint].xZ;
-                    bInit = 1;
-                }
-                for (xIndexInElement = 0; xIndexInElement < p_stES->xNbSpheres; xIndexInElement++)
-                {
-                    COL_fn_vUpdateMinMaxBoxWithPoint(p_stMinPoint, p_stMaxPoint, &hObject->d_stListOfPoints[p_stES->d_stListOfSpheres[xIndexInElement].xCenterPoint]);
-                }
-                break;
-
-            case 8:
-                p_stEAB = ((COL_tdstElementAlignedBoxes_**)hObject->d_stListOfElements)[xIndexElement];
-                if (!bInit && p_stEAB->xNbAlignedBoxes)
-                {
-                    *(int*)&p_stMinPoint->xX = *(int*)&hObject->d_stListOfPoints[p_stEAB->d_stListOfAlignedBoxes[0].xMinPoint].xX;
-                    *(int*)&p_stMinPoint->xY = *(int*)&hObject->d_stListOfPoints[p_stEAB->d_stListOfAlignedBoxes[0].xMinPoint].xY;
-                    *(int*)&p_stMinPoint->xZ = *(int*)&hObject->d_stListOfPoints[p_stEAB->d_stListOfAlignedBoxes[0].xMinPoint].xZ;
-                    *(int*)&p_stMaxPoint->xX = *(int*)&hObject->d_stListOfPoints[p_stEAB->d_stListOfAlignedBoxes[0].xMinPoint].xX;
-                    *(int*)&p_stMaxPoint->xY = *(int*)&hObject->d_stListOfPoints[p_stEAB->d_stListOfAlignedBoxes[0].xMinPoint].xY;
-                    *(int*)&p_stMaxPoint->xZ = *(int*)&hObject->d_stListOfPoints[p_stEAB->d_stListOfAlignedBoxes[0].xMinPoint].xZ;
-                    bInit = 1;
-                }
-                for (xIndexInElement = 0; xIndexInElement < p_stEAB->xNbAlignedBoxes; xIndexInElement++)
-                {
-                    COL_fn_vUpdateMinMaxBoxWithPoint(p_stMinPoint, p_stMaxPoint, &hObject->d_stListOfPoints[p_stEAB->d_stListOfAlignedBoxes[xIndexInElement].xMinPoint]);
-                    COL_fn_vUpdateMinMaxBoxWithPoint(p_stMinPoint, p_stMaxPoint, &hObject->d_stListOfPoints[p_stEAB->d_stListOfAlignedBoxes[xIndexInElement].xMaxPoint]);
-                }
-                break;
-            }
-        }
-    }
-}
-
-void COL_vCreateObjectListOfParallelBox(COL_tdstCollideObject_* hObject, short xNumberOfParallelBoxes)
-{
-    short xIndex;
-
-    hObject->xNbParallelBoxes = xNumberOfParallelBoxes;
-    if (hObject->xNbParallelBoxes != 0)
-    {
-        if (hObject->d_stListOfParallelBoxes == NULL)
-        {
-            hObject->d_stListOfParallelBoxes = (COL_tdstParallelBox_*)HMU_fn_p_vMalloc(hObject->xNbParallelBoxes * sizeof(COL_tdstParallelBox_), 0);
-            for (xIndex = 0; xIndex < hObject->xNbParallelBoxes; xIndex++)
-            {
-                hObject->d_stListOfParallelBoxes[xIndex].stMinPoint.xX = 3.402822e38f; hObject->d_stListOfParallelBoxes[xIndex].stMinPoint.xY = 3.402822e38f; hObject->d_stListOfParallelBoxes[xIndex].stMinPoint.xZ = 3.402822e38f;
-                hObject->d_stListOfParallelBoxes[xIndex].stMaxPoint.xX = -3.402822e38f; hObject->d_stListOfParallelBoxes[xIndex].stMaxPoint.xY = -3.402822e38f; hObject->d_stListOfParallelBoxes[xIndex].stMaxPoint.xZ = -3.402822e38f;
-            }
-        }
-    }
-}
-
-void COL_fn_vUpdateMinMaxBoxWithPoint(MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, MTH3D_tdstVector_* p_stPoint)
-{
-    if (p_stPoint->xX < p_stMinPoint->xX)
-    {
-        p_stMinPoint->xX = p_stPoint->xX;
-    }
-    else if (p_stPoint->xX > p_stMaxPoint->xX)
-    {
-        p_stMaxPoint->xX = p_stPoint->xX;
-    }
-    if (p_stPoint->xY < p_stMinPoint->xY)
-    {
-        p_stMinPoint->xY = p_stPoint->xY;
-    }
-    else if (p_stPoint->xY > p_stMaxPoint->xY)
-    {
-        p_stMaxPoint->xY = p_stPoint->xY;
-    }
-    if (p_stPoint->xZ < p_stMinPoint->xZ)
-    {
-        p_stMinPoint->xZ = p_stPoint->xZ;
-    }
-    else if (p_stPoint->xZ > p_stMaxPoint->xZ)
-    {
-        p_stMaxPoint->xZ = p_stPoint->xZ;
-    }
 }

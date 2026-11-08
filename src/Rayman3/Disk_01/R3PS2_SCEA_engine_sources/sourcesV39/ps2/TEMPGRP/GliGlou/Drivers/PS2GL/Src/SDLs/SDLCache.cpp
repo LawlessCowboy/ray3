@@ -302,15 +302,35 @@ inline C_SdlCache::~C_SdlCache()
     m_pList = 0;
 }
 
-extern "C" void GLI_vDeleteSdlCache(void)
-{
-    delete (C_SdlCache*)GLI_g_SdlCache;
-    GLI_g_SdlCache = 0;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+extern "C" void GLI_vDeleteSdlCache(void);
+extern "C" void GLI_vInitSdlCache(void);
 
-extern "C" void GLI_vInitSdlCache(void)
+void C_SdlCache::RemoveSdlInstance(_SDC_Instance_* pInstance)
 {
-    GLI_g_SdlCache = (int)new C_SdlCache;
+    tdstSDLCacheEntry_* pPrevious;
+    tdstSDLCacheEntry_* p;
+
+    pPrevious = m_pList;
+    if (pPrevious->m_pInstance == pInstance)
+    {
+        p = pPrevious->m_pNext;
+        PS2glLiberator(pPrevious);
+        m_pList = p;
+    }
+    else
+    {
+        for (p = pPrevious->m_pNext; p; pPrevious = p, p = p->m_pNext)
+        {
+            if (p->m_pInstance == pInstance)
+            {
+                pPrevious->m_pNext = p->m_pNext;
+                PS2glLiberator(p);
+                return;
+            }
+        }
+    }
 }
 
 unsigned int C_SdlCache::FindOldestSDLInstanceAndRemoveIt(void)
@@ -338,28 +358,13 @@ unsigned int C_SdlCache::FindOldestSDLInstanceAndRemoveIt(void)
     return 1;
 }
 
-void C_SdlCache::RemoveSdlInstance(_SDC_Instance_* pInstance)
+extern "C" void GLI_vInitSdlCache(void)
 {
-    tdstSDLCacheEntry_* pPrevious;
-    tdstSDLCacheEntry_* p;
+    GLI_g_SdlCache = (int)new C_SdlCache;
+}
 
-    pPrevious = m_pList;
-    if (pPrevious->m_pInstance == pInstance)
-    {
-        p = pPrevious->m_pNext;
-        PS2glLiberator(pPrevious);
-        m_pList = p;
-    }
-    else
-    {
-        for (p = pPrevious->m_pNext; p; pPrevious = p, p = p->m_pNext)
-        {
-            if (p->m_pInstance == pInstance)
-            {
-                pPrevious->m_pNext = p->m_pNext;
-                PS2glLiberator(p);
-                return;
-            }
-        }
-    }
+extern "C" void GLI_vDeleteSdlCache(void)
+{
+    delete (C_SdlCache*)GLI_g_SdlCache;
+    GLI_g_SdlCache = 0;
 }

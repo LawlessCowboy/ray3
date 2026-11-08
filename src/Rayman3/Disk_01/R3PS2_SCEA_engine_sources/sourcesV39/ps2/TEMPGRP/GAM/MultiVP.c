@@ -1669,10 +1669,31 @@ void GLI_fn_vSetCameraMirrorMode(GLI_tdstCamera_* p_stCam, int bMode);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_s32RetObjectCoordinateNull(void)
-{
-    return 0;
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+int fn_s32RetObjectCoordinateNull(void);
+void GAM_fn_vActualizeAllGameViewportSize(void);
+void fn_vChangeViewportRatio(unsigned char _ucVPIndex, unsigned int ulMode, float xRatio);
+void fn_vChangeViewPortPercent(unsigned char _ucVPIndex, unsigned int _ulMode, unsigned int _ulWhat, unsigned int _ulWidth, unsigned int _ulHeight, unsigned int _ulClipTop, unsigned int _ulClipLeft, unsigned int _ulClipBottom, unsigned int _ulClipRight, int _iPosX, int _iPosY);
+void fn_vReputGameViewportCamera(void);
+void GAM_fn_vDestroyGameDeviceAndViewPorts(void);
+void fn_vInitCameraMatrix(GLI_tdstCamera_* _p_tdstCamera);
+void fn_vCreateGameViewPort(unsigned char _ucIndex);
+void fn_vCreateViewPort(unsigned char _ucIndex);
+void GAM_fn_vCreateGameDeviceAndViewPorts(void);
+void GAM_MultiVP_fn_vInvertOneVP(unsigned char _ucWhat, unsigned char _ucIndex1, unsigned char _ucIndex2);
+void GAM_MultiVP_fn_vChangeOneVPSizeAndPositionPercent(unsigned char ucVpNum, unsigned int* a2_ulSize, unsigned int* a2_ulPos);
+void GAM_MultiVP_fn_vAdjustViewPortSizeAndPosition(unsigned char _ucNumberOfPlayers, unsigned char _ucNumberOfColumns);
+void GAM_MultiVP_fn_vInitMultiPlayerMode(void);
+void GAM_MultiVP_fn_vAutoAssociateMainPlayersForViewPorts(void);
+void GAM_MultiVP_fn_vInvertViewPorts(unsigned char _ucVPIndex1, unsigned char _ucVPIndex2);
+void GAM_MultiVP_fn_vSetAspectRatio(unsigned char _ucRatio);
+unsigned char GAM_MultiVP_fn_vGetViewPortFromPlayer(HIE_tdstSuperObject_* hCameraTargetSO);
+void GAM_MultiVP_fn_vSetPlayerForViewPort(unsigned char _ucViewPortIndex, HIE_tdstSuperObject_* hCameraTargetSO);
+void GAM_MultiVP_fn_vSetNumberOfPlayers(unsigned char _ucNumberOfPlayers, unsigned char _ucNumberOfColumns);
+unsigned char GAM_MultiVP_fn_ucGetNumberOfColumns(void);
+unsigned char GAM_MultiVP_fn_ucGetMaxNumberOfPlayers(void);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 668–682 */
 /* addr: 0x00266550  size: 212 bytes */
@@ -1683,13 +1704,6 @@ int fn_s32RetObjectCoordinateNull(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GAM_fn_vActualizeAllGameViewportSize(void)
-{
-    unsigned char uc_ViewPortIndex;
-    GLI_tdstCamera_* p_stCam;
-
-    for (uc_ViewPortIndex = 0; uc_ViewPortIndex < g_stEngineStructure.ucNumberOfPlayersInMultiMode; uc_ViewPortIndex++) { GLI_xGetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[uc_ViewPortIndex], &p_stCam); if (p_stCam) { GLI_xAdjustCameraToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[uc_ViewPortIndex], p_stCam); } GLI_xGetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[uc_ViewPortIndex], &p_stCam); if (p_stCam) { GLI_xAdjustCameraToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[uc_ViewPortIndex], p_stCam); } }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 635–664 */
 /* addr: 0x00266630  size: 216 bytes */
@@ -1711,29 +1725,6 @@ void GAM_fn_vActualizeAllGameViewportSize(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vChangeViewportRatio(unsigned char _ucVPIndex, unsigned int ulMode, float xRatio)
-{
-    GLI_tdstCamera_* p_stCam;
-
-    if (ulMode == 1)
-    {
-        GLI_xGetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucVPIndex], &p_stCam);
-        if (p_stCam)
-        {
-            GLI_xSetCameraRatio(p_stCam, xRatio);
-            GLI_xAdjustCameraToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucVPIndex], p_stCam);
-        }
-    }
-    else
-    {
-        GLI_xGetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucVPIndex], &p_stCam);
-        if (p_stCam)
-        {
-            GLI_xSetCameraRatio(p_stCam, xRatio);
-            GLI_xAdjustCameraToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucVPIndex], p_stCam);
-        }
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 560–631 */
 /* addr: 0x00266710  size: 752 bytes */
@@ -1792,6 +1783,706 @@ void fn_vChangeViewportRatio(unsigned char _ucVPIndex, unsigned int ulMode, floa
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 542–546 */
+/* addr: 0x00266a00  size: 136 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 542
+ *   +0x001c -> line 545
+ *   +0x0070 -> line 546
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 529–531 */
+/* addr: 0x00266a90  size: 108 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 529
+ *   +0x0014 -> line 530
+ *   +0x0058 -> line 531
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 504–525 */
+/* addr: 0x00266b00  size: 204 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 504
+ *   +0x0008 -> line 509
+ *   +0x000c -> line 504
+ *   +0x0010 -> line 509
+ *   +0x0018 -> line 511
+ *   +0x001c -> line 514
+ *   +0x0020 -> line 511
+ *   +0x0028 -> line 514
+ *   +0x0030 -> line 515
+ *   +0x0048 -> line 516
+ *   +0x0050 -> line 515
+ *   +0x0054 -> line 516
+ *   +0x0058 -> line 515
+ *   +0x005c -> line 516
+ *   +0x0060 -> line 515
+ *   +0x0074 -> line 516
+ *   +0x007c -> line 518
+ *   +0x0084 -> line 519
+ *   +0x0098 -> line 521
+ *   +0x00a8 -> line 522
+ *   +0x00b0 -> line 524
+ *   +0x00bc -> line 525
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 456–483 */
+/* addr: 0x00266bd0  size: 444 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 456
+ *   +0x0004 -> line 457
+ *   +0x0008 -> line 456
+ *   +0x000c -> line 458
+ *   +0x0010 -> line 456
+ *   +0x0014 -> line 457
+ *   +0x0018 -> line 456
+ *   +0x001c -> line 458
+ *   +0x0020 -> line 456
+ *   +0x0024 -> line 457
+ *   +0x002c -> line 467
+ *   +0x0030 -> line 457
+ *   +0x0034 -> line 467
+ *   +0x0038 -> line 457
+ *   +0x0040 -> line 459
+ *   +0x0044 -> line 457
+ *   +0x0048 -> line 459
+ *   +0x004c -> line 458
+ *   +0x0050 -> line 457
+ *   +0x0054 -> line 459
+ *   +0x0058 -> line 458
+ *   +0x005c -> line 460
+ *   +0x0068 -> line 459
+ *   +0x006c -> line 460
+ *   +0x0074 -> line 461
+ *   +0x0080 -> line 462
+ *   +0x0084 -> line 461
+ *   +0x0088 -> line 462
+ *   +0x0094 -> line 463
+ *   +0x00a0 -> line 464
+ *   +0x00a4 -> line 463
+ *   +0x00a8 -> line 464
+ *   +0x00ac -> line 467
+ *   +0x00b0 -> line 464
+ *   +0x00b4 -> line 467
+ *   +0x00b8 -> line 464
+ *   +0x00bc -> line 467
+ *   +0x00e0 -> line 470
+ *   +0x010c -> line 472
+ *   +0x0118 -> line 475
+ *   +0x011c -> line 472
+ *   +0x0120 -> line 473
+ *   +0x0124 -> line 472
+ *   +0x0128 -> line 473
+ *   +0x0134 -> line 475
+ *   +0x0164 -> line 478
+ *   +0x0190 -> line 480
+ *   +0x01a4 -> line 483
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 406–445 */
+/* addr: 0x00266d90  size: 620 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 406
+ *   +0x0004 -> line 408
+ *   +0x0008 -> line 406
+ *   +0x000c -> line 407
+ *   +0x0010 -> line 406
+ *   +0x0014 -> line 408
+ *   +0x0018 -> line 406
+ *   +0x001c -> line 417
+ *   +0x0020 -> line 406
+ *   +0x0028 -> line 407
+ *   +0x002c -> line 406
+ *   +0x0030 -> line 407
+ *   +0x0048 -> line 409
+ *   +0x004c -> line 407
+ *   +0x0050 -> line 409
+ *   +0x0054 -> line 407
+ *   +0x0058 -> line 408
+ *   +0x005c -> line 409
+ *   +0x0060 -> line 408
+ *   +0x0064 -> line 409
+ *   +0x0068 -> line 410
+ *   +0x0070 -> line 417
+ *   +0x0074 -> line 410
+ *   +0x007c -> line 411
+ *   +0x0080 -> line 410
+ *   +0x0084 -> line 411
+ *   +0x0090 -> line 412
+ *   +0x009c -> line 413
+ *   +0x00a0 -> line 412
+ *   +0x00a4 -> line 413
+ *   +0x00a8 -> line 417
+ *   +0x00ac -> line 413
+ *   +0x00b0 -> line 417
+ *   +0x00b4 -> line 413
+ *   +0x00b8 -> line 414
+ *   +0x00c8 -> line 417
+ *   +0x00ec -> line 420
+ *   +0x0118 -> line 422
+ *   +0x0150 -> line 425
+ *   +0x017c -> line 427
+ *   +0x0190 -> line 431
+ *   +0x01ac -> line 433
+ *   +0x0210 -> line 436
+ *   +0x0224 -> line 439
+ *   +0x0238 -> line 443
+ *   +0x0244 -> line 444
+ *   +0x024c -> line 445
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 388–402 */
+/* addr: 0x00267000  size: 116 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 388
+ *   +0x0014 -> line 401
+ *   +0x0060 -> line 402
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 327–377 */
+/* addr: 0x00267080  size: 592 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 327
+ *   +0x0004 -> line 335
+ *   +0x0008 -> line 327
+ *   +0x001c -> line 335
+ *   +0x0028 -> line 337
+ *   +0x0050 -> line 338
+ *   +0x0078 -> line 339
+ *   +0x0080 -> line 342
+ *   +0x00a8 -> line 343
+ *   +0x00d0 -> line 346
+ *   +0x00e8 -> line 348
+ *   +0x00f4 -> line 350
+ *   +0x011c -> line 351
+ *   +0x0144 -> line 354
+ *   +0x0158 -> line 355
+ *   +0x016c -> line 357
+ *   +0x0180 -> line 358
+ *   +0x0194 -> line 359
+ *   +0x019c -> line 362
+ *   +0x01c0 -> line 363
+ *   +0x01e8 -> line 366
+ *   +0x01fc -> line 367
+ *   +0x0210 -> line 369
+ *   +0x0224 -> line 370
+ *   +0x0238 -> line 377
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 312–320 */
+/* addr: 0x002672d0  size: 188 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 312
+ *   +0x0024 -> line 315
+ *   +0x0028 -> line 317
+ *   +0x0058 -> line 318
+ *   +0x0090 -> line 319
+ *   +0x00a0 -> line 320
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 243–309 */
+/* addr: 0x00267390  size: 1364 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 243
+ *   +0x0004 -> line 252
+ *   +0x0008 -> line 243
+ *   +0x0014 -> line 252
+ *   +0x0018 -> line 243
+ *   +0x0034 -> line 252
+ *   +0x003c -> line 249
+ *   +0x0040 -> line 252
+ *   +0x0054 -> line 254
+ *   +0x0070 -> line 255
+ *   +0x0078 -> line 257
+ *   +0x008c -> line 259
+ *   +0x0110 -> line 260
+ *   +0x019c -> line 261
+ *   +0x01a4 -> line 264
+ *   +0x01b0 -> line 266
+ *   +0x0234 -> line 268
+ *   +0x023c -> line 267
+ *   +0x0240 -> line 268
+ *   +0x0254 -> line 269
+ *   +0x025c -> line 272
+ *   +0x02e4 -> line 274
+ *   +0x02ec -> line 273
+ *   +0x02f0 -> line 274
+ *   +0x0308 -> line 281
+ *   +0x030c -> line 283
+ *   +0x0310 -> line 282
+ *   +0x0314 -> line 283
+ *   +0x031c -> line 286
+ *   +0x0354 -> line 287
+ *   +0x0390 -> line 289
+ *   +0x03c0 -> line 290
+ *   +0x03f0 -> line 292
+ *   +0x040c -> line 293
+ *   +0x0420 -> line 296
+ *   +0x0428 -> line 297
+ *   +0x0438 -> line 299
+ *   +0x0454 -> line 301
+ *   +0x0460 -> line 303
+ *   +0x0490 -> line 304
+ *   +0x04c0 -> line 306
+ *   +0x04f4 -> line 307
+ *   +0x0524 -> line 309
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 196–237 */
+/* addr: 0x002678f0  size: 456 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 196
+ *   +0x0004 -> line 199
+ *   +0x0008 -> line 196
+ *   +0x0020 -> line 199
+ *   +0x003c -> line 202
+ *   +0x004c -> line 203
+ *   +0x00c4 -> line 205
+ *   +0x00ec -> line 207
+ *   +0x01a8 -> line 237
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 175–191 */
+/* addr: 0x00267ac0  size: 240 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 175
+ *   +0x0018 -> line 176
+ *   +0x0024 -> line 179
+ *   +0x0030 -> line 181
+ *   +0x0038 -> line 183
+ *   +0x0088 -> line 185
+ *   +0x0098 -> line 186
+ *   +0x00a4 -> line 189
+ *   +0x00a8 -> line 190
+ *   +0x00ac -> line 186
+ *   +0x00b0 -> line 190
+ *   +0x00d0 -> line 191
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 160–169 */
+/* addr: 0x00267bb0  size: 128 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 160
+ *   +0x0004 -> line 161
+ *   +0x0008 -> line 160
+ *   +0x0014 -> line 161
+ *   +0x0044 -> line 165
+ *   +0x004c -> line 167
+ *   +0x005c -> line 168
+ *   +0x006c -> line 169
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 147–154 */
+/* addr: 0x00267c30  size: 64 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 147
+ *   +0x0004 -> line 148
+ *   +0x0008 -> line 147
+ *   +0x000c -> line 148
+ *   +0x001c -> line 150
+ *   +0x0020 -> line 152
+ *   +0x0034 -> line 154
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 119–141 */
+/* addr: 0x00267c70  size: 112 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 119
+ *   +0x0004 -> line 120
+ *   +0x000c -> line 132
+ *   +0x0010 -> line 124
+ *   +0x0014 -> line 132
+ *   +0x0018 -> line 124
+ *   +0x002c -> line 127
+ *   +0x003c -> line 130
+ *   +0x0040 -> line 132
+ *   +0x0058 -> line 135
+ *   +0x0060 -> line 137
+ *   +0x0068 -> line 141
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 97–112 */
+/* addr: 0x00267ce0  size: 124 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 97
+ *   +0x0004 -> line 100
+ *   +0x0008 -> line 97
+ *   +0x0018 -> line 100
+ *   +0x002c -> line 104
+ *   +0x0034 -> line 105
+ *   +0x003c -> line 106
+ *   +0x0050 -> line 108
+ *   +0x0068 -> line 112
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+HIE_tdstSuperObject_* CAM_fn_hGetActiveCamera(int _lViewportNumber);
+void CAM_fn_vCineInfoSetSuperObjectTargeted(tdstInternalStructurCineinfo_* _hIntCineinfo, HIE_tdstSuperObject_* _hSuperObject);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 80–90 */
+/* addr: 0x00267d60  size: 104 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 80
+ *   +0x0014 -> line 81
+ *   +0x0028 -> line 83
+ *   +0x0038 -> line 84
+ *   +0x0040 -> line 86
+ *   +0x004c -> line 89
+ *   +0x0054 -> line 90
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 72–73 */
+/* addr: 0x00267dd0  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 72
+ *   +0x0004 -> line 73
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 66–66 */
+/* addr: 0x00267de0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 66
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+unsigned char GAM_MultiVP_fn_ucGetMaxNumberOfPlayers(void)
+{
+    return 4;
+}
+
+unsigned char GAM_MultiVP_fn_ucGetNumberOfColumns(void)
+{
+    return g_stEngineStructure.ucNumberOfColumnsInMultiMode;
+}
+
+void GAM_MultiVP_fn_vSetNumberOfPlayers(unsigned char _ucNumberOfPlayers, unsigned char _ucNumberOfColumns)
+{
+    { int iPlayers = _ucNumberOfPlayers; if (iPlayers <= 0) { iPlayers = 1; } _ucNumberOfPlayers = (unsigned char)iPlayers; }
+    { int iColumns = _ucNumberOfColumns; if (iColumns <= 0) { iColumns = 1; } _ucNumberOfColumns = (unsigned char)iColumns; }
+    if (_ucNumberOfPlayers < 5)
+        g_stEngineStructure.ucNumberOfPlayersInMultiMode = _ucNumberOfPlayers;
+    else
+        g_stEngineStructure.ucNumberOfPlayersInMultiMode = 4;
+
+    g_stEngineStructure.ucNumberOfColumnsInMultiMode = _ucNumberOfColumns;
+    GAM_MultiVP_fn_vAdjustViewPortSizeAndPosition(g_stEngineStructure.ucNumberOfPlayersInMultiMode, g_stEngineStructure.ucNumberOfColumnsInMultiMode);
+}
+
+void GAM_MultiVP_fn_vSetPlayerForViewPort(unsigned char _ucViewPortIndex, HIE_tdstSuperObject_* hCameraTargetSO)
+{
+    HIE_tdstSuperObject_* hSprObjCamera;
+
+    if (_ucViewPortIndex > g_stEngineStructure.ucNumberOfPlayersInMultiMode)
+        return;
+
+    hSprObjCamera = CAM_fn_hGetActiveCamera(_ucViewPortIndex);
+    if (hSprObjCamera)
+        CAM_fn_vCineInfoSetSuperObjectTargeted(hSprObjCamera->hLinkedObject.p_stCharacter->h_Cineinfo->hCurrent, hCameraTargetSO);
+
+    g_stEngineStructure.a_hSO_CurrentMainPlayers[_ucViewPortIndex] = (int)hCameraTargetSO;
+}
+
+unsigned char GAM_MultiVP_fn_vGetViewPortFromPlayer(HIE_tdstSuperObject_* hCameraTargetSO)
+{
+    int i;
+    int Found;
+
+    i = 0;
+    Found = 0;
+    do
+    {
+        if (g_stEngineStructure.a_hSO_CurrentMainPlayers[i] == (int)hCameraTargetSO)
+            Found = 1;
+        else
+            i++;
+    } while (i < g_stEngineStructure.ucNumberOfPlayersInMultiMode && !Found);
+
+    if (Found)
+        return i + 1;
+    return 0;
+}
+
+void GAM_MultiVP_fn_vSetAspectRatio(unsigned char _ucRatio)
+{
+    if (_ucRatio != g_stEngineStructure.ucMiniScreenRatioInMultiMode) {
+        g_stEngineStructure.ucMiniScreenRatioInMultiMode = _ucRatio;
+        GAM_MultiVP_fn_vAdjustViewPortSizeAndPosition(g_stEngineStructure.ucNumberOfPlayersInMultiMode, g_stEngineStructure.ucNumberOfColumnsInMultiMode);
+    }
+}
+
+void GAM_MultiVP_fn_vInvertViewPorts(unsigned char _ucVPIndex1, unsigned char _ucVPIndex2)
+{
+    if ((_ucVPIndex1 >= g_stEngineStructure.ucNumberOfPlayersInMultiMode) || (_ucVPIndex2 >= g_stEngineStructure.ucNumberOfPlayersInMultiMode) || (_ucVPIndex1 == _ucVPIndex2))
+
+        return;
+
+    GAM_MultiVP_fn_vInvertOneVP(0, _ucVPIndex1, _ucVPIndex2);
+    GAM_MultiVP_fn_vInvertOneVP(1, _ucVPIndex1, _ucVPIndex2);
+}
+
+void GAM_MultiVP_fn_vAutoAssociateMainPlayersForViewPorts(void)
+{
+    tdstNodeMainCharacter_* hMCN;
+    unsigned char uc_ViewPortIndex;
+    HIE_tdstSuperObject_* hCharacter;
+    HIE_tdstSuperObject_* hCamera;
+
+    hMCN = MC_fn_hGetFirstMainCharNode();
+    for (uc_ViewPortIndex = 0; uc_ViewPortIndex < g_stEngineStructure.ucNumberOfPlayersInMultiMode; uc_ViewPortIndex++)
+    {
+        if (hMCN == NULL) { break; }
+        hCharacter = MC_fn_hGetCharacterInMainCharacterNode(hMCN); if (uc_ViewPortIndex <= g_stEngineStructure.ucNumberOfPlayersInMultiMode) { hCamera = CAM_fn_hGetActiveCamera(uc_ViewPortIndex); if (hCamera) { CAM_fn_vCineInfoSetSuperObjectTargeted(hCamera->hLinkedObject.p_stCharacter->h_Cineinfo->hCurrent, hCharacter); } g_stEngineStructure.a_hSO_CurrentMainPlayers[uc_ViewPortIndex] = (int)hCharacter; }
+        if (g_stEngineStructure.h_DbgCamCharacter == NULL)
+        {
+            hMCN = MC_fn_hGetNextMainCharNode(hMCN);
+        }
+    }
+}
+
+void GAM_MultiVP_fn_vInitMultiPlayerMode(void)
+{
+    unsigned char uc_ViewPortIndex;
+    tdstNodeMainCharacter_* hMCN;
+    HIE_tdstSuperObject_* hCharacter;
+    HIE_tdstSuperObject_* hCamera;
+    int iPlayers;
+    int iColumns;
+
+    g_stEngineStructure.a_hSO_CurrentMainPlayers[0] = 0; g_stEngineStructure.a_hSO_CurrentMainPlayers[1] = 0; g_stEngineStructure.a_hSO_CurrentMainPlayers[2] = 0; g_stEngineStructure.a_hSO_CurrentMainPlayers[3] = 0;
+    if (g_stEngineStructure.h_DbgCamCharacter == NULL)
+    {
+        iColumns = g_stEngineStructure.ucNumberOfColumnsInMultiMode; iPlayers = g_stEngineStructure.ucNumberOfPlayersInMultiMode; if ((unsigned char)iPlayers <= 0) { iPlayers = 1; } if ((unsigned char)iColumns <= 0) { iColumns = 1; } if ((unsigned char)iPlayers < 5) { g_stEngineStructure.ucNumberOfPlayersInMultiMode = (unsigned char)iPlayers; } else { g_stEngineStructure.ucNumberOfPlayersInMultiMode = 4; } g_stEngineStructure.ucNumberOfColumnsInMultiMode = (unsigned char)iColumns; GAM_MultiVP_fn_vAdjustViewPortSizeAndPosition(g_stEngineStructure.ucNumberOfPlayersInMultiMode, g_stEngineStructure.ucNumberOfColumnsInMultiMode);
+    }
+    else
+    {
+        g_stEngineStructure.ucNumberOfPlayersInMultiMode = 2; g_stEngineStructure.ucNumberOfColumnsInMultiMode = 1; GAM_MultiVP_fn_vAdjustViewPortSizeAndPosition(g_stEngineStructure.ucNumberOfPlayersInMultiMode, g_stEngineStructure.ucNumberOfColumnsInMultiMode);
+    }
+    hMCN = MC_fn_hGetFirstMainCharNode();
+    for (uc_ViewPortIndex = 0; uc_ViewPortIndex < g_stEngineStructure.ucNumberOfPlayersInMultiMode; uc_ViewPortIndex++) { if (hMCN == NULL) { break; } hCharacter = MC_fn_hGetCharacterInMainCharacterNode(hMCN); if (uc_ViewPortIndex <= g_stEngineStructure.ucNumberOfPlayersInMultiMode) { hCamera = CAM_fn_hGetActiveCamera(uc_ViewPortIndex); if (hCamera) { CAM_fn_vCineInfoSetSuperObjectTargeted(hCamera->hLinkedObject.p_stCharacter->h_Cineinfo->hCurrent, hCharacter); } g_stEngineStructure.a_hSO_CurrentMainPlayers[uc_ViewPortIndex] = (int)hCharacter; } if (g_stEngineStructure.h_DbgCamCharacter == NULL) { hMCN = MC_fn_hGetNextMainCharNode(hMCN); } }
+}
+
+void GAM_MultiVP_fn_vAdjustViewPortSizeAndPosition(unsigned char _ucNumberOfPlayers, unsigned char _ucNumberOfColumns)
+{
+    unsigned char ucNumberOfLines;
+    unsigned short uwLineSizePercentage;
+    unsigned short uwColumnSizePercentage;
+    unsigned short uwColumnPercentInit;
+    unsigned short uwLinePercentInit;
+    unsigned short uwColumnPercent = 0;
+    unsigned short uwLinePercent;
+    unsigned char ucIndex;
+
+    ucNumberOfLines = (unsigned char)(_ucNumberOfPlayers / _ucNumberOfColumns);
+    if ((_ucNumberOfPlayers % _ucNumberOfColumns) != 0) { uwLinePercent = 0; ucNumberOfLines = (unsigned char)(ucNumberOfLines + 1); }
+    if (g_stEngineStructure.ucMiniScreenRatioInMultiMode == 1)
+    {
+        uwColumnSizePercentage = (unsigned short)(100.0f / (float)_ucNumberOfColumns);
+        uwLineSizePercentage = (unsigned short)(100.0f / (float)ucNumberOfLines);
+    }
+    else if (_ucNumberOfColumns >= g_stEngineStructure.ucMiniScreenRatioInMultiMode)
+    {
+        uwLineSizePercentage = (unsigned short)(100.0f / (float)ucNumberOfLines);
+        uwColumnSizePercentage = uwLineSizePercentage;
+        uwLinePercent = (unsigned short)((100 - uwLineSizePercentage * _ucNumberOfColumns) / 2);
+    }
+    else
+    {
+        uwColumnSizePercentage = (unsigned short)(100.0f / (float)_ucNumberOfColumns);
+        uwLineSizePercentage = uwColumnSizePercentage;
+        uwColumnPercentInit = (unsigned short)((100 - uwColumnSizePercentage * g_stEngineStructure.ucMiniScreenRatioInMultiMode) / 2);
+    }
+    uwColumnPercentInit = uwColumnPercent;
+    for (ucIndex = 0; ucIndex < _ucNumberOfPlayers; ucIndex++)
+    {
+        fn_vChangeViewPortPercent(ucIndex, 1, 1, uwColumnSizePercentage, uwLineSizePercentage, 0, 0, 0, 0, 0, 0);
+        fn_vChangeViewPortPercent(ucIndex, 1, 5, 0, 0, 0, 0, 0, 0, uwLinePercent, uwColumnPercent);
+        fn_vChangeViewPortPercent(ucIndex, 0, 1, uwColumnSizePercentage, uwLineSizePercentage, 0, 0, 0, 0, 0, 0);
+        fn_vChangeViewPortPercent(ucIndex, 0, 5, 0, 0, 0, 0, 0, 0, uwLinePercent, uwColumnPercent);
+        if (((ucIndex + 1) / _ucNumberOfColumns) != 0) { uwLinePercent = (unsigned short)(uwLinePercent + uwLineSizePercentage); }
+        else { uwColumnPercent = (unsigned short)(uwColumnPercent + uwColumnSizePercentage); }
+    }
+    if (g_stEngineStructure.h_DbgCamCharacter == NULL)
+    {
+        fn_vChangeViewPortPercent(0, 1, 1, 0, 100, 0, 0, 0, 0, 0, 0);
+        fn_vChangeViewPortPercent(0, 0, 1, 0, 100, 0, 0, 0, 0, 0, 0);
+        fn_vChangeViewPortPercent(1, 1, 3, 0, 0, 0, 0, 0, 0, 0, 25);
+        fn_vChangeViewPortPercent(1, 1, 1, 0, 25, 0, 0, 0, 0, 0, 0);
+    }
+}
+
+void GAM_MultiVP_fn_vChangeOneVPSizeAndPositionPercent(unsigned char ucVpNum, unsigned int* a2_ulSize, unsigned int* a2_ulPos)
+{
+    int iGameOrFix;
+
+    for (iGameOrFix = 0; iGameOrFix < 2; iGameOrFix++)
+    {
+        fn_vChangeViewPortPercent(ucVpNum, iGameOrFix, 1, a2_ulSize[0], a2_ulSize[1], 0, 0, 0, 0, 0, 0);
+        fn_vChangeViewPortPercent(ucVpNum, iGameOrFix, 5, 0, 0, 0, 0, 0, 0, a2_ulPos[0], a2_ulPos[1]);
+    }
+}
+
+void GAM_MultiVP_fn_vInvertOneVP(unsigned char _ucWhat, unsigned char _ucIndex1, unsigned char _ucIndex2)
+{
+    GLD_tdstViewportAttributes_ stViewAttrib1;
+    GLD_tdstViewportAttributes_ stViewAttrib2;
+    GLI_tdstCamera_* p_stCam1;
+    GLI_tdstCamera_* p_stCam2;
+
+    if (_ucWhat == 1)
+    {
+        GLI_xGetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucIndex1], &p_stCam1);
+        GLI_xGetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucIndex2], &p_stCam2);
+    }
+    else
+    {
+        GLI_xGetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex1], &p_stCam1);
+        GLI_xGetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex2], &p_stCam2);
+    }
+    if (p_stCam1 && p_stCam2)
+    {
+        if (_ucWhat == 1)
+        {
+            GLD_bGetViewportAttributes(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucIndex1], &stViewAttrib1);
+            GLD_bGetViewportAttributes(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucIndex2], &stViewAttrib2);
+            GLD_bSetViewportPosition(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucIndex1], &stViewAttrib2);
+            GLI_xAdjustCameraToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucIndex1], p_stCam1);
+            GLD_bSetViewportPosition(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucIndex2], &stViewAttrib1);
+            GLI_xAdjustCameraToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucIndex2], p_stCam2);
+        }
+        else
+        {
+            GLD_bGetViewportAttributes(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex1], &stViewAttrib1);
+            GLD_bGetViewportAttributes(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex2], &stViewAttrib2);
+            GLD_bSetViewportPosition(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex1], &stViewAttrib2);
+            GLI_xAdjustCameraToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex1], p_stCam1);
+            GLD_bSetViewportPosition(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex2], &stViewAttrib1);
+            GLI_xAdjustCameraToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex2], p_stCam2);
+        }
+    }
+}
+
+void GAM_fn_vCreateGameDeviceAndViewPorts(void)
+{
+    unsigned char ucIndex;
+
+    for (ucIndex = 0; ucIndex < 4; ucIndex++) { g_stEngineStructure.a_p_stFixCamera[ucIndex] = 0; fn_vCreateViewPort(ucIndex); } g_stEngineStructure.a_p_stFixCamera[4] = 0; fn_vCreateViewPort(4);
+}
+
+void fn_vCreateViewPort(unsigned char _ucIndex)
+{
+    GLI_tdstCamera_* p_stCam[1];
+
+    g_stEngineStructure.a_stFixViewportAttr[_ucIndex].dwWidthInPercent = 100;
+    g_stEngineStructure.a_stFixViewportAttr[_ucIndex].dwHeightInPercent = 100;
+    g_stEngineStructure.a_stFixViewportAttr[_ucIndex].dwClipTopInPerMille = 0;
+    g_stEngineStructure.a_stFixViewportAttr[_ucIndex].dwClipBottomInPerMille = 1000;
+    g_stEngineStructure.a_stFixViewportAttr[_ucIndex].dwClipLeftInPerMille = 0;
+    g_stEngineStructure.a_stFixViewportAttr[_ucIndex].dwClipRightInPerMille = 1000;
+    g_stEngineStructure.a_stFixViewportAttr[_ucIndex].iOffsetPosX = 0;
+    g_stEngineStructure.a_stFixViewportAttr[_ucIndex].iOffsetPosY = 0;
+    if (!GLD_bCreateViewport(g_stEngineStructure.hGLDDevice, &g_stEngineStructure.a_stFixViewportAttr[_ucIndex], &g_stEngineStructure.a_hGLDFixViewport[_ucIndex]))
+    { Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(0x30, g_ucGameModuleId, 0, 0x28, -1, 255, 255, NULL); }
+    if (!GLD_bGiveSpecificAttributesToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex], &g_stEngineStructure.a_stFixAttributes3D[_ucIndex]))
+    { Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(0x30, g_ucGameModuleId, 0, 0x28, -1, 255, 255, NULL); }
+    GLD_bGetViewportAttributes(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex], &g_stEngineStructure.a_stFixViewportAttr[_ucIndex]);
+    if (g_stEngineStructure.a_p_stFixCamera[_ucIndex] == 0)
+    {
+        GLI_xCreateCamera(p_stCam, 0x67); g_stEngineStructure.a_p_stFixCamera[_ucIndex] = p_stCam[0]; GLI_xSetCameraAspectAndRatio(p_stCam[0], 1.5f, 0.75f); GLI_xSetCameraNearFar(p_stCam[0], 0.1f, 1000.0f); fn_vInitCameraMatrix(p_stCam[0]); *g_stEngineStructure.a_stFixViewportAttr[_ucIndex].p_vSpecificToXD = (int)p_stCam[0];
+    }
+    GLI_xAdjustCameraToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex], g_stEngineStructure.a_p_stFixCamera[_ucIndex]);
+    GLI_xSetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex], g_stEngineStructure.a_p_stFixCamera[_ucIndex]);
+    GLI_fn_vSetCameraMirrorMode(g_stEngineStructure.a_p_stFixCamera[_ucIndex], 0);
+    fn_vCreateGameViewPort(_ucIndex);
+}
+
+void fn_vCreateGameViewPort(unsigned char _ucIndex)
+{
+    g_stEngineStructure.a_stViewportAttr[_ucIndex].dwWidthInPercent = 100;
+    g_stEngineStructure.a_stViewportAttr[_ucIndex].dwHeightInPercent = 100;
+    g_stEngineStructure.a_stViewportAttr[_ucIndex].dwClipTopInPerMille = 0;
+    g_stEngineStructure.a_stViewportAttr[_ucIndex].dwClipBottomInPerMille = 1000;
+    g_stEngineStructure.a_stViewportAttr[_ucIndex].dwClipLeftInPerMille = 0;
+    g_stEngineStructure.a_stViewportAttr[_ucIndex].dwClipRightInPerMille = 1000;
+    g_stEngineStructure.a_stViewportAttr[_ucIndex].iOffsetPosX = 0;
+    g_stEngineStructure.a_stViewportAttr[_ucIndex].iOffsetPosY = 0;
+    if (!GLD_bCreateViewport(g_stEngineStructure.hGLDDevice, &g_stEngineStructure.a_stViewportAttr[_ucIndex], &g_stEngineStructure.a_hGLDViewport[_ucIndex], 100))
+    { Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(0x30, g_ucGameModuleId, 0, 0x28, -1, 255, 255, NULL); }
+    g_stEngineStructure.a_stGameAttributes3D[_ucIndex].p_stCam = 0;
+    g_stEngineStructure.a_stGameAttributes3D[_ucIndex].xNear = 0;
+    if (!GLD_bGiveSpecificAttributesToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucIndex], &g_stEngineStructure.a_stGameAttributes3D[_ucIndex]))
+    { Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(0x30, g_ucGameModuleId, 0, 0x28, -1, 255, 255, NULL); }
+    GLD_bGetViewportAttributes(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucIndex], &g_stEngineStructure.a_stViewportAttr[_ucIndex]);
+}
+
+void fn_vInitCameraMatrix(GLI_tdstCamera_* _p_tdstCamera)
+{
+    MAT_tdstTransformation_ stCameraMatrix;
+    MAT_tdstTransformation_ stTransformMatrix;
+    union { MTH3D_tdstVector_ v; int i[3]; } stTranslationVector;
+
+    GLI_xGetCameraMatrix(_p_tdstCamera, &stCameraMatrix);
+    stTranslationVector.v.xZ = 5.0f; stTranslationVector.v.xX = 0.0f; stTranslationVector.v.xY = 0.0f;
+    MAT_fn_vSetIdentity(&stCameraMatrix);
+    if (stCameraMatrix.eType == MAT_eTransform_Identity) { stCameraMatrix.eType = MAT_eTransform_Translation; } ((int*)&stCameraMatrix.stTransformMatrix.stCol_3)[0] = stTranslationVector.i[0]; ((int*)&stCameraMatrix.stTransformMatrix.stCol_3)[1] = stTranslationVector.i[1]; ((int*)&stCameraMatrix.stTransformMatrix.stCol_3)[2] = stTranslationVector.i[2]; stCameraMatrix.stTransformMatrix.stCol_3.xW = 1.0f;
+    MAT_fn_vSetXRotation(&stCameraMatrix, 1.5707964f);
+    MAT_fn_vSetIdentity(&stTransformMatrix);
+    MAT_fn_vSetZRotation(&stTransformMatrix, 3.1415927f);
+    MAT_fn_vCompose(&stCameraMatrix, &stTransformMatrix, &stCameraMatrix);
+    MAT_fn_vNormalize(&stCameraMatrix);
+    GLI_xSetCameraMatrix(_p_tdstCamera, &stCameraMatrix);
+}
+
+void GAM_fn_vDestroyGameDeviceAndViewPorts(void)
+{
+    unsigned char uc_ViewPortIndex;
+    int lViewportOffset;
+
+    for (uc_ViewPortIndex = 0, lViewportOffset = 0; uc_ViewPortIndex < 4; uc_ViewPortIndex++, lViewportOffset += 2) {
+        GLD_bDeleteViewport(g_stEngineStructure.hGLDDevice, *(short*)((char*)&g_stEngineStructure + 0x354 + lViewportOffset));
+    }
+}
+
+void fn_vReputGameViewportCamera(void)
+{
+    unsigned char uc_ViewPortIndex;
+
+    for (uc_ViewPortIndex = 0; uc_ViewPortIndex < g_stEngineStructure.ucNumberOfPlayersInMultiMode; uc_ViewPortIndex++) GLI_xSetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[uc_ViewPortIndex], g_stEngineStructure.a_p_stGameViewportCamera[uc_ViewPortIndex]);
+}
+
 void fn_vChangeViewPortPercent(unsigned char _ucVPIndex, unsigned int _ulMode, unsigned int _ulWhat, unsigned int _ulWidth, unsigned int _ulHeight, unsigned int _ulClipTop, unsigned int _ulClipLeft, unsigned int _ulClipBottom, unsigned int _ulClipRight, int _iPosX, int _iPosY)
 {
     GLD_tdstViewportAttributes_ stViewAttrib;
@@ -1851,687 +2542,39 @@ void fn_vChangeViewPortPercent(unsigned char _ucVPIndex, unsigned int _ulMode, u
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 542–546 */
-/* addr: 0x00266a00  size: 136 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 542
- *   +0x001c -> line 545
- *   +0x0070 -> line 546
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vReputGameViewportCamera(void)
+void fn_vChangeViewportRatio(unsigned char _ucVPIndex, unsigned int ulMode, float xRatio)
 {
-    unsigned char uc_ViewPortIndex;
+    GLI_tdstCamera_* p_stCam;
 
-    for (uc_ViewPortIndex = 0; uc_ViewPortIndex < g_stEngineStructure.ucNumberOfPlayersInMultiMode; uc_ViewPortIndex++) GLI_xSetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[uc_ViewPortIndex], g_stEngineStructure.a_p_stGameViewportCamera[uc_ViewPortIndex]);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 529–531 */
-/* addr: 0x00266a90  size: 108 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 529
- *   +0x0014 -> line 530
- *   +0x0058 -> line 531
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GAM_fn_vDestroyGameDeviceAndViewPorts(void)
-{
-    unsigned char uc_ViewPortIndex;
-    int lViewportOffset;
-
-    for (uc_ViewPortIndex = 0, lViewportOffset = 0; uc_ViewPortIndex < 4; uc_ViewPortIndex++, lViewportOffset += 2) {
-        GLD_bDeleteViewport(g_stEngineStructure.hGLDDevice, *(short*)((char*)&g_stEngineStructure + 0x354 + lViewportOffset));
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 504–525 */
-/* addr: 0x00266b00  size: 204 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 504
- *   +0x0008 -> line 509
- *   +0x000c -> line 504
- *   +0x0010 -> line 509
- *   +0x0018 -> line 511
- *   +0x001c -> line 514
- *   +0x0020 -> line 511
- *   +0x0028 -> line 514
- *   +0x0030 -> line 515
- *   +0x0048 -> line 516
- *   +0x0050 -> line 515
- *   +0x0054 -> line 516
- *   +0x0058 -> line 515
- *   +0x005c -> line 516
- *   +0x0060 -> line 515
- *   +0x0074 -> line 516
- *   +0x007c -> line 518
- *   +0x0084 -> line 519
- *   +0x0098 -> line 521
- *   +0x00a8 -> line 522
- *   +0x00b0 -> line 524
- *   +0x00bc -> line 525
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vInitCameraMatrix(GLI_tdstCamera_* _p_tdstCamera)
-{
-    MAT_tdstTransformation_ stCameraMatrix;
-    MAT_tdstTransformation_ stTransformMatrix;
-    union { MTH3D_tdstVector_ v; int i[3]; } stTranslationVector;
-
-    GLI_xGetCameraMatrix(_p_tdstCamera, &stCameraMatrix);
-    stTranslationVector.v.xZ = 5.0f; stTranslationVector.v.xX = 0.0f; stTranslationVector.v.xY = 0.0f;
-    MAT_fn_vSetIdentity(&stCameraMatrix);
-    if (stCameraMatrix.eType == MAT_eTransform_Identity) { stCameraMatrix.eType = MAT_eTransform_Translation; } ((int*)&stCameraMatrix.stTransformMatrix.stCol_3)[0] = stTranslationVector.i[0]; ((int*)&stCameraMatrix.stTransformMatrix.stCol_3)[1] = stTranslationVector.i[1]; ((int*)&stCameraMatrix.stTransformMatrix.stCol_3)[2] = stTranslationVector.i[2]; stCameraMatrix.stTransformMatrix.stCol_3.xW = 1.0f;
-    MAT_fn_vSetXRotation(&stCameraMatrix, 1.5707964f);
-    MAT_fn_vSetIdentity(&stTransformMatrix);
-    MAT_fn_vSetZRotation(&stTransformMatrix, 3.1415927f);
-    MAT_fn_vCompose(&stCameraMatrix, &stTransformMatrix, &stCameraMatrix);
-    MAT_fn_vNormalize(&stCameraMatrix);
-    GLI_xSetCameraMatrix(_p_tdstCamera, &stCameraMatrix);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 456–483 */
-/* addr: 0x00266bd0  size: 444 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 456
- *   +0x0004 -> line 457
- *   +0x0008 -> line 456
- *   +0x000c -> line 458
- *   +0x0010 -> line 456
- *   +0x0014 -> line 457
- *   +0x0018 -> line 456
- *   +0x001c -> line 458
- *   +0x0020 -> line 456
- *   +0x0024 -> line 457
- *   +0x002c -> line 467
- *   +0x0030 -> line 457
- *   +0x0034 -> line 467
- *   +0x0038 -> line 457
- *   +0x0040 -> line 459
- *   +0x0044 -> line 457
- *   +0x0048 -> line 459
- *   +0x004c -> line 458
- *   +0x0050 -> line 457
- *   +0x0054 -> line 459
- *   +0x0058 -> line 458
- *   +0x005c -> line 460
- *   +0x0068 -> line 459
- *   +0x006c -> line 460
- *   +0x0074 -> line 461
- *   +0x0080 -> line 462
- *   +0x0084 -> line 461
- *   +0x0088 -> line 462
- *   +0x0094 -> line 463
- *   +0x00a0 -> line 464
- *   +0x00a4 -> line 463
- *   +0x00a8 -> line 464
- *   +0x00ac -> line 467
- *   +0x00b0 -> line 464
- *   +0x00b4 -> line 467
- *   +0x00b8 -> line 464
- *   +0x00bc -> line 467
- *   +0x00e0 -> line 470
- *   +0x010c -> line 472
- *   +0x0118 -> line 475
- *   +0x011c -> line 472
- *   +0x0120 -> line 473
- *   +0x0124 -> line 472
- *   +0x0128 -> line 473
- *   +0x0134 -> line 475
- *   +0x0164 -> line 478
- *   +0x0190 -> line 480
- *   +0x01a4 -> line 483
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vCreateGameViewPort(unsigned char _ucIndex)
-{
-    g_stEngineStructure.a_stViewportAttr[_ucIndex].dwWidthInPercent = 100;
-    g_stEngineStructure.a_stViewportAttr[_ucIndex].dwHeightInPercent = 100;
-    g_stEngineStructure.a_stViewportAttr[_ucIndex].dwClipTopInPerMille = 0;
-    g_stEngineStructure.a_stViewportAttr[_ucIndex].dwClipBottomInPerMille = 1000;
-    g_stEngineStructure.a_stViewportAttr[_ucIndex].dwClipLeftInPerMille = 0;
-    g_stEngineStructure.a_stViewportAttr[_ucIndex].dwClipRightInPerMille = 1000;
-    g_stEngineStructure.a_stViewportAttr[_ucIndex].iOffsetPosX = 0;
-    g_stEngineStructure.a_stViewportAttr[_ucIndex].iOffsetPosY = 0;
-    if (!GLD_bCreateViewport(g_stEngineStructure.hGLDDevice, &g_stEngineStructure.a_stViewportAttr[_ucIndex], &g_stEngineStructure.a_hGLDViewport[_ucIndex], 100))
-    { Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(0x30, g_ucGameModuleId, 0, 0x28, -1, 255, 255, NULL); }
-    g_stEngineStructure.a_stGameAttributes3D[_ucIndex].p_stCam = 0;
-    g_stEngineStructure.a_stGameAttributes3D[_ucIndex].xNear = 0;
-    if (!GLD_bGiveSpecificAttributesToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucIndex], &g_stEngineStructure.a_stGameAttributes3D[_ucIndex]))
-    { Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(0x30, g_ucGameModuleId, 0, 0x28, -1, 255, 255, NULL); }
-    GLD_bGetViewportAttributes(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucIndex], &g_stEngineStructure.a_stViewportAttr[_ucIndex]);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 406–445 */
-/* addr: 0x00266d90  size: 620 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 406
- *   +0x0004 -> line 408
- *   +0x0008 -> line 406
- *   +0x000c -> line 407
- *   +0x0010 -> line 406
- *   +0x0014 -> line 408
- *   +0x0018 -> line 406
- *   +0x001c -> line 417
- *   +0x0020 -> line 406
- *   +0x0028 -> line 407
- *   +0x002c -> line 406
- *   +0x0030 -> line 407
- *   +0x0048 -> line 409
- *   +0x004c -> line 407
- *   +0x0050 -> line 409
- *   +0x0054 -> line 407
- *   +0x0058 -> line 408
- *   +0x005c -> line 409
- *   +0x0060 -> line 408
- *   +0x0064 -> line 409
- *   +0x0068 -> line 410
- *   +0x0070 -> line 417
- *   +0x0074 -> line 410
- *   +0x007c -> line 411
- *   +0x0080 -> line 410
- *   +0x0084 -> line 411
- *   +0x0090 -> line 412
- *   +0x009c -> line 413
- *   +0x00a0 -> line 412
- *   +0x00a4 -> line 413
- *   +0x00a8 -> line 417
- *   +0x00ac -> line 413
- *   +0x00b0 -> line 417
- *   +0x00b4 -> line 413
- *   +0x00b8 -> line 414
- *   +0x00c8 -> line 417
- *   +0x00ec -> line 420
- *   +0x0118 -> line 422
- *   +0x0150 -> line 425
- *   +0x017c -> line 427
- *   +0x0190 -> line 431
- *   +0x01ac -> line 433
- *   +0x0210 -> line 436
- *   +0x0224 -> line 439
- *   +0x0238 -> line 443
- *   +0x0244 -> line 444
- *   +0x024c -> line 445
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vCreateViewPort(unsigned char _ucIndex)
-{
-    GLI_tdstCamera_* p_stCam[1];
-
-    g_stEngineStructure.a_stFixViewportAttr[_ucIndex].dwWidthInPercent = 100;
-    g_stEngineStructure.a_stFixViewportAttr[_ucIndex].dwHeightInPercent = 100;
-    g_stEngineStructure.a_stFixViewportAttr[_ucIndex].dwClipTopInPerMille = 0;
-    g_stEngineStructure.a_stFixViewportAttr[_ucIndex].dwClipBottomInPerMille = 1000;
-    g_stEngineStructure.a_stFixViewportAttr[_ucIndex].dwClipLeftInPerMille = 0;
-    g_stEngineStructure.a_stFixViewportAttr[_ucIndex].dwClipRightInPerMille = 1000;
-    g_stEngineStructure.a_stFixViewportAttr[_ucIndex].iOffsetPosX = 0;
-    g_stEngineStructure.a_stFixViewportAttr[_ucIndex].iOffsetPosY = 0;
-    if (!GLD_bCreateViewport(g_stEngineStructure.hGLDDevice, &g_stEngineStructure.a_stFixViewportAttr[_ucIndex], &g_stEngineStructure.a_hGLDFixViewport[_ucIndex]))
-    { Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(0x30, g_ucGameModuleId, 0, 0x28, -1, 255, 255, NULL); }
-    if (!GLD_bGiveSpecificAttributesToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex], &g_stEngineStructure.a_stFixAttributes3D[_ucIndex]))
-    { Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(0x30, g_ucGameModuleId, 0, 0x28, -1, 255, 255, NULL); }
-    GLD_bGetViewportAttributes(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex], &g_stEngineStructure.a_stFixViewportAttr[_ucIndex]);
-    if (g_stEngineStructure.a_p_stFixCamera[_ucIndex] == 0)
+    if (ulMode == 1)
     {
-        GLI_xCreateCamera(p_stCam, 0x67); g_stEngineStructure.a_p_stFixCamera[_ucIndex] = p_stCam[0]; GLI_xSetCameraAspectAndRatio(p_stCam[0], 1.5f, 0.75f); GLI_xSetCameraNearFar(p_stCam[0], 0.1f, 1000.0f); fn_vInitCameraMatrix(p_stCam[0]); *g_stEngineStructure.a_stFixViewportAttr[_ucIndex].p_vSpecificToXD = (int)p_stCam[0];
-    }
-    GLI_xAdjustCameraToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex], g_stEngineStructure.a_p_stFixCamera[_ucIndex]);
-    GLI_xSetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex], g_stEngineStructure.a_p_stFixCamera[_ucIndex]);
-    GLI_fn_vSetCameraMirrorMode(g_stEngineStructure.a_p_stFixCamera[_ucIndex], 0);
-    fn_vCreateGameViewPort(_ucIndex);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 388–402 */
-/* addr: 0x00267000  size: 116 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 388
- *   +0x0014 -> line 401
- *   +0x0060 -> line 402
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GAM_fn_vCreateGameDeviceAndViewPorts(void)
-{
-    unsigned char ucIndex;
-
-    for (ucIndex = 0; ucIndex < 4; ucIndex++) { g_stEngineStructure.a_p_stFixCamera[ucIndex] = 0; fn_vCreateViewPort(ucIndex); } g_stEngineStructure.a_p_stFixCamera[4] = 0; fn_vCreateViewPort(4);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 327–377 */
-/* addr: 0x00267080  size: 592 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 327
- *   +0x0004 -> line 335
- *   +0x0008 -> line 327
- *   +0x001c -> line 335
- *   +0x0028 -> line 337
- *   +0x0050 -> line 338
- *   +0x0078 -> line 339
- *   +0x0080 -> line 342
- *   +0x00a8 -> line 343
- *   +0x00d0 -> line 346
- *   +0x00e8 -> line 348
- *   +0x00f4 -> line 350
- *   +0x011c -> line 351
- *   +0x0144 -> line 354
- *   +0x0158 -> line 355
- *   +0x016c -> line 357
- *   +0x0180 -> line 358
- *   +0x0194 -> line 359
- *   +0x019c -> line 362
- *   +0x01c0 -> line 363
- *   +0x01e8 -> line 366
- *   +0x01fc -> line 367
- *   +0x0210 -> line 369
- *   +0x0224 -> line 370
- *   +0x0238 -> line 377
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GAM_MultiVP_fn_vInvertOneVP(unsigned char _ucWhat, unsigned char _ucIndex1, unsigned char _ucIndex2)
-{
-    GLD_tdstViewportAttributes_ stViewAttrib1;
-    GLD_tdstViewportAttributes_ stViewAttrib2;
-    GLI_tdstCamera_* p_stCam1;
-    GLI_tdstCamera_* p_stCam2;
-
-    if (_ucWhat == 1)
-    {
-        GLI_xGetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucIndex1], &p_stCam1);
-        GLI_xGetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucIndex2], &p_stCam2);
+        GLI_xGetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucVPIndex], &p_stCam);
+        if (p_stCam)
+        {
+            GLI_xSetCameraRatio(p_stCam, xRatio);
+            GLI_xAdjustCameraToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucVPIndex], p_stCam);
+        }
     }
     else
     {
-        GLI_xGetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex1], &p_stCam1);
-        GLI_xGetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex2], &p_stCam2);
-    }
-    if (p_stCam1 && p_stCam2)
-    {
-        if (_ucWhat == 1)
+        GLI_xGetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucVPIndex], &p_stCam);
+        if (p_stCam)
         {
-            GLD_bGetViewportAttributes(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucIndex1], &stViewAttrib1);
-            GLD_bGetViewportAttributes(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucIndex2], &stViewAttrib2);
-            GLD_bSetViewportPosition(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucIndex1], &stViewAttrib2);
-            GLI_xAdjustCameraToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucIndex1], p_stCam1);
-            GLD_bSetViewportPosition(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucIndex2], &stViewAttrib1);
-            GLI_xAdjustCameraToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucIndex2], p_stCam2);
-        }
-        else
-        {
-            GLD_bGetViewportAttributes(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex1], &stViewAttrib1);
-            GLD_bGetViewportAttributes(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex2], &stViewAttrib2);
-            GLD_bSetViewportPosition(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex1], &stViewAttrib2);
-            GLI_xAdjustCameraToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex1], p_stCam1);
-            GLD_bSetViewportPosition(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex2], &stViewAttrib1);
-            GLI_xAdjustCameraToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex2], p_stCam2);
+            GLI_xSetCameraRatio(p_stCam, xRatio);
+            GLI_xAdjustCameraToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucVPIndex], p_stCam);
         }
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 312–320 */
-/* addr: 0x002672d0  size: 188 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 312
- *   +0x0024 -> line 315
- *   +0x0028 -> line 317
- *   +0x0058 -> line 318
- *   +0x0090 -> line 319
- *   +0x00a0 -> line 320
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GAM_MultiVP_fn_vChangeOneVPSizeAndPositionPercent(unsigned char ucVpNum, unsigned int* a2_ulSize, unsigned int* a2_ulPos)
-{
-    int iGameOrFix;
-
-    for (iGameOrFix = 0; iGameOrFix < 2; iGameOrFix++)
-    {
-        fn_vChangeViewPortPercent(ucVpNum, iGameOrFix, 1, a2_ulSize[0], a2_ulSize[1], 0, 0, 0, 0, 0, 0);
-        fn_vChangeViewPortPercent(ucVpNum, iGameOrFix, 5, 0, 0, 0, 0, 0, 0, a2_ulPos[0], a2_ulPos[1]);
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 243–309 */
-/* addr: 0x00267390  size: 1364 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 243
- *   +0x0004 -> line 252
- *   +0x0008 -> line 243
- *   +0x0014 -> line 252
- *   +0x0018 -> line 243
- *   +0x0034 -> line 252
- *   +0x003c -> line 249
- *   +0x0040 -> line 252
- *   +0x0054 -> line 254
- *   +0x0070 -> line 255
- *   +0x0078 -> line 257
- *   +0x008c -> line 259
- *   +0x0110 -> line 260
- *   +0x019c -> line 261
- *   +0x01a4 -> line 264
- *   +0x01b0 -> line 266
- *   +0x0234 -> line 268
- *   +0x023c -> line 267
- *   +0x0240 -> line 268
- *   +0x0254 -> line 269
- *   +0x025c -> line 272
- *   +0x02e4 -> line 274
- *   +0x02ec -> line 273
- *   +0x02f0 -> line 274
- *   +0x0308 -> line 281
- *   +0x030c -> line 283
- *   +0x0310 -> line 282
- *   +0x0314 -> line 283
- *   +0x031c -> line 286
- *   +0x0354 -> line 287
- *   +0x0390 -> line 289
- *   +0x03c0 -> line 290
- *   +0x03f0 -> line 292
- *   +0x040c -> line 293
- *   +0x0420 -> line 296
- *   +0x0428 -> line 297
- *   +0x0438 -> line 299
- *   +0x0454 -> line 301
- *   +0x0460 -> line 303
- *   +0x0490 -> line 304
- *   +0x04c0 -> line 306
- *   +0x04f4 -> line 307
- *   +0x0524 -> line 309
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GAM_MultiVP_fn_vAdjustViewPortSizeAndPosition(unsigned char _ucNumberOfPlayers, unsigned char _ucNumberOfColumns)
-{
-    unsigned char ucNumberOfLines;
-    unsigned short uwLineSizePercentage;
-    unsigned short uwColumnSizePercentage;
-    unsigned short uwColumnPercentInit;
-    unsigned short uwLinePercentInit;
-    unsigned short uwColumnPercent = 0;
-    unsigned short uwLinePercent;
-    unsigned char ucIndex;
-
-    ucNumberOfLines = (unsigned char)(_ucNumberOfPlayers / _ucNumberOfColumns);
-    if ((_ucNumberOfPlayers % _ucNumberOfColumns) != 0) { uwLinePercent = 0; ucNumberOfLines = (unsigned char)(ucNumberOfLines + 1); }
-    if (g_stEngineStructure.ucMiniScreenRatioInMultiMode == 1)
-    {
-        uwColumnSizePercentage = (unsigned short)(100.0f / (float)_ucNumberOfColumns);
-        uwLineSizePercentage = (unsigned short)(100.0f / (float)ucNumberOfLines);
-    }
-    else if (_ucNumberOfColumns >= g_stEngineStructure.ucMiniScreenRatioInMultiMode)
-    {
-        uwLineSizePercentage = (unsigned short)(100.0f / (float)ucNumberOfLines);
-        uwColumnSizePercentage = uwLineSizePercentage;
-        uwLinePercent = (unsigned short)((100 - uwLineSizePercentage * _ucNumberOfColumns) / 2);
-    }
-    else
-    {
-        uwColumnSizePercentage = (unsigned short)(100.0f / (float)_ucNumberOfColumns);
-        uwLineSizePercentage = uwColumnSizePercentage;
-        uwColumnPercentInit = (unsigned short)((100 - uwColumnSizePercentage * g_stEngineStructure.ucMiniScreenRatioInMultiMode) / 2);
-    }
-    uwColumnPercentInit = uwColumnPercent;
-    for (ucIndex = 0; ucIndex < _ucNumberOfPlayers; ucIndex++)
-    {
-        fn_vChangeViewPortPercent(ucIndex, 1, 1, uwColumnSizePercentage, uwLineSizePercentage, 0, 0, 0, 0, 0, 0);
-        fn_vChangeViewPortPercent(ucIndex, 1, 5, 0, 0, 0, 0, 0, 0, uwLinePercent, uwColumnPercent);
-        fn_vChangeViewPortPercent(ucIndex, 0, 1, uwColumnSizePercentage, uwLineSizePercentage, 0, 0, 0, 0, 0, 0);
-        fn_vChangeViewPortPercent(ucIndex, 0, 5, 0, 0, 0, 0, 0, 0, uwLinePercent, uwColumnPercent);
-        if (((ucIndex + 1) / _ucNumberOfColumns) != 0) { uwLinePercent = (unsigned short)(uwLinePercent + uwLineSizePercentage); }
-        else { uwColumnPercent = (unsigned short)(uwColumnPercent + uwColumnSizePercentage); }
-    }
-    if (g_stEngineStructure.h_DbgCamCharacter == NULL)
-    {
-        fn_vChangeViewPortPercent(0, 1, 1, 0, 100, 0, 0, 0, 0, 0, 0);
-        fn_vChangeViewPortPercent(0, 0, 1, 0, 100, 0, 0, 0, 0, 0, 0);
-        fn_vChangeViewPortPercent(1, 1, 3, 0, 0, 0, 0, 0, 0, 0, 25);
-        fn_vChangeViewPortPercent(1, 1, 1, 0, 25, 0, 0, 0, 0, 0, 0);
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 196–237 */
-/* addr: 0x002678f0  size: 456 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 196
- *   +0x0004 -> line 199
- *   +0x0008 -> line 196
- *   +0x0020 -> line 199
- *   +0x003c -> line 202
- *   +0x004c -> line 203
- *   +0x00c4 -> line 205
- *   +0x00ec -> line 207
- *   +0x01a8 -> line 237
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GAM_MultiVP_fn_vInitMultiPlayerMode(void)
+void GAM_fn_vActualizeAllGameViewportSize(void)
 {
     unsigned char uc_ViewPortIndex;
-    tdstNodeMainCharacter_* hMCN;
-    HIE_tdstSuperObject_* hCharacter;
-    HIE_tdstSuperObject_* hCamera;
-    int iPlayers;
-    int iColumns;
+    GLI_tdstCamera_* p_stCam;
 
-    g_stEngineStructure.a_hSO_CurrentMainPlayers[0] = 0; g_stEngineStructure.a_hSO_CurrentMainPlayers[1] = 0; g_stEngineStructure.a_hSO_CurrentMainPlayers[2] = 0; g_stEngineStructure.a_hSO_CurrentMainPlayers[3] = 0;
-    if (g_stEngineStructure.h_DbgCamCharacter == NULL)
-    {
-        iColumns = g_stEngineStructure.ucNumberOfColumnsInMultiMode; iPlayers = g_stEngineStructure.ucNumberOfPlayersInMultiMode; if ((unsigned char)iPlayers <= 0) { iPlayers = 1; } if ((unsigned char)iColumns <= 0) { iColumns = 1; } if ((unsigned char)iPlayers < 5) { g_stEngineStructure.ucNumberOfPlayersInMultiMode = (unsigned char)iPlayers; } else { g_stEngineStructure.ucNumberOfPlayersInMultiMode = 4; } g_stEngineStructure.ucNumberOfColumnsInMultiMode = (unsigned char)iColumns; GAM_MultiVP_fn_vAdjustViewPortSizeAndPosition(g_stEngineStructure.ucNumberOfPlayersInMultiMode, g_stEngineStructure.ucNumberOfColumnsInMultiMode);
-    }
-    else
-    {
-        g_stEngineStructure.ucNumberOfPlayersInMultiMode = 2; g_stEngineStructure.ucNumberOfColumnsInMultiMode = 1; GAM_MultiVP_fn_vAdjustViewPortSizeAndPosition(g_stEngineStructure.ucNumberOfPlayersInMultiMode, g_stEngineStructure.ucNumberOfColumnsInMultiMode);
-    }
-    hMCN = MC_fn_hGetFirstMainCharNode();
-    for (uc_ViewPortIndex = 0; uc_ViewPortIndex < g_stEngineStructure.ucNumberOfPlayersInMultiMode; uc_ViewPortIndex++) { if (hMCN == NULL) { break; } hCharacter = MC_fn_hGetCharacterInMainCharacterNode(hMCN); if (uc_ViewPortIndex <= g_stEngineStructure.ucNumberOfPlayersInMultiMode) { hCamera = CAM_fn_hGetActiveCamera(uc_ViewPortIndex); if (hCamera) { CAM_fn_vCineInfoSetSuperObjectTargeted(hCamera->hLinkedObject.p_stCharacter->h_Cineinfo->hCurrent, hCharacter); } g_stEngineStructure.a_hSO_CurrentMainPlayers[uc_ViewPortIndex] = (int)hCharacter; } if (g_stEngineStructure.h_DbgCamCharacter == NULL) { hMCN = MC_fn_hGetNextMainCharNode(hMCN); } }
+    for (uc_ViewPortIndex = 0; uc_ViewPortIndex < g_stEngineStructure.ucNumberOfPlayersInMultiMode; uc_ViewPortIndex++) { GLI_xGetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[uc_ViewPortIndex], &p_stCam); if (p_stCam) { GLI_xAdjustCameraToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[uc_ViewPortIndex], p_stCam); } GLI_xGetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[uc_ViewPortIndex], &p_stCam); if (p_stCam) { GLI_xAdjustCameraToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[uc_ViewPortIndex], p_stCam); } }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 175–191 */
-/* addr: 0x00267ac0  size: 240 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 175
- *   +0x0018 -> line 176
- *   +0x0024 -> line 179
- *   +0x0030 -> line 181
- *   +0x0038 -> line 183
- *   +0x0088 -> line 185
- *   +0x0098 -> line 186
- *   +0x00a4 -> line 189
- *   +0x00a8 -> line 190
- *   +0x00ac -> line 186
- *   +0x00b0 -> line 190
- *   +0x00d0 -> line 191
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GAM_MultiVP_fn_vAutoAssociateMainPlayersForViewPorts(void)
+int fn_s32RetObjectCoordinateNull(void)
 {
-    tdstNodeMainCharacter_* hMCN;
-    unsigned char uc_ViewPortIndex;
-    HIE_tdstSuperObject_* hCharacter;
-    HIE_tdstSuperObject_* hCamera;
-
-    hMCN = MC_fn_hGetFirstMainCharNode();
-    for (uc_ViewPortIndex = 0; uc_ViewPortIndex < g_stEngineStructure.ucNumberOfPlayersInMultiMode; uc_ViewPortIndex++)
-    {
-        if (hMCN == NULL) { break; }
-        hCharacter = MC_fn_hGetCharacterInMainCharacterNode(hMCN); if (uc_ViewPortIndex <= g_stEngineStructure.ucNumberOfPlayersInMultiMode) { hCamera = CAM_fn_hGetActiveCamera(uc_ViewPortIndex); if (hCamera) { CAM_fn_vCineInfoSetSuperObjectTargeted(hCamera->hLinkedObject.p_stCharacter->h_Cineinfo->hCurrent, hCharacter); } g_stEngineStructure.a_hSO_CurrentMainPlayers[uc_ViewPortIndex] = (int)hCharacter; }
-        if (g_stEngineStructure.h_DbgCamCharacter == NULL)
-        {
-            hMCN = MC_fn_hGetNextMainCharNode(hMCN);
-        }
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 160–169 */
-/* addr: 0x00267bb0  size: 128 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 160
- *   +0x0004 -> line 161
- *   +0x0008 -> line 160
- *   +0x0014 -> line 161
- *   +0x0044 -> line 165
- *   +0x004c -> line 167
- *   +0x005c -> line 168
- *   +0x006c -> line 169
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GAM_MultiVP_fn_vInvertViewPorts(unsigned char _ucVPIndex1, unsigned char _ucVPIndex2)
-{
-    if ((_ucVPIndex1 >= g_stEngineStructure.ucNumberOfPlayersInMultiMode) || (_ucVPIndex2 >= g_stEngineStructure.ucNumberOfPlayersInMultiMode) || (_ucVPIndex1 == _ucVPIndex2))
-
-
-
-        return;
-
-    GAM_MultiVP_fn_vInvertOneVP(0, _ucVPIndex1, _ucVPIndex2);
-    GAM_MultiVP_fn_vInvertOneVP(1, _ucVPIndex1, _ucVPIndex2);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 147–154 */
-/* addr: 0x00267c30  size: 64 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 147
- *   +0x0004 -> line 148
- *   +0x0008 -> line 147
- *   +0x000c -> line 148
- *   +0x001c -> line 150
- *   +0x0020 -> line 152
- *   +0x0034 -> line 154
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GAM_MultiVP_fn_vSetAspectRatio(unsigned char _ucRatio)
-{
-    if (_ucRatio != g_stEngineStructure.ucMiniScreenRatioInMultiMode) {
-        g_stEngineStructure.ucMiniScreenRatioInMultiMode = _ucRatio;
-        GAM_MultiVP_fn_vAdjustViewPortSizeAndPosition(g_stEngineStructure.ucNumberOfPlayersInMultiMode, g_stEngineStructure.ucNumberOfColumnsInMultiMode);
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 119–141 */
-/* addr: 0x00267c70  size: 112 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 119
- *   +0x0004 -> line 120
- *   +0x000c -> line 132
- *   +0x0010 -> line 124
- *   +0x0014 -> line 132
- *   +0x0018 -> line 124
- *   +0x002c -> line 127
- *   +0x003c -> line 130
- *   +0x0040 -> line 132
- *   +0x0058 -> line 135
- *   +0x0060 -> line 137
- *   +0x0068 -> line 141
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned char GAM_MultiVP_fn_vGetViewPortFromPlayer(HIE_tdstSuperObject_* hCameraTargetSO)
-{
-    int i;
-    int Found;
-
-    i = 0;
-    Found = 0;
-    do
-    {
-        if (g_stEngineStructure.a_hSO_CurrentMainPlayers[i] == (int)hCameraTargetSO)
-            Found = 1;
-        else
-            i++;
-    } while (i < g_stEngineStructure.ucNumberOfPlayersInMultiMode && !Found);
-
-    if (Found)
-        return i + 1;
     return 0;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 97–112 */
-/* addr: 0x00267ce0  size: 124 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 97
- *   +0x0004 -> line 100
- *   +0x0008 -> line 97
- *   +0x0018 -> line 100
- *   +0x002c -> line 104
- *   +0x0034 -> line 105
- *   +0x003c -> line 106
- *   +0x0050 -> line 108
- *   +0x0068 -> line 112
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-HIE_tdstSuperObject_* CAM_fn_hGetActiveCamera(int _lViewportNumber);
-void CAM_fn_vCineInfoSetSuperObjectTargeted(tdstInternalStructurCineinfo_* _hIntCineinfo, HIE_tdstSuperObject_* _hSuperObject);
-
-void GAM_MultiVP_fn_vSetPlayerForViewPort(unsigned char _ucViewPortIndex, HIE_tdstSuperObject_* hCameraTargetSO)
-{
-    HIE_tdstSuperObject_* hSprObjCamera;
-
-    if (_ucViewPortIndex > g_stEngineStructure.ucNumberOfPlayersInMultiMode)
-        return;
-
-
-    hSprObjCamera = CAM_fn_hGetActiveCamera(_ucViewPortIndex);
-    if (hSprObjCamera)
-        CAM_fn_vCineInfoSetSuperObjectTargeted(hSprObjCamera->hLinkedObject.p_stCharacter->h_Cineinfo->hCurrent, hCameraTargetSO);
-
-    g_stEngineStructure.a_hSO_CurrentMainPlayers[_ucViewPortIndex] = (int)hCameraTargetSO;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 80–90 */
-/* addr: 0x00267d60  size: 104 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 80
- *   +0x0014 -> line 81
- *   +0x0028 -> line 83
- *   +0x0038 -> line 84
- *   +0x0040 -> line 86
- *   +0x004c -> line 89
- *   +0x0054 -> line 90
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GAM_MultiVP_fn_vSetNumberOfPlayers(unsigned char _ucNumberOfPlayers, unsigned char _ucNumberOfColumns)
-{
-    { int iPlayers = _ucNumberOfPlayers; if (iPlayers <= 0) { iPlayers = 1; } _ucNumberOfPlayers = (unsigned char)iPlayers; }
-    { int iColumns = _ucNumberOfColumns; if (iColumns <= 0) { iColumns = 1; } _ucNumberOfColumns = (unsigned char)iColumns; }
-    if (_ucNumberOfPlayers < 5)
-        g_stEngineStructure.ucNumberOfPlayersInMultiMode = _ucNumberOfPlayers;
-    else
-        g_stEngineStructure.ucNumberOfPlayersInMultiMode = 4;
-
-    g_stEngineStructure.ucNumberOfColumnsInMultiMode = _ucNumberOfColumns;
-    GAM_MultiVP_fn_vAdjustViewPortSizeAndPosition(g_stEngineStructure.ucNumberOfPlayersInMultiMode, g_stEngineStructure.ucNumberOfColumnsInMultiMode);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 72–73 */
-/* addr: 0x00267dd0  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 72
- *   +0x0004 -> line 73
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned char GAM_MultiVP_fn_ucGetNumberOfColumns(void)
-{
-    return g_stEngineStructure.ucNumberOfColumnsInMultiMode;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 66–66 */
-/* addr: 0x00267de0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 66
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned char GAM_MultiVP_fn_ucGetMaxNumberOfPlayers(void)
-{
-    return 4;
 }

@@ -229,6 +229,52 @@ CSoundSemaphore::~CSoundSemaphore(void)
     _Tr.erase(_Tr.begin(), _Tr.end());
 }
 
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcsoundsemaphore.cpp lines 430–438 */
+/* addr: 0x001cb610  size: 160 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 430
+ *   +0x0004 -> line 431
+ *   +0x0008 -> line 430
+ *   +0x000c -> line 431
+ *   +0x0010 -> line 430
+ *   +0x0020 -> line 431
+ *   +0x0028 -> line 433
+ *   +0x0068 -> line 436
+ *   +0x0074 -> line 437
+ *   +0x0088 -> line 438
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+/* The reconstructed body now lives in the usnd::stree template member
+ * _Erase() defined above the smap stand-in; the original malformed
+ * template-instantiation body is retained below as evidence. */
+#if 0
+void _Erase__Q24usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i,P19CSoundSemaphoreInfo,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>4_Kfn,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>FPQ34usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i,P19CSoundSemaphoreInfo,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>4_Kfn,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>9sTreeNode(sTreeNode* _pNode)
+{
+    sTreeNode* _pNode2;
+    /* TODO: decompile from asm/... */
+}
+
+#endif
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcsoundsemaphore.cpp lines 29–32 */
+/* addr: 0x001cb6b0  size: 168 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 29
+ *   +0x0084 -> line 32
+ *   +0x0088 -> line 29
+ *   +0x008c -> line 32
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+CSoundSemaphore::CSoundSemaphore(unsigned int u32_ChannelId, unsigned int u32_ChannelSize) : mu32ChannelId(u32_ChannelId), mu32ChannelSize(u32_ChannelSize)
+{
+}
+
 void CSoundSemaphore::f_vSynchro(void)
 {
     /* The handles whose sound request finished are collected in a static
@@ -275,46 +321,4 @@ void CSoundSemaphore::f_vSynchro(void)
     {
         f_vSynchro();
     }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcsoundsemaphore.cpp lines 430–438 */
-/* addr: 0x001cb610  size: 160 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 430
- *   +0x0004 -> line 431
- *   +0x0008 -> line 430
- *   +0x000c -> line 431
- *   +0x0010 -> line 430
- *   +0x0020 -> line 431
- *   +0x0028 -> line 433
- *   +0x0068 -> line 436
- *   +0x0074 -> line 437
- *   +0x0088 -> line 438
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-/* The reconstructed body now lives in the usnd::stree template member
- * _Erase() defined above the smap stand-in; the original malformed
- * template-instantiation body is retained below as evidence. */
-#if 0
-void _Erase__Q24usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i,P19CSoundSemaphoreInfo,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>4_Kfn,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>FPQ34usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i,P19CSoundSemaphoreInfo,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>4_Kfn,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>9sTreeNode(sTreeNode* _pNode)
-{
-    sTreeNode* _pNode2;
-    /* TODO: decompile from asm/... */
-}
-
-#endif
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcsoundsemaphore.cpp lines 29–32 */
-/* addr: 0x001cb6b0  size: 168 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 29
- *   +0x0084 -> line 32
- *   +0x0088 -> line 29
- *   +0x008c -> line 32
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-CSoundSemaphore::CSoundSemaphore(unsigned int u32_ChannelId, unsigned int u32_ChannelSize) : mu32ChannelId(u32_ChannelId), mu32ChannelSize(u32_ChannelSize)
-{
 }

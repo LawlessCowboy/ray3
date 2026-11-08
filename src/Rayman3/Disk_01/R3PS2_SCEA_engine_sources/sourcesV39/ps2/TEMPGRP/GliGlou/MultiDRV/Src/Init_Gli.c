@@ -44,6 +44,28 @@ extern tdstFogParams_* GLI_gp_stLastFog;
 extern tdstFogParams_ GLI_ga_stFogTable[16];
 void GLI_vSetFogParameters(float start, float end, float* color);
 
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void GLI_vSetFog2(float xBlendStart, float xDepthStart, float xBlendEnd, float xDepthEnd, float xInfinite, GEO_tdstColor_* p_stFogColor);
+void GLI_vSignalCurrentMemoryChannel(int ucCurrentChannel);
+void GLI_vEndofGeometricLoad(void);
+int GLI_xIsGliInit(void);
+
+int GLI_xIsGliInit(void)
+{
+    return GLI_gsIsInit;
+}
+
+void GLI_vEndofGeometricLoad(void)
+{
+    GLI_vComputeTextures();
+}
+
+void GLI_vSignalCurrentMemoryChannel(int ucCurrentChannel)
+{
+    GLI_TEX_vSignalCurrentMemoryChannel(ucCurrentChannel);
+}
+
 void GLI_vSetFog2(float xBlendStart, float xDepthStart, float xBlendEnd, float xDepthEnd, float xInfinite, GEO_tdstColor_* p_stFogColor)
 {
     float A;
@@ -123,19 +145,4 @@ void GLI_vSetFog2(float xBlendStart, float xDepthStart, float xBlendEnd, float x
     GLI_gp_stCurrentFog++;
     if (GLI_gp_stCurrentFog == GLI_gp_stLastFog)
         GLI_gp_stCurrentFog = GLI_ga_stFogTable;
-}
-
-void GLI_vSignalCurrentMemoryChannel(int ucCurrentChannel)
-{
-    GLI_TEX_vSignalCurrentMemoryChannel(ucCurrentChannel);
-}
-
-void GLI_vEndofGeometricLoad(void)
-{
-    GLI_vComputeTextures();
-}
-
-int GLI_xIsGliInit(void)
-{
-    return GLI_gsIsInit;
 }

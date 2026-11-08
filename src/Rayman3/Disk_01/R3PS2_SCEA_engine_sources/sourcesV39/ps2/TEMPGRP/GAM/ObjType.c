@@ -96,47 +96,21 @@ struct DNM_stDynamics {
 tdstObjectType_ g_stObjectTypes;
 extern int strcasecmp(const char*, const char*);
 
-void fn_vExchangeTwoObjectsInCurrentObjectsTable(HIE_tdstSuperObject_* p_stSuperObject, unsigned short w_ObjectA, unsigned short w_ObjectB)
-{
-    tdstObjectsTableElement_ stObjectsTableElement;
-    if (p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData->h_CurrentObjectsTable) {
-        memcpy(&stObjectsTableElement,
-               &p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData->h_CurrentObjectsTable->d_stObjectsTable[w_ObjectB],
-               sizeof(stObjectsTableElement));
-        memcpy(&p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData->h_CurrentObjectsTable->d_stObjectsTable[w_ObjectB],
-               &p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData->h_CurrentObjectsTable->d_stObjectsTable[w_ObjectA],
-               sizeof(stObjectsTableElement));
-        memcpy(&p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData->h_CurrentObjectsTable->d_stObjectsTable[w_ObjectA],
-               &stObjectsTableElement, sizeof(stObjectsTableElement));
-    }
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void fn_vExchangeTwoObjectsInCurrentObjectsTable(HIE_tdstSuperObject_* p_stSuperObject, unsigned short w_ObjectA, unsigned short w_ObjectB);
+char* fn_szFindPersonalTypeNameOfPersonalType(int otType);
+unsigned char fn_ucFindPersonalIdOfPersonalType(int otType);
+char* fn_szFindModelTypeNameOfModelType(int otType);
+int fn_otFindFamilyTypeOfFamilyTypeName(char* szType);
+unsigned char fn_ucFindFamilyIdOfFamilyType(int otType);
 
-char* fn_szFindPersonalTypeNameOfPersonalType(int otType)
+unsigned char fn_ucFindFamilyIdOfFamilyType(int otType)
 {
     tdstObjectTypeElement_* hHandleToObjectTypeElement;
     unsigned int i;
-    for (i = 0, hHandleToObjectTypeElement = g_stObjectTypes.hPersonalType.hFirstElementDyn; i < (unsigned int)otType; i++, hHandleToObjectTypeElement = hHandleToObjectTypeElement->hNextBrotherDyn) ;
-    if (hHandleToObjectTypeElement)
-        return (char*)hHandleToObjectTypeElement->szName;
-    return NULL;
-}
-
-unsigned char fn_ucFindPersonalIdOfPersonalType(int otType)
-{
-    tdstObjectTypeElement_* hHandleToObjectTypeElement;
-    unsigned int i;
-    for (i = 0, hHandleToObjectTypeElement = g_stObjectTypes.hPersonalType.hFirstElementDyn; i < (unsigned int)otType; i++, hHandleToObjectTypeElement = hHandleToObjectTypeElement->hNextBrotherDyn) ;
+    for (i = 0, hHandleToObjectTypeElement = g_stObjectTypes.hFamilyType.hFirstElementDyn; i < (unsigned int)otType; i++, hHandleToObjectTypeElement = hHandleToObjectTypeElement->hNextBrotherDyn) ;
     return hHandleToObjectTypeElement->ucPermanentId;
-}
-
-char* fn_szFindModelTypeNameOfModelType(int otType)
-{
-    tdstObjectTypeElement_* hHandleToObjectTypeElement;
-    unsigned int i;
-    for (i = 0, hHandleToObjectTypeElement = g_stObjectTypes.hModelType.hFirstElementDyn; i < (unsigned int)otType; i++, hHandleToObjectTypeElement = hHandleToObjectTypeElement->hNextBrotherDyn) ;
-    if (hHandleToObjectTypeElement)
-        return (char*)hHandleToObjectTypeElement->szName;
-    return NULL;
 }
 
 int fn_otFindFamilyTypeOfFamilyTypeName(char* szType)
@@ -158,10 +132,45 @@ int fn_otFindFamilyTypeOfFamilyTypeName(char* szType)
     return otType;
 }
 
-unsigned char fn_ucFindFamilyIdOfFamilyType(int otType)
+char* fn_szFindModelTypeNameOfModelType(int otType)
 {
     tdstObjectTypeElement_* hHandleToObjectTypeElement;
     unsigned int i;
-    for (i = 0, hHandleToObjectTypeElement = g_stObjectTypes.hFamilyType.hFirstElementDyn; i < (unsigned int)otType; i++, hHandleToObjectTypeElement = hHandleToObjectTypeElement->hNextBrotherDyn) ;
+    for (i = 0, hHandleToObjectTypeElement = g_stObjectTypes.hModelType.hFirstElementDyn; i < (unsigned int)otType; i++, hHandleToObjectTypeElement = hHandleToObjectTypeElement->hNextBrotherDyn) ;
+    if (hHandleToObjectTypeElement)
+        return (char*)hHandleToObjectTypeElement->szName;
+    return NULL;
+}
+
+unsigned char fn_ucFindPersonalIdOfPersonalType(int otType)
+{
+    tdstObjectTypeElement_* hHandleToObjectTypeElement;
+    unsigned int i;
+    for (i = 0, hHandleToObjectTypeElement = g_stObjectTypes.hPersonalType.hFirstElementDyn; i < (unsigned int)otType; i++, hHandleToObjectTypeElement = hHandleToObjectTypeElement->hNextBrotherDyn) ;
     return hHandleToObjectTypeElement->ucPermanentId;
+}
+
+char* fn_szFindPersonalTypeNameOfPersonalType(int otType)
+{
+    tdstObjectTypeElement_* hHandleToObjectTypeElement;
+    unsigned int i;
+    for (i = 0, hHandleToObjectTypeElement = g_stObjectTypes.hPersonalType.hFirstElementDyn; i < (unsigned int)otType; i++, hHandleToObjectTypeElement = hHandleToObjectTypeElement->hNextBrotherDyn) ;
+    if (hHandleToObjectTypeElement)
+        return (char*)hHandleToObjectTypeElement->szName;
+    return NULL;
+}
+
+void fn_vExchangeTwoObjectsInCurrentObjectsTable(HIE_tdstSuperObject_* p_stSuperObject, unsigned short w_ObjectA, unsigned short w_ObjectB)
+{
+    tdstObjectsTableElement_ stObjectsTableElement;
+    if (p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData->h_CurrentObjectsTable) {
+        memcpy(&stObjectsTableElement,
+               &p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData->h_CurrentObjectsTable->d_stObjectsTable[w_ObjectB],
+               sizeof(stObjectsTableElement));
+        memcpy(&p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData->h_CurrentObjectsTable->d_stObjectsTable[w_ObjectB],
+               &p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData->h_CurrentObjectsTable->d_stObjectsTable[w_ObjectA],
+               sizeof(stObjectsTableElement));
+        memcpy(&p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData->h_CurrentObjectsTable->d_stObjectsTable[w_ObjectA],
+               &stObjectsTableElement, sizeof(stObjectsTableElement));
+    }
 }

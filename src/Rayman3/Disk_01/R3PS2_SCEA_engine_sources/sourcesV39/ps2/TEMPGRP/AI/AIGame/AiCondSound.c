@@ -73,11 +73,16 @@ int SND_fn_bIsTypePlayingSound(int s32_TypeId);
 int g_lSoundObjectTypeVoice;
 int g_lSoundObjectTypeMusic;
 
-tdstNodeInterpret_* fn_p_stIsEventValid(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+tdstNodeInterpret_* fn_p_stIsEventValid(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue);
+tdstNodeInterpret_* fn_p_stIsTypePlaying(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue);
+tdstNodeInterpret_* fn_p_stIsInStereoMode(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue);
+
+tdstNodeInterpret_* fn_p_stIsInStereoMode(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
-    int st_Param[4];
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, (tdstGetSetParam_*)st_Param);
-    *p_lValue = st_Param[0] ? 1 : 0;
+    (void)p_SuperObjPerso;
+    *p_lValue = SND_fn_bGetStereoSound();
     return p_stTree;
 }
 
@@ -102,9 +107,10 @@ tdstNodeInterpret_* fn_p_stIsTypePlaying(HIE_tdstSuperObject_* p_SuperObjPerso, 
     return p_stTree;
 }
 
-tdstNodeInterpret_* fn_p_stIsInStereoMode(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
+tdstNodeInterpret_* fn_p_stIsEventValid(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
-    (void)p_SuperObjPerso;
-    *p_lValue = SND_fn_bGetStereoSound();
+    int st_Param[4];
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, (tdstGetSetParam_*)st_Param);
+    *p_lValue = st_Param[0] ? 1 : 0;
     return p_stTree;
 }

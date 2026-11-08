@@ -1338,7 +1338,6 @@ struct SECT_tdstSector_ {
     _SND_tduRefEvt hTransitionSoundEvent; /* +0x90 */
 };
 
-
 /* Engine-structure and font types used by FON_fn_szGetTextPointerForHandle. */
 typedef struct _stTimerCount _stTimerCount;
 typedef struct tdstEngineTimerStructure_ tdstEngineTimerStructure_;
@@ -1526,10 +1525,11 @@ extern FON_tdstGeneral_ FON_g_stGeneral;
  * address fold; that reproduces the retail instruction order and registers.
  * The whole body stays on one line: retail's line table has entries only at
  * +0x0000 (line 122) and +0x006c (line 134). */
-char* FON_fn_szGetTextPointerForHandle(int hString)
-{
-    char** pstText; int iIndex; if (hString == -1) return NULL; if (hString < 20000) return ((char**)FON_g_stGeneral.d_sLanguageArray[g_stEngineStructure.ucCurrentLanguage].d_pTextsArray)[hString]; pstText = (char**)FON_g_stGeneral.p_stCommonLanguage->d_pTextsArray; pstText = (char**)(pstText - 20000); return *(char**)((char*)pstText + (iIndex = hString * 4));
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+char* FON_fn_szGetTextPointerForHandle(int hString);
+void ANI_fn_vUnFreeze(HIE_tdstSuperObject_* hSuperObjPerso);
 
 signed char fn_scGetSpeedInState(tdstState_* h_State);
 void fn_v3dDataSetFrameRate(tdst3dData_* h_3dData, unsigned char ucFrameRate);
@@ -1560,4 +1560,9 @@ void ANI_fn_vUnFreeze(HIE_tdstSuperObject_* hSuperObjPerso)
 
         PLA_fn_vSetCurrFrame(hSuperObjPerso, (unsigned short)MTH_M_xRealToLong(h_Current3dData->xCurrentFrame) + 1);
     }
+}
+
+char* FON_fn_szGetTextPointerForHandle(int hString)
+{
+    char** pstText; int iIndex; if (hString == -1) return NULL; if (hString < 20000) return ((char**)FON_g_stGeneral.d_sLanguageArray[g_stEngineStructure.ucCurrentLanguage].d_pTextsArray)[hString]; pstText = (char**)FON_g_stGeneral.p_stCommonLanguage->d_pTextsArray; pstText = (char**)(pstText - 20000); return *(char**)((char*)pstText + (iIndex = hString * 4));
 }

@@ -330,120 +330,10 @@ void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
         (_n)->xZ = _xResult;                                         \
     }
 
-void GEO_xComputeObjectNormals(GEO_tdstGeometricObject_* p_stObj)
-{
-    float xNorm;
-    float xX, xY, xZ;
-    short xIndex;
-    int xFace;
-    GEO_tdstElementFaceMapDescriptors_* p_stLocalElementFMD;
-    GEO_tdstFaceMapTriangle_* p_stITLastFMD;
-    GEO_tdstFaceMapTriangle_* p_stITCurFMD;
-    GEO_tdstElementIndexedTriangles_* p_stLocalElement;
-    GEO_tdstTripledIndex_* p_stITLast;
-    GEO_tdstTripledIndex_* p_stITCur;
-    MTH3D_tdstVector_ stNormalResult;
-    MTH3D_tdstVector_* p_stVertex;
-    MTH3D_tdstVector_* p_stVertexLast;
-    MTH3D_tdstVector_* p_stV0;
-    MTH3D_tdstVector_* p_stV1;
-    MTH3D_tdstVector_* p_stV2;
-
-    if (p_stObj->xNbPoints != 0) {
-        if (p_stObj->d_stListOfPointsNormals == 0) {
-            p_stObj->d_stListOfPointsNormals = (MTH3D_tdstVector_*)HMU_fn_p_vMalloc(p_stObj->xNbPoints * sizeof(MTH3D_tdstVector_), 0);
-        }
-        p_stVertexLast = p_stObj->d_stListOfPointsNormals + p_stObj->xNbPoints;
-        for (p_stVertex = p_stObj->d_stListOfPointsNormals; p_stVertex < p_stVertexLast; p_stVertex++) {
-            p_stVertex->xX = 0;
-            p_stVertex->xY = 0;
-            p_stVertex->xZ = 0;
-        }
-        for (xIndex = 0; xIndex < p_stObj->xNbElements; xIndex++) {
-            if (((short*)p_stObj->d_xListOfElementsTypes)[xIndex] == 1) {
-                p_stLocalElement = ((GEO_tdstElementIndexedTriangles_**)p_stObj->d_stListOfElements)[xIndex];
-                p_stITLast = p_stLocalElement->d_stListOfFacesTripled + p_stLocalElement->xNbFaces;
-                xFace = 0;
-                for (p_stITCur = p_stLocalElement->d_stListOfFacesTripled; p_stITCur < p_stITLast; p_stITCur++, xFace++) {
-                    p_stV2 = &p_stObj->d_stListOfPoints[p_stITCur->a3_xIndex[2]];
-                    p_stV1 = &p_stObj->d_stListOfPoints[p_stITCur->a3_xIndex[1]];
-                    p_stV0 = &p_stObj->d_stListOfPoints[p_stITCur->a3_xIndex[0]];
-                    GEO_M_vFaceNormal(&stNormalResult, p_stV0, p_stV1, p_stV2);
-                    p_stLocalElement->d_stListOfFacesNormals[xFace] = stNormalResult;
-                    if (!(stNormalResult.xX == 0 && stNormalResult.xY == 0 && stNormalResult.xZ == 0)) {
-                        p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[0]].xX = stNormalResult.xX + p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[0]].xX;
-                        p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[0]].xY = stNormalResult.xY + p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[0]].xY;
-                        p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[0]].xZ = stNormalResult.xZ + p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[0]].xZ;
-                        p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[1]].xX = stNormalResult.xX + p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[1]].xX;
-                        p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[1]].xY = stNormalResult.xY + p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[1]].xY;
-                        p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[1]].xZ = stNormalResult.xZ + p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[1]].xZ;
-                        p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[2]].xX = stNormalResult.xX + p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[2]].xX;
-                        p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[2]].xY = stNormalResult.xY + p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[2]].xY;
-                        p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[2]].xZ = stNormalResult.xZ + p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[2]].xZ;
-                        xX = p_stLocalElement->d_stListOfFacesNormals[xFace].xX; xY = p_stLocalElement->d_stListOfFacesNormals[xFace].xY; xZ = p_stLocalElement->d_stListOfFacesNormals[xFace].xZ;
-                        MTH_SQR3_TO(xNorm, xX, xY, xZ);
-                        MTH_SQRT_TO(xNorm, xNorm);
-                        if (xNorm != 0) {
-                            xNorm = 1.0f / xNorm;
-                            p_stLocalElement->d_stListOfFacesNormals[xFace].xX = xNorm * xX;
-                            p_stLocalElement->d_stListOfFacesNormals[xFace].xY *= xNorm;
-                            p_stLocalElement->d_stListOfFacesNormals[xFace].xZ *= xNorm;
-                        }
-                    }
-                }
-            } else if (((short*)p_stObj->d_xListOfElementsTypes)[xIndex] == 2) {
-                p_stLocalElementFMD = ((GEO_tdstElementFaceMapDescriptors_**)p_stObj->d_stListOfElements)[xIndex];
-                p_stITLastFMD = p_stLocalElementFMD->d_stListOfFacesQuadrupled + p_stLocalElementFMD->xNbFaces;
-                xFace = 0;
-                for (p_stITCurFMD = p_stLocalElementFMD->d_stListOfFacesQuadrupled; p_stITCurFMD < p_stITLastFMD; p_stITCurFMD++, xFace++) {
-                    p_stV2 = &p_stObj->d_stListOfPoints[p_stITCurFMD->stFaceTripled.a3_xIndex[2]];
-                    p_stV1 = &p_stObj->d_stListOfPoints[p_stITCurFMD->stFaceTripled.a3_xIndex[1]];
-                    p_stV0 = &p_stObj->d_stListOfPoints[p_stITCurFMD->stFaceTripled.a3_xIndex[0]];
-                    GEO_M_vFaceNormal(&stNormalResult, p_stV0, p_stV1, p_stV2);
-                    p_stLocalElementFMD->d_stListOfFacesNormals[xFace] = stNormalResult;
-                    if (!(stNormalResult.xX == 0 && stNormalResult.xY == 0 && stNormalResult.xZ == 0)) {
-                        p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[0]].xX = stNormalResult.xX + p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[0]].xX;
-                        p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[0]].xY = stNormalResult.xY + p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[0]].xY;
-                        p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[0]].xZ = stNormalResult.xZ + p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[0]].xZ;
-                        p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[1]].xX = stNormalResult.xX + p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[1]].xX;
-                        p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[1]].xY = stNormalResult.xY + p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[1]].xY;
-                        p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[1]].xZ = stNormalResult.xZ + p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[1]].xZ;
-                        p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[2]].xX = stNormalResult.xX + p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[2]].xX;
-                        p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[2]].xY = stNormalResult.xY + p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[2]].xY;
-                        p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[2]].xZ = stNormalResult.xZ + p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[2]].xZ;
-                        xX = p_stLocalElementFMD->d_stListOfFacesNormals[xFace].xX; xY = p_stLocalElementFMD->d_stListOfFacesNormals[xFace].xY; xZ = p_stLocalElementFMD->d_stListOfFacesNormals[xFace].xZ;
-                        MTH_SQR3_TO(xNorm, xX, xY, xZ);
-                        MTH_SQRT_TO(xNorm, xNorm);
-                        if (xNorm != 0) {
-                            xNorm = 1.0f / xNorm;
-                            p_stLocalElementFMD->d_stListOfFacesNormals[xFace].xX = xNorm * xX;
-                            p_stLocalElementFMD->d_stListOfFacesNormals[xFace].xY *= xNorm;
-                            p_stLocalElementFMD->d_stListOfFacesNormals[xFace].xZ *= xNorm;
-                        }
-                    }
-                }
-            }
-        }
-        p_stVertexLast = p_stObj->d_stListOfPointsNormals + p_stObj->xNbPoints;
-        for (p_stVertex = p_stObj->d_stListOfPointsNormals; p_stVertex < p_stVertexLast; p_stVertex++) {
-            if (p_stVertex->xX == 0 && p_stVertex->xY == 0 && p_stVertex->xZ == 0) {
-                p_stVertex->xX = 0;
-                p_stVertex->xY = 0;
-                p_stVertex->xZ = 1.0f;
-            } else {
-                xX = p_stVertex->xX; xY = p_stVertex->xY; xZ = p_stVertex->xZ;
-                        MTH_SQR3_TO(xNorm, xX, xY, xZ);
-                MTH_SQRT_TO(xNorm, xNorm);
-                if (xNorm != 0) {
-                    xNorm = 1.0f / xNorm;
-                    p_stVertex->xX = xNorm * xX;
-                    p_stVertex->xY *= xNorm;
-                    p_stVertex->xZ *= xNorm;
-                }
-            }
-        }
-    }
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void GEO_xComputeObjectNormals(GEO_tdstGeometricObject_* p_stObj);
+void GEO_vComputeObjectParallelBox(GEO_tdstGeometricObject_* hObject, short xParallelBox);
 
 GEO_tdstParallelBox_* GEO_hGetParallelBox(GEO_tdstGeometricObject_* hObject, short xParallelBox);
 short GEO_xGetParallelBoxIndexOfElement(GEO_tdstGeometricObject_* hObject, short xIndexElement);
@@ -576,6 +466,7 @@ void GEO_fn_vUpdateMinMaxBoxWithPoint(MTH3D_tdstVector_* p_stMinPoint, MTH3D_tds
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
 void GEO_vComputeObjectParallelBox(GEO_tdstGeometricObject_* hObject, short xParallelBox)
 {
     GEO_tdstElementIndexedTriangles_* p_stETIT;
@@ -729,6 +620,121 @@ void GEO_vComputeObjectParallelBox(GEO_tdstGeometricObject_* hObject, short xPar
                     GEO_fn_vUpdateMinMaxBoxWithPoint(p_stMinPoint, p_stMaxPoint, &hObject->d_stListOfPoints[p_stEC->d_stListOfCones[xIndexInElement].xBasePoint]);
                 }
                 break;
+            }
+        }
+    }
+}
+
+void GEO_xComputeObjectNormals(GEO_tdstGeometricObject_* p_stObj)
+{
+    float xNorm;
+    float xX, xY, xZ;
+    short xIndex;
+    int xFace;
+    GEO_tdstElementFaceMapDescriptors_* p_stLocalElementFMD;
+    GEO_tdstFaceMapTriangle_* p_stITLastFMD;
+    GEO_tdstFaceMapTriangle_* p_stITCurFMD;
+    GEO_tdstElementIndexedTriangles_* p_stLocalElement;
+    GEO_tdstTripledIndex_* p_stITLast;
+    GEO_tdstTripledIndex_* p_stITCur;
+    MTH3D_tdstVector_ stNormalResult;
+    MTH3D_tdstVector_* p_stVertex;
+    MTH3D_tdstVector_* p_stVertexLast;
+    MTH3D_tdstVector_* p_stV0;
+    MTH3D_tdstVector_* p_stV1;
+    MTH3D_tdstVector_* p_stV2;
+
+    if (p_stObj->xNbPoints != 0) {
+        if (p_stObj->d_stListOfPointsNormals == 0) {
+            p_stObj->d_stListOfPointsNormals = (MTH3D_tdstVector_*)HMU_fn_p_vMalloc(p_stObj->xNbPoints * sizeof(MTH3D_tdstVector_), 0);
+        }
+        p_stVertexLast = p_stObj->d_stListOfPointsNormals + p_stObj->xNbPoints;
+        for (p_stVertex = p_stObj->d_stListOfPointsNormals; p_stVertex < p_stVertexLast; p_stVertex++) {
+            p_stVertex->xX = 0;
+            p_stVertex->xY = 0;
+            p_stVertex->xZ = 0;
+        }
+        for (xIndex = 0; xIndex < p_stObj->xNbElements; xIndex++) {
+            if (((short*)p_stObj->d_xListOfElementsTypes)[xIndex] == 1) {
+                p_stLocalElement = ((GEO_tdstElementIndexedTriangles_**)p_stObj->d_stListOfElements)[xIndex];
+                p_stITLast = p_stLocalElement->d_stListOfFacesTripled + p_stLocalElement->xNbFaces;
+                xFace = 0;
+                for (p_stITCur = p_stLocalElement->d_stListOfFacesTripled; p_stITCur < p_stITLast; p_stITCur++, xFace++) {
+                    p_stV2 = &p_stObj->d_stListOfPoints[p_stITCur->a3_xIndex[2]];
+                    p_stV1 = &p_stObj->d_stListOfPoints[p_stITCur->a3_xIndex[1]];
+                    p_stV0 = &p_stObj->d_stListOfPoints[p_stITCur->a3_xIndex[0]];
+                    GEO_M_vFaceNormal(&stNormalResult, p_stV0, p_stV1, p_stV2);
+                    p_stLocalElement->d_stListOfFacesNormals[xFace] = stNormalResult;
+                    if (!(stNormalResult.xX == 0 && stNormalResult.xY == 0 && stNormalResult.xZ == 0)) {
+                        p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[0]].xX = stNormalResult.xX + p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[0]].xX;
+                        p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[0]].xY = stNormalResult.xY + p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[0]].xY;
+                        p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[0]].xZ = stNormalResult.xZ + p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[0]].xZ;
+                        p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[1]].xX = stNormalResult.xX + p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[1]].xX;
+                        p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[1]].xY = stNormalResult.xY + p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[1]].xY;
+                        p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[1]].xZ = stNormalResult.xZ + p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[1]].xZ;
+                        p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[2]].xX = stNormalResult.xX + p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[2]].xX;
+                        p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[2]].xY = stNormalResult.xY + p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[2]].xY;
+                        p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[2]].xZ = stNormalResult.xZ + p_stObj->d_stListOfPointsNormals[p_stITCur->a3_xIndex[2]].xZ;
+                        xX = p_stLocalElement->d_stListOfFacesNormals[xFace].xX; xY = p_stLocalElement->d_stListOfFacesNormals[xFace].xY; xZ = p_stLocalElement->d_stListOfFacesNormals[xFace].xZ;
+                        MTH_SQR3_TO(xNorm, xX, xY, xZ);
+                        MTH_SQRT_TO(xNorm, xNorm);
+                        if (xNorm != 0) {
+                            xNorm = 1.0f / xNorm;
+                            p_stLocalElement->d_stListOfFacesNormals[xFace].xX = xNorm * xX;
+                            p_stLocalElement->d_stListOfFacesNormals[xFace].xY *= xNorm;
+                            p_stLocalElement->d_stListOfFacesNormals[xFace].xZ *= xNorm;
+                        }
+                    }
+                }
+            } else if (((short*)p_stObj->d_xListOfElementsTypes)[xIndex] == 2) {
+                p_stLocalElementFMD = ((GEO_tdstElementFaceMapDescriptors_**)p_stObj->d_stListOfElements)[xIndex];
+                p_stITLastFMD = p_stLocalElementFMD->d_stListOfFacesQuadrupled + p_stLocalElementFMD->xNbFaces;
+                xFace = 0;
+                for (p_stITCurFMD = p_stLocalElementFMD->d_stListOfFacesQuadrupled; p_stITCurFMD < p_stITLastFMD; p_stITCurFMD++, xFace++) {
+                    p_stV2 = &p_stObj->d_stListOfPoints[p_stITCurFMD->stFaceTripled.a3_xIndex[2]];
+                    p_stV1 = &p_stObj->d_stListOfPoints[p_stITCurFMD->stFaceTripled.a3_xIndex[1]];
+                    p_stV0 = &p_stObj->d_stListOfPoints[p_stITCurFMD->stFaceTripled.a3_xIndex[0]];
+                    GEO_M_vFaceNormal(&stNormalResult, p_stV0, p_stV1, p_stV2);
+                    p_stLocalElementFMD->d_stListOfFacesNormals[xFace] = stNormalResult;
+                    if (!(stNormalResult.xX == 0 && stNormalResult.xY == 0 && stNormalResult.xZ == 0)) {
+                        p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[0]].xX = stNormalResult.xX + p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[0]].xX;
+                        p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[0]].xY = stNormalResult.xY + p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[0]].xY;
+                        p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[0]].xZ = stNormalResult.xZ + p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[0]].xZ;
+                        p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[1]].xX = stNormalResult.xX + p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[1]].xX;
+                        p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[1]].xY = stNormalResult.xY + p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[1]].xY;
+                        p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[1]].xZ = stNormalResult.xZ + p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[1]].xZ;
+                        p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[2]].xX = stNormalResult.xX + p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[2]].xX;
+                        p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[2]].xY = stNormalResult.xY + p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[2]].xY;
+                        p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[2]].xZ = stNormalResult.xZ + p_stObj->d_stListOfPointsNormals[p_stITCurFMD->stFaceTripled.a3_xIndex[2]].xZ;
+                        xX = p_stLocalElementFMD->d_stListOfFacesNormals[xFace].xX; xY = p_stLocalElementFMD->d_stListOfFacesNormals[xFace].xY; xZ = p_stLocalElementFMD->d_stListOfFacesNormals[xFace].xZ;
+                        MTH_SQR3_TO(xNorm, xX, xY, xZ);
+                        MTH_SQRT_TO(xNorm, xNorm);
+                        if (xNorm != 0) {
+                            xNorm = 1.0f / xNorm;
+                            p_stLocalElementFMD->d_stListOfFacesNormals[xFace].xX = xNorm * xX;
+                            p_stLocalElementFMD->d_stListOfFacesNormals[xFace].xY *= xNorm;
+                            p_stLocalElementFMD->d_stListOfFacesNormals[xFace].xZ *= xNorm;
+                        }
+                    }
+                }
+            }
+        }
+        p_stVertexLast = p_stObj->d_stListOfPointsNormals + p_stObj->xNbPoints;
+        for (p_stVertex = p_stObj->d_stListOfPointsNormals; p_stVertex < p_stVertexLast; p_stVertex++) {
+            if (p_stVertex->xX == 0 && p_stVertex->xY == 0 && p_stVertex->xZ == 0) {
+                p_stVertex->xX = 0;
+                p_stVertex->xY = 0;
+                p_stVertex->xZ = 1.0f;
+            } else {
+                xX = p_stVertex->xX; xY = p_stVertex->xY; xZ = p_stVertex->xZ;
+                        MTH_SQR3_TO(xNorm, xX, xY, xZ);
+                MTH_SQRT_TO(xNorm, xNorm);
+                if (xNorm != 0) {
+                    xNorm = 1.0f / xNorm;
+                    p_stVertex->xX = xNorm * xX;
+                    p_stVertex->xY *= xNorm;
+                    p_stVertex->xZ *= xNorm;
+                }
             }
         }
     }

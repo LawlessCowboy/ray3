@@ -25,6 +25,16 @@ extern unsigned char INO_gs_ucINOInitOK;
 extern int INO_gs_a_tdhDevice[2];
 extern short INOPS2_fn_wInit(void);
 
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+short INO_fn_wInit(void);
+unsigned int INO_fn_ulJoyPreviousButtons(stDevice* _hDev);
+
+unsigned int INO_fn_ulJoyPreviousButtons(stDevice* _hDev)
+{
+    return *(unsigned int*)((char*)_hDev->m_p_stLastState + 4);
+}
+
 short INO_fn_wInit(void)
 {
     if (!INO_gs_ucINOInitOK) {
@@ -34,9 +44,4 @@ short INO_fn_wInit(void)
         }
     }
     return INO_gs_ucINOInitOK;
-}
-
-unsigned int INO_fn_ulJoyPreviousButtons(stDevice* _hDev)
-{
-    return *(unsigned int*)((char*)_hDev->m_p_stLastState + 4);
 }

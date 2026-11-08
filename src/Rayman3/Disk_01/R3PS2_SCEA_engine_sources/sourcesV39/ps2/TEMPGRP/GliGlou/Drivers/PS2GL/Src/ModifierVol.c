@@ -1494,30 +1494,18 @@ int PS2glAllocator64;
  */
 void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
 
-void GLI_xCreateCamera(GLI_tdstCamera_** h_stCam, int lCameraMode)
-{
-    *h_stCam = (GLI_tdstCamera_*)HMU_fn_p_vMalloc(0x100, 0);
-    if (*h_stCam != NULL)
-    {
-        (*h_stCam)->lCameraMode = lCameraMode;
-        switch ((*h_stCam)->lCameraMode)
-        {
-        case 100:
-        case 101:
-            (*h_stCam)->xAlphaX = 1.0f;
-            (*h_stCam)->xAlphaY = 1.0f;
-            break;
-        case 102:
-        case 103:
-            (*h_stCam)->xAlphaX = 0.7853982f;
-            (*h_stCam)->xAlphaY = 0.7853982f;
-            break;
-        }
-        (*h_stCam)->xNear = 0.25f;
-        (*h_stCam)->xFar = 10000.0f;
-        (*h_stCam)->xRatio = (*h_stCam)->xAlphaY / (*h_stCam)->xAlphaX;
-    }
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void GLI_xCreateCamera(GLI_tdstCamera_** h_stCam, int lCameraMode);
+void GLI_vDrawDynamicShadowElem_OnlyLonelyEdges(GEO_tdstElementIndexedTriangles_* p_stEIT, int lUnused, GEO_tdstGeometricObject_* p_stObj);
+void GLI_vDrawVisualSetDynamicShadow(GEO_tdstVisualSet_* p_stVisualSet);
+void GLI_vDrawDynamicShadow(void);
+void GLI_vClearShadowVolumes(void);
+void GLI_vStartDrawingShadowVolume(void);
+void SwapShadowBuffers(void);
+void GLI_vComputeEdges(void);
+void GLI_vSetDynShadowParam(unsigned char bOnOff, void* pUnused, float fNewLenght, unsigned int ulNewLevel, unsigned char bCloseState);
+void GLI_vSetDynShadowState(unsigned char bOnOff);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\ModifierVol.c lines 914–1203 */
 /* addr: 0x002b2340  size: 1104 bytes */
@@ -1717,40 +1705,6 @@ void GLI_xCreateCamera(GLI_tdstCamera_** h_stCam, int lCameraMode)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vDrawDynamicShadowElem_OnlyLonelyEdges(GEO_tdstElementIndexedTriangles_* p_stEIT, int lUnused, GEO_tdstGeometricObject_* p_stObj)
-{
-    float Local_GLI_g_EndOfCone[4];
-    float Local_GLI_gs_stShadowLightDirectionObjMulLow[4];
-    char* p_xEdgeListMustDraw;
-    char cValue;
-    int retval;
-    unsigned int* p_stPointIndexDW;
-    unsigned short* param0;
-    unsigned int ADC;
-    unsigned int Local_GlobalShadowNextPointBack;
-    unsigned int Local_GlobalShadowNextPointFront;
-    float (*pBack)[4];
-    float (*pFront)[4];
-    GLI_tdstAligned3DVector_* pTurnedPoints;
-    unsigned int NbEdgesLoop;
-    GEO_tdstDoubledIndexDWORD_* p_ObjEdges;
-    GEO_tdstDoubledIndexDWORD_* p_stEdges;
-    float a4_stVecTable[6][4];
-    unsigned int xIndexE3;
-    unsigned int xIndexE2;
-    unsigned int xIndexE1;
-    unsigned int xIndexC;
-    unsigned int xIndexB;
-    unsigned int xIndexA;
-    float Local_GLI_gs_stShadowLightDirectionObj[4];
-    float (*pPointC)[4];
-    float (*pPointB)[4];
-    float (*pPointA)[4];
-    char* p_cEdgeListFlags;
-    char* p_cEdgeListDirection;
-    unsigned int ulFaceCpt;
-    /* TODO: decompile from asm/... */
-}
 
 void GLI_vDrawDynamicShadow(void);
 MAT_tdstTransformation_* HIE_fn_pGetCurrentInCamCoordsMatrix(void);
@@ -1780,10 +1734,6 @@ static inline void GLI_vDrawObjectDynamicShadow(int p_stObj)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vDrawVisualSetDynamicShadow(GEO_tdstVisualSet_* p_stVisualSet)
-{
-    GLI_vDrawObjectDynamicShadow(*(int*)p_stVisualSet->d_p_stLodDefinitions);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\ModifierVol.c lines 618–795 */
 /* addr: 0x002b2860  size: 916 bytes */
@@ -1884,6 +1834,296 @@ void MTH4D_fn_vSerialMul4DMatrix3DVertexTo4DAlignedDest_VU0(void* _p_stDest, voi
 void GLI_vAddShadowVolumeDisplayList(unsigned int _ulFront, unsigned int _ulBack, float* _p_stMatrix);
 void GLI_vStartDrawingShadowVolume(void);
 void GLI_vDrawDynamicShadowElem_OnlyLonelyEdges(GEO_tdstElementIndexedTriangles_* _p_stEIT, int _unused, GEO_tdstGeometricObject_* _p_stObj);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\ModifierVol.c lines 419–429 */
+/* addr: 0x002b2c00  size: 108 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 419
+ *   +0x0008 -> line 420
+ *   +0x0014 -> line 422
+ *   +0x0020 -> line 423
+ *   +0x0030 -> line 424
+ *   +0x0040 -> line 425
+ *   +0x0050 -> line 426
+ *   +0x005c -> line 427
+ *   +0x0060 -> line 429
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\ModifierVol.c lines 337–416 */
+/* addr: 0x002b2c70  size: 1220 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 337
+ *   +0x0008 -> line 338
+ *   +0x0014 -> line 342
+ *   +0x0028 -> line 343
+ *   +0x0038 -> line 346
+ *   +0x004c -> line 347
+ *   +0x005c -> line 349
+ *   +0x0068 -> line 350
+ *   +0x006c -> line 351
+ *   +0x0074 -> line 355
+ *   +0x0088 -> line 356
+ *   +0x0098 -> line 358
+ *   +0x00a4 -> line 359
+ *   +0x00b4 -> line 360
+ *   +0x00bc -> line 361
+ *   +0x00c0 -> line 362
+ *   +0x00c8 -> line 365
+ *   +0x00dc -> line 366
+ *   +0x00ec -> line 368
+ *   +0x00f8 -> line 369
+ *   +0x0108 -> line 370
+ *   +0x0118 -> line 371
+ *   +0x0120 -> line 372
+ *   +0x0128 -> line 373
+ *   +0x012c -> line 374
+ *   +0x0134 -> line 377
+ *   +0x0144 -> line 378
+ *   +0x0150 -> line 380
+ *   +0x0160 -> line 381
+ *   +0x0170 -> line 382
+ *   +0x0180 -> line 383
+ *   +0x0190 -> line 384
+ *   +0x0198 -> line 385
+ *   +0x01a0 -> line 386
+ *   +0x01a8 -> line 387
+ *   +0x01ac -> line 388
+ *   +0x01b4 -> line 393
+ *   +0x01b8 -> line 395
+ *   +0x01bc -> line 399
+ *   +0x01c4 -> line 396
+ *   +0x01c8 -> line 395
+ *   +0x01cc -> line 396
+ *   +0x01d4 -> line 401
+ *   +0x01dc -> line 404
+ *   +0x01e0 -> line 401
+ *   +0x01e4 -> line 404
+ *   +0x01e8 -> line 401
+ *   +0x01ec -> line 402
+ *   +0x01f0 -> line 401
+ *   +0x01f4 -> line 402
+ *   +0x01fc -> line 403
+ *   +0x0200 -> line 402
+ *   +0x0204 -> line 403
+ *   +0x020c -> line 404
+ *   +0x0210 -> line 403
+ *   +0x0214 -> line 404
+ *   +0x03f4 -> line 401
+ *   +0x03f8 -> line 404
+ *   +0x03fc -> line 405
+ *   +0x0400 -> line 404
+ *   +0x0404 -> line 405
+ *   +0x0408 -> line 404
+ *   +0x0440 -> line 405
+ *   +0x0448 -> line 408
+ *   +0x044c -> line 410
+ *   +0x0450 -> line 412
+ *   +0x0498 -> line 413
+ *   +0x049c -> line 412
+ *   +0x04a0 -> line 413
+ *   +0x04a4 -> line 412
+ *   +0x04a8 -> line 413
+ *   +0x04b8 -> line 416
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\ModifierVol.c lines 329–332 */
+/* addr: 0x002b3140  size: 64 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 329
+ *   +0x0004 -> line 330
+ *   +0x0008 -> line 331
+ *   +0x000c -> line 330
+ *   +0x0010 -> line 331
+ *   +0x0014 -> line 329
+ *   +0x001c -> line 330
+ *   +0x0028 -> line 331
+ *   +0x002c -> line 330
+ *   +0x0034 -> line 331
+ *   +0x0038 -> line 332
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\ModifierVol.c lines 191–235 */
+/* addr: 0x002b3180  size: 884 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 191
+ *   +0x0024 -> line 200
+ *   +0x0028 -> line 191
+ *   +0x0030 -> line 202
+ *   +0x0034 -> line 204
+ *   +0x003c -> line 207
+ *   +0x0054 -> line 209
+ *   +0x0060 -> line 211
+ *   +0x0098 -> line 215
+ *   +0x00a0 -> line 213
+ *   +0x00a4 -> line 215
+ *   +0x00b8 -> line 218
+ *   +0x00c0 -> line 220
+ *   +0x0168 -> line 221
+ *   +0x016c -> line 220
+ *   +0x0170 -> line 221
+ *   +0x0218 -> line 222
+ *   +0x021c -> line 221
+ *   +0x0220 -> line 222
+ *   +0x02c8 -> line 224
+ *   +0x02cc -> line 222
+ *   +0x02d0 -> line 226
+ *   +0x02d4 -> line 225
+ *   +0x02d8 -> line 226
+ *   +0x02e8 -> line 229
+ *   +0x02f0 -> line 226
+ *   +0x02f8 -> line 229
+ *   +0x031c -> line 230
+ *   +0x032c -> line 232
+ *   +0x0330 -> line 230
+ *   +0x0334 -> line 232
+ *   +0x0344 -> line 234
+ *   +0x034c -> line 235
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+/* Search the global edge list for the edge (iA,iB); append it when missing. */
+#define GLI_M_xGetEdgeIndex(lResult, iA, iB)                                                 \
+    do {                                                                                     \
+        GEO_tdstDoubledIndexDWORD_* pEdge;                                                    \
+        int lIdx;                                                                             \
+        short sA = (iA);                                                                      \
+        short sB = (iB);                                                                      \
+        long lA = sA;                                                                         \
+        long lB = sB;                                                                         \
+        pEdge = p_stListOfEdges;                                                              \
+        for (lIdx = 0; lIdx < (int)ulNbrEdge; lIdx++, pEdge++)                                \
+        {                                                                                     \
+            if ((pEdge->a2_xIndex[0] == lA && pEdge->a2_xIndex[1] == lB) ||                    \
+                (pEdge->a2_xIndex[0] == lB && pEdge->a2_xIndex[1] == lA))                       \
+            {                                                                                 \
+                break;                                                                        \
+            }                                                                                 \
+        }                                                                                     \
+        if (lIdx == (int)ulNbrEdge)                                                           \
+        {                                                                                     \
+            pEdge->a2_xIndex[0] = sA;                                                         \
+            pEdge->a2_xIndex[1] = sB;                                                         \
+            (lResult) = ulNbrEdge;                                                            \
+            ulNbrEdge++;                                                                      \
+        }                                                                                     \
+        else                                                                                  \
+        {                                                                                     \
+            (lResult) = lIdx;                                                                 \
+        }                                                                                     \
+    } while (0)
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\ModifierVol.c lines 154–159 */
+/* addr: 0x002b3500  size: 20 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 154
+ *   +0x0004 -> line 157
+ *   +0x0008 -> line 156
+ *   +0x000c -> line 159
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\ModifierVol.c lines 148–148 */
+/* addr: 0x002b3520  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 148
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void GLI_vSetDynShadowState(unsigned char bOnOff)
+{
+    GLI_g_bDynShadowIsOn = bOnOff;
+}
+
+void GLI_vSetDynShadowParam(unsigned char bOnOff, void* pUnused, float fNewLenght, unsigned int ulNewLevel, unsigned char bCloseState)
+{
+    GLI_g_bDynShadowIsOn = bOnOff;
+    GLI_g_fDynShadowLenght = fNewLenght;
+    GLI_g_ulDynShadowLevel = ulNewLevel;
+    GLI_g_bDynShadowClosed = bCloseState;
+}
+
+void GLI_vComputeEdges(void)
+{
+    GEO_tdstTripledIndex_* p_stPointIndex;
+    GEO_tdstDoubledIndexDWORD_* p_stListOfEdges;
+    short xElementCounter;
+    unsigned int ulNbrEdge;
+    GEO_tdstElementIndexedTriangles_* p_stEIT;
+    GEO_tdstTripledIndexDWORD_* p_stEdgeIndex;
+    unsigned int ulFaceIndex;
+    short sResult;
+    int bOk;
+
+    ulNbrEdge = 0;
+    p_stListOfEdges = (GEO_tdstDoubledIndexDWORD_*)GLI_BIG_GLOBALS_GLI_TurnedScaledDisplecedPoint;
+    for (xElementCounter = 0; xElementCounter < ((GEO_tdstGeometricObject_*)GLI_BIG_GLOBALS_p_stObj)->xNbElements; xElementCounter++)
+    {
+        if (((short*)((GEO_tdstGeometricObject_*)GLI_BIG_GLOBALS_p_stObj)->d_xListOfElementsTypes)[xElementCounter] != 1)
+            continue;
+        p_stEIT = ((GEO_tdstElementIndexedTriangles_**)((GEO_tdstGeometricObject_*)GLI_BIG_GLOBALS_p_stObj)->d_stListOfElements)[xElementCounter];
+        bOk = 0;
+        if (p_stEIT->hVisualMaterial != NULL)
+        {
+            if (p_stEIT->hVisualMaterial->lMaterialAdditionnalType & 8)
+            {
+                bOk = 1;
+            }
+        }
+        if (bOk)
+        {
+            p_stEdgeIndex = (GEO_tdstTripledIndexDWORD_*)HMU_fn_p_vMalloc(p_stEIT->xNbFaces * 3 * sizeof(GEO_tdstTripledIndexDWORD_), 1);
+            p_stEIT->d_stListOfFacesEdges = (GEO_tdstTripledIndex_*)p_stEdgeIndex;
+            p_stPointIndex = p_stEIT->d_stListOfFacesTripled;
+            for (ulFaceIndex = 0; ulFaceIndex < p_stEIT->xNbFaces; ulFaceIndex++, p_stPointIndex++, p_stEdgeIndex++)
+            {
+                GLI_M_xGetEdgeIndex(sResult, p_stPointIndex->a3_xIndex[0], p_stPointIndex->a3_xIndex[1]);
+                p_stEdgeIndex->a3_xIndex[0] = sResult;
+                GLI_M_xGetEdgeIndex(sResult, p_stPointIndex->a3_xIndex[1], p_stPointIndex->a3_xIndex[2]);
+                p_stEdgeIndex->a3_xIndex[1] = sResult;
+                GLI_M_xGetEdgeIndex(sResult, p_stPointIndex->a3_xIndex[2], p_stPointIndex->a3_xIndex[0]);
+                p_stEdgeIndex->a3_xIndex[2] = sResult;
+            }
+        }
+    }
+    ((GEO_tdstGeometricObject_*)GLI_BIG_GLOBALS_p_stObj)->d_stListOfEdgesDI = (GEO_tdstDoubledIndex_*)HMU_fn_p_vMalloc(ulNbrEdge * sizeof(GEO_tdstDoubledIndexDWORD_), 1);
+    memcpy(((GEO_tdstGeometricObject_*)GLI_BIG_GLOBALS_p_stObj)->d_stListOfEdgesDI, p_stListOfEdges, ulNbrEdge * sizeof(GEO_tdstDoubledIndexDWORD_));
+    ((GEO_tdstGeometricObject_*)GLI_BIG_GLOBALS_p_stObj)->xNbEdgesDI = (short)ulNbrEdge;
+}
+
+void SwapShadowBuffers(void)
+{
+    GLI_g_CurrentShadowArray ^= 1;
+    GLI_g_CurrentShadowVertexArrayFront = GLI_g_GlobalShadowVertexArray[GLI_g_CurrentShadowArray][0];
+    GLI_g_CurrentShadowVertexArrayBack = GLI_g_GlobalShadowVertexArray[GLI_g_CurrentShadowArray][1];
+}
+
+void GLI_vStartDrawingShadowVolume(void)
+{
+    unsigned int* pColor;
+    unsigned int i;
+    /* TODO: decompile from asm/... */
+}
+
+void GLI_vClearShadowVolumes(void)
+{
+    if (GLI_g_GlobalShadowColorArray)
+    {
+        PS2glLiberator((void*)GLI_g_GlobalShadowVertexArray[0][0]);
+        PS2glLiberator((void*)GLI_g_GlobalShadowVertexArray[0][1]);
+        PS2glLiberator((void*)GLI_g_GlobalShadowVertexArray[1][0]);
+        PS2glLiberator((void*)GLI_g_GlobalShadowVertexArray[1][1]);
+        PS2glLiberator((void*)GLI_g_GlobalShadowColorArray);
+        GLI_g_GlobalShadowColorArray = 0;
+    }
+}
 
 void GLI_vDrawDynamicShadow(void)
 {
@@ -1989,287 +2229,67 @@ void GLI_vDrawDynamicShadow(void)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\ModifierVol.c lines 419–429 */
-/* addr: 0x002b2c00  size: 108 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 419
- *   +0x0008 -> line 420
- *   +0x0014 -> line 422
- *   +0x0020 -> line 423
- *   +0x0030 -> line 424
- *   +0x0040 -> line 425
- *   +0x0050 -> line 426
- *   +0x005c -> line 427
- *   +0x0060 -> line 429
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GLI_vClearShadowVolumes(void)
+void GLI_vDrawVisualSetDynamicShadow(GEO_tdstVisualSet_* p_stVisualSet)
 {
-    if (GLI_g_GlobalShadowColorArray)
-    {
-        PS2glLiberator((void*)GLI_g_GlobalShadowVertexArray[0][0]);
-        PS2glLiberator((void*)GLI_g_GlobalShadowVertexArray[0][1]);
-        PS2glLiberator((void*)GLI_g_GlobalShadowVertexArray[1][0]);
-        PS2glLiberator((void*)GLI_g_GlobalShadowVertexArray[1][1]);
-        PS2glLiberator((void*)GLI_g_GlobalShadowColorArray);
-        GLI_g_GlobalShadowColorArray = 0;
-    }
+    GLI_vDrawObjectDynamicShadow(*(int*)p_stVisualSet->d_p_stLodDefinitions);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\ModifierVol.c lines 337–416 */
-/* addr: 0x002b2c70  size: 1220 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 337
- *   +0x0008 -> line 338
- *   +0x0014 -> line 342
- *   +0x0028 -> line 343
- *   +0x0038 -> line 346
- *   +0x004c -> line 347
- *   +0x005c -> line 349
- *   +0x0068 -> line 350
- *   +0x006c -> line 351
- *   +0x0074 -> line 355
- *   +0x0088 -> line 356
- *   +0x0098 -> line 358
- *   +0x00a4 -> line 359
- *   +0x00b4 -> line 360
- *   +0x00bc -> line 361
- *   +0x00c0 -> line 362
- *   +0x00c8 -> line 365
- *   +0x00dc -> line 366
- *   +0x00ec -> line 368
- *   +0x00f8 -> line 369
- *   +0x0108 -> line 370
- *   +0x0118 -> line 371
- *   +0x0120 -> line 372
- *   +0x0128 -> line 373
- *   +0x012c -> line 374
- *   +0x0134 -> line 377
- *   +0x0144 -> line 378
- *   +0x0150 -> line 380
- *   +0x0160 -> line 381
- *   +0x0170 -> line 382
- *   +0x0180 -> line 383
- *   +0x0190 -> line 384
- *   +0x0198 -> line 385
- *   +0x01a0 -> line 386
- *   +0x01a8 -> line 387
- *   +0x01ac -> line 388
- *   +0x01b4 -> line 393
- *   +0x01b8 -> line 395
- *   +0x01bc -> line 399
- *   +0x01c4 -> line 396
- *   +0x01c8 -> line 395
- *   +0x01cc -> line 396
- *   +0x01d4 -> line 401
- *   +0x01dc -> line 404
- *   +0x01e0 -> line 401
- *   +0x01e4 -> line 404
- *   +0x01e8 -> line 401
- *   +0x01ec -> line 402
- *   +0x01f0 -> line 401
- *   +0x01f4 -> line 402
- *   +0x01fc -> line 403
- *   +0x0200 -> line 402
- *   +0x0204 -> line 403
- *   +0x020c -> line 404
- *   +0x0210 -> line 403
- *   +0x0214 -> line 404
- *   +0x03f4 -> line 401
- *   +0x03f8 -> line 404
- *   +0x03fc -> line 405
- *   +0x0400 -> line 404
- *   +0x0404 -> line 405
- *   +0x0408 -> line 404
- *   +0x0440 -> line 405
- *   +0x0448 -> line 408
- *   +0x044c -> line 410
- *   +0x0450 -> line 412
- *   +0x0498 -> line 413
- *   +0x049c -> line 412
- *   +0x04a0 -> line 413
- *   +0x04a4 -> line 412
- *   +0x04a8 -> line 413
- *   +0x04b8 -> line 416
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GLI_vStartDrawingShadowVolume(void)
+void GLI_vDrawDynamicShadowElem_OnlyLonelyEdges(GEO_tdstElementIndexedTriangles_* p_stEIT, int lUnused, GEO_tdstGeometricObject_* p_stObj)
 {
-    unsigned int* pColor;
-    unsigned int i;
+    float Local_GLI_g_EndOfCone[4];
+    float Local_GLI_gs_stShadowLightDirectionObjMulLow[4];
+    char* p_xEdgeListMustDraw;
+    char cValue;
+    int retval;
+    unsigned int* p_stPointIndexDW;
+    unsigned short* param0;
+    unsigned int ADC;
+    unsigned int Local_GlobalShadowNextPointBack;
+    unsigned int Local_GlobalShadowNextPointFront;
+    float (*pBack)[4];
+    float (*pFront)[4];
+    GLI_tdstAligned3DVector_* pTurnedPoints;
+    unsigned int NbEdgesLoop;
+    GEO_tdstDoubledIndexDWORD_* p_ObjEdges;
+    GEO_tdstDoubledIndexDWORD_* p_stEdges;
+    float a4_stVecTable[6][4];
+    unsigned int xIndexE3;
+    unsigned int xIndexE2;
+    unsigned int xIndexE1;
+    unsigned int xIndexC;
+    unsigned int xIndexB;
+    unsigned int xIndexA;
+    float Local_GLI_gs_stShadowLightDirectionObj[4];
+    float (*pPointC)[4];
+    float (*pPointB)[4];
+    float (*pPointA)[4];
+    char* p_cEdgeListFlags;
+    char* p_cEdgeListDirection;
+    unsigned int ulFaceCpt;
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\ModifierVol.c lines 329–332 */
-/* addr: 0x002b3140  size: 64 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 329
- *   +0x0004 -> line 330
- *   +0x0008 -> line 331
- *   +0x000c -> line 330
- *   +0x0010 -> line 331
- *   +0x0014 -> line 329
- *   +0x001c -> line 330
- *   +0x0028 -> line 331
- *   +0x002c -> line 330
- *   +0x0034 -> line 331
- *   +0x0038 -> line 332
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void SwapShadowBuffers(void)
+void GLI_xCreateCamera(GLI_tdstCamera_** h_stCam, int lCameraMode)
 {
-    GLI_g_CurrentShadowArray ^= 1;
-    GLI_g_CurrentShadowVertexArrayFront = GLI_g_GlobalShadowVertexArray[GLI_g_CurrentShadowArray][0];
-    GLI_g_CurrentShadowVertexArrayBack = GLI_g_GlobalShadowVertexArray[GLI_g_CurrentShadowArray][1];
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\ModifierVol.c lines 191–235 */
-/* addr: 0x002b3180  size: 884 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 191
- *   +0x0024 -> line 200
- *   +0x0028 -> line 191
- *   +0x0030 -> line 202
- *   +0x0034 -> line 204
- *   +0x003c -> line 207
- *   +0x0054 -> line 209
- *   +0x0060 -> line 211
- *   +0x0098 -> line 215
- *   +0x00a0 -> line 213
- *   +0x00a4 -> line 215
- *   +0x00b8 -> line 218
- *   +0x00c0 -> line 220
- *   +0x0168 -> line 221
- *   +0x016c -> line 220
- *   +0x0170 -> line 221
- *   +0x0218 -> line 222
- *   +0x021c -> line 221
- *   +0x0220 -> line 222
- *   +0x02c8 -> line 224
- *   +0x02cc -> line 222
- *   +0x02d0 -> line 226
- *   +0x02d4 -> line 225
- *   +0x02d8 -> line 226
- *   +0x02e8 -> line 229
- *   +0x02f0 -> line 226
- *   +0x02f8 -> line 229
- *   +0x031c -> line 230
- *   +0x032c -> line 232
- *   +0x0330 -> line 230
- *   +0x0334 -> line 232
- *   +0x0344 -> line 234
- *   +0x034c -> line 235
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-/* Search the global edge list for the edge (iA,iB); append it when missing. */
-#define GLI_M_xGetEdgeIndex(lResult, iA, iB)                                                 \
-    do {                                                                                     \
-        GEO_tdstDoubledIndexDWORD_* pEdge;                                                    \
-        int lIdx;                                                                             \
-        short sA = (iA);                                                                      \
-        short sB = (iB);                                                                      \
-        long lA = sA;                                                                         \
-        long lB = sB;                                                                         \
-        pEdge = p_stListOfEdges;                                                              \
-        for (lIdx = 0; lIdx < (int)ulNbrEdge; lIdx++, pEdge++)                                \
-        {                                                                                     \
-            if ((pEdge->a2_xIndex[0] == lA && pEdge->a2_xIndex[1] == lB) ||                    \
-                (pEdge->a2_xIndex[0] == lB && pEdge->a2_xIndex[1] == lA))                       \
-            {                                                                                 \
-                break;                                                                        \
-            }                                                                                 \
-        }                                                                                     \
-        if (lIdx == (int)ulNbrEdge)                                                           \
-        {                                                                                     \
-            pEdge->a2_xIndex[0] = sA;                                                         \
-            pEdge->a2_xIndex[1] = sB;                                                         \
-            (lResult) = ulNbrEdge;                                                            \
-            ulNbrEdge++;                                                                      \
-        }                                                                                     \
-        else                                                                                  \
-        {                                                                                     \
-            (lResult) = lIdx;                                                                 \
-        }                                                                                     \
-    } while (0)
-
-void GLI_vComputeEdges(void)
-{
-    GEO_tdstTripledIndex_* p_stPointIndex;
-    GEO_tdstDoubledIndexDWORD_* p_stListOfEdges;
-    short xElementCounter;
-    unsigned int ulNbrEdge;
-    GEO_tdstElementIndexedTriangles_* p_stEIT;
-    GEO_tdstTripledIndexDWORD_* p_stEdgeIndex;
-    unsigned int ulFaceIndex;
-    short sResult;
-    int bOk;
-
-    ulNbrEdge = 0;
-    p_stListOfEdges = (GEO_tdstDoubledIndexDWORD_*)GLI_BIG_GLOBALS_GLI_TurnedScaledDisplecedPoint;
-    for (xElementCounter = 0; xElementCounter < ((GEO_tdstGeometricObject_*)GLI_BIG_GLOBALS_p_stObj)->xNbElements; xElementCounter++)
+    *h_stCam = (GLI_tdstCamera_*)HMU_fn_p_vMalloc(0x100, 0);
+    if (*h_stCam != NULL)
     {
-        if (((short*)((GEO_tdstGeometricObject_*)GLI_BIG_GLOBALS_p_stObj)->d_xListOfElementsTypes)[xElementCounter] != 1)
-            continue;
-        p_stEIT = ((GEO_tdstElementIndexedTriangles_**)((GEO_tdstGeometricObject_*)GLI_BIG_GLOBALS_p_stObj)->d_stListOfElements)[xElementCounter];
-        bOk = 0;
-        if (p_stEIT->hVisualMaterial != NULL)
+        (*h_stCam)->lCameraMode = lCameraMode;
+        switch ((*h_stCam)->lCameraMode)
         {
-            if (p_stEIT->hVisualMaterial->lMaterialAdditionnalType & 8)
-            {
-                bOk = 1;
-            }
+        case 100:
+        case 101:
+            (*h_stCam)->xAlphaX = 1.0f;
+            (*h_stCam)->xAlphaY = 1.0f;
+            break;
+        case 102:
+        case 103:
+            (*h_stCam)->xAlphaX = 0.7853982f;
+            (*h_stCam)->xAlphaY = 0.7853982f;
+            break;
         }
-        if (bOk)
-        {
-            p_stEdgeIndex = (GEO_tdstTripledIndexDWORD_*)HMU_fn_p_vMalloc(p_stEIT->xNbFaces * 3 * sizeof(GEO_tdstTripledIndexDWORD_), 1);
-            p_stEIT->d_stListOfFacesEdges = (GEO_tdstTripledIndex_*)p_stEdgeIndex;
-            p_stPointIndex = p_stEIT->d_stListOfFacesTripled;
-            for (ulFaceIndex = 0; ulFaceIndex < p_stEIT->xNbFaces; ulFaceIndex++, p_stPointIndex++, p_stEdgeIndex++)
-            {
-                GLI_M_xGetEdgeIndex(sResult, p_stPointIndex->a3_xIndex[0], p_stPointIndex->a3_xIndex[1]);
-                p_stEdgeIndex->a3_xIndex[0] = sResult;
-                GLI_M_xGetEdgeIndex(sResult, p_stPointIndex->a3_xIndex[1], p_stPointIndex->a3_xIndex[2]);
-                p_stEdgeIndex->a3_xIndex[1] = sResult;
-                GLI_M_xGetEdgeIndex(sResult, p_stPointIndex->a3_xIndex[2], p_stPointIndex->a3_xIndex[0]);
-                p_stEdgeIndex->a3_xIndex[2] = sResult;
-            }
-        }
+        (*h_stCam)->xNear = 0.25f;
+        (*h_stCam)->xFar = 10000.0f;
+        (*h_stCam)->xRatio = (*h_stCam)->xAlphaY / (*h_stCam)->xAlphaX;
     }
-    ((GEO_tdstGeometricObject_*)GLI_BIG_GLOBALS_p_stObj)->d_stListOfEdgesDI = (GEO_tdstDoubledIndex_*)HMU_fn_p_vMalloc(ulNbrEdge * sizeof(GEO_tdstDoubledIndexDWORD_), 1);
-    memcpy(((GEO_tdstGeometricObject_*)GLI_BIG_GLOBALS_p_stObj)->d_stListOfEdgesDI, p_stListOfEdges, ulNbrEdge * sizeof(GEO_tdstDoubledIndexDWORD_));
-    ((GEO_tdstGeometricObject_*)GLI_BIG_GLOBALS_p_stObj)->xNbEdgesDI = (short)ulNbrEdge;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\ModifierVol.c lines 154–159 */
-/* addr: 0x002b3500  size: 20 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 154
- *   +0x0004 -> line 157
- *   +0x0008 -> line 156
- *   +0x000c -> line 159
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GLI_vSetDynShadowParam(unsigned char bOnOff, void* pUnused, float fNewLenght, unsigned int ulNewLevel, unsigned char bCloseState)
-{
-    GLI_g_bDynShadowIsOn = bOnOff;
-    GLI_g_fDynShadowLenght = fNewLenght;
-    GLI_g_ulDynShadowLevel = ulNewLevel;
-    GLI_g_bDynShadowClosed = bCloseState;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\ModifierVol.c lines 148–148 */
-/* addr: 0x002b3520  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 148
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GLI_vSetDynShadowState(unsigned char bOnOff)
-{
-    GLI_g_bDynShadowIsOn = bOnOff;
 }

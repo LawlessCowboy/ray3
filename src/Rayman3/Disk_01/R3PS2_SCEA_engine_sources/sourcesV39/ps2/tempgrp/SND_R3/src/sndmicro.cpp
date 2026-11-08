@@ -67,12 +67,17 @@ template <class T> void TTypedVar<T>::f_vSetValue(T oValue)
 template struct TTypedVar<float>;
 }
 
-extern "C" void SND_fn_vSetRetMicroSound(_tdstAllRetMicroSound* pst_IMicro)
-{
-    CLinkMicroCont::mfn_roGetInstance()->mfn_bSetMicroInterface(pst_IMicro);
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+extern "C" void SND_fn_vSetRetMicroSound(_tdstAllRetMicroSound* pst_IMicro);
+extern "C" void SND_fn_vDestroyMicroSound(int s32_MicroId);
 
 extern "C" void SND_fn_vDestroyMicroSound(int s32_MicroId)
 {
     CLinkMicroCont::mfn_roGetInstance()->mfn_bRemoveMicroInstance(s32_MicroId);
+}
+
+extern "C" void SND_fn_vSetRetMicroSound(_tdstAllRetMicroSound* pst_IMicro)
+{
+    CLinkMicroCont::mfn_roGetInstance()->mfn_bSetMicroInterface(pst_IMicro);
 }

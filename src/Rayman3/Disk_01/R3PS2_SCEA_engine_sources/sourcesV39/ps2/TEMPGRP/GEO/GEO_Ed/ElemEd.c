@@ -201,32 +201,23 @@ void MAT_fn_vCompose(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _
  * matrix in a3. */
 int GEO_lMainCullingSphere(GLD_tdstViewportAttributes_* p_stVpt, MTH3D_tdstVector_* p_stShereCenter, float xRadius, MAT_tdstTransformation_* p_stMatrix, MAT_tdstTransformation_* p_stObjectMatrix, int _lCullingResult);
 
-int GEO_lCullingSphere(GLD_tdstViewportAttributes_* p_stVpt, MTH3D_tdstVector_* p_stSphereCenter, float xRadius, MAT_tdstTransformation_* p_stMatrix, int _lCullingResult)
-{
-    MAT_tdstTransformation_ stTempMatrix;
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+int GEO_lCullingSphere(GLD_tdstViewportAttributes_* p_stVpt, MTH3D_tdstVector_* p_stSphereCenter, float xRadius, MAT_tdstTransformation_* p_stMatrix, int _lCullingResult);
+void GEO_vSetElementVisibleInPortalFlag(GEO_tdstGeometricObject_* hObject, short hElement, unsigned char bVisible);
+void GEO_vSetVisualMaterialOfIndexedTriangles(GEO_tdstGeometricObject_* hObject, short hElement, GLI_tdstMaterial_* hVisualMaterial);
+void GEO_vSetUVOfIndexedTriangles(GEO_tdstGeometricObject_* hObject, short hElement, short xIndexOfUV, ACP_tdst2DUVValues_* p_stUV);
+int GEO_lGetIndexedTriangleNbFaces(GEO_tdstGeometricObject_* hObject, short hElement);
+void GEO_vSetIndexedUVOfFaceOfIndexedTriangles(GEO_tdstGeometricObject_* hObject, short hElement, short xIndexOfFace, short xUV1, short xUV2, short xUV3);
+void GEO_vGetFaceOfIndexedTriangles(GEO_tdstGeometricObject_* hObject, short hElement, short xIndexOfFace, short* p_xPoint1, short* p_xPoint2, short* p_xPoint3);
 
-    MAT_fn_vCompose(&stTempMatrix, &((GLI_tdstCamera_*)((GLI_tdstSpecificAttributesFor3D_*)p_stVpt->p_vSpecificToXD)->p_stCam)->stMatrix, p_stMatrix);
-    return GEO_lMainCullingSphere(p_stVpt, p_stSphereCenter, xRadius, &stTempMatrix, p_stMatrix, _lCullingResult);
-}
-
-void GEO_vSetElementVisibleInPortalFlag(GEO_tdstGeometricObject_* hObject, short hElement, unsigned char bVisible)
+void GEO_vGetFaceOfIndexedTriangles(GEO_tdstGeometricObject_* hObject, short hElement, short xIndexOfFace, short* p_xPoint1, short* p_xPoint2, short* p_xPoint3)
 {
-    hObject->d_stListOfElements[hElement]->bVisibleInPortal = bVisible;
-}
-
-void GEO_vSetVisualMaterialOfIndexedTriangles(GEO_tdstGeometricObject_* hObject, short hElement, GLI_tdstMaterial_* hVisualMaterial)
-{
-    hObject->d_stListOfElements[hElement]->hVisualMaterial = hVisualMaterial;
-}
-
-void GEO_vSetUVOfIndexedTriangles(GEO_tdstGeometricObject_* hObject, short hElement, short xIndexOfUV, ACP_tdst2DUVValues_* p_stUV)
-{
-    hObject->d_stListOfElements[hElement]->d_stListOfElementUV[xIndexOfUV] = *p_stUV;
-}
-
-int GEO_lGetIndexedTriangleNbFaces(GEO_tdstGeometricObject_* hObject, short hElement)
-{
-    return hObject->d_stListOfElements[hElement]->xNbFaces;
+    GEO_tdstElementIndexedTriangles_* param0;
+    param0 = hObject->d_stListOfElements[hElement];
+    *p_xPoint1 = ((GEO_tdstTripledIndex_*)(param0->d_stListOfFacesTripled->a3_xIndex + 0))[xIndexOfFace].a3_xIndex[0];
+    *p_xPoint2 = ((GEO_tdstTripledIndex_*)(param0->d_stListOfFacesTripled->a3_xIndex + 1))[xIndexOfFace].a3_xIndex[0];
+    *p_xPoint3 = ((GEO_tdstTripledIndex_*)(param0->d_stListOfFacesTripled->a3_xIndex + 2))[xIndexOfFace].a3_xIndex[0];
 }
 
 void GEO_vSetIndexedUVOfFaceOfIndexedTriangles(GEO_tdstGeometricObject_* hObject, short hElement, short xIndexOfFace, short xUV1, short xUV2, short xUV3)
@@ -238,11 +229,30 @@ void GEO_vSetIndexedUVOfFaceOfIndexedTriangles(GEO_tdstGeometricObject_* hObject
     ((GEO_tdstTripledIndex_*)(param0->d_stListOfFacesTripledIndexUV->a3_xIndex + 2))[xIndexOfFace].a3_xIndex[0] = xUV3;
 }
 
-void GEO_vGetFaceOfIndexedTriangles(GEO_tdstGeometricObject_* hObject, short hElement, short xIndexOfFace, short* p_xPoint1, short* p_xPoint2, short* p_xPoint3)
+int GEO_lGetIndexedTriangleNbFaces(GEO_tdstGeometricObject_* hObject, short hElement)
 {
-    GEO_tdstElementIndexedTriangles_* param0;
-    param0 = hObject->d_stListOfElements[hElement];
-    *p_xPoint1 = ((GEO_tdstTripledIndex_*)(param0->d_stListOfFacesTripled->a3_xIndex + 0))[xIndexOfFace].a3_xIndex[0];
-    *p_xPoint2 = ((GEO_tdstTripledIndex_*)(param0->d_stListOfFacesTripled->a3_xIndex + 1))[xIndexOfFace].a3_xIndex[0];
-    *p_xPoint3 = ((GEO_tdstTripledIndex_*)(param0->d_stListOfFacesTripled->a3_xIndex + 2))[xIndexOfFace].a3_xIndex[0];
+    return hObject->d_stListOfElements[hElement]->xNbFaces;
+}
+
+void GEO_vSetUVOfIndexedTriangles(GEO_tdstGeometricObject_* hObject, short hElement, short xIndexOfUV, ACP_tdst2DUVValues_* p_stUV)
+{
+    hObject->d_stListOfElements[hElement]->d_stListOfElementUV[xIndexOfUV] = *p_stUV;
+}
+
+void GEO_vSetVisualMaterialOfIndexedTriangles(GEO_tdstGeometricObject_* hObject, short hElement, GLI_tdstMaterial_* hVisualMaterial)
+{
+    hObject->d_stListOfElements[hElement]->hVisualMaterial = hVisualMaterial;
+}
+
+void GEO_vSetElementVisibleInPortalFlag(GEO_tdstGeometricObject_* hObject, short hElement, unsigned char bVisible)
+{
+    hObject->d_stListOfElements[hElement]->bVisibleInPortal = bVisible;
+}
+
+int GEO_lCullingSphere(GLD_tdstViewportAttributes_* p_stVpt, MTH3D_tdstVector_* p_stSphereCenter, float xRadius, MAT_tdstTransformation_* p_stMatrix, int _lCullingResult)
+{
+    MAT_tdstTransformation_ stTempMatrix;
+
+    MAT_fn_vCompose(&stTempMatrix, &((GLI_tdstCamera_*)((GLI_tdstSpecificAttributesFor3D_*)p_stVpt->p_vSpecificToXD)->p_stCam)->stMatrix, p_stMatrix);
+    return GEO_lMainCullingSphere(p_stVpt, p_stSphereCenter, xRadius, &stTempMatrix, p_stMatrix, _lCullingResult);
 }

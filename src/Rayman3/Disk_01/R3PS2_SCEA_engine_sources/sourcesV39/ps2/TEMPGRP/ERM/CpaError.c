@@ -23,6 +23,63 @@ void Erm_fn_v_PrintErrMsgWithPersonalMsg(char* p_cTxt1, char* p_cTxt2, char* p_c
 
 /* Retail callers pass eight arguments and szPersonalMsg is read from t3; the
  * debug definition drops the three unreferenced middle parameters. */
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void Erm_fn_v_UpdateLastError(unsigned short uwStartOfWarningsId, unsigned char ucModuleId, unsigned int ulChannelId, unsigned short uwErrNum, int lDebugInfo, unsigned char ucOpenInfoWindow, unsigned char ucStopForDebug, char* szPersonalMsg);
+void Erm_fn_ClearLastError(unsigned int ulChannelId);
+unsigned char Erm_fn_ucInitErrMsg(void);
+void Erm_fn_vSetCallBackForExit(void (*_p_fn_ExitAppliCallBack)(void));
+
+void Erm_fn_vSetCallBackForExit(void (*_p_fn_ExitAppliCallBack)(void))
+{
+    p_fn_ExitAppliCallBack = (int)_p_fn_ExitAppliCallBack;
+}
+
+unsigned char Erm_fn_ucInitErrMsg(void)
+{
+    if (g_ucErmNbOfModule == 0)
+    {
+        g_stErmTheLastErrorInfo[0].uwLastErr = 0;
+        g_stErmTheLastErrorInfo[0].ulChannelId = 0;
+        g_stErmTheLastErrorInfo[1].uwLastErr = 0;
+        g_stErmTheLastErrorInfo[1].ulChannelId = 0;
+        g_stErmTheLastErrorInfo[2].uwLastErr = 0;
+        g_stErmTheLastErrorInfo[2].ulChannelId = 0;
+    }
+    return g_ucErmNbOfModule++;
+}
+
+void Erm_fn_ClearLastError(unsigned int ulChannelId)
+{
+    unsigned char ucI;
+    unsigned char ucJ;
+
+    for (ucI = 0; ucI < 3 && g_stErmTheLastErrorInfo[ucI].uwLastErr != 0 && g_stErmTheLastErrorInfo[ucI].ulChannelId != ulChannelId; ucI++)
+        ;
+
+    if (ucI < 3 && g_stErmTheLastErrorInfo[ucI].uwLastErr != 0)
+    {
+        g_stErmTheLastErrorInfo[ucI].uwLastErr = 0;
+        g_stErmTheLastErrorInfo[ucI].ulChannelId = 0;
+        Erm_fn_v_PrintErrMsg("Explicit request for clear of the last error", "");
+        ucJ = ucI + 1;
+        if (ucJ < 3 && g_stErmTheLastErrorInfo[ucJ].uwLastErr != 0)
+        {
+            for (; ucJ < 3 && g_stErmTheLastErrorInfo[ucJ].uwLastErr != 0; ucJ++)
+            {
+                g_stErmTheLastErrorInfo[ucJ - 1] = g_stErmTheLastErrorInfo[ucJ];
+                g_stErmTheLastErrorInfo[ucJ].uwLastErr = 0;
+                g_stErmTheLastErrorInfo[ucJ].ulChannelId = 0;
+            }
+        }
+    }
+    else
+    {
+        Erm_fn_v_PrintErrMsg("Explicit request for clear of the last error.\n But there is no error !", "");
+    }
+}
+
 void Erm_fn_v_UpdateLastError(unsigned short uwStartOfWarningsId, unsigned char ucModuleId, unsigned int ulChannelId, unsigned short uwErrNum, int lDebugInfo, unsigned char ucOpenInfoWindow, unsigned char ucStopForDebug, char* szPersonalMsg)
 {
     unsigned char ucI;
@@ -66,53 +123,4 @@ void Erm_fn_v_UpdateLastError(unsigned short uwStartOfWarningsId, unsigned char 
         else
             Erm_fn_v_PrintErrMsgWithPersonalMsg("Warning error: ", "", szPersonalMsg);
     }
-}
-
-void Erm_fn_ClearLastError(unsigned int ulChannelId)
-{
-    unsigned char ucI;
-    unsigned char ucJ;
-
-    for (ucI = 0; ucI < 3 && g_stErmTheLastErrorInfo[ucI].uwLastErr != 0 && g_stErmTheLastErrorInfo[ucI].ulChannelId != ulChannelId; ucI++)
-        ;
-
-    if (ucI < 3 && g_stErmTheLastErrorInfo[ucI].uwLastErr != 0)
-    {
-        g_stErmTheLastErrorInfo[ucI].uwLastErr = 0;
-        g_stErmTheLastErrorInfo[ucI].ulChannelId = 0;
-        Erm_fn_v_PrintErrMsg("Explicit request for clear of the last error", "");
-        ucJ = ucI + 1;
-        if (ucJ < 3 && g_stErmTheLastErrorInfo[ucJ].uwLastErr != 0)
-        {
-            for (; ucJ < 3 && g_stErmTheLastErrorInfo[ucJ].uwLastErr != 0; ucJ++)
-            {
-                g_stErmTheLastErrorInfo[ucJ - 1] = g_stErmTheLastErrorInfo[ucJ];
-                g_stErmTheLastErrorInfo[ucJ].uwLastErr = 0;
-                g_stErmTheLastErrorInfo[ucJ].ulChannelId = 0;
-            }
-        }
-    }
-    else
-    {
-        Erm_fn_v_PrintErrMsg("Explicit request for clear of the last error.\n But there is no error !", "");
-    }
-}
-
-unsigned char Erm_fn_ucInitErrMsg(void)
-{
-    if (g_ucErmNbOfModule == 0)
-    {
-        g_stErmTheLastErrorInfo[0].uwLastErr = 0;
-        g_stErmTheLastErrorInfo[0].ulChannelId = 0;
-        g_stErmTheLastErrorInfo[1].uwLastErr = 0;
-        g_stErmTheLastErrorInfo[1].ulChannelId = 0;
-        g_stErmTheLastErrorInfo[2].uwLastErr = 0;
-        g_stErmTheLastErrorInfo[2].ulChannelId = 0;
-    }
-    return g_ucErmNbOfModule++;
-}
-
-void Erm_fn_vSetCallBackForExit(void (*_p_fn_ExitAppliCallBack)(void))
-{
-    p_fn_ExitAppliCallBack = (int)_p_fn_ExitAppliCallBack;
 }

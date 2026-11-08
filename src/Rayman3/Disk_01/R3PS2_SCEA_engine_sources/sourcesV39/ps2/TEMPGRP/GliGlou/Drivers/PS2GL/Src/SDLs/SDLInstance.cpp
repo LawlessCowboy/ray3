@@ -1194,11 +1194,9 @@ inline void PS2_M_vCopyMatrix(float (*_src)[4], float (*_dst)[4])
     }
 }
 
-void GLI_vSaveCameraMatrix(void)
-{
-    PS2_M_vCopyMatrix(GLI_g_SDL_pNonInterpolatedCameraMatrix, GLI_g_PreviousCameraMatrix);
-    PS2_M_vCopyMatrix(GLI_g_SDL_pNonInterpolatedCameraMatrixMirror, GLI_g_PreviousCameraMatrixMirror);
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+extern "C" void GLI_vSaveCameraMatrix(void);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLInstance.cpp lines 193–224 */
 /* addr: 0x002d8570  size: 312 bytes */
@@ -1225,34 +1223,6 @@ void GLI_vSaveCameraMatrix(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void C_InstanceList::Stealth_RemoveAndDeleteInstance(_SDC_Instance_* pInstance)
-{
-    unsigned int i = 0;
-    unsigned int j;
-
-    for (; i < m_NbInstances && m_pList[i] != pInstance; i++);
-    if (i == m_NbInstances)
-        return;
-    if (pInstance->pVertexArray)
-    {
-        PS2glLiberator(pInstance->pVertexArray);
-    }
-    pInstance->pVertexArray = 0;
-    if (pInstance->pInstanceNormals)
-    {
-        PS2glLiberator(pInstance->pInstanceNormals);
-    }
-    pInstance->pInstanceNormals = 0;
-    if (pInstance->pSDL)
-    {
-        pInstance->pSDL->StealthDestroy();
-        delete pInstance->pSDL;
-        pInstance->pSDL = 0;
-    }
-    PS2glLiberator(pInstance);
-    for (j = i + 1; j < m_NbInstances; j++) m_pList[j - 1] = m_pList[j];
-    m_NbInstances--;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLInstance.cpp lines 173–181 */
 /* addr: 0x002d86b0  size: 136 bytes */
@@ -1265,20 +1235,6 @@ void C_InstanceList::Stealth_RemoveAndDeleteInstance(_SDC_Instance_* pInstance)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-_SDC_Instance_* C_InstanceList::SearchInstance(HIE_tdstSuperObject_* pSPO, unsigned int ulElementNumber)
-{
-    unsigned int i = 0;
-
-    if (!m_pList)
-        m_NbInstances = 0;
-
-    for (; i < m_NbInstances && (m_pList[i]->pSPO != pSPO || m_pList[i]->ulElementNumber != ulElementNumber); i++);
-
-    if (i == m_NbInstances)
-        return 0;
-
-    return m_pList[i];
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLInstance.cpp lines 150–164 */
 /* addr: 0x002d8740  size: 184 bytes */
@@ -1296,18 +1252,6 @@ _SDC_Instance_* C_InstanceList::SearchInstance(HIE_tdstSuperObject_* pSPO, unsig
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned int C_InstanceList::SearchAndDestroyInstanceForThisSPO(HIE_tdstSuperObject_* pSPO)
-{
-    unsigned int i = 0;
-    if (!m_pList)
-        m_NbInstances = 0;
-    for (; i < m_NbInstances && m_pList[i]->pSPO != pSPO; i++);
-    if (i == m_NbInstances)
-        return 0;
-    GLI_vRemoveInstanceFromDisplay(m_pList[i]);
-    DeleteInstance(m_pList[i]);
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLInstance.cpp lines 110–142 */
 /* addr: 0x002d8800  size: 304 bytes */
@@ -1334,34 +1278,6 @@ unsigned int C_InstanceList::SearchAndDestroyInstanceForThisSPO(HIE_tdstSuperObj
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void C_InstanceList::DeleteInstance(_SDC_Instance_* pInstance)
-{
-    unsigned int i = 0;
-    unsigned int j;
-
-    for (; i < m_NbInstances && m_pList[i] != pInstance; i++);
-    if (i == m_NbInstances)
-        return;
-    ((C_SdlCache*)GLI_g_SdlCache)->RemoveSdlInstance(pInstance);
-    if (pInstance->pVertexArray)
-    {
-        MyDelayedFree(pInstance->pVertexArray);
-    }
-    if (pInstance->pInstanceNormals)
-    {
-        MyDelayedFree(pInstance->pInstanceNormals);
-    }
-    pInstance->pInstanceNormals = 0;
-    pInstance->pVertexArray = 0;
-    if (pInstance->pSDL)
-    {
-        delete pInstance->pSDL;
-        pInstance->pSDL = 0;
-    }
-    PS2glLiberator(pInstance);
-    for (j = i + 1; j < m_NbInstances; j++) m_pList[j - 1] = m_pList[j];
-    m_NbInstances--;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLInstance.cpp lines 84–104 */
 /* addr: 0x002d8930  size: 220 bytes */
@@ -1386,24 +1302,6 @@ void C_InstanceList::DeleteInstance(_SDC_Instance_* pInstance)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-_SDC_Instance_* C_InstanceList::AddInstance(HIE_tdstSuperObject_* pSPO, float (*pVertexArray)[4], unsigned int* pInstanceNormals, C_Sdl* pSDL, unsigned int ulElementNumber)
-{
-    _SDC_Instance_* pInstance;
-
-    pInstance = (_SDC_Instance_*)PS2glAllocator64(0x20);
-    pInstance->pSPO = pSPO;
-    pInstance->pVertexArray = pVertexArray;
-    pInstance->pInstanceNormals = pInstanceNormals;
-    pInstance->pSDL = pSDL;
-    pInstance->ulFrameNumberForNormals = GLI_g_FrameNumber;
-    pInstance->ulFrameNumber = GLI_g_FrameNumber;
-    pInstance->ulElementNumber = ulElementNumber;
-    pInstance->pList = this;
-    ((C_SdlCache*)GLI_g_SdlCache)->AddSdlInstance(pInstance);
-    m_pList = (_SDC_Instance_**)PS2glReallocator(m_pList, (m_NbInstances + 1) * sizeof(void*));
-    m_pList[m_NbInstances++] = pInstance;
-    return pInstance;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLInstance.cpp lines 44–76 */
 /* addr: 0x002d8a10  size: 332 bytes */
@@ -1438,6 +1336,7 @@ _SDC_Instance_* C_InstanceList::AddInstance(HIE_tdstSuperObject_* pSPO, float (*
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
 C_InstanceList::~C_InstanceList(void)
 {
     unsigned int i;
@@ -1469,4 +1368,115 @@ C_InstanceList::~C_InstanceList(void)
     m_pList = 0;
     m_NbInstances = 0;
     GLI_g_InstanceLists--;
+}
+
+_SDC_Instance_* C_InstanceList::AddInstance(HIE_tdstSuperObject_* pSPO, float (*pVertexArray)[4], unsigned int* pInstanceNormals, C_Sdl* pSDL, unsigned int ulElementNumber)
+{
+    _SDC_Instance_* pInstance;
+
+    pInstance = (_SDC_Instance_*)PS2glAllocator64(0x20);
+    pInstance->pSPO = pSPO;
+    pInstance->pVertexArray = pVertexArray;
+    pInstance->pInstanceNormals = pInstanceNormals;
+    pInstance->pSDL = pSDL;
+    pInstance->ulFrameNumberForNormals = GLI_g_FrameNumber;
+    pInstance->ulFrameNumber = GLI_g_FrameNumber;
+    pInstance->ulElementNumber = ulElementNumber;
+    pInstance->pList = this;
+    ((C_SdlCache*)GLI_g_SdlCache)->AddSdlInstance(pInstance);
+    m_pList = (_SDC_Instance_**)PS2glReallocator(m_pList, (m_NbInstances + 1) * sizeof(void*));
+    m_pList[m_NbInstances++] = pInstance;
+    return pInstance;
+}
+
+void C_InstanceList::DeleteInstance(_SDC_Instance_* pInstance)
+{
+    unsigned int i = 0;
+    unsigned int j;
+
+    for (; i < m_NbInstances && m_pList[i] != pInstance; i++);
+    if (i == m_NbInstances)
+        return;
+    ((C_SdlCache*)GLI_g_SdlCache)->RemoveSdlInstance(pInstance);
+    if (pInstance->pVertexArray)
+    {
+        MyDelayedFree(pInstance->pVertexArray);
+    }
+    if (pInstance->pInstanceNormals)
+    {
+        MyDelayedFree(pInstance->pInstanceNormals);
+    }
+    pInstance->pInstanceNormals = 0;
+    pInstance->pVertexArray = 0;
+    if (pInstance->pSDL)
+    {
+        delete pInstance->pSDL;
+        pInstance->pSDL = 0;
+    }
+    PS2glLiberator(pInstance);
+    for (j = i + 1; j < m_NbInstances; j++) m_pList[j - 1] = m_pList[j];
+    m_NbInstances--;
+}
+
+unsigned int C_InstanceList::SearchAndDestroyInstanceForThisSPO(HIE_tdstSuperObject_* pSPO)
+{
+    unsigned int i = 0;
+    if (!m_pList)
+        m_NbInstances = 0;
+    for (; i < m_NbInstances && m_pList[i]->pSPO != pSPO; i++);
+    if (i == m_NbInstances)
+        return 0;
+    GLI_vRemoveInstanceFromDisplay(m_pList[i]);
+    DeleteInstance(m_pList[i]);
+    return 1;
+}
+
+_SDC_Instance_* C_InstanceList::SearchInstance(HIE_tdstSuperObject_* pSPO, unsigned int ulElementNumber)
+{
+    unsigned int i = 0;
+
+    if (!m_pList)
+        m_NbInstances = 0;
+
+    for (; i < m_NbInstances && (m_pList[i]->pSPO != pSPO || m_pList[i]->ulElementNumber != ulElementNumber); i++);
+
+    if (i == m_NbInstances)
+        return 0;
+
+    return m_pList[i];
+}
+
+void C_InstanceList::Stealth_RemoveAndDeleteInstance(_SDC_Instance_* pInstance)
+{
+    unsigned int i = 0;
+    unsigned int j;
+
+    for (; i < m_NbInstances && m_pList[i] != pInstance; i++);
+    if (i == m_NbInstances)
+        return;
+    if (pInstance->pVertexArray)
+    {
+        PS2glLiberator(pInstance->pVertexArray);
+    }
+    pInstance->pVertexArray = 0;
+    if (pInstance->pInstanceNormals)
+    {
+        PS2glLiberator(pInstance->pInstanceNormals);
+    }
+    pInstance->pInstanceNormals = 0;
+    if (pInstance->pSDL)
+    {
+        pInstance->pSDL->StealthDestroy();
+        delete pInstance->pSDL;
+        pInstance->pSDL = 0;
+    }
+    PS2glLiberator(pInstance);
+    for (j = i + 1; j < m_NbInstances; j++) m_pList[j - 1] = m_pList[j];
+    m_NbInstances--;
+}
+
+void GLI_vSaveCameraMatrix(void)
+{
+    PS2_M_vCopyMatrix(GLI_g_SDL_pNonInterpolatedCameraMatrix, GLI_g_PreviousCameraMatrix);
+    PS2_M_vCopyMatrix(GLI_g_SDL_pNonInterpolatedCameraMatrixMirror, GLI_g_PreviousCameraMatrixMirror);
 }

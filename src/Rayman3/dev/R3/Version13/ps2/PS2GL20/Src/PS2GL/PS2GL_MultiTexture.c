@@ -538,15 +538,10 @@ void PS2glMatrixMode(unsigned int mode);
 void PS2glLoadIdentity(void);
 void PS2glOrtho(float left, float right, float bottom, float top, float zNear, float zFar);
 
-void DefaultHandleReshape(int w, int h)
-{
-    PS2glViewport(0, 0, w, h);
-    PS2glMatrixMode(0x1701); /* GL_PROJECTION */
-    PS2glLoadIdentity();
-    PS2glOrtho(0.0f, (float)w, 0.0f, (float)h, -1.0f, 1.0f);
-    PS2glMatrixMode(0x1700); /* GL_MODELVIEW */
-    PS2glLoadIdentity();
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void DefaultHandleReshape(int w, int h);
+void impPS2glClientActiveTextureARB(unsigned int texture);
 
 void impPS2glClientActiveTextureARB(unsigned int texture)
 {
@@ -557,4 +552,14 @@ void impPS2glClientActiveTextureARB(unsigned int texture)
     if (unit < 0 || unit >= 2)
         return;
     gc->iCurClientTextureSet = unit;
+}
+
+void DefaultHandleReshape(int w, int h)
+{
+    PS2glViewport(0, 0, w, h);
+    PS2glMatrixMode(0x1701); /* GL_PROJECTION */
+    PS2glLoadIdentity();
+    PS2glOrtho(0.0f, (float)w, 0.0f, (float)h, -1.0f, 1.0f);
+    PS2glMatrixMode(0x1700); /* GL_MODELVIEW */
+    PS2glLoadIdentity();
 }

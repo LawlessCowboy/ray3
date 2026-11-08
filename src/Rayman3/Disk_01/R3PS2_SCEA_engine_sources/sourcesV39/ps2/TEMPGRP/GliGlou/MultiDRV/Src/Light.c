@@ -300,37 +300,38 @@ void GLI_vSetModifierIntensity(int lMul, int lAdd);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_xInitGli(void)
-{
-    static int lFirst = 1;
-    if (lFirst)
-    {
-        lFirst = 0;
-        gs_aDEFTableOfTextureMemoryChannels = (int)malloc(0x640);
-        memset(gs_aDEFTableOfTextureMemoryChannels, 0, 0x640);
-        gs_aDEFTableOfTextureAlreadyRead = (int)malloc(0x640);
-        memset(gs_aDEFTableOfTextureAlreadyRead, 0, 0x640);
-        GLI_BIG_GLOBALS_GLI_TurnedScaledDisplecedPoint = (int)HMU_fn_p_vMalloc(0x13890, 1);
-        GLI_BIG_GLOBALS_GLI_TurnedScaledDisplecedPoint = (int)(((unsigned int)GLI_BIG_GLOBALS_GLI_TurnedScaledDisplecedPoint + 15) & 0xFFFFFFF0);
-        GLI_BIG_GLOBALS_GLI_aDEF_stEnvUV = (int)HMU_fn_p_vMalloc(0x9C40, 1);
-        GLI_BIG_GLOBALS_p_stActiveFog = 0;
-        GLI_BIG_GLOBALS_xFogIsOn = 0;
-        GLI_BIG_GLOBALS_xGlobalAlpha = 0;
-        GLI_xCreateMaterial(&gs_hDefaultMaterial);
-        GLI_vIniTextRead();
-        GLI_vCreateObjectsReference();
-        GLI_vInitWaterplaneModule();
-        GLI_vInitLensFlare();
-        GLI_xInitMatrixStack();
-        GLI_fn_vInitMenuBackground();
-    }
-    GLI_g_stCaps.fRefreshRate = 0.0f;
-    GLI_DRV_xInitDriver(NULL, 1, 0x280, 0x1C0, 0x20);
-    GLI_g_stCaps.fRefreshRate = 60.0f;
-    g_xVideoFrameDurationInSeconds = 1.0f / GLI_g_stCaps.fRefreshRate;
-    GLI_vSetModifierIntensity(100, 0);
-    GLI_gsIsInit = 1;
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void GLI_xInitGli(void);
+float GLI_fn_xFogGetBlendFar(GLI_tdstLight_* p_stLight);
+float GLI_fn_xFogGetBlendNear(GLI_tdstLight_* p_stLight);
+float GLI_fn_xFogGetInfinite(GLI_tdstLight_* p_stLight);
+float GLI_fn_xFogGetFar(GLI_tdstLight_* p_stLight);
+float GLI_fn_xFogGetNear(GLI_tdstLight_* p_stLight);
+unsigned char GLI_ucGetObjectLighted(GLI_tdstLight_* p_stLight);
+void GLI_xGetLightBackgroundColor(GLI_tdstLight_* p_stLight, GEO_tdstColor_* p_stColor);
+void GLI_vSetLightType(GLI_tdstLight_* p_stLight, unsigned short lNewType);
+unsigned short GLI_lGetLightType(GLI_tdstLight_* p_stLight);
+void GLI_vGetLightAlphas(GLI_tdstLight_* p_stLight, float* p_xLittleAlpha, float* p_xBigAlpha);
+void GLI_vSetLightAlphas(GLI_tdstLight_* p_stLight, float xLittleAlpha, float xBigAlpha);
+void GLI_vGetLightNearFar(GLI_tdstLight_* p_stLight, float* p_xNear, float* p_xFar);
+void GLI_vSetLightNearFar(GLI_tdstLight_* p_stLight, float xNear, float xFar);
+void GLI_xSetLightMatrix(GLI_tdstLight_* p_stLight, MAT_tdstTransformation_* p_stMatrix);
+void GLI_xGetLightColor(GLI_tdstLight_* p_stLight, GEO_tdstColor_* p_stColor);
+void GLI_xSetLightColor(GLI_tdstLight_* p_stLight, GEO_tdstColor_* p_stColor);
+void GLI_xGetLightState(GLI_tdstLight_* p_stLight, int* pb_lOnOff);
+void GLI_xSetLightState(GLI_tdstLight_* p_stLight, int b_lOnOff);
+void GLI_vRemoveLightForInit(GLI_tdstLight_* p_stLight, unsigned int eUserFlags);
+void GLI_vStoreLightForInit(GLI_tdstLight_* p_stLight, unsigned int eUserFlags);
+void GLI_vAddInternalLightToViewportGhost(void);
+void GLI_vAddInternalLightToViewport(int lUnused, MTH3D_tdstVector_* pAmbientColor, MTH3D_tdstVector_* pParallelDirection, MTH3D_tdstVector_* pParallelColor);
+void GLI_vCopyLight(GLI_tdstLight_* p_stLightDst, GLI_tdstLight_* p_stLightSrc);
+void GLI_xCreateLight(GLI_tdstLight_** h_stLight, int lTypeOfLight);
+void GLI_xSetViewportLightsOnOff(unsigned char bOnOff);
+void GLI_vClearListOfLightInViewport(void);
+void GLI_vPopLightsInViewport(int lUnused, unsigned int lNbLightsToPop);
+void GLI_vAddLightToViewport(int lUnused, GLI_tdstLight_* p_stLight);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 977–977 */
 /* addr: 0x002a8a20  size: 8 bytes */
@@ -339,10 +340,6 @@ void GLI_xInitGli(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-float GLI_fn_xFogGetBlendFar(GLI_tdstLight_* p_stLight)
-{
-    return *(float*)((unsigned char*)p_stLight + 0x108);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 967–967 */
 /* addr: 0x002a8a30  size: 8 bytes */
@@ -351,10 +348,6 @@ float GLI_fn_xFogGetBlendFar(GLI_tdstLight_* p_stLight)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-float GLI_fn_xFogGetBlendNear(GLI_tdstLight_* p_stLight)
-{
-    return p_stLight->xBigAlpha;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 957–957 */
 /* addr: 0x002a8a40  size: 8 bytes */
@@ -363,10 +356,6 @@ float GLI_fn_xFogGetBlendNear(GLI_tdstLight_* p_stLight)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-float GLI_fn_xFogGetInfinite(GLI_tdstLight_* p_stLight)
-{
-    return p_stLight->xLittleAlpha;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 947–947 */
 /* addr: 0x002a8a50  size: 8 bytes */
@@ -375,10 +364,6 @@ float GLI_fn_xFogGetInfinite(GLI_tdstLight_* p_stLight)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-float GLI_fn_xFogGetFar(GLI_tdstLight_* p_stLight)
-{
-    return p_stLight->xFar;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 937–937 */
 /* addr: 0x002a8a60  size: 8 bytes */
@@ -387,10 +372,6 @@ float GLI_fn_xFogGetFar(GLI_tdstLight_* p_stLight)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-float GLI_fn_xFogGetNear(GLI_tdstLight_* p_stLight)
-{
-    return p_stLight->xNear;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 904–904 */
 /* addr: 0x002a8a70  size: 8 bytes */
@@ -399,10 +380,6 @@ float GLI_fn_xFogGetNear(GLI_tdstLight_* p_stLight)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char GLI_ucGetObjectLighted(GLI_tdstLight_* p_stLight)
-{
-    return *(unsigned char*)((unsigned char*)p_stLight + 0xC5);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 833–834 */
 /* addr: 0x002a8a80  size: 36 bytes */
@@ -412,12 +389,6 @@ unsigned char GLI_ucGetObjectLighted(GLI_tdstLight_* p_stLight)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_xGetLightBackgroundColor(GLI_tdstLight_* p_stLight, GEO_tdstColor_* p_stColor)
-{
-    /* line map: */
-    /*   line 834 @ +0x000 */
-    *(GEO_tdstColor_*)p_stColor = *(GEO_tdstColor_* )((unsigned char*)p_stLight + 0x110);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 764–765 */
 /* addr: 0x002a8ab0  size: 12 bytes */
@@ -427,10 +398,6 @@ void GLI_xGetLightBackgroundColor(GLI_tdstLight_* p_stLight, GEO_tdstColor_* p_s
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vSetLightType(GLI_tdstLight_* p_stLight, unsigned short lNewType)
-{
-    p_stLight->lTypeOfLight = lNewType;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 760–760 */
 /* addr: 0x002a8ac0  size: 8 bytes */
@@ -439,10 +406,6 @@ void GLI_vSetLightType(GLI_tdstLight_* p_stLight, unsigned short lNewType)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned short GLI_lGetLightType(GLI_tdstLight_* p_stLight)
-{
-    return p_stLight->lTypeOfLight;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 750–752 */
 /* addr: 0x002a8ad0  size: 20 bytes */
@@ -453,13 +416,6 @@ unsigned short GLI_lGetLightType(GLI_tdstLight_* p_stLight)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vGetLightAlphas(GLI_tdstLight_* p_stLight, float* p_xLittleAlpha, float* p_xBigAlpha)
-{
-    /* line map: */
-    /*   line 751 @ +0x000 */
-    *p_xLittleAlpha = p_stLight->xLittleAlpha;
-    *p_xBigAlpha = p_stLight->xBigAlpha;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 741–746 */
 /* addr: 0x002a8af0  size: 92 bytes */
@@ -480,14 +436,6 @@ void GLI_vGetLightAlphas(GLI_tdstLight_* p_stLight, float* p_xLittleAlpha, float
  */
 float tanf(float x);
 
-void GLI_vSetLightAlphas(GLI_tdstLight_* p_stLight, float xLittleAlpha, float xBigAlpha)
-{
-    p_stLight->xLittleAlpha = xLittleAlpha;
-    p_stLight->xBigAlpha = xBigAlpha;
-    p_stLight->xLittleTangent = tanf(0.5f * xLittleAlpha);
-    p_stLight->xBigTangent = tanf(0.5f * xBigAlpha);
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 733–735 */
 /* addr: 0x002a8b50  size: 20 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -497,13 +445,6 @@ void GLI_vSetLightAlphas(GLI_tdstLight_* p_stLight, float xLittleAlpha, float xB
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vGetLightNearFar(GLI_tdstLight_* p_stLight, float* p_xNear, float* p_xFar)
-{
-    /* line map: */
-    /*   line 734 @ +0x000 */
-    *p_xNear = p_stLight->xNear;
-    *p_xFar = p_stLight->xFar;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 718–729 */
 /* addr: 0x002a8b70  size: 12 bytes */
@@ -513,11 +454,6 @@ void GLI_vGetLightNearFar(GLI_tdstLight_* p_stLight, float* p_xNear, float* p_xF
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vSetLightNearFar(GLI_tdstLight_* p_stLight, float xNear, float xFar)
-{
-    p_stLight->xNear = xNear;
-    p_stLight->xFar = xFar;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 704–705 */
 /* addr: 0x002a8b80  size: 52 bytes */
@@ -527,10 +463,6 @@ void GLI_vSetLightNearFar(GLI_tdstLight_* p_stLight, float xNear, float xFar)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_xSetLightMatrix(GLI_tdstLight_* p_stLight, MAT_tdstTransformation_* p_stMatrix)
-{
-    p_stLight->stMatrix = *p_stMatrix;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 691–692 */
 /* addr: 0x002a8bc0  size: 36 bytes */
@@ -540,12 +472,6 @@ void GLI_xSetLightMatrix(GLI_tdstLight_* p_stLight, MAT_tdstTransformation_* p_s
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_xGetLightColor(GLI_tdstLight_* p_stLight, GEO_tdstColor_* p_stColor)
-{
-    /* line map: */
-    /*   line 692 @ +0x000 */
-    *(GEO_tdstColor_*)p_stColor = *(GEO_tdstColor_* )((unsigned char*)p_stLight + 0x90);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 686–687 */
 /* addr: 0x002a8bf0  size: 36 bytes */
@@ -555,12 +481,6 @@ void GLI_xGetLightColor(GLI_tdstLight_* p_stLight, GEO_tdstColor_* p_stColor)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_xSetLightColor(GLI_tdstLight_* p_stLight, GEO_tdstColor_* p_stColor)
-{
-    /* line map: */
-    /*   line 687 @ +0x000 */
-    *(GEO_tdstColor_* )((unsigned char*)p_stLight + 0x90) = *(GEO_tdstColor_*)p_stColor;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 678–679 */
 /* addr: 0x002a8c20  size: 12 bytes */
@@ -570,10 +490,6 @@ void GLI_xSetLightColor(GLI_tdstLight_* p_stLight, GEO_tdstColor_* p_stColor)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_xGetLightState(GLI_tdstLight_* p_stLight, int* pb_lOnOff)
-{
-    *pb_lOnOff = p_stLight->b_lOnOff;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 674–674 */
 /* addr: 0x002a8c30  size: 8 bytes */
@@ -582,10 +498,6 @@ void GLI_xGetLightState(GLI_tdstLight_* p_stLight, int* pb_lOnOff)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_xSetLightState(GLI_tdstLight_* p_stLight, int b_lOnOff)
-{
-    p_stLight->b_lOnOff = b_lOnOff;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 609–625 */
 /* addr: 0x002a8c40  size: 180 bytes */
@@ -607,21 +519,6 @@ void GLI_xSetLightState(GLI_tdstLight_* p_stLight, int b_lOnOff)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vRemoveLightForInit(GLI_tdstLight_* p_stLight, unsigned int eUserFlags)
-{
-    SAI_fn_bRemoveValueFromTable(p_stLight, eUserFlags);
-    SAI_fn_bRemoveValueFromTable(&p_stLight->xFar, eUserFlags);
-    SAI_fn_bRemoveValueFromTable(&p_stLight->xNear, eUserFlags);
-    SAI_fn_bRemoveValueFromTable(&p_stLight->xLittleAlpha, eUserFlags);
-    SAI_fn_bRemoveValueFromTable(&p_stLight->xBigAlpha, eUserFlags);
-    SAI_fn_bRemoveValueFromTable(&p_stLight->xLittleTangent, eUserFlags);
-    SAI_fn_bRemoveValueFromTable(&p_stLight->xBigTangent, eUserFlags);
-    SAI_fn_bRemoveValueFromTable(&p_stLight->stColor.xR, eUserFlags);
-    SAI_fn_bRemoveValueFromTable(&p_stLight->stColor.xG, eUserFlags);
-    SAI_fn_bRemoveValueFromTable(&p_stLight->stColor.xB, eUserFlags);
-    SAI_fn_bRemoveValueFromTable(&p_stLight->stColor.xA, eUserFlags);
-    SAI_fn_bRemoveValueFromTable(&p_stLight->ucObjectLighted, eUserFlags);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 590–606 */
 /* addr: 0x002a8d00  size: 180 bytes */
@@ -643,21 +540,6 @@ void GLI_vRemoveLightForInit(GLI_tdstLight_* p_stLight, unsigned int eUserFlags)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vStoreLightForInit(GLI_tdstLight_* p_stLight, unsigned int eUserFlags)
-{
-    SAI_fn_bInsertLongInTable(p_stLight, eUserFlags);
-    SAI_fn_bInsertMTHRealInTable(&p_stLight->xFar, eUserFlags);
-    SAI_fn_bInsertMTHRealInTable(&p_stLight->xNear, eUserFlags);
-    SAI_fn_bInsertMTHRealInTable(&p_stLight->xLittleAlpha, eUserFlags);
-    SAI_fn_bInsertMTHRealInTable(&p_stLight->xBigAlpha, eUserFlags);
-    SAI_fn_bInsertMTHRealInTable(&p_stLight->xLittleTangent, eUserFlags);
-    SAI_fn_bInsertMTHRealInTable(&p_stLight->xBigTangent, eUserFlags);
-    SAI_fn_bInsertMTHRealInTable(&p_stLight->stColor.xR, eUserFlags);
-    SAI_fn_bInsertMTHRealInTable(&p_stLight->stColor.xG, eUserFlags);
-    SAI_fn_bInsertMTHRealInTable(&p_stLight->stColor.xB, eUserFlags);
-    SAI_fn_bInsertMTHRealInTable(&p_stLight->stColor.xA, eUserFlags);
-    SAI_fn_bInsertCharInTable(&p_stLight->ucObjectLighted, eUserFlags);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 514–581 */
 /* addr: 0x002a8dc0  size: 396 bytes */
@@ -735,50 +617,6 @@ void GLI_vStoreLightForInit(GLI_tdstLight_* p_stLight, unsigned int eUserFlags)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vAddInternalLightToViewportGhost(void)
-{
-    GLI_tdstLight_* p_stAmbient;
-    GLI_tdstLight_* p_stParallel;
-    p_stAmbient = &GLI_g_IL_Ambient;
-    GLI_g_IL_Ambient.lTypeOfLight = 4;
-    MAT_fn_vSetIdentity(&GLI_g_IL_Ambient.stMatrix);
-    GLI_g_IL_Ambient.b_lOnOff = 1;
-    GLI_g_IL_Ambient.stColor.xR = 0.5f;
-    GLI_g_IL_Ambient.stColor.xG = 0.5f;
-    GLI_g_IL_Ambient.stColor.xB = 0.5f;
-    GLI_g_IL_Ambient.stColor.xA = 0.0f;
-    GLI_g_IL_Ambient.stZBuffer.p_stZBufferMap = 0;
-    GLI_g_IL_Ambient.bValid = 1;
-    GLI_g_IL_Ambient.bIsPainting = 0;
-    GLI_g_IL_Ambient.bCreatesShadows = 0;
-    GLI_g_IL_Ambient.ucObjectLighted = 2;
-    if (gs_CurrentNumberOfLightInViewport != 300)
-    {
-        gs_aDEF_p_CurrentListOfLight[gs_CurrentNumberOfLightInViewport] = (int)p_stAmbient;
-        gs_CurrentNumberOfLightInViewport++;
-    }
-    p_stParallel = &GLI_g_IL_Parallel;
-    GLI_g_IL_Parallel.lTypeOfLight = 1;
-    MAT_fn_vSetIdentity(&GLI_g_IL_Parallel.stMatrix);
-    GLI_g_IL_Parallel.stMatrix.stTransformMatrix.stCol_2.xX = 0.0f;
-    GLI_g_IL_Parallel.stMatrix.stTransformMatrix.stCol_2.xY = 0.0f;
-    GLI_g_IL_Parallel.stMatrix.stTransformMatrix.stCol_2.xZ = -1.0f;
-    GLI_g_IL_Parallel.b_lOnOff = 1;
-    GLI_g_IL_Parallel.stColor.xR = 1.0f;
-    GLI_g_IL_Parallel.stColor.xG = 1.0f;
-    GLI_g_IL_Parallel.stColor.xB = 1.0f;
-    GLI_g_IL_Parallel.stColor.xA = 1.0f;
-    GLI_g_IL_Parallel.stZBuffer.p_stZBufferMap = 0;
-    GLI_g_IL_Parallel.bValid = 1;
-    GLI_g_IL_Parallel.bIsPainting = 0;
-    GLI_g_IL_Parallel.bCreatesShadows = 0;
-    GLI_g_IL_Parallel.ucObjectLighted = 2;
-    if (gs_CurrentNumberOfLightInViewport != 300)
-    {
-        gs_aDEF_p_CurrentListOfLight[gs_CurrentNumberOfLightInViewport] = (int)p_stParallel;
-        gs_CurrentNumberOfLightInViewport++;
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 458–510 */
 /* addr: 0x002a8f50  size: 452 bytes */
@@ -843,6 +681,146 @@ void GLI_vAddInternalLightToViewportGhost(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 445–445 */
+/* addr: 0x002a9120  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 445
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 413–441 */
+/* addr: 0x002a9130  size: 216 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 413
+ *   +0x0018 -> line 415
+ *   +0x0028 -> line 416
+ *   +0x0034 -> line 419
+ *   +0x0038 -> line 421
+ *   +0x0044 -> line 422
+ *   +0x004c -> line 423
+ *   +0x0050 -> line 435
+ *   +0x0054 -> line 423
+ *   +0x0058 -> line 422
+ *   +0x005c -> line 423
+ *   +0x0064 -> line 424
+ *   +0x006c -> line 425
+ *   +0x0074 -> line 426
+ *   +0x007c -> line 428
+ *   +0x0084 -> line 430
+ *   +0x008c -> line 431
+ *   +0x0094 -> line 433
+ *   +0x009c -> line 435
+ *   +0x00a4 -> line 437
+ *   +0x00ac -> line 438
+ *   +0x00b4 -> line 439
+ *   +0x00bc -> line 440
+ *   +0x00c4 -> line 441
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 402–405 */
+/* addr: 0x002a9210  size: 80 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 402
+ *   +0x000c -> line 403
+ *   +0x0010 -> line 402
+ *   +0x0018 -> line 403
+ *   +0x0024 -> line 404
+ *   +0x0048 -> line 405
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 388–388 */
+/* addr: 0x002a9260  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 388
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 373–376 */
+/* addr: 0x002a9270  size: 36 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 373
+ *   +0x000c -> line 374
+ *   +0x0018 -> line 375
+ *   +0x001c -> line 376
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 359–362 */
+/* addr: 0x002a92a0  size: 52 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 359
+ *   +0x0010 -> line 361
+ *   +0x002c -> line 362
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void GLI_vAddLightToViewport(int lUnused, GLI_tdstLight_* p_stLight)
+{
+    if (gs_CurrentNumberOfLightInViewport != 300)
+    {
+        gs_aDEF_p_CurrentListOfLight[gs_CurrentNumberOfLightInViewport] = (int)p_stLight;
+        gs_CurrentNumberOfLightInViewport++;
+    }
+}
+
+void GLI_vPopLightsInViewport(int lUnused, unsigned int lNbLightsToPop)
+{
+    gs_CurrentNumberOfLightInViewport -= lNbLightsToPop;
+    if (gs_CurrentNumberOfLightInViewport < 0)
+        gs_CurrentNumberOfLightInViewport = 0;
+}
+
+void GLI_vClearListOfLightInViewport(void)
+{
+    gs_CurrentNumberOfLightInViewport = 0;
+}
+
+void GLI_xSetViewportLightsOnOff(unsigned char bOnOff)
+{
+    int i;
+    GLI_g_ExcluLightIsOn = bOnOff ? 0 : 1;
+    for (i = 0; i < gs_CurrentNumberOfLightInViewport; i++)
+        ((GLI_tdstLight_*)gs_aDEF_p_CurrentListOfLight[i])->bValid = bOnOff;
+}
+
+void GLI_xCreateLight(GLI_tdstLight_** h_stLight, int lTypeOfLight)
+{
+    *h_stLight = (GLI_tdstLight_*)HMU_fn_p_vMalloc(0x130, 0);
+    if (*h_stLight != NULL)
+    {
+        (*h_stLight)->lTypeOfLight = lTypeOfLight;
+        MAT_fn_vSetIdentity(&(*h_stLight)->stMatrix);
+        (*h_stLight)->b_lOnOff = 1;
+        (*h_stLight)->stColor.xR = 0.8f;
+        (*h_stLight)->stColor.xG = 0.8f;
+        (*h_stLight)->stColor.xB = 0.8f;
+        (*h_stLight)->stColor.xA = 0.8f;
+        (*h_stLight)->stZBuffer.p_stZBufferMap = 0;
+        (*h_stLight)->bValid = 1;
+        (*h_stLight)->bIsPainting = 0;
+        (*h_stLight)->bCreatesShadows = 0;
+        (*h_stLight)->ucObjectLighted = 3;
+        (*h_stLight)->stBackgroundColor.xR = 0.0f;
+        (*h_stLight)->stBackgroundColor.xG = 0.0f;
+        (*h_stLight)->stBackgroundColor.xB = 0.0f;
+        (*h_stLight)->stBackgroundColor.xA = 0.0f;
+    }
+}
+
+void GLI_vCopyLight(GLI_tdstLight_* p_stLightDst, GLI_tdstLight_* p_stLightSrc)
+{
+    memcpy(p_stLightDst, p_stLightSrc, 0x130);
+}
+
 void GLI_vAddInternalLightToViewport(int lUnused, MTH3D_tdstVector_* pAmbientColor, MTH3D_tdstVector_* pParallelDirection, MTH3D_tdstVector_* pParallelColor)
 {
     GLI_tdstLight_* p_stAmbient;
@@ -888,135 +866,217 @@ void GLI_vAddInternalLightToViewport(int lUnused, MTH3D_tdstVector_* pAmbientCol
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 445–445 */
-/* addr: 0x002a9120  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 445
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GLI_vCopyLight(GLI_tdstLight_* p_stLightDst, GLI_tdstLight_* p_stLightSrc)
+void GLI_vAddInternalLightToViewportGhost(void)
 {
-    memcpy(p_stLightDst, p_stLightSrc, 0x130);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 413–441 */
-/* addr: 0x002a9130  size: 216 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 413
- *   +0x0018 -> line 415
- *   +0x0028 -> line 416
- *   +0x0034 -> line 419
- *   +0x0038 -> line 421
- *   +0x0044 -> line 422
- *   +0x004c -> line 423
- *   +0x0050 -> line 435
- *   +0x0054 -> line 423
- *   +0x0058 -> line 422
- *   +0x005c -> line 423
- *   +0x0064 -> line 424
- *   +0x006c -> line 425
- *   +0x0074 -> line 426
- *   +0x007c -> line 428
- *   +0x0084 -> line 430
- *   +0x008c -> line 431
- *   +0x0094 -> line 433
- *   +0x009c -> line 435
- *   +0x00a4 -> line 437
- *   +0x00ac -> line 438
- *   +0x00b4 -> line 439
- *   +0x00bc -> line 440
- *   +0x00c4 -> line 441
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GLI_xCreateLight(GLI_tdstLight_** h_stLight, int lTypeOfLight)
-{
-    *h_stLight = (GLI_tdstLight_*)HMU_fn_p_vMalloc(0x130, 0);
-    if (*h_stLight != NULL)
-    {
-        (*h_stLight)->lTypeOfLight = lTypeOfLight;
-        MAT_fn_vSetIdentity(&(*h_stLight)->stMatrix);
-        (*h_stLight)->b_lOnOff = 1;
-        (*h_stLight)->stColor.xR = 0.8f;
-        (*h_stLight)->stColor.xG = 0.8f;
-        (*h_stLight)->stColor.xB = 0.8f;
-        (*h_stLight)->stColor.xA = 0.8f;
-        (*h_stLight)->stZBuffer.p_stZBufferMap = 0;
-        (*h_stLight)->bValid = 1;
-        (*h_stLight)->bIsPainting = 0;
-        (*h_stLight)->bCreatesShadows = 0;
-        (*h_stLight)->ucObjectLighted = 3;
-        (*h_stLight)->stBackgroundColor.xR = 0.0f;
-        (*h_stLight)->stBackgroundColor.xG = 0.0f;
-        (*h_stLight)->stBackgroundColor.xB = 0.0f;
-        (*h_stLight)->stBackgroundColor.xA = 0.0f;
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 402–405 */
-/* addr: 0x002a9210  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 402
- *   +0x000c -> line 403
- *   +0x0010 -> line 402
- *   +0x0018 -> line 403
- *   +0x0024 -> line 404
- *   +0x0048 -> line 405
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GLI_xSetViewportLightsOnOff(unsigned char bOnOff)
-{
-    int i;
-    GLI_g_ExcluLightIsOn = bOnOff ? 0 : 1;
-    for (i = 0; i < gs_CurrentNumberOfLightInViewport; i++)
-        ((GLI_tdstLight_*)gs_aDEF_p_CurrentListOfLight[i])->bValid = bOnOff;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 388–388 */
-/* addr: 0x002a9260  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 388
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GLI_vClearListOfLightInViewport(void)
-{
-    gs_CurrentNumberOfLightInViewport = 0;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 373–376 */
-/* addr: 0x002a9270  size: 36 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 373
- *   +0x000c -> line 374
- *   +0x0018 -> line 375
- *   +0x001c -> line 376
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GLI_vPopLightsInViewport(int lUnused, unsigned int lNbLightsToPop)
-{
-    gs_CurrentNumberOfLightInViewport -= lNbLightsToPop;
-    if (gs_CurrentNumberOfLightInViewport < 0)
-        gs_CurrentNumberOfLightInViewport = 0;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 359–362 */
-/* addr: 0x002a92a0  size: 52 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 359
- *   +0x0010 -> line 361
- *   +0x002c -> line 362
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GLI_vAddLightToViewport(int lUnused, GLI_tdstLight_* p_stLight)
-{
+    GLI_tdstLight_* p_stAmbient;
+    GLI_tdstLight_* p_stParallel;
+    p_stAmbient = &GLI_g_IL_Ambient;
+    GLI_g_IL_Ambient.lTypeOfLight = 4;
+    MAT_fn_vSetIdentity(&GLI_g_IL_Ambient.stMatrix);
+    GLI_g_IL_Ambient.b_lOnOff = 1;
+    GLI_g_IL_Ambient.stColor.xR = 0.5f;
+    GLI_g_IL_Ambient.stColor.xG = 0.5f;
+    GLI_g_IL_Ambient.stColor.xB = 0.5f;
+    GLI_g_IL_Ambient.stColor.xA = 0.0f;
+    GLI_g_IL_Ambient.stZBuffer.p_stZBufferMap = 0;
+    GLI_g_IL_Ambient.bValid = 1;
+    GLI_g_IL_Ambient.bIsPainting = 0;
+    GLI_g_IL_Ambient.bCreatesShadows = 0;
+    GLI_g_IL_Ambient.ucObjectLighted = 2;
     if (gs_CurrentNumberOfLightInViewport != 300)
     {
-        gs_aDEF_p_CurrentListOfLight[gs_CurrentNumberOfLightInViewport] = (int)p_stLight;
+        gs_aDEF_p_CurrentListOfLight[gs_CurrentNumberOfLightInViewport] = (int)p_stAmbient;
         gs_CurrentNumberOfLightInViewport++;
     }
+    p_stParallel = &GLI_g_IL_Parallel;
+    GLI_g_IL_Parallel.lTypeOfLight = 1;
+    MAT_fn_vSetIdentity(&GLI_g_IL_Parallel.stMatrix);
+    GLI_g_IL_Parallel.stMatrix.stTransformMatrix.stCol_2.xX = 0.0f;
+    GLI_g_IL_Parallel.stMatrix.stTransformMatrix.stCol_2.xY = 0.0f;
+    GLI_g_IL_Parallel.stMatrix.stTransformMatrix.stCol_2.xZ = -1.0f;
+    GLI_g_IL_Parallel.b_lOnOff = 1;
+    GLI_g_IL_Parallel.stColor.xR = 1.0f;
+    GLI_g_IL_Parallel.stColor.xG = 1.0f;
+    GLI_g_IL_Parallel.stColor.xB = 1.0f;
+    GLI_g_IL_Parallel.stColor.xA = 1.0f;
+    GLI_g_IL_Parallel.stZBuffer.p_stZBufferMap = 0;
+    GLI_g_IL_Parallel.bValid = 1;
+    GLI_g_IL_Parallel.bIsPainting = 0;
+    GLI_g_IL_Parallel.bCreatesShadows = 0;
+    GLI_g_IL_Parallel.ucObjectLighted = 2;
+    if (gs_CurrentNumberOfLightInViewport != 300)
+    {
+        gs_aDEF_p_CurrentListOfLight[gs_CurrentNumberOfLightInViewport] = (int)p_stParallel;
+        gs_CurrentNumberOfLightInViewport++;
+    }
+}
+
+void GLI_vStoreLightForInit(GLI_tdstLight_* p_stLight, unsigned int eUserFlags)
+{
+    SAI_fn_bInsertLongInTable(p_stLight, eUserFlags);
+    SAI_fn_bInsertMTHRealInTable(&p_stLight->xFar, eUserFlags);
+    SAI_fn_bInsertMTHRealInTable(&p_stLight->xNear, eUserFlags);
+    SAI_fn_bInsertMTHRealInTable(&p_stLight->xLittleAlpha, eUserFlags);
+    SAI_fn_bInsertMTHRealInTable(&p_stLight->xBigAlpha, eUserFlags);
+    SAI_fn_bInsertMTHRealInTable(&p_stLight->xLittleTangent, eUserFlags);
+    SAI_fn_bInsertMTHRealInTable(&p_stLight->xBigTangent, eUserFlags);
+    SAI_fn_bInsertMTHRealInTable(&p_stLight->stColor.xR, eUserFlags);
+    SAI_fn_bInsertMTHRealInTable(&p_stLight->stColor.xG, eUserFlags);
+    SAI_fn_bInsertMTHRealInTable(&p_stLight->stColor.xB, eUserFlags);
+    SAI_fn_bInsertMTHRealInTable(&p_stLight->stColor.xA, eUserFlags);
+    SAI_fn_bInsertCharInTable(&p_stLight->ucObjectLighted, eUserFlags);
+}
+
+void GLI_vRemoveLightForInit(GLI_tdstLight_* p_stLight, unsigned int eUserFlags)
+{
+    SAI_fn_bRemoveValueFromTable(p_stLight, eUserFlags);
+    SAI_fn_bRemoveValueFromTable(&p_stLight->xFar, eUserFlags);
+    SAI_fn_bRemoveValueFromTable(&p_stLight->xNear, eUserFlags);
+    SAI_fn_bRemoveValueFromTable(&p_stLight->xLittleAlpha, eUserFlags);
+    SAI_fn_bRemoveValueFromTable(&p_stLight->xBigAlpha, eUserFlags);
+    SAI_fn_bRemoveValueFromTable(&p_stLight->xLittleTangent, eUserFlags);
+    SAI_fn_bRemoveValueFromTable(&p_stLight->xBigTangent, eUserFlags);
+    SAI_fn_bRemoveValueFromTable(&p_stLight->stColor.xR, eUserFlags);
+    SAI_fn_bRemoveValueFromTable(&p_stLight->stColor.xG, eUserFlags);
+    SAI_fn_bRemoveValueFromTable(&p_stLight->stColor.xB, eUserFlags);
+    SAI_fn_bRemoveValueFromTable(&p_stLight->stColor.xA, eUserFlags);
+    SAI_fn_bRemoveValueFromTable(&p_stLight->ucObjectLighted, eUserFlags);
+}
+
+void GLI_xSetLightState(GLI_tdstLight_* p_stLight, int b_lOnOff)
+{
+    p_stLight->b_lOnOff = b_lOnOff;
+}
+
+void GLI_xGetLightState(GLI_tdstLight_* p_stLight, int* pb_lOnOff)
+{
+    *pb_lOnOff = p_stLight->b_lOnOff;
+}
+
+void GLI_xSetLightColor(GLI_tdstLight_* p_stLight, GEO_tdstColor_* p_stColor)
+{
+    /* line map: */
+    /*   line 687 @ +0x000 */
+    *(GEO_tdstColor_* )((unsigned char*)p_stLight + 0x90) = *(GEO_tdstColor_*)p_stColor;
+}
+
+void GLI_xGetLightColor(GLI_tdstLight_* p_stLight, GEO_tdstColor_* p_stColor)
+{
+    /* line map: */
+    /*   line 692 @ +0x000 */
+    *(GEO_tdstColor_*)p_stColor = *(GEO_tdstColor_* )((unsigned char*)p_stLight + 0x90);
+}
+
+void GLI_xSetLightMatrix(GLI_tdstLight_* p_stLight, MAT_tdstTransformation_* p_stMatrix)
+{
+    p_stLight->stMatrix = *p_stMatrix;
+}
+
+void GLI_vSetLightNearFar(GLI_tdstLight_* p_stLight, float xNear, float xFar)
+{
+    p_stLight->xNear = xNear;
+    p_stLight->xFar = xFar;
+}
+
+void GLI_vGetLightNearFar(GLI_tdstLight_* p_stLight, float* p_xNear, float* p_xFar)
+{
+    /* line map: */
+    /*   line 734 @ +0x000 */
+    *p_xNear = p_stLight->xNear;
+    *p_xFar = p_stLight->xFar;
+}
+
+void GLI_vSetLightAlphas(GLI_tdstLight_* p_stLight, float xLittleAlpha, float xBigAlpha)
+{
+    p_stLight->xLittleAlpha = xLittleAlpha;
+    p_stLight->xBigAlpha = xBigAlpha;
+    p_stLight->xLittleTangent = tanf(0.5f * xLittleAlpha);
+    p_stLight->xBigTangent = tanf(0.5f * xBigAlpha);
+}
+
+void GLI_vGetLightAlphas(GLI_tdstLight_* p_stLight, float* p_xLittleAlpha, float* p_xBigAlpha)
+{
+    /* line map: */
+    /*   line 751 @ +0x000 */
+    *p_xLittleAlpha = p_stLight->xLittleAlpha;
+    *p_xBigAlpha = p_stLight->xBigAlpha;
+}
+
+unsigned short GLI_lGetLightType(GLI_tdstLight_* p_stLight)
+{
+    return p_stLight->lTypeOfLight;
+}
+
+void GLI_vSetLightType(GLI_tdstLight_* p_stLight, unsigned short lNewType)
+{
+    p_stLight->lTypeOfLight = lNewType;
+}
+
+void GLI_xGetLightBackgroundColor(GLI_tdstLight_* p_stLight, GEO_tdstColor_* p_stColor)
+{
+    /* line map: */
+    /*   line 834 @ +0x000 */
+    *(GEO_tdstColor_*)p_stColor = *(GEO_tdstColor_* )((unsigned char*)p_stLight + 0x110);
+}
+
+unsigned char GLI_ucGetObjectLighted(GLI_tdstLight_* p_stLight)
+{
+    return *(unsigned char*)((unsigned char*)p_stLight + 0xC5);
+}
+
+float GLI_fn_xFogGetNear(GLI_tdstLight_* p_stLight)
+{
+    return p_stLight->xNear;
+}
+
+float GLI_fn_xFogGetFar(GLI_tdstLight_* p_stLight)
+{
+    return p_stLight->xFar;
+}
+
+float GLI_fn_xFogGetInfinite(GLI_tdstLight_* p_stLight)
+{
+    return p_stLight->xLittleAlpha;
+}
+
+float GLI_fn_xFogGetBlendNear(GLI_tdstLight_* p_stLight)
+{
+    return p_stLight->xBigAlpha;
+}
+
+float GLI_fn_xFogGetBlendFar(GLI_tdstLight_* p_stLight)
+{
+    return *(float*)((unsigned char*)p_stLight + 0x108);
+}
+
+void GLI_xInitGli(void)
+{
+    static int lFirst = 1;
+    if (lFirst)
+    {
+        lFirst = 0;
+        gs_aDEFTableOfTextureMemoryChannels = (int)malloc(0x640);
+        memset(gs_aDEFTableOfTextureMemoryChannels, 0, 0x640);
+        gs_aDEFTableOfTextureAlreadyRead = (int)malloc(0x640);
+        memset(gs_aDEFTableOfTextureAlreadyRead, 0, 0x640);
+        GLI_BIG_GLOBALS_GLI_TurnedScaledDisplecedPoint = (int)HMU_fn_p_vMalloc(0x13890, 1);
+        GLI_BIG_GLOBALS_GLI_TurnedScaledDisplecedPoint = (int)(((unsigned int)GLI_BIG_GLOBALS_GLI_TurnedScaledDisplecedPoint + 15) & 0xFFFFFFF0);
+        GLI_BIG_GLOBALS_GLI_aDEF_stEnvUV = (int)HMU_fn_p_vMalloc(0x9C40, 1);
+        GLI_BIG_GLOBALS_p_stActiveFog = 0;
+        GLI_BIG_GLOBALS_xFogIsOn = 0;
+        GLI_BIG_GLOBALS_xGlobalAlpha = 0;
+        GLI_xCreateMaterial(&gs_hDefaultMaterial);
+        GLI_vIniTextRead();
+        GLI_vCreateObjectsReference();
+        GLI_vInitWaterplaneModule();
+        GLI_vInitLensFlare();
+        GLI_xInitMatrixStack();
+        GLI_fn_vInitMenuBackground();
+    }
+    GLI_g_stCaps.fRefreshRate = 0.0f;
+    GLI_DRV_xInitDriver(NULL, 1, 0x280, 0x1C0, 0x20);
+    GLI_g_stCaps.fRefreshRate = 60.0f;
+    g_xVideoFrameDurationInSeconds = 1.0f / GLI_g_stCaps.fRefreshRate;
+    GLI_vSetModifierIntensity(100, 0);
+    GLI_gsIsInit = 1;
 }

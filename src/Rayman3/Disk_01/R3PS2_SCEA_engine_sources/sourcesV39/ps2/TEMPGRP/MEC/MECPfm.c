@@ -1002,41 +1002,13 @@ extern void MAT_fn_vInvert(MAT_tdstTransformation_*, MAT_tdstTransformation_*);
 extern void MAT_fn_vRotateVector(MTH3D_tdstVector_*, MAT_tdstTransformation_*, MTH3D_tdstVector_*);
 extern void MEC_fn_vRoundVector(MTH3D_tdstVector_*, float);
 
-void MEC_fn_vInertiaCoeff(DNM_stDynamics* p_stDynamic, float xDT, float xInertiaX, float xInertiaY, float xInertiaZ, MAT_tdstTransformation_* hMatrix, MAT_tdstTransformation_* hInvMatrix)
-{
-    MTH3D_tdstVector_ stMove;
-    MTH3D_tdstVector_ stPreviousTranslation;
-    MTH3D_tdstVector_ stTranslation;
-    MAT_tdstTransformation_* hCurrentMatrix;
-    MTH3D_tdstVector_* p_stSpeed;
-    MTH3D_tdstVector_* p_stPreviousPosition;
-    union { MTH3D_tdstVector_ v; int i[3]; } stPosition;
-    unsigned int ulEndFlags;
-    float xHz;
-    float Uy;
-    float Uz;
-    float Vy;
-    float Vz;
-
-    hCurrentMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix;
-    p_stPreviousPosition = (MTH3D_tdstVector_*)&p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3;
-    stMove.xX = hCurrentMatrix->stTransformMatrix.stCol_3.xX - p_stPreviousPosition->xX; stMove.xY = hCurrentMatrix->stTransformMatrix.stCol_3.xY - p_stPreviousPosition->xY; stMove.xZ = hCurrentMatrix->stTransformMatrix.stCol_3.xZ - p_stPreviousPosition->xZ;
-    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x800) ? 1 : 0) { MAT_fn_vInvert(hInvMatrix, hMatrix); ulEndFlags = p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0xFFFFF7FF; p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulEndFlags; p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulEndFlags; }
-    stPreviousTranslation.xX = xDT * p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xX; stPreviousTranslation.xY = xDT * p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xY; stPreviousTranslation.xZ = xDT * p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xZ;
-    if (!((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x10) ? 1 : 0)) { stPreviousTranslation.xX = stPreviousTranslation.xX - p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stInertiaTranslation.xX; stPreviousTranslation.xY = stPreviousTranslation.xY - p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stInertiaTranslation.xY; stPreviousTranslation.xZ = stPreviousTranslation.xZ - p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stInertiaTranslation.xZ; }
-    MAT_fn_vRotateVector(&stMove, hInvMatrix, &stMove);
-    MAT_fn_vRotateVector(&stPreviousTranslation, hInvMatrix, &stPreviousTranslation);
-    stTranslation.xY = stMove.xY + xInertiaY * (stPreviousTranslation.xY - stMove.xY);
-    stTranslation.xX = stMove.xX + xInertiaX * (stPreviousTranslation.xX - stMove.xX);
-    stTranslation.xZ = stMove.xZ + xInertiaZ * (stPreviousTranslation.xZ - stMove.xZ);
-    xHz = 1.0f / xDT;
-    MAT_fn_vRotateVector(&stTranslation, hMatrix, &stTranslation);
-    MEC_fn_vRoundVector(&stTranslation, 1e-6f * (xHz - 60.0f) / 140.0f + 1e-4f * (200.0f - xHz) / 140.0f);
-    stPosition.v.xX = p_stPreviousPosition->xX + stTranslation.xX; stPosition.v.xY = p_stPreviousPosition->xY + stTranslation.xY; stPosition.v.xZ = p_stPreviousPosition->xZ + stTranslation.xZ;
-    if (hCurrentMatrix->eType == MAT_eTransform_Identity) hCurrentMatrix->eType = MAT_eTransform_Translation;
-    *(int*)&hCurrentMatrix->stTransformMatrix.stCol_3.xX = stPosition.i[0]; *(int*)&hCurrentMatrix->stTransformMatrix.stCol_3.xY = stPosition.i[1]; *(int*)&hCurrentMatrix->stTransformMatrix.stCol_3.xZ = stPosition.i[2];
-    hCurrentMatrix->stTransformMatrix.stCol_3.xW = 1.0f;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void MEC_fn_vInertiaCoeff(DNM_stDynamics* p_stDynamic, float xDT, float xInertiaX, float xInertiaY, float xInertiaZ, MAT_tdstTransformation_* hMatrix, MAT_tdstTransformation_* hInvMatrix);
+void MEC_fn_vDynamicComputeAbsoluteMatrix(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, MAT_tdstTransformation_* hPreviousMatrix, MAT_tdstTransformation_* hInvPreviousMatrix, MAT_tdstTransformation_* hCurrentMatrix);
+void MEC_fn_vFreePlatformLink(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj);
+void MEC_fn_vForcePlatformLink(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, HIE_tdstSuperObject_* hFatherSupObj);
+void MEC_fn_vSetPlatformLink(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, HIE_tdstSuperObject_* hFatherSupObj);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECPfm.c lines 168–228 */
 /* addr: 0x00310870  size: 1048 bytes */
@@ -1086,19 +1058,6 @@ void MEC_fn_vInertiaCoeff(DNM_stDynamics* p_stDynamic, float xDT, float xInertia
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void MEC_fn_vDynamicComputeAbsoluteMatrix(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, MAT_tdstTransformation_* hPreviousMatrix, MAT_tdstTransformation_* hInvPreviousMatrix, MAT_tdstTransformation_* hCurrentMatrix)
-{
-    float xNorm;
-    MTH3D_tdstVector_* p_stContact;
-    MTH3D_tdstVector_ stK;
-    MTH3D_tdstVector_ stJ;
-    MTH3D_tdstVector_ stI;
-    MTH3D_tdstVector_ stVector;
-    MAT_tdstTransformation_* hCurrentDynamicMatrix;
-    MAT_tdstTransformation_* hPreviousDynamicMatrix;
-    MAT_tdstTransformation_ stMatrix;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECPfm.c lines 149–152 */
 /* addr: 0x00310c90  size: 84 bytes */
@@ -1116,6 +1075,51 @@ void MEC_fn_vDynamicComputeAbsoluteMatrix(DNM_stDynamics* p_stDynamic, HIE_tdstS
  */
 void fn_vReputCharacterSuperObjectAtTheWorld(HIE_tdstSuperObject_* hSupObj);
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECPfm.c lines 143–146 */
+/* addr: 0x00310cf0  size: 56 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 143
+ *   +0x000c -> line 144
+ *   +0x0014 -> line 145
+ *   +0x0028 -> line 146
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void MEC_fn_vSetPlatformLink(DNM_stDynamics*, HIE_tdstSuperObject_*, HIE_tdstSuperObject_*);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECPfm.c lines 129–133 */
+/* addr: 0x00310d30  size: 364 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 129
+ *   +0x001c -> line 130
+ *   +0x0020 -> line 131
+ *   +0x00a4 -> line 132
+ *   +0x0164 -> line 133
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void MEC_fn_vSetPlatformLink(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, HIE_tdstSuperObject_* hFatherSupObj)
+{
+    if (!((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x40000000) ? 1 : 0))
+    {
+        p_stDynamic->m_tdstDynamicsComplexBlock.m_hPlatform = hFatherSupObj;
+        if (hSupObj->hNextBrotherDyn) hSupObj->hNextBrotherDyn->hPrevBrotherDyn = hSupObj->hPrevBrotherDyn; if (hSupObj->hPrevBrotherDyn) hSupObj->hPrevBrotherDyn->hNextBrotherDyn = hSupObj->hNextBrotherDyn; if (hSupObj->hFatherDyn) { hSupObj->hFatherDyn->lNumberOfElementsDyn--; if (hSupObj->hFatherDyn->hFirstElementDyn == hSupObj) hSupObj->hFatherDyn->hFirstElementDyn = hSupObj->hNextBrotherDyn; if (hSupObj->hFatherDyn->hLastElementDyn == hSupObj) hSupObj->hFatherDyn->hLastElementDyn = hSupObj->hPrevBrotherDyn; } hSupObj->hNextBrotherDyn = NULL; hSupObj->hPrevBrotherDyn = NULL; hSupObj->hFatherDyn = NULL;
+        if (hSupObj->hNextBrotherDyn) hSupObj->hNextBrotherDyn->hPrevBrotherDyn = hSupObj->hPrevBrotherDyn; if (hSupObj->hPrevBrotherDyn) hSupObj->hPrevBrotherDyn->hNextBrotherDyn = hSupObj->hNextBrotherDyn; if (hSupObj->hFatherDyn) { hSupObj->hFatherDyn->lNumberOfElementsDyn--; if (hSupObj->hFatherDyn->hFirstElementDyn == hSupObj) hSupObj->hFatherDyn->hFirstElementDyn = hSupObj->hNextBrotherDyn; if (hSupObj->hFatherDyn->hLastElementDyn == hSupObj) hSupObj->hFatherDyn->hLastElementDyn = hSupObj->hPrevBrotherDyn; } hSupObj->hNextBrotherDyn = NULL; hSupObj->hPrevBrotherDyn = NULL; hSupObj->hFatherDyn = NULL; hSupObj->hNextBrotherDyn = NULL; hSupObj->hPrevBrotherDyn = hFatherSupObj->hLastElementDyn; hSupObj->hFatherDyn = hFatherSupObj; if (hFatherSupObj->hFirstElementDyn == NULL) hFatherSupObj->hFirstElementDyn = hSupObj; else hFatherSupObj->hLastElementDyn->hNextBrotherDyn = hSupObj; hFatherSupObj->hLastElementDyn = hSupObj; hFatherSupObj->lNumberOfElementsDyn++;
+    }
+}
+
+void MEC_fn_vForcePlatformLink(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, HIE_tdstSuperObject_* hFatherSupObj)
+{
+    unsigned int ulFlags;
+
+    MEC_fn_vSetPlatformLink(p_stDynamic, hSupObj, hFatherSupObj);
+    ulFlags = p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags;
+    ulFlags |= 0x40000000;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags = ulFlags;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags = ulFlags;
+}
+
 void MEC_fn_vFreePlatformLink(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj)
 {
     unsigned int ulFlags;
@@ -1131,46 +1135,52 @@ void MEC_fn_vFreePlatformLink(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_*
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECPfm.c lines 143–146 */
-/* addr: 0x00310cf0  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 143
- *   +0x000c -> line 144
- *   +0x0014 -> line 145
- *   +0x0028 -> line 146
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void MEC_fn_vSetPlatformLink(DNM_stDynamics*, HIE_tdstSuperObject_*, HIE_tdstSuperObject_*);
-
-void MEC_fn_vForcePlatformLink(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, HIE_tdstSuperObject_* hFatherSupObj)
+void MEC_fn_vDynamicComputeAbsoluteMatrix(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, MAT_tdstTransformation_* hPreviousMatrix, MAT_tdstTransformation_* hInvPreviousMatrix, MAT_tdstTransformation_* hCurrentMatrix)
 {
-    unsigned int ulFlags;
-
-    MEC_fn_vSetPlatformLink(p_stDynamic, hSupObj, hFatherSupObj);
-    ulFlags = p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags;
-    ulFlags |= 0x40000000;
-    p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags = ulFlags;
-    p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags = ulFlags;
+    float xNorm;
+    MTH3D_tdstVector_* p_stContact;
+    MTH3D_tdstVector_ stK;
+    MTH3D_tdstVector_ stJ;
+    MTH3D_tdstVector_ stI;
+    MTH3D_tdstVector_ stVector;
+    MAT_tdstTransformation_* hCurrentDynamicMatrix;
+    MAT_tdstTransformation_* hPreviousDynamicMatrix;
+    MAT_tdstTransformation_ stMatrix;
+    /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECPfm.c lines 129–133 */
-/* addr: 0x00310d30  size: 364 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 129
- *   +0x001c -> line 130
- *   +0x0020 -> line 131
- *   +0x00a4 -> line 132
- *   +0x0164 -> line 133
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void MEC_fn_vSetPlatformLink(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, HIE_tdstSuperObject_* hFatherSupObj)
+void MEC_fn_vInertiaCoeff(DNM_stDynamics* p_stDynamic, float xDT, float xInertiaX, float xInertiaY, float xInertiaZ, MAT_tdstTransformation_* hMatrix, MAT_tdstTransformation_* hInvMatrix)
 {
-    if (!((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x40000000) ? 1 : 0))
-    {
-        p_stDynamic->m_tdstDynamicsComplexBlock.m_hPlatform = hFatherSupObj;
-        if (hSupObj->hNextBrotherDyn) hSupObj->hNextBrotherDyn->hPrevBrotherDyn = hSupObj->hPrevBrotherDyn; if (hSupObj->hPrevBrotherDyn) hSupObj->hPrevBrotherDyn->hNextBrotherDyn = hSupObj->hNextBrotherDyn; if (hSupObj->hFatherDyn) { hSupObj->hFatherDyn->lNumberOfElementsDyn--; if (hSupObj->hFatherDyn->hFirstElementDyn == hSupObj) hSupObj->hFatherDyn->hFirstElementDyn = hSupObj->hNextBrotherDyn; if (hSupObj->hFatherDyn->hLastElementDyn == hSupObj) hSupObj->hFatherDyn->hLastElementDyn = hSupObj->hPrevBrotherDyn; } hSupObj->hNextBrotherDyn = NULL; hSupObj->hPrevBrotherDyn = NULL; hSupObj->hFatherDyn = NULL;
-        if (hSupObj->hNextBrotherDyn) hSupObj->hNextBrotherDyn->hPrevBrotherDyn = hSupObj->hPrevBrotherDyn; if (hSupObj->hPrevBrotherDyn) hSupObj->hPrevBrotherDyn->hNextBrotherDyn = hSupObj->hNextBrotherDyn; if (hSupObj->hFatherDyn) { hSupObj->hFatherDyn->lNumberOfElementsDyn--; if (hSupObj->hFatherDyn->hFirstElementDyn == hSupObj) hSupObj->hFatherDyn->hFirstElementDyn = hSupObj->hNextBrotherDyn; if (hSupObj->hFatherDyn->hLastElementDyn == hSupObj) hSupObj->hFatherDyn->hLastElementDyn = hSupObj->hPrevBrotherDyn; } hSupObj->hNextBrotherDyn = NULL; hSupObj->hPrevBrotherDyn = NULL; hSupObj->hFatherDyn = NULL; hSupObj->hNextBrotherDyn = NULL; hSupObj->hPrevBrotherDyn = hFatherSupObj->hLastElementDyn; hSupObj->hFatherDyn = hFatherSupObj; if (hFatherSupObj->hFirstElementDyn == NULL) hFatherSupObj->hFirstElementDyn = hSupObj; else hFatherSupObj->hLastElementDyn->hNextBrotherDyn = hSupObj; hFatherSupObj->hLastElementDyn = hSupObj; hFatherSupObj->lNumberOfElementsDyn++;
-    }
+    MTH3D_tdstVector_ stMove;
+    MTH3D_tdstVector_ stPreviousTranslation;
+    MTH3D_tdstVector_ stTranslation;
+    MAT_tdstTransformation_* hCurrentMatrix;
+    MTH3D_tdstVector_* p_stSpeed;
+    MTH3D_tdstVector_* p_stPreviousPosition;
+    union { MTH3D_tdstVector_ v; int i[3]; } stPosition;
+    unsigned int ulEndFlags;
+    float xHz;
+    float Uy;
+    float Uz;
+    float Vy;
+    float Vz;
+
+    hCurrentMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix;
+    p_stPreviousPosition = (MTH3D_tdstVector_*)&p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3;
+    stMove.xX = hCurrentMatrix->stTransformMatrix.stCol_3.xX - p_stPreviousPosition->xX; stMove.xY = hCurrentMatrix->stTransformMatrix.stCol_3.xY - p_stPreviousPosition->xY; stMove.xZ = hCurrentMatrix->stTransformMatrix.stCol_3.xZ - p_stPreviousPosition->xZ;
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x800) ? 1 : 0) { MAT_fn_vInvert(hInvMatrix, hMatrix); ulEndFlags = p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0xFFFFF7FF; p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulEndFlags; p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulEndFlags; }
+    stPreviousTranslation.xX = xDT * p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xX; stPreviousTranslation.xY = xDT * p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xY; stPreviousTranslation.xZ = xDT * p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xZ;
+    if (!((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x10) ? 1 : 0)) { stPreviousTranslation.xX = stPreviousTranslation.xX - p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stInertiaTranslation.xX; stPreviousTranslation.xY = stPreviousTranslation.xY - p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stInertiaTranslation.xY; stPreviousTranslation.xZ = stPreviousTranslation.xZ - p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stInertiaTranslation.xZ; }
+    MAT_fn_vRotateVector(&stMove, hInvMatrix, &stMove);
+    MAT_fn_vRotateVector(&stPreviousTranslation, hInvMatrix, &stPreviousTranslation);
+    stTranslation.xY = stMove.xY + xInertiaY * (stPreviousTranslation.xY - stMove.xY);
+    stTranslation.xX = stMove.xX + xInertiaX * (stPreviousTranslation.xX - stMove.xX);
+    stTranslation.xZ = stMove.xZ + xInertiaZ * (stPreviousTranslation.xZ - stMove.xZ);
+    xHz = 1.0f / xDT;
+    MAT_fn_vRotateVector(&stTranslation, hMatrix, &stTranslation);
+    MEC_fn_vRoundVector(&stTranslation, 1e-6f * (xHz - 60.0f) / 140.0f + 1e-4f * (200.0f - xHz) / 140.0f);
+    stPosition.v.xX = p_stPreviousPosition->xX + stTranslation.xX; stPosition.v.xY = p_stPreviousPosition->xY + stTranslation.xY; stPosition.v.xZ = p_stPreviousPosition->xZ + stTranslation.xZ;
+    if (hCurrentMatrix->eType == MAT_eTransform_Identity) hCurrentMatrix->eType = MAT_eTransform_Translation;
+    *(int*)&hCurrentMatrix->stTransformMatrix.stCol_3.xX = stPosition.i[0]; *(int*)&hCurrentMatrix->stTransformMatrix.stCol_3.xY = stPosition.i[1]; *(int*)&hCurrentMatrix->stTransformMatrix.stCol_3.xZ = stPosition.i[2];
+    hCurrentMatrix->stTransformMatrix.stCol_3.xW = 1.0f;
 }

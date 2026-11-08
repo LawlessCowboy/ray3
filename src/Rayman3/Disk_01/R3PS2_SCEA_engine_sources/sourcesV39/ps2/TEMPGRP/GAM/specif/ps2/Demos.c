@@ -1837,45 +1837,32 @@ char* Strchr(char* s, int c);
 int sscanf(const char* s, const char* fmt, ...);
 char* FMN_SCE_ConvertPath2DVD(char* buffer);
 unsigned int strlen(const char* s);
-void DEMO_fn_vReadDemoTableFile(void)
-{
-    char buffer[1024];
-    char LevelName[128];
-    char FileName[128];
-    int ret;
-    int fh;
-    char* p;
-    unsigned int u32FileSize;
-    int i;
 
-    fh = CD_OpenFile(FMN_SCE_ConvertPath2DVD("demos/demotbl.txt"));
-    if (fh >= 0)
-    {
-        g_stEngineStructure.ucNumberOfDemos = 0;
-        memset(buffer, 0, 1024);
-        u32FileSize = CD_Read(fh, buffer, 1024);
-        i = 0;
-        p = buffer;
-        while (p != NULL && (unsigned int)p < (unsigned int)buffer + u32FileSize)
-        {
-            if (sscanf(p, "%s %s", LevelName, FileName) == -1)
-                break;
-            if (strlen(LevelName) < 12 && strlen(FileName) < 12)
-            {
-                strcpy(g_stEngineStructure.a_szDemoLevelName[i], LevelName);
-                strcpy(g_stEngineStructure.a_szDemoName[i], FileName);
-                i++;
-                g_stEngineStructure.ucNumberOfDemos = i;
-                if (i == 30)
-                    break;
-            }
-            p = Strchr(p, '\n');
-            if (p != NULL)
-                p++;
-        }
-        CD_Close(fh);
-    }
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void DEMO_fn_vReadDemoTableFile(void);
+void DEMO_fn_vDesInitGame(void);
+unsigned char DEMO_fn_bUpdateDynamicHierarchy(void);
+void DEMO_fn_vMoveModuleDelayedHandling(void);
+void DEMO_fn_vReadOneCompleteStateUpdate(void);
+void DEMO_fn_vGetACompleteCharacterPosition(HIE_tdstSuperObject_* hSO);
+void DEMO_fn_vReadAlwaysActivationDesactivation(HIE_tdstSuperObject_* hSO);
+void DEMO_fn_vReadAndChangeActivationDesactivation(HIE_tdstSuperObject_* hSO);
+void DEMO_fn_vReadAndTreatAllExtendedFlag(unsigned short Demo_Flag);
+void DEMO_fn_vSetMapToLoadWhenDemoFinished(char* _szMapName);
+void DEMO_fn_vSetTestInputDuringDemo(int _bTestInput);
+void DEMO_fn_vLoadDemoIfNeeded(void);
+void DEMO_fn_vAskToLoadDemo(char* pcDemoName);
+void DEMO_fn_vLoadFromFile(char* szDemoName);
+char* DEMO_fn_pcGetAddressForEventOffset(unsigned int u32Offset);
+unsigned int DEMO_fn_u32GetCurrentEventOffset(void);
+char* DEMO_fn_pcBuildDemoPath(char* szFilename);
+void DEMO_fn_vCloseFirstInit(void);
+void DEMO_fn_vPrepareForRead(int _iNbFramesToWait);
+void DEMO_fn_vPrepareForReadNow(void);
+void DEMO_fn_vAllocateMemory(void);
+void fn_vDemoReadCompressedTransform(tdstDemoCompressedTransform_* _p_stCompressedTransform);
+float fn_fUncompressNumber(short n);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 7476–7476 */
 /* addr: 0x00282f10  size: 8 bytes */
@@ -1884,10 +1871,6 @@ void DEMO_fn_vReadDemoTableFile(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void DEMO_fn_vDesInitGame(void)
-{
-    g_hDemoSOList = 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 7175–7410 */
 /* addr: 0x00282f20  size: 552 bytes */
@@ -1957,69 +1940,6 @@ void AGO_vClearUnwanted110AGOsForDemos(void);
 void SND_fn_vSynchroSound(void);
 void TMR_fn_wWait(unsigned int ulTimeToWait);
 int printf(const char* fmt, ...);
-unsigned char DEMO_fn_bUpdateDynamicHierarchy(void)
-{
-    unsigned int ulDEMO_ElapsedEngineTimerCount;
-    int iEndOfUpdate;
-    int iNewFrameInRecord;
-
-    if (g_iNbFramesToWaitBeforePlaying)
-    {
-        if (--g_iNbFramesToWaitBeforePlaying == 0) { DEMO_fn_vPrepareForReadNow(); }
-        return 1;
-    }
-
-    if (!(gl_DEMO_CurrentFrame < gl_DEMO_NumberOfFrames) || (g_bTestInputDuringDemo && gl_DEMO_CurrentFrame > 0x3C && (unsigned char)IPT_fn_bIsValidated(g_st_3DOS_EntryActions.hFlyingModeDoubleSpeed) == 1))
-    {
-        g_DEMO_KeybTest = 0; if (g_DEMO_AutoPlay == 1) { g_DEMO_AutoPlay = 0; printf("fn_vChangeEngineMode() comment\351 pour tests\n"); }
-        if (g_DEMO_u32PlayMode == 2)
-        {
-            DEMO_fn_vStopEventFlow();
-            g_DEMO_u32PlayMode = 0;
-        }
-        if (g_szMapNameToLoadWhenDemoFinished[0])
-        {
-            GAM_fn_vAskToChangeLevel(g_szMapNameToLoadWhenDemoFinished, 0);
-            g_szMapNameToLoadWhenDemoFinished[0] = 0;
-        }
-        else
-        {
-            fn_vKillAllAlways();
-            fn_vReinitTheMap();
-        }
-        return 0;
-    }
-    else
-    {
-        ulDEMO_ElapsedEngineTimerCount = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - g_ulDEMO_StartDEMO_EngineTimerCount;
-        iNewFrameInRecord = 0;
-        do
-        {
-            g_iFrameTimeOffset = g_ulDEMO_ElapsedDemoTimerCount - ulDEMO_ElapsedEngineTimerCount;
-            iEndOfUpdate = !((!gl_DEMO_ConstantSpeed) && (g_iFrameTimeOffset < 0));
-            if (!iEndOfUpdate)
-            {
-                if (iNewFrameInRecord)
-                {
-                    AGO_vClearUnwanted110AGOsForDemos();
-                    SND_fn_vSynchroSound();
-                    g_iNbMoveModule = 0; } else if (!gl_DEMO_ConstantSpeed &&
-                    g_iFrameTimeOffset > 0)
-                {
-                    printf("(wait %d)\n", g_iFrameTimeOffset);
-                    TMR_fn_wWait(g_iFrameTimeOffset);
-                    g_iFrameTimeOffset = 0;
-                }
-            }
-            g_xInterpolCoef = 1.0f - (float)g_iFrameTimeOffset / (float)g_ulDEMO_DeltaTimerCount;
-            DEMO_fn_vReadOneCompleteStateUpdate();
-            iNewFrameInRecord = 1;
-        } while (gl_DEMO_CurrentFrame < gl_DEMO_NumberOfFrames &&
-                 !iEndOfUpdate);
-        DEMO_fn_vMoveModuleDelayedHandling();
-        return 1;
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 7035–7169 */
 /* addr: 0x00283150  size: 592 bytes */
@@ -2104,71 +2024,6 @@ void HIE_fn_vInvalidateOneGlobalMatrix(HIE_tdstSuperObject_* hSO);
 void HIE_fn_vInvalidateHierarchy(HIE_tdstSuperObject_* hSO);
 void HIE_fn_vRefreshHierarchy(HIE_tdstSuperObject_* hSO);
 
-void DEMO_fn_vMoveModuleDelayedHandling(void)
-{
-    unsigned short Demo_Flag;
-    unsigned short wSO_Number;
-    unsigned char ucChannelNumber;
-    tdstDemoSOList_* p_stListElement;
-    tdstDemoCompressedTransform_ stCompressedTransform;
-    tduDemoV stTranslationVector;
-    int ii;
-    char* p_cCurrentDemoPosition;
-    HIE_tdstSuperObject_* hChild;
-    MAT_tdstTransformation_* hMatrix;
-
-    memset(&stTranslationVector, 0, 12);
-    p_cCurrentDemoPosition = (char*)gp_DEMO_CurrentPosInMemory;
-    for (ii = 0; ii < g_iNbMoveModule; ii++)
-    {
-        gp_DEMO_CurrentPosInMemory = g_aRemindedMoveModule[ii];
-        memcpy(&Demo_Flag, (void*)gp_DEMO_CurrentPosInMemory, 2);
-        gp_DEMO_CurrentPosInMemory += 2;
-        Demo_Flag &= 0x7FFF;
-        memcpy(&wSO_Number, (void*)gp_DEMO_CurrentPosInMemory, 2);
-        gp_DEMO_CurrentPosInMemory += 2;
-        memcpy(&ucChannelNumber, (void*)gp_DEMO_CurrentPosInMemory, 1);
-        gp_DEMO_CurrentPosInMemory += 1;
-        if (Demo_Flag == 8)
-        {
-            memcpy(&stTranslationVector, (void*)gp_DEMO_CurrentPosInMemory, 12);
-            gp_DEMO_CurrentPosInMemory += 12;
-        }
-        else if (Demo_Flag == 0x1A)
-        {
-            fn_vDemoReadCompressedTransform(&stCompressedTransform);
-        }
-        p_stListElement = &((LST2_tdstAnchorToDEMO_tdxHandleToDemoSOElementOpt*)g_hDemoSOList)->hFirstElementOpt[wSO_Number];
-        if (p_stListElement->hCharacterSupObject->hLinkedObject.p_stCharacter->h_3dData->hArrayOfChannels)
-        {
-            hChild = fn_hGetChannelSuperObject(p_stListElement->hCharacterSupObject->hLinkedObject.p_stCharacter->h_3dData, ucChannelNumber);
-            if (hChild)
-            {
-                hMatrix = hChild->hLocalMatrix;
-                if (Demo_Flag != 9)
-                {
-                    if (Demo_Flag == 0x1A)
-                    {
-                        fn_vDecompressTransform(hMatrix, &stCompressedTransform);
-                    }
-                    else
-                    {
-                        DEMO_vSetTranslation(hMatrix, &stTranslationVector);
-                    }
-                }
-                HIE_fn_vInvalidateOneGlobalMatrix(hChild);
-                for (hChild = p_stListElement->hCharacterSupObject->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn)
-                {
-                    HIE_fn_vInvalidateHierarchy(hChild);
-                }
-                HIE_fn_vRefreshHierarchy(p_stListElement->hCharacterSupObject);
-            }
-        }
-    }
-    gp_DEMO_CurrentPosInMemory = (int)p_cCurrentDemoPosition;
-    g_iNbMoveModule = 0;
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 6822–7029 */
 /* addr: 0x002833a0  size: 760 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -2219,91 +2074,6 @@ void DEMO_fn_vReadAlwaysActivationDesactivation(HIE_tdstSuperObject_* hSO);
 void DEMO_fn_vReadAndChangeActivationDesactivation(HIE_tdstSuperObject_* hSO);
 void HIE_fn_SO_vSetSuperimposedFlag(HIE_tdstSuperObject_* hSO);
 void fn_vTreatCharactersInSector(HIE_tdstSuperObject_* hCharacter);
-
-void DEMO_fn_vReadOneCompleteStateUpdate(void)
-{
-    int lFrame;
-    unsigned short wCurrentSO_Number;
-    unsigned short Demo_Flag;
-    unsigned short uwDelta;
-    unsigned short uwFlagCopy;
-    unsigned char ucCurrentSO_Number;
-    tdstDemoSOList_* p_stListElement;
-    int bSuperimposedSO;
-    tdstEngineObject_* param0;
-    int bEnd;
-
-    Demo_Flag = 0;
-    do
-    {
-        memcpy(&Demo_Flag, (void*)gp_DEMO_CurrentPosInMemory, 2);
-        if ((Demo_Flag & 0x8000) == 0x8000 ? 1 : 0)
-        {
-            DEMO_fn_vReadAndTreatAllExtendedFlag(Demo_Flag);
-        }
-        else if ((Demo_Flag & 1) == 1 ? 1 : 0)
-        {
-            memcpy(&uwFlagCopy, (void*)gp_DEMO_CurrentPosInMemory, 2);
-            gp_DEMO_CurrentPosInMemory += 2;
-            memcpy(&uwDelta, (void*)gp_DEMO_CurrentPosInMemory, 2);
-            gp_DEMO_CurrentPosInMemory += 2;
-            memcpy(&lFrame, (void*)gp_DEMO_CurrentPosInMemory, 4);
-            gp_DEMO_CurrentPosInMemory += 4;
-            g_ulDEMO_DeltaTimerCount = uwDelta;
-            g_ulDEMO_ElapsedDemoTimerCount += uwDelta;
-            gl_DEMO_CurrentFrame++;
-        }
-        else
-        {
-            if ((Demo_Flag & 0x2000) == 0x2000 ? 1 : 0)
-            {
-                memcpy(&ucCurrentSO_Number, (void*)(gp_DEMO_CurrentPosInMemory + 2), 1);
-                wCurrentSO_Number = ucCurrentSO_Number;
-            }
-            else
-            {
-                memcpy(&wCurrentSO_Number, (void*)(gp_DEMO_CurrentPosInMemory + 2), 2);
-            }
-            if (wCurrentSO_Number < 0x4000)
-            {
-                bSuperimposedSO = 0;
-            }
-            else
-            {
-                wCurrentSO_Number -= 0x4000;
-                bSuperimposedSO = 1;
-            }
-            p_stListElement = &((LST2_tdstAnchorToDEMO_tdxHandleToDemoSOElementOpt*)g_hDemoSOList)->hFirstElementOpt[wCurrentSO_Number];
-            if (bSuperimposedSO)
-            {
-                HIE_fn_SO_vSetSuperimposedFlag(p_stListElement->hCharacterSupObject);
-            }
-            if (((Demo_Flag & 0x100) == 0x100 ? 1 : 0) || ((Demo_Flag & 0x200) == 0x200 ? 1 : 0) || ((Demo_Flag & 0x400) == 0x400 ? 1 : 0) || ((Demo_Flag & 0x800) == 0x800 ? 1 : 0))
-            {
-                if ((Demo_Flag & 0x1000) == 0x1000 ? 1 : 0)
-                {
-                    DEMO_fn_vReadAlwaysActivationDesactivation(p_stListElement->hCharacterSupObject);
-                }
-                else
-                {
-                    DEMO_fn_vReadAndChangeActivationDesactivation(p_stListElement->hCharacterSupObject);
-                }
-            }
-            else if (p_stListElement->hCharacterSupObject->ulTypeOfLinkedObject == 2)
-            {
-                param0 = p_stListElement->hCharacterSupObject->hLinkedObject.p_stCharacter;
-                param0->h_StandardGame->ucMiscFlags |= 4;
-                param0->h_StandardGame->ulLastTrame = g_stEngineStructure.stEngineTimer.ulTrameNumber - 1;
-                fn_vTreatCharactersInSector(p_stListElement->hCharacterSupObject);
-            }
-        }
-        bEnd = 0;
-        if ((!((Demo_Flag & 0x8000) == 0x8000 ? 1 : 0)) != 0 && ((Demo_Flag & 1) == 1 ? 1 : 0))
-        {
-            bEnd = 1;
-        }
-    } while (!bEnd);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 6043–6440 */
 /* addr: 0x002836a0  size: 2360 bytes */
@@ -2492,217 +2262,6 @@ inline tdstDemoSOList_* DEMO_p_stFindSO(HIE_tdstSuperObject_* hSO)
     return NULL;
 }
 
-void DEMO_fn_vGetACompleteCharacterPosition(HIE_tdstSuperObject_* hSO)
-{
-    tdstDemoCompressedTransform_ stCompressedTransform;
-    MAT_tdstTransformation_ stNewlyReadTransform;
-    tduDemoV stTranslation;
-    tduDemoV stDeltaTranslation;
-    char szOutputMsg[8];
-    char a3_cCoef[3];
-    short wStateNumber;
-    unsigned short wSO_Number;
-    unsigned short uwForcedFrame;
-    unsigned short Demo_Flag;
-    unsigned char ucSO_Number;
-    tdstDemoSOList_* p_stListElement;
-    tdst3dData_* h3dData;
-    unsigned char bIsCamera;
-    MAT_tdstTransformation_* hMatrix;
-    tdstState_* p_stTmpState;
-    float xForcedFrame;
-    int* pY;
-    int* pZ;
-    int* pSrc;
-    float xInvNorm;
-    int lOldConstantSpeed;
-
-    h3dData = hSO->hLinkedObject.p_stCharacter->h_3dData;
-    wStateNumber = 0;
-    wSO_Number = 0;
-    Demo_Flag = 0;
-    if (g_DEMO_KeybTest != 2)
-    {
-        return;
-    }
-    if (g_iNbFramesToWaitBeforePlaying)
-    {
-        return;
-    }
-    p_stListElement = DEMO_p_stFindSO(hSO);
-    hMatrix = hSO->hLocalMatrix;
-    memcpy(&Demo_Flag, (void*)gp_DEMO_CurrentPosInMemory, 2);
-    gp_DEMO_CurrentPosInMemory += 2;
-    bIsCamera = (unsigned char)CAM_fn_bSuperObjectIsACamera(hSO);
-    if (((Demo_Flag & 0x2000) == 0x2000 ? 1 : 0))
-    {
-        memcpy(&ucSO_Number, (void*)gp_DEMO_CurrentPosInMemory, 1);
-        gp_DEMO_CurrentPosInMemory += 1;
-        wSO_Number = ucSO_Number;
-    }
-    else
-    {
-        memcpy(&wSO_Number, (void*)gp_DEMO_CurrentPosInMemory, 2);
-        gp_DEMO_CurrentPosInMemory += 2;
-    }
-    if (((Demo_Flag & 0x10) == 0x10 ? 1 : 0))
-    {
-        memcpy(&p_stListElement->_stTrs, (void*)gp_DEMO_CurrentPosInMemory, 12);
-        gp_DEMO_CurrentPosInMemory += 12;
-        DEMO_vSetTranslation(hMatrix, (tduDemoV*)&p_stListElement->_stTrs);
-    }
-    if (((Demo_Flag & 0x20) == 0x20 ? 1 : 0))
-    {
-        memcpy(a3_cCoef, (void*)gp_DEMO_CurrentPosInMemory, 3);
-        gp_DEMO_CurrentPosInMemory += 3;
-        p_stListElement->_stTrs.xX += (float)a3_cCoef[0] / 128.0f;
-        p_stListElement->_stTrs.xY += (float)a3_cCoef[1] / 128.0f;
-        p_stListElement->_stTrs.xZ += (float)a3_cCoef[2] / 128.0f;
-        DEMO_vSetTranslation(hMatrix, (tduDemoV*)&p_stListElement->_stTrs);
-    }
-    if (((Demo_Flag & 0x40) == 0x40 ? 1 : 0))
-    {
-        memcpy(&stTranslation, (void*)gp_DEMO_CurrentPosInMemory, 12);
-        gp_DEMO_CurrentPosInMemory += 12;
-        fn_vDemoReadCompressedTransform(&stCompressedTransform);
-        stDeltaTranslation.v.xX = stTranslation.v.xX - p_stListElement->_stTrs.xX;
-        stDeltaTranslation.v.xY = stTranslation.v.xY - p_stListElement->_stTrs.xY;
-        stDeltaTranslation.v.xZ = stTranslation.v.xZ - p_stListElement->_stTrs.xZ;
-    }
-    if (((Demo_Flag & 0x80) == 0x80 ? 1 : 0))
-    {
-        fn_vDemoReadCompressedTransform(&stCompressedTransform);
-    }
-    fn_vDecompressTransform(&stNewlyReadTransform, &stCompressedTransform);
-    memcpy(&p_stListElement->stCompressedTransform, &stCompressedTransform, 42);
-    if (((Demo_Flag & 0x80) == 0x80 ? 1 : 0))
-    {
-        pSrc = (int*)&stNewlyReadTransform.stTransformMatrix.stCol_3;
-        stDeltaTranslation.i[0] = pSrc[0];
-        stDeltaTranslation.i[1] = pSrc[1];
-        stDeltaTranslation.i[2] = pSrc[2];
-        stTranslation.v.xX = p_stListElement->_stTrs.xX + stDeltaTranslation.v.xX;
-        stTranslation.v.xY = p_stListElement->_stTrs.xY + stDeltaTranslation.v.xY;
-        stTranslation.v.xZ = p_stListElement->_stTrs.xZ + stDeltaTranslation.v.xZ;
-    }
-    *hMatrix = stNewlyReadTransform;
-    pY = &stTranslation.i[1];
-    pZ = &stTranslation.i[2];
-    *(int*)&hMatrix->stTransformMatrix.stCol_3.xX = stTranslation.i[0];
-    *(int*)&hMatrix->stTransformMatrix.stCol_3.xY = *pY;
-    *(int*)&hMatrix->stTransformMatrix.stCol_3.xZ = *pZ;
-    *(int*)&p_stListElement->_stTrs.xX = stTranslation.i[0];
-    *(int*)&p_stListElement->_stTrs.xY = *pY;
-    *(int*)&p_stListElement->_stTrs.xZ = *pZ;
-    if (bIsCamera)
-    {
-        xInvNorm = 1.0f / MTH_fn_xSqrtOpt2(MTH4D_fn_xSqrVector(&hMatrix->stTransformMatrix.stCol_0));
-        hMatrix->stTransformMatrix.stCol_0.xX = xInvNorm * hMatrix->stTransformMatrix.stCol_0.xX;
-        hMatrix->stTransformMatrix.stCol_0.xY = xInvNorm * hMatrix->stTransformMatrix.stCol_0.xY;
-        hMatrix->stTransformMatrix.stCol_0.xZ = xInvNorm * hMatrix->stTransformMatrix.stCol_0.xZ;
-        hMatrix->stTransformMatrix.stCol_0.xW = 1.0f;
-        xInvNorm = 1.0f / MTH_fn_xSqrtOpt2(MTH4D_fn_xSqrVector(&hMatrix->stTransformMatrix.stCol_1));
-        hMatrix->stTransformMatrix.stCol_1.xX = xInvNorm * hMatrix->stTransformMatrix.stCol_1.xX;
-        hMatrix->stTransformMatrix.stCol_1.xY = xInvNorm * hMatrix->stTransformMatrix.stCol_1.xY;
-        hMatrix->stTransformMatrix.stCol_1.xZ = xInvNorm * hMatrix->stTransformMatrix.stCol_1.xZ;
-        hMatrix->stTransformMatrix.stCol_1.xW = 1.0f;
-        DEMO_M_CROSS(hMatrix->stTransformMatrix.stCol_2.xX, hMatrix->stTransformMatrix.stCol_0.xY, hMatrix->stTransformMatrix.stCol_1.xZ, hMatrix->stTransformMatrix.stCol_0.xZ, hMatrix->stTransformMatrix.stCol_1.xY)
-        DEMO_M_CROSS(hMatrix->stTransformMatrix.stCol_2.xY, hMatrix->stTransformMatrix.stCol_0.xZ, hMatrix->stTransformMatrix.stCol_1.xX, hMatrix->stTransformMatrix.stCol_0.xX, hMatrix->stTransformMatrix.stCol_1.xZ)
-        DEMO_M_CROSS(hMatrix->stTransformMatrix.stCol_2.xZ, hMatrix->stTransformMatrix.stCol_0.xX, hMatrix->stTransformMatrix.stCol_1.xY, hMatrix->stTransformMatrix.stCol_0.xY, hMatrix->stTransformMatrix.stCol_1.xX)
-        hMatrix->stTransformMatrix.stCol_2.xW = 1.0f;
-        DEMO_M_CROSS(hMatrix->stTransformMatrix.stCol_1.xX, hMatrix->stTransformMatrix.stCol_2.xY, hMatrix->stTransformMatrix.stCol_0.xZ, hMatrix->stTransformMatrix.stCol_2.xZ, hMatrix->stTransformMatrix.stCol_0.xY)
-        DEMO_M_CROSS(hMatrix->stTransformMatrix.stCol_1.xY, hMatrix->stTransformMatrix.stCol_2.xZ, hMatrix->stTransformMatrix.stCol_0.xX, hMatrix->stTransformMatrix.stCol_2.xX, hMatrix->stTransformMatrix.stCol_0.xZ)
-        DEMO_M_CROSS(hMatrix->stTransformMatrix.stCol_1.xZ, hMatrix->stTransformMatrix.stCol_2.xX, hMatrix->stTransformMatrix.stCol_0.xY, hMatrix->stTransformMatrix.stCol_2.xY, hMatrix->stTransformMatrix.stCol_0.xX)
-        hMatrix->stTransformMatrix.stCol_1.xW = 1.0f;
-    }
-    if (((Demo_Flag & 0x2) == 0x2 ? 1 : 0))
-    {
-        memcpy(&wStateNumber, (void*)gp_DEMO_CurrentPosInMemory, 2);
-        gp_DEMO_CurrentPosInMemory += 2;
-        p_stListElement->wStateNumber = wStateNumber;
-    }
-    else
-    {
-        wStateNumber = p_stListElement->wStateNumber;
-    }
-    if (((Demo_Flag & 0x4) == 0x4 ? 1 : 0))
-    {
-        memcpy(&uwForcedFrame, (void*)gp_DEMO_CurrentPosInMemory, 2);
-        gp_DEMO_CurrentPosInMemory += 2;
-        sprintf(szOutputMsg, "%4d\n", uwForcedFrame);
-        p_stListElement->uwCurrentFrame = uwForcedFrame;
-    }
-    else
-    {
-        uwForcedFrame = p_stListElement->uwCurrentFrame;
-    }
-    xForcedFrame = fn_fUncompressNumberInline(uwForcedFrame);
-    *hSO->hGlobalMatrix = *hSO->hLocalMatrix;
-    if (((Demo_Flag & 0x4) == 0x4 ? 1 : 0) || ((Demo_Flag & 0x2) == 0x2 ? 1 : 0))
-    {
-        unsigned char bNoDisplay;
-
-        bNoDisplay = 0;
-        if (wStateNumber == 0x7FFF)
-        {
-            p_stTmpState = h3dData->h_CurrentState;
-        }
-        else if (wStateNumber >= 0)
-        {
-            p_stTmpState = &h3dData->h_Family->hForStateArray.hFirstElementOpt[wStateNumber];
-        }
-        else
-        {
-            wStateNumber = -1 - wStateNumber;
-            p_stTmpState = (tdstState_*)a_hTemporaryStateCorrespondance[wStateNumber];
-            if (p_stTmpState == NULL)
-            {
-                printf("interm state is null : ignore it !\n");
-                p_stTmpState = h3dData->h_CurrentState;
-            }
-        }
-        if (p_stTmpState != h3dData->h_CurrentState || uwForcedFrame == 0)
-        {
-            PLA_fn_bSetNewState(hSO, p_stTmpState, 1, 0, 1, 0, 0.0f, 0);
-            if (hSO->hLinkedObject.p_stCharacter->h_Micro == NULL)
-            {
-                PLA_fn_vSetCurrFrame(hSO, (int)xForcedFrame);
-            }
-        }
-        else
-        {
-            lOldConstantSpeed = g_bAnimConstantSpeed;
-            if (h3dData->h_CurrentState->p_stAnim)
-            {
-                if (!(xForcedFrame <= (float)(unsigned int)*(unsigned short*)h3dData->h_CurrentState->p_stAnim))
-                {
-                    bNoDisplay = 1;
-                    xForcedFrame = 1.0f;
-                }
-            }
-            h3dData->xCurrentFrame = xForcedFrame - 1.0f;
-            g_bAnimConstantSpeed = 1;
-            PLA_fn_bDoAnimPlayerForCharacter(hSO, bNoDisplay, 0);
-            g_bAnimConstantSpeed = lOldConstantSpeed;
-        }
-    }
-    if (((Demo_Flag & 0x8) == 0x8 ? 1 : 0))
-    {
-        memcpy(&p_stListElement->ucTransparence, (void*)gp_DEMO_CurrentPosInMemory, 1);
-        gp_DEMO_CurrentPosInMemory += 1;
-        hSO->fTransparenceLevel = (float)(unsigned int)p_stListElement->ucTransparence;
-        if (p_stListElement->ucTransparence == 0xFF)
-        {
-            hSO->lDrawModeMask |= 8;
-        }
-        else
-        {
-            hSO->lDrawModeMask &= ~8;
-            PLA_fn_vUpdateTransparencyForModules(hSO);
-        }
-    }
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 5927–6018 */
 /* addr: 0x00284020  size: 392 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -2740,43 +2299,6 @@ int MC_fn_hGetFirstMainCharNode(void);
 HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(int hNode);
 HIE_tdstSuperObject_* fn_p_stDemoAllocateAlways(int otObjectModelType, int hFather, HIE_tdstSuperObject_* hGenerator, int lParam, MAT_tdstTransformation_* hMatrix, short wAlwaysNumber);
 void fn_vKillEngineObjectOrAlwaysByPointer(tdstEngineObject_* p_stObject);
-
-void DEMO_fn_vReadAlwaysActivationDesactivation(HIE_tdstSuperObject_* hSO)
-{
-    unsigned short wSO_Number;
-    MAT_tdstTransformation_ p_stPosMatrix;
-    tduDemoV stTempVector;
-    int otObjectModelType;
-    unsigned short Demo_Flag;
-    short wAlwaysNumber;
-
-    wSO_Number = 0;
-    Demo_Flag = 0;
-    MAT_fn_vSetIdentity(&p_stPosMatrix);
-    if (g_DEMO_KeybTest == 2)
-    {
-        memcpy(&Demo_Flag, (void*)gp_DEMO_CurrentPosInMemory, 2);
-        gp_DEMO_CurrentPosInMemory += 2;
-        memcpy(&wSO_Number, (void*)gp_DEMO_CurrentPosInMemory, 2);
-        gp_DEMO_CurrentPosInMemory += 2;
-        memcpy(&wAlwaysNumber, (void*)gp_DEMO_CurrentPosInMemory, 2);
-        gp_DEMO_CurrentPosInMemory += 2;
-        if ((Demo_Flag & 0x100) == 0x100 ? 1 : 0)
-        {
-            memcpy(&otObjectModelType, (void*)gp_DEMO_CurrentPosInMemory, 4);
-            gp_DEMO_CurrentPosInMemory += 4;
-            memcpy(&stTempVector, (void*)gp_DEMO_CurrentPosInMemory, 12);
-            gp_DEMO_CurrentPosInMemory += 12;
-            DEMO_vSetTranslation(&p_stPosMatrix, &stTempVector);
-            fn_p_stDemoAllocateAlways(otObjectModelType, gp_stDynamicWorld, MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode()), 0, &p_stPosMatrix, wAlwaysNumber);
-            hSO->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags |= 2;
-        }
-        if ((Demo_Flag & 0x200) == 0x200 ? 1 : 0)
-        {
-            fn_vKillEngineObjectOrAlwaysByPointer(hSO->hLinkedObject.p_stCharacter);
-        }
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 5753–5843 */
 /* addr: 0x002841b0  size: 528 bytes */
@@ -2818,56 +2340,6 @@ void DEMO_fn_vReadAlwaysActivationDesactivation(HIE_tdstSuperObject_* hSO)
  * compare a candidate object's line table as an extra checkpoint.
  */
 void PLA_fn_vDesInitAllChildOfCharacter(HIE_tdstSuperObject_* p_stSuperObject, tdstEngineObject_* p_stObject);
-
-void DEMO_fn_vReadAndChangeActivationDesactivation(HIE_tdstSuperObject_* hSO)
-{
-    unsigned short wSO_Number;
-    unsigned short Demo_Flag;
-    tdstEngineObject_* p_stObj;
-    unsigned char ucChannelNumber;
-    HIE_tdstSuperObject_* hChannelSO;
-
-    wSO_Number = 0;
-    Demo_Flag = 0;
-    if (g_DEMO_KeybTest == 2)
-    {
-        memcpy(&Demo_Flag, (void*)gp_DEMO_CurrentPosInMemory, 2);
-        gp_DEMO_CurrentPosInMemory += 2;
-        memcpy(&wSO_Number, (void*)gp_DEMO_CurrentPosInMemory, 2);
-        gp_DEMO_CurrentPosInMemory += 2;
-        p_stObj = hSO->hLinkedObject.p_stCharacter;
-        if ((Demo_Flag & 0x100) == 0x100 ? 1 : 0)
-        {
-            p_stObj->h_StandardGame->ucMiscFlags |= 4;
-            PLA_fn_bDoAnimPlayerForCharacter(hSO, 1, 0);
-        }
-        if ((Demo_Flag & 0x200) == 0x200 ? 1 : 0)
-        {
-            p_stObj->h_StandardGame->ucMiscFlags &= ~4;
-            PLA_fn_vDesInitAllChildOfCharacter(hSO, p_stObj);
-        }
-        if ((Demo_Flag & 0x400) == 0x400 ? 1 : 0)
-        {
-            memcpy(&ucChannelNumber, (void*)gp_DEMO_CurrentPosInMemory, 1);
-            gp_DEMO_CurrentPosInMemory += 1;
-            hChannelSO = fn_hGetChannelSuperObject(hSO->hLinkedObject.p_stCharacter->h_3dData, ucChannelNumber);
-            if (hChannelSO)
-            {
-                hChannelSO->ulFlags &= ~0x83;
-            }
-        }
-        if ((Demo_Flag & 0x800) == 0x800 ? 1 : 0)
-        {
-            memcpy(&ucChannelNumber, (void*)gp_DEMO_CurrentPosInMemory, 1);
-            gp_DEMO_CurrentPosInMemory += 1;
-            hChannelSO = fn_hGetChannelSuperObject(hSO->hLinkedObject.p_stCharacter->h_3dData, ucChannelNumber);
-            if (hChannelSO)
-            {
-                hChannelSO->ulFlags |= 0x83;
-            }
-        }
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 4624–5742 */
 /* addr: 0x002843c0  size: 7368 bytes */
@@ -3477,6 +2949,667 @@ void DEMO_fn_vReadAndChangeActivationDesactivation(HIE_tdstSuperObject_* hSO)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 2026–2029 */
+/* addr: 0x00286090  size: 48 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0004 -> line 2026
+ *   +0x0008 -> line 2027
+ *   +0x000c -> line 2026
+ *   +0x0010 -> line 2027
+ *   +0x001c -> line 2028
+ *   +0x0024 -> line 2029
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 2023–2023 */
+/* addr: 0x002860c0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2023
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1963–1968 */
+/* addr: 0x002860d0  size: 176 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1963
+ *   +0x0008 -> line 1964
+ *   +0x0014 -> line 1965
+ *   +0x00a0 -> line 1966
+ *   +0x00a4 -> line 1968
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void DEMO_fn_vLoadFromFile(char* szDemoName);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1956–1959 */
+/* addr: 0x00286180  size: 44 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0004 -> line 1956
+ *   +0x0008 -> line 1957
+ *   +0x000c -> line 1956
+ *   +0x0010 -> line 1957
+ *   +0x0018 -> line 1958
+ *   +0x0020 -> line 1959
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1808–1921 */
+/* addr: 0x002861b0  size: 168 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1808
+ *   +0x0010 -> line 1878
+ *   +0x0018 -> line 1879
+ *   +0x0024 -> line 1884
+ *   +0x0028 -> line 1886
+ *   +0x003c -> line 1891
+ *   +0x0048 -> line 1895
+ *   +0x005c -> line 1896
+ *   +0x0060 -> line 1895
+ *   +0x0068 -> line 1896
+ *   +0x007c -> line 1898
+ *   +0x0084 -> line 1899
+ *   +0x0090 -> line 1900
+ *   +0x0098 -> line 1921
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+char* DEMO_fn_pcBuildDemoPath(char* szFilename);
+unsigned char DEMO_bInitEventFlow(char* szFileName);
+char* DEMO_pcGetNextFlowSegment(void);
+void* memcpy(void* dst, const void* src, size_t n);
+int printf(const char* fmt, ...);
+
+#pragma auto_inline on
+
+#pragma auto_inline reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1800–1801 */
+/* addr: 0x00286260  size: 16 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1800
+ *   +0x0008 -> line 1801
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1794–1795 */
+/* addr: 0x00286270  size: 20 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1794
+ *   +0x000c -> line 1795
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1735–1780 */
+/* addr: 0x00286290  size: 296 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1735
+ *   +0x0010 -> line 1741
+ *   +0x0024 -> line 1743
+ *   +0x002c -> line 1745
+ *   +0x0048 -> line 1746
+ *   +0x0050 -> line 1749
+ *   +0x0070 -> line 1757
+ *   +0x0090 -> line 1760
+ *   +0x00a0 -> line 1761
+ *   +0x00ac -> line 1762
+ *   +0x00d0 -> line 1764
+ *   +0x00d8 -> line 1768
+ *   +0x00ec -> line 1769
+ *   +0x0104 -> line 1771
+ *   +0x0108 -> line 1777
+ *   +0x0114 -> line 1780
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int fn_lGetSubMapNumber(void);
+char* fn_p_szGetLevelName(void);
+char* FMN_SCE_ConvertPath2DVD(char* buffer);
+char* FMN_SCE_AddBaseDirectory(char* buffer);
+char* strstr(const char* s1, const char* s2);
+unsigned int strlen(const char* s);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1448–1448 */
+/* addr: 0x002863c0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1448
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1367–1373 */
+/* addr: 0x002863d0  size: 60 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1367
+ *   +0x0004 -> line 1368
+ *   +0x0008 -> line 1367
+ *   +0x000c -> line 1369
+ *   +0x0024 -> line 1370
+ *   +0x0028 -> line 1372
+ *   +0x0030 -> line 1373
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1320–1364 */
+/* addr: 0x00286410  size: 204 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1320
+ *   +0x0004 -> line 1324
+ *   +0x0008 -> line 1320
+ *   +0x000c -> line 1324
+ *   +0x0018 -> line 1325
+ *   +0x0020 -> line 1339
+ *   +0x0024 -> line 1348
+ *   +0x0028 -> line 1339
+ *   +0x002c -> line 1338
+ *   +0x0030 -> line 1340
+ *   +0x0034 -> line 1348
+ *   +0x0038 -> line 1340
+ *   +0x003c -> line 1348
+ *   +0x0048 -> line 1338
+ *   +0x004c -> line 1349
+ *   +0x0058 -> line 1327
+ *   +0x005c -> line 1351
+ *   +0x0064 -> line 1353
+ *   +0x0078 -> line 1357
+ *   +0x00c0 -> line 1364
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO_vInit(void);
+void CreateType28AGO(MTH3D_tdstVector_* p_stPos, MTH3D_tdstVector_* p_stDir, int lParam, float fParam);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1266–1295 */
+/* addr: 0x002864e0  size: 16 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1284
+ *   +0x0004 -> line 1266
+ *   +0x0008 -> line 1295
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 887–1066 */
+/* addr: 0x002864f0  size: 4600 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 887
+ *   +0x0004 -> line 892
+ *   +0x0008 -> line 887
+ *   +0x000c -> line 892
+ *   +0x0010 -> line 887
+ *   +0x0034 -> line 892
+ *   +0x003c -> line 896
+ *   +0x005c -> line 901
+ *   +0x0084 -> line 906
+ *   +0x00a4 -> line 909
+ *   +0x00ac -> line 911
+ *   +0x00b0 -> line 914
+ *   +0x00b4 -> line 911
+ *   +0x00d4 -> line 914
+ *   +0x00e8 -> line 915
+ *   +0x00f0 -> line 918
+ *   +0x0104 -> line 919
+ *   +0x0108 -> line 921
+ *   +0x010c -> line 918
+ *   +0x0114 -> line 919
+ *   +0x0118 -> line 921
+ *   +0x0130 -> line 923
+ *   +0x014c -> line 924
+ *   +0x0154 -> line 927
+ *   +0x0168 -> line 928
+ *   +0x016c -> line 930
+ *   +0x0170 -> line 927
+ *   +0x0178 -> line 928
+ *   +0x017c -> line 930
+ *   +0x0194 -> line 932
+ *   +0x019c -> line 933
+ *   +0x01a4 -> line 934
+ *   +0x01a8 -> line 935
+ *   +0x01b0 -> line 943
+ *   +0x01c4 -> line 944
+ *   +0x01c8 -> line 946
+ *   +0x01cc -> line 943
+ *   +0x01d4 -> line 944
+ *   +0x01d8 -> line 946
+ *   +0x01f0 -> line 948
+ *   +0x021c -> line 951
+ *   +0x0234 -> line 956
+ *   +0x0474 -> line 958
+ *   +0x0478 -> line 956
+ *   +0x0480 -> line 959
+ *   +0x06b8 -> line 961
+ *   +0x06bc -> line 959
+ *   +0x06c4 -> line 962
+ *   +0x0900 -> line 966
+ *   +0x0904 -> line 962
+ *   +0x0908 -> line 966
+ *   +0x0914 -> line 969
+ *   +0x091c -> line 978
+ *   +0x0930 -> line 979
+ *   +0x0934 -> line 981
+ *   +0x0938 -> line 978
+ *   +0x0940 -> line 979
+ *   +0x0944 -> line 981
+ *   +0x0954 -> line 985
+ *   +0x0958 -> line 981
+ *   +0x0960 -> line 985
+ *   +0x0978 -> line 987
+ *   +0x09a4 -> line 990
+ *   +0x09bc -> line 992
+ *   +0x09e0 -> line 1020
+ *   +0x09e4 -> line 992
+ *   +0x09e8 -> line 1021
+ *   +0x09ec -> line 992
+ *   +0x09f0 -> line 1020
+ *   +0x09f4 -> line 992
+ *   +0x09f8 -> line 1020
+ *   +0x09fc -> line 992
+ *   +0x0a00 -> line 1020
+ *   +0x0a04 -> line 992
+ *   +0x0a08 -> line 1031
+ *   +0x0a10 -> line 1020
+ *   +0x0a14 -> line 1021
+ *   +0x0a20 -> line 1022
+ *   +0x0a30 -> line 1031
+ *   +0x0a34 -> line 1020
+ *   +0x0a38 -> line 1031
+ *   +0x0a3c -> line 1027
+ *   +0x0a40 -> line 1029
+ *   +0x0a44 -> line 1020
+ *   +0x0a64 -> line 1021
+ *   +0x0a8c -> line 1022
+ *   +0x0ab4 -> line 1023
+ *   +0x0ac0 -> line 1031
+ *   +0x0cf0 -> line 1035
+ *   +0x0cf4 -> line 1031
+ *   +0x0cf8 -> line 1035
+ *   +0x0f30 -> line 1038
+ *   +0x0f34 -> line 1035
+ *   +0x0f38 -> line 1038
+ *   +0x1170 -> line 1043
+ *   +0x1174 -> line 1038
+ *   +0x1178 -> line 1042
+ *   +0x1184 -> line 1045
+ *   +0x118c -> line 1047
+ *   +0x11a4 -> line 1048
+ *   +0x11ac -> line 1050
+ *   +0x11c8 -> line 1066
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+inline short fn_sCompressNumber(float xValue)
+{
+    char szBuffer[80];
+    unsigned int ulValue;
+    unsigned int sign_bit;
+    unsigned int expf;
+    unsigned int mantissa;
+    union {
+        float f;
+        unsigned int ul;
+    } value;
+
+    value.f = xValue;
+    ulValue = value.ul;
+    expf = (ulValue & 0x7F800000) >> 23;
+    mantissa = ulValue & 0x7FFFFF;
+    sign_bit = ulValue & 0x80000000;
+    if (expf != 0)
+    {
+        expf -= 0x7F;
+        if ((int)expf < -15)
+        {
+            sprintf(szBuffer, "float abs val too small to be compressed %f -> 0\n", (double)xValue);
+            expf = -15;
+            mantissa = 1;
+        }
+        if ((int)expf > 16)
+        {
+            expf = 16;
+            mantissa = 0x3FF;
+        }
+        expf += 15;
+        expf <<= 10;
+    }
+    return (short)((mantissa >> 13) | ((sign_bit >> 16) | expf));
+}
+
+#define DEMO_M_COMPRESS_VECTOR(a_sDst, p_stV) \
+    (a_sDst)[0] = fn_sCompressNumber((p_stV)->xX); \
+    (a_sDst)[1] = fn_sCompressNumber((p_stV)->xY); \
+    (a_sDst)[2] = fn_sCompressNumber((p_stV)->xZ); \
+    (a_sDst)[3] = fn_sCompressNumber((p_stV)->xW);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 440–482 */
+/* addr: 0x002876f0  size: 72 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 457
+ *   +0x0004 -> line 440
+ *   +0x0008 -> line 457
+ *   +0x000c -> line 460
+ *   +0x0010 -> line 457
+ *   +0x0014 -> line 460
+ *   +0x0018 -> line 466
+ *   +0x0020 -> line 470
+ *   +0x0024 -> line 471
+ *   +0x0028 -> line 477
+ *   +0x003c -> line 479
+ *   +0x0040 -> line 482
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+float fn_fUncompressNumber(short n)
+{
+    unsigned int sign_bit;
+    unsigned int expf;
+    unsigned int mantissa;
+    unsigned int ulValue;
+    union {
+        unsigned int ul;
+        float f;
+    } value;
+
+    sign_bit = n & 0x8000;
+    expf = (n & 0x7c00) >> 10;
+    mantissa = n & 0x3ff;
+    if (expf != 0)
+    {
+        expf += 0x70;
+        expf <<= 23;
+    }
+    ulValue = (mantissa << 13) | ((sign_bit << 16) | expf);
+    value.ul = ulValue;
+    return value.f;
+}
+
+void fn_vDemoReadCompressedTransform(tdstDemoCompressedTransform_* _p_stCompressedTransform)
+{
+    MTH4D_tdstMatrix_ stMatrix;
+    MTH4D_tdstMatrix_ stMatrix2;
+    short* p_coef;
+    MTH4D_tdstVector_* p_stVector;
+    short* p_coefScaled;
+    MTH4D_tdstVector_* p_stScaled;
+    float xScale;
+    float xX;
+    float xY;
+    float xZ;
+    float* p0Y; float* p0Z; float* p0W; float* p1X; float* p1Y; float* p1Z; float* p1W; float* p2X; float* p2Y; float* p2Z; float* p2W;
+
+    memset(_p_stCompressedTransform, 0, 42);
+    p_coef = _p_stCompressedTransform->a_sCoef;
+    memcpy(_p_stCompressedTransform, (void*)gp_DEMO_CurrentPosInMemory, 2);
+    gp_DEMO_CurrentPosInMemory += 2;
+    switch (_p_stCompressedTransform->uwType)
+    {
+    case 1:
+        p_coef[19] = 0x3C00;
+        p_coef[18] = 0x3C00;
+        p_coef[17] = 0x3C00;
+        p_coef[16] = 0x3C00;
+        p_coef[15] = 0x3C00;
+        p_coef[10] = 0x3C00;
+        p_coef[5] = 0x3C00;
+        p_coef[0] = 0x3C00;
+        break;
+    case 2:
+        p_coef[19] = 0x3C00;
+        p_coef[18] = 0x3C00;
+        p_coef[17] = 0x3C00;
+        p_coef[16] = 0x3C00;
+        p_coef[15] = 0x3C00;
+        p_coef[10] = 0x3C00;
+        p_coef[5] = 0x3C00;
+        p_coef[0] = 0x3C00;
+        memcpy(&_p_stCompressedTransform->a_sCoef[12], (void*)gp_DEMO_CurrentPosInMemory, 6);
+        gp_DEMO_CurrentPosInMemory += 6;
+        break;
+    case 3:
+        memcpy(&_p_stCompressedTransform->a_sCoef[12], (void*)gp_DEMO_CurrentPosInMemory, 6);
+        gp_DEMO_CurrentPosInMemory += 6;
+        _p_stCompressedTransform->a_sCoef[15] = 0x3C00;
+        memcpy(p_coef, (void*)gp_DEMO_CurrentPosInMemory, 2);
+        gp_DEMO_CurrentPosInMemory += 2;
+        p_coef[5] = p_coef[10] = p_coef[15] = p_coef[16] = p_coef[17] = p_coef[18] = p_coef[19] = p_coef[0];
+        break;
+    case 4:
+        memcpy(&_p_stCompressedTransform->a_sCoef[12], (void*)gp_DEMO_CurrentPosInMemory, 6);
+        gp_DEMO_CurrentPosInMemory += 6;
+        _p_stCompressedTransform->a_sCoef[15] = 0x3C00;
+        memcpy(&p_coef[16], (void*)gp_DEMO_CurrentPosInMemory, 6);
+        gp_DEMO_CurrentPosInMemory += 6;
+        p_coef[0] = p_coef[16];
+        p_coef[5] = p_coef[17];
+        p_coef[10] = p_coef[18];
+        break;
+    case 5:
+        memcpy(&_p_stCompressedTransform->a_sCoef[12], (void*)gp_DEMO_CurrentPosInMemory, 6);
+        gp_DEMO_CurrentPosInMemory += 6;
+        _p_stCompressedTransform->a_sCoef[15] = 0x3C00;
+        memcpy(p_coef, (void*)gp_DEMO_CurrentPosInMemory, 8);
+        gp_DEMO_CurrentPosInMemory += 8;
+        xZ = fn_fUncompressNumber(p_coef[3]);
+        xY = fn_fUncompressNumber(p_coef[2]);
+        xX = fn_fUncompressNumber(p_coef[1]);
+        MAT_fn_vQuatToMatrix(&stMatrix, fn_fUncompressNumber(p_coef[0]), xX, xY, xZ);
+        p_stVector = &stMatrix.stCol_0;
+        DEMO_M_COMPRESS_VECTOR(&p_coef[0], p_stVector)
+        p_stVector = &stMatrix.stCol_1;
+        DEMO_M_COMPRESS_VECTOR(&p_coef[4], p_stVector)
+        p_stVector = &stMatrix.stCol_2;
+        DEMO_M_COMPRESS_VECTOR(&p_coef[8], p_stVector)
+        _p_stCompressedTransform->a_sCoef[19] = 0x3C00;
+        _p_stCompressedTransform->a_sCoef[18] = 0x3C00;
+        _p_stCompressedTransform->a_sCoef[17] = 0x3C00;
+        _p_stCompressedTransform->a_sCoef[16] = 0x3C00;
+        break;
+    case 6:
+        memcpy(&_p_stCompressedTransform->a_sCoef[12], (void*)gp_DEMO_CurrentPosInMemory, 6);
+        gp_DEMO_CurrentPosInMemory += 6;
+        _p_stCompressedTransform->a_sCoef[15] = 0x3C00;
+        memcpy(&_p_stCompressedTransform->a_sCoef[16], (void*)gp_DEMO_CurrentPosInMemory, 2);
+        gp_DEMO_CurrentPosInMemory += 2;
+        memcpy(p_coef, (void*)gp_DEMO_CurrentPosInMemory, 8);
+        gp_DEMO_CurrentPosInMemory += 8;
+        xZ = fn_fUncompressNumber(p_coef[3]);
+        xY = fn_fUncompressNumber(p_coef[2]);
+        xX = fn_fUncompressNumber(p_coef[1]);
+        MAT_fn_vQuatToMatrix(&stMatrix2, fn_fUncompressNumber(p_coef[0]), xX, xY, xZ);
+        xScale = fn_fUncompressNumberInline(_p_stCompressedTransform->a_sCoef[16]);
+        p0W = &stMatrix2.stCol_0.xW;
+        p1X = &stMatrix2.stCol_1.xX;
+        p0Z = &stMatrix2.stCol_0.xZ;
+        p0Y = &stMatrix2.stCol_0.xY;
+        p1Y = &stMatrix2.stCol_1.xY;
+        p1Z = &stMatrix2.stCol_1.xZ;
+        p1W = &stMatrix2.stCol_1.xW;
+        p2X = &stMatrix2.stCol_2.xX;
+        p2Y = &stMatrix2.stCol_2.xY;
+        p2Z = &stMatrix2.stCol_2.xZ;
+        p2W = &stMatrix2.stCol_2.xW;
+        stMatrix2.stCol_0.xX *= xScale;
+        *p0Y *= xScale;
+        *p0Z *= xScale;
+        *p0W = 1.0f;
+        *p1X *= xScale;
+        *p1Y *= xScale;
+        *p1Z *= xScale;
+        *p1W = 1.0f;
+        *p2X *= xScale;
+        *p2Y *= xScale;
+        *p2Z *= xScale;
+        *p2W = 1.0f;
+        *p2W = 0.0f;
+        *p1W = 0.0f;
+        *p0W = 0.0f;
+        p_coefScaled = _p_stCompressedTransform->a_sCoef;
+        p_stScaled = &stMatrix2.stCol_0;
+        DEMO_M_COMPRESS_VECTOR(p_coefScaled, p_stScaled)
+        p_stScaled = &stMatrix2.stCol_1;
+        DEMO_M_COMPRESS_VECTOR(&p_coefScaled[4], p_stScaled)
+        p_stScaled = &stMatrix2.stCol_2;
+        DEMO_M_COMPRESS_VECTOR(&p_coefScaled[8], p_stScaled)
+        _p_stCompressedTransform->a_sCoef[19] = 0x3C00;
+        _p_stCompressedTransform->a_sCoef[18] = _p_stCompressedTransform->a_sCoef[17] = _p_stCompressedTransform->a_sCoef[16];
+        break;
+    case 7:
+        memcpy(_p_stCompressedTransform, (void*)gp_DEMO_CurrentPosInMemory, 42);
+        gp_DEMO_CurrentPosInMemory += 42;
+        break;
+    case 8:
+        memcpy(_p_stCompressedTransform, (void*)gp_DEMO_CurrentPosInMemory, 42);
+        gp_DEMO_CurrentPosInMemory += 42;
+        break;
+    case 0:
+    case 9:
+        break;
+    }
+}
+
+void DEMO_fn_vAllocateMemory(void)
+{
+    gp_DEMO_AllocatedMemory = 0;
+    g_szMapNameToLoadWhenDemoFinished[0] = '\0';
+}
+
+void DEMO_fn_vPrepareForReadNow(void)
+{
+    MTH3D_tdstVector_ stPos;
+    MTH3D_tdstVector_ stDir;
+    int i;
+
+    if (g_DEMO_u32PlayMode == 1)
+        gp_DEMO_CurrentPosInMemory = gp_DEMO_AllocatedMemory;
+    g_ulDEMO_ElapsedDemoTimerCount = 1;
+    g_ulDEMO_DeltaTimerCount = 32;
+    g_ulDEMO_StartDEMO_EngineTimerCount = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+    gl_DEMO_CurrentFrame = 0;
+    stPos.xX = 1.0f;
+    stPos.xY = 1.0f;
+    stPos.xZ = 1000.0f;
+    stDir.xX = 1.0f;
+    stDir.xY = 1.0f;
+    stDir.xZ = 1.0f;
+    AGO_vInit();
+    CreateType28AGO(&stPos, &stDir, 0, 0.0f);
+    for (i = 0; i < 32; i++)
+        g_as32DemoAGOTable[i] = -1;
+}
+
+void DEMO_fn_vPrepareForRead(int _iNbFramesToWait)
+{
+    g_DEMO_KeybTest = 2;
+    if (!_iNbFramesToWait) DEMO_fn_vPrepareForReadNow();
+    else g_iNbFramesToWaitBeforePlaying = _iNbFramesToWait;
+    g_DEMO_AutoPlay = 1;
+}
+
+void DEMO_fn_vCloseFirstInit(void)
+{
+    g_DEMO_FirstInitFlag = 0;
+}
+
+char* DEMO_fn_pcBuildDemoPath(char* szFilename)
+{
+    char ax_cName[256];
+    char* p_cFilename;
+    int lSubMapNumber;
+
+    lSubMapNumber = ((unsigned int)fn_lGetSubMapNumber() & 0xFFFF0000) >> 16;
+
+    if (lSubMapNumber == 0)
+    {
+        sprintf(szFilename, "\\Demos\\%s\\", fn_p_szGetLevelName());
+    }
+    else
+    {
+        sprintf(szFilename, "\\Demos\\%s\\%02d\\", fn_p_szGetLevelName(), lSubMapNumber);
+    }
+
+    strcpy(ax_cName, FMN_SCE_AddBaseDirectory(FMN_SCE_ConvertPath2DVD(szFilename)));
+
+    if (strstr(ax_cName, "cdrom0:") == ax_cName)
+        /* Not original source, needs cleaning up: int-cast keeps the unfolded sp+0x30 addressing. */
+        strcpy(szFilename, (char*)((int)ax_cName + strlen("cdrom0:")));
+    else
+        strcpy(szFilename, ax_cName);
+
+    p_cFilename = strstr(szFilename, ";1");
+    if (p_cFilename == szFilename + strlen(szFilename) - 2)
+        *p_cFilename = 0;
+
+    return szFilename + strlen(szFilename);
+}
+
+unsigned int DEMO_fn_u32GetCurrentEventOffset(void)
+{
+    return gp_DEMO_CurrentPosInMemory - gp_DEMO_AllocatedMemory + 8;
+}
+
+char* DEMO_fn_pcGetAddressForEventOffset(unsigned int u32Offset)
+{
+    return (char*)gp_DEMO_AllocatedMemory + u32Offset - 8;
+}
+
+#pragma auto_inline on
+void DEMO_fn_vLoadFromFile(char* szDemoName)
+{
+    unsigned int Length;
+    char* p_cFilename;
+    char szFilename[256];
+
+    p_cFilename = DEMO_fn_pcBuildDemoPath(szFilename);
+    strcpy(p_cFilename, szDemoName);
+    g_DEMO_u32PlayMode = 2;
+    if (DEMO_bInitEventFlow(szFilename))
+    {
+        gp_DEMO_CurrentPosInMemory = (int)DEMO_pcGetNextFlowSegment();
+        memcpy(&gl_DEMO_NumberOfFrames, (void*)gp_DEMO_CurrentPosInMemory, 4);
+        gp_DEMO_CurrentPosInMemory += 4;
+        memcpy(&Length, (void*)gp_DEMO_CurrentPosInMemory, 4);
+        gp_DEMO_CurrentPosInMemory += 4;
+    }
+    else
+    {
+        printf("DEMO_fn_vLoadFromFile(%s): open failed\n", szFilename);
+        gl_DEMO_NumberOfFrames = -1;
+    }
+}
+#pragma auto_inline reset
+
+void DEMO_fn_vAskToLoadDemo(char* pcDemoName)
+{
+    strcpy(g_szDemoToLoad, pcDemoName);
+    g_DEMO_LoadDemo = 1;
+}
+
+void DEMO_fn_vLoadDemoIfNeeded(void)
+{
+    if (g_DEMO_LoadDemo)
+    {
+        DEMO_fn_vLoadFromFile(g_szDemoToLoad);
+        g_DEMO_LoadDemo = 0;
+    }
+}
+
+void DEMO_fn_vSetTestInputDuringDemo(int _bTestInput)
+{
+    g_bTestInputDuringDemo = _bTestInput;
+}
+
+void DEMO_fn_vSetMapToLoadWhenDemoFinished(char* _szMapName)
+{
+    strncpy(g_szMapNameToLoadWhenDemoFinished, _szMapName, 20);
+    g_szMapNameToLoadWhenDemoFinished[19] = 0;
+}
+
 void DEMO_fn_vReadAndTreatAllExtendedFlag(unsigned short Demo_Flag)
 {
     CINE_tdstCine_* hCine;
@@ -3702,650 +3835,559 @@ void DEMO_fn_vReadAndTreatAllExtendedFlag(unsigned short Demo_Flag)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 2026–2029 */
-/* addr: 0x00286090  size: 48 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0004 -> line 2026
- *   +0x0008 -> line 2027
- *   +0x000c -> line 2026
- *   +0x0010 -> line 2027
- *   +0x001c -> line 2028
- *   +0x0024 -> line 2029
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void DEMO_fn_vSetMapToLoadWhenDemoFinished(char* _szMapName)
+void DEMO_fn_vReadAndChangeActivationDesactivation(HIE_tdstSuperObject_* hSO)
 {
-    strncpy(g_szMapNameToLoadWhenDemoFinished, _szMapName, 20);
-    g_szMapNameToLoadWhenDemoFinished[19] = 0;
-}
+    unsigned short wSO_Number;
+    unsigned short Demo_Flag;
+    tdstEngineObject_* p_stObj;
+    unsigned char ucChannelNumber;
+    HIE_tdstSuperObject_* hChannelSO;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 2023–2023 */
-/* addr: 0x002860c0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2023
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void DEMO_fn_vSetTestInputDuringDemo(int _bTestInput)
-{
-    g_bTestInputDuringDemo = _bTestInput;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1963–1968 */
-/* addr: 0x002860d0  size: 176 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1963
- *   +0x0008 -> line 1964
- *   +0x0014 -> line 1965
- *   +0x00a0 -> line 1966
- *   +0x00a4 -> line 1968
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void DEMO_fn_vLoadFromFile(char* szDemoName);
-
-void DEMO_fn_vLoadDemoIfNeeded(void)
-{
-    if (g_DEMO_LoadDemo)
+    wSO_Number = 0;
+    Demo_Flag = 0;
+    if (g_DEMO_KeybTest == 2)
     {
-        DEMO_fn_vLoadFromFile(g_szDemoToLoad);
-        g_DEMO_LoadDemo = 0;
+        memcpy(&Demo_Flag, (void*)gp_DEMO_CurrentPosInMemory, 2);
+        gp_DEMO_CurrentPosInMemory += 2;
+        memcpy(&wSO_Number, (void*)gp_DEMO_CurrentPosInMemory, 2);
+        gp_DEMO_CurrentPosInMemory += 2;
+        p_stObj = hSO->hLinkedObject.p_stCharacter;
+        if ((Demo_Flag & 0x100) == 0x100 ? 1 : 0)
+        {
+            p_stObj->h_StandardGame->ucMiscFlags |= 4;
+            PLA_fn_bDoAnimPlayerForCharacter(hSO, 1, 0);
+        }
+        if ((Demo_Flag & 0x200) == 0x200 ? 1 : 0)
+        {
+            p_stObj->h_StandardGame->ucMiscFlags &= ~4;
+            PLA_fn_vDesInitAllChildOfCharacter(hSO, p_stObj);
+        }
+        if ((Demo_Flag & 0x400) == 0x400 ? 1 : 0)
+        {
+            memcpy(&ucChannelNumber, (void*)gp_DEMO_CurrentPosInMemory, 1);
+            gp_DEMO_CurrentPosInMemory += 1;
+            hChannelSO = fn_hGetChannelSuperObject(hSO->hLinkedObject.p_stCharacter->h_3dData, ucChannelNumber);
+            if (hChannelSO)
+            {
+                hChannelSO->ulFlags &= ~0x83;
+            }
+        }
+        if ((Demo_Flag & 0x800) == 0x800 ? 1 : 0)
+        {
+            memcpy(&ucChannelNumber, (void*)gp_DEMO_CurrentPosInMemory, 1);
+            gp_DEMO_CurrentPosInMemory += 1;
+            hChannelSO = fn_hGetChannelSuperObject(hSO->hLinkedObject.p_stCharacter->h_3dData, ucChannelNumber);
+            if (hChannelSO)
+            {
+                hChannelSO->ulFlags |= 0x83;
+            }
+        }
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1956–1959 */
-/* addr: 0x00286180  size: 44 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0004 -> line 1956
- *   +0x0008 -> line 1957
- *   +0x000c -> line 1956
- *   +0x0010 -> line 1957
- *   +0x0018 -> line 1958
- *   +0x0020 -> line 1959
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void DEMO_fn_vAskToLoadDemo(char* pcDemoName)
+void DEMO_fn_vReadAlwaysActivationDesactivation(HIE_tdstSuperObject_* hSO)
 {
-    strcpy(g_szDemoToLoad, pcDemoName);
-    g_DEMO_LoadDemo = 1;
-}
+    unsigned short wSO_Number;
+    MAT_tdstTransformation_ p_stPosMatrix;
+    tduDemoV stTempVector;
+    int otObjectModelType;
+    unsigned short Demo_Flag;
+    short wAlwaysNumber;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1808–1921 */
-/* addr: 0x002861b0  size: 168 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1808
- *   +0x0010 -> line 1878
- *   +0x0018 -> line 1879
- *   +0x0024 -> line 1884
- *   +0x0028 -> line 1886
- *   +0x003c -> line 1891
- *   +0x0048 -> line 1895
- *   +0x005c -> line 1896
- *   +0x0060 -> line 1895
- *   +0x0068 -> line 1896
- *   +0x007c -> line 1898
- *   +0x0084 -> line 1899
- *   +0x0090 -> line 1900
- *   +0x0098 -> line 1921
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-char* DEMO_fn_pcBuildDemoPath(char* szFilename);
-unsigned char DEMO_bInitEventFlow(char* szFileName);
-char* DEMO_pcGetNextFlowSegment(void);
-void* memcpy(void* dst, const void* src, size_t n);
-int printf(const char* fmt, ...);
-
-#pragma auto_inline on
-void DEMO_fn_vLoadFromFile(char* szDemoName)
-{
-    unsigned int Length;
-    char* p_cFilename;
-    char szFilename[256];
-
-    p_cFilename = DEMO_fn_pcBuildDemoPath(szFilename);
-    strcpy(p_cFilename, szDemoName);
-    g_DEMO_u32PlayMode = 2;
-    if (DEMO_bInitEventFlow(szFilename))
+    wSO_Number = 0;
+    Demo_Flag = 0;
+    MAT_fn_vSetIdentity(&p_stPosMatrix);
+    if (g_DEMO_KeybTest == 2)
     {
-        gp_DEMO_CurrentPosInMemory = (int)DEMO_pcGetNextFlowSegment();
-        memcpy(&gl_DEMO_NumberOfFrames, (void*)gp_DEMO_CurrentPosInMemory, 4);
-        gp_DEMO_CurrentPosInMemory += 4;
-        memcpy(&Length, (void*)gp_DEMO_CurrentPosInMemory, 4);
-        gp_DEMO_CurrentPosInMemory += 4;
-    }
-    else
-    {
-        printf("DEMO_fn_vLoadFromFile(%s): open failed\n", szFilename);
-        gl_DEMO_NumberOfFrames = -1;
+        memcpy(&Demo_Flag, (void*)gp_DEMO_CurrentPosInMemory, 2);
+        gp_DEMO_CurrentPosInMemory += 2;
+        memcpy(&wSO_Number, (void*)gp_DEMO_CurrentPosInMemory, 2);
+        gp_DEMO_CurrentPosInMemory += 2;
+        memcpy(&wAlwaysNumber, (void*)gp_DEMO_CurrentPosInMemory, 2);
+        gp_DEMO_CurrentPosInMemory += 2;
+        if ((Demo_Flag & 0x100) == 0x100 ? 1 : 0)
+        {
+            memcpy(&otObjectModelType, (void*)gp_DEMO_CurrentPosInMemory, 4);
+            gp_DEMO_CurrentPosInMemory += 4;
+            memcpy(&stTempVector, (void*)gp_DEMO_CurrentPosInMemory, 12);
+            gp_DEMO_CurrentPosInMemory += 12;
+            DEMO_vSetTranslation(&p_stPosMatrix, &stTempVector);
+            fn_p_stDemoAllocateAlways(otObjectModelType, gp_stDynamicWorld, MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode()), 0, &p_stPosMatrix, wAlwaysNumber);
+            hSO->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags |= 2;
+        }
+        if ((Demo_Flag & 0x200) == 0x200 ? 1 : 0)
+        {
+            fn_vKillEngineObjectOrAlwaysByPointer(hSO->hLinkedObject.p_stCharacter);
+        }
     }
 }
-#pragma auto_inline reset
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1800–1801 */
-/* addr: 0x00286260  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1800
- *   +0x0008 -> line 1801
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-char* DEMO_fn_pcGetAddressForEventOffset(unsigned int u32Offset)
+void DEMO_fn_vGetACompleteCharacterPosition(HIE_tdstSuperObject_* hSO)
 {
-    return (char*)gp_DEMO_AllocatedMemory + u32Offset - 8;
-}
+    tdstDemoCompressedTransform_ stCompressedTransform;
+    MAT_tdstTransformation_ stNewlyReadTransform;
+    tduDemoV stTranslation;
+    tduDemoV stDeltaTranslation;
+    char szOutputMsg[8];
+    char a3_cCoef[3];
+    short wStateNumber;
+    unsigned short wSO_Number;
+    unsigned short uwForcedFrame;
+    unsigned short Demo_Flag;
+    unsigned char ucSO_Number;
+    tdstDemoSOList_* p_stListElement;
+    tdst3dData_* h3dData;
+    unsigned char bIsCamera;
+    MAT_tdstTransformation_* hMatrix;
+    tdstState_* p_stTmpState;
+    float xForcedFrame;
+    int* pY;
+    int* pZ;
+    int* pSrc;
+    float xInvNorm;
+    int lOldConstantSpeed;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1794–1795 */
-/* addr: 0x00286270  size: 20 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1794
- *   +0x000c -> line 1795
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned int DEMO_fn_u32GetCurrentEventOffset(void)
-{
-    return gp_DEMO_CurrentPosInMemory - gp_DEMO_AllocatedMemory + 8;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1735–1780 */
-/* addr: 0x00286290  size: 296 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1735
- *   +0x0010 -> line 1741
- *   +0x0024 -> line 1743
- *   +0x002c -> line 1745
- *   +0x0048 -> line 1746
- *   +0x0050 -> line 1749
- *   +0x0070 -> line 1757
- *   +0x0090 -> line 1760
- *   +0x00a0 -> line 1761
- *   +0x00ac -> line 1762
- *   +0x00d0 -> line 1764
- *   +0x00d8 -> line 1768
- *   +0x00ec -> line 1769
- *   +0x0104 -> line 1771
- *   +0x0108 -> line 1777
- *   +0x0114 -> line 1780
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int fn_lGetSubMapNumber(void);
-char* fn_p_szGetLevelName(void);
-char* FMN_SCE_ConvertPath2DVD(char* buffer);
-char* FMN_SCE_AddBaseDirectory(char* buffer);
-char* strstr(const char* s1, const char* s2);
-unsigned int strlen(const char* s);
-
-char* DEMO_fn_pcBuildDemoPath(char* szFilename)
-{
-    char ax_cName[256];
-    char* p_cFilename;
-    int lSubMapNumber;
-
-    lSubMapNumber = ((unsigned int)fn_lGetSubMapNumber() & 0xFFFF0000) >> 16;
-
-    if (lSubMapNumber == 0)
+    h3dData = hSO->hLinkedObject.p_stCharacter->h_3dData;
+    wStateNumber = 0;
+    wSO_Number = 0;
+    Demo_Flag = 0;
+    if (g_DEMO_KeybTest != 2)
     {
-        sprintf(szFilename, "\\Demos\\%s\\", fn_p_szGetLevelName());
+        return;
+    }
+    if (g_iNbFramesToWaitBeforePlaying)
+    {
+        return;
+    }
+    p_stListElement = DEMO_p_stFindSO(hSO);
+    hMatrix = hSO->hLocalMatrix;
+    memcpy(&Demo_Flag, (void*)gp_DEMO_CurrentPosInMemory, 2);
+    gp_DEMO_CurrentPosInMemory += 2;
+    bIsCamera = (unsigned char)CAM_fn_bSuperObjectIsACamera(hSO);
+    if (((Demo_Flag & 0x2000) == 0x2000 ? 1 : 0))
+    {
+        memcpy(&ucSO_Number, (void*)gp_DEMO_CurrentPosInMemory, 1);
+        gp_DEMO_CurrentPosInMemory += 1;
+        wSO_Number = ucSO_Number;
     }
     else
     {
-        sprintf(szFilename, "\\Demos\\%s\\%02d\\", fn_p_szGetLevelName(), lSubMapNumber);
+        memcpy(&wSO_Number, (void*)gp_DEMO_CurrentPosInMemory, 2);
+        gp_DEMO_CurrentPosInMemory += 2;
+    }
+    if (((Demo_Flag & 0x10) == 0x10 ? 1 : 0))
+    {
+        memcpy(&p_stListElement->_stTrs, (void*)gp_DEMO_CurrentPosInMemory, 12);
+        gp_DEMO_CurrentPosInMemory += 12;
+        DEMO_vSetTranslation(hMatrix, (tduDemoV*)&p_stListElement->_stTrs);
+    }
+    if (((Demo_Flag & 0x20) == 0x20 ? 1 : 0))
+    {
+        memcpy(a3_cCoef, (void*)gp_DEMO_CurrentPosInMemory, 3);
+        gp_DEMO_CurrentPosInMemory += 3;
+        p_stListElement->_stTrs.xX += (float)a3_cCoef[0] / 128.0f;
+        p_stListElement->_stTrs.xY += (float)a3_cCoef[1] / 128.0f;
+        p_stListElement->_stTrs.xZ += (float)a3_cCoef[2] / 128.0f;
+        DEMO_vSetTranslation(hMatrix, (tduDemoV*)&p_stListElement->_stTrs);
+    }
+    if (((Demo_Flag & 0x40) == 0x40 ? 1 : 0))
+    {
+        memcpy(&stTranslation, (void*)gp_DEMO_CurrentPosInMemory, 12);
+        gp_DEMO_CurrentPosInMemory += 12;
+        fn_vDemoReadCompressedTransform(&stCompressedTransform);
+        stDeltaTranslation.v.xX = stTranslation.v.xX - p_stListElement->_stTrs.xX;
+        stDeltaTranslation.v.xY = stTranslation.v.xY - p_stListElement->_stTrs.xY;
+        stDeltaTranslation.v.xZ = stTranslation.v.xZ - p_stListElement->_stTrs.xZ;
+    }
+    if (((Demo_Flag & 0x80) == 0x80 ? 1 : 0))
+    {
+        fn_vDemoReadCompressedTransform(&stCompressedTransform);
+    }
+    fn_vDecompressTransform(&stNewlyReadTransform, &stCompressedTransform);
+    memcpy(&p_stListElement->stCompressedTransform, &stCompressedTransform, 42);
+    if (((Demo_Flag & 0x80) == 0x80 ? 1 : 0))
+    {
+        pSrc = (int*)&stNewlyReadTransform.stTransformMatrix.stCol_3;
+        stDeltaTranslation.i[0] = pSrc[0];
+        stDeltaTranslation.i[1] = pSrc[1];
+        stDeltaTranslation.i[2] = pSrc[2];
+        stTranslation.v.xX = p_stListElement->_stTrs.xX + stDeltaTranslation.v.xX;
+        stTranslation.v.xY = p_stListElement->_stTrs.xY + stDeltaTranslation.v.xY;
+        stTranslation.v.xZ = p_stListElement->_stTrs.xZ + stDeltaTranslation.v.xZ;
+    }
+    *hMatrix = stNewlyReadTransform;
+    pY = &stTranslation.i[1];
+    pZ = &stTranslation.i[2];
+    *(int*)&hMatrix->stTransformMatrix.stCol_3.xX = stTranslation.i[0];
+    *(int*)&hMatrix->stTransformMatrix.stCol_3.xY = *pY;
+    *(int*)&hMatrix->stTransformMatrix.stCol_3.xZ = *pZ;
+    *(int*)&p_stListElement->_stTrs.xX = stTranslation.i[0];
+    *(int*)&p_stListElement->_stTrs.xY = *pY;
+    *(int*)&p_stListElement->_stTrs.xZ = *pZ;
+    if (bIsCamera)
+    {
+        xInvNorm = 1.0f / MTH_fn_xSqrtOpt2(MTH4D_fn_xSqrVector(&hMatrix->stTransformMatrix.stCol_0));
+        hMatrix->stTransformMatrix.stCol_0.xX = xInvNorm * hMatrix->stTransformMatrix.stCol_0.xX;
+        hMatrix->stTransformMatrix.stCol_0.xY = xInvNorm * hMatrix->stTransformMatrix.stCol_0.xY;
+        hMatrix->stTransformMatrix.stCol_0.xZ = xInvNorm * hMatrix->stTransformMatrix.stCol_0.xZ;
+        hMatrix->stTransformMatrix.stCol_0.xW = 1.0f;
+        xInvNorm = 1.0f / MTH_fn_xSqrtOpt2(MTH4D_fn_xSqrVector(&hMatrix->stTransformMatrix.stCol_1));
+        hMatrix->stTransformMatrix.stCol_1.xX = xInvNorm * hMatrix->stTransformMatrix.stCol_1.xX;
+        hMatrix->stTransformMatrix.stCol_1.xY = xInvNorm * hMatrix->stTransformMatrix.stCol_1.xY;
+        hMatrix->stTransformMatrix.stCol_1.xZ = xInvNorm * hMatrix->stTransformMatrix.stCol_1.xZ;
+        hMatrix->stTransformMatrix.stCol_1.xW = 1.0f;
+        DEMO_M_CROSS(hMatrix->stTransformMatrix.stCol_2.xX, hMatrix->stTransformMatrix.stCol_0.xY, hMatrix->stTransformMatrix.stCol_1.xZ, hMatrix->stTransformMatrix.stCol_0.xZ, hMatrix->stTransformMatrix.stCol_1.xY)
+        DEMO_M_CROSS(hMatrix->stTransformMatrix.stCol_2.xY, hMatrix->stTransformMatrix.stCol_0.xZ, hMatrix->stTransformMatrix.stCol_1.xX, hMatrix->stTransformMatrix.stCol_0.xX, hMatrix->stTransformMatrix.stCol_1.xZ)
+        DEMO_M_CROSS(hMatrix->stTransformMatrix.stCol_2.xZ, hMatrix->stTransformMatrix.stCol_0.xX, hMatrix->stTransformMatrix.stCol_1.xY, hMatrix->stTransformMatrix.stCol_0.xY, hMatrix->stTransformMatrix.stCol_1.xX)
+        hMatrix->stTransformMatrix.stCol_2.xW = 1.0f;
+        DEMO_M_CROSS(hMatrix->stTransformMatrix.stCol_1.xX, hMatrix->stTransformMatrix.stCol_2.xY, hMatrix->stTransformMatrix.stCol_0.xZ, hMatrix->stTransformMatrix.stCol_2.xZ, hMatrix->stTransformMatrix.stCol_0.xY)
+        DEMO_M_CROSS(hMatrix->stTransformMatrix.stCol_1.xY, hMatrix->stTransformMatrix.stCol_2.xZ, hMatrix->stTransformMatrix.stCol_0.xX, hMatrix->stTransformMatrix.stCol_2.xX, hMatrix->stTransformMatrix.stCol_0.xZ)
+        DEMO_M_CROSS(hMatrix->stTransformMatrix.stCol_1.xZ, hMatrix->stTransformMatrix.stCol_2.xX, hMatrix->stTransformMatrix.stCol_0.xY, hMatrix->stTransformMatrix.stCol_2.xY, hMatrix->stTransformMatrix.stCol_0.xX)
+        hMatrix->stTransformMatrix.stCol_1.xW = 1.0f;
+    }
+    if (((Demo_Flag & 0x2) == 0x2 ? 1 : 0))
+    {
+        memcpy(&wStateNumber, (void*)gp_DEMO_CurrentPosInMemory, 2);
+        gp_DEMO_CurrentPosInMemory += 2;
+        p_stListElement->wStateNumber = wStateNumber;
+    }
+    else
+    {
+        wStateNumber = p_stListElement->wStateNumber;
+    }
+    if (((Demo_Flag & 0x4) == 0x4 ? 1 : 0))
+    {
+        memcpy(&uwForcedFrame, (void*)gp_DEMO_CurrentPosInMemory, 2);
+        gp_DEMO_CurrentPosInMemory += 2;
+        sprintf(szOutputMsg, "%4d\n", uwForcedFrame);
+        p_stListElement->uwCurrentFrame = uwForcedFrame;
+    }
+    else
+    {
+        uwForcedFrame = p_stListElement->uwCurrentFrame;
+    }
+    xForcedFrame = fn_fUncompressNumberInline(uwForcedFrame);
+    *hSO->hGlobalMatrix = *hSO->hLocalMatrix;
+    if (((Demo_Flag & 0x4) == 0x4 ? 1 : 0) || ((Demo_Flag & 0x2) == 0x2 ? 1 : 0))
+    {
+        unsigned char bNoDisplay;
+
+        bNoDisplay = 0;
+        if (wStateNumber == 0x7FFF)
+        {
+            p_stTmpState = h3dData->h_CurrentState;
+        }
+        else if (wStateNumber >= 0)
+        {
+            p_stTmpState = &h3dData->h_Family->hForStateArray.hFirstElementOpt[wStateNumber];
+        }
+        else
+        {
+            wStateNumber = -1 - wStateNumber;
+            p_stTmpState = (tdstState_*)a_hTemporaryStateCorrespondance[wStateNumber];
+            if (p_stTmpState == NULL)
+            {
+                printf("interm state is null : ignore it !\n");
+                p_stTmpState = h3dData->h_CurrentState;
+            }
+        }
+        if (p_stTmpState != h3dData->h_CurrentState || uwForcedFrame == 0)
+        {
+            PLA_fn_bSetNewState(hSO, p_stTmpState, 1, 0, 1, 0, 0.0f, 0);
+            if (hSO->hLinkedObject.p_stCharacter->h_Micro == NULL)
+            {
+                PLA_fn_vSetCurrFrame(hSO, (int)xForcedFrame);
+            }
+        }
+        else
+        {
+            lOldConstantSpeed = g_bAnimConstantSpeed;
+            if (h3dData->h_CurrentState->p_stAnim)
+            {
+                if (!(xForcedFrame <= (float)(unsigned int)*(unsigned short*)h3dData->h_CurrentState->p_stAnim))
+                {
+                    bNoDisplay = 1;
+                    xForcedFrame = 1.0f;
+                }
+            }
+            h3dData->xCurrentFrame = xForcedFrame - 1.0f;
+            g_bAnimConstantSpeed = 1;
+            PLA_fn_bDoAnimPlayerForCharacter(hSO, bNoDisplay, 0);
+            g_bAnimConstantSpeed = lOldConstantSpeed;
+        }
+    }
+    if (((Demo_Flag & 0x8) == 0x8 ? 1 : 0))
+    {
+        memcpy(&p_stListElement->ucTransparence, (void*)gp_DEMO_CurrentPosInMemory, 1);
+        gp_DEMO_CurrentPosInMemory += 1;
+        hSO->fTransparenceLevel = (float)(unsigned int)p_stListElement->ucTransparence;
+        if (p_stListElement->ucTransparence == 0xFF)
+        {
+            hSO->lDrawModeMask |= 8;
+        }
+        else
+        {
+            hSO->lDrawModeMask &= ~8;
+            PLA_fn_vUpdateTransparencyForModules(hSO);
+        }
+    }
+}
+
+void DEMO_fn_vReadOneCompleteStateUpdate(void)
+{
+    int lFrame;
+    unsigned short wCurrentSO_Number;
+    unsigned short Demo_Flag;
+    unsigned short uwDelta;
+    unsigned short uwFlagCopy;
+    unsigned char ucCurrentSO_Number;
+    tdstDemoSOList_* p_stListElement;
+    int bSuperimposedSO;
+    tdstEngineObject_* param0;
+    int bEnd;
+
+    Demo_Flag = 0;
+    do
+    {
+        memcpy(&Demo_Flag, (void*)gp_DEMO_CurrentPosInMemory, 2);
+        if ((Demo_Flag & 0x8000) == 0x8000 ? 1 : 0)
+        {
+            DEMO_fn_vReadAndTreatAllExtendedFlag(Demo_Flag);
+        }
+        else if ((Demo_Flag & 1) == 1 ? 1 : 0)
+        {
+            memcpy(&uwFlagCopy, (void*)gp_DEMO_CurrentPosInMemory, 2);
+            gp_DEMO_CurrentPosInMemory += 2;
+            memcpy(&uwDelta, (void*)gp_DEMO_CurrentPosInMemory, 2);
+            gp_DEMO_CurrentPosInMemory += 2;
+            memcpy(&lFrame, (void*)gp_DEMO_CurrentPosInMemory, 4);
+            gp_DEMO_CurrentPosInMemory += 4;
+            g_ulDEMO_DeltaTimerCount = uwDelta;
+            g_ulDEMO_ElapsedDemoTimerCount += uwDelta;
+            gl_DEMO_CurrentFrame++;
+        }
+        else
+        {
+            if ((Demo_Flag & 0x2000) == 0x2000 ? 1 : 0)
+            {
+                memcpy(&ucCurrentSO_Number, (void*)(gp_DEMO_CurrentPosInMemory + 2), 1);
+                wCurrentSO_Number = ucCurrentSO_Number;
+            }
+            else
+            {
+                memcpy(&wCurrentSO_Number, (void*)(gp_DEMO_CurrentPosInMemory + 2), 2);
+            }
+            if (wCurrentSO_Number < 0x4000)
+            {
+                bSuperimposedSO = 0;
+            }
+            else
+            {
+                wCurrentSO_Number -= 0x4000;
+                bSuperimposedSO = 1;
+            }
+            p_stListElement = &((LST2_tdstAnchorToDEMO_tdxHandleToDemoSOElementOpt*)g_hDemoSOList)->hFirstElementOpt[wCurrentSO_Number];
+            if (bSuperimposedSO)
+            {
+                HIE_fn_SO_vSetSuperimposedFlag(p_stListElement->hCharacterSupObject);
+            }
+            if (((Demo_Flag & 0x100) == 0x100 ? 1 : 0) || ((Demo_Flag & 0x200) == 0x200 ? 1 : 0) || ((Demo_Flag & 0x400) == 0x400 ? 1 : 0) || ((Demo_Flag & 0x800) == 0x800 ? 1 : 0))
+            {
+                if ((Demo_Flag & 0x1000) == 0x1000 ? 1 : 0)
+                {
+                    DEMO_fn_vReadAlwaysActivationDesactivation(p_stListElement->hCharacterSupObject);
+                }
+                else
+                {
+                    DEMO_fn_vReadAndChangeActivationDesactivation(p_stListElement->hCharacterSupObject);
+                }
+            }
+            else if (p_stListElement->hCharacterSupObject->ulTypeOfLinkedObject == 2)
+            {
+                param0 = p_stListElement->hCharacterSupObject->hLinkedObject.p_stCharacter;
+                param0->h_StandardGame->ucMiscFlags |= 4;
+                param0->h_StandardGame->ulLastTrame = g_stEngineStructure.stEngineTimer.ulTrameNumber - 1;
+                fn_vTreatCharactersInSector(p_stListElement->hCharacterSupObject);
+            }
+        }
+        bEnd = 0;
+        if ((!((Demo_Flag & 0x8000) == 0x8000 ? 1 : 0)) != 0 && ((Demo_Flag & 1) == 1 ? 1 : 0))
+        {
+            bEnd = 1;
+        }
+    } while (!bEnd);
+}
+
+void DEMO_fn_vMoveModuleDelayedHandling(void)
+{
+    unsigned short Demo_Flag;
+    unsigned short wSO_Number;
+    unsigned char ucChannelNumber;
+    tdstDemoSOList_* p_stListElement;
+    tdstDemoCompressedTransform_ stCompressedTransform;
+    tduDemoV stTranslationVector;
+    int ii;
+    char* p_cCurrentDemoPosition;
+    HIE_tdstSuperObject_* hChild;
+    MAT_tdstTransformation_* hMatrix;
+
+    memset(&stTranslationVector, 0, 12);
+    p_cCurrentDemoPosition = (char*)gp_DEMO_CurrentPosInMemory;
+    for (ii = 0; ii < g_iNbMoveModule; ii++)
+    {
+        gp_DEMO_CurrentPosInMemory = g_aRemindedMoveModule[ii];
+        memcpy(&Demo_Flag, (void*)gp_DEMO_CurrentPosInMemory, 2);
+        gp_DEMO_CurrentPosInMemory += 2;
+        Demo_Flag &= 0x7FFF;
+        memcpy(&wSO_Number, (void*)gp_DEMO_CurrentPosInMemory, 2);
+        gp_DEMO_CurrentPosInMemory += 2;
+        memcpy(&ucChannelNumber, (void*)gp_DEMO_CurrentPosInMemory, 1);
+        gp_DEMO_CurrentPosInMemory += 1;
+        if (Demo_Flag == 8)
+        {
+            memcpy(&stTranslationVector, (void*)gp_DEMO_CurrentPosInMemory, 12);
+            gp_DEMO_CurrentPosInMemory += 12;
+        }
+        else if (Demo_Flag == 0x1A)
+        {
+            fn_vDemoReadCompressedTransform(&stCompressedTransform);
+        }
+        p_stListElement = &((LST2_tdstAnchorToDEMO_tdxHandleToDemoSOElementOpt*)g_hDemoSOList)->hFirstElementOpt[wSO_Number];
+        if (p_stListElement->hCharacterSupObject->hLinkedObject.p_stCharacter->h_3dData->hArrayOfChannels)
+        {
+            hChild = fn_hGetChannelSuperObject(p_stListElement->hCharacterSupObject->hLinkedObject.p_stCharacter->h_3dData, ucChannelNumber);
+            if (hChild)
+            {
+                hMatrix = hChild->hLocalMatrix;
+                if (Demo_Flag != 9)
+                {
+                    if (Demo_Flag == 0x1A)
+                    {
+                        fn_vDecompressTransform(hMatrix, &stCompressedTransform);
+                    }
+                    else
+                    {
+                        DEMO_vSetTranslation(hMatrix, &stTranslationVector);
+                    }
+                }
+                HIE_fn_vInvalidateOneGlobalMatrix(hChild);
+                for (hChild = p_stListElement->hCharacterSupObject->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn)
+                {
+                    HIE_fn_vInvalidateHierarchy(hChild);
+                }
+                HIE_fn_vRefreshHierarchy(p_stListElement->hCharacterSupObject);
+            }
+        }
+    }
+    gp_DEMO_CurrentPosInMemory = (int)p_cCurrentDemoPosition;
+    g_iNbMoveModule = 0;
+}
+
+unsigned char DEMO_fn_bUpdateDynamicHierarchy(void)
+{
+    unsigned int ulDEMO_ElapsedEngineTimerCount;
+    int iEndOfUpdate;
+    int iNewFrameInRecord;
+
+    if (g_iNbFramesToWaitBeforePlaying)
+    {
+        if (--g_iNbFramesToWaitBeforePlaying == 0) { DEMO_fn_vPrepareForReadNow(); }
+        return 1;
     }
 
-    strcpy(ax_cName, FMN_SCE_AddBaseDirectory(FMN_SCE_ConvertPath2DVD(szFilename)));
-
-    if (strstr(ax_cName, "cdrom0:") == ax_cName)
-        /* Not original source, needs cleaning up: int-cast keeps the unfolded sp+0x30 addressing. */
-        strcpy(szFilename, (char*)((int)ax_cName + strlen("cdrom0:")));
+    if (!(gl_DEMO_CurrentFrame < gl_DEMO_NumberOfFrames) || (g_bTestInputDuringDemo && gl_DEMO_CurrentFrame > 0x3C && (unsigned char)IPT_fn_bIsValidated(g_st_3DOS_EntryActions.hFlyingModeDoubleSpeed) == 1))
+    {
+        g_DEMO_KeybTest = 0; if (g_DEMO_AutoPlay == 1) { g_DEMO_AutoPlay = 0; printf("fn_vChangeEngineMode() comment\351 pour tests\n"); }
+        if (g_DEMO_u32PlayMode == 2)
+        {
+            DEMO_fn_vStopEventFlow();
+            g_DEMO_u32PlayMode = 0;
+        }
+        if (g_szMapNameToLoadWhenDemoFinished[0])
+        {
+            GAM_fn_vAskToChangeLevel(g_szMapNameToLoadWhenDemoFinished, 0);
+            g_szMapNameToLoadWhenDemoFinished[0] = 0;
+        }
+        else
+        {
+            fn_vKillAllAlways();
+            fn_vReinitTheMap();
+        }
+        return 0;
+    }
     else
-        strcpy(szFilename, ax_cName);
-
-    p_cFilename = strstr(szFilename, ";1");
-    if (p_cFilename == szFilename + strlen(szFilename) - 2)
-        *p_cFilename = 0;
-
-    return szFilename + strlen(szFilename);
+    {
+        ulDEMO_ElapsedEngineTimerCount = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - g_ulDEMO_StartDEMO_EngineTimerCount;
+        iNewFrameInRecord = 0;
+        do
+        {
+            g_iFrameTimeOffset = g_ulDEMO_ElapsedDemoTimerCount - ulDEMO_ElapsedEngineTimerCount;
+            iEndOfUpdate = !((!gl_DEMO_ConstantSpeed) && (g_iFrameTimeOffset < 0));
+            if (!iEndOfUpdate)
+            {
+                if (iNewFrameInRecord)
+                {
+                    AGO_vClearUnwanted110AGOsForDemos();
+                    SND_fn_vSynchroSound();
+                    g_iNbMoveModule = 0; } else if (!gl_DEMO_ConstantSpeed &&
+                    g_iFrameTimeOffset > 0)
+                {
+                    printf("(wait %d)\n", g_iFrameTimeOffset);
+                    TMR_fn_wWait(g_iFrameTimeOffset);
+                    g_iFrameTimeOffset = 0;
+                }
+            }
+            g_xInterpolCoef = 1.0f - (float)g_iFrameTimeOffset / (float)g_ulDEMO_DeltaTimerCount;
+            DEMO_fn_vReadOneCompleteStateUpdate();
+            iNewFrameInRecord = 1;
+        } while (gl_DEMO_CurrentFrame < gl_DEMO_NumberOfFrames &&
+                 !iEndOfUpdate);
+        DEMO_fn_vMoveModuleDelayedHandling();
+        return 1;
+    }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1448–1448 */
-/* addr: 0x002863c0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1448
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void DEMO_fn_vCloseFirstInit(void)
+void DEMO_fn_vDesInitGame(void)
 {
-    g_DEMO_FirstInitFlag = 0;
+    g_hDemoSOList = 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1367–1373 */
-/* addr: 0x002863d0  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1367
- *   +0x0004 -> line 1368
- *   +0x0008 -> line 1367
- *   +0x000c -> line 1369
- *   +0x0024 -> line 1370
- *   +0x0028 -> line 1372
- *   +0x0030 -> line 1373
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-void DEMO_fn_vPrepareForRead(int _iNbFramesToWait)
+void DEMO_fn_vReadDemoTableFile(void)
 {
-    g_DEMO_KeybTest = 2;
-    if (!_iNbFramesToWait) DEMO_fn_vPrepareForReadNow();
-    else g_iNbFramesToWaitBeforePlaying = _iNbFramesToWait;
-    g_DEMO_AutoPlay = 1;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1320–1364 */
-/* addr: 0x00286410  size: 204 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1320
- *   +0x0004 -> line 1324
- *   +0x0008 -> line 1320
- *   +0x000c -> line 1324
- *   +0x0018 -> line 1325
- *   +0x0020 -> line 1339
- *   +0x0024 -> line 1348
- *   +0x0028 -> line 1339
- *   +0x002c -> line 1338
- *   +0x0030 -> line 1340
- *   +0x0034 -> line 1348
- *   +0x0038 -> line 1340
- *   +0x003c -> line 1348
- *   +0x0048 -> line 1338
- *   +0x004c -> line 1349
- *   +0x0058 -> line 1327
- *   +0x005c -> line 1351
- *   +0x0064 -> line 1353
- *   +0x0078 -> line 1357
- *   +0x00c0 -> line 1364
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void AGO_vInit(void);
-void CreateType28AGO(MTH3D_tdstVector_* p_stPos, MTH3D_tdstVector_* p_stDir, int lParam, float fParam);
-
-void DEMO_fn_vPrepareForReadNow(void)
-{
-    MTH3D_tdstVector_ stPos;
-    MTH3D_tdstVector_ stDir;
+    char buffer[1024];
+    char LevelName[128];
+    char FileName[128];
+    int ret;
+    int fh;
+    char* p;
+    unsigned int u32FileSize;
     int i;
 
-    if (g_DEMO_u32PlayMode == 1)
-        gp_DEMO_CurrentPosInMemory = gp_DEMO_AllocatedMemory;
-    g_ulDEMO_ElapsedDemoTimerCount = 1;
-    g_ulDEMO_DeltaTimerCount = 32;
-    g_ulDEMO_StartDEMO_EngineTimerCount = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
-    gl_DEMO_CurrentFrame = 0;
-    stPos.xX = 1.0f;
-    stPos.xY = 1.0f;
-    stPos.xZ = 1000.0f;
-    stDir.xX = 1.0f;
-    stDir.xY = 1.0f;
-    stDir.xZ = 1.0f;
-    AGO_vInit();
-    CreateType28AGO(&stPos, &stDir, 0, 0.0f);
-    for (i = 0; i < 32; i++)
-        g_as32DemoAGOTable[i] = -1;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1266–1295 */
-/* addr: 0x002864e0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1284
- *   +0x0004 -> line 1266
- *   +0x0008 -> line 1295
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void DEMO_fn_vAllocateMemory(void)
-{
-    gp_DEMO_AllocatedMemory = 0;
-    g_szMapNameToLoadWhenDemoFinished[0] = '\0';
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 887–1066 */
-/* addr: 0x002864f0  size: 4600 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 887
- *   +0x0004 -> line 892
- *   +0x0008 -> line 887
- *   +0x000c -> line 892
- *   +0x0010 -> line 887
- *   +0x0034 -> line 892
- *   +0x003c -> line 896
- *   +0x005c -> line 901
- *   +0x0084 -> line 906
- *   +0x00a4 -> line 909
- *   +0x00ac -> line 911
- *   +0x00b0 -> line 914
- *   +0x00b4 -> line 911
- *   +0x00d4 -> line 914
- *   +0x00e8 -> line 915
- *   +0x00f0 -> line 918
- *   +0x0104 -> line 919
- *   +0x0108 -> line 921
- *   +0x010c -> line 918
- *   +0x0114 -> line 919
- *   +0x0118 -> line 921
- *   +0x0130 -> line 923
- *   +0x014c -> line 924
- *   +0x0154 -> line 927
- *   +0x0168 -> line 928
- *   +0x016c -> line 930
- *   +0x0170 -> line 927
- *   +0x0178 -> line 928
- *   +0x017c -> line 930
- *   +0x0194 -> line 932
- *   +0x019c -> line 933
- *   +0x01a4 -> line 934
- *   +0x01a8 -> line 935
- *   +0x01b0 -> line 943
- *   +0x01c4 -> line 944
- *   +0x01c8 -> line 946
- *   +0x01cc -> line 943
- *   +0x01d4 -> line 944
- *   +0x01d8 -> line 946
- *   +0x01f0 -> line 948
- *   +0x021c -> line 951
- *   +0x0234 -> line 956
- *   +0x0474 -> line 958
- *   +0x0478 -> line 956
- *   +0x0480 -> line 959
- *   +0x06b8 -> line 961
- *   +0x06bc -> line 959
- *   +0x06c4 -> line 962
- *   +0x0900 -> line 966
- *   +0x0904 -> line 962
- *   +0x0908 -> line 966
- *   +0x0914 -> line 969
- *   +0x091c -> line 978
- *   +0x0930 -> line 979
- *   +0x0934 -> line 981
- *   +0x0938 -> line 978
- *   +0x0940 -> line 979
- *   +0x0944 -> line 981
- *   +0x0954 -> line 985
- *   +0x0958 -> line 981
- *   +0x0960 -> line 985
- *   +0x0978 -> line 987
- *   +0x09a4 -> line 990
- *   +0x09bc -> line 992
- *   +0x09e0 -> line 1020
- *   +0x09e4 -> line 992
- *   +0x09e8 -> line 1021
- *   +0x09ec -> line 992
- *   +0x09f0 -> line 1020
- *   +0x09f4 -> line 992
- *   +0x09f8 -> line 1020
- *   +0x09fc -> line 992
- *   +0x0a00 -> line 1020
- *   +0x0a04 -> line 992
- *   +0x0a08 -> line 1031
- *   +0x0a10 -> line 1020
- *   +0x0a14 -> line 1021
- *   +0x0a20 -> line 1022
- *   +0x0a30 -> line 1031
- *   +0x0a34 -> line 1020
- *   +0x0a38 -> line 1031
- *   +0x0a3c -> line 1027
- *   +0x0a40 -> line 1029
- *   +0x0a44 -> line 1020
- *   +0x0a64 -> line 1021
- *   +0x0a8c -> line 1022
- *   +0x0ab4 -> line 1023
- *   +0x0ac0 -> line 1031
- *   +0x0cf0 -> line 1035
- *   +0x0cf4 -> line 1031
- *   +0x0cf8 -> line 1035
- *   +0x0f30 -> line 1038
- *   +0x0f34 -> line 1035
- *   +0x0f38 -> line 1038
- *   +0x1170 -> line 1043
- *   +0x1174 -> line 1038
- *   +0x1178 -> line 1042
- *   +0x1184 -> line 1045
- *   +0x118c -> line 1047
- *   +0x11a4 -> line 1048
- *   +0x11ac -> line 1050
- *   +0x11c8 -> line 1066
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-inline short fn_sCompressNumber(float xValue)
-{
-    char szBuffer[80];
-    unsigned int ulValue;
-    unsigned int sign_bit;
-    unsigned int expf;
-    unsigned int mantissa;
-    union {
-        float f;
-        unsigned int ul;
-    } value;
-
-    value.f = xValue;
-    ulValue = value.ul;
-    expf = (ulValue & 0x7F800000) >> 23;
-    mantissa = ulValue & 0x7FFFFF;
-    sign_bit = ulValue & 0x80000000;
-    if (expf != 0)
+    fh = CD_OpenFile(FMN_SCE_ConvertPath2DVD("demos/demotbl.txt"));
+    if (fh >= 0)
     {
-        expf -= 0x7F;
-        if ((int)expf < -15)
+        g_stEngineStructure.ucNumberOfDemos = 0;
+        memset(buffer, 0, 1024);
+        u32FileSize = CD_Read(fh, buffer, 1024);
+        i = 0;
+        p = buffer;
+        while (p != NULL && (unsigned int)p < (unsigned int)buffer + u32FileSize)
         {
-            sprintf(szBuffer, "float abs val too small to be compressed %f -> 0\n", (double)xValue);
-            expf = -15;
-            mantissa = 1;
+            if (sscanf(p, "%s %s", LevelName, FileName) == -1)
+                break;
+            if (strlen(LevelName) < 12 && strlen(FileName) < 12)
+            {
+                strcpy(g_stEngineStructure.a_szDemoLevelName[i], LevelName);
+                strcpy(g_stEngineStructure.a_szDemoName[i], FileName);
+                i++;
+                g_stEngineStructure.ucNumberOfDemos = i;
+                if (i == 30)
+                    break;
+            }
+            p = Strchr(p, '\n');
+            if (p != NULL)
+                p++;
         }
-        if ((int)expf > 16)
-        {
-            expf = 16;
-            mantissa = 0x3FF;
-        }
-        expf += 15;
-        expf <<= 10;
+        CD_Close(fh);
     }
-    return (short)((mantissa >> 13) | ((sign_bit >> 16) | expf));
-}
-
-#define DEMO_M_COMPRESS_VECTOR(a_sDst, p_stV) \
-    (a_sDst)[0] = fn_sCompressNumber((p_stV)->xX); \
-    (a_sDst)[1] = fn_sCompressNumber((p_stV)->xY); \
-    (a_sDst)[2] = fn_sCompressNumber((p_stV)->xZ); \
-    (a_sDst)[3] = fn_sCompressNumber((p_stV)->xW);
-
-void fn_vDemoReadCompressedTransform(tdstDemoCompressedTransform_* _p_stCompressedTransform)
-{
-    MTH4D_tdstMatrix_ stMatrix;
-    MTH4D_tdstMatrix_ stMatrix2;
-    short* p_coef;
-    MTH4D_tdstVector_* p_stVector;
-    short* p_coefScaled;
-    MTH4D_tdstVector_* p_stScaled;
-    float xScale;
-    float xX;
-    float xY;
-    float xZ;
-    float* p0Y; float* p0Z; float* p0W; float* p1X; float* p1Y; float* p1Z; float* p1W; float* p2X; float* p2Y; float* p2Z; float* p2W;
-
-    memset(_p_stCompressedTransform, 0, 42);
-    p_coef = _p_stCompressedTransform->a_sCoef;
-    memcpy(_p_stCompressedTransform, (void*)gp_DEMO_CurrentPosInMemory, 2);
-    gp_DEMO_CurrentPosInMemory += 2;
-    switch (_p_stCompressedTransform->uwType)
-    {
-    case 1:
-        p_coef[19] = 0x3C00;
-        p_coef[18] = 0x3C00;
-        p_coef[17] = 0x3C00;
-        p_coef[16] = 0x3C00;
-        p_coef[15] = 0x3C00;
-        p_coef[10] = 0x3C00;
-        p_coef[5] = 0x3C00;
-        p_coef[0] = 0x3C00;
-        break;
-    case 2:
-        p_coef[19] = 0x3C00;
-        p_coef[18] = 0x3C00;
-        p_coef[17] = 0x3C00;
-        p_coef[16] = 0x3C00;
-        p_coef[15] = 0x3C00;
-        p_coef[10] = 0x3C00;
-        p_coef[5] = 0x3C00;
-        p_coef[0] = 0x3C00;
-        memcpy(&_p_stCompressedTransform->a_sCoef[12], (void*)gp_DEMO_CurrentPosInMemory, 6);
-        gp_DEMO_CurrentPosInMemory += 6;
-        break;
-    case 3:
-        memcpy(&_p_stCompressedTransform->a_sCoef[12], (void*)gp_DEMO_CurrentPosInMemory, 6);
-        gp_DEMO_CurrentPosInMemory += 6;
-        _p_stCompressedTransform->a_sCoef[15] = 0x3C00;
-        memcpy(p_coef, (void*)gp_DEMO_CurrentPosInMemory, 2);
-        gp_DEMO_CurrentPosInMemory += 2;
-        p_coef[5] = p_coef[10] = p_coef[15] = p_coef[16] = p_coef[17] = p_coef[18] = p_coef[19] = p_coef[0];
-        break;
-    case 4:
-        memcpy(&_p_stCompressedTransform->a_sCoef[12], (void*)gp_DEMO_CurrentPosInMemory, 6);
-        gp_DEMO_CurrentPosInMemory += 6;
-        _p_stCompressedTransform->a_sCoef[15] = 0x3C00;
-        memcpy(&p_coef[16], (void*)gp_DEMO_CurrentPosInMemory, 6);
-        gp_DEMO_CurrentPosInMemory += 6;
-        p_coef[0] = p_coef[16];
-        p_coef[5] = p_coef[17];
-        p_coef[10] = p_coef[18];
-        break;
-    case 5:
-        memcpy(&_p_stCompressedTransform->a_sCoef[12], (void*)gp_DEMO_CurrentPosInMemory, 6);
-        gp_DEMO_CurrentPosInMemory += 6;
-        _p_stCompressedTransform->a_sCoef[15] = 0x3C00;
-        memcpy(p_coef, (void*)gp_DEMO_CurrentPosInMemory, 8);
-        gp_DEMO_CurrentPosInMemory += 8;
-        xZ = fn_fUncompressNumber(p_coef[3]);
-        xY = fn_fUncompressNumber(p_coef[2]);
-        xX = fn_fUncompressNumber(p_coef[1]);
-        MAT_fn_vQuatToMatrix(&stMatrix, fn_fUncompressNumber(p_coef[0]), xX, xY, xZ);
-        p_stVector = &stMatrix.stCol_0;
-        DEMO_M_COMPRESS_VECTOR(&p_coef[0], p_stVector)
-        p_stVector = &stMatrix.stCol_1;
-        DEMO_M_COMPRESS_VECTOR(&p_coef[4], p_stVector)
-        p_stVector = &stMatrix.stCol_2;
-        DEMO_M_COMPRESS_VECTOR(&p_coef[8], p_stVector)
-        _p_stCompressedTransform->a_sCoef[19] = 0x3C00;
-        _p_stCompressedTransform->a_sCoef[18] = 0x3C00;
-        _p_stCompressedTransform->a_sCoef[17] = 0x3C00;
-        _p_stCompressedTransform->a_sCoef[16] = 0x3C00;
-        break;
-    case 6:
-        memcpy(&_p_stCompressedTransform->a_sCoef[12], (void*)gp_DEMO_CurrentPosInMemory, 6);
-        gp_DEMO_CurrentPosInMemory += 6;
-        _p_stCompressedTransform->a_sCoef[15] = 0x3C00;
-        memcpy(&_p_stCompressedTransform->a_sCoef[16], (void*)gp_DEMO_CurrentPosInMemory, 2);
-        gp_DEMO_CurrentPosInMemory += 2;
-        memcpy(p_coef, (void*)gp_DEMO_CurrentPosInMemory, 8);
-        gp_DEMO_CurrentPosInMemory += 8;
-        xZ = fn_fUncompressNumber(p_coef[3]);
-        xY = fn_fUncompressNumber(p_coef[2]);
-        xX = fn_fUncompressNumber(p_coef[1]);
-        MAT_fn_vQuatToMatrix(&stMatrix2, fn_fUncompressNumber(p_coef[0]), xX, xY, xZ);
-        xScale = fn_fUncompressNumberInline(_p_stCompressedTransform->a_sCoef[16]);
-        p0W = &stMatrix2.stCol_0.xW;
-        p1X = &stMatrix2.stCol_1.xX;
-        p0Z = &stMatrix2.stCol_0.xZ;
-        p0Y = &stMatrix2.stCol_0.xY;
-        p1Y = &stMatrix2.stCol_1.xY;
-        p1Z = &stMatrix2.stCol_1.xZ;
-        p1W = &stMatrix2.stCol_1.xW;
-        p2X = &stMatrix2.stCol_2.xX;
-        p2Y = &stMatrix2.stCol_2.xY;
-        p2Z = &stMatrix2.stCol_2.xZ;
-        p2W = &stMatrix2.stCol_2.xW;
-        stMatrix2.stCol_0.xX *= xScale;
-        *p0Y *= xScale;
-        *p0Z *= xScale;
-        *p0W = 1.0f;
-        *p1X *= xScale;
-        *p1Y *= xScale;
-        *p1Z *= xScale;
-        *p1W = 1.0f;
-        *p2X *= xScale;
-        *p2Y *= xScale;
-        *p2Z *= xScale;
-        *p2W = 1.0f;
-        *p2W = 0.0f;
-        *p1W = 0.0f;
-        *p0W = 0.0f;
-        p_coefScaled = _p_stCompressedTransform->a_sCoef;
-        p_stScaled = &stMatrix2.stCol_0;
-        DEMO_M_COMPRESS_VECTOR(p_coefScaled, p_stScaled)
-        p_stScaled = &stMatrix2.stCol_1;
-        DEMO_M_COMPRESS_VECTOR(&p_coefScaled[4], p_stScaled)
-        p_stScaled = &stMatrix2.stCol_2;
-        DEMO_M_COMPRESS_VECTOR(&p_coefScaled[8], p_stScaled)
-        _p_stCompressedTransform->a_sCoef[19] = 0x3C00;
-        _p_stCompressedTransform->a_sCoef[18] = _p_stCompressedTransform->a_sCoef[17] = _p_stCompressedTransform->a_sCoef[16];
-        break;
-    case 7:
-        memcpy(_p_stCompressedTransform, (void*)gp_DEMO_CurrentPosInMemory, 42);
-        gp_DEMO_CurrentPosInMemory += 42;
-        break;
-    case 8:
-        memcpy(_p_stCompressedTransform, (void*)gp_DEMO_CurrentPosInMemory, 42);
-        gp_DEMO_CurrentPosInMemory += 42;
-        break;
-    case 0:
-    case 9:
-        break;
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 440–482 */
-/* addr: 0x002876f0  size: 72 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 457
- *   +0x0004 -> line 440
- *   +0x0008 -> line 457
- *   +0x000c -> line 460
- *   +0x0010 -> line 457
- *   +0x0014 -> line 460
- *   +0x0018 -> line 466
- *   +0x0020 -> line 470
- *   +0x0024 -> line 471
- *   +0x0028 -> line 477
- *   +0x003c -> line 479
- *   +0x0040 -> line 482
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-float fn_fUncompressNumber(short n)
-{
-    unsigned int sign_bit;
-    unsigned int expf;
-    unsigned int mantissa;
-    unsigned int ulValue;
-    union {
-        unsigned int ul;
-        float f;
-    } value;
-
-    sign_bit = n & 0x8000;
-    expf = (n & 0x7c00) >> 10;
-    mantissa = n & 0x3ff;
-    if (expf != 0)
-    {
-        expf += 0x70;
-        expf <<= 23;
-    }
-    ulValue = (mantissa << 13) | ((sign_bit << 16) | expf);
-    value.ul = ulValue;
-    return value.f;
 }

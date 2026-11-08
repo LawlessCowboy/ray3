@@ -204,99 +204,18 @@ extern void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
 extern void Erm_fn_ClearLastError(unsigned int ulChannelId);
 extern void Erm_fn_v_UpdateLastError(unsigned short uwStartOfWarningsId, unsigned char ucModuleId, unsigned int ulChannelId, unsigned short uwErrNum, int lDebugInfo, unsigned char ucOpenInfoWindow, unsigned char ucStopForDebug, char* szPersonalMsg);
 
-float GEO_xGetZFar(void)
-{
-    return GEO_g_xZFar;
-}
-
-void GEO_vSetVisualMaterialOfIndexedCone(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfCone, GLI_tdstMaterial_* hVisualMaterial)
-{
-    char* pc;
-    int iIndex;
-    /* Matching idiom for the unfolded member offset (char* base plus offset, dead scaled-index
-       assignment); found by scanning matched functions. Not original source and needs cleaning up. */
-    pc = (char*)(*(GEO_tdstElementCones_***)&hObject->d_stListOfElements)[hElement]->d_stListOfCones;
-    pc = pc + 8;
-    ((GLI_tdstMaterial_**)pc)[iIndex = (int)xNumberOfCone * 3] = hVisualMaterial;
-}
-
-void GEO_vSetRadiusOfIndexedCone(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfCone, float xRadius)
-{
-    char* pc;
-    int iIndex;
-    /* Matching idiom for the unfolded member offset (char* base plus offset, dead scaled-index
-       assignment); found by scanning matched functions. Not original source and needs cleaning up. */
-    pc = (char*)(*(GEO_tdstElementCones_***)&hObject->d_stListOfElements)[hElement]->d_stListOfCones;
-    pc = pc + 4;
-    ((float*)pc)[iIndex = (int)xNumberOfCone * 3] = xRadius;
-}
-
-void GEO_vSetPointsOfIndexedCone(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfCone, short xTopPoint, short xBasePoint)
-{
-    ((short *)((char *)(*(GEO_tdstElementCones_***)&hObject->d_stListOfElements)[hElement]->d_stListOfCones))[xNumberOfCone * 6] = xTopPoint;
-    ((short *)((char *)(*(GEO_tdstElementCones_***)&hObject->d_stListOfElements)[hElement]->d_stListOfCones + 2))[xNumberOfCone * 6] = xBasePoint;
-}
-
-void GEO_vCreateElementCones(GEO_tdstGeometricObject_* hObject, short* p_hElement, short xNbCones)
-{
-    GEO_tdstElementCones_* p_stElement;
-    short xElementToBuild;
-
-    for (xElementToBuild = 0; xElementToBuild < hObject->xNbElements; xElementToBuild++)
-    {
-        if (hObject->d_xListOfElementsTypes[xElementToBuild] == 0) break;
-    }
-    if (xElementToBuild == hObject->xNbElements) return;
-    hObject->d_xListOfElementsTypes[xElementToBuild] = 9;
-    *p_hElement = xElementToBuild;
-    /* The retail source allocated and filled the new element in a single
-       statement group on one source line (retail line 567). */
-    p_stElement = (GEO_tdstElementCones_*)HMU_fn_p_vMalloc(sizeof(GEO_tdstElementCones_), 0); p_stElement->d_stListOfCones = (GEO_tdstIndexedCone_*)HMU_fn_p_vMalloc(xNbCones * sizeof(GEO_tdstIndexedCone_), 0); p_stElement->xNbCones = xNbCones; p_stElement->xIndexOfParallelBox = -1; (*(GEO_tdstElementCones_***)&hObject->d_stListOfElements)[xElementToBuild] = p_stElement;
-}
-
-void GEO_vSetVisualMaterialOfIndexedSphere(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfSphere, GLI_tdstMaterial_* hVisualMaterial)
-{
-    char* pc;
-    int iIndex;
-    /* Matching idiom for the unfolded member offset (char* base plus offset, dead scaled-index
-       assignment); found by scanning matched functions. Not original source and needs cleaning up. */
-    pc = (char*)(*(GEO_tdstElementSpheres_***)&hObject->d_stListOfElements)[hElement]->d_stListOfSpheres;
-    pc = pc + 4;
-    ((GLI_tdstMaterial_**)pc)[iIndex = (int)xNumberOfSphere * 3] = hVisualMaterial;
-}
-
-void GEO_vSetRadiusOfIndexedSphere(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfSphere, float xRadius)
-{
-    (*(GEO_tdstElementSpheres_***)&hObject->d_stListOfElements)[hElement]->d_stListOfSpheres[xNumberOfSphere].xRadius = xRadius;
-}
-
-void GEO_vSetCenterPointOfIndexedSphere(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfSphere, short xIndexOfPoint)
-{
-    char* pc;
-    int iIndex;
-    /* Matching idiom for the unfolded member offset (char* base plus offset, dead scaled-index
-       assignment); found by scanning matched functions. Not original source and needs cleaning up. */
-    pc = (char*)(*(GEO_tdstElementSpheres_***)&hObject->d_stListOfElements)[hElement]->d_stListOfSpheres;
-    pc = pc + 8;
-    ((short*)pc)[iIndex = (int)xNumberOfSphere * 6] = xIndexOfPoint;
-}
-
-void GEO_vCreateElementSpheres(GEO_tdstGeometricObject_* hObject, short* p_hElement, short xNbSpheres)
-{
-    GEO_tdstElementSpheres_* p_stElement;
-    short xElementToBuild;
-
-    for (xElementToBuild = 0; xElementToBuild < hObject->xNbElements; xElementToBuild++)
-    {
-        if (hObject->d_xListOfElementsTypes[xElementToBuild] == 0) break;
-    }
-    if (xElementToBuild == hObject->xNbElements) return;
-    hObject->d_xListOfElementsTypes[xElementToBuild] = 7;
-    *p_hElement = xElementToBuild;
-    /* The retail source allocated and filled the new element in a single
-       statement group on one source line (retail line 263). */
-    p_stElement = (GEO_tdstElementSpheres_*)HMU_fn_p_vMalloc(sizeof(GEO_tdstElementSpheres_), 0); p_stElement->d_stListOfSpheres = (GEO_tdstIndexedSphere_*)HMU_fn_p_vMalloc(xNbSpheres * sizeof(GEO_tdstIndexedSphere_), 0); p_stElement->xNbSpheres = xNbSpheres; p_stElement->xIndexOfParallelBox = -1; (*(GEO_tdstElementSpheres_***)&hObject->d_stListOfElements)[xElementToBuild] = p_stElement;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+float GEO_xGetZFar(void);
+void GEO_vSetVisualMaterialOfIndexedCone(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfCone, GLI_tdstMaterial_* hVisualMaterial);
+void GEO_vSetRadiusOfIndexedCone(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfCone, float xRadius);
+void GEO_vSetPointsOfIndexedCone(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfCone, short xTopPoint, short xBasePoint);
+void GEO_vCreateElementCones(GEO_tdstGeometricObject_* hObject, short* p_hElement, short xNbCones);
+void GEO_vSetVisualMaterialOfIndexedSphere(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfSphere, GLI_tdstMaterial_* hVisualMaterial);
+void GEO_vSetRadiusOfIndexedSphere(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfSphere, float xRadius);
+void GEO_vSetCenterPointOfIndexedSphere(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfSphere, short xIndexOfPoint);
+void GEO_vCreateElementSpheres(GEO_tdstGeometricObject_* hObject, short* p_hElement, short xNbSpheres);
+GEO_tdstElementIndexedTriangles_* GEO_p_stAllocElementIndexedTriangles(short xNbFaces, short xNbElementUV, short xNbUVStages);
 
 GEO_tdstElementIndexedTriangles_* GEO_p_stAllocElementIndexedTriangles(short xNbFaces, short xNbElementUV, short xNbUVStages)
 {
@@ -340,4 +259,98 @@ GEO_tdstElementIndexedTriangles_* GEO_p_stAllocElementIndexedTriangles(short xNb
     p_stLocalElement->xIndexOfParallelBox = -1;
     p_stLocalElement->bVisibleInPortal = 1;
     return p_stLocalElement;
+}
+
+void GEO_vCreateElementSpheres(GEO_tdstGeometricObject_* hObject, short* p_hElement, short xNbSpheres)
+{
+    GEO_tdstElementSpheres_* p_stElement;
+    short xElementToBuild;
+
+    for (xElementToBuild = 0; xElementToBuild < hObject->xNbElements; xElementToBuild++)
+    {
+        if (hObject->d_xListOfElementsTypes[xElementToBuild] == 0) break;
+    }
+    if (xElementToBuild == hObject->xNbElements) return;
+    hObject->d_xListOfElementsTypes[xElementToBuild] = 7;
+    *p_hElement = xElementToBuild;
+    /* The retail source allocated and filled the new element in a single
+       statement group on one source line (retail line 263). */
+    p_stElement = (GEO_tdstElementSpheres_*)HMU_fn_p_vMalloc(sizeof(GEO_tdstElementSpheres_), 0); p_stElement->d_stListOfSpheres = (GEO_tdstIndexedSphere_*)HMU_fn_p_vMalloc(xNbSpheres * sizeof(GEO_tdstIndexedSphere_), 0); p_stElement->xNbSpheres = xNbSpheres; p_stElement->xIndexOfParallelBox = -1; (*(GEO_tdstElementSpheres_***)&hObject->d_stListOfElements)[xElementToBuild] = p_stElement;
+}
+
+void GEO_vSetCenterPointOfIndexedSphere(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfSphere, short xIndexOfPoint)
+{
+    char* pc;
+    int iIndex;
+    /* Matching idiom for the unfolded member offset (char* base plus offset, dead scaled-index
+       assignment); found by scanning matched functions. Not original source and needs cleaning up. */
+    pc = (char*)(*(GEO_tdstElementSpheres_***)&hObject->d_stListOfElements)[hElement]->d_stListOfSpheres;
+    pc = pc + 8;
+    ((short*)pc)[iIndex = (int)xNumberOfSphere * 6] = xIndexOfPoint;
+}
+
+void GEO_vSetRadiusOfIndexedSphere(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfSphere, float xRadius)
+{
+    (*(GEO_tdstElementSpheres_***)&hObject->d_stListOfElements)[hElement]->d_stListOfSpheres[xNumberOfSphere].xRadius = xRadius;
+}
+
+void GEO_vSetVisualMaterialOfIndexedSphere(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfSphere, GLI_tdstMaterial_* hVisualMaterial)
+{
+    char* pc;
+    int iIndex;
+    /* Matching idiom for the unfolded member offset (char* base plus offset, dead scaled-index
+       assignment); found by scanning matched functions. Not original source and needs cleaning up. */
+    pc = (char*)(*(GEO_tdstElementSpheres_***)&hObject->d_stListOfElements)[hElement]->d_stListOfSpheres;
+    pc = pc + 4;
+    ((GLI_tdstMaterial_**)pc)[iIndex = (int)xNumberOfSphere * 3] = hVisualMaterial;
+}
+
+void GEO_vCreateElementCones(GEO_tdstGeometricObject_* hObject, short* p_hElement, short xNbCones)
+{
+    GEO_tdstElementCones_* p_stElement;
+    short xElementToBuild;
+
+    for (xElementToBuild = 0; xElementToBuild < hObject->xNbElements; xElementToBuild++)
+    {
+        if (hObject->d_xListOfElementsTypes[xElementToBuild] == 0) break;
+    }
+    if (xElementToBuild == hObject->xNbElements) return;
+    hObject->d_xListOfElementsTypes[xElementToBuild] = 9;
+    *p_hElement = xElementToBuild;
+    /* The retail source allocated and filled the new element in a single
+       statement group on one source line (retail line 567). */
+    p_stElement = (GEO_tdstElementCones_*)HMU_fn_p_vMalloc(sizeof(GEO_tdstElementCones_), 0); p_stElement->d_stListOfCones = (GEO_tdstIndexedCone_*)HMU_fn_p_vMalloc(xNbCones * sizeof(GEO_tdstIndexedCone_), 0); p_stElement->xNbCones = xNbCones; p_stElement->xIndexOfParallelBox = -1; (*(GEO_tdstElementCones_***)&hObject->d_stListOfElements)[xElementToBuild] = p_stElement;
+}
+
+void GEO_vSetPointsOfIndexedCone(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfCone, short xTopPoint, short xBasePoint)
+{
+    ((short *)((char *)(*(GEO_tdstElementCones_***)&hObject->d_stListOfElements)[hElement]->d_stListOfCones))[xNumberOfCone * 6] = xTopPoint;
+    ((short *)((char *)(*(GEO_tdstElementCones_***)&hObject->d_stListOfElements)[hElement]->d_stListOfCones + 2))[xNumberOfCone * 6] = xBasePoint;
+}
+
+void GEO_vSetRadiusOfIndexedCone(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfCone, float xRadius)
+{
+    char* pc;
+    int iIndex;
+    /* Matching idiom for the unfolded member offset (char* base plus offset, dead scaled-index
+       assignment); found by scanning matched functions. Not original source and needs cleaning up. */
+    pc = (char*)(*(GEO_tdstElementCones_***)&hObject->d_stListOfElements)[hElement]->d_stListOfCones;
+    pc = pc + 4;
+    ((float*)pc)[iIndex = (int)xNumberOfCone * 3] = xRadius;
+}
+
+void GEO_vSetVisualMaterialOfIndexedCone(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfCone, GLI_tdstMaterial_* hVisualMaterial)
+{
+    char* pc;
+    int iIndex;
+    /* Matching idiom for the unfolded member offset (char* base plus offset, dead scaled-index
+       assignment); found by scanning matched functions. Not original source and needs cleaning up. */
+    pc = (char*)(*(GEO_tdstElementCones_***)&hObject->d_stListOfElements)[hElement]->d_stListOfCones;
+    pc = pc + 8;
+    ((GLI_tdstMaterial_**)pc)[iIndex = (int)xNumberOfCone * 3] = hVisualMaterial;
+}
+
+float GEO_xGetZFar(void)
+{
+    return GEO_g_xZFar;
 }

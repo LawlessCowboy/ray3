@@ -1409,10 +1409,66 @@ void AE_InternalGetBPandPSMFromID(int BufferID, unsigned long* pDestBP, unsigned
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void plyPS2glAccum(anon_29* param0)
-{
-    impPS2glAccum(*(unsigned int*)param0, ((float*)param0)[1]);
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void plyPS2glAccum(anon_29* param0);
+void AE_CopyBackBufferOnScreen(void);
+void AE_MoveGreenToAlpha(void);
+void AE_SetDrawTarget(int BufferID);
+void AE_SetTextureNoBilinear(int BufferID);
+void AE_SetTextureNoAlpha(int BufferID);
+void AE_SetTexture(int BufferID);
+int AE_GetZBufferBase(void);
+void AE_InternalGetBPandPSMFromID(int BufferID, unsigned long* pDestBP, unsigned long* pDestPSM);
+void AE_End(void);
+void AE_Begin(void);
+void AE_SetGS(int vA, int vB, int vC, int vD, unsigned int vFIX);
+void AE_DrawWindowWithoutOptimization(float x1, float y1, float x2, float y2, float r, float g, float b, float a, float u1, float v1, float u2, float v2);
+void AE_DrawWindow(float x1, float y1, float x2, float y2, float r, float g, float b, float a, float u1, float v1, float u2, float v2);
+void AE_SimpleBlurWithOptimization(int Counter);
+void AE_SimpleBlur(int Counter);
+void AE_CopyScreen(void);
+void impPS2glAccum(unsigned int op, float value);
+void impPS2glReadPixels(int x, int y, int width, int height, unsigned int format, unsigned int type, void* pixels);
+void internalReadFastRgbaPixels(int x, int y, int width, int height, unsigned int format, unsigned int type, void* pixels);
+void impPS2glReadBuffer(unsigned int mode);
+void impPS2glRasterPos4sv(short* v);
+void impPS2glRasterPos4s(short x, short y, short z, short w);
+void impPS2glRasterPos4iv(int* v);
+void impPS2glRasterPos4i(int x, int y, int z, int w);
+void impPS2glRasterPos4fv(float* v1);
+void impPS2glRasterPos4f(float x, float y, float z, float w);
+void impPS2glRasterPos4dv(double* v);
+void impPS2glRasterPos4d(double x, double y, double z, double w);
+void impPS2glRasterPos3sv(short* v);
+void impPS2glRasterPos3s(short x, short y, short z);
+void impPS2glRasterPos3iv(int* v);
+void impPS2glRasterPos3i(int x, int y, int z);
+void impPS2glRasterPos3fv(float* v);
+void impPS2glRasterPos3f(float x, float y, float z);
+void impPS2glRasterPos3dv(double* v);
+void impPS2glRasterPos3d(double x, double y, double z);
+void impPS2glRasterPos2sv(short* v);
+void impPS2glRasterPos2s(short x, short y);
+void impPS2glRasterPos2iv(int* v);
+void impPS2glRasterPos2i(int x, int y);
+void impPS2glRasterPos2fv(float* v);
+void impPS2glRasterPos2f(float x, float y);
+void impPS2glRasterPos2dv(double* v);
+void impPS2glRasterPos2d(double x, double y);
+void impPS2glPixelZoom(void);
+void impPS2glPixelTransferi(void);
+void impPS2glPixelTransferf(void);
+void impPS2glPixelStorei(void);
+void impPS2glPixelStoref(void);
+void impPS2glPixelMapusv(void);
+void impPS2glPixelMapuiv(void);
+void impPS2glPixelMapfv(void);
+void impPS2glDrawPixels(int width, int height, unsigned int format, unsigned int type, void* pixels);
+void internalPS2glDrawRgbaPixels(int x, int y, int width, int height, unsigned int format, unsigned int type, void* pixels);
+void impPS2glDrawBuffer(unsigned int mode);
+void PS2glClearLastBits(void);
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1897–1904 */
 /* addr: 0x00161b30  size: 1280 bytes */
@@ -1448,10 +1504,6 @@ void plyPS2glAccum(anon_29* param0)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AE_CopyBackBufferOnScreen(void)
-{
-    /* TODO: decompile from asm/... */
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1833–1892 */
 /* addr: 0x00162030  size: 1232 bytes */
@@ -1568,13 +1620,6 @@ void AE_CopyBackBufferOnScreen(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AE_MoveGreenToAlpha(void)
-{
-    anon_3 qword;
-    unsigned long DestPSM;
-    unsigned long DestBP;
-    /* TODO: decompile from asm/... */
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1813–1825 */
 /* addr: 0x00162500  size: 164 bytes */
@@ -1600,15 +1645,6 @@ void AE_MoveGreenToAlpha(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AE_SetDrawTarget(int BufferID)
-{
-    unsigned long DestBP;
-    unsigned long DestPSM;
-    AE_InternalGetBPandPSMFromID(BufferID, &DestBP, &DestPSM);
-    g_gsContext.FRAME_1.FBP = DestBP; g_gsContext.ModFlgs.FRAME_1_Modified = 1;
-    g_gsContext.FRAME_1.PSM = DestPSM; g_gsContext.ModFlgs.FRAME_1_Modified = 1;
-    GsUpdate();
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1793–1810 */
 /* addr: 0x001625b0  size: 220 bytes */
@@ -1634,24 +1670,6 @@ void AE_SetDrawTarget(int BufferID)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AE_SetTextureNoBilinear(int BufferID)
-{
-    anon_3 qword;
-    unsigned long DestBP;
-    unsigned long DestPSM;
-
-    qword.u64Data[0] = 0;
-    qword.u64Data[1] = 0;
-    AE_InternalGetBPandPSMFromID(BufferID, &DestBP, &DestPSM);
-    qword.u64Data[0] = SCE_GS_SET_TEX0(DestBP << 5, g_stBufferInfo.iScreenWidth >> 6, DestPSM, 10, 9, 0, 0, 0, 0, 0, 0, 0);
-    qword.ubData[8] = 6;
-    GsSendData(0xE, &qword);
-    qword.u64Data[0] = 0;
-    qword.ubData[8] = 0x14;
-    GsSendData(0xE, &qword);
-    GsUpdate();
-    g_gsContext.TEXFLUSH.DATA = 1; g_gsContext.ModFlgs.TEXFLUSH_Modified = 1;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1772–1789 */
 /* addr: 0x00162690  size: 224 bytes */
@@ -1679,24 +1697,6 @@ void AE_SetTextureNoBilinear(int BufferID)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AE_SetTextureNoAlpha(int BufferID)
-{
-    anon_3 qword;
-    unsigned long DestBP;
-    unsigned long DestPSM;
-
-    qword.u64Data[0] = 0;
-    qword.u64Data[1] = 0;
-    AE_InternalGetBPandPSMFromID(BufferID, &DestBP, &DestPSM);
-    qword.u64Data[0] = SCE_GS_SET_TEX0(DestBP << 5, g_stBufferInfo.iScreenWidth >> 6, DestPSM, 10, 9, 0, 0, 0, 0, 0, 0, 0);
-    qword.ubData[8] = 6;
-    GsSendData(0xE, &qword);
-    qword.u64Data[0] = 0x60;
-    qword.ubData[8] = 0x14;
-    GsSendData(0xE, &qword);
-    GsUpdate();
-    g_gsContext.TEXFLUSH.DATA = 1; g_gsContext.ModFlgs.TEXFLUSH_Modified = 1;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1752–1769 */
 /* addr: 0x00162770  size: 220 bytes */
@@ -1724,24 +1724,6 @@ void AE_SetTextureNoAlpha(int BufferID)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AE_SetTexture(int BufferID)
-{
-    anon_3 qword;
-    unsigned long DestBP;
-    unsigned long DestPSM;
-
-    qword.u64Data[0] = 0;
-    qword.u64Data[1] = 0;
-    AE_InternalGetBPandPSMFromID(BufferID, &DestBP, &DestPSM);
-    qword.u64Data[0] = SCE_GS_SET_TEX0(DestBP << 5, g_stBufferInfo.iScreenWidth >> 6, DestPSM, 10, 9, 1, 0, 0, 0, 0, 0, 0);
-    qword.ubData[8] = 6;
-    GsSendData(0xE, &qword);
-    qword.u64Data[0] = 0x60;
-    qword.ubData[8] = 0x14;
-    GsSendData(0xE, &qword);
-    GsUpdate();
-    g_gsContext.TEXFLUSH.DATA = 1; g_gsContext.ModFlgs.TEXFLUSH_Modified = 1;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1748–1749 */
 /* addr: 0x00162850  size: 16 bytes */
@@ -1751,10 +1733,6 @@ void AE_SetTexture(int BufferID)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int AE_GetZBufferBase(void)
-{
-    return g_stDoubleBuf.draw01.zbuf1.ZBP;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1689–1744 */
 /* addr: 0x00162860  size: 296 bytes */
@@ -1799,53 +1777,6 @@ int AE_GetZBufferBase(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AE_InternalGetBPandPSMFromID(int BufferID, unsigned long* pDestBP, unsigned long* pDestPSM)
-{
-    unsigned long DestPSM;
-    unsigned long DestBP;
-    anon_44 dispfb;
-
-    switch (BufferID)
-    {
-    case 0:
-        *(unsigned long*)&dispfb = *(unsigned long*)&g_stDoubleBuf.disp[0].dispfb;
-        DestBP = g_PS2glContext.iFrameBufferBack >> 5;
-        DestPSM = dispfb.PSM;
-        break;
-    case 1:
-        *(unsigned long*)&dispfb = *(unsigned long*)&g_stDoubleBuf.disp[0].dispfb;
-        DestBP = g_PS2glContext.iFrameBufferFront >> 5;
-        DestPSM = dispfb.PSM;
-        break;
-    case 2:
-        DestBP = g_stBufferInfo.iAuxBufferBase;
-        DestPSM = g_stBufferInfo.iAuxBufferPSM;
-        break;
-    case 3:
-        DestBP = g_stDoubleBuf.draw01.zbuf1.ZBP;
-        if (g_stBufferInfo.iDepthBufferDepth == 16)
-        {
-            DestPSM = g_stBufferInfo.iAuxBufferPSM;
-        }
-        else
-        {
-            *(unsigned long*)&dispfb = *(unsigned long*)&g_stDoubleBuf.disp[0].dispfb;
-            DestPSM = dispfb.PSM;
-        }
-        break;
-    case 4:
-        DestBP = g_stDoubleBuf.draw01.zbuf1.ZBP;
-        *(unsigned long*)&dispfb = *(unsigned long*)&g_stDoubleBuf.disp[0].dispfb;
-        DestPSM = dispfb.PSM;
-        break;
-    default:
-        DestBP = AE_g_iOldBP;
-        DestPSM = AE_g_iOldPSM;
-        break;
-    }
-    *pDestBP = DestBP;
-    *pDestPSM = DestPSM;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1660–1681 */
 /* addr: 0x00162990  size: 344 bytes */
@@ -1893,21 +1824,6 @@ void AE_InternalGetBPandPSMFromID(int BufferID, unsigned long* pDestBP, unsigned
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AE_End(void)
-{
-    g_gsContext.FRAME_1.FBP = AE_g_iOldBP; g_gsContext.ModFlgs.FRAME_1_Modified = 1;
-    g_gsContext.FRAME_1.PSM = AE_g_iOldPSM; g_gsContext.ModFlgs.FRAME_1_Modified = 1;
-    g_gsContext.FRAME_1.FBMSK = AE_g_iOldMSK; g_gsContext.ModFlgs.FRAME_1_Modified = 1;
-    g_PS2glContext.bTexCubeChanged = 1;
-    g_PS2glContext.abTex2DChanged[0] = 1;
-    g_PS2glContext.abTex1DChanged[0] = 1;
-    if (AE_g_bOldDepthTest)
-        PS2glEnable(0xB71);
-    AE_g_qOldAlpha.ubData[8] = 0x42; GsSendData(0xE, &AE_g_qOldAlpha);
-    *(anon_3*)&g_gsContext.ALPHA_1 = AE_g_qOldAlpha;
-    GsUpdate();
-    AE_g_UseAlphaTestValues = 0;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1646–1657 */
 /* addr: 0x00162af0  size: 148 bytes */
@@ -1937,17 +1853,6 @@ void AE_End(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AE_Begin(void)
-{
-    AE_g_iOldPSM = g_gsContext.FRAME_1.PSM;
-    AE_g_iOldBP = g_gsContext.FRAME_1.FBP;
-    AE_g_iOldMSK = g_gsContext.FRAME_1.FBMSK;
-    if (g_stBufferInfo.iAuxBufferSize)
-        PS2glFreeTexBlockSafe(0, g_stBufferInfo.iAuxBufferSize);
-    AE_g_bOldDepthTest = PS2glIsEnabled(0xB71);
-    PS2glDisable(0xB71);
-    AE_g_qOldAlpha = *(anon_3*)&g_gsContext.ALPHA_1;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1617–1622 */
 /* addr: 0x00162b90  size: 280 bytes */
@@ -1976,14 +1881,6 @@ void AE_Begin(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AE_SetGS(int vA, int vB, int vC, int vD, unsigned int vFIX)
-{
-    g_gsContext.ALPHA_1.A = vA; g_gsContext.ModFlgs.ALPHA_1_Modified = 1;
-    g_gsContext.ALPHA_1.B = vB; g_gsContext.ModFlgs.ALPHA_1_Modified = 1;
-    g_gsContext.ALPHA_1.C = vC; g_gsContext.ModFlgs.ALPHA_1_Modified = 1;
-    g_gsContext.ALPHA_1.D = vD; g_gsContext.ModFlgs.ALPHA_1_Modified = 1;
-    g_gsContext.ALPHA_1.FIX = vFIX; g_gsContext.ModFlgs.ALPHA_1_Modified = 1;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1595–1612 */
 /* addr: 0x00162cb0  size: 200 bytes */
@@ -2014,24 +1911,6 @@ void AE_SetGS(int vA, int vB, int vC, int vD, unsigned int vFIX)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AE_DrawWindowWithoutOptimization(float x1, float y1, float x2, float y2, float r, float g, float b, float a, float u1, float v1, float u2, float v2)
-{
-    y1 = 100.0f - y1;
-    y2 = 100.0f - y2;
-    u1 *= (float)(g_stBufferInfo.iScreenWidth * 16);
-    u2 *= (float)(g_stBufferInfo.iScreenWidth * 16);
-    if (g_stBufferInfo.bPlainBufferMode)
-    {
-        v1 *= (float)(g_stBufferInfo.iScreenHeight * 16);
-        v2 *= (float)(g_stBufferInfo.iScreenHeight * 16);
-    }
-    else
-    {
-        v1 *= (float)(g_stBufferInfo.iScreenHeight * 8);
-        v2 *= (float)(g_stBufferInfo.iScreenHeight * 8);
-    }
-    internalFullScreenQuadJeffWithoutOptimization(0x4000, x1, y1, x2, y2, r, g, b, a, u1, v1, u2, v2);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1573–1590 */
 /* addr: 0x00162d80  size: 200 bytes */
@@ -2062,24 +1941,6 @@ void AE_DrawWindowWithoutOptimization(float x1, float y1, float x2, float y2, fl
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AE_DrawWindow(float x1, float y1, float x2, float y2, float r, float g, float b, float a, float u1, float v1, float u2, float v2)
-{
-    y1 = 100.0f - y1;
-    y2 = 100.0f - y2;
-    u1 *= (float)(g_stBufferInfo.iScreenWidth * 16);
-    u2 *= (float)(g_stBufferInfo.iScreenWidth * 16);
-    if (g_stBufferInfo.bPlainBufferMode)
-    {
-        v1 *= (float)(g_stBufferInfo.iScreenHeight * 16);
-        v2 *= (float)(g_stBufferInfo.iScreenHeight * 16);
-    }
-    else
-    {
-        v1 *= (float)(g_stBufferInfo.iScreenHeight * 8);
-        v2 *= (float)(g_stBufferInfo.iScreenHeight * 8);
-    }
-    internalFullScreenQuadJeff(0x4000, x1, y1, x2, y2, r, g, b, a, u1, v1, u2, v2);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1526–1559 */
 /* addr: 0x00162e50  size: 1232 bytes */
@@ -2101,23 +1962,6 @@ void AE_DrawWindow(float x1, float y1, float x2, float y2, float r, float g, flo
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AE_SimpleBlurWithOptimization(int Counter)
-{
-    AE_BLUR_QUAD_OPT(0.0f, 99.33036041259766f, 100.0f, -0.6696395874023438f, 0.5f, 0.5f, 0.5f, 0.5f);
-    AE_BLUR_QUAD_OPT(0.46875f, 100.0f, 100.46875f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f);
-    Counter--;
-    if (Counter)
-    {
-        AE_BLUR_QUAD_OPT(0.0f, 98.21428680419922f, 100.0f, -1.7857131958007812f, 0.5f, 0.5f, 0.5f, 0.5f);
-        AE_BLUR_QUAD_OPT(1.25f, 100.0f, 101.25f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f);
-        Counter--;
-        if (Counter)
-        {
-            AE_BLUR_QUAD_OPT(0.0f, 97.32142639160156f, 100.0f, -2.6785736083984375f, 0.5f, 0.5f, 0.5f, 0.5f);
-            AE_BLUR_QUAD_OPT(1.875f, 100.0f, 101.875f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f);
-        }
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1489–1522 */
 /* addr: 0x00163320  size: 1232 bytes */
@@ -2139,23 +1983,6 @@ void AE_SimpleBlurWithOptimization(int Counter)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AE_SimpleBlur(int Counter)
-{
-    AE_BLUR_QUAD(0.0f, 99.33036041259766f, 100.0f, -0.6696395874023438f, 0.5f, 0.5f, 0.5f, 0.5f);
-    AE_BLUR_QUAD(0.46875f, 100.0f, 100.46875f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f);
-    Counter--;
-    if (Counter)
-    {
-        AE_BLUR_QUAD(0.0f, 98.21428680419922f, 100.0f, -1.7857131958007812f, 0.5f, 0.5f, 0.5f, 0.5f);
-        AE_BLUR_QUAD(1.25f, 100.0f, 101.25f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f);
-        Counter--;
-        if (Counter)
-        {
-            AE_BLUR_QUAD(0.0f, 97.32142639160156f, 100.0f, -2.6785736083984375f, 0.5f, 0.5f, 0.5f, 0.5f);
-            AE_BLUR_QUAD(1.875f, 100.0f, 101.875f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f);
-        }
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1468–1470 */
 /* addr: 0x001637f0  size: 204 bytes */
@@ -2168,10 +1995,6 @@ void AE_SimpleBlur(int Counter)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AE_CopyScreen(void)
-{
-    AE_DrawWindow(0.0f, 0.0f, 100.0f, 100.0f, 0.5f, 0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1283–1427 */
 /* addr: 0x001638c0  size: 3680 bytes */
@@ -2475,14 +2298,6 @@ void AE_CopyScreen(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glAccum(unsigned int op, float value)
-{
-    float vOldColor[4];
-    anon_3 qOldAlpha;
-    anon_3 qword;
-    int iOldPSM;
-    /* TODO: decompile from asm/... */
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1258–1280 */
 /* addr: 0x00164720  size: 68 bytes */
@@ -2496,27 +2311,6 @@ void impPS2glAccum(unsigned int op, float value)
  * compare a candidate object's line table as an extra checkpoint.
  */
 void internalReadFastRgbaPixels(int x, int y, int width, int height, unsigned int format, unsigned int type, void* pixels);
-
-void impPS2glReadPixels(int x, int y, int width, int height, unsigned int format, unsigned int type, void* pixels)
-{
-    switch (format)
-    {
-        case 0x1900:
-        case 0x1901:
-            break;
-        case 0x1902:
-        case 0x1903:
-        case 0x1904:
-        case 0x1905:
-        case 0x1906:
-        case 0x1907:
-        case 0x1908:
-        case 0x1909:
-        case 0x190A:
-            internalReadFastRgbaPixels(x, y, width, height, format, type, pixels);
-            break;
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1148–1251 */
 /* addr: 0x00164770  size: 1168 bytes */
@@ -2574,23 +2368,6 @@ void impPS2glReadPixels(int x, int y, int width, int height, unsigned int format
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-/* As with internalPS2glDrawRgbaPixels, the debug record drops the unused type parameter: the retail body
- * reads pixels from t2 (the seventh EABI argument register). */
-void internalReadFastRgbaPixels(int x, int y, int width, int height, unsigned int format, unsigned int type, void* pixels)
-{
-    unsigned char* src;
-    int row;
-    int iScreenHeight;
-    int iScreenWidth;
-    unsigned char bClip;
-    int destY;
-    int destX;
-    int drawHeight;
-    int drawWidth;
-    int skipRows;
-    int skipPixels;
-    /* TODO: decompile from asm/... */
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1144–1145 */
 /* addr: 0x00164c00  size: 12 bytes */
@@ -2600,10 +2377,6 @@ void internalReadFastRgbaPixels(int x, int y, int width, int height, unsigned in
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glReadBuffer(unsigned int mode)
-{
-    g_PS2glContext.eBufferReadMode = mode;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1060–1069 */
 /* addr: 0x00164c10  size: 104 bytes */
@@ -2620,15 +2393,6 @@ void impPS2glReadBuffer(unsigned int mode)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glRasterPos4sv(short* v)
-{
-    float v1[4];
-    v1[0] = (float)v[0];
-    v1[1] = (float)v[1];
-    v1[2] = (float)v[2];
-    v1[3] = (float)v[3];
-    impPS2glRasterPos4fv(v1);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1048–1057 */
 /* addr: 0x00164c80  size: 84 bytes */
@@ -2650,15 +2414,6 @@ void impPS2glRasterPos4sv(short* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glRasterPos4s(short x, short y, short z, short w)
-{
-    float v1[4];
-    v1[0] = (float)x;
-    v1[1] = (float)y;
-    v1[2] = (float)z;
-    v1[3] = (float)w;
-    impPS2glRasterPos4fv(v1);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1036–1045 */
 /* addr: 0x00164ce0  size: 76 bytes */
@@ -2673,15 +2428,6 @@ void impPS2glRasterPos4s(short x, short y, short z, short w)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glRasterPos4iv(int* v)
-{
-    float v1[4];
-    v1[0] = (float)v[0];
-    v1[1] = (float)v[1];
-    v1[2] = (float)v[2];
-    v1[3] = (float)v[3];
-    impPS2glRasterPos4fv(v1);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1024–1033 */
 /* addr: 0x00164d30  size: 84 bytes */
@@ -2703,15 +2449,6 @@ void impPS2glRasterPos4iv(int* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glRasterPos4i(int x, int y, int z, int w)
-{
-    float v1[4];
-    v1[0] = (float)x;
-    v1[1] = (float)y;
-    v1[2] = (float)z;
-    v1[3] = (float)w;
-    impPS2glRasterPos4fv(v1);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 939–1021 */
 /* addr: 0x00164d90  size: 688 bytes */
@@ -2785,17 +2522,6 @@ void impPS2glRasterPos4i(int x, int y, int z, int w)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glRasterPos4fv(float* v1)
-{
-    float mViewScreen[4][4];
-    float d;
-    float clip[4];
-    float eye[4];
-    float v[4];
-    float vScreenScale[4];
-    float vScreenOrg[4];
-    /* TODO: decompile from asm/... */
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 927–936 */
 /* addr: 0x00165040  size: 44 bytes */
@@ -2810,15 +2536,6 @@ void impPS2glRasterPos4fv(float* v1)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glRasterPos4f(float x, float y, float z, float w)
-{
-    float v1[4];
-    v1[0] = x;
-    v1[1] = y;
-    v1[2] = z;
-    v1[3] = w;
-    impPS2glRasterPos4fv(v1);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 915–924 */
 /* addr: 0x00165070  size: 88 bytes */
@@ -2833,15 +2550,6 @@ void impPS2glRasterPos4f(float x, float y, float z, float w)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glRasterPos4dv(double* v)
-{
-    float v1[4];
-    v1[0] = (float)v[0];
-    v1[1] = (float)v[1];
-    v1[2] = (float)v[2];
-    v1[3] = (float)v[3];
-    impPS2glRasterPos4fv(v1);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 903–912 */
 /* addr: 0x001650d0  size: 108 bytes */
@@ -2856,15 +2564,6 @@ void impPS2glRasterPos4dv(double* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glRasterPos4d(double x, double y, double z, double w)
-{
-    float v1[4];
-    v1[0] = (float)x;
-    v1[1] = (float)y;
-    v1[2] = (float)z;
-    v1[3] = (float)w;
-    impPS2glRasterPos4fv(v1);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 891–900 */
 /* addr: 0x00165140  size: 92 bytes */
@@ -2883,15 +2582,6 @@ void impPS2glRasterPos4d(double x, double y, double z, double w)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glRasterPos3sv(short* v)
-{
-    float v1[4];
-    v1[0] = (float)v[0];
-    v1[1] = (float)v[1];
-    v1[2] = (float)v[2];
-    v1[3] = 1.0f;
-    impPS2glRasterPos4fv(v1);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 879–888 */
 /* addr: 0x001651a0  size: 76 bytes */
@@ -2913,15 +2603,6 @@ void impPS2glRasterPos3sv(short* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glRasterPos3s(short x, short y, short z)
-{
-    float v1[4];
-    v1[0] = (float)x;
-    v1[1] = (float)y;
-    v1[2] = (float)z;
-    v1[3] = 1.0f;
-    impPS2glRasterPos4fv(v1);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 867–876 */
 /* addr: 0x001651f0  size: 72 bytes */
@@ -2938,15 +2619,6 @@ void impPS2glRasterPos3s(short x, short y, short z)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glRasterPos3iv(int* v)
-{
-    float v1[4];
-    v1[0] = (float)v[0];
-    v1[1] = (float)v[1];
-    v1[2] = (float)v[2];
-    v1[3] = 1.0f;
-    impPS2glRasterPos4fv(v1);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 855–864 */
 /* addr: 0x00165240  size: 76 bytes */
@@ -2968,15 +2640,6 @@ void impPS2glRasterPos3iv(int* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glRasterPos3i(int x, int y, int z)
-{
-    float v1[4];
-    v1[0] = (float)x;
-    v1[1] = (float)y;
-    v1[2] = (float)z;
-    v1[3] = 1.0f;
-    impPS2glRasterPos4fv(v1);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 843–852 */
 /* addr: 0x00165290  size: 60 bytes */
@@ -2992,15 +2655,6 @@ void impPS2glRasterPos3i(int x, int y, int z)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glRasterPos3fv(float* v)
-{
-    float v1[4];
-    v1[0] = v[0];
-    v1[1] = v[1];
-    v1[2] = v[2];
-    v1[3] = 1.0f;
-    impPS2glRasterPos4fv(v1);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 831–840 */
 /* addr: 0x001652d0  size: 48 bytes */
@@ -3017,15 +2671,6 @@ void impPS2glRasterPos3fv(float* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glRasterPos3f(float x, float y, float z)
-{
-    float v1[4];
-    v1[0] = x;
-    v1[1] = y;
-    v1[2] = z;
-    v1[3] = 1.0f;
-    impPS2glRasterPos4fv(v1);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 819–828 */
 /* addr: 0x00165300  size: 84 bytes */
@@ -3042,15 +2687,6 @@ void impPS2glRasterPos3f(float x, float y, float z)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glRasterPos3dv(double* v)
-{
-    float v1[4];
-    v1[0] = (float)v[0];
-    v1[1] = (float)v[1];
-    v1[2] = (float)v[2];
-    v1[3] = 1.0f;
-    impPS2glRasterPos4fv(v1);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 807–816 */
 /* addr: 0x00165360  size: 92 bytes */
@@ -3067,15 +2703,6 @@ void impPS2glRasterPos3dv(double* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glRasterPos3d(double x, double y, double z)
-{
-    float v1[4];
-    v1[0] = (float)x;
-    v1[1] = (float)y;
-    v1[2] = (float)z;
-    v1[3] = 1.0f;
-    impPS2glRasterPos4fv(v1);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 795–804 */
 /* addr: 0x001653c0  size: 76 bytes */
@@ -3094,15 +2721,6 @@ void impPS2glRasterPos3d(double x, double y, double z)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glRasterPos2sv(short* v)
-{
-    float v1[4];
-    v1[0] = (float)v[0];
-    v1[1] = (float)v[1];
-    v1[2] = 0.0f;
-    v1[3] = 1.0f;
-    impPS2glRasterPos4fv(v1);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 783–792 */
 /* addr: 0x00165410  size: 68 bytes */
@@ -3121,15 +2739,6 @@ void impPS2glRasterPos2sv(short* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glRasterPos2s(short x, short y)
-{
-    float v1[4];
-    v1[0] = (float)x;
-    v1[1] = (float)y;
-    v1[2] = 0.0f;
-    v1[3] = 1.0f;
-    impPS2glRasterPos4fv(v1);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 771–780 */
 /* addr: 0x00165460  size: 64 bytes */
@@ -3147,15 +2756,6 @@ void impPS2glRasterPos2s(short x, short y)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glRasterPos2iv(int* v)
-{
-    float v1[4];
-    v1[0] = (float)v[0];
-    v1[1] = (float)v[1];
-    v1[2] = 0.0f;
-    v1[3] = 1.0f;
-    impPS2glRasterPos4fv(v1);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 759–768 */
 /* addr: 0x001654a0  size: 68 bytes */
@@ -3174,15 +2774,6 @@ void impPS2glRasterPos2iv(int* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glRasterPos2i(int x, int y)
-{
-    float v1[4];
-    v1[0] = (float)x;
-    v1[1] = (float)y;
-    v1[2] = 0.0f;
-    v1[3] = 1.0f;
-    impPS2glRasterPos4fv(v1);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 747–756 */
 /* addr: 0x001654f0  size: 56 bytes */
@@ -3199,15 +2790,6 @@ void impPS2glRasterPos2i(int x, int y)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glRasterPos2fv(float* v)
-{
-    float v1[4];
-    v1[0] = v[0];
-    v1[1] = v[1];
-    v1[2] = 0.0f;
-    v1[3] = 1.0f;
-    impPS2glRasterPos4fv(v1);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 735–744 */
 /* addr: 0x00165530  size: 48 bytes */
@@ -3224,15 +2806,6 @@ void impPS2glRasterPos2fv(float* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glRasterPos2f(float x, float y)
-{
-    float v1[4];
-    v1[0] = x;
-    v1[1] = y;
-    v1[2] = 0.0f;
-    v1[3] = 1.0f;
-    impPS2glRasterPos4fv(v1);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 723–732 */
 /* addr: 0x00165560  size: 76 bytes */
@@ -3249,15 +2822,6 @@ void impPS2glRasterPos2f(float x, float y)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glRasterPos2dv(double* v)
-{
-    float v1[4];
-    v1[0] = (float)v[0];
-    v1[1] = (float)v[1];
-    v1[2] = 0.0f;
-    v1[3] = 1.0f;
-    impPS2glRasterPos4fv(v1);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 711–720 */
 /* addr: 0x001655b0  size: 72 bytes */
@@ -3274,15 +2838,6 @@ void impPS2glRasterPos2dv(double* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glRasterPos2d(double x, double y)
-{
-    float v1[4];
-    v1[0] = (float)x;
-    v1[1] = (float)y;
-    v1[2] = 0.0f;
-    v1[3] = 1.0f;
-    impPS2glRasterPos4fv(v1);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 708–708 */
 /* addr: 0x00165600  size: 8 bytes */
@@ -3291,10 +2846,6 @@ void impPS2glRasterPos2d(double x, double y)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glPixelZoom(void)
-{
-    /* TODO: decompile from asm/... */
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 702–702 */
 /* addr: 0x00165610  size: 8 bytes */
@@ -3303,10 +2854,6 @@ void impPS2glPixelZoom(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glPixelTransferi(void)
-{
-    /* TODO: decompile from asm/... */
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 696–696 */
 /* addr: 0x00165620  size: 8 bytes */
@@ -3315,10 +2862,6 @@ void impPS2glPixelTransferi(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glPixelTransferf(void)
-{
-    /* TODO: decompile from asm/... */
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 690–690 */
 /* addr: 0x00165630  size: 8 bytes */
@@ -3327,10 +2870,6 @@ void impPS2glPixelTransferf(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glPixelStorei(void)
-{
-    /* TODO: decompile from asm/... */
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 684–684 */
 /* addr: 0x00165640  size: 8 bytes */
@@ -3339,10 +2878,6 @@ void impPS2glPixelStorei(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glPixelStoref(void)
-{
-    /* TODO: decompile from asm/... */
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 678–678 */
 /* addr: 0x00165650  size: 8 bytes */
@@ -3351,10 +2886,6 @@ void impPS2glPixelStoref(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glPixelMapusv(void)
-{
-    /* TODO: decompile from asm/... */
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 672–672 */
 /* addr: 0x00165660  size: 8 bytes */
@@ -3363,10 +2894,6 @@ void impPS2glPixelMapusv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glPixelMapuiv(void)
-{
-    /* TODO: decompile from asm/... */
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 666–666 */
 /* addr: 0x00165670  size: 8 bytes */
@@ -3375,10 +2902,6 @@ void impPS2glPixelMapuiv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glPixelMapfv(void)
-{
-    /* TODO: decompile from asm/... */
-}
 
 void internalPS2glDrawRgbaPixels(int x, int y, int width, int height, unsigned int format, unsigned int type, void* pixels);
 
@@ -3403,35 +2926,6 @@ void internalPS2glDrawRgbaPixels(int x, int y, int width, int height, unsigned i
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glDrawPixels(int width, int height, unsigned int format, unsigned int type, void* pixels)
-{
-    int y;
-    int x;
-
-    if (g_PS2glContext.bRasterPosValid)
-    {
-        x = (int)(g_PS2glContext.fRasterPos[0] + 0.5f);
-        y = (int)(g_PS2glContext.fRasterPos[1] + 0.5f);
-
-        switch (format)
-        {
-            case 0x1900:
-            case 0x1901:
-                break;
-            case 0x1902:
-            case 0x1903:
-            case 0x1904:
-            case 0x1905:
-            case 0x1906:
-            case 0x1907:
-            case 0x1908:
-            case 0x1909:
-            case 0x190A:
-                internalPS2glDrawRgbaPixels(x, y, width, height, format, type, pixels);
-                break;
-        }
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 526–629 */
 /* addr: 0x00165720  size: 1160 bytes */
@@ -3491,23 +2985,6 @@ void impPS2glDrawPixels(int width, int height, unsigned int format, unsigned int
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-/* The debug record lists six parameters, but the retail body reads pixels from t2 (the seventh EABI
- * argument register) and the caller passes type in t1, so type is restored here as an unused parameter. */
-void internalPS2glDrawRgbaPixels(int x, int y, int width, int height, unsigned int format, unsigned int type, void* pixels)
-{
-    unsigned char* src;
-    int row;
-    int iScreenHeight;
-    int iScreenWidth;
-    unsigned char bClip;
-    int destY;
-    int destX;
-    int drawHeight;
-    int drawWidth;
-    int skipRows;
-    int skipPixels;
-    /* TODO: decompile from asm/... */
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 123–454 */
 /* addr: 0x00165bb0  size: 6008 bytes */
@@ -4239,25 +3716,6 @@ void internalPS2glDrawRgbaPixels(int x, int y, int width, int height, unsigned i
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glDrawBuffer(unsigned int mode)
-{
-    float iOldA;
-    float iOldB;
-    float iOldG;
-    float iOldR;
-    anon_3 qOldAlpha;
-    anon_3 qword;
-    unsigned int iOldMask;
-    float fOldViewOrg[2];
-    float vOldViewPort[4];
-    float fOldDepthRange[2];
-    int iOldZPSM;
-    int iOldAux1PSM;
-    int iOldColorClamp;
-    unsigned char iOldDepthFlag;
-    int iOldPSM;
-    /* TODO: decompile from asm/... */
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 111–120 */
 /* addr: 0x00167330  size: 344 bytes */
@@ -4301,6 +3759,7 @@ void impPS2glDrawBuffer(unsigned int mode)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
 void PS2glClearLastBits(void)
 {
     unsigned int iOldMask;
@@ -4314,4 +3773,661 @@ void PS2glClearLastBits(void)
     impPS2glClear(0x4000);
     g_gsContext.FRAME_1.FBMSK = iOldMask;
     g_gsContext.ModFlgs.FRAME_1_Modified = 1;
+}
+
+void impPS2glDrawBuffer(unsigned int mode)
+{
+    float iOldA;
+    float iOldB;
+    float iOldG;
+    float iOldR;
+    anon_3 qOldAlpha;
+    anon_3 qword;
+    unsigned int iOldMask;
+    float fOldViewOrg[2];
+    float vOldViewPort[4];
+    float fOldDepthRange[2];
+    int iOldZPSM;
+    int iOldAux1PSM;
+    int iOldColorClamp;
+    unsigned char iOldDepthFlag;
+    int iOldPSM;
+    /* TODO: decompile from asm/... */
+}
+
+/* The debug record lists six parameters, but the retail body reads pixels from t2 (the seventh EABI
+ * argument register) and the caller passes type in t1, so type is restored here as an unused parameter. */
+void internalPS2glDrawRgbaPixels(int x, int y, int width, int height, unsigned int format, unsigned int type, void* pixels)
+{
+    unsigned char* src;
+    int row;
+    int iScreenHeight;
+    int iScreenWidth;
+    unsigned char bClip;
+    int destY;
+    int destX;
+    int drawHeight;
+    int drawWidth;
+    int skipRows;
+    int skipPixels;
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glDrawPixels(int width, int height, unsigned int format, unsigned int type, void* pixels)
+{
+    int y;
+    int x;
+
+    if (g_PS2glContext.bRasterPosValid)
+    {
+        x = (int)(g_PS2glContext.fRasterPos[0] + 0.5f);
+        y = (int)(g_PS2glContext.fRasterPos[1] + 0.5f);
+
+        switch (format)
+        {
+            case 0x1900:
+            case 0x1901:
+                break;
+            case 0x1902:
+            case 0x1903:
+            case 0x1904:
+            case 0x1905:
+            case 0x1906:
+            case 0x1907:
+            case 0x1908:
+            case 0x1909:
+            case 0x190A:
+                internalPS2glDrawRgbaPixels(x, y, width, height, format, type, pixels);
+                break;
+        }
+    }
+}
+
+void impPS2glPixelMapfv(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glPixelMapuiv(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glPixelMapusv(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glPixelStoref(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glPixelStorei(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glPixelTransferf(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glPixelTransferi(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glPixelZoom(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glRasterPos2d(double x, double y)
+{
+    float v1[4];
+    v1[0] = (float)x;
+    v1[1] = (float)y;
+    v1[2] = 0.0f;
+    v1[3] = 1.0f;
+    impPS2glRasterPos4fv(v1);
+}
+
+void impPS2glRasterPos2dv(double* v)
+{
+    float v1[4];
+    v1[0] = (float)v[0];
+    v1[1] = (float)v[1];
+    v1[2] = 0.0f;
+    v1[3] = 1.0f;
+    impPS2glRasterPos4fv(v1);
+}
+
+void impPS2glRasterPos2f(float x, float y)
+{
+    float v1[4];
+    v1[0] = x;
+    v1[1] = y;
+    v1[2] = 0.0f;
+    v1[3] = 1.0f;
+    impPS2glRasterPos4fv(v1);
+}
+
+void impPS2glRasterPos2fv(float* v)
+{
+    float v1[4];
+    v1[0] = v[0];
+    v1[1] = v[1];
+    v1[2] = 0.0f;
+    v1[3] = 1.0f;
+    impPS2glRasterPos4fv(v1);
+}
+
+void impPS2glRasterPos2i(int x, int y)
+{
+    float v1[4];
+    v1[0] = (float)x;
+    v1[1] = (float)y;
+    v1[2] = 0.0f;
+    v1[3] = 1.0f;
+    impPS2glRasterPos4fv(v1);
+}
+
+void impPS2glRasterPos2iv(int* v)
+{
+    float v1[4];
+    v1[0] = (float)v[0];
+    v1[1] = (float)v[1];
+    v1[2] = 0.0f;
+    v1[3] = 1.0f;
+    impPS2glRasterPos4fv(v1);
+}
+
+void impPS2glRasterPos2s(short x, short y)
+{
+    float v1[4];
+    v1[0] = (float)x;
+    v1[1] = (float)y;
+    v1[2] = 0.0f;
+    v1[3] = 1.0f;
+    impPS2glRasterPos4fv(v1);
+}
+
+void impPS2glRasterPos2sv(short* v)
+{
+    float v1[4];
+    v1[0] = (float)v[0];
+    v1[1] = (float)v[1];
+    v1[2] = 0.0f;
+    v1[3] = 1.0f;
+    impPS2glRasterPos4fv(v1);
+}
+
+void impPS2glRasterPos3d(double x, double y, double z)
+{
+    float v1[4];
+    v1[0] = (float)x;
+    v1[1] = (float)y;
+    v1[2] = (float)z;
+    v1[3] = 1.0f;
+    impPS2glRasterPos4fv(v1);
+}
+
+void impPS2glRasterPos3dv(double* v)
+{
+    float v1[4];
+    v1[0] = (float)v[0];
+    v1[1] = (float)v[1];
+    v1[2] = (float)v[2];
+    v1[3] = 1.0f;
+    impPS2glRasterPos4fv(v1);
+}
+
+void impPS2glRasterPos3f(float x, float y, float z)
+{
+    float v1[4];
+    v1[0] = x;
+    v1[1] = y;
+    v1[2] = z;
+    v1[3] = 1.0f;
+    impPS2glRasterPos4fv(v1);
+}
+
+void impPS2glRasterPos3fv(float* v)
+{
+    float v1[4];
+    v1[0] = v[0];
+    v1[1] = v[1];
+    v1[2] = v[2];
+    v1[3] = 1.0f;
+    impPS2glRasterPos4fv(v1);
+}
+
+void impPS2glRasterPos3i(int x, int y, int z)
+{
+    float v1[4];
+    v1[0] = (float)x;
+    v1[1] = (float)y;
+    v1[2] = (float)z;
+    v1[3] = 1.0f;
+    impPS2glRasterPos4fv(v1);
+}
+
+void impPS2glRasterPos3iv(int* v)
+{
+    float v1[4];
+    v1[0] = (float)v[0];
+    v1[1] = (float)v[1];
+    v1[2] = (float)v[2];
+    v1[3] = 1.0f;
+    impPS2glRasterPos4fv(v1);
+}
+
+void impPS2glRasterPos3s(short x, short y, short z)
+{
+    float v1[4];
+    v1[0] = (float)x;
+    v1[1] = (float)y;
+    v1[2] = (float)z;
+    v1[3] = 1.0f;
+    impPS2glRasterPos4fv(v1);
+}
+
+void impPS2glRasterPos3sv(short* v)
+{
+    float v1[4];
+    v1[0] = (float)v[0];
+    v1[1] = (float)v[1];
+    v1[2] = (float)v[2];
+    v1[3] = 1.0f;
+    impPS2glRasterPos4fv(v1);
+}
+
+void impPS2glRasterPos4d(double x, double y, double z, double w)
+{
+    float v1[4];
+    v1[0] = (float)x;
+    v1[1] = (float)y;
+    v1[2] = (float)z;
+    v1[3] = (float)w;
+    impPS2glRasterPos4fv(v1);
+}
+
+void impPS2glRasterPos4dv(double* v)
+{
+    float v1[4];
+    v1[0] = (float)v[0];
+    v1[1] = (float)v[1];
+    v1[2] = (float)v[2];
+    v1[3] = (float)v[3];
+    impPS2glRasterPos4fv(v1);
+}
+
+void impPS2glRasterPos4f(float x, float y, float z, float w)
+{
+    float v1[4];
+    v1[0] = x;
+    v1[1] = y;
+    v1[2] = z;
+    v1[3] = w;
+    impPS2glRasterPos4fv(v1);
+}
+
+void impPS2glRasterPos4fv(float* v1)
+{
+    float mViewScreen[4][4];
+    float d;
+    float clip[4];
+    float eye[4];
+    float v[4];
+    float vScreenScale[4];
+    float vScreenOrg[4];
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glRasterPos4i(int x, int y, int z, int w)
+{
+    float v1[4];
+    v1[0] = (float)x;
+    v1[1] = (float)y;
+    v1[2] = (float)z;
+    v1[3] = (float)w;
+    impPS2glRasterPos4fv(v1);
+}
+
+void impPS2glRasterPos4iv(int* v)
+{
+    float v1[4];
+    v1[0] = (float)v[0];
+    v1[1] = (float)v[1];
+    v1[2] = (float)v[2];
+    v1[3] = (float)v[3];
+    impPS2glRasterPos4fv(v1);
+}
+
+void impPS2glRasterPos4s(short x, short y, short z, short w)
+{
+    float v1[4];
+    v1[0] = (float)x;
+    v1[1] = (float)y;
+    v1[2] = (float)z;
+    v1[3] = (float)w;
+    impPS2glRasterPos4fv(v1);
+}
+
+void impPS2glRasterPos4sv(short* v)
+{
+    float v1[4];
+    v1[0] = (float)v[0];
+    v1[1] = (float)v[1];
+    v1[2] = (float)v[2];
+    v1[3] = (float)v[3];
+    impPS2glRasterPos4fv(v1);
+}
+
+void impPS2glReadBuffer(unsigned int mode)
+{
+    g_PS2glContext.eBufferReadMode = mode;
+}
+
+/* As with internalPS2glDrawRgbaPixels, the debug record drops the unused type parameter: the retail body
+ * reads pixels from t2 (the seventh EABI argument register). */
+void internalReadFastRgbaPixels(int x, int y, int width, int height, unsigned int format, unsigned int type, void* pixels)
+{
+    unsigned char* src;
+    int row;
+    int iScreenHeight;
+    int iScreenWidth;
+    unsigned char bClip;
+    int destY;
+    int destX;
+    int drawHeight;
+    int drawWidth;
+    int skipRows;
+    int skipPixels;
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glReadPixels(int x, int y, int width, int height, unsigned int format, unsigned int type, void* pixels)
+{
+    switch (format)
+    {
+        case 0x1900:
+        case 0x1901:
+            break;
+        case 0x1902:
+        case 0x1903:
+        case 0x1904:
+        case 0x1905:
+        case 0x1906:
+        case 0x1907:
+        case 0x1908:
+        case 0x1909:
+        case 0x190A:
+            internalReadFastRgbaPixels(x, y, width, height, format, type, pixels);
+            break;
+    }
+}
+
+void impPS2glAccum(unsigned int op, float value)
+{
+    float vOldColor[4];
+    anon_3 qOldAlpha;
+    anon_3 qword;
+    int iOldPSM;
+    /* TODO: decompile from asm/... */
+}
+
+void AE_CopyScreen(void)
+{
+    AE_DrawWindow(0.0f, 0.0f, 100.0f, 100.0f, 0.5f, 0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f);
+}
+
+void AE_SimpleBlur(int Counter)
+{
+    AE_BLUR_QUAD(0.0f, 99.33036041259766f, 100.0f, -0.6696395874023438f, 0.5f, 0.5f, 0.5f, 0.5f);
+    AE_BLUR_QUAD(0.46875f, 100.0f, 100.46875f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f);
+    Counter--;
+    if (Counter)
+    {
+        AE_BLUR_QUAD(0.0f, 98.21428680419922f, 100.0f, -1.7857131958007812f, 0.5f, 0.5f, 0.5f, 0.5f);
+        AE_BLUR_QUAD(1.25f, 100.0f, 101.25f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f);
+        Counter--;
+        if (Counter)
+        {
+            AE_BLUR_QUAD(0.0f, 97.32142639160156f, 100.0f, -2.6785736083984375f, 0.5f, 0.5f, 0.5f, 0.5f);
+            AE_BLUR_QUAD(1.875f, 100.0f, 101.875f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f);
+        }
+    }
+}
+
+void AE_SimpleBlurWithOptimization(int Counter)
+{
+    AE_BLUR_QUAD_OPT(0.0f, 99.33036041259766f, 100.0f, -0.6696395874023438f, 0.5f, 0.5f, 0.5f, 0.5f);
+    AE_BLUR_QUAD_OPT(0.46875f, 100.0f, 100.46875f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f);
+    Counter--;
+    if (Counter)
+    {
+        AE_BLUR_QUAD_OPT(0.0f, 98.21428680419922f, 100.0f, -1.7857131958007812f, 0.5f, 0.5f, 0.5f, 0.5f);
+        AE_BLUR_QUAD_OPT(1.25f, 100.0f, 101.25f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f);
+        Counter--;
+        if (Counter)
+        {
+            AE_BLUR_QUAD_OPT(0.0f, 97.32142639160156f, 100.0f, -2.6785736083984375f, 0.5f, 0.5f, 0.5f, 0.5f);
+            AE_BLUR_QUAD_OPT(1.875f, 100.0f, 101.875f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f);
+        }
+    }
+}
+
+void AE_DrawWindow(float x1, float y1, float x2, float y2, float r, float g, float b, float a, float u1, float v1, float u2, float v2)
+{
+    y1 = 100.0f - y1;
+    y2 = 100.0f - y2;
+    u1 *= (float)(g_stBufferInfo.iScreenWidth * 16);
+    u2 *= (float)(g_stBufferInfo.iScreenWidth * 16);
+    if (g_stBufferInfo.bPlainBufferMode)
+    {
+        v1 *= (float)(g_stBufferInfo.iScreenHeight * 16);
+        v2 *= (float)(g_stBufferInfo.iScreenHeight * 16);
+    }
+    else
+    {
+        v1 *= (float)(g_stBufferInfo.iScreenHeight * 8);
+        v2 *= (float)(g_stBufferInfo.iScreenHeight * 8);
+    }
+    internalFullScreenQuadJeff(0x4000, x1, y1, x2, y2, r, g, b, a, u1, v1, u2, v2);
+}
+
+void AE_DrawWindowWithoutOptimization(float x1, float y1, float x2, float y2, float r, float g, float b, float a, float u1, float v1, float u2, float v2)
+{
+    y1 = 100.0f - y1;
+    y2 = 100.0f - y2;
+    u1 *= (float)(g_stBufferInfo.iScreenWidth * 16);
+    u2 *= (float)(g_stBufferInfo.iScreenWidth * 16);
+    if (g_stBufferInfo.bPlainBufferMode)
+    {
+        v1 *= (float)(g_stBufferInfo.iScreenHeight * 16);
+        v2 *= (float)(g_stBufferInfo.iScreenHeight * 16);
+    }
+    else
+    {
+        v1 *= (float)(g_stBufferInfo.iScreenHeight * 8);
+        v2 *= (float)(g_stBufferInfo.iScreenHeight * 8);
+    }
+    internalFullScreenQuadJeffWithoutOptimization(0x4000, x1, y1, x2, y2, r, g, b, a, u1, v1, u2, v2);
+}
+
+void AE_SetGS(int vA, int vB, int vC, int vD, unsigned int vFIX)
+{
+    g_gsContext.ALPHA_1.A = vA; g_gsContext.ModFlgs.ALPHA_1_Modified = 1;
+    g_gsContext.ALPHA_1.B = vB; g_gsContext.ModFlgs.ALPHA_1_Modified = 1;
+    g_gsContext.ALPHA_1.C = vC; g_gsContext.ModFlgs.ALPHA_1_Modified = 1;
+    g_gsContext.ALPHA_1.D = vD; g_gsContext.ModFlgs.ALPHA_1_Modified = 1;
+    g_gsContext.ALPHA_1.FIX = vFIX; g_gsContext.ModFlgs.ALPHA_1_Modified = 1;
+}
+
+void AE_Begin(void)
+{
+    AE_g_iOldPSM = g_gsContext.FRAME_1.PSM;
+    AE_g_iOldBP = g_gsContext.FRAME_1.FBP;
+    AE_g_iOldMSK = g_gsContext.FRAME_1.FBMSK;
+    if (g_stBufferInfo.iAuxBufferSize)
+        PS2glFreeTexBlockSafe(0, g_stBufferInfo.iAuxBufferSize);
+    AE_g_bOldDepthTest = PS2glIsEnabled(0xB71);
+    PS2glDisable(0xB71);
+    AE_g_qOldAlpha = *(anon_3*)&g_gsContext.ALPHA_1;
+}
+
+void AE_End(void)
+{
+    g_gsContext.FRAME_1.FBP = AE_g_iOldBP; g_gsContext.ModFlgs.FRAME_1_Modified = 1;
+    g_gsContext.FRAME_1.PSM = AE_g_iOldPSM; g_gsContext.ModFlgs.FRAME_1_Modified = 1;
+    g_gsContext.FRAME_1.FBMSK = AE_g_iOldMSK; g_gsContext.ModFlgs.FRAME_1_Modified = 1;
+    g_PS2glContext.bTexCubeChanged = 1;
+    g_PS2glContext.abTex2DChanged[0] = 1;
+    g_PS2glContext.abTex1DChanged[0] = 1;
+    if (AE_g_bOldDepthTest)
+        PS2glEnable(0xB71);
+    AE_g_qOldAlpha.ubData[8] = 0x42; GsSendData(0xE, &AE_g_qOldAlpha);
+    *(anon_3*)&g_gsContext.ALPHA_1 = AE_g_qOldAlpha;
+    GsUpdate();
+    AE_g_UseAlphaTestValues = 0;
+}
+
+void AE_InternalGetBPandPSMFromID(int BufferID, unsigned long* pDestBP, unsigned long* pDestPSM)
+{
+    unsigned long DestPSM;
+    unsigned long DestBP;
+    anon_44 dispfb;
+
+    switch (BufferID)
+    {
+    case 0:
+        *(unsigned long*)&dispfb = *(unsigned long*)&g_stDoubleBuf.disp[0].dispfb;
+        DestBP = g_PS2glContext.iFrameBufferBack >> 5;
+        DestPSM = dispfb.PSM;
+        break;
+    case 1:
+        *(unsigned long*)&dispfb = *(unsigned long*)&g_stDoubleBuf.disp[0].dispfb;
+        DestBP = g_PS2glContext.iFrameBufferFront >> 5;
+        DestPSM = dispfb.PSM;
+        break;
+    case 2:
+        DestBP = g_stBufferInfo.iAuxBufferBase;
+        DestPSM = g_stBufferInfo.iAuxBufferPSM;
+        break;
+    case 3:
+        DestBP = g_stDoubleBuf.draw01.zbuf1.ZBP;
+        if (g_stBufferInfo.iDepthBufferDepth == 16)
+        {
+            DestPSM = g_stBufferInfo.iAuxBufferPSM;
+        }
+        else
+        {
+            *(unsigned long*)&dispfb = *(unsigned long*)&g_stDoubleBuf.disp[0].dispfb;
+            DestPSM = dispfb.PSM;
+        }
+        break;
+    case 4:
+        DestBP = g_stDoubleBuf.draw01.zbuf1.ZBP;
+        *(unsigned long*)&dispfb = *(unsigned long*)&g_stDoubleBuf.disp[0].dispfb;
+        DestPSM = dispfb.PSM;
+        break;
+    default:
+        DestBP = AE_g_iOldBP;
+        DestPSM = AE_g_iOldPSM;
+        break;
+    }
+    *pDestBP = DestBP;
+    *pDestPSM = DestPSM;
+}
+
+int AE_GetZBufferBase(void)
+{
+    return g_stDoubleBuf.draw01.zbuf1.ZBP;
+}
+
+void AE_SetTexture(int BufferID)
+{
+    anon_3 qword;
+    unsigned long DestBP;
+    unsigned long DestPSM;
+
+    qword.u64Data[0] = 0;
+    qword.u64Data[1] = 0;
+    AE_InternalGetBPandPSMFromID(BufferID, &DestBP, &DestPSM);
+    qword.u64Data[0] = SCE_GS_SET_TEX0(DestBP << 5, g_stBufferInfo.iScreenWidth >> 6, DestPSM, 10, 9, 1, 0, 0, 0, 0, 0, 0);
+    qword.ubData[8] = 6;
+    GsSendData(0xE, &qword);
+    qword.u64Data[0] = 0x60;
+    qword.ubData[8] = 0x14;
+    GsSendData(0xE, &qword);
+    GsUpdate();
+    g_gsContext.TEXFLUSH.DATA = 1; g_gsContext.ModFlgs.TEXFLUSH_Modified = 1;
+}
+
+void AE_SetTextureNoAlpha(int BufferID)
+{
+    anon_3 qword;
+    unsigned long DestBP;
+    unsigned long DestPSM;
+
+    qword.u64Data[0] = 0;
+    qword.u64Data[1] = 0;
+    AE_InternalGetBPandPSMFromID(BufferID, &DestBP, &DestPSM);
+    qword.u64Data[0] = SCE_GS_SET_TEX0(DestBP << 5, g_stBufferInfo.iScreenWidth >> 6, DestPSM, 10, 9, 0, 0, 0, 0, 0, 0, 0);
+    qword.ubData[8] = 6;
+    GsSendData(0xE, &qword);
+    qword.u64Data[0] = 0x60;
+    qword.ubData[8] = 0x14;
+    GsSendData(0xE, &qword);
+    GsUpdate();
+    g_gsContext.TEXFLUSH.DATA = 1; g_gsContext.ModFlgs.TEXFLUSH_Modified = 1;
+}
+
+void AE_SetTextureNoBilinear(int BufferID)
+{
+    anon_3 qword;
+    unsigned long DestBP;
+    unsigned long DestPSM;
+
+    qword.u64Data[0] = 0;
+    qword.u64Data[1] = 0;
+    AE_InternalGetBPandPSMFromID(BufferID, &DestBP, &DestPSM);
+    qword.u64Data[0] = SCE_GS_SET_TEX0(DestBP << 5, g_stBufferInfo.iScreenWidth >> 6, DestPSM, 10, 9, 0, 0, 0, 0, 0, 0, 0);
+    qword.ubData[8] = 6;
+    GsSendData(0xE, &qword);
+    qword.u64Data[0] = 0;
+    qword.ubData[8] = 0x14;
+    GsSendData(0xE, &qword);
+    GsUpdate();
+    g_gsContext.TEXFLUSH.DATA = 1; g_gsContext.ModFlgs.TEXFLUSH_Modified = 1;
+}
+
+void AE_SetDrawTarget(int BufferID)
+{
+    unsigned long DestBP;
+    unsigned long DestPSM;
+    AE_InternalGetBPandPSMFromID(BufferID, &DestBP, &DestPSM);
+    g_gsContext.FRAME_1.FBP = DestBP; g_gsContext.ModFlgs.FRAME_1_Modified = 1;
+    g_gsContext.FRAME_1.PSM = DestPSM; g_gsContext.ModFlgs.FRAME_1_Modified = 1;
+    GsUpdate();
+}
+
+void AE_MoveGreenToAlpha(void)
+{
+    anon_3 qword;
+    unsigned long DestPSM;
+    unsigned long DestBP;
+    /* TODO: decompile from asm/... */
+}
+
+void AE_CopyBackBufferOnScreen(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void plyPS2glAccum(anon_29* param0)
+{
+    impPS2glAccum(*(unsigned int*)param0, ((float*)param0)[1]);
 }

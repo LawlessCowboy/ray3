@@ -2952,7 +2952,6 @@ tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstN
 void* memcpy(void* _pDst, const void* _pSrc, unsigned int _ulSize);
 void fn_vThisTypeVsThisType(HIE_tdstSuperObject_* _hCharacter, unsigned short _wCharacterMask, unsigned short _wOthersMask, HIE_tdstSuperObject_** _p_hObjectTable, unsigned short* _p_uwNumber);
 
-
 extern unsigned char g_ucIsInMacro;
 extern tdstNodeInterpret_* g_p_stTreeMacro;
 extern unsigned char g_ucNRule;
@@ -2962,55 +2961,433 @@ tdstNodeInterpret_* fn_p_stGetTableAction(tdstIntelligence_* p_stIntelligence, u
 tdstNodeInterpret_* fn_p_stIntelligenceEvalTreeEngine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
 void fn_vUnuseCurrentActionTableEntry(tdstIntelligence_* p_stIntelligence);
 void fn_vUseCurrentActionTableEntry(tdstIntelligence_* p_stIntelligence, unsigned char ucNRule, tdstNodeInterpret_* p_stNode);
-tdstNodeInterpret_* fn_p_stEvalSubRoutine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue, tdstMacro_* p_stMacro)
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+tdstNodeInterpret_* fn_p_stEvalSubRoutine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue, tdstMacro_* p_stMacro);
+tdstNodeInterpret_* fn_p_stListSort(tdstList_* p_List, unsigned char ucWantedNbElt, char b_cIncrease, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stListSelect(tdstList_* p_List, char b_cInverse, tdstNodeInterpret_* p_stTree);
+HIE_tdstSuperObject_* fn_p_stGetPersoInList(tdstList_* p_List, unsigned char ucPosition);
+unsigned char fn_ucAtLeastOnePersoInZde(HIE_tdstSuperObject_* p_stPerso, unsigned char ucModulOrCharact, short xZoneId, unsigned short xMask);
+unsigned char fn_ucAtLeastOnePersoInZdd(HIE_tdstSuperObject_* p_stPerso, unsigned char ucModulOrCharact, short xZoneId);
+void fn_vAffectTypeZdeWithTypeZdeInList(tdstList_* p_List, HIE_tdstSuperObject_* p_stPerso, unsigned short xPersoMask, unsigned short xOthersMask);
+void fn_vAffectZdeInList(tdstList_* p_List, HIE_tdstSuperObject_* p_stPerso, unsigned char ucModulOrCharact, short xZoneId, unsigned short xMask);
+void fn_vAffectZddInList(tdstList_* p_List, HIE_tdstSuperObject_* p_stPerso, unsigned char ucModulOrCharact, short xZoneId);
+void fn_vAddList(tdstList_* p_ListA, tdstList_* p_ListB);
+void fn_vDiffList(tdstList_* p_ListA, tdstList_* p_ListB, tdstList_* p_ListC);
+void fn_vInterList(tdstList_* p_ListA, tdstList_* p_ListB, tdstList_* p_ListC);
+void fn_vUnionList(tdstList_* p_ListA, tdstList_* p_ListB, tdstList_* p_ListC);
+void fn_vSortListByModel(tdstList_* p_stList, AI_tdstAIModel_* _p_stModel);
+void fn_vSortListByFamily(tdstList_* p_List, tdstFamilyList_* hFamily);
+void fn_vDeletePersoAtPositionInList(tdstList_* p_List, unsigned char ucPosition);
+char fn_bFindPersoAndDeleteInList(tdstList_* p_List, HIE_tdstSuperObject_* p_Perso);
+char fn_bFindFamilyInList(tdstList_* p_List, tdstFamilyList_* hFamily);
+char fn_bFindModelInList(tdstList_* p_List, AI_tdstAIModel_* _p_stModel);
+char fn_bFindPersoInList(tdstList_* p_List, HIE_tdstSuperObject_* p_Perso);
+void fn_vInsertPersoAtPositionInList(tdstList_* p_List, HIE_tdstSuperObject_* p_Perso, unsigned char ucPosition);
+
+#pragma auto_inline on
+
+#pragma auto_inline reset
+
+void fn_vGetAllCharactersInContactWithThisZde(HIE_tdstSuperObject_*, unsigned char, unsigned char, HIE_tdstSuperObject_**, unsigned short*, unsigned short);
+void fn_vGetAllObjectsInZdd(HIE_tdstSuperObject_*, unsigned char, unsigned char, HIE_tdstSuperObject_**, unsigned short*);
+
+/* Not original source, needs cleaning up: retail inlines fn_p_stGetPersoInList
+ * here with the -4 folded into the load, unlike its standalone copy, so this
+ * caller gets a pointer-form duplicate of it. */
+static inline HIE_tdstSuperObject_* fn_p_stGetPersoInListInline(tdstList_* p_List, unsigned char ucPosition)
 {
-    tdstNodeInterpret_* p_stTreeTmp;
-    unsigned char ucIndTabAction;
-    tdstNodeInterpret_* p_stTreeSave;
-    unsigned char ucActionReturn;
+    HIE_tdstSuperObject_* pNull;
 
-    p_stTreeSave = g_p_stTreeMacro;
-    g_ucIsInMacro++;
-    g_p_stTreeMacro = p_stTree;
-
-    ucIndTabAction = fn_ucIsRuleInActionTable(g_p_stIntelligence, g_ucNRule);
-    if (ucIndTabAction >= g_p_stIntelligence->p_stActionTable->ucNbEntries)
-        p_stMacro->p_stCurrentTree->p_stNodeInterpret = p_stMacro->p_stInitTree->p_stNodeInterpret;
-    else if (fn_p_stGetTableAction(g_p_stIntelligence, ucIndTabAction) != g_p_stTreeMacro)
-        p_stMacro->p_stCurrentTree->p_stNodeInterpret = p_stMacro->p_stInitTree->p_stNodeInterpret;
-
-    fn_p_stIntelligenceEvalTreeEngine(p_SuperObjPerso, p_stMacro->p_stCurrentTree->p_stNodeInterpret, p_stValue);
-    ucActionReturn = p_stValue->uDummy.uParam.ucValue;
-    g_ucIsInMacro--;
-
-    if ((ucActionReturn & 0x10) == 0x10)
+    if (p_List->ucNbElt == 0)
     {
-        p_stMacro->p_stCurrentTree->p_stNodeInterpret = p_stMacro->p_stInitTree->p_stNodeInterpret;
-        p_stValue->uDummy.uParam.lValue = 0;
-        p_stValue->eType = 20;
-        g_p_stTreeMacro = p_stTreeSave;
-        return ++p_stTree;
+        pNull = NULL;
+        return pNull;
     }
 
-    if ((ucActionReturn & 8) == 8)
+    if ((ucPosition >= p_List->ucNbElt) && (ucPosition != 0xff))
+        return NULL;
+
+    if (ucPosition == 0xff)
+        return p_List->p_hTabElt[p_List->ucNbElt - 1];
+    else
+        return p_List->p_hTabElt[ucPosition];
+}
+
+void fn_vInsertPersoAtPositionInList(tdstList_* p_List, HIE_tdstSuperObject_* p_Perso, unsigned char ucPosition)
+{
+    unsigned char ucI;
+
+    ucPosition = (ucPosition < p_List->ucNbElt + 1) ? ucPosition : p_List->ucNbElt + 1;
+
+    if (p_List->ucNbElt < p_List->ucMaxSize)
     {
-        p_stMacro->p_stCurrentTree->p_stNodeInterpret = p_stMacro->p_stInitTree->p_stNodeInterpret;
-        g_p_stTreeMacro = p_stTreeSave;
-        return ++p_stTree;
+        for (ucI = p_List->ucNbElt; ucI > ucPosition; ucI--)
+            p_List->p_hTabElt[ucI] = p_List->p_hTabElt[ucI - 1];
+        p_List->p_hTabElt[ucPosition] = p_Perso;
+        p_List->ucNbElt++;
+    }
+    else
+        fn_vOnAIErm_M_UpdateLastError(14, NULL);
+}
+
+char fn_bFindPersoInList(tdstList_* p_List, HIE_tdstSuperObject_* p_Perso)
+{
+    unsigned char ucPosition;
+
+    ucPosition = 0;
+    if (p_List->ucNbElt == 0)
+        return 0;
+
+    while ((ucPosition < p_List->ucNbElt) && (p_List->p_hTabElt[ucPosition] != p_Perso))
+        ucPosition++;
+
+    return ucPosition < p_List->ucNbElt;
+}
+
+char fn_bFindModelInList(tdstList_* p_List, AI_tdstAIModel_* _p_stModel)
+{
+    unsigned char ucPosition;
+
+    ucPosition = 0;
+    if (p_List->ucNbElt == 0)
+        return 0;
+
+    for (; (ucPosition < p_List->ucNbElt) && (p_List->p_hTabElt[ucPosition]->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stAIModel != _p_stModel); ucPosition++)
+        ;
+
+    return ucPosition < p_List->ucNbElt;
+}
+
+char fn_bFindFamilyInList(tdstList_* p_List, tdstFamilyList_* hFamily)
+{
+    unsigned char ucPosition;
+
+    ucPosition = 0;
+    if (p_List->ucNbElt == 0)
+        return 0;
+
+    for (; (ucPosition < p_List->ucNbElt) && (p_List->p_hTabElt[ucPosition]->hLinkedObject.p_stCharacter->h_3dData->h_Family != hFamily); ucPosition++)
+        ;
+
+    return ucPosition < p_List->ucNbElt;
+}
+
+char fn_bFindPersoAndDeleteInList(tdstList_* p_List, HIE_tdstSuperObject_* p_Perso)
+{
+    unsigned char ucPosition;
+    unsigned char ucI;
+
+    for (ucPosition = 0; (ucPosition < p_List->ucNbElt) && (p_List->p_hTabElt[ucPosition] != p_Perso); ucPosition++)
+        ;
+
+    if (p_List->p_hTabElt[ucPosition] == p_Perso)
+    {
+        for (ucI = ucPosition; ucI <= p_List->ucNbElt - 2; ucI++)
+            p_List->p_hTabElt[ucI] = p_List->p_hTabElt[ucI + 1];
+        p_List->ucNbElt--;
+        return 1;
+    }
+    return 0;
+}
+
+void fn_vDeletePersoAtPositionInList(tdstList_* p_List, unsigned char ucPosition)
+{
+    unsigned char ucI;
+
+    if (ucPosition == 0xff)
+        ucPosition = p_List->ucNbElt - 1;
+
+    if (ucPosition <= p_List->ucNbElt - 1)
+    {
+        for (ucI = ucPosition; ucI <= p_List->ucNbElt - 2; ucI++)
+            p_List->p_hTabElt[ucI] = p_List->p_hTabElt[ucI + 1];
+        p_List->ucNbElt--;
+    }
+    else
+        Erm_fn_v_UpdateLastError(67, g_ucAIModuleId, 0, 16, -1, 255, 255, NULL);
+}
+
+void fn_vSortListByFamily(tdstList_* p_List, tdstFamilyList_* hFamily)
+{
+    unsigned char ucI;
+    unsigned char ucJ;
+    HIE_tdstSuperObject_** p_hSupObjElt;
+    HIE_tdstSuperObject_* hSupObjElt;
+
+    ucJ = 0;
+    p_hSupObjElt = (HIE_tdstSuperObject_**)HMU_fn_p_vMalloc(p_List->ucNbElt, 1);
+    for (ucI = 0; ucI < p_List->ucNbElt; ucI++)
+    {
+        hSupObjElt = p_List->p_hTabElt[ucI];
+        if (hSupObjElt->hLinkedObject.p_stCharacter->h_3dData->h_Family == hFamily)
+            p_hSupObjElt[ucJ++] = hSupObjElt;
     }
 
-    ucIndTabAction = fn_ucIsRuleInActionTable(g_p_stIntelligence, g_ucNRule);
-    if (ucIndTabAction < g_p_stIntelligence->p_stActionTable->ucNbEntries)
+    p_List->ucNbElt = 0;
+    for (ucI = 0; ucI < ucJ; ucI++)
     {
-        p_stTreeTmp = fn_p_stGetTableAction(g_p_stIntelligence, ucIndTabAction);
-        if (p_stTreeTmp->eType != 41)
+        hSupObjElt = p_hSupObjElt[ucI];
+        if (p_List->ucNbElt < p_List->ucMaxSize)
+            p_List->p_hTabElt[p_List->ucNbElt++] = hSupObjElt;
+        else
+            fn_vOnAIErm_M_UpdateLastError(14, NULL);
+    }
+
+    HMU_fn_vFree((void**)&p_hSupObjElt, 1);
+}
+
+void fn_vSortListByModel(tdstList_* p_stList, AI_tdstAIModel_* _p_stModel)
+{
+    HIE_tdstSuperObject_* hPerso;
+    unsigned char ucPos;
+    HIE_tdstSuperObject_** p_hSupObjElt;
+    unsigned char ucI;
+    unsigned char ucJ;
+
+    ucPos = 0;
+    ucJ = 0;
+    p_hSupObjElt = (HIE_tdstSuperObject_**)HMU_fn_p_vMalloc(p_stList->ucNbElt, 1);
+    hPerso = fn_p_stGetPersoInListInline(p_stList, 0);
+    while (hPerso != NULL)
+    {
+        if ((hPerso->hLinkedObject.p_stCharacter->h_Brain != NULL) && (hPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stAIModel == _p_stModel))
+            p_hSupObjElt[ucJ++] = hPerso;
+        ucPos++;
+        hPerso = fn_p_stGetPersoInListInline(p_stList, ucPos);
+    }
+
+    p_stList->ucNbElt = 0;
+    for (ucI = 0; ucI < ucJ; ucI++)
+    {
+        hPerso = p_hSupObjElt[ucI];
+        if (p_stList->ucNbElt < p_stList->ucMaxSize)
+            p_stList->p_hTabElt[p_stList->ucNbElt++] = hPerso;
+        else
+            fn_vOnAIErm_M_UpdateLastError(14, NULL);
+    }
+
+    HMU_fn_vFree((void**)&p_hSupObjElt, 1);
+}
+
+void fn_vUnionList(tdstList_* p_ListA, tdstList_* p_ListB, tdstList_* p_ListC)
+{
+    HIE_tdstSuperObject_* p_Perso;
+    unsigned char ucJ;
+    unsigned char ucI;
+
+    for (ucI = 0; ucI < p_ListB->ucNbElt; ucI++)
+    {
+        p_Perso = p_ListB->p_hTabElt[ucI];
+        if (p_ListA->ucNbElt < p_ListA->ucMaxSize)
+            p_ListA->p_hTabElt[p_ListA->ucNbElt++] = p_Perso;
+        else
+            fn_vOnAIErm_M_UpdateLastError(14, NULL);
+    }
+
+    for (ucI = 0; ucI < p_ListC->ucNbElt; ucI++)
+    {
+        p_Perso = p_ListC->p_hTabElt[ucI];
+        for (ucJ = 0; (ucJ < p_ListB->ucNbElt) && (p_ListB->p_hTabElt[ucJ] != p_Perso); ucJ++)
+            ;
+        if (p_ListB->p_hTabElt[ucJ] != p_Perso)
         {
-            p_stMacro->p_stCurrentTree->p_stNodeInterpret = p_stTreeTmp;
-            fn_vUnuseCurrentActionTableEntry(g_p_stIntelligence);
-            fn_vUseCurrentActionTableEntry(g_p_stIntelligence, g_ucNRule, g_p_stTreeMacro);
+            if (p_ListA->ucNbElt < p_ListA->ucMaxSize)
+                p_ListA->p_hTabElt[p_ListA->ucNbElt++] = p_Perso;
+            else
+                fn_vOnAIErm_M_UpdateLastError(14, NULL);
         }
-        g_p_stTreeMacro = p_stTreeSave;
     }
+}
+
+void fn_vInterList(tdstList_* p_ListA, tdstList_* p_ListB, tdstList_* p_ListC)
+{
+    unsigned char ucC;
+    HIE_tdstSuperObject_* p_Perso;
+    unsigned char ucB;
+
+    for (ucB = 0; ucB < p_ListB->ucNbElt; ucB++)
+    {
+        p_Perso = p_ListB->p_hTabElt[ucB];
+        for (ucC = 0; ucC < p_ListC->ucNbElt; ucC++)
+        {
+            if (p_ListC->p_hTabElt[ucC] == p_Perso)
+            {
+                if (p_ListA->ucNbElt < p_ListA->ucMaxSize)
+                    p_ListA->p_hTabElt[p_ListA->ucNbElt++] = p_Perso;
+                else
+                    fn_vOnAIErm_M_UpdateLastError(14, NULL);
+                break;
+            }
+        }
+    }
+}
+
+void fn_vDiffList(tdstList_* p_ListA, tdstList_* p_ListB, tdstList_* p_ListC)
+{
+    unsigned char ucC;
+    HIE_tdstSuperObject_* p_Perso;
+    unsigned char ucB;
+
+    for (ucB = 0; ucB < p_ListB->ucNbElt; ucB++)
+    {
+        p_Perso = p_ListB->p_hTabElt[ucB];
+        for (ucC = 0; (ucC < p_ListC->ucNbElt) && (p_ListC->p_hTabElt[ucC] != p_Perso); ucC++)
+            ;
+        if (p_ListC->p_hTabElt[ucC] != p_Perso)
+        {
+            if (p_ListA->ucNbElt < p_ListA->ucMaxSize)
+                p_ListA->p_hTabElt[p_ListA->ucNbElt++] = p_Perso;
+            else
+                fn_vOnAIErm_M_UpdateLastError(14, NULL);
+        }
+    }
+}
+
+void fn_vAddList(tdstList_* p_ListA, tdstList_* p_ListB)
+{
+    HIE_tdstSuperObject_* hPerso;
+    unsigned char ucB;
+    unsigned char ucSizeA;
+    unsigned char ucA;
+
+    ucSizeA = p_ListA->ucNbElt;
+    for (ucB = 0; ucB < p_ListB->ucNbElt; ucB++)
+    {
+        hPerso = p_ListB->p_hTabElt[ucB];
+        for (ucA = 0; (ucA < ucSizeA) && (p_ListA->p_hTabElt[ucA] != hPerso); ucA++)
+            ;
+        if (p_ListA->p_hTabElt[ucA] != hPerso)
+        {
+            if (p_ListA->ucNbElt < p_ListA->ucMaxSize)
+                p_ListA->p_hTabElt[p_ListA->ucNbElt++] = hPerso;
+            else
+                fn_vOnAIErm_M_UpdateLastError(14, NULL);
+        }
+    }
+}
+
+void fn_vAffectZddInList(tdstList_* p_List, HIE_tdstSuperObject_* p_stPerso, unsigned char ucModulOrCharact, short xZoneId)
+{
+    unsigned short uwNbDetectedPerso;
+    unsigned short uwI;
+
+    p_List->ucNbElt = 0;
+    uwNbDetectedPerso = p_List->ucMaxSize;
+    fn_vGetAllObjectsInZdd(p_stPerso, ucModulOrCharact, xZoneId, (HIE_tdstSuperObject_**)g_a_hPersoInZone, &uwNbDetectedPerso);
+    for (uwI = 0; uwI < uwNbDetectedPerso; uwI++)
+    {
+        HIE_tdstSuperObject_* p_stFound = (HIE_tdstSuperObject_*)g_a_hPersoInZone[uwI];
+        if (p_List->ucNbElt < p_List->ucMaxSize)
+            p_List->p_hTabElt[p_List->ucNbElt++] = p_stFound;
+        else
+            fn_vOnAIErm_M_UpdateLastError(14, NULL);
+    }
+}
+
+void fn_vAffectZdeInList(tdstList_* p_List, HIE_tdstSuperObject_* p_stPerso, unsigned char ucModulOrCharact, short xZoneId, unsigned short xMask)
+{
+    unsigned short uwNbDetectedPerso;
+    unsigned short uwI;
+
+    p_List->ucNbElt = 0;
+    uwNbDetectedPerso = p_List->ucMaxSize;
+    fn_vGetAllCharactersInContactWithThisZde(p_stPerso, ucModulOrCharact, xZoneId, (HIE_tdstSuperObject_**)g_a_hPersoInZone, &uwNbDetectedPerso, xMask);
+    for (uwI = 0; uwI < uwNbDetectedPerso; uwI++)
+    {
+        HIE_tdstSuperObject_* p_stFound = (HIE_tdstSuperObject_*)g_a_hPersoInZone[uwI];
+        if (p_List->ucNbElt < p_List->ucMaxSize)
+            p_List->p_hTabElt[p_List->ucNbElt++] = p_stFound;
+        else
+            fn_vOnAIErm_M_UpdateLastError(14, NULL);
+    }
+}
+
+void fn_vAffectTypeZdeWithTypeZdeInList(tdstList_* p_List, HIE_tdstSuperObject_* p_stPerso, unsigned short xPersoMask, unsigned short xOthersMask)
+{
+    unsigned short uwNbDetectedPerso;
+    unsigned short uwI;
+
+    p_List->ucNbElt = 0;
+    uwNbDetectedPerso = p_List->ucMaxSize;
+    fn_vThisTypeVsThisType(p_stPerso, xPersoMask, xOthersMask, (HIE_tdstSuperObject_**)g_a_hPersoInZone, &uwNbDetectedPerso);
+    for (uwI = 0; uwI < uwNbDetectedPerso; uwI++)
+    {
+        HIE_tdstSuperObject_* p_stFound = (HIE_tdstSuperObject_*)g_a_hPersoInZone[uwI];
+        if (p_List->ucNbElt < p_List->ucMaxSize)
+            p_List->p_hTabElt[p_List->ucNbElt++] = p_stFound;
+        else
+            fn_vOnAIErm_M_UpdateLastError(14, NULL);
+    }
+}
+
+unsigned char fn_ucAtLeastOnePersoInZdd(HIE_tdstSuperObject_* p_stPerso, unsigned char ucModulOrCharact, short xZoneId)
+{
+    unsigned short uwNbDetectedPerso;
+    uwNbDetectedPerso = 1;
+    fn_vGetAllObjectsInZdd(p_stPerso, ucModulOrCharact, xZoneId, (HIE_tdstSuperObject_**)g_a_hPersoInZone, &uwNbDetectedPerso);
+    return uwNbDetectedPerso != 0;
+}
+
+unsigned char fn_ucAtLeastOnePersoInZde(HIE_tdstSuperObject_* p_stPerso, unsigned char ucModulOrCharact, short xZoneId, unsigned short xMask)
+{
+    unsigned short uwNbDetectedPerso;
+    uwNbDetectedPerso = 1;
+    fn_vGetAllCharactersInContactWithThisZde(p_stPerso, ucModulOrCharact, xZoneId, (HIE_tdstSuperObject_**)g_a_hPersoInZone, &uwNbDetectedPerso, xMask);
+    return uwNbDetectedPerso != 0;
+}
+
+#pragma auto_inline on
+HIE_tdstSuperObject_* fn_p_stGetPersoInList(tdstList_* p_List, unsigned char ucPosition)
+{
+    HIE_tdstSuperObject_* pNull;
+    int lOffset;
+
+    if (p_List->ucNbElt == 0)
+    {
+        pNull = NULL;
+        return pNull;
+    }
+
+    if ((ucPosition >= p_List->ucNbElt) && (ucPosition != 0xff))
+        return NULL;
+
+    /* Not original source, needs cleaning up: permuter-found int-address form;
+     * retail keeps the -4 on the base instead of folding it into the load. */
+    if (ucPosition == 0xff)
+        return *(HIE_tdstSuperObject_**)((int)p_List->p_hTabElt - 4 + (lOffset = p_List->ucNbElt * 4));
+    else
+        return p_List->p_hTabElt[ucPosition];
+}
+#pragma auto_inline reset
+
+tdstNodeInterpret_* fn_p_stListSelect(tdstList_* p_List, char b_cInverse, tdstNodeInterpret_* p_stTree)
+{
+    tdstGetSetParam_ stParam;
+    tdstList_ stWorkList;
+    HIE_tdstSuperObject_** p_p_stPerso;
+    tdstNodeInterpret_* p_stTreeSv;
+
+    p_stTreeSv = p_stTree;
+    for (p_p_stPerso = p_List->p_hTabElt, stWorkList.ucNbElt = 0; p_p_stPerso < p_List->p_hTabElt + p_List->ucNbElt; p_p_stPerso++)
+    {
+        p_stTree = fn_p_stEvalTree(*p_p_stPerso, p_stTreeSv, &stParam);
+        if (stParam.uDummy.uParam.cValue ^ b_cInverse)
+        {
+            {
+                HIE_tdstSuperObject_* p_stPerso = *p_p_stPerso;
+                if (stWorkList.ucNbElt < stWorkList.ucMaxSize)
+                {
+                    stWorkList.p_hTabElt[stWorkList.ucNbElt] = p_stPerso;
+                    stWorkList.ucNbElt++;
+                }
+                else
+                    fn_vOnAIErm_M_UpdateLastError(14, NULL);
+            }
+        }
+    }
+    memcpy(p_List, &stWorkList, sizeof(tdstList_) + stWorkList.ucNbElt * sizeof(HIE_tdstSuperObject_*));
     return p_stTree;
 }
 
@@ -3081,403 +3458,54 @@ tdstNodeInterpret_* fn_p_stListSort(tdstList_* p_List, unsigned char ucWantedNbE
     return p_stTree;
 }
 
-tdstNodeInterpret_* fn_p_stListSelect(tdstList_* p_List, char b_cInverse, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stEvalSubRoutine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue, tdstMacro_* p_stMacro)
 {
-    tdstGetSetParam_ stParam;
-    tdstList_ stWorkList;
-    HIE_tdstSuperObject_** p_p_stPerso;
-    tdstNodeInterpret_* p_stTreeSv;
+    tdstNodeInterpret_* p_stTreeTmp;
+    unsigned char ucIndTabAction;
+    tdstNodeInterpret_* p_stTreeSave;
+    unsigned char ucActionReturn;
 
-    p_stTreeSv = p_stTree;
-    for (p_p_stPerso = p_List->p_hTabElt, stWorkList.ucNbElt = 0; p_p_stPerso < p_List->p_hTabElt + p_List->ucNbElt; p_p_stPerso++)
+    p_stTreeSave = g_p_stTreeMacro;
+    g_ucIsInMacro++;
+    g_p_stTreeMacro = p_stTree;
+
+    ucIndTabAction = fn_ucIsRuleInActionTable(g_p_stIntelligence, g_ucNRule);
+    if (ucIndTabAction >= g_p_stIntelligence->p_stActionTable->ucNbEntries)
+        p_stMacro->p_stCurrentTree->p_stNodeInterpret = p_stMacro->p_stInitTree->p_stNodeInterpret;
+    else if (fn_p_stGetTableAction(g_p_stIntelligence, ucIndTabAction) != g_p_stTreeMacro)
+        p_stMacro->p_stCurrentTree->p_stNodeInterpret = p_stMacro->p_stInitTree->p_stNodeInterpret;
+
+    fn_p_stIntelligenceEvalTreeEngine(p_SuperObjPerso, p_stMacro->p_stCurrentTree->p_stNodeInterpret, p_stValue);
+    ucActionReturn = p_stValue->uDummy.uParam.ucValue;
+    g_ucIsInMacro--;
+
+    if ((ucActionReturn & 0x10) == 0x10)
     {
-        p_stTree = fn_p_stEvalTree(*p_p_stPerso, p_stTreeSv, &stParam);
-        if (stParam.uDummy.uParam.cValue ^ b_cInverse)
-        {
-            {
-                HIE_tdstSuperObject_* p_stPerso = *p_p_stPerso;
-                if (stWorkList.ucNbElt < stWorkList.ucMaxSize)
-                {
-                    stWorkList.p_hTabElt[stWorkList.ucNbElt] = p_stPerso;
-                    stWorkList.ucNbElt++;
-                }
-                else
-                    fn_vOnAIErm_M_UpdateLastError(14, NULL);
-            }
-        }
+        p_stMacro->p_stCurrentTree->p_stNodeInterpret = p_stMacro->p_stInitTree->p_stNodeInterpret;
+        p_stValue->uDummy.uParam.lValue = 0;
+        p_stValue->eType = 20;
+        g_p_stTreeMacro = p_stTreeSave;
+        return ++p_stTree;
     }
-    memcpy(p_List, &stWorkList, sizeof(tdstList_) + stWorkList.ucNbElt * sizeof(HIE_tdstSuperObject_*));
+
+    if ((ucActionReturn & 8) == 8)
+    {
+        p_stMacro->p_stCurrentTree->p_stNodeInterpret = p_stMacro->p_stInitTree->p_stNodeInterpret;
+        g_p_stTreeMacro = p_stTreeSave;
+        return ++p_stTree;
+    }
+
+    ucIndTabAction = fn_ucIsRuleInActionTable(g_p_stIntelligence, g_ucNRule);
+    if (ucIndTabAction < g_p_stIntelligence->p_stActionTable->ucNbEntries)
+    {
+        p_stTreeTmp = fn_p_stGetTableAction(g_p_stIntelligence, ucIndTabAction);
+        if (p_stTreeTmp->eType != 41)
+        {
+            p_stMacro->p_stCurrentTree->p_stNodeInterpret = p_stTreeTmp;
+            fn_vUnuseCurrentActionTableEntry(g_p_stIntelligence);
+            fn_vUseCurrentActionTableEntry(g_p_stIntelligence, g_ucNRule, g_p_stTreeMacro);
+        }
+        g_p_stTreeMacro = p_stTreeSave;
+    }
     return p_stTree;
-}
-
-#pragma auto_inline on
-HIE_tdstSuperObject_* fn_p_stGetPersoInList(tdstList_* p_List, unsigned char ucPosition)
-{
-    HIE_tdstSuperObject_* pNull;
-    int lOffset;
-
-    if (p_List->ucNbElt == 0)
-    {
-        pNull = NULL;
-        return pNull;
-    }
-
-    if ((ucPosition >= p_List->ucNbElt) && (ucPosition != 0xff))
-        return NULL;
-
-    /* Not original source, needs cleaning up: permuter-found int-address form;
-     * retail keeps the -4 on the base instead of folding it into the load. */
-    if (ucPosition == 0xff)
-        return *(HIE_tdstSuperObject_**)((int)p_List->p_hTabElt - 4 + (lOffset = p_List->ucNbElt * 4));
-    else
-        return p_List->p_hTabElt[ucPosition];
-}
-#pragma auto_inline reset
-
-void fn_vGetAllCharactersInContactWithThisZde(HIE_tdstSuperObject_*, unsigned char, unsigned char, HIE_tdstSuperObject_**, unsigned short*, unsigned short);
-void fn_vGetAllObjectsInZdd(HIE_tdstSuperObject_*, unsigned char, unsigned char, HIE_tdstSuperObject_**, unsigned short*);
-
-unsigned char fn_ucAtLeastOnePersoInZde(HIE_tdstSuperObject_* p_stPerso, unsigned char ucModulOrCharact, short xZoneId, unsigned short xMask)
-{
-    unsigned short uwNbDetectedPerso;
-    uwNbDetectedPerso = 1;
-    fn_vGetAllCharactersInContactWithThisZde(p_stPerso, ucModulOrCharact, xZoneId, (HIE_tdstSuperObject_**)g_a_hPersoInZone, &uwNbDetectedPerso, xMask);
-    return uwNbDetectedPerso != 0;
-}
-
-unsigned char fn_ucAtLeastOnePersoInZdd(HIE_tdstSuperObject_* p_stPerso, unsigned char ucModulOrCharact, short xZoneId)
-{
-    unsigned short uwNbDetectedPerso;
-    uwNbDetectedPerso = 1;
-    fn_vGetAllObjectsInZdd(p_stPerso, ucModulOrCharact, xZoneId, (HIE_tdstSuperObject_**)g_a_hPersoInZone, &uwNbDetectedPerso);
-    return uwNbDetectedPerso != 0;
-}
-
-void fn_vAffectTypeZdeWithTypeZdeInList(tdstList_* p_List, HIE_tdstSuperObject_* p_stPerso, unsigned short xPersoMask, unsigned short xOthersMask)
-{
-    unsigned short uwNbDetectedPerso;
-    unsigned short uwI;
-
-    p_List->ucNbElt = 0;
-    uwNbDetectedPerso = p_List->ucMaxSize;
-    fn_vThisTypeVsThisType(p_stPerso, xPersoMask, xOthersMask, (HIE_tdstSuperObject_**)g_a_hPersoInZone, &uwNbDetectedPerso);
-    for (uwI = 0; uwI < uwNbDetectedPerso; uwI++)
-    {
-        HIE_tdstSuperObject_* p_stFound = (HIE_tdstSuperObject_*)g_a_hPersoInZone[uwI];
-        if (p_List->ucNbElt < p_List->ucMaxSize)
-            p_List->p_hTabElt[p_List->ucNbElt++] = p_stFound;
-        else
-            fn_vOnAIErm_M_UpdateLastError(14, NULL);
-    }
-}
-
-void fn_vAffectZdeInList(tdstList_* p_List, HIE_tdstSuperObject_* p_stPerso, unsigned char ucModulOrCharact, short xZoneId, unsigned short xMask)
-{
-    unsigned short uwNbDetectedPerso;
-    unsigned short uwI;
-
-    p_List->ucNbElt = 0;
-    uwNbDetectedPerso = p_List->ucMaxSize;
-    fn_vGetAllCharactersInContactWithThisZde(p_stPerso, ucModulOrCharact, xZoneId, (HIE_tdstSuperObject_**)g_a_hPersoInZone, &uwNbDetectedPerso, xMask);
-    for (uwI = 0; uwI < uwNbDetectedPerso; uwI++)
-    {
-        HIE_tdstSuperObject_* p_stFound = (HIE_tdstSuperObject_*)g_a_hPersoInZone[uwI];
-        if (p_List->ucNbElt < p_List->ucMaxSize)
-            p_List->p_hTabElt[p_List->ucNbElt++] = p_stFound;
-        else
-            fn_vOnAIErm_M_UpdateLastError(14, NULL);
-    }
-}
-
-void fn_vAffectZddInList(tdstList_* p_List, HIE_tdstSuperObject_* p_stPerso, unsigned char ucModulOrCharact, short xZoneId)
-{
-    unsigned short uwNbDetectedPerso;
-    unsigned short uwI;
-
-    p_List->ucNbElt = 0;
-    uwNbDetectedPerso = p_List->ucMaxSize;
-    fn_vGetAllObjectsInZdd(p_stPerso, ucModulOrCharact, xZoneId, (HIE_tdstSuperObject_**)g_a_hPersoInZone, &uwNbDetectedPerso);
-    for (uwI = 0; uwI < uwNbDetectedPerso; uwI++)
-    {
-        HIE_tdstSuperObject_* p_stFound = (HIE_tdstSuperObject_*)g_a_hPersoInZone[uwI];
-        if (p_List->ucNbElt < p_List->ucMaxSize)
-            p_List->p_hTabElt[p_List->ucNbElt++] = p_stFound;
-        else
-            fn_vOnAIErm_M_UpdateLastError(14, NULL);
-    }
-}
-
-void fn_vAddList(tdstList_* p_ListA, tdstList_* p_ListB)
-{
-    HIE_tdstSuperObject_* hPerso;
-    unsigned char ucB;
-    unsigned char ucSizeA;
-    unsigned char ucA;
-
-    ucSizeA = p_ListA->ucNbElt;
-    for (ucB = 0; ucB < p_ListB->ucNbElt; ucB++)
-    {
-        hPerso = p_ListB->p_hTabElt[ucB];
-        for (ucA = 0; (ucA < ucSizeA) && (p_ListA->p_hTabElt[ucA] != hPerso); ucA++)
-            ;
-        if (p_ListA->p_hTabElt[ucA] != hPerso)
-        {
-            if (p_ListA->ucNbElt < p_ListA->ucMaxSize)
-                p_ListA->p_hTabElt[p_ListA->ucNbElt++] = hPerso;
-            else
-                fn_vOnAIErm_M_UpdateLastError(14, NULL);
-        }
-    }
-}
-
-void fn_vDiffList(tdstList_* p_ListA, tdstList_* p_ListB, tdstList_* p_ListC)
-{
-    unsigned char ucC;
-    HIE_tdstSuperObject_* p_Perso;
-    unsigned char ucB;
-
-    for (ucB = 0; ucB < p_ListB->ucNbElt; ucB++)
-    {
-        p_Perso = p_ListB->p_hTabElt[ucB];
-        for (ucC = 0; (ucC < p_ListC->ucNbElt) && (p_ListC->p_hTabElt[ucC] != p_Perso); ucC++)
-            ;
-        if (p_ListC->p_hTabElt[ucC] != p_Perso)
-        {
-            if (p_ListA->ucNbElt < p_ListA->ucMaxSize)
-                p_ListA->p_hTabElt[p_ListA->ucNbElt++] = p_Perso;
-            else
-                fn_vOnAIErm_M_UpdateLastError(14, NULL);
-        }
-    }
-}
-
-void fn_vInterList(tdstList_* p_ListA, tdstList_* p_ListB, tdstList_* p_ListC)
-{
-    unsigned char ucC;
-    HIE_tdstSuperObject_* p_Perso;
-    unsigned char ucB;
-
-    for (ucB = 0; ucB < p_ListB->ucNbElt; ucB++)
-    {
-        p_Perso = p_ListB->p_hTabElt[ucB];
-        for (ucC = 0; ucC < p_ListC->ucNbElt; ucC++)
-        {
-            if (p_ListC->p_hTabElt[ucC] == p_Perso)
-            {
-                if (p_ListA->ucNbElt < p_ListA->ucMaxSize)
-                    p_ListA->p_hTabElt[p_ListA->ucNbElt++] = p_Perso;
-                else
-                    fn_vOnAIErm_M_UpdateLastError(14, NULL);
-                break;
-            }
-        }
-    }
-}
-
-void fn_vUnionList(tdstList_* p_ListA, tdstList_* p_ListB, tdstList_* p_ListC)
-{
-    HIE_tdstSuperObject_* p_Perso;
-    unsigned char ucJ;
-    unsigned char ucI;
-
-    for (ucI = 0; ucI < p_ListB->ucNbElt; ucI++)
-    {
-        p_Perso = p_ListB->p_hTabElt[ucI];
-        if (p_ListA->ucNbElt < p_ListA->ucMaxSize)
-            p_ListA->p_hTabElt[p_ListA->ucNbElt++] = p_Perso;
-        else
-            fn_vOnAIErm_M_UpdateLastError(14, NULL);
-    }
-
-    for (ucI = 0; ucI < p_ListC->ucNbElt; ucI++)
-    {
-        p_Perso = p_ListC->p_hTabElt[ucI];
-        for (ucJ = 0; (ucJ < p_ListB->ucNbElt) && (p_ListB->p_hTabElt[ucJ] != p_Perso); ucJ++)
-            ;
-        if (p_ListB->p_hTabElt[ucJ] != p_Perso)
-        {
-            if (p_ListA->ucNbElt < p_ListA->ucMaxSize)
-                p_ListA->p_hTabElt[p_ListA->ucNbElt++] = p_Perso;
-            else
-                fn_vOnAIErm_M_UpdateLastError(14, NULL);
-        }
-    }
-}
-
-/* Not original source, needs cleaning up: retail inlines fn_p_stGetPersoInList
- * here with the -4 folded into the load, unlike its standalone copy, so this
- * caller gets a pointer-form duplicate of it. */
-static inline HIE_tdstSuperObject_* fn_p_stGetPersoInListInline(tdstList_* p_List, unsigned char ucPosition)
-{
-    HIE_tdstSuperObject_* pNull;
-
-    if (p_List->ucNbElt == 0)
-    {
-        pNull = NULL;
-        return pNull;
-    }
-
-    if ((ucPosition >= p_List->ucNbElt) && (ucPosition != 0xff))
-        return NULL;
-
-    if (ucPosition == 0xff)
-        return p_List->p_hTabElt[p_List->ucNbElt - 1];
-    else
-        return p_List->p_hTabElt[ucPosition];
-}
-
-void fn_vSortListByModel(tdstList_* p_stList, AI_tdstAIModel_* _p_stModel)
-{
-    HIE_tdstSuperObject_* hPerso;
-    unsigned char ucPos;
-    HIE_tdstSuperObject_** p_hSupObjElt;
-    unsigned char ucI;
-    unsigned char ucJ;
-
-    ucPos = 0;
-    ucJ = 0;
-    p_hSupObjElt = (HIE_tdstSuperObject_**)HMU_fn_p_vMalloc(p_stList->ucNbElt, 1);
-    hPerso = fn_p_stGetPersoInListInline(p_stList, 0);
-    while (hPerso != NULL)
-    {
-        if ((hPerso->hLinkedObject.p_stCharacter->h_Brain != NULL) && (hPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stAIModel == _p_stModel))
-            p_hSupObjElt[ucJ++] = hPerso;
-        ucPos++;
-        hPerso = fn_p_stGetPersoInListInline(p_stList, ucPos);
-    }
-
-    p_stList->ucNbElt = 0;
-    for (ucI = 0; ucI < ucJ; ucI++)
-    {
-        hPerso = p_hSupObjElt[ucI];
-        if (p_stList->ucNbElt < p_stList->ucMaxSize)
-            p_stList->p_hTabElt[p_stList->ucNbElt++] = hPerso;
-        else
-            fn_vOnAIErm_M_UpdateLastError(14, NULL);
-    }
-
-    HMU_fn_vFree((void**)&p_hSupObjElt, 1);
-}
-
-void fn_vSortListByFamily(tdstList_* p_List, tdstFamilyList_* hFamily)
-{
-    unsigned char ucI;
-    unsigned char ucJ;
-    HIE_tdstSuperObject_** p_hSupObjElt;
-    HIE_tdstSuperObject_* hSupObjElt;
-
-    ucJ = 0;
-    p_hSupObjElt = (HIE_tdstSuperObject_**)HMU_fn_p_vMalloc(p_List->ucNbElt, 1);
-    for (ucI = 0; ucI < p_List->ucNbElt; ucI++)
-    {
-        hSupObjElt = p_List->p_hTabElt[ucI];
-        if (hSupObjElt->hLinkedObject.p_stCharacter->h_3dData->h_Family == hFamily)
-            p_hSupObjElt[ucJ++] = hSupObjElt;
-    }
-
-    p_List->ucNbElt = 0;
-    for (ucI = 0; ucI < ucJ; ucI++)
-    {
-        hSupObjElt = p_hSupObjElt[ucI];
-        if (p_List->ucNbElt < p_List->ucMaxSize)
-            p_List->p_hTabElt[p_List->ucNbElt++] = hSupObjElt;
-        else
-            fn_vOnAIErm_M_UpdateLastError(14, NULL);
-    }
-
-    HMU_fn_vFree((void**)&p_hSupObjElt, 1);
-}
-
-void fn_vDeletePersoAtPositionInList(tdstList_* p_List, unsigned char ucPosition)
-{
-    unsigned char ucI;
-
-    if (ucPosition == 0xff)
-        ucPosition = p_List->ucNbElt - 1;
-
-    if (ucPosition <= p_List->ucNbElt - 1)
-    {
-        for (ucI = ucPosition; ucI <= p_List->ucNbElt - 2; ucI++)
-            p_List->p_hTabElt[ucI] = p_List->p_hTabElt[ucI + 1];
-        p_List->ucNbElt--;
-    }
-    else
-        Erm_fn_v_UpdateLastError(67, g_ucAIModuleId, 0, 16, -1, 255, 255, NULL);
-}
-
-char fn_bFindPersoAndDeleteInList(tdstList_* p_List, HIE_tdstSuperObject_* p_Perso)
-{
-    unsigned char ucPosition;
-    unsigned char ucI;
-
-    for (ucPosition = 0; (ucPosition < p_List->ucNbElt) && (p_List->p_hTabElt[ucPosition] != p_Perso); ucPosition++)
-        ;
-
-    if (p_List->p_hTabElt[ucPosition] == p_Perso)
-    {
-        for (ucI = ucPosition; ucI <= p_List->ucNbElt - 2; ucI++)
-            p_List->p_hTabElt[ucI] = p_List->p_hTabElt[ucI + 1];
-        p_List->ucNbElt--;
-        return 1;
-    }
-    return 0;
-}
-
-char fn_bFindFamilyInList(tdstList_* p_List, tdstFamilyList_* hFamily)
-{
-    unsigned char ucPosition;
-
-    ucPosition = 0;
-    if (p_List->ucNbElt == 0)
-        return 0;
-
-    for (; (ucPosition < p_List->ucNbElt) && (p_List->p_hTabElt[ucPosition]->hLinkedObject.p_stCharacter->h_3dData->h_Family != hFamily); ucPosition++)
-        ;
-
-    return ucPosition < p_List->ucNbElt;
-}
-
-char fn_bFindModelInList(tdstList_* p_List, AI_tdstAIModel_* _p_stModel)
-{
-    unsigned char ucPosition;
-
-    ucPosition = 0;
-    if (p_List->ucNbElt == 0)
-        return 0;
-
-    for (; (ucPosition < p_List->ucNbElt) && (p_List->p_hTabElt[ucPosition]->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stAIModel != _p_stModel); ucPosition++)
-        ;
-
-    return ucPosition < p_List->ucNbElt;
-}
-
-char fn_bFindPersoInList(tdstList_* p_List, HIE_tdstSuperObject_* p_Perso)
-{
-    unsigned char ucPosition;
-
-    ucPosition = 0;
-    if (p_List->ucNbElt == 0)
-        return 0;
-
-    while ((ucPosition < p_List->ucNbElt) && (p_List->p_hTabElt[ucPosition] != p_Perso))
-        ucPosition++;
-
-    return ucPosition < p_List->ucNbElt;
-}
-
-void fn_vInsertPersoAtPositionInList(tdstList_* p_List, HIE_tdstSuperObject_* p_Perso, unsigned char ucPosition)
-{
-    unsigned char ucI;
-
-    ucPosition = (ucPosition < p_List->ucNbElt + 1) ? ucPosition : p_List->ucNbElt + 1;
-
-    if (p_List->ucNbElt < p_List->ucMaxSize)
-    {
-        for (ucI = p_List->ucNbElt; ucI > ucPosition; ucI--)
-            p_List->p_hTabElt[ucI] = p_List->p_hTabElt[ucI - 1];
-        p_List->p_hTabElt[ucPosition] = p_Perso;
-        p_List->ucNbElt++;
-    }
-    else
-        fn_vOnAIErm_M_UpdateLastError(14, NULL);
 }

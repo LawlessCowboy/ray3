@@ -1536,10 +1536,73 @@ float XRESf;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vProcessMedalionAfterEffect(void)
-{
-    /* TODO: decompile from asm/... */
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void GLI_vProcessMedalionAfterEffect(void);
+void GLIPS2_vAE_PushPop(unsigned int param);
+void GLIPS2_vProcessWater2DEffect(void);
+void GLIPS2_vSetMirrorAE_Blur(unsigned int bOnOff, float fVal);
+void GLIPS2_vSetMirrorAE_WaterFx(unsigned int bOnOff, float fSpeed, float fAmp);
+void GLIPS2_vSetMirrorAE_ColorCorrection(unsigned int bOnOff, float fPreContrast, float fR, float fG, float fB);
+void GLIPS2_vSetMirrorAE_NoFx(void);
+void GLIPS2_vSetAE_MotionBlur(unsigned int bOnOff, float fIntensity);
+void GLIPS2_vSetAE_WaterFX(unsigned int bOnOff);
+void GLIPS2_vSetAE_ColorCorrection(unsigned int bOnOff, float fPreContrast, float fR, float fG, float fB);
+void GLIPS2_vSetAE_ZoomBlur(unsigned int bOnOff, float fIntensity);
+void GLIPS2_vSetAE_AutoGlow(unsigned int bOnOff, float fR, float fG, float fB, float fBrightness, float fDirection);
+void GLIPS2_vSetAE_Glow(unsigned int bOnOff, float fR, float fG, float fB, float fBrightness);
+void GLIPS2_vSetAE_CartoonEmboss(unsigned int bOnOff, float Blend);
+void GLIPS2_vSetAE_DepthBlur(unsigned int bOnOff, float fNear, float fFar, float fAlpha);
+void GLIPS2_vReinitAfterEffects(void);
+void AE_Filter_AutoGlow(float r, float g, float b, float Brightness);
+void AE_Filter_AutoGlowDown(float r, float g, float b, float Brightness);
+void AE_Filter_Glow(float r, float g, float b, float Brightness);
+void AE_SimpleBlurWINDOWEDNoOptWithDirectionPAL(int Counter);
+void AE_SimpleBlurWINDOWEDNoOptWithDirection(int Counter);
+void AE_SimpleBlurWINDOWEDNoOptPAL(int Counter);
+void AE_SimpleBlurWINDOWEDNoOpt(int Counter);
+void AE_SimpleBlurWINDOWED(int Counter);
+void GLIPS2_vProcessRedEnviromentEffect(void);
+void WAT_vTest(float (*pPos)[4]);
+void GLIPS2_vProcessWater2DEffectOLD(void);
+void GLIPS2_Water2D_DisplayTriangle(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2);
+void GLIPS2_Water2D_DisplayNearClippedTriangle(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2);
+void ClipTriangleOverXLow(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2);
+void ClipTriangleOverXHigh(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2);
+void ClipTriangleOverYLow(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2);
+void ClipTriangleOverYHigh(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2);
+void GLIPS2_Water2D_DisplayClippedTriangle(float* Pos2D0, float* Pos2D1, float* Pos2D2, float* Pos2D0u, float* Pos2D1u, float* Pos2D2u, float* C0, float* C1, float* C2);
+void GLIPS2_vMakeWaterEffect(void);
+void GLIPS2_vWaterFXProcess(void);
+void GLIPS2_vProcessMatrixDeformations(void);
+void GLIPS2_vReinitMatrixDeformations(void);
+void GLIPS2_vAddMatrixDeformationEffect(const MTH3D_tdstVector_* pPosition, float fSize, unsigned int TYPE);
+void GLIPS2_vInitMatrixDeformation(void);
+void AE_EndMatrixEffect(void);
+void AE_DrawMatrixDeformation(float Z, float x1, float y1f, float sx, float sy, float u1, float v1, float su, float sv, float AlphaCenter, float Angle);
+void AE_PrepareMatrixEffect(void);
+void GLIPS2_vSetDepthBlurMode(float Near, float Far, float Intensity);
+void DoFullScreenWaterEffect(void);
+void DoFullScreenWaterEffectForMirror(void);
+void AE_DrawDeformedScreen(float (*Points)[2], float (*UVs)[2]);
+void GLI_vSaveCurrentBackBuffer(void);
+void AE_PostProcessShadow(void);
+void GLI_vRestoreSavedFrameBuffer(void);
+void GLI_vSaveCurrentFrameBuffer(void);
+void GLI_vProcessFilters(void);
+void GLI_vProcessPSX_FX(void);
+void GLIPS2_vCreateWaterEffect(unsigned int Type, float X1, float Y1, float X2, float Y2, float Z);
+void GLIPS2_vSetWaterDeformation(int Val);
+void ActivateOldMovieEffect(void);
+void ReinitOldMovieEffect(void);
+void ProcessOldMovieEffect(void);
+void AE_BlackAndWhite(void);
+void GLI_vProcessMirrorAfterEffect(void);
+void GLIPS2_vSetMirrorBlur(void);
+void ProcessOldTV(void);
+void AE_Filter_BlurUsingDestAlpha2(void);
+void GLI_vReduceBackBufferTo256x256(void);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 6053–6123 */
 /* addr: 0x002dd9d0  size: 868 bytes */
@@ -1622,11 +1685,6 @@ void GLI_vProcessMedalionAfterEffect(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLIPS2_vAE_PushPop(unsigned int param)
-{
-    float* pStack;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5836–6040 */
 /* addr: 0x002ddd40  size: 3112 bytes */
@@ -1882,32 +1940,6 @@ void GLIPS2_vAE_PushPop(unsigned int param)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLIPS2_vProcessWater2DEffect(void)
-{
-    float sin1;
-    float cos1;
-    float fSizeY;
-    float fSizeX;
-    float SY[4];
-    float SX[4];
-    float Pos4[4];
-    float Pos3[4];
-    float Pos2[4];
-    float Pos1[4];
-    float Pos0[4];
-    Water2DEffect_* param0;
-    unsigned char zTst;
-    float* costable;
-    float ZZ;
-    float Y2;
-    float X2;
-    float Y1;
-    float X1;
-    float fADC;
-    unsigned int i;
-    float a16_fWorldMatrix[4][4];
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5818–5820 */
 /* addr: 0x002de970  size: 48 bytes */
@@ -1917,14 +1949,6 @@ void GLIPS2_vProcessWater2DEffect(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLIPS2_vSetMirrorAE_Blur(unsigned int bOnOff, float fVal)
-{
-    if (bOnOff)
-        AE_MirrorFX |= 1;
-    else
-        AE_MirrorFX &= ~1;
-    AE_Blur_M = fVal;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5808–5811 */
 /* addr: 0x002de9a0  size: 52 bytes */
@@ -1935,15 +1959,6 @@ void GLIPS2_vSetMirrorAE_Blur(unsigned int bOnOff, float fVal)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLIPS2_vSetMirrorAE_WaterFx(unsigned int bOnOff, float fSpeed, float fAmp)
-{
-    if (bOnOff)
-        AE_MirrorFX |= 8;
-    else
-        AE_MirrorFX &= ~8;
-    AE_MirrorWaterFX_Speed = fSpeed;
-    AE_MirrorWaterFX_Ampl = fAmp;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5795–5801 */
 /* addr: 0x002de9e0  size: 88 bytes */
@@ -1960,15 +1975,6 @@ void GLIPS2_vSetMirrorAE_WaterFx(unsigned int bOnOff, float fSpeed, float fAmp)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLIPS2_vSetMirrorAE_ColorCorrection(unsigned int bOnOff, float fPreContrast, float fR, float fG, float fB)
-{
-    if (bOnOff) AE_MirrorFX |= 4; else AE_MirrorFX &= ~4;
-    AE_Bright_Cont_M[0] = fR;
-    AE_Bright_Cont_M[1] = fG;
-    AE_Bright_Cont_M[2] = fB;
-    AE_Bright_Cont_M[3] = fPreContrast;
-    AE_Bright_Cont_M[4] = 1.0f;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5788–5788 */
 /* addr: 0x002dea40  size: 8 bytes */
@@ -1977,10 +1983,6 @@ void GLIPS2_vSetMirrorAE_ColorCorrection(unsigned int bOnOff, float fPreContrast
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLIPS2_vSetMirrorAE_NoFx(void)
-{
-    AE_MirrorFX = 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5778–5779 */
 /* addr: 0x002dea50  size: 28 bytes */
@@ -1990,13 +1992,6 @@ void GLIPS2_vSetMirrorAE_NoFx(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLIPS2_vSetAE_MotionBlur(unsigned int bOnOff, float fIntensity)
-{
-    if (bOnOff)
-        GLI_g_MotionBlurIntensity = fIntensity;
-    else
-        GLI_g_MotionBlurIntensity = 0.0f;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5769–5770 */
 /* addr: 0x002dea70  size: 28 bytes */
@@ -2006,13 +2001,6 @@ void GLIPS2_vSetAE_MotionBlur(unsigned int bOnOff, float fIntensity)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLIPS2_vSetAE_WaterFX(unsigned int bOnOff)
-{
-    if (bOnOff)
-        GLI_g_bFullScreenWaterEffect = 1;
-    else
-        GLI_g_bFullScreenWaterEffect = 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5756–5761 */
 /* addr: 0x002dea90  size: 56 bytes */
@@ -2026,17 +2014,6 @@ void GLIPS2_vSetAE_WaterFX(unsigned int bOnOff)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLIPS2_vSetAE_ColorCorrection(unsigned int bOnOff, float fPreContrast, float fR, float fG, float fB)
-{
-    if (bOnOff)
-        GLI_g_AfterEffect = 6;
-    else
-        GLI_g_AfterEffect = 0;
-    AE_Bright_Cont[0] = fR;
-    AE_Bright_Cont[1] = fG;
-    AE_Bright_Cont[2] = fB;
-    AE_Bright_Cont[3] = fPreContrast;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5746–5748 */
 /* addr: 0x002dead0  size: 28 bytes */
@@ -2046,14 +2023,6 @@ void GLIPS2_vSetAE_ColorCorrection(unsigned int bOnOff, float fPreContrast, floa
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLIPS2_vSetAE_ZoomBlur(unsigned int bOnOff, float fIntensity)
-{
-    if (bOnOff)
-        GLI_g_AfterEffect = 2;
-    else
-        GLI_g_AfterEffect = 0;
-    AE_ZoomBlurIntensity = fIntensity;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5733–5739 */
 /* addr: 0x002deaf0  size: 60 bytes */
@@ -2067,18 +2036,6 @@ void GLIPS2_vSetAE_ZoomBlur(unsigned int bOnOff, float fIntensity)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLIPS2_vSetAE_AutoGlow(unsigned int bOnOff, float fR, float fG, float fB, float fBrightness, float fDirection)
-{
-    if (bOnOff)
-        GLI_g_AfterEffect = 8;
-    else
-        GLI_g_AfterEffect = 0;
-    AE_Glow[0] = fR;
-    AE_Glow[1] = fG;
-    AE_Glow[2] = fB;
-    AE_Glow[3] = fBrightness;
-    AE_GlowDirection = fDirection;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5723–5728 */
 /* addr: 0x002deb30  size: 56 bytes */
@@ -2092,17 +2049,6 @@ void GLIPS2_vSetAE_AutoGlow(unsigned int bOnOff, float fR, float fG, float fB, f
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLIPS2_vSetAE_Glow(unsigned int bOnOff, float fR, float fG, float fB, float fBrightness)
-{
-    if (bOnOff)
-        GLI_g_AfterEffect = 3;
-    else
-        GLI_g_AfterEffect = 0;
-    AE_Glow[0] = fR;
-    AE_Glow[1] = fG;
-    AE_Glow[2] = fB;
-    AE_Glow[3] = fBrightness;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5711–5715 */
 /* addr: 0x002deb70  size: 84 bytes */
@@ -2114,13 +2060,6 @@ void GLIPS2_vSetAE_Glow(unsigned int bOnOff, float fR, float fG, float fB, float
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLIPS2_vSetAE_CartoonEmboss(unsigned int bOnOff, float Blend)
-{
-    if (bOnOff) GLI_g_AfterEffect = 10; else GLI_g_AfterEffect = 0;
-    if (Blend < 0.0f) Blend = 0.0f;
-    if (!(Blend <= 1.0f)) Blend = 1.0f;
-    GLI_g_CartoonBlendVal = Blend;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5701–5705 */
 /* addr: 0x002debd0  size: 36 bytes */
@@ -2132,16 +2071,6 @@ void GLIPS2_vSetAE_CartoonEmboss(unsigned int bOnOff, float Blend)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLIPS2_vSetAE_DepthBlur(unsigned int bOnOff, float fNear, float fFar, float fAlpha)
-{
-    if (bOnOff)
-        GLI_g_AfterEffect = 1;
-    else
-        GLI_g_AfterEffect = 0;
-    G_DEPTH_BLUR_DISTNEAR = fNear;
-    G_DEPTH_BLUR_DISTFAR = fFar;
-    G_DEPTH_BLUR_MAX_ALPHA = fAlpha;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5680–5685 */
 /* addr: 0x002dec00  size: 24 bytes */
@@ -2154,14 +2083,6 @@ void GLIPS2_vSetAE_DepthBlur(unsigned int bOnOff, float fNear, float fFar, float
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLIPS2_vReinitAfterEffects(void)
-{
-    GLI_g_AfterEffect = 0;
-    AE_MirrorFX = 0;
-    GLI_g_bFullScreenWaterEffect = 0;
-    GLI_g_MotionBlurIntensity = 0.0f;
-    GLI_g_CartoonBlendVal = 0.0f;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5526–5644 */
 /* addr: 0x002dec20  size: 1076 bytes */
@@ -2221,10 +2142,6 @@ void GLIPS2_vReinitAfterEffects(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AE_Filter_AutoGlow(float r, float g, float b, float Brightness)
-{
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5483–5483 */
 /* addr: 0x002df060  size: 8 bytes */
@@ -2233,10 +2150,6 @@ void AE_Filter_AutoGlow(float r, float g, float b, float Brightness)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AE_Filter_AutoGlowDown(float r, float g, float b, float Brightness)
-{
-    AE_Filter_AutoGlow(r, g, b, Brightness);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5414–5476 */
 /* addr: 0x002df070  size: 1312 bytes */
@@ -2329,10 +2242,6 @@ void AE_Filter_AutoGlowDown(float r, float g, float b, float Brightness)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AE_Filter_Glow(float r, float g, float b, float Brightness)
-{
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5370–5407 */
 /* addr: 0x002df590  size: 656 bytes */
@@ -2362,14 +2271,6 @@ void AE_Filter_Glow(float r, float g, float b, float Brightness)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AE_SimpleBlurWINDOWEDNoOptWithDirectionPAL(int Counter)
-{
-    float v2;
-    float u2;
-    float v1;
-    float u1;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5330–5366 */
 /* addr: 0x002df820  size: 644 bytes */
@@ -2399,14 +2300,6 @@ void AE_SimpleBlurWINDOWEDNoOptWithDirectionPAL(int Counter)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AE_SimpleBlurWINDOWEDNoOptWithDirection(int Counter)
-{
-    float v2;
-    float u2;
-    float v1;
-    float u1;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5291–5326 */
 /* addr: 0x002dfab0  size: 656 bytes */
@@ -2436,14 +2329,6 @@ void AE_SimpleBlurWINDOWEDNoOptWithDirection(int Counter)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AE_SimpleBlurWINDOWEDNoOptPAL(int Counter)
-{
-    float v2;
-    float u2;
-    float v1;
-    float u1;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5253–5288 */
 /* addr: 0x002dfd40  size: 644 bytes */
@@ -2473,14 +2358,6 @@ void AE_SimpleBlurWINDOWEDNoOptPAL(int Counter)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AE_SimpleBlurWINDOWEDNoOpt(int Counter)
-{
-    float v2;
-    float u2;
-    float v1;
-    float u1;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5215–5250 */
 /* addr: 0x002dffd0  size: 644 bytes */
@@ -2512,35 +2389,6 @@ void AE_SimpleBlurWINDOWEDNoOpt(int Counter)
  */
 void AE_DrawWindow(float x1, float y1, float x2, float y2, float r, float g, float b, float a, float u1, float v1, float u2, float v2);
 
-void AE_SimpleBlurWINDOWED(int Counter)
-{
-    float v2;
-    float u2;
-    float v1;
-    float u1;
-
-    v1 = u1 = 10.0f * 0.01f;
-    u2 = v2 = 60.0f * 0.01f;
-
-    AE_DrawWindow(10.0f, 10.0f - 1.0f * 100.0f / 224.0f, 60.0f, 60.0f - 1.0f * 100.0f / 224.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);
-
-    AE_DrawWindow(10.0f - 1.0f * 100.0f / 320.0f, 10.0f, 60.0f - 1.0f * 100.0f / 320.0f, 60.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);
-
-    if (!--Counter)
-        return;
-
-    AE_DrawWindow(10.0f, 10.0f - 2.0f * 100.0f / 224.0f, 60.0f, 60.0f - 2.0f * 100.0f / 224.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);
-
-    AE_DrawWindow(10.0f - 2.0f * 100.0f / 320.0f, 10.0f, 60.0f - 2.0f * 100.0f / 320.0f, 60.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);
-
-    if (!--Counter)
-        return;
-
-    AE_DrawWindow(10.0f, 10.0f + 3.0f * 100.0f / 224.0f, 60.0f, 60.0f + 3.0f * 100.0f / 224.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);
-
-    AE_DrawWindow(10.0f + 3.0f * 100.0f / 320.0f, 10.0f, 60.0f + 3.0f * 100.0f / 320.0f, 60.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5143–5143 */
 /* addr: 0x002e0260  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -2548,10 +2396,6 @@ void AE_SimpleBlurWINDOWED(int Counter)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLIPS2_vProcessRedEnviromentEffect(void)
-{
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5056–5056 */
 /* addr: 0x002e0270  size: 8 bytes */
@@ -2560,22 +2404,6 @@ void GLIPS2_vProcessRedEnviromentEffect(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void WAT_vTest(float (*pPos)[4])
-{
-    unsigned char zTst;
-    int y2;
-    int x2;
-    unsigned int* pShiftAnd4;
-    unsigned int* pShiftAnd3;
-    unsigned int* pShiftAnd2;
-    unsigned int* pShiftAnd;
-    int y;
-    int x;
-    char* pCur;
-    char* pOld;
-    int i;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 3972–4430 */
 /* addr: 0x002e0280  size: 5424 bytes */
@@ -3115,51 +2943,6 @@ void WAT_vTest(float (*pPos)[4])
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLIPS2_vProcessWater2DEffectOLD(void)
-{
-    unsigned char zTst;
-    float fZVal;
-    float ratio;
-    float sin1;
-    float cos1;
-    float fSizeY;
-    float fSizeX;
-    float SY[4];
-    float SX[4];
-    float Pos4u[4];
-    float Pos3u[4];
-    float Pos2u[4];
-    float Pos1u[4];
-    float Pos0u[4];
-    float Pos4[4];
-    float Pos3[4];
-    float Pos2[4];
-    float Pos1[4];
-    float Pos0[4];
-    Water2DEffect_* p;
-    float v2DAdd[4];
-    float v2DMul[4];
-    float UvMul[4];
-    float Mulu1[4];
-    float Addu1[4];
-    float Add2[4];
-    float Mul1[4];
-    float Add1[4];
-    float* costable;
-    float ZZ;
-    float Y2;
-    float X2;
-    float Y1;
-    float X1;
-    float fADC;
-    unsigned int ADC;
-    unsigned int i;
-    unsigned int NbTri;
-    float (*pC)[4];
-    float (*pV)[4];
-    float a16_fWorldMatrix[4][4];
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 3807–3901 */
 /* addr: 0x002e17b0  size: 2072 bytes */
@@ -3219,26 +3002,6 @@ void GLIPS2_vProcessWater2DEffectOLD(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLIPS2_Water2D_DisplayTriangle(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2)
-{
-    float fValue;
-    float DirU[4];
-    float Pos2x[4];
-    float Pos1x[4];
-    float Pos0x[4];
-    float U2x[4];
-    float U1x[4];
-    float U0x[4];
-    float C2x[4];
-    float C1x[4];
-    float C0x[4];
-    unsigned int Edge;
-    unsigned int Total;
-    unsigned int p2;
-    unsigned int p1;
-    unsigned int p0;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 3612–3744 */
 /* addr: 0x002e1fd0  size: 364 bytes */
@@ -3322,16 +3085,6 @@ void GLIPS2_Water2D_DisplayTriangle(float* Pos0, float* Pos1, float* Pos2, float
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLIPS2_Water2D_DisplayNearClippedTriangle(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2)
-{
-    float Pos2D2u[4];
-    float Pos2D1u[4];
-    float Pos2D0u[4];
-    float Pos2D2[4];
-    float Pos2D1[4];
-    float Pos2D0[4];
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 3475–3606 */
 /* addr: 0x002e2140  size: 2104 bytes */
@@ -3390,26 +3143,6 @@ void GLIPS2_Water2D_DisplayNearClippedTriangle(float* Pos0, float* Pos1, float* 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void ClipTriangleOverXLow(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2)
-{
-    float fValue;
-    float DirU[4];
-    float Pos2x[4];
-    float Pos1x[4];
-    float Pos0x[4];
-    float U2x[4];
-    float U1x[4];
-    float U0x[4];
-    float C2x[4];
-    float C1x[4];
-    float C0x[4];
-    unsigned int Edge;
-    unsigned int Total;
-    unsigned int p2;
-    unsigned int p1;
-    unsigned int p0;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 3340–3472 */
 /* addr: 0x002e2980  size: 2156 bytes */
@@ -3472,26 +3205,6 @@ void ClipTriangleOverXLow(float* Pos0, float* Pos1, float* Pos2, float* U0, floa
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void ClipTriangleOverXHigh(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2)
-{
-    float fValue;
-    float DirU[4];
-    float Pos2x[4];
-    float Pos1x[4];
-    float Pos0x[4];
-    float U2x[4];
-    float U1x[4];
-    float U0x[4];
-    float C2x[4];
-    float C1x[4];
-    float C0x[4];
-    unsigned int Edge;
-    unsigned int Total;
-    unsigned int p2;
-    unsigned int p1;
-    unsigned int p0;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 3203–3336 */
 /* addr: 0x002e31f0  size: 2104 bytes */
@@ -3550,26 +3263,6 @@ void ClipTriangleOverXHigh(float* Pos0, float* Pos1, float* Pos2, float* U0, flo
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void ClipTriangleOverYLow(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2)
-{
-    float fValue;
-    float DirU[4];
-    float Pos2x[4];
-    float Pos1x[4];
-    float Pos0x[4];
-    float U2x[4];
-    float U1x[4];
-    float U0x[4];
-    float C2x[4];
-    float C1x[4];
-    float C0x[4];
-    unsigned int Edge;
-    unsigned int Total;
-    unsigned int p2;
-    unsigned int p1;
-    unsigned int p0;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 3067–3199 */
 /* addr: 0x002e3a30  size: 2156 bytes */
@@ -3632,26 +3325,6 @@ void ClipTriangleOverYLow(float* Pos0, float* Pos1, float* Pos2, float* U0, floa
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void ClipTriangleOverYHigh(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2)
-{
-    float fValue;
-    float DirU[4];
-    float Pos2x[4];
-    float Pos1x[4];
-    float Pos0x[4];
-    float U2x[4];
-    float U1x[4];
-    float U0x[4];
-    float C2x[4];
-    float C1x[4];
-    float C0x[4];
-    unsigned int Edge;
-    unsigned int Total;
-    unsigned int p2;
-    unsigned int p1;
-    unsigned int p0;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 2935–3062 */
 /* addr: 0x002e42a0  size: 1704 bytes */
@@ -3782,11 +3455,6 @@ void ClipTriangleOverYHigh(float* Pos0, float* Pos1, float* Pos2, float* U0, flo
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLIPS2_Water2D_DisplayClippedTriangle(float* Pos2D0, float* Pos2D1, float* Pos2D2, float* Pos2D0u, float* Pos2D1u, float* Pos2D2u, float* C0, float* C1, float* C2)
-{
-    unsigned long* curtag;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 2609–2685 */
 /* addr: 0x002e4950  size: 552 bytes */
@@ -3871,88 +3539,6 @@ void GLIPS2_Water2D_DisplayClippedTriangle(float* Pos2D0, float* Pos2D1, float* 
  */
 void GLIPS2_vWaterFXProcess(void);
 
-void GLIPS2_vMakeWaterEffect(void)
-{
-    float X1;
-    float Y1;
-    float X2;
-    float Y2;
-    float Z;
-    float x;
-    float y;
-    float xStep;
-    float yStep;
-    float xSize;
-    float ySize;
-    float Time;
-    float* costable;
-    float Variation;
-    float fScale;
-    float fPosX;
-    float fPosY;
-    float fAngle;
-    int nIdx;
-
-    X1 = GLIPS2_WaterMin[0];
-    X2 = GLIPS2_WaterMax[0];
-    Y1 = GLIPS2_WaterMin[1];
-    Y2 = GLIPS2_WaterMax[1];
-    Z = GLIPS2_WaterMin[2];
-    costable = AGO2_g_pfCosTable;
-    Time = g_ffFrameTime;
-
-    if (g_bHasWaterEffect == 1)
-    {
-        xStep = 6.7f;
-        yStep = 7.4f;
-        xSize = 6.5f;
-        ySize = 7.0f;
-        Time *= 2.0f;
-        Variation = 1.0f;
-    }
-    else
-    {
-        xStep = 63.7f;
-        yStep = 61.4f;
-        xSize = 80.5f;
-        ySize = 80.0f;
-        Variation = 0.2f;
-    }
-
-    X2 += 0.00001f;
-    Y2 += 0.00001f;
-    fScale = 81.487328f;
-
-    for (x = X1; x <= X2; x += xStep)
-    {
-        for (y = Y1; y <= Y2; y += yStep)
-        {
-            nIdx = (int)((Time + 2.3321f * x + 2.5111f * y + x * y) * fScale);
-            fPosX = x + xStep * costable[nIdx & 0x1FF];
-            fPosY = y + yStep * costable[(nIdx + 0x80) & 0x1FF];
-            fAngle = costable[(int)((x + 1.21f * y) * Variation * fScale) & 0x1FF];
-
-            if (GLIPS2_g_NbWater2DEffects < 500)
-            {
-                Water2DEffect_* pNew = &GLIPS2_g_Water2DEffects[GLIPS2_g_NbWater2DEffects];
-                GLIPS2_g_NbWater2DEffects++;
-                pNew->Position3D[0] = fPosX;
-                pNew->Position3D[1] = fPosY;
-                pNew->Position3D[2] = Z;
-                pNew->Position3D[3] = 1.0f;
-                pNew->fAlpha = 1.0f;
-                pNew->Type = 1;
-                pNew->fSizeX = xSize;
-                pNew->fSizeY = ySize;
-                pNew->fSizeMultiplier = 1.0f;
-                pNew->fAngleSpeed = fAngle;
-            }
-        }
-    }
-
-    GLIPS2_vWaterFXProcess();
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 2554–2571 */
 /* addr: 0x002e4b80  size: 324 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3993,55 +3579,6 @@ void GLIPS2_vMakeWaterEffect(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLIPS2_vWaterFXProcess(void)
-{
-    Water2DEffect_* p;
-    unsigned int i;
-    float TimeDiff;
-    static float OldFrameTime;
-
-    TimeDiff = g_ffFrameTime - OldFrameTime;
-    if (TimeDiff > 0.032f) TimeDiff = 0.032f;
-
-    for (i = 0; i < 500; i++)
-    {
-        p = &GLIPS2_g_Water2DEffectsList[i];
-        if (p->fAlpha > 0.01f)
-        {
-            float fSizeX;
-            float fSizeY;
-            float fAngleSpeed;
-            float fSizeMultiplier;
-
-            fSizeMultiplier = p->fSizeMultiplier;
-            fAngleSpeed = p->fAngleSpeed;
-            fSizeY = p->fSizeY;
-            fSizeX = p->fSizeX;
-
-            if (GLIPS2_g_NbWater2DEffects < 500)
-            {
-                Water2DEffect_* pNew = &GLIPS2_g_Water2DEffects[GLIPS2_g_NbWater2DEffects];
-                GLIPS2_g_NbWater2DEffects++;
-                pNew->Position3D[0] = p->Position3D[0];
-                pNew->Position3D[1] = p->Position3D[1];
-                pNew->Position3D[2] = p->Position3D[2];
-                pNew->Position3D[3] = 1.0f;
-                pNew->fAlpha = 1.0f;
-                pNew->Type = 2;
-                pNew->fSizeX = fSizeX;
-                pNew->fSizeY = fSizeY;
-                pNew->fSizeMultiplier = fSizeMultiplier;
-                pNew->fAngleSpeed = fAngleSpeed;
-            }
-            p->fAlpha -= 3.0f * TimeDiff;
-            p->fSizeX += 2.0f * TimeDiff;
-            p->fSizeY += 2.0f * TimeDiff;
-            p->fSizeMultiplier -= 1.5f * TimeDiff;
-        }
-    }
-
-    OldFrameTime = g_ffFrameTime;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 2344–2496 */
 /* addr: 0x002e4cd0  size: 1236 bytes */
@@ -4141,22 +3678,6 @@ void GLIPS2_vWaterFXProcess(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLIPS2_vProcessMatrixDeformations(void)
-{
-    unsigned char zTst;
-    float fInv;
-    float (*pPos2D)[4];
-    unsigned int Found;
-    float fUvSizey;
-    float fUvSizex;
-    float UVs[4];
-    float fSizey;
-    float fSizex;
-    unsigned int i;
-    float a16_fProjectionMatrix[4][4];
-    float a16_fWorldMatrix[4][4];
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 2338–2339 */
 /* addr: 0x002e51b0  size: 16 bytes */
@@ -4166,10 +3687,6 @@ void GLIPS2_vProcessMatrixDeformations(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLIPS2_vReinitMatrixDeformations(void)
-{
-    WaterFrame ^= 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 2309–2332 */
 /* addr: 0x002e51c0  size: 316 bytes */
@@ -4221,33 +3738,6 @@ void GLIPS2_vReinitMatrixDeformations(void)
  */
 float FRR(float param0, float param1);
 
-void GLIPS2_vAddMatrixDeformationEffect(const MTH3D_tdstVector_* pPosition, float fSize, unsigned int TYPE)
-{
-    unsigned int i;
-    float MinVal;
-    unsigned int MinIndex;
-
-    MinVal = 2.0f;
-    MinIndex = 0;
-    for (i = 0; i < 200; i++)
-    {
-        if (GLI_g_MatrixDeformations[i].AlphaVal < MinVal)
-        {
-            MinVal = GLI_g_MatrixDeformations[i].AlphaVal;
-            MinIndex = i;
-        }
-    }
-
-    GLI_g_MatrixDeformations[MinIndex].Position[0] = pPosition->xX;
-    GLI_g_MatrixDeformations[MinIndex].Position[1] = pPosition->xY;
-    GLI_g_MatrixDeformations[MinIndex].Position[2] = pPosition->xZ;
-    GLI_g_MatrixDeformations[MinIndex].Position[3] = 1.0f;
-    GLI_g_MatrixDeformations[MinIndex].AlphaVal = fSize;
-    GLI_g_MatrixDeformations[MinIndex].AngleSpeed = FRR(-5.0f, 5.0f);
-    GLI_g_MatrixDeformations[MinIndex].Type = TYPE;
-    GLI_g_MatrixDeformations[MinIndex].fSize = 6.0f * fSize;
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 2301–2306 */
 /* addr: 0x002e5300  size: 208 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -4258,16 +3748,6 @@ void GLIPS2_vAddMatrixDeformationEffect(const MTH3D_tdstVector_* pPosition, floa
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLIPS2_vInitMatrixDeformation(void)
-{
-    unsigned int i;
-    unsigned int j;
-    for (i = 0; i < 200; i++)
-    {
-        GLI_g_MatrixDeformations[i].AlphaVal = 0.0f;
-    }
-    for (j = 0; j < 500; j++) GLIPS2_g_Water2DEffectsList[j].fAlpha = 0.0f;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 2256–2271 */
 /* addr: 0x002e53d0  size: 232 bytes */
@@ -4309,27 +3789,6 @@ void GLIPS2_vInitMatrixDeformation(void)
  */
 void GsSendData(unsigned int reg, anon_1* pdata);
 void GsFlushBuffer(void);
-
-void AE_EndMatrixEffect(void)
-{
-    anon_1 stData;
-
-    stData = *(anon_1*)&g_gsContext.PRMODE;
-    stData.ubData[8] = 0x1B;
-    GsSendData(0xE, &stData);
-    stData = *(anon_1*)&g_gsContext.PRIM;
-    stData.ubData[8] = 0x00;
-    GsSendData(0xE, &stData);
-    stData = *(anon_1*)&g_gsContext.TEST_1;
-    stData.ubData[8] = 0x47;
-    GsSendData(0xE, &stData);
-    stData.ubData[8] = 0x48;
-    GsSendData(0xE, &stData);
-    stData = *(anon_1*)&g_gsContext.RGBAQ;
-    stData.ubData[8] = 0x01;
-    GsSendData(0xE, &stData);
-    GsFlushBuffer();
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 2028–2249 */
 /* addr: 0x002e54c0  size: 3664 bytes */
@@ -4600,25 +4059,6 @@ void AE_EndMatrixEffect(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AE_DrawMatrixDeformation(float Z, float x1, float y1f, float sx, float sy, float u1, float v1, float su, float sv, float AlphaCenter, float Angle)
-{
-    float VY2;
-    float VX2;
-    float vMul;
-    float uMul;
-    unsigned long V[5];
-    unsigned long U[5];
-    unsigned int Y[5];
-    unsigned int X[5];
-    anon_1 qworduv;
-    anon_1 qword2;
-    anon_1 qword1;
-    float sin1;
-    float cos1;
-    anon_1 qwordcZero;
-    anon_1 qwordcOne;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 2002–2025 */
 /* addr: 0x002e6310  size: 272 bytes */
@@ -4665,34 +4105,6 @@ void AE_DrawMatrixDeformation(float Z, float x1, float y1f, float sx, float sy, 
 void GsUpdate(void);
 void GsSendData(unsigned int reg, anon_1* pdata);
 
-void AE_PrepareMatrixEffect(void)
-{
-    anon_1 qword;
-
-    if (((unsigned long long *)&g_gsContext)[0x36])
-    {
-        GsUpdate();
-    }
-    qword.u64Data[1] = 0;
-    qword.u64Data[0] = 0;
-
-    ((anon_25*)&qword)->ZTE = 1;
-    ((anon_25*)&qword)->ZTST = 2;
-    ((anon_25*)&qword)->ATE = 1;
-    ((anon_25*)&qword)->ATST = 0;
-    ((anon_25*)&qword)->AFAIL = 1;
-    qword.ubData[8] = 0x47;
-    GsSendData(0xE, &qword);
-
-    qword.u64Data[0] = 0x158;
-    qword.ubData[8] = 0x1B;
-    GsSendData(0xE, &qword);
-
-    ((anon_42*)&qword)->PRIM = 3;
-    qword.ubData[8] = 0;
-    GsSendData(0xE, &qword);
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 1879–1884 */
 /* addr: 0x002e6420  size: 92 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -4706,14 +4118,6 @@ void AE_PrepareMatrixEffect(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLIPS2_vSetDepthBlurMode(float Near, float Far, float Intensity)
-{
-    if (Intensity <= 0.0f) GLI_g_AfterEffect = 0; else GLI_g_AfterEffect = 1;
-    if (!(Intensity <= 1.0f)) Intensity = 1.0f;
-    G_DEPTH_BLUR_DISTNEAR = Near;
-    G_DEPTH_BLUR_DISTFAR = Far;
-    G_DEPTH_BLUR_MAX_ALPHA = 0.5f * Intensity;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 1818–1865 */
 /* addr: 0x002e6480  size: 540 bytes */
@@ -4772,48 +4176,6 @@ void AE_DrawDeformedScreen(float (*Points)[2], float (*UVs)[2]);
 float cosf(float x);
 float sinf(float x);
 
-void DoFullScreenWaterEffect(void)
-{
-    float Angle;
-    int x;
-    int y;
-    float Points[25][2];
-    float UVs[25][2];
-
-    for (y = 0; y < 5; y++)
-    {
-        for (x = 0; x < 5; x++)
-        {
-            ((float(*)[2])&Points[0])[y * 5 + x][0] = (100.0f * (float)x) / 4.0f;
-            ((float(*)[2])&Points[0])[y * 5 + x][1] = 100.0f - ((100.0f * (float)y) / 4.0f);
-            ((float(*)[2])&UVs[0])[y * 5 + x][0] = (float)x / 4.0f;
-            ((float(*)[2])&UVs[0])[y * 5 + x][1] = (float)y / 4.0f;
-            if ((y != 0) && (x != 0) && (y != 4) && (x != 4))
-            {
-                Angle = 5.33333f * (float)x + 5.45645f * (float)y + g_ffFrameTime;
-                ((float(*)[2])&Points[0])[y * 5 + x][0] = ((float(*)[2])&Points[0])[y * 5 + x][0] + 1.8f * cosf(Angle);
-                ((float(*)[2])&Points[0])[y * 5 + x][1] = ((float(*)[2])&Points[0])[y * 5 + x][1] + 1.8f * sinf(Angle);
-            }
-        }
-    }
-
-    AE_Begin();
-    PS2glColorMask(1, 1, 1, 0);
-    PS2glDepthMask(0);
-    PS2glDisable(0xB71);
-    AE_SetDrawTarget(2);
-    AE_SetTexture(0);
-    PS2glEnable(0xBD0);
-    AE_SetGS(0, 2, 2, 2, 0x80);
-    AE_CopyScreen();
-    PS2glDisable(0xBD0);
-    AE_SetTexture(2);
-    AE_SetDrawTarget(0);
-    AE_SetGS(0, 2, 2, 2, 0x80);
-    AE_DrawDeformedScreen(Points, UVs);
-    AE_End();
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 1763–1814 */
 /* addr: 0x002e66a0  size: 608 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -4862,52 +4224,6 @@ void DoFullScreenWaterEffect(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void DoFullScreenWaterEffectForMirror(void)
-{
-    float Angle;
-    float Time;
-    int x;
-    int y;
-    float Points[25][2];
-    float UVs[25][2];
-
-    Time = g_ffFrameTime * AE_MirrorWaterFX_Speed;
-
-    for (y = 0; y < 5; y++)
-    {
-        for (x = 0; x < 5; x++)
-        {
-            ((float(*)[2])&Points[0])[y * 5 + x][0] = (100.0f * (float)x) / 4.0f;
-            ((float(*)[2])&Points[0])[y * 5 + x][1] = 100.0f - ((100.0f * (float)y) / 4.0f);
-            ((float(*)[2])&UVs[0])[y * 5 + x][0] = (float)x / 4.0f;
-            ((float(*)[2])&UVs[0])[y * 5 + x][1] = (float)y / 4.0f;
-            if ((y != 0) && (x != 0) && (y != 4) && (x != 4))
-            {
-                Angle = 5.33333f * ((float)x + Time) + 5.45645f * (float)y + Time;
-                ((float(*)[2])&Points[0])[y * 5 + x][0] = ((float(*)[2])&Points[0])[y * 5 + x][0] + 1.8f * AE_MirrorWaterFX_Ampl * cosf(Angle);
-                ((float(*)[2])&Points[0])[y * 5 + x][1] = ((float(*)[2])&Points[0])[y * 5 + x][1] + 1.8f * AE_MirrorWaterFX_Ampl * sinf(Angle);
-            }
-        }
-    }
-
-    AE_Begin();
-    PS2glColorMask(1, 1, 1, 0);
-    PS2glDepthMask(0);
-    PS2glDisable(0xB71);
-    AE_SetDrawTarget(2);
-    AE_SetTexture(0);
-    PS2glEnable(0xBD0);
-    AE_SetGS(0, 2, 2, 2, 0x80);
-    AE_CopyScreen();
-    PS2glDisable(0xBD0);
-    AE_SetTexture(2);
-    AE_SetDrawTarget(0);
-    AE_SetGS(0, 2, 2, 2, 0x80);
-    AE_DrawDeformedScreen(Points, UVs);
-    AE_SetGS(0, 1, 2, 1, 0x40);
-    AE_CopyScreen();
-    AE_End();
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 1577–1757 */
 /* addr: 0x002e6900  size: 3524 bytes */
@@ -5139,23 +4455,6 @@ void DoFullScreenWaterEffectForMirror(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AE_DrawDeformedScreen(float (*Points)[2], float (*UVs)[2])
-{
-    float vMul;
-    float uMul;
-    unsigned long V[4];
-    unsigned long U[4];
-    unsigned int Y[4];
-    unsigned int X[4];
-    unsigned int Indice;
-    int y;
-    int x;
-    anon_1 qworduv;
-    anon_1 qword2;
-    anon_1 qword1;
-    anon_1 qword;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 1550–1568 */
 /* addr: 0x002e76d0  size: 144 bytes */
@@ -5187,26 +4486,6 @@ void PS2glColorMask(unsigned char red, unsigned char green, unsigned char blue, 
 void PS2glDepthMask(unsigned char flag);
 void PS2glDisable(unsigned int cap);
 void PS2glEnable(unsigned int cap);
-
-void GLI_vSaveCurrentBackBuffer(void)
-{
-    AE_Begin();
-
-    PS2glDepthMask(0);
-    PS2glColorMask(1, 1, 1, 0);
-    PS2glDepthMask(0);
-    PS2glDisable(0xB71);
-    PS2glEnable(0xBD0);
-
-    AE_SetDrawTarget(2);
-    AE_SetTexture(0);
-    AE_SetGS(0, 2, 2, 2, 0x80);
-    AE_CopyScreen();
-
-    AE_End();
-
-    PS2glDisable(0xBD0);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 1501–1544 */
 /* addr: 0x002e7760  size: 976 bytes */
@@ -5269,10 +4548,6 @@ void GLI_vSaveCurrentBackBuffer(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AE_PostProcessShadow(void)
-{
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 1237–1250 */
 /* addr: 0x002e7b30  size: 120 bytes */
@@ -5301,22 +4576,6 @@ void PS2glColorMask(unsigned char red, unsigned char green, unsigned char blue, 
 void PS2glDepthMask(unsigned char flag);
 void PS2glDisable(unsigned int cap);
 
-void GLI_vRestoreSavedFrameBuffer(void)
-{
-    AE_Begin();
-
-    PS2glColorMask(1, 1, 1, 0);
-    PS2glDepthMask(0);
-    PS2glDisable(0xb71);
-
-    AE_SetDrawTarget(0);
-    AE_SetTexture(2);
-    AE_SetGS(0, 2, 2, 2, 0x80);
-    AE_CopyScreen();
-
-    AE_End();
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 1216–1234 */
 /* addr: 0x002e7bb0  size: 144 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -5337,25 +4596,6 @@ void GLI_vRestoreSavedFrameBuffer(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vSaveCurrentFrameBuffer(void)
-{
-    AE_Begin();
-
-    PS2glDepthMask(0);
-    PS2glColorMask(1, 1, 1, 0);
-    PS2glDepthMask(0);
-    PS2glDisable(0xB71);
-    PS2glEnable(0xBD0);
-
-    AE_SetDrawTarget(2);
-    AE_SetTexture(1);
-    AE_SetGS(0, 2, 2, 2, 0x80);
-    AE_CopyScreen();
-
-    AE_End();
-
-    PS2glDisable(0xBD0);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 1100–1209 */
 /* addr: 0x002e7c40  size: 1552 bytes */
@@ -5426,10 +4666,6 @@ void GLI_vSaveCurrentFrameBuffer(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vProcessFilters(void)
-{
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 1063–1095 */
 /* addr: 0x002e8250  size: 316 bytes */
@@ -5461,34 +4697,6 @@ void AE_SetTextureNoBilinear(int BufferID);
 
 void AE_DrawWindowWithoutOptimization(float x1, float y1, float x2, float y2, float r, float g, float b, float a, float u1, float v1, float u2, float v2);
 
-void GLI_vProcessPSX_FX(void)
-{
-    AE_Begin();
-    PS2glDepthMask(0);
-
-    PS2glColorMask(1, 1, 1, 0);
-    PS2glDepthMask(0);
-    PS2glDisable(0xB71);
-
-    PS2glDisable(0xBD0);
-    AE_SetDrawTarget(4);
-    AE_SetTextureNoBilinear(0);
-    AE_SetGS(0, 2, 2, 2, 0x80);
-    AE_DrawWindowWithoutOptimization(0.0f, 0.0f, 50.0f, 50.0f, 0.5f, 0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f);
-
-    PS2glDisable(0xBD0);
-    AE_SetDrawTarget(0);
-    AE_SetTextureNoBilinear(4);
-    AE_SetGS(0, 2, 2, 2, 0x80);
-    AE_DrawWindowWithoutOptimization(0.0f, 0.0f, 100.0f, 100.0f, 0.5f, 0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 0.5f, 0.5f);
-
-    AE_SetTexture(2);
-
-    AE_End();
-
-    PS2glDisable(0xBD0);
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 1047–1056 */
 /* addr: 0x002e8390  size: 76 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -5507,18 +4715,6 @@ void GLI_vProcessPSX_FX(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLIPS2_vCreateWaterEffect(unsigned int Type, float X1, float Y1, float X2, float Y2, float Z)
-{
-    GLIPS2_WaterMin[0] = X1;
-    g_bHasWaterEffect = Type;
-    GLIPS2_WaterMin[1] = Y1;
-    GLIPS2_WaterMax[0] = X2;
-    GLIPS2_WaterMax[1] = Y2;
-    GLIPS2_WaterMin[2] = Z;
-    GLIPS2_WaterMax[2] = Z;
-    GLIPS2_WaterMin[3] = 1.0f;
-    GLIPS2_WaterMax[3] = 1.0f;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 982–982 */
 /* addr: 0x002e83e0  size: 8 bytes */
@@ -5527,10 +4723,6 @@ void GLIPS2_vCreateWaterEffect(unsigned int Type, float X1, float Y1, float X2, 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLIPS2_vSetWaterDeformation(int Val)
-{
-    GLI_g_bFullScreenWaterEffect = (unsigned int)Val;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 976–977 */
 /* addr: 0x002e83f0  size: 12 bytes */
@@ -5540,10 +4732,6 @@ void GLIPS2_vSetWaterDeformation(int Val)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void ActivateOldMovieEffect(void)
-{
-    GLI_g_OldMovieEffect = 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 965–972 */
 /* addr: 0x002e8400  size: 32 bytes */
@@ -5558,16 +4746,6 @@ void ActivateOldMovieEffect(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void ReinitOldMovieEffect(void)
-{
-    AGO_g_OldMovieMaterial = 0;
-    GLI_g_OldMovieEffect = 0;
-    GLI_g_MirrorAfterEffect = 0;
-    GLI_g_bFullScreenWaterEffect = 0;
-    GLI_g_AfterEffect = 0;
-    GLI_g_MotionBlurIntensity = 0;
-    g_bHasWaterEffect = 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 941–955 */
 /* addr: 0x002e8420  size: 44 bytes */
@@ -5582,12 +4760,6 @@ void ReinitOldMovieEffect(void)
  * compare a candidate object's line table as an extra checkpoint.
  */
 void AE_BlackAndWhite(void);
-
-void ProcessOldMovieEffect(void)
-{
-    if (GLI_g_OldMovieEffect == 1)
-        AE_BlackAndWhite();
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 760–925 */
 /* addr: 0x002e8450  size: 2612 bytes */
@@ -5774,15 +4946,6 @@ void ProcessOldMovieEffect(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AE_BlackAndWhite(void)
-{
-    float startV;
-    float startU;
-    float xx2;
-    float x;
-    float xx;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 608–671 */
 /* addr: 0x002e8e90  size: 708 bytes */
@@ -5836,10 +4999,6 @@ void AE_BlackAndWhite(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vProcessMirrorAfterEffect(void)
-{
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 585–585 */
 /* addr: 0x002e9160  size: 8 bytes */
@@ -5848,10 +5007,6 @@ void GLI_vProcessMirrorAfterEffect(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLIPS2_vSetMirrorBlur(void)
-{
-    GLI_g_MirrorAfterEffect = 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 401–483 */
 /* addr: 0x002e9170  size: 980 bytes */
@@ -5910,14 +5065,6 @@ void GLIPS2_vSetMirrorBlur(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void ProcessOldTV(void)
-{
-    float x;
-    float Lum;
-    float startV;
-    float startU;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 375–395 */
 /* addr: 0x002e9550  size: 268 bytes */
@@ -5945,20 +5092,6 @@ void ProcessOldTV(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AE_Filter_BlurUsingDestAlpha2(void)
-{
-    static float dx;
-    static float dy;
-
-    AE_Begin();
-    AE_SetDrawTarget(0);
-    AE_SetTexture(0);
-    AE_SetGS(0, 1, 1, 1, 0x80);
-    dx = 6.0f * FRR(-1.0f, 1.0f) / 640.0f;
-    dy = 6.0f * FRR(-1.0f, 1.0f) / 448.0f;
-    AE_DrawWindowWithoutOptimization(0.0f, 0.0f, 100.0f, 100.0f, 0.5f, 0.5f, 0.5f, 0.5f, -dx, -dy, 1.0f - dx, 1.0f - dy);
-    AE_End();
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 213–228 */
 /* addr: 0x002e9660  size: 288 bytes */
@@ -5980,6 +5113,7 @@ void AE_Filter_BlurUsingDestAlpha2(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
 void GLI_vReduceBackBufferTo256x256(void)
 {
     g_PS2glContext.nEnableBits |= 0x100; g_gsContext.PRMODE.ABE = 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;
@@ -5996,4 +5130,992 @@ void GLI_vReduceBackBufferTo256x256(void)
     AE_DrawWindowWithoutOptimization(0.0f, 0.0f, 25600.0f / XRESf, 25600.0f / YRESf, 0.5f, 0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f);
 
     AE_End();
+}
+
+void AE_Filter_BlurUsingDestAlpha2(void)
+{
+    static float dx;
+    static float dy;
+
+    AE_Begin();
+    AE_SetDrawTarget(0);
+    AE_SetTexture(0);
+    AE_SetGS(0, 1, 1, 1, 0x80);
+    dx = 6.0f * FRR(-1.0f, 1.0f) / 640.0f;
+    dy = 6.0f * FRR(-1.0f, 1.0f) / 448.0f;
+    AE_DrawWindowWithoutOptimization(0.0f, 0.0f, 100.0f, 100.0f, 0.5f, 0.5f, 0.5f, 0.5f, -dx, -dy, 1.0f - dx, 1.0f - dy);
+    AE_End();
+}
+
+void ProcessOldTV(void)
+{
+    float x;
+    float Lum;
+    float startV;
+    float startU;
+    /* TODO: decompile from asm/... */
+}
+
+void GLIPS2_vSetMirrorBlur(void)
+{
+    GLI_g_MirrorAfterEffect = 0;
+}
+
+void GLI_vProcessMirrorAfterEffect(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void AE_BlackAndWhite(void)
+{
+    float startV;
+    float startU;
+    float xx2;
+    float x;
+    float xx;
+    /* TODO: decompile from asm/... */
+}
+
+void ProcessOldMovieEffect(void)
+{
+    if (GLI_g_OldMovieEffect == 1)
+        AE_BlackAndWhite();
+}
+
+void ReinitOldMovieEffect(void)
+{
+    AGO_g_OldMovieMaterial = 0;
+    GLI_g_OldMovieEffect = 0;
+    GLI_g_MirrorAfterEffect = 0;
+    GLI_g_bFullScreenWaterEffect = 0;
+    GLI_g_AfterEffect = 0;
+    GLI_g_MotionBlurIntensity = 0;
+    g_bHasWaterEffect = 0;
+}
+
+void ActivateOldMovieEffect(void)
+{
+    GLI_g_OldMovieEffect = 1;
+}
+
+void GLIPS2_vSetWaterDeformation(int Val)
+{
+    GLI_g_bFullScreenWaterEffect = (unsigned int)Val;
+}
+
+void GLIPS2_vCreateWaterEffect(unsigned int Type, float X1, float Y1, float X2, float Y2, float Z)
+{
+    GLIPS2_WaterMin[0] = X1;
+    g_bHasWaterEffect = Type;
+    GLIPS2_WaterMin[1] = Y1;
+    GLIPS2_WaterMax[0] = X2;
+    GLIPS2_WaterMax[1] = Y2;
+    GLIPS2_WaterMin[2] = Z;
+    GLIPS2_WaterMax[2] = Z;
+    GLIPS2_WaterMin[3] = 1.0f;
+    GLIPS2_WaterMax[3] = 1.0f;
+}
+
+void GLI_vProcessPSX_FX(void)
+{
+    float h = 0.5f;
+    AE_Begin();
+    PS2glDepthMask(0);
+
+    PS2glColorMask(1, 1, 1, 0);
+    PS2glDepthMask(0);
+    PS2glDisable(0xB71);
+
+    PS2glDisable(0xBD0);
+    AE_SetDrawTarget(4);
+    AE_SetTextureNoBilinear(0);
+    AE_SetGS(0, 2, 2, 2, 0x80);
+    AE_DrawWindowWithoutOptimization(0.0f, 0.0f, 50.0f, 50.0f, 0.5f, 0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f);
+
+    PS2glDisable(0xBD0);
+    AE_SetDrawTarget(0);
+    AE_SetTextureNoBilinear(4);
+    AE_SetGS(0, 2, 2, 2, 0x80);
+    AE_DrawWindowWithoutOptimization(0.0f, 0.0f, 100.0f, 100.0f, h, h, h, h, 0.0f, 0.0f, h, h);
+
+    AE_SetTexture(2);
+
+    AE_End();
+
+    PS2glDisable(0xBD0);
+}
+
+void GLI_vProcessFilters(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void GLI_vSaveCurrentFrameBuffer(void)
+{
+    AE_Begin();
+
+    PS2glDepthMask(0);
+    PS2glColorMask(1, 1, 1, 0);
+    PS2glDepthMask(0);
+    PS2glDisable(0xB71);
+    PS2glEnable(0xBD0);
+
+    AE_SetDrawTarget(2);
+    AE_SetTexture(1);
+    AE_SetGS(0, 2, 2, 2, 0x80);
+    AE_CopyScreen();
+
+    AE_End();
+
+    PS2glDisable(0xBD0);
+}
+
+void GLI_vRestoreSavedFrameBuffer(void)
+{
+    AE_Begin();
+
+    PS2glColorMask(1, 1, 1, 0);
+    PS2glDepthMask(0);
+    PS2glDisable(0xb71);
+
+    AE_SetDrawTarget(0);
+    AE_SetTexture(2);
+    AE_SetGS(0, 2, 2, 2, 0x80);
+    AE_CopyScreen();
+
+    AE_End();
+}
+
+void AE_PostProcessShadow(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void GLI_vSaveCurrentBackBuffer(void)
+{
+    AE_Begin();
+
+    PS2glDepthMask(0);
+    PS2glColorMask(1, 1, 1, 0);
+    PS2glDepthMask(0);
+    PS2glDisable(0xB71);
+    PS2glEnable(0xBD0);
+
+    AE_SetDrawTarget(2);
+    AE_SetTexture(0);
+    AE_SetGS(0, 2, 2, 2, 0x80);
+    AE_CopyScreen();
+
+    AE_End();
+
+    PS2glDisable(0xBD0);
+}
+
+void AE_DrawDeformedScreen(float (*Points)[2], float (*UVs)[2])
+{
+    float vMul;
+    float uMul;
+    unsigned long V[4];
+    unsigned long U[4];
+    unsigned int Y[4];
+    unsigned int X[4];
+    unsigned int Indice;
+    int y;
+    int x;
+    anon_1 qworduv;
+    anon_1 qword2;
+    anon_1 qword1;
+    anon_1 qword;
+    /* TODO: decompile from asm/... */
+}
+
+void DoFullScreenWaterEffectForMirror(void)
+{
+    float Angle;
+    float Time;
+    int x;
+    int y;
+    float Points[25][2];
+    float UVs[25][2];
+
+    Time = g_ffFrameTime * AE_MirrorWaterFX_Speed;
+
+    for (y = 0; y < 5; y++)
+    {
+        for (x = 0; x < 5; x++)
+        {
+            ((float(*)[2])&Points[0])[y * 5 + x][0] = (100.0f * (float)x) / 4.0f;
+            ((float(*)[2])&Points[0])[y * 5 + x][1] = 100.0f - ((100.0f * (float)y) / 4.0f);
+            ((float(*)[2])&UVs[0])[y * 5 + x][0] = (float)x / 4.0f;
+            ((float(*)[2])&UVs[0])[y * 5 + x][1] = (float)y / 4.0f;
+            if ((y != 0) && (x != 0) && (y != 4) && (x != 4))
+            {
+                Angle = 5.33333f * ((float)x + Time) + 5.45645f * (float)y + Time;
+                ((float(*)[2])&Points[0])[y * 5 + x][0] = ((float(*)[2])&Points[0])[y * 5 + x][0] + 1.8f * AE_MirrorWaterFX_Ampl * cosf(Angle);
+                ((float(*)[2])&Points[0])[y * 5 + x][1] = ((float(*)[2])&Points[0])[y * 5 + x][1] + 1.8f * AE_MirrorWaterFX_Ampl * sinf(Angle);
+            }
+        }
+    }
+
+    AE_Begin();
+    PS2glColorMask(1, 1, 1, 0);
+    PS2glDepthMask(0);
+    PS2glDisable(0xB71);
+    AE_SetDrawTarget(2);
+    AE_SetTexture(0);
+    PS2glEnable(0xBD0);
+    AE_SetGS(0, 2, 2, 2, 0x80);
+    AE_CopyScreen();
+    PS2glDisable(0xBD0);
+    AE_SetTexture(2);
+    AE_SetDrawTarget(0);
+    AE_SetGS(0, 2, 2, 2, 0x80);
+    AE_DrawDeformedScreen(Points, UVs);
+    AE_SetGS(0, 1, 2, 1, 0x40);
+    AE_CopyScreen();
+    AE_End();
+}
+
+void DoFullScreenWaterEffect(void)
+{
+    float Angle;
+    int x;
+    int y;
+    float Points[25][2];
+    float UVs[25][2];
+
+    for (y = 0; y < 5; y++)
+    {
+        for (x = 0; x < 5; x++)
+        {
+            ((float(*)[2])&Points[0])[y * 5 + x][0] = (100.0f * (float)x) / 4.0f;
+            ((float(*)[2])&Points[0])[y * 5 + x][1] = 100.0f - ((100.0f * (float)y) / 4.0f);
+            ((float(*)[2])&UVs[0])[y * 5 + x][0] = (float)x / 4.0f;
+            ((float(*)[2])&UVs[0])[y * 5 + x][1] = (float)y / 4.0f;
+            if ((y != 0) && (x != 0) && (y != 4) && (x != 4))
+            {
+                Angle = 5.33333f * (float)x + 5.45645f * (float)y + g_ffFrameTime;
+                ((float(*)[2])&Points[0])[y * 5 + x][0] = ((float(*)[2])&Points[0])[y * 5 + x][0] + 1.8f * cosf(Angle);
+                ((float(*)[2])&Points[0])[y * 5 + x][1] = ((float(*)[2])&Points[0])[y * 5 + x][1] + 1.8f * sinf(Angle);
+            }
+        }
+    }
+
+    AE_Begin();
+    PS2glColorMask(1, 1, 1, 0);
+    PS2glDepthMask(0);
+    PS2glDisable(0xB71);
+    AE_SetDrawTarget(2);
+    AE_SetTexture(0);
+    PS2glEnable(0xBD0);
+    AE_SetGS(0, 2, 2, 2, 0x80);
+    AE_CopyScreen();
+    PS2glDisable(0xBD0);
+    AE_SetTexture(2);
+    AE_SetDrawTarget(0);
+    AE_SetGS(0, 2, 2, 2, 0x80);
+    AE_DrawDeformedScreen(Points, UVs);
+    AE_End();
+}
+
+void GLIPS2_vSetDepthBlurMode(float Near, float Far, float Intensity)
+{
+    if (Intensity <= 0.0f) GLI_g_AfterEffect = 0; else GLI_g_AfterEffect = 1;
+    if (!(Intensity <= 1.0f)) Intensity = 1.0f;
+    G_DEPTH_BLUR_DISTNEAR = Near;
+    G_DEPTH_BLUR_DISTFAR = Far;
+    G_DEPTH_BLUR_MAX_ALPHA = 0.5f * Intensity;
+}
+
+void AE_PrepareMatrixEffect(void)
+{
+    anon_1 qword;
+
+    if (((unsigned long long *)&g_gsContext)[0x36])
+    {
+        GsUpdate();
+    }
+    qword.u64Data[1] = 0;
+    qword.u64Data[0] = 0;
+
+    ((anon_25*)&qword)->ZTE = 1;
+    ((anon_25*)&qword)->ZTST = 2;
+    ((anon_25*)&qword)->ATE = 1;
+    ((anon_25*)&qword)->ATST = 0;
+    ((anon_25*)&qword)->AFAIL = 1;
+    qword.ubData[8] = 0x47;
+    GsSendData(0xE, &qword);
+
+    qword.u64Data[0] = 0x158;
+    qword.ubData[8] = 0x1B;
+    GsSendData(0xE, &qword);
+
+    ((anon_42*)&qword)->PRIM = 3;
+    qword.ubData[8] = 0;
+    GsSendData(0xE, &qword);
+}
+
+void AE_DrawMatrixDeformation(float Z, float x1, float y1f, float sx, float sy, float u1, float v1, float su, float sv, float AlphaCenter, float Angle)
+{
+    float VY2;
+    float VX2;
+    float vMul;
+    float uMul;
+    unsigned long V[5];
+    unsigned long U[5];
+    unsigned int Y[5];
+    unsigned int X[5];
+    anon_1 qworduv;
+    anon_1 qword2;
+    anon_1 qword1;
+    float sin1;
+    float cos1;
+    anon_1 qwordcZero;
+    anon_1 qwordcOne;
+    /* TODO: decompile from asm/... */
+}
+
+void AE_EndMatrixEffect(void)
+{
+    anon_1 stData;
+
+    stData = *(anon_1*)&g_gsContext.PRMODE;
+    stData.ubData[8] = 0x1B;
+    GsSendData(0xE, &stData);
+    stData = *(anon_1*)&g_gsContext.PRIM;
+    stData.ubData[8] = 0x00;
+    GsSendData(0xE, &stData);
+    stData = *(anon_1*)&g_gsContext.TEST_1;
+    stData.ubData[8] = 0x47;
+    GsSendData(0xE, &stData);
+    stData.ubData[8] = 0x48;
+    GsSendData(0xE, &stData);
+    stData = *(anon_1*)&g_gsContext.RGBAQ;
+    stData.ubData[8] = 0x01;
+    GsSendData(0xE, &stData);
+    GsFlushBuffer();
+}
+
+void GLIPS2_vInitMatrixDeformation(void)
+{
+    unsigned int i;
+    unsigned int j;
+    for (i = 0; i < 200; i++)
+    {
+        GLI_g_MatrixDeformations[i].AlphaVal = 0.0f;
+    }
+    for (j = 0; j < 500; j++) GLIPS2_g_Water2DEffectsList[j].fAlpha = 0.0f;
+}
+
+void GLIPS2_vAddMatrixDeformationEffect(const MTH3D_tdstVector_* pPosition, float fSize, unsigned int TYPE)
+{
+    unsigned int i;
+    float MinVal;
+    unsigned int MinIndex;
+
+    MinVal = 2.0f;
+    MinIndex = 0;
+    for (i = 0; i < 200; i++)
+    {
+        if (GLI_g_MatrixDeformations[i].AlphaVal < MinVal)
+        {
+            MinVal = GLI_g_MatrixDeformations[i].AlphaVal;
+            MinIndex = i;
+        }
+    }
+
+    GLI_g_MatrixDeformations[MinIndex].Position[0] = pPosition->xX;
+    GLI_g_MatrixDeformations[MinIndex].Position[1] = pPosition->xY;
+    GLI_g_MatrixDeformations[MinIndex].Position[2] = pPosition->xZ;
+    GLI_g_MatrixDeformations[MinIndex].Position[3] = 1.0f;
+    GLI_g_MatrixDeformations[MinIndex].AlphaVal = fSize;
+    GLI_g_MatrixDeformations[MinIndex].AngleSpeed = FRR(-5.0f, 5.0f);
+    GLI_g_MatrixDeformations[MinIndex].Type = TYPE;
+    GLI_g_MatrixDeformations[MinIndex].fSize = 6.0f * fSize;
+}
+
+void GLIPS2_vReinitMatrixDeformations(void)
+{
+    WaterFrame ^= 1;
+}
+
+void GLIPS2_vProcessMatrixDeformations(void)
+{
+    unsigned char zTst;
+    float fInv;
+    float (*pPos2D)[4];
+    unsigned int Found;
+    float fUvSizey;
+    float fUvSizex;
+    float UVs[4];
+    float fSizey;
+    float fSizex;
+    unsigned int i;
+    float a16_fProjectionMatrix[4][4];
+    float a16_fWorldMatrix[4][4];
+    /* TODO: decompile from asm/... */
+}
+
+void GLIPS2_vWaterFXProcess(void)
+{
+    Water2DEffect_* p;
+    unsigned int i;
+    float TimeDiff;
+    static float OldFrameTime;
+
+    TimeDiff = g_ffFrameTime - OldFrameTime;
+    if (TimeDiff > 0.032f) TimeDiff = 0.032f;
+
+    for (i = 0; i < 500; i++)
+    {
+        p = &GLIPS2_g_Water2DEffectsList[i];
+        if (p->fAlpha > 0.01f)
+        {
+            float fSizeX;
+            float fSizeY;
+            float fAngleSpeed;
+            float fSizeMultiplier;
+
+            fSizeMultiplier = p->fSizeMultiplier;
+            fAngleSpeed = p->fAngleSpeed;
+            fSizeY = p->fSizeY;
+            fSizeX = p->fSizeX;
+
+            if (GLIPS2_g_NbWater2DEffects < 500)
+            {
+                Water2DEffect_* pNew = &GLIPS2_g_Water2DEffects[GLIPS2_g_NbWater2DEffects];
+                GLIPS2_g_NbWater2DEffects++;
+                pNew->Position3D[0] = p->Position3D[0];
+                pNew->Position3D[1] = p->Position3D[1];
+                pNew->Position3D[2] = p->Position3D[2];
+                pNew->Position3D[3] = 1.0f;
+                pNew->fAlpha = 1.0f;
+                pNew->Type = 2;
+                pNew->fSizeX = fSizeX;
+                pNew->fSizeY = fSizeY;
+                pNew->fSizeMultiplier = fSizeMultiplier;
+                pNew->fAngleSpeed = fAngleSpeed;
+            }
+            p->fAlpha -= 3.0f * TimeDiff;
+            p->fSizeX += 2.0f * TimeDiff;
+            p->fSizeY += 2.0f * TimeDiff;
+            p->fSizeMultiplier -= 1.5f * TimeDiff;
+        }
+    }
+
+    OldFrameTime = g_ffFrameTime;
+}
+
+void GLIPS2_vMakeWaterEffect(void)
+{
+    float X1;
+    float Y1;
+    float X2;
+    float Y2;
+    float Z;
+    float x;
+    float y;
+    float xStep;
+    float yStep;
+    float xSize;
+    float ySize;
+    float Time;
+    float* costable;
+    float Variation;
+    float fScale;
+    float fPosX;
+    float fPosY;
+    float fAngle;
+    int nIdx;
+
+    X1 = GLIPS2_WaterMin[0];
+    X2 = GLIPS2_WaterMax[0];
+    Y1 = GLIPS2_WaterMin[1];
+    Y2 = GLIPS2_WaterMax[1];
+    Z = GLIPS2_WaterMin[2];
+    costable = AGO2_g_pfCosTable;
+    Time = g_ffFrameTime;
+
+    if (g_bHasWaterEffect == 1)
+    {
+        xStep = 6.7f;
+        yStep = 7.4f;
+        xSize = 6.5f;
+        ySize = 7.0f;
+        Time *= 2.0f;
+        Variation = 1.0f;
+    }
+    else
+    {
+        xStep = 63.7f;
+        yStep = 61.4f;
+        xSize = 80.5f;
+        ySize = 80.0f;
+        Variation = 0.2f;
+    }
+
+    X2 += 0.00001f;
+    Y2 += 0.00001f;
+    fScale = 81.487328f;
+
+    for (x = X1; x <= X2; x += xStep)
+    {
+        for (y = Y1; y <= Y2; y += yStep)
+        {
+            nIdx = (int)((Time + 2.3321f * x + 2.5111f * y + x * y) * fScale);
+            fPosX = x + xStep * costable[nIdx & 0x1FF];
+            fPosY = y + yStep * costable[(nIdx + 0x80) & 0x1FF];
+            fAngle = costable[(int)((x + 1.21f * y) * Variation * fScale) & 0x1FF];
+
+            if (GLIPS2_g_NbWater2DEffects < 500)
+            {
+                Water2DEffect_* pNew = &GLIPS2_g_Water2DEffects[GLIPS2_g_NbWater2DEffects];
+                GLIPS2_g_NbWater2DEffects++;
+                pNew->Position3D[0] = fPosX;
+                pNew->Position3D[1] = fPosY;
+                pNew->Position3D[2] = Z;
+                pNew->Position3D[3] = 1.0f;
+                pNew->fAlpha = 1.0f;
+                pNew->Type = 1;
+                pNew->fSizeX = xSize;
+                pNew->fSizeY = ySize;
+                pNew->fSizeMultiplier = 1.0f;
+                pNew->fAngleSpeed = fAngle;
+            }
+        }
+    }
+
+    GLIPS2_vWaterFXProcess();
+}
+
+void GLIPS2_Water2D_DisplayClippedTriangle(float* Pos2D0, float* Pos2D1, float* Pos2D2, float* Pos2D0u, float* Pos2D1u, float* Pos2D2u, float* C0, float* C1, float* C2)
+{
+    unsigned long* curtag;
+    /* TODO: decompile from asm/... */
+}
+
+void ClipTriangleOverYHigh(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2)
+{
+    float fValue;
+    float DirU[4];
+    float Pos2x[4];
+    float Pos1x[4];
+    float Pos0x[4];
+    float U2x[4];
+    float U1x[4];
+    float U0x[4];
+    float C2x[4];
+    float C1x[4];
+    float C0x[4];
+    unsigned int Edge;
+    unsigned int Total;
+    unsigned int p2;
+    unsigned int p1;
+    unsigned int p0;
+    /* TODO: decompile from asm/... */
+}
+
+void ClipTriangleOverYLow(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2)
+{
+    float fValue;
+    float DirU[4];
+    float Pos2x[4];
+    float Pos1x[4];
+    float Pos0x[4];
+    float U2x[4];
+    float U1x[4];
+    float U0x[4];
+    float C2x[4];
+    float C1x[4];
+    float C0x[4];
+    unsigned int Edge;
+    unsigned int Total;
+    unsigned int p2;
+    unsigned int p1;
+    unsigned int p0;
+    /* TODO: decompile from asm/... */
+}
+
+void ClipTriangleOverXHigh(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2)
+{
+    float fValue;
+    float DirU[4];
+    float Pos2x[4];
+    float Pos1x[4];
+    float Pos0x[4];
+    float U2x[4];
+    float U1x[4];
+    float U0x[4];
+    float C2x[4];
+    float C1x[4];
+    float C0x[4];
+    unsigned int Edge;
+    unsigned int Total;
+    unsigned int p2;
+    unsigned int p1;
+    unsigned int p0;
+    /* TODO: decompile from asm/... */
+}
+
+void ClipTriangleOverXLow(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2)
+{
+    float fValue;
+    float DirU[4];
+    float Pos2x[4];
+    float Pos1x[4];
+    float Pos0x[4];
+    float U2x[4];
+    float U1x[4];
+    float U0x[4];
+    float C2x[4];
+    float C1x[4];
+    float C0x[4];
+    unsigned int Edge;
+    unsigned int Total;
+    unsigned int p2;
+    unsigned int p1;
+    unsigned int p0;
+    /* TODO: decompile from asm/... */
+}
+
+void GLIPS2_Water2D_DisplayNearClippedTriangle(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2)
+{
+    float Pos2D2u[4];
+    float Pos2D1u[4];
+    float Pos2D0u[4];
+    float Pos2D2[4];
+    float Pos2D1[4];
+    float Pos2D0[4];
+    /* TODO: decompile from asm/... */
+}
+
+void GLIPS2_Water2D_DisplayTriangle(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2)
+{
+    float fValue;
+    float DirU[4];
+    float Pos2x[4];
+    float Pos1x[4];
+    float Pos0x[4];
+    float U2x[4];
+    float U1x[4];
+    float U0x[4];
+    float C2x[4];
+    float C1x[4];
+    float C0x[4];
+    unsigned int Edge;
+    unsigned int Total;
+    unsigned int p2;
+    unsigned int p1;
+    unsigned int p0;
+    /* TODO: decompile from asm/... */
+}
+
+void GLIPS2_vProcessWater2DEffectOLD(void)
+{
+    unsigned char zTst;
+    float fZVal;
+    float ratio;
+    float sin1;
+    float cos1;
+    float fSizeY;
+    float fSizeX;
+    float SY[4];
+    float SX[4];
+    float Pos4u[4];
+    float Pos3u[4];
+    float Pos2u[4];
+    float Pos1u[4];
+    float Pos0u[4];
+    float Pos4[4];
+    float Pos3[4];
+    float Pos2[4];
+    float Pos1[4];
+    float Pos0[4];
+    Water2DEffect_* p;
+    float v2DAdd[4];
+    float v2DMul[4];
+    float UvMul[4];
+    float Mulu1[4];
+    float Addu1[4];
+    float Add2[4];
+    float Mul1[4];
+    float Add1[4];
+    float* costable;
+    float ZZ;
+    float Y2;
+    float X2;
+    float Y1;
+    float X1;
+    float fADC;
+    unsigned int ADC;
+    unsigned int i;
+    unsigned int NbTri;
+    float (*pC)[4];
+    float (*pV)[4];
+    float a16_fWorldMatrix[4][4];
+    /* TODO: decompile from asm/... */
+}
+
+void WAT_vTest(float (*pPos)[4])
+{
+    unsigned char zTst;
+    int y2;
+    int x2;
+    unsigned int* pShiftAnd4;
+    unsigned int* pShiftAnd3;
+    unsigned int* pShiftAnd2;
+    unsigned int* pShiftAnd;
+    int y;
+    int x;
+    char* pCur;
+    char* pOld;
+    int i;
+    /* TODO: decompile from asm/... */
+}
+
+void GLIPS2_vProcessRedEnviromentEffect(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void AE_SimpleBlurWINDOWED(int Counter)
+{
+    float v2;
+    float u2;
+    float v1;
+    float u1;
+
+    v1 = u1 = 10.0f * 0.01f;
+    u2 = v2 = 60.0f * 0.01f;
+
+    AE_DrawWindow(10.0f, 10.0f - 1.0f * 100.0f / 224.0f, 60.0f, 60.0f - 1.0f * 100.0f / 224.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);
+
+    AE_DrawWindow(10.0f - 1.0f * 100.0f / 320.0f, 10.0f, 60.0f - 1.0f * 100.0f / 320.0f, 60.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);
+
+    if (!--Counter)
+        return;
+
+    AE_DrawWindow(10.0f, 10.0f - 2.0f * 100.0f / 224.0f, 60.0f, 60.0f - 2.0f * 100.0f / 224.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);
+
+    AE_DrawWindow(10.0f - 2.0f * 100.0f / 320.0f, 10.0f, 60.0f - 2.0f * 100.0f / 320.0f, 60.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);
+
+    if (!--Counter)
+        return;
+
+    AE_DrawWindow(10.0f, 10.0f + 3.0f * 100.0f / 224.0f, 60.0f, 60.0f + 3.0f * 100.0f / 224.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);
+
+    AE_DrawWindow(10.0f + 3.0f * 100.0f / 320.0f, 10.0f, 60.0f + 3.0f * 100.0f / 320.0f, 60.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);
+}
+
+void AE_SimpleBlurWINDOWEDNoOpt(int Counter)
+{
+    float v2;
+    float u2;
+    float v1;
+    float u1;
+    /* TODO: decompile from asm/... */
+}
+
+void AE_SimpleBlurWINDOWEDNoOptPAL(int Counter)
+{
+    float v2;
+    float u2;
+    float v1;
+    float u1;
+    /* TODO: decompile from asm/... */
+}
+
+void AE_SimpleBlurWINDOWEDNoOptWithDirection(int Counter)
+{
+    float v2;
+    float u2;
+    float v1;
+    float u1;
+    /* TODO: decompile from asm/... */
+}
+
+void AE_SimpleBlurWINDOWEDNoOptWithDirectionPAL(int Counter)
+{
+    float v2;
+    float u2;
+    float v1;
+    float u1;
+    /* TODO: decompile from asm/... */
+}
+
+void AE_Filter_Glow(float r, float g, float b, float Brightness)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void AE_Filter_AutoGlowDown(float r, float g, float b, float Brightness)
+{
+    AE_Filter_AutoGlow(r, g, b, Brightness);
+}
+
+void AE_Filter_AutoGlow(float r, float g, float b, float Brightness)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void GLIPS2_vReinitAfterEffects(void)
+{
+    GLI_g_AfterEffect = 0;
+    AE_MirrorFX = 0;
+    GLI_g_bFullScreenWaterEffect = 0;
+    GLI_g_MotionBlurIntensity = 0.0f;
+    GLI_g_CartoonBlendVal = 0.0f;
+}
+
+void GLIPS2_vSetAE_DepthBlur(unsigned int bOnOff, float fNear, float fFar, float fAlpha)
+{
+    if (bOnOff)
+        GLI_g_AfterEffect = 1;
+    else
+        GLI_g_AfterEffect = 0;
+    G_DEPTH_BLUR_DISTNEAR = fNear;
+    G_DEPTH_BLUR_DISTFAR = fFar;
+    G_DEPTH_BLUR_MAX_ALPHA = fAlpha;
+}
+
+void GLIPS2_vSetAE_CartoonEmboss(unsigned int bOnOff, float Blend)
+{
+    if (bOnOff) GLI_g_AfterEffect = 10; else GLI_g_AfterEffect = 0;
+    if (Blend < 0.0f) Blend = 0.0f;
+    if (!(Blend <= 1.0f)) Blend = 1.0f;
+    GLI_g_CartoonBlendVal = Blend;
+}
+
+void GLIPS2_vSetAE_Glow(unsigned int bOnOff, float fR, float fG, float fB, float fBrightness)
+{
+    if (bOnOff)
+        GLI_g_AfterEffect = 3;
+    else
+        GLI_g_AfterEffect = 0;
+    AE_Glow[0] = fR;
+    AE_Glow[1] = fG;
+    AE_Glow[2] = fB;
+    AE_Glow[3] = fBrightness;
+}
+
+void GLIPS2_vSetAE_AutoGlow(unsigned int bOnOff, float fR, float fG, float fB, float fBrightness, float fDirection)
+{
+    if (bOnOff)
+        GLI_g_AfterEffect = 8;
+    else
+        GLI_g_AfterEffect = 0;
+    AE_Glow[0] = fR;
+    AE_Glow[1] = fG;
+    AE_Glow[2] = fB;
+    AE_Glow[3] = fBrightness;
+    AE_GlowDirection = fDirection;
+}
+
+void GLIPS2_vSetAE_ZoomBlur(unsigned int bOnOff, float fIntensity)
+{
+    if (bOnOff)
+        GLI_g_AfterEffect = 2;
+    else
+        GLI_g_AfterEffect = 0;
+    AE_ZoomBlurIntensity = fIntensity;
+}
+
+void GLIPS2_vSetAE_ColorCorrection(unsigned int bOnOff, float fPreContrast, float fR, float fG, float fB)
+{
+    if (bOnOff)
+        GLI_g_AfterEffect = 6;
+    else
+        GLI_g_AfterEffect = 0;
+    AE_Bright_Cont[0] = fR;
+    AE_Bright_Cont[1] = fG;
+    AE_Bright_Cont[2] = fB;
+    AE_Bright_Cont[3] = fPreContrast;
+}
+
+void GLIPS2_vSetAE_WaterFX(unsigned int bOnOff)
+{
+    if (bOnOff)
+        GLI_g_bFullScreenWaterEffect = 1;
+    else
+        GLI_g_bFullScreenWaterEffect = 0;
+}
+
+void GLIPS2_vSetAE_MotionBlur(unsigned int bOnOff, float fIntensity)
+{
+    if (bOnOff)
+        GLI_g_MotionBlurIntensity = fIntensity;
+    else
+        GLI_g_MotionBlurIntensity = 0.0f;
+}
+
+void GLIPS2_vSetMirrorAE_NoFx(void)
+{
+    AE_MirrorFX = 0;
+}
+
+void GLIPS2_vSetMirrorAE_ColorCorrection(unsigned int bOnOff, float fPreContrast, float fR, float fG, float fB)
+{
+    if (bOnOff) AE_MirrorFX |= 4; else AE_MirrorFX &= ~4;
+    AE_Bright_Cont_M[0] = fR;
+    AE_Bright_Cont_M[1] = fG;
+    AE_Bright_Cont_M[2] = fB;
+    AE_Bright_Cont_M[3] = fPreContrast;
+    AE_Bright_Cont_M[4] = 1.0f;
+}
+
+void GLIPS2_vSetMirrorAE_WaterFx(unsigned int bOnOff, float fSpeed, float fAmp)
+{
+    if (bOnOff)
+        AE_MirrorFX |= 8;
+    else
+        AE_MirrorFX &= ~8;
+    AE_MirrorWaterFX_Speed = fSpeed;
+    AE_MirrorWaterFX_Ampl = fAmp;
+}
+
+void GLIPS2_vSetMirrorAE_Blur(unsigned int bOnOff, float fVal)
+{
+    if (bOnOff)
+        AE_MirrorFX |= 1;
+    else
+        AE_MirrorFX &= ~1;
+    AE_Blur_M = fVal;
+}
+
+void GLIPS2_vProcessWater2DEffect(void)
+{
+    float sin1;
+    float cos1;
+    float fSizeY;
+    float fSizeX;
+    float SY[4];
+    float SX[4];
+    float Pos4[4];
+    float Pos3[4];
+    float Pos2[4];
+    float Pos1[4];
+    float Pos0[4];
+    Water2DEffect_* param0;
+    unsigned char zTst;
+    float* costable;
+    float ZZ;
+    float Y2;
+    float X2;
+    float Y1;
+    float X1;
+    float fADC;
+    unsigned int i;
+    float a16_fWorldMatrix[4][4];
+    /* TODO: decompile from asm/... */
+}
+
+void GLIPS2_vAE_PushPop(unsigned int param)
+{
+    float* pStack;
+    /* TODO: decompile from asm/... */
+}
+
+void GLI_vProcessMedalionAfterEffect(void)
+{
+    /* TODO: decompile from asm/... */
 }

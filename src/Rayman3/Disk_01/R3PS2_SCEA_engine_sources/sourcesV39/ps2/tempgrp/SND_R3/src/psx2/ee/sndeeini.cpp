@@ -532,11 +532,15 @@ struct CPS2Box {
 };
 }
 
-void SND_fn_p_stPS2SetReverbOn(int s32_Channels, int s32_On)
-{
-    if (s32_Channels & 1) usnd::CPS2Box::fs_vSetReverbOn(0, s32_On != 0);
-    if (s32_Channels & 1) usnd::CPS2Box::fs_vSetReverbOn(1, s32_On != 0);
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+extern "C" void SND_fn_p_stPS2SetReverbOn(int s32_Channels, int s32_On);
+extern "C" void SND_fn_p_stPS2ChangeReverb(int s32_Channels, int s32_Mode, int s32_Vol, int s32_Delay, int s32_FeedBack);
+extern "C" void SND_fn_vSetDefaultRollOff(_RollOffParam* pst_RollOff);
+extern "C" void SND_fn_vGetDefaultRollOff(_RollOffParam* pst_RollOff);
+extern "C" int SND_fn_iDesInitSound(void);
+extern "C" int SND_fn_iInitSound(void);
+void RackTestCB(void* param);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeini.cpp lines 366–376 */
 /* addr: 0x00189d80  size: 132 bytes */
@@ -556,16 +560,6 @@ void SND_fn_p_stPS2SetReverbOn(int s32_Channels, int s32_On)
  * compare a candidate object's line table as an extra checkpoint.
  */
 #pragma optimize_for_size off
-void SND_fn_p_stPS2ChangeReverb(int s32_Channels, int s32_Mode, int s32_Vol, int s32_Delay, int s32_FeedBack)
-{
-    CPS2BoxReverbAttribute sRevAttr;
-    sRevAttr.m_iMode = s32_Mode;
-    sRevAttr.m_iDepthR = sRevAttr.m_iDepthL = s32_Vol * 0x3fff / 127;
-    sRevAttr.m_iFeedback = s32_FeedBack;
-    sRevAttr.m_iDelay = s32_Delay;
-    if (s32_Channels & 1) usnd::CPS2Box::fs_vSetReverbAttribute(0, &sRevAttr);
-    if (s32_Channels & 2) usnd::CPS2Box::fs_vSetReverbAttribute(1, &sRevAttr);
-}
 
 #pragma optimize_for_size reset
 
@@ -578,10 +572,6 @@ void SND_fn_p_stPS2ChangeReverb(int s32_Channels, int s32_Mode, int s32_Vol, int
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SND_fn_vSetDefaultRollOff(_RollOffParam* pst_RollOff)
-{
-    CLinkTypeActorCont* p_Instance = CLinkTypeActorCont::mfn_roGetInstance(); p_Instance->mfn_vSetDefaultRolloff(pst_RollOff);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeini.cpp lines 346–348 */
 /* addr: 0x00189e40  size: 72 bytes */
@@ -592,10 +582,6 @@ void SND_fn_vSetDefaultRollOff(_RollOffParam* pst_RollOff)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SND_fn_vGetDefaultRollOff(_RollOffParam* pst_RollOff)
-{
-    CLinkTypeActorCont::mfn_roGetInstance(); *pst_RollOff = CLinkTypeActorCont::moACPRolloff;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeini.cpp lines 309–328 */
 /* addr: 0x00189e90  size: 104 bytes */
@@ -616,17 +602,6 @@ void SND_fn_vGetDefaultRollOff(_RollOffParam* pst_RollOff)
  */
 extern "C" void SND_fn_vKillAllObjectSound(void);
 extern "C" void SND_fn_vSynchroSound(void);
-int SND_fn_iDesInitSound(void)
-{
-    SND_fn_vKillAllObjectSound();
-    SND_fn_vSynchroSound();
-    for (CExtraEventActor::ss32CurrentRefreshChannel = 0; CExtraEventActor::ss32CurrentRefreshChannel < 5; CExtraEventActor::ss32CurrentRefreshChannel++) {
-        SND_fn_vSynchroSound();
-        SND_fn_vSynchroSound();
-    }
-    usnd::CL2PS2CoreMgr::fs_vDesInit();
-    return 3;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeini.cpp lines 216–290 */
 /* addr: 0x00189f00  size: 428 bytes */
@@ -672,15 +647,6 @@ int SND_fn_iDesInitSound(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int SND_fn_iInitSound(void)
-{
-    CLinkTypeActorCont* ro_TypeCont;
-    _RollOffParam st_RollOff;
-    char FileNames[4][256];
-    CInitParams oInitParam;
-    char buffer[256];
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeini.cpp lines 197–208 */
 /* addr: 0x0018a0b0  size: 68 bytes */
@@ -710,4 +676,55 @@ void RackTestCB(void* param)
         printf(">>  Rack closed and CD spining !\n");
         gv_iCD_Opened = 0;
     }
+}
+
+int SND_fn_iInitSound(void)
+{
+    CLinkTypeActorCont* ro_TypeCont;
+    _RollOffParam st_RollOff;
+    char FileNames[4][256];
+    CInitParams oInitParam;
+    char buffer[256];
+    /* TODO: decompile from asm/... */
+}
+
+int SND_fn_iDesInitSound(void)
+{
+    SND_fn_vKillAllObjectSound();
+    SND_fn_vSynchroSound();
+    for (CExtraEventActor::ss32CurrentRefreshChannel = 0; CExtraEventActor::ss32CurrentRefreshChannel < 5; CExtraEventActor::ss32CurrentRefreshChannel++) {
+        SND_fn_vSynchroSound();
+        SND_fn_vSynchroSound();
+    }
+    usnd::CL2PS2CoreMgr::fs_vDesInit();
+    return 3;
+}
+
+void SND_fn_vGetDefaultRollOff(_RollOffParam* pst_RollOff)
+{
+    CLinkTypeActorCont::mfn_roGetInstance(); *pst_RollOff = CLinkTypeActorCont::moACPRolloff;
+}
+
+void SND_fn_vSetDefaultRollOff(_RollOffParam* pst_RollOff)
+{
+    CLinkTypeActorCont* p_Instance = CLinkTypeActorCont::mfn_roGetInstance(); p_Instance->mfn_vSetDefaultRolloff(pst_RollOff);
+}
+
+#pragma optimize_for_size off
+void SND_fn_p_stPS2ChangeReverb(int s32_Channels, int s32_Mode, int s32_Vol, int s32_Delay, int s32_FeedBack)
+{
+    CPS2BoxReverbAttribute sRevAttr;
+    sRevAttr.m_iMode = s32_Mode;
+    sRevAttr.m_iDepthR = sRevAttr.m_iDepthL = s32_Vol * 0x3fff / 127;
+    sRevAttr.m_iFeedback = s32_FeedBack;
+    sRevAttr.m_iDelay = s32_Delay;
+    if (s32_Channels & 1) usnd::CPS2Box::fs_vSetReverbAttribute(0, &sRevAttr);
+    if (s32_Channels & 2) usnd::CPS2Box::fs_vSetReverbAttribute(1, &sRevAttr);
+}
+#pragma optimize_for_size reset
+
+void SND_fn_p_stPS2SetReverbOn(int s32_Channels, int s32_On)
+{
+    if (s32_Channels & 1) usnd::CPS2Box::fs_vSetReverbOn(0, s32_On != 0);
+    if (s32_Channels & 1) usnd::CPS2Box::fs_vSetReverbOn(1, s32_On != 0);
 }

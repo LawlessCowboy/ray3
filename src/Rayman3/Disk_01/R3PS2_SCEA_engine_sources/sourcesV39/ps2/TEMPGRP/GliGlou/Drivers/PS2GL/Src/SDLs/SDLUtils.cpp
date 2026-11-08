@@ -154,10 +154,11 @@ struct C_Sdl {
 
 extern "C" unsigned int SDL_GetNew(void);
 
-unsigned int SDL_GetNew(void)
-{
-    return (unsigned int)new C_Sdl;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+extern "C" unsigned int SDL_GetNew(void);
+extern "C" void GLI_vGetVertexPointersFromSDCStructureSpriteGens(SDC_VertexArrays_* pSDC, unsigned int iElement, float ** pVOrg, float ** pUV1, float ** pUnused1, float ** pUnused2, float ** pNormals);
+extern "C" void GLI_vGetVertexPointersFromSDCStructureForSinus(SDC_VertexArrays_* pSDC, unsigned int iElement, float ** pVOrg[4], float** pVTSinus);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLUtils.cpp lines 167–189 */
 /* addr: 0x002db1f0  size: 64 bytes */
@@ -181,17 +182,6 @@ unsigned int SDL_GetNew(void)
  * the target body stores into the 3rd, 4th and 7th of them; the two unreferenced
  * middle parameters were dropped by the debug extractor, so the recovered
  * "float ** pVOrg[4]" parameters are plain "float **" pointers. */
-void GLI_vGetVertexPointersFromSDCStructureSpriteGens(SDC_VertexArrays_* pSDC, unsigned int iElement, float ** pVOrg, float ** pUV1, float ** pUnused1, float ** pUnused2, float ** pNormals)
-{
-    float (*pVA)[4];
-    float (*pUV)[4];
-    unsigned int NbVertices;
-    NbVertices = pSDC->pNbTrianglesPerElement[iElement] * 3;
-    pVA = (float (*)[4])pSDC->pArrayOfVertexArrays[iElement];
-    pVOrg[0] = (float*)pVA;
-    pUV = pVA + NbVertices;
-    pUV1[0] = (float*)pUV; pNormals[0] = (float*)(pUV + NbVertices);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLUtils.cpp lines 91–153 */
 /* addr: 0x002db230  size: 356 bytes */
@@ -229,6 +219,7 @@ void GLI_vGetVertexPointersFromSDCStructureSpriteGens(SDC_VertexArrays_* pSDC, u
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
 void GLI_vGetVertexPointersFromSDCStructureForSinus(SDC_VertexArrays_* pSDC, unsigned int iElement, float ** pVOrg[4], float** pVTSinus)
 {
     unsigned int Type;
@@ -242,4 +233,21 @@ void GLI_vGetVertexPointersFromSDCStructureForSinus(SDC_VertexArrays_* pSDC, uns
     unsigned int NbVerticesAligned;
     unsigned int NbVertices;
     /* TODO: decompile from asm/... */
+}
+
+void GLI_vGetVertexPointersFromSDCStructureSpriteGens(SDC_VertexArrays_* pSDC, unsigned int iElement, float ** pVOrg, float ** pUV1, float ** pUnused1, float ** pUnused2, float ** pNormals)
+{
+    float (*pVA)[4];
+    float (*pUV)[4];
+    unsigned int NbVertices;
+    NbVertices = pSDC->pNbTrianglesPerElement[iElement] * 3;
+    pVA = (float (*)[4])pSDC->pArrayOfVertexArrays[iElement];
+    pVOrg[0] = (float*)pVA;
+    pUV = pVA + NbVertices;
+    pUV1[0] = (float*)pUV; pNormals[0] = (float*)(pUV + NbVertices);
+}
+
+unsigned int SDL_GetNew(void)
+{
+    return (unsigned int)new C_Sdl;
 }

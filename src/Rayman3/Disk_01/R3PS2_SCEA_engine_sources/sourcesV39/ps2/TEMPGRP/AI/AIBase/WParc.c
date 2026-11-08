@@ -2912,98 +2912,15 @@ struct SCT_tdstListOfSoundEvent_ {
     _SND_tduRefEvt uSoundEvent; /* +0x4 */
 };
 
-void fn_vOnAIErm_M_UpdateLastError(int FatalErrorNum, char* szMsg)
-{
-    Erm_fn_v_UpdateLastError(67, g_ucAIModuleId, 0, FatalErrorNum, -1, 255, 255, szMsg);
-}
-
-int WPARCLST_fn_lGetWeight(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* hNode, int* p_lWeight)
-{
-    WP_tdstArc_* hElement;
-    if (hListOfArc && hNode) {
-        hElement = hListOfArc->m_hArc.hFirstElementDyn;
-        if (hElement) {
-            do {
-                if (hElement->m_hNode == hNode) {
-                    *p_lWeight = hElement->m_lWeight;
-                    return 0;
-                }
-                hElement = hElement->hNextBrotherDyn;
-            } while (hElement);
-        }
-    }
-    return -1;
-}
-
-int WPARCLST_fn_lChangeWeight(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* hNode, int lWeight)
-{
-    WP_tdstArc_* hElement;
-    if (hListOfArc && hNode) {
-        hElement = hListOfArc->m_hArc.hFirstElementDyn;
-        if (hElement) {
-            do {
-                if (hElement->m_hNode == hNode) {
-                    hElement->m_lWeight = lWeight;
-                    return 0;
-                }
-                hElement = hElement->hNextBrotherDyn;
-            } while (hElement);
-        }
-    }
-    return -1;
-}
-
-int WPARCLST_fn_lGetCapabilities(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* hNode, unsigned int* p_ulCapability)
-{
-    WP_tdstArc_* hElement;
-
-    if (hListOfArc && hNode)
-    {
-        for (hElement = hListOfArc->m_hArc.hFirstElementDyn; hElement; hElement = hElement->hNextBrotherDyn)
-        {
-            if (hElement->m_hNode == hNode)
-            {
-                *p_ulCapability = hElement->m_ulCapability;
-                return 0;
-            }
-        }
-    }
-    return -1;
-}
-
-int WPARCLST_fn_lChangeCapabilities(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* hNode, unsigned int ulCapability, int lValue)
-{
-    WP_tdstArc_* param0;
-
-    if (hListOfArc && hNode)
-    {
-        for (param0 = hListOfArc->m_hArc.hFirstElementDyn; param0; param0 = param0->hNextBrotherDyn)
-        {
-            if (param0->m_hNode == hNode)
-            {
-                switch (lValue)
-                {
-                    case 0:
-                    case 2:
-                        param0->m_ulCapability |= ulCapability;
-                        break;
-                    case 1:
-                    case 3:
-                        param0->m_ulCapability = ulCapability;
-                        break;
-                    case 4:
-                        param0->m_ulCapability &= ~ulCapability;
-                        break;
-                    case 5:
-                        param0->m_ulCapability = 0;
-                        break;
-                }
-                return 0;
-            }
-        }
-    }
-    return -1;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void fn_vOnAIErm_M_UpdateLastError(int FatalErrorNum, char* szMsg);
+int WPARCLST_fn_lGetWeight(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* hNode, int* p_lWeight);
+int WPARCLST_fn_lChangeWeight(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* hNode, int lWeight);
+int WPARCLST_fn_lGetCapabilities(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* hNode, unsigned int* p_ulCapability);
+int WPARCLST_fn_lChangeCapabilities(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* hNode, unsigned int ulCapability, int lValue);
+void WPARCLST_fn_vAdd(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* hNode, int lWeight, unsigned int ulCapability);
+void WPARCLST_fn_vDestroy(WP_tdstListOfArc_* hList);
 
 /* LST2 list insertion: unlink the element from its previous list, then append
    it to the given anchor. */
@@ -3027,38 +2944,6 @@ int WPARCLST_fn_lChangeCapabilities(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphN
     else (_p_stList)->hLastElementDyn->hNextBrotherDyn = (_hElement); \
     (_p_stList)->hLastElementDyn = (_hElement); \
     (_p_stList)->lNumberOfElementsDyn++; \
-}
-
-void WPARCLST_fn_vAdd(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* hNode, int lWeight, unsigned int ulCapability)
-{
-    char bOK;
-    WP_tdstArc_* hElement;
-    bOK = 0;
-    if (hListOfArc == NULL)
-    {
-        return;
-    }
-    hElement = hListOfArc->m_hArc.hFirstElementDyn; while (hElement != NULL)
-    {
-        if (hElement->m_hNode == hNode)
-        {
-            hElement->m_ulCapabilityInit = ulCapability;
-            hElement->m_ulCapability = ulCapability;
-            hElement->m_lWeightInit = lWeight;
-            bOK = 1;
-            hElement->m_lWeight = lWeight;
-            break;
-        }
-        hElement = hElement->hNextBrotherDyn; }
-    if (bOK == 0)
-    {
-        WPG_fn_vSetAllocMode(); hElement = (WP_tdstArc_*)HMU_fn_p_vMalloc(0x20, 1); if (hElement != NULL) { hElement->hNextBrotherDyn = NULL; hElement->hPrevBrotherDyn = NULL; hElement->hFatherDyn = NULL; hElement->m_hNode = hNode; hElement->m_ulCapabilityInit = ulCapability; hElement->m_ulCapability = ulCapability; hElement->m_lWeightInit = lWeight; hElement->m_lWeight = lWeight; } WPG_fn_vClearAllocMode();
-        if (hElement == NULL)
-        {
-            return;
-        }
-        LST2_M_vAddElementToList(&hListOfArc->m_hArc, hElement);
-    }
 }
 
 void WPARCLST_fn_vDestroy(WP_tdstListOfArc_* hList)
@@ -3099,4 +2984,129 @@ void WPARCLST_fn_vDestroy(WP_tdstListOfArc_* hList)
         }
         WPG_fn_vClearAllocMode();
     }
+}
+
+void WPARCLST_fn_vAdd(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* hNode, int lWeight, unsigned int ulCapability)
+{
+    char bOK;
+    WP_tdstArc_* hElement;
+    bOK = 0;
+    if (hListOfArc == NULL)
+    {
+        return;
+    }
+    hElement = hListOfArc->m_hArc.hFirstElementDyn; while (hElement != NULL)
+    {
+        if (hElement->m_hNode == hNode)
+        {
+            hElement->m_ulCapabilityInit = ulCapability;
+            hElement->m_ulCapability = ulCapability;
+            hElement->m_lWeightInit = lWeight;
+            bOK = 1;
+            hElement->m_lWeight = lWeight;
+            break;
+        }
+        hElement = hElement->hNextBrotherDyn; }
+    if (bOK == 0)
+    {
+        WPG_fn_vSetAllocMode(); hElement = (WP_tdstArc_*)HMU_fn_p_vMalloc(0x20, 1); if (hElement != NULL) { hElement->hNextBrotherDyn = NULL; hElement->hPrevBrotherDyn = NULL; hElement->hFatherDyn = NULL; hElement->m_hNode = hNode; hElement->m_ulCapabilityInit = ulCapability; hElement->m_ulCapability = ulCapability; hElement->m_lWeightInit = lWeight; hElement->m_lWeight = lWeight; } WPG_fn_vClearAllocMode();
+        if (hElement == NULL)
+        {
+            return;
+        }
+        LST2_M_vAddElementToList(&hListOfArc->m_hArc, hElement);
+    }
+}
+
+int WPARCLST_fn_lChangeCapabilities(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* hNode, unsigned int ulCapability, int lValue)
+{
+    WP_tdstArc_* param0;
+
+    if (hListOfArc && hNode)
+    {
+        for (param0 = hListOfArc->m_hArc.hFirstElementDyn; param0; param0 = param0->hNextBrotherDyn)
+        {
+            if (param0->m_hNode == hNode)
+            {
+                switch (lValue)
+                {
+                    case 0:
+                    case 2:
+                        param0->m_ulCapability |= ulCapability;
+                        break;
+                    case 1:
+                    case 3:
+                        param0->m_ulCapability = ulCapability;
+                        break;
+                    case 4:
+                        param0->m_ulCapability &= ~ulCapability;
+                        break;
+                    case 5:
+                        param0->m_ulCapability = 0;
+                        break;
+                }
+                return 0;
+            }
+        }
+    }
+    return -1;
+}
+
+int WPARCLST_fn_lGetCapabilities(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* hNode, unsigned int* p_ulCapability)
+{
+    WP_tdstArc_* hElement;
+
+    if (hListOfArc && hNode)
+    {
+        for (hElement = hListOfArc->m_hArc.hFirstElementDyn; hElement; hElement = hElement->hNextBrotherDyn)
+        {
+            if (hElement->m_hNode == hNode)
+            {
+                *p_ulCapability = hElement->m_ulCapability;
+                return 0;
+            }
+        }
+    }
+    return -1;
+}
+
+int WPARCLST_fn_lChangeWeight(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* hNode, int lWeight)
+{
+    WP_tdstArc_* hElement;
+    if (hListOfArc && hNode) {
+        hElement = hListOfArc->m_hArc.hFirstElementDyn;
+        if (hElement) {
+            do {
+                if (hElement->m_hNode == hNode) {
+                    hElement->m_lWeight = lWeight;
+                    return 0;
+                }
+                hElement = hElement->hNextBrotherDyn;
+            } while (hElement);
+        }
+    }
+    return -1;
+}
+
+int WPARCLST_fn_lGetWeight(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* hNode, int* p_lWeight)
+{
+    WP_tdstArc_* hElement;
+    if (hListOfArc && hNode) {
+        hElement = hListOfArc->m_hArc.hFirstElementDyn;
+        if (hElement) {
+            do {
+                if (hElement->m_hNode == hNode) {
+                    *p_lWeight = hElement->m_lWeight;
+                    return 0;
+                }
+                hElement = hElement->hNextBrotherDyn;
+            } while (hElement);
+        }
+    }
+    return -1;
+}
+
+void fn_vOnAIErm_M_UpdateLastError(int FatalErrorNum, char* szMsg)
+{
+    Erm_fn_v_UpdateLastError(67, g_ucAIModuleId, 0, FatalErrorNum, -1, 255, 255, szMsg);
 }

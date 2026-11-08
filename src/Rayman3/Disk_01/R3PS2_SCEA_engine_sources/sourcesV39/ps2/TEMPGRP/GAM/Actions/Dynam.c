@@ -1136,37 +1136,20 @@ struct DNM_stReport {
 unsigned char g_ucGameModuleId;
 char g_cInitializingTransitionSPO;
 
-unsigned int fn_ulCollSetSizeOf(void)
-{
-    return 0x70;
-}
-
-DNM_stDynamics* fn_p_stDynamGetDynamicsSO(HIE_tdstSuperObject_* hSupObj)
-{
-    DNM_stDynamics* p_stDynamics = NULL;
-
-    if (hSupObj->hLinkedObject.p_stCharacter != NULL)
-    {
-        if (hSupObj->hLinkedObject.p_stCharacter->h_Dynam != NULL)
-            p_stDynamics = hSupObj->hLinkedObject.p_stCharacter->h_Dynam->p_stDynamics;
-    }
-    return p_stDynamics;
-}
-
-void fn_vDynamSetUsedMechanics(tdstDynam_* h_Dynam, anon_enum_00825eb5 eUsedMechanics)
-{
-    h_Dynam->eUsedMechanics = eUsedMechanics;
-}
-
-DNM_stParsingDatas* fn_p_stDynamGetParsingDatas(tdstDynam_* h_Dynam)
-{
-    return h_Dynam->p_stParsingDatas;
-}
-
-DNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_* h_Dynam)
-{
-    return h_Dynam->p_stDynamics;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+unsigned int fn_ulCollSetSizeOf(void);
+DNM_stDynamics* fn_p_stDynamGetDynamicsSO(HIE_tdstSuperObject_* hSupObj);
+void fn_vDynamSetUsedMechanics(tdstDynam_* h_Dynam, anon_enum_00825eb5 eUsedMechanics);
+DNM_stParsingDatas* fn_p_stDynamGetParsingDatas(tdstDynam_* h_Dynam);
+DNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_* h_Dynam);
+void fn_vDynamCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc);
+void fn_vDynamDesinit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit);
+void fn_vDynamInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit);
+void fn_vDynamFree(tdstEngineObject_* p_stObject);
+void fn_v_DynamicFree(tdstDynam_* h_Dynam);
+void fn_v_DynamicAlloc(tdstDynam_* h_Dynam, eDynamicSize_ eSize, unsigned char bCollision, unsigned char bAlways);
+void fn_vDynamAlloc(tdstEngineObject_* p_stObject);
 
 void fn_v_DynamicFree(tdstDynam_* h_Dynam);
 
@@ -1174,167 +1157,37 @@ void fn_v_DynamicAlloc(tdstDynam_* h_Dynam, eDynamicSize_ eSize, unsigned char b
 
 unsigned char fn_ucIsAnAlwaysObject(tdstEngineObject_* p_stEngineObject);
 
-void fn_vDynamCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc)
-{
-    unsigned char bAlways;
-    DNM_stDynamics* p_stSrcDynamic;
-    DNM_stDynamics* p_stDestDynamic;
-    eDynamicSize_ eSize;
-    unsigned char bAlloc;
-    tdstDynam_* hSrc;
-    tdstDynam_* hDest;
-    unsigned int ulFlags;
-
-    hDest = _p_stObjectDest->h_Dynam;
-    hSrc = _p_stObjectSrc->h_Dynam;
-    p_stSrcDynamic = hSrc->p_stDynamics;
-    p_stDestDynamic = hDest->p_stDynamics;
-
-    bAlloc = 1;
-
-    if (p_stSrcDynamic == NULL)
-        return;
-
-    bAlways = fn_ucIsAnAlwaysObject(_p_stObjectDest);
-
-    /* The retail source keeps the size selection on a single line; the line
-     * table of the target only has one entry for it. */
-    if ((p_stSrcDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0) eSize = eDynamicSizeComplex;
-    else { eSize = eDynamicSizeBase; if ((p_stSrcDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 2) ? 1 : 0) eSize = eDynamicSizeAdvanced; }
-
-    if (p_stDestDynamic != NULL)
-    {
-        switch (eSize)
-        {
-        case eDynamicSizeComplex:
-            bAlloc = !((p_stDestDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0);
-            break;
-        case eDynamicSizeAdvanced:
-            bAlloc = !((p_stDestDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 2) ? 1 : 0);
-            break;
-        case eDynamicSizeBase:
-            bAlloc = !((p_stDestDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 1) ? 1 : 0);
-            break;
-        }
-
-        if (((p_stSrcDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000) ? 1 : 0) != ((p_stDestDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000) ? 1 : 0))
-        {
-            bAlloc = 1;
-        }
-
-        if (bAlloc) { fn_v_DynamicFree(hDest); }
-    }
-
-    if (bAlloc) { fn_v_DynamicAlloc(hDest, eSize, (unsigned char)((p_stSrcDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000) ? 1 : 0), bAlways); }
-
-    DNM_fn_vDynamicsCopyClone(hDest->p_stDynamics, hSrc->p_stDynamics);
-    memcpy(hDest->p_stParsingDatas, hSrc->p_stParsingDatas, sizeof(DNM_stParsingDatas));
-
-    hDest->eUsedMechanics = hSrc->eUsedMechanics;
-
-    /* One line in the retail source: the update stores the field in both arms
-     * and once more after the join. */
-    if (bAlways) { ulFlags = hDest->p_stDynamics->m_tdstDynamicsBaseBlock.ulEndFlags | 0x40000; hDest->p_stDynamics->m_tdstDynamicsBaseBlock.ulEndFlags = ulFlags; } else { ulFlags = hDest->p_stDynamics->m_tdstDynamicsBaseBlock.ulEndFlags & 0xFFFBFFFF; hDest->p_stDynamics->m_tdstDynamicsBaseBlock.ulEndFlags = ulFlags; } hDest->p_stDynamics->m_tdstDynamicsBaseBlock.ulEndFlags = ulFlags;
-}
-
-
-void fn_vDynamDesinit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
-{
-    if (!p_stObject) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
-    }
-    if (!p_stObject->h_Dynam) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
-    }
-
-    switch (eObjectInit)
-    {
-    case OTI_ReinitTheMap:
-        break;
-    case OTI_MapLoaded:
-    {
-        DNM_stDynamics* p_stDynamic = p_stObject->h_Dynam->p_stDynamics;
-
-        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x40000) ? 1 : 0)
-        {
-            fn_v_DynamicFree(p_stObject->h_Dynam);
-        }
-        break;
-    }
-    case OTI_AlwaysCreated:
-        break;
-    case OTI_PlayerDead:
-        break;
-    }
-}
-
 void fn_vPushAllocModeAccordingToEngineObject(tdstEngineObject_* p_stObject);
 void GAM_fn_vPopAllocMode(void);
 void DNM_fn_vInitBaseMechanic(DNM_stDynamics* p_stDynamic);
 void* memset(void*, int, unsigned int);
-
-void fn_vDynamInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
-{
-    fn_vPushAllocModeAccordingToEngineObject(p_stObject);
-
-    switch (eObjectInit)
-    {
-    case OTI_WhenGameStart:
-    case OTI_MapLoaded:
-    case OTI_ReinitTheMap:
-    case OTI_LoadSavedGame:
-    case OTI_PlayerDead:
-        if (!g_cInitializingTransitionSPO)
-        {
-            DNM_fn_vInitBaseMechanic(p_stObject->h_Dynam->p_stDynamics);
-            memset(p_stObject->h_Dynam->p_stParsingDatas, 0, sizeof(DNM_stParsingDatas));
-        }
-        break;
-    case OTI_AlwaysCreated:
-        break;
-    }
-
-    GAM_fn_vPopAllocMode();
-}
-
-
-void fn_vDynamFree(tdstEngineObject_* p_stObject)
-{
-    if (!p_stObject) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
-    }
-    if (!p_stObject->h_Dynam) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
-    }
-    fn_v_DynamicFree(p_stObject->h_Dynam);
-}
 
 #pragma auto_inline on
 /* The retail code tests the end flags through a register copy of the dynamics
  * pointer while the address of the pointer variable (the stack slot handed to
  * HMU_fn_vFree) is what gets freed; MWCC only keeps the register copy when
  * the pointer is read through a second, non address-taken local. */
-void fn_v_DynamicFree(tdstDynam_* h_Dynam)
-{
-    DNM_stDynamics* p_stDynamic;
-    DNM_stDynamics* p_stDyn;
-
-    if ((p_stDynamic = p_stDyn = h_Dynam->p_stDynamics, p_stDyn != NULL))
-    {
-        if ((p_stDyn->m_tdstDynamicsBaseBlock.ulEndFlags & 0x40000) ? 1 : 0)
-        {
-            if ((p_stDyn->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000) ? 1 : 0)
-                HMU_fn_vFree((void**)&p_stDyn->m_tdstDynamicsBaseBlock.m_pstReport, 1);
-            HMU_fn_vFree((void**)&p_stDynamic, 1);
-        }
-        h_Dynam->p_stDynamics = NULL;
-        p_stDynamic = NULL;
-    }
-}
 
 #pragma auto_inline reset
 
 void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+
+void fn_vDynamAlloc(tdstEngineObject_* p_stObject)
+{
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (p_stObject->h_Dynam) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 13, -1, 255, 255, NULL);
+    }
+
+    {
+        tdstDynam_* hDynam = (tdstDynam_*)HMU_fn_p_vMalloc(sizeof(tdstDynam_), 0);
+        hDynam->p_stParsingDatas = (DNM_stParsingDatas*)HMU_fn_p_vMalloc(sizeof(DNM_stParsingDatas), 0);
+        p_stObject->h_Dynam = hDynam;
+    }
+    fn_v_DynamicAlloc(p_stObject->h_Dynam, eDynamicSizeBase, 0, fn_ucIsAnAlwaysObject(p_stObject));
+}
 
 void fn_v_DynamicAlloc(tdstDynam_* h_Dynam, eDynamicSize_ eSize, unsigned char bCollision, unsigned char bAlways)
 {
@@ -1400,20 +1253,182 @@ void fn_v_DynamicAlloc(tdstDynam_* h_Dynam, eDynamicSize_ eSize, unsigned char b
     if (bCollision) { ulFlags = p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags | 0x4000; p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulFlags; } else { ulFlags = p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0xFFFFBFFF; p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulFlags; } p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulFlags;
 }
 
+#pragma auto_inline on
+void fn_v_DynamicFree(tdstDynam_* h_Dynam)
+{
+    DNM_stDynamics* p_stDynamic;
+    DNM_stDynamics* p_stDyn;
 
-void fn_vDynamAlloc(tdstEngineObject_* p_stObject)
+    if ((p_stDynamic = p_stDyn = h_Dynam->p_stDynamics, p_stDyn != NULL))
+    {
+        if ((p_stDyn->m_tdstDynamicsBaseBlock.ulEndFlags & 0x40000) ? 1 : 0)
+        {
+            if ((p_stDyn->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000) ? 1 : 0)
+                HMU_fn_vFree((void**)&p_stDyn->m_tdstDynamicsBaseBlock.m_pstReport, 1);
+            HMU_fn_vFree((void**)&p_stDynamic, 1);
+        }
+        h_Dynam->p_stDynamics = NULL;
+        p_stDynamic = NULL;
+    }
+}
+#pragma auto_inline reset
+
+void fn_vDynamFree(tdstEngineObject_* p_stObject)
 {
     if (!p_stObject) {
         Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
     }
-    if (p_stObject->h_Dynam) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 13, -1, 255, 255, NULL);
+    if (!p_stObject->h_Dynam) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+    fn_v_DynamicFree(p_stObject->h_Dynam);
+}
+
+void fn_vDynamInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
+{
+    fn_vPushAllocModeAccordingToEngineObject(p_stObject);
+
+    switch (eObjectInit)
+    {
+    case OTI_WhenGameStart:
+    case OTI_MapLoaded:
+    case OTI_ReinitTheMap:
+    case OTI_LoadSavedGame:
+    case OTI_PlayerDead:
+        if (!g_cInitializingTransitionSPO)
+        {
+            DNM_fn_vInitBaseMechanic(p_stObject->h_Dynam->p_stDynamics);
+            memset(p_stObject->h_Dynam->p_stParsingDatas, 0, sizeof(DNM_stParsingDatas));
+        }
+        break;
+    case OTI_AlwaysCreated:
+        break;
     }
 
-    {
-        tdstDynam_* hDynam = (tdstDynam_*)HMU_fn_p_vMalloc(sizeof(tdstDynam_), 0);
-        hDynam->p_stParsingDatas = (DNM_stParsingDatas*)HMU_fn_p_vMalloc(sizeof(DNM_stParsingDatas), 0);
-        p_stObject->h_Dynam = hDynam;
+    GAM_fn_vPopAllocMode();
+}
+
+void fn_vDynamDesinit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
+{
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
     }
-    fn_v_DynamicAlloc(p_stObject->h_Dynam, eDynamicSizeBase, 0, fn_ucIsAnAlwaysObject(p_stObject));
+    if (!p_stObject->h_Dynam) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+
+    switch (eObjectInit)
+    {
+    case OTI_ReinitTheMap:
+        break;
+    case OTI_MapLoaded:
+    {
+        DNM_stDynamics* p_stDynamic = p_stObject->h_Dynam->p_stDynamics;
+
+        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x40000) ? 1 : 0)
+        {
+            fn_v_DynamicFree(p_stObject->h_Dynam);
+        }
+        break;
+    }
+    case OTI_AlwaysCreated:
+        break;
+    case OTI_PlayerDead:
+        break;
+    }
+}
+
+void fn_vDynamCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc)
+{
+    unsigned char bAlways;
+    DNM_stDynamics* p_stSrcDynamic;
+    DNM_stDynamics* p_stDestDynamic;
+    eDynamicSize_ eSize;
+    unsigned char bAlloc;
+    tdstDynam_* hSrc;
+    tdstDynam_* hDest;
+    unsigned int ulFlags;
+
+    hDest = _p_stObjectDest->h_Dynam;
+    hSrc = _p_stObjectSrc->h_Dynam;
+    p_stSrcDynamic = hSrc->p_stDynamics;
+    p_stDestDynamic = hDest->p_stDynamics;
+
+    bAlloc = 1;
+
+    if (p_stSrcDynamic == NULL)
+        return;
+
+    bAlways = fn_ucIsAnAlwaysObject(_p_stObjectDest);
+
+    /* The retail source keeps the size selection on a single line; the line
+     * table of the target only has one entry for it. */
+    if ((p_stSrcDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0) eSize = eDynamicSizeComplex;
+    else { eSize = eDynamicSizeBase; if ((p_stSrcDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 2) ? 1 : 0) eSize = eDynamicSizeAdvanced; }
+
+    if (p_stDestDynamic != NULL)
+    {
+        switch (eSize)
+        {
+        case eDynamicSizeComplex:
+            bAlloc = !((p_stDestDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0);
+            break;
+        case eDynamicSizeAdvanced:
+            bAlloc = !((p_stDestDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 2) ? 1 : 0);
+            break;
+        case eDynamicSizeBase:
+            bAlloc = !((p_stDestDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 1) ? 1 : 0);
+            break;
+        }
+
+        if (((p_stSrcDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000) ? 1 : 0) != ((p_stDestDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000) ? 1 : 0))
+        {
+            bAlloc = 1;
+        }
+
+        if (bAlloc) { fn_v_DynamicFree(hDest); }
+    }
+
+    if (bAlloc) { fn_v_DynamicAlloc(hDest, eSize, (unsigned char)((p_stSrcDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000) ? 1 : 0), bAlways); }
+
+    DNM_fn_vDynamicsCopyClone(hDest->p_stDynamics, hSrc->p_stDynamics);
+    memcpy(hDest->p_stParsingDatas, hSrc->p_stParsingDatas, sizeof(DNM_stParsingDatas));
+
+    hDest->eUsedMechanics = hSrc->eUsedMechanics;
+
+    /* One line in the retail source: the update stores the field in both arms
+     * and once more after the join. */
+    if (bAlways) { ulFlags = hDest->p_stDynamics->m_tdstDynamicsBaseBlock.ulEndFlags | 0x40000; hDest->p_stDynamics->m_tdstDynamicsBaseBlock.ulEndFlags = ulFlags; } else { ulFlags = hDest->p_stDynamics->m_tdstDynamicsBaseBlock.ulEndFlags & 0xFFFBFFFF; hDest->p_stDynamics->m_tdstDynamicsBaseBlock.ulEndFlags = ulFlags; } hDest->p_stDynamics->m_tdstDynamicsBaseBlock.ulEndFlags = ulFlags;
+}
+
+DNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_* h_Dynam)
+{
+    return h_Dynam->p_stDynamics;
+}
+
+DNM_stParsingDatas* fn_p_stDynamGetParsingDatas(tdstDynam_* h_Dynam)
+{
+    return h_Dynam->p_stParsingDatas;
+}
+
+void fn_vDynamSetUsedMechanics(tdstDynam_* h_Dynam, anon_enum_00825eb5 eUsedMechanics)
+{
+    h_Dynam->eUsedMechanics = eUsedMechanics;
+}
+
+DNM_stDynamics* fn_p_stDynamGetDynamicsSO(HIE_tdstSuperObject_* hSupObj)
+{
+    DNM_stDynamics* p_stDynamics = NULL;
+
+    if (hSupObj->hLinkedObject.p_stCharacter != NULL)
+    {
+        if (hSupObj->hLinkedObject.p_stCharacter->h_Dynam != NULL)
+            p_stDynamics = hSupObj->hLinkedObject.p_stCharacter->h_Dynam->p_stDynamics;
+    }
+    return p_stDynamics;
+}
+
+unsigned int fn_ulCollSetSizeOf(void)
+{
+    return 0x70;
 }

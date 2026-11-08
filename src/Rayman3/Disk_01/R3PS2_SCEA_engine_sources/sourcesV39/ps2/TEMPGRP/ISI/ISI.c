@@ -111,35 +111,38 @@ struct IPT_tdstInput_ {
 extern IPT_tdstInput_ IPT_g_hInputStructure;
 extern void HMU_fn_vFree(void** p_vPointer, unsigned char bTempMalloc);
 
-unsigned char IPT_fn_ucGetFirstValidJoystick(void)
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+unsigned char IPT_fn_ucGetFirstValidJoystick(void);
+ISI_tdstColor_* ISI_fn_dGetVertexRLI(void* _hISI);
+int ISI_fn_dGetVertexRLILODLightMapU(void* _hISI, short _xNumISILOD);
+ISI_tdstColor_* ISI_fn_dGetVertexRLILOD(void* _hISI, short _xNumISILOD);
+short ISI_fn_xGetNbVertexRLILOD(void* _hISI, short _xNumISILOD);
+void ISI_fn_vFreeISI(void* _hISI);
+
+void ISI_fn_vFreeISI(void* _hISI)
 {
-    unsigned char ucReturn;
-    unsigned int i;
-    ucReturn = 0xFF;
-    for (i = 2; i < 0x12 && ucReturn == 0xFF; i++) {
-        if (IPT_g_hInputStructure.a_stDevice[i].ucValideAndActiveDevice == 2) {
-            ucReturn = (unsigned char)(i - 2);
+    short xI;
+    ISI_tdstISI_* hCpyISI;
+    hCpyISI = (ISI_tdstISI_*)_hISI;
+    for (xI = 0; xI < hCpyISI->xNbISILOD; xI++) {
+        if (hCpyISI->d_stISILOD[xI].d_stVertexRLI != 0) {
+            HMU_fn_vFree((void**)&hCpyISI->d_stISILOD[xI].d_stVertexRLI, 0);
+        }
+        if (hCpyISI->d_stISILOD[xI].d_fLightMapU != 0) {
+            HMU_fn_vFree((void**)&hCpyISI->d_stISILOD[xI].d_fLightMapU, 0);
         }
     }
-    return ucReturn;
+    HMU_fn_vFree((void**)&hCpyISI->d_stISILOD, 0);
+    HMU_fn_vFree((void**)&hCpyISI, 0);
 }
 
-ISI_tdstColor_* ISI_fn_dGetVertexRLI(void* _hISI)
+short ISI_fn_xGetNbVertexRLILOD(void* _hISI, short _xNumISILOD)
 {
-    return ((ISI_tdstISI_*)_hISI)->d_stISILOD->d_stVertexRLI;
-}
-
-int ISI_fn_dGetVertexRLILODLightMapU(void* _hISI, short _xNumISILOD)
-{
-    /* Permuter-found match (register allocation); the char* temporary and the
-     * index assignment are not original source and need cleaning up. */
-    char* pcLOD;
-    int iIndex;
     ISI_tdstISI_* hISI;
+
     hISI = (ISI_tdstISI_*)_hISI;
-    pcLOD = (char*)hISI->d_stISILOD;
-    pcLOD = pcLOD + 8;
-    return ((int*)pcLOD)[iIndex = (int)_xNumISILOD * 3];
+    return hISI->d_stISILOD[_xNumISILOD].xNbVertexRLI;
 }
 
 ISI_tdstColor_* ISI_fn_dGetVertexRLILOD(void* _hISI, short _xNumISILOD)
@@ -157,27 +160,33 @@ ISI_tdstColor_* ISI_fn_dGetVertexRLILOD(void* _hISI, short _xNumISILOD)
     return g_p_stRawRLIsForThisObject;
 }
 
-short ISI_fn_xGetNbVertexRLILOD(void* _hISI, short _xNumISILOD)
+int ISI_fn_dGetVertexRLILODLightMapU(void* _hISI, short _xNumISILOD)
 {
+    /* Permuter-found match (register allocation); the char* temporary and the
+     * index assignment are not original source and need cleaning up. */
+    char* pcLOD;
+    int iIndex;
     ISI_tdstISI_* hISI;
-
     hISI = (ISI_tdstISI_*)_hISI;
-    return hISI->d_stISILOD[_xNumISILOD].xNbVertexRLI;
+    pcLOD = (char*)hISI->d_stISILOD;
+    pcLOD = pcLOD + 8;
+    return ((int*)pcLOD)[iIndex = (int)_xNumISILOD * 3];
 }
 
-void ISI_fn_vFreeISI(void* _hISI)
+ISI_tdstColor_* ISI_fn_dGetVertexRLI(void* _hISI)
 {
-    short xI;
-    ISI_tdstISI_* hCpyISI;
-    hCpyISI = (ISI_tdstISI_*)_hISI;
-    for (xI = 0; xI < hCpyISI->xNbISILOD; xI++) {
-        if (hCpyISI->d_stISILOD[xI].d_stVertexRLI != 0) {
-            HMU_fn_vFree((void**)&hCpyISI->d_stISILOD[xI].d_stVertexRLI, 0);
-        }
-        if (hCpyISI->d_stISILOD[xI].d_fLightMapU != 0) {
-            HMU_fn_vFree((void**)&hCpyISI->d_stISILOD[xI].d_fLightMapU, 0);
+    return ((ISI_tdstISI_*)_hISI)->d_stISILOD->d_stVertexRLI;
+}
+
+unsigned char IPT_fn_ucGetFirstValidJoystick(void)
+{
+    unsigned char ucReturn;
+    unsigned int i;
+    ucReturn = 0xFF;
+    for (i = 2; i < 0x12 && ucReturn == 0xFF; i++) {
+        if (IPT_g_hInputStructure.a_stDevice[i].ucValideAndActiveDevice == 2) {
+            ucReturn = (unsigned char)(i - 2);
         }
     }
-    HMU_fn_vFree((void**)&hCpyISI->d_stISILOD, 0);
-    HMU_fn_vFree((void**)&hCpyISI, 0);
+    return ucReturn;
 }

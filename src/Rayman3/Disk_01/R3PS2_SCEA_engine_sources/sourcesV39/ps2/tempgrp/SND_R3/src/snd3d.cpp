@@ -625,7 +625,6 @@ struct CStringIsLess {
     /* C++ base binary_function at +0x0. */
 };
 
-
 struct _SND_tdstBlockEvent {
     unsigned char _extractor_padding_00[0x14]; /* +0x0..0x13 */
     CLinkActor* m_poLinkActor; /* +0x14 */
@@ -678,12 +677,31 @@ template <> void TTypedVar<int>::f_vSetValue(int oValue) { m_oValue = oValue; f_
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-extern "C" int SND_fn_bIsTypePlayingSound(int s32_TypeId)
-{
-    CLinkTypeActor* po_TypeActor;
-    po_TypeActor = CLinkTypeActorCont::mfn_roGetInstance()->mfn_poGetActorTypeFromId(s32_TypeId);
-    return po_TypeActor->mfn_bSoundPlaying() ? 1 : 0;
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+extern "C" int SND_fn_bIsTypePlayingSound(int s32_TypeId);
+extern "C" _SND_tdstBlockEvent* SND_fn_pstGetLastEventForObjectTypeSound(void);
+extern "C" void SND_fn_vSetMusicFadeOut(void);
+extern "C" int SND_fn_bGetStereoSound(void);
+extern "C" void SND_fn_vSetPan(int b_pan);
+extern "C" void SND_fn_vSetStereoSound(int b_Stereo);
+extern "C" void SND_fn_vSetDopplerFactorSound(void);
+extern "C" void SND_fn_vSynchroSound(void);
+extern "C" void SND_fn_vResetLastMarker(void);
+extern "C" int SND_fn_s32GetLastMarker(void);
+extern "C" void SND_fn_vChangeVolumeSound(void);
+extern "C" int SND_fn_bIsSoundPlaying(_SND_tduRefEvt u_RefEvt);
+extern "C" int SND_fn_s32GetSoundHandleState(int s32_ObjectId, int s32_TypeId, int s32_HandleId);
+extern "C" int SND_fn_s32SendRequestSound(int s32_ObjectId, int s32_ChannelId, int s32_TypeId, _SND_tduRefEvt u_RefEvt, int s32_Prio, void (*pfn_Proc)(int));
+extern "C" int SND_fn_s32SendRequestJingle(int s32_ObjectId, int s32_ChannelId, int s32_TypeId, _SND_tduRefEvt u_RefEvt, int s32_Prio, void (*pfn_Proc)(int), int s32_VolumeLine);
+extern "C" int SND_fn_s32SendRequestSemaphoreSound(int s32_SemaphoreId, int s32_ObjectId, int s32_ChannelId, int s32_TypeId, _SND_tduRefEvt u_RefEvt, int s32_Prio, void (*pfn_Proc)(int));
+extern "C" int SND_fn_bRemoveSemaphoreSound(int s32_SemaphoreId);
+extern "C" int SND_fn_s32AddSemaphoreSound(int s32_SemaphoreId, int s32_SemaphoreSize);
+extern "C" int SND_fn_hGetCurrentSoundHandle(void);
+extern "C" void SND_fn_vClearLastTheme(void);
+extern "C" int SND_fn_bGetLastTheme(_SND_tduRefEvt* p_RefEvt);
+extern "C" void SND_fn_vSaveLastTheme(void);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 1035–1035 */
 /* addr: 0x00186890  size: 8 bytes */
@@ -692,10 +710,6 @@ extern "C" int SND_fn_bIsTypePlayingSound(int s32_TypeId)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-_SND_tdstBlockEvent* SND_fn_pstGetLastEventForObjectTypeSound(void)
-{
-    return (_SND_tdstBlockEvent*)0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 1029–1029 */
 /* addr: 0x001868a0  size: 8 bytes */
@@ -704,9 +718,6 @@ _SND_tdstBlockEvent* SND_fn_pstGetLastEventForObjectTypeSound(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SND_fn_vSetMusicFadeOut(void)
-{
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 1025–1025 */
 /* addr: 0x001868b0  size: 8 bytes */
@@ -715,10 +726,6 @@ void SND_fn_vSetMusicFadeOut(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int SND_fn_bGetStereoSound(void)
-{
-    return g_bInStereo;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 963–965 */
 /* addr: 0x001868c0  size: 48 bytes */
@@ -729,10 +736,6 @@ int SND_fn_bGetStereoSound(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SND_fn_vSetPan(int b_pan)
-{
-    usnd::CMicroManager::fs_roGetInst(); usnd::CMicroManager::fs_vSetPanOn(b_pan == 1);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 946–947 */
 /* addr: 0x00186900  size: 16 bytes */
@@ -742,11 +745,6 @@ void SND_fn_vSetPan(int b_pan)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SND_fn_vSetStereoSound(int b_Stereo)
-{
-    g_bInStereo = b_Stereo;
-    return usnd::CPS2Box::fs_vSetMono(b_Stereo ^ 1);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 934–934 */
 /* addr: 0x00186910  size: 8 bytes */
@@ -755,10 +753,6 @@ void SND_fn_vSetStereoSound(int b_Stereo)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SND_fn_vSetDopplerFactorSound(void)
-{
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 821–930 */
 /* addr: 0x00186920  size: 444 bytes */
@@ -793,54 +787,6 @@ void SND_fn_vSetDopplerFactorSound(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SND_fn_vSynchroSound(void)
-{
-    int currentPause;
-    CLinkCallbackResObjCont o_Singleton;
-    static signed char init = 0;
-    static int inPause = 0;
-
-    GLI_vStartSoundCounter(0);
-    if (!init)
-    {
-        inPause = 0;
-        init = 1;
-    }
-    inPause = GAM_fn_iIsGamePaused();
-    if (inPause)
-    {
-        SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineMusic, 0);
-        SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineSound, 0);
-        SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineVoices, 0);
-        SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineAmbiance, 0);
-        SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineMenu, 0);
-    }
-    else
-    {
-        if (inPause != gs_uiCritSect)
-        {
-            fn_vValidateAllOption();
-            inPause = gs_uiCritSect;
-        }
-    }
-    if (!gs_uiCritSect)
-        gs_uiCritSect = usnd_uiCreateCritSect();
-    if (usnd_uiTryToEnterCritSect(gs_uiCritSect) == 1)
-    {
-        PostponedPlay::fs_vSynchro();
-        o_Singleton.mfn_bSynchroCallbackInstance();
-        CLinkMicroCont::mfn_roGetInstance()->mfn_bSynchroMicroInstance();
-        CExtraEventActor::ss32CurrentRefreshChannel++;
-        if (CExtraEventActor::ss32CurrentRefreshChannel >= 5)
-            CExtraEventActor::ss32CurrentRefreshChannel = 0;
-        CLinkTypeActorCont::mfn_roGetInstance()->mfn_vSynchroActorInstance();
-        CSoundSemaphoreCont::mfn_roGetInstance()->mfn_bSynchroSoundSemaphore();
-        Jingle::fs_vSynchronise();
-        usnd::CL2PS2CoreMgr::fs_vUpdate();
-        GLI_vEndSoundCounter(0);
-        usnd_vLeaveCritSect(gs_uiCritSect);
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 805–806 */
 /* addr: 0x00186d00  size: 12 bytes */
@@ -850,10 +796,6 @@ void SND_fn_vSynchroSound(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SND_fn_vResetLastMarker(void)
-{
-    g_szMarker[0] = '*';
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 790–790 */
 /* addr: 0x00186d10  size: 8 bytes */
@@ -862,10 +804,6 @@ void SND_fn_vResetLastMarker(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int SND_fn_s32GetLastMarker(void)
-{
-    return g_szMarker[0];
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 767–767 */
 /* addr: 0x00186d20  size: 8 bytes */
@@ -874,10 +812,6 @@ int SND_fn_s32GetLastMarker(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SND_fn_vChangeVolumeSound(void)
-{
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 652–685 */
 /* addr: 0x00186de0  size: 300 bytes */
@@ -907,40 +841,6 @@ void SND_fn_vChangeVolumeSound(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-extern "C" int SND_fn_bIsSoundPlaying(_SND_tduRefEvt u_RefEvt)
-{
-    CResData* po_ResData;
-    CLinkActor* poActor;
-    CExtraEventActor* poEEActor;
-    CLinkTypeActorCont::iterator it_Type;
-
-    if (u_RefEvt.pstPtr == (_SND_tdstBlockEvent*)-1 || u_RefEvt.pstPtr == NULL)
-    {
-        return 0;
-    }
-    po_ResData = u_RefEvt.pstPtr->m_oResId;
-    if (po_ResData == NULL)
-    {
-        return 0;
-    }
-    CLinkTypeActorCont* poCont = CLinkTypeActorCont::mfn_roGetInstance();
-    for (it_Type = poCont->begin(); it_Type != poCont->end(); ++it_Type)
-    {
-        poActor = (*it_Type).second->m_oActors.m_poNext;
-        while (poActor)
-        {
-            poEEActor = poActor->m_oExtraActors.m_poNext;
-            while (poEEActor)
-            {
-                if (poEEActor->fn_bIsSoundPlaying(po_ResData))
-                    return 1;
-                poEEActor = poEEActor->m_poNext;
-            }
-            poActor = poActor->m_poNext;
-        }
-    }
-    return 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 603–648 */
 /* addr: 0x00186f10  size: 204 bytes */
@@ -968,34 +868,6 @@ extern "C" int SND_fn_bIsSoundPlaying(_SND_tduRefEvt u_RefEvt)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-extern "C" int SND_fn_s32GetSoundHandleState(int s32_ObjectId, int s32_TypeId, int s32_HandleId)
-{
-    int s32_Answer;
-    CExtraEventActor* po_EventActor;
-    CLinkActor* po_LinkActor;
-    CLinkTypeActor* po_TypeActor;
-
-    if (s32_HandleId == -2)
-        return -1;
-    po_TypeActor = CLinkTypeActorCont::mfn_roGetInstance()->mfn_poGetActorTypeFromId(s32_TypeId);
-    if (po_TypeActor == NULL)
-        return 3;
-    po_LinkActor = po_TypeActor->mfn_poGetActorFromIdInTypeActorInstance(s32_ObjectId);
-    if (po_LinkActor == NULL)
-        return 3;
-    s32_Answer = 2;
-    po_EventActor = po_LinkActor->m_oExtraActors.m_poNext;
-    while (po_EventActor != NULL && s32_Answer == 2)
-    {
-        if (po_EventActor->meExtraCoeff == 0)
-        {
-            if (po_EventActor->fn_bIsSoundPlaying(s32_HandleId))
-                s32_Answer = 0;
-        }
-        po_EventActor = po_EventActor->m_poNext;
-    }
-    return s32_Answer;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 447–573 */
 /* addr: 0x00186fe0  size: 940 bytes */
@@ -1042,21 +914,6 @@ extern "C" int SND_fn_s32GetSoundHandleState(int s32_ObjectId, int s32_TypeId, i
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-extern "C" int SND_fn_s32SendRequestSound(int s32_ObjectId, int s32_ChannelId, int s32_TypeId, _SND_tduRefEvt u_RefEvt, int s32_Prio, void (*pfn_Proc)(int))
-{
-    CExtraEventActor* po_EventActor;
-    CLinkTypeActor* po_TypeActor;
-    CLinkActor* po_LinkActor;
-    CResData* po_ResData;
-    int s32_SemId;
-    CSoundSemaphore* po_Channel;
-    CEventResData* ro_EventResData;
-    int s32_Answer;
-    int s32_SoundHandle;
-    signed char init;
-    int s32_Handle;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 404–422 */
 /* addr: 0x001874e0  size: 224 bytes */
@@ -1074,21 +931,6 @@ extern "C" int SND_fn_s32SendRequestSound(int s32_ObjectId, int s32_ChannelId, i
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-extern "C" int SND_fn_s32SendRequestJingle(int s32_ObjectId, int s32_ChannelId, int s32_TypeId, _SND_tduRefEvt u_RefEvt, int s32_Prio, void (*pfn_Proc)(int), int s32_VolumeLine)
-{
-    int s32_Answer;
-    int bRes;
-
-    s32_Answer = -2;
-    if (!gs_uiCritSect) gs_uiCritSect = usnd_uiCreateCritSect(); bRes = usnd_uiTryToEnterCritSect(gs_uiCritSect) == 1; if (bRes)
-    {
-        s32_Answer = SND_fn_s32SendRequestSound(s32_ObjectId, s32_ChannelId, s32_TypeId, u_RefEvt, s32_Prio, pfn_Proc);
-        if (s32_Answer != -2)
-            Jingle::fs_vAddJingle(s32_ObjectId, s32_TypeId, s32_Answer, s32_VolumeLine);
-        usnd_vLeaveCritSect(gs_uiCritSect);
-    }
-    return s32_Answer;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 370–391 */
 /* addr: 0x001875c0  size: 284 bytes */
@@ -1108,29 +950,6 @@ extern "C" int SND_fn_s32SendRequestJingle(int s32_ObjectId, int s32_ChannelId, 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-extern "C" int SND_fn_s32SendRequestSemaphoreSound(int s32_SemaphoreId, int s32_ObjectId, int s32_ChannelId, int s32_TypeId, _SND_tduRefEvt u_RefEvt, int s32_Prio, void (*pfn_Proc)(int))
-{
-    int s32_Answer;
-    CSoundSemaphore* po_Channel;
-    int bRes;
-
-    s32_Answer = -2;
-    if (!gs_uiCritSect) gs_uiCritSect = usnd_uiCreateCritSect(); bRes = usnd_uiTryToEnterCritSect(gs_uiCritSect) == 1; if (bRes)
-    {
-        s32_Answer = -2; po_Channel = CSoundSemaphoreCont::mfn_roGetInstance()->mfn_poFindSoundSemaphore(s32_SemaphoreId);
-        if (po_Channel != NULL && (po_Channel == NULL || po_Channel->mu32ChannelSize == po_Channel->_Tr._Size))
-        {
-        }
-        else
-        {
-            s32_Answer = SND_fn_s32SendRequestSound(s32_ObjectId, s32_ChannelId, s32_TypeId, u_RefEvt, s32_Prio, pfn_Proc);
-            if (po_Channel != NULL && s32_Answer != -2)
-                po_Channel->mfn_bAddSoundRequest(s32_ObjectId, s32_TypeId, s32_Answer);
-        }
-        usnd_vLeaveCritSect(gs_uiCritSect);
-    }
-    return s32_Answer;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 348–355 */
 /* addr: 0x001876e0  size: 76 bytes */
@@ -1143,14 +962,6 @@ extern "C" int SND_fn_s32SendRequestSemaphoreSound(int s32_SemaphoreId, int s32_
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int SND_fn_bRemoveSemaphoreSound(int s32_SemaphoreId)
-{
-    int b_Answer;
-    b_Answer = 0;
-    if (CSoundSemaphoreCont::mfn_roGetInstance()->mfn_bRemoveSoundSemaphore(s32_SemaphoreId))
-        b_Answer = 1;
-    return b_Answer;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 333–340 */
 /* addr: 0x00187730  size: 92 bytes */
@@ -1163,14 +974,6 @@ int SND_fn_bRemoveSemaphoreSound(int s32_SemaphoreId)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int SND_fn_s32AddSemaphoreSound(int s32_SemaphoreId, int s32_SemaphoreSize)
-{
-    int s32_Answer;
-    s32_Answer = -3;
-    if (CSoundSemaphoreCont::mfn_roGetInstance()->mfn_poAddSoundSemaphore(s32_SemaphoreId, s32_SemaphoreSize))
-        s32_Answer = s32_SemaphoreId;
-    return s32_Answer;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 323–324 */
 /* addr: 0x00187790  size: 32 bytes */
@@ -1180,11 +983,6 @@ int SND_fn_s32AddSemaphoreSound(int s32_SemaphoreId, int s32_SemaphoreSize)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int SND_fn_hGetCurrentSoundHandle(void)
-{
-    static int s32_SoundHandle = -2;
-    return s32_SoundHandle;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 295–297 */
 /* addr: 0x001877b0  size: 12 bytes */
@@ -1194,11 +992,6 @@ int SND_fn_hGetCurrentSoundHandle(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SND_fn_vClearLastTheme(void)
-{
-    g_oLastTheme.Id = 0;
-    g_oLastSavedTheme.Id = 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 278–286 */
 /* addr: 0x001877c0  size: 48 bytes */
@@ -1212,17 +1005,6 @@ void SND_fn_vClearLastTheme(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int SND_fn_bGetLastTheme(_SND_tduRefEvt* p_RefEvt)
-{
-    int bRet;
-    bRet = 0;
-    if (g_oLastSavedTheme.Id && p_RefEvt) {
-        *p_RefEvt = g_oLastSavedTheme;
-        g_oLastTheme.Id = 0; g_oLastSavedTheme.Id = 0;
-        bRet = 1;
-    }
-    return bRet;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 264–264 */
 /* addr: 0x001877f0  size: 8 bytes */
@@ -1304,6 +1086,7 @@ unsigned char fn_bLockSound__Fb(unsigned char bIgnoreIfCantAccess)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
 extern "C" void SND_fn_vSaveLastTheme(void)
 {
     CExtraEventActor* po_EventActor;
@@ -1356,4 +1139,267 @@ extern "C" void SND_fn_vSaveLastTheme(void)
             }
         }
     }
+}
+
+int SND_fn_bGetLastTheme(_SND_tduRefEvt* p_RefEvt)
+{
+    int bRet;
+    bRet = 0;
+    if (g_oLastSavedTheme.Id && p_RefEvt) {
+        *p_RefEvt = g_oLastSavedTheme;
+        g_oLastTheme.Id = 0; g_oLastSavedTheme.Id = 0;
+        bRet = 1;
+    }
+    return bRet;
+}
+
+void SND_fn_vClearLastTheme(void)
+{
+    g_oLastTheme.Id = 0;
+    g_oLastSavedTheme.Id = 0;
+}
+
+int SND_fn_hGetCurrentSoundHandle(void)
+{
+    static int s32_SoundHandle = -2;
+    return s32_SoundHandle;
+}
+
+int SND_fn_s32AddSemaphoreSound(int s32_SemaphoreId, int s32_SemaphoreSize)
+{
+    int s32_Answer;
+    s32_Answer = -3;
+    if (CSoundSemaphoreCont::mfn_roGetInstance()->mfn_poAddSoundSemaphore(s32_SemaphoreId, s32_SemaphoreSize))
+        s32_Answer = s32_SemaphoreId;
+    return s32_Answer;
+}
+
+int SND_fn_bRemoveSemaphoreSound(int s32_SemaphoreId)
+{
+    int b_Answer;
+    b_Answer = 0;
+    if (CSoundSemaphoreCont::mfn_roGetInstance()->mfn_bRemoveSoundSemaphore(s32_SemaphoreId))
+        b_Answer = 1;
+    return b_Answer;
+}
+
+extern "C" int SND_fn_s32SendRequestSemaphoreSound(int s32_SemaphoreId, int s32_ObjectId, int s32_ChannelId, int s32_TypeId, _SND_tduRefEvt u_RefEvt, int s32_Prio, void (*pfn_Proc)(int))
+{
+    int s32_Answer;
+    CSoundSemaphore* po_Channel;
+    int bRes;
+
+    s32_Answer = -2;
+    if (!gs_uiCritSect) gs_uiCritSect = usnd_uiCreateCritSect(); bRes = usnd_uiTryToEnterCritSect(gs_uiCritSect) == 1; if (bRes)
+    {
+        s32_Answer = -2; po_Channel = CSoundSemaphoreCont::mfn_roGetInstance()->mfn_poFindSoundSemaphore(s32_SemaphoreId);
+        if (po_Channel != NULL && (po_Channel == NULL || po_Channel->mu32ChannelSize == po_Channel->_Tr._Size))
+        {
+        }
+        else
+        {
+            s32_Answer = SND_fn_s32SendRequestSound(s32_ObjectId, s32_ChannelId, s32_TypeId, u_RefEvt, s32_Prio, pfn_Proc);
+            if (po_Channel != NULL && s32_Answer != -2)
+                po_Channel->mfn_bAddSoundRequest(s32_ObjectId, s32_TypeId, s32_Answer);
+        }
+        usnd_vLeaveCritSect(gs_uiCritSect);
+    }
+    return s32_Answer;
+}
+
+extern "C" int SND_fn_s32SendRequestJingle(int s32_ObjectId, int s32_ChannelId, int s32_TypeId, _SND_tduRefEvt u_RefEvt, int s32_Prio, void (*pfn_Proc)(int), int s32_VolumeLine)
+{
+    int s32_Answer;
+    int bRes;
+
+    s32_Answer = -2;
+    if (!gs_uiCritSect) gs_uiCritSect = usnd_uiCreateCritSect(); bRes = usnd_uiTryToEnterCritSect(gs_uiCritSect) == 1; if (bRes)
+    {
+        s32_Answer = SND_fn_s32SendRequestSound(s32_ObjectId, s32_ChannelId, s32_TypeId, u_RefEvt, s32_Prio, pfn_Proc);
+        if (s32_Answer != -2)
+            Jingle::fs_vAddJingle(s32_ObjectId, s32_TypeId, s32_Answer, s32_VolumeLine);
+        usnd_vLeaveCritSect(gs_uiCritSect);
+    }
+    return s32_Answer;
+}
+
+extern "C" int SND_fn_s32SendRequestSound(int s32_ObjectId, int s32_ChannelId, int s32_TypeId, _SND_tduRefEvt u_RefEvt, int s32_Prio, void (*pfn_Proc)(int))
+{
+    CExtraEventActor* po_EventActor;
+    CLinkTypeActor* po_TypeActor;
+    CLinkActor* po_LinkActor;
+    CResData* po_ResData;
+    int s32_SemId;
+    CSoundSemaphore* po_Channel;
+    CEventResData* ro_EventResData;
+    int s32_Answer;
+    int s32_SoundHandle;
+    signed char init;
+    int s32_Handle;
+    /* TODO: decompile from asm/... */
+}
+
+extern "C" int SND_fn_s32GetSoundHandleState(int s32_ObjectId, int s32_TypeId, int s32_HandleId)
+{
+    int s32_Answer;
+    CExtraEventActor* po_EventActor;
+    CLinkActor* po_LinkActor;
+    CLinkTypeActor* po_TypeActor;
+
+    if (s32_HandleId == -2)
+        return -1;
+    po_TypeActor = CLinkTypeActorCont::mfn_roGetInstance()->mfn_poGetActorTypeFromId(s32_TypeId);
+    if (po_TypeActor == NULL)
+        return 3;
+    po_LinkActor = po_TypeActor->mfn_poGetActorFromIdInTypeActorInstance(s32_ObjectId);
+    if (po_LinkActor == NULL)
+        return 3;
+    s32_Answer = 2;
+    po_EventActor = po_LinkActor->m_oExtraActors.m_poNext;
+    while (po_EventActor != NULL && s32_Answer == 2)
+    {
+        if (po_EventActor->meExtraCoeff == 0)
+        {
+            if (po_EventActor->fn_bIsSoundPlaying(s32_HandleId))
+                s32_Answer = 0;
+        }
+        po_EventActor = po_EventActor->m_poNext;
+    }
+    return s32_Answer;
+}
+
+extern "C" int SND_fn_bIsSoundPlaying(_SND_tduRefEvt u_RefEvt)
+{
+    CResData* po_ResData;
+    CLinkActor* poActor;
+    CExtraEventActor* poEEActor;
+    CLinkTypeActorCont::iterator it_Type;
+
+    if (u_RefEvt.pstPtr == (_SND_tdstBlockEvent*)-1 || u_RefEvt.pstPtr == NULL)
+    {
+        return 0;
+    }
+    po_ResData = u_RefEvt.pstPtr->m_oResId;
+    if (po_ResData == NULL)
+    {
+        return 0;
+    }
+    CLinkTypeActorCont* poCont = CLinkTypeActorCont::mfn_roGetInstance();
+    for (it_Type = poCont->begin(); it_Type != poCont->end(); ++it_Type)
+    {
+        poActor = (*it_Type).second->m_oActors.m_poNext;
+        while (poActor)
+        {
+            poEEActor = poActor->m_oExtraActors.m_poNext;
+            while (poEEActor)
+            {
+                if (poEEActor->fn_bIsSoundPlaying(po_ResData))
+                    return 1;
+                poEEActor = poEEActor->m_poNext;
+            }
+            poActor = poActor->m_poNext;
+        }
+    }
+    return 0;
+}
+
+void SND_fn_vChangeVolumeSound(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+int SND_fn_s32GetLastMarker(void)
+{
+    return g_szMarker[0];
+}
+
+void SND_fn_vResetLastMarker(void)
+{
+    g_szMarker[0] = '*';
+}
+
+void SND_fn_vSynchroSound(void)
+{
+    int currentPause;
+    CLinkCallbackResObjCont o_Singleton;
+    static signed char init = 0;
+    static int inPause = 0;
+
+    GLI_vStartSoundCounter(0);
+    if (!init)
+    {
+        inPause = 0;
+        init = 1;
+    }
+    inPause = GAM_fn_iIsGamePaused();
+    if (inPause)
+    {
+        SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineMusic, 0);
+        SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineSound, 0);
+        SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineVoices, 0);
+        SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineAmbiance, 0);
+        SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineMenu, 0);
+    }
+    else
+    {
+        if (inPause != gs_uiCritSect)
+        {
+            fn_vValidateAllOption();
+            inPause = gs_uiCritSect;
+        }
+    }
+    if (!gs_uiCritSect)
+        gs_uiCritSect = usnd_uiCreateCritSect();
+    if (usnd_uiTryToEnterCritSect(gs_uiCritSect) == 1)
+    {
+        PostponedPlay::fs_vSynchro();
+        o_Singleton.mfn_bSynchroCallbackInstance();
+        CLinkMicroCont::mfn_roGetInstance()->mfn_bSynchroMicroInstance();
+        CExtraEventActor::ss32CurrentRefreshChannel++;
+        if (CExtraEventActor::ss32CurrentRefreshChannel >= 5)
+            CExtraEventActor::ss32CurrentRefreshChannel = 0;
+        CLinkTypeActorCont::mfn_roGetInstance()->mfn_vSynchroActorInstance();
+        CSoundSemaphoreCont::mfn_roGetInstance()->mfn_bSynchroSoundSemaphore();
+        Jingle::fs_vSynchronise();
+        usnd::CL2PS2CoreMgr::fs_vUpdate();
+        GLI_vEndSoundCounter(0);
+        usnd_vLeaveCritSect(gs_uiCritSect);
+    }
+}
+
+void SND_fn_vSetDopplerFactorSound(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void SND_fn_vSetStereoSound(int b_Stereo)
+{
+    g_bInStereo = b_Stereo;
+    return usnd::CPS2Box::fs_vSetMono(b_Stereo ^ 1);
+}
+
+void SND_fn_vSetPan(int b_pan)
+{
+    usnd::CMicroManager::fs_roGetInst(); usnd::CMicroManager::fs_vSetPanOn(b_pan == 1);
+}
+
+int SND_fn_bGetStereoSound(void)
+{
+    return g_bInStereo;
+}
+
+void SND_fn_vSetMusicFadeOut(void)
+{
+}
+
+_SND_tdstBlockEvent* SND_fn_pstGetLastEventForObjectTypeSound(void)
+{
+    return (_SND_tdstBlockEvent*)0;
+}
+
+extern "C" int SND_fn_bIsTypePlayingSound(int s32_TypeId)
+{
+    CLinkTypeActor* po_TypeActor;
+    po_TypeActor = CLinkTypeActorCont::mfn_roGetInstance()->mfn_poGetActorTypeFromId(s32_TypeId);
+    return po_TypeActor->mfn_bSoundPlaying() ? 1 : 0;
 }

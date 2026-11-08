@@ -3406,38 +3406,30 @@ MTH3D_tdstVector_* MTH_p_stRotationMulVector(MTH_stRotation*, MTH3D_tdstVector_*
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vCheckForABetterPos(CAM_tdstUpdateCamera_* _p_stStruct)
-{
-    char cRes;
-    MTH3D_tdstVector_ stComputeVector;
 
-    _p_stStruct->hCineinfo->xCounter1 = _p_stStruct->hCineinfo->xCounter1 + (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime;
-    if ((_p_stStruct->hCineinfo->xCounter1 >= 1000.0f * (float)CAM_g_stCameraConstants.xTickFindBetterPos * g_stEngineStructure.stEngineTimer.xFrameLength) && !(CAM_g_stCameraConstants.wFlags & 0x20) && _p_stStruct->hCineinfo->bCanDoBestPos)
-    {
-        _p_stStruct->hCineinfo->xCounter1 = 0.0f;
-        cRes = CAM_fn_cFindNewGoodIdealPos(_p_stStruct, &stComputeVector, 11);
-        if (!cRes) { return; }
-        else if (cRes == 1)
-        {
-            /* The retail source keeps this whole block on one source line. */
-            _p_stStruct->hCineinfo->eState = 0; CAM_fn_vSetCineinfoCurrentFromVisibility(_p_stStruct->hCineinfo); CAM_fn_vSetCineinfoWorkFromVisibility(_p_stStruct->hCineinfo); _p_stStruct->hCineinfo->ucPerIAFlags |= 4; _p_stStruct->hCineinfo->ucPerIAFlags &= ~8; CAM_fn_vComputeMovePosWithDynTheta(_p_stStruct);
-        }
-        else
-        {
-            CAM_fn_vMakeAsNewIdealPosition(_p_stStruct, &stComputeVector);
-            if (_p_stStruct->hCineinfo->ucPerIAFlags & 8)
-            {
-                cJustBetterPos = 1;
-            }
-            else
-            {
-                cJustBetterPos = 0;
-            }
-            _p_stStruct->hCineinfo->ucPerIAFlags &= ~8;
-        }
-        _p_stStruct->hCineinfo->bCanDoBestPos = 0;
-    }
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void CAM_fn_vCheckForABetterPos(CAM_tdstUpdateCamera_* _p_stStruct);
+char CAM_fn_cCanResetConstraintMoveVisFailure(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stWanted);
+void CAM_fn_vMakeAsNewIdealPosition(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stPosition);
+void CAM_fn_vComputeCineinfoCurrentForAPosition(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stPosition);
+void CAM_fn_vComputeCineinfoWorkForAPosition(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stPosition);
+void CAM_fn_vTestOppositeCollision(CAM_tdstUpdateCamera_* _p_stStruct);
+void CAM_fn_vTestBadVisibility(CAM_tdstUpdateCamera_* _p_stStruct);
+void CAM_fn_vTestBadDistance(CAM_tdstUpdateCamera_* _p_stStruct);
+void CAM_fn_vComputeFailureVisibility(CAM_tdstUpdateCamera_* _p_stStruct);
+void CAM_fn_vForceFailureVisibility(CAM_tdstUpdateCamera_* _p_stStruct);
+char CAM_fn_cFindNewGoodIdealPos(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stComputeVector, char _cMode);
+void CAM_fn_vFillVectorArray(CAM_tdstUpdateCamera_* _p_stStruct, char _cMode);
+int CAM_fni_ComparePositions(void* _pv_Elem1, void* _pv_Elem2);
+char CAM_fnc_IsDirectionCorrect(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _pst_Dir, float _x_Pound, float _x_PoundRef, char _c_Mode);
+float CAM_fnx_ComputePosPound(CAM_tdstUpdateCamera_* _pst_Struct, MTH3D_tdstVector_* _pst_Dir);
+char CAM_fn_cIsWantedPosIncorrect(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stWantedPos, char _cMode);
+char CAM_fn_cCameraCantSee(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stSourcePos, MTH3D_tdstVector_* _p_stTargetPos);
+char CAM_fn_cCameraCantGoFailure(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stSourcePos, MTH3D_tdstVector_* _p_stTargetPos);
+char CAM_fn_cSendMultiSegment(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stSourcePos, MTH3D_tdstVector_* _p_stTargetPos, float _xRadiusCamera, float _xRadiusTarget, int _lNbRay, tdstCineinfo_* _hCineinfo);
+char CAM_fn_cSendSegment(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stSource, MTH3D_tdstVector_* _p_stDest, tdstCineinfo_* _hCineinfo);
+char CAM_fn_cSendSegmentInDynamicWorld(MTH3D_tdstVector_* _p_stSource, MTH3D_tdstVector_* _p_stDest, HIE_tdstSuperObject_* _hSector, HIE_tdstSuperObject_* _hCamera);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 1657–1701 */
 /* addr: 0x0020b410  size: 252 bytes */
@@ -3514,20 +3506,6 @@ inline float MTH3D_xVectorGap(MTH3D_tdstVector_* _p_stA, MTH3D_tdstVector_* _p_s
         (_destination) = _mthResult;                                            \
     } while (0)
 
-char CAM_fn_cCanResetConstraintMoveVisFailure(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stWanted)
-{
-    if (_p_stStruct->hCineinfo->eState == 0)
-        return 1;
-
-    if (_p_stStruct->hCineinfo->xCounter4 >= 1000.0f * (float)CAM_g_stCameraConstants.xTickFindBetterPosIfNoMove * g_stEngineStructure.stEngineTimer.xFrameLength)
-        return 1;
-
-    if (!(_p_stStruct->hCineinfo->ucPerIAFlags & 8))
-        return 1;
-
-    return ((MTH3D_xVectorGap(&_p_stStruct->hCineinfo->stLastFailedOrigin, _p_stWanted) > 0.5f + MTH3D_xVectorGap(&_p_stStruct->hCineinfo->stLastFailedOrigin, &_p_stStruct->hCineinfo->stLastFailedWanted)) ? (char)0 : (char)1) ^ 1;
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 1585–1631 */
 /* addr: 0x0020b510  size: 268 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3550,10 +3528,6 @@ char CAM_fn_cCanResetConstraintMoveVisFailure(CAM_tdstUpdateCamera_* _p_stStruct
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vMakeAsNewIdealPosition(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stPosition)
-{
-    /* TODO: decompile from asm/... */
-}
 
 void CAM_fn_vComputeCineinfoWorkForAPosition(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stPosition);
 
@@ -3571,15 +3545,6 @@ void CAM_fn_vComputeCineinfoWorkForAPosition(CAM_tdstUpdateCamera_* _p_stStruct,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vComputeCineinfoCurrentForAPosition(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stPosition)
-{
-    tdstInternalStructurCineinfo_* p_stMemo;
-
-    p_stMemo = _p_stStruct->hCineinfoWork;
-    _p_stStruct->hCineinfoWork = _p_stStruct->hCineinfoCurrent;
-    CAM_fn_vComputeCineinfoWorkForAPosition(_p_stStruct, _p_stPosition);
-    _p_stStruct->hCineinfoWork = p_stMemo;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 1534–1567 */
 /* addr: 0x0020b710  size: 208 bytes */
@@ -3603,26 +3568,7 @@ void CAM_fn_vComputeRefAxis(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector
 void CAM_fn_vComputeAnglesBetweenTwoVectors(tdstInternalStructurCineinfo_* _hCineinfo, MTH3D_tdstVector_* _p_stSourceVector, MTH3D_tdstVector_* _p_stTargetVector, float* _p_xHorizontalAngle, float* _p_xVerticalAngle, MTH3D_tdstVector_* _p_stRefAxisZ);
 
 #pragma auto_inline on
-void CAM_fn_vComputeCineinfoWorkForAPosition(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stPosition)
-{
-    float xAlphaAngle;
-    float xThetaAngle;
-    MTH3D_tdstVector_ stCamTargetVector;
-    MTH3D_tdstVector_ stDir;
-    float xDist;
 
-    CAM_fn_vComputeRefAxis(_p_stStruct, &stCamTargetVector);
-
-    stDir.xX = _p_stPosition->xX - _p_stStruct->stTargetedPersoPos.xX; stDir.xY = _p_stPosition->xY - _p_stStruct->stTargetedPersoPos.xY; stDir.xZ = _p_stPosition->xZ - _p_stStruct->stTargetedPersoPos.xZ;
-    xDist = MTH_xSqrt(MTH3D_xSqrVector(&stDir));
-
-    CAM_fn_vComputeAnglesBetweenTwoVectors(_p_stStruct->hCineinfoWork, &stCamTargetVector, &stDir, &xAlphaAngle, &xThetaAngle, &_p_stStruct->stCptPos.stRefAxisZ);
-
-    _p_stStruct->hCineinfoWork->xDistMin = xDist;
-    _p_stStruct->hCineinfoWork->xDistMax = xDist;
-    _p_stStruct->hCineinfoWork->xAngleAlpha = xAlphaAngle;
-    _p_stStruct->hCineinfoWork->xAngleTheta = xThetaAngle;
-}
 #pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 1458–1513 */
@@ -3644,12 +3590,6 @@ void CAM_fn_vComputeCineinfoWorkForAPosition(CAM_tdstUpdateCamera_* _p_stStruct,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vTestOppositeCollision(CAM_tdstUpdateCamera_* _p_stStruct)
-{
-    char cMode;
-    MTH3D_tdstVector_ stCameraMove;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 1336–1449 */
 /* addr: 0x0020b940  size: 1620 bytes */
@@ -3708,14 +3648,6 @@ void CAM_fn_vTestOppositeCollision(CAM_tdstUpdateCamera_* _p_stStruct)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vTestBadVisibility(CAM_tdstUpdateCamera_* _p_stStruct)
-{
-    float xNorm;
-    MTH3D_tdstVector_ stVectorNull;
-    MTH3D_tdstVector_ stTempVector;
-    MTH3D_tdstVector_ stComputeVector;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 1254–1326 */
 /* addr: 0x0020bfa0  size: 688 bytes */
@@ -3739,100 +3671,6 @@ void CAM_fn_vTestBadVisibility(CAM_tdstUpdateCamera_* _p_stStruct)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vTestBadDistance(CAM_tdstUpdateCamera_* _p_stStruct)
-{
-    char cMode;
-    char cFound;
-    MTH3D_tdstVector_ stComputeVector;
-    MTH3D_tdstVector_ stComputeVector2;
-    float xDist;
-    float xX;
-    float xY;
-    float xZ;
-
-    if ((_p_stStruct->hCineinfo->eState != CAM_e_State_GoToOptimal) && (_p_stStruct->hCineinfo->eState != CAM_e_State_GoToComputedOptimal))
-    {
-        return;
-    }
-    if (_p_stStruct->hCineinfoWork->uwIAFlags & 0x1000)
-    {
-        return;
-    }
-    if (_p_stStruct->hCineinfoWork->uwIAFlags & 0x2000)
-    {
-        return;
-    }
-    if (_p_stStruct->hCineinfo->ucVolIAFlags & 2)
-    {
-        return;
-    }
-
-    xX = _p_stStruct->stCurrentCameraPos.xX - _p_stStruct->stTargetedPersoRealPos.xX;
-    xY = _p_stStruct->stCurrentCameraPos.xY - _p_stStruct->stTargetedPersoRealPos.xY;
-    xZ = _p_stStruct->stCurrentCameraPos.xZ - _p_stStruct->stTargetedPersoRealPos.xZ;
-    MTH_SQR3_TO(xZ, xX, xY, xZ);
-    MTH_SQRT_TO(xZ, xZ);
-    if (xZ > _p_stStruct->hCineinfoWork->xDistMin)
-    {
-        return;
-    }
-    if ((_p_stStruct->p_stReport->m_cBitField & 1) || (_p_stStruct->hCineinfo->ucVolIAFlags & 4))
-    {
-    xX = _p_stStruct->stWantedCameraPos.xX - _p_stStruct->stTargetedPersoRealPos.xX;
-    xY = _p_stStruct->stWantedCameraPos.xY - _p_stStruct->stTargetedPersoRealPos.xY;
-    xZ = _p_stStruct->stWantedCameraPos.xZ - _p_stStruct->stTargetedPersoRealPos.xZ;
-    MTH_SQR3_TO(xY, xX, xY, xZ);
-    MTH_SQRT_TO(xY, xY);
-    if (xY < (_p_stStruct->hCineinfoWork->xDistMin + CAM_g_stCameraConstants.xOffsetMinDistPerso))
-    {
-        cFound = 1;
-    }
-    else
-    {
-        if (cCanTestStatic)
-        {
-            CAM_fn_vResetArrayOfTransparentSuperObject(_p_stStruct->hCineinfo);
-        }
-        if (CAM_fn_cSendMultiSegment(_p_stStruct, &_p_stStruct->stTargetedPersoRealPos, &_p_stStruct->stWantedCameraPos, CAM_g_stCameraConstants.xRayCameraSphereToSee1, CAM_g_stCameraConstants.xRayCameraSphereToSee2, CAM_g_stCameraConstants.xNumRayCameraCanSee, _p_stStruct->hCineinfo))
-        {
-            cFound = 1;
-        }
-        else
-        {
-            cFound = (CAM_fn_cSendMultiSegment(_p_stStruct, &_p_stStruct->stCurrentCameraPos, &_p_stStruct->stWantedCameraPos, CAM_g_stCameraConstants.xRayCameraSphereToGo1, CAM_g_stCameraConstants.xRayCameraSphereToGo2, CAM_g_stCameraConstants.xNumRayCameraCanGo, NULL) != 0) ? 1 : 0;
-        }
-    }
-    if (!cFound)
-    {
-        return;
-    }
-
-    _p_stStruct->hCineinfo->xCounter1 = 0.0f;
-    cMode = 3;
-    if (_p_stStruct->hCineinfoWork->uwIAFlags & 8)
-    {
-        cMode &= ~1;
-    }
-    if (CAM_fn_cFindNewGoodIdealPos(_p_stStruct, &stComputeVector, cMode))
-    {
-        CAM_fn_vMakeAsNewIdealPosition(_p_stStruct, &stComputeVector);
-        _p_stStruct->hCineinfo->ucPerIAFlags |= 8;
-    }
-    else
-    {
-        cMode = 5;
-        if (CAM_g_stCameraConstants.wFlags & 4)
-        {
-            cMode |= 8;
-        }
-        if (CAM_fn_cFindNewGoodIdealPos(_p_stStruct, &stComputeVector2, cMode))
-        {
-            _p_stStruct->hCineinfo->eState = CAM_e_State_FailureVisibility;
-            MTH3D_M_vCopyVector(&_p_stStruct->hCineinfo->stLastFailedWanted, &stComputeVector2);
-        }
-    }
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 1220–1236 */
 /* addr: 0x0020c250  size: 132 bytes */
@@ -3851,16 +3689,6 @@ void CAM_fn_vTestBadDistance(CAM_tdstUpdateCamera_* _p_stStruct)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vComputeFailureVisibility(CAM_tdstUpdateCamera_* _p_stStruct)
-{
-    if (_p_stStruct->hCineinfo->eState == CAM_e_State_FailureVisibility)
-    {
-        CAM_fn_vForceCameraPos(_p_stStruct->hSuperObjCamera, &_p_stStruct->hCineinfo->stLastFailedWanted);
-        CAM_fn_vForceCameraTgt(_p_stStruct->hSuperObjCamera, &_p_stStruct->stCptPos.stTarget, &_p_stStruct->stCptPos.stRefAxisZ);
-        MTH3D_M_vCopyVector(&_p_stStruct->stCurrentCameraPos, &_p_stStruct->hCineinfo->stLastFailedWanted);
-        CAM_fn_vMakeAsNewIdealPosition(_p_stStruct, &_p_stStruct->hCineinfo->stLastFailedWanted);
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 1185–1212 */
 /* addr: 0x0020c2e0  size: 132 bytes */
@@ -3879,22 +3707,6 @@ void CAM_fn_vComputeFailureVisibility(CAM_tdstUpdateCamera_* _p_stStruct)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vForceFailureVisibility(CAM_tdstUpdateCamera_* _p_stStruct)
-{
-    char cMode;
-    union { MTH3D_tdstVector_ v; unsigned int a[3]; } stComputeVector;
-
-    cMode = 5;
-    if (CAM_g_stCameraConstants.wFlags & 4)
-        cMode |= 8;
-    if (CAM_fn_cFindNewGoodIdealPos(_p_stStruct, &stComputeVector.v, cMode))
-    {
-        _p_stStruct->hCineinfo->eState = CAM_e_State_FailureVisibility;
-        ((unsigned int*)&_p_stStruct->hCineinfo->stLastFailedWanted)[0] = stComputeVector.a[0];
-        ((unsigned int*)&_p_stStruct->hCineinfo->stLastFailedWanted)[1] = stComputeVector.a[1];
-        ((unsigned int*)&_p_stStruct->hCineinfo->stLastFailedWanted)[2] = stComputeVector.a[2];
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 1090–1166 */
 /* addr: 0x0020c370  size: 508 bytes */
@@ -3928,43 +3740,6 @@ void CAM_fn_vForceFailureVisibility(CAM_tdstUpdateCamera_* _p_stStruct)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-char CAM_fn_cFindNewGoodIdealPos(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stComputeVector, char _cMode)
-{
-    float xPoundRef;
-    MTH3D_tdstVector_* p_stDir;
-    MTH3D_tdstVector_ stDir;
-    union { MTH3D_tdstVector_ v; int i[3]; } stTemp;
-    unsigned int ulCounter;
-    int cFound;
-
-    *(int*)&_p_stComputeVector->xX = 0; *(int*)&_p_stComputeVector->xY = 0; *(int*)&_p_stComputeVector->xZ = 0; xPoundRef = 0.0f;
-
-    if (_cMode & 8)
-    {
-        if (_cMode & 4)
-        {
-            stDir.xX = _p_stStruct->stCurrentCameraPos.xX - _p_stStruct->stTargetedPersoPos.xX; stDir.xY = _p_stStruct->stCurrentCameraPos.xY - _p_stStruct->stTargetedPersoPos.xY; stDir.xZ = _p_stStruct->stCurrentCameraPos.xZ - _p_stStruct->stTargetedPersoPos.xZ;
-        }
-        else
-        {
-            stDir.xX = _p_stStruct->stWantedCameraPos.xX - _p_stStruct->stTargetedPersoPos.xX; stDir.xY = _p_stStruct->stWantedCameraPos.xY - _p_stStruct->stTargetedPersoPos.xY; stDir.xZ = _p_stStruct->stWantedCameraPos.xZ - _p_stStruct->stTargetedPersoPos.xZ;
-        }
-        xPoundRef = CAM_fnx_ComputePosPound(_p_stStruct, &stDir);
-    }
-    CAM_fn_vFillVectorArray(_p_stStruct, _cMode);
-    qsort(gast_VectorArrayCpt, guw_NbVectorArrayCpt, 16, CAM_fni_ComparePositions);
-
-    for (ulCounter = 0; ulCounter < guw_NbVectorArrayCpt; ulCounter++)
-    {
-        p_stDir = &gast_VectorArrayCpt[ulCounter].stDir;
-        if (CAM_fnc_IsDirectionCorrect(_p_stStruct, p_stDir, gast_VectorArrayCpt[ulCounter].xPound, xPoundRef, _cMode)) { stTemp.v.xX = p_stDir->xX + _p_stStruct->stTargetedPersoPos.xX; stTemp.v.xY = p_stDir->xY + _p_stStruct->stTargetedPersoPos.xY; stTemp.v.xZ = p_stDir->xZ + _p_stStruct->stTargetedPersoPos.xZ; if (CAM_fn_cIsWantedPosIncorrect(_p_stStruct, &stTemp.v, _cMode)) { cFound = 0; } else { *(int*)&_p_stComputeVector->xX = stTemp.i[0]; *(int*)&_p_stComputeVector->xY = stTemp.i[1]; *(int*)&_p_stComputeVector->xZ = stTemp.i[2]; cFound = 1; } if (cFound)
-        {
-            return (ulCounter == 0) ? (char)1 : (char)2;
-        }
-        }
-    }
-    return 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 947–1074 */
 /* addr: 0x0020c570  size: 1604 bytes */
@@ -4095,20 +3870,6 @@ char CAM_fn_cFindNewGoodIdealPos(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstV
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vFillVectorArray(CAM_tdstUpdateCamera_* _p_stStruct, char _cMode)
-{
-    float xNorm;
-    e_ucCameraStates_ eState;
-    CAM_tdstUpdateCamera_ stStruct;
-    tdstInternalStructurCineinfo_ stTemp;
-    unsigned int ulAngle;
-    unsigned int ulMax;
-    unsigned int ulCounter;
-    float xSaveTheta;
-    float xAngle;
-    MTH3D_tdstVector_* p_stDir;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 936–939 */
 /* addr: 0x0020cbc0  size: 64 bytes */
@@ -4120,14 +3881,6 @@ void CAM_fn_vFillVectorArray(CAM_tdstUpdateCamera_* _p_stStruct, char _cMode)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int CAM_fni_ComparePositions(void* _pv_Elem1, void* _pv_Elem2)
-{
-    float xPound1;
-    float xPound2;
-    xPound1 = *((float*)_pv_Elem1 + 3);
-    xPound2 = *((float*)_pv_Elem2 + 3);
-    return (xPound2 > xPound1) ? -1 : ((xPound2 == xPound1) ? 0 : 1);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 852–922 */
 /* addr: 0x0020cc00  size: 380 bytes */
@@ -4159,11 +3912,6 @@ int CAM_fni_ComparePositions(void* _pv_Elem1, void* _pv_Elem2)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-char CAM_fnc_IsDirectionCorrect(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _pst_Dir, float _x_Pound, float _x_PoundRef, char _c_Mode)
-{
-    MTH3D_tdstVector_ stTempVector;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 775–837 */
 /* addr: 0x0020cd80  size: 760 bytes */
@@ -4228,16 +3976,6 @@ char CAM_fnc_IsDirectionCorrect(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-float CAM_fnx_ComputePosPound(CAM_tdstUpdateCamera_* _pst_Struct, MTH3D_tdstVector_* _pst_Dir)
-{
-    tdstInternalStructurCineinfo_ st_Temp;
-    tdstInternalStructurCineinfo_* pst_Memo;
-    float x_P3;
-    float x_P2;
-    float x_P1;
-    float x_Pound;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 677–720 */
 /* addr: 0x0020d080  size: 320 bytes */
@@ -4259,11 +3997,6 @@ float CAM_fnx_ComputePosPound(CAM_tdstUpdateCamera_* _pst_Struct, MTH3D_tdstVect
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-char CAM_fn_cIsWantedPosIncorrect(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stWantedPos, char _cMode)
-{
-    char cCant;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 649–663 */
 /* addr: 0x0020d1c0  size: 116 bytes */
@@ -4276,14 +4009,6 @@ char CAM_fn_cIsWantedPosIncorrect(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdst
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-char CAM_fn_cCameraCantSee(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stSourcePos, MTH3D_tdstVector_* _p_stTargetPos)
-{
-    if (cCanTestStatic)
-    {
-        CAM_fn_vResetArrayOfTransparentSuperObject(_p_stStruct->hCineinfo);
-    }
-    return CAM_fn_cSendMultiSegment(_p_stStruct, _p_stSourcePos, _p_stTargetPos, CAM_g_stCameraConstants.xRayCameraSphereToSee1, CAM_g_stCameraConstants.xRayCameraSphereToSee2, CAM_g_stCameraConstants.xNumRayCameraCanSee, _p_stStruct->hCineinfo);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 611–636 */
 /* addr: 0x0020d240  size: 328 bytes */
@@ -4304,12 +4029,6 @@ char CAM_fn_cCameraCantSee(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-char CAM_fn_cCameraCantGoFailure(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stSourcePos, MTH3D_tdstVector_* _p_stTargetPos)
-{
-    float xNorm;
-    MTH3D_tdstVector_ stTempVector;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 416–489 */
 /* addr: 0x0020d390  size: 848 bytes */
@@ -4356,73 +4075,6 @@ char CAM_fn_cCameraCantGoFailure(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstV
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-char CAM_fn_cSendMultiSegment(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stSourcePos, MTH3D_tdstVector_* _p_stTargetPos, float _xRadiusCamera, float _xRadiusTarget, int _lNbRay, tdstCineinfo_* _hCineinfo)
-{
-    float xNorm;
-    int i;
-    MTH_stRotation stRotation;
-    MTH3D_tdstVector_ stDir;
-    MTH3D_tdstVector_ stSourcePoint;
-    MTH3D_tdstVector_ stTargetPoint;
-    MTH3D_tdstVector_ stRot;
-
-    if (_lNbRay == 1)
-    {
-        return CAM_fn_cSendSegment(_p_stStruct, _p_stSourcePos, _p_stTargetPos, _hCineinfo);
-    }
-
-    stDir.xX = _p_stTargetPos->xX - _p_stSourcePos->xX;
-    stDir.xY = _p_stTargetPos->xY - _p_stSourcePos->xY;
-    stDir.xZ = _p_stTargetPos->xZ - _p_stSourcePos->xZ;
-    xNorm = MTH_xSqrt(MTH3D_xSqrVector(&stDir));
-    if (xNorm != 0.0f)
-    {
-        xNorm = 1.0f / xNorm;
-        stDir.xX = xNorm * stDir.xX;
-        stDir.xY = xNorm * stDir.xY;
-        stDir.xZ = xNorm * stDir.xZ;
-    }
-
-    MTH_CROSS_COMPONENT_TO(stRot.xX, stDir.xY, 1.0f, stDir.xZ, 0.0f);
-    MTH_CROSS_COMPONENT_TO(stRot.xY, stDir.xZ, 0.0f, stDir.xX, 1.0f);
-    MTH_CROSS_COMPONENT_TO(stRot.xZ, stDir.xX, 0.0f, stDir.xY, 0.0f);
-    if ((stRot.xX == 0.0f) && (stRot.xY == 0.0f) && (stRot.xZ == 0.0f))
-    {
-        MTH_CROSS_COMPONENT_TO(stRot.xX, stDir.xY, 0.0f, stDir.xZ, 0.0f);
-        MTH_CROSS_COMPONENT_TO(stRot.xY, stDir.xZ, 1.0f, stDir.xX, 0.0f);
-        MTH_CROSS_COMPONENT_TO(stRot.xZ, stDir.xX, 0.0f, stDir.xY, 1.0f);
-    }
-    xNorm = MTH_xSqrt(MTH3D_xSqrVector(&stRot));
-    if (xNorm != 0.0f)
-    {
-        xNorm = 1.0f / xNorm;
-        stRot.xX = xNorm * stRot.xX;
-        stRot.xY = xNorm * stRot.xY;
-        stRot.xZ = xNorm * stRot.xZ;
-    }
-
-    stRotation.m_xAngle = 6.2831855f / (float)_lNbRay;
-    MTH3D_M_vCopyVector(&stRotation.m_stAxis, &stDir);
-
-    if (_lNbRay > 0)
-    {
-        for (i = 0; i < _lNbRay; i++)
-        {
-            stSourcePoint.xX = _xRadiusCamera * stRot.xX + _p_stSourcePos->xX;
-            stSourcePoint.xY = _xRadiusCamera * stRot.xY + _p_stSourcePos->xY;
-            stSourcePoint.xZ = _xRadiusCamera * stRot.xZ + _p_stSourcePos->xZ;
-            stTargetPoint.xX = _xRadiusTarget * stRot.xX + _p_stTargetPos->xX;
-            stTargetPoint.xY = _xRadiusTarget * stRot.xY + _p_stTargetPos->xY;
-            stTargetPoint.xZ = _xRadiusTarget * stRot.xZ + _p_stTargetPos->xZ;
-            if (CAM_fn_cSendSegment(_p_stStruct, &stSourcePoint, &stTargetPoint, _hCineinfo))
-            {
-                return 1;
-            }
-            MTH_p_stRotationMulVector(&stRotation, &stRot, &stRot);
-        }
-    }
-    return 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 170–398 */
 /* addr: 0x0020d6e0  size: 1052 bytes */
@@ -4497,20 +4149,6 @@ char CAM_fn_cSendMultiSegment(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVect
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-char CAM_fn_cSendSegment(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stSource, MTH3D_tdstVector_* _p_stDest, tdstCineinfo_* _hCineinfo)
-{
-    char cVisibilityWithDynWorld;
-    HIE_tdstSuperObject_* hCurrentSectorCamera;
-    HIE_tdstSuperObject_* hCurrentSectorPerso;
-    HIE_tdstSuperObject_* hCamera;
-    HIE_tdstSuperObject_* hPersoTargeted;
-    MTH3D_tdstVector_ stDest;
-    MTH3D_tdstVector_ stSource;
-    SECT_tdstListOfSOSectorsInCollisionInteraction_* hList;
-    int i;
-    MTH3D_tdstVector_ stTempVector;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 111–151 */
 /* addr: 0x0020db00  size: 296 bytes */
@@ -4533,6 +4171,7 @@ char CAM_fn_cSendSegment(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
 char CAM_fn_cSendSegmentInDynamicWorld(MTH3D_tdstVector_* _p_stSource, MTH3D_tdstVector_* _p_stDest, HIE_tdstSuperObject_* _hSector, HIE_tdstSuperObject_* _hCamera)
 {
     tdstStandardGame_* hStdGame;
@@ -4541,4 +4180,412 @@ char CAM_fn_cSendSegmentInDynamicWorld(MTH3D_tdstVector_* _p_stSource, MTH3D_tds
     unsigned char ucCameraPriority;
     SECT_tdstListOfSOCharacters_* hCharacterList;
     /* TODO: decompile from asm/... */
+}
+
+char CAM_fn_cSendSegment(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stSource, MTH3D_tdstVector_* _p_stDest, tdstCineinfo_* _hCineinfo)
+{
+    char cVisibilityWithDynWorld;
+    HIE_tdstSuperObject_* hCurrentSectorCamera;
+    HIE_tdstSuperObject_* hCurrentSectorPerso;
+    HIE_tdstSuperObject_* hCamera;
+    HIE_tdstSuperObject_* hPersoTargeted;
+    MTH3D_tdstVector_ stDest;
+    MTH3D_tdstVector_ stSource;
+    SECT_tdstListOfSOSectorsInCollisionInteraction_* hList;
+    int i;
+    MTH3D_tdstVector_ stTempVector;
+    /* TODO: decompile from asm/... */
+}
+
+char CAM_fn_cSendMultiSegment(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stSourcePos, MTH3D_tdstVector_* _p_stTargetPos, float _xRadiusCamera, float _xRadiusTarget, int _lNbRay, tdstCineinfo_* _hCineinfo)
+{
+    float xNorm;
+    int i;
+    MTH_stRotation stRotation;
+    MTH3D_tdstVector_ stDir;
+    MTH3D_tdstVector_ stSourcePoint;
+    MTH3D_tdstVector_ stTargetPoint;
+    MTH3D_tdstVector_ stRot;
+
+    if (_lNbRay == 1)
+    {
+        return CAM_fn_cSendSegment(_p_stStruct, _p_stSourcePos, _p_stTargetPos, _hCineinfo);
+    }
+
+    stDir.xX = _p_stTargetPos->xX - _p_stSourcePos->xX;
+    stDir.xY = _p_stTargetPos->xY - _p_stSourcePos->xY;
+    stDir.xZ = _p_stTargetPos->xZ - _p_stSourcePos->xZ;
+    xNorm = MTH_xSqrt(MTH3D_xSqrVector(&stDir));
+    if (xNorm != 0.0f)
+    {
+        xNorm = 1.0f / xNorm;
+        stDir.xX = xNorm * stDir.xX;
+        stDir.xY = xNorm * stDir.xY;
+        stDir.xZ = xNorm * stDir.xZ;
+    }
+
+    MTH_CROSS_COMPONENT_TO(stRot.xX, stDir.xY, 1.0f, stDir.xZ, 0.0f);
+    MTH_CROSS_COMPONENT_TO(stRot.xY, stDir.xZ, 0.0f, stDir.xX, 1.0f);
+    MTH_CROSS_COMPONENT_TO(stRot.xZ, stDir.xX, 0.0f, stDir.xY, 0.0f);
+    if ((stRot.xX == 0.0f) && (stRot.xY == 0.0f) && (stRot.xZ == 0.0f))
+    {
+        MTH_CROSS_COMPONENT_TO(stRot.xX, stDir.xY, 0.0f, stDir.xZ, 0.0f);
+        MTH_CROSS_COMPONENT_TO(stRot.xY, stDir.xZ, 1.0f, stDir.xX, 0.0f);
+        MTH_CROSS_COMPONENT_TO(stRot.xZ, stDir.xX, 0.0f, stDir.xY, 1.0f);
+    }
+    xNorm = MTH_xSqrt(MTH3D_xSqrVector(&stRot));
+    if (xNorm != 0.0f)
+    {
+        xNorm = 1.0f / xNorm;
+        stRot.xX = xNorm * stRot.xX;
+        stRot.xY = xNorm * stRot.xY;
+        stRot.xZ = xNorm * stRot.xZ;
+    }
+
+    stRotation.m_xAngle = 6.2831855f / (float)_lNbRay;
+    MTH3D_M_vCopyVector(&stRotation.m_stAxis, &stDir);
+
+    if (_lNbRay > 0)
+    {
+        for (i = 0; i < _lNbRay; i++)
+        {
+            stSourcePoint.xX = _xRadiusCamera * stRot.xX + _p_stSourcePos->xX;
+            stSourcePoint.xY = _xRadiusCamera * stRot.xY + _p_stSourcePos->xY;
+            stSourcePoint.xZ = _xRadiusCamera * stRot.xZ + _p_stSourcePos->xZ;
+            stTargetPoint.xX = _xRadiusTarget * stRot.xX + _p_stTargetPos->xX;
+            stTargetPoint.xY = _xRadiusTarget * stRot.xY + _p_stTargetPos->xY;
+            stTargetPoint.xZ = _xRadiusTarget * stRot.xZ + _p_stTargetPos->xZ;
+            if (CAM_fn_cSendSegment(_p_stStruct, &stSourcePoint, &stTargetPoint, _hCineinfo))
+            {
+                return 1;
+            }
+            MTH_p_stRotationMulVector(&stRotation, &stRot, &stRot);
+        }
+    }
+    return 0;
+}
+
+char CAM_fn_cCameraCantGoFailure(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stSourcePos, MTH3D_tdstVector_* _p_stTargetPos)
+{
+    float xNorm;
+    MTH3D_tdstVector_ stTempVector;
+    /* TODO: decompile from asm/... */
+}
+
+char CAM_fn_cCameraCantSee(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stSourcePos, MTH3D_tdstVector_* _p_stTargetPos)
+{
+    if (cCanTestStatic)
+    {
+        CAM_fn_vResetArrayOfTransparentSuperObject(_p_stStruct->hCineinfo);
+    }
+    return CAM_fn_cSendMultiSegment(_p_stStruct, _p_stSourcePos, _p_stTargetPos, CAM_g_stCameraConstants.xRayCameraSphereToSee1, CAM_g_stCameraConstants.xRayCameraSphereToSee2, CAM_g_stCameraConstants.xNumRayCameraCanSee, _p_stStruct->hCineinfo);
+}
+
+char CAM_fn_cIsWantedPosIncorrect(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stWantedPos, char _cMode)
+{
+    char cCant;
+    /* TODO: decompile from asm/... */
+}
+
+float CAM_fnx_ComputePosPound(CAM_tdstUpdateCamera_* _pst_Struct, MTH3D_tdstVector_* _pst_Dir)
+{
+    tdstInternalStructurCineinfo_ st_Temp;
+    tdstInternalStructurCineinfo_* pst_Memo;
+    float x_P3;
+    float x_P2;
+    float x_P1;
+    float x_Pound;
+    /* TODO: decompile from asm/... */
+}
+
+char CAM_fnc_IsDirectionCorrect(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _pst_Dir, float _x_Pound, float _x_PoundRef, char _c_Mode)
+{
+    MTH3D_tdstVector_ stTempVector;
+    /* TODO: decompile from asm/... */
+}
+
+int CAM_fni_ComparePositions(void* _pv_Elem1, void* _pv_Elem2)
+{
+    float xPound1;
+    float xPound2;
+    xPound1 = *((float*)_pv_Elem1 + 3);
+    xPound2 = *((float*)_pv_Elem2 + 3);
+    return (xPound2 > xPound1) ? -1 : ((xPound2 == xPound1) ? 0 : 1);
+}
+
+void CAM_fn_vFillVectorArray(CAM_tdstUpdateCamera_* _p_stStruct, char _cMode)
+{
+    float xNorm;
+    e_ucCameraStates_ eState;
+    CAM_tdstUpdateCamera_ stStruct;
+    tdstInternalStructurCineinfo_ stTemp;
+    unsigned int ulAngle;
+    unsigned int ulMax;
+    unsigned int ulCounter;
+    float xSaveTheta;
+    float xAngle;
+    MTH3D_tdstVector_* p_stDir;
+    /* TODO: decompile from asm/... */
+}
+
+char CAM_fn_cFindNewGoodIdealPos(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stComputeVector, char _cMode)
+{
+    float xPoundRef;
+    MTH3D_tdstVector_* p_stDir;
+    MTH3D_tdstVector_ stDir;
+    union { MTH3D_tdstVector_ v; int i[3]; } stTemp;
+    unsigned int ulCounter;
+    int cFound;
+
+    *(int*)&_p_stComputeVector->xX = 0; *(int*)&_p_stComputeVector->xY = 0; *(int*)&_p_stComputeVector->xZ = 0; xPoundRef = 0.0f;
+
+    if (_cMode & 8)
+    {
+        if (_cMode & 4)
+        {
+            stDir.xX = _p_stStruct->stCurrentCameraPos.xX - _p_stStruct->stTargetedPersoPos.xX; stDir.xY = _p_stStruct->stCurrentCameraPos.xY - _p_stStruct->stTargetedPersoPos.xY; stDir.xZ = _p_stStruct->stCurrentCameraPos.xZ - _p_stStruct->stTargetedPersoPos.xZ;
+        }
+        else
+        {
+            stDir.xX = _p_stStruct->stWantedCameraPos.xX - _p_stStruct->stTargetedPersoPos.xX; stDir.xY = _p_stStruct->stWantedCameraPos.xY - _p_stStruct->stTargetedPersoPos.xY; stDir.xZ = _p_stStruct->stWantedCameraPos.xZ - _p_stStruct->stTargetedPersoPos.xZ;
+        }
+        xPoundRef = CAM_fnx_ComputePosPound(_p_stStruct, &stDir);
+    }
+    CAM_fn_vFillVectorArray(_p_stStruct, _cMode);
+    qsort(gast_VectorArrayCpt, guw_NbVectorArrayCpt, 16, CAM_fni_ComparePositions);
+
+    for (ulCounter = 0; ulCounter < guw_NbVectorArrayCpt; ulCounter++)
+    {
+        p_stDir = &gast_VectorArrayCpt[ulCounter].stDir;
+        if (CAM_fnc_IsDirectionCorrect(_p_stStruct, p_stDir, gast_VectorArrayCpt[ulCounter].xPound, xPoundRef, _cMode)) { stTemp.v.xX = p_stDir->xX + _p_stStruct->stTargetedPersoPos.xX; stTemp.v.xY = p_stDir->xY + _p_stStruct->stTargetedPersoPos.xY; stTemp.v.xZ = p_stDir->xZ + _p_stStruct->stTargetedPersoPos.xZ; if (CAM_fn_cIsWantedPosIncorrect(_p_stStruct, &stTemp.v, _cMode)) { cFound = 0; } else { *(int*)&_p_stComputeVector->xX = stTemp.i[0]; *(int*)&_p_stComputeVector->xY = stTemp.i[1]; *(int*)&_p_stComputeVector->xZ = stTemp.i[2]; cFound = 1; } if (cFound)
+        {
+            return (ulCounter == 0) ? (char)1 : (char)2;
+        }
+        }
+    }
+    return 0;
+}
+
+void CAM_fn_vForceFailureVisibility(CAM_tdstUpdateCamera_* _p_stStruct)
+{
+    char cMode;
+    union { MTH3D_tdstVector_ v; unsigned int a[3]; } stComputeVector;
+
+    cMode = 5;
+    if (CAM_g_stCameraConstants.wFlags & 4)
+        cMode |= 8;
+    if (CAM_fn_cFindNewGoodIdealPos(_p_stStruct, &stComputeVector.v, cMode))
+    {
+        _p_stStruct->hCineinfo->eState = CAM_e_State_FailureVisibility;
+        ((unsigned int*)&_p_stStruct->hCineinfo->stLastFailedWanted)[0] = stComputeVector.a[0];
+        ((unsigned int*)&_p_stStruct->hCineinfo->stLastFailedWanted)[1] = stComputeVector.a[1];
+        ((unsigned int*)&_p_stStruct->hCineinfo->stLastFailedWanted)[2] = stComputeVector.a[2];
+    }
+}
+
+void CAM_fn_vComputeFailureVisibility(CAM_tdstUpdateCamera_* _p_stStruct)
+{
+    if (_p_stStruct->hCineinfo->eState == CAM_e_State_FailureVisibility)
+    {
+        CAM_fn_vForceCameraPos(_p_stStruct->hSuperObjCamera, &_p_stStruct->hCineinfo->stLastFailedWanted);
+        CAM_fn_vForceCameraTgt(_p_stStruct->hSuperObjCamera, &_p_stStruct->stCptPos.stTarget, &_p_stStruct->stCptPos.stRefAxisZ);
+        MTH3D_M_vCopyVector(&_p_stStruct->stCurrentCameraPos, &_p_stStruct->hCineinfo->stLastFailedWanted);
+        CAM_fn_vMakeAsNewIdealPosition(_p_stStruct, &_p_stStruct->hCineinfo->stLastFailedWanted);
+    }
+}
+
+void CAM_fn_vTestBadDistance(CAM_tdstUpdateCamera_* _p_stStruct)
+{
+    char cMode;
+    char cFound;
+    MTH3D_tdstVector_ stComputeVector;
+    MTH3D_tdstVector_ stComputeVector2;
+    float xDist;
+    float xX;
+    float xY;
+    float xZ;
+
+    if ((_p_stStruct->hCineinfo->eState != CAM_e_State_GoToOptimal) && (_p_stStruct->hCineinfo->eState != CAM_e_State_GoToComputedOptimal))
+    {
+        return;
+    }
+    if (_p_stStruct->hCineinfoWork->uwIAFlags & 0x1000)
+    {
+        return;
+    }
+    if (_p_stStruct->hCineinfoWork->uwIAFlags & 0x2000)
+    {
+        return;
+    }
+    if (_p_stStruct->hCineinfo->ucVolIAFlags & 2)
+    {
+        return;
+    }
+
+    xX = _p_stStruct->stCurrentCameraPos.xX - _p_stStruct->stTargetedPersoRealPos.xX;
+    xY = _p_stStruct->stCurrentCameraPos.xY - _p_stStruct->stTargetedPersoRealPos.xY;
+    xZ = _p_stStruct->stCurrentCameraPos.xZ - _p_stStruct->stTargetedPersoRealPos.xZ;
+    MTH_SQR3_TO(xZ, xX, xY, xZ);
+    MTH_SQRT_TO(xZ, xZ);
+    if (xZ > _p_stStruct->hCineinfoWork->xDistMin)
+    {
+        return;
+    }
+    if ((_p_stStruct->p_stReport->m_cBitField & 1) || (_p_stStruct->hCineinfo->ucVolIAFlags & 4))
+    {
+    xX = _p_stStruct->stWantedCameraPos.xX - _p_stStruct->stTargetedPersoRealPos.xX;
+    xY = _p_stStruct->stWantedCameraPos.xY - _p_stStruct->stTargetedPersoRealPos.xY;
+    xZ = _p_stStruct->stWantedCameraPos.xZ - _p_stStruct->stTargetedPersoRealPos.xZ;
+    MTH_SQR3_TO(xY, xX, xY, xZ);
+    MTH_SQRT_TO(xY, xY);
+    if (xY < (_p_stStruct->hCineinfoWork->xDistMin + CAM_g_stCameraConstants.xOffsetMinDistPerso))
+    {
+        cFound = 1;
+    }
+    else
+    {
+        if (cCanTestStatic)
+        {
+            CAM_fn_vResetArrayOfTransparentSuperObject(_p_stStruct->hCineinfo);
+        }
+        if (CAM_fn_cSendMultiSegment(_p_stStruct, &_p_stStruct->stTargetedPersoRealPos, &_p_stStruct->stWantedCameraPos, CAM_g_stCameraConstants.xRayCameraSphereToSee1, CAM_g_stCameraConstants.xRayCameraSphereToSee2, CAM_g_stCameraConstants.xNumRayCameraCanSee, _p_stStruct->hCineinfo))
+        {
+            cFound = 1;
+        }
+        else
+        {
+            cFound = (CAM_fn_cSendMultiSegment(_p_stStruct, &_p_stStruct->stCurrentCameraPos, &_p_stStruct->stWantedCameraPos, CAM_g_stCameraConstants.xRayCameraSphereToGo1, CAM_g_stCameraConstants.xRayCameraSphereToGo2, CAM_g_stCameraConstants.xNumRayCameraCanGo, NULL) != 0) ? 1 : 0;
+        }
+    }
+    if (!cFound)
+    {
+        return;
+    }
+
+    _p_stStruct->hCineinfo->xCounter1 = 0.0f;
+    cMode = 3;
+    if (_p_stStruct->hCineinfoWork->uwIAFlags & 8)
+    {
+        cMode &= ~1;
+    }
+    if (CAM_fn_cFindNewGoodIdealPos(_p_stStruct, &stComputeVector, cMode))
+    {
+        CAM_fn_vMakeAsNewIdealPosition(_p_stStruct, &stComputeVector);
+        _p_stStruct->hCineinfo->ucPerIAFlags |= 8;
+    }
+    else
+    {
+        cMode = 5;
+        if (CAM_g_stCameraConstants.wFlags & 4)
+        {
+            cMode |= 8;
+        }
+        if (CAM_fn_cFindNewGoodIdealPos(_p_stStruct, &stComputeVector2, cMode))
+        {
+            _p_stStruct->hCineinfo->eState = CAM_e_State_FailureVisibility;
+            MTH3D_M_vCopyVector(&_p_stStruct->hCineinfo->stLastFailedWanted, &stComputeVector2);
+        }
+    }
+    }
+}
+
+void CAM_fn_vTestBadVisibility(CAM_tdstUpdateCamera_* _p_stStruct)
+{
+    float xNorm;
+    MTH3D_tdstVector_ stVectorNull;
+    MTH3D_tdstVector_ stTempVector;
+    MTH3D_tdstVector_ stComputeVector;
+    /* TODO: decompile from asm/... */
+}
+
+void CAM_fn_vTestOppositeCollision(CAM_tdstUpdateCamera_* _p_stStruct)
+{
+    char cMode;
+    MTH3D_tdstVector_ stCameraMove;
+    /* TODO: decompile from asm/... */
+}
+
+#pragma auto_inline on
+void CAM_fn_vComputeCineinfoWorkForAPosition(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stPosition)
+{
+    float xAlphaAngle;
+    float xThetaAngle;
+    MTH3D_tdstVector_ stCamTargetVector;
+    MTH3D_tdstVector_ stDir;
+    float xDist;
+
+    CAM_fn_vComputeRefAxis(_p_stStruct, &stCamTargetVector);
+
+    stDir.xX = _p_stPosition->xX - _p_stStruct->stTargetedPersoPos.xX; stDir.xY = _p_stPosition->xY - _p_stStruct->stTargetedPersoPos.xY; stDir.xZ = _p_stPosition->xZ - _p_stStruct->stTargetedPersoPos.xZ;
+    xDist = MTH_xSqrt(MTH3D_xSqrVector(&stDir));
+
+    CAM_fn_vComputeAnglesBetweenTwoVectors(_p_stStruct->hCineinfoWork, &stCamTargetVector, &stDir, &xAlphaAngle, &xThetaAngle, &_p_stStruct->stCptPos.stRefAxisZ);
+
+    _p_stStruct->hCineinfoWork->xDistMin = xDist;
+    _p_stStruct->hCineinfoWork->xDistMax = xDist;
+    _p_stStruct->hCineinfoWork->xAngleAlpha = xAlphaAngle;
+    _p_stStruct->hCineinfoWork->xAngleTheta = xThetaAngle;
+}
+#pragma auto_inline reset
+
+void CAM_fn_vComputeCineinfoCurrentForAPosition(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stPosition)
+{
+    tdstInternalStructurCineinfo_* p_stMemo;
+
+    p_stMemo = _p_stStruct->hCineinfoWork;
+    _p_stStruct->hCineinfoWork = _p_stStruct->hCineinfoCurrent;
+    CAM_fn_vComputeCineinfoWorkForAPosition(_p_stStruct, _p_stPosition);
+    _p_stStruct->hCineinfoWork = p_stMemo;
+}
+
+void CAM_fn_vMakeAsNewIdealPosition(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stPosition)
+{
+    /* TODO: decompile from asm/... */
+}
+
+char CAM_fn_cCanResetConstraintMoveVisFailure(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stWanted)
+{
+    if (_p_stStruct->hCineinfo->eState == 0)
+        return 1;
+
+    if (_p_stStruct->hCineinfo->xCounter4 >= 1000.0f * (float)CAM_g_stCameraConstants.xTickFindBetterPosIfNoMove * g_stEngineStructure.stEngineTimer.xFrameLength)
+        return 1;
+
+    if (!(_p_stStruct->hCineinfo->ucPerIAFlags & 8))
+        return 1;
+
+    return ((MTH3D_xVectorGap(&_p_stStruct->hCineinfo->stLastFailedOrigin, _p_stWanted) > 0.5f + MTH3D_xVectorGap(&_p_stStruct->hCineinfo->stLastFailedOrigin, &_p_stStruct->hCineinfo->stLastFailedWanted)) ? (char)0 : (char)1) ^ 1;
+}
+
+void CAM_fn_vCheckForABetterPos(CAM_tdstUpdateCamera_* _p_stStruct)
+{
+    char cRes;
+    MTH3D_tdstVector_ stComputeVector;
+
+    _p_stStruct->hCineinfo->xCounter1 = _p_stStruct->hCineinfo->xCounter1 + (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime;
+    if ((_p_stStruct->hCineinfo->xCounter1 >= 1000.0f * (float)CAM_g_stCameraConstants.xTickFindBetterPos * g_stEngineStructure.stEngineTimer.xFrameLength) && !(CAM_g_stCameraConstants.wFlags & 0x20) && _p_stStruct->hCineinfo->bCanDoBestPos)
+    {
+        _p_stStruct->hCineinfo->xCounter1 = 0.0f;
+        cRes = CAM_fn_cFindNewGoodIdealPos(_p_stStruct, &stComputeVector, 11);
+        if (!cRes) { return; }
+        else if (cRes == 1)
+        {
+            /* The retail source keeps this whole block on one source line. */
+            _p_stStruct->hCineinfo->eState = 0; CAM_fn_vSetCineinfoCurrentFromVisibility(_p_stStruct->hCineinfo); CAM_fn_vSetCineinfoWorkFromVisibility(_p_stStruct->hCineinfo); _p_stStruct->hCineinfo->ucPerIAFlags |= 4; _p_stStruct->hCineinfo->ucPerIAFlags &= ~8; CAM_fn_vComputeMovePosWithDynTheta(_p_stStruct);
+        }
+        else
+        {
+            CAM_fn_vMakeAsNewIdealPosition(_p_stStruct, &stComputeVector);
+            if (_p_stStruct->hCineinfo->ucPerIAFlags & 8)
+            {
+                cJustBetterPos = 1;
+            }
+            else
+            {
+                cJustBetterPos = 0;
+            }
+            _p_stStruct->hCineinfo->ucPerIAFlags &= ~8;
+        }
+        _p_stStruct->hCineinfo->bCanDoBestPos = 0;
+    }
 }

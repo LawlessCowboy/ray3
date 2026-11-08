@@ -1220,93 +1220,24 @@ void impPS2glEnd(void);
 unsigned int VU1BufferFreeSpace(void);
 void VU1FlushBuffer(void);
 
-void PS2glInternalDrawSpriteArray(int count)
-{
-    _sceDmaTag* aDmaTag;
-    _sceDmaTag* aDmaTagBegin;
-    int I;
-    float (*pV)[4];
-    unsigned int* pMyGifTag;
-    unsigned char bFirst;
-    float sx;
-    float sy;
-    int iSizeBlock;
-    int nSprite;
-    int nVertex;
-    int nOffset;
-
-    I = 0;
-    bFirst = 1;
-    iSizeBlock = count * 2;
-    pV = (float (*)[4])g_PS2glContext.VertexArray.pointer;
-    sx = pV[0][3];
-    sy = pV[2][3];
-    PS2GL_bOptimizedSprite = 1;
-    impPS2glBegin(5);
-    impPS2glEnd();
-    if (VU1BufferFreeSpace() < (unsigned int)(((iSizeBlock + 29) / 30) * 9))
-        VU1FlushBuffer();
-    g_aDmaTag = (int)g_PS2glContext.pVIFIBufTail;
-    aDmaTagBegin = (_sceDmaTag*)g_aDmaTag;
-    aDmaTag = aDmaTagBegin;
-    nOffset = 0;
-    if (iSizeBlock > 0)
-    {
-        do
-        {
-            pV[0][3] = sx;
-            pV[2][3] = sy;
-            if (bFirst)
-            {
-                nSprite = 40;
-                if (iSizeBlock < 40)
-                    nSprite = iSizeBlock;
-            }
-            else
-            {
-                nSprite = 40;
-                if (iSizeBlock < 40)
-                    nSprite = iSizeBlock;
-            }
-            if (iSizeBlock < 40)
-                nVertex = iSizeBlock;
-            else
-                nVertex = 40;
-            pMyGifTag = (unsigned int*)((unsigned char*)aDmaTag + nOffset);
-            ((unsigned short*)pMyGifTag)[0] = (unsigned short)nSprite;
-            ((unsigned char*)pMyGifTag)[3] = 0x30;
-            pMyGifTag[1] = (unsigned int)pV;
-            pMyGifTag[2] = 0x01000404;
-            pMyGifTag[3] = 0x6C3C8001;
-            ((unsigned char*)pMyGifTag)[0xE] = (unsigned char)nSprite;
-            pMyGifTag[8] = 0x8000;
-            pMyGifTag[8] |= (nSprite >> 1);
-            pMyGifTag[9] = 0x90024000;
-            pMyGifTag[10] = 0x24242412;
-            pMyGifTag[11] = 4;
-            ((unsigned char*)pMyGifTag)[0x13] = 0x10;
-            pMyGifTag[6] = 0x01000404;
-            pMyGifTag[7] = 0x6C018000;
-            ((unsigned short*)pMyGifTag)[8] = 2;
-            *(tagMSCNT*)((unsigned char*)pMyGifTag + 0x30) = *(tagMSCNT*)MY_MSCNT;
-            nOffset += 0x40;
-            I += 4;
-            pV += nVertex;
-            if (bFirst)
-            {
-                iSizeBlock -= nSprite;
-                bFirst = 0;
-            }
-            else
-            {
-                iSizeBlock -= nVertex;
-            }
-        } while (iSizeBlock > 0);
-    }
-    g_PS2glContext.pVIFIBufTail += I;
-    iDmaTagCount = I;
-    PS2GL_bOptimizedSprite = 0;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void PS2glInternalDrawSpriteArray(int count);
+void impPS2glInterleavedArrays(unsigned int format, int stride, void* pointer);
+void impPS2glDrawElements(unsigned int mode, int count, unsigned int type, void* indices);
+void impPS2glDrawArrays(unsigned int mode, int first, int count);
+void PS2glInternalDrawArrays(unsigned int mode, int first, int count, int flag, unsigned char bImmediate);
+void WaitDMAFromSPR(void);
+int PS2glInternalArraysSize(unsigned int mode, int count);
+void impPS2glArrayElement(int iIndex);
+void impPS2glDisableClientState(unsigned int array);
+void impPS2glEnableClientState(unsigned int array);
+void impPS2glVertexPointer(int size, unsigned int type, int stride, void* pointer);
+void impPS2glTexCoordPointer(int size, unsigned int type, int stride, void* pointer);
+void impPS2glNormalPointer(unsigned int type, int stride, void* pointer);
+void impPS2glIndexPointer(unsigned int type, int stride, void* pointer);
+void impPS2glEdgeFlagPointer(int stride, void* pointer);
+void impPS2glColorPointer(int size, unsigned int type, int stride, void* pointer);
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Array.c lines 2942–3065 */
 /* addr: 0x0013c400  size: 1188 bytes */
@@ -1425,129 +1356,6 @@ void PS2glTexCoordPointer(int size, unsigned int type, int stride, unsigned char
 void PS2glNormalPointer(unsigned int type, int stride, unsigned char* pointer);
 void PS2glColorPointer(int size, unsigned int type, int stride, unsigned char* pointer);
 
-void impPS2glInterleavedArrays(unsigned int format, int stride, void* pointer)
-{
-    PS2glEnableClientState(0x8074); /* GL_VERTEX_ARRAY */
-    PS2glDisableClientState(0x8078); /* GL_TEXTURE_COORD_ARRAY */
-    PS2glDisableClientState(0x8075); /* GL_NORMAL_ARRAY */
-    PS2glDisableClientState(0x8076); /* GL_COLOR_ARRAY */
-    PS2glDisableClientState(0x8077); /* GL_INDEX_ARRAY */
-    PS2glDisableClientState(0x8079); /* GL_EDGE_FLAG_ARRAY */
-    switch (format)
-    {
-    case 0x2A20: /* GL_V2F */
-        if (stride == 0)
-            stride = 8;
-        PS2glVertexPointer(2, 0x1406, stride, pointer);
-        break;
-    case 0x2A21: /* GL_V3F */
-        if (stride == 0)
-            stride = 12;
-        PS2glVertexPointer(3, 0x1406, stride, pointer);
-        break;
-    case 0x2A22: /* GL_C4UB_V2F */
-        PS2glEnableClientState(0x8076); /* GL_COLOR_ARRAY */
-        if (stride == 0)
-            stride = 12;
-        PS2glColorPointer(4, 0x1401, stride, pointer);
-        PS2glVertexPointer(2, 0x1406, stride, (unsigned char*)pointer + 4);
-        break;
-    case 0x2A23: /* GL_C4UB_V3F */
-        PS2glEnableClientState(0x8076); /* GL_COLOR_ARRAY */
-        if (stride == 0)
-            stride = 16;
-        PS2glColorPointer(4, 0x1401, stride, pointer);
-        PS2glVertexPointer(3, 0x1406, stride, (unsigned char*)pointer + 4);
-        break;
-    case 0x2A24: /* GL_C3F_V3F */
-        PS2glEnableClientState(0x8076); /* GL_COLOR_ARRAY */
-        if (stride == 0)
-            stride = 24;
-        PS2glColorPointer(3, 0x1406, stride, pointer);
-        PS2glVertexPointer(3, 0x1406, stride, (unsigned char*)pointer + 12);
-        break;
-    case 0x2A25: /* GL_N3F_V3F */
-        PS2glEnableClientState(0x8075); /* GL_NORMAL_ARRAY */
-        if (stride == 0)
-            stride = 24;
-        PS2glNormalPointer(0x1406, stride, pointer);
-        PS2glVertexPointer(3, 0x1406, stride, (unsigned char*)pointer + 12);
-        break;
-    case 0x2A26: /* GL_C4F_N3F_V3F */
-        PS2glEnableClientState(0x8076); /* GL_COLOR_ARRAY */
-        PS2glEnableClientState(0x8075); /* GL_NORMAL_ARRAY */
-        if (stride == 0)
-            stride = 40;
-        PS2glColorPointer(4, 0x1406, stride, pointer);
-        PS2glNormalPointer(0x1406, stride, (unsigned char*)pointer + 16);
-        PS2glVertexPointer(3, 0x1406, stride, (unsigned char*)pointer + 28);
-        break;
-    case 0x2A27: /* GL_T2F_V3F */
-        PS2glEnableClientState(0x8078); /* GL_TEXTURE_COORD_ARRAY */
-        if (stride == 0)
-            stride = 20;
-        PS2glTexCoordPointer(2, 0x1406, stride, pointer);
-        PS2glVertexPointer(3, 0x1406, stride, (unsigned char*)pointer + 8);
-        break;
-    case 0x2A28: /* GL_T4F_V3F */
-        PS2glEnableClientState(0x8078); /* GL_TEXTURE_COORD_ARRAY */
-        if (stride == 0)
-            stride = 32;
-        PS2glTexCoordPointer(4, 0x1406, stride, pointer);
-        PS2glVertexPointer(4, 0x1406, stride, (unsigned char*)pointer + 16);
-        break;
-    case 0x2A29: /* GL_T2F_C4UB_V3F */
-        PS2glEnableClientState(0x8078); /* GL_TEXTURE_COORD_ARRAY */
-        PS2glEnableClientState(0x8076); /* GL_COLOR_ARRAY */
-        if (stride == 0)
-            stride = 24;
-        PS2glTexCoordPointer(2, 0x1406, stride, pointer);
-        PS2glColorPointer(4, 0x1401, stride, (unsigned char*)pointer + 8);
-        PS2glVertexPointer(3, 0x1406, stride, (unsigned char*)pointer + 12);
-        break;
-    case 0x2A2A: /* GL_T2F_C3F_V3F */
-        PS2glEnableClientState(0x8078); /* GL_TEXTURE_COORD_ARRAY */
-        PS2glEnableClientState(0x8076); /* GL_COLOR_ARRAY */
-        if (stride == 0)
-            stride = 32;
-        PS2glTexCoordPointer(2, 0x1406, stride, pointer);
-        PS2glColorPointer(3, 0x1406, stride, (unsigned char*)pointer + 8);
-        PS2glVertexPointer(3, 0x1406, stride, (unsigned char*)pointer + 20);
-        break;
-    case 0x2A2B: /* GL_T2F_N3F_V3F */
-        PS2glEnableClientState(0x8078); /* GL_TEXTURE_COORD_ARRAY */
-        PS2glEnableClientState(0x8075); /* GL_NORMAL_ARRAY */
-        if (stride == 0)
-            stride = 32;
-        PS2glTexCoordPointer(2, 0x1406, stride, pointer);
-        PS2glNormalPointer(0x1406, stride, (unsigned char*)pointer + 8);
-        PS2glVertexPointer(3, 0x1406, stride, (unsigned char*)pointer + 20);
-        break;
-    case 0x2A2C: /* GL_T2F_C4F_N3F_V3F */
-        PS2glEnableClientState(0x8078); /* GL_TEXTURE_COORD_ARRAY */
-        PS2glEnableClientState(0x8076); /* GL_COLOR_ARRAY */
-        PS2glEnableClientState(0x8075); /* GL_NORMAL_ARRAY */
-        if (stride == 0)
-            stride = 48;
-        PS2glTexCoordPointer(2, 0x1406, stride, pointer);
-        PS2glColorPointer(3, 0x1406, stride, (unsigned char*)pointer + 8);
-        PS2glNormalPointer(0x1406, stride, (unsigned char*)pointer + 24);
-        PS2glVertexPointer(3, 0x1406, stride, (unsigned char*)pointer + 36);
-        break;
-    case 0x2A2D: /* GL_T4F_C4F_N3F_V4F */
-        PS2glEnableClientState(0x8078); /* GL_TEXTURE_COORD_ARRAY */
-        PS2glEnableClientState(0x8076); /* GL_COLOR_ARRAY */
-        PS2glEnableClientState(0x8075); /* GL_NORMAL_ARRAY */
-        if (stride == 0)
-            stride = 60;
-        PS2glTexCoordPointer(4, 0x1406, stride, pointer);
-        PS2glColorPointer(4, 0x1406, stride, (unsigned char*)pointer + 16);
-        PS2glNormalPointer(0x1406, stride, (unsigned char*)pointer + 32);
-        PS2glVertexPointer(4, 0x1406, stride, (unsigned char*)pointer + 44);
-        break;
-    }
-}
-
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Array.c lines 2917–2938 */
 /* addr: 0x0013c8b0  size: 268 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1573,28 +1381,6 @@ void PS2glEnd(void);
 void PS2glArrayElement(int iIndex);
 
 #pragma opt_unroll_loops off
-void impPS2glDrawElements(unsigned int mode, int count, unsigned int type, void* indices)
-{
-    int i;
-
-    PS2glBegin(mode);
-    switch (type)
-    {
-    case 0x1401:
-        for (i = 0; i < count; i++)
-            PS2glArrayElement(((unsigned char*)indices)[i]);
-        break;
-    case 0x1403:
-        for (i = 0; i < count; i++)
-            PS2glArrayElement(((unsigned short*)indices)[i]);
-        break;
-    case 0x1405:
-        for (i = 0; i < count; i++)
-            PS2glArrayElement(((unsigned int*)indices)[i]);
-        break;
-    }
-    PS2glEnd();
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Array.c lines 2112–2914 */
 /* addr: 0x0013c9c0  size: 4380 bytes */
@@ -1953,28 +1739,6 @@ void impPS2glDrawElements(unsigned int mode, int count, unsigned int type, void*
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glDrawArrays(unsigned int mode, int first, int count)
-{
-    short iTexType;
-    short iColorType;
-    short iNormalType;
-    short iVertexType;
-    short iTexSize;
-    short iColorSize;
-    short iVertexSize;
-    short iTexStride;
-    short iColorStride;
-    short iNormalStride;
-    short iVertexStride;
-    unsigned char* pNormal;
-    unsigned char* pVertex;
-    short bNormal;
-    short bVertex;
-    unsigned int uFlags;
-    float vTemp[4];
-    int i;
-    /* TODO: decompile from asm/... */
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Array.c lines 1158–2109 */
 /* addr: 0x0013dae0  size: 6008 bytes */
@@ -2777,34 +2541,6 @@ void impPS2glDrawArrays(unsigned int mode, int first, int count)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glInternalDrawArrays(unsigned int mode, int first, int count, int flag, unsigned char bImmediate)
-{
-    int iSizeBlock;
-    unsigned char bPackageBoundingSphere;
-    unsigned char bTexture1;
-    unsigned char bTexture0;
-    unsigned char bColor1;
-    unsigned char bColor0;
-    unsigned char bNormal;
-    unsigned char bUseSPR;
-    unsigned char bTriangleFan;
-    unsigned char bFirst;
-    int iAdd;
-    int iTransfer;
-    int iOffset;
-    anon_1* pGifTag;
-    float (*pC_b)[4];
-    float (*pT_b)[4];
-    float (*pC)[4];
-    float (*pT)[4];
-    float (*pN)[4];
-    float (*pV)[4];
-    int I;
-    _sceDmaTag* aDmaTagBegin;
-    _sceDmaTag* aDmaTag;
-    anon_10* d8;
-    /* TODO: decompile from asm/... */
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Array.c lines 1142–1150 */
 /* addr: 0x0013f260  size: 56 bytes */
@@ -2815,15 +2551,6 @@ void PS2glInternalDrawArrays(unsigned int mode, int first, int count, int flag, 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void WaitDMAFromSPR(void)
-{
-    g_stSPRInfo.uiState &= ~1;
-    /* Target +0x10..+0x2c is one source-line DMA wait macro: six nops,
-     * bc0f back to the first nop, and its delay slot. COP0 condition-flag
-     * polling has no C equivalent; retain only this original asm region.
-     * MWCC moves one preceding nop into the branch delay slot. */
-    asm { wait_dma_from_spr: nop; nop; nop; nop; nop; nop; nop; bc0f wait_dma_from_spr; nop }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Array.c lines 982–1010 */
 /* addr: 0x0013f2a0  size: 180 bytes */
@@ -2845,35 +2572,6 @@ void WaitDMAFromSPR(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int PS2glInternalArraysSize(unsigned int mode, int count)
-{
-    int iCountPerBuf;
-    int iSizePerElement;
-
-    iCountPerBuf = g_PS2glContext.iBufLimit;
-    iSizePerElement = 7;
-    if (g_PS2glContext.uiBoundingSphereBits & 0xC)
-        iSizePerElement += 2;
-    if (g_PS2glContext.nTextureEnableBits & 0x200)
-        iSizePerElement += 7;
-    switch (mode)
-    {
-    case 8:
-    case 5:
-        count -= 2;
-        iCountPerBuf -= 2;
-        if (g_PS2glContext.uiDmaOmitDataBits & 0x502)
-            iCountPerBuf -= 2;
-        break;
-    case 9:
-    case 6:
-        count -= 2;
-        iCountPerBuf -= 2;
-        iSizePerElement += 4;
-        break;
-    }
-    return ((count + iCountPerBuf - 1) / iCountPerBuf) * iSizePerElement + 1;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Array.c lines 173–934 */
 /* addr: 0x0013f360  size: 3888 bytes */
@@ -3175,32 +2873,6 @@ int PS2glInternalArraysSize(unsigned int mode, int count)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glArrayElement(int iIndex)
-{
-    float vTemp[4];
-    short iTexType;
-    short iColorType;
-    short iNormalType;
-    short iVertexType;
-    short iTexSize;
-    short iColorSize;
-    short iVertexSize;
-    short iTexStride;
-    short iColorStride;
-    short iNormalStride;
-    short iVertexStride;
-    int pTex[2];
-    int pColor[2];
-    unsigned char* pNormal;
-    unsigned char* pVertex;
-    short bTex[2];
-    short bColor[2];
-    short bNormal;
-    short bVertex;
-    unsigned int uFlags;
-    int i;
-    /* TODO: decompile from asm/... */
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Array.c lines 132–170 */
 /* addr: 0x00140290  size: 152 bytes */
@@ -3219,34 +2891,6 @@ void impPS2glArrayElement(int iIndex)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glDisableClientState(unsigned int array)
-{
-    unsigned int uMask;
-
-    uMask = 0xFFFFFFFF;
-    switch (array)
-    {
-    case 0x8074: /* GL_VERTEX_ARRAY */
-        uMask = ~0x20;
-        break;
-    case 0x8075: /* GL_NORMAL_ARRAY */
-        uMask = ~0x8;
-        break;
-    case 0x8076: /* GL_COLOR_ARRAY */
-        uMask = (g_PS2glContext.iCurClientTextureSet == 0) ? ~0x1 : ~0x80;
-        break;
-    case 0x8077: /* GL_INDEX_ARRAY */
-        uMask = ~0x4;
-        break;
-    case 0x8078: /* GL_TEXTURE_COORD_ARRAY */
-        uMask = (g_PS2glContext.iCurClientTextureSet == 0) ? ~0x10 : ~0x40;
-        break;
-    case 0x8079: /* GL_EDGE_FLAG_ARRAY */
-        uMask = ~0x2;
-        break;
-    }
-    g_PS2glContext.nClientEnableBits &= uMask;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Array.c lines 89–126 */
 /* addr: 0x00140330  size: 152 bytes */
@@ -3265,6 +2909,161 @@ void impPS2glDisableClientState(unsigned int array)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Array.c lines 79–83 */
+/* addr: 0x001403d0  size: 36 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 79
+ *   +0x0008 -> line 80
+ *   +0x0010 -> line 81
+ *   +0x0018 -> line 82
+ *   +0x001c -> line 83
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Array.c lines 64–74 */
+/* addr: 0x00140400  size: 116 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 64
+ *   +0x000c -> line 65
+ *   +0x0010 -> line 66
+ *   +0x0014 -> line 67
+ *   +0x0018 -> line 64
+ *   +0x001c -> line 65
+ *   +0x0020 -> line 66
+ *   +0x0024 -> line 67
+ *   +0x0028 -> line 64
+ *   +0x002c -> line 65
+ *   +0x0030 -> line 64
+ *   +0x0038 -> line 65
+ *   +0x0040 -> line 66
+ *   +0x0044 -> line 65
+ *   +0x004c -> line 66
+ *   +0x0054 -> line 67
+ *   +0x0058 -> line 66
+ *   +0x0060 -> line 67
+ *   +0x006c -> line 74
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Array.c lines 54–57 */
+/* addr: 0x00140480  size: 28 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 54
+ *   +0x0008 -> line 55
+ *   +0x0010 -> line 56
+ *   +0x0014 -> line 57
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Array.c lines 46–49 */
+/* addr: 0x001404a0  size: 28 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 46
+ *   +0x0008 -> line 47
+ *   +0x0010 -> line 48
+ *   +0x0014 -> line 49
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Array.c lines 39–41 */
+/* addr: 0x001404c0  size: 20 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 39
+ *   +0x0008 -> line 40
+ *   +0x000c -> line 41
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Array.c lines 24–34 */
+/* addr: 0x001404e0  size: 116 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 24
+ *   +0x000c -> line 25
+ *   +0x0010 -> line 26
+ *   +0x0014 -> line 27
+ *   +0x0018 -> line 24
+ *   +0x001c -> line 25
+ *   +0x0020 -> line 26
+ *   +0x0024 -> line 27
+ *   +0x0028 -> line 24
+ *   +0x002c -> line 25
+ *   +0x0030 -> line 24
+ *   +0x0038 -> line 25
+ *   +0x0040 -> line 26
+ *   +0x0044 -> line 25
+ *   +0x004c -> line 26
+ *   +0x0054 -> line 27
+ *   +0x0058 -> line 26
+ *   +0x0060 -> line 27
+ *   +0x006c -> line 34
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+#pragma opt_unroll_loops reset
+#pragma opt_unroll_loops off
+void impPS2glColorPointer(int size, unsigned int type, int stride, void* pointer)
+{
+    g_PS2glContext.ColorArray[g_PS2glContext.iCurClientTextureSet].size = size;
+    g_PS2glContext.ColorArray[g_PS2glContext.iCurClientTextureSet].type = type;
+    g_PS2glContext.ColorArray[g_PS2glContext.iCurClientTextureSet].stride = stride;
+    g_PS2glContext.ColorArray[g_PS2glContext.iCurClientTextureSet].pointer = (int)pointer;
+}
+#pragma opt_unroll_loops reset
+
+#pragma opt_unroll_loops off
+void impPS2glEdgeFlagPointer(int stride, void* pointer)
+{
+    g_PS2glContext.EdgeFlagArray.stride = stride;
+    g_PS2glContext.EdgeFlagArray.pointer = (int)pointer;
+}
+#pragma opt_unroll_loops reset
+
+#pragma opt_unroll_loops off
+void impPS2glIndexPointer(unsigned int type, int stride, void* pointer)
+{
+    g_PS2glContext.IndexArray.type = type;
+    g_PS2glContext.IndexArray.stride = stride;
+    g_PS2glContext.IndexArray.pointer = (int)pointer;
+}
+#pragma opt_unroll_loops reset
+
+#pragma opt_unroll_loops off
+void impPS2glNormalPointer(unsigned int type, int stride, void* pointer)
+{
+    g_PS2glContext.NormalArray.type = type;
+    g_PS2glContext.NormalArray.stride = stride;
+    g_PS2glContext.NormalArray.pointer = (int)pointer;
+}
+#pragma opt_unroll_loops reset
+
+#pragma opt_unroll_loops off
+void impPS2glTexCoordPointer(int size, unsigned int type, int stride, void* pointer)
+{
+    g_PS2glContext.TexArray[g_PS2glContext.iCurClientTextureSet].size = size;
+    g_PS2glContext.TexArray[g_PS2glContext.iCurClientTextureSet].type = type;
+    g_PS2glContext.TexArray[g_PS2glContext.iCurClientTextureSet].stride = stride;
+    g_PS2glContext.TexArray[g_PS2glContext.iCurClientTextureSet].pointer = (int)pointer;
+}
+#pragma opt_unroll_loops reset
+
+#pragma opt_unroll_loops off
+void impPS2glVertexPointer(int size, unsigned int type, int stride, void* pointer)
+{
+    g_PS2glContext.VertexArray.size = size;
+    g_PS2glContext.VertexArray.type = type;
+    g_PS2glContext.VertexArray.stride = stride;
+    g_PS2glContext.VertexArray.pointer = (int)pointer;
+}
+#pragma opt_unroll_loops reset
+
+#pragma opt_unroll_loops off
 void impPS2glEnableClientState(unsigned int array)
 {
     unsigned int uMask;
@@ -3293,137 +3092,400 @@ void impPS2glEnableClientState(unsigned int array)
     }
     g_PS2glContext.nClientEnableBits |= uMask;
 }
+#pragma opt_unroll_loops reset
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Array.c lines 79–83 */
-/* addr: 0x001403d0  size: 36 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 79
- *   +0x0008 -> line 80
- *   +0x0010 -> line 81
- *   +0x0018 -> line 82
- *   +0x001c -> line 83
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void impPS2glVertexPointer(int size, unsigned int type, int stride, void* pointer)
+#pragma opt_unroll_loops off
+void impPS2glDisableClientState(unsigned int array)
 {
-    g_PS2glContext.VertexArray.size = size;
-    g_PS2glContext.VertexArray.type = type;
-    g_PS2glContext.VertexArray.stride = stride;
-    g_PS2glContext.VertexArray.pointer = (int)pointer;
+    unsigned int uMask;
+
+    uMask = 0xFFFFFFFF;
+    switch (array)
+    {
+    case 0x8074: /* GL_VERTEX_ARRAY */
+        uMask = ~0x20;
+        break;
+    case 0x8075: /* GL_NORMAL_ARRAY */
+        uMask = ~0x8;
+        break;
+    case 0x8076: /* GL_COLOR_ARRAY */
+        uMask = (g_PS2glContext.iCurClientTextureSet == 0) ? ~0x1 : ~0x80;
+        break;
+    case 0x8077: /* GL_INDEX_ARRAY */
+        uMask = ~0x4;
+        break;
+    case 0x8078: /* GL_TEXTURE_COORD_ARRAY */
+        uMask = (g_PS2glContext.iCurClientTextureSet == 0) ? ~0x10 : ~0x40;
+        break;
+    case 0x8079: /* GL_EDGE_FLAG_ARRAY */
+        uMask = ~0x2;
+        break;
+    }
+    g_PS2glContext.nClientEnableBits &= uMask;
+}
+#pragma opt_unroll_loops reset
+
+#pragma opt_unroll_loops off
+void impPS2glArrayElement(int iIndex)
+{
+    float vTemp[4];
+    short iTexType;
+    short iColorType;
+    short iNormalType;
+    short iVertexType;
+    short iTexSize;
+    short iColorSize;
+    short iVertexSize;
+    short iTexStride;
+    short iColorStride;
+    short iNormalStride;
+    short iVertexStride;
+    int pTex[2];
+    int pColor[2];
+    unsigned char* pNormal;
+    unsigned char* pVertex;
+    short bTex[2];
+    short bColor[2];
+    short bNormal;
+    short bVertex;
+    unsigned int uFlags;
+    int i;
+    /* TODO: decompile from asm/... */
+}
+#pragma opt_unroll_loops reset
+
+#pragma opt_unroll_loops off
+int PS2glInternalArraysSize(unsigned int mode, int count)
+{
+    int iCountPerBuf;
+    int iSizePerElement;
+
+    iCountPerBuf = g_PS2glContext.iBufLimit;
+    iSizePerElement = 7;
+    if (g_PS2glContext.uiBoundingSphereBits & 0xC)
+        iSizePerElement += 2;
+    if (g_PS2glContext.nTextureEnableBits & 0x200)
+        iSizePerElement += 7;
+    switch (mode)
+    {
+    case 8:
+    case 5:
+        count -= 2;
+        iCountPerBuf -= 2;
+        if (g_PS2glContext.uiDmaOmitDataBits & 0x502)
+            iCountPerBuf -= 2;
+        break;
+    case 9:
+    case 6:
+        count -= 2;
+        iCountPerBuf -= 2;
+        iSizePerElement += 4;
+        break;
+    }
+    return ((count + iCountPerBuf - 1) / iCountPerBuf) * iSizePerElement + 1;
+}
+#pragma opt_unroll_loops reset
+
+#pragma opt_unroll_loops off
+void WaitDMAFromSPR(void)
+{
+    g_stSPRInfo.uiState &= ~1;
+    /* Target +0x10..+0x2c is one source-line DMA wait macro: six nops,
+     * bc0f back to the first nop, and its delay slot. COP0 condition-flag
+     * polling has no C equivalent; retain only this original asm region.
+     * MWCC moves one preceding nop into the branch delay slot. */
+    asm { wait_dma_from_spr: nop; nop; nop; nop; nop; nop; nop; bc0f wait_dma_from_spr; nop }
+}
+#pragma opt_unroll_loops reset
+
+#pragma opt_unroll_loops off
+void PS2glInternalDrawArrays(unsigned int mode, int first, int count, int flag, unsigned char bImmediate)
+{
+    int iSizeBlock;
+    unsigned char bPackageBoundingSphere;
+    unsigned char bTexture1;
+    unsigned char bTexture0;
+    unsigned char bColor1;
+    unsigned char bColor0;
+    unsigned char bNormal;
+    unsigned char bUseSPR;
+    unsigned char bTriangleFan;
+    unsigned char bFirst;
+    int iAdd;
+    int iTransfer;
+    int iOffset;
+    anon_1* pGifTag;
+    float (*pC_b)[4];
+    float (*pT_b)[4];
+    float (*pC)[4];
+    float (*pT)[4];
+    float (*pN)[4];
+    float (*pV)[4];
+    int I;
+    _sceDmaTag* aDmaTagBegin;
+    _sceDmaTag* aDmaTag;
+    anon_10* d8;
+    /* TODO: decompile from asm/... */
+}
+#pragma opt_unroll_loops reset
+
+#pragma opt_unroll_loops off
+void impPS2glDrawArrays(unsigned int mode, int first, int count)
+{
+    short iTexType;
+    short iColorType;
+    short iNormalType;
+    short iVertexType;
+    short iTexSize;
+    short iColorSize;
+    short iVertexSize;
+    short iTexStride;
+    short iColorStride;
+    short iNormalStride;
+    short iVertexStride;
+    unsigned char* pNormal;
+    unsigned char* pVertex;
+    short bNormal;
+    short bVertex;
+    unsigned int uFlags;
+    float vTemp[4];
+    int i;
+    /* TODO: decompile from asm/... */
+}
+#pragma opt_unroll_loops reset
+
+#pragma opt_unroll_loops off
+void impPS2glDrawElements(unsigned int mode, int count, unsigned int type, void* indices)
+{
+    int i;
+
+    PS2glBegin(mode);
+    switch (type)
+    {
+    case 0x1401:
+        for (i = 0; i < count; i++)
+            PS2glArrayElement(((unsigned char*)indices)[i]);
+        break;
+    case 0x1403:
+        for (i = 0; i < count; i++)
+            PS2glArrayElement(((unsigned short*)indices)[i]);
+        break;
+    case 0x1405:
+        for (i = 0; i < count; i++)
+            PS2glArrayElement(((unsigned int*)indices)[i]);
+        break;
+    }
+    PS2glEnd();
+}
+#pragma opt_unroll_loops reset
+
+void impPS2glInterleavedArrays(unsigned int format, int stride, void* pointer)
+{
+    PS2glEnableClientState(0x8074); /* GL_VERTEX_ARRAY */
+    PS2glDisableClientState(0x8078); /* GL_TEXTURE_COORD_ARRAY */
+    PS2glDisableClientState(0x8075); /* GL_NORMAL_ARRAY */
+    PS2glDisableClientState(0x8076); /* GL_COLOR_ARRAY */
+    PS2glDisableClientState(0x8077); /* GL_INDEX_ARRAY */
+    PS2glDisableClientState(0x8079); /* GL_EDGE_FLAG_ARRAY */
+    switch (format)
+    {
+    case 0x2A20: /* GL_V2F */
+        if (stride == 0)
+            stride = 8;
+        PS2glVertexPointer(2, 0x1406, stride, pointer);
+        break;
+    case 0x2A21: /* GL_V3F */
+        if (stride == 0)
+            stride = 12;
+        PS2glVertexPointer(3, 0x1406, stride, pointer);
+        break;
+    case 0x2A22: /* GL_C4UB_V2F */
+        PS2glEnableClientState(0x8076); /* GL_COLOR_ARRAY */
+        if (stride == 0)
+            stride = 12;
+        PS2glColorPointer(4, 0x1401, stride, pointer);
+        PS2glVertexPointer(2, 0x1406, stride, (unsigned char*)pointer + 4);
+        break;
+    case 0x2A23: /* GL_C4UB_V3F */
+        PS2glEnableClientState(0x8076); /* GL_COLOR_ARRAY */
+        if (stride == 0)
+            stride = 16;
+        PS2glColorPointer(4, 0x1401, stride, pointer);
+        PS2glVertexPointer(3, 0x1406, stride, (unsigned char*)pointer + 4);
+        break;
+    case 0x2A24: /* GL_C3F_V3F */
+        PS2glEnableClientState(0x8076); /* GL_COLOR_ARRAY */
+        if (stride == 0)
+            stride = 24;
+        PS2glColorPointer(3, 0x1406, stride, pointer);
+        PS2glVertexPointer(3, 0x1406, stride, (unsigned char*)pointer + 12);
+        break;
+    case 0x2A25: /* GL_N3F_V3F */
+        PS2glEnableClientState(0x8075); /* GL_NORMAL_ARRAY */
+        if (stride == 0)
+            stride = 24;
+        PS2glNormalPointer(0x1406, stride, pointer);
+        PS2glVertexPointer(3, 0x1406, stride, (unsigned char*)pointer + 12);
+        break;
+    case 0x2A26: /* GL_C4F_N3F_V3F */
+        PS2glEnableClientState(0x8076); /* GL_COLOR_ARRAY */
+        PS2glEnableClientState(0x8075); /* GL_NORMAL_ARRAY */
+        if (stride == 0)
+            stride = 40;
+        PS2glColorPointer(4, 0x1406, stride, pointer);
+        PS2glNormalPointer(0x1406, stride, (unsigned char*)pointer + 16);
+        PS2glVertexPointer(3, 0x1406, stride, (unsigned char*)pointer + 28);
+        break;
+    case 0x2A27: /* GL_T2F_V3F */
+        PS2glEnableClientState(0x8078); /* GL_TEXTURE_COORD_ARRAY */
+        if (stride == 0)
+            stride = 20;
+        PS2glTexCoordPointer(2, 0x1406, stride, pointer);
+        PS2glVertexPointer(3, 0x1406, stride, (unsigned char*)pointer + 8);
+        break;
+    case 0x2A28: /* GL_T4F_V3F */
+        PS2glEnableClientState(0x8078); /* GL_TEXTURE_COORD_ARRAY */
+        if (stride == 0)
+            stride = 32;
+        PS2glTexCoordPointer(4, 0x1406, stride, pointer);
+        PS2glVertexPointer(4, 0x1406, stride, (unsigned char*)pointer + 16);
+        break;
+    case 0x2A29: /* GL_T2F_C4UB_V3F */
+        PS2glEnableClientState(0x8078); /* GL_TEXTURE_COORD_ARRAY */
+        PS2glEnableClientState(0x8076); /* GL_COLOR_ARRAY */
+        if (stride == 0)
+            stride = 24;
+        PS2glTexCoordPointer(2, 0x1406, stride, pointer);
+        PS2glColorPointer(4, 0x1401, stride, (unsigned char*)pointer + 8);
+        PS2glVertexPointer(3, 0x1406, stride, (unsigned char*)pointer + 12);
+        break;
+    case 0x2A2A: /* GL_T2F_C3F_V3F */
+        PS2glEnableClientState(0x8078); /* GL_TEXTURE_COORD_ARRAY */
+        PS2glEnableClientState(0x8076); /* GL_COLOR_ARRAY */
+        if (stride == 0)
+            stride = 32;
+        PS2glTexCoordPointer(2, 0x1406, stride, pointer);
+        PS2glColorPointer(3, 0x1406, stride, (unsigned char*)pointer + 8);
+        PS2glVertexPointer(3, 0x1406, stride, (unsigned char*)pointer + 20);
+        break;
+    case 0x2A2B: /* GL_T2F_N3F_V3F */
+        PS2glEnableClientState(0x8078); /* GL_TEXTURE_COORD_ARRAY */
+        PS2glEnableClientState(0x8075); /* GL_NORMAL_ARRAY */
+        if (stride == 0)
+            stride = 32;
+        PS2glTexCoordPointer(2, 0x1406, stride, pointer);
+        PS2glNormalPointer(0x1406, stride, (unsigned char*)pointer + 8);
+        PS2glVertexPointer(3, 0x1406, stride, (unsigned char*)pointer + 20);
+        break;
+    case 0x2A2C: /* GL_T2F_C4F_N3F_V3F */
+        PS2glEnableClientState(0x8078); /* GL_TEXTURE_COORD_ARRAY */
+        PS2glEnableClientState(0x8076); /* GL_COLOR_ARRAY */
+        PS2glEnableClientState(0x8075); /* GL_NORMAL_ARRAY */
+        if (stride == 0)
+            stride = 48;
+        PS2glTexCoordPointer(2, 0x1406, stride, pointer);
+        PS2glColorPointer(3, 0x1406, stride, (unsigned char*)pointer + 8);
+        PS2glNormalPointer(0x1406, stride, (unsigned char*)pointer + 24);
+        PS2glVertexPointer(3, 0x1406, stride, (unsigned char*)pointer + 36);
+        break;
+    case 0x2A2D: /* GL_T4F_C4F_N3F_V4F */
+        PS2glEnableClientState(0x8078); /* GL_TEXTURE_COORD_ARRAY */
+        PS2glEnableClientState(0x8076); /* GL_COLOR_ARRAY */
+        PS2glEnableClientState(0x8075); /* GL_NORMAL_ARRAY */
+        if (stride == 0)
+            stride = 60;
+        PS2glTexCoordPointer(4, 0x1406, stride, pointer);
+        PS2glColorPointer(4, 0x1406, stride, (unsigned char*)pointer + 16);
+        PS2glNormalPointer(0x1406, stride, (unsigned char*)pointer + 32);
+        PS2glVertexPointer(4, 0x1406, stride, (unsigned char*)pointer + 44);
+        break;
+    }
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Array.c lines 64–74 */
-/* addr: 0x00140400  size: 116 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 64
- *   +0x000c -> line 65
- *   +0x0010 -> line 66
- *   +0x0014 -> line 67
- *   +0x0018 -> line 64
- *   +0x001c -> line 65
- *   +0x0020 -> line 66
- *   +0x0024 -> line 67
- *   +0x0028 -> line 64
- *   +0x002c -> line 65
- *   +0x0030 -> line 64
- *   +0x0038 -> line 65
- *   +0x0040 -> line 66
- *   +0x0044 -> line 65
- *   +0x004c -> line 66
- *   +0x0054 -> line 67
- *   +0x0058 -> line 66
- *   +0x0060 -> line 67
- *   +0x006c -> line 74
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void impPS2glTexCoordPointer(int size, unsigned int type, int stride, void* pointer)
+void PS2glInternalDrawSpriteArray(int count)
 {
-    g_PS2glContext.TexArray[g_PS2glContext.iCurClientTextureSet].size = size;
-    g_PS2glContext.TexArray[g_PS2glContext.iCurClientTextureSet].type = type;
-    g_PS2glContext.TexArray[g_PS2glContext.iCurClientTextureSet].stride = stride;
-    g_PS2glContext.TexArray[g_PS2glContext.iCurClientTextureSet].pointer = (int)pointer;
-}
+    _sceDmaTag* aDmaTag;
+    _sceDmaTag* aDmaTagBegin;
+    int I;
+    float (*pV)[4];
+    unsigned int* pMyGifTag;
+    unsigned char bFirst;
+    float sx;
+    float sy;
+    int iSizeBlock;
+    int nSprite;
+    int nVertex;
+    int nOffset;
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Array.c lines 54–57 */
-/* addr: 0x00140480  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 54
- *   +0x0008 -> line 55
- *   +0x0010 -> line 56
- *   +0x0014 -> line 57
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void impPS2glNormalPointer(unsigned int type, int stride, void* pointer)
-{
-    g_PS2glContext.NormalArray.type = type;
-    g_PS2glContext.NormalArray.stride = stride;
-    g_PS2glContext.NormalArray.pointer = (int)pointer;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Array.c lines 46–49 */
-/* addr: 0x001404a0  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 46
- *   +0x0008 -> line 47
- *   +0x0010 -> line 48
- *   +0x0014 -> line 49
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void impPS2glIndexPointer(unsigned int type, int stride, void* pointer)
-{
-    g_PS2glContext.IndexArray.type = type;
-    g_PS2glContext.IndexArray.stride = stride;
-    g_PS2glContext.IndexArray.pointer = (int)pointer;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Array.c lines 39–41 */
-/* addr: 0x001404c0  size: 20 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 39
- *   +0x0008 -> line 40
- *   +0x000c -> line 41
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void impPS2glEdgeFlagPointer(int stride, void* pointer)
-{
-    g_PS2glContext.EdgeFlagArray.stride = stride;
-    g_PS2glContext.EdgeFlagArray.pointer = (int)pointer;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Array.c lines 24–34 */
-/* addr: 0x001404e0  size: 116 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 24
- *   +0x000c -> line 25
- *   +0x0010 -> line 26
- *   +0x0014 -> line 27
- *   +0x0018 -> line 24
- *   +0x001c -> line 25
- *   +0x0020 -> line 26
- *   +0x0024 -> line 27
- *   +0x0028 -> line 24
- *   +0x002c -> line 25
- *   +0x0030 -> line 24
- *   +0x0038 -> line 25
- *   +0x0040 -> line 26
- *   +0x0044 -> line 25
- *   +0x004c -> line 26
- *   +0x0054 -> line 27
- *   +0x0058 -> line 26
- *   +0x0060 -> line 27
- *   +0x006c -> line 34
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void impPS2glColorPointer(int size, unsigned int type, int stride, void* pointer)
-{
-    g_PS2glContext.ColorArray[g_PS2glContext.iCurClientTextureSet].size = size;
-    g_PS2glContext.ColorArray[g_PS2glContext.iCurClientTextureSet].type = type;
-    g_PS2glContext.ColorArray[g_PS2glContext.iCurClientTextureSet].stride = stride;
-    g_PS2glContext.ColorArray[g_PS2glContext.iCurClientTextureSet].pointer = (int)pointer;
+    I = 0;
+    bFirst = 1;
+    iSizeBlock = count * 2;
+    pV = (float (*)[4])g_PS2glContext.VertexArray.pointer;
+    sx = pV[0][3];
+    sy = pV[2][3];
+    PS2GL_bOptimizedSprite = 1;
+    impPS2glBegin(5);
+    impPS2glEnd();
+    if (VU1BufferFreeSpace() < (unsigned int)(((iSizeBlock + 29) / 30) * 9))
+        VU1FlushBuffer();
+    g_aDmaTag = (int)g_PS2glContext.pVIFIBufTail;
+    aDmaTagBegin = (_sceDmaTag*)g_aDmaTag;
+    aDmaTag = aDmaTagBegin;
+    nOffset = 0;
+    if (iSizeBlock > 0)
+    {
+        do
+        {
+            pV[0][3] = sx;
+            pV[2][3] = sy;
+            if (bFirst)
+            {
+                nSprite = 40;
+                if (iSizeBlock < 40)
+                    nSprite = iSizeBlock;
+            }
+            else
+            {
+                nSprite = 40;
+                if (iSizeBlock < 40)
+                    nSprite = iSizeBlock;
+            }
+            if (iSizeBlock < 40)
+                nVertex = iSizeBlock;
+            else
+                nVertex = 40;
+            pMyGifTag = (unsigned int*)((unsigned char*)aDmaTag + nOffset);
+            ((unsigned short*)pMyGifTag)[0] = (unsigned short)nSprite;
+            ((unsigned char*)pMyGifTag)[3] = 0x30;
+            pMyGifTag[1] = (unsigned int)pV;
+            pMyGifTag[2] = 0x01000404;
+            pMyGifTag[3] = 0x6C3C8001;
+            ((unsigned char*)pMyGifTag)[0xE] = (unsigned char)nSprite;
+            pMyGifTag[8] = 0x8000;
+            pMyGifTag[8] |= (nSprite >> 1);
+            pMyGifTag[9] = 0x90024000;
+            pMyGifTag[10] = 0x24242412;
+            pMyGifTag[11] = 4;
+            ((unsigned char*)pMyGifTag)[0x13] = 0x10;
+            pMyGifTag[6] = 0x01000404;
+            pMyGifTag[7] = 0x6C018000;
+            ((unsigned short*)pMyGifTag)[8] = 2;
+            *(tagMSCNT*)((unsigned char*)pMyGifTag + 0x30) = *(tagMSCNT*)MY_MSCNT;
+            nOffset += 0x40;
+            I += 4;
+            pV += nVertex;
+            if (bFirst)
+            {
+                iSizeBlock -= nSprite;
+                bFirst = 0;
+            }
+            else
+            {
+                iSizeBlock -= nVertex;
+            }
+        } while (iSizeBlock > 0);
+    }
+    g_PS2glContext.pVIFIBufTail += I;
+    iDmaTagCount = I;
+    PS2GL_bOptimizedSprite = 0;
 }

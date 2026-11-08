@@ -35,6 +35,53 @@ extern MAT_tdstTransformation_ PS2_MatStack[51];
 extern unsigned int PS2_MatStackIndex;
 extern int HIE_gs_lCurrentFrame;
 
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void HIE_fn_vFastPS2PushMatrix(HIE_tdstSuperObject_* _hSprObj);
+unsigned char HIE_fn_bInitCameraMatrixStack(GLD_tdstViewportAttributes_* _hVpt);
+unsigned char HIE_fn_bLoadIdentity(void);
+void HIE_fn_vInitMatrixStack(void);
+void HIE_fn_vCreateMatrixStack(void);
+
+void HIE_fn_vCreateMatrixStack(void)
+{
+    MAT_tdstTransformation_* p_stMatrix;
+
+    p_stMatrix = (MAT_tdstTransformation_ *)HMU_fn_p_vMalloc(0x60, 0);
+    MAT_fn_vSetIdentity(p_stMatrix);
+    HIE_g_a_hMatrixStack[0] = (int)p_stMatrix;
+    HIE_g_lNbMatrixInStack = 1;
+}
+
+void HIE_fn_vInitMatrixStack(void)
+{
+    HIE_g_lNbMatrixInStack = 0;
+    MAT_fn_vSetIdentity((MAT_tdstTransformation_*)HIE_g_a_hMatrixStack[0]);
+    HIE_g_lNbMatrixInStack++;
+    g_p_stCurrentMatrix = (MAT_tdstTransformation_*)(HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1]);
+}
+
+unsigned char HIE_fn_bLoadIdentity(void)
+{
+    unsigned int uIndex;
+    MAT_tdstTransformation_* p_stMatrix;
+    if (HIE_g_lNbMatrixInStack == 50) return 0;
+
+    HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack] = HIE_g_a_hMatrixStack[0];
+    HIE_g_lNbMatrixInStack++;
+    g_p_stCurrentMatrix = (MAT_tdstTransformation_*)(HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1]);
+    return 1;
+}
+
+unsigned char HIE_fn_bInitCameraMatrixStack(GLD_tdstViewportAttributes_* _hVpt)
+{
+    HIE_g_lNbMatrixInCameraStack = 0;
+    HIE_g_a_stCameraMatrixStack[0] = *(MAT_tdstTransformation_*)((unsigned char *)(*(int *)(*(int *)((unsigned char *)_hVpt + 0x68))) + 0x10);
+    HIE_g_lNbMatrixInCameraStack++;
+    g_p_stCurrentInCamCoordsMatrix = (int)((unsigned char *)&HIE_g_a_stCameraMatrixStack[HIE_g_lNbMatrixInCameraStack - 1]);
+    return 1;
+}
+
 void HIE_fn_vFastPS2PushMatrix(HIE_tdstSuperObject_* _hSprObj)
 {
     /* VU0 macro-mode matrix copies and product: these instructions have no C
@@ -138,43 +185,4 @@ void HIE_fn_vFastPS2PushMatrix(HIE_tdstSuperObject_* _hSprObj)
             _hSprObj->lLastComputeFrame = HIE_gs_lCurrentFrame;
         }
     }
-}
-
-unsigned char HIE_fn_bInitCameraMatrixStack(GLD_tdstViewportAttributes_* _hVpt)
-{
-    HIE_g_lNbMatrixInCameraStack = 0;
-    HIE_g_a_stCameraMatrixStack[0] = *(MAT_tdstTransformation_*)((unsigned char *)(*(int *)(*(int *)((unsigned char *)_hVpt + 0x68))) + 0x10);
-    HIE_g_lNbMatrixInCameraStack++;
-    g_p_stCurrentInCamCoordsMatrix = (int)((unsigned char *)&HIE_g_a_stCameraMatrixStack[HIE_g_lNbMatrixInCameraStack - 1]);
-    return 1;
-}
-
-unsigned char HIE_fn_bLoadIdentity(void)
-{
-    unsigned int uIndex;
-    MAT_tdstTransformation_* p_stMatrix;
-    if (HIE_g_lNbMatrixInStack == 50) return 0;
-
-    HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack] = HIE_g_a_hMatrixStack[0];
-    HIE_g_lNbMatrixInStack++;
-    g_p_stCurrentMatrix = (MAT_tdstTransformation_*)(HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1]);
-    return 1;
-}
-
-void HIE_fn_vInitMatrixStack(void)
-{
-    HIE_g_lNbMatrixInStack = 0;
-    MAT_fn_vSetIdentity((MAT_tdstTransformation_*)HIE_g_a_hMatrixStack[0]);
-    HIE_g_lNbMatrixInStack++;
-    g_p_stCurrentMatrix = (MAT_tdstTransformation_*)(HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1]);
-}
-
-void HIE_fn_vCreateMatrixStack(void)
-{
-    MAT_tdstTransformation_* p_stMatrix;
-
-    p_stMatrix = (MAT_tdstTransformation_ *)HMU_fn_p_vMalloc(0x60, 0);
-    MAT_fn_vSetIdentity(p_stMatrix);
-    HIE_g_a_hMatrixStack[0] = (int)p_stMatrix;
-    HIE_g_lNbMatrixInStack = 1;
 }

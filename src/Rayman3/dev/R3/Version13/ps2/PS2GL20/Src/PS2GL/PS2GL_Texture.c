@@ -1809,12 +1809,63 @@ void dmaSendGsPackage(void* pPackage, unsigned long ulLength);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glPushAttrib(unsigned int mask)
-{
-    defAttribViewportBit* pNew;
-    int EOP;
-    /* TODO: decompile from asm/... */
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void impPS2glPushAttrib(unsigned int mask);
+void PS2glVU1TexCoordsCubeMappingVectorTo2D(tagGLcontext* pctx);
+void PS2glVU1ListTexCoordsCubeMappingVectorTo2D(tagGLprimbuf* pPrimBuf);
+void impPS2glGetColorTableParameterfvEXT(unsigned int target, unsigned int pname, float* params);
+void impPS2glGetColorTableParameterivEXT(unsigned int target, unsigned int pname, int* params);
+void impPS2glGetColorTableEXT(unsigned int target, unsigned int format, unsigned int type, unsigned int* pDstData);
+void impPS2glColorSubTableEXT(unsigned int target, int start, int count, unsigned int format, unsigned int type, unsigned int* pSrcData);
+void impPS2glColorTableEXT(unsigned int target, unsigned int internalformat, int width, unsigned int format, unsigned int type, unsigned int* pSrcData);
+int PS2glAllocTexMem(int iTexSize, unsigned int nTexID);
+tagGLtexblock* PS2glFreeTexBlock(int iBlock, int iSize);
+void PS2glFreeTexBlockSafe(int iBlock, int iSize);
+void PS2glUpdateTexIndex(int iLevelByTexSize);
+void impPS2glTexParameteri(unsigned int target, unsigned int pname, int param);
+void impPS2glTexParameteriv(unsigned int target, unsigned int pname, int* params);
+void impPS2glTexParameterfv(unsigned int target, unsigned int pname, float* params);
+void impPS2glTexParameterf(unsigned int target, unsigned int pname, float param);
+void impPS2glTexImage2D(unsigned int target, int level, int components, int width, int height, int border, unsigned int format, unsigned int type, void* pixels);
+void impPS2glTexImage1D(unsigned int target, int level, int components, int width, int border, unsigned int format, unsigned int type, void* pixels);
+void PS2glTexCopyImage(tag_GLtexture_image* pTexImage, unsigned char* pixels, int xOffset, int yOffset, int width, int height, int border, unsigned int format, unsigned int type);
+void PS2glUpdateTexture(unsigned int target);
+void PS2glUpdateScreenTexture(void);
+void PS2glTexUpdateClut(tag_GLtexture* pTexture, unsigned int uiAddress);
+void PS2glTexUpdateImage(tag_GLtexture_image* pTexImage, unsigned int level, unsigned char bResident);
+void PS2glComplanationCubeMap(unsigned char* pixels, tag_GLtexture_image* pTexImage);
+void GsTransferTexture(unsigned char* pixels, int iWidth, int iHeight, int iUnitSize);
+void PS2glUpdateTexParameter(unsigned int target);
+void impPS2glTexGeniv(unsigned int coord, unsigned int pname, int* params);
+void impPS2glTexGenfv(unsigned int coord, unsigned int pname, float* params);
+void impPS2glTexGendv(unsigned int coord, unsigned int pname, double* params);
+void impPS2glTexGend(unsigned int coord, unsigned int pname, double param);
+void impPS2glTexGenf(unsigned int coord, unsigned int pname, float param);
+void impPS2glTexGeni(unsigned int coord, unsigned int pname, int param);
+void impPS2glTexEnviv(unsigned int target, unsigned int pname, int* params);
+void impPS2glTexEnvfv(unsigned int target, unsigned int pname, float* params);
+void impPS2glTexEnvf(unsigned int target, unsigned int pname, float param);
+void impPS2glTexEnvi(unsigned int target, unsigned int pname, int param);
+void impPS2glTexSubImage2D(unsigned int target, int level, int xoffset, int yoffset, int width, int height, unsigned int format, unsigned int type, void* pixels);
+void impPS2glTexSubImage1D(unsigned int target, int level, int xoffset, int width, unsigned int format, unsigned int type, void* pixels);
+void impPS2glCopyTexSubImage2D(void);
+void impPS2glCopyTexSubImage1D(void);
+void impPS2glCopyTexImage2D(void);
+void impPS2glCopyTexImage1D(void);
+void impPS2glBindTexture(unsigned int target, unsigned int texture);
+void impPS2glPrioritizeTextures(int n, unsigned int* textures, float* priorities);
+unsigned char impPS2glAreTexturesResident(int n, unsigned int* textures, unsigned char* residences);
+void impPS2glDeleteTextures(int n, unsigned int* textures);
+void PS2glFreeTexture(tag_GLtexture* pTexture);
+void impPS2glGenTextures(int n, unsigned int* textures);
+int impPS2glIsTexture(unsigned int texture);
+int PS2glTexImageConv8to32(int width, int height, unsigned char* p_input, unsigned char* p_output);
+int PS2glTexImageConv4to32(int width, int height, unsigned char* p_input, unsigned char* p_output);
+int PageConv8to32(int width, int height, unsigned char* p_input, unsigned char* p_output);
+int PageConv4to32(int width, int height, unsigned char* p_input, unsigned char* p_output);
+int BlockConv8to32(unsigned char* p_input, unsigned char* p_output);
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 5134–5367 */
 /* addr: 0x00168ab0  size: 2396 bytes */
@@ -2080,29 +2131,6 @@ void impPS2glPushAttrib(unsigned int mask)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glVU1TexCoordsCubeMappingVectorTo2D(tagGLcontext* pctx)
-{
-    int iCubeMapFaceMask;
-    int iCubeMapFaces[3];
-    int iCubeMapType;
-    int bCubeMapAddition;
-    float CubeMapNSave[3][4];
-    float CubeMapAbsNSave[3][4];
-    float (*CubeMapTSave)[4];
-    float (*pNormalMatrix)[4][4];
-    float (*pCubeMapNSave)[4];
-    float (*pCubeMapAbsNSave)[4];
-    float (*pN)[4];
-    float vUnitVector[4];
-    int* piCubeMapFaces;
-    int nLoop;
-    int j;
-    int i;
-    float ma;
-    float tc;
-    float sc;
-    /* TODO: decompile from asm/... */
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 4902–5131 */
 /* addr: 0x00169410  size: 2372 bytes */
@@ -2375,29 +2403,6 @@ void PS2glVU1TexCoordsCubeMappingVectorTo2D(tagGLcontext* pctx)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glVU1ListTexCoordsCubeMappingVectorTo2D(tagGLprimbuf* pPrimBuf)
-{
-    int iCubeMapFaceMask;
-    int iCubeMapFaces[3];
-    int iCubeMapType;
-    int bCubeMapAddition;
-    float CubeMapNSave[3][4];
-    float CubeMapAbsNSave[3][4];
-    float (*CubeMapTSave)[4];
-    float (*pNormalMatrix)[4][4];
-    float (*pCubeMapNSave)[4];
-    float (*pCubeMapAbsNSave)[4];
-    float (*pN)[4];
-    float vUnitVector[4];
-    int* piCubeMapFaces;
-    int nLoop;
-    int j;
-    int i;
-    float ma;
-    float tc;
-    float sc;
-    /* TODO: decompile from asm/... */
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 4461–4497 */
 /* addr: 0x00169d60  size: 424 bytes */
@@ -2416,38 +2421,6 @@ void PS2glVU1ListTexCoordsCubeMappingVectorTo2D(tagGLprimbuf* pPrimBuf)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glGetColorTableParameterfvEXT(unsigned int target, unsigned int pname, float* params)
-{
-    unsigned int eInternalTarget;
-
-    switch (pname)
-    {
-    case 0x80D9:
-        eInternalTarget = target;
-        switch (target)
-        {
-        case 0x8515:
-        case 0x8516:
-        case 0x8517:
-        case 0x8518:
-        case 0x8519:
-        case 0x851A:
-            eInternalTarget = 0x8513;
-            break;
-        }
-        *params = (float)PS2glGetTargetTexture(eInternalTarget)->iClutSize;
-        break;
-    case 0x80DA:
-    case 0x80DB:
-    case 0x80DC:
-    case 0x80DD:
-        *params = 1.0f;
-        break;
-    default:
-        *params = 0;
-        break;
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 4418–4458 */
 /* addr: 0x00169f10  size: 484 bytes */
@@ -2470,43 +2443,6 @@ void impPS2glGetColorTableParameterfvEXT(unsigned int target, unsigned int pname
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glGetColorTableParameterivEXT(unsigned int target, unsigned int pname, int* params)
-{
-    unsigned int eInternalTarget;
-
-    switch (pname)
-    {
-    case 0x80D8:
-        *params = 0x8058;
-        break;
-    case 0x80D9:
-        eInternalTarget = target;
-        switch (target)
-        {
-        case 0x8515:
-        case 0x8516:
-        case 0x8517:
-        case 0x8518:
-        case 0x8519:
-        case 0x851A:
-            eInternalTarget = 0x8513;
-            break;
-        }
-        *params = PS2glGetTargetTexture(eInternalTarget)->iClutSize;
-        break;
-    case 0x80DA:
-    case 0x80DB:
-    case 0x80DC:
-    case 0x80DD:
-        *params = 1;
-        break;
-    case 0x81FB:
-        *params = ((g_PS2glContext.nTextureEnableBits & 0x10) == 0) ? 0 : 1;
-    default:
-        *params = 0;
-        break;
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 4314–4415 */
 /* addr: 0x0016a100  size: 1080 bytes */
@@ -2572,101 +2508,6 @@ void impPS2glGetColorTableParameterivEXT(unsigned int target, unsigned int pname
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glGetColorTableEXT(unsigned int target, unsigned int format, unsigned int type, unsigned int* pDstData)
-{
-    unsigned char* pbSrcData;
-    tag_GLtexture* pTexture;
-    unsigned int* pSrcData;
-    int width;
-    int i;
-    unsigned int eInternalTarget;
-
-    eInternalTarget = target;
-    switch (target)
-    {
-    case 0x8515:
-    case 0x8516:
-    case 0x8517:
-    case 0x8518:
-    case 0x8519:
-    case 0x851A:
-        eInternalTarget = 0x8513;
-        break;
-    }
-
-    if (eInternalTarget == 0x81FB)
-    {
-        width = g_PS2glContext.iClutSize;
-        pSrcData = (unsigned int*)g_PS2glContext.clut;
-    }
-    else
-    {
-        pTexture = PS2glGetTargetTexture(eInternalTarget);
-        width = pTexture->iClutSize;
-        pSrcData = (unsigned int*)pTexture->clut;
-    }
-
-    if (width <= 0)
-        return;
-
-    switch (format)
-    {
-    case 0x1907:
-        if (width == 16)
-        {
-            for (i = 0; i < width; i++)
-            {
-                memcpy(pDstData, &pSrcData[i], 3);
-                pDstData = (unsigned int*)((unsigned char*)pDstData + 3);
-            }
-        }
-        else
-        {
-            for (i = 0; i < width; i++)
-            {
-                if ((i & 8) && !(i & 0x10))
-                    memcpy(pDstData, &pSrcData[i + 8], 3);
-                else if (!(i & 8) && (i & 0x10))
-                    memcpy(pDstData, &pSrcData[i - 8], 3);
-                else
-                    memcpy(pDstData, &pSrcData[i], 3);
-                pDstData = (unsigned int*)((unsigned char*)pDstData + 3);
-            }
-        }
-        break;
-    case 0x1908:
-        if (width == 16)
-        {
-            for (i = 0; i < width; i++)
-                pDstData[i] = pSrcData[i];
-        }
-        else
-        {
-            for (i = 0; i < width; i++)
-            {
-                if ((i & 8) && !(i & 0x10))
-                    pDstData[i] = pSrcData[i + 8];
-                else if (!(i & 8) && (i & 0x10))
-                    pDstData[i] = pSrcData[i - 8];
-                else
-                    pDstData[i] = pSrcData[i];
-            }
-        }
-        if (g_PS2glContext.eClutConvMode != 2 && g_PS2glContext.bAlphaChannelReduce == 1)
-        {
-            pbSrcData = (unsigned char*)pDstData + 3;
-            for (i = 0; i < width; i++)
-            {
-                if (*pbSrcData == 0x80)
-                    *pbSrcData = 0xFF;
-                else
-                    *pbSrcData <<= 1;
-                pbSrcData += 4;
-            }
-        }
-        break;
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 4158–4311 */
 /* addr: 0x0016a540  size: 1756 bytes */
@@ -2775,128 +2616,6 @@ void impPS2glGetColorTableEXT(unsigned int target, unsigned int format, unsigned
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glColorSubTableEXT(unsigned int target, int start, int count, unsigned int format, unsigned int type, unsigned int* pSrcData)
-{
-    unsigned int eInternalTarget;
-    unsigned int* pDstData;
-    int i;
-    int width;
-    union { unsigned char c[4]; unsigned int u; } aTemp;
-    unsigned char* pbDstData;
-    tag_GLtexture* pTexture;
-
-    eInternalTarget = target;
-    switch (target)
-    {
-    case 0x8515:
-    case 0x8516:
-    case 0x8517:
-    case 0x8518:
-    case 0x8519:
-    case 0x851A:
-        eInternalTarget = 0x8513;
-        break;
-    }
-
-    if (eInternalTarget == 0x81FB)
-    {
-        g_PS2glContext.bClutResident = 0;
-        width = g_PS2glContext.iClutSize;
-        pDstData = (unsigned int*)((start << 2) + (int)g_PS2glContext.clut);
-    }
-    else
-    {
-        pTexture = PS2glGetTargetTexture(eInternalTarget);
-        width = pTexture->iClutSize;
-        pDstData = (unsigned int*)((start << 2) + (int)pTexture->clut);
-    }
-
-    if (start < 0 || count <= 0 || start + count > width)
-        return;
-
-    switch (format)
-    {
-    case 0x1907:
-        aTemp.c[3] = 0x80;
-        if (width == 16)
-        {
-            for (i = 0; i < count; i++)
-            {
-                memcpy(aTemp.c, (unsigned char*)pSrcData + (i + i * 2), 3);
-                pDstData[i] = aTemp.u;
-            }
-        }
-        else
-        {
-            for (i = 0; i < count; i++)
-            {
-                if ((i & 8) && !(i & 0x10))
-                {
-                    memcpy(aTemp.c, (unsigned char*)pSrcData + (i + i * 2), 3);
-                    pDstData[i + 8] = aTemp.u;
-                }
-                else if (!(i & 8) && (i & 0x10))
-                {
-                    memcpy(aTemp.c, (unsigned char*)pSrcData + (i + i * 2), 3);
-                    pDstData[i - 8] = aTemp.u;
-                }
-                else
-                {
-                    memcpy(aTemp.c, (unsigned char*)pSrcData + (i + i * 2), 3);
-                    pDstData[i] = aTemp.u;
-                }
-            }
-        }
-        break;
-    case 0x1908:
-        if (width == 16)
-        {
-            for (i = 0; i < count; i++)
-                pDstData[i] = pSrcData[i];
-        }
-        else if (g_PS2glContext.eClutConvMode == 0)
-        {
-            for (i = 0; i < count; i++)
-            {
-                if ((i & 8) && !(i & 0x10))
-                    pDstData[i + 8] = pSrcData[i];
-                else if (!(i & 8) && (i & 0x10))
-                    pDstData[i - 8] = pSrcData[i];
-                else
-                    pDstData[i] = pSrcData[i];
-            }
-        }
-        if (g_PS2glContext.eClutConvMode != 2 && g_PS2glContext.bAlphaChannelReduce == 1)
-        {
-            pbDstData = (unsigned char*)pDstData + 3;
-            for (i = 0; i < width; i++)
-            {
-                if (*pbDstData == 0xFF)
-                    *pbDstData = 0x80;
-                else
-                    *pbDstData >>= 1;
-                pbDstData += 4;
-            }
-        }
-        break;
-    }
-
-    switch (eInternalTarget)
-    {
-    case 0xDE0:
-        g_PS2glContext.abTex1DChanged[g_PS2glContext.iCurTextureSet] = 1;
-        PS2glTexUnloadName(g_PS2glContext.anCurTexName1D[g_PS2glContext.iCurTextureSet]);
-        break;
-    case 0xDE1:
-        g_PS2glContext.abTex2DChanged[g_PS2glContext.iCurTextureSet] = 1;
-        PS2glTexUnloadName(g_PS2glContext.anCurTexName2D[g_PS2glContext.iCurTextureSet]);
-        break;
-    case 0x8513:
-        g_PS2glContext.bTexCubeChanged = 1;
-        PS2glTexUnloadName(g_PS2glContext.nCurTexNameCube);
-        break;
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 3985–4155 */
 /* addr: 0x0016ac20  size: 1744 bytes */
@@ -3008,133 +2727,6 @@ void impPS2glColorSubTableEXT(unsigned int target, int start, int count, unsigne
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glColorTableEXT(unsigned int target, unsigned int internalformat, int width, unsigned int format, unsigned int type, unsigned int* pSrcData)
-{
-    unsigned int eInternalTarget;
-    int i;
-    union { unsigned char c[4]; unsigned int u; } aTemp;
-    unsigned int* pDstData;
-    unsigned char* pbDstData;
-    tag_GLtexture* pTexture;
-
-    eInternalTarget = target;
-    switch (target)
-    {
-    case 0x8515:
-    case 0x8516:
-    case 0x8517:
-    case 0x8518:
-    case 0x8519:
-    case 0x851A:
-        eInternalTarget = 0x8513;
-        break;
-    }
-
-    if (eInternalTarget == 0x81FB)
-    {
-        g_PS2glContext.bClutResident = 0;
-        g_PS2glContext.iClutSize = width;
-        pDstData = (unsigned int*)g_PS2glContext.clut;
-    }
-    else
-    {
-        pTexture = PS2glGetTargetTexture(eInternalTarget);
-        if (g_PS2glContext.eTexUserMaintainMode)
-        {
-            pTexture->clut = pSrcData;
-        }
-        else if (pTexture->iClutSize != width)
-        {
-            if (pTexture->clut)
-                PS2glLiberator(pTexture->clut);
-            pTexture->clut = ((void* (*)(int))PS2glAllocator64)(width * 4);
-        }
-        pTexture->iClutSize = width;
-        pDstData = (unsigned int*)pTexture->clut;
-    }
-
-    if (!g_PS2glContext.eTexUserMaintainMode)
-    {
-        switch (format)
-        {
-        case 0x1907:
-            aTemp.c[3] = 0x80;
-            if (width == 16)
-            {
-                for (i = 0; i < width; i++)
-                {
-                    memcpy(aTemp.c, (unsigned char*)pSrcData + (i + i * 2), 3);
-                    pDstData[i] = aTemp.u;
-                }
-            }
-            else
-            {
-                for (i = 0; i < width; i++)
-                {
-                    if ((i & 8) && !(i & 0x10))
-                        memcpy(aTemp.c, (unsigned char*)pSrcData + ((i + 8) + (i + 8) * 2), 3);
-                    else if (!(i & 8) && (i & 0x10))
-                        memcpy(aTemp.c, (unsigned char*)pSrcData + ((i - 8) + (i - 8) * 2), 3);
-                    else
-                        memcpy(aTemp.c, (unsigned char*)pSrcData + (i + i * 2), 3);
-                    pDstData[i] = aTemp.u;
-                }
-            }
-            break;
-        case 0x1908:
-            if (width == 16)
-            {
-                for (i = 0; i < width; i++)
-                    pDstData[i] = pSrcData[i];
-            }
-            else if (g_PS2glContext.eClutConvMode == 0)
-            {
-                for (i = 0; i < width; i++)
-                {
-                    if ((i & 8) && !(i & 0x10))
-                        pDstData[i] = pSrcData[i + 8];
-                    else if (!(i & 8) && (i & 0x10))
-                        pDstData[i] = pSrcData[i - 8];
-                    else
-                        pDstData[i] = pSrcData[i];
-                }
-            }
-            else
-            {
-                memcpy(pDstData, pSrcData, width * 4);
-            }
-            if (g_PS2glContext.eClutConvMode != 2 && g_PS2glContext.bAlphaChannelReduce == 1)
-            {
-                pbDstData = (unsigned char*)pDstData + 3;
-                for (i = 0; i < width; i++)
-                {
-                    if (*pbDstData == 0xFF)
-                        *pbDstData = 0x80;
-                    else
-                        *pbDstData >>= 1;
-                    pbDstData += 4;
-                }
-            }
-            break;
-        }
-    }
-
-    switch (eInternalTarget)
-    {
-    case 0xDE0:
-        g_PS2glContext.abTex1DChanged[g_PS2glContext.iCurTextureSet] = 1;
-        PS2glTexUnloadName(g_PS2glContext.anCurTexName1D[g_PS2glContext.iCurTextureSet]);
-        break;
-    case 0xDE1:
-        g_PS2glContext.abTex2DChanged[g_PS2glContext.iCurTextureSet] = 1;
-        PS2glTexUnloadName(g_PS2glContext.anCurTexName2D[g_PS2glContext.iCurTextureSet]);
-        break;
-    case 0x8513:
-        g_PS2glContext.bTexCubeChanged = 1;
-        PS2glTexUnloadName(g_PS2glContext.nCurTexNameCube);
-        break;
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 3718–3980 */
 /* addr: 0x0016b2f0  size: 2256 bytes */
@@ -3305,202 +2897,6 @@ void impPS2glColorTableEXT(unsigned int target, unsigned int internalformat, int
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int PS2glAllocTexMem(int iTexSize, unsigned int nTexID)
-{
-    int iBlock;
-    int iBlockFound;
-    tagGLtexblock* pBlock;
-    int iLevel;
-    int iTexLevel;
-    int iTexIndexReplace;
-    int iHowFreeSpaceFound;
-    int nTexID_TEXTURE0_2D;
-    int iTexBlock_TEXTURE0_2D;
-    int iRandomIndex;
-    int iOldBlockEnd;
-    int iNewBlockSize;
-
-    iTexIndexReplace = -1;
-    iHowFreeSpaceFound = 0;
-    nTexID_TEXTURE0_2D = g_PS2glContext.anCurTexName2D[0];
-    iTexBlock_TEXTURE0_2D = g_PS2glContext.aTexName[nTexID_TEXTURE0_2D].iTexBlock;
-
-    if (iTexSize <= 0)
-        return iTexIndexReplace;
-
-    for (iLevel = 0; iLevel < 9; iLevel++)
-    {
-        if (iTexSize >= TEX_LEVEL_SIZE[iLevel] && iTexSize < TEX_LEVEL_SIZE[iLevel + 1])
-            break;
-    }
-    iTexLevel = iLevel;
-
-    if (iTexSize >= 4)
-    {
-        pBlock = g_PS2glContext.aBlockMap;
-        iBlock = 0;
-        while (iBlock < g_PS2glContext.iMaxTexBlockCount)
-        {
-            iBlockFound = pBlock->nLength;
-            if (pBlock->nTexID == 0x3ff && iBlockFound >= iTexSize)
-                goto found;
-            iBlock += iBlockFound;
-            pBlock += iBlockFound;
-        }
-    }
-    else
-    {
-        iBlock = g_PS2glContext.iMaxTexBlockCount - 1;
-        pBlock = &g_PS2glContext.aBlockMap[iBlock];
-        while (iBlock >= 0)
-        {
-            iBlockFound = pBlock->nLength;
-            if (pBlock->nTexID == 0x3ff && iBlockFound >= iTexSize)
-                goto found;
-            iBlock -= iBlockFound;
-            pBlock -= iBlockFound;
-        }
-    }
-
-    iHowFreeSpaceFound = 1;
-    if (g_PS2glContext.aTexLevelCount[iLevel] > 0)
-    {
-        iRandomIndex = rand() % g_PS2glContext.aTexLevelCount[iLevel];
-        for (iTexIndexReplace = iRandomIndex; iTexIndexReplace >= 0; iTexIndexReplace--)
-        {
-            iBlock = g_PS2glContext.aTexLevelIndex[iTexIndexReplace + TEX_LEVEL_BASE[iLevel]].nStart;
-            if (nTexID_TEXTURE0_2D != g_PS2glContext.aBlockMap[iBlock].nTexID && g_PS2glContext.aBlockMap[iBlock].nLength >= iTexSize)
-            {
-                pBlock = PS2glFreeTexBlock(iBlock, -1);
-                goto found;
-            }
-        }
-        for (iTexIndexReplace = iRandomIndex + 1; iTexIndexReplace < g_PS2glContext.aTexLevelCount[iLevel]; iTexIndexReplace++)
-        {
-            iBlock = g_PS2glContext.aTexLevelIndex[iTexIndexReplace + TEX_LEVEL_BASE[iLevel]].nStart;
-            if (nTexID_TEXTURE0_2D != g_PS2glContext.aBlockMap[iBlock].nTexID && g_PS2glContext.aBlockMap[iBlock].nLength >= iTexSize)
-            {
-                pBlock = PS2glFreeTexBlock(iBlock, -1);
-                goto found;
-            }
-        }
-    }
-
-    iHowFreeSpaceFound = 2;
-    for (iLevel++; iLevel < 10; iLevel++)
-    {
-        if (iTexSize <= TEX_LEVEL_SIZE[iLevel] && g_PS2glContext.aTexLevelCount[iLevel] > 0)
-        {
-            iTexIndexReplace = rand() % g_PS2glContext.aTexLevelCount[iLevel];
-            iBlockFound = g_PS2glContext.aTexLevelIndex[iTexIndexReplace + TEX_LEVEL_BASE[iLevel]].nStart;
-            if (nTexID_TEXTURE0_2D == g_PS2glContext.aBlockMap[iBlockFound].nTexID)
-            {
-                tagGLtexindex* pIndex;
-
-                pIndex = &g_PS2glContext.aTexLevelIndex[iTexIndexReplace + TEX_LEVEL_BASE[iLevel]];
-                memmove(pIndex, pIndex + 1, (--g_PS2glContext.aTexLevelCount[iLevel] - iTexIndexReplace) * 4);
-                pBlock = PS2glFreeTexBlock(iBlockFound, -1);
-                goto found;
-            }
-        }
-    }
-
-    iHowFreeSpaceFound = 3;
-    if (g_PS2glContext.iCurTextureSet == 1)
-    {
-        if (iTexBlock_TEXTURE0_2D >= iTexSize)
-            pBlock = PS2glFreeTexBlock(0, iTexSize);
-        else
-            pBlock = PS2glFreeTexBlock(g_PS2glContext.iMaxTexBlockCount - iTexSize, iTexSize);
-    }
-    else
-    {
-        if (iTexSize >= 4)
-            pBlock = PS2glFreeTexBlock(0, iTexSize);
-        else
-            pBlock = PS2glFreeTexBlock(g_PS2glContext.iMaxTexBlockCount - iTexSize, iTexSize);
-    }
-    PS2glUpdateTexIndex(-1);
-
-found:
-    if (!pBlock)
-    {
-        printf("pBlock = NULL\n");
-        return -1;
-    }
-    if (pBlock->nLength < iTexSize)
-        return -1;
-
-    if (iTexSize >= 4)
-    {
-        tagGLtexblock theBlock;
-
-        iBlock = pBlock->nStart;
-        pBlock = &g_PS2glContext.aBlockMap[iBlock];
-        iOldBlockEnd = iBlock + pBlock->nLength;
-        theBlock.nTexID = nTexID;
-        theBlock.nStart = iBlock;
-        theBlock.nLength = iTexSize;
-        iNewBlockSize = iTexSize;
-        while (iNewBlockSize--)
-        {
-            *pBlock = theBlock;
-            pBlock++;
-        }
-        iNewBlockSize = iOldBlockEnd - (iBlock + iTexSize);
-        theBlock.nTexID = 0x3ff;
-        theBlock.nStart = iBlock + iTexSize;
-        theBlock.nLength = iNewBlockSize;
-        pBlock = &g_PS2glContext.aBlockMap[theBlock.nStart];
-        while (iNewBlockSize--)
-        {
-            *pBlock = theBlock;
-            pBlock++;
-        }
-    }
-    else
-    {
-        tagGLtexblock theBlock;
-
-        iBlockFound = pBlock->nStart;
-        pBlock = &g_PS2glContext.aBlockMap[iBlockFound];
-        iOldBlockEnd = iBlockFound + pBlock->nLength;
-        iNewBlockSize = iOldBlockEnd - (iBlockFound + iTexSize);
-        theBlock.nTexID = 0x3ff;
-        theBlock.nStart = iBlockFound;
-        theBlock.nLength = iNewBlockSize;
-        while (iNewBlockSize--)
-        {
-            *pBlock = theBlock;
-            pBlock++;
-        }
-        iBlock = iOldBlockEnd - iTexSize;
-        theBlock.nTexID = nTexID;
-        theBlock.nStart = iBlock;
-        theBlock.nLength = iTexSize;
-        while (iTexSize--)
-        {
-            *pBlock = theBlock;
-            pBlock++;
-        }
-    }
-
-    if (iHowFreeSpaceFound == 1 && iTexIndexReplace != -1)
-    {
-        g_PS2glContext.aTexLevelIndex[iTexIndexReplace + TEX_LEVEL_BASE[iTexLevel]].nStart = iBlock;
-        g_PS2glContext.aTexLevelIndex[iTexIndexReplace + TEX_LEVEL_BASE[iTexLevel]].nTexID = nTexID;
-    }
-    else
-    {
-        int* piCount = &g_PS2glContext.aTexLevelCount[iTexLevel];
-
-        iLevel = *piCount + TEX_LEVEL_BASE[iTexLevel];
-        g_PS2glContext.aTexLevelIndex[iLevel].nStart = iBlock;
-        g_PS2glContext.aTexLevelIndex[iLevel].nTexID = nTexID;
-        (*piCount)++;
-    }
-    return iBlock;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 3652–3714 */
 /* addr: 0x0016bbc0  size: 600 bytes */
@@ -3563,68 +2959,6 @@ found:
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tagGLtexblock* PS2glFreeTexBlock(int iBlock, int iSize)
-{
-    unsigned int nTexIDUnload;
-    tagGLtexblock theBlock;
-    int iEnd;
-    int iStart;
-    tagGLtexblock* pBlockReturn;
-    tagGLtexblock* pBlock;
-
-    if (iBlock < 0 || iBlock >= g_PS2glContext.iMaxTexBlockCount)
-        return 0;
-
-    pBlock = &g_PS2glContext.aBlockMap[iBlock];
-    iStart = pBlock->nStart;
-    iEnd = iStart + pBlock->nLength;
-
-    if (iSize <= 0)
-        iSize = pBlock->nLength;
-
-    if (iStart + iSize > g_PS2glContext.iMaxTexBlockCount)
-        iSize = g_PS2glContext.iMaxTexBlockCount - iStart;
-
-    while (iSize > 0)
-    {
-        nTexIDUnload = pBlock->nTexID;
-        if (nTexIDUnload != 0x3ff)
-        {
-            g_PS2glContext.aTexName[nTexIDUnload].bResident = 0;
-        }
-        iEnd = pBlock->nStart + pBlock->nLength;
-        iSize -= pBlock->nLength;
-        pBlock = &g_PS2glContext.aBlockMap[iEnd];
-    }
-
-    pBlock = &g_PS2glContext.aBlockMap[iStart] - 1;
-    while (pBlock >= g_PS2glContext.aBlockMap && pBlock->nTexID == 0x3ff)
-    {
-        iStart = pBlock->nStart;
-        pBlock = &g_PS2glContext.aBlockMap[iStart] - 1;
-    }
-
-    pBlock = &g_PS2glContext.aBlockMap[iEnd];
-    while (pBlock < &g_PS2glContext.aBlockMap[g_PS2glContext.iMaxTexBlockCount] && pBlock->nTexID == 0x3ff)
-    {
-        iEnd = pBlock->nStart + pBlock->nLength;
-        pBlock = &g_PS2glContext.aBlockMap[iEnd];
-    }
-
-    theBlock.nTexID = 0x3ff;
-    theBlock.nStart = iStart;
-    theBlock.nLength = iEnd - iStart;
-
-    pBlockReturn = pBlock = &g_PS2glContext.aBlockMap[iStart];
-
-    for (; iStart < iEnd; iStart++)
-    {
-        *pBlock = theBlock;
-        pBlock++;
-    }
-
-    return pBlockReturn;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 3623–3640 */
 /* addr: 0x0016be20  size: 76 bytes */
@@ -3642,16 +2976,6 @@ tagGLtexblock* PS2glFreeTexBlock(int iBlock, int iSize)
  * compare a candidate object's line table as an extra checkpoint.
  */
 void PS2glUpdateTexIndex(int iLevelByTexSize);
-void PS2glFreeTexBlockSafe(int iBlock, int iSize)
-{
-    g_PS2glContext.abTex1DChanged[0] = 1;
-    g_PS2glContext.abTex2DChanged[0] = 1;
-    g_PS2glContext.abTex1DChanged[1] = 1;
-    g_PS2glContext.abTex2DChanged[1] = 1;
-    g_PS2glContext.bTexCubeChanged = 1;
-    PS2glFreeTexBlock(iBlock, iSize);
-    PS2glUpdateTexIndex(-1);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 3439–3521 */
 /* addr: 0x0016be70  size: 600 bytes */
@@ -3702,84 +3026,6 @@ void PS2glFreeTexBlockSafe(int iBlock, int iSize)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glUpdateTexIndex(int iLevelByTexSize)
-{
-    int iLevelStart;
-    int iLevelEnd;
-    int iLevel;
-    int iLoop;
-    int iLimit;
-    int I;
-    int J;
-    int N;
-
-    iLevelStart = 0;
-    iLevelEnd = 10;
-
-    if (iLevelByTexSize >= 0)
-    {
-        for (iLevel = 0; iLevel < 9; iLevel++)
-        {
-            if (iLevelByTexSize >= TEX_LEVEL_SIZE[iLevel] && iLevelByTexSize < TEX_LEVEL_SIZE[iLevel + 1])
-            {
-                iLevelStart = iLevel;
-                iLevelEnd = iLevel + 1;
-                goto found;
-            }
-        }
-        return;
-    }
-
-found:
-    for (iLevel = iLevelStart; iLevel < iLevelEnd; iLevel++)
-    {
-        iLoop = TEX_LEVEL_BASE[iLevel];
-        iLimit = iLoop + g_PS2glContext.aTexLevelCount[iLevel];
-        I = -1;
-        J = -1;
-
-        while (iLoop < iLimit)
-        {
-            for (; iLoop < iLimit; iLoop++)
-            {
-                if (g_PS2glContext.aBlockMap[g_PS2glContext.aTexLevelIndex[iLoop].nStart].nTexID == 0x3ff)
-                {
-                    if (I < J)
-                    {
-                        memmove(&g_PS2glContext.aTexLevelIndex[I], &g_PS2glContext.aTexLevelIndex[J], (N = iLoop - J) * 4);
-                        I += N;
-                        J = -1;
-                    }
-                    else
-                    {
-                        I = iLoop;
-                    }
-                    break;
-                }
-            }
-
-            for (; iLoop < iLimit; iLoop++)
-            {
-                if (g_PS2glContext.aBlockMap[g_PS2glContext.aTexLevelIndex[iLoop].nStart].nTexID != 0x3ff)
-                {
-                    J = iLoop;
-                    break;
-                }
-            }
-        }
-
-        if (I >= 0)
-        {
-            if (I < J)
-            {
-                iLoop -= J;
-                memmove(&g_PS2glContext.aTexLevelIndex[I], &g_PS2glContext.aTexLevelIndex[J], iLoop * 4);
-                I += iLoop;
-            }
-            g_PS2glContext.aTexLevelCount[iLevel] = I - TEX_LEVEL_BASE[iLevel];
-        }
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 3316–3341 */
 /* addr: 0x0016cbf0  size: 572 bytes */
@@ -3799,10 +3045,6 @@ found:
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexParameteri(unsigned int target, unsigned int pname, int param)
-{
-    PS2glTexSetParameter(target, pname, param);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 3376–3401 */
 /* addr: 0x0016c0d0  size: 1144 bytes */
@@ -3824,30 +3066,6 @@ void impPS2glTexParameteri(unsigned int target, unsigned int pname, int param)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexParameteriv(unsigned int target, unsigned int pname, int* params)
-{
-    tag_GLtexture* pTex;
-
-    switch (pname)
-    {
-    case 0x2800:
-    case 0x2801:
-    case 0x2802:
-    case 0x2803:
-        PS2glTexSetParameter(target, pname, params[0]);
-        break;
-    case 0x1004:
-        pTex = PS2glGetTargetTexture(target);
-        if (!pTex)
-            return;
-        pTex->vTexBorderColor[0] = params[0] / 2147483648.0f;
-        pTex->vTexBorderColor[1] = params[1] / 2147483648.0f;
-        pTex->vTexBorderColor[2] = params[2] / 2147483648.0f;
-        pTex->vTexBorderColor[3] = params[3] / 2147483648.0f;
-        break;
-    }
-    PS2glTexMarkChanged(target);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 3350–3373 */
 /* addr: 0x0016c550  size: 1084 bytes */
@@ -3866,27 +3084,6 @@ void impPS2glTexParameteriv(unsigned int target, unsigned int pname, int* params
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexParameterfv(unsigned int target, unsigned int pname, float* params)
-{
-    tag_GLtexture* pTex;
-
-    switch (pname)
-    {
-    case 0x2800:
-    case 0x2801:
-    case 0x2802:
-    case 0x2803:
-        PS2glTexSetParameter(target, pname, (int)params[0]);
-        break;
-    case 0x1004:
-        pTex = PS2glGetTargetTexture(target);
-        if (!pTex)
-            return;
-        *(quad*)pTex->vTexBorderColor = *(quad*)params;
-        break;
-    }
-    PS2glTexMarkChanged(target);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 3344–3347 */
 /* addr: 0x0016c990  size: 596 bytes */
@@ -3899,10 +3096,6 @@ void impPS2glTexParameterfv(unsigned int target, unsigned int pname, float* para
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexParameterf(unsigned int target, unsigned int pname, float param)
-{
-    PS2glTexSetParameter(target, pname, (int)param);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 3119–3313 */
 /* addr: 0x0016ce30  size: 2380 bytes */
@@ -4019,221 +3212,6 @@ void impPS2glTexParameterf(unsigned int target, unsigned int pname, float param)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexImage2D(unsigned int target, int level, int components, int width, int height, int border, unsigned int format, unsigned int type, void* pixels)
-{
-    unsigned int eInternalTarget;
-    int iInternalWidth;
-    int iInternalHeight;
-    unsigned int eInternalFormat;
-    int yOffset;
-    unsigned char* pOriginalTexture;
-    tag_GLtexture_image* pTexImage;
-
-    eInternalTarget = target;
-
-    switch (format)
-    {
-    case 0x80E4:
-        eInternalFormat = 0x80E4;
-        break;
-    case 0x80E5:
-    case 0x1900:
-        eInternalFormat = 0x80E5;
-        break;
-    case 0x2A10:
-    case 0x8055:
-    case 0x804F:
-    case 0x8050:
-    case 0x8056:
-    case 0x8057:
-        eInternalFormat = 0x8057;
-        break;
-    case 0x1909:
-    case 0x1903:
-    case 0x1904:
-    case 0x1905:
-    case 0x1907:
-        eInternalFormat = 0x8051;
-        break;
-    case 0x1906:
-    case 0x1908:
-    case 0x80E0:
-    case 0x80E1:
-    case 0x190A:
-        eInternalFormat = 0x8058;
-        break;
-    default:
-        eInternalFormat = 0x8051;
-        break;
-    }
-
-    iInternalWidth = width - border * 2;
-    iInternalHeight = height - border * 2;
-
-    switch (target)
-    {
-    case 0xDE0:
-        if (height != 1)
-            return;
-        break;
-    case 0xDE1:
-        break;
-    case 0x8515:
-    case 0x8516:
-    case 0x8517:
-    case 0x8518:
-    case 0x8519:
-    case 0x851A:
-        eInternalTarget = 0x8513;
-        if (eInternalFormat == 0x8051)
-            eInternalFormat = 0x8058;
-        break;
-    default:
-        return;
-    }
-
-    pTexImage = PS2glGetTargetTexImage(eInternalTarget, level);
-    if (!pTexImage)
-        return;
-
-    pTexImage->inputComponents = components;
-    pTexImage->format = eInternalFormat;
-    pTexImage->width = iInternalWidth;
-    pTexImage->height = iInternalHeight;
-    pTexImage->target = eInternalTarget;
-    pTexImage->bConverted = 0;
-
-    if (pixels)
-    {
-        yOffset = 0;
-        if (eInternalTarget == 0x8513)
-            yOffset = (target - 0x8515) * height;
-
-        if (g_PS2glContext.eTexUserMaintainMode && eInternalTarget != 0x8513)
-        {
-            pTexImage->pixels = pixels;
-            if (g_PS2glContext.eTexUserMaintainMode == 2)
-                pTexImage->bUserMaintain = 1;
-            else
-                pTexImage->bUserMaintain = 0;
-        }
-        else
-        {
-            PS2glTexCopyImage(pTexImage, (unsigned char*)pixels, 0, yOffset, width, height, border, format, type);
-            pTexImage->bUserMaintain = 0;
-        }
-
-        if (g_PS2glContext.eTexConvMode && eInternalTarget != 0x8513)
-        {
-            if (pTexImage->format == 0x80E5)
-            {
-                if (g_PS2glContext.eTexConvMode >= 3)
-                {
-                    if (g_PS2glContext.eTexConvMode == 4)
-                    {
-                        if (pTexImage->width >= 0x80 && pTexImage->height >= 0x40)
-                            pTexImage->bConverted = 1;
-                    }
-                    else
-                    {
-                        if (pTexImage->width >= 2 && pTexImage->height >= 2)
-                            pTexImage->bConverted = 1;
-                    }
-                }
-                else
-                {
-                    if (g_PS2glContext.eTexConvMode == 2)
-                    {
-                        if (pTexImage->width >= 0x80 && pTexImage->height >= 0x40)
-                            pTexImage->bConverted = 1;
-                    }
-                    else
-                    {
-                        if (pTexImage->width >= 2 && pTexImage->height >= 2)
-                            pTexImage->bConverted = 1;
-                    }
-                    if (pTexImage->bConverted == 1)
-                    {
-                        pOriginalTexture = (unsigned char*)pTexImage->pixels;
-                        pTexImage->pixels = ((void* (*)(int))PS2glAllocator64)(pTexImage->width * pTexImage->height);
-                        PS2glTexImageConv8to32(pTexImage->width, pTexImage->height, pOriginalTexture, pTexImage->pixels);
-                        if (!g_PS2glContext.eTexUserMaintainMode)
-                        {
-                            PS2glLiberator(pOriginalTexture);
-                        }
-                        else
-                        {
-                            memcpy(pOriginalTexture, pTexImage->pixels, pTexImage->width * pTexImage->height);
-                            PS2glLiberator(pTexImage->pixels);
-                            pTexImage->pixels = pOriginalTexture;
-                        }
-                    }
-                }
-            }
-            else if (pTexImage->format == 0x80E4)
-            {
-                if (g_PS2glContext.eTexConvMode >= 3)
-                {
-                    if (g_PS2glContext.eTexConvMode == 4)
-                    {
-                        if (pTexImage->width >= 0x80 && pTexImage->height >= 0x80)
-                            pTexImage->bConverted = 1;
-                    }
-                    else
-                    {
-                        if (pTexImage->width >= 2 && pTexImage->height >= 4)
-                            pTexImage->bConverted = 1;
-                    }
-                }
-                else
-                {
-                    if (g_PS2glContext.eTexConvMode == 2)
-                    {
-                        if (pTexImage->width >= 0x80 && pTexImage->height >= 0x80)
-                            pTexImage->bConverted = 1;
-                    }
-                    else
-                    {
-                        if (pTexImage->width >= 2 && pTexImage->height >= 4)
-                            pTexImage->bConverted = 1;
-                    }
-                    if (pTexImage->bConverted == 1)
-                    {
-                        pOriginalTexture = (unsigned char*)pTexImage->pixels;
-                        pTexImage->pixels = ((void* (*)(int))PS2glAllocator64)((pTexImage->width * pTexImage->height) >> 1);
-                        PS2glTexImageConv4to32(pTexImage->width, pTexImage->height, pOriginalTexture, pTexImage->pixels);
-                        if (!g_PS2glContext.eTexUserMaintainMode)
-                        {
-                            PS2glLiberator(pOriginalTexture);
-                        }
-                        else
-                        {
-                            memcpy(pOriginalTexture, pTexImage->pixels, (pTexImage->width * pTexImage->height) >> 1);
-                            PS2glLiberator(pTexImage->pixels);
-                            pTexImage->pixels = pOriginalTexture;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    switch (eInternalTarget)
-    {
-    case 0xDE0:
-        g_PS2glContext.abTex1DChanged[g_PS2glContext.iCurTextureSet] = 1;
-        PS2glTexUnloadName(g_PS2glContext.anCurTexName1D[g_PS2glContext.iCurTextureSet]);
-        break;
-    case 0xDE1:
-        g_PS2glContext.abTex2DChanged[g_PS2glContext.iCurTextureSet] = 1;
-        PS2glTexUnloadName(g_PS2glContext.anCurTexName2D[g_PS2glContext.iCurTextureSet]);
-        break;
-    case 0x8513:
-        g_PS2glContext.bTexCubeChanged = 1;
-        PS2glTexUnloadName(g_PS2glContext.nCurTexNameCube);
-        break;
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 3111–3114 */
 /* addr: 0x0016d780  size: 48 bytes */
@@ -4244,10 +3222,6 @@ void impPS2glTexImage2D(unsigned int target, int level, int components, int widt
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexImage1D(unsigned int target, int level, int components, int width, int border, unsigned int format, unsigned int type, void* pixels)
-{
-    impPS2glTexImage2D(target, level, components, width, 1, border, format, type, pixels);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 2646–3041 */
 /* addr: 0x0016d7b0  size: 5636 bytes */
@@ -4557,32 +3531,6 @@ void impPS2glTexImage1D(unsigned int target, int level, int components, int widt
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glTexCopyImage(tag_GLtexture_image* pTexImage, unsigned char* pixels, int xOffset, int yOffset, int width, int height, int border, unsigned int format, unsigned int type)
-{
-    float a;
-    float b;
-    float g;
-    float r;
-    float* pPixel;
-    short s;
-    unsigned short u;
-    unsigned char* pdata;
-    int iTexSize;
-    int iUnitSize;
-    int th;
-    int tw;
-    int iStoreSkip;
-    unsigned char* pStoreLine;
-    int iLineSkip;
-    unsigned char bScaleOrBias;
-    unsigned char bShiftOffset;
-    unsigned char* pLine;
-    int hImg;
-    int wImg;
-    int J;
-    int I;
-    /* TODO: decompile from asm/... */
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 2333–2538 */
 /* addr: 0x0016edc0  size: 1928 bytes */
@@ -4687,179 +3635,6 @@ void PS2glTexCopyImage(tag_GLtexture_image* pTexImage, unsigned char* pixels, in
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glUpdateTexture(unsigned int target)
-{
-    int I;
-    int J;
-    tagGLtexname* pTexName;
-    unsigned int nName;
-    unsigned int nTexSize;
-    unsigned int nMipTexSize;
-    tag_GLtexture_image* pImg;
-    tag_GLtexture_image** ppImg;
-    tag_GLtexture_image* pImgL0;
-    unsigned int iNeedFlushTexture;
-    tag_GLtexture* pTexture;
-
-    switch (target)
-    {
-    case 0xDE0: nName = g_PS2glContext.anCurTexName1D[g_PS2glContext.iCurTextureSet]; break;
-    case 0xDE1: nName = g_PS2glContext.anCurTexName2D[g_PS2glContext.iCurTextureSet]; break;
-    case 0x8513:
-    case 0x8515:
-    case 0x8516:
-    case 0x8517:
-    case 0x8518:
-    case 0x8519:
-    case 0x851A: nName = g_PS2glContext.nCurTexNameCube; break;
-    default: nName = 0; break;
-    }
-    switch (target)
-    {
-    case 0xDE0: pTexture = g_PS2glContext.aTexName[g_PS2glContext.anCurTexName1D[g_PS2glContext.iCurTextureSet]].pTex1D; break;
-    case 0xDE1: pTexture = g_PS2glContext.aTexName[g_PS2glContext.anCurTexName2D[g_PS2glContext.iCurTextureSet]].pTex2D; break;
-    case 0x8513:
-    case 0x8515:
-    case 0x8516:
-    case 0x8517:
-    case 0x8518:
-    case 0x8519:
-    case 0x851A: pTexture = g_PS2glContext.aTexName[g_PS2glContext.nCurTexNameCube].pTexCube; break;
-    default: pTexture = 0; break;
-    }
-    pTexName = &g_PS2glContext.aTexName[nName];
-
-    iNeedFlushTexture = 0;
-
-    if (!pTexture)
-        return;
-
-    if (g_PS2glContext.eTexLastBindTarget == 0xDE2)
-    {
-        PS2glUpdateScreenTexture();
-        return;
-    }
-
-    PS2glUpdateTexParameter(target);
-
-    ppImg = pTexture->Image;
-    pImgL0 = pTexture->Image[0];
-
-    if (!pTexName->bResident)
-    {
-        if (!pImgL0)
-            return;
-        if (!pImgL0->pixels)
-            return;
-
-        iNeedFlushTexture = 1;
-        if (pImgL0->width > 32 && pImgL0->height < 32)
-            nMipTexSize = nTexSize = (pImgL0->width * 32 * PS2glTexBytesPerPixel(pImgL0->format) + 0xff) >> 8;
-        else
-            nMipTexSize = nTexSize = (pImgL0->width * pImgL0->height * PS2glTexBytesPerPixel(pImgL0->format) + 0xff) >> 8;
-
-        if (pImgL0->format == 0x80E4)
-        {
-            nMipTexSize = nTexSize >>= 1;
-        }
-
-        for (I = 1; I < 7; I++)
-        {
-            if (!ppImg[I])
-                break;
-            if (nMipTexSize > 1)
-                nMipTexSize >>= 1;
-            nTexSize += nMipTexSize;
-        }
-
-        if (pImgL0->format == 0x80E4 || pImgL0->format == 0x80E5)
-        {
-            pTexture->iClutOffset = nTexSize;
-            if (pImgL0->format == 0x80E4)
-                nTexSize += 1;
-            else
-                nTexSize += 4;
-        }
-
-        pTexName->iTexBlock = PS2glAllocTexMem((nTexSize + 15) >> 4, nName);
-        if (pTexName->iTexBlock < 0)
-            printf("Warnning: texture %3d [W:%d, H:%d] is too big to fit in GS!\n", nName, pImgL0->width, pImgL0->height);
-    }
-
-    if (pTexName->iTexBlock < 0)
-        pTexName->iTexBlock = 0;
-
-    nTexSize = (g_PS2glContext.nTexMemBegin + ((pTexName->iTexBlock >= 0 ? pTexName->iTexBlock : 0) << 12) + 0xff) >> 8;
-    g_PS2glContext.pstCurGsSetTex->tex0.TBP0 = nTexSize;
-
-    for (I = 1; I < 7; I++)
-    {
-        if (!ppImg[I])
-            break;
-    }
-
-    g_PS2glContext.pstCurGsSetTex->tex1.MXL = I - 1;
-    if (I > 1)
-        g_PS2glContext.pstCurGsSetTex->tex1.K = g_PS2glContext.iMipMapCoeff;
-
-    for (J = 0; J < I; J++)
-    {
-        pImg = *ppImg++;
-        if (!pImg)
-            break;
-        if (pImg->pixels)
-            PS2glTexUpdateImage(pImg, J, pTexName->bResident);
-    }
-
-    if (pImgL0->format == 0x80E4 || pImgL0->format == 0x80E5)
-    {
-        if (g_PS2glContext.nTextureEnableBits & 0x10)
-        {
-            if (!g_PS2glContext.bClutResident)
-            {
-                PS2glTexUpdateClut(0, g_PS2glContext.nTexMemBegin - 4);
-                g_PS2glContext.bClutResident = 1;
-                iNeedFlushTexture = 2;
-                g_PS2glContext.pstCurGsSetTex->tex0.CBP = 0x3ffc;
-                g_PS2glContext.pstCurGsSetTex->tex0.CLD = 1;
-            }
-            else
-            {
-                g_PS2glContext.pstCurGsSetTex->tex0.CLD = 1;
-            }
-        }
-        else
-        {
-            nMipTexSize = nTexSize + pTexture->iClutOffset;
-            PS2glTexUpdateClut(pTexture, nMipTexSize);
-            iNeedFlushTexture = 2;
-            g_PS2glContext.pstCurGsSetTex->tex0.CBP = (int)nMipTexSize;
-            g_PS2glContext.pstCurGsSetTex->tex0.CLD = 1;
-            g_PS2glContext.bClutResident = 0;
-        }
-    }
-    else
-    {
-        g_PS2glContext.pstCurGsSetTex->tex0.CLD = 0;
-    }
-
-    if (iNeedFlushTexture == 2)
-    {
-        g_PS2glContext.pstCurGsSetTex->texflushaddr = 0x3f;
-    }
-    else
-    {
-        g_PS2glContext.pstCurGsSetTex->texflushaddr = 0x7f;
-        if (iNeedFlushTexture == 1)
-        {
-            g_gsContext.TEXFLUSH.DATA = 1;
-            g_gsContext.ModFlgs.TEXFLUSH_Modified = 1;
-        }
-    }
-
-    pTexName->bResident = 1;
-    dmaSendGsPackage(g_PS2glContext.pstCurGsSetTex, 7);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 2292–2328 */
 /* addr: 0x0016f550  size: 1016 bytes */
@@ -5006,60 +3781,6 @@ void PS2glUpdateTexture(unsigned int target)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glUpdateScreenTexture(void)
-{
-    int ScreenBuffer;
-    unsigned long ulBase;
-    unsigned long ulPSM;
-    volatile union { anon_42 f; unsigned long l; } dispfb;
-
-    ScreenBuffer = g_PS2glContext.anCurTexName2D[g_PS2glContext.iCurTextureSet];
-
-    g_PS2glContext.pstCurGsSetTex->tex1.MMAG = 1;
-    g_PS2glContext.pstCurGsSetTex->tex1.MMIN = 1;
-    g_PS2glContext.pstCurGsSetTex->clamp.WMS = 1;
-    g_PS2glContext.pstCurGsSetTex->clamp.WMT = 1;
-    g_PS2glContext.pstCurGsSetTex->tex0.TFX = 0;
-
-    switch (ScreenBuffer)
-    {
-    case 0:
-        dispfb.l = g_stDoubleBuf.disp[0].dispfb;
-        ulBase = g_PS2glContext.iFrameBufferFront >> 5;
-        ulPSM = dispfb.f.PSM;
-        break;
-    case 2:
-        ulBase = g_stBufferInfo.iAuxBufferBase;
-        ulPSM = g_stBufferInfo.iAuxBufferPSM;
-        break;
-    case 1:
-    default:
-        dispfb.l = g_stDoubleBuf.disp[0].dispfb;
-        ulBase = g_PS2glContext.iFrameBufferBack >> 5;
-        ulPSM = dispfb.f.PSM;
-        break;
-    }
-
-    g_PS2glContext.pstCurGsSetTex->tex0.TBP0 = ulBase << 5;
-    g_PS2glContext.pstCurGsSetTex->tex0.TBW = g_stBufferInfo.iScreenWidth >> 6;
-    g_PS2glContext.pstCurGsSetTex->tex0.PSM = ulPSM;
-    g_PS2glContext.pstCurGsSetTex->tex0.TW = 10;
-    g_PS2glContext.pstCurGsSetTex->tex0.TH = 9;
-    g_PS2glContext.pstCurGsSetTex->tex0.TCC = 0;
-    g_PS2glContext.pstCurGsSetTex->tex0.TFX = 0;
-    g_PS2glContext.pstCurGsSetTex->tex0.CBP = 0;
-    g_PS2glContext.pstCurGsSetTex->tex0.CPSM = 0;
-    g_PS2glContext.pstCurGsSetTex->tex0.CSM = 0;
-    g_PS2glContext.pstCurGsSetTex->tex0.CSA = 0;
-    g_PS2glContext.pstCurGsSetTex->tex0.CLD = 0;
-    g_PS2glContext.pstCurGsSetTex->tex1.MXL = 0;
-    g_PS2glContext.pstCurGsSetTex->texflushaddr = 0x7f;
-
-    g_gsContext.TEXFLUSH.DATA = 1;
-    g_gsContext.ModFlgs.TEXFLUSH_Modified = 1;
-
-    dmaSendGsPackage(g_PS2glContext.pstCurGsSetTex, 7);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 2211–2250 */
 /* addr: 0x0016f950  size: 416 bytes */
@@ -5138,42 +3859,6 @@ void PS2glUpdateScreenTexture(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glTexUpdateClut(tag_GLtexture* pTexture, unsigned int uiAddress)
-{
-    unsigned char* pClut;
-    int iSize;
-
-    if (pTexture == NULL)
-    {
-        iSize = g_PS2glContext.iClutSize;
-        pClut = (unsigned char*)g_PS2glContext.clut;
-    }
-    else
-    {
-        if ((pClut = (unsigned char*)pTexture->clut) == NULL) return;
-        iSize = pTexture->iClutSize;
-    }
-
-    g_PS2glContext.stGsLoadImage.bitbltbuf.DPSM = 0;
-    g_PS2glContext.stGsLoadImage.bitbltbuf.DBP = uiAddress;
-    g_PS2glContext.stGsLoadImage.bitbltbuf.DBW = 1;
-    g_PS2glContext.stGsLoadImage.trxdir.XDR = 0;
-    g_PS2glContext.stGsLoadImage.trxpos.DSAX = 0;
-    g_PS2glContext.stGsLoadImage.trxpos.DSAY = 0;
-
-    if (iSize == 256)
-    {
-        g_PS2glContext.stGsLoadImage.trxreg.RRW = 16;
-        g_PS2glContext.stGsLoadImage.trxreg.RRH = 16;
-        GsTransferTexture(pClut, 16, 16, 4);
-    }
-    else
-    {
-        g_PS2glContext.stGsLoadImage.trxreg.RRW = 8;
-        g_PS2glContext.stGsLoadImage.trxreg.RRH = 2;
-        GsTransferTexture(pClut, 8, 2, 4);
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 2048–2208 */
 /* addr: 0x0016faf0  size: 3416 bytes */
@@ -5381,17 +4066,6 @@ void PS2glTexUpdateClut(tag_GLtexture* pTexture, unsigned int uiAddress)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glTexUpdateImage(tag_GLtexture_image* pTexImage, unsigned int level, unsigned char bResident)
-{
-    int iTexSize;
-    int addr;
-    int eth;
-    int etw;
-    int th;
-    int tw;
-    unsigned char* pixels;
-    /* TODO: decompile from asm/... */
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 1863–2045 */
 /* addr: 0x00170850  size: 13032 bytes */
@@ -5569,17 +4243,6 @@ void PS2glTexUpdateImage(tag_GLtexture_image* pTexImage, unsigned int level, uns
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glComplanationCubeMap(unsigned char* pixels, tag_GLtexture_image* pTexImage)
-{
-    char* pTempSubImage1;
-    char* pTempSubImage;
-    char* pSrcSubImage;
-    int iSrcSubImageSize;
-    int iSubHeight;
-    int iSubWidth;
-    int i;
-    /* TODO: decompile from asm/... */
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 1479–1616 */
 /* addr: 0x00173b40  size: 364 bytes */
@@ -5635,60 +4298,6 @@ void PS2glComplanationCubeMap(unsigned char* pixels, tag_GLtexture_image* pTexIm
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GsTransferTexture(unsigned char* pixels, int iWidth, int iHeight, int iUnitSize)
-{
-    tag_stTexPackage* pPackage;
-    int iCount;
-    int iLoop;
-    unsigned char b4Bit;
-
-    dmaSendGsPackage(&g_PS2glContext.stGsLoadImage, 5);
-
-    pPackage = (tag_stTexPackage*)g_PS2glContext.pVIFIBufTail;
-
-    if (iUnitSize < 0)
-    {
-        iUnitSize = -iUnitSize;
-        b4Bit = 1;
-    }
-    else
-    {
-        b4Bit = 0;
-    }
-    iCount = iWidth * iHeight * iUnitSize;
-    if (b4Bit)
-        iCount >>= 1;
-
-    while (iCount > 0)
-    {
-        int iQwc;
-
-        iLoop = iCount < 0x7fff0 ? iCount : 0x7fff0;
-        iQwc = (iLoop + 15) >> 4;
-
-        pPackage->tagDmaHead.qwc = 1;
-        pPackage->tagDmaHead.id = 0x10;
-        pPackage->tagDmaHead.p[0] = 0;
-        pPackage->tagDmaHead.p[1] = 0x50000001;
-
-        pPackage->tagGifHead.FLG = 2;
-        pPackage->tagGifHead.NLOOP = iQwc;
-        pPackage->tagGifHead.EOP = 0;
-
-        pPackage->tagDmaData.qwc = iQwc;
-        pPackage->tagDmaData.id = 0x30;
-        pPackage->tagDmaData.next = (_sceDmaTag*)pixels;
-        pPackage->tagDmaData.p[0] = 0;
-        pPackage->tagDmaData.p[1] = iQwc | 0x50000000;
-
-        pixels += iLoop;
-        iCount -= iLoop;
-        pPackage++;
-    }
-    pPackage[-1].tagGifHead.EOP = 1;
-
-    g_PS2glContext.pVIFIBufTail = (float (*)[4])pPackage;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 1371–1445 */
 /* addr: 0x00173cb0  size: 1016 bytes */
@@ -5726,65 +4335,6 @@ void GsTransferTexture(unsigned char* pixels, int iWidth, int iHeight, int iUnit
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glUpdateTexParameter(unsigned int target)
-{
-    tag_GLtexture* pTexture;
-
-    switch (target)
-    {
-    case 0xDE0: pTexture = g_PS2glContext.aTexName[g_PS2glContext.anCurTexName1D[g_PS2glContext.iCurTextureSet]].pTex1D; break;
-    case 0xDE1: pTexture = g_PS2glContext.aTexName[g_PS2glContext.anCurTexName2D[g_PS2glContext.iCurTextureSet]].pTex2D; break;
-    case 0x8513:
-    case 0x8515:
-    case 0x8516:
-    case 0x8517:
-    case 0x8518:
-    case 0x8519:
-    case 0x851A: pTexture = g_PS2glContext.aTexName[g_PS2glContext.nCurTexNameCube].pTexCube; break;
-    default: pTexture = 0; break;
-    }
-
-    if (pTexture)
-    {
-        if (pTexture->eTexFilterMag == 0x2600)
-            g_PS2glContext.pstCurGsSetTex->tex1.MMAG = 0;
-        else
-            g_PS2glContext.pstCurGsSetTex->tex1.MMAG = 1;
-
-        switch (pTexture->eTexFilterMin)
-        {
-        case 0x2600: g_PS2glContext.pstCurGsSetTex->tex1.MMIN = 0; break;
-        case 0x2601: g_PS2glContext.pstCurGsSetTex->tex1.MMIN = 1; break;
-        case 0x2700: g_PS2glContext.pstCurGsSetTex->tex1.MMIN = 2; break;
-        case 0x2701: g_PS2glContext.pstCurGsSetTex->tex1.MMIN = 4; break;
-        case 0x2702: g_PS2glContext.pstCurGsSetTex->tex1.MMIN = 3; break;
-        case 0x2703: g_PS2glContext.pstCurGsSetTex->tex1.MMIN = 5; break;
-        }
-
-        switch (pTexture->eTexWrapS)
-        {
-        case 0x2901: g_PS2glContext.pstCurGsSetTex->clamp.WMS = 0; break;
-        case 0x2900: g_PS2glContext.pstCurGsSetTex->clamp.WMS = 1; break;
-        }
-
-        switch (pTexture->eTexWrapT)
-        {
-        case 0x2901: g_PS2glContext.pstCurGsSetTex->clamp.WMT = 0; break;
-        case 0x2900: g_PS2glContext.pstCurGsSetTex->clamp.WMT = 1; break;
-        }
-
-        switch (g_PS2glContext.pCurTexture->eTexEnvMode)
-        {
-        case 0x2100: g_PS2glContext.pstCurGsSetTex->tex0.TFX = 0; break;
-        case 0x2101: g_PS2glContext.pstCurGsSetTex->tex0.TFX = 1; break;
-        case 0xBE2: break;
-        case 2:
-        case 3:
-            g_PS2glContext.pstCurGsSetTex->tex0.TFX = g_PS2glContext.pCurTexture->eTexEnvMode;
-            break;
-        }
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 1284–1293 */
 /* addr: 0x001740b0  size: 200 bytes */
@@ -5798,20 +4348,6 @@ void PS2glUpdateTexParameter(unsigned int target)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexGeniv(unsigned int coord, unsigned int pname, int* params)
-{
-    tag_GLtexture_set* pCurTexture;
-    int iValue;
-
-    if (pname == 0x2500)
-    {
-        iValue = params[0]; pCurTexture = g_PS2glContext.pCurTexture; PS2GL_TEXGEN_MODE_SWITCH(pCurTexture, coord, pname, iValue) }
-    else
-    {
-        quad v = {0.0f, 0.0f, 0.0f, 0.0f}; v.f[0] = (float)params[0]; v.f[1] = (float)params[1]; v.f[2] = (float)params[2]; v.f[3] = (float)params[3];
-        impPS2glTexGenfv(coord, pname, v.f);
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 1260–1281 */
 /* addr: 0x00174180  size: 272 bytes */
@@ -5833,31 +4369,6 @@ void impPS2glTexGeniv(unsigned int coord, unsigned int pname, int* params)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexGenfv(unsigned int coord, unsigned int pname, float* params)
-{
-    float (*pvCoeff)[4] = 0;
-    int iValue;
-    tag_GLtexture_set* pCurTexture = g_PS2glContext.pCurTexture;
-
-    switch (pname)
-    {
-    case 0x2500:
-        iValue = (int)*params; PS2GL_TEXGEN_MODE_SWITCH(pCurTexture, coord, pname, iValue) break;
-    case 0x2501:
-    case 0x2502:
-        switch (coord)
-        {
-        case 0x2000: pvCoeff = &pCurTexture->vTexGenCoeffS; break;
-        case 0x2001: pvCoeff = &pCurTexture->vTexGenCoeffT; break;
-        case 0x2002: pvCoeff = &pCurTexture->vTexGenCoeffR; break;
-        case 0x2003: pvCoeff = &pCurTexture->vTexGenCoeffQ; break;
-        default: return;
-        }
-        break;
-    default: return;
-    }
-    *(quad*)pvCoeff = *(quad*)params;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 1252–1256 */
 /* addr: 0x00174290  size: 140 bytes */
@@ -5875,11 +4386,6 @@ void impPS2glTexGenfv(unsigned int coord, unsigned int pname, float* params)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexGendv(unsigned int coord, unsigned int pname, double* params)
-{
-    quad v = {0.0f, 0.0f, 0.0f, 0.0f}; v.f[0] = (float)params[0]; v.f[1] = (float)params[1]; v.f[2] = (float)params[2]; v.f[3] = (float)params[3];
-    impPS2glTexGenfv(coord, pname, v.f);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 1246–1249 */
 /* addr: 0x00174320  size: 152 bytes */
@@ -5894,11 +4400,6 @@ void impPS2glTexGendv(unsigned int coord, unsigned int pname, double* params)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexGend(unsigned int coord, unsigned int pname, double param)
-{
-    tag_GLtexture_set* pCurTexture = g_PS2glContext.pCurTexture;
-    if (pname == 0x2500) { switch (coord) { case 0x2000: pCurTexture->nTexGenModeS = (int)param; break; case 0x2001: pCurTexture->nTexGenModeT = (int)param; break; case 0x2002: pCurTexture->nTexGenModeR = (int)param; break; case 0x2003: pCurTexture->nTexGenModeQ = (int)param; break; } }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 1242–1243 */
 /* addr: 0x001743c0  size: 128 bytes */
@@ -5908,22 +4409,6 @@ void impPS2glTexGend(unsigned int coord, unsigned int pname, double param)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexGenf(unsigned int coord, unsigned int pname, float param)
-{
-    tag_GLtexture_set* pCurTexture;
-
-    pCurTexture = g_PS2glContext.pCurTexture;
-    if (pname == 0x2500)
-    {
-        switch (coord)
-        {
-        case 0x2000: pCurTexture->nTexGenModeS = (int)param; break;
-        case 0x2001: pCurTexture->nTexGenModeT = (int)param; break;
-        case 0x2002: pCurTexture->nTexGenModeR = (int)param; break;
-        case 0x2003: pCurTexture->nTexGenModeQ = (int)param; break;
-        }
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 1226–1237 */
 /* addr: 0x00174440  size: 100 bytes */
@@ -5939,22 +4424,6 @@ void impPS2glTexGenf(unsigned int coord, unsigned int pname, float param)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexGeni(unsigned int coord, unsigned int pname, int param)
-{
-    tag_GLtexture_set* pCurTexture;
-
-    pCurTexture = g_PS2glContext.pCurTexture;
-    if (pname == 0x2500)
-    {
-        switch (coord)
-        {
-        case 0x2000: pCurTexture->nTexGenModeS = param; break;
-        case 0x2001: pCurTexture->nTexGenModeT = param; break;
-        case 0x2002: pCurTexture->nTexGenModeR = param; break;
-        case 0x2003: pCurTexture->nTexGenModeQ = param; break;
-        }
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 1207–1222 */
 /* addr: 0x001744b0  size: 148 bytes */
@@ -5976,36 +4445,6 @@ void impPS2glTexGeni(unsigned int coord, unsigned int pname, int param)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexEnviv(unsigned int target, unsigned int pname, int* params)
-{
-    int iValue;
-    float* pfParams;
-    tag_GLtexture_set* pTex;
-    quad* pq;
-
-    if (target == 0x2300)
-    {
-        if (pname == 0x2200)
-        {
-            iValue = params[0];
-            if (target == 0x2300)
-            {
-                if (pname == 0x2200)
-                    g_PS2glContext.pCurTexture->eTexEnvMode = iValue;
-            }
-        }
-        else if (pname == 0x2201)
-        {
-            pTex = g_PS2glContext.pCurTexture;
-            pfParams = (float*)params;
-            pq = (quad*)&pTex->vTexEnvColor;
-            pq[0].f[0] = params[0] / 2147483648.0f;
-            pq[1].f[0] = params[1] / 2147483648.0f;
-            pq[2].f[0] = params[2] / 2147483648.0f;
-            pq[3].f[0] = params[3] / 2147483648.0f;
-        }
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 1191–1202 */
 /* addr: 0x00174550  size: 92 bytes */
@@ -6020,27 +4459,6 @@ void impPS2glTexEnviv(unsigned int target, unsigned int pname, int* params)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexEnvfv(unsigned int target, unsigned int pname, float* params)
-{
-    int iValue;
-
-    if (target == 0x2300)
-    {
-        if (pname == 0x2200)
-        {
-            iValue = (int)params[0];
-            if (target == 0x2300)
-            {
-                if (pname == 0x2200)
-                    g_PS2glContext.pCurTexture->eTexEnvMode = iValue;
-            }
-        }
-        else if (pname == 0x2201)
-        {
-            *(quad*)&g_PS2glContext.pCurTexture->vTexEnvColor = *(quad*)params;
-        }
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 1185–1186 */
 /* addr: 0x001745b0  size: 48 bytes */
@@ -6050,11 +4468,6 @@ void impPS2glTexEnvfv(unsigned int target, unsigned int pname, float* params)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexEnvf(unsigned int target, unsigned int pname, float param)
-{
-    if (target == 0x2300 && pname == 0x2200) /* GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE */
-        g_PS2glContext.pCurTexture->eTexEnvMode = (int)param;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 1176–1180 */
 /* addr: 0x001745e0  size: 36 bytes */
@@ -6065,11 +4478,6 @@ void impPS2glTexEnvf(unsigned int target, unsigned int pname, float param)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexEnvi(unsigned int target, unsigned int pname, int param)
-{
-    if (target == 0x2300 && pname == 0x2200)
-        g_PS2glContext.pCurTexture->eTexEnvMode = param;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 1152–1171 */
 /* addr: 0x00174610  size: 1120 bytes */
@@ -6089,21 +4497,6 @@ void impPS2glTexEnvi(unsigned int target, unsigned int pname, int param)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexSubImage2D(unsigned int target, int level, int xoffset, int yoffset, int width, int height, unsigned int format, unsigned int type, void* pixels)
-{
-    tag_GLtexture_image* pTexImage;
-
-    pTexImage = PS2glGetTargetTexImage(target, level);
-    if (!pTexImage)
-        return;
-    if (xoffset < 0 || yoffset < 0 || width <= 0 || xoffset + width > pTexImage->width || yoffset + height > pTexImage->height)
-        return;
-    if (pTexImage->target == 0x8513)
-        yoffset += (target - 0x8515) * height;
-    PS2glTexCopyImage(pTexImage, (unsigned char*)pixels, xoffset, yoffset, width, height, 0, format, type);
-    PS2glTexUnload(target);
-    PS2glTexMarkChanged(target);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 1123–1126 */
 /* addr: 0x00174a70  size: 1040 bytes */
@@ -6116,10 +4509,6 @@ void impPS2glTexSubImage2D(unsigned int target, int level, int xoffset, int yoff
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexSubImage1D(unsigned int target, int level, int xoffset, int width, unsigned int format, unsigned int type, void* pixels)
-{
-    PS2glTexSubImage(target, level, xoffset, 0, width, 1, format, type, pixels);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 1120–1120 */
 /* addr: 0x00174e80  size: 8 bytes */
@@ -6128,10 +4517,6 @@ void impPS2glTexSubImage1D(unsigned int target, int level, int xoffset, int widt
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glCopyTexSubImage2D(void)
-{
-    /* TODO: decompile from asm/... */
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 1114–1114 */
 /* addr: 0x00174e90  size: 8 bytes */
@@ -6140,10 +4525,6 @@ void impPS2glCopyTexSubImage2D(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glCopyTexSubImage1D(void)
-{
-    /* TODO: decompile from asm/... */
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 1108–1108 */
 /* addr: 0x00174ea0  size: 8 bytes */
@@ -6152,10 +4533,6 @@ void impPS2glCopyTexSubImage1D(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glCopyTexImage2D(void)
-{
-    /* TODO: decompile from asm/... */
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 1102–1102 */
 /* addr: 0x00174eb0  size: 8 bytes */
@@ -6164,10 +4541,6 @@ void impPS2glCopyTexImage2D(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glCopyTexImage1D(void)
-{
-    /* TODO: decompile from asm/... */
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 1027–1089 */
 /* addr: 0x00174ec0  size: 432 bytes */
@@ -6216,51 +4589,6 @@ void impPS2glCopyTexImage1D(void)
  * compare a candidate object's line table as an extra checkpoint.
  */
 extern void PS2glUpdateTexIndex(int iLength);
-void impPS2glBindTexture(unsigned int target, unsigned int texture)
-{
-    tagGLtexname* pTexName;
-
-    if (target == 0x8514)
-        target = 0x8513;
-    if (target == g_PS2glContext.eTexLastBindTarget && texture == g_PS2glContext.nTexLastBindName)
-        return;
-    if (texture < 0x200)
-    {
-        pTexName = &g_PS2glContext.aTexName[texture];
-        if (pTexName->eDimension != target)
-        {
-            if (pTexName->bResident)
-            {
-                int iLength = g_PS2glContext.aBlockMap[pTexName->iTexBlock].nLength;
-                if (PS2glFreeTexBlock(pTexName->iTexBlock, -1))
-                    PS2glUpdateTexIndex(iLength);
-            }
-            pTexName->bResident = 0;
-            pTexName->bResident = 0;
-        }
-        switch (target)
-        {
-        case 0xDE0:
-            g_PS2glContext.abTex1DChanged[g_PS2glContext.iCurTextureSet] = 1;
-            g_PS2glContext.anCurTexName1D[g_PS2glContext.iCurTextureSet] = texture;
-            break;
-        case 0xDE1:
-            g_PS2glContext.abTex2DChanged[g_PS2glContext.iCurTextureSet] = 1;
-            g_PS2glContext.anCurTexName2D[g_PS2glContext.iCurTextureSet] = texture;
-            break;
-        case 0x8513:
-            g_PS2glContext.nCurTexNameCube = texture;
-            g_PS2glContext.bTexCubeChanged = 1;
-            break;
-        default:
-            return;
-        }
-        pTexName->eDimension = target;
-        pTexName->bAllocated = 1;
-        g_PS2glContext.eTexLastBindTarget = target;
-        g_PS2glContext.nTexLastBindName = texture;
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 1004–1014 */
 /* addr: 0x00175070  size: 104 bytes */
@@ -6279,20 +4607,6 @@ void impPS2glBindTexture(unsigned int target, unsigned int texture)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glPrioritizeTextures(int n, unsigned int* textures, float* priorities)
-{
-    float fPrioritize;
-    int I;
-    unsigned int tex;
-
-    for (I = 0; I < n; I++)
-    {
-        tex = *textures++;
-        fPrioritize = *priorities++;
-        if ((tex < 0x200) && g_PS2glContext.aTexName[tex].bAllocated)
-            g_PS2glContext.aTexName[tex].fPrioritize = fPrioritize;
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 981–996 */
 /* addr: 0x001750e0  size: 136 bytes */
@@ -6310,25 +4624,6 @@ void impPS2glPrioritizeTextures(int n, unsigned int* textures, float* priorities
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char impPS2glAreTexturesResident(int n, unsigned int* textures, unsigned char* residences)
-{
-    unsigned int tex;
-    unsigned char bAll;
-    unsigned char bRes;
-    int I;
-
-    bAll = 1;
-    for (I = 0; I < n; I++)
-    {
-        tex = *textures++;
-        if (tex < 0x200)
-        {
-            bAll = bAll && (*residences = (g_PS2glContext.aTexName[tex].bResident != 0) && (g_PS2glContext.aTexName[tex].bAllocated != 0));
-        }
-        residences++;
-    }
-    return bAll;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 945–976 */
 /* addr: 0x00175170  size: 284 bytes */
@@ -6354,40 +4649,6 @@ unsigned char impPS2glAreTexturesResident(int n, unsigned int* textures, unsigne
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glDeleteTextures(int n, unsigned int* textures)
-{
-    unsigned int tex;
-    int I;
-    tagGLtexname* pTexName;
-    int lLength;
-
-    for (I = 0; I < n; I++)
-    {
-        tex = *textures++;
-        if (tex == 0) continue;
-        if (tex >= 512) continue;
-        pTexName = &g_PS2glContext.aTexName[tex];
-        if (!g_PS2glContext.aTexName[tex].bAllocated) continue;
-        if (pTexName->bResident)
-        {
-            lLength = g_PS2glContext.aBlockMap[pTexName->iTexBlock].nLength;
-            if (PS2glFreeTexBlock(pTexName->iTexBlock, -1))
-                PS2glUpdateTexIndex(lLength);
-        }
-        pTexName->bResident = 0;
-        if (g_PS2glContext.aTexName[tex].pTex1D)
-        {
-            PS2glFreeTexture(g_PS2glContext.aTexName[tex].pTex1D);
-            g_PS2glContext.aTexName[tex].pTex1D = 0;
-        }
-        if (g_PS2glContext.aTexName[tex].pTex2D)
-        {
-            PS2glFreeTexture(g_PS2glContext.aTexName[tex].pTex2D);
-            g_PS2glContext.aTexName[tex].pTex2D = 0;
-        }
-        pTexName->bAllocated = 0;
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 908–942 */
 /* addr: 0x00175290  size: 212 bytes */
@@ -6412,38 +4673,6 @@ void impPS2glDeleteTextures(int n, unsigned int* textures)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glFreeTexture(tag_GLtexture* pTexture)
-{
-    int I;
-    tag_GLtexture_image** ppImage;
-
-    ppImage = pTexture->Image;
-    if (pTexture)
-    {
-        for (I = 0; I < 7; I++, ppImage++)
-        {
-            if (*ppImage)
-            {
-                if ((*ppImage)->pixels)
-                {
-                    if (!(*ppImage)->bUserMaintain)
-                    {
-                        PS2glLiberator((*ppImage)->pixels);
-                        if (pTexture->clut)
-                        {
-                            PS2glLiberator(pTexture->clut);
-                            pTexture->clut = 0;
-                        }
-                    }
-                }
-                if ((*ppImage)->pixelsAux)
-                    PS2glLiberator((*ppImage)->pixelsAux);
-                PS2glLiberator(*ppImage);
-            }
-        }
-        PS2glLiberator(pTexture);
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 897–905 */
 /* addr: 0x00175370  size: 96 bytes */
@@ -6459,21 +4688,6 @@ void PS2glFreeTexture(tag_GLtexture* pTexture)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glGenTextures(int n, unsigned int* textures)
-{
-    unsigned int I;
-
-    for (I = 0; I < 512 && n > 0; I++)
-    {
-        if (!g_PS2glContext.aTexName[I].bAllocated)
-        {
-            *textures = I;
-            n--;
-            g_PS2glContext.aTexName[I].bAllocated = 1;
-            textures++;
-        }
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 890–892 */
 /* addr: 0x001753d0  size: 56 bytes */
@@ -6483,10 +4697,6 @@ void impPS2glGenTextures(int n, unsigned int* textures)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int impPS2glIsTexture(unsigned int texture)
-{
-    return texture >= 512 ? 0 : g_PS2glContext.aTexName[texture].bAllocated;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 656–735 */
 /* addr: 0x00175410  size: 692 bytes */
@@ -6550,99 +4760,6 @@ int impPS2glIsTexture(unsigned int texture)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int PS2glTexImageConv8to32(int width, int height, unsigned char* p_input, unsigned char* p_output)
-{
-    int i;
-    int j;
-    int k;
-    int n_page_h;
-    int n_page_w;
-    int n_input_width_byte;
-    int n_output_width_byte;
-    int n_input_height;
-    int n_output_height;
-    unsigned char* pi0;
-    unsigned char* pi1;
-    unsigned char* po0;
-    unsigned char* po1;
-    unsigned char input_page[8192];
-    unsigned char output_page[8192];
-
-    for (i = 0; i < 11; i++)
-    {
-        if (width == (0x400 >> i))
-            break;
-    }
-    if (i == 11)
-    {
-        printf("Error : width is not 2^n\n");
-        return 0;
-    }
-
-    for (i = 0; i < 11; i++)
-    {
-        if (height == (0x400 >> i))
-            break;
-    }
-    if (i == 11)
-    {
-        printf("Error : width is not 2^n\n");
-        return 0;
-    }
-
-    memset(input_page, 0, 0x2000);
-    memset(output_page, 0, 0x2000);
-
-    n_page_w = (width - 1) / 128 + 1;
-    n_page_h = (height - 1) / 64 + 1;
-
-    if (n_page_w == 1)
-    {
-        n_input_width_byte = width;
-        n_output_width_byte = width * 2;
-    }
-    else
-    {
-        n_input_width_byte = 0x80;
-        n_output_width_byte = 0x100;
-    }
-
-    if (n_page_h == 1)
-    {
-        n_input_height = height;
-        n_output_height = height / 2;
-    }
-    else
-    {
-        n_input_height = 0x40;
-        n_output_height = 0x20;
-    }
-
-    for (i = 0; i < n_page_h; i++)
-    {
-        for (j = 0; j < n_page_w; j++)
-        {
-            pi1 = input_page;
-            pi0 = p_input + i * (n_page_w * (n_input_width_byte * 64)) + n_input_width_byte * j;
-            for (k = 0; k < n_input_height; k++)
-            {
-                memcpy(pi1, pi0, n_input_width_byte);
-                pi1 += 0x80;
-                pi0 += n_input_width_byte * n_page_w;
-            }
-            PageConv8to32(0x80, 0x40, input_page, output_page);
-            po1 = output_page;
-            po0 = p_output + i * (n_page_w * (n_output_width_byte * n_output_height)) + n_output_width_byte * j;
-            for (k = 0; k < n_output_height; k++)
-            {
-                memcpy(po0, po1, n_output_width_byte);
-                po1 += 0x100;
-                po0 += n_output_width_byte * n_page_w;
-            }
-        }
-    }
-    return 1;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 560–644 */
 /* addr: 0x001756d0  size: 708 bytes */
@@ -6706,6 +4823,399 @@ int PS2glTexImageConv8to32(int width, int height, unsigned char* p_input, unsign
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 465–548 */
+/* addr: 0x001759a0  size: 884 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 465
+ *   +0x0030 -> line 492
+ *   +0x004c -> line 493
+ *   +0x005c -> line 494
+ *   +0x0060 -> line 495
+ *   +0x0064 -> line 497
+ *   +0x0068 -> line 498
+ *   +0x006c -> line 497
+ *   +0x0070 -> line 498
+ *   +0x0088 -> line 497
+ *   +0x008c -> line 499
+ *   +0x0090 -> line 497
+ *   +0x0094 -> line 499
+ *   +0x0098 -> line 497
+ *   +0x00a0 -> line 499
+ *   +0x00a8 -> line 497
+ *   +0x00b4 -> line 499
+ *   +0x00c4 -> line 497
+ *   +0x00c8 -> line 498
+ *   +0x00cc -> line 499
+ *   +0x00d4 -> line 498
+ *   +0x00dc -> line 499
+ *   +0x00ec -> line 498
+ *   +0x00f0 -> line 497
+ *   +0x00f4 -> line 499
+ *   +0x0108 -> line 498
+ *   +0x010c -> line 499
+ *   +0x0118 -> line 498
+ *   +0x011c -> line 499
+ *   +0x0130 -> line 498
+ *   +0x0134 -> line 499
+ *   +0x0148 -> line 498
+ *   +0x014c -> line 499
+ *   +0x0160 -> line 498
+ *   +0x0164 -> line 499
+ *   +0x0178 -> line 498
+ *   +0x017c -> line 499
+ *   +0x0190 -> line 498
+ *   +0x0194 -> line 499
+ *   +0x01a4 -> line 502
+ *   +0x01b4 -> line 506
+ *   +0x01cc -> line 507
+ *   +0x01e4 -> line 509
+ *   +0x01f4 -> line 510
+ *   +0x0204 -> line 516
+ *   +0x0218 -> line 518
+ *   +0x0230 -> line 521
+ *   +0x0238 -> line 523
+ *   +0x0240 -> line 520
+ *   +0x0244 -> line 525
+ *   +0x0248 -> line 521
+ *   +0x0250 -> line 523
+ *   +0x026c -> line 525
+ *   +0x0270 -> line 526
+ *   +0x0280 -> line 529
+ *   +0x0284 -> line 527
+ *   +0x0288 -> line 529
+ *   +0x0294 -> line 531
+ *   +0x02a0 -> line 534
+ *   +0x02a4 -> line 533
+ *   +0x02a8 -> line 535
+ *   +0x02ac -> line 534
+ *   +0x02d4 -> line 535
+ *   +0x02d8 -> line 536
+ *   +0x02e8 -> line 539
+ *   +0x02ec -> line 537
+ *   +0x02f0 -> line 539
+ *   +0x02fc -> line 541
+ *   +0x0310 -> line 542
+ *   +0x0328 -> line 544
+ *   +0x0334 -> line 545
+ *   +0x0340 -> line 548
+ *   +0x0344 -> line 547
+ *   +0x0348 -> line 548
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 361–451 */
+/* addr: 0x00175d20  size: 884 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 361
+ *   +0x0030 -> line 394
+ *   +0x004c -> line 395
+ *   +0x005c -> line 396
+ *   +0x0060 -> line 397
+ *   +0x0064 -> line 399
+ *   +0x0068 -> line 400
+ *   +0x006c -> line 399
+ *   +0x0070 -> line 400
+ *   +0x0088 -> line 399
+ *   +0x008c -> line 401
+ *   +0x0090 -> line 399
+ *   +0x0094 -> line 401
+ *   +0x0098 -> line 399
+ *   +0x00a0 -> line 401
+ *   +0x00a8 -> line 399
+ *   +0x00b4 -> line 401
+ *   +0x00c4 -> line 399
+ *   +0x00c8 -> line 400
+ *   +0x00cc -> line 401
+ *   +0x00d4 -> line 400
+ *   +0x00dc -> line 401
+ *   +0x00ec -> line 400
+ *   +0x00f0 -> line 399
+ *   +0x00f4 -> line 401
+ *   +0x0108 -> line 400
+ *   +0x010c -> line 401
+ *   +0x0118 -> line 400
+ *   +0x011c -> line 401
+ *   +0x0130 -> line 400
+ *   +0x0134 -> line 401
+ *   +0x0148 -> line 400
+ *   +0x014c -> line 401
+ *   +0x0160 -> line 400
+ *   +0x0164 -> line 401
+ *   +0x0178 -> line 400
+ *   +0x017c -> line 401
+ *   +0x0190 -> line 400
+ *   +0x0194 -> line 401
+ *   +0x01a4 -> line 404
+ *   +0x01b4 -> line 409
+ *   +0x01cc -> line 410
+ *   +0x01e4 -> line 412
+ *   +0x01f4 -> line 413
+ *   +0x0204 -> line 419
+ *   +0x0218 -> line 421
+ *   +0x0230 -> line 424
+ *   +0x0238 -> line 426
+ *   +0x0240 -> line 423
+ *   +0x0244 -> line 428
+ *   +0x0248 -> line 424
+ *   +0x0250 -> line 426
+ *   +0x026c -> line 428
+ *   +0x0270 -> line 429
+ *   +0x0280 -> line 432
+ *   +0x0284 -> line 430
+ *   +0x0288 -> line 432
+ *   +0x0294 -> line 434
+ *   +0x02a0 -> line 437
+ *   +0x02a4 -> line 436
+ *   +0x02a8 -> line 438
+ *   +0x02ac -> line 437
+ *   +0x02d4 -> line 438
+ *   +0x02d8 -> line 439
+ *   +0x02e8 -> line 442
+ *   +0x02ec -> line 440
+ *   +0x02f0 -> line 442
+ *   +0x02fc -> line 444
+ *   +0x0310 -> line 445
+ *   +0x0328 -> line 447
+ *   +0x0334 -> line 448
+ *   +0x0340 -> line 451
+ *   +0x0344 -> line 450
+ *   +0x0348 -> line 451
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 330–346 */
+/* addr: 0x001760a0  size: 212 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 330
+ *   +0x0004 -> line 332
+ *   +0x0008 -> line 338
+ *   +0x0010 -> line 334
+ *   +0x0014 -> line 336
+ *   +0x0018 -> line 334
+ *   +0x001c -> line 336
+ *   +0x0020 -> line 338
+ *   +0x0028 -> line 339
+ *   +0x002c -> line 338
+ *   +0x0030 -> line 341
+ *   +0x0034 -> line 339
+ *   +0x0038 -> line 338
+ *   +0x003c -> line 339
+ *   +0x004c -> line 338
+ *   +0x0050 -> line 339
+ *   +0x0068 -> line 338
+ *   +0x006c -> line 339
+ *   +0x0088 -> line 341
+ *   +0x008c -> line 339
+ *   +0x00b4 -> line 341
+ *   +0x00bc -> line 343
+ *   +0x00cc -> line 346
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+int BlockConv8to32(unsigned char* p_input, unsigned char* p_output)
+{
+    static int lut[128] = {
+        0, 36, 8, 44, 1, 37, 9, 45, 2, 38, 10, 46, 3, 39, 11, 47,
+        4, 32, 12, 40, 5, 33, 13, 41, 6, 34, 14, 42, 7, 35, 15, 43,
+        16, 52, 24, 60, 17, 53, 25, 61, 18, 54, 26, 62, 19, 55, 27, 63,
+        20, 48, 28, 56, 21, 49, 29, 57, 22, 50, 30, 58, 23, 51, 31, 59,
+        4, 32, 12, 40, 5, 33, 13, 41, 6, 34, 14, 42, 7, 35, 15, 43,
+        0, 36, 8, 44, 1, 37, 9, 45, 2, 38, 10, 46, 3, 39, 11, 47,
+        20, 48, 28, 56, 21, 49, 29, 57, 22, 50, 30, 58, 23, 51, 31, 59,
+        16, 52, 24, 60, 17, 53, 25, 61, 18, 54, 26, 62, 19, 55, 27, 63,
+    };
+    unsigned char* pIn;
+    unsigned int index1;
+    unsigned int index0;
+    unsigned int i0;
+    unsigned int k;
+    unsigned int i;
+
+    k = 0;
+    pIn = p_input;
+    for (index0 = 0; index0 < 4; index0++)
+    {
+        i0 = (index0 & 1) * 64;
+        for (index1 = 0; index1 < 16; index1++)
+        {
+            for (i = 0; i < 4; i++)
+                p_output[k++] = pIn[lut[i0++]];
+        }
+        pIn += 64;
+    }
+    return 0;
+}
+
+int PageConv4to32(int width, int height, unsigned char* p_input, unsigned char* p_output)
+{
+    static unsigned int block_table4[32] = {
+        0, 2, 8, 10, 1, 3, 9, 11,
+        4, 6, 12, 14, 5, 7, 13, 15,
+        16, 18, 24, 26, 17, 19, 25, 27,
+        20, 22, 28, 30, 21, 23, 29, 31,
+    };
+    static unsigned int block_table32[32] = {
+        0, 1, 4, 5, 16, 17, 20, 21,
+        2, 3, 6, 7, 18, 19, 22, 23,
+        8, 9, 12, 13, 24, 25, 28, 29,
+        10, 11, 14, 15, 26, 27, 30, 31,
+    };
+    int index0;
+    int index1;
+    int i;
+    int j;
+    int k;
+    unsigned int* index32_h;
+    unsigned int* index32_v;
+    unsigned int in_block_nb;
+    unsigned char input_block[256];
+    unsigned char output_block[256];
+    unsigned char* pi0;
+    unsigned char* pi1;
+    unsigned char* po0;
+    unsigned char* po1;
+    int n_width;
+    int n_height;
+
+    index32_h = (unsigned int*)PS2glAllocator(0x80);
+    index32_v = (unsigned int*)PS2glAllocator(0x80);
+    index1 = 0;
+    for (i = 0; i < 4; i++)
+    {
+        for (j = 0; j < 8; j++)
+        {
+            index0 = block_table32[index1];
+            index32_h[index0] = j;
+            index32_v[index0] = i;
+            index1++;
+        }
+    }
+
+    n_width = width / 32;
+    n_height = height / 16;
+
+    memset(input_block, 0, 256);
+    memset(output_block, 0, 256);
+
+    for (i = 0; i < n_height; i++)
+    {
+        index0 = i * 16;
+        for (j = 0; j < n_width; j++)
+        {
+            index1 = j * 16;
+            pi0 = input_block;
+            pi1 = p_input + index0 * 64 + index1;
+            in_block_nb = block_table4[j + i * n_width];
+            for (k = 0; k < 16; k++)
+            {
+                memcpy(pi0, pi1, 16);
+                pi0 += 16;
+                pi1 += 64;
+            }
+            BlockConv4to32(input_block, output_block);
+            po0 = output_block;
+            po1 = p_output + index32_v[in_block_nb] * 2048 + index32_h[in_block_nb] * 32;
+            for (k = 0; k < 8; k++)
+            {
+                memcpy(po1, po0, 32);
+                po0 += 32;
+                po1 += 256;
+            }
+        }
+    }
+
+    PS2glLiberator(index32_h);
+    PS2glLiberator(index32_v);
+    return 0;
+}
+
+int PageConv8to32(int width, int height, unsigned char* p_input, unsigned char* p_output)
+{
+    static unsigned int block_table8[32] = {
+        0, 1, 4, 5, 16, 17, 20, 21,
+        2, 3, 6, 7, 18, 19, 22, 23,
+        8, 9, 12, 13, 24, 25, 28, 29,
+        10, 11, 14, 15, 26, 27, 30, 31,
+    };
+    static unsigned int block_table32[32] = {
+        0, 1, 4, 5, 16, 17, 20, 21,
+        2, 3, 6, 7, 18, 19, 22, 23,
+        8, 9, 12, 13, 24, 25, 28, 29,
+        10, 11, 14, 15, 26, 27, 30, 31,
+    };
+    int index0;
+    int index1;
+    int i;
+    int j;
+    int k;
+    unsigned int* index32_h;
+    unsigned int* index32_v;
+    unsigned int in_block_nb;
+    unsigned char input_block[256];
+    unsigned char output_block[256];
+    unsigned char* pi0;
+    unsigned char* pi1;
+    unsigned char* po0;
+    unsigned char* po1;
+    int n_width;
+    int n_height;
+
+    index32_h = (unsigned int*)PS2glAllocator(0x80);
+    index32_v = (unsigned int*)PS2glAllocator(0x80);
+    index1 = 0;
+    for (i = 0; i < 4; i++)
+    {
+        for (j = 0; j < 8; j++)
+        {
+            index0 = block_table32[index1];
+            index32_h[index0] = j;
+            index32_v[index0] = i;
+            index1++;
+        }
+    }
+
+    n_width = width / 16;
+    n_height = height / 16;
+
+    memset(input_block, 0, 256);
+    memset(output_block, 0, 256);
+
+    for (i = 0; i < n_height; i++)
+    {
+        index0 = i * 16;
+        for (j = 0; j < n_width; j++)
+        {
+            index1 = j * 16;
+            pi0 = input_block;
+            pi1 = p_input + index0 * 128 + index1;
+            in_block_nb = block_table8[j + i * n_width];
+            for (k = 0; k < 16; k++)
+            {
+                memcpy(pi0, pi1, 16);
+                pi0 += 16;
+                pi1 += 128;
+            }
+            BlockConv8to32(input_block, output_block);
+            po0 = output_block;
+            po1 = p_output + index32_v[in_block_nb] * 2048 + index32_h[in_block_nb] * 32;
+            for (k = 0; k < 8; k++)
+            {
+                memcpy(po1, po0, 32);
+                po0 += 32;
+                po1 += 256;
+            }
+        }
+    }
+
+    PS2glLiberator(index32_h);
+    PS2glLiberator(index32_v);
+    return 0;
+}
+
 int PS2glTexImageConv4to32(int width, int height, unsigned char* p_input, unsigned char* p_output)
 {
     int i;
@@ -6800,391 +5310,1992 @@ int PS2glTexImageConv4to32(int width, int height, unsigned char* p_input, unsign
     return 1;
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 465–548 */
-/* addr: 0x001759a0  size: 884 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 465
- *   +0x0030 -> line 492
- *   +0x004c -> line 493
- *   +0x005c -> line 494
- *   +0x0060 -> line 495
- *   +0x0064 -> line 497
- *   +0x0068 -> line 498
- *   +0x006c -> line 497
- *   +0x0070 -> line 498
- *   +0x0088 -> line 497
- *   +0x008c -> line 499
- *   +0x0090 -> line 497
- *   +0x0094 -> line 499
- *   +0x0098 -> line 497
- *   +0x00a0 -> line 499
- *   +0x00a8 -> line 497
- *   +0x00b4 -> line 499
- *   +0x00c4 -> line 497
- *   +0x00c8 -> line 498
- *   +0x00cc -> line 499
- *   +0x00d4 -> line 498
- *   +0x00dc -> line 499
- *   +0x00ec -> line 498
- *   +0x00f0 -> line 497
- *   +0x00f4 -> line 499
- *   +0x0108 -> line 498
- *   +0x010c -> line 499
- *   +0x0118 -> line 498
- *   +0x011c -> line 499
- *   +0x0130 -> line 498
- *   +0x0134 -> line 499
- *   +0x0148 -> line 498
- *   +0x014c -> line 499
- *   +0x0160 -> line 498
- *   +0x0164 -> line 499
- *   +0x0178 -> line 498
- *   +0x017c -> line 499
- *   +0x0190 -> line 498
- *   +0x0194 -> line 499
- *   +0x01a4 -> line 502
- *   +0x01b4 -> line 506
- *   +0x01cc -> line 507
- *   +0x01e4 -> line 509
- *   +0x01f4 -> line 510
- *   +0x0204 -> line 516
- *   +0x0218 -> line 518
- *   +0x0230 -> line 521
- *   +0x0238 -> line 523
- *   +0x0240 -> line 520
- *   +0x0244 -> line 525
- *   +0x0248 -> line 521
- *   +0x0250 -> line 523
- *   +0x026c -> line 525
- *   +0x0270 -> line 526
- *   +0x0280 -> line 529
- *   +0x0284 -> line 527
- *   +0x0288 -> line 529
- *   +0x0294 -> line 531
- *   +0x02a0 -> line 534
- *   +0x02a4 -> line 533
- *   +0x02a8 -> line 535
- *   +0x02ac -> line 534
- *   +0x02d4 -> line 535
- *   +0x02d8 -> line 536
- *   +0x02e8 -> line 539
- *   +0x02ec -> line 537
- *   +0x02f0 -> line 539
- *   +0x02fc -> line 541
- *   +0x0310 -> line 542
- *   +0x0328 -> line 544
- *   +0x0334 -> line 545
- *   +0x0340 -> line 548
- *   +0x0344 -> line 547
- *   +0x0348 -> line 548
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int PageConv8to32(int width, int height, unsigned char* p_input, unsigned char* p_output)
+int PS2glTexImageConv8to32(int width, int height, unsigned char* p_input, unsigned char* p_output)
 {
-    static unsigned int block_table8[32] = {
-        0, 1, 4, 5, 16, 17, 20, 21,
-        2, 3, 6, 7, 18, 19, 22, 23,
-        8, 9, 12, 13, 24, 25, 28, 29,
-        10, 11, 14, 15, 26, 27, 30, 31,
-    };
-    static unsigned int block_table32[32] = {
-        0, 1, 4, 5, 16, 17, 20, 21,
-        2, 3, 6, 7, 18, 19, 22, 23,
-        8, 9, 12, 13, 24, 25, 28, 29,
-        10, 11, 14, 15, 26, 27, 30, 31,
-    };
-    int index0;
-    int index1;
     int i;
     int j;
     int k;
-    unsigned int* index32_h;
-    unsigned int* index32_v;
-    unsigned int in_block_nb;
-    unsigned char input_block[256];
-    unsigned char output_block[256];
+    int n_page_h;
+    int n_page_w;
+    int n_input_width_byte;
+    int n_output_width_byte;
+    int n_input_height;
+    int n_output_height;
     unsigned char* pi0;
     unsigned char* pi1;
     unsigned char* po0;
     unsigned char* po1;
-    int n_width;
-    int n_height;
+    unsigned char input_page[8192];
+    unsigned char output_page[8192];
 
-    index32_h = (unsigned int*)PS2glAllocator(0x80);
-    index32_v = (unsigned int*)PS2glAllocator(0x80);
-    index1 = 0;
-    for (i = 0; i < 4; i++)
+    for (i = 0; i < 11; i++)
     {
-        for (j = 0; j < 8; j++)
-        {
-            index0 = block_table32[index1];
-            index32_h[index0] = j;
-            index32_v[index0] = i;
-            index1++;
-        }
+        if (width == (0x400 >> i))
+            break;
+    }
+    if (i == 11)
+    {
+        printf("Error : width is not 2^n\n");
+        return 0;
     }
 
-    n_width = width / 16;
-    n_height = height / 16;
-
-    memset(input_block, 0, 256);
-    memset(output_block, 0, 256);
-
-    for (i = 0; i < n_height; i++)
+    for (i = 0; i < 11; i++)
     {
-        index0 = i * 16;
-        for (j = 0; j < n_width; j++)
+        if (height == (0x400 >> i))
+            break;
+    }
+    if (i == 11)
+    {
+        printf("Error : width is not 2^n\n");
+        return 0;
+    }
+
+    memset(input_page, 0, 0x2000);
+    memset(output_page, 0, 0x2000);
+
+    n_page_w = (width - 1) / 128 + 1;
+    n_page_h = (height - 1) / 64 + 1;
+
+    if (n_page_w == 1)
+    {
+        n_input_width_byte = width;
+        n_output_width_byte = width * 2;
+    }
+    else
+    {
+        n_input_width_byte = 0x80;
+        n_output_width_byte = 0x100;
+    }
+
+    if (n_page_h == 1)
+    {
+        n_input_height = height;
+        n_output_height = height / 2;
+    }
+    else
+    {
+        n_input_height = 0x40;
+        n_output_height = 0x20;
+    }
+
+    for (i = 0; i < n_page_h; i++)
+    {
+        for (j = 0; j < n_page_w; j++)
         {
-            index1 = j * 16;
-            pi0 = input_block;
-            pi1 = p_input + index0 * 128 + index1;
-            in_block_nb = block_table8[j + i * n_width];
-            for (k = 0; k < 16; k++)
+            pi1 = input_page;
+            pi0 = p_input + i * (n_page_w * (n_input_width_byte * 64)) + n_input_width_byte * j;
+            for (k = 0; k < n_input_height; k++)
             {
-                memcpy(pi0, pi1, 16);
-                pi0 += 16;
-                pi1 += 128;
+                memcpy(pi1, pi0, n_input_width_byte);
+                pi1 += 0x80;
+                pi0 += n_input_width_byte * n_page_w;
             }
-            BlockConv8to32(input_block, output_block);
-            po0 = output_block;
-            po1 = p_output + index32_v[in_block_nb] * 2048 + index32_h[in_block_nb] * 32;
-            for (k = 0; k < 8; k++)
+            PageConv8to32(0x80, 0x40, input_page, output_page);
+            po1 = output_page;
+            po0 = p_output + i * (n_page_w * (n_output_width_byte * n_output_height)) + n_output_width_byte * j;
+            for (k = 0; k < n_output_height; k++)
             {
-                memcpy(po1, po0, 32);
-                po0 += 32;
-                po1 += 256;
+                memcpy(po0, po1, n_output_width_byte);
+                po1 += 0x100;
+                po0 += n_output_width_byte * n_page_w;
             }
         }
     }
-
-    PS2glLiberator(index32_h);
-    PS2glLiberator(index32_v);
-    return 0;
+    return 1;
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 361–451 */
-/* addr: 0x00175d20  size: 884 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 361
- *   +0x0030 -> line 394
- *   +0x004c -> line 395
- *   +0x005c -> line 396
- *   +0x0060 -> line 397
- *   +0x0064 -> line 399
- *   +0x0068 -> line 400
- *   +0x006c -> line 399
- *   +0x0070 -> line 400
- *   +0x0088 -> line 399
- *   +0x008c -> line 401
- *   +0x0090 -> line 399
- *   +0x0094 -> line 401
- *   +0x0098 -> line 399
- *   +0x00a0 -> line 401
- *   +0x00a8 -> line 399
- *   +0x00b4 -> line 401
- *   +0x00c4 -> line 399
- *   +0x00c8 -> line 400
- *   +0x00cc -> line 401
- *   +0x00d4 -> line 400
- *   +0x00dc -> line 401
- *   +0x00ec -> line 400
- *   +0x00f0 -> line 399
- *   +0x00f4 -> line 401
- *   +0x0108 -> line 400
- *   +0x010c -> line 401
- *   +0x0118 -> line 400
- *   +0x011c -> line 401
- *   +0x0130 -> line 400
- *   +0x0134 -> line 401
- *   +0x0148 -> line 400
- *   +0x014c -> line 401
- *   +0x0160 -> line 400
- *   +0x0164 -> line 401
- *   +0x0178 -> line 400
- *   +0x017c -> line 401
- *   +0x0190 -> line 400
- *   +0x0194 -> line 401
- *   +0x01a4 -> line 404
- *   +0x01b4 -> line 409
- *   +0x01cc -> line 410
- *   +0x01e4 -> line 412
- *   +0x01f4 -> line 413
- *   +0x0204 -> line 419
- *   +0x0218 -> line 421
- *   +0x0230 -> line 424
- *   +0x0238 -> line 426
- *   +0x0240 -> line 423
- *   +0x0244 -> line 428
- *   +0x0248 -> line 424
- *   +0x0250 -> line 426
- *   +0x026c -> line 428
- *   +0x0270 -> line 429
- *   +0x0280 -> line 432
- *   +0x0284 -> line 430
- *   +0x0288 -> line 432
- *   +0x0294 -> line 434
- *   +0x02a0 -> line 437
- *   +0x02a4 -> line 436
- *   +0x02a8 -> line 438
- *   +0x02ac -> line 437
- *   +0x02d4 -> line 438
- *   +0x02d8 -> line 439
- *   +0x02e8 -> line 442
- *   +0x02ec -> line 440
- *   +0x02f0 -> line 442
- *   +0x02fc -> line 444
- *   +0x0310 -> line 445
- *   +0x0328 -> line 447
- *   +0x0334 -> line 448
- *   +0x0340 -> line 451
- *   +0x0344 -> line 450
- *   +0x0348 -> line 451
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int PageConv4to32(int width, int height, unsigned char* p_input, unsigned char* p_output)
+int impPS2glIsTexture(unsigned int texture)
 {
-    static unsigned int block_table4[32] = {
-        0, 2, 8, 10, 1, 3, 9, 11,
-        4, 6, 12, 14, 5, 7, 13, 15,
-        16, 18, 24, 26, 17, 19, 25, 27,
-        20, 22, 28, 30, 21, 23, 29, 31,
-    };
-    static unsigned int block_table32[32] = {
-        0, 1, 4, 5, 16, 17, 20, 21,
-        2, 3, 6, 7, 18, 19, 22, 23,
-        8, 9, 12, 13, 24, 25, 28, 29,
-        10, 11, 14, 15, 26, 27, 30, 31,
-    };
-    int index0;
-    int index1;
+    return texture >= 512 ? 0 : g_PS2glContext.aTexName[texture].bAllocated;
+}
+
+void impPS2glGenTextures(int n, unsigned int* textures)
+{
+    unsigned int I;
+
+    for (I = 0; I < 512 && n > 0; I++)
+    {
+        if (!g_PS2glContext.aTexName[I].bAllocated)
+        {
+            *textures = I;
+            n--;
+            g_PS2glContext.aTexName[I].bAllocated = 1;
+            textures++;
+        }
+    }
+}
+
+void PS2glFreeTexture(tag_GLtexture* pTexture)
+{
+    int I;
+    tag_GLtexture_image** ppImage;
+
+    ppImage = pTexture->Image;
+    if (pTexture)
+    {
+        for (I = 0; I < 7; I++, ppImage++)
+        {
+            if (*ppImage)
+            {
+                if ((*ppImage)->pixels)
+                {
+                    if (!(*ppImage)->bUserMaintain)
+                    {
+                        PS2glLiberator((*ppImage)->pixels);
+                        if (pTexture->clut)
+                        {
+                            PS2glLiberator(pTexture->clut);
+                            pTexture->clut = 0;
+                        }
+                    }
+                }
+                if ((*ppImage)->pixelsAux)
+                    PS2glLiberator((*ppImage)->pixelsAux);
+                PS2glLiberator(*ppImage);
+            }
+        }
+        PS2glLiberator(pTexture);
+    }
+}
+
+void impPS2glDeleteTextures(int n, unsigned int* textures)
+{
+    unsigned int tex;
+    int I;
+    tagGLtexname* pTexName;
+    int lLength;
+
+    for (I = 0; I < n; I++)
+    {
+        tex = *textures++;
+        if (tex == 0) continue;
+        if (tex >= 512) continue;
+        pTexName = &g_PS2glContext.aTexName[tex];
+        if (!g_PS2glContext.aTexName[tex].bAllocated) continue;
+        if (pTexName->bResident)
+        {
+            lLength = g_PS2glContext.aBlockMap[pTexName->iTexBlock].nLength;
+            if (PS2glFreeTexBlock(pTexName->iTexBlock, -1))
+                PS2glUpdateTexIndex(lLength);
+        }
+        pTexName->bResident = 0;
+        if (g_PS2glContext.aTexName[tex].pTex1D)
+        {
+            PS2glFreeTexture(g_PS2glContext.aTexName[tex].pTex1D);
+            g_PS2glContext.aTexName[tex].pTex1D = 0;
+        }
+        if (g_PS2glContext.aTexName[tex].pTex2D)
+        {
+            PS2glFreeTexture(g_PS2glContext.aTexName[tex].pTex2D);
+            g_PS2glContext.aTexName[tex].pTex2D = 0;
+        }
+        pTexName->bAllocated = 0;
+    }
+}
+
+unsigned char impPS2glAreTexturesResident(int n, unsigned int* textures, unsigned char* residences)
+{
+    unsigned int tex;
+    unsigned char bAll;
+    unsigned char bRes;
+    int I;
+
+    bAll = 1;
+    for (I = 0; I < n; I++)
+    {
+        tex = *textures++;
+        if (tex < 0x200)
+        {
+            bAll = bAll && (*residences = (g_PS2glContext.aTexName[tex].bResident != 0) && (g_PS2glContext.aTexName[tex].bAllocated != 0));
+        }
+        residences++;
+    }
+    return bAll;
+}
+
+void impPS2glPrioritizeTextures(int n, unsigned int* textures, float* priorities)
+{
+    float fPrioritize;
+    int I;
+    unsigned int tex;
+
+    for (I = 0; I < n; I++)
+    {
+        tex = *textures++;
+        fPrioritize = *priorities++;
+        if ((tex < 0x200) && g_PS2glContext.aTexName[tex].bAllocated)
+            g_PS2glContext.aTexName[tex].fPrioritize = fPrioritize;
+    }
+}
+
+void impPS2glBindTexture(unsigned int target, unsigned int texture)
+{
+    tagGLtexname* pTexName;
+
+    if (target == 0x8514)
+        target = 0x8513;
+    if (target == g_PS2glContext.eTexLastBindTarget && texture == g_PS2glContext.nTexLastBindName)
+        return;
+    if (texture < 0x200)
+    {
+        pTexName = &g_PS2glContext.aTexName[texture];
+        if (pTexName->eDimension != target)
+        {
+            if (pTexName->bResident)
+            {
+                int iLength = g_PS2glContext.aBlockMap[pTexName->iTexBlock].nLength;
+                if (PS2glFreeTexBlock(pTexName->iTexBlock, -1))
+                    PS2glUpdateTexIndex(iLength);
+            }
+            pTexName->bResident = 0;
+            pTexName->bResident = 0;
+        }
+        switch (target)
+        {
+        case 0xDE0:
+            g_PS2glContext.abTex1DChanged[g_PS2glContext.iCurTextureSet] = 1;
+            g_PS2glContext.anCurTexName1D[g_PS2glContext.iCurTextureSet] = texture;
+            break;
+        case 0xDE1:
+            g_PS2glContext.abTex2DChanged[g_PS2glContext.iCurTextureSet] = 1;
+            g_PS2glContext.anCurTexName2D[g_PS2glContext.iCurTextureSet] = texture;
+            break;
+        case 0x8513:
+            g_PS2glContext.nCurTexNameCube = texture;
+            g_PS2glContext.bTexCubeChanged = 1;
+            break;
+        default:
+            return;
+        }
+        pTexName->eDimension = target;
+        pTexName->bAllocated = 1;
+        g_PS2glContext.eTexLastBindTarget = target;
+        g_PS2glContext.nTexLastBindName = texture;
+    }
+}
+
+void impPS2glCopyTexImage1D(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glCopyTexImage2D(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glCopyTexSubImage1D(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glCopyTexSubImage2D(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glTexSubImage1D(unsigned int target, int level, int xoffset, int width, unsigned int format, unsigned int type, void* pixels)
+{
+    PS2glTexSubImage(target, level, xoffset, 0, width, 1, format, type, pixels);
+}
+
+void impPS2glTexSubImage2D(unsigned int target, int level, int xoffset, int yoffset, int width, int height, unsigned int format, unsigned int type, void* pixels)
+{
+    tag_GLtexture_image* pTexImage;
+
+    pTexImage = PS2glGetTargetTexImage(target, level);
+    if (!pTexImage)
+        return;
+    if (xoffset < 0 || yoffset < 0 || width <= 0 || xoffset + width > pTexImage->width || yoffset + height > pTexImage->height)
+        return;
+    if (pTexImage->target == 0x8513)
+        yoffset += (target - 0x8515) * height;
+    PS2glTexCopyImage(pTexImage, (unsigned char*)pixels, xoffset, yoffset, width, height, 0, format, type);
+    PS2glTexUnload(target);
+    PS2glTexMarkChanged(target);
+}
+
+void impPS2glTexEnvi(unsigned int target, unsigned int pname, int param)
+{
+    if (target == 0x2300 && pname == 0x2200)
+        g_PS2glContext.pCurTexture->eTexEnvMode = param;
+}
+
+void impPS2glTexEnvf(unsigned int target, unsigned int pname, float param)
+{
+    if (target == 0x2300 && pname == 0x2200) /* GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE */
+        g_PS2glContext.pCurTexture->eTexEnvMode = (int)param;
+}
+
+void impPS2glTexEnvfv(unsigned int target, unsigned int pname, float* params)
+{
+    int iValue;
+
+    if (target == 0x2300)
+    {
+        if (pname == 0x2200)
+        {
+            iValue = (int)params[0];
+            if (target == 0x2300)
+            {
+                if (pname == 0x2200)
+                    g_PS2glContext.pCurTexture->eTexEnvMode = iValue;
+            }
+        }
+        else if (pname == 0x2201)
+        {
+            *(quad*)&g_PS2glContext.pCurTexture->vTexEnvColor = *(quad*)params;
+        }
+    }
+}
+
+void impPS2glTexEnviv(unsigned int target, unsigned int pname, int* params)
+{
+    int iValue;
+    float* pfParams;
+    tag_GLtexture_set* pTex;
+    quad* pq;
+
+    if (target == 0x2300)
+    {
+        if (pname == 0x2200)
+        {
+            iValue = params[0];
+            if (target == 0x2300)
+            {
+                if (pname == 0x2200)
+                    g_PS2glContext.pCurTexture->eTexEnvMode = iValue;
+            }
+        }
+        else if (pname == 0x2201)
+        {
+            pTex = g_PS2glContext.pCurTexture;
+            pfParams = (float*)params;
+            pq = (quad*)&pTex->vTexEnvColor;
+            pq[0].f[0] = params[0] / 2147483648.0f;
+            pq[1].f[0] = params[1] / 2147483648.0f;
+            pq[2].f[0] = params[2] / 2147483648.0f;
+            pq[3].f[0] = params[3] / 2147483648.0f;
+        }
+    }
+}
+
+void impPS2glTexGeni(unsigned int coord, unsigned int pname, int param)
+{
+    tag_GLtexture_set* pCurTexture;
+
+    pCurTexture = g_PS2glContext.pCurTexture;
+    if (pname == 0x2500)
+    {
+        switch (coord)
+        {
+        case 0x2000: pCurTexture->nTexGenModeS = param; break;
+        case 0x2001: pCurTexture->nTexGenModeT = param; break;
+        case 0x2002: pCurTexture->nTexGenModeR = param; break;
+        case 0x2003: pCurTexture->nTexGenModeQ = param; break;
+        }
+    }
+}
+
+void impPS2glTexGenf(unsigned int coord, unsigned int pname, float param)
+{
+    tag_GLtexture_set* pCurTexture;
+
+    pCurTexture = g_PS2glContext.pCurTexture;
+    if (pname == 0x2500)
+    {
+        switch (coord)
+        {
+        case 0x2000: pCurTexture->nTexGenModeS = (int)param; break;
+        case 0x2001: pCurTexture->nTexGenModeT = (int)param; break;
+        case 0x2002: pCurTexture->nTexGenModeR = (int)param; break;
+        case 0x2003: pCurTexture->nTexGenModeQ = (int)param; break;
+        }
+    }
+}
+
+void impPS2glTexGend(unsigned int coord, unsigned int pname, double param)
+{
+    tag_GLtexture_set* pCurTexture = g_PS2glContext.pCurTexture;
+    if (pname == 0x2500) { switch (coord) { case 0x2000: pCurTexture->nTexGenModeS = (int)param; break; case 0x2001: pCurTexture->nTexGenModeT = (int)param; break; case 0x2002: pCurTexture->nTexGenModeR = (int)param; break; case 0x2003: pCurTexture->nTexGenModeQ = (int)param; break; } }
+}
+
+void impPS2glTexGendv(unsigned int coord, unsigned int pname, double* params)
+{
+    quad v = {0.0f, 0.0f, 0.0f, 0.0f}; v.f[0] = (float)params[0]; v.f[1] = (float)params[1]; v.f[2] = (float)params[2]; v.f[3] = (float)params[3];
+    impPS2glTexGenfv(coord, pname, v.f);
+}
+
+void impPS2glTexGenfv(unsigned int coord, unsigned int pname, float* params)
+{
+    float (*pvCoeff)[4] = 0;
+    int iValue;
+    tag_GLtexture_set* pCurTexture = g_PS2glContext.pCurTexture;
+
+    switch (pname)
+    {
+    case 0x2500:
+        iValue = (int)*params; PS2GL_TEXGEN_MODE_SWITCH(pCurTexture, coord, pname, iValue) break;
+    case 0x2501:
+    case 0x2502:
+        switch (coord)
+        {
+        case 0x2000: pvCoeff = &pCurTexture->vTexGenCoeffS; break;
+        case 0x2001: pvCoeff = &pCurTexture->vTexGenCoeffT; break;
+        case 0x2002: pvCoeff = &pCurTexture->vTexGenCoeffR; break;
+        case 0x2003: pvCoeff = &pCurTexture->vTexGenCoeffQ; break;
+        default: return;
+        }
+        break;
+    default: return;
+    }
+    *(quad*)pvCoeff = *(quad*)params;
+}
+
+void impPS2glTexGeniv(unsigned int coord, unsigned int pname, int* params)
+{
+    tag_GLtexture_set* pCurTexture;
+    int iValue;
+
+    if (pname == 0x2500)
+    {
+        iValue = params[0]; pCurTexture = g_PS2glContext.pCurTexture; PS2GL_TEXGEN_MODE_SWITCH(pCurTexture, coord, pname, iValue) }
+    else
+    {
+        quad v = {0.0f, 0.0f, 0.0f, 0.0f}; v.f[0] = (float)params[0]; v.f[1] = (float)params[1]; v.f[2] = (float)params[2]; v.f[3] = (float)params[3];
+        impPS2glTexGenfv(coord, pname, v.f);
+    }
+}
+
+void PS2glUpdateTexParameter(unsigned int target)
+{
+    tag_GLtexture* pTexture;
+
+    switch (target)
+    {
+    case 0xDE0: pTexture = g_PS2glContext.aTexName[g_PS2glContext.anCurTexName1D[g_PS2glContext.iCurTextureSet]].pTex1D; break;
+    case 0xDE1: pTexture = g_PS2glContext.aTexName[g_PS2glContext.anCurTexName2D[g_PS2glContext.iCurTextureSet]].pTex2D; break;
+    case 0x8513:
+    case 0x8515:
+    case 0x8516:
+    case 0x8517:
+    case 0x8518:
+    case 0x8519:
+    case 0x851A: pTexture = g_PS2glContext.aTexName[g_PS2glContext.nCurTexNameCube].pTexCube; break;
+    default: pTexture = 0; break;
+    }
+
+    if (pTexture)
+    {
+        if (pTexture->eTexFilterMag == 0x2600)
+            g_PS2glContext.pstCurGsSetTex->tex1.MMAG = 0;
+        else
+            g_PS2glContext.pstCurGsSetTex->tex1.MMAG = 1;
+
+        switch (pTexture->eTexFilterMin)
+        {
+        case 0x2600: g_PS2glContext.pstCurGsSetTex->tex1.MMIN = 0; break;
+        case 0x2601: g_PS2glContext.pstCurGsSetTex->tex1.MMIN = 1; break;
+        case 0x2700: g_PS2glContext.pstCurGsSetTex->tex1.MMIN = 2; break;
+        case 0x2701: g_PS2glContext.pstCurGsSetTex->tex1.MMIN = 4; break;
+        case 0x2702: g_PS2glContext.pstCurGsSetTex->tex1.MMIN = 3; break;
+        case 0x2703: g_PS2glContext.pstCurGsSetTex->tex1.MMIN = 5; break;
+        }
+
+        switch (pTexture->eTexWrapS)
+        {
+        case 0x2901: g_PS2glContext.pstCurGsSetTex->clamp.WMS = 0; break;
+        case 0x2900: g_PS2glContext.pstCurGsSetTex->clamp.WMS = 1; break;
+        }
+
+        switch (pTexture->eTexWrapT)
+        {
+        case 0x2901: g_PS2glContext.pstCurGsSetTex->clamp.WMT = 0; break;
+        case 0x2900: g_PS2glContext.pstCurGsSetTex->clamp.WMT = 1; break;
+        }
+
+        switch (g_PS2glContext.pCurTexture->eTexEnvMode)
+        {
+        case 0x2100: g_PS2glContext.pstCurGsSetTex->tex0.TFX = 0; break;
+        case 0x2101: g_PS2glContext.pstCurGsSetTex->tex0.TFX = 1; break;
+        case 0xBE2: break;
+        case 2:
+        case 3:
+            g_PS2glContext.pstCurGsSetTex->tex0.TFX = g_PS2glContext.pCurTexture->eTexEnvMode;
+            break;
+        }
+    }
+}
+
+void GsTransferTexture(unsigned char* pixels, int iWidth, int iHeight, int iUnitSize)
+{
+    tag_stTexPackage* pPackage;
+    int iCount;
+    int iLoop;
+    unsigned char b4Bit;
+
+    dmaSendGsPackage(&g_PS2glContext.stGsLoadImage, 5);
+
+    pPackage = (tag_stTexPackage*)g_PS2glContext.pVIFIBufTail;
+
+    if (iUnitSize < 0)
+    {
+        iUnitSize = -iUnitSize;
+        b4Bit = 1;
+    }
+    else
+    {
+        b4Bit = 0;
+    }
+    iCount = iWidth * iHeight * iUnitSize;
+    if (b4Bit)
+        iCount >>= 1;
+
+    while (iCount > 0)
+    {
+        int iQwc;
+
+        iLoop = iCount < 0x7fff0 ? iCount : 0x7fff0;
+        iQwc = (iLoop + 15) >> 4;
+
+        pPackage->tagDmaHead.qwc = 1;
+        pPackage->tagDmaHead.id = 0x10;
+        pPackage->tagDmaHead.p[0] = 0;
+        pPackage->tagDmaHead.p[1] = 0x50000001;
+
+        pPackage->tagGifHead.FLG = 2;
+        pPackage->tagGifHead.NLOOP = iQwc;
+        pPackage->tagGifHead.EOP = 0;
+
+        pPackage->tagDmaData.qwc = iQwc;
+        pPackage->tagDmaData.id = 0x30;
+        pPackage->tagDmaData.next = (_sceDmaTag*)pixels;
+        pPackage->tagDmaData.p[0] = 0;
+        pPackage->tagDmaData.p[1] = iQwc | 0x50000000;
+
+        pixels += iLoop;
+        iCount -= iLoop;
+        pPackage++;
+    }
+    pPackage[-1].tagGifHead.EOP = 1;
+
+    g_PS2glContext.pVIFIBufTail = (float (*)[4])pPackage;
+}
+
+void PS2glComplanationCubeMap(unsigned char* pixels, tag_GLtexture_image* pTexImage)
+{
+    char* pTempSubImage1;
+    char* pTempSubImage;
+    char* pSrcSubImage;
+    int iSrcSubImageSize;
+    int iSubHeight;
+    int iSubWidth;
     int i;
-    int j;
-    int k;
-    unsigned int* index32_h;
-    unsigned int* index32_v;
-    unsigned int in_block_nb;
-    unsigned char input_block[256];
-    unsigned char output_block[256];
-    unsigned char* pi0;
-    unsigned char* pi1;
-    unsigned char* po0;
-    unsigned char* po1;
-    int n_width;
-    int n_height;
-
-    index32_h = (unsigned int*)PS2glAllocator(0x80);
-    index32_v = (unsigned int*)PS2glAllocator(0x80);
-    index1 = 0;
-    for (i = 0; i < 4; i++)
-    {
-        for (j = 0; j < 8; j++)
-        {
-            index0 = block_table32[index1];
-            index32_h[index0] = j;
-            index32_v[index0] = i;
-            index1++;
-        }
-    }
-
-    n_width = width / 32;
-    n_height = height / 16;
-
-    memset(input_block, 0, 256);
-    memset(output_block, 0, 256);
-
-    for (i = 0; i < n_height; i++)
-    {
-        index0 = i * 16;
-        for (j = 0; j < n_width; j++)
-        {
-            index1 = j * 16;
-            pi0 = input_block;
-            pi1 = p_input + index0 * 64 + index1;
-            in_block_nb = block_table4[j + i * n_width];
-            for (k = 0; k < 16; k++)
-            {
-                memcpy(pi0, pi1, 16);
-                pi0 += 16;
-                pi1 += 64;
-            }
-            BlockConv4to32(input_block, output_block);
-            po0 = output_block;
-            po1 = p_output + index32_v[in_block_nb] * 2048 + index32_h[in_block_nb] * 32;
-            for (k = 0; k < 8; k++)
-            {
-                memcpy(po1, po0, 32);
-                po0 += 32;
-                po1 += 256;
-            }
-        }
-    }
-
-    PS2glLiberator(index32_h);
-    PS2glLiberator(index32_v);
-    return 0;
+    /* TODO: decompile from asm/... */
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 330–346 */
-/* addr: 0x001760a0  size: 212 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 330
- *   +0x0004 -> line 332
- *   +0x0008 -> line 338
- *   +0x0010 -> line 334
- *   +0x0014 -> line 336
- *   +0x0018 -> line 334
- *   +0x001c -> line 336
- *   +0x0020 -> line 338
- *   +0x0028 -> line 339
- *   +0x002c -> line 338
- *   +0x0030 -> line 341
- *   +0x0034 -> line 339
- *   +0x0038 -> line 338
- *   +0x003c -> line 339
- *   +0x004c -> line 338
- *   +0x0050 -> line 339
- *   +0x0068 -> line 338
- *   +0x006c -> line 339
- *   +0x0088 -> line 341
- *   +0x008c -> line 339
- *   +0x00b4 -> line 341
- *   +0x00bc -> line 343
- *   +0x00cc -> line 346
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int BlockConv8to32(unsigned char* p_input, unsigned char* p_output)
+void PS2glTexUpdateImage(tag_GLtexture_image* pTexImage, unsigned int level, unsigned char bResident)
 {
-    static int lut[128] = {
-        0, 36, 8, 44, 1, 37, 9, 45, 2, 38, 10, 46, 3, 39, 11, 47,
-        4, 32, 12, 40, 5, 33, 13, 41, 6, 34, 14, 42, 7, 35, 15, 43,
-        16, 52, 24, 60, 17, 53, 25, 61, 18, 54, 26, 62, 19, 55, 27, 63,
-        20, 48, 28, 56, 21, 49, 29, 57, 22, 50, 30, 58, 23, 51, 31, 59,
-        4, 32, 12, 40, 5, 33, 13, 41, 6, 34, 14, 42, 7, 35, 15, 43,
-        0, 36, 8, 44, 1, 37, 9, 45, 2, 38, 10, 46, 3, 39, 11, 47,
-        20, 48, 28, 56, 21, 49, 29, 57, 22, 50, 30, 58, 23, 51, 31, 59,
-        16, 52, 24, 60, 17, 53, 25, 61, 18, 54, 26, 62, 19, 55, 27, 63,
-    };
-    unsigned char* pIn;
-    unsigned int index1;
-    unsigned int index0;
-    unsigned int i0;
-    unsigned int k;
-    unsigned int i;
+    int iTexSize;
+    int addr;
+    int eth;
+    int etw;
+    int th;
+    int tw;
+    unsigned char* pixels;
+    /* TODO: decompile from asm/... */
+}
 
-    k = 0;
-    pIn = p_input;
-    for (index0 = 0; index0 < 4; index0++)
+void PS2glTexUpdateClut(tag_GLtexture* pTexture, unsigned int uiAddress)
+{
+    unsigned char* pClut;
+    int iSize;
+
+    if (pTexture == NULL)
     {
-        i0 = (index0 & 1) * 64;
-        for (index1 = 0; index1 < 16; index1++)
-        {
-            for (i = 0; i < 4; i++)
-                p_output[k++] = pIn[lut[i0++]];
-        }
-        pIn += 64;
+        iSize = g_PS2glContext.iClutSize;
+        pClut = (unsigned char*)g_PS2glContext.clut;
     }
-    return 0;
+    else
+    {
+        if ((pClut = (unsigned char*)pTexture->clut) == NULL) return;
+        iSize = pTexture->iClutSize;
+    }
+
+    g_PS2glContext.stGsLoadImage.bitbltbuf.DPSM = 0;
+    g_PS2glContext.stGsLoadImage.bitbltbuf.DBP = uiAddress;
+    g_PS2glContext.stGsLoadImage.bitbltbuf.DBW = 1;
+    g_PS2glContext.stGsLoadImage.trxdir.XDR = 0;
+    g_PS2glContext.stGsLoadImage.trxpos.DSAX = 0;
+    g_PS2glContext.stGsLoadImage.trxpos.DSAY = 0;
+
+    if (iSize == 256)
+    {
+        g_PS2glContext.stGsLoadImage.trxreg.RRW = 16;
+        g_PS2glContext.stGsLoadImage.trxreg.RRH = 16;
+        GsTransferTexture(pClut, 16, 16, 4);
+    }
+    else
+    {
+        g_PS2glContext.stGsLoadImage.trxreg.RRW = 8;
+        g_PS2glContext.stGsLoadImage.trxreg.RRH = 2;
+        GsTransferTexture(pClut, 8, 2, 4);
+    }
+}
+
+void PS2glUpdateScreenTexture(void)
+{
+    int ScreenBuffer;
+    unsigned long ulBase;
+    unsigned long ulPSM;
+    volatile union { anon_42 f; unsigned long l; } dispfb;
+
+    ScreenBuffer = g_PS2glContext.anCurTexName2D[g_PS2glContext.iCurTextureSet];
+
+    g_PS2glContext.pstCurGsSetTex->tex1.MMAG = 1;
+    g_PS2glContext.pstCurGsSetTex->tex1.MMIN = 1;
+    g_PS2glContext.pstCurGsSetTex->clamp.WMS = 1;
+    g_PS2glContext.pstCurGsSetTex->clamp.WMT = 1;
+    g_PS2glContext.pstCurGsSetTex->tex0.TFX = 0;
+
+    switch (ScreenBuffer)
+    {
+    case 0:
+        dispfb.l = g_stDoubleBuf.disp[0].dispfb;
+        ulBase = g_PS2glContext.iFrameBufferFront >> 5;
+        ulPSM = dispfb.f.PSM;
+        break;
+    case 2:
+        ulBase = g_stBufferInfo.iAuxBufferBase;
+        ulPSM = g_stBufferInfo.iAuxBufferPSM;
+        break;
+    case 1:
+    default:
+        dispfb.l = g_stDoubleBuf.disp[0].dispfb;
+        ulBase = g_PS2glContext.iFrameBufferBack >> 5;
+        ulPSM = dispfb.f.PSM;
+        break;
+    }
+
+    g_PS2glContext.pstCurGsSetTex->tex0.TBP0 = ulBase << 5;
+    g_PS2glContext.pstCurGsSetTex->tex0.TBW = g_stBufferInfo.iScreenWidth >> 6;
+    g_PS2glContext.pstCurGsSetTex->tex0.PSM = ulPSM;
+    g_PS2glContext.pstCurGsSetTex->tex0.TW = 10;
+    g_PS2glContext.pstCurGsSetTex->tex0.TH = 9;
+    g_PS2glContext.pstCurGsSetTex->tex0.TCC = 0;
+    g_PS2glContext.pstCurGsSetTex->tex0.TFX = 0;
+    g_PS2glContext.pstCurGsSetTex->tex0.CBP = 0;
+    g_PS2glContext.pstCurGsSetTex->tex0.CPSM = 0;
+    g_PS2glContext.pstCurGsSetTex->tex0.CSM = 0;
+    g_PS2glContext.pstCurGsSetTex->tex0.CSA = 0;
+    g_PS2glContext.pstCurGsSetTex->tex0.CLD = 0;
+    g_PS2glContext.pstCurGsSetTex->tex1.MXL = 0;
+    g_PS2glContext.pstCurGsSetTex->texflushaddr = 0x7f;
+
+    g_gsContext.TEXFLUSH.DATA = 1;
+    g_gsContext.ModFlgs.TEXFLUSH_Modified = 1;
+
+    dmaSendGsPackage(g_PS2glContext.pstCurGsSetTex, 7);
+}
+
+void PS2glUpdateTexture(unsigned int target)
+{
+    int I;
+    int J;
+    tagGLtexname* pTexName;
+    unsigned int nName;
+    unsigned int nTexSize;
+    unsigned int nMipTexSize;
+    tag_GLtexture_image* pImg;
+    tag_GLtexture_image** ppImg;
+    tag_GLtexture_image* pImgL0;
+    unsigned int iNeedFlushTexture;
+    tag_GLtexture* pTexture;
+
+    switch (target)
+    {
+    case 0xDE0: nName = g_PS2glContext.anCurTexName1D[g_PS2glContext.iCurTextureSet]; break;
+    case 0xDE1: nName = g_PS2glContext.anCurTexName2D[g_PS2glContext.iCurTextureSet]; break;
+    case 0x8513:
+    case 0x8515:
+    case 0x8516:
+    case 0x8517:
+    case 0x8518:
+    case 0x8519:
+    case 0x851A: nName = g_PS2glContext.nCurTexNameCube; break;
+    default: nName = 0; break;
+    }
+    switch (target)
+    {
+    case 0xDE0: pTexture = g_PS2glContext.aTexName[g_PS2glContext.anCurTexName1D[g_PS2glContext.iCurTextureSet]].pTex1D; break;
+    case 0xDE1: pTexture = g_PS2glContext.aTexName[g_PS2glContext.anCurTexName2D[g_PS2glContext.iCurTextureSet]].pTex2D; break;
+    case 0x8513:
+    case 0x8515:
+    case 0x8516:
+    case 0x8517:
+    case 0x8518:
+    case 0x8519:
+    case 0x851A: pTexture = g_PS2glContext.aTexName[g_PS2glContext.nCurTexNameCube].pTexCube; break;
+    default: pTexture = 0; break;
+    }
+    pTexName = &g_PS2glContext.aTexName[nName];
+
+    iNeedFlushTexture = 0;
+
+    if (!pTexture)
+        return;
+
+    if (g_PS2glContext.eTexLastBindTarget == 0xDE2)
+    {
+        PS2glUpdateScreenTexture();
+        return;
+    }
+
+    PS2glUpdateTexParameter(target);
+
+    ppImg = pTexture->Image;
+    pImgL0 = pTexture->Image[0];
+
+    if (!pTexName->bResident)
+    {
+        if (!pImgL0)
+            return;
+        if (!pImgL0->pixels)
+            return;
+
+        iNeedFlushTexture = 1;
+        if (pImgL0->width > 32 && pImgL0->height < 32)
+            nMipTexSize = nTexSize = (pImgL0->width * 32 * PS2glTexBytesPerPixel(pImgL0->format) + 0xff) >> 8;
+        else
+            nMipTexSize = nTexSize = (pImgL0->width * pImgL0->height * PS2glTexBytesPerPixel(pImgL0->format) + 0xff) >> 8;
+
+        if (pImgL0->format == 0x80E4)
+        {
+            nMipTexSize = nTexSize >>= 1;
+        }
+
+        for (I = 1; I < 7; I++)
+        {
+            if (!ppImg[I])
+                break;
+            if (nMipTexSize > 1)
+                nMipTexSize >>= 1;
+            nTexSize += nMipTexSize;
+        }
+
+        if (pImgL0->format == 0x80E4 || pImgL0->format == 0x80E5)
+        {
+            pTexture->iClutOffset = nTexSize;
+            if (pImgL0->format == 0x80E4)
+                nTexSize += 1;
+            else
+                nTexSize += 4;
+        }
+
+        pTexName->iTexBlock = PS2glAllocTexMem((nTexSize + 15) >> 4, nName);
+        if (pTexName->iTexBlock < 0)
+            printf("Warnning: texture %3d [W:%d, H:%d] is too big to fit in GS!\n", nName, pImgL0->width, pImgL0->height);
+    }
+
+    if (pTexName->iTexBlock < 0)
+        pTexName->iTexBlock = 0;
+
+    nTexSize = (g_PS2glContext.nTexMemBegin + ((pTexName->iTexBlock >= 0 ? pTexName->iTexBlock : 0) << 12) + 0xff) >> 8;
+    g_PS2glContext.pstCurGsSetTex->tex0.TBP0 = nTexSize;
+
+    for (I = 1; I < 7; I++)
+    {
+        if (!ppImg[I])
+            break;
+    }
+
+    g_PS2glContext.pstCurGsSetTex->tex1.MXL = I - 1;
+    if (I > 1)
+        g_PS2glContext.pstCurGsSetTex->tex1.K = g_PS2glContext.iMipMapCoeff;
+
+    for (J = 0; J < I; J++)
+    {
+        pImg = *ppImg++;
+        if (!pImg)
+            break;
+        if (pImg->pixels)
+            PS2glTexUpdateImage(pImg, J, pTexName->bResident);
+    }
+
+    if (pImgL0->format == 0x80E4 || pImgL0->format == 0x80E5)
+    {
+        if (g_PS2glContext.nTextureEnableBits & 0x10)
+        {
+            if (!g_PS2glContext.bClutResident)
+            {
+                PS2glTexUpdateClut(0, g_PS2glContext.nTexMemBegin - 4);
+                g_PS2glContext.bClutResident = 1;
+                iNeedFlushTexture = 2;
+                g_PS2glContext.pstCurGsSetTex->tex0.CBP = 0x3ffc;
+                g_PS2glContext.pstCurGsSetTex->tex0.CLD = 1;
+            }
+            else
+            {
+                g_PS2glContext.pstCurGsSetTex->tex0.CLD = 1;
+            }
+        }
+        else
+        {
+            nMipTexSize = nTexSize + pTexture->iClutOffset;
+            PS2glTexUpdateClut(pTexture, nMipTexSize);
+            iNeedFlushTexture = 2;
+            g_PS2glContext.pstCurGsSetTex->tex0.CBP = (int)nMipTexSize;
+            g_PS2glContext.pstCurGsSetTex->tex0.CLD = 1;
+            g_PS2glContext.bClutResident = 0;
+        }
+    }
+    else
+    {
+        g_PS2glContext.pstCurGsSetTex->tex0.CLD = 0;
+    }
+
+    if (iNeedFlushTexture == 2)
+    {
+        g_PS2glContext.pstCurGsSetTex->texflushaddr = 0x3f;
+    }
+    else
+    {
+        g_PS2glContext.pstCurGsSetTex->texflushaddr = 0x7f;
+        if (iNeedFlushTexture == 1)
+        {
+            g_gsContext.TEXFLUSH.DATA = 1;
+            g_gsContext.ModFlgs.TEXFLUSH_Modified = 1;
+        }
+    }
+
+    pTexName->bResident = 1;
+    dmaSendGsPackage(g_PS2glContext.pstCurGsSetTex, 7);
+}
+
+void PS2glTexCopyImage(tag_GLtexture_image* pTexImage, unsigned char* pixels, int xOffset, int yOffset, int width, int height, int border, unsigned int format, unsigned int type)
+{
+    float a;
+    float b;
+    float g;
+    float r;
+    float* pPixel;
+    short s;
+    unsigned short u;
+    unsigned char* pdata;
+    int iTexSize;
+    int iUnitSize;
+    int th;
+    int tw;
+    int iStoreSkip;
+    unsigned char* pStoreLine;
+    int iLineSkip;
+    unsigned char bScaleOrBias;
+    unsigned char bShiftOffset;
+    unsigned char* pLine;
+    int hImg;
+    int wImg;
+    int J;
+    int I;
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glTexImage1D(unsigned int target, int level, int components, int width, int border, unsigned int format, unsigned int type, void* pixels)
+{
+    impPS2glTexImage2D(target, level, components, width, 1, border, format, type, pixels);
+}
+
+void impPS2glTexImage2D(unsigned int target, int level, int components, int width, int height, int border, unsigned int format, unsigned int type, void* pixels)
+{
+    unsigned int eInternalTarget;
+    int iInternalWidth;
+    int iInternalHeight;
+    unsigned int eInternalFormat;
+    int yOffset;
+    unsigned char* pOriginalTexture;
+    tag_GLtexture_image* pTexImage;
+
+    eInternalTarget = target;
+
+    switch (format)
+    {
+    case 0x80E4:
+        eInternalFormat = 0x80E4;
+        break;
+    case 0x80E5:
+    case 0x1900:
+        eInternalFormat = 0x80E5;
+        break;
+    case 0x2A10:
+    case 0x8055:
+    case 0x804F:
+    case 0x8050:
+    case 0x8056:
+    case 0x8057:
+        eInternalFormat = 0x8057;
+        break;
+    case 0x1909:
+    case 0x1903:
+    case 0x1904:
+    case 0x1905:
+    case 0x1907:
+        eInternalFormat = 0x8051;
+        break;
+    case 0x1906:
+    case 0x1908:
+    case 0x80E0:
+    case 0x80E1:
+    case 0x190A:
+        eInternalFormat = 0x8058;
+        break;
+    default:
+        eInternalFormat = 0x8051;
+        break;
+    }
+
+    iInternalWidth = width - border * 2;
+    iInternalHeight = height - border * 2;
+
+    switch (target)
+    {
+    case 0xDE0:
+        if (height != 1)
+            return;
+        break;
+    case 0xDE1:
+        break;
+    case 0x8515:
+    case 0x8516:
+    case 0x8517:
+    case 0x8518:
+    case 0x8519:
+    case 0x851A:
+        eInternalTarget = 0x8513;
+        if (eInternalFormat == 0x8051)
+            eInternalFormat = 0x8058;
+        break;
+    default:
+        return;
+    }
+
+    pTexImage = PS2glGetTargetTexImage(eInternalTarget, level);
+    if (!pTexImage)
+        return;
+
+    pTexImage->inputComponents = components;
+    pTexImage->format = eInternalFormat;
+    pTexImage->width = iInternalWidth;
+    pTexImage->height = iInternalHeight;
+    pTexImage->target = eInternalTarget;
+    pTexImage->bConverted = 0;
+
+    if (pixels)
+    {
+        yOffset = 0;
+        if (eInternalTarget == 0x8513)
+            yOffset = (target - 0x8515) * height;
+
+        if (g_PS2glContext.eTexUserMaintainMode && eInternalTarget != 0x8513)
+        {
+            pTexImage->pixels = pixels;
+            if (g_PS2glContext.eTexUserMaintainMode == 2)
+                pTexImage->bUserMaintain = 1;
+            else
+                pTexImage->bUserMaintain = 0;
+        }
+        else
+        {
+            PS2glTexCopyImage(pTexImage, (unsigned char*)pixels, 0, yOffset, width, height, border, format, type);
+            pTexImage->bUserMaintain = 0;
+        }
+
+        if (g_PS2glContext.eTexConvMode && eInternalTarget != 0x8513)
+        {
+            if (pTexImage->format == 0x80E5)
+            {
+                if (g_PS2glContext.eTexConvMode >= 3)
+                {
+                    if (g_PS2glContext.eTexConvMode == 4)
+                    {
+                        if (pTexImage->width >= 0x80 && pTexImage->height >= 0x40)
+                            pTexImage->bConverted = 1;
+                    }
+                    else
+                    {
+                        if (pTexImage->width >= 2 && pTexImage->height >= 2)
+                            pTexImage->bConverted = 1;
+                    }
+                }
+                else
+                {
+                    if (g_PS2glContext.eTexConvMode == 2)
+                    {
+                        if (pTexImage->width >= 0x80 && pTexImage->height >= 0x40)
+                            pTexImage->bConverted = 1;
+                    }
+                    else
+                    {
+                        if (pTexImage->width >= 2 && pTexImage->height >= 2)
+                            pTexImage->bConverted = 1;
+                    }
+                    if (pTexImage->bConverted == 1)
+                    {
+                        pOriginalTexture = (unsigned char*)pTexImage->pixels;
+                        pTexImage->pixels = ((void* (*)(int))PS2glAllocator64)(pTexImage->width * pTexImage->height);
+                        PS2glTexImageConv8to32(pTexImage->width, pTexImage->height, pOriginalTexture, pTexImage->pixels);
+                        if (!g_PS2glContext.eTexUserMaintainMode)
+                        {
+                            PS2glLiberator(pOriginalTexture);
+                        }
+                        else
+                        {
+                            memcpy(pOriginalTexture, pTexImage->pixels, pTexImage->width * pTexImage->height);
+                            PS2glLiberator(pTexImage->pixels);
+                            pTexImage->pixels = pOriginalTexture;
+                        }
+                    }
+                }
+            }
+            else if (pTexImage->format == 0x80E4)
+            {
+                if (g_PS2glContext.eTexConvMode >= 3)
+                {
+                    if (g_PS2glContext.eTexConvMode == 4)
+                    {
+                        if (pTexImage->width >= 0x80 && pTexImage->height >= 0x80)
+                            pTexImage->bConverted = 1;
+                    }
+                    else
+                    {
+                        if (pTexImage->width >= 2 && pTexImage->height >= 4)
+                            pTexImage->bConverted = 1;
+                    }
+                }
+                else
+                {
+                    if (g_PS2glContext.eTexConvMode == 2)
+                    {
+                        if (pTexImage->width >= 0x80 && pTexImage->height >= 0x80)
+                            pTexImage->bConverted = 1;
+                    }
+                    else
+                    {
+                        if (pTexImage->width >= 2 && pTexImage->height >= 4)
+                            pTexImage->bConverted = 1;
+                    }
+                    if (pTexImage->bConverted == 1)
+                    {
+                        pOriginalTexture = (unsigned char*)pTexImage->pixels;
+                        pTexImage->pixels = ((void* (*)(int))PS2glAllocator64)((pTexImage->width * pTexImage->height) >> 1);
+                        PS2glTexImageConv4to32(pTexImage->width, pTexImage->height, pOriginalTexture, pTexImage->pixels);
+                        if (!g_PS2glContext.eTexUserMaintainMode)
+                        {
+                            PS2glLiberator(pOriginalTexture);
+                        }
+                        else
+                        {
+                            memcpy(pOriginalTexture, pTexImage->pixels, (pTexImage->width * pTexImage->height) >> 1);
+                            PS2glLiberator(pTexImage->pixels);
+                            pTexImage->pixels = pOriginalTexture;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    switch (eInternalTarget)
+    {
+    case 0xDE0:
+        g_PS2glContext.abTex1DChanged[g_PS2glContext.iCurTextureSet] = 1;
+        PS2glTexUnloadName(g_PS2glContext.anCurTexName1D[g_PS2glContext.iCurTextureSet]);
+        break;
+    case 0xDE1:
+        g_PS2glContext.abTex2DChanged[g_PS2glContext.iCurTextureSet] = 1;
+        PS2glTexUnloadName(g_PS2glContext.anCurTexName2D[g_PS2glContext.iCurTextureSet]);
+        break;
+    case 0x8513:
+        g_PS2glContext.bTexCubeChanged = 1;
+        PS2glTexUnloadName(g_PS2glContext.nCurTexNameCube);
+        break;
+    }
+}
+
+void impPS2glTexParameteri(unsigned int target, unsigned int pname, int param)
+{
+    PS2glTexSetParameter(target, pname, param);
+}
+
+void impPS2glTexParameterf(unsigned int target, unsigned int pname, float param)
+{
+    PS2glTexSetParameter(target, pname, (int)param);
+}
+
+void impPS2glTexParameterfv(unsigned int target, unsigned int pname, float* params)
+{
+    tag_GLtexture* pTex;
+
+    switch (pname)
+    {
+    case 0x2800:
+    case 0x2801:
+    case 0x2802:
+    case 0x2803:
+        PS2glTexSetParameter(target, pname, (int)params[0]);
+        break;
+    case 0x1004:
+        pTex = PS2glGetTargetTexture(target);
+        if (!pTex)
+            return;
+        *(quad*)pTex->vTexBorderColor = *(quad*)params;
+        break;
+    }
+    PS2glTexMarkChanged(target);
+}
+
+void impPS2glTexParameteriv(unsigned int target, unsigned int pname, int* params)
+{
+    tag_GLtexture* pTex;
+
+    switch (pname)
+    {
+    case 0x2800:
+    case 0x2801:
+    case 0x2802:
+    case 0x2803:
+        PS2glTexSetParameter(target, pname, params[0]);
+        break;
+    case 0x1004:
+        pTex = PS2glGetTargetTexture(target);
+        if (!pTex)
+            return;
+        pTex->vTexBorderColor[0] = params[0] / 2147483648.0f;
+        pTex->vTexBorderColor[1] = params[1] / 2147483648.0f;
+        pTex->vTexBorderColor[2] = params[2] / 2147483648.0f;
+        pTex->vTexBorderColor[3] = params[3] / 2147483648.0f;
+        break;
+    }
+    PS2glTexMarkChanged(target);
+}
+
+void PS2glUpdateTexIndex(int iLevelByTexSize)
+{
+    int iLevelStart;
+    int iLevelEnd;
+    int iLevel;
+    int iLoop;
+    int iLimit;
+    int I;
+    int J;
+    int N;
+
+    iLevelStart = 0;
+    iLevelEnd = 10;
+
+    if (iLevelByTexSize >= 0)
+    {
+        for (iLevel = 0; iLevel < 9; iLevel++)
+        {
+            if (iLevelByTexSize >= TEX_LEVEL_SIZE[iLevel] && iLevelByTexSize < TEX_LEVEL_SIZE[iLevel + 1])
+            {
+                iLevelStart = iLevel;
+                iLevelEnd = iLevel + 1;
+                goto found;
+            }
+        }
+        return;
+    }
+
+found:
+    for (iLevel = iLevelStart; iLevel < iLevelEnd; iLevel++)
+    {
+        iLoop = TEX_LEVEL_BASE[iLevel];
+        iLimit = iLoop + g_PS2glContext.aTexLevelCount[iLevel];
+        I = -1;
+        J = -1;
+
+        while (iLoop < iLimit)
+        {
+            for (; iLoop < iLimit; iLoop++)
+            {
+                if (g_PS2glContext.aBlockMap[g_PS2glContext.aTexLevelIndex[iLoop].nStart].nTexID == 0x3ff)
+                {
+                    if (I < J)
+                    {
+                        memmove(&g_PS2glContext.aTexLevelIndex[I], &g_PS2glContext.aTexLevelIndex[J], (N = iLoop - J) * 4);
+                        I += N;
+                        J = -1;
+                    }
+                    else
+                    {
+                        I = iLoop;
+                    }
+                    break;
+                }
+            }
+
+            for (; iLoop < iLimit; iLoop++)
+            {
+                if (g_PS2glContext.aBlockMap[g_PS2glContext.aTexLevelIndex[iLoop].nStart].nTexID != 0x3ff)
+                {
+                    J = iLoop;
+                    break;
+                }
+            }
+        }
+
+        if (I >= 0)
+        {
+            if (I < J)
+            {
+                iLoop -= J;
+                memmove(&g_PS2glContext.aTexLevelIndex[I], &g_PS2glContext.aTexLevelIndex[J], iLoop * 4);
+                I += iLoop;
+            }
+            g_PS2glContext.aTexLevelCount[iLevel] = I - TEX_LEVEL_BASE[iLevel];
+        }
+    }
+}
+
+void PS2glFreeTexBlockSafe(int iBlock, int iSize)
+{
+    g_PS2glContext.abTex1DChanged[0] = 1;
+    g_PS2glContext.abTex2DChanged[0] = 1;
+    g_PS2glContext.abTex1DChanged[1] = 1;
+    g_PS2glContext.abTex2DChanged[1] = 1;
+    g_PS2glContext.bTexCubeChanged = 1;
+    PS2glFreeTexBlock(iBlock, iSize);
+    PS2glUpdateTexIndex(-1);
+}
+
+tagGLtexblock* PS2glFreeTexBlock(int iBlock, int iSize)
+{
+    unsigned int nTexIDUnload;
+    tagGLtexblock theBlock;
+    int iEnd;
+    int iStart;
+    tagGLtexblock* pBlockReturn;
+    tagGLtexblock* pBlock;
+
+    if (iBlock < 0 || iBlock >= g_PS2glContext.iMaxTexBlockCount)
+        return 0;
+
+    pBlock = &g_PS2glContext.aBlockMap[iBlock];
+    iStart = pBlock->nStart;
+    iEnd = iStart + pBlock->nLength;
+
+    if (iSize <= 0)
+        iSize = pBlock->nLength;
+
+    if (iStart + iSize > g_PS2glContext.iMaxTexBlockCount)
+        iSize = g_PS2glContext.iMaxTexBlockCount - iStart;
+
+    while (iSize > 0)
+    {
+        nTexIDUnload = pBlock->nTexID;
+        if (nTexIDUnload != 0x3ff)
+        {
+            g_PS2glContext.aTexName[nTexIDUnload].bResident = 0;
+        }
+        iEnd = pBlock->nStart + pBlock->nLength;
+        iSize -= pBlock->nLength;
+        pBlock = &g_PS2glContext.aBlockMap[iEnd];
+    }
+
+    pBlock = &g_PS2glContext.aBlockMap[iStart] - 1;
+    while (pBlock >= g_PS2glContext.aBlockMap && pBlock->nTexID == 0x3ff)
+    {
+        iStart = pBlock->nStart;
+        pBlock = &g_PS2glContext.aBlockMap[iStart] - 1;
+    }
+
+    pBlock = &g_PS2glContext.aBlockMap[iEnd];
+    while (pBlock < &g_PS2glContext.aBlockMap[g_PS2glContext.iMaxTexBlockCount] && pBlock->nTexID == 0x3ff)
+    {
+        iEnd = pBlock->nStart + pBlock->nLength;
+        pBlock = &g_PS2glContext.aBlockMap[iEnd];
+    }
+
+    theBlock.nTexID = 0x3ff;
+    theBlock.nStart = iStart;
+    theBlock.nLength = iEnd - iStart;
+
+    pBlockReturn = pBlock = &g_PS2glContext.aBlockMap[iStart];
+
+    for (; iStart < iEnd; iStart++)
+    {
+        *pBlock = theBlock;
+        pBlock++;
+    }
+
+    return pBlockReturn;
+}
+
+int PS2glAllocTexMem(int iTexSize, unsigned int nTexID)
+{
+    int iBlock;
+    int iBlockFound;
+    tagGLtexblock* pBlock;
+    int iLevel;
+    int iTexLevel;
+    int iTexIndexReplace;
+    int iHowFreeSpaceFound;
+    int nTexID_TEXTURE0_2D;
+    int iTexBlock_TEXTURE0_2D;
+    int iRandomIndex;
+    int iOldBlockEnd;
+    int iNewBlockSize;
+
+    iTexIndexReplace = -1;
+    iHowFreeSpaceFound = 0;
+    nTexID_TEXTURE0_2D = g_PS2glContext.anCurTexName2D[0];
+    iTexBlock_TEXTURE0_2D = g_PS2glContext.aTexName[nTexID_TEXTURE0_2D].iTexBlock;
+
+    if (iTexSize <= 0)
+        return iTexIndexReplace;
+
+    for (iLevel = 0; iLevel < 9; iLevel++)
+    {
+        if (iTexSize >= TEX_LEVEL_SIZE[iLevel] && iTexSize < TEX_LEVEL_SIZE[iLevel + 1])
+            break;
+    }
+    iTexLevel = iLevel;
+
+    if (iTexSize >= 4)
+    {
+        pBlock = g_PS2glContext.aBlockMap;
+        iBlock = 0;
+        while (iBlock < g_PS2glContext.iMaxTexBlockCount)
+        {
+            iBlockFound = pBlock->nLength;
+            if (pBlock->nTexID == 0x3ff && iBlockFound >= iTexSize)
+                goto found;
+            iBlock += iBlockFound;
+            pBlock += iBlockFound;
+        }
+    }
+    else
+    {
+        iBlock = g_PS2glContext.iMaxTexBlockCount - 1;
+        pBlock = &g_PS2glContext.aBlockMap[iBlock];
+        while (iBlock >= 0)
+        {
+            iBlockFound = pBlock->nLength;
+            if (pBlock->nTexID == 0x3ff && iBlockFound >= iTexSize)
+                goto found;
+            iBlock -= iBlockFound;
+            pBlock -= iBlockFound;
+        }
+    }
+
+    iHowFreeSpaceFound = 1;
+    if (g_PS2glContext.aTexLevelCount[iLevel] > 0)
+    {
+        iRandomIndex = rand() % g_PS2glContext.aTexLevelCount[iLevel];
+        for (iTexIndexReplace = iRandomIndex; iTexIndexReplace >= 0; iTexIndexReplace--)
+        {
+            iBlock = g_PS2glContext.aTexLevelIndex[iTexIndexReplace + TEX_LEVEL_BASE[iLevel]].nStart;
+            if (nTexID_TEXTURE0_2D != g_PS2glContext.aBlockMap[iBlock].nTexID && g_PS2glContext.aBlockMap[iBlock].nLength >= iTexSize)
+            {
+                pBlock = PS2glFreeTexBlock(iBlock, -1);
+                goto found;
+            }
+        }
+        for (iTexIndexReplace = iRandomIndex + 1; iTexIndexReplace < g_PS2glContext.aTexLevelCount[iLevel]; iTexIndexReplace++)
+        {
+            iBlock = g_PS2glContext.aTexLevelIndex[iTexIndexReplace + TEX_LEVEL_BASE[iLevel]].nStart;
+            if (nTexID_TEXTURE0_2D != g_PS2glContext.aBlockMap[iBlock].nTexID && g_PS2glContext.aBlockMap[iBlock].nLength >= iTexSize)
+            {
+                pBlock = PS2glFreeTexBlock(iBlock, -1);
+                goto found;
+            }
+        }
+    }
+
+    iHowFreeSpaceFound = 2;
+    for (iLevel++; iLevel < 10; iLevel++)
+    {
+        if (iTexSize <= TEX_LEVEL_SIZE[iLevel] && g_PS2glContext.aTexLevelCount[iLevel] > 0)
+        {
+            iTexIndexReplace = rand() % g_PS2glContext.aTexLevelCount[iLevel];
+            iBlockFound = g_PS2glContext.aTexLevelIndex[iTexIndexReplace + TEX_LEVEL_BASE[iLevel]].nStart;
+            if (nTexID_TEXTURE0_2D == g_PS2glContext.aBlockMap[iBlockFound].nTexID)
+            {
+                tagGLtexindex* pIndex;
+
+                pIndex = &g_PS2glContext.aTexLevelIndex[iTexIndexReplace + TEX_LEVEL_BASE[iLevel]];
+                memmove(pIndex, pIndex + 1, (--g_PS2glContext.aTexLevelCount[iLevel] - iTexIndexReplace) * 4);
+                pBlock = PS2glFreeTexBlock(iBlockFound, -1);
+                goto found;
+            }
+        }
+    }
+
+    iHowFreeSpaceFound = 3;
+    if (g_PS2glContext.iCurTextureSet == 1)
+    {
+        if (iTexBlock_TEXTURE0_2D >= iTexSize)
+            pBlock = PS2glFreeTexBlock(0, iTexSize);
+        else
+            pBlock = PS2glFreeTexBlock(g_PS2glContext.iMaxTexBlockCount - iTexSize, iTexSize);
+    }
+    else
+    {
+        if (iTexSize >= 4)
+            pBlock = PS2glFreeTexBlock(0, iTexSize);
+        else
+            pBlock = PS2glFreeTexBlock(g_PS2glContext.iMaxTexBlockCount - iTexSize, iTexSize);
+    }
+    PS2glUpdateTexIndex(-1);
+
+found:
+    if (!pBlock)
+    {
+        printf("pBlock = NULL\n");
+        return -1;
+    }
+    if (pBlock->nLength < iTexSize)
+        return -1;
+
+    if (iTexSize >= 4)
+    {
+        tagGLtexblock theBlock;
+
+        iBlock = pBlock->nStart;
+        pBlock = &g_PS2glContext.aBlockMap[iBlock];
+        iOldBlockEnd = iBlock + pBlock->nLength;
+        theBlock.nTexID = nTexID;
+        theBlock.nStart = iBlock;
+        theBlock.nLength = iTexSize;
+        iNewBlockSize = iTexSize;
+        while (iNewBlockSize--)
+        {
+            *pBlock = theBlock;
+            pBlock++;
+        }
+        iNewBlockSize = iOldBlockEnd - (iBlock + iTexSize);
+        theBlock.nTexID = 0x3ff;
+        theBlock.nStart = iBlock + iTexSize;
+        theBlock.nLength = iNewBlockSize;
+        pBlock = &g_PS2glContext.aBlockMap[theBlock.nStart];
+        while (iNewBlockSize--)
+        {
+            *pBlock = theBlock;
+            pBlock++;
+        }
+    }
+    else
+    {
+        tagGLtexblock theBlock;
+
+        iBlockFound = pBlock->nStart;
+        pBlock = &g_PS2glContext.aBlockMap[iBlockFound];
+        iOldBlockEnd = iBlockFound + pBlock->nLength;
+        iNewBlockSize = iOldBlockEnd - (iBlockFound + iTexSize);
+        theBlock.nTexID = 0x3ff;
+        theBlock.nStart = iBlockFound;
+        theBlock.nLength = iNewBlockSize;
+        while (iNewBlockSize--)
+        {
+            *pBlock = theBlock;
+            pBlock++;
+        }
+        iBlock = iOldBlockEnd - iTexSize;
+        theBlock.nTexID = nTexID;
+        theBlock.nStart = iBlock;
+        theBlock.nLength = iTexSize;
+        while (iTexSize--)
+        {
+            *pBlock = theBlock;
+            pBlock++;
+        }
+    }
+
+    if (iHowFreeSpaceFound == 1 && iTexIndexReplace != -1)
+    {
+        g_PS2glContext.aTexLevelIndex[iTexIndexReplace + TEX_LEVEL_BASE[iTexLevel]].nStart = iBlock;
+        g_PS2glContext.aTexLevelIndex[iTexIndexReplace + TEX_LEVEL_BASE[iTexLevel]].nTexID = nTexID;
+    }
+    else
+    {
+        int* piCount = &g_PS2glContext.aTexLevelCount[iTexLevel];
+
+        iLevel = *piCount + TEX_LEVEL_BASE[iTexLevel];
+        g_PS2glContext.aTexLevelIndex[iLevel].nStart = iBlock;
+        g_PS2glContext.aTexLevelIndex[iLevel].nTexID = nTexID;
+        (*piCount)++;
+    }
+    return iBlock;
+}
+
+void impPS2glColorTableEXT(unsigned int target, unsigned int internalformat, int width, unsigned int format, unsigned int type, unsigned int* pSrcData)
+{
+    unsigned int eInternalTarget;
+    int i;
+    union { unsigned char c[4]; unsigned int u; } aTemp;
+    unsigned int* pDstData;
+    unsigned char* pbDstData;
+    tag_GLtexture* pTexture;
+
+    eInternalTarget = target;
+    switch (target)
+    {
+    case 0x8515:
+    case 0x8516:
+    case 0x8517:
+    case 0x8518:
+    case 0x8519:
+    case 0x851A:
+        eInternalTarget = 0x8513;
+        break;
+    }
+
+    if (eInternalTarget == 0x81FB)
+    {
+        g_PS2glContext.bClutResident = 0;
+        g_PS2glContext.iClutSize = width;
+        pDstData = (unsigned int*)g_PS2glContext.clut;
+    }
+    else
+    {
+        pTexture = PS2glGetTargetTexture(eInternalTarget);
+        if (g_PS2glContext.eTexUserMaintainMode)
+        {
+            pTexture->clut = pSrcData;
+        }
+        else if (pTexture->iClutSize != width)
+        {
+            if (pTexture->clut)
+                PS2glLiberator(pTexture->clut);
+            pTexture->clut = ((void* (*)(int))PS2glAllocator64)(width * 4);
+        }
+        pTexture->iClutSize = width;
+        pDstData = (unsigned int*)pTexture->clut;
+    }
+
+    if (!g_PS2glContext.eTexUserMaintainMode)
+    {
+        switch (format)
+        {
+        case 0x1907:
+            aTemp.c[3] = 0x80;
+            if (width == 16)
+            {
+                for (i = 0; i < width; i++)
+                {
+                    memcpy(aTemp.c, (unsigned char*)pSrcData + (i + i * 2), 3);
+                    pDstData[i] = aTemp.u;
+                }
+            }
+            else
+            {
+                for (i = 0; i < width; i++)
+                {
+                    if ((i & 8) && !(i & 0x10))
+                        memcpy(aTemp.c, (unsigned char*)pSrcData + ((i + 8) + (i + 8) * 2), 3);
+                    else if (!(i & 8) && (i & 0x10))
+                        memcpy(aTemp.c, (unsigned char*)pSrcData + ((i - 8) + (i - 8) * 2), 3);
+                    else
+                        memcpy(aTemp.c, (unsigned char*)pSrcData + (i + i * 2), 3);
+                    pDstData[i] = aTemp.u;
+                }
+            }
+            break;
+        case 0x1908:
+            if (width == 16)
+            {
+                for (i = 0; i < width; i++)
+                    pDstData[i] = pSrcData[i];
+            }
+            else if (g_PS2glContext.eClutConvMode == 0)
+            {
+                for (i = 0; i < width; i++)
+                {
+                    if ((i & 8) && !(i & 0x10))
+                        pDstData[i] = pSrcData[i + 8];
+                    else if (!(i & 8) && (i & 0x10))
+                        pDstData[i] = pSrcData[i - 8];
+                    else
+                        pDstData[i] = pSrcData[i];
+                }
+            }
+            else
+            {
+                memcpy(pDstData, pSrcData, width * 4);
+            }
+            if (g_PS2glContext.eClutConvMode != 2 && g_PS2glContext.bAlphaChannelReduce == 1)
+            {
+                pbDstData = (unsigned char*)pDstData + 3;
+                for (i = 0; i < width; i++)
+                {
+                    if (*pbDstData == 0xFF)
+                        *pbDstData = 0x80;
+                    else
+                        *pbDstData >>= 1;
+                    pbDstData += 4;
+                }
+            }
+            break;
+        }
+    }
+
+    switch (eInternalTarget)
+    {
+    case 0xDE0:
+        g_PS2glContext.abTex1DChanged[g_PS2glContext.iCurTextureSet] = 1;
+        PS2glTexUnloadName(g_PS2glContext.anCurTexName1D[g_PS2glContext.iCurTextureSet]);
+        break;
+    case 0xDE1:
+        g_PS2glContext.abTex2DChanged[g_PS2glContext.iCurTextureSet] = 1;
+        PS2glTexUnloadName(g_PS2glContext.anCurTexName2D[g_PS2glContext.iCurTextureSet]);
+        break;
+    case 0x8513:
+        g_PS2glContext.bTexCubeChanged = 1;
+        PS2glTexUnloadName(g_PS2glContext.nCurTexNameCube);
+        break;
+    }
+}
+
+void impPS2glColorSubTableEXT(unsigned int target, int start, int count, unsigned int format, unsigned int type, unsigned int* pSrcData)
+{
+    unsigned int eInternalTarget;
+    unsigned int* pDstData;
+    int i;
+    int width;
+    union { unsigned char c[4]; unsigned int u; } aTemp;
+    unsigned char* pbDstData;
+    tag_GLtexture* pTexture;
+
+    eInternalTarget = target;
+    switch (target)
+    {
+    case 0x8515:
+    case 0x8516:
+    case 0x8517:
+    case 0x8518:
+    case 0x8519:
+    case 0x851A:
+        eInternalTarget = 0x8513;
+        break;
+    }
+
+    if (eInternalTarget == 0x81FB)
+    {
+        g_PS2glContext.bClutResident = 0;
+        width = g_PS2glContext.iClutSize;
+        pDstData = (unsigned int*)((start << 2) + (int)g_PS2glContext.clut);
+    }
+    else
+    {
+        pTexture = PS2glGetTargetTexture(eInternalTarget);
+        width = pTexture->iClutSize;
+        pDstData = (unsigned int*)((start << 2) + (int)pTexture->clut);
+    }
+
+    if (start < 0 || count <= 0 || start + count > width)
+        return;
+
+    switch (format)
+    {
+    case 0x1907:
+        aTemp.c[3] = 0x80;
+        if (width == 16)
+        {
+            for (i = 0; i < count; i++)
+            {
+                memcpy(aTemp.c, (unsigned char*)pSrcData + (i + i * 2), 3);
+                pDstData[i] = aTemp.u;
+            }
+        }
+        else
+        {
+            for (i = 0; i < count; i++)
+            {
+                if ((i & 8) && !(i & 0x10))
+                {
+                    memcpy(aTemp.c, (unsigned char*)pSrcData + (i + i * 2), 3);
+                    pDstData[i + 8] = aTemp.u;
+                }
+                else if (!(i & 8) && (i & 0x10))
+                {
+                    memcpy(aTemp.c, (unsigned char*)pSrcData + (i + i * 2), 3);
+                    pDstData[i - 8] = aTemp.u;
+                }
+                else
+                {
+                    memcpy(aTemp.c, (unsigned char*)pSrcData + (i + i * 2), 3);
+                    pDstData[i] = aTemp.u;
+                }
+            }
+        }
+        break;
+    case 0x1908:
+        if (width == 16)
+        {
+            for (i = 0; i < count; i++)
+                pDstData[i] = pSrcData[i];
+        }
+        else if (g_PS2glContext.eClutConvMode == 0)
+        {
+            for (i = 0; i < count; i++)
+            {
+                if ((i & 8) && !(i & 0x10))
+                    pDstData[i + 8] = pSrcData[i];
+                else if (!(i & 8) && (i & 0x10))
+                    pDstData[i - 8] = pSrcData[i];
+                else
+                    pDstData[i] = pSrcData[i];
+            }
+        }
+        if (g_PS2glContext.eClutConvMode != 2 && g_PS2glContext.bAlphaChannelReduce == 1)
+        {
+            pbDstData = (unsigned char*)pDstData + 3;
+            for (i = 0; i < width; i++)
+            {
+                if (*pbDstData == 0xFF)
+                    *pbDstData = 0x80;
+                else
+                    *pbDstData >>= 1;
+                pbDstData += 4;
+            }
+        }
+        break;
+    }
+
+    switch (eInternalTarget)
+    {
+    case 0xDE0:
+        g_PS2glContext.abTex1DChanged[g_PS2glContext.iCurTextureSet] = 1;
+        PS2glTexUnloadName(g_PS2glContext.anCurTexName1D[g_PS2glContext.iCurTextureSet]);
+        break;
+    case 0xDE1:
+        g_PS2glContext.abTex2DChanged[g_PS2glContext.iCurTextureSet] = 1;
+        PS2glTexUnloadName(g_PS2glContext.anCurTexName2D[g_PS2glContext.iCurTextureSet]);
+        break;
+    case 0x8513:
+        g_PS2glContext.bTexCubeChanged = 1;
+        PS2glTexUnloadName(g_PS2glContext.nCurTexNameCube);
+        break;
+    }
+}
+
+void impPS2glGetColorTableEXT(unsigned int target, unsigned int format, unsigned int type, unsigned int* pDstData)
+{
+    unsigned char* pbSrcData;
+    tag_GLtexture* pTexture;
+    unsigned int* pSrcData;
+    int width;
+    int i;
+    unsigned int eInternalTarget;
+
+    eInternalTarget = target;
+    switch (target)
+    {
+    case 0x8515:
+    case 0x8516:
+    case 0x8517:
+    case 0x8518:
+    case 0x8519:
+    case 0x851A:
+        eInternalTarget = 0x8513;
+        break;
+    }
+
+    if (eInternalTarget == 0x81FB)
+    {
+        width = g_PS2glContext.iClutSize;
+        pSrcData = (unsigned int*)g_PS2glContext.clut;
+    }
+    else
+    {
+        pTexture = PS2glGetTargetTexture(eInternalTarget);
+        width = pTexture->iClutSize;
+        pSrcData = (unsigned int*)pTexture->clut;
+    }
+
+    if (width <= 0)
+        return;
+
+    switch (format)
+    {
+    case 0x1907:
+        if (width == 16)
+        {
+            for (i = 0; i < width; i++)
+            {
+                memcpy(pDstData, &pSrcData[i], 3);
+                pDstData = (unsigned int*)((unsigned char*)pDstData + 3);
+            }
+        }
+        else
+        {
+            for (i = 0; i < width; i++)
+            {
+                if ((i & 8) && !(i & 0x10))
+                    memcpy(pDstData, &pSrcData[i + 8], 3);
+                else if (!(i & 8) && (i & 0x10))
+                    memcpy(pDstData, &pSrcData[i - 8], 3);
+                else
+                    memcpy(pDstData, &pSrcData[i], 3);
+                pDstData = (unsigned int*)((unsigned char*)pDstData + 3);
+            }
+        }
+        break;
+    case 0x1908:
+        if (width == 16)
+        {
+            for (i = 0; i < width; i++)
+                pDstData[i] = pSrcData[i];
+        }
+        else
+        {
+            for (i = 0; i < width; i++)
+            {
+                if ((i & 8) && !(i & 0x10))
+                    pDstData[i] = pSrcData[i + 8];
+                else if (!(i & 8) && (i & 0x10))
+                    pDstData[i] = pSrcData[i - 8];
+                else
+                    pDstData[i] = pSrcData[i];
+            }
+        }
+        if (g_PS2glContext.eClutConvMode != 2 && g_PS2glContext.bAlphaChannelReduce == 1)
+        {
+            pbSrcData = (unsigned char*)pDstData + 3;
+            for (i = 0; i < width; i++)
+            {
+                if (*pbSrcData == 0x80)
+                    *pbSrcData = 0xFF;
+                else
+                    *pbSrcData <<= 1;
+                pbSrcData += 4;
+            }
+        }
+        break;
+    }
+}
+
+void impPS2glGetColorTableParameterivEXT(unsigned int target, unsigned int pname, int* params)
+{
+    unsigned int eInternalTarget;
+
+    switch (pname)
+    {
+    case 0x80D8:
+        *params = 0x8058;
+        break;
+    case 0x80D9:
+        eInternalTarget = target;
+        switch (target)
+        {
+        case 0x8515:
+        case 0x8516:
+        case 0x8517:
+        case 0x8518:
+        case 0x8519:
+        case 0x851A:
+            eInternalTarget = 0x8513;
+            break;
+        }
+        *params = PS2glGetTargetTexture(eInternalTarget)->iClutSize;
+        break;
+    case 0x80DA:
+    case 0x80DB:
+    case 0x80DC:
+    case 0x80DD:
+        *params = 1;
+        break;
+    case 0x81FB:
+        *params = ((g_PS2glContext.nTextureEnableBits & 0x10) == 0) ? 0 : 1;
+    default:
+        *params = 0;
+        break;
+    }
+}
+
+void impPS2glGetColorTableParameterfvEXT(unsigned int target, unsigned int pname, float* params)
+{
+    unsigned int eInternalTarget;
+
+    switch (pname)
+    {
+    case 0x80D9:
+        eInternalTarget = target;
+        switch (target)
+        {
+        case 0x8515:
+        case 0x8516:
+        case 0x8517:
+        case 0x8518:
+        case 0x8519:
+        case 0x851A:
+            eInternalTarget = 0x8513;
+            break;
+        }
+        *params = (float)PS2glGetTargetTexture(eInternalTarget)->iClutSize;
+        break;
+    case 0x80DA:
+    case 0x80DB:
+    case 0x80DC:
+    case 0x80DD:
+        *params = 1.0f;
+        break;
+    default:
+        *params = 0;
+        break;
+    }
+}
+
+void PS2glVU1ListTexCoordsCubeMappingVectorTo2D(tagGLprimbuf* pPrimBuf)
+{
+    int iCubeMapFaceMask;
+    int iCubeMapFaces[3];
+    int iCubeMapType;
+    int bCubeMapAddition;
+    float CubeMapNSave[3][4];
+    float CubeMapAbsNSave[3][4];
+    float (*CubeMapTSave)[4];
+    float (*pNormalMatrix)[4][4];
+    float (*pCubeMapNSave)[4];
+    float (*pCubeMapAbsNSave)[4];
+    float (*pN)[4];
+    float vUnitVector[4];
+    int* piCubeMapFaces;
+    int nLoop;
+    int j;
+    int i;
+    float ma;
+    float tc;
+    float sc;
+    /* TODO: decompile from asm/... */
+}
+
+void PS2glVU1TexCoordsCubeMappingVectorTo2D(tagGLcontext* pctx)
+{
+    int iCubeMapFaceMask;
+    int iCubeMapFaces[3];
+    int iCubeMapType;
+    int bCubeMapAddition;
+    float CubeMapNSave[3][4];
+    float CubeMapAbsNSave[3][4];
+    float (*CubeMapTSave)[4];
+    float (*pNormalMatrix)[4][4];
+    float (*pCubeMapNSave)[4];
+    float (*pCubeMapAbsNSave)[4];
+    float (*pN)[4];
+    float vUnitVector[4];
+    int* piCubeMapFaces;
+    int nLoop;
+    int j;
+    int i;
+    float ma;
+    float tc;
+    float sc;
+    /* TODO: decompile from asm/... */
+}
+
+void impPS2glPushAttrib(unsigned int mask)
+{
+    defAttribViewportBit* pNew;
+    int EOP;
+    /* TODO: decompile from asm/... */
 }

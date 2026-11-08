@@ -66,10 +66,12 @@ typedef struct stLensFlareTab_ {
 } stLensFlareTab_;
 extern stLensFlareTab_ g_stLensFlare;
 
-void GLI_vInitLensFlare(void)
-{
-    g_stLensFlare.lNumberOfLensFlare = 0;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void GLI_vInitLensFlare(void);
+unsigned int J_CreateParticlesOnFace(J_ParticleSprite_* pGeneratedSprites, unsigned int MaxParticles, J_ParticleFace_* pFace, float _fU, float _fV, float NoiseLevel);
+void J_GetInterpolPointOnEdge(J_ParticleFace_* pFace, J_InterpolPoint_* pPoint, unsigned int Edge, float U);
+void J_GetParticleSpriteFromInterpolatedPoints(J_ParticleSprite_* p, J_InterpolPoint_* p1, J_InterpolPoint_* p2, float V);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\jparticle.c lines 229–412 */
 /* addr: 0x002b0870  size: 1480 bytes */
@@ -155,6 +157,209 @@ void GLI_vInitLensFlare(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\jparticle.c lines 173–223 */
+/* addr: 0x002b0e40  size: 276 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 173
+ *   +0x0014 -> line 174
+ *   +0x002c -> line 175
+ *   +0x003c -> line 176
+ *   +0x0040 -> line 178
+ *   +0x0048 -> line 183
+ *   +0x004c -> line 178
+ *   +0x0050 -> line 183
+ *   +0x0054 -> line 178
+ *   +0x005c -> line 183
+ *   +0x0060 -> line 178
+ *   +0x006c -> line 183
+ *   +0x0070 -> line 178
+ *   +0x0078 -> line 183
+ *   +0x0084 -> line 179
+ *   +0x0088 -> line 178
+ *   +0x008c -> line 179
+ *   +0x0094 -> line 178
+ *   +0x0098 -> line 179
+ *   +0x009c -> line 183
+ *   +0x00a0 -> line 179
+ *   +0x00a8 -> line 185
+ *   +0x00ac -> line 186
+ *   +0x00b0 -> line 187
+ *   +0x00b4 -> line 188
+ *   +0x00b8 -> line 189
+ *   +0x00bc -> line 191
+ *   +0x00c0 -> line 192
+ *   +0x00c4 -> line 193
+ *   +0x00c8 -> line 195
+ *   +0x00cc -> line 196
+ *   +0x00d0 -> line 198
+ *   +0x00d4 -> line 199
+ *   +0x00d8 -> line 201
+ *   +0x00dc -> line 202
+ *   +0x00e0 -> line 222
+ *   +0x00ec -> line 221
+ *   +0x00f0 -> line 222
+ *   +0x010c -> line 223
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\jparticle.c lines 95–166 */
+/* addr: 0x002b0f60  size: 300 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 100
+ *   +0x0004 -> line 95
+ *   +0x0008 -> line 100
+ *   +0x000c -> line 101
+ *   +0x001c -> line 100
+ *   +0x0020 -> line 101
+ *   +0x0034 -> line 100
+ *   +0x0038 -> line 102
+ *   +0x003c -> line 107
+ *   +0x0044 -> line 100
+ *   +0x0050 -> line 101
+ *   +0x0054 -> line 102
+ *   +0x005c -> line 107
+ *   +0x0060 -> line 101
+ *   +0x0068 -> line 102
+ *   +0x006c -> line 101
+ *   +0x0074 -> line 102
+ *   +0x0078 -> line 101
+ *   +0x007c -> line 107
+ *   +0x0080 -> line 101
+ *   +0x0088 -> line 107
+ *   +0x00b0 -> line 109
+ *   +0x00b4 -> line 110
+ *   +0x00bc -> line 113
+ *   +0x00c0 -> line 120
+ *   +0x00dc -> line 122
+ *   +0x00e0 -> line 123
+ *   +0x00e4 -> line 124
+ *   +0x00e8 -> line 125
+ *   +0x00ec -> line 126
+ *   +0x00f0 -> line 127
+ *   +0x00f4 -> line 128
+ *   +0x00f8 -> line 129
+ *   +0x00fc -> line 131
+ *   +0x0100 -> line 132
+ *   +0x0104 -> line 133
+ *   +0x0108 -> line 135
+ *   +0x010c -> line 137
+ *   +0x0110 -> line 138
+ *   +0x0114 -> line 140
+ *   +0x0118 -> line 142
+ *   +0x011c -> line 144
+ *   +0x0120 -> line 145
+ *   +0x0124 -> line 166
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void J_GetParticleSpriteFromInterpolatedPoints(J_ParticleSprite_* p, J_InterpolPoint_* p1, J_InterpolPoint_* p2, float V)
+{
+    float vA[4];
+    unsigned int index;
+    float fSum;
+    float* pNoise;
+    float* pCol1;
+    float* pCol2;
+    float* pW;
+    float* pDstCol;
+    float U;
+
+    vA[1] = (V - p1->UVs[1]) / (p2->UVs[1] - p1->UVs[1]);
+
+    U = p1->UVs[0];
+    fSum = U * 1.5564321f + V * 3.4659879f;
+    index = (int)(1024.0f * fSum);
+    index = ((index & 0x7FF) + 3) & ~3u;
+
+    vA[0] = 1.0f - vA[1];
+
+    if (J_M_xAbs(vA[0]) < 0.0000001f || J_M_xAbs(vA[1]) < 0.0000001f)
+        p->Flags = 1;
+    else
+        p->Flags = 0;
+
+    pNoise = J_g_pNoiseTable + index;
+    pCol1 = &p1->Color[0];
+    pCol2 = &p2->Color[0];
+    pW = &vA[0];
+    pDstCol = &p->Color[0];
+
+    asm {
+        vsubx.w vf12, vf0, vf0x
+        lqc2 vf1, 0(pNoise)
+        lqc2 vf2, 0(p1)
+        lqc2 vf3, 0(p2)
+        lqc2 vf6, 0(pW)
+        vsubz.z vf1, vf1, vf1z
+        lqc2 vf4, 0(pCol1)
+        lqc2 vf5, 0(pCol2)
+        vmulx.xy vf1, vf1, vf25x
+        vmulx.xyz vf8, vf2, vf6x
+        vmuly.xyz vf9, vf3, vf6y
+        vadd.xyz vf12, vf8, vf9
+        vmulx.xyzw vf10, vf4, vf6x
+        vmuly.xyzw vf11, vf5, vf6y
+        vadd.xyz vf12, vf12, vf1
+        vadd.xyzw vf13, vf10, vf11
+        sqc2 vf12, 0(p)
+        sqc2 vf13, 0(pDstCol)
+    }
+}
+
+void J_GetInterpolPointOnEdge(J_ParticleFace_* pFace, J_InterpolPoint_* pPoint, unsigned int Edge, float U)
+{
+    float A[4];
+    int p2;
+    int p1;
+    float* pPts1;
+    float* pPts2;
+    float* pCol1;
+    float* pCol2;
+    float* pW;
+    float* pDstCol;
+    float* pUV0;
+    float* pUV1;
+
+    if (Edge == 0) { p1 = 0; p2 = 1; }
+    else if (Edge == 1) { p1 = 1; p2 = 2; }
+    else if (Edge == 2) { p1 = 2; p2 = 0; }
+    else { p1 = 0; p2 = 1; }
+
+    pUV0 = &pFace->pUVs[0][0];
+    A[1] = (U - pUV0[p1 * 2]) / (pUV0[p2 * 2] - pUV0[p1 * 2]);
+    A[0] = 1.0f - A[1];
+    pPts1 = &pFace->pPoints[p1][0];
+    pPts2 = &pFace->pPoints[p2][0];
+    pCol1 = &pFace->pColors[p1][0];
+    pCol2 = &pFace->pColors[p2][0];
+    pW = &A[0];
+    pDstCol = &pPoint->Color[0];
+
+    asm {
+        lqc2 vf2, 0(pPts1)
+        lqc2 vf3, 0(pPts2)
+        lqc2 vf4, 0(pCol1)
+        lqc2 vf5, 0(pCol2)
+        lqc2 vf6, 0(pW)
+        vmulx.xyz vf8, vf2, vf6x
+        vmuly.xyz vf9, vf3, vf6y
+        vsubx.w vf12, vf0, vf0x
+        vmulx.xyzw vf10, vf4, vf6x
+        vmuly.xyzw vf11, vf5, vf6y
+        vadd.xyz vf12, vf8, vf9
+        vadd.xyzw vf13, vf10, vf11
+        sqc2 vf12, 0(pPoint)
+        sqc2 vf13, 0(pDstCol)
+    }
+
+    pUV1 = (float*)&pFace->pUVs[0][1];
+    pPoint->UVs[0] = U;
+    pPoint->UVs[1] = pUV1[p1 * 2] * A[0] + pUV1[p2 * 2] * A[1];
+}
+
 unsigned int J_CreateParticlesOnFace(J_ParticleSprite_* pGeneratedSprites, unsigned int MaxParticles, J_ParticleFace_* pFace, float _fU, float _fV, float NoiseLevel)
 {
     int Edge[3];
@@ -342,202 +547,7 @@ unsigned int J_CreateParticlesOnFace(J_ParticleSprite_* pGeneratedSprites, unsig
     return NbGenerated;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\jparticle.c lines 173–223 */
-/* addr: 0x002b0e40  size: 276 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 173
- *   +0x0014 -> line 174
- *   +0x002c -> line 175
- *   +0x003c -> line 176
- *   +0x0040 -> line 178
- *   +0x0048 -> line 183
- *   +0x004c -> line 178
- *   +0x0050 -> line 183
- *   +0x0054 -> line 178
- *   +0x005c -> line 183
- *   +0x0060 -> line 178
- *   +0x006c -> line 183
- *   +0x0070 -> line 178
- *   +0x0078 -> line 183
- *   +0x0084 -> line 179
- *   +0x0088 -> line 178
- *   +0x008c -> line 179
- *   +0x0094 -> line 178
- *   +0x0098 -> line 179
- *   +0x009c -> line 183
- *   +0x00a0 -> line 179
- *   +0x00a8 -> line 185
- *   +0x00ac -> line 186
- *   +0x00b0 -> line 187
- *   +0x00b4 -> line 188
- *   +0x00b8 -> line 189
- *   +0x00bc -> line 191
- *   +0x00c0 -> line 192
- *   +0x00c4 -> line 193
- *   +0x00c8 -> line 195
- *   +0x00cc -> line 196
- *   +0x00d0 -> line 198
- *   +0x00d4 -> line 199
- *   +0x00d8 -> line 201
- *   +0x00dc -> line 202
- *   +0x00e0 -> line 222
- *   +0x00ec -> line 221
- *   +0x00f0 -> line 222
- *   +0x010c -> line 223
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void J_GetInterpolPointOnEdge(J_ParticleFace_* pFace, J_InterpolPoint_* pPoint, unsigned int Edge, float U)
+void GLI_vInitLensFlare(void)
 {
-    float A[4];
-    int p2;
-    int p1;
-    float* pPts1;
-    float* pPts2;
-    float* pCol1;
-    float* pCol2;
-    float* pW;
-    float* pDstCol;
-    float* pUV0;
-    float* pUV1;
-
-    if (Edge == 0) { p1 = 0; p2 = 1; }
-    else if (Edge == 1) { p1 = 1; p2 = 2; }
-    else if (Edge == 2) { p1 = 2; p2 = 0; }
-    else { p1 = 0; p2 = 1; }
-
-    pUV0 = &pFace->pUVs[0][0];
-    A[1] = (U - pUV0[p1 * 2]) / (pUV0[p2 * 2] - pUV0[p1 * 2]);
-    A[0] = 1.0f - A[1];
-    pPts1 = &pFace->pPoints[p1][0];
-    pPts2 = &pFace->pPoints[p2][0];
-    pCol1 = &pFace->pColors[p1][0];
-    pCol2 = &pFace->pColors[p2][0];
-    pW = &A[0];
-    pDstCol = &pPoint->Color[0];
-
-    asm {
-        lqc2 vf2, 0(pPts1)
-        lqc2 vf3, 0(pPts2)
-        lqc2 vf4, 0(pCol1)
-        lqc2 vf5, 0(pCol2)
-        lqc2 vf6, 0(pW)
-        vmulx.xyz vf8, vf2, vf6x
-        vmuly.xyz vf9, vf3, vf6y
-        vsubx.w vf12, vf0, vf0x
-        vmulx.xyzw vf10, vf4, vf6x
-        vmuly.xyzw vf11, vf5, vf6y
-        vadd.xyz vf12, vf8, vf9
-        vadd.xyzw vf13, vf10, vf11
-        sqc2 vf12, 0(pPoint)
-        sqc2 vf13, 0(pDstCol)
-    }
-
-    pUV1 = (float*)&pFace->pUVs[0][1];
-    pPoint->UVs[0] = U;
-    pPoint->UVs[1] = pUV1[p1 * 2] * A[0] + pUV1[p2 * 2] * A[1];
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\jparticle.c lines 95–166 */
-/* addr: 0x002b0f60  size: 300 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 100
- *   +0x0004 -> line 95
- *   +0x0008 -> line 100
- *   +0x000c -> line 101
- *   +0x001c -> line 100
- *   +0x0020 -> line 101
- *   +0x0034 -> line 100
- *   +0x0038 -> line 102
- *   +0x003c -> line 107
- *   +0x0044 -> line 100
- *   +0x0050 -> line 101
- *   +0x0054 -> line 102
- *   +0x005c -> line 107
- *   +0x0060 -> line 101
- *   +0x0068 -> line 102
- *   +0x006c -> line 101
- *   +0x0074 -> line 102
- *   +0x0078 -> line 101
- *   +0x007c -> line 107
- *   +0x0080 -> line 101
- *   +0x0088 -> line 107
- *   +0x00b0 -> line 109
- *   +0x00b4 -> line 110
- *   +0x00bc -> line 113
- *   +0x00c0 -> line 120
- *   +0x00dc -> line 122
- *   +0x00e0 -> line 123
- *   +0x00e4 -> line 124
- *   +0x00e8 -> line 125
- *   +0x00ec -> line 126
- *   +0x00f0 -> line 127
- *   +0x00f4 -> line 128
- *   +0x00f8 -> line 129
- *   +0x00fc -> line 131
- *   +0x0100 -> line 132
- *   +0x0104 -> line 133
- *   +0x0108 -> line 135
- *   +0x010c -> line 137
- *   +0x0110 -> line 138
- *   +0x0114 -> line 140
- *   +0x0118 -> line 142
- *   +0x011c -> line 144
- *   +0x0120 -> line 145
- *   +0x0124 -> line 166
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void J_GetParticleSpriteFromInterpolatedPoints(J_ParticleSprite_* p, J_InterpolPoint_* p1, J_InterpolPoint_* p2, float V)
-{
-    float vA[4];
-    unsigned int index;
-    float fSum;
-    float* pNoise;
-    float* pCol1;
-    float* pCol2;
-    float* pW;
-    float* pDstCol;
-    float U;
-
-    vA[1] = (V - p1->UVs[1]) / (p2->UVs[1] - p1->UVs[1]);
-
-    U = p1->UVs[0];
-    fSum = U * 1.5564321f + V * 3.4659879f;
-    index = (int)(1024.0f * fSum);
-    index = ((index & 0x7FF) + 3) & ~3u;
-
-    vA[0] = 1.0f - vA[1];
-
-    if (J_M_xAbs(vA[0]) < 0.0000001f || J_M_xAbs(vA[1]) < 0.0000001f)
-        p->Flags = 1;
-    else
-        p->Flags = 0;
-
-    pNoise = J_g_pNoiseTable + index;
-    pCol1 = &p1->Color[0];
-    pCol2 = &p2->Color[0];
-    pW = &vA[0];
-    pDstCol = &p->Color[0];
-
-    asm {
-        vsubx.w vf12, vf0, vf0x
-        lqc2 vf1, 0(pNoise)
-        lqc2 vf2, 0(p1)
-        lqc2 vf3, 0(p2)
-        lqc2 vf6, 0(pW)
-        vsubz.z vf1, vf1, vf1z
-        lqc2 vf4, 0(pCol1)
-        lqc2 vf5, 0(pCol2)
-        vmulx.xy vf1, vf1, vf25x
-        vmulx.xyz vf8, vf2, vf6x
-        vmuly.xyz vf9, vf3, vf6y
-        vadd.xyz vf12, vf8, vf9
-        vmulx.xyzw vf10, vf4, vf6x
-        vmuly.xyzw vf11, vf5, vf6y
-        vadd.xyz vf12, vf12, vf1
-        vadd.xyzw vf13, vf10, vf11
-        sqc2 vf12, 0(p)
-        sqc2 vf13, 0(pDstCol)
-    }
+    g_stLensFlare.lNumberOfLensFlare = 0;
 }

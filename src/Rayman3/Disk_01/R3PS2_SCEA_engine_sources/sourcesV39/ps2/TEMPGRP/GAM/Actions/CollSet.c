@@ -1268,6 +1268,570 @@ extern CAM_tdstCameraConstants_ CAM_g_stCameraConstants;
 extern CAM_tdstCameraConstants_ CAM_g_stCopyCameraConstants;
 
 #pragma optimize_for_size off
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void CAM_fn_vLoadCameraConstants(void);
+unsigned char CS_fn_eGetPrivilegedActivationZone(unsigned char _ucZoneType, tdstCollSet_* _hCollSet, short _wIndex);
+void CS_fn_vSetPrivilegedActivationZone(unsigned char _ucZoneType, tdstCollSet_* _hCollSet, short _wIndex, unsigned char _ePrivilege);
+unsigned int CS_fn_ulGetPrivilegedActivationZoneInCollSet(unsigned char _ucZoneType, tdstCollSet_* _hCollSet);
+tdstZoneSetList_* fn_hGetCurrentZoneSetOfType(unsigned char _ucZoneType, tdstCollSet_* _hCollSet);
+void fn_vSetCurrentZoneSetOfType(unsigned char _ucZoneType, tdstCollSet_* _hCollSet, tdstZoneSetList_* _hCurrentZoneSet);
+void fn_vCorrectAllActivationLists(tdstEngineObject_* _p_stObject);
+unsigned char fn_ucCollSetGetCollComputeFrequencySO(HIE_tdstSuperObject_* hSuperObj);
+unsigned char fn_ucCollSetGetCollComputeFrequency(tdstCollSet_* _hCollSet);
+void fn_vCollSetSetCollComputeFrequency(tdstCollSet_* _hCollSet, unsigned char _ucFrequency);
+unsigned char fn_bGetCharacterForceCollisionWhenNotMoving(HIE_tdstSuperObject_* _hSuperObject);
+void fn_vCollSetSetCharacterNoCollisionZdeWithProjectile(tdstCollSet_* _hCollSet, int _bValue);
+void fn_vCollSetSetCharacterNoCollisionWithOtherSectors(tdstCollSet_* _hCollSet, int _bValue);
+void fn_vCollSetSetCharacterNoCollisionWithMainCharacter(tdstCollSet_* _hCollSet, int _bValue);
+void fn_vCollSetSetCharacterNoCollisionWithSecondaryCharacter(tdstCollSet_* _hCollSet, int _bValue);
+void fn_vCollSetSetCharacterNoCollisionWithProjectile(tdstCollSet_* _hCollSet, int _bValue);
+void fn_vCollSetSetCharacterNoCollisionWithMap(tdstCollSet_* _hCollSet, int _bValue);
+unsigned char fn_bCollSetGetCharacterNoCollisionZdeWithProjectile(tdstCollSet_* _hCollSet);
+unsigned char fn_bCollSetGetCharacterNoCollisionWithOtherSectors(tdstCollSet_* _hCollSet);
+unsigned char fn_bCollSetGetCharacterNoCollisionWithMainCharacter(tdstCollSet_* _hCollSet);
+unsigned char fn_bCollSetGetCharacterNoCollisionWithSecondaryCharacter(tdstCollSet_* _hCollSet);
+unsigned char fn_bCollSetGetCharacterNoCollisionWithProjectile(tdstCollSet_* _hCollSet);
+unsigned char fn_bCollSetGetCharacterNoCollisionWithMap(tdstCollSet_* _hCollSet);
+void CS_fn_vSetCharacterPriority(tdstCollSet_* hCollSet, unsigned char _ucPriority);
+unsigned char CS_fn_ucGetCharacterPriority(tdstCollSet_* _hCollSet);
+tdstCsaList_* CS_fn_hGetActivationList(unsigned char ucZoneType, HIE_tdstSuperObject_* hSuperObj);
+tdstZdxList_* CS_fn_hGetZdxList(unsigned char ucZoneType, HIE_tdstSuperObject_* hSuperObj);
+void fn_vCollSetSetColliderReal(tdstCollSet_* _hCollSet, short _wIndex, float _xReal);
+void fn_vCollSetSetColliderActor(tdstCollSet_* _hCollSet, short _wIndex, HIE_tdstSuperObject_* _hActor);
+void fn_vCollSetSetColliderVector(tdstCollSet_* _hCollSet, short _wIndex, MTH3D_tdstVector_* _p_stVector);
+void fn_vCollSetSetColliderType(tdstCollSet_* _hCollSet, unsigned char _ucType);
+void fn_vCollSetSetColliderPriority(tdstCollSet_* _hCollSet, unsigned char _ucPri);
+float fn_xCollSetGetColliderReal(tdstCollSet_* _hCollSet, short _wIndex);
+MTH3D_tdstVector_ fn_stCollSetGetColliderVector(tdstCollSet_* _hCollSet, short _wIndex);
+HIE_tdstSuperObject_* fn_stCollSetGetColliderActor(tdstCollSet_* _hCollSet, short _wIndex);
+unsigned char fn_ucCollSetGetColliderType(tdstCollSet_* _hCollSet);
+unsigned char fn_ucCollSetGetColliderPriority(tdstCollSet_* _hCollSet);
+void fn_vCollSetCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc);
+void fn_vCollSetDesinit(tdstEngineObject_* p_stObject);
+void fn_vCollSetInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit);
+void fn_vCollSetFree(tdstEngineObject_* p_stObject);
+tdstCollSet_* fn_h_CollSetRealAlloc(void);
+void fn_vCollSetAlloc(tdstEngineObject_* p_stObject);
+
+#pragma optimize_for_size reset
+
+unsigned int CS_fn_ulGetPrivilegedActivationZoneInCollSet(unsigned char _ucZoneType, tdstCollSet_* _hCollSet);
+int fn_bHadToCorrectActivationList(tdstCsaList_* _p_stCsaList, int _lNumberOfState);
+
+/* Header inline (no out-of-line copy in the ELF). */
+inline void CS_fn_vSetPrivilegedActivationZoneInCollSet(unsigned char _ucZoneType, tdstCollSet_* _hCollSet, unsigned int _ulFB)
+{
+    switch (_ucZoneType)
+    {
+    case 0:
+        _hCollSet->ulFBZddPriviligedZones = _ulFB;
+        break;
+    case 3:
+        _hCollSet->ulFBZdrPriviligedZones = _ulFB;
+        break;
+    case 2:
+        _hCollSet->ulFBZdePriviligedZones = _ulFB;
+        break;
+    case 1:
+        _hCollSet->ulFBZdmPriviligedZones = _ulFB;
+        break;
+    }
+}
+
+#pragma auto_inline on
+
+#pragma auto_inline reset
+
+/* Header inline (no out-of-line copy in the ELF). */
+inline tdstCsaList_* CS_fn_hGetActivationListInCollSet(unsigned char _ucZoneType, tdstCollSet_* _hCollSet)
+{
+    switch (_ucZoneType)
+    {
+    case 0:
+        return _hCollSet->hZddActivationList;
+    case 2:
+        return _hCollSet->hZdeActivationList;
+    case 1:
+        return _hCollSet->hZdmActivationList;
+    case 3:
+        return _hCollSet->hZdrActivationList;
+    }
+    return NULL;
+}
+
+int SAI_fn_bRemoveValueFromTable(void* _p_vValue, int _eFlags);
+
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+
+tdstCollSet_* fn_h_CollSetRealAlloc(void);
+int SAI_fn_bInsertCharInTable(void* _p_vValue, int _eFlags);
+
+#pragma optimize_for_size off
+void fn_vCollSetAlloc(tdstEngineObject_* p_stObject)
+{
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (p_stObject->h_CollSet) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 13, -1, 255, 255, NULL);
+    }
+
+    p_stObject->h_CollSet = fn_h_CollSetRealAlloc();
+
+    {
+        tdstCollSet_* hCollSet = p_stObject->h_CollSet;
+        SAI_fn_bInsertCharInTable(&hCollSet->ucCollisionFlag, 0x13);
+        SAI_fn_bInsertCharInTable(&hCollSet->ucCollComputeFrequency, 0x13);
+    }
+}
+
+tdstCollSet_* fn_h_CollSetRealAlloc(void)
+{
+    tdstCollSet_* h_CollSet;
+
+    h_CollSet = (tdstCollSet_*)HMU_fn_p_vMalloc(sizeof(tdstCollSet_), 0);
+
+    h_CollSet->ucCharacterPriority = 0;
+    h_CollSet->hZddList = NULL;
+    h_CollSet->hZdeList = NULL;
+    h_CollSet->hZdmList = NULL;
+    h_CollSet->hZdrList = NULL;
+    h_CollSet->hZddActivationList = NULL;
+    h_CollSet->hZdeActivationList = NULL;
+    h_CollSet->hZdmActivationList = NULL;
+    h_CollSet->hZdrActivationList = NULL;
+
+    h_CollSet->stColliderInfo.ucColliderPriority = 0;
+
+    h_CollSet->ulFBZddPriviligedZones = 0;
+    h_CollSet->ulFBZdePriviligedZones = 0;
+    h_CollSet->ulFBZdmPriviligedZones = 0;
+    h_CollSet->ulFBZdrPriviligedZones = 0;
+    h_CollSet->ucCollComputeFrequency = 1;
+
+    return h_CollSet;
+}
+
+void fn_vCollSetFree(tdstEngineObject_* p_stObject)
+{
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!p_stObject->h_CollSet) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+
+    {
+        tdstCollSet_* hCollSet = p_stObject->h_CollSet;
+        SAI_fn_bRemoveValueFromTable(&hCollSet->ucCollisionFlag, 0x13);
+        SAI_fn_bRemoveValueFromTable(&hCollSet->ucCollComputeFrequency, 0x13);
+    }
+}
+
+void fn_vCollSetInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
+{
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!p_stObject->h_CollSet) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+
+    switch (eObjectInit)
+    {
+    case OTI_WhenGameStart:
+    case OTI_MapLoaded:
+    case OTI_LoadSavedGame:
+        {
+            tdstCollSet_* hCollSet = p_stObject->h_CollSet;
+            SAI_fn_bInsertCharInTable(&hCollSet->ucCollisionFlag, 0x13);
+            SAI_fn_bInsertCharInTable(&hCollSet->ucCollComputeFrequency, 0x13);
+        }
+        p_stObject->h_CollSet->stColliderInfo.ucColliderPriority = 0;
+        p_stObject->h_CollSet->ulFBZddPriviligedZones = 0;
+        p_stObject->h_CollSet->ulFBZdePriviligedZones = 0;
+        p_stObject->h_CollSet->ulFBZdmPriviligedZones = 0;
+        p_stObject->h_CollSet->ulFBZdrPriviligedZones = 0;
+        break;
+    case OTI_ReinitTheMap:
+    case OTI_PlayerDead:
+        p_stObject->h_CollSet->stColliderInfo.ucColliderPriority = 0;
+        p_stObject->h_CollSet->ulFBZddPriviligedZones = 0;
+        p_stObject->h_CollSet->ulFBZdePriviligedZones = 0;
+        p_stObject->h_CollSet->ulFBZdmPriviligedZones = 0;
+        p_stObject->h_CollSet->ulFBZdrPriviligedZones = 0;
+        break;
+    case OTI_AlwaysCreated:
+        break;
+    }
+}
+
+void fn_vCollSetDesinit(tdstEngineObject_* p_stObject)
+{
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!p_stObject->h_CollSet) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+}
+
+void fn_vCollSetCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc)
+{
+    memcpy(_p_stObjectDest->h_CollSet, _p_stObjectSrc->h_CollSet, 0x44);
+}
+
+unsigned char fn_ucCollSetGetColliderPriority(tdstCollSet_* _hCollSet)
+{
+    return _hCollSet->stColliderInfo.ucColliderPriority;
+}
+
+unsigned char fn_ucCollSetGetColliderType(tdstCollSet_* _hCollSet)
+{
+    return _hCollSet->stColliderInfo.ucColliderType;
+}
+
+HIE_tdstSuperObject_* fn_stCollSetGetColliderActor(tdstCollSet_* _hCollSet, short _wIndex)
+{
+    /* Matching idiom: see fn_xCollSetGetColliderReal (char* base plus a dead
+       scaled-index assignment).  Not original source, needs cleanup. */
+    int index = _wIndex; int iIndex; char *pc = (char*)_hCollSet; pc = pc + 0x44; return (index >= 0 && index < 2) ? *(HIE_tdstSuperObject_**)((char*)pc + (iIndex = index * 4)) : NULL;
+}
+
+MTH3D_tdstVector_ fn_stCollSetGetColliderVector(tdstCollSet_* _hCollSet, short _wIndex)
+{
+    MTH3D_tdstVector_ stNullVect = { 0.0f, 0.0f, 0.0f };
+
+    return ((_wIndex >= 0) && (_wIndex < 2)) ? _hCollSet->stColliderInfo.a_stColliderVectors[_wIndex] : stNullVect;
+}
+
+float fn_xCollSetGetColliderReal(tdstCollSet_* _hCollSet, short _wIndex)
+{
+    /* Matching idiom: a char* base plus a dead scaled-index assignment keeps
+       the retail's unfolded address (base addiu + index shift) with the whole
+       index chain in one register.  Not original source, needs cleanup. */
+    /* Permuter-found (verified): the constant bound in a local and the masked
+       index assignment change only the temporary numbering.  Not original source. */
+    int new_var;
+    int index = _wIndex; int iIndex; char *pc = (char*)_hCollSet;
+    int new_var2;
+    pc = pc + 0x64;
+    new_var = 2;
+    return (index >= 0 && index < new_var) ? *(float*)((char*)pc + (iIndex = (new_var2 = (index & 0xFFFFFFFF) * 4))) : 0.0f;
+}
+
+void fn_vCollSetSetColliderPriority(tdstCollSet_* _hCollSet, unsigned char _ucPri)
+{
+    _hCollSet->stColliderInfo.ucColliderPriority = _ucPri;
+}
+
+void fn_vCollSetSetColliderType(tdstCollSet_* _hCollSet, unsigned char _ucType)
+{
+    _hCollSet->stColliderInfo.ucColliderType = _ucType;
+}
+
+void fn_vCollSetSetColliderVector(tdstCollSet_* _hCollSet, short _wIndex, MTH3D_tdstVector_* _p_stVector)
+{
+    if (_wIndex >= 0 && _wIndex < 2)
+        ((MTH3D_tdstVector_*)((char*)&_hCollSet->stColliderInfo.a_stColliderVectors[0]))[_wIndex] = *_p_stVector;
+}
+
+void fn_vCollSetSetColliderActor(tdstCollSet_* _hCollSet, short _wIndex, HIE_tdstSuperObject_* _hActor)
+{
+    /* Matching idiom: the scaled index computed inside the condition (comma expression) and a char*
+       byte offset reproduce retail's unfolded store and delay-slot sll. Not original source and needs cleaning up. */
+    int o; if (_wIndex >= 0 && (o = _wIndex * 4, _wIndex < 2))
+        *(int*)((char*)&_hCollSet->stColliderInfo.a_stColliderActors[0] + o) = (int)_hActor;
+}
+
+void fn_vCollSetSetColliderReal(tdstCollSet_* _hCollSet, short _wIndex, float _xReal)
+{
+    /* Matching idiom: the scaled index computed inside the condition (comma expression) and a char*
+       byte offset reproduce retail's unfolded store and delay-slot sll. Not original source and needs cleaning up. */
+    int o; if (_wIndex >= 0 && (o = _wIndex * 4, _wIndex < 2))
+        *(float*)((char*)&_hCollSet->stColliderInfo.a_xColliderReals[0] + o) = _xReal;
+}
+
+tdstZdxList_* CS_fn_hGetZdxList(unsigned char ucZoneType, HIE_tdstSuperObject_* hSuperObj)
+{
+    tdstCollSet_* hCollSet = hSuperObj->hLinkedObject.p_stCharacter->h_CollSet;
+
+    if (!hCollSet)
+        return NULL;
+
+    switch (ucZoneType)
+    {
+    case 0:
+        return hCollSet->hZddList;
+    case 2:
+        return hCollSet->hZdeList;
+    case 1:
+        return hCollSet->hZdmList;
+    case 3:
+        return hCollSet->hZdrList;
+    }
+    return NULL;
+}
+
+tdstCsaList_* CS_fn_hGetActivationList(unsigned char ucZoneType, HIE_tdstSuperObject_* hSuperObj)
+{
+    tdstCollSet_* hCollSet = hSuperObj ? hSuperObj->hLinkedObject.p_stCharacter->h_CollSet : NULL;
+
+    return hCollSet ? CS_fn_hGetActivationListInCollSet(ucZoneType, hCollSet) : NULL;
+}
+
+unsigned char CS_fn_ucGetCharacterPriority(tdstCollSet_* _hCollSet)
+{
+    return _hCollSet->ucCharacterPriority;
+}
+
+void CS_fn_vSetCharacterPriority(tdstCollSet_* hCollSet, unsigned char _ucPriority)
+{
+    hCollSet->ucCharacterPriority = _ucPriority;
+}
+
+unsigned char fn_bCollSetGetCharacterNoCollisionWithMap(tdstCollSet_* _hCollSet)
+{
+    return _hCollSet->ucCollisionFlag & 1;
+}
+
+unsigned char fn_bCollSetGetCharacterNoCollisionWithProjectile(tdstCollSet_* _hCollSet)
+{
+    return _hCollSet->ucCollisionFlag & 2;
+}
+
+unsigned char fn_bCollSetGetCharacterNoCollisionWithSecondaryCharacter(tdstCollSet_* _hCollSet)
+{
+    return _hCollSet->ucCollisionFlag & 4;
+}
+
+unsigned char fn_bCollSetGetCharacterNoCollisionWithMainCharacter(tdstCollSet_* _hCollSet)
+{
+    return _hCollSet->ucCollisionFlag & 8;
+}
+
+unsigned char fn_bCollSetGetCharacterNoCollisionWithOtherSectors(tdstCollSet_* _hCollSet)
+{
+    return _hCollSet->ucCollisionFlag & 0x20;
+}
+
+unsigned char fn_bCollSetGetCharacterNoCollisionZdeWithProjectile(tdstCollSet_* _hCollSet)
+{
+    return _hCollSet->ucCollisionFlag & 0x40;
+}
+
+void fn_vCollSetSetCharacterNoCollisionWithMap(tdstCollSet_* _hCollSet, int _bValue)
+{
+    if (_bValue != 0)
+        _hCollSet->ucCollisionFlag |= 1;
+    else
+        _hCollSet->ucCollisionFlag &= 0xfe;
+}
+
+void fn_vCollSetSetCharacterNoCollisionWithProjectile(tdstCollSet_* _hCollSet, int _bValue)
+{
+    if (_bValue != 0)
+        _hCollSet->ucCollisionFlag |= 2;
+    else
+        _hCollSet->ucCollisionFlag &= 0xfd;
+}
+
+void fn_vCollSetSetCharacterNoCollisionWithSecondaryCharacter(tdstCollSet_* _hCollSet, int _bValue)
+{
+    if (_bValue != 0)
+        _hCollSet->ucCollisionFlag |= 4;
+    else
+        _hCollSet->ucCollisionFlag &= 0xfb;
+}
+
+void fn_vCollSetSetCharacterNoCollisionWithMainCharacter(tdstCollSet_* _hCollSet, int _bValue)
+{
+    if (_bValue != 0)
+        _hCollSet->ucCollisionFlag |= 8;
+    else
+        _hCollSet->ucCollisionFlag &= 0xf7;
+}
+
+void fn_vCollSetSetCharacterNoCollisionWithOtherSectors(tdstCollSet_* _hCollSet, int _bValue)
+{
+    if (_bValue != 0)
+        _hCollSet->ucCollisionFlag |= 0x20;
+    else
+        _hCollSet->ucCollisionFlag &= 0xdf;
+}
+
+void fn_vCollSetSetCharacterNoCollisionZdeWithProjectile(tdstCollSet_* _hCollSet, int _bValue)
+{
+    if (_bValue != 0)
+        _hCollSet->ucCollisionFlag |= 0x40;
+    else
+        _hCollSet->ucCollisionFlag &= 0xbf;
+}
+
+unsigned char fn_bGetCharacterForceCollisionWhenNotMoving(HIE_tdstSuperObject_* _hSuperObject)
+{
+    tdstCollSet_* hCollSet = _hSuperObject != NULL ? _hSuperObject->hLinkedObject.p_stCharacter->h_CollSet : NULL;
+    unsigned int bResult = hCollSet != NULL ? hCollSet->ucCollisionFlag & 0x10 : 0;
+    return bResult;
+}
+
+void fn_vCollSetSetCollComputeFrequency(tdstCollSet_* _hCollSet, unsigned char _ucFrequency)
+{
+    _hCollSet->ucCollComputeFrequency = _ucFrequency;
+}
+
+unsigned char fn_ucCollSetGetCollComputeFrequency(tdstCollSet_* _hCollSet)
+{
+    int ucFrequency = 1;
+    if (_hCollSet != NULL)
+        ucFrequency = _hCollSet->ucCollComputeFrequency;
+    return ucFrequency;
+}
+
+unsigned char fn_ucCollSetGetCollComputeFrequencySO(HIE_tdstSuperObject_* hSuperObj)
+{
+    tdstCollSet_* hCollSet = hSuperObj ? hSuperObj->hLinkedObject.p_stCharacter->h_CollSet : NULL;
+    return hCollSet ? (unsigned char)(hCollSet ? hCollSet->ucCollComputeFrequency : 1) : 1;
+}
+
+void fn_vCorrectAllActivationLists(tdstEngineObject_* _p_stObject)
+{
+    int bWarningZdd;
+    int bWarningZde;
+    int bWarningZdm;
+    int bWarningZdr;
+    tdstCollSet_* hCollSet;
+    int lNumberOfState;
+
+    hCollSet = _p_stObject->h_CollSet; if (hCollSet)
+    {
+        bWarningZdd = 0; bWarningZde = 0; bWarningZdm = 0; bWarningZdr = 0;
+        lNumberOfState = _p_stObject->h_3dData->h_Family->hForStateArray.lNumberOfElementsOpt;
+        if (hCollSet->hZddActivationList)
+        {
+            bWarningZdd = fn_bHadToCorrectActivationList(hCollSet->hZddActivationList, lNumberOfState);
+        }
+        if (hCollSet->hZdeActivationList)
+        {
+            bWarningZde = fn_bHadToCorrectActivationList(hCollSet->hZdeActivationList, lNumberOfState);
+        }
+        if (hCollSet->hZdmActivationList)
+        {
+            bWarningZdm = fn_bHadToCorrectActivationList(hCollSet->hZdmActivationList, lNumberOfState);
+        }
+        if (hCollSet->hZdrActivationList)
+        {
+            bWarningZdr = fn_bHadToCorrectActivationList(hCollSet->hZdrActivationList, lNumberOfState);
+        }
+        if (bWarningZde || bWarningZdd || bWarningZdm || bWarningZdr)
+        {
+            Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 64, -1, 255, 255, NULL);
+            Erm_fn_ClearLastError(0);
+        }
+    }
+}
+
+void fn_vSetCurrentZoneSetOfType(unsigned char _ucZoneType, tdstCollSet_* _hCollSet, tdstZoneSetList_* _hCurrentZoneSet)
+{
+    switch (_ucZoneType)
+    {
+    case 0:
+        _hCollSet->hZddCurrentActivation = _hCurrentZoneSet;
+        break;
+    case 3:
+        _hCollSet->hZdrCurrentActivation = _hCurrentZoneSet;
+        break;
+    case 2:
+        _hCollSet->hZdeCurrentActivation = _hCurrentZoneSet;
+        break;
+    case 1:
+        _hCollSet->hZdmCurrentActivation = _hCurrentZoneSet;
+        break;
+    }
+}
+
+tdstZoneSetList_* fn_hGetCurrentZoneSetOfType(unsigned char _ucZoneType, tdstCollSet_* _hCollSet)
+{
+    switch (_ucZoneType)
+    {
+    case 0:
+        return _hCollSet->hZddCurrentActivation;
+    case 3:
+        return _hCollSet->hZdrCurrentActivation;
+    case 2:
+        return _hCollSet->hZdeCurrentActivation;
+    case 1:
+        return _hCollSet->hZdmCurrentActivation;
+    }
+    return NULL;
+}
+
+#pragma auto_inline on
+unsigned int CS_fn_ulGetPrivilegedActivationZoneInCollSet(unsigned char _ucZoneType, tdstCollSet_* _hCollSet)
+{
+    switch (_ucZoneType)
+    {
+    case 0:
+        return _hCollSet->ulFBZddPriviligedZones;
+    case 3:
+        return _hCollSet->ulFBZdrPriviligedZones;
+    case 2:
+        return _hCollSet->ulFBZdePriviligedZones;
+    case 1:
+        return _hCollSet->ulFBZdmPriviligedZones;
+    }
+    return 0;
+}
+#pragma auto_inline reset
+
+void CS_fn_vSetPrivilegedActivationZone(unsigned char _ucZoneType, tdstCollSet_* _hCollSet, short _wIndex, unsigned char _ePrivilege)
+{
+    short wDecal;
+    unsigned int ulFB;
+
+    wDecal = _wIndex * 2;
+    ulFB = CS_fn_ulGetPrivilegedActivationZoneInCollSet(_ucZoneType, _hCollSet);
+    switch (_ePrivilege)
+    {
+    case 0:
+        ulFB &= ~(3 << wDecal);
+        break;
+    case 1:
+        ulFB &= ~(3 << wDecal);
+        ulFB |= 1 << wDecal;
+        break;
+    case 2:
+        ulFB &= ~(3 << wDecal);
+        ulFB |= 2 << wDecal;
+        break;
+    }
+    CS_fn_vSetPrivilegedActivationZoneInCollSet(_ucZoneType, _hCollSet, ulFB);
+}
+
+unsigned char CS_fn_eGetPrivilegedActivationZone(unsigned char _ucZoneType, tdstCollSet_* _hCollSet, short _wIndex)
+{
+    unsigned int ulFB;
+
+    ulFB = CS_fn_ulGetPrivilegedActivationZoneInCollSet(_ucZoneType, _hCollSet);
+
+    if (!ulFB)
+        return 0;
+
+    ulFB &= 3 << (short)(_wIndex * 2);
+    switch ((unsigned char)(ulFB >> (short)(_wIndex * 2)))
+    {
+    case 0:
+        return 0;
+    case 1:
+        return 1;
+    case 2:
+        return 2;
+    }
+    return 3;
+}
+
 void CAM_fn_vLoadCameraConstants(void)
 {
     /* Matching idiom: taking the copy source through a char* base makes the
@@ -1312,515 +1876,4 @@ void CAM_fn_vLoadCameraConstants(void)
     CAM_g_stCameraConstants.xCutAngleFactorTgt = 1.0f;
     CAM_g_stCameraConstants.wFlags = 0;
     memcpy(&CAM_g_stCopyCameraConstants, pSrc, sizeof(CAM_tdstCameraConstants_));
-}
-#pragma optimize_for_size reset
-
-unsigned int CS_fn_ulGetPrivilegedActivationZoneInCollSet(unsigned char _ucZoneType, tdstCollSet_* _hCollSet);
-int fn_bHadToCorrectActivationList(tdstCsaList_* _p_stCsaList, int _lNumberOfState);
-
-unsigned char CS_fn_eGetPrivilegedActivationZone(unsigned char _ucZoneType, tdstCollSet_* _hCollSet, short _wIndex)
-{
-    unsigned int ulFB;
-
-    ulFB = CS_fn_ulGetPrivilegedActivationZoneInCollSet(_ucZoneType, _hCollSet);
-
-    if (!ulFB)
-        return 0;
-
-    ulFB &= 3 << (short)(_wIndex * 2);
-    switch ((unsigned char)(ulFB >> (short)(_wIndex * 2)))
-    {
-    case 0:
-        return 0;
-    case 1:
-        return 1;
-    case 2:
-        return 2;
-    }
-    return 3;
-}
-
-/* Header inline (no out-of-line copy in the ELF). */
-inline void CS_fn_vSetPrivilegedActivationZoneInCollSet(unsigned char _ucZoneType, tdstCollSet_* _hCollSet, unsigned int _ulFB)
-{
-    switch (_ucZoneType)
-    {
-    case 0:
-        _hCollSet->ulFBZddPriviligedZones = _ulFB;
-        break;
-    case 3:
-        _hCollSet->ulFBZdrPriviligedZones = _ulFB;
-        break;
-    case 2:
-        _hCollSet->ulFBZdePriviligedZones = _ulFB;
-        break;
-    case 1:
-        _hCollSet->ulFBZdmPriviligedZones = _ulFB;
-        break;
-    }
-}
-
-void CS_fn_vSetPrivilegedActivationZone(unsigned char _ucZoneType, tdstCollSet_* _hCollSet, short _wIndex, unsigned char _ePrivilege)
-{
-    short wDecal;
-    unsigned int ulFB;
-
-    wDecal = _wIndex * 2;
-    ulFB = CS_fn_ulGetPrivilegedActivationZoneInCollSet(_ucZoneType, _hCollSet);
-    switch (_ePrivilege)
-    {
-    case 0:
-        ulFB &= ~(3 << wDecal);
-        break;
-    case 1:
-        ulFB &= ~(3 << wDecal);
-        ulFB |= 1 << wDecal;
-        break;
-    case 2:
-        ulFB &= ~(3 << wDecal);
-        ulFB |= 2 << wDecal;
-        break;
-    }
-    CS_fn_vSetPrivilegedActivationZoneInCollSet(_ucZoneType, _hCollSet, ulFB);
-}
-
-#pragma auto_inline on
-unsigned int CS_fn_ulGetPrivilegedActivationZoneInCollSet(unsigned char _ucZoneType, tdstCollSet_* _hCollSet)
-{
-    switch (_ucZoneType)
-    {
-    case 0:
-        return _hCollSet->ulFBZddPriviligedZones;
-    case 3:
-        return _hCollSet->ulFBZdrPriviligedZones;
-    case 2:
-        return _hCollSet->ulFBZdePriviligedZones;
-    case 1:
-        return _hCollSet->ulFBZdmPriviligedZones;
-    }
-    return 0;
-}
-#pragma auto_inline reset
-
-tdstZoneSetList_* fn_hGetCurrentZoneSetOfType(unsigned char _ucZoneType, tdstCollSet_* _hCollSet)
-{
-    switch (_ucZoneType)
-    {
-    case 0:
-        return _hCollSet->hZddCurrentActivation;
-    case 3:
-        return _hCollSet->hZdrCurrentActivation;
-    case 2:
-        return _hCollSet->hZdeCurrentActivation;
-    case 1:
-        return _hCollSet->hZdmCurrentActivation;
-    }
-    return NULL;
-}
-
-void fn_vSetCurrentZoneSetOfType(unsigned char _ucZoneType, tdstCollSet_* _hCollSet, tdstZoneSetList_* _hCurrentZoneSet)
-{
-    switch (_ucZoneType)
-    {
-    case 0:
-        _hCollSet->hZddCurrentActivation = _hCurrentZoneSet;
-        break;
-    case 3:
-        _hCollSet->hZdrCurrentActivation = _hCurrentZoneSet;
-        break;
-    case 2:
-        _hCollSet->hZdeCurrentActivation = _hCurrentZoneSet;
-        break;
-    case 1:
-        _hCollSet->hZdmCurrentActivation = _hCurrentZoneSet;
-        break;
-    }
-}
-
-void fn_vCorrectAllActivationLists(tdstEngineObject_* _p_stObject)
-{
-    int bWarningZdd;
-    int bWarningZde;
-    int bWarningZdm;
-    int bWarningZdr;
-    tdstCollSet_* hCollSet;
-    int lNumberOfState;
-
-    hCollSet = _p_stObject->h_CollSet; if (hCollSet)
-    {
-        bWarningZdd = 0; bWarningZde = 0; bWarningZdm = 0; bWarningZdr = 0;
-        lNumberOfState = _p_stObject->h_3dData->h_Family->hForStateArray.lNumberOfElementsOpt;
-        if (hCollSet->hZddActivationList)
-        {
-            bWarningZdd = fn_bHadToCorrectActivationList(hCollSet->hZddActivationList, lNumberOfState);
-        }
-        if (hCollSet->hZdeActivationList)
-        {
-            bWarningZde = fn_bHadToCorrectActivationList(hCollSet->hZdeActivationList, lNumberOfState);
-        }
-        if (hCollSet->hZdmActivationList)
-        {
-            bWarningZdm = fn_bHadToCorrectActivationList(hCollSet->hZdmActivationList, lNumberOfState);
-        }
-        if (hCollSet->hZdrActivationList)
-        {
-            bWarningZdr = fn_bHadToCorrectActivationList(hCollSet->hZdrActivationList, lNumberOfState);
-        }
-        if (bWarningZde || bWarningZdd || bWarningZdm || bWarningZdr)
-        {
-            Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 64, -1, 255, 255, NULL);
-            Erm_fn_ClearLastError(0);
-        }
-    }
-}
-
-unsigned char fn_ucCollSetGetCollComputeFrequencySO(HIE_tdstSuperObject_* hSuperObj)
-{
-    tdstCollSet_* hCollSet = hSuperObj ? hSuperObj->hLinkedObject.p_stCharacter->h_CollSet : NULL;
-    return hCollSet ? (unsigned char)(hCollSet ? hCollSet->ucCollComputeFrequency : 1) : 1;
-}
-
-unsigned char fn_ucCollSetGetCollComputeFrequency(tdstCollSet_* _hCollSet)
-{
-    int ucFrequency = 1;
-    if (_hCollSet != NULL)
-        ucFrequency = _hCollSet->ucCollComputeFrequency;
-    return ucFrequency;
-}
-
-void fn_vCollSetSetCollComputeFrequency(tdstCollSet_* _hCollSet, unsigned char _ucFrequency)
-{
-    _hCollSet->ucCollComputeFrequency = _ucFrequency;
-}
-
-unsigned char fn_bGetCharacterForceCollisionWhenNotMoving(HIE_tdstSuperObject_* _hSuperObject)
-{
-    tdstCollSet_* hCollSet = _hSuperObject != NULL ? _hSuperObject->hLinkedObject.p_stCharacter->h_CollSet : NULL;
-    unsigned int bResult = hCollSet != NULL ? hCollSet->ucCollisionFlag & 0x10 : 0;
-    return bResult;
-}
-
-void fn_vCollSetSetCharacterNoCollisionZdeWithProjectile(tdstCollSet_* _hCollSet, int _bValue)
-{
-    if (_bValue != 0)
-        _hCollSet->ucCollisionFlag |= 0x40;
-    else
-        _hCollSet->ucCollisionFlag &= 0xbf;
-}
-
-void fn_vCollSetSetCharacterNoCollisionWithOtherSectors(tdstCollSet_* _hCollSet, int _bValue)
-{
-    if (_bValue != 0)
-        _hCollSet->ucCollisionFlag |= 0x20;
-    else
-        _hCollSet->ucCollisionFlag &= 0xdf;
-}
-
-void fn_vCollSetSetCharacterNoCollisionWithMainCharacter(tdstCollSet_* _hCollSet, int _bValue)
-{
-    if (_bValue != 0)
-        _hCollSet->ucCollisionFlag |= 8;
-    else
-        _hCollSet->ucCollisionFlag &= 0xf7;
-}
-
-void fn_vCollSetSetCharacterNoCollisionWithSecondaryCharacter(tdstCollSet_* _hCollSet, int _bValue)
-{
-    if (_bValue != 0)
-        _hCollSet->ucCollisionFlag |= 4;
-    else
-        _hCollSet->ucCollisionFlag &= 0xfb;
-}
-
-void fn_vCollSetSetCharacterNoCollisionWithProjectile(tdstCollSet_* _hCollSet, int _bValue)
-{
-    if (_bValue != 0)
-        _hCollSet->ucCollisionFlag |= 2;
-    else
-        _hCollSet->ucCollisionFlag &= 0xfd;
-}
-
-void fn_vCollSetSetCharacterNoCollisionWithMap(tdstCollSet_* _hCollSet, int _bValue)
-{
-    if (_bValue != 0)
-        _hCollSet->ucCollisionFlag |= 1;
-    else
-        _hCollSet->ucCollisionFlag &= 0xfe;
-}
-
-unsigned char fn_bCollSetGetCharacterNoCollisionZdeWithProjectile(tdstCollSet_* _hCollSet)
-{
-    return _hCollSet->ucCollisionFlag & 0x40;
-}
-
-unsigned char fn_bCollSetGetCharacterNoCollisionWithOtherSectors(tdstCollSet_* _hCollSet)
-{
-    return _hCollSet->ucCollisionFlag & 0x20;
-}
-
-unsigned char fn_bCollSetGetCharacterNoCollisionWithMainCharacter(tdstCollSet_* _hCollSet)
-{
-    return _hCollSet->ucCollisionFlag & 8;
-}
-
-unsigned char fn_bCollSetGetCharacterNoCollisionWithSecondaryCharacter(tdstCollSet_* _hCollSet)
-{
-    return _hCollSet->ucCollisionFlag & 4;
-}
-
-unsigned char fn_bCollSetGetCharacterNoCollisionWithProjectile(tdstCollSet_* _hCollSet)
-{
-    return _hCollSet->ucCollisionFlag & 2;
-}
-
-unsigned char fn_bCollSetGetCharacterNoCollisionWithMap(tdstCollSet_* _hCollSet)
-{
-    return _hCollSet->ucCollisionFlag & 1;
-}
-
-void CS_fn_vSetCharacterPriority(tdstCollSet_* hCollSet, unsigned char _ucPriority)
-{
-    hCollSet->ucCharacterPriority = _ucPriority;
-}
-
-unsigned char CS_fn_ucGetCharacterPriority(tdstCollSet_* _hCollSet)
-{
-    return _hCollSet->ucCharacterPriority;
-}
-
-/* Header inline (no out-of-line copy in the ELF). */
-inline tdstCsaList_* CS_fn_hGetActivationListInCollSet(unsigned char _ucZoneType, tdstCollSet_* _hCollSet)
-{
-    switch (_ucZoneType)
-    {
-    case 0:
-        return _hCollSet->hZddActivationList;
-    case 2:
-        return _hCollSet->hZdeActivationList;
-    case 1:
-        return _hCollSet->hZdmActivationList;
-    case 3:
-        return _hCollSet->hZdrActivationList;
-    }
-    return NULL;
-}
-
-tdstCsaList_* CS_fn_hGetActivationList(unsigned char ucZoneType, HIE_tdstSuperObject_* hSuperObj)
-{
-    tdstCollSet_* hCollSet = hSuperObj ? hSuperObj->hLinkedObject.p_stCharacter->h_CollSet : NULL;
-
-    return hCollSet ? CS_fn_hGetActivationListInCollSet(ucZoneType, hCollSet) : NULL;
-}
-
-tdstZdxList_* CS_fn_hGetZdxList(unsigned char ucZoneType, HIE_tdstSuperObject_* hSuperObj)
-{
-    tdstCollSet_* hCollSet = hSuperObj->hLinkedObject.p_stCharacter->h_CollSet;
-
-    if (!hCollSet)
-        return NULL;
-
-    switch (ucZoneType)
-    {
-    case 0:
-        return hCollSet->hZddList;
-    case 2:
-        return hCollSet->hZdeList;
-    case 1:
-        return hCollSet->hZdmList;
-    case 3:
-        return hCollSet->hZdrList;
-    }
-    return NULL;
-}
-
-void fn_vCollSetSetColliderReal(tdstCollSet_* _hCollSet, short _wIndex, float _xReal)
-{
-    /* Matching idiom: the scaled index computed inside the condition (comma expression) and a char*
-       byte offset reproduce retail's unfolded store and delay-slot sll. Not original source and needs cleaning up. */
-    int o; if (_wIndex >= 0 && (o = _wIndex * 4, _wIndex < 2))
-        *(float*)((char*)&_hCollSet->stColliderInfo.a_xColliderReals[0] + o) = _xReal;
-}
-
-void fn_vCollSetSetColliderActor(tdstCollSet_* _hCollSet, short _wIndex, HIE_tdstSuperObject_* _hActor)
-{
-    /* Matching idiom: the scaled index computed inside the condition (comma expression) and a char*
-       byte offset reproduce retail's unfolded store and delay-slot sll. Not original source and needs cleaning up. */
-    int o; if (_wIndex >= 0 && (o = _wIndex * 4, _wIndex < 2))
-        *(int*)((char*)&_hCollSet->stColliderInfo.a_stColliderActors[0] + o) = (int)_hActor;
-}
-
-void fn_vCollSetSetColliderVector(tdstCollSet_* _hCollSet, short _wIndex, MTH3D_tdstVector_* _p_stVector)
-{
-    if (_wIndex >= 0 && _wIndex < 2)
-        ((MTH3D_tdstVector_*)((char*)&_hCollSet->stColliderInfo.a_stColliderVectors[0]))[_wIndex] = *_p_stVector;
-}
-
-void fn_vCollSetSetColliderType(tdstCollSet_* _hCollSet, unsigned char _ucType)
-{
-    _hCollSet->stColliderInfo.ucColliderType = _ucType;
-}
-
-void fn_vCollSetSetColliderPriority(tdstCollSet_* _hCollSet, unsigned char _ucPri)
-{
-    _hCollSet->stColliderInfo.ucColliderPriority = _ucPri;
-}
-
-float fn_xCollSetGetColliderReal(tdstCollSet_* _hCollSet, short _wIndex)
-{
-    /* Matching idiom: a char* base plus a dead scaled-index assignment keeps
-       the retail's unfolded address (base addiu + index shift) with the whole
-       index chain in one register.  Not original source, needs cleanup. */
-    /* Permuter-found (verified): the constant bound in a local and the masked
-       index assignment change only the temporary numbering.  Not original source. */
-    int new_var;
-    int index = _wIndex; int iIndex; char *pc = (char*)_hCollSet;
-    int new_var2;
-    pc = pc + 0x64;
-    new_var = 2;
-    return (index >= 0 && index < new_var) ? *(float*)((char*)pc + (iIndex = (new_var2 = (index & 0xFFFFFFFF) * 4))) : 0.0f;
-}
-
-MTH3D_tdstVector_ fn_stCollSetGetColliderVector(tdstCollSet_* _hCollSet, short _wIndex)
-{
-    MTH3D_tdstVector_ stNullVect = { 0.0f, 0.0f, 0.0f };
-
-    return ((_wIndex >= 0) && (_wIndex < 2)) ? _hCollSet->stColliderInfo.a_stColliderVectors[_wIndex] : stNullVect;
-}
-
-HIE_tdstSuperObject_* fn_stCollSetGetColliderActor(tdstCollSet_* _hCollSet, short _wIndex)
-{
-    /* Matching idiom: see fn_xCollSetGetColliderReal (char* base plus a dead
-       scaled-index assignment).  Not original source, needs cleanup. */
-    int index = _wIndex; int iIndex; char *pc = (char*)_hCollSet; pc = pc + 0x44; return (index >= 0 && index < 2) ? *(HIE_tdstSuperObject_**)((char*)pc + (iIndex = index * 4)) : NULL;
-}
-
-unsigned char fn_ucCollSetGetColliderType(tdstCollSet_* _hCollSet)
-{
-    return _hCollSet->stColliderInfo.ucColliderType;
-}
-
-unsigned char fn_ucCollSetGetColliderPriority(tdstCollSet_* _hCollSet)
-{
-    return _hCollSet->stColliderInfo.ucColliderPriority;
-}
-
-void fn_vCollSetCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc)
-{
-    memcpy(_p_stObjectDest->h_CollSet, _p_stObjectSrc->h_CollSet, 0x44);
-}
-
-void fn_vCollSetDesinit(tdstEngineObject_* p_stObject)
-{
-    if (!p_stObject) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
-    }
-    if (!p_stObject->h_CollSet) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
-    }
-}
-
-void fn_vCollSetInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
-{
-    if (!p_stObject) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
-    }
-    if (!p_stObject->h_CollSet) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
-    }
-
-    switch (eObjectInit)
-    {
-    case OTI_WhenGameStart:
-    case OTI_MapLoaded:
-    case OTI_LoadSavedGame:
-        {
-            tdstCollSet_* hCollSet = p_stObject->h_CollSet;
-            SAI_fn_bInsertCharInTable(&hCollSet->ucCollisionFlag, 0x13);
-            SAI_fn_bInsertCharInTable(&hCollSet->ucCollComputeFrequency, 0x13);
-        }
-        p_stObject->h_CollSet->stColliderInfo.ucColliderPriority = 0;
-        p_stObject->h_CollSet->ulFBZddPriviligedZones = 0;
-        p_stObject->h_CollSet->ulFBZdePriviligedZones = 0;
-        p_stObject->h_CollSet->ulFBZdmPriviligedZones = 0;
-        p_stObject->h_CollSet->ulFBZdrPriviligedZones = 0;
-        break;
-    case OTI_ReinitTheMap:
-    case OTI_PlayerDead:
-        p_stObject->h_CollSet->stColliderInfo.ucColliderPriority = 0;
-        p_stObject->h_CollSet->ulFBZddPriviligedZones = 0;
-        p_stObject->h_CollSet->ulFBZdePriviligedZones = 0;
-        p_stObject->h_CollSet->ulFBZdmPriviligedZones = 0;
-        p_stObject->h_CollSet->ulFBZdrPriviligedZones = 0;
-        break;
-    case OTI_AlwaysCreated:
-        break;
-    }
-}
-
-int SAI_fn_bRemoveValueFromTable(void* _p_vValue, int _eFlags);
-
-void fn_vCollSetFree(tdstEngineObject_* p_stObject)
-{
-    if (!p_stObject) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
-    }
-    if (!p_stObject->h_CollSet) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
-    }
-
-    {
-        tdstCollSet_* hCollSet = p_stObject->h_CollSet;
-        SAI_fn_bRemoveValueFromTable(&hCollSet->ucCollisionFlag, 0x13);
-        SAI_fn_bRemoveValueFromTable(&hCollSet->ucCollComputeFrequency, 0x13);
-    }
-}
-
-void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
-
-tdstCollSet_* fn_h_CollSetRealAlloc(void)
-{
-    tdstCollSet_* h_CollSet;
-
-    h_CollSet = (tdstCollSet_*)HMU_fn_p_vMalloc(sizeof(tdstCollSet_), 0);
-
-    h_CollSet->ucCharacterPriority = 0;
-    h_CollSet->hZddList = NULL;
-    h_CollSet->hZdeList = NULL;
-    h_CollSet->hZdmList = NULL;
-    h_CollSet->hZdrList = NULL;
-    h_CollSet->hZddActivationList = NULL;
-    h_CollSet->hZdeActivationList = NULL;
-    h_CollSet->hZdmActivationList = NULL;
-    h_CollSet->hZdrActivationList = NULL;
-
-    h_CollSet->stColliderInfo.ucColliderPriority = 0;
-
-    h_CollSet->ulFBZddPriviligedZones = 0;
-    h_CollSet->ulFBZdePriviligedZones = 0;
-    h_CollSet->ulFBZdmPriviligedZones = 0;
-    h_CollSet->ulFBZdrPriviligedZones = 0;
-    h_CollSet->ucCollComputeFrequency = 1;
-
-    return h_CollSet;
-}
-
-tdstCollSet_* fn_h_CollSetRealAlloc(void);
-int SAI_fn_bInsertCharInTable(void* _p_vValue, int _eFlags);
-
-void fn_vCollSetAlloc(tdstEngineObject_* p_stObject)
-{
-    if (!p_stObject) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
-    }
-    if (p_stObject->h_CollSet) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 13, -1, 255, 255, NULL);
-    }
-
-    p_stObject->h_CollSet = fn_h_CollSetRealAlloc();
-
-    {
-        tdstCollSet_* hCollSet = p_stObject->h_CollSet;
-        SAI_fn_bInsertCharInTable(&hCollSet->ucCollisionFlag, 0x13);
-        SAI_fn_bInsertCharInTable(&hCollSet->ucCollComputeFrequency, 0x13);
-    }
 }

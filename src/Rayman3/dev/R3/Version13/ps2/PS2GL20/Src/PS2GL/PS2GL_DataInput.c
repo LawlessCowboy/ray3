@@ -1612,47 +1612,200 @@ int Bug_Please_ReloadMenu_40;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glAssembleQuads(void)
-{
-    int I;
-    int iQuadCount;
-    float (*pT1_b)[4];
-    float (*pT_b)[4];
-    float (*pC1_b)[4];
-    float (*pC_b)[4];
-    float (*pT1)[4];
-    float (*pT)[4];
-    float (*pC1)[4];
-    float (*pC)[4];
-    float (*pN1)[4];
-    float (*pN)[4];
-    float (*pV1)[4];
-    float (*pV)[4];
-    iQuadCount = g_PS2glContext.iBufCount >> 2;
-    if (g_PS2glContext.pVBuf < g_PS2glContext.pVBuf1) {
-        pV = g_PS2glContext.pVBuf0; pN = g_PS2glContext.pNBuf0; pC = g_PS2glContext.pCBuf0;
-        pT = g_PS2glContext.pTBuf0; pC_b = g_PS2glContext.pCBuf0_b; pT_b = g_PS2glContext.pTBuf0_b;
-    } else {
-        pV = g_PS2glContext.pVBuf1; pN = g_PS2glContext.pNBuf1; pC = g_PS2glContext.pCBuf1;
-        pT = g_PS2glContext.pTBuf1; pC_b = g_PS2glContext.pCBuf1_b; pT_b = g_PS2glContext.pTBuf1_b;
-    }
-    pV1 = pV + iQuadCount * 6; pN1 = pN + iQuadCount * 6; pC1 = pC + iQuadCount * 6;
-    pT1 = pT + iQuadCount * 6; pC1_b = pC_b + iQuadCount * 6; pT1_b = pT_b + iQuadCount * 6;
-    pV += g_PS2glContext.iBufCount; pN += g_PS2glContext.iBufCount; pC += g_PS2glContext.iBufCount;
-    pT += g_PS2glContext.iBufCount; pC_b += g_PS2glContext.iBufCount; pT_b += g_PS2glContext.iBufCount;
-#define COPY6(d, s) *(quad*)&(d)[-1] = *(quad*)&(s)[-1]; *(quad*)&(d)[-2] = *(quad*)&(s)[-2]; *(quad*)&(d)[-4] = *(quad*)&(s)[-1]; *(quad*)&(d)[-3] = *(quad*)&(s)[-3]; *(quad*)&(d)[-5] = *(quad*)&(s)[-3]; *(quad*)&(d)[-6] = *(quad*)&(s)[-4];
-    for (I = 0; I < iQuadCount; I++) {
-        COPY6(pV1, pV)
-        if (g_PS2glContext.nLightBits & 0x400) { COPY6(pN1, pN) } else { COPY6(pC1, pC) }
-        COPY6(pC1_b, pC_b)
-        COPY6(pT1, pT)
-        COPY6(pT1_b, pT_b)
-        pV1 -= 6; pN1 -= 6; pC1 -= 6; pT1 -= 6; pC1_b -= 6; pT1_b -= 6;
-        pV -= 4; pN -= 4; pC -= 4; pT -= 4; pC_b -= 4; pT_b -= 4;
-    }
-#undef COPY6
-    g_PS2glContext.iBufCount = iQuadCount * 6;
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void PS2glAssembleQuads(void);
+void impPS2glGetClipPlane(unsigned int plane, double* equation);
+void impPS2glClipPlane(unsigned int plane, double* equation);
+void impPS2glMultiTexCoord4fvARB(unsigned int texture, float* v);
+void impPS2glMultiTexCoord4dvARB(unsigned int texture, double* v);
+void impPS2glMultiTexCoord4ivARB(unsigned int texture, int* v);
+void impPS2glMultiTexCoord4svARB(unsigned int texture, short* v);
+void impPS2glMultiTexCoord4fARB(unsigned int texture, float s, float t, float r, float q);
+void impPS2glMultiTexCoord4dARB(unsigned int texture, double s, double t, double r, double q);
+void impPS2glMultiTexCoord4iARB(unsigned int texture, int s, int t, int r, int q);
+void impPS2glMultiTexCoord4sARB(unsigned int texture, short s, short t, short r, short q);
+void impPS2glMultiTexCoord3fvARB(unsigned int texture, float* v);
+void impPS2glMultiTexCoord3dvARB(unsigned int texture, double* v);
+void impPS2glMultiTexCoord3ivARB(unsigned int texture, int* v);
+void impPS2glMultiTexCoord3svARB(unsigned int texture, short* v);
+void impPS2glMultiTexCoord3fARB(unsigned int texture, float s, float t, float r);
+void impPS2glMultiTexCoord3dARB(unsigned int texture, double s, double t, double r);
+void impPS2glMultiTexCoord3iARB(unsigned int texture, int s, int t, int r);
+void impPS2glMultiTexCoord3sARB(unsigned int texture, short s, short t, short r);
+void impPS2glMultiTexCoord2fvARB(unsigned int texture, float* v);
+void impPS2glMultiTexCoord2dvARB(unsigned int texture, double* v);
+void impPS2glMultiTexCoord2ivARB(unsigned int texture, int* v);
+void impPS2glMultiTexCoord2svARB(unsigned int texture, short* v);
+void impPS2glMultiTexCoord2fARB(unsigned int texture, float s, float t);
+void impPS2glMultiTexCoord2dARB(unsigned int texture, double s, double t);
+void impPS2glMultiTexCoord2iARB(unsigned int texture, int s, int t);
+void impPS2glMultiTexCoord2sARB(unsigned int texture, short s, short t);
+void impPS2glMultiTexCoord1fvARB(unsigned int texture, float* v);
+void impPS2glMultiTexCoord1dvARB(unsigned int texture, double* v);
+void impPS2glMultiTexCoord1ivARB(unsigned int texture, int* v);
+void impPS2glMultiTexCoord1svARB(unsigned int texture, short* v);
+void impPS2glMultiTexCoord1fARB(unsigned int texture, float s);
+void impPS2glMultiTexCoord1dARB(unsigned int texture, double s);
+void impPS2glMultiTexCoord1iARB(unsigned int texture, int s);
+void impPS2glMultiTexCoord1sARB(unsigned int texture, short s);
+void impPS2glTexCoord4fv(float* v);
+void impPS2glTexCoord4dv(double* v);
+void impPS2glTexCoord4iv(int* v);
+void impPS2glTexCoord4sv(short* v);
+void impPS2glTexCoord4f(float s, float t, float r, float q);
+void impPS2glTexCoord4d(double s, double t, double r, double q);
+void impPS2glTexCoord4i(int s, int t, int r, int q);
+void impPS2glTexCoord4s(short s, short t, short r, short q);
+void impPS2glTexCoord3fv(float* v);
+void impPS2glTexCoord3dv(double* v);
+void impPS2glTexCoord3iv(int* v);
+void impPS2glTexCoord3sv(short* v);
+void impPS2glTexCoord3f(float s, float t, float r);
+void impPS2glTexCoord3d(double s, double t, double r);
+void impPS2glTexCoord3i(int s, int t, int r);
+void impPS2glTexCoord3s(short s, short t, short r);
+void impPS2glTexCoord2fv(float* v);
+void impPS2glTexCoord2dv(double* v);
+void impPS2glTexCoord2iv(int* v);
+void impPS2glTexCoord2sv(short* v);
+void impPS2glTexCoord2f(float s, float t);
+void impPS2glTexCoord2d(double s, double t);
+void impPS2glTexCoord2i(int s, int t);
+void impPS2glTexCoord2s(short s, short t);
+void impPS2glTexCoord1fv(float* v);
+void impPS2glTexCoord1dv(double* v);
+void impPS2glTexCoord1iv(int* v);
+void impPS2glTexCoord1sv(short* v);
+void impPS2glTexCoord1f(float s);
+void impPS2glTexCoord1d(double s);
+void impPS2glTexCoord1i(int s);
+void impPS2glTexCoord1s(short s);
+void impPS2glLightiv(unsigned int light, unsigned int pname, int* params);
+void impPS2glLightfv(unsigned int light, unsigned int pname, float* params);
+void impPS2glLighti(unsigned int light, unsigned int pname, int param);
+void impPS2glLightf(unsigned int light, unsigned int pname, float param);
+void impPS2glLightModeliv(unsigned int pname, int* params);
+void impPS2glLightModeli(unsigned int pname, int param);
+void impPS2glLightModelfv(unsigned int pname, float* params);
+void impPS2glLightModelf(unsigned int pname, float param);
+void impPS2glMaterialiv(unsigned int face, unsigned int pname, int* params);
+void impPS2glMaterialfv(unsigned int face, unsigned int pname, float* params);
+void impPS2glMateriali(unsigned int face, unsigned int pname, int param);
+void impPS2glMaterialf(unsigned int face, unsigned int pname, float param);
+void impPS2glColorMaterial(unsigned int face, unsigned int mode);
+void impPS2glRects(short x1, short y1, short x2, short y2);
+void impPS2glRecti(int x1, int y1, int x2, int y2);
+void impPS2glRectf(float x1, float y1, float x2, float y2);
+void impPS2glRectd(double x1, double y1, double x2, double y2);
+void impPS2glRectsv(short* v1, short* v2);
+void impPS2glRectiv(int* v1, int* v2);
+void impPS2glRectfv(float* v1, float* v2);
+void impPS2glRectdv(double* v1, double* v2);
+void impPS2glVertex4sv(short* v);
+void impPS2glVertex4iv(int* v);
+void impPS2glVertex4fv(float* v);
+void impPS2glVertex4dv(double* v);
+void impPS2glVertex3sv(short* v);
+void impPS2glVertex3iv(int* v);
+void impPS2glVertex3fv(float* v);
+void impPS2glVertex3dv(double* v);
+void impPS2glVertex2sv(short* v);
+void impPS2glVertex2iv(int* v);
+void impPS2glVertex2fv(float* v);
+void impPS2glVertex2dv(double* v);
+void impPS2glVertex4s(short x, short y, short z, short w);
+void impPS2glVertex4i(int x, int y, int z, int w);
+void impPS2glVertex4d(double X, double Y, double Z, double W);
+void impPS2glVertex4f(float x, float y, float z, float w);
+void impPS2glVertex3s(short x, short y, short z);
+void impPS2glVertex3i(int x, int y, int z);
+void impPS2glVertex3f(float x, float y, float z);
+void impPS2glVertex3d(double x, double y, double z);
+void impPS2glVertex2s(short x, short y);
+void impPS2glVertex2i(int x, int y);
+void impPS2glVertex2f(float x, float y);
+void impPS2glVertex2d(double x, double y);
+void impPS2glNormal3fv(float* v);
+void impPS2glNormal3dv(double* v);
+void impPS2glNormal3iv(int* v);
+void impPS2glNormal3sv(short* v);
+void impPS2glNormal3bv(signed char* v);
+void impPS2glNormal3f(float nx, float ny, float nz);
+void impPS2glNormal3d(double nx, double ny, double nz);
+void impPS2glNormal3i(int nx, int ny, int nz);
+void impPS2glNormal3s(short nx, short ny, short nz);
+void impPS2glNormal3b(signed char nx, signed char ny, signed char nz);
+void impPS2glMultiColor4usvARB(unsigned int texture, unsigned short* v);
+void impPS2glMultiColor4uivARB(unsigned int texture, unsigned int* v);
+void impPS2glMultiColor4ubvARB(unsigned int texture, unsigned char* v);
+void impPS2glMultiColor4svARB(unsigned int texture, short* v);
+void impPS2glMultiColor4ivARB(unsigned int texture, int* v);
+void impPS2glMultiColor4fvARB(unsigned int texture, float* v);
+void impPS2glMultiColor4dvARB(unsigned int texture, double* v);
+void impPS2glMultiColor4bvARB(unsigned int texture, signed char* v);
+void impPS2glMultiColor3usvARB(unsigned int texture, unsigned short* v);
+void impPS2glMultiColor3uivARB(unsigned int texture, unsigned int* v);
+void impPS2glMultiColor3ubvARB(unsigned int texture, unsigned char* v);
+void impPS2glMultiColor3svARB(unsigned int texture, short* v);
+void impPS2glMultiColor3ivARB(unsigned int texture, int* v);
+void impPS2glMultiColor3fvARB(unsigned int texture, float* v);
+void impPS2glMultiColor3dvARB(unsigned int texture, double* v);
+void impPS2glMultiColor3bvARB(unsigned int texture, signed char* v);
+void impPS2glMultiColor4usARB(unsigned int texture, unsigned short red, unsigned short green, unsigned short blue, unsigned short alpha);
+void impPS2glMultiColor4uiARB(unsigned int texture, unsigned int red, unsigned int green, unsigned int blue, unsigned int alpha);
+void impPS2glMultiColor4ubARB(unsigned int texture, unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha);
+void impPS2glMultiColor4sARB(unsigned int texture, short red, short green, short blue, short alpha);
+void impPS2glMultiColor4iARB(unsigned int texture, int red, int green, int blue, int alpha);
+void impPS2glMultiColor4dARB(unsigned int texture, double R, double G, double B, double A);
+void impPS2glMultiColor4fARB(unsigned int texture, float red, float green, float blue, float alpha);
+void impPS2glMultiColor4bARB(unsigned int texture, signed char red, signed char green, signed char blue, signed char alpha);
+void impPS2glMultiColor3usARB(unsigned int texture, unsigned short red, unsigned short green, unsigned short blue);
+void impPS2glMultiColor3uiARB(unsigned int texture, unsigned int red, unsigned int green, unsigned int blue);
+void impPS2glMultiColor3ubARB(unsigned int texture, unsigned char red, unsigned char green, unsigned char blue);
+void impPS2glMultiColor3sARB(unsigned int texture, short red, short green, short blue);
+void impPS2glMultiColor3iARB(unsigned int texture, int red, int green, int blue);
+void impPS2glMultiColor3fARB(unsigned int texture, float red, float green, float blue);
+void impPS2glMultiColor3dARB(unsigned int texture, double red, double green, double blue);
+void impPS2glMultiColor3bARB(unsigned int texture, signed char red, signed char green, signed char blue);
+void impPS2glColor4usv(unsigned short* v);
+void impPS2glColor4uiv(unsigned int* v);
+void impPS2glColor4ubv(unsigned char* v);
+void impPS2glColor4sv(short* v);
+void impPS2glColor4iv(int* v);
+void impPS2glColor4fv(float* v);
+void impPS2glColor4dv(double* v);
+void impPS2glColor4bv(signed char* v);
+void impPS2glColor3usv(unsigned short* v);
+void impPS2glColor3uiv(unsigned int* v);
+void impPS2glColor3ubv(unsigned char* v);
+void impPS2glColor3sv(short* v);
+void impPS2glColor3iv(int* v);
+void impPS2glColor3fv(float* v);
+void impPS2glColor3dv(double* v);
+void impPS2glColor3bv(signed char* v);
+void impPS2glColor4us(unsigned short red, unsigned short green, unsigned short blue, unsigned short alpha);
+void impPS2glColor4ui(unsigned int red, unsigned int green, unsigned int blue, unsigned int alpha);
+void impPS2glColor4ub(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha);
+void impPS2glColor4s(short red, short green, short blue, short alpha);
+void impPS2glColor4i(int red, int green, int blue, int alpha);
+void impPS2glColor4d(double R, double G, double B, double A);
+void impPS2glColor4f(float red, float green, float blue, float alpha);
+void impPS2glColor4b(signed char red, signed char green, signed char blue, signed char alpha);
+void impPS2glColor3us(unsigned short red, unsigned short green, unsigned short blue);
+void impPS2glColor3ui(unsigned int red, unsigned int green, unsigned int blue);
+void impPS2glColor3ub(unsigned char red, unsigned char green, unsigned char blue);
+void impPS2glColor3s(short red, short green, short blue);
+void impPS2glColor3i(int red, int green, int blue);
+void impPS2glColor3f(float red, float green, float blue);
+void impPS2glColor3d(double red, double green, double blue);
+void impPS2glColor3b(signed char red, signed char green, signed char blue);
+void impPS2glEnd(void);
+void impPS2glBegin(unsigned int mode);
+void impPS2glFinish(void);
+void impPS2glFlush(void);
+int PS2glGsSyncPath(void);
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1796–1800 */
 /* addr: 0x00143c30  size: 80 bytes */
@@ -1664,12 +1817,6 @@ void PS2glAssembleQuads(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glGetClipPlane(unsigned int plane, double* equation)
-{
-    if ((plane < 0x3000) || (plane >= 0x3000 + g_PS2glContext.iMaxClipPlanes))
-        return;
-    *(quad*)equation = *(quad*)g_PS2glContext.avClipPlane[plane - 0x3000];
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1787–1791 */
 /* addr: 0x00143c80  size: 80 bytes */
@@ -1681,12 +1828,6 @@ void impPS2glGetClipPlane(unsigned int plane, double* equation)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glClipPlane(unsigned int plane, double* equation)
-{
-    if ((plane < 0x3000) || (plane >= 0x3000 + g_PS2glContext.iMaxClipPlanes))
-        return;
-    *(quad*)g_PS2glContext.avClipPlane[plane - 0x3000] = *(quad*)equation;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1780–1781 */
 /* addr: 0x00143cd0  size: 20 bytes */
@@ -1696,10 +1837,6 @@ void impPS2glClipPlane(unsigned int plane, double* equation)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiTexCoord4fvARB(unsigned int texture, float* v)
-{
-    *(quad*)g_PS2glContext.pvcurTextCoord = *(quad*)v;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1774–1776 */
 /* addr: 0x00143cf0  size: 180 bytes */
@@ -1710,11 +1847,6 @@ void impPS2glMultiTexCoord4fvARB(unsigned int texture, float* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiTexCoord4dvARB(unsigned int texture, double* v)
-{
-    float s, t, r, q;
-    q = (float)v[3]; r = (float)v[2]; t = (float)v[1]; s = (float)v[0]; g_PS2glContext.vacurTexCoords[texture][0] = s; g_PS2glContext.vacurTexCoords[texture][1] = t; g_PS2glContext.vacurTexCoords[texture][2] = r; g_PS2glContext.vacurTexCoords[texture][3] = q;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1769–1771 */
 /* addr: 0x00143db0  size: 128 bytes */
@@ -1724,11 +1856,6 @@ void impPS2glMultiTexCoord4dvARB(unsigned int texture, double* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiTexCoord4ivARB(unsigned int texture, int* v)
-{
-    float s, t, r, q;
-    q = (float)v[3] / 2147483648.0f; r = (float)v[2] / 2147483648.0f; t = (float)v[1] / 2147483648.0f; s = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurTexCoords[texture][0] = s; g_PS2glContext.vacurTexCoords[texture][1] = t; g_PS2glContext.vacurTexCoords[texture][2] = r; g_PS2glContext.vacurTexCoords[texture][3] = q;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1763–1765 */
 /* addr: 0x00143e30  size: 152 bytes */
@@ -1738,11 +1865,6 @@ void impPS2glMultiTexCoord4ivARB(unsigned int texture, int* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiTexCoord4svARB(unsigned int texture, short* v)
-{
-    float s, t, r, q;
-    q = (float)v[3] / 32767.0f; r = (float)v[2] / 32767.0f; t = (float)v[1] / 32767.0f; s = (float)v[0] / 32767.0f; g_PS2glContext.vacurTexCoords[texture][0] = s; g_PS2glContext.vacurTexCoords[texture][1] = t; g_PS2glContext.vacurTexCoords[texture][2] = r; g_PS2glContext.vacurTexCoords[texture][3] = q;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1755–1759 */
 /* addr: 0x00143ed0  size: 72 bytes */
@@ -1763,13 +1885,6 @@ void impPS2glMultiTexCoord4svARB(unsigned int texture, short* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiTexCoord4fARB(unsigned int texture, float s, float t, float r, float q)
-{
-    g_PS2glContext.vacurTexCoords[texture][0] = s;
-    g_PS2glContext.vacurTexCoords[texture][1] = t;
-    g_PS2glContext.vacurTexCoords[texture][2] = r;
-    g_PS2glContext.vacurTexCoords[texture][3] = q;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1749–1751 */
 /* addr: 0x00143f20  size: 168 bytes */
@@ -1780,10 +1895,6 @@ void impPS2glMultiTexCoord4fARB(unsigned int texture, float s, float t, float r,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiTexCoord4dARB(unsigned int texture, double s, double t, double r, double q)
-{
-    g_PS2glContext.vacurTexCoords[texture][0] = (float)s; g_PS2glContext.vacurTexCoords[texture][1] = (float)t; g_PS2glContext.vacurTexCoords[texture][2] = (float)r; g_PS2glContext.vacurTexCoords[texture][3] = (float)q;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1744–1746 */
 /* addr: 0x00143fd0  size: 136 bytes */
@@ -1793,10 +1904,6 @@ void impPS2glMultiTexCoord4dARB(unsigned int texture, double s, double t, double
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiTexCoord4iARB(unsigned int texture, int s, int t, int r, int q)
-{
-    g_PS2glContext.vacurTexCoords[texture][0] = (float)s / 2147483648.0f; g_PS2glContext.vacurTexCoords[texture][1] = (float)t / 2147483648.0f; g_PS2glContext.vacurTexCoords[texture][2] = (float)r / 2147483648.0f; g_PS2glContext.vacurTexCoords[texture][3] = (float)q / 2147483648.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1738–1740 */
 /* addr: 0x00144060  size: 136 bytes */
@@ -1806,10 +1913,6 @@ void impPS2glMultiTexCoord4iARB(unsigned int texture, int s, int t, int r, int q
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiTexCoord4sARB(unsigned int texture, short s, short t, short r, short q)
-{
-    g_PS2glContext.vacurTexCoords[texture][0] = (float)s / 32767.0f; g_PS2glContext.vacurTexCoords[texture][1] = (float)t / 32767.0f; g_PS2glContext.vacurTexCoords[texture][2] = (float)r / 32767.0f; g_PS2glContext.vacurTexCoords[texture][3] = (float)q / 32767.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1732–1733 */
 /* addr: 0x001440f0  size: 68 bytes */
@@ -1819,11 +1922,6 @@ void impPS2glMultiTexCoord4sARB(unsigned int texture, short s, short t, short r,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiTexCoord3fvARB(unsigned int texture, float* v)
-{
-    float s, t, r;
-    r = v[2]; t = v[1]; s = v[0]; g_PS2glContext.vacurTexCoords[texture][0] = s; g_PS2glContext.vacurTexCoords[texture][1] = t; g_PS2glContext.vacurTexCoords[texture][2] = r;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1726–1728 */
 /* addr: 0x00144140  size: 144 bytes */
@@ -1834,11 +1932,6 @@ void impPS2glMultiTexCoord3fvARB(unsigned int texture, float* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiTexCoord3dvARB(unsigned int texture, double* v)
-{
-    float s, t, r;
-    r = (float)v[2]; t = (float)v[1]; s = (float)v[0]; g_PS2glContext.vacurTexCoords[texture][0] = s; g_PS2glContext.vacurTexCoords[texture][1] = t; g_PS2glContext.vacurTexCoords[texture][2] = r;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1722–1723 */
 /* addr: 0x001441d0  size: 100 bytes */
@@ -1848,11 +1941,6 @@ void impPS2glMultiTexCoord3dvARB(unsigned int texture, double* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiTexCoord3ivARB(unsigned int texture, int* v)
-{
-    float s, t, r;
-    r = (float)v[2] / 2147483648.0f; t = (float)v[1] / 2147483648.0f; s = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurTexCoords[texture][0] = s; g_PS2glContext.vacurTexCoords[texture][1] = t; g_PS2glContext.vacurTexCoords[texture][2] = r;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1717–1718 */
 /* addr: 0x00144240  size: 124 bytes */
@@ -1862,11 +1950,6 @@ void impPS2glMultiTexCoord3ivARB(unsigned int texture, int* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiTexCoord3svARB(unsigned int texture, short* v)
-{
-    float s, t, r;
-    r = (float)v[2] / 32767.0f; t = (float)v[1] / 32767.0f; s = (float)v[0] / 32767.0f; g_PS2glContext.vacurTexCoords[texture][0] = s; g_PS2glContext.vacurTexCoords[texture][1] = t; g_PS2glContext.vacurTexCoords[texture][2] = r;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1710–1713 */
 /* addr: 0x001442c0  size: 56 bytes */
@@ -1886,12 +1969,6 @@ void impPS2glMultiTexCoord3svARB(unsigned int texture, short* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiTexCoord3fARB(unsigned int texture, float s, float t, float r)
-{
-    g_PS2glContext.vacurTexCoords[texture][0] = s;
-    g_PS2glContext.vacurTexCoords[texture][1] = t;
-    g_PS2glContext.vacurTexCoords[texture][2] = r;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1704–1706 */
 /* addr: 0x00144300  size: 132 bytes */
@@ -1902,10 +1979,6 @@ void impPS2glMultiTexCoord3fARB(unsigned int texture, float s, float t, float r)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiTexCoord3dARB(unsigned int texture, double s, double t, double r)
-{
-    g_PS2glContext.vacurTexCoords[texture][0] = (float)s; g_PS2glContext.vacurTexCoords[texture][1] = (float)t; g_PS2glContext.vacurTexCoords[texture][2] = (float)r;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1700–1701 */
 /* addr: 0x00144390  size: 104 bytes */
@@ -1915,10 +1988,6 @@ void impPS2glMultiTexCoord3dARB(unsigned int texture, double s, double t, double
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiTexCoord3iARB(unsigned int texture, int s, int t, int r)
-{
-    g_PS2glContext.vacurTexCoords[texture][0] = (float)s / 2147483648.0f; g_PS2glContext.vacurTexCoords[texture][1] = (float)t / 2147483648.0f; g_PS2glContext.vacurTexCoords[texture][2] = (float)r / 2147483648.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1695–1696 */
 /* addr: 0x00144400  size: 108 bytes */
@@ -1928,10 +1997,6 @@ void impPS2glMultiTexCoord3iARB(unsigned int texture, int s, int t, int r)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiTexCoord3sARB(unsigned int texture, short s, short t, short r)
-{
-    g_PS2glContext.vacurTexCoords[texture][0] = (float)s / 32767.0f; g_PS2glContext.vacurTexCoords[texture][1] = (float)t / 32767.0f; g_PS2glContext.vacurTexCoords[texture][2] = (float)r / 32767.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1689–1690 */
 /* addr: 0x00144470  size: 48 bytes */
@@ -1941,10 +2006,6 @@ void impPS2glMultiTexCoord3sARB(unsigned int texture, short s, short t, short r)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiTexCoord2fvARB(unsigned int texture, float* v)
-{
-    float t = v[1], s = v[0]; g_PS2glContext.vacurTexCoords[texture][0] = s; g_PS2glContext.vacurTexCoords[texture][1] = t;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1683–1685 */
 /* addr: 0x001444a0  size: 108 bytes */
@@ -1955,11 +2016,6 @@ void impPS2glMultiTexCoord2fvARB(unsigned int texture, float* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiTexCoord2dvARB(unsigned int texture, double* v)
-{
-    float s, t;
-    t = (float)v[1]; s = (float)v[0]; g_PS2glContext.vacurTexCoords[texture][0] = s; g_PS2glContext.vacurTexCoords[texture][1] = t;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1679–1680 */
 /* addr: 0x00144510  size: 72 bytes */
@@ -1969,11 +2025,6 @@ void impPS2glMultiTexCoord2dvARB(unsigned int texture, double* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiTexCoord2ivARB(unsigned int texture, int* v)
-{
-    float s, t;
-    t = (float)v[1] / 2147483648.0f; s = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurTexCoords[texture][0] = s; g_PS2glContext.vacurTexCoords[texture][1] = t;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1674–1675 */
 /* addr: 0x00144560  size: 88 bytes */
@@ -1983,11 +2034,6 @@ void impPS2glMultiTexCoord2ivARB(unsigned int texture, int* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiTexCoord2svARB(unsigned int texture, short* v)
-{
-    float s, t;
-    t = (float)v[1] / 32767.0f; s = (float)v[0] / 32767.0f; g_PS2glContext.vacurTexCoords[texture][0] = s; g_PS2glContext.vacurTexCoords[texture][1] = t;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1668–1670 */
 /* addr: 0x001445c0  size: 40 bytes */
@@ -2003,11 +2049,6 @@ void impPS2glMultiTexCoord2svARB(unsigned int texture, short* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiTexCoord2fARB(unsigned int texture, float s, float t)
-{
-    g_PS2glContext.vacurTexCoords[texture][0] = s;
-    g_PS2glContext.vacurTexCoords[texture][1] = t;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1662–1664 */
 /* addr: 0x001445f0  size: 96 bytes */
@@ -2018,10 +2059,6 @@ void impPS2glMultiTexCoord2fARB(unsigned int texture, float s, float t)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiTexCoord2dARB(unsigned int texture, double s, double t)
-{
-    g_PS2glContext.vacurTexCoords[texture][0] = (float)s; g_PS2glContext.vacurTexCoords[texture][1] = (float)t;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1658–1659 */
 /* addr: 0x00144650  size: 76 bytes */
@@ -2031,10 +2068,6 @@ void impPS2glMultiTexCoord2dARB(unsigned int texture, double s, double t)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiTexCoord2iARB(unsigned int texture, int s, int t)
-{
-    g_PS2glContext.vacurTexCoords[texture][0] = (float)s / 2147483648.0f; g_PS2glContext.vacurTexCoords[texture][1] = (float)t / 2147483648.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1653–1654 */
 /* addr: 0x001446a0  size: 76 bytes */
@@ -2044,10 +2077,6 @@ void impPS2glMultiTexCoord2iARB(unsigned int texture, int s, int t)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiTexCoord2sARB(unsigned int texture, short s, short t)
-{
-    g_PS2glContext.vacurTexCoords[texture][0] = (float)s / 32767.0f; g_PS2glContext.vacurTexCoords[texture][1] = (float)t / 32767.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1647–1648 */
 /* addr: 0x001446f0  size: 44 bytes */
@@ -2057,10 +2086,6 @@ void impPS2glMultiTexCoord2sARB(unsigned int texture, short s, short t)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiTexCoord1fvARB(unsigned int texture, float* v)
-{
-    g_PS2glContext.vacurTexCoords[texture][0] = v[0]; g_PS2glContext.vacurTexCoords[texture][1] = 0.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1641–1643 */
 /* addr: 0x00144720  size: 76 bytes */
@@ -2071,10 +2096,6 @@ void impPS2glMultiTexCoord1fvARB(unsigned int texture, float* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiTexCoord1dvARB(unsigned int texture, double* v)
-{
-    g_PS2glContext.vacurTexCoords[texture][0] = (float)v[0]; g_PS2glContext.vacurTexCoords[texture][1] = 0.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1637–1638 */
 /* addr: 0x00144770  size: 60 bytes */
@@ -2084,10 +2105,6 @@ void impPS2glMultiTexCoord1dvARB(unsigned int texture, double* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiTexCoord1ivARB(unsigned int texture, int* v)
-{
-    g_PS2glContext.vacurTexCoords[texture][0] = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurTexCoords[texture][1] = 0.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1632–1633 */
 /* addr: 0x001447b0  size: 68 bytes */
@@ -2097,10 +2114,6 @@ void impPS2glMultiTexCoord1ivARB(unsigned int texture, int* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiTexCoord1svARB(unsigned int texture, short* v)
-{
-    g_PS2glContext.vacurTexCoords[texture][0] = (float)v[0] / 32767.0f; g_PS2glContext.vacurTexCoords[texture][1] = 0.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1626–1628 */
 /* addr: 0x00144800  size: 40 bytes */
@@ -2116,11 +2129,6 @@ void impPS2glMultiTexCoord1svARB(unsigned int texture, short* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiTexCoord1fARB(unsigned int texture, float s)
-{
-    g_PS2glContext.vacurTexCoords[texture][0] = s;
-    g_PS2glContext.vacurTexCoords[texture][1] = 0.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1620–1622 */
 /* addr: 0x00144830  size: 76 bytes */
@@ -2131,10 +2139,6 @@ void impPS2glMultiTexCoord1fARB(unsigned int texture, float s)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiTexCoord1dARB(unsigned int texture, double s)
-{
-    g_PS2glContext.vacurTexCoords[texture][0] = (float)s; g_PS2glContext.vacurTexCoords[texture][1] = 0.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1616–1617 */
 /* addr: 0x00144880  size: 60 bytes */
@@ -2144,10 +2148,6 @@ void impPS2glMultiTexCoord1dARB(unsigned int texture, double s)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiTexCoord1iARB(unsigned int texture, int s)
-{
-    g_PS2glContext.vacurTexCoords[texture][0] = (float)s / 2147483648.0f; g_PS2glContext.vacurTexCoords[texture][1] = 0.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1611–1612 */
 /* addr: 0x001448c0  size: 64 bytes */
@@ -2157,10 +2157,6 @@ void impPS2glMultiTexCoord1iARB(unsigned int texture, int s)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiTexCoord1sARB(unsigned int texture, short s)
-{
-    g_PS2glContext.vacurTexCoords[texture][0] = (float)s / 32767.0f; g_PS2glContext.vacurTexCoords[texture][1] = 0.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1605–1606 */
 /* addr: 0x00144900  size: 20 bytes */
@@ -2170,10 +2166,6 @@ void impPS2glMultiTexCoord1sARB(unsigned int texture, short s)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexCoord4fv(float* v)
-{
-    *(quad*)g_PS2glContext.pvcurTextCoord = *(quad*)v;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1599–1601 */
 /* addr: 0x00144920  size: 132 bytes */
@@ -2184,11 +2176,6 @@ void impPS2glTexCoord4fv(float* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexCoord4dv(double* v)
-{
-    float s, t, r, q;
-    q = (float)v[3]; r = (float)v[2]; t = (float)v[1]; s = (float)v[0]; g_PS2glContext.vacurTexCoords[0][0] = s; g_PS2glContext.vacurTexCoords[0][1] = t; g_PS2glContext.vacurTexCoords[0][2] = r; g_PS2glContext.vacurTexCoords[0][3] = q;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1594–1596 */
 /* addr: 0x001449b0  size: 92 bytes */
@@ -2198,11 +2185,6 @@ void impPS2glTexCoord4dv(double* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexCoord4iv(int* v)
-{
-    float s, t, r, q;
-    q = (float)v[3] / 2147483648.0f; r = (float)v[2] / 2147483648.0f; t = (float)v[1] / 2147483648.0f; s = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurTexCoords[0][0] = s; g_PS2glContext.vacurTexCoords[0][1] = t; g_PS2glContext.vacurTexCoords[0][2] = r; g_PS2glContext.vacurTexCoords[0][3] = q;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1588–1590 */
 /* addr: 0x00144a10  size: 116 bytes */
@@ -2212,11 +2194,6 @@ void impPS2glTexCoord4iv(int* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexCoord4sv(short* v)
-{
-    float s, t, r, q;
-    q = (float)v[3] / 32767.0f; r = (float)v[2] / 32767.0f; t = (float)v[1] / 32767.0f; s = (float)v[0] / 32767.0f; g_PS2glContext.vacurTexCoords[0][0] = s; g_PS2glContext.vacurTexCoords[0][1] = t; g_PS2glContext.vacurTexCoords[0][2] = r; g_PS2glContext.vacurTexCoords[0][3] = q;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1567–1584 */
 /* addr: 0x00144a90  size: 36 bytes */
@@ -2229,13 +2206,6 @@ void impPS2glTexCoord4sv(short* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexCoord4f(float s, float t, float r, float q)
-{
-    g_PS2glContext.vacurTexCoords[0][0] = s;
-    g_PS2glContext.vacurTexCoords[0][1] = t;
-    g_PS2glContext.vacurTexCoords[0][2] = r;
-    g_PS2glContext.vacurTexCoords[0][3] = q;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1559–1561 */
 /* addr: 0x00144ac0  size: 116 bytes */
@@ -2246,10 +2216,6 @@ void impPS2glTexCoord4f(float s, float t, float r, float q)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexCoord4d(double s, double t, double r, double q)
-{
-    g_PS2glContext.vacurTexCoords[0][0] = (float)s; g_PS2glContext.vacurTexCoords[0][1] = (float)t; g_PS2glContext.vacurTexCoords[0][2] = (float)r; g_PS2glContext.vacurTexCoords[0][3] = (float)q;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1554–1556 */
 /* addr: 0x00144b40  size: 92 bytes */
@@ -2259,10 +2225,6 @@ void impPS2glTexCoord4d(double s, double t, double r, double q)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexCoord4i(int s, int t, int r, int q)
-{
-    g_PS2glContext.vacurTexCoords[0][0] = (float)s / 2147483648.0f; g_PS2glContext.vacurTexCoords[0][1] = (float)t / 2147483648.0f; g_PS2glContext.vacurTexCoords[0][2] = (float)r / 2147483648.0f; g_PS2glContext.vacurTexCoords[0][3] = (float)q / 2147483648.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1548–1550 */
 /* addr: 0x00144ba0  size: 100 bytes */
@@ -2272,10 +2234,6 @@ void impPS2glTexCoord4i(int s, int t, int r, int q)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexCoord4s(short s, short t, short r, short q)
-{
-    g_PS2glContext.vacurTexCoords[0][0] = (float)s / 32767.0f; g_PS2glContext.vacurTexCoords[0][1] = (float)t / 32767.0f; g_PS2glContext.vacurTexCoords[0][2] = (float)r / 32767.0f; g_PS2glContext.vacurTexCoords[0][3] = (float)q / 32767.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1542–1543 */
 /* addr: 0x00144c10  size: 40 bytes */
@@ -2285,11 +2243,6 @@ void impPS2glTexCoord4s(short s, short t, short r, short q)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexCoord3fv(float* v)
-{
-    float s, t, r;
-    r = v[2]; t = v[1]; s = v[0]; g_PS2glContext.vacurTexCoords[0][0] = s; g_PS2glContext.vacurTexCoords[0][1] = t; g_PS2glContext.vacurTexCoords[0][2] = r;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1536–1538 */
 /* addr: 0x00144c40  size: 104 bytes */
@@ -2300,11 +2253,6 @@ void impPS2glTexCoord3fv(float* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexCoord3dv(double* v)
-{
-    float s, t, r;
-    r = (float)v[2]; t = (float)v[1]; s = (float)v[0]; g_PS2glContext.vacurTexCoords[0][0] = s; g_PS2glContext.vacurTexCoords[0][1] = t; g_PS2glContext.vacurTexCoords[0][2] = r;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1532–1533 */
 /* addr: 0x00144cb0  size: 76 bytes */
@@ -2314,11 +2262,6 @@ void impPS2glTexCoord3dv(double* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexCoord3iv(int* v)
-{
-    float s, t, r;
-    r = (float)v[2] / 2147483648.0f; t = (float)v[1] / 2147483648.0f; s = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurTexCoords[0][0] = s; g_PS2glContext.vacurTexCoords[0][1] = t; g_PS2glContext.vacurTexCoords[0][2] = r;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1527–1528 */
 /* addr: 0x00144d00  size: 92 bytes */
@@ -2328,11 +2271,6 @@ void impPS2glTexCoord3iv(int* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexCoord3sv(short* v)
-{
-    float s, t, r;
-    r = (float)v[2] / 32767.0f; t = (float)v[1] / 32767.0f; s = (float)v[0] / 32767.0f; g_PS2glContext.vacurTexCoords[0][0] = s; g_PS2glContext.vacurTexCoords[0][1] = t; g_PS2glContext.vacurTexCoords[0][2] = r;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1509–1523 */
 /* addr: 0x00144d60  size: 28 bytes */
@@ -2344,12 +2282,6 @@ void impPS2glTexCoord3sv(short* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexCoord3f(float s, float t, float r)
-{
-    g_PS2glContext.vacurTexCoords[0][0] = s;
-    g_PS2glContext.vacurTexCoords[0][1] = t;
-    g_PS2glContext.vacurTexCoords[0][2] = r;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1501–1503 */
 /* addr: 0x00144d80  size: 88 bytes */
@@ -2360,10 +2292,6 @@ void impPS2glTexCoord3f(float s, float t, float r)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexCoord3d(double s, double t, double r)
-{
-    g_PS2glContext.vacurTexCoords[0][0] = (float)s; g_PS2glContext.vacurTexCoords[0][1] = (float)t; g_PS2glContext.vacurTexCoords[0][2] = (float)r;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1497–1498 */
 /* addr: 0x00144de0  size: 72 bytes */
@@ -2373,10 +2301,6 @@ void impPS2glTexCoord3d(double s, double t, double r)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexCoord3i(int s, int t, int r)
-{
-    g_PS2glContext.vacurTexCoords[0][0] = (float)s / 2147483648.0f; g_PS2glContext.vacurTexCoords[0][1] = (float)t / 2147483648.0f; g_PS2glContext.vacurTexCoords[0][2] = (float)r / 2147483648.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1492–1493 */
 /* addr: 0x00144e30  size: 80 bytes */
@@ -2386,10 +2310,6 @@ void impPS2glTexCoord3i(int s, int t, int r)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexCoord3s(short s, short t, short r)
-{
-    g_PS2glContext.vacurTexCoords[0][0] = (float)s / 32767.0f; g_PS2glContext.vacurTexCoords[0][1] = (float)t / 32767.0f; g_PS2glContext.vacurTexCoords[0][2] = (float)r / 32767.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1486–1487 */
 /* addr: 0x00144e80  size: 28 bytes */
@@ -2399,10 +2319,6 @@ void impPS2glTexCoord3s(short s, short t, short r)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexCoord2fv(float* v)
-{
-    float t = v[1], s = v[0]; g_PS2glContext.vacurTexCoords[0][0] = s; g_PS2glContext.vacurTexCoords[0][1] = t;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1480–1482 */
 /* addr: 0x00144ea0  size: 76 bytes */
@@ -2413,11 +2329,6 @@ void impPS2glTexCoord2fv(float* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexCoord2dv(double* v)
-{
-    float s, t;
-    t = (float)v[1]; s = (float)v[0]; g_PS2glContext.vacurTexCoords[0][0] = s; g_PS2glContext.vacurTexCoords[0][1] = t;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1476–1477 */
 /* addr: 0x00144ef0  size: 52 bytes */
@@ -2427,11 +2338,6 @@ void impPS2glTexCoord2dv(double* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexCoord2iv(int* v)
-{
-    float s, t;
-    t = (float)v[1] / 2147483648.0f; s = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurTexCoords[0][0] = s; g_PS2glContext.vacurTexCoords[0][1] = t;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1471–1472 */
 /* addr: 0x00144f30  size: 64 bytes */
@@ -2441,11 +2347,6 @@ void impPS2glTexCoord2iv(int* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexCoord2sv(short* v)
-{
-    float s, t;
-    t = (float)v[1] / 32767.0f; s = (float)v[0] / 32767.0f; g_PS2glContext.vacurTexCoords[0][0] = s; g_PS2glContext.vacurTexCoords[0][1] = t;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1456–1467 */
 /* addr: 0x00144f70  size: 20 bytes */
@@ -2456,11 +2357,6 @@ void impPS2glTexCoord2sv(short* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexCoord2f(float s, float t)
-{
-    g_PS2glContext.vacurTexCoords[0][0] = s;
-    g_PS2glContext.vacurTexCoords[0][1] = t;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1448–1450 */
 /* addr: 0x00144f90  size: 60 bytes */
@@ -2471,10 +2367,6 @@ void impPS2glTexCoord2f(float s, float t)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexCoord2d(double s, double t)
-{
-    g_PS2glContext.vacurTexCoords[0][0] = (float)s; g_PS2glContext.vacurTexCoords[0][1] = (float)t;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1444–1445 */
 /* addr: 0x00144fd0  size: 52 bytes */
@@ -2484,10 +2376,6 @@ void impPS2glTexCoord2d(double s, double t)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexCoord2i(int s, int t)
-{
-    g_PS2glContext.vacurTexCoords[0][0] = (float)s / 2147483648.0f; g_PS2glContext.vacurTexCoords[0][1] = (float)t / 2147483648.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1439–1440 */
 /* addr: 0x00145010  size: 60 bytes */
@@ -2497,10 +2385,6 @@ void impPS2glTexCoord2i(int s, int t)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexCoord2s(short s, short t)
-{
-    g_PS2glContext.vacurTexCoords[0][0] = (float)s / 32767.0f; g_PS2glContext.vacurTexCoords[0][1] = (float)t / 32767.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1433–1434 */
 /* addr: 0x00145050  size: 24 bytes */
@@ -2510,10 +2394,6 @@ void impPS2glTexCoord2s(short s, short t)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexCoord1fv(float* v)
-{
-    g_PS2glContext.vacurTexCoords[0][0] = v[0]; g_PS2glContext.vacurTexCoords[0][1] = 0.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1427–1429 */
 /* addr: 0x00145070  size: 44 bytes */
@@ -2524,10 +2404,6 @@ void impPS2glTexCoord1fv(float* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexCoord1dv(double* v)
-{
-    g_PS2glContext.vacurTexCoords[0][0] = (float)v[0]; g_PS2glContext.vacurTexCoords[0][1] = 0.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1423–1424 */
 /* addr: 0x001450a0  size: 44 bytes */
@@ -2537,10 +2413,6 @@ void impPS2glTexCoord1dv(double* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexCoord1iv(int* v)
-{
-    g_PS2glContext.vacurTexCoords[0][0] = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurTexCoords[0][1] = 0.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1418–1419 */
 /* addr: 0x001450d0  size: 48 bytes */
@@ -2550,10 +2422,6 @@ void impPS2glTexCoord1iv(int* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexCoord1sv(short* v)
-{
-    g_PS2glContext.vacurTexCoords[0][0] = (float)v[0] / 32767.0f; g_PS2glContext.vacurTexCoords[0][1] = 0.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1403–1414 */
 /* addr: 0x00145100  size: 20 bytes */
@@ -2564,11 +2432,6 @@ void impPS2glTexCoord1sv(short* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexCoord1f(float s)
-{
-    g_PS2glContext.vacurTexCoords[0][0] = s;
-    g_PS2glContext.vacurTexCoords[0][1] = 0.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1395–1397 */
 /* addr: 0x00145120  size: 44 bytes */
@@ -2579,10 +2442,6 @@ void impPS2glTexCoord1f(float s)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexCoord1d(double s)
-{
-    g_PS2glContext.vacurTexCoords[0][0] = (float)s; g_PS2glContext.vacurTexCoords[0][1] = 0.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1391–1392 */
 /* addr: 0x00145150  size: 44 bytes */
@@ -2592,10 +2451,6 @@ void impPS2glTexCoord1d(double s)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexCoord1i(int s)
-{
-    g_PS2glContext.vacurTexCoords[0][0] = (float)s / 2147483648.0f; g_PS2glContext.vacurTexCoords[0][1] = 0.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1386–1387 */
 /* addr: 0x00145180  size: 48 bytes */
@@ -2605,10 +2460,6 @@ void impPS2glTexCoord1i(int s)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glTexCoord1s(short s)
-{
-    g_PS2glContext.vacurTexCoords[0][0] = (float)s / 32767.0f; g_PS2glContext.vacurTexCoords[0][1] = 0.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1356–1379 */
 /* addr: 0x001451b0  size: 148 bytes */
@@ -2626,27 +2477,6 @@ void impPS2glTexCoord1s(short s)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glLightiv(unsigned int light, unsigned int pname, int* params)
-{
-    float fparams[4];
-
-    switch (pname)
-    {
-    case 0x1200:
-    case 0x1201:
-    case 0x1202:
-    case 0x1203:
-    case 0x1204:
-        fparams[0] = (float)params[0];
-        fparams[1] = (float)params[1];
-        fparams[2] = (float)params[2];
-        fparams[3] = (float)params[3];
-        impPS2glLightfv(light, pname, fparams);
-        break;
-    default:
-        impPS2glLightf(light, pname, (float)params[0]);
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1278–1353 */
 /* addr: 0x00145250  size: 604 bytes */
@@ -2700,66 +2530,6 @@ void impPS2glLightiv(unsigned int light, unsigned int pname, int* params)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glLightfv(unsigned int light, unsigned int pname, float* params)
-{
-    unsigned char bDirectionalLight;
-    float (*pVector)[4];
-    tag_GLlight* pLight;
-    static float vParams[4];
-
-    if (light < 0x4000 || light > 0x4008)
-        return;
-    if ((unsigned int)params & 0xf)
-        memcpy(vParams, params, 16);
-    else
-        *(quad*)vParams = *(quad*)params;
-    pLight = &g_PS2glContext.Lights[light - 0x4000];
-    switch (pname)
-    {
-    case 0x1200:
-        *(quad*)pLight->vAmbient = *(quad*)vParams;
-        break;
-    case 0x1201:
-        *(quad*)pLight->vDiffuse = *(quad*)vParams;
-        break;
-    case 0x1202:
-        *(quad*)pLight->vSpecular = *(quad*)vParams;
-        break;
-    case 0x1203:
-        vParams[3] = 0.0f;
-        bDirectionalLight = vParams[3] == 0.0f;
-        pVector = (float (*)[4])pLight->vPosition;
-        sceVu0ApplyMatrix(*pVector, g_PS2glContext.ModelViewMatrix, vParams);
-        if (bDirectionalLight)
-            sceVu0Normalize(*pVector, *pVector);
-        else
-            sceVu0ScaleVector(*pVector, *pVector, 1.0f / (*pVector)[3]);
-        break;
-    case 0x1204:
-        if (g_PS2glContext.bMatrixChanged)
-            PS2glUpdateNormalMatrix();
-        sceVu0ApplyMatrix(pLight->vDirection, g_PS2glContext.NormalMatrix, vParams);
-        sceVu0Normalize(pLight->vDirection, pLight->vDirection);
-        break;
-    case 0x1205:
-        pLight->fSpotExponent = vParams[0];
-        break;
-    case 0x1206:
-        pLight->fSpotCutoff = vParams[0];
-        pLight->fCosCutoff = cos(vParams[0] * 0.017453292f);
-        break;
-    case 0x1207:
-        pLight->fConstantAttenuation = vParams[0];
-        break;
-    case 0x1208:
-        pLight->fLinearAttenuation = vParams[0];
-        break;
-    case 0x1209:
-        pLight->fQuadraticAttenuation = vParams[0];
-        break;
-    }
-    g_PS2glContext.bLightsChanged = 1;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1274–1274 */
 /* addr: 0x001454b0  size: 12 bytes */
@@ -2769,10 +2539,6 @@ void impPS2glLightfv(unsigned int light, unsigned int pname, float* params)
  * compare a candidate object's line table as an extra checkpoint.
  */
 void impPS2glLightf(unsigned int light, unsigned int pname, float param);
-void impPS2glLighti(unsigned int light, unsigned int pname, int param)
-{
-    impPS2glLightf(light, pname, (float)param);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1235–1269 */
 /* addr: 0x001454c0  size: 240 bytes */
@@ -2799,36 +2565,6 @@ void impPS2glLighti(unsigned int light, unsigned int pname, int param)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glLightf(unsigned int light, unsigned int pname, float param)
-{
-    tag_GLlight* pLight;
-
-    if (light < 0x4000 || light > 0x4008)
-        return;
-    {
-        pLight = &g_PS2glContext.Lights[light - 0x4000];
-        switch (pname)
-        {
-        case 0x1205:
-            pLight->fSpotExponent = param;
-            break;
-        case 0x1206:
-            pLight->fSpotCutoff = param;
-            pLight->fCosCutoff = cos(param * 0.017453292f);
-            break;
-        case 0x1207:
-            pLight->fConstantAttenuation = param;
-            break;
-        case 0x1208:
-            pLight->fLinearAttenuation = param;
-            break;
-        case 0x1209:
-            pLight->fQuadraticAttenuation = param;
-            break;
-        }
-        g_PS2glContext.bLightsChanged = 1;
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1212–1232 */
 /* addr: 0x001455b0  size: 244 bytes */
@@ -2851,28 +2587,6 @@ void impPS2glLightf(unsigned int light, unsigned int pname, float param)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glLightModeliv(unsigned int pname, int* params)
-{
-    switch (pname) {
-    case 0xF00:
-        g_PS2glContext.bLightModelDiffuseOnly = (params[0] != 0);
-        break;
-    case 0xB51:
-        g_PS2glContext.bLocalViewer = (params[0] != 0);
-        break;
-    case 0xB52:
-        g_PS2glContext.bLightModelTwoSide = (params[0] != 0);
-        break;
-    case 0xB53: {
-        float v[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-        v[0] = (float)params[0] / 2147483648.0f; v[1] = (float)params[1] / 2147483648.0f; v[2] = (float)params[2] / 2147483648.0f; v[3] = (float)params[3] / 2147483648.0f;
-        *(quad*)g_PS2glContext.vAmbient = *(quad*)v;
-        break;
-    }
-    }
-
-    g_PS2glContext.bLightsChanged = 1;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1175–1189 */
 /* addr: 0x00145770  size: 92 bytes */
@@ -2889,22 +2603,7 @@ void impPS2glLightModeliv(unsigned int pname, int* params)
  * compare a candidate object's line table as an extra checkpoint.
  */
 #pragma auto_inline on
-void impPS2glLightModeli(unsigned int pname, int param)
-{
-    switch (pname) {
-    case 0xF00:
-        g_PS2glContext.bLightModelDiffuseOnly = (param != 0);
-        break;
-    case 0xB51:
-        g_PS2glContext.bLocalViewer = (param != 0);
-        break;
-    case 0xB52:
-        g_PS2glContext.bLightModelTwoSide = (param != 0);
-        break;
-    }
 
-    g_PS2glContext.bLightsChanged = 1;
-}
 #pragma auto_inline reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1194–1207 */
@@ -2919,22 +2618,6 @@ void impPS2glLightModeli(unsigned int pname, int param)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glLightModelfv(unsigned int pname, float* params)
-{
-    switch (pname) {
-    case 0xF00:
-    case 0xB51:
-    case 0xB52:
-        impPS2glLightModeli(pname, (int)params[0]);
-        break;
-    case 0xB53:
-        *(quad*)g_PS2glContext.vAmbient = *(quad*)params;
-        break;
-    }
-
-    g_PS2glContext.bLightsChanged = 1;
-}
-
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1156–1170 */
 /* addr: 0x001457d0  size: 172 bytes */
@@ -2950,22 +2633,6 @@ void impPS2glLightModelfv(unsigned int pname, float* params)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glLightModelf(unsigned int pname, float param)
-{
-    switch (pname) {
-    case 0xF00:
-        g_PS2glContext.bLightModelDiffuseOnly = (param != 0.0f);
-        break;
-    case 0xB51:
-        g_PS2glContext.bLocalViewer = (param != 0.0f);
-        break;
-    case 0xB52:
-        g_PS2glContext.bLightModelTwoSide = (param != 0.0f);
-        break;
-    }
-
-    g_PS2glContext.bLightsChanged = 1;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1141–1151 */
 /* addr: 0x00145880  size: 76 bytes */
@@ -2981,16 +2648,6 @@ void impPS2glLightModelf(unsigned int pname, float param)
  * compare a candidate object's line table as an extra checkpoint.
  */
 void impPS2glMaterialfv(unsigned int face, unsigned int pname, float* params);
-void impPS2glMaterialiv(unsigned int face, unsigned int pname, int* params)
-{
-    float fparams[4];
-
-    fparams[0] = (float)params[0];
-    fparams[1] = (float)params[1];
-    fparams[2] = (float)params[2];
-    fparams[3] = (float)params[3];
-    impPS2glMaterialfv(face, pname, fparams);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1106–1138 */
 /* addr: 0x001458d0  size: 300 bytes */
@@ -3018,38 +2675,6 @@ void impPS2glMaterialiv(unsigned int face, unsigned int pname, int* params)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMaterialfv(unsigned int face, unsigned int pname, float* params)
-{
-    tag_GLmaterial* pMaterial;
-
-    if (face == 0x408) {
-        impPS2glMaterialfv(0x404, pname, params);
-        impPS2glMaterialfv(0x405, pname, params);
-        return;
-    }
-
-    if (face == 0x404)
-        pMaterial = &g_PS2glContext.Materials[0];
-    else
-        pMaterial = &g_PS2glContext.Materials[1];
-
-    switch (pname) {
-    case 0x1602: *(quad*)pMaterial->vDiffuse = *(quad*)params;
-    case 0x1200: *(quad*)pMaterial->vAmbient = *(quad*)params; break;
-    case 0x1201: *(quad*)pMaterial->vDiffuse = *(quad*)params; break;
-    case 0x1202: *(quad*)pMaterial->vSpecular = *(quad*)params; break;
-    case 0x1600: *(quad*)pMaterial->vEmission = *(quad*)params; break;
-    case 0x1601:
-        pMaterial->fShininess = params[0]; break;
-    case 0x1603:
-        pMaterial->fAmbientIndex = params[0];
-        pMaterial->fDiffuseIndex = params[1];
-        pMaterial->fSpecularIndex = params[2];
-        break;
-    }
-
-    g_PS2glContext.bMaterialChanged = 1;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1102–1103 */
 /* addr: 0x00145a00  size: 120 bytes */
@@ -3059,10 +2684,6 @@ void impPS2glMaterialfv(unsigned int face, unsigned int pname, float* params)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMateriali(unsigned int face, unsigned int pname, int param)
-{
-    if (pname == 0x1601) { switch (face) { case 0x408: g_PS2glContext.Materials[0].fShininess = (float)param; case 0x405: g_PS2glContext.Materials[1].fShininess = (float)param; break; case 0x404: g_PS2glContext.Materials[0].fShininess = (float)param; break; }  g_PS2glContext.bMaterialChanged = 1; }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1082–1097 */
 /* addr: 0x00145a80  size: 92 bytes */
@@ -3078,23 +2699,6 @@ void impPS2glMateriali(unsigned int face, unsigned int pname, int param)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMaterialf(unsigned int face, unsigned int pname, float param)
-{
-    if (pname == 0x1601) {
-        switch (face) {
-        case 0x408:
-            g_PS2glContext.Materials[0].fShininess = param;
-        case 0x405:
-            g_PS2glContext.Materials[1].fShininess = param;
-            break;
-        case 0x404:
-            g_PS2glContext.Materials[0].fShininess = param;
-            break;
-        }
-
-        g_PS2glContext.bMaterialChanged = 1;
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1049–1077 */
 /* addr: 0x00145ae0  size: 268 bytes */
@@ -3126,33 +2730,6 @@ void impPS2glMaterialf(unsigned int face, unsigned int pname, float param)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glColorMaterial(unsigned int face, unsigned int mode)
-{
-    g_PS2glContext.eColorMaterialFace = face;
-    g_PS2glContext.eColorMaterialMode = mode;
-
-    switch (mode)
-    {
-    case 0x1600:
-        *g_PS2glContext.pnColorMatMasks = (*g_PS2glContext.pnColorMatMasks & 1) | 2;
-        *g_PS2glContext.pnColorMatMasks = *g_PS2glContext.pnColorMatMasks | 0x20;
-        break;
-    case 0x1200:
-        *g_PS2glContext.pnColorMatMasks = (*g_PS2glContext.pnColorMatMasks & 1) | 4;
-        *g_PS2glContext.pnColorMatMasks = *g_PS2glContext.pnColorMatMasks | 0x20;
-        break;
-    case 0x1201:
-        *g_PS2glContext.pnColorMatMasks = (*g_PS2glContext.pnColorMatMasks & 1) | 8;
-        break;
-    case 0x1602:
-        *g_PS2glContext.pnColorMatMasks = (*g_PS2glContext.pnColorMatMasks & 1) | 0xC;
-        *g_PS2glContext.pnColorMatMasks = *g_PS2glContext.pnColorMatMasks | 0x20;
-        break;
-    case 0x1202:
-        *g_PS2glContext.pnColorMatMasks = (*g_PS2glContext.pnColorMatMasks & 1) | 0x10;
-        break;
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1040–1042 */
 /* addr: 0x00145bf0  size: 1508 bytes */
@@ -3165,20 +2742,6 @@ void impPS2glColorMaterial(unsigned int face, unsigned int mode)
  */
 void impPS2glBegin(unsigned int mode);
 
-void impPS2glRects(short x1, short y1, short x2, short y2)
-{
-    quad* pQuad;
-    impPS2glBegin(9);
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x1; (*g_PS2glContext.pVBuf)[1] = (float)y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x2; (*g_PS2glContext.pVBuf)[1] = (float)y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x2; (*g_PS2glContext.pVBuf)[1] = (float)y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x1; (*g_PS2glContext.pVBuf)[1] = (float)y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-    if (g_PS2glContext.eBeginMode == 7)
-        PS2glAssembleQuads();
-    PS2glFlushBuffer(1);
-    g_PS2glContext.bInBeginEndPair = 0;
-}
-
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1035–1037 */
 /* addr: 0x001461e0  size: 1508 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3188,19 +2751,6 @@ void impPS2glRects(short x1, short y1, short x2, short y2)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glRecti(int x1, int y1, int x2, int y2)
-{
-    quad* pQuad;
-    impPS2glBegin(9);
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x1; (*g_PS2glContext.pVBuf)[1] = (float)y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x2; (*g_PS2glContext.pVBuf)[1] = (float)y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x2; (*g_PS2glContext.pVBuf)[1] = (float)y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x1; (*g_PS2glContext.pVBuf)[1] = (float)y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-    if (g_PS2glContext.eBeginMode == 7)
-        PS2glAssembleQuads();
-    PS2glFlushBuffer(1);
-    g_PS2glContext.bInBeginEndPair = 0;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1024–1032 */
 /* addr: 0x001467d0  size: 1444 bytes */
@@ -3236,19 +2786,6 @@ void impPS2glRecti(int x1, int y1, int x2, int y2)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glRectf(float x1, float y1, float x2, float y2)
-{
-    quad* pQuad;
-    impPS2glBegin(9);
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x1; (*g_PS2glContext.pVBuf)[1] = y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x2; (*g_PS2glContext.pVBuf)[1] = y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x2; (*g_PS2glContext.pVBuf)[1] = y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x1; (*g_PS2glContext.pVBuf)[1] = y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-    if (g_PS2glContext.eBeginMode == 7)
-        PS2glAssembleQuads();
-    PS2glFlushBuffer(1);
-    g_PS2glContext.bInBeginEndPair = 0;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1019–1021 */
 /* addr: 0x00146d80  size: 1524 bytes */
@@ -3259,19 +2796,6 @@ void impPS2glRectf(float x1, float y1, float x2, float y2)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glRectd(double x1, double y1, double x2, double y2)
-{
-    quad* pQuad;
-    impPS2glBegin(9);
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x1; (*g_PS2glContext.pVBuf)[1] = (float)y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x2; (*g_PS2glContext.pVBuf)[1] = (float)y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x2; (*g_PS2glContext.pVBuf)[1] = (float)y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x1; (*g_PS2glContext.pVBuf)[1] = (float)y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-    if (g_PS2glContext.eBeginMode == 7)
-        PS2glAssembleQuads();
-    PS2glFlushBuffer(1);
-    g_PS2glContext.bInBeginEndPair = 0;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1014–1016 */
 /* addr: 0x00147380  size: 1488 bytes */
@@ -3282,21 +2806,6 @@ void impPS2glRectd(double x1, double y1, double x2, double y2)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glRectsv(short* v1, short* v2)
-{
-    quad* pQuad;
-    float x1, y1, x2, y2;
-    y2 = (float)v2[1]; x2 = (float)v2[0]; y1 = (float)v1[1]; x1 = (float)v1[0];
-    impPS2glBegin(9);
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x1; (*g_PS2glContext.pVBuf)[1] = y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x2; (*g_PS2glContext.pVBuf)[1] = y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x2; (*g_PS2glContext.pVBuf)[1] = y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x1; (*g_PS2glContext.pVBuf)[1] = y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-    if (g_PS2glContext.eBeginMode == 7)
-        PS2glAssembleQuads();
-    PS2glFlushBuffer(1);
-    g_PS2glContext.bInBeginEndPair = 0;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1009–1011 */
 /* addr: 0x00147950  size: 1460 bytes */
@@ -3307,21 +2816,6 @@ void impPS2glRectsv(short* v1, short* v2)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glRectiv(int* v1, int* v2)
-{
-    quad* pQuad;
-    float x1, y1, x2, y2;
-    y2 = (float)v2[1]; x2 = (float)v2[0]; y1 = (float)v1[1]; x1 = (float)v1[0];
-    impPS2glBegin(9);
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x1; (*g_PS2glContext.pVBuf)[1] = y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x2; (*g_PS2glContext.pVBuf)[1] = y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x2; (*g_PS2glContext.pVBuf)[1] = y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x1; (*g_PS2glContext.pVBuf)[1] = y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-    if (g_PS2glContext.eBeginMode == 7)
-        PS2glAssembleQuads();
-    PS2glFlushBuffer(1);
-    g_PS2glContext.bInBeginEndPair = 0;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1004–1006 */
 /* addr: 0x00147f10  size: 1444 bytes */
@@ -3332,21 +2826,6 @@ void impPS2glRectiv(int* v1, int* v2)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glRectfv(float* v1, float* v2)
-{
-    quad* pQuad;
-    float x1, y1, x2, y2;
-    y2 = (float)v2[1]; x2 = (float)v2[0]; y1 = (float)v1[1]; x1 = (float)v1[0];
-    impPS2glBegin(9);
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x1; (*g_PS2glContext.pVBuf)[1] = y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x2; (*g_PS2glContext.pVBuf)[1] = y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x2; (*g_PS2glContext.pVBuf)[1] = y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x1; (*g_PS2glContext.pVBuf)[1] = y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-    if (g_PS2glContext.eBeginMode == 7)
-        PS2glAssembleQuads();
-    PS2glFlushBuffer(1);
-    g_PS2glContext.bInBeginEndPair = 0;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 999–1001 */
 /* addr: 0x001484c0  size: 1500 bytes */
@@ -3357,21 +2836,6 @@ void impPS2glRectfv(float* v1, float* v2)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glRectdv(double* v1, double* v2)
-{
-    quad* pQuad;
-    float x1, y1, x2, y2;
-    y2 = (float)v2[1]; x2 = (float)v2[0]; y1 = (float)v1[1]; x1 = (float)v1[0];
-    impPS2glBegin(9);
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x1; (*g_PS2glContext.pVBuf)[1] = y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x2; (*g_PS2glContext.pVBuf)[1] = y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x2; (*g_PS2glContext.pVBuf)[1] = y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x1; (*g_PS2glContext.pVBuf)[1] = y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-    if (g_PS2glContext.eBeginMode == 7)
-        PS2glAssembleQuads();
-    PS2glFlushBuffer(1);
-    g_PS2glContext.bInBeginEndPair = 0;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 991–994 */
 /* addr: 0x00148aa0  size: 432 bytes */
@@ -3384,12 +2848,6 @@ void impPS2glRectdv(double* v1, double* v2)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glVertex4sv(short* v)
-{
-    float x, y, z, w;
-    quad* pQuad;
-    w = (float)v[3]; z = (float)v[2]; y = (float)v[1]; x = (float)v[0]; if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x; (*g_PS2glContext.pVBuf)[1] = y; (*g_PS2glContext.pVBuf)[2] = z; (*g_PS2glContext.pVBuf++)[3] = w; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 985–988 */
 /* addr: 0x00148c50  size: 408 bytes */
@@ -3402,12 +2860,6 @@ void impPS2glVertex4sv(short* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glVertex4iv(int* v)
-{
-    float x, y, z, w;
-    quad* pQuad;
-    w = (float)v[3]; z = (float)v[2]; y = (float)v[1]; x = (float)v[0]; if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x; (*g_PS2glContext.pVBuf)[1] = y; (*g_PS2glContext.pVBuf)[2] = z; (*g_PS2glContext.pVBuf++)[3] = w; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 947–982 */
 /* addr: 0x00148df0  size: 328 bytes */
@@ -3454,23 +2906,6 @@ void impPS2glVertex4iv(int* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glVertex4fv(float* v)
-{
-    quad* pQuad;
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit)
-    {
-        if (g_PS2glContext.eBeginMode == 7)
-            PS2glAssembleQuads();
-        PS2glFlushBuffer(0);
-    }
-    pQuad = (quad*)g_PS2glContext.pVBuf++; *pQuad = *(quad*)v;
-    pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal;
-    pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0];
-    pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1];
-    pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0];
-    pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1];
-    g_PS2glContext.iBufCount++;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 942–944 */
 /* addr: 0x00148f40  size: 436 bytes */
@@ -3481,12 +2916,6 @@ void impPS2glVertex4fv(float* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glVertex4dv(double* v)
-{
-    float x, y, z, w;
-    quad* pQuad;
-    w = (float)v[3]; z = (float)v[2]; y = (float)v[1]; x = (float)v[0]; if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x; (*g_PS2glContext.pVBuf)[1] = y; (*g_PS2glContext.pVBuf)[2] = z; (*g_PS2glContext.pVBuf++)[3] = w; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 937–939 */
 /* addr: 0x00149100  size: 412 bytes */
@@ -3499,12 +2928,6 @@ void impPS2glVertex4dv(double* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glVertex3sv(short* v)
-{
-    float x, y, z;
-    quad* pQuad;
-    z = (float)v[2]; y = (float)v[1]; x = (float)v[0]; if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x; (*g_PS2glContext.pVBuf)[1] = y; (*g_PS2glContext.pVBuf)[2] = z; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 932–934 */
 /* addr: 0x001492a0  size: 396 bytes */
@@ -3517,12 +2940,6 @@ void impPS2glVertex3sv(short* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glVertex3iv(int* v)
-{
-    float x, y, z;
-    quad* pQuad;
-    z = (float)v[2]; y = (float)v[1]; x = (float)v[0]; if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x; (*g_PS2glContext.pVBuf)[1] = y; (*g_PS2glContext.pVBuf)[2] = z; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 927–929 */
 /* addr: 0x00149430  size: 388 bytes */
@@ -3535,12 +2952,6 @@ void impPS2glVertex3iv(int* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glVertex3fv(float* v)
-{
-    float x, y, z;
-    quad* pQuad;
-    z = v[2]; y = v[1]; x = v[0]; if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x; (*g_PS2glContext.pVBuf)[1] = y; (*g_PS2glContext.pVBuf)[2] = z; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 922–924 */
 /* addr: 0x001495c0  size: 420 bytes */
@@ -3551,12 +2962,6 @@ void impPS2glVertex3fv(float* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glVertex3dv(double* v)
-{
-    float x, y, z;
-    quad* pQuad;
-    z = (float)v[2]; y = (float)v[1]; x = (float)v[0]; if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x; (*g_PS2glContext.pVBuf)[1] = y; (*g_PS2glContext.pVBuf)[2] = z; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 917–919 */
 /* addr: 0x00149770  size: 392 bytes */
@@ -3569,12 +2974,6 @@ void impPS2glVertex3dv(double* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glVertex2sv(short* v)
-{
-    float x, y;
-    quad* pQuad;
-    y = (float)v[1]; x = (float)v[0]; if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x; (*g_PS2glContext.pVBuf)[1] = y; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 912–914 */
 /* addr: 0x00149900  size: 380 bytes */
@@ -3587,12 +2986,6 @@ void impPS2glVertex2sv(short* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glVertex2iv(int* v)
-{
-    float x, y;
-    quad* pQuad;
-    y = (float)v[1]; x = (float)v[0]; if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x; (*g_PS2glContext.pVBuf)[1] = y; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 907–909 */
 /* addr: 0x00149a80  size: 376 bytes */
@@ -3605,12 +2998,6 @@ void impPS2glVertex2iv(int* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glVertex2fv(float* v)
-{
-    float x, y;
-    quad* pQuad;
-    y = v[1]; x = v[0]; if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x; (*g_PS2glContext.pVBuf)[1] = y; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 902–904 */
 /* addr: 0x00149c00  size: 400 bytes */
@@ -3621,12 +3008,6 @@ void impPS2glVertex2fv(float* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glVertex2dv(double* v)
-{
-    float x, y;
-    quad* pQuad;
-    y = (float)v[1]; x = (float)v[0]; if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x; (*g_PS2glContext.pVBuf)[1] = y; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 897–899 */
 /* addr: 0x00149d90  size: 428 bytes */
@@ -3639,11 +3020,6 @@ void impPS2glVertex2dv(double* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glVertex4s(short x, short y, short z, short w)
-{
-    quad* pQuad;
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x; (*g_PS2glContext.pVBuf)[1] = (float)y; (*g_PS2glContext.pVBuf)[2] = (float)z; (*g_PS2glContext.pVBuf++)[3] = (float)w; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 892–894 */
 /* addr: 0x00149f40  size: 428 bytes */
@@ -3656,11 +3032,6 @@ void impPS2glVertex4s(short x, short y, short z, short w)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glVertex4i(int x, int y, int z, int w)
-{
-    quad* pQuad;
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x; (*g_PS2glContext.pVBuf)[1] = (float)y; (*g_PS2glContext.pVBuf)[2] = (float)z; (*g_PS2glContext.pVBuf++)[3] = (float)w; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 887–889 */
 /* addr: 0x0014a0f0  size: 424 bytes */
@@ -3673,11 +3044,6 @@ void impPS2glVertex4i(int x, int y, int z, int w)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glVertex4d(double X, double Y, double Z, double W)
-{
-    quad* pQuad;
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)X; (*g_PS2glContext.pVBuf)[1] = (float)Y; (*g_PS2glContext.pVBuf)[2] = (float)Z; (*g_PS2glContext.pVBuf++)[3] = (float)W; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 844–884 */
 /* addr: 0x0014a2a0  size: 392 bytes */
@@ -3725,27 +3091,6 @@ void impPS2glVertex4d(double X, double Y, double Z, double W)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glVertex4f(float x, float y, float z, float w)
-{
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) {
-        if (g_PS2glContext.eBeginMode == 7)
-            PS2glAssembleQuads();
-        PS2glFlushBuffer(0);
-    }
-
-    (*g_PS2glContext.pVBuf)[0] = x;
-    (*g_PS2glContext.pVBuf)[1] = y;
-    (*g_PS2glContext.pVBuf)[2] = z;
-    (*g_PS2glContext.pVBuf++)[3] = w;
-
-    *(quad*)g_PS2glContext.pNBuf++ = *(quad*)g_PS2glContext.vcurNormal;
-    *(quad*)g_PS2glContext.pCBuf++ = *(quad*)g_PS2glContext.vacurColor[0];
-    *(quad*)g_PS2glContext.pCBuf_b++ = *(quad*)g_PS2glContext.vacurColor[1];
-    *(quad*)g_PS2glContext.pTBuf++ = *(quad*)g_PS2glContext.vacurTexCoords[0];
-    *(quad*)g_PS2glContext.pTBuf_b++ = *(quad*)g_PS2glContext.vacurTexCoords[1];
-
-    g_PS2glContext.iBufCount++;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 839–841 */
 /* addr: 0x0014a430  size: 412 bytes */
@@ -3758,11 +3103,6 @@ void impPS2glVertex4f(float x, float y, float z, float w)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glVertex3s(short x, short y, short z)
-{
-    quad* pQuad;
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x; (*g_PS2glContext.pVBuf)[1] = (float)y; (*g_PS2glContext.pVBuf)[2] = (float)z; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 834–836 */
 /* addr: 0x0014a5d0  size: 412 bytes */
@@ -3775,11 +3115,6 @@ void impPS2glVertex3s(short x, short y, short z)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glVertex3i(int x, int y, int z)
-{
-    quad* pQuad;
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x; (*g_PS2glContext.pVBuf)[1] = (float)y; (*g_PS2glContext.pVBuf)[2] = (float)z; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 829–831 */
 /* addr: 0x0014a770  size: 384 bytes */
@@ -3792,11 +3127,6 @@ void impPS2glVertex3i(int x, int y, int z)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glVertex3f(float x, float y, float z)
-{
-    quad* pQuad;
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x; (*g_PS2glContext.pVBuf)[1] = y; (*g_PS2glContext.pVBuf)[2] = z; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 824–826 */
 /* addr: 0x0014a8f0  size: 408 bytes */
@@ -3809,11 +3139,6 @@ void impPS2glVertex3f(float x, float y, float z)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glVertex3d(double x, double y, double z)
-{
-    quad* pQuad;
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x; (*g_PS2glContext.pVBuf)[1] = (float)y; (*g_PS2glContext.pVBuf)[2] = (float)z; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 819–821 */
 /* addr: 0x0014aa90  size: 392 bytes */
@@ -3826,11 +3151,6 @@ void impPS2glVertex3d(double x, double y, double z)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glVertex2s(short x, short y)
-{
-    quad* pQuad;
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x; (*g_PS2glContext.pVBuf)[1] = (float)y; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 814–816 */
 /* addr: 0x0014ac20  size: 392 bytes */
@@ -3843,11 +3163,6 @@ void impPS2glVertex2s(short x, short y)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glVertex2i(int x, int y)
-{
-    quad* pQuad;
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x; (*g_PS2glContext.pVBuf)[1] = (float)y; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 809–811 */
 /* addr: 0x0014adb0  size: 372 bytes */
@@ -3860,11 +3175,6 @@ void impPS2glVertex2i(int x, int y)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glVertex2f(float x, float y)
-{
-    quad* pQuad;
-    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x; (*g_PS2glContext.pVBuf)[1] = y; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 804–806 */
 /* addr: 0x0014af30  size: 388 bytes */
@@ -3877,10 +3187,6 @@ void impPS2glVertex2f(float x, float y)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glVertex2d(double x, double y) { int nCount = g_PS2glContext.iBufCount, nLimit = g_PS2glContext.iBufLimit; quad* pQuad;
-    if (nCount >= nLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x; (*g_PS2glContext.pVBuf)[1] = (float)y; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1];
-    g_PS2glContext.iBufCount++;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 793–797 */
 /* addr: 0x0014b0c0  size: 48 bytes */
@@ -3893,13 +3199,6 @@ void impPS2glVertex2d(double x, double y) { int nCount = g_PS2glContext.iBufCoun
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glNormal3fv(float* v)
-{
-    g_PS2glContext.vcurNormal[0] = v[0];
-    g_PS2glContext.vcurNormal[1] = v[1];
-    g_PS2glContext.vcurNormal[2] = v[2];
-    g_PS2glContext.vcurNormal[3] = 0.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 787–789 */
 /* addr: 0x0014b0f0  size: 112 bytes */
@@ -3910,11 +3209,6 @@ void impPS2glNormal3fv(float* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glNormal3dv(double* v)
-{
-    float nx, ny, nz;
-    nz = (float)v[2]; ny = (float)v[1]; nx = (float)v[0]; g_PS2glContext.vcurNormal[0] = nx; g_PS2glContext.vcurNormal[1] = ny; g_PS2glContext.vcurNormal[2] = nz; g_PS2glContext.vcurNormal[3] = 0.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 783–784 */
 /* addr: 0x0014b160  size: 84 bytes */
@@ -3924,11 +3218,6 @@ void impPS2glNormal3dv(double* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glNormal3iv(int* v)
-{
-    float nx, ny, nz;
-    nz = (float)v[2] / 2147483648.0f; ny = (float)v[1] / 2147483648.0f; nx = (float)v[0] / 2147483648.0f; g_PS2glContext.vcurNormal[0] = nx; g_PS2glContext.vcurNormal[1] = ny; g_PS2glContext.vcurNormal[2] = nz; g_PS2glContext.vcurNormal[3] = 0.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 778–779 */
 /* addr: 0x0014b1c0  size: 100 bytes */
@@ -3938,11 +3227,6 @@ void impPS2glNormal3iv(int* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glNormal3sv(short* v)
-{
-    float nx, ny, nz;
-    nz = (float)v[2] / 32767.0f; ny = (float)v[1] / 32767.0f; nx = (float)v[0] / 32767.0f; g_PS2glContext.vcurNormal[0] = nx; g_PS2glContext.vcurNormal[1] = ny; g_PS2glContext.vcurNormal[2] = nz; g_PS2glContext.vcurNormal[3] = 0.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 773–774 */
 /* addr: 0x0014b230  size: 96 bytes */
@@ -3952,11 +3236,6 @@ void impPS2glNormal3sv(short* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glNormal3bv(signed char* v)
-{
-    float nx, ny, nz;
-    nz = (float)v[2] / 127.0f; ny = (float)v[1] / 127.0f; nx = (float)v[0] / 127.0f; g_PS2glContext.vcurNormal[0] = nx; g_PS2glContext.vcurNormal[1] = ny; g_PS2glContext.vcurNormal[2] = nz; g_PS2glContext.vcurNormal[3] = 0.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 765–769 */
 /* addr: 0x0014b290  size: 36 bytes */
@@ -3969,13 +3248,6 @@ void impPS2glNormal3bv(signed char* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glNormal3f(float nx, float ny, float nz)
-{
-    g_PS2glContext.vcurNormal[0] = nx;
-    g_PS2glContext.vcurNormal[1] = ny;
-    g_PS2glContext.vcurNormal[2] = nz;
-    g_PS2glContext.vcurNormal[3] = 0.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 759–761 */
 /* addr: 0x0014b2c0  size: 96 bytes */
@@ -3986,10 +3258,6 @@ void impPS2glNormal3f(float nx, float ny, float nz)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glNormal3d(double nx, double ny, double nz)
-{
-    g_PS2glContext.vcurNormal[0] = (float)nx; g_PS2glContext.vcurNormal[1] = (float)ny; g_PS2glContext.vcurNormal[2] = (float)nz; g_PS2glContext.vcurNormal[3] = 0.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 755–756 */
 /* addr: 0x0014b320  size: 84 bytes */
@@ -3999,10 +3267,6 @@ void impPS2glNormal3d(double nx, double ny, double nz)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glNormal3i(int nx, int ny, int nz)
-{
-    g_PS2glContext.vcurNormal[0] = (float)nx / 2147483648.0f; g_PS2glContext.vcurNormal[1] = (float)ny / 2147483648.0f; g_PS2glContext.vcurNormal[2] = (float)nz / 2147483648.0f; g_PS2glContext.vcurNormal[3] = 0.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 750–751 */
 /* addr: 0x0014b380  size: 84 bytes */
@@ -4012,10 +3276,6 @@ void impPS2glNormal3i(int nx, int ny, int nz)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glNormal3s(short nx, short ny, short nz)
-{
-    g_PS2glContext.vcurNormal[0] = (float)nx / 32767.0f; g_PS2glContext.vcurNormal[1] = (float)ny / 32767.0f; g_PS2glContext.vcurNormal[2] = (float)nz / 32767.0f; g_PS2glContext.vcurNormal[3] = 0.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 745–746 */
 /* addr: 0x0014b3e0  size: 84 bytes */
@@ -4025,10 +3285,6 @@ void impPS2glNormal3s(short nx, short ny, short nz)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glNormal3b(signed char nx, signed char ny, signed char nz)
-{
-    g_PS2glContext.vcurNormal[0] = (float)nx / 127.0f; g_PS2glContext.vcurNormal[1] = (float)ny / 127.0f; g_PS2glContext.vcurNormal[2] = (float)nz / 127.0f; g_PS2glContext.vcurNormal[3] = 0.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 735–737 */
 /* addr: 0x0014b440  size: 328 bytes */
@@ -4038,11 +3294,6 @@ void impPS2glNormal3b(signed char nx, signed char ny, signed char nz)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiColor4usvARB(unsigned int texture, unsigned short* v)
-{
-    float red, green, blue, alpha;
-    alpha = (float)v[3] / 65535.0f; blue = (float)v[2] / 65535.0f; green = (float)v[1] / 65535.0f; red = (float)v[0] / 65535.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = alpha;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 729–731 */
 /* addr: 0x0014b590  size: 312 bytes */
@@ -4052,11 +3303,6 @@ void impPS2glMultiColor4usvARB(unsigned int texture, unsigned short* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiColor4uivARB(unsigned int texture, unsigned int* v)
-{
-    float red, green, blue, alpha;
-    alpha = (float)v[3] / 4294967295.0f; blue = (float)v[2] / 4294967295.0f; green = (float)v[1] / 4294967295.0f; red = (float)v[0] / 4294967295.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = alpha;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 723–725 */
 /* addr: 0x0014b6d0  size: 312 bytes */
@@ -4066,11 +3312,6 @@ void impPS2glMultiColor4uivARB(unsigned int texture, unsigned int* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiColor4ubvARB(unsigned int texture, unsigned char* v)
-{
-    float red, green, blue, alpha;
-    alpha = (float)v[3] / 255.0f; blue = (float)v[2] / 255.0f; green = (float)v[1] / 255.0f; red = (float)v[0] / 255.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = alpha;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 717–719 */
 /* addr: 0x0014b810  size: 152 bytes */
@@ -4080,11 +3321,6 @@ void impPS2glMultiColor4ubvARB(unsigned int texture, unsigned char* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiColor4svARB(unsigned int texture, short* v)
-{
-    float red, green, blue, alpha;
-    alpha = (float)v[3] / 32767.0f; blue = (float)v[2] / 32767.0f; green = (float)v[1] / 32767.0f; red = (float)v[0] / 32767.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = alpha;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 711–713 */
 /* addr: 0x0014b8b0  size: 128 bytes */
@@ -4094,11 +3330,6 @@ void impPS2glMultiColor4svARB(unsigned int texture, short* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiColor4ivARB(unsigned int texture, int* v)
-{
-    float red, green, blue, alpha;
-    alpha = (float)v[3] / 2147483648.0f; blue = (float)v[2] / 2147483648.0f; green = (float)v[1] / 2147483648.0f; red = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = alpha;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 703–707 */
 /* addr: 0x0014b930  size: 88 bytes */
@@ -4117,13 +3348,6 @@ void impPS2glMultiColor4ivARB(unsigned int texture, int* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiColor4fvARB(unsigned int texture, float* v)
-{
-    g_PS2glContext.vacurColor[texture][0] = v[0];
-    g_PS2glContext.vacurColor[texture][1] = v[1];
-    g_PS2glContext.vacurColor[texture][2] = v[2];
-    g_PS2glContext.vacurColor[texture][3] = v[3];
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 697–699 */
 /* addr: 0x0014b990  size: 180 bytes */
@@ -4134,11 +3358,6 @@ void impPS2glMultiColor4fvARB(unsigned int texture, float* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiColor4dvARB(unsigned int texture, double* v)
-{
-    float red, green, blue, alpha;
-    alpha = (float)v[3]; blue = (float)v[2]; green = (float)v[1]; red = (float)v[0]; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = alpha;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 693–694 */
 /* addr: 0x0014ba50  size: 152 bytes */
@@ -4148,11 +3367,6 @@ void impPS2glMultiColor4dvARB(unsigned int texture, double* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiColor4bvARB(unsigned int texture, signed char* v)
-{
-    float red, green, blue, alpha;
-    alpha = (float)v[3] / 127.0f; blue = (float)v[2] / 127.0f; green = (float)v[1] / 127.0f; red = (float)v[0] / 127.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = alpha;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 688–689 */
 /* addr: 0x0014baf0  size: 268 bytes */
@@ -4162,11 +3376,6 @@ void impPS2glMultiColor4bvARB(unsigned int texture, signed char* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiColor3usvARB(unsigned int texture, unsigned short* v)
-{
-    float red, green, blue;
-    blue = (float)v[2] / 65535.0f; green = (float)v[1] / 65535.0f; red = (float)v[0] / 65535.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = 1.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 683–684 */
 /* addr: 0x0014bc00  size: 256 bytes */
@@ -4176,11 +3385,6 @@ void impPS2glMultiColor3usvARB(unsigned int texture, unsigned short* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiColor3uivARB(unsigned int texture, unsigned int* v)
-{
-    float red, green, blue;
-    blue = (float)v[2] / 4294967295.0f; green = (float)v[1] / 4294967295.0f; red = (float)v[0] / 4294967295.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = 1.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 678–679 */
 /* addr: 0x0014bd00  size: 256 bytes */
@@ -4190,11 +3394,6 @@ void impPS2glMultiColor3uivARB(unsigned int texture, unsigned int* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiColor3ubvARB(unsigned int texture, unsigned char* v)
-{
-    float red, green, blue;
-    blue = (float)v[2] / 255.0f; green = (float)v[1] / 255.0f; red = (float)v[0] / 255.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = 1.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 673–674 */
 /* addr: 0x0014be00  size: 140 bytes */
@@ -4204,11 +3403,6 @@ void impPS2glMultiColor3ubvARB(unsigned int texture, unsigned char* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiColor3svARB(unsigned int texture, short* v)
-{
-    float red, green, blue;
-    blue = (float)v[2] / 32767.0f; green = (float)v[1] / 32767.0f; red = (float)v[0] / 32767.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = 1.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 668–669 */
 /* addr: 0x0014be90  size: 120 bytes */
@@ -4218,11 +3412,6 @@ void impPS2glMultiColor3svARB(unsigned int texture, short* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiColor3ivARB(unsigned int texture, int* v)
-{
-    float red, green, blue;
-    blue = (float)v[2] / 2147483648.0f; green = (float)v[1] / 2147483648.0f; red = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = 1.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 663–664 */
 /* addr: 0x0014bf10  size: 88 bytes */
@@ -4232,11 +3421,6 @@ void impPS2glMultiColor3ivARB(unsigned int texture, int* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiColor3fvARB(unsigned int texture, float* v)
-{
-    float red, green, blue;
-    blue = v[2]; green = v[1]; red = v[0]; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = 1.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 657–659 */
 /* addr: 0x0014bf70  size: 164 bytes */
@@ -4247,11 +3431,6 @@ void impPS2glMultiColor3fvARB(unsigned int texture, float* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiColor3dvARB(unsigned int texture, double* v)
-{
-    float red, green, blue;
-    blue = (float)v[2]; green = (float)v[1]; red = (float)v[0]; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = 1.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 653–654 */
 /* addr: 0x0014c020  size: 136 bytes */
@@ -4261,11 +3440,6 @@ void impPS2glMultiColor3dvARB(unsigned int texture, double* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiColor3bvARB(unsigned int texture, signed char* v)
-{
-    float red, green, blue;
-    blue = (float)v[2] / 127.0f; green = (float)v[1] / 127.0f; red = (float)v[0] / 127.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = 1.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 647–649 */
 /* addr: 0x0014c0b0  size: 316 bytes */
@@ -4275,10 +3449,6 @@ void impPS2glMultiColor3bvARB(unsigned int texture, signed char* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiColor4usARB(unsigned int texture, unsigned short red, unsigned short green, unsigned short blue, unsigned short alpha)
-{
-    g_PS2glContext.vacurColor[texture][0] = (float)red / 65535.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 65535.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 65535.0f; g_PS2glContext.vacurColor[texture][3] = (float)alpha / 65535.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 641–643 */
 /* addr: 0x0014c1f0  size: 300 bytes */
@@ -4288,10 +3458,6 @@ void impPS2glMultiColor4usARB(unsigned int texture, unsigned short red, unsigned
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiColor4uiARB(unsigned int texture, unsigned int red, unsigned int green, unsigned int blue, unsigned int alpha)
-{
-    g_PS2glContext.vacurColor[texture][0] = (float)red / 4294967295.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 4294967295.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 4294967295.0f; g_PS2glContext.vacurColor[texture][3] = (float)alpha / 4294967295.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 635–637 */
 /* addr: 0x0014c320  size: 300 bytes */
@@ -4301,10 +3467,6 @@ void impPS2glMultiColor4uiARB(unsigned int texture, unsigned int red, unsigned i
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiColor4ubARB(unsigned int texture, unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha)
-{
-    g_PS2glContext.vacurColor[texture][0] = (float)red / 255.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 255.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 255.0f; g_PS2glContext.vacurColor[texture][3] = (float)alpha / 255.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 629–631 */
 /* addr: 0x0014c450  size: 136 bytes */
@@ -4314,10 +3476,6 @@ void impPS2glMultiColor4ubARB(unsigned int texture, unsigned char red, unsigned 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiColor4sARB(unsigned int texture, short red, short green, short blue, short alpha)
-{
-    g_PS2glContext.vacurColor[texture][0] = (float)red / 32767.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 32767.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 32767.0f; g_PS2glContext.vacurColor[texture][3] = (float)alpha / 32767.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 623–625 */
 /* addr: 0x0014c4e0  size: 136 bytes */
@@ -4327,10 +3485,6 @@ void impPS2glMultiColor4sARB(unsigned int texture, short red, short green, short
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiColor4iARB(unsigned int texture, int red, int green, int blue, int alpha)
-{
-    g_PS2glContext.vacurColor[texture][0] = (float)red / 2147483648.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 2147483648.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 2147483648.0f; g_PS2glContext.vacurColor[texture][3] = (float)alpha / 2147483648.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 617–619 */
 /* addr: 0x0014c570  size: 168 bytes */
@@ -4341,10 +3495,6 @@ void impPS2glMultiColor4iARB(unsigned int texture, int red, int green, int blue,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiColor4dARB(unsigned int texture, double R, double G, double B, double A)
-{
-    g_PS2glContext.vacurColor[texture][0] = (float)R; g_PS2glContext.vacurColor[texture][1] = (float)G; g_PS2glContext.vacurColor[texture][2] = (float)B; g_PS2glContext.vacurColor[texture][3] = (float)A;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 610–614 */
 /* addr: 0x0014c620  size: 72 bytes */
@@ -4365,13 +3515,6 @@ void impPS2glMultiColor4dARB(unsigned int texture, double R, double G, double B,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiColor4fARB(unsigned int texture, float red, float green, float blue, float alpha)
-{
-    g_PS2glContext.vacurColor[texture][0] = red;
-    g_PS2glContext.vacurColor[texture][1] = green;
-    g_PS2glContext.vacurColor[texture][2] = blue;
-    g_PS2glContext.vacurColor[texture][3] = alpha;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 604–606 */
 /* addr: 0x0014c670  size: 136 bytes */
@@ -4381,10 +3524,6 @@ void impPS2glMultiColor4fARB(unsigned int texture, float red, float green, float
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiColor4bARB(unsigned int texture, signed char red, signed char green, signed char blue, signed char alpha)
-{
-    g_PS2glContext.vacurColor[texture][0] = (float)red / 127.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 127.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 127.0f; g_PS2glContext.vacurColor[texture][3] = (float)alpha / 127.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 598–600 */
 /* addr: 0x0014c700  size: 256 bytes */
@@ -4394,10 +3533,6 @@ void impPS2glMultiColor4bARB(unsigned int texture, signed char red, signed char 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiColor3usARB(unsigned int texture, unsigned short red, unsigned short green, unsigned short blue)
-{
-    g_PS2glContext.vacurColor[texture][0] = (float)red / 65535.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 65535.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 65535.0f; g_PS2glContext.vacurColor[texture][3] = 1.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 593–594 */
 /* addr: 0x0014c800  size: 248 bytes */
@@ -4407,10 +3542,6 @@ void impPS2glMultiColor3usARB(unsigned int texture, unsigned short red, unsigned
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiColor3uiARB(unsigned int texture, unsigned int red, unsigned int green, unsigned int blue)
-{
-    g_PS2glContext.vacurColor[texture][0] = (float)red / 4294967295.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 4294967295.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 4294967295.0f; g_PS2glContext.vacurColor[texture][3] = 1.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 588–589 */
 /* addr: 0x0014c900  size: 248 bytes */
@@ -4420,10 +3551,6 @@ void impPS2glMultiColor3uiARB(unsigned int texture, unsigned int red, unsigned i
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiColor3ubARB(unsigned int texture, unsigned char red, unsigned char green, unsigned char blue)
-{
-    g_PS2glContext.vacurColor[texture][0] = (float)red / 255.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 255.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 255.0f; g_PS2glContext.vacurColor[texture][3] = 1.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 583–584 */
 /* addr: 0x0014ca00  size: 128 bytes */
@@ -4433,10 +3560,6 @@ void impPS2glMultiColor3ubARB(unsigned int texture, unsigned char red, unsigned 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiColor3sARB(unsigned int texture, short red, short green, short blue)
-{
-    g_PS2glContext.vacurColor[texture][0] = (float)red / 32767.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 32767.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 32767.0f; g_PS2glContext.vacurColor[texture][3] = 1.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 578–579 */
 /* addr: 0x0014ca80  size: 124 bytes */
@@ -4446,10 +3569,6 @@ void impPS2glMultiColor3sARB(unsigned int texture, short red, short green, short
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiColor3iARB(unsigned int texture, int red, int green, int blue)
-{
-    g_PS2glContext.vacurColor[texture][0] = (float)red / 2147483648.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 2147483648.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 2147483648.0f; g_PS2glContext.vacurColor[texture][3] = 1.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 573–574 */
 /* addr: 0x0014cb00  size: 76 bytes */
@@ -4459,10 +3578,6 @@ void impPS2glMultiColor3iARB(unsigned int texture, int red, int green, int blue)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiColor3fARB(unsigned int texture, float red, float green, float blue)
-{
-    g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = 1.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 567–569 */
 /* addr: 0x0014cb50  size: 152 bytes */
@@ -4473,10 +3588,6 @@ void impPS2glMultiColor3fARB(unsigned int texture, float red, float green, float
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiColor3dARB(unsigned int texture, double red, double green, double blue)
-{
-    g_PS2glContext.vacurColor[texture][0] = (float)red; g_PS2glContext.vacurColor[texture][1] = (float)green; g_PS2glContext.vacurColor[texture][2] = (float)blue; g_PS2glContext.vacurColor[texture][3] = 1.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 563–564 */
 /* addr: 0x0014cbf0  size: 124 bytes */
@@ -4486,10 +3597,6 @@ void impPS2glMultiColor3dARB(unsigned int texture, double red, double green, dou
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiColor3bARB(unsigned int texture, signed char red, signed char green, signed char blue)
-{
-    g_PS2glContext.vacurColor[texture][0] = (float)red / 127.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 127.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 127.0f; g_PS2glContext.vacurColor[texture][3] = 1.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 556–558 */
 /* addr: 0x0014cc70  size: 292 bytes */
@@ -4499,11 +3606,6 @@ void impPS2glMultiColor3bARB(unsigned int texture, signed char red, signed char 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glColor4usv(unsigned short* v)
-{
-    float red, green, blue, alpha;
-    alpha = (float)v[3] / 65535.0f; blue = (float)v[2] / 65535.0f; green = (float)v[1] / 65535.0f; red = (float)v[0] / 65535.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = alpha;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 550–552 */
 /* addr: 0x0014cda0  size: 276 bytes */
@@ -4513,11 +3615,6 @@ void impPS2glColor4usv(unsigned short* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glColor4uiv(unsigned int* v)
-{
-    float red, green, blue, alpha;
-    alpha = (float)v[3] / 4294967295.0f; blue = (float)v[2] / 4294967295.0f; green = (float)v[1] / 4294967295.0f; red = (float)v[0] / 4294967295.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = alpha;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 544–546 */
 /* addr: 0x0014cec0  size: 276 bytes */
@@ -4527,11 +3624,6 @@ void impPS2glColor4uiv(unsigned int* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glColor4ubv(unsigned char* v)
-{
-    float red, green, blue, alpha;
-    alpha = (float)v[3] / 255.0f; blue = (float)v[2] / 255.0f; green = (float)v[1] / 255.0f; red = (float)v[0] / 255.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = alpha;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 538–540 */
 /* addr: 0x0014cfe0  size: 116 bytes */
@@ -4541,11 +3633,6 @@ void impPS2glColor4ubv(unsigned char* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glColor4sv(short* v)
-{
-    float red, green, blue, alpha;
-    alpha = (float)v[3] / 32767.0f; blue = (float)v[2] / 32767.0f; green = (float)v[1] / 32767.0f; red = (float)v[0] / 32767.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = alpha;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 532–534 */
 /* addr: 0x0014d060  size: 92 bytes */
@@ -4555,11 +3642,6 @@ void impPS2glColor4sv(short* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glColor4iv(int* v)
-{
-    float red, green, blue, alpha;
-    alpha = (float)v[3] / 2147483648.0f; blue = (float)v[2] / 2147483648.0f; green = (float)v[1] / 2147483648.0f; red = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = alpha;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 511–528 */
 /* addr: 0x0014d0c0  size: 52 bytes */
@@ -4572,13 +3654,6 @@ void impPS2glColor4iv(int* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glColor4fv(float* v)
-{
-    g_PS2glContext.vacurColor[0][0] = v[0];
-    g_PS2glContext.vacurColor[0][1] = v[1];
-    g_PS2glContext.vacurColor[0][2] = v[2];
-    g_PS2glContext.vacurColor[0][3] = v[3];
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 503–505 */
 /* addr: 0x0014d100  size: 132 bytes */
@@ -4589,11 +3664,6 @@ void impPS2glColor4fv(float* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glColor4dv(double* v)
-{
-    float red, green, blue, alpha;
-    alpha = (float)v[3]; blue = (float)v[2]; green = (float)v[1]; red = (float)v[0]; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = alpha;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 499–500 */
 /* addr: 0x0014d190  size: 112 bytes */
@@ -4603,11 +3673,6 @@ void impPS2glColor4dv(double* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glColor4bv(signed char* v)
-{
-    float red, green, blue, alpha;
-    alpha = (float)v[3] / 127.0f; blue = (float)v[2] / 127.0f; green = (float)v[1] / 127.0f; red = (float)v[0] / 127.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = alpha;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 494–495 */
 /* addr: 0x0014d200  size: 232 bytes */
@@ -4617,11 +3682,6 @@ void impPS2glColor4bv(signed char* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glColor3usv(unsigned short* v)
-{
-    float red, green, blue;
-    blue = (float)v[2] / 65535.0f; green = (float)v[1] / 65535.0f; red = (float)v[0] / 65535.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = 1.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 489–490 */
 /* addr: 0x0014d2f0  size: 220 bytes */
@@ -4631,11 +3691,6 @@ void impPS2glColor3usv(unsigned short* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glColor3uiv(unsigned int* v)
-{
-    float red, green, blue;
-    blue = (float)v[2] / 4294967295.0f; green = (float)v[1] / 4294967295.0f; red = (float)v[0] / 4294967295.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = 1.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 484–485 */
 /* addr: 0x0014d3d0  size: 220 bytes */
@@ -4645,11 +3700,6 @@ void impPS2glColor3uiv(unsigned int* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glColor3ubv(unsigned char* v)
-{
-    float red, green, blue;
-    blue = (float)v[2] / 255.0f; green = (float)v[1] / 255.0f; red = (float)v[0] / 255.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = 1.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 479–480 */
 /* addr: 0x0014d4b0  size: 100 bytes */
@@ -4659,11 +3709,6 @@ void impPS2glColor3ubv(unsigned char* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glColor3sv(short* v)
-{
-    float red, green, blue;
-    blue = (float)v[2] / 32767.0f; green = (float)v[1] / 32767.0f; red = (float)v[0] / 32767.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = 1.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 474–475 */
 /* addr: 0x0014d520  size: 84 bytes */
@@ -4673,11 +3718,6 @@ void impPS2glColor3sv(short* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glColor3iv(int* v)
-{
-    float red, green, blue;
-    blue = (float)v[2] / 2147483648.0f; green = (float)v[1] / 2147483648.0f; red = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = 1.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 469–470 */
 /* addr: 0x0014d580  size: 52 bytes */
@@ -4687,11 +3727,6 @@ void impPS2glColor3iv(int* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glColor3fv(float* v)
-{
-    float red, green, blue;
-    blue = v[2]; green = v[1]; red = v[0]; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = 1.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 463–465 */
 /* addr: 0x0014d5c0  size: 116 bytes */
@@ -4702,11 +3737,6 @@ void impPS2glColor3fv(float* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glColor3dv(double* v)
-{
-    float red, green, blue;
-    blue = (float)v[2]; green = (float)v[1]; red = (float)v[0]; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = 1.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 459–460 */
 /* addr: 0x0014d640  size: 96 bytes */
@@ -4716,11 +3746,6 @@ void impPS2glColor3dv(double* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glColor3bv(signed char* v)
-{
-    float red, green, blue;
-    blue = (float)v[2] / 127.0f; green = (float)v[1] / 127.0f; red = (float)v[0] / 127.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = 1.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 453–455 */
 /* addr: 0x0014d6a0  size: 292 bytes */
@@ -4730,10 +3755,6 @@ void impPS2glColor3bv(signed char* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glColor4us(unsigned short red, unsigned short green, unsigned short blue, unsigned short alpha)
-{
-    g_PS2glContext.vacurColor[0][0] = (float)red / 65535.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 65535.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 65535.0f; g_PS2glContext.vacurColor[0][3] = (float)alpha / 65535.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 447–449 */
 /* addr: 0x0014d7d0  size: 276 bytes */
@@ -4743,10 +3764,6 @@ void impPS2glColor4us(unsigned short red, unsigned short green, unsigned short b
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glColor4ui(unsigned int red, unsigned int green, unsigned int blue, unsigned int alpha)
-{
-    g_PS2glContext.vacurColor[0][0] = (float)red / 4294967295.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 4294967295.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 4294967295.0f; g_PS2glContext.vacurColor[0][3] = (float)alpha / 4294967295.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 441–443 */
 /* addr: 0x0014d8f0  size: 276 bytes */
@@ -4756,10 +3773,6 @@ void impPS2glColor4ui(unsigned int red, unsigned int green, unsigned int blue, u
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glColor4ub(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha)
-{
-    g_PS2glContext.vacurColor[0][0] = (float)red / 255.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 255.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 255.0f; g_PS2glContext.vacurColor[0][3] = (float)alpha / 255.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 435–437 */
 /* addr: 0x0014da10  size: 100 bytes */
@@ -4769,10 +3782,6 @@ void impPS2glColor4ub(unsigned char red, unsigned char green, unsigned char blue
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glColor4s(short red, short green, short blue, short alpha)
-{
-    g_PS2glContext.vacurColor[0][0] = (float)red / 32767.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 32767.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 32767.0f; g_PS2glContext.vacurColor[0][3] = (float)alpha / 32767.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 429–431 */
 /* addr: 0x0014da80  size: 92 bytes */
@@ -4782,10 +3791,6 @@ void impPS2glColor4s(short red, short green, short blue, short alpha)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glColor4i(int red, int green, int blue, int alpha)
-{
-    g_PS2glContext.vacurColor[0][0] = (float)red / 2147483648.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 2147483648.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 2147483648.0f; g_PS2glContext.vacurColor[0][3] = (float)alpha / 2147483648.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 423–425 */
 /* addr: 0x0014dae0  size: 116 bytes */
@@ -4796,10 +3801,6 @@ void impPS2glColor4i(int red, int green, int blue, int alpha)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glColor4d(double R, double G, double B, double A)
-{
-    g_PS2glContext.vacurColor[0][0] = (float)R; g_PS2glContext.vacurColor[0][1] = (float)G; g_PS2glContext.vacurColor[0][2] = (float)B; g_PS2glContext.vacurColor[0][3] = (float)A;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 403–420 */
 /* addr: 0x0014db60  size: 36 bytes */
@@ -4812,13 +3813,6 @@ void impPS2glColor4d(double R, double G, double B, double A)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glColor4f(float red, float green, float blue, float alpha)
-{
-    g_PS2glContext.vacurColor[0][0] = red;
-    g_PS2glContext.vacurColor[0][1] = green;
-    g_PS2glContext.vacurColor[0][2] = blue;
-    g_PS2glContext.vacurColor[0][3] = alpha;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 395–397 */
 /* addr: 0x0014db90  size: 92 bytes */
@@ -4828,10 +3822,6 @@ void impPS2glColor4f(float red, float green, float blue, float alpha)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glColor4b(signed char red, signed char green, signed char blue, signed char alpha)
-{
-    g_PS2glContext.vacurColor[0][0] = (float)red / 127.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 127.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 127.0f; g_PS2glContext.vacurColor[0][3] = (float)alpha / 127.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 389–391 */
 /* addr: 0x0014dbf0  size: 232 bytes */
@@ -4841,10 +3831,6 @@ void impPS2glColor4b(signed char red, signed char green, signed char blue, signe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glColor3us(unsigned short red, unsigned short green, unsigned short blue)
-{
-    g_PS2glContext.vacurColor[0][0] = (float)red / 65535.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 65535.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 65535.0f; g_PS2glContext.vacurColor[0][3] = 1.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 384–385 */
 /* addr: 0x0014dce0  size: 216 bytes */
@@ -4854,10 +3840,6 @@ void impPS2glColor3us(unsigned short red, unsigned short green, unsigned short b
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glColor3ui(unsigned int red, unsigned int green, unsigned int blue)
-{
-    g_PS2glContext.vacurColor[0][0] = (float)red / 4294967295.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 4294967295.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 4294967295.0f; g_PS2glContext.vacurColor[0][3] = 1.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 379–380 */
 /* addr: 0x0014ddc0  size: 216 bytes */
@@ -4867,10 +3849,6 @@ void impPS2glColor3ui(unsigned int red, unsigned int green, unsigned int blue)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glColor3ub(unsigned char red, unsigned char green, unsigned char blue)
-{
-    g_PS2glContext.vacurColor[0][0] = (float)red / 255.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 255.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 255.0f; g_PS2glContext.vacurColor[0][3] = 1.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 374–375 */
 /* addr: 0x0014dea0  size: 92 bytes */
@@ -4880,10 +3858,6 @@ void impPS2glColor3ub(unsigned char red, unsigned char green, unsigned char blue
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glColor3s(short red, short green, short blue)
-{
-    g_PS2glContext.vacurColor[0][0] = (float)red / 32767.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 32767.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 32767.0f; g_PS2glContext.vacurColor[0][3] = 1.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 369–370 */
 /* addr: 0x0014df00  size: 84 bytes */
@@ -4893,10 +3867,6 @@ void impPS2glColor3s(short red, short green, short blue)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glColor3i(int red, int green, int blue)
-{
-    g_PS2glContext.vacurColor[0][0] = (float)red / 2147483648.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 2147483648.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 2147483648.0f; g_PS2glContext.vacurColor[0][3] = 1.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 364–365 */
 /* addr: 0x0014df60  size: 40 bytes */
@@ -4906,10 +3876,6 @@ void impPS2glColor3i(int red, int green, int blue)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glColor3f(float red, float green, float blue)
-{
-    g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = 1.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 358–360 */
 /* addr: 0x0014df90  size: 100 bytes */
@@ -4920,10 +3886,6 @@ void impPS2glColor3f(float red, float green, float blue)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glColor3d(double red, double green, double blue)
-{
-    g_PS2glContext.vacurColor[0][0] = (float)red; g_PS2glContext.vacurColor[0][1] = (float)green; g_PS2glContext.vacurColor[0][2] = (float)blue; g_PS2glContext.vacurColor[0][3] = 1.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 354–355 */
 /* addr: 0x0014e000  size: 84 bytes */
@@ -4933,10 +3895,6 @@ void impPS2glColor3d(double red, double green, double blue)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glColor3b(signed char red, signed char green, signed char blue)
-{
-    g_PS2glContext.vacurColor[0][0] = (float)red / 127.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 127.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 127.0f; g_PS2glContext.vacurColor[0][3] = 1.0f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 277–303 */
 /* addr: 0x0014e060  size: 68 bytes */
@@ -4952,13 +3910,6 @@ void impPS2glColor3b(signed char red, signed char green, signed char blue)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glEnd(void)
-{
-    if (g_PS2glContext.eBeginMode == 7)
-        PS2glAssembleQuads();
-    PS2glFlushBuffer(1);
-    g_PS2glContext.bInBeginEndPair = 0;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 127–274 */
 /* addr: 0x0014e0b0  size: 952 bytes */
@@ -5039,6 +3990,93 @@ extern unsigned int VU1BufferFreeSpace(void);
 extern void VU1UpdateParameters(tagGLcontext* pContext, unsigned int mode);
 extern void PS2glUpdateTexture(unsigned int target);
 extern void PS2glActiveTextureARB(unsigned int target);
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 112–122 */
+/* addr: 0x0014e470  size: 248 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 112
+ *   +0x0004 -> line 114
+ *   +0x0008 -> line 112
+ *   +0x0010 -> line 114
+ *   +0x00b0 -> line 119
+ *   +0x00e0 -> line 120
+ *   +0x00e8 -> line 122
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+extern int sceGsSyncPath(int mode, unsigned short timeout);
+extern int printf(const char*, ...);
+extern void sceDevVu1Pause(void);
+extern int sceDevVif1Reset(void);
+extern void sceDevVu1Reset(void);
+extern void sceDevGifReset(void);
+extern void sceDevVu1Exec(unsigned short addr);
+extern void PS2glFlushNotify(void);
+extern void GsUpdate(void);
+extern void VU1FlushBuffer(void);
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 84–109 */
+/* addr: 0x0014e570  size: 188 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 84
+ *   +0x0004 -> line 85
+ *   +0x0008 -> line 84
+ *   +0x000c -> line 85
+ *   +0x0018 -> line 87
+ *   +0x0088 -> line 89
+ *   +0x0090 -> line 102
+ *   +0x00a0 -> line 103
+ *   +0x00a8 -> line 107
+ *   +0x00b0 -> line 109
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 47–74 */
+/* addr: 0x0014e630  size: 72 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 47
+ *   +0x0004 -> line 50
+ *   +0x0008 -> line 47
+ *   +0x000c -> line 50
+ *   +0x001c -> line 51
+ *   +0x0024 -> line 53
+ *   +0x002c -> line 54
+ *   +0x0034 -> line 64
+ *   +0x0038 -> line 74
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+int PS2glGsSyncPath(void)
+{
+    int bReturn;
+
+    bReturn = sceGsSyncPath(0, 0);
+    if (bReturn != 0)
+    {
+        printf("\n\n************************************************\n************ sceGsSyncPath timeout.*************\n************************************************\n\n");
+        Bug_Please_ReloadMenu_40 = 1;
+    }
+    return bReturn;
+}
+
+void impPS2glFlush(void)
+{
+    g_PS2glContext.uiCurrentDmaBuffer++;
+    while (sceGsSyncPath(1, 0) & 4) { if (sceGsSyncPath(0, 100)) { printf("****** VU1 busy ...\n"); sceDevVu1Pause(); sceDevVif1Reset(); sceDevVu1Reset(); sceDevGifReset(); sceDevVu1Exec(0); break; } } PS2glFlushNotify(); if (g_gsContext.ModFlgs) GsUpdate(); VU1FlushBuffer();
+}
+
+void impPS2glFinish(void)
+{
+    int iRet;
+
+    g_PS2glContext.uiCurrentDmaBuffer++; while (sceGsSyncPath(1, 0) & 4) { if (sceGsSyncPath(0, 100)) { printf("****** VU1 busy ...\n"); sceDevVu1Pause(); sceDevVif1Reset(); sceDevVu1Reset(); sceDevGifReset(); sceDevVu1Exec(0); break; } } PS2glFlushNotify(); if (g_gsContext.ModFlgs) GsUpdate(); VU1FlushBuffer();
+
+    iRet = sceGsSyncPath(0, 0); if (iRet) { printf("\n\n************************************************\n************ sceGsSyncPath timeout.*************\n************************************************\n\n"); Bug_Please_ReloadMenu_40 = 1; }
+    if (iRet) printf("In PS2glFinish, SyncPath failure!\n");
+}
+
 void impPS2glBegin(unsigned int mode)
 {
     signed char iPrimMode;
@@ -5150,86 +4188,1433 @@ void impPS2glBegin(unsigned int mode)
     g_PS2glContext.eOldBeginMode = g_PS2glContext.eBeginMode;
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 112–122 */
-/* addr: 0x0014e470  size: 248 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 112
- *   +0x0004 -> line 114
- *   +0x0008 -> line 112
- *   +0x0010 -> line 114
- *   +0x00b0 -> line 119
- *   +0x00e0 -> line 120
- *   +0x00e8 -> line 122
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-extern int sceGsSyncPath(int mode, unsigned short timeout);
-extern int printf(const char*, ...);
-extern void sceDevVu1Pause(void);
-extern int sceDevVif1Reset(void);
-extern void sceDevVu1Reset(void);
-extern void sceDevGifReset(void);
-extern void sceDevVu1Exec(unsigned short addr);
-extern void PS2glFlushNotify(void);
-extern void GsUpdate(void);
-extern void VU1FlushBuffer(void);
-
-void impPS2glFinish(void)
+void impPS2glEnd(void)
 {
-    int iRet;
-
-    g_PS2glContext.uiCurrentDmaBuffer++; while (sceGsSyncPath(1, 0) & 4) { if (sceGsSyncPath(0, 100)) { printf("****** VU1 busy ...\n"); sceDevVu1Pause(); sceDevVif1Reset(); sceDevVu1Reset(); sceDevGifReset(); sceDevVu1Exec(0); break; } } PS2glFlushNotify(); if (g_gsContext.ModFlgs) GsUpdate(); VU1FlushBuffer();
-
-    iRet = sceGsSyncPath(0, 0); if (iRet) { printf("\n\n************************************************\n************ sceGsSyncPath timeout.*************\n************************************************\n\n"); Bug_Please_ReloadMenu_40 = 1; }
-    if (iRet) printf("In PS2glFinish, SyncPath failure!\n");
+    if (g_PS2glContext.eBeginMode == 7)
+        PS2glAssembleQuads();
+    PS2glFlushBuffer(1);
+    g_PS2glContext.bInBeginEndPair = 0;
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 84–109 */
-/* addr: 0x0014e570  size: 188 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 84
- *   +0x0004 -> line 85
- *   +0x0008 -> line 84
- *   +0x000c -> line 85
- *   +0x0018 -> line 87
- *   +0x0088 -> line 89
- *   +0x0090 -> line 102
- *   +0x00a0 -> line 103
- *   +0x00a8 -> line 107
- *   +0x00b0 -> line 109
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void impPS2glFlush(void)
+void impPS2glColor3b(signed char red, signed char green, signed char blue)
 {
-    g_PS2glContext.uiCurrentDmaBuffer++;
-    while (sceGsSyncPath(1, 0) & 4) { if (sceGsSyncPath(0, 100)) { printf("****** VU1 busy ...\n"); sceDevVu1Pause(); sceDevVif1Reset(); sceDevVu1Reset(); sceDevGifReset(); sceDevVu1Exec(0); break; } } PS2glFlushNotify(); if (g_gsContext.ModFlgs) GsUpdate(); VU1FlushBuffer();
+    g_PS2glContext.vacurColor[0][0] = (float)red / 127.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 127.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 127.0f; g_PS2glContext.vacurColor[0][3] = 1.0f;
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 47–74 */
-/* addr: 0x0014e630  size: 72 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 47
- *   +0x0004 -> line 50
- *   +0x0008 -> line 47
- *   +0x000c -> line 50
- *   +0x001c -> line 51
- *   +0x0024 -> line 53
- *   +0x002c -> line 54
- *   +0x0034 -> line 64
- *   +0x0038 -> line 74
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int PS2glGsSyncPath(void)
+void impPS2glColor3d(double red, double green, double blue)
 {
-    int bReturn;
+    g_PS2glContext.vacurColor[0][0] = (float)red; g_PS2glContext.vacurColor[0][1] = (float)green; g_PS2glContext.vacurColor[0][2] = (float)blue; g_PS2glContext.vacurColor[0][3] = 1.0f;
+}
 
-    bReturn = sceGsSyncPath(0, 0);
-    if (bReturn != 0)
-    {
-        printf("\n\n************************************************\n************ sceGsSyncPath timeout.*************\n************************************************\n\n");
-        Bug_Please_ReloadMenu_40 = 1;
+void impPS2glColor3f(float red, float green, float blue)
+{
+    g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = 1.0f;
+}
+
+void impPS2glColor3i(int red, int green, int blue)
+{
+    g_PS2glContext.vacurColor[0][0] = (float)red / 2147483648.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 2147483648.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 2147483648.0f; g_PS2glContext.vacurColor[0][3] = 1.0f;
+}
+
+void impPS2glColor3s(short red, short green, short blue)
+{
+    g_PS2glContext.vacurColor[0][0] = (float)red / 32767.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 32767.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 32767.0f; g_PS2glContext.vacurColor[0][3] = 1.0f;
+}
+
+void impPS2glColor3ub(unsigned char red, unsigned char green, unsigned char blue)
+{
+    g_PS2glContext.vacurColor[0][0] = (float)red / 255.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 255.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 255.0f; g_PS2glContext.vacurColor[0][3] = 1.0f;
+}
+
+void impPS2glColor3ui(unsigned int red, unsigned int green, unsigned int blue)
+{
+    g_PS2glContext.vacurColor[0][0] = (float)red / 4294967295.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 4294967295.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 4294967295.0f; g_PS2glContext.vacurColor[0][3] = 1.0f;
+}
+
+void impPS2glColor3us(unsigned short red, unsigned short green, unsigned short blue)
+{
+    g_PS2glContext.vacurColor[0][0] = (float)red / 65535.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 65535.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 65535.0f; g_PS2glContext.vacurColor[0][3] = 1.0f;
+}
+
+void impPS2glColor4b(signed char red, signed char green, signed char blue, signed char alpha)
+{
+    g_PS2glContext.vacurColor[0][0] = (float)red / 127.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 127.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 127.0f; g_PS2glContext.vacurColor[0][3] = (float)alpha / 127.0f;
+}
+
+void impPS2glColor4f(float red, float green, float blue, float alpha)
+{
+    g_PS2glContext.vacurColor[0][0] = red;
+    g_PS2glContext.vacurColor[0][1] = green;
+    g_PS2glContext.vacurColor[0][2] = blue;
+    g_PS2glContext.vacurColor[0][3] = alpha;
+}
+
+void impPS2glColor4d(double R, double G, double B, double A)
+{
+    g_PS2glContext.vacurColor[0][0] = (float)R; g_PS2glContext.vacurColor[0][1] = (float)G; g_PS2glContext.vacurColor[0][2] = (float)B; g_PS2glContext.vacurColor[0][3] = (float)A;
+}
+
+void impPS2glColor4i(int red, int green, int blue, int alpha)
+{
+    g_PS2glContext.vacurColor[0][0] = (float)red / 2147483648.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 2147483648.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 2147483648.0f; g_PS2glContext.vacurColor[0][3] = (float)alpha / 2147483648.0f;
+}
+
+void impPS2glColor4s(short red, short green, short blue, short alpha)
+{
+    g_PS2glContext.vacurColor[0][0] = (float)red / 32767.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 32767.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 32767.0f; g_PS2glContext.vacurColor[0][3] = (float)alpha / 32767.0f;
+}
+
+void impPS2glColor4ub(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha)
+{
+    g_PS2glContext.vacurColor[0][0] = (float)red / 255.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 255.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 255.0f; g_PS2glContext.vacurColor[0][3] = (float)alpha / 255.0f;
+}
+
+void impPS2glColor4ui(unsigned int red, unsigned int green, unsigned int blue, unsigned int alpha)
+{
+    g_PS2glContext.vacurColor[0][0] = (float)red / 4294967295.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 4294967295.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 4294967295.0f; g_PS2glContext.vacurColor[0][3] = (float)alpha / 4294967295.0f;
+}
+
+void impPS2glColor4us(unsigned short red, unsigned short green, unsigned short blue, unsigned short alpha)
+{
+    g_PS2glContext.vacurColor[0][0] = (float)red / 65535.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 65535.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 65535.0f; g_PS2glContext.vacurColor[0][3] = (float)alpha / 65535.0f;
+}
+
+void impPS2glColor3bv(signed char* v)
+{
+    float red, green, blue;
+    blue = (float)v[2] / 127.0f; green = (float)v[1] / 127.0f; red = (float)v[0] / 127.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = 1.0f;
+}
+
+void impPS2glColor3dv(double* v)
+{
+    float red, green, blue;
+    blue = (float)v[2]; green = (float)v[1]; red = (float)v[0]; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = 1.0f;
+}
+
+void impPS2glColor3fv(float* v)
+{
+    float red, green, blue;
+    blue = v[2]; green = v[1]; red = v[0]; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = 1.0f;
+}
+
+void impPS2glColor3iv(int* v)
+{
+    float red, green, blue;
+    blue = (float)v[2] / 2147483648.0f; green = (float)v[1] / 2147483648.0f; red = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = 1.0f;
+}
+
+void impPS2glColor3sv(short* v)
+{
+    float red, green, blue;
+    blue = (float)v[2] / 32767.0f; green = (float)v[1] / 32767.0f; red = (float)v[0] / 32767.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = 1.0f;
+}
+
+void impPS2glColor3ubv(unsigned char* v)
+{
+    float red, green, blue;
+    blue = (float)v[2] / 255.0f; green = (float)v[1] / 255.0f; red = (float)v[0] / 255.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = 1.0f;
+}
+
+void impPS2glColor3uiv(unsigned int* v)
+{
+    float red, green, blue;
+    blue = (float)v[2] / 4294967295.0f; green = (float)v[1] / 4294967295.0f; red = (float)v[0] / 4294967295.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = 1.0f;
+}
+
+void impPS2glColor3usv(unsigned short* v)
+{
+    float red, green, blue;
+    blue = (float)v[2] / 65535.0f; green = (float)v[1] / 65535.0f; red = (float)v[0] / 65535.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = 1.0f;
+}
+
+void impPS2glColor4bv(signed char* v)
+{
+    float red, green, blue, alpha;
+    alpha = (float)v[3] / 127.0f; blue = (float)v[2] / 127.0f; green = (float)v[1] / 127.0f; red = (float)v[0] / 127.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = alpha;
+}
+
+void impPS2glColor4dv(double* v)
+{
+    float red, green, blue, alpha;
+    alpha = (float)v[3]; blue = (float)v[2]; green = (float)v[1]; red = (float)v[0]; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = alpha;
+}
+
+void impPS2glColor4fv(float* v)
+{
+    g_PS2glContext.vacurColor[0][0] = v[0];
+    g_PS2glContext.vacurColor[0][1] = v[1];
+    g_PS2glContext.vacurColor[0][2] = v[2];
+    g_PS2glContext.vacurColor[0][3] = v[3];
+}
+
+void impPS2glColor4iv(int* v)
+{
+    float red, green, blue, alpha;
+    alpha = (float)v[3] / 2147483648.0f; blue = (float)v[2] / 2147483648.0f; green = (float)v[1] / 2147483648.0f; red = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = alpha;
+}
+
+void impPS2glColor4sv(short* v)
+{
+    float red, green, blue, alpha;
+    alpha = (float)v[3] / 32767.0f; blue = (float)v[2] / 32767.0f; green = (float)v[1] / 32767.0f; red = (float)v[0] / 32767.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = alpha;
+}
+
+void impPS2glColor4ubv(unsigned char* v)
+{
+    float red, green, blue, alpha;
+    alpha = (float)v[3] / 255.0f; blue = (float)v[2] / 255.0f; green = (float)v[1] / 255.0f; red = (float)v[0] / 255.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = alpha;
+}
+
+void impPS2glColor4uiv(unsigned int* v)
+{
+    float red, green, blue, alpha;
+    alpha = (float)v[3] / 4294967295.0f; blue = (float)v[2] / 4294967295.0f; green = (float)v[1] / 4294967295.0f; red = (float)v[0] / 4294967295.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = alpha;
+}
+
+void impPS2glColor4usv(unsigned short* v)
+{
+    float red, green, blue, alpha;
+    alpha = (float)v[3] / 65535.0f; blue = (float)v[2] / 65535.0f; green = (float)v[1] / 65535.0f; red = (float)v[0] / 65535.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = alpha;
+}
+
+void impPS2glMultiColor3bARB(unsigned int texture, signed char red, signed char green, signed char blue)
+{
+    g_PS2glContext.vacurColor[texture][0] = (float)red / 127.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 127.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 127.0f; g_PS2glContext.vacurColor[texture][3] = 1.0f;
+}
+
+void impPS2glMultiColor3dARB(unsigned int texture, double red, double green, double blue)
+{
+    g_PS2glContext.vacurColor[texture][0] = (float)red; g_PS2glContext.vacurColor[texture][1] = (float)green; g_PS2glContext.vacurColor[texture][2] = (float)blue; g_PS2glContext.vacurColor[texture][3] = 1.0f;
+}
+
+void impPS2glMultiColor3fARB(unsigned int texture, float red, float green, float blue)
+{
+    g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = 1.0f;
+}
+
+void impPS2glMultiColor3iARB(unsigned int texture, int red, int green, int blue)
+{
+    g_PS2glContext.vacurColor[texture][0] = (float)red / 2147483648.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 2147483648.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 2147483648.0f; g_PS2glContext.vacurColor[texture][3] = 1.0f;
+}
+
+void impPS2glMultiColor3sARB(unsigned int texture, short red, short green, short blue)
+{
+    g_PS2glContext.vacurColor[texture][0] = (float)red / 32767.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 32767.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 32767.0f; g_PS2glContext.vacurColor[texture][3] = 1.0f;
+}
+
+void impPS2glMultiColor3ubARB(unsigned int texture, unsigned char red, unsigned char green, unsigned char blue)
+{
+    g_PS2glContext.vacurColor[texture][0] = (float)red / 255.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 255.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 255.0f; g_PS2glContext.vacurColor[texture][3] = 1.0f;
+}
+
+void impPS2glMultiColor3uiARB(unsigned int texture, unsigned int red, unsigned int green, unsigned int blue)
+{
+    g_PS2glContext.vacurColor[texture][0] = (float)red / 4294967295.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 4294967295.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 4294967295.0f; g_PS2glContext.vacurColor[texture][3] = 1.0f;
+}
+
+void impPS2glMultiColor3usARB(unsigned int texture, unsigned short red, unsigned short green, unsigned short blue)
+{
+    g_PS2glContext.vacurColor[texture][0] = (float)red / 65535.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 65535.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 65535.0f; g_PS2glContext.vacurColor[texture][3] = 1.0f;
+}
+
+void impPS2glMultiColor4bARB(unsigned int texture, signed char red, signed char green, signed char blue, signed char alpha)
+{
+    g_PS2glContext.vacurColor[texture][0] = (float)red / 127.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 127.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 127.0f; g_PS2glContext.vacurColor[texture][3] = (float)alpha / 127.0f;
+}
+
+void impPS2glMultiColor4fARB(unsigned int texture, float red, float green, float blue, float alpha)
+{
+    g_PS2glContext.vacurColor[texture][0] = red;
+    g_PS2glContext.vacurColor[texture][1] = green;
+    g_PS2glContext.vacurColor[texture][2] = blue;
+    g_PS2glContext.vacurColor[texture][3] = alpha;
+}
+
+void impPS2glMultiColor4dARB(unsigned int texture, double R, double G, double B, double A)
+{
+    g_PS2glContext.vacurColor[texture][0] = (float)R; g_PS2glContext.vacurColor[texture][1] = (float)G; g_PS2glContext.vacurColor[texture][2] = (float)B; g_PS2glContext.vacurColor[texture][3] = (float)A;
+}
+
+void impPS2glMultiColor4iARB(unsigned int texture, int red, int green, int blue, int alpha)
+{
+    g_PS2glContext.vacurColor[texture][0] = (float)red / 2147483648.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 2147483648.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 2147483648.0f; g_PS2glContext.vacurColor[texture][3] = (float)alpha / 2147483648.0f;
+}
+
+void impPS2glMultiColor4sARB(unsigned int texture, short red, short green, short blue, short alpha)
+{
+    g_PS2glContext.vacurColor[texture][0] = (float)red / 32767.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 32767.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 32767.0f; g_PS2glContext.vacurColor[texture][3] = (float)alpha / 32767.0f;
+}
+
+void impPS2glMultiColor4ubARB(unsigned int texture, unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha)
+{
+    g_PS2glContext.vacurColor[texture][0] = (float)red / 255.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 255.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 255.0f; g_PS2glContext.vacurColor[texture][3] = (float)alpha / 255.0f;
+}
+
+void impPS2glMultiColor4uiARB(unsigned int texture, unsigned int red, unsigned int green, unsigned int blue, unsigned int alpha)
+{
+    g_PS2glContext.vacurColor[texture][0] = (float)red / 4294967295.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 4294967295.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 4294967295.0f; g_PS2glContext.vacurColor[texture][3] = (float)alpha / 4294967295.0f;
+}
+
+void impPS2glMultiColor4usARB(unsigned int texture, unsigned short red, unsigned short green, unsigned short blue, unsigned short alpha)
+{
+    g_PS2glContext.vacurColor[texture][0] = (float)red / 65535.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 65535.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 65535.0f; g_PS2glContext.vacurColor[texture][3] = (float)alpha / 65535.0f;
+}
+
+void impPS2glMultiColor3bvARB(unsigned int texture, signed char* v)
+{
+    float red, green, blue;
+    blue = (float)v[2] / 127.0f; green = (float)v[1] / 127.0f; red = (float)v[0] / 127.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = 1.0f;
+}
+
+void impPS2glMultiColor3dvARB(unsigned int texture, double* v)
+{
+    float red, green, blue;
+    blue = (float)v[2]; green = (float)v[1]; red = (float)v[0]; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = 1.0f;
+}
+
+void impPS2glMultiColor3fvARB(unsigned int texture, float* v)
+{
+    float red, green, blue;
+    blue = v[2]; green = v[1]; red = v[0]; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = 1.0f;
+}
+
+void impPS2glMultiColor3ivARB(unsigned int texture, int* v)
+{
+    float red, green, blue;
+    blue = (float)v[2] / 2147483648.0f; green = (float)v[1] / 2147483648.0f; red = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = 1.0f;
+}
+
+void impPS2glMultiColor3svARB(unsigned int texture, short* v)
+{
+    float red, green, blue;
+    blue = (float)v[2] / 32767.0f; green = (float)v[1] / 32767.0f; red = (float)v[0] / 32767.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = 1.0f;
+}
+
+void impPS2glMultiColor3ubvARB(unsigned int texture, unsigned char* v)
+{
+    float red, green, blue;
+    blue = (float)v[2] / 255.0f; green = (float)v[1] / 255.0f; red = (float)v[0] / 255.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = 1.0f;
+}
+
+void impPS2glMultiColor3uivARB(unsigned int texture, unsigned int* v)
+{
+    float red, green, blue;
+    blue = (float)v[2] / 4294967295.0f; green = (float)v[1] / 4294967295.0f; red = (float)v[0] / 4294967295.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = 1.0f;
+}
+
+void impPS2glMultiColor3usvARB(unsigned int texture, unsigned short* v)
+{
+    float red, green, blue;
+    blue = (float)v[2] / 65535.0f; green = (float)v[1] / 65535.0f; red = (float)v[0] / 65535.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = 1.0f;
+}
+
+void impPS2glMultiColor4bvARB(unsigned int texture, signed char* v)
+{
+    float red, green, blue, alpha;
+    alpha = (float)v[3] / 127.0f; blue = (float)v[2] / 127.0f; green = (float)v[1] / 127.0f; red = (float)v[0] / 127.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = alpha;
+}
+
+void impPS2glMultiColor4dvARB(unsigned int texture, double* v)
+{
+    float red, green, blue, alpha;
+    alpha = (float)v[3]; blue = (float)v[2]; green = (float)v[1]; red = (float)v[0]; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = alpha;
+}
+
+void impPS2glMultiColor4fvARB(unsigned int texture, float* v)
+{
+    g_PS2glContext.vacurColor[texture][0] = v[0];
+    g_PS2glContext.vacurColor[texture][1] = v[1];
+    g_PS2glContext.vacurColor[texture][2] = v[2];
+    g_PS2glContext.vacurColor[texture][3] = v[3];
+}
+
+void impPS2glMultiColor4ivARB(unsigned int texture, int* v)
+{
+    float red, green, blue, alpha;
+    alpha = (float)v[3] / 2147483648.0f; blue = (float)v[2] / 2147483648.0f; green = (float)v[1] / 2147483648.0f; red = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = alpha;
+}
+
+void impPS2glMultiColor4svARB(unsigned int texture, short* v)
+{
+    float red, green, blue, alpha;
+    alpha = (float)v[3] / 32767.0f; blue = (float)v[2] / 32767.0f; green = (float)v[1] / 32767.0f; red = (float)v[0] / 32767.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = alpha;
+}
+
+void impPS2glMultiColor4ubvARB(unsigned int texture, unsigned char* v)
+{
+    float red, green, blue, alpha;
+    alpha = (float)v[3] / 255.0f; blue = (float)v[2] / 255.0f; green = (float)v[1] / 255.0f; red = (float)v[0] / 255.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = alpha;
+}
+
+void impPS2glMultiColor4uivARB(unsigned int texture, unsigned int* v)
+{
+    float red, green, blue, alpha;
+    alpha = (float)v[3] / 4294967295.0f; blue = (float)v[2] / 4294967295.0f; green = (float)v[1] / 4294967295.0f; red = (float)v[0] / 4294967295.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = alpha;
+}
+
+void impPS2glMultiColor4usvARB(unsigned int texture, unsigned short* v)
+{
+    float red, green, blue, alpha;
+    alpha = (float)v[3] / 65535.0f; blue = (float)v[2] / 65535.0f; green = (float)v[1] / 65535.0f; red = (float)v[0] / 65535.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = alpha;
+}
+
+void impPS2glNormal3b(signed char nx, signed char ny, signed char nz)
+{
+    g_PS2glContext.vcurNormal[0] = (float)nx / 127.0f; g_PS2glContext.vcurNormal[1] = (float)ny / 127.0f; g_PS2glContext.vcurNormal[2] = (float)nz / 127.0f; g_PS2glContext.vcurNormal[3] = 0.0f;
+}
+
+void impPS2glNormal3s(short nx, short ny, short nz)
+{
+    g_PS2glContext.vcurNormal[0] = (float)nx / 32767.0f; g_PS2glContext.vcurNormal[1] = (float)ny / 32767.0f; g_PS2glContext.vcurNormal[2] = (float)nz / 32767.0f; g_PS2glContext.vcurNormal[3] = 0.0f;
+}
+
+void impPS2glNormal3i(int nx, int ny, int nz)
+{
+    g_PS2glContext.vcurNormal[0] = (float)nx / 2147483648.0f; g_PS2glContext.vcurNormal[1] = (float)ny / 2147483648.0f; g_PS2glContext.vcurNormal[2] = (float)nz / 2147483648.0f; g_PS2glContext.vcurNormal[3] = 0.0f;
+}
+
+void impPS2glNormal3d(double nx, double ny, double nz)
+{
+    g_PS2glContext.vcurNormal[0] = (float)nx; g_PS2glContext.vcurNormal[1] = (float)ny; g_PS2glContext.vcurNormal[2] = (float)nz; g_PS2glContext.vcurNormal[3] = 0.0f;
+}
+
+void impPS2glNormal3f(float nx, float ny, float nz)
+{
+    g_PS2glContext.vcurNormal[0] = nx;
+    g_PS2glContext.vcurNormal[1] = ny;
+    g_PS2glContext.vcurNormal[2] = nz;
+    g_PS2glContext.vcurNormal[3] = 0.0f;
+}
+
+void impPS2glNormal3bv(signed char* v)
+{
+    float nx, ny, nz;
+    nz = (float)v[2] / 127.0f; ny = (float)v[1] / 127.0f; nx = (float)v[0] / 127.0f; g_PS2glContext.vcurNormal[0] = nx; g_PS2glContext.vcurNormal[1] = ny; g_PS2glContext.vcurNormal[2] = nz; g_PS2glContext.vcurNormal[3] = 0.0f;
+}
+
+void impPS2glNormal3sv(short* v)
+{
+    float nx, ny, nz;
+    nz = (float)v[2] / 32767.0f; ny = (float)v[1] / 32767.0f; nx = (float)v[0] / 32767.0f; g_PS2glContext.vcurNormal[0] = nx; g_PS2glContext.vcurNormal[1] = ny; g_PS2glContext.vcurNormal[2] = nz; g_PS2glContext.vcurNormal[3] = 0.0f;
+}
+
+void impPS2glNormal3iv(int* v)
+{
+    float nx, ny, nz;
+    nz = (float)v[2] / 2147483648.0f; ny = (float)v[1] / 2147483648.0f; nx = (float)v[0] / 2147483648.0f; g_PS2glContext.vcurNormal[0] = nx; g_PS2glContext.vcurNormal[1] = ny; g_PS2glContext.vcurNormal[2] = nz; g_PS2glContext.vcurNormal[3] = 0.0f;
+}
+
+void impPS2glNormal3dv(double* v)
+{
+    float nx, ny, nz;
+    nz = (float)v[2]; ny = (float)v[1]; nx = (float)v[0]; g_PS2glContext.vcurNormal[0] = nx; g_PS2glContext.vcurNormal[1] = ny; g_PS2glContext.vcurNormal[2] = nz; g_PS2glContext.vcurNormal[3] = 0.0f;
+}
+
+void impPS2glNormal3fv(float* v)
+{
+    g_PS2glContext.vcurNormal[0] = v[0];
+    g_PS2glContext.vcurNormal[1] = v[1];
+    g_PS2glContext.vcurNormal[2] = v[2];
+    g_PS2glContext.vcurNormal[3] = 0.0f;
+}
+
+void impPS2glVertex2d(double x, double y) { int nCount = g_PS2glContext.iBufCount, nLimit = g_PS2glContext.iBufLimit; quad* pQuad;
+    if (nCount >= nLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x; (*g_PS2glContext.pVBuf)[1] = (float)y; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1];
+    g_PS2glContext.iBufCount++;
+}
+
+void impPS2glVertex2f(float x, float y)
+{
+    quad* pQuad;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x; (*g_PS2glContext.pVBuf)[1] = y; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+}
+
+void impPS2glVertex2i(int x, int y)
+{
+    quad* pQuad;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x; (*g_PS2glContext.pVBuf)[1] = (float)y; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+}
+
+void impPS2glVertex2s(short x, short y)
+{
+    quad* pQuad;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x; (*g_PS2glContext.pVBuf)[1] = (float)y; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+}
+
+void impPS2glVertex3d(double x, double y, double z)
+{
+    quad* pQuad;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x; (*g_PS2glContext.pVBuf)[1] = (float)y; (*g_PS2glContext.pVBuf)[2] = (float)z; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+}
+
+void impPS2glVertex3f(float x, float y, float z)
+{
+    quad* pQuad;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x; (*g_PS2glContext.pVBuf)[1] = y; (*g_PS2glContext.pVBuf)[2] = z; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+}
+
+void impPS2glVertex3i(int x, int y, int z)
+{
+    quad* pQuad;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x; (*g_PS2glContext.pVBuf)[1] = (float)y; (*g_PS2glContext.pVBuf)[2] = (float)z; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+}
+
+void impPS2glVertex3s(short x, short y, short z)
+{
+    quad* pQuad;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x; (*g_PS2glContext.pVBuf)[1] = (float)y; (*g_PS2glContext.pVBuf)[2] = (float)z; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+}
+
+void impPS2glVertex4f(float x, float y, float z, float w)
+{
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) {
+        if (g_PS2glContext.eBeginMode == 7)
+            PS2glAssembleQuads();
+        PS2glFlushBuffer(0);
     }
-    return bReturn;
+
+    (*g_PS2glContext.pVBuf)[0] = x;
+    (*g_PS2glContext.pVBuf)[1] = y;
+    (*g_PS2glContext.pVBuf)[2] = z;
+    (*g_PS2glContext.pVBuf++)[3] = w;
+
+    *(quad*)g_PS2glContext.pNBuf++ = *(quad*)g_PS2glContext.vcurNormal;
+    *(quad*)g_PS2glContext.pCBuf++ = *(quad*)g_PS2glContext.vacurColor[0];
+    *(quad*)g_PS2glContext.pCBuf_b++ = *(quad*)g_PS2glContext.vacurColor[1];
+    *(quad*)g_PS2glContext.pTBuf++ = *(quad*)g_PS2glContext.vacurTexCoords[0];
+    *(quad*)g_PS2glContext.pTBuf_b++ = *(quad*)g_PS2glContext.vacurTexCoords[1];
+
+    g_PS2glContext.iBufCount++;
+}
+
+void impPS2glVertex4d(double X, double Y, double Z, double W)
+{
+    quad* pQuad;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)X; (*g_PS2glContext.pVBuf)[1] = (float)Y; (*g_PS2glContext.pVBuf)[2] = (float)Z; (*g_PS2glContext.pVBuf++)[3] = (float)W; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+}
+
+void impPS2glVertex4i(int x, int y, int z, int w)
+{
+    quad* pQuad;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x; (*g_PS2glContext.pVBuf)[1] = (float)y; (*g_PS2glContext.pVBuf)[2] = (float)z; (*g_PS2glContext.pVBuf++)[3] = (float)w; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+}
+
+void impPS2glVertex4s(short x, short y, short z, short w)
+{
+    quad* pQuad;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x; (*g_PS2glContext.pVBuf)[1] = (float)y; (*g_PS2glContext.pVBuf)[2] = (float)z; (*g_PS2glContext.pVBuf++)[3] = (float)w; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+}
+
+void impPS2glVertex2dv(double* v)
+{
+    float x, y;
+    quad* pQuad;
+    y = (float)v[1]; x = (float)v[0]; if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x; (*g_PS2glContext.pVBuf)[1] = y; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+}
+
+void impPS2glVertex2fv(float* v)
+{
+    float x, y;
+    quad* pQuad;
+    y = v[1]; x = v[0]; if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x; (*g_PS2glContext.pVBuf)[1] = y; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+}
+
+void impPS2glVertex2iv(int* v)
+{
+    float x, y;
+    quad* pQuad;
+    y = (float)v[1]; x = (float)v[0]; if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x; (*g_PS2glContext.pVBuf)[1] = y; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+}
+
+void impPS2glVertex2sv(short* v)
+{
+    float x, y;
+    quad* pQuad;
+    y = (float)v[1]; x = (float)v[0]; if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x; (*g_PS2glContext.pVBuf)[1] = y; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+}
+
+void impPS2glVertex3dv(double* v)
+{
+    float x, y, z;
+    quad* pQuad;
+    z = (float)v[2]; y = (float)v[1]; x = (float)v[0]; if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x; (*g_PS2glContext.pVBuf)[1] = y; (*g_PS2glContext.pVBuf)[2] = z; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+}
+
+void impPS2glVertex3fv(float* v)
+{
+    float x, y, z;
+    quad* pQuad;
+    z = v[2]; y = v[1]; x = v[0]; if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x; (*g_PS2glContext.pVBuf)[1] = y; (*g_PS2glContext.pVBuf)[2] = z; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+}
+
+void impPS2glVertex3iv(int* v)
+{
+    float x, y, z;
+    quad* pQuad;
+    z = (float)v[2]; y = (float)v[1]; x = (float)v[0]; if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x; (*g_PS2glContext.pVBuf)[1] = y; (*g_PS2glContext.pVBuf)[2] = z; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+}
+
+void impPS2glVertex3sv(short* v)
+{
+    float x, y, z;
+    quad* pQuad;
+    z = (float)v[2]; y = (float)v[1]; x = (float)v[0]; if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x; (*g_PS2glContext.pVBuf)[1] = y; (*g_PS2glContext.pVBuf)[2] = z; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+}
+
+void impPS2glVertex4dv(double* v)
+{
+    float x, y, z, w;
+    quad* pQuad;
+    w = (float)v[3]; z = (float)v[2]; y = (float)v[1]; x = (float)v[0]; if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x; (*g_PS2glContext.pVBuf)[1] = y; (*g_PS2glContext.pVBuf)[2] = z; (*g_PS2glContext.pVBuf++)[3] = w; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+}
+
+void impPS2glVertex4fv(float* v)
+{
+    quad* pQuad;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit)
+    {
+        if (g_PS2glContext.eBeginMode == 7)
+            PS2glAssembleQuads();
+        PS2glFlushBuffer(0);
+    }
+    pQuad = (quad*)g_PS2glContext.pVBuf++; *pQuad = *(quad*)v;
+    pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal;
+    pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0];
+    pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1];
+    pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0];
+    pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1];
+    g_PS2glContext.iBufCount++;
+}
+
+void impPS2glVertex4iv(int* v)
+{
+    float x, y, z, w;
+    quad* pQuad;
+    w = (float)v[3]; z = (float)v[2]; y = (float)v[1]; x = (float)v[0]; if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x; (*g_PS2glContext.pVBuf)[1] = y; (*g_PS2glContext.pVBuf)[2] = z; (*g_PS2glContext.pVBuf++)[3] = w; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+}
+
+void impPS2glVertex4sv(short* v)
+{
+    float x, y, z, w;
+    quad* pQuad;
+    w = (float)v[3]; z = (float)v[2]; y = (float)v[1]; x = (float)v[0]; if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x; (*g_PS2glContext.pVBuf)[1] = y; (*g_PS2glContext.pVBuf)[2] = z; (*g_PS2glContext.pVBuf++)[3] = w; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+}
+
+void impPS2glRectdv(double* v1, double* v2)
+{
+    quad* pQuad;
+    float x1, y1, x2, y2;
+    y2 = (float)v2[1]; x2 = (float)v2[0]; y1 = (float)v1[1]; x1 = (float)v1[0];
+    impPS2glBegin(9);
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x1; (*g_PS2glContext.pVBuf)[1] = y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x2; (*g_PS2glContext.pVBuf)[1] = y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x2; (*g_PS2glContext.pVBuf)[1] = y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x1; (*g_PS2glContext.pVBuf)[1] = y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.eBeginMode == 7)
+        PS2glAssembleQuads();
+    PS2glFlushBuffer(1);
+    g_PS2glContext.bInBeginEndPair = 0;
+}
+
+void impPS2glRectfv(float* v1, float* v2)
+{
+    quad* pQuad;
+    float x1, y1, x2, y2;
+    y2 = (float)v2[1]; x2 = (float)v2[0]; y1 = (float)v1[1]; x1 = (float)v1[0];
+    impPS2glBegin(9);
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x1; (*g_PS2glContext.pVBuf)[1] = y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x2; (*g_PS2glContext.pVBuf)[1] = y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x2; (*g_PS2glContext.pVBuf)[1] = y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x1; (*g_PS2glContext.pVBuf)[1] = y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.eBeginMode == 7)
+        PS2glAssembleQuads();
+    PS2glFlushBuffer(1);
+    g_PS2glContext.bInBeginEndPair = 0;
+}
+
+void impPS2glRectiv(int* v1, int* v2)
+{
+    quad* pQuad;
+    float x1, y1, x2, y2;
+    y2 = (float)v2[1]; x2 = (float)v2[0]; y1 = (float)v1[1]; x1 = (float)v1[0];
+    impPS2glBegin(9);
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x1; (*g_PS2glContext.pVBuf)[1] = y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x2; (*g_PS2glContext.pVBuf)[1] = y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x2; (*g_PS2glContext.pVBuf)[1] = y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x1; (*g_PS2glContext.pVBuf)[1] = y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.eBeginMode == 7)
+        PS2glAssembleQuads();
+    PS2glFlushBuffer(1);
+    g_PS2glContext.bInBeginEndPair = 0;
+}
+
+void impPS2glRectsv(short* v1, short* v2)
+{
+    quad* pQuad;
+    float x1, y1, x2, y2;
+    y2 = (float)v2[1]; x2 = (float)v2[0]; y1 = (float)v1[1]; x1 = (float)v1[0];
+    impPS2glBegin(9);
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x1; (*g_PS2glContext.pVBuf)[1] = y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x2; (*g_PS2glContext.pVBuf)[1] = y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x2; (*g_PS2glContext.pVBuf)[1] = y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x1; (*g_PS2glContext.pVBuf)[1] = y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.eBeginMode == 7)
+        PS2glAssembleQuads();
+    PS2glFlushBuffer(1);
+    g_PS2glContext.bInBeginEndPair = 0;
+}
+
+void impPS2glRectd(double x1, double y1, double x2, double y2)
+{
+    quad* pQuad;
+    impPS2glBegin(9);
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x1; (*g_PS2glContext.pVBuf)[1] = (float)y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x2; (*g_PS2glContext.pVBuf)[1] = (float)y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x2; (*g_PS2glContext.pVBuf)[1] = (float)y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x1; (*g_PS2glContext.pVBuf)[1] = (float)y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.eBeginMode == 7)
+        PS2glAssembleQuads();
+    PS2glFlushBuffer(1);
+    g_PS2glContext.bInBeginEndPair = 0;
+}
+
+void impPS2glRectf(float x1, float y1, float x2, float y2)
+{
+    quad* pQuad;
+    impPS2glBegin(9);
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x1; (*g_PS2glContext.pVBuf)[1] = y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x2; (*g_PS2glContext.pVBuf)[1] = y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x2; (*g_PS2glContext.pVBuf)[1] = y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x1; (*g_PS2glContext.pVBuf)[1] = y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.eBeginMode == 7)
+        PS2glAssembleQuads();
+    PS2glFlushBuffer(1);
+    g_PS2glContext.bInBeginEndPair = 0;
+}
+
+void impPS2glRecti(int x1, int y1, int x2, int y2)
+{
+    quad* pQuad;
+    impPS2glBegin(9);
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x1; (*g_PS2glContext.pVBuf)[1] = (float)y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x2; (*g_PS2glContext.pVBuf)[1] = (float)y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x2; (*g_PS2glContext.pVBuf)[1] = (float)y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x1; (*g_PS2glContext.pVBuf)[1] = (float)y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.eBeginMode == 7)
+        PS2glAssembleQuads();
+    PS2glFlushBuffer(1);
+    g_PS2glContext.bInBeginEndPair = 0;
+}
+
+void impPS2glRects(short x1, short y1, short x2, short y2)
+{
+    quad* pQuad;
+    impPS2glBegin(9);
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x1; (*g_PS2glContext.pVBuf)[1] = (float)y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x2; (*g_PS2glContext.pVBuf)[1] = (float)y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x2; (*g_PS2glContext.pVBuf)[1] = (float)y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x1; (*g_PS2glContext.pVBuf)[1] = (float)y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.eBeginMode == 7)
+        PS2glAssembleQuads();
+    PS2glFlushBuffer(1);
+    g_PS2glContext.bInBeginEndPair = 0;
+}
+
+void impPS2glColorMaterial(unsigned int face, unsigned int mode)
+{
+    g_PS2glContext.eColorMaterialFace = face;
+    g_PS2glContext.eColorMaterialMode = mode;
+
+    switch (mode)
+    {
+    case 0x1600:
+        *g_PS2glContext.pnColorMatMasks = (*g_PS2glContext.pnColorMatMasks & 1) | 2;
+        *g_PS2glContext.pnColorMatMasks = *g_PS2glContext.pnColorMatMasks | 0x20;
+        break;
+    case 0x1200:
+        *g_PS2glContext.pnColorMatMasks = (*g_PS2glContext.pnColorMatMasks & 1) | 4;
+        *g_PS2glContext.pnColorMatMasks = *g_PS2glContext.pnColorMatMasks | 0x20;
+        break;
+    case 0x1201:
+        *g_PS2glContext.pnColorMatMasks = (*g_PS2glContext.pnColorMatMasks & 1) | 8;
+        break;
+    case 0x1602:
+        *g_PS2glContext.pnColorMatMasks = (*g_PS2glContext.pnColorMatMasks & 1) | 0xC;
+        *g_PS2glContext.pnColorMatMasks = *g_PS2glContext.pnColorMatMasks | 0x20;
+        break;
+    case 0x1202:
+        *g_PS2glContext.pnColorMatMasks = (*g_PS2glContext.pnColorMatMasks & 1) | 0x10;
+        break;
+    }
+}
+
+void impPS2glMaterialf(unsigned int face, unsigned int pname, float param)
+{
+    if (pname == 0x1601) {
+        switch (face) {
+        case 0x408:
+            g_PS2glContext.Materials[0].fShininess = param;
+        case 0x405:
+            g_PS2glContext.Materials[1].fShininess = param;
+            break;
+        case 0x404:
+            g_PS2glContext.Materials[0].fShininess = param;
+            break;
+        }
+
+        g_PS2glContext.bMaterialChanged = 1;
+    }
+}
+
+void impPS2glMateriali(unsigned int face, unsigned int pname, int param)
+{
+    if (pname == 0x1601) { switch (face) { case 0x408: g_PS2glContext.Materials[0].fShininess = (float)param; case 0x405: g_PS2glContext.Materials[1].fShininess = (float)param; break; case 0x404: g_PS2glContext.Materials[0].fShininess = (float)param; break; }  g_PS2glContext.bMaterialChanged = 1; }
+}
+
+void impPS2glMaterialfv(unsigned int face, unsigned int pname, float* params)
+{
+    tag_GLmaterial* pMaterial;
+
+    if (face == 0x408) {
+        impPS2glMaterialfv(0x404, pname, params);
+        impPS2glMaterialfv(0x405, pname, params);
+        return;
+    }
+
+    if (face == 0x404)
+        pMaterial = &g_PS2glContext.Materials[0];
+    else
+        pMaterial = &g_PS2glContext.Materials[1];
+
+    switch (pname) {
+    case 0x1602: *(quad*)pMaterial->vDiffuse = *(quad*)params;
+    case 0x1200: *(quad*)pMaterial->vAmbient = *(quad*)params; break;
+    case 0x1201: *(quad*)pMaterial->vDiffuse = *(quad*)params; break;
+    case 0x1202: *(quad*)pMaterial->vSpecular = *(quad*)params; break;
+    case 0x1600: *(quad*)pMaterial->vEmission = *(quad*)params; break;
+    case 0x1601:
+        pMaterial->fShininess = params[0]; break;
+    case 0x1603:
+        pMaterial->fAmbientIndex = params[0];
+        pMaterial->fDiffuseIndex = params[1];
+        pMaterial->fSpecularIndex = params[2];
+        break;
+    }
+
+    g_PS2glContext.bMaterialChanged = 1;
+}
+
+void impPS2glMaterialiv(unsigned int face, unsigned int pname, int* params)
+{
+    float fparams[4];
+
+    fparams[0] = (float)params[0];
+    fparams[1] = (float)params[1];
+    fparams[2] = (float)params[2];
+    fparams[3] = (float)params[3];
+    impPS2glMaterialfv(face, pname, fparams);
+}
+
+void impPS2glLightModelf(unsigned int pname, float param)
+{
+    switch (pname) {
+    case 0xF00:
+        g_PS2glContext.bLightModelDiffuseOnly = (param != 0.0f);
+        break;
+    case 0xB51:
+        g_PS2glContext.bLocalViewer = (param != 0.0f);
+        break;
+    case 0xB52:
+        g_PS2glContext.bLightModelTwoSide = (param != 0.0f);
+        break;
+    }
+
+    g_PS2glContext.bLightsChanged = 1;
+}
+
+#pragma auto_inline on
+void impPS2glLightModeli(unsigned int pname, int param)
+{
+    switch (pname) {
+    case 0xF00:
+        g_PS2glContext.bLightModelDiffuseOnly = (param != 0);
+        break;
+    case 0xB51:
+        g_PS2glContext.bLocalViewer = (param != 0);
+        break;
+    case 0xB52:
+        g_PS2glContext.bLightModelTwoSide = (param != 0);
+        break;
+    }
+
+    g_PS2glContext.bLightsChanged = 1;
+}
+#pragma auto_inline reset
+
+void impPS2glLightModelfv(unsigned int pname, float* params)
+{
+    switch (pname) {
+    case 0xF00:
+    case 0xB51:
+    case 0xB52:
+        impPS2glLightModeli(pname, (int)params[0]);
+        break;
+    case 0xB53:
+        *(quad*)g_PS2glContext.vAmbient = *(quad*)params;
+        break;
+    }
+
+    g_PS2glContext.bLightsChanged = 1;
+}
+
+void impPS2glLightModeliv(unsigned int pname, int* params)
+{
+    switch (pname) {
+    case 0xF00:
+        g_PS2glContext.bLightModelDiffuseOnly = (params[0] != 0);
+        break;
+    case 0xB51:
+        g_PS2glContext.bLocalViewer = (params[0] != 0);
+        break;
+    case 0xB52:
+        g_PS2glContext.bLightModelTwoSide = (params[0] != 0);
+        break;
+    case 0xB53: {
+        float v[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+        v[0] = (float)params[0] / 2147483648.0f; v[1] = (float)params[1] / 2147483648.0f; v[2] = (float)params[2] / 2147483648.0f; v[3] = (float)params[3] / 2147483648.0f;
+        *(quad*)g_PS2glContext.vAmbient = *(quad*)v;
+        break;
+    }
+    }
+
+    g_PS2glContext.bLightsChanged = 1;
+}
+
+void impPS2glLightf(unsigned int light, unsigned int pname, float param)
+{
+    tag_GLlight* pLight;
+
+    if (light < 0x4000 || light > 0x4008)
+        return;
+    {
+        pLight = &g_PS2glContext.Lights[light - 0x4000];
+        switch (pname)
+        {
+        case 0x1205:
+            pLight->fSpotExponent = param;
+            break;
+        case 0x1206:
+            pLight->fSpotCutoff = param;
+            pLight->fCosCutoff = cos(param * 0.017453292f);
+            break;
+        case 0x1207:
+            pLight->fConstantAttenuation = param;
+            break;
+        case 0x1208:
+            pLight->fLinearAttenuation = param;
+            break;
+        case 0x1209:
+            pLight->fQuadraticAttenuation = param;
+            break;
+        }
+        g_PS2glContext.bLightsChanged = 1;
+    }
+}
+
+void impPS2glLighti(unsigned int light, unsigned int pname, int param)
+{
+    impPS2glLightf(light, pname, (float)param);
+}
+
+void impPS2glLightfv(unsigned int light, unsigned int pname, float* params)
+{
+    unsigned char bDirectionalLight;
+    float (*pVector)[4];
+    tag_GLlight* pLight;
+    static float vParams[4];
+
+    if (light < 0x4000 || light > 0x4008)
+        return;
+    if ((unsigned int)params & 0xf)
+        memcpy(vParams, params, 16);
+    else
+        *(quad*)vParams = *(quad*)params;
+    pLight = &g_PS2glContext.Lights[light - 0x4000];
+    switch (pname)
+    {
+    case 0x1200:
+        *(quad*)pLight->vAmbient = *(quad*)vParams;
+        break;
+    case 0x1201:
+        *(quad*)pLight->vDiffuse = *(quad*)vParams;
+        break;
+    case 0x1202:
+        *(quad*)pLight->vSpecular = *(quad*)vParams;
+        break;
+    case 0x1203:
+        vParams[3] = 0.0f;
+        bDirectionalLight = vParams[3] == 0.0f;
+        pVector = (float (*)[4])pLight->vPosition;
+        sceVu0ApplyMatrix(*pVector, g_PS2glContext.ModelViewMatrix, vParams);
+        if (bDirectionalLight)
+            sceVu0Normalize(*pVector, *pVector);
+        else
+            sceVu0ScaleVector(*pVector, *pVector, 1.0f / (*pVector)[3]);
+        break;
+    case 0x1204:
+        if (g_PS2glContext.bMatrixChanged)
+            PS2glUpdateNormalMatrix();
+        sceVu0ApplyMatrix(pLight->vDirection, g_PS2glContext.NormalMatrix, vParams);
+        sceVu0Normalize(pLight->vDirection, pLight->vDirection);
+        break;
+    case 0x1205:
+        pLight->fSpotExponent = vParams[0];
+        break;
+    case 0x1206:
+        pLight->fSpotCutoff = vParams[0];
+        pLight->fCosCutoff = cos(vParams[0] * 0.017453292f);
+        break;
+    case 0x1207:
+        pLight->fConstantAttenuation = vParams[0];
+        break;
+    case 0x1208:
+        pLight->fLinearAttenuation = vParams[0];
+        break;
+    case 0x1209:
+        pLight->fQuadraticAttenuation = vParams[0];
+        break;
+    }
+    g_PS2glContext.bLightsChanged = 1;
+}
+
+void impPS2glLightiv(unsigned int light, unsigned int pname, int* params)
+{
+    float fparams[4];
+
+    switch (pname)
+    {
+    case 0x1200:
+    case 0x1201:
+    case 0x1202:
+    case 0x1203:
+    case 0x1204:
+        fparams[0] = (float)params[0];
+        fparams[1] = (float)params[1];
+        fparams[2] = (float)params[2];
+        fparams[3] = (float)params[3];
+        impPS2glLightfv(light, pname, fparams);
+        break;
+    default:
+        impPS2glLightf(light, pname, (float)params[0]);
+    }
+}
+
+void impPS2glTexCoord1s(short s)
+{
+    g_PS2glContext.vacurTexCoords[0][0] = (float)s / 32767.0f; g_PS2glContext.vacurTexCoords[0][1] = 0.0f;
+}
+
+void impPS2glTexCoord1i(int s)
+{
+    g_PS2glContext.vacurTexCoords[0][0] = (float)s / 2147483648.0f; g_PS2glContext.vacurTexCoords[0][1] = 0.0f;
+}
+
+void impPS2glTexCoord1d(double s)
+{
+    g_PS2glContext.vacurTexCoords[0][0] = (float)s; g_PS2glContext.vacurTexCoords[0][1] = 0.0f;
+}
+
+void impPS2glTexCoord1f(float s)
+{
+    g_PS2glContext.vacurTexCoords[0][0] = s;
+    g_PS2glContext.vacurTexCoords[0][1] = 0.0f;
+}
+
+void impPS2glTexCoord1sv(short* v)
+{
+    g_PS2glContext.vacurTexCoords[0][0] = (float)v[0] / 32767.0f; g_PS2glContext.vacurTexCoords[0][1] = 0.0f;
+}
+
+void impPS2glTexCoord1iv(int* v)
+{
+    g_PS2glContext.vacurTexCoords[0][0] = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurTexCoords[0][1] = 0.0f;
+}
+
+void impPS2glTexCoord1dv(double* v)
+{
+    g_PS2glContext.vacurTexCoords[0][0] = (float)v[0]; g_PS2glContext.vacurTexCoords[0][1] = 0.0f;
+}
+
+void impPS2glTexCoord1fv(float* v)
+{
+    g_PS2glContext.vacurTexCoords[0][0] = v[0]; g_PS2glContext.vacurTexCoords[0][1] = 0.0f;
+}
+
+void impPS2glTexCoord2s(short s, short t)
+{
+    g_PS2glContext.vacurTexCoords[0][0] = (float)s / 32767.0f; g_PS2glContext.vacurTexCoords[0][1] = (float)t / 32767.0f;
+}
+
+void impPS2glTexCoord2i(int s, int t)
+{
+    g_PS2glContext.vacurTexCoords[0][0] = (float)s / 2147483648.0f; g_PS2glContext.vacurTexCoords[0][1] = (float)t / 2147483648.0f;
+}
+
+void impPS2glTexCoord2d(double s, double t)
+{
+    g_PS2glContext.vacurTexCoords[0][0] = (float)s; g_PS2glContext.vacurTexCoords[0][1] = (float)t;
+}
+
+void impPS2glTexCoord2f(float s, float t)
+{
+    g_PS2glContext.vacurTexCoords[0][0] = s;
+    g_PS2glContext.vacurTexCoords[0][1] = t;
+}
+
+void impPS2glTexCoord2sv(short* v)
+{
+    float s, t;
+    t = (float)v[1] / 32767.0f; s = (float)v[0] / 32767.0f; g_PS2glContext.vacurTexCoords[0][0] = s; g_PS2glContext.vacurTexCoords[0][1] = t;
+}
+
+void impPS2glTexCoord2iv(int* v)
+{
+    float s, t;
+    t = (float)v[1] / 2147483648.0f; s = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurTexCoords[0][0] = s; g_PS2glContext.vacurTexCoords[0][1] = t;
+}
+
+void impPS2glTexCoord2dv(double* v)
+{
+    float s, t;
+    t = (float)v[1]; s = (float)v[0]; g_PS2glContext.vacurTexCoords[0][0] = s; g_PS2glContext.vacurTexCoords[0][1] = t;
+}
+
+void impPS2glTexCoord2fv(float* v)
+{
+    float t = v[1], s = v[0]; g_PS2glContext.vacurTexCoords[0][0] = s; g_PS2glContext.vacurTexCoords[0][1] = t;
+}
+
+void impPS2glTexCoord3s(short s, short t, short r)
+{
+    g_PS2glContext.vacurTexCoords[0][0] = (float)s / 32767.0f; g_PS2glContext.vacurTexCoords[0][1] = (float)t / 32767.0f; g_PS2glContext.vacurTexCoords[0][2] = (float)r / 32767.0f;
+}
+
+void impPS2glTexCoord3i(int s, int t, int r)
+{
+    g_PS2glContext.vacurTexCoords[0][0] = (float)s / 2147483648.0f; g_PS2glContext.vacurTexCoords[0][1] = (float)t / 2147483648.0f; g_PS2glContext.vacurTexCoords[0][2] = (float)r / 2147483648.0f;
+}
+
+void impPS2glTexCoord3d(double s, double t, double r)
+{
+    g_PS2glContext.vacurTexCoords[0][0] = (float)s; g_PS2glContext.vacurTexCoords[0][1] = (float)t; g_PS2glContext.vacurTexCoords[0][2] = (float)r;
+}
+
+void impPS2glTexCoord3f(float s, float t, float r)
+{
+    g_PS2glContext.vacurTexCoords[0][0] = s;
+    g_PS2glContext.vacurTexCoords[0][1] = t;
+    g_PS2glContext.vacurTexCoords[0][2] = r;
+}
+
+void impPS2glTexCoord3sv(short* v)
+{
+    float s, t, r;
+    r = (float)v[2] / 32767.0f; t = (float)v[1] / 32767.0f; s = (float)v[0] / 32767.0f; g_PS2glContext.vacurTexCoords[0][0] = s; g_PS2glContext.vacurTexCoords[0][1] = t; g_PS2glContext.vacurTexCoords[0][2] = r;
+}
+
+void impPS2glTexCoord3iv(int* v)
+{
+    float s, t, r;
+    r = (float)v[2] / 2147483648.0f; t = (float)v[1] / 2147483648.0f; s = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurTexCoords[0][0] = s; g_PS2glContext.vacurTexCoords[0][1] = t; g_PS2glContext.vacurTexCoords[0][2] = r;
+}
+
+void impPS2glTexCoord3dv(double* v)
+{
+    float s, t, r;
+    r = (float)v[2]; t = (float)v[1]; s = (float)v[0]; g_PS2glContext.vacurTexCoords[0][0] = s; g_PS2glContext.vacurTexCoords[0][1] = t; g_PS2glContext.vacurTexCoords[0][2] = r;
+}
+
+void impPS2glTexCoord3fv(float* v)
+{
+    float s, t, r;
+    r = v[2]; t = v[1]; s = v[0]; g_PS2glContext.vacurTexCoords[0][0] = s; g_PS2glContext.vacurTexCoords[0][1] = t; g_PS2glContext.vacurTexCoords[0][2] = r;
+}
+
+void impPS2glTexCoord4s(short s, short t, short r, short q)
+{
+    g_PS2glContext.vacurTexCoords[0][0] = (float)s / 32767.0f; g_PS2glContext.vacurTexCoords[0][1] = (float)t / 32767.0f; g_PS2glContext.vacurTexCoords[0][2] = (float)r / 32767.0f; g_PS2glContext.vacurTexCoords[0][3] = (float)q / 32767.0f;
+}
+
+void impPS2glTexCoord4i(int s, int t, int r, int q)
+{
+    g_PS2glContext.vacurTexCoords[0][0] = (float)s / 2147483648.0f; g_PS2glContext.vacurTexCoords[0][1] = (float)t / 2147483648.0f; g_PS2glContext.vacurTexCoords[0][2] = (float)r / 2147483648.0f; g_PS2glContext.vacurTexCoords[0][3] = (float)q / 2147483648.0f;
+}
+
+void impPS2glTexCoord4d(double s, double t, double r, double q)
+{
+    g_PS2glContext.vacurTexCoords[0][0] = (float)s; g_PS2glContext.vacurTexCoords[0][1] = (float)t; g_PS2glContext.vacurTexCoords[0][2] = (float)r; g_PS2glContext.vacurTexCoords[0][3] = (float)q;
+}
+
+void impPS2glTexCoord4f(float s, float t, float r, float q)
+{
+    g_PS2glContext.vacurTexCoords[0][0] = s;
+    g_PS2glContext.vacurTexCoords[0][1] = t;
+    g_PS2glContext.vacurTexCoords[0][2] = r;
+    g_PS2glContext.vacurTexCoords[0][3] = q;
+}
+
+void impPS2glTexCoord4sv(short* v)
+{
+    float s, t, r, q;
+    q = (float)v[3] / 32767.0f; r = (float)v[2] / 32767.0f; t = (float)v[1] / 32767.0f; s = (float)v[0] / 32767.0f; g_PS2glContext.vacurTexCoords[0][0] = s; g_PS2glContext.vacurTexCoords[0][1] = t; g_PS2glContext.vacurTexCoords[0][2] = r; g_PS2glContext.vacurTexCoords[0][3] = q;
+}
+
+void impPS2glTexCoord4iv(int* v)
+{
+    float s, t, r, q;
+    q = (float)v[3] / 2147483648.0f; r = (float)v[2] / 2147483648.0f; t = (float)v[1] / 2147483648.0f; s = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurTexCoords[0][0] = s; g_PS2glContext.vacurTexCoords[0][1] = t; g_PS2glContext.vacurTexCoords[0][2] = r; g_PS2glContext.vacurTexCoords[0][3] = q;
+}
+
+void impPS2glTexCoord4dv(double* v)
+{
+    float s, t, r, q;
+    q = (float)v[3]; r = (float)v[2]; t = (float)v[1]; s = (float)v[0]; g_PS2glContext.vacurTexCoords[0][0] = s; g_PS2glContext.vacurTexCoords[0][1] = t; g_PS2glContext.vacurTexCoords[0][2] = r; g_PS2glContext.vacurTexCoords[0][3] = q;
+}
+
+void impPS2glTexCoord4fv(float* v)
+{
+    *(quad*)g_PS2glContext.pvcurTextCoord = *(quad*)v;
+}
+
+void impPS2glMultiTexCoord1sARB(unsigned int texture, short s)
+{
+    g_PS2glContext.vacurTexCoords[texture][0] = (float)s / 32767.0f; g_PS2glContext.vacurTexCoords[texture][1] = 0.0f;
+}
+
+void impPS2glMultiTexCoord1iARB(unsigned int texture, int s)
+{
+    g_PS2glContext.vacurTexCoords[texture][0] = (float)s / 2147483648.0f; g_PS2glContext.vacurTexCoords[texture][1] = 0.0f;
+}
+
+void impPS2glMultiTexCoord1dARB(unsigned int texture, double s)
+{
+    g_PS2glContext.vacurTexCoords[texture][0] = (float)s; g_PS2glContext.vacurTexCoords[texture][1] = 0.0f;
+}
+
+void impPS2glMultiTexCoord1fARB(unsigned int texture, float s)
+{
+    g_PS2glContext.vacurTexCoords[texture][0] = s;
+    g_PS2glContext.vacurTexCoords[texture][1] = 0.0f;
+}
+
+void impPS2glMultiTexCoord1svARB(unsigned int texture, short* v)
+{
+    g_PS2glContext.vacurTexCoords[texture][0] = (float)v[0] / 32767.0f; g_PS2glContext.vacurTexCoords[texture][1] = 0.0f;
+}
+
+void impPS2glMultiTexCoord1ivARB(unsigned int texture, int* v)
+{
+    g_PS2glContext.vacurTexCoords[texture][0] = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurTexCoords[texture][1] = 0.0f;
+}
+
+void impPS2glMultiTexCoord1dvARB(unsigned int texture, double* v)
+{
+    g_PS2glContext.vacurTexCoords[texture][0] = (float)v[0]; g_PS2glContext.vacurTexCoords[texture][1] = 0.0f;
+}
+
+void impPS2glMultiTexCoord1fvARB(unsigned int texture, float* v)
+{
+    g_PS2glContext.vacurTexCoords[texture][0] = v[0]; g_PS2glContext.vacurTexCoords[texture][1] = 0.0f;
+}
+
+void impPS2glMultiTexCoord2sARB(unsigned int texture, short s, short t)
+{
+    g_PS2glContext.vacurTexCoords[texture][0] = (float)s / 32767.0f; g_PS2glContext.vacurTexCoords[texture][1] = (float)t / 32767.0f;
+}
+
+void impPS2glMultiTexCoord2iARB(unsigned int texture, int s, int t)
+{
+    g_PS2glContext.vacurTexCoords[texture][0] = (float)s / 2147483648.0f; g_PS2glContext.vacurTexCoords[texture][1] = (float)t / 2147483648.0f;
+}
+
+void impPS2glMultiTexCoord2dARB(unsigned int texture, double s, double t)
+{
+    g_PS2glContext.vacurTexCoords[texture][0] = (float)s; g_PS2glContext.vacurTexCoords[texture][1] = (float)t;
+}
+
+void impPS2glMultiTexCoord2fARB(unsigned int texture, float s, float t)
+{
+    g_PS2glContext.vacurTexCoords[texture][0] = s;
+    g_PS2glContext.vacurTexCoords[texture][1] = t;
+}
+
+void impPS2glMultiTexCoord2svARB(unsigned int texture, short* v)
+{
+    float s, t;
+    t = (float)v[1] / 32767.0f; s = (float)v[0] / 32767.0f; g_PS2glContext.vacurTexCoords[texture][0] = s; g_PS2glContext.vacurTexCoords[texture][1] = t;
+}
+
+void impPS2glMultiTexCoord2ivARB(unsigned int texture, int* v)
+{
+    float s, t;
+    t = (float)v[1] / 2147483648.0f; s = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurTexCoords[texture][0] = s; g_PS2glContext.vacurTexCoords[texture][1] = t;
+}
+
+void impPS2glMultiTexCoord2dvARB(unsigned int texture, double* v)
+{
+    float s, t;
+    t = (float)v[1]; s = (float)v[0]; g_PS2glContext.vacurTexCoords[texture][0] = s; g_PS2glContext.vacurTexCoords[texture][1] = t;
+}
+
+void impPS2glMultiTexCoord2fvARB(unsigned int texture, float* v)
+{
+    float t = v[1], s = v[0]; g_PS2glContext.vacurTexCoords[texture][0] = s; g_PS2glContext.vacurTexCoords[texture][1] = t;
+}
+
+void impPS2glMultiTexCoord3sARB(unsigned int texture, short s, short t, short r)
+{
+    g_PS2glContext.vacurTexCoords[texture][0] = (float)s / 32767.0f; g_PS2glContext.vacurTexCoords[texture][1] = (float)t / 32767.0f; g_PS2glContext.vacurTexCoords[texture][2] = (float)r / 32767.0f;
+}
+
+void impPS2glMultiTexCoord3iARB(unsigned int texture, int s, int t, int r)
+{
+    g_PS2glContext.vacurTexCoords[texture][0] = (float)s / 2147483648.0f; g_PS2glContext.vacurTexCoords[texture][1] = (float)t / 2147483648.0f; g_PS2glContext.vacurTexCoords[texture][2] = (float)r / 2147483648.0f;
+}
+
+void impPS2glMultiTexCoord3dARB(unsigned int texture, double s, double t, double r)
+{
+    g_PS2glContext.vacurTexCoords[texture][0] = (float)s; g_PS2glContext.vacurTexCoords[texture][1] = (float)t; g_PS2glContext.vacurTexCoords[texture][2] = (float)r;
+}
+
+void impPS2glMultiTexCoord3fARB(unsigned int texture, float s, float t, float r)
+{
+    g_PS2glContext.vacurTexCoords[texture][0] = s;
+    g_PS2glContext.vacurTexCoords[texture][1] = t;
+    g_PS2glContext.vacurTexCoords[texture][2] = r;
+}
+
+void impPS2glMultiTexCoord3svARB(unsigned int texture, short* v)
+{
+    float s, t, r;
+    r = (float)v[2] / 32767.0f; t = (float)v[1] / 32767.0f; s = (float)v[0] / 32767.0f; g_PS2glContext.vacurTexCoords[texture][0] = s; g_PS2glContext.vacurTexCoords[texture][1] = t; g_PS2glContext.vacurTexCoords[texture][2] = r;
+}
+
+void impPS2glMultiTexCoord3ivARB(unsigned int texture, int* v)
+{
+    float s, t, r;
+    r = (float)v[2] / 2147483648.0f; t = (float)v[1] / 2147483648.0f; s = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurTexCoords[texture][0] = s; g_PS2glContext.vacurTexCoords[texture][1] = t; g_PS2glContext.vacurTexCoords[texture][2] = r;
+}
+
+void impPS2glMultiTexCoord3dvARB(unsigned int texture, double* v)
+{
+    float s, t, r;
+    r = (float)v[2]; t = (float)v[1]; s = (float)v[0]; g_PS2glContext.vacurTexCoords[texture][0] = s; g_PS2glContext.vacurTexCoords[texture][1] = t; g_PS2glContext.vacurTexCoords[texture][2] = r;
+}
+
+void impPS2glMultiTexCoord3fvARB(unsigned int texture, float* v)
+{
+    float s, t, r;
+    r = v[2]; t = v[1]; s = v[0]; g_PS2glContext.vacurTexCoords[texture][0] = s; g_PS2glContext.vacurTexCoords[texture][1] = t; g_PS2glContext.vacurTexCoords[texture][2] = r;
+}
+
+void impPS2glMultiTexCoord4sARB(unsigned int texture, short s, short t, short r, short q)
+{
+    g_PS2glContext.vacurTexCoords[texture][0] = (float)s / 32767.0f; g_PS2glContext.vacurTexCoords[texture][1] = (float)t / 32767.0f; g_PS2glContext.vacurTexCoords[texture][2] = (float)r / 32767.0f; g_PS2glContext.vacurTexCoords[texture][3] = (float)q / 32767.0f;
+}
+
+void impPS2glMultiTexCoord4iARB(unsigned int texture, int s, int t, int r, int q)
+{
+    g_PS2glContext.vacurTexCoords[texture][0] = (float)s / 2147483648.0f; g_PS2glContext.vacurTexCoords[texture][1] = (float)t / 2147483648.0f; g_PS2glContext.vacurTexCoords[texture][2] = (float)r / 2147483648.0f; g_PS2glContext.vacurTexCoords[texture][3] = (float)q / 2147483648.0f;
+}
+
+void impPS2glMultiTexCoord4dARB(unsigned int texture, double s, double t, double r, double q)
+{
+    g_PS2glContext.vacurTexCoords[texture][0] = (float)s; g_PS2glContext.vacurTexCoords[texture][1] = (float)t; g_PS2glContext.vacurTexCoords[texture][2] = (float)r; g_PS2glContext.vacurTexCoords[texture][3] = (float)q;
+}
+
+void impPS2glMultiTexCoord4fARB(unsigned int texture, float s, float t, float r, float q)
+{
+    g_PS2glContext.vacurTexCoords[texture][0] = s;
+    g_PS2glContext.vacurTexCoords[texture][1] = t;
+    g_PS2glContext.vacurTexCoords[texture][2] = r;
+    g_PS2glContext.vacurTexCoords[texture][3] = q;
+}
+
+void impPS2glMultiTexCoord4svARB(unsigned int texture, short* v)
+{
+    float s, t, r, q;
+    q = (float)v[3] / 32767.0f; r = (float)v[2] / 32767.0f; t = (float)v[1] / 32767.0f; s = (float)v[0] / 32767.0f; g_PS2glContext.vacurTexCoords[texture][0] = s; g_PS2glContext.vacurTexCoords[texture][1] = t; g_PS2glContext.vacurTexCoords[texture][2] = r; g_PS2glContext.vacurTexCoords[texture][3] = q;
+}
+
+void impPS2glMultiTexCoord4ivARB(unsigned int texture, int* v)
+{
+    float s, t, r, q;
+    q = (float)v[3] / 2147483648.0f; r = (float)v[2] / 2147483648.0f; t = (float)v[1] / 2147483648.0f; s = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurTexCoords[texture][0] = s; g_PS2glContext.vacurTexCoords[texture][1] = t; g_PS2glContext.vacurTexCoords[texture][2] = r; g_PS2glContext.vacurTexCoords[texture][3] = q;
+}
+
+void impPS2glMultiTexCoord4dvARB(unsigned int texture, double* v)
+{
+    float s, t, r, q;
+    q = (float)v[3]; r = (float)v[2]; t = (float)v[1]; s = (float)v[0]; g_PS2glContext.vacurTexCoords[texture][0] = s; g_PS2glContext.vacurTexCoords[texture][1] = t; g_PS2glContext.vacurTexCoords[texture][2] = r; g_PS2glContext.vacurTexCoords[texture][3] = q;
+}
+
+void impPS2glMultiTexCoord4fvARB(unsigned int texture, float* v)
+{
+    *(quad*)g_PS2glContext.pvcurTextCoord = *(quad*)v;
+}
+
+void impPS2glClipPlane(unsigned int plane, double* equation)
+{
+    if ((plane < 0x3000) || (plane >= 0x3000 + g_PS2glContext.iMaxClipPlanes))
+        return;
+    *(quad*)g_PS2glContext.avClipPlane[plane - 0x3000] = *(quad*)equation;
+}
+
+void impPS2glGetClipPlane(unsigned int plane, double* equation)
+{
+    if ((plane < 0x3000) || (plane >= 0x3000 + g_PS2glContext.iMaxClipPlanes))
+        return;
+    *(quad*)equation = *(quad*)g_PS2glContext.avClipPlane[plane - 0x3000];
+}
+
+void PS2glAssembleQuads(void)
+{
+    int I;
+    int iQuadCount;
+    float (*pT1_b)[4];
+    float (*pT_b)[4];
+    float (*pC1_b)[4];
+    float (*pC_b)[4];
+    float (*pT1)[4];
+    float (*pT)[4];
+    float (*pC1)[4];
+    float (*pC)[4];
+    float (*pN1)[4];
+    float (*pN)[4];
+    float (*pV1)[4];
+    float (*pV)[4];
+    iQuadCount = g_PS2glContext.iBufCount >> 2;
+    if (g_PS2glContext.pVBuf < g_PS2glContext.pVBuf1) {
+        pV = g_PS2glContext.pVBuf0; pN = g_PS2glContext.pNBuf0; pC = g_PS2glContext.pCBuf0;
+        pT = g_PS2glContext.pTBuf0; pC_b = g_PS2glContext.pCBuf0_b; pT_b = g_PS2glContext.pTBuf0_b;
+    } else {
+        pV = g_PS2glContext.pVBuf1; pN = g_PS2glContext.pNBuf1; pC = g_PS2glContext.pCBuf1;
+        pT = g_PS2glContext.pTBuf1; pC_b = g_PS2glContext.pCBuf1_b; pT_b = g_PS2glContext.pTBuf1_b;
+    }
+    pV1 = pV + iQuadCount * 6; pN1 = pN + iQuadCount * 6; pC1 = pC + iQuadCount * 6;
+    pT1 = pT + iQuadCount * 6; pC1_b = pC_b + iQuadCount * 6; pT1_b = pT_b + iQuadCount * 6;
+    pV += g_PS2glContext.iBufCount; pN += g_PS2glContext.iBufCount; pC += g_PS2glContext.iBufCount;
+    pT += g_PS2glContext.iBufCount; pC_b += g_PS2glContext.iBufCount; pT_b += g_PS2glContext.iBufCount;
+#define COPY6(d, s) *(quad*)&(d)[-1] = *(quad*)&(s)[-1]; *(quad*)&(d)[-2] = *(quad*)&(s)[-2]; *(quad*)&(d)[-4] = *(quad*)&(s)[-1]; *(quad*)&(d)[-3] = *(quad*)&(s)[-3]; *(quad*)&(d)[-5] = *(quad*)&(s)[-3]; *(quad*)&(d)[-6] = *(quad*)&(s)[-4];
+    for (I = 0; I < iQuadCount; I++) {
+        COPY6(pV1, pV)
+        if (g_PS2glContext.nLightBits & 0x400) { COPY6(pN1, pN) } else { COPY6(pC1, pC) }
+        COPY6(pC1_b, pC_b)
+        COPY6(pT1, pT)
+        COPY6(pT1_b, pT_b)
+        pV1 -= 6; pN1 -= 6; pC1 -= 6; pT1 -= 6; pC1_b -= 6; pT1_b -= 6;
+        pV -= 4; pN -= 4; pC -= 4; pT -= 4; pC_b -= 4; pT_b -= 4;
+    }
+#undef COPY6
+    g_PS2glContext.iBufCount = iQuadCount * 6;
 }

@@ -97,13 +97,9 @@ struct CSrcFlow {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-CResData* CBankDesc::mfn_poAddCResData(const CUUID& ro_cuuid)
-{
-    CUUID aId[20];
-    int nb;
-    CResData* po_Answer;
-    /* TODO: decompile from asm/... */
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeectextfilesrc.cpp lines 148–192 */
 /* addr: 0x0018b910  size: 752 bytes */
@@ -135,14 +131,6 @@ CResData* CBankDesc::mfn_poAddCResData(const CUUID& ro_cuuid)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char CTextFileSrc::mfn_bRead(sstring& ro_Sentence)
-{
-    char* pch_StringNext;
-    unsigned int dw_Size;
-    char* pch_StringEnd;
-    unsigned char b_Answer;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeectextfilesrc.cpp lines 83–145 */
 /* addr: 0x0018bcd0  size: 176 bytes */
@@ -171,6 +159,27 @@ extern "C" char* strchr(const char* s, int c);
 
 #define M_MIN(a, b) (((a) < (b)) ? (a) : (b))
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeectextfilesrc.cpp lines 44–59 */
+/* addr: 0x0018bd80  size: 296 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 44
+ *   +0x0014 -> line 46
+ *   +0x009c -> line 48
+ *   +0x00a0 -> line 49
+ *   +0x00a8 -> line 50
+ *   +0x00e0 -> line 52
+ *   +0x0104 -> line 55
+ *   +0x0110 -> line 58
+ *   +0x0114 -> line 59
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+unsigned char CTextFileSrc::mfn_bOpen(const char* pch_FilePath)
+{
+    /* TODO: decompile from asm/... */
+}
+
 char* CTextFileSrc::mfn_pchParseChar(void) const
 {
     char* pch_SlashR;
@@ -198,22 +207,19 @@ char* CTextFileSrc::mfn_pchParseChar(void) const
     return pch_Answer;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeectextfilesrc.cpp lines 44–59 */
-/* addr: 0x0018bd80  size: 296 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 44
- *   +0x0014 -> line 46
- *   +0x009c -> line 48
- *   +0x00a0 -> line 49
- *   +0x00a8 -> line 50
- *   +0x00e0 -> line 52
- *   +0x0104 -> line 55
- *   +0x0110 -> line 58
- *   +0x0114 -> line 59
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned char CTextFileSrc::mfn_bOpen(const char* pch_FilePath)
+unsigned char CTextFileSrc::mfn_bRead(sstring& ro_Sentence)
 {
+    char* pch_StringNext;
+    unsigned int dw_Size;
+    char* pch_StringEnd;
+    unsigned char b_Answer;
+    /* TODO: decompile from asm/... */
+}
+
+CResData* CBankDesc::mfn_poAddCResData(const CUUID& ro_cuuid)
+{
+    CUUID aId[20];
+    int nb;
+    CResData* po_Answer;
     /* TODO: decompile from asm/... */
 }

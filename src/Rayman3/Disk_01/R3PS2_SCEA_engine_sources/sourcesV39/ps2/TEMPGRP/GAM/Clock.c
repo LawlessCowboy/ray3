@@ -770,6 +770,14 @@ float g_xVideoFrameDurationInSeconds;
 float ceilf(float f);
 void* HMU_fn_p_vMalloc(unsigned int ulSize, unsigned char ucChannel);
 
+short TMR_fn_wReadTimer(short wTimerHandle, _stTimerCount* p_stTimerCount);
+
+void fn_vFakeTimer(_stTimerCount* pstCurrentTimerCount);
+unsigned int fn_ulDetermineUsefulDT(void);
+
+short TMR_fn_wResetTimer(short wTimerHandle);
+void GLIPS2_vActualizeClock(void);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Clock.c lines 67–91 */
 /* addr: 0x0025de50  size: 212 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -796,311 +804,35 @@ void* HMU_fn_p_vMalloc(unsigned int ulSize, unsigned char ucChannel);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vInitCSOList(tdstAChannel_** p_hChannelArray, unsigned int ulNumberOfChannels)
-{
-    unsigned int ulI;
 
-    *p_hChannelArray = (tdstAChannel_*)HMU_fn_p_vMalloc(ulNumberOfChannels * sizeof(tdstAChannel_), 1);
-
-    for (ulI = 0; ulI < ulNumberOfChannels; ulI++)
-    {
-        (*p_hChannelArray)[ulI].hSupObject = NULL;
-        (*p_hChannelArray)[ulI].hZoomSupObject = NULL;
-        /* The retail code clears the +0x4 word twice; both stores are needed. */
-        (*p_hChannelArray)[ulI].hZoomSupObject = NULL;
-        (*p_hChannelArray)[ulI].p_stNextActiveChannel = NULL;
-        (*p_hChannelArray)[ulI].p_stFatherChannel = NULL;
-        (*p_hChannelArray)[ulI].bActiveChannel = 1;
-        (*p_hChannelArray)[ulI].bControlledChannel = 0;
-        (*p_hChannelArray)[ulI].bLipsChannel = 0;
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Clock.c lines 500–509 */
-/* addr: 0x0025df30  size: 116 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 500
- *   +0x0004 -> line 501
- *   +0x0008 -> line 500
- *   +0x000c -> line 501
- *   +0x001c -> line 502
- *   +0x0020 -> line 501
- *   +0x002c -> line 502
- *   +0x0030 -> line 503
- *   +0x0038 -> line 502
- *   +0x003c -> line 503
- *   +0x0044 -> line 505
- *   +0x0058 -> line 508
- *   +0x005c -> line 505
- *   +0x0060 -> line 508
- *   +0x0068 -> line 509
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vLoadEngineClock(void)
-{
-    g_stEngineStructure.stEngineTimer.stRealTimeCount = g_stEngineStructure.stEngineTimer.stPauseTime;
-    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount = g_stEngineStructure.stEngineTimer.ulPauseTime;
-    TMR_fn_wSetTimerValue(g_stEngineStructure.stEngineTimer.sTimerHandle, &g_stEngineStructure.stEngineTimer.stRealTimeCount);
-
-    g_stRealTimerCount = g_stRealTimerCountPaused;
-
-
-    TMR_fn_wStartTimer(g_stEngineStructure.stEngineTimer.sTimerHandle);
-}
-
-short TMR_fn_wReadTimer(short wTimerHandle, _stTimerCount* p_stTimerCount);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Clock.c lines 463–492 */
-/* addr: 0x0025dfb0  size: 172 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 463
- *   +0x0004 -> line 469
- *   +0x0008 -> line 463
- *   +0x000c -> line 469
- *   +0x0018 -> line 471
- *   +0x002c -> line 473
- *   +0x0038 -> line 474
- *   +0x0040 -> line 477
- *   +0x0054 -> line 478
- *   +0x005c -> line 481
- *   +0x0060 -> line 484
- *   +0x0070 -> line 486
- *   +0x0074 -> line 484
- *   +0x0080 -> line 486
- *   +0x00a0 -> line 492
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vSaveEngineClock(void)
-{
-    _stTimerCount stCurrentTimerCount;
-    unsigned int ulDeltaTime;
-
-    TMR_fn_wReadTimer(g_stEngineStructure.stEngineTimer.sTimerHandle, &stCurrentTimerCount);
-
-    if (stCurrentTimerCount.m_ulHighPart == g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulHighPart)
-    {
-        ulDeltaTime = (unsigned int)stCurrentTimerCount.m_ulLowPart - (unsigned int)g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulLowPart;
-    }
-    else if (stCurrentTimerCount.m_ulLowPart >= g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulLowPart)
-    {
-        ulDeltaTime = stCurrentTimerCount.m_ulLowPart - g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulLowPart;
-    }
-    else
-    {
-        ulDeltaTime = stCurrentTimerCount.m_ulLowPart + (0xFFFFFFFF - g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulLowPart + 1);
-    }
-
-    g_stEngineStructure.stEngineTimer.stPauseTime = stCurrentTimerCount;
-
-    g_stEngineStructure.stEngineTimer.ulPauseTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount + ulDeltaTime / g_stEngineStructure.stEngineTimer.ulTickPerMS;
-}
-
-void fn_vFakeTimer(_stTimerCount* pstCurrentTimerCount);
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void fn_vInitCSOList(tdstAChannel_** p_hChannelArray, unsigned int ulNumberOfChannels);
+void fn_vInitFrameLenght(void);
+void fn_vReinitEngineClock(void);
 unsigned int fn_ulDetermineUsefulDT(void);
+void fn_vStartEngineClock(void);
+void fn_vFakeTimer(_stTimerCount* pstCurrentTimerCount);
+void fn_vActualizeEngineClock(void);
+void fn_vSaveEngineClock(void);
+void fn_vLoadEngineClock(void);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Clock.c lines 370–455 */
-/* addr: 0x0025e060  size: 396 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Clock.c lines 97–99 */
+/* addr: 0x0025e690  size: 16 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 370
- *   +0x0004 -> line 394
- *   +0x0008 -> line 370
- *   +0x000c -> line 406
- *   +0x0010 -> line 394
- *   +0x0014 -> line 406
- *   +0x0018 -> line 394
- *   +0x001c -> line 406
- *   +0x0020 -> line 394
- *   +0x0024 -> line 406
- *   +0x002c -> line 408
- *   +0x0038 -> line 410
- *   +0x0040 -> line 411
- *   +0x0048 -> line 413
- *   +0x0058 -> line 420
- *   +0x006c -> line 422
- *   +0x0078 -> line 423
- *   +0x0080 -> line 426
- *   +0x0094 -> line 427
- *   +0x009c -> line 430
- *   +0x00a0 -> line 434
- *   +0x00a4 -> line 436
- *   +0x00ac -> line 440
- *   +0x00b8 -> line 434
- *   +0x00bc -> line 436
- *   +0x00cc -> line 438
- *   +0x00d0 -> line 436
- *   +0x00d4 -> line 441
- *   +0x00d8 -> line 438
- *   +0x00e0 -> line 440
- *   +0x00f0 -> line 441
- *   +0x0104 -> line 443
- *   +0x0110 -> line 444
- *   +0x0114 -> line 443
- *   +0x0118 -> line 448
- *   +0x011c -> line 444
- *   +0x0130 -> line 445
- *   +0x0140 -> line 450
- *   +0x0160 -> line 451
- *   +0x0168 -> line 453
- *   +0x0170 -> line 454
- *   +0x0180 -> line 455
+ *   +0x0000 -> line 97
+ *   +0x0008 -> line 99
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vActualizeEngineClock(void)
-{
-    static unsigned int s_ulTimeRemainder;
-    unsigned int i;
-    _stTimerCount stCurrentTimerCount;
-    unsigned int ulDeltaTime;
 
-    g_stEngineStructure.stEngineTimer.ulTrameNumber++;
-
-    TMR_fn_wReadTimer(g_stEngineStructure.stEngineTimer.sTimerHandle, &stCurrentTimerCount);
-
-    if (g_iFalseTime)
-        fn_vFakeTimer(&stCurrentTimerCount);
-    else
-        g_stRealTimerCount = stCurrentTimerCount;
-
-    if (stCurrentTimerCount.m_ulHighPart == g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulHighPart)
-    {
-        ulDeltaTime = (unsigned int)stCurrentTimerCount.m_ulLowPart - (unsigned int)g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulLowPart;
-    }
-    else if (stCurrentTimerCount.m_ulLowPart >= g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulLowPart)
-    {
-        ulDeltaTime = stCurrentTimerCount.m_ulLowPart - g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulLowPart;
-    }
-    else
-    {
-        ulDeltaTime = stCurrentTimerCount.m_ulLowPart + (0xFFFFFFFF - g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulLowPart + 1);
-    }
-
-    ulDeltaTime += s_ulTimeRemainder;
-    g_stEngineStructure.stEngineTimer.ulDeltaTimerCount = ulDeltaTime / g_stEngineStructure.stEngineTimer.ulTickPerMS;
-    s_ulTimeRemainder = ulDeltaTime % g_stEngineStructure.stEngineTimer.ulTickPerMS;
-
-    g_stEngineStructure.stEngineTimer.stRealTimeCount = stCurrentTimerCount;
-    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount += g_stEngineStructure.stEngineTimer.ulDeltaTimerCount;
-
-    g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime = fn_ulDetermineUsefulDT();
-
-    g_uiAnotherRandom += g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
-    g_uiAnotherRandom = (g_uiAnotherRandom << 2) + g_uiAnotherRandom;
-
-    for (i = 2; i < 16; i++)
-    {
-        if (g_stEngineStructure.stEngineTimer.a_ulCounter[i] == i - 1)
-            g_stEngineStructure.stEngineTimer.a_ulCounter[i] = 0;
-        else
-            g_stEngineStructure.stEngineTimer.a_ulCounter[i]++;
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Clock.c lines 290–352 */
-/* addr: 0x0025e1f0  size: 272 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Clock.c lines 115–115 */
+/* addr: 0x0025e680  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 290
- *   +0x0004 -> line 296
- *   +0x0008 -> line 290
- *   +0x000c -> line 295
- *   +0x0010 -> line 290
- *   +0x0014 -> line 296
- *   +0x0018 -> line 295
- *   +0x0020 -> line 296
- *   +0x0028 -> line 295
- *   +0x002c -> line 296
- *   +0x0034 -> line 301
- *   +0x007c -> line 310
- *   +0x0090 -> line 312
- *   +0x0094 -> line 320
- *   +0x0098 -> line 315
- *   +0x009c -> line 320
- *   +0x00a8 -> line 315
- *   +0x00ac -> line 318
- *   +0x00b0 -> line 315
- *   +0x00b4 -> line 318
- *   +0x00b8 -> line 320
- *   +0x00c0 -> line 321
- *   +0x00e0 -> line 322
- *   +0x00f4 -> line 323
- *   +0x0100 -> line 352
+ *   +0x0000 -> line 115
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vFakeTimer(_stTimerCount* pstCurrentTimerCount)
-{
-    unsigned long ulDeltaTime;
-
-    ulDeltaTime = pstCurrentTimerCount->m_ulLowPart - g_stRealTimerCount.m_ulLowPart;
-    g_stRealTimerCount = *pstCurrentTimerCount;
-
-    if (g_iFalseTimeFixedTime)
-        ulDeltaTime = g_iFalseTimeFixedTime * 294912;
-    else
-        ulDeltaTime = (unsigned long)(0.01f * ((float)ulDeltaTime * (float)g_iFalseTime));
-
-    if (ulDeltaTime > 0x5460000)
-        ulDeltaTime = 0xB40000;
-
-    pstCurrentTimerCount->m_ulLowPart = g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulLowPart + ulDeltaTime;
-    pstCurrentTimerCount->m_ulHighPart = g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulHighPart;
-
-    while (pstCurrentTimerCount->m_ulLowPart > 0x100000000)
-        pstCurrentTimerCount->m_ulLowPart -= 0x100000000;
-
-    if (pstCurrentTimerCount->m_ulLowPart < g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulLowPart)
-        pstCurrentTimerCount->m_ulHighPart++;
-}
-
-short TMR_fn_wResetTimer(short wTimerHandle);
-void GLIPS2_vActualizeClock(void);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Clock.c lines 243–268 */
-/* addr: 0x0025e300  size: 276 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 243
- *   +0x0004 -> line 248
- *   +0x0008 -> line 243
- *   +0x000c -> line 248
- *   +0x0014 -> line 249
- *   +0x0020 -> line 250
- *   +0x0030 -> line 252
- *   +0x0040 -> line 253
- *   +0x0044 -> line 252
- *   +0x0050 -> line 253
- *   +0x0068 -> line 255
- *   +0x0074 -> line 258
- *   +0x0078 -> line 255
- *   +0x0080 -> line 258
- *   +0x0088 -> line 261
- *   +0x0090 -> line 263
- *   +0x0100 -> line 266
- *   +0x0108 -> line 268
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vStartEngineClock(void)
-{
-    unsigned int i;
-    _stTimerCount stCurrentTimerCount;
-
-    TMR_fn_wResetTimer(g_stEngineStructure.stEngineTimer.sTimerHandle);
-    TMR_fn_wStartTimer(g_stEngineStructure.stEngineTimer.sTimerHandle);
-    TMR_fn_wReadTimer(g_stEngineStructure.stEngineTimer.sTimerHandle, &stCurrentTimerCount);
-
-    g_stEngineStructure.stEngineTimer.stRealTimeCount = stCurrentTimerCount;
-    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount = (unsigned int)(stCurrentTimerCount.m_ulLowPart / g_stEngineStructure.stEngineTimer.ulTickPerMS);
-    g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime = fn_ulDetermineUsefulDT();
-
-    g_stEngineStructure.stEngineTimer.ulTrameNumber = 1;
-    g_stEngineStructure.stEngineTimer.a_ulCounter[0] = 1;
-    for (i = 1; i < 16; i++)
-        g_stEngineStructure.stEngineTimer.a_ulCounter[i] = 0;
-
-    GLIPS2_vActualizeClock();
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Clock.c lines 159–226 */
 /* addr: 0x0025e420  size: 604 bytes */
@@ -1158,6 +890,177 @@ void fn_vStartEngineClock(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Engine float-to-int macro: retail converts through f30. */
+inline int MTH_M_xRealToLong(float _xValue)
+{
+    int _lResult;
+    asm
+    {
+        cvt.w.s f30, _xValue
+        mfc1 _lResult, f30
+    }
+    return _lResult;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Clock.c lines 243–268 */
+/* addr: 0x0025e300  size: 276 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 243
+ *   +0x0004 -> line 248
+ *   +0x0008 -> line 243
+ *   +0x000c -> line 248
+ *   +0x0014 -> line 249
+ *   +0x0020 -> line 250
+ *   +0x0030 -> line 252
+ *   +0x0040 -> line 253
+ *   +0x0044 -> line 252
+ *   +0x0050 -> line 253
+ *   +0x0068 -> line 255
+ *   +0x0074 -> line 258
+ *   +0x0078 -> line 255
+ *   +0x0080 -> line 258
+ *   +0x0088 -> line 261
+ *   +0x0090 -> line 263
+ *   +0x0100 -> line 266
+ *   +0x0108 -> line 268
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Clock.c lines 290–352 */
+/* addr: 0x0025e1f0  size: 272 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 290
+ *   +0x0004 -> line 296
+ *   +0x0008 -> line 290
+ *   +0x000c -> line 295
+ *   +0x0010 -> line 290
+ *   +0x0014 -> line 296
+ *   +0x0018 -> line 295
+ *   +0x0020 -> line 296
+ *   +0x0028 -> line 295
+ *   +0x002c -> line 296
+ *   +0x0034 -> line 301
+ *   +0x007c -> line 310
+ *   +0x0090 -> line 312
+ *   +0x0094 -> line 320
+ *   +0x0098 -> line 315
+ *   +0x009c -> line 320
+ *   +0x00a8 -> line 315
+ *   +0x00ac -> line 318
+ *   +0x00b0 -> line 315
+ *   +0x00b4 -> line 318
+ *   +0x00b8 -> line 320
+ *   +0x00c0 -> line 321
+ *   +0x00e0 -> line 322
+ *   +0x00f4 -> line 323
+ *   +0x0100 -> line 352
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Clock.c lines 370–455 */
+/* addr: 0x0025e060  size: 396 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 370
+ *   +0x0004 -> line 394
+ *   +0x0008 -> line 370
+ *   +0x000c -> line 406
+ *   +0x0010 -> line 394
+ *   +0x0014 -> line 406
+ *   +0x0018 -> line 394
+ *   +0x001c -> line 406
+ *   +0x0020 -> line 394
+ *   +0x0024 -> line 406
+ *   +0x002c -> line 408
+ *   +0x0038 -> line 410
+ *   +0x0040 -> line 411
+ *   +0x0048 -> line 413
+ *   +0x0058 -> line 420
+ *   +0x006c -> line 422
+ *   +0x0078 -> line 423
+ *   +0x0080 -> line 426
+ *   +0x0094 -> line 427
+ *   +0x009c -> line 430
+ *   +0x00a0 -> line 434
+ *   +0x00a4 -> line 436
+ *   +0x00ac -> line 440
+ *   +0x00b8 -> line 434
+ *   +0x00bc -> line 436
+ *   +0x00cc -> line 438
+ *   +0x00d0 -> line 436
+ *   +0x00d4 -> line 441
+ *   +0x00d8 -> line 438
+ *   +0x00e0 -> line 440
+ *   +0x00f0 -> line 441
+ *   +0x0104 -> line 443
+ *   +0x0110 -> line 444
+ *   +0x0114 -> line 443
+ *   +0x0118 -> line 448
+ *   +0x011c -> line 444
+ *   +0x0130 -> line 445
+ *   +0x0140 -> line 450
+ *   +0x0160 -> line 451
+ *   +0x0168 -> line 453
+ *   +0x0170 -> line 454
+ *   +0x0180 -> line 455
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Clock.c lines 463–492 */
+/* addr: 0x0025dfb0  size: 172 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 463
+ *   +0x0004 -> line 469
+ *   +0x0008 -> line 463
+ *   +0x000c -> line 469
+ *   +0x0018 -> line 471
+ *   +0x002c -> line 473
+ *   +0x0038 -> line 474
+ *   +0x0040 -> line 477
+ *   +0x0054 -> line 478
+ *   +0x005c -> line 481
+ *   +0x0060 -> line 484
+ *   +0x0070 -> line 486
+ *   +0x0074 -> line 484
+ *   +0x0080 -> line 486
+ *   +0x00a0 -> line 492
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Clock.c lines 500–509 */
+/* addr: 0x0025df30  size: 116 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 500
+ *   +0x0004 -> line 501
+ *   +0x0008 -> line 500
+ *   +0x000c -> line 501
+ *   +0x001c -> line 502
+ *   +0x0020 -> line 501
+ *   +0x002c -> line 502
+ *   +0x0030 -> line 503
+ *   +0x0038 -> line 502
+ *   +0x003c -> line 503
+ *   +0x0044 -> line 505
+ *   +0x0058 -> line 508
+ *   +0x005c -> line 505
+ *   +0x0060 -> line 508
+ *   +0x0068 -> line 509
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void fn_vInitFrameLenght(void)
+{
+    g_stEngineStructure.stEngineTimer.xFrameLength = g_xVideoFrameDurationInSeconds;
+}
+
+void fn_vReinitEngineClock(void)
+{
+}
+
 unsigned int fn_ulDetermineUsefulDT(void)
 {
     float xAverage;
@@ -1178,11 +1081,10 @@ unsigned int fn_ulDetermineUsefulDT(void)
     }
 
     if ((float)lResult < xFrameLengthInMs)
-        lResult = (int)xFrameLengthInMs;
-    else if ((int)(8.0f * xFrameLengthInMs) < lResult)
-        lResult = (int)(8.0f * xFrameLengthInMs);
+        lResult = MTH_M_xRealToLong(xFrameLengthInMs);
+    else if (MTH_M_xRealToLong(8.0f * xFrameLengthInMs) < lResult)
+        lResult = MTH_M_xRealToLong(8.0f * xFrameLengthInMs);
 
-    /* The retail code keeps the ceilf call but stores the un-converted delta. */
     xAverage = ceilf(0.001f * (float)lResult / g_stEngineStructure.stEngineTimer.xFrameLength);
     GAM_g_a_xMat[GAM_g_ulMai] = (float)lResult;
 
@@ -1210,26 +1112,154 @@ unsigned int fn_ulDetermineUsefulDT(void)
     return (unsigned int)xAverage;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Clock.c lines 115–115 */
-/* addr: 0x0025e680  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 115
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vReinitEngineClock(void)
+void fn_vStartEngineClock(void)
 {
+    unsigned int i;
+    _stTimerCount stCurrentTimerCount;
+
+    TMR_fn_wResetTimer(g_stEngineStructure.stEngineTimer.sTimerHandle);
+    TMR_fn_wStartTimer(g_stEngineStructure.stEngineTimer.sTimerHandle);
+    TMR_fn_wReadTimer(g_stEngineStructure.stEngineTimer.sTimerHandle, &stCurrentTimerCount);
+
+    g_stEngineStructure.stEngineTimer.stRealTimeCount = stCurrentTimerCount;
+    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount = (unsigned int)(stCurrentTimerCount.m_ulLowPart / g_stEngineStructure.stEngineTimer.ulTickPerMS);
+    g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime = fn_ulDetermineUsefulDT();
+
+    g_stEngineStructure.stEngineTimer.ulTrameNumber = 1;
+    g_stEngineStructure.stEngineTimer.a_ulCounter[0] = 1;
+    for (i = 1; i < 16; i++)
+        g_stEngineStructure.stEngineTimer.a_ulCounter[i] = 0;
+
+    GLIPS2_vActualizeClock();
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Clock.c lines 97–99 */
-/* addr: 0x0025e690  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 97
- *   +0x0008 -> line 99
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vInitFrameLenght(void)
+void fn_vFakeTimer(_stTimerCount* pstCurrentTimerCount)
 {
-    g_stEngineStructure.stEngineTimer.xFrameLength = g_xVideoFrameDurationInSeconds;
+    unsigned long ulDeltaTime;
+
+    ulDeltaTime = pstCurrentTimerCount->m_ulLowPart - g_stRealTimerCount.m_ulLowPart;
+    g_stRealTimerCount = *pstCurrentTimerCount;
+
+    if (g_iFalseTimeFixedTime)
+        ulDeltaTime = g_iFalseTimeFixedTime * 294912;
+    else
+        ulDeltaTime = (unsigned long)(0.01f * ((float)ulDeltaTime * (float)g_iFalseTime));
+
+    if (ulDeltaTime > 0x5460000)
+        ulDeltaTime = 0xB40000;
+
+    pstCurrentTimerCount->m_ulLowPart = g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulLowPart + ulDeltaTime;
+    pstCurrentTimerCount->m_ulHighPart = g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulHighPart;
+
+    while (pstCurrentTimerCount->m_ulLowPart > 0x100000000)
+        pstCurrentTimerCount->m_ulLowPart -= 0x100000000;
+
+    if (pstCurrentTimerCount->m_ulLowPart < g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulLowPart)
+        pstCurrentTimerCount->m_ulHighPart++;
+}
+
+void fn_vActualizeEngineClock(void)
+{
+    static unsigned int s_ulTimeRemainder;
+    unsigned int i;
+    _stTimerCount stCurrentTimerCount;
+    unsigned int ulDeltaTime;
+
+    g_stEngineStructure.stEngineTimer.ulTrameNumber++;
+
+    TMR_fn_wReadTimer(g_stEngineStructure.stEngineTimer.sTimerHandle, &stCurrentTimerCount);
+
+    if (g_iFalseTime)
+        fn_vFakeTimer(&stCurrentTimerCount);
+    else
+        g_stRealTimerCount = stCurrentTimerCount;
+
+    if (stCurrentTimerCount.m_ulHighPart == g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulHighPart)
+    {
+        ulDeltaTime = (unsigned int)stCurrentTimerCount.m_ulLowPart - (unsigned int)g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulLowPart;
+    }
+    else if (stCurrentTimerCount.m_ulLowPart >= g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulLowPart)
+    {
+        ulDeltaTime = stCurrentTimerCount.m_ulLowPart - g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulLowPart;
+    }
+    else
+    {
+        ulDeltaTime = stCurrentTimerCount.m_ulLowPart + (0xFFFFFFFF - g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulLowPart + 1);
+    }
+
+    ulDeltaTime += s_ulTimeRemainder;
+    g_stEngineStructure.stEngineTimer.ulDeltaTimerCount = ulDeltaTime / g_stEngineStructure.stEngineTimer.ulTickPerMS;
+    s_ulTimeRemainder = ulDeltaTime % g_stEngineStructure.stEngineTimer.ulTickPerMS;
+
+    g_stEngineStructure.stEngineTimer.stRealTimeCount = stCurrentTimerCount;
+    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount += g_stEngineStructure.stEngineTimer.ulDeltaTimerCount;
+
+    g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime = fn_ulDetermineUsefulDT();
+
+    g_uiAnotherRandom += g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+    g_uiAnotherRandom = (g_uiAnotherRandom << 2) + g_uiAnotherRandom;
+
+    for (i = 2; i < 16; i++)
+    {
+        if (g_stEngineStructure.stEngineTimer.a_ulCounter[i] == i - 1)
+            g_stEngineStructure.stEngineTimer.a_ulCounter[i] = 0;
+        else
+            g_stEngineStructure.stEngineTimer.a_ulCounter[i]++;
+    }
+}
+
+void fn_vSaveEngineClock(void)
+{
+    _stTimerCount stCurrentTimerCount;
+    unsigned int ulDeltaTime;
+
+    TMR_fn_wReadTimer(g_stEngineStructure.stEngineTimer.sTimerHandle, &stCurrentTimerCount);
+
+    if (stCurrentTimerCount.m_ulHighPart == g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulHighPart)
+    {
+        ulDeltaTime = (unsigned int)stCurrentTimerCount.m_ulLowPart - (unsigned int)g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulLowPart;
+    }
+    else if (stCurrentTimerCount.m_ulLowPart >= g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulLowPart)
+    {
+        ulDeltaTime = stCurrentTimerCount.m_ulLowPart - g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulLowPart;
+    }
+    else
+    {
+        ulDeltaTime = stCurrentTimerCount.m_ulLowPart + (0xFFFFFFFF - g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulLowPart + 1);
+    }
+
+    g_stEngineStructure.stEngineTimer.stPauseTime = stCurrentTimerCount;
+
+    g_stEngineStructure.stEngineTimer.ulPauseTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount + ulDeltaTime / g_stEngineStructure.stEngineTimer.ulTickPerMS;
+}
+
+void fn_vLoadEngineClock(void)
+{
+    g_stEngineStructure.stEngineTimer.stRealTimeCount = g_stEngineStructure.stEngineTimer.stPauseTime;
+    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount = g_stEngineStructure.stEngineTimer.ulPauseTime;
+    TMR_fn_wSetTimerValue(g_stEngineStructure.stEngineTimer.sTimerHandle, &g_stEngineStructure.stEngineTimer.stRealTimeCount);
+
+    g_stRealTimerCount = g_stRealTimerCountPaused;
+
+    TMR_fn_wStartTimer(g_stEngineStructure.stEngineTimer.sTimerHandle);
+}
+
+void fn_vInitCSOList(tdstAChannel_** p_hChannelArray, unsigned int ulNumberOfChannels)
+{
+    unsigned int ulI;
+
+    *p_hChannelArray = (tdstAChannel_*)HMU_fn_p_vMalloc(ulNumberOfChannels * sizeof(tdstAChannel_), 1);
+
+    for (ulI = 0; ulI < ulNumberOfChannels; ulI++)
+    {
+        (*p_hChannelArray)[ulI].hSupObject = NULL;
+        (*p_hChannelArray)[ulI].hZoomSupObject = NULL;
+        /* The retail code clears the +0x4 word twice; both stores are needed. */
+        (*p_hChannelArray)[ulI].hZoomSupObject = NULL;
+        (*p_hChannelArray)[ulI].p_stNextActiveChannel = NULL;
+        (*p_hChannelArray)[ulI].p_stFatherChannel = NULL;
+        (*p_hChannelArray)[ulI].bActiveChannel = 1;
+        (*p_hChannelArray)[ulI].bControlledChannel = 0;
+        (*p_hChannelArray)[ulI].bLipsChannel = 0;
+    }
 }

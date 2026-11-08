@@ -1439,6 +1439,1553 @@ void MAT_fn_vFastInvert(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_
 
 #define SPR_M_ul(off) (*(unsigned int*)(0x70000000 + (off)))
 
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void fn_vComputeDeformationPS2(GEO_tdstGeometricObject_* p_stGeoObj, unsigned int ulNbVertices, unsigned int ulChannelNumber, tdstPLA_Deformation_* p_stDeformation, GEO_tdstElementDeformationSetInfo_* p_stDeformationSetInfo);
+void SAV2_fn_vActualizeMenuOptionsAfterLoad(void);
+void SAV2_fn_vUpdateVibrations(void);
+int SAV2_CheckMCStatus(int _id);
+int SAV2_LastError(void);
+void SAV2_fn_p_szGetSaveNameOfSaveNumber(void);
+unsigned char SAV2_fn_ucGetNumberOfExistingSave(void);
+unsigned char SAV2_fn_bActualizeExistingSave(void);
+unsigned char SAV2_fn_bRemoveSaveFromDisk(void);
+unsigned char SAV2_fn_bUpdateAllDataFromLoadedFile(void);
+unsigned char SAV2_fn_bReadAllFromDisk(char* p_szSaveName);
+unsigned char SAV2_fn_bSaveAllOnDisk(char* p_szSaveName);
+void GAM_vAllocateSaveBloc(void);
+void SAV2_fn_vSetValueForSave(char* p_szElementName, void* p_stParam);
+void SAV2_fn_vSetValueInPipeline(char* p_szElementName, void* p_stParam);
+void SAV2_fn_xGetASingleValue(char* p_szElementName, void* p_stParam);
+void SAV2_fn_vSetASingleValue(char* p_szElementName, void* p_stParam);
+void SAV2_fn_xGetAValueAtIndex(char* p_szElementName, unsigned int ulElementNumber, void* p_stParam);
+void SAV2_fn_vSetAValueAtIndex(char* p_szElementName, unsigned int ulElementNumber, void* p_stParam);
+void SAV2_fn_vDeleteAllList(void);
+void SAV2_fn_vDeletePipelineElement(char* p_szElementName);
+void SAV2_fn_vDeleteAllPipeline(void);
+void SAV2_fn_vDeleteAField(char* p_szElementName);
+void SAV2_fn_vDeclareAField(char* p_szElementName, int ucType, unsigned int ulNumberOfElement, unsigned char bStatic, unsigned char bSave);
+unsigned char SAV2_fn_bIsExist(char* p_szElementName);
+SAV2_tdstElement_* SAV2_fn_p_stFindElementByName(char* p_szElementName);
+void SAV2_fn_vFreeAnElement(SAV2_tdstElement_* p_stElement);
+SAV2_tdeDataType_ SAV2_fn_eGiveElementTypeFromAIType(tdeVariableType_ _eIAType);
+void SAV2_fn_vFindGoodTypeAndOptionsFromString(char* p_szElementOptions, SAV2_tdeDataType_* p_ucType, unsigned char* p_bStatic, unsigned char* p_bSave);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 1597–1662 */
+/* addr: 0x0028a850  size: 660 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1597
+ *   +0x0004 -> line 1599
+ *   +0x0008 -> line 1597
+ *   +0x000c -> line 1599
+ *   +0x0010 -> line 1602
+ *   +0x0014 -> line 1618
+ *   +0x001c -> line 1602
+ *   +0x0020 -> line 1603
+ *   +0x0028 -> line 1604
+ *   +0x0030 -> line 1610
+ *   +0x0038 -> line 1611
+ *   +0x0040 -> line 1612
+ *   +0x0044 -> line 1618
+ *   +0x004c -> line 1619
+ *   +0x005c -> line 1621
+ *   +0x0068 -> line 1623
+ *   +0x0074 -> line 1624
+ *   +0x0080 -> line 1625
+ *   +0x008c -> line 1626
+ *   +0x0098 -> line 1628
+ *   +0x00a0 -> line 1631
+ *   +0x00a8 -> line 1632
+ *   +0x0198 -> line 1635
+ *   +0x01a0 -> line 1639
+ *   +0x01a4 -> line 1658
+ *   +0x01a8 -> line 1639
+ *   +0x01ac -> line 1658
+ *   +0x01b8 -> line 1639
+ *   +0x01d0 -> line 1642
+ *   +0x01d8 -> line 1645
+ *   +0x01dc -> line 1642
+ *   +0x01e0 -> line 1645
+ *   +0x01e4 -> line 1639
+ *   +0x01e8 -> line 1645
+ *   +0x01ec -> line 1639
+ *   +0x0208 -> line 1646
+ *   +0x0210 -> line 1647
+ *   +0x0214 -> line 1646
+ *   +0x0218 -> line 1647
+ *   +0x021c -> line 1650
+ *   +0x0220 -> line 1647
+ *   +0x0224 -> line 1650
+ *   +0x0228 -> line 1651
+ *   +0x022c -> line 1650
+ *   +0x0230 -> line 1651
+ *   +0x0234 -> line 1652
+ *   +0x0238 -> line 1651
+ *   +0x023c -> line 1652
+ *   +0x0240 -> line 1653
+ *   +0x0244 -> line 1652
+ *   +0x0248 -> line 1654
+ *   +0x024c -> line 1656
+ *   +0x0250 -> line 1653
+ *   +0x0254 -> line 1654
+ *   +0x0258 -> line 1658
+ *   +0x0260 -> line 1660
+ *   +0x0288 -> line 1662
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void IPT_fn_vResumeAllConstantFFBEffectForAllDevices(unsigned int ulCurrentTime);
+void IPT_fn_vPauseAllConstantFFBEffectForAllDevices(unsigned int ulCurrentTime);
+void SND_fn_vSetStereoSound(int iStereo);
+void GAM_fn_vSetVolumeMenu(int iVolume);
+void GAM_fn_vSetVolumeSound(int iVolume);
+void GAM_fn_vSetVolumeVoice(int iVolume);
+void GAM_fn_vSetVolumeMusic(int iVolume);
+void GAM_fn_vSetVolumeAmbiance(int iVolume);
+void fn_vUpdatePlayerGameName(void);
+void fn_vR3StoreInitScore(void);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 1581–1592 */
+/* addr: 0x0028aaf0  size: 60 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1581
+ *   +0x0004 -> line 1582
+ *   +0x0008 -> line 1581
+ *   +0x000c -> line 1584
+ *   +0x0018 -> line 1586
+ *   +0x0020 -> line 1587
+ *   +0x0028 -> line 1590
+ *   +0x0030 -> line 1592
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+int SVG_fn_s32Query(int _iPort, int _iSlot, int* _p_iFreeClusters);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 1506–1519 */
+/* addr: 0x0028ab30  size: 88 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1511
+ *   +0x0004 -> line 1506
+ *   +0x0008 -> line 1511
+ *   +0x0014 -> line 1506
+ *   +0x0018 -> line 1511
+ *   +0x0024 -> line 1508
+ *   +0x0028 -> line 1511
+ *   +0x0040 -> line 1519
+ *   +0x0044 -> line 1515
+ *   +0x0050 -> line 1519
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 1502–1503 */
+/* addr: 0x0028ab90  size: 16 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1502
+ *   +0x0008 -> line 1503
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 1481–1497 */
+/* addr: 0x0028aba0  size: 60 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1481
+ *   +0x0008 -> line 1486
+ *   +0x0030 -> line 1497
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 1473–1478 */
+/* addr: 0x0028abe0  size: 44 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1473
+ *   +0x0008 -> line 1475
+ *   +0x0020 -> line 1478
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 1447–1470 */
+/* addr: 0x0028ac10  size: 64 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1447
+ *   +0x0008 -> line 1454
+ *   +0x0030 -> line 1470
+ *   +0x0034 -> line 1469
+ *   +0x0038 -> line 1470
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 1419–1436 */
+/* addr: 0x0028ac50  size: 68 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1419
+ *   +0x0008 -> line 1421
+ *   +0x0030 -> line 1434
+ *   +0x0034 -> line 1435
+ *   +0x0038 -> line 1436
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 1300–1414 */
+/* addr: 0x0028aca0  size: 1756 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1300
+ *   +0x001c -> line 1304
+ *   +0x0020 -> line 1305
+ *   +0x0024 -> line 1312
+ *   +0x002c -> line 1321
+ *   +0x00a8 -> line 1324
+ *   +0x00d0 -> line 1326
+ *   +0x00d4 -> line 1329
+ *   +0x00d8 -> line 1326
+ *   +0x00dc -> line 1329
+ *   +0x0100 -> line 1331
+ *   +0x0120 -> line 1333
+ *   +0x0128 -> line 1335
+ *   +0x0130 -> line 1337
+ *   +0x0150 -> line 1338
+ *   +0x0170 -> line 1339
+ *   +0x0190 -> line 1340
+ *   +0x01ac -> line 1341
+ *   +0x01f8 -> line 1342
+ *   +0x0208 -> line 1344
+ *   +0x0234 -> line 1346
+ *   +0x0238 -> line 1347
+ *   +0x0254 -> line 1348
+ *   +0x025c -> line 1349
+ *   +0x0260 -> line 1350
+ *   +0x027c -> line 1351
+ *   +0x0284 -> line 1352
+ *   +0x0288 -> line 1353
+ *   +0x02a4 -> line 1354
+ *   +0x02ac -> line 1355
+ *   +0x02b0 -> line 1356
+ *   +0x02cc -> line 1357
+ *   +0x02d4 -> line 1358
+ *   +0x02d8 -> line 1359
+ *   +0x0320 -> line 1360
+ *   +0x0340 -> line 1361
+ *   +0x0348 -> line 1363
+ *   +0x0368 -> line 1364
+ *   +0x03b0 -> line 1365
+ *   +0x03d4 -> line 1368
+ *   +0x03e0 -> line 1371
+ *   +0x040c -> line 1373
+ *   +0x0410 -> line 1374
+ *   +0x0430 -> line 1375
+ *   +0x0438 -> line 1377
+ *   +0x0460 -> line 1378
+ *   +0x0468 -> line 1380
+ *   +0x0490 -> line 1381
+ *   +0x0498 -> line 1383
+ *   +0x04c0 -> line 1384
+ *   +0x04c8 -> line 1386
+ *   +0x04d0 -> line 1388
+ *   +0x0520 -> line 1389
+ *   +0x0528 -> line 1388
+ *   +0x0530 -> line 1389
+ *   +0x0578 -> line 1390
+ *   +0x059c -> line 1391
+ *   +0x05a4 -> line 1392
+ *   +0x05a8 -> line 1393
+ *   +0x05b0 -> line 1395
+ *   +0x05d0 -> line 1396
+ *   +0x0620 -> line 1397
+ *   +0x0628 -> line 1396
+ *   +0x0630 -> line 1397
+ *   +0x0660 -> line 1398
+ *   +0x0684 -> line 1401
+ *   +0x0688 -> line 1403
+ *   +0x06a8 -> line 1404
+ *   +0x06b4 -> line 1410
+ *   +0x06bc -> line 1414
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void* PS2MC_fn_pGetLoadGameBuffer(void);
+void SAV2_fn_vFreeAnElement(SAV2_tdstElement_* p_stElement);
+void SAV2_fn_vDeclareAField(char* p_szElementName, int ucType, unsigned int ulNumberOfElement, unsigned char bStatic, unsigned char bSave);
+static SAV2_tdstElement_* SAV2_fn_p_stFindElementByNameExpanded(char* p_szElementName);
+extern void Mmg_fn_v_SetModeAlloc(unsigned char ucModuleId, unsigned char ucNewMode, unsigned char ucChannel);
+extern void* fn_p_vGenAlloc(unsigned int ulSize, unsigned char ucChannel);
+
+#define SAV2_M_ReadData(p_vDest, ulSize) if (((int)pData - (int)pStartAddress) < 0x1000) { memcpy((p_vDest), pData, (ulSize)); pData += (ulSize); }
+
+/* The "SAV2_fn_p_vMalloc" trace names the allocator; retail expands it into
+ * its callers. */
+#pragma auto_inline on
+static void* SAV2_fn_p_vMalloc(unsigned int ulSize)
+{
+    void* p_vPtr;
+    Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0);
+    p_vPtr = fn_p_vGenAlloc(ulSize, 0);
+    printf("SAV2_fn_p_vMalloc %d\n", ulSize);
+    if (p_vPtr != NULL)
+        memset(p_vPtr, 0, ulSize);
+    return p_vPtr;
+}
+#pragma auto_inline reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 1018–1284 */
+/* addr: 0x0028b380  size: 64 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1018
+ *   +0x0010 -> line 1081
+ *   +0x0020 -> line 1085
+ *   +0x002c -> line 1284
+ *   +0x0030 -> line 1087
+ *   +0x0034 -> line 1284
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+extern void PS2MC_fn_vLoadGame(char* _pFileName);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 649–987 */
+/* addr: 0x0028b3c0  size: 2268 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 649
+ *   +0x0024 -> line 701
+ *   +0x0034 -> line 702
+ *   +0x0040 -> line 720
+ *   +0x0044 -> line 722
+ *   +0x0058 -> line 788
+ *   +0x0098 -> line 794
+ *   +0x009c -> line 788
+ *   +0x00a4 -> line 789
+ *   +0x00b0 -> line 795
+ *   +0x01a0 -> line 797
+ *   +0x01b4 -> line 799
+ *   +0x01c8 -> line 802
+ *   +0x01cc -> line 804
+ *   +0x01d0 -> line 802
+ *   +0x01d4 -> line 820
+ *   +0x01d8 -> line 807
+ *   +0x01dc -> line 802
+ *   +0x0208 -> line 808
+ *   +0x020c -> line 802
+ *   +0x0214 -> line 809
+ *   +0x0218 -> line 802
+ *   +0x021c -> line 804
+ *   +0x0220 -> line 812
+ *   +0x0224 -> line 804
+ *   +0x0228 -> line 807
+ *   +0x022c -> line 813
+ *   +0x0230 -> line 807
+ *   +0x0234 -> line 808
+ *   +0x0238 -> line 814
+ *   +0x023c -> line 808
+ *   +0x0240 -> line 809
+ *   +0x0248 -> line 812
+ *   +0x0250 -> line 813
+ *   +0x0258 -> line 814
+ *   +0x0260 -> line 820
+ *   +0x0294 -> line 822
+ *   +0x02cc -> line 825
+ *   +0x02dc -> line 827
+ *   +0x02ec -> line 829
+ *   +0x02f8 -> line 830
+ *   +0x0330 -> line 831
+ *   +0x0368 -> line 832
+ *   +0x0398 -> line 833
+ *   +0x03c8 -> line 834
+ *   +0x03d8 -> line 836
+ *   +0x0404 -> line 838
+ *   +0x0408 -> line 839
+ *   +0x0438 -> line 840
+ *   +0x0440 -> line 842
+ *   +0x0470 -> line 843
+ *   +0x0478 -> line 845
+ *   +0x04a8 -> line 846
+ *   +0x04b0 -> line 848
+ *   +0x04e0 -> line 849
+ *   +0x04e8 -> line 851
+ *   +0x051c -> line 852
+ *   +0x0524 -> line 853
+ *   +0x0528 -> line 854
+ *   +0x0534 -> line 855
+ *   +0x0568 -> line 856
+ *   +0x05a0 -> line 859
+ *   +0x05a8 -> line 862
+ *   +0x05d4 -> line 864
+ *   +0x05d8 -> line 865
+ *   +0x060c -> line 866
+ *   +0x0614 -> line 867
+ *   +0x0618 -> line 868
+ *   +0x0654 -> line 869
+ *   +0x065c -> line 870
+ *   +0x0660 -> line 871
+ *   +0x069c -> line 872
+ *   +0x06a4 -> line 873
+ *   +0x06a8 -> line 874
+ *   +0x06e4 -> line 875
+ *   +0x06ec -> line 876
+ *   +0x06f0 -> line 877
+ *   +0x0700 -> line 878
+ *   +0x077c -> line 879
+ *   +0x0784 -> line 880
+ *   +0x0788 -> line 881
+ *   +0x0798 -> line 883
+ *   +0x07ac -> line 884
+ *   +0x07e0 -> line 885
+ *   +0x0820 -> line 886
+ *   +0x0824 -> line 885
+ *   +0x0828 -> line 886
+ *   +0x0844 -> line 890
+ *   +0x0848 -> line 891
+ *   +0x0858 -> line 895
+ *   +0x088c -> line 944
+ *   +0x08a0 -> line 945
+ *   +0x08b0 -> line 987
+ *   +0x08b4 -> line 950
+ *   +0x08b8 -> line 987
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void PS2MC_fn_vSaveGame(char* _pData, char* _pFileName, unsigned int SaveGameSizeInBytes);
+
+/* The trace format is empty in this build. */
+#define SAV2_M_WriteData(p_vSource, ulSize) if (((int)pData - (int)pStartAddress) < 0x1000) { memcpy(pData, (p_vSource), (ulSize)); pData += (ulSize); printf("", (int)pData - (int)pStartAddress); }
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 641–644 */
+/* addr: 0x0028bca0  size: 32 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 641
+ *   +0x0008 -> line 642
+ *   +0x0014 -> line 644
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+SAV2_tdeDataType_ SAV2_fn_eGiveElementTypeFromAIType(tdeVariableType_ _eIAType);
+/* ucType is decoded as SAV2_tdeDataType_, but callers narrow it to a byte
+ * (andi 0xff), matching its uc prefix. */
+void SAV2_fn_vDeclareAField(char* p_szElementName, int ucType, unsigned int ulNumberOfElement, unsigned char bStatic, unsigned char bSave);
+void SAV2_fn_vSetAValueAtIndex(char* p_szElementName, unsigned int ulElementNumber, void* p_stParam);
+extern void Mmg_fn_v_SetModeAlloc(unsigned char ucModuleId, unsigned char ucNewMode, unsigned char ucChannel);
+extern void* fn_p_vGenAlloc(unsigned int ulSize, unsigned char ucChannel);
+void SAV2_fn_vFreeAnElement(SAV2_tdstElement_* p_stElement);
+/* The element lookup is expanded into its callers by the retail compiler, but
+ * SAV2_fn_vDeleteAllPipeline still calls the out-of-line copy, so the
+ * expandable copy is a separate static helper. */
+SAV2_tdstElement_* SAV2_fn_p_stFindElementByName(char* p_szElementName);
+static SAV2_tdstElement_* SAV2_fn_p_stFindElementByNameExpanded(char* p_szElementName);
+char* fn_szGetStringFromTextOrStringParam(tdstGetSetParam_* p_stValue);
+extern void fn_vGenFree(void* p_vMemBlock, unsigned char ucChannel);
+char* Strchr(char* p_cString, int cChar);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 591–596 */
+/* addr: 0x0028bcc0  size: 92 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 591
+ *   +0x0014 -> line 594
+ *   +0x0038 -> line 595
+ *   +0x0048 -> line 596
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 583–588 */
+/* addr: 0x0028bd20  size: 92 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 583
+ *   +0x0014 -> line 586
+ *   +0x0038 -> line 587
+ *   +0x0048 -> line 588
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void SAV2_fn_xGetAValueAtIndex(char* p_szElementName, unsigned int ulElementNumber, void* p_stParam);
+void SAV2_fn_vSetAValueAtIndex(char* p_szElementName, unsigned int ulElementNumber, void* p_stParam);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 579–579 */
+/* addr: 0x0028bd80  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0004 -> line 579
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 574–574 */
+/* addr: 0x0028bd90  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0004 -> line 574
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 479–570 */
+/* addr: 0x0028bda0  size: 660 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 479
+ *   +0x0004 -> line 483
+ *   +0x0008 -> line 479
+ *   +0x0024 -> line 483
+ *   +0x005c -> line 484
+ *   +0x0064 -> line 486
+ *   +0x0074 -> line 488
+ *   +0x007c -> line 490
+ *   +0x00a8 -> line 493
+ *   +0x00ac -> line 494
+ *   +0x00b0 -> line 493
+ *   +0x00b4 -> line 495
+ *   +0x00bc -> line 497
+ *   +0x00c0 -> line 498
+ *   +0x00c4 -> line 497
+ *   +0x00c8 -> line 499
+ *   +0x00d0 -> line 501
+ *   +0x00d4 -> line 502
+ *   +0x00d8 -> line 501
+ *   +0x00dc -> line 503
+ *   +0x00e4 -> line 505
+ *   +0x00e8 -> line 506
+ *   +0x00ec -> line 505
+ *   +0x00f0 -> line 507
+ *   +0x00f8 -> line 509
+ *   +0x00fc -> line 510
+ *   +0x0100 -> line 509
+ *   +0x0118 -> line 511
+ *   +0x0120 -> line 513
+ *   +0x0130 -> line 515
+ *   +0x013c -> line 517
+ *   +0x0144 -> line 518
+ *   +0x0150 -> line 525
+ *   +0x0158 -> line 528
+ *   +0x0184 -> line 531
+ *   +0x0188 -> line 532
+ *   +0x018c -> line 531
+ *   +0x0198 -> line 533
+ *   +0x01a0 -> line 535
+ *   +0x01a8 -> line 536
+ *   +0x01ac -> line 535
+ *   +0x01b8 -> line 537
+ *   +0x01c0 -> line 539
+ *   +0x01c8 -> line 540
+ *   +0x01cc -> line 539
+ *   +0x01d8 -> line 541
+ *   +0x01e0 -> line 543
+ *   +0x01e8 -> line 544
+ *   +0x01ec -> line 543
+ *   +0x01f8 -> line 545
+ *   +0x0200 -> line 547
+ *   +0x0208 -> line 548
+ *   +0x020c -> line 547
+ *   +0x022c -> line 549
+ *   +0x0234 -> line 551
+ *   +0x0244 -> line 553
+ *   +0x025c -> line 555
+ *   +0x0264 -> line 556
+ *   +0x0278 -> line 570
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 369–476 */
+/* addr: 0x0028c040  size: 1292 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 369
+ *   +0x0004 -> line 373
+ *   +0x0008 -> line 369
+ *   +0x002c -> line 373
+ *   +0x0064 -> line 374
+ *   +0x006c -> line 376
+ *   +0x0094 -> line 378
+ *   +0x00a4 -> line 380
+ *   +0x00ac -> line 382
+ *   +0x00d8 -> line 385
+ *   +0x00dc -> line 386
+ *   +0x00e4 -> line 388
+ *   +0x00e8 -> line 389
+ *   +0x00f0 -> line 391
+ *   +0x00f4 -> line 392
+ *   +0x00fc -> line 394
+ *   +0x0100 -> line 395
+ *   +0x0108 -> line 398
+ *   +0x0114 -> line 399
+ *   +0x0138 -> line 400
+ *   +0x0180 -> line 401
+ *   +0x0198 -> line 402
+ *   +0x01a0 -> line 406
+ *   +0x01a8 -> line 407
+ *   +0x01b4 -> line 408
+ *   +0x01d8 -> line 409
+ *   +0x0230 -> line 410
+ *   +0x023c -> line 413
+ *   +0x0268 -> line 416
+ *   +0x027c -> line 417
+ *   +0x0288 -> line 422
+ *   +0x0290 -> line 425
+ *   +0x02bc -> line 428
+ *   +0x02c8 -> line 429
+ *   +0x02d0 -> line 431
+ *   +0x02e0 -> line 432
+ *   +0x02e8 -> line 434
+ *   +0x02f8 -> line 435
+ *   +0x0300 -> line 437
+ *   +0x0310 -> line 438
+ *   +0x0318 -> line 441
+ *   +0x0330 -> line 442
+ *   +0x0354 -> line 443
+ *   +0x03a4 -> line 444
+ *   +0x03c4 -> line 445
+ *   +0x03cc -> line 449
+ *   +0x03d8 -> line 450
+ *   +0x03f0 -> line 451
+ *   +0x0414 -> line 452
+ *   +0x0474 -> line 453
+ *   +0x0488 -> line 456
+ *   +0x04b4 -> line 459
+ *   +0x04d0 -> line 460
+ *   +0x04e8 -> line 476
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+#pragma auto_inline on
+static SAV2_tdeDataType_ SAV2_fn_eGetType(SAV2_tdstElement_* p_stElement)
+{
+    return (SAV2_tdeDataType_)(p_stElement->ucDataInformation & 0x0F);
+}
+#pragma auto_inline reset
+
+#define SAV2_M_Free(p) { void* p_vPtr = (void*)(p); if (p_vPtr != NULL) { Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0); fn_vGenFree(p_vPtr, 0); } }
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 357–366 */
+/* addr: 0x0028c550  size: 120 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 357
+ *   +0x0004 -> line 361
+ *   +0x0008 -> line 357
+ *   +0x000c -> line 361
+ *   +0x0020 -> line 362
+ *   +0x0040 -> line 364
+ *   +0x0048 -> line 365
+ *   +0x0068 -> line 366
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 333–339 */
+/* addr: 0x0028c5d0  size: 128 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 333
+ *   +0x0004 -> line 336
+ *   +0x0008 -> line 333
+ *   +0x0014 -> line 336
+ *   +0x004c -> line 337
+ *   +0x0064 -> line 338
+ *   +0x006c -> line 339
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 322–330 */
+/* addr: 0x0028c650  size: 144 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 322
+ *   +0x0004 -> line 326
+ *   +0x0008 -> line 322
+ *   +0x0010 -> line 326
+ *   +0x0030 -> line 328
+ *   +0x0060 -> line 329
+ *   +0x0080 -> line 330
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 313–319 */
+/* addr: 0x0028c6e0  size: 112 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 313
+ *   +0x0004 -> line 316
+ *   +0x0008 -> line 313
+ *   +0x0014 -> line 316
+ *   +0x004c -> line 317
+ *   +0x0054 -> line 318
+ *   +0x005c -> line 319
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 294–310 */
+/* addr: 0x0028c750  size: 716 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 294
+ *   +0x0004 -> line 297
+ *   +0x0008 -> line 294
+ *   +0x003c -> line 297
+ *   +0x0074 -> line 298
+ *   +0x007c -> line 299
+ *   +0x0084 -> line 301
+ *   +0x0158 -> line 304
+ *   +0x015c -> line 301
+ *   +0x0164 -> line 304
+ *   +0x016c -> line 306
+ *   +0x01c4 -> line 309
+ *   +0x02a0 -> line 310
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 289–291 */
+/* addr: 0x0028ca20  size: 108 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 289
+ *   +0x0004 -> line 290
+ *   +0x0008 -> line 289
+ *   +0x0014 -> line 290
+ *   +0x0050 -> line 291
+ *   +0x0054 -> line 290
+ *   +0x0058 -> line 291
+ *   +0x0060 -> line 290
+ *   +0x0064 -> line 291
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 275–286 */
+/* addr: 0x0028ca90  size: 96 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 275
+ *   +0x0004 -> line 279
+ *   +0x0008 -> line 275
+ *   +0x0014 -> line 279
+ *   +0x0020 -> line 281
+ *   +0x0034 -> line 282
+ *   +0x003c -> line 283
+ *   +0x0048 -> line 285
+ *   +0x004c -> line 286
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* The retail code expands the lookup into its callers but keeps the call in
+ * SAV2_fn_vDeleteAllPipeline, so the expandable copy is a separate static
+ * helper. */
+#pragma auto_inline on
+static SAV2_tdstElement_* SAV2_fn_p_stFindElementByNameExpanded(char* p_szElementName)
+{
+    SAV2_tdstElement_* p_stElement;
+
+    for (p_stElement = SAV2_g_stList.SAV2_ListAnchor.hFirstElementDyn; p_stElement != NULL; p_stElement = p_stElement->hNextBrotherDyn)
+    {
+        if (strcasecmp((char*)p_stElement->p_szElementName, p_szElementName) == 0)
+            return p_stElement;
+    }
+
+    return NULL;
+}
+#pragma auto_inline reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 246–272 */
+/* addr: 0x0028caf0  size: 644 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 246
+ *   +0x001c -> line 249
+ *   +0x0094 -> line 251
+ *   +0x0098 -> line 249
+ *   +0x00a0 -> line 251
+ *   +0x00ac -> line 253
+ *   +0x00c0 -> line 255
+ *   +0x00cc -> line 256
+ *   +0x0118 -> line 257
+ *   +0x0120 -> line 258
+ *   +0x0128 -> line 260
+ *   +0x0130 -> line 261
+ *   +0x0178 -> line 263
+ *   +0x01a0 -> line 264
+ *   +0x01a8 -> line 265
+ *   +0x01bc -> line 266
+ *   +0x01ec -> line 267
+ *   +0x01f4 -> line 268
+ *   +0x021c -> line 270
+ *   +0x0244 -> line 271
+ *   +0x0268 -> line 272
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+extern void fn_vGenFree(void* p_vMemBlock, unsigned char ucChannel);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 204–220 */
+/* addr: 0x0028cd80  size: 156 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 204
+ *   +0x001c -> line 205
+ *   +0x0024 -> line 206
+ *   +0x0034 -> line 207
+ *   +0x003c -> line 208
+ *   +0x0050 -> line 209
+ *   +0x0058 -> line 210
+ *   +0x0060 -> line 211
+ *   +0x0068 -> line 212
+ *   +0x0074 -> line 213
+ *   +0x007c -> line 214
+ *   +0x0090 -> line 215
+ *   +0x0094 -> line 220
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+/* Debug info says void; the element type is returned in $v0. */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 157–188 */
+/* addr: 0x0028ce20  size: 536 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 157
+ *   +0x0004 -> line 159
+ *   +0x0008 -> line 157
+ *   +0x0028 -> line 159
+ *   +0x0030 -> line 160
+ *   +0x0034 -> line 164
+ *   +0x0058 -> line 165
+ *   +0x0064 -> line 166
+ *   +0x0084 -> line 167
+ *   +0x0088 -> line 170
+ *   +0x00ac -> line 171
+ *   +0x00b8 -> line 172
+ *   +0x00d8 -> line 173
+ *   +0x00dc -> line 176
+ *   +0x0104 -> line 177
+ *   +0x0110 -> line 178
+ *   +0x0134 -> line 179
+ *   +0x0140 -> line 180
+ *   +0x0164 -> line 181
+ *   +0x0170 -> line 182
+ *   +0x0194 -> line 183
+ *   +0x01a0 -> line 184
+ *   +0x01c4 -> line 185
+ *   +0x01d0 -> line 186
+ *   +0x01f4 -> line 187
+ *   +0x01fc -> line 188
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+char* Strchr(char* p_cString, int cChar);
+
+void SAV2_fn_vFindGoodTypeAndOptionsFromString(char* p_szElementOptions, SAV2_tdeDataType_* p_ucType, unsigned char* p_bStatic, unsigned char* p_bSave)
+{
+    *p_ucType = SAV2_eU8;
+    *p_bStatic = 0;
+    *p_bSave = 0;
+    if (Strchr(p_szElementOptions, 'S') || Strchr(p_szElementOptions, 's'))
+        *p_bStatic = 1;
+    else if (Strchr(p_szElementOptions, 'D') || Strchr(p_szElementOptions, 'd'))
+        *p_bStatic = 0;
+    if (Strchr(p_szElementOptions, 'O') || Strchr(p_szElementOptions, 'o'))
+        *p_bSave = 1;
+    else if (Strchr(p_szElementOptions, 'N') || Strchr(p_szElementOptions, 'n'))
+        *p_bSave = 0;
+    if (Strchr(p_szElementOptions, 'C') || Strchr(p_szElementOptions, 'c'))
+        *p_ucType = SAV2_eU8;
+    else if (Strchr(p_szElementOptions, 'W') || Strchr(p_szElementOptions, 'w'))
+        *p_ucType = SAV2_eU16;
+    else if (Strchr(p_szElementOptions, 'L') || Strchr(p_szElementOptions, 'l'))
+        *p_ucType = SAV2_eU32;
+    else if (Strchr(p_szElementOptions, 'F') || Strchr(p_szElementOptions, 'f'))
+        *p_ucType = SAV2_eFloat;
+    else if (Strchr(p_szElementOptions, 'V') || Strchr(p_szElementOptions, 'v'))
+        *p_ucType = SAV2_eVector;
+    else if (Strchr(p_szElementOptions, 'T') || Strchr(p_szElementOptions, 't'))
+        *p_ucType = SAV2_eString;
+}
+
+SAV2_tdeDataType_ SAV2_fn_eGiveElementTypeFromAIType(tdeVariableType_ _eIAType) { SAV2_tdeDataType_ eDataType = 0; if ((_eIAType == E_vt_Boolean) || (_eIAType == E_vt__128To127) || (_eIAType == E_vt_0To255))
+        eDataType = SAV2_eU8;
+    else if ((_eIAType == E_vt__32768To32767) || (_eIAType == E_vt_0To65535))
+        eDataType = SAV2_eU16;
+    else if ((_eIAType == E_vt_Integer) || (_eIAType == E_vt_PositiveInteger))
+        eDataType = SAV2_eU32;
+    else if (_eIAType == E_vt_Float)
+        eDataType = SAV2_eFloat;
+    else if (_eIAType == E_vt_Vector)
+        eDataType = SAV2_eVector;
+    else if ((_eIAType == E_vt_String) || (_eIAType == E_vt_Text))
+        eDataType = SAV2_eString;
+    return eDataType;
+}
+
+void SAV2_fn_vFreeAnElement(SAV2_tdstElement_* p_stElement)
+{
+    unsigned int ulIndex;
+    void* p_vElement;
+    void* p_vPtr;
+    if (p_stElement->hNextBrotherDyn != NULL) { p_stElement->hNextBrotherDyn->hPrevBrotherDyn = p_stElement->hPrevBrotherDyn; }
+    if (p_stElement->hPrevBrotherDyn != NULL) { p_stElement->hPrevBrotherDyn->hNextBrotherDyn = p_stElement->hNextBrotherDyn; }
+    if (p_stElement->hFatherDyn != NULL)
+    {
+        p_stElement->hFatherDyn->lNumberOfElementsDyn--;
+        if (p_stElement->hFatherDyn->hFirstElementDyn == p_stElement) { p_stElement->hFatherDyn->hFirstElementDyn = p_stElement->hNextBrotherDyn; }
+        if (p_stElement->hFatherDyn->hLastElementDyn == p_stElement) { p_stElement->hFatherDyn->hLastElementDyn = p_stElement->hPrevBrotherDyn; }
+    }
+    p_stElement->hNextBrotherDyn = NULL;
+    p_stElement->hPrevBrotherDyn = NULL;
+    p_stElement->hFatherDyn = NULL;
+    if (p_stElement->ucNumberOfData != 1)
+    {
+        if ((p_stElement->ucDataInformation & 0xF) == SAV2_eVector)
+        {
+            for (ulIndex = 0; ulIndex < p_stElement->ucNumberOfData; ulIndex++)
+            {
+                p_vElement = ((void**)p_stElement->uData.p_vArray)[ulIndex];
+                if (p_vElement != NULL) { Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0); fn_vGenFree(p_vElement, 0); }
+            }
+        }
+        else if ((p_stElement->ucDataInformation & 0xF) == SAV2_eString)
+        {
+            for (ulIndex = 0; ulIndex < p_stElement->ucNumberOfData; ulIndex++)
+            {
+                p_vElement = ((void**)p_stElement->uData.p_vArray)[ulIndex];
+                if (p_vElement != NULL) { Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0); fn_vGenFree(p_vElement, 0); }
+            }
+        }
+        p_vPtr = (void*)p_stElement->uData.p_vArray;
+        if (p_vPtr != NULL) { Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0); fn_vGenFree(p_vPtr, 0); }
+    }
+    else
+    {
+        if ((p_stElement->ucDataInformation & 0xF) == SAV2_eVector)
+        {
+            p_vPtr = p_stElement->uData.p_stVector;
+            if (p_vPtr != NULL) { Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0); fn_vGenFree(p_vPtr, 0); }
+        }
+        else if ((p_stElement->ucDataInformation & 0xF) == SAV2_eString)
+        {
+            p_vPtr = (void*)p_stElement->uData.p_szString;
+            if (p_vPtr != NULL) { Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0); fn_vGenFree(p_vPtr, 0); }
+        }
+    }
+    p_vPtr = (void*)p_stElement->p_szElementName;
+    if (p_vPtr != NULL) { Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0); fn_vGenFree(p_vPtr, 0); }
+    if (p_stElement != NULL) { Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0); fn_vGenFree(p_stElement, 0); }
+}
+
+SAV2_tdstElement_* SAV2_fn_p_stFindElementByName(char* p_szElementName)
+{
+    SAV2_tdstElement_* p_stElement;
+
+    for (p_stElement = SAV2_g_stList.SAV2_ListAnchor.hFirstElementDyn; p_stElement != NULL; p_stElement = p_stElement->hNextBrotherDyn)
+    {
+        if (strcasecmp((char*)p_stElement->p_szElementName, p_szElementName) == 0)
+            return p_stElement;
+    }
+
+    return NULL;
+}
+
+unsigned char SAV2_fn_bIsExist(char* p_szElementName)
+{
+    return (SAV2_fn_p_stFindElementByNameExpanded(p_szElementName) != NULL) ? 1 : 0;
+}
+
+void SAV2_fn_vDeclareAField(char* p_szElementName, int ucType, unsigned int ulNumberOfElement, unsigned char bStatic, unsigned char bSave)
+{
+    SAV2_tdstElement_* p_stElement; SAV2_tdstElement_* p_stFound; char* p_szName; void* p_vArray; unsigned int ulSize;
+    p_stFound = SAV2_fn_p_stFindElementByNameExpanded(p_szElementName);
+    if (p_stFound != NULL)
+        SAV2_fn_vFreeAnElement(p_stFound);
+
+    Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0); p_stElement = (SAV2_tdstElement_*)fn_p_vGenAlloc(sizeof(SAV2_tdstElement_), 0); printf("SAV2_fn_p_vMalloc %d\n", sizeof(SAV2_tdstElement_)); if (p_stElement != NULL) { memset(p_stElement, 0, sizeof(SAV2_tdstElement_)); } ulSize = strlen(p_szElementName) + 1; Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0); p_szName = (char*)fn_p_vGenAlloc(ulSize, 0); printf("SAV2_fn_p_vMalloc %d\n", ulSize); if (p_szName != NULL) { memset(p_szName, 0, ulSize); } p_stElement->p_szElementName = (int)p_szName; strcpy((char*)p_stElement->p_szElementName, p_szElementName); p_stElement->uData.p_vArray = NULL; p_stElement->ucDataInformation = ucType | ((char)bStatic * 0x10) | ((char)bSave * 0x30); p_stElement->ucNumberOfData = (unsigned char)ulNumberOfElement;
+
+    if (ulNumberOfElement != 1)
+    {
+        ulSize = SAV2_g_ulSizeByType[ucType] * ulNumberOfElement; Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0); p_vArray = fn_p_vGenAlloc(ulSize, 0); printf("SAV2_fn_p_vMalloc %d\n", ulSize); if (p_vArray != NULL) { memset(p_vArray, 0, ulSize); } p_stElement->uData.p_vArray = (int)p_vArray;
+    }
+
+    if (p_stElement->hNextBrotherDyn != NULL) { p_stElement->hNextBrotherDyn->hPrevBrotherDyn = p_stElement->hPrevBrotherDyn; } if (p_stElement->hPrevBrotherDyn != NULL) { p_stElement->hPrevBrotherDyn->hNextBrotherDyn = p_stElement->hNextBrotherDyn; } if (p_stElement->hFatherDyn != NULL) { p_stElement->hFatherDyn->lNumberOfElementsDyn--; if (p_stElement->hFatherDyn->hFirstElementDyn == p_stElement) { p_stElement->hFatherDyn->hFirstElementDyn = p_stElement->hNextBrotherDyn; } if (p_stElement->hFatherDyn->hLastElementDyn == p_stElement) { p_stElement->hFatherDyn->hLastElementDyn = p_stElement->hPrevBrotherDyn; } } p_stElement->hNextBrotherDyn = NULL; p_stElement->hPrevBrotherDyn = NULL; p_stElement->hFatherDyn = NULL; p_stElement->hNextBrotherDyn = NULL; p_stElement->hPrevBrotherDyn = SAV2_g_stList.SAV2_ListAnchor.hLastElementDyn; p_stElement->hFatherDyn = &SAV2_g_stList.SAV2_ListAnchor; if (SAV2_g_stList.SAV2_ListAnchor.hFirstElementDyn == NULL) { SAV2_g_stList.SAV2_ListAnchor.hFirstElementDyn = p_stElement; } else { SAV2_g_stList.SAV2_ListAnchor.hLastElementDyn->hNextBrotherDyn = p_stElement; } SAV2_g_stList.SAV2_ListAnchor.hLastElementDyn = p_stElement; SAV2_g_stList.SAV2_ListAnchor.lNumberOfElementsDyn++;
+}
+
+void SAV2_fn_vDeleteAField(char* p_szElementName)
+{
+    SAV2_tdstElement_* p_stElement;
+    p_stElement = SAV2_fn_p_stFindElementByNameExpanded(p_szElementName);
+    if (p_stElement != NULL)
+        SAV2_fn_vFreeAnElement(p_stElement);
+}
+
+void SAV2_fn_vDeleteAllPipeline(void)
+{
+    SAV2_tdstElement_* p_stNextElement;
+    SAV2_tdstElement_* p_stElement;
+    SAV2_tdstElement_* p_stFound;
+    p_stElement = SAV2_g_stList.SAV2_ListAnchor.hFirstElementDyn; p_stNextElement = (p_stElement != NULL) ? p_stElement->hNextBrotherDyn : NULL; while (p_stElement != NULL)
+    {
+        p_stFound = SAV2_fn_p_stFindElementByName((char*)p_stElement->p_szElementName); if ((p_stFound != NULL) && ((p_stFound->ucDataInformation & 0x10) == 0)) { SAV2_fn_vFreeAnElement(p_stFound); }
+        p_stElement = p_stNextElement; p_stNextElement = (p_stNextElement != NULL) ? p_stNextElement->hNextBrotherDyn : NULL; }
+}
+
+void SAV2_fn_vDeletePipelineElement(char* p_szElementName)
+{
+    SAV2_tdstElement_* p_stElement;
+    p_stElement = SAV2_fn_p_stFindElementByNameExpanded(p_szElementName);
+    if ((p_stElement != NULL) && ((p_stElement->ucDataInformation & 0x10) == 0))
+        SAV2_fn_vFreeAnElement(p_stElement);
+}
+
+void SAV2_fn_vDeleteAllList(void)
+{
+    SAV2_tdstElement_* p_stNextElement;
+    SAV2_tdstElement_* p_stElement;
+    memset(&SAV2_g_stList.stListHeader, 0, sizeof(SAV2_tdstHeader_));
+    p_stElement = SAV2_g_stList.SAV2_ListAnchor.hFirstElementDyn; p_stNextElement = (p_stElement != NULL) ? p_stElement->hNextBrotherDyn : NULL; while (p_stElement != NULL)
+    {
+        SAV2_fn_vFreeAnElement(p_stElement);
+        p_stElement = p_stNextElement; p_stNextElement = (p_stElement != NULL) ? p_stElement->hNextBrotherDyn : NULL; }
+}
+
+void SAV2_fn_vSetAValueAtIndex(char* p_szElementName, unsigned int ulElementNumber, void* p_stParam)
+{
+    char* p_szString;
+    tdstGetSetParam_* p_stParamAI = (tdstGetSetParam_*)p_stParam;
+    SAV2_tdstElement_* p_stElement;
+    unsigned char bOk;
+
+    p_stElement = SAV2_fn_p_stFindElementByNameExpanded(p_szElementName);
+    if (p_stElement == NULL)
+        return;
+
+    bOk = 0;
+    if (SAV2_fn_eGetType(p_stElement) == SAV2_fn_eGiveElementTypeFromAIType(p_stParamAI->eType))
+        bOk = 1;
+    if (bOk)
+    {
+        if (ulElementNumber < p_stElement->ucNumberOfData)
+        {
+            if (p_stElement->ucNumberOfData == 1)
+            {
+                switch (p_stElement->ucDataInformation & 0x0F)
+                {
+                case SAV2_eU8:
+                    p_stElement->uData.u8Data = p_stParamAI->uDummy.uParam.ucValue;
+                    break;
+                case SAV2_eU16:
+                    p_stElement->uData.u16Data = p_stParamAI->uDummy.uParam.uwValue;
+                    break;
+                case SAV2_eU32:
+                    p_stElement->uData.u32Data = p_stParamAI->uDummy.uParam.ulValue;
+                    break;
+                case SAV2_eFloat:
+                    p_stElement->uData.fFloat = p_stParamAI->uDummy.uParam.xValue;
+                    break;
+                case SAV2_eVector:
+                    if (p_stElement->uData.p_stVector != NULL) SAV2_M_Free(p_stElement->uData.p_stVector);
+                    p_stElement->uData.p_stVector = (MTH3D_tdstVector_*)SAV2_fn_p_vMalloc(sizeof(MTH3D_tdstVector_));
+                    *p_stElement->uData.p_stVector = *(MTH3D_tdstVector_*)&p_stParamAI->uDummy;
+                    break;
+                case SAV2_eString:
+                    p_szString = fn_szGetStringFromTextOrStringParam(p_stParamAI);
+                    if (p_stElement->uData.p_szString != 0)
+                        SAV2_M_Free(p_stElement->uData.p_szString);
+                    p_stElement->uData.p_szString = (int)SAV2_fn_p_vMalloc(strlen(p_szString) + 1);
+                    strcpy((char*)p_stElement->uData.p_szString, p_szString);
+
+                    if (strstr(p_szElementName, "sg_names") || strstr(p_szElementName, "currentgamename"))
+                    {
+                        if (Strchr((char*)p_stElement->uData.p_szString, '\\') != NULL)
+                            *Strchr((char*)p_stElement->uData.p_szString, '\\') = 0;
+                    }
+                    break;
+                }
+            }
+            else
+            {
+                switch (p_stElement->ucDataInformation & 0x0F)
+                {
+                case SAV2_eU8:
+                    ((unsigned char*)p_stElement->uData.p_vArray)[ulElementNumber] = p_stParamAI->uDummy.uParam.ucValue;
+                    break;
+                case SAV2_eU16:
+                    ((unsigned short*)p_stElement->uData.p_vArray)[ulElementNumber] = p_stParamAI->uDummy.uParam.uwValue;
+                    break;
+                case SAV2_eU32:
+                    ((unsigned int*)p_stElement->uData.p_vArray)[ulElementNumber] = p_stParamAI->uDummy.uParam.ulValue;
+                    break;
+                case SAV2_eFloat:
+                    ((float*)p_stElement->uData.p_vArray)[ulElementNumber] = p_stParamAI->uDummy.uParam.xValue;
+                    break;
+                case SAV2_eVector:
+                    if (((MTH3D_tdstVector_**)p_stElement->uData.p_vArray)[ulElementNumber] != NULL) SAV2_M_Free(((MTH3D_tdstVector_**)p_stElement->uData.p_vArray)[ulElementNumber]);
+                    ((MTH3D_tdstVector_**)p_stElement->uData.p_vArray)[ulElementNumber] = (MTH3D_tdstVector_*)SAV2_fn_p_vMalloc(sizeof(MTH3D_tdstVector_));
+                    *((MTH3D_tdstVector_**)p_stElement->uData.p_vArray)[ulElementNumber] = *(MTH3D_tdstVector_*)&p_stParamAI->uDummy;
+                    break;
+                case SAV2_eString:
+                    p_szString = fn_szGetStringFromTextOrStringParam(p_stParamAI);
+                    if (((char**)p_stElement->uData.p_vArray)[ulElementNumber] != NULL)
+                        SAV2_M_Free(((char**)p_stElement->uData.p_vArray)[ulElementNumber]);
+                    ((char**)p_stElement->uData.p_vArray)[ulElementNumber] = (char*)SAV2_fn_p_vMalloc(strlen(p_szString) + 1);
+                    strcpy(((char**)p_stElement->uData.p_vArray)[ulElementNumber], p_szString);
+
+                    if (strstr(p_szElementName, "sg_names") || strstr(p_szElementName, "currentgamename"))
+                    {
+                        if (Strchr(((char**)p_stElement->uData.p_vArray)[ulElementNumber], '\\') != NULL)
+                            *Strchr(((char**)p_stElement->uData.p_vArray)[ulElementNumber], '\\') = 0;
+                    }
+                    break;
+                }
+            }
+        }
+    }
+}
+
+void SAV2_fn_xGetAValueAtIndex(char* p_szElementName, unsigned int ulElementNumber, void* p_stParam)
+{
+    char* p_szString;
+    tdstGetSetParam_* p_stParamAI = (tdstGetSetParam_*)p_stParam;
+    SAV2_tdstElement_* p_stElement;
+
+    p_stElement = SAV2_fn_p_stFindElementByNameExpanded(p_szElementName);
+    if (p_stElement != NULL)
+    {
+        if (ulElementNumber < p_stElement->ucNumberOfData)
+        {
+            if (p_stElement->ucNumberOfData == 1)
+            {
+                switch (p_stElement->ucDataInformation & 0x0F)
+                {
+                case SAV2_eU8:
+                    p_stParamAI->uDummy.uParam.ucValue = p_stElement->uData.u8Data;
+                    p_stParamAI->eType = E_vt_0To255;
+                    break;
+                case SAV2_eU16:
+                    p_stParamAI->uDummy.uParam.uwValue = p_stElement->uData.u16Data;
+                    p_stParamAI->eType = E_vt_0To65535;
+                    break;
+                case SAV2_eU32:
+                    p_stParamAI->uDummy.uParam.ulValue = p_stElement->uData.u32Data;
+                    p_stParamAI->eType = E_vt_Integer;
+                    break;
+                case SAV2_eFloat:
+                    p_stParamAI->uDummy.uParam.xValue = p_stElement->uData.fFloat;
+                    p_stParamAI->eType = E_vt_Float;
+                    break;
+                case SAV2_eVector:
+                    *(MTH3D_tdstVector_*)&p_stParamAI->uDummy = *p_stElement->uData.p_stVector;
+                    p_stParamAI->eType = E_vt_Vector;
+                    break;
+                case SAV2_eString:
+                    if (p_stParamAI->eType == E_vt_Text)
+                    {
+                        if (p_stElement->uData.p_szString != 0)
+                        {
+                            p_szString = fn_szGetStringFromTextOrStringParam(p_stParamAI);
+                            strcpy(p_szString, (char*)p_stElement->uData.p_szString);
+                        }
+                    }
+                    break;
+                }
+            }
+            else
+            {
+                switch (p_stElement->ucDataInformation & 0x0F)
+                {
+                case SAV2_eU8:
+                    p_stParamAI->uDummy.uParam.ucValue = ((unsigned char*)p_stElement->uData.p_vArray)[ulElementNumber];
+                    p_stParamAI->eType = E_vt_0To255;
+                    break;
+                case SAV2_eU16:
+                    p_stParamAI->uDummy.uParam.uwValue = ((unsigned short*)p_stElement->uData.p_vArray)[ulElementNumber];
+                    p_stParamAI->eType = E_vt_0To65535;
+                    break;
+                case SAV2_eU32:
+                    p_stParamAI->uDummy.uParam.ulValue = ((unsigned int*)p_stElement->uData.p_vArray)[ulElementNumber];
+                    p_stParamAI->eType = E_vt_Integer;
+                    break;
+                case SAV2_eFloat:
+                    p_stParamAI->uDummy.uParam.xValue = ((float*)p_stElement->uData.p_vArray)[ulElementNumber];
+                    p_stParamAI->eType = E_vt_Float;
+                    break;
+                case SAV2_eVector:
+                    *(MTH3D_tdstVector_*)&p_stParamAI->uDummy = *((MTH3D_tdstVector_**)p_stElement->uData.p_vArray)[ulElementNumber];
+                    p_stParamAI->eType = E_vt_Vector;
+                    break;
+                case SAV2_eString:
+                    if (p_stParamAI->eType == E_vt_Text)
+                    {
+                        if (((char**)p_stElement->uData.p_vArray)[ulElementNumber] != NULL)
+                        {
+                            p_szString = fn_szGetStringFromTextOrStringParam(p_stParamAI);
+                            strcpy(p_szString, ((char**)p_stElement->uData.p_vArray)[ulElementNumber]);
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+    }
+}
+
+void SAV2_fn_vSetASingleValue(char* p_szElementName, void* p_stParam)
+{
+    SAV2_fn_vSetAValueAtIndex(p_szElementName, 0, p_stParam);
+}
+
+void SAV2_fn_xGetASingleValue(char* p_szElementName, void* p_stParam)
+{
+    SAV2_fn_xGetAValueAtIndex(p_szElementName, 0, p_stParam);
+}
+
+void SAV2_fn_vSetValueInPipeline(char* p_szElementName, void* p_stParam)
+{
+    SAV2_fn_vDeclareAField(p_szElementName, (unsigned char)SAV2_fn_eGiveElementTypeFromAIType(((tdstGetSetParam_*)p_stParam)->eType), 1, 1, 0);
+    SAV2_fn_vSetAValueAtIndex(p_szElementName, 0, p_stParam);
+}
+
+void SAV2_fn_vSetValueForSave(char* p_szElementName, void* p_stParam)
+{
+
+    SAV2_fn_vDeclareAField(p_szElementName, (unsigned char)SAV2_fn_eGiveElementTypeFromAIType(((tdstGetSetParam_*)p_stParam)->eType), 1, 1, 1);
+    SAV2_fn_vSetAValueAtIndex(p_szElementName, 0, p_stParam);
+}
+
+void GAM_vAllocateSaveBloc(void)
+{
+    PS2_g_SaveBloc = malloc(0x1000);
+}
+
+unsigned char SAV2_fn_bSaveAllOnDisk(char* p_szSaveName)
+{
+    unsigned char* pStartAddress;
+    signed char* pData;
+    unsigned char ucElementNumber;
+    unsigned char ucTempU8;
+    int i;
+    SAV2_tdstElement_* p_stElement;
+    SAV2_MenuOptionHeader_* p;
+
+    if (strlen(p_szSaveName) == 0)
+        strcpy(p_szSaveName, "ODI");
+
+    pStartAddress = (unsigned char*)PS2_g_SaveBloc;
+    pData = (signed char*)pStartAddress; memset(pStartAddress, 0, 0x1000);
+
+    p = &SAV2_g_stList.stListHeader.stMenuOptions; p->fCenteringX = GLI_g_ScreenPos_DX; p->fCenteringY = GLI_g_ScreenPos_DY; p->bWideScreen = GLI_g_bWideScreenMode; p->bVibration = MENU_g_bVibration; p->bInversionHor = MENU_g_bInversionHor; p->bInversionVert = MENU_g_bInversionVert; g_stGameOptions.s32VolumeMenu = SND_fn_bGetStereoSound();
+    SAV2_g_stList.stListHeader.ulWarnedUserAboutAutoSave = g_UserWarnedAboutAutoSave;
+
+    for (i = 0; i < 10; i++)
+        SAV2_g_stList.stListHeader.aEnvValue[i] = g_aEnvValue[i];
+
+    strcpy(SAV2_g_stList.stListHeader.szLevelName, SAV2_g_LevelNameToSave);
+
+    strcpy(SAV2_g_stList.stListHeader.szLevelNameAfterRevisit, SAV2_g_LevelNameAfterReinitToSave);
+
+    SAV2_g_stList.stListHeader.aForKeyAlgo[0] = g_aForKeyAlgo[0]; SAV2_g_stList.stListHeader.aForKeyAlgo[1] = g_aForKeyAlgo[1]; SAV2_g_stList.stListHeader.aForKeyAlgo[2] = g_aForKeyAlgo[2]; SAV2_g_stList.stListHeader.aForKeyAlgo[3] = g_aForKeyAlgo[3];
+
+    SAV2_g_stList.stListHeader.EndOfGameIsDone = g_EndOfGameIsDone;
+
+    SAV2_g_stList.stListHeader.MaxIndCurrentEnv = g_MaxIndCurrentEnv;
+    SAV2_g_stList.stListHeader.RevisitEnvironment = g_RevisitIndCurrentEnv;
+    SAV2_g_stList.stListHeader.RevisitOriginEnvironment = g_RevisitIndEnvironementFromWhereWeCome;
+
+    SAV2_g_stList.stListHeader.RevisitMode = g_RevisitMode;
+    SAV2_g_stList.stListHeader.RevisitEnvScore = g_RevisitEnvScoreAtBeginingOfLevel;
+    SAV2_g_stList.stListHeader.RevisitGlobalScore = g_RevisitGlobalScoreAtBeginingOfLevel;
+
+    SAV2_M_WriteData(&SAV2_g_stList.stListHeader, sizeof(SAV2_tdstHeader_));
+
+    SAV2_M_WriteData(&g_stGameOptions, sizeof(tdstGameOptions_));
+
+    for (p_stElement = SAV2_g_stList.SAV2_ListAnchor.hFirstElementDyn, i = 0; p_stElement != NULL; p_stElement = p_stElement->hNextBrotherDyn, i++)
+    {
+        if (p_stElement->ucDataInformation & 0x20)
+        {
+            ucElementNumber = strlen((char*)p_stElement->p_szElementName) + 1;
+            SAV2_M_WriteData(&ucElementNumber, 1);
+            SAV2_M_WriteData((char*)p_stElement->p_szElementName, ucElementNumber);
+            SAV2_M_WriteData(&p_stElement->ucDataInformation, 1);
+            SAV2_M_WriteData(&p_stElement->ucNumberOfData, 1);
+            if (p_stElement->ucNumberOfData == 1)
+            {
+                switch (p_stElement->ucDataInformation & 0x0F)
+                {
+                case SAV2_eU8:
+                    SAV2_M_WriteData(&p_stElement->uData.u8Data, 1);
+                    break;
+                case SAV2_eU16:
+                    SAV2_M_WriteData(&p_stElement->uData.u16Data, 2);
+                    break;
+                case SAV2_eU32:
+                    SAV2_M_WriteData(&p_stElement->uData.u32Data, 4);
+                    break;
+                case SAV2_eFloat:
+                    SAV2_M_WriteData(&p_stElement->uData.fFloat, 4);
+                    break;
+                case SAV2_eVector:
+                    SAV2_M_WriteData(p_stElement->uData.p_stVector, sizeof(MTH3D_tdstVector_));
+                    break;
+                case SAV2_eString:
+                    ucElementNumber = strlen((char*)p_stElement->uData.p_szString) + 1;
+                    SAV2_M_WriteData(&ucElementNumber, 1);
+                    SAV2_M_WriteData((char*)p_stElement->uData.p_szString, ucElementNumber);
+                    break;
+                }
+            }
+            else
+            {
+                switch (p_stElement->ucDataInformation & 0x0F)
+                {
+                case SAV2_eU8:
+                    SAV2_M_WriteData((void*)p_stElement->uData.p_vArray, p_stElement->ucNumberOfData);
+                    break;
+                case SAV2_eU16:
+                    SAV2_M_WriteData((void*)p_stElement->uData.p_vArray, p_stElement->ucNumberOfData * 2);
+                    break;
+                case SAV2_eU32:
+                    SAV2_M_WriteData((void*)p_stElement->uData.p_vArray, p_stElement->ucNumberOfData * 4);
+                    break;
+                case SAV2_eFloat:
+                    SAV2_M_WriteData((void*)p_stElement->uData.p_vArray, p_stElement->ucNumberOfData * 4);
+                    break;
+                case SAV2_eVector:
+                    for (ucTempU8 = 0; ucTempU8 < p_stElement->ucNumberOfData; ucTempU8++)
+                    {
+                        SAV2_M_WriteData(((MTH3D_tdstVector_**)p_stElement->uData.p_vArray)[ucTempU8], sizeof(MTH3D_tdstVector_) * p_stElement->ucNumberOfData);
+                    }
+                    break;
+                case SAV2_eString:
+                    for (ucTempU8 = 0; ucTempU8 < p_stElement->ucNumberOfData; ucTempU8++)
+                    {
+                        ucElementNumber = strlen(((char**)p_stElement->uData.p_vArray)[ucTempU8]) + 1;
+                        SAV2_M_WriteData(&ucElementNumber, 1);
+                        SAV2_M_WriteData(((char**)p_stElement->uData.p_vArray)[ucTempU8], ucElementNumber);
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    ucElementNumber = 0;
+    SAV2_M_WriteData(&ucElementNumber, 1);
+
+    printf("Saving %d bytes\n", (int)pData - (int)pStartAddress);
+    PS2MC_fn_vSaveGame((char*)pStartAddress, p_szSaveName, (int)pData - (int)pStartAddress);
+
+    return 1;
+}
+
+unsigned char SAV2_fn_bReadAllFromDisk(char* p_szSaveName)
+{
+    printf("Trying to Load \"%s\" from MC\n", p_szSaveName);
+    SAV2_ExitCode = 0;
+    PS2MC_fn_vLoadGame(p_szSaveName);
+    return 1;
+}
+
+unsigned char SAV2_fn_bUpdateAllDataFromLoadedFile(void)
+{
+    unsigned char* pStartAddress;
+    signed char* pData;
+    char szElementName[256];
+    unsigned char ucElementNumber;
+    unsigned char ucDataInformation;
+    unsigned char ucTempU8;
+    SAV2_tdstElement_* p_stElement;
+    SAV2_tdstElement_* p_stNextElement;
+
+    ucElementNumber = 0;
+    ucDataInformation = 0;
+    ucTempU8 = 0;
+
+    pData = (signed char*)PS2MC_fn_pGetLoadGameBuffer();
+
+    p_stElement = SAV2_g_stList.SAV2_ListAnchor.hFirstElementDyn; p_stNextElement = (p_stElement != NULL) ? p_stElement->hNextBrotherDyn : NULL; while (p_stElement != NULL) { if ((unsigned char)(p_stElement->ucDataInformation & 0x20)) SAV2_fn_vFreeAnElement(p_stElement); else printf("\nVar name: %s", (char*)p_stElement->p_szElementName); p_stElement = p_stNextElement; p_stNextElement = (p_stNextElement != NULL) ? p_stNextElement->hNextBrotherDyn : NULL; }
+
+    pStartAddress = (unsigned char*)pData; SAV2_M_ReadData(&SAV2_g_stList.stListHeader, sizeof(SAV2_tdstHeader_));
+
+    g_UserWarnedAboutAutoSave = SAV2_g_stList.stListHeader.ulWarnedUserAboutAutoSave;
+
+    SAV2_M_ReadData(&g_stGameOptions, sizeof(tdstGameOptions_));
+
+    SAV2_M_ReadData(&ucElementNumber, 1);
+
+    SAV2_fn_vActualizeMenuOptionsAfterLoad();
+
+    while (ucElementNumber != 0)
+    {
+        SAV2_M_ReadData(szElementName, ucElementNumber);
+        SAV2_M_ReadData(&ucDataInformation, 1);
+        SAV2_M_ReadData(&ucTempU8, 1);
+        SAV2_fn_vDeclareAField(szElementName, ucDataInformation & 0x0F, ucTempU8, 1, 1);
+        p_stElement = SAV2_fn_p_stFindElementByNameExpanded(szElementName);
+        if (p_stElement->ucNumberOfData == 1)
+        {
+            switch (p_stElement->ucDataInformation & 0x0F)
+            {
+            case SAV2_eU8:
+                SAV2_M_ReadData(&p_stElement->uData.u8Data, 1);
+                break;
+            case SAV2_eU16:
+                SAV2_M_ReadData(&p_stElement->uData.u16Data, 2);
+                break;
+            case SAV2_eU32:
+                SAV2_M_ReadData(&p_stElement->uData.u32Data, 4);
+                break;
+            case SAV2_eFloat:
+                SAV2_M_ReadData(&p_stElement->uData.fFloat, 4);
+                break;
+            case SAV2_eVector:
+                p_stElement->uData.p_stVector = (MTH3D_tdstVector_*)SAV2_fn_p_vMalloc(sizeof(MTH3D_tdstVector_));
+                SAV2_M_ReadData(p_stElement->uData.p_stVector, sizeof(MTH3D_tdstVector_));
+                break;
+            case SAV2_eString:
+                SAV2_M_ReadData(&ucElementNumber, 1);
+                p_stElement->uData.p_szString = (int)SAV2_fn_p_vMalloc(ucElementNumber);
+                SAV2_M_ReadData((char*)p_stElement->uData.p_szString, ucElementNumber);
+                break;
+            }
+        }
+        else
+        {
+            switch (p_stElement->ucDataInformation & 0x0F)
+            {
+            case SAV2_eU8:
+                SAV2_M_ReadData((void*)p_stElement->uData.p_vArray, p_stElement->ucNumberOfData);
+                break;
+            case SAV2_eU16:
+                SAV2_M_ReadData((void*)p_stElement->uData.p_vArray, p_stElement->ucNumberOfData * 2);
+                break;
+            case SAV2_eU32:
+                SAV2_M_ReadData((void*)p_stElement->uData.p_vArray, p_stElement->ucNumberOfData * 4);
+                break;
+            case SAV2_eFloat:
+                SAV2_M_ReadData((void*)p_stElement->uData.p_vArray, p_stElement->ucNumberOfData * 4);
+                break;
+            case SAV2_eVector:
+                for (ucTempU8 = 0; ucTempU8 < p_stElement->ucNumberOfData; ucTempU8++)
+                {
+                    ((MTH3D_tdstVector_**)p_stElement->uData.p_vArray)[ucTempU8] = (MTH3D_tdstVector_*)SAV2_fn_p_vMalloc(sizeof(MTH3D_tdstVector_));
+                    SAV2_M_ReadData(((MTH3D_tdstVector_**)p_stElement->uData.p_vArray)[ucTempU8], sizeof(MTH3D_tdstVector_) * p_stElement->ucNumberOfData);
+                }
+                break;
+            case SAV2_eString:
+                for (ucTempU8 = 0; ucTempU8 < p_stElement->ucNumberOfData; ucTempU8++)
+                {
+                    SAV2_M_ReadData(&ucElementNumber, 1);
+                    ((char**)p_stElement->uData.p_vArray)[ucTempU8] = (char*)SAV2_fn_p_vMalloc(ucElementNumber);
+                    SAV2_M_ReadData(((char**)p_stElement->uData.p_vArray)[ucTempU8], ucElementNumber);
+                }
+                break;
+            }
+        }
+
+        SAV2_M_ReadData(&ucElementNumber, 1);
+    }
+
+    SAV2_ExitCode = 1;
+    return 1;
+}
+
+unsigned char SAV2_fn_bRemoveSaveFromDisk(void)
+{
+    static int start;
+    if (start++ < 10)
+        printf("function %s not implemented\n", "SAV2_fn_bRemoveSaveFromDisk");
+    SAV2_ExitCode = 0;
+    return 0;
+}
+
+unsigned char SAV2_fn_bActualizeExistingSave(void)
+{
+    static int start;
+
+    if (start++ < 10)
+    {
+        printf("function %s not implemented\n", "SAV2_fn_bActualizeExistingSave");
+    }
+    return 1;
+}
+
+unsigned char SAV2_fn_ucGetNumberOfExistingSave(void)
+{
+    if (SAV2_g_hExistSaveOnDisk)
+    {
+        return FIL_fn_ulGetNumberOfFiles((FIL_tdstFileNameList_*)SAV2_g_hExistSaveOnDisk);
+    }
+    return 0;
+}
+
+void SAV2_fn_p_szGetSaveNameOfSaveNumber(void)
+{
+    static int start;
+
+    if (start++ < 10)
+    {
+        printf("function %s not implemented\n", "SAV2_fn_p_szGetSaveNameOfSaveNumber");
+    }
+}
+
+int SAV2_LastError(void)
+{
+    return !SAV2_ExitCode;
+}
+
+int SAV2_CheckMCStatus(int _id)
+{
+    int Value;
+    int Bidon;
+    Value = 0;
+    Bidon = SVG_fn_s32Query(g_axPadMapping[_id].iPort, g_axPadMapping[_id].iSlot, &Value);
+    return (Bidon == 0) ^ 1;
+}
+
+void SAV2_fn_vUpdateVibrations(void)
+{
+    unsigned int ulCurrentTime;
+    ulCurrentTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+    if (MENU_g_bVibration)
+        IPT_fn_vResumeAllConstantFFBEffectForAllDevices(ulCurrentTime);
+    else
+        IPT_fn_vPauseAllConstantFFBEffectForAllDevices(ulCurrentTime);
+}
+
+void SAV2_fn_vActualizeMenuOptionsAfterLoad(void)
+{
+    SAV2_MenuOptionHeader_* p;
+    int i;
+    unsigned int ulCurrentTime;
+
+    p = &SAV2_g_stList.stListHeader.stMenuOptions;
+    GLI_g_ScreenPos_DX = p->fCenteringX;
+    GLI_g_ScreenPos_DY = p->fCenteringY;
+    GLI_g_bWideScreenMode = p->bWideScreen;
+    MENU_g_bVibration = p->bVibration;
+    MENU_g_bInversionHor = p->bInversionHor;
+    MENU_g_bInversionVert = p->bInversionVert;
+    SND_fn_vSetStereoSound(g_stGameOptions.s32VolumeMenu);
+    g_stGameOptions.s32VolumeMenu = g_stGameOptions.s32VolumeAmbiance;
+    GAM_fn_vSetVolumeMenu(g_stGameOptions.s32VolumeMenu);
+    GAM_fn_vSetVolumeSound(g_stGameOptions.s32VolumeSound);
+    GAM_fn_vSetVolumeVoice(g_stGameOptions.s32VolumeVoice);
+    GAM_fn_vSetVolumeMusic(g_stGameOptions.s32VolumeMusic);
+    GAM_fn_vSetVolumeAmbiance(g_stGameOptions.s32VolumeAmbiance);
+    fn_vUpdatePlayerGameName();
+    for (i = 0; i < 10; i++) { g_aEnvValue[i] = SAV2_g_stList.stListHeader.aEnvValue[i]; }
+    fn_vR3StoreInitScore();
+    g_aForKeyAlgo[0] = SAV2_g_stList.stListHeader.aForKeyAlgo[0];
+    g_aForKeyAlgo[1] = SAV2_g_stList.stListHeader.aForKeyAlgo[1];
+    g_aForKeyAlgo[2] = SAV2_g_stList.stListHeader.aForKeyAlgo[2];
+    g_aForKeyAlgo[3] = SAV2_g_stList.stListHeader.aForKeyAlgo[3];
+    g_EndOfGameIsDone = SAV2_g_stList.stListHeader.EndOfGameIsDone;
+    g_MaxIndCurrentEnv = SAV2_g_stList.stListHeader.MaxIndCurrentEnv;
+    g_RevisitIndCurrentEnv = SAV2_g_stList.stListHeader.RevisitEnvironment;
+    g_RevisitIndEnvironementFromWhereWeCome = SAV2_g_stList.stListHeader.RevisitOriginEnvironment;
+    g_RevisitMode = SAV2_g_stList.stListHeader.RevisitMode;
+    g_RevisitEnvScoreAtBeginingOfLevel = SAV2_g_stList.stListHeader.RevisitEnvScore;
+    g_RevisitGlobalScoreAtBeginingOfLevel = SAV2_g_stList.stListHeader.RevisitGlobalScore;
+    g_RevisitCurrentEnvScore = g_RevisitEnvScoreAtBeginingOfLevel;
+    g_RevisitCurrentGlobalScore = g_RevisitGlobalScoreAtBeginingOfLevel;
+    g_IndCurrentEnv = g_RevisitIndCurrentEnv;
+    strcpy(SAV2_g_LevelNameAfterReinitToSave, SAV2_g_stList.stListHeader.szLevelNameAfterRevisit);
+    ulCurrentTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+    if (MENU_g_bVibration)
+        IPT_fn_vResumeAllConstantFFBEffectForAllDevices(ulCurrentTime);
+    else
+        IPT_fn_vPauseAllConstantFFBEffectForAllDevices(ulCurrentTime);
+}
+
 void fn_vComputeDeformationPS2(GEO_tdstGeometricObject_* p_stGeoObj, unsigned int ulNbVertices, unsigned int ulChannelNumber, tdstPLA_Deformation_* p_stDeformation, GEO_tdstElementDeformationSetInfo_* p_stDeformationSetInfo)
 {
     int* p;
@@ -1696,1515 +3243,4 @@ void fn_vComputeDeformationPS2(GEO_tdstGeometricObject_* p_stGeoObj, unsigned in
             ctc2 t0, vi6
         }
     }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 1597–1662 */
-/* addr: 0x0028a850  size: 660 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1597
- *   +0x0004 -> line 1599
- *   +0x0008 -> line 1597
- *   +0x000c -> line 1599
- *   +0x0010 -> line 1602
- *   +0x0014 -> line 1618
- *   +0x001c -> line 1602
- *   +0x0020 -> line 1603
- *   +0x0028 -> line 1604
- *   +0x0030 -> line 1610
- *   +0x0038 -> line 1611
- *   +0x0040 -> line 1612
- *   +0x0044 -> line 1618
- *   +0x004c -> line 1619
- *   +0x005c -> line 1621
- *   +0x0068 -> line 1623
- *   +0x0074 -> line 1624
- *   +0x0080 -> line 1625
- *   +0x008c -> line 1626
- *   +0x0098 -> line 1628
- *   +0x00a0 -> line 1631
- *   +0x00a8 -> line 1632
- *   +0x0198 -> line 1635
- *   +0x01a0 -> line 1639
- *   +0x01a4 -> line 1658
- *   +0x01a8 -> line 1639
- *   +0x01ac -> line 1658
- *   +0x01b8 -> line 1639
- *   +0x01d0 -> line 1642
- *   +0x01d8 -> line 1645
- *   +0x01dc -> line 1642
- *   +0x01e0 -> line 1645
- *   +0x01e4 -> line 1639
- *   +0x01e8 -> line 1645
- *   +0x01ec -> line 1639
- *   +0x0208 -> line 1646
- *   +0x0210 -> line 1647
- *   +0x0214 -> line 1646
- *   +0x0218 -> line 1647
- *   +0x021c -> line 1650
- *   +0x0220 -> line 1647
- *   +0x0224 -> line 1650
- *   +0x0228 -> line 1651
- *   +0x022c -> line 1650
- *   +0x0230 -> line 1651
- *   +0x0234 -> line 1652
- *   +0x0238 -> line 1651
- *   +0x023c -> line 1652
- *   +0x0240 -> line 1653
- *   +0x0244 -> line 1652
- *   +0x0248 -> line 1654
- *   +0x024c -> line 1656
- *   +0x0250 -> line 1653
- *   +0x0254 -> line 1654
- *   +0x0258 -> line 1658
- *   +0x0260 -> line 1660
- *   +0x0288 -> line 1662
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void IPT_fn_vResumeAllConstantFFBEffectForAllDevices(unsigned int ulCurrentTime);
-void IPT_fn_vPauseAllConstantFFBEffectForAllDevices(unsigned int ulCurrentTime);
-void SND_fn_vSetStereoSound(int iStereo);
-void GAM_fn_vSetVolumeMenu(int iVolume);
-void GAM_fn_vSetVolumeSound(int iVolume);
-void GAM_fn_vSetVolumeVoice(int iVolume);
-void GAM_fn_vSetVolumeMusic(int iVolume);
-void GAM_fn_vSetVolumeAmbiance(int iVolume);
-void fn_vUpdatePlayerGameName(void);
-void fn_vR3StoreInitScore(void);
-
-void SAV2_fn_vActualizeMenuOptionsAfterLoad(void)
-{
-    SAV2_MenuOptionHeader_* p;
-    int i;
-    unsigned int ulCurrentTime;
-
-    p = &SAV2_g_stList.stListHeader.stMenuOptions;
-    GLI_g_ScreenPos_DX = p->fCenteringX;
-    GLI_g_ScreenPos_DY = p->fCenteringY;
-    GLI_g_bWideScreenMode = p->bWideScreen;
-    MENU_g_bVibration = p->bVibration;
-    MENU_g_bInversionHor = p->bInversionHor;
-    MENU_g_bInversionVert = p->bInversionVert;
-    SND_fn_vSetStereoSound(g_stGameOptions.s32VolumeMenu);
-    g_stGameOptions.s32VolumeMenu = g_stGameOptions.s32VolumeAmbiance;
-    GAM_fn_vSetVolumeMenu(g_stGameOptions.s32VolumeMenu);
-    GAM_fn_vSetVolumeSound(g_stGameOptions.s32VolumeSound);
-    GAM_fn_vSetVolumeVoice(g_stGameOptions.s32VolumeVoice);
-    GAM_fn_vSetVolumeMusic(g_stGameOptions.s32VolumeMusic);
-    GAM_fn_vSetVolumeAmbiance(g_stGameOptions.s32VolumeAmbiance);
-    fn_vUpdatePlayerGameName();
-    for (i = 0; i < 10; i++) { g_aEnvValue[i] = SAV2_g_stList.stListHeader.aEnvValue[i]; }
-    fn_vR3StoreInitScore();
-    g_aForKeyAlgo[0] = SAV2_g_stList.stListHeader.aForKeyAlgo[0];
-    g_aForKeyAlgo[1] = SAV2_g_stList.stListHeader.aForKeyAlgo[1];
-    g_aForKeyAlgo[2] = SAV2_g_stList.stListHeader.aForKeyAlgo[2];
-    g_aForKeyAlgo[3] = SAV2_g_stList.stListHeader.aForKeyAlgo[3];
-    g_EndOfGameIsDone = SAV2_g_stList.stListHeader.EndOfGameIsDone;
-    g_MaxIndCurrentEnv = SAV2_g_stList.stListHeader.MaxIndCurrentEnv;
-    g_RevisitIndCurrentEnv = SAV2_g_stList.stListHeader.RevisitEnvironment;
-    g_RevisitIndEnvironementFromWhereWeCome = SAV2_g_stList.stListHeader.RevisitOriginEnvironment;
-    g_RevisitMode = SAV2_g_stList.stListHeader.RevisitMode;
-    g_RevisitEnvScoreAtBeginingOfLevel = SAV2_g_stList.stListHeader.RevisitEnvScore;
-    g_RevisitGlobalScoreAtBeginingOfLevel = SAV2_g_stList.stListHeader.RevisitGlobalScore;
-    g_RevisitCurrentEnvScore = g_RevisitEnvScoreAtBeginingOfLevel;
-    g_RevisitCurrentGlobalScore = g_RevisitGlobalScoreAtBeginingOfLevel;
-    g_IndCurrentEnv = g_RevisitIndCurrentEnv;
-    strcpy(SAV2_g_LevelNameAfterReinitToSave, SAV2_g_stList.stListHeader.szLevelNameAfterRevisit);
-    ulCurrentTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
-    if (MENU_g_bVibration)
-        IPT_fn_vResumeAllConstantFFBEffectForAllDevices(ulCurrentTime);
-    else
-        IPT_fn_vPauseAllConstantFFBEffectForAllDevices(ulCurrentTime);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 1581–1592 */
-/* addr: 0x0028aaf0  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1581
- *   +0x0004 -> line 1582
- *   +0x0008 -> line 1581
- *   +0x000c -> line 1584
- *   +0x0018 -> line 1586
- *   +0x0020 -> line 1587
- *   +0x0028 -> line 1590
- *   +0x0030 -> line 1592
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void SAV2_fn_vUpdateVibrations(void)
-{
-    unsigned int ulCurrentTime;
-    ulCurrentTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
-    if (MENU_g_bVibration)
-        IPT_fn_vResumeAllConstantFFBEffectForAllDevices(ulCurrentTime);
-    else
-        IPT_fn_vPauseAllConstantFFBEffectForAllDevices(ulCurrentTime);
-}
-
-int SVG_fn_s32Query(int _iPort, int _iSlot, int* _p_iFreeClusters);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 1506–1519 */
-/* addr: 0x0028ab30  size: 88 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1511
- *   +0x0004 -> line 1506
- *   +0x0008 -> line 1511
- *   +0x0014 -> line 1506
- *   +0x0018 -> line 1511
- *   +0x0024 -> line 1508
- *   +0x0028 -> line 1511
- *   +0x0040 -> line 1519
- *   +0x0044 -> line 1515
- *   +0x0050 -> line 1519
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int SAV2_CheckMCStatus(int _id)
-{
-    int Value;
-    int Bidon;
-    Value = 0;
-    Bidon = SVG_fn_s32Query(g_axPadMapping[_id].iPort, g_axPadMapping[_id].iSlot, &Value);
-    return (Bidon == 0) ^ 1;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 1502–1503 */
-/* addr: 0x0028ab90  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1502
- *   +0x0008 -> line 1503
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int SAV2_LastError(void)
-{
-    return !SAV2_ExitCode;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 1481–1497 */
-/* addr: 0x0028aba0  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1481
- *   +0x0008 -> line 1486
- *   +0x0030 -> line 1497
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void SAV2_fn_p_szGetSaveNameOfSaveNumber(void)
-{
-    static int start;
-
-    if (start++ < 10)
-    {
-        printf("function %s not implemented\n", "SAV2_fn_p_szGetSaveNameOfSaveNumber");
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 1473–1478 */
-/* addr: 0x0028abe0  size: 44 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1473
- *   +0x0008 -> line 1475
- *   +0x0020 -> line 1478
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned char SAV2_fn_ucGetNumberOfExistingSave(void)
-{
-    if (SAV2_g_hExistSaveOnDisk)
-    {
-        return FIL_fn_ulGetNumberOfFiles((FIL_tdstFileNameList_*)SAV2_g_hExistSaveOnDisk);
-    }
-    return 0;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 1447–1470 */
-/* addr: 0x0028ac10  size: 64 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1447
- *   +0x0008 -> line 1454
- *   +0x0030 -> line 1470
- *   +0x0034 -> line 1469
- *   +0x0038 -> line 1470
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned char SAV2_fn_bActualizeExistingSave(void)
-{
-    static int start;
-
-    if (start++ < 10)
-    {
-        printf("function %s not implemented\n", "SAV2_fn_bActualizeExistingSave");
-    }
-    return 1;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 1419–1436 */
-/* addr: 0x0028ac50  size: 68 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1419
- *   +0x0008 -> line 1421
- *   +0x0030 -> line 1434
- *   +0x0034 -> line 1435
- *   +0x0038 -> line 1436
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned char SAV2_fn_bRemoveSaveFromDisk(void)
-{
-    static int start;
-    if (start++ < 10)
-        printf("function %s not implemented\n", "SAV2_fn_bRemoveSaveFromDisk");
-    SAV2_ExitCode = 0;
-    return 0;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 1300–1414 */
-/* addr: 0x0028aca0  size: 1756 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1300
- *   +0x001c -> line 1304
- *   +0x0020 -> line 1305
- *   +0x0024 -> line 1312
- *   +0x002c -> line 1321
- *   +0x00a8 -> line 1324
- *   +0x00d0 -> line 1326
- *   +0x00d4 -> line 1329
- *   +0x00d8 -> line 1326
- *   +0x00dc -> line 1329
- *   +0x0100 -> line 1331
- *   +0x0120 -> line 1333
- *   +0x0128 -> line 1335
- *   +0x0130 -> line 1337
- *   +0x0150 -> line 1338
- *   +0x0170 -> line 1339
- *   +0x0190 -> line 1340
- *   +0x01ac -> line 1341
- *   +0x01f8 -> line 1342
- *   +0x0208 -> line 1344
- *   +0x0234 -> line 1346
- *   +0x0238 -> line 1347
- *   +0x0254 -> line 1348
- *   +0x025c -> line 1349
- *   +0x0260 -> line 1350
- *   +0x027c -> line 1351
- *   +0x0284 -> line 1352
- *   +0x0288 -> line 1353
- *   +0x02a4 -> line 1354
- *   +0x02ac -> line 1355
- *   +0x02b0 -> line 1356
- *   +0x02cc -> line 1357
- *   +0x02d4 -> line 1358
- *   +0x02d8 -> line 1359
- *   +0x0320 -> line 1360
- *   +0x0340 -> line 1361
- *   +0x0348 -> line 1363
- *   +0x0368 -> line 1364
- *   +0x03b0 -> line 1365
- *   +0x03d4 -> line 1368
- *   +0x03e0 -> line 1371
- *   +0x040c -> line 1373
- *   +0x0410 -> line 1374
- *   +0x0430 -> line 1375
- *   +0x0438 -> line 1377
- *   +0x0460 -> line 1378
- *   +0x0468 -> line 1380
- *   +0x0490 -> line 1381
- *   +0x0498 -> line 1383
- *   +0x04c0 -> line 1384
- *   +0x04c8 -> line 1386
- *   +0x04d0 -> line 1388
- *   +0x0520 -> line 1389
- *   +0x0528 -> line 1388
- *   +0x0530 -> line 1389
- *   +0x0578 -> line 1390
- *   +0x059c -> line 1391
- *   +0x05a4 -> line 1392
- *   +0x05a8 -> line 1393
- *   +0x05b0 -> line 1395
- *   +0x05d0 -> line 1396
- *   +0x0620 -> line 1397
- *   +0x0628 -> line 1396
- *   +0x0630 -> line 1397
- *   +0x0660 -> line 1398
- *   +0x0684 -> line 1401
- *   +0x0688 -> line 1403
- *   +0x06a8 -> line 1404
- *   +0x06b4 -> line 1410
- *   +0x06bc -> line 1414
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void* PS2MC_fn_pGetLoadGameBuffer(void);
-void SAV2_fn_vFreeAnElement(SAV2_tdstElement_* p_stElement);
-void SAV2_fn_vDeclareAField(char* p_szElementName, int ucType, unsigned int ulNumberOfElement, unsigned char bStatic, unsigned char bSave);
-static SAV2_tdstElement_* SAV2_fn_p_stFindElementByNameExpanded(char* p_szElementName);
-extern void Mmg_fn_v_SetModeAlloc(unsigned char ucModuleId, unsigned char ucNewMode, unsigned char ucChannel);
-extern void* fn_p_vGenAlloc(unsigned int ulSize, unsigned char ucChannel);
-
-#define SAV2_M_ReadData(p_vDest, ulSize) if (((int)pData - (int)pStartAddress) < 0x1000) { memcpy((p_vDest), pData, (ulSize)); pData += (ulSize); }
-
-/* The "SAV2_fn_p_vMalloc" trace names the allocator; retail expands it into
- * its callers. */
-#pragma auto_inline on
-static void* SAV2_fn_p_vMalloc(unsigned int ulSize)
-{
-    void* p_vPtr;
-    Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0);
-    p_vPtr = fn_p_vGenAlloc(ulSize, 0);
-    printf("SAV2_fn_p_vMalloc %d\n", ulSize);
-    if (p_vPtr != NULL)
-        memset(p_vPtr, 0, ulSize);
-    return p_vPtr;
-}
-#pragma auto_inline reset
-
-unsigned char SAV2_fn_bUpdateAllDataFromLoadedFile(void)
-{
-    unsigned char* pStartAddress;
-    signed char* pData;
-    char szElementName[256];
-    unsigned char ucElementNumber;
-    unsigned char ucDataInformation;
-    unsigned char ucTempU8;
-    SAV2_tdstElement_* p_stElement;
-    SAV2_tdstElement_* p_stNextElement;
-
-    ucElementNumber = 0;
-    ucDataInformation = 0;
-    ucTempU8 = 0;
-
-    pData = (signed char*)PS2MC_fn_pGetLoadGameBuffer();
-
-    p_stElement = SAV2_g_stList.SAV2_ListAnchor.hFirstElementDyn; p_stNextElement = (p_stElement != NULL) ? p_stElement->hNextBrotherDyn : NULL; while (p_stElement != NULL) { if ((unsigned char)(p_stElement->ucDataInformation & 0x20)) SAV2_fn_vFreeAnElement(p_stElement); else printf("\nVar name: %s", (char*)p_stElement->p_szElementName); p_stElement = p_stNextElement; p_stNextElement = (p_stNextElement != NULL) ? p_stNextElement->hNextBrotherDyn : NULL; }
-
-    pStartAddress = (unsigned char*)pData; SAV2_M_ReadData(&SAV2_g_stList.stListHeader, sizeof(SAV2_tdstHeader_));
-
-    g_UserWarnedAboutAutoSave = SAV2_g_stList.stListHeader.ulWarnedUserAboutAutoSave;
-
-    SAV2_M_ReadData(&g_stGameOptions, sizeof(tdstGameOptions_));
-
-    SAV2_M_ReadData(&ucElementNumber, 1);
-
-    SAV2_fn_vActualizeMenuOptionsAfterLoad();
-
-    while (ucElementNumber != 0)
-    {
-        SAV2_M_ReadData(szElementName, ucElementNumber);
-        SAV2_M_ReadData(&ucDataInformation, 1);
-        SAV2_M_ReadData(&ucTempU8, 1);
-        SAV2_fn_vDeclareAField(szElementName, ucDataInformation & 0x0F, ucTempU8, 1, 1);
-        p_stElement = SAV2_fn_p_stFindElementByNameExpanded(szElementName);
-        if (p_stElement->ucNumberOfData == 1)
-        {
-            switch (p_stElement->ucDataInformation & 0x0F)
-            {
-            case SAV2_eU8:
-                SAV2_M_ReadData(&p_stElement->uData.u8Data, 1);
-                break;
-            case SAV2_eU16:
-                SAV2_M_ReadData(&p_stElement->uData.u16Data, 2);
-                break;
-            case SAV2_eU32:
-                SAV2_M_ReadData(&p_stElement->uData.u32Data, 4);
-                break;
-            case SAV2_eFloat:
-                SAV2_M_ReadData(&p_stElement->uData.fFloat, 4);
-                break;
-            case SAV2_eVector:
-                p_stElement->uData.p_stVector = (MTH3D_tdstVector_*)SAV2_fn_p_vMalloc(sizeof(MTH3D_tdstVector_));
-                SAV2_M_ReadData(p_stElement->uData.p_stVector, sizeof(MTH3D_tdstVector_));
-                break;
-            case SAV2_eString:
-                SAV2_M_ReadData(&ucElementNumber, 1);
-                p_stElement->uData.p_szString = (int)SAV2_fn_p_vMalloc(ucElementNumber);
-                SAV2_M_ReadData((char*)p_stElement->uData.p_szString, ucElementNumber);
-                break;
-            }
-        }
-        else
-        {
-            switch (p_stElement->ucDataInformation & 0x0F)
-            {
-            case SAV2_eU8:
-                SAV2_M_ReadData((void*)p_stElement->uData.p_vArray, p_stElement->ucNumberOfData);
-                break;
-            case SAV2_eU16:
-                SAV2_M_ReadData((void*)p_stElement->uData.p_vArray, p_stElement->ucNumberOfData * 2);
-                break;
-            case SAV2_eU32:
-                SAV2_M_ReadData((void*)p_stElement->uData.p_vArray, p_stElement->ucNumberOfData * 4);
-                break;
-            case SAV2_eFloat:
-                SAV2_M_ReadData((void*)p_stElement->uData.p_vArray, p_stElement->ucNumberOfData * 4);
-                break;
-            case SAV2_eVector:
-                for (ucTempU8 = 0; ucTempU8 < p_stElement->ucNumberOfData; ucTempU8++)
-                {
-                    ((MTH3D_tdstVector_**)p_stElement->uData.p_vArray)[ucTempU8] = (MTH3D_tdstVector_*)SAV2_fn_p_vMalloc(sizeof(MTH3D_tdstVector_));
-                    SAV2_M_ReadData(((MTH3D_tdstVector_**)p_stElement->uData.p_vArray)[ucTempU8], sizeof(MTH3D_tdstVector_) * p_stElement->ucNumberOfData);
-                }
-                break;
-            case SAV2_eString:
-                for (ucTempU8 = 0; ucTempU8 < p_stElement->ucNumberOfData; ucTempU8++)
-                {
-                    SAV2_M_ReadData(&ucElementNumber, 1);
-                    ((char**)p_stElement->uData.p_vArray)[ucTempU8] = (char*)SAV2_fn_p_vMalloc(ucElementNumber);
-                    SAV2_M_ReadData(((char**)p_stElement->uData.p_vArray)[ucTempU8], ucElementNumber);
-                }
-                break;
-            }
-        }
-
-        SAV2_M_ReadData(&ucElementNumber, 1);
-    }
-
-    SAV2_ExitCode = 1;
-    return 1;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 1018–1284 */
-/* addr: 0x0028b380  size: 64 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1018
- *   +0x0010 -> line 1081
- *   +0x0020 -> line 1085
- *   +0x002c -> line 1284
- *   +0x0030 -> line 1087
- *   +0x0034 -> line 1284
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-extern void PS2MC_fn_vLoadGame(char* _pFileName);
-
-unsigned char SAV2_fn_bReadAllFromDisk(char* p_szSaveName)
-{
-    printf("Trying to Load \"%s\" from MC\n", p_szSaveName);
-    SAV2_ExitCode = 0;
-    PS2MC_fn_vLoadGame(p_szSaveName);
-    return 1;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 649–987 */
-/* addr: 0x0028b3c0  size: 2268 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 649
- *   +0x0024 -> line 701
- *   +0x0034 -> line 702
- *   +0x0040 -> line 720
- *   +0x0044 -> line 722
- *   +0x0058 -> line 788
- *   +0x0098 -> line 794
- *   +0x009c -> line 788
- *   +0x00a4 -> line 789
- *   +0x00b0 -> line 795
- *   +0x01a0 -> line 797
- *   +0x01b4 -> line 799
- *   +0x01c8 -> line 802
- *   +0x01cc -> line 804
- *   +0x01d0 -> line 802
- *   +0x01d4 -> line 820
- *   +0x01d8 -> line 807
- *   +0x01dc -> line 802
- *   +0x0208 -> line 808
- *   +0x020c -> line 802
- *   +0x0214 -> line 809
- *   +0x0218 -> line 802
- *   +0x021c -> line 804
- *   +0x0220 -> line 812
- *   +0x0224 -> line 804
- *   +0x0228 -> line 807
- *   +0x022c -> line 813
- *   +0x0230 -> line 807
- *   +0x0234 -> line 808
- *   +0x0238 -> line 814
- *   +0x023c -> line 808
- *   +0x0240 -> line 809
- *   +0x0248 -> line 812
- *   +0x0250 -> line 813
- *   +0x0258 -> line 814
- *   +0x0260 -> line 820
- *   +0x0294 -> line 822
- *   +0x02cc -> line 825
- *   +0x02dc -> line 827
- *   +0x02ec -> line 829
- *   +0x02f8 -> line 830
- *   +0x0330 -> line 831
- *   +0x0368 -> line 832
- *   +0x0398 -> line 833
- *   +0x03c8 -> line 834
- *   +0x03d8 -> line 836
- *   +0x0404 -> line 838
- *   +0x0408 -> line 839
- *   +0x0438 -> line 840
- *   +0x0440 -> line 842
- *   +0x0470 -> line 843
- *   +0x0478 -> line 845
- *   +0x04a8 -> line 846
- *   +0x04b0 -> line 848
- *   +0x04e0 -> line 849
- *   +0x04e8 -> line 851
- *   +0x051c -> line 852
- *   +0x0524 -> line 853
- *   +0x0528 -> line 854
- *   +0x0534 -> line 855
- *   +0x0568 -> line 856
- *   +0x05a0 -> line 859
- *   +0x05a8 -> line 862
- *   +0x05d4 -> line 864
- *   +0x05d8 -> line 865
- *   +0x060c -> line 866
- *   +0x0614 -> line 867
- *   +0x0618 -> line 868
- *   +0x0654 -> line 869
- *   +0x065c -> line 870
- *   +0x0660 -> line 871
- *   +0x069c -> line 872
- *   +0x06a4 -> line 873
- *   +0x06a8 -> line 874
- *   +0x06e4 -> line 875
- *   +0x06ec -> line 876
- *   +0x06f0 -> line 877
- *   +0x0700 -> line 878
- *   +0x077c -> line 879
- *   +0x0784 -> line 880
- *   +0x0788 -> line 881
- *   +0x0798 -> line 883
- *   +0x07ac -> line 884
- *   +0x07e0 -> line 885
- *   +0x0820 -> line 886
- *   +0x0824 -> line 885
- *   +0x0828 -> line 886
- *   +0x0844 -> line 890
- *   +0x0848 -> line 891
- *   +0x0858 -> line 895
- *   +0x088c -> line 944
- *   +0x08a0 -> line 945
- *   +0x08b0 -> line 987
- *   +0x08b4 -> line 950
- *   +0x08b8 -> line 987
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void PS2MC_fn_vSaveGame(char* _pData, char* _pFileName, unsigned int SaveGameSizeInBytes);
-
-/* The trace format is empty in this build. */
-#define SAV2_M_WriteData(p_vSource, ulSize) if (((int)pData - (int)pStartAddress) < 0x1000) { memcpy(pData, (p_vSource), (ulSize)); pData += (ulSize); printf("", (int)pData - (int)pStartAddress); }
-
-unsigned char SAV2_fn_bSaveAllOnDisk(char* p_szSaveName)
-{
-    unsigned char* pStartAddress;
-    signed char* pData;
-    unsigned char ucElementNumber;
-    unsigned char ucTempU8;
-    int i;
-    SAV2_tdstElement_* p_stElement;
-    SAV2_MenuOptionHeader_* p;
-
-    if (strlen(p_szSaveName) == 0)
-        strcpy(p_szSaveName, "ODI");
-
-    pStartAddress = (unsigned char*)PS2_g_SaveBloc;
-    pData = (signed char*)pStartAddress; memset(pStartAddress, 0, 0x1000);
-
-    p = &SAV2_g_stList.stListHeader.stMenuOptions; p->fCenteringX = GLI_g_ScreenPos_DX; p->fCenteringY = GLI_g_ScreenPos_DY; p->bWideScreen = GLI_g_bWideScreenMode; p->bVibration = MENU_g_bVibration; p->bInversionHor = MENU_g_bInversionHor; p->bInversionVert = MENU_g_bInversionVert; g_stGameOptions.s32VolumeMenu = SND_fn_bGetStereoSound();
-    SAV2_g_stList.stListHeader.ulWarnedUserAboutAutoSave = g_UserWarnedAboutAutoSave;
-
-
-
-
-    for (i = 0; i < 10; i++)
-        SAV2_g_stList.stListHeader.aEnvValue[i] = g_aEnvValue[i];
-
-    strcpy(SAV2_g_stList.stListHeader.szLevelName, SAV2_g_LevelNameToSave);
-
-    strcpy(SAV2_g_stList.stListHeader.szLevelNameAfterRevisit, SAV2_g_LevelNameAfterReinitToSave);
-
-
-    SAV2_g_stList.stListHeader.aForKeyAlgo[0] = g_aForKeyAlgo[0]; SAV2_g_stList.stListHeader.aForKeyAlgo[1] = g_aForKeyAlgo[1]; SAV2_g_stList.stListHeader.aForKeyAlgo[2] = g_aForKeyAlgo[2]; SAV2_g_stList.stListHeader.aForKeyAlgo[3] = g_aForKeyAlgo[3];
-
-    SAV2_g_stList.stListHeader.EndOfGameIsDone = g_EndOfGameIsDone;
-
-
-    SAV2_g_stList.stListHeader.MaxIndCurrentEnv = g_MaxIndCurrentEnv;
-    SAV2_g_stList.stListHeader.RevisitEnvironment = g_RevisitIndCurrentEnv;
-    SAV2_g_stList.stListHeader.RevisitOriginEnvironment = g_RevisitIndEnvironementFromWhereWeCome;
-
-
-    SAV2_g_stList.stListHeader.RevisitMode = g_RevisitMode;
-    SAV2_g_stList.stListHeader.RevisitEnvScore = g_RevisitEnvScoreAtBeginingOfLevel;
-    SAV2_g_stList.stListHeader.RevisitGlobalScore = g_RevisitGlobalScoreAtBeginingOfLevel;
-
-
-
-
-
-    SAV2_M_WriteData(&SAV2_g_stList.stListHeader, sizeof(SAV2_tdstHeader_));
-
-    SAV2_M_WriteData(&g_stGameOptions, sizeof(tdstGameOptions_));
-
-
-    for (p_stElement = SAV2_g_stList.SAV2_ListAnchor.hFirstElementDyn, i = 0; p_stElement != NULL; p_stElement = p_stElement->hNextBrotherDyn, i++)
-    {
-        if (p_stElement->ucDataInformation & 0x20)
-        {
-            ucElementNumber = strlen((char*)p_stElement->p_szElementName) + 1;
-            SAV2_M_WriteData(&ucElementNumber, 1);
-            SAV2_M_WriteData((char*)p_stElement->p_szElementName, ucElementNumber);
-            SAV2_M_WriteData(&p_stElement->ucDataInformation, 1);
-            SAV2_M_WriteData(&p_stElement->ucNumberOfData, 1);
-            if (p_stElement->ucNumberOfData == 1)
-            {
-                switch (p_stElement->ucDataInformation & 0x0F)
-                {
-                case SAV2_eU8:
-                    SAV2_M_WriteData(&p_stElement->uData.u8Data, 1);
-                    break;
-                case SAV2_eU16:
-                    SAV2_M_WriteData(&p_stElement->uData.u16Data, 2);
-                    break;
-                case SAV2_eU32:
-                    SAV2_M_WriteData(&p_stElement->uData.u32Data, 4);
-                    break;
-                case SAV2_eFloat:
-                    SAV2_M_WriteData(&p_stElement->uData.fFloat, 4);
-                    break;
-                case SAV2_eVector:
-                    SAV2_M_WriteData(p_stElement->uData.p_stVector, sizeof(MTH3D_tdstVector_));
-                    break;
-                case SAV2_eString:
-                    ucElementNumber = strlen((char*)p_stElement->uData.p_szString) + 1;
-                    SAV2_M_WriteData(&ucElementNumber, 1);
-                    SAV2_M_WriteData((char*)p_stElement->uData.p_szString, ucElementNumber);
-                    break;
-                }
-            }
-            else
-            {
-                switch (p_stElement->ucDataInformation & 0x0F)
-                {
-                case SAV2_eU8:
-                    SAV2_M_WriteData((void*)p_stElement->uData.p_vArray, p_stElement->ucNumberOfData);
-                    break;
-                case SAV2_eU16:
-                    SAV2_M_WriteData((void*)p_stElement->uData.p_vArray, p_stElement->ucNumberOfData * 2);
-                    break;
-                case SAV2_eU32:
-                    SAV2_M_WriteData((void*)p_stElement->uData.p_vArray, p_stElement->ucNumberOfData * 4);
-                    break;
-                case SAV2_eFloat:
-                    SAV2_M_WriteData((void*)p_stElement->uData.p_vArray, p_stElement->ucNumberOfData * 4);
-                    break;
-                case SAV2_eVector:
-                    for (ucTempU8 = 0; ucTempU8 < p_stElement->ucNumberOfData; ucTempU8++)
-                    {
-                        SAV2_M_WriteData(((MTH3D_tdstVector_**)p_stElement->uData.p_vArray)[ucTempU8], sizeof(MTH3D_tdstVector_) * p_stElement->ucNumberOfData);
-                    }
-                    break;
-                case SAV2_eString:
-                    for (ucTempU8 = 0; ucTempU8 < p_stElement->ucNumberOfData; ucTempU8++)
-                    {
-                        ucElementNumber = strlen(((char**)p_stElement->uData.p_vArray)[ucTempU8]) + 1;
-                        SAV2_M_WriteData(&ucElementNumber, 1);
-                        SAV2_M_WriteData(((char**)p_stElement->uData.p_vArray)[ucTempU8], ucElementNumber);
-                    }
-                    break;
-                }
-            }
-        }
-    }
-
-    ucElementNumber = 0;
-    SAV2_M_WriteData(&ucElementNumber, 1);
-
-    printf("Saving %d bytes\n", (int)pData - (int)pStartAddress);
-    PS2MC_fn_vSaveGame((char*)pStartAddress, p_szSaveName, (int)pData - (int)pStartAddress);
-
-    return 1;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 641–644 */
-/* addr: 0x0028bca0  size: 32 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 641
- *   +0x0008 -> line 642
- *   +0x0014 -> line 644
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GAM_vAllocateSaveBloc(void)
-{
-    PS2_g_SaveBloc = malloc(0x1000);
-}
-
-SAV2_tdeDataType_ SAV2_fn_eGiveElementTypeFromAIType(tdeVariableType_ _eIAType);
-/* ucType is decoded as SAV2_tdeDataType_, but callers narrow it to a byte
- * (andi 0xff), matching its uc prefix. */
-void SAV2_fn_vDeclareAField(char* p_szElementName, int ucType, unsigned int ulNumberOfElement, unsigned char bStatic, unsigned char bSave);
-void SAV2_fn_vSetAValueAtIndex(char* p_szElementName, unsigned int ulElementNumber, void* p_stParam);
-extern void Mmg_fn_v_SetModeAlloc(unsigned char ucModuleId, unsigned char ucNewMode, unsigned char ucChannel);
-extern void* fn_p_vGenAlloc(unsigned int ulSize, unsigned char ucChannel);
-void SAV2_fn_vFreeAnElement(SAV2_tdstElement_* p_stElement);
-/* The element lookup is expanded into its callers by the retail compiler, but
- * SAV2_fn_vDeleteAllPipeline still calls the out-of-line copy, so the
- * expandable copy is a separate static helper. */
-SAV2_tdstElement_* SAV2_fn_p_stFindElementByName(char* p_szElementName);
-static SAV2_tdstElement_* SAV2_fn_p_stFindElementByNameExpanded(char* p_szElementName);
-char* fn_szGetStringFromTextOrStringParam(tdstGetSetParam_* p_stValue);
-extern void fn_vGenFree(void* p_vMemBlock, unsigned char ucChannel);
-char* Strchr(char* p_cString, int cChar);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 591–596 */
-/* addr: 0x0028bcc0  size: 92 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 591
- *   +0x0014 -> line 594
- *   +0x0038 -> line 595
- *   +0x0048 -> line 596
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void SAV2_fn_vSetValueForSave(char* p_szElementName, void* p_stParam)
-{
-
-
-    SAV2_fn_vDeclareAField(p_szElementName, (unsigned char)SAV2_fn_eGiveElementTypeFromAIType(((tdstGetSetParam_*)p_stParam)->eType), 1, 1, 1);
-    SAV2_fn_vSetAValueAtIndex(p_szElementName, 0, p_stParam);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 583–588 */
-/* addr: 0x0028bd20  size: 92 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 583
- *   +0x0014 -> line 586
- *   +0x0038 -> line 587
- *   +0x0048 -> line 588
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void SAV2_fn_vSetValueInPipeline(char* p_szElementName, void* p_stParam)
-{
-    SAV2_fn_vDeclareAField(p_szElementName, (unsigned char)SAV2_fn_eGiveElementTypeFromAIType(((tdstGetSetParam_*)p_stParam)->eType), 1, 1, 0);
-    SAV2_fn_vSetAValueAtIndex(p_szElementName, 0, p_stParam);
-}
-
-void SAV2_fn_xGetAValueAtIndex(char* p_szElementName, unsigned int ulElementNumber, void* p_stParam);
-void SAV2_fn_vSetAValueAtIndex(char* p_szElementName, unsigned int ulElementNumber, void* p_stParam);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 579–579 */
-/* addr: 0x0028bd80  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0004 -> line 579
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void SAV2_fn_xGetASingleValue(char* p_szElementName, void* p_stParam)
-{
-    SAV2_fn_xGetAValueAtIndex(p_szElementName, 0, p_stParam);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 574–574 */
-/* addr: 0x0028bd90  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0004 -> line 574
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void SAV2_fn_vSetASingleValue(char* p_szElementName, void* p_stParam)
-{
-    SAV2_fn_vSetAValueAtIndex(p_szElementName, 0, p_stParam);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 479–570 */
-/* addr: 0x0028bda0  size: 660 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 479
- *   +0x0004 -> line 483
- *   +0x0008 -> line 479
- *   +0x0024 -> line 483
- *   +0x005c -> line 484
- *   +0x0064 -> line 486
- *   +0x0074 -> line 488
- *   +0x007c -> line 490
- *   +0x00a8 -> line 493
- *   +0x00ac -> line 494
- *   +0x00b0 -> line 493
- *   +0x00b4 -> line 495
- *   +0x00bc -> line 497
- *   +0x00c0 -> line 498
- *   +0x00c4 -> line 497
- *   +0x00c8 -> line 499
- *   +0x00d0 -> line 501
- *   +0x00d4 -> line 502
- *   +0x00d8 -> line 501
- *   +0x00dc -> line 503
- *   +0x00e4 -> line 505
- *   +0x00e8 -> line 506
- *   +0x00ec -> line 505
- *   +0x00f0 -> line 507
- *   +0x00f8 -> line 509
- *   +0x00fc -> line 510
- *   +0x0100 -> line 509
- *   +0x0118 -> line 511
- *   +0x0120 -> line 513
- *   +0x0130 -> line 515
- *   +0x013c -> line 517
- *   +0x0144 -> line 518
- *   +0x0150 -> line 525
- *   +0x0158 -> line 528
- *   +0x0184 -> line 531
- *   +0x0188 -> line 532
- *   +0x018c -> line 531
- *   +0x0198 -> line 533
- *   +0x01a0 -> line 535
- *   +0x01a8 -> line 536
- *   +0x01ac -> line 535
- *   +0x01b8 -> line 537
- *   +0x01c0 -> line 539
- *   +0x01c8 -> line 540
- *   +0x01cc -> line 539
- *   +0x01d8 -> line 541
- *   +0x01e0 -> line 543
- *   +0x01e8 -> line 544
- *   +0x01ec -> line 543
- *   +0x01f8 -> line 545
- *   +0x0200 -> line 547
- *   +0x0208 -> line 548
- *   +0x020c -> line 547
- *   +0x022c -> line 549
- *   +0x0234 -> line 551
- *   +0x0244 -> line 553
- *   +0x025c -> line 555
- *   +0x0264 -> line 556
- *   +0x0278 -> line 570
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void SAV2_fn_xGetAValueAtIndex(char* p_szElementName, unsigned int ulElementNumber, void* p_stParam)
-{
-    char* p_szString;
-    tdstGetSetParam_* p_stParamAI = (tdstGetSetParam_*)p_stParam;
-    SAV2_tdstElement_* p_stElement;
-
-    p_stElement = SAV2_fn_p_stFindElementByNameExpanded(p_szElementName);
-    if (p_stElement != NULL)
-    {
-        if (ulElementNumber < p_stElement->ucNumberOfData)
-        {
-            if (p_stElement->ucNumberOfData == 1)
-            {
-                switch (p_stElement->ucDataInformation & 0x0F)
-                {
-                case SAV2_eU8:
-                    p_stParamAI->uDummy.uParam.ucValue = p_stElement->uData.u8Data;
-                    p_stParamAI->eType = E_vt_0To255;
-                    break;
-                case SAV2_eU16:
-                    p_stParamAI->uDummy.uParam.uwValue = p_stElement->uData.u16Data;
-                    p_stParamAI->eType = E_vt_0To65535;
-                    break;
-                case SAV2_eU32:
-                    p_stParamAI->uDummy.uParam.ulValue = p_stElement->uData.u32Data;
-                    p_stParamAI->eType = E_vt_Integer;
-                    break;
-                case SAV2_eFloat:
-                    p_stParamAI->uDummy.uParam.xValue = p_stElement->uData.fFloat;
-                    p_stParamAI->eType = E_vt_Float;
-                    break;
-                case SAV2_eVector:
-                    *(MTH3D_tdstVector_*)&p_stParamAI->uDummy = *p_stElement->uData.p_stVector;
-                    p_stParamAI->eType = E_vt_Vector;
-                    break;
-                case SAV2_eString:
-                    if (p_stParamAI->eType == E_vt_Text)
-                    {
-                        if (p_stElement->uData.p_szString != 0)
-                        {
-                            p_szString = fn_szGetStringFromTextOrStringParam(p_stParamAI);
-                            strcpy(p_szString, (char*)p_stElement->uData.p_szString);
-                        }
-                    }
-                    break;
-                }
-            }
-            else
-            {
-                switch (p_stElement->ucDataInformation & 0x0F)
-                {
-                case SAV2_eU8:
-                    p_stParamAI->uDummy.uParam.ucValue = ((unsigned char*)p_stElement->uData.p_vArray)[ulElementNumber];
-                    p_stParamAI->eType = E_vt_0To255;
-                    break;
-                case SAV2_eU16:
-                    p_stParamAI->uDummy.uParam.uwValue = ((unsigned short*)p_stElement->uData.p_vArray)[ulElementNumber];
-                    p_stParamAI->eType = E_vt_0To65535;
-                    break;
-                case SAV2_eU32:
-                    p_stParamAI->uDummy.uParam.ulValue = ((unsigned int*)p_stElement->uData.p_vArray)[ulElementNumber];
-                    p_stParamAI->eType = E_vt_Integer;
-                    break;
-                case SAV2_eFloat:
-                    p_stParamAI->uDummy.uParam.xValue = ((float*)p_stElement->uData.p_vArray)[ulElementNumber];
-                    p_stParamAI->eType = E_vt_Float;
-                    break;
-                case SAV2_eVector:
-                    *(MTH3D_tdstVector_*)&p_stParamAI->uDummy = *((MTH3D_tdstVector_**)p_stElement->uData.p_vArray)[ulElementNumber];
-                    p_stParamAI->eType = E_vt_Vector;
-                    break;
-                case SAV2_eString:
-                    if (p_stParamAI->eType == E_vt_Text)
-                    {
-                        if (((char**)p_stElement->uData.p_vArray)[ulElementNumber] != NULL)
-                        {
-                            p_szString = fn_szGetStringFromTextOrStringParam(p_stParamAI);
-                            strcpy(p_szString, ((char**)p_stElement->uData.p_vArray)[ulElementNumber]);
-                        }
-                    }
-                    break;
-                }
-            }
-        }
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 369–476 */
-/* addr: 0x0028c040  size: 1292 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 369
- *   +0x0004 -> line 373
- *   +0x0008 -> line 369
- *   +0x002c -> line 373
- *   +0x0064 -> line 374
- *   +0x006c -> line 376
- *   +0x0094 -> line 378
- *   +0x00a4 -> line 380
- *   +0x00ac -> line 382
- *   +0x00d8 -> line 385
- *   +0x00dc -> line 386
- *   +0x00e4 -> line 388
- *   +0x00e8 -> line 389
- *   +0x00f0 -> line 391
- *   +0x00f4 -> line 392
- *   +0x00fc -> line 394
- *   +0x0100 -> line 395
- *   +0x0108 -> line 398
- *   +0x0114 -> line 399
- *   +0x0138 -> line 400
- *   +0x0180 -> line 401
- *   +0x0198 -> line 402
- *   +0x01a0 -> line 406
- *   +0x01a8 -> line 407
- *   +0x01b4 -> line 408
- *   +0x01d8 -> line 409
- *   +0x0230 -> line 410
- *   +0x023c -> line 413
- *   +0x0268 -> line 416
- *   +0x027c -> line 417
- *   +0x0288 -> line 422
- *   +0x0290 -> line 425
- *   +0x02bc -> line 428
- *   +0x02c8 -> line 429
- *   +0x02d0 -> line 431
- *   +0x02e0 -> line 432
- *   +0x02e8 -> line 434
- *   +0x02f8 -> line 435
- *   +0x0300 -> line 437
- *   +0x0310 -> line 438
- *   +0x0318 -> line 441
- *   +0x0330 -> line 442
- *   +0x0354 -> line 443
- *   +0x03a4 -> line 444
- *   +0x03c4 -> line 445
- *   +0x03cc -> line 449
- *   +0x03d8 -> line 450
- *   +0x03f0 -> line 451
- *   +0x0414 -> line 452
- *   +0x0474 -> line 453
- *   +0x0488 -> line 456
- *   +0x04b4 -> line 459
- *   +0x04d0 -> line 460
- *   +0x04e8 -> line 476
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-#pragma auto_inline on
-static SAV2_tdeDataType_ SAV2_fn_eGetType(SAV2_tdstElement_* p_stElement)
-{
-    return (SAV2_tdeDataType_)(p_stElement->ucDataInformation & 0x0F);
-}
-#pragma auto_inline reset
-
-#define SAV2_M_Free(p) { void* p_vPtr = (void*)(p); if (p_vPtr != NULL) { Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0); fn_vGenFree(p_vPtr, 0); } }
-
-void SAV2_fn_vSetAValueAtIndex(char* p_szElementName, unsigned int ulElementNumber, void* p_stParam)
-{
-    char* p_szString;
-    tdstGetSetParam_* p_stParamAI = (tdstGetSetParam_*)p_stParam;
-    SAV2_tdstElement_* p_stElement;
-    unsigned char bOk;
-
-    p_stElement = SAV2_fn_p_stFindElementByNameExpanded(p_szElementName);
-    if (p_stElement == NULL)
-        return;
-
-    bOk = 0;
-    if (SAV2_fn_eGetType(p_stElement) == SAV2_fn_eGiveElementTypeFromAIType(p_stParamAI->eType))
-        bOk = 1;
-    if (bOk)
-    {
-        if (ulElementNumber < p_stElement->ucNumberOfData)
-        {
-            if (p_stElement->ucNumberOfData == 1)
-            {
-                switch (p_stElement->ucDataInformation & 0x0F)
-                {
-                case SAV2_eU8:
-                    p_stElement->uData.u8Data = p_stParamAI->uDummy.uParam.ucValue;
-                    break;
-                case SAV2_eU16:
-                    p_stElement->uData.u16Data = p_stParamAI->uDummy.uParam.uwValue;
-                    break;
-                case SAV2_eU32:
-                    p_stElement->uData.u32Data = p_stParamAI->uDummy.uParam.ulValue;
-                    break;
-                case SAV2_eFloat:
-                    p_stElement->uData.fFloat = p_stParamAI->uDummy.uParam.xValue;
-                    break;
-                case SAV2_eVector:
-                    if (p_stElement->uData.p_stVector != NULL) SAV2_M_Free(p_stElement->uData.p_stVector);
-                    p_stElement->uData.p_stVector = (MTH3D_tdstVector_*)SAV2_fn_p_vMalloc(sizeof(MTH3D_tdstVector_));
-                    *p_stElement->uData.p_stVector = *(MTH3D_tdstVector_*)&p_stParamAI->uDummy;
-                    break;
-                case SAV2_eString:
-                    p_szString = fn_szGetStringFromTextOrStringParam(p_stParamAI);
-                    if (p_stElement->uData.p_szString != 0)
-                        SAV2_M_Free(p_stElement->uData.p_szString);
-                    p_stElement->uData.p_szString = (int)SAV2_fn_p_vMalloc(strlen(p_szString) + 1);
-                    strcpy((char*)p_stElement->uData.p_szString, p_szString);
-
-                    if (strstr(p_szElementName, "sg_names") || strstr(p_szElementName, "currentgamename"))
-                    {
-                        if (Strchr((char*)p_stElement->uData.p_szString, '\\') != NULL)
-                            *Strchr((char*)p_stElement->uData.p_szString, '\\') = 0;
-                    }
-                    break;
-                }
-            }
-            else
-            {
-                switch (p_stElement->ucDataInformation & 0x0F)
-                {
-                case SAV2_eU8:
-                    ((unsigned char*)p_stElement->uData.p_vArray)[ulElementNumber] = p_stParamAI->uDummy.uParam.ucValue;
-                    break;
-                case SAV2_eU16:
-                    ((unsigned short*)p_stElement->uData.p_vArray)[ulElementNumber] = p_stParamAI->uDummy.uParam.uwValue;
-                    break;
-                case SAV2_eU32:
-                    ((unsigned int*)p_stElement->uData.p_vArray)[ulElementNumber] = p_stParamAI->uDummy.uParam.ulValue;
-                    break;
-                case SAV2_eFloat:
-                    ((float*)p_stElement->uData.p_vArray)[ulElementNumber] = p_stParamAI->uDummy.uParam.xValue;
-                    break;
-                case SAV2_eVector:
-                    if (((MTH3D_tdstVector_**)p_stElement->uData.p_vArray)[ulElementNumber] != NULL) SAV2_M_Free(((MTH3D_tdstVector_**)p_stElement->uData.p_vArray)[ulElementNumber]);
-                    ((MTH3D_tdstVector_**)p_stElement->uData.p_vArray)[ulElementNumber] = (MTH3D_tdstVector_*)SAV2_fn_p_vMalloc(sizeof(MTH3D_tdstVector_));
-                    *((MTH3D_tdstVector_**)p_stElement->uData.p_vArray)[ulElementNumber] = *(MTH3D_tdstVector_*)&p_stParamAI->uDummy;
-                    break;
-                case SAV2_eString:
-                    p_szString = fn_szGetStringFromTextOrStringParam(p_stParamAI);
-                    if (((char**)p_stElement->uData.p_vArray)[ulElementNumber] != NULL)
-                        SAV2_M_Free(((char**)p_stElement->uData.p_vArray)[ulElementNumber]);
-                    ((char**)p_stElement->uData.p_vArray)[ulElementNumber] = (char*)SAV2_fn_p_vMalloc(strlen(p_szString) + 1);
-                    strcpy(((char**)p_stElement->uData.p_vArray)[ulElementNumber], p_szString);
-
-                    if (strstr(p_szElementName, "sg_names") || strstr(p_szElementName, "currentgamename"))
-                    {
-                        if (Strchr(((char**)p_stElement->uData.p_vArray)[ulElementNumber], '\\') != NULL)
-                            *Strchr(((char**)p_stElement->uData.p_vArray)[ulElementNumber], '\\') = 0;
-                    }
-                    break;
-                }
-            }
-        }
-    }
-}
-
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 357–366 */
-/* addr: 0x0028c550  size: 120 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 357
- *   +0x0004 -> line 361
- *   +0x0008 -> line 357
- *   +0x000c -> line 361
- *   +0x0020 -> line 362
- *   +0x0040 -> line 364
- *   +0x0048 -> line 365
- *   +0x0068 -> line 366
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void SAV2_fn_vDeleteAllList(void)
-{
-    SAV2_tdstElement_* p_stNextElement;
-    SAV2_tdstElement_* p_stElement;
-    memset(&SAV2_g_stList.stListHeader, 0, sizeof(SAV2_tdstHeader_));
-    p_stElement = SAV2_g_stList.SAV2_ListAnchor.hFirstElementDyn; p_stNextElement = (p_stElement != NULL) ? p_stElement->hNextBrotherDyn : NULL; while (p_stElement != NULL)
-    {
-        SAV2_fn_vFreeAnElement(p_stElement);
-        p_stElement = p_stNextElement; p_stNextElement = (p_stElement != NULL) ? p_stElement->hNextBrotherDyn : NULL; }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 333–339 */
-/* addr: 0x0028c5d0  size: 128 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 333
- *   +0x0004 -> line 336
- *   +0x0008 -> line 333
- *   +0x0014 -> line 336
- *   +0x004c -> line 337
- *   +0x0064 -> line 338
- *   +0x006c -> line 339
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void SAV2_fn_vDeletePipelineElement(char* p_szElementName)
-{
-    SAV2_tdstElement_* p_stElement;
-    p_stElement = SAV2_fn_p_stFindElementByNameExpanded(p_szElementName);
-    if ((p_stElement != NULL) && ((p_stElement->ucDataInformation & 0x10) == 0))
-        SAV2_fn_vFreeAnElement(p_stElement);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 322–330 */
-/* addr: 0x0028c650  size: 144 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 322
- *   +0x0004 -> line 326
- *   +0x0008 -> line 322
- *   +0x0010 -> line 326
- *   +0x0030 -> line 328
- *   +0x0060 -> line 329
- *   +0x0080 -> line 330
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void SAV2_fn_vDeleteAllPipeline(void)
-{
-    SAV2_tdstElement_* p_stNextElement;
-    SAV2_tdstElement_* p_stElement;
-    SAV2_tdstElement_* p_stFound;
-    p_stElement = SAV2_g_stList.SAV2_ListAnchor.hFirstElementDyn; p_stNextElement = (p_stElement != NULL) ? p_stElement->hNextBrotherDyn : NULL; while (p_stElement != NULL)
-    {
-        p_stFound = SAV2_fn_p_stFindElementByName((char*)p_stElement->p_szElementName); if ((p_stFound != NULL) && ((p_stFound->ucDataInformation & 0x10) == 0)) { SAV2_fn_vFreeAnElement(p_stFound); }
-        p_stElement = p_stNextElement; p_stNextElement = (p_stNextElement != NULL) ? p_stNextElement->hNextBrotherDyn : NULL; }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 313–319 */
-/* addr: 0x0028c6e0  size: 112 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 313
- *   +0x0004 -> line 316
- *   +0x0008 -> line 313
- *   +0x0014 -> line 316
- *   +0x004c -> line 317
- *   +0x0054 -> line 318
- *   +0x005c -> line 319
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void SAV2_fn_vDeleteAField(char* p_szElementName)
-{
-    SAV2_tdstElement_* p_stElement;
-    p_stElement = SAV2_fn_p_stFindElementByNameExpanded(p_szElementName);
-    if (p_stElement != NULL)
-        SAV2_fn_vFreeAnElement(p_stElement);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 294–310 */
-/* addr: 0x0028c750  size: 716 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 294
- *   +0x0004 -> line 297
- *   +0x0008 -> line 294
- *   +0x003c -> line 297
- *   +0x0074 -> line 298
- *   +0x007c -> line 299
- *   +0x0084 -> line 301
- *   +0x0158 -> line 304
- *   +0x015c -> line 301
- *   +0x0164 -> line 304
- *   +0x016c -> line 306
- *   +0x01c4 -> line 309
- *   +0x02a0 -> line 310
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void SAV2_fn_vDeclareAField(char* p_szElementName, int ucType, unsigned int ulNumberOfElement, unsigned char bStatic, unsigned char bSave)
-{
-    SAV2_tdstElement_* p_stElement; SAV2_tdstElement_* p_stFound; char* p_szName; void* p_vArray; unsigned int ulSize;
-    p_stFound = SAV2_fn_p_stFindElementByNameExpanded(p_szElementName);
-    if (p_stFound != NULL)
-        SAV2_fn_vFreeAnElement(p_stFound);
-
-    Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0); p_stElement = (SAV2_tdstElement_*)fn_p_vGenAlloc(sizeof(SAV2_tdstElement_), 0); printf("SAV2_fn_p_vMalloc %d\n", sizeof(SAV2_tdstElement_)); if (p_stElement != NULL) { memset(p_stElement, 0, sizeof(SAV2_tdstElement_)); } ulSize = strlen(p_szElementName) + 1; Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0); p_szName = (char*)fn_p_vGenAlloc(ulSize, 0); printf("SAV2_fn_p_vMalloc %d\n", ulSize); if (p_szName != NULL) { memset(p_szName, 0, ulSize); } p_stElement->p_szElementName = (int)p_szName; strcpy((char*)p_stElement->p_szElementName, p_szElementName); p_stElement->uData.p_vArray = NULL; p_stElement->ucDataInformation = ucType | ((char)bStatic * 0x10) | ((char)bSave * 0x30); p_stElement->ucNumberOfData = (unsigned char)ulNumberOfElement;
-
-    if (ulNumberOfElement != 1)
-    {
-        ulSize = SAV2_g_ulSizeByType[ucType] * ulNumberOfElement; Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0); p_vArray = fn_p_vGenAlloc(ulSize, 0); printf("SAV2_fn_p_vMalloc %d\n", ulSize); if (p_vArray != NULL) { memset(p_vArray, 0, ulSize); } p_stElement->uData.p_vArray = (int)p_vArray;
-    }
-
-    if (p_stElement->hNextBrotherDyn != NULL) { p_stElement->hNextBrotherDyn->hPrevBrotherDyn = p_stElement->hPrevBrotherDyn; } if (p_stElement->hPrevBrotherDyn != NULL) { p_stElement->hPrevBrotherDyn->hNextBrotherDyn = p_stElement->hNextBrotherDyn; } if (p_stElement->hFatherDyn != NULL) { p_stElement->hFatherDyn->lNumberOfElementsDyn--; if (p_stElement->hFatherDyn->hFirstElementDyn == p_stElement) { p_stElement->hFatherDyn->hFirstElementDyn = p_stElement->hNextBrotherDyn; } if (p_stElement->hFatherDyn->hLastElementDyn == p_stElement) { p_stElement->hFatherDyn->hLastElementDyn = p_stElement->hPrevBrotherDyn; } } p_stElement->hNextBrotherDyn = NULL; p_stElement->hPrevBrotherDyn = NULL; p_stElement->hFatherDyn = NULL; p_stElement->hNextBrotherDyn = NULL; p_stElement->hPrevBrotherDyn = SAV2_g_stList.SAV2_ListAnchor.hLastElementDyn; p_stElement->hFatherDyn = &SAV2_g_stList.SAV2_ListAnchor; if (SAV2_g_stList.SAV2_ListAnchor.hFirstElementDyn == NULL) { SAV2_g_stList.SAV2_ListAnchor.hFirstElementDyn = p_stElement; } else { SAV2_g_stList.SAV2_ListAnchor.hLastElementDyn->hNextBrotherDyn = p_stElement; } SAV2_g_stList.SAV2_ListAnchor.hLastElementDyn = p_stElement; SAV2_g_stList.SAV2_ListAnchor.lNumberOfElementsDyn++;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 289–291 */
-/* addr: 0x0028ca20  size: 108 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 289
- *   +0x0004 -> line 290
- *   +0x0008 -> line 289
- *   +0x0014 -> line 290
- *   +0x0050 -> line 291
- *   +0x0054 -> line 290
- *   +0x0058 -> line 291
- *   +0x0060 -> line 290
- *   +0x0064 -> line 291
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned char SAV2_fn_bIsExist(char* p_szElementName)
-{
-    return (SAV2_fn_p_stFindElementByNameExpanded(p_szElementName) != NULL) ? 1 : 0;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 275–286 */
-/* addr: 0x0028ca90  size: 96 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 275
- *   +0x0004 -> line 279
- *   +0x0008 -> line 275
- *   +0x0014 -> line 279
- *   +0x0020 -> line 281
- *   +0x0034 -> line 282
- *   +0x003c -> line 283
- *   +0x0048 -> line 285
- *   +0x004c -> line 286
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-SAV2_tdstElement_* SAV2_fn_p_stFindElementByName(char* p_szElementName)
-{
-    SAV2_tdstElement_* p_stElement;
-
-
-
-    for (p_stElement = SAV2_g_stList.SAV2_ListAnchor.hFirstElementDyn; p_stElement != NULL; p_stElement = p_stElement->hNextBrotherDyn)
-    {
-        if (strcasecmp((char*)p_stElement->p_szElementName, p_szElementName) == 0)
-            return p_stElement;
-    }
-
-    return NULL;
-}
-
-/* The retail code expands the lookup into its callers but keeps the call in
- * SAV2_fn_vDeleteAllPipeline, so the expandable copy is a separate static
- * helper. */
-#pragma auto_inline on
-static SAV2_tdstElement_* SAV2_fn_p_stFindElementByNameExpanded(char* p_szElementName)
-{
-    SAV2_tdstElement_* p_stElement;
-
-
-
-    for (p_stElement = SAV2_g_stList.SAV2_ListAnchor.hFirstElementDyn; p_stElement != NULL; p_stElement = p_stElement->hNextBrotherDyn)
-    {
-        if (strcasecmp((char*)p_stElement->p_szElementName, p_szElementName) == 0)
-            return p_stElement;
-    }
-
-    return NULL;
-}
-#pragma auto_inline reset
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 246–272 */
-/* addr: 0x0028caf0  size: 644 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 246
- *   +0x001c -> line 249
- *   +0x0094 -> line 251
- *   +0x0098 -> line 249
- *   +0x00a0 -> line 251
- *   +0x00ac -> line 253
- *   +0x00c0 -> line 255
- *   +0x00cc -> line 256
- *   +0x0118 -> line 257
- *   +0x0120 -> line 258
- *   +0x0128 -> line 260
- *   +0x0130 -> line 261
- *   +0x0178 -> line 263
- *   +0x01a0 -> line 264
- *   +0x01a8 -> line 265
- *   +0x01bc -> line 266
- *   +0x01ec -> line 267
- *   +0x01f4 -> line 268
- *   +0x021c -> line 270
- *   +0x0244 -> line 271
- *   +0x0268 -> line 272
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-extern void fn_vGenFree(void* p_vMemBlock, unsigned char ucChannel);
-
-void SAV2_fn_vFreeAnElement(SAV2_tdstElement_* p_stElement)
-{
-    unsigned int ulIndex;
-    void* p_vElement;
-    void* p_vPtr;
-    if (p_stElement->hNextBrotherDyn != NULL) { p_stElement->hNextBrotherDyn->hPrevBrotherDyn = p_stElement->hPrevBrotherDyn; }
-    if (p_stElement->hPrevBrotherDyn != NULL) { p_stElement->hPrevBrotherDyn->hNextBrotherDyn = p_stElement->hNextBrotherDyn; }
-    if (p_stElement->hFatherDyn != NULL)
-    {
-        p_stElement->hFatherDyn->lNumberOfElementsDyn--;
-        if (p_stElement->hFatherDyn->hFirstElementDyn == p_stElement) { p_stElement->hFatherDyn->hFirstElementDyn = p_stElement->hNextBrotherDyn; }
-        if (p_stElement->hFatherDyn->hLastElementDyn == p_stElement) { p_stElement->hFatherDyn->hLastElementDyn = p_stElement->hPrevBrotherDyn; }
-    }
-    p_stElement->hNextBrotherDyn = NULL;
-    p_stElement->hPrevBrotherDyn = NULL;
-    p_stElement->hFatherDyn = NULL;
-    if (p_stElement->ucNumberOfData != 1)
-    {
-        if ((p_stElement->ucDataInformation & 0xF) == SAV2_eVector)
-        {
-            for (ulIndex = 0; ulIndex < p_stElement->ucNumberOfData; ulIndex++)
-            {
-                p_vElement = ((void**)p_stElement->uData.p_vArray)[ulIndex];
-                if (p_vElement != NULL) { Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0); fn_vGenFree(p_vElement, 0); }
-            }
-        }
-        else if ((p_stElement->ucDataInformation & 0xF) == SAV2_eString)
-        {
-            for (ulIndex = 0; ulIndex < p_stElement->ucNumberOfData; ulIndex++)
-            {
-                p_vElement = ((void**)p_stElement->uData.p_vArray)[ulIndex];
-                if (p_vElement != NULL) { Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0); fn_vGenFree(p_vElement, 0); }
-            }
-        }
-        p_vPtr = (void*)p_stElement->uData.p_vArray;
-        if (p_vPtr != NULL) { Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0); fn_vGenFree(p_vPtr, 0); }
-    }
-    else
-    {
-        if ((p_stElement->ucDataInformation & 0xF) == SAV2_eVector)
-        {
-            p_vPtr = p_stElement->uData.p_stVector;
-            if (p_vPtr != NULL) { Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0); fn_vGenFree(p_vPtr, 0); }
-        }
-        else if ((p_stElement->ucDataInformation & 0xF) == SAV2_eString)
-        {
-            p_vPtr = (void*)p_stElement->uData.p_szString;
-            if (p_vPtr != NULL) { Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0); fn_vGenFree(p_vPtr, 0); }
-        }
-    }
-    p_vPtr = (void*)p_stElement->p_szElementName;
-    if (p_vPtr != NULL) { Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0); fn_vGenFree(p_vPtr, 0); }
-    if (p_stElement != NULL) { Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0); fn_vGenFree(p_stElement, 0); }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 204–220 */
-/* addr: 0x0028cd80  size: 156 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 204
- *   +0x001c -> line 205
- *   +0x0024 -> line 206
- *   +0x0034 -> line 207
- *   +0x003c -> line 208
- *   +0x0050 -> line 209
- *   +0x0058 -> line 210
- *   +0x0060 -> line 211
- *   +0x0068 -> line 212
- *   +0x0074 -> line 213
- *   +0x007c -> line 214
- *   +0x0090 -> line 215
- *   +0x0094 -> line 220
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-/* Debug info says void; the element type is returned in $v0. */
-SAV2_tdeDataType_ SAV2_fn_eGiveElementTypeFromAIType(tdeVariableType_ _eIAType) { SAV2_tdeDataType_ eDataType = 0; if ((_eIAType == E_vt_Boolean) || (_eIAType == E_vt__128To127) || (_eIAType == E_vt_0To255))
-        eDataType = SAV2_eU8;
-    else if ((_eIAType == E_vt__32768To32767) || (_eIAType == E_vt_0To65535))
-        eDataType = SAV2_eU16;
-    else if ((_eIAType == E_vt_Integer) || (_eIAType == E_vt_PositiveInteger))
-        eDataType = SAV2_eU32;
-    else if (_eIAType == E_vt_Float)
-        eDataType = SAV2_eFloat;
-    else if (_eIAType == E_vt_Vector)
-        eDataType = SAV2_eVector;
-    else if ((_eIAType == E_vt_String) || (_eIAType == E_vt_Text))
-        eDataType = SAV2_eString;
-    return eDataType;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 157–188 */
-/* addr: 0x0028ce20  size: 536 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 157
- *   +0x0004 -> line 159
- *   +0x0008 -> line 157
- *   +0x0028 -> line 159
- *   +0x0030 -> line 160
- *   +0x0034 -> line 164
- *   +0x0058 -> line 165
- *   +0x0064 -> line 166
- *   +0x0084 -> line 167
- *   +0x0088 -> line 170
- *   +0x00ac -> line 171
- *   +0x00b8 -> line 172
- *   +0x00d8 -> line 173
- *   +0x00dc -> line 176
- *   +0x0104 -> line 177
- *   +0x0110 -> line 178
- *   +0x0134 -> line 179
- *   +0x0140 -> line 180
- *   +0x0164 -> line 181
- *   +0x0170 -> line 182
- *   +0x0194 -> line 183
- *   +0x01a0 -> line 184
- *   +0x01c4 -> line 185
- *   +0x01d0 -> line 186
- *   +0x01f4 -> line 187
- *   +0x01fc -> line 188
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-char* Strchr(char* p_cString, int cChar);
-
-void SAV2_fn_vFindGoodTypeAndOptionsFromString(char* p_szElementOptions, SAV2_tdeDataType_* p_ucType, unsigned char* p_bStatic, unsigned char* p_bSave)
-{
-    *p_ucType = SAV2_eU8;
-    *p_bStatic = 0;
-    *p_bSave = 0;
-    if (Strchr(p_szElementOptions, 'S') || Strchr(p_szElementOptions, 's'))
-        *p_bStatic = 1;
-    else if (Strchr(p_szElementOptions, 'D') || Strchr(p_szElementOptions, 'd'))
-        *p_bStatic = 0;
-    if (Strchr(p_szElementOptions, 'O') || Strchr(p_szElementOptions, 'o'))
-        *p_bSave = 1;
-    else if (Strchr(p_szElementOptions, 'N') || Strchr(p_szElementOptions, 'n'))
-        *p_bSave = 0;
-    if (Strchr(p_szElementOptions, 'C') || Strchr(p_szElementOptions, 'c'))
-        *p_ucType = SAV2_eU8;
-    else if (Strchr(p_szElementOptions, 'W') || Strchr(p_szElementOptions, 'w'))
-        *p_ucType = SAV2_eU16;
-    else if (Strchr(p_szElementOptions, 'L') || Strchr(p_szElementOptions, 'l'))
-        *p_ucType = SAV2_eU32;
-    else if (Strchr(p_szElementOptions, 'F') || Strchr(p_szElementOptions, 'f'))
-        *p_ucType = SAV2_eFloat;
-    else if (Strchr(p_szElementOptions, 'V') || Strchr(p_szElementOptions, 'v'))
-        *p_ucType = SAV2_eVector;
-    else if (Strchr(p_szElementOptions, 'T') || Strchr(p_szElementOptions, 't'))
-        *p_ucType = SAV2_eString;
 }

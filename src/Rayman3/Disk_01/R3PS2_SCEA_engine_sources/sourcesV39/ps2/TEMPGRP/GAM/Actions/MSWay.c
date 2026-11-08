@@ -703,10 +703,28 @@ struct tdstPLA_DeformationLink_ {
 
 unsigned char g_ucGameModuleId;
 
-unsigned int fn_ulMSSoundSizeOf(void)
-{
-    return 0x10;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+unsigned int fn_ulMSSoundSizeOf(void);
+int MSWay_fn_lChangeWeightForNextWayPointOfPath(tdstMSWay_* hWay, int iIndex, int lWeight);
+int MSWay_fn_lGetWeightForNextWayPointOfPath(tdstMSWay_* hWay, int iIndex);
+int MSWay_fn_lChangeCapsForNextWayPointOfPath(tdstMSWay_* hWay, int iIndex, unsigned int ulNewCaps, int lValue);
+unsigned int MSWay_fn_ulGetCapsForNextWayPointOfPath(tdstMSWay_* hWay, int iIndex);
+WP_tdstWayPoint_* MSWay_fn_hGetWayPointOfPath(tdstMSWay_* hWay, int iIndex);
+int MSWay_fn_lIncrementCurrentIndexInPath(tdstMSWay_* hWay, int iStep);
+int MSWay_fn_lLookForWPInMSWay(tdstMSWay_* _hWay, WP_tdstWayPoint_* _hWayPoint);
+int MSWay_fn_lSetCurrentIndexInPath(tdstMSWay_* hWay, int _lIndex);
+int MSWay_fn_lGetFirstIndexInPath(tdstMSWay_* hWay);
+int MSWay_fn_lGetLastIndexInPath(tdstMSWay_* hWay);
+int MSWay_fn_lGetCurrentIndexInPath(tdstMSWay_* hWay);
+int MSWay_fn_lGetNumberWayPointInPath(tdstMSWay_* hWay);
+void MSWay_fn_vSetPath(tdstMSWay_* hWay, WP_tdstGraph_* hPath, char _bIsCircular);
+void MSWay_fn_vDesinitPath(tdstMSWay_* hWay);
+void fn_vMSWayCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc);
+void fn_vMSWayDesinit(tdstEngineObject_* p_stObject);
+void fn_vMSWayInit(tdstEngineObject_* p_stObject);
+void fn_vMSWayFree(tdstEngineObject_* p_stObject);
+void fn_vMSWayAlloc(tdstEngineObject_* p_stObject);
 
 int WPG_fn_lGetLinkWeight(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, int* p_lWeight);
 int WPG_fn_lChangeLinkWeight(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, int lWeight);
@@ -714,7 +732,301 @@ int WPG_fn_lGetLinkCapabilities(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWay
 int WPG_fn_lChangeLinkCapabilities(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, unsigned int ulCapability, int lValue);
 WP_tdstWayPoint_* MSWay_fn_hGetWayPointOfPath(tdstMSWay_* hWay, int iIndex);
 
-int MSWay_fn_lChangeWeightForNextWayPointOfPath(tdstMSWay_* hWay, int iIndex, int lWeight)
+/* Statement-macro form of MSWay_fn_vDesinitPath: retail expands it on one
+ * source line in fn_vMSWayDesinit, fn_vMSWayFree and fn_vMSWayCopyClone,
+ * while other callers call the function. */
+#define MSWay_M_vDesinitPath(_hWay)                                            \
+    {                                                                          \
+        tdstMSWay_* _hMacroWay = (_hWay);                                      \
+        if (_hMacroWay)                                                        \
+        {                                                                      \
+            if (fn_bScriptTransitionDeallocationCondition())                   \
+            {                                                                  \
+                if (_hMacroWay->m_hPath)                                       \
+                    WPG_fn_vDestroy(_hMacroWay->m_hPath);                      \
+            }                                                                  \
+            _hMacroWay->m_hPath = NULL;                                        \
+            _hMacroWay->m_lIndex = -1;                                         \
+            _hMacroWay->m_bIsCircular = 0;                                     \
+        }                                                                      \
+    }
+
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+
+void fn_vMSWayAlloc(tdstEngineObject_* p_stObject)
+{
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (p_stObject->h_MSWay) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 13, -1, 255, 255, NULL);
+    }
+
+    {
+        tdstMSWay_* hMSWay = (tdstMSWay_*)HMU_fn_p_vMalloc(sizeof(tdstMSWay_), 0);
+        MSWay_fn_vDesinitPath(hMSWay);
+        p_stObject->h_MSWay = hMSWay;
+    }
+}
+
+void fn_vMSWayFree(tdstEngineObject_* p_stObject)
+{
+    tdstMSWay_* hMSWay;
+
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    hMSWay = p_stObject->h_MSWay;
+    if (!hMSWay) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+    MSWay_M_vDesinitPath(hMSWay);
+}
+
+void fn_vMSWayInit(tdstEngineObject_* p_stObject)
+{
+    tdstMSWay_* hMSWay;
+
+    fn_vPushAllocModeAccordingToEngineObject(p_stObject);
+
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    hMSWay = p_stObject->h_MSWay;
+    if (!hMSWay) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+
+    MSWay_fn_vDesinitPath(hMSWay);
+
+    GAM_fn_vPopAllocMode();
+}
+
+void fn_vMSWayDesinit(tdstEngineObject_* p_stObject)
+{
+    tdstMSWay_* hMSWay;
+
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    hMSWay = p_stObject->h_MSWay;
+    if (!hMSWay) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+    MSWay_M_vDesinitPath(hMSWay);
+}
+
+void fn_vMSWayCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc)
+{
+    MSWay_M_vDesinitPath(_p_stObjectDest->h_MSWay);
+
+    memcpy(_p_stObjectDest->h_MSWay, _p_stObjectSrc->h_MSWay, sizeof(tdstMSWay_));
+
+    MSWay_fn_vDesinitPath(_p_stObjectDest->h_MSWay);
+}
+
+void MSWay_fn_vDesinitPath(tdstMSWay_* hWay)
+{
+    if (hWay)
+    {
+
+        if (fn_bScriptTransitionDeallocationCondition())
+        {
+            if (hWay->m_hPath)
+            {
+
+                WPG_fn_vDestroy(hWay->m_hPath);
+            }
+        }
+        hWay->m_hPath = NULL;
+        hWay->m_lIndex = -1;
+        hWay->m_bIsCircular = 0;
+    }
+}
+
+void MSWay_fn_vSetPath(tdstMSWay_* hWay, WP_tdstGraph_* hPath, char _bIsCircular)
+{
+    if ((hWay != 0) && (hPath != 0)) {
+        if (hWay->m_hPath != 0) {
+            WPG_fn_vDestroy(hWay->m_hPath);
+        }
+        hWay->m_hPath = hPath;
+        hWay->m_lIndex = 0;
+        hWay->m_bIsCircular = _bIsCircular;
+    }
+}
+
+int MSWay_fn_lGetNumberWayPointInPath(tdstMSWay_* hWay)
+{
+    if (hWay != NULL)
+    {
+        if (hWay->m_hPath != NULL)
+            return hWay->m_hPath->m_hListOfNode.lNumberOfElementsDyn;
+    }
+    return -1;
+}
+
+int MSWay_fn_lGetCurrentIndexInPath(tdstMSWay_* hWay)
+{
+    if (hWay != NULL)
+    {
+        if (hWay->m_hPath != NULL)
+            return hWay->m_lIndex;
+    }
+    return -1;
+}
+
+int MSWay_fn_lGetLastIndexInPath(tdstMSWay_* hWay)
+{
+    if (hWay != NULL)
+    {
+        if (hWay->m_hPath != NULL)
+            return hWay->m_hPath->m_hListOfNode.lNumberOfElementsDyn - 1;
+    }
+    return -1;
+}
+
+int MSWay_fn_lGetFirstIndexInPath(tdstMSWay_* hWay)
+{
+    if (hWay != NULL)
+    {
+        if (hWay->m_hPath != NULL)
+            return 0;
+    }
+    return -1;
+}
+
+int MSWay_fn_lSetCurrentIndexInPath(tdstMSWay_* hWay, int _lIndex)
+{
+    int lNbOfElts;
+
+    if ((hWay != NULL) && (hWay->m_hPath != NULL))
+    {
+        lNbOfElts = hWay->m_hPath->m_hListOfNode.lNumberOfElementsDyn;
+        if (hWay->m_bIsCircular)
+        {
+            _lIndex %= lNbOfElts;
+            if (_lIndex < 0)
+                _lIndex += lNbOfElts;
+        }
+        if (_lIndex >= lNbOfElts)
+            _lIndex = lNbOfElts - 1;
+        if (_lIndex < 0)
+            _lIndex = 0;
+        hWay->m_lIndex = _lIndex;
+        return hWay->m_lIndex;
+    }
+    return -1;
+}
+
+int MSWay_fn_lLookForWPInMSWay(tdstMSWay_* _hWay, WP_tdstWayPoint_* _hWayPoint)
+{
+{
+    int lNbOfElts;
+    int iIndex;
+    WP_tdstGraphNode_* hElement;
+    if ((_hWay != NULL) && (_hWay->m_hPath != NULL))
+    {
+        lNbOfElts = _hWay->m_hPath->m_hListOfNode.lNumberOfElementsDyn;
+        for (iIndex = 0, hElement = _hWay->m_hPath->m_hListOfNode.hFirstElementDyn; hElement != NULL; hElement = hElement->hNextBrotherDyn, iIndex++)
+        {
+            if (_hWayPoint == hElement->m_hWayPoint)
+                return lNbOfElts - iIndex - 1;
+        }
+    }
+    return -1;
+}
+}
+
+int MSWay_fn_lIncrementCurrentIndexInPath(tdstMSWay_* hWay, int iStep)
+{
+    int lNbOfElts;
+
+    if (hWay == NULL)
+        return -1;
+
+    if (hWay->m_hPath != NULL)
+    {
+        lNbOfElts = hWay->m_hPath->m_hListOfNode.lNumberOfElementsDyn;
+        if (hWay->m_bIsCircular)
+        {
+            hWay->m_lIndex += iStep;
+            hWay->m_lIndex %= lNbOfElts;
+            if (hWay->m_lIndex < 0)
+                hWay->m_lIndex += lNbOfElts;
+            return hWay->m_lIndex;
+        }
+
+        if ((hWay->m_lIndex + iStep >= 0) && (hWay->m_lIndex + iStep < lNbOfElts))
+        {
+            hWay->m_lIndex += iStep;
+            return hWay->m_lIndex;
+        }
+    }
+
+    return -1;
+}
+
+WP_tdstWayPoint_* MSWay_fn_hGetWayPointOfPath(tdstMSWay_* hWay, int iIndex)
+{
+    int lNbOfElts;
+    WP_tdstGraphNode_* hElement;
+    int i;
+    int k;
+
+    if ((hWay != NULL) && (hWay->m_hPath != NULL))
+    {
+        lNbOfElts = hWay->m_hPath->m_hListOfNode.lNumberOfElementsDyn;
+        if (hWay->m_bIsCircular)
+        {
+            if (lNbOfElts == 0)
+                return NULL;
+            iIndex %= lNbOfElts;
+            if (iIndex < 0)
+                iIndex += lNbOfElts;
+        }
+        else
+        {
+            if ((iIndex < 0) || (iIndex >= lNbOfElts))
+                return NULL;
+        }
+        k = lNbOfElts - iIndex - 1;
+        for (i = 0, hElement = hWay->m_hPath->m_hListOfNode.hFirstElementDyn; i < k; i++, hElement = hElement->hNextBrotherDyn) ;
+        return hElement->m_hWayPoint;
+    }
+    return NULL;
+}
+
+unsigned int MSWay_fn_ulGetCapsForNextWayPointOfPath(tdstMSWay_* hWay, int iIndex)
+{
+    int lNbOfElts;
+    unsigned int ulNewCaps;
+    WP_tdstWayPoint_* hWayPoint2;
+    WP_tdstWayPoint_* hWayPoint1;
+
+    if ((hWay != NULL) && (hWay->m_hPath != NULL))
+    {
+        lNbOfElts = hWay->m_hPath->m_hListOfNode.lNumberOfElementsDyn;
+        if (hWay->m_bIsCircular)
+        {
+            iIndex %= lNbOfElts;
+            if (iIndex < 0)
+                iIndex += lNbOfElts;
+        }
+        if ((iIndex >= 0) && (iIndex < lNbOfElts))
+        {
+            hWayPoint1 = MSWay_fn_hGetWayPointOfPath(hWay, iIndex);
+            hWayPoint2 = MSWay_fn_hGetWayPointOfPath(hWay, iIndex + 1);
+            if (hWayPoint2 != NULL)
+            {
+                return (WPG_fn_lGetLinkCapabilities(hWay->m_hPath, hWayPoint1, hWayPoint2, &ulNewCaps) == -1) ? 0 : ulNewCaps;
+            }
+        }
+    }
+    return 0;
+}
+
+int MSWay_fn_lChangeCapsForNextWayPointOfPath(tdstMSWay_* hWay, int iIndex, unsigned int ulNewCaps, int lValue)
 {
     int lNbOfElts;
     WP_tdstWayPoint_* hWayPoint2;
@@ -735,7 +1047,7 @@ int MSWay_fn_lChangeWeightForNextWayPointOfPath(tdstMSWay_* hWay, int iIndex, in
             hWayPoint2 = MSWay_fn_hGetWayPointOfPath(hWay, iIndex + 1);
             if (hWayPoint2 != NULL)
             {
-                return WPG_fn_lChangeLinkWeight(hWay->m_hPath, hWayPoint1, hWayPoint2, lWeight);
+                return WPG_fn_lChangeLinkCapabilities(hWay->m_hPath, hWayPoint1, hWayPoint2, ulNewCaps, lValue);
             }
         }
     }
@@ -771,7 +1083,7 @@ int MSWay_fn_lGetWeightForNextWayPointOfPath(tdstMSWay_* hWay, int iIndex)
     return 0;
 }
 
-int MSWay_fn_lChangeCapsForNextWayPointOfPath(tdstMSWay_* hWay, int iIndex, unsigned int ulNewCaps, int lValue)
+int MSWay_fn_lChangeWeightForNextWayPointOfPath(tdstMSWay_* hWay, int iIndex, int lWeight)
 {
     int lNbOfElts;
     WP_tdstWayPoint_* hWayPoint2;
@@ -792,306 +1104,14 @@ int MSWay_fn_lChangeCapsForNextWayPointOfPath(tdstMSWay_* hWay, int iIndex, unsi
             hWayPoint2 = MSWay_fn_hGetWayPointOfPath(hWay, iIndex + 1);
             if (hWayPoint2 != NULL)
             {
-                return WPG_fn_lChangeLinkCapabilities(hWay->m_hPath, hWayPoint1, hWayPoint2, ulNewCaps, lValue);
+                return WPG_fn_lChangeLinkWeight(hWay->m_hPath, hWayPoint1, hWayPoint2, lWeight);
             }
         }
     }
     return -1;
 }
 
-unsigned int MSWay_fn_ulGetCapsForNextWayPointOfPath(tdstMSWay_* hWay, int iIndex)
+unsigned int fn_ulMSSoundSizeOf(void)
 {
-    int lNbOfElts;
-    unsigned int ulNewCaps;
-    WP_tdstWayPoint_* hWayPoint2;
-    WP_tdstWayPoint_* hWayPoint1;
-
-    if ((hWay != NULL) && (hWay->m_hPath != NULL))
-    {
-        lNbOfElts = hWay->m_hPath->m_hListOfNode.lNumberOfElementsDyn;
-        if (hWay->m_bIsCircular)
-        {
-            iIndex %= lNbOfElts;
-            if (iIndex < 0)
-                iIndex += lNbOfElts;
-        }
-        if ((iIndex >= 0) && (iIndex < lNbOfElts))
-        {
-            hWayPoint1 = MSWay_fn_hGetWayPointOfPath(hWay, iIndex);
-            hWayPoint2 = MSWay_fn_hGetWayPointOfPath(hWay, iIndex + 1);
-            if (hWayPoint2 != NULL)
-            {
-                return (WPG_fn_lGetLinkCapabilities(hWay->m_hPath, hWayPoint1, hWayPoint2, &ulNewCaps) == -1) ? 0 : ulNewCaps;
-            }
-        }
-    }
-    return 0;
-}
-
-WP_tdstWayPoint_* MSWay_fn_hGetWayPointOfPath(tdstMSWay_* hWay, int iIndex)
-{
-    int lNbOfElts;
-    WP_tdstGraphNode_* hElement;
-    int i;
-    int k;
-
-    if ((hWay != NULL) && (hWay->m_hPath != NULL))
-    {
-        lNbOfElts = hWay->m_hPath->m_hListOfNode.lNumberOfElementsDyn;
-        if (hWay->m_bIsCircular)
-        {
-            if (lNbOfElts == 0)
-                return NULL;
-            iIndex %= lNbOfElts;
-            if (iIndex < 0)
-                iIndex += lNbOfElts;
-        }
-        else
-        {
-            if ((iIndex < 0) || (iIndex >= lNbOfElts))
-                return NULL;
-        }
-        k = lNbOfElts - iIndex - 1;
-        for (i = 0, hElement = hWay->m_hPath->m_hListOfNode.hFirstElementDyn; i < k; i++, hElement = hElement->hNextBrotherDyn) ;
-        return hElement->m_hWayPoint;
-    }
-    return NULL;
-}
-
-int MSWay_fn_lIncrementCurrentIndexInPath(tdstMSWay_* hWay, int iStep)
-{
-    int lNbOfElts;
-
-    if (hWay == NULL)
-        return -1;
-
-    if (hWay->m_hPath != NULL)
-    {
-        lNbOfElts = hWay->m_hPath->m_hListOfNode.lNumberOfElementsDyn;
-        if (hWay->m_bIsCircular)
-        {
-            hWay->m_lIndex += iStep;
-            hWay->m_lIndex %= lNbOfElts;
-            if (hWay->m_lIndex < 0)
-                hWay->m_lIndex += lNbOfElts;
-            return hWay->m_lIndex;
-        }
-
-        if ((hWay->m_lIndex + iStep >= 0) && (hWay->m_lIndex + iStep < lNbOfElts))
-        {
-            hWay->m_lIndex += iStep;
-            return hWay->m_lIndex;
-        }
-    }
-
-    return -1;
-}
-
-int MSWay_fn_lLookForWPInMSWay(tdstMSWay_* _hWay, WP_tdstWayPoint_* _hWayPoint)
-{
-{
-    int lNbOfElts;
-    int iIndex;
-    WP_tdstGraphNode_* hElement;
-    if ((_hWay != NULL) && (_hWay->m_hPath != NULL))
-    {
-        lNbOfElts = _hWay->m_hPath->m_hListOfNode.lNumberOfElementsDyn;
-        for (iIndex = 0, hElement = _hWay->m_hPath->m_hListOfNode.hFirstElementDyn; hElement != NULL; hElement = hElement->hNextBrotherDyn, iIndex++)
-        {
-            if (_hWayPoint == hElement->m_hWayPoint)
-                return lNbOfElts - iIndex - 1;
-        }
-    }
-    return -1;
-}
-}
-
-int MSWay_fn_lSetCurrentIndexInPath(tdstMSWay_* hWay, int _lIndex)
-{
-    int lNbOfElts;
-
-    if ((hWay != NULL) && (hWay->m_hPath != NULL))
-    {
-        lNbOfElts = hWay->m_hPath->m_hListOfNode.lNumberOfElementsDyn;
-        if (hWay->m_bIsCircular)
-        {
-            _lIndex %= lNbOfElts;
-            if (_lIndex < 0)
-                _lIndex += lNbOfElts;
-        }
-        if (_lIndex >= lNbOfElts)
-            _lIndex = lNbOfElts - 1;
-        if (_lIndex < 0)
-            _lIndex = 0;
-        hWay->m_lIndex = _lIndex;
-        return hWay->m_lIndex;
-    }
-    return -1;
-}
-
-int MSWay_fn_lGetFirstIndexInPath(tdstMSWay_* hWay)
-{
-    if (hWay != NULL)
-    {
-        if (hWay->m_hPath != NULL)
-            return 0;
-    }
-    return -1;
-}
-
-int MSWay_fn_lGetLastIndexInPath(tdstMSWay_* hWay)
-{
-    if (hWay != NULL)
-    {
-        if (hWay->m_hPath != NULL)
-            return hWay->m_hPath->m_hListOfNode.lNumberOfElementsDyn - 1;
-    }
-    return -1;
-}
-
-int MSWay_fn_lGetCurrentIndexInPath(tdstMSWay_* hWay)
-{
-    if (hWay != NULL)
-    {
-        if (hWay->m_hPath != NULL)
-            return hWay->m_lIndex;
-    }
-    return -1;
-}
-
-int MSWay_fn_lGetNumberWayPointInPath(tdstMSWay_* hWay)
-{
-    if (hWay != NULL)
-    {
-        if (hWay->m_hPath != NULL)
-            return hWay->m_hPath->m_hListOfNode.lNumberOfElementsDyn;
-    }
-    return -1;
-}
-
-void MSWay_fn_vSetPath(tdstMSWay_* hWay, WP_tdstGraph_* hPath, char _bIsCircular)
-{
-    if ((hWay != 0) && (hPath != 0)) {
-        if (hWay->m_hPath != 0) {
-            WPG_fn_vDestroy(hWay->m_hPath);
-        }
-        hWay->m_hPath = hPath;
-        hWay->m_lIndex = 0;
-        hWay->m_bIsCircular = _bIsCircular;
-    }
-}
-
-void MSWay_fn_vDesinitPath(tdstMSWay_* hWay)
-{
-    if (hWay)
-    {
-
-
-        if (fn_bScriptTransitionDeallocationCondition())
-        {
-            if (hWay->m_hPath)
-            {
-
-
-
-                WPG_fn_vDestroy(hWay->m_hPath);
-            }
-        }
-        hWay->m_hPath = NULL;
-        hWay->m_lIndex = -1;
-        hWay->m_bIsCircular = 0;
-    }
-}
-
-/* Statement-macro form of MSWay_fn_vDesinitPath: retail expands it on one
- * source line in fn_vMSWayDesinit, fn_vMSWayFree and fn_vMSWayCopyClone,
- * while other callers call the function. */
-#define MSWay_M_vDesinitPath(_hWay)                                            \
-    {                                                                          \
-        tdstMSWay_* _hMacroWay = (_hWay);                                      \
-        if (_hMacroWay)                                                        \
-        {                                                                      \
-            if (fn_bScriptTransitionDeallocationCondition())                   \
-            {                                                                  \
-                if (_hMacroWay->m_hPath)                                       \
-                    WPG_fn_vDestroy(_hMacroWay->m_hPath);                      \
-            }                                                                  \
-            _hMacroWay->m_hPath = NULL;                                        \
-            _hMacroWay->m_lIndex = -1;                                         \
-            _hMacroWay->m_bIsCircular = 0;                                     \
-        }                                                                      \
-    }
-
-void fn_vMSWayCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc)
-{
-    MSWay_M_vDesinitPath(_p_stObjectDest->h_MSWay);
-
-    memcpy(_p_stObjectDest->h_MSWay, _p_stObjectSrc->h_MSWay, sizeof(tdstMSWay_));
-
-    MSWay_fn_vDesinitPath(_p_stObjectDest->h_MSWay);
-}
-
-void fn_vMSWayDesinit(tdstEngineObject_* p_stObject)
-{
-    tdstMSWay_* hMSWay;
-
-    if (!p_stObject) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
-    }
-    hMSWay = p_stObject->h_MSWay;
-    if (!hMSWay) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
-    }
-    MSWay_M_vDesinitPath(hMSWay);
-}
-
-void fn_vMSWayInit(tdstEngineObject_* p_stObject)
-{
-    tdstMSWay_* hMSWay;
-
-    fn_vPushAllocModeAccordingToEngineObject(p_stObject);
-
-    if (!p_stObject) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
-    }
-    hMSWay = p_stObject->h_MSWay;
-    if (!hMSWay) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
-    }
-
-    MSWay_fn_vDesinitPath(hMSWay);
-
-    GAM_fn_vPopAllocMode();
-}
-
-void fn_vMSWayFree(tdstEngineObject_* p_stObject)
-{
-    tdstMSWay_* hMSWay;
-
-    if (!p_stObject) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
-    }
-    hMSWay = p_stObject->h_MSWay;
-    if (!hMSWay) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
-    }
-    MSWay_M_vDesinitPath(hMSWay);
-}
-
-void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
-
-void fn_vMSWayAlloc(tdstEngineObject_* p_stObject)
-{
-    if (!p_stObject) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
-    }
-    if (p_stObject->h_MSWay) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 13, -1, 255, 255, NULL);
-    }
-
-    {
-        tdstMSWay_* hMSWay = (tdstMSWay_*)HMU_fn_p_vMalloc(sizeof(tdstMSWay_), 0);
-        MSWay_fn_vDesinitPath(hMSWay);
-        p_stObject->h_MSWay = hMSWay;
-    }
+    return 0x10;
 }

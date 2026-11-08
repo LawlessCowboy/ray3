@@ -76,14 +76,12 @@ short COL_g_xNumberOfFacesLimit;
 void COL_fn_vExploreRecursiveOctreeWithSegment(COL_tdstOctreeNode_*, MTH3D_tdstVector_*, MTH3D_tdstVector_*, COL_tdstOctreeNode_**, float*, short*);
 void COL_fn_vExploreRecursiveOctreeWithBox(COL_tdstOctreeNode_*, MTH3D_tdstVector_*, MTH3D_tdstVector_*, COL_tdstOctreeNode_**, short*);
 
-void COL_fn_vExploreOctreeWithSegment(COL_tdstOctree_* p_stOctree, MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, COL_tdstOctreeNode_** d_pstSelectedNode, float* d_xSelectedT, short* p_xNumberOfSelectedNodes)
-{
-    *p_xNumberOfSelectedNodes = 0;
-    COL_g_xSelectedDepth = 0;
-    COL_g_xDepth = 0;
-    if (p_stOctree != NULL)
-        COL_fn_vExploreRecursiveOctreeWithSegment(p_stOctree->p_stOctreeRoot, p_stVertexA, p_stVectAB, d_pstSelectedNode, d_xSelectedT, p_xNumberOfSelectedNodes);
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void COL_fn_vExploreOctreeWithSegment(COL_tdstOctree_* p_stOctree, MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, COL_tdstOctreeNode_** d_pstSelectedNode, float* d_xSelectedT, short* p_xNumberOfSelectedNodes);
+void COL_fn_vExploreRecursiveOctreeWithSegment(COL_tdstOctreeNode_* p_stNodeToBeExplored, MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, COL_tdstOctreeNode_** d_pstSelectedNode, float* d_xSelectedT, short* p_xNumberOfSelectedNodes);
+void COL_fn_vExploreOctreeWithBox(COL_tdstOctree_* p_stOctree, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, COL_tdstOctreeNode_** d_pstSelectedNode, short* p_xNumberOfSelectedNodes);
+void COL_fn_vExploreRecursiveOctreeWithBox(COL_tdstOctreeNode_* p_stNodeToBeExplored, MTH3D_tdstVector_* p_stMinSituation, MTH3D_tdstVector_* p_stMaxSituation, COL_tdstOctreeNode_** d_pstSelectedNode, short* p_xNumberOfSelectedNodes);
 
 unsigned char INT_fn_bDetectIntersectSegmentWithBox(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, float* _p_xT);
 
@@ -108,44 +106,6 @@ static inline void COL_fn_vInsertNodeSortedByT(COL_tdstOctreeNode_* p_stNode, fl
         if (*p_xNumberOfSelectedNodes < 100)
             (*p_xNumberOfSelectedNodes)++;
     }
-}
-
-void COL_fn_vExploreRecursiveOctreeWithSegment(COL_tdstOctreeNode_* p_stNodeToBeExplored, MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, COL_tdstOctreeNode_** d_pstSelectedNode, float* d_xSelectedT, short* p_xNumberOfSelectedNodes)
-{
-    float xT;
-
-    COL_g_xDepth++;
-
-    if (INT_fn_bDetectIntersectSegmentWithBox(p_stVertexA, p_stVectAB, &p_stNodeToBeExplored->stMinPart, &p_stNodeToBeExplored->stMaxPart, &xT))
-    {
-        if (p_stNodeToBeExplored->p_pstChildList)
-        {
-            COL_fn_vExploreRecursiveOctreeWithSegment(p_stNodeToBeExplored->p_pstChildList[0], p_stVertexA, p_stVectAB, d_pstSelectedNode, d_xSelectedT, p_xNumberOfSelectedNodes);
-            COL_fn_vExploreRecursiveOctreeWithSegment(p_stNodeToBeExplored->p_pstChildList[1], p_stVertexA, p_stVectAB, d_pstSelectedNode, d_xSelectedT, p_xNumberOfSelectedNodes);
-            COL_fn_vExploreRecursiveOctreeWithSegment(p_stNodeToBeExplored->p_pstChildList[2], p_stVertexA, p_stVectAB, d_pstSelectedNode, d_xSelectedT, p_xNumberOfSelectedNodes);
-            COL_fn_vExploreRecursiveOctreeWithSegment(p_stNodeToBeExplored->p_pstChildList[3], p_stVertexA, p_stVectAB, d_pstSelectedNode, d_xSelectedT, p_xNumberOfSelectedNodes);
-            COL_fn_vExploreRecursiveOctreeWithSegment(p_stNodeToBeExplored->p_pstChildList[4], p_stVertexA, p_stVectAB, d_pstSelectedNode, d_xSelectedT, p_xNumberOfSelectedNodes);
-            COL_fn_vExploreRecursiveOctreeWithSegment(p_stNodeToBeExplored->p_pstChildList[5], p_stVertexA, p_stVectAB, d_pstSelectedNode, d_xSelectedT, p_xNumberOfSelectedNodes);
-            COL_fn_vExploreRecursiveOctreeWithSegment(p_stNodeToBeExplored->p_pstChildList[6], p_stVertexA, p_stVectAB, d_pstSelectedNode, d_xSelectedT, p_xNumberOfSelectedNodes);
-            COL_fn_vExploreRecursiveOctreeWithSegment(p_stNodeToBeExplored->p_pstChildList[7], p_stVertexA, p_stVectAB, d_pstSelectedNode, d_xSelectedT, p_xNumberOfSelectedNodes);
-        }
-        else if (p_stNodeToBeExplored->d_xFaceIndexList)
-        {
-            COL_fn_vInsertNodeSortedByT(p_stNodeToBeExplored, xT, d_pstSelectedNode, d_xSelectedT, p_xNumberOfSelectedNodes);
-            COL_g_xSelectedDepth = COL_g_xDepth;
-        }
-    }
-
-    COL_g_xDepth--;
-}
-
-void COL_fn_vExploreOctreeWithBox(COL_tdstOctree_* p_stOctree, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, COL_tdstOctreeNode_** d_pstSelectedNode, short* p_xNumberOfSelectedNodes)
-{
-    *p_xNumberOfSelectedNodes = 0;
-    COL_g_xSelectedDepth = 0;
-    COL_g_xDepth = 0;
-    if (p_stOctree != NULL)
-        COL_fn_vExploreRecursiveOctreeWithBox(p_stOctree->p_stOctreeRoot, p_stMinPoint, p_stMaxPoint, d_pstSelectedNode, p_xNumberOfSelectedNodes);
 }
 
 unsigned char INT_fn_bIntersectBoxWithBox(MTH3D_tdstVector_* p_stMinPoint1, MTH3D_tdstVector_* p_stMaxPoint1, MTH3D_tdstVector_* p_stMinPoint2, MTH3D_tdstVector_* p_stMaxPoint2);
@@ -179,4 +139,51 @@ void COL_fn_vExploreRecursiveOctreeWithBox(COL_tdstOctreeNode_* p_stNodeToBeExpl
     }
 
     COL_g_xDepth--;
+}
+
+void COL_fn_vExploreOctreeWithBox(COL_tdstOctree_* p_stOctree, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, COL_tdstOctreeNode_** d_pstSelectedNode, short* p_xNumberOfSelectedNodes)
+{
+    *p_xNumberOfSelectedNodes = 0;
+    COL_g_xSelectedDepth = 0;
+    COL_g_xDepth = 0;
+    if (p_stOctree != NULL)
+        COL_fn_vExploreRecursiveOctreeWithBox(p_stOctree->p_stOctreeRoot, p_stMinPoint, p_stMaxPoint, d_pstSelectedNode, p_xNumberOfSelectedNodes);
+}
+
+void COL_fn_vExploreRecursiveOctreeWithSegment(COL_tdstOctreeNode_* p_stNodeToBeExplored, MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, COL_tdstOctreeNode_** d_pstSelectedNode, float* d_xSelectedT, short* p_xNumberOfSelectedNodes)
+{
+    float xT;
+
+    COL_g_xDepth++;
+
+    if (INT_fn_bDetectIntersectSegmentWithBox(p_stVertexA, p_stVectAB, &p_stNodeToBeExplored->stMinPart, &p_stNodeToBeExplored->stMaxPart, &xT))
+    {
+        if (p_stNodeToBeExplored->p_pstChildList)
+        {
+            COL_fn_vExploreRecursiveOctreeWithSegment(p_stNodeToBeExplored->p_pstChildList[0], p_stVertexA, p_stVectAB, d_pstSelectedNode, d_xSelectedT, p_xNumberOfSelectedNodes);
+            COL_fn_vExploreRecursiveOctreeWithSegment(p_stNodeToBeExplored->p_pstChildList[1], p_stVertexA, p_stVectAB, d_pstSelectedNode, d_xSelectedT, p_xNumberOfSelectedNodes);
+            COL_fn_vExploreRecursiveOctreeWithSegment(p_stNodeToBeExplored->p_pstChildList[2], p_stVertexA, p_stVectAB, d_pstSelectedNode, d_xSelectedT, p_xNumberOfSelectedNodes);
+            COL_fn_vExploreRecursiveOctreeWithSegment(p_stNodeToBeExplored->p_pstChildList[3], p_stVertexA, p_stVectAB, d_pstSelectedNode, d_xSelectedT, p_xNumberOfSelectedNodes);
+            COL_fn_vExploreRecursiveOctreeWithSegment(p_stNodeToBeExplored->p_pstChildList[4], p_stVertexA, p_stVectAB, d_pstSelectedNode, d_xSelectedT, p_xNumberOfSelectedNodes);
+            COL_fn_vExploreRecursiveOctreeWithSegment(p_stNodeToBeExplored->p_pstChildList[5], p_stVertexA, p_stVectAB, d_pstSelectedNode, d_xSelectedT, p_xNumberOfSelectedNodes);
+            COL_fn_vExploreRecursiveOctreeWithSegment(p_stNodeToBeExplored->p_pstChildList[6], p_stVertexA, p_stVectAB, d_pstSelectedNode, d_xSelectedT, p_xNumberOfSelectedNodes);
+            COL_fn_vExploreRecursiveOctreeWithSegment(p_stNodeToBeExplored->p_pstChildList[7], p_stVertexA, p_stVectAB, d_pstSelectedNode, d_xSelectedT, p_xNumberOfSelectedNodes);
+        }
+        else if (p_stNodeToBeExplored->d_xFaceIndexList)
+        {
+            COL_fn_vInsertNodeSortedByT(p_stNodeToBeExplored, xT, d_pstSelectedNode, d_xSelectedT, p_xNumberOfSelectedNodes);
+            COL_g_xSelectedDepth = COL_g_xDepth;
+        }
+    }
+
+    COL_g_xDepth--;
+}
+
+void COL_fn_vExploreOctreeWithSegment(COL_tdstOctree_* p_stOctree, MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, COL_tdstOctreeNode_** d_pstSelectedNode, float* d_xSelectedT, short* p_xNumberOfSelectedNodes)
+{
+    *p_xNumberOfSelectedNodes = 0;
+    COL_g_xSelectedDepth = 0;
+    COL_g_xDepth = 0;
+    if (p_stOctree != NULL)
+        COL_fn_vExploreRecursiveOctreeWithSegment(p_stOctree->p_stOctreeRoot, p_stVertexA, p_stVectAB, d_pstSelectedNode, d_xSelectedT, p_xNumberOfSelectedNodes);
 }

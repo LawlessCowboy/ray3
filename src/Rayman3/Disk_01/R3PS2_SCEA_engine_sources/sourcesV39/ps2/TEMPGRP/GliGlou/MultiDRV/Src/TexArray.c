@@ -13,35 +13,12 @@ int *gs_aDEFTableOfTextureMemoryChannels;
 GLI_tdstTexture_ **gs_aDEFTableOfTextureAlreadyRead;
 unsigned int GLI_gsCurrentMemoryChannel;
 
-void GLI_TEX_vSignalCurrentMemoryChannel(unsigned char ucCurrentChannel)
-{
-    GLI_gsCurrentMemoryChannel = ucCurrentChannel;
-}
-
-void GLI_vUnCompressExistantTexture(void)
-{
-    int lTextureCounter;
-    int lTextureOffset;
-
-    lTextureCounter = 0;
-    lTextureOffset = 0;
-    do {
-        if (*((int *)((char *)gs_aDEFTableOfTextureMemoryChannels + lTextureOffset)) != 0xC0DE0005) {
-            if (*((GLI_tdstTexture_ **)((char *)gs_aDEFTableOfTextureAlreadyRead + lTextureOffset)) != NULL) {
-                (*((GLI_tdstTexture_ **)((char *)gs_aDEFTableOfTextureAlreadyRead + lTextureOffset)))->lHeight = (*((GLI_tdstTexture_ **)((char *)gs_aDEFTableOfTextureAlreadyRead + lTextureOffset)))->lRealHeight;
-                (*((GLI_tdstTexture_ **)((char *)gs_aDEFTableOfTextureAlreadyRead + lTextureOffset)))->lWidth = (*((GLI_tdstTexture_ **)((char *)gs_aDEFTableOfTextureAlreadyRead + lTextureOffset)))->lRealWidth;
-                (*((GLI_tdstTexture_ **)((char *)gs_aDEFTableOfTextureAlreadyRead + lTextureOffset)))->lCompressionCounter = 0;
-            }
-        }
-        lTextureCounter++;
-        lTextureOffset += 4;
-    } while (lTextureCounter < 0x190);
-}
-
-int GLI_lGetBigestSizeOfTexture(void)
-{
-    return 0x40400;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void GLI_TEX_vSignalCurrentMemoryChannel(unsigned char ucCurrentChannel);
+void GLI_vUnCompressExistantTexture(void);
+int GLI_lGetBigestSizeOfTexture(void);
+void GLI_fn_vUnallocAllTextures(void);
 
 void GLI_fn_vUnallocAllTextures(void)
 {
@@ -70,4 +47,34 @@ void GLI_fn_vUnallocAllTextures(void)
         lTextureCounter += 8;
         lTextureOffset += 32;
     } while (lTextureCounter < 0x190);
+}
+
+int GLI_lGetBigestSizeOfTexture(void)
+{
+    return 0x40400;
+}
+
+void GLI_vUnCompressExistantTexture(void)
+{
+    int lTextureCounter;
+    int lTextureOffset;
+
+    lTextureCounter = 0;
+    lTextureOffset = 0;
+    do {
+        if (*((int *)((char *)gs_aDEFTableOfTextureMemoryChannels + lTextureOffset)) != 0xC0DE0005) {
+            if (*((GLI_tdstTexture_ **)((char *)gs_aDEFTableOfTextureAlreadyRead + lTextureOffset)) != NULL) {
+                (*((GLI_tdstTexture_ **)((char *)gs_aDEFTableOfTextureAlreadyRead + lTextureOffset)))->lHeight = (*((GLI_tdstTexture_ **)((char *)gs_aDEFTableOfTextureAlreadyRead + lTextureOffset)))->lRealHeight;
+                (*((GLI_tdstTexture_ **)((char *)gs_aDEFTableOfTextureAlreadyRead + lTextureOffset)))->lWidth = (*((GLI_tdstTexture_ **)((char *)gs_aDEFTableOfTextureAlreadyRead + lTextureOffset)))->lRealWidth;
+                (*((GLI_tdstTexture_ **)((char *)gs_aDEFTableOfTextureAlreadyRead + lTextureOffset)))->lCompressionCounter = 0;
+            }
+        }
+        lTextureCounter++;
+        lTextureOffset += 4;
+    } while (lTextureCounter < 0x190);
+}
+
+void GLI_TEX_vSignalCurrentMemoryChannel(unsigned char ucCurrentChannel)
+{
+    GLI_gsCurrentMemoryChannel = ucCurrentChannel;
 }

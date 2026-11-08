@@ -18,6 +18,34 @@ struct TEX_tdstPalette_ {
 extern int *gs_aDEFTableOfTextureMemoryChannels;
 extern int *gs_aDEFTableOfTextureAlreadyRead;
 
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void GLI_fn_vUnallocTextureInChannel(unsigned char _ucChannel);
+void TEX_fn_vSetTextureCaps(GLI_tdstTexture_* p_stTexture, int _lTextureCaps);
+int TEX_fn_lGetTextureCaps(GLI_tdstTexture_* p_stTexture);
+int TEX_fn_lGetTextureRealWidth(GLI_tdstTexture_* p_stTexture);
+int TEX_fn_lGetTextureRealHeight(GLI_tdstTexture_* p_stTexture);
+
+int TEX_fn_lGetTextureRealHeight(GLI_tdstTexture_* p_stTexture)
+{
+    return p_stTexture->lRealHeight;
+}
+
+int TEX_fn_lGetTextureRealWidth(GLI_tdstTexture_* p_stTexture)
+{
+    return p_stTexture->lRealWidth;
+}
+
+int TEX_fn_lGetTextureCaps(GLI_tdstTexture_* p_stTexture)
+{
+    return p_stTexture->lTextureCaps;
+}
+
+void TEX_fn_vSetTextureCaps(GLI_tdstTexture_* p_stTexture, int _lTextureCaps)
+{
+    p_stTexture->lTextureCaps = _lTextureCaps;
+}
+
 void GLI_fn_vUnallocTextureInChannel(unsigned char _ucChannel)
 {
     int lTextureCounter;
@@ -33,24 +61,4 @@ void GLI_fn_vUnallocTextureInChannel(unsigned char _ucChannel)
         lTextureCounter++;
         lTextureOffset += 4;
     } while (lTextureCounter < 0x190);
-}
-
-void TEX_fn_vSetTextureCaps(GLI_tdstTexture_* p_stTexture, int _lTextureCaps)
-{
-    p_stTexture->lTextureCaps = _lTextureCaps;
-}
-
-int TEX_fn_lGetTextureCaps(GLI_tdstTexture_* p_stTexture)
-{
-    return p_stTexture->lTextureCaps;
-}
-
-int TEX_fn_lGetTextureRealWidth(GLI_tdstTexture_* p_stTexture)
-{
-    return p_stTexture->lRealWidth;
-}
-
-int TEX_fn_lGetTextureRealHeight(GLI_tdstTexture_* p_stTexture)
-{
-    return p_stTexture->lRealHeight;
 }

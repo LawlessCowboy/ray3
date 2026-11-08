@@ -2937,33 +2937,22 @@ unsigned char g_ucAIModuleId;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucIsRuleInActionTable(tdstIntelligence_* p_stIntelligence, unsigned char ucNumRule)
-{
-    /* The debug local list is (p_stEntry, ucCurrentEntry, ucNbEntries); the retail
-     * register allocation (ucNbEntries in a2, p_stEntry in a3) needs the reverse
-     * declaration order. */
-    unsigned char ucNbEntries;
-    unsigned char ucCurrentEntry;
-    tdstActionTableEntry_* p_stEntry;
 
-    ucNbEntries = p_stIntelligence->p_stActionTable->ucNbEntries;
-    /* 'x ? 1 : 0' is what produces the retail's li v0,1 / movz v0,zero,v1 pair. */
-    if (p_stIntelligence->p_stActionTable->ucNbEntriesUsed ? 1 : 0)
-    {
-        p_stEntry = p_stIntelligence->p_stActionTable->p_stEntry;
-        for (ucCurrentEntry = 0; ucCurrentEntry < ucNbEntries; ucCurrentEntry++, p_stEntry++)
-        {
-            if (p_stEntry->bUsed)
-            {
-                if (p_stEntry->ucNumRule == ucNumRule)
-                {
-                    return ucCurrentEntry;
-                }
-            }
-        }
-    }
-    return ucNbEntries;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+unsigned char fn_ucIsRuleInActionTable(tdstIntelligence_* p_stIntelligence, unsigned char ucNumRule);
+void fn_vSimulateMindAllocationFromAnotherMind(AI_tdstMind_* p_stMindSrc, AI_tdstMind_* p_stMindDst);
+tdstActionTable_* fn_p_stSimulateAllocActionTable(char** p_ptr, unsigned char ucActionTableNbEntry);
+void fn_vReinitAIWithFlags(AI_tdstMind_* p_stMind, tdeObjectTreeInit_ eObjIniType);
+void fn_vReinitAI(AI_tdstMind_* p_stMind);
+void fn_vSecondPassOfMindLoading(void);
+void AI_fn_vInsertDsgVarInSAI(AI_tdstMind_* p_stMind);
+void ReinitDesignerVariables(AI_tdstMind_* p_stMind);
+void fn_vReinitDesignerVariablesWithFlags(AI_tdstMind_* p_stMind, tdeObjectTreeInit_ eObjIniType);
+unsigned char fn_bDoReflexPerso(HIE_tdstSuperObject_* p_SuperObjPerso);
+unsigned char fn_bDoIntelligencePerso(HIE_tdstSuperObject_* p_SuperObjPerso);
+void AI_fn_vFirstInit(void);
+AI_tdstMind_* fn_pstAllocMind(void);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 1539–1668 */
 tdstActionTable_* fn_p_stSimulateAllocActionTable(char** p_ptr, unsigned char ucActionTableNbEntry);
@@ -3062,6 +3051,495 @@ inline tdstDsgMem_* fn_p_stSimulateAllocDsgMem(char** p_ptr, tdstDsgVar_** p_p_s
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 1473–1514 */
+/* addr: 0x001faf30  size: 248 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1473
+ *   +0x001c -> line 1481
+ *   +0x0020 -> line 1473
+ *   +0x0024 -> line 1481
+ *   +0x002c -> line 1483
+ *   +0x0030 -> line 1484
+ *   +0x0040 -> line 1485
+ *   +0x0048 -> line 1486
+ *   +0x0050 -> line 1489
+ *   +0x0058 -> line 1493
+ *   +0x005c -> line 1494
+ *   +0x0094 -> line 1496
+ *   +0x0098 -> line 1497
+ *   +0x009c -> line 1499
+ *   +0x00a8 -> line 1501
+ *   +0x00ac -> line 1503
+ *   +0x00b4 -> line 1501
+ *   +0x00b8 -> line 1502
+ *   +0x00c0 -> line 1503
+ *   +0x00d8 -> line 1514
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 1417–1426 */
+/* addr: 0x001fb030  size: 120 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1417
+ *   +0x0014 -> line 1418
+ *   +0x001c -> line 1421
+ *   +0x0058 -> line 1424
+ *   +0x0064 -> line 1426
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vSetUltraOperatorPerso(HIE_tdstSuperObject_* hCurrentSuperObjPerso, HIE_tdstSuperObject_* hNewCurrentSuperObjPerso);
+void fn_vReinitComport(tdstIntelligence_* p_stIntelligence);
+void ReinitDesignerVariables(AI_tdstMind_* p_stMind);
+void fn_vReinitDesignerVariablesWithFlags(AI_tdstMind_* p_stMind, tdeObjectTreeInit_ eObjIniType);
+
+/* Inlined into fn_vReinitAIWithFlags and fn_vReinitAI: each call site
+ * attributes the whole block to one line (1421 and 1390). */
+static inline void fn_vReinitComports(AI_tdstMind_* p_stMind)
+{
+    fn_vSetUltraOperatorPerso(NULL, NULL);
+    if (p_stMind)
+    {
+        if (p_stMind->p_stIntelligence)
+            fn_vReinitComport(p_stMind->p_stIntelligence);
+        if (p_stMind->p_stReflex)
+            fn_vReinitComport(p_stMind->p_stReflex);
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 1386–1395 */
+/* addr: 0x001fb0b0  size: 112 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1386
+ *   +0x0010 -> line 1387
+ *   +0x0018 -> line 1390
+ *   +0x0054 -> line 1393
+ *   +0x0060 -> line 1395
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 1342–1342 */
+/* addr: 0x001fb120  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1342
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 870–921 */
+/* addr: 0x001fb130  size: 784 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 870
+ *   +0x002c -> line 877
+ *   +0x0034 -> line 880
+ *   +0x0050 -> line 884
+ *   +0x0058 -> line 886
+ *   +0x0070 -> line 888
+ *   +0x0078 -> line 891
+ *   +0x0080 -> line 892
+ *   +0x0084 -> line 891
+ *   +0x0088 -> line 895
+ *   +0x009c -> line 899
+ *   +0x00a0 -> line 901
+ *   +0x00b0 -> line 903
+ *   +0x00c8 -> line 904
+ *   +0x00cc -> line 903
+ *   +0x00d0 -> line 904
+ *   +0x01a8 -> line 905
+ *   +0x01ac -> line 904
+ *   +0x01b0 -> line 905
+ *   +0x01cc -> line 906
+ *   +0x01d8 -> line 909
+ *   +0x02ac -> line 911
+ *   +0x02b0 -> line 912
+ *   +0x02b4 -> line 909
+ *   +0x02b8 -> line 912
+ *   +0x02dc -> line 914
+ *   +0x02e0 -> line 921
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int SAI_fn_bInsertPointerInTable(void* _p_vValue, int _eFlags);
+int SAI_fn_bInsertArrayInTable(void* param0, unsigned int _ulSize, int _eFlags);
+
+/* Not original source, needs cleaning up: the retail emits this switch as
+ * one source line at each use, so it was a macro or an inline function. */
+inline void fn_vInsertOneDsgVarInSAI(void* p_vAddr, tdeDsgVarTypeId_ eDsgVarType, unsigned short eFlags)
+{
+    switch (eDsgVarType)
+    {
+    case eDsgVarType_WayPoint:
+    case eDsgVarType_Comport:
+    case eDsgVarType_Action:
+    case eDsgVarType_Perso:
+    case eDsgVarType_GameMaterial:
+    case eDsgVarType_VisualMaterial:
+        SAI_fn_bInsertPointerInTable(p_vAddr, eFlags);
+        break;
+    case eDsgVarType_List:
+    case eDsgVarType_PersoArray:
+    case eDsgVarType_VectorArray:
+    case eDsgVarType_FloatArray:
+    case eDsgVarType_IntegerArray:
+    case eDsgVarType_WayPointArray:
+    case eDsgVarType_GraphArray:
+    case eDsgVarType_TextArray:
+    case eDsgVarType_SoundEventArray:
+        break;
+    default:
+        SAI_fn_bInsertArrayInTable(p_vAddr, fn_ulSizeOfDsgVar(eDsgVarType, 0), eFlags);
+        break;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 785–831 */
+/* addr: 0x001fb440  size: 328 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 785
+ *   +0x0024 -> line 786
+ *   +0x002c -> line 789
+ *   +0x0038 -> line 804
+ *   +0x0054 -> line 808
+ *   +0x0060 -> line 810
+ *   +0x0074 -> line 811
+ *   +0x0078 -> line 813
+ *   +0x0080 -> line 816
+ *   +0x0084 -> line 825
+ *   +0x00dc -> line 826
+ *   +0x00ec -> line 827
+ *   +0x00f0 -> line 828
+ *   +0x00f4 -> line 826
+ *   +0x00f8 -> line 828
+ *   +0x011c -> line 830
+ *   +0x0120 -> line 831
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 698–758 */
+/* addr: 0x001fb590  size: 396 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 698
+ *   +0x002c -> line 699
+ *   +0x0034 -> line 702
+ *   +0x0040 -> line 717
+ *   +0x005c -> line 721
+ *   +0x0068 -> line 723
+ *   +0x006c -> line 726
+ *   +0x0070 -> line 723
+ *   +0x0084 -> line 726
+ *   +0x008c -> line 728
+ *   +0x0094 -> line 729
+ *   +0x0098 -> line 731
+ *   +0x00a0 -> line 732
+ *   +0x00a8 -> line 733
+ *   +0x00b0 -> line 736
+ *   +0x00b4 -> line 739
+ *   +0x00c0 -> line 742
+ *   +0x00c4 -> line 751
+ *   +0x011c -> line 752
+ *   +0x012c -> line 754
+ *   +0x0130 -> line 755
+ *   +0x0134 -> line 752
+ *   +0x0138 -> line 755
+ *   +0x015c -> line 757
+ *   +0x0160 -> line 758
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+unsigned char fn_bIntelligenceEngine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstIntelligence_* p_stIntelligence);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 504–520 */
+/* addr: 0x001fb720  size: 56 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 504
+ *   +0x0008 -> line 505
+ *   +0x0014 -> line 507
+ *   +0x0018 -> line 516
+ *   +0x002c -> line 520
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 480–498 */
+/* addr: 0x001fb760  size: 60 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 480
+ *   +0x0004 -> line 482
+ *   +0x0008 -> line 480
+ *   +0x000c -> line 481
+ *   +0x0018 -> line 482
+ *   +0x001c -> line 494
+ *   +0x0030 -> line 498
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 232–241 */
+/* addr: 0x001fb7a0  size: 48 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 232
+ *   +0x0004 -> line 233
+ *   +0x0008 -> line 232
+ *   +0x000c -> line 233
+ *   +0x0024 -> line 241
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 193–229 */
+/* addr: 0x001fb7d0  size: 52 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 193
+ *   +0x0004 -> line 196
+ *   +0x0008 -> line 193
+ *   +0x000c -> line 196
+ *   +0x0014 -> line 199
+ *   +0x0018 -> line 200
+ *   +0x001c -> line 201
+ *   +0x0020 -> line 202
+ *   +0x0024 -> line 208
+ *   +0x0028 -> line 229
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+AI_tdstMind_* fn_pstAllocMind(void)
+{
+    extern void* HMU_fn_p_vMalloc(unsigned int u32Size,
+                                  unsigned char bTempMalloc);
+    AI_tdstMind_* p_stMind;
+
+    p_stMind = HMU_fn_p_vMalloc(sizeof(AI_tdstMind_), 0);
+    p_stMind->p_stAIModel = NULL;
+    p_stMind->p_stIntelligence = NULL;
+    p_stMind->p_stReflex = NULL;
+    p_stMind->p_stDsgMem = NULL;
+    p_stMind->bDoingIntel = 0;
+
+    return p_stMind;
+}
+
+void AI_fn_vFirstInit(void)
+{
+    if (g_ucAIModuleId == 255)
+        g_ucAIModuleId = Erm_fn_ucInitErrMsg(g_ucAIModuleId);
+}
+
+unsigned char fn_bDoIntelligencePerso(HIE_tdstSuperObject_* p_SuperObjPerso)
+{
+    AI_tdstMind_* p_stPerso;
+    p_stPerso = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind;
+    p_stPerso->bDoingIntel = 1;
+
+    if (p_stPerso->p_stIntelligence != NULL)
+        return fn_bIntelligenceEngine(p_SuperObjPerso, p_stPerso->p_stIntelligence);
+
+    return 0;
+}
+
+/* The debug record decodes as int, but the result is returned unmasked from
+ * the unsigned char fn_bIntelligenceEngine, like fn_bDoIntelligencePerso. */
+unsigned char fn_bDoReflexPerso(HIE_tdstSuperObject_* p_SuperObjPerso)
+{
+    AI_tdstMind_* p_stPerso;
+
+    p_stPerso = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind;
+    p_stPerso->bDoingIntel = 0;
+    if (p_stPerso->p_stReflex != NULL) {
+        return fn_bIntelligenceEngine(p_SuperObjPerso, p_stPerso->p_stReflex);
+    }
+    return 0;
+}
+
+void fn_vReinitDesignerVariablesWithFlags(AI_tdstMind_* p_stMind, tdeObjectTreeInit_ eObjIniType)
+{
+    char* ptrDst;
+    unsigned char ucVarId;
+    tdeDsgVarTypeId_ eDsgVarType;
+    unsigned int ulMyVarOffset;
+    tdstDsgVarInfo_* p_stDsgVarInfo;
+    char* ptrSrc;
+    unsigned int ulMyVarSize;
+    tdeObjectTreeInit_ eFlags;
+
+    if (p_stMind != NULL)
+    {
+        if (p_stMind->p_stDsgMem != NULL)
+        {
+            ptrSrc = (char*)p_stMind->p_stDsgMem->p_cDsgMemBufferInit;
+            ptrDst = (char*)p_stMind->p_stDsgMem->p_cDsgMemBuffer;
+            if (ptrSrc == NULL)
+                ptrSrc = (char*)p_stMind->p_stAIModel->p_stDsgVar->p_cDsgMemDefaultInit;
+
+            for (ucVarId = 0; ucVarId < p_stMind->p_stAIModel->p_stDsgVar->ucNbDsgVar; ucVarId++)
+            {
+                p_stDsgVarInfo = (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo + ucVarId;
+                eDsgVarType = p_stDsgVarInfo->eDsgVarTypeId;
+                if (eDsgVarType == eDsgVarType_List)
+                {
+                    ulMyVarOffset = p_stDsgVarInfo->ulOffsetInDsgMem;
+                    *(unsigned int*)(ptrDst + ulMyVarOffset + 4) = *(unsigned int*)(ptrSrc + ulMyVarOffset + 4);
+                    *(unsigned char*)(ptrDst + ulMyVarOffset) = 0;
+                    *(unsigned char*)(ptrDst + ulMyVarOffset + 1) = *(unsigned char*)(ptrSrc + ulMyVarOffset + 1);
+                    continue;
+                }
+                eFlags = p_stDsgVarInfo->eInitType;
+                if (eObjIniType > eFlags)
+                    continue;
+                ulMyVarOffset = p_stDsgVarInfo->ulOffsetInDsgMem;
+                if (fn_GetDsgVarType(eDsgVarType) == 42)
+                {
+                    ulMyVarSize = fn_ulSizeOfDsgVar(eDsgVarType, *(unsigned char*)((char*)p_stMind->p_stAIModel->p_stDsgVar->p_cDsgMemDefaultInit + (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem + 4));
+                }
+                else
+                {
+                    ulMyVarSize = fn_ulSizeOfDsgVar(eDsgVarType, 0);
+                }
+                memcpy(ptrDst + ulMyVarOffset, ptrSrc + ulMyVarOffset, ulMyVarSize);
+            }
+        }
+    }
+}
+
+void ReinitDesignerVariables(AI_tdstMind_* p_stMind)
+{
+    char* ptrDst;
+    unsigned char ucVarId;
+    tdeDsgVarTypeId_ eDsgVarType;
+    unsigned int ulMyVarOffset;
+    tdstDsgVarInfo_* p_stDsgVarInfo;
+    char* ptrSrc;
+    unsigned int ulMyVarSize;
+    tdeObjectTreeInit_ eFlags;
+    if (p_stMind != NULL)
+    {
+        if (p_stMind->p_stDsgMem != NULL)
+        {
+            ptrSrc = (char*)p_stMind->p_stDsgMem->p_cDsgMemBufferInit;
+            ptrDst = (char*)p_stMind->p_stDsgMem->p_cDsgMemBuffer;
+            if (p_stMind->p_stDsgMem->p_cDsgMemBufferInit == 0)
+                ptrSrc = (char*)p_stMind->p_stAIModel->p_stDsgVar->p_cDsgMemDefaultInit;
+            for (ucVarId = 0; ucVarId < p_stMind->p_stAIModel->p_stDsgVar->ucNbDsgVar; ucVarId++)
+            {
+                p_stDsgVarInfo = (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo + ucVarId;
+                eDsgVarType = p_stDsgVarInfo->eDsgVarTypeId;
+                if (p_stDsgVarInfo->eInitType == 0)
+                    continue;
+                ulMyVarOffset = p_stDsgVarInfo->ulOffsetInDsgMem;
+                if (fn_GetDsgVarType(eDsgVarType) == 42)
+                {
+                    ulMyVarSize = fn_ulSizeOfDsgVar(eDsgVarType, *(unsigned char*)((char*)p_stMind->p_stAIModel->p_stDsgVar->p_cDsgMemDefaultInit + (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem + 4));
+                }
+                else
+                {
+                    ulMyVarSize = fn_ulSizeOfDsgVar(eDsgVarType, 0);
+                }
+                memcpy(ptrDst + ulMyVarOffset, ptrSrc + ulMyVarOffset, ulMyVarSize);
+            }
+        }
+    }
+}
+
+void AI_fn_vInsertDsgVarInSAI(AI_tdstMind_* p_stMind)
+{
+    tdeDsgVarTypeId_ eDsgVarTypeId;
+    tdstArray_* p_stArray;
+    unsigned char ucIndex;
+    tdeDsgVarTypeId_ eDsgVarType;
+    char* p_MyVarAddr;
+    unsigned short eFlags;
+    unsigned char ucVarId;
+
+    if (p_stMind != NULL)
+    {
+        if ((p_stMind->p_stDsgMem != NULL) && (p_stMind->p_stAIModel->p_stDsgVar != NULL))
+        {
+            for (ucIndex = 0; ucIndex < p_stMind->p_stAIModel->p_stDsgVar->ucNbDsgVar; ucIndex++)
+            {
+                eFlags = (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucIndex].eSaveType;
+                if (eFlags != 0)
+                {
+                    p_MyVarAddr = (char*)p_stMind->p_stDsgMem->p_cDsgMemBuffer + (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucIndex].ulOffsetInDsgMem;
+                    eDsgVarType = (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucIndex].eDsgVarTypeId;
+                    if (fn_GetDsgVarType(eDsgVarType) == 42)
+                    {
+                        p_stArray = (tdstArray_*)p_MyVarAddr;
+                        eDsgVarTypeId = p_stArray->eType;
+                        for (ucVarId = 0; ucVarId < p_stArray->ucMaxSize; ucVarId++)
+                        {
+                            fn_vInsertOneDsgVarInSAI(&p_stArray->d_ArrayElement[(p_stArray->eType == eDsgVarType_Vector) ? ucVarId * 3 : ucVarId], eDsgVarTypeId, eFlags);
+                        }
+                    }
+                    else
+                    {
+                        fn_vInsertOneDsgVarInSAI(p_MyVarAddr, eDsgVarType, eFlags);
+                    }
+                }
+            }
+        }
+    }
+}
+
+void fn_vSecondPassOfMindLoading(void)
+{
+}
+
+void fn_vReinitAI(AI_tdstMind_* p_stMind)
+{
+    if (p_stMind)
+    {
+        fn_vReinitComports(p_stMind);
+        ReinitDesignerVariables(p_stMind);
+    }
+}
+
+void fn_vReinitAIWithFlags(AI_tdstMind_* p_stMind, tdeObjectTreeInit_ eObjIniType)
+{
+    if (p_stMind)
+    {
+        fn_vReinitComports(p_stMind);
+        fn_vReinitDesignerVariablesWithFlags(p_stMind, eObjIniType);
+    }
+}
+
+tdstActionTable_* fn_p_stSimulateAllocActionTable(char** p_ptr, unsigned char ucActionTableNbEntry)
+{
+    tdstActionTable_* p_stActionTable;
+    tdstActionTableEntry_* p_stEntry;
+    /* The retail walks the entry array with a second pointer local; using the
+     * same variable for the allocation and the walk swaps a0/a1 in the loop. */
+    tdstActionTableEntry_* p_stCurEntry;
+    unsigned char ucNEntry;
+
+    if (ucActionTableNbEntry != 0)
+    {
+        p_stActionTable = (tdstActionTable_*)*p_ptr;
+        memset(*p_ptr, 0, sizeof(tdstActionTable_));
+        *p_ptr += sizeof(tdstActionTable_);
+    }
+    else
+    {
+        return NULL;
+    }
+    p_stActionTable->ucNbEntries = ucActionTableNbEntry;
+    /* One retail source line: the entry area is cleared and the table filled in
+     * the same statement group. */
+    p_stEntry = (tdstActionTableEntry_*)*p_ptr; memset(*p_ptr, 0, ucActionTableNbEntry * sizeof(tdstActionTableEntry_)); *p_ptr += ucActionTableNbEntry * sizeof(tdstActionTableEntry_); p_stActionTable->p_stEntry = p_stEntry;
+    p_stActionTable->ucNbEntriesUsed = 0;
+    p_stActionTable->ucCurrentEntry = 0;
+    for (p_stCurEntry = p_stActionTable->p_stEntry, ucNEntry = 0; ucNEntry < ucActionTableNbEntry; ucNEntry++, p_stCurEntry++)
+    {
+        p_stCurEntry->bUseDefaultActionReturn = g_ucUseDefaultActionReturn;
+        p_stCurEntry->ucNewActionReturn = g_ucNewActionReturn;
+    }
+    return p_stActionTable;
+}
+
 void fn_vSimulateMindAllocationFromAnotherMind(AI_tdstMind_* p_stMindSrc, AI_tdstMind_* p_stMindDst)
 {
     char* ptr;
@@ -3146,492 +3624,30 @@ void fn_vSimulateMindAllocationFromAnotherMind(AI_tdstMind_* p_stMindSrc, AI_tds
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 1473–1514 */
-/* addr: 0x001faf30  size: 248 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1473
- *   +0x001c -> line 1481
- *   +0x0020 -> line 1473
- *   +0x0024 -> line 1481
- *   +0x002c -> line 1483
- *   +0x0030 -> line 1484
- *   +0x0040 -> line 1485
- *   +0x0048 -> line 1486
- *   +0x0050 -> line 1489
- *   +0x0058 -> line 1493
- *   +0x005c -> line 1494
- *   +0x0094 -> line 1496
- *   +0x0098 -> line 1497
- *   +0x009c -> line 1499
- *   +0x00a8 -> line 1501
- *   +0x00ac -> line 1503
- *   +0x00b4 -> line 1501
- *   +0x00b8 -> line 1502
- *   +0x00c0 -> line 1503
- *   +0x00d8 -> line 1514
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstActionTable_* fn_p_stSimulateAllocActionTable(char** p_ptr, unsigned char ucActionTableNbEntry)
+unsigned char fn_ucIsRuleInActionTable(tdstIntelligence_* p_stIntelligence, unsigned char ucNumRule)
 {
-    tdstActionTable_* p_stActionTable;
+    /* The debug local list is (p_stEntry, ucCurrentEntry, ucNbEntries); the retail
+     * register allocation (ucNbEntries in a2, p_stEntry in a3) needs the reverse
+     * declaration order. */
+    unsigned char ucNbEntries;
+    unsigned char ucCurrentEntry;
     tdstActionTableEntry_* p_stEntry;
-    /* The retail walks the entry array with a second pointer local; using the
-     * same variable for the allocation and the walk swaps a0/a1 in the loop. */
-    tdstActionTableEntry_* p_stCurEntry;
-    unsigned char ucNEntry;
 
-    if (ucActionTableNbEntry != 0)
+    ucNbEntries = p_stIntelligence->p_stActionTable->ucNbEntries;
+    /* 'x ? 1 : 0' is what produces the retail's li v0,1 / movz v0,zero,v1 pair. */
+    if (p_stIntelligence->p_stActionTable->ucNbEntriesUsed ? 1 : 0)
     {
-        p_stActionTable = (tdstActionTable_*)*p_ptr;
-        memset(*p_ptr, 0, sizeof(tdstActionTable_));
-        *p_ptr += sizeof(tdstActionTable_);
-    }
-    else
-    {
-        return NULL;
-    }
-    p_stActionTable->ucNbEntries = ucActionTableNbEntry;
-    /* One retail source line: the entry area is cleared and the table filled in
-     * the same statement group. */
-    p_stEntry = (tdstActionTableEntry_*)*p_ptr; memset(*p_ptr, 0, ucActionTableNbEntry * sizeof(tdstActionTableEntry_)); *p_ptr += ucActionTableNbEntry * sizeof(tdstActionTableEntry_); p_stActionTable->p_stEntry = p_stEntry;
-    p_stActionTable->ucNbEntriesUsed = 0;
-    p_stActionTable->ucCurrentEntry = 0;
-    for (p_stCurEntry = p_stActionTable->p_stEntry, ucNEntry = 0; ucNEntry < ucActionTableNbEntry; ucNEntry++, p_stCurEntry++)
-    {
-        p_stCurEntry->bUseDefaultActionReturn = g_ucUseDefaultActionReturn;
-        p_stCurEntry->ucNewActionReturn = g_ucNewActionReturn;
-    }
-    return p_stActionTable;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 1417–1426 */
-/* addr: 0x001fb030  size: 120 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1417
- *   +0x0014 -> line 1418
- *   +0x001c -> line 1421
- *   +0x0058 -> line 1424
- *   +0x0064 -> line 1426
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vSetUltraOperatorPerso(HIE_tdstSuperObject_* hCurrentSuperObjPerso, HIE_tdstSuperObject_* hNewCurrentSuperObjPerso);
-void fn_vReinitComport(tdstIntelligence_* p_stIntelligence);
-void ReinitDesignerVariables(AI_tdstMind_* p_stMind);
-void fn_vReinitDesignerVariablesWithFlags(AI_tdstMind_* p_stMind, tdeObjectTreeInit_ eObjIniType);
-
-/* Inlined into fn_vReinitAIWithFlags and fn_vReinitAI: each call site
- * attributes the whole block to one line (1421 and 1390). */
-static inline void fn_vReinitComports(AI_tdstMind_* p_stMind)
-{
-    fn_vSetUltraOperatorPerso(NULL, NULL);
-    if (p_stMind)
-    {
-        if (p_stMind->p_stIntelligence)
-            fn_vReinitComport(p_stMind->p_stIntelligence);
-        if (p_stMind->p_stReflex)
-            fn_vReinitComport(p_stMind->p_stReflex);
-    }
-}
-
-void fn_vReinitAIWithFlags(AI_tdstMind_* p_stMind, tdeObjectTreeInit_ eObjIniType)
-{
-    if (p_stMind)
-    {
-        fn_vReinitComports(p_stMind);
-        fn_vReinitDesignerVariablesWithFlags(p_stMind, eObjIniType);
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 1386–1395 */
-/* addr: 0x001fb0b0  size: 112 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1386
- *   +0x0010 -> line 1387
- *   +0x0018 -> line 1390
- *   +0x0054 -> line 1393
- *   +0x0060 -> line 1395
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vReinitAI(AI_tdstMind_* p_stMind)
-{
-    if (p_stMind)
-    {
-        fn_vReinitComports(p_stMind);
-        ReinitDesignerVariables(p_stMind);
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 1342–1342 */
-/* addr: 0x001fb120  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1342
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vSecondPassOfMindLoading(void)
-{
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 870–921 */
-/* addr: 0x001fb130  size: 784 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 870
- *   +0x002c -> line 877
- *   +0x0034 -> line 880
- *   +0x0050 -> line 884
- *   +0x0058 -> line 886
- *   +0x0070 -> line 888
- *   +0x0078 -> line 891
- *   +0x0080 -> line 892
- *   +0x0084 -> line 891
- *   +0x0088 -> line 895
- *   +0x009c -> line 899
- *   +0x00a0 -> line 901
- *   +0x00b0 -> line 903
- *   +0x00c8 -> line 904
- *   +0x00cc -> line 903
- *   +0x00d0 -> line 904
- *   +0x01a8 -> line 905
- *   +0x01ac -> line 904
- *   +0x01b0 -> line 905
- *   +0x01cc -> line 906
- *   +0x01d8 -> line 909
- *   +0x02ac -> line 911
- *   +0x02b0 -> line 912
- *   +0x02b4 -> line 909
- *   +0x02b8 -> line 912
- *   +0x02dc -> line 914
- *   +0x02e0 -> line 921
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int SAI_fn_bInsertPointerInTable(void* _p_vValue, int _eFlags);
-int SAI_fn_bInsertArrayInTable(void* param0, unsigned int _ulSize, int _eFlags);
-
-/* Not original source, needs cleaning up: the retail emits this switch as
- * one source line at each use, so it was a macro or an inline function. */
-inline void fn_vInsertOneDsgVarInSAI(void* p_vAddr, tdeDsgVarTypeId_ eDsgVarType, unsigned short eFlags)
-{
-    switch (eDsgVarType)
-    {
-    case eDsgVarType_WayPoint:
-    case eDsgVarType_Comport:
-    case eDsgVarType_Action:
-    case eDsgVarType_Perso:
-    case eDsgVarType_GameMaterial:
-    case eDsgVarType_VisualMaterial:
-        SAI_fn_bInsertPointerInTable(p_vAddr, eFlags);
-        break;
-    case eDsgVarType_List:
-    case eDsgVarType_PersoArray:
-    case eDsgVarType_VectorArray:
-    case eDsgVarType_FloatArray:
-    case eDsgVarType_IntegerArray:
-    case eDsgVarType_WayPointArray:
-    case eDsgVarType_GraphArray:
-    case eDsgVarType_TextArray:
-    case eDsgVarType_SoundEventArray:
-        break;
-    default:
-        SAI_fn_bInsertArrayInTable(p_vAddr, fn_ulSizeOfDsgVar(eDsgVarType, 0), eFlags);
-        break;
-    }
-}
-
-void AI_fn_vInsertDsgVarInSAI(AI_tdstMind_* p_stMind)
-{
-    tdeDsgVarTypeId_ eDsgVarTypeId;
-    tdstArray_* p_stArray;
-    unsigned char ucIndex;
-    tdeDsgVarTypeId_ eDsgVarType;
-    char* p_MyVarAddr;
-    unsigned short eFlags;
-    unsigned char ucVarId;
-
-    if (p_stMind != NULL)
-    {
-        if ((p_stMind->p_stDsgMem != NULL) && (p_stMind->p_stAIModel->p_stDsgVar != NULL))
+        p_stEntry = p_stIntelligence->p_stActionTable->p_stEntry;
+        for (ucCurrentEntry = 0; ucCurrentEntry < ucNbEntries; ucCurrentEntry++, p_stEntry++)
         {
-            for (ucIndex = 0; ucIndex < p_stMind->p_stAIModel->p_stDsgVar->ucNbDsgVar; ucIndex++)
+            if (p_stEntry->bUsed)
             {
-                eFlags = (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucIndex].eSaveType;
-                if (eFlags != 0)
+                if (p_stEntry->ucNumRule == ucNumRule)
                 {
-                    p_MyVarAddr = (char*)p_stMind->p_stDsgMem->p_cDsgMemBuffer + (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucIndex].ulOffsetInDsgMem;
-                    eDsgVarType = (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucIndex].eDsgVarTypeId;
-                    if (fn_GetDsgVarType(eDsgVarType) == 42)
-                    {
-                        p_stArray = (tdstArray_*)p_MyVarAddr;
-                        eDsgVarTypeId = p_stArray->eType;
-                        for (ucVarId = 0; ucVarId < p_stArray->ucMaxSize; ucVarId++)
-                        {
-                            fn_vInsertOneDsgVarInSAI(&p_stArray->d_ArrayElement[(p_stArray->eType == eDsgVarType_Vector) ? ucVarId * 3 : ucVarId], eDsgVarTypeId, eFlags);
-                        }
-                    }
-                    else
-                    {
-                        fn_vInsertOneDsgVarInSAI(p_MyVarAddr, eDsgVarType, eFlags);
-                    }
+                    return ucCurrentEntry;
                 }
             }
         }
     }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 785–831 */
-/* addr: 0x001fb440  size: 328 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 785
- *   +0x0024 -> line 786
- *   +0x002c -> line 789
- *   +0x0038 -> line 804
- *   +0x0054 -> line 808
- *   +0x0060 -> line 810
- *   +0x0074 -> line 811
- *   +0x0078 -> line 813
- *   +0x0080 -> line 816
- *   +0x0084 -> line 825
- *   +0x00dc -> line 826
- *   +0x00ec -> line 827
- *   +0x00f0 -> line 828
- *   +0x00f4 -> line 826
- *   +0x00f8 -> line 828
- *   +0x011c -> line 830
- *   +0x0120 -> line 831
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void ReinitDesignerVariables(AI_tdstMind_* p_stMind)
-{
-    char* ptrDst;
-    unsigned char ucVarId;
-    tdeDsgVarTypeId_ eDsgVarType;
-    unsigned int ulMyVarOffset;
-    tdstDsgVarInfo_* p_stDsgVarInfo;
-    char* ptrSrc;
-    unsigned int ulMyVarSize;
-    tdeObjectTreeInit_ eFlags;
-    if (p_stMind != NULL)
-    {
-        if (p_stMind->p_stDsgMem != NULL)
-        {
-            ptrSrc = (char*)p_stMind->p_stDsgMem->p_cDsgMemBufferInit;
-            ptrDst = (char*)p_stMind->p_stDsgMem->p_cDsgMemBuffer;
-            if (p_stMind->p_stDsgMem->p_cDsgMemBufferInit == 0)
-                ptrSrc = (char*)p_stMind->p_stAIModel->p_stDsgVar->p_cDsgMemDefaultInit;
-            for (ucVarId = 0; ucVarId < p_stMind->p_stAIModel->p_stDsgVar->ucNbDsgVar; ucVarId++)
-            {
-                p_stDsgVarInfo = (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo + ucVarId;
-                eDsgVarType = p_stDsgVarInfo->eDsgVarTypeId;
-                if (p_stDsgVarInfo->eInitType == 0)
-                    continue;
-                ulMyVarOffset = p_stDsgVarInfo->ulOffsetInDsgMem;
-                if (fn_GetDsgVarType(eDsgVarType) == 42)
-                {
-                    ulMyVarSize = fn_ulSizeOfDsgVar(eDsgVarType, *(unsigned char*)((char*)p_stMind->p_stAIModel->p_stDsgVar->p_cDsgMemDefaultInit + (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem + 4));
-                }
-                else
-                {
-                    ulMyVarSize = fn_ulSizeOfDsgVar(eDsgVarType, 0);
-                }
-                memcpy(ptrDst + ulMyVarOffset, ptrSrc + ulMyVarOffset, ulMyVarSize);
-            }
-        }
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 698–758 */
-/* addr: 0x001fb590  size: 396 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 698
- *   +0x002c -> line 699
- *   +0x0034 -> line 702
- *   +0x0040 -> line 717
- *   +0x005c -> line 721
- *   +0x0068 -> line 723
- *   +0x006c -> line 726
- *   +0x0070 -> line 723
- *   +0x0084 -> line 726
- *   +0x008c -> line 728
- *   +0x0094 -> line 729
- *   +0x0098 -> line 731
- *   +0x00a0 -> line 732
- *   +0x00a8 -> line 733
- *   +0x00b0 -> line 736
- *   +0x00b4 -> line 739
- *   +0x00c0 -> line 742
- *   +0x00c4 -> line 751
- *   +0x011c -> line 752
- *   +0x012c -> line 754
- *   +0x0130 -> line 755
- *   +0x0134 -> line 752
- *   +0x0138 -> line 755
- *   +0x015c -> line 757
- *   +0x0160 -> line 758
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vReinitDesignerVariablesWithFlags(AI_tdstMind_* p_stMind, tdeObjectTreeInit_ eObjIniType)
-{
-    char* ptrDst;
-    unsigned char ucVarId;
-    tdeDsgVarTypeId_ eDsgVarType;
-    unsigned int ulMyVarOffset;
-    tdstDsgVarInfo_* p_stDsgVarInfo;
-    char* ptrSrc;
-    unsigned int ulMyVarSize;
-    tdeObjectTreeInit_ eFlags;
-
-    if (p_stMind != NULL)
-    {
-        if (p_stMind->p_stDsgMem != NULL)
-        {
-            ptrSrc = (char*)p_stMind->p_stDsgMem->p_cDsgMemBufferInit;
-            ptrDst = (char*)p_stMind->p_stDsgMem->p_cDsgMemBuffer;
-            if (ptrSrc == NULL)
-                ptrSrc = (char*)p_stMind->p_stAIModel->p_stDsgVar->p_cDsgMemDefaultInit;
-
-            for (ucVarId = 0; ucVarId < p_stMind->p_stAIModel->p_stDsgVar->ucNbDsgVar; ucVarId++)
-            {
-                p_stDsgVarInfo = (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo + ucVarId;
-                eDsgVarType = p_stDsgVarInfo->eDsgVarTypeId;
-                if (eDsgVarType == eDsgVarType_List)
-                {
-                    ulMyVarOffset = p_stDsgVarInfo->ulOffsetInDsgMem;
-                    *(unsigned int*)(ptrDst + ulMyVarOffset + 4) = *(unsigned int*)(ptrSrc + ulMyVarOffset + 4);
-                    *(unsigned char*)(ptrDst + ulMyVarOffset) = 0;
-                    *(unsigned char*)(ptrDst + ulMyVarOffset + 1) = *(unsigned char*)(ptrSrc + ulMyVarOffset + 1);
-                    continue;
-                }
-                eFlags = p_stDsgVarInfo->eInitType;
-                if (eObjIniType > eFlags)
-                    continue;
-                ulMyVarOffset = p_stDsgVarInfo->ulOffsetInDsgMem;
-                if (fn_GetDsgVarType(eDsgVarType) == 42)
-                {
-                    ulMyVarSize = fn_ulSizeOfDsgVar(eDsgVarType, *(unsigned char*)((char*)p_stMind->p_stAIModel->p_stDsgVar->p_cDsgMemDefaultInit + (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem + 4));
-                }
-                else
-                {
-                    ulMyVarSize = fn_ulSizeOfDsgVar(eDsgVarType, 0);
-                }
-                memcpy(ptrDst + ulMyVarOffset, ptrSrc + ulMyVarOffset, ulMyVarSize);
-            }
-        }
-    }
-}
-
-unsigned char fn_bIntelligenceEngine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstIntelligence_* p_stIntelligence);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 504–520 */
-/* addr: 0x001fb720  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 504
- *   +0x0008 -> line 505
- *   +0x0014 -> line 507
- *   +0x0018 -> line 516
- *   +0x002c -> line 520
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-/* The debug record decodes as int, but the result is returned unmasked from
- * the unsigned char fn_bIntelligenceEngine, like fn_bDoIntelligencePerso. */
-unsigned char fn_bDoReflexPerso(HIE_tdstSuperObject_* p_SuperObjPerso)
-{
-    AI_tdstMind_* p_stPerso;
-
-    p_stPerso = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind;
-    p_stPerso->bDoingIntel = 0;
-    if (p_stPerso->p_stReflex != NULL) {
-        return fn_bIntelligenceEngine(p_SuperObjPerso, p_stPerso->p_stReflex);
-    }
-    return 0;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 480–498 */
-/* addr: 0x001fb760  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 480
- *   +0x0004 -> line 482
- *   +0x0008 -> line 480
- *   +0x000c -> line 481
- *   +0x0018 -> line 482
- *   +0x001c -> line 494
- *   +0x0030 -> line 498
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned char fn_bDoIntelligencePerso(HIE_tdstSuperObject_* p_SuperObjPerso)
-{
-    AI_tdstMind_* p_stPerso;
-    p_stPerso = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind;
-    p_stPerso->bDoingIntel = 1;
-
-
-
-
-
-
-
-
-
-
-
-    if (p_stPerso->p_stIntelligence != NULL)
-        return fn_bIntelligenceEngine(p_SuperObjPerso, p_stPerso->p_stIntelligence);
-
-
-    return 0;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 232–241 */
-/* addr: 0x001fb7a0  size: 48 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 232
- *   +0x0004 -> line 233
- *   +0x0008 -> line 232
- *   +0x000c -> line 233
- *   +0x0024 -> line 241
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void AI_fn_vFirstInit(void)
-{
-    if (g_ucAIModuleId == 255)
-        g_ucAIModuleId = Erm_fn_ucInitErrMsg(g_ucAIModuleId);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 193–229 */
-/* addr: 0x001fb7d0  size: 52 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 193
- *   +0x0004 -> line 196
- *   +0x0008 -> line 193
- *   +0x000c -> line 196
- *   +0x0014 -> line 199
- *   +0x0018 -> line 200
- *   +0x001c -> line 201
- *   +0x0020 -> line 202
- *   +0x0024 -> line 208
- *   +0x0028 -> line 229
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-AI_tdstMind_* fn_pstAllocMind(void)
-{
-    extern void* HMU_fn_p_vMalloc(unsigned int u32Size,
-                                  unsigned char bTempMalloc);
-    AI_tdstMind_* p_stMind;
-
-    p_stMind = HMU_fn_p_vMalloc(sizeof(AI_tdstMind_), 0);
-    p_stMind->p_stAIModel = NULL;
-    p_stMind->p_stIntelligence = NULL;
-    p_stMind->p_stReflex = NULL;
-    p_stMind->p_stDsgMem = NULL;
-    p_stMind->bDoingIntel = 0;
-
-    return p_stMind;
+    return ucNbEntries;
 }

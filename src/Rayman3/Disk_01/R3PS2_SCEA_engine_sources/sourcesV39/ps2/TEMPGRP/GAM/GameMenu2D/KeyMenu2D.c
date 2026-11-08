@@ -768,28 +768,14 @@ int fn_iAppendKey(unsigned char* _LastKey, int _LastKeyLength, unsigned char* _N
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vInitSoundInGameMenu2D(unsigned int uiPause)
-{
-    int i;
-    _SND_tduRefEvt u_RefEvt;
 
-    if (g_uiInitialised != 1)
-    {
-        i = 0;
-        do
-        {
-            g_aSoundEvent[i] = SND_fn_pstGetBlockEventFromId(g_aSoundEventID[i]);
-            i++;
-        } while (i < 11);
-        g_uiInitialised = 1;
-    }
-    if (uiPause == 1)
-    {
-        SND_fn_vPauseSound();
-    }
-    if (g_aSoundEvent[3] != 0) { u_RefEvt.pstPtr = g_aSoundEvent[3]; SND_fn_s32SendRequestSound(-1, -1, g_lSoundObjectTypeMenu, u_RefEvt, 0, 0); }
-    if (g_aSoundEvent[8] != 0) { u_RefEvt.pstPtr = g_aSoundEvent[8]; SND_fn_s32SendRequestSound(-1, -1, g_lSoundObjectTypeMenu, u_RefEvt, 0, 0); }
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void fn_vInitSoundInGameMenu2D(unsigned int uiPause);
+void fn_vEncodeKey(unsigned char* _Key, unsigned int _Score, unsigned int _Cages, unsigned int _Id);
+void fn_vEncrypt(unsigned char* _LastKey, int length);
+void fn_vXorEncrypt(unsigned char* _LastKey, int length, int direction);
+int fn_iAppendKey(unsigned char* _LastKey, int _LastKeyLength, unsigned char* _NewValues, int _NewValuesLength);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\KeyMenu2D.c lines 315–370 */
 /* addr: 0x002a00e0  size: 616 bytes */
@@ -851,6 +837,228 @@ void fn_vInitSoundInGameMenu2D(unsigned int uiPause)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\KeyMenu2D.c lines 194–256 */
+/* addr: 0x002a0350  size: 468 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 194
+ *   +0x0004 -> line 201
+ *   +0x0008 -> line 194
+ *   +0x0018 -> line 201
+ *   +0x0020 -> line 208
+ *   +0x0024 -> line 207
+ *   +0x0028 -> line 208
+ *   +0x0034 -> line 214
+ *   +0x0038 -> line 216
+ *   +0x003c -> line 214
+ *   +0x0040 -> line 216
+ *   +0x0044 -> line 214
+ *   +0x0074 -> line 215
+ *   +0x0078 -> line 214
+ *   +0x007c -> line 215
+ *   +0x0080 -> line 216
+ *   +0x0088 -> line 219
+ *   +0x0098 -> line 223
+ *   +0x009c -> line 222
+ *   +0x00a0 -> line 223
+ *   +0x00ac -> line 229
+ *   +0x00b0 -> line 232
+ *   +0x00b4 -> line 229
+ *   +0x00b8 -> line 232
+ *   +0x00bc -> line 229
+ *   +0x00f4 -> line 230
+ *   +0x00f8 -> line 229
+ *   +0x00fc -> line 230
+ *   +0x0100 -> line 229
+ *   +0x0104 -> line 231
+ *   +0x0108 -> line 230
+ *   +0x010c -> line 231
+ *   +0x0110 -> line 232
+ *   +0x0118 -> line 235
+ *   +0x0128 -> line 239
+ *   +0x012c -> line 238
+ *   +0x0130 -> line 239
+ *   +0x013c -> line 245
+ *   +0x0148 -> line 249
+ *   +0x014c -> line 245
+ *   +0x0150 -> line 249
+ *   +0x0154 -> line 245
+ *   +0x017c -> line 246
+ *   +0x0180 -> line 245
+ *   +0x0184 -> line 246
+ *   +0x0188 -> line 245
+ *   +0x018c -> line 247
+ *   +0x0190 -> line 246
+ *   +0x0194 -> line 247
+ *   +0x019c -> line 248
+ *   +0x01a4 -> line 249
+ *   +0x01b0 -> line 253
+ *   +0x01c0 -> line 256
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\KeyMenu2D.c lines 164–187 */
+/* addr: 0x002a0530  size: 96 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 164
+ *   +0x0008 -> line 166
+ *   +0x000c -> line 167
+ *   +0x0010 -> line 166
+ *   +0x0014 -> line 168
+ *   +0x0018 -> line 178
+ *   +0x001c -> line 180
+ *   +0x0024 -> line 182
+ *   +0x0028 -> line 183
+ *   +0x002c -> line 184
+ *   +0x0030 -> line 186
+ *   +0x0034 -> line 183
+ *   +0x0038 -> line 185
+ *   +0x003c -> line 183
+ *   +0x0040 -> line 185
+ *   +0x0044 -> line 186
+ *   +0x0048 -> line 185
+ *   +0x004c -> line 186
+ *   +0x0058 -> line 187
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\KeyMenu2D.c lines 111–147 */
+/* addr: 0x002a0590  size: 308 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 111
+ *   +0x0028 -> line 120
+ *   +0x003c -> line 123
+ *   +0x0050 -> line 129
+ *   +0x0054 -> line 127
+ *   +0x0058 -> line 123
+ *   +0x005c -> line 128
+ *   +0x0060 -> line 123
+ *   +0x0068 -> line 129
+ *   +0x0070 -> line 131
+ *   +0x0074 -> line 133
+ *   +0x0078 -> line 131
+ *   +0x0080 -> line 132
+ *   +0x0084 -> line 134
+ *   +0x00b0 -> line 135
+ *   +0x00c0 -> line 137
+ *   +0x00c4 -> line 138
+ *   +0x00c8 -> line 137
+ *   +0x00cc -> line 138
+ *   +0x00d0 -> line 139
+ *   +0x0100 -> line 143
+ *   +0x0110 -> line 146
+ *   +0x0114 -> line 147
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+int fn_iAppendKey(unsigned char* _LastKey, int _LastKeyLength, unsigned char* _NewValues, int _NewValuesLength)
+{
+    unsigned char OldKey[256];
+    int Val;
+    int NewLength;
+    int OffsetInInt;
+
+    memcpy(OldKey, _LastKey, _LastKeyLength);
+    NewLength = _LastKeyLength + ((_NewValuesLength + 4) / 5);
+    Val = 0;
+    OffsetInInt = 0;
+    while (_NewValuesLength >= 9)
+    {
+        Val |= (*_NewValues) << OffsetInInt;
+        OffsetInInt += 8;
+        _NewValues++;
+        _NewValuesLength -= 8;
+        while (OffsetInInt >= 5)
+        {
+            *_LastKey = Val & 0x1F;
+            Val >>= 5;
+            OffsetInInt -= 5;
+            _LastKey++;
+        }
+    }
+    Val |= (*_NewValues) << OffsetInInt;
+    OffsetInInt += _NewValuesLength + 4;
+    while (OffsetInInt >= 5)
+    {
+        *_LastKey = Val & 0x1F;
+        Val >>= 5;
+        OffsetInInt -= 5;
+        _LastKey++;
+    }
+    memcpy(_LastKey, OldKey, _LastKeyLength);
+    return NewLength;
+}
+
+void fn_vXorEncrypt(unsigned char* _LastKey, int length, int direction)
+{
+    int i;
+    unsigned char* p;
+    unsigned int pval;
+    unsigned int val2;
+    unsigned int val;
+    int last_val;
+
+    i = 0;
+    p = _LastKey;
+    if (direction < 0)
+    {
+        p = _LastKey + length - 1;
+        i = length - 1;
+        length = -1;
+    }
+    val = 0;
+    last_val = 0;
+    while (i != length)
+    {
+        pval = *p;
+        val2 = val ^ last_val;
+        last_val = val;
+        *p = pval ^ val2;
+        val = (val + pval + 2 - direction) & 0x1f;
+        i += direction;
+        p += direction;
+    }
+}
+
+void fn_vEncrypt(unsigned char* _LastKey, int length)
+{
+    unsigned char* p;
+    int i;
+    unsigned int val;
+
+    fn_vXorEncrypt(_LastKey, length, -1);
+    p = _LastKey;
+for (i = 0; i < length - 1; i += 2)
+    {
+        val = (p[1] + (p[0] << 5)) * 130521; p[1] = (val >> 5) & 0x1F;
+        p[0] = val & 0x1F;
+        p += 2;
+    }
+    fn_vXorEncrypt(_LastKey, length, 1);
+    p = _LastKey;
+for (i = 0; i < length - 2; i += 3)
+    {
+        val = (p[0] + (p[1] << 5) + (p[2] << 10)) * 130521; p[1] = (val >> 10) & 0x1F;
+        p[0] = (val >> 5) & 0x1F;
+        p[2] = val & 0x1F;
+        p += 3;
+    }
+    fn_vXorEncrypt(_LastKey, length, -1);
+    p = _LastKey;
+for (i = 0; i < length - 3; i += 4)
+    {
+        val = (p[0] + (p[1] << 5) + (p[2] << 10) + (p[3] << 15)) * 0x9DD7107; p[1] = (val >> 15) & 0x1F;
+        p[3] = (val >> 10) & 0x1F;
+        p[0] = (val >> 5) & 0x1F;
+        p[2] = val & 0x1F;
+        p += 4;
+    }
+    fn_vXorEncrypt(_LastKey, length, 1);
+}
+
 void fn_vEncodeKey(unsigned char* _Key, unsigned int _Score, unsigned int _Cages, unsigned int _Id)
 {
     unsigned int Cages_Platform_Score;
@@ -912,255 +1120,25 @@ void fn_vEncodeKey(unsigned char* _Key, unsigned int _Score, unsigned int _Cages
     _Key[total] = 0;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\KeyMenu2D.c lines 194–256 */
-/* addr: 0x002a0350  size: 468 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 194
- *   +0x0004 -> line 201
- *   +0x0008 -> line 194
- *   +0x0018 -> line 201
- *   +0x0020 -> line 208
- *   +0x0024 -> line 207
- *   +0x0028 -> line 208
- *   +0x0034 -> line 214
- *   +0x0038 -> line 216
- *   +0x003c -> line 214
- *   +0x0040 -> line 216
- *   +0x0044 -> line 214
- *   +0x0074 -> line 215
- *   +0x0078 -> line 214
- *   +0x007c -> line 215
- *   +0x0080 -> line 216
- *   +0x0088 -> line 219
- *   +0x0098 -> line 223
- *   +0x009c -> line 222
- *   +0x00a0 -> line 223
- *   +0x00ac -> line 229
- *   +0x00b0 -> line 232
- *   +0x00b4 -> line 229
- *   +0x00b8 -> line 232
- *   +0x00bc -> line 229
- *   +0x00f4 -> line 230
- *   +0x00f8 -> line 229
- *   +0x00fc -> line 230
- *   +0x0100 -> line 229
- *   +0x0104 -> line 231
- *   +0x0108 -> line 230
- *   +0x010c -> line 231
- *   +0x0110 -> line 232
- *   +0x0118 -> line 235
- *   +0x0128 -> line 239
- *   +0x012c -> line 238
- *   +0x0130 -> line 239
- *   +0x013c -> line 245
- *   +0x0148 -> line 249
- *   +0x014c -> line 245
- *   +0x0150 -> line 249
- *   +0x0154 -> line 245
- *   +0x017c -> line 246
- *   +0x0180 -> line 245
- *   +0x0184 -> line 246
- *   +0x0188 -> line 245
- *   +0x018c -> line 247
- *   +0x0190 -> line 246
- *   +0x0194 -> line 247
- *   +0x019c -> line 248
- *   +0x01a4 -> line 249
- *   +0x01b0 -> line 253
- *   +0x01c0 -> line 256
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vEncrypt(unsigned char* _LastKey, int length)
-{
-    unsigned char* p;
-    int i;
-    unsigned int val;
-
-    fn_vXorEncrypt(_LastKey, length, -1);
-    p = _LastKey;
-for (i = 0; i < length - 1; i += 2)
-    {
-        val = (p[1] + (p[0] << 5)) * 130521; p[1] = (val >> 5) & 0x1F;
-        p[0] = val & 0x1F;
-        p += 2;
-    }
-    fn_vXorEncrypt(_LastKey, length, 1);
-    p = _LastKey;
-for (i = 0; i < length - 2; i += 3)
-    {
-        val = (p[0] + (p[1] << 5) + (p[2] << 10)) * 130521; p[1] = (val >> 10) & 0x1F;
-        p[0] = (val >> 5) & 0x1F;
-        p[2] = val & 0x1F;
-        p += 3;
-    }
-    fn_vXorEncrypt(_LastKey, length, -1);
-    p = _LastKey;
-for (i = 0; i < length - 3; i += 4)
-    {
-        val = (p[0] + (p[1] << 5) + (p[2] << 10) + (p[3] << 15)) * 0x9DD7107; p[1] = (val >> 15) & 0x1F;
-        p[3] = (val >> 10) & 0x1F;
-        p[0] = (val >> 5) & 0x1F;
-        p[2] = val & 0x1F;
-        p += 4;
-    }
-    fn_vXorEncrypt(_LastKey, length, 1);
-}
-
-
-
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\KeyMenu2D.c lines 164–187 */
-/* addr: 0x002a0530  size: 96 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 164
- *   +0x0008 -> line 166
- *   +0x000c -> line 167
- *   +0x0010 -> line 166
- *   +0x0014 -> line 168
- *   +0x0018 -> line 178
- *   +0x001c -> line 180
- *   +0x0024 -> line 182
- *   +0x0028 -> line 183
- *   +0x002c -> line 184
- *   +0x0030 -> line 186
- *   +0x0034 -> line 183
- *   +0x0038 -> line 185
- *   +0x003c -> line 183
- *   +0x0040 -> line 185
- *   +0x0044 -> line 186
- *   +0x0048 -> line 185
- *   +0x004c -> line 186
- *   +0x0058 -> line 187
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vXorEncrypt(unsigned char* _LastKey, int length, int direction)
+void fn_vInitSoundInGameMenu2D(unsigned int uiPause)
 {
     int i;
-    unsigned char* p;
-    unsigned int pval;
-    unsigned int val2;
-    unsigned int val;
-    int last_val;
+    _SND_tduRefEvt u_RefEvt;
 
-    i = 0;
-    p = _LastKey;
-    if (direction < 0)
+    if (g_uiInitialised != 1)
     {
-        p = _LastKey + length - 1;
-        i = length - 1;
-        length = -1;
-    }
-    val = 0;
-    last_val = 0;
-    while (i != length)
-    {
-        pval = *p;
-        val2 = val ^ last_val;
-        last_val = val;
-        *p = pval ^ val2;
-        val = (val + pval + 2 - direction) & 0x1f;
-        i += direction;
-        p += direction;
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\KeyMenu2D.c lines 111–147 */
-/* addr: 0x002a0590  size: 308 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 111
- *   +0x0028 -> line 120
- *   +0x003c -> line 123
- *   +0x0050 -> line 129
- *   +0x0054 -> line 127
- *   +0x0058 -> line 123
- *   +0x005c -> line 128
- *   +0x0060 -> line 123
- *   +0x0068 -> line 129
- *   +0x0070 -> line 131
- *   +0x0074 -> line 133
- *   +0x0078 -> line 131
- *   +0x0080 -> line 132
- *   +0x0084 -> line 134
- *   +0x00b0 -> line 135
- *   +0x00c0 -> line 137
- *   +0x00c4 -> line 138
- *   +0x00c8 -> line 137
- *   +0x00cc -> line 138
- *   +0x00d0 -> line 139
- *   +0x0100 -> line 143
- *   +0x0110 -> line 146
- *   +0x0114 -> line 147
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int fn_iAppendKey(unsigned char* _LastKey, int _LastKeyLength, unsigned char* _NewValues, int _NewValuesLength)
-{
-    unsigned char OldKey[256];
-    int Val;
-    int NewLength;
-    int OffsetInInt;
-
-    memcpy(OldKey, _LastKey, _LastKeyLength);
-    NewLength = _LastKeyLength + ((_NewValuesLength + 4) / 5);
-    Val = 0;
-    OffsetInInt = 0;
-    while (_NewValuesLength >= 9)
-    {
-        Val |= (*_NewValues) << OffsetInInt;
-        OffsetInInt += 8;
-        _NewValues++;
-        _NewValuesLength -= 8;
-        while (OffsetInInt >= 5)
+        i = 0;
+        do
         {
-            *_LastKey = Val & 0x1F;
-            Val >>= 5;
-            OffsetInInt -= 5;
-            _LastKey++;
-        }
+            g_aSoundEvent[i] = SND_fn_pstGetBlockEventFromId(g_aSoundEventID[i]);
+            i++;
+        } while (i < 11);
+        g_uiInitialised = 1;
     }
-    Val |= (*_NewValues) << OffsetInInt;
-    OffsetInInt += _NewValuesLength + 4;
-    while (OffsetInInt >= 5)
+    if (uiPause == 1)
     {
-        *_LastKey = Val & 0x1F;
-        Val >>= 5;
-        OffsetInInt -= 5;
-        _LastKey++;
+        SND_fn_vPauseSound();
     }
-    memcpy(_LastKey, OldKey, _LastKeyLength);
-    return NewLength;
+    if (g_aSoundEvent[3] != 0) { u_RefEvt.pstPtr = g_aSoundEvent[3]; SND_fn_s32SendRequestSound(-1, -1, g_lSoundObjectTypeMenu, u_RefEvt, 0, 0); }
+    if (g_aSoundEvent[8] != 0) { u_RefEvt.pstPtr = g_aSoundEvent[8]; SND_fn_s32SendRequestSound(-1, -1, g_lSoundObjectTypeMenu, u_RefEvt, 0, 0); }
 }

@@ -10,27 +10,26 @@
 VID_tdstGeneral_ VID_g_stGeneralVideos;
 unsigned char g_ucVIDModuleId;
 
-void VID_fn_vPlayVideoNow(void)
-{
-    VID_g_stGeneralVideos.stNextVideoToPlay.bPlayAfterLevel = 0;
-    VIDSPE_fn_vPlayVideoNow(0, 1, -1);
-}
-
-void VID_fn_vPlayVideoIfAskedAfterLevel(void)
-{
-    if (VID_g_stGeneralVideos.stNextVideoToPlay.bPlayAfterLevel != 0)
-    {
-        VIDSPE_fn_vPlayVideoNow(0, 1, -1);
-        VID_g_stGeneralVideos.stNextVideoToPlay.bPlayAfterLevel = 0;
-    }
-}
-
-void VID_fn_vPlayVideoAfterLevel(void)
-{
-    VID_g_stGeneralVideos.stNextVideoToPlay.bPlayAfterLevel = 1;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void VID_fn_vPlayVideoNow(void);
+void VID_fn_vPlayVideoIfAskedAfterLevel(void);
+void VID_fn_vPlayVideoAfterLevel(void);
+void VID_fn_vNextVideoToPlay(char* p_szVideoName, unsigned char bCanBeInterrupt, unsigned char bLoop);
+void VID_fn_vSetVideoSoundVolume(unsigned int ulVideoSoundVolume);
+void VID_fn_vSetVideoQuality(unsigned char ucBPP, unsigned char ucVideoQuality);
 
 int strcasecmp(const char* s1, const char* s2);
+
+void VID_fn_vSetVideoQuality(unsigned char ucBPP, unsigned char ucVideoQuality)
+{
+    VIDSPE_fn_vSetVideoQuality();
+}
+
+void VID_fn_vSetVideoSoundVolume(unsigned int ulVideoSoundVolume)
+{
+    VIDSPE_fn_vSetVideoSoundVolume(ulVideoSoundVolume);
+}
 
 void VID_fn_vNextVideoToPlay(char* p_szVideoName, unsigned char bCanBeInterrupt, unsigned char bLoop)
 {
@@ -46,12 +45,22 @@ void VID_fn_vNextVideoToPlay(char* p_szVideoName, unsigned char bCanBeInterrupt,
     }
 }
 
-void VID_fn_vSetVideoSoundVolume(unsigned int ulVideoSoundVolume)
+void VID_fn_vPlayVideoAfterLevel(void)
 {
-    VIDSPE_fn_vSetVideoSoundVolume(ulVideoSoundVolume);
+    VID_g_stGeneralVideos.stNextVideoToPlay.bPlayAfterLevel = 1;
 }
 
-void VID_fn_vSetVideoQuality(unsigned char ucBPP, unsigned char ucVideoQuality)
+void VID_fn_vPlayVideoIfAskedAfterLevel(void)
 {
-    VIDSPE_fn_vSetVideoQuality();
+    if (VID_g_stGeneralVideos.stNextVideoToPlay.bPlayAfterLevel != 0)
+    {
+        VIDSPE_fn_vPlayVideoNow(0, 1, -1);
+        VID_g_stGeneralVideos.stNextVideoToPlay.bPlayAfterLevel = 0;
+    }
+}
+
+void VID_fn_vPlayVideoNow(void)
+{
+    VID_g_stGeneralVideos.stNextVideoToPlay.bPlayAfterLevel = 0;
+    VIDSPE_fn_vPlayVideoNow(0, 1, -1);
 }

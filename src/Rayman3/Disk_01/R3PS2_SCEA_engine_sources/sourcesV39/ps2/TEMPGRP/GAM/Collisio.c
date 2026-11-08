@@ -1518,15 +1518,13 @@ unsigned long long fn_ulTimerTickPerSecond(short wTimerType);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vFirstInitEngineClock(void)
-{
 
-    TMR_fn_wInitLibrary();
-
-
-    g_stEngineStructure.stEngineTimer.sTimerHandle = TMR_fn_wCreateTimer(1);
-    g_stEngineStructure.stEngineTimer.ulTickPerMS = fn_ulTimerTickPerSecond(1) / 1000;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void fn_vFirstInitEngineClock(void);
+void COL_fn_vStaticCollisionWithPartOfTreeForSector(HIE_tdstSuperObject_* _p_stEngineObj, HIE_tdstSuperObject_* _p_stSuperObj, COL_tdstCollideObject_* _p_stDynamicGeoColl, MAT_tdstTransformation_* _p_stStartMatrix, MAT_tdstTransformation_* _p_stEndMatrix);
+void COL_fn_vNewStaticCollisionForCharacter(HIE_tdstSuperObject_* _hCharacter, HIE_tdstSuperObject_* _hSector, MAT_tdstTransformation_* _p_stStartMatrix, MAT_tdstTransformation_* _p_stEndMatrix);
+void fn_vNewTestStaticCollideFor2Characters(HIE_tdstSuperObject_* hCharacter, COL_tdstCollideObject_* _hDynamicZdm, HIE_tdstSuperObject_* hStaticCharacter, MAT_tdstTransformation_* p_stStartMatrix, MAT_tdstTransformation_* p_stEndMatrix);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Collisio.c lines 607–702 */
 /* addr: 0x0025e6f0  size: 424 bytes */
@@ -1556,16 +1554,6 @@ void fn_vFirstInitEngineClock(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void COL_fn_vStaticCollisionWithPartOfTreeForSector(HIE_tdstSuperObject_* _p_stEngineObj, HIE_tdstSuperObject_* _p_stSuperObj, COL_tdstCollideObject_* _p_stDynamicGeoColl, MAT_tdstTransformation_* _p_stStartMatrix, MAT_tdstTransformation_* _p_stEndMatrix)
-{
-    void* hBoundingVolumeStatic;
-    COL_tdstBoundingSphere_* hBoundingVolumeCharacter;
-    tdstPhysicalCollSet_* hPhyCollSet;
-    PO_tdstPhysicalObject_* hPhysicalObject;
-    COL_tdstCollideObject_* p_stStaticGeoColl;
-    HIE_tdstSuperObject_* pChild;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Collisio.c lines 461–595 */
 /* addr: 0x0025e8a0  size: 860 bytes */
@@ -1634,19 +1622,6 @@ void COL_fn_vStaticCollisionWithPartOfTreeForSector(HIE_tdstSuperObject_* _p_stE
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void COL_fn_vNewStaticCollisionForCharacter(HIE_tdstSuperObject_* _hCharacter, HIE_tdstSuperObject_* _hSector, MAT_tdstTransformation_* _p_stStartMatrix, MAT_tdstTransformation_* _p_stEndMatrix)
-{
-    int i;
-    float xBackupSphereRadius;
-    COL_tdstParallelBox_ stBackupParallelBox;
-    COL_tdstBoundingSphere_* hBoundingSphereStatic;
-    COL_tdstParallelBox_* hParallelBoxStatic;
-    COL_tdstCollideObject_* hDynamicZDM;
-    SECT_tdstListOfSOSectorsInCollisionInteraction_* hCollisionList;
-    SECT_tdstListOfSOCharacters_* hCharacterList;
-    tdstCollSet_* hCollSet;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Collisio.c lines 253–451 */
 /* addr: 0x0025ec00  size: 828 bytes */
@@ -1690,6 +1665,7 @@ void COL_fn_vNewStaticCollisionForCharacter(HIE_tdstSuperObject_* _hCharacter, H
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
 void fn_vNewTestStaticCollideFor2Characters(HIE_tdstSuperObject_* hCharacter, COL_tdstCollideObject_* _hDynamicZdm, HIE_tdstSuperObject_* hStaticCharacter, MAT_tdstTransformation_* p_stStartMatrix, MAT_tdstTransformation_* p_stEndMatrix)
 {
     COL_tdstCollideObject_* hStaticZdr;
@@ -1700,4 +1676,38 @@ void fn_vNewTestStaticCollideFor2Characters(HIE_tdstSuperObject_* hCharacter, CO
     COL_tdstBoundingSphere_* hBoundingVolumeStaticCharacter;
     COL_tdstBoundingSphere_* hBoundingVolumeCharacter;
     /* TODO: decompile from asm/... */
+}
+
+void COL_fn_vNewStaticCollisionForCharacter(HIE_tdstSuperObject_* _hCharacter, HIE_tdstSuperObject_* _hSector, MAT_tdstTransformation_* _p_stStartMatrix, MAT_tdstTransformation_* _p_stEndMatrix)
+{
+    int i;
+    float xBackupSphereRadius;
+    COL_tdstParallelBox_ stBackupParallelBox;
+    COL_tdstBoundingSphere_* hBoundingSphereStatic;
+    COL_tdstParallelBox_* hParallelBoxStatic;
+    COL_tdstCollideObject_* hDynamicZDM;
+    SECT_tdstListOfSOSectorsInCollisionInteraction_* hCollisionList;
+    SECT_tdstListOfSOCharacters_* hCharacterList;
+    tdstCollSet_* hCollSet;
+    /* TODO: decompile from asm/... */
+}
+
+void COL_fn_vStaticCollisionWithPartOfTreeForSector(HIE_tdstSuperObject_* _p_stEngineObj, HIE_tdstSuperObject_* _p_stSuperObj, COL_tdstCollideObject_* _p_stDynamicGeoColl, MAT_tdstTransformation_* _p_stStartMatrix, MAT_tdstTransformation_* _p_stEndMatrix)
+{
+    void* hBoundingVolumeStatic;
+    COL_tdstBoundingSphere_* hBoundingVolumeCharacter;
+    tdstPhysicalCollSet_* hPhyCollSet;
+    PO_tdstPhysicalObject_* hPhysicalObject;
+    COL_tdstCollideObject_* p_stStaticGeoColl;
+    HIE_tdstSuperObject_* pChild;
+    /* TODO: decompile from asm/... */
+}
+
+void fn_vFirstInitEngineClock(void)
+{
+
+    TMR_fn_wInitLibrary();
+
+    g_stEngineStructure.stEngineTimer.sTimerHandle = TMR_fn_wCreateTimer(1);
+    g_stEngineStructure.stEngineTimer.ulTickPerMS = fn_ulTimerTickPerSecond(1) / 1000;
 }

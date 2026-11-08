@@ -425,941 +425,149 @@ struct tagPS2glApiTable {
 tagPS2glApiTable g_PS2glApiTableImp;
 tagPS2glApiTable* g_pPS2glApiTable;
 
-asm void PS2glColorTableEXT(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glColorTableEXT(v0)
-    jr v1; nop
-}
-
-asm void PS2glMultiColor4usvARB(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor4usvARB(v0)
-    jr v1; nop
-}
-
-asm void PS2glMultiColor4uivARB(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor4uivARB(v0)
-    jr v1; nop
-}
-
-asm void PS2glMultiColor4ubvARB(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor4ubvARB(v0)
-    jr v1; nop
-}
-
-asm void PS2glMultiColor4svARB(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor4svARB(v0)
-    jr v1; nop
-}
-
-asm void PS2glMultiColor4ivARB(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor4ivARB(v0)
-    jr v1; nop
-}
-
-asm void PS2glMultiColor4fvARB(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor4fvARB(v0)
-    jr v1; nop
-}
-
-asm void PS2glMultiColor4dvARB(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor4dvARB(v0)
-    jr v1; nop
-}
-
-asm void PS2glMultiColor4bvARB(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor4bvARB(v0)
-    jr v1; nop
-}
-
-asm void PS2glMultiColor3usvARB(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor3usvARB(v0)
-    jr v1; nop
-}
-
-asm void PS2glMultiColor3uivARB(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor3uivARB(v0)
-    jr v1; nop
-}
-
-asm void PS2glMultiColor3ubvARB(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor3ubvARB(v0)
-    jr v1; nop
-}
-
-asm void PS2glMultiColor3svARB(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor3svARB(v0)
-    jr v1; nop
-}
-
-asm void PS2glMultiColor3ivARB(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor3ivARB(v0)
-    jr v1; nop
-}
-
-asm void PS2glMultiColor3fvARB(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor3fvARB(v0)
-    jr v1; nop
-}
-
-asm void PS2glMultiColor3dvARB(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor3dvARB(v0)
-    jr v1; nop
-}
-
-asm void PS2glMultiColor3bvARB(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor3bvARB(v0)
-    jr v1; nop
-}
-
-asm void PS2glMultiTexCoord4svARB(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord4svARB(v0)
-    jr v1; nop
-}
-
-asm void PS2glMultiTexCoord4ivARB(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord4ivARB(v0)
-    jr v1; nop
-}
-
-asm void PS2glMultiTexCoord4fvARB(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord4fvARB(v0)
-    jr v1; nop
-}
-
-asm void PS2glMultiTexCoord4dvARB(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord4dvARB(v0)
-    jr v1; nop
-}
-
-asm void PS2glMultiTexCoord3svARB(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord3svARB(v0)
-    jr v1; nop
-}
-
-asm void PS2glMultiTexCoord3ivARB(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord3ivARB(v0)
-    jr v1; nop
-}
-
-asm void PS2glMultiTexCoord3fvARB(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord3fvARB(v0)
-    jr v1; nop
-}
-
-asm void PS2glMultiTexCoord3dvARB(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord3dvARB(v0)
-    jr v1; nop
-}
-
-asm void PS2glMultiTexCoord2svARB(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord2svARB(v0)
-    jr v1; nop
-}
-
-asm void PS2glMultiTexCoord2ivARB(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord2ivARB(v0)
-    jr v1; nop
-}
-
-asm void PS2glMultiTexCoord2fvARB(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord2fvARB(v0)
-    jr v1; nop
-}
-
-asm void PS2glMultiTexCoord2dvARB(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord2dvARB(v0)
-    jr v1; nop
-}
-
-asm void PS2glActiveTextureARB(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glActiveTextureARB(v0)
-    jr v1; nop
-}
-
-asm void PS2glSetGsRegister(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glSetGsRegister(v0)
-    jr v1; nop
-}
-
-asm void PS2glViewport(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glViewport(v0)
-    jr v1; nop
-}
-
-asm void PS2glVertexPointer(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glVertexPointer(v0)
-    jr v1; nop
-}
-
-asm void PS2glVertex4sv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glVertex4sv(v0)
-    jr v1; nop
-}
-
-asm void PS2glVertex4iv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glVertex4iv(v0)
-    jr v1; nop
-}
-
-asm void PS2glVertex4fv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glVertex4fv(v0)
-    jr v1; nop
-}
-
-asm void PS2glVertex4f(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glVertex4f(v0)
-    jr v1; nop
-}
-
-asm void PS2glVertex4dv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glVertex4dv(v0)
-    jr v1; nop
-}
-
-asm void PS2glVertex3sv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glVertex3sv(v0)
-    jr v1; nop
-}
-
-asm void PS2glVertex3iv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glVertex3iv(v0)
-    jr v1; nop
-}
-
-asm void PS2glVertex3fv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glVertex3fv(v0)
-    jr v1; nop
-}
-
-asm void PS2glVertex3f(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glVertex3f(v0)
-    jr v1; nop
-}
-
-asm void PS2glVertex3dv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glVertex3dv(v0)
-    jr v1; nop
-}
-
-asm void PS2glVertex3d(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glVertex3d(v0)
-    jr v1; nop
-}
-
-asm void PS2glVertex2sv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glVertex2sv(v0)
-    jr v1; nop
-}
-
-asm void PS2glVertex2iv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glVertex2iv(v0)
-    jr v1; nop
-}
-
-asm void PS2glVertex2fv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glVertex2fv(v0)
-    jr v1; nop
-}
-
-asm void PS2glVertex2f(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glVertex2f(v0)
-    jr v1; nop
-}
-
-asm void PS2glVertex2dv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glVertex2dv(v0)
-    jr v1; nop
-}
-
-asm void PS2glTranslatef(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glTranslatef(v0)
-    jr v1; nop
-}
-
-asm void PS2glTexParameteri(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glTexParameteri(v0)
-    jr v1; nop
-}
-
-asm void PS2glTexImage2D(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glTexImage2D(v0)
-    jr v1; nop
-}
-
-asm void PS2glTexEnvf(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glTexEnvf(v0)
-    jr v1; nop
-}
-
-asm void PS2glTexCoordPointer(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glTexCoordPointer(v0)
-    jr v1; nop
-}
-
-asm void PS2glTexCoord4sv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord4sv(v0)
-    jr v1; nop
-}
-
-asm void PS2glTexCoord4iv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord4iv(v0)
-    jr v1; nop
-}
-
-asm void PS2glTexCoord4fv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord4fv(v0)
-    jr v1; nop
-}
-
-asm void PS2glTexCoord4dv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord4dv(v0)
-    jr v1; nop
-}
-
-asm void PS2glTexCoord3sv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord3sv(v0)
-    jr v1; nop
-}
-
-asm void PS2glTexCoord3iv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord3iv(v0)
-    jr v1; nop
-}
-
-asm void PS2glTexCoord3fv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord3fv(v0)
-    jr v1; nop
-}
-
-asm void PS2glTexCoord3dv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord3dv(v0)
-    jr v1; nop
-}
-
-asm void PS2glTexCoord2sv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord2sv(v0)
-    jr v1; nop
-}
-
-asm void PS2glTexCoord2iv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord2iv(v0)
-    jr v1; nop
-}
-
-asm void PS2glTexCoord2fv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord2fv(v0)
-    jr v1; nop
-}
-
-asm void PS2glTexCoord2f(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord2f(v0)
-    jr v1; nop
-}
-
-asm void PS2glTexCoord2dv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord2dv(v0)
-    jr v1; nop
-}
-
-asm void PS2glScissor(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glScissor(v0)
-    jr v1; nop
-}
-
-asm void PS2glOrtho(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glOrtho(v0)
-    jr v1; nop
-}
-
-asm void PS2glNormalPointer(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glNormalPointer(v0)
-    jr v1; nop
-}
-
-asm void PS2glNormal3sv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glNormal3sv(v0)
-    jr v1; nop
-}
-
-asm void PS2glNormal3iv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glNormal3iv(v0)
-    jr v1; nop
-}
-
-asm void PS2glNormal3fv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glNormal3fv(v0)
-    jr v1; nop
-}
-
-asm void PS2glNormal3dv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glNormal3dv(v0)
-    jr v1; nop
-}
-
-asm void PS2glNewList(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glNewList(v0)
-    jr v1; nop
-}
-
-asm void PS2glMatrixMode(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glMatrixMode(v0)
-    jr v1; nop
-}
-
-asm void PS2glMateriali(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glMateriali(v0)
-    jr v1; nop
-}
-
-asm void PS2glMaterialfv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glMaterialfv(v0)
-    jr v1; nop
-}
-
-asm void PS2glLoadMatrixf(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glLoadMatrixf(v0)
-    jr v1; nop
-}
-
-asm void PS2glLoadIdentity(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glLoadIdentity(v0)
-    jr v1; nop
-}
-
-asm void PS2glLighti(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glLighti(v0)
-    jr v1; nop
-}
-
-asm void PS2glLightfv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glLightfv(v0)
-    jr v1; nop
-}
-
-asm void PS2glLightModeli(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glLightModeli(v0)
-    jr v1; nop
-}
-
-asm void PS2glLightModelfv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glLightModelfv(v0)
-    jr v1; nop
-}
-
-asm unsigned char PS2glIsEnabled(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glIsEnabled(v0)
-    jr v1; nop
-}
-
-asm void PS2glHint(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glHint(v0)
-    jr v1; nop
-}
-
-asm void PS2glGetIntegerv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glGetIntegerv(v0)
-    jr v1; nop
-}
-
-asm void PS2glGetFloatv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glGetFloatv(v0)
-    jr v1; nop
-}
-
-asm void PS2glGenTextures(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glGenTextures(v0)
-    jr v1; nop
-}
-
-asm unsigned int PS2glGenLists(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glGenLists(v0)
-    jr v1; nop
-}
-
-asm void PS2glFogiv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glFogiv(v0)
-    jr v1; nop
-}
-
-asm void PS2glFogi(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glFogi(v0)
-    jr v1; nop
-}
-
-asm void PS2glFogfv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glFogfv(v0)
-    jr v1; nop
-}
-
-asm void PS2glFogf(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glFogf(v0)
-    jr v1; nop
-}
-
-asm void PS2glFlush(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glFlush(v0)
-    jr v1; nop
-}
-
-asm void PS2glFinish(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glFinish(v0)
-    jr v1; nop
-}
-
-asm void PS2glEndList(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glEndList(v0)
-    jr v1; nop
-}
-
-asm void PS2glEnd(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glEnd(v0)
-    jr v1; nop
-}
-
-asm void PS2glEnableClientState(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glEnableClientState(v0)
-    jr v1; nop
-}
-
-asm void PS2glEnable(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glEnable(v0)
-    jr v1; nop
-}
-
-asm void PS2glDrawArrays(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glDrawArrays(v0)
-    jr v1; nop
-}
-
-asm void PS2glDisableClientState(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glDisableClientState(v0)
-    jr v1; nop
-}
-
-asm void PS2glDisable(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glDisable(v0)
-    jr v1; nop
-}
-
-asm void PS2glDepthRange(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glDepthRange(v0)
-    jr v1; nop
-}
-
-asm void PS2glDepthMask(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glDepthMask(v0)
-    jr v1; nop
-}
-
-asm void PS2glDepthFunc(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glDepthFunc(v0)
-    jr v1; nop
-}
-
-asm void PS2glDeleteTextures(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glDeleteTextures(v0)
-    jr v1; nop
-}
-
-asm void PS2glDeleteLists(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glDeleteLists(v0)
-    jr v1; nop
-}
-
-asm void PS2glCullFace(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glCullFace(v0)
-    jr v1; nop
-}
-
-asm void PS2glColorPointer(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glColorPointer(v0)
-    jr v1; nop
-}
-
-asm void PS2glColorMask(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glColorMask(v0)
-    jr v1; nop
-}
-
-asm void PS2glColor4usv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glColor4usv(v0)
-    jr v1; nop
-}
-
-asm void PS2glColor4uiv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glColor4uiv(v0)
-    jr v1; nop
-}
-
-asm void PS2glColor4ubv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glColor4ubv(v0)
-    jr v1; nop
-}
-
-asm void PS2glColor4sv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glColor4sv(v0)
-    jr v1; nop
-}
-
-asm void PS2glColor4iv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glColor4iv(v0)
-    jr v1; nop
-}
-
-asm void PS2glColor4fv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glColor4fv(v0)
-    jr v1; nop
-}
-
-asm void PS2glColor4f(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glColor4f(v0)
-    jr v1; nop
-}
-
-asm void PS2glColor4dv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glColor4dv(v0)
-    jr v1; nop
-}
-
-asm void PS2glColor4bv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glColor4bv(v0)
-    jr v1; nop
-}
-
-asm void PS2glColor3usv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glColor3usv(v0)
-    jr v1; nop
-}
-
-asm void PS2glColor3uiv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glColor3uiv(v0)
-    jr v1; nop
-}
-
-asm void PS2glColor3ubv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glColor3ubv(v0)
-    jr v1; nop
-}
-
-asm void PS2glColor3sv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glColor3sv(v0)
-    jr v1; nop
-}
-
-asm void PS2glColor3iv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glColor3iv(v0)
-    jr v1; nop
-}
-
-asm void PS2glColor3fv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glColor3fv(v0)
-    jr v1; nop
-}
-
-asm void PS2glColor3f(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glColor3f(v0)
-    jr v1; nop
-}
-
-asm void PS2glColor3dv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glColor3dv(v0)
-    jr v1; nop
-}
-
-asm void PS2glColor3bv(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glColor3bv(v0)
-    jr v1; nop
-}
-
-asm void PS2glClearColor(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glClearColor(v0)
-    jr v1; nop
-}
-
-asm void PS2glClear(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glClear(v0)
-    jr v1; nop
-}
-
-asm void PS2glBlendFunc(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glBlendFunc(v0)
-    jr v1; nop
-}
-
-asm void PS2glBindTexture(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glBindTexture(v0)
-    jr v1; nop
-}
-
-asm void PS2glBegin(void)
-{
-    lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glBegin(v0)
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+asm void PS2glColorTableEXT(void);
+asm void PS2glMultiColor4usvARB(void);
+asm void PS2glMultiColor4uivARB(void);
+asm void PS2glMultiColor4ubvARB(void);
+asm void PS2glMultiColor4svARB(void);
+asm void PS2glMultiColor4ivARB(void);
+asm void PS2glMultiColor4fvARB(void);
+asm void PS2glMultiColor4dvARB(void);
+asm void PS2glMultiColor4bvARB(void);
+asm void PS2glMultiColor3usvARB(void);
+asm void PS2glMultiColor3uivARB(void);
+asm void PS2glMultiColor3ubvARB(void);
+asm void PS2glMultiColor3svARB(void);
+asm void PS2glMultiColor3ivARB(void);
+asm void PS2glMultiColor3fvARB(void);
+asm void PS2glMultiColor3dvARB(void);
+asm void PS2glMultiColor3bvARB(void);
+asm void PS2glMultiTexCoord4svARB(void);
+asm void PS2glMultiTexCoord4ivARB(void);
+asm void PS2glMultiTexCoord4fvARB(void);
+asm void PS2glMultiTexCoord4dvARB(void);
+asm void PS2glMultiTexCoord3svARB(void);
+asm void PS2glMultiTexCoord3ivARB(void);
+asm void PS2glMultiTexCoord3fvARB(void);
+asm void PS2glMultiTexCoord3dvARB(void);
+asm void PS2glMultiTexCoord2svARB(void);
+asm void PS2glMultiTexCoord2ivARB(void);
+asm void PS2glMultiTexCoord2fvARB(void);
+asm void PS2glMultiTexCoord2dvARB(void);
+asm void PS2glActiveTextureARB(void);
+asm void PS2glSetGsRegister(void);
+asm void PS2glViewport(void);
+asm void PS2glVertexPointer(void);
+asm void PS2glVertex4sv(void);
+asm void PS2glVertex4iv(void);
+asm void PS2glVertex4fv(void);
+asm void PS2glVertex4f(void);
+asm void PS2glVertex4dv(void);
+asm void PS2glVertex3sv(void);
+asm void PS2glVertex3iv(void);
+asm void PS2glVertex3fv(void);
+asm void PS2glVertex3f(void);
+asm void PS2glVertex3dv(void);
+asm void PS2glVertex3d(void);
+asm void PS2glVertex2sv(void);
+asm void PS2glVertex2iv(void);
+asm void PS2glVertex2fv(void);
+asm void PS2glVertex2f(void);
+asm void PS2glVertex2dv(void);
+asm void PS2glTranslatef(void);
+asm void PS2glTexParameteri(void);
+asm void PS2glTexImage2D(void);
+asm void PS2glTexEnvf(void);
+asm void PS2glTexCoordPointer(void);
+asm void PS2glTexCoord4sv(void);
+asm void PS2glTexCoord4iv(void);
+asm void PS2glTexCoord4fv(void);
+asm void PS2glTexCoord4dv(void);
+asm void PS2glTexCoord3sv(void);
+asm void PS2glTexCoord3iv(void);
+asm void PS2glTexCoord3fv(void);
+asm void PS2glTexCoord3dv(void);
+asm void PS2glTexCoord2sv(void);
+asm void PS2glTexCoord2iv(void);
+asm void PS2glTexCoord2fv(void);
+asm void PS2glTexCoord2f(void);
+asm void PS2glTexCoord2dv(void);
+asm void PS2glScissor(void);
+asm void PS2glOrtho(void);
+asm void PS2glNormalPointer(void);
+asm void PS2glNormal3sv(void);
+asm void PS2glNormal3iv(void);
+asm void PS2glNormal3fv(void);
+asm void PS2glNormal3dv(void);
+asm void PS2glNewList(void);
+asm void PS2glMatrixMode(void);
+asm void PS2glMateriali(void);
+asm void PS2glMaterialfv(void);
+asm void PS2glLoadMatrixf(void);
+asm void PS2glLoadIdentity(void);
+asm void PS2glLighti(void);
+asm void PS2glLightfv(void);
+asm void PS2glLightModeli(void);
+asm void PS2glLightModelfv(void);
+asm unsigned char PS2glIsEnabled(void);
+asm void PS2glHint(void);
+asm void PS2glGetIntegerv(void);
+asm void PS2glGetFloatv(void);
+asm void PS2glGenTextures(void);
+asm unsigned int PS2glGenLists(void);
+asm void PS2glFogiv(void);
+asm void PS2glFogi(void);
+asm void PS2glFogfv(void);
+asm void PS2glFogf(void);
+asm void PS2glFlush(void);
+asm void PS2glFinish(void);
+asm void PS2glEndList(void);
+asm void PS2glEnd(void);
+asm void PS2glEnableClientState(void);
+asm void PS2glEnable(void);
+asm void PS2glDrawArrays(void);
+asm void PS2glDisableClientState(void);
+asm void PS2glDisable(void);
+asm void PS2glDepthRange(void);
+asm void PS2glDepthMask(void);
+asm void PS2glDepthFunc(void);
+asm void PS2glDeleteTextures(void);
+asm void PS2glDeleteLists(void);
+asm void PS2glCullFace(void);
+asm void PS2glColorPointer(void);
+asm void PS2glColorMask(void);
+asm void PS2glColor4usv(void);
+asm void PS2glColor4uiv(void);
+asm void PS2glColor4ubv(void);
+asm void PS2glColor4sv(void);
+asm void PS2glColor4iv(void);
+asm void PS2glColor4fv(void);
+asm void PS2glColor4f(void);
+asm void PS2glColor4dv(void);
+asm void PS2glColor4bv(void);
+asm void PS2glColor3usv(void);
+asm void PS2glColor3uiv(void);
+asm void PS2glColor3ubv(void);
+asm void PS2glColor3sv(void);
+asm void PS2glColor3iv(void);
+asm void PS2glColor3fv(void);
+asm void PS2glColor3f(void);
+asm void PS2glColor3dv(void);
+asm void PS2glColor3bv(void);
+asm void PS2glClearColor(void);
+asm void PS2glClear(void);
+asm void PS2glBlendFunc(void);
+asm void PS2glBindTexture(void);
+asm void PS2glBegin(void);
+asm void PS2glArrayElement(void);
+asm void PS2glAlphaFunc(void);
+
+asm void PS2glAlphaFunc(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glAlphaFunc(v0)
     jr v1; nop
 }
 
@@ -1370,9 +578,940 @@ asm void PS2glArrayElement(void)
     jr v1; nop
 }
 
-asm void PS2glAlphaFunc(void)
+asm void PS2glBegin(void)
 {
     lw v0, g_pPS2glApiTable
-    lw v1, tagPS2glApiTable.pfn_PS2glAlphaFunc(v0)
+    lw v1, tagPS2glApiTable.pfn_PS2glBegin(v0)
+    jr v1; nop
+}
+
+asm void PS2glBindTexture(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glBindTexture(v0)
+    jr v1; nop
+}
+
+asm void PS2glBlendFunc(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glBlendFunc(v0)
+    jr v1; nop
+}
+
+asm void PS2glClear(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glClear(v0)
+    jr v1; nop
+}
+
+asm void PS2glClearColor(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glClearColor(v0)
+    jr v1; nop
+}
+
+asm void PS2glColor3bv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor3bv(v0)
+    jr v1; nop
+}
+
+asm void PS2glColor3dv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor3dv(v0)
+    jr v1; nop
+}
+
+asm void PS2glColor3f(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor3f(v0)
+    jr v1; nop
+}
+
+asm void PS2glColor3fv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor3fv(v0)
+    jr v1; nop
+}
+
+asm void PS2glColor3iv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor3iv(v0)
+    jr v1; nop
+}
+
+asm void PS2glColor3sv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor3sv(v0)
+    jr v1; nop
+}
+
+asm void PS2glColor3ubv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor3ubv(v0)
+    jr v1; nop
+}
+
+asm void PS2glColor3uiv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor3uiv(v0)
+    jr v1; nop
+}
+
+asm void PS2glColor3usv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor3usv(v0)
+    jr v1; nop
+}
+
+asm void PS2glColor4bv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor4bv(v0)
+    jr v1; nop
+}
+
+asm void PS2glColor4dv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor4dv(v0)
+    jr v1; nop
+}
+
+asm void PS2glColor4f(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor4f(v0)
+    jr v1; nop
+}
+
+asm void PS2glColor4fv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor4fv(v0)
+    jr v1; nop
+}
+
+asm void PS2glColor4iv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor4iv(v0)
+    jr v1; nop
+}
+
+asm void PS2glColor4sv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor4sv(v0)
+    jr v1; nop
+}
+
+asm void PS2glColor4ubv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor4ubv(v0)
+    jr v1; nop
+}
+
+asm void PS2glColor4uiv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor4uiv(v0)
+    jr v1; nop
+}
+
+asm void PS2glColor4usv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor4usv(v0)
+    jr v1; nop
+}
+
+asm void PS2glColorMask(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColorMask(v0)
+    jr v1; nop
+}
+
+asm void PS2glColorPointer(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColorPointer(v0)
+    jr v1; nop
+}
+
+asm void PS2glCullFace(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glCullFace(v0)
+    jr v1; nop
+}
+
+asm void PS2glDeleteLists(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glDeleteLists(v0)
+    jr v1; nop
+}
+
+asm void PS2glDeleteTextures(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glDeleteTextures(v0)
+    jr v1; nop
+}
+
+asm void PS2glDepthFunc(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glDepthFunc(v0)
+    jr v1; nop
+}
+
+asm void PS2glDepthMask(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glDepthMask(v0)
+    jr v1; nop
+}
+
+asm void PS2glDepthRange(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glDepthRange(v0)
+    jr v1; nop
+}
+
+asm void PS2glDisable(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glDisable(v0)
+    jr v1; nop
+}
+
+asm void PS2glDisableClientState(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glDisableClientState(v0)
+    jr v1; nop
+}
+
+asm void PS2glDrawArrays(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glDrawArrays(v0)
+    jr v1; nop
+}
+
+asm void PS2glEnable(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glEnable(v0)
+    jr v1; nop
+}
+
+asm void PS2glEnableClientState(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glEnableClientState(v0)
+    jr v1; nop
+}
+
+asm void PS2glEnd(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glEnd(v0)
+    jr v1; nop
+}
+
+asm void PS2glEndList(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glEndList(v0)
+    jr v1; nop
+}
+
+asm void PS2glFinish(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glFinish(v0)
+    jr v1; nop
+}
+
+asm void PS2glFlush(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glFlush(v0)
+    jr v1; nop
+}
+
+asm void PS2glFogf(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glFogf(v0)
+    jr v1; nop
+}
+
+asm void PS2glFogfv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glFogfv(v0)
+    jr v1; nop
+}
+
+asm void PS2glFogi(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glFogi(v0)
+    jr v1; nop
+}
+
+asm void PS2glFogiv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glFogiv(v0)
+    jr v1; nop
+}
+
+asm unsigned int PS2glGenLists(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glGenLists(v0)
+    jr v1; nop
+}
+
+asm void PS2glGenTextures(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glGenTextures(v0)
+    jr v1; nop
+}
+
+asm void PS2glGetFloatv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glGetFloatv(v0)
+    jr v1; nop
+}
+
+asm void PS2glGetIntegerv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glGetIntegerv(v0)
+    jr v1; nop
+}
+
+asm void PS2glHint(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glHint(v0)
+    jr v1; nop
+}
+
+asm unsigned char PS2glIsEnabled(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glIsEnabled(v0)
+    jr v1; nop
+}
+
+asm void PS2glLightModelfv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glLightModelfv(v0)
+    jr v1; nop
+}
+
+asm void PS2glLightModeli(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glLightModeli(v0)
+    jr v1; nop
+}
+
+asm void PS2glLightfv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glLightfv(v0)
+    jr v1; nop
+}
+
+asm void PS2glLighti(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glLighti(v0)
+    jr v1; nop
+}
+
+asm void PS2glLoadIdentity(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glLoadIdentity(v0)
+    jr v1; nop
+}
+
+asm void PS2glLoadMatrixf(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glLoadMatrixf(v0)
+    jr v1; nop
+}
+
+asm void PS2glMaterialfv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMaterialfv(v0)
+    jr v1; nop
+}
+
+asm void PS2glMateriali(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMateriali(v0)
+    jr v1; nop
+}
+
+asm void PS2glMatrixMode(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMatrixMode(v0)
+    jr v1; nop
+}
+
+asm void PS2glNewList(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glNewList(v0)
+    jr v1; nop
+}
+
+asm void PS2glNormal3dv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glNormal3dv(v0)
+    jr v1; nop
+}
+
+asm void PS2glNormal3fv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glNormal3fv(v0)
+    jr v1; nop
+}
+
+asm void PS2glNormal3iv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glNormal3iv(v0)
+    jr v1; nop
+}
+
+asm void PS2glNormal3sv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glNormal3sv(v0)
+    jr v1; nop
+}
+
+asm void PS2glNormalPointer(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glNormalPointer(v0)
+    jr v1; nop
+}
+
+asm void PS2glOrtho(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glOrtho(v0)
+    jr v1; nop
+}
+
+asm void PS2glScissor(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glScissor(v0)
+    jr v1; nop
+}
+
+asm void PS2glTexCoord2dv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord2dv(v0)
+    jr v1; nop
+}
+
+asm void PS2glTexCoord2f(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord2f(v0)
+    jr v1; nop
+}
+
+asm void PS2glTexCoord2fv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord2fv(v0)
+    jr v1; nop
+}
+
+asm void PS2glTexCoord2iv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord2iv(v0)
+    jr v1; nop
+}
+
+asm void PS2glTexCoord2sv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord2sv(v0)
+    jr v1; nop
+}
+
+asm void PS2glTexCoord3dv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord3dv(v0)
+    jr v1; nop
+}
+
+asm void PS2glTexCoord3fv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord3fv(v0)
+    jr v1; nop
+}
+
+asm void PS2glTexCoord3iv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord3iv(v0)
+    jr v1; nop
+}
+
+asm void PS2glTexCoord3sv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord3sv(v0)
+    jr v1; nop
+}
+
+asm void PS2glTexCoord4dv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord4dv(v0)
+    jr v1; nop
+}
+
+asm void PS2glTexCoord4fv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord4fv(v0)
+    jr v1; nop
+}
+
+asm void PS2glTexCoord4iv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord4iv(v0)
+    jr v1; nop
+}
+
+asm void PS2glTexCoord4sv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord4sv(v0)
+    jr v1; nop
+}
+
+asm void PS2glTexCoordPointer(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTexCoordPointer(v0)
+    jr v1; nop
+}
+
+asm void PS2glTexEnvf(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTexEnvf(v0)
+    jr v1; nop
+}
+
+asm void PS2glTexImage2D(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTexImage2D(v0)
+    jr v1; nop
+}
+
+asm void PS2glTexParameteri(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTexParameteri(v0)
+    jr v1; nop
+}
+
+asm void PS2glTranslatef(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTranslatef(v0)
+    jr v1; nop
+}
+
+asm void PS2glVertex2dv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glVertex2dv(v0)
+    jr v1; nop
+}
+
+asm void PS2glVertex2f(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glVertex2f(v0)
+    jr v1; nop
+}
+
+asm void PS2glVertex2fv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glVertex2fv(v0)
+    jr v1; nop
+}
+
+asm void PS2glVertex2iv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glVertex2iv(v0)
+    jr v1; nop
+}
+
+asm void PS2glVertex2sv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glVertex2sv(v0)
+    jr v1; nop
+}
+
+asm void PS2glVertex3d(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glVertex3d(v0)
+    jr v1; nop
+}
+
+asm void PS2glVertex3dv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glVertex3dv(v0)
+    jr v1; nop
+}
+
+asm void PS2glVertex3f(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glVertex3f(v0)
+    jr v1; nop
+}
+
+asm void PS2glVertex3fv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glVertex3fv(v0)
+    jr v1; nop
+}
+
+asm void PS2glVertex3iv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glVertex3iv(v0)
+    jr v1; nop
+}
+
+asm void PS2glVertex3sv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glVertex3sv(v0)
+    jr v1; nop
+}
+
+asm void PS2glVertex4dv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glVertex4dv(v0)
+    jr v1; nop
+}
+
+asm void PS2glVertex4f(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glVertex4f(v0)
+    jr v1; nop
+}
+
+asm void PS2glVertex4fv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glVertex4fv(v0)
+    jr v1; nop
+}
+
+asm void PS2glVertex4iv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glVertex4iv(v0)
+    jr v1; nop
+}
+
+asm void PS2glVertex4sv(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glVertex4sv(v0)
+    jr v1; nop
+}
+
+asm void PS2glVertexPointer(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glVertexPointer(v0)
+    jr v1; nop
+}
+
+asm void PS2glViewport(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glViewport(v0)
+    jr v1; nop
+}
+
+asm void PS2glSetGsRegister(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glSetGsRegister(v0)
+    jr v1; nop
+}
+
+asm void PS2glActiveTextureARB(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glActiveTextureARB(v0)
+    jr v1; nop
+}
+
+asm void PS2glMultiTexCoord2dvARB(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord2dvARB(v0)
+    jr v1; nop
+}
+
+asm void PS2glMultiTexCoord2fvARB(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord2fvARB(v0)
+    jr v1; nop
+}
+
+asm void PS2glMultiTexCoord2ivARB(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord2ivARB(v0)
+    jr v1; nop
+}
+
+asm void PS2glMultiTexCoord2svARB(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord2svARB(v0)
+    jr v1; nop
+}
+
+asm void PS2glMultiTexCoord3dvARB(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord3dvARB(v0)
+    jr v1; nop
+}
+
+asm void PS2glMultiTexCoord3fvARB(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord3fvARB(v0)
+    jr v1; nop
+}
+
+asm void PS2glMultiTexCoord3ivARB(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord3ivARB(v0)
+    jr v1; nop
+}
+
+asm void PS2glMultiTexCoord3svARB(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord3svARB(v0)
+    jr v1; nop
+}
+
+asm void PS2glMultiTexCoord4dvARB(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord4dvARB(v0)
+    jr v1; nop
+}
+
+asm void PS2glMultiTexCoord4fvARB(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord4fvARB(v0)
+    jr v1; nop
+}
+
+asm void PS2glMultiTexCoord4ivARB(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord4ivARB(v0)
+    jr v1; nop
+}
+
+asm void PS2glMultiTexCoord4svARB(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord4svARB(v0)
+    jr v1; nop
+}
+
+asm void PS2glMultiColor3bvARB(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor3bvARB(v0)
+    jr v1; nop
+}
+
+asm void PS2glMultiColor3dvARB(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor3dvARB(v0)
+    jr v1; nop
+}
+
+asm void PS2glMultiColor3fvARB(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor3fvARB(v0)
+    jr v1; nop
+}
+
+asm void PS2glMultiColor3ivARB(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor3ivARB(v0)
+    jr v1; nop
+}
+
+asm void PS2glMultiColor3svARB(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor3svARB(v0)
+    jr v1; nop
+}
+
+asm void PS2glMultiColor3ubvARB(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor3ubvARB(v0)
+    jr v1; nop
+}
+
+asm void PS2glMultiColor3uivARB(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor3uivARB(v0)
+    jr v1; nop
+}
+
+asm void PS2glMultiColor3usvARB(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor3usvARB(v0)
+    jr v1; nop
+}
+
+asm void PS2glMultiColor4bvARB(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor4bvARB(v0)
+    jr v1; nop
+}
+
+asm void PS2glMultiColor4dvARB(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor4dvARB(v0)
+    jr v1; nop
+}
+
+asm void PS2glMultiColor4fvARB(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor4fvARB(v0)
+    jr v1; nop
+}
+
+asm void PS2glMultiColor4ivARB(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor4ivARB(v0)
+    jr v1; nop
+}
+
+asm void PS2glMultiColor4svARB(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor4svARB(v0)
+    jr v1; nop
+}
+
+asm void PS2glMultiColor4ubvARB(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor4ubvARB(v0)
+    jr v1; nop
+}
+
+asm void PS2glMultiColor4uivARB(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor4uivARB(v0)
+    jr v1; nop
+}
+
+asm void PS2glMultiColor4usvARB(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor4usvARB(v0)
+    jr v1; nop
+}
+
+asm void PS2glColorTableEXT(void)
+{
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColorTableEXT(v0)
     jr v1; nop
 }

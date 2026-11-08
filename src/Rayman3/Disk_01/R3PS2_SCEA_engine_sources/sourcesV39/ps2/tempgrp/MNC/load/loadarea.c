@@ -70,83 +70,39 @@ inline unsigned int MNC_fn_ulComputeChecksum(char* _pcBuffer, unsigned int _u32S
     return u32Checksum;
 }
 
-unsigned char MNC_fn_bGetPointerInfo(void* _pvAddress, int* _piAreaId, int* _piOffset)
-{
-    int i;
-    char* pcAddressAsChar;
-    unsigned char bPointerFound;
-
-    pcAddressAsChar = (char*)_pvAddress;
-    bPointerFound = 0;
-
-    for (i = 0; !bPointerFound && i < 250; i++)
-    {
-        if (g_a_pcAreaBasePointers[i] <= pcAddressAsChar && pcAddressAsChar < g_a_pcEndOfArea[i])
-        {
-            *_piAreaId = i;
-            *_piOffset = pcAddressAsChar - g_a_pcAreaBasePointers[i];
-            bPointerFound = 1;
-        }
-    }
-
-    return bPointerFound;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+unsigned char MNC_fn_bGetPointerInfo(void* _pvAddress, int* _piAreaId, int* _piOffset);
+void MNC_fn_pcUnLoadArea(unsigned int _u32AreaId);
+char* MNC_fn_pcLoadArea(char* _szAreaName, unsigned int _u32AreaId);
+void MNC_fn_vUnLoadAreaWithDeallocator(unsigned int _u32AreaId, void (*_fn_vDeallocator)(void*));
+char* MNC_fn_pcLoadAreaWithAllocator(char* _szAreaName, unsigned int _u32AreaId, MNC_tfnAllocator_ _pfnAllocator);
+void MNC_fn_vDefaultDeallocator(void* pvPointer);
+void* MNC_fn_pvDefaultAllocator(unsigned int u32Size);
+unsigned int MNC_fn_ulGetAreaChecksum(void);
 
 void HMU_fn_vSetMemoriesInBinaryMode(void);
 void MNC_fn_vDefaultDeallocator(void* pvPointer);
 void MNC_fn_vUnLoadAreaWithDeallocator(unsigned int _u32AreaId, void (*_fn_vDeallocator)(void*));
 
-void MNC_fn_pcUnLoadArea(unsigned int _u32AreaId)
-{
-    HMU_fn_vSetMemoriesInBinaryMode();
-    MNC_fn_vUnLoadAreaWithDeallocator(_u32AreaId, MNC_fn_vDefaultDeallocator);
-}
-
 char* MNC_fn_pcLoadAreaWithAllocator(char* _szAreaName, unsigned int _u32AreaId, MNC_tfnAllocator_ _pfnAllocator);
 void* MNC_fn_pvDefaultAllocator(unsigned int u32Size);
 
-char* MNC_fn_pcLoadArea(char* _szAreaName, unsigned int _u32AreaId)
-{
-
-    HMU_fn_vSetMemoriesInBinaryMode();
-
-    return MNC_fn_pcLoadAreaWithAllocator(_szAreaName, _u32AreaId, MNC_fn_pvDefaultAllocator);
-}
-
 unsigned char fn_bLevelHasTransitionMemory(void);
 
-void MNC_fn_vUnLoadAreaWithDeallocator(unsigned int _u32AreaId, void (*_fn_vDeallocator)(void*))
+unsigned int MNC_fn_ulGetAreaChecksum(void)
 {
-    anon_1* pstOldLinkPointers;
-    unsigned int u32NbLinks;
-    unsigned int i;
+    return g_ulAreaChecksum;
+}
 
-    pstOldLinkPointers = g_a_stOldLinkPointers[_u32AreaId].pstOldLinks;
-    u32NbLinks = g_a_stOldLinkPointers[_u32AreaId].u32NbLinks;
+void* MNC_fn_pvDefaultAllocator(unsigned int u32Size)
+{
+    return HMU_fn_p_vMalloc(u32Size, 0);
+}
 
-    if (_u32AreaId == 4 || _u32AreaId == 0 || !fn_bLevelHasTransitionMemory())
-    {
-        for (i = 0; i < u32NbLinks; i++)
-        {
-            *(int*)pstOldLinkPointers->pPtrAddress = pstOldLinkPointers->pPtrOldValue;
-            pstOldLinkPointers++;
-        }
-    }
-    else
-    {
-        for (i = 0; i < u32NbLinks; i++)
-        {
-            if (*(char**)pstOldLinkPointers->pPtrAddress >= g_a_pcAreaBasePointers[_u32AreaId] && *(char**)pstOldLinkPointers->pPtrAddress <= g_a_pcEndOfArea[_u32AreaId])
-                *(int*)pstOldLinkPointers->pPtrAddress = pstOldLinkPointers->pPtrOldValue;
-            pstOldLinkPointers++;
-        }
-    }
-
-    _fn_vDeallocator(g_a_pcAreaBasePointers[_u32AreaId]);
-    if (g_a_stOldLinkPointers[_u32AreaId].pstOldLinks != NULL)
-        _fn_vDeallocator(g_a_stOldLinkPointers[_u32AreaId].pstOldLinks);
-    g_a_pcAreaBasePointers[_u32AreaId] = NULL;
-    g_a_stOldLinkPointers[_u32AreaId].pstOldLinks = NULL;
+void MNC_fn_vDefaultDeallocator(void* pvPointer)
+{
+    HMU_fn_vFree(&pvPointer, 0);
 }
 
 /* The debug record lists two parameters and an allocator return, but the
@@ -277,17 +233,72 @@ char* MNC_fn_pcLoadAreaWithAllocator(char* _szAreaName, unsigned int _u32AreaId,
     return g_a_pcAreaBasePointers[_u32AreaId];
 }
 
-void MNC_fn_vDefaultDeallocator(void* pvPointer)
+void MNC_fn_vUnLoadAreaWithDeallocator(unsigned int _u32AreaId, void (*_fn_vDeallocator)(void*))
 {
-    HMU_fn_vFree(&pvPointer, 0);
+    anon_1* pstOldLinkPointers;
+    unsigned int u32NbLinks;
+    unsigned int i;
+
+    pstOldLinkPointers = g_a_stOldLinkPointers[_u32AreaId].pstOldLinks;
+    u32NbLinks = g_a_stOldLinkPointers[_u32AreaId].u32NbLinks;
+
+    if (_u32AreaId == 4 || _u32AreaId == 0 || !fn_bLevelHasTransitionMemory())
+    {
+        for (i = 0; i < u32NbLinks; i++)
+        {
+            *(int*)pstOldLinkPointers->pPtrAddress = pstOldLinkPointers->pPtrOldValue;
+            pstOldLinkPointers++;
+        }
+    }
+    else
+    {
+        for (i = 0; i < u32NbLinks; i++)
+        {
+            if (*(char**)pstOldLinkPointers->pPtrAddress >= g_a_pcAreaBasePointers[_u32AreaId] && *(char**)pstOldLinkPointers->pPtrAddress <= g_a_pcEndOfArea[_u32AreaId])
+                *(int*)pstOldLinkPointers->pPtrAddress = pstOldLinkPointers->pPtrOldValue;
+            pstOldLinkPointers++;
+        }
+    }
+
+    _fn_vDeallocator(g_a_pcAreaBasePointers[_u32AreaId]);
+    if (g_a_stOldLinkPointers[_u32AreaId].pstOldLinks != NULL)
+        _fn_vDeallocator(g_a_stOldLinkPointers[_u32AreaId].pstOldLinks);
+    g_a_pcAreaBasePointers[_u32AreaId] = NULL;
+    g_a_stOldLinkPointers[_u32AreaId].pstOldLinks = NULL;
 }
 
-void* MNC_fn_pvDefaultAllocator(unsigned int u32Size)
+char* MNC_fn_pcLoadArea(char* _szAreaName, unsigned int _u32AreaId)
 {
-    return HMU_fn_p_vMalloc(u32Size, 0);
+
+    HMU_fn_vSetMemoriesInBinaryMode();
+
+    return MNC_fn_pcLoadAreaWithAllocator(_szAreaName, _u32AreaId, MNC_fn_pvDefaultAllocator);
 }
 
-unsigned int MNC_fn_ulGetAreaChecksum(void)
+void MNC_fn_pcUnLoadArea(unsigned int _u32AreaId)
 {
-    return g_ulAreaChecksum;
+    HMU_fn_vSetMemoriesInBinaryMode();
+    MNC_fn_vUnLoadAreaWithDeallocator(_u32AreaId, MNC_fn_vDefaultDeallocator);
+}
+
+unsigned char MNC_fn_bGetPointerInfo(void* _pvAddress, int* _piAreaId, int* _piOffset)
+{
+    int i;
+    char* pcAddressAsChar;
+    unsigned char bPointerFound;
+
+    pcAddressAsChar = (char*)_pvAddress;
+    bPointerFound = 0;
+
+    for (i = 0; !bPointerFound && i < 250; i++)
+    {
+        if (g_a_pcAreaBasePointers[i] <= pcAddressAsChar && pcAddressAsChar < g_a_pcEndOfArea[i])
+        {
+            *_piAreaId = i;
+            *_piOffset = pcAddressAsChar - g_a_pcAreaBasePointers[i];
+            bPointerFound = 1;
+        }
+    }
+
+    return bPointerFound;
 }

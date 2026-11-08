@@ -54,6 +54,20 @@ struct GEO_tdstGeometricObject_ {
 void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
 void* memset(void* dst, int c, size_t n);
 
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+GEO_tdstGeometricObject_* GEO_hAllocTMPGeometricObject(short xNbPoints, short xNbElements);
+void GLI_fn_vDrawMirror(void);
+void GLI_DRV_xSendListToViewport(void);
+
+void GLI_DRV_xSendListToViewport(void)
+{
+}
+
+void GLI_fn_vDrawMirror(void)
+{
+}
+
 GEO_tdstGeometricObject_* GEO_hAllocTMPGeometricObject(short xNbPoints, short xNbElements)
 {
     GEO_tdstGeometricObject_* p_stObjectToCreate;
@@ -69,12 +83,4 @@ GEO_tdstGeometricObject_* GEO_hAllocTMPGeometricObject(short xNbPoints, short xN
     p_stObjectToCreate->d_dfVertexTransparency = 0;
     p_stObjectToCreate->d_stListOfEdges = NULL;
     return p_stObjectToCreate;
-}
-
-void GLI_fn_vDrawMirror(void)
-{
-}
-
-void GLI_DRV_xSendListToViewport(void)
-{
 }

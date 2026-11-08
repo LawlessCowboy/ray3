@@ -60,31 +60,29 @@ unsigned char INT_fn_bGetPointInTriangle(MTH3D_tdstVector_* p_stPoint, MTH3D_tds
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-float INT_fn_xDistancePointToLine(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, float* p_xT, MTH3D_tdstVector_* p_stHit)
-{
-    if ((p_stVectAB->xX != 0.0f) || (p_stVectAB->xY != 0.0f) || (p_stVectAB->xZ != 0.0f))
-    {
-        *p_xT = ((p_stPoint->xX - p_stVertexA->xX) * p_stVectAB->xX +
-                 (p_stPoint->xY - p_stVertexA->xY) * p_stVectAB->xY +
-                 (p_stPoint->xZ - p_stVertexA->xZ) * p_stVectAB->xZ) /
-                (p_stVectAB->xX * p_stVectAB->xX +
-                 p_stVectAB->xY * p_stVectAB->xY +
-                 p_stVectAB->xZ * p_stVectAB->xZ);
 
-        p_stHit->xX = p_stVertexA->xX + *p_xT * p_stVectAB->xX;
-        p_stHit->xY = p_stVertexA->xY + *p_xT * p_stVectAB->xY;
-        p_stHit->xZ = p_stVertexA->xZ + *p_xT * p_stVectAB->xZ;
-    }
-    else
-    {
-        *p_xT = 0.0f;
-        *p_stHit = *p_stVertexA;
-    }
-
-    return __builtin_sqrt((p_stHit->xX - p_stPoint->xX) * (p_stHit->xX - p_stPoint->xX) +
-                          (p_stHit->xY - p_stPoint->xY) * (p_stHit->xY - p_stPoint->xY) +
-                          (p_stHit->xZ - p_stPoint->xZ) * (p_stHit->xZ - p_stPoint->xZ));
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+float INT_fn_xDistancePointToLine(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, float* p_xT, MTH3D_tdstVector_* p_stHit);
+unsigned char INT_fn_bIntersectSegmentWithCylinder(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, float xCylinderRadius, float* p_xTSegment, MTH3D_tdstVector_* p_stHitSegment, MTH3D_tdstVector_* p_stHitLine);
+unsigned char INT_fn_bDetectIntersectSegmentWithSphere(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius);
+unsigned char INT_fn_bIntersectSegmentWithSphere(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius, float* p_xT, MTH3D_tdstVector_* p_stHit, MTH3D_tdstVector_* p_stNormal);
+unsigned char INT_fn_bFastRejectIntersectSegmentWithSphere(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius);
+unsigned char INT_fn_bGetInclusionPointInSphere(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius);
+unsigned char INT_fn_bDetectIntersectSegmentWithTriangle(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3, MTH3D_tdstVector_* p_stNormal, float xDPlan);
+unsigned char INT_fn_bIntersectSegmentWithTriangle2(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3, MTH3D_tdstVector_* p_stNormal, float xDPlan, float xDotProduct, float* p_xT, MTH3D_tdstVector_* p_stHit);
+unsigned char INT_fn_bIntersectSegmentWithTriangle(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3, MTH3D_tdstVector_* p_stNormal, float xDPlan, float* p_xT, MTH3D_tdstVector_* p_stHit);
+unsigned char INT_fn_bFastRejectIntersectSegmentWithTriangle(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3);
+unsigned char INT_fn_bGetPointInTriangle(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stVertex0, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stNormal);
+unsigned char INT_fn_bDetectIntersectSegmentWithBox(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, float* _p_xT);
+unsigned char ucPlaneCrossingdetect(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, float xT, char cFace);
+unsigned char INT_fn_bIntersectSegmentWithBox(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, float* p_xT, MTH3D_tdstVector_* p_stHit, MTH3D_tdstVector_* p_stNormal);
+int INT_fn_bGetInclusionPointInBox(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint);
+unsigned int INT_fn_ulGetPositionPointWithBox(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint);
+unsigned char INT_fn_bIntersectSphereWithSphere(MTH3D_tdstVector_* p_stCenter1, float xRadius1, MTH3D_tdstVector_* p_stCenter2, float xRadius2);
+unsigned char INT_fn_bIntersectSphereWithBox(MTH3D_tdstVector_* p_stCenter, float xRadius, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint);
+unsigned char INT_fn_bIntersectBoxWithBox(MTH3D_tdstVector_* p_stMinPoint1, MTH3D_tdstVector_* p_stMaxPoint1, MTH3D_tdstVector_* p_stMinPoint2, MTH3D_tdstVector_* p_stMaxPoint2);
+short INT_fn_xTrinomeResolution(float xA, float xB, float xC, float* p_xT1, float* p_xT2);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 1826–1997 */
 /* addr: 0x00252720  size: 1388 bytes */
@@ -172,18 +170,6 @@ float INT_fn_xDistancePointToLine(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char INT_fn_bIntersectSegmentWithCylinder(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, float xCylinderRadius, float* p_xTSegment, MTH3D_tdstVector_* p_stHitSegment, MTH3D_tdstVector_* p_stHitLine)
-{
-    unsigned char bGreaterZero2;
-    unsigned char bGreaterZero1;
-    float xTmp;
-    float xT2;
-    float xT1;
-    float xB;
-    float xM;
-    float xTLine;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 1702–1805 */
 /* addr: 0x00252c90  size: 712 bytes */
@@ -250,13 +236,6 @@ unsigned char INT_fn_bIntersectSegmentWithCylinder(MTH3D_tdstVector_* p_stVertex
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char INT_fn_bDetectIntersectSegmentWithSphere(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius)
-{
-    float xSpecialRadius;
-    float xTemp;
-    float xdist;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 1618–1675 */
 /* addr: 0x00252f60  size: 724 bytes */
@@ -297,14 +276,6 @@ unsigned char INT_fn_bDetectIntersectSegmentWithSphere(MTH3D_tdstVector_* p_stVe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char INT_fn_bIntersectSegmentWithSphere(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius, float* p_xT, MTH3D_tdstVector_* p_stHit, MTH3D_tdstVector_* p_stNormal)
-{
-    float xInvR;
-    float xT2;
-    float xT1;
-    float xB;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 1537–1587 */
 /* addr: 0x00253240  size: 428 bytes */
@@ -347,10 +318,6 @@ unsigned char INT_fn_bIntersectSegmentWithSphere(MTH3D_tdstVector_* p_stVertex1,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char INT_fn_bFastRejectIntersectSegmentWithSphere(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius)
-{
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 1514–1515 */
 /* addr: 0x002533f0  size: 80 bytes */
@@ -360,11 +327,6 @@ unsigned char INT_fn_bFastRejectIntersectSegmentWithSphere(MTH3D_tdstVector_* p_
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char INT_fn_bGetInclusionPointInSphere(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius)
-{
-    float xDx, xDy, xDz, xSqrNorm;
-    xDz = p_stPoint->xZ - p_stSphereCenter->xZ; xDy = p_stPoint->xY - p_stSphereCenter->xY; xDx = p_stPoint->xX - p_stSphereCenter->xX; MTH_SQR3_TO(xSqrNorm, xDx, xDy, xDz); return (xSqrNorm <= xSphereRadius * xSphereRadius);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 1283–1322 */
 /* addr: 0x00253440  size: 352 bytes */
@@ -385,11 +347,6 @@ unsigned char INT_fn_bGetInclusionPointInSphere(MTH3D_tdstVector_* p_stPoint, MT
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char INT_fn_bDetectIntersectSegmentWithTriangle(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3, MTH3D_tdstVector_* p_stNormal, float xDPlan)
-{
-    MTH3D_tdstVector_ stHit;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 1213–1264 */
 /* addr: 0x002535a0  size: 472 bytes */
@@ -420,50 +377,6 @@ unsigned char INT_fn_bDetectIntersectSegmentWithTriangle(MTH3D_tdstVector_* p_st
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char INT_fn_bIntersectSegmentWithTriangle2(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3, MTH3D_tdstVector_* p_stNormal, float xDPlan, float xDotProduct, float* p_xT, MTH3D_tdstVector_* p_stHit)
-{
-    float xDivid;
-
-    if (!INT_fn_bFastRejectIntersectSegmentWithTriangle(p_stVertexA, p_stVectAB, p_stVertex1, p_stVertex2, p_stVertex3))
-        return 0;
-
-    xDivid = xDPlan + MTH_xDot3(p_stNormal->xX, p_stVertexA->xX, p_stNormal->xY, p_stVertexA->xY, p_stNormal->xZ, p_stVertexA->xZ);
-    if (MTH_xAbs(xDivid) < 0.001f)
-    {
-        if (xDotProduct < -0.001f)
-        {
-            *p_xT = 0.0f;
-            *p_stHit = *p_stVertexA;
-            return 1;
-        }
-    }
-    if (xDivid >= 0.0f)
-    {
-        if (xDivid < -xDotProduct)
-        {
-            xDivid = xDivid / xDotProduct;
-            xDivid = -xDivid;
-
-            p_stHit->xX = p_stVertexA->xX + xDivid * p_stVectAB->xX;
-            p_stHit->xY = p_stVertexA->xY + xDivid * p_stVectAB->xY;
-            p_stHit->xZ = p_stVertexA->xZ + xDivid * p_stVectAB->xZ;
-
-            if (!INT_fn_bGetPointInTriangle(p_stHit, p_stVertex1, p_stVertex2, p_stVertex3, p_stNormal))
-                return 0;
-
-            *p_xT = xDivid;
-            return 1;
-        }
-        else
-        {
-            return 0;
-        }
-    }
-    else
-    {
-        return 0;
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 1154–1199 */
 /* addr: 0x00253780  size: 396 bytes */
@@ -488,41 +401,6 @@ unsigned char INT_fn_bIntersectSegmentWithTriangle2(MTH3D_tdstVector_* p_stVerte
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char INT_fn_bIntersectSegmentWithTriangle(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3, MTH3D_tdstVector_* p_stNormal, float xDPlan, float* p_xT, MTH3D_tdstVector_* p_stHit)
-{
-    float xDivid;
-    float xDot;
-
-    if (!INT_fn_bFastRejectIntersectSegmentWithTriangle(p_stVertexA, p_stVectAB, p_stVertex1, p_stVertex2, p_stVertex3))
-        return 0;
-
-    xDot = MTH_xDot3(p_stNormal->xX, p_stVectAB->xX, p_stNormal->xY, p_stVectAB->xY, p_stNormal->xZ, p_stVectAB->xZ);
-    if (xDot < 0.0f)
-    {
-        xDivid = xDPlan + MTH_xDot3(p_stNormal->xX, p_stVertexA->xX, p_stNormal->xY, p_stVertexA->xY, p_stNormal->xZ, p_stVertexA->xZ);
-        if (xDivid > 0.0f)
-        {
-            if (xDivid < -xDot)
-            {
-                xDivid = xDivid / xDot;
-                xDivid = -xDivid;
-
-                p_stHit->xX = p_stVertexA->xX + xDivid * p_stVectAB->xX;
-                p_stHit->xY = p_stVertexA->xY + xDivid * p_stVectAB->xY;
-                p_stHit->xZ = p_stVertexA->xZ + xDivid * p_stVectAB->xZ;
-
-                if (INT_fn_bGetPointInTriangle(p_stHit, p_stVertex1, p_stVertex2, p_stVertex3, p_stNormal))
-                {
-                    *p_xT = xDivid;
-                    return 1;
-                }
-                return 0;
-            }
-        }
-        return 0;
-    }
-    return 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 1055–1133 */
 /* addr: 0x00253910  size: 1000 bytes */
@@ -563,11 +441,6 @@ unsigned char INT_fn_bIntersectSegmentWithTriangle(MTH3D_tdstVector_* p_stVertex
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char INT_fn_bFastRejectIntersectSegmentWithTriangle(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3)
-{
-    unsigned char bGreaterZero;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 962–1033 */
 /* addr: 0x00253d00  size: 884 bytes */
@@ -623,10 +496,6 @@ unsigned char INT_fn_bFastRejectIntersectSegmentWithTriangle(MTH3D_tdstVector_* 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char INT_fn_bGetPointInTriangle(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stVertex0, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stNormal)
-{
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 742–936 */
 /* addr: 0x00254080  size: 1152 bytes */
@@ -745,18 +614,6 @@ unsigned char INT_fn_bGetPointInTriangle(MTH3D_tdstVector_* p_stPoint, MTH3D_tds
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char INT_fn_bDetectIntersectSegmentWithBox(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, float* _p_xT)
-{
-    unsigned char bWithxT;
-    unsigned char bResult;
-    MTH3D_tdstVector_ stVertex2;
-    float* p_xT;
-    float xT;
-    unsigned int ulExploredPlan;
-    unsigned int ulVertex2Test;
-    unsigned int ulVertex1Test;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 625–732 */
 /* addr: 0x00254500  size: 536 bytes */
@@ -809,13 +666,6 @@ unsigned char INT_fn_bDetectIntersectSegmentWithBox(MTH3D_tdstVector_* p_stVerte
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char ucPlaneCrossingdetect(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, float xT, char cFace)
-{
-    float xTmp;
-    unsigned int idx2;
-    unsigned int idx1;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 505–605 */
 /* addr: 0x00254720  size: 1728 bytes */
@@ -886,12 +736,6 @@ unsigned char ucPlaneCrossingdetect(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char INT_fn_bIntersectSegmentWithBox(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, float* p_xT, MTH3D_tdstVector_* p_stHit, MTH3D_tdstVector_* p_stNormal)
-{
-    unsigned int ulVertex2Test;
-    unsigned int ulVertex1Test;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 320–334 */
 /* addr: 0x00254de0  size: 188 bytes */
@@ -911,20 +755,6 @@ unsigned char INT_fn_bIntersectSegmentWithBox(MTH3D_tdstVector_* p_stVertex1, MT
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int INT_fn_bGetInclusionPointInBox(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint)
-{
-    if (p_stPoint->xX < p_stMinPoint->xX)
-        return 0;
-    if (p_stPoint->xX > p_stMaxPoint->xX)
-        return 0;
-    if (p_stPoint->xY < p_stMinPoint->xY)
-        return 0;
-    if (p_stPoint->xY > p_stMaxPoint->xY)
-        return 0;
-    if (p_stPoint->xZ < p_stMinPoint->xZ)
-        return 0;
-    return !(p_stPoint->xZ > p_stMaxPoint->xZ);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 216–230 */
 /* addr: 0x00254ea0  size: 176 bytes */
@@ -945,24 +775,6 @@ int INT_fn_bGetInclusionPointInBox(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVecto
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned int INT_fn_ulGetPositionPointWithBox(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint)
-{
-    unsigned int ulOutCode;
-    ulOutCode = 0;
-    if (p_stPoint->xX < p_stMinPoint->xX)
-        ulOutCode |= 1;
-    else if (p_stPoint->xX > p_stMaxPoint->xX)
-        ulOutCode |= 2;
-    if (p_stPoint->xY < p_stMinPoint->xY)
-        ulOutCode |= 4;
-    else if (p_stPoint->xY > p_stMaxPoint->xY)
-        ulOutCode |= 8;
-    if (p_stPoint->xZ < p_stMinPoint->xZ)
-        ulOutCode |= 16;
-    else if (p_stPoint->xZ > p_stMaxPoint->xZ)
-        ulOutCode |= 32;
-    return ulOutCode;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 195–196 */
 /* addr: 0x00254f50  size: 84 bytes */
@@ -972,11 +784,6 @@ unsigned int INT_fn_ulGetPositionPointWithBox(MTH3D_tdstVector_* p_stPoint, MTH3
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char INT_fn_bIntersectSphereWithSphere(MTH3D_tdstVector_* p_stCenter1, float xRadius1, MTH3D_tdstVector_* p_stCenter2, float xRadius2)
-{
-    float xDX; float xDY; float xDZ; float xDist;
-    xDZ = p_stCenter1->xZ - p_stCenter2->xZ; xDY = p_stCenter1->xY - p_stCenter2->xY; xDX = p_stCenter1->xX - p_stCenter2->xX; MTH_SQR3_TO(xDist, xDX, xDY, xDZ); return xDist <= (xRadius1 + xRadius2) * (xRadius1 + xRadius2);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 139–178 */
 /* addr: 0x00254fb0  size: 256 bytes */
@@ -1003,24 +810,6 @@ unsigned char INT_fn_bIntersectSphereWithSphere(MTH3D_tdstVector_* p_stCenter1, 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char INT_fn_bIntersectSphereWithBox(MTH3D_tdstVector_* p_stCenter, float xRadius, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint)
-{
-    float xDist;
-    xDist = 0.0f;
-    if (p_stCenter->xX < p_stMinPoint->xX)
-        xDist += (p_stCenter->xX - p_stMinPoint->xX) * (p_stCenter->xX - p_stMinPoint->xX);
-    else if (p_stCenter->xX > p_stMaxPoint->xX)
-        xDist += (p_stCenter->xX - p_stMaxPoint->xX) * (p_stCenter->xX - p_stMaxPoint->xX);
-    if (p_stCenter->xY < p_stMinPoint->xY)
-        xDist += (p_stCenter->xY - p_stMinPoint->xY) * (p_stCenter->xY - p_stMinPoint->xY);
-    else if (p_stCenter->xY > p_stMaxPoint->xY)
-        xDist += (p_stCenter->xY - p_stMaxPoint->xY) * (p_stCenter->xY - p_stMaxPoint->xY);
-    if (p_stCenter->xZ < p_stMinPoint->xZ)
-        xDist += (p_stCenter->xZ - p_stMinPoint->xZ) * (p_stCenter->xZ - p_stMinPoint->xZ);
-    else if (p_stCenter->xZ > p_stMaxPoint->xZ)
-        xDist += (p_stCenter->xZ - p_stMaxPoint->xZ) * (p_stCenter->xZ - p_stMaxPoint->xZ);
-    return xDist < xRadius * xRadius;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 108–120 */
 /* addr: 0x002550b0  size: 172 bytes */
@@ -1030,15 +819,6 @@ unsigned char INT_fn_bIntersectSphereWithBox(MTH3D_tdstVector_* p_stCenter, floa
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char INT_fn_bIntersectBoxWithBox(MTH3D_tdstVector_* p_stMinPoint1, MTH3D_tdstVector_* p_stMaxPoint1, MTH3D_tdstVector_* p_stMinPoint2, MTH3D_tdstVector_* p_stMaxPoint2)
-{
-    return (((p_stMinPoint1->xX > p_stMinPoint2->xX) ? p_stMinPoint1->xX : p_stMinPoint2->xX) <=
-            ((p_stMaxPoint1->xX < p_stMaxPoint2->xX) ? p_stMaxPoint1->xX : p_stMaxPoint2->xX)) &&
-           (((p_stMinPoint1->xY > p_stMinPoint2->xY) ? p_stMinPoint1->xY : p_stMinPoint2->xY) <=
-            ((p_stMaxPoint1->xY < p_stMaxPoint2->xY) ? p_stMaxPoint1->xY : p_stMaxPoint2->xY)) &&
-           (((p_stMinPoint1->xZ > p_stMinPoint2->xZ) ? p_stMinPoint1->xZ : p_stMinPoint2->xZ) <=
-            ((p_stMaxPoint1->xZ < p_stMaxPoint2->xZ) ? p_stMaxPoint1->xZ : p_stMaxPoint2->xZ));
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 49–91 */
 /* addr: 0x00255160  size: 232 bytes */
@@ -1074,9 +854,272 @@ unsigned char INT_fn_bIntersectBoxWithBox(MTH3D_tdstVector_* p_stMinPoint1, MTH3
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
 short INT_fn_xTrinomeResolution(float xA, float xB, float xC, float* p_xT1, float* p_xT2)
 {
     float xDiv;
     float xDelta;
     /* TODO: decompile from asm/... */
+}
+
+unsigned char INT_fn_bIntersectBoxWithBox(MTH3D_tdstVector_* p_stMinPoint1, MTH3D_tdstVector_* p_stMaxPoint1, MTH3D_tdstVector_* p_stMinPoint2, MTH3D_tdstVector_* p_stMaxPoint2)
+{
+    return (((p_stMinPoint1->xX > p_stMinPoint2->xX) ? p_stMinPoint1->xX : p_stMinPoint2->xX) <=
+            ((p_stMaxPoint1->xX < p_stMaxPoint2->xX) ? p_stMaxPoint1->xX : p_stMaxPoint2->xX)) &&
+           (((p_stMinPoint1->xY > p_stMinPoint2->xY) ? p_stMinPoint1->xY : p_stMinPoint2->xY) <=
+            ((p_stMaxPoint1->xY < p_stMaxPoint2->xY) ? p_stMaxPoint1->xY : p_stMaxPoint2->xY)) &&
+           (((p_stMinPoint1->xZ > p_stMinPoint2->xZ) ? p_stMinPoint1->xZ : p_stMinPoint2->xZ) <=
+            ((p_stMaxPoint1->xZ < p_stMaxPoint2->xZ) ? p_stMaxPoint1->xZ : p_stMaxPoint2->xZ));
+}
+
+unsigned char INT_fn_bIntersectSphereWithBox(MTH3D_tdstVector_* p_stCenter, float xRadius, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint)
+{
+    float xDist;
+    xDist = 0.0f;
+    if (p_stCenter->xX < p_stMinPoint->xX)
+        xDist += (p_stCenter->xX - p_stMinPoint->xX) * (p_stCenter->xX - p_stMinPoint->xX);
+    else if (p_stCenter->xX > p_stMaxPoint->xX)
+        xDist += (p_stCenter->xX - p_stMaxPoint->xX) * (p_stCenter->xX - p_stMaxPoint->xX);
+    if (p_stCenter->xY < p_stMinPoint->xY)
+        xDist += (p_stCenter->xY - p_stMinPoint->xY) * (p_stCenter->xY - p_stMinPoint->xY);
+    else if (p_stCenter->xY > p_stMaxPoint->xY)
+        xDist += (p_stCenter->xY - p_stMaxPoint->xY) * (p_stCenter->xY - p_stMaxPoint->xY);
+    if (p_stCenter->xZ < p_stMinPoint->xZ)
+        xDist += (p_stCenter->xZ - p_stMinPoint->xZ) * (p_stCenter->xZ - p_stMinPoint->xZ);
+    else if (p_stCenter->xZ > p_stMaxPoint->xZ)
+        xDist += (p_stCenter->xZ - p_stMaxPoint->xZ) * (p_stCenter->xZ - p_stMaxPoint->xZ);
+    return xDist < xRadius * xRadius;
+}
+
+unsigned char INT_fn_bIntersectSphereWithSphere(MTH3D_tdstVector_* p_stCenter1, float xRadius1, MTH3D_tdstVector_* p_stCenter2, float xRadius2)
+{
+    float xDX; float xDY; float xDZ; float xDist;
+    xDZ = p_stCenter1->xZ - p_stCenter2->xZ; xDY = p_stCenter1->xY - p_stCenter2->xY; xDX = p_stCenter1->xX - p_stCenter2->xX; MTH_SQR3_TO(xDist, xDX, xDY, xDZ); return xDist <= (xRadius1 + xRadius2) * (xRadius1 + xRadius2);
+}
+
+unsigned int INT_fn_ulGetPositionPointWithBox(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint)
+{
+    unsigned int ulOutCode;
+    ulOutCode = 0;
+    if (p_stPoint->xX < p_stMinPoint->xX)
+        ulOutCode |= 1;
+    else if (p_stPoint->xX > p_stMaxPoint->xX)
+        ulOutCode |= 2;
+    if (p_stPoint->xY < p_stMinPoint->xY)
+        ulOutCode |= 4;
+    else if (p_stPoint->xY > p_stMaxPoint->xY)
+        ulOutCode |= 8;
+    if (p_stPoint->xZ < p_stMinPoint->xZ)
+        ulOutCode |= 16;
+    else if (p_stPoint->xZ > p_stMaxPoint->xZ)
+        ulOutCode |= 32;
+    return ulOutCode;
+}
+
+int INT_fn_bGetInclusionPointInBox(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint)
+{
+    if (p_stPoint->xX < p_stMinPoint->xX)
+        return 0;
+    if (p_stPoint->xX > p_stMaxPoint->xX)
+        return 0;
+    if (p_stPoint->xY < p_stMinPoint->xY)
+        return 0;
+    if (p_stPoint->xY > p_stMaxPoint->xY)
+        return 0;
+    if (p_stPoint->xZ < p_stMinPoint->xZ)
+        return 0;
+    return !(p_stPoint->xZ > p_stMaxPoint->xZ);
+}
+
+unsigned char INT_fn_bIntersectSegmentWithBox(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, float* p_xT, MTH3D_tdstVector_* p_stHit, MTH3D_tdstVector_* p_stNormal)
+{
+    unsigned int ulVertex2Test;
+    unsigned int ulVertex1Test;
+    /* TODO: decompile from asm/... */
+}
+
+unsigned char ucPlaneCrossingdetect(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, float xT, char cFace)
+{
+    float xTmp;
+    unsigned int idx2;
+    unsigned int idx1;
+    /* TODO: decompile from asm/... */
+}
+
+unsigned char INT_fn_bDetectIntersectSegmentWithBox(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, float* _p_xT)
+{
+    unsigned char bWithxT;
+    unsigned char bResult;
+    MTH3D_tdstVector_ stVertex2;
+    float* p_xT;
+    float xT;
+    unsigned int ulExploredPlan;
+    unsigned int ulVertex2Test;
+    unsigned int ulVertex1Test;
+    /* TODO: decompile from asm/... */
+}
+
+unsigned char INT_fn_bGetPointInTriangle(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stVertex0, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stNormal)
+{
+    /* TODO: decompile from asm/... */
+}
+
+unsigned char INT_fn_bFastRejectIntersectSegmentWithTriangle(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3)
+{
+    unsigned char bGreaterZero;
+    /* TODO: decompile from asm/... */
+}
+
+unsigned char INT_fn_bIntersectSegmentWithTriangle(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3, MTH3D_tdstVector_* p_stNormal, float xDPlan, float* p_xT, MTH3D_tdstVector_* p_stHit)
+{
+    float xDivid;
+    float xDot;
+
+    if (!INT_fn_bFastRejectIntersectSegmentWithTriangle(p_stVertexA, p_stVectAB, p_stVertex1, p_stVertex2, p_stVertex3))
+        return 0;
+
+    xDot = MTH_xDot3(p_stNormal->xX, p_stVectAB->xX, p_stNormal->xY, p_stVectAB->xY, p_stNormal->xZ, p_stVectAB->xZ);
+    if (xDot < 0.0f)
+    {
+        xDivid = xDPlan + MTH_xDot3(p_stNormal->xX, p_stVertexA->xX, p_stNormal->xY, p_stVertexA->xY, p_stNormal->xZ, p_stVertexA->xZ);
+        if (xDivid > 0.0f)
+        {
+            if (xDivid < -xDot)
+            {
+                xDivid = xDivid / xDot;
+                xDivid = -xDivid;
+
+                p_stHit->xX = p_stVertexA->xX + xDivid * p_stVectAB->xX;
+                p_stHit->xY = p_stVertexA->xY + xDivid * p_stVectAB->xY;
+                p_stHit->xZ = p_stVertexA->xZ + xDivid * p_stVectAB->xZ;
+
+                if (INT_fn_bGetPointInTriangle(p_stHit, p_stVertex1, p_stVertex2, p_stVertex3, p_stNormal))
+                {
+                    *p_xT = xDivid;
+                    return 1;
+                }
+                return 0;
+            }
+        }
+        return 0;
+    }
+    return 0;
+}
+
+unsigned char INT_fn_bIntersectSegmentWithTriangle2(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3, MTH3D_tdstVector_* p_stNormal, float xDPlan, float xDotProduct, float* p_xT, MTH3D_tdstVector_* p_stHit)
+{
+    float xDivid;
+
+    if (!INT_fn_bFastRejectIntersectSegmentWithTriangle(p_stVertexA, p_stVectAB, p_stVertex1, p_stVertex2, p_stVertex3))
+        return 0;
+
+    xDivid = xDPlan + MTH_xDot3(p_stNormal->xX, p_stVertexA->xX, p_stNormal->xY, p_stVertexA->xY, p_stNormal->xZ, p_stVertexA->xZ);
+    if (MTH_xAbs(xDivid) < 0.001f)
+    {
+        if (xDotProduct < -0.001f)
+        {
+            *p_xT = 0.0f;
+            *p_stHit = *p_stVertexA;
+            return 1;
+        }
+    }
+    if (xDivid >= 0.0f)
+    {
+        if (xDivid < -xDotProduct)
+        {
+            xDivid = xDivid / xDotProduct;
+            xDivid = -xDivid;
+
+            p_stHit->xX = p_stVertexA->xX + xDivid * p_stVectAB->xX;
+            p_stHit->xY = p_stVertexA->xY + xDivid * p_stVectAB->xY;
+            p_stHit->xZ = p_stVertexA->xZ + xDivid * p_stVectAB->xZ;
+
+            if (!INT_fn_bGetPointInTriangle(p_stHit, p_stVertex1, p_stVertex2, p_stVertex3, p_stNormal))
+                return 0;
+
+            *p_xT = xDivid;
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+unsigned char INT_fn_bDetectIntersectSegmentWithTriangle(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3, MTH3D_tdstVector_* p_stNormal, float xDPlan)
+{
+    MTH3D_tdstVector_ stHit;
+    /* TODO: decompile from asm/... */
+}
+
+unsigned char INT_fn_bGetInclusionPointInSphere(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius)
+{
+    float xDx, xDy, xDz, xSqrNorm;
+    xDz = p_stPoint->xZ - p_stSphereCenter->xZ; xDy = p_stPoint->xY - p_stSphereCenter->xY; xDx = p_stPoint->xX - p_stSphereCenter->xX; MTH_SQR3_TO(xSqrNorm, xDx, xDy, xDz); return (xSqrNorm <= xSphereRadius * xSphereRadius);
+}
+
+unsigned char INT_fn_bFastRejectIntersectSegmentWithSphere(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius)
+{
+    /* TODO: decompile from asm/... */
+}
+
+unsigned char INT_fn_bIntersectSegmentWithSphere(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius, float* p_xT, MTH3D_tdstVector_* p_stHit, MTH3D_tdstVector_* p_stNormal)
+{
+    float xInvR;
+    float xT2;
+    float xT1;
+    float xB;
+    /* TODO: decompile from asm/... */
+}
+
+unsigned char INT_fn_bDetectIntersectSegmentWithSphere(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius)
+{
+    float xSpecialRadius;
+    float xTemp;
+    float xdist;
+    /* TODO: decompile from asm/... */
+}
+
+unsigned char INT_fn_bIntersectSegmentWithCylinder(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, float xCylinderRadius, float* p_xTSegment, MTH3D_tdstVector_* p_stHitSegment, MTH3D_tdstVector_* p_stHitLine)
+{
+    unsigned char bGreaterZero2;
+    unsigned char bGreaterZero1;
+    float xTmp;
+    float xT2;
+    float xT1;
+    float xB;
+    float xM;
+    float xTLine;
+    /* TODO: decompile from asm/... */
+}
+
+float INT_fn_xDistancePointToLine(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, float* p_xT, MTH3D_tdstVector_* p_stHit)
+{
+    if ((p_stVectAB->xX != 0.0f) || (p_stVectAB->xY != 0.0f) || (p_stVectAB->xZ != 0.0f))
+    {
+        *p_xT = ((p_stPoint->xX - p_stVertexA->xX) * p_stVectAB->xX +
+                 (p_stPoint->xY - p_stVertexA->xY) * p_stVectAB->xY +
+                 (p_stPoint->xZ - p_stVertexA->xZ) * p_stVectAB->xZ) /
+                (p_stVectAB->xX * p_stVectAB->xX +
+                 p_stVectAB->xY * p_stVectAB->xY +
+                 p_stVectAB->xZ * p_stVectAB->xZ);
+
+        p_stHit->xX = p_stVertexA->xX + *p_xT * p_stVectAB->xX;
+        p_stHit->xY = p_stVertexA->xY + *p_xT * p_stVectAB->xY;
+        p_stHit->xZ = p_stVertexA->xZ + *p_xT * p_stVectAB->xZ;
+    }
+    else
+    {
+        *p_xT = 0.0f;
+        *p_stHit = *p_stVertexA;
+    }
+
+    return __builtin_sqrt((p_stHit->xX - p_stPoint->xX) * (p_stHit->xX - p_stPoint->xX) +
+                          (p_stHit->xY - p_stPoint->xY) * (p_stHit->xY - p_stPoint->xY) +
+                          (p_stHit->xZ - p_stPoint->xZ) * (p_stHit->xZ - p_stPoint->xZ));
 }

@@ -94,59 +94,12 @@ void DNM_p_stReportDefaultInit(DNM_stReport* p_stReport);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void DNM_fn_vDynamicsInitDefault(DNM_stDynamics* p_stDynamic)
-{
-    DNM_stReport* p_stReport;
-    unsigned int ulEndFlags;
 
-    p_stReport = NULL;
-    memset(&g_stReport, 0, 0x274);
-    p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags = 0;
-    p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags &= 0x0004400Fu;
-    ulEndFlags = p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags;
-
-    if ((ulEndFlags & 0x4000) ? 1 : 0)
-    {
-        p_stReport = p_stDynamic->m_tdstDynamicsBaseBlock.m_pstReport;
-        DNM_p_stReportDefaultInit(p_stReport);
-    }
-
-    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4) ? 1 : 0)
-    {
-        memset(p_stDynamic, 0, sizeof(DNM_stDynamics));
-    }
-    else if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x2) ? 1 : 0)
-    {
-        memset(p_stDynamic, 0, sizeof(DNM_stDynamics) - sizeof(DNM_stDynamicsComplexBlock));
-    }
-    else
-    {
-        memset(p_stDynamic, 0, sizeof(DNM_stDynamicsBaseBlock));
-    }
-    p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulEndFlags;
-
-    if (p_stReport != NULL)
-    {
-        p_stDynamic->m_tdstDynamicsBaseBlock.m_pstReport = p_stReport;
-    }
-
-    ulEndFlags = p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags | 0x80;
-    p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulEndFlags;
-    p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulEndFlags;
-    p_stDynamic->m_tdstDynamicsBaseBlock.m_ucNbFrame = 1;
-
-    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x2) ? 1 : 0)
-    {
-        p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xStreamFactor = 1.0f;
-    }
-
-    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4) ? 1 : 0)
-    {
-        p_stDynamic->m_tdstDynamicsComplexBlock.m_hPlatform = NULL;
-    }
-
-    memset(&g_stReport, 0, 0x274);
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void DNM_fn_vDynamicsInitDefault(DNM_stDynamics* p_stDynamic);
+MTH3D_tdstVector_* MTH_p_stRotationMulVector(MTH_stRotation* _p_stRotation, MTH3D_tdstVector_* _p_stSource, MTH3D_tdstVector_* _p_stResult);
+MTH_stRotation* MTH_p_stRotationComputeRotationWith2Vectors(MTH_stRotation* _p_stResult, MTH3D_tdstVector_* _p_stSrcUnitVector, MTH3D_tdstVector_* _p_stImaUnitVector);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMMTH.c lines 164–201 */
 /* addr: 0x00302680  size: 636 bytes */
@@ -179,18 +132,6 @@ void DNM_fn_vDynamicsInitDefault(DNM_stDynamics* p_stDynamic)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-MTH3D_tdstVector_* MTH_p_stRotationMulVector(MTH_stRotation* _p_stRotation, MTH3D_tdstVector_* _p_stSource, MTH3D_tdstVector_* _p_stResult)
-{
-    MTH3D_tdstVector_ VectTmp;
-    float xAngle;
-    float xValue;
-    float xSin;
-    float xCos;
-    MTH3D_tdstVector_* p_stAxis;
-    MTH3D_tdstVector_ stTmp1;
-    MTH3D_tdstVector_ stTmp0;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMMTH.c lines 74–151 */
 /* addr: 0x00302900  size: 576 bytes */
@@ -298,4 +239,71 @@ MTH_stRotation* MTH_p_stRotationComputeRotationWith2Vectors(MTH_stRotation* _p_s
     _p_stResult->m_xAngle = acosf(xNorm);
 
     return _p_stResult;
+}
+
+MTH3D_tdstVector_* MTH_p_stRotationMulVector(MTH_stRotation* _p_stRotation, MTH3D_tdstVector_* _p_stSource, MTH3D_tdstVector_* _p_stResult)
+{
+    MTH3D_tdstVector_ VectTmp;
+    float xAngle;
+    float xValue;
+    float xSin;
+    float xCos;
+    MTH3D_tdstVector_* p_stAxis;
+    MTH3D_tdstVector_ stTmp1;
+    MTH3D_tdstVector_ stTmp0;
+    /* TODO: decompile from asm/... */
+}
+
+void DNM_fn_vDynamicsInitDefault(DNM_stDynamics* p_stDynamic)
+{
+    DNM_stReport* p_stReport;
+    unsigned int ulEndFlags;
+
+    p_stReport = NULL;
+    memset(&g_stReport, 0, 0x274);
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags = 0;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags &= 0x0004400Fu;
+    ulEndFlags = p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags;
+
+    if ((ulEndFlags & 0x4000) ? 1 : 0)
+    {
+        p_stReport = p_stDynamic->m_tdstDynamicsBaseBlock.m_pstReport;
+        DNM_p_stReportDefaultInit(p_stReport);
+    }
+
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4) ? 1 : 0)
+    {
+        memset(p_stDynamic, 0, sizeof(DNM_stDynamics));
+    }
+    else if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x2) ? 1 : 0)
+    {
+        memset(p_stDynamic, 0, sizeof(DNM_stDynamics) - sizeof(DNM_stDynamicsComplexBlock));
+    }
+    else
+    {
+        memset(p_stDynamic, 0, sizeof(DNM_stDynamicsBaseBlock));
+    }
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulEndFlags;
+
+    if (p_stReport != NULL)
+    {
+        p_stDynamic->m_tdstDynamicsBaseBlock.m_pstReport = p_stReport;
+    }
+
+    ulEndFlags = p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags | 0x80;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulEndFlags;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulEndFlags;
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_ucNbFrame = 1;
+
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x2) ? 1 : 0)
+    {
+        p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xStreamFactor = 1.0f;
+    }
+
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4) ? 1 : 0)
+    {
+        p_stDynamic->m_tdstDynamicsComplexBlock.m_hPlatform = NULL;
+    }
+
+    memset(&g_stReport, 0, 0x274);
 }

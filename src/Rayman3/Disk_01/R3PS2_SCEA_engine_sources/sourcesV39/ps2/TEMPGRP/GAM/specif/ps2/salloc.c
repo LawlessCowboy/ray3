@@ -43,6 +43,53 @@ int strcmp(const char* s1, const char* s2);
 char* strcpy(char* s1, const char* s2);
 size_t strlen(const char* s);
 
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void fn_vGetScreenShotDefaultName(void);
+void fn_vFreeAllocator(anon_0* pstAllocator, void* pvClientAddress);
+void* fn_pvAllocAllocator(anon_0* pstAllocator, unsigned int u32Size);
+void fn_vResetAllocator(anon_0* pstAllocator);
+void fn_vInitAllocator(anon_0* pstAllocator, unsigned int u32Size, char* pcBuffer);
+
+void fn_vResetAllocator(anon_0* pstAllocator)
+{
+    pstAllocator->pcTop = pstAllocator->pcBase;
+    pstAllocator->pcTop += 4;
+    pstAllocator->pcTop = (pstAllocator->pcTop & 0xF) ? (pstAllocator->pcTop & -0x10) + 0x10 : pstAllocator->pcTop;
+    pstAllocator->pcTop -= 4;
+    channel_debug_printf(-1, "(%08x)->trreset()\n", pstAllocator);
+}
+
+void fn_vInitAllocator(anon_0* pstAllocator, unsigned int u32Size, char* pcBuffer)
+{
+    pstAllocator->u32Limit = u32Size;
+    pstAllocator->pcBase = (int)pcBuffer;
+    fn_vResetAllocator(pstAllocator);
+}
+
+void* fn_pvAllocAllocator(anon_0* pstAllocator, unsigned int u32Size)
+{
+    anon_1* pstBlockDescriptor;
+    unsigned int u32AlignedSize;
+
+    u32AlignedSize = (u32Size & 0xF) ? (u32Size & ~0xF) + 16 : u32Size;
+    pstBlockDescriptor = (anon_1*)pstAllocator->pcTop;
+    if ((unsigned int)(u32AlignedSize + ((char*)pstBlockDescriptor - (char*)pstAllocator->pcBase) + 4) > pstAllocator->u32Limit)
+    {
+        channel_debug_printf(-1, "(%08x)->tralloc(%d) fails\n", pstAllocator, u32Size);
+        return NULL;
+    }
+    pstAllocator->pcTop = (int)((char*)pstBlockDescriptor + u32AlignedSize);
+    pstBlockDescriptor->u32Size = u32Size;
+    channel_debug_printf(-1, "(%08x)->tralloc(%d) -> %08x\n", pstAllocator, u32Size, &pstBlockDescriptor->acBuffer);
+    return &pstBlockDescriptor->acBuffer;
+}
+
+void fn_vFreeAllocator(anon_0* pstAllocator, void* pvClientAddress)
+{
+    channel_debug_printf(-1, "(%08x)->trfree (%08x)\n", pstAllocator, pvClientAddress);
+}
+
 void fn_vGetScreenShotDefaultName(void)
 {
     int Found;
@@ -75,43 +122,4 @@ void fn_vGetScreenShotDefaultName(void)
     {
         g_CurrentSelectedCharNumber--;
     }
-}
-
-void fn_vFreeAllocator(anon_0* pstAllocator, void* pvClientAddress)
-{
-    channel_debug_printf(-1, "(%08x)->trfree (%08x)\n", pstAllocator, pvClientAddress);
-}
-
-void* fn_pvAllocAllocator(anon_0* pstAllocator, unsigned int u32Size)
-{
-    anon_1* pstBlockDescriptor;
-    unsigned int u32AlignedSize;
-
-    u32AlignedSize = (u32Size & 0xF) ? (u32Size & ~0xF) + 16 : u32Size;
-    pstBlockDescriptor = (anon_1*)pstAllocator->pcTop;
-    if ((unsigned int)(u32AlignedSize + ((char*)pstBlockDescriptor - (char*)pstAllocator->pcBase) + 4) > pstAllocator->u32Limit)
-    {
-        channel_debug_printf(-1, "(%08x)->tralloc(%d) fails\n", pstAllocator, u32Size);
-        return NULL;
-    }
-    pstAllocator->pcTop = (int)((char*)pstBlockDescriptor + u32AlignedSize);
-    pstBlockDescriptor->u32Size = u32Size;
-    channel_debug_printf(-1, "(%08x)->tralloc(%d) -> %08x\n", pstAllocator, u32Size, &pstBlockDescriptor->acBuffer);
-    return &pstBlockDescriptor->acBuffer;
-}
-
-void fn_vResetAllocator(anon_0* pstAllocator)
-{
-    pstAllocator->pcTop = pstAllocator->pcBase;
-    pstAllocator->pcTop += 4;
-    pstAllocator->pcTop = (pstAllocator->pcTop & 0xF) ? (pstAllocator->pcTop & -0x10) + 0x10 : pstAllocator->pcTop;
-    pstAllocator->pcTop -= 4;
-    channel_debug_printf(-1, "(%08x)->trreset()\n", pstAllocator);
-}
-
-void fn_vInitAllocator(anon_0* pstAllocator, unsigned int u32Size, char* pcBuffer)
-{
-    pstAllocator->u32Limit = u32Size;
-    pstAllocator->pcBase = (int)pcBuffer;
-    fn_vResetAllocator(pstAllocator);
 }

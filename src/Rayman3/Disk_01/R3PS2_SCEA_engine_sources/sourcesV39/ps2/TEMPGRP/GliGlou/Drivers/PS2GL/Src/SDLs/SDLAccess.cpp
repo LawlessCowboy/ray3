@@ -370,71 +370,35 @@ void CHEAP_CountMatrices(HIE_tdstSuperObject_* pSPO, unsigned int* pNbMatrices)
 /* The retail SDL_* entry points have C linkage (unmangled ELF symbols). */
 extern "C" {
 
-unsigned int SDL_REF_GetNewFogRef(unsigned int Index)
-{
-    return (unsigned int)new C_SdlRef_FogParameters(Index);
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+unsigned int SDL_REF_GetNewFogRef(unsigned int Index);
+unsigned int SDL_REF_GetNewTextureOffsetRef(float du, float dv, unsigned int Index, GLI_tdstMaterial_* hMaterial);
+unsigned int SDL_REF_GetNewPointLightingDataRef(HIE_tdstSuperObject_* pSPO, unsigned int Index);
+unsigned int SDL_REF_GetNewTextureIdMatrixRef(HIE_tdstSuperObject_* pSPO, unsigned int Index);
+unsigned int SDL_REF_GetNewTextureMatrixRef(HIE_tdstSuperObject_* pSPO, unsigned int Index);
+unsigned int SDL_REF_GetNewLocalMatrixRef(HIE_tdstSuperObject_* pSPO, unsigned int Index);
+void SDL_IncNbElements(unsigned int hSDL);
+void SDL_SetNbFaces(unsigned int hSDL, unsigned int NbFaces);
+void SDL_UpdateFogs(unsigned int hSDL);
+void SDL_Draw(unsigned int hSDL);
+void SDL_Preprocess(unsigned int hSDL);
+void SDL_End(unsigned int hSDL);
+void SDL_Start(unsigned int hSDL);
+void SDL_AddRef(unsigned int hSDL, unsigned int hRef);
+void SDL_Destroy(unsigned int* phSDL);
 
-unsigned int SDL_REF_GetNewTextureOffsetRef(float du, float dv, unsigned int Index, GLI_tdstMaterial_* hMaterial)
+void SDL_Destroy(unsigned int* phSDL)
 {
-    return (unsigned int)new C_SdlRef_TextureOffset(du, dv, Index, hMaterial);
-}
+    C_Sdl* pSdl;
 
-unsigned int SDL_REF_GetNewPointLightingDataRef(HIE_tdstSuperObject_* pSPO, unsigned int Index)
-{
-    return (unsigned int)new C_SdlRef_PointLighting(pSPO, Index);
-}
-
-unsigned int SDL_REF_GetNewTextureIdMatrixRef(HIE_tdstSuperObject_* pSPO, unsigned int Index)
-{
-    return (unsigned int)new C_SdlRef_TextureIdMatrix(pSPO, Index);
-}
-
-unsigned int SDL_REF_GetNewTextureMatrixRef(HIE_tdstSuperObject_* pSPO, unsigned int Index)
-{
-    return (unsigned int)new C_SdlRef_TextureMatrix(pSPO, Index);
-}
-
-unsigned int SDL_REF_GetNewLocalMatrixRef(HIE_tdstSuperObject_* pSPO, unsigned int Index)
-{
-    return (unsigned int)new C_SdlRef_LocalMatrix(pSPO, Index);
-}
-
-void SDL_IncNbElements(unsigned int hSDL)
-{
-    unsigned int* p = (unsigned int*)(hSDL + 0x20);
-    *p = *p + 1;
-}
-
-void SDL_SetNbFaces(unsigned int hSDL, unsigned int NbFaces)
-{
-    *(unsigned int*)(hSDL + 0x1C) = NbFaces;
-}
-
-void SDL_UpdateFogs(unsigned int hSDL)
-{
-    ((C_Sdl*)hSDL)->UpdateFogs();
-}
-
-void SDL_Draw(unsigned int hSDL)
-{
-    ((C_Sdl*)hSDL)->Draw(1);
-}
-
-void SDL_Preprocess(unsigned int hSDL)
-{
-    ((C_Sdl*)hSDL)->Preprocess();
-}
-
-void SDL_End(unsigned int hSDL)
-{
-    ((C_Sdl*)hSDL)->End();
-}
-
-void SDL_Start(unsigned int hSDL)
-{
-    hCurrentSDL = hSDL;
-    ((C_Sdl*)hSDL)->Start();
+    if (phSDL)
+    {
+        pSdl = (C_Sdl*)*phSDL;
+        if (pSdl)
+            delete pSdl;
+        *phSDL = 0;
+    }
 }
 
 void SDL_AddRef(unsigned int hSDL, unsigned int hRef)
@@ -453,16 +417,70 @@ void SDL_AddRef(unsigned int hSDL, unsigned int hRef)
     }
 }
 
-void SDL_Destroy(unsigned int* phSDL)
+void SDL_Start(unsigned int hSDL)
 {
-    C_Sdl* pSdl;
+    hCurrentSDL = hSDL;
+    ((C_Sdl*)hSDL)->Start();
+}
 
-    if (phSDL)
-    {
-        pSdl = (C_Sdl*)*phSDL;
-        if (pSdl)
-            delete pSdl;
-        *phSDL = 0;
-    }
+void SDL_End(unsigned int hSDL)
+{
+    ((C_Sdl*)hSDL)->End();
+}
+
+void SDL_Preprocess(unsigned int hSDL)
+{
+    ((C_Sdl*)hSDL)->Preprocess();
+}
+
+void SDL_Draw(unsigned int hSDL)
+{
+    ((C_Sdl*)hSDL)->Draw(1);
+}
+
+void SDL_UpdateFogs(unsigned int hSDL)
+{
+    ((C_Sdl*)hSDL)->UpdateFogs();
+}
+
+void SDL_SetNbFaces(unsigned int hSDL, unsigned int NbFaces)
+{
+    *(unsigned int*)(hSDL + 0x1C) = NbFaces;
+}
+
+void SDL_IncNbElements(unsigned int hSDL)
+{
+    unsigned int* p = (unsigned int*)(hSDL + 0x20);
+    *p = *p + 1;
+}
+
+unsigned int SDL_REF_GetNewLocalMatrixRef(HIE_tdstSuperObject_* pSPO, unsigned int Index)
+{
+    return (unsigned int)new C_SdlRef_LocalMatrix(pSPO, Index);
+}
+
+unsigned int SDL_REF_GetNewTextureMatrixRef(HIE_tdstSuperObject_* pSPO, unsigned int Index)
+{
+    return (unsigned int)new C_SdlRef_TextureMatrix(pSPO, Index);
+}
+
+unsigned int SDL_REF_GetNewTextureIdMatrixRef(HIE_tdstSuperObject_* pSPO, unsigned int Index)
+{
+    return (unsigned int)new C_SdlRef_TextureIdMatrix(pSPO, Index);
+}
+
+unsigned int SDL_REF_GetNewPointLightingDataRef(HIE_tdstSuperObject_* pSPO, unsigned int Index)
+{
+    return (unsigned int)new C_SdlRef_PointLighting(pSPO, Index);
+}
+
+unsigned int SDL_REF_GetNewTextureOffsetRef(float du, float dv, unsigned int Index, GLI_tdstMaterial_* hMaterial)
+{
+    return (unsigned int)new C_SdlRef_TextureOffset(du, dv, Index, hMaterial);
+}
+
+unsigned int SDL_REF_GetNewFogRef(unsigned int Index)
+{
+    return (unsigned int)new C_SdlRef_FogParameters(Index);
 }
 }

@@ -1806,6 +1806,481 @@ void MAT_fn_vApplyOnVector(MTH3D_tdstVector_* pResult, MAT_tdstTransformation_* 
 unsigned char INT_fn_bIntersectSegmentWithFaceOfGeometricObject(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVertexB, MTH3D_tdstVector_* p_stVectAB, GEO_tdstGeometricObject_* p_stGeomObj, short xNbMaxElements, short* p_xNbElements, GLI_tdstDataOfElement_* d_stDataOfElement);
 unsigned char GEO_vGetFaceSurfaceSpeed(GEO_tdstGeometricObject_* hObject, short xElement, short xFace, MTH3D_tdstVector_* p_vSpeed, int lMTIndex);
 
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void fn_vGetScrollSpeedMatCollided(HIE_tdstSuperObject_* p_stSuperObj, MTH3D_tdstVector_* p_stVector, unsigned int ulObstacleType, int ulMTIndex);
+unsigned char EngineIsFrozen(void);
+void fn_vReinitTheStaticHierarchie(HIE_tdstSuperObject_* hSuperObject);
+void fn_vReinitTheMap(void);
+void fn_vDesInitDeadLoop(void);
+void fn_vInitDeadLoop(void);
+void fn_vInitGameLoop(void);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Initeng.c lines 1418–1419 */
+/* addr: 0x002647d0  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1418
+ *   +0x0004 -> line 1419
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Initeng.c lines 1378–1387 */
+/* addr: 0x002647e0  size: 208 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1378
+ *   +0x0004 -> line 1382
+ *   +0x0008 -> line 1378
+ *   +0x000c -> line 1382
+ *   +0x0010 -> line 1378
+ *   +0x001c -> line 1382
+ *   +0x0028 -> line 1383
+ *   +0x0034 -> line 1385
+ *   +0x00a8 -> line 1386
+ *   +0x00b8 -> line 1387
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+#pragma auto_inline on
+
+#pragma auto_inline reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Initeng.c lines 1235–1364 */
+/* addr: 0x002648b0  size: 808 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1235
+ *   +0x0004 -> line 1243
+ *   +0x0008 -> line 1235
+ *   +0x0010 -> line 1243
+ *   +0x0028 -> line 1246
+ *   +0x0030 -> line 1249
+ *   +0x0038 -> line 1254
+ *   +0x0040 -> line 1257
+ *   +0x0048 -> line 1259
+ *   +0x0054 -> line 1260
+ *   +0x0060 -> line 1261
+ *   +0x0064 -> line 1262
+ *   +0x006c -> line 1263
+ *   +0x0074 -> line 1264
+ *   +0x007c -> line 1265
+ *   +0x0084 -> line 1267
+ *   +0x00f8 -> line 1270
+ *   +0x0100 -> line 1272
+ *   +0x0118 -> line 1273
+ *   +0x0150 -> line 1274
+ *   +0x0160 -> line 1276
+ *   +0x0168 -> line 1278
+ *   +0x0180 -> line 1279
+ *   +0x0188 -> line 1280
+ *   +0x0198 -> line 1282
+ *   +0x01a0 -> line 1287
+ *   +0x01c8 -> line 1291
+ *   +0x01d0 -> line 1293
+ *   +0x01dc -> line 1295
+ *   +0x01e8 -> line 1296
+ *   +0x0204 -> line 1299
+ *   +0x020c -> line 1303
+ *   +0x0214 -> line 1310
+ *   +0x0218 -> line 1313
+ *   +0x021c -> line 1310
+ *   +0x0234 -> line 1316
+ *   +0x023c -> line 1318
+ *   +0x0244 -> line 1324
+ *   +0x024c -> line 1337
+ *   +0x0290 -> line 1339
+ *   +0x0298 -> line 1340
+ *   +0x02a4 -> line 1342
+ *   +0x02ac -> line 1343
+ *   +0x02b8 -> line 1347
+ *   +0x02c0 -> line 1349
+ *   +0x02cc -> line 1353
+ *   +0x02dc -> line 1354
+ *   +0x02ec -> line 1355
+ *   +0x02fc -> line 1358
+ *   +0x0304 -> line 1360
+ *   +0x030c -> line 1361
+ *   +0x0314 -> line 1364
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+short fn_hGetGLDDevice(int lDevice);
+int GLD_bSetBackgroundColorForDevice(int hDevice, unsigned int crRGB);
+void InitListOfCheapCharacterList(void);
+void SND_fn_vKillAllObjectTypeSound(int s32_TypeId);
+void SND_fn_vKillAllObjectSound(void);
+void fn_vRemoveAllMicros(void);
+void MAT_fn_vSetIdentity(MAT_tdstTransformation_* p_stMatrix);
+void fn_vKillAllAlways(void);
+void fn_vDestructAllFatherSonLinks(void);
+int SAI_fn_bInitAllWhen(int eUserFlags);
+void fn_vForceReinitAllObjects(void);
+void HIE_fn_vUpdateGlobalMatrix(HIE_tdstSuperObject_* hSO);
+void WPG_fn_vReinitAllGraphs(void);
+void CAM_fn_vActualizeAViewport(int lViewport);
+void GLI_vInitWaterplaneModule(void);
+void GAM_fn_vSaveBlockEventSlotMemory(_SND_tdstBlockEvent* pst_BlockEvent, int s32_Index);
+int SND_fn_s32SendRequestSound(int s32_ObjectId, int s32_ChannelId, int s32_TypeId,
+                               _SND_tduRefEvt u_RefEvt, void* pData, void* pData2);
+void MOR_fn_vRemoveAllMorphedObjects(void);
+void SPO_ReinitSuperimposedArray(void);
+void IPT_fn_vActivateAllEntryElements(void);
+void TFMT_vInitTextAfficheStructure(void);
+void AGO_vInit(void);
+int GLD_bClearViewportWithChoice(short hDev, short hVP, short sChoice);
+void fn_vStartEngineClock(void);
+void fn_vSaveEngineClock(void);
+void SECT_fn_vInitActivationSector(HIE_tdstSuperObject_* hSectorRoot);
+void CAM_fn_vAssignCameraToAViewport(int lViewportNumber, HIE_tdstSuperObject_* hCamera);
+void fn_vReInitAllDynamicAlwaysActiveState(void);
+void IPO_fn_vLevelReInitRLI(void);
+void GLI_fn_vInitInstantFadeIn(unsigned int ulNumberOfFrame);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Initeng.c lines 1136–1152 */
+/* addr: 0x00264be0  size: 44 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1136
+ *   +0x0008 -> line 1144
+ *   +0x0010 -> line 1146
+ *   +0x0018 -> line 1147
+ *   +0x0020 -> line 1152
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vDestructAllFatherSonLinks(void);
+void fn_vKillAllAlways(void);
+void AGO_vInit(void);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Initeng.c lines 998–1122 */
+/* addr: 0x00264c10  size: 896 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 998
+ *   +0x0004 -> line 1002
+ *   +0x0008 -> line 998
+ *   +0x000c -> line 1007
+ *   +0x0010 -> line 998
+ *   +0x0018 -> line 1002
+ *   +0x001c -> line 1003
+ *   +0x0024 -> line 1004
+ *   +0x0028 -> line 1007
+ *   +0x0030 -> line 1011
+ *   +0x0038 -> line 1013
+ *   +0x0040 -> line 1014
+ *   +0x00b8 -> line 1017
+ *   +0x00c0 -> line 1019
+ *   +0x00d8 -> line 1020
+ *   +0x0110 -> line 1021
+ *   +0x0120 -> line 1023
+ *   +0x0128 -> line 1025
+ *   +0x0140 -> line 1026
+ *   +0x0148 -> line 1027
+ *   +0x0158 -> line 1032
+ *   +0x0180 -> line 1034
+ *   +0x0188 -> line 1036
+ *   +0x01a4 -> line 1042
+ *   +0x01b8 -> line 1044
+ *   +0x01cc -> line 1046
+ *   +0x01d4 -> line 1047
+ *   +0x01dc -> line 1052
+ *   +0x01e4 -> line 1053
+ *   +0x01ec -> line 1056
+ *   +0x01f4 -> line 1057
+ *   +0x01fc -> line 1059
+ *   +0x020c -> line 1062
+ *   +0x0214 -> line 1064
+ *   +0x0260 -> line 1071
+ *   +0x0270 -> line 1073
+ *   +0x02bc -> line 1080
+ *   +0x02c0 -> line 1091
+ *   +0x02c4 -> line 1080
+ *   +0x02c8 -> line 1085
+ *   +0x02e4 -> line 1092
+ *   +0x02ec -> line 1096
+ *   +0x0304 -> line 1106
+ *   +0x0324 -> line 1108
+ *   +0x0330 -> line 1109
+ *   +0x034c -> line 1112
+ *   +0x0354 -> line 1114
+ *   +0x035c -> line 1116
+ *   +0x036c -> line 1122
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_HysteresisLevelStart(char* szLevelName);
+void InitListOfCheapCharacterList(void);
+void fn_vStartEngineClock(void);
+void HIE_fn_vUpdateGlobalMatrix(HIE_tdstSuperObject_* hSO);
+void CAM_fn_vActualizeAViewport(int lViewport);
+void SECT_fn_vInitActivationSector(HIE_tdstSuperObject_* hSectorRoot);
+tdstNodeMainCharacter_* MC_fn_hGetFirstMainCharNode(void);
+HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(tdstNodeMainCharacter_* hMainCharNode);
+int SAI_fn_bInitAllWhen(int eUserFlags);
+void fn_vInitAllObjectsWhenPlayerDead(void);
+void IPT_fn_vActivateAllEntryElements(void);
+void fn_vInitAllObjectsWhenMapJustLoaded(void);
+void* SAI_fn_p_vGetTableValuePointerOf(void* p_vValue, unsigned short eFlags);
+void GLI_vInitWaterplaneModule(void);
+void fn_vReputCharacterSuperObjectAtTheWorld(HIE_tdstSuperObject_* h_SupObject);
+_SND_tdstBlockEvent* GAM_p_stGetBlockEventSlotMemory(int s32_Index);
+int SND_fn_s32SendRequestSound(int s32_ObjectId, int s32_ChannelId, int s32_TypeId,
+                               _SND_tduRefEvt u_RefEvt, void* pData, void* pData2);
+void GAM_MultiVP_fn_vInitMultiPlayerMode(void);
+void IPO_fn_vLevelReInitRLI(void);
+void CAM_fn_vAssignCameraToAViewport(int lViewportNumber, HIE_tdstSuperObject_* hCamera);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Initeng.c lines 415–458 */
+/* addr: 0x00264f90  size: 184 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 415
+ *   +0x0004 -> line 416
+ *   +0x0008 -> line 415
+ *   +0x0010 -> line 418
+ *   +0x0018 -> line 425
+ *   +0x0020 -> line 426
+ *   +0x0028 -> line 429
+ *   +0x0038 -> line 431
+ *   +0x0048 -> line 432
+ *   +0x0050 -> line 433
+ *   +0x0058 -> line 435
+ *   +0x0068 -> line 437
+ *   +0x0070 -> line 438
+ *   +0x0078 -> line 441
+ *   +0x0080 -> line 447
+ *   +0x0088 -> line 449
+ *   +0x0090 -> line 452
+ *   +0x0098 -> line 454
+ *   +0x00a0 -> line 456
+ *   +0x00a8 -> line 458
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GAM_fn_vSetEngineInLevelMode(void);
+void fn_vReinitEngineClock(void);
+void HIE_fn_vInitGlobalMatrixFrameCounter(int lValue);
+unsigned char fn_bIsNextLevelNameValid(void);
+char* fn_p_szGetNextLevelName(void);
+void fn_vSetLevelName(char* szLevelName);
+void fn_vFreeNextLevelName(void);
+char* fn_p_szGetFirstLevelName(void);
+void fn_vInitAllObjectsWhenNewGameStart(void);
+int SAI_fn_bInitAllWhen(int eUserFlags);
+void fn_vChangeEngineMode(unsigned char eNewMode);
+void fn_vInitLevelLoop(void);
+void fn_vTestUnusedComport(void);
+void TFMT_vInitTextAfficheStructure(void);
+void GAM_MultiVP_fn_vInitMultiPlayerMode(void);
+
+void fn_vInitGameLoop(void)
+{
+    unsigned char ucEngineMode;
+
+    ucEngineMode = g_stEngineStructure.eEngineMode;
+
+    GAM_fn_vSetEngineInLevelMode();
+
+    fn_vReinitEngineClock();
+    HIE_fn_vInitGlobalMatrixFrameCounter(0);
+
+    if (fn_bIsNextLevelNameValid())
+    {
+        fn_vSetLevelName(fn_p_szGetNextLevelName());
+        fn_vFreeNextLevelName();
+    }
+    else
+    {
+        fn_vSetLevelName(fn_p_szGetFirstLevelName());
+    }
+
+    fn_vInitAllObjectsWhenNewGameStart();
+    SAI_fn_bInitAllWhen(1);
+
+    fn_vChangeEngineMode(5);
+
+    fn_vInitLevelLoop();
+    fn_vChangeEngineMode(ucEngineMode);
+
+    fn_vTestUnusedComport();
+    TFMT_vInitTextAfficheStructure();
+    GAM_MultiVP_fn_vInitMultiPlayerMode();
+}
+
+void fn_vInitDeadLoop(void)
+{
+    int i;
+    _SND_tduRefEvt uSoundEvent;
+    unsigned char uc_ViewPortIndex;
+    HIE_tdstSuperObject_* hMaincharacter;
+
+    g_stEngineStructure.stEngineTimer.ulTrameNumber = 0;
+    g_stEngineStructure.bEngineFrozen = 0;
+    g_stEngineStructure.cCameraMode = 0;
+    GLI_HysteresisLevelStart(NULL);
+    InitListOfCheapCharacterList();
+    fn_vStartEngineClock();
+    fn_vReinitTheStaticHierarchie((HIE_tdstSuperObject_*)SECT_hFatherSector);
+
+    for (i = 0; i < 300; i++)
+    {
+        if (g_a50_stDynSpoInitialPos[i].hDynSpo != NULL)
+            *g_a50_stDynSpoInitialPos[i].hDynSpo->hLocalMatrix = g_a50_stDynSpoInitialPos[i].stMatrix;
+    }
+
+    for (i = 0; i < 300; i++)
+    {
+        if (g_a50_stDynSpoInitialPos[i].hDynSpo != NULL)
+            HIE_fn_vUpdateGlobalMatrix(g_a50_stDynSpoInitialPos[i].hDynSpo);
+    }
+
+    for (uc_ViewPortIndex = 0; uc_ViewPortIndex < 4; uc_ViewPortIndex++) CAM_fn_vActualizeAViewport(uc_ViewPortIndex);
+
+    SECT_fn_vInitActivationSector((HIE_tdstSuperObject_*)g_hLoadedSuperObjectRoot);
+
+    if (g_stEngineStructure.eEngineMode != 5 && g_stEngineStructure.eEngineMode != 3)
+    {
+        hMaincharacter = MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode());
+        if (hMaincharacter->hLinkedObject.p_stCharacter->h_StandardGame->ucHitPoints > 0)
+        {
+            SAI_fn_bInitAllWhen(0x20);
+            fn_vInitAllObjectsWhenPlayerDead();
+            IPT_fn_vActivateAllEntryElements();
+        }
+        else
+        {
+            fn_vReinitTheMap();
+            fn_vInitAllObjectsWhenMapJustLoaded();
+        }
+
+        if (g_stEngineStructure.bResurection)
+        {
+            if (hMaincharacter != NULL)
+            {
+                *(MAT_tdstTransformation_*)SAI_fn_p_vGetTableValuePointerOf(&hMaincharacter->hLinkedObject.p_stCharacter->h_3dData->stGLIObjectMatrix, 0x32) = g_stEngineStructure.stMainCharacterPosition;
+            }
+            if (g_stEngineStructure.h_StdCamCaracter != NULL)
+            {
+                *(MAT_tdstTransformation_*)SAI_fn_p_vGetTableValuePointerOf(&g_stEngineStructure.h_StdCamCaracter->hLinkedObject.p_stCharacter->h_3dData->stGLIObjectMatrix, 0x32)
+                    = g_stEngineStructure.stMainCameraPosition;
+            }
+        }
+
+        g_stEngineStructure.bResurection = 0;
+        g_a_hSOCurrentMainSector[0] = 0; g_a_hSOCurrentMainSector[1] = 0; g_a_hSOCurrentMainSector[2] = 0; g_a_hSOCurrentMainSector[3] = 0;
+        GLI_cGlobalFogIsOn = 0;
+        GLI_vInitWaterplaneModule();
+    }
+
+    fn_vReputCharacterSuperObjectAtTheWorld(MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode()));
+
+    if (g_stEngineStructure.eEngineMode == 7 && g_bBeginMapSoundEventFlag)
+    {
+        uSoundEvent.pstPtr = GAM_p_stGetBlockEventSlotMemory(0);
+        SND_fn_s32SendRequestSound(-1, -1, g_lSoundObjectTypeMusic, uSoundEvent, NULL, NULL);
+    }
+
+    GAM_MultiVP_fn_vInitMultiPlayerMode();
+    IPO_fn_vLevelReInitRLI();
+    CAM_fn_vAssignCameraToAViewport(4, g_stEngineStructure.h_StdCamCaracter);
+}
+
+void fn_vDesInitDeadLoop(void)
+{
+    fn_vDestructAllFatherSonLinks();
+    fn_vKillAllAlways();
+    AGO_vInit();
+}
+
+void fn_vReinitTheMap(void)
+{
+    unsigned char uc_ViewPortIndex;
+    int i;
+
+    GLD_bSetBackgroundColorForDevice(fn_hGetGLDDevice(0), 0);
+    InitListOfCheapCharacterList();
+    SND_fn_vKillAllObjectTypeSound(g_lSoundObjectTypeAnim);
+    SND_fn_vKillAllObjectSound();
+    fn_vRemoveAllMicros();
+    MAT_fn_vSetIdentity(&g_stEngineStructure.stMainCharacterPosition);
+    MAT_fn_vSetIdentity(&g_stEngineStructure.stMainCameraPosition);
+    g_stEngineStructure.bResurection = 0;
+    fn_vKillAllAlways();
+    fn_vDestructAllFatherSonLinks();
+    SAI_fn_bInitAllWhen(0x10);
+    fn_vForceReinitAllObjects();
+    fn_vReinitTheStaticHierarchie((HIE_tdstSuperObject_*)SECT_hFatherSector);
+
+    for (i = 0; i < 300; i++)
+    {
+        if (g_a50_stDynSpoInitialPos[i].hDynSpo != NULL)
+            *g_a50_stDynSpoInitialPos[i].hDynSpo->hLocalMatrix = g_a50_stDynSpoInitialPos[i].stMatrix;
+    }
+
+    for (i = 0; i < 300; i++)
+    {
+        if (g_a50_stDynSpoInitialPos[i].hDynSpo != NULL)
+            HIE_fn_vUpdateGlobalMatrix(g_a50_stDynSpoInitialPos[i].hDynSpo);
+    }
+
+    WPG_fn_vReinitAllGraphs();
+
+    for (uc_ViewPortIndex = 0; uc_ViewPortIndex < 4; uc_ViewPortIndex++) CAM_fn_vActualizeAViewport(uc_ViewPortIndex);
+
+    GLI_vInitWaterplaneModule();
+
+    if (g_bBeginMapSoundEventFlag)
+    {
+        GAM_fn_vSaveBlockEventSlotMemory(g_stBeginMapSoundEvent.pstPtr, 0);
+        SND_fn_s32SendRequestSound(-1, -1, g_lSoundObjectTypeMusic, g_stBeginMapSoundEvent, NULL, NULL);
+    }
+
+    MOR_fn_vRemoveAllMorphedObjects();
+    GLI_cGlobalFogIsOn = 0;
+    SPO_ReinitSuperimposedArray();
+    iNumLoop = 0;
+    g_a_hSOCurrentMainSector[0] = 0; g_a_hSOCurrentMainSector[1] = 0; g_a_hSOCurrentMainSector[2] = 0; g_a_hSOCurrentMainSector[3] = 0;
+
+    IPT_fn_vActivateAllEntryElements();
+    TFMT_vInitTextAfficheStructure();
+    AGO_vInit();
+
+    for (uc_ViewPortIndex = 0; uc_ViewPortIndex < 4; uc_ViewPortIndex++) GLD_bClearViewportWithChoice(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[uc_ViewPortIndex], 1);
+
+    fn_vStartEngineClock();
+    if (g_bFrozenWhenStart)
+    {
+        fn_vSaveEngineClock();
+        g_stEngineStructure.bEngineFrozen = 1;
+    }
+
+    SECT_fn_vInitActivationSector((HIE_tdstSuperObject_*)g_hLoadedSuperObjectRoot);
+
+    if (g_ucDebugCamera)
+    {
+        g_ucDebugCamera = 0;
+        CAM_fn_vAssignCameraToAViewport(0, g_stEngineStructure.h_DbgCamCharacter);
+        CAM_fn_vAssignCameraToAViewport(1, g_stEngineStructure.h_StdCamCaracter);
+        g_stEngineStructure.h_StdCamCaracter = g_stEngineStructure.h_DbgCamCharacter;
+    }
+
+    fn_vReInitAllDynamicAlwaysActiveState();
+    IPO_fn_vLevelReInitRLI();
+    GLI_fn_vInitInstantFadeIn(4);
+}
+
+#pragma auto_inline on
+void fn_vReinitTheStaticHierarchie(HIE_tdstSuperObject_* hSuperObject)
+{
+    HIE_tdstSuperObject_* hChild;
+
+    hSuperObject->lDrawModeMask |= 0xEE7FFFFF;
+    for (hChild = hSuperObject->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn)
+        fn_vReinitTheStaticHierarchie(hChild);
+}
+#pragma auto_inline reset
+
+unsigned char EngineIsFrozen(void)
+{
+    return g_stEngineStructure.bEngineFrozen;
+}
+
 void fn_vGetScrollSpeedMatCollided(HIE_tdstSuperObject_* p_stSuperObj, MTH3D_tdstVector_* p_stVector, unsigned int ulObstacleType, int ulMTIndex)
 {
     short xNbFaceCollided;
@@ -1926,464 +2401,4 @@ void fn_vGetScrollSpeedMatCollided(HIE_tdstSuperObject_* p_stSuperObj, MTH3D_tds
             }
         }
     }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Initeng.c lines 1418–1419 */
-/* addr: 0x002647d0  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1418
- *   +0x0004 -> line 1419
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned char EngineIsFrozen(void)
-{
-    return g_stEngineStructure.bEngineFrozen;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Initeng.c lines 1378–1387 */
-/* addr: 0x002647e0  size: 208 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1378
- *   +0x0004 -> line 1382
- *   +0x0008 -> line 1378
- *   +0x000c -> line 1382
- *   +0x0010 -> line 1378
- *   +0x001c -> line 1382
- *   +0x0028 -> line 1383
- *   +0x0034 -> line 1385
- *   +0x00a8 -> line 1386
- *   +0x00b8 -> line 1387
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-#pragma auto_inline on
-void fn_vReinitTheStaticHierarchie(HIE_tdstSuperObject_* hSuperObject)
-{
-    HIE_tdstSuperObject_* hChild;
-
-    hSuperObject->lDrawModeMask |= 0xEE7FFFFF;
-    for (hChild = hSuperObject->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn)
-        fn_vReinitTheStaticHierarchie(hChild);
-}
-#pragma auto_inline reset
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Initeng.c lines 1235–1364 */
-/* addr: 0x002648b0  size: 808 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1235
- *   +0x0004 -> line 1243
- *   +0x0008 -> line 1235
- *   +0x0010 -> line 1243
- *   +0x0028 -> line 1246
- *   +0x0030 -> line 1249
- *   +0x0038 -> line 1254
- *   +0x0040 -> line 1257
- *   +0x0048 -> line 1259
- *   +0x0054 -> line 1260
- *   +0x0060 -> line 1261
- *   +0x0064 -> line 1262
- *   +0x006c -> line 1263
- *   +0x0074 -> line 1264
- *   +0x007c -> line 1265
- *   +0x0084 -> line 1267
- *   +0x00f8 -> line 1270
- *   +0x0100 -> line 1272
- *   +0x0118 -> line 1273
- *   +0x0150 -> line 1274
- *   +0x0160 -> line 1276
- *   +0x0168 -> line 1278
- *   +0x0180 -> line 1279
- *   +0x0188 -> line 1280
- *   +0x0198 -> line 1282
- *   +0x01a0 -> line 1287
- *   +0x01c8 -> line 1291
- *   +0x01d0 -> line 1293
- *   +0x01dc -> line 1295
- *   +0x01e8 -> line 1296
- *   +0x0204 -> line 1299
- *   +0x020c -> line 1303
- *   +0x0214 -> line 1310
- *   +0x0218 -> line 1313
- *   +0x021c -> line 1310
- *   +0x0234 -> line 1316
- *   +0x023c -> line 1318
- *   +0x0244 -> line 1324
- *   +0x024c -> line 1337
- *   +0x0290 -> line 1339
- *   +0x0298 -> line 1340
- *   +0x02a4 -> line 1342
- *   +0x02ac -> line 1343
- *   +0x02b8 -> line 1347
- *   +0x02c0 -> line 1349
- *   +0x02cc -> line 1353
- *   +0x02dc -> line 1354
- *   +0x02ec -> line 1355
- *   +0x02fc -> line 1358
- *   +0x0304 -> line 1360
- *   +0x030c -> line 1361
- *   +0x0314 -> line 1364
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-short fn_hGetGLDDevice(int lDevice);
-int GLD_bSetBackgroundColorForDevice(int hDevice, unsigned int crRGB);
-void InitListOfCheapCharacterList(void);
-void SND_fn_vKillAllObjectTypeSound(int s32_TypeId);
-void SND_fn_vKillAllObjectSound(void);
-void fn_vRemoveAllMicros(void);
-void MAT_fn_vSetIdentity(MAT_tdstTransformation_* p_stMatrix);
-void fn_vKillAllAlways(void);
-void fn_vDestructAllFatherSonLinks(void);
-int SAI_fn_bInitAllWhen(int eUserFlags);
-void fn_vForceReinitAllObjects(void);
-void HIE_fn_vUpdateGlobalMatrix(HIE_tdstSuperObject_* hSO);
-void WPG_fn_vReinitAllGraphs(void);
-void CAM_fn_vActualizeAViewport(int lViewport);
-void GLI_vInitWaterplaneModule(void);
-void GAM_fn_vSaveBlockEventSlotMemory(_SND_tdstBlockEvent* pst_BlockEvent, int s32_Index);
-int SND_fn_s32SendRequestSound(int s32_ObjectId, int s32_ChannelId, int s32_TypeId,
-                               _SND_tduRefEvt u_RefEvt, void* pData, void* pData2);
-void MOR_fn_vRemoveAllMorphedObjects(void);
-void SPO_ReinitSuperimposedArray(void);
-void IPT_fn_vActivateAllEntryElements(void);
-void TFMT_vInitTextAfficheStructure(void);
-void AGO_vInit(void);
-int GLD_bClearViewportWithChoice(short hDev, short hVP, short sChoice);
-void fn_vStartEngineClock(void);
-void fn_vSaveEngineClock(void);
-void SECT_fn_vInitActivationSector(HIE_tdstSuperObject_* hSectorRoot);
-void CAM_fn_vAssignCameraToAViewport(int lViewportNumber, HIE_tdstSuperObject_* hCamera);
-void fn_vReInitAllDynamicAlwaysActiveState(void);
-void IPO_fn_vLevelReInitRLI(void);
-void GLI_fn_vInitInstantFadeIn(unsigned int ulNumberOfFrame);
-
-void fn_vReinitTheMap(void)
-{
-    unsigned char uc_ViewPortIndex;
-    int i;
-
-    GLD_bSetBackgroundColorForDevice(fn_hGetGLDDevice(0), 0);
-    InitListOfCheapCharacterList();
-    SND_fn_vKillAllObjectTypeSound(g_lSoundObjectTypeAnim);
-    SND_fn_vKillAllObjectSound();
-    fn_vRemoveAllMicros();
-    MAT_fn_vSetIdentity(&g_stEngineStructure.stMainCharacterPosition);
-    MAT_fn_vSetIdentity(&g_stEngineStructure.stMainCameraPosition);
-    g_stEngineStructure.bResurection = 0;
-    fn_vKillAllAlways();
-    fn_vDestructAllFatherSonLinks();
-    SAI_fn_bInitAllWhen(0x10);
-    fn_vForceReinitAllObjects();
-    fn_vReinitTheStaticHierarchie((HIE_tdstSuperObject_*)SECT_hFatherSector);
-
-    for (i = 0; i < 300; i++)
-    {
-        if (g_a50_stDynSpoInitialPos[i].hDynSpo != NULL)
-            *g_a50_stDynSpoInitialPos[i].hDynSpo->hLocalMatrix = g_a50_stDynSpoInitialPos[i].stMatrix;
-    }
-
-    for (i = 0; i < 300; i++)
-    {
-        if (g_a50_stDynSpoInitialPos[i].hDynSpo != NULL)
-            HIE_fn_vUpdateGlobalMatrix(g_a50_stDynSpoInitialPos[i].hDynSpo);
-    }
-
-    WPG_fn_vReinitAllGraphs();
-
-    for (uc_ViewPortIndex = 0; uc_ViewPortIndex < 4; uc_ViewPortIndex++) CAM_fn_vActualizeAViewport(uc_ViewPortIndex);
-
-    GLI_vInitWaterplaneModule();
-
-    if (g_bBeginMapSoundEventFlag)
-    {
-        GAM_fn_vSaveBlockEventSlotMemory(g_stBeginMapSoundEvent.pstPtr, 0);
-        SND_fn_s32SendRequestSound(-1, -1, g_lSoundObjectTypeMusic, g_stBeginMapSoundEvent, NULL, NULL);
-    }
-
-    MOR_fn_vRemoveAllMorphedObjects();
-    GLI_cGlobalFogIsOn = 0;
-    SPO_ReinitSuperimposedArray();
-    iNumLoop = 0;
-    g_a_hSOCurrentMainSector[0] = 0; g_a_hSOCurrentMainSector[1] = 0; g_a_hSOCurrentMainSector[2] = 0; g_a_hSOCurrentMainSector[3] = 0;
-
-    IPT_fn_vActivateAllEntryElements();
-    TFMT_vInitTextAfficheStructure();
-    AGO_vInit();
-
-    for (uc_ViewPortIndex = 0; uc_ViewPortIndex < 4; uc_ViewPortIndex++) GLD_bClearViewportWithChoice(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[uc_ViewPortIndex], 1);
-
-    fn_vStartEngineClock();
-    if (g_bFrozenWhenStart)
-    {
-        fn_vSaveEngineClock();
-        g_stEngineStructure.bEngineFrozen = 1;
-    }
-
-    SECT_fn_vInitActivationSector((HIE_tdstSuperObject_*)g_hLoadedSuperObjectRoot);
-
-    if (g_ucDebugCamera)
-    {
-        g_ucDebugCamera = 0;
-        CAM_fn_vAssignCameraToAViewport(0, g_stEngineStructure.h_DbgCamCharacter);
-        CAM_fn_vAssignCameraToAViewport(1, g_stEngineStructure.h_StdCamCaracter);
-        g_stEngineStructure.h_StdCamCaracter = g_stEngineStructure.h_DbgCamCharacter;
-    }
-
-    fn_vReInitAllDynamicAlwaysActiveState();
-    IPO_fn_vLevelReInitRLI();
-    GLI_fn_vInitInstantFadeIn(4);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Initeng.c lines 1136–1152 */
-/* addr: 0x00264be0  size: 44 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1136
- *   +0x0008 -> line 1144
- *   +0x0010 -> line 1146
- *   +0x0018 -> line 1147
- *   +0x0020 -> line 1152
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vDestructAllFatherSonLinks(void);
-void fn_vKillAllAlways(void);
-void AGO_vInit(void);
-
-void fn_vDesInitDeadLoop(void)
-{
-    fn_vDestructAllFatherSonLinks();
-    fn_vKillAllAlways();
-    AGO_vInit();
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Initeng.c lines 998–1122 */
-/* addr: 0x00264c10  size: 896 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 998
- *   +0x0004 -> line 1002
- *   +0x0008 -> line 998
- *   +0x000c -> line 1007
- *   +0x0010 -> line 998
- *   +0x0018 -> line 1002
- *   +0x001c -> line 1003
- *   +0x0024 -> line 1004
- *   +0x0028 -> line 1007
- *   +0x0030 -> line 1011
- *   +0x0038 -> line 1013
- *   +0x0040 -> line 1014
- *   +0x00b8 -> line 1017
- *   +0x00c0 -> line 1019
- *   +0x00d8 -> line 1020
- *   +0x0110 -> line 1021
- *   +0x0120 -> line 1023
- *   +0x0128 -> line 1025
- *   +0x0140 -> line 1026
- *   +0x0148 -> line 1027
- *   +0x0158 -> line 1032
- *   +0x0180 -> line 1034
- *   +0x0188 -> line 1036
- *   +0x01a4 -> line 1042
- *   +0x01b8 -> line 1044
- *   +0x01cc -> line 1046
- *   +0x01d4 -> line 1047
- *   +0x01dc -> line 1052
- *   +0x01e4 -> line 1053
- *   +0x01ec -> line 1056
- *   +0x01f4 -> line 1057
- *   +0x01fc -> line 1059
- *   +0x020c -> line 1062
- *   +0x0214 -> line 1064
- *   +0x0260 -> line 1071
- *   +0x0270 -> line 1073
- *   +0x02bc -> line 1080
- *   +0x02c0 -> line 1091
- *   +0x02c4 -> line 1080
- *   +0x02c8 -> line 1085
- *   +0x02e4 -> line 1092
- *   +0x02ec -> line 1096
- *   +0x0304 -> line 1106
- *   +0x0324 -> line 1108
- *   +0x0330 -> line 1109
- *   +0x034c -> line 1112
- *   +0x0354 -> line 1114
- *   +0x035c -> line 1116
- *   +0x036c -> line 1122
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GLI_HysteresisLevelStart(char* szLevelName);
-void InitListOfCheapCharacterList(void);
-void fn_vStartEngineClock(void);
-void HIE_fn_vUpdateGlobalMatrix(HIE_tdstSuperObject_* hSO);
-void CAM_fn_vActualizeAViewport(int lViewport);
-void SECT_fn_vInitActivationSector(HIE_tdstSuperObject_* hSectorRoot);
-tdstNodeMainCharacter_* MC_fn_hGetFirstMainCharNode(void);
-HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(tdstNodeMainCharacter_* hMainCharNode);
-int SAI_fn_bInitAllWhen(int eUserFlags);
-void fn_vInitAllObjectsWhenPlayerDead(void);
-void IPT_fn_vActivateAllEntryElements(void);
-void fn_vInitAllObjectsWhenMapJustLoaded(void);
-void* SAI_fn_p_vGetTableValuePointerOf(void* p_vValue, unsigned short eFlags);
-void GLI_vInitWaterplaneModule(void);
-void fn_vReputCharacterSuperObjectAtTheWorld(HIE_tdstSuperObject_* h_SupObject);
-_SND_tdstBlockEvent* GAM_p_stGetBlockEventSlotMemory(int s32_Index);
-int SND_fn_s32SendRequestSound(int s32_ObjectId, int s32_ChannelId, int s32_TypeId,
-                               _SND_tduRefEvt u_RefEvt, void* pData, void* pData2);
-void GAM_MultiVP_fn_vInitMultiPlayerMode(void);
-void IPO_fn_vLevelReInitRLI(void);
-void CAM_fn_vAssignCameraToAViewport(int lViewportNumber, HIE_tdstSuperObject_* hCamera);
-
-void fn_vInitDeadLoop(void)
-{
-    int i;
-    _SND_tduRefEvt uSoundEvent;
-    unsigned char uc_ViewPortIndex;
-    HIE_tdstSuperObject_* hMaincharacter;
-
-    g_stEngineStructure.stEngineTimer.ulTrameNumber = 0;
-    g_stEngineStructure.bEngineFrozen = 0;
-    g_stEngineStructure.cCameraMode = 0;
-    GLI_HysteresisLevelStart(NULL);
-    InitListOfCheapCharacterList();
-    fn_vStartEngineClock();
-    fn_vReinitTheStaticHierarchie((HIE_tdstSuperObject_*)SECT_hFatherSector);
-
-    for (i = 0; i < 300; i++)
-    {
-        if (g_a50_stDynSpoInitialPos[i].hDynSpo != NULL)
-            *g_a50_stDynSpoInitialPos[i].hDynSpo->hLocalMatrix = g_a50_stDynSpoInitialPos[i].stMatrix;
-    }
-
-    for (i = 0; i < 300; i++)
-    {
-        if (g_a50_stDynSpoInitialPos[i].hDynSpo != NULL)
-            HIE_fn_vUpdateGlobalMatrix(g_a50_stDynSpoInitialPos[i].hDynSpo);
-    }
-
-    for (uc_ViewPortIndex = 0; uc_ViewPortIndex < 4; uc_ViewPortIndex++) CAM_fn_vActualizeAViewport(uc_ViewPortIndex);
-
-    SECT_fn_vInitActivationSector((HIE_tdstSuperObject_*)g_hLoadedSuperObjectRoot);
-
-    if (g_stEngineStructure.eEngineMode != 5 && g_stEngineStructure.eEngineMode != 3)
-    {
-        hMaincharacter = MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode());
-        if (hMaincharacter->hLinkedObject.p_stCharacter->h_StandardGame->ucHitPoints > 0)
-        {
-            SAI_fn_bInitAllWhen(0x20);
-            fn_vInitAllObjectsWhenPlayerDead();
-            IPT_fn_vActivateAllEntryElements();
-        }
-        else
-        {
-            fn_vReinitTheMap();
-            fn_vInitAllObjectsWhenMapJustLoaded();
-        }
-
-        if (g_stEngineStructure.bResurection)
-        {
-            if (hMaincharacter != NULL)
-            {
-                *(MAT_tdstTransformation_*)SAI_fn_p_vGetTableValuePointerOf(&hMaincharacter->hLinkedObject.p_stCharacter->h_3dData->stGLIObjectMatrix, 0x32) = g_stEngineStructure.stMainCharacterPosition;
-            }
-            if (g_stEngineStructure.h_StdCamCaracter != NULL)
-            {
-                *(MAT_tdstTransformation_*)SAI_fn_p_vGetTableValuePointerOf(&g_stEngineStructure.h_StdCamCaracter->hLinkedObject.p_stCharacter->h_3dData->stGLIObjectMatrix, 0x32)
-                    = g_stEngineStructure.stMainCameraPosition;
-            }
-        }
-
-        g_stEngineStructure.bResurection = 0;
-        g_a_hSOCurrentMainSector[0] = 0; g_a_hSOCurrentMainSector[1] = 0; g_a_hSOCurrentMainSector[2] = 0; g_a_hSOCurrentMainSector[3] = 0;
-        GLI_cGlobalFogIsOn = 0;
-        GLI_vInitWaterplaneModule();
-    }
-
-    fn_vReputCharacterSuperObjectAtTheWorld(MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode()));
-
-    if (g_stEngineStructure.eEngineMode == 7 && g_bBeginMapSoundEventFlag)
-    {
-        uSoundEvent.pstPtr = GAM_p_stGetBlockEventSlotMemory(0);
-        SND_fn_s32SendRequestSound(-1, -1, g_lSoundObjectTypeMusic, uSoundEvent, NULL, NULL);
-    }
-
-    GAM_MultiVP_fn_vInitMultiPlayerMode();
-    IPO_fn_vLevelReInitRLI();
-    CAM_fn_vAssignCameraToAViewport(4, g_stEngineStructure.h_StdCamCaracter);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Initeng.c lines 415–458 */
-/* addr: 0x00264f90  size: 184 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 415
- *   +0x0004 -> line 416
- *   +0x0008 -> line 415
- *   +0x0010 -> line 418
- *   +0x0018 -> line 425
- *   +0x0020 -> line 426
- *   +0x0028 -> line 429
- *   +0x0038 -> line 431
- *   +0x0048 -> line 432
- *   +0x0050 -> line 433
- *   +0x0058 -> line 435
- *   +0x0068 -> line 437
- *   +0x0070 -> line 438
- *   +0x0078 -> line 441
- *   +0x0080 -> line 447
- *   +0x0088 -> line 449
- *   +0x0090 -> line 452
- *   +0x0098 -> line 454
- *   +0x00a0 -> line 456
- *   +0x00a8 -> line 458
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GAM_fn_vSetEngineInLevelMode(void);
-void fn_vReinitEngineClock(void);
-void HIE_fn_vInitGlobalMatrixFrameCounter(int lValue);
-unsigned char fn_bIsNextLevelNameValid(void);
-char* fn_p_szGetNextLevelName(void);
-void fn_vSetLevelName(char* szLevelName);
-void fn_vFreeNextLevelName(void);
-char* fn_p_szGetFirstLevelName(void);
-void fn_vInitAllObjectsWhenNewGameStart(void);
-int SAI_fn_bInitAllWhen(int eUserFlags);
-void fn_vChangeEngineMode(unsigned char eNewMode);
-void fn_vInitLevelLoop(void);
-void fn_vTestUnusedComport(void);
-void TFMT_vInitTextAfficheStructure(void);
-void GAM_MultiVP_fn_vInitMultiPlayerMode(void);
-
-void fn_vInitGameLoop(void)
-{
-    unsigned char ucEngineMode;
-
-    ucEngineMode = g_stEngineStructure.eEngineMode;
-
-    GAM_fn_vSetEngineInLevelMode();
-
-    fn_vReinitEngineClock();
-    HIE_fn_vInitGlobalMatrixFrameCounter(0);
-
-    if (fn_bIsNextLevelNameValid())
-    {
-        fn_vSetLevelName(fn_p_szGetNextLevelName());
-        fn_vFreeNextLevelName();
-    }
-    else
-    {
-        fn_vSetLevelName(fn_p_szGetFirstLevelName());
-    }
-
-    fn_vInitAllObjectsWhenNewGameStart();
-    SAI_fn_bInitAllWhen(1);
-
-    fn_vChangeEngineMode(5);
-
-    fn_vInitLevelLoop();
-    fn_vChangeEngineMode(ucEngineMode);
-
-    fn_vTestUnusedComport();
-    TFMT_vInitTextAfficheStructure();
-    GAM_MultiVP_fn_vInitMultiPlayerMode();
 }

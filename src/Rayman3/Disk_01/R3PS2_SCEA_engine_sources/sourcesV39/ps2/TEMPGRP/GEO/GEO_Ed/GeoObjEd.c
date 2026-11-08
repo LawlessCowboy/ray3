@@ -202,34 +202,13 @@ void MAT_fn_vSetRotationVectors(MAT_tdstTransformation_* _hTransform, MTH3D_tdst
     asm { madd.s _result, _z, _z }
 #define MTH3D_M_vCopyVector(_d, _s) { *(int*)&(_d)->xX = *(int*)&(_s)->xX; *(int*)&(_d)->xY = *(int*)&(_s)->xY; *(int*)&(_d)->xZ = *(int*)&(_s)->xZ; }
 
-void GEO_fn_vComputeBoundingSphereOfTwoSpheres(MTH3D_tdstVector_* _p_stReturnedSphereCenter, float* _p_xReturnedSphereRadius, MTH3D_tdstVector_* _p_stFirstSphereCenter, float _xFirstSphereRadius, MTH3D_tdstVector_* _p_stSecondSphereCenter, float _xSecondSphereRadius)
-{
-    float xAlpha;
-    float xX, xY, xZ;
-    float xSqrNorm;
-    float xNorm;
-
-    xX = _p_stFirstSphereCenter->xX - _p_stSecondSphereCenter->xX; xY = _p_stFirstSphereCenter->xY - _p_stSecondSphereCenter->xY; xZ = _p_stFirstSphereCenter->xZ - _p_stSecondSphereCenter->xZ;
-    MTH_SQR3_TO(xSqrNorm, xX, xY, xZ) MTH_SQRT_TO(xNorm, xSqrNorm)
-    if (xNorm + _xFirstSphereRadius <= _xSecondSphereRadius)
-    {
-        *(int*)&_p_stReturnedSphereCenter->xX = *(int*)&_p_stSecondSphereCenter->xX; *(int*)&_p_stReturnedSphereCenter->xY = *(int*)&_p_stSecondSphereCenter->xY; *(int*)&_p_stReturnedSphereCenter->xZ = *(int*)&_p_stSecondSphereCenter->xZ;
-
-        *_p_xReturnedSphereRadius = _xSecondSphereRadius;
-    }
-    else if (xNorm + _xSecondSphereRadius < _xFirstSphereRadius)
-    {
-        *(int*)&_p_stReturnedSphereCenter->xX = *(int*)&_p_stFirstSphereCenter->xX; *(int*)&_p_stReturnedSphereCenter->xY = *(int*)&_p_stFirstSphereCenter->xY; *(int*)&_p_stReturnedSphereCenter->xZ = *(int*)&_p_stFirstSphereCenter->xZ;
-
-        *_p_xReturnedSphereRadius = _xFirstSphereRadius;
-    }
-    else
-    {
-        xAlpha = (1.0f - (_xFirstSphereRadius - _xSecondSphereRadius) / xNorm) / 2.0f;
-        _p_stReturnedSphereCenter->xX = _p_stFirstSphereCenter->xX + xAlpha * (_p_stSecondSphereCenter->xX - _p_stFirstSphereCenter->xX); _p_stReturnedSphereCenter->xY = _p_stFirstSphereCenter->xY + xAlpha * (_p_stSecondSphereCenter->xY - _p_stFirstSphereCenter->xY); _p_stReturnedSphereCenter->xZ = _p_stFirstSphereCenter->xZ + xAlpha * (_p_stSecondSphereCenter->xZ - _p_stFirstSphereCenter->xZ);
-        *_p_xReturnedSphereRadius = (xNorm + _xFirstSphereRadius + _xSecondSphereRadius) / 2.0f;
-    }
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void GEO_fn_vComputeBoundingSphereOfTwoSpheres(MTH3D_tdstVector_* _p_stReturnedSphereCenter, float* _p_xReturnedSphereRadius, MTH3D_tdstVector_* _p_stFirstSphereCenter, float _xFirstSphereRadius, MTH3D_tdstVector_* _p_stSecondSphereCenter, float _xSecondSphereRadius);
+void GEO_vTurnLookAt(GEO_tdstGeometricObject_* p_stObj, GLD_tdstViewportAttributes_* hVpt, GLI_tdstCamera_* _pstCameraFromPushBuffer, MAT_tdstTransformation_* p_stCurrentMatrix);
+unsigned char GEO_bIsLookAt(GEO_tdstGeometricObject_* p_stObj);
+void GEO_vCreateTMPGeometricObjectWithEdges(GEO_tdstGeometricObject_** p_hObject, short xNbPoints, short xNbElements, short xNbEdges);
+void GEO_vCreateTMPGeometricObject(GEO_tdstGeometricObject_** p_hObject, short xNbPoints, short xNbElements);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\GeoObjEd.c lines 875–966 */
 /* addr: 0x002a4650  size: 1332 bytes */
@@ -287,6 +266,64 @@ void GEO_fn_vComputeBoundingSphereOfTwoSpheres(MTH3D_tdstVector_* _p_stReturnedS
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\GeoObjEd.c lines 868–868 */
+/* addr: 0x002a4b90  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 868
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\GeoObjEd.c lines 147–151 */
+/* addr: 0x002a4ba0  size: 152 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 147
+ *   +0x0028 -> line 148
+ *   +0x005c -> line 149
+ *   +0x0060 -> line 148
+ *   +0x0064 -> line 149
+ *   +0x0070 -> line 150
+ *   +0x0078 -> line 151
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\GeoObjEd.c lines 140–144 */
+/* addr: 0x002a4c40  size: 228 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 140
+ *   +0x0028 -> line 141
+ *   +0x00a0 -> line 142
+ *   +0x00a4 -> line 141
+ *   +0x00b0 -> line 142
+ *   +0x00bc -> line 143
+ *   +0x00c4 -> line 144
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void GEO_vCreateTMPGeometricObject(GEO_tdstGeometricObject_** p_hObject, short xNbPoints, short xNbElements)
+{
+    GEO_tdstGeometricObject_* p_stObj;
+
+    p_stObj = (GEO_tdstGeometricObject_*)HMU_fn_p_vMalloc(sizeof(GEO_tdstGeometricObject_), 1); p_stObj->xNbElements = xNbElements; p_stObj->xNbPoints = xNbPoints; p_stObj->d_xListOfElementsTypes = (short*)HMU_fn_p_vMalloc(xNbElements * sizeof(short), 1); p_stObj->d_stListOfElements = (void**)HMU_fn_p_vMalloc(xNbElements * sizeof(void*), 1); p_stObj->d_stListOfPoints = (MTH3D_tdstVector_*)HMU_fn_p_vMalloc(xNbPoints * sizeof(MTH3D_tdstVector_), 1); memset(p_stObj->d_stListOfPoints, 0, xNbPoints * sizeof(MTH3D_tdstVector_)); p_stObj->d_stListOfPointsNormals = NULL; p_stObj->d_dfVertexTransparency = 0; p_stObj->d_stListOfEdges = NULL; *p_hObject = p_stObj;
+    GEO_vInitGeometricObject(*p_hObject, xNbPoints, xNbElements);
+    (*p_hObject)->xNbEdges = 0;
+}
+
+void GEO_vCreateTMPGeometricObjectWithEdges(GEO_tdstGeometricObject_** p_hObject, short xNbPoints, short xNbElements, short xNbEdges)
+{
+    GEO_tdstGeometricObject_* p_stObj = GEO_hAllocTMPGeometricObject(xNbPoints, xNbElements); p_stObj->d_stListOfEdges = (GEO_tdstEdge_*)HMU_fn_p_vMalloc(xNbEdges * sizeof(GEO_tdstEdge_), 1); *p_hObject = p_stObj;
+    GEO_vInitGeometricObject(*p_hObject, xNbPoints, xNbElements);
+    (*p_hObject)->xNbEdges = xNbEdges;
+}
+
+unsigned char GEO_bIsLookAt(GEO_tdstGeometricObject_* p_stObj)
+{
+    return p_stObj->ulType;
+}
+
 void GEO_vTurnLookAt(GEO_tdstGeometricObject_* p_stObj, GLD_tdstViewportAttributes_* hVpt, GLI_tdstCamera_* _pstCameraFromPushBuffer, MAT_tdstTransformation_* p_stCurrentMatrix)
 {
     MAT_tdstTransformation_ hCameraPosInv;
@@ -361,56 +398,31 @@ void GEO_vTurnLookAt(GEO_tdstGeometricObject_* p_stObj, GLD_tdstViewportAttribut
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\GeoObjEd.c lines 868–868 */
-/* addr: 0x002a4b90  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 868
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned char GEO_bIsLookAt(GEO_tdstGeometricObject_* p_stObj)
+void GEO_fn_vComputeBoundingSphereOfTwoSpheres(MTH3D_tdstVector_* _p_stReturnedSphereCenter, float* _p_xReturnedSphereRadius, MTH3D_tdstVector_* _p_stFirstSphereCenter, float _xFirstSphereRadius, MTH3D_tdstVector_* _p_stSecondSphereCenter, float _xSecondSphereRadius)
 {
-    return p_stObj->ulType;
-}
+    float xAlpha;
+    float xX, xY, xZ;
+    float xSqrNorm;
+    float xNorm;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\GeoObjEd.c lines 147–151 */
-/* addr: 0x002a4ba0  size: 152 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 147
- *   +0x0028 -> line 148
- *   +0x005c -> line 149
- *   +0x0060 -> line 148
- *   +0x0064 -> line 149
- *   +0x0070 -> line 150
- *   +0x0078 -> line 151
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GEO_vCreateTMPGeometricObjectWithEdges(GEO_tdstGeometricObject_** p_hObject, short xNbPoints, short xNbElements, short xNbEdges)
-{
-    GEO_tdstGeometricObject_* p_stObj = GEO_hAllocTMPGeometricObject(xNbPoints, xNbElements); p_stObj->d_stListOfEdges = (GEO_tdstEdge_*)HMU_fn_p_vMalloc(xNbEdges * sizeof(GEO_tdstEdge_), 1); *p_hObject = p_stObj;
-    GEO_vInitGeometricObject(*p_hObject, xNbPoints, xNbElements);
-    (*p_hObject)->xNbEdges = xNbEdges;
-}
+    xX = _p_stFirstSphereCenter->xX - _p_stSecondSphereCenter->xX; xY = _p_stFirstSphereCenter->xY - _p_stSecondSphereCenter->xY; xZ = _p_stFirstSphereCenter->xZ - _p_stSecondSphereCenter->xZ;
+    MTH_SQR3_TO(xSqrNorm, xX, xY, xZ) MTH_SQRT_TO(xNorm, xSqrNorm)
+    if (xNorm + _xFirstSphereRadius <= _xSecondSphereRadius)
+    {
+        *(int*)&_p_stReturnedSphereCenter->xX = *(int*)&_p_stSecondSphereCenter->xX; *(int*)&_p_stReturnedSphereCenter->xY = *(int*)&_p_stSecondSphereCenter->xY; *(int*)&_p_stReturnedSphereCenter->xZ = *(int*)&_p_stSecondSphereCenter->xZ;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\GeoObjEd.c lines 140–144 */
-/* addr: 0x002a4c40  size: 228 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 140
- *   +0x0028 -> line 141
- *   +0x00a0 -> line 142
- *   +0x00a4 -> line 141
- *   +0x00b0 -> line 142
- *   +0x00bc -> line 143
- *   +0x00c4 -> line 144
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GEO_vCreateTMPGeometricObject(GEO_tdstGeometricObject_** p_hObject, short xNbPoints, short xNbElements)
-{
-    GEO_tdstGeometricObject_* p_stObj;
+        *_p_xReturnedSphereRadius = _xSecondSphereRadius;
+    }
+    else if (xNorm + _xSecondSphereRadius < _xFirstSphereRadius)
+    {
+        *(int*)&_p_stReturnedSphereCenter->xX = *(int*)&_p_stFirstSphereCenter->xX; *(int*)&_p_stReturnedSphereCenter->xY = *(int*)&_p_stFirstSphereCenter->xY; *(int*)&_p_stReturnedSphereCenter->xZ = *(int*)&_p_stFirstSphereCenter->xZ;
 
-    p_stObj = (GEO_tdstGeometricObject_*)HMU_fn_p_vMalloc(sizeof(GEO_tdstGeometricObject_), 1); p_stObj->xNbElements = xNbElements; p_stObj->xNbPoints = xNbPoints; p_stObj->d_xListOfElementsTypes = (short*)HMU_fn_p_vMalloc(xNbElements * sizeof(short), 1); p_stObj->d_stListOfElements = (void**)HMU_fn_p_vMalloc(xNbElements * sizeof(void*), 1); p_stObj->d_stListOfPoints = (MTH3D_tdstVector_*)HMU_fn_p_vMalloc(xNbPoints * sizeof(MTH3D_tdstVector_), 1); memset(p_stObj->d_stListOfPoints, 0, xNbPoints * sizeof(MTH3D_tdstVector_)); p_stObj->d_stListOfPointsNormals = NULL; p_stObj->d_dfVertexTransparency = 0; p_stObj->d_stListOfEdges = NULL; *p_hObject = p_stObj;
-    GEO_vInitGeometricObject(*p_hObject, xNbPoints, xNbElements);
-    (*p_hObject)->xNbEdges = 0;
+        *_p_xReturnedSphereRadius = _xFirstSphereRadius;
+    }
+    else
+    {
+        xAlpha = (1.0f - (_xFirstSphereRadius - _xSecondSphereRadius) / xNorm) / 2.0f;
+        _p_stReturnedSphereCenter->xX = _p_stFirstSphereCenter->xX + xAlpha * (_p_stSecondSphereCenter->xX - _p_stFirstSphereCenter->xX); _p_stReturnedSphereCenter->xY = _p_stFirstSphereCenter->xY + xAlpha * (_p_stSecondSphereCenter->xY - _p_stFirstSphereCenter->xY); _p_stReturnedSphereCenter->xZ = _p_stFirstSphereCenter->xZ + xAlpha * (_p_stSecondSphereCenter->xZ - _p_stFirstSphereCenter->xZ);
+        *_p_xReturnedSphereRadius = (xNorm + _xFirstSphereRadius + _xSecondSphereRadius) / 2.0f;
+    }
 }

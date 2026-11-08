@@ -419,187 +419,21 @@ void COL_fn_vExploreOctreeWithBox(COL_tdstOctree_* p_stOctree, MTH3D_tdstVector_
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void COL_fn_vCollideStaticSphereWithStaticAlignedBox(COL_tdstGVForCollision_* p_stGV)
-{
-    MTH3D_tdstVector_ stEndPosition;
-    MTH3D_tdstVector_ stMovementVector;
-    MTH3D_tdstVector_ stNormal;
-    MTH3D_tdstVector_ stPointBox;
-    MTH3D_tdstVector_ stVectCenterHit;
-    MTH3D_tdstVector_ stHitPoint;
-    MTH3D_tdstVector_ stNegVector;
-    MTH4D_tdstVector_ stVect4;
-    MTH4D_tdstVector_* pVect4;
-    MTH4D_tdstMatrix_* pMat;
-    MTH3D_tdstVector_* p_stMinPoint;
-    MTH3D_tdstVector_* p_stMaxPoint;
-    float a6_Distance[6];
-    float xNorm;
-    float tempTime;
-    unsigned char bCollide;
-    short xIndex;
-    short xIndexClosest;
 
-    p_stMinPoint = p_stGV->p_stStaticMinPoint;
-    p_stMaxPoint = p_stGV->p_stStaticMaxPoint;
-
-    /* the closest point of the box to the dynamic centre */
-    if (p_stGV->stDinST0Point.xX > p_stMaxPoint->xX)
-        stPointBox.xX = p_stMaxPoint->xX;
-    else if (p_stGV->stDinST0Point.xX < p_stMinPoint->xX)
-    {
-        stPointBox.xX = p_stGV->stDinST0Point.xX;
-        xIndexClosest++;
-    }
-    else
-        stPointBox.xX = p_stMinPoint->xX;
-    if (p_stGV->stDinST0Point.xY > p_stMaxPoint->xY)
-        stPointBox.xY = p_stMaxPoint->xY;
-    else if (p_stGV->stDinST0Point.xY < p_stMinPoint->xY)
-    {
-        stPointBox.xY = p_stGV->stDinST0Point.xY;
-        xIndexClosest++;
-    }
-    else
-        stPointBox.xY = p_stMinPoint->xY;
-    if (p_stGV->stDinST0Point.xZ > p_stMaxPoint->xZ)
-        stPointBox.xZ = p_stMaxPoint->xZ;
-    else if (p_stGV->stDinST0Point.xZ < p_stMinPoint->xZ)
-    {
-        stPointBox.xZ = p_stGV->stDinST0Point.xZ;
-        xIndexClosest++;
-    }
-    else
-        stPointBox.xZ = p_stMinPoint->xZ;
-
-    COL_fn_vMinMaxBox2VerticesBox(p_stGV->a8_stStatic8VBox, &p_stGV->StaticMinPoint, &p_stGV->StaticMaxPoint);
-
-    if (INT_fn_bIntersectSphereWithBox(&p_stGV->stDinST0Point, &p_stGV->StaticMinPoint, &p_stGV->StaticMaxPoint, p_stGV->xDynamicRadius))
-    {
-        if (p_stGV->bUseEnlargeSphere != 0)
-        {
-            float xRadius;
-
-            xRadius = p_stGV->xDynamicRadius;
-            p_stGV->xDynamicRadius = p_stGV->xSwapRadius;
-            p_stGV->xSwapRadius = xRadius;
-            *(int*)&p_stGV->stSwapDinST0Point.xX = *(int*)&p_stGV->stDinST0Point.xX;
-            *(int*)&p_stGV->stSwapDinST0Point.xY = *(int*)&p_stGV->stDinST0Point.xY;
-            *(int*)&p_stGV->stSwapDinST0Point.xZ = *(int*)&p_stGV->stDinST0Point.xZ;
-            *(int*)&p_stGV->stDinST0Point.xX = *(int*)&p_stGV->stSwapDinST0Point.xX;
-            *(int*)&p_stGV->stDinST0Point.xY = *(int*)&p_stGV->stSwapDinST0Point.xY;
-            *(int*)&p_stGV->stDinST0Point.xZ = *(int*)&p_stGV->stSwapDinST0Point.xZ;
-            p_stGV->bUseEnlargeSphere = 0;
-        }
-
-        stNegVector.xX = -p_stGV->stDinST01Vector.xX;
-        stNegVector.xY = -p_stGV->stDinST01Vector.xY;
-        stNegVector.xZ = -p_stGV->stDinST01Vector.xZ;
-
-        bCollide = 0;
-        if (INT_fn_bIntersectSphereWithBox(&p_stGV->stDinST1Point, &p_stGV->StaticMinPoint, &p_stGV->StaticMaxPoint, p_stGV->xDynamicRadius))
-            bCollide = 1;
-        else if (!INT_fn_bIntersectSphereWithBox(&p_stGV->stDinST0Point, &p_stGV->StaticMinPoint, &p_stGV->StaticMaxPoint, p_stGV->xDynamicRadius))
-        {
-            if (INT_fn_bIntersectSegmentWithBox(&p_stGV->stDinST0Point, &stNegVector,
-                                                &p_stGV->StaticMinPoint, &p_stGV->StaticMaxPoint,
-                                                &tempTime, &stPointBox, &stVectCenterHit))
-            {
-                if (tempTime < 0.0f || tempTime > 1.0f)
-                    bCollide = 1;
-            }
-        }
-    }
-
-    if (bCollide)
-    {
-        /* the six candidate distances, and the axis that is the closest */
-        a6_Distance[0] = p_stGV->StaticMaxPoint.xX - p_stGV->stDinST0Point.xX;
-        a6_Distance[1] = p_stGV->stDinST0Point.xX - p_stGV->StaticMinPoint.xX;
-        xIndex = (a6_Distance[1] < a6_Distance[0]) ? 1 : 0;
-        a6_Distance[2] = p_stGV->StaticMaxPoint.xY - p_stGV->stDinST0Point.xY;
-        xIndex = (a6_Distance[2] < a6_Distance[xIndex]) ? 2 : 3;
-        a6_Distance[3] = p_stGV->stDinST0Point.xY - p_stGV->StaticMinPoint.xY;
-        xIndex = (a6_Distance[3] < a6_Distance[xIndex]) ? 3 : 4;
-        a6_Distance[4] = p_stGV->StaticMaxPoint.xZ - p_stGV->stDinST0Point.xZ;
-        xIndex = (a6_Distance[4] < a6_Distance[xIndex]) ? 4 : 5;
-        a6_Distance[5] = p_stGV->stDinST0Point.xZ - p_stGV->StaticMinPoint.xZ;
-        xIndex = (a6_Distance[5] < a6_Distance[xIndex]) ? 5 : 6;
-
-        switch (xIndex)
-        {
-            case 0:
-            case 1:
-                stNormal.xX = (xIndex == 0) ? 1.0f : -1.0f;
-                stNormal.xY = 0.0f;
-                stNormal.xZ = 0.0f;
-                break;
-            case 2:
-            case 3:
-                stNormal.xX = 0.0f;
-                stNormal.xY = (xIndex == 2) ? 1.0f : -1.0f;
-                stNormal.xZ = 0.0f;
-                break;
-            default:
-                stNormal.xX = 0.0f;
-                stNormal.xY = 0.0f;
-                stNormal.xZ = (xIndex == 4) ? 1.0f : -1.0f;
-                break;
-        }
-
-        stHitPoint.xX = p_stGV->stDinST0Point.xX - stNormal.xX * a6_Distance[xIndex];
-        stHitPoint.xY = p_stGV->stDinST0Point.xY - stNormal.xY * a6_Distance[xIndex];
-        stHitPoint.xZ = p_stGV->stDinST0Point.xZ - stNormal.xZ * a6_Distance[xIndex];
-
-        stVectCenterHit.xX = stHitPoint.xX - p_stGV->stDinST0Point.xX;
-        stVectCenterHit.xY = stHitPoint.xY - p_stGV->stDinST0Point.xY;
-        stVectCenterHit.xZ = stHitPoint.xZ - p_stGV->stDinST0Point.xZ;
-        xNorm = stVectCenterHit.xX * stVectCenterHit.xX
-              + stVectCenterHit.xY * stVectCenterHit.xY
-              + stVectCenterHit.xZ * stVectCenterHit.xZ;
-        if (xNorm == 0.0f)
-        {
-            stVectCenterHit.xX = stVectCenterHit.xX;
-            stVectCenterHit.xY = stVectCenterHit.xY;
-            stVectCenterHit.xZ = stVectCenterHit.xZ;
-        }
-        else
-        {
-            xNorm = 1.0f / xNorm;
-            stVectCenterHit.xX = xNorm * stVectCenterHit.xX;
-            stVectCenterHit.xY = xNorm * stVectCenterHit.xY;
-            stVectCenterHit.xZ = xNorm * stVectCenterHit.xZ;
-        }
-
-        stMovementVector.xX = p_stGV->xDynamicRadius * p_stGV->xStaticScale - xNorm;
-        stMovementVector.xX = stMovementVector.xX * stVectCenterHit.xX;
-        stMovementVector.xY = stMovementVector.xX;
-        stMovementVector.xZ = stMovementVector.xX;
-
-        pMat = &p_stGV->p_stStaticGeomObjMatrix->stTransformMatrix;
-        pVect4 = &stVect4;
-        stVect4.xX = stHitPoint.xX;
-        stVect4.xY = stHitPoint.xY;
-        stVect4.xZ = stHitPoint.xZ;
-        stVect4.xW = 0.0f;
-        COL_VU_MUL_MATRIX(pVect4, pMat);
-        stHitPoint.xX = stVect4.xX;
-        stHitPoint.xY = stVect4.xY;
-        stHitPoint.xZ = stVect4.xZ;
-        stVect4.xX = p_stGV->stDinST0Point.xX;
-        stVect4.xY = p_stGV->stDinST0Point.xY;
-        stVect4.xZ = p_stGV->stDinST0Point.xZ;
-        stVect4.xW = 0.0f;
-        COL_VU_MUL_MATRIX(pVect4, pMat);
-        stEndPosition.xX = stVect4.xX;
-        stEndPosition.xY = stVect4.xY;
-        stEndPosition.xZ = stVect4.xZ;
-
-        COL_fn_vAddInStaticCollisionTable(-1.0f, &stMovementVector, &stHitPoint, &stNormal,
-                                         p_stGV->hDynamicMaterial, p_stGV->hStaticMaterial,
-                                         0, 0, NULL, 0, &stEndPosition, 0.0f, NULL);
-    }
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void COL_fn_vCollideStaticSphereWithStaticAlignedBox(COL_tdstGVForCollision_* p_stGV);
+void COL_fn_vCollideStaticElementSpheresWithStaticElementAlignedBoxes(COL_tdstGVForCollision_* p_stGV);
+unsigned char COL_fn_bCollideStaticElementSpheresWithStaticBoundingVolumes(COL_tdstGVForCollision_* p_stGV, int* _aDEF_lBitsFieldInCollision, unsigned char _bPartialResult);
+void COL_fn_vCollideStaticElementSpheresWithStaticElements(COL_tdstGVForCollision_* p_stGV);
+void COL_fn_vCollideStaticElementSpheresWithStaticOctree(COL_tdstGVForCollision_* p_stGV);
+void COL_fn_vCollideStaticElementSpheresWithStaticElementSpheres(COL_tdstGVForCollision_* p_stGV);
+void COL_fn_vCollideStaticSphereWithStaticSphere(COL_tdstGVForCollision_* p_stGV);
+void COL_fn_vCollideStaticElementSpheresWithStaticElementIndexedTriangles(COL_tdstGVForCollision_* p_stGV);
+unsigned char COL_fn_bCollideStaticSphereWithStaticIndexedTriangle(COL_tdstGVForCollision_* p_stGV, short xIndex);
+unsigned char COL_fn_bIsCollisionPossibleStaticSphereWithStaticIndexedTriangle(COL_tdstGVForCollision_* p_stGV);
+void COL_fn_vCollideStaticSphereWithStaticEdge(COL_tdstGVForCollision_* p_stGV, MTH3D_tdstVector_* p_stNormal);
+void COL_fn_vEnlargeSphereIfNecessary(COL_tdstGVForCollision_* p_stGV);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CsSphElt.c lines 1357–1423 */
 /* addr: 0x0024f740  size: 588 bytes */
@@ -651,12 +485,6 @@ void COL_fn_vCollideStaticSphereWithStaticAlignedBox(COL_tdstGVForCollision_* p_
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void COL_fn_vCollideStaticElementSpheresWithStaticElementAlignedBoxes(COL_tdstGVForCollision_* p_stGV)
-{
-    short xStaticIndexedBoxIndex;
-    short xDynamicIndexedSphereIndex;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CsSphElt.c lines 1271–1336 */
 /* addr: 0x0024f990  size: 1028 bytes */
@@ -715,23 +543,6 @@ void COL_fn_vCollideStaticElementSpheresWithStaticElementAlignedBoxes(COL_tdstGV
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char COL_fn_bCollideStaticElementSpheresWithStaticBoundingVolumes(COL_tdstGVForCollision_* p_stGV, int* _aDEF_lBitsFieldInCollision, unsigned char _bPartialResult)
-{
-    unsigned char bResult;
-    MTH3D_tdstVector_ stMaxPointLocalSphere;
-    MTH3D_tdstVector_ stMinPointLocalSphere;
-    MTH3D_tdstVector_ stMaxPointSphere;
-    MTH3D_tdstVector_ stMinPointSphere;
-    MTH3D_tdstVector_ stFirstCenter;
-    MTH3D_tdstVector_* param0;
-    MTH3D_tdstVector_* p_stMaxPointBox;
-    MTH3D_tdstVector_* p_stMinPointBox;
-    COL_tdstParallelBox_* hBox;
-    int* p_lCurrentBitsField;
-    short xIndexSphere;
-    short xIndexBox;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CsSphElt.c lines 1192–1259 */
 /* addr: 0x0024fda0  size: 500 bytes */
@@ -775,12 +586,6 @@ unsigned char COL_fn_bCollideStaticElementSpheresWithStaticBoundingVolumes(COL_t
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void COL_fn_vCollideStaticElementSpheresWithStaticElements(COL_tdstGVForCollision_* p_stGV)
-{
-    short xIndexBox;
-    int a_DEF_lBitsFieldOfCollisionsWithBoundingBox[50];
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CsSphElt.c lines 1005–1180 */
 /* addr: 0x0024ffa0  size: 1628 bytes */
@@ -905,6 +710,946 @@ void COL_fn_vCollideStaticElementSpheresWithStaticElements(COL_tdstGVForCollisio
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CsSphElt.c lines 957–994 */
+/* addr: 0x00250600  size: 580 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 957
+ *   +0x0020 -> line 963
+ *   +0x0030 -> line 966
+ *   +0x0034 -> line 975
+ *   +0x0044 -> line 966
+ *   +0x004c -> line 969
+ *   +0x0070 -> line 972
+ *   +0x0084 -> line 975
+ *   +0x00d4 -> line 978
+ *   +0x00e4 -> line 975
+ *   +0x00f8 -> line 978
+ *   +0x0148 -> line 981
+ *   +0x014c -> line 978
+ *   +0x0160 -> line 979
+ *   +0x018c -> line 981
+ *   +0x0194 -> line 984
+ *   +0x01a0 -> line 987
+ *   +0x01a4 -> line 991
+ *   +0x01a8 -> line 987
+ *   +0x01b0 -> line 989
+ *   +0x01bc -> line 990
+ *   +0x01c4 -> line 991
+ *   +0x01cc -> line 992
+ *   +0x01d0 -> line 991
+ *   +0x01d4 -> line 992
+ *   +0x0200 -> line 993
+ *   +0x0224 -> line 994
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CsSphElt.c lines 816–945 */
+/* addr: 0x00250850  size: 1612 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 816
+ *   +0x001c -> line 820
+ *   +0x0040 -> line 825
+ *   +0x0064 -> line 833
+ *   +0x0088 -> line 835
+ *   +0x00f8 -> line 836
+ *   +0x0100 -> line 839
+ *   +0x0108 -> line 836
+ *   +0x0110 -> line 839
+ *   +0x0120 -> line 849
+ *   +0x0130 -> line 852
+ *   +0x0134 -> line 849
+ *   +0x0168 -> line 852
+ *   +0x01a4 -> line 855
+ *   +0x01b4 -> line 856
+ *   +0x022c -> line 859
+ *   +0x0290 -> line 863
+ *   +0x0298 -> line 860
+ *   +0x029c -> line 863
+ *   +0x02a0 -> line 860
+ *   +0x02a8 -> line 863
+ *   +0x02b4 -> line 866
+ *   +0x02b8 -> line 859
+ *   +0x02c0 -> line 860
+ *   +0x02c8 -> line 863
+ *   +0x02cc -> line 859
+ *   +0x02d4 -> line 863
+ *   +0x02d8 -> line 859
+ *   +0x02dc -> line 860
+ *   +0x0318 -> line 863
+ *   +0x031c -> line 860
+ *   +0x0328 -> line 863
+ *   +0x0334 -> line 865
+ *   +0x0364 -> line 866
+ *   +0x0370 -> line 867
+ *   +0x03d0 -> line 870
+ *   +0x03f0 -> line 867
+ *   +0x0404 -> line 870
+ *   +0x0430 -> line 875
+ *   +0x0438 -> line 888
+ *   +0x0498 -> line 890
+ *   +0x04ac -> line 888
+ *   +0x04c0 -> line 890
+ *   +0x04d4 -> line 895
+ *   +0x04e8 -> line 896
+ *   +0x04f4 -> line 895
+ *   +0x0554 -> line 896
+ *   +0x05a8 -> line 899
+ *   +0x05ac -> line 896
+ *   +0x05c0 -> line 899
+ *   +0x05cc -> line 902
+ *   +0x05d0 -> line 904
+ *   +0x05d4 -> line 902
+ *   +0x05dc -> line 904
+ *   +0x05e8 -> line 906
+ *   +0x0630 -> line 945
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CsSphElt.c lines 731–804 */
+/* addr: 0x00250ea0  size: 1068 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 731
+ *   +0x0020 -> line 735
+ *   +0x002c -> line 737
+ *   +0x0050 -> line 742
+ *   +0x0054 -> line 748
+ *   +0x0064 -> line 742
+ *   +0x006c -> line 745
+ *   +0x0090 -> line 748
+ *   +0x00e0 -> line 751
+ *   +0x00f0 -> line 748
+ *   +0x0104 -> line 751
+ *   +0x0154 -> line 757
+ *   +0x0158 -> line 751
+ *   +0x016c -> line 752
+ *   +0x019c -> line 755
+ *   +0x01b4 -> line 757
+ *   +0x01bc -> line 760
+ *   +0x01c8 -> line 762
+ *   +0x01cc -> line 767
+ *   +0x01d4 -> line 762
+ *   +0x01dc -> line 763
+ *   +0x01e4 -> line 767
+ *   +0x01ec -> line 777
+ *   +0x01f8 -> line 780
+ *   +0x0200 -> line 779
+ *   +0x0204 -> line 780
+ *   +0x0208 -> line 779
+ *   +0x020c -> line 783
+ *   +0x0210 -> line 779
+ *   +0x0214 -> line 792
+ *   +0x0218 -> line 779
+ *   +0x024c -> line 780
+ *   +0x0274 -> line 783
+ *   +0x0278 -> line 780
+ *   +0x0298 -> line 781
+ *   +0x02c0 -> line 783
+ *   +0x02c4 -> line 781
+ *   +0x02c8 -> line 783
+ *   +0x02cc -> line 781
+ *   +0x02e8 -> line 783
+ *   +0x0328 -> line 786
+ *   +0x0344 -> line 787
+ *   +0x0348 -> line 786
+ *   +0x0354 -> line 787
+ *   +0x0358 -> line 786
+ *   +0x035c -> line 787
+ *   +0x0360 -> line 786
+ *   +0x0364 -> line 787
+ *   +0x0368 -> line 786
+ *   +0x0370 -> line 787
+ *   +0x0374 -> line 788
+ *   +0x0390 -> line 792
+ *   +0x0398 -> line 800
+ *   +0x039c -> line 792
+ *   +0x03a0 -> line 800
+ *   +0x03bc -> line 801
+ *   +0x03e0 -> line 803
+ *   +0x03e8 -> line 801
+ *   +0x03ec -> line 803
+ *   +0x040c -> line 804
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CsSphElt.c lines 564–719 */
+/* addr: 0x002512d0  size: 1996 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 564
+ *   +0x0034 -> line 576
+ *   +0x0054 -> line 581
+ *   +0x005c -> line 576
+ *   +0x0060 -> line 577
+ *   +0x0064 -> line 576
+ *   +0x0068 -> line 581
+ *   +0x006c -> line 577
+ *   +0x0070 -> line 578
+ *   +0x0074 -> line 577
+ *   +0x0078 -> line 578
+ *   +0x007c -> line 584
+ *   +0x0088 -> line 578
+ *   +0x008c -> line 576
+ *   +0x009c -> line 577
+ *   +0x00a0 -> line 584
+ *   +0x00a4 -> line 577
+ *   +0x00a8 -> line 584
+ *   +0x00ac -> line 577
+ *   +0x00b0 -> line 584
+ *   +0x00b4 -> line 578
+ *   +0x00bc -> line 577
+ *   +0x00c0 -> line 578
+ *   +0x00c8 -> line 584
+ *   +0x00d4 -> line 586
+ *   +0x0148 -> line 588
+ *   +0x014c -> line 590
+ *   +0x0150 -> line 588
+ *   +0x0154 -> line 589
+ *   +0x0158 -> line 588
+ *   +0x015c -> line 589
+ *   +0x0160 -> line 590
+ *   +0x0164 -> line 592
+ *   +0x0168 -> line 589
+ *   +0x016c -> line 592
+ *   +0x0170 -> line 588
+ *   +0x0174 -> line 590
+ *   +0x0178 -> line 592
+ *   +0x0180 -> line 588
+ *   +0x0184 -> line 592
+ *   +0x018c -> line 589
+ *   +0x0194 -> line 588
+ *   +0x0198 -> line 589
+ *   +0x019c -> line 590
+ *   +0x01a0 -> line 589
+ *   +0x01a8 -> line 588
+ *   +0x01ac -> line 589
+ *   +0x01b0 -> line 590
+ *   +0x01b4 -> line 589
+ *   +0x01bc -> line 590
+ *   +0x01cc -> line 592
+ *   +0x01e0 -> line 600
+ *   +0x0250 -> line 601
+ *   +0x0254 -> line 602
+ *   +0x0258 -> line 601
+ *   +0x025c -> line 606
+ *   +0x0260 -> line 601
+ *   +0x0264 -> line 606
+ *   +0x0268 -> line 602
+ *   +0x026c -> line 610
+ *   +0x0270 -> line 601
+ *   +0x0274 -> line 610
+ *   +0x0278 -> line 602
+ *   +0x027c -> line 610
+ *   +0x0288 -> line 601
+ *   +0x028c -> line 610
+ *   +0x0290 -> line 601
+ *   +0x0298 -> line 602
+ *   +0x02b4 -> line 606
+ *   +0x02b8 -> line 610
+ *   +0x02bc -> line 606
+ *   +0x02dc -> line 608
+ *   +0x02fc -> line 610
+ *   +0x030c -> line 624
+ *   +0x0324 -> line 626
+ *   +0x0328 -> line 624
+ *   +0x032c -> line 626
+ *   +0x0334 -> line 624
+ *   +0x033c -> line 626
+ *   +0x0348 -> line 627
+ *   +0x034c -> line 634
+ *   +0x0354 -> line 627
+ *   +0x0358 -> line 634
+ *   +0x0368 -> line 635
+ *   +0x0370 -> line 638
+ *   +0x0374 -> line 637
+ *   +0x0390 -> line 638
+ *   +0x039c -> line 641
+ *   +0x03a8 -> line 646
+ *   +0x03bc -> line 641
+ *   +0x03dc -> line 642
+ *   +0x0408 -> line 646
+ *   +0x0418 -> line 647
+ *   +0x0420 -> line 649
+ *   +0x0488 -> line 652
+ *   +0x048c -> line 649
+ *   +0x04a0 -> line 652
+ *   +0x04ac -> line 654
+ *   +0x04bc -> line 655
+ *   +0x051c -> line 664
+ *   +0x053c -> line 655
+ *   +0x0550 -> line 664
+ *   +0x057c -> line 669
+ *   +0x0584 -> line 679
+ *   +0x05a8 -> line 684
+ *   +0x05ac -> line 682
+ *   +0x05b0 -> line 684
+ *   +0x05b4 -> line 682
+ *   +0x05b8 -> line 684
+ *   +0x05d4 -> line 682
+ *   +0x0618 -> line 684
+ *   +0x0628 -> line 695
+ *   +0x0688 -> line 697
+ *   +0x068c -> line 695
+ *   +0x06a0 -> line 697
+ *   +0x06ac -> line 700
+ *   +0x06b0 -> line 702
+ *   +0x06b4 -> line 700
+ *   +0x06bc -> line 702
+ *   +0x06c8 -> line 703
+ *   +0x0728 -> line 705
+ *   +0x0740 -> line 703
+ *   +0x0754 -> line 705
+ *   +0x0784 -> line 710
+ *   +0x078c -> line 712
+ *   +0x0794 -> line 717
+ *   +0x0798 -> line 719
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CsSphElt.c lines 387–552 */
+/* addr: 0x00251aa0  size: 524 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 398
+ *   +0x0004 -> line 387
+ *   +0x0008 -> line 398
+ *   +0x000c -> line 395
+ *   +0x0010 -> line 399
+ *   +0x0014 -> line 408
+ *   +0x0018 -> line 398
+ *   +0x0024 -> line 399
+ *   +0x0028 -> line 398
+ *   +0x002c -> line 402
+ *   +0x0030 -> line 398
+ *   +0x0034 -> line 402
+ *   +0x0038 -> line 404
+ *   +0x003c -> line 405
+ *   +0x0040 -> line 402
+ *   +0x0044 -> line 404
+ *   +0x004c -> line 406
+ *   +0x0050 -> line 405
+ *   +0x0058 -> line 404
+ *   +0x005c -> line 405
+ *   +0x0064 -> line 404
+ *   +0x0068 -> line 406
+ *   +0x0074 -> line 408
+ *   +0x00d8 -> line 409
+ *   +0x00f0 -> line 410
+ *   +0x00f4 -> line 416
+ *   +0x00f8 -> line 417
+ *   +0x00fc -> line 418
+ *   +0x0100 -> line 419
+ *   +0x0104 -> line 420
+ *   +0x010c -> line 421
+ *   +0x0110 -> line 422
+ *   +0x0114 -> line 423
+ *   +0x0118 -> line 424
+ *   +0x011c -> line 425
+ *   +0x0120 -> line 426
+ *   +0x0124 -> line 428
+ *   +0x0128 -> line 429
+ *   +0x012c -> line 430
+ *   +0x0130 -> line 432
+ *   +0x0134 -> line 433
+ *   +0x0138 -> line 434
+ *   +0x013c -> line 437
+ *   +0x0140 -> line 438
+ *   +0x0144 -> line 439
+ *   +0x0148 -> line 440
+ *   +0x014c -> line 441
+ *   +0x0150 -> line 442
+ *   +0x0154 -> line 443
+ *   +0x0158 -> line 444
+ *   +0x015c -> line 445
+ *   +0x0160 -> line 446
+ *   +0x0164 -> line 448
+ *   +0x0168 -> line 449
+ *   +0x016c -> line 450
+ *   +0x0170 -> line 452
+ *   +0x0174 -> line 453
+ *   +0x0178 -> line 454
+ *   +0x017c -> line 457
+ *   +0x0180 -> line 458
+ *   +0x0184 -> line 459
+ *   +0x0188 -> line 460
+ *   +0x018c -> line 461
+ *   +0x0190 -> line 462
+ *   +0x0194 -> line 463
+ *   +0x0198 -> line 464
+ *   +0x019c -> line 465
+ *   +0x01a0 -> line 466
+ *   +0x01a4 -> line 468
+ *   +0x01a8 -> line 469
+ *   +0x01ac -> line 470
+ *   +0x01b0 -> line 472
+ *   +0x01b4 -> line 473
+ *   +0x01b8 -> line 474
+ *   +0x01bc -> line 478
+ *   +0x01c0 -> line 479
+ *   +0x01c4 -> line 480
+ *   +0x01c8 -> line 481
+ *   +0x01cc -> line 482
+ *   +0x01d0 -> line 483
+ *   +0x01d4 -> line 484
+ *   +0x01d8 -> line 486
+ *   +0x01dc -> line 487
+ *   +0x01e0 -> line 488
+ *   +0x01e4 -> line 489
+ *   +0x01e8 -> line 491
+ *   +0x01ec -> line 492
+ *   +0x01f0 -> line 493
+ *   +0x01f4 -> line 496
+ *   +0x01f8 -> line 545
+ *   +0x0200 -> line 546
+ *   +0x0204 -> line 552
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CsSphElt.c lines 214–371 */
+/* addr: 0x00251cb0  size: 2136 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 214
+ *   +0x0020 -> line 220
+ *   +0x0094 -> line 223
+ *   +0x00d8 -> line 226
+ *   +0x00f4 -> line 234
+ *   +0x0118 -> line 237
+ *   +0x0188 -> line 239
+ *   +0x01a4 -> line 253
+ *   +0x01b4 -> line 254
+ *   +0x01c0 -> line 253
+ *   +0x01d8 -> line 254
+ *   +0x01e4 -> line 255
+ *   +0x01f0 -> line 258
+ *   +0x01f4 -> line 255
+ *   +0x01f8 -> line 258
+ *   +0x021c -> line 260
+ *   +0x023c -> line 262
+ *   +0x0248 -> line 265
+ *   +0x0250 -> line 262
+ *   +0x0288 -> line 265
+ *   +0x02b8 -> line 266
+ *   +0x032c -> line 267
+ *   +0x0350 -> line 269
+ *   +0x0388 -> line 271
+ *   +0x0394 -> line 272
+ *   +0x039c -> line 275
+ *   +0x03ac -> line 277
+ *   +0x03b4 -> line 279
+ *   +0x03c0 -> line 281
+ *   +0x03d0 -> line 283
+ *   +0x0404 -> line 285
+ *   +0x041c -> line 289
+ *   +0x0440 -> line 291
+ *   +0x0458 -> line 289
+ *   +0x045c -> line 291
+ *   +0x04ac -> line 293
+ *   +0x04b0 -> line 291
+ *   +0x04c4 -> line 293
+ *   +0x04d0 -> line 294
+ *   +0x0530 -> line 302
+ *   +0x0550 -> line 294
+ *   +0x0564 -> line 302
+ *   +0x0590 -> line 307
+ *   +0x0598 -> line 322
+ *   +0x05c4 -> line 329
+ *   +0x05ec -> line 332
+ *   +0x0600 -> line 329
+ *   +0x0604 -> line 332
+ *   +0x0650 -> line 337
+ *   +0x0658 -> line 335
+ *   +0x065c -> line 337
+ *   +0x0660 -> line 335
+ *   +0x0670 -> line 332
+ *   +0x0674 -> line 335
+ *   +0x0678 -> line 332
+ *   +0x067c -> line 335
+ *   +0x0680 -> line 332
+ *   +0x0688 -> line 335
+ *   +0x068c -> line 332
+ *   +0x0690 -> line 335
+ *   +0x06a8 -> line 336
+ *   +0x06d8 -> line 337
+ *   +0x06f0 -> line 339
+ *   +0x0728 -> line 341
+ *   +0x0734 -> line 342
+ *   +0x073c -> line 345
+ *   +0x074c -> line 347
+ *   +0x0754 -> line 349
+ *   +0x0760 -> line 353
+ *   +0x0764 -> line 355
+ *   +0x0768 -> line 353
+ *   +0x0770 -> line 355
+ *   +0x077c -> line 356
+ *   +0x07dc -> line 363
+ *   +0x07f4 -> line 356
+ *   +0x0808 -> line 363
+ *   +0x0838 -> line 371
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CsSphElt.c lines 134–164 */
+/* addr: 0x00252510  size: 208 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 134
+ *   +0x0008 -> line 135
+ *   +0x0020 -> line 138
+ *   +0x0038 -> line 140
+ *   +0x0058 -> line 143
+ *   +0x0060 -> line 147
+ *   +0x006c -> line 150
+ *   +0x0070 -> line 157
+ *   +0x0074 -> line 163
+ *   +0x0078 -> line 150
+ *   +0x0080 -> line 157
+ *   +0x0084 -> line 158
+ *   +0x0088 -> line 157
+ *   +0x008c -> line 150
+ *   +0x0098 -> line 158
+ *   +0x00c0 -> line 161
+ *   +0x00c4 -> line 163
+ *   +0x00c8 -> line 164
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+/* Recovered PS2 MTH scalar helpers: sqrt.s and the R5900 accumulator ops
+   have no C form under the baseline. */
+#define MTH_SQRT_TO(_result, _value) \
+    asm { sqrt.s _result, _value }
+#define MTH_SQR3_TO(_result, _x, _y, _z) \
+    asm { mula.s _x, _x }                  \
+    asm { madda.s _y, _y }                 \
+    asm { madd.s _result, _z, _z }
+
+void COL_fn_vEnlargeSphereIfNecessary(COL_tdstGVForCollision_* p_stGV)
+{
+    float xNewRadius;
+    float xY, xZ, xX;
+    float xSqrLength;
+    float xLength;
+
+    p_stGV->xSwapRadius = p_stGV->xDynamicRadius;
+    *(int*)&p_stGV->stSwapDinST0Point.xX = *(int*)&p_stGV->stDinST0Point.xX; *(int*)&p_stGV->stSwapDinST0Point.xY = *(int*)&p_stGV->stDinST0Point.xY; *(int*)&p_stGV->stSwapDinST0Point.xZ = *(int*)&p_stGV->stDinST0Point.xZ;
+
+    xX = p_stGV->stDinST01Vector.xX; xY = p_stGV->stDinST01Vector.xY; xZ = p_stGV->stDinST01Vector.xZ; MTH_SQR3_TO(xSqrLength, xX, xY, xZ)
+
+    if (xSqrLength < 0.001f)
+    {
+        p_stGV->bUseEnlargeSphere = 0;
+    }
+    else
+    {
+        MTH_SQRT_TO(xLength, xSqrLength)
+        xNewRadius = (xLength + 2.0f * p_stGV->xDynamicRadius) / 2.0f;
+        xY = 0.5f * xY;
+        p_stGV->stDinST0Point.xX += 0.5f * xX; p_stGV->stDinST0Point.xY += xY; p_stGV->stDinST0Point.xZ += 0.5f * xZ;
+        p_stGV->xDynamicRadius = xNewRadius;
+        p_stGV->bUseEnlargeSphere = 1;
+    }
+}
+
+void COL_fn_vCollideStaticSphereWithStaticEdge(COL_tdstGVForCollision_* p_stGV, MTH3D_tdstVector_* p_stNormal)
+{
+    MTH3D_tdstVector_ stEndPosition;
+    MTH3D_tdstVector_ stTempNormal;
+    MTH3D_tdstVector_ stTempDistance;
+    MTH3D_tdstVector_ stTempHit;
+    MTH3D_tdstVector_ stNormal;
+    MTH3D_tdstVector_ stHit;
+    MTH3D_tdstVector_ stTempVector;
+    MTH3D_tdstVector_ stCenterToCenter;
+    MTH3D_tdstVector_ stMovementVector;
+    float xT;
+    float xNorm;
+    float xDotProduct;
+    float xEdgeX;
+    float xEdgeY;
+    float xEdgeZ;
+    MTH4D_tdstVector_ stVect4;
+    MTH4D_tdstVector_* pVect4;
+    MTH4D_tdstMatrix_* pMat;
+
+    if (p_stGV->bUseEnlargeSphere == 0)
+    {
+        float xRadius;
+
+        xRadius = p_stGV->xDynamicRadius;
+        p_stGV->xDynamicRadius = p_stGV->xSwapRadius;
+        p_stGV->xSwapRadius = xRadius;
+        *(int*)&p_stGV->stSwapDinST0Point.xX = *(int*)&p_stGV->stDinST0Point.xX;
+        *(int*)&p_stGV->stSwapDinST0Point.xY = *(int*)&p_stGV->stDinST0Point.xY;
+        *(int*)&p_stGV->stSwapDinST0Point.xZ = *(int*)&p_stGV->stDinST0Point.xZ;
+        *(int*)&p_stGV->stDinST0Point.xX = *(int*)&p_stGV->stSwapDinST0Point.xX;
+        *(int*)&p_stGV->stDinST0Point.xY = *(int*)&p_stGV->stSwapDinST0Point.xY;
+        *(int*)&p_stGV->stDinST0Point.xZ = *(int*)&p_stGV->stSwapDinST0Point.xZ;
+        p_stGV->bUseEnlargeSphere = 1;
+    }
+
+    if (p_stGV->stEdgeVector.xX == 0.0f && p_stGV->stEdgeVector.xY == 0.0f && p_stGV->stEdgeVector.xZ == 0.0f)
+        return;
+
+    if (INT_fn_bDetectIntersectSegmentWithSphere(p_stGV->p_stVertex1, &p_stGV->stEdgeVector, &p_stGV->stDinST0Point, p_stGV->xDynamicRadius))
+    {
+        stCenterToCenter.xX = -p_stGV->stDinST01Vector.xX;
+        stCenterToCenter.xY = -p_stGV->stDinST01Vector.xY;
+        stCenterToCenter.xZ = -p_stGV->stDinST01Vector.xZ;
+
+        if (p_stGV->bUseEnlargeSphere != 0)
+        {
+            float xRadius;
+
+            xRadius = p_stGV->xDynamicRadius;
+            p_stGV->xDynamicRadius = p_stGV->xSwapRadius;
+            p_stGV->xSwapRadius = xRadius;
+            *(int*)&p_stGV->stSwapDinST0Point.xX = *(int*)&p_stGV->stDinST0Point.xX;
+            *(int*)&p_stGV->stSwapDinST0Point.xY = *(int*)&p_stGV->stDinST0Point.xY;
+            *(int*)&p_stGV->stSwapDinST0Point.xZ = *(int*)&p_stGV->stDinST0Point.xZ;
+            *(int*)&p_stGV->stDinST0Point.xX = *(int*)&p_stGV->stSwapDinST0Point.xX;
+            *(int*)&p_stGV->stDinST0Point.xY = *(int*)&p_stGV->stSwapDinST0Point.xY;
+            *(int*)&p_stGV->stDinST0Point.xZ = *(int*)&p_stGV->stSwapDinST0Point.xZ;
+            p_stGV->bUseEnlargeSphere = 0;
+        }
+
+        if (INT_fn_bDetectIntersectSegmentWithSphere(p_stGV->p_stVertex1, &p_stGV->stEdgeVector, &p_stGV->stDinST1Point, p_stGV->xDynamicRadius))
+        {
+            float xEdgeX2;
+            float xEdgeY2;
+            float xEdgeZ2;
+
+            xEdgeX = p_stGV->stEdgeVector.xX;
+            xEdgeY = p_stGV->stEdgeVector.xY;
+            xEdgeZ = p_stGV->stEdgeVector.xZ;
+            xDotProduct = (p_stGV->stDinST0Point.xX - p_stGV->p_stVertex1->xX) * xEdgeX
+                        + (p_stGV->stDinST0Point.xY - p_stGV->p_stVertex1->xY) * xEdgeY
+                        + (p_stGV->stDinST0Point.xZ - p_stGV->p_stVertex1->xZ) * xEdgeZ;
+            xEdgeX2 = xEdgeX * xEdgeX;
+            xEdgeY2 = xEdgeY * xEdgeY;
+            xEdgeZ2 = xEdgeZ * xEdgeZ;
+            xNorm = xEdgeX2 + xEdgeY2 + xEdgeZ2;
+            xT = xDotProduct / xNorm;
+            if (xT < 0.002f)
+                xT = 0.002f;
+            else if (xT > 0.998f)
+                xT = 0.998f;
+
+            stTempHit.xX = p_stGV->p_stVertex1->xX + xT * xEdgeX2;
+            stTempHit.xY = p_stGV->p_stVertex1->xY + xT * xEdgeY;
+            stTempHit.xZ = p_stGV->p_stVertex1->xZ + xT * xEdgeZ;
+
+            stMovementVector.xX = p_stGV->stDinST0Point.xX - stTempHit.xX;
+            stMovementVector.xY = p_stGV->stDinST0Point.xY - stTempHit.xY;
+            stMovementVector.xZ = p_stGV->stDinST0Point.xZ - stTempHit.xZ;
+            xNorm = stMovementVector.xX * stMovementVector.xX
+                  + stMovementVector.xY * stMovementVector.xY
+                  + stMovementVector.xZ * stMovementVector.xZ;
+            if (xNorm == 0.0f)
+            {
+                stTempNormal.xX = stMovementVector.xX;
+                stTempNormal.xY = stMovementVector.xY;
+                stTempNormal.xZ = stMovementVector.xZ;
+            }
+            else
+            {
+                xNorm = 1.0f / xNorm;
+                stTempNormal.xX = xNorm * stMovementVector.xX;
+                stTempNormal.xY = xNorm * stMovementVector.xY;
+                stTempNormal.xZ = xNorm * stMovementVector.xZ;
+            }
+
+            if (COL_g_p_stEdgeNormalForNewComputations->xZ > 0.7f)
+            {
+                xDotProduct = COL_g_p_stEdgeNormalForNewComputations->xX * stTempNormal.xX
+                            + COL_g_p_stEdgeNormalForNewComputations->xY * stTempNormal.xY
+                            + COL_g_p_stEdgeNormalForNewComputations->xZ * stTempNormal.xZ;
+                MAT_fn_vRotateVector(&stNormal, p_stGV->p_stStaticGeomObjMatrix, &stTempNormal);
+            }
+            else
+            {
+                MAT_fn_vRotateVector(&stNormal, p_stGV->p_stStaticGeomObjMatrix, COL_g_p_stEdgeNormalForNewComputations);
+            }
+
+            MAT_fn_vApplyOnVector(&stMovementVector, p_stGV->p_stStaticGeomObjMatrix, &stMovementVector);
+            xDotProduct = p_stGV->xDynamicRadius * p_stGV->xStaticScale - xNorm;
+            stMovementVector.xX = xDotProduct * stNormal.xX;
+            stMovementVector.xY = xDotProduct * stNormal.xY;
+            stMovementVector.xZ = xDotProduct * stNormal.xZ;
+
+            /* the hit point and the movement vector are moved back into the
+               static frame with the VU0 matrix product */
+            pMat = &p_stGV->p_stStaticGeomObjMatrix->stTransformMatrix;
+            pVect4 = &stVect4;
+            stVect4.xX = stTempHit.xX;
+            stVect4.xY = stTempHit.xY;
+            stVect4.xZ = stTempHit.xZ;
+            stVect4.xW = 0.0f;
+            COL_VU_MUL_MATRIX(pVect4, pMat);
+            stTempDistance.xX = stVect4.xX;
+            stTempDistance.xY = stVect4.xY;
+            stTempDistance.xZ = stVect4.xZ;
+            stVect4.xX = stCenterToCenter.xX;
+            stVect4.xY = stCenterToCenter.xY;
+            stVect4.xZ = stCenterToCenter.xZ;
+            stVect4.xW = 0.0f;
+            COL_VU_MUL_MATRIX(pVect4, pMat);
+            stCenterToCenter.xX = stVect4.xX;
+            stCenterToCenter.xY = stVect4.xY;
+            stCenterToCenter.xZ = stVect4.xZ;
+            MAT_fn_vApplyOnVector(&stCenterToCenter, p_stGV->p_stStaticGeomObjMatrix, &stCenterToCenter);
+
+            COL_fn_vAddInStaticCollisionTable(-1.0f, &stMovementVector, &stTempDistance, &stNormal,
+                                             p_stGV->hDynamicMaterial, p_stGV->hStaticMaterial,
+                                             0, 0, NULL, 0, &stEndPosition, 0.0f, NULL);
+        }
+        else if (INT_fn_bIntersectSegmentWithCylinder(&p_stGV->stDinST1Point, &stCenterToCenter,
+                                                      p_stGV->p_stVertex2, &p_stGV->stEdgeVector,
+                                                      p_stGV->xDynamicRadius, &xT,
+                                                      &stTempHit, &stHit))
+        {
+            /* the cylinder case: the same static-frame conversion is applied to
+               the cylinder hit point */
+            pMat = &p_stGV->p_stStaticGeomObjMatrix->stTransformMatrix;
+            pVect4 = &stVect4;
+            stVect4.xX = stTempHit.xX;
+            stVect4.xY = stTempHit.xY;
+            stVect4.xZ = stTempHit.xZ;
+            stVect4.xW = 0.0f;
+            COL_VU_MUL_MATRIX(pVect4, pMat);
+            stTempDistance.xX = stVect4.xX;
+            stTempDistance.xY = stVect4.xY;
+            stTempDistance.xZ = stVect4.xZ;
+            stVect4.xX = stCenterToCenter.xX;
+            stVect4.xY = stCenterToCenter.xY;
+            stVect4.xZ = stCenterToCenter.xZ;
+            stVect4.xW = 0.0f;
+            COL_VU_MUL_MATRIX(pVect4, pMat);
+            stCenterToCenter.xX = stVect4.xX;
+            stCenterToCenter.xY = stVect4.xY;
+            stCenterToCenter.xZ = stVect4.xZ;
+            MAT_fn_vApplyOnVector(&stCenterToCenter, p_stGV->p_stStaticGeomObjMatrix, &stCenterToCenter);
+
+            COL_fn_vAddInStaticCollisionTable(xT, &stCenterToCenter, &stTempDistance, &stNormal,
+                                             p_stGV->hDynamicMaterial, p_stGV->hStaticMaterial,
+                                             0, 0, NULL, 0, &stEndPosition, 0.0f, NULL);
+        }
+    }
+}
+
+unsigned char COL_fn_bIsCollisionPossibleStaticSphereWithStaticIndexedTriangle(COL_tdstGVForCollision_* p_stGV)
+{
+    MTH3D_tdstVector_* pVertex;
+    short* pTriIndex;
+    int result;
+    MTH3D_tdstVector_* param0;
+    float xRadius;
+    MTH3D_tdstVector_* p_stNormal;
+    MTH3D_tdstVector_* p_stVertex3;
+    MTH3D_tdstVector_* p_stVertex2;
+    MTH3D_tdstVector_* p_stVertex1;
+    /* TODO: decompile from asm/... */
+}
+
+unsigned char COL_fn_bCollideStaticSphereWithStaticIndexedTriangle(COL_tdstGVForCollision_* p_stGV, short xIndex)
+{
+    MTH3D_tdstVector_ stEndPosition;
+    MTH3D_tdstVector_ stTempDistance;
+    MTH3D_tdstVector_ stTempNormal;
+    MTH3D_tdstVector_ stTempHit;
+    MTH3D_tdstVector_ stHit;
+    MTH3D_tdstVector_ stMovementVector;
+    MTH3D_tdstVector_ stSegmentVector;
+    MTH3D_tdstVector_ stSegmentStartPoint;
+    MTH3D_tdstVector_ stT1Center;
+    MTH4D_tdstVector_ stVect4;
+    MTH4D_tdstVector_* pVect4;
+    MTH4D_tdstMatrix_* pMat;
+    MTH3D_tdstVector_* p_stNormal;
+    MTH3D_tdstVector_* p_stVertex3;
+    MTH3D_tdstVector_* p_stVertex2;
+    MTH3D_tdstVector_* p_stVertex1;
+    float xT;
+    float xDistance;
+    float xDPlan;
+
+    /* the three vertices of the triangle */
+    p_stVertex1 = &p_stGV->p_stStaticColObj->d_stListOfPoints[p_stGV->p_stStaticElementIndexedTriangles->d_stListOfFacesTripled[p_stGV->xStaticIndexedTriangleIndex].a3_xIndex[0]];
+    p_stVertex2 = &p_stGV->p_stStaticColObj->d_stListOfPoints[p_stGV->p_stStaticElementIndexedTriangles->d_stListOfFacesTripled[p_stGV->xStaticIndexedTriangleIndex].a3_xIndex[1]];
+    p_stVertex3 = &p_stGV->p_stStaticColObj->d_stListOfPoints[p_stGV->p_stStaticElementIndexedTriangles->d_stListOfFacesTripled[p_stGV->xStaticIndexedTriangleIndex].a3_xIndex[2]];
+    p_stNormal = &p_stGV->p_stStaticElementIndexedTriangles->d_stListOfFacesNormals[p_stGV->xStaticIndexedTriangleIndex];
+
+    /* the plane of the triangle, computed with the R5900 accumulator */
+    xDPlan = (p_stVertex2->xX - p_stVertex1->xX) * (p_stVertex3->xY - p_stVertex1->xY)
+           - (p_stVertex2->xY - p_stVertex1->xY) * (p_stVertex3->xX - p_stVertex1->xX);
+
+    if (p_stGV->bUseEnlargeSphere == 0)
+    {
+        float xRadius;
+
+        xRadius = p_stGV->xDynamicRadius;
+        p_stGV->xDynamicRadius = p_stGV->xSwapRadius;
+        p_stGV->xSwapRadius = xRadius;
+        *(int*)&p_stGV->stSwapDinST0Point.xX = *(int*)&p_stGV->stDinST0Point.xX;
+        *(int*)&p_stGV->stSwapDinST0Point.xY = *(int*)&p_stGV->stDinST0Point.xY;
+        *(int*)&p_stGV->stSwapDinST0Point.xZ = *(int*)&p_stGV->stDinST0Point.xZ;
+        *(int*)&p_stGV->stDinST0Point.xX = *(int*)&p_stGV->stSwapDinST0Point.xX;
+        *(int*)&p_stGV->stDinST0Point.xY = *(int*)&p_stGV->stSwapDinST0Point.xY;
+        *(int*)&p_stGV->stDinST0Point.xZ = *(int*)&p_stGV->stSwapDinST0Point.xZ;
+        p_stGV->bUseEnlargeSphere = 1;
+    }
+
+    /* the segment from the dynamic centre to the contact point on the plane */
+    stSegmentStartPoint.xX = p_stGV->stDinST0Point.xX + p_stGV->xDynamicRadius * p_stNormal->xX;
+    stSegmentStartPoint.xY = p_stGV->stDinST0Point.xY + p_stGV->xDynamicRadius * p_stNormal->xY;
+    stSegmentStartPoint.xZ = p_stGV->stDinST0Point.xZ + p_stGV->xDynamicRadius * p_stNormal->xZ;
+    stSegmentVector.xX = -2.0f * p_stGV->xDynamicRadius * p_stNormal->xX;
+    stSegmentVector.xY = -2.0f * p_stGV->xDynamicRadius * p_stNormal->xY;
+    stSegmentVector.xZ = -2.0f * p_stGV->xDynamicRadius * p_stNormal->xZ;
+
+    if (INT_fn_bDetectIntersectSegmentWithTriangle(&stSegmentStartPoint, &stSegmentVector,
+                                                  p_stVertex1, p_stVertex2, p_stVertex3,
+                                                  p_stNormal, xDPlan, &xT, &stTempHit))
+    {
+        if (p_stGV->bUseEnlargeSphere != 0)
+        {
+            float xRadius;
+
+            xRadius = p_stGV->xDynamicRadius;
+            p_stGV->xDynamicRadius = p_stGV->xSwapRadius;
+            p_stGV->xSwapRadius = xRadius;
+            *(int*)&p_stGV->stSwapDinST0Point.xX = *(int*)&p_stGV->stDinST0Point.xX;
+            *(int*)&p_stGV->stSwapDinST0Point.xY = *(int*)&p_stGV->stDinST0Point.xY;
+            *(int*)&p_stGV->stSwapDinST0Point.xZ = *(int*)&p_stGV->stDinST0Point.xZ;
+            *(int*)&p_stGV->stDinST0Point.xX = *(int*)&p_stGV->stSwapDinST0Point.xX;
+            *(int*)&p_stGV->stDinST0Point.xY = *(int*)&p_stGV->stSwapDinST0Point.xY;
+            *(int*)&p_stGV->stDinST0Point.xZ = *(int*)&p_stGV->stSwapDinST0Point.xZ;
+            p_stGV->bUseEnlargeSphere = 0;
+        }
+
+        stSegmentStartPoint.xX = p_stGV->stDinST1Point.xX + p_stGV->xDynamicRadius * p_stNormal->xX;
+        stSegmentStartPoint.xY = p_stGV->stDinST1Point.xY + p_stGV->xDynamicRadius * p_stNormal->xY;
+        stSegmentStartPoint.xZ = p_stGV->stDinST1Point.xZ + p_stGV->xDynamicRadius * p_stNormal->xZ;
+        stSegmentVector.xX = -2.0f * p_stGV->xDynamicRadius * p_stNormal->xX;
+        stSegmentVector.xY = -2.0f * p_stGV->xDynamicRadius * p_stNormal->xY;
+        stSegmentVector.xZ = -2.0f * p_stGV->xDynamicRadius * p_stNormal->xZ;
+        stT1Center.xX = -p_stGV->stDinST01Vector.xX;
+        stT1Center.xY = -p_stGV->stDinST01Vector.xY;
+        stT1Center.xZ = -p_stGV->stDinST01Vector.xZ;
+
+        if (INT_fn_bDetectIntersectSegmentWithTriangle(&stSegmentStartPoint, &stSegmentVector,
+                                                      p_stVertex1, p_stVertex2, p_stVertex3,
+                                                      p_stNormal, xDPlan, &xT, &stTempHit))
+        {
+            /* the contact point on the triangle, in the static frame */
+            xDistance = xT + p_stGV->xDynamicRadius;
+            if (xDistance > 0.0f)
+            {
+                stMovementVector.xX = xDistance * p_stNormal->xX;
+                stMovementVector.xY = xDistance * p_stNormal->xY;
+                stMovementVector.xZ = xDistance * p_stNormal->xZ;
+                MAT_fn_vApplyOnVector(&stMovementVector, p_stGV->p_stStaticGeomObjMatrix, &stMovementVector);
+
+                stTempHit.xX = p_stGV->stDinST0Point.xX + xT * p_stNormal->xX;
+                stTempHit.xY = p_stGV->stDinST0Point.xY + xT * p_stNormal->xY;
+                stTempHit.xZ = p_stGV->stDinST0Point.xZ + xT * p_stNormal->xZ;
+                if (INT_fn_bGetPointInTriangle(&stTempHit, p_stVertex1, p_stVertex2, p_stVertex3, p_stNormal))
+                {
+                    pMat = &p_stGV->p_stStaticGeomObjMatrix->stTransformMatrix;
+                    pVect4 = &stVect4;
+                    stVect4.xX = stTempHit.xX;
+                    stVect4.xY = stTempHit.xY;
+                    stVect4.xZ = stTempHit.xZ;
+                    stVect4.xW = 0.0f;
+                    COL_VU_MUL_MATRIX(pVect4, pMat);
+                    stTempDistance.xX = stVect4.xX;
+                    stTempDistance.xY = stVect4.xY;
+                    stTempDistance.xZ = stVect4.xZ;
+                    MAT_fn_vRotateVector(&stTempNormal, p_stGV->p_stStaticGeomObjMatrix, p_stNormal, &stTempDistance);
+                    MAT_fn_vApplyOnVector(&stT1Center, p_stGV->p_stStaticGeomObjMatrix, &stT1Center);
+                    stVect4.xX = p_stGV->stDinST0Point.xX;
+                    stVect4.xY = p_stGV->stDinST0Point.xY;
+                    stVect4.xZ = p_stGV->stDinST0Point.xZ;
+                    stVect4.xW = 0.0f;
+                    COL_VU_MUL_MATRIX(pVect4, pMat);
+                    stEndPosition.xX = stVect4.xX;
+                    stEndPosition.xY = stVect4.xY;
+                    stEndPosition.xZ = stVect4.xZ;
+
+                    COL_fn_vAddInStaticCollisionTable(-1.0f, &stMovementVector, &stTempDistance, &stTempNormal,
+                                                     p_stGV->hDynamicMaterial, p_stGV->hStaticMaterial,
+                                                     0, 0, NULL, 0, &stEndPosition, 0.0f, NULL);
+                    return 1;
+                }
+            }
+        }
+        else if (INT_fn_bIntersectSegmentWithTriangle2(&stSegmentStartPoint, &stSegmentVector,
+                                                       p_stVertex1, p_stVertex2, p_stVertex3,
+                                                       p_stNormal, xDPlan, xDistance, &xT, &stTempHit))
+        {
+            pMat = &p_stGV->p_stStaticGeomObjMatrix->stTransformMatrix;
+            pVect4 = &stVect4;
+            stVect4.xX = stTempHit.xX;
+            stVect4.xY = stTempHit.xY;
+            stVect4.xZ = stTempHit.xZ;
+            stVect4.xW = 0.0f;
+            COL_VU_MUL_MATRIX(pVect4, pMat);
+            stTempDistance.xX = stVect4.xX;
+            stTempDistance.xY = stVect4.xY;
+            stTempDistance.xZ = stVect4.xZ;
+            MAT_fn_vRotateVector(&stTempNormal, p_stGV->p_stStaticGeomObjMatrix, p_stNormal, &stTempDistance);
+            MAT_fn_vApplyOnVector(&stT1Center, p_stGV->p_stStaticGeomObjMatrix, &stT1Center);
+            stVect4.xX = p_stGV->stDinST0Point.xX;
+            stVect4.xY = p_stGV->stDinST0Point.xY;
+            stVect4.xZ = p_stGV->stDinST0Point.xZ;
+            stVect4.xW = 0.0f;
+            COL_VU_MUL_MATRIX(pVect4, pMat);
+            stEndPosition.xX = stVect4.xX;
+            stEndPosition.xY = stVect4.xY;
+            stEndPosition.xZ = stVect4.xZ;
+
+            COL_fn_vAddInStaticCollisionTable(xT, &stT1Center, &stTempDistance, &stTempNormal,
+                                             p_stGV->hDynamicMaterial, p_stGV->hStaticMaterial,
+                                             0, 0, NULL, 0, &stEndPosition, 0.0f, NULL);
+        }
+    }
+    return 0;
+}
+
+void COL_fn_vCollideStaticElementSpheresWithStaticElementIndexedTriangles(COL_tdstGVForCollision_* p_stGV)
+{
+    MTH3D_tdstVector_* p_stCenter;
+    int* pSrc;
+    MTH3D_tdstVector_* p_stEdgeNormal;
+    short xStaticEdgeIndex;
+    short xDynamicIndexedSphereIndex;
+    /* TODO: decompile from asm/... */
+}
+
+void COL_fn_vCollideStaticSphereWithStaticSphere(COL_tdstGVForCollision_* p_stGV)
+{
+    MTH3D_tdstVector_ stEndPosition;
+    MTH3D_tdstVector_ stTempDistance;
+    MTH3D_tdstVector_ stTempNormal;
+    MTH3D_tdstVector_ stTempHit;
+    MTH3D_tdstVector_ stNormal;
+    MTH3D_tdstVector_ stHit;
+    float xT;
+    float xNorm;
+    MTH3D_tdstVector_ stCenterToCenter;
+    MTH3D_tdstVector_ stMovementVector;
+    float xRadiusSum;
+    /* TODO: decompile from asm/... */
+}
+
+void COL_fn_vCollideStaticElementSpheresWithStaticElementSpheres(COL_tdstGVForCollision_* p_stGV)
+{
+    short xStaticIndexedSphereIndex;
+    short xDynamicIndexedSphereIndex;
+    /* TODO: decompile from asm/... */
+}
+
 void COL_fn_vCollideStaticElementSpheresWithStaticOctree(COL_tdstGVForCollision_* p_stGV)
 {
     MTH3D_tdstVector_* pV1;
@@ -1098,935 +1843,216 @@ void COL_fn_vCollideStaticElementSpheresWithStaticOctree(COL_tdstGVForCollision_
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CsSphElt.c lines 957–994 */
-/* addr: 0x00250600  size: 580 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 957
- *   +0x0020 -> line 963
- *   +0x0030 -> line 966
- *   +0x0034 -> line 975
- *   +0x0044 -> line 966
- *   +0x004c -> line 969
- *   +0x0070 -> line 972
- *   +0x0084 -> line 975
- *   +0x00d4 -> line 978
- *   +0x00e4 -> line 975
- *   +0x00f8 -> line 978
- *   +0x0148 -> line 981
- *   +0x014c -> line 978
- *   +0x0160 -> line 979
- *   +0x018c -> line 981
- *   +0x0194 -> line 984
- *   +0x01a0 -> line 987
- *   +0x01a4 -> line 991
- *   +0x01a8 -> line 987
- *   +0x01b0 -> line 989
- *   +0x01bc -> line 990
- *   +0x01c4 -> line 991
- *   +0x01cc -> line 992
- *   +0x01d0 -> line 991
- *   +0x01d4 -> line 992
- *   +0x0200 -> line 993
- *   +0x0224 -> line 994
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void COL_fn_vCollideStaticElementSpheresWithStaticElementSpheres(COL_tdstGVForCollision_* p_stGV)
+void COL_fn_vCollideStaticElementSpheresWithStaticElements(COL_tdstGVForCollision_* p_stGV)
 {
-    short xStaticIndexedSphereIndex;
-    short xDynamicIndexedSphereIndex;
+    short xIndexBox;
+    int a_DEF_lBitsFieldOfCollisionsWithBoundingBox[50];
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CsSphElt.c lines 816–945 */
-/* addr: 0x00250850  size: 1612 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 816
- *   +0x001c -> line 820
- *   +0x0040 -> line 825
- *   +0x0064 -> line 833
- *   +0x0088 -> line 835
- *   +0x00f8 -> line 836
- *   +0x0100 -> line 839
- *   +0x0108 -> line 836
- *   +0x0110 -> line 839
- *   +0x0120 -> line 849
- *   +0x0130 -> line 852
- *   +0x0134 -> line 849
- *   +0x0168 -> line 852
- *   +0x01a4 -> line 855
- *   +0x01b4 -> line 856
- *   +0x022c -> line 859
- *   +0x0290 -> line 863
- *   +0x0298 -> line 860
- *   +0x029c -> line 863
- *   +0x02a0 -> line 860
- *   +0x02a8 -> line 863
- *   +0x02b4 -> line 866
- *   +0x02b8 -> line 859
- *   +0x02c0 -> line 860
- *   +0x02c8 -> line 863
- *   +0x02cc -> line 859
- *   +0x02d4 -> line 863
- *   +0x02d8 -> line 859
- *   +0x02dc -> line 860
- *   +0x0318 -> line 863
- *   +0x031c -> line 860
- *   +0x0328 -> line 863
- *   +0x0334 -> line 865
- *   +0x0364 -> line 866
- *   +0x0370 -> line 867
- *   +0x03d0 -> line 870
- *   +0x03f0 -> line 867
- *   +0x0404 -> line 870
- *   +0x0430 -> line 875
- *   +0x0438 -> line 888
- *   +0x0498 -> line 890
- *   +0x04ac -> line 888
- *   +0x04c0 -> line 890
- *   +0x04d4 -> line 895
- *   +0x04e8 -> line 896
- *   +0x04f4 -> line 895
- *   +0x0554 -> line 896
- *   +0x05a8 -> line 899
- *   +0x05ac -> line 896
- *   +0x05c0 -> line 899
- *   +0x05cc -> line 902
- *   +0x05d0 -> line 904
- *   +0x05d4 -> line 902
- *   +0x05dc -> line 904
- *   +0x05e8 -> line 906
- *   +0x0630 -> line 945
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void COL_fn_vCollideStaticSphereWithStaticSphere(COL_tdstGVForCollision_* p_stGV)
+unsigned char COL_fn_bCollideStaticElementSpheresWithStaticBoundingVolumes(COL_tdstGVForCollision_* p_stGV, int* _aDEF_lBitsFieldInCollision, unsigned char _bPartialResult)
 {
-    MTH3D_tdstVector_ stEndPosition;
-    MTH3D_tdstVector_ stTempDistance;
-    MTH3D_tdstVector_ stTempNormal;
-    MTH3D_tdstVector_ stTempHit;
-    MTH3D_tdstVector_ stNormal;
-    MTH3D_tdstVector_ stHit;
-    float xT;
-    float xNorm;
-    MTH3D_tdstVector_ stCenterToCenter;
-    MTH3D_tdstVector_ stMovementVector;
-    float xRadiusSum;
-    /* TODO: decompile from asm/... */
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CsSphElt.c lines 731–804 */
-/* addr: 0x00250ea0  size: 1068 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 731
- *   +0x0020 -> line 735
- *   +0x002c -> line 737
- *   +0x0050 -> line 742
- *   +0x0054 -> line 748
- *   +0x0064 -> line 742
- *   +0x006c -> line 745
- *   +0x0090 -> line 748
- *   +0x00e0 -> line 751
- *   +0x00f0 -> line 748
- *   +0x0104 -> line 751
- *   +0x0154 -> line 757
- *   +0x0158 -> line 751
- *   +0x016c -> line 752
- *   +0x019c -> line 755
- *   +0x01b4 -> line 757
- *   +0x01bc -> line 760
- *   +0x01c8 -> line 762
- *   +0x01cc -> line 767
- *   +0x01d4 -> line 762
- *   +0x01dc -> line 763
- *   +0x01e4 -> line 767
- *   +0x01ec -> line 777
- *   +0x01f8 -> line 780
- *   +0x0200 -> line 779
- *   +0x0204 -> line 780
- *   +0x0208 -> line 779
- *   +0x020c -> line 783
- *   +0x0210 -> line 779
- *   +0x0214 -> line 792
- *   +0x0218 -> line 779
- *   +0x024c -> line 780
- *   +0x0274 -> line 783
- *   +0x0278 -> line 780
- *   +0x0298 -> line 781
- *   +0x02c0 -> line 783
- *   +0x02c4 -> line 781
- *   +0x02c8 -> line 783
- *   +0x02cc -> line 781
- *   +0x02e8 -> line 783
- *   +0x0328 -> line 786
- *   +0x0344 -> line 787
- *   +0x0348 -> line 786
- *   +0x0354 -> line 787
- *   +0x0358 -> line 786
- *   +0x035c -> line 787
- *   +0x0360 -> line 786
- *   +0x0364 -> line 787
- *   +0x0368 -> line 786
- *   +0x0370 -> line 787
- *   +0x0374 -> line 788
- *   +0x0390 -> line 792
- *   +0x0398 -> line 800
- *   +0x039c -> line 792
- *   +0x03a0 -> line 800
- *   +0x03bc -> line 801
- *   +0x03e0 -> line 803
- *   +0x03e8 -> line 801
- *   +0x03ec -> line 803
- *   +0x040c -> line 804
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void COL_fn_vCollideStaticElementSpheresWithStaticElementIndexedTriangles(COL_tdstGVForCollision_* p_stGV)
-{
-    MTH3D_tdstVector_* p_stCenter;
-    int* pSrc;
-    MTH3D_tdstVector_* p_stEdgeNormal;
-    short xStaticEdgeIndex;
-    short xDynamicIndexedSphereIndex;
-    /* TODO: decompile from asm/... */
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CsSphElt.c lines 564–719 */
-/* addr: 0x002512d0  size: 1996 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 564
- *   +0x0034 -> line 576
- *   +0x0054 -> line 581
- *   +0x005c -> line 576
- *   +0x0060 -> line 577
- *   +0x0064 -> line 576
- *   +0x0068 -> line 581
- *   +0x006c -> line 577
- *   +0x0070 -> line 578
- *   +0x0074 -> line 577
- *   +0x0078 -> line 578
- *   +0x007c -> line 584
- *   +0x0088 -> line 578
- *   +0x008c -> line 576
- *   +0x009c -> line 577
- *   +0x00a0 -> line 584
- *   +0x00a4 -> line 577
- *   +0x00a8 -> line 584
- *   +0x00ac -> line 577
- *   +0x00b0 -> line 584
- *   +0x00b4 -> line 578
- *   +0x00bc -> line 577
- *   +0x00c0 -> line 578
- *   +0x00c8 -> line 584
- *   +0x00d4 -> line 586
- *   +0x0148 -> line 588
- *   +0x014c -> line 590
- *   +0x0150 -> line 588
- *   +0x0154 -> line 589
- *   +0x0158 -> line 588
- *   +0x015c -> line 589
- *   +0x0160 -> line 590
- *   +0x0164 -> line 592
- *   +0x0168 -> line 589
- *   +0x016c -> line 592
- *   +0x0170 -> line 588
- *   +0x0174 -> line 590
- *   +0x0178 -> line 592
- *   +0x0180 -> line 588
- *   +0x0184 -> line 592
- *   +0x018c -> line 589
- *   +0x0194 -> line 588
- *   +0x0198 -> line 589
- *   +0x019c -> line 590
- *   +0x01a0 -> line 589
- *   +0x01a8 -> line 588
- *   +0x01ac -> line 589
- *   +0x01b0 -> line 590
- *   +0x01b4 -> line 589
- *   +0x01bc -> line 590
- *   +0x01cc -> line 592
- *   +0x01e0 -> line 600
- *   +0x0250 -> line 601
- *   +0x0254 -> line 602
- *   +0x0258 -> line 601
- *   +0x025c -> line 606
- *   +0x0260 -> line 601
- *   +0x0264 -> line 606
- *   +0x0268 -> line 602
- *   +0x026c -> line 610
- *   +0x0270 -> line 601
- *   +0x0274 -> line 610
- *   +0x0278 -> line 602
- *   +0x027c -> line 610
- *   +0x0288 -> line 601
- *   +0x028c -> line 610
- *   +0x0290 -> line 601
- *   +0x0298 -> line 602
- *   +0x02b4 -> line 606
- *   +0x02b8 -> line 610
- *   +0x02bc -> line 606
- *   +0x02dc -> line 608
- *   +0x02fc -> line 610
- *   +0x030c -> line 624
- *   +0x0324 -> line 626
- *   +0x0328 -> line 624
- *   +0x032c -> line 626
- *   +0x0334 -> line 624
- *   +0x033c -> line 626
- *   +0x0348 -> line 627
- *   +0x034c -> line 634
- *   +0x0354 -> line 627
- *   +0x0358 -> line 634
- *   +0x0368 -> line 635
- *   +0x0370 -> line 638
- *   +0x0374 -> line 637
- *   +0x0390 -> line 638
- *   +0x039c -> line 641
- *   +0x03a8 -> line 646
- *   +0x03bc -> line 641
- *   +0x03dc -> line 642
- *   +0x0408 -> line 646
- *   +0x0418 -> line 647
- *   +0x0420 -> line 649
- *   +0x0488 -> line 652
- *   +0x048c -> line 649
- *   +0x04a0 -> line 652
- *   +0x04ac -> line 654
- *   +0x04bc -> line 655
- *   +0x051c -> line 664
- *   +0x053c -> line 655
- *   +0x0550 -> line 664
- *   +0x057c -> line 669
- *   +0x0584 -> line 679
- *   +0x05a8 -> line 684
- *   +0x05ac -> line 682
- *   +0x05b0 -> line 684
- *   +0x05b4 -> line 682
- *   +0x05b8 -> line 684
- *   +0x05d4 -> line 682
- *   +0x0618 -> line 684
- *   +0x0628 -> line 695
- *   +0x0688 -> line 697
- *   +0x068c -> line 695
- *   +0x06a0 -> line 697
- *   +0x06ac -> line 700
- *   +0x06b0 -> line 702
- *   +0x06b4 -> line 700
- *   +0x06bc -> line 702
- *   +0x06c8 -> line 703
- *   +0x0728 -> line 705
- *   +0x0740 -> line 703
- *   +0x0754 -> line 705
- *   +0x0784 -> line 710
- *   +0x078c -> line 712
- *   +0x0794 -> line 717
- *   +0x0798 -> line 719
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned char COL_fn_bCollideStaticSphereWithStaticIndexedTriangle(COL_tdstGVForCollision_* p_stGV, short xIndex)
-{
-    MTH3D_tdstVector_ stEndPosition;
-    MTH3D_tdstVector_ stTempDistance;
-    MTH3D_tdstVector_ stTempNormal;
-    MTH3D_tdstVector_ stTempHit;
-    MTH3D_tdstVector_ stHit;
-    MTH3D_tdstVector_ stMovementVector;
-    MTH3D_tdstVector_ stSegmentVector;
-    MTH3D_tdstVector_ stSegmentStartPoint;
-    MTH3D_tdstVector_ stT1Center;
-    MTH4D_tdstVector_ stVect4;
-    MTH4D_tdstVector_* pVect4;
-    MTH4D_tdstMatrix_* pMat;
-    MTH3D_tdstVector_* p_stNormal;
-    MTH3D_tdstVector_* p_stVertex3;
-    MTH3D_tdstVector_* p_stVertex2;
-    MTH3D_tdstVector_* p_stVertex1;
-    float xT;
-    float xDistance;
-    float xDPlan;
-
-    /* the three vertices of the triangle */
-    p_stVertex1 = &p_stGV->p_stStaticColObj->d_stListOfPoints[p_stGV->p_stStaticElementIndexedTriangles->d_stListOfFacesTripled[p_stGV->xStaticIndexedTriangleIndex].a3_xIndex[0]];
-    p_stVertex2 = &p_stGV->p_stStaticColObj->d_stListOfPoints[p_stGV->p_stStaticElementIndexedTriangles->d_stListOfFacesTripled[p_stGV->xStaticIndexedTriangleIndex].a3_xIndex[1]];
-    p_stVertex3 = &p_stGV->p_stStaticColObj->d_stListOfPoints[p_stGV->p_stStaticElementIndexedTriangles->d_stListOfFacesTripled[p_stGV->xStaticIndexedTriangleIndex].a3_xIndex[2]];
-    p_stNormal = &p_stGV->p_stStaticElementIndexedTriangles->d_stListOfFacesNormals[p_stGV->xStaticIndexedTriangleIndex];
-
-    /* the plane of the triangle, computed with the R5900 accumulator */
-    xDPlan = (p_stVertex2->xX - p_stVertex1->xX) * (p_stVertex3->xY - p_stVertex1->xY)
-           - (p_stVertex2->xY - p_stVertex1->xY) * (p_stVertex3->xX - p_stVertex1->xX);
-
-    if (p_stGV->bUseEnlargeSphere == 0)
-    {
-        float xRadius;
-
-        xRadius = p_stGV->xDynamicRadius;
-        p_stGV->xDynamicRadius = p_stGV->xSwapRadius;
-        p_stGV->xSwapRadius = xRadius;
-        *(int*)&p_stGV->stSwapDinST0Point.xX = *(int*)&p_stGV->stDinST0Point.xX;
-        *(int*)&p_stGV->stSwapDinST0Point.xY = *(int*)&p_stGV->stDinST0Point.xY;
-        *(int*)&p_stGV->stSwapDinST0Point.xZ = *(int*)&p_stGV->stDinST0Point.xZ;
-        *(int*)&p_stGV->stDinST0Point.xX = *(int*)&p_stGV->stSwapDinST0Point.xX;
-        *(int*)&p_stGV->stDinST0Point.xY = *(int*)&p_stGV->stSwapDinST0Point.xY;
-        *(int*)&p_stGV->stDinST0Point.xZ = *(int*)&p_stGV->stSwapDinST0Point.xZ;
-        p_stGV->bUseEnlargeSphere = 1;
-    }
-
-    /* the segment from the dynamic centre to the contact point on the plane */
-    stSegmentStartPoint.xX = p_stGV->stDinST0Point.xX + p_stGV->xDynamicRadius * p_stNormal->xX;
-    stSegmentStartPoint.xY = p_stGV->stDinST0Point.xY + p_stGV->xDynamicRadius * p_stNormal->xY;
-    stSegmentStartPoint.xZ = p_stGV->stDinST0Point.xZ + p_stGV->xDynamicRadius * p_stNormal->xZ;
-    stSegmentVector.xX = -2.0f * p_stGV->xDynamicRadius * p_stNormal->xX;
-    stSegmentVector.xY = -2.0f * p_stGV->xDynamicRadius * p_stNormal->xY;
-    stSegmentVector.xZ = -2.0f * p_stGV->xDynamicRadius * p_stNormal->xZ;
-
-    if (INT_fn_bDetectIntersectSegmentWithTriangle(&stSegmentStartPoint, &stSegmentVector,
-                                                  p_stVertex1, p_stVertex2, p_stVertex3,
-                                                  p_stNormal, xDPlan, &xT, &stTempHit))
-    {
-        if (p_stGV->bUseEnlargeSphere != 0)
-        {
-            float xRadius;
-
-            xRadius = p_stGV->xDynamicRadius;
-            p_stGV->xDynamicRadius = p_stGV->xSwapRadius;
-            p_stGV->xSwapRadius = xRadius;
-            *(int*)&p_stGV->stSwapDinST0Point.xX = *(int*)&p_stGV->stDinST0Point.xX;
-            *(int*)&p_stGV->stSwapDinST0Point.xY = *(int*)&p_stGV->stDinST0Point.xY;
-            *(int*)&p_stGV->stSwapDinST0Point.xZ = *(int*)&p_stGV->stDinST0Point.xZ;
-            *(int*)&p_stGV->stDinST0Point.xX = *(int*)&p_stGV->stSwapDinST0Point.xX;
-            *(int*)&p_stGV->stDinST0Point.xY = *(int*)&p_stGV->stSwapDinST0Point.xY;
-            *(int*)&p_stGV->stDinST0Point.xZ = *(int*)&p_stGV->stSwapDinST0Point.xZ;
-            p_stGV->bUseEnlargeSphere = 0;
-        }
-
-        stSegmentStartPoint.xX = p_stGV->stDinST1Point.xX + p_stGV->xDynamicRadius * p_stNormal->xX;
-        stSegmentStartPoint.xY = p_stGV->stDinST1Point.xY + p_stGV->xDynamicRadius * p_stNormal->xY;
-        stSegmentStartPoint.xZ = p_stGV->stDinST1Point.xZ + p_stGV->xDynamicRadius * p_stNormal->xZ;
-        stSegmentVector.xX = -2.0f * p_stGV->xDynamicRadius * p_stNormal->xX;
-        stSegmentVector.xY = -2.0f * p_stGV->xDynamicRadius * p_stNormal->xY;
-        stSegmentVector.xZ = -2.0f * p_stGV->xDynamicRadius * p_stNormal->xZ;
-        stT1Center.xX = -p_stGV->stDinST01Vector.xX;
-        stT1Center.xY = -p_stGV->stDinST01Vector.xY;
-        stT1Center.xZ = -p_stGV->stDinST01Vector.xZ;
-
-        if (INT_fn_bDetectIntersectSegmentWithTriangle(&stSegmentStartPoint, &stSegmentVector,
-                                                      p_stVertex1, p_stVertex2, p_stVertex3,
-                                                      p_stNormal, xDPlan, &xT, &stTempHit))
-        {
-            /* the contact point on the triangle, in the static frame */
-            xDistance = xT + p_stGV->xDynamicRadius;
-            if (xDistance > 0.0f)
-            {
-                stMovementVector.xX = xDistance * p_stNormal->xX;
-                stMovementVector.xY = xDistance * p_stNormal->xY;
-                stMovementVector.xZ = xDistance * p_stNormal->xZ;
-                MAT_fn_vApplyOnVector(&stMovementVector, p_stGV->p_stStaticGeomObjMatrix, &stMovementVector);
-
-                stTempHit.xX = p_stGV->stDinST0Point.xX + xT * p_stNormal->xX;
-                stTempHit.xY = p_stGV->stDinST0Point.xY + xT * p_stNormal->xY;
-                stTempHit.xZ = p_stGV->stDinST0Point.xZ + xT * p_stNormal->xZ;
-                if (INT_fn_bGetPointInTriangle(&stTempHit, p_stVertex1, p_stVertex2, p_stVertex3, p_stNormal))
-                {
-                    pMat = &p_stGV->p_stStaticGeomObjMatrix->stTransformMatrix;
-                    pVect4 = &stVect4;
-                    stVect4.xX = stTempHit.xX;
-                    stVect4.xY = stTempHit.xY;
-                    stVect4.xZ = stTempHit.xZ;
-                    stVect4.xW = 0.0f;
-                    COL_VU_MUL_MATRIX(pVect4, pMat);
-                    stTempDistance.xX = stVect4.xX;
-                    stTempDistance.xY = stVect4.xY;
-                    stTempDistance.xZ = stVect4.xZ;
-                    MAT_fn_vRotateVector(&stTempNormal, p_stGV->p_stStaticGeomObjMatrix, p_stNormal, &stTempDistance);
-                    MAT_fn_vApplyOnVector(&stT1Center, p_stGV->p_stStaticGeomObjMatrix, &stT1Center);
-                    stVect4.xX = p_stGV->stDinST0Point.xX;
-                    stVect4.xY = p_stGV->stDinST0Point.xY;
-                    stVect4.xZ = p_stGV->stDinST0Point.xZ;
-                    stVect4.xW = 0.0f;
-                    COL_VU_MUL_MATRIX(pVect4, pMat);
-                    stEndPosition.xX = stVect4.xX;
-                    stEndPosition.xY = stVect4.xY;
-                    stEndPosition.xZ = stVect4.xZ;
-
-                    COL_fn_vAddInStaticCollisionTable(-1.0f, &stMovementVector, &stTempDistance, &stTempNormal,
-                                                     p_stGV->hDynamicMaterial, p_stGV->hStaticMaterial,
-                                                     0, 0, NULL, 0, &stEndPosition, 0.0f, NULL);
-                    return 1;
-                }
-            }
-        }
-        else if (INT_fn_bIntersectSegmentWithTriangle2(&stSegmentStartPoint, &stSegmentVector,
-                                                       p_stVertex1, p_stVertex2, p_stVertex3,
-                                                       p_stNormal, xDPlan, xDistance, &xT, &stTempHit))
-        {
-            pMat = &p_stGV->p_stStaticGeomObjMatrix->stTransformMatrix;
-            pVect4 = &stVect4;
-            stVect4.xX = stTempHit.xX;
-            stVect4.xY = stTempHit.xY;
-            stVect4.xZ = stTempHit.xZ;
-            stVect4.xW = 0.0f;
-            COL_VU_MUL_MATRIX(pVect4, pMat);
-            stTempDistance.xX = stVect4.xX;
-            stTempDistance.xY = stVect4.xY;
-            stTempDistance.xZ = stVect4.xZ;
-            MAT_fn_vRotateVector(&stTempNormal, p_stGV->p_stStaticGeomObjMatrix, p_stNormal, &stTempDistance);
-            MAT_fn_vApplyOnVector(&stT1Center, p_stGV->p_stStaticGeomObjMatrix, &stT1Center);
-            stVect4.xX = p_stGV->stDinST0Point.xX;
-            stVect4.xY = p_stGV->stDinST0Point.xY;
-            stVect4.xZ = p_stGV->stDinST0Point.xZ;
-            stVect4.xW = 0.0f;
-            COL_VU_MUL_MATRIX(pVect4, pMat);
-            stEndPosition.xX = stVect4.xX;
-            stEndPosition.xY = stVect4.xY;
-            stEndPosition.xZ = stVect4.xZ;
-
-            COL_fn_vAddInStaticCollisionTable(xT, &stT1Center, &stTempDistance, &stTempNormal,
-                                             p_stGV->hDynamicMaterial, p_stGV->hStaticMaterial,
-                                             0, 0, NULL, 0, &stEndPosition, 0.0f, NULL);
-        }
-    }
-    return 0;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CsSphElt.c lines 387–552 */
-/* addr: 0x00251aa0  size: 524 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 398
- *   +0x0004 -> line 387
- *   +0x0008 -> line 398
- *   +0x000c -> line 395
- *   +0x0010 -> line 399
- *   +0x0014 -> line 408
- *   +0x0018 -> line 398
- *   +0x0024 -> line 399
- *   +0x0028 -> line 398
- *   +0x002c -> line 402
- *   +0x0030 -> line 398
- *   +0x0034 -> line 402
- *   +0x0038 -> line 404
- *   +0x003c -> line 405
- *   +0x0040 -> line 402
- *   +0x0044 -> line 404
- *   +0x004c -> line 406
- *   +0x0050 -> line 405
- *   +0x0058 -> line 404
- *   +0x005c -> line 405
- *   +0x0064 -> line 404
- *   +0x0068 -> line 406
- *   +0x0074 -> line 408
- *   +0x00d8 -> line 409
- *   +0x00f0 -> line 410
- *   +0x00f4 -> line 416
- *   +0x00f8 -> line 417
- *   +0x00fc -> line 418
- *   +0x0100 -> line 419
- *   +0x0104 -> line 420
- *   +0x010c -> line 421
- *   +0x0110 -> line 422
- *   +0x0114 -> line 423
- *   +0x0118 -> line 424
- *   +0x011c -> line 425
- *   +0x0120 -> line 426
- *   +0x0124 -> line 428
- *   +0x0128 -> line 429
- *   +0x012c -> line 430
- *   +0x0130 -> line 432
- *   +0x0134 -> line 433
- *   +0x0138 -> line 434
- *   +0x013c -> line 437
- *   +0x0140 -> line 438
- *   +0x0144 -> line 439
- *   +0x0148 -> line 440
- *   +0x014c -> line 441
- *   +0x0150 -> line 442
- *   +0x0154 -> line 443
- *   +0x0158 -> line 444
- *   +0x015c -> line 445
- *   +0x0160 -> line 446
- *   +0x0164 -> line 448
- *   +0x0168 -> line 449
- *   +0x016c -> line 450
- *   +0x0170 -> line 452
- *   +0x0174 -> line 453
- *   +0x0178 -> line 454
- *   +0x017c -> line 457
- *   +0x0180 -> line 458
- *   +0x0184 -> line 459
- *   +0x0188 -> line 460
- *   +0x018c -> line 461
- *   +0x0190 -> line 462
- *   +0x0194 -> line 463
- *   +0x0198 -> line 464
- *   +0x019c -> line 465
- *   +0x01a0 -> line 466
- *   +0x01a4 -> line 468
- *   +0x01a8 -> line 469
- *   +0x01ac -> line 470
- *   +0x01b0 -> line 472
- *   +0x01b4 -> line 473
- *   +0x01b8 -> line 474
- *   +0x01bc -> line 478
- *   +0x01c0 -> line 479
- *   +0x01c4 -> line 480
- *   +0x01c8 -> line 481
- *   +0x01cc -> line 482
- *   +0x01d0 -> line 483
- *   +0x01d4 -> line 484
- *   +0x01d8 -> line 486
- *   +0x01dc -> line 487
- *   +0x01e0 -> line 488
- *   +0x01e4 -> line 489
- *   +0x01e8 -> line 491
- *   +0x01ec -> line 492
- *   +0x01f0 -> line 493
- *   +0x01f4 -> line 496
- *   +0x01f8 -> line 545
- *   +0x0200 -> line 546
- *   +0x0204 -> line 552
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned char COL_fn_bIsCollisionPossibleStaticSphereWithStaticIndexedTriangle(COL_tdstGVForCollision_* p_stGV)
-{
-    MTH3D_tdstVector_* pVertex;
-    short* pTriIndex;
-    int result;
+    unsigned char bResult;
+    MTH3D_tdstVector_ stMaxPointLocalSphere;
+    MTH3D_tdstVector_ stMinPointLocalSphere;
+    MTH3D_tdstVector_ stMaxPointSphere;
+    MTH3D_tdstVector_ stMinPointSphere;
+    MTH3D_tdstVector_ stFirstCenter;
     MTH3D_tdstVector_* param0;
-    float xRadius;
-    MTH3D_tdstVector_* p_stNormal;
-    MTH3D_tdstVector_* p_stVertex3;
-    MTH3D_tdstVector_* p_stVertex2;
-    MTH3D_tdstVector_* p_stVertex1;
+    MTH3D_tdstVector_* p_stMaxPointBox;
+    MTH3D_tdstVector_* p_stMinPointBox;
+    COL_tdstParallelBox_* hBox;
+    int* p_lCurrentBitsField;
+    short xIndexSphere;
+    short xIndexBox;
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CsSphElt.c lines 214–371 */
-/* addr: 0x00251cb0  size: 2136 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 214
- *   +0x0020 -> line 220
- *   +0x0094 -> line 223
- *   +0x00d8 -> line 226
- *   +0x00f4 -> line 234
- *   +0x0118 -> line 237
- *   +0x0188 -> line 239
- *   +0x01a4 -> line 253
- *   +0x01b4 -> line 254
- *   +0x01c0 -> line 253
- *   +0x01d8 -> line 254
- *   +0x01e4 -> line 255
- *   +0x01f0 -> line 258
- *   +0x01f4 -> line 255
- *   +0x01f8 -> line 258
- *   +0x021c -> line 260
- *   +0x023c -> line 262
- *   +0x0248 -> line 265
- *   +0x0250 -> line 262
- *   +0x0288 -> line 265
- *   +0x02b8 -> line 266
- *   +0x032c -> line 267
- *   +0x0350 -> line 269
- *   +0x0388 -> line 271
- *   +0x0394 -> line 272
- *   +0x039c -> line 275
- *   +0x03ac -> line 277
- *   +0x03b4 -> line 279
- *   +0x03c0 -> line 281
- *   +0x03d0 -> line 283
- *   +0x0404 -> line 285
- *   +0x041c -> line 289
- *   +0x0440 -> line 291
- *   +0x0458 -> line 289
- *   +0x045c -> line 291
- *   +0x04ac -> line 293
- *   +0x04b0 -> line 291
- *   +0x04c4 -> line 293
- *   +0x04d0 -> line 294
- *   +0x0530 -> line 302
- *   +0x0550 -> line 294
- *   +0x0564 -> line 302
- *   +0x0590 -> line 307
- *   +0x0598 -> line 322
- *   +0x05c4 -> line 329
- *   +0x05ec -> line 332
- *   +0x0600 -> line 329
- *   +0x0604 -> line 332
- *   +0x0650 -> line 337
- *   +0x0658 -> line 335
- *   +0x065c -> line 337
- *   +0x0660 -> line 335
- *   +0x0670 -> line 332
- *   +0x0674 -> line 335
- *   +0x0678 -> line 332
- *   +0x067c -> line 335
- *   +0x0680 -> line 332
- *   +0x0688 -> line 335
- *   +0x068c -> line 332
- *   +0x0690 -> line 335
- *   +0x06a8 -> line 336
- *   +0x06d8 -> line 337
- *   +0x06f0 -> line 339
- *   +0x0728 -> line 341
- *   +0x0734 -> line 342
- *   +0x073c -> line 345
- *   +0x074c -> line 347
- *   +0x0754 -> line 349
- *   +0x0760 -> line 353
- *   +0x0764 -> line 355
- *   +0x0768 -> line 353
- *   +0x0770 -> line 355
- *   +0x077c -> line 356
- *   +0x07dc -> line 363
- *   +0x07f4 -> line 356
- *   +0x0808 -> line 363
- *   +0x0838 -> line 371
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void COL_fn_vCollideStaticSphereWithStaticEdge(COL_tdstGVForCollision_* p_stGV, MTH3D_tdstVector_* p_stNormal)
+void COL_fn_vCollideStaticElementSpheresWithStaticElementAlignedBoxes(COL_tdstGVForCollision_* p_stGV)
+{
+    short xStaticIndexedBoxIndex;
+    short xDynamicIndexedSphereIndex;
+    /* TODO: decompile from asm/... */
+}
+
+void COL_fn_vCollideStaticSphereWithStaticAlignedBox(COL_tdstGVForCollision_* p_stGV)
 {
     MTH3D_tdstVector_ stEndPosition;
-    MTH3D_tdstVector_ stTempNormal;
-    MTH3D_tdstVector_ stTempDistance;
-    MTH3D_tdstVector_ stTempHit;
-    MTH3D_tdstVector_ stNormal;
-    MTH3D_tdstVector_ stHit;
-    MTH3D_tdstVector_ stTempVector;
-    MTH3D_tdstVector_ stCenterToCenter;
     MTH3D_tdstVector_ stMovementVector;
-    float xT;
-    float xNorm;
-    float xDotProduct;
-    float xEdgeX;
-    float xEdgeY;
-    float xEdgeZ;
+    MTH3D_tdstVector_ stNormal;
+    MTH3D_tdstVector_ stPointBox;
+    MTH3D_tdstVector_ stVectCenterHit;
+    MTH3D_tdstVector_ stHitPoint;
+    MTH3D_tdstVector_ stNegVector;
     MTH4D_tdstVector_ stVect4;
     MTH4D_tdstVector_* pVect4;
     MTH4D_tdstMatrix_* pMat;
+    MTH3D_tdstVector_* p_stMinPoint;
+    MTH3D_tdstVector_* p_stMaxPoint;
+    float a6_Distance[6];
+    float xNorm;
+    float tempTime;
+    unsigned char bCollide;
+    short xIndex;
+    short xIndexClosest;
 
-    if (p_stGV->bUseEnlargeSphere == 0)
+    p_stMinPoint = p_stGV->p_stStaticMinPoint;
+    p_stMaxPoint = p_stGV->p_stStaticMaxPoint;
+
+    /* the closest point of the box to the dynamic centre */
+    if (p_stGV->stDinST0Point.xX > p_stMaxPoint->xX)
+        stPointBox.xX = p_stMaxPoint->xX;
+    else if (p_stGV->stDinST0Point.xX < p_stMinPoint->xX)
     {
-        float xRadius;
-
-        xRadius = p_stGV->xDynamicRadius;
-        p_stGV->xDynamicRadius = p_stGV->xSwapRadius;
-        p_stGV->xSwapRadius = xRadius;
-        *(int*)&p_stGV->stSwapDinST0Point.xX = *(int*)&p_stGV->stDinST0Point.xX;
-        *(int*)&p_stGV->stSwapDinST0Point.xY = *(int*)&p_stGV->stDinST0Point.xY;
-        *(int*)&p_stGV->stSwapDinST0Point.xZ = *(int*)&p_stGV->stDinST0Point.xZ;
-        *(int*)&p_stGV->stDinST0Point.xX = *(int*)&p_stGV->stSwapDinST0Point.xX;
-        *(int*)&p_stGV->stDinST0Point.xY = *(int*)&p_stGV->stSwapDinST0Point.xY;
-        *(int*)&p_stGV->stDinST0Point.xZ = *(int*)&p_stGV->stSwapDinST0Point.xZ;
-        p_stGV->bUseEnlargeSphere = 1;
-    }
-
-    if (p_stGV->stEdgeVector.xX == 0.0f && p_stGV->stEdgeVector.xY == 0.0f && p_stGV->stEdgeVector.xZ == 0.0f)
-        return;
-
-    if (INT_fn_bDetectIntersectSegmentWithSphere(p_stGV->p_stVertex1, &p_stGV->stEdgeVector, &p_stGV->stDinST0Point, p_stGV->xDynamicRadius))
-    {
-        stCenterToCenter.xX = -p_stGV->stDinST01Vector.xX;
-        stCenterToCenter.xY = -p_stGV->stDinST01Vector.xY;
-        stCenterToCenter.xZ = -p_stGV->stDinST01Vector.xZ;
-
-        if (p_stGV->bUseEnlargeSphere != 0)
-        {
-            float xRadius;
-
-            xRadius = p_stGV->xDynamicRadius;
-            p_stGV->xDynamicRadius = p_stGV->xSwapRadius;
-            p_stGV->xSwapRadius = xRadius;
-            *(int*)&p_stGV->stSwapDinST0Point.xX = *(int*)&p_stGV->stDinST0Point.xX;
-            *(int*)&p_stGV->stSwapDinST0Point.xY = *(int*)&p_stGV->stDinST0Point.xY;
-            *(int*)&p_stGV->stSwapDinST0Point.xZ = *(int*)&p_stGV->stDinST0Point.xZ;
-            *(int*)&p_stGV->stDinST0Point.xX = *(int*)&p_stGV->stSwapDinST0Point.xX;
-            *(int*)&p_stGV->stDinST0Point.xY = *(int*)&p_stGV->stSwapDinST0Point.xY;
-            *(int*)&p_stGV->stDinST0Point.xZ = *(int*)&p_stGV->stSwapDinST0Point.xZ;
-            p_stGV->bUseEnlargeSphere = 0;
-        }
-
-        if (INT_fn_bDetectIntersectSegmentWithSphere(p_stGV->p_stVertex1, &p_stGV->stEdgeVector, &p_stGV->stDinST1Point, p_stGV->xDynamicRadius))
-        {
-            float xEdgeX2;
-            float xEdgeY2;
-            float xEdgeZ2;
-
-            xEdgeX = p_stGV->stEdgeVector.xX;
-            xEdgeY = p_stGV->stEdgeVector.xY;
-            xEdgeZ = p_stGV->stEdgeVector.xZ;
-            xDotProduct = (p_stGV->stDinST0Point.xX - p_stGV->p_stVertex1->xX) * xEdgeX
-                        + (p_stGV->stDinST0Point.xY - p_stGV->p_stVertex1->xY) * xEdgeY
-                        + (p_stGV->stDinST0Point.xZ - p_stGV->p_stVertex1->xZ) * xEdgeZ;
-            xEdgeX2 = xEdgeX * xEdgeX;
-            xEdgeY2 = xEdgeY * xEdgeY;
-            xEdgeZ2 = xEdgeZ * xEdgeZ;
-            xNorm = xEdgeX2 + xEdgeY2 + xEdgeZ2;
-            xT = xDotProduct / xNorm;
-            if (xT < 0.002f)
-                xT = 0.002f;
-            else if (xT > 0.998f)
-                xT = 0.998f;
-
-            stTempHit.xX = p_stGV->p_stVertex1->xX + xT * xEdgeX2;
-            stTempHit.xY = p_stGV->p_stVertex1->xY + xT * xEdgeY;
-            stTempHit.xZ = p_stGV->p_stVertex1->xZ + xT * xEdgeZ;
-
-            stMovementVector.xX = p_stGV->stDinST0Point.xX - stTempHit.xX;
-            stMovementVector.xY = p_stGV->stDinST0Point.xY - stTempHit.xY;
-            stMovementVector.xZ = p_stGV->stDinST0Point.xZ - stTempHit.xZ;
-            xNorm = stMovementVector.xX * stMovementVector.xX
-                  + stMovementVector.xY * stMovementVector.xY
-                  + stMovementVector.xZ * stMovementVector.xZ;
-            if (xNorm == 0.0f)
-            {
-                stTempNormal.xX = stMovementVector.xX;
-                stTempNormal.xY = stMovementVector.xY;
-                stTempNormal.xZ = stMovementVector.xZ;
-            }
-            else
-            {
-                xNorm = 1.0f / xNorm;
-                stTempNormal.xX = xNorm * stMovementVector.xX;
-                stTempNormal.xY = xNorm * stMovementVector.xY;
-                stTempNormal.xZ = xNorm * stMovementVector.xZ;
-            }
-
-            if (COL_g_p_stEdgeNormalForNewComputations->xZ > 0.7f)
-            {
-                xDotProduct = COL_g_p_stEdgeNormalForNewComputations->xX * stTempNormal.xX
-                            + COL_g_p_stEdgeNormalForNewComputations->xY * stTempNormal.xY
-                            + COL_g_p_stEdgeNormalForNewComputations->xZ * stTempNormal.xZ;
-                MAT_fn_vRotateVector(&stNormal, p_stGV->p_stStaticGeomObjMatrix, &stTempNormal);
-            }
-            else
-            {
-                MAT_fn_vRotateVector(&stNormal, p_stGV->p_stStaticGeomObjMatrix, COL_g_p_stEdgeNormalForNewComputations);
-            }
-
-            MAT_fn_vApplyOnVector(&stMovementVector, p_stGV->p_stStaticGeomObjMatrix, &stMovementVector);
-            xDotProduct = p_stGV->xDynamicRadius * p_stGV->xStaticScale - xNorm;
-            stMovementVector.xX = xDotProduct * stNormal.xX;
-            stMovementVector.xY = xDotProduct * stNormal.xY;
-            stMovementVector.xZ = xDotProduct * stNormal.xZ;
-
-            /* the hit point and the movement vector are moved back into the
-               static frame with the VU0 matrix product */
-            pMat = &p_stGV->p_stStaticGeomObjMatrix->stTransformMatrix;
-            pVect4 = &stVect4;
-            stVect4.xX = stTempHit.xX;
-            stVect4.xY = stTempHit.xY;
-            stVect4.xZ = stTempHit.xZ;
-            stVect4.xW = 0.0f;
-            COL_VU_MUL_MATRIX(pVect4, pMat);
-            stTempDistance.xX = stVect4.xX;
-            stTempDistance.xY = stVect4.xY;
-            stTempDistance.xZ = stVect4.xZ;
-            stVect4.xX = stCenterToCenter.xX;
-            stVect4.xY = stCenterToCenter.xY;
-            stVect4.xZ = stCenterToCenter.xZ;
-            stVect4.xW = 0.0f;
-            COL_VU_MUL_MATRIX(pVect4, pMat);
-            stCenterToCenter.xX = stVect4.xX;
-            stCenterToCenter.xY = stVect4.xY;
-            stCenterToCenter.xZ = stVect4.xZ;
-            MAT_fn_vApplyOnVector(&stCenterToCenter, p_stGV->p_stStaticGeomObjMatrix, &stCenterToCenter);
-
-            COL_fn_vAddInStaticCollisionTable(-1.0f, &stMovementVector, &stTempDistance, &stNormal,
-                                             p_stGV->hDynamicMaterial, p_stGV->hStaticMaterial,
-                                             0, 0, NULL, 0, &stEndPosition, 0.0f, NULL);
-        }
-        else if (INT_fn_bIntersectSegmentWithCylinder(&p_stGV->stDinST1Point, &stCenterToCenter,
-                                                      p_stGV->p_stVertex2, &p_stGV->stEdgeVector,
-                                                      p_stGV->xDynamicRadius, &xT,
-                                                      &stTempHit, &stHit))
-        {
-            /* the cylinder case: the same static-frame conversion is applied to
-               the cylinder hit point */
-            pMat = &p_stGV->p_stStaticGeomObjMatrix->stTransformMatrix;
-            pVect4 = &stVect4;
-            stVect4.xX = stTempHit.xX;
-            stVect4.xY = stTempHit.xY;
-            stVect4.xZ = stTempHit.xZ;
-            stVect4.xW = 0.0f;
-            COL_VU_MUL_MATRIX(pVect4, pMat);
-            stTempDistance.xX = stVect4.xX;
-            stTempDistance.xY = stVect4.xY;
-            stTempDistance.xZ = stVect4.xZ;
-            stVect4.xX = stCenterToCenter.xX;
-            stVect4.xY = stCenterToCenter.xY;
-            stVect4.xZ = stCenterToCenter.xZ;
-            stVect4.xW = 0.0f;
-            COL_VU_MUL_MATRIX(pVect4, pMat);
-            stCenterToCenter.xX = stVect4.xX;
-            stCenterToCenter.xY = stVect4.xY;
-            stCenterToCenter.xZ = stVect4.xZ;
-            MAT_fn_vApplyOnVector(&stCenterToCenter, p_stGV->p_stStaticGeomObjMatrix, &stCenterToCenter);
-
-            COL_fn_vAddInStaticCollisionTable(xT, &stCenterToCenter, &stTempDistance, &stNormal,
-                                             p_stGV->hDynamicMaterial, p_stGV->hStaticMaterial,
-                                             0, 0, NULL, 0, &stEndPosition, 0.0f, NULL);
-        }
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CsSphElt.c lines 134–164 */
-/* addr: 0x00252510  size: 208 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 134
- *   +0x0008 -> line 135
- *   +0x0020 -> line 138
- *   +0x0038 -> line 140
- *   +0x0058 -> line 143
- *   +0x0060 -> line 147
- *   +0x006c -> line 150
- *   +0x0070 -> line 157
- *   +0x0074 -> line 163
- *   +0x0078 -> line 150
- *   +0x0080 -> line 157
- *   +0x0084 -> line 158
- *   +0x0088 -> line 157
- *   +0x008c -> line 150
- *   +0x0098 -> line 158
- *   +0x00c0 -> line 161
- *   +0x00c4 -> line 163
- *   +0x00c8 -> line 164
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-/* Recovered PS2 MTH scalar helpers: sqrt.s and the R5900 accumulator ops
-   have no C form under the baseline. */
-#define MTH_SQRT_TO(_result, _value) \
-    asm { sqrt.s _result, _value }
-#define MTH_SQR3_TO(_result, _x, _y, _z) \
-    asm { mula.s _x, _x }                  \
-    asm { madda.s _y, _y }                 \
-    asm { madd.s _result, _z, _z }
-
-void COL_fn_vEnlargeSphereIfNecessary(COL_tdstGVForCollision_* p_stGV)
-{
-    float xNewRadius;
-    float xY, xZ, xX;
-    float xSqrLength;
-    float xLength;
-
-    p_stGV->xSwapRadius = p_stGV->xDynamicRadius;
-    *(int*)&p_stGV->stSwapDinST0Point.xX = *(int*)&p_stGV->stDinST0Point.xX; *(int*)&p_stGV->stSwapDinST0Point.xY = *(int*)&p_stGV->stDinST0Point.xY; *(int*)&p_stGV->stSwapDinST0Point.xZ = *(int*)&p_stGV->stDinST0Point.xZ;
-
-    xX = p_stGV->stDinST01Vector.xX; xY = p_stGV->stDinST01Vector.xY; xZ = p_stGV->stDinST01Vector.xZ; MTH_SQR3_TO(xSqrLength, xX, xY, xZ)
-
-    if (xSqrLength < 0.001f)
-    {
-        p_stGV->bUseEnlargeSphere = 0;
+        stPointBox.xX = p_stGV->stDinST0Point.xX;
+        xIndexClosest++;
     }
     else
+        stPointBox.xX = p_stMinPoint->xX;
+    if (p_stGV->stDinST0Point.xY > p_stMaxPoint->xY)
+        stPointBox.xY = p_stMaxPoint->xY;
+    else if (p_stGV->stDinST0Point.xY < p_stMinPoint->xY)
     {
-        MTH_SQRT_TO(xLength, xSqrLength)
-        xNewRadius = (xLength + 2.0f * p_stGV->xDynamicRadius) / 2.0f;
-        xY = 0.5f * xY;
-        p_stGV->stDinST0Point.xX += 0.5f * xX; p_stGV->stDinST0Point.xY += xY; p_stGV->stDinST0Point.xZ += 0.5f * xZ;
-        p_stGV->xDynamicRadius = xNewRadius;
-        p_stGV->bUseEnlargeSphere = 1;
+        stPointBox.xY = p_stGV->stDinST0Point.xY;
+        xIndexClosest++;
+    }
+    else
+        stPointBox.xY = p_stMinPoint->xY;
+    if (p_stGV->stDinST0Point.xZ > p_stMaxPoint->xZ)
+        stPointBox.xZ = p_stMaxPoint->xZ;
+    else if (p_stGV->stDinST0Point.xZ < p_stMinPoint->xZ)
+    {
+        stPointBox.xZ = p_stGV->stDinST0Point.xZ;
+        xIndexClosest++;
+    }
+    else
+        stPointBox.xZ = p_stMinPoint->xZ;
+
+    COL_fn_vMinMaxBox2VerticesBox(p_stGV->a8_stStatic8VBox, &p_stGV->StaticMinPoint, &p_stGV->StaticMaxPoint);
+
+    if (INT_fn_bIntersectSphereWithBox(&p_stGV->stDinST0Point, &p_stGV->StaticMinPoint, &p_stGV->StaticMaxPoint, p_stGV->xDynamicRadius))
+    {
+        if (p_stGV->bUseEnlargeSphere != 0)
+        {
+            float xRadius;
+
+            xRadius = p_stGV->xDynamicRadius;
+            p_stGV->xDynamicRadius = p_stGV->xSwapRadius;
+            p_stGV->xSwapRadius = xRadius;
+            *(int*)&p_stGV->stSwapDinST0Point.xX = *(int*)&p_stGV->stDinST0Point.xX;
+            *(int*)&p_stGV->stSwapDinST0Point.xY = *(int*)&p_stGV->stDinST0Point.xY;
+            *(int*)&p_stGV->stSwapDinST0Point.xZ = *(int*)&p_stGV->stDinST0Point.xZ;
+            *(int*)&p_stGV->stDinST0Point.xX = *(int*)&p_stGV->stSwapDinST0Point.xX;
+            *(int*)&p_stGV->stDinST0Point.xY = *(int*)&p_stGV->stSwapDinST0Point.xY;
+            *(int*)&p_stGV->stDinST0Point.xZ = *(int*)&p_stGV->stSwapDinST0Point.xZ;
+            p_stGV->bUseEnlargeSphere = 0;
+        }
+
+        stNegVector.xX = -p_stGV->stDinST01Vector.xX;
+        stNegVector.xY = -p_stGV->stDinST01Vector.xY;
+        stNegVector.xZ = -p_stGV->stDinST01Vector.xZ;
+
+        bCollide = 0;
+        if (INT_fn_bIntersectSphereWithBox(&p_stGV->stDinST1Point, &p_stGV->StaticMinPoint, &p_stGV->StaticMaxPoint, p_stGV->xDynamicRadius))
+            bCollide = 1;
+        else if (!INT_fn_bIntersectSphereWithBox(&p_stGV->stDinST0Point, &p_stGV->StaticMinPoint, &p_stGV->StaticMaxPoint, p_stGV->xDynamicRadius))
+        {
+            if (INT_fn_bIntersectSegmentWithBox(&p_stGV->stDinST0Point, &stNegVector,
+                                                &p_stGV->StaticMinPoint, &p_stGV->StaticMaxPoint,
+                                                &tempTime, &stPointBox, &stVectCenterHit))
+            {
+                if (tempTime < 0.0f || tempTime > 1.0f)
+                    bCollide = 1;
+            }
+        }
+    }
+
+    if (bCollide)
+    {
+        /* the six candidate distances, and the axis that is the closest */
+        a6_Distance[0] = p_stGV->StaticMaxPoint.xX - p_stGV->stDinST0Point.xX;
+        a6_Distance[1] = p_stGV->stDinST0Point.xX - p_stGV->StaticMinPoint.xX;
+        xIndex = (a6_Distance[1] < a6_Distance[0]) ? 1 : 0;
+        a6_Distance[2] = p_stGV->StaticMaxPoint.xY - p_stGV->stDinST0Point.xY;
+        xIndex = (a6_Distance[2] < a6_Distance[xIndex]) ? 2 : 3;
+        a6_Distance[3] = p_stGV->stDinST0Point.xY - p_stGV->StaticMinPoint.xY;
+        xIndex = (a6_Distance[3] < a6_Distance[xIndex]) ? 3 : 4;
+        a6_Distance[4] = p_stGV->StaticMaxPoint.xZ - p_stGV->stDinST0Point.xZ;
+        xIndex = (a6_Distance[4] < a6_Distance[xIndex]) ? 4 : 5;
+        a6_Distance[5] = p_stGV->stDinST0Point.xZ - p_stGV->StaticMinPoint.xZ;
+        xIndex = (a6_Distance[5] < a6_Distance[xIndex]) ? 5 : 6;
+
+        switch (xIndex)
+        {
+            case 0:
+            case 1:
+                stNormal.xX = (xIndex == 0) ? 1.0f : -1.0f;
+                stNormal.xY = 0.0f;
+                stNormal.xZ = 0.0f;
+                break;
+            case 2:
+            case 3:
+                stNormal.xX = 0.0f;
+                stNormal.xY = (xIndex == 2) ? 1.0f : -1.0f;
+                stNormal.xZ = 0.0f;
+                break;
+            default:
+                stNormal.xX = 0.0f;
+                stNormal.xY = 0.0f;
+                stNormal.xZ = (xIndex == 4) ? 1.0f : -1.0f;
+                break;
+        }
+
+        stHitPoint.xX = p_stGV->stDinST0Point.xX - stNormal.xX * a6_Distance[xIndex];
+        stHitPoint.xY = p_stGV->stDinST0Point.xY - stNormal.xY * a6_Distance[xIndex];
+        stHitPoint.xZ = p_stGV->stDinST0Point.xZ - stNormal.xZ * a6_Distance[xIndex];
+
+        stVectCenterHit.xX = stHitPoint.xX - p_stGV->stDinST0Point.xX;
+        stVectCenterHit.xY = stHitPoint.xY - p_stGV->stDinST0Point.xY;
+        stVectCenterHit.xZ = stHitPoint.xZ - p_stGV->stDinST0Point.xZ;
+        xNorm = stVectCenterHit.xX * stVectCenterHit.xX
+              + stVectCenterHit.xY * stVectCenterHit.xY
+              + stVectCenterHit.xZ * stVectCenterHit.xZ;
+        if (xNorm == 0.0f)
+        {
+            stVectCenterHit.xX = stVectCenterHit.xX;
+            stVectCenterHit.xY = stVectCenterHit.xY;
+            stVectCenterHit.xZ = stVectCenterHit.xZ;
+        }
+        else
+        {
+            xNorm = 1.0f / xNorm;
+            stVectCenterHit.xX = xNorm * stVectCenterHit.xX;
+            stVectCenterHit.xY = xNorm * stVectCenterHit.xY;
+            stVectCenterHit.xZ = xNorm * stVectCenterHit.xZ;
+        }
+
+        stMovementVector.xX = p_stGV->xDynamicRadius * p_stGV->xStaticScale - xNorm;
+        stMovementVector.xX = stMovementVector.xX * stVectCenterHit.xX;
+        stMovementVector.xY = stMovementVector.xX;
+        stMovementVector.xZ = stMovementVector.xX;
+
+        pMat = &p_stGV->p_stStaticGeomObjMatrix->stTransformMatrix;
+        pVect4 = &stVect4;
+        stVect4.xX = stHitPoint.xX;
+        stVect4.xY = stHitPoint.xY;
+        stVect4.xZ = stHitPoint.xZ;
+        stVect4.xW = 0.0f;
+        COL_VU_MUL_MATRIX(pVect4, pMat);
+        stHitPoint.xX = stVect4.xX;
+        stHitPoint.xY = stVect4.xY;
+        stHitPoint.xZ = stVect4.xZ;
+        stVect4.xX = p_stGV->stDinST0Point.xX;
+        stVect4.xY = p_stGV->stDinST0Point.xY;
+        stVect4.xZ = p_stGV->stDinST0Point.xZ;
+        stVect4.xW = 0.0f;
+        COL_VU_MUL_MATRIX(pVect4, pMat);
+        stEndPosition.xX = stVect4.xX;
+        stEndPosition.xY = stVect4.xY;
+        stEndPosition.xZ = stVect4.xZ;
+
+        COL_fn_vAddInStaticCollisionTable(-1.0f, &stMovementVector, &stHitPoint, &stNormal,
+                                         p_stGV->hDynamicMaterial, p_stGV->hStaticMaterial,
+                                         0, 0, NULL, 0, &stEndPosition, 0.0f, NULL);
     }
 }

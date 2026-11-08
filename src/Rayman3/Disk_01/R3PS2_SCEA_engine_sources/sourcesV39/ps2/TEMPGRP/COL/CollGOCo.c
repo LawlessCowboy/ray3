@@ -391,6 +391,66 @@ int COL_g_lMaxNumberOfCollisions;
  *   return with 'bne'; the rest is the s0/s1/s2 and a2/a3 allocation and the
  *   order of the two instructions in the element-counting loop.
  */
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void COL_fn_vAddInStaticCollisionTable(float _xT, MTH3D_tdstVector_* _p_stTranslation, MTH3D_tdstVector_* _p_stHit, MTH3D_tdstVector_* _p_stNormal, GMT_tdstGameMaterial_* _hDynMat, GMT_tdstGameMaterial_* _hStatMat, short _xDynamicGeomEntity, short _xStaticGeomEntity, void* _p_vParameter1, short _sParameter2, MTH3D_tdstVector_* _p_stMovement, float _xSphereRadius, MTH3D_tdstVector_* _p_stEndPosition);
+void COL_fn_vGetCollidedEgde(int Ind, MTH3D_tdstVector_* _pV1, MTH3D_tdstVector_* _pV2, int* i);
+int COL_fn_iNbCollidedEdges(void);
+void COL_fn_vResetNbCollidedEdges(void);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollGOCo.c lines 80–83 */
+/* addr: 0x0024d9a0  size: 96 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 80
+ *   +0x0014 -> line 82
+ *   +0x0018 -> line 80
+ *   +0x001c -> line 82
+ *   +0x0020 -> line 80
+ *   +0x0024 -> line 82
+ *   +0x0028 -> line 80
+ *   +0x003c -> line 81
+ *   +0x0054 -> line 82
+ *   +0x0058 -> line 83
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollGOCo.c lines 76–76 */
+/* addr: 0x0024da00  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 76
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollGOCo.c lines 71–71 */
+/* addr: 0x0024da10  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 71
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void COL_fn_vResetNbCollidedEdges(void)
+{
+    g_NbCollidedEdges = 0;
+}
+
+int COL_fn_iNbCollidedEdges(void)
+{
+    return g_NbCollidedEdges;
+}
+
+void COL_fn_vGetCollidedEgde(int Ind, MTH3D_tdstVector_* _pV1, MTH3D_tdstVector_* _pV2, int* i)
+{
+{
+    MTH3D_M_vCopyVector(_pV1, &g_aCollidedEdges[Ind].A);
+    MTH3D_M_vCopyVector(_pV2, &g_aCollidedEdges[Ind].B);
+    *i = g_aCollidedEdges[Ind].Ind;
+}
+}
+
 void COL_fn_vAddInStaticCollisionTable(float _xT, MTH3D_tdstVector_* _p_stTranslation, MTH3D_tdstVector_* _p_stHit, MTH3D_tdstVector_* _p_stNormal, GMT_tdstGameMaterial_* _hDynMat, GMT_tdstGameMaterial_* _hStatMat, short _xDynamicGeomEntity, short _xStaticGeomEntity, void* _p_vParameter1, short _sParameter2, MTH3D_tdstVector_* _p_stMovement, float _xSphereRadius, MTH3D_tdstVector_* _p_stEndPosition)
 {
     long lStaticGeomEntity;
@@ -596,53 +656,4 @@ void COL_fn_vAddInStaticCollisionTable(float _xT, MTH3D_tdstVector_* _p_stTransl
             g_NbCollidedEdges++;
         }
     }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollGOCo.c lines 80–83 */
-/* addr: 0x0024d9a0  size: 96 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 80
- *   +0x0014 -> line 82
- *   +0x0018 -> line 80
- *   +0x001c -> line 82
- *   +0x0020 -> line 80
- *   +0x0024 -> line 82
- *   +0x0028 -> line 80
- *   +0x003c -> line 81
- *   +0x0054 -> line 82
- *   +0x0058 -> line 83
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void COL_fn_vGetCollidedEgde(int Ind, MTH3D_tdstVector_* _pV1, MTH3D_tdstVector_* _pV2, int* i)
-{
-{
-    MTH3D_M_vCopyVector(_pV1, &g_aCollidedEdges[Ind].A);
-    MTH3D_M_vCopyVector(_pV2, &g_aCollidedEdges[Ind].B);
-    *i = g_aCollidedEdges[Ind].Ind;
-}
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollGOCo.c lines 76–76 */
-/* addr: 0x0024da00  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 76
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int COL_fn_iNbCollidedEdges(void)
-{
-    return g_NbCollidedEdges;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollGOCo.c lines 71–71 */
-/* addr: 0x0024da10  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 71
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void COL_fn_vResetNbCollidedEdges(void)
-{
-    g_NbCollidedEdges = 0;
 }

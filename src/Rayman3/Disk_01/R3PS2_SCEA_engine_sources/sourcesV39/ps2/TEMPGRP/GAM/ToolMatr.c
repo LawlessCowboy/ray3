@@ -37,11 +37,33 @@ inline float MTH_xAbs(float _xValue)
     return xResult;
 }
 
-HIE_tdstSuperObject_* CAM_fn_hGetActiveCamera(int _lViewportNumber)
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+HIE_tdstSuperObject_* CAM_fn_hGetActiveCamera(int _lViewportNumber);
+void fn_vTurnMatrixZ(MAT_tdstTransformation_* _p_stMatrix, float _xAngle);
+void fn_vTurnMatrixY(MAT_tdstTransformation_* _p_stMatrix, float _xAngle);
+
+void fn_vTurnMatrixY(MAT_tdstTransformation_* _p_stMatrix, float _xAngle)
 {
-    tdstViewportManagement_* p_stViewport;
-    if ((_lViewportNumber >= 5) || (_lViewportNumber < 0)) p_stViewport = NULL; else p_stViewport = &g_stEngineStructure.a_hViewportArray[_lViewportNumber];
-    return p_stViewport->hActiveCamera;
+    MAT_tdstTransformation_ TmpMatrix;
+    MTH3D_tdstVector_ I;
+    MTH3D_tdstVector_ J;
+    MTH3D_tdstVector_ K;
+    float xCos;
+    float xSin;
+
+    MAT_fn_vSetIdentity(&TmpMatrix);
+    xCos = cosf(_xAngle);
+    xSin = sinf(_xAngle);
+    if (MTH_xAbs(xCos) < 0.0001f)
+        xCos = 0.0f;
+    if (MTH_xAbs(xSin) < 0.0001f)
+        xSin = 0.0f;
+    I.xX = xCos; I.xY = 0.0f; I.xZ = -xSin;
+    J.xX = 0.0f; J.xY = 1.0f; J.xZ = 0.0f;
+    K.xX = xSin; K.xY = 0.0f; K.xZ = xCos;
+    MAT_fn_vSetRotationVectors(&TmpMatrix, &I, &J, &K);
+    MAT_fn_vCompose(_p_stMatrix, _p_stMatrix, &TmpMatrix);
 }
 
 void fn_vTurnMatrixZ(MAT_tdstTransformation_* _p_stMatrix, float _xAngle)
@@ -67,25 +89,9 @@ void fn_vTurnMatrixZ(MAT_tdstTransformation_* _p_stMatrix, float _xAngle)
     MAT_fn_vCompose(_p_stMatrix, _p_stMatrix, &TmpMatrix);
 }
 
-void fn_vTurnMatrixY(MAT_tdstTransformation_* _p_stMatrix, float _xAngle)
+HIE_tdstSuperObject_* CAM_fn_hGetActiveCamera(int _lViewportNumber)
 {
-    MAT_tdstTransformation_ TmpMatrix;
-    MTH3D_tdstVector_ I;
-    MTH3D_tdstVector_ J;
-    MTH3D_tdstVector_ K;
-    float xCos;
-    float xSin;
-
-    MAT_fn_vSetIdentity(&TmpMatrix);
-    xCos = cosf(_xAngle);
-    xSin = sinf(_xAngle);
-    if (MTH_xAbs(xCos) < 0.0001f)
-        xCos = 0.0f;
-    if (MTH_xAbs(xSin) < 0.0001f)
-        xSin = 0.0f;
-    I.xX = xCos; I.xY = 0.0f; I.xZ = -xSin;
-    J.xX = 0.0f; J.xY = 1.0f; J.xZ = 0.0f;
-    K.xX = xSin; K.xY = 0.0f; K.xZ = xCos;
-    MAT_fn_vSetRotationVectors(&TmpMatrix, &I, &J, &K);
-    MAT_fn_vCompose(_p_stMatrix, _p_stMatrix, &TmpMatrix);
+    tdstViewportManagement_* p_stViewport;
+    if ((_lViewportNumber >= 5) || (_lViewportNumber < 0)) p_stViewport = NULL; else p_stViewport = &g_stEngineStructure.a_hViewportArray[_lViewportNumber];
+    return p_stViewport->hActiveCamera;
 }

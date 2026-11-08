@@ -39,11 +39,17 @@ int g_bDrawingBlackFrame;
 
 /* The target reads COP0 Count with mfc0, which MWCC cannot emit from C;
  * only that instruction is written as asm. */
-void GLI_fn_vTimerPS2Counter(unsigned int* pCount)
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void GLI_fn_vTimerPS2Counter(unsigned int* pCount);
+void GLI_fn_vDoCompleteFadeOut(void);
+void GLI_fn_vInitInstantFadeIn(unsigned int ulNumberOfFrame);
+
+void GLI_fn_vInitInstantFadeIn(unsigned int ulNumberOfFrame)
 {
-    register unsigned int counter;
-    asm { mfc0 counter, $9 }
-    *pCount = counter;
+    GLI_g_ulFadeNumberOfFrameIn = ulNumberOfFrame;
+    GLI_g_ulFadeCurrentFrameIn = 0;
 }
 
 void GLI_fn_vDoCompleteFadeOut(void)
@@ -53,8 +59,9 @@ void GLI_fn_vDoCompleteFadeOut(void)
     GLI_g_CompleteFadeCurrentValue = 1.0f - GLI_g_CompleteFadeDirection;
 }
 
-void GLI_fn_vInitInstantFadeIn(unsigned int ulNumberOfFrame)
+void GLI_fn_vTimerPS2Counter(unsigned int* pCount)
 {
-    GLI_g_ulFadeNumberOfFrameIn = ulNumberOfFrame;
-    GLI_g_ulFadeCurrentFrameIn = 0;
+    register unsigned int counter;
+    asm { mfc0 counter, $9 }
+    *pCount = counter;
 }

@@ -292,10 +292,10 @@ int dmaGIF;
 anon_12 PS2INIT_db;
 void (*fn_v_EngMain_VBLCallback)(void);
 
-GEO_tdstVisualSet_* PO_fn_hGetVisualSet(PO_tdstPhysicalObject_* _hPhysicalObject)
-{
-    return *(GEO_tdstVisualSet_**)_hPhysicalObject;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+GEO_tdstVisualSet_* PO_fn_hGetVisualSet(PO_tdstPhysicalObject_* _hPhysicalObject);
+void ClearVRAM(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
 
 void sceGifPkInit(anon_17* pPacket, long double* pBase);
 void sceGifPkReset(anon_17* pPacket);
@@ -350,4 +350,9 @@ void ClearVRAM(unsigned char r, unsigned char g, unsigned char b, unsigned char 
     sceGifPkTerminate(&gif_pkt);
     sceDmaSendN(dmaGIF, (void*)(gif_pkt.pBase & 0x0fffffff), sceGifPkSize(&gif_pkt));
     sceGsSyncPath(0, 0);
+}
+
+GEO_tdstVisualSet_* PO_fn_hGetVisualSet(PO_tdstPhysicalObject_* _hPhysicalObject)
+{
+    return *(GEO_tdstVisualSet_**)_hPhysicalObject;
 }

@@ -22,9 +22,20 @@ unsigned char fn_bGetVolumeLineModifierString(int s32_LineId, char* sz_Buffer, i
 unsigned char fn_bSetVolumeModifier(const char* sz_Name, int s32_Value);
 int fn_s32GetVolumeModifier(const char* sz_Name);
 
-extern "C" int SND_fn_lCreateMicroSound(void)
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+extern "C" int SND_fn_lCreateMicroSound(void);
+extern "C" int SND_fn_s32GetVolumeLineSound(int s32_LineId);
+extern "C" void SND_fn_vSetVolumeLineSound(int s32_LineId, int s32_VolValue);
+
+extern "C" void SND_fn_vSetVolumeLineSound(int s32_LineId, int s32_VolValue)
 {
-    return CLinkMicroCont::mfn_roGetInstance().mfn_s32AddMicroInstance();
+    char ch_Buffer[256];
+
+    if (fn_bGetVolumeLineModifierString(s32_LineId, ch_Buffer, 256))
+    {
+        fn_bSetVolumeModifier(ch_Buffer, Jingle::fs_uGetVolume(s32_VolValue, s32_LineId));
+    }
 }
 
 extern "C" int SND_fn_s32GetVolumeLineSound(int s32_LineId)
@@ -39,12 +50,7 @@ extern "C" int SND_fn_s32GetVolumeLineSound(int s32_LineId)
     return s32_Answer;
 }
 
-extern "C" void SND_fn_vSetVolumeLineSound(int s32_LineId, int s32_VolValue)
+extern "C" int SND_fn_lCreateMicroSound(void)
 {
-    char ch_Buffer[256];
-
-    if (fn_bGetVolumeLineModifierString(s32_LineId, ch_Buffer, 256))
-    {
-        fn_bSetVolumeModifier(ch_Buffer, Jingle::fs_uGetVolume(s32_VolValue, s32_LineId));
-    }
+    return CLinkMicroCont::mfn_roGetInstance().mfn_s32AddMicroInstance();
 }

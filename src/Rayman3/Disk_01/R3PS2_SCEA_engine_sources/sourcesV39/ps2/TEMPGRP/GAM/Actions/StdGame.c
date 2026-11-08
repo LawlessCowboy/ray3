@@ -1207,10 +1207,31 @@ unsigned char g_ucGameModuleId;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned int fn_ulSectInfoSizeOf(void)
-{
-    return 0x18;
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+unsigned int fn_ulSectInfoSizeOf(void);
+unsigned char fn_ucStdGameCheckValidity(HIE_tdstSuperObject_* _h_SprObj);
+void fn_vStandardGameSetCustomVectorSO(HIE_tdstSuperObject_* _hSO, long _lIndex, MTH3D_tdstVector_* _p_stVec);
+void fn_vStandardGameGetCustomVectorSO(HIE_tdstSuperObject_* _hSO, long _lIndex, MTH3D_tdstVector_* _p_stVec);
+void fn_vStandardGameSetCustomLongSO(HIE_tdstSuperObject_* _hSO, long _lIndex, int _lValue);
+int fn_lStandardGameGetCustomLongSO(HIE_tdstSuperObject_* _hSO, long _lIndex);
+void fn_vStandardGameSetCustomFloatSO(HIE_tdstSuperObject_* _hSO, long _lIndex, float _xValue);
+float fn_xStandardGameGetCustomFloatSO(HIE_tdstSuperObject_* _hSO, long _lIndex);
+unsigned char fn_ucStandardGameGetTransparencyZoneMaxSO(HIE_tdstSuperObject_* hSupObj);
+unsigned char fn_ucStandardGameGetTransparencyZoneMinSO(HIE_tdstSuperObject_* hSupObj);
+unsigned char fn_bStandardGameIsAPlatform(HIE_tdstSuperObject_* hSupObj);
+void fn_vStandardGameSetCustomBitsSO(HIE_tdstSuperObject_* hSupObj, unsigned int ulCustomBits);
+unsigned int fn_ulStandardGameGetCustomBitsSO(HIE_tdstSuperObject_* hSupObj);
+void fn_vStandardGameSetSuperObject(tdstStandardGame_* h_StdGame, HIE_tdstSuperObject_* h_SuperObject);
+HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* h_StdGame);
+void fn_vStdGameCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc);
+void fn_vSetHitPointsMaxToInitValue(tdstEngineObject_* _p_stObject);
+void fn_vSetHitPointsToInitValue(tdstEngineObject_* _p_stObject);
+void fn_vStdGameDesinit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit);
+void fn_vStdGameInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit);
+void fn_vStdGameFree(tdstEngineObject_* p_stObject);
+void fn_vStdGameAlloc(tdstEngineObject_* p_stObject);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 787–789 */
 /* addr: 0x00274150  size: 16 bytes */
@@ -1220,10 +1241,6 @@ unsigned int fn_ulSectInfoSizeOf(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucStdGameCheckValidity(HIE_tdstSuperObject_* _h_SprObj)
-{
-    return _h_SprObj->hLinkedObject.p_stCharacter->h_StandardGame != 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 706–715 */
 /* addr: 0x00274160  size: 92 bytes */
@@ -1238,16 +1255,6 @@ unsigned char fn_ucStdGameCheckValidity(HIE_tdstSuperObject_* _h_SprObj)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vStandardGameSetCustomVectorSO(HIE_tdstSuperObject_* _hSO, long _lIndex, MTH3D_tdstVector_* _p_stVec)
-{
-    MTH3D_tdstVector_* p_stTmpVec;
-
-    if (_lIndex < 2 && _lIndex >= 0 && _p_stVec)
-    {
-        p_stTmpVec = &_hSO->hLinkedObject.p_stCharacter->h_StandardGame->a_stCustomVectors[_lIndex];
-        *(int*)&p_stTmpVec->xX = *(int*)&_p_stVec->xX; *(int*)&p_stTmpVec->xY = *(int*)&_p_stVec->xY; *(int*)&p_stTmpVec->xZ = *(int*)&_p_stVec->xZ;
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 691–700 */
 /* addr: 0x002741c0  size: 92 bytes */
@@ -1260,16 +1267,6 @@ void fn_vStandardGameSetCustomVectorSO(HIE_tdstSuperObject_* _hSO, long _lIndex,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vStandardGameGetCustomVectorSO(HIE_tdstSuperObject_* _hSO, long _lIndex, MTH3D_tdstVector_* _p_stVec)
-{
-    MTH3D_tdstVector_* p_stTmpVec;
-
-    if (_lIndex < 2 && _lIndex >= 0 && _p_stVec)
-    {
-        p_stTmpVec = &_hSO->hLinkedObject.p_stCharacter->h_StandardGame->a_stCustomVectors[_lIndex];
-        *(int*)&_p_stVec->xX = *(int*)&p_stTmpVec->xX; *(int*)&_p_stVec->xY = *(int*)&p_stTmpVec->xY; *(int*)&_p_stVec->xZ = *(int*)&p_stTmpVec->xZ;
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 681–685 */
 /* addr: 0x00274220  size: 56 bytes */
@@ -1280,16 +1277,6 @@ void fn_vStandardGameGetCustomVectorSO(HIE_tdstSuperObject_* _hSO, long _lIndex,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vStandardGameSetCustomLongSO(HIE_tdstSuperObject_* _hSO, long _lIndex, int _lValue)
-{
-    tdstEngineObject_* p_stObject;
-    tdstStandardGame_* p_stStandardGame;
-    if ((_lIndex < 2) && (_lIndex >= 0))
-    {
-        int* p_lCustomLong;
-        p_stStandardGame = _hSO->hLinkedObject.p_stCharacter->h_StandardGame; p_lCustomLong = &p_stStandardGame->a_lCustomLongs[_lIndex]; *p_lCustomLong = _lValue;
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 672–677 */
 /* addr: 0x00274260  size: 60 bytes */
@@ -1300,16 +1287,6 @@ void fn_vStandardGameSetCustomLongSO(HIE_tdstSuperObject_* _hSO, long _lIndex, i
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_lStandardGameGetCustomLongSO(HIE_tdstSuperObject_* _hSO, long _lIndex)
-{
-    int lValue = 0;
-    int* p_lCustomLong;
-    if ((_lIndex < 2) && (_lIndex >= 0))
-    {
-        p_lCustomLong = &_hSO->hLinkedObject.p_stCharacter->h_StandardGame->a_lCustomLongs[_lIndex]; lValue = *p_lCustomLong;
-    }
-    return lValue;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 664–668 */
 /* addr: 0x002742a0  size: 56 bytes */
@@ -1320,16 +1297,6 @@ int fn_lStandardGameGetCustomLongSO(HIE_tdstSuperObject_* _hSO, long _lIndex)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vStandardGameSetCustomFloatSO(HIE_tdstSuperObject_* _hSO, long _lIndex, float _xValue)
-{
-    tdstEngineObject_* p_stObject;
-    tdstStandardGame_* p_stStandardGame;
-    if ((_lIndex < 2) && (_lIndex >= 0))
-    {
-        float* p_xCustomFloat;
-        p_stStandardGame = _hSO->hLinkedObject.p_stCharacter->h_StandardGame; p_xCustomFloat = &p_stStandardGame->a_xCustomFloats[_lIndex]; *p_xCustomFloat = _xValue;
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 655–660 */
 /* addr: 0x002742e0  size: 64 bytes */
@@ -1341,18 +1308,6 @@ void fn_vStandardGameSetCustomFloatSO(HIE_tdstSuperObject_* _hSO, long _lIndex, 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-float fn_xStandardGameGetCustomFloatSO(HIE_tdstSuperObject_* _hSO, long _lIndex)
-{
-    tdstEngineObject_* p_stObject;
-    float* p_xCustomFloat;
-    tdstStandardGame_* p_stStandardGame;
-    float xValue;
-    if ((_lIndex < 2) && (_lIndex >= 0))
-
-    { p_stObject = _hSO->hLinkedObject.p_stCharacter; p_stStandardGame = p_stObject->h_StandardGame; p_xCustomFloat = &p_stStandardGame->a_xCustomFloats[_lIndex]; xValue = *p_xCustomFloat; }
-
-    else xValue = 0.0f; return xValue;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 649–651 */
 /* addr: 0x00274320  size: 36 bytes */
@@ -1363,12 +1318,6 @@ float fn_xStandardGameGetCustomFloatSO(HIE_tdstSuperObject_* _hSO, long _lIndex)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucStandardGameGetTransparencyZoneMaxSO(HIE_tdstSuperObject_* hSupObj)
-{
-    tdstStandardGame_* hStdGame;
-    hStdGame = hSupObj->hLinkedObject.p_stCharacter->h_StandardGame;
-    return hStdGame ? hStdGame->ucTransparencyZoneMax : 0x50;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 643–645 */
 /* addr: 0x00274350  size: 36 bytes */
@@ -1379,12 +1328,6 @@ unsigned char fn_ucStandardGameGetTransparencyZoneMaxSO(HIE_tdstSuperObject_* hS
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucStandardGameGetTransparencyZoneMinSO(HIE_tdstSuperObject_* hSupObj)
-{
-    tdstStandardGame_* hStdGame;
-    hStdGame = hSupObj->hLinkedObject.p_stCharacter->h_StandardGame;
-    return hStdGame ? hStdGame->ucTransparencyZoneMin : 0x46;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 638–639 */
 /* addr: 0x00274380  size: 24 bytes */
@@ -1394,10 +1337,6 @@ unsigned char fn_ucStandardGameGetTransparencyZoneMinSO(HIE_tdstSuperObject_* hS
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_bStandardGameIsAPlatform(HIE_tdstSuperObject_* hSupObj)
-{
-    return hSupObj->hLinkedObject.p_stCharacter->h_StandardGame->ucPlatFormType == 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 624–625 */
 /* addr: 0x002743a0  size: 16 bytes */
@@ -1407,10 +1346,6 @@ unsigned char fn_bStandardGameIsAPlatform(HIE_tdstSuperObject_* hSupObj)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vStandardGameSetCustomBitsSO(HIE_tdstSuperObject_* hSupObj, unsigned int ulCustomBits)
-{
-    hSupObj->hLinkedObject.p_stCharacter->h_StandardGame->ulCustomBits = ulCustomBits;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 619–620 */
 /* addr: 0x002743b0  size: 16 bytes */
@@ -1420,10 +1355,6 @@ void fn_vStandardGameSetCustomBitsSO(HIE_tdstSuperObject_* hSupObj, unsigned int
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned int fn_ulStandardGameGetCustomBitsSO(HIE_tdstSuperObject_* hSupObj)
-{
-    return hSupObj->hLinkedObject.p_stCharacter->h_StandardGame->ulCustomBits;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 609–615 */
 /* addr: 0x002743c0  size: 32 bytes */
@@ -1434,14 +1365,6 @@ unsigned int fn_ulStandardGameGetCustomBitsSO(HIE_tdstSuperObject_* hSupObj)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vStandardGameSetSuperObject(tdstStandardGame_* h_StdGame, HIE_tdstSuperObject_* h_SuperObject)
-{
-    h_StdGame->h_SuperObject = h_SuperObject;
-    if (h_SuperObject != NULL)
-    {
-        h_SuperObject->hLinkedObject.p_stCharacter->h_3dData->p_stGLIObjectAbsoluteMatrix = h_SuperObject->hGlobalMatrix;
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 603–604 */
 /* addr: 0x002743e0  size: 24 bytes */
@@ -1451,10 +1374,6 @@ void fn_vStandardGameSetSuperObject(tdstStandardGame_* h_StdGame, HIE_tdstSuperO
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* h_StdGame)
-{
-    return h_StdGame != NULL ? h_StdGame->h_SuperObject : NULL;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 586–586 */
 /* addr: 0x00274400  size: 16 bytes */
@@ -1463,10 +1382,6 @@ HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* h_StdGa
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vStdGameCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc)
-{
-    memcpy(_p_stObjectDest->h_StandardGame, _p_stObjectSrc->h_StandardGame, sizeof(tdstStandardGame_));
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 565–566 */
 /* addr: 0x00274410  size: 16 bytes */
@@ -1476,10 +1391,6 @@ void fn_vStdGameCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_*
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vSetHitPointsMaxToInitValue(tdstEngineObject_* _p_stObject)
-{
-    _p_stObject->h_StandardGame->ucHitPointsMax = _p_stObject->h_StandardGame->ucSaveHitPointsMax;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 560–561 */
 /* addr: 0x00274420  size: 16 bytes */
@@ -1489,10 +1400,6 @@ void fn_vSetHitPointsMaxToInitValue(tdstEngineObject_* _p_stObject)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vSetHitPointsToInitValue(tdstEngineObject_* _p_stObject)
-{
-    _p_stObject->h_StandardGame->ucHitPoints = _p_stObject->h_StandardGame->ucSaveHitPoints;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 501–520 */
 /* addr: 0x00274430  size: 224 bytes */
@@ -1508,26 +1415,6 @@ void fn_vSetHitPointsToInitValue(tdstEngineObject_* _p_stObject)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vStdGameDesinit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
-{
-    if (!p_stObject) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
-    }
-    if (!p_stObject->h_StandardGame) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
-    }
-
-    switch (eObjectInit)
-    {
-    case OTI_AlwaysCreated:
-    case OTI_ReinitTheMap:
-    case OTI_MapLoaded:
-    case OTI_PlayerDead:
-    case OTI_LoadSavedGame:
-        p_stObject->h_StandardGame->ucMiscFlags &= ~2;
-        break;
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 380–487 */
 /* addr: 0x00274510  size: 1132 bytes */
@@ -1591,12 +1478,6 @@ void fn_vStdGameDesinit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjec
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vStdGameInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
-{
-    tdstStandardGame_* h_StdGame;
-    MTH3D_tdstVector_ hPosition;
-    /* TODO: decompile from asm/... */
-}
 
 int SAI_fn_bRemoveValueFromTable(void* _p_vValue, int _eFlags);
 typedef struct tdstNodeMainCharacter_ tdstNodeMainCharacter_;
@@ -1618,26 +1499,6 @@ HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(tdstNodeMainCharact
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vStdGameFree(tdstEngineObject_* p_stObject)
-{
-    if (!p_stObject) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
-    }
-    if (!p_stObject->h_StandardGame) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
-    }
-
-    if (p_stObject->h_StandardGame->eInitFlagWhenDeadOrTaken == 5)
-        SAI_fn_bRemoveValueFromTable(&p_stObject->h_StandardGame->ucMiscFlags, 0x200);
-
-    if (p_stObject == MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode())->hLinkedObject.p_stCharacter)
-    {
-        tdstStandardGame_* hStdGame = p_stObject->h_StandardGame;
-        SAI_fn_bRemoveValueFromTable(&hStdGame->ucHitPoints, 0x80);
-        SAI_fn_bRemoveValueFromTable(&hStdGame->ucHitPointsMax, 0x80);
-        SAI_fn_bRemoveValueFromTable(&hStdGame->ucHitPointsMaxMax, 0x80);
-    }
-}
 
 void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
 
@@ -1655,6 +1516,7 @@ void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
 void fn_vStdGameAlloc(tdstEngineObject_* p_stObject)
 {
     if (!p_stObject) {
@@ -1687,4 +1549,189 @@ void fn_vStdGameAlloc(tdstEngineObject_* p_stObject)
         hStdGame->ulSaveCustomBits = hStdGame->ulCustomBits;
         hStdGame->ulSaveAICustomBits = hStdGame->ulAICustomBits;
     }
+}
+
+void fn_vStdGameFree(tdstEngineObject_* p_stObject)
+{
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!p_stObject->h_StandardGame) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+
+    if (p_stObject->h_StandardGame->eInitFlagWhenDeadOrTaken == 5)
+        SAI_fn_bRemoveValueFromTable(&p_stObject->h_StandardGame->ucMiscFlags, 0x200);
+
+    if (p_stObject == MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode())->hLinkedObject.p_stCharacter)
+    {
+        tdstStandardGame_* hStdGame = p_stObject->h_StandardGame;
+        SAI_fn_bRemoveValueFromTable(&hStdGame->ucHitPoints, 0x80);
+        SAI_fn_bRemoveValueFromTable(&hStdGame->ucHitPointsMax, 0x80);
+        SAI_fn_bRemoveValueFromTable(&hStdGame->ucHitPointsMaxMax, 0x80);
+    }
+}
+
+void fn_vStdGameInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
+{
+    tdstStandardGame_* h_StdGame;
+    MTH3D_tdstVector_ hPosition;
+    /* TODO: decompile from asm/... */
+}
+
+void fn_vStdGameDesinit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
+{
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!p_stObject->h_StandardGame) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+
+    switch (eObjectInit)
+    {
+    case OTI_AlwaysCreated:
+    case OTI_ReinitTheMap:
+    case OTI_MapLoaded:
+    case OTI_PlayerDead:
+    case OTI_LoadSavedGame:
+        p_stObject->h_StandardGame->ucMiscFlags &= ~2;
+        break;
+    }
+}
+
+void fn_vSetHitPointsToInitValue(tdstEngineObject_* _p_stObject)
+{
+    _p_stObject->h_StandardGame->ucHitPoints = _p_stObject->h_StandardGame->ucSaveHitPoints;
+}
+
+void fn_vSetHitPointsMaxToInitValue(tdstEngineObject_* _p_stObject)
+{
+    _p_stObject->h_StandardGame->ucHitPointsMax = _p_stObject->h_StandardGame->ucSaveHitPointsMax;
+}
+
+void fn_vStdGameCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc)
+{
+    memcpy(_p_stObjectDest->h_StandardGame, _p_stObjectSrc->h_StandardGame, sizeof(tdstStandardGame_));
+}
+
+HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* h_StdGame)
+{
+    return h_StdGame != NULL ? h_StdGame->h_SuperObject : NULL;
+}
+
+void fn_vStandardGameSetSuperObject(tdstStandardGame_* h_StdGame, HIE_tdstSuperObject_* h_SuperObject)
+{
+    h_StdGame->h_SuperObject = h_SuperObject;
+    if (h_SuperObject != NULL)
+    {
+        h_SuperObject->hLinkedObject.p_stCharacter->h_3dData->p_stGLIObjectAbsoluteMatrix = h_SuperObject->hGlobalMatrix;
+    }
+}
+
+unsigned int fn_ulStandardGameGetCustomBitsSO(HIE_tdstSuperObject_* hSupObj)
+{
+    return hSupObj->hLinkedObject.p_stCharacter->h_StandardGame->ulCustomBits;
+}
+
+void fn_vStandardGameSetCustomBitsSO(HIE_tdstSuperObject_* hSupObj, unsigned int ulCustomBits)
+{
+    hSupObj->hLinkedObject.p_stCharacter->h_StandardGame->ulCustomBits = ulCustomBits;
+}
+
+unsigned char fn_bStandardGameIsAPlatform(HIE_tdstSuperObject_* hSupObj)
+{
+    return hSupObj->hLinkedObject.p_stCharacter->h_StandardGame->ucPlatFormType == 1;
+}
+
+unsigned char fn_ucStandardGameGetTransparencyZoneMinSO(HIE_tdstSuperObject_* hSupObj)
+{
+    tdstStandardGame_* hStdGame;
+    hStdGame = hSupObj->hLinkedObject.p_stCharacter->h_StandardGame;
+    return hStdGame ? hStdGame->ucTransparencyZoneMin : 0x46;
+}
+
+unsigned char fn_ucStandardGameGetTransparencyZoneMaxSO(HIE_tdstSuperObject_* hSupObj)
+{
+    tdstStandardGame_* hStdGame;
+    hStdGame = hSupObj->hLinkedObject.p_stCharacter->h_StandardGame;
+    return hStdGame ? hStdGame->ucTransparencyZoneMax : 0x50;
+}
+
+float fn_xStandardGameGetCustomFloatSO(HIE_tdstSuperObject_* _hSO, long _lIndex)
+{
+    tdstEngineObject_* p_stObject;
+    float* p_xCustomFloat;
+    tdstStandardGame_* p_stStandardGame;
+    float xValue;
+    if ((_lIndex < 2) && (_lIndex >= 0))
+
+    { p_stObject = _hSO->hLinkedObject.p_stCharacter; p_stStandardGame = p_stObject->h_StandardGame; p_xCustomFloat = &p_stStandardGame->a_xCustomFloats[_lIndex]; xValue = *p_xCustomFloat; }
+
+    else xValue = 0.0f; return xValue;
+}
+
+void fn_vStandardGameSetCustomFloatSO(HIE_tdstSuperObject_* _hSO, long _lIndex, float _xValue)
+{
+    tdstEngineObject_* p_stObject;
+    tdstStandardGame_* p_stStandardGame;
+    if ((_lIndex < 2) && (_lIndex >= 0))
+    {
+        float* p_xCustomFloat;
+        p_stStandardGame = _hSO->hLinkedObject.p_stCharacter->h_StandardGame; p_xCustomFloat = &p_stStandardGame->a_xCustomFloats[_lIndex]; *p_xCustomFloat = _xValue;
+    }
+}
+
+int fn_lStandardGameGetCustomLongSO(HIE_tdstSuperObject_* _hSO, long _lIndex)
+{
+    int lValue = 0;
+    int* p_lCustomLong;
+    if ((_lIndex < 2) && (_lIndex >= 0))
+    {
+        p_lCustomLong = &_hSO->hLinkedObject.p_stCharacter->h_StandardGame->a_lCustomLongs[_lIndex]; lValue = *p_lCustomLong;
+    }
+    return lValue;
+}
+
+void fn_vStandardGameSetCustomLongSO(HIE_tdstSuperObject_* _hSO, long _lIndex, int _lValue)
+{
+    tdstEngineObject_* p_stObject;
+    tdstStandardGame_* p_stStandardGame;
+    if ((_lIndex < 2) && (_lIndex >= 0))
+    {
+        int* p_lCustomLong;
+        p_stStandardGame = _hSO->hLinkedObject.p_stCharacter->h_StandardGame; p_lCustomLong = &p_stStandardGame->a_lCustomLongs[_lIndex]; *p_lCustomLong = _lValue;
+    }
+}
+
+void fn_vStandardGameGetCustomVectorSO(HIE_tdstSuperObject_* _hSO, long _lIndex, MTH3D_tdstVector_* _p_stVec)
+{
+    MTH3D_tdstVector_* p_stTmpVec;
+
+    if (_lIndex < 2 && _lIndex >= 0 && _p_stVec)
+    {
+        p_stTmpVec = &_hSO->hLinkedObject.p_stCharacter->h_StandardGame->a_stCustomVectors[_lIndex];
+        *(int*)&_p_stVec->xX = *(int*)&p_stTmpVec->xX; *(int*)&_p_stVec->xY = *(int*)&p_stTmpVec->xY; *(int*)&_p_stVec->xZ = *(int*)&p_stTmpVec->xZ;
+    }
+}
+
+void fn_vStandardGameSetCustomVectorSO(HIE_tdstSuperObject_* _hSO, long _lIndex, MTH3D_tdstVector_* _p_stVec)
+{
+    MTH3D_tdstVector_* p_stTmpVec;
+
+    if (_lIndex < 2 && _lIndex >= 0 && _p_stVec)
+    {
+        p_stTmpVec = &_hSO->hLinkedObject.p_stCharacter->h_StandardGame->a_stCustomVectors[_lIndex];
+        *(int*)&p_stTmpVec->xX = *(int*)&_p_stVec->xX; *(int*)&p_stTmpVec->xY = *(int*)&_p_stVec->xY; *(int*)&p_stTmpVec->xZ = *(int*)&_p_stVec->xZ;
+    }
+}
+
+unsigned char fn_ucStdGameCheckValidity(HIE_tdstSuperObject_* _h_SprObj)
+{
+    return _h_SprObj->hLinkedObject.p_stCharacter->h_StandardGame != 0;
+}
+
+unsigned int fn_ulSectInfoSizeOf(void)
+{
+    return 0x18;
 }

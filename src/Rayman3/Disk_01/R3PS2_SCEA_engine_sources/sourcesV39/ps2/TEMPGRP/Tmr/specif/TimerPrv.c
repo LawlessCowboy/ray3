@@ -5,7 +5,6 @@
 #include <stddef.h>
 #include "r3/ENG.h"
 
-
 /* Recovered aggregate layouts from MWCC debug type records. */
 
 float g_xVideoFrameDurationInSeconds;
@@ -32,6 +31,65 @@ void* memset(void*, int, unsigned int);
 unsigned int fn_ulTimerTickPerSecond(short wTimerType);
 unsigned int fn_ulTimerEventTickPerSecond(short wTimerType);
 
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+short TMR_fn_wInitLibrary(void);
+unsigned int fn_ulTimerEventTickPerSecond(short wTimerType);
+void fn_vTimerGetCounter(void* unused, _stTimerCount* p_stValue);
+unsigned int TMR_fn_ulFastGetInternalCounter(void);
+unsigned int fn_ulTimerWaitTicksPerSecond(void);
+void fn_vTimerWait(unsigned int ulTicksToWait);
+
+/* fn_vTimerGetCounter is inlined into its callers here yet still emitted as a
+ * callable function, which MWCC only does with automatic inlining.  It is not
+ * enabled for TMR_fn_wInitLibrary, which calls fn_ulTimerEventTickPerSecond. */
+#pragma auto_inline on
+
+#pragma auto_inline reset
+unsigned int fn_ulTimerEventTickPerSecond(short wTimerType)
+{
+    return 0x11940000;
+}
+
+#pragma auto_inline on
+void fn_vTimerGetCounter(void* unused, _stTimerCount* p_stValue)
+{
+    unsigned int count;
+    __asm__ volatile("mfc0 %0, $9" : "=r"(count));
+    p_stValue->m_ulLowPart = count;
+    p_stValue->m_ulHighPart = 0;
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+void fn_vTimerWait(unsigned int ulTicksToWait)
+{
+    _stTimerCount st;
+    unsigned int ulTick;
+
+    fn_vTimerGetCounter(0, &st);
+    ulTick = st.m_ulLowPart;
+    while (st.m_ulLowPart - ulTick < ulTicksToWait)
+        fn_vTimerGetCounter(0, &st);
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+unsigned int fn_ulTimerWaitTicksPerSecond(void)
+{
+    return 0x11940000;
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+unsigned int TMR_fn_ulFastGetInternalCounter(void)
+{
+    _stTimerCount st;
+    fn_vTimerGetCounter(0, &st);
+    return st.m_ulLowPart;
+}
+#pragma auto_inline reset
+
 short TMR_fn_wInitLibrary(void)
 {
     if (TimerLibOk)
@@ -52,45 +110,3 @@ short TMR_fn_wInitLibrary(void)
     TimerLibOk++;
     return 0;
 }
-
-unsigned int fn_ulTimerEventTickPerSecond(short wTimerType)
-{
-    return 0x11940000;
-}
-
-/* fn_vTimerGetCounter is inlined into its callers here yet still emitted as a
- * callable function, which MWCC only does with automatic inlining.  It is not
- * enabled for TMR_fn_wInitLibrary, which calls fn_ulTimerEventTickPerSecond. */
-#pragma auto_inline on
-
-void fn_vTimerGetCounter(void* unused, _stTimerCount* p_stValue)
-{
-    unsigned int count;
-    __asm__ volatile("mfc0 %0, $9" : "=r"(count));
-    p_stValue->m_ulLowPart = count;
-    p_stValue->m_ulHighPart = 0;
-}
-
-unsigned int TMR_fn_ulFastGetInternalCounter(void)
-{
-    _stTimerCount st;
-    fn_vTimerGetCounter(0, &st);
-    return st.m_ulLowPart;
-}
-
-unsigned int fn_ulTimerWaitTicksPerSecond(void)
-{
-    return 0x11940000;
-}
-
-void fn_vTimerWait(unsigned int ulTicksToWait)
-{
-    _stTimerCount st;
-    unsigned int ulTick;
-
-    fn_vTimerGetCounter(0, &st);
-    ulTick = st.m_ulLowPart;
-    while (st.m_ulLowPart - ulTick < ulTicksToWait)
-        fn_vTimerGetCounter(0, &st);
-}
-

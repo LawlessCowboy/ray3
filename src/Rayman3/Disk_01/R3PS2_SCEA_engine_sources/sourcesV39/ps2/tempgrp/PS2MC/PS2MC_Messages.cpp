@@ -1644,25 +1644,13 @@ struct C_PS2MC_Manager {
     C_PS2MC_Manager();
 };
 
-C_PS2MC_Manager::C_PS2MC_Manager()
-{
-    m_uiNextState = 2;
-    m_uiState = 0;
-    m_uiIdleState = 2;
-    m_bAutoSaveEnabled = 0;
-    m_bWillHaveToRestoreMenu2D = 0;
-    m_bMCChangedSinceLastSave = 0;
-    m_bPromptIsOn = 1;
-    m_bFirstBootCheckHasBeenDone = 0;
-    m_bPreBootCheckWasDone = 0;
-    m_bPreBootCheckHadNoMC = 0;
-    m_IPausedTheEngine = 0;
-    m_bCurrentlyWarningAboutMCRemoval = 0;
-    m_bActivated = 0;
-    m_bMemoryCardWasRemovedWhilePromptWasOff = 0;
-    m_bNeedToWarnUserAboutAutoSaveDisabled = 0;
-    m_bNeedToCheckAndWarnForMCFull = 3;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+extern "C" void PS2MC_RemoveCurrentMessage(void);
+extern "C" void PS2MC_SetRequiredDataSizeForMessages(unsigned int _Size);
+extern "C" unsigned int PS2MC_GetCurrentMessageAnswer(void);
+extern "C" void PS2MC_DisplayCurrentMessage(void);
+extern "C" void PS2MC_SetDisplayMessage(PS2MC_tdeMessageID _MessageID, unsigned int _RequiredDataSize);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MC_Messages.cpp lines 3746–3747 */
 /* addr: 0x00331e50  size: 20 bytes */
@@ -1672,11 +1660,6 @@ C_PS2MC_Manager::C_PS2MC_Manager()
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2MC_RemoveCurrentMessage(void)
-{
-    PS2MC_g_MessageHandler.m_pCurrentMessage = 0;
-    PS2MC_g_MessageHandler.m_iCurrentChoice = 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MC_Messages.cpp lines 3741–3742 */
 /* addr: 0x00331e70  size: 12 bytes */
@@ -1686,10 +1669,6 @@ void PS2MC_RemoveCurrentMessage(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2MC_SetRequiredDataSizeForMessages(unsigned int _Size)
-{
-    PS2MC_g_MessageHandler.m_uiSaveGameRequiredSize = _Size;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MC_Messages.cpp lines 3736–3736 */
 /* addr: 0x00331e80  size: 12 bytes */
@@ -1699,10 +1678,6 @@ void PS2MC_SetRequiredDataSizeForMessages(unsigned int _Size)
  * compare a candidate object's line table as an extra checkpoint.
  */
 #pragma exceptions off
-unsigned int PS2MC_GetCurrentMessageAnswer(void)
-{
-    return PS2MC_g_MessageHandler.GetAnswer();
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MC_Messages.cpp lines 3731–3731 */
 /* addr: 0x00331e90  size: 12 bytes */
@@ -1711,10 +1686,7 @@ unsigned int PS2MC_GetCurrentMessageAnswer(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2MC_DisplayCurrentMessage(void)
-{
-    PS2MC_g_MessageHandler.Display();
-}
+
 #pragma exceptions reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MC_Messages.cpp lines 3726–3726 */
@@ -1724,10 +1696,6 @@ void PS2MC_DisplayCurrentMessage(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2MC_SetDisplayMessage(PS2MC_tdeMessageID _MessageID, unsigned int _RequiredDataSize)
-{
-    g_CurrentLanguage = g_stEngineStructure.ucCurrentLanguage; PS2MC_g_MessageHandler.m_iCurrentMessage = (unsigned char)_MessageID; PS2MC_g_MessageHandler.m_pCurrentMessage = &PS2MC_g_MessageTable[g_CurrentLanguage][(unsigned char)_MessageID]; PS2MC_g_MessageHandler.m_iCurrentChoice = PS2MC_g_MessageHandler.m_pCurrentMessage->iDefaultChoice; PS2MC_g_MessageHandler.m_uiSaveGameRequiredSize = _RequiredDataSize; PS2MC_g_MessageHandler.CalculateMessagePosition();
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MC_Messages.cpp lines 3656–3689 */
 /* addr: 0x00331f20  size: 216 bytes */
@@ -1758,29 +1726,6 @@ extern "C" void TXT_vAfficheSpecialWithTransparency(float _xAlpha, char* _pText,
 extern "C" unsigned char IPT_fn_bIsJustValidated(IPT_tdstEntryElement_* _hEntryElement);
 extern "C" void IPT_fn_vReadInput(unsigned int ulCurrentTime);
 extern "C" int fn_bHasBeenPausedForController(void);
-
-void C_PS2MC_Message::CalculateMessagePosition(void)
-{
-    int NbLines = 1;
-    char* pString;
-
-    m_a3fMessagePosition[0] = 500.0f;
-    m_a3fMessagePosition[2] = 500.0f;
-    if (m_pCurrentMessage)
-    {
-        pString = m_pCurrentMessage->aMessage;
-        pString = strstr(pString, "\\l");
-        while (pString != NULL)
-        {
-            NbLines++; pString = strstr(pString + 1, "\\l");
-        }
-        if (m_pCurrentMessage->iNbChoice)
-        {
-            NbLines += 2;
-        }
-        m_a3fMessagePosition[1] = 500.0f - (m_pCurrentMessage->iNbChoice ? 20.0f : 0.0f) * (float)(NbLines / 2) * 2.0f;
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MC_Messages.cpp lines 3577–3643 */
 /* addr: 0x00332000  size: 444 bytes */
@@ -1816,6 +1761,72 @@ void C_PS2MC_Message::CalculateMessagePosition(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MC_Messages.cpp lines 3426–3490 */
+/* addr: 0x003321c0  size: 572 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3426
+ *   +0x0004 -> line 3430
+ *   +0x0008 -> line 3426
+ *   +0x0010 -> line 3430
+ *   +0x0018 -> line 3433
+ *   +0x0024 -> line 3435
+ *   +0x0034 -> line 3443
+ *   +0x0048 -> line 3446
+ *   +0x0058 -> line 3447
+ *   +0x0080 -> line 3448
+ *   +0x008c -> line 3454
+ *   +0x00c8 -> line 3456
+ *   +0x00d8 -> line 3458
+ *   +0x00f4 -> line 3460
+ *   +0x0100 -> line 3461
+ *   +0x0108 -> line 3465
+ *   +0x0118 -> line 3468
+ *   +0x0140 -> line 3469
+ *   +0x014c -> line 3472
+ *   +0x0188 -> line 3475
+ *   +0x0198 -> line 3478
+ *   +0x01a8 -> line 3480
+ *   +0x01d0 -> line 3481
+ *   +0x01dc -> line 3484
+ *   +0x0218 -> line 3488
+ *   +0x022c -> line 3490
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void C_PS2MC_Message::Display(void)
+{
+    char TempString[1024];
+
+    g_CurrentLanguage = g_stEngineStructure.ucCurrentLanguage;
+    if (m_pCurrentMessage &&
+        !fn_bHasBeenPausedForController())
+    {
+        sprintf(TempString, m_pCurrentMessage->aMessage, m_uiSaveGameRequiredSize);
+        Strcat(TempString, "\\l\\l");
+        if (m_iCurrentChoice == 1) { Strcat(TempString, "\\c255:255:0:"); }
+        else { Strcat(TempString, "\\c125:125:125:"); }
+        Strcat(TempString, PS2MC_g_Buttons[g_CurrentLanguage][m_pCurrentMessage->cChoice1]);
+        if (m_pCurrentMessage->cChoice2 != 0)
+        {
+            if (m_pCurrentMessage->cChoice3 != 0 || m_iCurrentMessage == (unsigned char)MC_eAreYouSureSaveNo) { Strcat(TempString, "\\l"); }
+            else { Strcat(TempString, "    "); }
+            if (m_iCurrentChoice == 2) { Strcat(TempString, "\\c255:255:0:"); }
+            else { Strcat(TempString, "\\c125:125:125:"); }
+            Strcat(TempString, PS2MC_g_Buttons[g_CurrentLanguage][m_pCurrentMessage->cChoice2]);
+        }
+        if (m_pCurrentMessage->cChoice3 != 0)
+        {
+            Strcat(TempString, "\\l");
+            if (m_iCurrentChoice == 3) { Strcat(TempString, "\\c255:255:0:"); }
+            else { Strcat(TempString, "\\c125:125:125:"); }
+            Strcat(TempString, PS2MC_g_Buttons[g_CurrentLanguage][m_pCurrentMessage->cChoice3]);
+        }
+        TXT_vAfficheSpecialWithTransparency(255.0f, TempString, &m_a3fMessagePosition[0]);
+    }
+}
+
 unsigned int C_PS2MC_Message::GetAnswer(void)
 {
     if (m_pCurrentMessage == NULL) { return 0; }
@@ -1861,66 +1872,75 @@ unsigned int C_PS2MC_Message::GetAnswer(void)
     return 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MC_Messages.cpp lines 3426–3490 */
-/* addr: 0x003321c0  size: 572 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3426
- *   +0x0004 -> line 3430
- *   +0x0008 -> line 3426
- *   +0x0010 -> line 3430
- *   +0x0018 -> line 3433
- *   +0x0024 -> line 3435
- *   +0x0034 -> line 3443
- *   +0x0048 -> line 3446
- *   +0x0058 -> line 3447
- *   +0x0080 -> line 3448
- *   +0x008c -> line 3454
- *   +0x00c8 -> line 3456
- *   +0x00d8 -> line 3458
- *   +0x00f4 -> line 3460
- *   +0x0100 -> line 3461
- *   +0x0108 -> line 3465
- *   +0x0118 -> line 3468
- *   +0x0140 -> line 3469
- *   +0x014c -> line 3472
- *   +0x0188 -> line 3475
- *   +0x0198 -> line 3478
- *   +0x01a8 -> line 3480
- *   +0x01d0 -> line 3481
- *   +0x01dc -> line 3484
- *   +0x0218 -> line 3488
- *   +0x022c -> line 3490
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void C_PS2MC_Message::Display(void)
+void C_PS2MC_Message::CalculateMessagePosition(void)
 {
-    char TempString[1024];
+    int NbLines = 1;
+    char* pString;
 
-    g_CurrentLanguage = g_stEngineStructure.ucCurrentLanguage;
-    if (m_pCurrentMessage &&
-        !fn_bHasBeenPausedForController())
+    m_a3fMessagePosition[0] = 500.0f;
+    m_a3fMessagePosition[2] = 500.0f;
+    if (m_pCurrentMessage)
     {
-        sprintf(TempString, m_pCurrentMessage->aMessage, m_uiSaveGameRequiredSize);
-        Strcat(TempString, "\\l\\l");
-        if (m_iCurrentChoice == 1) { Strcat(TempString, "\\c255:255:0:"); }
-        else { Strcat(TempString, "\\c125:125:125:"); }
-        Strcat(TempString, PS2MC_g_Buttons[g_CurrentLanguage][m_pCurrentMessage->cChoice1]);
-        if (m_pCurrentMessage->cChoice2 != 0)
+        pString = m_pCurrentMessage->aMessage;
+        pString = strstr(pString, "\\l");
+        while (pString != NULL)
         {
-            if (m_pCurrentMessage->cChoice3 != 0 || m_iCurrentMessage == (unsigned char)MC_eAreYouSureSaveNo) { Strcat(TempString, "\\l"); }
-            else { Strcat(TempString, "    "); }
-            if (m_iCurrentChoice == 2) { Strcat(TempString, "\\c255:255:0:"); }
-            else { Strcat(TempString, "\\c125:125:125:"); }
-            Strcat(TempString, PS2MC_g_Buttons[g_CurrentLanguage][m_pCurrentMessage->cChoice2]);
+            NbLines++; pString = strstr(pString + 1, "\\l");
         }
-        if (m_pCurrentMessage->cChoice3 != 0)
+        if (m_pCurrentMessage->iNbChoice)
         {
-            Strcat(TempString, "\\l");
-            if (m_iCurrentChoice == 3) { Strcat(TempString, "\\c255:255:0:"); }
-            else { Strcat(TempString, "\\c125:125:125:"); }
-            Strcat(TempString, PS2MC_g_Buttons[g_CurrentLanguage][m_pCurrentMessage->cChoice3]);
+            NbLines += 2;
         }
-        TXT_vAfficheSpecialWithTransparency(255.0f, TempString, &m_a3fMessagePosition[0]);
+        m_a3fMessagePosition[1] = 500.0f - (m_pCurrentMessage->iNbChoice ? 20.0f : 0.0f) * (float)(NbLines / 2) * 2.0f;
     }
+}
+
+void PS2MC_SetDisplayMessage(PS2MC_tdeMessageID _MessageID, unsigned int _RequiredDataSize)
+{
+    g_CurrentLanguage = g_stEngineStructure.ucCurrentLanguage; PS2MC_g_MessageHandler.m_iCurrentMessage = (unsigned char)_MessageID; PS2MC_g_MessageHandler.m_pCurrentMessage = &PS2MC_g_MessageTable[g_CurrentLanguage][(unsigned char)_MessageID]; PS2MC_g_MessageHandler.m_iCurrentChoice = PS2MC_g_MessageHandler.m_pCurrentMessage->iDefaultChoice; PS2MC_g_MessageHandler.m_uiSaveGameRequiredSize = _RequiredDataSize; PS2MC_g_MessageHandler.CalculateMessagePosition();
+}
+
+#pragma exceptions off
+void PS2MC_DisplayCurrentMessage(void)
+{
+    PS2MC_g_MessageHandler.Display();
+}
+#pragma exceptions reset
+
+#pragma exceptions off
+unsigned int PS2MC_GetCurrentMessageAnswer(void)
+{
+    return PS2MC_g_MessageHandler.GetAnswer();
+}
+#pragma exceptions reset
+
+void PS2MC_SetRequiredDataSizeForMessages(unsigned int _Size)
+{
+    PS2MC_g_MessageHandler.m_uiSaveGameRequiredSize = _Size;
+}
+
+void PS2MC_RemoveCurrentMessage(void)
+{
+    PS2MC_g_MessageHandler.m_pCurrentMessage = 0;
+    PS2MC_g_MessageHandler.m_iCurrentChoice = 0;
+}
+
+C_PS2MC_Manager::C_PS2MC_Manager()
+{
+    m_uiNextState = 2;
+    m_uiState = 0;
+    m_uiIdleState = 2;
+    m_bAutoSaveEnabled = 0;
+    m_bWillHaveToRestoreMenu2D = 0;
+    m_bMCChangedSinceLastSave = 0;
+    m_bPromptIsOn = 1;
+    m_bFirstBootCheckHasBeenDone = 0;
+    m_bPreBootCheckWasDone = 0;
+    m_bPreBootCheckHadNoMC = 0;
+    m_IPausedTheEngine = 0;
+    m_bCurrentlyWarningAboutMCRemoval = 0;
+    m_bActivated = 0;
+    m_bMemoryCardWasRemovedWhilePromptWasOff = 0;
+    m_bNeedToWarnUserAboutAutoSaveDisabled = 0;
+    m_bNeedToCheckAndWarnForMCFull = 3;
 }

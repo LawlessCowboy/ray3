@@ -401,91 +401,123 @@ struct CResType {
     smap m_oCommands; /* +0x3c */
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-CLinkTypeActor::~CLinkTypeActor()
-{
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
 
 CLinkActor CLinkActorPool::ms_oPool;
-
-void CLinkActorPool::f_vSalvageActor(CLinkActor* poActor)
-{
-    poActor->m_poNext = ms_oPool.m_poNext;
-    poActor->m_poPrevious = &ms_oPool;
-    if (poActor->m_poNext != 0)
-        poActor->m_poNext->m_poPrevious = poActor;
-    ms_oPool.m_poNext = poActor;
-}
-
-CLinkActor* CLinkActorPool::fs_poGetAnActor(void)
-{
-    CLinkActor* poActor;
-
-    poActor = ms_oPool.m_poNext;
-    if (poActor)
-        poActor->f_vIsolate();
-    else
-        poActor = new CLinkActor;
-    return poActor;
-}
-
-unsigned char CLinkActor::mfn_bSynchroniseActorInstance(void)
-{
-    unsigned char b_Answer;
-    CExtraEventActor* poEEActor;
-
-    b_Answer = 0;
-    for (poEEActor = m_oExtraActors.m_poNext; poEEActor != NULL; poEEActor = poEEActor->m_poNext)
-        b_Answer = poEEActor->mfn_bApplyAllParams(false) || b_Answer;
-    return b_Answer;
-}
 
 /* Scoped opt_lifetimes off: both loops share one poEEActor web, which gives
  * retail's s2 (actor) / s3 (bool temp) assignment in the -2 channel loop
  * (measured pragma sweep). */
 #pragma push
+#pragma opt_lifetimes off
+
+#pragma pop
+
+#pragma auto_inline on
+
+#pragma auto_inline reset
+
+#pragma auto_inline on
+
+#pragma auto_inline reset
+
+#pragma auto_inline on
+
+#pragma auto_inline reset
+
+#pragma auto_inline on
+
+#pragma auto_inline reset
+
+CLinkActor::~CLinkActor(void)
+{
+    f_vDesInit();
+}
+
+void CLinkActor::f_vInit(CLinkTypeActor& ro_Type, int s32_ObjectId)
+{
+    mpoType = &ro_Type;
+    ms32ACPObjectId = s32_ObjectId;
+    mfn_poAddExtraEventActorInstance(-1, NULL);
+}
+
+#pragma auto_inline on
+void CLinkActor::f_vDesInit(void)
+{
+    CExtraEventActor* poEEActor;
+
+    while ((poEEActor = m_oExtraActors.m_poNext) != NULL)
+    {
+        poEEActor->f_vIsolate();
+        poEEActor->f_vDesInit();
+        CExtraEventActorPool::f_vSalvageActor(poEEActor);
+    }
+    mpoType = NULL;
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+void CLinkActor::f_vIsolate(void)
+{
+    if (m_poPrevious != 0)
+        m_poPrevious->m_poNext = m_poNext;
+    if (m_poNext != 0)
+        m_poNext->m_poPrevious = m_poPrevious;
+    m_poNext = 0;
+    m_poPrevious = 0;
+}
+#pragma auto_inline reset
+
+void CLinkActor::f_vInsertAfter(CLinkActor* pParam)
+{
+    m_poNext = pParam->m_poNext;
+    m_poPrevious = pParam;
+    if (m_poNext != 0)
+        m_poNext->m_poPrevious = this;
+    pParam->m_poNext = this;
+}
+
+#pragma auto_inline on
+CExtraEventActor* CLinkActor::mfn_poGetExtraEventActorInstance(int s32_ChannelId, const usnd::CEventResData* po_ResData)
+{
+    CExtraEventActor* poEEActor;
+    tdeEventType e_Type;
+
+    e_Type = po_ResData ? *(const tdeEventType*)((const char*)po_ResData + 0x28) : (tdeEventType)0;
+    for (poEEActor = m_oExtraActors.m_poNext; poEEActor != NULL; poEEActor = poEEActor->m_poNext)
+    {
+        if ((poEEActor->meExtraCoeff == e_Type) && (poEEActor->ms32ACPChannelId == s32_ChannelId))
+            return poEEActor;
+    }
+    return NULL;
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+CExtraEventActor* CLinkActor::mfn_poAddExtraEventActorInstance(int s32_ChannelId, const usnd::CEventResData* poResData)
+{
+    static int s32_InstanceId = 0;
+    CExtraEventActor* poEventActor;
+
+    poEventActor = mfn_poGetExtraEventActorInstance(s32_ChannelId, poResData);
+    if (poEventActor)
+        return poEventActor;
+
+    poEventActor = CExtraEventActorPool::fs_poGetAnActor(ms32ACPObjectId);
+    poEventActor->f_vInit(*mpoType, ms32ACPObjectId, s32_ChannelId, poResData);
+    if (!poEventActor->mfn_bIsValid())
+    {
+        poEventActor->f_vDesInit();
+        CExtraEventActorPool::f_vSalvageActor(poEventActor);
+        return NULL;
+    }
+    poEventActor->f_vInsertAfter(&m_oExtraActors);
+    s32_InstanceId++;
+    return poEventActor;
+}
+#pragma auto_inline reset
+
 #pragma opt_lifetimes off
 unsigned char CLinkActor::mfn_bExecuteActorInstance(int s32_CmdId, int s32_ChannelId)
 {
@@ -515,92 +547,40 @@ unsigned char CLinkActor::mfn_bExecuteActorInstance(int s32_CmdId, int s32_Chann
     }
     return b_Answer;
 }
-#pragma pop
+#pragma opt_lifetimes reset
 
-#pragma auto_inline on
-CExtraEventActor* CLinkActor::mfn_poAddExtraEventActorInstance(int s32_ChannelId, const usnd::CEventResData* poResData)
+unsigned char CLinkActor::mfn_bSynchroniseActorInstance(void)
 {
-    static int s32_InstanceId = 0;
-    CExtraEventActor* poEventActor;
-
-    poEventActor = mfn_poGetExtraEventActorInstance(s32_ChannelId, poResData);
-    if (poEventActor)
-        return poEventActor;
-
-    poEventActor = CExtraEventActorPool::fs_poGetAnActor(ms32ACPObjectId);
-    poEventActor->f_vInit(*mpoType, ms32ACPObjectId, s32_ChannelId, poResData);
-    if (!poEventActor->mfn_bIsValid())
-    {
-        poEventActor->f_vDesInit();
-        CExtraEventActorPool::f_vSalvageActor(poEventActor);
-        return NULL;
-    }
-    poEventActor->f_vInsertAfter(&m_oExtraActors);
-    s32_InstanceId++;
-    return poEventActor;
-}
-#pragma auto_inline reset
-
-#pragma auto_inline on
-CExtraEventActor* CLinkActor::mfn_poGetExtraEventActorInstance(int s32_ChannelId, const usnd::CEventResData* po_ResData)
-{
+    unsigned char b_Answer;
     CExtraEventActor* poEEActor;
-    tdeEventType e_Type;
 
-    e_Type = po_ResData ? *(const tdeEventType*)((const char*)po_ResData + 0x28) : (tdeEventType)0;
+    b_Answer = 0;
     for (poEEActor = m_oExtraActors.m_poNext; poEEActor != NULL; poEEActor = poEEActor->m_poNext)
-    {
-        if ((poEEActor->meExtraCoeff == e_Type) && (poEEActor->ms32ACPChannelId == s32_ChannelId))
-            return poEEActor;
-    }
-    return NULL;
-}
-#pragma auto_inline reset
-
-void CLinkActor::f_vInsertAfter(CLinkActor* pParam)
-{
-    m_poNext = pParam->m_poNext;
-    m_poPrevious = pParam;
-    if (m_poNext != 0)
-        m_poNext->m_poPrevious = this;
-    pParam->m_poNext = this;
+        b_Answer = poEEActor->mfn_bApplyAllParams(false) || b_Answer;
+    return b_Answer;
 }
 
-#pragma auto_inline on
-void CLinkActor::f_vIsolate(void)
+CLinkActor* CLinkActorPool::fs_poGetAnActor(void)
 {
-    if (m_poPrevious != 0)
-        m_poPrevious->m_poNext = m_poNext;
-    if (m_poNext != 0)
-        m_poNext->m_poPrevious = m_poPrevious;
-    m_poNext = 0;
-    m_poPrevious = 0;
-}
-#pragma auto_inline reset
+    CLinkActor* poActor;
 
-#pragma auto_inline on
-void CLinkActor::f_vDesInit(void)
-{
-    CExtraEventActor* poEEActor;
-
-    while ((poEEActor = m_oExtraActors.m_poNext) != NULL)
-    {
-        poEEActor->f_vIsolate();
-        poEEActor->f_vDesInit();
-        CExtraEventActorPool::f_vSalvageActor(poEEActor);
-    }
-    mpoType = NULL;
-}
-#pragma auto_inline reset
-
-void CLinkActor::f_vInit(CLinkTypeActor& ro_Type, int s32_ObjectId)
-{
-    mpoType = &ro_Type;
-    ms32ACPObjectId = s32_ObjectId;
-    mfn_poAddExtraEventActorInstance(-1, NULL);
+    poActor = ms_oPool.m_poNext;
+    if (poActor)
+        poActor->f_vIsolate();
+    else
+        poActor = new CLinkActor;
+    return poActor;
 }
 
-CLinkActor::~CLinkActor(void)
+void CLinkActorPool::f_vSalvageActor(CLinkActor* poActor)
 {
-    f_vDesInit();
+    poActor->m_poNext = ms_oPool.m_poNext;
+    poActor->m_poPrevious = &ms_oPool;
+    if (poActor->m_poNext != 0)
+        poActor->m_poNext->m_poPrevious = poActor;
+    ms_oPool.m_poNext = poActor;
+}
+
+CLinkTypeActor::~CLinkTypeActor()
+{
 }

@@ -1143,45 +1143,13 @@ tagGScontext g_gsContext;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void gifSetTag(anon_1* pTag, unsigned short nLoop, unsigned char EOP, unsigned char PRE, unsigned short PRIM, unsigned short FLG, unsigned char nReg, unsigned char* pRegs)
-{
-    pTag->NLOOP = nLoop;
-    pTag->EOP = EOP;
-    pTag->PRE = PRE;
-    pTag->PRIM = PRIM;
-    pTag->FLG = FLG;
-    if (nReg > 16)
-    {
-        nReg = 16;
-    }
-    pTag->NREG = (nReg == 16) ? 0 : nReg;
-    if (nReg > 0)
-    {
-        pRegs += nReg - 1;
-        if (pRegs != NULL)
-        {
-            switch (nReg)
-            {
-            case 15: pTag->REGS15 = *(pRegs--);
-            case 14: pTag->REGS14 = *(pRegs--);
-            case 13: pTag->REGS13 = *(pRegs--);
-            case 12: pTag->REGS12 = *(pRegs--);
-            case 11: pTag->REGS11 = *(pRegs--);
-            case 10: pTag->REGS10 = *(pRegs--);
-            case 9:  pTag->REGS9  = *(pRegs--);
-            case 8:  pTag->REGS8  = *(pRegs--);
-            case 7:  pTag->REGS7  = *(pRegs--);
-            case 6:  pTag->REGS6  = *(pRegs--);
-            case 5:  pTag->REGS5  = *(pRegs--);
-            case 4:  pTag->REGS4  = *(pRegs--);
-            case 3:  pTag->REGS3  = *(pRegs--);
-            case 2:  pTag->REGS2  = *(pRegs--);
-            case 1:  pTag->REGS1  = *(pRegs--);
-            case 0:  pTag->REGS0  = *(pRegs--);
-            }
-        }
-    }
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void gifSetTag(anon_1* pTag, unsigned short nLoop, unsigned char EOP, unsigned char PRE, unsigned short PRIM, unsigned short FLG, unsigned char nReg, unsigned char* pRegs);
+void impPS2glFogiv(unsigned int pname, int* params);
+void impPS2glFogi(unsigned int pname, int param);
+void impPS2glFogfv(unsigned int pname, float* params);
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Fog.c lines 68–80 */
 /* addr: 0x00179e50  size: 312 bytes */
@@ -1199,47 +1167,6 @@ void gifSetTag(anon_1* pTag, unsigned short nLoop, unsigned char EOP, unsigned c
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glFogiv(unsigned int pname, int* params)
-{
-    if (pname == 0x0B66) /* GL_FOG_COLOR */
-    {
-        *(tag_int4*)&g_PS2glContext.ivFogColor = *(tag_int4*)params;
-        g_gsContext.FOGCOL.FCR = (char)params[0]; g_gsContext.ModFlgs.FOGCOL_Modified = 1;
-        g_gsContext.FOGCOL.FCG = (char)params[1]; g_gsContext.ModFlgs.FOGCOL_Modified = 1;
-        g_gsContext.FOGCOL.FCB = (char)params[2]; g_gsContext.ModFlgs.FOGCOL_Modified = 1;
-    }
-    else
-    {
-        int iValue = params[0];
-        switch (pname)
-        {
-        case 0x0B65: /* GL_FOG_MODE */
-            g_PS2glContext.eFogMode = iValue;
-            break;
-        case 0x0B62: /* GL_FOG_DENSITY */
-            g_PS2glContext.fFogDensity = (float)iValue;
-            break;
-        case 0x0B63: /* GL_FOG_START */
-            g_PS2glContext.fFogLinearStart = (float)iValue;
-            break;
-        case 0x0B64: /* GL_FOG_END */
-            g_PS2glContext.fFogLinearEnd = (float)iValue;
-            break;
-        case 0x0B61: /* GL_FOG_INDEX */
-            g_PS2glContext.fFogIndex = (float)iValue;
-            break;
-        default:
-            /* An unknown pname leaves the fog state untouched: it has to skip
-             * the bFogChanged store below.  A plain 'return' makes MWCC emit an
-             * extra trampoline block (b <epilogue>) that the retail code does
-             * not have, so jump straight to the end of the branch instead. */
-            goto bFogDone;
-        }
-        g_PS2glContext.bFogChanged = 1;
-    bFogDone:
-        ;
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Fog.c lines 53–63 */
 /* addr: 0x00179f90  size: 176 bytes */
@@ -1256,30 +1183,6 @@ void impPS2glFogiv(unsigned int pname, int* params)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glFogi(unsigned int pname, int param)
-{
-    switch (pname)
-    {
-    case 0x0B65: /* GL_FOG_MODE */
-        g_PS2glContext.eFogMode = param;
-        break;
-    case 0x0B62: /* GL_FOG_DENSITY */
-        g_PS2glContext.fFogDensity = (float)param;
-        break;
-    case 0x0B63: /* GL_FOG_START */
-        g_PS2glContext.fFogLinearStart = (float)param;
-        break;
-    case 0x0B64: /* GL_FOG_END */
-        g_PS2glContext.fFogLinearEnd = (float)param;
-        break;
-    case 0x0B61: /* GL_FOG_INDEX */
-        g_PS2glContext.fFogIndex = (float)param;
-        break;
-    default:
-        return;
-    }
-    g_PS2glContext.bFogChanged = 1;
-}
 
 /* Clamp a colour component to the [0, 1] range the GS fog register expects. */
 #pragma auto_inline on
@@ -1396,5 +1299,112 @@ void impPS2glFogfv(unsigned int pname, float* params)
             return;
         }
         g_PS2glContext.bFogChanged = 1;
+    }
+}
+
+void impPS2glFogi(unsigned int pname, int param)
+{
+    switch (pname)
+    {
+    case 0x0B65: /* GL_FOG_MODE */
+        g_PS2glContext.eFogMode = param;
+        break;
+    case 0x0B62: /* GL_FOG_DENSITY */
+        g_PS2glContext.fFogDensity = (float)param;
+        break;
+    case 0x0B63: /* GL_FOG_START */
+        g_PS2glContext.fFogLinearStart = (float)param;
+        break;
+    case 0x0B64: /* GL_FOG_END */
+        g_PS2glContext.fFogLinearEnd = (float)param;
+        break;
+    case 0x0B61: /* GL_FOG_INDEX */
+        g_PS2glContext.fFogIndex = (float)param;
+        break;
+    default:
+        return;
+    }
+    g_PS2glContext.bFogChanged = 1;
+}
+
+void impPS2glFogiv(unsigned int pname, int* params)
+{
+    if (pname == 0x0B66) /* GL_FOG_COLOR */
+    {
+        *(tag_int4*)&g_PS2glContext.ivFogColor = *(tag_int4*)params;
+        g_gsContext.FOGCOL.FCR = (char)params[0]; g_gsContext.ModFlgs.FOGCOL_Modified = 1;
+        g_gsContext.FOGCOL.FCG = (char)params[1]; g_gsContext.ModFlgs.FOGCOL_Modified = 1;
+        g_gsContext.FOGCOL.FCB = (char)params[2]; g_gsContext.ModFlgs.FOGCOL_Modified = 1;
+    }
+    else
+    {
+        int iValue = params[0];
+        switch (pname)
+        {
+        case 0x0B65: /* GL_FOG_MODE */
+            g_PS2glContext.eFogMode = iValue;
+            break;
+        case 0x0B62: /* GL_FOG_DENSITY */
+            g_PS2glContext.fFogDensity = (float)iValue;
+            break;
+        case 0x0B63: /* GL_FOG_START */
+            g_PS2glContext.fFogLinearStart = (float)iValue;
+            break;
+        case 0x0B64: /* GL_FOG_END */
+            g_PS2glContext.fFogLinearEnd = (float)iValue;
+            break;
+        case 0x0B61: /* GL_FOG_INDEX */
+            g_PS2glContext.fFogIndex = (float)iValue;
+            break;
+        default:
+            /* An unknown pname leaves the fog state untouched: it has to skip
+             * the bFogChanged store below.  A plain 'return' makes MWCC emit an
+             * extra trampoline block (b <epilogue>) that the retail code does
+             * not have, so jump straight to the end of the branch instead. */
+            goto bFogDone;
+        }
+        g_PS2glContext.bFogChanged = 1;
+    bFogDone:
+        ;
+    }
+}
+
+void gifSetTag(anon_1* pTag, unsigned short nLoop, unsigned char EOP, unsigned char PRE, unsigned short PRIM, unsigned short FLG, unsigned char nReg, unsigned char* pRegs)
+{
+    pTag->NLOOP = nLoop;
+    pTag->EOP = EOP;
+    pTag->PRE = PRE;
+    pTag->PRIM = PRIM;
+    pTag->FLG = FLG;
+    if (nReg > 16)
+    {
+        nReg = 16;
+    }
+    pTag->NREG = (nReg == 16) ? 0 : nReg;
+    if (nReg > 0)
+    {
+        pRegs += nReg - 1;
+        if (pRegs != NULL)
+        {
+            switch (nReg)
+            {
+            case 15: pTag->REGS15 = *(pRegs--);
+            case 14: pTag->REGS14 = *(pRegs--);
+            case 13: pTag->REGS13 = *(pRegs--);
+            case 12: pTag->REGS12 = *(pRegs--);
+            case 11: pTag->REGS11 = *(pRegs--);
+            case 10: pTag->REGS10 = *(pRegs--);
+            case 9:  pTag->REGS9  = *(pRegs--);
+            case 8:  pTag->REGS8  = *(pRegs--);
+            case 7:  pTag->REGS7  = *(pRegs--);
+            case 6:  pTag->REGS6  = *(pRegs--);
+            case 5:  pTag->REGS5  = *(pRegs--);
+            case 4:  pTag->REGS4  = *(pRegs--);
+            case 3:  pTag->REGS3  = *(pRegs--);
+            case 2:  pTag->REGS2  = *(pRegs--);
+            case 1:  pTag->REGS1  = *(pRegs--);
+            case 0:  pTag->REGS0  = *(pRegs--);
+            }
+        }
     }
 }

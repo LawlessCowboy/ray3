@@ -68,6 +68,22 @@ unsigned char CS_fn_eGetPrivilegedActivationZone(unsigned char _ucZoneType, tdst
 tdstZdxList_* CS_fn_hGetZdxList(unsigned char ucZoneType, HIE_tdstSuperObject_* hSuperObj);
 tdstZoneSetList_* fn_hGetCurrentZoneSetOfType(unsigned char _ucZoneType, tdstCollSet_* _hCollSet);
 
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+COL_tdstCollideObject_* fn_hIsThisZoneActive(HIE_tdstSuperObject_* _hCharacter, unsigned char _ucZoneType, unsigned char _ucZoneNumber);
+void fn_vFreeTransitionAllocatedMemory(void);
+
+void PLD_fn_vUnLoadTransition(void);
+void fn_vSetLevelHasTransitionMemory(unsigned char _ucLevelHasTransitionMemory);
+void HMU_fn_vSetMemoriesInFixMode(void);
+
+void fn_vFreeTransitionAllocatedMemory(void)
+{
+    PLD_fn_vUnLoadTransition();
+    fn_vSetLevelHasTransitionMemory(0);
+    HMU_fn_vSetMemoriesInFixMode();
+}
+
 COL_tdstCollideObject_* fn_hIsThisZoneActive(HIE_tdstSuperObject_* _hCharacter, unsigned char _ucZoneType, unsigned char _ucZoneNumber)
 {
     unsigned char ePrivileged;
@@ -107,15 +123,4 @@ COL_tdstCollideObject_* fn_hIsThisZoneActive(HIE_tdstSuperObject_* _hCharacter, 
         }
     }
     return NULL;
-}
-
-void PLD_fn_vUnLoadTransition(void);
-void fn_vSetLevelHasTransitionMemory(unsigned char _ucLevelHasTransitionMemory);
-void HMU_fn_vSetMemoriesInFixMode(void);
-
-void fn_vFreeTransitionAllocatedMemory(void)
-{
-    PLD_fn_vUnLoadTransition();
-    fn_vSetLevelHasTransitionMemory(0);
-    HMU_fn_vSetMemoriesInFixMode();
 }

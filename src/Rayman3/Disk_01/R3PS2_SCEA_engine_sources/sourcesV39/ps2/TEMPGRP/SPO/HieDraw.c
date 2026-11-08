@@ -936,17 +936,19 @@ float VoidReal;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SHW_fn_vInitShadow(short _hGLDDevice, int bMustAlloc)
-{
-    unsigned char ucOldHMUTempBloc;
-    unsigned char ucOldHMUNormalBloc;
-    short* p_hHandleOfElementForShadow;
-    GEO_tdstGeometricObject_** p_hHandleGeoShwObj;
-    short i;
-    GEO_tdstColor_ stShadowPolygonColor;
-    GLI_tdstMaterial_* s_hShadowPolygonVisualMaterialLocal;
-    /* TODO: decompile from asm/... */
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void SHW_fn_vInitShadow(short _hGLDDevice, int bMustAlloc);
+void HIE_fn_vSendCharacterToViewportPS2(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask, int _lCullingResult);
+void HIE_fn_vSendCharacterModulesToViewPortPS2(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask);
+GEO_tdstGeometricObject_* HIE_fn_p_stGetGeometricObjectFromSuperObject(HIE_tdstSuperObject_* h_SuperObject);
+unsigned char HIE_fn_bSendSPOToFixViewport(GLD_tdstViewportAttributes_* p_stFixViewportAttr, int _lDrawMask);
+void HIE_fn_vSendSPOToFixViewport(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask, int _lCullingResult);
+void HIE_fn_hFindAllMirrorsInHierarchy(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, HIE_tdstSuperObject_** p_hHandleOfMirror, GEO_tdstGeometricObject_** p_hHandleOfGeometricMirror, short* p_shNbOfMirrors, short shNbMaxOfMirrors);
+int HIE_fn_bFindMirrorInHierarchy(HIE_tdstSuperObject_* _hSprObj);
+void HIE_fn_vSendCharacterDynShadowToViewPort(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask);
+void HIE_fn_vSendStaticWorldToViewport(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask, int _lCullingResult);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieDraw.c lines 1389–1721 */
 /* addr: 0x0031df90  size: 3044 bytes */
@@ -1151,6 +1153,386 @@ void GLIPS2_vManageLightsForThisCharacter(GLD_tdstViewportAttributes_* _hVpt, HI
 void fn_vComputeGeometricJobs(HIE_tdstSuperObject_* p_stActorSO);
 void HIE_fn_vSendCharacterModulesToViewPortPS2(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int ulDrawMask);
 void GLI_vSetGlobalAlpha(float fAlpha);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieDraw.c lines 1354–1376 */
+/* addr: 0x0031eb80  size: 884 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1354
+ *   +0x0020 -> line 1359
+ *   +0x01f8 -> line 1362
+ *   +0x01fc -> line 1363
+ *   +0x0200 -> line 1362
+ *   +0x0204 -> line 1363
+ *   +0x0250 -> line 1365
+ *   +0x02f0 -> line 1368
+ *   +0x02fc -> line 1369
+ *   +0x030c -> line 1371
+ *   +0x0318 -> line 1372
+ *   +0x0328 -> line 1374
+ *   +0x0358 -> line 1376
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void GLI_vGetVisualSetLOD(GEO_tdstVisualSet_* p_stVisualSet, int lNumberOfLodToGet, float* p_xThreshold, GEO_tdstGeometricObject_** h_stObject);
+GEO_tdstVisualSet_* PO_fn_hGetVisualSet(PO_tdstPhysicalObject_* _hPhysicalObject);
+PO_tdstPhysicalObject_* IPO_fn_hGetPhysicalObject(IPO_tdstInstanciatedPhysicalObject_* _hInstanciatedPhysicalObject);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieDraw.c lines 1165–1203 */
+/* addr: 0x0031ef00  size: 148 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1165
+ *   +0x0004 -> line 1178
+ *   +0x0008 -> line 1165
+ *   +0x000c -> line 1174
+ *   +0x0010 -> line 1176
+ *   +0x0014 -> line 1178
+ *   +0x001c -> line 1180
+ *   +0x0020 -> line 1181
+ *   +0x0028 -> line 1182
+ *   +0x0030 -> line 1187
+ *   +0x004c -> line 1191
+ *   +0x0054 -> line 1194
+ *   +0x0060 -> line 1197
+ *   +0x0068 -> line 1198
+ *   +0x0084 -> line 1202
+ *   +0x0088 -> line 1203
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieDraw.c lines 1089–1160 */
+/* addr: 0x0031efa0  size: 312 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1089
+ *   +0x0028 -> line 1093
+ *   +0x002c -> line 1097
+ *   +0x0034 -> line 1098
+ *   +0x0040 -> line 1099
+ *   +0x0050 -> line 1100
+ *   +0x0058 -> line 1106
+ *   +0x0064 -> line 1115
+ *   +0x0074 -> line 1131
+ *   +0x008c -> line 1133
+ *   +0x0094 -> line 1134
+ *   +0x0098 -> line 1136
+ *   +0x00b0 -> line 1141
+ *   +0x00c8 -> line 1143
+ *   +0x00d0 -> line 1145
+ *   +0x00f8 -> line 1154
+ *   +0x0100 -> line 1156
+ *   +0x0108 -> line 1157
+ *   +0x0110 -> line 1160
+ *   +0x0114 -> line 1159
+ *   +0x0118 -> line 1160
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vFogOff(void);
+void GLI_vFogOn(void);
+char GLI_fn_SinusEffect_vGetState(void);
+void GLI_fn_SinusEffect_vSetState(char cState);
+char GLI_fn_SinusEffect_cIsSecondViewportAffected(GLD_tdstViewportAttributes_* p_stViewportAttr);
+unsigned char HIE_fn_bInitCameraMatrixStack(GLD_tdstViewportAttributes_* p_stViewportAttr);
+void GAM_fn_vClipFixObject(GLD_tdstViewportAttributes_* p_stViewportAttr);
+void GAM_fn_vResetClipFixObject(GLD_tdstViewportAttributes_* p_stViewportAttr);
+void HIE_fn_vSendSPOToFixViewport(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask, int _lCullingResult);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieDraw.c lines 901–1066 */
+/* addr: 0x0031f0e0  size: 1392 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 901
+ *   +0x0030 -> line 915
+ *   +0x0034 -> line 908
+ *   +0x0038 -> line 915
+ *   +0x0044 -> line 928
+ *   +0x0218 -> line 936
+ *   +0x0228 -> line 938
+ *   +0x0234 -> line 940
+ *   +0x0238 -> line 942
+ *   +0x023c -> line 943
+ *   +0x0244 -> line 945
+ *   +0x025c -> line 946
+ *   +0x0264 -> line 949
+ *   +0x0278 -> line 950
+ *   +0x02a4 -> line 952
+ *   +0x02a8 -> line 955
+ *   +0x02ac -> line 954
+ *   +0x02b4 -> line 956
+ *   +0x02b8 -> line 954
+ *   +0x02bc -> line 956
+ *   +0x02c4 -> line 959
+ *   +0x031c -> line 962
+ *   +0x0320 -> line 961
+ *   +0x0324 -> line 964
+ *   +0x032c -> line 966
+ *   +0x0334 -> line 972
+ *   +0x0340 -> line 973
+ *   +0x0344 -> line 976
+ *   +0x0348 -> line 974
+ *   +0x034c -> line 976
+ *   +0x0354 -> line 986
+ *   +0x035c -> line 992
+ *   +0x03a4 -> line 993
+ *   +0x03b8 -> line 994
+ *   +0x03cc -> line 1002
+ *   +0x03d8 -> line 1003
+ *   +0x03e8 -> line 1006
+ *   +0x03ec -> line 1007
+ *   +0x0404 -> line 1008
+ *   +0x0418 -> line 1015
+ *   +0x044c -> line 1016
+ *   +0x0460 -> line 1028
+ *   +0x0468 -> line 1036
+ *   +0x046c -> line 1037
+ *   +0x0470 -> line 1036
+ *   +0x0474 -> line 1037
+ *   +0x04c0 -> line 1038
+ *   +0x04cc -> line 1040
+ *   +0x04d8 -> line 1041
+ *   +0x04e8 -> line 1044
+ *   +0x04ec -> line 1045
+ *   +0x0504 -> line 1046
+ *   +0x0514 -> line 1052
+ *   +0x0518 -> line 1058
+ *   +0x0548 -> line 1066
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieDraw.c lines 797–886 */
+/* addr: 0x0031f650  size: 740 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 797
+ *   +0x0010 -> line 802
+ *   +0x0014 -> line 797
+ *   +0x001c -> line 799
+ *   +0x0020 -> line 797
+ *   +0x004c -> line 810
+ *   +0x0050 -> line 801
+ *   +0x0054 -> line 810
+ *   +0x0058 -> line 813
+ *   +0x0064 -> line 814
+ *   +0x006c -> line 815
+ *   +0x0074 -> line 817
+ *   +0x007c -> line 820
+ *   +0x008c -> line 822
+ *   +0x0098 -> line 823
+ *   +0x00a0 -> line 824
+ *   +0x00a4 -> line 829
+ *   +0x00a8 -> line 826
+ *   +0x00dc -> line 827
+ *   +0x0108 -> line 829
+ *   +0x0110 -> line 832
+ *   +0x0120 -> line 834
+ *   +0x0138 -> line 835
+ *   +0x0140 -> line 839
+ *   +0x0198 -> line 856
+ *   +0x01a8 -> line 858
+ *   +0x01c0 -> line 860
+ *   +0x01c4 -> line 862
+ *   +0x01c8 -> line 860
+ *   +0x01cc -> line 862
+ *   +0x01d8 -> line 863
+ *   +0x01f0 -> line 866
+ *   +0x01f8 -> line 867
+ *   +0x022c -> line 872
+ *   +0x0238 -> line 873
+ *   +0x0270 -> line 877
+ *   +0x027c -> line 881
+ *   +0x0288 -> line 883
+ *   +0x02a4 -> line 884
+ *   +0x02b0 -> line 886
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieDraw.c lines 770–785 */
+/* addr: 0x0031f940  size: 200 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 770
+ *   +0x0010 -> line 775
+ *   +0x0020 -> line 776
+ *   +0x0028 -> line 779
+ *   +0x0034 -> line 780
+ *   +0x0098 -> line 781
+ *   +0x00a0 -> line 782
+ *   +0x00b0 -> line 784
+ *   +0x00b4 -> line 785
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+/* Not original source, needs cleaning up: scoped auto_inline makes MWCC
+ * inline the recursive call one level, as in retail. */
+#pragma auto_inline on
+
+#pragma auto_inline reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieDraw.c lines 589–619 */
+/* addr: 0x0031fa10  size: 768 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 589
+ *   +0x001c -> line 595
+ *   +0x0030 -> line 600
+ *   +0x0204 -> line 603
+ *   +0x0208 -> line 604
+ *   +0x020c -> line 603
+ *   +0x0210 -> line 604
+ *   +0x025c -> line 606
+ *   +0x026c -> line 608
+ *   +0x0274 -> line 609
+ *   +0x027c -> line 613
+ *   +0x0288 -> line 614
+ *   +0x0298 -> line 615
+ *   +0x02b8 -> line 617
+ *   +0x02e8 -> line 619
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieDraw.c lines 344–373 */
+/* addr: 0x0031fd10  size: 932 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 344
+ *   +0x002c -> line 350
+ *   +0x0034 -> line 352
+ *   +0x020c -> line 354
+ *   +0x025c -> line 356
+ *   +0x0268 -> line 362
+ *   +0x0274 -> line 364
+ *   +0x0340 -> line 370
+ *   +0x0350 -> line 372
+ *   +0x0380 -> line 373
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void HIE_fn_vSendStaticWorldToViewport(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask, int _lCullingResult)
+{
+    HIE_tdstSuperObject_* hChild;
+    /* TODO: decompile from asm/... */
+}
+
+void HIE_fn_vSendCharacterDynShadowToViewPort(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask)
+{
+    GEO_tdstVisualSet_* hVisualSet;
+    HIE_tdstSuperObject_* hChild;
+    /* TODO: decompile from asm/... */
+}
+
+#pragma auto_inline on
+int HIE_fn_bFindMirrorInHierarchy(HIE_tdstSuperObject_* _hSprObj)
+{
+    HIE_tdstSuperObject_* hChild;
+
+    if (_hSprObj->ulTypeOfLinkedObject & 0x250)
+        return 1;
+
+    for (hChild = _hSprObj->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn)
+    {
+        if (HIE_fn_bFindMirrorInHierarchy(hChild))
+            return 1;
+    }
+
+    return 0;
+}
+#pragma auto_inline reset
+
+void HIE_fn_hFindAllMirrorsInHierarchy(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, HIE_tdstSuperObject_** p_hHandleOfMirror, GEO_tdstGeometricObject_** p_hHandleOfGeometricMirror, short* p_shNbOfMirrors, short shNbMaxOfMirrors)
+{
+    MTH3D_tdstVector_* p_stMaxPoint;
+    MTH3D_tdstVector_* p_stMinPoint;
+    int lType;
+    MAT_tdstTransformation_ stIdentityMatrix;
+    MTH3D_tdstVector_ stMaxPoint;
+    MTH3D_tdstVector_ stMinPoint;
+    COL_tdstParallelBox_* hParallelBox;
+    float xSphereRadius;
+    MTH3D_tdstVector_ stSphereCenter;
+    COL_tdstBoundingSphere_* hBoundingSphere;
+    HIE_tdstSuperObject_* hChild;
+    /* TODO: decompile from asm/... */
+}
+
+void HIE_fn_vSendSPOToFixViewport(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask, int _lCullingResult)
+{
+    tdstStandardGame_* hStdGame;
+    float xPercent;
+    unsigned char ucNbRLIUse;
+    unsigned char ucIndex2;
+    unsigned char ucIndex1;
+    unsigned int ulCustomBit;
+    float xSphereRadius;
+    MTH3D_tdstVector_ stSphereCenter;
+    unsigned char bDisplayed;
+    COL_tdstBoundingSphere_* hBoundingSphere;
+    GLI_tdstLight_* hLight;
+    HIE_tdstSuperObject_* hChild;
+    /* TODO: decompile from asm/... */
+}
+
+unsigned char HIE_fn_bSendSPOToFixViewport(GLD_tdstViewportAttributes_* p_stFixViewportAttr, int _lDrawMask)
+{
+    char cSaveGlobalFog;
+    char cSaveSinusEffectState;
+    HIE_tdstSuperObject_** hSPO;
+    short xI;
+
+    cSaveGlobalFog = GLI_cGlobalFogIsOn;
+    GLI_cGlobalFogIsOn = 0;
+    GLI_vFogOff();
+    cSaveSinusEffectState = GLI_fn_SinusEffect_vGetState();
+    if (!GLI_fn_SinusEffect_cIsSecondViewportAffected(p_stFixViewportAttr))
+        GLI_fn_SinusEffect_vSetState(0);
+    HIE_fn_bInitCameraMatrixStack(p_stFixViewportAttr);
+    for (xI = 0, hSPO = (HIE_tdstSuperObject_**)gd_hFixSPO; xI < g_xFixIndex; xI++, hSPO++)
+    {
+        if ((*hSPO)->ulFlags |= 0x40000)
+            GAM_fn_vClipFixObject(p_stFixViewportAttr);
+        HIE_fn_vSendSPOToFixViewport(p_stFixViewportAttr, (*hSPO), _lDrawMask & (*hSPO)->lDrawModeMask, 0);
+        if ((*hSPO)->ulFlags |= 0x40000)
+            GAM_fn_vResetClipFixObject(p_stFixViewportAttr);
+    }
+    GLI_fn_SinusEffect_vSetState(cSaveSinusEffectState);
+    GLI_cGlobalFogIsOn = cSaveGlobalFog;
+    if (cSaveGlobalFog)
+        GLI_vFogOn();
+    return 1;
+}
+
+GEO_tdstGeometricObject_* HIE_fn_p_stGetGeometricObjectFromSuperObject(HIE_tdstSuperObject_* h_SuperObject)
+{
+    int lSOType;
+    PO_tdstPhysicalObject_* h_PO;
+    float p_xThreshold;
+    GEO_tdstGeometricObject_* p_stObject;
+
+    p_stObject = NULL;
+
+    lSOType = h_SuperObject->ulTypeOfLinkedObject;
+
+    if (lSOType == 0x400)
+    {
+        p_stObject = h_SuperObject->hLinkedObject.p_stGeometricObject;
+    }
+    else if (lSOType & 0x18)
+    {
+        GLI_vGetVisualSetLOD(PO_fn_hGetVisualSet(h_SuperObject->hLinkedObject.p_stPhysicalObject), 0, &p_xThreshold, &p_stObject);
+    }
+    else if (lSOType & 0x60)
+    {
+        h_PO = IPO_fn_hGetPhysicalObject(h_SuperObject->hLinkedObject.p_stInstanciatedPhysicalObject);
+        GLI_vGetVisualSetLOD(PO_fn_hGetVisualSet(h_PO), 0, &p_xThreshold, &p_stObject);
+    }
+
+    return p_stObject;
+}
+
+void HIE_fn_vSendCharacterModulesToViewPortPS2(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask)
+{
+    HIE_tdstSuperObject_* hChild;
+    /* TODO: decompile from asm/... */
+}
 
 void HIE_fn_vSendCharacterToViewportPS2(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask, int _lCullingResult)
 {
@@ -1487,371 +1869,14 @@ void HIE_fn_vSendCharacterToViewportPS2(GLD_tdstViewportAttributes_* _hVpt, HIE_
     GLI_vSetGlobalAlpha(fGlobalAlphaTemp);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieDraw.c lines 1354–1376 */
-/* addr: 0x0031eb80  size: 884 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1354
- *   +0x0020 -> line 1359
- *   +0x01f8 -> line 1362
- *   +0x01fc -> line 1363
- *   +0x0200 -> line 1362
- *   +0x0204 -> line 1363
- *   +0x0250 -> line 1365
- *   +0x02f0 -> line 1368
- *   +0x02fc -> line 1369
- *   +0x030c -> line 1371
- *   +0x0318 -> line 1372
- *   +0x0328 -> line 1374
- *   +0x0358 -> line 1376
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void HIE_fn_vSendCharacterModulesToViewPortPS2(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask)
+void SHW_fn_vInitShadow(short _hGLDDevice, int bMustAlloc)
 {
-    HIE_tdstSuperObject_* hChild;
-    /* TODO: decompile from asm/... */
-}
-
-void GLI_vGetVisualSetLOD(GEO_tdstVisualSet_* p_stVisualSet, int lNumberOfLodToGet, float* p_xThreshold, GEO_tdstGeometricObject_** h_stObject);
-GEO_tdstVisualSet_* PO_fn_hGetVisualSet(PO_tdstPhysicalObject_* _hPhysicalObject);
-PO_tdstPhysicalObject_* IPO_fn_hGetPhysicalObject(IPO_tdstInstanciatedPhysicalObject_* _hInstanciatedPhysicalObject);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieDraw.c lines 1165–1203 */
-/* addr: 0x0031ef00  size: 148 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1165
- *   +0x0004 -> line 1178
- *   +0x0008 -> line 1165
- *   +0x000c -> line 1174
- *   +0x0010 -> line 1176
- *   +0x0014 -> line 1178
- *   +0x001c -> line 1180
- *   +0x0020 -> line 1181
- *   +0x0028 -> line 1182
- *   +0x0030 -> line 1187
- *   +0x004c -> line 1191
- *   +0x0054 -> line 1194
- *   +0x0060 -> line 1197
- *   +0x0068 -> line 1198
- *   +0x0084 -> line 1202
- *   +0x0088 -> line 1203
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-GEO_tdstGeometricObject_* HIE_fn_p_stGetGeometricObjectFromSuperObject(HIE_tdstSuperObject_* h_SuperObject)
-{
-    int lSOType;
-    PO_tdstPhysicalObject_* h_PO;
-    float p_xThreshold;
-    GEO_tdstGeometricObject_* p_stObject;
-
-    p_stObject = NULL;
-
-    lSOType = h_SuperObject->ulTypeOfLinkedObject;
-
-    if (lSOType == 0x400)
-    {
-        p_stObject = h_SuperObject->hLinkedObject.p_stGeometricObject;
-    }
-    else if (lSOType & 0x18)
-    {
-        GLI_vGetVisualSetLOD(PO_fn_hGetVisualSet(h_SuperObject->hLinkedObject.p_stPhysicalObject), 0, &p_xThreshold, &p_stObject);
-    }
-    else if (lSOType & 0x60)
-    {
-        h_PO = IPO_fn_hGetPhysicalObject(h_SuperObject->hLinkedObject.p_stInstanciatedPhysicalObject);
-        GLI_vGetVisualSetLOD(PO_fn_hGetVisualSet(h_PO), 0, &p_xThreshold, &p_stObject);
-    }
-
-    return p_stObject;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieDraw.c lines 1089–1160 */
-/* addr: 0x0031efa0  size: 312 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1089
- *   +0x0028 -> line 1093
- *   +0x002c -> line 1097
- *   +0x0034 -> line 1098
- *   +0x0040 -> line 1099
- *   +0x0050 -> line 1100
- *   +0x0058 -> line 1106
- *   +0x0064 -> line 1115
- *   +0x0074 -> line 1131
- *   +0x008c -> line 1133
- *   +0x0094 -> line 1134
- *   +0x0098 -> line 1136
- *   +0x00b0 -> line 1141
- *   +0x00c8 -> line 1143
- *   +0x00d0 -> line 1145
- *   +0x00f8 -> line 1154
- *   +0x0100 -> line 1156
- *   +0x0108 -> line 1157
- *   +0x0110 -> line 1160
- *   +0x0114 -> line 1159
- *   +0x0118 -> line 1160
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GLI_vFogOff(void);
-void GLI_vFogOn(void);
-char GLI_fn_SinusEffect_vGetState(void);
-void GLI_fn_SinusEffect_vSetState(char cState);
-char GLI_fn_SinusEffect_cIsSecondViewportAffected(GLD_tdstViewportAttributes_* p_stViewportAttr);
-unsigned char HIE_fn_bInitCameraMatrixStack(GLD_tdstViewportAttributes_* p_stViewportAttr);
-void GAM_fn_vClipFixObject(GLD_tdstViewportAttributes_* p_stViewportAttr);
-void GAM_fn_vResetClipFixObject(GLD_tdstViewportAttributes_* p_stViewportAttr);
-void HIE_fn_vSendSPOToFixViewport(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask, int _lCullingResult);
-unsigned char HIE_fn_bSendSPOToFixViewport(GLD_tdstViewportAttributes_* p_stFixViewportAttr, int _lDrawMask)
-{
-    char cSaveGlobalFog;
-    char cSaveSinusEffectState;
-    HIE_tdstSuperObject_** hSPO;
-    short xI;
-
-    cSaveGlobalFog = GLI_cGlobalFogIsOn;
-    GLI_cGlobalFogIsOn = 0;
-    GLI_vFogOff();
-    cSaveSinusEffectState = GLI_fn_SinusEffect_vGetState();
-    if (!GLI_fn_SinusEffect_cIsSecondViewportAffected(p_stFixViewportAttr))
-        GLI_fn_SinusEffect_vSetState(0);
-    HIE_fn_bInitCameraMatrixStack(p_stFixViewportAttr);
-    for (xI = 0, hSPO = (HIE_tdstSuperObject_**)gd_hFixSPO; xI < g_xFixIndex; xI++, hSPO++)
-    {
-        if ((*hSPO)->ulFlags |= 0x40000)
-            GAM_fn_vClipFixObject(p_stFixViewportAttr);
-        HIE_fn_vSendSPOToFixViewport(p_stFixViewportAttr, (*hSPO), _lDrawMask & (*hSPO)->lDrawModeMask, 0);
-        if ((*hSPO)->ulFlags |= 0x40000)
-            GAM_fn_vResetClipFixObject(p_stFixViewportAttr);
-    }
-    GLI_fn_SinusEffect_vSetState(cSaveSinusEffectState);
-    GLI_cGlobalFogIsOn = cSaveGlobalFog;
-    if (cSaveGlobalFog)
-        GLI_vFogOn();
-    return 1;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieDraw.c lines 901–1066 */
-/* addr: 0x0031f0e0  size: 1392 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 901
- *   +0x0030 -> line 915
- *   +0x0034 -> line 908
- *   +0x0038 -> line 915
- *   +0x0044 -> line 928
- *   +0x0218 -> line 936
- *   +0x0228 -> line 938
- *   +0x0234 -> line 940
- *   +0x0238 -> line 942
- *   +0x023c -> line 943
- *   +0x0244 -> line 945
- *   +0x025c -> line 946
- *   +0x0264 -> line 949
- *   +0x0278 -> line 950
- *   +0x02a4 -> line 952
- *   +0x02a8 -> line 955
- *   +0x02ac -> line 954
- *   +0x02b4 -> line 956
- *   +0x02b8 -> line 954
- *   +0x02bc -> line 956
- *   +0x02c4 -> line 959
- *   +0x031c -> line 962
- *   +0x0320 -> line 961
- *   +0x0324 -> line 964
- *   +0x032c -> line 966
- *   +0x0334 -> line 972
- *   +0x0340 -> line 973
- *   +0x0344 -> line 976
- *   +0x0348 -> line 974
- *   +0x034c -> line 976
- *   +0x0354 -> line 986
- *   +0x035c -> line 992
- *   +0x03a4 -> line 993
- *   +0x03b8 -> line 994
- *   +0x03cc -> line 1002
- *   +0x03d8 -> line 1003
- *   +0x03e8 -> line 1006
- *   +0x03ec -> line 1007
- *   +0x0404 -> line 1008
- *   +0x0418 -> line 1015
- *   +0x044c -> line 1016
- *   +0x0460 -> line 1028
- *   +0x0468 -> line 1036
- *   +0x046c -> line 1037
- *   +0x0470 -> line 1036
- *   +0x0474 -> line 1037
- *   +0x04c0 -> line 1038
- *   +0x04cc -> line 1040
- *   +0x04d8 -> line 1041
- *   +0x04e8 -> line 1044
- *   +0x04ec -> line 1045
- *   +0x0504 -> line 1046
- *   +0x0514 -> line 1052
- *   +0x0518 -> line 1058
- *   +0x0548 -> line 1066
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void HIE_fn_vSendSPOToFixViewport(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask, int _lCullingResult)
-{
-    tdstStandardGame_* hStdGame;
-    float xPercent;
-    unsigned char ucNbRLIUse;
-    unsigned char ucIndex2;
-    unsigned char ucIndex1;
-    unsigned int ulCustomBit;
-    float xSphereRadius;
-    MTH3D_tdstVector_ stSphereCenter;
-    unsigned char bDisplayed;
-    COL_tdstBoundingSphere_* hBoundingSphere;
-    GLI_tdstLight_* hLight;
-    HIE_tdstSuperObject_* hChild;
-    /* TODO: decompile from asm/... */
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieDraw.c lines 797–886 */
-/* addr: 0x0031f650  size: 740 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 797
- *   +0x0010 -> line 802
- *   +0x0014 -> line 797
- *   +0x001c -> line 799
- *   +0x0020 -> line 797
- *   +0x004c -> line 810
- *   +0x0050 -> line 801
- *   +0x0054 -> line 810
- *   +0x0058 -> line 813
- *   +0x0064 -> line 814
- *   +0x006c -> line 815
- *   +0x0074 -> line 817
- *   +0x007c -> line 820
- *   +0x008c -> line 822
- *   +0x0098 -> line 823
- *   +0x00a0 -> line 824
- *   +0x00a4 -> line 829
- *   +0x00a8 -> line 826
- *   +0x00dc -> line 827
- *   +0x0108 -> line 829
- *   +0x0110 -> line 832
- *   +0x0120 -> line 834
- *   +0x0138 -> line 835
- *   +0x0140 -> line 839
- *   +0x0198 -> line 856
- *   +0x01a8 -> line 858
- *   +0x01c0 -> line 860
- *   +0x01c4 -> line 862
- *   +0x01c8 -> line 860
- *   +0x01cc -> line 862
- *   +0x01d8 -> line 863
- *   +0x01f0 -> line 866
- *   +0x01f8 -> line 867
- *   +0x022c -> line 872
- *   +0x0238 -> line 873
- *   +0x0270 -> line 877
- *   +0x027c -> line 881
- *   +0x0288 -> line 883
- *   +0x02a4 -> line 884
- *   +0x02b0 -> line 886
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void HIE_fn_hFindAllMirrorsInHierarchy(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, HIE_tdstSuperObject_** p_hHandleOfMirror, GEO_tdstGeometricObject_** p_hHandleOfGeometricMirror, short* p_shNbOfMirrors, short shNbMaxOfMirrors)
-{
-    MTH3D_tdstVector_* p_stMaxPoint;
-    MTH3D_tdstVector_* p_stMinPoint;
-    int lType;
-    MAT_tdstTransformation_ stIdentityMatrix;
-    MTH3D_tdstVector_ stMaxPoint;
-    MTH3D_tdstVector_ stMinPoint;
-    COL_tdstParallelBox_* hParallelBox;
-    float xSphereRadius;
-    MTH3D_tdstVector_ stSphereCenter;
-    COL_tdstBoundingSphere_* hBoundingSphere;
-    HIE_tdstSuperObject_* hChild;
-    /* TODO: decompile from asm/... */
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieDraw.c lines 770–785 */
-/* addr: 0x0031f940  size: 200 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 770
- *   +0x0010 -> line 775
- *   +0x0020 -> line 776
- *   +0x0028 -> line 779
- *   +0x0034 -> line 780
- *   +0x0098 -> line 781
- *   +0x00a0 -> line 782
- *   +0x00b0 -> line 784
- *   +0x00b4 -> line 785
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-/* Not original source, needs cleaning up: scoped auto_inline makes MWCC
- * inline the recursive call one level, as in retail. */
-#pragma auto_inline on
-int HIE_fn_bFindMirrorInHierarchy(HIE_tdstSuperObject_* _hSprObj)
-{
-    HIE_tdstSuperObject_* hChild;
-
-    if (_hSprObj->ulTypeOfLinkedObject & 0x250)
-        return 1;
-
-    for (hChild = _hSprObj->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn)
-    {
-        if (HIE_fn_bFindMirrorInHierarchy(hChild))
-            return 1;
-    }
-
-    return 0;
-}
-#pragma auto_inline reset
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieDraw.c lines 589–619 */
-/* addr: 0x0031fa10  size: 768 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 589
- *   +0x001c -> line 595
- *   +0x0030 -> line 600
- *   +0x0204 -> line 603
- *   +0x0208 -> line 604
- *   +0x020c -> line 603
- *   +0x0210 -> line 604
- *   +0x025c -> line 606
- *   +0x026c -> line 608
- *   +0x0274 -> line 609
- *   +0x027c -> line 613
- *   +0x0288 -> line 614
- *   +0x0298 -> line 615
- *   +0x02b8 -> line 617
- *   +0x02e8 -> line 619
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void HIE_fn_vSendCharacterDynShadowToViewPort(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask)
-{
-    GEO_tdstVisualSet_* hVisualSet;
-    HIE_tdstSuperObject_* hChild;
-    /* TODO: decompile from asm/... */
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieDraw.c lines 344–373 */
-/* addr: 0x0031fd10  size: 932 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 344
- *   +0x002c -> line 350
- *   +0x0034 -> line 352
- *   +0x020c -> line 354
- *   +0x025c -> line 356
- *   +0x0268 -> line 362
- *   +0x0274 -> line 364
- *   +0x0340 -> line 370
- *   +0x0350 -> line 372
- *   +0x0380 -> line 373
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void HIE_fn_vSendStaticWorldToViewport(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask, int _lCullingResult)
-{
-    HIE_tdstSuperObject_* hChild;
+    unsigned char ucOldHMUTempBloc;
+    unsigned char ucOldHMUNormalBloc;
+    short* p_hHandleOfElementForShadow;
+    GEO_tdstGeometricObject_** p_hHandleGeoShwObj;
+    short i;
+    GEO_tdstColor_ stShadowPolygonColor;
+    GLI_tdstMaterial_* s_hShadowPolygonVisualMaterialLocal;
     /* TODO: decompile from asm/... */
 }

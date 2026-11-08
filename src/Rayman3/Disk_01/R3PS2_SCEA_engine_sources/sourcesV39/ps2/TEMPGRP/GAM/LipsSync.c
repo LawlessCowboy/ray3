@@ -816,50 +816,10 @@ void fn_vLoadEngineClock(void);
 HIE_tdstSuperObject_* fn_hGetDebugCamera(int index);
 void CAM_fn_vAssignCameraToAViewport(int _lViewportNumber, HIE_tdstSuperObject_* _hCamera);
 
-void fn_vAnalyse3DOSSpecialInputActions(void)
-{
-    HIE_tdstSuperObject_* hCamera;
-    unsigned char bDoIt;
-
-    bDoIt = IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hScreenSnapShot) == 1;
-    if (bDoIt)
-    {
-        fn_vSaveEngineClock();
-        fn_vLoadEngineClock();
-    }
-
-    if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hDebugCamera) == 1 && g_stEngineStructure.h_DbgCamCharacter)
-    {
-        if (g_ucDebugCamera && !g_ucControlFrom2ndViewport)
-        {
-            g_ucControlFrom2ndViewport = 1;
-            g_stEngineStructure.h_StdCamCaracter = g_stEngineStructure.h_DbgCamCharacter;
-        }
-        else if (++g_ucDebugCamera < g_stEngineStructure.lNumberOfCameras)
-        {
-            g_ucControlFrom2ndViewport = 0;
-            hCamera = fn_hGetDebugCamera(g_ucDebugCamera);
-            if (hCamera)
-            {
-                CAM_fn_vAssignCameraToAViewport(0, hCamera);
-                if (g_ucDebugCamera == 1)
-                {
-                    CAM_fn_vAssignCameraToAViewport(1, g_stEngineStructure.h_StdCamCaracter);
-                    g_stEngineStructure.h_DbgCamCharacter = g_stEngineStructure.h_StdCamCaracter;
-                }
-                g_stEngineStructure.h_StdCamCaracter = fn_hGetDebugCamera(g_ucDebugCamera);
-            }
-            else
-                g_ucDebugCamera = 0;
-        }
-        else
-        {
-            g_stEngineStructure.h_StdCamCaracter = g_stEngineStructure.h_DbgCamCharacter;
-            CAM_fn_vAssignCameraToAViewport(0, g_stEngineStructure.h_StdCamCaracter);
-            g_ucDebugCamera = 0;
-        }
-    }
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void fn_vAnalyse3DOSSpecialInputActions(void);
+void fn_vPlayNewLipsSynchro(tdstAChannel_* p_stChannel, tdstFamilyList_* p_stFamily);
 
 int SND_fn_s32GetLastMarker(void);
 int fn_bGetVectorFromPhonem(MTH3D_tdstVector_* p_stVector, char cPhonem, tdstFamilyList_* p_stFamily);
@@ -869,6 +829,10 @@ void MAT_fn_vRemoveScale(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation
  * interpolation constant (f3) and stLastVector.y (f2); every source order
  * tried at level 3 swaps them (measured pragma sweep). */
 #pragma push
+#pragma optimization_level 4
+
+#pragma pop
+
 #pragma optimization_level 4
 void fn_vPlayNewLipsSynchro(tdstAChannel_* p_stChannel, tdstFamilyList_* p_stFamily)
 {
@@ -915,4 +879,49 @@ void fn_vPlayNewLipsSynchro(tdstAChannel_* p_stChannel, tdstFamilyList_* p_stFam
         cLastPhonem = '*';
     }
 }
-#pragma pop
+#pragma optimization_level reset
+
+void fn_vAnalyse3DOSSpecialInputActions(void)
+{
+    HIE_tdstSuperObject_* hCamera;
+    unsigned char bDoIt;
+
+    bDoIt = IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hScreenSnapShot) == 1;
+    if (bDoIt)
+    {
+        fn_vSaveEngineClock();
+        fn_vLoadEngineClock();
+    }
+
+    if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hDebugCamera) == 1 && g_stEngineStructure.h_DbgCamCharacter)
+    {
+        if (g_ucDebugCamera && !g_ucControlFrom2ndViewport)
+        {
+            g_ucControlFrom2ndViewport = 1;
+            g_stEngineStructure.h_StdCamCaracter = g_stEngineStructure.h_DbgCamCharacter;
+        }
+        else if (++g_ucDebugCamera < g_stEngineStructure.lNumberOfCameras)
+        {
+            g_ucControlFrom2ndViewport = 0;
+            hCamera = fn_hGetDebugCamera(g_ucDebugCamera);
+            if (hCamera)
+            {
+                CAM_fn_vAssignCameraToAViewport(0, hCamera);
+                if (g_ucDebugCamera == 1)
+                {
+                    CAM_fn_vAssignCameraToAViewport(1, g_stEngineStructure.h_StdCamCaracter);
+                    g_stEngineStructure.h_DbgCamCharacter = g_stEngineStructure.h_StdCamCaracter;
+                }
+                g_stEngineStructure.h_StdCamCaracter = fn_hGetDebugCamera(g_ucDebugCamera);
+            }
+            else
+                g_ucDebugCamera = 0;
+        }
+        else
+        {
+            g_stEngineStructure.h_StdCamCaracter = g_stEngineStructure.h_DbgCamCharacter;
+            CAM_fn_vAssignCameraToAViewport(0, g_stEngineStructure.h_StdCamCaracter);
+            g_ucDebugCamera = 0;
+        }
+    }
+}

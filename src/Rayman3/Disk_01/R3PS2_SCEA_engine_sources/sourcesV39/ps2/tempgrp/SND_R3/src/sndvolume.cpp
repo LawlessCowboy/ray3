@@ -1167,26 +1167,10 @@ float dB[128];
 unsigned int c_uiLanguages[6];
 tdstEngineStructure_ g_stEngineStructure;
 
-void impPS2glActiveTextureARB(unsigned int texture)
-{
-    tagGLcontext* gc;
-    int unit;
-
-    gc = &g_PS2glContext;
-    unit = texture;
-    if (unit < 0 || unit >= 2)
-    {
-        return;
-    }
-    gc->iCurTextureSet = texture;
-    gc->pCurTexture = &gc->TextureSet[unit];
-    gc->pstCurGsSetTex = &gc->astGsSetTex[unit];
-    gc->pvlistTexCoord = &gc->valistTexCoords[unit];
-    g_astGsSetTex = &gc->astGsSetTex[unit];
-    gc->pvcurColor = &gc->vacurColor[unit];
-    gc->pvlistColor = &gc->valistColor[unit];
-    gc->pvRasterTexCoord = &gc->RasterMultiTexCoords[unit];
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+extern "C" void impPS2glActiveTextureARB(unsigned int texture);
+unsigned char fn_bSetLanguage(void);
 
 unsigned char fn_bGetVolumeLineModifierString__FiPci(int s32_ModifierId, char* pch_Buffer, int s32_Size)
 {
@@ -1201,21 +1185,6 @@ struct CLanguageMng {
     static CLanguageMng* fs_roGetInst(void);
     void f_vSetCurrentLanguage(unsigned int uiLanguage);
 };
-}
-
-unsigned char fn_bSetLanguage(void)
-{
-    unsigned char bRet;
-    unsigned char ucLanguage;
-
-    bRet = 0;
-    ucLanguage = g_stEngineStructure.ucCurrentLanguage;
-    if (ucLanguage < 6)
-    {
-        usnd::CLanguageMng::fs_roGetInst()->f_vSetCurrentLanguage(c_uiLanguages[ucLanguage]);
-        bRet = 1;
-    }
-    return bRet;
 }
 
 unsigned char fn_bSetVolumeModifier__FPCci(char* ch_buffer, int s32_volume)
@@ -1293,4 +1262,40 @@ float int2dB__Fi(int s32_volume)
         s32_volume = 127;
 
     return dB[s32_volume];
+}
+
+unsigned char fn_bSetLanguage(void)
+{
+    unsigned char bRet;
+    unsigned char ucLanguage;
+
+    bRet = 0;
+    ucLanguage = g_stEngineStructure.ucCurrentLanguage;
+    if (ucLanguage < 6)
+    {
+        usnd::CLanguageMng::fs_roGetInst()->f_vSetCurrentLanguage(c_uiLanguages[ucLanguage]);
+        bRet = 1;
+    }
+    return bRet;
+}
+
+void impPS2glActiveTextureARB(unsigned int texture)
+{
+    tagGLcontext* gc;
+    int unit;
+
+    gc = &g_PS2glContext;
+    unit = texture;
+    if (unit < 0 || unit >= 2)
+    {
+        return;
+    }
+    gc->iCurTextureSet = texture;
+    gc->pCurTexture = &gc->TextureSet[unit];
+    gc->pstCurGsSetTex = &gc->astGsSetTex[unit];
+    gc->pvlistTexCoord = &gc->valistTexCoords[unit];
+    g_astGsSetTex = &gc->astGsSetTex[unit];
+    gc->pvcurColor = &gc->vacurColor[unit];
+    gc->pvlistColor = &gc->valistColor[unit];
+    gc->pvRasterTexCoord = &gc->RasterMultiTexCoords[unit];
 }

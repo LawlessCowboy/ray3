@@ -15,38 +15,21 @@ int g_bOptimizedWindowedMode;
 unsigned short GAM_g_uwLoadingLevel;
 int gpfnl_AddDisplayInfo;
 
-void GLI_vSetModifierIntensity(void)
-{
-    /* TODO: decompile from asm/... */
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void GLI_vSetModifierIntensity(void);
+void GLI_fn_vBlitSurfaceForBlitInBackBuffer(void);
+void GLI_fn_vFreeSurfaceForBlit(void);
+void fn_vSetUnusedTextures(void);
+void fn_RemoveTextureFromMaterial(void);
+void GLI_ClearZBufferRegion(void);
+void GLI_xSendListToViewport(GLD_tdstViewportAttributes_* p_stVpt);
+void GLI_xClearViewingList(void);
+int GLI_fnl_InitDll(void);
 
-void GLI_fn_vBlitSurfaceForBlitInBackBuffer(void)
+int GLI_fnl_InitDll(void)
 {
-}
-
-void GLI_fn_vFreeSurfaceForBlit(void)
-{
-}
-
-void fn_vSetUnusedTextures(void)
-{
-    static int start = 0; if (start++ < 10) printf("function %s not implemented\n", "fn_vSetUnusedTextures");
-}
-
-void fn_RemoveTextureFromMaterial(void)
-{
-    static int start = 0; if (start++ < 10) printf("function %s not implemented\n", "fn_RemoveTextureFromMaterial");
-}
-
-void GLI_ClearZBufferRegion(void)
-{
-    PS2glDepthMask(1);
-    PS2glClear(0xD56);
-}
-
-void GLI_xSendListToViewport(GLD_tdstViewportAttributes_* p_stVpt)
-{
-    GLI_DRV_xSendListToViewport(p_stVpt);
+    return 1;
 }
 
 void GLI_xClearViewingList(void)
@@ -55,7 +38,36 @@ void GLI_xClearViewingList(void)
     GLI_DRV_xClearViewingList();
 }
 
-int GLI_fnl_InitDll(void)
+void GLI_xSendListToViewport(GLD_tdstViewportAttributes_* p_stVpt)
 {
-    return 1;
+    GLI_DRV_xSendListToViewport(p_stVpt);
+}
+
+void GLI_ClearZBufferRegion(void)
+{
+    PS2glDepthMask(1);
+    PS2glClear(0xD56);
+}
+
+void fn_RemoveTextureFromMaterial(void)
+{
+    static int start = 0; if (start++ < 10) printf("function %s not implemented\n", "fn_RemoveTextureFromMaterial");
+}
+
+void fn_vSetUnusedTextures(void)
+{
+    static int start = 0; if (start++ < 10) printf("function %s not implemented\n", "fn_vSetUnusedTextures");
+}
+
+void GLI_fn_vFreeSurfaceForBlit(void)
+{
+}
+
+void GLI_fn_vBlitSurfaceForBlitInBackBuffer(void)
+{
+}
+
+void GLI_vSetModifierIntensity(void)
+{
+    /* TODO: decompile from asm/... */
 }
