@@ -1,7 +1,3 @@
-/* PS2GL is built with -inline on, which only inlines helpers defined earlier;
-   deferring codegen lets the double wrappers inline the float recorders that
-   are defined after them (reverse address order). */
-#pragma defer_codegen on
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c */
 /* Language: C */
 /* Compiler: MW MIPS C Compiler */

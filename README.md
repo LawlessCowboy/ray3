@@ -113,19 +113,20 @@ The evidence-backed baseline compiler profile is:
 
 ```text
 -g -opt level=3 -farcall off -sdatathreshold 8 \
-   -inline on -strings reuse,nopool,readonly -enum int \
+   -inline on -inline deferred -strings reuse,nopool,readonly -enum int \
    -Cpp_exceptions off -pragma "fast_fptosi on" -pragma "padloop on" \
    -pragma "optimize_for_size off"
 ```
 
+Deferred inlining applies to game and library code alike: retail emits every
+unit's functions last-defined-first, and the sources keep that original
+definition order (reverse retail address order).
+
 Game sources (`Disk_01/R3PS2_SCEA_engine_sources`) additionally use
-`-pragma "dividefix on" -inline deferred -O3,p`:
+`-pragma "dividefix on" -O3,p`:
 
 - retail game code pads a `div.s` followed by a branch or call with two nops,
   while the PS2GL library code does not;
-- retail game objects list functions in reverse source order, which is what
-  deferred inlining emits (it also lets a function inline a helper defined
-  later in our address-ordered sources);
 - `-O3,p` is not equivalent to `-opt level=3` plus the `optimize_for_size`
   pragma: it pads loop-head branch targets to 8 bytes with a nop and changes
   some scheduling, exactly as retail game code does (+48 game matches, none
