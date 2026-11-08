@@ -72,48 +72,17 @@ extern short INOPS2_fn_wJoyCheckConnection(short _wJoystickNum);
 extern short INOPS2_fn_wJoyGetJoystickCaps(int _unused, void* _p_stJoyCaps);
 extern short INOPS2_fn_wReadJoystick(stDevice* _p_stDev);
 
-stDevice* INO_fn_hCreateJoystickDevice(short _wPort, short _wHistoricSize)
-{
-    stDevice* p_stDev;
-
-    if (INOPS2_fn_wRegisterJoystick(_wPort) != 1)
-    {
-        return NULL;
-    }
-
-    p_stDev = (stDevice*)HMU_fn_p_vMalloc(sizeof(stDevice), 1);
-    if (p_stDev)
-    {
-        p_stDev->m_uwType = 0x10;
-        p_stDev->m_wPort = _wPort;
-        p_stDev->m_p_stCaps = (int)HMU_fn_p_vMalloc(0x58, 1);
-        if (p_stDev->m_p_stCaps)
-        {
-            memset((void*)p_stDev->m_p_stCaps, 0, 0x58);
-            INOPS2_fn_wJoyGetJoystickCaps(p_stDev->m_wPort, (void*)p_stDev->m_p_stCaps);
-            p_stDev->m_p_stState = (anon_0*)HMU_fn_p_vMalloc(0x60, 1);
-            if (p_stDev->m_p_stState)
-            {
-                memset(p_stDev->m_p_stState, 0, 0x60);
-                p_stDev->m_p_stLastState = (anon_0*)HMU_fn_p_vMalloc(0x60, 1);
-                if (p_stDev->m_p_stLastState)
-                {
-                    memset(p_stDev->m_p_stLastState, 0, 0x60);
-                    if (INOPS2_fn_wJoyCheckConnection(p_stDev->m_wPort) == 1)
-                    {
-                        p_stDev->m_p_stState->m_ucStatus |= 1;
-                    }
-                    p_stDev->m_pfnRead = INOPS2_fn_wReadJoystick;
-                    return p_stDev;
-                }
-                HMU_fn_vFree((void**)&p_stDev->m_p_stState, 1);
-            }
-            HMU_fn_vFree((void**)&p_stDev->m_p_stCaps, 1);
-        }
-        HMU_fn_vFree((void**)&p_stDev, 1);
-    }
-    return NULL;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+stDevice* INO_fn_hCreateJoystickDevice(short _wPort, short _wHistoricSize);
+short INO_fn_wInvalidateHandle(stDevice** hDev);
+int INO_fn_wIsJoyConnected(int JoyNb);
+short INO_fn_wIsConnectedFast(stDevice* _hDev);
+short INO_fn_wReadAllDevices(unsigned short _uwType, short _wMode);
+short INO_fn_wDeactivateDevice(stDevice* _hDev);
+short INO_fn_wActivateDevice(stDevice* _hDev);
+stDevice* INO_fn_hCreateDevice(unsigned short _uwType, short _wPort, short _wHistoricSize);
+void INO_fn_vRelease(void);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ino\inomain.c lines 487–489 */
 /* addr: 0x002ee880  size: 12 bytes */
@@ -123,11 +92,6 @@ stDevice* INO_fn_hCreateJoystickDevice(short _wPort, short _wHistoricSize)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-short INO_fn_wInvalidateHandle(stDevice** hDev)
-{
-    *(unsigned int*)hDev = 0;
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ino\inomain.c lines 453–476 */
 /* addr: 0x002ee890  size: 172 bytes */
@@ -154,34 +118,6 @@ short INO_fn_wInvalidateHandle(stDevice** hDev)
  */
 short INO_fn_wIsJoystickConnected(stDevice* _hDev);
 
-int INO_fn_wIsJoyConnected(int JoyNb)
-{
-    short xIndex;
-    stDevice** p_hDevice;
-    int iResult;
-    stDevice* hDev;
-
-    iResult = 0;
-    if (!(INO_gs_ucINOInitOK ? 1 : 0))
-        return iResult;
-
-    for (xIndex = 0, p_hDevice = (stDevice**)INO_gs_a_tdhDevice; xIndex < INO_gs_xNbDevice; xIndex++, p_hDevice++)
-    {
-        hDev = *p_hDevice;
-        if (hDev->m_uwType & 0x10)
-        {
-            if (JoyNb-- == 0)
-            {
-                iResult = INO_fn_wIsJoystickConnected(hDev);
-                if (iResult == -1)
-                    iResult = 0;
-                break;
-            }
-        }
-    }
-    return iResult;
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ino\inomain.c lines 422–450 */
 /* addr: 0x002ee940  size: 124 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -202,32 +138,6 @@ int INO_fn_wIsJoyConnected(int JoyNb)
  * it, so the declaration seen by this unit cannot be a plain short (that
  * removes the truncation and shrinks the function by 28 bytes). */
 int INO_fn_wIsJoystickConnectedFast(stDevice* _hDev);
-
-short INO_fn_wIsConnectedFast(stDevice* _hDev)
-{
-    short wResult;
-
-    switch (_hDev->m_uwType)
-    {
-    case 0x10:
-        wResult = INO_fn_wIsJoystickConnectedFast(_hDev);
-        break;
-    default:
-        wResult = -1;
-        break;
-    }
-
-    if (wResult == 1)
-    {
-        _hDev->m_p_stState->m_ucStatus |= 1;
-    }
-    else
-    {
-        _hDev->m_p_stState->m_ucStatus &= ~1;
-    }
-
-    return wResult;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ino\inomain.c lines 333–387 */
 /* addr: 0x002ee9c0  size: 624 bytes */
@@ -279,6 +189,169 @@ short INO_fn_wIsConnectedFast(stDevice* _hDev)
  * The local declaration order below reproduces the retail register
  * allocation (wResult in $s4, wOneGood in $s5, hDev in $s6).
  */
+
+/* Inlined helpers (no out-of-line copies in the ELF); bodies recovered from
+ * the expansions in INO_fn_wActivateDevice/INO_fn_wDeactivateDevice. */
+inline short INO_fn_wIsInit(void)
+{
+    return INO_gs_ucINOInitOK ? 1 : 0;
+}
+
+inline short INO_fn_wIsHandleValid(stDevice* _hDev)
+{
+    stDevice** p_hDevice;
+    short xIndex;
+
+    if (_hDev && (INO_gs_ucINOInitOK ? 1 : 0))
+    {
+        for (xIndex = INO_gs_xNbDevice - 1, p_hDevice = (stDevice**)&INO_gs_a_tdhDevice[xIndex]; xIndex >= 0; xIndex--, p_hDevice--)
+        {
+            if (*p_hDevice == _hDev)
+                return 1;
+        }
+    }
+    return 0;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ino\inomain.c lines 318–327 */
+/* addr: 0x002eec30  size: 176 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 318
+ *   +0x001c -> line 320
+ *   +0x008c -> line 322
+ *   +0x0090 -> line 323
+ *   +0x0094 -> line 322
+ *   +0x009c -> line 323
+ *   +0x00a4 -> line 326
+ *   +0x00a8 -> line 327
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ino\inomain.c lines 305–314 */
+/* addr: 0x002eece0  size: 176 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 305
+ *   +0x001c -> line 307
+ *   +0x008c -> line 309
+ *   +0x0090 -> line 310
+ *   +0x0094 -> line 309
+ *   +0x009c -> line 310
+ *   +0x00a4 -> line 313
+ *   +0x00a8 -> line 314
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ino\inomain.c lines 196–238 */
+/* addr: 0x002eed90  size: 140 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 196
+ *   +0x0004 -> line 199
+ *   +0x0008 -> line 196
+ *   +0x000c -> line 199
+ *   +0x001c -> line 201
+ *   +0x0024 -> line 203
+ *   +0x0034 -> line 208
+ *   +0x003c -> line 211
+ *   +0x0050 -> line 214
+ *   +0x0058 -> line 226
+ *   +0x0060 -> line 228
+ *   +0x0080 -> line 238
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ino\inomain.c lines 169–181 */
+/* addr: 0x002eee20  size: 252 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 169
+ *   +0x0014 -> line 172
+ *   +0x0020 -> line 174
+ *   +0x0038 -> line 176
+ *   +0x00c0 -> line 177
+ *   +0x00c8 -> line 176
+ *   +0x00cc -> line 177
+ *   +0x00e0 -> line 179
+ *   +0x00e4 -> line 181
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void INO_fn_vRelease(void)
+{
+    short xIndex;
+    stDevice* p_stDev;
+
+    if (INO_gs_ucINOInitOK)
+    {
+        for (xIndex = INO_gs_xNbDevice - 1; xIndex >= 0; xIndex--)
+        {
+            /* The retail source released a device with a single statement group:
+             * the range test, the four frees and the removal from the device
+             * table all share one source line. */
+            if (xIndex < INO_gs_xNbDevice) { p_stDev = (stDevice*)INO_gs_a_tdhDevice[xIndex]; HMU_fn_vFree((void**)&p_stDev->m_p_stState, 1); HMU_fn_vFree((void**)&p_stDev->m_p_stCaps, 1); HMU_fn_vFree((void**)&p_stDev->m_p_stLastState, 1); HMU_fn_vFree((void**)&p_stDev, 1); INO_gs_xNbDevice--; INO_gs_a_tdhDevice[xIndex] = INO_gs_a_tdhDevice[INO_gs_xNbDevice]; INO_gs_a_tdhDevice[INO_gs_xNbDevice] = 0; }
+        }
+    }
+    INO_gs_ucINOInitOK = 0;
+}
+
+stDevice* INO_fn_hCreateDevice(unsigned short _uwType, short _wPort, short _wHistoricSize)
+{
+    stDevice* p_stDev;
+
+    if (!(INO_gs_ucINOInitOK ? 1 : 0))
+    {
+        return NULL;
+    }
+
+    if (INO_gs_xNbDevice >= 2)
+    {
+        return NULL;
+    }
+
+    switch (_uwType)
+    {
+    case 0x10:
+        p_stDev = INO_fn_hCreateJoystickDevice(_wPort, _wHistoricSize);
+        break;
+    default:
+        p_stDev = NULL;
+        break;
+    }
+
+    if (p_stDev)
+    {
+        INO_gs_a_tdhDevice[INO_gs_xNbDevice] = (int)p_stDev;
+        INO_gs_xNbDevice++;
+    }
+
+    return p_stDev;
+}
+
+short INO_fn_wActivateDevice(stDevice* _hDev)
+{
+    if (INO_fn_wIsInit())
+    if (INO_fn_wIsHandleValid(_hDev))
+    {
+        _hDev->m_p_stState->m_ucStatus |= 2;
+        return 1;
+    }
+
+    return 0;
+}
+
+short INO_fn_wDeactivateDevice(stDevice* _hDev)
+{
+    if (INO_fn_wIsInit() && INO_fn_wIsHandleValid(_hDev))
+    {
+        _hDev->m_p_stState->m_ucStatus &= ~2;
+        return 1;
+    }
+
+    return 0;
+}
+
 short INO_fn_wReadAllDevices(unsigned short _uwType, short _wMode)
 {
     short wReadResult;
@@ -371,161 +444,105 @@ short INO_fn_wReadAllDevices(unsigned short _uwType, short _wMode)
     return INO_fn_wReadAllDevices(_uwType, 1);
 }
 
-/* Inlined helpers (no out-of-line copies in the ELF); bodies recovered from
- * the expansions in INO_fn_wActivateDevice/INO_fn_wDeactivateDevice. */
-inline short INO_fn_wIsInit(void)
+short INO_fn_wIsConnectedFast(stDevice* _hDev)
 {
-    return INO_gs_ucINOInitOK ? 1 : 0;
-}
+    short wResult;
 
-inline short INO_fn_wIsHandleValid(stDevice* _hDev)
-{
-    stDevice** p_hDevice;
-    short xIndex;
-
-    if (_hDev && (INO_gs_ucINOInitOK ? 1 : 0))
-    {
-        for (xIndex = INO_gs_xNbDevice - 1, p_hDevice = (stDevice**)&INO_gs_a_tdhDevice[xIndex]; xIndex >= 0; xIndex--, p_hDevice--)
-        {
-            if (*p_hDevice == _hDev)
-                return 1;
-        }
-    }
-    return 0;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ino\inomain.c lines 318–327 */
-/* addr: 0x002eec30  size: 176 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 318
- *   +0x001c -> line 320
- *   +0x008c -> line 322
- *   +0x0090 -> line 323
- *   +0x0094 -> line 322
- *   +0x009c -> line 323
- *   +0x00a4 -> line 326
- *   +0x00a8 -> line 327
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-short INO_fn_wDeactivateDevice(stDevice* _hDev)
-{
-    if (INO_fn_wIsInit() && INO_fn_wIsHandleValid(_hDev))
-    {
-        _hDev->m_p_stState->m_ucStatus &= ~2;
-        return 1;
-    }
-
-    return 0;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ino\inomain.c lines 305–314 */
-/* addr: 0x002eece0  size: 176 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 305
- *   +0x001c -> line 307
- *   +0x008c -> line 309
- *   +0x0090 -> line 310
- *   +0x0094 -> line 309
- *   +0x009c -> line 310
- *   +0x00a4 -> line 313
- *   +0x00a8 -> line 314
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-short INO_fn_wActivateDevice(stDevice* _hDev)
-{
-    if (INO_fn_wIsInit())
-    if (INO_fn_wIsHandleValid(_hDev))
-    {
-        _hDev->m_p_stState->m_ucStatus |= 2;
-        return 1;
-    }
-
-    return 0;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ino\inomain.c lines 196–238 */
-/* addr: 0x002eed90  size: 140 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 196
- *   +0x0004 -> line 199
- *   +0x0008 -> line 196
- *   +0x000c -> line 199
- *   +0x001c -> line 201
- *   +0x0024 -> line 203
- *   +0x0034 -> line 208
- *   +0x003c -> line 211
- *   +0x0050 -> line 214
- *   +0x0058 -> line 226
- *   +0x0060 -> line 228
- *   +0x0080 -> line 238
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-stDevice* INO_fn_hCreateDevice(unsigned short _uwType, short _wPort, short _wHistoricSize)
-{
-    stDevice* p_stDev;
-
-    if (!(INO_gs_ucINOInitOK ? 1 : 0))
-    {
-        return NULL;
-    }
-
-    if (INO_gs_xNbDevice >= 2)
-    {
-        return NULL;
-    }
-
-    switch (_uwType)
+    switch (_hDev->m_uwType)
     {
     case 0x10:
-        p_stDev = INO_fn_hCreateJoystickDevice(_wPort, _wHistoricSize);
+        wResult = INO_fn_wIsJoystickConnectedFast(_hDev);
         break;
     default:
-        p_stDev = NULL;
+        wResult = -1;
         break;
     }
 
-    if (p_stDev)
+    if (wResult == 1)
     {
-        INO_gs_a_tdhDevice[INO_gs_xNbDevice] = (int)p_stDev;
-        INO_gs_xNbDevice++;
+        _hDev->m_p_stState->m_ucStatus |= 1;
+    }
+    else
+    {
+        _hDev->m_p_stState->m_ucStatus &= ~1;
     }
 
-    return p_stDev;
+    return wResult;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ino\inomain.c lines 169–181 */
-/* addr: 0x002eee20  size: 252 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 169
- *   +0x0014 -> line 172
- *   +0x0020 -> line 174
- *   +0x0038 -> line 176
- *   +0x00c0 -> line 177
- *   +0x00c8 -> line 176
- *   +0x00cc -> line 177
- *   +0x00e0 -> line 179
- *   +0x00e4 -> line 181
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-void INO_fn_vRelease(void)
+int INO_fn_wIsJoyConnected(int JoyNb)
 {
     short xIndex;
-    stDevice* p_stDev;
+    stDevice** p_hDevice;
+    int iResult;
+    stDevice* hDev;
 
-    if (INO_gs_ucINOInitOK)
+    iResult = 0;
+    if (!(INO_gs_ucINOInitOK ? 1 : 0))
+        return iResult;
+
+    for (xIndex = 0, p_hDevice = (stDevice**)INO_gs_a_tdhDevice; xIndex < INO_gs_xNbDevice; xIndex++, p_hDevice++)
     {
-        for (xIndex = INO_gs_xNbDevice - 1; xIndex >= 0; xIndex--)
+        hDev = *p_hDevice;
+        if (hDev->m_uwType & 0x10)
         {
-            /* The retail source released a device with a single statement group:
-             * the range test, the four frees and the removal from the device
-             * table all share one source line. */
-            if (xIndex < INO_gs_xNbDevice) { p_stDev = (stDevice*)INO_gs_a_tdhDevice[xIndex]; HMU_fn_vFree((void**)&p_stDev->m_p_stState, 1); HMU_fn_vFree((void**)&p_stDev->m_p_stCaps, 1); HMU_fn_vFree((void**)&p_stDev->m_p_stLastState, 1); HMU_fn_vFree((void**)&p_stDev, 1); INO_gs_xNbDevice--; INO_gs_a_tdhDevice[xIndex] = INO_gs_a_tdhDevice[INO_gs_xNbDevice]; INO_gs_a_tdhDevice[INO_gs_xNbDevice] = 0; }
+            if (JoyNb-- == 0)
+            {
+                iResult = INO_fn_wIsJoystickConnected(hDev);
+                if (iResult == -1)
+                    iResult = 0;
+                break;
+            }
         }
     }
-    INO_gs_ucINOInitOK = 0;
+    return iResult;
+}
+
+short INO_fn_wInvalidateHandle(stDevice** hDev)
+{
+    *(unsigned int*)hDev = 0;
+    return 1;
+}
+
+stDevice* INO_fn_hCreateJoystickDevice(short _wPort, short _wHistoricSize)
+{
+    stDevice* p_stDev;
+
+    if (INOPS2_fn_wRegisterJoystick(_wPort) != 1)
+    {
+        return NULL;
+    }
+
+    p_stDev = (stDevice*)HMU_fn_p_vMalloc(sizeof(stDevice), 1);
+    if (p_stDev)
+    {
+        p_stDev->m_uwType = 0x10;
+        p_stDev->m_wPort = _wPort;
+        p_stDev->m_p_stCaps = (int)HMU_fn_p_vMalloc(0x58, 1);
+        if (p_stDev->m_p_stCaps)
+        {
+            memset((void*)p_stDev->m_p_stCaps, 0, 0x58);
+            INOPS2_fn_wJoyGetJoystickCaps(p_stDev->m_wPort, (void*)p_stDev->m_p_stCaps);
+            p_stDev->m_p_stState = (anon_0*)HMU_fn_p_vMalloc(0x60, 1);
+            if (p_stDev->m_p_stState)
+            {
+                memset(p_stDev->m_p_stState, 0, 0x60);
+                p_stDev->m_p_stLastState = (anon_0*)HMU_fn_p_vMalloc(0x60, 1);
+                if (p_stDev->m_p_stLastState)
+                {
+                    memset(p_stDev->m_p_stLastState, 0, 0x60);
+                    if (INOPS2_fn_wJoyCheckConnection(p_stDev->m_wPort) == 1)
+                    {
+                        p_stDev->m_p_stState->m_ucStatus |= 1;
+                    }
+                    p_stDev->m_pfnRead = INOPS2_fn_wReadJoystick;
+                    return p_stDev;
+                }
+                HMU_fn_vFree((void**)&p_stDev->m_p_stState, 1);
+            }
+            HMU_fn_vFree((void**)&p_stDev->m_p_stCaps, 1);
+        }
+        HMU_fn_vFree((void**)&p_stDev, 1);
+    }
+    return NULL;
 }

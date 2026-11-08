@@ -3,7 +3,6 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
-#pragma defer_codegen off
 
 /* Recovered from the original PS2 MTH floating-point helper convention.
    MTH_SQRT_TO carries no explicit nop: MWCC inserts the sqrt.s hazard nop
@@ -3945,146 +3944,33 @@ inline void CSH_fn_vFastAlign(CAM_Shooter_* pcs)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_StrafeLockMode(CAM_Shooter_* pcs)
-{
-    float xNorm;
-    float xD2r;
-    float xTheta;
-    float xAlpha;
-    MTH3D_tdstVector_ vTemp2;
-    MTH3D_tdstVector_ vTemp1;
 
-    fn_GetPersoSighting(&pcs->vCameraSighting, pcs->pCamera);
-    if (*(char *)pcs->abExternDsgVarBoolean[0])
-    {
-        CSH_fn_vCheckRestart(pcs);
-
-        pcs->xTheta_Default = stCamShooter_CV.xTheta_Init;
-        pcs->xTheta_Min = -0.8f;
-        pcs->xTheta_Max = 1.2f;
-        pcs->xDistMax = pcs->xDistMax_Default = stCamShooter_CV.xDistMax_Init;
-
-        CSH_fn_vReadInputs(pcs);
-
-        if (*(char *)pcs->abExternDsgVarBoolean[1])
-        {
-            pcs->pLockedActor = *(HIE_tdstSuperObject_ **)pcs->apExternDsgVarPerso[0];
-            if (fn_bIsValidObject(pcs->pLockedActor))
-            {
-                vTemp1.xX = pcs->pTargetActor_position->xX - pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xX;
-                vTemp1.xY = pcs->pTargetActor_position->xY - pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xY;
-                vTemp1.xZ = pcs->pTargetActor_position->xZ - pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xZ;
-                vTemp2.xX = vTemp1.xX; vTemp2.xY = vTemp1.xY;
-                vTemp2.xZ = 0.0f;
-                xD2r = fn_xAngleVectorVertical(&vTemp1, &vTemp2);
-                fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x242, 0, 1, 0.15f + CSH_MTH_xSign(vTemp1.xZ) * CSH_MTH_xAbs(xD2r));
-                fn_GetPersoNegativeSighting(&vTemp2, pcs->pTargetActor);
-                vTemp2.xZ = 0.0f;
-                if (vTemp2.xX != 0.0f || vTemp2.xY != 0.0f || vTemp2.xZ != 0.0f)
-                {
-                    float xInvNorm;
-
-                    MTH_VECTOR_NORM_TO(xInvNorm, vTemp2);
-                    if (xInvNorm != 0.0f)
-                    {
-                        xInvNorm = 1.0f / xInvNorm;
-                        pcs->vRefAxis.xX = xInvNorm * vTemp2.xX;
-                        pcs->vRefAxis.xY = xInvNorm * vTemp2.xY;
-                        pcs->vRefAxis.xZ = xInvNorm * vTemp2.xZ;
-                    }
-                    else
-                        pcs->vRefAxis = vTemp2;
-                }
-                else
-                    fn_GetPersoNegativeSighting(&vTemp2, pcs->pTargetActor);
-            }
-            else
-            {
-                fn_GetPersoNegativeSighting(&vTemp2, pcs->pTargetActor);
-                vTemp2.xZ = 0.0f;
-                if (vTemp2.xX != 0.0f || vTemp2.xY != 0.0f || vTemp2.xZ != 0.0f)
-                {
-                    float xInvNorm;
-
-                    MTH_VECTOR_NORM_TO(xInvNorm, vTemp2);
-                    if (xInvNorm != 0.0f)
-                    {
-                        xInvNorm = 1.0f / xInvNorm;
-                        pcs->vRefAxis.xX = xInvNorm * vTemp2.xX;
-                        pcs->vRefAxis.xY = xInvNorm * vTemp2.xY;
-                        pcs->vRefAxis.xZ = xInvNorm * vTemp2.xZ;
-                    }
-                    else
-                        pcs->vRefAxis = vTemp2;
-                }
-                else
-                    fn_GetPersoNegativeSighting(&vTemp2, pcs->pTargetActor);
-                fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x242, 0, 1, 0.15f);
-            }
-        }
-        else
-        {
-            pcs->pLockedActor = 0;
-            fn_GetPersoNegativeSighting(&vTemp2, pcs->pTargetActor);
-            vTemp2.xZ = 0.0f;
-            if (vTemp2.xX != 0.0f || vTemp2.xY != 0.0f || vTemp2.xZ != 0.0f)
-            {
-                float xInvNorm;
-
-                MTH_VECTOR_NORM_TO(xInvNorm, vTemp2);
-                if (xInvNorm != 0.0f)
-                {
-                    xInvNorm = 1.0f / xInvNorm;
-                    pcs->vRefAxis.xX = xInvNorm * vTemp2.xX;
-                    pcs->vRefAxis.xY = xInvNorm * vTemp2.xY;
-                    pcs->vRefAxis.xZ = xInvNorm * vTemp2.xZ;
-                }
-                else
-                    pcs->vRefAxis = vTemp2;
-            }
-            else
-                fn_GetPersoNegativeSighting(&vTemp2, pcs->pTargetActor);
-            fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x242, 0, 1, 0.15f);
-        }
-
-        {
-            tdstCineinfo_* hLocalCineInfo;
-
-            hLocalCineInfo = hCineInfo;
-            *(int *)&hLocalCineInfo->stForceRefAxisY.xX = *(int *)&pcs->vRefAxis.xX; *(int *)&hLocalCineInfo->stForceRefAxisY.xY = *(int *)&pcs->vRefAxis.xY; *(int *)&hLocalCineInfo->stForceRefAxisY.xZ = *(int *)&pcs->vRefAxis.xZ;
-            *(int *)&hLocalCineInfo->stForceRefAxisZ.xX = vVectorZ.i[0]; *(int *)&hLocalCineInfo->stForceRefAxisZ.xY = vVectorZ.i[1]; *(int *)&hLocalCineInfo->stForceRefAxisZ.xZ = vVectorZ.i[2];
-            CAM_fn_vSetResetInternalFlag(hLocalCineInfo, &hLocalCineInfo->hCurrent->uwIAFlags, &hLocalCineInfo->hVisibility->uwIAFlags, &hLocalCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);
-        }
-
-        if (!bGCubeVersion)
-        {
-            if (pcs->axExternDsgVarFloat[0]) { xD2r = *(float *)pcs->axExternDsgVarFloat[0] * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime; if (xD2r == 0.0f) xD2r = 0.001f * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime; } else xD2r = 0.001f * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime; if (lInputAxisZ < -25) xTheta = 0.45f * (((float)(lInputAxisZ + 25) / 75.0f) * ((float)(lInputAxisZ + 25) / 75.0f)); else if (lInputAxisZ >= 26) xTheta = 0.45f * (-((float)(lInputAxisZ - 25) / 75.0f) * ((float)(lInputAxisZ - 25) / 75.0f)); else xTheta = 0.0f; if (lInputAxisV < -25) xAlpha = 0.45f * (((float)(lInputAxisV + 25) / 75.0f) * ((float)(lInputAxisV + 25) / 75.0f)); else if (lInputAxisV >= 26) xAlpha = 0.45f * (-((float)(lInputAxisV - 25) / 75.0f) * ((float)(lInputAxisV - 25) / 75.0f)); else xAlpha = 0.0f; if (!(CSH_MTH_xAbs(pcs->xAlphaLock - xAlpha) < xD2r)) pcs->xAlphaLock += pcs->xAlphaLock < xAlpha ? xD2r : -xD2r; else pcs->xAlphaLock = xAlpha; if (!(CSH_MTH_xAbs(pcs->xThetaLock - xTheta) < xD2r)) pcs->xThetaLock += pcs->xThetaLock < xTheta ? xD2r : -xD2r; else pcs->xThetaLock = xTheta;
-        }
-
-        CSH_fn_vUpdateViewFinder(pcs);
-
-        pcs->xTheta_Current = hCineInfo->hCurrent->xAngleTheta;
-        if (!CSH_fn_bIsInComport(pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind, pcs->pMAComport_Climb) &&
-            !CSH_fn_bIsInComport(pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind, pcs->pMAComport_Hang) &&
-            pcs->xTheta_Current < pcs->xTheta_Default)
-        {
-            xNorm = 3.0f + (pcs->xDistMax_Default - 3.0f) * ((pcs->xTheta_Current - pcs->xTheta_Min) / (pcs->xTheta_Default - pcs->xTheta_Min));
-            if (pcs->xDistMax > xNorm)
-                pcs->xDistMax = xNorm;
-        }
-
-        CSH_fn_vComputeTargetAngle(pcs);
-
-        CSH_fn_vCheckCameraCollision(pcs);
-
-        CSH_fn_vCheckFastAlign(pcs);
-        if (pcs->bFastAlign) CSH_fn_vFastAlign(pcs);
-        fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x23C, 0, 1, pcs->xDistMax);
-        fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x23D, 0, 1, pcs->xDistMax);
-        return 0;
-    }
-    return 2;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+unsigned char fn_StrafeLockMode(CAM_Shooter_* pcs);
+unsigned char fn_MarioMode(CAM_Shooter_* pcs);
+void fn_CreateRaycastDirection(CAM_Shooter_* pcs, MTH3D_tdstVector_* vRayCastDirection, MTH3D_tdstVector_* vCentralSegment);
+void fn_PutCameraAgainstWall(CAM_Shooter_* pcs, float xDistanceToTarget);
+void fn_GetTheoreticalPosition_UsingRealPosition(MTH3D_tdstVector_* vTPosition, CAM_Shooter_* pcs, unsigned int iMode);
+unsigned char fn_BackMode(CAM_Shooter_* pcs);
+void fn_ChangeCameraRealParameter(tdstCineinfo_* hCineInfo, tdeProcedureId_ eProcedureId, int lTypeOfChange, int lChangingMode, float xValue);
+void fn_ChangeCameraVectorParameter(tdstCineinfo_* hCineInfo, tdeProcedureId_ eProcedureId, int lTypeOfChange, int lChangingMode, MTH3D_tdstVector_* p_stValue);
+void fn_InitCSH_Common(void);
+tdstNodeInterpret_* fn_p_SetGCubeVersion(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_SetSkin(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_RemoveMainActor(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_AddMainActor(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_RegisterDesignVar(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_GetViewFinderVMT(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_GetViewFinderDistance(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_GetMainActorComports(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_StrafeLockMode(HIE_tdstSuperObject_* hCamera, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_InitStrafeLockMode(HIE_tdstSuperObject_* hCamera, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_MarioMode(HIE_tdstSuperObject_* hCamera, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_InitMarioMode(HIE_tdstSuperObject_* hCamera, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_BackMode(HIE_tdstSuperObject_* hCamera, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_InitBackMode(HIE_tdstSuperObject_* hCamera, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_InitCamShooter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 3407–3465 */
 /* addr: 0x002432c0  size: 1160 bytes */
@@ -4141,85 +4027,6 @@ unsigned char fn_StrafeLockMode(CAM_Shooter_* pcs)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-inline void fn_InitStrafeLockMode(CAM_Shooter_* pcs)
-{
-    float xNorm;
-    float xX;
-    MTH3D_tdstVector_ vShiftPos;
-    MTH3D_tdstVector_ vTemp1;
-
-    vShiftPos.xX = 0.0f;
-    vShiftPos.xY = 0.0f;
-    vShiftPos.xZ = 2.5f;
-    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x80);
-    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 4);
-    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x247, 0, 1, bGCubeVersion ? 60.0f : 5.7f);
-    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 1);
-    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x10);
-    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 8);
-    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 2);
-    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x20);
-    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x40);
-    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 8);
-    fn_ChangeCameraVectorParameter(hCineInfo, (tdeProcedureId_)0x23B, 0, 1, &vShiftPos);
-    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x240, 0, 1, 0.0f);
-    if (GAM_MultiVP_fn_ucGetNumberOfPlayers() == 2)
-    {
-        vShiftPos.xX = 0.0f;
-        vShiftPos.xY = 0.0f;
-        vShiftPos.xZ = 2.5f;
-        fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 0, 1, bGCubeVersion ? 60.0f : 26.0f);
-    }
-    else
-        fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 0, 1, bGCubeVersion ? 60.0f : 36.0f);
-
-    pcs->xTheta_Default = stCamShooter_CV.xTheta_Init;
-    pcs->xTheta_Min = -0.8f;
-    pcs->xTheta_Max = 1.2f;
-    pcs->xDistMax = pcs->xDistMax_Default = stCamShooter_CV.xDistMax_Init;
-    pcs->xTheta_User = pcs->xTheta_Current = pcs->xTheta_Default;
-
-    if (*(char *)pcs->abExternDsgVarBoolean[1])
-    {
-        pcs->pLockedActor = *(HIE_tdstSuperObject_ **)pcs->apExternDsgVarPerso[0];
-        if (fn_bIsValidObject(pcs->pLockedActor))
-        {
-            vTemp1.xX = pcs->pTargetActor_position->xX - pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xX;
-            vTemp1.xY = pcs->pTargetActor_position->xY - pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xY;
-            vTemp1.xZ = pcs->pTargetActor_position->xZ - pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xZ;
-            vTemp1.xZ = 0.0f;
-            xX = vTemp1.xX;
-            if (xX != 0.0f || vTemp1.xY != 0.0f || vTemp1.xZ != 0.0f)
-            {
-                {
-                    float xY = vTemp1.xY;
-                    float xZ = vTemp1.xZ;
-                    float xSq;
-                    MTH_SQR3_TO(xSq, xX, xY, xZ);
-                    MTH_SQRT_TO(xNorm, xSq);
-                }
-                if (xNorm != 0.0f)
-                {
-                    xNorm = 1.0f / xNorm;
-                    pcs->vRefAxis.xX = xNorm * xX;
-                    pcs->vRefAxis.xY = xNorm * vTemp1.xY;
-                    pcs->vRefAxis.xZ = xNorm * vTemp1.xZ;
-                }
-                else
-                    pcs->vRefAxis = vTemp1;
-            }
-            else
-                fn_GetPersoNegativeSighting(&pcs->vRefAxis, pcs->pTargetActor);
-        }
-        else
-            fn_GetPersoNegativeSighting(&pcs->vRefAxis, pcs->pTargetActor);
-    }
-    else
-        fn_GetPersoNegativeSighting(&pcs->vRefAxis, pcs->pTargetActor);
-
-    pcs->xFastAlign_StartDistance = pcs->xDistMax;
-    pcs->bFastAlign = 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 1173–1213 */
 /* addr: 0x00243750  size: 712 bytes */
@@ -4261,37 +4068,6 @@ inline void fn_InitStrafeLockMode(CAM_Shooter_* pcs)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-inline void fn_InitBackMode(CAM_Shooter_* pcs)
-{
-    MTH3D_tdstVector_ vShiftPos;
-
-    pcs->bIsBot = pcs->bRaiseCamera = pcs->bSideCollision = pcs->bStartAlignCamera = pcs->bVerticalCollision = pcs->bWasClimbing = pcs->bFastAlign = pcs->bIsJumpFalling = pcs->bLowCeiling = pcs->bObstacleCollision = pcs->bAlignCamera = pcs->bAutoAlign = pcs->bCollision = pcs->bCollisionAlign = 0;
-    vShiftPos.xX = 0.0f;
-    vShiftPos.xY = 0.0f;
-    vShiftPos.xZ = 2.5f;
-    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x80);
-    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 4);
-    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x247, 0, 1, 35.7f);
-    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 1);
-    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x10);
-    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 8);
-    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 2);
-    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x20);
-    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x40);
-    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 8);
-    fn_ChangeCameraVectorParameter(hCineInfo, (tdeProcedureId_)0x23B, 0, 1, &vShiftPos);
-    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x240, 0, 1, 0.0f);
-    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 0, 1, 56.0f);
-
-    pcs->xTheta_Default = stCamShooter_CV.xTheta_Init;
-    pcs->xTheta_Min = -0.8f;
-    pcs->xTheta_Max = 1.2f;
-    pcs->xDistMax = pcs->xDistMax_Default = stCamShooter_CV.xDistMax_Init;
-    pcs->xTheta_User = pcs->xTheta_Current = pcs->xTheta_Default;
-    pcs->xDeltaTheta_User = 0.0f;
-    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x242, 0, 1, pcs->xTheta_Current);
-    pcs->hWaterGMT = (GMT_tdstGameMaterial_*)stCamShooter_CV.hVMTViewFinder_white;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 1935–1984 */
 /* addr: 0x00243a20  size: 856 bytes */
@@ -4336,49 +4112,6 @@ inline void fn_InitBackMode(CAM_Shooter_* pcs)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-inline void fn_InitMarioMode(CAM_Shooter_* pcs)
-{
-    MTH3D_tdstVector_ vShiftPos;
-
-    pcs->bIsBot = pcs->bRaiseCamera = pcs->bSideCollision = pcs->bStartAlignCamera = pcs->bVerticalCollision = pcs->bWasClimbing = pcs->bFastAlign = pcs->bIsJumpFalling = pcs->bLowCeiling = pcs->bObstacleCollision = pcs->bAlignCamera = pcs->bAutoAlign = pcs->bCollision = pcs->bCollisionAlign = 0;
-    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 0, 0x80);
-    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 4);
-    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 1);
-    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 0x10);
-    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 8);
-    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 2);
-    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 0x20);
-    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x248, 0, 1, 0.5f);
-    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x249, 0, 1, 0.5f);
-    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x245, 0, 1, 5.0f);
-    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x246, 0, 1, 0.0f);
-    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 0, 1, 24.0f);
-    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x24A, 0, 1, 24.0f);
-    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x40);
-    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 8);
-    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x240, 0, 1, 0.0f);
-    if (GAM_MultiVP_fn_ucGetNumberOfPlayers() == 2)
-    {
-        vShiftPos.xX = 0.0f;
-        vShiftPos.xY = 0.0f;
-        vShiftPos.xZ = 4.5f;
-    }
-    else
-    {
-        vShiftPos.xX = 0.0f;
-        vShiftPos.xY = 0.0f;
-        vShiftPos.xZ = 3.0f;
-    }
-    fn_ChangeCameraVectorParameter(hCineInfo, (tdeProcedureId_)0x23B, 0, 1, &vShiftPos);
-
-    pcs->xTheta_Default = stCamShooter_CV.xTheta_Init_mario;
-    pcs->xTheta_Min = -0.6f;
-    pcs->xTheta_Max = 1.3f;
-    pcs->xDistMax = pcs->xDistMax_Default = stCamShooter_CV.xDistMax_Init_mario;
-    pcs->xTheta_User = pcs->xTheta_Current = pcs->xTheta_Default;
-    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x242, 0, 1, pcs->xTheta_Current);
-    pcs->bIsBot = *(char *)pcs->abExternDsgVarBoolean[4];
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 3314–3398 */
 /* addr: 0x00243d80  size: 10052 bytes */
@@ -4422,6 +4155,1826 @@ inline void fn_InitMarioMode(CAM_Shooter_* pcs)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 2823–2840 */
+/* addr: 0x002464d0  size: 272 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2823
+ *   +0x0014 -> line 2830
+ *   +0x0030 -> line 2832
+ *   +0x0068 -> line 2833
+ *   +0x0084 -> line 2834
+ *   +0x00a0 -> line 2835
+ *   +0x00a8 -> line 2836
+ *   +0x00b4 -> line 2837
+ *   +0x00fc -> line 2840
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 2695–2767 */
+/* addr: 0x002465e0  size: 840 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2695
+ *   +0x0004 -> line 2701
+ *   +0x0008 -> line 2695
+ *   +0x000c -> line 2701
+ *   +0x0010 -> line 2695
+ *   +0x0020 -> line 2701
+ *   +0x0030 -> line 2704
+ *   +0x0034 -> line 2702
+ *   +0x0038 -> line 2704
+ *   +0x0070 -> line 2706
+ *   +0x0074 -> line 2707
+ *   +0x0078 -> line 2709
+ *   +0x0080 -> line 2713
+ *   +0x0090 -> line 2717
+ *   +0x0098 -> line 2713
+ *   +0x009c -> line 2715
+ *   +0x00ac -> line 2717
+ *   +0x00bc -> line 2718
+ *   +0x00c4 -> line 2720
+ *   +0x00cc -> line 2722
+ *   +0x00e8 -> line 2725
+ *   +0x00f8 -> line 2726
+ *   +0x00fc -> line 2728
+ *   +0x0100 -> line 2731
+ *   +0x0104 -> line 2730
+ *   +0x0108 -> line 2731
+ *   +0x010c -> line 2730
+ *   +0x0120 -> line 2731
+ *   +0x0124 -> line 2733
+ *   +0x0160 -> line 2734
+ *   +0x016c -> line 2736
+ *   +0x01d8 -> line 2740
+ *   +0x01dc -> line 2736
+ *   +0x01e0 -> line 2740
+ *   +0x01f0 -> line 2736
+ *   +0x01f8 -> line 2740
+ *   +0x01fc -> line 2736
+ *   +0x0200 -> line 2739
+ *   +0x0214 -> line 2740
+ *   +0x021c -> line 2742
+ *   +0x022c -> line 2744
+ *   +0x0240 -> line 2746
+ *   +0x0290 -> line 2747
+ *   +0x029c -> line 2749
+ *   +0x02c4 -> line 2750
+ *   +0x02ec -> line 2754
+ *   +0x0300 -> line 2758
+ *   +0x0304 -> line 2756
+ *   +0x0308 -> line 2758
+ *   +0x0320 -> line 2761
+ *   +0x0328 -> line 2762
+ *   +0x032c -> line 2767
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 2477–2509 */
+/* addr: 0x00246930  size: 664 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2477
+ *   +0x002c -> line 2483
+ *   +0x00b0 -> line 2485
+ *   +0x00b4 -> line 2483
+ *   +0x00b8 -> line 2485
+ *   +0x00bc -> line 2487
+ *   +0x00c0 -> line 2485
+ *   +0x00c4 -> line 2483
+ *   +0x00c8 -> line 2485
+ *   +0x00f4 -> line 2487
+ *   +0x00f8 -> line 2489
+ *   +0x0118 -> line 2491
+ *   +0x0128 -> line 2492
+ *   +0x0148 -> line 2493
+ *   +0x0150 -> line 2496
+ *   +0x0188 -> line 2498
+ *   +0x0194 -> line 2500
+ *   +0x01a0 -> line 2499
+ *   +0x01a4 -> line 2500
+ *   +0x01b8 -> line 2502
+ *   +0x0220 -> line 2504
+ *   +0x0248 -> line 2507
+ *   +0x026c -> line 2509
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 1850–1915 */
+/* addr: 0x00246bd0  size: 8388 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1850
+ *   +0x003c -> line 1854
+ *   +0x01ac -> line 1856
+ *   +0x01b8 -> line 1858
+ *   +0x028c -> line 1859
+ *   +0x02c0 -> line 1861
+ *   +0x0520 -> line 1865
+ *   +0x052c -> line 1866
+ *   +0x0594 -> line 1868
+ *   +0x05d8 -> line 1870
+ *   +0x0808 -> line 1872
+ *   +0x0868 -> line 1873
+ *   +0x0874 -> line 1874
+ *   +0x0980 -> line 1876
+ *   +0x0aa4 -> line 1877
+ *   +0x0aac -> line 1878
+ *   +0x0ab0 -> line 1880
+ *   +0x0abc -> line 1881
+ *   +0x1194 -> line 1883
+ *   +0x158c -> line 1885
+ *   +0x1594 -> line 1887
+ *   +0x15a0 -> line 1889
+ *   +0x1650 -> line 1890
+ *   +0x17d0 -> line 1893
+ *   +0x1d20 -> line 1895
+ *   +0x1dd8 -> line 1897
+ *   +0x1e6c -> line 1899
+ *   +0x1e84 -> line 1900
+ *   +0x1e9c -> line 1902
+ *   +0x1eb4 -> line 1903
+ *   +0x1ecc -> line 1905
+ *   +0x1f00 -> line 1906
+ *   +0x1f1c -> line 1907
+ *   +0x1f38 -> line 1908
+ *   +0x2004 -> line 1909
+ *   +0x2008 -> line 1908
+ *   +0x200c -> line 1909
+ *   +0x2014 -> line 1908
+ *   +0x203c -> line 1909
+ *   +0x2080 -> line 1915
+ *   +0x20a4 -> line 1914
+ *   +0x20a8 -> line 1915
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 737–875 */
+/* addr: 0x00248ca0  size: 716 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 742
+ *   +0x0010 -> line 737
+ *   +0x0014 -> line 738
+ *   +0x0018 -> line 739
+ *   +0x001c -> line 742
+ *   +0x0040 -> line 746
+ *   +0x0044 -> line 747
+ *   +0x0048 -> line 748
+ *   +0x004c -> line 749
+ *   +0x0050 -> line 746
+ *   +0x0054 -> line 747
+ *   +0x0058 -> line 748
+ *   +0x005c -> line 750
+ *   +0x0064 -> line 753
+ *   +0x0068 -> line 754
+ *   +0x006c -> line 755
+ *   +0x0070 -> line 756
+ *   +0x0074 -> line 753
+ *   +0x0078 -> line 754
+ *   +0x007c -> line 755
+ *   +0x0080 -> line 757
+ *   +0x0088 -> line 760
+ *   +0x008c -> line 761
+ *   +0x0090 -> line 762
+ *   +0x0094 -> line 763
+ *   +0x0098 -> line 760
+ *   +0x009c -> line 761
+ *   +0x00a0 -> line 762
+ *   +0x00a4 -> line 764
+ *   +0x00ac -> line 768
+ *   +0x00b0 -> line 769
+ *   +0x00b4 -> line 770
+ *   +0x00b8 -> line 771
+ *   +0x00bc -> line 768
+ *   +0x00c0 -> line 769
+ *   +0x00c4 -> line 770
+ *   +0x00c8 -> line 772
+ *   +0x00d0 -> line 776
+ *   +0x00d4 -> line 777
+ *   +0x00d8 -> line 778
+ *   +0x00dc -> line 779
+ *   +0x00e0 -> line 776
+ *   +0x00e4 -> line 777
+ *   +0x00e8 -> line 778
+ *   +0x00ec -> line 780
+ *   +0x00f4 -> line 783
+ *   +0x00f8 -> line 784
+ *   +0x00fc -> line 785
+ *   +0x0100 -> line 786
+ *   +0x0104 -> line 783
+ *   +0x0108 -> line 784
+ *   +0x010c -> line 785
+ *   +0x0110 -> line 787
+ *   +0x0118 -> line 790
+ *   +0x011c -> line 791
+ *   +0x0120 -> line 792
+ *   +0x0124 -> line 793
+ *   +0x0128 -> line 790
+ *   +0x012c -> line 791
+ *   +0x0130 -> line 792
+ *   +0x0134 -> line 794
+ *   +0x013c -> line 797
+ *   +0x0140 -> line 798
+ *   +0x0144 -> line 799
+ *   +0x0148 -> line 800
+ *   +0x014c -> line 797
+ *   +0x0150 -> line 798
+ *   +0x0154 -> line 799
+ *   +0x0158 -> line 801
+ *   +0x0160 -> line 804
+ *   +0x0164 -> line 805
+ *   +0x0168 -> line 806
+ *   +0x016c -> line 807
+ *   +0x0170 -> line 804
+ *   +0x0174 -> line 805
+ *   +0x0178 -> line 806
+ *   +0x017c -> line 808
+ *   +0x0184 -> line 811
+ *   +0x0188 -> line 812
+ *   +0x018c -> line 813
+ *   +0x0190 -> line 814
+ *   +0x0194 -> line 811
+ *   +0x0198 -> line 812
+ *   +0x019c -> line 813
+ *   +0x01a0 -> line 815
+ *   +0x01a8 -> line 818
+ *   +0x01ac -> line 819
+ *   +0x01b0 -> line 820
+ *   +0x01b4 -> line 821
+ *   +0x01b8 -> line 818
+ *   +0x01bc -> line 819
+ *   +0x01c0 -> line 820
+ *   +0x01c4 -> line 822
+ *   +0x01cc -> line 825
+ *   +0x01d0 -> line 826
+ *   +0x01d4 -> line 827
+ *   +0x01d8 -> line 828
+ *   +0x01dc -> line 825
+ *   +0x01e0 -> line 826
+ *   +0x01e4 -> line 827
+ *   +0x01e8 -> line 829
+ *   +0x01f0 -> line 832
+ *   +0x01f4 -> line 833
+ *   +0x01f8 -> line 834
+ *   +0x01fc -> line 835
+ *   +0x0200 -> line 832
+ *   +0x0204 -> line 833
+ *   +0x0208 -> line 834
+ *   +0x020c -> line 836
+ *   +0x0214 -> line 839
+ *   +0x0218 -> line 840
+ *   +0x021c -> line 841
+ *   +0x0220 -> line 842
+ *   +0x0224 -> line 839
+ *   +0x0228 -> line 840
+ *   +0x022c -> line 841
+ *   +0x0230 -> line 843
+ *   +0x0238 -> line 846
+ *   +0x023c -> line 847
+ *   +0x0240 -> line 848
+ *   +0x0244 -> line 849
+ *   +0x0248 -> line 846
+ *   +0x024c -> line 847
+ *   +0x0250 -> line 848
+ *   +0x0254 -> line 850
+ *   +0x025c -> line 853
+ *   +0x0260 -> line 854
+ *   +0x0264 -> line 855
+ *   +0x0268 -> line 856
+ *   +0x026c -> line 853
+ *   +0x0270 -> line 854
+ *   +0x0274 -> line 855
+ *   +0x0278 -> line 857
+ *   +0x0280 -> line 860
+ *   +0x0284 -> line 861
+ *   +0x0288 -> line 862
+ *   +0x028c -> line 863
+ *   +0x0290 -> line 860
+ *   +0x0294 -> line 861
+ *   +0x0298 -> line 862
+ *   +0x029c -> line 864
+ *   +0x02a4 -> line 867
+ *   +0x02a8 -> line 868
+ *   +0x02ac -> line 869
+ *   +0x02b0 -> line 870
+ *   +0x02b4 -> line 867
+ *   +0x02b8 -> line 868
+ *   +0x02bc -> line 869
+ *   +0x02c0 -> line 870
+ *   +0x02c4 -> line 875
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+extern void CAM_fn_vChangeARealParameter(tdstCineinfo_* _hCineInfo, float* _p_xInitialValue, float* _p_xCurrentValue, float* _p_xVisibilityValue, float* _p_xWorkValue, int _lTypeOfChange, int _lChangingMode, float _xValue);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 708–730 */
+/* addr: 0x00248f70  size: 120 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x000c -> line 713
+ *   +0x0010 -> line 708
+ *   +0x0014 -> line 709
+ *   +0x0018 -> line 710
+ *   +0x001c -> line 713
+ *   +0x0038 -> line 717
+ *   +0x003c -> line 718
+ *   +0x0040 -> line 719
+ *   +0x0044 -> line 720
+ *   +0x004c -> line 723
+ *   +0x0050 -> line 725
+ *   +0x0054 -> line 726
+ *   +0x0058 -> line 724
+ *   +0x005c -> line 723
+ *   +0x0060 -> line 725
+ *   +0x0064 -> line 726
+ *   +0x0068 -> line 724
+ *   +0x006c -> line 730
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 657–691 */
+/* addr: 0x00248ff0  size: 368 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 657
+ *   +0x0008 -> line 661
+ *   +0x0020 -> line 664
+ *   +0x0024 -> line 662
+ *   +0x0028 -> line 664
+ *   +0x0034 -> line 662
+ *   +0x003c -> line 666
+ *   +0x0040 -> line 662
+ *   +0x0044 -> line 667
+ *   +0x0048 -> line 663
+ *   +0x004c -> line 665
+ *   +0x0050 -> line 663
+ *   +0x0054 -> line 666
+ *   +0x005c -> line 667
+ *   +0x0064 -> line 665
+ *   +0x006c -> line 668
+ *   +0x0070 -> line 669
+ *   +0x0078 -> line 670
+ *   +0x0080 -> line 671
+ *   +0x0084 -> line 670
+ *   +0x0088 -> line 671
+ *   +0x0090 -> line 672
+ *   +0x0094 -> line 671
+ *   +0x0098 -> line 672
+ *   +0x00a4 -> line 673
+ *   +0x00a8 -> line 674
+ *   +0x00ac -> line 673
+ *   +0x00b0 -> line 674
+ *   +0x00b8 -> line 675
+ *   +0x00c4 -> line 673
+ *   +0x00cc -> line 676
+ *   +0x00d4 -> line 682
+ *   +0x00e8 -> line 683
+ *   +0x00ec -> line 682
+ *   +0x00f8 -> line 683
+ *   +0x0104 -> line 685
+ *   +0x0108 -> line 684
+ *   +0x010c -> line 685
+ *   +0x0110 -> line 684
+ *   +0x0114 -> line 683
+ *   +0x011c -> line 684
+ *   +0x0124 -> line 685
+ *   +0x012c -> line 683
+ *   +0x0134 -> line 684
+ *   +0x0144 -> line 685
+ *   +0x014c -> line 679
+ *   +0x015c -> line 680
+ *   +0x0164 -> line 691
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 628–645 */
+/* addr: 0x00249160  size: 76 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 628
+ *   +0x0008 -> line 635
+ *   +0x0014 -> line 636
+ *   +0x001c -> line 638
+ *   +0x0028 -> line 639
+ *   +0x0034 -> line 641
+ *   +0x003c -> line 645
+ *   +0x0040 -> line 643
+ *   +0x0044 -> line 645
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* p_stStandardGame);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 593–624 */
+/* addr: 0x002491b0  size: 220 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 593
+ *   +0x0008 -> line 600
+ *   +0x000c -> line 593
+ *   +0x001c -> line 600
+ *   +0x0028 -> line 601
+ *   +0x0034 -> line 603
+ *   +0x003c -> line 601
+ *   +0x0040 -> line 603
+ *   +0x0048 -> line 606
+ *   +0x004c -> line 603
+ *   +0x0050 -> line 608
+ *   +0x0054 -> line 610
+ *   +0x0058 -> line 608
+ *   +0x005c -> line 606
+ *   +0x0060 -> line 604
+ *   +0x0064 -> line 606
+ *   +0x0068 -> line 608
+ *   +0x0088 -> line 610
+ *   +0x00b0 -> line 611
+ *   +0x00bc -> line 622
+ *   +0x00c0 -> line 624
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 558–589 */
+/* addr: 0x00249290  size: 244 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 558
+ *   +0x0008 -> line 569
+ *   +0x000c -> line 558
+ *   +0x001c -> line 569
+ *   +0x0028 -> line 570
+ *   +0x0034 -> line 572
+ *   +0x0038 -> line 574
+ *   +0x0040 -> line 576
+ *   +0x0048 -> line 572
+ *   +0x0050 -> line 574
+ *   +0x0070 -> line 576
+ *   +0x0078 -> line 577
+ *   +0x0088 -> line 578
+ *   +0x0090 -> line 579
+ *   +0x00a0 -> line 580
+ *   +0x00a8 -> line 581
+ *   +0x00b0 -> line 582
+ *   +0x00b4 -> line 581
+ *   +0x00b8 -> line 582
+ *   +0x00c8 -> line 584
+ *   +0x00d0 -> line 585
+ *   +0x00d8 -> line 587
+ *   +0x00dc -> line 589
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 532–552 */
+/* addr: 0x00249390  size: 192 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 532
+ *   +0x0008 -> line 538
+ *   +0x000c -> line 532
+ *   +0x0018 -> line 538
+ *   +0x0024 -> line 539
+ *   +0x0030 -> line 541
+ *   +0x0034 -> line 539
+ *   +0x0038 -> line 543
+ *   +0x003c -> line 545
+ *   +0x0040 -> line 543
+ *   +0x0044 -> line 541
+ *   +0x004c -> line 543
+ *   +0x006c -> line 545
+ *   +0x008c -> line 546
+ *   +0x0098 -> line 547
+ *   +0x00a4 -> line 550
+ *   +0x00a8 -> line 552
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 391–450 */
+/* addr: 0x00249450  size: 684 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 391
+ *   +0x0024 -> line 401
+ *   +0x0028 -> line 406
+ *   +0x0040 -> line 408
+ *   +0x0044 -> line 410
+ *   +0x004c -> line 413
+ *   +0x0058 -> line 408
+ *   +0x0064 -> line 410
+ *   +0x0084 -> line 413
+ *   +0x008c -> line 416
+ *   +0x0090 -> line 413
+ *   +0x0094 -> line 416
+ *   +0x00c0 -> line 421
+ *   +0x00c4 -> line 416
+ *   +0x00d0 -> line 421
+ *   +0x0110 -> line 424
+ *   +0x0120 -> line 425
+ *   +0x0150 -> line 426
+ *   +0x0158 -> line 429
+ *   +0x0168 -> line 430
+ *   +0x019c -> line 431
+ *   +0x01a4 -> line 434
+ *   +0x01b4 -> line 435
+ *   +0x01e8 -> line 436
+ *   +0x01f0 -> line 439
+ *   +0x0200 -> line 440
+ *   +0x0234 -> line 441
+ *   +0x023c -> line 444
+ *   +0x0250 -> line 445
+ *   +0x0288 -> line 449
+ *   +0x028c -> line 450
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 375–385 */
+/* addr: 0x00249700  size: 80 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 375
+ *   +0x0008 -> line 378
+ *   +0x000c -> line 375
+ *   +0x0010 -> line 378
+ *   +0x001c -> line 379
+ *   +0x0024 -> line 380
+ *   +0x0034 -> line 381
+ *   +0x0040 -> line 385
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 349–369 */
+/* addr: 0x00249750  size: 212 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 349
+ *   +0x001c -> line 358
+ *   +0x0038 -> line 360
+ *   +0x003c -> line 362
+ *   +0x0044 -> line 360
+ *   +0x0050 -> line 362
+ *   +0x0074 -> line 364
+ *   +0x009c -> line 365
+ *   +0x00b0 -> line 367
+ *   +0x00b4 -> line 365
+ *   +0x00bc -> line 369
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 308–344 */
+/* addr: 0x00249830  size: 284 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 308
+ *   +0x0018 -> line 317
+ *   +0x0034 -> line 319
+ *   +0x0038 -> line 321
+ *   +0x0040 -> line 323
+ *   +0x004c -> line 319
+ *   +0x0058 -> line 321
+ *   +0x0078 -> line 323
+ *   +0x0084 -> line 326
+ *   +0x0088 -> line 324
+ *   +0x008c -> line 326
+ *   +0x009c -> line 327
+ *   +0x00a0 -> line 329
+ *   +0x00b4 -> line 330
+ *   +0x00b8 -> line 332
+ *   +0x00cc -> line 333
+ *   +0x00d0 -> line 335
+ *   +0x00e4 -> line 336
+ *   +0x00e8 -> line 338
+ *   +0x00fc -> line 339
+ *   +0x0104 -> line 344
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 296–303 */
+/* addr: 0x00249950  size: 124 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 296
+ *   +0x0004 -> line 300
+ *   +0x0008 -> line 296
+ *   +0x000c -> line 300
+ *   +0x0010 -> line 296
+ *   +0x001c -> line 298
+ *   +0x002c -> line 300
+ *   +0x0064 -> line 301
+ *   +0x0068 -> line 303
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 279–292 */
+/* addr: 0x002499d0  size: 1232 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 279
+ *   +0x0004 -> line 284
+ *   +0x0008 -> line 279
+ *   +0x000c -> line 286
+ *   +0x0010 -> line 279
+ *   +0x0014 -> line 284
+ *   +0x0018 -> line 279
+ *   +0x0024 -> line 286
+ *   +0x0028 -> line 279
+ *   +0x002c -> line 286
+ *   +0x0030 -> line 283
+ *   +0x0034 -> line 286
+ *   +0x0040 -> line 283
+ *   +0x0048 -> line 284
+ *   +0x0054 -> line 286
+ *   +0x0058 -> line 284
+ *   +0x005c -> line 286
+ *   +0x0060 -> line 284
+ *   +0x0064 -> line 286
+ *   +0x0068 -> line 284
+ *   +0x0070 -> line 286
+ *   +0x0074 -> line 284
+ *   +0x0078 -> line 286
+ *   +0x007c -> line 284
+ *   +0x0080 -> line 286
+ *   +0x04a0 -> line 288
+ *   +0x04a4 -> line 290
+ *   +0x04a8 -> line 286
+ *   +0x04b0 -> line 288
+ *   +0x04b4 -> line 292
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 267–274 */
+/* addr: 0x00249ea0  size: 124 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 267
+ *   +0x0004 -> line 271
+ *   +0x0008 -> line 267
+ *   +0x000c -> line 271
+ *   +0x0010 -> line 267
+ *   +0x001c -> line 269
+ *   +0x002c -> line 271
+ *   +0x0064 -> line 272
+ *   +0x0068 -> line 274
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 250–263 */
+/* addr: 0x00249f20  size: 932 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 250
+ *   +0x0004 -> line 255
+ *   +0x0008 -> line 250
+ *   +0x000c -> line 255
+ *   +0x0010 -> line 250
+ *   +0x0014 -> line 257
+ *   +0x0018 -> line 250
+ *   +0x0020 -> line 254
+ *   +0x0024 -> line 257
+ *   +0x002c -> line 254
+ *   +0x0034 -> line 255
+ *   +0x0058 -> line 257
+ *   +0x037c -> line 259
+ *   +0x0380 -> line 261
+ *   +0x0384 -> line 257
+ *   +0x038c -> line 259
+ *   +0x0390 -> line 263
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 237–246 */
+/* addr: 0x0024a2d0  size: 124 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 237
+ *   +0x0004 -> line 242
+ *   +0x0008 -> line 237
+ *   +0x000c -> line 242
+ *   +0x0010 -> line 237
+ *   +0x001c -> line 240
+ *   +0x002c -> line 242
+ *   +0x0064 -> line 244
+ *   +0x0068 -> line 246
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 216–232 */
+/* addr: 0x0024a350  size: 788 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 216
+ *   +0x0004 -> line 224
+ *   +0x0008 -> line 216
+ *   +0x000c -> line 224
+ *   +0x0010 -> line 216
+ *   +0x0014 -> line 226
+ *   +0x0018 -> line 216
+ *   +0x0020 -> line 223
+ *   +0x0024 -> line 226
+ *   +0x0030 -> line 223
+ *   +0x0038 -> line 224
+ *   +0x005c -> line 226
+ *   +0x02ec -> line 228
+ *   +0x02f0 -> line 226
+ *   +0x02f4 -> line 230
+ *   +0x02f8 -> line 226
+ *   +0x02fc -> line 228
+ *   +0x0300 -> line 232
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 102–208 */
+/* addr: 0x0024a670  size: 708 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 102
+ *   +0x0018 -> line 118
+ *   +0x0034 -> line 120
+ *   +0x0038 -> line 122
+ *   +0x0040 -> line 135
+ *   +0x004c -> line 120
+ *   +0x0058 -> line 122
+ *   +0x007c -> line 126
+ *   +0x0080 -> line 128
+ *   +0x0088 -> line 130
+ *   +0x0094 -> line 135
+ *   +0x00a0 -> line 136
+ *   +0x00ac -> line 139
+ *   +0x00b0 -> line 136
+ *   +0x00b4 -> line 139
+ *   +0x00c4 -> line 140
+ *   +0x00d0 -> line 143
+ *   +0x00d4 -> line 140
+ *   +0x00d8 -> line 143
+ *   +0x00e4 -> line 144
+ *   +0x00e8 -> line 147
+ *   +0x00fc -> line 148
+ *   +0x0100 -> line 151
+ *   +0x0118 -> line 152
+ *   +0x0120 -> line 156
+ *   +0x0130 -> line 159
+ *   +0x013c -> line 160
+ *   +0x0144 -> line 163
+ *   +0x014c -> line 164
+ *   +0x0154 -> line 165
+ *   +0x0160 -> line 167
+ *   +0x0174 -> line 169
+ *   +0x017c -> line 170
+ *   +0x0194 -> line 174
+ *   +0x01ac -> line 190
+ *   +0x01b0 -> line 176
+ *   +0x01b4 -> line 190
+ *   +0x01b8 -> line 177
+ *   +0x01bc -> line 179
+ *   +0x01c0 -> line 181
+ *   +0x01c4 -> line 183
+ *   +0x01cc -> line 184
+ *   +0x01d0 -> line 190
+ *   +0x01f0 -> line 192
+ *   +0x0208 -> line 193
+ *   +0x020c -> line 194
+ *   +0x0210 -> line 193
+ *   +0x0214 -> line 194
+ *   +0x022c -> line 196
+ *   +0x0234 -> line 198
+ *   +0x0238 -> line 197
+ *   +0x023c -> line 198
+ *   +0x0254 -> line 199
+ *   +0x0268 -> line 202
+ *   +0x0270 -> line 204
+ *   +0x0274 -> line 206
+ *   +0x0278 -> line 204
+ *   +0x02ac -> line 208
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+DNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_* h_Dynam);
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+tdstNodeInterpret_* fn_p_InitCamShooter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_InitBackMode(HIE_tdstSuperObject_* hCamera, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_BackMode(HIE_tdstSuperObject_* hCamera, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_InitMarioMode(HIE_tdstSuperObject_* hCamera, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_MarioMode(HIE_tdstSuperObject_* hCamera, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_InitStrafeLockMode(HIE_tdstSuperObject_* hCamera, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_StrafeLockMode(HIE_tdstSuperObject_* hCamera, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_GetMainActorComports(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_GetViewFinderDistance(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_GetViewFinderVMT(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_RegisterDesignVar(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_AddMainActor(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_RemoveMainActor(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_SetSkin(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_SetGCubeVersion(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+void fn_InitCSH_Common(void);
+void fn_ChangeCameraVectorParameter(tdstCineinfo_* hCineInfo, tdeProcedureId_ eProcedureId, int lTypeOfChange, int lChangingMode, MTH3D_tdstVector_* p_stValue);
+void fn_ChangeCameraRealParameter(tdstCineinfo_* hCineInfo, tdeProcedureId_ eProcedureId, int lTypeOfChange, int lChangingMode, float xValue);
+inline void fn_InitBackMode(CAM_Shooter_* pcs);
+unsigned char fn_BackMode(CAM_Shooter_* pcs);
+inline void fn_InitMarioMode(CAM_Shooter_* pcs);
+void fn_GetTheoreticalPosition_UsingRealPosition(MTH3D_tdstVector_* vTPosition, CAM_Shooter_* pcs, unsigned int iMode);
+void fn_PutCameraAgainstWall(CAM_Shooter_* pcs, float xDistanceToTarget);
+void fn_CreateRaycastDirection(CAM_Shooter_* pcs, MTH3D_tdstVector_* vRayCastDirection, MTH3D_tdstVector_* vCentralSegment);
+unsigned char fn_MarioMode(CAM_Shooter_* pcs);
+inline void fn_InitStrafeLockMode(CAM_Shooter_* pcs);
+unsigned char fn_StrafeLockMode(CAM_Shooter_* pcs);
+
+tdstNodeInterpret_* fn_p_InitCamShooter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    DNM_stDynamics* p_stDynamic;
+    HIE_tdstSuperObject_* hCamera;
+    GLD_tdstViewportAttributes_* _p_stViewport;
+    tdstDynam_* h_Dynam;
+    tdstGetSetParam_ stValue;
+    CAM_Shooter_* pcs;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator((p_stTree - 1)->uDummy.uId.eProcedureId), p_SuperObjPerso, &hCamera);
+    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
+    pcs->pCamera = hCamera;
+    pcs->hCineInfo = hCineInfo;
+    pcs->vCameraPosition = (MTH3D_tdstVector_*)&pcs->pCamera->hGlobalMatrix->stTransformMatrix.stCol_3;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    pcs->pTargetActor = fn_h_StandardGameGetSuperObject(stValue.uDummy.uParam.p_stEngObjValue->h_StandardGame);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    pcs->pTargetSkin = fn_h_StandardGameGetSuperObject(stValue.uDummy.uParam.p_stEngObjValue->h_StandardGame);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    pcs->iViewFinderIconId = stValue.uDummy.uParam.ulValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    pcs->bMouseDriven = stValue.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    pcs->bAutoAim = stValue.uDummy.uParam.lValue;
+    pcs->pTargetActor_position = (MTH3D_tdstVector_*)&pcs->pTargetActor->hGlobalMatrix->stTransformMatrix.stCol_3;
+    h_Dynam = pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Dynam;
+    if (h_Dynam != NULL)
+    {
+        p_stDynamic = fn_p_stDynamGetDynamics(h_Dynam);
+        if (p_stDynamic != NULL)
+            pcs->pTargetActor_speed = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed;
+        else
+        {
+            pcs->pTargetActor_speed->xX = 0.0f;
+            pcs->pTargetActor_speed->xY = 0.0f;
+            pcs->pTargetActor_speed->xZ = 0.0f;
+        }
+    }
+    else
+    {
+        pcs->pTargetActor_speed->xX = 0.0f;
+        pcs->pTargetActor_speed->xY = 0.0f;
+        pcs->pTargetActor_speed->xZ = 0.0f;
+    }
+    pcs->vStartProjectilePosition.xX = -0.5f;
+    pcs->vStartProjectilePosition.xY = 0.0f;
+    pcs->vStartProjectilePosition.xZ = 1.4f;
+    pcs->iOldInputAxisZ = 0;
+    pcs->llUnknown2A0 = 0;
+    pcs->xAlpha_User = 0.0f;
+    pcs->iNumberOfMainActors = 0;
+    pcs->vCollisionDirectionV.xY = 0.0f;
+    pcs->vCollisionDirectionV.xX = 0.0f;
+    pcs->vCollisionDirectionH.xZ = 0.0f;
+    _p_stViewport = &g_stEngineStructure.a_stViewportAttr[hCineInfo->hCurrent->eTypeOfViewport];
+    pcs->p_stViewport = _p_stViewport;
+    if (GAM_MultiVP_fn_ucGetNumberOfPlayers() == 1)
+    {
+        pcs->xViewFinderWidth_2 = 4.0f;
+        pcs->xViewFinderHeight_2 = 1.3333334f * pcs->xViewFinderWidth_2;
+        pcs->iViewportIndex = 0;
+    }
+    else
+    {
+        pcs->xViewFinderWidth_2 = 6.0f;
+        pcs->xViewFinderHeight_2 = 1.3333334f * pcs->xViewFinderWidth_2;
+        pcs->iViewportIndex = hCineInfo->hCurrent->eTypeOfViewport + 1;
+    }
+    fn_InitCSH_Common();
+    pcs->bIsBot = pcs->bRaiseCamera = pcs->bSideCollision = pcs->bStartAlignCamera = pcs->bVerticalCollision = pcs->bWasClimbing = pcs->bFastAlign = pcs->bIsJumpFalling = pcs->bLowCeiling = pcs->bObstacleCollision = pcs->bAlignCamera = pcs->bAutoAlign = pcs->bCollision = pcs->bCollisionAlign = 0;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_InitBackMode(HIE_tdstSuperObject_* hCamera, tdstNodeInterpret_* p_stTree)
+{
+    CAM_Shooter_* pcs;
+
+    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
+    fn_InitBackMode(pcs);
+    pcs->iMode = 1;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_BackMode(HIE_tdstSuperObject_* hCamera, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    CAM_Shooter_* pcs;
+
+    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
+    *(int *)p_stValue = (long)fn_BackMode(pcs);
+    p_stValue->eType = 6;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_InitMarioMode(HIE_tdstSuperObject_* hCamera, tdstNodeInterpret_* p_stTree)
+{
+    CAM_Shooter_* pcs;
+
+    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
+    fn_InitMarioMode(pcs);
+    pcs->iMode = 2;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_MarioMode(HIE_tdstSuperObject_* hCamera, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    CAM_Shooter_* pcs;
+
+    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
+    *(int *)p_stValue = fn_MarioMode(pcs);
+    p_stValue->eType = 6;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_InitStrafeLockMode(HIE_tdstSuperObject_* hCamera, tdstNodeInterpret_* p_stTree)
+{
+    CAM_Shooter_* pcs;
+
+    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
+    fn_InitStrafeLockMode(pcs);
+    pcs->iMode = 3;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_StrafeLockMode(HIE_tdstSuperObject_* hCamera, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    CAM_Shooter_* pcs;
+
+    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
+    *(int *)p_stValue = fn_StrafeLockMode(pcs);
+    p_stValue->eType = 6;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_GetMainActorComports(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    HIE_tdstSuperObject_* hCamera;
+    tdstGetSetParam_ stValue;
+    CAM_Shooter_* pcs;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator((p_stTree - 1)->uDummy.uId.eProcedureId), p_SuperObjPerso, &hCamera);
+    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    pcs->pMAComport_Wait = stValue.uDummy.uParam.pComport;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    pcs->pMAComport_Run = stValue.uDummy.uParam.pComport;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    pcs->pMAComport_Hang = stValue.uDummy.uParam.pComport;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    pcs->pMAComport_Climb = stValue.uDummy.uParam.pComport;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    pcs->pMAComport_Reborn = stValue.uDummy.uParam.pComport;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    pcs->pMAComport_Fall = stValue.uDummy.uParam.pComport;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_GetViewFinderDistance(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    HIE_tdstSuperObject_* hCamera;
+    CAM_Shooter_* pcs;
+    float xX, xY, xZ;
+    float xSquared;
+    float xNorm;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator((p_stTree - 1)->uDummy.uId.eProcedureId), p_SuperObjPerso, &hCamera);
+
+    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+
+    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
+
+    xX = pcs->vViewFinderPosition.xX - pcs->pTargetActor_position->xX; xY = pcs->vViewFinderPosition.xY - pcs->pTargetActor_position->xY; xZ = pcs->vViewFinderPosition.xZ - pcs->pTargetActor_position->xZ;
+    MTH_SQR3_TO(xSquared, xX, xY, xZ); MTH_SQRT_TO(xNorm, xSquared); p_stValue->uDummy.uParam.xValue = xNorm; p_stValue->eType = E_vt_Float;
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_GetViewFinderVMT(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstGetSetParam_ stValue;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    stCamShooter_CV.hVMTViewFinder_white = (GLI_tdstMaterial_*)stValue.uDummy.uParam.ulValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    stCamShooter_CV.hVMTViewFinder_red = (GLI_tdstMaterial_*)stValue.uDummy.uParam.ulValue;
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_RegisterDesignVar(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstGetSetParam_ stValue;
+    unsigned char iCSVarId;
+    CAM_Shooter_* pCamShooter;
+    unsigned char ucVarId;
+    AI_tdstMind_* param0;
+    tdeProcedureId_ eProcedureId;
+    HIE_tdstSuperObject_* hCamera;
+    HIE_tdstSuperObject_* p_stResultOwnerPerso;
+    /* Unfolded member offset with the index scaled first: field address as a
+       char* plus a dead scaled-index assignment (insight: unfolded element-offset,
+       single-access case). Not original source, needs cleaning up. */
+    int iIndex;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hCamera);
+    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+    pCamShooter = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+
+    iCSVarId = stValue.uDummy.uParam.ucValue; if (p_stTree->eType == 2) p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree + 1, &p_stResultOwnerPerso); else p_stResultOwnerPerso = p_SuperObjPerso; param0 = p_stResultOwnerPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind; ucVarId = p_stTree->uDummy.uParam.ucValue;
+
+    switch (eProcedureId)
+    {
+    case eProc_CSHRegisterIntegerVar:
+        if (iCSVarId >= 0 && iCSVarId < 5)
+            *(int *)((char *)&pCamShooter->aiExternDsgVarInt + (iIndex = iCSVarId * 4)) = param0->p_stDsgMem->p_cDsgMemBuffer + (*param0->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem;
+        break;
+    case eProc_CSHRegisterVectorVar:
+        if (iCSVarId >= 0 && iCSVarId < 5)
+            *(int *)((char *)&pCamShooter->avExternDsgVarVector + (iIndex = iCSVarId * 4)) = param0->p_stDsgMem->p_cDsgMemBuffer + (*param0->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem;
+        break;
+    case eProc_CSHRegisterPersoVar:
+        if (iCSVarId >= 0 && iCSVarId < 5)
+            *(int *)((char *)&pCamShooter->apExternDsgVarPerso + (iIndex = iCSVarId * 4)) = param0->p_stDsgMem->p_cDsgMemBuffer + (*param0->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem;
+        break;
+    case eProc_CSHRegisterBooleanVar:
+        if (iCSVarId >= 0 && iCSVarId < 5)
+            *(int *)((char *)&pCamShooter->abExternDsgVarBoolean + (iIndex = iCSVarId * 4)) = param0->p_stDsgMem->p_cDsgMemBuffer + (*param0->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem;
+        break;
+    case eProc_CSHRegisterFloatVar:
+        if (iCSVarId >= 0 && iCSVarId < 5)
+            *(int *)((char *)&pCamShooter->axExternDsgVarFloat + (iIndex = iCSVarId * 4)) = param0->p_stDsgMem->p_cDsgMemBuffer + (*param0->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem;
+        break;
+    }
+
+    return p_stTree + 1;
+}
+
+tdstNodeInterpret_* fn_p_AddMainActor(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    CAM_Shooter_* pcs;
+    HIE_tdstSuperObject_* pMainActor;
+    tdstGetSetParam_ stValue;
+    char* pc;
+    int iIndex;
+    /* Matching idiom for the unfolded member offset (char* base plus offset, dead scaled-index
+       assignment); found by scanning matched functions. Not original source and needs cleaning up. */
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    pMainActor = fn_h_StandardGameGetSuperObject(stValue.uDummy.uParam.p_stEngObjValue->h_StandardGame);
+    hCineInfo = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Cineinfo;
+    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
+    if (fn_bIsValidObject(pMainActor) && pcs->iNumberOfMainActors < 4)
+    {
+        pc = (char*)&pcs->apMainActors;
+        *(HIE_tdstSuperObject_**)(pc + (iIndex = pcs->iNumberOfMainActors * 4)) = pMainActor;
+        pcs->iNumberOfMainActors++;
+    }
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_RemoveMainActor(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    HIE_tdstSuperObject_* pMainActor;
+    int bFound;
+    int k;
+    CAM_Shooter_* pcs;
+    tdstGetSetParam_ stValue;
+    tdstEngineObject_* p_stEngObj;
+
+    bFound = 0;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    p_stEngObj = stValue.uDummy.uParam.p_stEngObjValue;
+    pMainActor = fn_h_StandardGameGetSuperObject(p_stEngObj->h_StandardGame);
+    hCineInfo = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Cineinfo;
+    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
+    for (k = 0; k < pcs->iNumberOfMainActors; k++)
+    {
+        if (pcs->apMainActors[k] == pMainActor)
+            bFound = 1;
+        if (bFound && k <= 2)
+            pcs->apMainActors[k] = pcs->apMainActors[k + 1];
+        pcs->apSkins[k] = pcs->apSkins[k + 1];
+    }
+    if (bFound)
+        pcs->iNumberOfMainActors--;
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_SetSkin(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    HIE_tdstSuperObject_* pSkin;
+    int iSkinIndex;
+    CAM_Shooter_* pcs;
+    tdstGetSetParam_ stValue;
+    /* Unfolded member offset with the scaled index computed inside the last &&
+       operand (it lands in the bltz delay slot, as in retail). Not original
+       source, needs cleaning up. */
+    int iIndex;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    pSkin = fn_h_StandardGameGetSuperObject(stValue.uDummy.uParam.p_stEngObjValue->h_StandardGame);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    iSkinIndex = stValue.uDummy.uParam.ulValue;
+    hCineInfo = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Cineinfo;
+    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
+    if (fn_bIsValidObject(pSkin) && iSkinIndex < pcs->iNumberOfMainActors && (iIndex = iSkinIndex * 4, iSkinIndex >= 0))
+    {
+        *(HIE_tdstSuperObject_**)((char*)&pcs->apSkins + iIndex) = pSkin;
+    }
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_SetGCubeVersion(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstGetSetParam_ stValue;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    bGCubeVersion = stValue.uDummy.uParam.ulValue;
+
+    if (bGCubeVersion)
+        xCameraDelayAlign = 500.0f;
+    else
+        xCameraDelayAlign = 2000.0f;
+
+    return p_stTree;
+}
+
+void fn_InitCSH_Common(void)
+{
+    if (GAM_MultiVP_fn_ucGetNumberOfPlayers() == 2)
+    {
+        stCamShooter_CV.xTheta_Init = 0.4f;
+        stCamShooter_CV.xTheta_Init_mario = 0.4f;
+        stCamShooter_CV.xTheta_Init_Climb = 0.6f;
+        stCamShooter_CV.xDistMax_Init = 6.0f;
+        stCamShooter_CV.xDistMax_Init_mario = 7.0f;
+        stCamShooter_CV.xDistMax_Init_Climb = 8.0f;
+        stCamShooter_CV.xDistMax_Init_Swim = 6.0f;
+    }
+    else
+    {
+        stCamShooter_CV.xTheta_Init = 0.2f;
+        stCamShooter_CV.xTheta_Init_mario = 0.27f;
+        stCamShooter_CV.xTheta_Init_Climb = 0.6f;
+        stCamShooter_CV.xDistMax_Init = 8.3f;
+        stCamShooter_CV.xDistMax_Init_mario = 9.0f;
+        stCamShooter_CV.xDistMax_Init_Climb = 12.0f;
+        stCamShooter_CV.xDistMax_Init_Swim = 8.3f;
+    }
+    stCamShooter_CV.xMouseFactorY = xMouseSensitivityFactor[1];
+    stCamShooter_CV.xMouseFactorX = xMouseSensitivityFactor[1];
+    stCamShooter_CV.vViewFinderRedIconUV1.xX = 0.627f; stCamShooter_CV.vViewFinderRedIconUV1.xY = 0.0f; stCamShooter_CV.vViewFinderRedIconUV1.xZ = 0.0f;
+    stCamShooter_CV.vViewFinderRedIconUV2.xX = 0.75f; stCamShooter_CV.vViewFinderRedIconUV2.xY = 0.125f; stCamShooter_CV.vViewFinderRedIconUV2.xZ = 0.0f;
+    stCamShooter_CV.vViewFinderWhiteIconUV1.xX = 0.502f; stCamShooter_CV.vViewFinderWhiteIconUV1.xY = 0.0f; stCamShooter_CV.vViewFinderWhiteIconUV1.xZ = 0.0f;
+    stCamShooter_CV.vViewFinderWhiteIconUV2.xX = 0.625f; stCamShooter_CV.vViewFinderWhiteIconUV2.xY = 0.125f; stCamShooter_CV.vViewFinderWhiteIconUV2.xZ = 0.0f;
+}
+
+void fn_ChangeCameraVectorParameter(tdstCineinfo_* hCineInfo, tdeProcedureId_ eProcedureId, int lTypeOfChange, int lChangingMode, MTH3D_tdstVector_* p_stValue)
+{
+    MTH3D_tdstVector_* p_vWorkVectorValue;
+    MTH3D_tdstVector_* p_vVisibilityVectorValue;
+    MTH3D_tdstVector_* p_vCurrentVectorValue;
+    MTH3D_tdstVector_* p_vInitialVectorValue;
+
+    p_vInitialVectorValue = NULL;
+    p_vCurrentVectorValue = NULL;
+    p_vVisibilityVectorValue = NULL;
+    p_vWorkVectorValue = NULL;
+
+    switch (eProcedureId)
+    {
+    case 0x23A:
+        p_vInitialVectorValue = &hCineInfo->hInit->stShiftTarget;
+        p_vCurrentVectorValue = &hCineInfo->hCurrent->stShiftTarget;
+        p_vVisibilityVectorValue = &hCineInfo->hVisibility->stShiftTarget;
+        p_vWorkVectorValue = &hCineInfo->hWork->stShiftTarget;
+        break;
+    case 0x23B:
+        p_vInitialVectorValue = &hCineInfo->hInit->stShiftPos;
+        p_vCurrentVectorValue = &hCineInfo->hCurrent->stShiftPos;
+        p_vVisibilityVectorValue = &hCineInfo->hVisibility->stShiftPos;
+        p_vWorkVectorValue = &hCineInfo->hWork->stShiftPos;
+        break;
+    }
+
+    CAM_fn_vChangeAVectorParameter(hCineInfo, p_vInitialVectorValue, p_vCurrentVectorValue, p_vVisibilityVectorValue, p_vWorkVectorValue, lTypeOfChange, lChangingMode, p_stValue);
+}
+
+void fn_ChangeCameraRealParameter(tdstCineinfo_* hCineInfo, tdeProcedureId_ eProcedureId, int lTypeOfChange, int lChangingMode, float xValue)
+{
+    float* p_xWorkValue;
+    float* p_xVisibilityValue;
+    float* p_xCurrentValue;
+    float* p_xInitialValue;
+
+    p_xInitialValue = NULL;
+    p_xCurrentValue = NULL;
+    p_xVisibilityValue = NULL;
+    p_xWorkValue = NULL;
+
+    switch (eProcedureId)
+    {
+    case 0x23C:
+        p_xInitialValue = &hCineInfo->hInit->xDistMin;
+        p_xCurrentValue = &hCineInfo->hCurrent->xDistMin;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xDistMin;
+        p_xWorkValue = &hCineInfo->hWork->xDistMin;
+        break;
+    case 0x23D:
+        p_xInitialValue = &hCineInfo->hInit->xDistMax;
+        p_xCurrentValue = &hCineInfo->hCurrent->xDistMax;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xDistMax;
+        p_xWorkValue = &hCineInfo->hWork->xDistMax;
+        break;
+    case 0x23E:
+        p_xInitialValue = &hCineInfo->hInit->xBoundDistMin;
+        p_xCurrentValue = &hCineInfo->hCurrent->xBoundDistMin;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xBoundDistMin;
+        p_xWorkValue = &hCineInfo->hWork->xBoundDistMin;
+        break;
+    case 0x23F:
+        p_xInitialValue = &hCineInfo->hInit->xBoundDistMax;
+        p_xCurrentValue = &hCineInfo->hCurrent->xBoundDistMax;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xBoundDistMax;
+        p_xWorkValue = &hCineInfo->hWork->xBoundDistMax;
+        break;
+    case 0x240:
+        p_xInitialValue = &hCineInfo->hInit->xAngleAlpha;
+        p_xCurrentValue = &hCineInfo->hCurrent->xAngleAlpha;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xAngleAlpha;
+        p_xWorkValue = &hCineInfo->hWork->xAngleAlpha;
+        break;
+    case 0x241:
+        p_xInitialValue = &hCineInfo->hInit->xAngleShiftAlpha;
+        p_xCurrentValue = &hCineInfo->hCurrent->xAngleShiftAlpha;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xAngleShiftAlpha;
+        p_xWorkValue = &hCineInfo->hWork->xAngleShiftAlpha;
+        break;
+    case 0x242:
+        p_xInitialValue = &hCineInfo->hInit->xAngleTheta;
+        p_xCurrentValue = &hCineInfo->hCurrent->xAngleTheta;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xAngleTheta;
+        p_xWorkValue = &hCineInfo->hWork->xAngleTheta;
+        break;
+    case 0x243:
+        p_xInitialValue = &hCineInfo->hInit->xAngleShiftTheta;
+        p_xCurrentValue = &hCineInfo->hCurrent->xAngleShiftTheta;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xAngleShiftTheta;
+        p_xWorkValue = &hCineInfo->hWork->xAngleShiftTheta;
+        break;
+    case 0x244:
+        p_xInitialValue = &hCineInfo->hInit->xLinearSpeed;
+        p_xCurrentValue = &hCineInfo->hCurrent->xLinearSpeed;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xLinearSpeed;
+        p_xWorkValue = &hCineInfo->hWork->xLinearSpeed;
+        break;
+    case 0x245:
+        p_xInitialValue = &hCineInfo->hInit->xLinearIncreaseSpeed;
+        p_xCurrentValue = &hCineInfo->hCurrent->xLinearIncreaseSpeed;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xLinearIncreaseSpeed;
+        p_xWorkValue = &hCineInfo->hWork->xLinearIncreaseSpeed;
+        break;
+    case 0x246:
+        p_xInitialValue = &hCineInfo->hInit->xLinearDecreaseSpeed;
+        p_xCurrentValue = &hCineInfo->hCurrent->xLinearDecreaseSpeed;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xLinearDecreaseSpeed;
+        p_xWorkValue = &hCineInfo->hWork->xLinearDecreaseSpeed;
+        break;
+    case 0x247:
+        p_xInitialValue = &hCineInfo->hInit->xAngularSpeed;
+        p_xCurrentValue = &hCineInfo->hCurrent->xAngularSpeed;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xAngularSpeed;
+        p_xWorkValue = &hCineInfo->hWork->xAngularSpeed;
+        break;
+    case 0x248:
+        p_xInitialValue = &hCineInfo->hInit->xAngularIncreaseSpeed;
+        p_xCurrentValue = &hCineInfo->hCurrent->xAngularIncreaseSpeed;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xAngularIncreaseSpeed;
+        p_xWorkValue = &hCineInfo->hWork->xAngularIncreaseSpeed;
+        break;
+    case 0x249:
+        p_xInitialValue = &hCineInfo->hInit->xAngularDecreaseSpeed;
+        p_xCurrentValue = &hCineInfo->hCurrent->xAngularDecreaseSpeed;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xAngularDecreaseSpeed;
+        p_xWorkValue = &hCineInfo->hWork->xAngularDecreaseSpeed;
+        break;
+    case 0x24A:
+        p_xInitialValue = &hCineInfo->hInit->xTargetSpeed;
+        p_xCurrentValue = &hCineInfo->hCurrent->xTargetSpeed;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xTargetSpeed;
+        p_xWorkValue = &hCineInfo->hWork->xTargetSpeed;
+        break;
+    case 0x24B:
+        p_xInitialValue = &hCineInfo->hInit->xTargetIncreaseSpeed;
+        p_xCurrentValue = &hCineInfo->hCurrent->xTargetIncreaseSpeed;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xTargetIncreaseSpeed;
+        p_xWorkValue = &hCineInfo->hWork->xTargetIncreaseSpeed;
+        break;
+    case 0x24C:
+        p_xInitialValue = &hCineInfo->hInit->xTargetDecreaseSpeed;
+        p_xCurrentValue = &hCineInfo->hCurrent->xTargetDecreaseSpeed;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xTargetDecreaseSpeed;
+        p_xWorkValue = &hCineInfo->hWork->xTargetDecreaseSpeed;
+        break;
+    case 0x24D:
+        p_xInitialValue = &hCineInfo->hInit->xFocal;
+        p_xCurrentValue = &hCineInfo->hCurrent->xFocal;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xFocal;
+        p_xWorkValue = &hCineInfo->hWork->xFocal;
+        break;
+    }
+
+    CAM_fn_vChangeARealParameter(hCineInfo, p_xInitialValue, p_xCurrentValue, p_xVisibilityValue, p_xWorkValue, lTypeOfChange, lChangingMode, xValue);
+}
+
+unsigned char fn_BackMode(CAM_Shooter_* pcs)
+{
+    MTH3D_tdstVector_ vPos;
+
+    CSH_fn_vCheckRestart(pcs);
+
+    fn_GetPersoSighting(&pcs->vCameraSighting, pcs->pCamera);
+    CSH_fn_vReadInputs(pcs);
+
+    pcs->xTheta_Default = stCamShooter_CV.xTheta_Init;
+    pcs->xTheta_Min = -0.8f;
+    pcs->xTheta_Max = 1.2f;
+    pcs->xDistMax_Default = stCamShooter_CV.xDistMax_Init;
+    pcs->xDistMax = stCamShooter_CV.xDistMax_Init;
+    if (pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport == pcs->pMAComport_Climb)
+    {
+        pcs->xTheta_Default = stCamShooter_CV.xTheta_Init_Climb;
+        pcs->xDistMax_Default = stCamShooter_CV.xDistMax_Init_Climb;
+        pcs->xDistMax = stCamShooter_CV.xDistMax_Init_Climb;
+        if (!pcs->bWasClimbing)
+        {
+            pcs->bWasClimbing = 1;
+            pcs->ulDelayTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+            pcs->bStartAlignCamera = 1;
+        }
+        else if (g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - pcs->ulDelayTime < 1000)
+        {
+            vPos.xX = pcs->pTargetActor_speed->xX;
+            vPos.xY = pcs->pTargetActor_speed->xY;
+            vPos.xZ = pcs->pTargetActor_speed->xZ;
+            if (sqrtf(vPos.xX * vPos.xX + vPos.xY * vPos.xY + vPos.xZ * vPos.xZ) < 0.1f)
+            {
+                fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 1, 1, 8.0f);
+                fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x247, 1, 1, 1.0f);
+            }
+            else
+            {
+                fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 1, 1, 16.0f);
+                fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x247, 1, 1, 2.0f);
+            }
+        }
+    }
+    else if (pcs->bWasClimbing)
+    {
+        pcs->bWasClimbing = 0;
+        pcs->ulDelayTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+        pcs->xTheta_Default = stCamShooter_CV.xTheta_Init_Climb;
+        pcs->xDistMax_Default = stCamShooter_CV.xDistMax_Init_Climb;
+        pcs->xDistMax = stCamShooter_CV.xDistMax_Init_Climb;
+    }
+    else if (g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - pcs->ulDelayTime < 1000 && fn_bCollideWithGround(pcs->pTargetSkin))
+    {
+        pcs->xTheta_Default = stCamShooter_CV.xTheta_Init_Climb;
+        pcs->xDistMax_Default = stCamShooter_CV.xDistMax_Init_Climb;
+        pcs->xDistMax = stCamShooter_CV.xDistMax_Init_Climb;
+    }
+    else if (g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - pcs->ulDelayTime < 2000 &&
+             pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport == pcs->pMAComport_Wait)
+    {
+        fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 1, 1, 16.0f);
+        fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x247, 1, 1, 1.0f);
+    }
+
+    fn_GetPersoNegativeSighting(&pcs->vRefAxis, pcs->pTargetActor);
+    hCineInfo->stForceRefAxisY = pcs->vRefAxis;
+    hCineInfo->stForceRefAxisZ = vVectorZ.v;
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);
+
+    fn_CollisionRayCast(pcs->pCamera, pcs->vCameraPosition, &vVectorZ.v, 0);
+    pcs->vCeilingCollisionPoint = g_stCollideResultPoint.v;
+    if (bMovedCameraY && (lInputAxisZ <= 0 ||
+        (pcs->vCeilingCollisionPoint.xX == 0.0f && pcs->vCeilingCollisionPoint.xY == 0.0f && pcs->vCeilingCollisionPoint.xZ == 0.0f)) &&
+        !*(char *)pcs->abExternDsgVarBoolean[2])
+    {
+        if (pcs->bMouseDriven)
+            vPos.xX = (-(float)lInputAxisZ * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime) / stCamShooter_CV.xMouseFactorY;
+        else
+        {
+            vPos.xX = (float)(lInputAxisZ < 0 ? lInputAxisZ + 12 : lInputAxisZ - 12) * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime / 11000.0f;
+            vPos.xX = lInputAxisZ < 0 ? -(vPos.xX * vPos.xX) : vPos.xX * vPos.xX;
+        }
+        pcs->xDeltaTheta_User -= vPos.xX;
+        pcs->xTheta_User = pcs->xTheta_Default + pcs->xDeltaTheta_User;
+        if (pcs->xTheta_User > pcs->xTheta_Max)
+        {
+            pcs->xTheta_User = pcs->xTheta_Max;
+            pcs->xDeltaTheta_User = pcs->xTheta_Max - pcs->xTheta_Default;
+        }
+        else if (pcs->xTheta_User < pcs->xTheta_Min)
+        {
+            pcs->xTheta_User = pcs->xTheta_Min;
+            pcs->xDeltaTheta_User = pcs->xTheta_Min - pcs->xTheta_Default;
+        }
+    }
+    else if (*(char *)pcs->abExternDsgVarBoolean[2])
+    {
+        pcs->xTheta_Current = pcs->xTheta_Default;
+        pcs->xTheta_User = pcs->xTheta_Default;
+        pcs->xDeltaTheta_User = 0.0f;
+    }
+    pcs->iOldInputAxisZ = lInputAxisZ;
+
+    if (pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport == pcs->pMAComport_Hang ||
+        pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport == pcs->pMAComport_Climb)
+    {
+        if (bMovedCameraX)
+        {
+            if (pcs->bMouseDriven)
+                vPos.xX = (float)lInputAxisV * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime / stCamShooter_CV.xMouseFactorX;
+            else
+            {
+                vPos.xX = (float)(lInputAxisV < 0 ? lInputAxisV + 12 : lInputAxisV - 12) * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime / 13000.0f;
+                vPos.xX = lInputAxisV < 0 ? -(vPos.xX * vPos.xX) : vPos.xX * vPos.xX;
+            }
+            pcs->xAlpha_User -= vPos.xX;
+            if (pcs->xAlpha_User > 1.0f)
+                pcs->xAlpha_User = 1.0f;
+            else if (pcs->xAlpha_User < -1.0f)
+                pcs->xAlpha_User = -1.0f;
+        }
+    }
+    else
+        pcs->xAlpha_User = 0.0f;
+
+    fn_GetPersoSighting(&pcs->vRayCastDirection, pcs->pTargetActor);
+    pcs->vRayCastOrigin = *pcs->pTargetActor_position;
+    pcs->vRayCastOrigin.xZ += 1.0f;
+    if (pcs->bMouseDriven)
+    {
+        pcs->vRayCastDirection.xZ = 0.0f;
+        vPos.xX = sqrtf(pcs->vRayCastDirection.xX * pcs->vRayCastDirection.xX + pcs->vRayCastDirection.xY * pcs->vRayCastDirection.xY);
+        if (vPos.xX != 0.0f)
+        {
+            pcs->vRayCastDirection.xX *= 200.0f / vPos.xX;
+            pcs->vRayCastDirection.xY *= 200.0f / vPos.xX;
+        }
+    }
+    else
+    {
+        vPos.xX = sqrtf(pcs->vRayCastDirection.xX * pcs->vRayCastDirection.xX + pcs->vRayCastDirection.xY * pcs->vRayCastDirection.xY + pcs->vRayCastDirection.xZ * pcs->vRayCastDirection.xZ);
+        if (vPos.xX != 0.0f)
+        {
+            pcs->vRayCastDirection.xX *= 200.0f / vPos.xX;
+            pcs->vRayCastDirection.xY *= 200.0f / vPos.xX;
+            pcs->vRayCastDirection.xZ *= 200.0f / vPos.xX;
+        }
+    }
+    *(int *)pcs->apExternDsgVarPerso[1] = 0;
+    fn_CollisionRayCast(pcs->pCamera, &pcs->vRayCastOrigin, &pcs->vRayCastDirection, pcs->bAutoAim ? 2 : 0);
+    if (g_hSuperObjectHit)
+    {
+        if (((HIE_tdstSuperObject_ *)g_hSuperObjectHit)->ulTypeOfLinkedObject == 2 && (HIE_tdstSuperObject_ *)g_hSuperObjectHit != pcs->pTargetSkin)
+        {
+            pcs->vViewFinderPosition.xX = ((HIE_tdstSuperObject_ *)g_hSuperObjectHit)->hGlobalMatrix->stTransformMatrix.stCol_3.xX;
+            pcs->vViewFinderPosition.xY = ((HIE_tdstSuperObject_ *)g_hSuperObjectHit)->hGlobalMatrix->stTransformMatrix.stCol_3.xY;
+            pcs->vViewFinderPosition.xZ = ((HIE_tdstSuperObject_ *)g_hSuperObjectHit)->hGlobalMatrix->stTransformMatrix.stCol_3.xZ + 1.0f;
+            *(HIE_tdstSuperObject_ **)pcs->apExternDsgVarPerso[1] = (HIE_tdstSuperObject_ *)g_hSuperObjectHit;
+        }
+        else
+            pcs->vViewFinderPosition = g_stCollideResultPoint.v;
+    }
+    else
+    {
+        pcs->vViewFinderPosition.xX = pcs->vRayCastOrigin.xX + pcs->vRayCastDirection.xX;
+        pcs->vViewFinderPosition.xY = pcs->vRayCastOrigin.xY + pcs->vRayCastDirection.xY;
+        pcs->vViewFinderPosition.xZ = pcs->vRayCastOrigin.xZ + pcs->vRayCastDirection.xZ;
+        fn_GetPersoSighting((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0], pcs->pTargetActor);
+    }
+
+    fn_vGetViewportCoordinates(&vPos, &pcs->vViewFinderPosition, pcs->p_stViewport);
+    if (GAM_MultiVP_fn_ucGetNumberOfPlayers() == 2)
+        vPos.xY *= 2.0f;
+    if (pcs->bMouseDriven)
+    {
+        pcs->vCheckCollisionShift.xX = vPos.xX - pcs->v2DViewFinderPosition.xX;
+        pcs->vCheckCollisionShift.xY = vPos.xY - pcs->v2DViewFinderPosition.xY;
+        pcs->vCheckCollisionShift.xZ = vPos.xZ - pcs->v2DViewFinderPosition.xZ;
+        if (pcs->v2DViewFinderPosition.xZ > 3.0f ||
+            sqrtf(pcs->vCheckCollisionShift.xX * pcs->vCheckCollisionShift.xX + pcs->vCheckCollisionShift.xY * pcs->vCheckCollisionShift.xY + pcs->vCheckCollisionShift.xZ * pcs->vCheckCollisionShift.xZ) < 0.5f)
+            pcs->v2DViewFinderPosition = vPos;
+        else
+        {
+            pcs->v2DViewFinderPosition.xX += 0.5f * pcs->vCheckCollisionShift.xX;
+            pcs->v2DViewFinderPosition.xY += 0.5f * pcs->vCheckCollisionShift.xY;
+            pcs->v2DViewFinderPosition.xZ += 0.5f * pcs->vCheckCollisionShift.xZ;
+        }
+    }
+    else
+        pcs->v2DViewFinderPosition = vPos;
+
+    pcs->vDirection.xX = pcs->vViewFinderPosition.xX - pcs->vRayCastOrigin.xX;
+    pcs->vDirection.xY = pcs->vViewFinderPosition.xY - pcs->vRayCastOrigin.xY;
+    pcs->vDirection.xZ = pcs->vViewFinderPosition.xZ - pcs->vRayCastOrigin.xZ;
+    vPos.xX = sqrtf(pcs->vDirection.xX * pcs->vDirection.xX + pcs->vDirection.xY * pcs->vDirection.xY + pcs->vDirection.xZ * pcs->vDirection.xZ);
+    if (vPos.xX != 0.0f)
+    {
+        ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0])->xX = pcs->vDirection.xX / vPos.xX;
+        ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0])->xY = pcs->vDirection.xY / vPos.xX;
+        ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0])->xZ = pcs->vDirection.xZ / vPos.xX;
+    }
+    pcs->vCheckCollisionShift1 = pcs->v2DViewFinderPosition;
+    pcs->vCheckCollisionShift = pcs->v2DViewFinderPosition;
+    pcs->vCheckCollisionShift1.xX -= pcs->xViewFinderWidth_2;
+    pcs->vCheckCollisionShift1.xY -= pcs->xViewFinderHeight_2;
+    pcs->vCheckCollisionShift.xX += pcs->xViewFinderWidth_2;
+    pcs->vCheckCollisionShift.xY += pcs->xViewFinderHeight_2;
+    if (*(int *)pcs->apExternDsgVarPerso[1])
+        AGO_vAddParticle(50, &stCamShooter_CV.vViewFinderRedIconUV1, &stCamShooter_CV.vViewFinderRedIconUV2, stCamShooter_CV.hVMTViewFinder_white, 0.0f);
+    else
+        AGO_vAddParticle(50, &stCamShooter_CV.vViewFinderWhiteIconUV1, &stCamShooter_CV.vViewFinderWhiteIconUV2, stCamShooter_CV.hVMTViewFinder_white, 0.0f);
+    AGO_vSetIcon(pcs->iViewportIndex, pcs->iViewFinderIconId, &pcs->vCheckCollisionShift1.xX, &pcs->vCheckCollisionShift.xX, 255.0f, stCamShooter_CV.hVMTViewFinder_red);
+
+    pcs->xTheta_Current = pcs->xTheta_User;
+    if (!pcs->bMouseDriven)
+    {
+        fn_GetPersoSighting(&vPos, pcs->pTargetActor);
+        pcs->xTargetAngle = fn_xAngleVectorXOY(&pcs->vCameraSighting, &vPos);
+        if (fabsf(pcs->xTargetAngle) > 0.2f &&
+            pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport != pcs->pMAComport_Hang &&
+            pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport != pcs->pMAComport_Climb)
+        {
+            pcs->bFastAlign = 1;
+            pcs->xFastAlign_StartDistance = pcs->xDistMax;
+        }
+        if (pcs->bFastAlign)
+        {
+            fn_GetPersoNegativeSighting(&pcs->vRefAxis, pcs->pTargetActor);
+            vPos.xX = fabsf(pcs->xTargetAngle);
+            fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x247, 1, 1, 180.0f);
+            fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 1, 1, 180.0f);
+            fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x24A, 1, 1, 180.0f);
+            CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);
+            CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x4000);
+            if (vPos.xX > 1.5707964f)
+                vPos.xY = 6.0f + ((vPos.xX - 1.5707964f) / 1.5707964f) * (pcs->xFastAlign_StartDistance - 6.0f);
+            else if (vPos.xX > 0.2f)
+                vPos.xY = 6.0f + ((vPos.xX - 1.5707964f) / 1.5707964f) * (pcs->xDistMax_Default - 6.0f);
+            else
+            {
+                pcs->bFastAlign = 0;
+                vPos.xY = pcs->xDistMax;
+            }
+            if (pcs->xDistMax > vPos.xY)
+                pcs->xDistMax = vPos.xY;
+        }
+    }
+
+    vPos = *pcs->pTargetActor_position;
+    vPos.xZ += 1.5f;
+    fn_GetPersoHorizon(&pcs->vCheckCollisionShift, pcs->pCamera);
+    pcs->vCheckCollisionShift.xX *= 0.7f;
+    pcs->vCheckCollisionShift.xY *= 0.7f;
+    pcs->vCheckCollisionShift.xZ *= 0.7f;
+    pcs->vCollisionDirectionV.xX = pcs->vCheckCollisionShift.xX - pcs->xDistMax * pcs->vCameraSighting.xX;
+    pcs->vCollisionDirectionV.xY = pcs->vCheckCollisionShift.xY - pcs->xDistMax * pcs->vCameraSighting.xY;
+    pcs->vCollisionDirectionV.xZ = pcs->vCheckCollisionShift.xZ - pcs->xDistMax * pcs->vCameraSighting.xZ;
+    fn_CollisionRayCast(pcs->pCamera, &vPos, &pcs->vCollisionDirectionV, 0);
+    pcs->vCollisionPoint.xX = 0.0f;
+    pcs->vCollisionPoint.xY = 0.0f;
+    pcs->vCollisionPoint.xZ = 0.0f;
+    pcs->xOldDistMax = pcs->xDistMax;
+    if (g_stCollideResultPoint.v.xX != 0.0f || g_stCollideResultPoint.v.xY != 0.0f || g_stCollideResultPoint.v.xZ != 0.0f)
+    {
+        if (!pcs->hWaterGMT || g_hColMatHit != (int)pcs->hWaterGMT->hCollideMaterial)
+        {
+            pcs->xOldDistMax = sqrtf(
+                (g_stCollideResultPoint.v.xX - vPos.xX) * (g_stCollideResultPoint.v.xX - vPos.xX) +
+                (g_stCollideResultPoint.v.xY - vPos.xY) * (g_stCollideResultPoint.v.xY - vPos.xY) +
+                (g_stCollideResultPoint.v.xZ - vPos.xZ) * (g_stCollideResultPoint.v.xZ - vPos.xZ));
+            if (pcs->xOldDistMax < pcs->xDistMax)
+                pcs->vCollisionPoint = g_stCollideResultPoint.v;
+        }
+    }
+    pcs->vCheckCollisionShift.xX = -pcs->vCheckCollisionShift.xX;
+    pcs->vCheckCollisionShift.xY = -pcs->vCheckCollisionShift.xY;
+    pcs->vCheckCollisionShift.xZ = -pcs->vCheckCollisionShift.xZ;
+    pcs->vCollisionDirectionV.xX = pcs->vCheckCollisionShift.xX - pcs->xDistMax * pcs->vCameraSighting.xX;
+    pcs->vCollisionDirectionV.xY = pcs->vCheckCollisionShift.xY - pcs->xDistMax * pcs->vCameraSighting.xY;
+    pcs->vCollisionDirectionV.xZ = pcs->vCheckCollisionShift.xZ - pcs->xDistMax * pcs->vCameraSighting.xZ;
+    fn_CollisionRayCast(pcs->pCamera, &vPos, &pcs->vCollisionDirectionV, 0);
+    if (g_stCollideResultPoint.v.xX != 0.0f || g_stCollideResultPoint.v.xY != 0.0f || g_stCollideResultPoint.v.xZ != 0.0f)
+    {
+        if (!pcs->hWaterGMT || g_hColMatHit != (int)pcs->hWaterGMT->hCollideMaterial)
+        {
+            vPos.xX = sqrtf(
+                (g_stCollideResultPoint.v.xX - pcs->pTargetActor_position->xX) * (g_stCollideResultPoint.v.xX - pcs->pTargetActor_position->xX) +
+                (g_stCollideResultPoint.v.xY - pcs->pTargetActor_position->xY) * (g_stCollideResultPoint.v.xY - pcs->pTargetActor_position->xY) +
+                (g_stCollideResultPoint.v.xZ - pcs->pTargetActor_position->xZ - 1.5f) * (g_stCollideResultPoint.v.xZ - pcs->pTargetActor_position->xZ - 1.5f));
+            if (vPos.xX < pcs->xOldDistMax)
+            {
+                pcs->xOldDistMax = vPos.xX;
+                pcs->vCollisionPoint = g_stCollideResultPoint.v;
+            }
+        }
+    }
+    if (pcs->vCollisionPoint.xX != 0.0f || pcs->vCollisionPoint.xY != 0.0f || pcs->vCollisionPoint.xZ != 0.0f)
+    {
+        pcs->xOldDistMax -= 0.6f;
+        if (pcs->xOldDistMax < 1.3f)
+            pcs->xOldDistMax = 1.3f;
+        pcs->xDistMax = pcs->xOldDistMax;
+        if (pcs->xDistMax < 2.0f)
+        {
+            CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x4000);
+            CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x4000);
+        }
+    }
+
+    if (pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport != pcs->pMAComport_Climb &&
+        pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport != pcs->pMAComport_Hang &&
+        pcs->xTheta_Current < pcs->xTheta_Default)
+    {
+        vPos.xX = 3.0f + (pcs->xDistMax_Default - 3.0f) * ((pcs->xTheta_Current - pcs->xTheta_Min) / (pcs->xTheta_Default - pcs->xTheta_Min));
+        if (pcs->xDistMax > vPos.xX)
+            pcs->xDistMax = vPos.xX;
+    }
+    if (pcs->xDistMax < 4.0f && pcs->vCollisionPoint.xZ > 0.0f)
+    {
+        vPos = hCineInfo->hCurrent->stShiftTarget;
+        vPos.xZ += (4.0f - pcs->xDistMax) / 3.0f;
+        fn_ChangeCameraVectorParameter(hCineInfo, (tdeProcedureId_)0x23B, 1, 1, &vPos);
+    }
+    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x23C, 0, 1, pcs->xDistMax);
+    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x23D, 0, 1, pcs->xDistMax);
+    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x242, 0, 1, pcs->xTheta_Current);
+    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x240, 0, 1, pcs->xAlpha_User);
+
+    if (pcs->bMouseDriven && fabsf((float)lInputAxisV) > 400.0f)
+    {
+        fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x247, 1, 1, 290.0f);
+        fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 1, 1, 290.0f);
+        vPos.xX = pcs->pTargetActor_position->xX + hCineInfo->hWork->stShiftTarget.xX;
+        vPos.xY = pcs->pTargetActor_position->xY + hCineInfo->hWork->stShiftTarget.xY;
+        vPos.xZ = pcs->pTargetActor_position->xZ + hCineInfo->hWork->stShiftTarget.xZ;
+        fn_GetPersoNegativeSighting(&pcs->vDirection, pcs->pTargetActor);
+        fn_GetPersoHorizon(&pcs->vCheckCollisionShift, pcs->pTargetActor);
+        pcs->vDirection.xX *= pcs->xDistMax;
+        pcs->vDirection.xY *= pcs->xDistMax;
+        pcs->vDirection.xZ *= pcs->xDistMax;
+        fn_RotateVectorByAngle(&pcs->vDirection, pcs->xTheta_Current, &pcs->vCheckCollisionShift);
+        fn_RotateVectorByAngle(&pcs->vDirection, pcs->xAlpha_User, &vVectorZ.v);
+        hCineInfo->stForcePosition.xX = vPos.xX + pcs->vDirection.xX;
+        hCineInfo->stForcePosition.xY = vPos.xY + pcs->vDirection.xY;
+        hCineInfo->stForcePosition.xZ = vPos.xZ + pcs->vDirection.xZ;
+        CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);
+    }
+    return 0;
+}
+
+void fn_GetTheoreticalPosition_UsingRealPosition(MTH3D_tdstVector_* vTPosition, CAM_Shooter_* pcs, unsigned int iMode)
+{
+    float xNorm;
+    MTH3D_tdstVector_ vDiff;
+    MTH3D_tdstVector_ vHorizon;
+    MTH3D_tdstVector_ vCenter;
+    float xX, xY, xZ, xSquared;
+
+    vCenter.xX = pcs->pTargetActor_position->xX + (iMode == 0 ? &hCineInfo->hCurrent->stShiftPos : &hCineInfo->hWork->stShiftPos)->xX; vCenter.xY = pcs->pTargetActor_position->xY + (iMode == 0 ? &hCineInfo->hCurrent->stShiftPos : &hCineInfo->hWork->stShiftPos)->xY; vCenter.xZ = pcs->pTargetActor_position->xZ + (iMode == 0 ? &hCineInfo->hCurrent->stShiftPos : &hCineInfo->hWork->stShiftPos)->xZ;
+
+    vDiff.xX = pcs->vCameraPosition->xX - vCenter.xX; vDiff.xY = pcs->vCameraPosition->xY - vCenter.xY; vDiff.xZ = pcs->vCameraPosition->xZ - vCenter.xZ;
+
+    vDiff.xZ = xZ = 0.0f;
+
+    xX = vDiff.xX; xY = vDiff.xY; MTH_SQR3_TO(xSquared, xX, xY, xZ); MTH_SQRT_TO(xNorm, xSquared);
+
+    if (xNorm == 0.0f)
+    {
+        *(int *)&vTPosition->xX = *(int *)&pcs->vCameraPosition->xX; *(int *)&vTPosition->xY = *(int *)&pcs->vCameraPosition->xY; *(int *)&vTPosition->xZ = *(int *)&pcs->vCameraPosition->xZ;
+        return;
+    }
+
+    vDiff.xX = vDiff.xX * (pcs->xDistMax / xNorm); vDiff.xY = vDiff.xY * (pcs->xDistMax / xNorm); vDiff.xZ = vDiff.xZ * (pcs->xDistMax / xNorm);
+
+    fn_GetPersoNegativeSighting(&vHorizon, pcs->pCamera);
+    vHorizon.xZ = 0.0f;
+    fn_RotateVectorByAngle(&vHorizon, -1.5707964f, &vVectorZ.v);
+
+    MTH_VECTOR_NORM_TO(xNorm, vHorizon); if (xNorm != 0.0f) { xNorm = 1.0f / xNorm; vHorizon.xX = xNorm * vHorizon.xX; vHorizon.xY = xNorm * vHorizon.xY; vHorizon.xZ = xNorm * vHorizon.xZ; }
+
+    fn_RotateVectorByAngle(&vDiff, pcs->bObstacleCollision ? pcs->xTheta_Imposed : pcs->xTheta_User, &vHorizon);
+
+    vTPosition->xX = vCenter.xX + vDiff.xX; vTPosition->xY = vCenter.xY + vDiff.xY; vTPosition->xZ = vCenter.xZ + vDiff.xZ;
+}
+
+void fn_PutCameraAgainstWall(CAM_Shooter_* pcs, float xDistanceToTarget)
+{
+    CSH_tduWordVector vRayCast;
+    CSH_tduWordVector vHorizon;
+    float xFactor;
+    float xAngle;
+    float xTheoreticalDistance;
+    float xNewTheta;
+    static float xMultiplier = 1.0f;
+    float xX, xY, xZ, xSquared;
+
+    xAngle = fn_xAngleVectorVertical(&pcs->vNormalCollision, &vVectorZ.v);
+    if (CSH_MTH_xAbs(xAngle) < 0.7853982f || CSH_MTH_xAbs(xAngle) > 2.3561945f)
+    {
+        pcs->xDistMax = xDistanceToTarget;
+        pcs->xTheta_Imposed = pcs->xTheta_User;
+    }
+    else
+    {
+        xTheoreticalDistance = pcs->xDistMax_Default + 0.6f;
+        xFactor = (xTheoreticalDistance - xDistanceToTarget) / xTheoreticalDistance;
+        if (xFactor < 0.0f)
+            xFactor = 0.0f;
+        else
+            xFactor *= xMultiplier;
+        xNewTheta = pcs->xTheta_Default + (1.0f - pcs->xTheta_Default) * xFactor;
+        if (xNewTheta > 1.0f)
+            xNewTheta = 1.0f;
+        pcs->xTheta_Imposed = xNewTheta;
+        vRayCast.i[0] = ((int*)&pcs->vRayCastDirection)[0];
+        vRayCast.i[1] = ((int*)&pcs->vRayCastDirection)[1];
+        vRayCast.i[2] = ((int*)&pcs->vRayCastDirection)[2];
+        vRayCast.v.xZ = 0.0f;
+        if (vRayCast.v.xX == 0.0f && vRayCast.v.xY == 0.0f && vRayCast.v.xZ == 0.0f)
+            fn_GetPersoNegativeSighting(&vRayCast.v, pcs->pTargetActor);
+        MTH_VECTOR_NORM_TO(xSquared, vRayCast.v); vRayCast.v.xX = vRayCast.v.xX * (xTheoreticalDistance / xSquared);
+        MTH_VECTOR_NORM_TO(xSquared, vRayCast.v); vRayCast.v.xY = vRayCast.v.xY * (xTheoreticalDistance / xSquared);
+        MTH_VECTOR_NORM_TO(xSquared, vRayCast.v); vRayCast.v.xZ = vRayCast.v.xZ * (xTheoreticalDistance / xSquared);
+
+        vHorizon.i[0] = ((int*)&pcs->vRefAxis)[0];
+        vHorizon.i[1] = ((int*)&pcs->vRefAxis)[1];
+        vHorizon.i[2] = ((int*)&pcs->vRefAxis)[2];
+        fn_RotateVectorByAngle(&vHorizon.v, -1.5707964f, &vVectorZ.v);
+        fn_RotateVectorByAngle(&vRayCast.v, xNewTheta, &vHorizon.v);
+        fn_CollisionRayCast(pcs->pCamera, &pcs->vRayCastOrigin, &vRayCast.v, 0);
+        if (g_stCollideResultPoint.v.xX == 0.0f && g_stCollideResultPoint.v.xY == 0.0f && g_stCollideResultPoint.v.xZ == 0.0f)
+        {
+            pcs->xDistMax = pcs->xDistMax_Default;
+        }
+        else
+        {
+            xX = g_stCollideResultPoint.v.xX - pcs->vRayCastOrigin.xX; xY = g_stCollideResultPoint.v.xY - pcs->vRayCastOrigin.xY; xZ = g_stCollideResultPoint.v.xZ - pcs->vRayCastOrigin.xZ;
+            MTH_SQR3_TO(xSquared, xX, xY, xZ); MTH_SQRT_TO(xX, xSquared); pcs->xDistMax = xX - 0.6f;
+            if (pcs->xDistMax < pcs->xDistMax_Default)
+            {
+                pcs->bObstacleCollision = 1;
+                if (pcs->xDistMax < 1.0f)
+                    pcs->xDistMax = 1.0f;
+            }
+            else
+                pcs->xDistMax = pcs->xDistMax_Default;
+        }
+    }
+}
+
+void fn_CreateRaycastDirection(CAM_Shooter_* pcs, MTH3D_tdstVector_* vRayCastDirection, MTH3D_tdstVector_* vCentralSegment)
+{
+    MTH3D_tdstVector_ vTemp;
+    float xNorm;
+    float xX, xY, xZ;
+    float xSquared;
+    float xScale;
+
+    *(int *)&vRayCastDirection->xX = *(int *)&vCentralSegment->xX; *(int *)&vRayCastDirection->xY = *(int *)&vCentralSegment->xY; *(int *)&vRayCastDirection->xZ = *(int *)&vCentralSegment->xZ;
+
+    xX = vRayCastDirection->xX; xY = vRayCastDirection->xY; xZ = vRayCastDirection->xZ; MTH_SQR3_TO(xSquared, xX, xY, xZ); MTH_SQRT_TO(xNorm, xSquared); if (xNorm != 0.0f)
+    {
+        xScale = (pcs->xDistMax_Default / xNorm) + 0.6f;
+        vRayCastDirection->xX = xScale * vRayCastDirection->xX; vRayCastDirection->xY = xScale * vRayCastDirection->xY; vRayCastDirection->xZ = xScale * vRayCastDirection->xZ;
+    }
+    else
+    {
+        fn_GetPersoNegativeSighting(&vTemp, pcs->pCamera);
+        vRayCastDirection->xX = (pcs->xDistMax_Default + 0.6f) * vTemp.xX; vRayCastDirection->xY = (pcs->xDistMax_Default + 0.6f) * vTemp.xY; vRayCastDirection->xZ = (pcs->xDistMax_Default + 0.6f) * vTemp.xZ;
+    }
+}
+
 unsigned char fn_MarioMode(CAM_Shooter_* pcs)
 {
     float xAngularSpeed;
@@ -4776,1777 +6329,299 @@ unsigned char fn_MarioMode(CAM_Shooter_* pcs)
     return 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 2823–2840 */
-/* addr: 0x002464d0  size: 272 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2823
- *   +0x0014 -> line 2830
- *   +0x0030 -> line 2832
- *   +0x0068 -> line 2833
- *   +0x0084 -> line 2834
- *   +0x00a0 -> line 2835
- *   +0x00a8 -> line 2836
- *   +0x00b4 -> line 2837
- *   +0x00fc -> line 2840
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_CreateRaycastDirection(CAM_Shooter_* pcs, MTH3D_tdstVector_* vRayCastDirection, MTH3D_tdstVector_* vCentralSegment)
+inline void fn_InitMarioMode(CAM_Shooter_* pcs)
 {
-    MTH3D_tdstVector_ vTemp;
-    float xNorm;
-    float xX, xY, xZ;
-    float xSquared;
-    float xScale;
+    MTH3D_tdstVector_ vShiftPos;
 
-    *(int *)&vRayCastDirection->xX = *(int *)&vCentralSegment->xX; *(int *)&vRayCastDirection->xY = *(int *)&vCentralSegment->xY; *(int *)&vRayCastDirection->xZ = *(int *)&vCentralSegment->xZ;
-
-    xX = vRayCastDirection->xX; xY = vRayCastDirection->xY; xZ = vRayCastDirection->xZ; MTH_SQR3_TO(xSquared, xX, xY, xZ); MTH_SQRT_TO(xNorm, xSquared); if (xNorm != 0.0f)
+    pcs->bIsBot = pcs->bRaiseCamera = pcs->bSideCollision = pcs->bStartAlignCamera = pcs->bVerticalCollision = pcs->bWasClimbing = pcs->bFastAlign = pcs->bIsJumpFalling = pcs->bLowCeiling = pcs->bObstacleCollision = pcs->bAlignCamera = pcs->bAutoAlign = pcs->bCollision = pcs->bCollisionAlign = 0;
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 0, 0x80);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 4);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 1);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 0x10);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 8);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 2);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 0x20);
+    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x248, 0, 1, 0.5f);
+    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x249, 0, 1, 0.5f);
+    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x245, 0, 1, 5.0f);
+    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x246, 0, 1, 0.0f);
+    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 0, 1, 24.0f);
+    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x24A, 0, 1, 24.0f);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x40);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 8);
+    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x240, 0, 1, 0.0f);
+    if (GAM_MultiVP_fn_ucGetNumberOfPlayers() == 2)
     {
-        xScale = (pcs->xDistMax_Default / xNorm) + 0.6f;
-        vRayCastDirection->xX = xScale * vRayCastDirection->xX; vRayCastDirection->xY = xScale * vRayCastDirection->xY; vRayCastDirection->xZ = xScale * vRayCastDirection->xZ;
+        vShiftPos.xX = 0.0f;
+        vShiftPos.xY = 0.0f;
+        vShiftPos.xZ = 4.5f;
     }
     else
     {
-        fn_GetPersoNegativeSighting(&vTemp, pcs->pCamera);
-        vRayCastDirection->xX = (pcs->xDistMax_Default + 0.6f) * vTemp.xX; vRayCastDirection->xY = (pcs->xDistMax_Default + 0.6f) * vTemp.xY; vRayCastDirection->xZ = (pcs->xDistMax_Default + 0.6f) * vTemp.xZ;
+        vShiftPos.xX = 0.0f;
+        vShiftPos.xY = 0.0f;
+        vShiftPos.xZ = 3.0f;
     }
+    fn_ChangeCameraVectorParameter(hCineInfo, (tdeProcedureId_)0x23B, 0, 1, &vShiftPos);
+
+    pcs->xTheta_Default = stCamShooter_CV.xTheta_Init_mario;
+    pcs->xTheta_Min = -0.6f;
+    pcs->xTheta_Max = 1.3f;
+    pcs->xDistMax = pcs->xDistMax_Default = stCamShooter_CV.xDistMax_Init_mario;
+    pcs->xTheta_User = pcs->xTheta_Current = pcs->xTheta_Default;
+    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x242, 0, 1, pcs->xTheta_Current);
+    pcs->bIsBot = *(char *)pcs->abExternDsgVarBoolean[4];
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 2695–2767 */
-/* addr: 0x002465e0  size: 840 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2695
- *   +0x0004 -> line 2701
- *   +0x0008 -> line 2695
- *   +0x000c -> line 2701
- *   +0x0010 -> line 2695
- *   +0x0020 -> line 2701
- *   +0x0030 -> line 2704
- *   +0x0034 -> line 2702
- *   +0x0038 -> line 2704
- *   +0x0070 -> line 2706
- *   +0x0074 -> line 2707
- *   +0x0078 -> line 2709
- *   +0x0080 -> line 2713
- *   +0x0090 -> line 2717
- *   +0x0098 -> line 2713
- *   +0x009c -> line 2715
- *   +0x00ac -> line 2717
- *   +0x00bc -> line 2718
- *   +0x00c4 -> line 2720
- *   +0x00cc -> line 2722
- *   +0x00e8 -> line 2725
- *   +0x00f8 -> line 2726
- *   +0x00fc -> line 2728
- *   +0x0100 -> line 2731
- *   +0x0104 -> line 2730
- *   +0x0108 -> line 2731
- *   +0x010c -> line 2730
- *   +0x0120 -> line 2731
- *   +0x0124 -> line 2733
- *   +0x0160 -> line 2734
- *   +0x016c -> line 2736
- *   +0x01d8 -> line 2740
- *   +0x01dc -> line 2736
- *   +0x01e0 -> line 2740
- *   +0x01f0 -> line 2736
- *   +0x01f8 -> line 2740
- *   +0x01fc -> line 2736
- *   +0x0200 -> line 2739
- *   +0x0214 -> line 2740
- *   +0x021c -> line 2742
- *   +0x022c -> line 2744
- *   +0x0240 -> line 2746
- *   +0x0290 -> line 2747
- *   +0x029c -> line 2749
- *   +0x02c4 -> line 2750
- *   +0x02ec -> line 2754
- *   +0x0300 -> line 2758
- *   +0x0304 -> line 2756
- *   +0x0308 -> line 2758
- *   +0x0320 -> line 2761
- *   +0x0328 -> line 2762
- *   +0x032c -> line 2767
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_PutCameraAgainstWall(CAM_Shooter_* pcs, float xDistanceToTarget)
+inline void fn_InitBackMode(CAM_Shooter_* pcs)
 {
-    CSH_tduWordVector vRayCast;
-    CSH_tduWordVector vHorizon;
-    float xFactor;
-    float xAngle;
-    float xTheoreticalDistance;
-    float xNewTheta;
-    static float xMultiplier = 1.0f;
-    float xX, xY, xZ, xSquared;
+    MTH3D_tdstVector_ vShiftPos;
 
-    xAngle = fn_xAngleVectorVertical(&pcs->vNormalCollision, &vVectorZ.v);
-    if (CSH_MTH_xAbs(xAngle) < 0.7853982f || CSH_MTH_xAbs(xAngle) > 2.3561945f)
-    {
-        pcs->xDistMax = xDistanceToTarget;
-        pcs->xTheta_Imposed = pcs->xTheta_User;
-    }
-    else
-    {
-        xTheoreticalDistance = pcs->xDistMax_Default + 0.6f;
-        xFactor = (xTheoreticalDistance - xDistanceToTarget) / xTheoreticalDistance;
-        if (xFactor < 0.0f)
-            xFactor = 0.0f;
-        else
-            xFactor *= xMultiplier;
-        xNewTheta = pcs->xTheta_Default + (1.0f - pcs->xTheta_Default) * xFactor;
-        if (xNewTheta > 1.0f)
-            xNewTheta = 1.0f;
-        pcs->xTheta_Imposed = xNewTheta;
-        vRayCast.i[0] = ((int*)&pcs->vRayCastDirection)[0];
-        vRayCast.i[1] = ((int*)&pcs->vRayCastDirection)[1];
-        vRayCast.i[2] = ((int*)&pcs->vRayCastDirection)[2];
-        vRayCast.v.xZ = 0.0f;
-        if (vRayCast.v.xX == 0.0f && vRayCast.v.xY == 0.0f && vRayCast.v.xZ == 0.0f)
-            fn_GetPersoNegativeSighting(&vRayCast.v, pcs->pTargetActor);
-        MTH_VECTOR_NORM_TO(xSquared, vRayCast.v); vRayCast.v.xX = vRayCast.v.xX * (xTheoreticalDistance / xSquared);
-        MTH_VECTOR_NORM_TO(xSquared, vRayCast.v); vRayCast.v.xY = vRayCast.v.xY * (xTheoreticalDistance / xSquared);
-        MTH_VECTOR_NORM_TO(xSquared, vRayCast.v); vRayCast.v.xZ = vRayCast.v.xZ * (xTheoreticalDistance / xSquared);
-
-        vHorizon.i[0] = ((int*)&pcs->vRefAxis)[0];
-        vHorizon.i[1] = ((int*)&pcs->vRefAxis)[1];
-        vHorizon.i[2] = ((int*)&pcs->vRefAxis)[2];
-        fn_RotateVectorByAngle(&vHorizon.v, -1.5707964f, &vVectorZ.v);
-        fn_RotateVectorByAngle(&vRayCast.v, xNewTheta, &vHorizon.v);
-        fn_CollisionRayCast(pcs->pCamera, &pcs->vRayCastOrigin, &vRayCast.v, 0);
-        if (g_stCollideResultPoint.v.xX == 0.0f && g_stCollideResultPoint.v.xY == 0.0f && g_stCollideResultPoint.v.xZ == 0.0f)
-        {
-            pcs->xDistMax = pcs->xDistMax_Default;
-        }
-        else
-        {
-            xX = g_stCollideResultPoint.v.xX - pcs->vRayCastOrigin.xX; xY = g_stCollideResultPoint.v.xY - pcs->vRayCastOrigin.xY; xZ = g_stCollideResultPoint.v.xZ - pcs->vRayCastOrigin.xZ;
-            MTH_SQR3_TO(xSquared, xX, xY, xZ); MTH_SQRT_TO(xX, xSquared); pcs->xDistMax = xX - 0.6f;
-            if (pcs->xDistMax < pcs->xDistMax_Default)
-            {
-                pcs->bObstacleCollision = 1;
-                if (pcs->xDistMax < 1.0f)
-                    pcs->xDistMax = 1.0f;
-            }
-            else
-                pcs->xDistMax = pcs->xDistMax_Default;
-        }
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 2477–2509 */
-/* addr: 0x00246930  size: 664 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2477
- *   +0x002c -> line 2483
- *   +0x00b0 -> line 2485
- *   +0x00b4 -> line 2483
- *   +0x00b8 -> line 2485
- *   +0x00bc -> line 2487
- *   +0x00c0 -> line 2485
- *   +0x00c4 -> line 2483
- *   +0x00c8 -> line 2485
- *   +0x00f4 -> line 2487
- *   +0x00f8 -> line 2489
- *   +0x0118 -> line 2491
- *   +0x0128 -> line 2492
- *   +0x0148 -> line 2493
- *   +0x0150 -> line 2496
- *   +0x0188 -> line 2498
- *   +0x0194 -> line 2500
- *   +0x01a0 -> line 2499
- *   +0x01a4 -> line 2500
- *   +0x01b8 -> line 2502
- *   +0x0220 -> line 2504
- *   +0x0248 -> line 2507
- *   +0x026c -> line 2509
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_GetTheoreticalPosition_UsingRealPosition(MTH3D_tdstVector_* vTPosition, CAM_Shooter_* pcs, unsigned int iMode)
-{
-    float xNorm;
-    MTH3D_tdstVector_ vDiff;
-    MTH3D_tdstVector_ vHorizon;
-    MTH3D_tdstVector_ vCenter;
-    float xX, xY, xZ, xSquared;
-
-    vCenter.xX = pcs->pTargetActor_position->xX + (iMode == 0 ? &hCineInfo->hCurrent->stShiftPos : &hCineInfo->hWork->stShiftPos)->xX; vCenter.xY = pcs->pTargetActor_position->xY + (iMode == 0 ? &hCineInfo->hCurrent->stShiftPos : &hCineInfo->hWork->stShiftPos)->xY; vCenter.xZ = pcs->pTargetActor_position->xZ + (iMode == 0 ? &hCineInfo->hCurrent->stShiftPos : &hCineInfo->hWork->stShiftPos)->xZ;
-
-    vDiff.xX = pcs->vCameraPosition->xX - vCenter.xX; vDiff.xY = pcs->vCameraPosition->xY - vCenter.xY; vDiff.xZ = pcs->vCameraPosition->xZ - vCenter.xZ;
-
-    vDiff.xZ = xZ = 0.0f;
-
-    xX = vDiff.xX; xY = vDiff.xY; MTH_SQR3_TO(xSquared, xX, xY, xZ); MTH_SQRT_TO(xNorm, xSquared);
-
-    if (xNorm == 0.0f)
-    {
-        *(int *)&vTPosition->xX = *(int *)&pcs->vCameraPosition->xX; *(int *)&vTPosition->xY = *(int *)&pcs->vCameraPosition->xY; *(int *)&vTPosition->xZ = *(int *)&pcs->vCameraPosition->xZ;
-        return;
-    }
-
-    vDiff.xX = vDiff.xX * (pcs->xDistMax / xNorm); vDiff.xY = vDiff.xY * (pcs->xDistMax / xNorm); vDiff.xZ = vDiff.xZ * (pcs->xDistMax / xNorm);
-
-    fn_GetPersoNegativeSighting(&vHorizon, pcs->pCamera);
-    vHorizon.xZ = 0.0f;
-    fn_RotateVectorByAngle(&vHorizon, -1.5707964f, &vVectorZ.v);
-
-    MTH_VECTOR_NORM_TO(xNorm, vHorizon); if (xNorm != 0.0f) { xNorm = 1.0f / xNorm; vHorizon.xX = xNorm * vHorizon.xX; vHorizon.xY = xNorm * vHorizon.xY; vHorizon.xZ = xNorm * vHorizon.xZ; }
-
-    fn_RotateVectorByAngle(&vDiff, pcs->bObstacleCollision ? pcs->xTheta_Imposed : pcs->xTheta_User, &vHorizon);
-
-    vTPosition->xX = vCenter.xX + vDiff.xX; vTPosition->xY = vCenter.xY + vDiff.xY; vTPosition->xZ = vCenter.xZ + vDiff.xZ;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 1850–1915 */
-/* addr: 0x00246bd0  size: 8388 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1850
- *   +0x003c -> line 1854
- *   +0x01ac -> line 1856
- *   +0x01b8 -> line 1858
- *   +0x028c -> line 1859
- *   +0x02c0 -> line 1861
- *   +0x0520 -> line 1865
- *   +0x052c -> line 1866
- *   +0x0594 -> line 1868
- *   +0x05d8 -> line 1870
- *   +0x0808 -> line 1872
- *   +0x0868 -> line 1873
- *   +0x0874 -> line 1874
- *   +0x0980 -> line 1876
- *   +0x0aa4 -> line 1877
- *   +0x0aac -> line 1878
- *   +0x0ab0 -> line 1880
- *   +0x0abc -> line 1881
- *   +0x1194 -> line 1883
- *   +0x158c -> line 1885
- *   +0x1594 -> line 1887
- *   +0x15a0 -> line 1889
- *   +0x1650 -> line 1890
- *   +0x17d0 -> line 1893
- *   +0x1d20 -> line 1895
- *   +0x1dd8 -> line 1897
- *   +0x1e6c -> line 1899
- *   +0x1e84 -> line 1900
- *   +0x1e9c -> line 1902
- *   +0x1eb4 -> line 1903
- *   +0x1ecc -> line 1905
- *   +0x1f00 -> line 1906
- *   +0x1f1c -> line 1907
- *   +0x1f38 -> line 1908
- *   +0x2004 -> line 1909
- *   +0x2008 -> line 1908
- *   +0x200c -> line 1909
- *   +0x2014 -> line 1908
- *   +0x203c -> line 1909
- *   +0x2080 -> line 1915
- *   +0x20a4 -> line 1914
- *   +0x20a8 -> line 1915
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned char fn_BackMode(CAM_Shooter_* pcs)
-{
-    MTH3D_tdstVector_ vPos;
-
-    CSH_fn_vCheckRestart(pcs);
-
-    fn_GetPersoSighting(&pcs->vCameraSighting, pcs->pCamera);
-    CSH_fn_vReadInputs(pcs);
+    pcs->bIsBot = pcs->bRaiseCamera = pcs->bSideCollision = pcs->bStartAlignCamera = pcs->bVerticalCollision = pcs->bWasClimbing = pcs->bFastAlign = pcs->bIsJumpFalling = pcs->bLowCeiling = pcs->bObstacleCollision = pcs->bAlignCamera = pcs->bAutoAlign = pcs->bCollision = pcs->bCollisionAlign = 0;
+    vShiftPos.xX = 0.0f;
+    vShiftPos.xY = 0.0f;
+    vShiftPos.xZ = 2.5f;
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x80);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 4);
+    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x247, 0, 1, 35.7f);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 1);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x10);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 8);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 2);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x20);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x40);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 8);
+    fn_ChangeCameraVectorParameter(hCineInfo, (tdeProcedureId_)0x23B, 0, 1, &vShiftPos);
+    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x240, 0, 1, 0.0f);
+    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 0, 1, 56.0f);
 
     pcs->xTheta_Default = stCamShooter_CV.xTheta_Init;
     pcs->xTheta_Min = -0.8f;
     pcs->xTheta_Max = 1.2f;
-    pcs->xDistMax_Default = stCamShooter_CV.xDistMax_Init;
-    pcs->xDistMax = stCamShooter_CV.xDistMax_Init;
-    if (pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport == pcs->pMAComport_Climb)
-    {
-        pcs->xTheta_Default = stCamShooter_CV.xTheta_Init_Climb;
-        pcs->xDistMax_Default = stCamShooter_CV.xDistMax_Init_Climb;
-        pcs->xDistMax = stCamShooter_CV.xDistMax_Init_Climb;
-        if (!pcs->bWasClimbing)
-        {
-            pcs->bWasClimbing = 1;
-            pcs->ulDelayTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
-            pcs->bStartAlignCamera = 1;
-        }
-        else if (g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - pcs->ulDelayTime < 1000)
-        {
-            vPos.xX = pcs->pTargetActor_speed->xX;
-            vPos.xY = pcs->pTargetActor_speed->xY;
-            vPos.xZ = pcs->pTargetActor_speed->xZ;
-            if (sqrtf(vPos.xX * vPos.xX + vPos.xY * vPos.xY + vPos.xZ * vPos.xZ) < 0.1f)
-            {
-                fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 1, 1, 8.0f);
-                fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x247, 1, 1, 1.0f);
-            }
-            else
-            {
-                fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 1, 1, 16.0f);
-                fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x247, 1, 1, 2.0f);
-            }
-        }
-    }
-    else if (pcs->bWasClimbing)
-    {
-        pcs->bWasClimbing = 0;
-        pcs->ulDelayTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
-        pcs->xTheta_Default = stCamShooter_CV.xTheta_Init_Climb;
-        pcs->xDistMax_Default = stCamShooter_CV.xDistMax_Init_Climb;
-        pcs->xDistMax = stCamShooter_CV.xDistMax_Init_Climb;
-    }
-    else if (g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - pcs->ulDelayTime < 1000 && fn_bCollideWithGround(pcs->pTargetSkin))
-    {
-        pcs->xTheta_Default = stCamShooter_CV.xTheta_Init_Climb;
-        pcs->xDistMax_Default = stCamShooter_CV.xDistMax_Init_Climb;
-        pcs->xDistMax = stCamShooter_CV.xDistMax_Init_Climb;
-    }
-    else if (g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - pcs->ulDelayTime < 2000 &&
-             pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport == pcs->pMAComport_Wait)
-    {
-        fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 1, 1, 16.0f);
-        fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x247, 1, 1, 1.0f);
-    }
-
-    fn_GetPersoNegativeSighting(&pcs->vRefAxis, pcs->pTargetActor);
-    hCineInfo->stForceRefAxisY = pcs->vRefAxis;
-    hCineInfo->stForceRefAxisZ = vVectorZ.v;
-    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);
-
-    fn_CollisionRayCast(pcs->pCamera, pcs->vCameraPosition, &vVectorZ.v, 0);
-    pcs->vCeilingCollisionPoint = g_stCollideResultPoint.v;
-    if (bMovedCameraY && (lInputAxisZ <= 0 ||
-        (pcs->vCeilingCollisionPoint.xX == 0.0f && pcs->vCeilingCollisionPoint.xY == 0.0f && pcs->vCeilingCollisionPoint.xZ == 0.0f)) &&
-        !*(char *)pcs->abExternDsgVarBoolean[2])
-    {
-        if (pcs->bMouseDriven)
-            vPos.xX = (-(float)lInputAxisZ * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime) / stCamShooter_CV.xMouseFactorY;
-        else
-        {
-            vPos.xX = (float)(lInputAxisZ < 0 ? lInputAxisZ + 12 : lInputAxisZ - 12) * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime / 11000.0f;
-            vPos.xX = lInputAxisZ < 0 ? -(vPos.xX * vPos.xX) : vPos.xX * vPos.xX;
-        }
-        pcs->xDeltaTheta_User -= vPos.xX;
-        pcs->xTheta_User = pcs->xTheta_Default + pcs->xDeltaTheta_User;
-        if (pcs->xTheta_User > pcs->xTheta_Max)
-        {
-            pcs->xTheta_User = pcs->xTheta_Max;
-            pcs->xDeltaTheta_User = pcs->xTheta_Max - pcs->xTheta_Default;
-        }
-        else if (pcs->xTheta_User < pcs->xTheta_Min)
-        {
-            pcs->xTheta_User = pcs->xTheta_Min;
-            pcs->xDeltaTheta_User = pcs->xTheta_Min - pcs->xTheta_Default;
-        }
-    }
-    else if (*(char *)pcs->abExternDsgVarBoolean[2])
-    {
-        pcs->xTheta_Current = pcs->xTheta_Default;
-        pcs->xTheta_User = pcs->xTheta_Default;
-        pcs->xDeltaTheta_User = 0.0f;
-    }
-    pcs->iOldInputAxisZ = lInputAxisZ;
-
-    if (pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport == pcs->pMAComport_Hang ||
-        pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport == pcs->pMAComport_Climb)
-    {
-        if (bMovedCameraX)
-        {
-            if (pcs->bMouseDriven)
-                vPos.xX = (float)lInputAxisV * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime / stCamShooter_CV.xMouseFactorX;
-            else
-            {
-                vPos.xX = (float)(lInputAxisV < 0 ? lInputAxisV + 12 : lInputAxisV - 12) * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime / 13000.0f;
-                vPos.xX = lInputAxisV < 0 ? -(vPos.xX * vPos.xX) : vPos.xX * vPos.xX;
-            }
-            pcs->xAlpha_User -= vPos.xX;
-            if (pcs->xAlpha_User > 1.0f)
-                pcs->xAlpha_User = 1.0f;
-            else if (pcs->xAlpha_User < -1.0f)
-                pcs->xAlpha_User = -1.0f;
-        }
-    }
-    else
-        pcs->xAlpha_User = 0.0f;
-
-    fn_GetPersoSighting(&pcs->vRayCastDirection, pcs->pTargetActor);
-    pcs->vRayCastOrigin = *pcs->pTargetActor_position;
-    pcs->vRayCastOrigin.xZ += 1.0f;
-    if (pcs->bMouseDriven)
-    {
-        pcs->vRayCastDirection.xZ = 0.0f;
-        vPos.xX = sqrtf(pcs->vRayCastDirection.xX * pcs->vRayCastDirection.xX + pcs->vRayCastDirection.xY * pcs->vRayCastDirection.xY);
-        if (vPos.xX != 0.0f)
-        {
-            pcs->vRayCastDirection.xX *= 200.0f / vPos.xX;
-            pcs->vRayCastDirection.xY *= 200.0f / vPos.xX;
-        }
-    }
-    else
-    {
-        vPos.xX = sqrtf(pcs->vRayCastDirection.xX * pcs->vRayCastDirection.xX + pcs->vRayCastDirection.xY * pcs->vRayCastDirection.xY + pcs->vRayCastDirection.xZ * pcs->vRayCastDirection.xZ);
-        if (vPos.xX != 0.0f)
-        {
-            pcs->vRayCastDirection.xX *= 200.0f / vPos.xX;
-            pcs->vRayCastDirection.xY *= 200.0f / vPos.xX;
-            pcs->vRayCastDirection.xZ *= 200.0f / vPos.xX;
-        }
-    }
-    *(int *)pcs->apExternDsgVarPerso[1] = 0;
-    fn_CollisionRayCast(pcs->pCamera, &pcs->vRayCastOrigin, &pcs->vRayCastDirection, pcs->bAutoAim ? 2 : 0);
-    if (g_hSuperObjectHit)
-    {
-        if (((HIE_tdstSuperObject_ *)g_hSuperObjectHit)->ulTypeOfLinkedObject == 2 && (HIE_tdstSuperObject_ *)g_hSuperObjectHit != pcs->pTargetSkin)
-        {
-            pcs->vViewFinderPosition.xX = ((HIE_tdstSuperObject_ *)g_hSuperObjectHit)->hGlobalMatrix->stTransformMatrix.stCol_3.xX;
-            pcs->vViewFinderPosition.xY = ((HIE_tdstSuperObject_ *)g_hSuperObjectHit)->hGlobalMatrix->stTransformMatrix.stCol_3.xY;
-            pcs->vViewFinderPosition.xZ = ((HIE_tdstSuperObject_ *)g_hSuperObjectHit)->hGlobalMatrix->stTransformMatrix.stCol_3.xZ + 1.0f;
-            *(HIE_tdstSuperObject_ **)pcs->apExternDsgVarPerso[1] = (HIE_tdstSuperObject_ *)g_hSuperObjectHit;
-        }
-        else
-            pcs->vViewFinderPosition = g_stCollideResultPoint.v;
-    }
-    else
-    {
-        pcs->vViewFinderPosition.xX = pcs->vRayCastOrigin.xX + pcs->vRayCastDirection.xX;
-        pcs->vViewFinderPosition.xY = pcs->vRayCastOrigin.xY + pcs->vRayCastDirection.xY;
-        pcs->vViewFinderPosition.xZ = pcs->vRayCastOrigin.xZ + pcs->vRayCastDirection.xZ;
-        fn_GetPersoSighting((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0], pcs->pTargetActor);
-    }
-
-    fn_vGetViewportCoordinates(&vPos, &pcs->vViewFinderPosition, pcs->p_stViewport);
-    if (GAM_MultiVP_fn_ucGetNumberOfPlayers() == 2)
-        vPos.xY *= 2.0f;
-    if (pcs->bMouseDriven)
-    {
-        pcs->vCheckCollisionShift.xX = vPos.xX - pcs->v2DViewFinderPosition.xX;
-        pcs->vCheckCollisionShift.xY = vPos.xY - pcs->v2DViewFinderPosition.xY;
-        pcs->vCheckCollisionShift.xZ = vPos.xZ - pcs->v2DViewFinderPosition.xZ;
-        if (pcs->v2DViewFinderPosition.xZ > 3.0f ||
-            sqrtf(pcs->vCheckCollisionShift.xX * pcs->vCheckCollisionShift.xX + pcs->vCheckCollisionShift.xY * pcs->vCheckCollisionShift.xY + pcs->vCheckCollisionShift.xZ * pcs->vCheckCollisionShift.xZ) < 0.5f)
-            pcs->v2DViewFinderPosition = vPos;
-        else
-        {
-            pcs->v2DViewFinderPosition.xX += 0.5f * pcs->vCheckCollisionShift.xX;
-            pcs->v2DViewFinderPosition.xY += 0.5f * pcs->vCheckCollisionShift.xY;
-            pcs->v2DViewFinderPosition.xZ += 0.5f * pcs->vCheckCollisionShift.xZ;
-        }
-    }
-    else
-        pcs->v2DViewFinderPosition = vPos;
-
-    pcs->vDirection.xX = pcs->vViewFinderPosition.xX - pcs->vRayCastOrigin.xX;
-    pcs->vDirection.xY = pcs->vViewFinderPosition.xY - pcs->vRayCastOrigin.xY;
-    pcs->vDirection.xZ = pcs->vViewFinderPosition.xZ - pcs->vRayCastOrigin.xZ;
-    vPos.xX = sqrtf(pcs->vDirection.xX * pcs->vDirection.xX + pcs->vDirection.xY * pcs->vDirection.xY + pcs->vDirection.xZ * pcs->vDirection.xZ);
-    if (vPos.xX != 0.0f)
-    {
-        ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0])->xX = pcs->vDirection.xX / vPos.xX;
-        ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0])->xY = pcs->vDirection.xY / vPos.xX;
-        ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0])->xZ = pcs->vDirection.xZ / vPos.xX;
-    }
-    pcs->vCheckCollisionShift1 = pcs->v2DViewFinderPosition;
-    pcs->vCheckCollisionShift = pcs->v2DViewFinderPosition;
-    pcs->vCheckCollisionShift1.xX -= pcs->xViewFinderWidth_2;
-    pcs->vCheckCollisionShift1.xY -= pcs->xViewFinderHeight_2;
-    pcs->vCheckCollisionShift.xX += pcs->xViewFinderWidth_2;
-    pcs->vCheckCollisionShift.xY += pcs->xViewFinderHeight_2;
-    if (*(int *)pcs->apExternDsgVarPerso[1])
-        AGO_vAddParticle(50, &stCamShooter_CV.vViewFinderRedIconUV1, &stCamShooter_CV.vViewFinderRedIconUV2, stCamShooter_CV.hVMTViewFinder_white, 0.0f);
-    else
-        AGO_vAddParticle(50, &stCamShooter_CV.vViewFinderWhiteIconUV1, &stCamShooter_CV.vViewFinderWhiteIconUV2, stCamShooter_CV.hVMTViewFinder_white, 0.0f);
-    AGO_vSetIcon(pcs->iViewportIndex, pcs->iViewFinderIconId, &pcs->vCheckCollisionShift1.xX, &pcs->vCheckCollisionShift.xX, 255.0f, stCamShooter_CV.hVMTViewFinder_red);
-
-    pcs->xTheta_Current = pcs->xTheta_User;
-    if (!pcs->bMouseDriven)
-    {
-        fn_GetPersoSighting(&vPos, pcs->pTargetActor);
-        pcs->xTargetAngle = fn_xAngleVectorXOY(&pcs->vCameraSighting, &vPos);
-        if (fabsf(pcs->xTargetAngle) > 0.2f &&
-            pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport != pcs->pMAComport_Hang &&
-            pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport != pcs->pMAComport_Climb)
-        {
-            pcs->bFastAlign = 1;
-            pcs->xFastAlign_StartDistance = pcs->xDistMax;
-        }
-        if (pcs->bFastAlign)
-        {
-            fn_GetPersoNegativeSighting(&pcs->vRefAxis, pcs->pTargetActor);
-            vPos.xX = fabsf(pcs->xTargetAngle);
-            fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x247, 1, 1, 180.0f);
-            fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 1, 1, 180.0f);
-            fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x24A, 1, 1, 180.0f);
-            CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);
-            CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x4000);
-            if (vPos.xX > 1.5707964f)
-                vPos.xY = 6.0f + ((vPos.xX - 1.5707964f) / 1.5707964f) * (pcs->xFastAlign_StartDistance - 6.0f);
-            else if (vPos.xX > 0.2f)
-                vPos.xY = 6.0f + ((vPos.xX - 1.5707964f) / 1.5707964f) * (pcs->xDistMax_Default - 6.0f);
-            else
-            {
-                pcs->bFastAlign = 0;
-                vPos.xY = pcs->xDistMax;
-            }
-            if (pcs->xDistMax > vPos.xY)
-                pcs->xDistMax = vPos.xY;
-        }
-    }
-
-    vPos = *pcs->pTargetActor_position;
-    vPos.xZ += 1.5f;
-    fn_GetPersoHorizon(&pcs->vCheckCollisionShift, pcs->pCamera);
-    pcs->vCheckCollisionShift.xX *= 0.7f;
-    pcs->vCheckCollisionShift.xY *= 0.7f;
-    pcs->vCheckCollisionShift.xZ *= 0.7f;
-    pcs->vCollisionDirectionV.xX = pcs->vCheckCollisionShift.xX - pcs->xDistMax * pcs->vCameraSighting.xX;
-    pcs->vCollisionDirectionV.xY = pcs->vCheckCollisionShift.xY - pcs->xDistMax * pcs->vCameraSighting.xY;
-    pcs->vCollisionDirectionV.xZ = pcs->vCheckCollisionShift.xZ - pcs->xDistMax * pcs->vCameraSighting.xZ;
-    fn_CollisionRayCast(pcs->pCamera, &vPos, &pcs->vCollisionDirectionV, 0);
-    pcs->vCollisionPoint.xX = 0.0f;
-    pcs->vCollisionPoint.xY = 0.0f;
-    pcs->vCollisionPoint.xZ = 0.0f;
-    pcs->xOldDistMax = pcs->xDistMax;
-    if (g_stCollideResultPoint.v.xX != 0.0f || g_stCollideResultPoint.v.xY != 0.0f || g_stCollideResultPoint.v.xZ != 0.0f)
-    {
-        if (!pcs->hWaterGMT || g_hColMatHit != (int)pcs->hWaterGMT->hCollideMaterial)
-        {
-            pcs->xOldDistMax = sqrtf(
-                (g_stCollideResultPoint.v.xX - vPos.xX) * (g_stCollideResultPoint.v.xX - vPos.xX) +
-                (g_stCollideResultPoint.v.xY - vPos.xY) * (g_stCollideResultPoint.v.xY - vPos.xY) +
-                (g_stCollideResultPoint.v.xZ - vPos.xZ) * (g_stCollideResultPoint.v.xZ - vPos.xZ));
-            if (pcs->xOldDistMax < pcs->xDistMax)
-                pcs->vCollisionPoint = g_stCollideResultPoint.v;
-        }
-    }
-    pcs->vCheckCollisionShift.xX = -pcs->vCheckCollisionShift.xX;
-    pcs->vCheckCollisionShift.xY = -pcs->vCheckCollisionShift.xY;
-    pcs->vCheckCollisionShift.xZ = -pcs->vCheckCollisionShift.xZ;
-    pcs->vCollisionDirectionV.xX = pcs->vCheckCollisionShift.xX - pcs->xDistMax * pcs->vCameraSighting.xX;
-    pcs->vCollisionDirectionV.xY = pcs->vCheckCollisionShift.xY - pcs->xDistMax * pcs->vCameraSighting.xY;
-    pcs->vCollisionDirectionV.xZ = pcs->vCheckCollisionShift.xZ - pcs->xDistMax * pcs->vCameraSighting.xZ;
-    fn_CollisionRayCast(pcs->pCamera, &vPos, &pcs->vCollisionDirectionV, 0);
-    if (g_stCollideResultPoint.v.xX != 0.0f || g_stCollideResultPoint.v.xY != 0.0f || g_stCollideResultPoint.v.xZ != 0.0f)
-    {
-        if (!pcs->hWaterGMT || g_hColMatHit != (int)pcs->hWaterGMT->hCollideMaterial)
-        {
-            vPos.xX = sqrtf(
-                (g_stCollideResultPoint.v.xX - pcs->pTargetActor_position->xX) * (g_stCollideResultPoint.v.xX - pcs->pTargetActor_position->xX) +
-                (g_stCollideResultPoint.v.xY - pcs->pTargetActor_position->xY) * (g_stCollideResultPoint.v.xY - pcs->pTargetActor_position->xY) +
-                (g_stCollideResultPoint.v.xZ - pcs->pTargetActor_position->xZ - 1.5f) * (g_stCollideResultPoint.v.xZ - pcs->pTargetActor_position->xZ - 1.5f));
-            if (vPos.xX < pcs->xOldDistMax)
-            {
-                pcs->xOldDistMax = vPos.xX;
-                pcs->vCollisionPoint = g_stCollideResultPoint.v;
-            }
-        }
-    }
-    if (pcs->vCollisionPoint.xX != 0.0f || pcs->vCollisionPoint.xY != 0.0f || pcs->vCollisionPoint.xZ != 0.0f)
-    {
-        pcs->xOldDistMax -= 0.6f;
-        if (pcs->xOldDistMax < 1.3f)
-            pcs->xOldDistMax = 1.3f;
-        pcs->xDistMax = pcs->xOldDistMax;
-        if (pcs->xDistMax < 2.0f)
-        {
-            CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x4000);
-            CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x4000);
-        }
-    }
-
-    if (pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport != pcs->pMAComport_Climb &&
-        pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport != pcs->pMAComport_Hang &&
-        pcs->xTheta_Current < pcs->xTheta_Default)
-    {
-        vPos.xX = 3.0f + (pcs->xDistMax_Default - 3.0f) * ((pcs->xTheta_Current - pcs->xTheta_Min) / (pcs->xTheta_Default - pcs->xTheta_Min));
-        if (pcs->xDistMax > vPos.xX)
-            pcs->xDistMax = vPos.xX;
-    }
-    if (pcs->xDistMax < 4.0f && pcs->vCollisionPoint.xZ > 0.0f)
-    {
-        vPos = hCineInfo->hCurrent->stShiftTarget;
-        vPos.xZ += (4.0f - pcs->xDistMax) / 3.0f;
-        fn_ChangeCameraVectorParameter(hCineInfo, (tdeProcedureId_)0x23B, 1, 1, &vPos);
-    }
-    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x23C, 0, 1, pcs->xDistMax);
-    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x23D, 0, 1, pcs->xDistMax);
+    pcs->xDistMax = pcs->xDistMax_Default = stCamShooter_CV.xDistMax_Init;
+    pcs->xTheta_User = pcs->xTheta_Current = pcs->xTheta_Default;
+    pcs->xDeltaTheta_User = 0.0f;
     fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x242, 0, 1, pcs->xTheta_Current);
-    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x240, 0, 1, pcs->xAlpha_User);
-
-    if (pcs->bMouseDriven && fabsf((float)lInputAxisV) > 400.0f)
-    {
-        fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x247, 1, 1, 290.0f);
-        fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 1, 1, 290.0f);
-        vPos.xX = pcs->pTargetActor_position->xX + hCineInfo->hWork->stShiftTarget.xX;
-        vPos.xY = pcs->pTargetActor_position->xY + hCineInfo->hWork->stShiftTarget.xY;
-        vPos.xZ = pcs->pTargetActor_position->xZ + hCineInfo->hWork->stShiftTarget.xZ;
-        fn_GetPersoNegativeSighting(&pcs->vDirection, pcs->pTargetActor);
-        fn_GetPersoHorizon(&pcs->vCheckCollisionShift, pcs->pTargetActor);
-        pcs->vDirection.xX *= pcs->xDistMax;
-        pcs->vDirection.xY *= pcs->xDistMax;
-        pcs->vDirection.xZ *= pcs->xDistMax;
-        fn_RotateVectorByAngle(&pcs->vDirection, pcs->xTheta_Current, &pcs->vCheckCollisionShift);
-        fn_RotateVectorByAngle(&pcs->vDirection, pcs->xAlpha_User, &vVectorZ.v);
-        hCineInfo->stForcePosition.xX = vPos.xX + pcs->vDirection.xX;
-        hCineInfo->stForcePosition.xY = vPos.xY + pcs->vDirection.xY;
-        hCineInfo->stForcePosition.xZ = vPos.xZ + pcs->vDirection.xZ;
-        CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);
-    }
-    return 0;
+    pcs->hWaterGMT = (GMT_tdstGameMaterial_*)stCamShooter_CV.hVMTViewFinder_white;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 737–875 */
-/* addr: 0x00248ca0  size: 716 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 742
- *   +0x0010 -> line 737
- *   +0x0014 -> line 738
- *   +0x0018 -> line 739
- *   +0x001c -> line 742
- *   +0x0040 -> line 746
- *   +0x0044 -> line 747
- *   +0x0048 -> line 748
- *   +0x004c -> line 749
- *   +0x0050 -> line 746
- *   +0x0054 -> line 747
- *   +0x0058 -> line 748
- *   +0x005c -> line 750
- *   +0x0064 -> line 753
- *   +0x0068 -> line 754
- *   +0x006c -> line 755
- *   +0x0070 -> line 756
- *   +0x0074 -> line 753
- *   +0x0078 -> line 754
- *   +0x007c -> line 755
- *   +0x0080 -> line 757
- *   +0x0088 -> line 760
- *   +0x008c -> line 761
- *   +0x0090 -> line 762
- *   +0x0094 -> line 763
- *   +0x0098 -> line 760
- *   +0x009c -> line 761
- *   +0x00a0 -> line 762
- *   +0x00a4 -> line 764
- *   +0x00ac -> line 768
- *   +0x00b0 -> line 769
- *   +0x00b4 -> line 770
- *   +0x00b8 -> line 771
- *   +0x00bc -> line 768
- *   +0x00c0 -> line 769
- *   +0x00c4 -> line 770
- *   +0x00c8 -> line 772
- *   +0x00d0 -> line 776
- *   +0x00d4 -> line 777
- *   +0x00d8 -> line 778
- *   +0x00dc -> line 779
- *   +0x00e0 -> line 776
- *   +0x00e4 -> line 777
- *   +0x00e8 -> line 778
- *   +0x00ec -> line 780
- *   +0x00f4 -> line 783
- *   +0x00f8 -> line 784
- *   +0x00fc -> line 785
- *   +0x0100 -> line 786
- *   +0x0104 -> line 783
- *   +0x0108 -> line 784
- *   +0x010c -> line 785
- *   +0x0110 -> line 787
- *   +0x0118 -> line 790
- *   +0x011c -> line 791
- *   +0x0120 -> line 792
- *   +0x0124 -> line 793
- *   +0x0128 -> line 790
- *   +0x012c -> line 791
- *   +0x0130 -> line 792
- *   +0x0134 -> line 794
- *   +0x013c -> line 797
- *   +0x0140 -> line 798
- *   +0x0144 -> line 799
- *   +0x0148 -> line 800
- *   +0x014c -> line 797
- *   +0x0150 -> line 798
- *   +0x0154 -> line 799
- *   +0x0158 -> line 801
- *   +0x0160 -> line 804
- *   +0x0164 -> line 805
- *   +0x0168 -> line 806
- *   +0x016c -> line 807
- *   +0x0170 -> line 804
- *   +0x0174 -> line 805
- *   +0x0178 -> line 806
- *   +0x017c -> line 808
- *   +0x0184 -> line 811
- *   +0x0188 -> line 812
- *   +0x018c -> line 813
- *   +0x0190 -> line 814
- *   +0x0194 -> line 811
- *   +0x0198 -> line 812
- *   +0x019c -> line 813
- *   +0x01a0 -> line 815
- *   +0x01a8 -> line 818
- *   +0x01ac -> line 819
- *   +0x01b0 -> line 820
- *   +0x01b4 -> line 821
- *   +0x01b8 -> line 818
- *   +0x01bc -> line 819
- *   +0x01c0 -> line 820
- *   +0x01c4 -> line 822
- *   +0x01cc -> line 825
- *   +0x01d0 -> line 826
- *   +0x01d4 -> line 827
- *   +0x01d8 -> line 828
- *   +0x01dc -> line 825
- *   +0x01e0 -> line 826
- *   +0x01e4 -> line 827
- *   +0x01e8 -> line 829
- *   +0x01f0 -> line 832
- *   +0x01f4 -> line 833
- *   +0x01f8 -> line 834
- *   +0x01fc -> line 835
- *   +0x0200 -> line 832
- *   +0x0204 -> line 833
- *   +0x0208 -> line 834
- *   +0x020c -> line 836
- *   +0x0214 -> line 839
- *   +0x0218 -> line 840
- *   +0x021c -> line 841
- *   +0x0220 -> line 842
- *   +0x0224 -> line 839
- *   +0x0228 -> line 840
- *   +0x022c -> line 841
- *   +0x0230 -> line 843
- *   +0x0238 -> line 846
- *   +0x023c -> line 847
- *   +0x0240 -> line 848
- *   +0x0244 -> line 849
- *   +0x0248 -> line 846
- *   +0x024c -> line 847
- *   +0x0250 -> line 848
- *   +0x0254 -> line 850
- *   +0x025c -> line 853
- *   +0x0260 -> line 854
- *   +0x0264 -> line 855
- *   +0x0268 -> line 856
- *   +0x026c -> line 853
- *   +0x0270 -> line 854
- *   +0x0274 -> line 855
- *   +0x0278 -> line 857
- *   +0x0280 -> line 860
- *   +0x0284 -> line 861
- *   +0x0288 -> line 862
- *   +0x028c -> line 863
- *   +0x0290 -> line 860
- *   +0x0294 -> line 861
- *   +0x0298 -> line 862
- *   +0x029c -> line 864
- *   +0x02a4 -> line 867
- *   +0x02a8 -> line 868
- *   +0x02ac -> line 869
- *   +0x02b0 -> line 870
- *   +0x02b4 -> line 867
- *   +0x02b8 -> line 868
- *   +0x02bc -> line 869
- *   +0x02c0 -> line 870
- *   +0x02c4 -> line 875
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-extern void CAM_fn_vChangeARealParameter(tdstCineinfo_* _hCineInfo, float* _p_xInitialValue, float* _p_xCurrentValue, float* _p_xVisibilityValue, float* _p_xWorkValue, int _lTypeOfChange, int _lChangingMode, float _xValue);
-
-void fn_ChangeCameraRealParameter(tdstCineinfo_* hCineInfo, tdeProcedureId_ eProcedureId, int lTypeOfChange, int lChangingMode, float xValue)
+inline void fn_InitStrafeLockMode(CAM_Shooter_* pcs)
 {
-    float* p_xWorkValue;
-    float* p_xVisibilityValue;
-    float* p_xCurrentValue;
-    float* p_xInitialValue;
+    float xNorm;
+    float xX;
+    MTH3D_tdstVector_ vShiftPos;
+    MTH3D_tdstVector_ vTemp1;
 
-    p_xInitialValue = NULL;
-    p_xCurrentValue = NULL;
-    p_xVisibilityValue = NULL;
-    p_xWorkValue = NULL;
-
-    switch (eProcedureId)
-    {
-    case 0x23C:
-        p_xInitialValue = &hCineInfo->hInit->xDistMin;
-        p_xCurrentValue = &hCineInfo->hCurrent->xDistMin;
-        p_xVisibilityValue = &hCineInfo->hVisibility->xDistMin;
-        p_xWorkValue = &hCineInfo->hWork->xDistMin;
-        break;
-    case 0x23D:
-        p_xInitialValue = &hCineInfo->hInit->xDistMax;
-        p_xCurrentValue = &hCineInfo->hCurrent->xDistMax;
-        p_xVisibilityValue = &hCineInfo->hVisibility->xDistMax;
-        p_xWorkValue = &hCineInfo->hWork->xDistMax;
-        break;
-    case 0x23E:
-        p_xInitialValue = &hCineInfo->hInit->xBoundDistMin;
-        p_xCurrentValue = &hCineInfo->hCurrent->xBoundDistMin;
-        p_xVisibilityValue = &hCineInfo->hVisibility->xBoundDistMin;
-        p_xWorkValue = &hCineInfo->hWork->xBoundDistMin;
-        break;
-    case 0x23F:
-        p_xInitialValue = &hCineInfo->hInit->xBoundDistMax;
-        p_xCurrentValue = &hCineInfo->hCurrent->xBoundDistMax;
-        p_xVisibilityValue = &hCineInfo->hVisibility->xBoundDistMax;
-        p_xWorkValue = &hCineInfo->hWork->xBoundDistMax;
-        break;
-    case 0x240:
-        p_xInitialValue = &hCineInfo->hInit->xAngleAlpha;
-        p_xCurrentValue = &hCineInfo->hCurrent->xAngleAlpha;
-        p_xVisibilityValue = &hCineInfo->hVisibility->xAngleAlpha;
-        p_xWorkValue = &hCineInfo->hWork->xAngleAlpha;
-        break;
-    case 0x241:
-        p_xInitialValue = &hCineInfo->hInit->xAngleShiftAlpha;
-        p_xCurrentValue = &hCineInfo->hCurrent->xAngleShiftAlpha;
-        p_xVisibilityValue = &hCineInfo->hVisibility->xAngleShiftAlpha;
-        p_xWorkValue = &hCineInfo->hWork->xAngleShiftAlpha;
-        break;
-    case 0x242:
-        p_xInitialValue = &hCineInfo->hInit->xAngleTheta;
-        p_xCurrentValue = &hCineInfo->hCurrent->xAngleTheta;
-        p_xVisibilityValue = &hCineInfo->hVisibility->xAngleTheta;
-        p_xWorkValue = &hCineInfo->hWork->xAngleTheta;
-        break;
-    case 0x243:
-        p_xInitialValue = &hCineInfo->hInit->xAngleShiftTheta;
-        p_xCurrentValue = &hCineInfo->hCurrent->xAngleShiftTheta;
-        p_xVisibilityValue = &hCineInfo->hVisibility->xAngleShiftTheta;
-        p_xWorkValue = &hCineInfo->hWork->xAngleShiftTheta;
-        break;
-    case 0x244:
-        p_xInitialValue = &hCineInfo->hInit->xLinearSpeed;
-        p_xCurrentValue = &hCineInfo->hCurrent->xLinearSpeed;
-        p_xVisibilityValue = &hCineInfo->hVisibility->xLinearSpeed;
-        p_xWorkValue = &hCineInfo->hWork->xLinearSpeed;
-        break;
-    case 0x245:
-        p_xInitialValue = &hCineInfo->hInit->xLinearIncreaseSpeed;
-        p_xCurrentValue = &hCineInfo->hCurrent->xLinearIncreaseSpeed;
-        p_xVisibilityValue = &hCineInfo->hVisibility->xLinearIncreaseSpeed;
-        p_xWorkValue = &hCineInfo->hWork->xLinearIncreaseSpeed;
-        break;
-    case 0x246:
-        p_xInitialValue = &hCineInfo->hInit->xLinearDecreaseSpeed;
-        p_xCurrentValue = &hCineInfo->hCurrent->xLinearDecreaseSpeed;
-        p_xVisibilityValue = &hCineInfo->hVisibility->xLinearDecreaseSpeed;
-        p_xWorkValue = &hCineInfo->hWork->xLinearDecreaseSpeed;
-        break;
-    case 0x247:
-        p_xInitialValue = &hCineInfo->hInit->xAngularSpeed;
-        p_xCurrentValue = &hCineInfo->hCurrent->xAngularSpeed;
-        p_xVisibilityValue = &hCineInfo->hVisibility->xAngularSpeed;
-        p_xWorkValue = &hCineInfo->hWork->xAngularSpeed;
-        break;
-    case 0x248:
-        p_xInitialValue = &hCineInfo->hInit->xAngularIncreaseSpeed;
-        p_xCurrentValue = &hCineInfo->hCurrent->xAngularIncreaseSpeed;
-        p_xVisibilityValue = &hCineInfo->hVisibility->xAngularIncreaseSpeed;
-        p_xWorkValue = &hCineInfo->hWork->xAngularIncreaseSpeed;
-        break;
-    case 0x249:
-        p_xInitialValue = &hCineInfo->hInit->xAngularDecreaseSpeed;
-        p_xCurrentValue = &hCineInfo->hCurrent->xAngularDecreaseSpeed;
-        p_xVisibilityValue = &hCineInfo->hVisibility->xAngularDecreaseSpeed;
-        p_xWorkValue = &hCineInfo->hWork->xAngularDecreaseSpeed;
-        break;
-    case 0x24A:
-        p_xInitialValue = &hCineInfo->hInit->xTargetSpeed;
-        p_xCurrentValue = &hCineInfo->hCurrent->xTargetSpeed;
-        p_xVisibilityValue = &hCineInfo->hVisibility->xTargetSpeed;
-        p_xWorkValue = &hCineInfo->hWork->xTargetSpeed;
-        break;
-    case 0x24B:
-        p_xInitialValue = &hCineInfo->hInit->xTargetIncreaseSpeed;
-        p_xCurrentValue = &hCineInfo->hCurrent->xTargetIncreaseSpeed;
-        p_xVisibilityValue = &hCineInfo->hVisibility->xTargetIncreaseSpeed;
-        p_xWorkValue = &hCineInfo->hWork->xTargetIncreaseSpeed;
-        break;
-    case 0x24C:
-        p_xInitialValue = &hCineInfo->hInit->xTargetDecreaseSpeed;
-        p_xCurrentValue = &hCineInfo->hCurrent->xTargetDecreaseSpeed;
-        p_xVisibilityValue = &hCineInfo->hVisibility->xTargetDecreaseSpeed;
-        p_xWorkValue = &hCineInfo->hWork->xTargetDecreaseSpeed;
-        break;
-    case 0x24D:
-        p_xInitialValue = &hCineInfo->hInit->xFocal;
-        p_xCurrentValue = &hCineInfo->hCurrent->xFocal;
-        p_xVisibilityValue = &hCineInfo->hVisibility->xFocal;
-        p_xWorkValue = &hCineInfo->hWork->xFocal;
-        break;
-    }
-
-    CAM_fn_vChangeARealParameter(hCineInfo, p_xInitialValue, p_xCurrentValue, p_xVisibilityValue, p_xWorkValue, lTypeOfChange, lChangingMode, xValue);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 708–730 */
-/* addr: 0x00248f70  size: 120 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x000c -> line 713
- *   +0x0010 -> line 708
- *   +0x0014 -> line 709
- *   +0x0018 -> line 710
- *   +0x001c -> line 713
- *   +0x0038 -> line 717
- *   +0x003c -> line 718
- *   +0x0040 -> line 719
- *   +0x0044 -> line 720
- *   +0x004c -> line 723
- *   +0x0050 -> line 725
- *   +0x0054 -> line 726
- *   +0x0058 -> line 724
- *   +0x005c -> line 723
- *   +0x0060 -> line 725
- *   +0x0064 -> line 726
- *   +0x0068 -> line 724
- *   +0x006c -> line 730
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_ChangeCameraVectorParameter(tdstCineinfo_* hCineInfo, tdeProcedureId_ eProcedureId, int lTypeOfChange, int lChangingMode, MTH3D_tdstVector_* p_stValue)
-{
-    MTH3D_tdstVector_* p_vWorkVectorValue;
-    MTH3D_tdstVector_* p_vVisibilityVectorValue;
-    MTH3D_tdstVector_* p_vCurrentVectorValue;
-    MTH3D_tdstVector_* p_vInitialVectorValue;
-
-    p_vInitialVectorValue = NULL;
-    p_vCurrentVectorValue = NULL;
-    p_vVisibilityVectorValue = NULL;
-    p_vWorkVectorValue = NULL;
-
-    switch (eProcedureId)
-    {
-    case 0x23A:
-        p_vInitialVectorValue = &hCineInfo->hInit->stShiftTarget;
-        p_vCurrentVectorValue = &hCineInfo->hCurrent->stShiftTarget;
-        p_vVisibilityVectorValue = &hCineInfo->hVisibility->stShiftTarget;
-        p_vWorkVectorValue = &hCineInfo->hWork->stShiftTarget;
-        break;
-    case 0x23B:
-        p_vInitialVectorValue = &hCineInfo->hInit->stShiftPos;
-        p_vCurrentVectorValue = &hCineInfo->hCurrent->stShiftPos;
-        p_vVisibilityVectorValue = &hCineInfo->hVisibility->stShiftPos;
-        p_vWorkVectorValue = &hCineInfo->hWork->stShiftPos;
-        break;
-    }
-
-    CAM_fn_vChangeAVectorParameter(hCineInfo, p_vInitialVectorValue, p_vCurrentVectorValue, p_vVisibilityVectorValue, p_vWorkVectorValue, lTypeOfChange, lChangingMode, p_stValue);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 657–691 */
-/* addr: 0x00248ff0  size: 368 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 657
- *   +0x0008 -> line 661
- *   +0x0020 -> line 664
- *   +0x0024 -> line 662
- *   +0x0028 -> line 664
- *   +0x0034 -> line 662
- *   +0x003c -> line 666
- *   +0x0040 -> line 662
- *   +0x0044 -> line 667
- *   +0x0048 -> line 663
- *   +0x004c -> line 665
- *   +0x0050 -> line 663
- *   +0x0054 -> line 666
- *   +0x005c -> line 667
- *   +0x0064 -> line 665
- *   +0x006c -> line 668
- *   +0x0070 -> line 669
- *   +0x0078 -> line 670
- *   +0x0080 -> line 671
- *   +0x0084 -> line 670
- *   +0x0088 -> line 671
- *   +0x0090 -> line 672
- *   +0x0094 -> line 671
- *   +0x0098 -> line 672
- *   +0x00a4 -> line 673
- *   +0x00a8 -> line 674
- *   +0x00ac -> line 673
- *   +0x00b0 -> line 674
- *   +0x00b8 -> line 675
- *   +0x00c4 -> line 673
- *   +0x00cc -> line 676
- *   +0x00d4 -> line 682
- *   +0x00e8 -> line 683
- *   +0x00ec -> line 682
- *   +0x00f8 -> line 683
- *   +0x0104 -> line 685
- *   +0x0108 -> line 684
- *   +0x010c -> line 685
- *   +0x0110 -> line 684
- *   +0x0114 -> line 683
- *   +0x011c -> line 684
- *   +0x0124 -> line 685
- *   +0x012c -> line 683
- *   +0x0134 -> line 684
- *   +0x0144 -> line 685
- *   +0x014c -> line 679
- *   +0x015c -> line 680
- *   +0x0164 -> line 691
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_InitCSH_Common(void)
-{
+    vShiftPos.xX = 0.0f;
+    vShiftPos.xY = 0.0f;
+    vShiftPos.xZ = 2.5f;
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x80);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 4);
+    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x247, 0, 1, bGCubeVersion ? 60.0f : 5.7f);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 1);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x10);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 8);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 2);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x20);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x40);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 8);
+    fn_ChangeCameraVectorParameter(hCineInfo, (tdeProcedureId_)0x23B, 0, 1, &vShiftPos);
+    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x240, 0, 1, 0.0f);
     if (GAM_MultiVP_fn_ucGetNumberOfPlayers() == 2)
     {
-        stCamShooter_CV.xTheta_Init = 0.4f;
-        stCamShooter_CV.xTheta_Init_mario = 0.4f;
-        stCamShooter_CV.xTheta_Init_Climb = 0.6f;
-        stCamShooter_CV.xDistMax_Init = 6.0f;
-        stCamShooter_CV.xDistMax_Init_mario = 7.0f;
-        stCamShooter_CV.xDistMax_Init_Climb = 8.0f;
-        stCamShooter_CV.xDistMax_Init_Swim = 6.0f;
+        vShiftPos.xX = 0.0f;
+        vShiftPos.xY = 0.0f;
+        vShiftPos.xZ = 2.5f;
+        fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 0, 1, bGCubeVersion ? 60.0f : 26.0f);
     }
     else
+        fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 0, 1, bGCubeVersion ? 60.0f : 36.0f);
+
+    pcs->xTheta_Default = stCamShooter_CV.xTheta_Init;
+    pcs->xTheta_Min = -0.8f;
+    pcs->xTheta_Max = 1.2f;
+    pcs->xDistMax = pcs->xDistMax_Default = stCamShooter_CV.xDistMax_Init;
+    pcs->xTheta_User = pcs->xTheta_Current = pcs->xTheta_Default;
+
+    if (*(char *)pcs->abExternDsgVarBoolean[1])
     {
-        stCamShooter_CV.xTheta_Init = 0.2f;
-        stCamShooter_CV.xTheta_Init_mario = 0.27f;
-        stCamShooter_CV.xTheta_Init_Climb = 0.6f;
-        stCamShooter_CV.xDistMax_Init = 8.3f;
-        stCamShooter_CV.xDistMax_Init_mario = 9.0f;
-        stCamShooter_CV.xDistMax_Init_Climb = 12.0f;
-        stCamShooter_CV.xDistMax_Init_Swim = 8.3f;
+        pcs->pLockedActor = *(HIE_tdstSuperObject_ **)pcs->apExternDsgVarPerso[0];
+        if (fn_bIsValidObject(pcs->pLockedActor))
+        {
+            vTemp1.xX = pcs->pTargetActor_position->xX - pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xX;
+            vTemp1.xY = pcs->pTargetActor_position->xY - pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xY;
+            vTemp1.xZ = pcs->pTargetActor_position->xZ - pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xZ;
+            vTemp1.xZ = 0.0f;
+            xX = vTemp1.xX;
+            if (xX != 0.0f || vTemp1.xY != 0.0f || vTemp1.xZ != 0.0f)
+            {
+                {
+                    float xY = vTemp1.xY;
+                    float xZ = vTemp1.xZ;
+                    float xSq;
+                    MTH_SQR3_TO(xSq, xX, xY, xZ);
+                    MTH_SQRT_TO(xNorm, xSq);
+                }
+                if (xNorm != 0.0f)
+                {
+                    xNorm = 1.0f / xNorm;
+                    pcs->vRefAxis.xX = xNorm * xX;
+                    pcs->vRefAxis.xY = xNorm * vTemp1.xY;
+                    pcs->vRefAxis.xZ = xNorm * vTemp1.xZ;
+                }
+                else
+                    pcs->vRefAxis = vTemp1;
+            }
+            else
+                fn_GetPersoNegativeSighting(&pcs->vRefAxis, pcs->pTargetActor);
+        }
+        else
+            fn_GetPersoNegativeSighting(&pcs->vRefAxis, pcs->pTargetActor);
     }
-    stCamShooter_CV.xMouseFactorY = xMouseSensitivityFactor[1];
-    stCamShooter_CV.xMouseFactorX = xMouseSensitivityFactor[1];
-    stCamShooter_CV.vViewFinderRedIconUV1.xX = 0.627f; stCamShooter_CV.vViewFinderRedIconUV1.xY = 0.0f; stCamShooter_CV.vViewFinderRedIconUV1.xZ = 0.0f;
-    stCamShooter_CV.vViewFinderRedIconUV2.xX = 0.75f; stCamShooter_CV.vViewFinderRedIconUV2.xY = 0.125f; stCamShooter_CV.vViewFinderRedIconUV2.xZ = 0.0f;
-    stCamShooter_CV.vViewFinderWhiteIconUV1.xX = 0.502f; stCamShooter_CV.vViewFinderWhiteIconUV1.xY = 0.0f; stCamShooter_CV.vViewFinderWhiteIconUV1.xZ = 0.0f;
-    stCamShooter_CV.vViewFinderWhiteIconUV2.xX = 0.625f; stCamShooter_CV.vViewFinderWhiteIconUV2.xY = 0.125f; stCamShooter_CV.vViewFinderWhiteIconUV2.xZ = 0.0f;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 628–645 */
-/* addr: 0x00249160  size: 76 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 628
- *   +0x0008 -> line 635
- *   +0x0014 -> line 636
- *   +0x001c -> line 638
- *   +0x0028 -> line 639
- *   +0x0034 -> line 641
- *   +0x003c -> line 645
- *   +0x0040 -> line 643
- *   +0x0044 -> line 645
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
-HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* p_stStandardGame);
-
-tdstNodeInterpret_* fn_p_SetGCubeVersion(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ stValue;
-
-
-
-
-
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-    bGCubeVersion = stValue.uDummy.uParam.ulValue;
-
-    if (bGCubeVersion)
-        xCameraDelayAlign = 500.0f;
     else
-        xCameraDelayAlign = 2000.0f;
+        fn_GetPersoNegativeSighting(&pcs->vRefAxis, pcs->pTargetActor);
 
-    return p_stTree;
+    pcs->xFastAlign_StartDistance = pcs->xDistMax;
+    pcs->bFastAlign = 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 593–624 */
-/* addr: 0x002491b0  size: 220 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 593
- *   +0x0008 -> line 600
- *   +0x000c -> line 593
- *   +0x001c -> line 600
- *   +0x0028 -> line 601
- *   +0x0034 -> line 603
- *   +0x003c -> line 601
- *   +0x0040 -> line 603
- *   +0x0048 -> line 606
- *   +0x004c -> line 603
- *   +0x0050 -> line 608
- *   +0x0054 -> line 610
- *   +0x0058 -> line 608
- *   +0x005c -> line 606
- *   +0x0060 -> line 604
- *   +0x0064 -> line 606
- *   +0x0068 -> line 608
- *   +0x0088 -> line 610
- *   +0x00b0 -> line 611
- *   +0x00bc -> line 622
- *   +0x00c0 -> line 624
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_SetSkin(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+unsigned char fn_StrafeLockMode(CAM_Shooter_* pcs)
 {
-    HIE_tdstSuperObject_* pSkin;
-    int iSkinIndex;
-    CAM_Shooter_* pcs;
-    tdstGetSetParam_ stValue;
-    /* Unfolded member offset with the scaled index computed inside the last &&
-       operand (it lands in the bltz delay slot, as in retail). Not original
-       source, needs cleaning up. */
-    int iIndex;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-    pSkin = fn_h_StandardGameGetSuperObject(stValue.uDummy.uParam.p_stEngObjValue->h_StandardGame);
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-    iSkinIndex = stValue.uDummy.uParam.ulValue;
-    hCineInfo = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Cineinfo;
-    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
-    if (fn_bIsValidObject(pSkin) && iSkinIndex < pcs->iNumberOfMainActors && (iIndex = iSkinIndex * 4, iSkinIndex >= 0))
-    {
-        *(HIE_tdstSuperObject_**)((char*)&pcs->apSkins + iIndex) = pSkin;
-    }
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 558–589 */
-/* addr: 0x00249290  size: 244 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 558
- *   +0x0008 -> line 569
- *   +0x000c -> line 558
- *   +0x001c -> line 569
- *   +0x0028 -> line 570
- *   +0x0034 -> line 572
- *   +0x0038 -> line 574
- *   +0x0040 -> line 576
- *   +0x0048 -> line 572
- *   +0x0050 -> line 574
- *   +0x0070 -> line 576
- *   +0x0078 -> line 577
- *   +0x0088 -> line 578
- *   +0x0090 -> line 579
- *   +0x00a0 -> line 580
- *   +0x00a8 -> line 581
- *   +0x00b0 -> line 582
- *   +0x00b4 -> line 581
- *   +0x00b8 -> line 582
- *   +0x00c8 -> line 584
- *   +0x00d0 -> line 585
- *   +0x00d8 -> line 587
- *   +0x00dc -> line 589
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_RemoveMainActor(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    HIE_tdstSuperObject_* pMainActor;
-    int bFound;
-    int k;
-    CAM_Shooter_* pcs;
-    tdstGetSetParam_ stValue;
-    tdstEngineObject_* p_stEngObj;
-
-    bFound = 0;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-    p_stEngObj = stValue.uDummy.uParam.p_stEngObjValue;
-    pMainActor = fn_h_StandardGameGetSuperObject(p_stEngObj->h_StandardGame);
-    hCineInfo = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Cineinfo;
-    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
-    for (k = 0; k < pcs->iNumberOfMainActors; k++)
-    {
-        if (pcs->apMainActors[k] == pMainActor)
-            bFound = 1;
-        if (bFound && k <= 2)
-            pcs->apMainActors[k] = pcs->apMainActors[k + 1];
-        pcs->apSkins[k] = pcs->apSkins[k + 1];
-    }
-    if (bFound)
-        pcs->iNumberOfMainActors--;
-
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 532–552 */
-/* addr: 0x00249390  size: 192 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 532
- *   +0x0008 -> line 538
- *   +0x000c -> line 532
- *   +0x0018 -> line 538
- *   +0x0024 -> line 539
- *   +0x0030 -> line 541
- *   +0x0034 -> line 539
- *   +0x0038 -> line 543
- *   +0x003c -> line 545
- *   +0x0040 -> line 543
- *   +0x0044 -> line 541
- *   +0x004c -> line 543
- *   +0x006c -> line 545
- *   +0x008c -> line 546
- *   +0x0098 -> line 547
- *   +0x00a4 -> line 550
- *   +0x00a8 -> line 552
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_AddMainActor(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    CAM_Shooter_* pcs;
-    HIE_tdstSuperObject_* pMainActor;
-    tdstGetSetParam_ stValue;
-    char* pc;
-    int iIndex;
-    /* Matching idiom for the unfolded member offset (char* base plus offset, dead scaled-index
-       assignment); found by scanning matched functions. Not original source and needs cleaning up. */
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-    pMainActor = fn_h_StandardGameGetSuperObject(stValue.uDummy.uParam.p_stEngObjValue->h_StandardGame);
-    hCineInfo = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Cineinfo;
-    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
-    if (fn_bIsValidObject(pMainActor) && pcs->iNumberOfMainActors < 4)
-    {
-        pc = (char*)&pcs->apMainActors;
-        *(HIE_tdstSuperObject_**)(pc + (iIndex = pcs->iNumberOfMainActors * 4)) = pMainActor;
-        pcs->iNumberOfMainActors++;
-    }
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 391–450 */
-/* addr: 0x00249450  size: 684 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 391
- *   +0x0024 -> line 401
- *   +0x0028 -> line 406
- *   +0x0040 -> line 408
- *   +0x0044 -> line 410
- *   +0x004c -> line 413
- *   +0x0058 -> line 408
- *   +0x0064 -> line 410
- *   +0x0084 -> line 413
- *   +0x008c -> line 416
- *   +0x0090 -> line 413
- *   +0x0094 -> line 416
- *   +0x00c0 -> line 421
- *   +0x00c4 -> line 416
- *   +0x00d0 -> line 421
- *   +0x0110 -> line 424
- *   +0x0120 -> line 425
- *   +0x0150 -> line 426
- *   +0x0158 -> line 429
- *   +0x0168 -> line 430
- *   +0x019c -> line 431
- *   +0x01a4 -> line 434
- *   +0x01b4 -> line 435
- *   +0x01e8 -> line 436
- *   +0x01f0 -> line 439
- *   +0x0200 -> line 440
- *   +0x0234 -> line 441
- *   +0x023c -> line 444
- *   +0x0250 -> line 445
- *   +0x0288 -> line 449
- *   +0x028c -> line 450
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_RegisterDesignVar(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ stValue;
-    unsigned char iCSVarId;
-    CAM_Shooter_* pCamShooter;
-    unsigned char ucVarId;
-    AI_tdstMind_* param0;
-    tdeProcedureId_ eProcedureId;
-    HIE_tdstSuperObject_* hCamera;
-    HIE_tdstSuperObject_* p_stResultOwnerPerso;
-    /* Unfolded member offset with the index scaled first: field address as a
-       char* plus a dead scaled-index assignment (insight: unfolded element-offset,
-       single-access case). Not original source, needs cleaning up. */
-    int iIndex;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hCamera);
-    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
-    pCamShooter = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-
-    iCSVarId = stValue.uDummy.uParam.ucValue; if (p_stTree->eType == 2) p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree + 1, &p_stResultOwnerPerso); else p_stResultOwnerPerso = p_SuperObjPerso; param0 = p_stResultOwnerPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind; ucVarId = p_stTree->uDummy.uParam.ucValue;
-
-    switch (eProcedureId)
-    {
-    case eProc_CSHRegisterIntegerVar:
-        if (iCSVarId >= 0 && iCSVarId < 5)
-            *(int *)((char *)&pCamShooter->aiExternDsgVarInt + (iIndex = iCSVarId * 4)) = param0->p_stDsgMem->p_cDsgMemBuffer + (*param0->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem;
-        break;
-    case eProc_CSHRegisterVectorVar:
-        if (iCSVarId >= 0 && iCSVarId < 5)
-            *(int *)((char *)&pCamShooter->avExternDsgVarVector + (iIndex = iCSVarId * 4)) = param0->p_stDsgMem->p_cDsgMemBuffer + (*param0->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem;
-        break;
-    case eProc_CSHRegisterPersoVar:
-        if (iCSVarId >= 0 && iCSVarId < 5)
-            *(int *)((char *)&pCamShooter->apExternDsgVarPerso + (iIndex = iCSVarId * 4)) = param0->p_stDsgMem->p_cDsgMemBuffer + (*param0->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem;
-        break;
-    case eProc_CSHRegisterBooleanVar:
-        if (iCSVarId >= 0 && iCSVarId < 5)
-            *(int *)((char *)&pCamShooter->abExternDsgVarBoolean + (iIndex = iCSVarId * 4)) = param0->p_stDsgMem->p_cDsgMemBuffer + (*param0->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem;
-        break;
-    case eProc_CSHRegisterFloatVar:
-        if (iCSVarId >= 0 && iCSVarId < 5)
-            *(int *)((char *)&pCamShooter->axExternDsgVarFloat + (iIndex = iCSVarId * 4)) = param0->p_stDsgMem->p_cDsgMemBuffer + (*param0->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem;
-        break;
-    }
-
-    return p_stTree + 1;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 375–385 */
-/* addr: 0x00249700  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 375
- *   +0x0008 -> line 378
- *   +0x000c -> line 375
- *   +0x0010 -> line 378
- *   +0x001c -> line 379
- *   +0x0024 -> line 380
- *   +0x0034 -> line 381
- *   +0x0040 -> line 385
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_GetViewFinderVMT(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ stValue;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-    stCamShooter_CV.hVMTViewFinder_white = (GLI_tdstMaterial_*)stValue.uDummy.uParam.ulValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-    stCamShooter_CV.hVMTViewFinder_red = (GLI_tdstMaterial_*)stValue.uDummy.uParam.ulValue;
-
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 349–369 */
-/* addr: 0x00249750  size: 212 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 349
- *   +0x001c -> line 358
- *   +0x0038 -> line 360
- *   +0x003c -> line 362
- *   +0x0044 -> line 360
- *   +0x0050 -> line 362
- *   +0x0074 -> line 364
- *   +0x009c -> line 365
- *   +0x00b0 -> line 367
- *   +0x00b4 -> line 365
- *   +0x00bc -> line 369
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_GetViewFinderDistance(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    HIE_tdstSuperObject_* hCamera;
-    CAM_Shooter_* pcs;
-    float xX, xY, xZ;
-    float xSquared;
     float xNorm;
+    float xD2r;
+    float xTheta;
+    float xAlpha;
+    MTH3D_tdstVector_ vTemp2;
+    MTH3D_tdstVector_ vTemp1;
 
-    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator((p_stTree - 1)->uDummy.uId.eProcedureId), p_SuperObjPerso, &hCamera);
-
-    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
-
-    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
-
-    xX = pcs->vViewFinderPosition.xX - pcs->pTargetActor_position->xX; xY = pcs->vViewFinderPosition.xY - pcs->pTargetActor_position->xY; xZ = pcs->vViewFinderPosition.xZ - pcs->pTargetActor_position->xZ;
-    MTH_SQR3_TO(xSquared, xX, xY, xZ); MTH_SQRT_TO(xNorm, xSquared); p_stValue->uDummy.uParam.xValue = xNorm; p_stValue->eType = E_vt_Float;
-
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 308–344 */
-/* addr: 0x00249830  size: 284 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 308
- *   +0x0018 -> line 317
- *   +0x0034 -> line 319
- *   +0x0038 -> line 321
- *   +0x0040 -> line 323
- *   +0x004c -> line 319
- *   +0x0058 -> line 321
- *   +0x0078 -> line 323
- *   +0x0084 -> line 326
- *   +0x0088 -> line 324
- *   +0x008c -> line 326
- *   +0x009c -> line 327
- *   +0x00a0 -> line 329
- *   +0x00b4 -> line 330
- *   +0x00b8 -> line 332
- *   +0x00cc -> line 333
- *   +0x00d0 -> line 335
- *   +0x00e4 -> line 336
- *   +0x00e8 -> line 338
- *   +0x00fc -> line 339
- *   +0x0104 -> line 344
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_GetMainActorComports(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    HIE_tdstSuperObject_* hCamera;
-    tdstGetSetParam_ stValue;
-    CAM_Shooter_* pcs;
-
-    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator((p_stTree - 1)->uDummy.uId.eProcedureId), p_SuperObjPerso, &hCamera);
-    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
-    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-    pcs->pMAComport_Wait = stValue.uDummy.uParam.pComport;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-    pcs->pMAComport_Run = stValue.uDummy.uParam.pComport;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-    pcs->pMAComport_Hang = stValue.uDummy.uParam.pComport;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-    pcs->pMAComport_Climb = stValue.uDummy.uParam.pComport;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-    pcs->pMAComport_Reborn = stValue.uDummy.uParam.pComport;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-    pcs->pMAComport_Fall = stValue.uDummy.uParam.pComport;
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 296–303 */
-/* addr: 0x00249950  size: 124 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 296
- *   +0x0004 -> line 300
- *   +0x0008 -> line 296
- *   +0x000c -> line 300
- *   +0x0010 -> line 296
- *   +0x001c -> line 298
- *   +0x002c -> line 300
- *   +0x0064 -> line 301
- *   +0x0068 -> line 303
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_StrafeLockMode(HIE_tdstSuperObject_* hCamera, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    CAM_Shooter_* pcs;
-
-    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
-    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
-    *(int *)p_stValue = fn_StrafeLockMode(pcs);
-    p_stValue->eType = 6;
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 279–292 */
-/* addr: 0x002499d0  size: 1232 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 279
- *   +0x0004 -> line 284
- *   +0x0008 -> line 279
- *   +0x000c -> line 286
- *   +0x0010 -> line 279
- *   +0x0014 -> line 284
- *   +0x0018 -> line 279
- *   +0x0024 -> line 286
- *   +0x0028 -> line 279
- *   +0x002c -> line 286
- *   +0x0030 -> line 283
- *   +0x0034 -> line 286
- *   +0x0040 -> line 283
- *   +0x0048 -> line 284
- *   +0x0054 -> line 286
- *   +0x0058 -> line 284
- *   +0x005c -> line 286
- *   +0x0060 -> line 284
- *   +0x0064 -> line 286
- *   +0x0068 -> line 284
- *   +0x0070 -> line 286
- *   +0x0074 -> line 284
- *   +0x0078 -> line 286
- *   +0x007c -> line 284
- *   +0x0080 -> line 286
- *   +0x04a0 -> line 288
- *   +0x04a4 -> line 290
- *   +0x04a8 -> line 286
- *   +0x04b0 -> line 288
- *   +0x04b4 -> line 292
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_InitStrafeLockMode(HIE_tdstSuperObject_* hCamera, tdstNodeInterpret_* p_stTree)
-{
-    CAM_Shooter_* pcs;
-
-    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
-    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
-    fn_InitStrafeLockMode(pcs);
-    pcs->iMode = 3;
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 267–274 */
-/* addr: 0x00249ea0  size: 124 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 267
- *   +0x0004 -> line 271
- *   +0x0008 -> line 267
- *   +0x000c -> line 271
- *   +0x0010 -> line 267
- *   +0x001c -> line 269
- *   +0x002c -> line 271
- *   +0x0064 -> line 272
- *   +0x0068 -> line 274
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_MarioMode(HIE_tdstSuperObject_* hCamera, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    CAM_Shooter_* pcs;
-
-    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
-    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
-    *(int *)p_stValue = fn_MarioMode(pcs);
-    p_stValue->eType = 6;
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 250–263 */
-/* addr: 0x00249f20  size: 932 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 250
- *   +0x0004 -> line 255
- *   +0x0008 -> line 250
- *   +0x000c -> line 255
- *   +0x0010 -> line 250
- *   +0x0014 -> line 257
- *   +0x0018 -> line 250
- *   +0x0020 -> line 254
- *   +0x0024 -> line 257
- *   +0x002c -> line 254
- *   +0x0034 -> line 255
- *   +0x0058 -> line 257
- *   +0x037c -> line 259
- *   +0x0380 -> line 261
- *   +0x0384 -> line 257
- *   +0x038c -> line 259
- *   +0x0390 -> line 263
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_InitMarioMode(HIE_tdstSuperObject_* hCamera, tdstNodeInterpret_* p_stTree)
-{
-    CAM_Shooter_* pcs;
-
-    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
-    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
-    fn_InitMarioMode(pcs);
-    pcs->iMode = 2;
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 237–246 */
-/* addr: 0x0024a2d0  size: 124 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 237
- *   +0x0004 -> line 242
- *   +0x0008 -> line 237
- *   +0x000c -> line 242
- *   +0x0010 -> line 237
- *   +0x001c -> line 240
- *   +0x002c -> line 242
- *   +0x0064 -> line 244
- *   +0x0068 -> line 246
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_BackMode(HIE_tdstSuperObject_* hCamera, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    CAM_Shooter_* pcs;
-
-    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
-    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
-    *(int *)p_stValue = (long)fn_BackMode(pcs);
-    p_stValue->eType = 6;
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 216–232 */
-/* addr: 0x0024a350  size: 788 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 216
- *   +0x0004 -> line 224
- *   +0x0008 -> line 216
- *   +0x000c -> line 224
- *   +0x0010 -> line 216
- *   +0x0014 -> line 226
- *   +0x0018 -> line 216
- *   +0x0020 -> line 223
- *   +0x0024 -> line 226
- *   +0x0030 -> line 223
- *   +0x0038 -> line 224
- *   +0x005c -> line 226
- *   +0x02ec -> line 228
- *   +0x02f0 -> line 226
- *   +0x02f4 -> line 230
- *   +0x02f8 -> line 226
- *   +0x02fc -> line 228
- *   +0x0300 -> line 232
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_InitBackMode(HIE_tdstSuperObject_* hCamera, tdstNodeInterpret_* p_stTree)
-{
-    CAM_Shooter_* pcs;
-
-    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
-    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
-    fn_InitBackMode(pcs);
-    pcs->iMode = 1;
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 102–208 */
-/* addr: 0x0024a670  size: 708 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 102
- *   +0x0018 -> line 118
- *   +0x0034 -> line 120
- *   +0x0038 -> line 122
- *   +0x0040 -> line 135
- *   +0x004c -> line 120
- *   +0x0058 -> line 122
- *   +0x007c -> line 126
- *   +0x0080 -> line 128
- *   +0x0088 -> line 130
- *   +0x0094 -> line 135
- *   +0x00a0 -> line 136
- *   +0x00ac -> line 139
- *   +0x00b0 -> line 136
- *   +0x00b4 -> line 139
- *   +0x00c4 -> line 140
- *   +0x00d0 -> line 143
- *   +0x00d4 -> line 140
- *   +0x00d8 -> line 143
- *   +0x00e4 -> line 144
- *   +0x00e8 -> line 147
- *   +0x00fc -> line 148
- *   +0x0100 -> line 151
- *   +0x0118 -> line 152
- *   +0x0120 -> line 156
- *   +0x0130 -> line 159
- *   +0x013c -> line 160
- *   +0x0144 -> line 163
- *   +0x014c -> line 164
- *   +0x0154 -> line 165
- *   +0x0160 -> line 167
- *   +0x0174 -> line 169
- *   +0x017c -> line 170
- *   +0x0194 -> line 174
- *   +0x01ac -> line 190
- *   +0x01b0 -> line 176
- *   +0x01b4 -> line 190
- *   +0x01b8 -> line 177
- *   +0x01bc -> line 179
- *   +0x01c0 -> line 181
- *   +0x01c4 -> line 183
- *   +0x01cc -> line 184
- *   +0x01d0 -> line 190
- *   +0x01f0 -> line 192
- *   +0x0208 -> line 193
- *   +0x020c -> line 194
- *   +0x0210 -> line 193
- *   +0x0214 -> line 194
- *   +0x022c -> line 196
- *   +0x0234 -> line 198
- *   +0x0238 -> line 197
- *   +0x023c -> line 198
- *   +0x0254 -> line 199
- *   +0x0268 -> line 202
- *   +0x0270 -> line 204
- *   +0x0274 -> line 206
- *   +0x0278 -> line 204
- *   +0x02ac -> line 208
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-DNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_* h_Dynam);
-
-tdstNodeInterpret_* fn_p_InitCamShooter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    DNM_stDynamics* p_stDynamic;
-    HIE_tdstSuperObject_* hCamera;
-    GLD_tdstViewportAttributes_* _p_stViewport;
-    tdstDynam_* h_Dynam;
-    tdstGetSetParam_ stValue;
-    CAM_Shooter_* pcs;
-
-    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator((p_stTree - 1)->uDummy.uId.eProcedureId), p_SuperObjPerso, &hCamera);
-    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
-    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
-    pcs->pCamera = hCamera;
-    pcs->hCineInfo = hCineInfo;
-    pcs->vCameraPosition = (MTH3D_tdstVector_*)&pcs->pCamera->hGlobalMatrix->stTransformMatrix.stCol_3;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-    pcs->pTargetActor = fn_h_StandardGameGetSuperObject(stValue.uDummy.uParam.p_stEngObjValue->h_StandardGame);
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-    pcs->pTargetSkin = fn_h_StandardGameGetSuperObject(stValue.uDummy.uParam.p_stEngObjValue->h_StandardGame);
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-    pcs->iViewFinderIconId = stValue.uDummy.uParam.ulValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-    pcs->bMouseDriven = stValue.uDummy.uParam.lValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-    pcs->bAutoAim = stValue.uDummy.uParam.lValue;
-    pcs->pTargetActor_position = (MTH3D_tdstVector_*)&pcs->pTargetActor->hGlobalMatrix->stTransformMatrix.stCol_3;
-    h_Dynam = pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Dynam;
-    if (h_Dynam != NULL)
+    fn_GetPersoSighting(&pcs->vCameraSighting, pcs->pCamera);
+    if (*(char *)pcs->abExternDsgVarBoolean[0])
     {
-        p_stDynamic = fn_p_stDynamGetDynamics(h_Dynam);
-        if (p_stDynamic != NULL)
-            pcs->pTargetActor_speed = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed;
+        CSH_fn_vCheckRestart(pcs);
+
+        pcs->xTheta_Default = stCamShooter_CV.xTheta_Init;
+        pcs->xTheta_Min = -0.8f;
+        pcs->xTheta_Max = 1.2f;
+        pcs->xDistMax = pcs->xDistMax_Default = stCamShooter_CV.xDistMax_Init;
+
+        CSH_fn_vReadInputs(pcs);
+
+        if (*(char *)pcs->abExternDsgVarBoolean[1])
+        {
+            pcs->pLockedActor = *(HIE_tdstSuperObject_ **)pcs->apExternDsgVarPerso[0];
+            if (fn_bIsValidObject(pcs->pLockedActor))
+            {
+                vTemp1.xX = pcs->pTargetActor_position->xX - pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xX;
+                vTemp1.xY = pcs->pTargetActor_position->xY - pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xY;
+                vTemp1.xZ = pcs->pTargetActor_position->xZ - pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xZ;
+                vTemp2.xX = vTemp1.xX; vTemp2.xY = vTemp1.xY;
+                vTemp2.xZ = 0.0f;
+                xD2r = fn_xAngleVectorVertical(&vTemp1, &vTemp2);
+                fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x242, 0, 1, 0.15f + CSH_MTH_xSign(vTemp1.xZ) * CSH_MTH_xAbs(xD2r));
+                fn_GetPersoNegativeSighting(&vTemp2, pcs->pTargetActor);
+                vTemp2.xZ = 0.0f;
+                if (vTemp2.xX != 0.0f || vTemp2.xY != 0.0f || vTemp2.xZ != 0.0f)
+                {
+                    float xInvNorm;
+
+                    MTH_VECTOR_NORM_TO(xInvNorm, vTemp2);
+                    if (xInvNorm != 0.0f)
+                    {
+                        xInvNorm = 1.0f / xInvNorm;
+                        pcs->vRefAxis.xX = xInvNorm * vTemp2.xX;
+                        pcs->vRefAxis.xY = xInvNorm * vTemp2.xY;
+                        pcs->vRefAxis.xZ = xInvNorm * vTemp2.xZ;
+                    }
+                    else
+                        pcs->vRefAxis = vTemp2;
+                }
+                else
+                    fn_GetPersoNegativeSighting(&vTemp2, pcs->pTargetActor);
+            }
+            else
+            {
+                fn_GetPersoNegativeSighting(&vTemp2, pcs->pTargetActor);
+                vTemp2.xZ = 0.0f;
+                if (vTemp2.xX != 0.0f || vTemp2.xY != 0.0f || vTemp2.xZ != 0.0f)
+                {
+                    float xInvNorm;
+
+                    MTH_VECTOR_NORM_TO(xInvNorm, vTemp2);
+                    if (xInvNorm != 0.0f)
+                    {
+                        xInvNorm = 1.0f / xInvNorm;
+                        pcs->vRefAxis.xX = xInvNorm * vTemp2.xX;
+                        pcs->vRefAxis.xY = xInvNorm * vTemp2.xY;
+                        pcs->vRefAxis.xZ = xInvNorm * vTemp2.xZ;
+                    }
+                    else
+                        pcs->vRefAxis = vTemp2;
+                }
+                else
+                    fn_GetPersoNegativeSighting(&vTemp2, pcs->pTargetActor);
+                fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x242, 0, 1, 0.15f);
+            }
+        }
         else
         {
-            pcs->pTargetActor_speed->xX = 0.0f;
-            pcs->pTargetActor_speed->xY = 0.0f;
-            pcs->pTargetActor_speed->xZ = 0.0f;
+            pcs->pLockedActor = 0;
+            fn_GetPersoNegativeSighting(&vTemp2, pcs->pTargetActor);
+            vTemp2.xZ = 0.0f;
+            if (vTemp2.xX != 0.0f || vTemp2.xY != 0.0f || vTemp2.xZ != 0.0f)
+            {
+                float xInvNorm;
+
+                MTH_VECTOR_NORM_TO(xInvNorm, vTemp2);
+                if (xInvNorm != 0.0f)
+                {
+                    xInvNorm = 1.0f / xInvNorm;
+                    pcs->vRefAxis.xX = xInvNorm * vTemp2.xX;
+                    pcs->vRefAxis.xY = xInvNorm * vTemp2.xY;
+                    pcs->vRefAxis.xZ = xInvNorm * vTemp2.xZ;
+                }
+                else
+                    pcs->vRefAxis = vTemp2;
+            }
+            else
+                fn_GetPersoNegativeSighting(&vTemp2, pcs->pTargetActor);
+            fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x242, 0, 1, 0.15f);
         }
+
+        {
+            tdstCineinfo_* hLocalCineInfo;
+
+            hLocalCineInfo = hCineInfo;
+            *(int *)&hLocalCineInfo->stForceRefAxisY.xX = *(int *)&pcs->vRefAxis.xX; *(int *)&hLocalCineInfo->stForceRefAxisY.xY = *(int *)&pcs->vRefAxis.xY; *(int *)&hLocalCineInfo->stForceRefAxisY.xZ = *(int *)&pcs->vRefAxis.xZ;
+            *(int *)&hLocalCineInfo->stForceRefAxisZ.xX = vVectorZ.i[0]; *(int *)&hLocalCineInfo->stForceRefAxisZ.xY = vVectorZ.i[1]; *(int *)&hLocalCineInfo->stForceRefAxisZ.xZ = vVectorZ.i[2];
+            CAM_fn_vSetResetInternalFlag(hLocalCineInfo, &hLocalCineInfo->hCurrent->uwIAFlags, &hLocalCineInfo->hVisibility->uwIAFlags, &hLocalCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);
+        }
+
+        if (!bGCubeVersion)
+        {
+            if (pcs->axExternDsgVarFloat[0]) { xD2r = *(float *)pcs->axExternDsgVarFloat[0] * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime; if (xD2r == 0.0f) xD2r = 0.001f * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime; } else xD2r = 0.001f * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime; if (lInputAxisZ < -25) xTheta = 0.45f * (((float)(lInputAxisZ + 25) / 75.0f) * ((float)(lInputAxisZ + 25) / 75.0f)); else if (lInputAxisZ >= 26) xTheta = 0.45f * (-((float)(lInputAxisZ - 25) / 75.0f) * ((float)(lInputAxisZ - 25) / 75.0f)); else xTheta = 0.0f; if (lInputAxisV < -25) xAlpha = 0.45f * (((float)(lInputAxisV + 25) / 75.0f) * ((float)(lInputAxisV + 25) / 75.0f)); else if (lInputAxisV >= 26) xAlpha = 0.45f * (-((float)(lInputAxisV - 25) / 75.0f) * ((float)(lInputAxisV - 25) / 75.0f)); else xAlpha = 0.0f; if (!(CSH_MTH_xAbs(pcs->xAlphaLock - xAlpha) < xD2r)) pcs->xAlphaLock += pcs->xAlphaLock < xAlpha ? xD2r : -xD2r; else pcs->xAlphaLock = xAlpha; if (!(CSH_MTH_xAbs(pcs->xThetaLock - xTheta) < xD2r)) pcs->xThetaLock += pcs->xThetaLock < xTheta ? xD2r : -xD2r; else pcs->xThetaLock = xTheta;
+        }
+
+        CSH_fn_vUpdateViewFinder(pcs);
+
+        pcs->xTheta_Current = hCineInfo->hCurrent->xAngleTheta;
+        if (!CSH_fn_bIsInComport(pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind, pcs->pMAComport_Climb) &&
+            !CSH_fn_bIsInComport(pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind, pcs->pMAComport_Hang) &&
+            pcs->xTheta_Current < pcs->xTheta_Default)
+        {
+            xNorm = 3.0f + (pcs->xDistMax_Default - 3.0f) * ((pcs->xTheta_Current - pcs->xTheta_Min) / (pcs->xTheta_Default - pcs->xTheta_Min));
+            if (pcs->xDistMax > xNorm)
+                pcs->xDistMax = xNorm;
+        }
+
+        CSH_fn_vComputeTargetAngle(pcs);
+
+        CSH_fn_vCheckCameraCollision(pcs);
+
+        CSH_fn_vCheckFastAlign(pcs);
+        if (pcs->bFastAlign) CSH_fn_vFastAlign(pcs);
+        fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x23C, 0, 1, pcs->xDistMax);
+        fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x23D, 0, 1, pcs->xDistMax);
+        return 0;
     }
-    else
-    {
-        pcs->pTargetActor_speed->xX = 0.0f;
-        pcs->pTargetActor_speed->xY = 0.0f;
-        pcs->pTargetActor_speed->xZ = 0.0f;
-    }
-    pcs->vStartProjectilePosition.xX = -0.5f;
-    pcs->vStartProjectilePosition.xY = 0.0f;
-    pcs->vStartProjectilePosition.xZ = 1.4f;
-    pcs->iOldInputAxisZ = 0;
-    pcs->llUnknown2A0 = 0;
-    pcs->xAlpha_User = 0.0f;
-    pcs->iNumberOfMainActors = 0;
-    pcs->vCollisionDirectionV.xY = 0.0f;
-    pcs->vCollisionDirectionV.xX = 0.0f;
-    pcs->vCollisionDirectionH.xZ = 0.0f;
-    _p_stViewport = &g_stEngineStructure.a_stViewportAttr[hCineInfo->hCurrent->eTypeOfViewport];
-    pcs->p_stViewport = _p_stViewport;
-    if (GAM_MultiVP_fn_ucGetNumberOfPlayers() == 1)
-    {
-        pcs->xViewFinderWidth_2 = 4.0f;
-        pcs->xViewFinderHeight_2 = 1.3333334f * pcs->xViewFinderWidth_2;
-        pcs->iViewportIndex = 0;
-    }
-    else
-    {
-        pcs->xViewFinderWidth_2 = 6.0f;
-        pcs->xViewFinderHeight_2 = 1.3333334f * pcs->xViewFinderWidth_2;
-        pcs->iViewportIndex = hCineInfo->hCurrent->eTypeOfViewport + 1;
-    }
-    fn_InitCSH_Common();
-    pcs->bIsBot = pcs->bRaiseCamera = pcs->bSideCollision = pcs->bStartAlignCamera = pcs->bVerticalCollision = pcs->bWasClimbing = pcs->bFastAlign = pcs->bIsJumpFalling = pcs->bLowCeiling = pcs->bObstacleCollision = pcs->bAlignCamera = pcs->bAutoAlign = pcs->bCollision = pcs->bCollisionAlign = 0;
-    return p_stTree;
+    return 2;
 }

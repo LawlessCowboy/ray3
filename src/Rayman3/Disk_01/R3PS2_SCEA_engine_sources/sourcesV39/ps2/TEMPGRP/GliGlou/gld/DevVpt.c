@@ -157,11 +157,25 @@ void fn_vUpdateViewportSizesInPixels(GLD_stDevice* p_stDev, GLD_stViewport* p_st
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vSetWaterplane(int _unused, MTH3D_tdstVector_* p_stNormale, float xDistance)
-{
-    stWaterPlaneNormale = *p_stNormale;
-    fWaterPlaneDistance = xDistance;
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void GLI_vSetWaterplane(int _unused, MTH3D_tdstVector_* p_stNormale, float xDistance);
+int GLD_bSetBackgroundColorForDevice(short hDevice, unsigned int crRGB);
+int GLD_bGiveSpecificAttributesToViewport(short hDev, short hVP, void* p_vSpecAttrib);
+int GLD_bDeleteDevice(short hDev);
+int GLD_bDeleteViewport(int _unused, short hVP);
+int GLD_bSetViewportPosition(int _unused, short hVP, GLD_tdstViewportAttributes_* pstViewAttrib);
+int GLD_bWriteToViewportFinished(int _unused, short hVP);
+int GLD_bRequestWriteToViewport(int _unused, short hVP, GLD_tdstViewportAttributes_* pstViewAttrib, int* pbCanWrite);
+int GLD_bEndWriteToDevice(void);
+int GLD_bBeginWriteToDevice(void);
+int GLD_bGetViewportAttributes(int _unused, short hVP, GLD_tdstViewportAttributes_* pstViewAttrib);
+int GLD_bCreateViewport(short hDev, GLD_tdstViewportAttributes_* pstViewAttrib, short* phVP);
+int GLD_bGetDeviceAttributes(short hDev, GLD_tdstDeviceAttributes_* pstDevAttrib);
+int GLD_bCreateDevice(GLD_tdstDeviceAttributes_* pstDevAttrib, short* phDev);
+int GLD_bClearViewportWithChoice(short hDev, short hVP, short sChoice);
+void fn_vUpdateViewportSizesInPixels(GLD_stDevice* p_stDev, GLD_stViewport* p_stVP);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 1704–1706 */
 /* addr: 0x002ac060  size: 12 bytes */
@@ -171,12 +185,6 @@ void GLI_vSetWaterplane(int _unused, MTH3D_tdstVector_* p_stNormale, float xDist
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int GLD_bSetBackgroundColorForDevice(short hDevice, unsigned int crRGB)
-{
-    (void)hDevice;
-    GLI_gs_lBackGroundColor = crRGB;
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 1685–1695 */
 /* addr: 0x002ac070  size: 108 bytes */
@@ -191,20 +199,6 @@ int GLD_bSetBackgroundColorForDevice(short hDevice, unsigned int crRGB)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int GLD_bGiveSpecificAttributesToViewport(short hDev, short hVP, void* p_vSpecAttrib)
-{
-    GLD_stDevice* pstDev;
-    GLD_stViewport* pstVP;
-    int lVP;
-
-    lVP = hVP / 16;
-    hDev = lVP;
-    pstDev = g_pstGLDDevices[hDev];
-    lVP = hVP % 16;
-    pstVP = ((GLD_stViewport**)&pstDev->pstViewports[0])[(short)lVP];
-    pstVP->stViewAttrib.p_vSpecificToXD = (int)p_vSpecAttrib;
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 1191–1231 */
 /* addr: 0x002ac0e0  size: 228 bytes */
@@ -239,31 +233,6 @@ int GLD_bGiveSpecificAttributesToViewport(short hDev, short hVP, void* p_vSpecAt
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int GLD_bDeleteDevice(short hDev)
-{
-    GLD_stDevice* pstDev;
-    GLD_stViewport* pstVP;
-    int i;
-
-    if (!g_bGLDSwapInProgress)
-    {
-        pstDev = g_pstGLDDevices[hDev];
-        for (i = 0; i < 16; i++)
-        {
-            pstVP = pstDev->pstViewports[i];
-            if (pstVP != NULL)
-            {
-                memset(pstVP, 0xCC, sizeof(GLD_stViewport));
-                pstDev->pstViewports[i] = NULL;
-            }
-        }
-        memset(pstDev, 0xCC, sizeof(GLD_stDevice));
-        Mmg_fn_v_SetModeAlloc(g_ucGLDModuleId, 0xFF, 0);
-        fn_vGenFree(pstDev, 0);
-        g_pstGLDDevices[hDev] = NULL;
-    }
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 1144–1183 */
 /* addr: 0x002ac1d0  size: 252 bytes */
@@ -292,28 +261,6 @@ int GLD_bDeleteDevice(short hDev)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int GLD_bDeleteViewport(int _unused, short hVP)
-{
-    GLD_stDevice* pstDev;
-    GLD_stViewport* pstVP;
-    short hDev;
-    int lVP;
-
-    g_bGLDBlockSwaping = 1;
-    while (g_bGLDSwapInProgress)
-        ;
-    hDev = (short)(hVP / 16);
-    pstDev = g_pstGLDDevices[hDev];
-    lVP = hVP % 16;
-    hDev = lVP;
-    pstVP = ((GLD_stViewport**)&pstDev->pstViewports[0])[(short)hDev];
-    memset(pstVP, 0xCC, sizeof(GLD_stViewport));
-    Mmg_fn_v_SetModeAlloc(g_ucGLDModuleId, 0xFF, 0);
-    fn_vGenFree(pstVP, 0);
-    ((GLD_stViewport**)((char*)pstDev + 0x60))[(short)hDev] = NULL;
-    g_bGLDBlockSwaping = 0;
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 1097–1134 */
 /* addr: 0x002ac2d0  size: 272 bytes */
@@ -346,30 +293,6 @@ int GLD_bDeleteViewport(int _unused, short hVP)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int GLD_bSetViewportPosition(int _unused, short hVP, GLD_tdstViewportAttributes_* pstViewAttrib)
-{
-    GLD_stDevice* pstDev;
-    GLD_stViewport* pstVP;
-    short hDev;
-    int lVP;
-
-    g_bGLDBlockSwaping = 1;
-    while (g_bGLDSwapInProgress)
-        ;
-    hDev = (short)(hVP / 16);
-    pstDev = g_pstGLDDevices[hDev];
-    lVP = hVP % 16;
-    hDev = lVP;
-    pstVP = ((GLD_stViewport**)&pstDev->pstViewports[0])[(short)hDev];
-    memset(pstVP, 0, sizeof(GLD_stViewport));
-    memcpy(pstVP, pstViewAttrib, sizeof(GLD_tdstViewportAttributes_));
-    fn_vUpdateViewportSizesInPixels(pstDev, pstVP);
-    pstVP->stViewAttrib.p_cVirtualScreen = 0;
-    pstVP->stViewAttrib.lPitch = -1;
-    memcpy(pstViewAttrib, pstVP, sizeof(GLD_tdstViewportAttributes_));
-    g_bGLDBlockSwaping = 0;
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 933–935 */
 /* addr: 0x002ac3e0  size: 64 bytes */
@@ -381,20 +304,6 @@ int GLD_bSetViewportPosition(int _unused, short hVP, GLD_tdstViewportAttributes_
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int GLD_bWriteToViewportFinished(int _unused, short hVP)
-{
-    GLD_stDevice* p_stDev;
-    int lVP;
-
-    lVP = hVP >> 4;
-    if (hVP < 0)
-    {
-        lVP = (hVP + 0xF) >> 4;
-    }
-    p_stDev = (GLD_stDevice*)g_pstGLDDevices[(short)lVP];
-    p_stDev->bIsLocked = 0;
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 882–913 */
 /* addr: 0x002ac420  size: 204 bytes */
@@ -418,27 +327,6 @@ int GLD_bWriteToViewportFinished(int _unused, short hVP)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int GLD_bRequestWriteToViewport(int _unused, short hVP, GLD_tdstViewportAttributes_* pstViewAttrib, int* pbCanWrite)
-{
-    GLD_stDevice* pstDev;
-    GLD_stViewport* pstVP;
-    short hDev;
-    int lVP;
-
-    g_bGLDBlockSwaping = 1;
-    while (g_bGLDSwapInProgress)
-        ;
-    lVP = hVP / 16;
-    hDev = lVP;
-    pstDev = g_pstGLDDevices[hDev];
-    lVP = hVP % 16;
-    pstVP = ((GLD_stViewport**)&pstDev->pstViewports[0])[(short)lVP];
-    *pbCanWrite = 1;
-    memcpy(pstViewAttrib, pstVP, sizeof(GLD_tdstViewportAttributes_));
-    pstDev->bIsLocked = 1;
-    g_bGLDBlockSwaping = 0;
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 864–864 */
 /* addr: 0x002ac4f0  size: 8 bytes */
@@ -447,10 +335,6 @@ int GLD_bRequestWriteToViewport(int _unused, short hVP, GLD_tdstViewportAttribut
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int GLD_bEndWriteToDevice(void)
-{
-    return GLI_DRV_bEndScene();
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 845–848 */
 /* addr: 0x002ac500  size: 36 bytes */
@@ -462,11 +346,6 @@ int GLD_bEndWriteToDevice(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int GLD_bBeginWriteToDevice(void)
-{
-    GLI_vReinitViewport();
-    return GLI_DRV_bBeginScene();
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 794–825 */
 /* addr: 0x002ac530  size: 196 bytes */
@@ -491,27 +370,6 @@ int GLD_bBeginWriteToDevice(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int GLD_bGetViewportAttributes(int _unused, short hVP, GLD_tdstViewportAttributes_* pstViewAttrib)
-{
-    GLD_stDevice* pstDev;
-    GLD_stViewport* pstVpt;
-    short hDev;
-    int lVP;
-
-    g_bGLDBlockSwaping = 1;
-    while (g_bGLDSwapInProgress)
-        ;
-    lVP = hVP / 16;
-    hDev = lVP;
-    pstDev = g_pstGLDDevices[hDev];
-    lVP = hVP % 16;
-    pstVpt = ((GLD_stViewport**)&pstDev->pstViewports[0])[(short)lVP];
-    pstVpt->stViewAttrib.lPitch = -1;
-    pstVpt->stViewAttrib.p_cVirtualScreen = 0;
-    memcpy(pstViewAttrib, pstVpt, sizeof(GLD_tdstViewportAttributes_));
-    g_bGLDBlockSwaping = 0;
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 731–785 */
 /* addr: 0x002ac600  size: 492 bytes */
@@ -564,55 +422,6 @@ int GLD_bGetViewportAttributes(int _unused, short hVP, GLD_tdstViewportAttribute
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int GLD_bCreateViewport(short hDev, GLD_tdstViewportAttributes_* pstViewAttrib, short* phVP)
-{
-    GLD_stViewport* pstVP;
-    GLD_stDevice* pstDev;
-    long lVPIdx;
-    int bFound;
-    int i;
-
-    pstDev = g_pstGLDDevices[hDev];
-    lVPIdx = -1;
-    bFound = 0;
-    for (i = 0; i < 16; i++)
-    {
-        if (pstDev->pstViewports[i] == NULL)
-        {
-            lVPIdx = i;
-            bFound = 1;
-            break;
-        }
-    }
-    if (!bFound)
-    {
-        *phVP = -1;
-        memset(pstViewAttrib, 0xCC, sizeof(GLD_tdstViewportAttributes_));
-        Erm_fn_v_UpdateLastError(0x34, g_ucGLDModuleId, 0, 0x20, -1, 0xFF, 0xFF, "V5.9.0 - August 11th 1997");
-        return 0;
-    }
-    Mmg_fn_v_SetModeAlloc(g_ucGLDModuleId, 0xFF, 0);
-    pstVP = (GLD_stViewport*)fn_p_vGenAlloc(sizeof(GLD_stViewport), 0);
-    if (pstVP == NULL)
-    {
-        *phVP = -1;
-        memset(pstViewAttrib, 0xCC, sizeof(GLD_tdstViewportAttributes_));
-        return 0;
-    }
-    memset(pstVP, 0, sizeof(GLD_stViewport));
-    memcpy(pstVP, pstViewAttrib, sizeof(GLD_tdstViewportAttributes_));
-    fn_vUpdateViewportSizesInPixels(pstDev, pstVP);
-    pstVP->stViewAttrib.dwInitialHeight = pstVP->stViewAttrib.dwHeight;
-    pstVP->stViewAttrib.dwInitialWidth = pstVP->stViewAttrib.dwWidth;
-    pstVP->stViewAttrib.p_vSpecificToXD = 0;
-    pstVP->stViewAttrib.p_cVirtualScreen = 0;
-    pstVP->stViewAttrib.lPitch = -1;
-    memcpy(pstViewAttrib, pstVP, sizeof(GLD_tdstViewportAttributes_));
-    ((GLD_stViewport**)&g_pstGLDDevices[hDev]->pstViewports[0])[lVPIdx] = pstVP;
-    GLI_vInitSpritesForThisViewport(pstViewAttrib);
-    *phVP = hDev * 16 + lVPIdx;
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 705–720 */
 /* addr: 0x002ac7f0  size: 136 bytes */
@@ -631,20 +440,6 @@ int GLD_bCreateViewport(short hDev, GLD_tdstViewportAttributes_* pstViewAttrib, 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int GLD_bGetDeviceAttributes(short hDev, GLD_tdstDeviceAttributes_* pstDevAttrib)
-{
-    GLD_stDevice* pstDev;
-
-    g_bGLDBlockSwaping = 1;
-    while (g_bGLDSwapInProgress)
-        ;
-    pstDev = (GLD_stDevice*)g_pstGLDDevices[hDev];
-    if (pstDev == NULL)
-        return 0;
-    memcpy(pstDevAttrib, pstDev, sizeof(GLD_tdstDeviceAttributes_));
-    g_bGLDBlockSwaping = 0;
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 517–565 */
 /* addr: 0x002ac880  size: 492 bytes */
@@ -680,58 +475,6 @@ int GLD_bGetDeviceAttributes(short hDev, GLD_tdstDeviceAttributes_* pstDevAttrib
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int GLD_bCreateDevice(GLD_tdstDeviceAttributes_* pstDevAttrib, short* phDev)
-{
-    static int bFirstTime;
-    GLD_stDevice* pstDev;
-    int i;
-    int bOk;
-
-    if (bFirstTime)
-    {
-        Erm_fn_vSetCallBackForExit(&GLD_vCloseErr);
-        if (g_ucGLDModuleId == 0xFF)
-        {
-            g_ucGLDModuleId = Erm_fn_ucInitErrMsg();
-        }
-        Mmg_fn_v_InitMmg(g_ucGLDModuleId, 4, 0x186A0);
-        Mmg_fn_v_SetModeAlloc(g_ucGLDModuleId, 0xFF, 0);
-        memset(g_pstGLDDevices, 0, sizeof(g_pstGLDDevices));
-        if (TMR_fn_wInitLibrary() == 0x7FFF)
-        {
-            Erm_fn_v_UpdateLastError(0x34, g_ucGLDModuleId, 0, 0x36, -1, 0xFF, 0xFF, "V5.9.0 - August 11th 1997");
-            return 0;
-        }
-        GLD_fn_vInitSmoothSynchro();
-        bFirstTime = 0;
-    }
-    Mmg_fn_v_SetModeAlloc(g_ucGLDModuleId, 0xFF, 0);
-    pstDev = (GLD_stDevice*)fn_p_vGenAlloc(sizeof(GLD_stDevice), 0);
-    memset(pstDev, 0, sizeof(GLD_stDevice));
-    pstDevAttrib->dwWidth = 0x280;
-    pstDevAttrib->dwHeight = 0x1E0;
-    for (i = 0; i < 16L; i++)
-    {
-        if (g_pstGLDDevices[i] == NULL)
-        {
-            *phDev = i;
-            break;
-        }
-    }
-    if (i == 16)
-    {
-        *phDev = -1;
-    }
-    g_pstGLDDevices[*phDev] = pstDev;
-    pstDevAttrib->xPixelDimensionX = 1.0f / 3200.0f;
-    pstDevAttrib->xPixelDimensionY = 1.0f / 3200.0f;
-    pstDevAttrib->p_cVirtualScreen = 0;
-    memcpy(pstDev, pstDevAttrib, sizeof(GLD_tdstDeviceAttributes_));
-    pstDevAttrib->lPitch = -1;
-    pstDev->bIsLocked = 0;
-    pstDev->dwBackgroundColor = 0;
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 472–476 */
 /* addr: 0x002aca70  size: 64 bytes */
@@ -745,12 +488,6 @@ int GLD_bCreateDevice(GLD_tdstDeviceAttributes_* pstDevAttrib, short* phDev)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int GLD_bClearViewportWithChoice(short hDev, short hVP, short sChoice)
-{
-    GLI_vReinitViewport();
-    GLI_DRV_vClearDevice(sChoice & 2, sChoice & 1, GLI_gs_lBackGroundColor);
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 166–273 */
 /* addr: 0x002acab0  size: 736 bytes */
@@ -857,6 +594,7 @@ int GLD_bClearViewportWithChoice(short hDev, short hVP, short sChoice)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
 void fn_vUpdateViewportSizesInPixels(GLD_stDevice* p_stDev, GLD_stViewport* p_stVP)
 {
     int iLeft;
@@ -972,4 +710,301 @@ void fn_vUpdateViewportSizesInPixels(GLD_stDevice* p_stDev, GLD_stViewport* p_st
     {
         GLI_DRV_vAddBlackPolygon(p_stVP->stViewAttrib.dwClipRightInPix, 0, p_stVP->stViewAttrib.dwWidth, p_stVP->stViewAttrib.dwHeight);
     }
+}
+
+int GLD_bClearViewportWithChoice(short hDev, short hVP, short sChoice)
+{
+    GLI_vReinitViewport();
+    GLI_DRV_vClearDevice(sChoice & 2, sChoice & 1, GLI_gs_lBackGroundColor);
+    return 1;
+}
+
+int GLD_bCreateDevice(GLD_tdstDeviceAttributes_* pstDevAttrib, short* phDev)
+{
+    static int bFirstTime;
+    GLD_stDevice* pstDev;
+    int i;
+    int bOk;
+
+    if (bFirstTime)
+    {
+        Erm_fn_vSetCallBackForExit(&GLD_vCloseErr);
+        if (g_ucGLDModuleId == 0xFF)
+        {
+            g_ucGLDModuleId = Erm_fn_ucInitErrMsg();
+        }
+        Mmg_fn_v_InitMmg(g_ucGLDModuleId, 4, 0x186A0);
+        Mmg_fn_v_SetModeAlloc(g_ucGLDModuleId, 0xFF, 0);
+        memset(g_pstGLDDevices, 0, sizeof(g_pstGLDDevices));
+        if (TMR_fn_wInitLibrary() == 0x7FFF)
+        {
+            Erm_fn_v_UpdateLastError(0x34, g_ucGLDModuleId, 0, 0x36, -1, 0xFF, 0xFF, "V5.9.0 - August 11th 1997");
+            return 0;
+        }
+        GLD_fn_vInitSmoothSynchro();
+        bFirstTime = 0;
+    }
+    Mmg_fn_v_SetModeAlloc(g_ucGLDModuleId, 0xFF, 0);
+    pstDev = (GLD_stDevice*)fn_p_vGenAlloc(sizeof(GLD_stDevice), 0);
+    memset(pstDev, 0, sizeof(GLD_stDevice));
+    pstDevAttrib->dwWidth = 0x280;
+    pstDevAttrib->dwHeight = 0x1E0;
+    for (i = 0; i < 16L; i++)
+    {
+        if (g_pstGLDDevices[i] == NULL)
+        {
+            *phDev = i;
+            break;
+        }
+    }
+    if (i == 16)
+    {
+        *phDev = -1;
+    }
+    g_pstGLDDevices[*phDev] = pstDev;
+    pstDevAttrib->xPixelDimensionX = 1.0f / 3200.0f;
+    pstDevAttrib->xPixelDimensionY = 1.0f / 3200.0f;
+    pstDevAttrib->p_cVirtualScreen = 0;
+    memcpy(pstDev, pstDevAttrib, sizeof(GLD_tdstDeviceAttributes_));
+    pstDevAttrib->lPitch = -1;
+    pstDev->bIsLocked = 0;
+    pstDev->dwBackgroundColor = 0;
+    return 1;
+}
+
+int GLD_bGetDeviceAttributes(short hDev, GLD_tdstDeviceAttributes_* pstDevAttrib)
+{
+    GLD_stDevice* pstDev;
+
+    g_bGLDBlockSwaping = 1;
+    while (g_bGLDSwapInProgress)
+        ;
+    pstDev = (GLD_stDevice*)g_pstGLDDevices[hDev];
+    if (pstDev == NULL)
+        return 0;
+    memcpy(pstDevAttrib, pstDev, sizeof(GLD_tdstDeviceAttributes_));
+    g_bGLDBlockSwaping = 0;
+    return 1;
+}
+
+int GLD_bCreateViewport(short hDev, GLD_tdstViewportAttributes_* pstViewAttrib, short* phVP)
+{
+    GLD_stViewport* pstVP;
+    GLD_stDevice* pstDev;
+    long lVPIdx;
+    int bFound;
+    int i;
+
+    pstDev = g_pstGLDDevices[hDev];
+    lVPIdx = -1;
+    bFound = 0;
+    for (i = 0; i < 16; i++)
+    {
+        if (pstDev->pstViewports[i] == NULL)
+        {
+            lVPIdx = i;
+            bFound = 1;
+            break;
+        }
+    }
+    if (!bFound)
+    {
+        *phVP = -1;
+        memset(pstViewAttrib, 0xCC, sizeof(GLD_tdstViewportAttributes_));
+        Erm_fn_v_UpdateLastError(0x34, g_ucGLDModuleId, 0, 0x20, -1, 0xFF, 0xFF, "V5.9.0 - August 11th 1997");
+        return 0;
+    }
+    Mmg_fn_v_SetModeAlloc(g_ucGLDModuleId, 0xFF, 0);
+    pstVP = (GLD_stViewport*)fn_p_vGenAlloc(sizeof(GLD_stViewport), 0);
+    if (pstVP == NULL)
+    {
+        *phVP = -1;
+        memset(pstViewAttrib, 0xCC, sizeof(GLD_tdstViewportAttributes_));
+        return 0;
+    }
+    memset(pstVP, 0, sizeof(GLD_stViewport));
+    memcpy(pstVP, pstViewAttrib, sizeof(GLD_tdstViewportAttributes_));
+    fn_vUpdateViewportSizesInPixels(pstDev, pstVP);
+    pstVP->stViewAttrib.dwInitialHeight = pstVP->stViewAttrib.dwHeight;
+    pstVP->stViewAttrib.dwInitialWidth = pstVP->stViewAttrib.dwWidth;
+    pstVP->stViewAttrib.p_vSpecificToXD = 0;
+    pstVP->stViewAttrib.p_cVirtualScreen = 0;
+    pstVP->stViewAttrib.lPitch = -1;
+    memcpy(pstViewAttrib, pstVP, sizeof(GLD_tdstViewportAttributes_));
+    ((GLD_stViewport**)&g_pstGLDDevices[hDev]->pstViewports[0])[lVPIdx] = pstVP;
+    GLI_vInitSpritesForThisViewport(pstViewAttrib);
+    *phVP = hDev * 16 + lVPIdx;
+    return 1;
+}
+
+int GLD_bGetViewportAttributes(int _unused, short hVP, GLD_tdstViewportAttributes_* pstViewAttrib)
+{
+    GLD_stDevice* pstDev;
+    GLD_stViewport* pstVpt;
+    short hDev;
+    int lVP;
+
+    g_bGLDBlockSwaping = 1;
+    while (g_bGLDSwapInProgress)
+        ;
+    lVP = hVP / 16;
+    hDev = lVP;
+    pstDev = g_pstGLDDevices[hDev];
+    lVP = hVP % 16;
+    pstVpt = ((GLD_stViewport**)&pstDev->pstViewports[0])[(short)lVP];
+    pstVpt->stViewAttrib.lPitch = -1;
+    pstVpt->stViewAttrib.p_cVirtualScreen = 0;
+    memcpy(pstViewAttrib, pstVpt, sizeof(GLD_tdstViewportAttributes_));
+    g_bGLDBlockSwaping = 0;
+    return 1;
+}
+
+int GLD_bBeginWriteToDevice(void)
+{
+    GLI_vReinitViewport();
+    return GLI_DRV_bBeginScene();
+}
+
+int GLD_bEndWriteToDevice(void)
+{
+    return GLI_DRV_bEndScene();
+}
+
+int GLD_bRequestWriteToViewport(int _unused, short hVP, GLD_tdstViewportAttributes_* pstViewAttrib, int* pbCanWrite)
+{
+    GLD_stDevice* pstDev;
+    GLD_stViewport* pstVP;
+    short hDev;
+    int lVP;
+
+    g_bGLDBlockSwaping = 1;
+    while (g_bGLDSwapInProgress)
+        ;
+    lVP = hVP / 16;
+    hDev = lVP;
+    pstDev = g_pstGLDDevices[hDev];
+    lVP = hVP % 16;
+    pstVP = ((GLD_stViewport**)&pstDev->pstViewports[0])[(short)lVP];
+    *pbCanWrite = 1;
+    memcpy(pstViewAttrib, pstVP, sizeof(GLD_tdstViewportAttributes_));
+    pstDev->bIsLocked = 1;
+    g_bGLDBlockSwaping = 0;
+    return 1;
+}
+
+int GLD_bWriteToViewportFinished(int _unused, short hVP)
+{
+    GLD_stDevice* p_stDev;
+    int lVP;
+
+    lVP = hVP >> 4;
+    if (hVP < 0)
+    {
+        lVP = (hVP + 0xF) >> 4;
+    }
+    p_stDev = (GLD_stDevice*)g_pstGLDDevices[(short)lVP];
+    p_stDev->bIsLocked = 0;
+    return 1;
+}
+
+int GLD_bSetViewportPosition(int _unused, short hVP, GLD_tdstViewportAttributes_* pstViewAttrib)
+{
+    GLD_stDevice* pstDev;
+    GLD_stViewport* pstVP;
+    short hDev;
+    int lVP;
+
+    g_bGLDBlockSwaping = 1;
+    while (g_bGLDSwapInProgress)
+        ;
+    hDev = (short)(hVP / 16);
+    pstDev = g_pstGLDDevices[hDev];
+    lVP = hVP % 16;
+    hDev = lVP;
+    pstVP = ((GLD_stViewport**)&pstDev->pstViewports[0])[(short)hDev];
+    memset(pstVP, 0, sizeof(GLD_stViewport));
+    memcpy(pstVP, pstViewAttrib, sizeof(GLD_tdstViewportAttributes_));
+    fn_vUpdateViewportSizesInPixels(pstDev, pstVP);
+    pstVP->stViewAttrib.p_cVirtualScreen = 0;
+    pstVP->stViewAttrib.lPitch = -1;
+    memcpy(pstViewAttrib, pstVP, sizeof(GLD_tdstViewportAttributes_));
+    g_bGLDBlockSwaping = 0;
+    return 1;
+}
+
+int GLD_bDeleteViewport(int _unused, short hVP)
+{
+    GLD_stDevice* pstDev;
+    GLD_stViewport* pstVP;
+    short hDev;
+    int lVP;
+
+    g_bGLDBlockSwaping = 1;
+    while (g_bGLDSwapInProgress)
+        ;
+    hDev = (short)(hVP / 16);
+    pstDev = g_pstGLDDevices[hDev];
+    lVP = hVP % 16;
+    hDev = lVP;
+    pstVP = ((GLD_stViewport**)&pstDev->pstViewports[0])[(short)hDev];
+    memset(pstVP, 0xCC, sizeof(GLD_stViewport));
+    Mmg_fn_v_SetModeAlloc(g_ucGLDModuleId, 0xFF, 0);
+    fn_vGenFree(pstVP, 0);
+    ((GLD_stViewport**)((char*)pstDev + 0x60))[(short)hDev] = NULL;
+    g_bGLDBlockSwaping = 0;
+    return 1;
+}
+
+int GLD_bDeleteDevice(short hDev)
+{
+    GLD_stDevice* pstDev;
+    GLD_stViewport* pstVP;
+    int i;
+
+    if (!g_bGLDSwapInProgress)
+    {
+        pstDev = g_pstGLDDevices[hDev];
+        for (i = 0; i < 16; i++)
+        {
+            pstVP = pstDev->pstViewports[i];
+            if (pstVP != NULL)
+            {
+                memset(pstVP, 0xCC, sizeof(GLD_stViewport));
+                pstDev->pstViewports[i] = NULL;
+            }
+        }
+        memset(pstDev, 0xCC, sizeof(GLD_stDevice));
+        Mmg_fn_v_SetModeAlloc(g_ucGLDModuleId, 0xFF, 0);
+        fn_vGenFree(pstDev, 0);
+        g_pstGLDDevices[hDev] = NULL;
+    }
+    return 1;
+}
+
+int GLD_bGiveSpecificAttributesToViewport(short hDev, short hVP, void* p_vSpecAttrib)
+{
+    GLD_stDevice* pstDev;
+    GLD_stViewport* pstVP;
+    int lVP;
+
+    lVP = hVP / 16;
+    hDev = lVP;
+    pstDev = g_pstGLDDevices[hDev];
+    lVP = hVP % 16;
+    pstVP = ((GLD_stViewport**)&pstDev->pstViewports[0])[(short)lVP];
+    pstVP->stViewAttrib.p_vSpecificToXD = (int)p_vSpecAttrib;
+    return 1;
+}
+
+int GLD_bSetBackgroundColorForDevice(short hDevice, unsigned int crRGB)
+{
+    (void)hDevice;
+    GLI_gs_lBackGroundColor = crRGB;
+    return 1;
+}
+
+void GLI_vSetWaterplane(int _unused, MTH3D_tdstVector_* p_stNormale, float xDistance)
+{
+    stWaterPlaneNormale = *p_stNormale;
+    fWaterPlaneDistance = xDistance;
 }

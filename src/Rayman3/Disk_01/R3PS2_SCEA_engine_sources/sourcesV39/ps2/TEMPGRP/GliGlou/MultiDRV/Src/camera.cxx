@@ -242,55 +242,13 @@ extern float GLI_g_fCurrentCameraxAngle;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char GLI_vAdjustCameraToMirror(GEO_tdstGeometricObject_* hHandleOfGometricMirror, MAT_tdstTransformation_* hGlobalMatrixOfMirror, MAT_tdstTransformation_* hMatrixOfCamera, GLI_tdstCamera_* pstCamera, GLD_tdstViewportAttributes_* p_stVpt, int lDrawModeMask)
-{
-    short xNewNbPoints;
-    float fNear;
-    unsigned char p_bPointOfMirrorIsBehindCamera[4];
-    unsigned char bIDrawTheMirrorNormally;
-    MAT_tdstTransformation_ stMatrixFromSuperObjectToCamera;
-    float xConstantDivForZ;
-    float xConstantMinForZ;
-    float fYMax1;
-    float fXMax1;
-    float fXMin1;
-    float fYMax;
-    float fYMin;
-    float fXMax;
-    float fXMin;
-    short xTempIndexForRectangle;
-    short j;
-    short i;
-    GLI_tdstAligned2DVector_ pstAligned2DProjectedPointOfRectangleMirror[5];
-    MTH4D_tdstVector_ pstAligned3DCorrectedPointOfRectangleMirror[5];
-    MTH4D_tdstVector_ pstAligned3DPointOfRectangleMirror[4];
-    MTH3D_tdstVector_ pstPointOfRectangleMirror[4];
-    /* TODO: decompile from asm/...
-     *
-     * Recovered structure of the retail body (agent-299):
-     *  - frame 0x560; callee-saved s0..s8 (fp=s8) and fs0/fs1; the five
-     *    integer parameters arrive in a0..a5 and are copied to s5 (mirror
-     *    handle), s7 (mirror global matrix), fp (camera matrix), s4 (camera),
-     *    t0 (viewport attributes) and s3 (draw mode mask).
-     *  - the first three float values are the viewport clip sizes
-     *    p_stVpt->dwClipLeftInPix (+0x40), dwClipRightInPix (+0x44) and
-     *    dwClipBottomInPix (+0x3c), each converted with the retail's
-     *    "halve a negative size" idiom:
-     *        if (value >= 0) f = (float)value;
-     *        else { int h = (int)(((unsigned)value >> 1) | (value & 1));
-     *               f = (float)h + (float)h; }
-     *    (MWCC 3.0.1 cannot lower a signed "value / 2" that way, so the
-     *    unsigned-shift spelling is required; see the matching insights.)
-     *  - a four-iteration loop (s2 += 12) calls the engine routine at
-     *    0x002a2100 with (mirror handle, sp+0xb0+s2, s1) and copies 16-byte
-     *    (quadword) blocks around it.
-     *  - the following code branches on lDrawModeMask (1/2/3), tests the
-     *    0x8000 bit, then runs two more four-point loops over
-     *    pstAligned3DPointOfRectangleMirror with modulo-4 addressing
-     *    ("andi t0,t1,3; addiu t0,t0,-4") and tanf() on the resulting
-     *    plane distances.
-     */
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+unsigned char GLI_vAdjustCameraToMirror(GEO_tdstGeometricObject_* hHandleOfGometricMirror, MAT_tdstTransformation_* hGlobalMatrixOfMirror, MAT_tdstTransformation_* hMatrixOfCamera, GLI_tdstCamera_* pstCamera, GLD_tdstViewportAttributes_* p_stVpt, int lDrawModeMask);
+void GLI_xAdjustCameraToViewport2(GLD_tdstDeviceAttributes_* p_stDev, GLD_tdstViewportAttributes_* p_stVpt, GLI_tdstCamera_* p_stCam);
+void GLI_vGet3DVertexFromScreenPos(GLD_tdstViewportAttributes_* p_stVpt, MTH3D_tdstVector_* p_stPos3D, float xRatioX, float xRatioY, float xSize);
+void GLI_xAdjustCameraToViewport(short hDevice, short hViewport, GLI_tdstCamera_* p_stCam);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\camera.cxx lines 242–424 */
 /* addr: 0x002b1b40  size: 1032 bytes */
@@ -394,6 +352,185 @@ unsigned char GLI_vAdjustCameraToMirror(GEO_tdstGeometricObject_* hHandleOfGomet
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\camera.cxx lines 107–168 */
+/* addr: 0x002b1f50  size: 652 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 107
+ *   +0x000c -> line 120
+ *   +0x0040 -> line 125
+ *   +0x0044 -> line 120
+ *   +0x0048 -> line 125
+ *   +0x004c -> line 120
+ *   +0x0058 -> line 122
+ *   +0x005c -> line 127
+ *   +0x0060 -> line 122
+ *   +0x0064 -> line 121
+ *   +0x0068 -> line 127
+ *   +0x009c -> line 131
+ *   +0x00a8 -> line 132
+ *   +0x00b0 -> line 136
+ *   +0x00fc -> line 137
+ *   +0x0104 -> line 140
+ *   +0x0108 -> line 141
+ *   +0x0110 -> line 148
+ *   +0x0128 -> line 153
+ *   +0x012c -> line 150
+ *   +0x0130 -> line 151
+ *   +0x0134 -> line 152
+ *   +0x013c -> line 150
+ *   +0x0148 -> line 151
+ *   +0x014c -> line 150
+ *   +0x0150 -> line 151
+ *   +0x0154 -> line 150
+ *   +0x015c -> line 151
+ *   +0x0160 -> line 152
+ *   +0x016c -> line 151
+ *   +0x0170 -> line 152
+ *   +0x0174 -> line 151
+ *   +0x0178 -> line 152
+ *   +0x017c -> line 151
+ *   +0x0180 -> line 152
+ *   +0x0184 -> line 153
+ *   +0x0194 -> line 154
+ *   +0x019c -> line 157
+ *   +0x01a8 -> line 158
+ *   +0x01b4 -> line 157
+ *   +0x01b8 -> line 158
+ *   +0x01bc -> line 157
+ *   +0x01c0 -> line 158
+ *   +0x01c8 -> line 159
+ *   +0x01cc -> line 158
+ *   +0x01d0 -> line 165
+ *   +0x01dc -> line 166
+ *   +0x01e0 -> line 165
+ *   +0x0204 -> line 166
+ *   +0x020c -> line 167
+ *   +0x027c -> line 168
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\camera.cxx lines 64–84 */
+/* addr: 0x002b21e0  size: 128 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 64
+ *   +0x0020 -> line 70
+ *   +0x0030 -> line 72
+ *   +0x0044 -> line 76
+ *   +0x004c -> line 77
+ *   +0x0054 -> line 79
+ *   +0x0058 -> line 82
+ *   +0x0068 -> line 84
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void GLI_xAdjustCameraToViewport(short hDevice, short hViewport, GLI_tdstCamera_* p_stCam)
+{
+    GLD_tdstDeviceAttributes_ stDevAttrib;
+    GLD_tdstViewportAttributes_ stViewAttrib;
+
+    if (GLD_bGetDeviceAttributes(hDevice, &stDevAttrib))
+    {
+        if (GLD_bGetViewportAttributes(hDevice, hViewport, &stViewAttrib))
+        {
+            if (p_stCam == NULL)
+                p_stCam = p_stCamAntiBug;
+            else
+                p_stCamAntiBug = p_stCam;
+
+            GLI_xAdjustCameraToViewport2(&stDevAttrib, &stViewAttrib, p_stCam);
+        }
+    }
+}
+
+void GLI_vGet3DVertexFromScreenPos(GLD_tdstViewportAttributes_* p_stVpt, MTH3D_tdstVector_* p_stPos3D, float xRatioX, float xRatioY, float xSize)
+{
+    MAT_tdstTransformation_ stInvMatrix;
+    MAT_tdstTransformation_ stMatrix;
+    MTH3D_tdstVector_ stTemp;
+    float fCoeff;
+    float xScreen;
+    float fZ;
+    GLI_tdstCamera_* p_stCam;
+    float fWidth;
+    float fX;
+    float fY;
+    int lVal;
+
+    if (p_stVpt->dwWidth >= 0) fWidth = (float)p_stVpt->dwWidth; else
+    {
+        lVal = (int)(((unsigned int)p_stVpt->dwWidth >> 1) | (p_stVpt->dwWidth & 1));
+        fWidth = (float)lVal + (float)lVal;
+    }
+    p_stCam = *(GLI_tdstCamera_**)p_stVpt->p_vSpecificToXD;
+    fCoeff = fWidth / 1024.0f;
+    fX = 1024.0f * xRatioX;
+    fY = 0.5f * xRatioY;
+
+    switch (p_stCam->lCameraMode)
+    {
+    case 100:
+    case 101:
+        xScreen = 0.1f;
+        break;
+    case 102:
+    case 103:
+        if (p_stVpt->dwWidth >= 0) fWidth = (float)p_stVpt->dwWidth; else
+        {
+            lVal = (int)(((unsigned int)p_stVpt->dwWidth >> 1) | (p_stVpt->dwWidth & 1));
+            fWidth = (float)lVal + (float)lVal;
+        }
+        xScreen = (p_stCam->xScreen * fWidth) / 1024.0f;
+        break;
+    default:
+        p_stPos3D->xZ = 0.0f;
+        p_stPos3D->xY = 0.0f;
+        p_stPos3D->xX = 0.0f;
+        return;
+    }
+
+    if (xSize != 0.0f)
+    {
+        fCoeff = ((fX - p_stCam->stScale.xX) / p_stCam->stScale.xX) / xSize;
+        xScreen = xScreen * ((1.0f + xSize) / xSize);
+        fZ = 0.0f;
+    }
+    else
+    {
+        fCoeff = (fX - p_stCam->stScale.xX) / p_stCam->stScale.xX;
+        xScreen = (fY - 240.0f) / p_stCam->stScale.xY;
+        fZ = 0.0f;
+    }
+
+    stMatrix = p_stCam->stMatrix;
+    MAT_fn_vInvert(&stInvMatrix, &stMatrix);
+
+    stTemp.xX = fCoeff;
+    stTemp.xY = xScreen;
+    stTemp.xZ = fZ;
+    {
+        float* pMat = (float*)&stInvMatrix.stTransformMatrix;
+        float* pVec = (float*)&stTemp;
+        asm {
+            lqc2 $vf1, 0x0(pVec)
+            lqc2 $vf2, 0x0(pMat)
+            lqc2 $vf3, 0x10(pMat)
+            lqc2 $vf4, 0x20(pMat)
+            lqc2 $vf5, 0x30(pMat)
+            vmulax.xyzw $ACC, $vf2, $vf1x
+            vmadday.xyzw $ACC, $vf3, $vf1y
+            vmaddaz.xyzw $ACC, $vf4, $vf1z
+            vmaddw.xyzw $vf6, $vf5, $vf0w
+            sqc2 $vf6, 0x0(pVec)
+        }
+    }
+    p_stPos3D->xX = stTemp.xX;
+    p_stPos3D->xY = stTemp.xY;
+    p_stPos3D->xZ = stTemp.xZ;
+}
+
 void GLI_xAdjustCameraToViewport2(GLD_tdstDeviceAttributes_* p_stDev, GLD_tdstViewportAttributes_* p_stVpt, GLI_tdstCamera_* p_stCam)
 {
     float fWidth;
@@ -502,178 +639,52 @@ void GLI_xAdjustCameraToViewport2(GLD_tdstDeviceAttributes_* p_stDev, GLD_tdstVi
     GLI_g_fCurrentCameraxAngle = 0.75f * (180.0f * p_stCam->xAlphaX) / 3.1415927f;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\camera.cxx lines 107–168 */
-/* addr: 0x002b1f50  size: 652 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 107
- *   +0x000c -> line 120
- *   +0x0040 -> line 125
- *   +0x0044 -> line 120
- *   +0x0048 -> line 125
- *   +0x004c -> line 120
- *   +0x0058 -> line 122
- *   +0x005c -> line 127
- *   +0x0060 -> line 122
- *   +0x0064 -> line 121
- *   +0x0068 -> line 127
- *   +0x009c -> line 131
- *   +0x00a8 -> line 132
- *   +0x00b0 -> line 136
- *   +0x00fc -> line 137
- *   +0x0104 -> line 140
- *   +0x0108 -> line 141
- *   +0x0110 -> line 148
- *   +0x0128 -> line 153
- *   +0x012c -> line 150
- *   +0x0130 -> line 151
- *   +0x0134 -> line 152
- *   +0x013c -> line 150
- *   +0x0148 -> line 151
- *   +0x014c -> line 150
- *   +0x0150 -> line 151
- *   +0x0154 -> line 150
- *   +0x015c -> line 151
- *   +0x0160 -> line 152
- *   +0x016c -> line 151
- *   +0x0170 -> line 152
- *   +0x0174 -> line 151
- *   +0x0178 -> line 152
- *   +0x017c -> line 151
- *   +0x0180 -> line 152
- *   +0x0184 -> line 153
- *   +0x0194 -> line 154
- *   +0x019c -> line 157
- *   +0x01a8 -> line 158
- *   +0x01b4 -> line 157
- *   +0x01b8 -> line 158
- *   +0x01bc -> line 157
- *   +0x01c0 -> line 158
- *   +0x01c8 -> line 159
- *   +0x01cc -> line 158
- *   +0x01d0 -> line 165
- *   +0x01dc -> line 166
- *   +0x01e0 -> line 165
- *   +0x0204 -> line 166
- *   +0x020c -> line 167
- *   +0x027c -> line 168
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GLI_vGet3DVertexFromScreenPos(GLD_tdstViewportAttributes_* p_stVpt, MTH3D_tdstVector_* p_stPos3D, float xRatioX, float xRatioY, float xSize)
+unsigned char GLI_vAdjustCameraToMirror(GEO_tdstGeometricObject_* hHandleOfGometricMirror, MAT_tdstTransformation_* hGlobalMatrixOfMirror, MAT_tdstTransformation_* hMatrixOfCamera, GLI_tdstCamera_* pstCamera, GLD_tdstViewportAttributes_* p_stVpt, int lDrawModeMask)
 {
-    MAT_tdstTransformation_ stInvMatrix;
-    MAT_tdstTransformation_ stMatrix;
-    MTH3D_tdstVector_ stTemp;
-    float fCoeff;
-    float xScreen;
-    float fZ;
-    GLI_tdstCamera_* p_stCam;
-    float fWidth;
-    float fX;
-    float fY;
-    int lVal;
-
-    if (p_stVpt->dwWidth >= 0) fWidth = (float)p_stVpt->dwWidth; else
-    {
-        lVal = (int)(((unsigned int)p_stVpt->dwWidth >> 1) | (p_stVpt->dwWidth & 1));
-        fWidth = (float)lVal + (float)lVal;
-    }
-    p_stCam = *(GLI_tdstCamera_**)p_stVpt->p_vSpecificToXD;
-    fCoeff = fWidth / 1024.0f;
-    fX = 1024.0f * xRatioX;
-    fY = 0.5f * xRatioY;
-
-    switch (p_stCam->lCameraMode)
-    {
-    case 100:
-    case 101:
-        xScreen = 0.1f;
-        break;
-    case 102:
-    case 103:
-        if (p_stVpt->dwWidth >= 0) fWidth = (float)p_stVpt->dwWidth; else
-        {
-            lVal = (int)(((unsigned int)p_stVpt->dwWidth >> 1) | (p_stVpt->dwWidth & 1));
-            fWidth = (float)lVal + (float)lVal;
-        }
-        xScreen = (p_stCam->xScreen * fWidth) / 1024.0f;
-        break;
-    default:
-        p_stPos3D->xZ = 0.0f;
-        p_stPos3D->xY = 0.0f;
-        p_stPos3D->xX = 0.0f;
-        return;
-    }
-
-    if (xSize != 0.0f)
-    {
-        fCoeff = ((fX - p_stCam->stScale.xX) / p_stCam->stScale.xX) / xSize;
-        xScreen = xScreen * ((1.0f + xSize) / xSize);
-        fZ = 0.0f;
-    }
-    else
-    {
-        fCoeff = (fX - p_stCam->stScale.xX) / p_stCam->stScale.xX;
-        xScreen = (fY - 240.0f) / p_stCam->stScale.xY;
-        fZ = 0.0f;
-    }
-
-    stMatrix = p_stCam->stMatrix;
-    MAT_fn_vInvert(&stInvMatrix, &stMatrix);
-
-    stTemp.xX = fCoeff;
-    stTemp.xY = xScreen;
-    stTemp.xZ = fZ;
-    {
-        float* pMat = (float*)&stInvMatrix.stTransformMatrix;
-        float* pVec = (float*)&stTemp;
-        asm {
-            lqc2 $vf1, 0x0(pVec)
-            lqc2 $vf2, 0x0(pMat)
-            lqc2 $vf3, 0x10(pMat)
-            lqc2 $vf4, 0x20(pMat)
-            lqc2 $vf5, 0x30(pMat)
-            vmulax.xyzw $ACC, $vf2, $vf1x
-            vmadday.xyzw $ACC, $vf3, $vf1y
-            vmaddaz.xyzw $ACC, $vf4, $vf1z
-            vmaddw.xyzw $vf6, $vf5, $vf0w
-            sqc2 $vf6, 0x0(pVec)
-        }
-    }
-    p_stPos3D->xX = stTemp.xX;
-    p_stPos3D->xY = stTemp.xY;
-    p_stPos3D->xZ = stTemp.xZ;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\camera.cxx lines 64–84 */
-/* addr: 0x002b21e0  size: 128 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 64
- *   +0x0020 -> line 70
- *   +0x0030 -> line 72
- *   +0x0044 -> line 76
- *   +0x004c -> line 77
- *   +0x0054 -> line 79
- *   +0x0058 -> line 82
- *   +0x0068 -> line 84
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GLI_xAdjustCameraToViewport(short hDevice, short hViewport, GLI_tdstCamera_* p_stCam)
-{
-    GLD_tdstDeviceAttributes_ stDevAttrib;
-    GLD_tdstViewportAttributes_ stViewAttrib;
-
-    if (GLD_bGetDeviceAttributes(hDevice, &stDevAttrib))
-    {
-        if (GLD_bGetViewportAttributes(hDevice, hViewport, &stViewAttrib))
-        {
-            if (p_stCam == NULL)
-                p_stCam = p_stCamAntiBug;
-            else
-                p_stCamAntiBug = p_stCam;
-
-            GLI_xAdjustCameraToViewport2(&stDevAttrib, &stViewAttrib, p_stCam);
-        }
-    }
+    short xNewNbPoints;
+    float fNear;
+    unsigned char p_bPointOfMirrorIsBehindCamera[4];
+    unsigned char bIDrawTheMirrorNormally;
+    MAT_tdstTransformation_ stMatrixFromSuperObjectToCamera;
+    float xConstantDivForZ;
+    float xConstantMinForZ;
+    float fYMax1;
+    float fXMax1;
+    float fXMin1;
+    float fYMax;
+    float fYMin;
+    float fXMax;
+    float fXMin;
+    short xTempIndexForRectangle;
+    short j;
+    short i;
+    GLI_tdstAligned2DVector_ pstAligned2DProjectedPointOfRectangleMirror[5];
+    MTH4D_tdstVector_ pstAligned3DCorrectedPointOfRectangleMirror[5];
+    MTH4D_tdstVector_ pstAligned3DPointOfRectangleMirror[4];
+    MTH3D_tdstVector_ pstPointOfRectangleMirror[4];
+    /* TODO: decompile from asm/...
+     *
+     * Recovered structure of the retail body (agent-299):
+     *  - frame 0x560; callee-saved s0..s8 (fp=s8) and fs0/fs1; the five
+     *    integer parameters arrive in a0..a5 and are copied to s5 (mirror
+     *    handle), s7 (mirror global matrix), fp (camera matrix), s4 (camera),
+     *    t0 (viewport attributes) and s3 (draw mode mask).
+     *  - the first three float values are the viewport clip sizes
+     *    p_stVpt->dwClipLeftInPix (+0x40), dwClipRightInPix (+0x44) and
+     *    dwClipBottomInPix (+0x3c), each converted with the retail's
+     *    "halve a negative size" idiom:
+     *        if (value >= 0) f = (float)value;
+     *        else { int h = (int)(((unsigned)value >> 1) | (value & 1));
+     *               f = (float)h + (float)h; }
+     *    (MWCC 3.0.1 cannot lower a signed "value / 2" that way, so the
+     *    unsigned-shift spelling is required; see the matching insights.)
+     *  - a four-iteration loop (s2 += 12) calls the engine routine at
+     *    0x002a2100 with (mirror handle, sp+0xb0+s2, s1) and copies 16-byte
+     *    (quadword) blocks around it.
+     *  - the following code branches on lDrawModeMask (1/2/3), tests the
+     *    0x8000 bit, then runs two more four-point loops over
+     *    pstAligned3DPointOfRectangleMirror with modulo-4 addressing
+     *    ("andi t0,t1,3; addiu t0,t0,-4") and tanf() on the resulting
+     *    plane distances.
+     */
 }

@@ -14,16 +14,27 @@ unsigned int g_DEMO_u32StreamFileOffset;
 char g_DEMO_aEventBuffer[2][131072];
 unsigned int g_DEMO_u32PlayMode;
 
-unsigned char fn_bDoTransition(void)
-{
-    return g_bDoTransition;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+unsigned char fn_bDoTransition(void);
+char* DEMO_pcGetNextFlowSegment(void);
+void DEMO_fn_vStopEventFlow(void);
 
 unsigned int DEMO_fn_u32GetCurrentEventOffset(void);
 char* DEMO_fn_pcGetAddressForEventOffset(unsigned int u32Offset);
 
 /* Debug signature records no return type; the target returns the segment
    address in v0. */
+
+void DEMO_fn_vStopEventFlow(void)
+{
+    fn_bSyncStream(g_DEMO_u32StreamRequestHandle);
+    fn_vCloseStream(g_DEMO_u32StreamFileHandle);
+    g_DEMO_u32StreamFileOffset = 0;
+    g_DEMO_u32StreamFileHandle = -1;
+    g_DEMO_u32StreamRequestHandle = -1;
+}
+
 char* DEMO_pcGetNextFlowSegment(void)
 {
     unsigned int u32CurrentOffset;
@@ -52,11 +63,7 @@ char* DEMO_pcGetNextFlowSegment(void)
     }
 }
 
-void DEMO_fn_vStopEventFlow(void)
+unsigned char fn_bDoTransition(void)
 {
-    fn_bSyncStream(g_DEMO_u32StreamRequestHandle);
-    fn_vCloseStream(g_DEMO_u32StreamFileHandle);
-    g_DEMO_u32StreamFileOffset = 0;
-    g_DEMO_u32StreamFileHandle = -1;
-    g_DEMO_u32StreamRequestHandle = -1;
+    return g_bDoTransition;
 }

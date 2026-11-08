@@ -163,16 +163,26 @@ int decBs0(anon_0* vd);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int mpegTS(anon_2* mp, anon_6* cbts, void* anyData)
-{
-    anon_1 ts;
 
-
-    viBufGetTs(&videoDec.vibuf, &ts);
-    cbts->pts = ts.pts;
-    cbts->dts = ts.dts;
-    return 1;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+int mpegTS(anon_2* mp, anon_6* cbts, void* anyData);
+int mpegRestartDMA(void);
+int mpegStopDMA(void);
+int mpegNodata(anon_2* mp, anon_3* cbdata, void* anyData);
+int mpegError(anon_2* mp, anon_5* cberror, void* anyData);
+int decBs0(anon_0* vd);
+void videoDecMain(anon_0* vd);
+int videoDecIsFlushed(anon_0* vd);
+int videoDecFlush(anon_0* vd);
+int videoDecPutTs(anon_0* vd, long pts_val, long dts_val, unsigned char* start, int len);
+unsigned int videoDecGetState(anon_0* vd);
+int videoDecAbort(anon_0* vd);
+int videoDecDelete(anon_0* vd);
+void videoDecEndPut(anon_0* vd, int size);
+void videoDecBeginPut(anon_0* vd, unsigned char** ptr0, int* len0, unsigned char** ptr1, int* len1);
+int videoDecSetStream(anon_0* vd, int strType, int ch, int (*cb)(anon_2*, anon_3*, void*), void* data);
+int videoDecCreate(anon_0* vd, unsigned char* mpegWork, int mpegWorkSize, long double* data, long double* tag, int tagSize, anon_1* pts, int n_pts);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 382–386 */
 /* addr: 0x001329c0  size: 36 bytes */
@@ -187,11 +197,6 @@ int mpegTS(anon_2* mp, anon_6* cbts, void* anyData)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int mpegRestartDMA(void)
-{
-    viBufRestartDMA((anon_3*)&videoDec.vibuf);
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 371–375 */
 /* addr: 0x001329f0  size: 36 bytes */
@@ -206,11 +211,6 @@ int mpegRestartDMA(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int mpegStopDMA(void)
-{
-    viBufStopDMA((anon_3*)&videoDec.vibuf);
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 360–364 */
 /* addr: 0x00132a20  size: 44 bytes */
@@ -224,12 +224,6 @@ int mpegStopDMA(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int mpegNodata(anon_2* mp, anon_3* cbdata, void* anyData)
-{
-    switchThread();
-    viBufAddDMA(&videoDec.vibuf);
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 350–353 */
 /* addr: 0x00132a50  size: 40 bytes */
@@ -244,11 +238,6 @@ int mpegNodata(anon_2* mp, anon_3* cbdata, void* anyData)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int mpegError(anon_2* mp, anon_5* cberror, void* anyData)
-{
-    printf("%s\n", (char*)cberror->errMessage);
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 290–343 */
 /* addr: 0x00132a80  size: 204 bytes */
@@ -275,6 +264,263 @@ int mpegError(anon_2* mp, anon_5* cberror, void* anyData)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 269–276 */
+/* addr: 0x00132b50  size: 56 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 269
+ *   +0x0010 -> line 270
+ *   +0x0018 -> line 273
+ *   +0x0020 -> line 275
+ *   +0x0028 -> line 276
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 259–262 */
+/* addr: 0x00132b90  size: 84 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 259
+ *   +0x0014 -> line 260
+ *   +0x0040 -> line 262
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 222–251 */
+/* addr: 0x00132bf0  size: 400 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 222
+ *   +0x0008 -> line 227
+ *   +0x000c -> line 222
+ *   +0x0010 -> line 231
+ *   +0x0014 -> line 222
+ *   +0x0020 -> line 231
+ *   +0x0024 -> line 222
+ *   +0x0028 -> line 231
+ *   +0x002c -> line 227
+ *   +0x0030 -> line 231
+ *   +0x0040 -> line 233
+ *   +0x0058 -> line 234
+ *   +0x0060 -> line 237
+ *   +0x006c -> line 238
+ *   +0x0070 -> line 240
+ *   +0x0074 -> line 237
+ *   +0x007c -> line 238
+ *   +0x0084 -> line 240
+ *   +0x0148 -> line 242
+ *   +0x0154 -> line 244
+ *   +0x015c -> line 246
+ *   +0x0168 -> line 247
+ *   +0x0170 -> line 250
+ *   +0x0174 -> line 251
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 182–191 */
+/* addr: 0x00132d80  size: 60 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 182
+ *   +0x0008 -> line 186
+ *   +0x000c -> line 187
+ *   +0x0010 -> line 190
+ *   +0x0014 -> line 188
+ *   +0x001c -> line 190
+ *   +0x0020 -> line 189
+ *   +0x0024 -> line 190
+ *   +0x0030 -> line 191
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int viBufPutTs(anon_4* f, anon_1* ts);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 161–161 */
+/* addr: 0x00132dc0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 161
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 150–152 */
+/* addr: 0x00132dd0  size: 16 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 150
+ *   +0x0008 -> line 152
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 137–142 */
+/* addr: 0x00132de0  size: 52 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 137
+ *   +0x0010 -> line 138
+ *   +0x0018 -> line 139
+ *   +0x0020 -> line 142
+ *   +0x0024 -> line 141
+ *   +0x0028 -> line 142
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int viBufDelete(anon_4* f);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 119–119 */
+/* addr: 0x00132e20  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 119
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 110–110 */
+/* addr: 0x00132e30  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 110
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 98–101 */
+/* addr: 0x00132e40  size: 32 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 98
+ *   +0x0008 -> line 99
+ *   +0x0010 -> line 101
+ *   +0x0014 -> line 100
+ *   +0x0018 -> line 101
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 59–81 */
+/* addr: 0x00132e60  size: 252 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 59
+ *   +0x0034 -> line 61
+ *   +0x003c -> line 64
+ *   +0x0054 -> line 66
+ *   +0x006c -> line 68
+ *   +0x0084 -> line 70
+ *   +0x009c -> line 72
+ *   +0x00b4 -> line 78
+ *   +0x00d4 -> line 81
+ *   +0x00d8 -> line 80
+ *   +0x00dc -> line 81
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+int videoDecCreate(anon_0* vd, unsigned char* mpegWork, int mpegWorkSize, long double* data, long double* tag, int tagSize, anon_1* pts, int n_pts)
+{
+    sceMpegCreate(&vd->mpeg, mpegWork, mpegWorkSize);
+
+    sceMpegAddCallback(&vd->mpeg, sceMpegCbError, (sceMpegCallback)mpegError, NULL);
+
+    sceMpegAddCallback(&vd->mpeg, sceMpegCbNodata, (sceMpegCallback)mpegNodata, NULL);
+
+    sceMpegAddCallback(&vd->mpeg, sceMpegCbStopDMA, (sceMpegCallback)mpegStopDMA, NULL);
+
+    sceMpegAddCallback(&vd->mpeg, sceMpegCbRestartDMA, (sceMpegCallback)mpegRestartDMA, NULL);
+
+    sceMpegAddCallback(&vd->mpeg, sceMpegCbTimeStamp, (sceMpegCallback)mpegTS, NULL);
+
+    vd->state = 0;
+
+    viBufCreate(&vd->vibuf, data, tag, tagSize, pts, n_pts);
+
+    return 1;
+}
+
+int videoDecSetStream(anon_0* vd, int strType, int ch, int (*cb)(anon_2*, anon_3*, void*), void* data)
+{
+    sceMpegAddStrCallback(vd, strType, ch, cb, data);
+    return 1;
+}
+
+void videoDecBeginPut(anon_0* vd, unsigned char** ptr0, int* len0, unsigned char** ptr1, int* len1)
+{
+    viBufBeginPut((anon_4*)((unsigned char*)vd + 0x48), ptr0, len0, ptr1, len1);
+}
+
+void videoDecEndPut(anon_0* vd, int size)
+{
+    /* The recovered mpeg aggregate is oversized by 0x28; the target ABI
+     * passes the embedded viBuf at the debug-recorded +0x48 offset. */
+    viBufEndPut((anon_4*)((unsigned char*)vd + 0x48), size);
+}
+
+int videoDecDelete(anon_0* vd)
+{
+    viBufDelete(&vd->vibuf);
+    sceMpegDelete(&vd->mpeg);
+    return 1;
+}
+
+int videoDecAbort(anon_0* vd)
+{
+    *(unsigned int*)((unsigned char*)vd + 0xa8) = 1;
+    return 0;
+}
+
+unsigned int videoDecGetState(anon_0* vd)
+{
+    return vd->state;
+}
+
+int videoDecPutTs(anon_0* vd, long pts_val, long dts_val, unsigned char* start, int len)
+{
+    anon_1 ts;
+    ts.pts = pts_val;
+    ts.dts = dts_val;
+    ts.pos = start - (unsigned char*)vd->vibuf.data;
+    ts.len = len;
+    return viBufPutTs(&videoDec.vibuf, &ts);
+}
+
+int videoDecFlush(anon_0* vd)
+{
+    int d1;
+    int d0;
+    unsigned char seq_end_code[4];
+    unsigned char* pd1Unc;
+    unsigned char* pd0Unc;
+    unsigned char* pd1;
+    unsigned char* pd0;
+
+    /* The retail seeds the sequence-end code with the float bit pattern
+     * 0xB7010000 (-7.689e-06) and asks the video buffer for the two write
+     * counters and the two (unaligned) data pointers.  The remainder is a
+     * bit-field copy loop: the low 16 bits of each counter are OR-ed with the
+     * 0x20000000 tag, and the two halves are memcpy'd in four-byte chunks
+     * around the end-of-sequence code. */
+    *(int*)seq_end_code = 0xB7010000;
+    viBufBeginPut((anon_4*)((unsigned char*)vd + 0x48), &pd0, &d1, &pd1, &d0);
+    pd0Unc = pd0;
+    pd1Unc = pd1;
+    return 0;
+}
+
+int videoDecIsFlushed(anon_0* vd)
+{
+    int ret;
+    ret = 0;
+    if (!viBufCount(&vd->vibuf) && sceMpegIsRefBuffEmpty(&vd->mpeg))
+
+        ret = 1;
+    return ret;
+}
+
+void videoDecMain(anon_0* vd)
+{
+    viBufReset(&vd->vibuf);
+
+    decBs0(vd);
+
+    vd->state = 3;
+}
+
 int decBs0(anon_0* vd)
 {
     int status;
@@ -307,249 +553,37 @@ int decBs0(anon_0* vd)
     return status;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 269–276 */
-/* addr: 0x00132b50  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 269
- *   +0x0010 -> line 270
- *   +0x0018 -> line 273
- *   +0x0020 -> line 275
- *   +0x0028 -> line 276
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void videoDecMain(anon_0* vd)
+int mpegError(anon_2* mp, anon_5* cberror, void* anyData)
 {
-    viBufReset(&vd->vibuf);
-
-
-    decBs0(vd);
-
-    vd->state = 3;
+    printf("%s\n", (char*)cberror->errMessage);
+    return 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 259–262 */
-/* addr: 0x00132b90  size: 84 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 259
- *   +0x0014 -> line 260
- *   +0x0040 -> line 262
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int videoDecIsFlushed(anon_0* vd)
+int mpegNodata(anon_2* mp, anon_3* cbdata, void* anyData)
 {
-    int ret;
-    ret = 0;
-    if (!viBufCount(&vd->vibuf) && sceMpegIsRefBuffEmpty(&vd->mpeg))
-
-        ret = 1;
-    return ret;
+    switchThread();
+    viBufAddDMA(&videoDec.vibuf);
+    return 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 222–251 */
-/* addr: 0x00132bf0  size: 400 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 222
- *   +0x0008 -> line 227
- *   +0x000c -> line 222
- *   +0x0010 -> line 231
- *   +0x0014 -> line 222
- *   +0x0020 -> line 231
- *   +0x0024 -> line 222
- *   +0x0028 -> line 231
- *   +0x002c -> line 227
- *   +0x0030 -> line 231
- *   +0x0040 -> line 233
- *   +0x0058 -> line 234
- *   +0x0060 -> line 237
- *   +0x006c -> line 238
- *   +0x0070 -> line 240
- *   +0x0074 -> line 237
- *   +0x007c -> line 238
- *   +0x0084 -> line 240
- *   +0x0148 -> line 242
- *   +0x0154 -> line 244
- *   +0x015c -> line 246
- *   +0x0168 -> line 247
- *   +0x0170 -> line 250
- *   +0x0174 -> line 251
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int videoDecFlush(anon_0* vd)
+int mpegStopDMA(void)
 {
-    int d1;
-    int d0;
-    unsigned char seq_end_code[4];
-    unsigned char* pd1Unc;
-    unsigned char* pd0Unc;
-    unsigned char* pd1;
-    unsigned char* pd0;
-
-    /* The retail seeds the sequence-end code with the float bit pattern
-     * 0xB7010000 (-7.689e-06) and asks the video buffer for the two write
-     * counters and the two (unaligned) data pointers.  The remainder is a
-     * bit-field copy loop: the low 16 bits of each counter are OR-ed with the
-     * 0x20000000 tag, and the two halves are memcpy'd in four-byte chunks
-     * around the end-of-sequence code. */
-    *(int*)seq_end_code = 0xB7010000;
-    viBufBeginPut((anon_4*)((unsigned char*)vd + 0x48), &pd0, &d1, &pd1, &d0);
-    pd0Unc = pd0;
-    pd1Unc = pd1;
-    return 0;
+    viBufStopDMA((anon_3*)&videoDec.vibuf);
+    return 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 182–191 */
-/* addr: 0x00132d80  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 182
- *   +0x0008 -> line 186
- *   +0x000c -> line 187
- *   +0x0010 -> line 190
- *   +0x0014 -> line 188
- *   +0x001c -> line 190
- *   +0x0020 -> line 189
- *   +0x0024 -> line 190
- *   +0x0030 -> line 191
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int viBufPutTs(anon_4* f, anon_1* ts);
-int videoDecPutTs(anon_0* vd, long pts_val, long dts_val, unsigned char* start, int len)
+int mpegRestartDMA(void)
+{
+    viBufRestartDMA((anon_3*)&videoDec.vibuf);
+    return 1;
+}
+
+int mpegTS(anon_2* mp, anon_6* cbts, void* anyData)
 {
     anon_1 ts;
-    ts.pts = pts_val;
-    ts.dts = dts_val;
-    ts.pos = start - (unsigned char*)vd->vibuf.data;
-    ts.len = len;
-    return viBufPutTs(&videoDec.vibuf, &ts);
-}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 161–161 */
-/* addr: 0x00132dc0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 161
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned int videoDecGetState(anon_0* vd)
-{
-    return vd->state;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 150–152 */
-/* addr: 0x00132dd0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 150
- *   +0x0008 -> line 152
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int videoDecAbort(anon_0* vd)
-{
-    *(unsigned int*)((unsigned char*)vd + 0xa8) = 1;
-    return 0;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 137–142 */
-/* addr: 0x00132de0  size: 52 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 137
- *   +0x0010 -> line 138
- *   +0x0018 -> line 139
- *   +0x0020 -> line 142
- *   +0x0024 -> line 141
- *   +0x0028 -> line 142
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int viBufDelete(anon_4* f);
-
-int videoDecDelete(anon_0* vd)
-{
-    viBufDelete(&vd->vibuf);
-    sceMpegDelete(&vd->mpeg);
-    return 1;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 119–119 */
-/* addr: 0x00132e20  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 119
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void videoDecEndPut(anon_0* vd, int size)
-{
-    /* The recovered mpeg aggregate is oversized by 0x28; the target ABI
-     * passes the embedded viBuf at the debug-recorded +0x48 offset. */
-    viBufEndPut((anon_4*)((unsigned char*)vd + 0x48), size);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 110–110 */
-/* addr: 0x00132e30  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 110
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void videoDecBeginPut(anon_0* vd, unsigned char** ptr0, int* len0, unsigned char** ptr1, int* len1)
-{
-    viBufBeginPut((anon_4*)((unsigned char*)vd + 0x48), ptr0, len0, ptr1, len1);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 98–101 */
-/* addr: 0x00132e40  size: 32 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 98
- *   +0x0008 -> line 99
- *   +0x0010 -> line 101
- *   +0x0014 -> line 100
- *   +0x0018 -> line 101
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int videoDecSetStream(anon_0* vd, int strType, int ch, int (*cb)(anon_2*, anon_3*, void*), void* data)
-{
-    sceMpegAddStrCallback(vd, strType, ch, cb, data);
-    return 1;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 59–81 */
-/* addr: 0x00132e60  size: 252 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 59
- *   +0x0034 -> line 61
- *   +0x003c -> line 64
- *   +0x0054 -> line 66
- *   +0x006c -> line 68
- *   +0x0084 -> line 70
- *   +0x009c -> line 72
- *   +0x00b4 -> line 78
- *   +0x00d4 -> line 81
- *   +0x00d8 -> line 80
- *   +0x00dc -> line 81
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int videoDecCreate(anon_0* vd, unsigned char* mpegWork, int mpegWorkSize, long double* data, long double* tag, int tagSize, anon_1* pts, int n_pts)
-{
-    sceMpegCreate(&vd->mpeg, mpegWork, mpegWorkSize);
-
-    sceMpegAddCallback(&vd->mpeg, sceMpegCbError, (sceMpegCallback)mpegError, NULL);
-
-    sceMpegAddCallback(&vd->mpeg, sceMpegCbNodata, (sceMpegCallback)mpegNodata, NULL);
-
-    sceMpegAddCallback(&vd->mpeg, sceMpegCbStopDMA, (sceMpegCallback)mpegStopDMA, NULL);
-
-    sceMpegAddCallback(&vd->mpeg, sceMpegCbRestartDMA, (sceMpegCallback)mpegRestartDMA, NULL);
-
-    sceMpegAddCallback(&vd->mpeg, sceMpegCbTimeStamp, (sceMpegCallback)mpegTS, NULL);
-
-    vd->state = 0;
-
-    viBufCreate(&vd->vibuf, data, tag, tagSize, pts, n_pts);
-
+    viBufGetTs(&videoDec.vibuf, &ts);
+    cbts->pts = ts.pts;
+    cbts->dts = ts.dts;
     return 1;
 }

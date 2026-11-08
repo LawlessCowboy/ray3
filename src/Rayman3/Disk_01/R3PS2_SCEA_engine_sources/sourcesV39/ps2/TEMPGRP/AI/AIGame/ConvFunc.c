@@ -61,12 +61,17 @@ struct tdstFunctionEntry_ {
 
 tdstFunctionEntry_ a_stFunctionTable[446];
 
-tdstFunctionPointer_ fn_p_fn_pGetFunctionFunctionPtr(tdeFuncId_ eFuncId)
-{
-    return a_stFunctionTable[eFuncId].p_fn_p_stFunctionFunction;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+tdstFunctionPointer_ fn_p_fn_pGetFunctionFunctionPtr(tdeFuncId_ eFuncId);
+unsigned char fn_ucGetFunctionUltraOperator(tdeFuncId_ eFuncId);
 
 unsigned char fn_ucGetFunctionUltraOperator(tdeFuncId_ eFuncId)
 {
     return a_stFunctionTable[eFuncId].bUltraFunctionFlag;
+}
+
+tdstFunctionPointer_ fn_p_fn_pGetFunctionFunctionPtr(tdeFuncId_ eFuncId)
+{
+    return a_stFunctionTable[eFuncId].p_fn_p_stFunctionFunction;
 }

@@ -107,13 +107,11 @@ void switchThread(void);
 
 /* MPEG stream callback: (sceMpeg* mp, sceMpegCbDataStr* str, void* data);
    only the stream data is used. */
-int vagCallbackLeft(void* mp, anon_1* str, void* data)
-{
-    VID_g_iHasAudio = 1;
-    while (SND_VID_fn_iAddIOPData((unsigned char*)str->data + 4, str->len - 4) < 0)
-        switchThread();
-    return 1;
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+int vagCallbackLeft(void* mp, anon_1* str, void* data);
+int videoCallback(void* mp, anon_1* str, void* data);
 
 void videoDecBeginPut(anon_6* vd, unsigned char** ptr0, int* len0, unsigned char** ptr1, int* len1);
 int videoDecPutTs(anon_6* vd, long pts_val, long dts_val, unsigned char* start, int len);
@@ -156,6 +154,7 @@ static inline int copy2(unsigned char* pd0, int d0, unsigned char* pd1, int d1, 
 /* MPEG stream callback: (sceMpeg* mp, sceMpegCbDataStr* str, void* data);
    main.c's videoCallback pointer type confirms the leading sceMpeg* the
    debug signature omits. */
+
 int videoCallback(void* mp, anon_1* str, void* data)
 {
     int s1;
@@ -189,4 +188,12 @@ int videoCallback(void* mp, anon_1* str, void* data)
     videoDecEndPut(&videoDec, len);
 
     return (len > 0) ? 1 : 0;
+}
+
+int vagCallbackLeft(void* mp, anon_1* str, void* data)
+{
+    VID_g_iHasAudio = 1;
+    while (SND_VID_fn_iAddIOPData((unsigned char*)str->data + 4, str->len - 4) < 0)
+        switchThread();
+    return 1;
 }

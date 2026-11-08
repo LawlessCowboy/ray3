@@ -291,10 +291,13 @@ float MAT_fn_xGetMaxScaleTest(MAT_tdstTransformation_* p_stTransform);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void COL_fn_vCollideStaticGeomObj1WithStaticGeomObj2(COL_tdstCollideObject_* _hGeometricObject1, MAT_tdstTransformation_* _p_stGeometricObjectStartMatrix1, MAT_tdstTransformation_* _p_stGeometricObjectEndMatrix1, COL_tdstCollideObject_* _hGeometricObject2, MAT_tdstTransformation_* _p_stGeometricObjectMatrix2, void* _p_vParameter1, short _sParameter2, unsigned char _bStaticGeomObjHasNoTransformationMatrix, unsigned char _bDynamicGeomObjHasZoomInsteadOfScale)
-{
-    /* TODO: decompile from asm/... */
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void COL_fn_vCollideStaticGeomObj1WithStaticGeomObj2(COL_tdstCollideObject_* _hGeometricObject1, MAT_tdstTransformation_* _p_stGeometricObjectStartMatrix1, MAT_tdstTransformation_* _p_stGeometricObjectEndMatrix1, COL_tdstCollideObject_* _hGeometricObject2, MAT_tdstTransformation_* _p_stGeometricObjectMatrix2, void* _p_vParameter1, short _sParameter2, unsigned char _bStaticGeomObjHasNoTransformationMatrix, unsigned char _bDynamicGeomObjHasZoomInsteadOfScale);
+void COL_fn_vInitCollideStaticGeomObjWithStaticGeomObj(COL_tdstGVForCollision_* p_stGV);
+unsigned char COL_fn_bDetectCollisionStaticGeomObjWithStaticGeomObj(COL_tdstBoundingSphere_* _hDynamicGeometricObject, MAT_tdstTransformation_* _p_stDynamicGeometricObjectMatrix, void* _hStaticGeometricObject, MAT_tdstTransformation_* _p_stStaticGeometricObjectMatrix, unsigned char _bStaticGeomObjHasNoTransformationMatrix, unsigned char _bDynamicGeomObjHasZoomInsteadOfScale, unsigned char _bHasABoxBoundingVolume);
+float MAT_fn_xGetMaxScaleTest(MAT_tdstTransformation_* _hTransform);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollGO.c lines 350–406 */
 /* addr: 0x0024ce60  size: 372 bytes */
@@ -328,56 +331,6 @@ void COL_fn_vCollideStaticGeomObj1WithStaticGeomObj2(COL_tdstCollideObject_* _hG
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void COL_fn_vInitCollideStaticGeomObjWithStaticGeomObj(COL_tdstGVForCollision_* p_stGV)
-{
-    short sType;
-    short lIndex;
-    int lFound;
-
-    MAT_fn_vSetIdentity(&p_stGV->stInvMatrix);
-    MAT_fn_vSetIdentity(&p_stGV->stD2ST0TransformMatrix);
-    MAT_fn_vSetIdentity(&p_stGV->stD2ST1TransformMatrix);
-    MAT_fn_vSetIdentity(&p_stGV->stS2DT0TransformMatrix);
-    MAT_fn_vSetIdentity(&p_stGV->stS2DT1TransformMatrix);
-    MAT_fn_vInvert(&p_stGV->stInvMatrix, p_stGV->p_stStaticGeomObjMatrix);
-    MAT_fn_vCompose(&p_stGV->stD2ST0TransformMatrix, &p_stGV->stInvMatrix, p_stGV->p_stT0DynamicGeomObjMatrix);
-    MAT_fn_vCompose(&p_stGV->stD2ST1TransformMatrix, &p_stGV->stInvMatrix, p_stGV->p_stT1DynamicGeomObjMatrix);
-
-    lIndex = 0;
-    lFound = 0;
-    while (lIndex < p_stGV->p_stDynamicColObj->xNbElements)
-    {
-        sType = p_stGV->p_stDynamicColObj->d_xListOfElementsTypes[lIndex];
-        if (sType != 8 && sType != 7 && sType != 1)
-        {
-            lIndex++;
-        }
-        else
-        {
-            lFound = 1;
-            break;
-        }
-    }
-
-    if (lFound == 0)
-    {
-        p_stGV->ulSelectedCollisionCases &= 0xFFFFFF0Fu;
-        p_stGV->ulSelectedCollisionCases &= 0xFFFFFEFFu;
-        p_stGV->ulSelectedCollisionCases &= 0xFFFFF9FFu;
-        p_stGV->ulSelectedCollisionCases &= 0xFFFFE7FFu;
-        p_stGV->ulSelectedCollisionCases &= 0xFE001FFFu;
-    }
-
-    p_stGV->p_stOctree = p_stGV->p_stStaticColObj->p_stOctree;
-    if (p_stGV->bStaticGeomObjHasNoTransformationMatrix)
-    {
-        p_stGV->xStaticScale = 1.0f;
-    }
-    else
-    {
-        p_stGV->xStaticScale = MAT_fn_xGetMaxScaleTest(p_stGV->p_stStaticGeomObjMatrix);
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollGO.c lines 180–309 */
 /* addr: 0x0024cfe0  size: 412 bytes */
@@ -445,6 +398,84 @@ void COL_fn_vInitCollideStaticGeomObjWithStaticGeomObj(COL_tdstGVForCollision_* 
 inline float GEO_fn_xGetBoundingSphereRadius(COL_tdstBoundingSphere_* p_stSphere)
 {
     return p_stSphere->xRadius;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollGO.c lines 114–167 */
+/* addr: 0x0024d180  size: 352 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 114
+ *   +0x0008 -> line 121
+ *   +0x0030 -> line 126
+ *   +0x0038 -> line 127
+ *   +0x0040 -> line 131
+ *   +0x0048 -> line 140
+ *   +0x006c -> line 141
+ *   +0x008c -> line 143
+ *   +0x0094 -> line 151
+ *   +0x0098 -> line 147
+ *   +0x009c -> line 151
+ *   +0x00f4 -> line 154
+ *   +0x0130 -> line 157
+ *   +0x0138 -> line 158
+ *   +0x0144 -> line 159
+ *   +0x014c -> line 163
+ *   +0x0154 -> line 167
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+/* R5900 accumulator ops have no C form under the baseline. */
+inline float MTH4D_xSqrVector3(MTH4D_tdstVector_* p_stV)
+{
+    float xX, xY, xZ, xResult;
+
+    xZ = p_stV->xZ; xY = p_stV->xY; xX = p_stV->xX;
+    asm { mula.s xX, xX }
+    asm { madda.s xY, xY }
+    asm { madd.s xResult, xZ, xZ }
+    return xResult;
+}
+
+#define M_MAX(a, b) (((a) > (b)) ? (a) : (b))
+
+float PS2SQRTF(float x);
+
+float MAT_fn_xGetMaxScaleTest(MAT_tdstTransformation_* _hTransform)
+{
+    MTH4D_tdstVector_* p_stScale;
+    MTH4D_tdstMatrix_* p_stMatrix;
+    float xMax;
+
+    switch (_hTransform->eType)
+    {
+    case MAT_eTransform_Identity:
+    case MAT_eTransform_Translation:
+    case MAT_eTransform_Rotation:
+        return 1.0f;
+
+    case MAT_eTransform_Zoom:
+    case MAT_eTransform_RotationZoom:
+        xMax = _hTransform->stScaleVector.xX;
+        break;
+
+    case MAT_eTransform_Scale:
+    case MAT_eTransform_RotationScale:
+        p_stScale = &_hTransform->stScaleVector;
+        xMax = M_MAX(p_stScale->xX, p_stScale->xY);
+        xMax = M_MAX(xMax, p_stScale->xZ);
+        break;
+
+    case MAT_eTransform_ComplexRotationScale:
+        p_stMatrix = &_hTransform->stTransformMatrix;
+        xMax = M_MAX(MTH4D_xSqrVector3(&p_stMatrix->stCol_0), MTH4D_xSqrVector3(&p_stMatrix->stCol_1));
+        xMax = M_MAX(xMax, MTH4D_xSqrVector3(&p_stMatrix->stCol_2));
+        xMax = PS2SQRTF(xMax);
+        return 1.4142135f * xMax;
+
+    default:
+        xMax = 1.0f;
+        break;
+    }
+    return xMax;
 }
 
 /* The debug record lists six parameters, but both callers (GAM/Collisio.c)
@@ -545,80 +576,58 @@ unsigned char COL_fn_bDetectCollisionStaticGeomObjWithStaticGeomObj(COL_tdstBoun
     return (*(unsigned int*)0x70000000 & 0x80000000) != 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollGO.c lines 114–167 */
-/* addr: 0x0024d180  size: 352 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 114
- *   +0x0008 -> line 121
- *   +0x0030 -> line 126
- *   +0x0038 -> line 127
- *   +0x0040 -> line 131
- *   +0x0048 -> line 140
- *   +0x006c -> line 141
- *   +0x008c -> line 143
- *   +0x0094 -> line 151
- *   +0x0098 -> line 147
- *   +0x009c -> line 151
- *   +0x00f4 -> line 154
- *   +0x0130 -> line 157
- *   +0x0138 -> line 158
- *   +0x0144 -> line 159
- *   +0x014c -> line 163
- *   +0x0154 -> line 167
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-/* R5900 accumulator ops have no C form under the baseline. */
-inline float MTH4D_xSqrVector3(MTH4D_tdstVector_* p_stV)
+void COL_fn_vInitCollideStaticGeomObjWithStaticGeomObj(COL_tdstGVForCollision_* p_stGV)
 {
-    float xX, xY, xZ, xResult;
+    short sType;
+    short lIndex;
+    int lFound;
 
-    xZ = p_stV->xZ; xY = p_stV->xY; xX = p_stV->xX;
-    asm { mula.s xX, xX }
-    asm { madda.s xY, xY }
-    asm { madd.s xResult, xZ, xZ }
-    return xResult;
+    MAT_fn_vSetIdentity(&p_stGV->stInvMatrix);
+    MAT_fn_vSetIdentity(&p_stGV->stD2ST0TransformMatrix);
+    MAT_fn_vSetIdentity(&p_stGV->stD2ST1TransformMatrix);
+    MAT_fn_vSetIdentity(&p_stGV->stS2DT0TransformMatrix);
+    MAT_fn_vSetIdentity(&p_stGV->stS2DT1TransformMatrix);
+    MAT_fn_vInvert(&p_stGV->stInvMatrix, p_stGV->p_stStaticGeomObjMatrix);
+    MAT_fn_vCompose(&p_stGV->stD2ST0TransformMatrix, &p_stGV->stInvMatrix, p_stGV->p_stT0DynamicGeomObjMatrix);
+    MAT_fn_vCompose(&p_stGV->stD2ST1TransformMatrix, &p_stGV->stInvMatrix, p_stGV->p_stT1DynamicGeomObjMatrix);
+
+    lIndex = 0;
+    lFound = 0;
+    while (lIndex < p_stGV->p_stDynamicColObj->xNbElements)
+    {
+        sType = p_stGV->p_stDynamicColObj->d_xListOfElementsTypes[lIndex];
+        if (sType != 8 && sType != 7 && sType != 1)
+        {
+            lIndex++;
+        }
+        else
+        {
+            lFound = 1;
+            break;
+        }
+    }
+
+    if (lFound == 0)
+    {
+        p_stGV->ulSelectedCollisionCases &= 0xFFFFFF0Fu;
+        p_stGV->ulSelectedCollisionCases &= 0xFFFFFEFFu;
+        p_stGV->ulSelectedCollisionCases &= 0xFFFFF9FFu;
+        p_stGV->ulSelectedCollisionCases &= 0xFFFFE7FFu;
+        p_stGV->ulSelectedCollisionCases &= 0xFE001FFFu;
+    }
+
+    p_stGV->p_stOctree = p_stGV->p_stStaticColObj->p_stOctree;
+    if (p_stGV->bStaticGeomObjHasNoTransformationMatrix)
+    {
+        p_stGV->xStaticScale = 1.0f;
+    }
+    else
+    {
+        p_stGV->xStaticScale = MAT_fn_xGetMaxScaleTest(p_stGV->p_stStaticGeomObjMatrix);
+    }
 }
 
-#define M_MAX(a, b) (((a) > (b)) ? (a) : (b))
-
-float PS2SQRTF(float x);
-
-float MAT_fn_xGetMaxScaleTest(MAT_tdstTransformation_* _hTransform)
+void COL_fn_vCollideStaticGeomObj1WithStaticGeomObj2(COL_tdstCollideObject_* _hGeometricObject1, MAT_tdstTransformation_* _p_stGeometricObjectStartMatrix1, MAT_tdstTransformation_* _p_stGeometricObjectEndMatrix1, COL_tdstCollideObject_* _hGeometricObject2, MAT_tdstTransformation_* _p_stGeometricObjectMatrix2, void* _p_vParameter1, short _sParameter2, unsigned char _bStaticGeomObjHasNoTransformationMatrix, unsigned char _bDynamicGeomObjHasZoomInsteadOfScale)
 {
-    MTH4D_tdstVector_* p_stScale;
-    MTH4D_tdstMatrix_* p_stMatrix;
-    float xMax;
-
-    switch (_hTransform->eType)
-    {
-    case MAT_eTransform_Identity:
-    case MAT_eTransform_Translation:
-    case MAT_eTransform_Rotation:
-        return 1.0f;
-
-    case MAT_eTransform_Zoom:
-    case MAT_eTransform_RotationZoom:
-        xMax = _hTransform->stScaleVector.xX;
-        break;
-
-    case MAT_eTransform_Scale:
-    case MAT_eTransform_RotationScale:
-        p_stScale = &_hTransform->stScaleVector;
-        xMax = M_MAX(p_stScale->xX, p_stScale->xY);
-        xMax = M_MAX(xMax, p_stScale->xZ);
-        break;
-
-    case MAT_eTransform_ComplexRotationScale:
-        p_stMatrix = &_hTransform->stTransformMatrix;
-        xMax = M_MAX(MTH4D_xSqrVector3(&p_stMatrix->stCol_0), MTH4D_xSqrVector3(&p_stMatrix->stCol_1));
-        xMax = M_MAX(xMax, MTH4D_xSqrVector3(&p_stMatrix->stCol_2));
-        xMax = PS2SQRTF(xMax);
-        return 1.4142135f * xMax;
-
-    default:
-        xMax = 1.0f;
-        break;
-    }
-    return xMax;
+    /* TODO: decompile from asm/... */
 }

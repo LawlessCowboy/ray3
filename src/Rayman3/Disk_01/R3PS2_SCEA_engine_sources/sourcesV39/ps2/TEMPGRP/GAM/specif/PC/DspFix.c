@@ -109,30 +109,25 @@ int g_InGameMenu2DActivated;
 
 extern tdstSubMapPosition_* gs_hFirstSubMapPosition;
 
-MAT_tdstTransformation_* GAM_fn_hGetSubMapPosition(int _lSubMapNumber, int _lEntryNumber)
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+MAT_tdstTransformation_* GAM_fn_hGetSubMapPosition(int _lSubMapNumber, int _lEntryNumber);
+void GAM_fn_vResetClipFixObject(GLD_tdstViewportAttributes_* _p_stFixViewportAttr);
+void GAM_fn_vClipFixObject(GLD_tdstViewportAttributes_* _p_stFixViewportAttr);
+void GAM_fn_vSetFixClippingCoordinates(int _lTop, int _lLeft, int _lBottom, int _lRight);
+void fn_vAskToDisplayVignette(void);
+
+void fn_vAskToDisplayVignette(void)
 {
-    int lAbsolute;
-    tdstSubMapPosition_* hSubMapPosition;
-    lAbsolute = ((unsigned short)_lSubMapNumber << 16) + (unsigned short)_lEntryNumber;
-    hSubMapPosition = gs_hFirstSubMapPosition;
-
-    while (hSubMapPosition != NULL)
-    {
-        if (hSubMapPosition->lSubMap == lAbsolute)
-            return hSubMapPosition->hPosition;
-
-        hSubMapPosition = hSubMapPosition->p_stNextPosition;
-    }
-    return NULL;
+    g_stDisplayVignetteDuringPlaying.bAskToDisplayVignette = 0;
 }
 
-void GAM_fn_vResetClipFixObject(GLD_tdstViewportAttributes_* _p_stFixViewportAttr)
+void GAM_fn_vSetFixClippingCoordinates(int _lTop, int _lLeft, int _lBottom, int _lRight)
 {
-    _p_stFixViewportAttr->dwClipTopInPix = GAM_g_dwOldTop;
-    _p_stFixViewportAttr->dwClipLeftInPix = GAM_g_dwOldLeft;
-    _p_stFixViewportAttr->dwClipBottomInPix = GAM_g_dwOldBottom;
-    _p_stFixViewportAttr->dwClipRightInPix = GAM_g_dwOldRight;
-    GLI_vRemoveScissors(_p_stFixViewportAttr);
+    GAM_g_dwClipping_Top = _lTop;
+    GAM_g_dwClipping_Left = _lLeft;
+    GAM_g_dwClipping_Right = _lBottom;
+    GAM_g_dwClipping_Bottom = _lRight;
 }
 
 void GAM_fn_vClipFixObject(GLD_tdstViewportAttributes_* _p_stFixViewportAttr)
@@ -154,15 +149,28 @@ void GAM_fn_vClipFixObject(GLD_tdstViewportAttributes_* _p_stFixViewportAttr)
     GLI_vSetScissors(_p_stFixViewportAttr);
 }
 
-void GAM_fn_vSetFixClippingCoordinates(int _lTop, int _lLeft, int _lBottom, int _lRight)
+void GAM_fn_vResetClipFixObject(GLD_tdstViewportAttributes_* _p_stFixViewportAttr)
 {
-    GAM_g_dwClipping_Top = _lTop;
-    GAM_g_dwClipping_Left = _lLeft;
-    GAM_g_dwClipping_Right = _lBottom;
-    GAM_g_dwClipping_Bottom = _lRight;
+    _p_stFixViewportAttr->dwClipTopInPix = GAM_g_dwOldTop;
+    _p_stFixViewportAttr->dwClipLeftInPix = GAM_g_dwOldLeft;
+    _p_stFixViewportAttr->dwClipBottomInPix = GAM_g_dwOldBottom;
+    _p_stFixViewportAttr->dwClipRightInPix = GAM_g_dwOldRight;
+    GLI_vRemoveScissors(_p_stFixViewportAttr);
 }
 
-void fn_vAskToDisplayVignette(void)
+MAT_tdstTransformation_* GAM_fn_hGetSubMapPosition(int _lSubMapNumber, int _lEntryNumber)
 {
-    g_stDisplayVignetteDuringPlaying.bAskToDisplayVignette = 0;
+    int lAbsolute;
+    tdstSubMapPosition_* hSubMapPosition;
+    lAbsolute = ((unsigned short)_lSubMapNumber << 16) + (unsigned short)_lEntryNumber;
+    hSubMapPosition = gs_hFirstSubMapPosition;
+
+    while (hSubMapPosition != NULL)
+    {
+        if (hSubMapPosition->lSubMap == lAbsolute)
+            return hSubMapPosition->hPosition;
+
+        hSubMapPosition = hSubMapPosition->p_stNextPosition;
+    }
+    return NULL;
 }

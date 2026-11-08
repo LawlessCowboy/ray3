@@ -121,210 +121,29 @@ extern char* SVG_fn_szGetSonyCompliantDirName();
 extern int sprintf(char*, const char*, ...);
 extern int SVG_fn_s32ReadNextName();
 
-int VMS_lInitFilenameList(int drive, int* lListSize)
-{
-    int lRet;
-    char filename[33];
-    char wildcardName[33];
-
-    if (VMS_lInitOk != 1)
-        return 0;
-
-    VMS_lFilenameListSize = 0;
-    *lListSize = -1;
-
-    sprintf(wildcardName, "%s*", SVG_fn_szGetSonyCompliantDirName(""));
-
-    if ((lRet = SVG_fn_s32ReadNextName((&g_axPadMapping)[drive].iPort, (&g_axPadMapping)[drive].iSlot, wildcardName, 0, filename)) == 0)
-        return 0;
-    if (filename[0] == 0)
-        return 0;
-
-    strcpy(VMS_ax_cFilenameList[VMS_lFilenameListSize++], filename);
-
-    while (VMS_lFilenameListSize < 160) {
-        lRet = SVG_fn_s32ReadNextName((&g_axPadMapping)[drive].iPort, (&g_axPadMapping)[drive].iSlot, wildcardName, 1, filename);
-        switch (lRet) {
-        case 0:
-            *lListSize = VMS_lFilenameListSize;
-            return 1;
-        case 1:
-            strcpy(VMS_ax_cFilenameList[VMS_lFilenameListSize++], filename);
-            break;
-        }
-    }
-    return lRet;
-}
-
-int VMS_lGetFilenameInList(int lFileIndex, char* pcFilename)
-{
-    if (lFileIndex >= VMS_lFilenameListSize || VMS_lFilenameListSize <= 0) {
-        strcpy(pcFilename, "");
-        return -1;
-    }
-    strcpy(pcFilename, VMS_ax_cFilenameList[lFileIndex]);
-    return 0;
-}
-
-void fn_vDecryptBuffer(unsigned char* p_ucBuffer, int lLen)
-{
-    int ucEncryptKey2;
-    int ucEncryptKey;
-    int lI;
-    ucEncryptKey = 0x224896eb;
-    for (lI = 0; lI < lLen; lI++) {
-        ucEncryptKey2 = ucEncryptKey >> 12;
-        p_ucBuffer[lI] ^= (unsigned char)ucEncryptKey2;
-        ucEncryptKey *= 0x3a41c471;
-    }
-}
-
-void fn_vEncryptBuffer(unsigned char* p_ucBuffer, int lLen)
-{
-    int ucEncryptKey2;
-    int ucEncryptKey;
-    int lI;
-    ucEncryptKey = 0x224896eb;
-    for (lI = 0; lI < lLen; lI++) {
-        ucEncryptKey2 = ucEncryptKey >> 12;
-        p_ucBuffer[lI] ^= (unsigned char)ucEncryptKey2;
-        ucEncryptKey *= 0x3a41c471;
-    }
-}
-
-int fn_vCheckSum(unsigned char* p_ucBuffer, int lLen)
-{
-    int lCheckSum;
-    int i;
-
-    lCheckSum = 0;
-
-    for (i = 0; i < lLen; i++)
-        lCheckSum += p_ucBuffer[i];
-
-    return lCheckSum;
-}
-
-int Int100ToBCD(int val)
-{
-    int lReturn = 0;
-
-    val %= 100;
-
-    lReturn = val % 10;
-    lReturn += (val / 10) << 4;
-    return lReturn;
-}
-
-int BCDToInt100(int val)
-{
-    int lReturn;
-
-    lReturn = 0;
-    val &= 0xFF;
-    lReturn = val & 0xF;
-    lReturn += (val >> 4) * 10;
-    return lReturn;
-}
-
-int VMS_lGetFileDate(int drive, char* fname, anon_1* fDate)
-{
-    anon_3 t;
-    int lRet;
-    anon_2_local info;
-    if (fDate == NULL) return -1;
-    lRet = SVG_fn_s32GetFileInfo((&g_axPadMapping)[drive].iPort,
-        (&g_axPadMapping)[drive].iSlot, fname, (anon_2*)&info);
-    if (!lRet)
-        return 0;
-    memset(&t, 0, sizeof(t));
-    t.second = Int100ToBCD(info._Modify.Sec);
-    t.minute = Int100ToBCD(info._Modify.Min);
-    t.hour = Int100ToBCD(info._Modify.Hour);
-    t.day = Int100ToBCD(info._Modify.Day);
-    t.month = Int100ToBCD(info._Modify.Month);
-    t.year = Int100ToBCD(info._Modify.Year);
-    sceScfGetLocalTimefromRTC(&t);
-    fDate->year = BCDToInt100(t.year);
-    fDate->month = BCDToInt100(t.month);
-    fDate->day = BCDToInt100(t.day);
-    fDate->hour = BCDToInt100(t.hour);
-    fDate->minute = BCDToInt100(t.minute);
-    fDate->second = BCDToInt100(t.second);
-    return 1;
-}
-
-int VMS_lLoadFileAndExtractUnknowData(int drive, char* fname, void** bufData, int* fileSize)
-{
-    int ret;
-    if (VMS_lInitOk != 1)
-        return -1;
-    ret = SVG_fn_s32ReadUnknownFile((&g_axPadMapping)[drive].iPort,
-        (&g_axPadMapping)[drive].iSlot, fname, bufData, fileSize);
-    if (ret != 1)
-        return 0;
-    return 1;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+int VMS_lInitFilenameList(int drive, int* lListSize);
+int VMS_lGetFilenameInList(int lFileIndex, char* pcFilename);
+void fn_vDecryptBuffer(unsigned char* p_ucBuffer, int lLen);
+void fn_vEncryptBuffer(unsigned char* p_ucBuffer, int lLen);
+int fn_vCheckSum(unsigned char* p_ucBuffer, int lLen);
+int Int100ToBCD(int val);
+int BCDToInt100(int val);
+int VMS_lGetFileDate(int drive, char* fname, anon_1* fDate);
+int VMS_lLoadFileAndExtractUnknowData(int drive, char* fname, void** bufData, int* fileSize);
+int VMS_lGetVmsCommentFromFile(int drive, char* fileName, char* comment);
+tdstSaveBuffer_* VMS_fn_p_stFopenR(char* _szFileName);
+int VMS_fn_bFread(void* _p_vData, int _lNumber, int _lSize, tdstSaveBuffer_* _p_stBuffer);
+int VMS_fn_bFclose(tdstSaveBuffer_* _p_stBuffer);
 
 #pragma peephole on
-int VMS_lGetVmsCommentFromFile(int drive, char* fileName, char* comment)
-{
-    unsigned char* buf;
-    int ret;
-    buf = malloc(512);
-    if (VMS_lInitOk != 1 || buf == NULL)
-        return -1;
-    ret = SVG_fn_s32ReadFromFile((&g_axPadMapping)[drive].iPort,
-        (&g_axPadMapping)[drive].iSlot, fileName, buf, 16);
-    if (ret != 1) {
-        free(buf);
-        return -1;
-    }
-    memcpy(comment, buf, 16);
-    free(buf);
-    return ret;
-}
+
 #pragma peephole reset
 
 #pragma peephole on
-tdstSaveBuffer_* VMS_fn_p_stFopenR(char* _szFileName)
-{
-    int lNumActiveVms;
-    tdstSaveBuffer_* p_stBuffer;
-    lNumActiveVms = SVG_fn_bGetActiveVms();
-    if (lNumActiveVms == -1)
-        return NULL;
-    if (_szFileName == NULL)
-        return NULL;
-    p_stBuffer = malloc(sizeof(tdstSaveBuffer_));
-    memset(p_stBuffer, 0, sizeof(tdstSaveBuffer_));
-    if (p_stBuffer == NULL)
-        return NULL;
-    p_stBuffer->lCurrentPosition = 0;
-    p_stBuffer->cFileMode = 'r';
-    p_stBuffer->szFileName = (int)_szFileName;
-    if (!fn_bLoadUnknowFileFromSlot(lNumActiveVms, p_stBuffer->szFileName,
-        &p_stBuffer->szSaveBuffer, &p_stBuffer->lSize)) {
-        free(p_stBuffer);
-        return NULL;
-    }
-    if (!p_stBuffer->szSaveBuffer) {
-        free(p_stBuffer);
-        return NULL;
-    }
-    return p_stBuffer;
-}
-#pragma peephole reset
 
-int VMS_fn_bFread(void* _p_vData, int _lNumber, int _lSize, tdstSaveBuffer_* _p_stBuffer)
-{
-    if (_p_stBuffer->cFileMode == 'w') return 0;
-    if (_p_stBuffer->lCurrentPosition + _lSize * _lNumber >= _p_stBuffer->lSize)
-        return 0;
-    memcpy(_p_vData, (void*)(_p_stBuffer->szSaveBuffer + _p_stBuffer->lCurrentPosition), _lSize * _lNumber);
-    _p_stBuffer->lCurrentPosition = _p_stBuffer->lCurrentPosition + _lSize * _lNumber;
-    return 1;
-}
+#pragma peephole reset
 
 extern unsigned char fn_bSaveFileInSlot(int drive, int fileName, int vmsComment, int bootRomComment,
     int gameName, int iconPalette, int iconData, unsigned short nbIcon, unsigned short iconSpeed,
@@ -363,4 +182,209 @@ int VMS_fn_bFclose(tdstSaveBuffer_* _p_stBuffer)
     free(_p_stBuffer);
 
     return bReturn;
+}
+
+int VMS_fn_bFread(void* _p_vData, int _lNumber, int _lSize, tdstSaveBuffer_* _p_stBuffer)
+{
+    if (_p_stBuffer->cFileMode == 'w') return 0;
+    if (_p_stBuffer->lCurrentPosition + _lSize * _lNumber >= _p_stBuffer->lSize)
+        return 0;
+    memcpy(_p_vData, (void*)(_p_stBuffer->szSaveBuffer + _p_stBuffer->lCurrentPosition), _lSize * _lNumber);
+    _p_stBuffer->lCurrentPosition = _p_stBuffer->lCurrentPosition + _lSize * _lNumber;
+    return 1;
+}
+
+#pragma peephole on
+tdstSaveBuffer_* VMS_fn_p_stFopenR(char* _szFileName)
+{
+    int lNumActiveVms;
+    tdstSaveBuffer_* p_stBuffer;
+    lNumActiveVms = SVG_fn_bGetActiveVms();
+    if (lNumActiveVms == -1)
+        return NULL;
+    if (_szFileName == NULL)
+        return NULL;
+    p_stBuffer = malloc(sizeof(tdstSaveBuffer_));
+    memset(p_stBuffer, 0, sizeof(tdstSaveBuffer_));
+    if (p_stBuffer == NULL)
+        return NULL;
+    p_stBuffer->lCurrentPosition = 0;
+    p_stBuffer->cFileMode = 'r';
+    p_stBuffer->szFileName = (int)_szFileName;
+    if (!fn_bLoadUnknowFileFromSlot(lNumActiveVms, p_stBuffer->szFileName,
+        &p_stBuffer->szSaveBuffer, &p_stBuffer->lSize)) {
+        free(p_stBuffer);
+        return NULL;
+    }
+    if (!p_stBuffer->szSaveBuffer) {
+        free(p_stBuffer);
+        return NULL;
+    }
+    return p_stBuffer;
+}
+#pragma peephole reset
+
+#pragma peephole on
+int VMS_lGetVmsCommentFromFile(int drive, char* fileName, char* comment)
+{
+    unsigned char* buf;
+    int ret;
+    buf = malloc(512);
+    if (VMS_lInitOk != 1 || buf == NULL)
+        return -1;
+    ret = SVG_fn_s32ReadFromFile((&g_axPadMapping)[drive].iPort,
+        (&g_axPadMapping)[drive].iSlot, fileName, buf, 16);
+    if (ret != 1) {
+        free(buf);
+        return -1;
+    }
+    memcpy(comment, buf, 16);
+    free(buf);
+    return ret;
+}
+#pragma peephole reset
+
+int VMS_lLoadFileAndExtractUnknowData(int drive, char* fname, void** bufData, int* fileSize)
+{
+    int ret;
+    if (VMS_lInitOk != 1)
+        return -1;
+    ret = SVG_fn_s32ReadUnknownFile((&g_axPadMapping)[drive].iPort,
+        (&g_axPadMapping)[drive].iSlot, fname, bufData, fileSize);
+    if (ret != 1)
+        return 0;
+    return 1;
+}
+
+int VMS_lGetFileDate(int drive, char* fname, anon_1* fDate)
+{
+    anon_3 t;
+    int lRet;
+    anon_2_local info;
+    if (fDate == NULL) return -1;
+    lRet = SVG_fn_s32GetFileInfo((&g_axPadMapping)[drive].iPort,
+        (&g_axPadMapping)[drive].iSlot, fname, (anon_2*)&info);
+    if (!lRet)
+        return 0;
+    memset(&t, 0, sizeof(t));
+    t.second = Int100ToBCD(info._Modify.Sec);
+    t.minute = Int100ToBCD(info._Modify.Min);
+    t.hour = Int100ToBCD(info._Modify.Hour);
+    t.day = Int100ToBCD(info._Modify.Day);
+    t.month = Int100ToBCD(info._Modify.Month);
+    t.year = Int100ToBCD(info._Modify.Year);
+    sceScfGetLocalTimefromRTC(&t);
+    fDate->year = BCDToInt100(t.year);
+    fDate->month = BCDToInt100(t.month);
+    fDate->day = BCDToInt100(t.day);
+    fDate->hour = BCDToInt100(t.hour);
+    fDate->minute = BCDToInt100(t.minute);
+    fDate->second = BCDToInt100(t.second);
+    return 1;
+}
+
+int BCDToInt100(int val)
+{
+    int lReturn;
+
+    lReturn = 0;
+    val &= 0xFF;
+    lReturn = val & 0xF;
+    lReturn += (val >> 4) * 10;
+    return lReturn;
+}
+
+int Int100ToBCD(int val)
+{
+    int lReturn = 0;
+
+    val %= 100;
+
+    lReturn = val % 10;
+    lReturn += (val / 10) << 4;
+    return lReturn;
+}
+
+int fn_vCheckSum(unsigned char* p_ucBuffer, int lLen)
+{
+    int lCheckSum;
+    int i;
+
+    lCheckSum = 0;
+
+    for (i = 0; i < lLen; i++)
+        lCheckSum += p_ucBuffer[i];
+
+    return lCheckSum;
+}
+
+void fn_vEncryptBuffer(unsigned char* p_ucBuffer, int lLen)
+{
+    int ucEncryptKey2;
+    int ucEncryptKey;
+    int lI;
+    ucEncryptKey = 0x224896eb;
+    for (lI = 0; lI < lLen; lI++) {
+        ucEncryptKey2 = ucEncryptKey >> 12;
+        p_ucBuffer[lI] ^= (unsigned char)ucEncryptKey2;
+        ucEncryptKey *= 0x3a41c471;
+    }
+}
+
+void fn_vDecryptBuffer(unsigned char* p_ucBuffer, int lLen)
+{
+    int ucEncryptKey2;
+    int ucEncryptKey;
+    int lI;
+    ucEncryptKey = 0x224896eb;
+    for (lI = 0; lI < lLen; lI++) {
+        ucEncryptKey2 = ucEncryptKey >> 12;
+        p_ucBuffer[lI] ^= (unsigned char)ucEncryptKey2;
+        ucEncryptKey *= 0x3a41c471;
+    }
+}
+
+int VMS_lGetFilenameInList(int lFileIndex, char* pcFilename)
+{
+    if (lFileIndex >= VMS_lFilenameListSize || VMS_lFilenameListSize <= 0) {
+        strcpy(pcFilename, "");
+        return -1;
+    }
+    strcpy(pcFilename, VMS_ax_cFilenameList[lFileIndex]);
+    return 0;
+}
+
+int VMS_lInitFilenameList(int drive, int* lListSize)
+{
+    int lRet;
+    char filename[33];
+    char wildcardName[33];
+
+    if (VMS_lInitOk != 1)
+        return 0;
+
+    VMS_lFilenameListSize = 0;
+    *lListSize = -1;
+
+    sprintf(wildcardName, "%s*", SVG_fn_szGetSonyCompliantDirName(""));
+
+    if ((lRet = SVG_fn_s32ReadNextName((&g_axPadMapping)[drive].iPort, (&g_axPadMapping)[drive].iSlot, wildcardName, 0, filename)) == 0)
+        return 0;
+    if (filename[0] == 0)
+        return 0;
+
+    strcpy(VMS_ax_cFilenameList[VMS_lFilenameListSize++], filename);
+
+    while (VMS_lFilenameListSize < 160) {
+        lRet = SVG_fn_s32ReadNextName((&g_axPadMapping)[drive].iPort, (&g_axPadMapping)[drive].iSlot, wildcardName, 1, filename);
+        switch (lRet) {
+        case 0:
+            *lListSize = VMS_lFilenameListSize;
+            return 1;
+        case 1:
+            strcpy(VMS_ax_cFilenameList[VMS_lFilenameListSize++], filename);
+            break;
+        }
+    }
+    return lRet;
 }

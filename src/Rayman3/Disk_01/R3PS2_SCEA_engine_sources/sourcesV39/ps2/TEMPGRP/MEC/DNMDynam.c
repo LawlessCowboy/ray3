@@ -468,9 +468,6 @@ inline float MTH_xSqrt(float _xValue)
     return xResult;
 }
 
-
-
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMDynam.c lines 66–100 */
 /* addr: 0x00301b90  size: 776 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -499,6 +496,239 @@ inline float MTH_xSqrt(float _xValue)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+float CAM_fn_xComputeHorizontalAngle(MTH3D_tdstVector_* _p_stOrgVector, MTH3D_tdstVector_* _p_stDestVector, MTH3D_tdstVector_* _p_stAxisZ);
+void DNM_fn_vDynamicsCopyClone(DNM_stDynamics* _p_stDst, DNM_stDynamics* _p_stSrc);
+void DNM_fn_vChangeIdCard(DNM_stDynamics* _p_stDynamics, void* _hNewIdCard);
+void DNM_fn_vInitDynamic(DNM_stDynamics* p_stDynamic, void* hIdCard);
+void DNM_fn_vInitBaseMechanic(DNM_stDynamics* p_stDynamic);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMDynam.c lines 412–432 */
+/* addr: 0x00301ea0  size: 236 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 412
+ *   +0x0004 -> line 415
+ *   +0x0008 -> line 412
+ *   +0x0020 -> line 415
+ *   +0x0034 -> line 418
+ *   +0x003c -> line 422
+ *   +0x006c -> line 423
+ *   +0x0094 -> line 424
+ *   +0x00a0 -> line 426
+ *   +0x00a8 -> line 428
+ *   +0x00ac -> line 429
+ *   +0x00c4 -> line 430
+ *   +0x00d4 -> line 432
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMDynam.c lines 370–407 */
+/* addr: 0x00301f90  size: 68 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 370
+ *   +0x0004 -> line 403
+ *   +0x0008 -> line 370
+ *   +0x0018 -> line 403
+ *   +0x0024 -> line 405
+ *   +0x002c -> line 406
+ *   +0x0030 -> line 407
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void DNM_fn_vInitDynamic(DNM_stDynamics* p_stDynamic, void* hIdCard);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMDynam.c lines 314–362 */
+/* addr: 0x00301fe0  size: 1316 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 314
+ *   +0x003c -> line 315
+ *   +0x0078 -> line 316
+ *   +0x00b4 -> line 317
+ *   +0x00f0 -> line 318
+ *   +0x012c -> line 319
+ *   +0x0168 -> line 320
+ *   +0x01a4 -> line 321
+ *   +0x01e0 -> line 322
+ *   +0x021c -> line 323
+ *   +0x0264 -> line 324
+ *   +0x02a0 -> line 325
+ *   +0x02dc -> line 326
+ *   +0x0318 -> line 327
+ *   +0x0354 -> line 328
+ *   +0x0390 -> line 329
+ *   +0x03cc -> line 330
+ *   +0x0408 -> line 335
+ *   +0x040c -> line 331
+ *   +0x0410 -> line 334
+ *   +0x0418 -> line 335
+ *   +0x041c -> line 338
+ *   +0x0420 -> line 341
+ *   +0x0424 -> line 338
+ *   +0x042c -> line 331
+ *   +0x0430 -> line 332
+ *   +0x0438 -> line 333
+ *   +0x0448 -> line 334
+ *   +0x0458 -> line 335
+ *   +0x0468 -> line 338
+ *   +0x0480 -> line 341
+ *   +0x0494 -> line 343
+ *   +0x049c -> line 344
+ *   +0x04a4 -> line 345
+ *   +0x04ac -> line 346
+ *   +0x04b4 -> line 347
+ *   +0x04bc -> line 348
+ *   +0x04d4 -> line 351
+ *   +0x04e8 -> line 353
+ *   +0x04f0 -> line 356
+ *   +0x0504 -> line 358
+ *   +0x050c -> line 359
+ *   +0x0514 -> line 360
+ *   +0x051c -> line 362
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMDynam.c lines 314–362 */
+/* addr: 0x00301fe0  size: 1316 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 314
+ *   +0x003c -> line 315
+ *   +0x0078 -> line 316
+ *   +0x00b4 -> line 317
+ *   +0x00f0 -> line 318
+ *   +0x012c -> line 319
+ *   +0x0168 -> line 320
+ *   +0x01a4 -> line 321
+ *   +0x01e0 -> line 322
+ *   +0x021c -> line 323
+ *   +0x0264 -> line 324
+ *   +0x02a0 -> line 325
+ *   +0x02dc -> line 326
+ *   +0x0318 -> line 327
+ *   +0x0354 -> line 328
+ *   +0x0390 -> line 329
+ *   +0x03cc -> line 330
+ *   +0x0408 -> line 335
+ *   +0x040c -> line 331
+ *   +0x0410 -> line 334
+ *   +0x0418 -> line 335
+ *   +0x041c -> line 338
+ *   +0x0420 -> line 341
+ *   +0x0424 -> line 338
+ *   +0x042c -> line 331
+ *   +0x0430 -> line 332
+ *   +0x0438 -> line 333
+ *   +0x0448 -> line 334
+ *   +0x0458 -> line 335
+ *   +0x0468 -> line 338
+ *   +0x0480 -> line 341
+ *   +0x0494 -> line 343
+ *   +0x049c -> line 344
+ *   +0x04a4 -> line 345
+ *   +0x04ac -> line 346
+ *   +0x04b4 -> line 347
+ *   +0x04bc -> line 348
+ *   +0x04d4 -> line 351
+ *   +0x04e8 -> line 353
+ *   +0x04f0 -> line 356
+ *   +0x0504 -> line 358
+ *   +0x050c -> line 359
+ *   +0x0514 -> line 360
+ *   +0x051c -> line 362
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMDynam.c lines 306–306 */
+/* addr: 0x00302510  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 306
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void DNM_fn_vInitBaseMechanic(DNM_stDynamics* p_stDynamic)
+{
+    DNM_fn_vDynamicsInitDefault(p_stDynamic);
+}
+
+void DNM_fn_vInitDynamic(DNM_stDynamics* p_stDynamic, void* hIdCard)
+{
+    DNM_stMecBaseIdCard* p_IdCard = (DNM_stMecBaseIdCard*)hIdCard;
+    DNM_M_vCopyFlag(&p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags, p_IdCard->ulFlags, 0x1, 0x1);
+    DNM_M_vCopyFlag(&p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags, p_IdCard->ulFlags, 0x2, 0x2);
+    DNM_M_vCopyFlag(&p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags, p_IdCard->ulFlags, 0x4, 0x4);
+    DNM_M_vCopyFlag(&p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags, p_IdCard->ulFlags, 0x8, 0x8);
+    DNM_M_vCopyFlag(&p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags, p_IdCard->ulFlags, 0x10, 0x10);
+    DNM_M_vCopyFlag(&p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags, p_IdCard->ulFlags, 0x20, 0x20);
+    DNM_M_vCopyFlag(&p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags, p_IdCard->ulFlags, 0x40, 0x40);
+    DNM_M_vCopyFlag(&p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags, p_IdCard->ulFlags, 0x80, 0x100);
+    DNM_M_vCopyFlag(&p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags, p_IdCard->ulFlags, 0x100, 0x200);
+    DNM_M_vCopyFlag(&p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags, p_IdCard->ulFlags, 0x20000, 0x100000);
+    DNM_M_vCopyFlag(&p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags, p_IdCard->ulFlags, 0x200, 0x80);
+    DNM_M_vCopyFlag(&p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags, p_IdCard->ulFlags, 0x400, 0x100);
+    DNM_M_vCopyFlag(&p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags, p_IdCard->ulFlags, 0x800, 0x200);
+    DNM_M_vCopyFlag(&p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags, p_IdCard->ulFlags, 0x1000, 0x400);
+    DNM_M_vCopyFlag(&p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags, p_IdCard->ulFlags, 0x2000, 0x800);
+    DNM_M_vCopyFlag(&p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags, p_IdCard->ulFlags, 0x4000, 0x1000);
+    DNM_M_vCopyFlag(&p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags, p_IdCard->ulFlags, 0x8000, 0x2000);
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_xGravity = p_IdCard->m_xGravity;
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_xSlopeLimit = p_IdCard->m_xSlopeLimit;
+    DNM_M_vSetEndFlags(&p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags, p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags | 0x10);
+    DNM_M_vSetEndFlags(&p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags, p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0xFFDFFFFF);
+    DNM_M_vSetEndFlags(&p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags, p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0xFDFFFFFF);
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope = MTH_xSqrt(1.0f / (1.0f + p_stDynamic->m_tdstDynamicsBaseBlock.m_xSlopeLimit * p_stDynamic->m_tdstDynamicsBaseBlock.m_xSlopeLimit));
+    if ((0x2 & p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags) ? 1 : 0)
+    {
+        p_stDynamic->m_tdstDynamicsBaseBlock.m_xSlide = p_IdCard->m_xSlide;
+        p_stDynamic->m_tdstDynamicsBaseBlock.m_xRebound = p_IdCard->m_xRebound;
+        p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xInertiaX = p_IdCard->m_xInertiaX;
+        p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xInertiaY = p_IdCard->m_xInertiaY;
+        p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xInertiaZ = p_IdCard->m_xInertiaZ;
+        MTH3D_M_vCopyVector(&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stMaxSpeed, &p_IdCard->m_stMaxSpeed);
+        /* the collision translation is the current matrix translation */
+        MTH3D_M_vCopyVector(&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stCollisionTranslation, &p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3);
+    }
+    else
+    {
+        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4) ? 1 : 0)
+        {
+            p_stDynamic->m_tdstDynamicsComplexBlock.m_xTiltIntensity = p_IdCard->m_xTiltIntensity;
+            p_stDynamic->m_tdstDynamicsComplexBlock.m_xTiltInertia = p_IdCard->m_xTiltInertia;
+            p_stDynamic->m_tdstDynamicsComplexBlock.m_xTiltOrigin = p_IdCard->m_xTiltOrigin;
+        }
+    }
+}
+
+void DNM_fn_vChangeIdCard(DNM_stDynamics* _p_stDynamics, void* _hNewIdCard)
+{
+    DNM_stMecBaseIdCard* pIdCard = (DNM_stMecBaseIdCard*)_hNewIdCard;
+    if (pIdCard->m_eIdentity == 1)
+        DNM_fn_vInitDynamic(_p_stDynamics, _hNewIdCard);
+    _p_stDynamics->m_tdstDynamicsBaseBlock.m_pCurrentIdCard = (int)_hNewIdCard;
+}
+
+void DNM_fn_vDynamicsCopyClone(DNM_stDynamics* _p_stDst, DNM_stDynamics* _p_stSrc)
+{
+    DNM_stReport* p_stReport = NULL;
+    if ((_p_stDst->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000) ? 1 : 0)
+    {
+        /* the destination owns the report buffer */
+        p_stReport = _p_stDst->m_tdstDynamicsBaseBlock.m_pstReport;
+    }
+    if ((_p_stSrc->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4) ? 1 : 0) { memcpy(_p_stDst, _p_stSrc, sizeof(DNM_stDynamics)); }
+    else if ((_p_stSrc->m_tdstDynamicsBaseBlock.ulEndFlags & 0x2) ? 1 : 0) { memcpy(_p_stDst, _p_stSrc, sizeof(DNM_stDynamics) - sizeof(DNM_stDynamicsComplexBlock)); }
+    else { memcpy(_p_stDst, _p_stSrc, sizeof(DNM_stDynamicsBaseBlock)); }
+    if (p_stReport)
+    {
+        _p_stDst->m_tdstDynamicsBaseBlock.m_pstReport = p_stReport;
+        if ((_p_stSrc->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000) ? 1 : 0)
+            memcpy(p_stReport, _p_stSrc->m_tdstDynamicsBaseBlock.m_pstReport, sizeof(DNM_stReport));
+    }
+}
+
 float CAM_fn_xComputeHorizontalAngle(MTH3D_tdstVector_* _p_stOrgVector, MTH3D_tdstVector_* _p_stDestVector, MTH3D_tdstVector_* _p_stAxisZ)
 {
     float xNorm;
@@ -568,225 +798,4 @@ float CAM_fn_xComputeHorizontalAngle(MTH3D_tdstVector_* _p_stOrgVector, MTH3D_td
         xAngle = -xAngle;
     }
     return xAngle;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMDynam.c lines 412–432 */
-/* addr: 0x00301ea0  size: 236 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 412
- *   +0x0004 -> line 415
- *   +0x0008 -> line 412
- *   +0x0020 -> line 415
- *   +0x0034 -> line 418
- *   +0x003c -> line 422
- *   +0x006c -> line 423
- *   +0x0094 -> line 424
- *   +0x00a0 -> line 426
- *   +0x00a8 -> line 428
- *   +0x00ac -> line 429
- *   +0x00c4 -> line 430
- *   +0x00d4 -> line 432
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void DNM_fn_vDynamicsCopyClone(DNM_stDynamics* _p_stDst, DNM_stDynamics* _p_stSrc)
-{
-    DNM_stReport* p_stReport = NULL;
-    if ((_p_stDst->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000) ? 1 : 0)
-    {
-        /* the destination owns the report buffer */
-        p_stReport = _p_stDst->m_tdstDynamicsBaseBlock.m_pstReport;
-    }
-    if ((_p_stSrc->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4) ? 1 : 0) { memcpy(_p_stDst, _p_stSrc, sizeof(DNM_stDynamics)); }
-    else if ((_p_stSrc->m_tdstDynamicsBaseBlock.ulEndFlags & 0x2) ? 1 : 0) { memcpy(_p_stDst, _p_stSrc, sizeof(DNM_stDynamics) - sizeof(DNM_stDynamicsComplexBlock)); }
-    else { memcpy(_p_stDst, _p_stSrc, sizeof(DNM_stDynamicsBaseBlock)); }
-    if (p_stReport)
-    {
-        _p_stDst->m_tdstDynamicsBaseBlock.m_pstReport = p_stReport;
-        if ((_p_stSrc->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000) ? 1 : 0)
-            memcpy(p_stReport, _p_stSrc->m_tdstDynamicsBaseBlock.m_pstReport, sizeof(DNM_stReport));
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMDynam.c lines 370–407 */
-/* addr: 0x00301f90  size: 68 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 370
- *   +0x0004 -> line 403
- *   +0x0008 -> line 370
- *   +0x0018 -> line 403
- *   +0x0024 -> line 405
- *   +0x002c -> line 406
- *   +0x0030 -> line 407
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void DNM_fn_vInitDynamic(DNM_stDynamics* p_stDynamic, void* hIdCard);
-
-void DNM_fn_vChangeIdCard(DNM_stDynamics* _p_stDynamics, void* _hNewIdCard)
-{
-    DNM_stMecBaseIdCard* pIdCard = (DNM_stMecBaseIdCard*)_hNewIdCard;
-    if (pIdCard->m_eIdentity == 1)
-        DNM_fn_vInitDynamic(_p_stDynamics, _hNewIdCard);
-    _p_stDynamics->m_tdstDynamicsBaseBlock.m_pCurrentIdCard = (int)_hNewIdCard;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMDynam.c lines 314–362 */
-/* addr: 0x00301fe0  size: 1316 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 314
- *   +0x003c -> line 315
- *   +0x0078 -> line 316
- *   +0x00b4 -> line 317
- *   +0x00f0 -> line 318
- *   +0x012c -> line 319
- *   +0x0168 -> line 320
- *   +0x01a4 -> line 321
- *   +0x01e0 -> line 322
- *   +0x021c -> line 323
- *   +0x0264 -> line 324
- *   +0x02a0 -> line 325
- *   +0x02dc -> line 326
- *   +0x0318 -> line 327
- *   +0x0354 -> line 328
- *   +0x0390 -> line 329
- *   +0x03cc -> line 330
- *   +0x0408 -> line 335
- *   +0x040c -> line 331
- *   +0x0410 -> line 334
- *   +0x0418 -> line 335
- *   +0x041c -> line 338
- *   +0x0420 -> line 341
- *   +0x0424 -> line 338
- *   +0x042c -> line 331
- *   +0x0430 -> line 332
- *   +0x0438 -> line 333
- *   +0x0448 -> line 334
- *   +0x0458 -> line 335
- *   +0x0468 -> line 338
- *   +0x0480 -> line 341
- *   +0x0494 -> line 343
- *   +0x049c -> line 344
- *   +0x04a4 -> line 345
- *   +0x04ac -> line 346
- *   +0x04b4 -> line 347
- *   +0x04bc -> line 348
- *   +0x04d4 -> line 351
- *   +0x04e8 -> line 353
- *   +0x04f0 -> line 356
- *   +0x0504 -> line 358
- *   +0x050c -> line 359
- *   +0x0514 -> line 360
- *   +0x051c -> line 362
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMDynam.c lines 314–362 */
-/* addr: 0x00301fe0  size: 1316 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 314
- *   +0x003c -> line 315
- *   +0x0078 -> line 316
- *   +0x00b4 -> line 317
- *   +0x00f0 -> line 318
- *   +0x012c -> line 319
- *   +0x0168 -> line 320
- *   +0x01a4 -> line 321
- *   +0x01e0 -> line 322
- *   +0x021c -> line 323
- *   +0x0264 -> line 324
- *   +0x02a0 -> line 325
- *   +0x02dc -> line 326
- *   +0x0318 -> line 327
- *   +0x0354 -> line 328
- *   +0x0390 -> line 329
- *   +0x03cc -> line 330
- *   +0x0408 -> line 335
- *   +0x040c -> line 331
- *   +0x0410 -> line 334
- *   +0x0418 -> line 335
- *   +0x041c -> line 338
- *   +0x0420 -> line 341
- *   +0x0424 -> line 338
- *   +0x042c -> line 331
- *   +0x0430 -> line 332
- *   +0x0438 -> line 333
- *   +0x0448 -> line 334
- *   +0x0458 -> line 335
- *   +0x0468 -> line 338
- *   +0x0480 -> line 341
- *   +0x0494 -> line 343
- *   +0x049c -> line 344
- *   +0x04a4 -> line 345
- *   +0x04ac -> line 346
- *   +0x04b4 -> line 347
- *   +0x04bc -> line 348
- *   +0x04d4 -> line 351
- *   +0x04e8 -> line 353
- *   +0x04f0 -> line 356
- *   +0x0504 -> line 358
- *   +0x050c -> line 359
- *   +0x0514 -> line 360
- *   +0x051c -> line 362
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void DNM_fn_vInitDynamic(DNM_stDynamics* p_stDynamic, void* hIdCard)
-{
-    DNM_stMecBaseIdCard* p_IdCard = (DNM_stMecBaseIdCard*)hIdCard;
-    DNM_M_vCopyFlag(&p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags, p_IdCard->ulFlags, 0x1, 0x1);
-    DNM_M_vCopyFlag(&p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags, p_IdCard->ulFlags, 0x2, 0x2);
-    DNM_M_vCopyFlag(&p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags, p_IdCard->ulFlags, 0x4, 0x4);
-    DNM_M_vCopyFlag(&p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags, p_IdCard->ulFlags, 0x8, 0x8);
-    DNM_M_vCopyFlag(&p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags, p_IdCard->ulFlags, 0x10, 0x10);
-    DNM_M_vCopyFlag(&p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags, p_IdCard->ulFlags, 0x20, 0x20);
-    DNM_M_vCopyFlag(&p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags, p_IdCard->ulFlags, 0x40, 0x40);
-    DNM_M_vCopyFlag(&p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags, p_IdCard->ulFlags, 0x80, 0x100);
-    DNM_M_vCopyFlag(&p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags, p_IdCard->ulFlags, 0x100, 0x200);
-    DNM_M_vCopyFlag(&p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags, p_IdCard->ulFlags, 0x20000, 0x100000);
-    DNM_M_vCopyFlag(&p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags, p_IdCard->ulFlags, 0x200, 0x80);
-    DNM_M_vCopyFlag(&p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags, p_IdCard->ulFlags, 0x400, 0x100);
-    DNM_M_vCopyFlag(&p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags, p_IdCard->ulFlags, 0x800, 0x200);
-    DNM_M_vCopyFlag(&p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags, p_IdCard->ulFlags, 0x1000, 0x400);
-    DNM_M_vCopyFlag(&p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags, p_IdCard->ulFlags, 0x2000, 0x800);
-    DNM_M_vCopyFlag(&p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags, p_IdCard->ulFlags, 0x4000, 0x1000);
-    DNM_M_vCopyFlag(&p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags, p_IdCard->ulFlags, 0x8000, 0x2000);
-    p_stDynamic->m_tdstDynamicsBaseBlock.m_xGravity = p_IdCard->m_xGravity;
-    p_stDynamic->m_tdstDynamicsBaseBlock.m_xSlopeLimit = p_IdCard->m_xSlopeLimit;
-    DNM_M_vSetEndFlags(&p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags, p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags | 0x10);
-    DNM_M_vSetEndFlags(&p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags, p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0xFFDFFFFF);
-    DNM_M_vSetEndFlags(&p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags, p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0xFDFFFFFF);
-    p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope = MTH_xSqrt(1.0f / (1.0f + p_stDynamic->m_tdstDynamicsBaseBlock.m_xSlopeLimit * p_stDynamic->m_tdstDynamicsBaseBlock.m_xSlopeLimit));
-    if ((0x2 & p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags) ? 1 : 0)
-    {
-        p_stDynamic->m_tdstDynamicsBaseBlock.m_xSlide = p_IdCard->m_xSlide;
-        p_stDynamic->m_tdstDynamicsBaseBlock.m_xRebound = p_IdCard->m_xRebound;
-        p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xInertiaX = p_IdCard->m_xInertiaX;
-        p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xInertiaY = p_IdCard->m_xInertiaY;
-        p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xInertiaZ = p_IdCard->m_xInertiaZ;
-        MTH3D_M_vCopyVector(&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stMaxSpeed, &p_IdCard->m_stMaxSpeed);
-        /* the collision translation is the current matrix translation */
-        MTH3D_M_vCopyVector(&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stCollisionTranslation, &p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3);
-    }
-    else
-    {
-        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4) ? 1 : 0)
-        {
-            p_stDynamic->m_tdstDynamicsComplexBlock.m_xTiltIntensity = p_IdCard->m_xTiltIntensity;
-            p_stDynamic->m_tdstDynamicsComplexBlock.m_xTiltInertia = p_IdCard->m_xTiltInertia;
-            p_stDynamic->m_tdstDynamicsComplexBlock.m_xTiltOrigin = p_IdCard->m_xTiltOrigin;
-        }
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMDynam.c lines 306–306 */
-/* addr: 0x00302510  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 306
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void DNM_fn_vInitBaseMechanic(DNM_stDynamics* p_stDynamic)
-{
-    DNM_fn_vDynamicsInitDefault(p_stDynamic);
 }

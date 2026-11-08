@@ -31,13 +31,15 @@ extern int INO_gs_a_bIsForceFeedBack[2];
 extern IPO_tdstPadMapping_ g_axPadMapping[2];
 extern int scePadInfoMode(int, int, int, int);
 
-void fn_vUpdateIsFfbTable(unsigned char _ucJoyNb)
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void fn_vUpdateIsFfbTable(unsigned char _ucJoyNb);
+HIE_tdstSuperObject_* fn_hGetPortalCamera(IPO_tdstInstanciatedPhysicalObject_* hIPO);
+int IPO_fn_hGetRadiosity(IPO_tdstInstanciatedPhysicalObject_* _hInstanciatedPhysicalObject);
+
+int IPO_fn_hGetRadiosity(IPO_tdstInstanciatedPhysicalObject_* _hInstanciatedPhysicalObject)
 {
-    INO_gs_a_bIsForceFeedBack[_ucJoyNb] = scePadInfoMode(
-        g_axPadMapping[_ucJoyNb].iPort,
-        g_axPadMapping[_ucJoyNb].iSlot,
-        2,
-        0);
+    return _hInstanciatedPhysicalObject->_hCurrentRadiosity;
 }
 
 HIE_tdstSuperObject_* fn_hGetPortalCamera(IPO_tdstInstanciatedPhysicalObject_* hIPO)
@@ -45,7 +47,11 @@ HIE_tdstSuperObject_* fn_hGetPortalCamera(IPO_tdstInstanciatedPhysicalObject_* h
     return hIPO->hPortalCamera;
 }
 
-int IPO_fn_hGetRadiosity(IPO_tdstInstanciatedPhysicalObject_* _hInstanciatedPhysicalObject)
+void fn_vUpdateIsFfbTable(unsigned char _ucJoyNb)
 {
-    return _hInstanciatedPhysicalObject->_hCurrentRadiosity;
+    INO_gs_a_bIsForceFeedBack[_ucJoyNb] = scePadInfoMode(
+        g_axPadMapping[_ucJoyNb].iPort,
+        g_axPadMapping[_ucJoyNb].iSlot,
+        2,
+        0);
 }

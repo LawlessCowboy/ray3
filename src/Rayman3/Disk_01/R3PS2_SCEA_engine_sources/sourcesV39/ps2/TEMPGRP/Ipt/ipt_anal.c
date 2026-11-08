@@ -185,32 +185,16 @@ unsigned int INO_fn_ulJoyPreviousButtons(stDevice* _hDev);
 void Erm_fn_ClearLastError(unsigned int ulChannelId);
 void Erm_fn_v_UpdateLastError();
 
-unsigned char IPT_fn_bIsEntryActionValid(IPT_tdstEntryElement_* _hEntryElement)
-{
-    /* The retail body keeps the keyword result in a saved register and masks
-     * it once on return (andi v0,s0,0xff), so the local is int-sized even
-     * though the debug record types it as unsigned char. */
-    unsigned char ucReturn;
-
-    g_h_ActualEntryInput = _hEntryElement;
-    _hEntryElement->xAnalogicValue = 0.0f;
-    IPT_g_hNextParameter = _hEntryElement->d_stKeyWordElementArray;
-    ucReturn = 0;
-    if (IPT_g_hNextParameter)
-    {
-        ucReturn = 0;
-        if (IPT_p_fn_bIsKeyWordValid[(unsigned char)IPT_g_hNextParameter->u_ElementUnion.swKeyWord])
-        {
-            ucReturn = IPT_p_fn_bIsKeyWordValid[(unsigned char)IPT_g_hNextParameter->u_ElementUnion.swKeyWord]();
-        }
-        else
-        {
-            Erm_fn_ClearLastError(0);
-            Erm_fn_v_UpdateLastError(14, g_ucIPTModuleId, 0, 12, -1, 255, 255, NULL);
-        }
-    }
-    return ucReturn;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+unsigned char IPT_fn_bIsEntryActionValid(IPT_tdstEntryElement_* _hEntryElement);
+unsigned char IPT_fn_bAButtonPadJustPressed(void);
+unsigned char IPT_fn_bAKeyJustPressed(void);
+float IPT_fn_xGetAnalogicValue(IPT_tdstEntryElement_* _hEntryElement);
+unsigned char IPT_fn_bIsInvalidated(IPT_tdstEntryElement_* _hEntryElement);
+unsigned char IPT_fn_bIsJustInvalidated(IPT_tdstEntryElement_* _hEntryElement);
+unsigned char IPT_fn_bIsValidated(IPT_tdstEntryElement_* _hEntryElement);
+unsigned char IPT_fn_bIsJustValidated(IPT_tdstEntryElement_* _hEntryElement);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 182–203 */
 /* addr: 0x002f59b0  size: 240 bytes */
@@ -233,31 +217,6 @@ unsigned char IPT_fn_bIsEntryActionValid(IPT_tdstEntryElement_* _hEntryElement)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char IPT_fn_bAButtonPadJustPressed(void)
-{
-    int j;
-    int i;
-    stDevice* hPad;
-
-    if (IPT_g_hInputStructure.ucOnePadActivate == 2)
-    {
-        for (i = 2; i < 18; i++)
-        {
-            j = 12;
-            hPad = IPT_g_hInputStructure.a_stDevice[i].hDeviceHandle;
-            do
-            {
-                if (((IPT_g_ulPadAndJoyButtonFlag[j - 12] & *(unsigned int*)((char*)hPad->m_p_stState + 4)) == IPT_g_ulPadAndJoyButtonFlag[j - 12]) &&
-                    !((IPT_g_ulPadAndJoyButtonFlag[j - 12] & INO_fn_ulJoyPreviousButtons(hPad)) == IPT_g_ulPadAndJoyButtonFlag[j - 12]))
-                {
-                    return 1;
-                }
-                j++;
-            } while (j <= 27);
-        }
-    }
-    return 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 161–179 */
 /* addr: 0x002f5aa0  size: 176 bytes */
@@ -282,6 +241,83 @@ unsigned char IPT_fn_bAButtonPadJustPressed(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 149–152 */
+/* addr: 0x002f5b50  size: 28 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 149
+ *   +0x0014 -> line 152
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 125–126 */
+/* addr: 0x002f5b70  size: 40 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 125
+ *   +0x0020 -> line 126
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 120–121 */
+/* addr: 0x002f5ba0  size: 52 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 120
+ *   +0x002c -> line 121
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 115–116 */
+/* addr: 0x002f5be0  size: 48 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 115
+ *   +0x0028 -> line 116
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 110–111 */
+/* addr: 0x002f5c10  size: 36 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 110
+ *   +0x001c -> line 111
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+unsigned char IPT_fn_bIsJustValidated(IPT_tdstEntryElement_* _hEntryElement)
+{
+    return (_hEntryElement && (_hEntryElement->lState == 1)) ? (unsigned char)1 : (unsigned char)0;
+
+}
+
+unsigned char IPT_fn_bIsValidated(IPT_tdstEntryElement_* _hEntryElement)
+{
+    return ((_hEntryElement != NULL) && (_hEntryElement->lState > 0)) ?
+        (unsigned char)1 : (unsigned char)0;
+}
+
+unsigned char IPT_fn_bIsJustInvalidated(IPT_tdstEntryElement_* _hEntryElement)
+{
+    return ((_hEntryElement != NULL) && (_hEntryElement->lState == -1)) ?
+        (unsigned char)1 : (unsigned char)0;
+}
+
+unsigned char IPT_fn_bIsInvalidated(IPT_tdstEntryElement_* _hEntryElement)
+{
+    return ((_hEntryElement == NULL) || (_hEntryElement->lState < 0)) ?
+        (unsigned char)1 : (unsigned char)0;
+}
+
+float IPT_fn_xGetAnalogicValue(IPT_tdstEntryElement_* _hEntryElement)
+{
+    if (_hEntryElement != NULL)
+        return _hEntryElement->xAnalogicValue;
+    return 0.0f;
+}
+
 unsigned char IPT_fn_bAKeyJustPressed(void)
 {
     unsigned short uwKeyCode;
@@ -309,74 +345,55 @@ unsigned char IPT_fn_bAKeyJustPressed(void)
     return 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 149–152 */
-/* addr: 0x002f5b50  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 149
- *   +0x0014 -> line 152
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-float IPT_fn_xGetAnalogicValue(IPT_tdstEntryElement_* _hEntryElement)
+unsigned char IPT_fn_bAButtonPadJustPressed(void)
 {
-    if (_hEntryElement != NULL)
-        return _hEntryElement->xAnalogicValue;
-    return 0.0f;
+    int j;
+    int i;
+    stDevice* hPad;
+
+    if (IPT_g_hInputStructure.ucOnePadActivate == 2)
+    {
+        for (i = 2; i < 18; i++)
+        {
+            j = 12;
+            hPad = IPT_g_hInputStructure.a_stDevice[i].hDeviceHandle;
+            do
+            {
+                if (((IPT_g_ulPadAndJoyButtonFlag[j - 12] & *(unsigned int*)((char*)hPad->m_p_stState + 4)) == IPT_g_ulPadAndJoyButtonFlag[j - 12]) &&
+                    !((IPT_g_ulPadAndJoyButtonFlag[j - 12] & INO_fn_ulJoyPreviousButtons(hPad)) == IPT_g_ulPadAndJoyButtonFlag[j - 12]))
+                {
+                    return 1;
+                }
+                j++;
+            } while (j <= 27);
+        }
+    }
+    return 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 125–126 */
-/* addr: 0x002f5b70  size: 40 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 125
- *   +0x0020 -> line 126
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned char IPT_fn_bIsInvalidated(IPT_tdstEntryElement_* _hEntryElement)
+unsigned char IPT_fn_bIsEntryActionValid(IPT_tdstEntryElement_* _hEntryElement)
 {
-    return ((_hEntryElement == NULL) || (_hEntryElement->lState < 0)) ?
-        (unsigned char)1 : (unsigned char)0;
-}
+    /* The retail body keeps the keyword result in a saved register and masks
+     * it once on return (andi v0,s0,0xff), so the local is int-sized even
+     * though the debug record types it as unsigned char. */
+    unsigned char ucReturn;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 120–121 */
-/* addr: 0x002f5ba0  size: 52 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 120
- *   +0x002c -> line 121
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned char IPT_fn_bIsJustInvalidated(IPT_tdstEntryElement_* _hEntryElement)
-{
-    return ((_hEntryElement != NULL) && (_hEntryElement->lState == -1)) ?
-        (unsigned char)1 : (unsigned char)0;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 115–116 */
-/* addr: 0x002f5be0  size: 48 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 115
- *   +0x0028 -> line 116
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned char IPT_fn_bIsValidated(IPT_tdstEntryElement_* _hEntryElement)
-{
-    return ((_hEntryElement != NULL) && (_hEntryElement->lState > 0)) ?
-        (unsigned char)1 : (unsigned char)0;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 110–111 */
-/* addr: 0x002f5c10  size: 36 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 110
- *   +0x001c -> line 111
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned char IPT_fn_bIsJustValidated(IPT_tdstEntryElement_* _hEntryElement)
-{
-    return (_hEntryElement && (_hEntryElement->lState == 1)) ? (unsigned char)1 : (unsigned char)0;
-
-
+    g_h_ActualEntryInput = _hEntryElement;
+    _hEntryElement->xAnalogicValue = 0.0f;
+    IPT_g_hNextParameter = _hEntryElement->d_stKeyWordElementArray;
+    ucReturn = 0;
+    if (IPT_g_hNextParameter)
+    {
+        ucReturn = 0;
+        if (IPT_p_fn_bIsKeyWordValid[(unsigned char)IPT_g_hNextParameter->u_ElementUnion.swKeyWord])
+        {
+            ucReturn = IPT_p_fn_bIsKeyWordValid[(unsigned char)IPT_g_hNextParameter->u_ElementUnion.swKeyWord]();
+        }
+        else
+        {
+            Erm_fn_ClearLastError(0);
+            Erm_fn_v_UpdateLastError(14, g_ucIPTModuleId, 0, 12, -1, 255, 255, NULL);
+        }
+    }
+    return ucReturn;
 }

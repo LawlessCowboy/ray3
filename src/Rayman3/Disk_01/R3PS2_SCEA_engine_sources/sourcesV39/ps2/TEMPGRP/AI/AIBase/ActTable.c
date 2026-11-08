@@ -55,47 +55,113 @@ struct tdstNodeInterpret_ {
 unsigned char g_ucNewActionReturn;
 unsigned char g_ucUseDefaultActionReturn;
 
-void fn_vSetActionParamxValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso, float xValue)
-{
-    unsigned char* p;
-    unsigned char* base;
-    unsigned char* array;
-    unsigned int stride;
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void fn_vSetActionParamxValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso, float xValue);
+tdstNodeInterpret_* fn_p_stGetTableAction(tdstIntelligence_* p_stIntelligence, unsigned char ucNEntry);
+void fn_vInitActionTable(tdstIntelligence_* p_stIntelligence);
+void fn_vUnuseAllRulesFromSchedule(tdstIntelligence_* p_stIntelligence);
+void fn_vUnuseAllRulesWhichHaveGreaterNumRule(tdstIntelligence_* p_stIntelligence, unsigned char ucNumRule);
+void fn_vUnuseCurrentActionTableEntry(tdstIntelligence_* p_stIntelligence);
+void fn_vUseCurrentActionTableEntry(tdstIntelligence_* p_stIntelligence, unsigned char ucNRule, tdstNodeInterpret_* p_stNode);
+unsigned char fn_ucFindPlaceInActionTable(tdstIntelligence_* p_stIntelligence);
+unsigned char fn_ucIsRuleAndNodeInActionTable(tdstIntelligence_* p_stIntelligence, unsigned char ucNumRule, tdstNodeInterpret_* p_stNode);
 
-    p = *(unsigned char**)((char*)p_SuperObjPerso + 4);
-    p = *(unsigned char**)(p + 0xc);
-    p = *(unsigned char**)p;
-    if (*(unsigned char*)(p + 0x10) != 0)
-        p = *(unsigned char**)(p + 4);
-    else
-        p = *(unsigned char**)(p + 8);
-    base = *(unsigned char**)(p + 0x10);
-    stride = (unsigned int)*(unsigned char*)(base + 6);
-    array = *(unsigned char**)base;
-    ucN &= 0xff;
-    p = array + stride * 104 + (unsigned int)ucN * 12;
-    *(float*)p = xValue;
+unsigned char fn_ucIsRuleAndNodeInActionTable(tdstIntelligence_* p_stIntelligence, unsigned char ucNumRule, tdstNodeInterpret_* p_stNode)
+{
+    unsigned char ucNbEntries;
+    unsigned char ucCurrentEntry;
+    tdstActionTableEntry_* p_stEntry;
+
+    ucNbEntries = p_stIntelligence->p_stActionTable->ucNbEntries;
+    if (p_stIntelligence->p_stActionTable->ucNbEntriesUsed ? 1 : 0)
+    {
+        p_stEntry = p_stIntelligence->p_stActionTable->p_stEntry;
+        for (ucCurrentEntry = 0; ucCurrentEntry < ucNbEntries; ucCurrentEntry++, p_stEntry++)
+        {
+            if (p_stEntry->bUsed)
+            {
+                if (p_stEntry->ucNumRule == ucNumRule)
+                {
+                    if (p_stEntry->p_stNode == p_stNode)
+                    {
+                        return ucCurrentEntry;
+                    }
+                }
+            }
+        }
+    }
+    return ucNbEntries;
 }
 
-tdstNodeInterpret_* fn_p_stGetTableAction(tdstIntelligence_* p_stIntelligence, unsigned char ucNEntry)
+unsigned char fn_ucFindPlaceInActionTable(tdstIntelligence_* p_stIntelligence)
 {
-    g_ucUseDefaultActionReturn = *((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x66) + ucNEntry * sizeof(tdstActionTableEntry_));
-    g_ucNewActionReturn = *((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x67) + ucNEntry * sizeof(tdstActionTableEntry_));
-    return *(tdstNodeInterpret_**)((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x60) + ucNEntry * sizeof(tdstActionTableEntry_));
-}
-
-void fn_vInitActionTable(tdstIntelligence_* p_stIntelligence)
-{
-    unsigned char ucNEntry;
+    tdstActionTableEntry_* param0;
+    unsigned char ucCurrentEntry;
     unsigned char ucNbEntries;
 
-    p_stIntelligence->p_stActionTable->ucNbEntriesUsed = 0;
-    p_stIntelligence->p_stActionTable->ucCurrentEntry = 0;
     ucNbEntries = p_stIntelligence->p_stActionTable->ucNbEntries;
 
-    for (ucNEntry = 0; ucNEntry < ucNbEntries; ucNEntry++)
+    if (p_stIntelligence->p_stActionTable->ucNbEntriesUsed < ucNbEntries)
     {
-        p_stIntelligence->p_stActionTable->p_stEntry[ucNEntry].bUseDefaultActionReturn = g_ucUseDefaultActionReturn; p_stIntelligence->p_stActionTable->p_stEntry[ucNEntry].ucNewActionReturn = g_ucNewActionReturn; p_stIntelligence->p_stActionTable->p_stEntry[ucNEntry].bUsed = 0; p_stIntelligence->p_stActionTable->p_stEntry[ucNEntry].p_stNode = NULL; p_stIntelligence->p_stActionTable->p_stEntry[ucNEntry].ucNumRule = 0; memset(&p_stIntelligence->p_stActionTable->p_stEntry[ucNEntry].stActionParam, 0, sizeof(tdstActionParam_));
+        param0 = p_stIntelligence->p_stActionTable->p_stEntry;
+
+        for (ucCurrentEntry = 0; ucCurrentEntry < ucNbEntries; param0 += 1, ucCurrentEntry += 1)
+        {
+            if (param0->bUsed == 0)
+            {
+                return ucCurrentEntry;
+            }
+        }
+    }
+    return ucNbEntries;
+}
+
+void fn_vUseCurrentActionTableEntry(tdstIntelligence_* p_stIntelligence, unsigned char ucNRule, tdstNodeInterpret_* p_stNode)
+{
+    unsigned char ucCurrentEntry;
+
+    ucCurrentEntry = p_stIntelligence->p_stActionTable->ucCurrentEntry;
+    if (!*((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x64) + ucCurrentEntry * sizeof(tdstActionTableEntry_)))
+    {
+        *((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x66) + ucCurrentEntry * sizeof(tdstActionTableEntry_)) = g_ucUseDefaultActionReturn; *((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x67) + ucCurrentEntry * sizeof(tdstActionTableEntry_)) = g_ucNewActionReturn; *((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x64) + ucCurrentEntry * sizeof(tdstActionTableEntry_)) = 1; *(tdstNodeInterpret_**)((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x60) + ucCurrentEntry * sizeof(tdstActionTableEntry_)) = p_stNode; *((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x65) + ucCurrentEntry * sizeof(tdstActionTableEntry_)) = ucNRule; memset((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + ucCurrentEntry * sizeof(tdstActionTableEntry_), 0, sizeof(tdstActionParam_));
+        p_stIntelligence->p_stActionTable->ucNbEntriesUsed++;
+    }
+}
+
+void fn_vUnuseCurrentActionTableEntry(tdstIntelligence_* p_stIntelligence)
+{
+    unsigned char ucCurrentEntry;
+
+    ucCurrentEntry = p_stIntelligence->p_stActionTable->ucCurrentEntry;
+    if (*((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x64) + ucCurrentEntry * sizeof(tdstActionTableEntry_)))
+    {
+        *((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x66) + ucCurrentEntry * sizeof(tdstActionTableEntry_)) = g_ucUseDefaultActionReturn; *((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x67) + ucCurrentEntry * sizeof(tdstActionTableEntry_)) = g_ucNewActionReturn; *((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x64) + ucCurrentEntry * sizeof(tdstActionTableEntry_)) = 0; *(tdstNodeInterpret_**)((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x60) + ucCurrentEntry * sizeof(tdstActionTableEntry_)) = 0; *((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x65) + ucCurrentEntry * sizeof(tdstActionTableEntry_)) = 0; memset((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + ucCurrentEntry * sizeof(tdstActionTableEntry_), 0, sizeof(tdstActionParam_));
+        p_stIntelligence->p_stActionTable->ucNbEntriesUsed--;
+    }
+}
+
+void fn_vUnuseAllRulesWhichHaveGreaterNumRule(tdstIntelligence_* p_stIntelligence, unsigned char ucNumRule)
+{
+    unsigned char ucNbEntries;
+    unsigned char ucCurrentEntry;
+    tdstActionTableEntry_* p_stEntry;
+
+    ucNbEntries = p_stIntelligence->p_stActionTable->ucNbEntries;
+    if (p_stIntelligence->p_stActionTable->ucNbEntriesUsed ? 1 : 0)
+    {
+        p_stEntry = p_stIntelligence->p_stActionTable->p_stEntry;
+        for (ucCurrentEntry = 0; ucCurrentEntry < ucNbEntries; ucCurrentEntry++, p_stEntry++)
+        {
+            if (p_stEntry->bUsed)
+            {
+                if (p_stEntry->ucNumRule > ucNumRule)
+                {
+                    p_stIntelligence->p_stActionTable->p_stEntry[ucCurrentEntry].bUseDefaultActionReturn = g_ucUseDefaultActionReturn; p_stIntelligence->p_stActionTable->p_stEntry[ucCurrentEntry].ucNewActionReturn = g_ucNewActionReturn; p_stIntelligence->p_stActionTable->p_stEntry[ucCurrentEntry].bUsed = 0; p_stIntelligence->p_stActionTable->p_stEntry[ucCurrentEntry].p_stNode = NULL; p_stIntelligence->p_stActionTable->p_stEntry[ucCurrentEntry].ucNumRule = 0; memset(&p_stIntelligence->p_stActionTable->p_stEntry[ucCurrentEntry].stActionParam, 0, sizeof(tdstActionParam_));
+                    p_stIntelligence->p_stActionTable->ucNbEntriesUsed--;
+                }
+            }
+        }
     }
 }
 
@@ -124,100 +190,46 @@ void fn_vUnuseAllRulesFromSchedule(tdstIntelligence_* p_stIntelligence)
     }
 }
 
-void fn_vUnuseAllRulesWhichHaveGreaterNumRule(tdstIntelligence_* p_stIntelligence, unsigned char ucNumRule)
+void fn_vInitActionTable(tdstIntelligence_* p_stIntelligence)
 {
-    unsigned char ucNbEntries;
-    unsigned char ucCurrentEntry;
-    tdstActionTableEntry_* p_stEntry;
-
-    ucNbEntries = p_stIntelligence->p_stActionTable->ucNbEntries;
-    if (p_stIntelligence->p_stActionTable->ucNbEntriesUsed ? 1 : 0)
-    {
-        p_stEntry = p_stIntelligence->p_stActionTable->p_stEntry;
-        for (ucCurrentEntry = 0; ucCurrentEntry < ucNbEntries; ucCurrentEntry++, p_stEntry++)
-        {
-            if (p_stEntry->bUsed)
-            {
-                if (p_stEntry->ucNumRule > ucNumRule)
-                {
-                    p_stIntelligence->p_stActionTable->p_stEntry[ucCurrentEntry].bUseDefaultActionReturn = g_ucUseDefaultActionReturn; p_stIntelligence->p_stActionTable->p_stEntry[ucCurrentEntry].ucNewActionReturn = g_ucNewActionReturn; p_stIntelligence->p_stActionTable->p_stEntry[ucCurrentEntry].bUsed = 0; p_stIntelligence->p_stActionTable->p_stEntry[ucCurrentEntry].p_stNode = NULL; p_stIntelligence->p_stActionTable->p_stEntry[ucCurrentEntry].ucNumRule = 0; memset(&p_stIntelligence->p_stActionTable->p_stEntry[ucCurrentEntry].stActionParam, 0, sizeof(tdstActionParam_));
-                    p_stIntelligence->p_stActionTable->ucNbEntriesUsed--;
-                }
-            }
-        }
-    }
-}
-
-void fn_vUnuseCurrentActionTableEntry(tdstIntelligence_* p_stIntelligence)
-{
-    unsigned char ucCurrentEntry;
-
-    ucCurrentEntry = p_stIntelligence->p_stActionTable->ucCurrentEntry;
-    if (*((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x64) + ucCurrentEntry * sizeof(tdstActionTableEntry_)))
-    {
-        *((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x66) + ucCurrentEntry * sizeof(tdstActionTableEntry_)) = g_ucUseDefaultActionReturn; *((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x67) + ucCurrentEntry * sizeof(tdstActionTableEntry_)) = g_ucNewActionReturn; *((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x64) + ucCurrentEntry * sizeof(tdstActionTableEntry_)) = 0; *(tdstNodeInterpret_**)((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x60) + ucCurrentEntry * sizeof(tdstActionTableEntry_)) = 0; *((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x65) + ucCurrentEntry * sizeof(tdstActionTableEntry_)) = 0; memset((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + ucCurrentEntry * sizeof(tdstActionTableEntry_), 0, sizeof(tdstActionParam_));
-        p_stIntelligence->p_stActionTable->ucNbEntriesUsed--;
-    }
-}
-
-void fn_vUseCurrentActionTableEntry(tdstIntelligence_* p_stIntelligence, unsigned char ucNRule, tdstNodeInterpret_* p_stNode)
-{
-    unsigned char ucCurrentEntry;
-
-    ucCurrentEntry = p_stIntelligence->p_stActionTable->ucCurrentEntry;
-    if (!*((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x64) + ucCurrentEntry * sizeof(tdstActionTableEntry_)))
-    {
-        *((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x66) + ucCurrentEntry * sizeof(tdstActionTableEntry_)) = g_ucUseDefaultActionReturn; *((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x67) + ucCurrentEntry * sizeof(tdstActionTableEntry_)) = g_ucNewActionReturn; *((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x64) + ucCurrentEntry * sizeof(tdstActionTableEntry_)) = 1; *(tdstNodeInterpret_**)((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x60) + ucCurrentEntry * sizeof(tdstActionTableEntry_)) = p_stNode; *((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x65) + ucCurrentEntry * sizeof(tdstActionTableEntry_)) = ucNRule; memset((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + ucCurrentEntry * sizeof(tdstActionTableEntry_), 0, sizeof(tdstActionParam_));
-        p_stIntelligence->p_stActionTable->ucNbEntriesUsed++;
-    }
-}
-
-unsigned char fn_ucFindPlaceInActionTable(tdstIntelligence_* p_stIntelligence)
-{
-    tdstActionTableEntry_* param0;
-    unsigned char ucCurrentEntry;
+    unsigned char ucNEntry;
     unsigned char ucNbEntries;
 
+    p_stIntelligence->p_stActionTable->ucNbEntriesUsed = 0;
+    p_stIntelligence->p_stActionTable->ucCurrentEntry = 0;
     ucNbEntries = p_stIntelligence->p_stActionTable->ucNbEntries;
 
-    if (p_stIntelligence->p_stActionTable->ucNbEntriesUsed < ucNbEntries)
+    for (ucNEntry = 0; ucNEntry < ucNbEntries; ucNEntry++)
     {
-        param0 = p_stIntelligence->p_stActionTable->p_stEntry;
-
-        for (ucCurrentEntry = 0; ucCurrentEntry < ucNbEntries; param0 += 1, ucCurrentEntry += 1)
-        {
-            if (param0->bUsed == 0)
-            {
-                return ucCurrentEntry;
-            }
-        }
+        p_stIntelligence->p_stActionTable->p_stEntry[ucNEntry].bUseDefaultActionReturn = g_ucUseDefaultActionReturn; p_stIntelligence->p_stActionTable->p_stEntry[ucNEntry].ucNewActionReturn = g_ucNewActionReturn; p_stIntelligence->p_stActionTable->p_stEntry[ucNEntry].bUsed = 0; p_stIntelligence->p_stActionTable->p_stEntry[ucNEntry].p_stNode = NULL; p_stIntelligence->p_stActionTable->p_stEntry[ucNEntry].ucNumRule = 0; memset(&p_stIntelligence->p_stActionTable->p_stEntry[ucNEntry].stActionParam, 0, sizeof(tdstActionParam_));
     }
-    return ucNbEntries;
 }
 
-unsigned char fn_ucIsRuleAndNodeInActionTable(tdstIntelligence_* p_stIntelligence, unsigned char ucNumRule, tdstNodeInterpret_* p_stNode)
+tdstNodeInterpret_* fn_p_stGetTableAction(tdstIntelligence_* p_stIntelligence, unsigned char ucNEntry)
 {
-    unsigned char ucNbEntries;
-    unsigned char ucCurrentEntry;
-    tdstActionTableEntry_* p_stEntry;
+    g_ucUseDefaultActionReturn = *((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x66) + ucNEntry * sizeof(tdstActionTableEntry_));
+    g_ucNewActionReturn = *((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x67) + ucNEntry * sizeof(tdstActionTableEntry_));
+    return *(tdstNodeInterpret_**)((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x60) + ucNEntry * sizeof(tdstActionTableEntry_));
+}
 
-    ucNbEntries = p_stIntelligence->p_stActionTable->ucNbEntries;
-    if (p_stIntelligence->p_stActionTable->ucNbEntriesUsed ? 1 : 0)
-    {
-        p_stEntry = p_stIntelligence->p_stActionTable->p_stEntry;
-        for (ucCurrentEntry = 0; ucCurrentEntry < ucNbEntries; ucCurrentEntry++, p_stEntry++)
-        {
-            if (p_stEntry->bUsed)
-            {
-                if (p_stEntry->ucNumRule == ucNumRule)
-                {
-                    if (p_stEntry->p_stNode == p_stNode)
-                    {
-                        return ucCurrentEntry;
-                    }
-                }
-            }
-        }
-    }
-    return ucNbEntries;
+void fn_vSetActionParamxValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso, float xValue)
+{
+    unsigned char* p;
+    unsigned char* base;
+    unsigned char* array;
+    unsigned int stride;
+
+    p = *(unsigned char**)((char*)p_SuperObjPerso + 4);
+    p = *(unsigned char**)(p + 0xc);
+    p = *(unsigned char**)p;
+    if (*(unsigned char*)(p + 0x10) != 0)
+        p = *(unsigned char**)(p + 4);
+    else
+        p = *(unsigned char**)(p + 8);
+    base = *(unsigned char**)(p + 0x10);
+    stride = (unsigned int)*(unsigned char*)(base + 6);
+    array = *(unsigned char**)base;
+    ucN &= 0xff;
+    p = array + stride * 104 + (unsigned int)ucN * 12;
+    *(float*)p = xValue;
 }

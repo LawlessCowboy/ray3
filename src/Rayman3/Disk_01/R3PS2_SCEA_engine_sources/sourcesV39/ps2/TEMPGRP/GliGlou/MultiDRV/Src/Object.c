@@ -1146,9 +1146,18 @@ char g_cSinusEffectState;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_fn_vInitMenuBackground(void)
-{
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void GLI_fn_vInitMenuBackground(void);
+void GLIPS2_vSendCharacterVisualSetToViewport(GEO_tdstVisualSet_* p_stVisualSet, int lDrawModeMask);
+void GLIPS2_vPrepareDisplay(GLD_tdstViewportAttributes_* p_stVpt);
+void GLI_vCreateObjectsReference(void);
+void GLI_xSendObjectToViewportWithLightsFlag(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstGeometricObject_* p_stObj, int lDrawModeMask);
+void GLI_xSendObjectToViewportWithLights(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstGeometricObject_* p_stObj, int lDrawModeMask);
+void GLI_vSetViewportVars(GLD_tdstViewportAttributes_* p_stVpt);
+void GLI_xSendObjectElement(GLD_tdstViewportAttributes_* p_stVpt);
+float GLI_vGetGlobalAlpha(void);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Object.c lines 739–851 */
 /* addr: 0x002aa2c0  size: 900 bytes */
@@ -1214,15 +1223,6 @@ void GLI_fn_vInitMenuBackground(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLIPS2_vSendCharacterVisualSetToViewport(GEO_tdstVisualSet_* p_stVisualSet, int lDrawModeMask)
-{
-    float* pScale;
-    float* pMatrix;
-    SDC_VertexArrays_* pSDC;
-    MAT_tdstTransformation_ stPrevMatrix;
-    GEO_tdstGeometricObject_* p_stObj;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Object.c lines 722–730 */
 /* addr: 0x002aa650  size: 36 bytes */
@@ -1235,15 +1235,6 @@ void GLIPS2_vSendCharacterVisualSetToViewport(GEO_tdstVisualSet_* p_stVisualSet,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLIPS2_vPrepareDisplay(GLD_tdstViewportAttributes_* p_stVpt)
-{
-    GLI_tdstSpecificAttributesFor3D_* p_stSpecifAttrib3D;
-    p_stSpecifAttrib3D = (GLI_tdstSpecificAttributesFor3D_*)p_stVpt->p_vSpecificToXD;
-    GLI_BIG_GLOBALS_p_stVpt = (int)p_stVpt;
-    g_p_stCurrentViewport = (int)p_stVpt;
-    GLI_BIG_GLOBALS_gs_st_CameraMatrix = (int)p_stSpecifAttrib3D->p_stCam + 0x10;
-    GLI_BIG_GLOBALS_p_stCurrentCamera = (int)p_stSpecifAttrib3D->p_stCam;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Object.c lines 687–687 */
 /* addr: 0x002aa680  size: 8 bytes */
@@ -1252,9 +1243,6 @@ void GLIPS2_vPrepareDisplay(GLD_tdstViewportAttributes_* p_stVpt)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vCreateObjectsReference(void)
-{
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Object.c lines 565–677 */
 /* addr: 0x002aa690  size: 440 bytes */
@@ -1292,12 +1280,6 @@ void GLI_vCreateObjectsReference(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_xSendObjectToViewportWithLightsFlag(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstGeometricObject_* p_stObj, int lDrawModeMask)
-{
-    MAT_tdstTransformation_ stPrevMatrix;
-    GLI_tdstSpecificAttributesFor3D_* p_stSpecifAttrib3D;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Object.c lines 458–561 */
 /* addr: 0x002aa850  size: 576 bytes */
@@ -1342,12 +1324,6 @@ void GLI_xSendObjectToViewportWithLightsFlag(GLD_tdstViewportAttributes_* p_stVp
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_xSendObjectToViewportWithLights(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstGeometricObject_* p_stObj, int lDrawModeMask)
-{
-    MAT_tdstTransformation_ stPrevMatrix;
-    GLI_tdstSpecificAttributesFor3D_* p_stSpecifAttrib3D;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Object.c lines 438–445 */
 /* addr: 0x002aaa90  size: 44 bytes */
@@ -1362,16 +1338,6 @@ void GLI_xSendObjectToViewportWithLights(GLD_tdstViewportAttributes_* p_stVpt, G
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vSetViewportVars(GLD_tdstViewportAttributes_* p_stVpt)
-{
-    GLI_tdstSpecificAttributesFor3D_* p_stSpecifAttrib3D;
-    p_stSpecifAttrib3D = (GLI_tdstSpecificAttributesFor3D_*)p_stVpt->p_vSpecificToXD;
-    GLI_BIG_GLOBALS_p_stVpt = (int)p_stVpt;
-    g_p_stCurrentViewport = (int)p_stVpt;
-    GLI_BIG_GLOBALS_gs_st_CurrentMatrix = (int)g_p_stCurrentMatrix;
-    GLI_BIG_GLOBALS_gs_st_CameraMatrix = (int)p_stSpecifAttrib3D->p_stCam + 0x10;
-    GLI_BIG_GLOBALS_p_stCurrentCamera = (int)p_stSpecifAttrib3D->p_stCam;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Object.c lines 375–431 */
 /* addr: 0x002aaac0  size: 408 bytes */
@@ -1405,13 +1371,6 @@ void GLI_vSetViewportVars(GLD_tdstViewportAttributes_* p_stVpt)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_xSendObjectElement(GLD_tdstViewportAttributes_* p_stVpt)
-{
-    SDC_VertexArrays_* pSDC;
-    int iElementType;
-    short xElementCounter;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Object.c lines 224–225 */
 /* addr: 0x002aac60  size: 20 bytes */
@@ -1421,7 +1380,69 @@ void GLI_xSendObjectElement(GLD_tdstViewportAttributes_* p_stVpt)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
 float GLI_vGetGlobalAlpha(void)
 {
     return GLI_BIG_GLOBALS_xGlobalAlpha * 255.0f;
+}
+
+void GLI_xSendObjectElement(GLD_tdstViewportAttributes_* p_stVpt)
+{
+    SDC_VertexArrays_* pSDC;
+    int iElementType;
+    short xElementCounter;
+    /* TODO: decompile from asm/... */
+}
+
+void GLI_vSetViewportVars(GLD_tdstViewportAttributes_* p_stVpt)
+{
+    GLI_tdstSpecificAttributesFor3D_* p_stSpecifAttrib3D;
+    p_stSpecifAttrib3D = (GLI_tdstSpecificAttributesFor3D_*)p_stVpt->p_vSpecificToXD;
+    GLI_BIG_GLOBALS_p_stVpt = (int)p_stVpt;
+    g_p_stCurrentViewport = (int)p_stVpt;
+    GLI_BIG_GLOBALS_gs_st_CurrentMatrix = (int)g_p_stCurrentMatrix;
+    GLI_BIG_GLOBALS_gs_st_CameraMatrix = (int)p_stSpecifAttrib3D->p_stCam + 0x10;
+    GLI_BIG_GLOBALS_p_stCurrentCamera = (int)p_stSpecifAttrib3D->p_stCam;
+}
+
+void GLI_xSendObjectToViewportWithLights(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstGeometricObject_* p_stObj, int lDrawModeMask)
+{
+    MAT_tdstTransformation_ stPrevMatrix;
+    GLI_tdstSpecificAttributesFor3D_* p_stSpecifAttrib3D;
+    /* TODO: decompile from asm/... */
+}
+
+void GLI_xSendObjectToViewportWithLightsFlag(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstGeometricObject_* p_stObj, int lDrawModeMask)
+{
+    MAT_tdstTransformation_ stPrevMatrix;
+    GLI_tdstSpecificAttributesFor3D_* p_stSpecifAttrib3D;
+    /* TODO: decompile from asm/... */
+}
+
+void GLI_vCreateObjectsReference(void)
+{
+}
+
+void GLIPS2_vPrepareDisplay(GLD_tdstViewportAttributes_* p_stVpt)
+{
+    GLI_tdstSpecificAttributesFor3D_* p_stSpecifAttrib3D;
+    p_stSpecifAttrib3D = (GLI_tdstSpecificAttributesFor3D_*)p_stVpt->p_vSpecificToXD;
+    GLI_BIG_GLOBALS_p_stVpt = (int)p_stVpt;
+    g_p_stCurrentViewport = (int)p_stVpt;
+    GLI_BIG_GLOBALS_gs_st_CameraMatrix = (int)p_stSpecifAttrib3D->p_stCam + 0x10;
+    GLI_BIG_GLOBALS_p_stCurrentCamera = (int)p_stSpecifAttrib3D->p_stCam;
+}
+
+void GLIPS2_vSendCharacterVisualSetToViewport(GEO_tdstVisualSet_* p_stVisualSet, int lDrawModeMask)
+{
+    float* pScale;
+    float* pMatrix;
+    SDC_VertexArrays_* pSDC;
+    MAT_tdstTransformation_ stPrevMatrix;
+    GEO_tdstGeometricObject_* p_stObj;
+    /* TODO: decompile from asm/... */
+}
+
+void GLI_fn_vInitMenuBackground(void)
+{
 }

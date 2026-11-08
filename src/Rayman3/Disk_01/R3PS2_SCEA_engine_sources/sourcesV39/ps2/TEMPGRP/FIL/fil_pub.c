@@ -10,13 +10,18 @@
 unsigned char g_ucFILModuleId;
 FIL_tdstInternalGeneral_ g_stInternalGeneral;
 
-int Erm_fn_iMessageBox(char* _szText, char* _szTitle)
-{
-    printf("Erm_SCE_fn_iMessageBox(%s,%s)\n", _szTitle, _szText);
-    return 0;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+int Erm_fn_iMessageBox(char* _szText, char* _szTitle);
+unsigned int FIL_fn_ulGetNumberOfFiles(FIL_tdstFileNameList_* hHandleToFileNameList);
 
 unsigned int FIL_fn_ulGetNumberOfFiles(FIL_tdstFileNameList_* hHandleToFileNameList)
 {
     return hHandleToFileNameList->hFileNameListAnchor.lNumberOfElementsDyn;
+}
+
+int Erm_fn_iMessageBox(char* _szText, char* _szTitle)
+{
+    printf("Erm_SCE_fn_iMessageBox(%s,%s)\n", _szTitle, _szText);
+    return 0;
 }

@@ -1479,56 +1479,19 @@ void WaterFx_vInit(void);
 void PS2MC_vActivateMemoryCard(void);
 int printf(const char* format, ...);
 
-void GLI_PS2GL_PrepareSpecificDataForLevel(void)
-{
-    PS2glTexParameteri(0xDE1, 0x2801, 0x2701);
-    PS2glTexParameteri(0xDE1, 0x2800, 0x2601);
-    GLI_vInitSdlCache();
-    GLI_g_MustBlocIn30FPS = 0;
-    GLI_BIG_GLOBALS_xGlobalAlpha = 1.0f;
-    GLI_g_fCurrentCameraRatio = 4.0f / 3.0f;
-    GLI_g_fCurrentCameraxAngle = 45.0f;
-    GLI_g_NearValue = 0.8f;
-    GLI_g_FarValue = 2048.0f;
-    GLI_gs_lBackGroundColor = 0;
-    GLI_vInitSimpleShadowArrays();
-    GLI_g_StaticVertexArraySizePrevision = 0;
-    GLI_fnvPrecalculateStuffForAllMaterials();
-    TotalVertexArraySizeWithoutStrips = 0;
-    TotalVertexArraySizeWithStrips = 0;
-    NbVerticesToProcessWithStrips = 0;
-    NbVerticesToProcessWithoutStrips = 0;
-    GLI_PS2GL_PrepareSpecificDataForSPO(gp_stActualWorld);
-    GLI_PS2GL_PrepareSpecificDataForSPO(gp_stDynamicWorld);
-    GLI_PS2GL_PrepareSpecificDataForSPO(gp_stInactiveDynamicWorld);
-    GLIPS2_vInitMatrixDeformation();
-    ReinitOldMovieEffect();
-    GLI_g_hVAContainer = (int)VAC_Create(1000);
-    GLI_BIG_GLOBALS_xGlobalAlpha = 1.0f;
-    if (GLI_g_ChristianSlaterMode)
-    {
-        PS2glTexParameteri(0xDE1, 0x2800, 0x2600);
-        PS2glTexParameteri(0xDE1, 0x2801, 0x2600);
-        PS2glTexParameteri(0xDE1, 0x2800, 0x2600);
-        PS2glTexParameteri(0xDE1, 0x2801, 0x2600);
-    }
-    else
-    {
-        PS2glTexParameteri(0xDE1, 0x2800, 0x2601);
-        PS2glTexParameteri(0xDE1, 0x2801, 0x2701);
-    }
-    g_PS2glContext.uiStaticDisplayListMaxSize = 30000;
-    GLI_g_StaticVertexArraySizePrevision = 0;
-    HIE_fn_vInitMatrixStack();
-    GLI_g_DMA_PreparingOpaque = 1;
-    GLI_vDMABufferParseTree(gp_stActualWorld);
-    GLI_g_DMA_PreparingOpaque = 0;
-    GLI_vDMABufferParseTree(gp_stActualWorld);
-    g_PS2glContext.uiStaticDisplayListMaxSize = 5000;
-    WaterFx_vInit();
-    PS2MC_vActivateMemoryCard();
-    printf("Specific data done :\n");
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void GLI_PS2GL_PrepareSpecificDataForLevel(void);
+void J_New_DrawSpriteGenList(GLI_tdstMaterial_* pMat, float (*pParticleList)[4], unsigned int NbSprites);
+void GLI_vSendEITToSpriteGeneratorNewSimple(GEO_tdstElementIndexedTriangles_* p_stEIT, ISI_tdstColor_* pRLIs, float* pLightMap, float (*pV1)[4], float (*pU1)[4], float** pVertexTransparency);
+void GLI_vSendEITToSpriteGeneratorNew(GEO_tdstElementIndexedTriangles_* p_stEIT, ISI_tdstColor_* pRLIs, float* LightMaps, float (*pV1)[4], float (*pU1)[4], float** pVertexTransparency);
+float SpriteGenCalculateNorm(MTH3D_tdstVector_* p_stMin, MTH3D_tdstVector_* p_stMax);
+void J_DrawSpriteGenListAnimated(GLI_tdstMaterial_* pMat, J_ParticleSprite_* pParticleList, unsigned int NbSprites);
+void J_Draw3DSpriteGenListAnimated(GLI_tdstMaterial_* pMat, J_ParticleSprite_* pParticleList __attribute__((aligned(16))), unsigned int NbSprites __attribute__((aligned(16))));
+void J_Draw3DSpriteGenList(GLI_tdstMaterial_* pMat, J_ParticleSprite_* pParticleList __attribute__((aligned(16))), unsigned int NbSprites);
+void GLI_v_CalculateVectorsFor3DSpriteGen(MAT_tdstTransformation_* param0, J_ParticleSprite_* p, float sx, float sy);
+void GLI_v_CalculateVectorsFor3DSpriteGenVU0(MAT_tdstTransformation_* pInvertedCam, J_ParticleSprite_* p, float sx, float sy);
+void GLI_v_CalculateInverseCamMat(MAT_tdstTransformation_* pInvertedCam, GLD_tdstViewportAttributes_* _p_stViewport);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawSpriteGen.c lines 1633–1754 */
 /* addr: 0x002b9540  size: 1044 bytes */
@@ -1617,117 +1580,6 @@ void GLI_PS2GL_PrepareSpecificDataForLevel(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void J_New_DrawSpriteGenList(GLI_tdstMaterial_* pMat, float (*pParticleList)[4], unsigned int NbSprites)
-{
-    float CosValAdd;
-    float CosVal;
-    unsigned char zTst;
-    void* pAnimaterTextureToUseSaved;
-    int RemainingNbSprites;
-    unsigned int i;
-    float ModelView[4][4];
-    float sx;
-    float sy;
-    float* pNeg;
-    float* pSrc;
-    float* pDst;
-
-    RemainingNbSprites = NbSprites - (NbSprites / 20) * 20;
-    if (RemainingNbSprites < 4)
-        NbSprites -= RemainingNbSprites;
-    if (NbSprites < 4)
-        return;
-
-    sx = 10.0f * pMat->stAmbient.xR;
-    sy = 10.0f * pMat->stAmbient.xG;
-    if (sx <= 0.0f)
-        sx = 0.01f;
-    if (sy <= 0.0f)
-        sy = 0.01f;
-
-    GLI_vInitGLProjectionMatrix();
-    PS2glMatrixMode(0x1700);
-
-    pSrc = (float*)(GLI_BIG_GLOBALS_gs_st_CurrentMatrix + 0x10);
-    pNeg = GLI_g_NegVect;
-    pDst = (float*)ModelView;
-    asm {
-        lqc2 $vf5, 0x0(pNeg)
-        lqc2 $vf1, 0x0(pSrc)
-        lqc2 $vf2, 0x10(pSrc)
-        lqc2 $vf3, 0x20(pSrc)
-        lqc2 $vf4, 0x30(pSrc)
-        vmul.xyzw $vf1, $vf1, $vf5
-        vmul.xyzw $vf2, $vf2, $vf5
-        vmul.xyzw $vf3, $vf3, $vf5
-        vmul.xyzw $vf4, $vf4, $vf5
-        sqc2 $vf1, 0x0(pDst)
-        sqc2 $vf2, 0x10(pDst)
-        sqc2 $vf3, 0x20(pDst)
-        sqc2 $vf4, 0x30(pDst)
-    }
-    ModelView[3][3] = 1.0f;
-    PS2glLoadMatrixf(ModelView);
-    GLI_AddNormalInterpolation(GLI_BIG_GLOBALS_gs_st_CurrentMatrix + 0x10);
-
-    if (pMat != NULL)
-    {
-        pAnimaterTextureToUseSaved = (void*)GLI_g_AnimatedTextureToUse;
-        GLI_g_AnimatedTextureToUse = 0;
-        if (GLI_DRV_IsMaterialTransparent(pMat))
-            GLI_BIG_GLOBALS_xGlobalAlpha = 0.2f;
-        else
-            GLI_BIG_GLOBALS_xGlobalAlpha = 1.0f;
-        GLI_vClearSendMatStates();
-        GLI_DRV_SendMaterialToViewport(pMat);
-        GLI_BIG_GLOBALS_xGlobalAlpha = 1.0f;
-        GLI_g_AnimatedTextureToUse = (int)pAnimaterTextureToUseSaved;
-
-        g_PS2glContext.nEnableBits |= 0x800;
-        g_gsContext.TEST_1.ZTE = 1;
-        g_gsContext.ModFlgs.TEST_1_Modified = 1;
-        zTst = 1;
-        switch (g_PS2glContext.eDepthFunc)
-        {
-        case 0x200: zTst = 0; break;
-        case 0x207: zTst = 1; break;
-        case 0x203: zTst = 2; break;
-        case 0x201: zTst = 3; break;
-        case 0x202:
-        case 0x204:
-        case 0x205:
-        case 0x206:
-            break;
-        }
-        g_gsContext.TEST_1.ZTST = zTst;
-        g_gsContext.ModFlgs.TEST_1_Modified = 1;
-        g_PS2glContext.nLightBits &= ~0x400;
-    }
-
-    g_PS2glContext.eClippingFunction = 3;
-    if (g_PS2glContext.uiDmaOmitDataBits & 0x600)
-    {
-        *(int*)g_PS2glContext.pnColorMatMasks &= ~0x200;
-        *(int*)g_PS2glContext.pnColorMatMasks &= ~0x100;
-    }
-    g_PS2glContext.uiDmaOmitDataBits = 0;
-    g_PS2glContext.uiFastPathBits = 1;
-
-    pParticleList[0][3] = sx * XRESf;
-    pParticleList[2][3] = sy * YRESf;
-
-    CosValAdd = 5.0f * pMat->stDiffuse.xR;
-    CosVal = 6.0f * (g_ffFrameTime * (4.0f + pMat->stDiffuse.xR * pMat->stDiffuse.xG));
-    for (i = 0; i < NbSprites; i += 20)
-    {
-        pParticleList[(i << 1) + 4][3] = 2.5f * a64_fSinTable[(unsigned int)CosVal & 0x1FF];
-        CosVal += CosValAdd;
-    }
-
-    PS2glVertexPointer(NbSprites, 0x1406, -2, pParticleList);
-    PS2glInternalDrawSpriteArray(NbSprites);
-    g_PS2glContext.eClippingFunction = 3;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawSpriteGen.c lines 1359–1627 */
 /* addr: 0x002b9960  size: 1992 bytes */
@@ -1871,198 +1723,6 @@ inline float (*GLI_pGetFastSpriteGenBuffer(void))[4]
     if (GLI_g_CurrentSpriteGenIndex >= 0xA000)
         return NULL;
     return p;
-}
-void GLI_vSendEITToSpriteGeneratorNewSimple(GEO_tdstElementIndexedTriangles_* p_stEIT, ISI_tdstColor_* pRLIs, float* pLightMap, float (*pV1)[4], float (*pU1)[4], float** pVertexTransparency)
-{
-    unsigned int i;
-    float fAddU;
-    float fAddV;
-    unsigned int bAdditive;
-    float DU;
-    float DV;
-    J_New_ParticleFace_ Face;
-    unsigned int NbGenerated;
-    unsigned int* pNbGenSave;
-    unsigned int I1[3];
-    GLI_SpecificPS2GL_Structure_* pSpecif;
-    GEO_tdstTripledIndex_* p_stListOfFacesTripled;
-    float NoiseLevel;
-    unsigned int NoScroll;
-    float LM1;
-    float LM2;
-    float LM3;
-    float (*pParticles)[4];
-    float (*pV)[4];
-    int j;
-    float fr;
-    float fg;
-    float fb;
-    float fa;
-    ISI_tdstColor_* p_SRCColors;
-
-    NbGenerated = 0;
-    NoScroll = 0;
-    pSpecif = GLI_pstGetSpecificStructureFromEIT(p_stEIT);
-    GLI_vClearCop0Register24();
-    bAdditive = GLI_bIsMaterialAdditive(p_stEIT->hVisualMaterial);
-    GLI_BIG_GLOBALS_hCurrentMaterial = (int)p_stEIT->hVisualMaterial;
-    if (((GLI_tdstMaterial_*)GLI_BIG_GLOBALS_hCurrentMaterial)->fConstantAddU == 0.0f && ((GLI_tdstMaterial_*)GLI_BIG_GLOBALS_hCurrentMaterial)->fConstantAddV == 0.0f)
-        NoScroll = 1;
-
-    if (!pSpecif->SpriteGenArray || !NoScroll)
-    {
-        if (NoScroll)
-        {
-            pSpecif->SpriteGenArray = ((unsigned int (*)(unsigned int))PS2glAllocator64)(0x20010);
-            pNbGenSave = (unsigned int*)pSpecif->SpriteGenArray;
-            pParticles = (float (*)[4])((unsigned int)pNbGenSave + 0x10);
-            if (pNbGenSave == NULL)
-            {
-                GLI_vClearCop0Register24();
-                return;
-            }
-            else
-            {
-            }
-        }
-        else
-        {
-            pParticles = GLI_pGetFastSpriteGenBuffer();
-        }
-        if (pParticles == NULL)
-        {
-            GLI_vClearCop0Register24();
-            return;
-        }
-
-        DU = ((GLI_tdstMaterial_*)GLI_BIG_GLOBALS_hCurrentMaterial)->stDiffuse.xR;
-        DV = ((GLI_tdstMaterial_*)GLI_BIG_GLOBALS_hCurrentMaterial)->stDiffuse.xG;
-        NoiseLevel = ((GLI_tdstMaterial_*)GLI_BIG_GLOBALS_hCurrentMaterial)->stAmbient.xB;
-        if (DU <= 0.1f)
-            DU = 0.1f;
-        if (DV <= 0.1f)
-            DV = 0.1f;
-
-        pV = pV1;
-        p_stListOfFacesTripled = p_stEIT->d_stListOfFacesTripled;
-        fAddV = 1000.0f * g_ffFrameTime;
-        fAddU = fAddV * ((GLI_tdstMaterial_*)GLI_BIG_GLOBALS_hCurrentMaterial)->fConstantAddU;
-        fAddV = fAddV * ((GLI_tdstMaterial_*)GLI_BIG_GLOBALS_hCurrentMaterial)->fConstantAddV;
-
-        for (i = 0; i < p_stEIT->xNbFaces; i++)
-        {
-            I1[0] = p_stListOfFacesTripled->a3_xIndex[0];
-            I1[1] = p_stListOfFacesTripled->a3_xIndex[1];
-            I1[2] = p_stListOfFacesTripled->a3_xIndex[2];
-            if (pLightMap)
-            {
-                LM1 = pLightMap[I1[0]];
-                LM2 = pLightMap[I1[1]];
-                LM3 = pLightMap[I1[2]];
-                LM1 = (LM1 > 1.0f) ? 1.0f : ((LM1 < 0.0f) ? 0.0f : LM1);
-                LM2 = (LM2 > 1.0f) ? 1.0f : ((LM2 < 0.0f) ? 0.0f : LM2);
-                LM3 = (LM3 > 1.0f) ? 1.0f : ((LM3 < 0.0f) ? 0.0f : LM3);
-            }
-            else
-            {
-                LM1 = LM2 = LM3 = 1.0f;
-            }
-
-            Face.pPoints[0][0] = pV[0][0];
-            Face.pPoints[0][1] = pV[0][1];
-            Face.pPoints[0][2] = pV[0][2];
-            Face.pPoints[1][0] = pV[1][0];
-            Face.pPoints[1][1] = pV[1][1];
-            Face.pPoints[1][2] = pV[1][2];
-            Face.pPoints[2][0] = pV[2][0];
-            Face.pPoints[2][1] = pV[2][1];
-            Face.pPoints[2][2] = pV[2][2];
-            pV += 3;
-
-            if (!pRLIs || pRLIs == NULL)
-            {
-                Face.pColors[0][0] = 1.0f; Face.pColors[0][1] = 1.0f; Face.pColors[0][2] = 1.0f; Face.pColors[0][3] = 0.1f;
-                Face.pColors[1][0] = 1.0f; Face.pColors[1][1] = 1.0f; Face.pColors[1][2] = 1.0f; Face.pColors[1][3] = 0.1f;
-                Face.pColors[2][0] = 1.0f; Face.pColors[2][1] = 1.0f; Face.pColors[2][2] = 1.0f; Face.pColors[2][3] = 0.1f;
-            }
-            else
-            {
-                for (j = 0; j < 3; j++)
-                {
-                    p_SRCColors = &pRLIs[*(unsigned int*)((int)I1 + j * 4)];
-                    if (bAdditive)
-                    {
-                        fr = 1.0f;
-                        fg = fr;
-                        fb = fr;
-                    }
-                    else
-                    {
-                        fr = 0.003921569f * (float)p_SRCColors->xRed;
-                        fg = 0.003921569f * (float)p_SRCColors->xGreen;
-                        fb = 0.003921569f * (float)p_SRCColors->xBlue;
-                        if (fr < 0.0f) fr = 0.0f;
-                        if (fg < 0.0f) fg = 0.0f;
-                        if (fb < 0.0f) fb = 0.0f;
-                        if (fr > 1.0f) fr = 1.0f;
-                        if (fg > 1.0f) fg = 1.0f;
-                        if (fb > 1.0f) fb = 1.0f;
-
-                        LM1 = pLightMap[*(unsigned int*)((int)I1 + j * 4)];
-                        if (LM1 < 0.0f) LM1 = 0.0f;
-                        if (LM1 > 1.0f) LM1 = 1.0f;
-
-                        fr = fr * (fr * LM1);
-                        fg = fg * (fg * LM1);
-                        fb = fb * (fb * LM1);
-                        if (fr < 0.0f) fr = 0.0f;
-                        if (fr > 1.0f) fr = 1.0f;
-                        if (fg < 0.0f) fg = 0.0f;
-                        if (fg > 1.0f) fg = 1.0f;
-                        if (fb < 0.0f) fb = 0.0f;
-                        if (fb > 1.0f) fb = 1.0f;
-                    }
-                    *(float*)((int)&Face.pColors[0][0] + j * 16) = fr;
-                    *(float*)((int)&Face.pColors[0][1] + j * 16) = fg;
-                    *(float*)((int)&Face.pColors[0][2] + j * 16) = fb;
-                    *(float*)((int)&Face.pColors[0][3] + j * 16) = 1.0f + 0.003921569f * (float)p_SRCColors->xAlpha;
-                    if (pVertexTransparency && *pVertexTransparency)
-                        *(float*)((int)&Face.pColors[0][3] + j * 16) *= (*pVertexTransparency)[*(unsigned int*)((int)I1 + j * 4)];
-                    if (*(float*)((int)&Face.pColors[0][3] + j * 16) < 0.0f)
-                        *(float*)((int)&Face.pColors[0][3] + j * 16) = 0.0f;
-                    if (*(float*)((int)&Face.pColors[0][3] + j * 16) > 0.5f)
-                        *(float*)((int)&Face.pColors[0][3] + j * 16) = 1.0f;
-                }
-            }
-
-            Face.pUVs[0][0] = pU1[0][0] + fAddU;
-            Face.pUVs[0][1] = pU1[0][1] + fAddV;
-            Face.pUVs[1][0] = pU1[1][0] + fAddU;
-            Face.pUVs[1][1] = pU1[1][1] + fAddV;
-            Face.pUVs[2][0] = pU1[2][0] + fAddU;
-            Face.pUVs[2][1] = pU1[2][1] + fAddV;
-            pU1 += 3;
-
-            NbGenerated += J_New_CreateParticlesOnFace(&pParticles[NbGenerated * 2], 0xFFF - NbGenerated, &Face, DU, DV, NoiseLevel);
-            p_stListOfFacesTripled++;
-        }
-
-        if (NoScroll)
-        {
-            pParticles = (float (*)[4])(pSpecif->SpriteGenArray + 0x10);
-            *pNbGenSave = NbGenerated;
-        }
-    }
-    else
-    {
-        NbGenerated = *(unsigned int*)pSpecif->SpriteGenArray;
-        pParticles = (float (*)[4])(pSpecif->SpriteGenArray + 0x10);
-    }
-
-    GLI_BIG_GLOBALS_xGlobalAlpha = 1.0f;
-    GLI_SpriteGenMustDisplayEvery = NbGenerated;
-    J_New_DrawSpriteGenList((GLI_tdstMaterial_*)GLI_BIG_GLOBALS_hCurrentMaterial, pParticles, NbGenerated);
-    GLI_vClearCop0Register24();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawSpriteGen.c lines 1015–1318 */
@@ -2263,35 +1923,6 @@ void GLI_vSendEITToSpriteGeneratorNewSimple(GEO_tdstElementIndexedTriangles_* p_
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vSendEITToSpriteGeneratorNew(GEO_tdstElementIndexedTriangles_* p_stEIT, ISI_tdstColor_* pRLIs, float* LightMaps, float (*pV1)[4], float (*pU1)[4], float** pVertexTransparency)
-{
-    float ratio;
-    ISI_tdstColor_* param0;
-    float (*pV)[4];
-    float* LightMapU;
-    float LM3;
-    float LM2;
-    float LM1;
-    unsigned int NoScroll;
-    float Norme;
-    float NoiseLevel;
-    GEO_tdstTripledIndex_* p_stListOfFacesTripled;
-    GLI_SpecificPS2GL_Structure_* pSpecif;
-    unsigned int I3;
-    unsigned int I2;
-    unsigned int I1;
-    unsigned int* pNbGenSave;
-    unsigned int NbGenerated;
-    J_ParticleFace_ Face;
-    float TempParticleList[4096][4];
-    J_ParticleSprite_* ParticleList;
-    float DV;
-    float DU;
-    float fAddV;
-    float fAddU;
-    unsigned int i;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawSpriteGen.c lines 976–1008 */
 /* addr: 0x002bae80  size: 1496 bytes */
@@ -2351,70 +1982,6 @@ void GLI_vSendEITToSpriteGeneratorNew(GEO_tdstElementIndexedTriangles_* p_stEIT,
         (dest)->xY = GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix.stTransformMatrix.stCol_0.xY * (src)->xX + GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix.stTransformMatrix.stCol_1.xY * (src)->xY + GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix.stTransformMatrix.stCol_2.xY * (src)->xZ + GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix.stTransformMatrix.stCol_3.xY; \
         (dest)->xZ = GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix.stTransformMatrix.stCol_0.xZ * (src)->xX + GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix.stTransformMatrix.stCol_1.xZ * (src)->xY + GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix.stTransformMatrix.stCol_2.xZ * (src)->xZ + GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix.stTransformMatrix.stCol_3.xZ; \
     } while (0)
-
-float SpriteGenCalculateNorm(MTH3D_tdstVector_* p_stMin, MTH3D_tdstVector_* p_stMax)
-{
-    float MinNorme;
-    MTH3D_tdstVector_ SourceVect;
-    MTH3D_tdstVector_ DistVect;
-
-    SourceVect = *p_stMin;
-    SPRITEGEN_TRANSFORM_VERTEX(&DistVect, &SourceVect);
-    MinNorme = DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ;
-
-    SourceVect.xX = p_stMax->xX;
-    SourceVect.xY = p_stMax->xY;
-    SourceVect.xZ = p_stMax->xZ;
-    SPRITEGEN_TRANSFORM_VERTEX(&DistVect, &SourceVect);
-    if (DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ < MinNorme)
-        MinNorme = DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ;
-
-    SourceVect.xX = p_stMin->xX;
-    SourceVect.xY = p_stMax->xY;
-    SourceVect.xZ = p_stMax->xZ;
-    SPRITEGEN_TRANSFORM_VERTEX(&DistVect, &SourceVect);
-    if (DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ < MinNorme)
-        MinNorme = DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ;
-
-    SourceVect.xX = p_stMin->xX;
-    SourceVect.xY = p_stMin->xY;
-    SourceVect.xZ = p_stMax->xZ;
-    SPRITEGEN_TRANSFORM_VERTEX(&DistVect, &SourceVect);
-    if (DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ < MinNorme)
-        MinNorme = DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ;
-
-    SourceVect.xX = p_stMax->xX;
-    SourceVect.xY = p_stMin->xY;
-    SourceVect.xZ = p_stMax->xZ;
-    SPRITEGEN_TRANSFORM_VERTEX(&DistVect, &SourceVect);
-    if (DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ < MinNorme)
-        MinNorme = DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ;
-
-    SourceVect.xX = p_stMax->xX;
-    SourceVect.xY = p_stMax->xY;
-    SourceVect.xZ = p_stMin->xZ;
-    SPRITEGEN_TRANSFORM_VERTEX(&DistVect, &SourceVect);
-    if (DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ < MinNorme)
-        MinNorme = DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ;
-
-    SourceVect.xX = p_stMax->xX;
-    SourceVect.xY = p_stMin->xY;
-    SourceVect.xZ = p_stMin->xZ;
-    SPRITEGEN_TRANSFORM_VERTEX(&DistVect, &SourceVect);
-    if (DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ < MinNorme)
-        MinNorme = DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ;
-
-    SourceVect.xX = p_stMin->xX;
-    SourceVect.xY = p_stMax->xY;
-    SourceVect.xZ = p_stMin->xZ;
-    SPRITEGEN_TRANSFORM_VERTEX(&DistVect, &SourceVect);
-    if (DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ < MinNorme)
-        MinNorme = DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ;
-
-    GLI_g_CurrentSpriteGenIndex = 0;
-    GLI_g_SpriteGenNorme = 10000;
-    return __builtin_sqrt(MinNorme);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawSpriteGen.c lines 774–954 */
 /* addr: 0x002bb460  size: 1524 bytes */
@@ -2574,6 +2141,776 @@ inline void GLI_vPrefetch(void* pPrefetch)
 {
     asm { pref 0x0, 0x0(pPrefetch) }
 }
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawSpriteGen.c lines 602–770 */
+/* addr: 0x002bbab0  size: 1308 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 602
+ *   +0x0034 -> line 607
+ *   +0x0038 -> line 602
+ *   +0x0048 -> line 617
+ *   +0x0054 -> line 619
+ *   +0x0084 -> line 622
+ *   +0x00a4 -> line 623
+ *   +0x00b0 -> line 625
+ *   +0x00bc -> line 626
+ *   +0x00c4 -> line 631
+ *   +0x010c -> line 633
+ *   +0x0110 -> line 632
+ *   +0x0114 -> line 633
+ *   +0x0118 -> line 634
+ *   +0x0124 -> line 635
+ *   +0x0130 -> line 636
+ *   +0x013c -> line 637
+ *   +0x0150 -> line 639
+ *   +0x0194 -> line 640
+ *   +0x01d4 -> line 643
+ *   +0x023c -> line 649
+ *   +0x0240 -> line 650
+ *   +0x0244 -> line 653
+ *   +0x0248 -> line 643
+ *   +0x024c -> line 649
+ *   +0x0254 -> line 643
+ *   +0x0258 -> line 649
+ *   +0x025c -> line 653
+ *   +0x0278 -> line 654
+ *   +0x0298 -> line 657
+ *   +0x02b4 -> line 671
+ *   +0x02b8 -> line 674
+ *   +0x02bc -> line 671
+ *   +0x02c0 -> line 678
+ *   +0x02c4 -> line 681
+ *   +0x02c8 -> line 679
+ *   +0x02cc -> line 675
+ *   +0x02d0 -> line 676
+ *   +0x02d4 -> line 681
+ *   +0x02e4 -> line 683
+ *   +0x02ec -> line 684
+ *   +0x0300 -> line 686
+ *   +0x030c -> line 689
+ *   +0x0314 -> line 688
+ *   +0x0318 -> line 689
+ *   +0x0320 -> line 690
+ *   +0x0330 -> line 691
+ *   +0x0334 -> line 692
+ *   +0x0338 -> line 693
+ *   +0x033c -> line 694
+ *   +0x0340 -> line 698
+ *   +0x0350 -> line 703
+ *   +0x0360 -> line 705
+ *   +0x0398 -> line 706
+ *   +0x03a0 -> line 705
+ *   +0x03a4 -> line 709
+ *   +0x03a8 -> line 706
+ *   +0x03ac -> line 705
+ *   +0x03b0 -> line 706
+ *   +0x03bc -> line 709
+ *   +0x03d0 -> line 726
+ *   +0x03d4 -> line 712
+ *   +0x03d8 -> line 711
+ *   +0x03dc -> line 713
+ *   +0x03e0 -> line 712
+ *   +0x03e4 -> line 713
+ *   +0x03e8 -> line 714
+ *   +0x03ec -> line 715
+ *   +0x03f0 -> line 716
+ *   +0x03f4 -> line 717
+ *   +0x03f8 -> line 718
+ *   +0x03fc -> line 719
+ *   +0x0400 -> line 720
+ *   +0x0404 -> line 721
+ *   +0x0408 -> line 722
+ *   +0x040c -> line 724
+ *   +0x0410 -> line 730
+ *   +0x0414 -> line 731
+ *   +0x0418 -> line 736
+ *   +0x041c -> line 737
+ *   +0x0420 -> line 738
+ *   +0x0424 -> line 739
+ *   +0x0428 -> line 742
+ *   +0x042c -> line 743
+ *   +0x0430 -> line 744
+ *   +0x0434 -> line 745
+ *   +0x0438 -> line 746
+ *   +0x043c -> line 747
+ *   +0x0440 -> line 750
+ *   +0x0444 -> line 751
+ *   +0x0448 -> line 752
+ *   +0x044c -> line 753
+ *   +0x0450 -> line 754
+ *   +0x0454 -> line 755
+ *   +0x0458 -> line 761
+ *   +0x045c -> line 762
+ *   +0x0460 -> line 764
+ *   +0x0470 -> line 765
+ *   +0x0488 -> line 768
+ *   +0x04a0 -> line 769
+ *   +0x04a4 -> line 768
+ *   +0x04ac -> line 769
+ *   +0x04b0 -> line 768
+ *   +0x04d4 -> line 769
+ *   +0x04dc -> line 770
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_v_CalculateVectorsFor3DSpriteGenVU0(MAT_tdstTransformation_* pInvertedCam, J_ParticleSprite_* p, float sx, float sy);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawSpriteGen.c lines 456–591 */
+/* addr: 0x002bbfd0  size: 1220 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 456
+ *   +0x0010 -> line 460
+ *   +0x0014 -> line 456
+ *   +0x0058 -> line 463
+ *   +0x0060 -> line 467
+ *   +0x006c -> line 468
+ *   +0x0070 -> line 471
+ *   +0x0078 -> line 467
+ *   +0x007c -> line 471
+ *   +0x0098 -> line 472
+ *   +0x00bc -> line 474
+ *   +0x00d8 -> line 479
+ *   +0x014c -> line 481
+ *   +0x0150 -> line 479
+ *   +0x01a4 -> line 481
+ *   +0x01ac -> line 483
+ *   +0x01b4 -> line 485
+ *   +0x01c0 -> line 486
+ *   +0x01c8 -> line 504
+ *   +0x01cc -> line 508
+ *   +0x01d0 -> line 505
+ *   +0x01d4 -> line 500
+ *   +0x01d8 -> line 506
+ *   +0x01dc -> line 508
+ *   +0x01e8 -> line 510
+ *   +0x01f0 -> line 511
+ *   +0x0204 -> line 513
+ *   +0x020c -> line 516
+ *   +0x0218 -> line 515
+ *   +0x021c -> line 516
+ *   +0x0224 -> line 517
+ *   +0x0234 -> line 518
+ *   +0x023c -> line 517
+ *   +0x0240 -> line 520
+ *   +0x0244 -> line 518
+ *   +0x024c -> line 519
+ *   +0x0254 -> line 518
+ *   +0x0258 -> line 521
+ *   +0x025c -> line 519
+ *   +0x0268 -> line 522
+ *   +0x026c -> line 523
+ *   +0x0270 -> line 525
+ *   +0x0280 -> line 529
+ *   +0x0284 -> line 540
+ *   +0x0288 -> line 530
+ *   +0x028c -> line 527
+ *   +0x0290 -> line 531
+ *   +0x0294 -> line 533
+ *   +0x0298 -> line 544
+ *   +0x029c -> line 533
+ *   +0x02b4 -> line 534
+ *   +0x02b8 -> line 545
+ *   +0x02bc -> line 546
+ *   +0x02c0 -> line 534
+ *   +0x02d8 -> line 535
+ *   +0x02dc -> line 550
+ *   +0x02e0 -> line 556
+ *   +0x02e4 -> line 535
+ *   +0x02fc -> line 536
+ *   +0x0300 -> line 574
+ *   +0x0304 -> line 551
+ *   +0x0308 -> line 536
+ *   +0x0320 -> line 539
+ *   +0x0324 -> line 552
+ *   +0x0328 -> line 539
+ *   +0x032c -> line 537
+ *   +0x0330 -> line 539
+ *   +0x033c -> line 557
+ *   +0x0340 -> line 539
+ *   +0x0344 -> line 540
+ *   +0x0350 -> line 575
+ *   +0x0354 -> line 540
+ *   +0x0360 -> line 544
+ *   +0x0364 -> line 541
+ *   +0x0368 -> line 545
+ *   +0x036c -> line 546
+ *   +0x0370 -> line 547
+ *   +0x0374 -> line 558
+ *   +0x0378 -> line 550
+ *   +0x037c -> line 551
+ *   +0x0380 -> line 552
+ *   +0x0384 -> line 553
+ *   +0x0388 -> line 576
+ *   +0x038c -> line 556
+ *   +0x0390 -> line 557
+ *   +0x0394 -> line 558
+ *   +0x0398 -> line 559
+ *   +0x039c -> line 562
+ *   +0x03a0 -> line 563
+ *   +0x03a4 -> line 564
+ *   +0x03a8 -> line 565
+ *   +0x03ac -> line 568
+ *   +0x03b0 -> line 569
+ *   +0x03b4 -> line 570
+ *   +0x03b8 -> line 571
+ *   +0x03bc -> line 574
+ *   +0x03c0 -> line 575
+ *   +0x03c4 -> line 576
+ *   +0x03c8 -> line 577
+ *   +0x03cc -> line 578
+ *   +0x03d0 -> line 580
+ *   +0x03e4 -> line 584
+ *   +0x03e8 -> line 582
+ *   +0x03fc -> line 583
+ *   +0x0400 -> line 584
+ *   +0x0410 -> line 585
+ *   +0x0420 -> line 588
+ *   +0x0438 -> line 589
+ *   +0x043c -> line 588
+ *   +0x0444 -> line 589
+ *   +0x0448 -> line 588
+ *   +0x046c -> line 589
+ *   +0x0474 -> line 591
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_v_CalculateVectorsFor3DSpriteGen(MAT_tdstTransformation_* param0, J_ParticleSprite_* p, float sx, float sy);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawSpriteGen.c lines 423–449 */
+/* addr: 0x002bc4a0  size: 452 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 423
+ *   +0x0004 -> line 428
+ *   +0x0008 -> line 423
+ *   +0x000c -> line 430
+ *   +0x0010 -> line 423
+ *   +0x0020 -> line 430
+ *   +0x0028 -> line 428
+ *   +0x0030 -> line 430
+ *   +0x0034 -> line 426
+ *   +0x0038 -> line 430
+ *   +0x0040 -> line 434
+ *   +0x0048 -> line 438
+ *   +0x0050 -> line 434
+ *   +0x0054 -> line 435
+ *   +0x0060 -> line 438
+ *   +0x0068 -> line 436
+ *   +0x0074 -> line 438
+ *   +0x00b0 -> line 439
+ *   +0x0134 -> line 442
+ *   +0x013c -> line 443
+ *   +0x0144 -> line 442
+ *   +0x0148 -> line 444
+ *   +0x0150 -> line 443
+ *   +0x0154 -> line 446
+ *   +0x015c -> line 444
+ *   +0x0160 -> line 447
+ *   +0x0168 -> line 446
+ *   +0x016c -> line 448
+ *   +0x0174 -> line 447
+ *   +0x0178 -> line 442
+ *   +0x0180 -> line 443
+ *   +0x0188 -> line 444
+ *   +0x0190 -> line 446
+ *   +0x0198 -> line 447
+ *   +0x01a0 -> line 448
+ *   +0x01ac -> line 449
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+/* sqrt.s and the R5900 accumulator ops have no C form under MWCC; only
+ * those instructions are asm. */
+inline float MTH_M_xSqrNorm(float _xX, float _xY, float _xZ)
+{
+    float _xResult;
+    asm { mula.s _xX, _xX }
+    asm { madda.s _xY, _xY }
+    asm { madd.s _xResult, _xZ, _xZ }
+    return _xResult;
+}
+inline float MTH_M_xSqrt(float _xA)
+{
+    float _xResult;
+    asm { sqrt.s _xResult, _xA }
+    return _xResult;
+}
+inline float MTH_M_xMulSubMul(float _xA, float _xB, float _xC, float _xD)
+{
+    float _xResult;
+    asm { mula.s _xA, _xB }
+    asm { msub.s _xResult, _xC, _xD }
+    return _xResult;
+}
+#define MTH3D_M_vCrossProductVector(_d, _a, _b)                                    \
+    {                                                                               \
+        (_d)->xX = MTH_M_xMulSubMul((_a)->xY, (_b)->xZ, (_a)->xZ, (_b)->xY);        \
+        (_d)->xY = MTH_M_xMulSubMul((_a)->xZ, (_b)->xX, (_a)->xX, (_b)->xZ);        \
+        (_d)->xZ = MTH_M_xMulSubMul((_a)->xX, (_b)->xY, (_a)->xY, (_b)->xX);        \
+    }
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawSpriteGen.c lines 352–419 */
+/* addr: 0x002bc670  size: 196 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 352
+ *   +0x0004 -> line 357
+ *   +0x0008 -> line 362
+ *   +0x000c -> line 357
+ *   +0x0010 -> line 362
+ *   +0x001c -> line 355
+ *   +0x0020 -> line 356
+ *   +0x0024 -> line 362
+ *   +0x0028 -> line 358
+ *   +0x002c -> line 362
+ *   +0x0034 -> line 364
+ *   +0x0038 -> line 365
+ *   +0x003c -> line 366
+ *   +0x0040 -> line 367
+ *   +0x0044 -> line 368
+ *   +0x0048 -> line 370
+ *   +0x004c -> line 372
+ *   +0x0050 -> line 373
+ *   +0x0054 -> line 374
+ *   +0x0058 -> line 375
+ *   +0x005c -> line 377
+ *   +0x0060 -> line 378
+ *   +0x0064 -> line 379
+ *   +0x0068 -> line 381
+ *   +0x006c -> line 382
+ *   +0x0070 -> line 383
+ *   +0x0074 -> line 384
+ *   +0x0078 -> line 385
+ *   +0x007c -> line 386
+ *   +0x0080 -> line 387
+ *   +0x0084 -> line 388
+ *   +0x0088 -> line 389
+ *   +0x008c -> line 390
+ *   +0x0090 -> line 391
+ *   +0x0094 -> line 395
+ *   +0x009c -> line 396
+ *   +0x00a0 -> line 397
+ *   +0x00a4 -> line 400
+ *   +0x00ac -> line 401
+ *   +0x00b0 -> line 402
+ *   +0x00b4 -> line 405
+ *   +0x00b8 -> line 406
+ *   +0x00bc -> line 419
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawSpriteGen.c lines 344–347 */
+/* addr: 0x002bc740  size: 20 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 344
+ *   +0x0008 -> line 345
+ *   +0x000c -> line 347
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void GLI_v_CalculateInverseCamMat(MAT_tdstTransformation_* pInvertedCam, GLD_tdstViewportAttributes_* _p_stViewport)
+{
+    GLI_tdstCamera_* p_stCam;
+
+    p_stCam = *(GLI_tdstCamera_**)_p_stViewport->p_vSpecificToXD;
+    GLI_g_p_stCurrentCam = (int)p_stCam;
+    MAT_fn_vInvert(pInvertedCam, (MAT_tdstTransformation_* )((char*)p_stCam + 0x10));
+}
+
+void GLI_v_CalculateVectorsFor3DSpriteGenVU0(MAT_tdstTransformation_* pInvertedCam, J_ParticleSprite_* p, float sx, float sy)
+{
+    float V1[4];
+    float* pX;
+    float* pMat;
+    float* pV1;
+    float* pDirection;
+    float* pY;
+
+    V1[0] = 0.0f;
+    V1[1] = 0.0f;
+    V1[2] = -1.0f;
+    pDirection = p->FaceNormal;
+    pMat = (float*)((char*)pInvertedCam + 0x10);
+    V1[3] = 0.0f;
+    pX = GLI_g_stXVecta;
+    pV1 = V1;
+    pY = GLI_g_stYVecta;
+
+    asm {
+        lqc2 $vf8, 0x0(pV1)
+        lqc2 $vf4, 0x0(pMat)
+        lqc2 $vf5, 0x10(pMat)
+        lqc2 $vf6, 0x20(pMat)
+        lqc2 $vf7, 0x30(pMat)
+        lqc2 $vf10, 0x0(pDirection)
+        vmulax.xyzw $ACC, $vf4, $vf8x
+        vmadday.xyzw $ACC, $vf5, $vf8y
+        vmaddaz.xyzw $ACC, $vf6, $vf8z
+        vmaddw.xyzw $vf9, $vf7, $vf8w
+        vopmula.xyz $ACC, $vf10, $vf9
+        vopmsub.xyz $vf13, $vf9, $vf10
+        vsub.w $vf13, $vf13, $vf13
+        vmul.xyz $vf5, $vf13, $vf13
+        vaddy.x $vf5, $vf5, $vf5y
+        vaddz.x $vf5, $vf5, $vf5z
+        vsqrt $Q, $vf5x
+        vwaitq
+        vaddq.x $vf5, $vf0, $Q
+        vdiv $Q, $vf0w, $vf5x
+        vsub.xyzw $vf6, $vf0, $vf0
+        vwaitq
+        vmulq.xyz $vf6, $vf13, $Q
+        sqc2 $vf6, 0x0(pX)
+        mfc1 $t0, sx
+        nop
+        qmtc2.ni $t0, $vf8
+        vmulx.xyzw $vf7, $vf6, $vf8x
+        mfc1 $t0, sy
+        nop
+        qmtc2.ni $t0, $vf9
+        vmulx.xyzw $vf2, $vf10, $vf9x
+        sqc2 $vf7, 0x0(pX)
+        sqc2 $vf2, 0x0(pY)
+    }
+}
+
+void GLI_v_CalculateVectorsFor3DSpriteGen(MAT_tdstTransformation_* param0, J_ParticleSprite_* p, float sx, float sy)
+{
+    float xNorm;
+    MTH3D_tdstVector_ V1;
+    MTH3D_tdstVector_ V2;
+    MTH3D_tdstVector_ V3;
+
+    V1.xX = 0.0f;
+    V1.xY = 0.0f;
+    V1.xZ = -1.0f;
+    MAT_fn_vApplyOnVector(&V2, param0, &V1);
+
+    GLI_g_stYVect.xX = p->FaceNormal[0];
+    GLI_g_stYVect.xY = p->FaceNormal[1];
+    GLI_g_stYVect.xZ = p->FaceNormal[2];
+
+    MTH3D_M_vCrossProductVector(&V3, &GLI_g_stYVect, &V2);
+    xNorm = MTH_M_xSqrt(MTH_M_xSqrNorm(V3.xX, V3.xY, V3.xZ));
+    if (xNorm != 0.0f)
+    {
+        xNorm = 1.0f / xNorm;
+        GLI_g_stXVect.xX = xNorm * V3.xX; GLI_g_stXVect.xY = xNorm * V3.xY; GLI_g_stXVect.xZ = xNorm * V3.xZ;
+    }
+    else
+    {
+        GLI_g_stXVect = V3;
+    }
+
+    GLI_g_stXVect.xX *= sx;
+    GLI_g_stXVect.xY *= sx;
+    GLI_g_stXVect.xZ *= sx;
+
+    GLI_g_stYVect.xX *= sy;
+    GLI_g_stYVect.xY *= sy;
+    GLI_g_stYVect.xZ *= sy;
+}
+
+/* retail keeps pParticleList in a 16-byte aligned stack slot */
+void J_Draw3DSpriteGenList(GLI_tdstMaterial_* pMat, J_ParticleSprite_* pParticleList __attribute__((aligned(16))), unsigned int NbSprites)
+{
+    MAT_tdstTransformation_ InvertedCam;
+    float M[4][4];
+    MAT_tdstTransformation_ stMat;
+    unsigned int i;
+    float sx;
+    float sy;
+    J_ParticleSprite_* p;
+    unsigned int NbSpritesReal;
+    float (*pUV)[4];
+    float (*pColor)[4];
+    float (*pV)[4];
+    float PosX;
+    float PosY;
+    float PosZ;
+    float SumX;
+    float SumY;
+    float SumZ;
+    float DifX;
+    float DifY;
+    float DifZ;
+    unsigned int FirstCheck;
+    unsigned int j;
+
+    NbSpritesReal = 0;
+    if (NbSprites == 0)
+        return;
+
+    sx = 10.0f * pMat->stAmbient.xR;
+    sy = 10.0f * pMat->stAmbient.xG;
+    if (sx <= 0.0f)
+        sx = 0.01f;
+    if (sy <= 0.0f)
+        sy = 0.01f;
+
+    MAT_fn_vInvert(&InvertedCam, (GLI_g_p_stCurrentCam = *(int*)((GLD_tdstViewportAttributes_*)g_p_stCurrentViewport)->p_vSpecificToXD) + 0x10);
+    GLI_g_p_stCurrentCam = *(int*)((GLD_tdstViewportAttributes_*)g_p_stCurrentViewport)->p_vSpecificToXD;
+    if (g_UseFullMatrix)
+    {
+        GLI_vTransformToGLMatrix(M, &GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix);
+        MAT_fn_vInvert(&stMat);
+    }
+    else
+    {
+        GLI_vTransformToGLMatrix(M, GLI_g_p_stCurrentCam + 0x20);
+        MAT_fn_vInvert(&stMat, GLI_g_p_stCurrentCam + 0x10);
+    }
+    VAC_Acquire(GLI_g_hVAContainer, M, pMat);
+
+    GLI_g_stXVect.xX = stMat.stTransformMatrix.stCol_0.xX * sx;
+    GLI_g_stXVect.xY = stMat.stTransformMatrix.stCol_0.xY * sx;
+    GLI_g_stXVect.xZ = stMat.stTransformMatrix.stCol_0.xZ * sx;
+    GLI_g_stYVect.xX = stMat.stTransformMatrix.stCol_1.xX * sy;
+    GLI_g_stYVect.xY = stMat.stTransformMatrix.stCol_1.xY * sy;
+    GLI_g_stYVect.xZ = stMat.stTransformMatrix.stCol_1.xZ * sy;
+
+    NbSprites = (NbSprites < VAC_g_NbSpritesLefts) ? NbSprites : VAC_g_NbSpritesLefts;
+    if (NbSprites == 0)
+    {
+        VAC_UnAcquireAndDraw(GLI_g_hVAContainer, 0);
+        return;
+    }
+
+    FirstCheck = 1;
+    pUV = (float (*)[4])VAC_g_CurrentpT;
+    pColor = (float (*)[4])VAC_g_CurrentpC;
+    pV = (float (*)[4])VAC_g_CurrentpV;
+    for (i = 0; i < NbSprites; i++)
+    {
+        p = &pParticleList[i];
+        GLI_vPrefetch(&pParticleList[i + 4]);
+        if (FirstCheck)
+        {
+            FirstCheck = 0;
+            GLI_v_CalculateVectorsFor3DSpriteGen(&InvertedCam, p, sx, sy);
+            SumX = GLI_g_stXVect.xX + GLI_g_stYVect.xX;
+            SumY = GLI_g_stXVect.xY + GLI_g_stYVect.xY;
+            SumZ = GLI_g_stXVect.xZ + GLI_g_stYVect.xZ;
+            DifX = GLI_g_stXVect.xX - GLI_g_stYVect.xX;
+            DifY = GLI_g_stXVect.xY - GLI_g_stYVect.xY;
+            DifZ = GLI_g_stXVect.xZ - GLI_g_stYVect.xZ;
+        }
+
+        if (p->Flags != 2)
+        {
+            NbSpritesReal++;
+            PosX = p->Pos[0];
+            PosY = p->Pos[1];
+            PosZ = p->Pos[2];
+
+            pColor[0][0] = pColor[1][0] = pColor[2][0] = pColor[3][0] = pColor[4][0] = pColor[5][0] = p->Color[0];
+            pColor[0][1] = pColor[1][1] = pColor[2][1] = pColor[3][1] = pColor[4][1] = pColor[5][1] = p->Color[1];
+            pColor[0][2] = pColor[1][2] = pColor[2][2] = pColor[3][2] = pColor[4][2] = pColor[5][2] = p->Color[2];
+            pColor[0][3] = pColor[1][3] = pColor[2][3] = pColor[3][3] = pColor[4][3] = pColor[5][3] = p->Color[3];
+            pColor += 6;
+
+            pUV[0][0] = pUV[0][1] = pUV[1][1] = pUV[3][0] = pUV[3][1] = pUV[5][0] = 0.0f;
+            pUV[1][0] = pUV[2][0] = pUV[2][1] = pUV[4][0] = pUV[4][1] = pUV[5][1] = 1.0f;
+            pUV += 6;
+
+            pV[0][0] = PosX - SumX;
+            pV[0][1] = PosY - SumY;
+            pV[0][2] = PosZ - SumZ;
+            pV[0][3] = 1.0f;
+
+            pV[1][0] = PosX + DifX;
+            pV[1][1] = PosY + DifY;
+            pV[1][2] = PosZ + DifZ;
+            pV[1][3] = 1.0f;
+
+            pV[2][0] = PosX + SumX;
+            pV[2][1] = PosY + SumY;
+            pV[2][2] = PosZ + SumZ;
+            pV[2][3] = 1.0f;
+
+            pV[3][0] = PosX - SumX;
+            pV[3][1] = PosY - SumY;
+            pV[3][2] = PosZ - SumZ;
+            pV[3][3] = 1.0f;
+
+            pV[4][0] = PosX + SumX;
+            pV[4][1] = PosY + SumY;
+            pV[4][2] = PosZ + SumZ;
+            pV[4][3] = 1.0f;
+
+            pV[5][0] = PosX - DifX;
+            pV[5][1] = PosY - DifY;
+            pV[5][2] = PosZ - DifZ;
+            pV[5][3] = 1.0f;
+            pV += 6;
+        }
+
+        for (j = i + 1; j <= i + 1; j++)
+        {
+            if (pParticleList[j].bFirst)
+                FirstCheck = 1;
+        }
+    }
+
+    VAC_g_NbSpritesLefts -= NbSpritesReal;
+    VAC_g_CurrentNbSprites += NbSpritesReal;
+    VAC_g_CurrentpV += NbSpritesReal * 96;
+    VAC_g_CurrentpC += NbSpritesReal * 96;
+    VAC_g_CurrentpT += NbSpritesReal * 96;
+    VAC_UnAcquireAndDraw(GLI_g_hVAContainer, 0);
+}
+
+void J_Draw3DSpriteGenListAnimated(GLI_tdstMaterial_* pMat, J_ParticleSprite_* pParticleList __attribute__((aligned(16))), unsigned int NbSprites __attribute__((aligned(16))))
+{
+    MAT_tdstTransformation_ InvertedCam;
+    float M[4][4];
+    unsigned int i;
+    float sx;
+    float sy;
+    unsigned int NbSpritesReal;
+    int CurrentSprite;
+    float u0;
+    float v0;
+    float du;
+    float dv;
+    unsigned int AnimationData;
+    unsigned int NbColumns;
+    unsigned int NbLines;
+    unsigned int NbSpriteMax __attribute__((aligned(16)));
+    float (*pUV)[4];
+    float (*pColor)[4];
+    float (*pV)[4];
+    J_ParticleSprite_* p;
+    unsigned int FirstCheck __attribute__((aligned(16)));
+    int CurrentLine;
+    float* pX;
+    float* pY;
+    float* pC;
+
+    NbSpritesReal = 0;
+    if (NbSprites == 0)
+        return;
+
+    GLI_g_p_stCurrentCam = *(int*)((GLD_tdstViewportAttributes_*)g_p_stCurrentViewport)->p_vSpecificToXD;
+    GLI_vTransformToGLMatrix(M, &GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix.stTransformMatrix);
+    VAC_Acquire(GLI_g_hVAContainer, M, pMat);
+
+    NbSprites = (NbSprites < VAC_g_NbSpritesLefts) ? NbSprites : VAC_g_NbSpritesLefts;
+    if (NbSprites == 0)
+    {
+        VAC_UnAcquireAndDraw(GLI_g_hVAContainer, 0);
+        return;
+    }
+
+    AnimationData = (unsigned int)pMat->stDiffuse.xB;
+    NbColumns = AnimationData & 0xFF;
+    NbLines = (AnimationData & 0xFF00) >> 8;
+    NbSpriteMax = (AnimationData & 0xFF0000) >> 16;
+    if (!NbColumns)
+        NbColumns = 1;
+    if (!NbLines)
+        NbLines = 1;
+    if (!NbSpriteMax)
+        NbSpriteMax = 1;
+    du = 1.0f / (float)NbColumns;
+    dv = 1.0f / (float)NbLines;
+
+    CurrentSprite = (unsigned int)(0.8f * (25.0f * g_ffFrameTime)) % NbSpriteMax;
+
+    sx = 10.0f * pMat->stAmbient.xR;
+    sy = 10.0f * pMat->stAmbient.xG;
+    if (sx <= 0.0f)
+        sx = 0.01f;
+    if (sy <= 0.0f)
+        sy = 0.01f;
+
+    MAT_fn_vInvert(&InvertedCam, (GLI_g_p_stCurrentCam = *(int*)((GLD_tdstViewportAttributes_*)g_p_stCurrentViewport)->p_vSpecificToXD) + 0x10);
+
+    FirstCheck = 1;
+    pUV = (float (*)[4])VAC_g_CurrentpT;
+    pColor = (float (*)[4])VAC_g_CurrentpC;
+    pV = (float (*)[4])VAC_g_CurrentpV;
+    du = -du;
+    dv = -dv;
+    for (i = 0; i < NbSprites; i++)
+    {
+        p = &pParticleList[i];
+        GLI_vPrefetch(&pParticleList[i + 4]);
+        if (FirstCheck)
+        {
+            FirstCheck = 0;
+            GLI_v_CalculateVectorsFor3DSpriteGenVU0(&InvertedCam, p, sx, sy);
+            pX = GLI_g_stXVecta;
+            pY = GLI_g_stYVecta;
+            asm {
+                lqc2 $vf15, 0x0(pX)
+                lqc2 $vf16, 0x0(pY)
+                vsub.xyzw $vf4, $vf15, $vf16
+                vadd.xyzw $vf5, $vf15, $vf16
+            }
+        }
+
+        if (p->Flags != 2)
+        {
+            NbSpritesReal++;
+            CurrentLine = CurrentSprite / NbColumns;
+            u0 = -(du * (float)(unsigned int)(CurrentSprite - CurrentLine * NbColumns));
+            v0 = 1.0f + (float)CurrentLine * dv;
+            CurrentSprite++;
+            if (CurrentSprite == NbSpriteMax)
+                CurrentSprite = 0;
+
+            pUV[0][0] = u0;
+            pUV[0][1] = v0 + dv;
+            pUV[1][0] = u0 - du;
+            pUV[1][1] = v0 + dv;
+            pUV[2][0] = u0 - du;
+            pUV[2][1] = v0;
+            pUV[3][0] = u0;
+            pUV[3][1] = v0 + dv;
+            pUV[4][0] = u0 - du;
+            pUV[4][1] = v0;
+            pUV[5][0] = u0;
+            pUV[5][1] = v0;
+            pUV += 6;
+
+            pC = p->Color;
+            asm {
+                lqc2 $vf1, 0x0(p)
+                lqc2 $vf10, 0x0(pC)
+                vsub.xyzw $vf6, $vf1, $vf5
+                vadd.xyzw $vf7, $vf1, $vf4
+                vadd.xyzw $vf8, $vf1, $vf5
+                vsub.xyzw $vf9, $vf1, $vf4
+                sqc2 $vf10, 0x0(pColor)
+                sqc2 $vf10, 0x10(pColor)
+                sqc2 $vf10, 0x20(pColor)
+                sqc2 $vf10, 0x30(pColor)
+                sqc2 $vf10, 0x40(pColor)
+                sqc2 $vf10, 0x50(pColor)
+                sqc2 $vf6, 0x0(pV)
+                sqc2 $vf7, 0x10(pV)
+                sqc2 $vf8, 0x20(pV)
+                sqc2 $vf6, 0x30(pV)
+                sqc2 $vf8, 0x40(pV)
+                sqc2 $vf9, 0x50(pV)
+            }
+            pColor += 6;
+            pV += 6;
+        }
+
+        if (p[1].bFirst)
+            FirstCheck = 1;
+    }
+
+    VAC_g_NbSpritesLefts -= NbSpritesReal;
+    VAC_g_CurrentNbSprites += NbSpritesReal;
+    VAC_g_CurrentpV += NbSpritesReal * 96;
+    VAC_g_CurrentpC += NbSpritesReal * 96;
+    VAC_g_CurrentpT += NbSpritesReal * 96;
+    VAC_UnAcquireAndDraw(GLI_g_hVAContainer, 0);
+}
+
 void J_DrawSpriteGenListAnimated(GLI_tdstMaterial_* pMat, J_ParticleSprite_* pParticleList, unsigned int NbSprites)
 {
     MAT_tdstTransformation_ InvertedCam;
@@ -2746,417 +3083,312 @@ void J_DrawSpriteGenListAnimated(GLI_tdstMaterial_* pMat, J_ParticleSprite_* pPa
     VAC_UnAcquireAndDraw(GLI_g_hVAContainer, 0);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawSpriteGen.c lines 602–770 */
-/* addr: 0x002bbab0  size: 1308 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 602
- *   +0x0034 -> line 607
- *   +0x0038 -> line 602
- *   +0x0048 -> line 617
- *   +0x0054 -> line 619
- *   +0x0084 -> line 622
- *   +0x00a4 -> line 623
- *   +0x00b0 -> line 625
- *   +0x00bc -> line 626
- *   +0x00c4 -> line 631
- *   +0x010c -> line 633
- *   +0x0110 -> line 632
- *   +0x0114 -> line 633
- *   +0x0118 -> line 634
- *   +0x0124 -> line 635
- *   +0x0130 -> line 636
- *   +0x013c -> line 637
- *   +0x0150 -> line 639
- *   +0x0194 -> line 640
- *   +0x01d4 -> line 643
- *   +0x023c -> line 649
- *   +0x0240 -> line 650
- *   +0x0244 -> line 653
- *   +0x0248 -> line 643
- *   +0x024c -> line 649
- *   +0x0254 -> line 643
- *   +0x0258 -> line 649
- *   +0x025c -> line 653
- *   +0x0278 -> line 654
- *   +0x0298 -> line 657
- *   +0x02b4 -> line 671
- *   +0x02b8 -> line 674
- *   +0x02bc -> line 671
- *   +0x02c0 -> line 678
- *   +0x02c4 -> line 681
- *   +0x02c8 -> line 679
- *   +0x02cc -> line 675
- *   +0x02d0 -> line 676
- *   +0x02d4 -> line 681
- *   +0x02e4 -> line 683
- *   +0x02ec -> line 684
- *   +0x0300 -> line 686
- *   +0x030c -> line 689
- *   +0x0314 -> line 688
- *   +0x0318 -> line 689
- *   +0x0320 -> line 690
- *   +0x0330 -> line 691
- *   +0x0334 -> line 692
- *   +0x0338 -> line 693
- *   +0x033c -> line 694
- *   +0x0340 -> line 698
- *   +0x0350 -> line 703
- *   +0x0360 -> line 705
- *   +0x0398 -> line 706
- *   +0x03a0 -> line 705
- *   +0x03a4 -> line 709
- *   +0x03a8 -> line 706
- *   +0x03ac -> line 705
- *   +0x03b0 -> line 706
- *   +0x03bc -> line 709
- *   +0x03d0 -> line 726
- *   +0x03d4 -> line 712
- *   +0x03d8 -> line 711
- *   +0x03dc -> line 713
- *   +0x03e0 -> line 712
- *   +0x03e4 -> line 713
- *   +0x03e8 -> line 714
- *   +0x03ec -> line 715
- *   +0x03f0 -> line 716
- *   +0x03f4 -> line 717
- *   +0x03f8 -> line 718
- *   +0x03fc -> line 719
- *   +0x0400 -> line 720
- *   +0x0404 -> line 721
- *   +0x0408 -> line 722
- *   +0x040c -> line 724
- *   +0x0410 -> line 730
- *   +0x0414 -> line 731
- *   +0x0418 -> line 736
- *   +0x041c -> line 737
- *   +0x0420 -> line 738
- *   +0x0424 -> line 739
- *   +0x0428 -> line 742
- *   +0x042c -> line 743
- *   +0x0430 -> line 744
- *   +0x0434 -> line 745
- *   +0x0438 -> line 746
- *   +0x043c -> line 747
- *   +0x0440 -> line 750
- *   +0x0444 -> line 751
- *   +0x0448 -> line 752
- *   +0x044c -> line 753
- *   +0x0450 -> line 754
- *   +0x0454 -> line 755
- *   +0x0458 -> line 761
- *   +0x045c -> line 762
- *   +0x0460 -> line 764
- *   +0x0470 -> line 765
- *   +0x0488 -> line 768
- *   +0x04a0 -> line 769
- *   +0x04a4 -> line 768
- *   +0x04ac -> line 769
- *   +0x04b0 -> line 768
- *   +0x04d4 -> line 769
- *   +0x04dc -> line 770
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GLI_v_CalculateVectorsFor3DSpriteGenVU0(MAT_tdstTransformation_* pInvertedCam, J_ParticleSprite_* p, float sx, float sy);
-void J_Draw3DSpriteGenListAnimated(GLI_tdstMaterial_* pMat, J_ParticleSprite_* pParticleList __attribute__((aligned(16))), unsigned int NbSprites __attribute__((aligned(16))))
+float SpriteGenCalculateNorm(MTH3D_tdstVector_* p_stMin, MTH3D_tdstVector_* p_stMax)
 {
-    MAT_tdstTransformation_ InvertedCam;
-    float M[4][4];
-    unsigned int i;
-    float sx;
-    float sy;
-    unsigned int NbSpritesReal;
-    int CurrentSprite;
-    float u0;
-    float v0;
-    float du;
-    float dv;
-    unsigned int AnimationData;
-    unsigned int NbColumns;
-    unsigned int NbLines;
-    unsigned int NbSpriteMax __attribute__((aligned(16)));
-    float (*pUV)[4];
-    float (*pColor)[4];
-    float (*pV)[4];
-    J_ParticleSprite_* p;
-    unsigned int FirstCheck __attribute__((aligned(16)));
-    int CurrentLine;
-    float* pX;
-    float* pY;
-    float* pC;
+    float MinNorme;
+    MTH3D_tdstVector_ SourceVect;
+    MTH3D_tdstVector_ DistVect;
 
-    NbSpritesReal = 0;
-    if (NbSprites == 0)
-        return;
+    SourceVect = *p_stMin;
+    SPRITEGEN_TRANSFORM_VERTEX(&DistVect, &SourceVect);
+    MinNorme = DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ;
 
-    GLI_g_p_stCurrentCam = *(int*)((GLD_tdstViewportAttributes_*)g_p_stCurrentViewport)->p_vSpecificToXD;
-    GLI_vTransformToGLMatrix(M, &GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix.stTransformMatrix);
-    VAC_Acquire(GLI_g_hVAContainer, M, pMat);
+    SourceVect.xX = p_stMax->xX;
+    SourceVect.xY = p_stMax->xY;
+    SourceVect.xZ = p_stMax->xZ;
+    SPRITEGEN_TRANSFORM_VERTEX(&DistVect, &SourceVect);
+    if (DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ < MinNorme)
+        MinNorme = DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ;
 
-    NbSprites = (NbSprites < VAC_g_NbSpritesLefts) ? NbSprites : VAC_g_NbSpritesLefts;
-    if (NbSprites == 0)
-    {
-        VAC_UnAcquireAndDraw(GLI_g_hVAContainer, 0);
-        return;
-    }
+    SourceVect.xX = p_stMin->xX;
+    SourceVect.xY = p_stMax->xY;
+    SourceVect.xZ = p_stMax->xZ;
+    SPRITEGEN_TRANSFORM_VERTEX(&DistVect, &SourceVect);
+    if (DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ < MinNorme)
+        MinNorme = DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ;
 
-    AnimationData = (unsigned int)pMat->stDiffuse.xB;
-    NbColumns = AnimationData & 0xFF;
-    NbLines = (AnimationData & 0xFF00) >> 8;
-    NbSpriteMax = (AnimationData & 0xFF0000) >> 16;
-    if (!NbColumns)
-        NbColumns = 1;
-    if (!NbLines)
-        NbLines = 1;
-    if (!NbSpriteMax)
-        NbSpriteMax = 1;
-    du = 1.0f / (float)NbColumns;
-    dv = 1.0f / (float)NbLines;
+    SourceVect.xX = p_stMin->xX;
+    SourceVect.xY = p_stMin->xY;
+    SourceVect.xZ = p_stMax->xZ;
+    SPRITEGEN_TRANSFORM_VERTEX(&DistVect, &SourceVect);
+    if (DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ < MinNorme)
+        MinNorme = DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ;
 
-    CurrentSprite = (unsigned int)(0.8f * (25.0f * g_ffFrameTime)) % NbSpriteMax;
+    SourceVect.xX = p_stMax->xX;
+    SourceVect.xY = p_stMin->xY;
+    SourceVect.xZ = p_stMax->xZ;
+    SPRITEGEN_TRANSFORM_VERTEX(&DistVect, &SourceVect);
+    if (DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ < MinNorme)
+        MinNorme = DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ;
 
-    sx = 10.0f * pMat->stAmbient.xR;
-    sy = 10.0f * pMat->stAmbient.xG;
-    if (sx <= 0.0f)
-        sx = 0.01f;
-    if (sy <= 0.0f)
-        sy = 0.01f;
+    SourceVect.xX = p_stMax->xX;
+    SourceVect.xY = p_stMax->xY;
+    SourceVect.xZ = p_stMin->xZ;
+    SPRITEGEN_TRANSFORM_VERTEX(&DistVect, &SourceVect);
+    if (DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ < MinNorme)
+        MinNorme = DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ;
 
-    MAT_fn_vInvert(&InvertedCam, (GLI_g_p_stCurrentCam = *(int*)((GLD_tdstViewportAttributes_*)g_p_stCurrentViewport)->p_vSpecificToXD) + 0x10);
+    SourceVect.xX = p_stMax->xX;
+    SourceVect.xY = p_stMin->xY;
+    SourceVect.xZ = p_stMin->xZ;
+    SPRITEGEN_TRANSFORM_VERTEX(&DistVect, &SourceVect);
+    if (DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ < MinNorme)
+        MinNorme = DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ;
 
-    FirstCheck = 1;
-    pUV = (float (*)[4])VAC_g_CurrentpT;
-    pColor = (float (*)[4])VAC_g_CurrentpC;
-    pV = (float (*)[4])VAC_g_CurrentpV;
-    du = -du;
-    dv = -dv;
-    for (i = 0; i < NbSprites; i++)
-    {
-        p = &pParticleList[i];
-        GLI_vPrefetch(&pParticleList[i + 4]);
-        if (FirstCheck)
-        {
-            FirstCheck = 0;
-            GLI_v_CalculateVectorsFor3DSpriteGenVU0(&InvertedCam, p, sx, sy);
-            pX = GLI_g_stXVecta;
-            pY = GLI_g_stYVecta;
-            asm {
-                lqc2 $vf15, 0x0(pX)
-                lqc2 $vf16, 0x0(pY)
-                vsub.xyzw $vf4, $vf15, $vf16
-                vadd.xyzw $vf5, $vf15, $vf16
-            }
-        }
+    SourceVect.xX = p_stMin->xX;
+    SourceVect.xY = p_stMax->xY;
+    SourceVect.xZ = p_stMin->xZ;
+    SPRITEGEN_TRANSFORM_VERTEX(&DistVect, &SourceVect);
+    if (DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ < MinNorme)
+        MinNorme = DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ;
 
-        if (p->Flags != 2)
-        {
-            NbSpritesReal++;
-            CurrentLine = CurrentSprite / NbColumns;
-            u0 = -(du * (float)(unsigned int)(CurrentSprite - CurrentLine * NbColumns));
-            v0 = 1.0f + (float)CurrentLine * dv;
-            CurrentSprite++;
-            if (CurrentSprite == NbSpriteMax)
-                CurrentSprite = 0;
-
-            pUV[0][0] = u0;
-            pUV[0][1] = v0 + dv;
-            pUV[1][0] = u0 - du;
-            pUV[1][1] = v0 + dv;
-            pUV[2][0] = u0 - du;
-            pUV[2][1] = v0;
-            pUV[3][0] = u0;
-            pUV[3][1] = v0 + dv;
-            pUV[4][0] = u0 - du;
-            pUV[4][1] = v0;
-            pUV[5][0] = u0;
-            pUV[5][1] = v0;
-            pUV += 6;
-
-            pC = p->Color;
-            asm {
-                lqc2 $vf1, 0x0(p)
-                lqc2 $vf10, 0x0(pC)
-                vsub.xyzw $vf6, $vf1, $vf5
-                vadd.xyzw $vf7, $vf1, $vf4
-                vadd.xyzw $vf8, $vf1, $vf5
-                vsub.xyzw $vf9, $vf1, $vf4
-                sqc2 $vf10, 0x0(pColor)
-                sqc2 $vf10, 0x10(pColor)
-                sqc2 $vf10, 0x20(pColor)
-                sqc2 $vf10, 0x30(pColor)
-                sqc2 $vf10, 0x40(pColor)
-                sqc2 $vf10, 0x50(pColor)
-                sqc2 $vf6, 0x0(pV)
-                sqc2 $vf7, 0x10(pV)
-                sqc2 $vf8, 0x20(pV)
-                sqc2 $vf6, 0x30(pV)
-                sqc2 $vf8, 0x40(pV)
-                sqc2 $vf9, 0x50(pV)
-            }
-            pColor += 6;
-            pV += 6;
-        }
-
-        if (p[1].bFirst)
-            FirstCheck = 1;
-    }
-
-    VAC_g_NbSpritesLefts -= NbSpritesReal;
-    VAC_g_CurrentNbSprites += NbSpritesReal;
-    VAC_g_CurrentpV += NbSpritesReal * 96;
-    VAC_g_CurrentpC += NbSpritesReal * 96;
-    VAC_g_CurrentpT += NbSpritesReal * 96;
-    VAC_UnAcquireAndDraw(GLI_g_hVAContainer, 0);
+    GLI_g_CurrentSpriteGenIndex = 0;
+    GLI_g_SpriteGenNorme = 10000;
+    return __builtin_sqrt(MinNorme);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawSpriteGen.c lines 456–591 */
-/* addr: 0x002bbfd0  size: 1220 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 456
- *   +0x0010 -> line 460
- *   +0x0014 -> line 456
- *   +0x0058 -> line 463
- *   +0x0060 -> line 467
- *   +0x006c -> line 468
- *   +0x0070 -> line 471
- *   +0x0078 -> line 467
- *   +0x007c -> line 471
- *   +0x0098 -> line 472
- *   +0x00bc -> line 474
- *   +0x00d8 -> line 479
- *   +0x014c -> line 481
- *   +0x0150 -> line 479
- *   +0x01a4 -> line 481
- *   +0x01ac -> line 483
- *   +0x01b4 -> line 485
- *   +0x01c0 -> line 486
- *   +0x01c8 -> line 504
- *   +0x01cc -> line 508
- *   +0x01d0 -> line 505
- *   +0x01d4 -> line 500
- *   +0x01d8 -> line 506
- *   +0x01dc -> line 508
- *   +0x01e8 -> line 510
- *   +0x01f0 -> line 511
- *   +0x0204 -> line 513
- *   +0x020c -> line 516
- *   +0x0218 -> line 515
- *   +0x021c -> line 516
- *   +0x0224 -> line 517
- *   +0x0234 -> line 518
- *   +0x023c -> line 517
- *   +0x0240 -> line 520
- *   +0x0244 -> line 518
- *   +0x024c -> line 519
- *   +0x0254 -> line 518
- *   +0x0258 -> line 521
- *   +0x025c -> line 519
- *   +0x0268 -> line 522
- *   +0x026c -> line 523
- *   +0x0270 -> line 525
- *   +0x0280 -> line 529
- *   +0x0284 -> line 540
- *   +0x0288 -> line 530
- *   +0x028c -> line 527
- *   +0x0290 -> line 531
- *   +0x0294 -> line 533
- *   +0x0298 -> line 544
- *   +0x029c -> line 533
- *   +0x02b4 -> line 534
- *   +0x02b8 -> line 545
- *   +0x02bc -> line 546
- *   +0x02c0 -> line 534
- *   +0x02d8 -> line 535
- *   +0x02dc -> line 550
- *   +0x02e0 -> line 556
- *   +0x02e4 -> line 535
- *   +0x02fc -> line 536
- *   +0x0300 -> line 574
- *   +0x0304 -> line 551
- *   +0x0308 -> line 536
- *   +0x0320 -> line 539
- *   +0x0324 -> line 552
- *   +0x0328 -> line 539
- *   +0x032c -> line 537
- *   +0x0330 -> line 539
- *   +0x033c -> line 557
- *   +0x0340 -> line 539
- *   +0x0344 -> line 540
- *   +0x0350 -> line 575
- *   +0x0354 -> line 540
- *   +0x0360 -> line 544
- *   +0x0364 -> line 541
- *   +0x0368 -> line 545
- *   +0x036c -> line 546
- *   +0x0370 -> line 547
- *   +0x0374 -> line 558
- *   +0x0378 -> line 550
- *   +0x037c -> line 551
- *   +0x0380 -> line 552
- *   +0x0384 -> line 553
- *   +0x0388 -> line 576
- *   +0x038c -> line 556
- *   +0x0390 -> line 557
- *   +0x0394 -> line 558
- *   +0x0398 -> line 559
- *   +0x039c -> line 562
- *   +0x03a0 -> line 563
- *   +0x03a4 -> line 564
- *   +0x03a8 -> line 565
- *   +0x03ac -> line 568
- *   +0x03b0 -> line 569
- *   +0x03b4 -> line 570
- *   +0x03b8 -> line 571
- *   +0x03bc -> line 574
- *   +0x03c0 -> line 575
- *   +0x03c4 -> line 576
- *   +0x03c8 -> line 577
- *   +0x03cc -> line 578
- *   +0x03d0 -> line 580
- *   +0x03e4 -> line 584
- *   +0x03e8 -> line 582
- *   +0x03fc -> line 583
- *   +0x0400 -> line 584
- *   +0x0410 -> line 585
- *   +0x0420 -> line 588
- *   +0x0438 -> line 589
- *   +0x043c -> line 588
- *   +0x0444 -> line 589
- *   +0x0448 -> line 588
- *   +0x046c -> line 589
- *   +0x0474 -> line 591
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GLI_v_CalculateVectorsFor3DSpriteGen(MAT_tdstTransformation_* param0, J_ParticleSprite_* p, float sx, float sy);
-/* retail keeps pParticleList in a 16-byte aligned stack slot */
-void J_Draw3DSpriteGenList(GLI_tdstMaterial_* pMat, J_ParticleSprite_* pParticleList __attribute__((aligned(16))), unsigned int NbSprites)
+void GLI_vSendEITToSpriteGeneratorNew(GEO_tdstElementIndexedTriangles_* p_stEIT, ISI_tdstColor_* pRLIs, float* LightMaps, float (*pV1)[4], float (*pU1)[4], float** pVertexTransparency)
 {
-    MAT_tdstTransformation_ InvertedCam;
-    float M[4][4];
-    MAT_tdstTransformation_ stMat;
+    float ratio;
+    ISI_tdstColor_* param0;
+    float (*pV)[4];
+    float* LightMapU;
+    float LM3;
+    float LM2;
+    float LM1;
+    unsigned int NoScroll;
+    float Norme;
+    float NoiseLevel;
+    GEO_tdstTripledIndex_* p_stListOfFacesTripled;
+    GLI_SpecificPS2GL_Structure_* pSpecif;
+    unsigned int I3;
+    unsigned int I2;
+    unsigned int I1;
+    unsigned int* pNbGenSave;
+    unsigned int NbGenerated;
+    J_ParticleFace_ Face;
+    float TempParticleList[4096][4];
+    J_ParticleSprite_* ParticleList;
+    float DV;
+    float DU;
+    float fAddV;
+    float fAddU;
     unsigned int i;
+    /* TODO: decompile from asm/... */
+}
+
+void GLI_vSendEITToSpriteGeneratorNewSimple(GEO_tdstElementIndexedTriangles_* p_stEIT, ISI_tdstColor_* pRLIs, float* pLightMap, float (*pV1)[4], float (*pU1)[4], float** pVertexTransparency)
+{
+    unsigned int i;
+    float fAddU;
+    float fAddV;
+    unsigned int bAdditive;
+    float DU;
+    float DV;
+    J_New_ParticleFace_ Face;
+    unsigned int NbGenerated;
+    unsigned int* pNbGenSave;
+    unsigned int I1[3];
+    GLI_SpecificPS2GL_Structure_* pSpecif;
+    GEO_tdstTripledIndex_* p_stListOfFacesTripled;
+    float NoiseLevel;
+    unsigned int NoScroll;
+    float LM1;
+    float LM2;
+    float LM3;
+    float (*pParticles)[4];
+    float (*pV)[4];
+    int j;
+    float fr;
+    float fg;
+    float fb;
+    float fa;
+    ISI_tdstColor_* p_SRCColors;
+
+    NbGenerated = 0;
+    NoScroll = 0;
+    pSpecif = GLI_pstGetSpecificStructureFromEIT(p_stEIT);
+    GLI_vClearCop0Register24();
+    bAdditive = GLI_bIsMaterialAdditive(p_stEIT->hVisualMaterial);
+    GLI_BIG_GLOBALS_hCurrentMaterial = (int)p_stEIT->hVisualMaterial;
+    if (((GLI_tdstMaterial_*)GLI_BIG_GLOBALS_hCurrentMaterial)->fConstantAddU == 0.0f && ((GLI_tdstMaterial_*)GLI_BIG_GLOBALS_hCurrentMaterial)->fConstantAddV == 0.0f)
+        NoScroll = 1;
+
+    if (!pSpecif->SpriteGenArray || !NoScroll)
+    {
+        if (NoScroll)
+        {
+            pSpecif->SpriteGenArray = ((unsigned int (*)(unsigned int))PS2glAllocator64)(0x20010);
+            pNbGenSave = (unsigned int*)pSpecif->SpriteGenArray;
+            pParticles = (float (*)[4])((unsigned int)pNbGenSave + 0x10);
+            if (pNbGenSave == NULL)
+            {
+                GLI_vClearCop0Register24();
+                return;
+            }
+            else
+            {
+            }
+        }
+        else
+        {
+            pParticles = GLI_pGetFastSpriteGenBuffer();
+        }
+        if (pParticles == NULL)
+        {
+            GLI_vClearCop0Register24();
+            return;
+        }
+
+        DU = ((GLI_tdstMaterial_*)GLI_BIG_GLOBALS_hCurrentMaterial)->stDiffuse.xR;
+        DV = ((GLI_tdstMaterial_*)GLI_BIG_GLOBALS_hCurrentMaterial)->stDiffuse.xG;
+        NoiseLevel = ((GLI_tdstMaterial_*)GLI_BIG_GLOBALS_hCurrentMaterial)->stAmbient.xB;
+        if (DU <= 0.1f)
+            DU = 0.1f;
+        if (DV <= 0.1f)
+            DV = 0.1f;
+
+        pV = pV1;
+        p_stListOfFacesTripled = p_stEIT->d_stListOfFacesTripled;
+        fAddV = 1000.0f * g_ffFrameTime;
+        fAddU = fAddV * ((GLI_tdstMaterial_*)GLI_BIG_GLOBALS_hCurrentMaterial)->fConstantAddU;
+        fAddV = fAddV * ((GLI_tdstMaterial_*)GLI_BIG_GLOBALS_hCurrentMaterial)->fConstantAddV;
+
+        for (i = 0; i < p_stEIT->xNbFaces; i++)
+        {
+            I1[0] = p_stListOfFacesTripled->a3_xIndex[0];
+            I1[1] = p_stListOfFacesTripled->a3_xIndex[1];
+            I1[2] = p_stListOfFacesTripled->a3_xIndex[2];
+            if (pLightMap)
+            {
+                LM1 = pLightMap[I1[0]];
+                LM2 = pLightMap[I1[1]];
+                LM3 = pLightMap[I1[2]];
+                LM1 = (LM1 > 1.0f) ? 1.0f : ((LM1 < 0.0f) ? 0.0f : LM1);
+                LM2 = (LM2 > 1.0f) ? 1.0f : ((LM2 < 0.0f) ? 0.0f : LM2);
+                LM3 = (LM3 > 1.0f) ? 1.0f : ((LM3 < 0.0f) ? 0.0f : LM3);
+            }
+            else
+            {
+                LM1 = LM2 = LM3 = 1.0f;
+            }
+
+            Face.pPoints[0][0] = pV[0][0];
+            Face.pPoints[0][1] = pV[0][1];
+            Face.pPoints[0][2] = pV[0][2];
+            Face.pPoints[1][0] = pV[1][0];
+            Face.pPoints[1][1] = pV[1][1];
+            Face.pPoints[1][2] = pV[1][2];
+            Face.pPoints[2][0] = pV[2][0];
+            Face.pPoints[2][1] = pV[2][1];
+            Face.pPoints[2][2] = pV[2][2];
+            pV += 3;
+
+            if (!pRLIs || pRLIs == NULL)
+            {
+                Face.pColors[0][0] = 1.0f; Face.pColors[0][1] = 1.0f; Face.pColors[0][2] = 1.0f; Face.pColors[0][3] = 0.1f;
+                Face.pColors[1][0] = 1.0f; Face.pColors[1][1] = 1.0f; Face.pColors[1][2] = 1.0f; Face.pColors[1][3] = 0.1f;
+                Face.pColors[2][0] = 1.0f; Face.pColors[2][1] = 1.0f; Face.pColors[2][2] = 1.0f; Face.pColors[2][3] = 0.1f;
+            }
+            else
+            {
+                for (j = 0; j < 3; j++)
+                {
+                    p_SRCColors = &pRLIs[*(unsigned int*)((int)I1 + j * 4)];
+                    if (bAdditive)
+                    {
+                        fr = 1.0f;
+                        fg = fr;
+                        fb = fr;
+                    }
+                    else
+                    {
+                        fr = 0.003921569f * (float)p_SRCColors->xRed;
+                        fg = 0.003921569f * (float)p_SRCColors->xGreen;
+                        fb = 0.003921569f * (float)p_SRCColors->xBlue;
+                        if (fr < 0.0f) fr = 0.0f;
+                        if (fg < 0.0f) fg = 0.0f;
+                        if (fb < 0.0f) fb = 0.0f;
+                        if (fr > 1.0f) fr = 1.0f;
+                        if (fg > 1.0f) fg = 1.0f;
+                        if (fb > 1.0f) fb = 1.0f;
+
+                        LM1 = pLightMap[*(unsigned int*)((int)I1 + j * 4)];
+                        if (LM1 < 0.0f) LM1 = 0.0f;
+                        if (LM1 > 1.0f) LM1 = 1.0f;
+
+                        fr = fr * (fr * LM1);
+                        fg = fg * (fg * LM1);
+                        fb = fb * (fb * LM1);
+                        if (fr < 0.0f) fr = 0.0f;
+                        if (fr > 1.0f) fr = 1.0f;
+                        if (fg < 0.0f) fg = 0.0f;
+                        if (fg > 1.0f) fg = 1.0f;
+                        if (fb < 0.0f) fb = 0.0f;
+                        if (fb > 1.0f) fb = 1.0f;
+                    }
+                    *(float*)((int)&Face.pColors[0][0] + j * 16) = fr;
+                    *(float*)((int)&Face.pColors[0][1] + j * 16) = fg;
+                    *(float*)((int)&Face.pColors[0][2] + j * 16) = fb;
+                    *(float*)((int)&Face.pColors[0][3] + j * 16) = 1.0f + 0.003921569f * (float)p_SRCColors->xAlpha;
+                    if (pVertexTransparency && *pVertexTransparency)
+                        *(float*)((int)&Face.pColors[0][3] + j * 16) *= (*pVertexTransparency)[*(unsigned int*)((int)I1 + j * 4)];
+                    if (*(float*)((int)&Face.pColors[0][3] + j * 16) < 0.0f)
+                        *(float*)((int)&Face.pColors[0][3] + j * 16) = 0.0f;
+                    if (*(float*)((int)&Face.pColors[0][3] + j * 16) > 0.5f)
+                        *(float*)((int)&Face.pColors[0][3] + j * 16) = 1.0f;
+                }
+            }
+
+            Face.pUVs[0][0] = pU1[0][0] + fAddU;
+            Face.pUVs[0][1] = pU1[0][1] + fAddV;
+            Face.pUVs[1][0] = pU1[1][0] + fAddU;
+            Face.pUVs[1][1] = pU1[1][1] + fAddV;
+            Face.pUVs[2][0] = pU1[2][0] + fAddU;
+            Face.pUVs[2][1] = pU1[2][1] + fAddV;
+            pU1 += 3;
+
+            NbGenerated += J_New_CreateParticlesOnFace(&pParticles[NbGenerated * 2], 0xFFF - NbGenerated, &Face, DU, DV, NoiseLevel);
+            p_stListOfFacesTripled++;
+        }
+
+        if (NoScroll)
+        {
+            pParticles = (float (*)[4])(pSpecif->SpriteGenArray + 0x10);
+            *pNbGenSave = NbGenerated;
+        }
+    }
+    else
+    {
+        NbGenerated = *(unsigned int*)pSpecif->SpriteGenArray;
+        pParticles = (float (*)[4])(pSpecif->SpriteGenArray + 0x10);
+    }
+
+    GLI_BIG_GLOBALS_xGlobalAlpha = 1.0f;
+    GLI_SpriteGenMustDisplayEvery = NbGenerated;
+    J_New_DrawSpriteGenList((GLI_tdstMaterial_*)GLI_BIG_GLOBALS_hCurrentMaterial, pParticles, NbGenerated);
+    GLI_vClearCop0Register24();
+}
+
+void J_New_DrawSpriteGenList(GLI_tdstMaterial_* pMat, float (*pParticleList)[4], unsigned int NbSprites)
+{
+    float CosValAdd;
+    float CosVal;
+    unsigned char zTst;
+    void* pAnimaterTextureToUseSaved;
+    int RemainingNbSprites;
+    unsigned int i;
+    float ModelView[4][4];
     float sx;
     float sy;
-    J_ParticleSprite_* p;
-    unsigned int NbSpritesReal;
-    float (*pUV)[4];
-    float (*pColor)[4];
-    float (*pV)[4];
-    float PosX;
-    float PosY;
-    float PosZ;
-    float SumX;
-    float SumY;
-    float SumZ;
-    float DifX;
-    float DifY;
-    float DifZ;
-    unsigned int FirstCheck;
-    unsigned int j;
+    float* pNeg;
+    float* pSrc;
+    float* pDst;
 
-    NbSpritesReal = 0;
-    if (NbSprites == 0)
+    RemainingNbSprites = NbSprites - (NbSprites / 20) * 20;
+    if (RemainingNbSprites < 4)
+        NbSprites -= RemainingNbSprites;
+    if (NbSprites < 4)
         return;
 
     sx = 10.0f * pMat->stAmbient.xR;
@@ -3166,347 +3398,137 @@ void J_Draw3DSpriteGenList(GLI_tdstMaterial_* pMat, J_ParticleSprite_* pParticle
     if (sy <= 0.0f)
         sy = 0.01f;
 
-    MAT_fn_vInvert(&InvertedCam, (GLI_g_p_stCurrentCam = *(int*)((GLD_tdstViewportAttributes_*)g_p_stCurrentViewport)->p_vSpecificToXD) + 0x10);
-    GLI_g_p_stCurrentCam = *(int*)((GLD_tdstViewportAttributes_*)g_p_stCurrentViewport)->p_vSpecificToXD;
-    if (g_UseFullMatrix)
-    {
-        GLI_vTransformToGLMatrix(M, &GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix);
-        MAT_fn_vInvert(&stMat);
-    }
-    else
-    {
-        GLI_vTransformToGLMatrix(M, GLI_g_p_stCurrentCam + 0x20);
-        MAT_fn_vInvert(&stMat, GLI_g_p_stCurrentCam + 0x10);
-    }
-    VAC_Acquire(GLI_g_hVAContainer, M, pMat);
+    GLI_vInitGLProjectionMatrix();
+    PS2glMatrixMode(0x1700);
 
-    GLI_g_stXVect.xX = stMat.stTransformMatrix.stCol_0.xX * sx;
-    GLI_g_stXVect.xY = stMat.stTransformMatrix.stCol_0.xY * sx;
-    GLI_g_stXVect.xZ = stMat.stTransformMatrix.stCol_0.xZ * sx;
-    GLI_g_stYVect.xX = stMat.stTransformMatrix.stCol_1.xX * sy;
-    GLI_g_stYVect.xY = stMat.stTransformMatrix.stCol_1.xY * sy;
-    GLI_g_stYVect.xZ = stMat.stTransformMatrix.stCol_1.xZ * sy;
-
-    NbSprites = (NbSprites < VAC_g_NbSpritesLefts) ? NbSprites : VAC_g_NbSpritesLefts;
-    if (NbSprites == 0)
-    {
-        VAC_UnAcquireAndDraw(GLI_g_hVAContainer, 0);
-        return;
-    }
-
-    FirstCheck = 1;
-    pUV = (float (*)[4])VAC_g_CurrentpT;
-    pColor = (float (*)[4])VAC_g_CurrentpC;
-    pV = (float (*)[4])VAC_g_CurrentpV;
-    for (i = 0; i < NbSprites; i++)
-    {
-        p = &pParticleList[i];
-        GLI_vPrefetch(&pParticleList[i + 4]);
-        if (FirstCheck)
-        {
-            FirstCheck = 0;
-            GLI_v_CalculateVectorsFor3DSpriteGen(&InvertedCam, p, sx, sy);
-            SumX = GLI_g_stXVect.xX + GLI_g_stYVect.xX;
-            SumY = GLI_g_stXVect.xY + GLI_g_stYVect.xY;
-            SumZ = GLI_g_stXVect.xZ + GLI_g_stYVect.xZ;
-            DifX = GLI_g_stXVect.xX - GLI_g_stYVect.xX;
-            DifY = GLI_g_stXVect.xY - GLI_g_stYVect.xY;
-            DifZ = GLI_g_stXVect.xZ - GLI_g_stYVect.xZ;
-        }
-
-        if (p->Flags != 2)
-        {
-            NbSpritesReal++;
-            PosX = p->Pos[0];
-            PosY = p->Pos[1];
-            PosZ = p->Pos[2];
-
-            pColor[0][0] = pColor[1][0] = pColor[2][0] = pColor[3][0] = pColor[4][0] = pColor[5][0] = p->Color[0];
-            pColor[0][1] = pColor[1][1] = pColor[2][1] = pColor[3][1] = pColor[4][1] = pColor[5][1] = p->Color[1];
-            pColor[0][2] = pColor[1][2] = pColor[2][2] = pColor[3][2] = pColor[4][2] = pColor[5][2] = p->Color[2];
-            pColor[0][3] = pColor[1][3] = pColor[2][3] = pColor[3][3] = pColor[4][3] = pColor[5][3] = p->Color[3];
-            pColor += 6;
-
-            pUV[0][0] = pUV[0][1] = pUV[1][1] = pUV[3][0] = pUV[3][1] = pUV[5][0] = 0.0f;
-            pUV[1][0] = pUV[2][0] = pUV[2][1] = pUV[4][0] = pUV[4][1] = pUV[5][1] = 1.0f;
-            pUV += 6;
-
-            pV[0][0] = PosX - SumX;
-            pV[0][1] = PosY - SumY;
-            pV[0][2] = PosZ - SumZ;
-            pV[0][3] = 1.0f;
-
-            pV[1][0] = PosX + DifX;
-            pV[1][1] = PosY + DifY;
-            pV[1][2] = PosZ + DifZ;
-            pV[1][3] = 1.0f;
-
-            pV[2][0] = PosX + SumX;
-            pV[2][1] = PosY + SumY;
-            pV[2][2] = PosZ + SumZ;
-            pV[2][3] = 1.0f;
-
-            pV[3][0] = PosX - SumX;
-            pV[3][1] = PosY - SumY;
-            pV[3][2] = PosZ - SumZ;
-            pV[3][3] = 1.0f;
-
-            pV[4][0] = PosX + SumX;
-            pV[4][1] = PosY + SumY;
-            pV[4][2] = PosZ + SumZ;
-            pV[4][3] = 1.0f;
-
-            pV[5][0] = PosX - DifX;
-            pV[5][1] = PosY - DifY;
-            pV[5][2] = PosZ - DifZ;
-            pV[5][3] = 1.0f;
-            pV += 6;
-        }
-
-        for (j = i + 1; j <= i + 1; j++)
-        {
-            if (pParticleList[j].bFirst)
-                FirstCheck = 1;
-        }
-    }
-
-    VAC_g_NbSpritesLefts -= NbSpritesReal;
-    VAC_g_CurrentNbSprites += NbSpritesReal;
-    VAC_g_CurrentpV += NbSpritesReal * 96;
-    VAC_g_CurrentpC += NbSpritesReal * 96;
-    VAC_g_CurrentpT += NbSpritesReal * 96;
-    VAC_UnAcquireAndDraw(GLI_g_hVAContainer, 0);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawSpriteGen.c lines 423–449 */
-/* addr: 0x002bc4a0  size: 452 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 423
- *   +0x0004 -> line 428
- *   +0x0008 -> line 423
- *   +0x000c -> line 430
- *   +0x0010 -> line 423
- *   +0x0020 -> line 430
- *   +0x0028 -> line 428
- *   +0x0030 -> line 430
- *   +0x0034 -> line 426
- *   +0x0038 -> line 430
- *   +0x0040 -> line 434
- *   +0x0048 -> line 438
- *   +0x0050 -> line 434
- *   +0x0054 -> line 435
- *   +0x0060 -> line 438
- *   +0x0068 -> line 436
- *   +0x0074 -> line 438
- *   +0x00b0 -> line 439
- *   +0x0134 -> line 442
- *   +0x013c -> line 443
- *   +0x0144 -> line 442
- *   +0x0148 -> line 444
- *   +0x0150 -> line 443
- *   +0x0154 -> line 446
- *   +0x015c -> line 444
- *   +0x0160 -> line 447
- *   +0x0168 -> line 446
- *   +0x016c -> line 448
- *   +0x0174 -> line 447
- *   +0x0178 -> line 442
- *   +0x0180 -> line 443
- *   +0x0188 -> line 444
- *   +0x0190 -> line 446
- *   +0x0198 -> line 447
- *   +0x01a0 -> line 448
- *   +0x01ac -> line 449
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-/* sqrt.s and the R5900 accumulator ops have no C form under MWCC; only
- * those instructions are asm. */
-inline float MTH_M_xSqrNorm(float _xX, float _xY, float _xZ)
-{
-    float _xResult;
-    asm { mula.s _xX, _xX }
-    asm { madda.s _xY, _xY }
-    asm { madd.s _xResult, _xZ, _xZ }
-    return _xResult;
-}
-inline float MTH_M_xSqrt(float _xA)
-{
-    float _xResult;
-    asm { sqrt.s _xResult, _xA }
-    return _xResult;
-}
-inline float MTH_M_xMulSubMul(float _xA, float _xB, float _xC, float _xD)
-{
-    float _xResult;
-    asm { mula.s _xA, _xB }
-    asm { msub.s _xResult, _xC, _xD }
-    return _xResult;
-}
-#define MTH3D_M_vCrossProductVector(_d, _a, _b)                                    \
-    {                                                                               \
-        (_d)->xX = MTH_M_xMulSubMul((_a)->xY, (_b)->xZ, (_a)->xZ, (_b)->xY);        \
-        (_d)->xY = MTH_M_xMulSubMul((_a)->xZ, (_b)->xX, (_a)->xX, (_b)->xZ);        \
-        (_d)->xZ = MTH_M_xMulSubMul((_a)->xX, (_b)->xY, (_a)->xY, (_b)->xX);        \
-    }
-
-void GLI_v_CalculateVectorsFor3DSpriteGen(MAT_tdstTransformation_* param0, J_ParticleSprite_* p, float sx, float sy)
-{
-    float xNorm;
-    MTH3D_tdstVector_ V1;
-    MTH3D_tdstVector_ V2;
-    MTH3D_tdstVector_ V3;
-
-    V1.xX = 0.0f;
-    V1.xY = 0.0f;
-    V1.xZ = -1.0f;
-    MAT_fn_vApplyOnVector(&V2, param0, &V1);
-
-    GLI_g_stYVect.xX = p->FaceNormal[0];
-    GLI_g_stYVect.xY = p->FaceNormal[1];
-    GLI_g_stYVect.xZ = p->FaceNormal[2];
-
-    MTH3D_M_vCrossProductVector(&V3, &GLI_g_stYVect, &V2);
-    xNorm = MTH_M_xSqrt(MTH_M_xSqrNorm(V3.xX, V3.xY, V3.xZ));
-    if (xNorm != 0.0f)
-    {
-        xNorm = 1.0f / xNorm;
-        GLI_g_stXVect.xX = xNorm * V3.xX; GLI_g_stXVect.xY = xNorm * V3.xY; GLI_g_stXVect.xZ = xNorm * V3.xZ;
-    }
-    else
-    {
-        GLI_g_stXVect = V3;
-    }
-
-    GLI_g_stXVect.xX *= sx;
-    GLI_g_stXVect.xY *= sx;
-    GLI_g_stXVect.xZ *= sx;
-
-    GLI_g_stYVect.xX *= sy;
-    GLI_g_stYVect.xY *= sy;
-    GLI_g_stYVect.xZ *= sy;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawSpriteGen.c lines 352–419 */
-/* addr: 0x002bc670  size: 196 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 352
- *   +0x0004 -> line 357
- *   +0x0008 -> line 362
- *   +0x000c -> line 357
- *   +0x0010 -> line 362
- *   +0x001c -> line 355
- *   +0x0020 -> line 356
- *   +0x0024 -> line 362
- *   +0x0028 -> line 358
- *   +0x002c -> line 362
- *   +0x0034 -> line 364
- *   +0x0038 -> line 365
- *   +0x003c -> line 366
- *   +0x0040 -> line 367
- *   +0x0044 -> line 368
- *   +0x0048 -> line 370
- *   +0x004c -> line 372
- *   +0x0050 -> line 373
- *   +0x0054 -> line 374
- *   +0x0058 -> line 375
- *   +0x005c -> line 377
- *   +0x0060 -> line 378
- *   +0x0064 -> line 379
- *   +0x0068 -> line 381
- *   +0x006c -> line 382
- *   +0x0070 -> line 383
- *   +0x0074 -> line 384
- *   +0x0078 -> line 385
- *   +0x007c -> line 386
- *   +0x0080 -> line 387
- *   +0x0084 -> line 388
- *   +0x0088 -> line 389
- *   +0x008c -> line 390
- *   +0x0090 -> line 391
- *   +0x0094 -> line 395
- *   +0x009c -> line 396
- *   +0x00a0 -> line 397
- *   +0x00a4 -> line 400
- *   +0x00ac -> line 401
- *   +0x00b0 -> line 402
- *   +0x00b4 -> line 405
- *   +0x00b8 -> line 406
- *   +0x00bc -> line 419
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GLI_v_CalculateVectorsFor3DSpriteGenVU0(MAT_tdstTransformation_* pInvertedCam, J_ParticleSprite_* p, float sx, float sy)
-{
-    float V1[4];
-    float* pX;
-    float* pMat;
-    float* pV1;
-    float* pDirection;
-    float* pY;
-
-    V1[0] = 0.0f;
-    V1[1] = 0.0f;
-    V1[2] = -1.0f;
-    pDirection = p->FaceNormal;
-    pMat = (float*)((char*)pInvertedCam + 0x10);
-    V1[3] = 0.0f;
-    pX = GLI_g_stXVecta;
-    pV1 = V1;
-    pY = GLI_g_stYVecta;
-
+    pSrc = (float*)(GLI_BIG_GLOBALS_gs_st_CurrentMatrix + 0x10);
+    pNeg = GLI_g_NegVect;
+    pDst = (float*)ModelView;
     asm {
-        lqc2 $vf8, 0x0(pV1)
-        lqc2 $vf4, 0x0(pMat)
-        lqc2 $vf5, 0x10(pMat)
-        lqc2 $vf6, 0x20(pMat)
-        lqc2 $vf7, 0x30(pMat)
-        lqc2 $vf10, 0x0(pDirection)
-        vmulax.xyzw $ACC, $vf4, $vf8x
-        vmadday.xyzw $ACC, $vf5, $vf8y
-        vmaddaz.xyzw $ACC, $vf6, $vf8z
-        vmaddw.xyzw $vf9, $vf7, $vf8w
-        vopmula.xyz $ACC, $vf10, $vf9
-        vopmsub.xyz $vf13, $vf9, $vf10
-        vsub.w $vf13, $vf13, $vf13
-        vmul.xyz $vf5, $vf13, $vf13
-        vaddy.x $vf5, $vf5, $vf5y
-        vaddz.x $vf5, $vf5, $vf5z
-        vsqrt $Q, $vf5x
-        vwaitq
-        vaddq.x $vf5, $vf0, $Q
-        vdiv $Q, $vf0w, $vf5x
-        vsub.xyzw $vf6, $vf0, $vf0
-        vwaitq
-        vmulq.xyz $vf6, $vf13, $Q
-        sqc2 $vf6, 0x0(pX)
-        mfc1 $t0, sx
-        nop
-        qmtc2.ni $t0, $vf8
-        vmulx.xyzw $vf7, $vf6, $vf8x
-        mfc1 $t0, sy
-        nop
-        qmtc2.ni $t0, $vf9
-        vmulx.xyzw $vf2, $vf10, $vf9x
-        sqc2 $vf7, 0x0(pX)
-        sqc2 $vf2, 0x0(pY)
+        lqc2 $vf5, 0x0(pNeg)
+        lqc2 $vf1, 0x0(pSrc)
+        lqc2 $vf2, 0x10(pSrc)
+        lqc2 $vf3, 0x20(pSrc)
+        lqc2 $vf4, 0x30(pSrc)
+        vmul.xyzw $vf1, $vf1, $vf5
+        vmul.xyzw $vf2, $vf2, $vf5
+        vmul.xyzw $vf3, $vf3, $vf5
+        vmul.xyzw $vf4, $vf4, $vf5
+        sqc2 $vf1, 0x0(pDst)
+        sqc2 $vf2, 0x10(pDst)
+        sqc2 $vf3, 0x20(pDst)
+        sqc2 $vf4, 0x30(pDst)
     }
+    ModelView[3][3] = 1.0f;
+    PS2glLoadMatrixf(ModelView);
+    GLI_AddNormalInterpolation(GLI_BIG_GLOBALS_gs_st_CurrentMatrix + 0x10);
+
+    if (pMat != NULL)
+    {
+        pAnimaterTextureToUseSaved = (void*)GLI_g_AnimatedTextureToUse;
+        GLI_g_AnimatedTextureToUse = 0;
+        if (GLI_DRV_IsMaterialTransparent(pMat))
+            GLI_BIG_GLOBALS_xGlobalAlpha = 0.2f;
+        else
+            GLI_BIG_GLOBALS_xGlobalAlpha = 1.0f;
+        GLI_vClearSendMatStates();
+        GLI_DRV_SendMaterialToViewport(pMat);
+        GLI_BIG_GLOBALS_xGlobalAlpha = 1.0f;
+        GLI_g_AnimatedTextureToUse = (int)pAnimaterTextureToUseSaved;
+
+        g_PS2glContext.nEnableBits |= 0x800;
+        g_gsContext.TEST_1.ZTE = 1;
+        g_gsContext.ModFlgs.TEST_1_Modified = 1;
+        zTst = 1;
+        switch (g_PS2glContext.eDepthFunc)
+        {
+        case 0x200: zTst = 0; break;
+        case 0x207: zTst = 1; break;
+        case 0x203: zTst = 2; break;
+        case 0x201: zTst = 3; break;
+        case 0x202:
+        case 0x204:
+        case 0x205:
+        case 0x206:
+            break;
+        }
+        g_gsContext.TEST_1.ZTST = zTst;
+        g_gsContext.ModFlgs.TEST_1_Modified = 1;
+        g_PS2glContext.nLightBits &= ~0x400;
+    }
+
+    g_PS2glContext.eClippingFunction = 3;
+    if (g_PS2glContext.uiDmaOmitDataBits & 0x600)
+    {
+        *(int*)g_PS2glContext.pnColorMatMasks &= ~0x200;
+        *(int*)g_PS2glContext.pnColorMatMasks &= ~0x100;
+    }
+    g_PS2glContext.uiDmaOmitDataBits = 0;
+    g_PS2glContext.uiFastPathBits = 1;
+
+    pParticleList[0][3] = sx * XRESf;
+    pParticleList[2][3] = sy * YRESf;
+
+    CosValAdd = 5.0f * pMat->stDiffuse.xR;
+    CosVal = 6.0f * (g_ffFrameTime * (4.0f + pMat->stDiffuse.xR * pMat->stDiffuse.xG));
+    for (i = 0; i < NbSprites; i += 20)
+    {
+        pParticleList[(i << 1) + 4][3] = 2.5f * a64_fSinTable[(unsigned int)CosVal & 0x1FF];
+        CosVal += CosValAdd;
+    }
+
+    PS2glVertexPointer(NbSprites, 0x1406, -2, pParticleList);
+    PS2glInternalDrawSpriteArray(NbSprites);
+    g_PS2glContext.eClippingFunction = 3;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawSpriteGen.c lines 344–347 */
-/* addr: 0x002bc740  size: 20 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 344
- *   +0x0008 -> line 345
- *   +0x000c -> line 347
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GLI_v_CalculateInverseCamMat(MAT_tdstTransformation_* pInvertedCam, GLD_tdstViewportAttributes_* _p_stViewport)
+void GLI_PS2GL_PrepareSpecificDataForLevel(void)
 {
-    GLI_tdstCamera_* p_stCam;
-
-    p_stCam = *(GLI_tdstCamera_**)_p_stViewport->p_vSpecificToXD;
-    GLI_g_p_stCurrentCam = (int)p_stCam;
-    MAT_fn_vInvert(pInvertedCam, (MAT_tdstTransformation_* )((char*)p_stCam + 0x10));
+    PS2glTexParameteri(0xDE1, 0x2801, 0x2701);
+    PS2glTexParameteri(0xDE1, 0x2800, 0x2601);
+    GLI_vInitSdlCache();
+    GLI_g_MustBlocIn30FPS = 0;
+    GLI_BIG_GLOBALS_xGlobalAlpha = 1.0f;
+    GLI_g_fCurrentCameraRatio = 4.0f / 3.0f;
+    GLI_g_fCurrentCameraxAngle = 45.0f;
+    GLI_g_NearValue = 0.8f;
+    GLI_g_FarValue = 2048.0f;
+    GLI_gs_lBackGroundColor = 0;
+    GLI_vInitSimpleShadowArrays();
+    GLI_g_StaticVertexArraySizePrevision = 0;
+    GLI_fnvPrecalculateStuffForAllMaterials();
+    TotalVertexArraySizeWithoutStrips = 0;
+    TotalVertexArraySizeWithStrips = 0;
+    NbVerticesToProcessWithStrips = 0;
+    NbVerticesToProcessWithoutStrips = 0;
+    GLI_PS2GL_PrepareSpecificDataForSPO(gp_stActualWorld);
+    GLI_PS2GL_PrepareSpecificDataForSPO(gp_stDynamicWorld);
+    GLI_PS2GL_PrepareSpecificDataForSPO(gp_stInactiveDynamicWorld);
+    GLIPS2_vInitMatrixDeformation();
+    ReinitOldMovieEffect();
+    GLI_g_hVAContainer = (int)VAC_Create(1000);
+    GLI_BIG_GLOBALS_xGlobalAlpha = 1.0f;
+    if (GLI_g_ChristianSlaterMode)
+    {
+        PS2glTexParameteri(0xDE1, 0x2800, 0x2600);
+        PS2glTexParameteri(0xDE1, 0x2801, 0x2600);
+        PS2glTexParameteri(0xDE1, 0x2800, 0x2600);
+        PS2glTexParameteri(0xDE1, 0x2801, 0x2600);
+    }
+    else
+    {
+        PS2glTexParameteri(0xDE1, 0x2800, 0x2601);
+        PS2glTexParameteri(0xDE1, 0x2801, 0x2701);
+    }
+    g_PS2glContext.uiStaticDisplayListMaxSize = 30000;
+    GLI_g_StaticVertexArraySizePrevision = 0;
+    HIE_fn_vInitMatrixStack();
+    GLI_g_DMA_PreparingOpaque = 1;
+    GLI_vDMABufferParseTree(gp_stActualWorld);
+    GLI_g_DMA_PreparingOpaque = 0;
+    GLI_vDMABufferParseTree(gp_stActualWorld);
+    g_PS2glContext.uiStaticDisplayListMaxSize = 5000;
+    WaterFx_vInit();
+    PS2MC_vActivateMemoryCard();
+    printf("Specific data done :\n");
 }

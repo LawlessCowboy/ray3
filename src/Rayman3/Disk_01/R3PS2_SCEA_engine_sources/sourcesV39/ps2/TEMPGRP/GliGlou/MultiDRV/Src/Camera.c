@@ -79,6 +79,124 @@ inline float J_M_xAbs(float x)
     return r;
 }
 
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void J_RemoveRedundantSprites(J_ParticleSprite_* pList, unsigned int NbSprites);
+void GLD_fn_vD3DUpdateViewMatrixFromCamera(GLD_tdstViewportAttributes_* _p_stVpt);
+void GLI_fn_vSetCameraMirrorMode(GLI_tdstCamera_* p_stCam, unsigned char _bMirrorMode);
+void GLI_xGetViewportCamera(short hDevice, short hViewport, GLI_tdstCamera_** p_stCam);
+void GLI_xSetViewportCamera(short hDevice, short hViewport, GLI_tdstCamera_* p_stCam);
+void GLI_xSetCameraRatio(GLI_tdstCamera_* p_stCam, float xRatio);
+void GLI_xGetCameraAspectAndRatio(GLI_tdstCamera_* p_stCam, float* p_xAlphaX, float* p_xRatio);
+void GLI_xSetCameraAspectAndRatio(GLI_tdstCamera_* p_stCam, float xAlphaX, float xRatio);
+void GLI_xSetCameraMatrix(GLI_tdstCamera_* p_stCam, MAT_tdstTransformation_* p_stMatrix);
+void GLI_xGetCameraMatrix(GLI_tdstCamera_* p_stCam, MAT_tdstTransformation_* p_stMatrix);
+void GLI_xSetCameraNearFar(GLI_tdstCamera_* p_stCam, float xNear, float xFar);
+void GLI_vCopyCamera(GLI_tdstCamera_* p_stCamDest, GLI_tdstCamera_* p_stCamSource);
+
+void GLI_vReinitViewport();
+
+int GLD_bGetViewportAttributes(short hDev, short hVP, GLD_tdstViewportAttributes_* pstViewAttrib);
+int GLD_bGetDeviceAttributes(short hDev, GLD_tdstDeviceAttributes_* pstDevAttrib);
+void GLI_xAdjustCameraToViewport2(GLD_tdstDeviceAttributes_* p_stDev, GLD_tdstViewportAttributes_* p_stVpt, GLI_tdstCamera_* p_stCam);
+
+/* MultiVP's target call supplies near in f12 and far in f13; the unused
+ * near parameter was omitted by debug extraction. */
+#pragma optimize_for_size off
+
+#pragma optimize_for_size reset
+
+void GLI_vCopyCamera(GLI_tdstCamera_* p_stCamDest, GLI_tdstCamera_* p_stCamSource)
+{
+    *p_stCamDest = *p_stCamSource;
+}
+
+#pragma optimize_for_size off
+void GLI_xSetCameraNearFar(GLI_tdstCamera_* p_stCam, float xNear, float xFar)
+{
+    p_stCam->xNear = 0.25f;
+    if (xFar == 0.0f)
+        p_stCam->xFar = 100000.0f;
+    else
+        p_stCam->xFar = xFar;
+}
+#pragma optimize_for_size reset
+
+void GLI_xGetCameraMatrix(GLI_tdstCamera_* p_stCam, MAT_tdstTransformation_* p_stMatrix)
+{
+    *p_stMatrix = p_stCam->stMatrix;
+
+}
+
+void GLI_xSetCameraMatrix(GLI_tdstCamera_* p_stCam, MAT_tdstTransformation_* p_stMatrix)
+{
+    p_stCam->stMatrix = *p_stMatrix;
+
+    if (GLI_g_StereoVisionMode == 2)
+        p_stCam->stMatrix.stTransformMatrix.stCol_3.xX += 0.4f;
+}
+
+void GLI_xSetCameraAspectAndRatio(GLI_tdstCamera_* p_stCam, float xAlphaX, float xRatio)
+{
+    p_stCam->xAlphaX = xAlphaX;
+    p_stCam->xRatio = xRatio;
+    p_stCam->xAlphaY = xAlphaX * xRatio;
+}
+
+void GLI_xGetCameraAspectAndRatio(GLI_tdstCamera_* p_stCam, float* p_xAlphaX, float* p_xRatio)
+{
+    *p_xAlphaX = p_stCam->xAlphaX;
+    *p_xRatio = p_stCam->xRatio;
+}
+
+void GLI_xSetCameraRatio(GLI_tdstCamera_* p_stCam, float xRatio)
+{
+    p_stCam->xRatio = xRatio;
+    p_stCam->xAlphaY = p_stCam->xAlphaX * xRatio;
+}
+
+void GLI_xSetViewportCamera(short hDevice, short hViewport, GLI_tdstCamera_* p_stCam)
+{
+    GLD_tdstViewportAttributes_ stViewAttrib;
+    GLD_tdstViewportAttributes_ stViewAttrib2;
+    GLD_tdstDeviceAttributes_ stDevAttrib;
+    GLI_tdstCamera_* p_stCamUsed;
+    GLI_tdstSpecificAttributesFor3D_* p_stSpecific;
+
+    GLI_vReinitViewport();
+    if (GLD_bGetViewportAttributes(hDevice, hViewport, &stViewAttrib))
+    {
+        p_stSpecific = (GLI_tdstSpecificAttributesFor3D_*)stViewAttrib.p_vSpecificToXD;
+        if (p_stCam != p_stSpecific->p_stCam)
+        {
+            p_stSpecific->p_stCam = p_stCam;
+            p_stCamUsed = p_stCam; if (GLD_bGetDeviceAttributes(hDevice, &stDevAttrib)) { if (GLD_bGetViewportAttributes(hDevice, hViewport, &stViewAttrib2)) { if (p_stCam == NULL) p_stCamUsed = p_stCamAntiBug; else p_stCamAntiBug = p_stCam; GLI_xAdjustCameraToViewport2(&stDevAttrib, &stViewAttrib2, p_stCamUsed); } }
+        }
+        if (p_stCam) { GLI_g_fCurrentCameraxAngle = 0.75f * (180.0f * p_stCam->xAlphaX) / 3.1415927f; }
+    }
+}
+
+void GLI_xGetViewportCamera(short hDevice, short hViewport, GLI_tdstCamera_** p_stCam)
+{
+    GLD_tdstViewportAttributes_ stViewAttrib;
+    if (GLD_bGetViewportAttributes(hDevice, hViewport, &stViewAttrib))
+    {
+        *p_stCam = *(GLI_tdstCamera_**)stViewAttrib.p_vSpecificToXD;
+    }
+}
+
+void GLI_fn_vSetCameraMirrorMode(GLI_tdstCamera_* p_stCam, unsigned char _bMirrorMode)
+{
+    p_stCam->bCameraIsMirrored = _bMirrorMode;
+}
+
+void GLD_fn_vD3DUpdateViewMatrixFromCamera(GLD_tdstViewportAttributes_* _p_stVpt)
+{
+    GLI_vReinitViewport(_p_stVpt);
+    if (*(GLI_tdstCamera_**)_p_stVpt->p_vSpecificToXD) GLI_g_fCurrentCameraxAngle = 0.75f * (180.0f * (*(GLI_tdstCamera_**)_p_stVpt->p_vSpecificToXD)->xAlphaX) / 3.1415927f;
+    GLI_BIG_GLOBALS_gs_st_CameraMatrix = (int)&(*(GLI_tdstCamera_**)_p_stVpt->p_vSpecificToXD)->stMatrix;
+}
+
 void J_RemoveRedundantSprites(J_ParticleSprite_* pList, unsigned int NbSprites)
 {
     unsigned int i;
@@ -103,151 +221,4 @@ void J_RemoveRedundantSprites(J_ParticleSprite_* pList, unsigned int NbSprites)
             }
         }
     }
-}
-
-void GLI_vReinitViewport();
-
-void GLD_fn_vD3DUpdateViewMatrixFromCamera(GLD_tdstViewportAttributes_* _p_stVpt)
-{
-    GLI_vReinitViewport(_p_stVpt);
-    if (*(GLI_tdstCamera_**)_p_stVpt->p_vSpecificToXD) GLI_g_fCurrentCameraxAngle = 0.75f * (180.0f * (*(GLI_tdstCamera_**)_p_stVpt->p_vSpecificToXD)->xAlphaX) / 3.1415927f;
-    GLI_BIG_GLOBALS_gs_st_CameraMatrix = (int)&(*(GLI_tdstCamera_**)_p_stVpt->p_vSpecificToXD)->stMatrix;
-}
-
-void GLI_fn_vSetCameraMirrorMode(GLI_tdstCamera_* p_stCam, unsigned char _bMirrorMode)
-{
-    p_stCam->bCameraIsMirrored = _bMirrorMode;
-}
-
-int GLD_bGetViewportAttributes(short hDev, short hVP, GLD_tdstViewportAttributes_* pstViewAttrib);
-int GLD_bGetDeviceAttributes(short hDev, GLD_tdstDeviceAttributes_* pstDevAttrib);
-void GLI_xAdjustCameraToViewport2(GLD_tdstDeviceAttributes_* p_stDev, GLD_tdstViewportAttributes_* p_stVpt, GLI_tdstCamera_* p_stCam);
-
-void GLI_xGetViewportCamera(short hDevice, short hViewport, GLI_tdstCamera_** p_stCam)
-{
-    GLD_tdstViewportAttributes_ stViewAttrib;
-    if (GLD_bGetViewportAttributes(hDevice, hViewport, &stViewAttrib))
-    {
-        *p_stCam = *(GLI_tdstCamera_**)stViewAttrib.p_vSpecificToXD;
-    }
-}
-
-void GLI_xSetViewportCamera(short hDevice, short hViewport, GLI_tdstCamera_* p_stCam)
-{
-    GLD_tdstViewportAttributes_ stViewAttrib;
-    GLD_tdstViewportAttributes_ stViewAttrib2;
-    GLD_tdstDeviceAttributes_ stDevAttrib;
-    GLI_tdstCamera_* p_stCamUsed;
-    GLI_tdstSpecificAttributesFor3D_* p_stSpecific;
-
-    GLI_vReinitViewport();
-    if (GLD_bGetViewportAttributes(hDevice, hViewport, &stViewAttrib))
-    {
-        p_stSpecific = (GLI_tdstSpecificAttributesFor3D_*)stViewAttrib.p_vSpecificToXD;
-        if (p_stCam != p_stSpecific->p_stCam)
-        {
-            p_stSpecific->p_stCam = p_stCam;
-            p_stCamUsed = p_stCam; if (GLD_bGetDeviceAttributes(hDevice, &stDevAttrib)) { if (GLD_bGetViewportAttributes(hDevice, hViewport, &stViewAttrib2)) { if (p_stCam == NULL) p_stCamUsed = p_stCamAntiBug; else p_stCamAntiBug = p_stCam; GLI_xAdjustCameraToViewport2(&stDevAttrib, &stViewAttrib2, p_stCamUsed); } }
-        }
-        if (p_stCam) { GLI_g_fCurrentCameraxAngle = 0.75f * (180.0f * p_stCam->xAlphaX) / 3.1415927f; }
-    }
-}
-
-void GLI_xSetCameraRatio(GLI_tdstCamera_* p_stCam, float xRatio)
-{
-    p_stCam->xRatio = xRatio;
-    p_stCam->xAlphaY = p_stCam->xAlphaX * xRatio;
-}
-
-void GLI_xGetCameraAspectAndRatio(GLI_tdstCamera_* p_stCam, float* p_xAlphaX, float* p_xRatio)
-{
-    *p_xAlphaX = p_stCam->xAlphaX;
-    *p_xRatio = p_stCam->xRatio;
-}
-
-void GLI_xSetCameraAspectAndRatio(GLI_tdstCamera_* p_stCam, float xAlphaX, float xRatio)
-{
-    p_stCam->xAlphaX = xAlphaX;
-    p_stCam->xRatio = xRatio;
-    p_stCam->xAlphaY = xAlphaX * xRatio;
-}
-
-void GLI_xSetCameraMatrix(GLI_tdstCamera_* p_stCam, MAT_tdstTransformation_* p_stMatrix)
-{
-    p_stCam->stMatrix = *p_stMatrix;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    if (GLI_g_StereoVisionMode == 2)
-        p_stCam->stMatrix.stTransformMatrix.stCol_3.xX += 0.4f;
-}
-
-void GLI_xGetCameraMatrix(GLI_tdstCamera_* p_stCam, MAT_tdstTransformation_* p_stMatrix)
-{
-    *p_stMatrix = p_stCam->stMatrix;
-
-}
-
-/* MultiVP's target call supplies near in f12 and far in f13; the unused
- * near parameter was omitted by debug extraction. */
-#pragma optimize_for_size off
-void GLI_xSetCameraNearFar(GLI_tdstCamera_* p_stCam, float xNear, float xFar)
-{
-    p_stCam->xNear = 0.25f;
-    if (xFar == 0.0f)
-        p_stCam->xFar = 100000.0f;
-    else
-        p_stCam->xFar = xFar;
-}
-#pragma optimize_for_size reset
-
-void GLI_vCopyCamera(GLI_tdstCamera_* p_stCamDest, GLI_tdstCamera_* p_stCamSource)
-{
-    *p_stCamDest = *p_stCamSource;
 }

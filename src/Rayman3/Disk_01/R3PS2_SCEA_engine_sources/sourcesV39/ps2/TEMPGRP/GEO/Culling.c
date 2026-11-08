@@ -145,12 +145,18 @@ extern void GLI_vSignalCurrentMemoryChannel(int ucCurrentChannel);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GEO_xInitGEOError(void)
-{
-    if (g_ucGEOModuleId == 255)
-        g_ucGEOModuleId = Erm_fn_ucInitErrMsg();
-    GLI_vSignalCurrentMemoryChannel(255);
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void GEO_xInitGEOError(void);
+int GEO_lCullingBox(GLD_tdstViewportAttributes_* p_stVpt, MTH3D_tdstVector_* p_stMin, MTH3D_tdstVector_* p_stMax, int _lCullingResult);
+void GEO_fn_vComputeCameraParametersForCulling(GLD_tdstViewportAttributes_* p_stVpt, float _xZFar);
+int GEO_lMainCullingSphere(GLD_tdstViewportAttributes_* p_stVpt, MTH3D_tdstVector_* p_stShereCenter, float xRadius, MAT_tdstTransformation_* p_stMatrix, MAT_tdstTransformation_* p_stObjectMatrix, int _lCullingResult);
+void GEO_xReinitZFarTransparencyLevel(void);
+float GEO_xGetZFarTransparencyLevel(void);
+void GEO_vSetZFarTransparencyZone(float _xZ);
+float GEO_xGetZFarTransparencyZone(void);
+void GEO_vSetZFar(float _xZ);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Culling.c lines 349–538 */
 /* addr: 0x002a08c0  size: 1768 bytes */
@@ -276,6 +282,329 @@ void GEO_xInitGEOError(void)
  */
 #define M_Min(a, b) (((a) < (b)) ? (a) : (b))
 #define M_Max(a, b) (((a) > (b)) ? (a) : (b))
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Culling.c lines 258–295 */
+/* addr: 0x002a0fb0  size: 236 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 258
+ *   +0x0010 -> line 264
+ *   +0x001c -> line 272
+ *   +0x0028 -> line 276
+ *   +0x002c -> line 277
+ *   +0x0030 -> line 276
+ *   +0x0034 -> line 277
+ *   +0x0038 -> line 276
+ *   +0x0044 -> line 277
+ *   +0x0048 -> line 276
+ *   +0x004c -> line 277
+ *   +0x005c -> line 280
+ *   +0x0060 -> line 283
+ *   +0x0064 -> line 280
+ *   +0x006c -> line 283
+ *   +0x0078 -> line 280
+ *   +0x0090 -> line 283
+ *   +0x0098 -> line 286
+ *   +0x00ac -> line 289
+ *   +0x00c0 -> line 292
+ *   +0x00d4 -> line 294
+ *   +0x00d8 -> line 295
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void MAT_fn_vInvertRotation(MAT_tdstTransformation_* _p_stDest, MAT_tdstTransformation_* _p_stSrc);
+void MAT_fn_vApplyOnVector(MTH3D_tdstVector_* _p_stDest, MAT_tdstTransformation_* _p_stTransform, MTH3D_tdstVector_* _p_stSrc);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Culling.c lines 108–238 */
+/* addr: 0x002a10a0  size: 988 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 108
+ *   +0x0030 -> line 117
+ *   +0x0034 -> line 113
+ *   +0x0038 -> line 117
+ *   +0x008c -> line 120
+ *   +0x00c4 -> line 126
+ *   +0x00c8 -> line 129
+ *   +0x00dc -> line 126
+ *   +0x00e0 -> line 129
+ *   +0x0128 -> line 131
+ *   +0x012c -> line 133
+ *   +0x0130 -> line 129
+ *   +0x0140 -> line 133
+ *   +0x0148 -> line 135
+ *   +0x0164 -> line 137
+ *   +0x016c -> line 142
+ *   +0x017c -> line 144
+ *   +0x0180 -> line 149
+ *   +0x018c -> line 151
+ *   +0x01a8 -> line 153
+ *   +0x01b8 -> line 155
+ *   +0x01bc -> line 156
+ *   +0x01c4 -> line 159
+ *   +0x01dc -> line 161
+ *   +0x0200 -> line 162
+ *   +0x0208 -> line 167
+ *   +0x020c -> line 169
+ *   +0x0214 -> line 174
+ *   +0x0218 -> line 176
+ *   +0x0220 -> line 179
+ *   +0x0224 -> line 183
+ *   +0x0230 -> line 185
+ *   +0x0254 -> line 186
+ *   +0x026c -> line 188
+ *   +0x0274 -> line 190
+ *   +0x0284 -> line 192
+ *   +0x0288 -> line 197
+ *   +0x0294 -> line 199
+ *   +0x02b8 -> line 200
+ *   +0x02d0 -> line 202
+ *   +0x02d8 -> line 204
+ *   +0x02e8 -> line 206
+ *   +0x02ec -> line 211
+ *   +0x02f8 -> line 213
+ *   +0x031c -> line 214
+ *   +0x0334 -> line 216
+ *   +0x033c -> line 218
+ *   +0x034c -> line 220
+ *   +0x0350 -> line 225
+ *   +0x035c -> line 227
+ *   +0x0380 -> line 228
+ *   +0x0398 -> line 230
+ *   +0x03a0 -> line 232
+ *   +0x03b0 -> line 234
+ *   +0x03b4 -> line 237
+ *   +0x03b8 -> line 238
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+float MAT_fn_xGetMaxScaleNonOpt(MAT_tdstTransformation_* _hTransform);
+
+/* R5900 accumulator dot product (mula.s/madda.s/madd.s), not emittable from C. */
+inline float MTH_xDot3(float _x1, float _x2, float _y1, float _y2, float _z1, float _z2) { float _r; asm { mula.s _x1, _x2 } asm { madda.s _y1, _y2 } asm { madd.s _r, _z1, _z2 } return _r; }
+
+inline unsigned char MAT_M_bTransformHasScale(MAT_tdstTransformation_* _hTransform)
+{
+    return _hTransform->eType == MAT_eTransform_Scale || _hTransform->eType == MAT_eTransform_Zoom
+        || _hTransform->eType == MAT_eTransform_RotationScale || _hTransform->eType == MAT_eTransform_RotationZoom
+        || _hTransform->eType == MAT_eTransform_ComplexRotationScale;
+}
+
+inline float MAT_M_xGetMaxScale(MAT_tdstTransformation_* _hTransform)
+{
+    if ((unsigned int)(_hTransform->eType - MAT_eTransform_Identity) <= 1 || _hTransform->eType == MAT_eTransform_Rotation)
+        return 1.0f;
+    return MAT_fn_xGetMaxScaleNonOpt(_hTransform);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Culling.c lines 76–76 */
+/* addr: 0x002a1480  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 76
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Culling.c lines 75–75 */
+/* addr: 0x002a1490  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 75
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Culling.c lines 71–73 */
+/* addr: 0x002a14a0  size: 52 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 71
+ *   +0x0018 -> line 72
+ *   +0x002c -> line 73
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Culling.c lines 67–67 */
+/* addr: 0x002a14e0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 67
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Culling.c lines 65–65 */
+/* addr: 0x002a14f0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 65
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void GEO_vSetZFar(float _xZ)
+{
+    GEO_g_xZFar = _xZ;
+}
+
+float GEO_xGetZFarTransparencyZone(void)
+{
+    return GEO_g_xZFarTransparencyZone;
+}
+
+void GEO_vSetZFarTransparencyZone(float _xZ)
+{
+    GEO_g_xZFarTransparencyZone = _xZ;
+    if (_xZ)
+        GEO_g_xOoZFarTransparencyZone = 1.0f / _xZ;
+}
+
+float GEO_xGetZFarTransparencyLevel(void)
+{
+    return GEO_g_xZFarTransparencyLevel;
+}
+
+void GEO_xReinitZFarTransparencyLevel(void)
+{
+    GEO_g_xZFarTransparencyLevel = 1.0f;
+}
+
+/* The debug scaffold lists five parameters, but retail reads _lCullingResult
+   from t0 and every caller (SPO/HieDraw.c, GEO/GEO_Ed/ElemEd.c) passes an
+   object matrix before it, which this function does not use. */
+int GEO_lMainCullingSphere(GLD_tdstViewportAttributes_* p_stVpt, MTH3D_tdstVector_* p_stShereCenter, float xRadius, MAT_tdstTransformation_* p_stMatrix, MAT_tdstTransformation_* p_stObjectMatrix, int _lCullingResult)
+{
+    float xDotProduct;
+    GLI_tdstCamera_* param0;
+    MTH3D_tdstVector_ stCenter;
+    MTH4D_tdstVector_ stVect;
+    MTH4D_tdstMatrix_* pMat;
+    MTH4D_tdstVector_* pVect;
+
+    xDotProduct = 0.0f;
+    if (MAT_M_bTransformHasScale(p_stMatrix))
+        xRadius *= MAT_M_xGetMaxScale(p_stMatrix);
+
+    param0 = *(GLI_tdstCamera_**)p_stVpt->p_vSpecificToXD;
+
+    pMat = &p_stMatrix->stTransformMatrix;
+    pVect = &stVect;
+    *(int*)&stVect.xX = *(int*)&p_stShereCenter->xX;
+    *(int*)&stVect.xY = *(int*)&p_stShereCenter->xY;
+    *(int*)&stVect.xZ = *(int*)&p_stShereCenter->xZ;
+    asm {
+        lqc2 vf1, 0x0(pVect)
+        lqc2 vf2, 0x0(pMat)
+        lqc2 vf3, 0x10(pMat)
+        lqc2 vf4, 0x20(pMat)
+        lqc2 vf5, 0x30(pMat)
+        vmulax.xyzw ACC, vf2, vf1x
+        vmadday.xyzw ACC, vf3, vf1y
+        vmaddaz.xyzw ACC, vf4, vf1z
+        vmaddw.xyzw vf6, vf5, vf0w
+        nop
+        nop
+        sqc2 vf6, 0x0(pVect)
+    }
+    ((int*)&stCenter)[0] = *(int*)&stVect.xX;
+    ((int*)&stCenter)[1] = *(int*)&stVect.xY;
+    ((int*)&stCenter)[2] = *(int*)&stVect.xZ;
+
+    _lCullingResult |= 0x40;
+
+    if (!(_lCullingResult & 0x10))
+    {
+        if (stCenter.xZ + xRadius < param0->xNear)
+            return 0;
+        xDotProduct = stCenter.xZ - xRadius;
+        if (xDotProduct > param0->xNear)
+            _lCullingResult |= 0x10;
+    }
+
+    if (!(_lCullingResult & 0x20))
+    {
+        if (GEO_g_xZFar != 0.0f)
+        {
+            if (xDotProduct > GEO_g_xZFar)
+            {
+                GEO_g_xZFarTransparencyLevel = 0.0f;
+                return 0;
+            }
+            if (xDotProduct > GEO_g_xZFar - GEO_g_xZFarTransparencyZone)
+                GEO_g_xZFarTransparencyLevel = 1.0f - GEO_g_xOoZFarTransparencyZone * (stCenter.xZ - xRadius - GEO_g_xZFar + GEO_g_xZFarTransparencyZone);
+            else
+            {
+                _lCullingResult |= 0x20;
+                GEO_g_xZFarTransparencyLevel = 1.0f;
+            }
+        }
+        else
+        {
+            _lCullingResult |= 0x20;
+            GEO_g_xZFarTransparencyLevel = 1.0f;
+        }
+    }
+    else
+        GEO_g_xZFarTransparencyLevel = 1.0f;
+
+    if (!(_lCullingResult & 1))
+    {
+        xDotProduct = MTH_xDot3(stCenter.xX, param0->stNormPlaneRight.xX, stCenter.xY, param0->stNormPlaneRight.xY, stCenter.xZ, param0->stNormPlaneRight.xZ);
+        if (xDotProduct > xRadius + param0->xDistPlaneLeft)
+            return 0;
+        if (xDotProduct < param0->xDistPlaneLeft - xRadius)
+            _lCullingResult |= 1;
+    }
+
+    if (!(_lCullingResult & 2))
+    {
+        xDotProduct = MTH_xDot3(stCenter.xX, param0->stNormPlaneLeft.xX, stCenter.xY, param0->stNormPlaneLeft.xY, stCenter.xZ, param0->stNormPlaneLeft.xZ);
+        if (xDotProduct > xRadius + param0->xDistPlaneRight)
+            return 0;
+        if (xDotProduct < param0->xDistPlaneRight - xRadius)
+            _lCullingResult |= 2;
+    }
+
+    if (!(_lCullingResult & 4))
+    {
+        xDotProduct = MTH_xDot3(stCenter.xX, param0->stNormPlaneUp.xX, stCenter.xY, param0->stNormPlaneUp.xY, stCenter.xZ, param0->stNormPlaneUp.xZ);
+        if (xDotProduct > xRadius + param0->xDistPlaneUp)
+            return 0;
+        if (xDotProduct < param0->xDistPlaneUp - xRadius)
+            _lCullingResult |= 4;
+    }
+
+    if (!(_lCullingResult & 8))
+    {
+        xDotProduct = MTH_xDot3(stCenter.xX, param0->stNormPlaneDown.xX, stCenter.xY, param0->stNormPlaneDown.xY, stCenter.xZ, param0->stNormPlaneDown.xZ);
+        if (xDotProduct > xRadius + param0->xDistPlaneDown)
+            return 0;
+        if (xDotProduct < param0->xDistPlaneDown - xRadius)
+            _lCullingResult |= 8;
+    }
+
+    return _lCullingResult;
+}
+
+void GEO_fn_vComputeCameraParametersForCulling(GLD_tdstViewportAttributes_* p_stVpt, float _xZFar)
+{
+    GLI_tdstCamera_* hCamera;
+    MAT_tdstTransformation_ stMatrixInverse;
+
+    hCamera = *(GLI_tdstCamera_**)p_stVpt->p_vSpecificToXD;
+
+    MAT_fn_vInvertRotation(&stMatrixInverse, &hCamera->stMatrix);
+
+    gs_stCameraPosInGlobal.xX = 0.0f; gs_stCameraPosInGlobal.xY = 0.0f; gs_stCameraPosInGlobal.xZ = -1.0f;
+    MAT_fn_vApplyOnVector(&gs_stGlobalNormPlaneNear, &stMatrixInverse, &gs_stCameraPosInGlobal);
+
+    *(int*)&gs_stCameraPosInGlobal.xX = ((int*)&stMatrixInverse.stTransformMatrix.stCol_3)[0]; *(int*)&gs_stCameraPosInGlobal.xY = ((int*)&stMatrixInverse.stTransformMatrix.stCol_3)[1]; *(int*)&gs_stCameraPosInGlobal.xZ = ((int*)&stMatrixInverse.stTransformMatrix.stCol_3)[2];
+
+    MAT_fn_vApplyOnVector(&gs_stGlobalNormPlaneLeft, &stMatrixInverse, &hCamera->stNormPlaneRight);
+
+    MAT_fn_vApplyOnVector(&gs_stGlobalNormPlaneRight, &stMatrixInverse, &hCamera->stNormPlaneLeft);
+
+    MAT_fn_vApplyOnVector(&gs_stGlobalNormPlaneUp, &stMatrixInverse, &hCamera->stNormPlaneUp);
+
+    MAT_fn_vApplyOnVector(&gs_stGlobalNormPlaneDown, &stMatrixInverse, &hCamera->stNormPlaneDown);
+
+    GEO_g_xZFar = _xZFar;
+}
 
 int GEO_lCullingBox(GLD_tdstViewportAttributes_* p_stVpt, MTH3D_tdstVector_* p_stMin, MTH3D_tdstVector_* p_stMax, int _lCullingResult)
 {
@@ -426,320 +755,9 @@ int GEO_lCullingBox(GLD_tdstViewportAttributes_* p_stVpt, MTH3D_tdstVector_* p_s
     return _lCullingResult;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Culling.c lines 258–295 */
-/* addr: 0x002a0fb0  size: 236 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 258
- *   +0x0010 -> line 264
- *   +0x001c -> line 272
- *   +0x0028 -> line 276
- *   +0x002c -> line 277
- *   +0x0030 -> line 276
- *   +0x0034 -> line 277
- *   +0x0038 -> line 276
- *   +0x0044 -> line 277
- *   +0x0048 -> line 276
- *   +0x004c -> line 277
- *   +0x005c -> line 280
- *   +0x0060 -> line 283
- *   +0x0064 -> line 280
- *   +0x006c -> line 283
- *   +0x0078 -> line 280
- *   +0x0090 -> line 283
- *   +0x0098 -> line 286
- *   +0x00ac -> line 289
- *   +0x00c0 -> line 292
- *   +0x00d4 -> line 294
- *   +0x00d8 -> line 295
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void MAT_fn_vInvertRotation(MAT_tdstTransformation_* _p_stDest, MAT_tdstTransformation_* _p_stSrc);
-void MAT_fn_vApplyOnVector(MTH3D_tdstVector_* _p_stDest, MAT_tdstTransformation_* _p_stTransform, MTH3D_tdstVector_* _p_stSrc);
-
-void GEO_fn_vComputeCameraParametersForCulling(GLD_tdstViewportAttributes_* p_stVpt, float _xZFar)
+void GEO_xInitGEOError(void)
 {
-    GLI_tdstCamera_* hCamera;
-    MAT_tdstTransformation_ stMatrixInverse;
-
-    hCamera = *(GLI_tdstCamera_**)p_stVpt->p_vSpecificToXD;
-
-    MAT_fn_vInvertRotation(&stMatrixInverse, &hCamera->stMatrix);
-
-    gs_stCameraPosInGlobal.xX = 0.0f; gs_stCameraPosInGlobal.xY = 0.0f; gs_stCameraPosInGlobal.xZ = -1.0f;
-    MAT_fn_vApplyOnVector(&gs_stGlobalNormPlaneNear, &stMatrixInverse, &gs_stCameraPosInGlobal);
-
-    *(int*)&gs_stCameraPosInGlobal.xX = ((int*)&stMatrixInverse.stTransformMatrix.stCol_3)[0]; *(int*)&gs_stCameraPosInGlobal.xY = ((int*)&stMatrixInverse.stTransformMatrix.stCol_3)[1]; *(int*)&gs_stCameraPosInGlobal.xZ = ((int*)&stMatrixInverse.stTransformMatrix.stCol_3)[2];
-
-    MAT_fn_vApplyOnVector(&gs_stGlobalNormPlaneLeft, &stMatrixInverse, &hCamera->stNormPlaneRight);
-
-    MAT_fn_vApplyOnVector(&gs_stGlobalNormPlaneRight, &stMatrixInverse, &hCamera->stNormPlaneLeft);
-
-    MAT_fn_vApplyOnVector(&gs_stGlobalNormPlaneUp, &stMatrixInverse, &hCamera->stNormPlaneUp);
-
-    MAT_fn_vApplyOnVector(&gs_stGlobalNormPlaneDown, &stMatrixInverse, &hCamera->stNormPlaneDown);
-
-    GEO_g_xZFar = _xZFar;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Culling.c lines 108–238 */
-/* addr: 0x002a10a0  size: 988 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 108
- *   +0x0030 -> line 117
- *   +0x0034 -> line 113
- *   +0x0038 -> line 117
- *   +0x008c -> line 120
- *   +0x00c4 -> line 126
- *   +0x00c8 -> line 129
- *   +0x00dc -> line 126
- *   +0x00e0 -> line 129
- *   +0x0128 -> line 131
- *   +0x012c -> line 133
- *   +0x0130 -> line 129
- *   +0x0140 -> line 133
- *   +0x0148 -> line 135
- *   +0x0164 -> line 137
- *   +0x016c -> line 142
- *   +0x017c -> line 144
- *   +0x0180 -> line 149
- *   +0x018c -> line 151
- *   +0x01a8 -> line 153
- *   +0x01b8 -> line 155
- *   +0x01bc -> line 156
- *   +0x01c4 -> line 159
- *   +0x01dc -> line 161
- *   +0x0200 -> line 162
- *   +0x0208 -> line 167
- *   +0x020c -> line 169
- *   +0x0214 -> line 174
- *   +0x0218 -> line 176
- *   +0x0220 -> line 179
- *   +0x0224 -> line 183
- *   +0x0230 -> line 185
- *   +0x0254 -> line 186
- *   +0x026c -> line 188
- *   +0x0274 -> line 190
- *   +0x0284 -> line 192
- *   +0x0288 -> line 197
- *   +0x0294 -> line 199
- *   +0x02b8 -> line 200
- *   +0x02d0 -> line 202
- *   +0x02d8 -> line 204
- *   +0x02e8 -> line 206
- *   +0x02ec -> line 211
- *   +0x02f8 -> line 213
- *   +0x031c -> line 214
- *   +0x0334 -> line 216
- *   +0x033c -> line 218
- *   +0x034c -> line 220
- *   +0x0350 -> line 225
- *   +0x035c -> line 227
- *   +0x0380 -> line 228
- *   +0x0398 -> line 230
- *   +0x03a0 -> line 232
- *   +0x03b0 -> line 234
- *   +0x03b4 -> line 237
- *   +0x03b8 -> line 238
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-float MAT_fn_xGetMaxScaleNonOpt(MAT_tdstTransformation_* _hTransform);
-
-/* R5900 accumulator dot product (mula.s/madda.s/madd.s), not emittable from C. */
-inline float MTH_xDot3(float _x1, float _x2, float _y1, float _y2, float _z1, float _z2) { float _r; asm { mula.s _x1, _x2 } asm { madda.s _y1, _y2 } asm { madd.s _r, _z1, _z2 } return _r; }
-
-inline unsigned char MAT_M_bTransformHasScale(MAT_tdstTransformation_* _hTransform)
-{
-    return _hTransform->eType == MAT_eTransform_Scale || _hTransform->eType == MAT_eTransform_Zoom
-        || _hTransform->eType == MAT_eTransform_RotationScale || _hTransform->eType == MAT_eTransform_RotationZoom
-        || _hTransform->eType == MAT_eTransform_ComplexRotationScale;
-}
-
-inline float MAT_M_xGetMaxScale(MAT_tdstTransformation_* _hTransform)
-{
-    if ((unsigned int)(_hTransform->eType - MAT_eTransform_Identity) <= 1 || _hTransform->eType == MAT_eTransform_Rotation)
-        return 1.0f;
-    return MAT_fn_xGetMaxScaleNonOpt(_hTransform);
-}
-
-/* The debug scaffold lists five parameters, but retail reads _lCullingResult
-   from t0 and every caller (SPO/HieDraw.c, GEO/GEO_Ed/ElemEd.c) passes an
-   object matrix before it, which this function does not use. */
-int GEO_lMainCullingSphere(GLD_tdstViewportAttributes_* p_stVpt, MTH3D_tdstVector_* p_stShereCenter, float xRadius, MAT_tdstTransformation_* p_stMatrix, MAT_tdstTransformation_* p_stObjectMatrix, int _lCullingResult)
-{
-    float xDotProduct;
-    GLI_tdstCamera_* param0;
-    MTH3D_tdstVector_ stCenter;
-    MTH4D_tdstVector_ stVect;
-    MTH4D_tdstMatrix_* pMat;
-    MTH4D_tdstVector_* pVect;
-
-    xDotProduct = 0.0f;
-    if (MAT_M_bTransformHasScale(p_stMatrix))
-        xRadius *= MAT_M_xGetMaxScale(p_stMatrix);
-
-    param0 = *(GLI_tdstCamera_**)p_stVpt->p_vSpecificToXD;
-
-    pMat = &p_stMatrix->stTransformMatrix;
-    pVect = &stVect;
-    *(int*)&stVect.xX = *(int*)&p_stShereCenter->xX;
-    *(int*)&stVect.xY = *(int*)&p_stShereCenter->xY;
-    *(int*)&stVect.xZ = *(int*)&p_stShereCenter->xZ;
-    asm {
-        lqc2 vf1, 0x0(pVect)
-        lqc2 vf2, 0x0(pMat)
-        lqc2 vf3, 0x10(pMat)
-        lqc2 vf4, 0x20(pMat)
-        lqc2 vf5, 0x30(pMat)
-        vmulax.xyzw ACC, vf2, vf1x
-        vmadday.xyzw ACC, vf3, vf1y
-        vmaddaz.xyzw ACC, vf4, vf1z
-        vmaddw.xyzw vf6, vf5, vf0w
-        nop
-        nop
-        sqc2 vf6, 0x0(pVect)
-    }
-    ((int*)&stCenter)[0] = *(int*)&stVect.xX;
-    ((int*)&stCenter)[1] = *(int*)&stVect.xY;
-    ((int*)&stCenter)[2] = *(int*)&stVect.xZ;
-
-    _lCullingResult |= 0x40;
-
-    if (!(_lCullingResult & 0x10))
-    {
-        if (stCenter.xZ + xRadius < param0->xNear)
-            return 0;
-        xDotProduct = stCenter.xZ - xRadius;
-        if (xDotProduct > param0->xNear)
-            _lCullingResult |= 0x10;
-    }
-
-    if (!(_lCullingResult & 0x20))
-    {
-        if (GEO_g_xZFar != 0.0f)
-        {
-            if (xDotProduct > GEO_g_xZFar)
-            {
-                GEO_g_xZFarTransparencyLevel = 0.0f;
-                return 0;
-            }
-            if (xDotProduct > GEO_g_xZFar - GEO_g_xZFarTransparencyZone)
-                GEO_g_xZFarTransparencyLevel = 1.0f - GEO_g_xOoZFarTransparencyZone * (stCenter.xZ - xRadius - GEO_g_xZFar + GEO_g_xZFarTransparencyZone);
-            else
-            {
-                _lCullingResult |= 0x20;
-                GEO_g_xZFarTransparencyLevel = 1.0f;
-            }
-        }
-        else
-        {
-            _lCullingResult |= 0x20;
-            GEO_g_xZFarTransparencyLevel = 1.0f;
-        }
-    }
-    else
-        GEO_g_xZFarTransparencyLevel = 1.0f;
-
-    if (!(_lCullingResult & 1))
-    {
-        xDotProduct = MTH_xDot3(stCenter.xX, param0->stNormPlaneRight.xX, stCenter.xY, param0->stNormPlaneRight.xY, stCenter.xZ, param0->stNormPlaneRight.xZ);
-        if (xDotProduct > xRadius + param0->xDistPlaneLeft)
-            return 0;
-        if (xDotProduct < param0->xDistPlaneLeft - xRadius)
-            _lCullingResult |= 1;
-    }
-
-    if (!(_lCullingResult & 2))
-    {
-        xDotProduct = MTH_xDot3(stCenter.xX, param0->stNormPlaneLeft.xX, stCenter.xY, param0->stNormPlaneLeft.xY, stCenter.xZ, param0->stNormPlaneLeft.xZ);
-        if (xDotProduct > xRadius + param0->xDistPlaneRight)
-            return 0;
-        if (xDotProduct < param0->xDistPlaneRight - xRadius)
-            _lCullingResult |= 2;
-    }
-
-    if (!(_lCullingResult & 4))
-    {
-        xDotProduct = MTH_xDot3(stCenter.xX, param0->stNormPlaneUp.xX, stCenter.xY, param0->stNormPlaneUp.xY, stCenter.xZ, param0->stNormPlaneUp.xZ);
-        if (xDotProduct > xRadius + param0->xDistPlaneUp)
-            return 0;
-        if (xDotProduct < param0->xDistPlaneUp - xRadius)
-            _lCullingResult |= 4;
-    }
-
-    if (!(_lCullingResult & 8))
-    {
-        xDotProduct = MTH_xDot3(stCenter.xX, param0->stNormPlaneDown.xX, stCenter.xY, param0->stNormPlaneDown.xY, stCenter.xZ, param0->stNormPlaneDown.xZ);
-        if (xDotProduct > xRadius + param0->xDistPlaneDown)
-            return 0;
-        if (xDotProduct < param0->xDistPlaneDown - xRadius)
-            _lCullingResult |= 8;
-    }
-
-    return _lCullingResult;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Culling.c lines 76–76 */
-/* addr: 0x002a1480  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 76
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GEO_xReinitZFarTransparencyLevel(void)
-{
-    GEO_g_xZFarTransparencyLevel = 1.0f;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Culling.c lines 75–75 */
-/* addr: 0x002a1490  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 75
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-float GEO_xGetZFarTransparencyLevel(void)
-{
-    return GEO_g_xZFarTransparencyLevel;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Culling.c lines 71–73 */
-/* addr: 0x002a14a0  size: 52 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 71
- *   +0x0018 -> line 72
- *   +0x002c -> line 73
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GEO_vSetZFarTransparencyZone(float _xZ)
-{
-    GEO_g_xZFarTransparencyZone = _xZ;
-    if (_xZ)
-        GEO_g_xOoZFarTransparencyZone = 1.0f / _xZ;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Culling.c lines 67–67 */
-/* addr: 0x002a14e0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 67
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-float GEO_xGetZFarTransparencyZone(void)
-{
-    return GEO_g_xZFarTransparencyZone;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Culling.c lines 65–65 */
-/* addr: 0x002a14f0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 65
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GEO_vSetZFar(float _xZ)
-{
-    GEO_g_xZFar = _xZ;
+    if (g_ucGEOModuleId == 255)
+        g_ucGEOModuleId = Erm_fn_ucInitErrMsg();
+    GLI_vSignalCurrentMemoryChannel(255);
 }

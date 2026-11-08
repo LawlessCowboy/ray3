@@ -1839,7 +1839,6 @@ typedef enum tdeMetaActionId_ {
     eNbMetaAction = 13,
 } tdeMetaActionId_;
 
-
 struct tdstProhibit_ {
     tdstState_* h_ProhibitedState; /* +0x0 */
 };
@@ -1974,12 +1973,6 @@ struct tdstState_ {
 struct tdstSubAnim_ {
     tdstAnim3d_* p_stSubAnim; /* +0x0 */
 };
-
-
-
-
-
-
 
 union HIE_tduLinkedObject_ {
     HIE_tdstSuperObject_* p_stSuperObject; /* +0x0 */
@@ -2290,7 +2283,6 @@ struct SECT_tdstSector_ {
     _SND_tduRefEvt hTransitionSoundEvent; /* +0x90 */
 };
 
-
 struct LST2_tdstAnchorToWP_tdHandleOfArcDyn {
     WP_tdstArc_* hFirstElementDyn; /* +0x0 */
     WP_tdstArc_* hLastElementDyn; /* +0x4 */
@@ -2307,7 +2299,6 @@ struct SECT_tdstListOfDNMLights_ {
     SECT_tdstListOfDNMLights_* hPrevBrotherDyn; /* +0x8 */
     LST2_tdstAnchorToSECT_tdxHandleOfElementLstDNMLightsDyn* hFatherDyn; /* +0xc */
 };
-
 
 struct tdstComport_ {
     tdstTreeInterpret_* p_stRules; /* +0x0 */
@@ -2534,7 +2525,6 @@ struct WP_tdstArc_ {
     int m_lWeight; /* +0x18 */
     int m_lWeightInit; /* +0x1c */
 };
-
 
 struct tdstEngineTimerStructure_ {
     unsigned int ulTrameNumber; /* +0x0 */
@@ -2813,7 +2803,6 @@ struct CINE_Manager_ {
     HIE_tdstSuperObject_* gp_stSPOHandleCamera; /* +0x70 */
 };
 
-
 struct AI_tdstMind_ {
     AI_tdstAIModel_* p_stAIModel; /* +0x0 */
     tdstIntelligence_* p_stIntelligence; /* +0x4 */
@@ -2834,7 +2823,6 @@ struct MOR_stMorphVector_ {
     short xVertexIndex; /* +0x0 */
     MTH3D_tdstVector_ stDeformationVector; /* +0x4 */
 };
-
 
 struct tdstEngineStructure_ {
     unsigned char eEngineMode; /* +0x0 */
@@ -3058,55 +3046,29 @@ void WP_fnv_WayPoint_ComputeLocation(WP_tdstWayPoint_* hWayPoint, MTH3D_tdstVect
     asm { madda.s _y, _y }                 \
     asm { madd.s _result, _z, _z }
 
-WP_tdstListOfArc_* WPARCLST_fn_hInit(void)
-{
-    WP_tdstListOfArc_* hList;
-
-
-    WPG_fn_vSetAllocMode();
-
-
-
-    hList = (WP_tdstListOfArc_*)HMU_fn_p_vMalloc(sizeof(WP_tdstListOfArc_), 1);
-
-    if (hList)
-    {
-        hList->m_hArc.hFirstElementDyn = NULL; hList->m_hArc.hLastElementDyn = NULL; hList->m_hArc.lNumberOfElementsDyn = 0;
-    }
-    WPG_fn_vClearAllocMode();
-
-    return hList;
-}
-
-WP_tdstListOfArc_* WPG_fn_hGetArcList(WP_tdstGraphNode_* hSrcNode)
-{
-    if (hSrcNode != NULL) {
-        return hSrcNode->m_hListOfArc;
-    }
-
-    return NULL;
-}
-
-WP_tdstWayPoint_* WPG_fn_hGetWaypointOfGraph(WP_tdstGraph_* hGraph, int iIndex, int* _plTypeOfWP)
-{
-    WP_tdstGraphNode_* hElement;
-    int i;
-
-    for (i = 0, hElement = hGraph->m_hListOfNode.hFirstElementDyn; i < iIndex; i++, hElement = hElement->hNextBrotherDyn) ;
-
-    *_plTypeOfWP = hElement->m_lTypeOfWP;
-    return hElement->m_hWayPoint;
-}
-
-int WPG_fn_lNumberOfWaypointOfGraph(WP_tdstGraph_* hGraph)
-{
-    return hGraph->m_hListOfNode.lNumberOfElementsDyn;
-}
-
-WP_tdstGraph_* WPG_fn_lBuildRandomPath(WP_tdstGraph_* _hGraph, WP_tdstWayPoint_* _hStartWP, int _bIsCircular)
-{
-    return WPG_fn_lBuildOrderedPath(_hGraph, _hStartWP, _bIsCircular, 1);
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+WP_tdstListOfArc_* WPARCLST_fn_hInit(void);
+WP_tdstListOfArc_* WPG_fn_hGetArcList(WP_tdstGraphNode_* hSrcNode);
+WP_tdstWayPoint_* WPG_fn_hGetWaypointOfGraph(WP_tdstGraph_* hGraph, int iIndex, int* _plTypeOfWP);
+int WPG_fn_lNumberOfWaypointOfGraph(WP_tdstGraph_* hGraph);
+WP_tdstGraph_* WPG_fn_lBuildRandomPath(WP_tdstGraph_* _hGraph, WP_tdstWayPoint_* _hStartWP, int _bIsCircular);
+WP_tdstGraph_* WPG_fn_lBuildOrderedPath(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hStartWP, int bIsCircular, int bIsRandom);
+WP_tdstGraph_* WPG_fn_hBuildOrderedPathFromAtoB(WP_tdstGraph_* _hGraph, WP_tdstGraphNode_* _hStartingNode, WP_tdstGraphNode_* _hEndingNode, int bIsRandom);
+int WPG_fn_hRecursiveBuildBestOrderedPathFromAtoB(WP_tdstGraphNode_* _hStartingNode, WP_tdstGraphNode_* _hEndingNode, WP_tdstGraphNode_** _p_hListOfUsefulNodes, int _iNbOfElementInTheGraph, WP_tdstGraphNode_** _p_hListOfResultNodes, int bIsRandom);
+WP_tdstGraph_* WPG_fn_lShortestPath(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, unsigned int ulCapability);
+WP_tdstGraph_* WPG_fn_hGetNearestGraph(MTH3D_tdstVector_* _p_stPos);
+float WPG_xGetCloserWPDistInGraph(WP_tdstGraph_* _hGraph, MTH3D_tdstVector_* _p_stPos);
+void WPG_fn_vReinitAllGraphs(void);
+void WPG_fn_vReinitGraph(WP_tdstGraph_* hGraph);
+int WPG_fn_lGetLinkWeight(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, int* p_lWeight);
+int WPG_fn_lChangeLinkWeight(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, int lWeight);
+int WPG_fn_lGetLinkCapabilities(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, unsigned int* p_ulCapability);
+int WPG_fn_lChangeLinkCapabilities(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, unsigned int ulCapability, int lValue);
+int WPG_fn_lAddArcToWayPoint(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, int lWeight, unsigned int ulCapability);
+int WPG_fn_lAddWayPoint(WP_tdstGraph_* _hGraph, WP_tdstWayPoint_* _hWayPoint, int _lTypeOfWP);
+void WPG_fn_vDestroy(WP_tdstGraph_* hGraph);
+void WPG_fn_vClearAllocMode(void);
 
 /* Not original source, needs cleaning up: the retail inlines these node-level
  * link queries (no out-of-line copies exist). */
@@ -3145,286 +3107,417 @@ inline WP_tdstGraph_* WPG_fn_hCreateGraph(void)
 WP_tdstGraph_* WPG_fn_hBuildOrderedPathFromAtoB(WP_tdstGraph_* _hGraph, WP_tdstGraphNode_* _hStartingNode, WP_tdstGraphNode_* _hEndingNode, int bIsRandom);
 int rand(void);
 
-WP_tdstGraph_* WPG_fn_lBuildOrderedPath(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hStartWP, int bIsCircular, int bIsRandom)
-{
-    WP_tdstGraph_* tdhNewPath;
-    WP_tdstGraphNode_* hCurrentNode;
-    WP_tdstGraphNode_** d_hListOfWPNode;
-    WP_tdstGraphNode_* hFirstNode;
-    int iNbElementInTheGraph;
-    int lBestArcWeight;
-    int iStartingIndex;
-    unsigned int ulCapsOfBestNode;
-    unsigned int ulCapability;
-    int lRealArcWeight;
-    int iCount;
-    int iIndex;
-    int iIndexOfBestNode;
-    WP_tdstWayPoint_** d_hListOfDestWP;
-    int* d_hListOfTypeOfWP;
-    unsigned int* d_hListOfDestCaps;
-    int* d_hListOfDestWeight;
-    int iCurrentIndex;
-    int i;
-    int lPonderationMin;
-    int lPonderationTmp;
-
-    ulCapsOfBestNode = 0;
-    iNbElementInTheGraph = hGraph->m_hListOfNode.lNumberOfElementsDyn;
-    if (iNbElementInTheGraph == 0)
-    {
-        return NULL;
-    }
-
-    d_hListOfWPNode = (WP_tdstGraphNode_**)HMU_fn_p_vMalloc(iNbElementInTheGraph * sizeof(WP_tdstGraphNode_*), 1);
-    d_hListOfDestWP = (WP_tdstWayPoint_**)HMU_fn_p_vMalloc(iNbElementInTheGraph * sizeof(WP_tdstWayPoint_*), 1);
-    d_hListOfTypeOfWP = (int*)HMU_fn_p_vMalloc(iNbElementInTheGraph * sizeof(int), 1);
-    d_hListOfDestCaps = (unsigned int*)HMU_fn_p_vMalloc(iNbElementInTheGraph * sizeof(unsigned int), 1);
-    d_hListOfDestWeight = (int*)HMU_fn_p_vMalloc(iNbElementInTheGraph * sizeof(int), 1);
-
-    iStartingIndex = -1;
-    for (i = 0, hCurrentNode = hGraph->m_hListOfNode.hFirstElementDyn; hCurrentNode != NULL; i++, hCurrentNode = hCurrentNode->hNextBrotherDyn)
-    {
-        if (hCurrentNode->m_hWayPoint == hStartWP)
-        {
-            d_hListOfWPNode[0] = hCurrentNode;
-            iStartingIndex = i;
-            break;
-        }
-    }
-
-    tdhNewPath = NULL;
-    if (iStartingIndex != -1)
-    {
-        iCurrentIndex = iStartingIndex + 1;
-        while (iCurrentIndex != -1)
-        {
-            for (iIndex = 0, hCurrentNode = hGraph->m_hListOfNode.hFirstElementDyn; iIndex < iCurrentIndex % iNbElementInTheGraph; iIndex++, hCurrentNode = hCurrentNode->hNextBrotherDyn) ;
-            d_hListOfWPNode[(iCurrentIndex - iStartingIndex) % iNbElementInTheGraph] = hCurrentNode;
-            if (++iCurrentIndex % iNbElementInTheGraph == iStartingIndex)
-                iCurrentIndex = -1;
-        }
-
-        hFirstNode = d_hListOfWPNode[0];
-        iCurrentIndex = 0;
-        d_hListOfDestWP[0] = hFirstNode->m_hWayPoint;
-        d_hListOfTypeOfWP[0] = d_hListOfWPNode[0]->m_lTypeOfWP;
-        iCount = 0;
-
-        do
-        {
-            iIndexOfBestNode = -1;
-            lBestArcWeight = lPonderationMin = 0x7FFFFFFF;
-            for (i = 1; i < iNbElementInTheGraph; i++)
-            {
-                if (i != iCurrentIndex)
-                {
-                    if ((WPG_fn_lGetNodeLinkCapabilities(d_hListOfWPNode[iCurrentIndex], d_hListOfWPNode[i], &ulCapability) != -1) && (WPG_fn_lGetNodeLinkWeight(d_hListOfWPNode[iCurrentIndex], d_hListOfWPNode[i], &lRealArcWeight) != -1))
-                    {
-                        lPonderationTmp = bIsRandom ? rand() % 0x7FFFFFFF : lRealArcWeight;
-                        if (lPonderationTmp < lPonderationMin)
-                        {
-                            lPonderationMin = lPonderationTmp;
-                            lBestArcWeight = lRealArcWeight;
-                            iIndexOfBestNode = i;
-                            ulCapsOfBestNode = ulCapability;
-                        }
-                    }
-                }
-            }
-            if (bIsRandom)
-            {
-                if ((WPG_fn_lGetNodeLinkCapabilities(d_hListOfWPNode[iCurrentIndex], hFirstNode, &ulCapability) != -1) && (WPG_fn_lGetNodeLinkWeight(d_hListOfWPNode[iCurrentIndex], hFirstNode, &lRealArcWeight) != -1))
-                {
-                    if (rand() % 0x7FFFFFFF < lPonderationMin)
-                    {
-                        iIndexOfBestNode = -1;
-                    }
-                }
-            }
-            if (iIndexOfBestNode != -1)
-            {
-                iCount++;
-                d_hListOfDestWP[iCount] = d_hListOfWPNode[iIndexOfBestNode]->m_hWayPoint;
-                d_hListOfTypeOfWP[iCount] = d_hListOfWPNode[iIndexOfBestNode]->m_lTypeOfWP;
-                d_hListOfDestCaps[iCount] = ulCapsOfBestNode;
-                d_hListOfDestWeight[iCount] = lBestArcWeight;
-                d_hListOfWPNode[iCurrentIndex] = NULL;
-                iCurrentIndex = iIndexOfBestNode;
-            }
-        } while (iIndexOfBestNode != -1);
-
-        d_hListOfDestCaps[0] = 0;
-        d_hListOfDestWeight[0] = 0;
-        if ((WPG_fn_lGetNodeLinkCapabilities(d_hListOfWPNode[iCurrentIndex], hFirstNode, &ulCapability) != -1) && (WPG_fn_lGetNodeLinkWeight(d_hListOfWPNode[iCurrentIndex], hFirstNode, &lRealArcWeight) != -1))
-        {
-            d_hListOfDestCaps[0] = ulCapability;
-            d_hListOfDestWeight[0] = lRealArcWeight;
-        }
-        else if (bIsCircular)
-        {
-            HMU_fn_vFree((void**)&d_hListOfWPNode, 1);
-            HMU_fn_vFree((void**)&d_hListOfDestWP, 1);
-            HMU_fn_vFree((void**)&d_hListOfTypeOfWP, 1);
-            HMU_fn_vFree((void**)&d_hListOfDestCaps, 1);
-            HMU_fn_vFree((void**)&d_hListOfDestWeight, 1);
-            return WPG_fn_hBuildOrderedPathFromAtoB(hGraph, hFirstNode, hFirstNode, bIsRandom);
-        }
-
-        tdhNewPath = WPG_fn_hCreateGraph();
-        WPG_fn_lAddWayPoint(tdhNewPath, d_hListOfDestWP[iCount], d_hListOfTypeOfWP[iCount]);
-        iCount--;
-        while (iCount >= 0)
-        {
-            WPG_fn_lAddWayPoint(tdhNewPath, d_hListOfDestWP[iCount], d_hListOfTypeOfWP[iCount]);
-            WPG_fn_lAddArcToWayPoint(tdhNewPath, d_hListOfDestWP[iCount], d_hListOfDestWP[iCount + 1], d_hListOfDestWeight[iCount + 1], d_hListOfDestCaps[iCount + 1]);
-            iCount--;
-        }
-        WPG_fn_lAddArcToWayPoint(tdhNewPath, d_hListOfWPNode[iCurrentIndex]->m_hWayPoint, d_hListOfDestWP[0], d_hListOfDestWeight[0], d_hListOfDestCaps[0]);
-    }
-
-    HMU_fn_vFree((void**)&d_hListOfWPNode, 1);
-    HMU_fn_vFree((void**)&d_hListOfDestWP, 1);
-    HMU_fn_vFree((void**)&d_hListOfTypeOfWP, 1);
-    HMU_fn_vFree((void**)&d_hListOfDestCaps, 1);
-    HMU_fn_vFree((void**)&d_hListOfDestWeight, 1);
-    return tdhNewPath;
-}
-
-WP_tdstGraph_* WPG_fn_hBuildOrderedPathFromAtoB(WP_tdstGraph_* _hGraph, WP_tdstGraphNode_* _hStartingNode, WP_tdstGraphNode_* _hEndingNode, int bIsRandom)
-{
-    int lSizeOfResult;
-    WP_tdstGraphNode_* param0;
-    int lIndex;
-    int i;
-    int j;
-    int iNbElementInTheGraph;
-    WP_tdstGraphNode_** p_hListOfUsefulNodes;
-    WP_tdstGraphNode_** p_hListOfResultNodes;
-    unsigned int ulCapability;
-    int lWeight;
-    int lOffset;
-
-    iNbElementInTheGraph = _hGraph->m_hListOfNode.lNumberOfElementsDyn;
-    p_hListOfUsefulNodes = (WP_tdstGraphNode_**)HMU_fn_p_vMalloc(iNbElementInTheGraph * sizeof(WP_tdstGraphNode_*), 1);
-    p_hListOfResultNodes = (WP_tdstGraphNode_**)HMU_fn_p_vMalloc(iNbElementInTheGraph * sizeof(WP_tdstGraphNode_*), 1);
-
-    for (i = 0; i < iNbElementInTheGraph; i++)
-    {
-        for (j = 0, param0 = _hGraph->m_hListOfNode.hFirstElementDyn; j < i; j++, param0 = param0->hNextBrotherDyn);
-        p_hListOfUsefulNodes[i] = param0;
-        p_hListOfResultNodes[i] = NULL;
-    }
-
-    _hGraph = WPG_fn_hCreateGraph();
-
-    lSizeOfResult = WPG_fn_hRecursiveBuildBestOrderedPathFromAtoB(_hStartingNode, _hEndingNode, p_hListOfUsefulNodes, iNbElementInTheGraph, p_hListOfResultNodes, bIsRandom);
-
-    if (lSizeOfResult)
-    {
-        lIndex = 0;
-        WPG_fn_lAddWayPoint(_hGraph, p_hListOfResultNodes[lIndex]->m_hWayPoint, p_hListOfResultNodes[lIndex]->m_lTypeOfWP);
-        for (lIndex++; lIndex < lSizeOfResult; lIndex++)
-        {
-            WPG_fn_lAddWayPoint(_hGraph, p_hListOfResultNodes[lIndex]->m_hWayPoint, p_hListOfResultNodes[lIndex]->m_lTypeOfWP);
-            WPG_fn_lGetNodeLinkCapabilities(p_hListOfResultNodes[lIndex], p_hListOfResultNodes[lIndex - 1], &ulCapability);
-            WPG_fn_lGetNodeLinkWeight(p_hListOfResultNodes[lIndex], p_hListOfResultNodes[lIndex - 1], &lWeight);
-            WPG_fn_lAddArcToWayPoint(_hGraph, p_hListOfResultNodes[lIndex]->m_hWayPoint, p_hListOfResultNodes[lIndex - 1]->m_hWayPoint, lWeight, ulCapability);
-        }
-        /* Not original source, needs cleaning up: int-address form keeps the
-         * retail's unfolded -4 base offset (see fn_p_stGetPersoInList). */
-        WPG_fn_lGetNodeLinkCapabilities(p_hListOfResultNodes[0], *(WP_tdstGraphNode_**)((int)p_hListOfResultNodes - 4 + (lOffset = lSizeOfResult * 4)), &ulCapability);
-        WPG_fn_lGetNodeLinkWeight(p_hListOfResultNodes[0], *(WP_tdstGraphNode_**)((int)p_hListOfResultNodes - 4 + lOffset), &lWeight);
-        WPG_fn_lAddArcToWayPoint(_hGraph, p_hListOfResultNodes[0]->m_hWayPoint, (*(WP_tdstGraphNode_**)((int)p_hListOfResultNodes - 4 + lOffset))->m_hWayPoint, lWeight, ulCapability);
-    }
-
-    HMU_fn_vFree((void**)&p_hListOfUsefulNodes, 1);
-    HMU_fn_vFree((void**)&p_hListOfResultNodes, 1);
-    return _hGraph;
-}
-
-int WPG_fn_hRecursiveBuildBestOrderedPathFromAtoB(WP_tdstGraphNode_* _hStartingNode, WP_tdstGraphNode_* _hEndingNode, WP_tdstGraphNode_** _p_hListOfUsefulNodes, int _iNbOfElementInTheGraph, WP_tdstGraphNode_** _p_hListOfResultNodes, int bIsRandom)
-{
-    WP_tdstArc_* hElement;
-    int lBestWeight;
-    int lSizeOfResultForNextNode;
-    int lSizeOfResult;
-    int lTmpPonderation;
-    unsigned int ulCapability;
-    int lWeight;
-    WP_tdstGraphNode_** ap_hListOfTmpResultNodes;
-    int i;
-    int lOffset;
-
-    lBestWeight = 0x7FFFFFFF;
-    lSizeOfResult = 0;
-    ap_hListOfTmpResultNodes = (WP_tdstGraphNode_**)HMU_fn_p_vMalloc(_iNbOfElementInTheGraph * sizeof(WP_tdstGraphNode_*), 1);
-
-    for (i = 0; i < _iNbOfElementInTheGraph; i++)
-    {
-        if ((_p_hListOfUsefulNodes[i] != NULL) && (_hStartingNode->m_hWayPoint == _p_hListOfUsefulNodes[i]->m_hWayPoint))
-        {
-            _p_hListOfUsefulNodes[i] = NULL;
-            break;
-        }
-    }
-
-    if ((WPG_fn_lGetNodeLinkCapabilities(_hStartingNode, _hEndingNode, &ulCapability) != -1) && (WPG_fn_lGetNodeLinkWeight(_hStartingNode, _hEndingNode, &lWeight) != -1))
-    {
-        lSizeOfResult = 1;
-    }
-    else
-    {
-        for (i = 0; i < _iNbOfElementInTheGraph; i++)
-        {
-            if (_p_hListOfUsefulNodes[i] != NULL)
-            {
-                if (_hStartingNode->m_hListOfArc != NULL)
-                {
-                    hElement = _hStartingNode->m_hListOfArc->m_hArc.hFirstElementDyn;
-                    while (hElement != NULL)
-                    {
-                        if (hElement->m_hNode == _p_hListOfUsefulNodes[i])
-                        {
-                            ulCapability = hElement->m_ulCapability;
-                            lWeight = hElement->m_lWeight;
-                            lSizeOfResultForNextNode = WPG_fn_hRecursiveBuildBestOrderedPathFromAtoB(_p_hListOfUsefulNodes[i], _hEndingNode, _p_hListOfUsefulNodes, _iNbOfElementInTheGraph, ap_hListOfTmpResultNodes, bIsRandom);
-                            if (lSizeOfResultForNextNode)
-                            {
-                                if (bIsRandom)
-                                    lTmpPonderation = rand() % 0x7FFFFFFF;
-                                else
-                                    lTmpPonderation = lWeight;
-                                if (lTmpPonderation < lBestWeight)
-                                {
-                                    lSizeOfResult = lSizeOfResultForNextNode + 1;
-                                    lBestWeight = lTmpPonderation;
-                                    memcpy(_p_hListOfResultNodes, ap_hListOfTmpResultNodes, (lSizeOfResult - 1) * sizeof(WP_tdstGraphNode_*));
-                                }
-                            }
-                            break;
-                        }
-                        hElement = hElement->hNextBrotherDyn;
-                    }
-                }
-            }
-        }
-    }
-
-    if (lSizeOfResult == 1)
-        _p_hListOfResultNodes[0] = _hStartingNode;
-    else if (lSizeOfResult > 1)
-        /* Not original source, needs cleaning up: int-address form keeps the
-         * retail's unfolded -4 base offset (see fn_p_stGetPersoInList). */
-        *(WP_tdstGraphNode_**)((int)_p_hListOfResultNodes - 4 + (lOffset = lSizeOfResult * 4)) = _hStartingNode;
-
-    HMU_fn_vFree((void**)&ap_hListOfTmpResultNodes, 1);
-    return lSizeOfResult;
-}
-
 int WPG_fn_lGetLinkWeight(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, int* p_lWeight);
 int WPG_fn_lGetLinkCapabilities(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, unsigned int* p_ulCapability);
 void* memmove(void*, const void*, size_t);
+
+#pragma auto_inline on
+
+#pragma auto_inline reset
+
+#define LST2_M_vAddElementToList(_p_stList, _hElement) \
+{ \
+    if ((_hElement)->hNextBrotherDyn) (_hElement)->hNextBrotherDyn->hPrevBrotherDyn = (_hElement)->hPrevBrotherDyn; \
+    if ((_hElement)->hPrevBrotherDyn) (_hElement)->hPrevBrotherDyn->hNextBrotherDyn = (_hElement)->hNextBrotherDyn; \
+    if ((_hElement)->hFatherDyn) \
+    { \
+        (_hElement)->hFatherDyn->lNumberOfElementsDyn--; \
+        if ((_hElement)->hFatherDyn->hFirstElementDyn == (_hElement)) (_hElement)->hFatherDyn->hFirstElementDyn = (_hElement)->hNextBrotherDyn; \
+        if ((_hElement)->hFatherDyn->hLastElementDyn == (_hElement)) (_hElement)->hFatherDyn->hLastElementDyn = (_hElement)->hPrevBrotherDyn; \
+    } \
+    (_hElement)->hNextBrotherDyn = NULL; \
+    (_hElement)->hPrevBrotherDyn = NULL; \
+    (_hElement)->hFatherDyn = NULL; \
+    (_hElement)->hNextBrotherDyn = NULL; \
+    (_hElement)->hPrevBrotherDyn = (_p_stList)->hLastElementDyn; \
+    (_hElement)->hFatherDyn = (_p_stList); \
+    if ((_p_stList)->hFirstElementDyn == NULL) (_p_stList)->hFirstElementDyn = (_hElement); \
+    else (_p_stList)->hLastElementDyn->hNextBrotherDyn = (_hElement); \
+    (_p_stList)->hLastElementDyn = (_hElement); \
+    (_p_stList)->lNumberOfElementsDyn++; \
+}
+
+/* Not original source, needs cleaning up: the retail has no out-of-line copy
+ * of the node constructor; it is inlined into WPG_fn_lAddWayPoint. */
+inline WP_tdstGraphNode_* WPG_fn_hCreateGraphNode(WP_tdstWayPoint_* hWayPoint, int lTypeOfWP)
+{
+    WP_tdstGraphNode_* hNode;
+
+    hNode = NULL;
+    GAM_fn_vPushAllocMode(2);
+    if (hWayPoint != NULL)
+    {
+        hNode = (WP_tdstGraphNode_*)HMU_fn_p_vMalloc(sizeof(WP_tdstGraphNode_), 1);
+        if (hNode != NULL)
+        {
+            hNode->hNextBrotherDyn = NULL;
+            hNode->hPrevBrotherDyn = NULL;
+            hNode->hFatherDyn = NULL;
+            hNode->m_hWayPoint = hWayPoint;
+            hNode->m_lTypeOfWP = lTypeOfWP;
+            hNode->m_lTypeOfWPInit = lTypeOfWP;
+            hNode->m_hListOfArc = WPARCLST_fn_hInit();
+        }
+    }
+    GAM_fn_vPopAllocMode();
+    return hNode;
+}
+
+/* Not original source, needs cleaning up: the retail has no out-of-line copy
+ * of the node destructor; it is inlined into WPG_fn_vDestroy. */
+inline void WPG_fn_vDestroyGraphNode(WP_tdstGraphNode_* hNode)
+{
+    if (fn_bScriptTransitionDeallocationCondition())
+    {
+        GAM_fn_vPushAllocMode(2);
+        if (hNode != NULL)
+        {
+            WPARCLST_fn_vDestroy(hNode->m_hListOfArc);
+            HMU_fn_vFree((void**)&hNode, 1);
+            hNode = NULL;
+        }
+        GAM_fn_vPopAllocMode();
+    }
+}
+
+void WPG_fn_vClearAllocMode(void)
+{
+    GAM_fn_vPopAllocMode();
+}
+
+void WPG_fn_vDestroy(WP_tdstGraph_* hGraph)
+{
+    WP_tdstGraphNode_* hNextElement;
+    WP_tdstGraphNode_* hElement;
+
+    if (fn_bScriptTransitionDeallocationCondition())
+    {
+        GAM_fn_vPushAllocMode(2);
+        for (hElement = hGraph->m_hListOfNode.hFirstElementDyn, hNextElement = hElement ? hElement->hNextBrotherDyn : NULL; hElement; hElement = hNextElement, hNextElement = hElement ? hElement->hNextBrotherDyn : NULL)
+        {
+            if (hElement->hNextBrotherDyn) hElement->hNextBrotherDyn->hPrevBrotherDyn = hElement->hPrevBrotherDyn;
+            if (hElement->hPrevBrotherDyn) hElement->hPrevBrotherDyn->hNextBrotherDyn = hElement->hNextBrotherDyn;
+            if (hElement->hFatherDyn)
+            {
+                hElement->hFatherDyn->lNumberOfElementsDyn--;
+                if (hElement->hFatherDyn->hFirstElementDyn == hElement) hElement->hFatherDyn->hFirstElementDyn = hElement->hNextBrotherDyn;
+                if (hElement->hFatherDyn->hLastElementDyn == hElement) hElement->hFatherDyn->hLastElementDyn = hElement->hPrevBrotherDyn;
+            }
+            hElement->hNextBrotherDyn = NULL;
+            hElement->hPrevBrotherDyn = NULL;
+            hElement->hFatherDyn = NULL;
+            WPG_fn_vDestroyGraphNode(hElement);
+        }
+        HMU_fn_vFree((void**)&hGraph, 1);
+        hGraph = NULL;
+        GAM_fn_vPopAllocMode();
+    }
+}
+
+int WPG_fn_lAddWayPoint(WP_tdstGraph_* _hGraph, WP_tdstWayPoint_* _hWayPoint, int _lTypeOfWP)
+{
+    WP_tdstGraphNode_* hNode;
+
+    if ((_hGraph != NULL) && (_hWayPoint != NULL))
+    {
+        hNode = WPG_fn_hCreateGraphNode(_hWayPoint, _lTypeOfWP);
+        LST2_M_vAddElementToList(&_hGraph->m_hListOfNode, hNode);
+        return 0;
+    }
+    return -1;
+}
+
+int WPG_fn_lAddArcToWayPoint(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, int lWeight, unsigned int ulCapability)
+{
+    WP_tdstGraphNode_* hDstNode;
+    WP_tdstGraphNode_* hSrcNode;
+    int lResult;
+
+    if ((hGraph != NULL) && (hSrcWayPoint != NULL) && (hDstWayPoint != NULL))
+    {
+        hDstNode = hGraph->m_hListOfNode.hFirstElementDyn;
+        while (hDstNode != NULL)
+        {
+            if (hDstNode->m_hWayPoint == hDstWayPoint) { break; }
+            hDstNode = hDstNode->hNextBrotherDyn;
+        }
+        if (hDstNode != NULL)
+        {
+            hSrcNode = hGraph->m_hListOfNode.hFirstElementDyn;
+            while (hSrcNode != NULL)
+            {
+                if (hSrcNode->m_hWayPoint == hSrcWayPoint)
+                {
+                    if ((hSrcNode != NULL) && (hDstNode != NULL))
+                    {
+                        WPARCLST_fn_vAdd(hSrcNode->m_hListOfArc, hDstNode, lWeight, ulCapability);
+                    }
+                    lResult = 0;
+                    return lResult;
+                }
+                hSrcNode = hSrcNode->hNextBrotherDyn;
+            }
+        }
+    }
+    return -1;
+}
+
+int WPG_fn_lChangeLinkCapabilities(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, unsigned int ulCapability, int lValue)
+{
+    WP_tdstGraphNode_* hDstNode;
+    WP_tdstGraphNode_* hSrcNode;
+    int lResult;
+
+    if ((hGraph != NULL) && (hSrcWayPoint != NULL) && (hDstWayPoint != NULL))
+    {
+        hDstNode = hGraph->m_hListOfNode.hFirstElementDyn;
+        while (hDstNode != NULL)
+        {
+            if (hDstNode->m_hWayPoint == hDstWayPoint) { break; }
+            hDstNode = hDstNode->hNextBrotherDyn;
+        }
+        if (hDstNode != NULL)
+        {
+            hSrcNode = hGraph->m_hListOfNode.hFirstElementDyn;
+            while (hSrcNode != NULL)
+            {
+                if (hSrcNode->m_hWayPoint == hSrcWayPoint)
+                {
+                    if ((hSrcNode != NULL) && (hDstNode != NULL))
+                    {
+                        lResult = WPARCLST_fn_lChangeCapabilities(hSrcNode->m_hListOfArc, hDstNode, ulCapability, lValue);
+                    }
+                    else
+                    {
+                        lResult = -1;
+                    }
+                    return lResult;
+                }
+                hSrcNode = hSrcNode->hNextBrotherDyn;
+            }
+        }
+    }
+    return -1;
+}
+
+int WPG_fn_lGetLinkCapabilities(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, unsigned int* p_ulCapability)
+{
+    WP_tdstGraphNode_* hDstNode;
+    WP_tdstGraphNode_* hSrcNode;
+    int lResult;
+
+    if ((hGraph != NULL) && (hSrcWayPoint != NULL) && (hDstWayPoint != NULL))
+    {
+        hDstNode = hGraph->m_hListOfNode.hFirstElementDyn;
+        while (hDstNode != NULL)
+        {
+            if (hDstNode->m_hWayPoint == hDstWayPoint) { break; }
+            hDstNode = hDstNode->hNextBrotherDyn;
+        }
+        if (hDstNode != NULL)
+        {
+            hSrcNode = hGraph->m_hListOfNode.hFirstElementDyn;
+            while (hSrcNode != NULL)
+            {
+                if (hSrcNode->m_hWayPoint == hSrcWayPoint)
+                {
+                    if ((hSrcNode != NULL) && (hDstNode != NULL))
+                    {
+                        lResult = WPARCLST_fn_lGetCapabilities(hSrcNode->m_hListOfArc, hDstNode, p_ulCapability);
+                    }
+                    else
+                    {
+                        lResult = -1;
+                    }
+                    return lResult;
+                }
+                hSrcNode = hSrcNode->hNextBrotherDyn;
+            }
+        }
+    }
+    return -1;
+}
+
+int WPG_fn_lChangeLinkWeight(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, int lWeight)
+{
+    WP_tdstGraphNode_* hDstNode;
+    WP_tdstGraphNode_* hSrcNode;
+    int lResult;
+
+    if ((hGraph != NULL) && (hSrcWayPoint != NULL) && (hDstWayPoint != NULL))
+    {
+        hDstNode = hGraph->m_hListOfNode.hFirstElementDyn;
+        while (hDstNode != NULL)
+        {
+            if (hDstNode->m_hWayPoint == hDstWayPoint) { break; }
+            hDstNode = hDstNode->hNextBrotherDyn;
+        }
+        if (hDstNode != NULL)
+        {
+            hSrcNode = hGraph->m_hListOfNode.hFirstElementDyn;
+            while (hSrcNode != NULL)
+            {
+                if (hSrcNode->m_hWayPoint == hSrcWayPoint)
+                {
+                    if ((hSrcNode != NULL) && (hDstNode != NULL))
+                    {
+                        lResult = WPARCLST_fn_lChangeWeight(hSrcNode->m_hListOfArc, hDstNode, lWeight);
+                    }
+                    else
+                    {
+                        lResult = -1;
+                    }
+                    return lResult;
+                }
+                hSrcNode = hSrcNode->hNextBrotherDyn;
+            }
+        }
+    }
+    return -1;
+}
+
+int WPG_fn_lGetLinkWeight(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, int* p_lWeight)
+{
+    WP_tdstGraphNode_* hDstNode;
+    WP_tdstGraphNode_* hSrcNode;
+    int lResult;
+
+    if ((hGraph != NULL) && (hSrcWayPoint != NULL) && (hDstWayPoint != NULL))
+    {
+        hDstNode = hGraph->m_hListOfNode.hFirstElementDyn;
+        while (hDstNode != NULL)
+        {
+            if (hDstNode->m_hWayPoint == hDstWayPoint) { break; }
+            hDstNode = hDstNode->hNextBrotherDyn;
+        }
+        if (hDstNode != NULL)
+        {
+            hSrcNode = hGraph->m_hListOfNode.hFirstElementDyn;
+            while (hSrcNode != NULL)
+            {
+                if (hSrcNode->m_hWayPoint == hSrcWayPoint)
+                {
+                    if ((hSrcNode != NULL) && (hDstNode != NULL))
+                    {
+                        lResult = WPARCLST_fn_lGetWeight(hSrcNode->m_hListOfArc, hDstNode, p_lWeight);
+                    }
+                    else
+                    {
+                        lResult = -1;
+                    }
+                    return lResult;
+                }
+                hSrcNode = hSrcNode->hNextBrotherDyn;
+            }
+        }
+    }
+    return -1;
+}
+
+#pragma auto_inline on
+void WPG_fn_vReinitGraph(WP_tdstGraph_* hGraph)
+{
+    WP_tdstGraphNode_* param0;
+    WP_tdstArc_* hElement;
+
+    if (hGraph)
+    {
+        for (param0 = hGraph->m_hListOfNode.hFirstElementDyn; param0; param0 = param0->hNextBrotherDyn)
+        {
+            param0->m_lTypeOfWP = param0->m_lTypeOfWPInit;
+            for (hElement = param0->m_hListOfArc->m_hArc.hFirstElementDyn; hElement; hElement = hElement->hNextBrotherDyn)
+            {
+                hElement->m_ulCapability = hElement->m_ulCapabilityInit;
+                hElement->m_lWeight = hElement->m_lWeightInit;
+            }
+        }
+    }
+}
+#pragma auto_inline reset
+
+void WPG_fn_vReinitAllGraphs(void)
+{
+    tdstGraphChainedListNode_* p_stGraphListNode;
+
+    p_stGraphListNode = g_stEngineStructure.p_GraphChainedList;
+    while (p_stGraphListNode)
+    {
+        WPG_fn_vReinitGraph(p_stGraphListNode->GraphChainedListNodeInfo);
+        p_stGraphListNode = p_stGraphListNode->p_NextGraphChainedListNode;
+    }
+}
+
+float WPG_xGetCloserWPDistInGraph(WP_tdstGraph_* _hGraph, MTH3D_tdstVector_* _p_stPos)
+{
+    float xDistMin;
+    MTH3D_tdstVector_ stWpPos;
+    long lNbWp;
+    long lIndex;
+    WP_tdstGraphNode_* hNode;
+    int i;
+
+    lNbWp = _hGraph->m_hListOfNode.lNumberOfElementsDyn;
+    hNode = _hGraph->m_hListOfNode.hFirstElementDyn;
+    WP_fnv_WayPoint_ComputeLocation(hNode->m_hWayPoint, &stWpPos);
+    stWpPos.xX = stWpPos.xX - _p_stPos->xX;
+    stWpPos.xY = stWpPos.xY - _p_stPos->xY;
+    stWpPos.xZ = stWpPos.xZ - _p_stPos->xZ;
+    {
+        float xZ = stWpPos.xZ;
+        float xX = stWpPos.xX;
+        float xY = stWpPos.xY;
+        float xSqrNorm;
+        MTH_SQR3_TO(xSqrNorm, xX, xY, xZ)
+        lIndex = 1;
+        MTH_SQRT_TO(xDistMin, xSqrNorm)
+    }
+    while (lIndex < lNbWp)
+    {
+        for (i = 0, hNode = _hGraph->m_hListOfNode.hFirstElementDyn; i < (int)lIndex; i++, hNode = hNode->hNextBrotherDyn) ;
+        WP_fnv_WayPoint_ComputeLocation(hNode->m_hWayPoint, &stWpPos);
+        stWpPos.xX = stWpPos.xX - _p_stPos->xX;
+        stWpPos.xY = stWpPos.xY - _p_stPos->xY;
+        stWpPos.xZ = stWpPos.xZ - _p_stPos->xZ;
+        {
+            float xZ = stWpPos.xZ;
+            float xX = stWpPos.xX;
+            float xY = stWpPos.xY;
+            float xDist;
+            MTH_SQR3_TO(xDist, xX, xY, xZ)
+            MTH_SQRT_TO(xDist, xDist)
+            if (xDist < xDistMin) { xDistMin = xDist; }
+        }
+        lIndex++;
+    }
+    return xDistMin;
+}
+
+WP_tdstGraph_* WPG_fn_hGetNearestGraph(MTH3D_tdstVector_* _p_stPos)
+{
+    tdstGraphChainedListNode_* p_stGraphListNode;
+    WP_tdstGraph_* hCloserGraph;
+    float xTmp;
+    float xDistMin;
+
+    p_stGraphListNode = g_stEngineStructure.p_GraphChainedList;
+    if (p_stGraphListNode == NULL)
+    {
+        return NULL;
+    }
+    else
+    {
+        xDistMin = WPG_xGetCloserWPDistInGraph(p_stGraphListNode->GraphChainedListNodeInfo, _p_stPos);
+        hCloserGraph = p_stGraphListNode->GraphChainedListNodeInfo;
+        p_stGraphListNode = p_stGraphListNode->p_NextGraphChainedListNode;
+        while (p_stGraphListNode != NULL)
+        {
+            xTmp = WPG_xGetCloserWPDistInGraph(p_stGraphListNode->GraphChainedListNodeInfo, _p_stPos);
+            if (xTmp < xDistMin) { hCloserGraph = p_stGraphListNode->GraphChainedListNodeInfo; }
+            p_stGraphListNode = p_stGraphListNode->p_NextGraphChainedListNode;
+        }
+        return hCloserGraph;
+    }
+}
 
 WP_tdstGraph_* WPG_fn_lShortestPath(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, unsigned int ulCapability)
 {
@@ -3572,406 +3665,326 @@ WP_tdstGraph_* WPG_fn_lShortestPath(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSr
     return tdhShortestPath;
 }
 
-WP_tdstGraph_* WPG_fn_hGetNearestGraph(MTH3D_tdstVector_* _p_stPos)
+int WPG_fn_hRecursiveBuildBestOrderedPathFromAtoB(WP_tdstGraphNode_* _hStartingNode, WP_tdstGraphNode_* _hEndingNode, WP_tdstGraphNode_** _p_hListOfUsefulNodes, int _iNbOfElementInTheGraph, WP_tdstGraphNode_** _p_hListOfResultNodes, int bIsRandom)
 {
-    tdstGraphChainedListNode_* p_stGraphListNode;
-    WP_tdstGraph_* hCloserGraph;
-    float xTmp;
-    float xDistMin;
+    WP_tdstArc_* hElement;
+    int lBestWeight;
+    int lSizeOfResultForNextNode;
+    int lSizeOfResult;
+    int lTmpPonderation;
+    unsigned int ulCapability;
+    int lWeight;
+    WP_tdstGraphNode_** ap_hListOfTmpResultNodes;
+    int i;
+    int lOffset;
 
-    p_stGraphListNode = g_stEngineStructure.p_GraphChainedList;
-    if (p_stGraphListNode == NULL)
+    lBestWeight = 0x7FFFFFFF;
+    lSizeOfResult = 0;
+    ap_hListOfTmpResultNodes = (WP_tdstGraphNode_**)HMU_fn_p_vMalloc(_iNbOfElementInTheGraph * sizeof(WP_tdstGraphNode_*), 1);
+
+    for (i = 0; i < _iNbOfElementInTheGraph; i++)
     {
-        return NULL;
+        if ((_p_hListOfUsefulNodes[i] != NULL) && (_hStartingNode->m_hWayPoint == _p_hListOfUsefulNodes[i]->m_hWayPoint))
+        {
+            _p_hListOfUsefulNodes[i] = NULL;
+            break;
+        }
+    }
+
+    if ((WPG_fn_lGetNodeLinkCapabilities(_hStartingNode, _hEndingNode, &ulCapability) != -1) && (WPG_fn_lGetNodeLinkWeight(_hStartingNode, _hEndingNode, &lWeight) != -1))
+    {
+        lSizeOfResult = 1;
     }
     else
     {
-        xDistMin = WPG_xGetCloserWPDistInGraph(p_stGraphListNode->GraphChainedListNodeInfo, _p_stPos);
-        hCloserGraph = p_stGraphListNode->GraphChainedListNodeInfo;
-        p_stGraphListNode = p_stGraphListNode->p_NextGraphChainedListNode;
-        while (p_stGraphListNode != NULL)
+        for (i = 0; i < _iNbOfElementInTheGraph; i++)
         {
-            xTmp = WPG_xGetCloserWPDistInGraph(p_stGraphListNode->GraphChainedListNodeInfo, _p_stPos);
-            if (xTmp < xDistMin) { hCloserGraph = p_stGraphListNode->GraphChainedListNodeInfo; }
-            p_stGraphListNode = p_stGraphListNode->p_NextGraphChainedListNode;
+            if (_p_hListOfUsefulNodes[i] != NULL)
+            {
+                if (_hStartingNode->m_hListOfArc != NULL)
+                {
+                    hElement = _hStartingNode->m_hListOfArc->m_hArc.hFirstElementDyn;
+                    while (hElement != NULL)
+                    {
+                        if (hElement->m_hNode == _p_hListOfUsefulNodes[i])
+                        {
+                            ulCapability = hElement->m_ulCapability;
+                            lWeight = hElement->m_lWeight;
+                            lSizeOfResultForNextNode = WPG_fn_hRecursiveBuildBestOrderedPathFromAtoB(_p_hListOfUsefulNodes[i], _hEndingNode, _p_hListOfUsefulNodes, _iNbOfElementInTheGraph, ap_hListOfTmpResultNodes, bIsRandom);
+                            if (lSizeOfResultForNextNode)
+                            {
+                                if (bIsRandom)
+                                    lTmpPonderation = rand() % 0x7FFFFFFF;
+                                else
+                                    lTmpPonderation = lWeight;
+                                if (lTmpPonderation < lBestWeight)
+                                {
+                                    lSizeOfResult = lSizeOfResultForNextNode + 1;
+                                    lBestWeight = lTmpPonderation;
+                                    memcpy(_p_hListOfResultNodes, ap_hListOfTmpResultNodes, (lSizeOfResult - 1) * sizeof(WP_tdstGraphNode_*));
+                                }
+                            }
+                            break;
+                        }
+                        hElement = hElement->hNextBrotherDyn;
+                    }
+                }
+            }
         }
-        return hCloserGraph;
     }
+
+    if (lSizeOfResult == 1)
+        _p_hListOfResultNodes[0] = _hStartingNode;
+    else if (lSizeOfResult > 1)
+        /* Not original source, needs cleaning up: int-address form keeps the
+         * retail's unfolded -4 base offset (see fn_p_stGetPersoInList). */
+        *(WP_tdstGraphNode_**)((int)_p_hListOfResultNodes - 4 + (lOffset = lSizeOfResult * 4)) = _hStartingNode;
+
+    HMU_fn_vFree((void**)&ap_hListOfTmpResultNodes, 1);
+    return lSizeOfResult;
 }
 
-float WPG_xGetCloserWPDistInGraph(WP_tdstGraph_* _hGraph, MTH3D_tdstVector_* _p_stPos)
+WP_tdstGraph_* WPG_fn_hBuildOrderedPathFromAtoB(WP_tdstGraph_* _hGraph, WP_tdstGraphNode_* _hStartingNode, WP_tdstGraphNode_* _hEndingNode, int bIsRandom)
 {
-    float xDistMin;
-    MTH3D_tdstVector_ stWpPos;
-    long lNbWp;
-    long lIndex;
-    WP_tdstGraphNode_* hNode;
+    int lSizeOfResult;
+    WP_tdstGraphNode_* param0;
+    int lIndex;
+    int i;
+    int j;
+    int iNbElementInTheGraph;
+    WP_tdstGraphNode_** p_hListOfUsefulNodes;
+    WP_tdstGraphNode_** p_hListOfResultNodes;
+    unsigned int ulCapability;
+    int lWeight;
+    int lOffset;
+
+    iNbElementInTheGraph = _hGraph->m_hListOfNode.lNumberOfElementsDyn;
+    p_hListOfUsefulNodes = (WP_tdstGraphNode_**)HMU_fn_p_vMalloc(iNbElementInTheGraph * sizeof(WP_tdstGraphNode_*), 1);
+    p_hListOfResultNodes = (WP_tdstGraphNode_**)HMU_fn_p_vMalloc(iNbElementInTheGraph * sizeof(WP_tdstGraphNode_*), 1);
+
+    for (i = 0; i < iNbElementInTheGraph; i++)
+    {
+        for (j = 0, param0 = _hGraph->m_hListOfNode.hFirstElementDyn; j < i; j++, param0 = param0->hNextBrotherDyn);
+        p_hListOfUsefulNodes[i] = param0;
+        p_hListOfResultNodes[i] = NULL;
+    }
+
+    _hGraph = WPG_fn_hCreateGraph();
+
+    lSizeOfResult = WPG_fn_hRecursiveBuildBestOrderedPathFromAtoB(_hStartingNode, _hEndingNode, p_hListOfUsefulNodes, iNbElementInTheGraph, p_hListOfResultNodes, bIsRandom);
+
+    if (lSizeOfResult)
+    {
+        lIndex = 0;
+        WPG_fn_lAddWayPoint(_hGraph, p_hListOfResultNodes[lIndex]->m_hWayPoint, p_hListOfResultNodes[lIndex]->m_lTypeOfWP);
+        for (lIndex++; lIndex < lSizeOfResult; lIndex++)
+        {
+            WPG_fn_lAddWayPoint(_hGraph, p_hListOfResultNodes[lIndex]->m_hWayPoint, p_hListOfResultNodes[lIndex]->m_lTypeOfWP);
+            WPG_fn_lGetNodeLinkCapabilities(p_hListOfResultNodes[lIndex], p_hListOfResultNodes[lIndex - 1], &ulCapability);
+            WPG_fn_lGetNodeLinkWeight(p_hListOfResultNodes[lIndex], p_hListOfResultNodes[lIndex - 1], &lWeight);
+            WPG_fn_lAddArcToWayPoint(_hGraph, p_hListOfResultNodes[lIndex]->m_hWayPoint, p_hListOfResultNodes[lIndex - 1]->m_hWayPoint, lWeight, ulCapability);
+        }
+        /* Not original source, needs cleaning up: int-address form keeps the
+         * retail's unfolded -4 base offset (see fn_p_stGetPersoInList). */
+        WPG_fn_lGetNodeLinkCapabilities(p_hListOfResultNodes[0], *(WP_tdstGraphNode_**)((int)p_hListOfResultNodes - 4 + (lOffset = lSizeOfResult * 4)), &ulCapability);
+        WPG_fn_lGetNodeLinkWeight(p_hListOfResultNodes[0], *(WP_tdstGraphNode_**)((int)p_hListOfResultNodes - 4 + lOffset), &lWeight);
+        WPG_fn_lAddArcToWayPoint(_hGraph, p_hListOfResultNodes[0]->m_hWayPoint, (*(WP_tdstGraphNode_**)((int)p_hListOfResultNodes - 4 + lOffset))->m_hWayPoint, lWeight, ulCapability);
+    }
+
+    HMU_fn_vFree((void**)&p_hListOfUsefulNodes, 1);
+    HMU_fn_vFree((void**)&p_hListOfResultNodes, 1);
+    return _hGraph;
+}
+
+WP_tdstGraph_* WPG_fn_lBuildOrderedPath(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hStartWP, int bIsCircular, int bIsRandom)
+{
+    WP_tdstGraph_* tdhNewPath;
+    WP_tdstGraphNode_* hCurrentNode;
+    WP_tdstGraphNode_** d_hListOfWPNode;
+    WP_tdstGraphNode_* hFirstNode;
+    int iNbElementInTheGraph;
+    int lBestArcWeight;
+    int iStartingIndex;
+    unsigned int ulCapsOfBestNode;
+    unsigned int ulCapability;
+    int lRealArcWeight;
+    int iCount;
+    int iIndex;
+    int iIndexOfBestNode;
+    WP_tdstWayPoint_** d_hListOfDestWP;
+    int* d_hListOfTypeOfWP;
+    unsigned int* d_hListOfDestCaps;
+    int* d_hListOfDestWeight;
+    int iCurrentIndex;
+    int i;
+    int lPonderationMin;
+    int lPonderationTmp;
+
+    ulCapsOfBestNode = 0;
+    iNbElementInTheGraph = hGraph->m_hListOfNode.lNumberOfElementsDyn;
+    if (iNbElementInTheGraph == 0)
+    {
+        return NULL;
+    }
+
+    d_hListOfWPNode = (WP_tdstGraphNode_**)HMU_fn_p_vMalloc(iNbElementInTheGraph * sizeof(WP_tdstGraphNode_*), 1);
+    d_hListOfDestWP = (WP_tdstWayPoint_**)HMU_fn_p_vMalloc(iNbElementInTheGraph * sizeof(WP_tdstWayPoint_*), 1);
+    d_hListOfTypeOfWP = (int*)HMU_fn_p_vMalloc(iNbElementInTheGraph * sizeof(int), 1);
+    d_hListOfDestCaps = (unsigned int*)HMU_fn_p_vMalloc(iNbElementInTheGraph * sizeof(unsigned int), 1);
+    d_hListOfDestWeight = (int*)HMU_fn_p_vMalloc(iNbElementInTheGraph * sizeof(int), 1);
+
+    iStartingIndex = -1;
+    for (i = 0, hCurrentNode = hGraph->m_hListOfNode.hFirstElementDyn; hCurrentNode != NULL; i++, hCurrentNode = hCurrentNode->hNextBrotherDyn)
+    {
+        if (hCurrentNode->m_hWayPoint == hStartWP)
+        {
+            d_hListOfWPNode[0] = hCurrentNode;
+            iStartingIndex = i;
+            break;
+        }
+    }
+
+    tdhNewPath = NULL;
+    if (iStartingIndex != -1)
+    {
+        iCurrentIndex = iStartingIndex + 1;
+        while (iCurrentIndex != -1)
+        {
+            for (iIndex = 0, hCurrentNode = hGraph->m_hListOfNode.hFirstElementDyn; iIndex < iCurrentIndex % iNbElementInTheGraph; iIndex++, hCurrentNode = hCurrentNode->hNextBrotherDyn) ;
+            d_hListOfWPNode[(iCurrentIndex - iStartingIndex) % iNbElementInTheGraph] = hCurrentNode;
+            if (++iCurrentIndex % iNbElementInTheGraph == iStartingIndex)
+                iCurrentIndex = -1;
+        }
+
+        hFirstNode = d_hListOfWPNode[0];
+        iCurrentIndex = 0;
+        d_hListOfDestWP[0] = hFirstNode->m_hWayPoint;
+        d_hListOfTypeOfWP[0] = d_hListOfWPNode[0]->m_lTypeOfWP;
+        iCount = 0;
+
+        do
+        {
+            iIndexOfBestNode = -1;
+            lBestArcWeight = lPonderationMin = 0x7FFFFFFF;
+            for (i = 1; i < iNbElementInTheGraph; i++)
+            {
+                if (i != iCurrentIndex)
+                {
+                    if ((WPG_fn_lGetNodeLinkCapabilities(d_hListOfWPNode[iCurrentIndex], d_hListOfWPNode[i], &ulCapability) != -1) && (WPG_fn_lGetNodeLinkWeight(d_hListOfWPNode[iCurrentIndex], d_hListOfWPNode[i], &lRealArcWeight) != -1))
+                    {
+                        lPonderationTmp = bIsRandom ? rand() % 0x7FFFFFFF : lRealArcWeight;
+                        if (lPonderationTmp < lPonderationMin)
+                        {
+                            lPonderationMin = lPonderationTmp;
+                            lBestArcWeight = lRealArcWeight;
+                            iIndexOfBestNode = i;
+                            ulCapsOfBestNode = ulCapability;
+                        }
+                    }
+                }
+            }
+            if (bIsRandom)
+            {
+                if ((WPG_fn_lGetNodeLinkCapabilities(d_hListOfWPNode[iCurrentIndex], hFirstNode, &ulCapability) != -1) && (WPG_fn_lGetNodeLinkWeight(d_hListOfWPNode[iCurrentIndex], hFirstNode, &lRealArcWeight) != -1))
+                {
+                    if (rand() % 0x7FFFFFFF < lPonderationMin)
+                    {
+                        iIndexOfBestNode = -1;
+                    }
+                }
+            }
+            if (iIndexOfBestNode != -1)
+            {
+                iCount++;
+                d_hListOfDestWP[iCount] = d_hListOfWPNode[iIndexOfBestNode]->m_hWayPoint;
+                d_hListOfTypeOfWP[iCount] = d_hListOfWPNode[iIndexOfBestNode]->m_lTypeOfWP;
+                d_hListOfDestCaps[iCount] = ulCapsOfBestNode;
+                d_hListOfDestWeight[iCount] = lBestArcWeight;
+                d_hListOfWPNode[iCurrentIndex] = NULL;
+                iCurrentIndex = iIndexOfBestNode;
+            }
+        } while (iIndexOfBestNode != -1);
+
+        d_hListOfDestCaps[0] = 0;
+        d_hListOfDestWeight[0] = 0;
+        if ((WPG_fn_lGetNodeLinkCapabilities(d_hListOfWPNode[iCurrentIndex], hFirstNode, &ulCapability) != -1) && (WPG_fn_lGetNodeLinkWeight(d_hListOfWPNode[iCurrentIndex], hFirstNode, &lRealArcWeight) != -1))
+        {
+            d_hListOfDestCaps[0] = ulCapability;
+            d_hListOfDestWeight[0] = lRealArcWeight;
+        }
+        else if (bIsCircular)
+        {
+            HMU_fn_vFree((void**)&d_hListOfWPNode, 1);
+            HMU_fn_vFree((void**)&d_hListOfDestWP, 1);
+            HMU_fn_vFree((void**)&d_hListOfTypeOfWP, 1);
+            HMU_fn_vFree((void**)&d_hListOfDestCaps, 1);
+            HMU_fn_vFree((void**)&d_hListOfDestWeight, 1);
+            return WPG_fn_hBuildOrderedPathFromAtoB(hGraph, hFirstNode, hFirstNode, bIsRandom);
+        }
+
+        tdhNewPath = WPG_fn_hCreateGraph();
+        WPG_fn_lAddWayPoint(tdhNewPath, d_hListOfDestWP[iCount], d_hListOfTypeOfWP[iCount]);
+        iCount--;
+        while (iCount >= 0)
+        {
+            WPG_fn_lAddWayPoint(tdhNewPath, d_hListOfDestWP[iCount], d_hListOfTypeOfWP[iCount]);
+            WPG_fn_lAddArcToWayPoint(tdhNewPath, d_hListOfDestWP[iCount], d_hListOfDestWP[iCount + 1], d_hListOfDestWeight[iCount + 1], d_hListOfDestCaps[iCount + 1]);
+            iCount--;
+        }
+        WPG_fn_lAddArcToWayPoint(tdhNewPath, d_hListOfWPNode[iCurrentIndex]->m_hWayPoint, d_hListOfDestWP[0], d_hListOfDestWeight[0], d_hListOfDestCaps[0]);
+    }
+
+    HMU_fn_vFree((void**)&d_hListOfWPNode, 1);
+    HMU_fn_vFree((void**)&d_hListOfDestWP, 1);
+    HMU_fn_vFree((void**)&d_hListOfTypeOfWP, 1);
+    HMU_fn_vFree((void**)&d_hListOfDestCaps, 1);
+    HMU_fn_vFree((void**)&d_hListOfDestWeight, 1);
+    return tdhNewPath;
+}
+
+WP_tdstGraph_* WPG_fn_lBuildRandomPath(WP_tdstGraph_* _hGraph, WP_tdstWayPoint_* _hStartWP, int _bIsCircular)
+{
+    return WPG_fn_lBuildOrderedPath(_hGraph, _hStartWP, _bIsCircular, 1);
+}
+
+int WPG_fn_lNumberOfWaypointOfGraph(WP_tdstGraph_* hGraph)
+{
+    return hGraph->m_hListOfNode.lNumberOfElementsDyn;
+}
+
+WP_tdstWayPoint_* WPG_fn_hGetWaypointOfGraph(WP_tdstGraph_* hGraph, int iIndex, int* _plTypeOfWP)
+{
+    WP_tdstGraphNode_* hElement;
     int i;
 
-    lNbWp = _hGraph->m_hListOfNode.lNumberOfElementsDyn;
-    hNode = _hGraph->m_hListOfNode.hFirstElementDyn;
-    WP_fnv_WayPoint_ComputeLocation(hNode->m_hWayPoint, &stWpPos);
-    stWpPos.xX = stWpPos.xX - _p_stPos->xX;
-    stWpPos.xY = stWpPos.xY - _p_stPos->xY;
-    stWpPos.xZ = stWpPos.xZ - _p_stPos->xZ;
-    {
-        float xZ = stWpPos.xZ;
-        float xX = stWpPos.xX;
-        float xY = stWpPos.xY;
-        float xSqrNorm;
-        MTH_SQR3_TO(xSqrNorm, xX, xY, xZ)
-        lIndex = 1;
-        MTH_SQRT_TO(xDistMin, xSqrNorm)
-    }
-    while (lIndex < lNbWp)
-    {
-        for (i = 0, hNode = _hGraph->m_hListOfNode.hFirstElementDyn; i < (int)lIndex; i++, hNode = hNode->hNextBrotherDyn) ;
-        WP_fnv_WayPoint_ComputeLocation(hNode->m_hWayPoint, &stWpPos);
-        stWpPos.xX = stWpPos.xX - _p_stPos->xX;
-        stWpPos.xY = stWpPos.xY - _p_stPos->xY;
-        stWpPos.xZ = stWpPos.xZ - _p_stPos->xZ;
-        {
-            float xZ = stWpPos.xZ;
-            float xX = stWpPos.xX;
-            float xY = stWpPos.xY;
-            float xDist;
-            MTH_SQR3_TO(xDist, xX, xY, xZ)
-            MTH_SQRT_TO(xDist, xDist)
-            if (xDist < xDistMin) { xDistMin = xDist; }
-        }
-        lIndex++;
-    }
-    return xDistMin;
+    for (i = 0, hElement = hGraph->m_hListOfNode.hFirstElementDyn; i < iIndex; i++, hElement = hElement->hNextBrotherDyn) ;
+
+    *_plTypeOfWP = hElement->m_lTypeOfWP;
+    return hElement->m_hWayPoint;
 }
 
-void WPG_fn_vReinitAllGraphs(void)
+WP_tdstListOfArc_* WPG_fn_hGetArcList(WP_tdstGraphNode_* hSrcNode)
 {
-    tdstGraphChainedListNode_* p_stGraphListNode;
-
-    p_stGraphListNode = g_stEngineStructure.p_GraphChainedList;
-    while (p_stGraphListNode)
-    {
-        WPG_fn_vReinitGraph(p_stGraphListNode->GraphChainedListNodeInfo);
-        p_stGraphListNode = p_stGraphListNode->p_NextGraphChainedListNode;
+    if (hSrcNode != NULL) {
+        return hSrcNode->m_hListOfArc;
     }
+
+    return NULL;
 }
 
-#pragma auto_inline on
-void WPG_fn_vReinitGraph(WP_tdstGraph_* hGraph)
+WP_tdstListOfArc_* WPARCLST_fn_hInit(void)
 {
-    WP_tdstGraphNode_* param0;
-    WP_tdstArc_* hElement;
+    WP_tdstListOfArc_* hList;
 
-    if (hGraph)
+    WPG_fn_vSetAllocMode();
+
+    hList = (WP_tdstListOfArc_*)HMU_fn_p_vMalloc(sizeof(WP_tdstListOfArc_), 1);
+
+    if (hList)
     {
-        for (param0 = hGraph->m_hListOfNode.hFirstElementDyn; param0; param0 = param0->hNextBrotherDyn)
-        {
-            param0->m_lTypeOfWP = param0->m_lTypeOfWPInit;
-            for (hElement = param0->m_hListOfArc->m_hArc.hFirstElementDyn; hElement; hElement = hElement->hNextBrotherDyn)
-            {
-                hElement->m_ulCapability = hElement->m_ulCapabilityInit;
-                hElement->m_lWeight = hElement->m_lWeightInit;
-            }
-        }
+        hList->m_hArc.hFirstElementDyn = NULL; hList->m_hArc.hLastElementDyn = NULL; hList->m_hArc.lNumberOfElementsDyn = 0;
     }
-}
-#pragma auto_inline reset
+    WPG_fn_vClearAllocMode();
 
-int WPG_fn_lGetLinkWeight(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, int* p_lWeight)
-{
-    WP_tdstGraphNode_* hDstNode;
-    WP_tdstGraphNode_* hSrcNode;
-    int lResult;
-
-    if ((hGraph != NULL) && (hSrcWayPoint != NULL) && (hDstWayPoint != NULL))
-    {
-        hDstNode = hGraph->m_hListOfNode.hFirstElementDyn;
-        while (hDstNode != NULL)
-        {
-            if (hDstNode->m_hWayPoint == hDstWayPoint) { break; }
-            hDstNode = hDstNode->hNextBrotherDyn;
-        }
-        if (hDstNode != NULL)
-        {
-            hSrcNode = hGraph->m_hListOfNode.hFirstElementDyn;
-            while (hSrcNode != NULL)
-            {
-                if (hSrcNode->m_hWayPoint == hSrcWayPoint)
-                {
-                    if ((hSrcNode != NULL) && (hDstNode != NULL))
-                    {
-                        lResult = WPARCLST_fn_lGetWeight(hSrcNode->m_hListOfArc, hDstNode, p_lWeight);
-                    }
-                    else
-                    {
-                        lResult = -1;
-                    }
-                    return lResult;
-                }
-                hSrcNode = hSrcNode->hNextBrotherDyn;
-            }
-        }
-    }
-    return -1;
-}
-
-int WPG_fn_lChangeLinkWeight(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, int lWeight)
-{
-    WP_tdstGraphNode_* hDstNode;
-    WP_tdstGraphNode_* hSrcNode;
-    int lResult;
-
-    if ((hGraph != NULL) && (hSrcWayPoint != NULL) && (hDstWayPoint != NULL))
-    {
-        hDstNode = hGraph->m_hListOfNode.hFirstElementDyn;
-        while (hDstNode != NULL)
-        {
-            if (hDstNode->m_hWayPoint == hDstWayPoint) { break; }
-            hDstNode = hDstNode->hNextBrotherDyn;
-        }
-        if (hDstNode != NULL)
-        {
-            hSrcNode = hGraph->m_hListOfNode.hFirstElementDyn;
-            while (hSrcNode != NULL)
-            {
-                if (hSrcNode->m_hWayPoint == hSrcWayPoint)
-                {
-                    if ((hSrcNode != NULL) && (hDstNode != NULL))
-                    {
-                        lResult = WPARCLST_fn_lChangeWeight(hSrcNode->m_hListOfArc, hDstNode, lWeight);
-                    }
-                    else
-                    {
-                        lResult = -1;
-                    }
-                    return lResult;
-                }
-                hSrcNode = hSrcNode->hNextBrotherDyn;
-            }
-        }
-    }
-    return -1;
-}
-
-int WPG_fn_lGetLinkCapabilities(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, unsigned int* p_ulCapability)
-{
-    WP_tdstGraphNode_* hDstNode;
-    WP_tdstGraphNode_* hSrcNode;
-    int lResult;
-
-    if ((hGraph != NULL) && (hSrcWayPoint != NULL) && (hDstWayPoint != NULL))
-    {
-        hDstNode = hGraph->m_hListOfNode.hFirstElementDyn;
-        while (hDstNode != NULL)
-        {
-            if (hDstNode->m_hWayPoint == hDstWayPoint) { break; }
-            hDstNode = hDstNode->hNextBrotherDyn;
-        }
-        if (hDstNode != NULL)
-        {
-            hSrcNode = hGraph->m_hListOfNode.hFirstElementDyn;
-            while (hSrcNode != NULL)
-            {
-                if (hSrcNode->m_hWayPoint == hSrcWayPoint)
-                {
-                    if ((hSrcNode != NULL) && (hDstNode != NULL))
-                    {
-                        lResult = WPARCLST_fn_lGetCapabilities(hSrcNode->m_hListOfArc, hDstNode, p_ulCapability);
-                    }
-                    else
-                    {
-                        lResult = -1;
-                    }
-                    return lResult;
-                }
-                hSrcNode = hSrcNode->hNextBrotherDyn;
-            }
-        }
-    }
-    return -1;
-}
-
-int WPG_fn_lChangeLinkCapabilities(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, unsigned int ulCapability, int lValue)
-{
-    WP_tdstGraphNode_* hDstNode;
-    WP_tdstGraphNode_* hSrcNode;
-    int lResult;
-
-    if ((hGraph != NULL) && (hSrcWayPoint != NULL) && (hDstWayPoint != NULL))
-    {
-        hDstNode = hGraph->m_hListOfNode.hFirstElementDyn;
-        while (hDstNode != NULL)
-        {
-            if (hDstNode->m_hWayPoint == hDstWayPoint) { break; }
-            hDstNode = hDstNode->hNextBrotherDyn;
-        }
-        if (hDstNode != NULL)
-        {
-            hSrcNode = hGraph->m_hListOfNode.hFirstElementDyn;
-            while (hSrcNode != NULL)
-            {
-                if (hSrcNode->m_hWayPoint == hSrcWayPoint)
-                {
-                    if ((hSrcNode != NULL) && (hDstNode != NULL))
-                    {
-                        lResult = WPARCLST_fn_lChangeCapabilities(hSrcNode->m_hListOfArc, hDstNode, ulCapability, lValue);
-                    }
-                    else
-                    {
-                        lResult = -1;
-                    }
-                    return lResult;
-                }
-                hSrcNode = hSrcNode->hNextBrotherDyn;
-            }
-        }
-    }
-    return -1;
-}
-
-int WPG_fn_lAddArcToWayPoint(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, int lWeight, unsigned int ulCapability)
-{
-    WP_tdstGraphNode_* hDstNode;
-    WP_tdstGraphNode_* hSrcNode;
-    int lResult;
-
-    if ((hGraph != NULL) && (hSrcWayPoint != NULL) && (hDstWayPoint != NULL))
-    {
-        hDstNode = hGraph->m_hListOfNode.hFirstElementDyn;
-        while (hDstNode != NULL)
-        {
-            if (hDstNode->m_hWayPoint == hDstWayPoint) { break; }
-            hDstNode = hDstNode->hNextBrotherDyn;
-        }
-        if (hDstNode != NULL)
-        {
-            hSrcNode = hGraph->m_hListOfNode.hFirstElementDyn;
-            while (hSrcNode != NULL)
-            {
-                if (hSrcNode->m_hWayPoint == hSrcWayPoint)
-                {
-                    if ((hSrcNode != NULL) && (hDstNode != NULL))
-                    {
-                        WPARCLST_fn_vAdd(hSrcNode->m_hListOfArc, hDstNode, lWeight, ulCapability);
-                    }
-                    lResult = 0;
-                    return lResult;
-                }
-                hSrcNode = hSrcNode->hNextBrotherDyn;
-            }
-        }
-    }
-    return -1;
-}
-
-#define LST2_M_vAddElementToList(_p_stList, _hElement) \
-{ \
-    if ((_hElement)->hNextBrotherDyn) (_hElement)->hNextBrotherDyn->hPrevBrotherDyn = (_hElement)->hPrevBrotherDyn; \
-    if ((_hElement)->hPrevBrotherDyn) (_hElement)->hPrevBrotherDyn->hNextBrotherDyn = (_hElement)->hNextBrotherDyn; \
-    if ((_hElement)->hFatherDyn) \
-    { \
-        (_hElement)->hFatherDyn->lNumberOfElementsDyn--; \
-        if ((_hElement)->hFatherDyn->hFirstElementDyn == (_hElement)) (_hElement)->hFatherDyn->hFirstElementDyn = (_hElement)->hNextBrotherDyn; \
-        if ((_hElement)->hFatherDyn->hLastElementDyn == (_hElement)) (_hElement)->hFatherDyn->hLastElementDyn = (_hElement)->hPrevBrotherDyn; \
-    } \
-    (_hElement)->hNextBrotherDyn = NULL; \
-    (_hElement)->hPrevBrotherDyn = NULL; \
-    (_hElement)->hFatherDyn = NULL; \
-    (_hElement)->hNextBrotherDyn = NULL; \
-    (_hElement)->hPrevBrotherDyn = (_p_stList)->hLastElementDyn; \
-    (_hElement)->hFatherDyn = (_p_stList); \
-    if ((_p_stList)->hFirstElementDyn == NULL) (_p_stList)->hFirstElementDyn = (_hElement); \
-    else (_p_stList)->hLastElementDyn->hNextBrotherDyn = (_hElement); \
-    (_p_stList)->hLastElementDyn = (_hElement); \
-    (_p_stList)->lNumberOfElementsDyn++; \
-}
-
-/* Not original source, needs cleaning up: the retail has no out-of-line copy
- * of the node constructor; it is inlined into WPG_fn_lAddWayPoint. */
-inline WP_tdstGraphNode_* WPG_fn_hCreateGraphNode(WP_tdstWayPoint_* hWayPoint, int lTypeOfWP)
-{
-    WP_tdstGraphNode_* hNode;
-
-    hNode = NULL;
-    GAM_fn_vPushAllocMode(2);
-    if (hWayPoint != NULL)
-    {
-        hNode = (WP_tdstGraphNode_*)HMU_fn_p_vMalloc(sizeof(WP_tdstGraphNode_), 1);
-        if (hNode != NULL)
-        {
-            hNode->hNextBrotherDyn = NULL;
-            hNode->hPrevBrotherDyn = NULL;
-            hNode->hFatherDyn = NULL;
-            hNode->m_hWayPoint = hWayPoint;
-            hNode->m_lTypeOfWP = lTypeOfWP;
-            hNode->m_lTypeOfWPInit = lTypeOfWP;
-            hNode->m_hListOfArc = WPARCLST_fn_hInit();
-        }
-    }
-    GAM_fn_vPopAllocMode();
-    return hNode;
-}
-
-int WPG_fn_lAddWayPoint(WP_tdstGraph_* _hGraph, WP_tdstWayPoint_* _hWayPoint, int _lTypeOfWP)
-{
-    WP_tdstGraphNode_* hNode;
-
-    if ((_hGraph != NULL) && (_hWayPoint != NULL))
-    {
-        hNode = WPG_fn_hCreateGraphNode(_hWayPoint, _lTypeOfWP);
-        LST2_M_vAddElementToList(&_hGraph->m_hListOfNode, hNode);
-        return 0;
-    }
-    return -1;
-}
-
-/* Not original source, needs cleaning up: the retail has no out-of-line copy
- * of the node destructor; it is inlined into WPG_fn_vDestroy. */
-inline void WPG_fn_vDestroyGraphNode(WP_tdstGraphNode_* hNode)
-{
-    if (fn_bScriptTransitionDeallocationCondition())
-    {
-        GAM_fn_vPushAllocMode(2);
-        if (hNode != NULL)
-        {
-            WPARCLST_fn_vDestroy(hNode->m_hListOfArc);
-            HMU_fn_vFree((void**)&hNode, 1);
-            hNode = NULL;
-        }
-        GAM_fn_vPopAllocMode();
-    }
-}
-
-void WPG_fn_vDestroy(WP_tdstGraph_* hGraph)
-{
-    WP_tdstGraphNode_* hNextElement;
-    WP_tdstGraphNode_* hElement;
-
-    if (fn_bScriptTransitionDeallocationCondition())
-    {
-        GAM_fn_vPushAllocMode(2);
-        for (hElement = hGraph->m_hListOfNode.hFirstElementDyn, hNextElement = hElement ? hElement->hNextBrotherDyn : NULL; hElement; hElement = hNextElement, hNextElement = hElement ? hElement->hNextBrotherDyn : NULL)
-        {
-            if (hElement->hNextBrotherDyn) hElement->hNextBrotherDyn->hPrevBrotherDyn = hElement->hPrevBrotherDyn;
-            if (hElement->hPrevBrotherDyn) hElement->hPrevBrotherDyn->hNextBrotherDyn = hElement->hNextBrotherDyn;
-            if (hElement->hFatherDyn)
-            {
-                hElement->hFatherDyn->lNumberOfElementsDyn--;
-                if (hElement->hFatherDyn->hFirstElementDyn == hElement) hElement->hFatherDyn->hFirstElementDyn = hElement->hNextBrotherDyn;
-                if (hElement->hFatherDyn->hLastElementDyn == hElement) hElement->hFatherDyn->hLastElementDyn = hElement->hPrevBrotherDyn;
-            }
-            hElement->hNextBrotherDyn = NULL;
-            hElement->hPrevBrotherDyn = NULL;
-            hElement->hFatherDyn = NULL;
-            WPG_fn_vDestroyGraphNode(hElement);
-        }
-        HMU_fn_vFree((void**)&hGraph, 1);
-        hGraph = NULL;
-        GAM_fn_vPopAllocMode();
-    }
-}
-
-void WPG_fn_vClearAllocMode(void)
-{
-    GAM_fn_vPopAllocMode();
+    return hList;
 }

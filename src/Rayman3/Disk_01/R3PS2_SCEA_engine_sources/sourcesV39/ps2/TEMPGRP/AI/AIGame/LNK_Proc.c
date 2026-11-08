@@ -3341,12 +3341,40 @@ static LinkActorType_* fn_p_SPO2Link(HIE_tdstSuperObject_* hSPO)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_DisplayLink(LinkActorType_* p_link, LinkDisplayMode_ displayMode)
-{
-    unsigned short cp;
-    unsigned short k;
-    /* TODO: decompile from asm/... */
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void fn_DisplayLink(LinkActorType_* p_link, LinkDisplayMode_ displayMode);
+HIE_tdstSuperObject_* fn_p_Fisher2Fish(HIE_tdstSuperObject_* p_Fisher);
+void fn_NetSendEvent(LinkActorType_* p_link, LinkNetEventType_ LNEvent, unsigned char iV, MTH3D_tdstVector_* vV, float fV);
+void fn_NetReceiveEvents(LinkActorType_* p_link);
+tdstNodeInterpret_* LNK_fn_SetSendStatusPeriod(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* LNK_fn_SetSendDataRate(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* LNK_fn_p_SetLag(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+int fn_CrunchLink(LinkActorType_* p_link);
+unsigned char fn_Launch(LinkActorType_* p_link);
+int fn_DeleteLoops(LinkActorType_* p_link);
+IntersectionPoint_* fn_stSegmentDistance(LinkActorType_* p_link, unsigned short k, unsigned short i);
+void fn_Mechanics(LinkActorType_* p_link);
+void fn_MoveCutPoint(LinkActorType_* p_link, unsigned short k);
+int fn_CheckDeletedCutPoint(LinkActorType_* p_link, int k);
+void fn_CheckNewCutPoint(LinkActorType_* p_link, unsigned short k);
+void fn_DeleteCutPoint(LinkActorType_* p_link, unsigned char uiStart, unsigned char uiEnd);
+void fn_InsertCutPoint(LinkActorType_* p_link, MTH3D_tdstVector_* p_vPosition, MTH3D_tdstVector_* p_vNormal, MTH3D_tdstVector_* p_vSpeed, int uc_index);
+void fn_CollisionRayCastLnKProc(LinkActorType_* p_link, MTH3D_tdstVector_* p_vPoint, MTH3D_tdstVector_* p_vDirection, unsigned long ulMode);
+void fn_StateConstructor(LinkActorType_* p_link);
+tdstNodeInterpret_* LNK_fn_p_FollowLinkDirection(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* LNK_fn_SetUnlaunch(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* LNK_fn_SetFlagStraight(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* LNK_fn_SetLaunchSpeed(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* LNK_fn_p_SetGaugeSpeed(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* LNK_fn_p_GetCutPoint(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* LNK_fn_p_GetNoCutPoints(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* LNK_fn_p_Kill(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* LNK_fn_p_DoBehaviour(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* LNK_fn_p_SetAgo(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* LNK_fn_p_Init(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* LNK_fn_p_InitAll(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 2169–2174 */
 /* addr: 0x0023cdb0  size: 124 bytes */
@@ -3360,19 +3388,6 @@ void fn_DisplayLink(LinkActorType_* p_link, LinkDisplayMode_ displayMode)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-HIE_tdstSuperObject_* fn_p_Fisher2Fish(HIE_tdstSuperObject_* p_Fisher)
-{
-    unsigned char k;
-
-    if (p_Fisher) {
-        for (k = 0; k < 8; k++) {
-            if (linkStructure[k].p_RefFisher == p_Fisher && linkStructure[k].iLinkID >= 0) {
-                return linkStructure[k].p_RefFish;
-            }
-        }
-    }
-    return 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 2064–2150 */
 /* addr: 0x0023ce30  size: 1008 bytes */
@@ -3469,69 +3484,6 @@ HIE_tdstSuperObject_* fn_p_Fisher2Fish(HIE_tdstSuperObject_* p_Fisher)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_NetSendEvent(LinkActorType_* p_link, LinkNetEventType_ LNEvent, unsigned char iV, MTH3D_tdstVector_* vV, float fV)
-{
-    unsigned char k;
-
-    if (p_link->bIsGhost) {
-        return;
-    }
-    if (!bSendData) {
-        if (!bSendStatus && LNEvent != LNE_Kill && LNEvent != LNE_CreateCP && LNEvent != LNE_DeleteCP) {
-            return;
-        }
-    }
-    bSendData = 1;
-    if (LNEvent != LNE_CPsStatus) {
-        a_NetBuffer[ui_BCPindexWrite].iLinkID = p_link->iLinkID;
-        a_NetBuffer[ui_BCPindexWrite].Event = LNEvent;
-        a_NetBuffer[ui_BCPindexWrite].Time = p_link->ui_BCPTimeWrite;
-        a_NetBuffer[ui_BCPindexWrite].iValue = iV;
-        if (LNEvent == LNE_SetEnergy) {
-            a_NetBuffer[ui_BCPindexWrite].fValue = fV;
-        } else {
-            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xX = *(int*)&vV->xX;
-            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xY = *(int*)&vV->xY;
-            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xZ = *(int*)&vV->xZ;
-        }
-        ui_BCPindexWrite = (ui_BCPindexWrite + 1) % 1000;
-        a_NetBuffer[ui_BCPindexWrite].Time = 30000000;
-    } else {
-        a_NetBuffer[ui_BCPindexWrite].iLinkID = p_link->iLinkID;
-        a_NetBuffer[ui_BCPindexWrite].Event = LNEvent;
-        a_NetBuffer[ui_BCPindexWrite].Time = p_link->ui_BCPTimeWrite;
-        a_NetBuffer[ui_BCPindexWrite].iValue = p_link->ui_CutPointNb;
-        a_NetBuffer[ui_BCPindexWrite].fValue = p_link->xEnergy;
-        ui_BCPindexWrite = (ui_BCPindexWrite + 1) % 1000;
-        for (k = (unsigned char)bSendData; k < p_link->ui_CutPointNb - 1; k++) {
-            a_NetBuffer[ui_BCPindexWrite].iLinkID = p_link->iLinkID;
-            a_NetBuffer[ui_BCPindexWrite].Event = LNE_MoveCP;
-            a_NetBuffer[ui_BCPindexWrite].Time = p_link->ui_BCPTimeWrite;
-            a_NetBuffer[ui_BCPindexWrite].iValue = k;
-            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xX = *(int*)&p_link->a_Cutpoint[k].Position.xX;
-            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xY = *(int*)&p_link->a_Cutpoint[k].Position.xY;
-            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xZ = *(int*)&p_link->a_Cutpoint[k].Position.xZ;
-            ui_BCPindexWrite = (ui_BCPindexWrite + 1) % 1000;
-            a_NetBuffer[ui_BCPindexWrite].iLinkID = p_link->iLinkID;
-            a_NetBuffer[ui_BCPindexWrite].Event = LNE_SetCPNormal;
-            a_NetBuffer[ui_BCPindexWrite].Time = p_link->ui_BCPTimeWrite;
-            a_NetBuffer[ui_BCPindexWrite].iValue = k;
-            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xX = *(int*)&p_link->a_Cutpoint[k].Normal.xX;
-            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xY = *(int*)&p_link->a_Cutpoint[k].Normal.xY;
-            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xZ = *(int*)&p_link->a_Cutpoint[k].Normal.xZ;
-            ui_BCPindexWrite = (ui_BCPindexWrite + 1) % 1000;
-            a_NetBuffer[ui_BCPindexWrite].iLinkID = p_link->iLinkID;
-            a_NetBuffer[ui_BCPindexWrite].Event = LNE_SetCPSpeed;
-            a_NetBuffer[ui_BCPindexWrite].Time = p_link->ui_BCPTimeWrite;
-            a_NetBuffer[ui_BCPindexWrite].iValue = k;
-            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xX = *(int*)&p_link->a_Cutpoint[k].Speed.xX;
-            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xY = *(int*)&p_link->a_Cutpoint[k].Speed.xY;
-            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xZ = *(int*)&p_link->a_Cutpoint[k].Speed.xZ;
-            ui_BCPindexWrite = (ui_BCPindexWrite + 1) % 1000;
-        }
-        a_NetBuffer[ui_BCPindexWrite].Time = 30000000;
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1970–2059 */
 /* addr: 0x0023d220  size: 1128 bytes */
@@ -3588,15 +3540,6 @@ void fn_NetSendEvent(LinkActorType_* p_link, LinkNetEventType_ LNEvent, unsigned
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_NetReceiveEvents(LinkActorType_* p_link)
-{
-    unsigned short iAnotherLinkEventIndex;
-    unsigned short cp;
-    LinkNetEventType_ uiNetEvent;
-    int i;
-    int k;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1929–1957 */
 /* addr: 0x0023d690  size: 224 bytes */
@@ -3615,26 +3558,6 @@ void fn_NetReceiveEvents(LinkActorType_* p_link)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* LNK_fn_SetSendStatusPeriod(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    LinkActorType_* p_link;
-    tdstGetSetParam_ stValue;
-    unsigned int k;
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-
-    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(p_stTree[-1].uDummy.uId.eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
-    p_link = fn_p_SPO2Link(hNewSuperObjPerso);
-    if (p_link) {
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-        k = stValue.uDummy.uParam.ulValue;
-        if (k) {
-            p_link->ulSendStatusPeriod = k;
-        } else {
-            p_link->ulSendStatusPeriod = 2000;
-        }
-    }
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1897–1925 */
 /* addr: 0x0023d770  size: 240 bytes */
@@ -3652,24 +3575,6 @@ tdstNodeInterpret_* LNK_fn_SetSendStatusPeriod(HIE_tdstSuperObject_* p_SuperObjP
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* LNK_fn_SetSendDataRate(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    LinkActorType_* p_link;
-    tdstGetSetParam_ stValue;
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-
-    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(p_stTree[-1].uDummy.uId.eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
-    p_link = fn_p_SPO2Link(hNewSuperObjPerso);
-    if (p_link) {
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-        if (stValue.uDummy.uParam.ucValue > 0) {
-            p_link->ulSendDataPeriod = 1000 / stValue.uDummy.uParam.ucValue;
-        } else {
-            p_link->ulSendDataPeriod = 166;
-        }
-    }
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1893–1893 */
 /* addr: 0x0023d860  size: 8 bytes */
@@ -3678,10 +3583,6 @@ tdstNodeInterpret_* LNK_fn_SetSendDataRate(HIE_tdstSuperObject_* p_SuperObjPerso
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* LNK_fn_p_SetLag(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1818–1857 */
 /* addr: 0x0023d870  size: 624 bytes */
@@ -3726,15 +3627,6 @@ tdstNodeInterpret_* LNK_fn_p_SetLag(HIE_tdstSuperObject_* p_SuperObjPerso, tdstN
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_CrunchLink(LinkActorType_* p_link)
-{
-    float xScale;
-    unsigned char cp;
-    unsigned char k;
-    float xTempLength;
-    float xCurrentLength;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1773–1798 */
 /* addr: 0x0023dae0  size: 824 bytes */
@@ -3761,13 +3653,6 @@ int fn_CrunchLink(LinkActorType_* p_link)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_Launch(LinkActorType_* p_link)
-{
-    float xNorm;
-    MTH3D_tdstVector_ stDiff;
-    float xScale;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1628–1672 */
 /* addr: 0x0023de20  size: 928 bytes */
@@ -3845,17 +3730,6 @@ unsigned char fn_Launch(LinkActorType_* p_link)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_DeleteLoops(LinkActorType_* p_link)
-{
-    IntersectionPoint_* Ipoint;
-    short k;
-    unsigned short temp16;
-    unsigned short i;
-    int bLoop;
-    MTH3D_tdstVector_ stLastSegment;
-    MTH3D_tdstVector_ stFirstSegment;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1575–1613 */
 /* addr: 0x0023e1c0  size: 696 bytes */
@@ -3945,20 +3819,6 @@ int fn_DeleteLoops(LinkActorType_* p_link)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-IntersectionPoint_* fn_stSegmentDistance(LinkActorType_* p_link, unsigned short k, unsigned short i)
-{
-    float det;
-    float e;
-    float b;
-    float t;
-    float s;
-    MTH3D_tdstVector_* p3;
-    MTH3D_tdstVector_* p2;
-    MTH3D_tdstVector_* p1;
-    MTH3D_tdstVector_* p0;
-    IntersectionPoint_ DP;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1538–1549 */
 /* addr: 0x0023e480  size: 140 bytes */
@@ -3974,22 +3834,6 @@ IntersectionPoint_* fn_stSegmentDistance(LinkActorType_* p_link, unsigned short 
  * compare a candidate object's line table as an extra checkpoint.
  */
 void fn_MoveCutPoint(LinkActorType_* p_link, unsigned short k);
-
-void fn_Mechanics(LinkActorType_* p_link)
-{
-    unsigned short k;
-    int n;
-
-    n = (unsigned short)(p_link->ui_CutPointNb - 2);
-    if (n > 0) {
-        for (k = 0; k < n; k++) {
-            fn_MoveCutPoint(p_link, k);
-        }
-        if (bSendStatus) {
-            fn_NetSendEvent(p_link, (LinkNetEventType_)0x6b, 0, &vNullVector, 0.0f);
-        }
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1449–1525 */
 /* addr: 0x0023e510  size: 1916 bytes */
@@ -4092,21 +3936,6 @@ void fn_Mechanics(LinkActorType_* p_link)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_MoveCutPoint(LinkActorType_* p_link, unsigned short k)
-{
-    float xNorm;
-    int bMovePoint;
-    float sumAngle;
-    MTH3D_tdstVector_ p_stPointD;
-    MTH3D_tdstVector_ p_NewPointB;
-    MTH3D_tdstVector_ p_tempVector;
-    MTH3D_tdstVector_* p_stNormalB;
-    MTH3D_tdstVector_* p_stSpeedB;
-    MTH3D_tdstVector_* p_stPointC;
-    MTH3D_tdstVector_* p_stPointB;
-    MTH3D_tdstVector_* p_stPointA;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1343–1387 */
 /* addr: 0x0023ec90  size: 856 bytes */
@@ -4171,17 +4000,6 @@ void fn_MoveCutPoint(LinkActorType_* p_link, unsigned short k)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_CheckDeletedCutPoint(LinkActorType_* p_link, int k)
-{
-    float xNorm;
-    MTH3D_tdstVector_ p_tempVector;
-    MTH3D_tdstVector_* p_stNormalB;
-    MTH3D_tdstVector_* p_stPointC;
-    MTH3D_tdstVector_* p_stPointB;
-    MTH3D_tdstVector_* p_stPointA;
-    int bRemoved;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1254–1329 */
 /* addr: 0x0023eff0  size: 2800 bytes */
@@ -4325,21 +4143,6 @@ int fn_CheckDeletedCutPoint(LinkActorType_* p_link, int k)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_CheckNewCutPoint(LinkActorType_* p_link, unsigned short k)
-{
-    float xNorm;
-    MTH3D_tdstVector_ VectTmp;
-    MTH3D_tdstVector_ p_stMovePoint;
-    MTH3D_tdstVector_ p_stNormalMid;
-    MTH3D_tdstVector_ p_stPointMid;
-    MTH3D_tdstVector_ p_stNormal2;
-    MTH3D_tdstVector_ p_stNormal1;
-    MTH3D_tdstVector_ p_stCollidedPoint2;
-    MTH3D_tdstVector_ p_stCollidedPoint1;
-    MTH3D_tdstVector_ p_Direction;
-    MTH3D_tdstVector_* p_stPoint;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1214–1236 */
 /* addr: 0x0023fae0  size: 380 bytes */
@@ -4365,13 +4168,6 @@ void fn_CheckNewCutPoint(LinkActorType_* p_link, unsigned short k)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_DeleteCutPoint(LinkActorType_* p_link, unsigned char uiStart, unsigned char uiEnd)
-{
-    int nDeletedCutPoints;
-    int k;
-    unsigned char* p_uiCutPointNb;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1150–1199 */
 /* addr: 0x0023fc60  size: 836 bytes */
@@ -4414,13 +4210,6 @@ void fn_DeleteCutPoint(LinkActorType_* p_link, unsigned char uiStart, unsigned c
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_InsertCutPoint(LinkActorType_* p_link, MTH3D_tdstVector_* p_vPosition, MTH3D_tdstVector_* p_vNormal, MTH3D_tdstVector_* p_vSpeed, int uc_index)
-{
-    unsigned char bAddPoint;
-    unsigned char k;
-    unsigned char* uc_p_CutPointNb;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1060–1071 */
 /* addr: 0x0023ffb0  size: 100 bytes */
@@ -4437,15 +4226,6 @@ void fn_InsertCutPoint(LinkActorType_* p_link, MTH3D_tdstVector_* p_vPosition, M
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_CollisionRayCastLnKProc(LinkActorType_* p_link, MTH3D_tdstVector_* p_vPoint, MTH3D_tdstVector_* p_vDirection, unsigned long ulMode)
-{
-    *(int*)&g_stCollideParameterPoint.xX = *(int*)&p_vPoint->xX; *(int*)&g_stCollideParameterPoint.xY = *(int*)&p_vPoint->xY; *(int*)&g_stCollideParameterPoint.xZ = *(int*)&p_vPoint->xZ;
-    *(int*)&g_stCollideParameterVector.xX = *(int*)&p_vDirection->xX; *(int*)&g_stCollideParameterVector.xY = *(int*)&p_vDirection->xY; *(int*)&g_stCollideParameterVector.xZ = *(int*)&p_vDirection->xZ;
-    g_ulMode = ulMode;
-    g_ulCollideTimeCounter = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
-    g_hSuperObjectHit = 0;
-    fn_vComputeCollideResult(p_link->p_LinkSPO);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 931–1004 */
 /* addr: 0x00240020  size: 440 bytes */
@@ -4491,56 +4271,6 @@ void fn_CollisionRayCastLnKProc(LinkActorType_* p_link, MTH3D_tdstVector_* p_vPo
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_StateConstructor(LinkActorType_* p_link)
-{
-    float xTemp;
-    MTH3D_tdstVector_* vPointCP_K;
-    MTH3D_tdstVector_* vPointK;
-    unsigned char cp_2;
-    unsigned char k;
-
-    switch (p_link->State) {
-    case LS_CheckCollision:
-        vPointK = &p_link->a_Cutpoint[1].Position;
-        *(int*)&vPointK->xX = *(int*)&p_link->a_Cutpoint[2].Position.xX;
-        *(int*)&vPointK->xY = *(int*)&p_link->a_Cutpoint[2].Position.xY;
-        *(int*)&vPointK->xZ = *(int*)&p_link->a_Cutpoint[2].Position.xZ;
-        AGO_vAddParticle(45, vPointK, vPointK, hVisualMaterial[p_link->ui_Material], 4.0f);
-        break;
-    case LS_Launch:
-        p_link->ulInitTime = p_link->ulPrevFrameTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
-        ((tdstRawVector*)&p_link->a_Cutpoint[2].Position)->xX = ((tdstRawVector*)&p_link->a_Cutpoint[0].Position)->xX;
-        ((tdstRawVector*)&p_link->a_Cutpoint[2].Position)->xY = ((tdstRawVector*)&p_link->a_Cutpoint[0].Position)->xY;
-        ((tdstRawVector*)&p_link->a_Cutpoint[2].Position)->xZ = ((tdstRawVector*)&p_link->a_Cutpoint[0].Position)->xZ;
-        break;
-    case LS_Unlaunch:
-        p_link->ulInitTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
-        break;
-    case LS_Destroying:
-        p_link->ulInitTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
-        cp_2 = p_link->ui_CutPointNb / 2;
-        for (k = 0; k < cp_2; k++) {
-            vPointK = &p_link->a_Cutpoint[k].Position;
-            vPointCP_K = &p_link->a_Cutpoint[p_link->ui_CutPointNb - 1 - k].Position;
-            xTemp = vPointK->xX;
-            vPointK->xX = vPointCP_K->xX;
-            vPointCP_K->xX = xTemp;
-            xTemp = vPointK->xY;
-            vPointK->xY = vPointCP_K->xY;
-            vPointCP_K->xY = xTemp;
-            xTemp = vPointK->xZ;
-            vPointK->xZ = vPointCP_K->xZ;
-            vPointCP_K->xZ = xTemp;
-        }
-        break;
-    case LS_Sleep:
-        fn_NetSendEvent(p_link, (LinkNetEventType_)0x6a, 0, &vNullVector, 0.0f);
-        p_link->iLinkID = -1;
-        p_link->p_GhostLinkSPO = 0;
-        p_link->p_LinkSPO = 0;
-        break;
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 749–810 */
 /* addr: 0x002401e0  size: 856 bytes */
@@ -4587,16 +4317,6 @@ void fn_StateConstructor(LinkActorType_* p_link)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* LNK_fn_p_FollowLinkDirection(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    unsigned char cp;
-    MTH3D_tdstVector_ vDirection;
-    float xNorm;
-    float xSpeed;
-    tdstGetSetParam_ stValue;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 725–744 */
 /* addr: 0x00240540  size: 176 bytes */
@@ -4611,19 +4331,6 @@ tdstNodeInterpret_* LNK_fn_p_FollowLinkDirection(HIE_tdstSuperObject_* p_SuperOb
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* LNK_fn_SetUnlaunch(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    LinkActorType_* p_link;
-
-    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(p_stTree[-1].uDummy.uId.eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
-    p_link = fn_p_SPO2Link(hNewSuperObjPerso);
-    if (p_link) {
-        p_link->State = 2;
-        fn_StateConstructor(p_link);
-    }
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 695–719 */
 /* addr: 0x002405f0  size: 236 bytes */
@@ -4643,21 +4350,6 @@ tdstNodeInterpret_* LNK_fn_SetUnlaunch(HIE_tdstSuperObject_* p_SuperObjPerso, td
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* LNK_fn_SetFlagStraight(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    LinkActorType_* p_link;
-    tdstGetSetParam_ stValue;
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-
-    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(p_stTree[-1].uDummy.uId.eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
-    p_link = fn_p_SPO2Link(hNewSuperObjPerso);
-    if (p_link) {
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-        p_link->bStraightLink = stValue.uDummy.uParam.lValue;
-        p_link->xEnergy = p_link->bStraightLink ? 0 : 30;
-    }
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 665–689 */
 /* addr: 0x002406e0  size: 276 bytes */
@@ -4674,21 +4366,6 @@ tdstNodeInterpret_* LNK_fn_SetFlagStraight(HIE_tdstSuperObject_* p_SuperObjPerso
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* LNK_fn_SetLaunchSpeed(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    LinkActorType_* p_link;
-    tdstGetSetParam_ stValue;
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-
-    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(p_stTree[-1].uDummy.uId.eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
-    p_link = fn_p_SPO2Link(hNewSuperObjPerso);
-    if (p_link) {
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-        p_link->xLaunchSpeed = (float)stValue.uDummy.uParam.ulValue;
-        if (p_link->xLaunchSpeed <= 0) p_link->xLaunchSpeed = 5.0f;
-    }
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 640–660 */
 /* addr: 0x00240800  size: 232 bytes */
@@ -4706,20 +4383,6 @@ tdstNodeInterpret_* LNK_fn_SetLaunchSpeed(HIE_tdstSuperObject_* p_SuperObjPerso,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* LNK_fn_p_SetGaugeSpeed(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    LinkActorType_* p_link;
-    tdstGetSetParam_ stValue;
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-
-    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(p_stTree[-1].uDummy.uId.eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
-    p_link = fn_p_SPO2Link(hNewSuperObjPerso);
-    if (p_link) {
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-        p_link->xGaugeSpeedFactor = (stValue.eType == 8) ? stValue.uDummy.uParam.xValue : (float)stValue.uDummy.uParam.lValue;
-    }
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 591–618 */
 /* addr: 0x002408f0  size: 368 bytes */
@@ -4743,37 +4406,6 @@ tdstNodeInterpret_* LNK_fn_p_SetGaugeSpeed(HIE_tdstSuperObject_* p_SuperObjPerso
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* LNK_fn_p_GetCutPoint(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    tdstGetSetParam_ stValue;
-    unsigned short i;
-    LinkActorType_* p_link;
-
-    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(p_stTree[-1].uDummy.uId.eFuncId), p_SuperObjPerso, &hNewSuperObjPerso);
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-    i = stValue.uDummy.uParam.uwValue;
-    p_link = fn_p_SPO2Link(hNewSuperObjPerso);
-    if (p_link) {
-        if (i < p_link->ui_CutPointNb && i >= 0) {
-            ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xX = ((tdstRawVector*)&p_link->a_Cutpoint[i].Position)->xX;
-            ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xY = ((tdstRawVector*)&p_link->a_Cutpoint[i].Position)->xY;
-            ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xZ = ((tdstRawVector*)&p_link->a_Cutpoint[i].Position)->xZ;
-            p_stValue->eType = (tdeVariableType_)0x15;
-        } else {
-            ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xX = ((tdstRawVector*)&vNullVector)->xX;
-            ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xY = ((tdstRawVector*)&vNullVector)->xY;
-            ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xZ = ((tdstRawVector*)&vNullVector)->xZ;
-        }
-        p_stValue->eType = (tdeVariableType_)0x15;
-    } else {
-        ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xX = ((tdstRawVector*)&vNullVector)->xX;
-        ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xY = ((tdstRawVector*)&vNullVector)->xY;
-        ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xZ = ((tdstRawVector*)&vNullVector)->xZ;
-        p_stValue->eType = (tdeVariableType_)0x15;
-    }
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 546–568 */
 /* addr: 0x00240a60  size: 204 bytes */
@@ -4788,17 +4420,6 @@ tdstNodeInterpret_* LNK_fn_p_GetCutPoint(HIE_tdstSuperObject_* p_SuperObjPerso, 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* LNK_fn_p_GetNoCutPoints(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    LinkActorType_* p_link;
-
-    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(p_stTree[-1].uDummy.uId.eFuncId), p_SuperObjPerso, &hNewSuperObjPerso);
-    p_link = fn_p_SPO2Link(hNewSuperObjPerso);
-    p_stValue->uDummy.uParam.ulValue = (unsigned short)(p_link ? p_link->ui_CutPointNb : 0);
-    p_stValue->eType = (tdeVariableType_)6;
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 495–523 */
 /* addr: 0x00240b30  size: 220 bytes */
@@ -4819,25 +4440,6 @@ tdstNodeInterpret_* LNK_fn_p_GetNoCutPoints(HIE_tdstSuperObject_* p_SuperObjPers
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* LNK_fn_p_Kill(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    LinkActorType_* p_link;
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-
-    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(p_stTree[-1].uDummy.uId.eFuncId), p_SuperObjPerso, &hNewSuperObjPerso);
-    p_link = fn_p_SPO2Link(hNewSuperObjPerso);
-    if (p_link) {
-        p_link->State = 4;
-        fn_StateConstructor(p_link);
-        p_stValue->uDummy.uParam.lValue = 1;
-        p_stValue->eType = (tdeVariableType_)6;
-        return p_stTree;
-    } else {
-        p_stValue->uDummy.uParam.lValue = 0;
-        p_stValue->eType = (tdeVariableType_)6;
-        return p_stTree;
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 320–469 */
 /* addr: 0x00240c10  size: 2248 bytes */
@@ -4932,14 +4534,6 @@ tdstNodeInterpret_* LNK_fn_p_Kill(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNod
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* LNK_fn_p_DoBehaviour(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    LinkState_ OldState;
-    unsigned short cp;
-    unsigned char k;
-    /* TODO: decompile from asm/... */
-}
-
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 282–292 */
 /* addr: 0x002414e0  size: 84 bytes */
@@ -4956,20 +4550,6 @@ tdstNodeInterpret_* LNK_fn_p_DoBehaviour(HIE_tdstSuperObject_* p_SuperObjPerso, 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* LNK_fn_p_SetAgo(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ stValue;
-
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-    agoType = stValue.uDummy.uParam.lValue;
-    if (agoType < 0) agoType = 0;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-    agoXParam = stValue.uDummy.uParam.xValue;
-
-
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 179–275 */
 /* addr: 0x00241540  size: 1096 bytes */
@@ -5060,14 +4640,6 @@ tdstNodeInterpret_* LNK_fn_p_SetAgo(HIE_tdstSuperObject_* p_SuperObjPerso, tdstN
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* LNK_fn_p_Init(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    unsigned short cp;
-    HIE_tdstSuperObject_* pRemoteSPOLink;
-    tdstGetSetParam_ stValue;
-    unsigned char k;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 127–147 */
 /* addr: 0x00241990  size: 320 bytes */
@@ -5094,6 +4666,7 @@ tdstNodeInterpret_* LNK_fn_p_Init(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNod
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
 tdstNodeInterpret_* LNK_fn_p_InitAll(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     int k;
@@ -5111,4 +4684,492 @@ tdstNodeInterpret_* LNK_fn_p_InitAll(HIE_tdstSuperObject_* p_SuperObjPerso, tdst
     vNullVector.xX = 0; vNullVector.xY = 0; vNullVector.xZ = 0;
     agoType = 21;
     return p_stTree;
+}
+
+tdstNodeInterpret_* LNK_fn_p_Init(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    unsigned short cp;
+    HIE_tdstSuperObject_* pRemoteSPOLink;
+    tdstGetSetParam_ stValue;
+    unsigned char k;
+    /* TODO: decompile from asm/... */
+}
+
+tdstNodeInterpret_* LNK_fn_p_SetAgo(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstGetSetParam_ stValue;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    agoType = stValue.uDummy.uParam.lValue;
+    if (agoType < 0) agoType = 0;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    agoXParam = stValue.uDummy.uParam.xValue;
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* LNK_fn_p_DoBehaviour(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    LinkState_ OldState;
+    unsigned short cp;
+    unsigned char k;
+    /* TODO: decompile from asm/... */
+}
+
+tdstNodeInterpret_* LNK_fn_p_Kill(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    LinkActorType_* p_link;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(p_stTree[-1].uDummy.uId.eFuncId), p_SuperObjPerso, &hNewSuperObjPerso);
+    p_link = fn_p_SPO2Link(hNewSuperObjPerso);
+    if (p_link) {
+        p_link->State = 4;
+        fn_StateConstructor(p_link);
+        p_stValue->uDummy.uParam.lValue = 1;
+        p_stValue->eType = (tdeVariableType_)6;
+        return p_stTree;
+    } else {
+        p_stValue->uDummy.uParam.lValue = 0;
+        p_stValue->eType = (tdeVariableType_)6;
+        return p_stTree;
+    }
+}
+
+tdstNodeInterpret_* LNK_fn_p_GetNoCutPoints(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    LinkActorType_* p_link;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(p_stTree[-1].uDummy.uId.eFuncId), p_SuperObjPerso, &hNewSuperObjPerso);
+    p_link = fn_p_SPO2Link(hNewSuperObjPerso);
+    p_stValue->uDummy.uParam.ulValue = (unsigned short)(p_link ? p_link->ui_CutPointNb : 0);
+    p_stValue->eType = (tdeVariableType_)6;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* LNK_fn_p_GetCutPoint(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    tdstGetSetParam_ stValue;
+    unsigned short i;
+    LinkActorType_* p_link;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(p_stTree[-1].uDummy.uId.eFuncId), p_SuperObjPerso, &hNewSuperObjPerso);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    i = stValue.uDummy.uParam.uwValue;
+    p_link = fn_p_SPO2Link(hNewSuperObjPerso);
+    if (p_link) {
+        if (i < p_link->ui_CutPointNb && i >= 0) {
+            ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xX = ((tdstRawVector*)&p_link->a_Cutpoint[i].Position)->xX;
+            ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xY = ((tdstRawVector*)&p_link->a_Cutpoint[i].Position)->xY;
+            ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xZ = ((tdstRawVector*)&p_link->a_Cutpoint[i].Position)->xZ;
+            p_stValue->eType = (tdeVariableType_)0x15;
+        } else {
+            ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xX = ((tdstRawVector*)&vNullVector)->xX;
+            ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xY = ((tdstRawVector*)&vNullVector)->xY;
+            ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xZ = ((tdstRawVector*)&vNullVector)->xZ;
+        }
+        p_stValue->eType = (tdeVariableType_)0x15;
+    } else {
+        ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xX = ((tdstRawVector*)&vNullVector)->xX;
+        ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xY = ((tdstRawVector*)&vNullVector)->xY;
+        ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xZ = ((tdstRawVector*)&vNullVector)->xZ;
+        p_stValue->eType = (tdeVariableType_)0x15;
+    }
+    return p_stTree;
+}
+
+tdstNodeInterpret_* LNK_fn_p_SetGaugeSpeed(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    LinkActorType_* p_link;
+    tdstGetSetParam_ stValue;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(p_stTree[-1].uDummy.uId.eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+    p_link = fn_p_SPO2Link(hNewSuperObjPerso);
+    if (p_link) {
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        p_link->xGaugeSpeedFactor = (stValue.eType == 8) ? stValue.uDummy.uParam.xValue : (float)stValue.uDummy.uParam.lValue;
+    }
+    return p_stTree;
+}
+
+tdstNodeInterpret_* LNK_fn_SetLaunchSpeed(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    LinkActorType_* p_link;
+    tdstGetSetParam_ stValue;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(p_stTree[-1].uDummy.uId.eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+    p_link = fn_p_SPO2Link(hNewSuperObjPerso);
+    if (p_link) {
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        p_link->xLaunchSpeed = (float)stValue.uDummy.uParam.ulValue;
+        if (p_link->xLaunchSpeed <= 0) p_link->xLaunchSpeed = 5.0f;
+    }
+    return p_stTree;
+}
+
+tdstNodeInterpret_* LNK_fn_SetFlagStraight(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    LinkActorType_* p_link;
+    tdstGetSetParam_ stValue;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(p_stTree[-1].uDummy.uId.eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+    p_link = fn_p_SPO2Link(hNewSuperObjPerso);
+    if (p_link) {
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        p_link->bStraightLink = stValue.uDummy.uParam.lValue;
+        p_link->xEnergy = p_link->bStraightLink ? 0 : 30;
+    }
+    return p_stTree;
+}
+
+tdstNodeInterpret_* LNK_fn_SetUnlaunch(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    LinkActorType_* p_link;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(p_stTree[-1].uDummy.uId.eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+    p_link = fn_p_SPO2Link(hNewSuperObjPerso);
+    if (p_link) {
+        p_link->State = 2;
+        fn_StateConstructor(p_link);
+    }
+    return p_stTree;
+}
+
+tdstNodeInterpret_* LNK_fn_p_FollowLinkDirection(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    unsigned char cp;
+    MTH3D_tdstVector_ vDirection;
+    float xNorm;
+    float xSpeed;
+    tdstGetSetParam_ stValue;
+    /* TODO: decompile from asm/... */
+}
+
+void fn_StateConstructor(LinkActorType_* p_link)
+{
+    float xTemp;
+    MTH3D_tdstVector_* vPointCP_K;
+    MTH3D_tdstVector_* vPointK;
+    unsigned char cp_2;
+    unsigned char k;
+
+    switch (p_link->State) {
+    case LS_CheckCollision:
+        vPointK = &p_link->a_Cutpoint[1].Position;
+        *(int*)&vPointK->xX = *(int*)&p_link->a_Cutpoint[2].Position.xX;
+        *(int*)&vPointK->xY = *(int*)&p_link->a_Cutpoint[2].Position.xY;
+        *(int*)&vPointK->xZ = *(int*)&p_link->a_Cutpoint[2].Position.xZ;
+        AGO_vAddParticle(45, vPointK, vPointK, hVisualMaterial[p_link->ui_Material], 4.0f);
+        break;
+    case LS_Launch:
+        p_link->ulInitTime = p_link->ulPrevFrameTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+        ((tdstRawVector*)&p_link->a_Cutpoint[2].Position)->xX = ((tdstRawVector*)&p_link->a_Cutpoint[0].Position)->xX;
+        ((tdstRawVector*)&p_link->a_Cutpoint[2].Position)->xY = ((tdstRawVector*)&p_link->a_Cutpoint[0].Position)->xY;
+        ((tdstRawVector*)&p_link->a_Cutpoint[2].Position)->xZ = ((tdstRawVector*)&p_link->a_Cutpoint[0].Position)->xZ;
+        break;
+    case LS_Unlaunch:
+        p_link->ulInitTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+        break;
+    case LS_Destroying:
+        p_link->ulInitTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+        cp_2 = p_link->ui_CutPointNb / 2;
+        for (k = 0; k < cp_2; k++) {
+            vPointK = &p_link->a_Cutpoint[k].Position;
+            vPointCP_K = &p_link->a_Cutpoint[p_link->ui_CutPointNb - 1 - k].Position;
+            xTemp = vPointK->xX;
+            vPointK->xX = vPointCP_K->xX;
+            vPointCP_K->xX = xTemp;
+            xTemp = vPointK->xY;
+            vPointK->xY = vPointCP_K->xY;
+            vPointCP_K->xY = xTemp;
+            xTemp = vPointK->xZ;
+            vPointK->xZ = vPointCP_K->xZ;
+            vPointCP_K->xZ = xTemp;
+        }
+        break;
+    case LS_Sleep:
+        fn_NetSendEvent(p_link, (LinkNetEventType_)0x6a, 0, &vNullVector, 0.0f);
+        p_link->iLinkID = -1;
+        p_link->p_GhostLinkSPO = 0;
+        p_link->p_LinkSPO = 0;
+        break;
+    }
+}
+
+void fn_CollisionRayCastLnKProc(LinkActorType_* p_link, MTH3D_tdstVector_* p_vPoint, MTH3D_tdstVector_* p_vDirection, unsigned long ulMode)
+{
+    *(int*)&g_stCollideParameterPoint.xX = *(int*)&p_vPoint->xX; *(int*)&g_stCollideParameterPoint.xY = *(int*)&p_vPoint->xY; *(int*)&g_stCollideParameterPoint.xZ = *(int*)&p_vPoint->xZ;
+    *(int*)&g_stCollideParameterVector.xX = *(int*)&p_vDirection->xX; *(int*)&g_stCollideParameterVector.xY = *(int*)&p_vDirection->xY; *(int*)&g_stCollideParameterVector.xZ = *(int*)&p_vDirection->xZ;
+    g_ulMode = ulMode;
+    g_ulCollideTimeCounter = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+    g_hSuperObjectHit = 0;
+    fn_vComputeCollideResult(p_link->p_LinkSPO);
+}
+
+void fn_InsertCutPoint(LinkActorType_* p_link, MTH3D_tdstVector_* p_vPosition, MTH3D_tdstVector_* p_vNormal, MTH3D_tdstVector_* p_vSpeed, int uc_index)
+{
+    unsigned char bAddPoint;
+    unsigned char k;
+    unsigned char* uc_p_CutPointNb;
+    /* TODO: decompile from asm/... */
+}
+
+void fn_DeleteCutPoint(LinkActorType_* p_link, unsigned char uiStart, unsigned char uiEnd)
+{
+    int nDeletedCutPoints;
+    int k;
+    unsigned char* p_uiCutPointNb;
+    /* TODO: decompile from asm/... */
+}
+
+void fn_CheckNewCutPoint(LinkActorType_* p_link, unsigned short k)
+{
+    float xNorm;
+    MTH3D_tdstVector_ VectTmp;
+    MTH3D_tdstVector_ p_stMovePoint;
+    MTH3D_tdstVector_ p_stNormalMid;
+    MTH3D_tdstVector_ p_stPointMid;
+    MTH3D_tdstVector_ p_stNormal2;
+    MTH3D_tdstVector_ p_stNormal1;
+    MTH3D_tdstVector_ p_stCollidedPoint2;
+    MTH3D_tdstVector_ p_stCollidedPoint1;
+    MTH3D_tdstVector_ p_Direction;
+    MTH3D_tdstVector_* p_stPoint;
+    /* TODO: decompile from asm/... */
+}
+
+int fn_CheckDeletedCutPoint(LinkActorType_* p_link, int k)
+{
+    float xNorm;
+    MTH3D_tdstVector_ p_tempVector;
+    MTH3D_tdstVector_* p_stNormalB;
+    MTH3D_tdstVector_* p_stPointC;
+    MTH3D_tdstVector_* p_stPointB;
+    MTH3D_tdstVector_* p_stPointA;
+    int bRemoved;
+    /* TODO: decompile from asm/... */
+}
+
+void fn_MoveCutPoint(LinkActorType_* p_link, unsigned short k)
+{
+    float xNorm;
+    int bMovePoint;
+    float sumAngle;
+    MTH3D_tdstVector_ p_stPointD;
+    MTH3D_tdstVector_ p_NewPointB;
+    MTH3D_tdstVector_ p_tempVector;
+    MTH3D_tdstVector_* p_stNormalB;
+    MTH3D_tdstVector_* p_stSpeedB;
+    MTH3D_tdstVector_* p_stPointC;
+    MTH3D_tdstVector_* p_stPointB;
+    MTH3D_tdstVector_* p_stPointA;
+    /* TODO: decompile from asm/... */
+}
+
+void fn_Mechanics(LinkActorType_* p_link)
+{
+    unsigned short k;
+    int n;
+
+    n = (unsigned short)(p_link->ui_CutPointNb - 2);
+    if (n > 0) {
+        for (k = 0; k < n; k++) {
+            fn_MoveCutPoint(p_link, k);
+        }
+        if (bSendStatus) {
+            fn_NetSendEvent(p_link, (LinkNetEventType_)0x6b, 0, &vNullVector, 0.0f);
+        }
+    }
+}
+
+IntersectionPoint_* fn_stSegmentDistance(LinkActorType_* p_link, unsigned short k, unsigned short i)
+{
+    float det;
+    float e;
+    float b;
+    float t;
+    float s;
+    MTH3D_tdstVector_* p3;
+    MTH3D_tdstVector_* p2;
+    MTH3D_tdstVector_* p1;
+    MTH3D_tdstVector_* p0;
+    IntersectionPoint_ DP;
+    /* TODO: decompile from asm/... */
+}
+
+int fn_DeleteLoops(LinkActorType_* p_link)
+{
+    IntersectionPoint_* Ipoint;
+    short k;
+    unsigned short temp16;
+    unsigned short i;
+    int bLoop;
+    MTH3D_tdstVector_ stLastSegment;
+    MTH3D_tdstVector_ stFirstSegment;
+    /* TODO: decompile from asm/... */
+}
+
+unsigned char fn_Launch(LinkActorType_* p_link)
+{
+    float xNorm;
+    MTH3D_tdstVector_ stDiff;
+    float xScale;
+    /* TODO: decompile from asm/... */
+}
+
+int fn_CrunchLink(LinkActorType_* p_link)
+{
+    float xScale;
+    unsigned char cp;
+    unsigned char k;
+    float xTempLength;
+    float xCurrentLength;
+    /* TODO: decompile from asm/... */
+}
+
+tdstNodeInterpret_* LNK_fn_p_SetLag(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    return p_stTree;
+}
+
+tdstNodeInterpret_* LNK_fn_SetSendDataRate(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    LinkActorType_* p_link;
+    tdstGetSetParam_ stValue;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(p_stTree[-1].uDummy.uId.eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+    p_link = fn_p_SPO2Link(hNewSuperObjPerso);
+    if (p_link) {
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        if (stValue.uDummy.uParam.ucValue > 0) {
+            p_link->ulSendDataPeriod = 1000 / stValue.uDummy.uParam.ucValue;
+        } else {
+            p_link->ulSendDataPeriod = 166;
+        }
+    }
+    return p_stTree;
+}
+
+tdstNodeInterpret_* LNK_fn_SetSendStatusPeriod(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    LinkActorType_* p_link;
+    tdstGetSetParam_ stValue;
+    unsigned int k;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(p_stTree[-1].uDummy.uId.eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+    p_link = fn_p_SPO2Link(hNewSuperObjPerso);
+    if (p_link) {
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        k = stValue.uDummy.uParam.ulValue;
+        if (k) {
+            p_link->ulSendStatusPeriod = k;
+        } else {
+            p_link->ulSendStatusPeriod = 2000;
+        }
+    }
+    return p_stTree;
+}
+
+void fn_NetReceiveEvents(LinkActorType_* p_link)
+{
+    unsigned short iAnotherLinkEventIndex;
+    unsigned short cp;
+    LinkNetEventType_ uiNetEvent;
+    int i;
+    int k;
+    /* TODO: decompile from asm/... */
+}
+
+void fn_NetSendEvent(LinkActorType_* p_link, LinkNetEventType_ LNEvent, unsigned char iV, MTH3D_tdstVector_* vV, float fV)
+{
+    unsigned char k;
+
+    if (p_link->bIsGhost) {
+        return;
+    }
+    if (!bSendData) {
+        if (!bSendStatus && LNEvent != LNE_Kill && LNEvent != LNE_CreateCP && LNEvent != LNE_DeleteCP) {
+            return;
+        }
+    }
+    bSendData = 1;
+    if (LNEvent != LNE_CPsStatus) {
+        a_NetBuffer[ui_BCPindexWrite].iLinkID = p_link->iLinkID;
+        a_NetBuffer[ui_BCPindexWrite].Event = LNEvent;
+        a_NetBuffer[ui_BCPindexWrite].Time = p_link->ui_BCPTimeWrite;
+        a_NetBuffer[ui_BCPindexWrite].iValue = iV;
+        if (LNEvent == LNE_SetEnergy) {
+            a_NetBuffer[ui_BCPindexWrite].fValue = fV;
+        } else {
+            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xX = *(int*)&vV->xX;
+            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xY = *(int*)&vV->xY;
+            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xZ = *(int*)&vV->xZ;
+        }
+        ui_BCPindexWrite = (ui_BCPindexWrite + 1) % 1000;
+        a_NetBuffer[ui_BCPindexWrite].Time = 30000000;
+    } else {
+        a_NetBuffer[ui_BCPindexWrite].iLinkID = p_link->iLinkID;
+        a_NetBuffer[ui_BCPindexWrite].Event = LNEvent;
+        a_NetBuffer[ui_BCPindexWrite].Time = p_link->ui_BCPTimeWrite;
+        a_NetBuffer[ui_BCPindexWrite].iValue = p_link->ui_CutPointNb;
+        a_NetBuffer[ui_BCPindexWrite].fValue = p_link->xEnergy;
+        ui_BCPindexWrite = (ui_BCPindexWrite + 1) % 1000;
+        for (k = (unsigned char)bSendData; k < p_link->ui_CutPointNb - 1; k++) {
+            a_NetBuffer[ui_BCPindexWrite].iLinkID = p_link->iLinkID;
+            a_NetBuffer[ui_BCPindexWrite].Event = LNE_MoveCP;
+            a_NetBuffer[ui_BCPindexWrite].Time = p_link->ui_BCPTimeWrite;
+            a_NetBuffer[ui_BCPindexWrite].iValue = k;
+            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xX = *(int*)&p_link->a_Cutpoint[k].Position.xX;
+            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xY = *(int*)&p_link->a_Cutpoint[k].Position.xY;
+            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xZ = *(int*)&p_link->a_Cutpoint[k].Position.xZ;
+            ui_BCPindexWrite = (ui_BCPindexWrite + 1) % 1000;
+            a_NetBuffer[ui_BCPindexWrite].iLinkID = p_link->iLinkID;
+            a_NetBuffer[ui_BCPindexWrite].Event = LNE_SetCPNormal;
+            a_NetBuffer[ui_BCPindexWrite].Time = p_link->ui_BCPTimeWrite;
+            a_NetBuffer[ui_BCPindexWrite].iValue = k;
+            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xX = *(int*)&p_link->a_Cutpoint[k].Normal.xX;
+            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xY = *(int*)&p_link->a_Cutpoint[k].Normal.xY;
+            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xZ = *(int*)&p_link->a_Cutpoint[k].Normal.xZ;
+            ui_BCPindexWrite = (ui_BCPindexWrite + 1) % 1000;
+            a_NetBuffer[ui_BCPindexWrite].iLinkID = p_link->iLinkID;
+            a_NetBuffer[ui_BCPindexWrite].Event = LNE_SetCPSpeed;
+            a_NetBuffer[ui_BCPindexWrite].Time = p_link->ui_BCPTimeWrite;
+            a_NetBuffer[ui_BCPindexWrite].iValue = k;
+            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xX = *(int*)&p_link->a_Cutpoint[k].Speed.xX;
+            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xY = *(int*)&p_link->a_Cutpoint[k].Speed.xY;
+            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xZ = *(int*)&p_link->a_Cutpoint[k].Speed.xZ;
+            ui_BCPindexWrite = (ui_BCPindexWrite + 1) % 1000;
+        }
+        a_NetBuffer[ui_BCPindexWrite].Time = 30000000;
+    }
+}
+
+HIE_tdstSuperObject_* fn_p_Fisher2Fish(HIE_tdstSuperObject_* p_Fisher)
+{
+    unsigned char k;
+
+    if (p_Fisher) {
+        for (k = 0; k < 8; k++) {
+            if (linkStructure[k].p_RefFisher == p_Fisher && linkStructure[k].iLinkID >= 0) {
+                return linkStructure[k].p_RefFish;
+            }
+        }
+    }
+    return 0;
+}
+
+void fn_DisplayLink(LinkActorType_* p_link, LinkDisplayMode_ displayMode)
+{
+    unsigned short cp;
+    unsigned short k;
+    /* TODO: decompile from asm/... */
 }

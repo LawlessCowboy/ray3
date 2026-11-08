@@ -61,10 +61,12 @@ unsigned char loadbufRootDir[2048];
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CD_SetCallBack(void* FunctionPointer)
-{
-    CD_ProgressCallBack = (int)FunctionPointer;
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void CD_SetCallBack(void* FunctionPointer);
+int ReadDirInCache(stFile_* pLevel);
+int SCEECdSearchFile(anon_0* fp, char* name);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\fmn\sceecd.c lines 427–481 */
 /* addr: 0x00258d00  size: 512 bytes */
@@ -118,56 +120,7 @@ void CD_SetCallBack(void* FunctionPointer)
 /* The retail build keeps the directory-entry name copy rolled; the default
  * speed mode unrolls it by eight, so the unroller is switched off here. */
 #pragma opt_unroll_loops off
-int ReadDirInCache(stFile_* pLevel)
-{
-    int i;
-    int last;
-    stFile_* pNewFile;
-    unsigned char* first;
-    int numSectors;
-    char work[16];
-    int l;
-    int j;
-    int n;
-    unsigned int uiSector;
-    numSectors = (pLevel->length + 0x7FF) >> 11;
-    pLevel->pChild = &ax_FileCache[g_NbCacheFiles];
-    pLevel->nb_sons = 0;
-    if (pLevel->length == 0) {
-        return -1;
-    }
-    for (i = 0; i < numSectors; i++) {
-        last = 0;
-        uiSector = pLevel->sector;
-        CDmode.trycount = 20;
-        g_NbSectRead++;
-        CDmode.spindlctrl = 0;
-        CDmode.datapattern = 0;
-        SearchSectorCache((unsigned long)(uiSector + i), loadbuf);
-        for (first = loadbuf + last; first[0] != 0; first = loadbuf + last) {
-            l = first[0x20];
-            n = last + 0x21;
-            j = 0;
-            if (n <= last + 0x20 + l) {
-                do {
-                    work[j] = loadbuf[n];
-                    n++;
-                    j++;
-                } while (n <= last + 0x20 + l);
-            }
-            work[j] = 0;
-            pNewFile = &ax_FileCache[g_NbCacheFiles++];
-            memset(pNewFile, 0, 32);
-            strncpy(pNewFile->name, work, 16);
-            pNewFile->name[15] = 0;
-            pNewFile->sector = first[2] + (first[3] << 8) + (first[4] << 16) + (first[5] << 24);
-            pNewFile->length = first[10] + (first[11] << 8) + (first[12] << 16) + (first[13] << 24);
-            pLevel->nb_sons++;
-            last += first[0];
-        }
-    }
-    return 0;
-}
+
 #pragma opt_unroll_loops reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\fmn\sceecd.c lines 291–349 */
@@ -206,6 +159,107 @@ int ReadDirInCache(stFile_* pLevel)
 /* The retail build keeps the 'not found' size value in a temporary and
  * stores it only on the two failure paths, so the constant propagation that
  * would hoist the initialisation across the search loop is switched off. */
+#pragma opt_propagation off
+
+#pragma opt_propagation reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\fmn\sceecd.c lines 101–143 */
+/* addr: 0x00259200  size: 452 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 101
+ *   +0x0020 -> line 106
+ *   +0x0024 -> line 107
+ *   +0x002c -> line 106
+ *   +0x0034 -> line 109
+ *   +0x0058 -> line 111
+ *   +0x0070 -> line 112
+ *   +0x008c -> line 113
+ *   +0x0098 -> line 115
+ *   +0x00a8 -> line 116
+ *   +0x00ac -> line 117
+ *   +0x00b0 -> line 116
+ *   +0x00b4 -> line 118
+ *   +0x00bc -> line 120
+ *   +0x00d8 -> line 123
+ *   +0x00dc -> line 122
+ *   +0x00e0 -> line 123
+ *   +0x00e4 -> line 124
+ *   +0x00e8 -> line 125
+ *   +0x00f8 -> line 131
+ *   +0x0100 -> line 132
+ *   +0x0130 -> line 133
+ *   +0x0138 -> line 134
+ *   +0x0140 -> line 135
+ *   +0x0150 -> line 137
+ *   +0x0164 -> line 138
+ *   +0x016c -> line 137
+ *   +0x0170 -> line 138
+ *   +0x0174 -> line 137
+ *   +0x0178 -> line 138
+ *   +0x017c -> line 140
+ *   +0x0180 -> line 138
+ *   +0x0184 -> line 139
+ *   +0x0194 -> line 140
+ *   +0x01a4 -> line 142
+ *   +0x01a8 -> line 143
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void CD_SetCallBack(void* FunctionPointer);
+int SCEECdSearchFile(anon_0* fp, char* name);
+int ReadDirInCache(stFile_* pLevel);
+
+/* Old-style definition: callers pass unsigned char buffers. */
+int SearchSectorCache(sectornumber, pBuffer)
+unsigned long sectornumber;
+char* pBuffer;
+{
+    int i;
+    unsigned long MinSector;
+    unsigned long MinAccess;
+    int iResult;
+    GLOBAL_SectorAccess++;
+    for (i = 0; i < 16; i++) {
+        if (GLOBAL_SectorCache[i].bValid && GLOBAL_SectorCache[i].SectorNumber == sectornumber) {
+            memcpy(pBuffer, GLOBAL_LoadBuffer + (i << 11), 0x800);
+            GLOBAL_SectorCache[i].lastaccess = GLOBAL_SectorAccess;
+            return 1;
+        }
+    }
+    MinAccess = GLOBAL_SectorCache[0].lastaccess;
+    MinSector = 0;
+    for (i = 1; i < 16; i++) {
+        if (GLOBAL_SectorCache[i].lastaccess < MinAccess) {
+            MinAccess = GLOBAL_SectorCache[i].lastaccess;
+            MinSector = i;
+        }
+    }
+    while (1) {
+        sceCdDiskReady(0);
+        iResult = sceCdRead(sectornumber, 1, GLOBAL_LoadBuffer + (MinSector << 11), &CDmode);
+        if (!iResult) continue;
+        sceCdSync(0);
+        if (sceCdGetError()) continue;
+        break;
+    }
+    GLOBAL_SectorCache[MinSector].SectorNumber = sectornumber;
+    GLOBAL_SectorCache[MinSector].bValid = 1;
+    GLOBAL_SectorCache[MinSector].lastaccess = GLOBAL_SectorAccess;
+    memcpy(pBuffer, GLOBAL_LoadBuffer + (MinSector << 11), 0x800);
+    return 1;
+}
+
+#pragma opt_propagation off
+
+#pragma opt_propagation reset
+
+#pragma opt_unroll_loops off
+
+#pragma opt_unroll_loops reset
+
 #pragma opt_propagation off
 int SCEECdSearchFile(anon_0* fp, char* name)
 {
@@ -288,84 +342,62 @@ int SCEECdSearchFile(anon_0* fp, char* name)
     }
     return 0;
 }
-
 #pragma opt_propagation reset
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\fmn\sceecd.c lines 101–143 */
-/* addr: 0x00259200  size: 452 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 101
- *   +0x0020 -> line 106
- *   +0x0024 -> line 107
- *   +0x002c -> line 106
- *   +0x0034 -> line 109
- *   +0x0058 -> line 111
- *   +0x0070 -> line 112
- *   +0x008c -> line 113
- *   +0x0098 -> line 115
- *   +0x00a8 -> line 116
- *   +0x00ac -> line 117
- *   +0x00b0 -> line 116
- *   +0x00b4 -> line 118
- *   +0x00bc -> line 120
- *   +0x00d8 -> line 123
- *   +0x00dc -> line 122
- *   +0x00e0 -> line 123
- *   +0x00e4 -> line 124
- *   +0x00e8 -> line 125
- *   +0x00f8 -> line 131
- *   +0x0100 -> line 132
- *   +0x0130 -> line 133
- *   +0x0138 -> line 134
- *   +0x0140 -> line 135
- *   +0x0150 -> line 137
- *   +0x0164 -> line 138
- *   +0x016c -> line 137
- *   +0x0170 -> line 138
- *   +0x0174 -> line 137
- *   +0x0178 -> line 138
- *   +0x017c -> line 140
- *   +0x0180 -> line 138
- *   +0x0184 -> line 139
- *   +0x0194 -> line 140
- *   +0x01a4 -> line 142
- *   +0x01a8 -> line 143
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int SearchSectorCache(unsigned long sectornumber, char* pBuffer)
+#pragma opt_unroll_loops off
+int ReadDirInCache(stFile_* pLevel)
 {
     int i;
-    unsigned long MinSector;
-    unsigned long MinAccess;
-    int iResult;
-    GLOBAL_SectorAccess++;
-    for (i = 0; i < 16; i++) {
-        if (GLOBAL_SectorCache[i].bValid && GLOBAL_SectorCache[i].SectorNumber == sectornumber) {
-            memcpy(pBuffer, GLOBAL_LoadBuffer + (i << 11), 0x800);
-            GLOBAL_SectorCache[i].lastaccess = GLOBAL_SectorAccess;
-            return 1;
+    int last;
+    stFile_* pNewFile;
+    unsigned char* first;
+    int numSectors;
+    char work[16];
+    int l;
+    int j;
+    int n;
+    unsigned int uiSector;
+    numSectors = (pLevel->length + 0x7FF) >> 11;
+    pLevel->pChild = &ax_FileCache[g_NbCacheFiles];
+    pLevel->nb_sons = 0;
+    if (pLevel->length == 0) {
+        return -1;
+    }
+    for (i = 0; i < numSectors; i++) {
+        last = 0;
+        uiSector = pLevel->sector;
+        CDmode.trycount = 20;
+        g_NbSectRead++;
+        CDmode.spindlctrl = 0;
+        CDmode.datapattern = 0;
+        SearchSectorCache((unsigned long)(uiSector + i), loadbuf);
+        for (first = loadbuf + last; first[0] != 0; first = loadbuf + last) {
+            l = first[0x20];
+            n = last + 0x21;
+            j = 0;
+            if (n <= last + 0x20 + l) {
+                do {
+                    work[j] = loadbuf[n];
+                    n++;
+                    j++;
+                } while (n <= last + 0x20 + l);
+            }
+            work[j] = 0;
+            pNewFile = &ax_FileCache[g_NbCacheFiles++];
+            memset(pNewFile, 0, 32);
+            strncpy(pNewFile->name, work, 16);
+            pNewFile->name[15] = 0;
+            pNewFile->sector = first[2] + (first[3] << 8) + (first[4] << 16) + (first[5] << 24);
+            pNewFile->length = first[10] + (first[11] << 8) + (first[12] << 16) + (first[13] << 24);
+            pLevel->nb_sons++;
+            last += first[0];
         }
     }
-    MinAccess = GLOBAL_SectorCache[0].lastaccess;
-    MinSector = 0;
-    for (i = 1; i < 16; i++) {
-        if (GLOBAL_SectorCache[i].lastaccess < MinAccess) {
-            MinAccess = GLOBAL_SectorCache[i].lastaccess;
-            MinSector = i;
-        }
-    }
-    while (1) {
-        sceCdDiskReady(0);
-        iResult = sceCdRead(sectornumber, 1, GLOBAL_LoadBuffer + (MinSector << 11), &CDmode);
-        if (!iResult) continue;
-        sceCdSync(0);
-        if (sceCdGetError()) continue;
-        break;
-    }
-    GLOBAL_SectorCache[MinSector].SectorNumber = sectornumber;
-    GLOBAL_SectorCache[MinSector].bValid = 1;
-    GLOBAL_SectorCache[MinSector].lastaccess = GLOBAL_SectorAccess;
-    memcpy(pBuffer, GLOBAL_LoadBuffer + (MinSector << 11), 0x800);
-    return 1;
+    return 0;
+}
+#pragma opt_unroll_loops reset
+
+void CD_SetCallBack(void* FunctionPointer)
+{
+    CD_ProgressCallBack = (int)FunctionPointer;
 }

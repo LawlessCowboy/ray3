@@ -15,18 +15,16 @@ static unsigned int gs_ulDepthBufferTestEnabled;
 int p_stLightMapTexture;
 int g_lNumberOfBlackTriangles;
 
-void GLI_DRV_xClearViewingList(void)
-{
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void GLI_DRV_xClearViewingList(void);
+int GLI_DRV_bEndScene(void);
+int GLI_DRV_bBeginScene(void);
+void GLI_fn_vInitRenderParameters(void);
+void GLI_DRV_vAddBlackPolygon(void);
 
-int GLI_DRV_bEndScene(void)
+void GLI_DRV_vAddBlackPolygon(void)
 {
-    return 1;
-}
-
-int GLI_DRV_bBeginScene(void)
-{
-    return 1;
 }
 
 void GLI_fn_vInitRenderParameters(void)
@@ -39,6 +37,16 @@ void GLI_fn_vInitRenderParameters(void)
     ucSaveFunction = 0xff;
 }
 
-void GLI_DRV_vAddBlackPolygon(void)
+int GLI_DRV_bBeginScene(void)
+{
+    return 1;
+}
+
+int GLI_DRV_bEndScene(void)
+{
+    return 1;
+}
+
+void GLI_DRV_xClearViewingList(void)
 {
 }

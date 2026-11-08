@@ -19,9 +19,9 @@ Checked with `python3 tools/match.py coverage` at each matching commit:
 
 | Scope | Functions | Code bytes |
 | --- | --- | --- |
-| **Game code** | **3,387 / 4,134** (+3 register-equivalent) | **668,272 / 1,507,864** (**44.3191%**) |
+| **Game code** | **3,392 / 4,134** (+3 register-equivalent) | **669,800 / 1,507,864** (**44.4205%**) |
 | Library code | 1,133 / 1,200 | 148,200 / 298,548 (49.6403%) |
-| **Total** | **4,520 / 5,334** (+3 register-equivalent) | **816,472 / 1,806,412** (**45.1985%**) |
+| **Total** | **4,525 / 5,334** (+3 register-equivalent) | **818,000 / 1,806,412** (**45.2831%**) |
 
 - Out of scope and excluded from these totals: 177 library header functions
   (Pustl STL, `CIdObjPtr`, MTH/PS2GL support headers) and 2,321 third-party

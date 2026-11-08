@@ -579,7 +579,6 @@ struct CEventResData : CResData {
     CIdObjPtr m_pTargetRes; /* +0x2c */
 };
 
-
 /* Text file source classes.  CFlow is the virtual base of CSrcFlow, so
    CPS2FileSrcFlow carries MWCC's hidden virtual-base constructor argument and
    stores the virtual base after its own members (the object layout recovered
@@ -636,64 +635,6 @@ struct CTextFileSrc : CTextFile {
     unsigned int mdwPosition; /* +0x848 */
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeecbankdesccont.cpp lines 30–40 */
 /* addr: 0x0018beb0  size: 304 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -711,13 +652,9 @@ struct CTextFileSrc : CTextFile {
    around the CPS2FileSrcFlow base-constructor call, and it materialises the
    "read == 0x400" test as a value instead of branching on the argument
    register); see the recorded attempt in config/matches.json. */
-CTextFileSrc::CTextFileSrc(const char* pch_FilePath) { mostringName._Init(pch_FilePath, strlen(pch_FilePath)); m_bOpened = 0; unsigned short us_Len = mostringName.m_pcData ? (unsigned short)strlen(mostringName.m_pcData) : 0; if (us_Len) m_bOpened = m_File.f_bOpen(mostringName.m_pcData, E_RamLocation_RAM); mpchBuffer1 = &mchBuffer[0]; mpchBuffer2 = &mchBuffer[1024]; mpchBufferEnd = &mchBuffer[2048];
 
-    mdwPosition = 0;
-    mpchCurrent = mpchBuffer1;
-    if (m_bOpened && m_File.fv_uiRead(mpchBuffer1, 1, 0x400) == 0x400)
-    { if (m_bOpened) { m_File.fv_uiRead(mpchBuffer2, 1, 0x400); } }
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeecbankdesccont.cpp lines 63–68 */
 /* addr: 0x0018cad0  size: 468 bytes */
@@ -734,6 +671,7 @@ CTextFileSrc::CTextFileSrc(const char* pch_FilePath) { mostringName._Init(pch_Fi
    remaining differences are the callee-saved register assignment, the extra
    local the retail passes to insert(), and the shape of the map lookup; see
    the recorded attempt in config/matches.json. */
+
 CBankDesc* CBankDescCont::mfn_poAddBankDesc(const char* pch_FileName)
 {
     char* pch_Copy;
@@ -785,4 +723,12 @@ CBankDesc* CBankDescCont::mfn_poAddBankDesc(const char* pch_FileName)
     }
 
     return po_BankDesc;
+}
+
+CTextFileSrc::CTextFileSrc(const char* pch_FilePath) { mostringName._Init(pch_FilePath, strlen(pch_FilePath)); m_bOpened = 0; unsigned short us_Len = mostringName.m_pcData ? (unsigned short)strlen(mostringName.m_pcData) : 0; if (us_Len) m_bOpened = m_File.f_bOpen(mostringName.m_pcData, E_RamLocation_RAM); mpchBuffer1 = &mchBuffer[0]; mpchBuffer2 = &mchBuffer[1024]; mpchBufferEnd = &mchBuffer[2048];
+
+    mdwPosition = 0;
+    mpchCurrent = mpchBuffer1;
+    if (m_bOpened && m_File.fv_uiRead(mpchBuffer1, 1, 0x400) == 0x400)
+    { if (m_bOpened) { m_File.fv_uiRead(mpchBuffer2, 1, 0x400); } }
 }

@@ -357,137 +357,131 @@ AGO_Light_ AGO_g_pLightList[8];
 int PS2glLiberator;
 int PS2glAllocator64;
 
-void C_SdlCache::AddSdlInstance(_SDC_Instance_* pInstance)
-{
-    tdstSDLCacheEntry_* p;
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+extern "C" void GLI_vUpdateAllSPORefs(void);
+extern "C" void fn_vAddSdlToProcessLater(C_Sdl* pSdl);
 
-    p = ((tdstSDLCacheEntry_* (*)(int))PS2glAllocator64)(8);
-    p->pInstance = pInstance;
-    p->pNext = m_pList;
-    m_pList = p;
+void C_SdlRef::operator delete(void* ptr)
+{
+    ((void (*)(void*))PS2glLiberator)(ptr);
 }
 
-void GLI_vUpdateAllSPORefs(void)
+void C_SdlRef::Process(void)
 {
+    printf("Dummy reference called !!\n");
+}
+
+void C_SdlRef::ProcessWithInterpol(void)
+{
+    printf("Dummy interpol reference called !!\n");
+}
+
+void C_SdlRef::ProcessNoInterpol(void)
+{
+    printf("Dummy interpol reference called !!\n");
+}
+
+void C_SdlRef_PointLighting::Process(void)
+{
+    float* pDest;
+    float* pEnd;
     unsigned int i;
 
-    for (i = 0; i < GLI_G_iNbSdlsInThisFrame; i++)
+    pDest = (float*)m_vpDestinationPointer;
+    pEnd = pDest + 64;
+    for (i = 0; i < AGO_g_ulNbLights; i++)
     {
-        if (GLI_G_pProcessSDLs[i])
-            ((C_Sdl*)GLI_G_pProcessSDLs[i])->ProcessAllRefs();
+        AGO_Light_* pLight = &AGO_g_pLightList[i];
+        pDest[0] = pLight->Position[0];
+        pDest[1] = pLight->Position[1];
+        pDest[2] = pLight->Position[2];
+        pDest[3] = pLight->SqFar;
+        pDest[4] = pLight->Color[0];
+        pDest[5] = pLight->Color[1];
+        pDest[6] = pLight->Color[2];
+        pDest[7] = pLight->Color[3];
+        pDest += 8;
+    }
+    while (pDest < pEnd)
+        *pDest++ = 0;
+}
+
+void C_SdlRef_PointLighting::ProcessWithInterpol(void)
+{
+    Process();
+}
+
+void C_SdlRef_PointLighting::ProcessNoInterpol(void)
+{
+    Process();
+}
+
+void C_SdlRef_LocalMatrix::Process(void)
+{
+    float (*pDest)[4] = (float (*)[4])m_vpDestinationPointer;
+    PS2_M_vCopyMatrix(OldMat, pDest);
+    if (GLI_g_SDLIsBlinking || ((*(int*)((char*)m_vpOriginPointer + 0x30) & 2) == 2))
+        pDest[3][2] -= 50000.0f;
+}
+
+void C_SdlRef_LocalMatrix::ProcessWithInterpol(void)
+{
+    if (m_bNoInterpolation)
+    {
+        ProcessNoInterpol();
+        m_bNoInterpolation = 0;
+    }
+    else
+    {
+        InterpolateMatrixAndStoreWithThreshold((float*)m_vpDestinationPointer, (float*)(*(char**)((char*)m_vpOriginPointer + 0x24) + 0x10), &OldMat[0][0]);
+        if (GLI_g_SDLIsBlinking || ((*(int*)((char*)m_vpOriginPointer + 0x30) & 2) == 2))
+            ((float (*)[4])m_vpDestinationPointer)[3][2] -= 50000.0f;
     }
 }
 
-void fn_vAddSdlToProcessLater(C_Sdl* pSdl)
+void C_SdlRef_LocalMatrix::ProcessNoInterpol(void)
 {
-    if (GLI_G_iNbSdlsInThisFrame < 2048)
-        GLI_G_pProcessSDLs[GLI_G_iNbSdlsInThisFrame++] = (int)pSdl;
+    char* pOrigin = (char*)m_vpOriginPointer;
+    float (*pDest)[4] = (float (*)[4])m_vpDestinationPointer;
+    PS2_M_vCopyMatrix2((float (*)[4])(*(char**)(pOrigin + 0x24) + 0x10), pDest, OldMat);
+    if (GLI_g_SDLIsBlinking || ((*(int*)(pOrigin + 0x30) & 2) == 2))
+        pDest[3][2] -= 50000.0f;
 }
 
-void C_SdlRef_FogParameters::ProcessNoInterpol(void)
+void C_SdlRef_LocalMatrixForCheap::Process(void)
 {
-    Process();
-}
-
-void C_SdlRef_FogParameters::ProcessWithInterpol(void)
-{
-    Process();
-}
-
-void C_SdlRef_FogParameters::Process(void)
-{
-    *(unsigned int*)m_pDestFogColor = GLI_g_CurrentSDLFogColor;
-    *(float*)m_pDestFogStart = GLI_g_OOStartMinusEnd;
-    *(float*)m_pDestFogEnd = g_fFogEnd;
-}
-
-void C_SdlRef_TextureOffset::ProcessNoInterpol(void)
-{
-    Process();
-}
-
-void C_SdlRef_TextureOffset::ProcessWithInterpol(void)
-{
-    float fU;
-    float fV;
-
-    if (m_fpOffsetU)
+    float (*pDest)[4] = (float (*)[4])m_vpDestinationPointer;
+    if (pDest)
     {
-        if (m_hMaterial && (m_hMaterial->lIncrementIsEnable == 2))
-        {
-            fU = m_hMaterial->fAddU;
-            fV = m_hMaterial->fAddV;
-        }
-        else
-        {
-            float fTime = 1000.0f * (g_ffFrameTime - 0.5f * (g_ffFrameTime - g_ffFrameTimeLastFrame));
-            fU = m_du * fTime;
-            fV = m_dv * fTime;
-        }
-        *(float*)m_fpOffsetU = fU - (float)(int)fU;
-        *(float*)m_fpOffsetV = fV - (float)(int)fV;
+        PS2_M_vCopyMatrix(OldMat, pDest);
+        if (*(char*)m_pcActivity == 0)
+            pDest[3][2] -= 50000.0f;
     }
 }
 
-void C_SdlRef_TextureOffset::Process(void)
+void C_SdlRef_LocalMatrixForCheap::ProcessNoInterpol(void)
 {
-    float fU;
-    float fV;
-
-    if (m_fpOffsetU)
+    float (*pSrc)[4] = (float (*)[4])m_vpOriginPointer;
+    float (*pDest)[4] = (float (*)[4])m_vpDestinationPointer;
+    if (m_vpDestinationPointer)
     {
-        if (m_hMaterial && (m_hMaterial->lIncrementIsEnable == 2))
-        {
-            fU = m_hMaterial->fAddU;
-            fV = m_hMaterial->fAddV;
-        }
-        else
-        {
-            float fTime = 1000.0f * g_ffFrameTime;
-            fU = m_du * fTime;
-            fV = m_dv * fTime;
-        }
-        *(float*)m_fpOffsetU = fU - (float)(int)fU;
-        *(float*)m_fpOffsetV = fV - (float)(int)fV;
+        PS2_M_vCopyMatrix2(pSrc, pDest, OldMat);
+        if (*(char*)m_pcActivity == 0)
+            pDest[3][2] -= 50000.0f;
     }
 }
 
-void C_SdlRef_TextureIdMatrix::ProcessNoInterpol(void)
+void C_SdlRef_LocalMatrixForCheap::ProcessWithInterpol(void)
 {
-    Process();
-}
-
-void C_SdlRef_TextureIdMatrix::ProcessWithInterpol(void)
-{
-    Process();
-}
-
-void C_SdlRef_TextureIdMatrix::Process(void)
-{
-    float (*param0)[4] = (float (*)[4])m_vpDestinationPointer;
-
-    if (param0)
+    float* pDest = (float*)m_vpDestinationPointer;
+    float* pSrc = (float*)m_vpOriginPointer;
+    if (pDest)
     {
-        param0[0][0] = 1.0f;
-        param0[0][1] = 0.0f;
-        param0[0][2] = 0.0f;
-        param0[1][0] = 0.0f;
-        param0[1][1] = 1.0f;
-        param0[1][2] = 0.0f;
-        param0[2][0] = 0.0f;
-        param0[2][1] = 0.0f;
-        param0[2][2] = 1.0f;
+        InterpolateMatrixAndStoreWithThreshold(pDest, pSrc, &OldMat[0][0]);
+        if (*(char*)m_pcActivity == 0)
+            ((float (*)[4])m_vpDestinationPointer)[3][2] -= 50000.0f;
     }
-}
-
-void C_SdlRef_TextureMatrix::ProcessNoInterpol(void)
-{
-    Process();
-}
-
-void C_SdlRef_TextureMatrix::ProcessWithInterpol(void)
-{
-    Process();
 }
 
 void C_SdlRef_TextureMatrix::Process(void)
@@ -530,124 +524,135 @@ void C_SdlRef_TextureMatrix::Process(void)
     }
 }
 
-void C_SdlRef_LocalMatrixForCheap::ProcessWithInterpol(void)
-{
-    float* pDest = (float*)m_vpDestinationPointer;
-    float* pSrc = (float*)m_vpOriginPointer;
-    if (pDest)
-    {
-        InterpolateMatrixAndStoreWithThreshold(pDest, pSrc, &OldMat[0][0]);
-        if (*(char*)m_pcActivity == 0)
-            ((float (*)[4])m_vpDestinationPointer)[3][2] -= 50000.0f;
-    }
-}
-
-void C_SdlRef_LocalMatrixForCheap::ProcessNoInterpol(void)
-{
-    float (*pSrc)[4] = (float (*)[4])m_vpOriginPointer;
-    float (*pDest)[4] = (float (*)[4])m_vpDestinationPointer;
-    if (m_vpDestinationPointer)
-    {
-        PS2_M_vCopyMatrix2(pSrc, pDest, OldMat);
-        if (*(char*)m_pcActivity == 0)
-            pDest[3][2] -= 50000.0f;
-    }
-}
-
-void C_SdlRef_LocalMatrixForCheap::Process(void)
-{
-    float (*pDest)[4] = (float (*)[4])m_vpDestinationPointer;
-    if (pDest)
-    {
-        PS2_M_vCopyMatrix(OldMat, pDest);
-        if (*(char*)m_pcActivity == 0)
-            pDest[3][2] -= 50000.0f;
-    }
-}
-
-void C_SdlRef_LocalMatrix::ProcessNoInterpol(void)
-{
-    char* pOrigin = (char*)m_vpOriginPointer;
-    float (*pDest)[4] = (float (*)[4])m_vpDestinationPointer;
-    PS2_M_vCopyMatrix2((float (*)[4])(*(char**)(pOrigin + 0x24) + 0x10), pDest, OldMat);
-    if (GLI_g_SDLIsBlinking || ((*(int*)(pOrigin + 0x30) & 2) == 2))
-        pDest[3][2] -= 50000.0f;
-}
-
-void C_SdlRef_LocalMatrix::ProcessWithInterpol(void)
-{
-    if (m_bNoInterpolation)
-    {
-        ProcessNoInterpol();
-        m_bNoInterpolation = 0;
-    }
-    else
-    {
-        InterpolateMatrixAndStoreWithThreshold((float*)m_vpDestinationPointer, (float*)(*(char**)((char*)m_vpOriginPointer + 0x24) + 0x10), &OldMat[0][0]);
-        if (GLI_g_SDLIsBlinking || ((*(int*)((char*)m_vpOriginPointer + 0x30) & 2) == 2))
-            ((float (*)[4])m_vpDestinationPointer)[3][2] -= 50000.0f;
-    }
-}
-
-void C_SdlRef_LocalMatrix::Process(void)
-{
-    float (*pDest)[4] = (float (*)[4])m_vpDestinationPointer;
-    PS2_M_vCopyMatrix(OldMat, pDest);
-    if (GLI_g_SDLIsBlinking || ((*(int*)((char*)m_vpOriginPointer + 0x30) & 2) == 2))
-        pDest[3][2] -= 50000.0f;
-}
-
-void C_SdlRef_PointLighting::ProcessNoInterpol(void)
+void C_SdlRef_TextureMatrix::ProcessWithInterpol(void)
 {
     Process();
 }
 
-void C_SdlRef_PointLighting::ProcessWithInterpol(void)
+void C_SdlRef_TextureMatrix::ProcessNoInterpol(void)
 {
     Process();
 }
 
-void C_SdlRef_PointLighting::Process(void)
+void C_SdlRef_TextureIdMatrix::Process(void)
 {
-    float* pDest;
-    float* pEnd;
+    float (*param0)[4] = (float (*)[4])m_vpDestinationPointer;
+
+    if (param0)
+    {
+        param0[0][0] = 1.0f;
+        param0[0][1] = 0.0f;
+        param0[0][2] = 0.0f;
+        param0[1][0] = 0.0f;
+        param0[1][1] = 1.0f;
+        param0[1][2] = 0.0f;
+        param0[2][0] = 0.0f;
+        param0[2][1] = 0.0f;
+        param0[2][2] = 1.0f;
+    }
+}
+
+void C_SdlRef_TextureIdMatrix::ProcessWithInterpol(void)
+{
+    Process();
+}
+
+void C_SdlRef_TextureIdMatrix::ProcessNoInterpol(void)
+{
+    Process();
+}
+
+void C_SdlRef_TextureOffset::Process(void)
+{
+    float fU;
+    float fV;
+
+    if (m_fpOffsetU)
+    {
+        if (m_hMaterial && (m_hMaterial->lIncrementIsEnable == 2))
+        {
+            fU = m_hMaterial->fAddU;
+            fV = m_hMaterial->fAddV;
+        }
+        else
+        {
+            float fTime = 1000.0f * g_ffFrameTime;
+            fU = m_du * fTime;
+            fV = m_dv * fTime;
+        }
+        *(float*)m_fpOffsetU = fU - (float)(int)fU;
+        *(float*)m_fpOffsetV = fV - (float)(int)fV;
+    }
+}
+
+void C_SdlRef_TextureOffset::ProcessWithInterpol(void)
+{
+    float fU;
+    float fV;
+
+    if (m_fpOffsetU)
+    {
+        if (m_hMaterial && (m_hMaterial->lIncrementIsEnable == 2))
+        {
+            fU = m_hMaterial->fAddU;
+            fV = m_hMaterial->fAddV;
+        }
+        else
+        {
+            float fTime = 1000.0f * (g_ffFrameTime - 0.5f * (g_ffFrameTime - g_ffFrameTimeLastFrame));
+            fU = m_du * fTime;
+            fV = m_dv * fTime;
+        }
+        *(float*)m_fpOffsetU = fU - (float)(int)fU;
+        *(float*)m_fpOffsetV = fV - (float)(int)fV;
+    }
+}
+
+void C_SdlRef_TextureOffset::ProcessNoInterpol(void)
+{
+    Process();
+}
+
+void C_SdlRef_FogParameters::Process(void)
+{
+    *(unsigned int*)m_pDestFogColor = GLI_g_CurrentSDLFogColor;
+    *(float*)m_pDestFogStart = GLI_g_OOStartMinusEnd;
+    *(float*)m_pDestFogEnd = g_fFogEnd;
+}
+
+void C_SdlRef_FogParameters::ProcessWithInterpol(void)
+{
+    Process();
+}
+
+void C_SdlRef_FogParameters::ProcessNoInterpol(void)
+{
+    Process();
+}
+
+void fn_vAddSdlToProcessLater(C_Sdl* pSdl)
+{
+    if (GLI_G_iNbSdlsInThisFrame < 2048)
+        GLI_G_pProcessSDLs[GLI_G_iNbSdlsInThisFrame++] = (int)pSdl;
+}
+
+void GLI_vUpdateAllSPORefs(void)
+{
     unsigned int i;
 
-    pDest = (float*)m_vpDestinationPointer;
-    pEnd = pDest + 64;
-    for (i = 0; i < AGO_g_ulNbLights; i++)
+    for (i = 0; i < GLI_G_iNbSdlsInThisFrame; i++)
     {
-        AGO_Light_* pLight = &AGO_g_pLightList[i];
-        pDest[0] = pLight->Position[0];
-        pDest[1] = pLight->Position[1];
-        pDest[2] = pLight->Position[2];
-        pDest[3] = pLight->SqFar;
-        pDest[4] = pLight->Color[0];
-        pDest[5] = pLight->Color[1];
-        pDest[6] = pLight->Color[2];
-        pDest[7] = pLight->Color[3];
-        pDest += 8;
+        if (GLI_G_pProcessSDLs[i])
+            ((C_Sdl*)GLI_G_pProcessSDLs[i])->ProcessAllRefs();
     }
-    while (pDest < pEnd)
-        *pDest++ = 0;
 }
 
-void C_SdlRef::ProcessNoInterpol(void)
+void C_SdlCache::AddSdlInstance(_SDC_Instance_* pInstance)
 {
-    printf("Dummy interpol reference called !!\n");
-}
+    tdstSDLCacheEntry_* p;
 
-void C_SdlRef::ProcessWithInterpol(void)
-{
-    printf("Dummy interpol reference called !!\n");
-}
-
-void C_SdlRef::Process(void)
-{
-    printf("Dummy reference called !!\n");
-}
-
-void C_SdlRef::operator delete(void* ptr)
-{
-    ((void (*)(void*))PS2glLiberator)(ptr);
+    p = ((tdstSDLCacheEntry_* (*)(int))PS2glAllocator64)(8);
+    p->pInstance = pInstance;
+    p->pNext = m_pList;
+    m_pList = p;
 }

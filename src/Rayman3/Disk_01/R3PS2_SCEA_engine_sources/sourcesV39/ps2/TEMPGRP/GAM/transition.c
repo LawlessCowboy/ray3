@@ -1436,9 +1436,26 @@ void* (*fn_pvTransitionAllocatorOdd)(unsigned int);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vBbInit(void)
-{
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void fn_vBbInit(void);
+void fn_vPushAllocModeAccordingToObject(void* _p_stSuperObject);
+void fn_vPushAllocModeAccordingToEngineObject(tdstEngineObject_* p_stObject);
+void fn_vSetTransitionBloc(int lBloc);
+int fn_lGetTransitionBloc(void);
+void fn_vEndTransition(void);
+void fn_vBeginTransition(void);
+void fn_vInitTransitionHierarchy(void);
+void fn_vPlugMicroOnSO(HIE_tdstSuperObject_* hSO);
+unsigned char fn_bScriptTransitionDeallocationCondition(void);
+unsigned char fn_bLevelHadTransitionMemory(void);
+void fn_vSetLevelHasTransitionMemory(unsigned char bValue);
+unsigned char fn_bLevelHasTransitionMemory(void);
+unsigned char fn_bIsTransitionInProgress(void);
+unsigned char fn_bIsLoadInProgress(void);
+void fn_vStopTransition(void);
+void fn_vSetDoTransition(unsigned char bValue);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 522–527 */
 /* addr: 0x0028d150  size: 132 bytes */
@@ -1455,15 +1472,6 @@ extern unsigned short GAM_fn_uwGetEngineLoading(void);
 extern void GAM_fn_vPushAllocMode(GAM_eLoadingMode);
 extern int fn_bIsInFix(tdstEngineObject_*);
 
-void fn_vPushAllocModeAccordingToObject(void* _p_stSuperObject)
-{
-    if (_p_stSuperObject == 0)
-        GAM_fn_vPushAllocMode(GAM_eFixLoading);
-    else {
-        tdstEngineObject_* p_stObject = ((HIE_tdstSuperObject_*)_p_stSuperObject)->ulTypeOfLinkedObject != 2 ? 0 : ((HIE_tdstSuperObject_*)_p_stSuperObject)->hLinkedObject.p_stCharacter; GAM_eLoadingMode eCurrentMode = GAM_fn_uwGetEngineLoading(); if (fn_bIsInFix(p_stObject)) GAM_fn_vPushAllocMode(GAM_eFixLoading); else GAM_fn_vPushAllocMode(eCurrentMode);
-    }
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 504–519 */
 /* addr: 0x0028d1e0  size: 80 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1476,15 +1484,6 @@ void fn_vPushAllocModeAccordingToObject(void* _p_stSuperObject)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vPushAllocModeAccordingToEngineObject(tdstEngineObject_* p_stObject)
-{
-    GAM_eLoadingMode eCurrentMode;
-    eCurrentMode = GAM_fn_uwGetEngineLoading();
-    if (fn_bIsInFix(p_stObject))
-        GAM_fn_vPushAllocMode(GAM_eFixLoading);
-    else
-        GAM_fn_vPushAllocMode(eCurrentMode);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 487–487 */
 /* addr: 0x0028d230  size: 8 bytes */
@@ -1493,10 +1492,6 @@ void fn_vPushAllocModeAccordingToEngineObject(tdstEngineObject_* p_stObject)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vSetTransitionBloc(int lBloc)
-{
-    g_lTransitionBloc = lBloc;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 482–482 */
 /* addr: 0x0028d240  size: 8 bytes */
@@ -1505,10 +1500,6 @@ void fn_vSetTransitionBloc(int lBloc)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_lGetTransitionBloc(void)
-{
-    return g_lTransitionBloc;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 368–473 */
 /* addr: 0x0028d250  size: 588 bytes */
@@ -1569,6 +1560,198 @@ extern void fn_vDesinitOneObject(tdstEngineObject_*, tdeObjectTreeInit_);
 extern void PLD_fn_vUnLoadTransition(void);
 extern void* memcpy(void*, const void*, unsigned int);
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 331–341 */
+/* addr: 0x0028d4a0  size: 80 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 331
+ *   +0x0004 -> line 332
+ *   +0x0008 -> line 331
+ *   +0x000c -> line 332
+ *   +0x0010 -> line 333
+ *   +0x0014 -> line 334
+ *   +0x0018 -> line 337
+ *   +0x001c -> line 340
+ *   +0x0044 -> line 341
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+extern unsigned char HMU_fn_ucGetActualNormalMemoryBlockUsed(void);
+extern unsigned char HMU_fn_ucGetActualTempMemoryBlockUsed(void);
+extern void PS2_fn_vLeaveGLCriticalSection(void);
+extern void PS2_fn_vTriggerTransitionOn(void);
+extern void PS2_fn_vFlipThreadsPriority(void);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 201–244 */
+/* addr: 0x0028d4f0  size: 728 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 201
+ *   +0x0004 -> line 207
+ *   +0x0008 -> line 201
+ *   +0x0014 -> line 207
+ *   +0x001c -> line 208
+ *   +0x0020 -> line 207
+ *   +0x0024 -> line 233
+ *   +0x0028 -> line 210
+ *   +0x0030 -> line 213
+ *   +0x0034 -> line 214
+ *   +0x0038 -> line 215
+ *   +0x003c -> line 233
+ *   +0x0048 -> line 237
+ *   +0x0064 -> line 240
+ *   +0x007c -> line 241
+ *   +0x0140 -> line 242
+ *   +0x0204 -> line 243
+ *   +0x02c4 -> line 244
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 186–195 */
+/* addr: 0x0028d7d0  size: 60 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 186
+ *   +0x0004 -> line 189
+ *   +0x0008 -> line 186
+ *   +0x000c -> line 189
+ *   +0x0018 -> line 190
+ *   +0x001c -> line 191
+ *   +0x0028 -> line 192
+ *   +0x0030 -> line 195
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+extern void fn_vMicroInit(tdstEngineObject_*, tdeObjectTreeInit_);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 161–161 */
+/* addr: 0x0028dac0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 161
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 137–137 */
+/* addr: 0x0028dad0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 137
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 130–130 */
+/* addr: 0x0028dae0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 130
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 125–125 */
+/* addr: 0x0028daf0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 125
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 111–111 */
+/* addr: 0x0028db00  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 111
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 104–104 */
+/* addr: 0x0028db10  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 104
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 92–92 */
+/* addr: 0x0028db20  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 92
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 80–80 */
+/* addr: 0x0028db30  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 80
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void fn_vSetDoTransition(unsigned char bValue)
+{
+    g_bDoTransition = bValue;
+}
+
+void fn_vStopTransition(void)
+{
+    g_bTransitionIsRunning = 0;
+}
+
+unsigned char fn_bIsLoadInProgress(void)
+{
+    return g_bLoadInProgress;
+}
+
+unsigned char fn_bIsTransitionInProgress(void)
+{
+    return g_bTransitionInProgress;
+}
+
+unsigned char fn_bLevelHasTransitionMemory(void)
+{
+    return g_bLevelHasTransitionMemory;
+}
+
+void fn_vSetLevelHasTransitionMemory(unsigned char bValue)
+{
+    g_bLevelHasTransitionMemory = bValue;
+}
+
+unsigned char fn_bLevelHadTransitionMemory(void)
+{
+    return g_bLevelHadTransitionMemory;
+}
+
+unsigned char fn_bScriptTransitionDeallocationCondition(void)
+{
+    return 1;
+}
+
+void fn_vPlugMicroOnSO(HIE_tdstSuperObject_* hSO)
+{
+    tdstEngineObject_* pEO;
+    if (hSO->ulTypeOfLinkedObject == 2) {
+        pEO = hSO->hLinkedObject.p_stCharacter;
+        if (pEO->h_Micro)
+            fn_vMicroInit(pEO, OTI_MapLoaded);
+    }
+}
+
+void fn_vInitTransitionHierarchy(void)
+{
+    SECT_tdstSector_* hTransitionSector;
+    HIE_tdstSuperObject_* hTransitionSectorSO;
+    /* TODO: decompile from asm/... */
+}
+
+void fn_vBeginTransition(void)
+{
+    g_bTransitionInProgress = 1;
+    g_bTransitionIsRunning = 1;
+    g_bLoadInProgress = 1;
+    g_bEngineCallOneTrameWhileLoading = 1;
+    g_bLoadingIsFinished = 0; ucCurrentNormalMemoryBlockBeforePlayingOneTrame = HMU_fn_ucGetActualNormalMemoryBlockUsed(); ucCurrentTempMemoryBlockBeforePlayingOneTrame = HMU_fn_ucGetActualTempMemoryBlockUsed(); PS2_fn_vLeaveGLCriticalSection(); PS2_fn_vTriggerTransitionOn(); PS2_fn_vFlipThreadsPriority();
+}
+
 void fn_vEndTransition(void)
 {
     tdstGraphChainedListNode_* p_GraphChainedListNode;
@@ -1609,185 +1792,35 @@ void fn_vEndTransition(void)
     g_stEngineStructure.stCineManager = (CINE_Manager_*)g_stNewCineManager;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 331–341 */
-/* addr: 0x0028d4a0  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 331
- *   +0x0004 -> line 332
- *   +0x0008 -> line 331
- *   +0x000c -> line 332
- *   +0x0010 -> line 333
- *   +0x0014 -> line 334
- *   +0x0018 -> line 337
- *   +0x001c -> line 340
- *   +0x0044 -> line 341
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-extern unsigned char HMU_fn_ucGetActualNormalMemoryBlockUsed(void);
-extern unsigned char HMU_fn_ucGetActualTempMemoryBlockUsed(void);
-extern void PS2_fn_vLeaveGLCriticalSection(void);
-extern void PS2_fn_vTriggerTransitionOn(void);
-extern void PS2_fn_vFlipThreadsPriority(void);
-
-void fn_vBeginTransition(void)
+int fn_lGetTransitionBloc(void)
 {
-    g_bTransitionInProgress = 1;
-    g_bTransitionIsRunning = 1;
-    g_bLoadInProgress = 1;
-    g_bEngineCallOneTrameWhileLoading = 1;
-    g_bLoadingIsFinished = 0; ucCurrentNormalMemoryBlockBeforePlayingOneTrame = HMU_fn_ucGetActualNormalMemoryBlockUsed(); ucCurrentTempMemoryBlockBeforePlayingOneTrame = HMU_fn_ucGetActualTempMemoryBlockUsed(); PS2_fn_vLeaveGLCriticalSection(); PS2_fn_vTriggerTransitionOn(); PS2_fn_vFlipThreadsPriority();
+    return g_lTransitionBloc;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 201–244 */
-/* addr: 0x0028d4f0  size: 728 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 201
- *   +0x0004 -> line 207
- *   +0x0008 -> line 201
- *   +0x0014 -> line 207
- *   +0x001c -> line 208
- *   +0x0020 -> line 207
- *   +0x0024 -> line 233
- *   +0x0028 -> line 210
- *   +0x0030 -> line 213
- *   +0x0034 -> line 214
- *   +0x0038 -> line 215
- *   +0x003c -> line 233
- *   +0x0048 -> line 237
- *   +0x0064 -> line 240
- *   +0x007c -> line 241
- *   +0x0140 -> line 242
- *   +0x0204 -> line 243
- *   +0x02c4 -> line 244
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vInitTransitionHierarchy(void)
+void fn_vSetTransitionBloc(int lBloc)
 {
-    SECT_tdstSector_* hTransitionSector;
-    HIE_tdstSuperObject_* hTransitionSectorSO;
-    /* TODO: decompile from asm/... */
+    g_lTransitionBloc = lBloc;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 186–195 */
-/* addr: 0x0028d7d0  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 186
- *   +0x0004 -> line 189
- *   +0x0008 -> line 186
- *   +0x000c -> line 189
- *   +0x0018 -> line 190
- *   +0x001c -> line 191
- *   +0x0028 -> line 192
- *   +0x0030 -> line 195
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-extern void fn_vMicroInit(tdstEngineObject_*, tdeObjectTreeInit_);
-
-void fn_vPlugMicroOnSO(HIE_tdstSuperObject_* hSO)
+void fn_vPushAllocModeAccordingToEngineObject(tdstEngineObject_* p_stObject)
 {
-    tdstEngineObject_* pEO;
-    if (hSO->ulTypeOfLinkedObject == 2) {
-        pEO = hSO->hLinkedObject.p_stCharacter;
-        if (pEO->h_Micro)
-            fn_vMicroInit(pEO, OTI_MapLoaded);
+    GAM_eLoadingMode eCurrentMode;
+    eCurrentMode = GAM_fn_uwGetEngineLoading();
+    if (fn_bIsInFix(p_stObject))
+        GAM_fn_vPushAllocMode(GAM_eFixLoading);
+    else
+        GAM_fn_vPushAllocMode(eCurrentMode);
+}
+
+void fn_vPushAllocModeAccordingToObject(void* _p_stSuperObject)
+{
+    if (_p_stSuperObject == 0)
+        GAM_fn_vPushAllocMode(GAM_eFixLoading);
+    else {
+        tdstEngineObject_* p_stObject = ((HIE_tdstSuperObject_*)_p_stSuperObject)->ulTypeOfLinkedObject != 2 ? 0 : ((HIE_tdstSuperObject_*)_p_stSuperObject)->hLinkedObject.p_stCharacter; GAM_eLoadingMode eCurrentMode = GAM_fn_uwGetEngineLoading(); if (fn_bIsInFix(p_stObject)) GAM_fn_vPushAllocMode(GAM_eFixLoading); else GAM_fn_vPushAllocMode(eCurrentMode);
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 161–161 */
-/* addr: 0x0028dac0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 161
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned char fn_bScriptTransitionDeallocationCondition(void)
+void fn_vBbInit(void)
 {
-    return 1;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 137–137 */
-/* addr: 0x0028dad0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 137
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned char fn_bLevelHadTransitionMemory(void)
-{
-    return g_bLevelHadTransitionMemory;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 130–130 */
-/* addr: 0x0028dae0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 130
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vSetLevelHasTransitionMemory(unsigned char bValue)
-{
-    g_bLevelHasTransitionMemory = bValue;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 125–125 */
-/* addr: 0x0028daf0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 125
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned char fn_bLevelHasTransitionMemory(void)
-{
-    return g_bLevelHasTransitionMemory;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 111–111 */
-/* addr: 0x0028db00  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 111
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned char fn_bIsTransitionInProgress(void)
-{
-    return g_bTransitionInProgress;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 104–104 */
-/* addr: 0x0028db10  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 104
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned char fn_bIsLoadInProgress(void)
-{
-    return g_bLoadInProgress;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 92–92 */
-/* addr: 0x0028db20  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 92
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vStopTransition(void)
-{
-    g_bTransitionIsRunning = 0;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 80–80 */
-/* addr: 0x0028db30  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 80
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vSetDoTransition(unsigned char bValue)
-{
-    g_bDoTransition = bValue;
 }

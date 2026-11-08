@@ -235,21 +235,20 @@ struct GEO_tdstElementTMeshes_ {
  */
 void* GEO_p_stAllocElementIndexedTriangles(short xNbFaces, short xNbElementUV, short xNbUVStages);
 
-void GEO_vCreateElementIndexedTriangles(GEO_tdstGeometricObject_* hObject, short* p_hElement, short xNbFaces, short xNbElementUV, short xNbUVStages)
-{
-    short xElementToBuild;
-
-    for (xElementToBuild = 0; xElementToBuild < hObject->xNbElements; xElementToBuild++)
-    {
-        if (hObject->d_xListOfElementsTypes[xElementToBuild] == 0)
-            break;
-    }
-    if (xElementToBuild == hObject->xNbElements)
-        return;
-    hObject->d_xListOfElementsTypes[xElementToBuild] = 1;
-    *p_hElement = xElementToBuild;
-    hObject->d_stListOfElements[xElementToBuild] = GEO_p_stAllocElementIndexedTriangles(xNbFaces, xNbElementUV, xNbUVStages);
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void GEO_vCreateElementIndexedTriangles(GEO_tdstGeometricObject_* hObject, short* p_hElement, short xNbFaces, short xNbElementUV, short xNbUVStages);
+short GEO_xGetParallelBoxIndexOfElement(GEO_tdstGeometricObject_* hObject, short xIndexElement);
+GEO_tdstParallelBox_* GEO_hGetParallelBox(GEO_tdstGeometricObject_* hObject, short xParallelBox);
+void GEO_vCreateObjectListOfParallelBox(GEO_tdstGeometricObject_* hObject, short xNumberOfParallelBoxes);
+unsigned char GEO_vGetFaceSurfaceSpeed(GEO_tdstGeometricObject_* hObject, short xElement, short xFace, MTH3D_tdstVector_* p_vSpeed, int lMTIndex);
+void GEO_vGetNormalOfGeometricObjectElement(GEO_tdstGeometricObject_* hObject, short xElementIndex, short xDataElementIndex, MTH3D_tdstVector_* p_stNormal);
+void GEO_vEndModifyObject(GEO_tdstGeometricObject_* hObject);
+void GEO_vGetPointOfObject(GEO_tdstGeometricObject_* hObject, MTH3D_tdstVector_* p_stPoint, short xIndexOfPoint);
+void GEO_vSetPointOfObject(GEO_tdstGeometricObject_* hObject, MTH3D_tdstVector_* p_stPoint, short xIndexOfPoint);
+void GEO_vCreateGeometricObject(GEO_tdstGeometricObject_** p_hObject, short xNbPoints, short xNbElements);
+void GEO_vInitGeometricObject(GEO_tdstGeometricObject_* p_stObjectToCreate, short xNbPoints, short xNbElements);
+void GEO_xComputeIndexUsedByElements(GEO_tdstGeometricObject_* p_stObj);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 1029–1061 */
 /* addr: 0x002a1aa0  size: 288 bytes */
@@ -269,33 +268,6 @@ void GEO_vCreateElementIndexedTriangles(GEO_tdstGeometricObject_* hObject, short
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-short GEO_xGetParallelBoxIndexOfElement(GEO_tdstGeometricObject_* hObject, short xIndexElement)
-{
-    switch (hObject->d_xListOfElementsTypes[xIndexElement])
-    {
-        case 1:
-            return ((GEO_tdstElementIndexedTriangles_*)hObject->d_stListOfElements[xIndexElement])->xIndexOfParallelBox;
-        case 2:
-            return ((GEO_tdstElementFaceMapDescriptors_*)hObject->d_stListOfElements[xIndexElement])->xIndexOfParallelBox;
-        case 3:
-            return ((GEO_tdstElementSprite_*)hObject->d_stListOfElements[xIndexElement])->xIndexOfParallelBox;
-        case 4:
-            return ((GEO_tdstElementTMeshes_*)hObject->d_stListOfElements[xIndexElement])->xIndexOfParallelBox;
-        case 5:
-            return ((GEO_tdstElementPoints_*)hObject->d_stListOfElements[xIndexElement])->xIndexOfParallelBox;
-        case 6:
-            return ((GEO_tdstElementLines_*)hObject->d_stListOfElements[xIndexElement])->xIndexOfParallelBox;
-        case 7:
-            return ((GEO_tdstElementSpheres_*)hObject->d_stListOfElements[xIndexElement])->xIndexOfParallelBox;
-        case 8:
-            return ((GEO_tdstElementAlignedBoxes_*)hObject->d_stListOfElements[xIndexElement])->xIndexOfParallelBox;
-        case 9:
-            return ((GEO_tdstElementCones_*)hObject->d_stListOfElements[xIndexElement])->xIndexOfParallelBox;
-        case 0:
-        default:
-            return -1;
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 1012–1015 */
 /* addr: 0x002a1bc0  size: 44 bytes */
@@ -305,12 +277,6 @@ short GEO_xGetParallelBoxIndexOfElement(GEO_tdstGeometricObject_* hObject, short
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-GEO_tdstParallelBox_* GEO_hGetParallelBox(GEO_tdstGeometricObject_* hObject, short xParallelBox)
-{
-    if (xParallelBox < hObject->xNbParallelBoxes)
-        return hObject->d_stListOfParallelBoxes + xParallelBox;
-    return 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 950–974 */
 /* addr: 0x002a1bf0  size: 216 bytes */
@@ -334,25 +300,6 @@ GEO_tdstParallelBox_* GEO_hGetParallelBox(GEO_tdstGeometricObject_* hObject, sho
  */
 void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
 void* memset(void* dst, int c, size_t n);
-
-void GEO_vCreateObjectListOfParallelBox(GEO_tdstGeometricObject_* hObject, short xNumberOfParallelBoxes)
-{
-    short xIndex;
-
-    hObject->xNbParallelBoxes = xNumberOfParallelBoxes;
-    if (hObject->xNbParallelBoxes != 0)
-    {
-        if (hObject->d_stListOfParallelBoxes == NULL)
-        {
-            hObject->d_stListOfParallelBoxes = (GEO_tdstParallelBox_*)HMU_fn_p_vMalloc(hObject->xNbParallelBoxes * sizeof(GEO_tdstParallelBox_), 0);
-            for (xIndex = 0; xIndex < hObject->xNbParallelBoxes; xIndex++)
-            {
-                hObject->d_stListOfParallelBoxes[xIndex].stMinPoint.xX = 3.402822e38f; hObject->d_stListOfParallelBoxes[xIndex].stMinPoint.xY = 3.402822e38f; hObject->d_stListOfParallelBoxes[xIndex].stMinPoint.xZ = 3.402822e38f;
-                hObject->d_stListOfParallelBoxes[xIndex].stMaxPoint.xX = -3.402822e38f; hObject->d_stListOfParallelBoxes[xIndex].stMaxPoint.xY = -3.402822e38f; hObject->d_stListOfParallelBoxes[xIndex].stMaxPoint.xZ = -3.402822e38f;
-            }
-        }
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 846–938 */
 /* addr: 0x002a1cd0  size: 608 bytes */
@@ -453,52 +400,6 @@ void GEO_vCreateObjectListOfParallelBox(GEO_tdstGeometricObject_* hObject, short
    difference is at +0x0 (the frame size / the missing $fs0 save). */
 void GLI_xGetMaterialTextureScrollingCoef(GLI_tdstMaterial_* hMaterial, int lUnused, int* p_bSwitch, float* p_fUSpeed, float* p_fVSpeed);
 
-unsigned char GEO_vGetFaceSurfaceSpeed(GEO_tdstGeometricObject_* hObject, short xElement, short xFace, MTH3D_tdstVector_* p_vSpeed, int lMTIndex)
-{
-    float det;
-    float xVSpeed;
-    float xUSpeed;
-    int bScrollMode;
-    ACP_tdst2DUVValues_* param0;
-    ACP_tdst2DUVValues_* p_uvB;
-    ACP_tdst2DUVValues_* p_uvA;
-    MTH3D_tdstVector_* p_vC;
-    MTH3D_tdstVector_* p_vB;
-    MTH3D_tdstVector_* p_vA;
-    GEO_tdstTripledIndex_* p_stListOfTripled;
-    GEO_tdstElementIndexedTriangles_* p_stElement;
-
-    p_vSpeed->xX = 0.0f;
-    p_vSpeed->xY = 0.0f;
-    p_vSpeed->xZ = 0.0f;
-    if (hObject->d_xListOfElementsTypes[xElement] != 1)
-        return 0;
-    p_stElement = (GEO_tdstElementIndexedTriangles_*)hObject->d_stListOfElements[xElement];
-    bScrollMode = 0;
-    xVSpeed = 0.0f;
-    xUSpeed = 0.0f;
-    if (lMTIndex == -1)
-        GLI_xGetMaterialTextureScrollingCoef(p_stElement->hVisualMaterial, 0, &bScrollMode, &xUSpeed, &xVSpeed);
-    if (bScrollMode == 0)
-        return 0;
-    xUSpeed = 60.0f * -xUSpeed;
-    xVSpeed = 60.0f * -xVSpeed;
-    p_stListOfTripled = p_stElement->d_stListOfFacesTripled;
-    p_vA = &hObject->d_stListOfPoints[p_stListOfTripled[xFace].a3_xIndex[0]];
-    p_vB = &hObject->d_stListOfPoints[p_stListOfTripled[xFace].a3_xIndex[1]];
-    p_vC = &hObject->d_stListOfPoints[p_stListOfTripled[xFace].a3_xIndex[2]];
-    p_uvA = &p_stElement->d_stListOfElementUV[p_stElement->d_stListOfFacesTripledIndexUV[xFace].a3_xIndex[0]];
-    p_uvB = &p_stElement->d_stListOfElementUV[p_stElement->d_stListOfFacesTripledIndexUV[xFace].a3_xIndex[1]];
-    param0 = &p_stElement->d_stListOfElementUV[p_stElement->d_stListOfFacesTripledIndexUV[xFace].a3_xIndex[2]];
-    det = (p_uvB->xU - p_uvA->xU) * (param0->xV - p_uvA->xV) - (p_uvB->xV - p_uvA->xV) * (param0->xU - p_uvA->xU);
-    xUSpeed = xUSpeed * ((param0->xV - p_uvA->xV) / det) + xVSpeed * (-(param0->xU - p_uvA->xU) / det);
-    xVSpeed = xUSpeed * (-(p_uvB->xV - p_uvA->xV) / det) + xVSpeed * ((p_uvB->xU - p_uvA->xU) * (param0->xV - p_uvA->xV) / det);
-    p_vSpeed->xX = (p_vB->xX - p_vA->xX) * xUSpeed + (p_vC->xX - p_vA->xX) * xVSpeed + 0.0f * 0.0f;
-    p_vSpeed->xY = (p_vB->xY - p_vA->xY) * xUSpeed + (p_vC->xY - p_vA->xY) * xVSpeed + 0.0f * 0.0f;
-    p_vSpeed->xZ = (p_vB->xZ - p_vA->xZ) * xUSpeed + (p_vC->xZ - p_vA->xZ) * xVSpeed + 0.0f * 0.0f;
-    return 1;
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 665–681 */
 /* addr: 0x002a1f30  size: 244 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -522,25 +423,6 @@ unsigned char GEO_vGetFaceSurfaceSpeed(GEO_tdstGeometricObject_* hObject, short 
  * compare a candidate object's line table as an extra checkpoint.
  */
 #define MTH3D_M_vCopyVector(_d, _s) { *(int*)&(_d)->xX = *(int*)&(_s)->xX; *(int*)&(_d)->xY = *(int*)&(_s)->xY; *(int*)&(_d)->xZ = *(int*)&(_s)->xZ; }
-
-void GEO_vGetNormalOfGeometricObjectElement(GEO_tdstGeometricObject_* hObject, short xElementIndex, short xDataElementIndex, MTH3D_tdstVector_* p_stNormal)
-{
-    GEO_tdstElementFaceMapDescriptors_* param0;
-    GEO_tdstElementIndexedTriangles_* param1;
-
-    p_stNormal->xX = 0.0f; p_stNormal->xY = 0.0f; p_stNormal->xZ = 0.0f;
-
-    switch (hObject->d_xListOfElementsTypes[xElementIndex]) {
-        case 1:
-            param1 = (GEO_tdstElementIndexedTriangles_*)hObject->d_stListOfElements[xElementIndex];
-            MTH3D_M_vCopyVector(p_stNormal, &param1->d_stListOfFacesNormals[xDataElementIndex]);
-            break;
-        case 2:
-            param0 = (GEO_tdstElementFaceMapDescriptors_*)hObject->d_stListOfElements[xElementIndex];
-            MTH3D_M_vCopyVector(p_stNormal, &param0->d_stListOfFacesNormals[xDataElementIndex]);
-            break;
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 588–606 */
 /* addr: 0x002a2030  size: 204 bytes */
@@ -566,27 +448,6 @@ void GEO_vComputeObjectParallelBox(GEO_tdstGeometricObject_* hObject, short xInd
 void GEO_fn_vAddObjectToSphere(GEO_tdstGeometricObject_* hObject, MTH4D_tdstVector_* p_stCenter, float* p_xRadius);
 void GEO_xComputeIndexUsedByElements(GEO_tdstGeometricObject_* p_stObj);
 
-void GEO_vEndModifyObject(GEO_tdstGeometricObject_* hObject)
-{
-    GEO_xComputeObjectNormals(hObject);
-    GEO_xComputeIndexUsedByElements(hObject);
-    if (hObject->xNbParallelBoxes)
-    {
-        short i;
-
-        if (hObject->d_stListOfParallelBoxes == NULL)
-            GEO_vCreateObjectListOfParallelBox(hObject, hObject->xNbParallelBoxes);
-        for (i = 0; i < hObject->xNbParallelBoxes; i++)
-            GEO_vComputeObjectParallelBox(hObject, i);
-    }
-    hObject->xBoudingSphereCenter.xX = hObject->d_stListOfPoints->xX;
-    hObject->xBoudingSphereCenter.xY = hObject->d_stListOfPoints->xY;
-    hObject->xBoudingSphereCenter.xZ = hObject->d_stListOfPoints->xZ;
-    hObject->xBoudingSphereCenter.xW = 1.0f;
-    hObject->xBoudingSphereRadius = 0.0f;
-    GEO_fn_vAddObjectToSphere(hObject, &hObject->xBoudingSphereCenter, &hObject->xBoudingSphereRadius);
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 390–391 */
 /* addr: 0x002a2100  size: 56 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -595,10 +456,6 @@ void GEO_vEndModifyObject(GEO_tdstGeometricObject_* hObject)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GEO_vGetPointOfObject(GEO_tdstGeometricObject_* hObject, MTH3D_tdstVector_* p_stPoint, short xIndexOfPoint)
-{
-    *p_stPoint = hObject->d_stListOfPoints[xIndexOfPoint];
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 378–379 */
 /* addr: 0x002a2140  size: 56 bytes */
@@ -608,10 +465,6 @@ void GEO_vGetPointOfObject(GEO_tdstGeometricObject_* hObject, MTH3D_tdstVector_*
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GEO_vSetPointOfObject(GEO_tdstGeometricObject_* hObject, MTH3D_tdstVector_* p_stPoint, short xIndexOfPoint)
-{
-    hObject->d_stListOfPoints[xIndexOfPoint] = *p_stPoint;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 347–351 */
 /* addr: 0x002a2180  size: 464 bytes */
@@ -629,13 +482,6 @@ void GEO_vSetPointOfObject(GEO_tdstGeometricObject_* hObject, MTH3D_tdstVector_*
  * compare a candidate object's line table as an extra checkpoint.
  */
 void GEO_vInitGeometricObject(GEO_tdstGeometricObject_* p_stObjectToCreate, short xNbPoints, short xNbElements);
-
-void GEO_vCreateGeometricObject(GEO_tdstGeometricObject_** p_hObject, short xNbPoints, short xNbElements)
-{
-    GEO_tdstGeometricObject_* p_stObj; p_stObj = (GEO_tdstGeometricObject_*)HMU_fn_p_vMalloc(sizeof(GEO_tdstGeometricObject_), 0); p_stObj->xNbElements = xNbElements; p_stObj->xNbPoints = xNbPoints; p_stObj->d_xListOfElementsTypes = (short*)HMU_fn_p_vMalloc(xNbElements * sizeof(short), 0); p_stObj->d_stListOfElements = (void**)HMU_fn_p_vMalloc(xNbElements * sizeof(void*), 0); p_stObj->d_stListOfPoints = (MTH3D_tdstVector_*)HMU_fn_p_vMalloc(xNbPoints * sizeof(MTH3D_tdstVector_), 0); p_stObj->d_stListOfPointsNormals = (MTH3D_tdstVector_*)HMU_fn_p_vMalloc(xNbPoints * sizeof(MTH3D_tdstVector_), 0); p_stObj->d_stListOfEdges = NULL; p_stObj->bIsStatic = 0; p_stObj->glDisplayList = 0; *p_hObject = p_stObj;
-    GEO_vInitGeometricObject(*p_hObject, xNbPoints, xNbElements);
-    (*p_hObject)->xNbEdges = 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 310–338 */
 /* addr: 0x002a2350  size: 272 bytes */
@@ -657,23 +503,6 @@ void GEO_vCreateGeometricObject(GEO_tdstGeometricObject_** p_hObject, short xNbP
  * compare a candidate object's line table as an extra checkpoint.
  */
 #pragma auto_inline on
-
-void GEO_vInitGeometricObject(GEO_tdstGeometricObject_* p_stObjectToCreate, short xNbPoints, short xNbElements)
-{
-    short xInitCount;
-
-    for (xInitCount = 0; xInitCount < xNbElements; xInitCount++)
-        p_stObjectToCreate->d_xListOfElementsTypes[xInitCount] = 0;
-
-    p_stObjectToCreate->xNbParallelBoxes = 0;
-    p_stObjectToCreate->d_stListOfParallelBoxes = NULL;
-    p_stObjectToCreate->ulType = 0;
-    p_stObjectToCreate->d_dfVertexTransparency = 0;
-    p_stObjectToCreate->bUsedForShadowDrawing = 1;
-    p_stObjectToCreate->bUsedForShadowCreating = 1;
-    p_stObjectToCreate->bIsStatic = 0;
-    p_stObjectToCreate->glDisplayList = 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 149–227 */
 /* addr: 0x002a2460  size: 1080 bytes */
@@ -725,6 +554,9 @@ void GEO_vInitGeometricObject(GEO_tdstGeometricObject_* p_stObjectToCreate, shor
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+#pragma auto_inline reset
+#pragma auto_inline on
 void GEO_xComputeIndexUsedByElements(GEO_tdstGeometricObject_* p_stObj)
 {
     unsigned char aDEF_ulCountBuffer[625];
@@ -775,4 +607,197 @@ void GEO_xComputeIndexUsedByElements(GEO_tdstGeometricObject_* p_stObj)
             }
         }
     }
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+void GEO_vInitGeometricObject(GEO_tdstGeometricObject_* p_stObjectToCreate, short xNbPoints, short xNbElements)
+{
+    short xInitCount;
+
+    for (xInitCount = 0; xInitCount < xNbElements; xInitCount++)
+        p_stObjectToCreate->d_xListOfElementsTypes[xInitCount] = 0;
+
+    p_stObjectToCreate->xNbParallelBoxes = 0;
+    p_stObjectToCreate->d_stListOfParallelBoxes = NULL;
+    p_stObjectToCreate->ulType = 0;
+    p_stObjectToCreate->d_dfVertexTransparency = 0;
+    p_stObjectToCreate->bUsedForShadowDrawing = 1;
+    p_stObjectToCreate->bUsedForShadowCreating = 1;
+    p_stObjectToCreate->bIsStatic = 0;
+    p_stObjectToCreate->glDisplayList = 0;
+}
+#pragma auto_inline reset
+
+void GEO_vCreateGeometricObject(GEO_tdstGeometricObject_** p_hObject, short xNbPoints, short xNbElements)
+{
+    GEO_tdstGeometricObject_* p_stObj; p_stObj = (GEO_tdstGeometricObject_*)HMU_fn_p_vMalloc(sizeof(GEO_tdstGeometricObject_), 0); p_stObj->xNbElements = xNbElements; p_stObj->xNbPoints = xNbPoints; p_stObj->d_xListOfElementsTypes = (short*)HMU_fn_p_vMalloc(xNbElements * sizeof(short), 0); p_stObj->d_stListOfElements = (void**)HMU_fn_p_vMalloc(xNbElements * sizeof(void*), 0); p_stObj->d_stListOfPoints = (MTH3D_tdstVector_*)HMU_fn_p_vMalloc(xNbPoints * sizeof(MTH3D_tdstVector_), 0); p_stObj->d_stListOfPointsNormals = (MTH3D_tdstVector_*)HMU_fn_p_vMalloc(xNbPoints * sizeof(MTH3D_tdstVector_), 0); p_stObj->d_stListOfEdges = NULL; p_stObj->bIsStatic = 0; p_stObj->glDisplayList = 0; *p_hObject = p_stObj;
+    GEO_vInitGeometricObject(*p_hObject, xNbPoints, xNbElements);
+    (*p_hObject)->xNbEdges = 0;
+}
+
+void GEO_vSetPointOfObject(GEO_tdstGeometricObject_* hObject, MTH3D_tdstVector_* p_stPoint, short xIndexOfPoint)
+{
+    hObject->d_stListOfPoints[xIndexOfPoint] = *p_stPoint;
+}
+
+void GEO_vGetPointOfObject(GEO_tdstGeometricObject_* hObject, MTH3D_tdstVector_* p_stPoint, short xIndexOfPoint)
+{
+    *p_stPoint = hObject->d_stListOfPoints[xIndexOfPoint];
+}
+
+void GEO_vEndModifyObject(GEO_tdstGeometricObject_* hObject)
+{
+    GEO_xComputeObjectNormals(hObject);
+    GEO_xComputeIndexUsedByElements(hObject);
+    if (hObject->xNbParallelBoxes)
+    {
+        short i;
+
+        if (hObject->d_stListOfParallelBoxes == NULL)
+            GEO_vCreateObjectListOfParallelBox(hObject, hObject->xNbParallelBoxes);
+        for (i = 0; i < hObject->xNbParallelBoxes; i++)
+            GEO_vComputeObjectParallelBox(hObject, i);
+    }
+    hObject->xBoudingSphereCenter.xX = hObject->d_stListOfPoints->xX;
+    hObject->xBoudingSphereCenter.xY = hObject->d_stListOfPoints->xY;
+    hObject->xBoudingSphereCenter.xZ = hObject->d_stListOfPoints->xZ;
+    hObject->xBoudingSphereCenter.xW = 1.0f;
+    hObject->xBoudingSphereRadius = 0.0f;
+    GEO_fn_vAddObjectToSphere(hObject, &hObject->xBoudingSphereCenter, &hObject->xBoudingSphereRadius);
+}
+
+void GEO_vGetNormalOfGeometricObjectElement(GEO_tdstGeometricObject_* hObject, short xElementIndex, short xDataElementIndex, MTH3D_tdstVector_* p_stNormal)
+{
+    GEO_tdstElementFaceMapDescriptors_* param0;
+    GEO_tdstElementIndexedTriangles_* param1;
+
+    p_stNormal->xX = 0.0f; p_stNormal->xY = 0.0f; p_stNormal->xZ = 0.0f;
+
+    switch (hObject->d_xListOfElementsTypes[xElementIndex]) {
+        case 1:
+            param1 = (GEO_tdstElementIndexedTriangles_*)hObject->d_stListOfElements[xElementIndex];
+            MTH3D_M_vCopyVector(p_stNormal, &param1->d_stListOfFacesNormals[xDataElementIndex]);
+            break;
+        case 2:
+            param0 = (GEO_tdstElementFaceMapDescriptors_*)hObject->d_stListOfElements[xElementIndex];
+            MTH3D_M_vCopyVector(p_stNormal, &param0->d_stListOfFacesNormals[xDataElementIndex]);
+            break;
+    }
+}
+
+unsigned char GEO_vGetFaceSurfaceSpeed(GEO_tdstGeometricObject_* hObject, short xElement, short xFace, MTH3D_tdstVector_* p_vSpeed, int lMTIndex)
+{
+    float det;
+    float xVSpeed;
+    float xUSpeed;
+    int bScrollMode;
+    ACP_tdst2DUVValues_* param0;
+    ACP_tdst2DUVValues_* p_uvB;
+    ACP_tdst2DUVValues_* p_uvA;
+    MTH3D_tdstVector_* p_vC;
+    MTH3D_tdstVector_* p_vB;
+    MTH3D_tdstVector_* p_vA;
+    GEO_tdstTripledIndex_* p_stListOfTripled;
+    GEO_tdstElementIndexedTriangles_* p_stElement;
+
+    p_vSpeed->xX = 0.0f;
+    p_vSpeed->xY = 0.0f;
+    p_vSpeed->xZ = 0.0f;
+    if (hObject->d_xListOfElementsTypes[xElement] != 1)
+        return 0;
+    p_stElement = (GEO_tdstElementIndexedTriangles_*)hObject->d_stListOfElements[xElement];
+    bScrollMode = 0;
+    xVSpeed = 0.0f;
+    xUSpeed = 0.0f;
+    if (lMTIndex == -1)
+        GLI_xGetMaterialTextureScrollingCoef(p_stElement->hVisualMaterial, 0, &bScrollMode, &xUSpeed, &xVSpeed);
+    if (bScrollMode == 0)
+        return 0;
+    xUSpeed = 60.0f * -xUSpeed;
+    xVSpeed = 60.0f * -xVSpeed;
+    p_stListOfTripled = p_stElement->d_stListOfFacesTripled;
+    p_vA = &hObject->d_stListOfPoints[p_stListOfTripled[xFace].a3_xIndex[0]];
+    p_vB = &hObject->d_stListOfPoints[p_stListOfTripled[xFace].a3_xIndex[1]];
+    p_vC = &hObject->d_stListOfPoints[p_stListOfTripled[xFace].a3_xIndex[2]];
+    p_uvA = &p_stElement->d_stListOfElementUV[p_stElement->d_stListOfFacesTripledIndexUV[xFace].a3_xIndex[0]];
+    p_uvB = &p_stElement->d_stListOfElementUV[p_stElement->d_stListOfFacesTripledIndexUV[xFace].a3_xIndex[1]];
+    param0 = &p_stElement->d_stListOfElementUV[p_stElement->d_stListOfFacesTripledIndexUV[xFace].a3_xIndex[2]];
+    det = (p_uvB->xU - p_uvA->xU) * (param0->xV - p_uvA->xV) - (p_uvB->xV - p_uvA->xV) * (param0->xU - p_uvA->xU);
+    xUSpeed = xUSpeed * ((param0->xV - p_uvA->xV) / det) + xVSpeed * (-(param0->xU - p_uvA->xU) / det);
+    xVSpeed = xUSpeed * (-(p_uvB->xV - p_uvA->xV) / det) + xVSpeed * ((p_uvB->xU - p_uvA->xU) * (param0->xV - p_uvA->xV) / det);
+    p_vSpeed->xX = (p_vB->xX - p_vA->xX) * xUSpeed + (p_vC->xX - p_vA->xX) * xVSpeed + 0.0f * 0.0f;
+    p_vSpeed->xY = (p_vB->xY - p_vA->xY) * xUSpeed + (p_vC->xY - p_vA->xY) * xVSpeed + 0.0f * 0.0f;
+    p_vSpeed->xZ = (p_vB->xZ - p_vA->xZ) * xUSpeed + (p_vC->xZ - p_vA->xZ) * xVSpeed + 0.0f * 0.0f;
+    return 1;
+}
+
+void GEO_vCreateObjectListOfParallelBox(GEO_tdstGeometricObject_* hObject, short xNumberOfParallelBoxes)
+{
+    short xIndex;
+
+    hObject->xNbParallelBoxes = xNumberOfParallelBoxes;
+    if (hObject->xNbParallelBoxes != 0)
+    {
+        if (hObject->d_stListOfParallelBoxes == NULL)
+        {
+            hObject->d_stListOfParallelBoxes = (GEO_tdstParallelBox_*)HMU_fn_p_vMalloc(hObject->xNbParallelBoxes * sizeof(GEO_tdstParallelBox_), 0);
+            for (xIndex = 0; xIndex < hObject->xNbParallelBoxes; xIndex++)
+            {
+                hObject->d_stListOfParallelBoxes[xIndex].stMinPoint.xX = 3.402822e38f; hObject->d_stListOfParallelBoxes[xIndex].stMinPoint.xY = 3.402822e38f; hObject->d_stListOfParallelBoxes[xIndex].stMinPoint.xZ = 3.402822e38f;
+                hObject->d_stListOfParallelBoxes[xIndex].stMaxPoint.xX = -3.402822e38f; hObject->d_stListOfParallelBoxes[xIndex].stMaxPoint.xY = -3.402822e38f; hObject->d_stListOfParallelBoxes[xIndex].stMaxPoint.xZ = -3.402822e38f;
+            }
+        }
+    }
+}
+
+GEO_tdstParallelBox_* GEO_hGetParallelBox(GEO_tdstGeometricObject_* hObject, short xParallelBox)
+{
+    if (xParallelBox < hObject->xNbParallelBoxes)
+        return hObject->d_stListOfParallelBoxes + xParallelBox;
+    return 0;
+}
+
+short GEO_xGetParallelBoxIndexOfElement(GEO_tdstGeometricObject_* hObject, short xIndexElement)
+{
+    switch (hObject->d_xListOfElementsTypes[xIndexElement])
+    {
+        case 1:
+            return ((GEO_tdstElementIndexedTriangles_*)hObject->d_stListOfElements[xIndexElement])->xIndexOfParallelBox;
+        case 2:
+            return ((GEO_tdstElementFaceMapDescriptors_*)hObject->d_stListOfElements[xIndexElement])->xIndexOfParallelBox;
+        case 3:
+            return ((GEO_tdstElementSprite_*)hObject->d_stListOfElements[xIndexElement])->xIndexOfParallelBox;
+        case 4:
+            return ((GEO_tdstElementTMeshes_*)hObject->d_stListOfElements[xIndexElement])->xIndexOfParallelBox;
+        case 5:
+            return ((GEO_tdstElementPoints_*)hObject->d_stListOfElements[xIndexElement])->xIndexOfParallelBox;
+        case 6:
+            return ((GEO_tdstElementLines_*)hObject->d_stListOfElements[xIndexElement])->xIndexOfParallelBox;
+        case 7:
+            return ((GEO_tdstElementSpheres_*)hObject->d_stListOfElements[xIndexElement])->xIndexOfParallelBox;
+        case 8:
+            return ((GEO_tdstElementAlignedBoxes_*)hObject->d_stListOfElements[xIndexElement])->xIndexOfParallelBox;
+        case 9:
+            return ((GEO_tdstElementCones_*)hObject->d_stListOfElements[xIndexElement])->xIndexOfParallelBox;
+        case 0:
+        default:
+            return -1;
+    }
+}
+
+void GEO_vCreateElementIndexedTriangles(GEO_tdstGeometricObject_* hObject, short* p_hElement, short xNbFaces, short xNbElementUV, short xNbUVStages)
+{
+    short xElementToBuild;
+
+    for (xElementToBuild = 0; xElementToBuild < hObject->xNbElements; xElementToBuild++)
+    {
+        if (hObject->d_xListOfElementsTypes[xElementToBuild] == 0)
+            break;
+    }
+    if (xElementToBuild == hObject->xNbElements)
+        return;
+    hObject->d_xListOfElementsTypes[xElementToBuild] = 1;
+    *p_hElement = xElementToBuild;
+    hObject->d_stListOfElements[xElementToBuild] = GEO_p_stAllocElementIndexedTriangles(xNbFaces, xNbElementUV, xNbUVStages);
 }

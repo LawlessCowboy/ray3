@@ -100,49 +100,75 @@ typedef struct tdstObjectType_ {
 } tdstObjectType_;
 extern tdstObjectType_ g_stObjectTypes;
 
-void fn_vFirstInitObjectTypeStructure(void)
-{
-    g_stObjectTypes.hFamilyType.hFirstElementDyn = NULL; g_stObjectTypes.hFamilyType.hLastElementDyn = NULL; g_stObjectTypes.hFamilyType.lNumberOfElementsDyn = 0;
-    g_stObjectTypes.hModelType.hFirstElementDyn = NULL; g_stObjectTypes.hModelType.hLastElementDyn = NULL; g_stObjectTypes.hModelType.lNumberOfElementsDyn = 0;
-    g_stObjectTypes.hPersonalType.hFirstElementDyn = NULL; g_stObjectTypes.hPersonalType.hLastElementDyn = NULL; g_stObjectTypes.hPersonalType.lNumberOfElementsDyn = 0;
-}
-
-void fn_h_TmpStateFree(tdstState_* h_State)
-{
-    extern void HMU_fn_vFree(void*, int);
-    HMU_fn_vFree(&h_State, 1);
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void fn_vFirstInitObjectTypeStructure(void);
+void fn_h_TmpStateFree(tdstState_* h_State);
+tdstState_* fn_h_TmpStateAlloc(void);
+int fn_hIfExistProhibitedState(tdstState_* h_State, tdstState_* h_TargetState);
+tdstTransition_* fn_hIfExistTransitionalWithTargetState(tdstState_* h_State, tdstState_* h_TargetState);
+unsigned char fn_ucGetLinkingTypeInTransition(tdstTransition_* h_Transition);
+tdstState_* fn_hGetStateToGoInTransition(tdstTransition_* h_Transition);
+unsigned char fn_ucGetStateCustomBits(tdstState_* h_State);
+int fn_hGetStateMechanicsIdCard(tdstState_* h_State);
+void fn_vSetSpeedInState(tdstState_* h_State, signed char scSpeedAnim);
+signed char fn_scGetSpeedInState(tdstState_* h_State);
+void fn_vSetRepeatAnimationInState(tdstState_* h_State, unsigned char ucRepeatAnimation);
+void fn_vSetNextStateInState(tdstState_* h_State, tdstState_* h_NextState);
+tdstState_* fn_hGetNextStateInState(tdstState_* h_State);
+void fn_vSetAnimInState(tdstState_* h_State, tdstAnim3d_* p_stAnim);
 
 void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
 void* memset(void*, int, unsigned int);
 
-tdstState_* fn_h_TmpStateAlloc(void)
+void fn_vSetAnimInState(tdstState_* h_State, tdstAnim3d_* p_stAnim)
 {
-    tdstState_* h_State;
-
-    h_State = (tdstState_*)HMU_fn_p_vMalloc(sizeof(tdstState_), 1);
-    if (h_State == NULL)
-        return NULL;
-    memset(h_State, 0, sizeof(tdstState_));
-    h_State->ucTransitionStatusFlag = 0;
-    h_State->scSpeedAnim = 1;
-    return h_State;
+    h_State->p_stAnim = p_stAnim;
 }
 
-int fn_hIfExistProhibitedState(tdstState_* h_State, tdstState_* h_TargetState)
+tdstState_* fn_hGetNextStateInState(tdstState_* h_State)
 {
-    tdstProhibit_* p_stProhibit;
-    int i;
-    int max;
+    return h_State->h_NextState;
+}
 
-    p_stProhibit = h_State->hForProhibitArray.hFirstElementOpt;
-    max = h_State->hForProhibitArray.lNumberOfElementsOpt;
-    for (i = 0; (p_stProhibit != NULL) && (i < max); p_stProhibit++, i++)
-    {
-        if (p_stProhibit->h_ProhibitedState == h_TargetState)
-            return 1;
-    }
-    return 0;
+void fn_vSetNextStateInState(tdstState_* h_State, tdstState_* h_NextState)
+{
+    h_State->h_NextState = h_NextState;
+}
+
+void fn_vSetRepeatAnimationInState(tdstState_* h_State, unsigned char ucRepeatAnimation)
+{
+    h_State->ucRepeatAnimation = ucRepeatAnimation;
+}
+
+signed char fn_scGetSpeedInState(tdstState_* h_State)
+{
+    return h_State->scSpeedAnim;
+}
+
+void fn_vSetSpeedInState(tdstState_* h_State, signed char scSpeedAnim)
+{
+    h_State->scSpeedAnim = scSpeedAnim;
+}
+
+int fn_hGetStateMechanicsIdCard(tdstState_* h_State)
+{
+    return h_State->h_LinkedMechanicsIdCard;
+}
+
+unsigned char fn_ucGetStateCustomBits(tdstState_* h_State)
+{
+    return h_State->ucCustomBits;
+}
+
+tdstState_* fn_hGetStateToGoInTransition(tdstTransition_* h_Transition)
+{
+    return h_Transition->h_StateToGo;
+}
+
+unsigned char fn_ucGetLinkingTypeInTransition(tdstTransition_* h_Transition)
+{
+    return h_Transition->ucLinkingType;
 }
 
 tdstTransition_* fn_hIfExistTransitionalWithTargetState(tdstState_* h_State, tdstState_* h_TargetState)
@@ -162,52 +188,44 @@ tdstTransition_* fn_hIfExistTransitionalWithTargetState(tdstState_* h_State, tds
     return NULL;
 }
 
-unsigned char fn_ucGetLinkingTypeInTransition(tdstTransition_* h_Transition)
+int fn_hIfExistProhibitedState(tdstState_* h_State, tdstState_* h_TargetState)
 {
-    return h_Transition->ucLinkingType;
+    tdstProhibit_* p_stProhibit;
+    int i;
+    int max;
+
+    p_stProhibit = h_State->hForProhibitArray.hFirstElementOpt;
+    max = h_State->hForProhibitArray.lNumberOfElementsOpt;
+    for (i = 0; (p_stProhibit != NULL) && (i < max); p_stProhibit++, i++)
+    {
+        if (p_stProhibit->h_ProhibitedState == h_TargetState)
+            return 1;
+    }
+    return 0;
 }
 
-tdstState_* fn_hGetStateToGoInTransition(tdstTransition_* h_Transition)
+tdstState_* fn_h_TmpStateAlloc(void)
 {
-    return h_Transition->h_StateToGo;
+    tdstState_* h_State;
+
+    h_State = (tdstState_*)HMU_fn_p_vMalloc(sizeof(tdstState_), 1);
+    if (h_State == NULL)
+        return NULL;
+    memset(h_State, 0, sizeof(tdstState_));
+    h_State->ucTransitionStatusFlag = 0;
+    h_State->scSpeedAnim = 1;
+    return h_State;
 }
 
-unsigned char fn_ucGetStateCustomBits(tdstState_* h_State)
+void fn_h_TmpStateFree(tdstState_* h_State)
 {
-    return h_State->ucCustomBits;
+    extern void HMU_fn_vFree(void*, int);
+    HMU_fn_vFree(&h_State, 1);
 }
 
-int fn_hGetStateMechanicsIdCard(tdstState_* h_State)
+void fn_vFirstInitObjectTypeStructure(void)
 {
-    return h_State->h_LinkedMechanicsIdCard;
-}
-
-void fn_vSetSpeedInState(tdstState_* h_State, signed char scSpeedAnim)
-{
-    h_State->scSpeedAnim = scSpeedAnim;
-}
-
-signed char fn_scGetSpeedInState(tdstState_* h_State)
-{
-    return h_State->scSpeedAnim;
-}
-
-void fn_vSetRepeatAnimationInState(tdstState_* h_State, unsigned char ucRepeatAnimation)
-{
-    h_State->ucRepeatAnimation = ucRepeatAnimation;
-}
-
-void fn_vSetNextStateInState(tdstState_* h_State, tdstState_* h_NextState)
-{
-    h_State->h_NextState = h_NextState;
-}
-
-tdstState_* fn_hGetNextStateInState(tdstState_* h_State)
-{
-    return h_State->h_NextState;
-}
-
-void fn_vSetAnimInState(tdstState_* h_State, tdstAnim3d_* p_stAnim)
-{
-    h_State->p_stAnim = p_stAnim;
+    g_stObjectTypes.hFamilyType.hFirstElementDyn = NULL; g_stObjectTypes.hFamilyType.hLastElementDyn = NULL; g_stObjectTypes.hFamilyType.lNumberOfElementsDyn = 0;
+    g_stObjectTypes.hModelType.hFirstElementDyn = NULL; g_stObjectTypes.hModelType.hLastElementDyn = NULL; g_stObjectTypes.hModelType.lNumberOfElementsDyn = 0;
+    g_stObjectTypes.hPersonalType.hFirstElementDyn = NULL; g_stObjectTypes.hPersonalType.hLastElementDyn = NULL; g_stObjectTypes.hPersonalType.lNumberOfElementsDyn = 0;
 }

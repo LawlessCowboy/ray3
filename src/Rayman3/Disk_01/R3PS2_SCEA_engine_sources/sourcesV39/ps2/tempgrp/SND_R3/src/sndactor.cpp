@@ -496,51 +496,6 @@ struct iterator {
     /* C++ base iterator_base at +0x0. */
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 int g_pauseCnt;
 
 extern "C" void SND_fn_vSynchroSound(void);
@@ -563,84 +518,16 @@ struct CLinkCallbackResObj {
     static void operator delete(void* pv_Ptr) { usnd_free(pv_Ptr); }
 };
 
-CLinkCallbackResObj::~CLinkCallbackResObj()
-{
-    mroActorObj->m_oProgramContext.fv_vReleaseRunningObjRef(*mroResObj);
-}
-
-void SND_fn_vKillAllObjectSound(void)
-{
-    /* The statement grouping below follows the retail line table: the
-     * pause test, its command and the counter update share one source
-     * line, the two kill commands share the next one, and the loop body
-     * ends on the line of the channel counter. */
-    PostponedPlay::fs_vEmpty();
-
-    SND_fn_vSynchroSound();
-
-    if (g_pauseCnt == 0) CLinkTypeActorCont::mfn_roGetInstance()->mfn_bExecuteActorType(2, -2); g_pauseCnt++;
-
-
-    CLinkTypeActorCont::mfn_roGetInstance()->mfn_bExecuteActorType(2, -2); CLinkTypeActorCont::mfn_roGetInstance()->mfn_bExecuteActorType(1, -2);
-
-    CExtraEventActor::ss32CurrentRefreshChannel = 0;
-    while (CExtraEventActor::ss32CurrentRefreshChannel < 5)
-    {
-
-
-        SND_fn_vSynchroSound();
-        SND_fn_vSynchroSound();
-        CExtraEventActor::ss32CurrentRefreshChannel++; }
-
-    CSoundSemaphoreCont::mfn_roGetInstance()->mfn_vDelete();
-    SND_fn_vScanActor();
-
-
-    SND_fn_vClearLastTheme();
-
-    g_pauseCnt = 0;
-}
-
-void SND_fn_vResumeSound(void)
-{
-    g_pauseCnt--;
-    if (g_pauseCnt <= 0)
-    {
-        g_pauseCnt = 0;
-        CLinkTypeActorCont::mfn_roGetInstance()->mfn_bExecuteActorType(3, -2);
-    }
-}
-
-void SND_fn_vPauseSound(void)
-{
-    if (g_pauseCnt == 0)
-        CLinkTypeActorCont::mfn_roGetInstance()->mfn_bExecuteActorType(2, -2);
-    g_pauseCnt++;
-}
-
-void SND_fn_vResumeAllObjectTypeSound(int s32_TypeId)
-{
-    CLinkTypeActorCont::mfn_roGetInstance()->mfn_bExecuteActorType(3, s32_TypeId);
-}
-
-void SND_fn_vPauseAllObjectTypeSound(int s32_TypeId)
-{
-    CLinkTypeActorCont::mfn_roGetInstance()->mfn_bExecuteActorType(2, s32_TypeId);
-}
-
-void SND_fn_vKillAllObjectTypeSound(int s32_TypeId)
-{
-    CLinkTypeActorCont::mfn_roGetInstance()->mfn_bExecuteActorType(2, s32_TypeId);
-    CLinkTypeActorCont::mfn_roGetInstance()->mfn_bExecuteActorType(1, s32_TypeId);
-}
-
-void SND_fn_vKillObjectSound2(int s32_ObjectId, int s32_TypeId)
-{
-    CLinkTypeActor* poType;
-    poType = CLinkTypeActorCont::mfn_roGetInstance()->mfn_poGetActorTypeFromId(s32_TypeId);
-    if (poType)
-        poType->mfn_bExecuteActorInTypeActorInstance(1, s32_ObjectId);
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+extern "C" void SND_fn_vKillAllObjectSound(void);
+extern "C" void SND_fn_vResumeSound(void);
+extern "C" void SND_fn_vPauseSound(void);
+extern "C" void SND_fn_vResumeAllObjectTypeSound(int s32_TypeId);
+extern "C" void SND_fn_vPauseAllObjectTypeSound(int s32_TypeId);
+extern "C" void SND_fn_vKillAllObjectTypeSound(int s32_TypeId);
+extern "C" void SND_fn_vKillObjectSound2(int s32_ObjectId, int s32_TypeId);
+void SND_fn_vScanActor(void);
 
 void SND_fn_vScanActor(void)
 {
@@ -664,4 +551,80 @@ void SND_fn_vScanActor(void)
             poActor = poActor->m_poNext;
         }
     }
+}
+
+void SND_fn_vKillObjectSound2(int s32_ObjectId, int s32_TypeId)
+{
+    CLinkTypeActor* poType;
+    poType = CLinkTypeActorCont::mfn_roGetInstance()->mfn_poGetActorTypeFromId(s32_TypeId);
+    if (poType)
+        poType->mfn_bExecuteActorInTypeActorInstance(1, s32_ObjectId);
+}
+
+void SND_fn_vKillAllObjectTypeSound(int s32_TypeId)
+{
+    CLinkTypeActorCont::mfn_roGetInstance()->mfn_bExecuteActorType(2, s32_TypeId);
+    CLinkTypeActorCont::mfn_roGetInstance()->mfn_bExecuteActorType(1, s32_TypeId);
+}
+
+void SND_fn_vPauseAllObjectTypeSound(int s32_TypeId)
+{
+    CLinkTypeActorCont::mfn_roGetInstance()->mfn_bExecuteActorType(2, s32_TypeId);
+}
+
+void SND_fn_vResumeAllObjectTypeSound(int s32_TypeId)
+{
+    CLinkTypeActorCont::mfn_roGetInstance()->mfn_bExecuteActorType(3, s32_TypeId);
+}
+
+void SND_fn_vPauseSound(void)
+{
+    if (g_pauseCnt == 0)
+        CLinkTypeActorCont::mfn_roGetInstance()->mfn_bExecuteActorType(2, -2);
+    g_pauseCnt++;
+}
+
+void SND_fn_vResumeSound(void)
+{
+    g_pauseCnt--;
+    if (g_pauseCnt <= 0)
+    {
+        g_pauseCnt = 0;
+        CLinkTypeActorCont::mfn_roGetInstance()->mfn_bExecuteActorType(3, -2);
+    }
+}
+
+void SND_fn_vKillAllObjectSound(void)
+{
+    /* The statement grouping below follows the retail line table: the
+     * pause test, its command and the counter update share one source
+     * line, the two kill commands share the next one, and the loop body
+     * ends on the line of the channel counter. */
+    PostponedPlay::fs_vEmpty();
+
+    SND_fn_vSynchroSound();
+
+    if (g_pauseCnt == 0) CLinkTypeActorCont::mfn_roGetInstance()->mfn_bExecuteActorType(2, -2); g_pauseCnt++;
+
+    CLinkTypeActorCont::mfn_roGetInstance()->mfn_bExecuteActorType(2, -2); CLinkTypeActorCont::mfn_roGetInstance()->mfn_bExecuteActorType(1, -2);
+
+    CExtraEventActor::ss32CurrentRefreshChannel = 0;
+    while (CExtraEventActor::ss32CurrentRefreshChannel < 5)
+    {
+
+        SND_fn_vSynchroSound();
+        SND_fn_vSynchroSound();
+        CExtraEventActor::ss32CurrentRefreshChannel++; }
+
+    CSoundSemaphoreCont::mfn_roGetInstance()->mfn_vDelete();
+    SND_fn_vScanActor();
+
+    SND_fn_vClearLastTheme();
+
+    g_pauseCnt = 0;
+}
+
+CLinkCallbackResObj::~CLinkCallbackResObj()
+{
+    mroActorObj->m_oProgramContext.fv_vReleaseRunningObjRef(*mroResObj);
 }

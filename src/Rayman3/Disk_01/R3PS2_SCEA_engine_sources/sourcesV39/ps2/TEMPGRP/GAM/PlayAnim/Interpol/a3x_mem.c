@@ -156,6 +156,53 @@ void fn_v_QuatSlerp(float* _a4_xQuatD, float* _a4_xQuatS1, float* _a4_xQuatS2, f
         (_p_dst)->xX = pSrc->xX; (_p_dst)->xY = pSrc->xY; (_p_dst)->xZ = pSrc->xZ; \
     }
 
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void fn_v_InterpolBetweenKeys(tdstKeyFrame_* _p_stKey1, tdstKeyFrame_* _p_stKey2, tdstChannel_* _p_stChannel, stInterpolatedPosition* _p_stResult, float _xT);
+tdstA3dGENERAL_ForTransitions_* fn_p_GetA3dGENERALForTransitions(unsigned short uwIndex);
+void fn_vReleaseMergeA3dGeneral(unsigned short _uwIndex);
+tdstA3dGENERAL_ForTransitions_* fn_p_stFindFreeMergeA3dGeneral(unsigned short* p_uwIndex);
+void fn_v_InitInterpol(void);
+
+void fn_v_InitInterpol(void)
+{
+    fn_v_InitSinTab();
+}
+
+tdstA3dGENERAL_ForTransitions_* fn_p_stFindFreeMergeA3dGeneral(unsigned short* p_uwIndex)
+{
+    unsigned int ulTest;
+    int i;
+
+    ulTest = 1;
+    i = 0;
+    while ((ulTest & ulFreePlaceInMergeStack) && (i < 32))
+    {
+        ulTest <<= 1;
+        i++;
+    }
+    if (i < 32)
+    {
+        ulFreePlaceInMergeStack |= ulTest;
+        *p_uwIndex = (unsigned short)i;
+        return &a32_stA3dGENERALTransitionArray[i];
+    }
+    return NULL;
+}
+
+void fn_vReleaseMergeA3dGeneral(unsigned short _uwIndex)
+{
+    unsigned int ubBitToSet;
+    ubBitToSet = 1;
+    ubBitToSet <<= _uwIndex;
+    ulFreePlaceInMergeStack &= ~ubBitToSet;
+}
+
+tdstA3dGENERAL_ForTransitions_* fn_p_GetA3dGENERALForTransitions(unsigned short uwIndex)
+{
+    return &a32_stA3dGENERALTransitionArray[uwIndex];
+}
+
 void fn_v_InterpolBetweenKeys(tdstKeyFrame_* _p_stKey1, tdstKeyFrame_* _p_stKey2, tdstChannel_* _p_stChannel, stInterpolatedPosition* _p_stResult, float _xT)
 {
     float a4_xQuatS1[4];
@@ -224,43 +271,4 @@ void fn_v_InterpolBetweenKeys(tdstKeyFrame_* _p_stKey1, tdstKeyFrame_* _p_stKey2
         _p_stResult->stPos.xX = ((float*)&gp_a3_xVectors[_p_stKey1->uwNumOfPosition])[0] + _xT * (((float*)&gp_a3_xVectors[_p_stKey2->uwNumOfPosition])[0] - ((float*)&gp_a3_xVectors[_p_stKey1->uwNumOfPosition])[0]); _p_stResult->stPos.xY = ((float*)&gp_a3_xVectors[_p_stKey1->uwNumOfPosition])[1] + _xT * (((float*)&gp_a3_xVectors[_p_stKey2->uwNumOfPosition])[1] - ((float*)&gp_a3_xVectors[_p_stKey1->uwNumOfPosition])[1]); _p_stResult->stPos.xZ = ((float*)&gp_a3_xVectors[_p_stKey1->uwNumOfPosition])[2] + _xT * (((float*)&gp_a3_xVectors[_p_stKey2->uwNumOfPosition])[2] - ((float*)&gp_a3_xVectors[_p_stKey1->uwNumOfPosition])[2]);
         _p_stResult->stPos.xX += ((float*)&gp_a3_xVectors[_p_stChannel->uwNumOfLocalPivotPos])[0]; _p_stResult->stPos.xY += ((float*)&gp_a3_xVectors[_p_stChannel->uwNumOfLocalPivotPos])[1]; _p_stResult->stPos.xZ += ((float*)&gp_a3_xVectors[_p_stChannel->uwNumOfLocalPivotPos])[2];
     }
-}
-
-tdstA3dGENERAL_ForTransitions_* fn_p_GetA3dGENERALForTransitions(unsigned short uwIndex)
-{
-    return &a32_stA3dGENERALTransitionArray[uwIndex];
-}
-
-void fn_vReleaseMergeA3dGeneral(unsigned short _uwIndex)
-{
-    unsigned int ubBitToSet;
-    ubBitToSet = 1;
-    ubBitToSet <<= _uwIndex;
-    ulFreePlaceInMergeStack &= ~ubBitToSet;
-}
-
-tdstA3dGENERAL_ForTransitions_* fn_p_stFindFreeMergeA3dGeneral(unsigned short* p_uwIndex)
-{
-    unsigned int ulTest;
-    int i;
-
-    ulTest = 1;
-    i = 0;
-    while ((ulTest & ulFreePlaceInMergeStack) && (i < 32))
-    {
-        ulTest <<= 1;
-        i++;
-    }
-    if (i < 32)
-    {
-        ulFreePlaceInMergeStack |= ulTest;
-        *p_uwIndex = (unsigned short)i;
-        return &a32_stA3dGENERALTransitionArray[i];
-    }
-    return NULL;
-}
-
-void fn_v_InitInterpol(void)
-{
-    fn_v_InitSinTab();
 }

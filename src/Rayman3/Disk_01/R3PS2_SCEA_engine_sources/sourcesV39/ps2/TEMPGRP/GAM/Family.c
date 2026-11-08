@@ -96,24 +96,13 @@ struct DNM_stDynamics {
 
 tdstEngineStructure_ g_stEngineStructure;
 
-void fn_vEmptyFunction2(void)
-{
-}
-
-unsigned char fn_bGetFamilyProperty(tdstFamilyList_* h_Family, unsigned char ucPropertyMask)
-{
-    return (unsigned char)(h_Family->ucProperties & ucPropertyMask);
-}
-
-tdstObjectsTablesList_* fn_hGetObjectsTableOfFamilyByIndex(tdstFamilyList_* _hFamily, short _xIndex)
-{
-    return &_hFamily->hForObjectsTablesList.hFirstElementOpt[_xIndex];
-}
-
-COL_tdstBoundingSphere_* fn_vGetBoundingVolumeOfFamily(tdstFamilyList_* h_Family)
-{
-    return h_Family->hBoundingSphere;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void fn_vEmptyFunction2(void);
+unsigned char fn_bGetFamilyProperty(tdstFamilyList_* h_Family, unsigned char ucPropertyMask);
+tdstObjectsTablesList_* fn_hGetObjectsTableOfFamilyByIndex(tdstFamilyList_* _hFamily, short _xIndex);
+COL_tdstBoundingSphere_* fn_vGetBoundingVolumeOfFamily(tdstFamilyList_* h_Family);
+void fn_vDesinitFamilyStructureForPriority(unsigned char ucPriority);
 
 void fn_vDesinitFamilyStructureForPriority(unsigned char ucPriority)
 {
@@ -128,4 +117,23 @@ void fn_vDesinitFamilyStructureForPriority(unsigned char ucPriority)
             if (p_stThisFamily->hNextBrotherDyn) p_stThisFamily->hNextBrotherDyn->hPrevBrotherDyn = p_stThisFamily->hPrevBrotherDyn; if (p_stThisFamily->hPrevBrotherDyn) p_stThisFamily->hPrevBrotherDyn->hNextBrotherDyn = p_stThisFamily->hNextBrotherDyn; if (p_stThisFamily->hFatherDyn) { p_stThisFamily->hFatherDyn->lNumberOfElementsDyn--; if (p_stThisFamily->hFatherDyn->hFirstElementDyn == p_stThisFamily) p_stThisFamily->hFatherDyn->hFirstElementDyn = p_stThisFamily->hNextBrotherDyn; if (p_stThisFamily->hFatherDyn->hLastElementDyn == p_stThisFamily) p_stThisFamily->hFatherDyn->hLastElementDyn = p_stThisFamily->hPrevBrotherDyn; } p_stThisFamily->hNextBrotherDyn = NULL; p_stThisFamily->hPrevBrotherDyn = NULL; p_stThisFamily->hFatherDyn = NULL;
         }
     }
+}
+
+COL_tdstBoundingSphere_* fn_vGetBoundingVolumeOfFamily(tdstFamilyList_* h_Family)
+{
+    return h_Family->hBoundingSphere;
+}
+
+tdstObjectsTablesList_* fn_hGetObjectsTableOfFamilyByIndex(tdstFamilyList_* _hFamily, short _xIndex)
+{
+    return &_hFamily->hForObjectsTablesList.hFirstElementOpt[_xIndex];
+}
+
+unsigned char fn_bGetFamilyProperty(tdstFamilyList_* h_Family, unsigned char ucPropertyMask)
+{
+    return (unsigned char)(h_Family->ucProperties & ucPropertyMask);
+}
+
+void fn_vEmptyFunction2(void)
+{
 }

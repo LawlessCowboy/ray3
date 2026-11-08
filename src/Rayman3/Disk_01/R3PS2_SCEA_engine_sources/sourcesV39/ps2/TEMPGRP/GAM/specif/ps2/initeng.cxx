@@ -220,121 +220,14 @@ HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(void*);
 void MEC_fn_vImposeActorMatrix(HIE_tdstSuperObject_*);
 void DEMO_fn_vLoadDemoIfNeeded(void);
 
-/* The statements below are grouped on single source lines on purpose: the
-   retail line map puts the same statement groups on one line each (the
-   target line map in the comment above), and MWCC emits one line-table row
-   per source line, so the grouping is what makes the line offsets match. */
-void fn_vDesInitLevelLoop(void)
-{
-    int i;
-    HIE_tdstSuperObject_* hNextCharacter;
-    HIE_tdstSuperObject_* hCharacter;
-    HIE_tdstSuperObject_* hMainChar;
-
-    GLI_vCleanAllSpecificData();
-
-    IPO_fn_vLevelDesinitRLITables();
-
-    Toby_DestroyAll();
-
-    fn_vDestructAllFatherSonLinks(); fn_vKillAllAlways(); AGO_vInit();
-
-    SPO_ReinitSuperimposedArray();
-
-    fn_vKillAllAlwaysModel();
-
-    fn_vLastDesinitAlwaysStructure();
-
-    CINE_fn_pResetCineList();
-
-    PLD_fn_vUnLoadLevelFamilies();
-
-    fn_vDesinitFamilyStructureForPriority(HMU_fn_ucGetLevelNormalMemoryBlock());
-
-    if (fn_bDoTransition() == 0)
-        fn_vDestroyAllHierarchy(gp_stActualWorld);
-    else
-    {
-        CAM_fn_vInvalidateViewports();
-
-        i = 0; hCharacter = gp_stDynamicWorld->hFirstElementDyn; hNextCharacter = HIE_fn_hForceGetSuperObjectNextBrother(hCharacter); while (hCharacter != NULL)
-        {
-            if (hCharacter->ulTypeOfLinkedObject == 2)
-            {
-                if (((unsigned char*)fn_h_SectInfoGetCurrentSector(hCharacter->hLinkedObject.p_stCharacter->h_SectInfo))[0x7E] == 0)
-                {
-                    fn_vRemoveObjectInSectorList(hCharacter);
-                }
-            }
-
-            i++; hCharacter = hNextCharacter; hNextCharacter = HIE_fn_hForceGetSuperObjectNextBrother(hNextCharacter); }
-
-        fn_vRemoveCharactersFromTransitionSector(GAM_fn_hGetCurrentSector(g_stEngineStructure.h_StdCamCaracter));
-
-        fn_vPartiallyDestroyHierarchy(gp_stActualWorld);
-
-        for (i = 0; i < g_iNbPersoOfFixInDynamicHierarchy; i++)
-        {
-            HIE_fn_vIsolate(gp_stPersoInDynamicHierarchy[i]);
-        }
-
-        for (i = 0; i < g_iNbPersoOfFixInDynamicHierarchy; i++)
-        {
-            HIE_tdstSuperObject_* p_stWorld = gp_stDynamicWorld; HIE_tdstSuperObject_* p_stPerso = gp_stPersoInDynamicHierarchy[i]; if (p_stPerso->hNextBrotherDyn != NULL) { p_stPerso->hNextBrotherDyn->hPrevBrotherDyn = p_stPerso->hPrevBrotherDyn; } if (p_stPerso->hPrevBrotherDyn != NULL) { p_stPerso->hPrevBrotherDyn->hNextBrotherDyn = p_stPerso->hNextBrotherDyn; } if (p_stPerso->hFatherDyn != NULL) { p_stPerso->hFatherDyn->lNumberOfElementsDyn--; if (p_stPerso->hFatherDyn->hFirstElementDyn == p_stPerso) { p_stPerso->hFatherDyn->hFirstElementDyn = p_stPerso->hNextBrotherDyn; } if (p_stPerso->hFatherDyn->hLastElementDyn == p_stPerso) { p_stPerso->hFatherDyn->hLastElementDyn = p_stPerso->hPrevBrotherDyn; } } p_stPerso->hNextBrotherDyn = NULL; p_stPerso->hPrevBrotherDyn = NULL; p_stPerso->hFatherDyn = NULL; p_stPerso->hNextBrotherDyn = NULL; p_stPerso->hPrevBrotherDyn = p_stWorld->hLastElementDyn; p_stPerso->hFatherDyn = p_stWorld; if (p_stWorld->hFirstElementDyn == NULL) { p_stWorld->hFirstElementDyn = p_stPerso; } else { p_stWorld->hLastElementDyn->hNextBrotherDyn = p_stPerso; } p_stWorld->hLastElementDyn = p_stPerso; p_stWorld->lNumberOfElementsDyn++;
-        }
-
-        hMainChar = MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode());
-
-        g_hMCMatrix = *hMainChar->hGlobalMatrix;
-
-        g_hMCLocalMatrix = *hMainChar->hLocalMatrix;
-
-        g_hCamMatrix = *g_stEngineStructure.h_StdCamCaracter->hGlobalMatrix;
-
-        g_hCamLocalMatrix = *g_stEngineStructure.h_StdCamCaracter->hLocalMatrix;
-
-        fn_vRemoveWorldSectInfo();
-    }
-
-    fn_vLastDeinitMorphTaskList();
-
-    g_hLoadedSuperObjectRoot = NULL;
-
-    fn_vRemoveAllMicros();
-
-    fn_vReputGameViewportCamera();
-
-    g_stEngineStructure.hCameraList.hFirstElementDyn = NULL; g_stEngineStructure.hCameraList.hLastElementDyn = NULL; g_stEngineStructure.hCameraList.lNumberOfElementsDyn = 0;
-
-    if (fn_bLevelHasTransitionMemory() == 0)
-    {
-        g_stEngineStructure.hMainCharacterList.hFirstElementDyn = NULL; g_stEngineStructure.hMainCharacterList.hLastElementDyn = NULL; g_stEngineStructure.hMainCharacterList.lNumberOfElementsDyn = 0;
-    }
-
-    g_stEngineStructure.hAlwaysActiveCharactersList.hFirstElementDyn = NULL; g_stEngineStructure.hAlwaysActiveCharactersList.hLastElementDyn = NULL; g_stEngineStructure.hAlwaysActiveCharactersList.lNumberOfElementsDyn = 0;
-
-    fn_vTakeControlOfLipChannel(NULL, NULL);
-
-    if (fn_bDoTransition())
-    {
-        GAM_fn_vPushAllocMode(2);
-
-        fn_vInitTransitionHierarchy();
-
-        GLI_PS2GL_PrepareSpecificDataForLevel();
-
-        fn_vBeginTransition();
-
-        GAM_fn_vPopAllocMode();
-    }
-
-    fn_vFreeLevelAllowedMemory();
-
-    if (fn_bLevelHasTransitionMemory() && (fn_bDoTransition() == 0))
-    {
-        fn_vFreeTransitionAllocatedMemory();
-    }
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void fn_vDesInitLevelLoop(void);
+void fn_vInitLevelLoop(void);
+void fn_vInitEngineWhenInitApplication(void);
+void fn_vFirstInitEngine(void);
+void fn_vTVS(void);
+void GAM_fn_vLoadTextures(void);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\initeng.cxx lines 671–1070 */
 /* addr: 0x00263390  size: 992 bytes */
@@ -424,6 +317,365 @@ void fn_vDesInitLevelLoop(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\initeng.cxx lines 554–628 */
+/* addr: 0x00263770  size: 200 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 554
+ *   +0x0008 -> line 556
+ *   +0x0010 -> line 561
+ *   +0x002c -> line 565
+ *   +0x0034 -> line 566
+ *   +0x003c -> line 568
+ *   +0x0044 -> line 575
+ *   +0x004c -> line 576
+ *   +0x0054 -> line 577
+ *   +0x005c -> line 580
+ *   +0x0064 -> line 581
+ *   +0x006c -> line 582
+ *   +0x0074 -> line 583
+ *   +0x007c -> line 586
+ *   +0x0084 -> line 602
+ *   +0x008c -> line 614
+ *   +0x0098 -> line 615
+ *   +0x00a4 -> line 617
+ *   +0x00b0 -> line 620
+ *   +0x00b4 -> line 627
+ *   +0x00bc -> line 628
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+extern tdstEngineStructure_ g_stEngineStructure;
+extern unsigned char g_ucGameModuleId;
+extern unsigned int g_FixMemHasBeenSet;
+
+void HMU_fn_vFirstInit(void);
+unsigned char Erm_fn_ucInitErrMsg(void);
+void GAM_fn_vReadUbiIniFileForGame(void);
+void GAM_fn_vTreatExeParameters(void);
+void GEO_xInitGEOError(void);
+void IPT_fn_vFirstInitInput(void);
+void RND_fn_vFirstInitRandom(void);
+void SAI_fn_vFirstInit(void);
+void FIL_fn_vFirstInit(void);
+void FON_fn_vFirstInit(void);
+void AI_fn_vFirstInit(void);
+void SAV2_fn_vFirstInit(void);
+void fn_vInitAndRegisterAllScriptSections(void);
+void HMU_fn_vInitNormalFixMemory(unsigned int ulSize);
+void HMU_fn_vInitTempFixMemory(unsigned int ulSize);
+void HMU_fn_vInitBinaryMemory(unsigned int ulSize);
+void GAM_fn_vSetEngineInFixMode(void);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\initeng.cxx lines 171–534 */
+/* addr: 0x00263840  size: 1468 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 171
+ *   +0x0008 -> line 178
+ *   +0x0010 -> line 180
+ *   +0x0018 -> line 182
+ *   +0x001c -> line 207
+ *   +0x0020 -> line 182
+ *   +0x0024 -> line 183
+ *   +0x002c -> line 207
+ *   +0x0030 -> line 183
+ *   +0x0034 -> line 207
+ *   +0x0038 -> line 185
+ *   +0x003c -> line 203
+ *   +0x0040 -> line 185
+ *   +0x0054 -> line 190
+ *   +0x006c -> line 192
+ *   +0x0084 -> line 194
+ *   +0x008c -> line 195
+ *   +0x0094 -> line 196
+ *   +0x009c -> line 203
+ *   +0x00a4 -> line 204
+ *   +0x00ac -> line 205
+ *   +0x00b0 -> line 207
+ *   +0x00b8 -> line 208
+ *   +0x00e0 -> line 223
+ *   +0x00e8 -> line 226
+ *   +0x0188 -> line 229
+ *   +0x038c -> line 244
+ *   +0x0394 -> line 251
+ *   +0x039c -> line 253
+ *   +0x03a4 -> line 260
+ *   +0x03ac -> line 263
+ *   +0x03b4 -> line 267
+ *   +0x03bc -> line 268
+ *   +0x03c8 -> line 269
+ *   +0x03d0 -> line 278
+ *   +0x03d8 -> line 290
+ *   +0x03e0 -> line 306
+ *   +0x03e8 -> line 307
+ *   +0x03f0 -> line 323
+ *   +0x03f8 -> line 377
+ *   +0x0400 -> line 381
+ *   +0x0414 -> line 392
+ *   +0x041c -> line 394
+ *   +0x0424 -> line 396
+ *   +0x042c -> line 399
+ *   +0x0438 -> line 400
+ *   +0x0444 -> line 405
+ *   +0x0448 -> line 410
+ *   +0x0450 -> line 413
+ *   +0x0460 -> line 415
+ *   +0x0468 -> line 421
+ *   +0x04a4 -> line 444
+ *   +0x04ac -> line 446
+ *   +0x04b4 -> line 448
+ *   +0x04bc -> line 451
+ *   +0x04d8 -> line 455
+ *   +0x04e0 -> line 456
+ *   +0x04f0 -> line 458
+ *   +0x04f8 -> line 466
+ *   +0x0504 -> line 469
+ *   +0x050c -> line 472
+ *   +0x0520 -> line 474
+ *   +0x0528 -> line 476
+ *   +0x053c -> line 484
+ *   +0x0544 -> line 490
+ *   +0x054c -> line 525
+ *   +0x0598 -> line 527
+ *   +0x05a0 -> line 528
+ *   +0x05a8 -> line 529
+ *   +0x05b0 -> line 534
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\initeng.cxx lines 148–163 */
+/* addr: 0x00263e00  size: 720 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 148
+ *   +0x0004 -> line 151
+ *   +0x0008 -> line 148
+ *   +0x000c -> line 156
+ *   +0x0010 -> line 148
+ *   +0x0014 -> line 151
+ *   +0x0018 -> line 148
+ *   +0x001c -> line 151
+ *   +0x0020 -> line 148
+ *   +0x0024 -> line 153
+ *   +0x0028 -> line 148
+ *   +0x002c -> line 156
+ *   +0x0030 -> line 151
+ *   +0x0034 -> line 156
+ *   +0x0038 -> line 151
+ *   +0x003c -> line 156
+ *   +0x0040 -> line 151
+ *   +0x0044 -> line 155
+ *   +0x0048 -> line 151
+ *   +0x004c -> line 153
+ *   +0x0050 -> line 156
+ *   +0x0058 -> line 157
+ *   +0x0290 -> line 158
+ *   +0x02b0 -> line 161
+ *   +0x02b4 -> line 163
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+/* fn_vTVS walks the file tree returned by pFD.  The retail lowers the
+   "x / 2 * 2" idiom to "x" for non-negative x and to a logical shift plus a
+   sign fix-up for negative x; see the attempt note for this function. */
+extern int g_iArraySizes;
+stFile_* pFD(char* format, char* name, int mode1, int mode2);
+float GetDS(stFile_* pCache);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\initeng.cxx lines 82–99 */
+/* addr: 0x00264780  size: 80 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 82
+ *   +0x0008 -> line 89
+ *   +0x0010 -> line 92
+ *   +0x0034 -> line 96
+ *   +0x0044 -> line 99
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_fn_vCloseBigFileTextures(void);
+/* Pointer return/argument roles are established by this wrapper's target ABI;
+ * the recovered callee scaffolds currently omit them. */
+char* MNC_fn_pcGetCurrentDirectory(void);
+char* FMN_SCE_ConvertPath2DVD(char* buffer);
+void GLI_fn_vOpenBigFileTextures(char* filename);
+int sprintf(char*, const char*, ...);
+
+void GAM_fn_vLoadTextures(void)
+{
+    char Texture_BF_Name[255];
+    GLI_fn_vCloseBigFileTextures();
+    sprintf(Texture_BF_Name, "%s\\%s", MNC_fn_pcGetCurrentDirectory(), "TEXTURES.CNT;1");
+    GLI_fn_vOpenBigFileTextures(FMN_SCE_ConvertPath2DVD(Texture_BF_Name));
+}
+
+void fn_vTVS(void)
+{
+    char format[10] = ".I%sE%c%c";
+    stFile_* pCache;
+    stFile_* pCur;
+    stFile_* pFirst;
+    stFile_* pMid;
+    stFile_* pFile;
+    float fTotal;
+    float fVal;
+    int i;
+
+    format[0] = 'V';
+
+    pFile = pFD(format, "D", 'O', 'S');
+    g_iArraySizes = 0x4D8;
+    fTotal = 0.0f;
+
+    if (pFile != NULL)
+    {
+        pCache = pFile->pChild;
+
+        if (pCache != NULL)
+        {
+            if (pFile->nb_sons != 0)
+            {
+                pFirst = (stFile_*)((unsigned int)pCache | 0x20000000);
+                pCur = pFirst;
+
+                for (i = pFile->nb_sons - 1; i != 0; i--)
+                {
+                    fVal = (float)(pCur->length / 2) * 2.0f;
+                    fTotal += fVal;
+
+                    if (pCur->nb_sons != 0)
+                    {
+                        fTotal += GetDS(pCur);
+                    }
+
+                    if (pFirst < pCur)
+                    {
+                        for (pMid = pFirst; pMid < pCur; pMid++)
+                        {
+                            if (pMid->sector < pCur->sector)
+                            {
+                                if ((2048.0f * ((float)(pMid->sector / 2) * 2.0f) + ((float)(pMid->length / 2) * 2.0f)) > (2048.0f * ((float)(pCur->sector / 2) * 2.0f)))
+                                {
+                                    fTotal = 0.0f;
+                                    goto theEnd;
+                                }
+                            }
+                            else
+                            {
+                                if ((2048.0f * ((float)(pCur->sector / 2) * 2.0f) + ((float)(pCur->length / 2) * 2.0f)) > (2048.0f * ((float)(pMid->sector / 2) * 2.0f)))
+                                {
+                                    fTotal = 0.0f;
+                                    goto theEnd;
+                                }
+                            }
+                        }
+                    }
+
+                    pCur++;
+                }
+            }
+        }
+    }
+
+theEnd:
+    if (fTotal < 1316448357.0f)
+    {
+    }
+    else
+    {
+        g_iArraySizes = 0;
+    }
+}
+
+void fn_vFirstInitEngine(void)
+{
+    unsigned char i;
+    _SND_tdstInitStruct st_SoundInit;
+    int FirstCine;
+    /* TODO: decompile from asm/...
+     *
+     * Structure recovered from the retail disassembly (0x263840, 1468 bytes):
+     *
+     *   178-205  a run of global initialisations: fn_vBbInit(),
+     *            fn_vInitDefaultValuesForSoundVolumes(), the engine-structure
+     *            list handles (hCameraList at +0x5f8, hMainCharacterList at
+     *            +0x620, hAlwaysActiveCharactersList at +0x614) and three
+     *            bytes at -0x6192/-0x6191/-0x6190 are cleared.
+     *   207-215  a four-iteration loop that clears the four words of
+     *            D_5383F4 (the counter is an unsigned char, the index is
+     *            strength reduced to a byte offset).
+     *   223-229  fn_vFirstInitEngineClock(), then a check of the six
+     *            globals D_00346138..D_0034614C against 1..6; a mismatch
+     *            calls Erm_fn_ClearLastError(0) and
+     *            Erm_fn_v_UpdateLastError(0x30, ..., 0, 0x15).
+     *   229      one source line holds a ~500 byte scan of the whole
+     *            __text_start..__text_end range that looks for the word
+     *            0x4080c000 and counts matches; it uses 64-bit shifts
+     *            (dsll32/dsrl32) and writes to the DMAlike area at
+     *            0x1000d400..0x1000d480.
+     *   244-529  the engine start-up call chain: GLI_xInitGli,
+     *            fn_vInitFrameLenght, GAM_fn_vCreateGameDeviceAndViewPorts,
+     *            FON_fn_vInitFonts, DEMO_fn_vAllocateMemory,
+     *            HMU_fn_vSetMemoriesInBinaryMode,
+     *            fn_vInitTransitionAllocPools(0x1e000),
+     *            HMU_fn_vSetMemoriesInFixMode, fn_v_InitInterpol,
+     *            SND_fn_iInitSound, GAM_fn_bInitSoundTypes,
+     *            fn_vInitMicrosFunction, fn_vFirstInitObjectTypeStructure,
+     *            PLD_fn_vLoadFix, IPT_fn_vInitInput(0xf,0,0,0),
+     *            fn_bLoadCurrentGameOptions, PLA_fn_vCreateAndInitHeaps,
+     *            fn_vFirstTimeInitCollisionGeometricObject,
+     *            MAT_fn_vSetIdentity(&D_538940), MAT_fn_vSetIdentity(&D_5389A0),
+     *            fn_vInitWaterStreakEffect,
+     *            SHW_fn_vInitShadow(g_stEngineStructure.hGLDDevice, 1),
+     *            HIE_fn_vCreateMatrixStack, GLI_fn_vCloseBigFileTextures,
+     *            sprintf(sp+0x30, "@897", MNC_fn_pcGetCurrentDirectory(),
+     *            "@898"), FMN_SCE_ConvertPath2DVD, GLI_fn_vOpenBigFileTextures,
+     *            GLI_vSetLoadingFix(1), GLI_vEndofGeometricLoad,
+     *            GLI_vSetLoadingFix(0),
+     *            TFMT_vSetDefaultValuesCharacter(1.0f, 0.0f, 2.0f),
+     *            GLI_xCreateMaterial, GLI_xSetMaterialType(..., 0x4ddc47f6),
+     *            GLI_fn_vDoCompleteFadeOut(4), the optional video start-up
+     *            (sceSifInitIopHeap, VID_fn_vNextVideoToPlay,
+     *            VID_fn_vSetVideoSoundVolume(0x7f), VIDSPE_fn_vPlayVideoNow),
+     *            fn_vInitInGameMenu2D and DEMO_fn_vReadDemoTableFile.
+     *   525-529  a VU0 block that cannot be emitted from C: mtsab, lqc2
+     *            vf27, qmfc2.ni, qfsrv and vcallms.  The retail line map puts
+     *            the whole block on one source line, so the original used a
+     *            statement-level asm block (or a macro expanding to one).
+     *            It is followed by VU0_fn_vLoadPrgPlayAnim and
+     *            VU0_fn_vWaitEndLoadVU0.
+     */
+}
+
+void fn_vInitEngineWhenInitApplication(void)
+{
+    HMU_fn_vFirstInit();
+
+    if (g_ucGameModuleId == 0xFF)
+        g_ucGameModuleId = Erm_fn_ucInitErrMsg();
+
+    GAM_fn_vReadUbiIniFileForGame();
+    GAM_fn_vTreatExeParameters();
+
+    g_stEngineStructure.eEngineMode = 1;
+
+    GEO_xInitGEOError();
+    IPT_fn_vFirstInitInput();
+    RND_fn_vFirstInitRandom();
+    SAI_fn_vFirstInit();
+    FIL_fn_vFirstInit();
+    FON_fn_vFirstInit();
+    AI_fn_vFirstInit();
+    SAV2_fn_vFirstInit();
+    fn_vInitAndRegisterAllScriptSections();
+
+    HMU_fn_vInitNormalFixMemory(460000);
+    HMU_fn_vInitTempFixMemory(1400000);
+    HMU_fn_vInitBinaryMemory(13841203);
+    g_FixMemHasBeenSet = 1;
+    GAM_fn_vSetEngineInFixMode();
+}
+
 void fn_vInitLevelLoop(void)
 {
     char cDoInit;
@@ -540,358 +792,118 @@ void fn_vInitLevelLoop(void)
     DEMO_fn_vLoadDemoIfNeeded();
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\initeng.cxx lines 554–628 */
-/* addr: 0x00263770  size: 200 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 554
- *   +0x0008 -> line 556
- *   +0x0010 -> line 561
- *   +0x002c -> line 565
- *   +0x0034 -> line 566
- *   +0x003c -> line 568
- *   +0x0044 -> line 575
- *   +0x004c -> line 576
- *   +0x0054 -> line 577
- *   +0x005c -> line 580
- *   +0x0064 -> line 581
- *   +0x006c -> line 582
- *   +0x0074 -> line 583
- *   +0x007c -> line 586
- *   +0x0084 -> line 602
- *   +0x008c -> line 614
- *   +0x0098 -> line 615
- *   +0x00a4 -> line 617
- *   +0x00b0 -> line 620
- *   +0x00b4 -> line 627
- *   +0x00bc -> line 628
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-extern tdstEngineStructure_ g_stEngineStructure;
-extern unsigned char g_ucGameModuleId;
-extern unsigned int g_FixMemHasBeenSet;
-
-void HMU_fn_vFirstInit(void);
-unsigned char Erm_fn_ucInitErrMsg(void);
-void GAM_fn_vReadUbiIniFileForGame(void);
-void GAM_fn_vTreatExeParameters(void);
-void GEO_xInitGEOError(void);
-void IPT_fn_vFirstInitInput(void);
-void RND_fn_vFirstInitRandom(void);
-void SAI_fn_vFirstInit(void);
-void FIL_fn_vFirstInit(void);
-void FON_fn_vFirstInit(void);
-void AI_fn_vFirstInit(void);
-void SAV2_fn_vFirstInit(void);
-void fn_vInitAndRegisterAllScriptSections(void);
-void HMU_fn_vInitNormalFixMemory(unsigned int ulSize);
-void HMU_fn_vInitTempFixMemory(unsigned int ulSize);
-void HMU_fn_vInitBinaryMemory(unsigned int ulSize);
-void GAM_fn_vSetEngineInFixMode(void);
-
-void fn_vInitEngineWhenInitApplication(void)
+/* The statements below are grouped on single source lines on purpose: the
+   retail line map puts the same statement groups on one line each (the
+   target line map in the comment above), and MWCC emits one line-table row
+   per source line, so the grouping is what makes the line offsets match. */
+void fn_vDesInitLevelLoop(void)
 {
-    HMU_fn_vFirstInit();
-
-    if (g_ucGameModuleId == 0xFF)
-        g_ucGameModuleId = Erm_fn_ucInitErrMsg();
-
-    GAM_fn_vReadUbiIniFileForGame();
-    GAM_fn_vTreatExeParameters();
-
-    g_stEngineStructure.eEngineMode = 1;
-
-    GEO_xInitGEOError();
-    IPT_fn_vFirstInitInput();
-    RND_fn_vFirstInitRandom();
-    SAI_fn_vFirstInit();
-    FIL_fn_vFirstInit();
-    FON_fn_vFirstInit();
-    AI_fn_vFirstInit();
-    SAV2_fn_vFirstInit();
-    fn_vInitAndRegisterAllScriptSections();
-
-    HMU_fn_vInitNormalFixMemory(460000);
-    HMU_fn_vInitTempFixMemory(1400000);
-    HMU_fn_vInitBinaryMemory(13841203);
-    g_FixMemHasBeenSet = 1;
-    GAM_fn_vSetEngineInFixMode();
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\initeng.cxx lines 171–534 */
-/* addr: 0x00263840  size: 1468 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 171
- *   +0x0008 -> line 178
- *   +0x0010 -> line 180
- *   +0x0018 -> line 182
- *   +0x001c -> line 207
- *   +0x0020 -> line 182
- *   +0x0024 -> line 183
- *   +0x002c -> line 207
- *   +0x0030 -> line 183
- *   +0x0034 -> line 207
- *   +0x0038 -> line 185
- *   +0x003c -> line 203
- *   +0x0040 -> line 185
- *   +0x0054 -> line 190
- *   +0x006c -> line 192
- *   +0x0084 -> line 194
- *   +0x008c -> line 195
- *   +0x0094 -> line 196
- *   +0x009c -> line 203
- *   +0x00a4 -> line 204
- *   +0x00ac -> line 205
- *   +0x00b0 -> line 207
- *   +0x00b8 -> line 208
- *   +0x00e0 -> line 223
- *   +0x00e8 -> line 226
- *   +0x0188 -> line 229
- *   +0x038c -> line 244
- *   +0x0394 -> line 251
- *   +0x039c -> line 253
- *   +0x03a4 -> line 260
- *   +0x03ac -> line 263
- *   +0x03b4 -> line 267
- *   +0x03bc -> line 268
- *   +0x03c8 -> line 269
- *   +0x03d0 -> line 278
- *   +0x03d8 -> line 290
- *   +0x03e0 -> line 306
- *   +0x03e8 -> line 307
- *   +0x03f0 -> line 323
- *   +0x03f8 -> line 377
- *   +0x0400 -> line 381
- *   +0x0414 -> line 392
- *   +0x041c -> line 394
- *   +0x0424 -> line 396
- *   +0x042c -> line 399
- *   +0x0438 -> line 400
- *   +0x0444 -> line 405
- *   +0x0448 -> line 410
- *   +0x0450 -> line 413
- *   +0x0460 -> line 415
- *   +0x0468 -> line 421
- *   +0x04a4 -> line 444
- *   +0x04ac -> line 446
- *   +0x04b4 -> line 448
- *   +0x04bc -> line 451
- *   +0x04d8 -> line 455
- *   +0x04e0 -> line 456
- *   +0x04f0 -> line 458
- *   +0x04f8 -> line 466
- *   +0x0504 -> line 469
- *   +0x050c -> line 472
- *   +0x0520 -> line 474
- *   +0x0528 -> line 476
- *   +0x053c -> line 484
- *   +0x0544 -> line 490
- *   +0x054c -> line 525
- *   +0x0598 -> line 527
- *   +0x05a0 -> line 528
- *   +0x05a8 -> line 529
- *   +0x05b0 -> line 534
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vFirstInitEngine(void)
-{
-    unsigned char i;
-    _SND_tdstInitStruct st_SoundInit;
-    int FirstCine;
-    /* TODO: decompile from asm/...
-     *
-     * Structure recovered from the retail disassembly (0x263840, 1468 bytes):
-     *
-     *   178-205  a run of global initialisations: fn_vBbInit(),
-     *            fn_vInitDefaultValuesForSoundVolumes(), the engine-structure
-     *            list handles (hCameraList at +0x5f8, hMainCharacterList at
-     *            +0x620, hAlwaysActiveCharactersList at +0x614) and three
-     *            bytes at -0x6192/-0x6191/-0x6190 are cleared.
-     *   207-215  a four-iteration loop that clears the four words of
-     *            D_5383F4 (the counter is an unsigned char, the index is
-     *            strength reduced to a byte offset).
-     *   223-229  fn_vFirstInitEngineClock(), then a check of the six
-     *            globals D_00346138..D_0034614C against 1..6; a mismatch
-     *            calls Erm_fn_ClearLastError(0) and
-     *            Erm_fn_v_UpdateLastError(0x30, ..., 0, 0x15).
-     *   229      one source line holds a ~500 byte scan of the whole
-     *            __text_start..__text_end range that looks for the word
-     *            0x4080c000 and counts matches; it uses 64-bit shifts
-     *            (dsll32/dsrl32) and writes to the DMAlike area at
-     *            0x1000d400..0x1000d480.
-     *   244-529  the engine start-up call chain: GLI_xInitGli,
-     *            fn_vInitFrameLenght, GAM_fn_vCreateGameDeviceAndViewPorts,
-     *            FON_fn_vInitFonts, DEMO_fn_vAllocateMemory,
-     *            HMU_fn_vSetMemoriesInBinaryMode,
-     *            fn_vInitTransitionAllocPools(0x1e000),
-     *            HMU_fn_vSetMemoriesInFixMode, fn_v_InitInterpol,
-     *            SND_fn_iInitSound, GAM_fn_bInitSoundTypes,
-     *            fn_vInitMicrosFunction, fn_vFirstInitObjectTypeStructure,
-     *            PLD_fn_vLoadFix, IPT_fn_vInitInput(0xf,0,0,0),
-     *            fn_bLoadCurrentGameOptions, PLA_fn_vCreateAndInitHeaps,
-     *            fn_vFirstTimeInitCollisionGeometricObject,
-     *            MAT_fn_vSetIdentity(&D_538940), MAT_fn_vSetIdentity(&D_5389A0),
-     *            fn_vInitWaterStreakEffect,
-     *            SHW_fn_vInitShadow(g_stEngineStructure.hGLDDevice, 1),
-     *            HIE_fn_vCreateMatrixStack, GLI_fn_vCloseBigFileTextures,
-     *            sprintf(sp+0x30, "@897", MNC_fn_pcGetCurrentDirectory(),
-     *            "@898"), FMN_SCE_ConvertPath2DVD, GLI_fn_vOpenBigFileTextures,
-     *            GLI_vSetLoadingFix(1), GLI_vEndofGeometricLoad,
-     *            GLI_vSetLoadingFix(0),
-     *            TFMT_vSetDefaultValuesCharacter(1.0f, 0.0f, 2.0f),
-     *            GLI_xCreateMaterial, GLI_xSetMaterialType(..., 0x4ddc47f6),
-     *            GLI_fn_vDoCompleteFadeOut(4), the optional video start-up
-     *            (sceSifInitIopHeap, VID_fn_vNextVideoToPlay,
-     *            VID_fn_vSetVideoSoundVolume(0x7f), VIDSPE_fn_vPlayVideoNow),
-     *            fn_vInitInGameMenu2D and DEMO_fn_vReadDemoTableFile.
-     *   525-529  a VU0 block that cannot be emitted from C: mtsab, lqc2
-     *            vf27, qmfc2.ni, qfsrv and vcallms.  The retail line map puts
-     *            the whole block on one source line, so the original used a
-     *            statement-level asm block (or a macro expanding to one).
-     *            It is followed by VU0_fn_vLoadPrgPlayAnim and
-     *            VU0_fn_vWaitEndLoadVU0.
-     */
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\initeng.cxx lines 148–163 */
-/* addr: 0x00263e00  size: 720 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 148
- *   +0x0004 -> line 151
- *   +0x0008 -> line 148
- *   +0x000c -> line 156
- *   +0x0010 -> line 148
- *   +0x0014 -> line 151
- *   +0x0018 -> line 148
- *   +0x001c -> line 151
- *   +0x0020 -> line 148
- *   +0x0024 -> line 153
- *   +0x0028 -> line 148
- *   +0x002c -> line 156
- *   +0x0030 -> line 151
- *   +0x0034 -> line 156
- *   +0x0038 -> line 151
- *   +0x003c -> line 156
- *   +0x0040 -> line 151
- *   +0x0044 -> line 155
- *   +0x0048 -> line 151
- *   +0x004c -> line 153
- *   +0x0050 -> line 156
- *   +0x0058 -> line 157
- *   +0x0290 -> line 158
- *   +0x02b0 -> line 161
- *   +0x02b4 -> line 163
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-/* fn_vTVS walks the file tree returned by pFD.  The retail lowers the
-   "x / 2 * 2" idiom to "x" for non-negative x and to a logical shift plus a
-   sign fix-up for negative x; see the attempt note for this function. */
-extern int g_iArraySizes;
-stFile_* pFD(char* format, char* name, int mode1, int mode2);
-float GetDS(stFile_* pCache);
-
-void fn_vTVS(void)
-{
-    char format[10] = ".I%sE%c%c";
-    stFile_* pCache;
-    stFile_* pCur;
-    stFile_* pFirst;
-    stFile_* pMid;
-    stFile_* pFile;
-    float fTotal;
-    float fVal;
     int i;
+    HIE_tdstSuperObject_* hNextCharacter;
+    HIE_tdstSuperObject_* hCharacter;
+    HIE_tdstSuperObject_* hMainChar;
 
-    format[0] = 'V';
+    GLI_vCleanAllSpecificData();
 
-    pFile = pFD(format, "D", 'O', 'S');
-    g_iArraySizes = 0x4D8;
-    fTotal = 0.0f;
+    IPO_fn_vLevelDesinitRLITables();
 
-    if (pFile != NULL)
-    {
-        pCache = pFile->pChild;
+    Toby_DestroyAll();
 
-        if (pCache != NULL)
-        {
-            if (pFile->nb_sons != 0)
-            {
-                pFirst = (stFile_*)((unsigned int)pCache | 0x20000000);
-                pCur = pFirst;
+    fn_vDestructAllFatherSonLinks(); fn_vKillAllAlways(); AGO_vInit();
 
-                for (i = pFile->nb_sons - 1; i != 0; i--)
-                {
-                    fVal = (float)(pCur->length / 2) * 2.0f;
-                    fTotal += fVal;
+    SPO_ReinitSuperimposedArray();
 
-                    if (pCur->nb_sons != 0)
-                    {
-                        fTotal += GetDS(pCur);
-                    }
+    fn_vKillAllAlwaysModel();
 
-                    if (pFirst < pCur)
-                    {
-                        for (pMid = pFirst; pMid < pCur; pMid++)
-                        {
-                            if (pMid->sector < pCur->sector)
-                            {
-                                if ((2048.0f * ((float)(pMid->sector / 2) * 2.0f) + ((float)(pMid->length / 2) * 2.0f)) > (2048.0f * ((float)(pCur->sector / 2) * 2.0f)))
-                                {
-                                    fTotal = 0.0f;
-                                    goto theEnd;
-                                }
-                            }
-                            else
-                            {
-                                if ((2048.0f * ((float)(pCur->sector / 2) * 2.0f) + ((float)(pCur->length / 2) * 2.0f)) > (2048.0f * ((float)(pMid->sector / 2) * 2.0f)))
-                                {
-                                    fTotal = 0.0f;
-                                    goto theEnd;
-                                }
-                            }
-                        }
-                    }
+    fn_vLastDesinitAlwaysStructure();
 
-                    pCur++;
-                }
-            }
-        }
-    }
+    CINE_fn_pResetCineList();
 
-theEnd:
-    if (fTotal < 1316448357.0f)
-    {
-    }
+    PLD_fn_vUnLoadLevelFamilies();
+
+    fn_vDesinitFamilyStructureForPriority(HMU_fn_ucGetLevelNormalMemoryBlock());
+
+    if (fn_bDoTransition() == 0)
+        fn_vDestroyAllHierarchy(gp_stActualWorld);
     else
     {
-        g_iArraySizes = 0;
-    }
-}
+        CAM_fn_vInvalidateViewports();
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\initeng.cxx lines 82–99 */
-/* addr: 0x00264780  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 82
- *   +0x0008 -> line 89
- *   +0x0010 -> line 92
- *   +0x0034 -> line 96
- *   +0x0044 -> line 99
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GLI_fn_vCloseBigFileTextures(void);
-/* Pointer return/argument roles are established by this wrapper's target ABI;
- * the recovered callee scaffolds currently omit them. */
-char* MNC_fn_pcGetCurrentDirectory(void);
-char* FMN_SCE_ConvertPath2DVD(char* buffer);
-void GLI_fn_vOpenBigFileTextures(char* filename);
-int sprintf(char*, const char*, ...);
-void GAM_fn_vLoadTextures(void)
-{
-    char Texture_BF_Name[255];
-    GLI_fn_vCloseBigFileTextures();
-    sprintf(Texture_BF_Name, "%s\\%s", MNC_fn_pcGetCurrentDirectory(), "TEXTURES.CNT;1");
-    GLI_fn_vOpenBigFileTextures(FMN_SCE_ConvertPath2DVD(Texture_BF_Name));
+        i = 0; hCharacter = gp_stDynamicWorld->hFirstElementDyn; hNextCharacter = HIE_fn_hForceGetSuperObjectNextBrother(hCharacter); while (hCharacter != NULL)
+        {
+            if (hCharacter->ulTypeOfLinkedObject == 2)
+            {
+                if (((unsigned char*)fn_h_SectInfoGetCurrentSector(hCharacter->hLinkedObject.p_stCharacter->h_SectInfo))[0x7E] == 0)
+                {
+                    fn_vRemoveObjectInSectorList(hCharacter);
+                }
+            }
+
+            i++; hCharacter = hNextCharacter; hNextCharacter = HIE_fn_hForceGetSuperObjectNextBrother(hNextCharacter); }
+
+        fn_vRemoveCharactersFromTransitionSector(GAM_fn_hGetCurrentSector(g_stEngineStructure.h_StdCamCaracter));
+
+        fn_vPartiallyDestroyHierarchy(gp_stActualWorld);
+
+        for (i = 0; i < g_iNbPersoOfFixInDynamicHierarchy; i++)
+        {
+            HIE_fn_vIsolate(gp_stPersoInDynamicHierarchy[i]);
+        }
+
+        for (i = 0; i < g_iNbPersoOfFixInDynamicHierarchy; i++)
+        {
+            HIE_tdstSuperObject_* p_stWorld = gp_stDynamicWorld; HIE_tdstSuperObject_* p_stPerso = gp_stPersoInDynamicHierarchy[i]; if (p_stPerso->hNextBrotherDyn != NULL) { p_stPerso->hNextBrotherDyn->hPrevBrotherDyn = p_stPerso->hPrevBrotherDyn; } if (p_stPerso->hPrevBrotherDyn != NULL) { p_stPerso->hPrevBrotherDyn->hNextBrotherDyn = p_stPerso->hNextBrotherDyn; } if (p_stPerso->hFatherDyn != NULL) { p_stPerso->hFatherDyn->lNumberOfElementsDyn--; if (p_stPerso->hFatherDyn->hFirstElementDyn == p_stPerso) { p_stPerso->hFatherDyn->hFirstElementDyn = p_stPerso->hNextBrotherDyn; } if (p_stPerso->hFatherDyn->hLastElementDyn == p_stPerso) { p_stPerso->hFatherDyn->hLastElementDyn = p_stPerso->hPrevBrotherDyn; } } p_stPerso->hNextBrotherDyn = NULL; p_stPerso->hPrevBrotherDyn = NULL; p_stPerso->hFatherDyn = NULL; p_stPerso->hNextBrotherDyn = NULL; p_stPerso->hPrevBrotherDyn = p_stWorld->hLastElementDyn; p_stPerso->hFatherDyn = p_stWorld; if (p_stWorld->hFirstElementDyn == NULL) { p_stWorld->hFirstElementDyn = p_stPerso; } else { p_stWorld->hLastElementDyn->hNextBrotherDyn = p_stPerso; } p_stWorld->hLastElementDyn = p_stPerso; p_stWorld->lNumberOfElementsDyn++;
+        }
+
+        hMainChar = MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode());
+
+        g_hMCMatrix = *hMainChar->hGlobalMatrix;
+
+        g_hMCLocalMatrix = *hMainChar->hLocalMatrix;
+
+        g_hCamMatrix = *g_stEngineStructure.h_StdCamCaracter->hGlobalMatrix;
+
+        g_hCamLocalMatrix = *g_stEngineStructure.h_StdCamCaracter->hLocalMatrix;
+
+        fn_vRemoveWorldSectInfo();
+    }
+
+    fn_vLastDeinitMorphTaskList();
+
+    g_hLoadedSuperObjectRoot = NULL;
+
+    fn_vRemoveAllMicros();
+
+    fn_vReputGameViewportCamera();
+
+    g_stEngineStructure.hCameraList.hFirstElementDyn = NULL; g_stEngineStructure.hCameraList.hLastElementDyn = NULL; g_stEngineStructure.hCameraList.lNumberOfElementsDyn = 0;
+
+    if (fn_bLevelHasTransitionMemory() == 0)
+    {
+        g_stEngineStructure.hMainCharacterList.hFirstElementDyn = NULL; g_stEngineStructure.hMainCharacterList.hLastElementDyn = NULL; g_stEngineStructure.hMainCharacterList.lNumberOfElementsDyn = 0;
+    }
+
+    g_stEngineStructure.hAlwaysActiveCharactersList.hFirstElementDyn = NULL; g_stEngineStructure.hAlwaysActiveCharactersList.hLastElementDyn = NULL; g_stEngineStructure.hAlwaysActiveCharactersList.lNumberOfElementsDyn = 0;
+
+    fn_vTakeControlOfLipChannel(NULL, NULL);
+
+    if (fn_bDoTransition())
+    {
+        GAM_fn_vPushAllocMode(2);
+
+        fn_vInitTransitionHierarchy();
+
+        GLI_PS2GL_PrepareSpecificDataForLevel();
+
+        fn_vBeginTransition();
+
+        GAM_fn_vPopAllocMode();
+    }
+
+    fn_vFreeLevelAllowedMemory();
+
+    if (fn_bLevelHasTransitionMemory() && (fn_bDoTransition() == 0))
+    {
+        fn_vFreeTransitionAllocatedMemory();
+    }
 }

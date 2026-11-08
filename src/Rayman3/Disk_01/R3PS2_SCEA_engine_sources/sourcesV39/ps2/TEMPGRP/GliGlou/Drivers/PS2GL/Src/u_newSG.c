@@ -196,6 +196,110 @@ extern "C" {
 void J_New_GetInterpolPointOnEdge(J_New_ParticleFace_* pFace, J_New_InterpolPoint_* pPoint, unsigned int Edge, float U);
 void J_New_GetParticleSpriteFromInterpolatedPoints(float (*pParticles)[4], J_New_InterpolPoint_* p1, J_New_InterpolPoint_* p2, float V);
 
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+unsigned int J_New_CreateParticlesOnFace(float (*pParticles)[4], unsigned int MaxParticles, J_New_ParticleFace_* pFace, float _fU, float _fV, float NoiseLevel);
+void J_New_GetInterpolPointOnEdge(J_New_ParticleFace_* pFace, J_New_InterpolPoint_* pPoint, unsigned int Edge, float U);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_newSG.c lines 138–188 */
+/* addr: 0x002cfc10  size: 276 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 138
+ *   +0x0014 -> line 139
+ *   +0x002c -> line 140
+ *   +0x003c -> line 141
+ *   +0x0040 -> line 143
+ *   +0x0048 -> line 148
+ *   +0x004c -> line 143
+ *   +0x0050 -> line 148
+ *   +0x0054 -> line 143
+ *   +0x005c -> line 148
+ *   +0x0060 -> line 143
+ *   +0x006c -> line 148
+ *   +0x0070 -> line 143
+ *   +0x0078 -> line 148
+ *   +0x0084 -> line 144
+ *   +0x0088 -> line 143
+ *   +0x008c -> line 144
+ *   +0x0094 -> line 143
+ *   +0x0098 -> line 144
+ *   +0x009c -> line 148
+ *   +0x00a0 -> line 144
+ *   +0x00a8 -> line 150
+ *   +0x00ac -> line 151
+ *   +0x00b0 -> line 152
+ *   +0x00b4 -> line 153
+ *   +0x00b8 -> line 154
+ *   +0x00bc -> line 156
+ *   +0x00c0 -> line 157
+ *   +0x00c4 -> line 158
+ *   +0x00c8 -> line 160
+ *   +0x00cc -> line 161
+ *   +0x00d0 -> line 163
+ *   +0x00d4 -> line 164
+ *   +0x00d8 -> line 166
+ *   +0x00dc -> line 167
+ *   +0x00e0 -> line 187
+ *   +0x00ec -> line 186
+ *   +0x00f0 -> line 187
+ *   +0x010c -> line 188
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void J_New_GetInterpolPointOnEdge(J_New_ParticleFace_* pFace, J_New_InterpolPoint_* pPoint, unsigned int Edge, float U)
+{
+    float A[4];
+    int p2;
+    int p1;
+    float* pPts1;
+    float* pPts2;
+    float* pCol1;
+    float* pCol2;
+    float* pW;
+    float* pDstCol;
+    float* pUV0;
+    float* pUV1;
+
+    /* Edge selects the (p1, p2) vertex pair of the triangle face. */
+    if (Edge == 0) { p1 = 0; p2 = 1; }
+    else if (Edge == 1) { p1 = 1; p2 = 2; }
+    else if (Edge == 2) { p1 = 2; p2 = 0; }
+    else { p1 = 0; p2 = 1; }
+
+    pUV0 = &pFace->pUVs[0][0];
+    pUV1 = &pFace->pUVs[0][1];
+    A[1] = (U - pUV0[p1 * 2]) / (pUV0[p2 * 2] - pUV0[p1 * 2]);
+    A[0] = 1.0f - A[1];
+    pPts1 = &pFace->pPoints[p1][0];
+    pPts2 = &pFace->pPoints[p2][0];
+    pCol1 = &pFace->pColors[p1][0];
+    pCol2 = &pFace->pColors[p2][0];
+    pW = &A[0];
+    pDstCol = &pPoint->Color[0];
+
+    /* VU0 macro-mode interpolation: MWCC cannot emit lqc2/sqc2 from C. */
+    asm {
+        lqc2 vf2, 0(pPts1)
+        lqc2 vf3, 0(pPts2)
+        lqc2 vf4, 0(pCol1)
+        lqc2 vf5, 0(pCol2)
+        lqc2 vf6, 0(pW)
+        vmulx.xyz vf8, vf2, vf6x
+        vmuly.xyz vf9, vf3, vf6y
+        vsubx.w vf12, vf0, vf0x
+        vmulx.xyzw vf10, vf4, vf6x
+        vmuly.xyzw vf11, vf5, vf6y
+        vadd.xyz vf12, vf8, vf9
+        vadd.xyzw vf13, vf10, vf11
+        sqc2 vf12, 0(pPoint)
+        sqc2 vf13, 0(pDstCol)
+    }
+
+    pPoint->UVs[0] = U;
+    pPoint->UVs[1] = pUV1[p1 * 2] * A[0] + pUV1[p2 * 2] * A[1];
+}
+
 unsigned int J_New_CreateParticlesOnFace(float (*pParticles)[4], unsigned int MaxParticles, J_New_ParticleFace_* pFace, float _fU, float _fV, float NoiseLevel)
 {
     int Edge[3];
@@ -322,103 +426,4 @@ unsigned int J_New_CreateParticlesOnFace(float (*pParticles)[4], unsigned int Ma
     }
     return NbGenerated;
 }
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_newSG.c lines 138–188 */
-/* addr: 0x002cfc10  size: 276 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 138
- *   +0x0014 -> line 139
- *   +0x002c -> line 140
- *   +0x003c -> line 141
- *   +0x0040 -> line 143
- *   +0x0048 -> line 148
- *   +0x004c -> line 143
- *   +0x0050 -> line 148
- *   +0x0054 -> line 143
- *   +0x005c -> line 148
- *   +0x0060 -> line 143
- *   +0x006c -> line 148
- *   +0x0070 -> line 143
- *   +0x0078 -> line 148
- *   +0x0084 -> line 144
- *   +0x0088 -> line 143
- *   +0x008c -> line 144
- *   +0x0094 -> line 143
- *   +0x0098 -> line 144
- *   +0x009c -> line 148
- *   +0x00a0 -> line 144
- *   +0x00a8 -> line 150
- *   +0x00ac -> line 151
- *   +0x00b0 -> line 152
- *   +0x00b4 -> line 153
- *   +0x00b8 -> line 154
- *   +0x00bc -> line 156
- *   +0x00c0 -> line 157
- *   +0x00c4 -> line 158
- *   +0x00c8 -> line 160
- *   +0x00cc -> line 161
- *   +0x00d0 -> line 163
- *   +0x00d4 -> line 164
- *   +0x00d8 -> line 166
- *   +0x00dc -> line 167
- *   +0x00e0 -> line 187
- *   +0x00ec -> line 186
- *   +0x00f0 -> line 187
- *   +0x010c -> line 188
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void J_New_GetInterpolPointOnEdge(J_New_ParticleFace_* pFace, J_New_InterpolPoint_* pPoint, unsigned int Edge, float U)
-{
-    float A[4];
-    int p2;
-    int p1;
-    float* pPts1;
-    float* pPts2;
-    float* pCol1;
-    float* pCol2;
-    float* pW;
-    float* pDstCol;
-    float* pUV0;
-    float* pUV1;
-
-    /* Edge selects the (p1, p2) vertex pair of the triangle face. */
-    if (Edge == 0) { p1 = 0; p2 = 1; }
-    else if (Edge == 1) { p1 = 1; p2 = 2; }
-    else if (Edge == 2) { p1 = 2; p2 = 0; }
-    else { p1 = 0; p2 = 1; }
-
-    pUV0 = &pFace->pUVs[0][0];
-    pUV1 = &pFace->pUVs[0][1];
-    A[1] = (U - pUV0[p1 * 2]) / (pUV0[p2 * 2] - pUV0[p1 * 2]);
-    A[0] = 1.0f - A[1];
-    pPts1 = &pFace->pPoints[p1][0];
-    pPts2 = &pFace->pPoints[p2][0];
-    pCol1 = &pFace->pColors[p1][0];
-    pCol2 = &pFace->pColors[p2][0];
-    pW = &A[0];
-    pDstCol = &pPoint->Color[0];
-
-    /* VU0 macro-mode interpolation: MWCC cannot emit lqc2/sqc2 from C. */
-    asm {
-        lqc2 vf2, 0(pPts1)
-        lqc2 vf3, 0(pPts2)
-        lqc2 vf4, 0(pCol1)
-        lqc2 vf5, 0(pCol2)
-        lqc2 vf6, 0(pW)
-        vmulx.xyz vf8, vf2, vf6x
-        vmuly.xyz vf9, vf3, vf6y
-        vsubx.w vf12, vf0, vf0x
-        vmulx.xyzw vf10, vf4, vf6x
-        vmuly.xyzw vf11, vf5, vf6y
-        vadd.xyz vf12, vf8, vf9
-        vadd.xyzw vf13, vf10, vf11
-        sqc2 vf12, 0(pPoint)
-        sqc2 vf13, 0(pDstCol)
-    }
-
-    pPoint->UVs[0] = U;
-    pPoint->UVs[1] = pUV1[p1 * 2] * A[0] + pUV1[p2 * 2] * A[1];
-}
-
 } /* extern "C" */

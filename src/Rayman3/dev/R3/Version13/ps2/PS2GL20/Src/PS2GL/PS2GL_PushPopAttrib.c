@@ -887,24 +887,11 @@ void internalPS2glDrawRgbaPixels(int x, int y, int width, int height, unsigned i
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glCopyPixels(int x, int y, int width, int height, unsigned int type)
-{
-    void* pixels;
 
-    pixels = PS2glAllocator(width * height * 4);
-    switch (type)
-    {
-        case 0x1800:
-            internalReadFastRgbaPixels(x, y, width, height, 0x1908, 0x1401, pixels);
-            if (g_PS2glContext.bRasterPosValid) internalPS2glDrawRgbaPixels((int)(0.5f + g_PS2glContext.fRasterPos[0]), (int)(0.5f + g_PS2glContext.fRasterPos[1]), width, height, 0x1908, 0x1401, pixels);
-            break;
-        case 0x1801:
-            internalReadFastRgbaPixels(x, y, width, height, 0x1902, 0x1401, pixels);
-            if (g_PS2glContext.bRasterPosValid) internalPS2glDrawRgbaPixels((int)(0.5f + g_PS2glContext.fRasterPos[0]), (int)(0.5f + g_PS2glContext.fRasterPos[1]), width, height, 0x1902, 0x1401, pixels);
-            break;
-    }
-    PS2glLiberator(pixels);
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void impPS2glCopyPixels(int x, int y, int width, int height, unsigned int type);
+void impPS2glPopAttrib(void);
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PushPopAttrib.c lines 541–867 */
 /* addr: 0x00167610  size: 2760 bytes */
@@ -1135,9 +1122,29 @@ void impPS2glCopyPixels(int x, int y, int width, int height, unsigned int type)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
 void impPS2glPopAttrib(void)
 {
     defAttribViewportBit* pSolidCurrent;
     defAttribNode* pTemp;
     /* TODO: decompile from asm/... */
+}
+
+void impPS2glCopyPixels(int x, int y, int width, int height, unsigned int type)
+{
+    void* pixels;
+
+    pixels = PS2glAllocator(width * height * 4);
+    switch (type)
+    {
+        case 0x1800:
+            internalReadFastRgbaPixels(x, y, width, height, 0x1908, 0x1401, pixels);
+            if (g_PS2glContext.bRasterPosValid) internalPS2glDrawRgbaPixels((int)(0.5f + g_PS2glContext.fRasterPos[0]), (int)(0.5f + g_PS2glContext.fRasterPos[1]), width, height, 0x1908, 0x1401, pixels);
+            break;
+        case 0x1801:
+            internalReadFastRgbaPixels(x, y, width, height, 0x1902, 0x1401, pixels);
+            if (g_PS2glContext.bRasterPosValid) internalPS2glDrawRgbaPixels((int)(0.5f + g_PS2glContext.fRasterPos[0]), (int)(0.5f + g_PS2glContext.fRasterPos[1]), width, height, 0x1902, 0x1401, pixels);
+            break;
+    }
+    PS2glLiberator(pixels);
 }

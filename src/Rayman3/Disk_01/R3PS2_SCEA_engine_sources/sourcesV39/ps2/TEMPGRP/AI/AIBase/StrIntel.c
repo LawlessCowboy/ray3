@@ -114,17 +114,37 @@ struct tdstList_ {
 
 void fn_vOnAIErm_M_UpdateLastError(int FatalErrorNum, char* szMsg);
 
-void fn_vPutInList(tdstList_* p_List, HIE_tdstSuperObject_* p_Perso)
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void fn_vPutInList(tdstList_* p_List, HIE_tdstSuperObject_* p_Perso);
+unsigned char fn_ucGetTreeNbParam(tdstNodeInterpret_* p_stTree);
+unsigned char fn_ucChangeComportIntell(tdstIntelligence_* p_stIntelligence, tdstComport_* p_stComport);
+void fn_vReinitComport(tdstIntelligence_* p_stIntelligence);
+
+void fn_vReinitComport(tdstIntelligence_* p_stIntelligence)
 {
+    tdstComport_* p_stComport = (tdstComport_*)p_stIntelligence->ulNoComportInit;
 
-    if (p_List->ucNbElt < p_List->ucMaxSize)
-    {
-        p_List->p_hTabElt[p_List->ucNbElt++] = p_Perso;
-    }
-
-
+    p_stIntelligence->p_stPrevComport = p_stIntelligence->p_stCurrentComport;
+    p_stIntelligence->p_stCurrentComport = p_stComport;
+    fn_vInitActionTable(p_stIntelligence);
+    if (p_stComport->p_stSchedule == NULL)
+        p_stIntelligence->p_stCurrentSchedule = NULL;
     else
-        fn_vOnAIErm_M_UpdateLastError(14, NULL);
+        p_stIntelligence->p_stCurrentSchedule = p_stComport->p_stSchedule->p_stNodeInterpret;
+    p_stIntelligence->p_stPrevComport = p_stIntelligence->p_stCurrentComport;
+}
+
+unsigned char fn_ucChangeComportIntell(tdstIntelligence_* p_stIntelligence, tdstComport_* p_stComport)
+{
+    p_stIntelligence->p_stPrevComport = p_stIntelligence->p_stCurrentComport;
+    p_stIntelligence->p_stCurrentComport = p_stComport;
+    fn_vInitActionTable(p_stIntelligence);
+    if (p_stComport->p_stSchedule == NULL)
+        p_stIntelligence->p_stCurrentSchedule = NULL;
+    else
+        p_stIntelligence->p_stCurrentSchedule = p_stComport->p_stSchedule->p_stNodeInterpret;
+    return 1;
 }
 
 unsigned char fn_ucGetTreeNbParam(tdstNodeInterpret_* p_stTree)
@@ -143,28 +163,14 @@ unsigned char fn_ucGetTreeNbParam(tdstNodeInterpret_* p_stTree)
     return ucNbParam;
 }
 
-unsigned char fn_ucChangeComportIntell(tdstIntelligence_* p_stIntelligence, tdstComport_* p_stComport)
+void fn_vPutInList(tdstList_* p_List, HIE_tdstSuperObject_* p_Perso)
 {
-    p_stIntelligence->p_stPrevComport = p_stIntelligence->p_stCurrentComport;
-    p_stIntelligence->p_stCurrentComport = p_stComport;
-    fn_vInitActionTable(p_stIntelligence);
-    if (p_stComport->p_stSchedule == NULL)
-        p_stIntelligence->p_stCurrentSchedule = NULL;
-    else
-        p_stIntelligence->p_stCurrentSchedule = p_stComport->p_stSchedule->p_stNodeInterpret;
-    return 1;
-}
 
-void fn_vReinitComport(tdstIntelligence_* p_stIntelligence)
-{
-    tdstComport_* p_stComport = (tdstComport_*)p_stIntelligence->ulNoComportInit;
+    if (p_List->ucNbElt < p_List->ucMaxSize)
+    {
+        p_List->p_hTabElt[p_List->ucNbElt++] = p_Perso;
+    }
 
-    p_stIntelligence->p_stPrevComport = p_stIntelligence->p_stCurrentComport;
-    p_stIntelligence->p_stCurrentComport = p_stComport;
-    fn_vInitActionTable(p_stIntelligence);
-    if (p_stComport->p_stSchedule == NULL)
-        p_stIntelligence->p_stCurrentSchedule = NULL;
     else
-        p_stIntelligence->p_stCurrentSchedule = p_stComport->p_stSchedule->p_stNodeInterpret;
-    p_stIntelligence->p_stPrevComport = p_stIntelligence->p_stCurrentComport;
+        fn_vOnAIErm_M_UpdateLastError(14, NULL);
 }

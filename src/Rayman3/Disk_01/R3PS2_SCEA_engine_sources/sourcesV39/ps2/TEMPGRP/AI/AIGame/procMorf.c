@@ -3001,91 +3001,14 @@ tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstN
 tdstNodeInterpret_* fn_p_stOperatorGetPerso(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, HIE_tdstSuperObject_** hSuperObjPersoFound);
 unsigned char fn_ucGetDsgVar(unsigned char ucId, unsigned char ucIndex, AI_tdstMind_* p_stPerso, tdstGetSetParam_* p_stGetSetParam);
 
-tdstNodeInterpret_* fn_p_stMorphingMT(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    HIE_tdstSuperObject_* p_stResultOwnerPerso;
-    HIE_tdstSuperObject_* p_stResultOwnerPerso2;
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    tdstArray_* p_stArray;
-    tdstGetSetParam_ stParam;
-    AI_tdstMind_* p_stMind2;
-    AI_tdstMind_* p_stMind1;
-    unsigned char i;
-    unsigned char iMaxArraySize;
-    unsigned char ucArrayId2;
-    unsigned char ucArrayId1;
-    tdstGetSetParam_ stValue[2];
-    short xChannelIndex;
-    float axRatio[10];
-    short axEndIndexInObjectTable[10];
-    short xStartIndexInObjectTable;
-    int iTreeResult;
-
-    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator((p_stTree - 1)->uDummy.uId.eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue[0]);
-
-    if (p_stTree->eType == 2)
-    {
-        p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree + 1, &p_stResultOwnerPerso);
-    }
-    else
-    {
-        p_stResultOwnerPerso = p_SuperObjPerso;
-    }
-
-    ucArrayId1 = (unsigned char)p_stTree->uDummy.uId.eProcedureId;
-
-    p_stTree++;
-
-    p_stMind1 = p_stResultOwnerPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind;
-
-    if (p_stTree->eType == 2)
-    {
-        p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree + 1, &p_stResultOwnerPerso2);
-    }
-    else
-    {
-        p_stResultOwnerPerso2 = p_SuperObjPerso;
-    }
-
-    ucArrayId2 = (unsigned char)p_stTree->uDummy.uId.eProcedureId;
-
-    p_stMind2 = p_stResultOwnerPerso2->hLinkedObject.p_stCharacter->h_Brain->p_stMind;
-
-    iTreeResult = (int)fn_p_stEvalTree(p_SuperObjPerso, p_stTree + 1, &stValue[1]);
-
-    xChannelIndex = stValue[1].uDummy.uParam.wValue;
-    xStartIndexInObjectTable = stValue[0].uDummy.uParam.wValue - 1;
-
-    p_stArray = (tdstArray_ *)((char *)p_stMind1->p_stDsgMem->p_cDsgMemBuffer + p_stMind1->p_stDsgMem->p_p_stDsgVar[0]->p_stDsgVarInfo[ucArrayId1].ulOffsetInDsgMem);
-    iMaxArraySize = p_stArray->ucMaxSize;
-
-    if (iMaxArraySize > 10)
-    {
-        iMaxArraySize = 10;
-    }
-
-    for (i = 0; i < iMaxArraySize; i++)
-    {
-        if (fn_ucGetDsgVar(ucArrayId1, i, p_stMind1, &stParam) == 1)
-        {
-            axEndIndexInObjectTable[i] = stParam.uDummy.uParam.wValue - 1;
-        }
-
-        if (fn_ucGetDsgVar(ucArrayId1, i, p_stMind2, &stParam) == 1)
-        {
-            axRatio[i] = 0.01f * stParam.uDummy.uParam.lValue;
-        }
-    }
-
-    if (MOR_fn_xMorphing(p_SuperObjPerso, xStartIndexInObjectTable, &axEndIndexInObjectTable[0], iMaxArraySize, &axRatio[0], xChannelIndex, 2) == -1)
-    {
-        Erm_fn_v_UpdateLastError(0x43, g_ucAIModuleId, 0, 0x4D, -1, 0xFF, 0, "Morphing requires objects with the same number of points"); Erm_fn_ClearLastError(0);
-    }
-
-    return (tdstNodeInterpret_ *)iTreeResult;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+tdstNodeInterpret_* fn_p_stMorphingMT(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stMorphing(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stIsMorphing(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue);
+tdstNodeInterpret_* fn_p_stStopMorph(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stPrepareMorphMT(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stPrepareMorph(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\procMorf.c lines 306–365 */
 /* addr: 0x0023c150  size: 372 bytes */
@@ -3123,43 +3046,6 @@ tdstNodeInterpret_* fn_p_stMorphingMT(HIE_tdstSuperObject_* p_SuperObjPerso, tds
  * compare a candidate object's line table as an extra checkpoint.
  */
 
-tdstNodeInterpret_* fn_p_stMorphing(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ stValue[4];
-    float xRatio;
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    short xEndIndexInObjectTable;
-    short xChannelIndex;
-    int xStartIndexInObjectTable;
-
-    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator((p_stTree - 1)->uDummy.uId.eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue[0]);
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue[1]);
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue[2]);
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue[3]);
-
-    xStartIndexInObjectTable = stValue[0].uDummy.uParam.wValue;
-    xEndIndexInObjectTable = stValue[1].uDummy.uParam.wValue;
-    xRatio = (float)stValue[2].uDummy.uParam.lValue;
-    xChannelIndex = stValue[3].uDummy.uParam.wValue;
-
-    xEndIndexInObjectTable = xEndIndexInObjectTable - 1;
-    xRatio = xRatio / 100.0f;
-
-    if (PLA_bCheckDistForMorph(p_SuperObjPerso) == 0)
-    {
-        MOR_fn_xStopMorph(p_SuperObjPerso, xChannelIndex);
-    }
-
-    if (MOR_fn_xMorphing(p_SuperObjPerso, xStartIndexInObjectTable - 1, &xEndIndexInObjectTable, 1, &xRatio, xChannelIndex, 2) == -1)
-    {
-        Erm_fn_v_UpdateLastError(0x43, g_ucAIModuleId, 0, 0x4D, -1, 0xFF, 0, "Morphing requires two objects with the same number of points"); Erm_fn_ClearLastError(0);
-    }
-
-    return p_stTree;
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\procMorf.c lines 274–296 */
 /* addr: 0x0023c2d0  size: 124 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3175,20 +3061,6 @@ tdstNodeInterpret_* fn_p_stMorphing(HIE_tdstSuperObject_* p_SuperObjPerso, tdstN
 /* Declared without a narrow return type here: retail passes the result on without an andi. */
 int fn_ucGetConditionUltraOperator(tdeCondId_ eCondId);
 unsigned char MOR_fn_bIsChannelMorphed(HIE_tdstSuperObject_* _hActorSuperObject, short _xChannelIndex);
-
-tdstNodeInterpret_* fn_p_stIsMorphing(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
-{
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    tdstGetSetParam_ stValue;
-
-    fn_vGetUltraOperatorPerso(fn_ucGetConditionUltraOperator((p_stTree - 1)->uDummy.uId.eCondId), p_SuperObjPerso, &hNewSuperObjPerso);
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-
-    *p_lValue = (long)MOR_fn_bIsChannelMorphed(p_SuperObjPerso, stValue.uDummy.uParam.wValue);
-
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\procMorf.c lines 226–264 */
 /* addr: 0x0023c350  size: 228 bytes */
@@ -3210,42 +3082,6 @@ tdstNodeInterpret_* fn_p_stIsMorphing(HIE_tdstSuperObject_* p_SuperObjPerso, tds
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stStopMorph(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstMorphChannelList_* p_stMorph_Next;
-    tdstMorphChannelList_* p_stMorph;
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    tdeProcedureId_ eProcId;
-    tdstGetSetParam_ stValue;
-
-    eProcId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcId), p_SuperObjPerso, &hNewSuperObjPerso);
-
-    switch (eProcId)
-    {
-
-    case eProc_StopMorph:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-
-        MOR_fn_xStopMorph(p_SuperObjPerso, stValue.uDummy.uParam.wValue);
-
-        break;
-
-
-
-
-
-    case eProc_StopAllMorph:
-        for (p_stMorph = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_3dData->hMorphChannelList->hFirstElementDyn, p_stMorph_Next = p_stMorph ? p_stMorph->hNextBrotherDyn : NULL; p_stMorph; p_stMorph = p_stMorph_Next, p_stMorph_Next = p_stMorph ? p_stMorph->hNextBrotherDyn : NULL)
-        {
-            MOR_fn_xStopMorph(p_SuperObjPerso, p_stMorph->uwChannelNumber);
-        }
-        break;
-    }
-
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\procMorf.c lines 126–211 */
 /* addr: 0x0023c440  size: 720 bytes */
@@ -3294,6 +3130,63 @@ tdstNodeInterpret_* fn_p_stStopMorph(HIE_tdstSuperObject_* p_SuperObjPerso, tdst
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\procMorf.c lines 56–107 */
+/* addr: 0x0023c710  size: 328 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 56
+ *   +0x0020 -> line 74
+ *   +0x003c -> line 77
+ *   +0x0050 -> line 78
+ *   +0x0064 -> line 79
+ *   +0x0078 -> line 80
+ *   +0x008c -> line 81
+ *   +0x00a0 -> line 84
+ *   +0x00a4 -> line 94
+ *   +0x00a8 -> line 81
+ *   +0x00ac -> line 94
+ *   +0x00b0 -> line 92
+ *   +0x00b4 -> line 94
+ *   +0x00bc -> line 84
+ *   +0x00c0 -> line 92
+ *   +0x00c4 -> line 91
+ *   +0x00c8 -> line 94
+ *   +0x00f8 -> line 97
+ *   +0x0124 -> line 106
+ *   +0x0128 -> line 107
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+tdstNodeInterpret_* fn_p_stPrepareMorph(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstGetSetParam_ stValue[5];
+    float xStart;
+    float xEnd;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    short xEndIndexInObjectTable;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator((p_stTree - 1)->uDummy.uId.eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue[0]);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue[1]);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue[2]);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue[3]);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue[4]);
+
+    xEndIndexInObjectTable = stValue[1].uDummy.uParam.wValue;
+
+    xStart = 0.0f;
+    xEnd = 1.0f;
+
+    if (MOR_fn_xPrepareMorph(p_SuperObjPerso, stValue[0].uDummy.uParam.wValue, &xEndIndexInObjectTable, 1, stValue[2].uDummy.uParam.lValue, &xStart, &xEnd, stValue[3].uDummy.uParam.cValue, stValue[4].uDummy.uParam.wValue) == -1)
+    {
+        Erm_fn_v_UpdateLastError(0x43, g_ucAIModuleId, 0, 0x4D, -1, 0xFF, 0, "Morphing requires two objects with the same number of points"); Erm_fn_ClearLastError(0);
+    }
+
+    return p_stTree;
+}
+
 tdstNodeInterpret_* fn_p_stPrepareMorphMT(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     short xStartIndexInObjectTable;
@@ -3383,39 +3276,61 @@ tdstNodeInterpret_* fn_p_stPrepareMorphMT(HIE_tdstSuperObject_* p_SuperObjPerso,
     return p_stTree;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\procMorf.c lines 56–107 */
-/* addr: 0x0023c710  size: 328 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 56
- *   +0x0020 -> line 74
- *   +0x003c -> line 77
- *   +0x0050 -> line 78
- *   +0x0064 -> line 79
- *   +0x0078 -> line 80
- *   +0x008c -> line 81
- *   +0x00a0 -> line 84
- *   +0x00a4 -> line 94
- *   +0x00a8 -> line 81
- *   +0x00ac -> line 94
- *   +0x00b0 -> line 92
- *   +0x00b4 -> line 94
- *   +0x00bc -> line 84
- *   +0x00c0 -> line 92
- *   +0x00c4 -> line 91
- *   +0x00c8 -> line 94
- *   +0x00f8 -> line 97
- *   +0x0124 -> line 106
- *   +0x0128 -> line 107
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stPrepareMorph(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stStopMorph(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    tdstGetSetParam_ stValue[5];
-    float xStart;
-    float xEnd;
+    tdstMorphChannelList_* p_stMorph_Next;
+    tdstMorphChannelList_* p_stMorph;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    tdeProcedureId_ eProcId;
+    tdstGetSetParam_ stValue;
+
+    eProcId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcId), p_SuperObjPerso, &hNewSuperObjPerso);
+
+    switch (eProcId)
+    {
+
+    case eProc_StopMorph:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+
+        MOR_fn_xStopMorph(p_SuperObjPerso, stValue.uDummy.uParam.wValue);
+
+        break;
+
+    case eProc_StopAllMorph:
+        for (p_stMorph = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_3dData->hMorphChannelList->hFirstElementDyn, p_stMorph_Next = p_stMorph ? p_stMorph->hNextBrotherDyn : NULL; p_stMorph; p_stMorph = p_stMorph_Next, p_stMorph_Next = p_stMorph ? p_stMorph->hNextBrotherDyn : NULL)
+        {
+            MOR_fn_xStopMorph(p_SuperObjPerso, p_stMorph->uwChannelNumber);
+        }
+        break;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stIsMorphing(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
+{
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    tdstGetSetParam_ stValue;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetConditionUltraOperator((p_stTree - 1)->uDummy.uId.eCondId), p_SuperObjPerso, &hNewSuperObjPerso);
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+
+    *p_lValue = (long)MOR_fn_bIsChannelMorphed(p_SuperObjPerso, stValue.uDummy.uParam.wValue);
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stMorphing(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstGetSetParam_ stValue[4];
+    float xRatio;
     HIE_tdstSuperObject_* hNewSuperObjPerso;
     short xEndIndexInObjectTable;
+    short xChannelIndex;
+    int xStartIndexInObjectTable;
 
     fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator((p_stTree - 1)->uDummy.uId.eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
 
@@ -3423,17 +3338,110 @@ tdstNodeInterpret_* fn_p_stPrepareMorph(HIE_tdstSuperObject_* p_SuperObjPerso, t
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue[1]);
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue[2]);
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue[3]);
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue[4]);
 
+    xStartIndexInObjectTable = stValue[0].uDummy.uParam.wValue;
     xEndIndexInObjectTable = stValue[1].uDummy.uParam.wValue;
+    xRatio = (float)stValue[2].uDummy.uParam.lValue;
+    xChannelIndex = stValue[3].uDummy.uParam.wValue;
 
-    xStart = 0.0f;
-    xEnd = 1.0f;
+    xEndIndexInObjectTable = xEndIndexInObjectTable - 1;
+    xRatio = xRatio / 100.0f;
 
-    if (MOR_fn_xPrepareMorph(p_SuperObjPerso, stValue[0].uDummy.uParam.wValue, &xEndIndexInObjectTable, 1, stValue[2].uDummy.uParam.lValue, &xStart, &xEnd, stValue[3].uDummy.uParam.cValue, stValue[4].uDummy.uParam.wValue) == -1)
+    if (PLA_bCheckDistForMorph(p_SuperObjPerso) == 0)
+    {
+        MOR_fn_xStopMorph(p_SuperObjPerso, xChannelIndex);
+    }
+
+    if (MOR_fn_xMorphing(p_SuperObjPerso, xStartIndexInObjectTable - 1, &xEndIndexInObjectTable, 1, &xRatio, xChannelIndex, 2) == -1)
     {
         Erm_fn_v_UpdateLastError(0x43, g_ucAIModuleId, 0, 0x4D, -1, 0xFF, 0, "Morphing requires two objects with the same number of points"); Erm_fn_ClearLastError(0);
     }
 
     return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stMorphingMT(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    HIE_tdstSuperObject_* p_stResultOwnerPerso;
+    HIE_tdstSuperObject_* p_stResultOwnerPerso2;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    tdstArray_* p_stArray;
+    tdstGetSetParam_ stParam;
+    AI_tdstMind_* p_stMind2;
+    AI_tdstMind_* p_stMind1;
+    unsigned char i;
+    unsigned char iMaxArraySize;
+    unsigned char ucArrayId2;
+    unsigned char ucArrayId1;
+    tdstGetSetParam_ stValue[2];
+    short xChannelIndex;
+    float axRatio[10];
+    short axEndIndexInObjectTable[10];
+    short xStartIndexInObjectTable;
+    int iTreeResult;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator((p_stTree - 1)->uDummy.uId.eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue[0]);
+
+    if (p_stTree->eType == 2)
+    {
+        p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree + 1, &p_stResultOwnerPerso);
+    }
+    else
+    {
+        p_stResultOwnerPerso = p_SuperObjPerso;
+    }
+
+    ucArrayId1 = (unsigned char)p_stTree->uDummy.uId.eProcedureId;
+
+    p_stTree++;
+
+    p_stMind1 = p_stResultOwnerPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind;
+
+    if (p_stTree->eType == 2)
+    {
+        p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree + 1, &p_stResultOwnerPerso2);
+    }
+    else
+    {
+        p_stResultOwnerPerso2 = p_SuperObjPerso;
+    }
+
+    ucArrayId2 = (unsigned char)p_stTree->uDummy.uId.eProcedureId;
+
+    p_stMind2 = p_stResultOwnerPerso2->hLinkedObject.p_stCharacter->h_Brain->p_stMind;
+
+    iTreeResult = (int)fn_p_stEvalTree(p_SuperObjPerso, p_stTree + 1, &stValue[1]);
+
+    xChannelIndex = stValue[1].uDummy.uParam.wValue;
+    xStartIndexInObjectTable = stValue[0].uDummy.uParam.wValue - 1;
+
+    p_stArray = (tdstArray_ *)((char *)p_stMind1->p_stDsgMem->p_cDsgMemBuffer + p_stMind1->p_stDsgMem->p_p_stDsgVar[0]->p_stDsgVarInfo[ucArrayId1].ulOffsetInDsgMem);
+    iMaxArraySize = p_stArray->ucMaxSize;
+
+    if (iMaxArraySize > 10)
+    {
+        iMaxArraySize = 10;
+    }
+
+    for (i = 0; i < iMaxArraySize; i++)
+    {
+        if (fn_ucGetDsgVar(ucArrayId1, i, p_stMind1, &stParam) == 1)
+        {
+            axEndIndexInObjectTable[i] = stParam.uDummy.uParam.wValue - 1;
+        }
+
+        if (fn_ucGetDsgVar(ucArrayId1, i, p_stMind2, &stParam) == 1)
+        {
+            axRatio[i] = 0.01f * stParam.uDummy.uParam.lValue;
+        }
+    }
+
+    if (MOR_fn_xMorphing(p_SuperObjPerso, xStartIndexInObjectTable, &axEndIndexInObjectTable[0], iMaxArraySize, &axRatio[0], xChannelIndex, 2) == -1)
+    {
+        Erm_fn_v_UpdateLastError(0x43, g_ucAIModuleId, 0, 0x4D, -1, 0xFF, 0, "Morphing requires objects with the same number of points"); Erm_fn_ClearLastError(0);
+    }
+
+    return (tdstNodeInterpret_ *)iTreeResult;
 }

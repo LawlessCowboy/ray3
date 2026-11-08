@@ -1395,6 +1395,190 @@ extern char* fn_szFindModelTypeNameOfModelType(int otType);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void fn_vDestroyAllHierarchy(HIE_tdstSuperObject_* p_stSuperObject);
+void fn_vReInitAllMiscFlagForAlwaysActiveState(void);
+void fn_vReInitAllDynamicAlwaysActiveState(void);
+void fn_vChangeDynamicAlwaysActiveState(HIE_tdstSuperObject_* hCharacter, unsigned char bNewState);
+tdstAlwaysActiveCharacter_* fn_hGetNextAlwaysActiveCharNode(tdstAlwaysActiveCharacter_* hCharNode, unsigned char bTestDynamicAlwaysActive);
+tdstAlwaysActiveCharacter_* fn_hGetFirstAlwaysActiveCharNode(void);
+unsigned char fn_bGetIfCharacterIsInAlwaysActiveCharacterListAndDynamicallyActived(HIE_tdstSuperObject_* hCharacter);
+unsigned char fn_bGetIfCharacterIsInAlwaysActiveCharacterList(HIE_tdstSuperObject_* hCharacter);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\AlwAct.c lines 184–188 */
+/* addr: 0x0025af50  size: 64 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 184
+ *   +0x0010 -> line 186
+ *   +0x0028 -> line 187
+ *   +0x0038 -> line 188
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\AlwAct.c lines 174–178 */
+/* addr: 0x0025af90  size: 56 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 174
+ *   +0x0010 -> line 176
+ *   +0x0014 -> line 177
+ *   +0x0030 -> line 178
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\AlwAct.c lines 137–168 */
+/* addr: 0x0025afd0  size: 152 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 137
+ *   +0x0004 -> line 141
+ *   +0x0008 -> line 137
+ *   +0x000c -> line 141
+ *   +0x0018 -> line 143
+ *   +0x0024 -> line 146
+ *   +0x0028 -> line 145
+ *   +0x002c -> line 147
+ *   +0x0030 -> line 148
+ *   +0x0040 -> line 149
+ *   +0x0048 -> line 154
+ *   +0x0050 -> line 155
+ *   +0x0074 -> line 156
+ *   +0x008c -> line 168
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\AlwAct.c lines 125–132 */
+/* addr: 0x0025b070  size: 56 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 125
+ *   +0x0008 -> line 127
+ *   +0x0010 -> line 128
+ *   +0x0030 -> line 132
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\AlwAct.c lines 117–118 */
+/* addr: 0x0025b0b0  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 117
+ *   +0x0004 -> line 118
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\AlwAct.c lines 103–113 */
+/* addr: 0x0025b0c0  size: 104 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 103
+ *   +0x0024 -> line 105
+ *   +0x0034 -> line 107
+ *   +0x004c -> line 108
+ *   +0x0050 -> line 109
+ *   +0x005c -> line 110
+ *   +0x0060 -> line 113
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\AlwAct.c lines 95–96 */
+/* addr: 0x0025b130  size: 32 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 95
+ *   +0x0018 -> line 96
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+unsigned char fn_bGetIfCharacterIsInAlwaysActiveCharacterList(HIE_tdstSuperObject_* hCharacter)
+{
+    unsigned char bReturn;
+    bReturn = 1;
+    bReturn = (hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 0x40) ? bReturn : 0;
+    return bReturn;
+}
+
+unsigned char fn_bGetIfCharacterIsInAlwaysActiveCharacterListAndDynamicallyActived(HIE_tdstSuperObject_* hCharacter)
+{
+    tdstAlwaysActiveCharacter_* hCharNode;
+    unsigned char bReturn;
+
+    bReturn = 0;
+    if ((unsigned char)((hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 0x40) ? 1 : 0))
+    {
+        for (hCharNode = g_stEngineStructure.hAlwaysActiveCharactersList.hFirstElementDyn; hCharNode; hCharNode = hCharNode->hNextBrotherDyn)
+        {
+            if (hCharNode->hAlwActSuperObject == hCharacter && hCharNode->bDynamicAlwaysActive == 1)
+                bReturn = 1;
+        }
+    }
+
+    return bReturn;
+}
+
+tdstAlwaysActiveCharacter_* fn_hGetFirstAlwaysActiveCharNode(void)
+{
+    return g_stEngineStructure.hAlwaysActiveCharactersList.hFirstElementDyn;
+}
+
+tdstAlwaysActiveCharacter_* fn_hGetNextAlwaysActiveCharNode(tdstAlwaysActiveCharacter_* hCharNode, unsigned char bTestDynamicAlwaysActive)
+{
+    tdstAlwaysActiveCharacter_* hNextCharNode;
+
+    hNextCharNode = hCharNode->hNextBrotherDyn;
+    if (bTestDynamicAlwaysActive)
+        while (hNextCharNode && !hNextCharNode->bDynamicAlwaysActive)
+            hNextCharNode = hNextCharNode->hNextBrotherDyn;
+    return hNextCharNode;
+}
+
+void fn_vChangeDynamicAlwaysActiveState(HIE_tdstSuperObject_* hCharacter, unsigned char bNewState)
+{
+    char buffer[256];
+    unsigned char bFound;
+    tdstAlwaysActiveCharacter_* hCharNode;
+
+    bFound = 0;
+    for (hCharNode = g_stEngineStructure.hAlwaysActiveCharactersList.hFirstElementDyn; hCharNode != (tdstAlwaysActiveCharacter_*)0; hCharNode = hCharNode->hNextBrotherDyn)
+    {
+        if (hCharNode->hAlwActSuperObject == hCharacter)
+        {
+            bFound = 1;
+            hCharNode->bDynamicAlwaysActive = bNewState;
+        }
+    }
+    if (!bFound)
+    {
+        GROS_ANTIBUG_DE_LA_MORT_QUI_TUE = 1;
+        sprintf(buffer, "[%s]:fn_vChangeDynamicAlwaysActiveState :\n*** The object is not in the Always Active List ! ***\n",
+                fn_szFindModelTypeNameOfModelType(hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->otObjectModelType));
+        printf("Message called :\n %s\n%s\n", "AlwaysActive Error", buffer);
+    }
+}
+
+void fn_vReInitAllDynamicAlwaysActiveState(void)
+{
+    tdstAlwaysActiveCharacter_* hCharNode;
+    hCharNode = g_stEngineStructure.hAlwaysActiveCharactersList.hFirstElementDyn;
+    if (hCharNode != (tdstAlwaysActiveCharacter_*)0) do {
+        hCharNode->bDynamicAlwaysActive = 1;
+        hCharNode = hCharNode->hNextBrotherDyn;
+    } while (hCharNode != (tdstAlwaysActiveCharacter_*)0);
+}
+
+void fn_vReInitAllMiscFlagForAlwaysActiveState(void)
+{
+    tdstAlwaysActiveCharacter_* hCharNode;
+    hCharNode = g_stEngineStructure.hAlwaysActiveCharactersList.hFirstElementDyn;
+    if (hCharNode != (tdstAlwaysActiveCharacter_*)0) do {
+        hCharNode->hAlwActSuperObject->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags |= 0x40;
+        hCharNode = hCharNode->hNextBrotherDyn;
+    } while (hCharNode != (tdstAlwaysActiveCharacter_*)0);
+}
+
 void fn_vDestroyAllHierarchy(HIE_tdstSuperObject_* p_stSuperObject)
 {
     HIE_tdstSuperObject_* p_stNextChild;
@@ -1461,169 +1645,4 @@ void fn_vDestroyAllHierarchy(HIE_tdstSuperObject_* p_stSuperObject)
             fn_vDesinitOneObject(p_stSuperObject->ulTypeOfLinkedObject != 2 ? 0 : p_stSuperObject->hLinkedObject.p_stCharacter, 1);
         }
     }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\AlwAct.c lines 184–188 */
-/* addr: 0x0025af50  size: 64 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 184
- *   +0x0010 -> line 186
- *   +0x0028 -> line 187
- *   +0x0038 -> line 188
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vReInitAllMiscFlagForAlwaysActiveState(void)
-{
-    tdstAlwaysActiveCharacter_* hCharNode;
-    hCharNode = g_stEngineStructure.hAlwaysActiveCharactersList.hFirstElementDyn;
-    if (hCharNode != (tdstAlwaysActiveCharacter_*)0) do {
-        hCharNode->hAlwActSuperObject->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags |= 0x40;
-        hCharNode = hCharNode->hNextBrotherDyn;
-    } while (hCharNode != (tdstAlwaysActiveCharacter_*)0);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\AlwAct.c lines 174–178 */
-/* addr: 0x0025af90  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 174
- *   +0x0010 -> line 176
- *   +0x0014 -> line 177
- *   +0x0030 -> line 178
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vReInitAllDynamicAlwaysActiveState(void)
-{
-    tdstAlwaysActiveCharacter_* hCharNode;
-    hCharNode = g_stEngineStructure.hAlwaysActiveCharactersList.hFirstElementDyn;
-    if (hCharNode != (tdstAlwaysActiveCharacter_*)0) do {
-        hCharNode->bDynamicAlwaysActive = 1;
-        hCharNode = hCharNode->hNextBrotherDyn;
-    } while (hCharNode != (tdstAlwaysActiveCharacter_*)0);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\AlwAct.c lines 137–168 */
-/* addr: 0x0025afd0  size: 152 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 137
- *   +0x0004 -> line 141
- *   +0x0008 -> line 137
- *   +0x000c -> line 141
- *   +0x0018 -> line 143
- *   +0x0024 -> line 146
- *   +0x0028 -> line 145
- *   +0x002c -> line 147
- *   +0x0030 -> line 148
- *   +0x0040 -> line 149
- *   +0x0048 -> line 154
- *   +0x0050 -> line 155
- *   +0x0074 -> line 156
- *   +0x008c -> line 168
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vChangeDynamicAlwaysActiveState(HIE_tdstSuperObject_* hCharacter, unsigned char bNewState)
-{
-    char buffer[256];
-    unsigned char bFound;
-    tdstAlwaysActiveCharacter_* hCharNode;
-
-    bFound = 0;
-    for (hCharNode = g_stEngineStructure.hAlwaysActiveCharactersList.hFirstElementDyn; hCharNode != (tdstAlwaysActiveCharacter_*)0; hCharNode = hCharNode->hNextBrotherDyn)
-    {
-        if (hCharNode->hAlwActSuperObject == hCharacter)
-        {
-            bFound = 1;
-            hCharNode->bDynamicAlwaysActive = bNewState;
-        }
-    }
-    if (!bFound)
-    {
-        GROS_ANTIBUG_DE_LA_MORT_QUI_TUE = 1;
-        sprintf(buffer, "[%s]:fn_vChangeDynamicAlwaysActiveState :\n*** The object is not in the Always Active List ! ***\n",
-                fn_szFindModelTypeNameOfModelType(hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->otObjectModelType));
-        printf("Message called :\n %s\n%s\n", "AlwaysActive Error", buffer);
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\AlwAct.c lines 125–132 */
-/* addr: 0x0025b070  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 125
- *   +0x0008 -> line 127
- *   +0x0010 -> line 128
- *   +0x0030 -> line 132
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstAlwaysActiveCharacter_* fn_hGetNextAlwaysActiveCharNode(tdstAlwaysActiveCharacter_* hCharNode, unsigned char bTestDynamicAlwaysActive)
-{
-    tdstAlwaysActiveCharacter_* hNextCharNode;
-
-    hNextCharNode = hCharNode->hNextBrotherDyn;
-    if (bTestDynamicAlwaysActive)
-        while (hNextCharNode && !hNextCharNode->bDynamicAlwaysActive)
-            hNextCharNode = hNextCharNode->hNextBrotherDyn;
-    return hNextCharNode;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\AlwAct.c lines 117–118 */
-/* addr: 0x0025b0b0  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 117
- *   +0x0004 -> line 118
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstAlwaysActiveCharacter_* fn_hGetFirstAlwaysActiveCharNode(void)
-{
-    return g_stEngineStructure.hAlwaysActiveCharactersList.hFirstElementDyn;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\AlwAct.c lines 103–113 */
-/* addr: 0x0025b0c0  size: 104 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 103
- *   +0x0024 -> line 105
- *   +0x0034 -> line 107
- *   +0x004c -> line 108
- *   +0x0050 -> line 109
- *   +0x005c -> line 110
- *   +0x0060 -> line 113
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned char fn_bGetIfCharacterIsInAlwaysActiveCharacterListAndDynamicallyActived(HIE_tdstSuperObject_* hCharacter)
-{
-    tdstAlwaysActiveCharacter_* hCharNode;
-    unsigned char bReturn;
-
-    bReturn = 0;
-    if ((unsigned char)((hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 0x40) ? 1 : 0))
-    {
-        for (hCharNode = g_stEngineStructure.hAlwaysActiveCharactersList.hFirstElementDyn; hCharNode; hCharNode = hCharNode->hNextBrotherDyn)
-        {
-            if (hCharNode->hAlwActSuperObject == hCharacter && hCharNode->bDynamicAlwaysActive == 1)
-                bReturn = 1;
-        }
-    }
-
-    return bReturn;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\AlwAct.c lines 95–96 */
-/* addr: 0x0025b130  size: 32 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 95
- *   +0x0018 -> line 96
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned char fn_bGetIfCharacterIsInAlwaysActiveCharacterList(HIE_tdstSuperObject_* hCharacter)
-{
-    unsigned char bReturn;
-    bReturn = 1;
-    bReturn = (hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 0x40) ? bReturn : 0;
-    return bReturn;
 }

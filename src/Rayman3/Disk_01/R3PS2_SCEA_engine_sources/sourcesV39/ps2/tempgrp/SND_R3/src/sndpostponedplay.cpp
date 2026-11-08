@@ -428,49 +428,6 @@ struct CActorModifiers {
     unsigned char m_bResultChanged; /* +0x20 */
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndpostponedplay.cpp lines 452–478 */
 /* addr: 0x001d0210  size: 312 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -515,13 +472,9 @@ struct CActorModifiers {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char PostponedPlay::fs_bIsPending(CExtraEventActor* pEActor)
-{
-    PostponedPlay* e;
-    for (e = ms_pFirst; e && e->m_pEActor != pEActor; e = e->m_pNext)
-        ;
-    return e != NULL;
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndpostponedplay.cpp lines 151–161 */
 /* addr: 0x001d0390  size: 52 bytes */
@@ -537,16 +490,6 @@ unsigned char PostponedPlay::fs_bIsPending(CExtraEventActor* pEActor)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PostponedPlay::fs_vEmpty(void)
-{
-    while (ms_pFirst) {
-        PostponedPlay* e = ms_pFirst;
-        ms_pFirst = e->m_pNext;
-        e->m_pNext = ms_pFree;
-        ms_pFree = e;
-    }
-    ms_pLast = 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndpostponedplay.cpp lines 127–142 */
 /* addr: 0x001d03d0  size: 204 bytes */
@@ -564,24 +507,6 @@ void PostponedPlay::fs_vEmpty(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char PostponedPlay::fs_bExecute(int s32_CmdId, const CUUID& roId, CExtraEventActor* pEActor)
-{
-    unsigned char bRet = 0;
-    PostponedPlay* e = ms_pFirst;
-
-    while (e)
-    {
-        if ((e->m_pEActor == pEActor) &&
-            (roId == e->m_pData->m_pTargetRes.__rf()->m_oId) &&
-            (e->m_s32LastCmd != 1))
-        {
-            e->m_s32LastCmd = s32_CmdId;
-            bRet = 1;
-        }
-        e = e->m_pNext;
-    }
-    return bRet;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndpostponedplay.cpp lines 114–122 */
 /* addr: 0x001d04a0  size: 68 bytes */
@@ -652,6 +577,42 @@ unsigned char PostponedPlay::fs_bIsSoundPlaying(usnd::CResData* po_ResData, CExt
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndpostponedplay.cpp lines 43–60 */
+/* addr: 0x001d0630  size: 304 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 43
+ *   +0x0030 -> line 47
+ *   +0x0044 -> line 49
+ *   +0x0058 -> line 50
+ *   +0x0060 -> line 54
+ *   +0x00fc -> line 57
+ *   +0x0100 -> line 59
+ *   +0x0104 -> line 57
+ *   +0x010c -> line 60
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+unsigned char PostponedPlay::fs_bPlay(const CEventResData& ro_EventResData, int s32_Handle, void (*pfn_Proc)(int), CExtraEventActor* pEActor)
+{
+    PostponedPlay* e;
+    unsigned char bRet = 1;
+
+    if (ms_uiCount < ms_uiMaxPlay)
+    {
+        bRet = pEActor->mfn_bPlay(ro_EventResData, s32_Handle, pfn_Proc);
+    }
+    else
+    {
+        e = ms_pFree; if (e) { PostponedPlay* pFirst = ms_pFirst; ms_pFree = e->m_pNext; e->m_pData = &ro_EventResData; e->m_pNext = pFirst; e->m_pPrev = NULL; e->m_pEActor = pEActor; e->m_s32Handle = s32_Handle; e->m_s32LastCmd = -1; e->m_pProc = pfn_Proc; } else { e = (PostponedPlay*)usnd_malloc(0x20); if (e) { e->f_vSet(ro_EventResData, s32_Handle, pfn_Proc, pEActor, ms_pFirst, NULL); } } e->m_u32EngineContext = g_bUseMarkersForNextRequest; if (ms_pFirst) ms_pFirst->m_pPrev = e; ms_pFirst = e; if (!ms_pLast) { ms_pLast = ms_pFirst; }
+    }
+
+    ms_uiCount++;
+
+    return bRet;
+}
+
 void PostponedPlay::fs_vSynchro(void)
 {
     PostponedPlay* e;
@@ -679,36 +640,40 @@ void PostponedPlay::fs_vSynchro(void)
     ms_uiCount = 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndpostponedplay.cpp lines 43–60 */
-/* addr: 0x001d0630  size: 304 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 43
- *   +0x0030 -> line 47
- *   +0x0044 -> line 49
- *   +0x0058 -> line 50
- *   +0x0060 -> line 54
- *   +0x00fc -> line 57
- *   +0x0100 -> line 59
- *   +0x0104 -> line 57
- *   +0x010c -> line 60
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned char PostponedPlay::fs_bPlay(const CEventResData& ro_EventResData, int s32_Handle, void (*pfn_Proc)(int), CExtraEventActor* pEActor)
+unsigned char PostponedPlay::fs_bExecute(int s32_CmdId, const CUUID& roId, CExtraEventActor* pEActor)
+{
+    unsigned char bRet = 0;
+    PostponedPlay* e = ms_pFirst;
+
+    while (e)
+    {
+        if ((e->m_pEActor == pEActor) &&
+            (roId == e->m_pData->m_pTargetRes.__rf()->m_oId) &&
+            (e->m_s32LastCmd != 1))
+        {
+            e->m_s32LastCmd = s32_CmdId;
+            bRet = 1;
+        }
+        e = e->m_pNext;
+    }
+    return bRet;
+}
+
+void PostponedPlay::fs_vEmpty(void)
+{
+    while (ms_pFirst) {
+        PostponedPlay* e = ms_pFirst;
+        ms_pFirst = e->m_pNext;
+        e->m_pNext = ms_pFree;
+        ms_pFree = e;
+    }
+    ms_pLast = 0;
+}
+
+unsigned char PostponedPlay::fs_bIsPending(CExtraEventActor* pEActor)
 {
     PostponedPlay* e;
-    unsigned char bRet = 1;
-
-    if (ms_uiCount < ms_uiMaxPlay)
-    {
-        bRet = pEActor->mfn_bPlay(ro_EventResData, s32_Handle, pfn_Proc);
-    }
-    else
-    {
-        e = ms_pFree; if (e) { PostponedPlay* pFirst = ms_pFirst; ms_pFree = e->m_pNext; e->m_pData = &ro_EventResData; e->m_pNext = pFirst; e->m_pPrev = NULL; e->m_pEActor = pEActor; e->m_s32Handle = s32_Handle; e->m_s32LastCmd = -1; e->m_pProc = pfn_Proc; } else { e = (PostponedPlay*)usnd_malloc(0x20); if (e) { e->f_vSet(ro_EventResData, s32_Handle, pfn_Proc, pEActor, ms_pFirst, NULL); } } e->m_u32EngineContext = g_bUseMarkersForNextRequest; if (ms_pFirst) ms_pFirst->m_pPrev = e; ms_pFirst = e; if (!ms_pLast) { ms_pLast = ms_pFirst; }
-    }
-
-    ms_uiCount++;
-
-    return bRet;
+    for (e = ms_pFirst; e && e->m_pEActor != pEActor; e = e->m_pNext)
+        ;
+    return e != NULL;
 }

@@ -67,6 +67,208 @@ struct MAT_tdstTransformation_ {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void MAT_fn_vZoom(MAT_tdstTransformation_* _hTransform, float _xZoomFactor);
+void MAT_fn_vNormQuatToMatrix(MTH4D_tdstMatrix_* _p_stMatrix, float _xX, float _xY, float _xZ, float _xW);
+void MAT_fn_vQuatToMatrix(MTH4D_tdstMatrix_* _p_stMatrix, float _xX, float _xY, float _xZ, float _xW);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\mat\matutils.c lines 178–211 */
+/* addr: 0x002fe660  size: 172 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 180
+ *   +0x0004 -> line 192
+ *   +0x0008 -> line 179
+ *   +0x000c -> line 178
+ *   +0x0010 -> line 190
+ *   +0x0014 -> line 182
+ *   +0x0018 -> line 185
+ *   +0x001c -> line 188
+ *   +0x0020 -> line 184
+ *   +0x0024 -> line 187
+ *   +0x0028 -> line 189
+ *   +0x002c -> line 192
+ *   +0x0034 -> line 183
+ *   +0x0038 -> line 186
+ *   +0x003c -> line 192
+ *   +0x0044 -> line 198
+ *   +0x0048 -> line 204
+ *   +0x004c -> line 198
+ *   +0x0050 -> line 204
+ *   +0x0054 -> line 193
+ *   +0x005c -> line 194
+ *   +0x0064 -> line 197
+ *   +0x0068 -> line 195
+ *   +0x006c -> line 197
+ *   +0x0070 -> line 198
+ *   +0x0074 -> line 199
+ *   +0x007c -> line 202
+ *   +0x0080 -> line 200
+ *   +0x0084 -> line 203
+ *   +0x0088 -> line 202
+ *   +0x008c -> line 203
+ *   +0x0090 -> line 204
+ *   +0x0094 -> line 205
+ *   +0x0098 -> line 207
+ *   +0x009c -> line 208
+ *   +0x00a0 -> line 209
+ *   +0x00a4 -> line 211
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\mat\matutils.c lines 112–160 */
+/* addr: 0x002fe710  size: 220 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 112
+ *   +0x0028 -> line 121
+ *   +0x002c -> line 122
+ *   +0x0030 -> line 129
+ *   +0x0034 -> line 120
+ *   +0x0038 -> line 123
+ *   +0x003c -> line 128
+ *   +0x0040 -> line 127
+ *   +0x0044 -> line 139
+ *   +0x0048 -> line 131
+ *   +0x004c -> line 134
+ *   +0x0050 -> line 137
+ *   +0x0054 -> line 141
+ *   +0x0060 -> line 153
+ *   +0x0064 -> line 132
+ *   +0x0068 -> line 135
+ *   +0x006c -> line 147
+ *   +0x0070 -> line 136
+ *   +0x0074 -> line 133
+ *   +0x0078 -> line 138
+ *   +0x007c -> line 142
+ *   +0x0084 -> line 143
+ *   +0x008c -> line 146
+ *   +0x0090 -> line 144
+ *   +0x0094 -> line 146
+ *   +0x0098 -> line 147
+ *   +0x00a0 -> line 148
+ *   +0x00a8 -> line 151
+ *   +0x00ac -> line 149
+ *   +0x00b0 -> line 152
+ *   +0x00b4 -> line 151
+ *   +0x00b8 -> line 153
+ *   +0x00bc -> line 152
+ *   +0x00c0 -> line 153
+ *   +0x00c4 -> line 154
+ *   +0x00c8 -> line 156
+ *   +0x00cc -> line 157
+ *   +0x00d0 -> line 158
+ *   +0x00d4 -> line 160
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void MAT_fn_vQuatToMatrix(MTH4D_tdstMatrix_* _p_stMatrix, float _xX, float _xY, float _xZ, float _xW)
+{
+    float xXs;
+    float xYs;
+    float xZs;
+    float xWx;
+    float xWy;
+    float xWz;
+    float xXx;
+    float xXy;
+    float xXz;
+    float xYy;
+    float xYz;
+    float xZz;
+    float xInvNorm;
+
+    /* sqrt.s has no C form under the baseline (MWCC calls sqrtf). */
+    xInvNorm = (_xX * _xX + _xY * _xY) + (_xZ * _xZ + _xW * _xW); asm { sqrt.s xInvNorm, xInvNorm } xInvNorm = 1.0f / xInvNorm;
+    _xX = _xX * xInvNorm;
+    _xY = _xY * xInvNorm;
+    _xZ = _xZ * xInvNorm;
+    _xW = _xW * xInvNorm;
+    xXs = _xX + _xX;
+    xYs = _xY + _xY;
+    xZs = _xZ + _xZ;
+    xWx = _xW * xXs;
+    xWy = _xW * xYs;
+    xWz = _xW * xZs;
+    xXx = _xX * xXs;
+    xXy = _xX * xYs;
+    xXz = _xX * xZs;
+    xYy = _xY * xYs;
+    xYz = _xY * xZs;
+    xZz = _xZ * xZs;
+
+    _p_stMatrix->stCol_0.xX = 1.0f - (xYy + xZz);
+    _p_stMatrix->stCol_1.xX = xXy + xWz;
+    _p_stMatrix->stCol_2.xX = xXz - xWy;
+    _p_stMatrix->stCol_3.xX = 0.0f;
+
+    _p_stMatrix->stCol_0.xY = xXy - xWz;
+    _p_stMatrix->stCol_1.xY = 1.0f - (xXx + xZz);
+    _p_stMatrix->stCol_2.xY = xYz + xWx;
+    _p_stMatrix->stCol_3.xY = 0.0f;
+
+    _p_stMatrix->stCol_0.xZ = xXz + xWy;
+    _p_stMatrix->stCol_1.xZ = xYz - xWx;
+    _p_stMatrix->stCol_2.xZ = 1.0f - (xXx + xYy);
+    _p_stMatrix->stCol_3.xZ = 0.0f;
+
+    _p_stMatrix->stCol_0.xW = 0.0f;
+    _p_stMatrix->stCol_1.xW = 0.0f;
+    _p_stMatrix->stCol_2.xW = 0.0f;
+    _p_stMatrix->stCol_3.xW = 1.0f;
+}
+
+void MAT_fn_vNormQuatToMatrix(MTH4D_tdstMatrix_* _p_stMatrix, float _xX, float _xY, float _xZ, float _xW)
+{
+    float xXs;
+    float xYs;
+    float xZs;
+    float xWx;
+    float xWy;
+    float xWz;
+    float xXx;
+    float xXy;
+    float xXz;
+    float xYy;
+    float xYz;
+    float xZz;
+
+    xXs = _xX + _xX;
+    xYs = _xY + _xY;
+    xZs = _xZ + _xZ;
+    xWx = _xW * xXs;
+    xWy = _xW * xYs;
+    xWz = _xW * xZs;
+    xXx = _xX * xXs;
+    xXy = _xX * xYs;
+    xXz = _xX * xZs;
+    xYy = _xY * xYs;
+    xYz = _xY * xZs;
+    xZz = _xZ * xZs;
+
+    _p_stMatrix->stCol_0.xX = 1.0f - (xYy + xZz);
+    _p_stMatrix->stCol_1.xX = xXy + xWz;
+    _p_stMatrix->stCol_2.xX = xXz - xWy;
+    _p_stMatrix->stCol_3.xX = 0.0f;
+
+    _p_stMatrix->stCol_0.xY = xXy - xWz;
+    _p_stMatrix->stCol_1.xY = 1.0f - (xXx + xZz);
+    _p_stMatrix->stCol_2.xY = xYz + xWx;
+    _p_stMatrix->stCol_3.xY = 0.0f;
+
+    _p_stMatrix->stCol_0.xZ = xXz + xWy;
+    _p_stMatrix->stCol_1.xZ = xYz - xWx;
+    _p_stMatrix->stCol_2.xZ = 1.0f - (xXx + xYy);
+    _p_stMatrix->stCol_3.xZ = 0.0f;
+
+    _p_stMatrix->stCol_0.xW = 0.0f;
+    _p_stMatrix->stCol_1.xW = 0.0f;
+    _p_stMatrix->stCol_2.xW = 0.0f;
+    _p_stMatrix->stCol_3.xW = 1.0f;
+}
+
 void MAT_fn_vZoom(MAT_tdstTransformation_* _hTransform, float _xZoomFactor)
 {
     MTH4D_tdstMatrix_* p_stMatrix;
@@ -134,197 +336,4 @@ void MAT_fn_vZoom(MAT_tdstTransformation_* _hTransform, float _xZoomFactor)
         case MAT_eTransform_ComplexRotationScale:
             break;
     }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\mat\matutils.c lines 178–211 */
-/* addr: 0x002fe660  size: 172 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 180
- *   +0x0004 -> line 192
- *   +0x0008 -> line 179
- *   +0x000c -> line 178
- *   +0x0010 -> line 190
- *   +0x0014 -> line 182
- *   +0x0018 -> line 185
- *   +0x001c -> line 188
- *   +0x0020 -> line 184
- *   +0x0024 -> line 187
- *   +0x0028 -> line 189
- *   +0x002c -> line 192
- *   +0x0034 -> line 183
- *   +0x0038 -> line 186
- *   +0x003c -> line 192
- *   +0x0044 -> line 198
- *   +0x0048 -> line 204
- *   +0x004c -> line 198
- *   +0x0050 -> line 204
- *   +0x0054 -> line 193
- *   +0x005c -> line 194
- *   +0x0064 -> line 197
- *   +0x0068 -> line 195
- *   +0x006c -> line 197
- *   +0x0070 -> line 198
- *   +0x0074 -> line 199
- *   +0x007c -> line 202
- *   +0x0080 -> line 200
- *   +0x0084 -> line 203
- *   +0x0088 -> line 202
- *   +0x008c -> line 203
- *   +0x0090 -> line 204
- *   +0x0094 -> line 205
- *   +0x0098 -> line 207
- *   +0x009c -> line 208
- *   +0x00a0 -> line 209
- *   +0x00a4 -> line 211
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void MAT_fn_vNormQuatToMatrix(MTH4D_tdstMatrix_* _p_stMatrix, float _xX, float _xY, float _xZ, float _xW)
-{
-    float xXs;
-    float xYs;
-    float xZs;
-    float xWx;
-    float xWy;
-    float xWz;
-    float xXx;
-    float xXy;
-    float xXz;
-    float xYy;
-    float xYz;
-    float xZz;
-
-    xXs = _xX + _xX;
-    xYs = _xY + _xY;
-    xZs = _xZ + _xZ;
-    xWx = _xW * xXs;
-    xWy = _xW * xYs;
-    xWz = _xW * xZs;
-    xXx = _xX * xXs;
-    xXy = _xX * xYs;
-    xXz = _xX * xZs;
-    xYy = _xY * xYs;
-    xYz = _xY * xZs;
-    xZz = _xZ * xZs;
-
-    _p_stMatrix->stCol_0.xX = 1.0f - (xYy + xZz);
-    _p_stMatrix->stCol_1.xX = xXy + xWz;
-    _p_stMatrix->stCol_2.xX = xXz - xWy;
-    _p_stMatrix->stCol_3.xX = 0.0f;
-
-    _p_stMatrix->stCol_0.xY = xXy - xWz;
-    _p_stMatrix->stCol_1.xY = 1.0f - (xXx + xZz);
-    _p_stMatrix->stCol_2.xY = xYz + xWx;
-    _p_stMatrix->stCol_3.xY = 0.0f;
-
-    _p_stMatrix->stCol_0.xZ = xXz + xWy;
-    _p_stMatrix->stCol_1.xZ = xYz - xWx;
-    _p_stMatrix->stCol_2.xZ = 1.0f - (xXx + xYy);
-    _p_stMatrix->stCol_3.xZ = 0.0f;
-
-    _p_stMatrix->stCol_0.xW = 0.0f;
-    _p_stMatrix->stCol_1.xW = 0.0f;
-    _p_stMatrix->stCol_2.xW = 0.0f;
-    _p_stMatrix->stCol_3.xW = 1.0f;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\mat\matutils.c lines 112–160 */
-/* addr: 0x002fe710  size: 220 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 112
- *   +0x0028 -> line 121
- *   +0x002c -> line 122
- *   +0x0030 -> line 129
- *   +0x0034 -> line 120
- *   +0x0038 -> line 123
- *   +0x003c -> line 128
- *   +0x0040 -> line 127
- *   +0x0044 -> line 139
- *   +0x0048 -> line 131
- *   +0x004c -> line 134
- *   +0x0050 -> line 137
- *   +0x0054 -> line 141
- *   +0x0060 -> line 153
- *   +0x0064 -> line 132
- *   +0x0068 -> line 135
- *   +0x006c -> line 147
- *   +0x0070 -> line 136
- *   +0x0074 -> line 133
- *   +0x0078 -> line 138
- *   +0x007c -> line 142
- *   +0x0084 -> line 143
- *   +0x008c -> line 146
- *   +0x0090 -> line 144
- *   +0x0094 -> line 146
- *   +0x0098 -> line 147
- *   +0x00a0 -> line 148
- *   +0x00a8 -> line 151
- *   +0x00ac -> line 149
- *   +0x00b0 -> line 152
- *   +0x00b4 -> line 151
- *   +0x00b8 -> line 153
- *   +0x00bc -> line 152
- *   +0x00c0 -> line 153
- *   +0x00c4 -> line 154
- *   +0x00c8 -> line 156
- *   +0x00cc -> line 157
- *   +0x00d0 -> line 158
- *   +0x00d4 -> line 160
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void MAT_fn_vQuatToMatrix(MTH4D_tdstMatrix_* _p_stMatrix, float _xX, float _xY, float _xZ, float _xW)
-{
-    float xXs;
-    float xYs;
-    float xZs;
-    float xWx;
-    float xWy;
-    float xWz;
-    float xXx;
-    float xXy;
-    float xXz;
-    float xYy;
-    float xYz;
-    float xZz;
-    float xInvNorm;
-
-    /* sqrt.s has no C form under the baseline (MWCC calls sqrtf). */
-    xInvNorm = (_xX * _xX + _xY * _xY) + (_xZ * _xZ + _xW * _xW); asm { sqrt.s xInvNorm, xInvNorm } xInvNorm = 1.0f / xInvNorm;
-    _xX = _xX * xInvNorm;
-    _xY = _xY * xInvNorm;
-    _xZ = _xZ * xInvNorm;
-    _xW = _xW * xInvNorm;
-    xXs = _xX + _xX;
-    xYs = _xY + _xY;
-    xZs = _xZ + _xZ;
-    xWx = _xW * xXs;
-    xWy = _xW * xYs;
-    xWz = _xW * xZs;
-    xXx = _xX * xXs;
-    xXy = _xX * xYs;
-    xXz = _xX * xZs;
-    xYy = _xY * xYs;
-    xYz = _xY * xZs;
-    xZz = _xZ * xZs;
-
-    _p_stMatrix->stCol_0.xX = 1.0f - (xYy + xZz);
-    _p_stMatrix->stCol_1.xX = xXy + xWz;
-    _p_stMatrix->stCol_2.xX = xXz - xWy;
-    _p_stMatrix->stCol_3.xX = 0.0f;
-
-    _p_stMatrix->stCol_0.xY = xXy - xWz;
-    _p_stMatrix->stCol_1.xY = 1.0f - (xXx + xZz);
-    _p_stMatrix->stCol_2.xY = xYz + xWx;
-    _p_stMatrix->stCol_3.xY = 0.0f;
-
-    _p_stMatrix->stCol_0.xZ = xXz + xWy;
-    _p_stMatrix->stCol_1.xZ = xYz - xWx;
-    _p_stMatrix->stCol_2.xZ = 1.0f - (xXx + xYy);
-    _p_stMatrix->stCol_3.xZ = 0.0f;
-
-    _p_stMatrix->stCol_0.xW = 0.0f;
-    _p_stMatrix->stCol_1.xW = 0.0f;
-    _p_stMatrix->stCol_2.xW = 0.0f;
-    _p_stMatrix->stCol_3.xW = 1.0f;
 }

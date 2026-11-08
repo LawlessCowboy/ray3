@@ -11,14 +11,16 @@ extern "C" void HMU_fn_vSndFree(void**);
 
 #pragma exceptions off
 
-extern "C" void usnd_memset(void* pvDest, unsigned char uiVal, unsigned int uiSize)
-{
-    memset(pvDest, uiVal & 0xFF, uiSize);
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+extern "C" void usnd_memset(void* pvDest, unsigned char uiVal, unsigned int uiSize);
+extern "C" int usnd_memcmp(void* pvDest, void* pvSrc, unsigned int uiSize);
+extern "C" void usnd_memcpy(void* pvDest, void* pvSrc, unsigned int uiSize);
+extern "C" void usnd_free(void* pv);
 
-extern "C" int usnd_memcmp(void* pvDest, void* pvSrc, unsigned int uiSize)
+extern "C" void usnd_free(void* pv)
 {
-    return memcmp(pvDest, pvSrc, uiSize);
+    HMU_fn_vSndFree(&pv);
 }
 
 extern "C" void usnd_memcpy(void* pvDest, void* pvSrc, unsigned int uiSize)
@@ -26,7 +28,12 @@ extern "C" void usnd_memcpy(void* pvDest, void* pvSrc, unsigned int uiSize)
     memcpy(pvDest, pvSrc, uiSize);
 }
 
-extern "C" void usnd_free(void* pv)
+extern "C" int usnd_memcmp(void* pvDest, void* pvSrc, unsigned int uiSize)
 {
-    HMU_fn_vSndFree(&pv);
+    return memcmp(pvDest, pvSrc, uiSize);
+}
+
+extern "C" void usnd_memset(void* pvDest, unsigned char uiVal, unsigned int uiSize)
+{
+    memset(pvDest, uiVal & 0xFF, uiSize);
 }

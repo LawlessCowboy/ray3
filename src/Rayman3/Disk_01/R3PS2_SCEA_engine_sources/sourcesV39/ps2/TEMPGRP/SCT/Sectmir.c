@@ -470,10 +470,15 @@ char GLI_cGlobalFogIsOn;
  * Sectdraw.c's, consistent with Sectdraw.c including this file. */
 static int bNotCreateDefaultMaterial;
 
-void SCT_fn_vInitMaterialForGoThrough(void)
-{
-    bNotCreateDefaultMaterial = 1;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void SCT_fn_vInitMaterialForGoThrough(void);
+void SCT_fn_vInitMirrorFlagForAllSectors(HIE_tdstSuperObject_* _hStaticRoot);
+void SCT_fn_vDoPreClippingForPortal(HIE_tdstSuperObject_* _hSector);
+void SCT_fn_vPreClippingForOnePortal(HIE_tdstSuperObject_* _hIPOMirror);
+void SCT_fn_vSendSectorWhereIAmToViewportWithMirror(MTH3D_tdstVector_* _p_stAbsolutePositionOfCamera, short _hDevice, short _hViewport, GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, int _lDrawMask);
+int fn_iZCompare(void* arg1, void* arg2);
+void SCT_fn_vFindAllMirrorsInVisibleSector(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, HIE_tdstSuperObject_** p_hHandleOfMirror, GEO_tdstGeometricObject_** p_hHandleOfGometricMirror, HIE_tdstSuperObject_** p_hSectorOfMirror, short* p_shNbOfMirrors);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectmir.c lines 952–964 */
 /* addr: 0x0031a960  size: 172 bytes */
@@ -493,28 +498,6 @@ unsigned char HIE_fn_bFindMirrorInHierarchy(HIE_tdstSuperObject_* hSO);
 void SCT_fn_vDoPreClippingForPortal(HIE_tdstSuperObject_* _hSector);
 void SCT_fn_vPreClippingForOnePortal(HIE_tdstSuperObject_* _hIPOMirror);
 
-void SCT_fn_vInitMirrorFlagForAllSectors(HIE_tdstSuperObject_* _hStaticRoot)
-{
-    HIE_tdstSuperObject_* hSector;
-
-    for (hSector = _hStaticRoot->hFirstElementDyn; hSector; hSector = hSector->hNextBrotherDyn)
-    {
-        if (HIE_fn_bFindMirrorInHierarchy(hSector))
-        {
-            HIE_tdstSuperObject_* hChild;
-
-            hSector->lDrawModeMask &= ~0x10000000;
-            for (hChild = hSector->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn)
-            {
-                if (hChild->ulTypeOfLinkedObject & 0x40)
-                    SCT_fn_vPreClippingForOnePortal(hChild);
-                else
-                    SCT_fn_vDoPreClippingForPortal(hChild);
-            }
-        }
-    }
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectmir.c lines 932–943 */
 /* addr: 0x0031aa10  size: 172 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -528,30 +511,6 @@ void SCT_fn_vInitMirrorFlagForAllSectors(HIE_tdstSuperObject_* _hStaticRoot)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SCT_fn_vDoPreClippingForPortal(HIE_tdstSuperObject_* _hSector)
-{
-    HIE_tdstSuperObject_* hChild;
-
-    for (hChild = _hSector->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn)
-    {
-        if (hChild->ulTypeOfLinkedObject & 0x40)
-        {
-            SCT_fn_vPreClippingForOnePortal(hChild);
-        }
-        else
-        {
-            HIE_tdstSuperObject_* hSubChild;
-
-            for (hSubChild = hChild->hFirstElementDyn; hSubChild; hSubChild = hSubChild->hNextBrotherDyn)
-            {
-                if (hSubChild->ulTypeOfLinkedObject & 0x40)
-                    SCT_fn_vPreClippingForOnePortal(hSubChild);
-                else
-                    SCT_fn_vDoPreClippingForPortal(hSubChild);
-            }
-        }
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectmir.c lines 874–929 */
 /* addr: 0x0031aac0  size: 684 bytes */
@@ -594,26 +553,6 @@ void SCT_fn_vDoPreClippingForPortal(HIE_tdstSuperObject_* _hSector)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SCT_fn_vPreClippingForOnePortal(HIE_tdstSuperObject_* _hIPOMirror)
-{
-    short idxPt3;
-    short idxPt2;
-    short idxPt1;
-    short xNbFaces;
-    short k;
-    short i;
-    MTH3D_tdstVector_ stNormal;
-    MTH3D_tdstVector_ stPosCam;
-    MTH3D_tdstVector_ stVector;
-    MTH3D_tdstVector_ stPoint;
-    MAT_tdstTransformation_ stTransMatrix;
-    GEO_tdstGeometricObject_* p_stObject;
-    PO_tdstPhysicalObject_* hPO;
-    HIE_tdstSuperObject_* hSprObjPortalSector;
-    HIE_tdstSuperObject_* hChild;
-    HIE_tdstSuperObject_* hPortalCamera;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectmir.c lines 302–868 */
 /* addr: 0x0031ad70  size: 4444 bytes */
@@ -852,6 +791,63 @@ void SCT_fn_vPreClippingForOnePortal(HIE_tdstSuperObject_* _hIPOMirror)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectmir.c lines 279–280 */
+/* addr: 0x0031bed0  size: 28 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 279
+ *   +0x0014 -> line 280
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectmir.c lines 162–235 */
+/* addr: 0x0031bef0  size: 396 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 162
+ *   +0x0040 -> line 173
+ *   +0x0050 -> line 184
+ *   +0x0064 -> line 186
+ *   +0x0080 -> line 198
+ *   +0x008c -> line 201
+ *   +0x0090 -> line 202
+ *   +0x0094 -> line 201
+ *   +0x0098 -> line 202
+ *   +0x009c -> line 201
+ *   +0x00a0 -> line 202
+ *   +0x00b8 -> line 208
+ *   +0x00c8 -> line 213
+ *   +0x00e0 -> line 215
+ *   +0x00f8 -> line 229
+ *   +0x0108 -> line 232
+ *   +0x0110 -> line 233
+ *   +0x0118 -> line 232
+ *   +0x011c -> line 233
+ *   +0x0120 -> line 232
+ *   +0x0124 -> line 233
+ *   +0x0140 -> line 234
+ *   +0x0160 -> line 235
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void SCT_fn_vFindAllMirrorsInVisibleSector(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, HIE_tdstSuperObject_** p_hHandleOfMirror, GEO_tdstGeometricObject_** p_hHandleOfGometricMirror, HIE_tdstSuperObject_** p_hSectorOfMirror, short* p_shNbOfMirrors)
+{
+    short shTempNbOfMirrors;
+    short i;
+    short xI;
+    SECT_tdstListOfSOSectorsInGraphicInteraction_* hGraphicElement;
+    /* TODO: decompile from asm/... */
+}
+
+int fn_iZCompare(void* arg1, void* arg2)
+{
+    float x;
+    x = ((MTH3D_tdstVector_*)arg2)->xZ -
+        ((MTH3D_tdstVector_*)arg1)->xZ;
+    return x;
+}
+
 void SCT_fn_vSendSectorWhereIAmToViewportWithMirror(MTH3D_tdstVector_* _p_stAbsolutePositionOfCamera, short _hDevice, short _hViewport, GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, int _lDrawMask)
 {
     float xNorm;
@@ -908,56 +904,75 @@ void SCT_fn_vSendSectorWhereIAmToViewportWithMirror(MTH3D_tdstVector_* _p_stAbso
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectmir.c lines 279–280 */
-/* addr: 0x0031bed0  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 279
- *   +0x0014 -> line 280
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int fn_iZCompare(void* arg1, void* arg2)
+void SCT_fn_vPreClippingForOnePortal(HIE_tdstSuperObject_* _hIPOMirror)
 {
-    float x;
-    x = ((MTH3D_tdstVector_*)arg2)->xZ -
-        ((MTH3D_tdstVector_*)arg1)->xZ;
-    return x;
+    short idxPt3;
+    short idxPt2;
+    short idxPt1;
+    short xNbFaces;
+    short k;
+    short i;
+    MTH3D_tdstVector_ stNormal;
+    MTH3D_tdstVector_ stPosCam;
+    MTH3D_tdstVector_ stVector;
+    MTH3D_tdstVector_ stPoint;
+    MAT_tdstTransformation_ stTransMatrix;
+    GEO_tdstGeometricObject_* p_stObject;
+    PO_tdstPhysicalObject_* hPO;
+    HIE_tdstSuperObject_* hSprObjPortalSector;
+    HIE_tdstSuperObject_* hChild;
+    HIE_tdstSuperObject_* hPortalCamera;
+    /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectmir.c lines 162–235 */
-/* addr: 0x0031bef0  size: 396 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 162
- *   +0x0040 -> line 173
- *   +0x0050 -> line 184
- *   +0x0064 -> line 186
- *   +0x0080 -> line 198
- *   +0x008c -> line 201
- *   +0x0090 -> line 202
- *   +0x0094 -> line 201
- *   +0x0098 -> line 202
- *   +0x009c -> line 201
- *   +0x00a0 -> line 202
- *   +0x00b8 -> line 208
- *   +0x00c8 -> line 213
- *   +0x00e0 -> line 215
- *   +0x00f8 -> line 229
- *   +0x0108 -> line 232
- *   +0x0110 -> line 233
- *   +0x0118 -> line 232
- *   +0x011c -> line 233
- *   +0x0120 -> line 232
- *   +0x0124 -> line 233
- *   +0x0140 -> line 234
- *   +0x0160 -> line 235
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void SCT_fn_vFindAllMirrorsInVisibleSector(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, HIE_tdstSuperObject_** p_hHandleOfMirror, GEO_tdstGeometricObject_** p_hHandleOfGometricMirror, HIE_tdstSuperObject_** p_hSectorOfMirror, short* p_shNbOfMirrors)
+void SCT_fn_vDoPreClippingForPortal(HIE_tdstSuperObject_* _hSector)
 {
-    short shTempNbOfMirrors;
-    short i;
-    short xI;
-    SECT_tdstListOfSOSectorsInGraphicInteraction_* hGraphicElement;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hChild;
+
+    for (hChild = _hSector->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn)
+    {
+        if (hChild->ulTypeOfLinkedObject & 0x40)
+        {
+            SCT_fn_vPreClippingForOnePortal(hChild);
+        }
+        else
+        {
+            HIE_tdstSuperObject_* hSubChild;
+
+            for (hSubChild = hChild->hFirstElementDyn; hSubChild; hSubChild = hSubChild->hNextBrotherDyn)
+            {
+                if (hSubChild->ulTypeOfLinkedObject & 0x40)
+                    SCT_fn_vPreClippingForOnePortal(hSubChild);
+                else
+                    SCT_fn_vDoPreClippingForPortal(hSubChild);
+            }
+        }
+    }
+}
+
+void SCT_fn_vInitMirrorFlagForAllSectors(HIE_tdstSuperObject_* _hStaticRoot)
+{
+    HIE_tdstSuperObject_* hSector;
+
+    for (hSector = _hStaticRoot->hFirstElementDyn; hSector; hSector = hSector->hNextBrotherDyn)
+    {
+        if (HIE_fn_bFindMirrorInHierarchy(hSector))
+        {
+            HIE_tdstSuperObject_* hChild;
+
+            hSector->lDrawModeMask &= ~0x10000000;
+            for (hChild = hSector->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn)
+            {
+                if (hChild->ulTypeOfLinkedObject & 0x40)
+                    SCT_fn_vPreClippingForOnePortal(hChild);
+                else
+                    SCT_fn_vDoPreClippingForPortal(hChild);
+            }
+        }
+    }
+}
+
+void SCT_fn_vInitMaterialForGoThrough(void)
+{
+    bNotCreateDefaultMaterial = 1;
 }

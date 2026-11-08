@@ -103,52 +103,10 @@ unsigned char g_ucDisplayActivatedGendoors;
 tdstEngineStructure_ g_stEngineStructure;
 tdst_EntryActions_ g_st_3DOS_EntryActions;
 
-void fn_vLastDesinitEngine(void)
-{
-    GAM_fn_vSetEngineInFixMode();
-
-
-
-
-
-    GAM_fn_vDestroyGameDeviceAndViewPorts();
-
-
-
-
-
-
-    IPT_fn_vDesinitInput();
-
-
-
-
-
-
-
-
-
-
-
-
-
-    SND_fn_bDesInitDataLoadSnd();
-    SND_fn_iDesInitSound();
-
-
-
-
-
-
-    fn_vLastDesinitFamilyStructure();
-
-
-    DEMO_fn_vDesInitGame();
-
-
-
-
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void fn_vLastDesinitEngine(void);
+void fn_vEngineReadInput(void);
 
 void fn_vEngineReadInput(void)
 {
@@ -158,4 +116,21 @@ void fn_vEngineReadInput(void)
         IPT_fn_vReadInput(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
         fn_vAnalyse3DOSSpecialInputActions();
     }
+}
+
+void fn_vLastDesinitEngine(void)
+{
+    GAM_fn_vSetEngineInFixMode();
+
+    GAM_fn_vDestroyGameDeviceAndViewPorts();
+
+    IPT_fn_vDesinitInput();
+
+    SND_fn_bDesInitDataLoadSnd();
+    SND_fn_iDesInitSound();
+
+    fn_vLastDesinitFamilyStructure();
+
+    DEMO_fn_vDesInitGame();
+
 }

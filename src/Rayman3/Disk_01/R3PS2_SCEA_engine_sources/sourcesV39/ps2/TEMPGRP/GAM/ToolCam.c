@@ -1487,86 +1487,23 @@ struct tdstMSLight_ {
 tdstEngineStructure_ g_stEngineStructure;
 unsigned short g_DEMO_KeybTest;
 
-unsigned char fn_ucToTableElement(int _n)
-{
-    if (_n < 0x20)
-        _n = 0;
-    else if (_n >= 0x61 && _n < 0x7b)
-        _n -= 0x40;
-    else if (_n >= 0x41 && _n < 0x5b)
-        _n -= 0x20;
-    else if (_n >= 0xa0)
-        _n -= 0x40;
-    else
-        _n -= 0x20;
-
-
-    return (unsigned char)_n;
-}
-
-void CAM_vDisplayInfo(void)
-{
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+unsigned char fn_ucToTableElement(int _n);
+void CAM_vDisplayInfo(void);
+void CAM_fn_vCameraManagement(void);
+HIE_tdstSuperObject_* fn_hGetDebugCamera(int index);
+void CAM_fn_vActualizeAViewport(int _lViewport);
+void CAM_fn_vInvalidateViewports(void);
+int CAM_fn_bSuperObjectIsACamera(HIE_tdstSuperObject_* _h_SprObj);
+void CAM_fn_vInitCameras(void);
+void CAM_fn_vReInitCameras(void);
+void CAM_fn_vAssignCameraToAViewport(int _lViewportNumber, HIE_tdstSuperObject_* _hCamera);
 
 void fn_vTreatCameraHierarchy(HIE_tdstSuperObject_* hSuperObj, unsigned char bForcedActivity, tdstInternalStructurCineinfo_* hIntCineinfo);
 void CAM_fn_vActualizeAViewport(int _lViewport);
 
-void CAM_fn_vCameraManagement(void)
-{
-    tdstInternalStructurCineinfo_* hIntCineinfo;
-    HIE_tdstSuperObject_* hCamera;
-    tdstNodeCamera_* p_stNodeCamera;
-    int i;
-    tdstViewportManagement_* p_stViewport;
-
-    if (g_DEMO_KeybTest != 2)
-    {
-        p_stNodeCamera = g_stEngineStructure.hCameraList.hFirstElementDyn; i = 0; if (p_stNodeCamera)
-        {
-            do
-            {
-                if (p_stNodeCamera)
-                {
-                    hCamera = p_stNodeCamera->p_stSuperObjectCamera;
-                    if (hCamera->hLinkedObject.p_stCharacter->h_Cineinfo->ucVolIAFlags & 1) hIntCineinfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo->hWork; else hIntCineinfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo->hCurrent;
-                    if (hIntCineinfo->bIsActive || hIntCineinfo->eTypeOfViewport != CAM_e_NoViewport)
-                    {
-                        if (hIntCineinfo->eTypeOfViewport != CAM_e_NoViewport)
-                            fn_vTreatCameraHierarchy(hCamera, 1, hIntCineinfo);
-                        else
-                            fn_vTreatCameraHierarchy(hCamera, 0, hIntCineinfo);
-                    }
-                }
-                p_stNodeCamera = p_stNodeCamera->hNextBrotherDyn; i++; } while (p_stNodeCamera);
-        }
-    }
-
-    for (i = 3; i >= 0; i--)
-    {
-        if ((i >= 5) || (i < 0)) p_stViewport = NULL; else p_stViewport = &g_stEngineStructure.a_hViewportArray[i];
-        if (p_stViewport->bValid)
-            CAM_fn_vActualizeAViewport(i);
-    }
-}
-
 unsigned char CAM_fn_bCineInfoGetIsDebugCamera(tdstInternalStructurCineinfo_* _hIntCineinfo);
-
-HIE_tdstSuperObject_* fn_hGetDebugCamera(int index)
-{
-    tdstNodeCamera_* p_stNodeCamera;
-    int j;
-
-    j = 0;
-    for (p_stNodeCamera = g_stEngineStructure.hCameraList.hFirstElementDyn; p_stNodeCamera; p_stNodeCamera = p_stNodeCamera->hNextBrotherDyn)
-    {
-        if (CAM_fn_bCineInfoGetIsDebugCamera(p_stNodeCamera->p_stSuperObjectCamera->hLinkedObject.p_stCharacter->h_Cineinfo->hCurrent))
-            j++;
-        if (j == index)
-            return p_stNodeCamera ? p_stNodeCamera->p_stSuperObjectCamera : NULL;
-    }
-
-    return NULL;
-}
 
 void MAT_fn_vGetRotationVectors(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stVecI, MTH3D_tdstVector_* _p_stVecJ, MTH3D_tdstVector_* _p_stVecK);
 void MAT_fn_vSetRotationVectors(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stVecI, MTH3D_tdstVector_* _p_stVecJ, MTH3D_tdstVector_* _p_stVecK);
@@ -1580,6 +1517,132 @@ void GLI_fn_vSetCameraMirrorMode(GLI_tdstCamera_* p_stCam, unsigned char _bMirro
 void GLI_xAdjustCameraToViewport(short hDevice, short hViewport, GLI_tdstCamera_* p_stCam);
 void GEO_fn_vComputeCameraParametersForCulling(GLD_tdstViewportAttributes_* p_stVpt, float _xZFar);
 unsigned char CAM_fn_bGetMirrorFlag(tdstCineinfo_* _hCineinfo);
+
+unsigned char fn_bIsInFix(tdstEngineObject_* p_stObject);
+
+unsigned char fn_bLevelHasTransitionMemory(void);
+int fn_lGetTransitionBloc(void);
+void HMU_fn_vSetMemoriesInTransition2Mode(void);
+void HMU_fn_vSetMemoriesInTransition1Mode(void);
+void HMU_fn_vSetMemoriesInLevelMode(void);
+void CAM_fn_vLoadCameraConstants(void);
+void GAM_fn_vSetEngineInLevelMode(void);
+void CAM_fn_vReInitCameras(void);
+
+void CAM_fn_vAssignCameraToAViewport(int _lViewportNumber, HIE_tdstSuperObject_* _hCamera)
+{
+    tdstViewportManagement_* hViewport;
+
+    if ((_lViewportNumber >= 5) || (_lViewportNumber < 0))
+        hViewport = NULL;
+    else
+        hViewport = g_stEngineStructure.a_hViewportArray + _lViewportNumber;
+    hViewport->hCamera = _hCamera;
+    hViewport->bValid = 1;
+}
+
+void CAM_fn_vReInitCameras(void)
+{
+    int i;
+    int lViewport;
+    tdstViewportManagement_* p_stViewport;
+    tdstNodeCamera_* p_stNodeCamera;
+    tdstNodeCamera_* p_stNextNodeCamera;
+    HIE_tdstSuperObject_* hCamera;
+    tdstInternalStructurCineinfo_* hIntCineinfo;
+
+    for (i = 0; i <= 4; i++)
+    {
+        if ((i >= 5) || (i < 0)) p_stViewport = NULL; else p_stViewport = &g_stEngineStructure.a_hViewportArray[i];
+        p_stViewport->hTempCamera = NULL;
+        p_stViewport->bValid = 0;
+    }
+
+    p_stNodeCamera = g_stEngineStructure.hCameraList.hFirstElementDyn;
+    i = 0;
+    p_stNextNodeCamera = p_stNodeCamera ? p_stNodeCamera->hNextBrotherDyn : NULL;
+    if (p_stNodeCamera)
+    {
+        do
+        {
+            if (p_stNodeCamera)
+            {
+                hCamera = p_stNodeCamera->p_stSuperObjectCamera;
+                hIntCineinfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo->hInit;
+                if (hIntCineinfo->bIsActive && hIntCineinfo->eTypeOfViewport != CAM_e_NoViewport)
+                {
+                    lViewport = hIntCineinfo->eTypeOfViewport;
+                    if ((lViewport >= 5) || (lViewport < 0)) p_stViewport = NULL; else p_stViewport = &g_stEngineStructure.a_hViewportArray[lViewport];
+                    p_stViewport->hCamera = hCamera;
+                    p_stViewport->bValid = 1;
+                }
+            }
+            i++;
+            p_stNodeCamera = p_stNextNodeCamera;
+            p_stNextNodeCamera = p_stNodeCamera ? p_stNodeCamera->hNextBrotherDyn : NULL;
+        } while (p_stNodeCamera);
+    }
+}
+
+void CAM_fn_vInitCameras(void)
+{
+    int i;
+    float xAlphaX;
+    float xRatio;
+    tdstViewportManagement_* p_stViewport;
+
+    CAM_fn_vReInitCameras();
+    if (fn_bLevelHasTransitionMemory())
+    {
+        if (fn_lGetTransitionBloc() == 1)
+        {
+            HMU_fn_vSetMemoriesInTransition2Mode();
+        }
+        else
+        {
+            HMU_fn_vSetMemoriesInTransition1Mode();
+        }
+    }
+    for (i = 0; i <= 4; i++)
+    {
+        if ((i >= 5) || (i < 0)) p_stViewport = NULL; else p_stViewport = &g_stEngineStructure.a_hViewportArray[i];
+        GLI_xCreateCamera(&p_stViewport->p_stCamera, 0x67);
+        xAlphaX = 1.5f;
+        xRatio = 0.75f;
+        GLI_xSetCameraAspectAndRatio(p_stViewport->p_stCamera, xAlphaX, xRatio);
+        g_stEngineStructure.a_p_stGameViewportCamera[i] = p_stViewport->p_stCamera;
+        GLI_xSetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[i], p_stViewport->p_stCamera);
+    }
+    HMU_fn_vSetMemoriesInLevelMode();
+    CAM_fn_vLoadCameraConstants();
+    CAM_fn_vReInitCameras();
+    if (fn_bLevelHasTransitionMemory())
+        GAM_fn_vSetEngineInLevelMode();
+}
+
+int CAM_fn_bSuperObjectIsACamera(HIE_tdstSuperObject_* _h_SprObj)
+{
+    if (_h_SprObj->ulTypeOfLinkedObject != 2)
+        return 0;
+    {
+        int lNumberOfElementsDyn;
+        lNumberOfElementsDyn = _h_SprObj->hLinkedObject.p_stSuperObject->lNumberOfElementsDyn;
+        return (lNumberOfElementsDyn == 0) ^ 1;
+    }
+}
+
+void CAM_fn_vInvalidateViewports(void)
+{
+    int i;
+    tdstViewportManagement_* p_stViewport;
+
+    for (i = 3; i >= 0; i--)
+    {
+        if ((i >= 5) || (i < 0)) p_stViewport = NULL; else p_stViewport = &g_stEngineStructure.a_hViewportArray[i];
+        if (p_stViewport->hCamera && !fn_bIsInFix(p_stViewport->hCamera->ulTypeOfLinkedObject != 2 ? NULL : p_stViewport->hCamera->hLinkedObject.p_stCharacter))
+            p_stViewport->bValid = 0;
+    }
+}
 
 void CAM_fn_vActualizeAViewport(int _lViewport)
 {
@@ -1626,128 +1689,77 @@ void CAM_fn_vActualizeAViewport(int _lViewport)
     }
 }
 
-unsigned char fn_bIsInFix(tdstEngineObject_* p_stObject);
-
-void CAM_fn_vInvalidateViewports(void)
+HIE_tdstSuperObject_* fn_hGetDebugCamera(int index)
 {
+    tdstNodeCamera_* p_stNodeCamera;
+    int j;
+
+    j = 0;
+    for (p_stNodeCamera = g_stEngineStructure.hCameraList.hFirstElementDyn; p_stNodeCamera; p_stNodeCamera = p_stNodeCamera->hNextBrotherDyn)
+    {
+        if (CAM_fn_bCineInfoGetIsDebugCamera(p_stNodeCamera->p_stSuperObjectCamera->hLinkedObject.p_stCharacter->h_Cineinfo->hCurrent))
+            j++;
+        if (j == index)
+            return p_stNodeCamera ? p_stNodeCamera->p_stSuperObjectCamera : NULL;
+    }
+
+    return NULL;
+}
+
+void CAM_fn_vCameraManagement(void)
+{
+    tdstInternalStructurCineinfo_* hIntCineinfo;
+    HIE_tdstSuperObject_* hCamera;
+    tdstNodeCamera_* p_stNodeCamera;
     int i;
     tdstViewportManagement_* p_stViewport;
+
+    if (g_DEMO_KeybTest != 2)
+    {
+        p_stNodeCamera = g_stEngineStructure.hCameraList.hFirstElementDyn; i = 0; if (p_stNodeCamera)
+        {
+            do
+            {
+                if (p_stNodeCamera)
+                {
+                    hCamera = p_stNodeCamera->p_stSuperObjectCamera;
+                    if (hCamera->hLinkedObject.p_stCharacter->h_Cineinfo->ucVolIAFlags & 1) hIntCineinfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo->hWork; else hIntCineinfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo->hCurrent;
+                    if (hIntCineinfo->bIsActive || hIntCineinfo->eTypeOfViewport != CAM_e_NoViewport)
+                    {
+                        if (hIntCineinfo->eTypeOfViewport != CAM_e_NoViewport)
+                            fn_vTreatCameraHierarchy(hCamera, 1, hIntCineinfo);
+                        else
+                            fn_vTreatCameraHierarchy(hCamera, 0, hIntCineinfo);
+                    }
+                }
+                p_stNodeCamera = p_stNodeCamera->hNextBrotherDyn; i++; } while (p_stNodeCamera);
+        }
+    }
 
     for (i = 3; i >= 0; i--)
     {
         if ((i >= 5) || (i < 0)) p_stViewport = NULL; else p_stViewport = &g_stEngineStructure.a_hViewportArray[i];
-        if (p_stViewport->hCamera && !fn_bIsInFix(p_stViewport->hCamera->ulTypeOfLinkedObject != 2 ? NULL : p_stViewport->hCamera->hLinkedObject.p_stCharacter))
-            p_stViewport->bValid = 0;
+        if (p_stViewport->bValid)
+            CAM_fn_vActualizeAViewport(i);
     }
 }
 
-int CAM_fn_bSuperObjectIsACamera(HIE_tdstSuperObject_* _h_SprObj)
+void CAM_vDisplayInfo(void)
 {
-    if (_h_SprObj->ulTypeOfLinkedObject != 2)
-        return 0;
-    {
-        int lNumberOfElementsDyn;
-        lNumberOfElementsDyn = _h_SprObj->hLinkedObject.p_stSuperObject->lNumberOfElementsDyn;
-        return (lNumberOfElementsDyn == 0) ^ 1;
-    }
 }
 
-unsigned char fn_bLevelHasTransitionMemory(void);
-int fn_lGetTransitionBloc(void);
-void HMU_fn_vSetMemoriesInTransition2Mode(void);
-void HMU_fn_vSetMemoriesInTransition1Mode(void);
-void HMU_fn_vSetMemoriesInLevelMode(void);
-void CAM_fn_vLoadCameraConstants(void);
-void GAM_fn_vSetEngineInLevelMode(void);
-void CAM_fn_vReInitCameras(void);
-
-void CAM_fn_vInitCameras(void)
+unsigned char fn_ucToTableElement(int _n)
 {
-    int i;
-    float xAlphaX;
-    float xRatio;
-    tdstViewportManagement_* p_stViewport;
-
-    CAM_fn_vReInitCameras();
-    if (fn_bLevelHasTransitionMemory())
-    {
-        if (fn_lGetTransitionBloc() == 1)
-        {
-            HMU_fn_vSetMemoriesInTransition2Mode();
-        }
-        else
-        {
-            HMU_fn_vSetMemoriesInTransition1Mode();
-        }
-    }
-    for (i = 0; i <= 4; i++)
-    {
-        if ((i >= 5) || (i < 0)) p_stViewport = NULL; else p_stViewport = &g_stEngineStructure.a_hViewportArray[i];
-        GLI_xCreateCamera(&p_stViewport->p_stCamera, 0x67);
-        xAlphaX = 1.5f;
-        xRatio = 0.75f;
-        GLI_xSetCameraAspectAndRatio(p_stViewport->p_stCamera, xAlphaX, xRatio);
-        g_stEngineStructure.a_p_stGameViewportCamera[i] = p_stViewport->p_stCamera;
-        GLI_xSetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[i], p_stViewport->p_stCamera);
-    }
-    HMU_fn_vSetMemoriesInLevelMode();
-    CAM_fn_vLoadCameraConstants();
-    CAM_fn_vReInitCameras();
-    if (fn_bLevelHasTransitionMemory())
-        GAM_fn_vSetEngineInLevelMode();
-}
-
-void CAM_fn_vReInitCameras(void)
-{
-    int i;
-    int lViewport;
-    tdstViewportManagement_* p_stViewport;
-    tdstNodeCamera_* p_stNodeCamera;
-    tdstNodeCamera_* p_stNextNodeCamera;
-    HIE_tdstSuperObject_* hCamera;
-    tdstInternalStructurCineinfo_* hIntCineinfo;
-
-    for (i = 0; i <= 4; i++)
-    {
-        if ((i >= 5) || (i < 0)) p_stViewport = NULL; else p_stViewport = &g_stEngineStructure.a_hViewportArray[i];
-        p_stViewport->hTempCamera = NULL;
-        p_stViewport->bValid = 0;
-    }
-
-    p_stNodeCamera = g_stEngineStructure.hCameraList.hFirstElementDyn;
-    i = 0;
-    p_stNextNodeCamera = p_stNodeCamera ? p_stNodeCamera->hNextBrotherDyn : NULL;
-    if (p_stNodeCamera)
-    {
-        do
-        {
-            if (p_stNodeCamera)
-            {
-                hCamera = p_stNodeCamera->p_stSuperObjectCamera;
-                hIntCineinfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo->hInit;
-                if (hIntCineinfo->bIsActive && hIntCineinfo->eTypeOfViewport != CAM_e_NoViewport)
-                {
-                    lViewport = hIntCineinfo->eTypeOfViewport;
-                    if ((lViewport >= 5) || (lViewport < 0)) p_stViewport = NULL; else p_stViewport = &g_stEngineStructure.a_hViewportArray[lViewport];
-                    p_stViewport->hCamera = hCamera;
-                    p_stViewport->bValid = 1;
-                }
-            }
-            i++;
-            p_stNodeCamera = p_stNextNodeCamera;
-            p_stNextNodeCamera = p_stNodeCamera ? p_stNodeCamera->hNextBrotherDyn : NULL;
-        } while (p_stNodeCamera);
-    }
-}
-
-void CAM_fn_vAssignCameraToAViewport(int _lViewportNumber, HIE_tdstSuperObject_* _hCamera)
-{
-    tdstViewportManagement_* hViewport;
-
-    if ((_lViewportNumber >= 5) || (_lViewportNumber < 0))
-        hViewport = NULL;
+    if (_n < 0x20)
+        _n = 0;
+    else if (_n >= 0x61 && _n < 0x7b)
+        _n -= 0x40;
+    else if (_n >= 0x41 && _n < 0x5b)
+        _n -= 0x20;
+    else if (_n >= 0xa0)
+        _n -= 0x40;
     else
-        hViewport = g_stEngineStructure.a_hViewportArray + _lViewportNumber;
-    hViewport->hCamera = _hCamera;
-    hViewport->bValid = 1;
+        _n -= 0x20;
+
+    return (unsigned char)_n;
 }

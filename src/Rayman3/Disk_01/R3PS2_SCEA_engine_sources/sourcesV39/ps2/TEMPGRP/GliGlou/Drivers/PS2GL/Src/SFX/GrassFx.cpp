@@ -1376,92 +1376,6 @@ struct tagGScontext {
     signed char iRegs; /* +0x222c */
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 C_FxList GrassFx_g_List;
 C_FxList GrassFx_g_ListToDisplay;
 void* (*PS2glAllocator64)(unsigned int size);
@@ -1532,31 +1446,13 @@ extern "C" void PS2glLightfv(unsigned int light, unsigned int pname, float* para
 extern "C" void PS2glLighti(unsigned int light, unsigned int pname, int param);
 extern "C" void PS2glMaterialfv(unsigned int face, unsigned int pname, float* params);
 
-void GLI_vSetDummyLighting(void)
-{
-    float light_diffuse[4];
-    float light_direction[4];
-    /* Not original source, needs cleaning up: retail negates these at runtime (neg.s); debug lists only the two arrays. */
-    float x = 0.3f, y = 0.2f, z = -1.0f;
-
-    light_direction[0] = -x;
-    light_direction[1] = -y;
-    light_direction[2] = -z;
-    light_direction[3] = 0.0f;
-    light_diffuse[0] = 0.4f;
-    light_diffuse[1] = 0.4f;
-    light_diffuse[2] = 0.4f;
-    light_diffuse[3] = 1.0f;
-
-    PS2glLightfv(0x4000, 0x1200, light_ambient0);
-    PS2glLightfv(0x4000, 0x1201, light_diffuse);
-    PS2glLightfv(0x4000, 0x1202, light_specular0);
-    PS2glLighti(0x4000, 0x1205, 0x40);
-    PS2glLightfv(0x4000, 0x1203, light_direction);
-
-    ambientMaterial[0] = ambientMaterial[1] = ambientMaterial[2] = 0.1f;
-    PS2glMaterialfv(0x404, 0x1200, ambientMaterial);
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+extern "C" void GLI_vSetDummyLighting(void);
+extern "C" void GrassFx_vDesinit(void);
+extern "C" void GrassFx_vProcessAndDisplay(void);
+extern "C" void GrassFx_vAddEITToDisplay(GEO_tdstElementIndexedTriangles_* p_stEIT);
+extern "C" void GrassFx_vCreateEffectFromObjectAndEIT(GEO_tdstGeometricObject_* pObj, GEO_tdstElementIndexedTriangles_* p_stEIT);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\GrassFx.cpp lines 562–562 */
 /* addr: 0x002dc2c0  size: 8 bytes */
@@ -1565,10 +1461,6 @@ void GLI_vSetDummyLighting(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GrassFx_vDesinit(void)
-{
-    GrassFx_g_List.DeleteAll();
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\GrassFx.cpp lines 542–556 */
 /* addr: 0x002dc2d0  size: 88 bytes */
@@ -1587,23 +1479,7 @@ void GrassFx_vDesinit(void)
  */
 #pragma opt_loop_invariants off
 #pragma opt_strength_reduction off
-void GrassFx_vProcessAndDisplay(void)
-{
-    tdstBaseFxListElement_* p;
 
-    p = GrassFx_g_ListToDisplay.pFirst;
-    if (p == NULL)
-    {
-        return;
-    }
-    while (p)
-    {
-        ((C_GrassFx*)p->pFx)->Display();
-        p = p->pNext;
-    }
-
-    GrassFx_g_ListToDisplay.DeleteAllNoFree();
-}
 #pragma opt_loop_invariants reset
 #pragma opt_strength_reduction reset
 
@@ -1618,14 +1494,6 @@ void GrassFx_vProcessAndDisplay(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GrassFx_vAddEITToDisplay(GEO_tdstElementIndexedTriangles_* p_stEIT)
-{
-    C_GrassFx* p;
-    p = (C_GrassFx*)GrassFx_g_List.SearchElement(p_stEIT);
-    if (p) {
-        GrassFx_g_ListToDisplay.vAddElement((C_BaseFx*)p);
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\GrassFx.cpp lines 518–529 */
 /* addr: 0x002dc370  size: 268 bytes */
@@ -1657,20 +1525,6 @@ inline void C_GrassFx::Init(GEO_tdstElementIndexedTriangles_* p_stEIT, SDC_Verte
     GLI_vGetVertexPointersFromSDCStructure(m_pSDC, 0, &pVOrg, &pUV1, &pUV2, &pUVChrome, &pNormals);
     m_pVNew = (float (*)[4])PS2glAllocator64(m_NbVertices * 16);
     memcpy(m_pVNew, pVOrg, m_NbVertices * 16);
-}
-
-void GrassFx_vCreateEffectFromObjectAndEIT(GEO_tdstGeometricObject_* pObj, GEO_tdstElementIndexedTriangles_* p_stEIT)
-{
-    C_GrassFx* p;
-
-    if (GrassFx_g_List.SearchElement(p_stEIT))
-        return;
-
-    p = new C_GrassFx;
-
-    p->Init(p_stEIT, (SDC_VertexArrays_*)pObj->pSDC_Data);
-
-    GrassFx_g_List.vAddElement(p);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\GrassFx.cpp lines 209–503 */
@@ -1869,6 +1723,94 @@ inline void GrassFx_vMulMatrixByVector(float (*_pDst)[4], float* _pVec, float (*
 
 #pragma opt_loop_invariants off
 #pragma opt_strength_reduction off
+
+#pragma opt_loop_invariants reset
+#pragma opt_strength_reduction reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\GrassFx.cpp lines 147–205 */
+/* addr: 0x002dce40  size: 368 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 147
+ *   +0x0020 -> line 155
+ *   +0x0024 -> line 147
+ *   +0x0030 -> line 155
+ *   +0x0038 -> line 159
+ *   +0x0044 -> line 156
+ *   +0x0048 -> line 157
+ *   +0x004c -> line 159
+ *   +0x0054 -> line 160
+ *   +0x005c -> line 161
+ *   +0x0064 -> line 167
+ *   +0x0088 -> line 170
+ *   +0x0098 -> line 180
+ *   +0x00a0 -> line 184
+ *   +0x00c0 -> line 194
+ *   +0x00c8 -> line 195
+ *   +0x00d0 -> line 196
+ *   +0x00dc -> line 197
+ *   +0x00ec -> line 198
+ *   +0x0100 -> line 199
+ *   +0x0114 -> line 200
+ *   +0x0128 -> line 201
+ *   +0x0138 -> line 202
+ *   +0x0144 -> line 203
+ *   +0x0150 -> line 205
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* addr: 0x002dcfb0  size: 156 bytes */
+C_GrassFx::~C_GrassFx()
+{
+    if (m_pVNew)
+        PS2glLiberator(m_pVNew);
+    m_pVNew = 0;
+    m_p_stEIT = 0;
+    m_pSDC = 0;
+    m_hGrassVisualMaterial = 0;
+    m_hFootVisualMaterial = 0;
+    m_NbVertices = 0;
+    m_pVNew = 0;
+}
+
+void C_GrassFx::DisplayGrassLayer(float X, float Y, float Z, float* a16_fWorldMatrix, int iPass)
+{
+    float ZOffsetMatrix[4][4];
+    float NewMatrix[4][4];
+    float (*pVOrg)[4] __attribute__((aligned(16)));
+    float (*pUV1)[4] __attribute__((aligned(16)));
+    float (*pUV2)[4] __attribute__((aligned(16)));
+    float (*pUVChrome)[4] __attribute__((aligned(16)));
+    float (*pColors)[4] __attribute__((aligned(16)));
+    unsigned int NbVertices;
+
+    sceVu0UnitMatrix(ZOffsetMatrix);
+    ZOffsetMatrix[3][0] = X;
+    ZOffsetMatrix[3][1] = Y;
+    ZOffsetMatrix[3][2] = Z;
+    sceVu0MulMatrix(NewMatrix, a16_fWorldMatrix, ZOffsetMatrix);
+    PS2glMatrixMode(0x1700);
+    PS2glLoadMatrixf(&NewMatrix[0][0]);
+    if (((*(unsigned int*)m_pSDC & 0xF) == 4) || ((*(unsigned int*)m_pSDC & 0xF) == 5))
+    {
+        NbVertices = *(unsigned int*)m_pSDC->pArrayOfVertexArrays[0][0];
+        GLI_AddNormalInterpolation(ZOffsetMatrix, m_pSDC);
+        GLI_vGetVertexPointersFromSDCStructure(m_pSDC, 0, &pVOrg, &pUV1, &pUV2, &pUVChrome, &pColors);
+        PS2glDepthMask(1);
+        PS2glDepthMask(1);
+        PS2glHint(0xF10, 0x341);
+        PS2glNormalPointer(0x1406, -2, pVOrg);
+        PS2glTexCoordPointer(NbVertices, 0x1406, -2, pUV1);
+        impPS2glColorPointer(NbVertices, 0x1406, -2, pColors);
+        PS2glVertexPointer(NbVertices, 0x1406, -2, pVOrg);
+        PS2glDrawArrays(5, 0, NbVertices);
+        impPS2glHint(0xF10, 0);
+        PS2glHint(0xF10, 0);
+    }
+}
+
+#pragma opt_loop_invariants off
+#pragma opt_strength_reduction off
 void C_GrassFx::Display(void)
 {
     float a16_fWorldMatrix[4][4];
@@ -2026,87 +1968,81 @@ void C_GrassFx::Display(void)
     PS2glColorMask(1, 1, 1, 0);
     GrassFx_vClearCop0Register24();
 }
-#pragma opt_loop_invariants reset
 #pragma opt_strength_reduction reset
+#pragma opt_loop_invariants reset
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\GrassFx.cpp lines 147–205 */
-/* addr: 0x002dce40  size: 368 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 147
- *   +0x0020 -> line 155
- *   +0x0024 -> line 147
- *   +0x0030 -> line 155
- *   +0x0038 -> line 159
- *   +0x0044 -> line 156
- *   +0x0048 -> line 157
- *   +0x004c -> line 159
- *   +0x0054 -> line 160
- *   +0x005c -> line 161
- *   +0x0064 -> line 167
- *   +0x0088 -> line 170
- *   +0x0098 -> line 180
- *   +0x00a0 -> line 184
- *   +0x00c0 -> line 194
- *   +0x00c8 -> line 195
- *   +0x00d0 -> line 196
- *   +0x00dc -> line 197
- *   +0x00ec -> line 198
- *   +0x0100 -> line 199
- *   +0x0114 -> line 200
- *   +0x0128 -> line 201
- *   +0x0138 -> line 202
- *   +0x0144 -> line 203
- *   +0x0150 -> line 205
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void C_GrassFx::DisplayGrassLayer(float X, float Y, float Z, float* a16_fWorldMatrix, int iPass)
+void GrassFx_vCreateEffectFromObjectAndEIT(GEO_tdstGeometricObject_* pObj, GEO_tdstElementIndexedTriangles_* p_stEIT)
 {
-    float ZOffsetMatrix[4][4];
-    float NewMatrix[4][4];
-    float (*pVOrg)[4] __attribute__((aligned(16)));
-    float (*pUV1)[4] __attribute__((aligned(16)));
-    float (*pUV2)[4] __attribute__((aligned(16)));
-    float (*pUVChrome)[4] __attribute__((aligned(16)));
-    float (*pColors)[4] __attribute__((aligned(16)));
-    unsigned int NbVertices;
+    C_GrassFx* p;
 
-    sceVu0UnitMatrix(ZOffsetMatrix);
-    ZOffsetMatrix[3][0] = X;
-    ZOffsetMatrix[3][1] = Y;
-    ZOffsetMatrix[3][2] = Z;
-    sceVu0MulMatrix(NewMatrix, a16_fWorldMatrix, ZOffsetMatrix);
-    PS2glMatrixMode(0x1700);
-    PS2glLoadMatrixf(&NewMatrix[0][0]);
-    if (((*(unsigned int*)m_pSDC & 0xF) == 4) || ((*(unsigned int*)m_pSDC & 0xF) == 5))
-    {
-        NbVertices = *(unsigned int*)m_pSDC->pArrayOfVertexArrays[0][0];
-        GLI_AddNormalInterpolation(ZOffsetMatrix, m_pSDC);
-        GLI_vGetVertexPointersFromSDCStructure(m_pSDC, 0, &pVOrg, &pUV1, &pUV2, &pUVChrome, &pColors);
-        PS2glDepthMask(1);
-        PS2glDepthMask(1);
-        PS2glHint(0xF10, 0x341);
-        PS2glNormalPointer(0x1406, -2, pVOrg);
-        PS2glTexCoordPointer(NbVertices, 0x1406, -2, pUV1);
-        impPS2glColorPointer(NbVertices, 0x1406, -2, pColors);
-        PS2glVertexPointer(NbVertices, 0x1406, -2, pVOrg);
-        PS2glDrawArrays(5, 0, NbVertices);
-        impPS2glHint(0xF10, 0);
-        PS2glHint(0xF10, 0);
+    if (GrassFx_g_List.SearchElement(p_stEIT))
+        return;
+
+    p = new C_GrassFx;
+
+    p->Init(p_stEIT, (SDC_VertexArrays_*)pObj->pSDC_Data);
+
+    GrassFx_g_List.vAddElement(p);
+}
+
+void GrassFx_vAddEITToDisplay(GEO_tdstElementIndexedTriangles_* p_stEIT)
+{
+    C_GrassFx* p;
+    p = (C_GrassFx*)GrassFx_g_List.SearchElement(p_stEIT);
+    if (p) {
+        GrassFx_g_ListToDisplay.vAddElement((C_BaseFx*)p);
     }
 }
 
-
-/* addr: 0x002dcfb0  size: 156 bytes */
-C_GrassFx::~C_GrassFx()
+#pragma opt_loop_invariants off
+#pragma opt_strength_reduction off
+void GrassFx_vProcessAndDisplay(void)
 {
-    if (m_pVNew)
-        PS2glLiberator(m_pVNew);
-    m_pVNew = 0;
-    m_p_stEIT = 0;
-    m_pSDC = 0;
-    m_hGrassVisualMaterial = 0;
-    m_hFootVisualMaterial = 0;
-    m_NbVertices = 0;
-    m_pVNew = 0;
+    tdstBaseFxListElement_* p;
+
+    p = GrassFx_g_ListToDisplay.pFirst;
+    if (p == NULL)
+    {
+        return;
+    }
+    while (p)
+    {
+        ((C_GrassFx*)p->pFx)->Display();
+        p = p->pNext;
+    }
+
+    GrassFx_g_ListToDisplay.DeleteAllNoFree();
+}
+#pragma opt_strength_reduction reset
+#pragma opt_loop_invariants reset
+
+void GrassFx_vDesinit(void)
+{
+    GrassFx_g_List.DeleteAll();
+}
+
+void GLI_vSetDummyLighting(void)
+{
+    float light_diffuse[4];
+    float light_direction[4];
+    /* Not original source, needs cleaning up: retail negates these at runtime (neg.s); debug lists only the two arrays. */
+    float x = 0.3f, y = 0.2f, z = -1.0f;
+
+    light_direction[0] = -x;
+    light_direction[1] = -y;
+    light_direction[2] = -z;
+    light_direction[3] = 0.0f;
+    light_diffuse[0] = 0.4f;
+    light_diffuse[1] = 0.4f;
+    light_diffuse[2] = 0.4f;
+    light_diffuse[3] = 1.0f;
+
+    PS2glLightfv(0x4000, 0x1200, light_ambient0);
+    PS2glLightfv(0x4000, 0x1201, light_diffuse);
+    PS2glLightfv(0x4000, 0x1202, light_specular0);
+    PS2glLighti(0x4000, 0x1205, 0x40);
+    PS2glLightfv(0x4000, 0x1203, light_direction);
+
+    ambientMaterial[0] = ambientMaterial[1] = ambientMaterial[2] = 0.1f;
+    PS2glMaterialfv(0x404, 0x1200, ambientMaterial);
 }

@@ -14,7 +14,6 @@ typedef struct _atexit _atexit;
 typedef struct _reent _reent;
 typedef struct tm tm;
 
-
 struct _glue {
     _glue* _next; /* +0x0 */
     int _niobs; /* +0x4 */
@@ -109,19 +108,23 @@ extern "C" int fseek(__sFILE*, long, int);
 extern "C" long ftell(__sFILE*);
 extern "C" unsigned int fread(void*, unsigned int, unsigned int, __sFILE*);
 
-extern "C" int usnd_feof(__sFILE* stream)
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+extern "C" int usnd_feof(__sFILE* stream);
+extern "C" unsigned int usnd_fread(void* buffer, unsigned int size, unsigned int count, __sFILE* stream);
+extern "C" long usnd_ftell(__sFILE* stream);
+extern "C" int usnd_fseek(__sFILE* stream, long offset, int origin);
+extern "C" int usnd_fclose(__sFILE* stream);
+extern "C" __sFILE* usnd_fopen(char* filename, char* mode);
+
+extern "C" __sFILE* usnd_fopen(char* filename, char* mode)
 {
-    return (stream->_flags & 0x20) != 0;
+    return fopen(filename, mode);
 }
 
-extern "C" unsigned int usnd_fread(void* buffer, unsigned int size, unsigned int count, __sFILE* stream)
+extern "C" int usnd_fclose(__sFILE* stream)
 {
-    return fread(buffer, size, count, stream);
-}
-
-extern "C" long usnd_ftell(__sFILE* stream)
-{
-    return ftell(stream);
+    return fclose(stream);
 }
 
 extern "C" int usnd_fseek(__sFILE* stream, long offset, int origin)
@@ -130,12 +133,17 @@ extern "C" int usnd_fseek(__sFILE* stream, long offset, int origin)
     return (int)ftell(stream);
 }
 
-extern "C" int usnd_fclose(__sFILE* stream)
+extern "C" long usnd_ftell(__sFILE* stream)
 {
-    return fclose(stream);
+    return ftell(stream);
 }
 
-extern "C" __sFILE* usnd_fopen(char* filename, char* mode)
+extern "C" unsigned int usnd_fread(void* buffer, unsigned int size, unsigned int count, __sFILE* stream)
 {
-    return fopen(filename, mode);
+    return fread(buffer, size, count, stream);
+}
+
+extern "C" int usnd_feof(__sFILE* stream)
+{
+    return (stream->_flags & 0x20) != 0;
 }

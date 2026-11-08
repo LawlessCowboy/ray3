@@ -4,11 +4,16 @@
 
 #include <stddef.h>
 
-unsigned char fn_bLoadPlayerSaveGameAfterLoadLevel(void)
-{
-    return 0;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+unsigned char fn_bLoadPlayerSaveGameAfterLoadLevel(void);
+void GAM_fn_vReadUbiIniFileForGame(void);
 
 void GAM_fn_vReadUbiIniFileForGame(void)
 {
+}
+
+unsigned char fn_bLoadPlayerSaveGameAfterLoadLevel(void)
+{
+    return 0;
 }

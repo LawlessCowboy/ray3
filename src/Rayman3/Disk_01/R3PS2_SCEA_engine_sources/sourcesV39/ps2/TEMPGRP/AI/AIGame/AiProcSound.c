@@ -2986,31 +2986,25 @@ int g_lSoundObjectTypeAnim;
 void SND_fn_p_stPS2SetReverbOn(int s32_Channels, int s32_On);
 void fn_vOnAIErm_M_UpdateLastError(int FatalErrorNum, char* szMsg);
 
-tdstNodeInterpret_* fn_p_stSoundProcedurePS2SetReverbOn(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    int s32_On;
-    tdstGetSetParam_ stParam;
-    tdeProcedureId_ eProcedureId;
-    int s32_Channels;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    s32_Channels = stParam.uDummy.uParam.lValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    s32_On = stParam.uDummy.uParam.lValue;
-
-    switch (eProcedureId)
-    {
-    case eProc_SND_PS2SetReverbOn:
-        SND_fn_p_stPS2SetReverbOn(s32_Channels, s32_On);
-        break;
-    default:
-        fn_vOnAIErm_M_UpdateLastError(40, 0);
-    }
-
-    return p_stTree;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+tdstNodeInterpret_* fn_p_stSoundProcedurePS2SetReverbOn(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stSoundProcedurePS2ChangeReverb(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stMusicMarkerSlotControlProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stLipsChannelControl(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stSaveCurrentSoundRequest(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stSetRollOffDistances(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stSetPrevMusicFadeOut(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stSetInStereoMode(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stSetDopplerEffect(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stSoundProcedureSetVolume(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stSoundProcedureChangeVolume(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stSoundProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stSoundProcedureResume(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stSoundProcedurePause(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stSoundProcedureStopRequest(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stSoundProcedureChangeVolumeId(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stSoundProcedureSendRequest(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiProcSound.c lines 764–799 */
 /* addr: 0x0024a9d0  size: 228 bytes */
@@ -3039,41 +3033,6 @@ tdstNodeInterpret_* fn_p_stSoundProcedurePS2SetReverbOn(HIE_tdstSuperObject_* p_
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stSoundProcedurePS2ChangeReverb(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdeProcedureId_ eProcedureId;
-    tdstGetSetParam_ stParam;
-    int s32_Channels;
-    int s32_Mode;
-    int s32_Vol;
-    int s32_Delay;
-    int s32_FeedBack;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    s32_Channels = stParam.uDummy.uParam.lValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    s32_Mode = stParam.uDummy.uParam.lValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    s32_Vol = stParam.uDummy.uParam.lValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    s32_Delay = stParam.uDummy.uParam.lValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    s32_FeedBack = stParam.uDummy.uParam.lValue;
-
-    switch (eProcedureId)
-    {
-    case eProc_SND_PS2ChangeReverb:
-        SND_fn_p_stPS2ChangeReverb(s32_Channels, s32_Mode, s32_Vol, s32_Delay, s32_FeedBack);
-        break;
-    default:
-        fn_vOnAIErm_M_UpdateLastError(40, 0);
-        break;
-    }
-
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiProcSound.c lines 730–758 */
 /* addr: 0x0024aac0  size: 168 bytes */
@@ -3103,38 +3062,6 @@ stMusicMarkerSlot* SND_fn_p_stGetMusicMarkerSlots(void);
  * dead iIndex assignment reproduce the retail's unfolded szBuffer offset
  * (index scaled first, then base + 0x20); see the unfolded element-offset
  * insight. */
-tdstNodeInterpret_* fn_p_stMusicMarkerSlotControlProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    stMusicMarkerSlot* p_stMarkerSlots;
-    int s32_Index;
-    tdstGetSetParam_ stParam;
-    tdeProcedureId_ eProcedureId;
-    char* pc;
-    int iIndex;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    switch (eProcedureId)
-    {
-    case eProc_SND_ResetMusicMarkerSlot:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        s32_Index = stParam.uDummy.uParam.lValue - 1;
-
-        if (s32_Index < SND_fn_iGetNbMusicMarkerSlots() && s32_Index >= 0)
-        {
-            p_stMarkerSlots = SND_fn_p_stGetMusicMarkerSlots();
-            pc = (char*)p_stMarkerSlots;
-            pc = pc + 0x20;
-            strcpy((char*)((int*)pc)[iIndex = (int)s32_Index * 10], "");
-        }
-        break;
-    default:
-        fn_vOnAIErm_M_UpdateLastError(40, 0);
-        break;
-    }
-
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiProcSound.c lines 690–722 */
 /* addr: 0x0024ab70  size: 228 bytes */
@@ -3169,35 +3096,6 @@ unsigned char fn_ucGetProcedureUltraOperator(tdeProcedureId_ eProcedureId);
 void fn_vGetUltraOperatorPerso(unsigned char bYouHaveRightToUseThisFunction, HIE_tdstSuperObject_* hCurrentSuperObjPerso, HIE_tdstSuperObject_** hNewSuperObjPerso);
 void fn_vLooseControlOfLipChannel(tdstEngineObject_* _hActor, unsigned short _uwChannel);
 
-tdstNodeInterpret_* fn_p_stLipsChannelControl(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdeProcedureId_ e_ProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-    tdstGetSetParam_ stParam1 = {0};
-    HIE_tdstSuperObject_* h_UltraAbleObject;
-
-    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(e_ProcedureId), p_SuperObjPerso, &h_UltraAbleObject);
-
-    switch (e_ProcedureId)
-    {
-    case eProc_SND_StopLipsChannel:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
-        fn_vLooseControlOfLipChannel(h_UltraAbleObject->hLinkedObject.p_stCharacter, stParam1.uDummy.uParam.uwValue);
-        break;
-    case eProc_SND_StopLipsChannelAuto:
-        if (h_UltraAbleObject->hLinkedObject.p_stCharacter->h_3dData->h_Family->ulLipsChannel != (unsigned int)-1)
-        {
-            fn_vLooseControlOfLipChannel(h_UltraAbleObject->hLinkedObject.p_stCharacter,
-                                         (unsigned short)h_UltraAbleObject->hLinkedObject.p_stCharacter->h_3dData->h_Family->ulLipsChannel);
-        }
-        break;
-    default:
-        fn_vOnAIErm_M_UpdateLastError(39, 0);
-        break;
-    }
-
-    return p_stTree;
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiProcSound.c lines 647–686 */
 /* addr: 0x0024ac60  size: 184 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3221,37 +3119,6 @@ _SND_tdstBlockEvent* SND_fn_pstGetLastEventForObjectTypeSound(int s32_TypeId);
 void GAM_fn_vSaveBlockEventSlotMemory(_SND_tdstBlockEvent* pst_BlockEvent, int s32_Index);
 _SND_tdstBlockEvent* GAM_p_stGetBlockEventSlotMemory(int s32_Index);
 int SND_fn_s32SendRequestSemaphoreSound(int s32_SemaphoreId, int s32_ObjectId, int s32_ChannelId, int s32_TypeId, _SND_tduRefEvt u_RefEvt, int s32_Prio, void (*pfn_Proc)(int));
-
-tdstNodeInterpret_* fn_p_stSaveCurrentSoundRequest(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    _SND_tduRefEvt u_RefEvt;
-    _SND_tdstBlockEvent* pst_BlockEvent;
-    tdeProcedureId_ eProcedureId;
-    int s32_Index;
-    tdstGetSetParam_ stParam;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    s32_Index = stParam.uDummy.uParam.lValue;
-
-    switch (eProcedureId)
-    {
-    case eProc_SND_SaveSoundEventInSlotMemory:
-        pst_BlockEvent = SND_fn_pstGetLastEventForObjectTypeSound(g_lSoundObjectTypeMusic);
-        GAM_fn_vSaveBlockEventSlotMemory(pst_BlockEvent, s32_Index);
-        break;
-    case eProc_SND_RestoreSoundEventInSlotMemory:
-        u_RefEvt.pstPtr = GAM_p_stGetBlockEventSlotMemory(s32_Index);
-        SND_fn_s32SendRequestSemaphoreSound(-3, -1, -1, g_lSoundObjectTypeMusic, u_RefEvt, 0, 0);
-        break;
-    default:
-        fn_vOnAIErm_M_UpdateLastError(40, 0);
-        break;
-    }
-
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiProcSound.c lines 597–643 */
 /* addr: 0x0024ad20  size: 344 bytes */
@@ -3296,51 +3163,6 @@ void SND_fn_vSetDefaultRollOff(_RollOffParam* pst_RollOff);
 void fn_vMSSoundSetBackGroundDistance(tdstMSSound_* h_MSSound, int _xBackGroundDistance);
 void fn_vMSSoundSetSaturationDistance(tdstMSSound_* h_MSSound, int _xSaturationDistance);
 
-/* Not original source, needs cleaning up: xSatur and xBackGround are not in
- * the debug locals (probably a float-parameter macro in the original), but
- * holding both values before the fixed-point conversion is what matches. */
-tdstNodeInterpret_* fn_p_stSetRollOffDistances(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstMSSound_* h_MSSound;
-    HIE_tdstSuperObject_* h_UltraAbleObject;
-    _RollOffParam st_RollOff;
-    tdstGetSetParam_ stParam;
-    tdeProcedureId_ eProcedureId;
-    float xSatur;
-    float xBackGround;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    xSatur = (stParam.eType == 8) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    xBackGround = (stParam.eType == 8) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
-
-    st_RollOff.rDistSatur = (int)(65536.0f * xSatur);
-    st_RollOff.rDistBackGround = (int)(65536.0f * xBackGround);
-
-    switch (eProcedureId)
-    {
-    case eProc_SND_SetRollOffDistances:
-        fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &h_UltraAbleObject);
-        h_MSSound = h_UltraAbleObject->hLinkedObject.p_stCharacter->h_MSSound;
-        if (h_MSSound != NULL)
-        {
-            fn_vMSSoundSetSaturationDistance(h_MSSound, st_RollOff.rDistSatur);
-            fn_vMSSoundSetBackGroundDistance(h_MSSound, st_RollOff.rDistBackGround);
-        }
-        break;
-    case eProc_SND_SetDefaultRollOffDistances:
-        SND_fn_vSetDefaultRollOff(&st_RollOff);
-        break;
-    default:
-        fn_vOnAIErm_M_UpdateLastError(39, 0);
-        break;
-    }
-
-    return p_stTree;
-}
-
 /* Debug info lists no parameters; callers pass a float in $f12. */
 void SND_fn_vSetMusicFadeOut(float xFadeOut);
 
@@ -3355,15 +3177,6 @@ void SND_fn_vSetMusicFadeOut(float xFadeOut);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stSetPrevMusicFadeOut(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ stParam;
-
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    SND_fn_vSetMusicFadeOut((double)stParam.uDummy.uParam.xValue);
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiProcSound.c lines 577–583 */
 /* addr: 0x0024aed0  size: 52 bytes */
@@ -3376,14 +3189,6 @@ tdstNodeInterpret_* fn_p_stSetPrevMusicFadeOut(HIE_tdstSuperObject_* p_SuperObjP
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stSetInStereoMode(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ stParam;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    SND_fn_vSetStereoSound(stParam.uDummy.uParam.ucValue);
-    return p_stTree;
-}
 
 /* Debug info lists no parameters; callers pass a 16.16 fixed-point int. */
 void SND_fn_vSetDopplerFactorSound(long lFactor);
@@ -3401,17 +3206,6 @@ void SND_fn_vSetDopplerFactorSound(long lFactor);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stSetDopplerEffect(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ st_Param;
-
-
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
-
-    SND_fn_vSetDopplerFactorSound((long)(st_Param.uDummy.uParam.xValue * 65536.0f));
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiProcSound.c lines 523–559 */
 /* addr: 0x0024af60  size: 204 bytes */
@@ -3442,41 +3236,6 @@ void GAM_fn_vSetVolumeMusic(int iVolume);
 void GAM_fn_vSetVolumeAmbiance(int iVolume);
 void GAM_fn_vSetVolumeMenu(int iVolume);
 
-tdstNodeInterpret_* fn_p_stSoundProcedureSetVolume(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ st_Param;
-    int s32_Volume;
-    tdeProcedureId_ e_ProcedureId;
-
-    e_ProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
-    s32_Volume = st_Param.uDummy.uParam.lValue;
-
-    switch (e_ProcedureId)
-    {
-    case eProc_SND_SetVolumeSound:
-        GAM_fn_vSetVolumeSound(s32_Volume);
-        break;
-    case eProc_SND_SetVolumeVoice:
-        GAM_fn_vSetVolumeVoice(s32_Volume);
-        break;
-    case eProc_SND_SetVolumeMusic:
-        GAM_fn_vSetVolumeMusic(s32_Volume);
-        break;
-    case eProc_SND_SetVolumeAmbiance:
-        GAM_fn_vSetVolumeAmbiance(s32_Volume);
-        break;
-    case eProc_SND_SetVolumeMenuSnd:
-        GAM_fn_vSetVolumeMenu(s32_Volume);
-        break;
-    default:
-        fn_vOnAIErm_M_UpdateLastError(39, 0);
-    }
-
-    return p_stTree;
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiProcSound.c lines 464–519 */
 /* addr: 0x0024b030  size: 212 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3499,45 +3258,6 @@ tdstNodeInterpret_* fn_p_stSoundProcedureSetVolume(HIE_tdstSuperObject_* p_Super
 unsigned char fn_ucGetProcedureUltraOperator(tdeProcedureId_ eProcedureId);
 void fn_vGetUltraOperatorPerso(unsigned char bYouHaveRightToUseThisFunction, HIE_tdstSuperObject_* hCurrentSuperObjPerso, HIE_tdstSuperObject_** hNewSuperObjPerso);
 void SND_fn_vSetVolumeLineSound(int s32_LineId, int s32_VolValue);
-
-tdstNodeInterpret_* fn_p_stSoundProcedureChangeVolume(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    int s32_LineId;
-    int s32_Volume;
-    HIE_tdstSuperObject_* h_UltraAbleObject;
-    tdstGetSetParam_ st_Param;
-    tdeProcedureId_ e_ProcedureId;
-
-    e_ProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(e_ProcedureId), p_SuperObjPerso, &h_UltraAbleObject);
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
-    s32_Volume = st_Param.uDummy.uParam.lValue;
-
-    switch (e_ProcedureId)
-    {
-    case eProc_SND_ChangeVolumeSound:
-        s32_LineId = g_lSoundVolumeLineSound;
-        break;
-    case eProc_SND_ChangeVolumeVoice:
-        s32_LineId = g_lSoundVolumeLineVoices;
-        break;
-    case eProc_SND_ChangeVolumeMusic:
-        s32_LineId = g_lSoundVolumeLineMusic;
-        break;
-    case eProc_SND_ChangeVolumeAmbiance:
-        s32_LineId = g_lSoundVolumeLineAmbiance;
-        break;
-    case eProc_SND_ChangeVolumeMenuSnd:
-        s32_LineId = g_lSoundVolumeLineMenu;
-        break;
-    default:
-        s32_LineId = -1;
-    }
-
-    SND_fn_vSetVolumeLineSound(s32_LineId, s32_Volume);
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiProcSound.c lines 359–457 */
 /* addr: 0x0024b110  size: 540 bytes */
@@ -3596,70 +3316,6 @@ void fn_vMicroSetActivationFlag(tdstEngineObject_* hEngObj, tdstMicro_* h_MS_Mic
 HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* h_StdGame);
 void fn_vMSSoundSetMechaCharacter(tdstMSSound_* h_MSSound, HIE_tdstSuperObject_* _hMechaCharacter);
 
-tdstNodeInterpret_* fn_p_stSoundProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    HIE_tdstSuperObject_* h_MechaCharacter;
-    tdstEngineObject_* pst_Object;
-    int s32_SemaphoreId;
-    char* pch_BankName;
-    HIE_tdstSuperObject_* h_UltraAbleObject;
-    _SND_tduRefEvt u_RefEvtSaved;
-    tdstGetSetParam_ st_Param;
-    tdeProcedureId_ e_ProcedureId;
-
-    e_ProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(e_ProcedureId), p_SuperObjPerso, &h_UltraAbleObject);
-
-    switch (e_ProcedureId)
-    {
-    case eProc_SND_KillSemaphore:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
-        SND_fn_bRemoveSemaphoreSound(st_Param.uDummy.uParam.lValue);
-        break;
-    case eProc_SND_SaveCurrentTheme:
-        SND_fn_vSaveLastTheme();
-        break;
-    case eProc_SND_RestoreLastTheme:
-        if (SND_fn_bGetLastTheme(&u_RefEvtSaved) == 1)
-        {
-            SND_fn_s32SendRequestSound(-1, -1, g_lSoundObjectTypeMusic, u_RefEvtSaved, 0, NULL);
-        }
-        break;
-    case eProc_SND_LoadBank:
-    case eProc_SND_UnloadBank:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
-        pch_BankName = FON_fn_szGetTextPointerForHandle(st_Param.uDummy.uParam.lValue);
-        if (e_ProcedureId == eProc_SND_LoadBank)
-            SND_fn_bLoadBank(pch_BankName);
-        if (e_ProcedureId == eProc_SND_UnloadBank)
-            SND_fn_bUnloadBank(pch_BankName);
-        break;
-    case eProc_SND_SetSemaphoreCapacity:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
-        s32_SemaphoreId = st_Param.uDummy.uParam.lValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
-        SND_fn_s32AddSemaphoreSound(s32_SemaphoreId, st_Param.uDummy.uParam.lValue);
-        break;
-    case eProc_SND_SetMicroActivation:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
-        pst_Object = h_UltraAbleObject->hLinkedObject.p_stCharacter;
-        fn_vMicroSetActivationFlag(pst_Object, pst_Object->h_Micro, st_Param.uDummy.uParam.ucValue);
-        break;
-    case eProc_SND_SetMechaSoundCharacter:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
-        h_MechaCharacter = fn_h_StandardGameGetSuperObject(st_Param.uDummy.uParam.p_stEngObjValue->h_StandardGame);
-        pst_Object = h_UltraAbleObject->hLinkedObject.p_stCharacter;
-        if (pst_Object->h_MSSound != NULL)
-            fn_vMSSoundSetMechaCharacter(pst_Object->h_MSSound, h_MechaCharacter);
-        break;
-    default:
-        fn_vOnAIErm_M_UpdateLastError(40, 0);
-        break;
-    }
-
-    return p_stTree;
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiProcSound.c lines 314–355 */
 /* addr: 0x0024b330  size: 180 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3685,45 +3341,6 @@ void SND_fn_vResumeAllObjectTypeSound(int s32_TypeId);
 void SND_fn_vPauseSound(void);
 void SND_fn_vPauseAllObjectTypeSound(int s32_TypeId);
 
-tdstNodeInterpret_* fn_p_stSoundProcedureResume(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    int s32_TypeId;
-    tdstGetSetParam_ st_Param;
-    tdeProcedureId_ e_ProcedureId;
-
-    e_ProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
-
-    switch (e_ProcedureId)
-    {
-    case eProc_SND_ResumeSound:
-        s32_TypeId = g_lSoundObjectTypeAnim;
-        break;
-    case eProc_SND_ResumeVoice:
-        s32_TypeId = g_lSoundObjectTypeVoice;
-        break;
-    case eProc_SND_ResumeMusic:
-        s32_TypeId = g_lSoundObjectTypeMusic;
-        break;
-    case eProc_SND_ResumeAmbiance:
-        s32_TypeId = g_lSoundObjectTypeAmbiance;
-        break;
-    case eProc_SND_ResumeMenuSound:
-        s32_TypeId = g_lSoundObjectTypeMenu;
-        break;
-    case eProc_SND_ResumeAllRequests:
-        s32_TypeId = -2;
-        break;
-    default:
-        s32_TypeId = -1;
-    }
-
-    if (s32_TypeId == -2) { SND_fn_vResumeSound(); return p_stTree; }
-    SND_fn_vResumeAllObjectTypeSound(s32_TypeId);
-    return p_stTree;
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiProcSound.c lines 269–310 */
 /* addr: 0x0024b3f0  size: 180 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3744,44 +3361,6 @@ tdstNodeInterpret_* fn_p_stSoundProcedureResume(HIE_tdstSuperObject_* p_SuperObj
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stSoundProcedurePause(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    int s32_TypeId;
-    tdstGetSetParam_ st_Param;
-    tdeProcedureId_ e_ProcedureId;
-
-    e_ProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
-
-    switch (e_ProcedureId)
-    {
-    case eProc_SND_PauseSound:
-        s32_TypeId = g_lSoundObjectTypeAnim;
-        break;
-    case eProc_SND_PauseVoice:
-        s32_TypeId = g_lSoundObjectTypeVoice;
-        break;
-    case eProc_SND_PauseMusic:
-        s32_TypeId = g_lSoundObjectTypeMusic;
-        break;
-    case eProc_SND_PauseAmbiance:
-        s32_TypeId = g_lSoundObjectTypeAmbiance;
-        break;
-    case eProc_SND_PauseMenuSound:
-        s32_TypeId = g_lSoundObjectTypeMenu;
-        break;
-    case eProc_SND_PauseAllRequests:
-        s32_TypeId = -2;
-        break;
-    default:
-        s32_TypeId = -1;
-    }
-
-    if (s32_TypeId == -2) { SND_fn_vPauseSound(); return p_stTree; }
-    SND_fn_vPauseAllObjectTypeSound(s32_TypeId);
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiProcSound.c lines 231–265 */
 /* addr: 0x0024b4b0  size: 140 bytes */
@@ -3803,42 +3382,6 @@ tdstNodeInterpret_* fn_p_stSoundProcedurePause(HIE_tdstSuperObject_* p_SuperObjP
  * compare a candidate object's line table as an extra checkpoint.
  */
 void SND_fn_vKillAllObjectTypeSound(int s32_TypeId);
-
-tdstNodeInterpret_* fn_p_stSoundProcedureStopRequest(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    int s32_TypeId;
-    tdeProcedureId_ e_ProcedureId;
-
-    e_ProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    switch (e_ProcedureId)
-    {
-    case eProc_SND_StopMenuSnd:
-        s32_TypeId = g_lSoundObjectTypeMenu;
-        break;
-    case eProc_SND_StopSound:
-        s32_TypeId = g_lSoundObjectTypeAnim;
-        break;
-    case eProc_SND_StopMusic:
-        s32_TypeId = g_lSoundObjectTypeMusic;
-        break;
-    case eProc_SND_StopAmbiance:
-        s32_TypeId = g_lSoundObjectTypeAmbiance;
-        break;
-    case eProc_SND_StopVoice:
-        s32_TypeId = g_lSoundObjectTypeVoice;
-        break;
-    case eProc_SND_StopAllRequests:
-        s32_TypeId = -2;
-        break;
-    default:
-        s32_TypeId = -1;
-    }
-
-    SND_fn_vKillAllObjectTypeSound(s32_TypeId);
-
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiProcSound.c lines 181–223 */
 /* addr: 0x0024b540  size: 228 bytes */
@@ -3865,47 +3408,6 @@ tdstNodeInterpret_* fn_p_stSoundProcedureStopRequest(HIE_tdstSuperObject_* p_Sup
  * compare a candidate object's line table as an extra checkpoint.
  */
 void SND_fn_vChangeVolumeSound(int s32_Handle, int s32_Volume, int s32_TypeId, int s32_ObjectId);
-
-tdstNodeInterpret_* fn_p_stSoundProcedureChangeVolumeId(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdeProcedureId_ e_ProcedureId;
-    tdstGetSetParam_ st_Param;
-    int s32_ObjectId;
-    int s32_TypeId;
-    int s32_Volume;
-    int s32_Handle;
-    HIE_tdstSuperObject_* h_UltraAbleObject;
-
-    e_ProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(e_ProcedureId), p_SuperObjPerso, &h_UltraAbleObject);
-    s32_Handle = (int)h_UltraAbleObject;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
-    s32_Volume = st_Param.uDummy.uParam.lValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
-    s32_ObjectId = st_Param.uDummy.uParam.lValue;
-
-    switch (e_ProcedureId)
-    {
-    case eProc_SND_ChangeVolumeIdAmbiance:
-        s32_TypeId = g_lSoundObjectTypeAmbiance;
-        s32_Handle = -1;
-        break;
-    case eProc_SND_ChangeVolumeIdVoice:
-        s32_TypeId = g_lSoundObjectTypeVoice;
-        break;
-    case eProc_SND_ChangeVolumeIdMusic:
-        s32_TypeId = g_lSoundObjectTypeMusic;
-        s32_Handle = -1;
-        break;
-    default:
-        s32_TypeId = -1;
-        s32_Handle = s32_TypeId;
-        break;
-    }
-
-    SND_fn_vChangeVolumeSound(s32_Handle, s32_Volume, s32_TypeId, s32_ObjectId);
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiProcSound.c lines 35–177 */
 /* addr: 0x0024b630  size: 848 bytes */
@@ -4085,6 +3587,527 @@ tdstNodeInterpret_* fn_p_stSoundProcedureSendRequest(HIE_tdstSuperObject_* p_Sup
     else
         SND_fn_s32SendRequestSemaphoreSound(s32_SemaphoreId, s32_ObjectId, s32_ChannelId, s32_TypeId, u_RefEvt, 0, NULL);
     g_bUseMarkersForNextRequest = 0;
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stSoundProcedureChangeVolumeId(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdeProcedureId_ e_ProcedureId;
+    tdstGetSetParam_ st_Param;
+    int s32_ObjectId;
+    int s32_TypeId;
+    int s32_Volume;
+    int s32_Handle;
+    HIE_tdstSuperObject_* h_UltraAbleObject;
+
+    e_ProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(e_ProcedureId), p_SuperObjPerso, &h_UltraAbleObject);
+    s32_Handle = (int)h_UltraAbleObject;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
+    s32_Volume = st_Param.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
+    s32_ObjectId = st_Param.uDummy.uParam.lValue;
+
+    switch (e_ProcedureId)
+    {
+    case eProc_SND_ChangeVolumeIdAmbiance:
+        s32_TypeId = g_lSoundObjectTypeAmbiance;
+        s32_Handle = -1;
+        break;
+    case eProc_SND_ChangeVolumeIdVoice:
+        s32_TypeId = g_lSoundObjectTypeVoice;
+        break;
+    case eProc_SND_ChangeVolumeIdMusic:
+        s32_TypeId = g_lSoundObjectTypeMusic;
+        s32_Handle = -1;
+        break;
+    default:
+        s32_TypeId = -1;
+        s32_Handle = s32_TypeId;
+        break;
+    }
+
+    SND_fn_vChangeVolumeSound(s32_Handle, s32_Volume, s32_TypeId, s32_ObjectId);
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stSoundProcedureStopRequest(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    int s32_TypeId;
+    tdeProcedureId_ e_ProcedureId;
+
+    e_ProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    switch (e_ProcedureId)
+    {
+    case eProc_SND_StopMenuSnd:
+        s32_TypeId = g_lSoundObjectTypeMenu;
+        break;
+    case eProc_SND_StopSound:
+        s32_TypeId = g_lSoundObjectTypeAnim;
+        break;
+    case eProc_SND_StopMusic:
+        s32_TypeId = g_lSoundObjectTypeMusic;
+        break;
+    case eProc_SND_StopAmbiance:
+        s32_TypeId = g_lSoundObjectTypeAmbiance;
+        break;
+    case eProc_SND_StopVoice:
+        s32_TypeId = g_lSoundObjectTypeVoice;
+        break;
+    case eProc_SND_StopAllRequests:
+        s32_TypeId = -2;
+        break;
+    default:
+        s32_TypeId = -1;
+    }
+
+    SND_fn_vKillAllObjectTypeSound(s32_TypeId);
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stSoundProcedurePause(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    int s32_TypeId;
+    tdstGetSetParam_ st_Param;
+    tdeProcedureId_ e_ProcedureId;
+
+    e_ProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
+
+    switch (e_ProcedureId)
+    {
+    case eProc_SND_PauseSound:
+        s32_TypeId = g_lSoundObjectTypeAnim;
+        break;
+    case eProc_SND_PauseVoice:
+        s32_TypeId = g_lSoundObjectTypeVoice;
+        break;
+    case eProc_SND_PauseMusic:
+        s32_TypeId = g_lSoundObjectTypeMusic;
+        break;
+    case eProc_SND_PauseAmbiance:
+        s32_TypeId = g_lSoundObjectTypeAmbiance;
+        break;
+    case eProc_SND_PauseMenuSound:
+        s32_TypeId = g_lSoundObjectTypeMenu;
+        break;
+    case eProc_SND_PauseAllRequests:
+        s32_TypeId = -2;
+        break;
+    default:
+        s32_TypeId = -1;
+    }
+
+    if (s32_TypeId == -2) { SND_fn_vPauseSound(); return p_stTree; }
+    SND_fn_vPauseAllObjectTypeSound(s32_TypeId);
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stSoundProcedureResume(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    int s32_TypeId;
+    tdstGetSetParam_ st_Param;
+    tdeProcedureId_ e_ProcedureId;
+
+    e_ProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
+
+    switch (e_ProcedureId)
+    {
+    case eProc_SND_ResumeSound:
+        s32_TypeId = g_lSoundObjectTypeAnim;
+        break;
+    case eProc_SND_ResumeVoice:
+        s32_TypeId = g_lSoundObjectTypeVoice;
+        break;
+    case eProc_SND_ResumeMusic:
+        s32_TypeId = g_lSoundObjectTypeMusic;
+        break;
+    case eProc_SND_ResumeAmbiance:
+        s32_TypeId = g_lSoundObjectTypeAmbiance;
+        break;
+    case eProc_SND_ResumeMenuSound:
+        s32_TypeId = g_lSoundObjectTypeMenu;
+        break;
+    case eProc_SND_ResumeAllRequests:
+        s32_TypeId = -2;
+        break;
+    default:
+        s32_TypeId = -1;
+    }
+
+    if (s32_TypeId == -2) { SND_fn_vResumeSound(); return p_stTree; }
+    SND_fn_vResumeAllObjectTypeSound(s32_TypeId);
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stSoundProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    HIE_tdstSuperObject_* h_MechaCharacter;
+    tdstEngineObject_* pst_Object;
+    int s32_SemaphoreId;
+    char* pch_BankName;
+    HIE_tdstSuperObject_* h_UltraAbleObject;
+    _SND_tduRefEvt u_RefEvtSaved;
+    tdstGetSetParam_ st_Param;
+    tdeProcedureId_ e_ProcedureId;
+
+    e_ProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(e_ProcedureId), p_SuperObjPerso, &h_UltraAbleObject);
+
+    switch (e_ProcedureId)
+    {
+    case eProc_SND_KillSemaphore:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
+        SND_fn_bRemoveSemaphoreSound(st_Param.uDummy.uParam.lValue);
+        break;
+    case eProc_SND_SaveCurrentTheme:
+        SND_fn_vSaveLastTheme();
+        break;
+    case eProc_SND_RestoreLastTheme:
+        if (SND_fn_bGetLastTheme(&u_RefEvtSaved) == 1)
+        {
+            SND_fn_s32SendRequestSound(-1, -1, g_lSoundObjectTypeMusic, u_RefEvtSaved, 0, NULL);
+        }
+        break;
+    case eProc_SND_LoadBank:
+    case eProc_SND_UnloadBank:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
+        pch_BankName = FON_fn_szGetTextPointerForHandle(st_Param.uDummy.uParam.lValue);
+        if (e_ProcedureId == eProc_SND_LoadBank)
+            SND_fn_bLoadBank(pch_BankName);
+        if (e_ProcedureId == eProc_SND_UnloadBank)
+            SND_fn_bUnloadBank(pch_BankName);
+        break;
+    case eProc_SND_SetSemaphoreCapacity:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
+        s32_SemaphoreId = st_Param.uDummy.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
+        SND_fn_s32AddSemaphoreSound(s32_SemaphoreId, st_Param.uDummy.uParam.lValue);
+        break;
+    case eProc_SND_SetMicroActivation:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
+        pst_Object = h_UltraAbleObject->hLinkedObject.p_stCharacter;
+        fn_vMicroSetActivationFlag(pst_Object, pst_Object->h_Micro, st_Param.uDummy.uParam.ucValue);
+        break;
+    case eProc_SND_SetMechaSoundCharacter:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
+        h_MechaCharacter = fn_h_StandardGameGetSuperObject(st_Param.uDummy.uParam.p_stEngObjValue->h_StandardGame);
+        pst_Object = h_UltraAbleObject->hLinkedObject.p_stCharacter;
+        if (pst_Object->h_MSSound != NULL)
+            fn_vMSSoundSetMechaCharacter(pst_Object->h_MSSound, h_MechaCharacter);
+        break;
+    default:
+        fn_vOnAIErm_M_UpdateLastError(40, 0);
+        break;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stSoundProcedureChangeVolume(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    int s32_LineId;
+    int s32_Volume;
+    HIE_tdstSuperObject_* h_UltraAbleObject;
+    tdstGetSetParam_ st_Param;
+    tdeProcedureId_ e_ProcedureId;
+
+    e_ProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(e_ProcedureId), p_SuperObjPerso, &h_UltraAbleObject);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
+    s32_Volume = st_Param.uDummy.uParam.lValue;
+
+    switch (e_ProcedureId)
+    {
+    case eProc_SND_ChangeVolumeSound:
+        s32_LineId = g_lSoundVolumeLineSound;
+        break;
+    case eProc_SND_ChangeVolumeVoice:
+        s32_LineId = g_lSoundVolumeLineVoices;
+        break;
+    case eProc_SND_ChangeVolumeMusic:
+        s32_LineId = g_lSoundVolumeLineMusic;
+        break;
+    case eProc_SND_ChangeVolumeAmbiance:
+        s32_LineId = g_lSoundVolumeLineAmbiance;
+        break;
+    case eProc_SND_ChangeVolumeMenuSnd:
+        s32_LineId = g_lSoundVolumeLineMenu;
+        break;
+    default:
+        s32_LineId = -1;
+    }
+
+    SND_fn_vSetVolumeLineSound(s32_LineId, s32_Volume);
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stSoundProcedureSetVolume(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstGetSetParam_ st_Param;
+    int s32_Volume;
+    tdeProcedureId_ e_ProcedureId;
+
+    e_ProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
+    s32_Volume = st_Param.uDummy.uParam.lValue;
+
+    switch (e_ProcedureId)
+    {
+    case eProc_SND_SetVolumeSound:
+        GAM_fn_vSetVolumeSound(s32_Volume);
+        break;
+    case eProc_SND_SetVolumeVoice:
+        GAM_fn_vSetVolumeVoice(s32_Volume);
+        break;
+    case eProc_SND_SetVolumeMusic:
+        GAM_fn_vSetVolumeMusic(s32_Volume);
+        break;
+    case eProc_SND_SetVolumeAmbiance:
+        GAM_fn_vSetVolumeAmbiance(s32_Volume);
+        break;
+    case eProc_SND_SetVolumeMenuSnd:
+        GAM_fn_vSetVolumeMenu(s32_Volume);
+        break;
+    default:
+        fn_vOnAIErm_M_UpdateLastError(39, 0);
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stSetDopplerEffect(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstGetSetParam_ st_Param;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
+
+    SND_fn_vSetDopplerFactorSound((long)(st_Param.uDummy.uParam.xValue * 65536.0f));
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stSetInStereoMode(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstGetSetParam_ stParam;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    SND_fn_vSetStereoSound(stParam.uDummy.uParam.ucValue);
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stSetPrevMusicFadeOut(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstGetSetParam_ stParam;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    SND_fn_vSetMusicFadeOut((double)stParam.uDummy.uParam.xValue);
+    return p_stTree;
+}
+
+/* Not original source, needs cleaning up: xSatur and xBackGround are not in
+ * the debug locals (probably a float-parameter macro in the original), but
+ * holding both values before the fixed-point conversion is what matches. */
+tdstNodeInterpret_* fn_p_stSetRollOffDistances(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstMSSound_* h_MSSound;
+    HIE_tdstSuperObject_* h_UltraAbleObject;
+    _RollOffParam st_RollOff;
+    tdstGetSetParam_ stParam;
+    tdeProcedureId_ eProcedureId;
+    float xSatur;
+    float xBackGround;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    xSatur = (stParam.eType == 8) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    xBackGround = (stParam.eType == 8) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
+
+    st_RollOff.rDistSatur = (int)(65536.0f * xSatur);
+    st_RollOff.rDistBackGround = (int)(65536.0f * xBackGround);
+
+    switch (eProcedureId)
+    {
+    case eProc_SND_SetRollOffDistances:
+        fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &h_UltraAbleObject);
+        h_MSSound = h_UltraAbleObject->hLinkedObject.p_stCharacter->h_MSSound;
+        if (h_MSSound != NULL)
+        {
+            fn_vMSSoundSetSaturationDistance(h_MSSound, st_RollOff.rDistSatur);
+            fn_vMSSoundSetBackGroundDistance(h_MSSound, st_RollOff.rDistBackGround);
+        }
+        break;
+    case eProc_SND_SetDefaultRollOffDistances:
+        SND_fn_vSetDefaultRollOff(&st_RollOff);
+        break;
+    default:
+        fn_vOnAIErm_M_UpdateLastError(39, 0);
+        break;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stSaveCurrentSoundRequest(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    _SND_tduRefEvt u_RefEvt;
+    _SND_tdstBlockEvent* pst_BlockEvent;
+    tdeProcedureId_ eProcedureId;
+    int s32_Index;
+    tdstGetSetParam_ stParam;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    s32_Index = stParam.uDummy.uParam.lValue;
+
+    switch (eProcedureId)
+    {
+    case eProc_SND_SaveSoundEventInSlotMemory:
+        pst_BlockEvent = SND_fn_pstGetLastEventForObjectTypeSound(g_lSoundObjectTypeMusic);
+        GAM_fn_vSaveBlockEventSlotMemory(pst_BlockEvent, s32_Index);
+        break;
+    case eProc_SND_RestoreSoundEventInSlotMemory:
+        u_RefEvt.pstPtr = GAM_p_stGetBlockEventSlotMemory(s32_Index);
+        SND_fn_s32SendRequestSemaphoreSound(-3, -1, -1, g_lSoundObjectTypeMusic, u_RefEvt, 0, 0);
+        break;
+    default:
+        fn_vOnAIErm_M_UpdateLastError(40, 0);
+        break;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stLipsChannelControl(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdeProcedureId_ e_ProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    tdstGetSetParam_ stParam1 = {0};
+    HIE_tdstSuperObject_* h_UltraAbleObject;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(e_ProcedureId), p_SuperObjPerso, &h_UltraAbleObject);
+
+    switch (e_ProcedureId)
+    {
+    case eProc_SND_StopLipsChannel:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
+        fn_vLooseControlOfLipChannel(h_UltraAbleObject->hLinkedObject.p_stCharacter, stParam1.uDummy.uParam.uwValue);
+        break;
+    case eProc_SND_StopLipsChannelAuto:
+        if (h_UltraAbleObject->hLinkedObject.p_stCharacter->h_3dData->h_Family->ulLipsChannel != (unsigned int)-1)
+        {
+            fn_vLooseControlOfLipChannel(h_UltraAbleObject->hLinkedObject.p_stCharacter,
+                                         (unsigned short)h_UltraAbleObject->hLinkedObject.p_stCharacter->h_3dData->h_Family->ulLipsChannel);
+        }
+        break;
+    default:
+        fn_vOnAIErm_M_UpdateLastError(39, 0);
+        break;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stMusicMarkerSlotControlProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    stMusicMarkerSlot* p_stMarkerSlots;
+    int s32_Index;
+    tdstGetSetParam_ stParam;
+    tdeProcedureId_ eProcedureId;
+    char* pc;
+    int iIndex;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    switch (eProcedureId)
+    {
+    case eProc_SND_ResetMusicMarkerSlot:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        s32_Index = stParam.uDummy.uParam.lValue - 1;
+
+        if (s32_Index < SND_fn_iGetNbMusicMarkerSlots() && s32_Index >= 0)
+        {
+            p_stMarkerSlots = SND_fn_p_stGetMusicMarkerSlots();
+            pc = (char*)p_stMarkerSlots;
+            pc = pc + 0x20;
+            strcpy((char*)((int*)pc)[iIndex = (int)s32_Index * 10], "");
+        }
+        break;
+    default:
+        fn_vOnAIErm_M_UpdateLastError(40, 0);
+        break;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stSoundProcedurePS2ChangeReverb(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdeProcedureId_ eProcedureId;
+    tdstGetSetParam_ stParam;
+    int s32_Channels;
+    int s32_Mode;
+    int s32_Vol;
+    int s32_Delay;
+    int s32_FeedBack;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    s32_Channels = stParam.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    s32_Mode = stParam.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    s32_Vol = stParam.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    s32_Delay = stParam.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    s32_FeedBack = stParam.uDummy.uParam.lValue;
+
+    switch (eProcedureId)
+    {
+    case eProc_SND_PS2ChangeReverb:
+        SND_fn_p_stPS2ChangeReverb(s32_Channels, s32_Mode, s32_Vol, s32_Delay, s32_FeedBack);
+        break;
+    default:
+        fn_vOnAIErm_M_UpdateLastError(40, 0);
+        break;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stSoundProcedurePS2SetReverbOn(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    int s32_On;
+    tdstGetSetParam_ stParam;
+    tdeProcedureId_ eProcedureId;
+    int s32_Channels;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    s32_Channels = stParam.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    s32_On = stParam.uDummy.uParam.lValue;
+
+    switch (eProcedureId)
+    {
+    case eProc_SND_PS2SetReverbOn:
+        SND_fn_p_stPS2SetReverbOn(s32_Channels, s32_On);
+        break;
+    default:
+        fn_vOnAIErm_M_UpdateLastError(40, 0);
+    }
 
     return p_stTree;
 }

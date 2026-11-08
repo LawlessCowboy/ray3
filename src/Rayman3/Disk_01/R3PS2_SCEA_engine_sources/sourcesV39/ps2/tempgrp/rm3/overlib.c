@@ -4,13 +4,13 @@
 
 #include <stddef.h>
 
-void abort(void)
-{
-}
-
-void exit(void)
-{
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void abort(void);
+void exit(void);
+float PS2_dl_cosf(float val);
+float PS2_dl_sinf(float val);
+void PS2_fn_vCreatemallocCriticalSection(void);
 
 /* Hand-written asm body: the target line map has one line per instruction
  * from the first abs.s/sub.s to madd.s, and the code uses callee-saved
@@ -25,35 +25,9 @@ void exit(void)
  * ".set noreorder" / ".set reorder" pin the block (and the interleaved
  * callee-saved FPR saves) in place; the closing ".set reorder" restores
  * normal scheduling for the rest of the function. */
-float PS2_dl_cosf(float val)
+
+void PS2_fn_vCreatemallocCriticalSection(void)
 {
-    float x0;
-    float x1 = -0.15915493667125702f, x2 = 2.0f, x3 = 4194304.0f, x4 = 0.25f, x5 = 6.2831850051879883f, x6 = -41.341670989990234f, x7 = 81.60222625732422f, x8 = -76.57495880126953f, x9 = 39.71065902709961f;
-
-    asm {
-        .set noreorder
-        abs.s   x0, $f12
-        mula.s  x0, x1
-        msuba.s x2, x3
-        madda.s x2, x3
-        msuba.s x0, x1
-        msub.s  x0, x2, x4
-        abs.s   x0, x0
-        sub.s   $f26, x0, x4
-
-        mul.s   x0, $f26, $f26
-        mula.s  $f26, x5
-        mul.s   $f24, $f26, x0
-        mul.s   $f25, $f24, x0
-        madda.s $f24, x6
-        mul.s   $f24, $f25, x0
-        madda.s $f25, x7
-        mul.s   $f25, $f24, x0
-        madda.s $f24, x8
-        madd.s  x0, $f25, x9
-        .set reorder
-    }
-    return x0;
 }
 
 /* Hand-written asm body: the target line map has one line per instruction
@@ -92,6 +66,41 @@ float PS2_dl_sinf(float val)
     return x0;
 }
 
-void PS2_fn_vCreatemallocCriticalSection(void)
+float PS2_dl_cosf(float val)
+{
+    float x0;
+    float x1 = -0.15915493667125702f, x2 = 2.0f, x3 = 4194304.0f, x4 = 0.25f, x5 = 6.2831850051879883f, x6 = -41.341670989990234f, x7 = 81.60222625732422f, x8 = -76.57495880126953f, x9 = 39.71065902709961f;
+
+    asm {
+        .set noreorder
+        abs.s   x0, $f12
+        mula.s  x0, x1
+        msuba.s x2, x3
+        madda.s x2, x3
+        msuba.s x0, x1
+        msub.s  x0, x2, x4
+        abs.s   x0, x0
+        sub.s   $f26, x0, x4
+
+        mul.s   x0, $f26, $f26
+        mula.s  $f26, x5
+        mul.s   $f24, $f26, x0
+        mul.s   $f25, $f24, x0
+        madda.s $f24, x6
+        mul.s   $f24, $f25, x0
+        madda.s $f25, x7
+        mul.s   $f25, $f24, x0
+        madda.s $f24, x8
+        madd.s  x0, $f25, x9
+        .set reorder
+    }
+    return x0;
+}
+
+void exit(void)
+{
+}
+
+void abort(void)
 {
 }

@@ -121,51 +121,44 @@ ISI_tdstColor_* ISI_fn_dGetVertexRLILOD(void* _hISI, short _xNumISILOD);
 int ISI_fn_dGetVertexRLILODLightMapU(void* _hISI, short _xNumISILOD);
 void GLI_xSendObjectToViewportWithLightsFlag(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstGeometricObject_* p_stObj, int lDrawModeMask, unsigned int ulSuperObjectFlag);
 
-void TEX_vSetTextureQualityLevel(GLI_tdstTexture_* p_stTexture, char ucTextQuality)
-{
-    *(int *)((char *)p_stTexture + 4) = ucTextQuality;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void TEX_vSetTextureQualityLevel(GLI_tdstTexture_* p_stTexture, char ucTextQuality);
+void* GLI_hComputeBlendRLI(GEO_tdstVisualSet_* hVisualSet, unsigned char ucIndex1, unsigned char ucIndex2, short xNumISILOD, float xPercent);
+int GLI_hGetRLI(GEO_tdstVisualSet_* hVisualSet, unsigned char ucIndex);
+void GLI_lSendVisualSetToViewport2(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstVisualSet_* p_stVisualSet, int lUnused, int lDrawModeMask);
+void GLI_lSendVisualSetToViewportWithRLI2Flag(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstVisualSet_* p_stVisualSet, int lUnused, int lDrawModeMask, void* hISI, unsigned int ulSuperObjectFlag);
+void GLI_lSendVisualSetToViewportWithRLI2(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstVisualSet_* p_stVisualSet, int lUnused, int lDrawModeMask, void* hISI);
+int GLI_lGetVisualSetNumbertOfLOD(GEO_tdstVisualSet_* p_stVisualSet);
+GEO_tdstGeometricObject_* GLI_hGetVisualSetGeometricForADistance(GEO_tdstVisualSet_* p_stVSE, float xThreshold);
+void GLI_vGetVisualSetLOD(GEO_tdstVisualSet_* p_stVisualSet, int lNumberOfLodToGet, float* p_xThreshold, GEO_tdstGeometricObject_** h_stObject);
 
-void* GLI_hComputeBlendRLI(GEO_tdstVisualSet_* hVisualSet, unsigned char ucIndex1, unsigned char ucIndex2, short xNumISILOD, float xPercent)
+void GLI_vGetVisualSetLOD(GEO_tdstVisualSet_* p_stVisualSet, int lNumberOfLodToGet, float* p_xThreshold, GEO_tdstGeometricObject_** h_stObject)
 {
-    if ((ucIndex1 < hVisualSet->lNumberOfRLI) && (ucIndex2 < hVisualSet->lNumberOfRLI))
-        return ISI_hComputeBlendRLI(((void**)hVisualSet->d_hRLI)[ucIndex1], ((void**)hVisualSet->d_hRLI)[ucIndex2], xNumISILOD, xPercent);
-    return NULL;
-}
-
-int GLI_hGetRLI(GEO_tdstVisualSet_* hVisualSet, unsigned char ucIndex)
-{
-    return (ucIndex < hVisualSet->lNumberOfRLI) ? ((int*)hVisualSet->d_hRLI)[ucIndex] : 0;
-}
-
-void GLI_lSendVisualSetToViewport2(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstVisualSet_* p_stVisualSet, int lUnused, int lDrawModeMask)
-{
-    g_p_stRLIForNextObjectToDraw = 0;
-    g_p_stRawRLIsForThisObject = 0;
-    g_p_stLightMapUForNextObjectToDraw = 0;
-    if (p_stVisualSet->d_p_stLodDefinitions->p_stGeometricObject)
-        GLI_xSendObjectToViewportWithLights(p_stVpt, p_stVisualSet->d_p_stLodDefinitions->p_stGeometricObject, lDrawModeMask);
-}
-
-void GLI_lSendVisualSetToViewportWithRLI2Flag(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstVisualSet_* p_stVisualSet, int lUnused, int lDrawModeMask, void* hISI, unsigned int ulSuperObjectFlag)
-{
-    if (hISI)
-    {
-        g_p_stRLIForNextObjectToDraw = (int)ISI_fn_dGetVertexRLILOD(hISI, 0);
-        g_p_stRawRLIsForThisObject = (int)ISI_fn_dGetVertexRLILOD(hISI, 0);
-        g_p_stLightMapUForNextObjectToDraw = ISI_fn_dGetVertexRLILODLightMapU(hISI, 0);
+    if (lNumberOfLodToGet < p_stVisualSet->xNbLodDefinitions) {
+        *p_xThreshold = ((float*)p_stVisualSet->d_xThresholdsTable)[lNumberOfLodToGet];
+        *(GEO_tdstGeometricObject_**)h_stObject = ((GEO_tduVSObject_*)p_stVisualSet->d_p_stLodDefinitions)[lNumberOfLodToGet].p_stGeometricObject;
     }
-    else
-    {
-        g_p_stRLIForNextObjectToDraw = 0;
-        g_p_stRawRLIsForThisObject = 0;
-        g_p_stLightMapUForNextObjectToDraw = 0;
+}
+
+GEO_tdstGeometricObject_* GLI_hGetVisualSetGeometricForADistance(GEO_tdstVisualSet_* p_stVSE, float xThreshold)
+{
+    int lLod;
+    int lOffset;
+    lLod = 0;
+    lOffset = 0;
+    while (lLod < p_stVSE->xNbLodDefinitions - 1) {
+        if (*(float*)((char*)p_stVSE->d_xThresholdsTable + lOffset + 4) > xThreshold)
+            break;
+        lOffset += 4;
+        lLod++;
     }
-    if (p_stVisualSet->d_p_stLodDefinitions->p_stGeometricObject)
-        GLI_xSendObjectToViewportWithLightsFlag(p_stVpt, p_stVisualSet->d_p_stLodDefinitions->p_stGeometricObject, lDrawModeMask, ulSuperObjectFlag);
-    g_p_stRLIForNextObjectToDraw = 0;
-    g_p_stRawRLIsForThisObject = 0;
-    g_p_stLightMapUForNextObjectToDraw = 0;
+    return p_stVSE->d_p_stLodDefinitions[lLod].p_stGeometricObject;
+}
+
+int GLI_lGetVisualSetNumbertOfLOD(GEO_tdstVisualSet_* p_stVisualSet)
+{
+    return p_stVisualSet->xNbLodDefinitions;
 }
 
 void GLI_lSendVisualSetToViewportWithRLI2(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstVisualSet_* p_stVisualSet, int lUnused, int lDrawModeMask, void* hISI)
@@ -189,30 +182,49 @@ void GLI_lSendVisualSetToViewportWithRLI2(GLD_tdstViewportAttributes_* p_stVpt, 
     g_p_stLightMapUForNextObjectToDraw = 0;
 }
 
-int GLI_lGetVisualSetNumbertOfLOD(GEO_tdstVisualSet_* p_stVisualSet)
+void GLI_lSendVisualSetToViewportWithRLI2Flag(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstVisualSet_* p_stVisualSet, int lUnused, int lDrawModeMask, void* hISI, unsigned int ulSuperObjectFlag)
 {
-    return p_stVisualSet->xNbLodDefinitions;
+    if (hISI)
+    {
+        g_p_stRLIForNextObjectToDraw = (int)ISI_fn_dGetVertexRLILOD(hISI, 0);
+        g_p_stRawRLIsForThisObject = (int)ISI_fn_dGetVertexRLILOD(hISI, 0);
+        g_p_stLightMapUForNextObjectToDraw = ISI_fn_dGetVertexRLILODLightMapU(hISI, 0);
+    }
+    else
+    {
+        g_p_stRLIForNextObjectToDraw = 0;
+        g_p_stRawRLIsForThisObject = 0;
+        g_p_stLightMapUForNextObjectToDraw = 0;
+    }
+    if (p_stVisualSet->d_p_stLodDefinitions->p_stGeometricObject)
+        GLI_xSendObjectToViewportWithLightsFlag(p_stVpt, p_stVisualSet->d_p_stLodDefinitions->p_stGeometricObject, lDrawModeMask, ulSuperObjectFlag);
+    g_p_stRLIForNextObjectToDraw = 0;
+    g_p_stRawRLIsForThisObject = 0;
+    g_p_stLightMapUForNextObjectToDraw = 0;
 }
 
-GEO_tdstGeometricObject_* GLI_hGetVisualSetGeometricForADistance(GEO_tdstVisualSet_* p_stVSE, float xThreshold)
+void GLI_lSendVisualSetToViewport2(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstVisualSet_* p_stVisualSet, int lUnused, int lDrawModeMask)
 {
-    int lLod;
-    int lOffset;
-    lLod = 0;
-    lOffset = 0;
-    while (lLod < p_stVSE->xNbLodDefinitions - 1) {
-        if (*(float*)((char*)p_stVSE->d_xThresholdsTable + lOffset + 4) > xThreshold)
-            break;
-        lOffset += 4;
-        lLod++;
-    }
-    return p_stVSE->d_p_stLodDefinitions[lLod].p_stGeometricObject;
+    g_p_stRLIForNextObjectToDraw = 0;
+    g_p_stRawRLIsForThisObject = 0;
+    g_p_stLightMapUForNextObjectToDraw = 0;
+    if (p_stVisualSet->d_p_stLodDefinitions->p_stGeometricObject)
+        GLI_xSendObjectToViewportWithLights(p_stVpt, p_stVisualSet->d_p_stLodDefinitions->p_stGeometricObject, lDrawModeMask);
 }
 
-void GLI_vGetVisualSetLOD(GEO_tdstVisualSet_* p_stVisualSet, int lNumberOfLodToGet, float* p_xThreshold, GEO_tdstGeometricObject_** h_stObject)
+int GLI_hGetRLI(GEO_tdstVisualSet_* hVisualSet, unsigned char ucIndex)
 {
-    if (lNumberOfLodToGet < p_stVisualSet->xNbLodDefinitions) {
-        *p_xThreshold = ((float*)p_stVisualSet->d_xThresholdsTable)[lNumberOfLodToGet];
-        *(GEO_tdstGeometricObject_**)h_stObject = ((GEO_tduVSObject_*)p_stVisualSet->d_p_stLodDefinitions)[lNumberOfLodToGet].p_stGeometricObject;
-    }
+    return (ucIndex < hVisualSet->lNumberOfRLI) ? ((int*)hVisualSet->d_hRLI)[ucIndex] : 0;
+}
+
+void* GLI_hComputeBlendRLI(GEO_tdstVisualSet_* hVisualSet, unsigned char ucIndex1, unsigned char ucIndex2, short xNumISILOD, float xPercent)
+{
+    if ((ucIndex1 < hVisualSet->lNumberOfRLI) && (ucIndex2 < hVisualSet->lNumberOfRLI))
+        return ISI_hComputeBlendRLI(((void**)hVisualSet->d_hRLI)[ucIndex1], ((void**)hVisualSet->d_hRLI)[ucIndex2], xNumISILOD, xPercent);
+    return NULL;
+}
+
+void TEX_vSetTextureQualityLevel(GLI_tdstTexture_* p_stTexture, char ucTextQuality)
+{
+    *(int *)((char *)p_stTexture + 4) = ucTextQuality;
 }

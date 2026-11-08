@@ -1627,17 +1627,14 @@ int g_InGameMenu2DActivated;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vLastDesinitFamilyStructure(void)
-{
-    tdstFamilyList_* param0;
-    tdstFamilyList_* p_stNextFamily;
 
-    for (param0 = g_stEngineStructure.hFamilyList.hFirstElementDyn, p_stNextFamily = param0 ? param0->hNextBrotherDyn : NULL; param0;
-         param0 = p_stNextFamily, p_stNextFamily = param0 ? param0->hNextBrotherDyn : NULL)
-    {
-        if (param0->hNextBrotherDyn) param0->hNextBrotherDyn->hPrevBrotherDyn = param0->hPrevBrotherDyn; if (param0->hPrevBrotherDyn) param0->hPrevBrotherDyn->hNextBrotherDyn = param0->hNextBrotherDyn; if (param0->hFatherDyn) { param0->hFatherDyn->lNumberOfElementsDyn--; if (param0->hFatherDyn->hFirstElementDyn == param0) param0->hFatherDyn->hFirstElementDyn = param0->hNextBrotherDyn; if (param0->hFatherDyn->hLastElementDyn == param0) param0->hFatherDyn->hLastElementDyn = param0->hPrevBrotherDyn; } param0->hNextBrotherDyn = NULL; param0->hPrevBrotherDyn = NULL; param0->hFatherDyn = NULL;
-    }
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void fn_vLastDesinitFamilyStructure(void);
+void GAM_MultiVP_fn_vDisplayAllInOneViewPort(unsigned char _ucIndex);
+void fn_vDisplayAll(unsigned char _ucViewPortIndex);
+void GAM_fn_vCheckIfDebugCamera(HIE_tdstSuperObject_** hCamera);
+void fn_vSetCinemascopeRatio(unsigned int ulRatio);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameDisp.c lines 561–815 */
 /* addr: 0x0025f850  size: 240 bytes */
@@ -1671,27 +1668,6 @@ void CAM_vDisplayInfo(void);
 void Erm_fn_ClearLastError();
 void Erm_fn_v_UpdateLastError();
 
-void GAM_MultiVP_fn_vDisplayAllInOneViewPort(unsigned char _ucIndex)
-{
-    GLD_tdstViewportAttributes_* p_stVpt;
-
-    p_stVpt = &g_stEngineStructure.a_stViewportAttr[_ucIndex];
-    GLI_xSendListToViewport(p_stVpt);
-    GLI_xSendListToViewport(p_stVpt);
-    if (!GLD_bWriteToViewportFinished(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucIndex]))
-    {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 43, -1, 255, 255, NULL);
-    }
-    SCT_g_ulDisplayingAgos = 1;
-    if (_ucIndex == 0)
-        AGO_vProcessAllParts(p_stVpt);
-    else
-        AGO_vReDisplayAllParts(p_stVpt);
-    SCT_g_ulDisplayingAgos = 0;
-    GLI_xSendListToViewport(p_stVpt);
-    CAM_vDisplayInfo();
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameDisp.c lines 329–505 */
 /* addr: 0x0025fc70  size: 620 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1722,6 +1698,38 @@ void CAM_fn_vActualizeAViewport(int _lViewport);
 unsigned char GAM_MultiVP_fn_bWriteFrameToViewPort(unsigned char _ucIndex);
 void GAM_MultiVP_fn_vChangeOneVPSizeAndPositionPercent(unsigned char ucVpNum, unsigned int* a2_ulSize, unsigned int* a2_ulPos);
 unsigned char CAM_fn_bCineInfoGetIsDebugCamera(tdstInternalStructurCineinfo_* _hIntCineinfo);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameDisp.c lines 244–247 */
+/* addr: 0x0025fee0  size: 28 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 244
+ *   +0x000c -> line 246
+ *   +0x0014 -> line 247
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameDisp.c lines 238–240 */
+/* addr: 0x0025ff00  size: 28 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 238
+ *   +0x0010 -> line 239
+ *   +0x0014 -> line 240
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void fn_vSetCinemascopeRatio(unsigned int ulRatio)
+{
+    if (ulRatio != 0 && ulRatio < 101)
+        g_ulMinSize = ulRatio;
+}
+
+void GAM_fn_vCheckIfDebugCamera(HIE_tdstSuperObject_** hCamera)
+{
+    if (g_ucDebugCamera != 0)
+        *hCamera = g_stEngineStructure.h_StdCamCaracter;
+}
 
 void fn_vDisplayAll(unsigned char _ucViewPortIndex)
 {
@@ -1772,32 +1780,35 @@ void fn_vDisplayAll(unsigned char _ucViewPortIndex)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameDisp.c lines 244–247 */
-/* addr: 0x0025fee0  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 244
- *   +0x000c -> line 246
- *   +0x0014 -> line 247
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GAM_fn_vCheckIfDebugCamera(HIE_tdstSuperObject_** hCamera)
+void GAM_MultiVP_fn_vDisplayAllInOneViewPort(unsigned char _ucIndex)
 {
-    if (g_ucDebugCamera != 0)
-        *hCamera = g_stEngineStructure.h_StdCamCaracter;
+    GLD_tdstViewportAttributes_* p_stVpt;
+
+    p_stVpt = &g_stEngineStructure.a_stViewportAttr[_ucIndex];
+    GLI_xSendListToViewport(p_stVpt);
+    GLI_xSendListToViewport(p_stVpt);
+    if (!GLD_bWriteToViewportFinished(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucIndex]))
+    {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 43, -1, 255, 255, NULL);
+    }
+    SCT_g_ulDisplayingAgos = 1;
+    if (_ucIndex == 0)
+        AGO_vProcessAllParts(p_stVpt);
+    else
+        AGO_vReDisplayAllParts(p_stVpt);
+    SCT_g_ulDisplayingAgos = 0;
+    GLI_xSendListToViewport(p_stVpt);
+    CAM_vDisplayInfo();
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameDisp.c lines 238–240 */
-/* addr: 0x0025ff00  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 238
- *   +0x0010 -> line 239
- *   +0x0014 -> line 240
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vSetCinemascopeRatio(unsigned int ulRatio)
+void fn_vLastDesinitFamilyStructure(void)
 {
-    if (ulRatio != 0 && ulRatio < 101)
-        g_ulMinSize = ulRatio;
+    tdstFamilyList_* param0;
+    tdstFamilyList_* p_stNextFamily;
+
+    for (param0 = g_stEngineStructure.hFamilyList.hFirstElementDyn, p_stNextFamily = param0 ? param0->hNextBrotherDyn : NULL; param0;
+         param0 = p_stNextFamily, p_stNextFamily = param0 ? param0->hNextBrotherDyn : NULL)
+    {
+        if (param0->hNextBrotherDyn) param0->hNextBrotherDyn->hPrevBrotherDyn = param0->hPrevBrotherDyn; if (param0->hPrevBrotherDyn) param0->hPrevBrotherDyn->hNextBrotherDyn = param0->hNextBrotherDyn; if (param0->hFatherDyn) { param0->hFatherDyn->lNumberOfElementsDyn--; if (param0->hFatherDyn->hFirstElementDyn == param0) param0->hFatherDyn->hFirstElementDyn = param0->hNextBrotherDyn; if (param0->hFatherDyn->hLastElementDyn == param0) param0->hFatherDyn->hLastElementDyn = param0->hPrevBrotherDyn; } param0->hNextBrotherDyn = NULL; param0->hPrevBrotherDyn = NULL; param0->hFatherDyn = NULL;
+    }
 }

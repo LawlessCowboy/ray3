@@ -2359,12 +2359,21 @@ extern void free(void*);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-float FRR(float a, float b)
-{
-    float r;
 
-    return a + (b - a) * (r = (float)rand() / 2147483648.0f);
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+float FRR(float a, float b);
+void GLIPS2_vDisplayFirstLoadingBar(float Percent);
+void GLI_vLoadCarton(char* levelname);
+void GLI_vShowVignetteFromHandle(int FileHandle);
+void ChangeClippingMode(void);
+char* AskForLevelStartWithName(void);
+void AskForLevelStart(void);
+void GLI_PrintDebugString(void);
+void ClearScreenAfterInit(void);
+void GLI_vSetProgressCallBack(unsigned int SizeToRead);
+void GLI_vProgressCallBack(unsigned int NbBytesReadThisTime);
+void GLI_vShowVignette(char* FileName);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawInterf.c lines 2774–2820 */
 /* addr: 0x002b57f0  size: 1616 bytes */
@@ -2458,90 +2467,6 @@ float FRR(float a, float b)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLIPS2_vDisplayFirstLoadingBar(float Percent)
-{
-    /* Partial reconstruction: the GS/PS2GL state update and the draw order
-     * follow the retail code, the vertex list is still approximate.
-     * See m2c-seeds/GLIPS2_vDisplayFirstLoadingBar.c for the full skeleton. */
-    float fBar;
-    float fPos;
-
-    PS2glMatrixMode(0x1701);
-    PS2glLoadIdentity();
-    PS2glOrtho(0.0f, 100.0f, 100.0f, 0.0f, -1.0f, 1.0f);
-    PS2glMatrixMode(0x1700);
-    PS2glLoadIdentity();
-
-    g_PS2glContext.nEnableBits &= ~0x800;
-    g_gsContext.TEST_1.ZTE = 1;
-    g_gsContext.ModFlgs.TEST_1_Modified = 1;
-    g_PS2glContext.nLightBits &= ~0x200;
-    g_gsContext.TEST_1.ZTST = 2;
-    g_gsContext.ModFlgs.TEST_1_Modified = 1;
-    *g_PS2glContext.pnColorMatMasks &= ~1;
-    if (g_PS2glContext.iCurTextureSet != 0) {
-        g_PS2glContext.bPointLighting &= ~0x200;
-    }
-    else {
-        g_PS2glContext.bPointLighting &= ~2;
-    }
-    g_gsContext.ModFlgs.PRMODE_Modified = 1;
-    g_PS2glContext.nEnableBits &= ~0x400;
-    g_gsContext.TEST_1.ATE = 0;
-    g_PS2glContext.nLightBits &= ~0x400;
-    g_gsContext.ModFlgs.TEST_1_Modified = 1;
-    if ((g_PS2glContext.bPointLighting & 0xF) != 0) {
-        g_gsContext.PRMODE.TME = 1;
-    }
-    else {
-        g_gsContext.PRMODE.TME = 0;
-    }
-    g_PS2glContext.nEnableBits &= ~0x80;
-    g_gsContext.ModFlgs.PRMODE_Modified = 1;
-    g_gsContext.PRMODE.FGE = 0;
-    *g_PS2glContext.pbFogging = 0;
-    g_PS2glContext.bCullfaceChanged = 1;
-    g_PS2glContext.nEnableBits &= ~0x2000;
-    PS2glColorMask(1, 1, 1, 1);
-    PS2glDepthMask(0);
-    PS2glBlendFunc(0x302, 0x303);
-    g_PS2glContext.nEnableBits &= ~0x100;
-    g_gsContext.PRMODE.ABE = 0;
-    g_gsContext.ModFlgs.PRMODE_Modified = 1;
-    PS2glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    PS2glClear(0x4100);
-
-    if (Percent > 100.0f) {
-        Percent = 100.0f;
-    }
-    fPos = BAR_POS[1] + 0.5f;
-    fBar = 0.5f + (BAR_POS[0] + ((Percent * ((BAR_POS[2] - 0.5f) - (BAR_POS[0] + 0.5f))) / 100.0f));
-    PS2glBegin(4);
-    PS2glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-    PS2glVertex2f(BAR_POS[0], BAR_POS[2]);
-    PS2glVertex2f(BAR_POS[2], fPos);
-    PS2glVertex2f(BAR_POS[2], fPos);
-    PS2glVertex2f(BAR_POS[1], fPos);
-    PS2glVertex2f(BAR_POS[2], BAR_POS[1]);
-    PS2glVertex2f(BAR_POS[1], BAR_POS[1]);
-    PS2glColor4f(0.0f, 0.3f, 0.3f, 1.0f);
-    PS2glVertex2f(BAR_POS[0], BAR_POS[3] - 0.5f);
-    PS2glVertex2f(BAR_POS[3], BAR_POS[3] - 0.5f);
-    PS2glVertex2f(BAR_POS[3], BAR_POS[3] - 0.5f);
-    PS2glVertex2f(BAR_POS[2], BAR_POS[3] - 0.5f);
-    PS2glVertex2f(BAR_POS[3], BAR_POS[3] - 0.5f);
-    PS2glVertex2f(BAR_POS[2], BAR_POS[3] - 0.5f);
-    PS2glColor4f(0.0f, 0.75f, 0.75f, 1.0f);
-    PS2glVertex2f(BAR_POS[3] - 0.5f, BAR_POS[0] + 0.5f);
-    PS2glVertex2f(fBar, fBar);
-    PS2glVertex2f(fBar, fBar);
-    PS2glVertex2f(BAR_POS[3] - 0.5f, fBar);
-    PS2glVertex2f(fBar, fBar);
-    PS2glVertex2f(BAR_POS[3] - 0.5f, fBar);
-    PS2glEnd();
-    PS2glFinish();
-    PS2auxSwapBuffers();
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawInterf.c lines 2229–2238 */
 /* addr: 0x002b5e40  size: 64 bytes */
@@ -2556,17 +2481,6 @@ void GLIPS2_vDisplayFirstLoadingBar(float Percent)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vLoadCarton(char* levelname)
-{
-    int FileHandle;
-    char TempString[512];
-
-    sprintf(TempString, "VIGNETTE\\FRA\\%s.RAW", levelname);
-    FileHandle = CD_OpenFileWithNameConversion(PLD_szPrependGamedataName(TempString));
-
-    GLI_vShowVignetteFromHandle(FileHandle);
-
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawInterf.c lines 2101–2223 */
 /* addr: 0x002b5e80  size: 1608 bytes */
@@ -2709,107 +2623,6 @@ void GLI_vLoadCarton(char* levelname)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vShowVignetteFromHandle(int FileHandle)
-{
-    /* Partial reconstruction: the GS/PS2GL state update and the draw order
-     * follow the retail code, the texture loop is still approximate.
-     * See m2c-seeds/GLI_vShowVignetteFromHandle.c for the full skeleton. */
-    unsigned char* pBitmap;
-    unsigned int i;
-    unsigned int K;
-    int TexHandle[4];
-
-    if (FileHandle < 0) {
-        return;
-    }
-    pBitmap = (unsigned char*)malloc(0x30080);
-    PS2glFlush();
-    PS2glFinish();
-    GLI_vReinitViewport();
-    PS2glGenTextures(4, TexHandle);
-    g_PS2glContext.nLightBits &= ~0x400;
-    g_PS2glContext.nEnableBits &= ~0x800;
-    g_gsContext.TEST_1.ZTE = 1;
-    g_gsContext.ModFlgs.TEST_1_Modified = 1;
-    if (g_PS2glContext.iCurTextureSet != 0) {
-        g_PS2glContext.bPointLighting |= 0x200;
-    }
-    else {
-        g_PS2glContext.bPointLighting |= 2;
-    }
-    g_gsContext.TEST_1.ZTST = 2;
-    g_gsContext.ModFlgs.TEST_1_Modified = 1;
-    g_gsContext.PRMODE.TME = 1;
-    g_gsContext.ModFlgs.PRMODE_Modified = 1;
-    PS2glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    PS2glClear(0x4000);
-    PS2glFlush();
-    PS2glFinish();
-    PS2auxSwapBuffers();
-    PS2glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    PS2glClear(0x4000);
-    PS2glFlush();
-    PS2glFinish();
-    PS2auxSwapBuffers();
-    PS2glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    PS2glClear(0x4000);
-    PS2glFlush();
-    PS2glFinish();
-    PS2auxSwapBuffers();
-    for (i = 0; i < 4; i++) {
-        CD_Read(FileHandle, (unsigned int)(((int)pBitmap + 0x7F) & ~0x7F), 0x30000);
-        PS2glBindTexture(0xDE1, TexHandle[i]);
-        PS2glTexImage2D(0xDE1, 0, 0x1907, 0x200, 0x80, 0, 0x1907, 0x1401);
-    }
-    PS2glMatrixMode(0x1701);
-    PS2glLoadIdentity();
-    PS2glOrtho(0.0f, 100.0f, 100.0f, 0.0f, -1.0f, 1.0f);
-    PS2glMatrixMode(0x1702);
-    PS2glLoadIdentity();
-    PS2glMatrixMode(0x1700);
-    PS2glLoadIdentity();
-    for (i = 0; i < 4; i++) {
-        for (K = 0; K < 4; K++) {
-            if (g_PS2glContext.iCurTextureSet != 0) {
-                g_PS2glContext.bPointLighting |= 0x200;
-            }
-            else {
-                g_PS2glContext.bPointLighting |= 2;
-            }
-            g_gsContext.PRMODE.TME = 1;
-            g_gsContext.ModFlgs.PRMODE_Modified = 1;
-            PS2glBindTexture(0xDE1, TexHandle[K]);
-            PS2glTexParameteri(0xDE1, 0x2802, 0x2900);
-            PS2glTexParameteri(0xDE1, 0x2803, 0x2900);
-            PS2glBegin(4);
-            PS2glColor4f(0.5f, 0.5f, 0.5f, 1.0f);
-            PS2glTexCoord2f(0.0f, 0.0f);
-            PS2glVertex2f(0.0f, 0.0f);
-            PS2glTexCoord2f(1.0f, 0.0f);
-            PS2glVertex2f(100.0f, 0.0f);
-            PS2glTexCoord2f(1.0f, 1.0f);
-            PS2glVertex2f(100.0f, 100.0f);
-            PS2glTexCoord2f(0.0f, 1.0f);
-            PS2glVertex2f(0.0f, 100.0f);
-            PS2glTexCoord2f(1.0f, 0.0f);
-            PS2glVertex2f(100.0f, 0.0f);
-            PS2glTexCoord2f(0.0f, 0.0f);
-            PS2glVertex2f(0.0f, 0.0f);
-            PS2glEnd();
-        }
-        g_PS2glContext.nEnableBits &= ~0x100;
-        g_gsContext.PRMODE.ABE = 0;
-        g_gsContext.ModFlgs.PRMODE_Modified = 1;
-        PS2glFlush();
-        PS2glFinish();
-        PS2auxSwapBuffers();
-    }
-    CD_Close(FileHandle);
-    PS2auxSwapBuffers();
-    PS2auxSwapBuffers();
-    free(pBitmap);
-    PS2glDeleteTextures(4, TexHandle);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawInterf.c lines 2025–2026 */
 /* addr: 0x002b64d0  size: 16 bytes */
@@ -2819,10 +2632,6 @@ void GLI_vShowVignetteFromHandle(int FileHandle)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void ChangeClippingMode(void)
-{
-    g_PS2glContext.eClippingFunction = 3;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawInterf.c lines 1613–1616 */
 /* addr: 0x002b64e0  size: 36 bytes */
@@ -2835,11 +2644,6 @@ void ChangeClippingMode(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-char* AskForLevelStartWithName(void)
-{
-    AskForLevelStart();
-    return g_stEngineStructure.szLevelName;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawInterf.c lines 1257–1609 */
 /* addr: 0x002b6510  size: 40 bytes */
@@ -2852,20 +2656,6 @@ char* AskForLevelStartWithName(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AskForLevelStart(void)
-{
-    unsigned int i;
-    char GamedataDir[255];
-    unsigned int PL;
-    unsigned int PR;
-    unsigned int PU;
-    unsigned int PD;
-    unsigned int NbLevels;
-    unsigned int chosen;
-    int CurrentLevelNum;
-
-    strcpy(g_stEngineStructure.szLevelName, "MENUMAP");
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawInterf.c lines 616–616 */
 /* addr: 0x002b6540  size: 8 bytes */
@@ -2874,10 +2664,6 @@ void AskForLevelStart(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_PrintDebugString(void)
-{
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawInterf.c lines 465–484 */
 /* addr: 0x002b6550  size: 340 bytes */
@@ -2921,26 +2707,6 @@ void GLI_PrintDebugString(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void ClearScreenAfterInit(void)
-{
-    PS2glDepthMask(1);
-    g_PS2glContext.nEnableBits &= ~0x400;
-    g_gsContext.TEST_1.ATE = 1;
-    g_gsContext.ModFlgs.TEST_1_Modified = 1;
-    g_PS2glContext.nLightBits &= ~0x400;
-    g_gsContext.PRMODE.FGE = 1;
-    g_PS2glContext.nEnableBits &= ~0x80;
-    g_gsContext.ModFlgs.PRMODE_Modified = 1;
-    *g_PS2glContext.pbFogging = 0;
-    PS2glColorMask(1, 1, 1, 0);
-    PS2glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    PS2glClear(0x4100);
-    PS2glColorMask(1, 1, 1, 0);
-    PS2glFlush();
-    PS2glFinish();
-    PS2auxSwapBuffers();
-    GLI_vShowVignette("UBISOFT.SCR");
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawInterf.c lines 417–459 */
 /* addr: 0x002b66b0  size: 80 bytes */
@@ -2959,19 +2725,6 @@ void ClearScreenAfterInit(void)
  */
 void CD_SetCallBack(void* FunctionPointer);
 void GLI_vProgressCallBack(unsigned int NbBytesReadThisTime);
-void GLI_vSetProgressCallBack(unsigned int SizeToRead)
-{
-    if (SizeToRead == 0 || CD_ProgressCallBack == 0) {
-        g_ProgressSizeToRead = SizeToRead;
-        g_ProgressSizeHaveRead = 0;
-        g_ProgressTime = 0;
-        if (SizeToRead == 0) {
-            CD_SetCallBack(NULL);
-            return;
-        }
-        CD_SetCallBack((void*)GLI_vProgressCallBack);
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawInterf.c lines 349–406 */
 /* addr: 0x002b6700  size: 28 bytes */
@@ -2985,11 +2738,6 @@ void GLI_vSetProgressCallBack(unsigned int SizeToRead)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vProgressCallBack(unsigned int NbBytesReadThisTime)
-{
-    g_ProgressSizeHaveRead += NbBytesReadThisTime;
-    g_ProgressTime++;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawInterf.c lines 178–320 */
 /* addr: 0x002b6720  size: 1648 bytes */
@@ -3140,6 +2888,7 @@ void GLI_vProgressCallBack(unsigned int NbBytesReadThisTime)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
 void GLI_vShowVignette(char* FileName)
 {
     /* Partial reconstruction: the GS/PS2GL state update and the draw order
@@ -3244,4 +2993,282 @@ void GLI_vShowVignette(char* FileName)
     PS2auxSwapBuffers();
     free(pBitmap);
     PS2glDeleteTextures(4, TexHandle);
+}
+
+void GLI_vProgressCallBack(unsigned int NbBytesReadThisTime)
+{
+    g_ProgressSizeHaveRead += NbBytesReadThisTime;
+    g_ProgressTime++;
+}
+
+void GLI_vSetProgressCallBack(unsigned int SizeToRead)
+{
+    if (SizeToRead == 0 || CD_ProgressCallBack == 0) {
+        g_ProgressSizeToRead = SizeToRead;
+        g_ProgressSizeHaveRead = 0;
+        g_ProgressTime = 0;
+        if (SizeToRead == 0) {
+            CD_SetCallBack(NULL);
+            return;
+        }
+        CD_SetCallBack((void*)GLI_vProgressCallBack);
+    }
+}
+
+void ClearScreenAfterInit(void)
+{
+    PS2glDepthMask(1);
+    g_PS2glContext.nEnableBits &= ~0x400;
+    g_gsContext.TEST_1.ATE = 1;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    g_PS2glContext.nLightBits &= ~0x400;
+    g_gsContext.PRMODE.FGE = 1;
+    g_PS2glContext.nEnableBits &= ~0x80;
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    *g_PS2glContext.pbFogging = 0;
+    PS2glColorMask(1, 1, 1, 0);
+    PS2glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    PS2glClear(0x4100);
+    PS2glColorMask(1, 1, 1, 0);
+    PS2glFlush();
+    PS2glFinish();
+    PS2auxSwapBuffers();
+    GLI_vShowVignette("UBISOFT.SCR");
+}
+
+void GLI_PrintDebugString(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+void AskForLevelStart(void)
+{
+    unsigned int i;
+    char GamedataDir[255];
+    unsigned int PL;
+    unsigned int PR;
+    unsigned int PU;
+    unsigned int PD;
+    unsigned int NbLevels;
+    unsigned int chosen;
+    int CurrentLevelNum;
+
+    strcpy(g_stEngineStructure.szLevelName, "MENUMAP");
+}
+
+char* AskForLevelStartWithName(void)
+{
+    AskForLevelStart();
+    return g_stEngineStructure.szLevelName;
+}
+
+void ChangeClippingMode(void)
+{
+    g_PS2glContext.eClippingFunction = 3;
+}
+
+void GLI_vShowVignetteFromHandle(int FileHandle)
+{
+    /* Partial reconstruction: the GS/PS2GL state update and the draw order
+     * follow the retail code, the texture loop is still approximate.
+     * See m2c-seeds/GLI_vShowVignetteFromHandle.c for the full skeleton. */
+    unsigned char* pBitmap;
+    unsigned int i;
+    unsigned int K;
+    int TexHandle[4];
+
+    if (FileHandle < 0) {
+        return;
+    }
+    pBitmap = (unsigned char*)malloc(0x30080);
+    PS2glFlush();
+    PS2glFinish();
+    GLI_vReinitViewport();
+    PS2glGenTextures(4, TexHandle);
+    g_PS2glContext.nLightBits &= ~0x400;
+    g_PS2glContext.nEnableBits &= ~0x800;
+    g_gsContext.TEST_1.ZTE = 1;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    if (g_PS2glContext.iCurTextureSet != 0) {
+        g_PS2glContext.bPointLighting |= 0x200;
+    }
+    else {
+        g_PS2glContext.bPointLighting |= 2;
+    }
+    g_gsContext.TEST_1.ZTST = 2;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    g_gsContext.PRMODE.TME = 1;
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    PS2glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    PS2glClear(0x4000);
+    PS2glFlush();
+    PS2glFinish();
+    PS2auxSwapBuffers();
+    PS2glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    PS2glClear(0x4000);
+    PS2glFlush();
+    PS2glFinish();
+    PS2auxSwapBuffers();
+    PS2glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    PS2glClear(0x4000);
+    PS2glFlush();
+    PS2glFinish();
+    PS2auxSwapBuffers();
+    for (i = 0; i < 4; i++) {
+        CD_Read(FileHandle, (unsigned int)(((int)pBitmap + 0x7F) & ~0x7F), 0x30000);
+        PS2glBindTexture(0xDE1, TexHandle[i]);
+        PS2glTexImage2D(0xDE1, 0, 0x1907, 0x200, 0x80, 0, 0x1907, 0x1401);
+    }
+    PS2glMatrixMode(0x1701);
+    PS2glLoadIdentity();
+    PS2glOrtho(0.0f, 100.0f, 100.0f, 0.0f, -1.0f, 1.0f);
+    PS2glMatrixMode(0x1702);
+    PS2glLoadIdentity();
+    PS2glMatrixMode(0x1700);
+    PS2glLoadIdentity();
+    for (i = 0; i < 4; i++) {
+        for (K = 0; K < 4; K++) {
+            if (g_PS2glContext.iCurTextureSet != 0) {
+                g_PS2glContext.bPointLighting |= 0x200;
+            }
+            else {
+                g_PS2glContext.bPointLighting |= 2;
+            }
+            g_gsContext.PRMODE.TME = 1;
+            g_gsContext.ModFlgs.PRMODE_Modified = 1;
+            PS2glBindTexture(0xDE1, TexHandle[K]);
+            PS2glTexParameteri(0xDE1, 0x2802, 0x2900);
+            PS2glTexParameteri(0xDE1, 0x2803, 0x2900);
+            PS2glBegin(4);
+            PS2glColor4f(0.5f, 0.5f, 0.5f, 1.0f);
+            PS2glTexCoord2f(0.0f, 0.0f);
+            PS2glVertex2f(0.0f, 0.0f);
+            PS2glTexCoord2f(1.0f, 0.0f);
+            PS2glVertex2f(100.0f, 0.0f);
+            PS2glTexCoord2f(1.0f, 1.0f);
+            PS2glVertex2f(100.0f, 100.0f);
+            PS2glTexCoord2f(0.0f, 1.0f);
+            PS2glVertex2f(0.0f, 100.0f);
+            PS2glTexCoord2f(1.0f, 0.0f);
+            PS2glVertex2f(100.0f, 0.0f);
+            PS2glTexCoord2f(0.0f, 0.0f);
+            PS2glVertex2f(0.0f, 0.0f);
+            PS2glEnd();
+        }
+        g_PS2glContext.nEnableBits &= ~0x100;
+        g_gsContext.PRMODE.ABE = 0;
+        g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        PS2glFlush();
+        PS2glFinish();
+        PS2auxSwapBuffers();
+    }
+    CD_Close(FileHandle);
+    PS2auxSwapBuffers();
+    PS2auxSwapBuffers();
+    free(pBitmap);
+    PS2glDeleteTextures(4, TexHandle);
+}
+
+void GLI_vLoadCarton(char* levelname)
+{
+    int FileHandle;
+    char TempString[512];
+
+    sprintf(TempString, "VIGNETTE\\FRA\\%s.RAW", levelname);
+    FileHandle = CD_OpenFileWithNameConversion(PLD_szPrependGamedataName(TempString));
+
+    GLI_vShowVignetteFromHandle(FileHandle);
+
+}
+
+void GLIPS2_vDisplayFirstLoadingBar(float Percent)
+{
+    /* Partial reconstruction: the GS/PS2GL state update and the draw order
+     * follow the retail code, the vertex list is still approximate.
+     * See m2c-seeds/GLIPS2_vDisplayFirstLoadingBar.c for the full skeleton. */
+    float fBar;
+    float fPos;
+
+    PS2glMatrixMode(0x1701);
+    PS2glLoadIdentity();
+    PS2glOrtho(0.0f, 100.0f, 100.0f, 0.0f, -1.0f, 1.0f);
+    PS2glMatrixMode(0x1700);
+    PS2glLoadIdentity();
+
+    g_PS2glContext.nEnableBits &= ~0x800;
+    g_gsContext.TEST_1.ZTE = 1;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    g_PS2glContext.nLightBits &= ~0x200;
+    g_gsContext.TEST_1.ZTST = 2;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    *g_PS2glContext.pnColorMatMasks &= ~1;
+    if (g_PS2glContext.iCurTextureSet != 0) {
+        g_PS2glContext.bPointLighting &= ~0x200;
+    }
+    else {
+        g_PS2glContext.bPointLighting &= ~2;
+    }
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    g_PS2glContext.nEnableBits &= ~0x400;
+    g_gsContext.TEST_1.ATE = 0;
+    g_PS2glContext.nLightBits &= ~0x400;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    if ((g_PS2glContext.bPointLighting & 0xF) != 0) {
+        g_gsContext.PRMODE.TME = 1;
+    }
+    else {
+        g_gsContext.PRMODE.TME = 0;
+    }
+    g_PS2glContext.nEnableBits &= ~0x80;
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    g_gsContext.PRMODE.FGE = 0;
+    *g_PS2glContext.pbFogging = 0;
+    g_PS2glContext.bCullfaceChanged = 1;
+    g_PS2glContext.nEnableBits &= ~0x2000;
+    PS2glColorMask(1, 1, 1, 1);
+    PS2glDepthMask(0);
+    PS2glBlendFunc(0x302, 0x303);
+    g_PS2glContext.nEnableBits &= ~0x100;
+    g_gsContext.PRMODE.ABE = 0;
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    PS2glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    PS2glClear(0x4100);
+
+    if (Percent > 100.0f) {
+        Percent = 100.0f;
+    }
+    fPos = BAR_POS[1] + 0.5f;
+    fBar = 0.5f + (BAR_POS[0] + ((Percent * ((BAR_POS[2] - 0.5f) - (BAR_POS[0] + 0.5f))) / 100.0f));
+    PS2glBegin(4);
+    PS2glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+    PS2glVertex2f(BAR_POS[0], BAR_POS[2]);
+    PS2glVertex2f(BAR_POS[2], fPos);
+    PS2glVertex2f(BAR_POS[2], fPos);
+    PS2glVertex2f(BAR_POS[1], fPos);
+    PS2glVertex2f(BAR_POS[2], BAR_POS[1]);
+    PS2glVertex2f(BAR_POS[1], BAR_POS[1]);
+    PS2glColor4f(0.0f, 0.3f, 0.3f, 1.0f);
+    PS2glVertex2f(BAR_POS[0], BAR_POS[3] - 0.5f);
+    PS2glVertex2f(BAR_POS[3], BAR_POS[3] - 0.5f);
+    PS2glVertex2f(BAR_POS[3], BAR_POS[3] - 0.5f);
+    PS2glVertex2f(BAR_POS[2], BAR_POS[3] - 0.5f);
+    PS2glVertex2f(BAR_POS[3], BAR_POS[3] - 0.5f);
+    PS2glVertex2f(BAR_POS[2], BAR_POS[3] - 0.5f);
+    PS2glColor4f(0.0f, 0.75f, 0.75f, 1.0f);
+    PS2glVertex2f(BAR_POS[3] - 0.5f, BAR_POS[0] + 0.5f);
+    PS2glVertex2f(fBar, fBar);
+    PS2glVertex2f(fBar, fBar);
+    PS2glVertex2f(BAR_POS[3] - 0.5f, fBar);
+    PS2glVertex2f(fBar, fBar);
+    PS2glVertex2f(BAR_POS[3] - 0.5f, fBar);
+    PS2glEnd();
+    PS2glFinish();
+    PS2auxSwapBuffers();
+}
+
+float FRR(float a, float b)
+{
+    float r;
+
+    return a + (b - a) * (r = (float)rand() / 2147483648.0f);
 }

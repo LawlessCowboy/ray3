@@ -1241,48 +1241,21 @@ tdstAnim3d_* fn_p_stGetAnimInState(tdstState_* p_stState);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char PLA_bCheckDistForMorph(HIE_tdstSuperObject_* p_stActorSO)
-{
-    unsigned char i;
-    float xResult;
-    tdst3dData_* h_Current3dData;
-    float xX, xY, xZ;
-    float xSqrNorm, xNorm;
-    UV3 stCamPos;
-    UV3 stDiff;
-    HIE_tdstSuperObject_* hCam;
 
-    xResult = 3.402822e38f;
-    h_Current3dData = p_stActorSO->hLinkedObject.p_stCharacter->h_3dData;
-    for (i = 0; i < g_stEngineStructure.ucNumberOfPlayersInMultiMode; i++)
-    {
-        float *pY;
-        float *pZ;
-        hCam = CAM_fn_hGetActiveCamera();
-        {
-            int *pPos = (int *)&p_stActorSO->hGlobalMatrix->stTransformMatrix.stCol_3;
-            stDiff.i[0] = pPos[0];
-            stDiff.i[1] = pPos[1];
-            stDiff.i[2] = pPos[2];
-        }
-        {
-            int *pPos = (int *)&hCam->hGlobalMatrix->stTransformMatrix.stCol_3;
-            stCamPos.i[0] = pPos[0];
-            stCamPos.i[1] = pPos[1];
-            stCamPos.i[2] = pPos[2];
-        }
-        pY = &stDiff.v.xY;
-        pZ = &stDiff.v.xZ;
-        stDiff.v.xX -= stCamPos.v.xX;
-        *pY -= stCamPos.v.xY;
-        *pZ -= stCamPos.v.xZ;
-        xZ = *pZ; xY = *pY; xX = stDiff.v.xX;
-        MTH_SQR3_TO(xSqrNorm, xX, xY, xZ) MTH_SQRT_TO(xNorm, xSqrNorm)
-        if (xNorm < xResult)
-            xResult = xNorm;
-    }
-    return (xResult < h_Current3dData->xDistNoMorphing);
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+unsigned char PLA_bCheckDistForMorph(HIE_tdstSuperObject_* p_stActorSO);
+void fn_vPlayLastSubEventsBeforeRestart(HIE_tdstSuperObject_* _hCharacter, tdstSubAnimInUse_* hNewSubAnimInUse);
+void fn_vPlaySubEventsSinceLastOneNoLoop(HIE_tdstSuperObject_* _hCharacter, tdstSubAnimInUse_* hNewSubAnimInUse);
+void fn_vDesInitAllSubEvents(HIE_tdstSuperObject_* _hCharacter, tdstSubAnimInUse_* hNewSubAnimInUse);
+void fn_vInitAllSubEvents(HIE_tdstSuperObject_* _hCharacter, tdstSubAnimInUse_* hNewSubAnimInUse);
+unsigned char GAM_fn_ucGetFirstCallOfEvent(tdstEvent_* _p_stEvent);
+unsigned char GAM_fn_ucGetTypeOfEvent(tdstEvent_* _p_stEvent);
+unsigned short fn_uwGetNbEngineFrameSinceLastMechEvent(HIE_tdstSuperObject_* p_stSuperObject);
+void fn_vPlayEvent(tdstEvent_* p_stEvent, int iMode, HIE_tdstSuperObject_* p_stSuperObject);
+void fn_vPlayLastEventsBeforeRestart(HIE_tdstSuperObject_* p_stSuperObject);
+void fn_vPlayEventsSinceLastOneNoLoop(HIE_tdstSuperObject_* p_stSuperObject);
+void fn_vDesInitAllEvents(HIE_tdstSuperObject_* p_stSuperObject, tdstState_* hNextState, int bStopEvents);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 847–876 */
 /* addr: 0x0027ae70  size: 276 bytes */
@@ -1310,31 +1283,6 @@ unsigned char PLA_bCheckDistForMorph(HIE_tdstSuperObject_* p_stActorSO)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vPlayLastSubEventsBeforeRestart(HIE_tdstSuperObject_* _hCharacter, tdstSubAnimInUse_* hNewSubAnimInUse)
-{
-    tdstEvent_* p_stEvent;
-    unsigned char ucNumberOfEvents;
-    unsigned char i;
-
-    p_stEvent = fn_p_GetEventsAddress(hNewSubAnimInUse->p_stTheSubAnim->p_stSubAnim, 0, 0);
-    if (p_stEvent != NULL)
-    {
-        ucNumberOfEvents = hNewSubAnimInUse->p_stTheSubAnim->p_stSubAnim->ucNumberOfEvents;
-        for (i = hNewSubAnimInUse->ucNextEvent; i < ucNumberOfEvents; i++)
-        {
-            if (hNewSubAnimInUse->d_ucEventActivation[i] == 0)
-            {
-                fn_vPlayEvent(&p_stEvent[i], 0, _hCharacter);
-                hNewSubAnimInUse->d_ucEventActivation[i] = p_stEvent[i].p_stfEventInTBL->ucPeriod;
-            }
-            else if (hNewSubAnimInUse->d_ucEventActivation[i] != 0xFF)
-            {
-                hNewSubAnimInUse->d_ucEventActivation[i] = hNewSubAnimInUse->d_ucEventActivation[i] - 1;
-            }
-        }
-        hNewSubAnimInUse->ucNextEvent = 0;
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 812–842 */
 /* addr: 0x0027af90  size: 324 bytes */
@@ -1359,37 +1307,6 @@ void fn_vPlayLastSubEventsBeforeRestart(HIE_tdstSuperObject_* _hCharacter, tdstS
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vPlaySubEventsSinceLastOneNoLoop(HIE_tdstSuperObject_* _hCharacter, tdstSubAnimInUse_* hNewSubAnimInUse)
-{
-    tdstEvent_* p_stEvent;
-    unsigned char ucNumberOfEvents;
-    float xFrame;
-
-    p_stEvent = fn_p_GetEventsAddress(hNewSubAnimInUse->p_stTheSubAnim->p_stSubAnim, 0, 0);
-    if (p_stEvent != NULL)
-    {
-        ucNumberOfEvents = hNewSubAnimInUse->p_stTheSubAnim->p_stSubAnim->ucNumberOfEvents;
-        while ((unsigned char)hNewSubAnimInUse->ucNextEvent != ucNumberOfEvents)
-        {
-            if ((short)p_stEvent[hNewSubAnimInUse->ucNextEvent].uwFrameNumber >= 0)
-                xFrame = (float)p_stEvent[hNewSubAnimInUse->ucNextEvent].uwFrameNumber;
-            else
-                xFrame = (float)((short)p_stEvent[hNewSubAnimInUse->ucNextEvent].uwFrameNumber >> 1);
-            if (xFrame + xFrame > hNewSubAnimInUse->xFrameNumber)
-                break;
-            if (hNewSubAnimInUse->d_ucEventActivation[hNewSubAnimInUse->ucNextEvent] == 0)
-            {
-                fn_vPlayEvent(&p_stEvent[hNewSubAnimInUse->ucNextEvent], 0, _hCharacter);
-                hNewSubAnimInUse->d_ucEventActivation[hNewSubAnimInUse->ucNextEvent] = p_stEvent[hNewSubAnimInUse->ucNextEvent].p_stfEventInTBL->ucPeriod;
-            }
-            else if (hNewSubAnimInUse->d_ucEventActivation[hNewSubAnimInUse->ucNextEvent] != 0xFF)
-            {
-                hNewSubAnimInUse->d_ucEventActivation[hNewSubAnimInUse->ucNextEvent] = hNewSubAnimInUse->d_ucEventActivation[hNewSubAnimInUse->ucNextEvent] - 1;
-            }
-            hNewSubAnimInUse->ucNextEvent = (signed char)(hNewSubAnimInUse->ucNextEvent + 1);
-        }
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 784–807 */
 /* addr: 0x0027b0e0  size: 196 bytes */
@@ -1415,27 +1332,6 @@ void fn_vPlayEvent(tdstEvent_* p_stEvent, int iMode, HIE_tdstSuperObject_* p_stS
 tdstEvent_* fn_p_GetEventsAddress(tdstAnim3d_* _p_stAnim3d, int lParam1, tdstObjectsTablesList_* p_stObjectsTable);
 tdstAnim3d_* fn_p_stGetAnimInState(tdstState_* p_stState);
 void HMU_fn_vFree(void** p_vPointer, unsigned char bTempMalloc);
-
-void fn_vDesInitAllSubEvents(HIE_tdstSuperObject_* _hCharacter, tdstSubAnimInUse_* hNewSubAnimInUse)
-{
-    tdstEvent_* p_stEvent;
-    unsigned char ucNumberOfEvents;
-    unsigned char i;
-
-    if (hNewSubAnimInUse->d_ucEventActivation)
-    {
-        ucNumberOfEvents = hNewSubAnimInUse->p_stTheSubAnim->p_stSubAnim->ucNumberOfEvents;
-        p_stEvent = fn_p_GetEventsAddress(hNewSubAnimInUse->p_stTheSubAnim->p_stSubAnim, 0, 0);
-        for (i = 0; i < ucNumberOfEvents; i++, p_stEvent++)
-        {
-            if (p_stEvent->p_stfEventInTBL->ucFirstCall == 0xFF)
-                fn_vPlayEvent(p_stEvent, 2, _hCharacter);
-        }
-        HMU_fn_vFree((void**)&hNewSubAnimInUse->d_ucEventActivation, 1);
-        hNewSubAnimInUse->d_ucEventActivation = 0;
-        hNewSubAnimInUse->ucNextEvent = 0;
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 728–779 */
 /* addr: 0x0027b1b0  size: 384 bytes */
@@ -1481,47 +1377,6 @@ void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
 tdstEvent_* fn_p_GetEventsAddress(tdstAnim3d_* _p_stAnim3d, int lParam1, tdstObjectsTablesList_* p_stObjectsTable);
 #endif
 
-void fn_vInitAllSubEvents(HIE_tdstSuperObject_* _hCharacter, tdstSubAnimInUse_* hNewSubAnimInUse)
-{
-    tdstEvent_* p_stEvent;
-    unsigned char i;
-    unsigned char bBTLevel;
-    unsigned char ucMemoryType;
-    int lNbEvents;
-
-    ucMemoryType = 0;
-    bBTLevel = 0;
-    if (fn_bIsInFix(_hCharacter->ulTypeOfLinkedObject != 2 ? NULL : _hCharacter->hLinkedObject.p_stCharacter) && !GAM_fn_bIsEngineInFixMode())
-    {
-        ucMemoryType = HMU_fn_ucGetActualNormalMemoryBlockUsed();
-        HMU_fn_vSetMemoriesInFixMode();
-        bBTLevel = 1;
-    }
-    p_stEvent = fn_p_GetEventsAddress(hNewSubAnimInUse->p_stTheSubAnim->p_stSubAnim, 0, 0);
-    if (p_stEvent)
-    {
-        lNbEvents = hNewSubAnimInUse->p_stTheSubAnim->p_stSubAnim->ucNumberOfEvents;
-        hNewSubAnimInUse->d_ucEventActivation = (unsigned char*)HMU_fn_p_vMalloc(lNbEvents, 1);
-        hNewSubAnimInUse->ucNextEvent = 0;
-        for (i = 0; i < lNbEvents; i++, p_stEvent++)
-            hNewSubAnimInUse->d_ucEventActivation[i] = p_stEvent->p_stfEventInTBL->ucFirstCall;
-    }
-    else
-    {
-        hNewSubAnimInUse->d_ucEventActivation = NULL;
-        hNewSubAnimInUse->ucNextEvent = 0;
-    }
-    if (bBTLevel)
-    {
-        if (ucMemoryType == HMU_fn_ucGetLevelNormalMemoryBlock())
-            HMU_fn_vSetMemoriesInLevelMode();
-        else if (fn_lGetTransitionBloc() != 1)
-            HMU_fn_vSetMemoriesInTransition1Mode();
-        else
-            HMU_fn_vSetMemoriesInTransition2Mode();
-    }
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 677–678 */
 /* addr: 0x0027b330  size: 12 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1530,10 +1385,6 @@ void fn_vInitAllSubEvents(HIE_tdstSuperObject_* _hCharacter, tdstSubAnimInUse_* 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char GAM_fn_ucGetFirstCallOfEvent(tdstEvent_* _p_stEvent)
-{
-    return _p_stEvent->p_stfEventInTBL->ucFirstCall;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 651–652 */
 /* addr: 0x0027b340  size: 12 bytes */
@@ -1543,10 +1394,6 @@ unsigned char GAM_fn_ucGetFirstCallOfEvent(tdstEvent_* _p_stEvent)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char GAM_fn_ucGetTypeOfEvent(tdstEvent_* _p_stEvent)
-{
-    return _p_stEvent->p_stfEventInTBL->ucTypeOfEvent;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 638–639 */
 /* addr: 0x0027b350  size: 16 bytes */
@@ -1556,12 +1403,6 @@ unsigned char GAM_fn_ucGetTypeOfEvent(tdstEvent_* _p_stEvent)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned short fn_uwGetNbEngineFrameSinceLastMechEvent(HIE_tdstSuperObject_* p_stSuperObject)
-{
-    tdstEngineObject_* p_stCharacter = (tdstEngineObject_ *)p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData;
-
-    return *(unsigned short *)((char *)p_stCharacter + 0x102);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 468–634 */
 /* addr: 0x0027b360  size: 560 bytes */
@@ -1605,16 +1446,6 @@ unsigned short fn_uwGetNbEngineFrameSinceLastMechEvent(HIE_tdstSuperObject_* p_s
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vPlayEvent(tdstEvent_* p_stEvent, int iMode, HIE_tdstSuperObject_* p_stSuperObject)
-{
-    unsigned int ulCustomBits;
-    int s32_SemaphoreId;
-    _SND_tduRefEvt u_RefEvt;
-    int s32_TypeId;
-    int s32_ChannelId;
-    int s32_ObjectId;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 389–453 */
 /* addr: 0x0027b590  size: 508 bytes */
@@ -1656,14 +1487,6 @@ void fn_vPlayEvent(tdstEvent_* p_stEvent, int iMode, HIE_tdstSuperObject_* p_stS
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vPlayLastEventsBeforeRestart(HIE_tdstSuperObject_* p_stSuperObject)
-{
-    char i;
-    tdstEvent_* p_stEvent;
-    tdstAnim3d_* p_stAnim;
-    tdst3dData_* h_3dData;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 310–373 */
 /* addr: 0x0027b790  size: 556 bytes */
@@ -1701,13 +1524,6 @@ void fn_vPlayLastEventsBeforeRestart(HIE_tdstSuperObject_* p_stSuperObject)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vPlayEventsSinceLastOneNoLoop(HIE_tdstSuperObject_* p_stSuperObject)
-{
-    tdstEvent_* p_stEvent;
-    tdstAnim3d_* p_stAnim;
-    tdst3dData_* h_3dData;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 171–295 */
 /* addr: 0x0027b9c0  size: 680 bytes */
@@ -1859,4 +1675,212 @@ Cleanup:
     if (h_3dData->d_ucEventActivation != 0)
         HMU_fn_vFree((void**)&h_3dData->d_ucEventActivation, 1);
     h_3dData->d_ucEventActivation = 0;
+}
+
+void fn_vPlayEventsSinceLastOneNoLoop(HIE_tdstSuperObject_* p_stSuperObject)
+{
+    tdstEvent_* p_stEvent;
+    tdstAnim3d_* p_stAnim;
+    tdst3dData_* h_3dData;
+    /* TODO: decompile from asm/... */
+}
+
+void fn_vPlayLastEventsBeforeRestart(HIE_tdstSuperObject_* p_stSuperObject)
+{
+    char i;
+    tdstEvent_* p_stEvent;
+    tdstAnim3d_* p_stAnim;
+    tdst3dData_* h_3dData;
+    /* TODO: decompile from asm/... */
+}
+
+void fn_vPlayEvent(tdstEvent_* p_stEvent, int iMode, HIE_tdstSuperObject_* p_stSuperObject)
+{
+    unsigned int ulCustomBits;
+    int s32_SemaphoreId;
+    _SND_tduRefEvt u_RefEvt;
+    int s32_TypeId;
+    int s32_ChannelId;
+    int s32_ObjectId;
+    /* TODO: decompile from asm/... */
+}
+
+unsigned short fn_uwGetNbEngineFrameSinceLastMechEvent(HIE_tdstSuperObject_* p_stSuperObject)
+{
+    tdstEngineObject_* p_stCharacter = (tdstEngineObject_ *)p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData;
+
+    return *(unsigned short *)((char *)p_stCharacter + 0x102);
+}
+
+unsigned char GAM_fn_ucGetTypeOfEvent(tdstEvent_* _p_stEvent)
+{
+    return _p_stEvent->p_stfEventInTBL->ucTypeOfEvent;
+}
+
+unsigned char GAM_fn_ucGetFirstCallOfEvent(tdstEvent_* _p_stEvent)
+{
+    return _p_stEvent->p_stfEventInTBL->ucFirstCall;
+}
+
+void fn_vInitAllSubEvents(HIE_tdstSuperObject_* _hCharacter, tdstSubAnimInUse_* hNewSubAnimInUse)
+{
+    tdstEvent_* p_stEvent;
+    unsigned char i;
+    unsigned char bBTLevel;
+    unsigned char ucMemoryType;
+    int lNbEvents;
+
+    ucMemoryType = 0;
+    bBTLevel = 0;
+    if (fn_bIsInFix(_hCharacter->ulTypeOfLinkedObject != 2 ? NULL : _hCharacter->hLinkedObject.p_stCharacter) && !GAM_fn_bIsEngineInFixMode())
+    {
+        ucMemoryType = HMU_fn_ucGetActualNormalMemoryBlockUsed();
+        HMU_fn_vSetMemoriesInFixMode();
+        bBTLevel = 1;
+    }
+    p_stEvent = fn_p_GetEventsAddress(hNewSubAnimInUse->p_stTheSubAnim->p_stSubAnim, 0, 0);
+    if (p_stEvent)
+    {
+        lNbEvents = hNewSubAnimInUse->p_stTheSubAnim->p_stSubAnim->ucNumberOfEvents;
+        hNewSubAnimInUse->d_ucEventActivation = (unsigned char*)HMU_fn_p_vMalloc(lNbEvents, 1);
+        hNewSubAnimInUse->ucNextEvent = 0;
+        for (i = 0; i < lNbEvents; i++, p_stEvent++)
+            hNewSubAnimInUse->d_ucEventActivation[i] = p_stEvent->p_stfEventInTBL->ucFirstCall;
+    }
+    else
+    {
+        hNewSubAnimInUse->d_ucEventActivation = NULL;
+        hNewSubAnimInUse->ucNextEvent = 0;
+    }
+    if (bBTLevel)
+    {
+        if (ucMemoryType == HMU_fn_ucGetLevelNormalMemoryBlock())
+            HMU_fn_vSetMemoriesInLevelMode();
+        else if (fn_lGetTransitionBloc() != 1)
+            HMU_fn_vSetMemoriesInTransition1Mode();
+        else
+            HMU_fn_vSetMemoriesInTransition2Mode();
+    }
+}
+
+void fn_vDesInitAllSubEvents(HIE_tdstSuperObject_* _hCharacter, tdstSubAnimInUse_* hNewSubAnimInUse)
+{
+    tdstEvent_* p_stEvent;
+    unsigned char ucNumberOfEvents;
+    unsigned char i;
+
+    if (hNewSubAnimInUse->d_ucEventActivation)
+    {
+        ucNumberOfEvents = hNewSubAnimInUse->p_stTheSubAnim->p_stSubAnim->ucNumberOfEvents;
+        p_stEvent = fn_p_GetEventsAddress(hNewSubAnimInUse->p_stTheSubAnim->p_stSubAnim, 0, 0);
+        for (i = 0; i < ucNumberOfEvents; i++, p_stEvent++)
+        {
+            if (p_stEvent->p_stfEventInTBL->ucFirstCall == 0xFF)
+                fn_vPlayEvent(p_stEvent, 2, _hCharacter);
+        }
+        HMU_fn_vFree((void**)&hNewSubAnimInUse->d_ucEventActivation, 1);
+        hNewSubAnimInUse->d_ucEventActivation = 0;
+        hNewSubAnimInUse->ucNextEvent = 0;
+    }
+}
+
+void fn_vPlaySubEventsSinceLastOneNoLoop(HIE_tdstSuperObject_* _hCharacter, tdstSubAnimInUse_* hNewSubAnimInUse)
+{
+    tdstEvent_* p_stEvent;
+    unsigned char ucNumberOfEvents;
+    float xFrame;
+
+    p_stEvent = fn_p_GetEventsAddress(hNewSubAnimInUse->p_stTheSubAnim->p_stSubAnim, 0, 0);
+    if (p_stEvent != NULL)
+    {
+        ucNumberOfEvents = hNewSubAnimInUse->p_stTheSubAnim->p_stSubAnim->ucNumberOfEvents;
+        while ((unsigned char)hNewSubAnimInUse->ucNextEvent != ucNumberOfEvents)
+        {
+            if ((short)p_stEvent[hNewSubAnimInUse->ucNextEvent].uwFrameNumber >= 0)
+                xFrame = (float)p_stEvent[hNewSubAnimInUse->ucNextEvent].uwFrameNumber;
+            else
+                xFrame = (float)((short)p_stEvent[hNewSubAnimInUse->ucNextEvent].uwFrameNumber >> 1);
+            if (xFrame + xFrame > hNewSubAnimInUse->xFrameNumber)
+                break;
+            if (hNewSubAnimInUse->d_ucEventActivation[hNewSubAnimInUse->ucNextEvent] == 0)
+            {
+                fn_vPlayEvent(&p_stEvent[hNewSubAnimInUse->ucNextEvent], 0, _hCharacter);
+                hNewSubAnimInUse->d_ucEventActivation[hNewSubAnimInUse->ucNextEvent] = p_stEvent[hNewSubAnimInUse->ucNextEvent].p_stfEventInTBL->ucPeriod;
+            }
+            else if (hNewSubAnimInUse->d_ucEventActivation[hNewSubAnimInUse->ucNextEvent] != 0xFF)
+            {
+                hNewSubAnimInUse->d_ucEventActivation[hNewSubAnimInUse->ucNextEvent] = hNewSubAnimInUse->d_ucEventActivation[hNewSubAnimInUse->ucNextEvent] - 1;
+            }
+            hNewSubAnimInUse->ucNextEvent = (signed char)(hNewSubAnimInUse->ucNextEvent + 1);
+        }
+    }
+}
+
+void fn_vPlayLastSubEventsBeforeRestart(HIE_tdstSuperObject_* _hCharacter, tdstSubAnimInUse_* hNewSubAnimInUse)
+{
+    tdstEvent_* p_stEvent;
+    unsigned char ucNumberOfEvents;
+    unsigned char i;
+
+    p_stEvent = fn_p_GetEventsAddress(hNewSubAnimInUse->p_stTheSubAnim->p_stSubAnim, 0, 0);
+    if (p_stEvent != NULL)
+    {
+        ucNumberOfEvents = hNewSubAnimInUse->p_stTheSubAnim->p_stSubAnim->ucNumberOfEvents;
+        for (i = hNewSubAnimInUse->ucNextEvent; i < ucNumberOfEvents; i++)
+        {
+            if (hNewSubAnimInUse->d_ucEventActivation[i] == 0)
+            {
+                fn_vPlayEvent(&p_stEvent[i], 0, _hCharacter);
+                hNewSubAnimInUse->d_ucEventActivation[i] = p_stEvent[i].p_stfEventInTBL->ucPeriod;
+            }
+            else if (hNewSubAnimInUse->d_ucEventActivation[i] != 0xFF)
+            {
+                hNewSubAnimInUse->d_ucEventActivation[i] = hNewSubAnimInUse->d_ucEventActivation[i] - 1;
+            }
+        }
+        hNewSubAnimInUse->ucNextEvent = 0;
+    }
+}
+
+unsigned char PLA_bCheckDistForMorph(HIE_tdstSuperObject_* p_stActorSO)
+{
+    unsigned char i;
+    float xResult;
+    tdst3dData_* h_Current3dData;
+    float xX, xY, xZ;
+    float xSqrNorm, xNorm;
+    UV3 stCamPos;
+    UV3 stDiff;
+    HIE_tdstSuperObject_* hCam;
+
+    xResult = 3.402822e38f;
+    h_Current3dData = p_stActorSO->hLinkedObject.p_stCharacter->h_3dData;
+    for (i = 0; i < g_stEngineStructure.ucNumberOfPlayersInMultiMode; i++)
+    {
+        float *pY;
+        float *pZ;
+        hCam = CAM_fn_hGetActiveCamera();
+        {
+            int *pPos = (int *)&p_stActorSO->hGlobalMatrix->stTransformMatrix.stCol_3;
+            stDiff.i[0] = pPos[0];
+            stDiff.i[1] = pPos[1];
+            stDiff.i[2] = pPos[2];
+        }
+        {
+            int *pPos = (int *)&hCam->hGlobalMatrix->stTransformMatrix.stCol_3;
+            stCamPos.i[0] = pPos[0];
+            stCamPos.i[1] = pPos[1];
+            stCamPos.i[2] = pPos[2];
+        }
+        pY = &stDiff.v.xY;
+        pZ = &stDiff.v.xZ;
+        stDiff.v.xX -= stCamPos.v.xX;
+        *pY -= stCamPos.v.xY;
+        *pZ -= stCamPos.v.xZ;
+        xZ = *pZ; xY = *pY; xX = stDiff.v.xX;
+        MTH_SQR3_TO(xSqrNorm, xX, xY, xZ) MTH_SQRT_TO(xNorm, xSqrNorm)
+        if (xNorm < xResult)
+            xResult = xNorm;
+    }
+    return (xResult < h_Current3dData->xDistNoMorphing);
 }

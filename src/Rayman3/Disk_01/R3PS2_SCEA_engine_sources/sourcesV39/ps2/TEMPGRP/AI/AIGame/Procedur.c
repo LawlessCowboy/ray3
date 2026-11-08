@@ -3762,25 +3762,115 @@ inline long MTH_M_xRealToLong(float _xValue)
     return _lResult;
 }
 
-tdstNodeInterpret_* fn_p_stAllowNormalsRecomputing(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ stParam;
-    long lValue;
-
-
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    lValue = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
-
-    if (lValue == 0)
-
-        p_SuperObjPerso->ulFlags &= ~0x200000;
-
-
-    else
-        p_SuperObjPerso->ulFlags |= 0x200000;
-    return p_stTree;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+tdstNodeInterpret_* fn_p_stAllowNormalsRecomputing(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_st2DMenuProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stGcResetToIpl(tdstNodeInterpret_* p_stTree, tdstNodeInterpret_* p_stTree2);
+tdstNodeInterpret_* fn_p_stGcSetActiveMcSlot(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stSFX_ActivateWaterCircles(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stSFX_ActivateLightReflection(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stWaterEffect_GenerateSplash(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stWaterEffect_GenerateImpulse(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stWaterEffect_SetRandomPerturbationGeneration(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stSetCurrentValueAsInit(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stDemoProc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stBulletTimeProc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stMCProc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stScreenProc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stAddMemoryCardString(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stValidateMemoryCard(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stTobySetMaterial(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stTobyDestroy(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stTobySetTransparency(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stAddSegmentToToby(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stCreateToby(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stMonitoringStop(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stMonitoringStart(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stHandleActorDynamicLoad(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stHandleFamilyDynamicLoad(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stFFBProcedures(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stLogFileProcedure(tdstNodeInterpret_* p_stTree, tdstNodeInterpret_* p_stTree2);
+tdstNodeInterpret_* fn_p_stPortalActivationProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stSCT_UltraProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stSAV2SaveProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stDoNotLoadTextures(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stSetGameMode(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stDataPath(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stLoadingLevel(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stStartCine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stEndTransitionProcedure(tdstNodeInterpret_* p_stTree, tdstNodeInterpret_* p_stTree2);
+tdstNodeInterpret_* fn_p_stDisplaySegment(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stBrainActivationProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stSetVSyncWait(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stVideoProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stRLIProcedure2(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stMultiPlayerProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stJFFTXTGetBdBox(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stJFFTXTSettings(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+void fn_vSetMenuPausePad(void);
+void fn_vTXTAffichePause(int _lVMSOrPad, int DeconenctedPadId);
+void PS2_fn_vSetControllerMessage(void);
+tdstNodeInterpret_* fn_p_stJFFTXTProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stCheatCodeProcedure(tdstNodeInterpret_* p_stTree, tdstNodeInterpret_* p_stTree2);
+tdstNodeInterpret_* fn_p_stInGameMenuProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stTakePictureProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stAGOProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stDummy(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stBreakKeyword(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stEndLoopKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stLoopKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stSkipLoop(tdstNodeInterpret_* p_stTreeInit);
+tdstNodeInterpret_* fn_p_st_ACT_SetDrawFlag(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_st_SPO_SetEngineDisplayModeFlag(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_st_SPO_SetDrawFlag(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_st_SinusEffect_SetState(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_st_SinusEffect_SetRLIParams(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_st_SinusEffect_SetAmplitude(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_st_SinusEffect_SetPreMultiplier(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_st_SinusEffect_SetFreq(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stMenuAndVignetteProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stVisualMaterialProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stTransparenceProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stSkinMaterialProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+void fn_vUpdateCharacterSkinList(tdst3dData_* h_3dData, GLI_tdstMaterial_* hMaterial, short _xSkinIndex);
+tdstNodeInterpret_* fn_p_stDisplayProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stChangeActionRandomProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stChangeActionProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stTurnPersoProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stTurnProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stChangeMyComportIntelligenceAndReflexProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stChangeMyComportReflexProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stChangeMyComportIntelligenceProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stChangeComportReflexProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stChangeComportIntelligenceProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+void fn_vInternalChangeComportProcedure(tdstIntelligence_* p_stAimedPersoIntelligenceOrReflex, tdstComport_* p_stComport, unsigned char _bContinueExecution);
+tdstNodeInterpret_* fn_p_stTraceProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stNoneProcedure(tdstNodeInterpret_* p_stTree, tdstNodeInterpret_* p_stTree2);
+tdstNodeInterpret_* fn_p_stKeyboardProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stPersoLightProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stFogProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stChangeActivationChannelProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stSaveGameProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stModuleControlProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stBuildObjectTableFromTableAndStringProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stLinkTableProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stListEnsembleProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stListProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+void fn_vFillListWithAllPersoOfAModel(tdstList_* _p_stList, HIE_tdstSuperObject_* _hFather, AI_tdstAIModel_* _p_stModel);
+void fn_vFillListWithAllPersoOfAFamilly(tdstList_* _p_stList, HIE_tdstSuperObject_* _hFather, tdstFamilyList_* _hFamily);
+tdstNodeInterpret_* fn_p_stListZDDZDEProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stHitPointsMaxProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stHitPointsProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stLogWindowProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stDynamProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stMiscMoreProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stMiscProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stKillPersoAndClearVariableProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stDeletePersoFromGameProcedure(tdstNodeInterpret_* p_stTree, tdstNodeInterpret_* p_stTree2);
+tdstNodeInterpret_* fn_p_stMiscNoProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stMiscUltraProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stR3SetValue(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6916–6940 */
 /* addr: 0x00223a70  size: 172 bytes */
@@ -3804,31 +3894,6 @@ tdstNodeInterpret_* fn_p_stAllowNormalsRecomputing(HIE_tdstSuperObject_* p_Super
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_st2DMenuProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdeProcedureId_ eProcedureId;
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-    switch (eProcedureId) {
-    case eProc_Begin2DMenu:
-        ActivateInGameMenu2D();
-        break;
-    case eProc_Begin2DMenuStart:
-        ActivateInGameMenu2DStart();
-        break;
-    case eProc_Begin2DMenuPhoto:
-        ActivateInGameMenu2DPhoto();
-        break;
-    case eProc_Begin2DMenuBonus:
-        ActivateInGameMenu2DBonus(0);
-        break;
-    case eProc_Begin2DMenuBonusExit:
-        ActivateInGameMenu2DBonus(1);
-        break;
-    default:
-        break;
-    }
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6901–6901 */
 /* addr: 0x00223b20  size: 8 bytes */
@@ -3837,10 +3902,6 @@ tdstNodeInterpret_* fn_p_st2DMenuProcedure(HIE_tdstSuperObject_* p_SuperObjPerso
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stGcResetToIpl(tdstNodeInterpret_* p_stTree, tdstNodeInterpret_* p_stTree2)
-{
-    return p_stTree2;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6875–6887 */
 /* addr: 0x00223b30  size: 28 bytes */
@@ -3851,11 +3912,6 @@ tdstNodeInterpret_* fn_p_stGcResetToIpl(tdstNodeInterpret_* p_stTree, tdstNodeIn
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stGcSetActiveMcSlot(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    int stParam[4];
-    return fn_p_stEvalTree(p_SuperObjPerso, p_stTree, (tdstGetSetParam_*)stParam);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6852–6866 */
 /* addr: 0x00223b50  size: 72 bytes */
@@ -3871,20 +3927,6 @@ tdstNodeInterpret_* fn_p_stGcSetActiveMcSlot(HIE_tdstSuperObject_* p_SuperObjPer
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stSFX_ActivateWaterCircles(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ stParam;
-    long lValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    if (stParam.eType == E_vt_Float) lValue = MTH_M_xRealToLong(stParam.uDummy.uParam.xValue);
-
-
-
-
-
-
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6834–6848 */
 /* addr: 0x00223ba0  size: 72 bytes */
@@ -3900,20 +3942,6 @@ tdstNodeInterpret_* fn_p_stSFX_ActivateWaterCircles(HIE_tdstSuperObject_* p_Supe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stSFX_ActivateLightReflection(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ stParam;
-    long lValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    if (stParam.eType == E_vt_Float) lValue = MTH_M_xRealToLong(stParam.uDummy.uParam.xValue);
-
-
-
-
-
-
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6754–6777 */
 /* addr: 0x00223bf0  size: 112 bytes */
@@ -3929,18 +3957,6 @@ tdstNodeInterpret_* fn_p_stSFX_ActivateLightReflection(HIE_tdstSuperObject_* p_S
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stWaterEffect_GenerateSplash(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ stParam;
-    long lValue;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    lValue = (stParam.eType == E_vt_Float) ? 0 : stParam.uDummy.uParam.lValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    lValue = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6737–6750 */
 /* addr: 0x00223c60  size: 28 bytes */
@@ -3951,11 +3967,6 @@ tdstNodeInterpret_* fn_p_stWaterEffect_GenerateSplash(HIE_tdstSuperObject_* p_Su
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stWaterEffect_GenerateImpulse(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    int stParam[4];
-    return fn_p_stEvalTree(p_SuperObjPerso, p_stTree, (tdstGetSetParam_*)stParam);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6714–6733 */
 /* addr: 0x00223c80  size: 128 bytes */
@@ -3973,17 +3984,6 @@ tdstNodeInterpret_* fn_p_stWaterEffect_GenerateImpulse(HIE_tdstSuperObject_* p_S
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stWaterEffect_SetRandomPerturbationGeneration(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ stParam;
-    long lValue;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    lValue = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    lValue = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6636–6695 */
 /* addr: 0x00223d00  size: 112 bytes */
@@ -3996,20 +3996,6 @@ tdstNodeInterpret_* fn_p_stWaterEffect_SetRandomPerturbationGeneration(HIE_tdstS
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stSetCurrentValueAsInit(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    HIE_tdstSuperObject_* p_stResultOwnerPerso;
-
-    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator((p_stTree - 1)->uDummy.uId.eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
-
-    if (p_stTree->eType == 2)
-        p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree + 1, &p_stResultOwnerPerso);
-    else
-        p_stResultOwnerPerso = p_SuperObjPerso;
-
-    return p_stTree + 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6612–6630 */
 /* addr: 0x00223d70  size: 60 bytes */
@@ -4026,16 +4012,6 @@ tdstNodeInterpret_* fn_p_stSetCurrentValueAsInit(HIE_tdstSuperObject_* p_SuperOb
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stDemoProc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    int stParam[4];
-    tdeProcedureId_ eProcedureId;
-    eProcedureId = *(tdeProcedureId_*)((char*)p_stTree - 8);
-    if (eProcedureId != eProc_ExitFromDemo) {
-        return p_stTree;
-    }
-    return fn_p_stEvalTree(p_SuperObjPerso, p_stTree, (tdstGetSetParam_*)&stParam[0]);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6591–6609 */
 /* addr: 0x00223db0  size: 68 bytes */
@@ -4053,22 +4029,6 @@ tdstNodeInterpret_* fn_p_stDemoProc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstN
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stBulletTimeProc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdeProcedureId_ eProcedureId;
-    eProcedureId = *(tdeProcedureId_*)((char*)p_stTree - 8);
-    switch (eProcedureId)
-    {
-        case eProc_SetFakeSpeedPercentage:
-        {
-            int stParam[4];
-            p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, (tdstGetSetParam_*)stParam);
-            g_iFalseTime = stParam[0];
-        }
-        break;
-    }
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6569–6588 */
 /* addr: 0x00223e00  size: 68 bytes */
@@ -4086,22 +4046,6 @@ tdstNodeInterpret_* fn_p_stBulletTimeProc(HIE_tdstSuperObject_* p_SuperObjPerso,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stMCProc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdeProcedureId_ eProcedureId;
-    eProcedureId = *(tdeProcedureId_*)((char*)p_stTree - 8);
-    switch (eProcedureId)
-    {
-        case eProc_SetSaveGameAccessType:
-        {
-            int stParam[4];
-            p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, (tdstGetSetParam_*)stParam);
-            MC_ManagmentState = stParam[0];
-        }
-        break;
-    }
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6519–6565 */
 /* addr: 0x00223e50  size: 148 bytes */
@@ -4126,32 +4070,6 @@ tdstNodeInterpret_* fn_p_stMCProc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNod
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stScreenProc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ stParam;
-    tdeProcedureId_ eProcedureId;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    switch (eProcedureId)
-    {
-    case eProc_EnableWidescreen:
-        GLI_g_bWideScreenMode = 1;
-        break;
-    case eProc_DisableWidescreen:
-        GLI_g_bWideScreenMode = 0;
-        break;
-    case eProc_SetDisplayFrequency:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        if (stParam.uDummy.uParam.lValue == 50)
-            GLI_fn_vSwitchTo50Hz();
-        else
-            GLI_fn_vSwitchTo60Hz();
-        break;
-    }
-
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6494–6509 */
 /* addr: 0x00223ef0  size: 96 bytes */
@@ -4171,21 +4089,6 @@ tdstNodeInterpret_* fn_p_stScreenProc(HIE_tdstSuperObject_* p_SuperObjPerso, tds
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stAddMemoryCardString(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    char* pszString;
-    int pos;
-    tdstGetSetParam_ stParam;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    pos = stParam.uDummy.uParam.ucValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    pszString = fn_szGetStringFromTextOrStringParam(&stParam);
-
-    MC_AddString(pos, pszString);
-
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6476–6490 */
 /* addr: 0x00223f50  size: 52 bytes */
@@ -4198,13 +4101,6 @@ tdstNodeInterpret_* fn_p_stAddMemoryCardString(HIE_tdstSuperObject_* p_SuperObjP
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stValidateMemoryCard(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    int stParam[4];
-    tdstNodeInterpret_* result = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, (tdstGetSetParam_*)stParam);
-    SVG_fn_SetAsCurrentMemoryCard(((unsigned char*)stParam)[0]);
-    return result;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6457–6471 */
 /* addr: 0x00223f90  size: 140 bytes */
@@ -4225,23 +4121,6 @@ tdstNodeInterpret_* fn_p_stValidateMemoryCard(HIE_tdstSuperObject_* p_SuperObjPe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stTobySetMaterial(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ stParam;
-    int lValue;
-
-
-
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    lValue = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-
-
-    Toby_SetMaterial((void*)lValue, stParam.uDummy.uParam.hVisualMaterial);
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6445–6454 */
 /* addr: 0x00224020  size: 108 bytes */
@@ -4259,18 +4138,6 @@ tdstNodeInterpret_* fn_p_stTobySetMaterial(HIE_tdstSuperObject_* p_SuperObjPerso
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stTobyDestroy(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ stParam;
-    int lValue;
-
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    lValue = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
-
-    Toby_Destroy(lValue);
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6427–6441 */
 /* addr: 0x00224090  size: 140 bytes */
@@ -4291,24 +4158,6 @@ tdstNodeInterpret_* fn_p_stTobyDestroy(HIE_tdstSuperObject_* p_SuperObjPerso, td
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stTobySetTransparency(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ stParam;
-    int lValue;
-
-
-
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    lValue = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-
-
-    Toby_SetTransparency(lValue, stParam.uDummy.uParam.xValue);
-
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6407–6423 */
 /* addr: 0x00224120  size: 200 bytes */
@@ -4336,26 +4185,6 @@ tdstNodeInterpret_* fn_p_stTobySetTransparency(HIE_tdstSuperObject_* p_SuperObjP
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stAddSegmentToToby(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    MTH3D_tdstVector_ stPt1;
-    MTH3D_tdstVector_ stPt2;
-    tdstGetSetParam_ stParam;
-    int ID;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    ID = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    stPt1 = stParam.uDummy.uParam.stVectorValue;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    stPt2 = stParam.uDummy.uParam.stVectorValue;
-
-    Toby_AddSegment(ID, &stPt1, &stPt2);
-
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6390–6403 */
 /* addr: 0x002241f0  size: 208 bytes */
@@ -4377,19 +4206,6 @@ tdstNodeInterpret_* fn_p_stAddSegmentToToby(HIE_tdstSuperObject_* p_SuperObjPers
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stCreateToby(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    long ID;
-    tdstGetSetParam_ stParam;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    ID = (int)((stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue);
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    Toby_Allocate(ID, (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue);
-
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6378–6384 */
 /* addr: 0x002242c0  size: 104 bytes */
@@ -4406,15 +4222,6 @@ tdstNodeInterpret_* fn_p_stCreateToby(HIE_tdstSuperObject_* p_SuperObjPerso, tds
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stMonitoringStop(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ stParam;
-
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    fn_bBbStopMonitoring((stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue);
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6369–6375 */
 /* addr: 0x00224330  size: 104 bytes */
@@ -4431,15 +4238,6 @@ tdstNodeInterpret_* fn_p_stMonitoringStop(HIE_tdstSuperObject_* p_SuperObjPerso,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stMonitoringStart(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ stParam;
-
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    fn_bBbStartMonitoring((stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue);
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6347–6365 */
 /* addr: 0x002243a0  size: 84 bytes */
@@ -4454,26 +4252,6 @@ tdstNodeInterpret_* fn_p_stMonitoringStart(HIE_tdstSuperObject_* p_SuperObjPerso
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stHandleActorDynamicLoad(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstEngineObject_* p_stEngineObject;
-    tdeProcedureId_ eProcedureId;
-    tdstGetSetParam_ stParam;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-
-    p_stEngineObject = stParam.uDummy.uParam.p_stEngObjValue;
-    switch (eProcedureId)
-    {
-    case eProc_SetActorToLoad:
-        GAM_fn_vSetActorToLoad(p_stEngineObject);
-        break;
-    }
-
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6325–6343 */
 /* addr: 0x00224400  size: 84 bytes */
@@ -4488,26 +4266,6 @@ tdstNodeInterpret_* fn_p_stHandleActorDynamicLoad(HIE_tdstSuperObject_* p_SuperO
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stHandleFamilyDynamicLoad(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstFamilyList_* hFamily;
-    tdeProcedureId_ eProcedureId;
-    tdstGetSetParam_ stParam;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-
-    hFamily = stParam.uDummy.uParam.hFamily;
-    switch (eProcedureId)
-    {
-    case eProc_SetFamilyToLoad:
-        GAM_fn_vSetFamilyToLoad(hFamily);
-        break;
-    }
-
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6239–6321 */
 /* addr: 0x00224460  size: 460 bytes */
@@ -4560,71 +4318,6 @@ tdstNodeInterpret_* fn_p_stHandleFamilyDynamicLoad(HIE_tdstSuperObject_* p_Super
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stFFBProcedures(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ stParam;
-    tdeProcedureId_ eProcedureId;
-    unsigned char ucPadNumber;
-    unsigned int ulCurrentTime;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-    ulCurrentTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
-    ucPadNumber = 0;
-
-    if (eProcedureId != eProc_FFBDeleteAllPreCreatedEffectForAllPad && eProcedureId != eProc_FFBStopAllEffectForAllPad && eProcedureId != eProc_FFBPauseAllEffectForAllPad && eProcedureId != eProc_FFBResumeAllEffectForAllPad)
-    {
-        /* Not original source, needs cleaning up (temp defers the p_stTree move after the pad check) */
-        tdstNodeInterpret_* p_stNext;
-
-        p_stNext = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        ucPadNumber = stParam.uDummy.uParam.ucValue;
-        if (ucPadNumber > 15)
-        {
-            ucPadNumber = 0;
-        }
-        p_stTree = p_stNext;
-    }
-
-    switch (eProcedureId)
-    {
-    case eProc_FFBDeletePreCreatedEffect:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        IPT_fn_vDeletePreCreatedConstantFFBEffect(ucPadNumber, stParam.uDummy.uParam.cValue);
-        break;
-    case eProc_FFBDeleteAllPreCreatedEffectForAPad:
-        IPT_fn_vDeleteAllPreCreatedConstantFFBEffectForDevice(ucPadNumber);
-        break;
-    case eProc_FFBDeleteAllPreCreatedEffectForAllPad:
-        IPT_fn_vDeleteAllPreCreatedConstantFFBEffectForAllDevices();
-        break;
-    case eProc_FFBStartPreCreatedEffect:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        IPT_fn_vStartPreCreatedFFBEffect(ulCurrentTime, ucPadNumber, stParam.uDummy.uParam.cValue);
-        break;
-    case eProc_FFBStopPreCreatedEffect:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        IPT_fn_vStopPreCreatedFFBEffect(ulCurrentTime, ucPadNumber, stParam.uDummy.uParam.cValue);
-        break;
-    case eProc_FFBStopAllEffectForAPad:
-        IPT_fn_vStopAllConstantFFBEffectForDevice(ulCurrentTime, ucPadNumber);
-        break;
-    case eProc_FFBStopAllEffectForAllPad:
-        IPT_fn_vStopAllConstantFFBEffectForAllDevices(ulCurrentTime);
-        break;
-    case eProc_FFBPauseAllEffectForAllPad:
-        IPT_fn_vPauseAllConstantFFBEffectForAllDevices(ulCurrentTime);
-        break;
-    case eProc_FFBResumeAllEffectForAllPad:
-        IPT_fn_vResumeAllConstantFFBEffectForAllDevices(ulCurrentTime);
-        break;
-    case eProc_FFBStopEffect:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        IPT_fn_vStopFFBEffect(ulCurrentTime, ucPadNumber, stParam.uDummy.uParam.cValue);
-        break;
-    }
-
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6236–6236 */
 /* addr: 0x00224630  size: 8 bytes */
@@ -4633,10 +4326,6 @@ tdstNodeInterpret_* fn_p_stFFBProcedures(HIE_tdstSuperObject_* p_SuperObjPerso, 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stLogFileProcedure(tdstNodeInterpret_* p_stTree, tdstNodeInterpret_* p_stTree2)
-{
-    return p_stTree2;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6142–6169 */
 /* addr: 0x00224640  size: 88 bytes */
@@ -4651,29 +4340,6 @@ tdstNodeInterpret_* fn_p_stLogFileProcedure(tdstNodeInterpret_* p_stTree, tdstNo
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stPortalActivationProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    HIE_tdstSuperObject_* param0;
-    tdeProcedureId_ eProcedureId;
-    tdstGetSetParam_ stParam;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    param0 = stParam.uDummy.uParam.hSuperObject;
-
-    switch (eProcedureId)
-    {
-    case eProc_ActivePortal:
-        param0->ulTypeOfLinkedObject = 0x40;
-        return p_stTree;
-    case eProc_DeactivePortal:
-        param0->ulTypeOfLinkedObject = 0x20;
-        return p_stTree;
-    }
-
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6103–6138 */
 /* addr: 0x002246a0  size: 172 bytes */
@@ -4691,30 +4357,6 @@ tdstNodeInterpret_* fn_p_stPortalActivationProcedure(HIE_tdstSuperObject_* p_Sup
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stSCT_UltraProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    tdstGetSetParam_ stParam;
-    tdeProcedureId_ eProcedureId;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
-
-    switch (eProcedureId)
-    {
-    case eProc_SCT_EnableSectorSynchro:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        GAM_fn_vSetObjectSectorSynchro(hNewSuperObjPerso, fn_h_StandardGameGetSuperObject(stParam.uDummy.uParam.p_stEngObjValue->h_StandardGame));
-        return p_stTree;
-
-    case eProc_SCT_DisableSectorSynchro:
-        GAM_fn_vSetObjectSectorSynchro(hNewSuperObjPerso, NULL);
-        return p_stTree;
-    }
-
-    return p_stTree;
-}
 
 void SAV2_fn_vFindGoodTypeAndOptionsFromString(char* p_szElementOptions, SAV2_tdeDataType_* p_ucType, unsigned char* p_bStatic, unsigned char* p_bSave);
 void SAV2_fn_vDeclareAField(char* p_szElementName, int ucType, unsigned int ulNumberOfElement, unsigned char bStatic, unsigned char bSave);
@@ -4849,167 +4491,6 @@ char* SAV2_fn_p_szGetSaveNameOfSaveNumber(unsigned char ucSaveNumber);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stSAV2SaveProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdeProcedureId_ eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-    tdstGetSetParam_ stParam;
-    char* p_szElementName = NULL;
-    char* p_szElementOptions;
-    SAV2_tdeDataType_ ucType;
-    unsigned char bStatic;
-    unsigned char bSave;
-    unsigned int i;
-    AI_tdstMind_* p_stMind;
-    unsigned char ucArrayId;
-    tdstArray_* p_stArray;
-    unsigned int ulMyVarSize;
-    SAV2_tdeDataType_ eDataType;
-    HIE_tdstSuperObject_* p_stResultOwnerPerso;
-
-    if (eProcedureId != eProc_SAV2_DeleteAllPipeline && eProcedureId != eProc_SAV2_DeleteAll && eProcedureId != eProc_SAV2_ActualizeExistingSave && eProcedureId != eProc_SAV2_GetSaveNameFromSaveNumber && eProcedureId != eProc_SAV2_AutoSaveOnDisk)
-    {
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        p_szElementName = fn_szGetStringFromTextOrStringParam(&stParam);
-    }
-
-    switch (eProcedureId)
-    {
-    case eProc_SAV2_DeclareField:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        p_szElementOptions = fn_szGetStringFromTextOrStringParam(&stParam);
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        ulMyVarSize = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
-        SAV2_fn_vFindGoodTypeAndOptionsFromString(p_szElementOptions, &eDataType, &bStatic, &bSave);
-        SAV2_fn_vDeclareAField(p_szElementName, eDataType, ulMyVarSize, bStatic, bSave);
-        return p_stTree;
-
-    case eProc_SAV2_DeleteField:
-        SAV2_fn_vDeleteAField(p_szElementName);
-        return p_stTree;
-
-    case eProc_SAV2_DeleteAllPipeline:
-        SAV2_fn_vDeleteAllPipeline();
-        return p_stTree;
-
-    case eProc_SAV2_DeleteAll:
-        SAV2_fn_vDeleteAllList();
-        return p_stTree;
-
-    case eProc_SAV2_SetValue:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        SAV2_fn_vSetASingleValue(p_szElementName, &stParam);
-        return p_stTree;
-
-    case eProc_SAV2_SetValueIndex:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        i = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        SAV2_fn_vSetAValueAtIndex(p_szElementName, i, &stParam);
-        return p_stTree;
-
-    case eProc_SAV2_AddSingleValueInPipeline:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        SAV2_fn_vSetValueInPipeline(p_szElementName, &stParam);
-        return p_stTree;
-
-    case eProc_SAV2_AddArrayInPipeline:
-    case eProc_SAV2_AddArrayForSave:
-        if (p_stTree->eType == 2)
-            p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree + 1, &p_stResultOwnerPerso);
-        else
-            p_stResultOwnerPerso = p_SuperObjPerso;
-        ucArrayId = p_stTree->uDummy.uParam.ucValue;
-        p_stMind = p_stResultOwnerPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind;
-        p_stArray = (tdstArray_*)(p_stMind->p_stDsgMem->p_cDsgMemBuffer + (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucArrayId].ulOffsetInDsgMem);
-        ulMyVarSize = p_stArray->ucMaxSize;
-        fn_ucGetDsgVar(ucArrayId, 0, p_stMind, &stParam);
-        ucType = SAV2_fn_eGiveElementTypeFromAIType(stParam.eType);
-        if (eProcedureId == eProc_SAV2_AddArrayForSave)
-            SAV2_fn_vDeclareAField(p_szElementName, ucType, ulMyVarSize, 1, 1);
-        else
-            SAV2_fn_vDeclareAField(p_szElementName, ucType, ulMyVarSize, 1, 0);
-        for (i = 0; i < ulMyVarSize; i++)
-        {
-            fn_ucGetDsgVar(ucArrayId, i, p_stMind, &stParam);
-            SAV2_fn_vSetAValueAtIndex(p_szElementName, i, &stParam);
-        }
-        return p_stTree + 1;
-
-    case eProc_SAV2_AddSingleValueForSave:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        SAV2_fn_vSetValueForSave(p_szElementName, &stParam);
-        return p_stTree;
-
-    case eProc_SAV2_GetValueString:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        SAV2_fn_xGetASingleValue(p_szElementName, &stParam);
-        SAV2_fn_vDeletePipelineElement(p_szElementName);
-        return p_stTree;
-
-    case eProc_SAV2_GetValueStringIndex:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        i = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        SAV2_fn_xGetAValueAtIndex(p_szElementName, i, &stParam);
-        return p_stTree;
-
-    case eProc_SAV2_GetArray:
-    {
-        HIE_tdstSuperObject_* p_stOwner;
-
-        if (p_stTree->eType == 2)
-            p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree + 1, &p_stOwner);
-        else
-            p_stOwner = p_SuperObjPerso;
-        ucArrayId = p_stTree->uDummy.uParam.ucValue;
-        p_stMind = p_stOwner->hLinkedObject.p_stCharacter->h_Brain->p_stMind;
-        p_stArray = (tdstArray_*)(p_stMind->p_stDsgMem->p_cDsgMemBuffer + (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucArrayId].ulOffsetInDsgMem);
-        ulMyVarSize = p_stArray->ucMaxSize;
-        for (i = 0; i < ulMyVarSize; i++)
-        {
-            fn_ucGetDsgVar(ucArrayId, i, p_stMind, &stParam);
-            SAV2_fn_xGetAValueAtIndex(p_szElementName, i, &stParam);
-            fn_ucSetDsgVar(ucArrayId, i, p_stMind, &stParam);
-        }
-        SAV2_fn_vDeletePipelineElement(p_szElementName);
-        return p_stTree + 1;
-    }
-
-    case eProc_SAV2_SaveOnDisk:
-        SAV2_fn_bSaveAllOnDisk(p_szElementName);
-        return p_stTree;
-
-    case eProc_SAV2_AutoSaveOnDisk:
-        if (g_DoAutoSaveWhenChangeMap == 1)
-        {
-            PS2MC_fn_vStopPrompts();
-            fn_vR3StoreInitScore();
-            SAV2_fn_bSaveAllOnDisk(g_CurrentSaveName);
-        }
-        return p_stTree;
-
-    case eProc_SAV2_LoadOnDisk:
-        SAV2_fn_bReadAllFromDisk(p_szElementName);
-        return p_stTree;
-
-    case eProc_SAV2_RemoveSaveOnDisk:
-        SAV2_fn_bRemoveSaveFromDisk(p_szElementName);
-        return p_stTree;
-
-    case eProc_SAV2_ActualizeExistingSave:
-        SAV2_fn_bActualizeExistingSave();
-        return p_stTree;
-
-    case eProc_SAV2_GetSaveNameFromSaveNumber:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        p_szElementOptions = SAV2_fn_p_szGetSaveNameOfSaveNumber((unsigned char)((stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue));
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        strcpy(fn_szGetStringFromTextOrStringParam(&stParam), p_szElementOptions);
-        return p_stTree;
-    }
-
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 5871–5889 */
 /* addr: 0x00224d30  size: 84 bytes */
@@ -5024,24 +4505,6 @@ tdstNodeInterpret_* fn_p_stSAV2SaveProcedure(HIE_tdstSuperObject_* p_SuperObjPer
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stDoNotLoadTextures(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdeProcedureId_ eProcedureId;
-    tdstGetSetParam_ stValue;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-
-    switch (eProcedureId)
-    {
-    case eProc_DoNotLoadTextures:
-        fn_vSetUnusedTextures(stValue.uDummy.uParam.lValue);
-        break;
-    }
-
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 5850–5867 */
 /* addr: 0x00224d90  size: 96 bytes */
@@ -5058,22 +4521,6 @@ tdstNodeInterpret_* fn_p_stDoNotLoadTextures(HIE_tdstSuperObject_* p_SuperObjPer
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stSetGameMode(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdeProcedureId_ eProcedureId;
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-    switch (eProcedureId) {
-    case eProc_SetSingleplayerMode:
-        GAM_g_uwLoadingLevel &= ~2;
-        GAM_g_uwLoadingLevel |= 1;
-        break;
-    case eProc_SetMultiplayerMode:
-        GAM_g_uwLoadingLevel &= ~1;
-        GAM_g_uwLoadingLevel |= 2;
-        break;
-    }
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 5814–5845 */
 /* addr: 0x00224df0  size: 92 bytes */
@@ -5093,26 +4540,6 @@ tdstNodeInterpret_* fn_p_stSetGameMode(HIE_tdstSuperObject_* p_SuperObjPerso, td
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stDataPath(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    char* pszChar;
-    tdstGetSetParam_ stParam;
-    tdeProcedureId_ eProcedureId;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    switch (eProcedureId)
-    {
-    case eProc_SetDataPath:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        pszChar = fn_szGetStringFromTextOrStringParam(&stParam);
-        fn_vSetGameDataPath(pszChar);
-        bChangedGamedataDirectory = 1;
-        return p_stTree;
-    }
-
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 5773–5809 */
 /* addr: 0x00224e50  size: 200 bytes */
@@ -5137,41 +4564,6 @@ tdstNodeInterpret_* fn_p_stDataPath(HIE_tdstSuperObject_* p_SuperObjPerso, tdstN
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stLoadingLevel(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ stParam;
-    tdeProcedureId_ eProcedureId;
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-
-
-    if (eProcedureId != eProc_SkipLoading_SetLoadingLevel) return p_stTree;
-    else
-    {
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-
-
-        switch ((char)((stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue))
-        {
-        case 1:
-            GAM_fn_vSetLoadingLevel("S");
-            break;
-
-        case 2:
-            GAM_fn_vSetLoadingLevel("M");
-            break;
-
-
-
-        default:
-            GAM_fn_vSetLoadingLevel(NULL);
-            
-        }
-
-
-    }
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 5721–5767 */
 /* addr: 0x00224f20  size: 196 bytes */
@@ -5199,38 +4591,6 @@ tdstNodeInterpret_* fn_p_stLoadingLevel(HIE_tdstSuperObject_* p_SuperObjPerso, t
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stStartCine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdeProcedureId_ eProcedureId;
-    char* p_szString;
-    tdstGetSetParam_ stParam;
-    CINE_tdstCine_* hCine;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    switch (eProcedureId)
-    {
-    case eProc_EndCine:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        p_szString = fn_szGetStringFromTextOrStringParam(&stParam);
-        hCine = CINE_fn_pFindCine(p_szString);
-        if (hCine != NULL)
-            fn_vStopEngineCinematics(hCine);
-        return p_stTree;
-
-    case eProc_StartCine:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        p_szString = fn_szGetStringFromTextOrStringParam(&stParam);
-        hCine = CINE_fn_pFindCine(p_szString);
-        if (hCine != NULL)
-            fn_vLaunchEngineCinematics(hCine);
-        else
-            Erm_fn_iMessageBox("Try to start an undefined cinematic", "Cinematic error", 0x40030);
-        return p_stTree;
-    }
-
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 5708–5713 */
 /* addr: 0x00224ff0  size: 40 bytes */
@@ -5243,12 +4603,6 @@ tdstNodeInterpret_* fn_p_stStartCine(HIE_tdstSuperObject_* p_SuperObjPerso, tdst
  * compare a candidate object's line table as an extra checkpoint.
  */
 extern void fn_vStopTransition(void);
-
-tdstNodeInterpret_* fn_p_stEndTransitionProcedure(tdstNodeInterpret_* p_stTree, tdstNodeInterpret_* p_stTree2)
-{
-    fn_vStopTransition();
-    return p_stTree2;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 5666–5705 */
 /* addr: 0x00225020  size: 92 bytes */
@@ -5265,24 +4619,6 @@ tdstNodeInterpret_* fn_p_stEndTransitionProcedure(tdstNodeInterpret_* p_stTree, 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stDisplaySegment(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdeProcedureId_ eProcedureId;
-    tdstGetSetParam_ stParam;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    switch (eProcedureId)
-    {
-    case eProc_DisplaySegment:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        return p_stTree;
-    }
-
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 5637–5663 */
 /* addr: 0x00225080  size: 100 bytes */
@@ -5300,29 +4636,6 @@ tdstNodeInterpret_* fn_p_stDisplaySegment(HIE_tdstSuperObject_* p_SuperObjPerso,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stBrainActivationProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdeProcedureId_ eProcedureId;
-    tdstBrain_* h_Brain;
-    tdstGetSetParam_ stParam;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-    h_Brain = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-
-    switch (eProcedureId)
-    {
-    case eProc_ActiveBrainDuringTransitions:
-        h_Brain->bActiveDuringTransition = 1;
-        return p_stTree;
-    case eProc_DeactiveBrainDuringTransitions:
-        h_Brain->bActiveDuringTransition = 0;
-        return p_stTree;
-    }
-
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 5616–5634 */
 /* addr: 0x002250f0  size: 96 bytes */
@@ -5341,25 +4654,6 @@ tdstNodeInterpret_* fn_p_stBrainActivationProcedure(HIE_tdstSuperObject_* p_Supe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stSetVSyncWait(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdeProcedureId_ eProcedureId;
-    tdstGetSetParam_ stParam;
-    long lValue;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-
-    switch (eProcedureId)
-    {
-    case eProc_SetVsyncWait:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        if (stParam.eType == E_vt_Float) lValue = MTH_M_xRealToLong(stParam.uDummy.uParam.xValue);
-
-        return p_stTree;
-    }
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 5564–5609 */
 /* addr: 0x00225150  size: 432 bytes */
@@ -5396,40 +4690,6 @@ tdstNodeInterpret_* fn_p_stSetVSyncWait(HIE_tdstSuperObject_* p_SuperObjPerso, t
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stVideoProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdeProcedureId_ eProcedureId;
-    char* p_szVideoName;
-    char cCanInterrupt;
-    tdstGetSetParam_ stParam;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    switch (eProcedureId)
-    {
-    case eProc_EnqueueVideo:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        p_szVideoName = fn_szGetStringFromTextOrStringParam(&stParam);
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        cCanInterrupt = (char)((stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue);
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        VID_fn_vNextVideoToPlay(p_szVideoName, cCanInterrupt, (char)((stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue));
-        VID_fn_vPlayVideoAfterLevel();
-        return p_stTree;
-    case eProc_VideoQuality:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        VID_fn_vSetVideoQuality(32, (char)((stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue));
-        return p_stTree;
-    case eProc_PlayVideo:
-        VID_fn_vPlayVideoNow();
-        return p_stTree;
-    case eProc_PlayVideoAfterLevel:
-        VID_fn_vPlayVideoAfterLevel();
-        return p_stTree;
-    }
-
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 5509–5555 */
 /* addr: 0x00225300  size: 608 bytes */
@@ -5470,42 +4730,6 @@ tdstNodeInterpret_* fn_p_stVideoProcedure(HIE_tdstSuperObject_* p_SuperObjPerso,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stRLIProcedure2(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdeProcedureId_ eProcedureId;
-    unsigned int ulDuration;
-    unsigned char ucValue;
-    tdstGetSetParam_ stParam;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    switch (eProcedureId)
-    {
-    case eProc_TransitionDeRLI:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        ucValue = (unsigned char)((stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue);
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        ulDuration = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        IPO_fn_vSetChangeOfRLITable(ucValue, ulDuration, (unsigned char)(char)((stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue));
-        return p_stTree;
-    case eProc_AjoutDeRLI:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        ucValue = (unsigned char)((stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue);
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        ulDuration = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        IPO_fn_vSetAddRLITable(ucValue, ulDuration, (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue);
-        return p_stTree;
-    case eProc_BlockingRLITransitions:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        ucValue = (unsigned char)((stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue);
-        IPO_fn_vSetRLITransitionsBlocking(ucValue);
-        return p_stTree;
-    }
-
-    return p_stTree;
-}
 
 void GAM_MultiVP_fn_vSetAspectRatio(unsigned char _ucRatio);
 void GAM_MultiVP_fn_vChangeOneVPSizeAndPositionPercent(unsigned char ucVpNum, unsigned int* a2_ulSize, unsigned int* a2_ulPos);
@@ -5593,98 +4817,6 @@ void GAM_MultiVP_fn_vInvertViewPorts(unsigned char _ucVPIndex1, unsigned char _u
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stMultiPlayerProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdeProcedureId_ eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-    tdstGetSetParam_ stParam;
-    unsigned char ucNumberOfPlayers;
-    unsigned char unNumberOfColumns;
-    unsigned char ucVpNum;
-    unsigned int a2_ulSize[2];
-    unsigned int a2_ulPos[2];
-
-    switch (eProcedureId)
-    {
-    case eProc_MultiPlayer_SetAspectRatio:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        GAM_MultiVP_fn_vSetAspectRatio(stParam.uDummy.uParam.ucValue);
-        return p_stTree;
-
-    case eProc_MultiPlayer_SetViewportDisplayOrder:
-    {
-        unsigned char ucPrio0, ucPrio1, ucPrio2, ucPrio3;
-
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        ucPrio0 = stParam.uDummy.uParam.ucValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        ucPrio1 = stParam.uDummy.uParam.ucValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        ucPrio2 = stParam.uDummy.uParam.ucValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        ucPrio3 = stParam.uDummy.uParam.ucValue;
-
-        if (ucPrio0 >= 4 || ucPrio1 >= 4 || ucPrio2 >= 4 || ucPrio3 >= 4)
-        {
-            g_a4_ucSectorDisplayPriority[0] = 0;
-            g_a4_ucSectorDisplayPriority[1] = 1;
-            g_a4_ucSectorDisplayPriority[2] = 2;
-            g_a4_ucSectorDisplayPriority[3] = 3;
-            g_bSectorDisplayPriorityFixed = 0;
-        }
-        else
-        {
-            g_a4_ucSectorDisplayPriority[0] = ucPrio0;
-            g_a4_ucSectorDisplayPriority[1] = ucPrio1;
-            g_a4_ucSectorDisplayPriority[2] = ucPrio2;
-            g_a4_ucSectorDisplayPriority[3] = ucPrio3;
-            g_bSectorDisplayPriorityFixed = 1;
-        }
-        return p_stTree;
-    }
-
-    case eProc_MultiPlayer_SetViewportSizeAndPos:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        ucVpNum = stParam.uDummy.uParam.ucValue;
-        ucVpNum--;
-        if (ucVpNum == 255)
-            ucVpNum = 4;
-        else if (ucVpNum >= 4)
-            ucVpNum = 0;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        a2_ulSize[0] = (unsigned int)stParam.uDummy.uParam.stVectorValue.xX;
-        a2_ulSize[1] = (unsigned int)stParam.uDummy.uParam.stVectorValue.xY;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        a2_ulPos[0] = (unsigned int)stParam.uDummy.uParam.stVectorValue.xX;
-        a2_ulPos[1] = (unsigned int)stParam.uDummy.uParam.stVectorValue.xY;
-        GAM_MultiVP_fn_vChangeOneVPSizeAndPositionPercent(ucVpNum, a2_ulSize, a2_ulPos);
-        return p_stTree;
-
-    case eProc_MultiPlayer_SetNumberOfPlayers:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        ucNumberOfPlayers = stParam.uDummy.uParam.ucValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        unNumberOfColumns = stParam.uDummy.uParam.ucValue;
-        GAM_MultiVP_fn_vSetNumberOfPlayers(ucNumberOfPlayers, unNumberOfColumns);
-        GAM_MultiVP_fn_vAutoAssociateMainPlayersForViewPorts();
-        return p_stTree;
-
-    case eProc_MultiPlayer_SetPlayerForViewport:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        unNumberOfColumns = stParam.uDummy.uParam.ucValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        GAM_MultiVP_fn_vSetPlayerForViewPort(unNumberOfColumns, fn_h_StandardGameGetSuperObject(stParam.uDummy.uParam.p_stEngObjValue->h_StandardGame));
-        return p_stTree;
-
-    case eProc_MultiPlayer_InvertViewports:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        ucVpNum = stParam.uDummy.uParam.ucValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        GAM_MultiVP_fn_vInvertViewPorts(ucVpNum, stParam.uDummy.uParam.ucValue);
-        return p_stTree;
-    }
-
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 5300–5333 */
 /* addr: 0x00225920  size: 512 bytes */
@@ -5723,71 +4855,6 @@ tdstNodeInterpret_* fn_p_stMultiPlayerProcedure(HIE_tdstSuperObject_* p_SuperObj
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stJFFTXTGetBdBox(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    unsigned char ucVarId;
-    long StringNumber;
-    tdstGetSetParam_ stParam;
-    int* x1;
-    int* y1f;
-    int* x2;
-    HIE_tdstSuperObject_* p_stResultOwnerPerso;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    StringNumber = stParam.uDummy.uParam.ulValue;
-
-    {
-        HIE_tdstSuperObject_* p_stResultOwnerPerso;
-
-        if (p_stTree->eType == 2)
-            p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree + 1, &p_stResultOwnerPerso);
-        else
-            p_stResultOwnerPerso = p_SuperObjPerso;
-
-        ucVarId = p_stTree->uDummy.uParam.ucValue;
-        p_stTree++;
-
-        x1 = (int*)(p_stResultOwnerPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stDsgMem->p_cDsgMemBuffer + (*p_stResultOwnerPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem);
-    }
-    {
-        HIE_tdstSuperObject_* p_stResultOwnerPerso;
-
-        if (p_stTree->eType == 2)
-            p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree + 1, &p_stResultOwnerPerso);
-        else
-            p_stResultOwnerPerso = p_SuperObjPerso;
-
-        ucVarId = p_stTree->uDummy.uParam.ucValue;
-        p_stTree++;
-
-        y1f = (int*)(p_stResultOwnerPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stDsgMem->p_cDsgMemBuffer + (*p_stResultOwnerPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem);
-    }
-    {
-        HIE_tdstSuperObject_* p_stResultOwnerPerso;
-
-        if (p_stTree->eType == 2)
-            p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree + 1, &p_stResultOwnerPerso);
-        else
-            p_stResultOwnerPerso = p_SuperObjPerso;
-
-        ucVarId = p_stTree->uDummy.uParam.ucValue;
-        p_stTree++;
-
-        x2 = (int*)(p_stResultOwnerPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stDsgMem->p_cDsgMemBuffer + (*p_stResultOwnerPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem);
-    }
-    {
-        HIE_tdstSuperObject_* p_stResultOwnerPerso;
-
-        if (p_stTree->eType == 2)
-            p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree + 1, &p_stResultOwnerPerso);
-        else
-            p_stResultOwnerPerso = p_SuperObjPerso;
-
-
-        TXT_GetBoundingBox(StringNumber, x1, y1f, x2, (int*)(p_stResultOwnerPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stDsgMem->p_cDsgMemBuffer + (*p_stResultOwnerPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[p_stTree->uDummy.uParam.ucValue].ulOffsetInDsgMem));
-    }
-    return p_stTree + 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 5207–5290 */
 /* addr: 0x00225b20  size: 328 bytes */
@@ -5826,47 +4893,6 @@ tdstNodeInterpret_* fn_p_stJFFTXTGetBdBox(HIE_tdstSuperObject_* p_SuperObjPerso,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stJFFTXTSettings(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    unsigned long ulRed;
-    unsigned long ulGreen;
-    tdstGetSetParam_ stParam;
-    tdeProcedureId_ eProcedureId;
-    int StringNumber;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    StringNumber = stParam.uDummy.uParam.lValue;
-
-    switch (eProcedureId)
-    {
-    case eProc_JffTxt_SetColor:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        ulRed = stParam.uDummy.uParam.ulValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        ulGreen = stParam.uDummy.uParam.ulValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        TXT_vSetColor(StringNumber, ulRed, ulGreen, stParam.uDummy.uParam.ulValue);
-        return p_stTree;
-    case eProc_JffTxt_SetTransp:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        TXT_vSetTransparence(StringNumber, stParam.uDummy.uParam.ulValue);
-        return p_stTree;
-    case eProc_JffTxt_DoFadeIn:
-        TXT_vDoFadeIn(StringNumber);
-        return p_stTree;
-    case eProc_JffTxt_DoFadeOut:
-        TXT_vDoFadeOut(StringNumber);
-        return p_stTree;
-    case eProc_JffTxt_SetFrameMode:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        TXT_vSetFrameMode(StringNumber, stParam.uDummy.uParam.ucValue);
-        return p_stTree;
-    }
-
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 5193–5202 */
 /* addr: 0x00225c70  size: 68 bytes */
@@ -5884,12 +4910,6 @@ tdstNodeInterpret_* fn_p_stJFFTXTSettings(HIE_tdstSuperObject_* p_SuperObjPerso,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vSetMenuPausePad(void)
-{
-    myMenuPause.ulTimer = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
-    TXT_vSetTransparence(myMenuPause.iVmsStringNumber, 0);
-    TXT_vSetTransparence(myMenuPause.iPadStringNumber, 0);
-}
 
 void PS2_fn_vSetControllerMessage(void);
 int sprintf(char* s, const char* format, ...);
@@ -5956,71 +4976,6 @@ short INOPS2_fn_wJoyCheckConnectionFast(short _wJoystickNum);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vTXTAffichePause(int _lVMSOrPad, int DeconenctedPadId)
-{
-    long lPad;
-    char cPort;
-    unsigned int ulTimer;
-    char PadStr[4];
-
-    ulTimer = (g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - myMenuPause.ulTimer) % 2000;
-    g_PauseStringNumber = myMenuPause.iVmsStringNumber;
-
-    PS2_fn_vSetControllerMessage();
-
-    if (g_GameHasNotStartedTheFirstBootCheck)
-    {
-        myMenuPause.stPadPosition.xX = 500.0f;
-        myMenuPause.stPadPosition.xY = 700.0f;
-    }
-    else
-    {
-        myMenuPause.stPadPosition.xX = 500.0f;
-        myMenuPause.stPadPosition.xY = 450.0f;
-    }
-
-    if (ulTimer < 1000)
-        myMenuPause.xXXXTransparency = 128.0f + 128.0f * ((float)ulTimer / 2000.0f);
-    else
-        myMenuPause.xXXXTransparency = 255.0f - 128.0f * ((float)ulTimer / 2000.0f);
-    myMenuPause.xXXXTransparency = 255.0f;
-
-    switch (_lVMSOrPad)
-    {
-    case 0:
-        lPad = myMenuPause.lVmsPad;
-        cPort = (lPad - 1) / 2 + 'A';
-        sprintf(myMenuPause.szVmsStringToDraw, (char*)myMenuPause.pszVmsString, cPort, (char)((lPad % 2) ? 1 : 2));
-        myMenuPause.xVmsParameter = myMenuPause.xXXXTransparency;
-        TXT_vSetTransparence(myMenuPause.iVmsStringNumber, (unsigned long)myMenuPause.xXXXTransparency);
-        MJ_JFFTXT_vAddText(myMenuPause.NumeroVp, myMenuPause.iVmsStringNumber, &myMenuPause.stVmsPosition, (unsigned char*)myMenuPause.szVmsStringToDraw, myMenuPause.xVmsParameter);
-        break;
-
-    case 1:
-        memset(myMenuPause.szPadStringToDraw, 0, 256);
-        memset(PadStr, 0, 4);
-        lPad = DeconenctedPadId & 0x0F;
-        cPort = g_axPadMapping[lPad].iPort;
-        PadStr[0] = cPort + '1';
-        if (!INOPS2_fn_wJoyCheckConnectionFast(2) && INO_aJoyUsedByAI[2] == 1)
-            sprintf(myMenuPause.szPadStringToDraw, myMenuPause.pszPadString, PadStr, PadStr);
-        else
-            sprintf(myMenuPause.szPadStringToDraw, myMenuPause.pszPadString, PadStr, PadStr);
-        myMenuPause.xPadParameter = myMenuPause.xXXXTransparency;
-        TXT_vSetTransparence(myMenuPause.iPadStringNumber, (unsigned long)myMenuPause.xXXXTransparency);
-        MJ_JFFTXT_vAddText(myMenuPause.NumeroVp, myMenuPause.iPadStringNumber, &myMenuPause.stPadPosition, (unsigned char*)myMenuPause.szPadStringToDraw, myMenuPause.xPadParameter);
-        JFFTXT_vExtendText(myMenuPause.iPadStringNumber, 6, 1.0f);
-        TXT_PauseGameIWantToDrawThisStringNumber(myMenuPause.iPadStringNumber);
-        break;
-
-    case 2:
-        sprintf(myMenuPause.szDemoStringToDraw, (char*)myMenuPause.pszDemoString);
-        myMenuPause.xDemoParameter = myMenuPause.xXXXTransparency;
-        TXT_vSetTransparence(myMenuPause.iDemoStringNumber, (unsigned long)myMenuPause.xXXXTransparency);
-        MJ_JFFTXT_vAddText(myMenuPause.NumeroVp, myMenuPause.iDemoStringNumber, &myMenuPause.stDemoPosition, (unsigned char*)myMenuPause.szDemoStringToDraw, myMenuPause.xDemoParameter);
-        break;
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 4975–5026 */
 /* addr: 0x00226170  size: 428 bytes */
@@ -6052,51 +5007,6 @@ void fn_vTXTAffichePause(int _lVMSOrPad, int DeconenctedPadId)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2_fn_vSetControllerMessage(void)
-{
-    if (!g_GameHasNotStartedTheFirstBootCheck)
-    {
-        switch (g_stEngineStructure.ucCurrentLanguage)
-        {
-        case 0:
-            strcpy(myMenuPause.pszPadString, "\\jcLa manette est d�branch�e.\\lVeuillez rebrancher la manette\\ldans le port de manette 1 et appuyez\\lsur la touche START pour continuer.");
-            break;
-        case 1:
-            strcpy(myMenuPause.pszPadString, "\\jcController disconnected.\\lPlease reconnect the controller\\lin the controller port 1 and\\lpress the START button to continue.");
-            break;
-        case 2:
-            strcpy(myMenuPause.pszPadString, "\\jcNo hay ning�n control conectado.\\lVuelve a conectar el control\\len el puerto de control 1\\ly pulsa el bot�n START para continuar.");
-            break;
-        case 3:
-            strcpy(myMenuPause.pszPadString, "\\jcController scollegato.\\lRicollega il controller\\lnell'ingresso controller 1 e premi\\lil tasto START per continuare.");
-            break;
-        case 4:
-            strcpy(myMenuPause.pszPadString, "\\jcDer Controller wurde entfernt.\\lSchlie�en Sie bitte den Controller\\lin Controller-Anschluss 1 an und\\ldr�cken Sie die START-Taste, um mit\\ldem Spiel fortzufahren. ");
-            break;
-        }
-    }
-    else
-    {
-        switch (g_stEngineStructure.ucCurrentLanguage)
-        {
-        case 0:
-            strcpy(myMenuPause.pszPadString, "\\jcVeuillez rebrancher la manette\\ldans le port de manette 1.");
-            break;
-        case 1:
-            strcpy(myMenuPause.pszPadString, "\\jcPlease reconnect the controller\\lin the controller port 1.");
-            break;
-        case 2:
-            strcpy(myMenuPause.pszPadString, "\\jcVuelve a conectar el control\\len el puerto de control 1.");
-            break;
-        case 3:
-            strcpy(myMenuPause.pszPadString, "\\jcRicollega il controller\\lnell'ingresso controller 1.");
-            break;
-        case 4:
-            strcpy(myMenuPause.pszPadString, "\\jcSchlie�en Sie bitte den Controller\\lin Controller-Anschluss 1 an.");
-            break;
-        }
-    }
-}
 
 void JFFTXT_vAddText(int StringNumber, MTH3D_tdstVector_* p_stPosition, unsigned char* pszString, unsigned char ucParameter);
 void JFFTXT_vModifyCaracter(int StringNumber, int Position, int newcar);
@@ -6369,6 +5279,4268 @@ void TXT_PauseInvIWantToDrawThisStringNumber(int _iStringNumber);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 4524–4524 */
+/* addr: 0x00226e70  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4524
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 4450–4483 */
+/* addr: 0x00226e80  size: 140 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4450
+ *   +0x0004 -> line 4455
+ *   +0x0008 -> line 4450
+ *   +0x0010 -> line 4451
+ *   +0x0014 -> line 4455
+ *   +0x0024 -> line 4458
+ *   +0x0030 -> line 4460
+ *   +0x003c -> line 4462
+ *   +0x0040 -> line 4463
+ *   +0x0048 -> line 4464
+ *   +0x0050 -> line 4465
+ *   +0x0054 -> line 4464
+ *   +0x0058 -> line 4465
+ *   +0x0060 -> line 4466
+ *   +0x0068 -> line 4470
+ *   +0x0078 -> line 4473
+ *   +0x007c -> line 4483
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 4390–4422 */
+/* addr: 0x00226f10  size: 84 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4390
+ *   +0x0004 -> line 4393
+ *   +0x0008 -> line 4390
+ *   +0x0010 -> line 4391
+ *   +0x0014 -> line 4393
+ *   +0x0030 -> line 4398
+ *   +0x0038 -> line 4403
+ *   +0x0040 -> line 4421
+ *   +0x0044 -> line 4422
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void AGO3_ReInit(unsigned int dwHandle, unsigned int dwPartNumber, MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fParameter);
+void AGO3_vKill(int iHandle);
+void AGO_vAddParticle(unsigned int PartType, MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial, float parameter);
+void AGO_vSetGauge(int NumeroVp, int NumeroGauge, float* V1, float* V2, float xNiveau, float xTransparency, void* hVisualMaterial1, void* hVisualMaterial2);
+void AGO_vSetIcon(int NumeroVp, int Num, float* V1, float* V2, float xTransparency, void* Mat);
+unsigned char GAM_fn_bLoadBitmapForAGO(int NumeroBitmap, char* p_ucFilenameOrMemoryAddress, int lMode, int NumeroVp, MTH3D_tdstVector_* p_stV1, MTH3D_tdstVector_* p_stV2);
+void GAM_fn_vSetFixClippingCoordinates(int _lTop, int _lLeft, int _lBottom, int _lRight);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 4012–4365 */
+/* addr: 0x00226f70  size: 2532 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4012
+ *   +0x0004 -> line 4021
+ *   +0x0008 -> line 4012
+ *   +0x0034 -> line 4013
+ *   +0x0038 -> line 4021
+ *   +0x00bc -> line 4032
+ *   +0x00c4 -> line 4033
+ *   +0x00c8 -> line 4032
+ *   +0x00cc -> line 4035
+ *   +0x00d8 -> line 4036
+ *   +0x00dc -> line 4038
+ *   +0x00ec -> line 4040
+ *   +0x00f0 -> line 4041
+ *   +0x00f4 -> line 4042
+ *   +0x00f8 -> line 4044
+ *   +0x0104 -> line 4040
+ *   +0x0108 -> line 4041
+ *   +0x0110 -> line 4042
+ *   +0x0114 -> line 4044
+ *   +0x011c -> line 4046
+ *   +0x0120 -> line 4050
+ *   +0x012c -> line 4046
+ *   +0x0130 -> line 4047
+ *   +0x0138 -> line 4048
+ *   +0x013c -> line 4050
+ *   +0x0144 -> line 4051
+ *   +0x0164 -> line 4053
+ *   +0x0174 -> line 4056
+ *   +0x0178 -> line 4053
+ *   +0x017c -> line 4056
+ *   +0x0194 -> line 4058
+ *   +0x019c -> line 4070
+ *   +0x01a4 -> line 4071
+ *   +0x01a8 -> line 4073
+ *   +0x01b8 -> line 4074
+ *   +0x01bc -> line 4076
+ *   +0x01cc -> line 4078
+ *   +0x01d0 -> line 4079
+ *   +0x01d4 -> line 4080
+ *   +0x01d8 -> line 4082
+ *   +0x01e4 -> line 4078
+ *   +0x01e8 -> line 4079
+ *   +0x01f0 -> line 4080
+ *   +0x01f4 -> line 4082
+ *   +0x01fc -> line 4084
+ *   +0x0200 -> line 4088
+ *   +0x020c -> line 4084
+ *   +0x0210 -> line 4085
+ *   +0x0218 -> line 4086
+ *   +0x021c -> line 4088
+ *   +0x0224 -> line 4089
+ *   +0x0248 -> line 4091
+ *   +0x0258 -> line 4092
+ *   +0x0278 -> line 4094
+ *   +0x0288 -> line 4097
+ *   +0x0290 -> line 4095
+ *   +0x0294 -> line 4097
+ *   +0x029c -> line 4100
+ *   +0x02a0 -> line 4097
+ *   +0x02a4 -> line 4100
+ *   +0x02c4 -> line 4102
+ *   +0x02cc -> line 4113
+ *   +0x02dc -> line 4114
+ *   +0x02e0 -> line 4116
+ *   +0x02f0 -> line 4117
+ *   +0x02f4 -> line 4119
+ *   +0x0304 -> line 4121
+ *   +0x0308 -> line 4122
+ *   +0x030c -> line 4123
+ *   +0x0310 -> line 4125
+ *   +0x031c -> line 4121
+ *   +0x0320 -> line 4122
+ *   +0x0328 -> line 4123
+ *   +0x032c -> line 4125
+ *   +0x0334 -> line 4127
+ *   +0x0338 -> line 4131
+ *   +0x0344 -> line 4127
+ *   +0x0348 -> line 4128
+ *   +0x0350 -> line 4129
+ *   +0x0354 -> line 4131
+ *   +0x0360 -> line 4132
+ *   +0x036c -> line 4133
+ *   +0x037c -> line 4134
+ *   +0x0388 -> line 4135
+ *   +0x0390 -> line 4137
+ *   +0x03a4 -> line 4138
+ *   +0x03c4 -> line 4139
+ *   +0x03cc -> line 4140
+ *   +0x03ec -> line 4141
+ *   +0x03f8 -> line 4142
+ *   +0x0410 -> line 4144
+ *   +0x041c -> line 4151
+ *   +0x0424 -> line 4152
+ *   +0x0428 -> line 4154
+ *   +0x0438 -> line 4156
+ *   +0x043c -> line 4157
+ *   +0x0440 -> line 4158
+ *   +0x0444 -> line 4160
+ *   +0x0450 -> line 4156
+ *   +0x0454 -> line 4157
+ *   +0x045c -> line 4158
+ *   +0x0460 -> line 4160
+ *   +0x0468 -> line 4162
+ *   +0x046c -> line 4166
+ *   +0x0478 -> line 4162
+ *   +0x047c -> line 4163
+ *   +0x0484 -> line 4164
+ *   +0x0488 -> line 4166
+ *   +0x0490 -> line 4167
+ *   +0x0494 -> line 4169
+ *   +0x04a4 -> line 4170
+ *   +0x04a8 -> line 4169
+ *   +0x04ac -> line 4170
+ *   +0x04c8 -> line 4175
+ *   +0x04e0 -> line 4180
+ *   +0x04e8 -> line 4188
+ *   +0x04f0 -> line 4189
+ *   +0x04f4 -> line 4191
+ *   +0x0504 -> line 4192
+ *   +0x0508 -> line 4193
+ *   +0x0518 -> line 4194
+ *   +0x051c -> line 4195
+ *   +0x052c -> line 4197
+ *   +0x0534 -> line 4196
+ *   +0x0538 -> line 4197
+ *   +0x0540 -> line 4201
+ *   +0x0544 -> line 4197
+ *   +0x0548 -> line 4201
+ *   +0x054c -> line 4202
+ *   +0x0550 -> line 4201
+ *   +0x0554 -> line 4202
+ *   +0x0558 -> line 4201
+ *   +0x056c -> line 4202
+ *   +0x05d4 -> line 4205
+ *   +0x05d8 -> line 4202
+ *   +0x05e0 -> line 4205
+ *   +0x05e8 -> line 4202
+ *   +0x05ec -> line 4205
+ *   +0x0604 -> line 4206
+ *   +0x0664 -> line 4210
+ *   +0x066c -> line 4206
+ *   +0x0678 -> line 4210
+ *   +0x0700 -> line 4219
+ *   +0x0704 -> line 4218
+ *   +0x0708 -> line 4210
+ *   +0x070c -> line 4219
+ *   +0x0710 -> line 4210
+ *   +0x0714 -> line 4219
+ *   +0x07a0 -> line 4222
+ *   +0x07a8 -> line 4232
+ *   +0x07b0 -> line 4238
+ *   +0x07c0 -> line 4244
+ *   +0x07d0 -> line 4249
+ *   +0x07d8 -> line 4258
+ *   +0x07e0 -> line 4261
+ *   +0x07f0 -> line 4267
+ *   +0x0800 -> line 4275
+ *   +0x0808 -> line 4284
+ *   +0x0810 -> line 4287
+ *   +0x0820 -> line 4293
+ *   +0x0830 -> line 4298
+ *   +0x0838 -> line 4307
+ *   +0x0840 -> line 4308
+ *   +0x0844 -> line 4307
+ *   +0x0848 -> line 4308
+ *   +0x0870 -> line 4310
+ *   +0x0878 -> line 4315
+ *   +0x0880 -> line 4328
+ *   +0x0888 -> line 4329
+ *   +0x08b8 -> line 4331
+ *   +0x08c8 -> line 4332
+ *   +0x08f4 -> line 4334
+ *   +0x0904 -> line 4336
+ *   +0x0908 -> line 4337
+ *   +0x090c -> line 4338
+ *   +0x0910 -> line 4340
+ *   +0x091c -> line 4336
+ *   +0x0920 -> line 4337
+ *   +0x0928 -> line 4338
+ *   +0x092c -> line 4340
+ *   +0x0934 -> line 4342
+ *   +0x0938 -> line 4346
+ *   +0x0944 -> line 4342
+ *   +0x0948 -> line 4343
+ *   +0x0950 -> line 4344
+ *   +0x0954 -> line 4346
+ *   +0x095c -> line 4349
+ *   +0x0964 -> line 4347
+ *   +0x0968 -> line 4349
+ *   +0x0970 -> line 4352
+ *   +0x0974 -> line 4349
+ *   +0x0978 -> line 4352
+ *   +0x09ac -> line 4355
+ *   +0x09b0 -> line 4365
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3961–3968 */
+/* addr: 0x00227960  size: 56 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3961
+ *   +0x000c -> line 3964
+ *   +0x0010 -> line 3961
+ *   +0x0018 -> line 3963
+ *   +0x001c -> line 3964
+ *   +0x0024 -> line 3967
+ *   +0x0028 -> line 3968
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3930–3951 */
+/* addr: 0x002279a0  size: 120 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3930
+ *   +0x0008 -> line 3934
+ *   +0x0014 -> line 3937
+ *   +0x0020 -> line 3942
+ *   +0x0028 -> line 3945
+ *   +0x0038 -> line 3946
+ *   +0x003c -> line 3948
+ *   +0x0058 -> line 3949
+ *   +0x0068 -> line 3951
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3918–3927 */
+/* addr: 0x00227a20  size: 96 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3918
+ *   +0x000c -> line 3919
+ *   +0x0014 -> line 3921
+ *   +0x002c -> line 3922
+ *   +0x0038 -> line 3923
+ *   +0x0048 -> line 3925
+ *   +0x004c -> line 3926
+ *   +0x0050 -> line 3925
+ *   +0x0058 -> line 3927
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3899–3914 */
+/* addr: 0x00227a80  size: 148 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3899
+ *   +0x0004 -> line 3904
+ *   +0x0008 -> line 3899
+ *   +0x000c -> line 3904
+ *   +0x0010 -> line 3899
+ *   +0x0014 -> line 3906
+ *   +0x0018 -> line 3904
+ *   +0x001c -> line 3900
+ *   +0x0020 -> line 3904
+ *   +0x0028 -> line 3906
+ *   +0x0030 -> line 3907
+ *   +0x004c -> line 3908
+ *   +0x0058 -> line 3909
+ *   +0x0068 -> line 3911
+ *   +0x0078 -> line 3912
+ *   +0x0084 -> line 3914
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3860–3896 */
+/* addr: 0x00227b20  size: 152 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3864
+ *   +0x0004 -> line 3860
+ *   +0x0008 -> line 3864
+ *   +0x0010 -> line 3866
+ *   +0x0020 -> line 3873
+ *   +0x0028 -> line 3875
+ *   +0x0038 -> line 3878
+ *   +0x0040 -> line 3879
+ *   +0x004c -> line 3881
+ *   +0x0050 -> line 3882
+ *   +0x0058 -> line 3885
+ *   +0x0060 -> line 3889
+ *   +0x0064 -> line 3890
+ *   +0x0078 -> line 3892
+ *   +0x0090 -> line 3896
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3792–3840 */
+/* addr: 0x00227bc0  size: 216 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3792
+ *   +0x0008 -> line 3804
+ *   +0x000c -> line 3792
+ *   +0x0014 -> line 3804
+ *   +0x0020 -> line 3805
+ *   +0x002c -> line 3806
+ *   +0x0034 -> line 3805
+ *   +0x0038 -> line 3806
+ *   +0x0040 -> line 3809
+ *   +0x0048 -> line 3807
+ *   +0x004c -> line 3809
+ *   +0x0054 -> line 3812
+ *   +0x006c -> line 3814
+ *   +0x0070 -> line 3815
+ *   +0x0074 -> line 3819
+ *   +0x0078 -> line 3814
+ *   +0x007c -> line 3817
+ *   +0x0080 -> line 3819
+ *   +0x0088 -> line 3820
+ *   +0x0094 -> line 3822
+ *   +0x00b0 -> line 3826
+ *   +0x00b8 -> line 3828
+ *   +0x00bc -> line 3833
+ *   +0x00c0 -> line 3834
+ *   +0x00c4 -> line 3840
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3741–3775 */
+/* addr: 0x00227ca0  size: 180 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3741
+ *   +0x0008 -> line 3750
+ *   +0x000c -> line 3741
+ *   +0x0010 -> line 3750
+ *   +0x0018 -> line 3752
+ *   +0x001c -> line 3750
+ *   +0x0020 -> line 3751
+ *   +0x0024 -> line 3752
+ *   +0x002c -> line 3755
+ *   +0x0040 -> line 3759
+ *   +0x004c -> line 3760
+ *   +0x0060 -> line 3762
+ *   +0x007c -> line 3765
+ *   +0x008c -> line 3766
+ *   +0x0094 -> line 3768
+ *   +0x00a4 -> line 3775
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3657–3725 */
+/* addr: 0x00227d60  size: 188 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3657
+ *   +0x0008 -> line 3668
+ *   +0x000c -> line 3657
+ *   +0x0014 -> line 3668
+ *   +0x001c -> line 3669
+ *   +0x0020 -> line 3668
+ *   +0x0024 -> line 3670
+ *   +0x0030 -> line 3672
+ *   +0x0038 -> line 3671
+ *   +0x003c -> line 3672
+ *   +0x0044 -> line 3675
+ *   +0x005c -> line 3703
+ *   +0x0060 -> line 3701
+ *   +0x0064 -> line 3705
+ *   +0x0070 -> line 3706
+ *   +0x007c -> line 3708
+ *   +0x0098 -> line 3712
+ *   +0x00a0 -> line 3714
+ *   +0x00a4 -> line 3719
+ *   +0x00a8 -> line 3725
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3607–3641 */
+/* addr: 0x00227e20  size: 216 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3607
+ *   +0x0008 -> line 3614
+ *   +0x000c -> line 3607
+ *   +0x0010 -> line 3614
+ *   +0x0018 -> line 3615
+ *   +0x001c -> line 3614
+ *   +0x0020 -> line 3617
+ *   +0x002c -> line 3619
+ *   +0x0034 -> line 3623
+ *   +0x003c -> line 3626
+ *   +0x0048 -> line 3627
+ *   +0x0080 -> line 3629
+ *   +0x0090 -> line 3630
+ *   +0x009c -> line 3631
+ *   +0x00ac -> line 3632
+ *   +0x00b8 -> line 3634
+ *   +0x00c0 -> line 3640
+ *   +0x00c4 -> line 3641
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3560–3598 */
+/* addr: 0x00227f00  size: 168 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3560
+ *   +0x0008 -> line 3570
+ *   +0x000c -> line 3560
+ *   +0x001c -> line 3562
+ *   +0x0020 -> line 3570
+ *   +0x0028 -> line 3571
+ *   +0x002c -> line 3570
+ *   +0x0030 -> line 3572
+ *   +0x003c -> line 3573
+ *   +0x0040 -> line 3574
+ *   +0x0054 -> line 3583
+ *   +0x0060 -> line 3585
+ *   +0x006c -> line 3589
+ *   +0x0074 -> line 3590
+ *   +0x0080 -> line 3592
+ *   +0x0088 -> line 3597
+ *   +0x008c -> line 3598
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3534–3552 */
+/* addr: 0x00227fb0  size: 128 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3534
+ *   +0x0008 -> line 3540
+ *   +0x0018 -> line 3541
+ *   +0x0020 -> line 3543
+ *   +0x0024 -> line 3541
+ *   +0x0030 -> line 3542
+ *   +0x0034 -> line 3541
+ *   +0x0038 -> line 3542
+ *   +0x0044 -> line 3544
+ *   +0x0048 -> line 3542
+ *   +0x0050 -> line 3543
+ *   +0x005c -> line 3544
+ *   +0x0064 -> line 3545
+ *   +0x006c -> line 3551
+ *   +0x0070 -> line 3552
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3499–3518 */
+/* addr: 0x00228030  size: 120 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3499
+ *   +0x0008 -> line 3506
+ *   +0x000c -> line 3499
+ *   +0x0018 -> line 3506
+ *   +0x0020 -> line 3507
+ *   +0x0024 -> line 3506
+ *   +0x0028 -> line 3509
+ *   +0x0034 -> line 3510
+ *   +0x0038 -> line 3512
+ *   +0x0048 -> line 3515
+ *   +0x004c -> line 3512
+ *   +0x0050 -> line 3515
+ *   +0x005c -> line 3517
+ *   +0x0060 -> line 3518
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3446–3483 */
+/* addr: 0x002280b0  size: 264 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3446
+ *   +0x0008 -> line 3453
+ *   +0x000c -> line 3446
+ *   +0x0024 -> line 3448
+ *   +0x0028 -> line 3453
+ *   +0x0030 -> line 3454
+ *   +0x0034 -> line 3453
+ *   +0x0038 -> line 3455
+ *   +0x0044 -> line 3456
+ *   +0x0048 -> line 3455
+ *   +0x004c -> line 3458
+ *   +0x0058 -> line 3460
+ *   +0x0068 -> line 3461
+ *   +0x006c -> line 3460
+ *   +0x0070 -> line 3464
+ *   +0x0088 -> line 3466
+ *   +0x0094 -> line 3467
+ *   +0x00a4 -> line 3468
+ *   +0x00ac -> line 3469
+ *   +0x00b4 -> line 3471
+ *   +0x00c0 -> line 3472
+ *   +0x00c8 -> line 3473
+ *   +0x00d4 -> line 3475
+ *   +0x00e0 -> line 3482
+ *   +0x00e4 -> line 3483
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3352–3383 */
+/* addr: 0x002281c0  size: 112 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3352
+ *   +0x0004 -> line 3358
+ *   +0x0008 -> line 3352
+ *   +0x0010 -> line 3353
+ *   +0x0014 -> line 3358
+ *   +0x0030 -> line 3361
+ *   +0x003c -> line 3362
+ *   +0x0044 -> line 3364
+ *   +0x004c -> line 3366
+ *   +0x0054 -> line 3371
+ *   +0x005c -> line 3373
+ *   +0x0060 -> line 3383
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+tdstNodeInterpret_* fn_p_stSwapNextParameter2(tdstNodeInterpret_* p_stTree);
+void GLI_xSetMaterialColor(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor);
+void GLI_xGetMaterialSpecularCoef(GLI_tdstMaterial_* hMaterial, int* p_lSpecularExponent, GEO_tdstColor_* p_stColor);
+void GLI_xSetMaterialSpecularCoef(GLI_tdstMaterial_* hMaterial, int lSpecularExponent, GEO_tdstColor_* p_stColor);
+void GLI_xSetMaterialDiffuseCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor);
+void GLI_xSetMaterialAmbientCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor);
+void GLI_vSetMaterialAsChromed(GLI_tdstMaterial_* hMaterial, int bChromed);
+void GLI_xSetMaterialTextureScrollingCoef(GLI_tdstMaterial_* hMaterial, int lUnused, int bSwitch, float fUSpeed, float fVSpeed);
+void GLI_vLockAnimatedTexture(GLI_tdstMaterial_* _hMaterial);
+void GLI_vUnLockAnimatedTexture(GLI_tdstMaterial_* _hMaterial);
+void GLI_vSetCurrentAnimatedTextureNumber(GLI_tdstMaterial_* hMaterial, int lTextureNumber);
+void fn_RemoveTextureFromMaterial(GLI_tdstMaterial_* hMaterial);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3229–3347 */
+/* addr: 0x00228230  size: 888 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3229
+ *   +0x0008 -> line 3239
+ *   +0x000c -> line 3229
+ *   +0x0028 -> line 3233
+ *   +0x002c -> line 3229
+ *   +0x0034 -> line 3230
+ *   +0x0038 -> line 3239
+ *   +0x0040 -> line 3240
+ *   +0x0044 -> line 3242
+ *   +0x004c -> line 3244
+ *   +0x005c -> line 3247
+ *   +0x00e8 -> line 3251
+ *   +0x00f8 -> line 3253
+ *   +0x0104 -> line 3254
+ *   +0x0110 -> line 3256
+ *   +0x0118 -> line 3260
+ *   +0x0128 -> line 3262
+ *   +0x0138 -> line 3263
+ *   +0x0164 -> line 3264
+ *   +0x0168 -> line 3263
+ *   +0x016c -> line 3264
+ *   +0x0174 -> line 3266
+ *   +0x017c -> line 3271
+ *   +0x018c -> line 3273
+ *   +0x019c -> line 3274
+ *   +0x01a8 -> line 3275
+ *   +0x01b8 -> line 3277
+ *   +0x01c0 -> line 3281
+ *   +0x01d0 -> line 3283
+ *   +0x01dc -> line 3284
+ *   +0x01e8 -> line 3286
+ *   +0x01f0 -> line 3290
+ *   +0x0200 -> line 3292
+ *   +0x020c -> line 3293
+ *   +0x0218 -> line 3295
+ *   +0x0220 -> line 3299
+ *   +0x022c -> line 3300
+ *   +0x0230 -> line 3299
+ *   +0x0234 -> line 3300
+ *   +0x023c -> line 3301
+ *   +0x0244 -> line 3308
+ *   +0x0250 -> line 3309
+ *   +0x0274 -> line 3310
+ *   +0x0284 -> line 3312
+ *   +0x0288 -> line 3310
+ *   +0x028c -> line 3312
+ *   +0x02bc -> line 3314
+ *   +0x02c4 -> line 3318
+ *   +0x02d4 -> line 3319
+ *   +0x02dc -> line 3320
+ *   +0x02e4 -> line 3324
+ *   +0x02ec -> line 3325
+ *   +0x02f4 -> line 3330
+ *   +0x0300 -> line 3331
+ *   +0x0304 -> line 3330
+ *   +0x0308 -> line 3331
+ *   +0x033c -> line 3332
+ *   +0x0344 -> line 3336
+ *   +0x034c -> line 3338
+ *   +0x0350 -> line 3347
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3086–3226 */
+/* addr: 0x002285b0  size: 660 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3086
+ *   +0x0010 -> line 3098
+ *   +0x0014 -> line 3086
+ *   +0x0018 -> line 3092
+ *   +0x001c -> line 3086
+ *   +0x0028 -> line 3087
+ *   +0x0030 -> line 3099
+ *   +0x0048 -> line 3102
+ *   +0x005c -> line 3104
+ *   +0x0084 -> line 3119
+ *   +0x00a4 -> line 3121
+ *   +0x00b8 -> line 3131
+ *   +0x00c8 -> line 3132
+ *   +0x00d0 -> line 3136
+ *   +0x00fc -> line 3137
+ *   +0x0104 -> line 3140
+ *   +0x0114 -> line 3144
+ *   +0x0134 -> line 3145
+ *   +0x014c -> line 3146
+ *   +0x0154 -> line 3148
+ *   +0x016c -> line 3149
+ *   +0x0170 -> line 3150
+ *   +0x0174 -> line 3152
+ *   +0x0180 -> line 3154
+ *   +0x0188 -> line 3157
+ *   +0x0190 -> line 3173
+ *   +0x01b0 -> line 3175
+ *   +0x01c4 -> line 3184
+ *   +0x01d4 -> line 3185
+ *   +0x01dc -> line 3189
+ *   +0x0208 -> line 3190
+ *   +0x0210 -> line 3197
+ *   +0x0214 -> line 3199
+ *   +0x0220 -> line 3201
+ *   +0x0224 -> line 3202
+ *   +0x022c -> line 3206
+ *   +0x0234 -> line 3207
+ *   +0x0248 -> line 3209
+ *   +0x0250 -> line 3211
+ *   +0x0260 -> line 3212
+ *   +0x0264 -> line 3214
+ *   +0x026c -> line 3217
+ *   +0x0270 -> line 3225
+ *   +0x0274 -> line 3226
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3037–3080 */
+/* addr: 0x00228850  size: 436 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3037
+ *   +0x0018 -> line 3038
+ *   +0x0020 -> line 3047
+ *   +0x0038 -> line 3050
+ *   +0x0058 -> line 3053
+ *   +0x0064 -> line 3054
+ *   +0x0068 -> line 3053
+ *   +0x006c -> line 3055
+ *   +0x0074 -> line 3058
+ *   +0x00f4 -> line 3064
+ *   +0x00fc -> line 3066
+ *   +0x010c -> line 3067
+ *   +0x0110 -> line 3070
+ *   +0x0198 -> line 3079
+ *   +0x019c -> line 3080
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3018–3030 */
+/* addr: 0x00228a10  size: 128 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3018
+ *   +0x0010 -> line 3020
+ *   +0x001c -> line 3022
+ *   +0x0028 -> line 3023
+ *   +0x0034 -> line 3025
+ *   +0x0044 -> line 3026
+ *   +0x0050 -> line 3028
+ *   +0x0054 -> line 3027
+ *   +0x0058 -> line 3028
+ *   +0x005c -> line 3027
+ *   +0x0060 -> line 3028
+ *   +0x0064 -> line 3027
+ *   +0x0068 -> line 3028
+ *   +0x006c -> line 3029
+ *   +0x0078 -> line 3030
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+#pragma auto_inline on
+
+#pragma auto_inline reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 2935–2962 */
+/* addr: 0x00228a90  size: 136 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2935
+ *   +0x0018 -> line 2936
+ *   +0x0020 -> line 2943
+ *   +0x0038 -> line 2946
+ *   +0x004c -> line 2949
+ *   +0x0054 -> line 2951
+ *   +0x0064 -> line 2952
+ *   +0x006c -> line 2961
+ *   +0x0070 -> line 2962
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 2900–2928 */
+/* addr: 0x00228b20  size: 168 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2900
+ *   +0x0008 -> line 2904
+ *   +0x000c -> line 2900
+ *   +0x0018 -> line 2904
+ *   +0x0020 -> line 2905
+ *   +0x0024 -> line 2904
+ *   +0x0028 -> line 2907
+ *   +0x003c -> line 2909
+ *   +0x0044 -> line 2910
+ *   +0x004c -> line 2912
+ *   +0x0058 -> line 2913
+ *   +0x0060 -> line 2915
+ *   +0x0068 -> line 2916
+ *   +0x0074 -> line 2918
+ *   +0x007c -> line 2922
+ *   +0x0084 -> line 2925
+ *   +0x008c -> line 2927
+ *   +0x0090 -> line 2928
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 2760–2895 */
+/* addr: 0x00228bd0  size: 584 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2760
+ *   +0x0020 -> line 2766
+ *   +0x0024 -> line 2760
+ *   +0x0028 -> line 2764
+ *   +0x002c -> line 2760
+ *   +0x0034 -> line 2768
+ *   +0x0038 -> line 2765
+ *   +0x003c -> line 2773
+ *   +0x0054 -> line 2775
+ *   +0x0068 -> line 2815
+ *   +0x00e4 -> line 2818
+ *   +0x00ec -> line 2825
+ *   +0x00fc -> line 2826
+ *   +0x0100 -> line 2828
+ *   +0x0108 -> line 2835
+ *   +0x0118 -> line 2836
+ *   +0x011c -> line 2835
+ *   +0x0120 -> line 2838
+ *   +0x0130 -> line 2839
+ *   +0x0134 -> line 2841
+ *   +0x013c -> line 2846
+ *   +0x0148 -> line 2847
+ *   +0x014c -> line 2846
+ *   +0x0150 -> line 2851
+ *   +0x0158 -> line 2854
+ *   +0x0168 -> line 2855
+ *   +0x016c -> line 2854
+ *   +0x0170 -> line 2857
+ *   +0x0174 -> line 2863
+ *   +0x0180 -> line 2865
+ *   +0x0190 -> line 2866
+ *   +0x0194 -> line 2865
+ *   +0x0198 -> line 2871
+ *   +0x01c4 -> line 2873
+ *   +0x01d0 -> line 2874
+ *   +0x01d8 -> line 2876
+ *   +0x01e4 -> line 2877
+ *   +0x01ec -> line 2879
+ *   +0x01f4 -> line 2880
+ *   +0x0200 -> line 2882
+ *   +0x0208 -> line 2886
+ *   +0x0210 -> line 2889
+ *   +0x0218 -> line 2892
+ *   +0x021c -> line 2894
+ *   +0x0220 -> line 2895
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* MatSp.h inline: the VU0 macro-mode instructions have no C form. */
+inline void MAT_fn_vApplyOnVertex(MTH3D_tdstVector_* VectDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* VectA)
+{
+    MTH4D_tdstVector_ Vtmp;
+    MTH4D_tdstMatrix_* p_stMatrix;
+    MTH4D_tdstVector_* p_stVtmp;
+
+    p_stMatrix = &_hTransform->stTransformMatrix; p_stVtmp = &Vtmp;
+    ((unsigned int*)&Vtmp)[0] = ((unsigned int*)VectA)[0]; ((unsigned int*)&Vtmp)[1] = ((unsigned int*)VectA)[1]; ((unsigned int*)&Vtmp)[2] = ((unsigned int*)VectA)[2];
+    asm {
+        lqc2 vf1, 0x0(p_stVtmp)
+        lqc2 vf2, 0x0(p_stMatrix)
+        lqc2 vf3, 0x10(p_stMatrix)
+        lqc2 vf4, 0x20(p_stMatrix)
+        lqc2 vf5, 0x30(p_stMatrix)
+        vmulax.xyzw ACC, vf2, vf1x
+        vmadday.xyzw ACC, vf3, vf1y
+        vmaddaz.xyzw ACC, vf4, vf1z
+        vmaddw.xyzw vf6, vf5, vf0w
+        nop
+        nop
+        sqc2 vf6, 0x0(p_stVtmp)
+    }
+    ((unsigned int*)VectDest)[0] = ((unsigned int*)&Vtmp)[0]; ((unsigned int*)VectDest)[1] = ((unsigned int*)&Vtmp)[1]; ((unsigned int*)VectDest)[2] = ((unsigned int*)&Vtmp)[2];
+}
+
+inline void MTH3D_M_vSetVectorElements(MTH3D_tdstVector_* VectDest, float x, float y, float z)
+{
+    VectDest->xX = x; VectDest->xY = y; VectDest->xZ = z;
+}
+
+inline void MTH3D_M_vSubVector(MTH3D_tdstVector_* VectDest, MTH3D_tdstVector_* VectA, MTH3D_tdstVector_* VectB)
+{
+    VectDest->xX = VectA->xX - VectB->xX; VectDest->xY = VectA->xY - VectB->xY; VectDest->xZ = VectA->xZ - VectB->xZ;
+}
+
+inline void MTH3D_M_vCopyVector(MTH3D_tdstVector_* VectDest, MTH3D_tdstVector_* VectA)
+{
+    ((int*)VectDest)[0] = ((int*)VectA)[0]; ((int*)VectDest)[1] = ((int*)VectA)[1]; ((int*)VectDest)[2] = ((int*)VectA)[2];
+}
+
+inline MTH3D_tdstVector_* POS_fn_p_stGetTranslationVector(MAT_tdstTransformation_* hMatrix)
+{
+    return (MTH3D_tdstVector_*)&hMatrix->stTransformMatrix.stCol_3;
+}
+
+void MEC_vTurnAbsolute(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stVector);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 2674–2746 */
+/* addr: 0x00228e20  size: 652 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2674
+ *   +0x002c -> line 2680
+ *   +0x0030 -> line 2686
+ *   +0x0048 -> line 2690
+ *   +0x005c -> line 2692
+ *   +0x006c -> line 2697
+ *   +0x0078 -> line 2698
+ *   +0x0080 -> line 2700
+ *   +0x008c -> line 2701
+ *   +0x0094 -> line 2705
+ *   +0x0098 -> line 2707
+ *   +0x009c -> line 2705
+ *   +0x00b4 -> line 2707
+ *   +0x00d0 -> line 2715
+ *   +0x00dc -> line 2716
+ *   +0x00e0 -> line 2715
+ *   +0x00e4 -> line 2716
+ *   +0x0104 -> line 2718
+ *   +0x0114 -> line 2719
+ *   +0x0134 -> line 2721
+ *   +0x0144 -> line 2722
+ *   +0x0148 -> line 2721
+ *   +0x014c -> line 2722
+ *   +0x0168 -> line 2724
+ *   +0x016c -> line 2725
+ *   +0x0170 -> line 2724
+ *   +0x0174 -> line 2725
+ *   +0x0178 -> line 2724
+ *   +0x017c -> line 2725
+ *   +0x01ec -> line 2727
+ *   +0x01f4 -> line 2731
+ *   +0x020c -> line 2732
+ *   +0x0214 -> line 2737
+ *   +0x021c -> line 2740
+ *   +0x0230 -> line 2741
+ *   +0x0238 -> line 2740
+ *   +0x0258 -> line 2741
+ *   +0x0260 -> line 2745
+ *   +0x0264 -> line 2746
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 2621–2665 */
+/* addr: 0x00239400  size: 328 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2621
+ *   +0x0020 -> line 2624
+ *   +0x0024 -> line 2633
+ *   +0x003c -> line 2637
+ *   +0x004c -> line 2638
+ *   +0x0050 -> line 2637
+ *   +0x0054 -> line 2638
+ *   +0x0070 -> line 2640
+ *   +0x007c -> line 2641
+ *   +0x0084 -> line 2643
+ *   +0x008c -> line 2644
+ *   +0x0094 -> line 2647
+ *   +0x00b0 -> line 2651
+ *   +0x00b4 -> line 2650
+ *   +0x00b8 -> line 2651
+ *   +0x00c0 -> line 2650
+ *   +0x00c4 -> line 2651
+ *   +0x0100 -> line 2652
+ *   +0x010c -> line 2653
+ *   +0x0114 -> line 2656
+ *   +0x0128 -> line 2664
+ *   +0x012c -> line 2665
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 2575–2615 */
+/* addr: 0x00239550  size: 184 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2575
+ *   +0x0008 -> line 2584
+ *   +0x000c -> line 2575
+ *   +0x001c -> line 2577
+ *   +0x0028 -> line 2584
+ *   +0x0030 -> line 2585
+ *   +0x0034 -> line 2587
+ *   +0x0038 -> line 2584
+ *   +0x003c -> line 2587
+ *   +0x0044 -> line 2603
+ *   +0x0048 -> line 2587
+ *   +0x004c -> line 2603
+ *   +0x0070 -> line 2604
+ *   +0x0098 -> line 2614
+ *   +0x009c -> line 2615
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 2535–2569 */
+/* addr: 0x00239610  size: 128 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2535
+ *   +0x0014 -> line 2537
+ *   +0x0020 -> line 2542
+ *   +0x0028 -> line 2561
+ *   +0x002c -> line 2542
+ *   +0x0030 -> line 2561
+ *   +0x0064 -> line 2568
+ *   +0x0068 -> line 2569
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 2497–2530 */
+/* addr: 0x00239690  size: 132 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2497
+ *   +0x0010 -> line 2499
+ *   +0x001c -> line 2504
+ *   +0x0028 -> line 2522
+ *   +0x006c -> line 2529
+ *   +0x0070 -> line 2530
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 2450–2492 */
+/* addr: 0x00239720  size: 188 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2450
+ *   +0x0008 -> line 2459
+ *   +0x000c -> line 2450
+ *   +0x0018 -> line 2459
+ *   +0x0024 -> line 2460
+ *   +0x0034 -> line 2464
+ *   +0x0038 -> line 2462
+ *   +0x003c -> line 2464
+ *   +0x0040 -> line 2462
+ *   +0x0048 -> line 2464
+ *   +0x0050 -> line 2467
+ *   +0x0068 -> line 2484
+ *   +0x00a0 -> line 2491
+ *   +0x00a4 -> line 2492
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 2395–2445 */
+/* addr: 0x002397e0  size: 220 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2395
+ *   +0x0008 -> line 2404
+ *   +0x000c -> line 2395
+ *   +0x0018 -> line 2404
+ *   +0x0024 -> line 2406
+ *   +0x0030 -> line 2408
+ *   +0x003c -> line 2409
+ *   +0x0044 -> line 2412
+ *   +0x0050 -> line 2416
+ *   +0x0054 -> line 2414
+ *   +0x0058 -> line 2416
+ *   +0x005c -> line 2414
+ *   +0x0064 -> line 2416
+ *   +0x006c -> line 2419
+ *   +0x0088 -> line 2437
+ *   +0x00c0 -> line 2444
+ *   +0x00c4 -> line 2445
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 2347–2364 */
+/* addr: 0x002398c0  size: 72 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2347
+ *   +0x000c -> line 2349
+ *   +0x0018 -> line 2354
+ *   +0x0028 -> line 2357
+ *   +0x0030 -> line 2362
+ *   +0x0038 -> line 2364
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+#pragma auto_inline on
+
+#pragma auto_inline reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 2323–2335 */
+/* addr: 0x00239910  size: 120 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2323
+ *   +0x0008 -> line 2329
+ *   +0x000c -> line 2323
+ *   +0x0010 -> line 2329
+ *   +0x001c -> line 2331
+ *   +0x0028 -> line 2332
+ *   +0x0060 -> line 2334
+ *   +0x0064 -> line 2335
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 2317–2317 */
+/* addr: 0x00239990  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2317
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 2280–2301 */
+/* addr: 0x002399a0  size: 112 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2280
+ *   +0x0010 -> line 2283
+ *   +0x0014 -> line 2286
+ *   +0x0020 -> line 2289
+ *   +0x0040 -> line 2292
+ *   +0x0048 -> line 2293
+ *   +0x0050 -> line 2295
+ *   +0x0058 -> line 2300
+ *   +0x005c -> line 2301
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void fn_vMSLightSetOnOff(tdstMSLight_* h_MSLight, unsigned char ucOnOff);
+void fn_vMSLightSetNearFar(tdstMSLight_* h_MSLight, float xNear, float xFar);
+void fn_vMSLightSetColorRGBA(tdstMSLight_* h_MSLight, float xR, float xG, float xB, float xA);
+void fn_vMSLightSetLittleAlpha(tdstMSLight_* h_MSLight, float xLittleAlpha);
+void fn_vMSLightSetBigAlpha(tdstMSLight_* h_MSLight, float xBigAlpha);
+void fn_vMSLightSetGiroPhare(tdstMSLight_* h_MSLight, unsigned char bOnOff, float xStep);
+void fn_vMSLightSetPulse(tdstMSLight_* h_MSLight, unsigned char bOnOff, float xStep, float xMaxRange);
+void fn_vMSLightSetTypeOfLight(tdstMSLight_* h_MSLight, unsigned short lTypeOfLight);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1988–2142 */
+/* addr: 0x00239a10  size: 912 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1988
+ *   +0x0024 -> line 1989
+ *   +0x0028 -> line 1996
+ *   +0x0040 -> line 2000
+ *   +0x0068 -> line 2002
+ *   +0x0070 -> line 2004
+ *   +0x0080 -> line 2010
+ *   +0x00a8 -> line 2013
+ *   +0x00b4 -> line 2019
+ *   +0x00bc -> line 2023
+ *   +0x00c8 -> line 2029
+ *   +0x00d0 -> line 2036
+ *   +0x00e0 -> line 2037
+ *   +0x00e4 -> line 2036
+ *   +0x00e8 -> line 2037
+ *   +0x0108 -> line 2039
+ *   +0x0118 -> line 2042
+ *   +0x011c -> line 2039
+ *   +0x0120 -> line 2042
+ *   +0x0148 -> line 2044
+ *   +0x0150 -> line 2050
+ *   +0x0164 -> line 2051
+ *   +0x0170 -> line 2052
+ *   +0x0188 -> line 2057
+ *   +0x0190 -> line 2065
+ *   +0x01a0 -> line 2066
+ *   +0x01a4 -> line 2065
+ *   +0x01a8 -> line 2066
+ *   +0x01c8 -> line 2067
+ *   +0x01d0 -> line 2069
+ *   +0x01e0 -> line 2071
+ *   +0x01e4 -> line 2069
+ *   +0x01e8 -> line 2071
+ *   +0x020c -> line 2073
+ *   +0x0214 -> line 2081
+ *   +0x0224 -> line 2082
+ *   +0x022c -> line 2084
+ *   +0x0238 -> line 2082
+ *   +0x023c -> line 2084
+ *   +0x0244 -> line 2087
+ *   +0x0248 -> line 2084
+ *   +0x024c -> line 2087
+ *   +0x0274 -> line 2089
+ *   +0x027c -> line 2097
+ *   +0x028c -> line 2098
+ *   +0x0294 -> line 2100
+ *   +0x02a0 -> line 2098
+ *   +0x02a4 -> line 2100
+ *   +0x02ac -> line 2101
+ *   +0x02d0 -> line 2103
+ *   +0x02e0 -> line 2106
+ *   +0x02e4 -> line 2103
+ *   +0x02e8 -> line 2106
+ *   +0x0314 -> line 2108
+ *   +0x031c -> line 2112
+ *   +0x0328 -> line 2113
+ *   +0x0330 -> line 2118
+ *   +0x033c -> line 2119
+ *   +0x0344 -> line 2124
+ *   +0x0350 -> line 2125
+ *   +0x0358 -> line 2129
+ *   +0x0364 -> line 2130
+ *   +0x036c -> line 2140
+ *   +0x0370 -> line 2142
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1850–1983 */
+/* addr: 0x00239da0  size: 748 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1850
+ *   +0x0018 -> line 1852
+ *   +0x001c -> line 1858
+ *   +0x0048 -> line 1863
+ *   +0x0050 -> line 1864
+ *   +0x0054 -> line 1863
+ *   +0x0058 -> line 1864
+ *   +0x0080 -> line 1871
+ *   +0x008c -> line 1872
+ *   +0x0098 -> line 1874
+ *   +0x009c -> line 1877
+ *   +0x00a4 -> line 1883
+ *   +0x00b0 -> line 1884
+ *   +0x00bc -> line 1886
+ *   +0x00d0 -> line 1889
+ *   +0x00d8 -> line 1896
+ *   +0x00e0 -> line 1897
+ *   +0x0104 -> line 1899
+ *   +0x0108 -> line 1901
+ *   +0x0118 -> line 1904
+ *   +0x013c -> line 1906
+ *   +0x014c -> line 1909
+ *   +0x016c -> line 1912
+ *   +0x0174 -> line 1919
+ *   +0x017c -> line 1920
+ *   +0x01a0 -> line 1922
+ *   +0x01a4 -> line 1924
+ *   +0x01b4 -> line 1927
+ *   +0x01d4 -> line 1930
+ *   +0x01dc -> line 1936
+ *   +0x01e8 -> line 1939
+ *   +0x0200 -> line 1940
+ *   +0x0204 -> line 1947
+ *   +0x0208 -> line 1940
+ *   +0x020c -> line 1946
+ *   +0x0210 -> line 1947
+ *   +0x0214 -> line 1941
+ *   +0x021c -> line 1940
+ *   +0x0220 -> line 1942
+ *   +0x0228 -> line 1941
+ *   +0x022c -> line 1943
+ *   +0x0234 -> line 1942
+ *   +0x0238 -> line 1944
+ *   +0x0240 -> line 1943
+ *   +0x0244 -> line 1944
+ *   +0x0248 -> line 1951
+ *   +0x0254 -> line 1956
+ *   +0x0260 -> line 1959
+ *   +0x0278 -> line 1960
+ *   +0x0280 -> line 1966
+ *   +0x0284 -> line 1961
+ *   +0x0288 -> line 1966
+ *   +0x028c -> line 1967
+ *   +0x0290 -> line 1962
+ *   +0x0294 -> line 1963
+ *   +0x0298 -> line 1964
+ *   +0x029c -> line 1960
+ *   +0x02a0 -> line 1961
+ *   +0x02a8 -> line 1962
+ *   +0x02ac -> line 1967
+ *   +0x02b0 -> line 1962
+ *   +0x02b4 -> line 1963
+ *   +0x02bc -> line 1964
+ *   +0x02c4 -> line 1971
+ *   +0x02d0 -> line 1982
+ *   +0x02d4 -> line 1983
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1801–1837 */
+/* addr: 0x0023a090  size: 168 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1801
+ *   +0x001c -> line 1804
+ *   +0x0020 -> line 1810
+ *   +0x0038 -> line 1815
+ *   +0x0048 -> line 1816
+ *   +0x004c -> line 1818
+ *   +0x006c -> line 1821
+ *   +0x0078 -> line 1822
+ *   +0x0080 -> line 1826
+ *   +0x008c -> line 1827
+ *   +0x0090 -> line 1837
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1759–1796 */
+/* addr: 0x0023a140  size: 72 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1759
+ *   +0x0004 -> line 1762
+ *   +0x0008 -> line 1759
+ *   +0x0010 -> line 1760
+ *   +0x0014 -> line 1762
+ *   +0x0024 -> line 1765
+ *   +0x002c -> line 1767
+ *   +0x0034 -> line 1795
+ *   +0x0038 -> line 1796
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1704–1754 */
+/* addr: 0x0023a190  size: 268 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1704
+ *   +0x0004 -> line 1705
+ *   +0x0008 -> line 1704
+ *   +0x000c -> line 1705
+ *   +0x0010 -> line 1704
+ *   +0x0014 -> line 1705
+ *   +0x0018 -> line 1704
+ *   +0x0024 -> line 1705
+ *   +0x002c -> line 1710
+ *   +0x0030 -> line 1706
+ *   +0x0034 -> line 1710
+ *   +0x003c -> line 1711
+ *   +0x0048 -> line 1713
+ *   +0x0078 -> line 1717
+ *   +0x007c -> line 1718
+ *   +0x0088 -> line 1721
+ *   +0x0098 -> line 1723
+ *   +0x00a8 -> line 1724
+ *   +0x00b0 -> line 1730
+ *   +0x00c0 -> line 1732
+ *   +0x00c8 -> line 1737
+ *   +0x00d8 -> line 1738
+ *   +0x00e0 -> line 1742
+ *   +0x00f0 -> line 1743
+ *   +0x00f4 -> line 1754
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1587–1662 */
+/* addr: 0x0023a2a0  size: 672 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1587
+ *   +0x0008 -> line 1592
+ *   +0x000c -> line 1587
+ *   +0x0030 -> line 1589
+ *   +0x0034 -> line 1592
+ *   +0x003c -> line 1593
+ *   +0x005c -> line 1601
+ *   +0x0064 -> line 1602
+ *   +0x0068 -> line 1601
+ *   +0x006c -> line 1602
+ *   +0x0078 -> line 1603
+ *   +0x009c -> line 1604
+ *   +0x00ac -> line 1605
+ *   +0x00d8 -> line 1606
+ *   +0x00e8 -> line 1607
+ *   +0x00ec -> line 1606
+ *   +0x00f0 -> line 1607
+ *   +0x0118 -> line 1609
+ *   +0x0120 -> line 1610
+ *   +0x0124 -> line 1612
+ *   +0x0140 -> line 1614
+ *   +0x0148 -> line 1624
+ *   +0x014c -> line 1620
+ *   +0x0150 -> line 1622
+ *   +0x0154 -> line 1624
+ *   +0x015c -> line 1625
+ *   +0x0168 -> line 1626
+ *   +0x0174 -> line 1628
+ *   +0x017c -> line 1626
+ *   +0x0180 -> line 1628
+ *   +0x0190 -> line 1629
+ *   +0x0198 -> line 1631
+ *   +0x01a0 -> line 1634
+ *   +0x01b8 -> line 1635
+ *   +0x01d8 -> line 1636
+ *   +0x01e0 -> line 1638
+ *   +0x01f4 -> line 1641
+ *   +0x01f8 -> line 1640
+ *   +0x01fc -> line 1641
+ *   +0x0204 -> line 1642
+ *   +0x022c -> line 1644
+ *   +0x0234 -> line 1647
+ *   +0x0244 -> line 1649
+ *   +0x0250 -> line 1650
+ *   +0x026c -> line 1652
+ *   +0x0270 -> line 1662
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1514–1570 */
+/* addr: 0x0023a540  size: 212 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1514
+ *   +0x0008 -> line 1519
+ *   +0x000c -> line 1514
+ *   +0x0018 -> line 1516
+ *   +0x001c -> line 1519
+ *   +0x0024 -> line 1521
+ *   +0x004c -> line 1526
+ *   +0x0050 -> line 1525
+ *   +0x0054 -> line 1526
+ *   +0x005c -> line 1527
+ *   +0x0060 -> line 1526
+ *   +0x0064 -> line 1527
+ *   +0x0070 -> line 1532
+ *   +0x0078 -> line 1538
+ *   +0x007c -> line 1539
+ *   +0x008c -> line 1541
+ *   +0x0094 -> line 1543
+ *   +0x009c -> line 1544
+ *   +0x00a4 -> line 1551
+ *   +0x00ac -> line 1555
+ *   +0x00bc -> line 1570
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void fn_vAddList(tdstList_* p_stListA, tdstList_* p_stListB);
+void fn_vUnionList(tdstList_* p_stListA, tdstList_* p_stListB, tdstList_* p_stListC);
+void fn_vInterList(tdstList_* p_stListA, tdstList_* p_stListB, tdstList_* p_stListC);
+void fn_vDiffList(tdstList_* p_stListA, tdstList_* p_stListB, tdstList_* p_stListC);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1462–1507 */
+/* addr: 0x0023a620  size: 252 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1462
+ *   +0x0008 -> line 1467
+ *   +0x000c -> line 1462
+ *   +0x0020 -> line 1464
+ *   +0x0024 -> line 1467
+ *   +0x002c -> line 1468
+ *   +0x0030 -> line 1467
+ *   +0x0034 -> line 1470
+ *   +0x0044 -> line 1473
+ *   +0x0050 -> line 1475
+ *   +0x005c -> line 1476
+ *   +0x0064 -> line 1479
+ *   +0x0078 -> line 1482
+ *   +0x00a4 -> line 1485
+ *   +0x00ac -> line 1486
+ *   +0x00b4 -> line 1490
+ *   +0x00bc -> line 1491
+ *   +0x00c4 -> line 1495
+ *   +0x00d0 -> line 1496
+ *   +0x00d8 -> line 1506
+ *   +0x00dc -> line 1507
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void fn_vPutInList(tdstList_* p_List, HIE_tdstSuperObject_* p_Perso);
+void fn_vInsertPersoAtPositionInList(tdstList_* p_List, HIE_tdstSuperObject_* p_Perso, unsigned char ucPosition);
+void fn_vDeletePersoAtPositionInList(tdstList_* p_List, unsigned char ucPosition);
+char fn_bFindPersoAndDeleteInList(tdstList_* p_List, HIE_tdstSuperObject_* p_Perso);
+tdstNodeInterpret_* fn_p_stListSelect(tdstList_* p_List, char b_cInverse, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stListSort(tdstList_* p_List, unsigned char ucWantedNbElt, char b_cIncrease, tdstNodeInterpret_* p_stTree);
+void fn_vSortListByFamily(tdstList_* p_List, tdstFamilyList_* hFamily);
+void fn_vSortListByModel(tdstList_* p_stList, AI_tdstAIModel_* _p_stModel);
+void fn_vFillListWithAllPersoOfAFamilly(tdstList_* _p_stList, HIE_tdstSuperObject_* _hFather, tdstFamilyList_* _hFamily);
+void fn_vFillListWithAllPersoOfAModel(tdstList_* _p_stList, HIE_tdstSuperObject_* _hFather, AI_tdstAIModel_* _p_stModel);
+HIE_tdstSuperObject_* fn_p_stGetPersoInList(tdstList_* p_List, unsigned char ucPosition);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1305–1457 */
+/* addr: 0x0023a720  size: 1080 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1305
+ *   +0x0008 -> line 1310
+ *   +0x000c -> line 1305
+ *   +0x001c -> line 1307
+ *   +0x0020 -> line 1310
+ *   +0x0028 -> line 1313
+ *   +0x0054 -> line 1317
+ *   +0x0068 -> line 1319
+ *   +0x0080 -> line 1320
+ *   +0x0088 -> line 1324
+ *   +0x00ac -> line 1326
+ *   +0x00c8 -> line 1327
+ *   +0x00d0 -> line 1331
+ *   +0x00e0 -> line 1332
+ *   +0x00e4 -> line 1331
+ *   +0x00e8 -> line 1332
+ *   +0x00f0 -> line 1333
+ *   +0x00f8 -> line 1338
+ *   +0x010c -> line 1340
+ *   +0x0124 -> line 1341
+ *   +0x012c -> line 1345
+ *   +0x0144 -> line 1349
+ *   +0x015c -> line 1354
+ *   +0x017c -> line 1355
+ *   +0x0198 -> line 1359
+ *   +0x01a8 -> line 1360
+ *   +0x01ac -> line 1359
+ *   +0x01b0 -> line 1360
+ *   +0x01b8 -> line 1361
+ *   +0x01c0 -> line 1365
+ *   +0x01d0 -> line 1366
+ *   +0x01d4 -> line 1365
+ *   +0x01d8 -> line 1366
+ *   +0x01e0 -> line 1367
+ *   +0x01e8 -> line 1377
+ *   +0x0200 -> line 1380
+ *   +0x0270 -> line 1383
+ *   +0x0278 -> line 1392
+ *   +0x0290 -> line 1395
+ *   +0x0310 -> line 1397
+ *   +0x0318 -> line 1407
+ *   +0x032c -> line 1408
+ *   +0x0330 -> line 1407
+ *   +0x0334 -> line 1410
+ *   +0x0340 -> line 1411
+ *   +0x0348 -> line 1413
+ *   +0x035c -> line 1414
+ *   +0x0370 -> line 1416
+ *   +0x0378 -> line 1417
+ *   +0x0384 -> line 1418
+ *   +0x0390 -> line 1420
+ *   +0x0398 -> line 1429
+ *   +0x03ac -> line 1430
+ *   +0x03b0 -> line 1429
+ *   +0x03b4 -> line 1432
+ *   +0x03c0 -> line 1433
+ *   +0x03c8 -> line 1436
+ *   +0x03e8 -> line 1441
+ *   +0x03f8 -> line 1443
+ *   +0x0400 -> line 1444
+ *   +0x040c -> line 1445
+ *   +0x0418 -> line 1447
+ *   +0x041c -> line 1457
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1272–1296 */
+/* addr: 0x0023ab60  size: 292 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1272
+ *   +0x0020 -> line 1276
+ *   +0x0034 -> line 1279
+ *   +0x0044 -> line 1282
+ *   +0x004c -> line 1283
+ *   +0x0054 -> line 1285
+ *   +0x0064 -> line 1287
+ *   +0x006c -> line 1292
+ *   +0x0078 -> line 1294
+ *   +0x00f8 -> line 1295
+ *   +0x0108 -> line 1296
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+#pragma auto_inline on
+
+#pragma auto_inline reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1249–1268 */
+/* addr: 0x0023ac90  size: 268 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1249
+ *   +0x0020 -> line 1253
+ *   +0x0034 -> line 1256
+ *   +0x0044 -> line 1258
+ *   +0x0058 -> line 1260
+ *   +0x0060 -> line 1264
+ *   +0x006c -> line 1266
+ *   +0x00e0 -> line 1267
+ *   +0x00f0 -> line 1268
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+#pragma auto_inline on
+
+#pragma auto_inline reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1148–1242 */
+/* addr: 0x0023ada0  size: 412 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1148
+ *   +0x0008 -> line 1153
+ *   +0x000c -> line 1148
+ *   +0x0020 -> line 1150
+ *   +0x0024 -> line 1153
+ *   +0x0030 -> line 1163
+ *   +0x003c -> line 1167
+ *   +0x0048 -> line 1168
+ *   +0x004c -> line 1170
+ *   +0x005c -> line 1173
+ *   +0x0060 -> line 1170
+ *   +0x0064 -> line 1173
+ *   +0x0074 -> line 1174
+ *   +0x007c -> line 1180
+ *   +0x008c -> line 1184
+ *   +0x0098 -> line 1186
+ *   +0x00ac -> line 1187
+ *   +0x00b4 -> line 1189
+ *   +0x00c0 -> line 1191
+ *   +0x00d4 -> line 1192
+ *   +0x00dc -> line 1199
+ *   +0x00f0 -> line 1204
+ *   +0x00f8 -> line 1205
+ *   +0x0100 -> line 1209
+ *   +0x0110 -> line 1210
+ *   +0x0118 -> line 1213
+ *   +0x012c -> line 1221
+ *   +0x0144 -> line 1222
+ *   +0x014c -> line 1225
+ *   +0x0160 -> line 1230
+ *   +0x0178 -> line 1241
+ *   +0x017c -> line 1242
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1095–1139 */
+/* addr: 0x0023af40  size: 416 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1095
+ *   +0x0008 -> line 1099
+ *   +0x000c -> line 1095
+ *   +0x001c -> line 1097
+ *   +0x0020 -> line 1099
+ *   +0x0028 -> line 1104
+ *   +0x0068 -> line 1107
+ *   +0x00bc -> line 1112
+ *   +0x00c4 -> line 1113
+ *   +0x00cc -> line 1117
+ *   +0x00d4 -> line 1118
+ *   +0x00dc -> line 1123
+ *   +0x0130 -> line 1128
+ *   +0x0184 -> line 1139
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1037–1088 */
+/* addr: 0x0023b0e0  size: 452 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1037
+ *   +0x0008 -> line 1041
+ *   +0x000c -> line 1037
+ *   +0x001c -> line 1039
+ *   +0x0020 -> line 1041
+ *   +0x0028 -> line 1046
+ *   +0x0050 -> line 1049
+ *   +0x00a8 -> line 1055
+ *   +0x00b0 -> line 1054
+ *   +0x00b4 -> line 1055
+ *   +0x00bc -> line 1056
+ *   +0x00c0 -> line 1055
+ *   +0x00c4 -> line 1056
+ *   +0x00cc -> line 1058
+ *   +0x00d4 -> line 1062
+ *   +0x00dc -> line 1063
+ *   +0x00e4 -> line 1068
+ *   +0x00ec -> line 1069
+ *   +0x00f4 -> line 1074
+ *   +0x014c -> line 1078
+ *   +0x01a4 -> line 1087
+ *   +0x01a8 -> line 1088
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1016–1030 */
+/* addr: 0x0023b2b0  size: 28 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1016
+ *   +0x0008 -> line 1022
+ *   +0x0010 -> line 1030
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 962–1007 */
+/* addr: 0x0023b2d0  size: 244 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 962
+ *   +0x001c -> line 963
+ *   +0x0020 -> line 969
+ *   +0x0038 -> line 972
+ *   +0x004c -> line 976
+ *   +0x0058 -> line 978
+ *   +0x0060 -> line 980
+ *   +0x0074 -> line 987
+ *   +0x0078 -> line 990
+ *   +0x0084 -> line 987
+ *   +0x0088 -> line 992
+ *   +0x0094 -> line 994
+ *   +0x0098 -> line 992
+ *   +0x009c -> line 996
+ *   +0x00a0 -> line 994
+ *   +0x00a4 -> line 996
+ *   +0x00a8 -> line 994
+ *   +0x00ac -> line 995
+ *   +0x00b0 -> line 994
+ *   +0x00b4 -> line 995
+ *   +0x00cc -> line 996
+ *   +0x00d4 -> line 998
+ *   +0x00d8 -> line 1000
+ *   +0x00dc -> line 1007
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+HIE_tdstSuperObject_* CAM_fn_hCineInfoGetSuperObjectTargeted(tdstInternalStructurCineinfo_* hCineinfo);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 922–956 */
+/* addr: 0x0023b3d0  size: 172 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 922
+ *   +0x0008 -> line 931
+ *   +0x000c -> line 922
+ *   +0x0014 -> line 924
+ *   +0x0018 -> line 931
+ *   +0x0030 -> line 937
+ *   +0x0044 -> line 941
+ *   +0x0094 -> line 945
+ *   +0x0098 -> line 956
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void fn_vSaveEngineClock(void);
+void fn_vLoadEngineClock(void);
+void HIE_fn_vInvalidateHierarchy(HIE_tdstSuperObject_* _hSprObj);
+void HIE_fn_vChangeFather(HIE_tdstSuperObject_* _hSprObj, HIE_tdstSuperObject_* _hNewFather, unsigned char _bAtHead);
+tdstNodeMainCharacter_* MC_fn_hGetFirstMainCharNode(void);
+void MC_fn_vSetNewMainCharacter(tdstNodeMainCharacter_* hNode, HIE_tdstSuperObject_* hCharacter);
+void fn_vForceActiveAnObject(tdstEngineObject_* p_stObject);
+void fn_vDesactiveAnObject(tdstEngineObject_* p_stObject);
+int strcasecmp(const char* s1, const char* s2);
+void GAM_fn_vAskToChangeLevel(char* szNewLevelName, unsigned char bSaveGame);
+void GAM_fn_vAskToChangeLevelWithTransition(char* szNewLevelName, unsigned char bSaveGame);
+void fn_vR3ReInitScore(void);
+void fn_v3dDataSetGlobalAccelerationFactor(float fFactor);
+int DNM_fn_eIdentityCardGetType(void* _hCurrent);
+void MEC_fn_vFreePlatformLink(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj);
+void fn_vReputCharacterSuperObjectAtTheWorld(HIE_tdstSuperObject_* hSupObj);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 732–915 */
+/* addr: 0x0023b480  size: 876 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 732
+ *   +0x0008 -> line 736
+ *   +0x000c -> line 732
+ *   +0x0024 -> line 734
+ *   +0x0028 -> line 736
+ *   +0x0030 -> line 738
+ *   +0x00ac -> line 742
+ *   +0x00b0 -> line 746
+ *   +0x00c8 -> line 749
+ *   +0x00d0 -> line 751
+ *   +0x00e0 -> line 754
+ *   +0x00ec -> line 759
+ *   +0x00f0 -> line 761
+ *   +0x00f8 -> line 763
+ *   +0x0100 -> line 769
+ *   +0x0108 -> line 773
+ *   +0x0114 -> line 774
+ *   +0x011c -> line 777
+ *   +0x0120 -> line 779
+ *   +0x012c -> line 784
+ *   +0x0130 -> line 785
+ *   +0x0134 -> line 784
+ *   +0x0138 -> line 785
+ *   +0x013c -> line 787
+ *   +0x0144 -> line 790
+ *   +0x014c -> line 795
+ *   +0x0158 -> line 797
+ *   +0x0168 -> line 799
+ *   +0x0170 -> line 800
+ *   +0x0178 -> line 802
+ *   +0x0184 -> line 803
+ *   +0x01b8 -> line 806
+ *   +0x01c0 -> line 810
+ *   +0x01c8 -> line 812
+ *   +0x01d4 -> line 813
+ *   +0x01d8 -> line 815
+ *   +0x01dc -> line 817
+ *   +0x01ec -> line 820
+ *   +0x01f4 -> line 824
+ *   +0x0218 -> line 825
+ *   +0x0220 -> line 832
+ *   +0x0228 -> line 834
+ *   +0x0230 -> line 838
+ *   +0x0238 -> line 839
+ *   +0x0240 -> line 848
+ *   +0x024c -> line 849
+ *   +0x0264 -> line 851
+ *   +0x0270 -> line 852
+ *   +0x0278 -> line 854
+ *   +0x0280 -> line 857
+ *   +0x0290 -> line 860
+ *   +0x02a8 -> line 862
+ *   +0x02bc -> line 863
+ *   +0x02c4 -> line 866
+ *   +0x02d0 -> line 869
+ *   +0x02e0 -> line 873
+ *   +0x02e4 -> line 881
+ *   +0x02f0 -> line 885
+ *   +0x0308 -> line 886
+ *   +0x0320 -> line 894
+ *   +0x0328 -> line 898
+ *   +0x032c -> line 899
+ *   +0x0334 -> line 900
+ *   +0x033c -> line 904
+ *   +0x0344 -> line 905
+ *   +0x0348 -> line 915
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+inline void fn_vResetCheapCharacterList(unsigned int ulInd)
+{
+    _tdstCheapCharacterList* pCheapList = &g_aListOfCheapCharacterList[ulInd];
+    unsigned int i;
+
+    pCheapList->NumberOfCheapCharacter = 0;
+    pCheapList->pReferenceObject = NULL;
+    pCheapList->ulOptionFlags = 0;
+    for (i = 0; i < pCheapList->MaxNumberOfCheapCharacter; i++)
+        pCheapList->List[i].cActivity = 0;
+    pCheapList->hAuraVisualMaterial = NULL;
+    pCheapList->bAurasNeedToBeDrawn = 0;
+}
+
+void fn_vKillEngineObjectOrAlwaysByPointer(tdstEngineObject_* p_stObject);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 629–715 */
+/* addr: 0x0023b7f0  size: 704 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 629
+ *   +0x0004 -> line 639
+ *   +0x0008 -> line 629
+ *   +0x0028 -> line 636
+ *   +0x002c -> line 629
+ *   +0x0030 -> line 630
+ *   +0x0034 -> line 639
+ *   +0x0050 -> line 642
+ *   +0x0078 -> line 644
+ *   +0x007c -> line 642
+ *   +0x0080 -> line 644
+ *   +0x0084 -> line 642
+ *   +0x0088 -> line 644
+ *   +0x008c -> line 642
+ *   +0x0094 -> line 644
+ *   +0x00ac -> line 647
+ *   +0x00b0 -> line 650
+ *   +0x00c8 -> line 652
+ *   +0x00fc -> line 654
+ *   +0x0144 -> line 655
+ *   +0x0158 -> line 661
+ *   +0x0160 -> line 664
+ *   +0x0188 -> line 666
+ *   +0x0190 -> line 671
+ *   +0x01a8 -> line 674
+ *   +0x01b0 -> line 679
+ *   +0x01b8 -> line 682
+ *   +0x01bc -> line 679
+ *   +0x01c0 -> line 685
+ *   +0x01d4 -> line 687
+ *   +0x0208 -> line 689
+ *   +0x024c -> line 690
+ *   +0x0260 -> line 696
+ *   +0x0268 -> line 699
+ *   +0x0290 -> line 701
+ *   +0x0298 -> line 704
+ *   +0x029c -> line 715
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 626–626 */
+/* addr: 0x0023bab0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 626
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 500–566 */
+/* addr: 0x0023bac0  size: 296 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 500
+ *   +0x0004 -> line 502
+ *   +0x0008 -> line 500
+ *   +0x001c -> line 501
+ *   +0x0020 -> line 502
+ *   +0x0050 -> line 506
+ *   +0x0058 -> line 511
+ *   +0x0080 -> line 512
+ *   +0x0084 -> line 514
+ *   +0x008c -> line 515
+ *   +0x0098 -> line 518
+ *   +0x00a0 -> line 521
+ *   +0x00a8 -> line 527
+ *   +0x00b4 -> line 529
+ *   +0x00bc -> line 535
+ *   +0x00c4 -> line 536
+ *   +0x00cc -> line 538
+ *   +0x00d8 -> line 540
+ *   +0x00e0 -> line 543
+ *   +0x00e8 -> line 544
+ *   +0x00f0 -> line 546
+ *   +0x00f8 -> line 551
+ *   +0x0104 -> line 555
+ *   +0x010c -> line 556
+ *   +0x0110 -> line 566
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 431–492 */
+/* addr: 0x0023bbf0  size: 420 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 431
+ *   +0x0020 -> line 432
+ *   +0x0024 -> line 439
+ *   +0x003c -> line 442
+ *   +0x0080 -> line 446
+ *   +0x008c -> line 448
+ *   +0x0090 -> line 446
+ *   +0x0094 -> line 448
+ *   +0x00cc -> line 450
+ *   +0x00d4 -> line 456
+ *   +0x00d8 -> line 455
+ *   +0x00e8 -> line 456
+ *   +0x00f0 -> line 461
+ *   +0x00fc -> line 463
+ *   +0x0100 -> line 461
+ *   +0x0104 -> line 463
+ *   +0x013c -> line 464
+ *   +0x0144 -> line 470
+ *   +0x0150 -> line 472
+ *   +0x0160 -> line 474
+ *   +0x0168 -> line 479
+ *   +0x0174 -> line 480
+ *   +0x0184 -> line 481
+ *   +0x0188 -> line 492
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 232–277 */
+/* addr: 0x0023bda0  size: 284 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 232
+ *   +0x0004 -> line 237
+ *   +0x0008 -> line 232
+ *   +0x0024 -> line 233
+ *   +0x0028 -> line 237
+ *   +0x0044 -> line 242
+ *   +0x0054 -> line 243
+ *   +0x0058 -> line 242
+ *   +0x005c -> line 248
+ *   +0x0070 -> line 251
+ *   +0x009c -> line 254
+ *   +0x00a4 -> line 255
+ *   +0x00ac -> line 257
+ *   +0x00b4 -> line 258
+ *   +0x00bc -> line 260
+ *   +0x00c4 -> line 261
+ *   +0x00cc -> line 263
+ *   +0x00d4 -> line 264
+ *   +0x00dc -> line 266
+ *   +0x00e4 -> line 267
+ *   +0x00ec -> line 270
+ *   +0x00f4 -> line 272
+ *   +0x00fc -> line 276
+ *   +0x0100 -> line 277
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+tdstNodeInterpret_* fn_p_stR3SetValue(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdeProcedureId_ eProcedureId;
+    tdstGetSetParam_ stParam;
+    unsigned int ulIndEnv;
+    unsigned int ulValue;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    ulIndEnv = 0;
+    switch (eProcedureId)
+    {
+    case eProc_R3SetScore:
+    case eProc_R3SetNbCage:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        ulIndEnv = stParam.uDummy.uParam.lValue;
+        break;
+    }
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    ulValue = stParam.uDummy.uParam.lValue;
+
+    switch (eProcedureId)
+    {
+    case eProc_R3SetScore:
+        fn_vR3SetEnvScoreWithRevisit(ulIndEnv, ulValue);
+        break;
+    case eProc_R3SetNbCage:
+        fn_vR3SetEnvNbCage(ulIndEnv, ulValue);
+        break;
+    case eProc_R3SetCurrentEnvNumber:
+        fn_vR3SetCurrentEnvNumber(ulValue);
+        break;
+    case eProc_R3SetNbCineOpen:
+        fn_vR3SetNbCineOpen(ulValue);
+        break;
+    case eProc_R3SetNbBonusOpen:
+        fn_vR3SetNbBonusOpen(ulValue);
+        break;
+    case eProc_R3SetAutoSave:
+        g_DoAutoSaveWhenChangeMap = ulValue;
+        break;
+    case eProc_R3SetEndOfGame:
+        fn_vR3SetEndOfGame(ulValue);
+        break;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stMiscUltraProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    tdstGetSetParam_ stParam;
+    tdeProcedureId_ eProcedureId;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+
+    switch (eProcedureId)
+    {
+    case eProc_SetCharacterPriority:
+    {
+        tdstEngineObject_* p_stCharacter;
+
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        p_stCharacter = hNewSuperObjPerso->hLinkedObject.p_stCharacter;
+        CS_fn_vSetCharacterPriority(p_stCharacter->h_CollSet, (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue);
+        return p_stTree;
+    }
+    case eProc_EraseLastGoThroughMaterial:
+        hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->hLastCollidedGoThroughMaterial = (GMT_tdstGameMaterial_*)0xcdcdcdcd;
+        return p_stTree;
+    case eProc_FactorAnimationFrameRate:
+    {
+        tdstEngineObject_* p_stCharacter;
+
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        p_stCharacter = hNewSuperObjPerso->hLinkedObject.p_stCharacter;
+        fn_v3dDataFactorFrameRate(p_stCharacter->h_3dData, (stParam.eType == E_vt_Float) ? (unsigned int)MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.ulValue);
+        return p_stTree;
+    }
+    case eProc_SetGoThroughMechanicsHandling:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->bWarnMechanicsFlag = stParam.uDummy.uParam.cValue;
+        return p_stTree;
+    case eProc_SetDynamicAlwaysActive:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        fn_vChangeDynamicAlwaysActiveState(hNewSuperObjPerso, (int)stParam.uDummy.uParam.ucValue);
+        return p_stTree;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stMiscNoProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    void* hMecIdCard;
+    DNM_stDynamics* p_stDynamics;
+    tdstDynam_* h_Dynam;
+    tdstComport_* p_stComport;
+    tdstIntelligence_* p_stIntelligence;
+    tdeProcedureId_ eProcedureId;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    switch (eProcedureId)
+    {
+    case eProc_IgnoreTraceFlagForNextPicking:
+        g_ulOverRideRayTraceSpoMask = 0;
+        return p_stTree;
+    case eProc_BreakAI:
+    {
+        AI_tdstMind_* p_stMind;
+
+        p_stMind = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind;
+        if (p_stMind->bDoingIntel)
+            p_stIntelligence = p_stMind->p_stIntelligence;
+        else
+            p_stIntelligence = p_stMind->p_stReflex;
+        p_stComport = p_stIntelligence->p_stCurrentComport;
+        fn_vInitActionTable(p_stIntelligence);
+        if (p_stComport->p_stSchedule == NULL)
+            p_stIntelligence->p_stCurrentSchedule = NULL;
+        else
+            p_stIntelligence->p_stCurrentSchedule = p_stComport->p_stSchedule->p_stNodeInterpret;
+        iNumLoop = 0;
+        fn_vSetProcedureActionReturn(11);
+        return p_stTree;
+    }
+    case eProc_ResetDynamicsWithCard:
+        h_Dynam = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;
+        if (h_Dynam)
+        {
+            p_stDynamics = fn_p_stDynamGetDynamics(h_Dynam);
+            if (p_stDynamics)
+            {
+                hMecIdCard = (void*)fn_h_GetCurrentDNMIdCard(p_SuperObjPerso);
+                if (hMecIdCard)
+                    DNM_fn_vChangeIdCard(p_stDynamics, hMecIdCard);
+            }
+        }
+        return p_stTree;
+    case eProc_PlayerIsDead:
+        fn_vSnifThePlayerIsDead();
+        return p_stTree;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stDeletePersoFromGameProcedure(tdstNodeInterpret_* p_stTree, tdstNodeInterpret_* p_stTree2)
+{
+    return p_stTree2;
+}
+
+tdstNodeInterpret_* fn_p_stKillPersoAndClearVariableProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdeProcedureId_ eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    tdstEngineObject_* hKilledObject;
+    tdstGetSetParam_ stParam;
+    AI_tdstMind_* p_stMind;
+    unsigned char ucVarId;
+    unsigned int i;
+    _tdstCheapCharacterList* pCheapList = g_aListOfCheapCharacterList;
+    HIE_tdstSuperObject_* p_stResultOwnerPerso;
+
+    switch (eProcedureId)
+    {
+    case eProc_KillPersoAndClearVariable:
+        if (p_stTree->eType == 2)
+            p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree + 1, &p_stResultOwnerPerso);
+        else
+            p_stResultOwnerPerso = p_SuperObjPerso;
+        ucVarId = p_stTree->uDummy.uParam.ucValue;
+        p_stMind = p_stResultOwnerPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind;
+
+        if (fn_ucGetDsgVar(ucVarId, 0, p_stMind, &stParam) == 1)
+        {
+            hKilledObject = stParam.uDummy.uParam.p_stEngObjValue;
+
+            for (i = 0; i < g_lNbListOfCheapCharacterList; i++)
+            {
+                if (pCheapList[i].NumberOfCheapCharacter && M_GetEngineObject(pCheapList[i].pReferenceObject) == hKilledObject)
+                    fn_vResetCheapCharacterList(i);
+            }
+
+            fn_vKillEngineObjectOrAlwaysByPointer(hKilledObject);
+
+            if (hKilledObject == M_GetEngineObject(p_SuperObjPerso))
+                fn_vSetProcedureActionReturn(3);
+
+            stParam.uDummy.uParam.p_stEngObjValue = NULL;
+            fn_ucSetDsgVar(ucVarId, 0, p_stMind, &stParam);
+        }
+        return p_stTree + 1;
+
+    case eProc_KillPerso:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        hKilledObject = stParam.uDummy.uParam.p_stEngObjValue;
+
+        for (i = 0; i < g_lNbListOfCheapCharacterList; i++)
+        {
+            if (pCheapList[i].NumberOfCheapCharacter && M_GetEngineObject(pCheapList[i].pReferenceObject) == hKilledObject)
+                fn_vResetCheapCharacterList(i);
+        }
+
+        fn_vKillEngineObjectOrAlwaysByPointer(hKilledObject);
+
+        if (hKilledObject == M_GetEngineObject(p_SuperObjPerso))
+            fn_vSetProcedureActionReturn(3);
+        return p_stTree;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stMiscProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstGetSetParam_ stValue;
+    tdeProcedureId_ eProcedureId;
+    tdstEngineObject_* p_stObj;
+    unsigned char bFreeze;
+    tdstStandardGame_* hStdGame;
+    unsigned char bPlatform;
+    HIE_tdstSuperObject_* hChild;
+    tdstDynam_* hDynam;
+    DNM_stDynamics* p_stDynamic;
+    char* pMapName;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+
+    switch (eProcedureId)
+    {
+    case eProc_ForcePersoHandling:
+        p_stObj = stValue.uDummy.uParam.p_stEngObjValue;
+        if (g_stEngineStructure.stEngineTimer.ulTrameNumber == p_stObj->h_StandardGame->ulLastTrame)
+        {
+            p_stObj->h_StandardGame->ulLastTrame = g_stEngineStructure.stEngineTimer.ulTrameNumber - 1;
+            HIE_fn_vInvalidateHierarchy(fn_h_StandardGameGetSuperObject(p_stObj->h_StandardGame));
+        }
+        return p_stTree;
+
+    case eProc_HierFreezeEngine:
+        bFreeze = stValue.uDummy.uParam.ucValue;
+        if (bFreeze)
+            fn_vSaveEngineClock();
+        else if (g_stEngineStructure.bEngineFrozen)
+            fn_vLoadEngineClock();
+        g_stEngineStructure.bEngineFrozen = bFreeze;
+        return p_stTree;
+
+    case eProc_HierSetPlatformType:
+        hStdGame = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_StandardGame;
+        bPlatform = stValue.uDummy.uParam.ucValue;
+        if (hStdGame->ucPlatFormType != bPlatform)
+        {
+            if (hStdGame->ucPlatFormType)
+            {
+                for (hChild = p_SuperObjPerso->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn)
+                {
+                    if (hChild->ulTypeOfLinkedObject == 2)
+                    {
+                        hDynam = hChild->hLinkedObject.p_stCharacter->h_Dynam;
+                        if (hDynam)
+                        {
+                            p_stDynamic = fn_p_stDynamGetDynamics(hDynam);
+                            if (p_stDynamic)
+                            {
+                                if ((unsigned char)(p_stDynamic->m_tdstDynamicsBaseBlock.m_pCurrentIdCard && DNM_fn_eIdentityCardGetType((void*)p_stDynamic->m_tdstDynamicsBaseBlock.m_pCurrentIdCard) == 1))
+                                    MEC_fn_vFreePlatformLink(p_stDynamic, hChild);
+                            }
+                        }
+                        fn_vReputCharacterSuperObjectAtTheWorld(hChild);
+                    }
+                }
+            }
+            hStdGame->ucPlatFormType = bPlatform;
+            HIE_fn_vChangeFather(p_SuperObjPerso, p_SuperObjPerso->hFatherDyn, bPlatform);
+        }
+        return p_stTree;
+
+    case eProc_SetMainActor:
+        MC_fn_vSetNewMainCharacter(MC_fn_hGetFirstMainCharNode(), fn_h_StandardGameGetSuperObject(stValue.uDummy.uParam.p_stEngObjValue->h_StandardGame));
+        return p_stTree;
+
+    case eProc_ActivateObject:
+        fn_vForceActiveAnObject(stValue.uDummy.uParam.p_stEngObjValue);
+        return p_stTree;
+
+    case eProc_DesactivateObject:
+        fn_vDesactiveAnObject(stValue.uDummy.uParam.p_stEngObjValue);
+        return p_stTree;
+
+    case eProc_ChangeMapNoAutosave:
+    case eProc_ChangeMap:
+        pMapName = fn_szGetStringFromTextOrStringParam(&stValue);
+        if (!strcasecmp(pMapName, "menumap"))
+        {
+            GAM_fn_vAskToChangeLevel(SAV2_g_LevelNameToSave, 0);
+            fn_vR3ReInitScore();
+        }
+        else
+        {
+            GAM_fn_vAskToChangeLevel(pMapName, eProcedureId == eProc_ChangeMap);
+            if (!strcasecmp(pMapName, "staff"))
+                strcpy(SAV2_g_LevelNameToSave, "endgame");
+            else
+                strcpy(SAV2_g_LevelNameToSave, pMapName);
+            if (g_DoAutoSaveWhenChangeMap == 1)
+                GLI_g_PerformAutosaveAfterVideo = 1;
+        }
+        return p_stTree;
+
+    case eProc_ChangeMapWithTransition:
+        GAM_fn_vAskToChangeLevelWithTransition(fn_szGetStringFromTextOrStringParam(&stValue), eProcedureId == eProc_ChangeMap);
+        strcpy(SAV2_g_LevelNameToSave, fn_szGetStringFromTextOrStringParam(&stValue));
+        return p_stTree;
+
+    case eProc_SetActionReturn:
+        g_ucNewActionReturn = stValue.uDummy.uParam.cValue;
+        g_ucUseDefaultActionReturn = 1;
+        return p_stTree;
+
+    case eProc_SetGlobalAccelerationFactorForAnims:
+        fn_v3dDataSetGlobalAccelerationFactor(stValue.uDummy.uParam.xValue);
+        return p_stTree;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stMiscMoreProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdeProcedureId_ eProcedureId;
+    tdstGetSetParam_ stParam1;
+    tdstGetSetParam_ stParam2;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam2);
+
+    switch (eProcedureId)
+    {
+    case eProc_PlayerIsDeadWithPlacement:
+        fn_vSnifThePlayerIsDeadWithResurrectionAt(
+            stParam1.uDummy.uParam.p_stEngObjValue ? fn_h_StandardGameGetSuperObject(stParam1.uDummy.uParam.p_stEngObjValue->h_StandardGame) : NULL,
+            stParam2.uDummy.uParam.p_stEngObjValue ? fn_h_StandardGameGetSuperObject(stParam2.uDummy.uParam.p_stEngObjValue->h_StandardGame) : NULL);
+        return p_stTree;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stDynamProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    unsigned int ulIndex;
+    tdstCineinfo_* hCineinfo;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    tdeProcedureId_ eProcedureId;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+
+    switch (eProcedureId)
+    {
+    case 0xAD:
+        if (g_stEngineStructure.h_StdCamCaracter)
+        {
+            hCineinfo = g_stEngineStructure.h_StdCamCaracter->hLinkedObject.p_stCharacter->h_Cineinfo;
+            if (CAM_fn_hCineInfoGetSuperObjectTargeted(hCineinfo->hCurrent) == hNewSuperObjPerso)
+            {
+                MTH3D_tdstVector_* p_stPos = (MTH3D_tdstVector_*)&hNewSuperObjPerso->hGlobalMatrix->stTransformMatrix.stCol_3;
+                for (ulIndex = 0; ulIndex < 8; ulIndex++)
+                {
+                    hCineinfo->AveragePosition.a_CheckedTime[ulIndex] = 0.03f;
+                    hCineinfo->AveragePosition.a_CheckedSpeed[ulIndex].xX = 0.0f; hCineinfo->AveragePosition.a_CheckedSpeed[ulIndex].xY = 0.0f; hCineinfo->AveragePosition.a_CheckedSpeed[ulIndex].xZ = 0.0f;
+                    *(int*)&hCineinfo->AveragePosition.a_CheckedPos[ulIndex].xX = *(int*)&p_stPos->xX; *(int*)&hCineinfo->AveragePosition.a_CheckedPos[ulIndex].xY = *(int*)&p_stPos->xY; *(int*)&hCineinfo->AveragePosition.a_CheckedPos[ulIndex].xZ = *(int*)&p_stPos->xZ;
+                }
+            }
+        }
+        return p_stTree;
+    }
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stLogWindowProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    int stParam[4];
+    return fn_p_stEvalTree(p_SuperObjPerso, p_stTree, (tdstGetSetParam_*)stParam);
+}
+
+tdstNodeInterpret_* fn_p_stHitPointsProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstGetSetParam_ stParam;
+    tdeProcedureId_ eProcedureId;
+    tdstEngineObject_* hPerso1;
+    tdstEngineObject_* hPerso;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+
+    switch (eProcedureId)
+    {
+    case eProc_SetHitPoints:
+    {
+        tdstGetSetParam_ stValue;
+
+        hPerso = stParam.uDummy.uParam.p_stEngObjValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        fn_vSetHitPoints(hPerso, (stValue.eType == E_vt_Float) ? MTH_M_xRealToLong(stValue.uDummy.uParam.xValue) : stValue.uDummy.uParam.lValue);
+        return p_stTree;
+    }
+    case eProc_SetHitPointsInit:
+        hPerso1 = stParam.uDummy.uParam.p_stEngObjValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        fn_vSetHitPointsInit(hPerso1, stParam.uDummy.uParam.ucValue);
+        return p_stTree;
+    case eProc_SetHitPointsToInitValue:
+        fn_vSetHitPointsToInitValue(stParam.uDummy.uParam.p_stEngObjValue);
+        return p_stTree;
+    case eProc_SetHitPointsToMaxValue:
+        fn_vSetHitPointsToMaxValue(stParam.uDummy.uParam.p_stEngObjValue);
+        return p_stTree;
+    case eProc_AddHitPoints:
+    {
+        tdstGetSetParam_ stValue;
+
+        hPerso = stParam.uDummy.uParam.p_stEngObjValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        fn_vAddHitPoints(hPerso, (stValue.eType == E_vt_Float) ? MTH_M_xRealToLong(stValue.uDummy.uParam.xValue) : stValue.uDummy.uParam.lValue);
+        return p_stTree;
+    }
+    case eProc_SubHitPoints:
+    {
+        tdstGetSetParam_ stValue;
+
+        hPerso = stParam.uDummy.uParam.p_stEngObjValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        fn_ucSubHitPoints(hPerso, (stValue.eType == E_vt_Float) ? MTH_M_xRealToLong(stValue.uDummy.uParam.xValue) : stValue.uDummy.uParam.lValue);
+        return p_stTree;
+    }
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stHitPointsMaxProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdeProcedureId_ eProcedureId;
+    tdstEngineObject_* p_stObject;
+    tdstGetSetParam_ stParam;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+
+    switch (eProcedureId)
+    {
+    case eProc_SetHitPointsMax:
+    {
+        tdstGetSetParam_ stValue;
+
+        p_stObject = stParam.uDummy.uParam.p_stEngObjValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        fn_vSetHitPointsMax(p_stObject, (stValue.eType == E_vt_Float) ? MTH_M_xRealToLong(stValue.uDummy.uParam.xValue) : stValue.uDummy.uParam.lValue);
+        return p_stTree;
+    }
+    case eProc_SetHitPointsMaxToInitValue:
+        fn_vSetHitPointsMaxToInitValue(stParam.uDummy.uParam.p_stEngObjValue);
+        return p_stTree;
+    case eProc_SetHitPointsMaxToMaxValue:
+        fn_vSetHitPointsMaxToMaxValue(stParam.uDummy.uParam.p_stEngObjValue);
+        return p_stTree;
+    case eProc_AddHitPointsMax:
+    {
+        tdstGetSetParam_ stValue;
+
+        p_stObject = stParam.uDummy.uParam.p_stEngObjValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        fn_vAddHitPointsMax(p_stObject, (stValue.eType == E_vt_Float) ? MTH_M_xRealToLong(stValue.uDummy.uParam.xValue) : stValue.uDummy.uParam.lValue);
+        return p_stTree;
+    }
+    case eProc_SubHitPointsMax:
+    {
+        tdstGetSetParam_ stValue;
+
+        p_stObject = stParam.uDummy.uParam.p_stEngObjValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        fn_ucSubHitPointsMax(p_stObject, (stValue.eType == E_vt_Float) ? MTH_M_xRealToLong(stValue.uDummy.uParam.xValue) : stValue.uDummy.uParam.lValue);
+        return p_stTree;
+    }
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stListZDDZDEProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdeProcedureId_ eProcedureId;
+    unsigned short xMask;
+    unsigned short xPersoMask;
+    tdstList_* p_stList;
+    short xIndex;
+    tdstGetSetParam_ stValue;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    p_stList = (tdstList_*)stValue.uDummy.uParam.lValue;
+
+    if (eProcedureId == eProc_ListAffectTypeZDEWithTypeZDE)
+    {
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        xPersoMask = stValue.uDummy.uParam.uwValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        fn_vAffectTypeZdeWithTypeZdeInList(p_stList, p_SuperObjPerso, xPersoMask, stValue.uDummy.uParam.uwValue);
+    }
+    else
+    {
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        xIndex = stValue.uDummy.uParam.wValue;
+        if (eProcedureId == eProc_ListAffectPersoZDD)
+        {
+            fn_vAffectZddInList(p_stList, p_SuperObjPerso, 0, xIndex);
+        }
+        else if (eProcedureId == eProc_ListAffectModuleZDD)
+        {
+            fn_vAffectZddInList(p_stList, p_SuperObjPerso, 1, xIndex);
+        }
+        else
+        {
+            if (eProcedureId == eProc_ListAffectPersoZDE || eProcedureId == eProc_ListAffectModuleZDE)
+            {
+                GMT_fn_vResetEntireMask(&xMask);
+            }
+            else
+            {
+                p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+                xMask = stValue.uDummy.uParam.uwValue;
+            }
+            if (eProcedureId == eProc_ListAffectPersoZDE || eProcedureId == eProc_ListAffectPersoTypeZDE)
+            {
+                fn_vAffectZdeInList(p_stList, p_SuperObjPerso, 0, xIndex, xMask);
+            }
+            else if (eProcedureId == eProc_ListAffectModuleZDE || eProcedureId == eProc_ListAffectModuleTypeZDE)
+            {
+                fn_vAffectZdeInList(p_stList, p_SuperObjPerso, 1, xIndex, xMask);
+            }
+        }
+
+    }
+
+    return p_stTree;
+}
+
+#pragma auto_inline on
+void fn_vFillListWithAllPersoOfAFamilly(tdstList_* _p_stList, HIE_tdstSuperObject_* _hFather, tdstFamilyList_* _hFamily)
+{
+    HIE_tdstSuperObject_* hChild;
+
+    if (_p_stList->ucNbElt >= _p_stList->ucMaxSize)
+        return;
+    if (_hFather->ulTypeOfLinkedObject == 2 && _hFather->hLinkedObject.p_stCharacter->h_3dData->h_Family == _hFamily)
+        fn_vPutInList(_p_stList, _hFather);
+    for (hChild = _hFather->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn)
+        fn_vFillListWithAllPersoOfAFamilly(_p_stList, hChild, _hFamily);
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+void fn_vFillListWithAllPersoOfAModel(tdstList_* _p_stList, HIE_tdstSuperObject_* _hFather, AI_tdstAIModel_* _p_stModel)
+{
+    tdstBrain_* hBrain;
+    HIE_tdstSuperObject_* hChild;
+
+    if (_p_stList->ucNbElt >= _p_stList->ucMaxSize)
+        return;
+    if (_hFather->ulTypeOfLinkedObject == 2)
+    {
+        hBrain = _hFather->hLinkedObject.p_stCharacter->h_Brain;
+        if (hBrain && hBrain->p_stMind->p_stAIModel == _p_stModel)
+            fn_vPutInList(_p_stList, _hFather);
+    }
+    for (hChild = _hFather->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn)
+        fn_vFillListWithAllPersoOfAModel(_p_stList, hChild, _p_stModel);
+}
+#pragma auto_inline reset
+
+tdstNodeInterpret_* fn_p_stListProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstGetSetParam_ stParam1;
+    tdstGetSetParam_ stParam2;
+    tdeProcedureId_ eProcedureId;
+    tdstList_* p_stList;
+    tdstFamilyList_* hFamily;
+    HIE_tdstSuperObject_* hPerso;
+    AI_tdstAIModel_* p_stModel;
+    unsigned char ucPos;
+    tdstBrain_* hBrain;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
+    p_stList = *(tdstList_**)&stParam1;
+
+    switch (eProcedureId)
+    {
+    case eProc_AddPersoInList:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
+        fn_vPutInList(p_stList, fn_h_StandardGameGetSuperObject(stParam1.uDummy.uParam.p_stEngObjValue->h_StandardGame));
+        return p_stTree;
+
+    case eProc_AddPersoInListAt:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam2);
+        fn_vInsertPersoAtPositionInList(p_stList, fn_h_StandardGameGetSuperObject(stParam1.uDummy.uParam.p_stEngObjValue->h_StandardGame), stParam2.uDummy.uParam.ucValue);
+        return p_stTree;
+
+    case eProc_DeletePersoAtInList:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
+        fn_vDeletePersoAtPositionInList(p_stList, stParam1.uDummy.uParam.ucValue);
+        return p_stTree;
+
+    case eProc_FindPersoAndDeleteInList:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
+        fn_bFindPersoAndDeleteInList(p_stList, fn_h_StandardGameGetSuperObject(stParam1.uDummy.uParam.p_stEngObjValue->h_StandardGame));
+        return p_stTree;
+
+    case eProc_ListSelect:
+        return fn_p_stListSelect(p_stList, 0, p_stTree);
+
+    case eProc_ListUnSelect:
+        p_stTree = fn_p_stListSelect(p_stList, 1, p_stTree);
+        return p_stTree;
+
+    case eProc_ListSort:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam2);
+        p_stTree = fn_p_stListSort(p_stList, stParam1.uDummy.uParam.ucValue, stParam2.uDummy.uParam.cValue, p_stTree);
+        return p_stTree;
+
+    case eProc_ListSortByFamily:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
+        fn_vSortListByFamily(p_stList, stParam1.uDummy.uParam.hFamily);
+        return p_stTree;
+
+    case eProc_ListSortByModel:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
+        fn_vSortListByModel(p_stList, stParam1.uDummy.uParam.p_stModel);
+        return p_stTree;
+
+    case eProc_FillListWithAllPersoOfAFamily:
+        p_stList->ucNbElt = 0;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam2);
+        hFamily = stParam2.uDummy.uParam.hFamily;
+        fn_vFillListWithAllPersoOfAFamilly(p_stList, gp_stDynamicWorld, hFamily);
+        return p_stTree;
+
+    case eProc_FillListWithAllPersoOfAModel:
+        p_stList->ucNbElt = 0;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam2);
+        p_stModel = stParam2.uDummy.uParam.p_stModel;
+        fn_vFillListWithAllPersoOfAModel(p_stList, gp_stDynamicWorld, p_stModel);
+        return p_stTree;
+
+    case eProc_DeleteFamilyInList:
+        ucPos = 0;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam2);
+        hFamily = stParam2.uDummy.uParam.hFamily;
+        while ((hPerso = fn_p_stGetPersoInList(p_stList, ucPos)) != NULL)
+        {
+            if (hPerso->hLinkedObject.p_stCharacter->h_3dData->h_Family == hFamily)
+                fn_vDeletePersoAtPositionInList(p_stList, ucPos);
+            else
+                ucPos++;
+        }
+        return p_stTree;
+
+    case eProc_DeleteModelInList:
+        ucPos = 0;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam2);
+        p_stModel = stParam2.uDummy.uParam.p_stModel;
+        while ((hPerso = fn_p_stGetPersoInList(p_stList, ucPos)) != NULL)
+        {
+            hBrain = hPerso->hLinkedObject.p_stCharacter->h_Brain;
+            if (hBrain && hBrain->p_stMind->p_stAIModel == p_stModel)
+                fn_vDeletePersoAtPositionInList(p_stList, ucPos);
+            else
+                ucPos++;
+        }
+        return p_stTree;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stListEnsembleProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstGetSetParam_ stValue;
+    tdeProcedureId_ eProcedureId;
+    tdstList_* p_stListA;
+    tdstList_* p_stListB;
+    tdstList_* p_stListC;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    p_stListA = *(tdstList_**)&stValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    p_stListB = *(tdstList_**)&stValue;
+
+    if (eProcedureId == eProc_ListAdd)
+    {
+        fn_vAddList(p_stListA, p_stListB);
+        return p_stTree;
+    }
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    p_stListC = *(tdstList_**)&stValue;
+
+    switch (eProcedureId)
+    {
+    case eProc_ListUnion:
+        fn_vUnionList(p_stListA, p_stListB, p_stListC);
+        break;
+    case eProc_ListInter:
+        fn_vInterList(p_stListA, p_stListB, p_stListC);
+        break;
+    case eProc_ListDiff:
+        fn_vDiffList(p_stListA, p_stListB, p_stListC);
+        break;
+    }
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stLinkTableProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstObjectsTablesList_* hTable;
+    unsigned char ucObj1;
+    tdeProcedureId_ eProcedureId;
+    tdstGetSetParam_ stParam;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+
+    switch (eProcedureId)
+    {
+    case eProc_SwapLinkTableObjects:
+        ucObj1 = stParam.uDummy.uParam.ucValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        fn_vExchangeTwoObjectsInCurrentObjectsTable(p_SuperObjPerso, ucObj1, stParam.uDummy.uParam.ucValue);
+        return p_stTree;
+
+    case eProc_ReinitTableObjects:
+        hTable = stParam.uDummy.uParam.hObjectTable;
+        if (fn_d_hGetInitObjectsTable(hTable) != NULL)
+        {
+            fn_vReInitObjectTable(hTable);
+            PLA_fn_vStopCurrentMorphAnim(p_SuperObjPerso);
+            MOR_fn_vRemoveMorph2(p_SuperObjPerso);
+        }
+        return p_stTree;
+
+    case eProc_ChangeCurrentObjectTable:
+        p_SuperObjPerso->hLinkedObject.p_stCharacter->h_3dData->h_CurrentObjectsTable = stParam.uDummy.uParam.hObjectTable;
+        return p_stTree;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stBuildObjectTableFromTableAndStringProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    char* pszChar;
+    int lStart;
+    int lEnd;
+    float xScreenWidth;
+    tdeProcedureId_ eProcedureId;
+    short wNbObjectsInTargetTable;
+    short wTargetObject;
+    tdstObjectsTablesList_* hSourceObjectTable;
+    tdstObjectsTablesList_* hTargetTable;
+    short wNbObjectsInSourceTable;
+    short wSourceObject;
+    tdstGetSetParam_ stParam;
+    stTfmtStatus_ stStatus;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+
+    switch (eProcedureId)
+    {
+    case eProc_BuildObjectTableFromFormattedString:
+        pszChar = fn_szGetStringFromTextOrStringParam(&stParam);
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        xScreenWidth = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        lStart = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        lEnd = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
+        if (lStart < 0)
+            lStart = 0;
+        TFMT_wPositionModulesAccordingToText(&stStatus, p_SuperObjPerso, pszChar, lStart, lEnd, xScreenWidth, NULL, -1);
+        return p_stTree;
+    case eProc_BuildObjectTableFromTableAndString:
+        hTargetTable = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_3dData->h_CurrentObjectsTable;
+        wTargetObject = 0;
+        hSourceObjectTable = (tdstObjectsTablesList_*)stParam.uDummy.uParam.lValue;
+        wNbObjectsInTargetTable = (short)fn_uwGetObjectTableNumberOfelements(hTargetTable);
+        wNbObjectsInSourceTable = (short)fn_uwGetObjectTableNumberOfelements(hSourceObjectTable);
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        pszChar = fn_szGetStringFromTextOrStringParam(&stParam);
+        while (*pszChar != 0 && wTargetObject < wNbObjectsInTargetTable)
+        {
+            wSourceObject = toupper(*pszChar) - 0x20;
+            if (wSourceObject < 0 || wSourceObject >= wNbObjectsInSourceTable)
+                wSourceObject = 0;
+            fn_vCopyObjectFromObjectTabletoAnother(hTargetTable, hSourceObjectTable, (unsigned short)wTargetObject, (unsigned short)wSourceObject);
+            pszChar++;
+            wTargetObject++;
+        }
+        while (wTargetObject < wNbObjectsInTargetTable)
+        {
+            fn_vCopyObjectFromObjectTabletoAnother(hTargetTable, hSourceObjectTable, (unsigned short)wTargetObject, 0);
+            wTargetObject++;
+        }
+        return p_stTree;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stModuleControlProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    int lModuleId;
+    tdeProcedureId_ eProcedureId;
+    tdstGetSetParam_ stParam1 = {0};
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    if (eProcedureId != eProc_ReleaseAllModulesControl)
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
+
+    switch (eProcedureId)
+    {
+    case eProc_TakeManyModulesControl:
+        lModuleId = stParam1.uDummy.uParam.lValue;
+        lModuleId--;
+        while (lModuleId >= 0)
+        {
+            fn_vTakeControlOfChannel(p_SuperObjPerso->hLinkedObject.p_stCharacter, lModuleId, 1);
+            lModuleId--;
+        }
+        return p_stTree;
+    case eProc_TakeModuleControl:
+        fn_vTakeControlOfChannel(p_SuperObjPerso->hLinkedObject.p_stCharacter, stParam1.uDummy.uParam.uwValue, 1);
+        return p_stTree;
+    case eProc_ReleaseModuleControl:
+        fn_vTakeControlOfChannel(p_SuperObjPerso->hLinkedObject.p_stCharacter, stParam1.uDummy.uParam.uwValue, 0);
+        return p_stTree;
+    case eProc_ReleaseAllModulesControl:
+        fn_vTakeControlOfChannel(p_SuperObjPerso->hLinkedObject.p_stCharacter, 0xffff, 0);
+        return p_stTree;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stSaveGameProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdeProcedureId_ eProcedureId;
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    switch (eProcedureId) {
+    case eProc_QuitGame:
+        fn_vChangeEngineMode(2);
+        fn_vSetProcedureActionReturn(3);
+        break;
+    }
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stChangeActivationChannelProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    tdeProcedureId_ eProcedureId;
+    unsigned short uwChannelNumber;
+    tdstGetSetParam_ stParam;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    uwChannelNumber = stParam.uDummy.uParam.uwValue;
+
+    switch (eProcedureId)
+    {
+    case eProc_ActivateChannel:
+        fn_vActivateChannel(hNewSuperObjPerso, uwChannelNumber, 1);
+        return p_stTree;
+
+    case eProc_DeactivateChannel:
+        fn_vActivateChannel(hNewSuperObjPerso, uwChannelNumber, 0);
+        return p_stTree;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stFogProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    static char cGlobalFogIsOn;
+    tdstGetSetParam_ stParam;
+    tdeProcedureId_ eProcedureId;
+    GEO_tdstColor_ stColor;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    switch (eProcedureId)
+    {
+    case eProc_FogActivate:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        if ((unsigned char)((stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue))
+            GLI_cGlobalFogIsOn = 1;
+        else
+            GLI_cGlobalFogIsOn = 0;
+        return p_stTree;
+
+    case eProc_SetFogColor:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        fn_vConvertParamToColor(&stParam, &stColor);
+        memcpy(&GLI_stFogColor, &stColor, sizeof(GEO_tdstColor_));
+        return p_stTree;
+
+    case eProc_SetFogNearFarInf:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        GLI_xFogNear = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        GLI_xFogFar = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        GLI_xFogInfinite = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
+        return p_stTree;
+
+    case eProc_SetFogBlend:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        GLI_xFogBlendNear = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        GLI_xFogBlendFar = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
+        return p_stTree;
+
+    case eProc_RestoreFog:
+        if (GLI_g_bSaveFog)
+        {
+            memcpy(&GLI_stFogColor, &GLI_g_stSaveFog.stColor, sizeof(GEO_tdstColor_));
+            GLI_xFogNear = GLI_g_stSaveFog.xDepthStart;
+            GLI_xFogFar = GLI_g_stSaveFog.xDepthEnd;
+            GLI_xFogInfinite = GLI_g_stSaveFog.xInfinite;
+            GLI_xFogBlendNear = GLI_g_stSaveFog.xBlendStart;
+            GLI_xFogBlendFar = GLI_g_stSaveFog.xBlendEnd;
+
+            GLI_g_bSaveFog = 0;
+            GLI_cGlobalFogIsOn = cGlobalFogIsOn;
+        }
+        return p_stTree;
+
+    case eProc_SaveFog:
+        if (!GLI_g_bSaveFog)
+        {
+            memcpy(&GLI_g_stSaveFog.stColor, &GLI_stFogColor, sizeof(GEO_tdstColor_));
+            GLI_g_stSaveFog.xDepthStart = GLI_xFogNear;
+            GLI_g_stSaveFog.xDepthEnd = GLI_xFogFar;
+            GLI_g_stSaveFog.xInfinite = GLI_xFogInfinite;
+            GLI_g_stSaveFog.xBlendStart = GLI_xFogBlendNear;
+            GLI_g_stSaveFog.xBlendEnd = GLI_xFogBlendFar;
+
+            GLI_g_bSaveFog = 1;
+            cGlobalFogIsOn = GLI_cGlobalFogIsOn;
+        }
+        return p_stTree;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stPersoLightProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdeProcedureId_ eProcedureId;
+    tdstMSLight_* h_MSLight;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    tdstGetSetParam_ stParam;
+    GEO_tdstColor_ stColor;
+    unsigned char bOnOff;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+
+    h_MSLight = M_GetEngineObject(hNewSuperObjPerso)->h_MSLight;
+    if (h_MSLight == NULL)
+        return fn_p_stSwapNextParameter2(p_stTree);
+
+    switch (eProcedureId)
+    {
+    case eProc_PersoLightOn:
+        fn_vMSLightSetOnOff(h_MSLight, 1);
+        return p_stTree;
+
+    case eProc_PersoLightOff:
+        fn_vMSLightSetOnOff(h_MSLight, 0);
+        return p_stTree;
+
+    case eProc_SetPersoLightNearFar:
+    {
+        float xNear;
+
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        xNear = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        fn_vMSLightSetNearFar(h_MSLight, xNear, (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue);
+        return p_stTree;
+    }
+
+    case eProc_SetPersoLightColor:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        fn_vConvertParamToColor(&stParam, &stColor);
+        fn_vMSLightSetColorRGBA(h_MSLight, stColor.xR, stColor.xG, stColor.xB, stColor.xA);
+        return p_stTree;
+
+    case eProc_SetPersoLightLittleBigAlpha:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        fn_vMSLightSetLittleAlpha(h_MSLight, (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue);
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        fn_vMSLightSetBigAlpha(h_MSLight, (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue);
+        return p_stTree;
+
+    case eProc_SetPersoLightGyrophare:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        bOnOff = stParam.uDummy.uParam.lValue ? 1 : 0;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        fn_vMSLightSetGiroPhare(h_MSLight, bOnOff, (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue);
+        return p_stTree;
+
+    case eProc_SetPersoLightPulse:
+    {
+        float xStep;
+
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        bOnOff = stParam.uDummy.uParam.lValue ? 1 : 0;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        xStep = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        fn_vMSLightSetPulse(h_MSLight, bOnOff, xStep, (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue);
+        return p_stTree;
+    }
+
+    case eProc_SetPersoLightParalleleType:
+        fn_vMSLightSetTypeOfLight(h_MSLight, 1);
+        return p_stTree;
+
+    case eProc_SetPersoLightSphericalType:
+        fn_vMSLightSetTypeOfLight(h_MSLight, 2);
+        return p_stTree;
+
+    case eProc_SetPersoLightHotSpotType:
+        fn_vMSLightSetTypeOfLight(h_MSLight, 3);
+        return p_stTree;
+
+    case eProc_SetPersoLightAmbientType:
+        fn_vMSLightSetTypeOfLight(h_MSLight, 4);
+        return p_stTree;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stKeyboardProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdeProcedureId_ eProcedureId;
+    IPT_tdstEntryElement_* IPT_xHandle;
+    tdstGetSetParam_ stValue;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    IPT_xHandle = (IPT_tdstEntryElement_*)stValue.uDummy.uParam.lValue;
+
+    switch (eProcedureId)
+    {
+    case eProc_DeactivateBut:
+        IPT_fn_vDesactivateEntryElement(IPT_xHandle);
+        break;
+    case eProc_ActivateBut:
+        IPT_fn_vActivateEntryElement(IPT_xHandle);
+        break;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stNoneProcedure(tdstNodeInterpret_* p_stTree, tdstNodeInterpret_* p_stTree2)
+{
+    return p_stTree2;
+}
+
+tdstNodeInterpret_* fn_p_stTraceProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstGetSetParam_ stValue;
+    static int s_iActivated;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+
+    if (s_iActivated)
+        printf("trace %d\n", (stValue.eType == E_vt_Float) ? MTH_M_xRealToLong(stValue.uDummy.uParam.xValue) : stValue.uDummy.uParam.lValue);
+
+    return p_stTree;
+}
+
+#pragma auto_inline on
+void fn_vInternalChangeComportProcedure(tdstIntelligence_* p_stAimedPersoIntelligenceOrReflex, tdstComport_* p_stComport, unsigned char _bContinueExecution)
+{
+    if (p_stAimedPersoIntelligenceOrReflex->p_stCurrentComport != p_stComport)
+    {
+        if (fn_ucChangeComportIntell(p_stAimedPersoIntelligenceOrReflex, p_stComport))
+        {
+            if (!_bContinueExecution)
+            {
+                iNumLoop = 0;
+                fn_vSetProcedureActionReturn(8);
+            }
+        }
+    }
+}
+#pragma auto_inline reset
+
+tdstNodeInterpret_* fn_p_stChangeComportIntelligenceProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    AI_tdstMind_* p_stMind;
+    unsigned char bTest;
+    HIE_tdstSuperObject_* p_stAimedObject;
+    tdstGetSetParam_ stParam;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    if (stParam.uDummy.uParam.p_stEngObjValue == NULL)
+    {
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        return p_stTree;
+    }
+    p_stAimedObject = fn_h_StandardGameGetSuperObject(stParam.uDummy.uParam.p_stEngObjValue->h_StandardGame);
+    p_stMind = p_stAimedObject->hLinkedObject.p_stCharacter->h_Brain->p_stMind;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+
+    bTest = (p_stAimedObject != p_SuperObjPerso) || !p_stMind->bDoingIntel;
+    fn_vInternalChangeComportProcedure(p_stMind->p_stIntelligence, stParam.uDummy.uParam.pComport, bTest);
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stChangeComportReflexProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    unsigned char bTest;
+    AI_tdstMind_* p_stMind;
+    HIE_tdstSuperObject_* p_stAimedObject;
+    tdstGetSetParam_ stParam;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    p_stAimedObject = fn_h_StandardGameGetSuperObject(stParam.uDummy.uParam.p_stEngObjValue->h_StandardGame);
+    p_stMind = p_stAimedObject->hLinkedObject.p_stCharacter->h_Brain->p_stMind;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+
+    bTest = (p_stAimedObject != p_SuperObjPerso) || p_stMind->bDoingIntel;
+    fn_vInternalChangeComportProcedure(p_stMind->p_stReflex, stParam.uDummy.uParam.pComport, bTest);
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stChangeMyComportIntelligenceProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    AI_tdstMind_* p_stMind;
+    tdstGetSetParam_ stParam;
+
+    p_stMind = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+
+    fn_vInternalChangeComportProcedure(p_stMind->p_stIntelligence, stParam.uDummy.uParam.pComport, !p_stMind->bDoingIntel);
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stChangeMyComportReflexProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    AI_tdstMind_* p_stMind;
+    tdstGetSetParam_ stParam;
+
+    p_stMind = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+
+    fn_vInternalChangeComportProcedure(p_stMind->p_stReflex, stParam.uDummy.uParam.pComport, p_stMind->bDoingIntel);
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stChangeMyComportIntelligenceAndReflexProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    AI_tdstMind_* p_stMind;
+    tdstComport_* p_stIntell;
+    tdstComport_* p_stReflex;
+    tdstGetSetParam_ stParam;
+
+    p_stMind = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    p_stIntell = stParam.uDummy.uParam.pComport;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    p_stReflex = stParam.uDummy.uParam.pComport;
+
+    fn_vInternalChangeComportProcedure(p_stMind->p_stIntelligence, p_stIntell, 0);
+    fn_vInternalChangeComportProcedure(p_stMind->p_stReflex, p_stReflex, 0);
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stTurnProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstGetSetParam_ stParam;
+    float xAngle;
+    float xAngleRad;
+    tdeProcedureId_ eProcedureId;
+    DNM_stDynamics* p_stDynamics;
+    tdstDynam_* hDynam;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    xAngle = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
+
+    hDynam = hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;
+    if (hDynam)
+    {
+        p_stDynamics = fn_p_stDynamGetDynamics(hDynam);
+        if (p_stDynamics != NULL)
+        {
+            switch (eProcedureId)
+            {
+            case eProc_Turn:
+                xAngleRad = 0.017453292f * xAngle;
+                xAngleRad = xAngleRad * (0.001f * g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime);
+                MEC_vTurnAroundZAxis(p_stDynamics, xAngleRad);
+                break;
+            case eProc_Turn2:
+                MEC_vTurnAroundZAxis(p_stDynamics, 0.017453292f * xAngle);
+                break;
+            }
+        }
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stTurnPersoProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstGetSetParam_ stParam;
+    tdstDynam_* h_Dynam;
+    DNM_stDynamics* p_stDynamic;
+    HIE_tdstSuperObject_* p_stAimedObject;
+    MTH3D_tdstVector_ stVertexDirection;
+    MTH3D_tdstVector_ stVertex1;
+    tdeProcedureId_ eProcedureId;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    p_stAimedObject = fn_h_StandardGameGetSuperObject(stParam.uDummy.uParam.p_stEngObjValue->h_StandardGame);
+
+    h_Dynam = hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;
+    if (h_Dynam)
+    {
+        p_stDynamic = fn_p_stDynamGetDynamics(h_Dynam);
+        if (p_stDynamic)
+        {
+            MTH3D_M_vCopyVector(&stVertex1, POS_fn_p_stGetTranslationVector(hNewSuperObjPerso->hGlobalMatrix));
+
+            switch (eProcedureId)
+            {
+            case eProc_DeltaTurnPerso:
+                {
+                    float xX, xY, xZ;
+
+                    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+                    xX = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
+                    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+                    xY = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
+                    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+                    xZ = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
+
+                    MTH3D_M_vSetVectorElements(&stVertexDirection, xX, xY, xZ);
+                    MAT_fn_vApplyOnVertex(&stVertexDirection, p_stAimedObject->hGlobalMatrix, &stVertexDirection);
+                }
+                break;
+
+            case eProc_TurnPerso:
+                MTH3D_M_vCopyVector(&stVertexDirection, POS_fn_p_stGetTranslationVector(p_stAimedObject->hGlobalMatrix));
+                break;
+
+            default:
+                return p_stTree;
+            }
+
+            MTH3D_M_vSubVector(&stVertexDirection, &stVertexDirection, &stVertex1);
+            MEC_vTurnAbsolute(p_stDynamic, &stVertexDirection);
+        }
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stChangeActionProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstGetSetParam_ stParam;
+    tdstState_* h_WantedState;
+    unsigned char bHandleSkippedEventsIfRelevant;
+    unsigned int ulNbFramesForMerging;
+    float xNLParameter;
+    unsigned char bProportional;
+    tdeProcedureId_ eProcedureId;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    tdstDynam_* h_Dynam;
+    DNM_stDynamics* p_stDynamics;
+    void* hIdCard;
+
+    bProportional = 0;
+    ulNbFramesForMerging = 0;
+    xNLParameter = 0.0f;
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    h_WantedState = stParam.uDummy.uParam.tdxstHandleToState;
+
+    switch (eProcedureId)
+    {
+    case eProc_ChangeActionSmoothNoSpeed:
+        g_bNoSpeedForIntermAnim = 1;
+    case eProc_ChangeActionSmooth:
+    case eProc_ChangeActionForceSmooth:
+    case eProc_ChangeActionRandomSmooth:
+    case eProc_ChangeActionWithEventsSmooth:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        ulNbFramesForMerging = stParam.uDummy.uParam.ulValue;
+        break;
+    case eProc_ChangeActionSmoothNL:
+    case eProc_ChangeActionForceSmoothNL:
+    case eProc_ChangeActionRandomSmoothNL:
+    case eProc_ChangeActionWithEventsSmoothNL:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        ulNbFramesForMerging = stParam.uDummy.uParam.ulValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        xNLParameter = stParam.uDummy.uParam.xValue;
+        break;
+    case eProc_ChangeActionSmoothProportional:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        ulNbFramesForMerging = stParam.uDummy.uParam.ulValue;
+        bProportional = 1;
+        break;
+    case eProc_ChangeActionSmoothSymetric:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        ulNbFramesForMerging = stParam.uDummy.uParam.ulValue;
+        bProportional = 2;
+        break;
+    }
+
+    bHandleSkippedEventsIfRelevant = 0;
+    if (eProcedureId == eProc_ChangeActionWithEvents)
+    {
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        bHandleSkippedEventsIfRelevant = stParam.uDummy.uParam.ucValue;
+    }
+
+    if (PLA_fn_bSetNewState(hNewSuperObjPerso, h_WantedState, eProcedureId == eProc_ChangeActionForce, bHandleSkippedEventsIfRelevant, 0, ulNbFramesForMerging, xNLParameter, bProportional))
+    {
+        h_Dynam = hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;
+        if (h_Dynam)
+        {
+            p_stDynamics = fn_p_stDynamGetDynamics(h_Dynam);
+            if (p_stDynamics)
+            {
+                hIdCard = (void*)fn_hGetStateMechanicsIdCard(h_WantedState);
+                if ((void*)p_stDynamics->m_tdstDynamicsBaseBlock.m_pCurrentIdCard != hIdCard)
+                    DNM_fn_vChangeIdCard(p_stDynamics, hIdCard);
+            }
+        }
+    }
+    else
+    {
+        fn_vSetProcedureActionReturn(2);
+    }
+    g_bNoSpeedForIntermAnim = 0;
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stChangeActionRandomProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    void* hIdCard;
+    tdstDynam_* h_Dynam;
+    tdstState_* h_WantedState;
+    DNM_stDynamics* p_stDynamics;
+    tdstGetSetParam_ stParam;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    h_WantedState = stParam.uDummy.uParam.tdxstHandleToState;
+
+    if (PLA_fn_bSetNewStateWithRandom(p_SuperObjPerso, h_WantedState))
+    {
+        h_Dynam = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;
+        if (h_Dynam)
+        {
+            p_stDynamics = fn_p_stDynamGetDynamics(h_Dynam);
+            if (p_stDynamics)
+            {
+                hIdCard = (void*)fn_hGetStateMechanicsIdCard(h_WantedState);
+                if ((void*)p_stDynamics->m_tdstDynamicsBaseBlock.m_pCurrentIdCard != hIdCard)
+                    DNM_fn_vChangeIdCard(p_stDynamics, hIdCard);
+            }
+        }
+    }
+    else
+    {
+        fn_vSetProcedureActionReturn(2);
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stDisplayProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    tdeProcedureId_ eProcedureId;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+
+    switch (eProcedureId)
+    {
+    case eProc_DefaultDisplay:
+        {
+            int lMask = hNewSuperObjPerso->lDrawModeMask | 8;
+            hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_3dData->lDrawMask = lMask;
+            hNewSuperObjPerso->lDrawModeMask = lMask;
+        }
+        break;
+    }
+
+    return p_stTree;
+}
+
+#pragma auto_inline on
+void fn_vUpdateCharacterSkinList(tdst3dData_* h_3dData, GLI_tdstMaterial_* hMaterial, short _xSkinIndex)
+{
+    unsigned int i;
+
+    for (i = 0; i < h_3dData->NbSkinMaterials; i++)
+    {
+        if (h_3dData->hSkinMaterial[i] == (int)hMaterial)
+        {
+            h_3dData->xSkinIndex[i] = _xSkinIndex;
+            return;
+        }
+    }
+    if (i != 4)
+    {
+        h_3dData->hSkinMaterial[i] = (int)hMaterial;
+        h_3dData->xSkinIndex[i] = _xSkinIndex;
+        h_3dData->NbSkinMaterials++;
+    }
+}
+#pragma auto_inline reset
+
+tdstNodeInterpret_* fn_p_stSkinMaterialProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    short xIndex;
+    tdstGetSetParam_ stParam;
+    tdeProcedureId_ eProcedureId;
+    static GLI_tdstMaterial_* hMaterial;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+
+    switch (eProcedureId)
+    {
+    case eProc_SkinMaterial:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        hMaterial = stParam.uDummy.uParam.hVisualMaterial;
+        if (hMaterial)
+            fn_vUpdateCharacterSkinList(hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_3dData, hMaterial, 0);
+        break;
+    case eProc_SkinIndex:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        xIndex = stParam.uDummy.uParam.wValue;
+        fn_vUpdateCharacterSkinList(hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_3dData, hMaterial, xIndex);
+        break;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stTransparenceProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdeProcedureId_ eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    tdstGetSetParam_ stParam;
+    float xValue;
+    int lValue;
+    unsigned char bModule = 0;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    HIE_tdstSuperObject_* hModule = NULL;
+    unsigned short uwChannelNumber;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+
+    switch (eProcedureId)
+    {
+    case eProc_SetModuleTransparency:
+    case eProc_SetModuleTransparency2:
+        uwChannelNumber = (eProcedureId == eProc_SetModuleTransparency) ? (unsigned short)stParam.uDummy.uParam.lValue : stParam.uDummy.uParam.uwValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        if (hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_3dData->hArrayOfChannels == NULL)
+            break;
+        hNewSuperObjPerso = hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_3dData->hArrayOfChannels ? hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_3dData->hArrayOfChannels[uwChannelNumber].hSupObject : NULL;
+        if (hNewSuperObjPerso == NULL)
+            break;
+        hNewSuperObjPerso->ulFlags |= 0x10000;
+    case eProc_SetTransparency:
+        xValue = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
+        if (xValue < 0.0f)
+            xValue = 0.0f;
+        else if (xValue > 255.0f)
+            xValue = 255.0f;
+        hNewSuperObjPerso->fTransparenceLevel = xValue;
+        if (eProcedureId == eProc_SetTransparency)
+            PLA_fn_vUpdateTransparencyForModules(hNewSuperObjPerso);
+        break;
+
+    case eProc_ModuleTransparentDisplay:
+    case eProc_ModuleTransparentDisplay2:
+        uwChannelNumber = (eProcedureId == eProc_ModuleTransparentDisplay) ? (unsigned short)stParam.uDummy.uParam.lValue : stParam.uDummy.uParam.uwValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        if (hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_3dData->hArrayOfChannels == NULL)
+            break;
+        hModule = hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_3dData->hArrayOfChannels ? hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_3dData->hArrayOfChannels[uwChannelNumber].hSupObject : NULL;
+        if (hModule == NULL)
+            break;
+        bModule = 1;
+    case eProc_TransparentDisplay:
+        lValue = hNewSuperObjPerso->lDrawModeMask;
+        if (stParam.uDummy.uParam.lValue)
+            lValue &= ~8;
+        else
+        {
+            lValue |= 8;
+            if (bModule)
+                hModule->ulFlags &= ~0x10000;
+        }
+        if (!bModule)
+        {
+            hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_3dData->lDrawMask = lValue;
+            hNewSuperObjPerso->lDrawModeMask = lValue;
+        }
+        else
+            hModule->lDrawModeMask = lValue;
+        break;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stVisualMaterialProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdeProcedureId_ eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    tdstGetSetParam_ stParam;
+    GLI_tdstMaterial_* hVisualMaterial;
+    tdstNodeInterpret_* p_stTreeOrg = p_stTree;
+    GEO_tdstColor_ stColor;
+    int lValue = 0;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    hVisualMaterial = stParam.uDummy.uParam.hVisualMaterial;
+    if (hVisualMaterial == NULL)
+        return fn_p_stSwapNextParameter2(p_stTreeOrg);
+
+    switch (eProcedureId)
+    {
+    case eProc_SetVMTColor:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        fn_vConvertParamToColor(&stParam, &stColor);
+        GLI_xSetMaterialColor(hVisualMaterial, &stColor);
+        return p_stTree;
+
+    case eProc_SetVMTSpecularExponent:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        GLI_xGetMaterialSpecularCoef(hVisualMaterial, &lValue, &stColor);
+        GLI_xSetMaterialSpecularCoef(hVisualMaterial, lValue = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue, &stColor);
+        return p_stTree;
+
+    case eProc_SetVMTSpecularCoef:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        GLI_xGetMaterialSpecularCoef(hVisualMaterial, &lValue, &stColor);
+        fn_vConvertParamToColor(&stParam, &stColor);
+        GLI_xSetMaterialSpecularCoef(hVisualMaterial, lValue, &stColor);
+        return p_stTree;
+
+    case eProc_SetVMTDiffuseCoef:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        fn_vConvertParamToColor(&stParam, &stColor);
+        GLI_xSetMaterialDiffuseCoef(hVisualMaterial, &stColor);
+        return p_stTree;
+
+    case eProc_SetVMTAmbientCoef:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        fn_vConvertParamToColor(&stParam, &stColor);
+        GLI_xSetMaterialAmbientCoef(hVisualMaterial, &stColor);
+        return p_stTree;
+
+    case eProc_SetVMTAsChromed:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        GLI_vSetMaterialAsChromed(hVisualMaterial, stParam.uDummy.uParam.lValue);
+        return p_stTree;
+
+    case eProc_SetVMTTextureScrollingCoef:
+    {
+        float xU, xV;
+
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        xU = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        xV = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
+        GLI_xSetMaterialTextureScrollingCoef(hVisualMaterial, 0, 1, xU, xV);
+        return p_stTree;
+    }
+
+    case eProc_LockVMT:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        GLI_vLockAnimatedTexture(hVisualMaterial);
+        return p_stTree;
+
+    case eProc_UnlockVMT:
+        GLI_vUnLockAnimatedTexture(hVisualMaterial);
+        return p_stTree;
+
+    case eProc_SetVMTFrame:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        GLI_vSetCurrentAnimatedTextureNumber(hVisualMaterial, (stParam.eType == E_vt_Float) ? (int)MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue);
+        return p_stTree;
+
+    case eProc_DoNotLoadMaterialTextures:
+        fn_RemoveTextureFromMaterial(hVisualMaterial);
+        return p_stTree;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stMenuAndVignetteProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    char* p_szString;
+    tdstGetSetParam_ stParam;
+    tdeProcedureId_ eProcedureId;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    switch (eProcedureId)
+    {
+    case eProc_DisplayVignette:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        p_szString = fn_szGetStringFromTextOrStringParam(&stParam);
+        fn_vAskToDisplayVignette(p_szString);
+        return p_stTree;
+
+    case eProc_DeleteVignette:
+        fn_vAskToDisplayVignette(NULL);
+        return p_stTree;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_st_SinusEffect_SetFreq(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdeProcedureId_ eProcedureId;
+    int lXFreq;
+    int lYFreq;
+    int lZFreq;
+    tdstGetSetParam_ stParam;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    lXFreq = stParam.uDummy.uParam.wValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    lYFreq = stParam.uDummy.uParam.wValue;
+    lZFreq = 0;
+    if (eProcedureId != eProc_SinEffect_SetFreq)
+    {
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        lZFreq = stParam.uDummy.uParam.wValue;
+    }
+
+    if (eProcedureId == eProc_SinEffect_SetFreq || eProcedureId == eProc_SinEffect_SetFreq3D)
+    {
+        GLI_fn_SinusEffect_vSetFreqMesh(lXFreq, lYFreq, lZFreq);
+        GLI_fn_SinusEffect_vSetFreqRLI(lXFreq, lYFreq, lZFreq);
+    }
+    else if (eProcedureId == eProc_SinEffect_SetFreq3DMesh)
+    {
+        GLI_fn_SinusEffect_vSetFreqMesh(lXFreq, lYFreq, lZFreq);
+    }
+    else if (eProcedureId == eProc_SinEffect_SetFreq3DRLI)
+    {
+        GLI_fn_SinusEffect_vSetFreqRLI(lXFreq, lYFreq, lZFreq);
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_st_SinusEffect_SetPreMultiplier(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    float X;
+    float Y;
+    tdstGetSetParam_ stParam;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    X = stParam.uDummy.uParam.xValue;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    Y = stParam.uDummy.uParam.xValue;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+
+    GLI_fn_vSetSinusPreMultiplier(X, Y, stParam.uDummy.uParam.xValue);
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_st_SinusEffect_SetAmplitude(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    MTH3D_tdstVector_ stAmp;
+    tdstGetSetParam_ stParam;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    *(&stAmp) = *(&stParam.uDummy.uParam.stVectorValue);
+    (&stAmp)->xX = 0.1f * (&stAmp)->xX;
+    (&stAmp)->xY = 0.1f * (&stAmp)->xY;
+    (&stAmp)->xZ = 0.1f * (&stAmp)->xZ;
+
+    GLI_fn_SinusEffect_vSetAmplitude(&stAmp);
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_st_SinusEffect_SetRLIParams(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    float xRed;
+    float xGreen;
+    float xBlue;
+    tdstGetSetParam_ stParam;
+    tdeProcedureId_ eProcedureId;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    xRed = stParam.uDummy.uParam.xValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    xGreen = stParam.uDummy.uParam.xValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    xBlue = stParam.uDummy.uParam.xValue;
+
+    if (eProcedureId == eProc_SinEffect_SetRLIBase)
+    {
+        GLI_vSetSinusEffectOnRLIBase(xRed, xGreen, xBlue);
+    }
+    else if (eProcedureId == eProc_SinEffect_SetRLIAmplitude)
+    {
+        GLI_vSetSinusEffectOnRLIAmp(xRed, xGreen, xBlue);
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_st_SinusEffect_SetState(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    char cFlag;
+    int cState; /* debug lists char; a char local re-sign-extends before the switch */
+    tdstGetSetParam_ stParam;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    cState = stParam.uDummy.uParam.cValue;
+
+    if (cState < 0x40)
+    {
+        GLI_fn_SinusEffect_vSetState(stParam.uDummy.uParam.cValue);
+    }
+    else
+    {
+        cFlag = GLI_fn_SinusEffect_vGetFlag();
+        switch (cState)
+        {
+        case 0x40:
+            cFlag &= ~1;
+            break;
+        case 0x41:
+            cFlag |= 1;
+            break;
+        case 0x42:
+            cFlag &= ~2;
+            break;
+        case 0x43:
+            cFlag |= 2;
+            break;
+        }
+        GLI_fn_SinusEffect_vSetFlag(cFlag);
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_st_SPO_SetDrawFlag(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    int lMask;
+    int lType;
+    int lDrawMask;
+    int lBit;
+    HIE_tdstSuperObject_* hSpo;
+    tdstGetSetParam_ stParam;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    hSpo = stParam.uDummy.uParam.hSuperObject;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    lBit = stParam.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    lType = stParam.uDummy.uParam.lValue;
+
+    if ((hSpo != NULL) && (lBit >= 0) && (lBit < 32))
+    {
+        lDrawMask = hSpo->lDrawModeMask;
+        lMask = 1 << lBit;
+        if (lType == 2)
+            lType = (lDrawMask & lMask) ? 0 : 1;
+
+        switch (lType)
+        {
+        case 0:
+            lDrawMask &= ~lMask;
+            break;
+        case 1:
+            lDrawMask |= lMask;
+            break;
+        }
+        hSpo->lDrawModeMask = lDrawMask;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_st_SPO_SetEngineDisplayModeFlag(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    int lMask;
+    int lType;
+    int lBit;
+    tdstGetSetParam_ stParam;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    lBit = stParam.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    lType = stParam.uDummy.uParam.lValue;
+
+    if ((lBit >= 0) && (lBit < 32))
+    {
+        lMask = 1 << lBit;
+        if (lType == 2)
+            lType = (g_stEngineStructure.ulDisplayMode & lMask) ? 0 : 1;
+
+        switch (lType)
+        {
+        case 0:
+            g_stEngineStructure.ulDisplayMode &= ~lMask;
+            break;
+        case 1:
+            g_stEngineStructure.ulDisplayMode |= lMask;
+            break;
+        }
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_st_ACT_SetDrawFlag(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdst3dData_* h3dData;
+    int lMask;
+    int lType;
+    int lDrawMask;
+    int lBit;
+    HIE_tdstSuperObject_* hCharact;
+    tdstGetSetParam_ stParam;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    hCharact = fn_h_StandardGameGetSuperObject(stParam.uDummy.uParam.p_stEngObjValue->h_StandardGame);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    lBit = stParam.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    lType = stParam.uDummy.uParam.lValue;
+
+    if ((hCharact != NULL) && (lBit >= 0) && (lBit < 32))
+    {
+        h3dData = hCharact->hLinkedObject.p_stCharacter->h_3dData;
+        lMask = 1 << lBit;
+        lDrawMask = h3dData->lDrawMask;
+        if (lType == 2)
+            lType = (lDrawMask & lMask) ? 0 : 1;
+
+        switch (lType)
+        {
+        case 0:
+            lDrawMask &= ~lMask;
+            break;
+        case 1:
+            lDrawMask |= lMask;
+            break;
+        }
+        hCharact->lDrawModeMask = lDrawMask;
+        h3dData->lDrawMask = lDrawMask;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stSkipLoop(tdstNodeInterpret_* p_stTreeInit)
+{
+    tdstNodeInterpret_* p_stTree;
+    int iLevel;
+    iLevel = 0;
+    p_stTree = p_stTreeInit;
+    if (p_stTreeInit->uwNodeToSkip) {
+        p_stTree = p_stTreeInit + p_stTreeInit->uwNodeToSkip;
+    } else {
+        while (p_stTree->eType != 8) {
+            if (p_stTree->eType == 4) {
+                if (p_stTree->uDummy.uId.eKeyWordId == eKeyWord_Boucle)
+                    iLevel++;
+                else if (p_stTree->uDummy.uId.eKeyWordId == eKeyWord_FinBoucle) {
+                    iLevel--;
+                    if (iLevel <= 0) {
+                        p_stTree++;
+                        break;
+                    }
+                }
+            }
+            p_stTree++;
+        }
+        p_stTreeInit->uwNodeToSkip = p_stTree - p_stTreeInit;
+    }
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stLoopKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstGetSetParam_ stValue;
+    tdstNodeInterpret_* p_stTreeInit;
+
+    p_stTreeInit = p_stTree - 1;
+
+    GlobalLoopInit[iNumLoop] = (int)p_stTreeInit;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    GlobalLoopCpt[iNumLoop] = stValue.uDummy.uParam.lValue;
+    if (GlobalLoopCpt[iNumLoop] == 0)
+        return fn_p_stSkipLoop(p_stTreeInit);
+
+    GlobalLoopTree[iNumLoop] = (int)p_stTree;
+    iNumLoop++;
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEndLoopKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    if (!iNumLoop)
+        return p_stTree;
+    GlobalLoopCpt[iNumLoop - 1]--;
+    if (GlobalLoopCpt[iNumLoop - 1] > 0)
+        return (tdstNodeInterpret_*)GlobalLoopTree[iNumLoop - 1];
+    iNumLoop--;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stBreakKeyword(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    int lValue;
+    tdstGetSetParam_ stValue;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+
+    lValue = stValue.uDummy.uParam.lValue;
+    if (iNumLoop <= 0)
+    {
+        return p_stTree;
+    }
+
+    if (lValue > iNumLoop - 1)
+        lValue = iNumLoop - 1;
+
+    p_stTree = fn_p_stSkipLoop((tdstNodeInterpret_*)GlobalLoopInit[iNumLoop - lValue - 1]);
+    iNumLoop -= lValue + 1;
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stDummy(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdeProcedureId_ eProcedureId;
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    printf("ProcedureDummy %d, spo=0x%x!!\n", eProcedureId, p_SuperObjPerso);
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stAGOProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdeProcedureId_ eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    int lTop;
+    char* p_ucFilenameOrMemoryAddress;
+    int lLeft;
+    GLI_tdstMaterial_* hVisualMaterial1;
+    int NumeroVp;
+    int NumeroGauge;
+    MTH3D_tdstVector_ stPosition;
+    MTH3D_tdstVector_ stDirection;
+    GLI_tdstMaterial_* hVisualMaterial;
+    unsigned int PartType;
+    int lBottom;
+    int NumeroIcone;
+    int NumeroBitmap;
+    float fRate;
+    tdstGetSetParam_ stParam;
+
+    switch (eProcedureId)
+    {
+    case eProc_MultiPlayer_LanceIcone:
+    {
+        MTH3D_tdstVector_ stV1, stV2;
+        float xTransparency;
+
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        NumeroVp = stParam.uDummy.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        NumeroIcone = stParam.uDummy.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        stV1.xX = stParam.uDummy.uParam.stVectorValue.xX;
+        stV1.xY = stParam.uDummy.uParam.stVectorValue.xY;
+        stV1.xZ = stParam.uDummy.uParam.stVectorValue.xZ;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        stV2.xX = stParam.uDummy.uParam.stVectorValue.xX;
+        stV2.xY = stParam.uDummy.uParam.stVectorValue.xY;
+        stV2.xZ = stParam.uDummy.uParam.stVectorValue.xZ;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        xTransparency = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        AGO_vSetIcon(NumeroVp, NumeroIcone, (float*)&stV1, (float*)&stV2, xTransparency, stParam.uDummy.uParam.hVisualMaterial);
+        return p_stTree;
+    }
+
+    case eProc_MultiPlayer_LanceGauge:
+    {
+        MTH3D_tdstVector_ stV1, stV2;
+        float xNiveau, xTransparency;
+
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        NumeroVp = stParam.uDummy.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        NumeroGauge = stParam.uDummy.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        stV1.xX = stParam.uDummy.uParam.stVectorValue.xX;
+        stV1.xY = stParam.uDummy.uParam.stVectorValue.xY;
+        stV1.xZ = stParam.uDummy.uParam.stVectorValue.xZ;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        stV2.xX = stParam.uDummy.uParam.stVectorValue.xX;
+        stV2.xY = stParam.uDummy.uParam.stVectorValue.xY;
+        stV2.xZ = stParam.uDummy.uParam.stVectorValue.xZ;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        xNiveau = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        xTransparency = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        hVisualMaterial1 = stParam.uDummy.uParam.hVisualMaterial;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        AGO_vSetGauge(NumeroVp, NumeroGauge, (float*)&stV1, (float*)&stV2, xNiveau, xTransparency, hVisualMaterial1, stParam.uDummy.uParam.hVisualMaterial);
+        return p_stTree;
+    }
+
+    case eProc_MultiPlayer_LanceBitmapFile:
+    case eProc_MultiPlayer_LanceBitmapMemory:
+    {
+        MTH3D_tdstVector_ stVect1, stVect2;
+
+        p_ucFilenameOrMemoryAddress = NULL;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        NumeroVp = stParam.uDummy.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        NumeroBitmap = stParam.uDummy.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        stVect1.xX = stParam.uDummy.uParam.stVectorValue.xX;
+        stVect1.xY = stParam.uDummy.uParam.stVectorValue.xY;
+        stVect1.xZ = stParam.uDummy.uParam.stVectorValue.xZ;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        stVect2.xX = stParam.uDummy.uParam.stVectorValue.xX;
+        stVect2.xY = stParam.uDummy.uParam.stVectorValue.xY;
+        stVect2.xZ = stParam.uDummy.uParam.stVectorValue.xZ;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        if (eProcedureId == eProc_MultiPlayer_LanceBitmapFile)
+            p_ucFilenameOrMemoryAddress = fn_szGetStringFromTextOrStringParam(&stParam);
+        else if (eProcedureId == eProc_MultiPlayer_LanceBitmapMemory)
+            p_ucFilenameOrMemoryAddress = (char*)stParam.uDummy.uParam.lValue;
+
+        if (p_ucFilenameOrMemoryAddress == NULL || *p_ucFilenameOrMemoryAddress == 0)
+            GAM_fn_bLoadBitmapForAGO(NumeroBitmap, NULL, 2, NumeroVp, &stVect1, &stVect2);
+        else if (eProcedureId == eProc_MultiPlayer_LanceBitmapFile)
+            GAM_fn_bLoadBitmapForAGO(NumeroBitmap, p_ucFilenameOrMemoryAddress, 0, NumeroVp, &stVect1, &stVect2);
+        else if (eProcedureId == eProc_MultiPlayer_LanceBitmapMemory)
+            GAM_fn_bLoadBitmapForAGO(NumeroBitmap, p_ucFilenameOrMemoryAddress, 1, NumeroVp, &stVect1, &stVect2);
+        return p_stTree;
+    }
+
+    case eProc_LaunchAGO:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        PartType = stParam.uDummy.uParam.ulValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        stPosition.xX = stParam.uDummy.uParam.stVectorValue.xX;
+        stPosition.xY = stParam.uDummy.uParam.stVectorValue.xY;
+        stPosition.xZ = stParam.uDummy.uParam.stVectorValue.xZ;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        stDirection.xX = stParam.uDummy.uParam.stVectorValue.xX;
+        stDirection.xY = stParam.uDummy.uParam.stVectorValue.xY;
+        stDirection.xZ = stParam.uDummy.uParam.stVectorValue.xZ;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        hVisualMaterial = stParam.uDummy.uParam.hVisualMaterial;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        fRate = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
+        AGO_g_SuperObjectForAGOs = (int)p_SuperObjPerso;
+        AGO_vAddParticle(PartType, &stPosition, &stDirection, hVisualMaterial, fRate);
+        return p_stTree;
+
+    case eProc_SetAGOClipping:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        NumeroVp = stParam.uDummy.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        lTop = stParam.uDummy.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        lLeft = stParam.uDummy.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        lBottom = stParam.uDummy.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        fRate = lTop / 1000.0f;
+        lTop = (int)((&g_stEngineStructure.a_stFixViewportAttr[0])->dwTopInPix + (&g_stEngineStructure.a_stFixViewportAttr[0])->dwHeight * fRate);
+        fRate = lBottom / 1000.0f;
+        lBottom = (int)((&g_stEngineStructure.a_stFixViewportAttr[0])->dwTopInPix + (&g_stEngineStructure.a_stFixViewportAttr[0])->dwHeight * fRate);
+        fRate = lLeft / 1000.0f;
+        lLeft = (int)((&g_stEngineStructure.a_stFixViewportAttr[0])->dwLeftInPix + (&g_stEngineStructure.a_stFixViewportAttr[0])->dwWidth * fRate);
+        AGO_g_iIndexOfClippedSprite = NumeroVp;
+        GAM_fn_vSetFixClippingCoordinates(lTop, lLeft, lBottom, (int)((&g_stEngineStructure.a_stFixViewportAttr[0])->dwLeftInPix + (stParam.uDummy.uParam.lValue / 1000.0f) * (&g_stEngineStructure.a_stFixViewportAttr[0])->dwWidth));
+        return p_stTree;
+
+    case eProc_MultiPlayer_LanceMask:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        return p_stTree;
+
+    case eProc_MultiPlayer_LanceBlur:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        return p_stTree;
+
+    case eProc_MultiPlayer_Prepare2DSprite:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        return p_stTree;
+
+    case eProc_AGO_Kill:
+    {
+        tdstGetSetParam_ stParam;
+
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        AGO3_vKill((stParam.eType == E_vt_Float) ? (int)MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue);
+        return p_stTree;
+    }
+
+    case eProc_AGO_ReInit:
+    {
+        unsigned int dwHandle;
+        unsigned int dwPartNumber;
+        MTH3D_tdstVector_ stPosition;
+        MTH3D_tdstVector_ stDirection;
+        GLI_tdstMaterial_* hVisualMaterial;
+
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        dwHandle = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        dwPartNumber = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        stPosition.xX = stParam.uDummy.uParam.stVectorValue.xX;
+        stPosition.xY = stParam.uDummy.uParam.stVectorValue.xY;
+        stPosition.xZ = stParam.uDummy.uParam.stVectorValue.xZ;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        stDirection.xX = stParam.uDummy.uParam.stVectorValue.xX;
+        stDirection.xY = stParam.uDummy.uParam.stVectorValue.xY;
+        stDirection.xZ = stParam.uDummy.uParam.stVectorValue.xZ;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        hVisualMaterial = stParam.uDummy.uParam.hVisualMaterial;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        AGO3_ReInit(dwHandle, dwPartNumber, &stPosition, &stDirection, hVisualMaterial, (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue);
+        return p_stTree;
+    }
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stTakePictureProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdeProcedureId_ eProcedureId;
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    switch (eProcedureId) {
+    case eProc_TakePicture:
+        GLI_vAskToTakePicture();
+        return p_stTree;
+    case eProc_ReleasePicture:
+        return p_stTree;
+    }
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stInGameMenuProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstGetSetParam_ stParam;
+    tdeProcedureId_ eProcedureId;
+    static unsigned char s_ucPreviousNumberOfColumns;
+    static unsigned char s_ucPreviousNumberOfPlayers;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    switch (eProcedureId)
+    {
+    case eProc_SetInGameMenu:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        if (stParam.uDummy.uParam.lValue)
+        {
+            g_bInGameMenu = 1;
+            s_ucPreviousNumberOfPlayers = GAM_MultiVP_fn_ucGetNumberOfPlayers();
+            s_ucPreviousNumberOfColumns = GAM_MultiVP_fn_ucGetNumberOfColumns();
+            GAM_MultiVP_fn_vSetNumberOfPlayers(1, 1);
+        }
+        else
+        {
+            g_bInGameMenu = 0;
+            GAM_MultiVP_fn_vSetNumberOfPlayers(s_ucPreviousNumberOfPlayers, s_ucPreviousNumberOfColumns);
+        }
+        return p_stTree;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stCheatCodeProcedure(tdstNodeInterpret_* p_stTree, tdstNodeInterpret_* p_stTree2)
+{
+    return p_stTree2;
+}
+
 tdstNodeInterpret_* fn_p_stJFFTXTProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdeProcedureId_ eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
@@ -6604,4197 +9776,1215 @@ tdstNodeInterpret_* fn_p_stJFFTXTProcedure(HIE_tdstSuperObject_* p_SuperObjPerso
     return p_stTree;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 4524–4524 */
-/* addr: 0x00226e70  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4524
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stCheatCodeProcedure(tdstNodeInterpret_* p_stTree, tdstNodeInterpret_* p_stTree2)
+void PS2_fn_vSetControllerMessage(void)
 {
-    return p_stTree2;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 4450–4483 */
-/* addr: 0x00226e80  size: 140 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4450
- *   +0x0004 -> line 4455
- *   +0x0008 -> line 4450
- *   +0x0010 -> line 4451
- *   +0x0014 -> line 4455
- *   +0x0024 -> line 4458
- *   +0x0030 -> line 4460
- *   +0x003c -> line 4462
- *   +0x0040 -> line 4463
- *   +0x0048 -> line 4464
- *   +0x0050 -> line 4465
- *   +0x0054 -> line 4464
- *   +0x0058 -> line 4465
- *   +0x0060 -> line 4466
- *   +0x0068 -> line 4470
- *   +0x0078 -> line 4473
- *   +0x007c -> line 4483
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stInGameMenuProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ stParam;
-    tdeProcedureId_ eProcedureId;
-    static unsigned char s_ucPreviousNumberOfColumns;
-    static unsigned char s_ucPreviousNumberOfPlayers;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    switch (eProcedureId)
+    if (!g_GameHasNotStartedTheFirstBootCheck)
     {
-    case eProc_SetInGameMenu:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        if (stParam.uDummy.uParam.lValue)
-        {
-            g_bInGameMenu = 1;
-            s_ucPreviousNumberOfPlayers = GAM_MultiVP_fn_ucGetNumberOfPlayers();
-            s_ucPreviousNumberOfColumns = GAM_MultiVP_fn_ucGetNumberOfColumns();
-            GAM_MultiVP_fn_vSetNumberOfPlayers(1, 1);
-        }
-        else
-        {
-            g_bInGameMenu = 0;
-            GAM_MultiVP_fn_vSetNumberOfPlayers(s_ucPreviousNumberOfPlayers, s_ucPreviousNumberOfColumns);
-        }
-        return p_stTree;
-    }
-
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 4390–4422 */
-/* addr: 0x00226f10  size: 84 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4390
- *   +0x0004 -> line 4393
- *   +0x0008 -> line 4390
- *   +0x0010 -> line 4391
- *   +0x0014 -> line 4393
- *   +0x0030 -> line 4398
- *   +0x0038 -> line 4403
- *   +0x0040 -> line 4421
- *   +0x0044 -> line 4422
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stTakePictureProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdeProcedureId_ eProcedureId;
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-    switch (eProcedureId) {
-    case eProc_TakePicture:
-        GLI_vAskToTakePicture();
-        return p_stTree;
-    case eProc_ReleasePicture:
-        return p_stTree;
-    }
-    return p_stTree;
-}
-
-void AGO3_ReInit(unsigned int dwHandle, unsigned int dwPartNumber, MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fParameter);
-void AGO3_vKill(int iHandle);
-void AGO_vAddParticle(unsigned int PartType, MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial, float parameter);
-void AGO_vSetGauge(int NumeroVp, int NumeroGauge, float* V1, float* V2, float xNiveau, float xTransparency, void* hVisualMaterial1, void* hVisualMaterial2);
-void AGO_vSetIcon(int NumeroVp, int Num, float* V1, float* V2, float xTransparency, void* Mat);
-unsigned char GAM_fn_bLoadBitmapForAGO(int NumeroBitmap, char* p_ucFilenameOrMemoryAddress, int lMode, int NumeroVp, MTH3D_tdstVector_* p_stV1, MTH3D_tdstVector_* p_stV2);
-void GAM_fn_vSetFixClippingCoordinates(int _lTop, int _lLeft, int _lBottom, int _lRight);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 4012–4365 */
-/* addr: 0x00226f70  size: 2532 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4012
- *   +0x0004 -> line 4021
- *   +0x0008 -> line 4012
- *   +0x0034 -> line 4013
- *   +0x0038 -> line 4021
- *   +0x00bc -> line 4032
- *   +0x00c4 -> line 4033
- *   +0x00c8 -> line 4032
- *   +0x00cc -> line 4035
- *   +0x00d8 -> line 4036
- *   +0x00dc -> line 4038
- *   +0x00ec -> line 4040
- *   +0x00f0 -> line 4041
- *   +0x00f4 -> line 4042
- *   +0x00f8 -> line 4044
- *   +0x0104 -> line 4040
- *   +0x0108 -> line 4041
- *   +0x0110 -> line 4042
- *   +0x0114 -> line 4044
- *   +0x011c -> line 4046
- *   +0x0120 -> line 4050
- *   +0x012c -> line 4046
- *   +0x0130 -> line 4047
- *   +0x0138 -> line 4048
- *   +0x013c -> line 4050
- *   +0x0144 -> line 4051
- *   +0x0164 -> line 4053
- *   +0x0174 -> line 4056
- *   +0x0178 -> line 4053
- *   +0x017c -> line 4056
- *   +0x0194 -> line 4058
- *   +0x019c -> line 4070
- *   +0x01a4 -> line 4071
- *   +0x01a8 -> line 4073
- *   +0x01b8 -> line 4074
- *   +0x01bc -> line 4076
- *   +0x01cc -> line 4078
- *   +0x01d0 -> line 4079
- *   +0x01d4 -> line 4080
- *   +0x01d8 -> line 4082
- *   +0x01e4 -> line 4078
- *   +0x01e8 -> line 4079
- *   +0x01f0 -> line 4080
- *   +0x01f4 -> line 4082
- *   +0x01fc -> line 4084
- *   +0x0200 -> line 4088
- *   +0x020c -> line 4084
- *   +0x0210 -> line 4085
- *   +0x0218 -> line 4086
- *   +0x021c -> line 4088
- *   +0x0224 -> line 4089
- *   +0x0248 -> line 4091
- *   +0x0258 -> line 4092
- *   +0x0278 -> line 4094
- *   +0x0288 -> line 4097
- *   +0x0290 -> line 4095
- *   +0x0294 -> line 4097
- *   +0x029c -> line 4100
- *   +0x02a0 -> line 4097
- *   +0x02a4 -> line 4100
- *   +0x02c4 -> line 4102
- *   +0x02cc -> line 4113
- *   +0x02dc -> line 4114
- *   +0x02e0 -> line 4116
- *   +0x02f0 -> line 4117
- *   +0x02f4 -> line 4119
- *   +0x0304 -> line 4121
- *   +0x0308 -> line 4122
- *   +0x030c -> line 4123
- *   +0x0310 -> line 4125
- *   +0x031c -> line 4121
- *   +0x0320 -> line 4122
- *   +0x0328 -> line 4123
- *   +0x032c -> line 4125
- *   +0x0334 -> line 4127
- *   +0x0338 -> line 4131
- *   +0x0344 -> line 4127
- *   +0x0348 -> line 4128
- *   +0x0350 -> line 4129
- *   +0x0354 -> line 4131
- *   +0x0360 -> line 4132
- *   +0x036c -> line 4133
- *   +0x037c -> line 4134
- *   +0x0388 -> line 4135
- *   +0x0390 -> line 4137
- *   +0x03a4 -> line 4138
- *   +0x03c4 -> line 4139
- *   +0x03cc -> line 4140
- *   +0x03ec -> line 4141
- *   +0x03f8 -> line 4142
- *   +0x0410 -> line 4144
- *   +0x041c -> line 4151
- *   +0x0424 -> line 4152
- *   +0x0428 -> line 4154
- *   +0x0438 -> line 4156
- *   +0x043c -> line 4157
- *   +0x0440 -> line 4158
- *   +0x0444 -> line 4160
- *   +0x0450 -> line 4156
- *   +0x0454 -> line 4157
- *   +0x045c -> line 4158
- *   +0x0460 -> line 4160
- *   +0x0468 -> line 4162
- *   +0x046c -> line 4166
- *   +0x0478 -> line 4162
- *   +0x047c -> line 4163
- *   +0x0484 -> line 4164
- *   +0x0488 -> line 4166
- *   +0x0490 -> line 4167
- *   +0x0494 -> line 4169
- *   +0x04a4 -> line 4170
- *   +0x04a8 -> line 4169
- *   +0x04ac -> line 4170
- *   +0x04c8 -> line 4175
- *   +0x04e0 -> line 4180
- *   +0x04e8 -> line 4188
- *   +0x04f0 -> line 4189
- *   +0x04f4 -> line 4191
- *   +0x0504 -> line 4192
- *   +0x0508 -> line 4193
- *   +0x0518 -> line 4194
- *   +0x051c -> line 4195
- *   +0x052c -> line 4197
- *   +0x0534 -> line 4196
- *   +0x0538 -> line 4197
- *   +0x0540 -> line 4201
- *   +0x0544 -> line 4197
- *   +0x0548 -> line 4201
- *   +0x054c -> line 4202
- *   +0x0550 -> line 4201
- *   +0x0554 -> line 4202
- *   +0x0558 -> line 4201
- *   +0x056c -> line 4202
- *   +0x05d4 -> line 4205
- *   +0x05d8 -> line 4202
- *   +0x05e0 -> line 4205
- *   +0x05e8 -> line 4202
- *   +0x05ec -> line 4205
- *   +0x0604 -> line 4206
- *   +0x0664 -> line 4210
- *   +0x066c -> line 4206
- *   +0x0678 -> line 4210
- *   +0x0700 -> line 4219
- *   +0x0704 -> line 4218
- *   +0x0708 -> line 4210
- *   +0x070c -> line 4219
- *   +0x0710 -> line 4210
- *   +0x0714 -> line 4219
- *   +0x07a0 -> line 4222
- *   +0x07a8 -> line 4232
- *   +0x07b0 -> line 4238
- *   +0x07c0 -> line 4244
- *   +0x07d0 -> line 4249
- *   +0x07d8 -> line 4258
- *   +0x07e0 -> line 4261
- *   +0x07f0 -> line 4267
- *   +0x0800 -> line 4275
- *   +0x0808 -> line 4284
- *   +0x0810 -> line 4287
- *   +0x0820 -> line 4293
- *   +0x0830 -> line 4298
- *   +0x0838 -> line 4307
- *   +0x0840 -> line 4308
- *   +0x0844 -> line 4307
- *   +0x0848 -> line 4308
- *   +0x0870 -> line 4310
- *   +0x0878 -> line 4315
- *   +0x0880 -> line 4328
- *   +0x0888 -> line 4329
- *   +0x08b8 -> line 4331
- *   +0x08c8 -> line 4332
- *   +0x08f4 -> line 4334
- *   +0x0904 -> line 4336
- *   +0x0908 -> line 4337
- *   +0x090c -> line 4338
- *   +0x0910 -> line 4340
- *   +0x091c -> line 4336
- *   +0x0920 -> line 4337
- *   +0x0928 -> line 4338
- *   +0x092c -> line 4340
- *   +0x0934 -> line 4342
- *   +0x0938 -> line 4346
- *   +0x0944 -> line 4342
- *   +0x0948 -> line 4343
- *   +0x0950 -> line 4344
- *   +0x0954 -> line 4346
- *   +0x095c -> line 4349
- *   +0x0964 -> line 4347
- *   +0x0968 -> line 4349
- *   +0x0970 -> line 4352
- *   +0x0974 -> line 4349
- *   +0x0978 -> line 4352
- *   +0x09ac -> line 4355
- *   +0x09b0 -> line 4365
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stAGOProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdeProcedureId_ eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-    int lTop;
-    char* p_ucFilenameOrMemoryAddress;
-    int lLeft;
-    GLI_tdstMaterial_* hVisualMaterial1;
-    int NumeroVp;
-    int NumeroGauge;
-    MTH3D_tdstVector_ stPosition;
-    MTH3D_tdstVector_ stDirection;
-    GLI_tdstMaterial_* hVisualMaterial;
-    unsigned int PartType;
-    int lBottom;
-    int NumeroIcone;
-    int NumeroBitmap;
-    float fRate;
-    tdstGetSetParam_ stParam;
-
-    switch (eProcedureId)
-    {
-    case eProc_MultiPlayer_LanceIcone:
-    {
-        MTH3D_tdstVector_ stV1, stV2;
-        float xTransparency;
-
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        NumeroVp = stParam.uDummy.uParam.lValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        NumeroIcone = stParam.uDummy.uParam.lValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        stV1.xX = stParam.uDummy.uParam.stVectorValue.xX;
-        stV1.xY = stParam.uDummy.uParam.stVectorValue.xY;
-        stV1.xZ = stParam.uDummy.uParam.stVectorValue.xZ;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        stV2.xX = stParam.uDummy.uParam.stVectorValue.xX;
-        stV2.xY = stParam.uDummy.uParam.stVectorValue.xY;
-        stV2.xZ = stParam.uDummy.uParam.stVectorValue.xZ;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        xTransparency = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        AGO_vSetIcon(NumeroVp, NumeroIcone, (float*)&stV1, (float*)&stV2, xTransparency, stParam.uDummy.uParam.hVisualMaterial);
-        return p_stTree;
-    }
-
-    case eProc_MultiPlayer_LanceGauge:
-    {
-        MTH3D_tdstVector_ stV1, stV2;
-        float xNiveau, xTransparency;
-
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        NumeroVp = stParam.uDummy.uParam.lValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        NumeroGauge = stParam.uDummy.uParam.lValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        stV1.xX = stParam.uDummy.uParam.stVectorValue.xX;
-        stV1.xY = stParam.uDummy.uParam.stVectorValue.xY;
-        stV1.xZ = stParam.uDummy.uParam.stVectorValue.xZ;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        stV2.xX = stParam.uDummy.uParam.stVectorValue.xX;
-        stV2.xY = stParam.uDummy.uParam.stVectorValue.xY;
-        stV2.xZ = stParam.uDummy.uParam.stVectorValue.xZ;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        xNiveau = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        xTransparency = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        hVisualMaterial1 = stParam.uDummy.uParam.hVisualMaterial;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        AGO_vSetGauge(NumeroVp, NumeroGauge, (float*)&stV1, (float*)&stV2, xNiveau, xTransparency, hVisualMaterial1, stParam.uDummy.uParam.hVisualMaterial);
-        return p_stTree;
-    }
-
-    case eProc_MultiPlayer_LanceBitmapFile:
-    case eProc_MultiPlayer_LanceBitmapMemory:
-    {
-        MTH3D_tdstVector_ stVect1, stVect2;
-
-        p_ucFilenameOrMemoryAddress = NULL;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        NumeroVp = stParam.uDummy.uParam.lValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        NumeroBitmap = stParam.uDummy.uParam.lValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        stVect1.xX = stParam.uDummy.uParam.stVectorValue.xX;
-        stVect1.xY = stParam.uDummy.uParam.stVectorValue.xY;
-        stVect1.xZ = stParam.uDummy.uParam.stVectorValue.xZ;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        stVect2.xX = stParam.uDummy.uParam.stVectorValue.xX;
-        stVect2.xY = stParam.uDummy.uParam.stVectorValue.xY;
-        stVect2.xZ = stParam.uDummy.uParam.stVectorValue.xZ;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        if (eProcedureId == eProc_MultiPlayer_LanceBitmapFile)
-            p_ucFilenameOrMemoryAddress = fn_szGetStringFromTextOrStringParam(&stParam);
-        else if (eProcedureId == eProc_MultiPlayer_LanceBitmapMemory)
-            p_ucFilenameOrMemoryAddress = (char*)stParam.uDummy.uParam.lValue;
-
-        if (p_ucFilenameOrMemoryAddress == NULL || *p_ucFilenameOrMemoryAddress == 0)
-            GAM_fn_bLoadBitmapForAGO(NumeroBitmap, NULL, 2, NumeroVp, &stVect1, &stVect2);
-        else if (eProcedureId == eProc_MultiPlayer_LanceBitmapFile)
-            GAM_fn_bLoadBitmapForAGO(NumeroBitmap, p_ucFilenameOrMemoryAddress, 0, NumeroVp, &stVect1, &stVect2);
-        else if (eProcedureId == eProc_MultiPlayer_LanceBitmapMemory)
-            GAM_fn_bLoadBitmapForAGO(NumeroBitmap, p_ucFilenameOrMemoryAddress, 1, NumeroVp, &stVect1, &stVect2);
-        return p_stTree;
-    }
-
-    case eProc_LaunchAGO:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        PartType = stParam.uDummy.uParam.ulValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        stPosition.xX = stParam.uDummy.uParam.stVectorValue.xX;
-        stPosition.xY = stParam.uDummy.uParam.stVectorValue.xY;
-        stPosition.xZ = stParam.uDummy.uParam.stVectorValue.xZ;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        stDirection.xX = stParam.uDummy.uParam.stVectorValue.xX;
-        stDirection.xY = stParam.uDummy.uParam.stVectorValue.xY;
-        stDirection.xZ = stParam.uDummy.uParam.stVectorValue.xZ;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        hVisualMaterial = stParam.uDummy.uParam.hVisualMaterial;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        fRate = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
-        AGO_g_SuperObjectForAGOs = (int)p_SuperObjPerso;
-        AGO_vAddParticle(PartType, &stPosition, &stDirection, hVisualMaterial, fRate);
-        return p_stTree;
-
-    case eProc_SetAGOClipping:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        NumeroVp = stParam.uDummy.uParam.lValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        lTop = stParam.uDummy.uParam.lValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        lLeft = stParam.uDummy.uParam.lValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        lBottom = stParam.uDummy.uParam.lValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        fRate = lTop / 1000.0f;
-        lTop = (int)((&g_stEngineStructure.a_stFixViewportAttr[0])->dwTopInPix + (&g_stEngineStructure.a_stFixViewportAttr[0])->dwHeight * fRate);
-        fRate = lBottom / 1000.0f;
-        lBottom = (int)((&g_stEngineStructure.a_stFixViewportAttr[0])->dwTopInPix + (&g_stEngineStructure.a_stFixViewportAttr[0])->dwHeight * fRate);
-        fRate = lLeft / 1000.0f;
-        lLeft = (int)((&g_stEngineStructure.a_stFixViewportAttr[0])->dwLeftInPix + (&g_stEngineStructure.a_stFixViewportAttr[0])->dwWidth * fRate);
-        AGO_g_iIndexOfClippedSprite = NumeroVp;
-        GAM_fn_vSetFixClippingCoordinates(lTop, lLeft, lBottom, (int)((&g_stEngineStructure.a_stFixViewportAttr[0])->dwLeftInPix + (stParam.uDummy.uParam.lValue / 1000.0f) * (&g_stEngineStructure.a_stFixViewportAttr[0])->dwWidth));
-        return p_stTree;
-
-    case eProc_MultiPlayer_LanceMask:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        return p_stTree;
-
-    case eProc_MultiPlayer_LanceBlur:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        return p_stTree;
-
-    case eProc_MultiPlayer_Prepare2DSprite:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        return p_stTree;
-
-    case eProc_AGO_Kill:
-    {
-        tdstGetSetParam_ stParam;
-
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        AGO3_vKill((stParam.eType == E_vt_Float) ? (int)MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue);
-        return p_stTree;
-    }
-
-    case eProc_AGO_ReInit:
-    {
-        unsigned int dwHandle;
-        unsigned int dwPartNumber;
-        MTH3D_tdstVector_ stPosition;
-        MTH3D_tdstVector_ stDirection;
-        GLI_tdstMaterial_* hVisualMaterial;
-
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        dwHandle = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        dwPartNumber = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        stPosition.xX = stParam.uDummy.uParam.stVectorValue.xX;
-        stPosition.xY = stParam.uDummy.uParam.stVectorValue.xY;
-        stPosition.xZ = stParam.uDummy.uParam.stVectorValue.xZ;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        stDirection.xX = stParam.uDummy.uParam.stVectorValue.xX;
-        stDirection.xY = stParam.uDummy.uParam.stVectorValue.xY;
-        stDirection.xZ = stParam.uDummy.uParam.stVectorValue.xZ;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        hVisualMaterial = stParam.uDummy.uParam.hVisualMaterial;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        AGO3_ReInit(dwHandle, dwPartNumber, &stPosition, &stDirection, hVisualMaterial, (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue);
-        return p_stTree;
-    }
-    }
-
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3961–3968 */
-/* addr: 0x00227960  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3961
- *   +0x000c -> line 3964
- *   +0x0010 -> line 3961
- *   +0x0018 -> line 3963
- *   +0x001c -> line 3964
- *   +0x0024 -> line 3967
- *   +0x0028 -> line 3968
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stDummy(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdeProcedureId_ eProcedureId;
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-    printf("ProcedureDummy %d, spo=0x%x!!\n", eProcedureId, p_SuperObjPerso);
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3930–3951 */
-/* addr: 0x002279a0  size: 120 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3930
- *   +0x0008 -> line 3934
- *   +0x0014 -> line 3937
- *   +0x0020 -> line 3942
- *   +0x0028 -> line 3945
- *   +0x0038 -> line 3946
- *   +0x003c -> line 3948
- *   +0x0058 -> line 3949
- *   +0x0068 -> line 3951
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stBreakKeyword(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    int lValue;
-    tdstGetSetParam_ stValue;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-
-    lValue = stValue.uDummy.uParam.lValue;
-    if (iNumLoop <= 0)
-    {
-        return p_stTree;
-    }
-
-    if (lValue > iNumLoop - 1)
-        lValue = iNumLoop - 1;
-
-    p_stTree = fn_p_stSkipLoop((tdstNodeInterpret_*)GlobalLoopInit[iNumLoop - lValue - 1]);
-    iNumLoop -= lValue + 1;
-
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3918–3927 */
-/* addr: 0x00227a20  size: 96 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3918
- *   +0x000c -> line 3919
- *   +0x0014 -> line 3921
- *   +0x002c -> line 3922
- *   +0x0038 -> line 3923
- *   +0x0048 -> line 3925
- *   +0x004c -> line 3926
- *   +0x0050 -> line 3925
- *   +0x0058 -> line 3927
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stEndLoopKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    if (!iNumLoop)
-        return p_stTree;
-    GlobalLoopCpt[iNumLoop - 1]--;
-    if (GlobalLoopCpt[iNumLoop - 1] > 0)
-        return (tdstNodeInterpret_*)GlobalLoopTree[iNumLoop - 1];
-    iNumLoop--;
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3899–3914 */
-/* addr: 0x00227a80  size: 148 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3899
- *   +0x0004 -> line 3904
- *   +0x0008 -> line 3899
- *   +0x000c -> line 3904
- *   +0x0010 -> line 3899
- *   +0x0014 -> line 3906
- *   +0x0018 -> line 3904
- *   +0x001c -> line 3900
- *   +0x0020 -> line 3904
- *   +0x0028 -> line 3906
- *   +0x0030 -> line 3907
- *   +0x004c -> line 3908
- *   +0x0058 -> line 3909
- *   +0x0068 -> line 3911
- *   +0x0078 -> line 3912
- *   +0x0084 -> line 3914
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stLoopKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ stValue;
-    tdstNodeInterpret_* p_stTreeInit;
-
-    p_stTreeInit = p_stTree - 1;
-
-    GlobalLoopInit[iNumLoop] = (int)p_stTreeInit;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-    GlobalLoopCpt[iNumLoop] = stValue.uDummy.uParam.lValue;
-    if (GlobalLoopCpt[iNumLoop] == 0)
-        return fn_p_stSkipLoop(p_stTreeInit);
-
-    GlobalLoopTree[iNumLoop] = (int)p_stTree;
-    iNumLoop++;
-
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3860–3896 */
-/* addr: 0x00227b20  size: 152 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3864
- *   +0x0004 -> line 3860
- *   +0x0008 -> line 3864
- *   +0x0010 -> line 3866
- *   +0x0020 -> line 3873
- *   +0x0028 -> line 3875
- *   +0x0038 -> line 3878
- *   +0x0040 -> line 3879
- *   +0x004c -> line 3881
- *   +0x0050 -> line 3882
- *   +0x0058 -> line 3885
- *   +0x0060 -> line 3889
- *   +0x0064 -> line 3890
- *   +0x0078 -> line 3892
- *   +0x0090 -> line 3896
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stSkipLoop(tdstNodeInterpret_* p_stTreeInit)
-{
-    tdstNodeInterpret_* p_stTree;
-    int iLevel;
-    iLevel = 0;
-    p_stTree = p_stTreeInit;
-    if (p_stTreeInit->uwNodeToSkip) {
-        p_stTree = p_stTreeInit + p_stTreeInit->uwNodeToSkip;
-    } else {
-        while (p_stTree->eType != 8) {
-            if (p_stTree->eType == 4) {
-                if (p_stTree->uDummy.uId.eKeyWordId == eKeyWord_Boucle)
-                    iLevel++;
-                else if (p_stTree->uDummy.uId.eKeyWordId == eKeyWord_FinBoucle) {
-                    iLevel--;
-                    if (iLevel <= 0) {
-                        p_stTree++;
-                        break;
-                    }
-                }
-            }
-            p_stTree++;
-        }
-        p_stTreeInit->uwNodeToSkip = p_stTree - p_stTreeInit;
-    }
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3792–3840 */
-/* addr: 0x00227bc0  size: 216 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3792
- *   +0x0008 -> line 3804
- *   +0x000c -> line 3792
- *   +0x0014 -> line 3804
- *   +0x0020 -> line 3805
- *   +0x002c -> line 3806
- *   +0x0034 -> line 3805
- *   +0x0038 -> line 3806
- *   +0x0040 -> line 3809
- *   +0x0048 -> line 3807
- *   +0x004c -> line 3809
- *   +0x0054 -> line 3812
- *   +0x006c -> line 3814
- *   +0x0070 -> line 3815
- *   +0x0074 -> line 3819
- *   +0x0078 -> line 3814
- *   +0x007c -> line 3817
- *   +0x0080 -> line 3819
- *   +0x0088 -> line 3820
- *   +0x0094 -> line 3822
- *   +0x00b0 -> line 3826
- *   +0x00b8 -> line 3828
- *   +0x00bc -> line 3833
- *   +0x00c0 -> line 3834
- *   +0x00c4 -> line 3840
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_st_ACT_SetDrawFlag(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdst3dData_* h3dData;
-    int lMask;
-    int lType;
-    int lDrawMask;
-    int lBit;
-    HIE_tdstSuperObject_* hCharact;
-    tdstGetSetParam_ stParam;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    hCharact = fn_h_StandardGameGetSuperObject(stParam.uDummy.uParam.p_stEngObjValue->h_StandardGame);
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    lBit = stParam.uDummy.uParam.lValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    lType = stParam.uDummy.uParam.lValue;
-
-    if ((hCharact != NULL) && (lBit >= 0) && (lBit < 32))
-    {
-        h3dData = hCharact->hLinkedObject.p_stCharacter->h_3dData;
-        lMask = 1 << lBit;
-        lDrawMask = h3dData->lDrawMask;
-        if (lType == 2)
-            lType = (lDrawMask & lMask) ? 0 : 1;
-
-        switch (lType)
+        switch (g_stEngineStructure.ucCurrentLanguage)
         {
         case 0:
-            lDrawMask &= ~lMask;
+            strcpy(myMenuPause.pszPadString, "\\jcLa manette est d�branch�e.\\lVeuillez rebrancher la manette\\ldans le port de manette 1 et appuyez\\lsur la touche START pour continuer.");
             break;
         case 1:
-            lDrawMask |= lMask;
+            strcpy(myMenuPause.pszPadString, "\\jcController disconnected.\\lPlease reconnect the controller\\lin the controller port 1 and\\lpress the START button to continue.");
+            break;
+        case 2:
+            strcpy(myMenuPause.pszPadString, "\\jcNo hay ning�n control conectado.\\lVuelve a conectar el control\\len el puerto de control 1\\ly pulsa el bot�n START para continuar.");
+            break;
+        case 3:
+            strcpy(myMenuPause.pszPadString, "\\jcController scollegato.\\lRicollega il controller\\lnell'ingresso controller 1 e premi\\lil tasto START per continuare.");
+            break;
+        case 4:
+            strcpy(myMenuPause.pszPadString, "\\jcDer Controller wurde entfernt.\\lSchlie�en Sie bitte den Controller\\lin Controller-Anschluss 1 an und\\ldr�cken Sie die START-Taste, um mit\\ldem Spiel fortzufahren. ");
             break;
         }
-        hCharact->lDrawModeMask = lDrawMask;
-        h3dData->lDrawMask = lDrawMask;
-    }
-
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3741–3775 */
-/* addr: 0x00227ca0  size: 180 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3741
- *   +0x0008 -> line 3750
- *   +0x000c -> line 3741
- *   +0x0010 -> line 3750
- *   +0x0018 -> line 3752
- *   +0x001c -> line 3750
- *   +0x0020 -> line 3751
- *   +0x0024 -> line 3752
- *   +0x002c -> line 3755
- *   +0x0040 -> line 3759
- *   +0x004c -> line 3760
- *   +0x0060 -> line 3762
- *   +0x007c -> line 3765
- *   +0x008c -> line 3766
- *   +0x0094 -> line 3768
- *   +0x00a4 -> line 3775
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_st_SPO_SetEngineDisplayModeFlag(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    int lMask;
-    int lType;
-    int lBit;
-    tdstGetSetParam_ stParam;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    lBit = stParam.uDummy.uParam.lValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    lType = stParam.uDummy.uParam.lValue;
-
-    if ((lBit >= 0) && (lBit < 32))
-    {
-        lMask = 1 << lBit;
-        if (lType == 2)
-            lType = (g_stEngineStructure.ulDisplayMode & lMask) ? 0 : 1;
-
-        switch (lType)
-        {
-        case 0:
-            g_stEngineStructure.ulDisplayMode &= ~lMask;
-            break;
-        case 1:
-            g_stEngineStructure.ulDisplayMode |= lMask;
-            break;
-        }
-    }
-
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3657–3725 */
-/* addr: 0x00227d60  size: 188 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3657
- *   +0x0008 -> line 3668
- *   +0x000c -> line 3657
- *   +0x0014 -> line 3668
- *   +0x001c -> line 3669
- *   +0x0020 -> line 3668
- *   +0x0024 -> line 3670
- *   +0x0030 -> line 3672
- *   +0x0038 -> line 3671
- *   +0x003c -> line 3672
- *   +0x0044 -> line 3675
- *   +0x005c -> line 3703
- *   +0x0060 -> line 3701
- *   +0x0064 -> line 3705
- *   +0x0070 -> line 3706
- *   +0x007c -> line 3708
- *   +0x0098 -> line 3712
- *   +0x00a0 -> line 3714
- *   +0x00a4 -> line 3719
- *   +0x00a8 -> line 3725
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_st_SPO_SetDrawFlag(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    int lMask;
-    int lType;
-    int lDrawMask;
-    int lBit;
-    HIE_tdstSuperObject_* hSpo;
-    tdstGetSetParam_ stParam;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    hSpo = stParam.uDummy.uParam.hSuperObject;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    lBit = stParam.uDummy.uParam.lValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    lType = stParam.uDummy.uParam.lValue;
-
-    if ((hSpo != NULL) && (lBit >= 0) && (lBit < 32))
-    {
-        lDrawMask = hSpo->lDrawModeMask;
-        lMask = 1 << lBit;
-        if (lType == 2)
-            lType = (lDrawMask & lMask) ? 0 : 1;
-
-        switch (lType)
-        {
-        case 0:
-            lDrawMask &= ~lMask;
-            break;
-        case 1:
-            lDrawMask |= lMask;
-            break;
-        }
-        hSpo->lDrawModeMask = lDrawMask;
-    }
-
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3607–3641 */
-/* addr: 0x00227e20  size: 216 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3607
- *   +0x0008 -> line 3614
- *   +0x000c -> line 3607
- *   +0x0010 -> line 3614
- *   +0x0018 -> line 3615
- *   +0x001c -> line 3614
- *   +0x0020 -> line 3617
- *   +0x002c -> line 3619
- *   +0x0034 -> line 3623
- *   +0x003c -> line 3626
- *   +0x0048 -> line 3627
- *   +0x0080 -> line 3629
- *   +0x0090 -> line 3630
- *   +0x009c -> line 3631
- *   +0x00ac -> line 3632
- *   +0x00b8 -> line 3634
- *   +0x00c0 -> line 3640
- *   +0x00c4 -> line 3641
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_st_SinusEffect_SetState(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    char cFlag;
-    int cState; /* debug lists char; a char local re-sign-extends before the switch */
-    tdstGetSetParam_ stParam;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    cState = stParam.uDummy.uParam.cValue;
-
-    if (cState < 0x40)
-    {
-        GLI_fn_SinusEffect_vSetState(stParam.uDummy.uParam.cValue);
     }
     else
     {
-        cFlag = GLI_fn_SinusEffect_vGetFlag();
-        switch (cState)
+        switch (g_stEngineStructure.ucCurrentLanguage)
         {
-        case 0x40:
-            cFlag &= ~1;
+        case 0:
+            strcpy(myMenuPause.pszPadString, "\\jcVeuillez rebrancher la manette\\ldans le port de manette 1.");
             break;
-        case 0x41:
-            cFlag |= 1;
+        case 1:
+            strcpy(myMenuPause.pszPadString, "\\jcPlease reconnect the controller\\lin the controller port 1.");
             break;
-        case 0x42:
-            cFlag &= ~2;
+        case 2:
+            strcpy(myMenuPause.pszPadString, "\\jcVuelve a conectar el control\\len el puerto de control 1.");
             break;
-        case 0x43:
-            cFlag |= 2;
+        case 3:
+            strcpy(myMenuPause.pszPadString, "\\jcRicollega il controller\\lnell'ingresso controller 1.");
+            break;
+        case 4:
+            strcpy(myMenuPause.pszPadString, "\\jcSchlie�en Sie bitte den Controller\\lin Controller-Anschluss 1 an.");
             break;
         }
-        GLI_fn_SinusEffect_vSetFlag(cFlag);
     }
-
-    return p_stTree;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3560–3598 */
-/* addr: 0x00227f00  size: 168 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3560
- *   +0x0008 -> line 3570
- *   +0x000c -> line 3560
- *   +0x001c -> line 3562
- *   +0x0020 -> line 3570
- *   +0x0028 -> line 3571
- *   +0x002c -> line 3570
- *   +0x0030 -> line 3572
- *   +0x003c -> line 3573
- *   +0x0040 -> line 3574
- *   +0x0054 -> line 3583
- *   +0x0060 -> line 3585
- *   +0x006c -> line 3589
- *   +0x0074 -> line 3590
- *   +0x0080 -> line 3592
- *   +0x0088 -> line 3597
- *   +0x008c -> line 3598
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_st_SinusEffect_SetRLIParams(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+void fn_vTXTAffichePause(int _lVMSOrPad, int DeconenctedPadId)
 {
-    float xRed;
-    float xGreen;
-    float xBlue;
+    long lPad;
+    char cPort;
+    unsigned int ulTimer;
+    char PadStr[4];
+
+    ulTimer = (g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - myMenuPause.ulTimer) % 2000;
+    g_PauseStringNumber = myMenuPause.iVmsStringNumber;
+
+    PS2_fn_vSetControllerMessage();
+
+    if (g_GameHasNotStartedTheFirstBootCheck)
+    {
+        myMenuPause.stPadPosition.xX = 500.0f;
+        myMenuPause.stPadPosition.xY = 700.0f;
+    }
+    else
+    {
+        myMenuPause.stPadPosition.xX = 500.0f;
+        myMenuPause.stPadPosition.xY = 450.0f;
+    }
+
+    if (ulTimer < 1000)
+        myMenuPause.xXXXTransparency = 128.0f + 128.0f * ((float)ulTimer / 2000.0f);
+    else
+        myMenuPause.xXXXTransparency = 255.0f - 128.0f * ((float)ulTimer / 2000.0f);
+    myMenuPause.xXXXTransparency = 255.0f;
+
+    switch (_lVMSOrPad)
+    {
+    case 0:
+        lPad = myMenuPause.lVmsPad;
+        cPort = (lPad - 1) / 2 + 'A';
+        sprintf(myMenuPause.szVmsStringToDraw, (char*)myMenuPause.pszVmsString, cPort, (char)((lPad % 2) ? 1 : 2));
+        myMenuPause.xVmsParameter = myMenuPause.xXXXTransparency;
+        TXT_vSetTransparence(myMenuPause.iVmsStringNumber, (unsigned long)myMenuPause.xXXXTransparency);
+        MJ_JFFTXT_vAddText(myMenuPause.NumeroVp, myMenuPause.iVmsStringNumber, &myMenuPause.stVmsPosition, (unsigned char*)myMenuPause.szVmsStringToDraw, myMenuPause.xVmsParameter);
+        break;
+
+    case 1:
+        memset(myMenuPause.szPadStringToDraw, 0, 256);
+        memset(PadStr, 0, 4);
+        lPad = DeconenctedPadId & 0x0F;
+        cPort = g_axPadMapping[lPad].iPort;
+        PadStr[0] = cPort + '1';
+        if (!INOPS2_fn_wJoyCheckConnectionFast(2) && INO_aJoyUsedByAI[2] == 1)
+            sprintf(myMenuPause.szPadStringToDraw, myMenuPause.pszPadString, PadStr, PadStr);
+        else
+            sprintf(myMenuPause.szPadStringToDraw, myMenuPause.pszPadString, PadStr, PadStr);
+        myMenuPause.xPadParameter = myMenuPause.xXXXTransparency;
+        TXT_vSetTransparence(myMenuPause.iPadStringNumber, (unsigned long)myMenuPause.xXXXTransparency);
+        MJ_JFFTXT_vAddText(myMenuPause.NumeroVp, myMenuPause.iPadStringNumber, &myMenuPause.stPadPosition, (unsigned char*)myMenuPause.szPadStringToDraw, myMenuPause.xPadParameter);
+        JFFTXT_vExtendText(myMenuPause.iPadStringNumber, 6, 1.0f);
+        TXT_PauseGameIWantToDrawThisStringNumber(myMenuPause.iPadStringNumber);
+        break;
+
+    case 2:
+        sprintf(myMenuPause.szDemoStringToDraw, (char*)myMenuPause.pszDemoString);
+        myMenuPause.xDemoParameter = myMenuPause.xXXXTransparency;
+        TXT_vSetTransparence(myMenuPause.iDemoStringNumber, (unsigned long)myMenuPause.xXXXTransparency);
+        MJ_JFFTXT_vAddText(myMenuPause.NumeroVp, myMenuPause.iDemoStringNumber, &myMenuPause.stDemoPosition, (unsigned char*)myMenuPause.szDemoStringToDraw, myMenuPause.xDemoParameter);
+        break;
+    }
+}
+
+void fn_vSetMenuPausePad(void)
+{
+    myMenuPause.ulTimer = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+    TXT_vSetTransparence(myMenuPause.iVmsStringNumber, 0);
+    TXT_vSetTransparence(myMenuPause.iPadStringNumber, 0);
+}
+
+tdstNodeInterpret_* fn_p_stJFFTXTSettings(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    unsigned long ulRed;
+    unsigned long ulGreen;
     tdstGetSetParam_ stParam;
     tdeProcedureId_ eProcedureId;
+    int StringNumber;
 
     eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
 
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    xRed = stParam.uDummy.uParam.xValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    xGreen = stParam.uDummy.uParam.xValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    xBlue = stParam.uDummy.uParam.xValue;
+    StringNumber = stParam.uDummy.uParam.lValue;
 
-    if (eProcedureId == eProc_SinEffect_SetRLIBase)
+    switch (eProcedureId)
     {
-        GLI_vSetSinusEffectOnRLIBase(xRed, xGreen, xBlue);
-    }
-    else if (eProcedureId == eProc_SinEffect_SetRLIAmplitude)
-    {
-        GLI_vSetSinusEffectOnRLIAmp(xRed, xGreen, xBlue);
-    }
-
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3534–3552 */
-/* addr: 0x00227fb0  size: 128 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3534
- *   +0x0008 -> line 3540
- *   +0x0018 -> line 3541
- *   +0x0020 -> line 3543
- *   +0x0024 -> line 3541
- *   +0x0030 -> line 3542
- *   +0x0034 -> line 3541
- *   +0x0038 -> line 3542
- *   +0x0044 -> line 3544
- *   +0x0048 -> line 3542
- *   +0x0050 -> line 3543
- *   +0x005c -> line 3544
- *   +0x0064 -> line 3545
- *   +0x006c -> line 3551
- *   +0x0070 -> line 3552
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_st_SinusEffect_SetAmplitude(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    MTH3D_tdstVector_ stAmp;
-    tdstGetSetParam_ stParam;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    *(&stAmp) = *(&stParam.uDummy.uParam.stVectorValue);
-    (&stAmp)->xX = 0.1f * (&stAmp)->xX;
-    (&stAmp)->xY = 0.1f * (&stAmp)->xY;
-    (&stAmp)->xZ = 0.1f * (&stAmp)->xZ;
-
-    GLI_fn_SinusEffect_vSetAmplitude(&stAmp);
-
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3499–3518 */
-/* addr: 0x00228030  size: 120 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3499
- *   +0x0008 -> line 3506
- *   +0x000c -> line 3499
- *   +0x0018 -> line 3506
- *   +0x0020 -> line 3507
- *   +0x0024 -> line 3506
- *   +0x0028 -> line 3509
- *   +0x0034 -> line 3510
- *   +0x0038 -> line 3512
- *   +0x0048 -> line 3515
- *   +0x004c -> line 3512
- *   +0x0050 -> line 3515
- *   +0x005c -> line 3517
- *   +0x0060 -> line 3518
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_st_SinusEffect_SetPreMultiplier(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    float X;
-    float Y;
-    tdstGetSetParam_ stParam;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    X = stParam.uDummy.uParam.xValue;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    Y = stParam.uDummy.uParam.xValue;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-
-    GLI_fn_vSetSinusPreMultiplier(X, Y, stParam.uDummy.uParam.xValue);
-
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3446–3483 */
-/* addr: 0x002280b0  size: 264 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3446
- *   +0x0008 -> line 3453
- *   +0x000c -> line 3446
- *   +0x0024 -> line 3448
- *   +0x0028 -> line 3453
- *   +0x0030 -> line 3454
- *   +0x0034 -> line 3453
- *   +0x0038 -> line 3455
- *   +0x0044 -> line 3456
- *   +0x0048 -> line 3455
- *   +0x004c -> line 3458
- *   +0x0058 -> line 3460
- *   +0x0068 -> line 3461
- *   +0x006c -> line 3460
- *   +0x0070 -> line 3464
- *   +0x0088 -> line 3466
- *   +0x0094 -> line 3467
- *   +0x00a4 -> line 3468
- *   +0x00ac -> line 3469
- *   +0x00b4 -> line 3471
- *   +0x00c0 -> line 3472
- *   +0x00c8 -> line 3473
- *   +0x00d4 -> line 3475
- *   +0x00e0 -> line 3482
- *   +0x00e4 -> line 3483
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_st_SinusEffect_SetFreq(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdeProcedureId_ eProcedureId;
-    int lXFreq;
-    int lYFreq;
-    int lZFreq;
-    tdstGetSetParam_ stParam;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    lXFreq = stParam.uDummy.uParam.wValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    lYFreq = stParam.uDummy.uParam.wValue;
-    lZFreq = 0;
-    if (eProcedureId != eProc_SinEffect_SetFreq)
-    {
+    case eProc_JffTxt_SetColor:
         p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        lZFreq = stParam.uDummy.uParam.wValue;
-    }
-
-    if (eProcedureId == eProc_SinEffect_SetFreq || eProcedureId == eProc_SinEffect_SetFreq3D)
-    {
-        GLI_fn_SinusEffect_vSetFreqMesh(lXFreq, lYFreq, lZFreq);
-        GLI_fn_SinusEffect_vSetFreqRLI(lXFreq, lYFreq, lZFreq);
-    }
-    else if (eProcedureId == eProc_SinEffect_SetFreq3DMesh)
-    {
-        GLI_fn_SinusEffect_vSetFreqMesh(lXFreq, lYFreq, lZFreq);
-    }
-    else if (eProcedureId == eProc_SinEffect_SetFreq3DRLI)
-    {
-        GLI_fn_SinusEffect_vSetFreqRLI(lXFreq, lYFreq, lZFreq);
+        ulRed = stParam.uDummy.uParam.ulValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        ulGreen = stParam.uDummy.uParam.ulValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        TXT_vSetColor(StringNumber, ulRed, ulGreen, stParam.uDummy.uParam.ulValue);
+        return p_stTree;
+    case eProc_JffTxt_SetTransp:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        TXT_vSetTransparence(StringNumber, stParam.uDummy.uParam.ulValue);
+        return p_stTree;
+    case eProc_JffTxt_DoFadeIn:
+        TXT_vDoFadeIn(StringNumber);
+        return p_stTree;
+    case eProc_JffTxt_DoFadeOut:
+        TXT_vDoFadeOut(StringNumber);
+        return p_stTree;
+    case eProc_JffTxt_SetFrameMode:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        TXT_vSetFrameMode(StringNumber, stParam.uDummy.uParam.ucValue);
+        return p_stTree;
     }
 
     return p_stTree;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3352–3383 */
-/* addr: 0x002281c0  size: 112 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3352
- *   +0x0004 -> line 3358
- *   +0x0008 -> line 3352
- *   +0x0010 -> line 3353
- *   +0x0014 -> line 3358
- *   +0x0030 -> line 3361
- *   +0x003c -> line 3362
- *   +0x0044 -> line 3364
- *   +0x004c -> line 3366
- *   +0x0054 -> line 3371
- *   +0x005c -> line 3373
- *   +0x0060 -> line 3383
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stMenuAndVignetteProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stJFFTXTGetBdBox(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
+    unsigned char ucVarId;
+    long StringNumber;
+    tdstGetSetParam_ stParam;
+    int* x1;
+    int* y1f;
+    int* x2;
+    HIE_tdstSuperObject_* p_stResultOwnerPerso;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    StringNumber = stParam.uDummy.uParam.ulValue;
+
+    {
+        HIE_tdstSuperObject_* p_stResultOwnerPerso;
+
+        if (p_stTree->eType == 2)
+            p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree + 1, &p_stResultOwnerPerso);
+        else
+            p_stResultOwnerPerso = p_SuperObjPerso;
+
+        ucVarId = p_stTree->uDummy.uParam.ucValue;
+        p_stTree++;
+
+        x1 = (int*)(p_stResultOwnerPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stDsgMem->p_cDsgMemBuffer + (*p_stResultOwnerPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem);
+    }
+    {
+        HIE_tdstSuperObject_* p_stResultOwnerPerso;
+
+        if (p_stTree->eType == 2)
+            p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree + 1, &p_stResultOwnerPerso);
+        else
+            p_stResultOwnerPerso = p_SuperObjPerso;
+
+        ucVarId = p_stTree->uDummy.uParam.ucValue;
+        p_stTree++;
+
+        y1f = (int*)(p_stResultOwnerPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stDsgMem->p_cDsgMemBuffer + (*p_stResultOwnerPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem);
+    }
+    {
+        HIE_tdstSuperObject_* p_stResultOwnerPerso;
+
+        if (p_stTree->eType == 2)
+            p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree + 1, &p_stResultOwnerPerso);
+        else
+            p_stResultOwnerPerso = p_SuperObjPerso;
+
+        ucVarId = p_stTree->uDummy.uParam.ucValue;
+        p_stTree++;
+
+        x2 = (int*)(p_stResultOwnerPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stDsgMem->p_cDsgMemBuffer + (*p_stResultOwnerPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem);
+    }
+    {
+        HIE_tdstSuperObject_* p_stResultOwnerPerso;
+
+        if (p_stTree->eType == 2)
+            p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree + 1, &p_stResultOwnerPerso);
+        else
+            p_stResultOwnerPerso = p_SuperObjPerso;
+
+        TXT_GetBoundingBox(StringNumber, x1, y1f, x2, (int*)(p_stResultOwnerPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stDsgMem->p_cDsgMemBuffer + (*p_stResultOwnerPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[p_stTree->uDummy.uParam.ucValue].ulOffsetInDsgMem));
+    }
+    return p_stTree + 1;
+}
+
+tdstNodeInterpret_* fn_p_stMultiPlayerProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdeProcedureId_ eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    tdstGetSetParam_ stParam;
+    unsigned char ucNumberOfPlayers;
+    unsigned char unNumberOfColumns;
+    unsigned char ucVpNum;
+    unsigned int a2_ulSize[2];
+    unsigned int a2_ulPos[2];
+
+    switch (eProcedureId)
+    {
+    case eProc_MultiPlayer_SetAspectRatio:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        GAM_MultiVP_fn_vSetAspectRatio(stParam.uDummy.uParam.ucValue);
+        return p_stTree;
+
+    case eProc_MultiPlayer_SetViewportDisplayOrder:
+    {
+        unsigned char ucPrio0, ucPrio1, ucPrio2, ucPrio3;
+
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        ucPrio0 = stParam.uDummy.uParam.ucValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        ucPrio1 = stParam.uDummy.uParam.ucValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        ucPrio2 = stParam.uDummy.uParam.ucValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        ucPrio3 = stParam.uDummy.uParam.ucValue;
+
+        if (ucPrio0 >= 4 || ucPrio1 >= 4 || ucPrio2 >= 4 || ucPrio3 >= 4)
+        {
+            g_a4_ucSectorDisplayPriority[0] = 0;
+            g_a4_ucSectorDisplayPriority[1] = 1;
+            g_a4_ucSectorDisplayPriority[2] = 2;
+            g_a4_ucSectorDisplayPriority[3] = 3;
+            g_bSectorDisplayPriorityFixed = 0;
+        }
+        else
+        {
+            g_a4_ucSectorDisplayPriority[0] = ucPrio0;
+            g_a4_ucSectorDisplayPriority[1] = ucPrio1;
+            g_a4_ucSectorDisplayPriority[2] = ucPrio2;
+            g_a4_ucSectorDisplayPriority[3] = ucPrio3;
+            g_bSectorDisplayPriorityFixed = 1;
+        }
+        return p_stTree;
+    }
+
+    case eProc_MultiPlayer_SetViewportSizeAndPos:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        ucVpNum = stParam.uDummy.uParam.ucValue;
+        ucVpNum--;
+        if (ucVpNum == 255)
+            ucVpNum = 4;
+        else if (ucVpNum >= 4)
+            ucVpNum = 0;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        a2_ulSize[0] = (unsigned int)stParam.uDummy.uParam.stVectorValue.xX;
+        a2_ulSize[1] = (unsigned int)stParam.uDummy.uParam.stVectorValue.xY;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        a2_ulPos[0] = (unsigned int)stParam.uDummy.uParam.stVectorValue.xX;
+        a2_ulPos[1] = (unsigned int)stParam.uDummy.uParam.stVectorValue.xY;
+        GAM_MultiVP_fn_vChangeOneVPSizeAndPositionPercent(ucVpNum, a2_ulSize, a2_ulPos);
+        return p_stTree;
+
+    case eProc_MultiPlayer_SetNumberOfPlayers:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        ucNumberOfPlayers = stParam.uDummy.uParam.ucValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        unNumberOfColumns = stParam.uDummy.uParam.ucValue;
+        GAM_MultiVP_fn_vSetNumberOfPlayers(ucNumberOfPlayers, unNumberOfColumns);
+        GAM_MultiVP_fn_vAutoAssociateMainPlayersForViewPorts();
+        return p_stTree;
+
+    case eProc_MultiPlayer_SetPlayerForViewport:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        unNumberOfColumns = stParam.uDummy.uParam.ucValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        GAM_MultiVP_fn_vSetPlayerForViewPort(unNumberOfColumns, fn_h_StandardGameGetSuperObject(stParam.uDummy.uParam.p_stEngObjValue->h_StandardGame));
+        return p_stTree;
+
+    case eProc_MultiPlayer_InvertViewports:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        ucVpNum = stParam.uDummy.uParam.ucValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        GAM_MultiVP_fn_vInvertViewPorts(ucVpNum, stParam.uDummy.uParam.ucValue);
+        return p_stTree;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stRLIProcedure2(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdeProcedureId_ eProcedureId;
+    unsigned int ulDuration;
+    unsigned char ucValue;
+    tdstGetSetParam_ stParam;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    switch (eProcedureId)
+    {
+    case eProc_TransitionDeRLI:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        ucValue = (unsigned char)((stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue);
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        ulDuration = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        IPO_fn_vSetChangeOfRLITable(ucValue, ulDuration, (unsigned char)(char)((stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue));
+        return p_stTree;
+    case eProc_AjoutDeRLI:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        ucValue = (unsigned char)((stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue);
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        ulDuration = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        IPO_fn_vSetAddRLITable(ucValue, ulDuration, (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue);
+        return p_stTree;
+    case eProc_BlockingRLITransitions:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        ucValue = (unsigned char)((stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue);
+        IPO_fn_vSetRLITransitionsBlocking(ucValue);
+        return p_stTree;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stVideoProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdeProcedureId_ eProcedureId;
+    char* p_szVideoName;
+    char cCanInterrupt;
+    tdstGetSetParam_ stParam;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    switch (eProcedureId)
+    {
+    case eProc_EnqueueVideo:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        p_szVideoName = fn_szGetStringFromTextOrStringParam(&stParam);
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        cCanInterrupt = (char)((stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue);
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        VID_fn_vNextVideoToPlay(p_szVideoName, cCanInterrupt, (char)((stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue));
+        VID_fn_vPlayVideoAfterLevel();
+        return p_stTree;
+    case eProc_VideoQuality:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        VID_fn_vSetVideoQuality(32, (char)((stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue));
+        return p_stTree;
+    case eProc_PlayVideo:
+        VID_fn_vPlayVideoNow();
+        return p_stTree;
+    case eProc_PlayVideoAfterLevel:
+        VID_fn_vPlayVideoAfterLevel();
+        return p_stTree;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stSetVSyncWait(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdeProcedureId_ eProcedureId;
+    tdstGetSetParam_ stParam;
+    long lValue;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    switch (eProcedureId)
+    {
+    case eProc_SetVsyncWait:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        if (stParam.eType == E_vt_Float) lValue = MTH_M_xRealToLong(stParam.uDummy.uParam.xValue);
+
+        return p_stTree;
+    }
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stBrainActivationProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdeProcedureId_ eProcedureId;
+    tdstBrain_* h_Brain;
+    tdstGetSetParam_ stParam;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    h_Brain = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+
+    switch (eProcedureId)
+    {
+    case eProc_ActiveBrainDuringTransitions:
+        h_Brain->bActiveDuringTransition = 1;
+        return p_stTree;
+    case eProc_DeactiveBrainDuringTransitions:
+        h_Brain->bActiveDuringTransition = 0;
+        return p_stTree;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stDisplaySegment(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdeProcedureId_ eProcedureId;
+    tdstGetSetParam_ stParam;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    switch (eProcedureId)
+    {
+    case eProc_DisplaySegment:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        return p_stTree;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEndTransitionProcedure(tdstNodeInterpret_* p_stTree, tdstNodeInterpret_* p_stTree2)
+{
+    fn_vStopTransition();
+    return p_stTree2;
+}
+
+tdstNodeInterpret_* fn_p_stStartCine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdeProcedureId_ eProcedureId;
     char* p_szString;
     tdstGetSetParam_ stParam;
-    tdeProcedureId_ eProcedureId;
+    CINE_tdstCine_* hCine;
 
     eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
 
     switch (eProcedureId)
     {
-    case eProc_DisplayVignette:
+    case eProc_EndCine:
         p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
         p_szString = fn_szGetStringFromTextOrStringParam(&stParam);
-        fn_vAskToDisplayVignette(p_szString);
+        hCine = CINE_fn_pFindCine(p_szString);
+        if (hCine != NULL)
+            fn_vStopEngineCinematics(hCine);
         return p_stTree;
 
-    case eProc_DeleteVignette:
-        fn_vAskToDisplayVignette(NULL);
-        return p_stTree;
-    }
-
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stSwapNextParameter2(tdstNodeInterpret_* p_stTree);
-void GLI_xSetMaterialColor(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor);
-void GLI_xGetMaterialSpecularCoef(GLI_tdstMaterial_* hMaterial, int* p_lSpecularExponent, GEO_tdstColor_* p_stColor);
-void GLI_xSetMaterialSpecularCoef(GLI_tdstMaterial_* hMaterial, int lSpecularExponent, GEO_tdstColor_* p_stColor);
-void GLI_xSetMaterialDiffuseCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor);
-void GLI_xSetMaterialAmbientCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor);
-void GLI_vSetMaterialAsChromed(GLI_tdstMaterial_* hMaterial, int bChromed);
-void GLI_xSetMaterialTextureScrollingCoef(GLI_tdstMaterial_* hMaterial, int lUnused, int bSwitch, float fUSpeed, float fVSpeed);
-void GLI_vLockAnimatedTexture(GLI_tdstMaterial_* _hMaterial);
-void GLI_vUnLockAnimatedTexture(GLI_tdstMaterial_* _hMaterial);
-void GLI_vSetCurrentAnimatedTextureNumber(GLI_tdstMaterial_* hMaterial, int lTextureNumber);
-void fn_RemoveTextureFromMaterial(GLI_tdstMaterial_* hMaterial);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3229–3347 */
-/* addr: 0x00228230  size: 888 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3229
- *   +0x0008 -> line 3239
- *   +0x000c -> line 3229
- *   +0x0028 -> line 3233
- *   +0x002c -> line 3229
- *   +0x0034 -> line 3230
- *   +0x0038 -> line 3239
- *   +0x0040 -> line 3240
- *   +0x0044 -> line 3242
- *   +0x004c -> line 3244
- *   +0x005c -> line 3247
- *   +0x00e8 -> line 3251
- *   +0x00f8 -> line 3253
- *   +0x0104 -> line 3254
- *   +0x0110 -> line 3256
- *   +0x0118 -> line 3260
- *   +0x0128 -> line 3262
- *   +0x0138 -> line 3263
- *   +0x0164 -> line 3264
- *   +0x0168 -> line 3263
- *   +0x016c -> line 3264
- *   +0x0174 -> line 3266
- *   +0x017c -> line 3271
- *   +0x018c -> line 3273
- *   +0x019c -> line 3274
- *   +0x01a8 -> line 3275
- *   +0x01b8 -> line 3277
- *   +0x01c0 -> line 3281
- *   +0x01d0 -> line 3283
- *   +0x01dc -> line 3284
- *   +0x01e8 -> line 3286
- *   +0x01f0 -> line 3290
- *   +0x0200 -> line 3292
- *   +0x020c -> line 3293
- *   +0x0218 -> line 3295
- *   +0x0220 -> line 3299
- *   +0x022c -> line 3300
- *   +0x0230 -> line 3299
- *   +0x0234 -> line 3300
- *   +0x023c -> line 3301
- *   +0x0244 -> line 3308
- *   +0x0250 -> line 3309
- *   +0x0274 -> line 3310
- *   +0x0284 -> line 3312
- *   +0x0288 -> line 3310
- *   +0x028c -> line 3312
- *   +0x02bc -> line 3314
- *   +0x02c4 -> line 3318
- *   +0x02d4 -> line 3319
- *   +0x02dc -> line 3320
- *   +0x02e4 -> line 3324
- *   +0x02ec -> line 3325
- *   +0x02f4 -> line 3330
- *   +0x0300 -> line 3331
- *   +0x0304 -> line 3330
- *   +0x0308 -> line 3331
- *   +0x033c -> line 3332
- *   +0x0344 -> line 3336
- *   +0x034c -> line 3338
- *   +0x0350 -> line 3347
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stVisualMaterialProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdeProcedureId_ eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-    tdstGetSetParam_ stParam;
-    GLI_tdstMaterial_* hVisualMaterial;
-    tdstNodeInterpret_* p_stTreeOrg = p_stTree;
-    GEO_tdstColor_ stColor;
-    int lValue = 0;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    hVisualMaterial = stParam.uDummy.uParam.hVisualMaterial;
-    if (hVisualMaterial == NULL)
-        return fn_p_stSwapNextParameter2(p_stTreeOrg);
-
-    switch (eProcedureId)
-    {
-    case eProc_SetVMTColor:
+    case eProc_StartCine:
         p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        fn_vConvertParamToColor(&stParam, &stColor);
-        GLI_xSetMaterialColor(hVisualMaterial, &stColor);
-        return p_stTree;
-
-    case eProc_SetVMTSpecularExponent:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        GLI_xGetMaterialSpecularCoef(hVisualMaterial, &lValue, &stColor);
-        GLI_xSetMaterialSpecularCoef(hVisualMaterial, lValue = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue, &stColor);
-        return p_stTree;
-
-    case eProc_SetVMTSpecularCoef:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        GLI_xGetMaterialSpecularCoef(hVisualMaterial, &lValue, &stColor);
-        fn_vConvertParamToColor(&stParam, &stColor);
-        GLI_xSetMaterialSpecularCoef(hVisualMaterial, lValue, &stColor);
-        return p_stTree;
-
-    case eProc_SetVMTDiffuseCoef:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        fn_vConvertParamToColor(&stParam, &stColor);
-        GLI_xSetMaterialDiffuseCoef(hVisualMaterial, &stColor);
-        return p_stTree;
-
-    case eProc_SetVMTAmbientCoef:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        fn_vConvertParamToColor(&stParam, &stColor);
-        GLI_xSetMaterialAmbientCoef(hVisualMaterial, &stColor);
-        return p_stTree;
-
-    case eProc_SetVMTAsChromed:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        GLI_vSetMaterialAsChromed(hVisualMaterial, stParam.uDummy.uParam.lValue);
-        return p_stTree;
-
-    case eProc_SetVMTTextureScrollingCoef:
-    {
-        float xU, xV;
-
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        xU = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        xV = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
-        GLI_xSetMaterialTextureScrollingCoef(hVisualMaterial, 0, 1, xU, xV);
-        return p_stTree;
-    }
-
-    case eProc_LockVMT:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        GLI_vLockAnimatedTexture(hVisualMaterial);
-        return p_stTree;
-
-    case eProc_UnlockVMT:
-        GLI_vUnLockAnimatedTexture(hVisualMaterial);
-        return p_stTree;
-
-    case eProc_SetVMTFrame:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        GLI_vSetCurrentAnimatedTextureNumber(hVisualMaterial, (stParam.eType == E_vt_Float) ? (int)MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue);
-        return p_stTree;
-
-    case eProc_DoNotLoadMaterialTextures:
-        fn_RemoveTextureFromMaterial(hVisualMaterial);
-        return p_stTree;
-    }
-
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3086–3226 */
-/* addr: 0x002285b0  size: 660 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3086
- *   +0x0010 -> line 3098
- *   +0x0014 -> line 3086
- *   +0x0018 -> line 3092
- *   +0x001c -> line 3086
- *   +0x0028 -> line 3087
- *   +0x0030 -> line 3099
- *   +0x0048 -> line 3102
- *   +0x005c -> line 3104
- *   +0x0084 -> line 3119
- *   +0x00a4 -> line 3121
- *   +0x00b8 -> line 3131
- *   +0x00c8 -> line 3132
- *   +0x00d0 -> line 3136
- *   +0x00fc -> line 3137
- *   +0x0104 -> line 3140
- *   +0x0114 -> line 3144
- *   +0x0134 -> line 3145
- *   +0x014c -> line 3146
- *   +0x0154 -> line 3148
- *   +0x016c -> line 3149
- *   +0x0170 -> line 3150
- *   +0x0174 -> line 3152
- *   +0x0180 -> line 3154
- *   +0x0188 -> line 3157
- *   +0x0190 -> line 3173
- *   +0x01b0 -> line 3175
- *   +0x01c4 -> line 3184
- *   +0x01d4 -> line 3185
- *   +0x01dc -> line 3189
- *   +0x0208 -> line 3190
- *   +0x0210 -> line 3197
- *   +0x0214 -> line 3199
- *   +0x0220 -> line 3201
- *   +0x0224 -> line 3202
- *   +0x022c -> line 3206
- *   +0x0234 -> line 3207
- *   +0x0248 -> line 3209
- *   +0x0250 -> line 3211
- *   +0x0260 -> line 3212
- *   +0x0264 -> line 3214
- *   +0x026c -> line 3217
- *   +0x0270 -> line 3225
- *   +0x0274 -> line 3226
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stTransparenceProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdeProcedureId_ eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-    tdstGetSetParam_ stParam;
-    float xValue;
-    int lValue;
-    unsigned char bModule = 0;
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    HIE_tdstSuperObject_* hModule = NULL;
-    unsigned short uwChannelNumber;
-
-    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-
-    switch (eProcedureId)
-    {
-    case eProc_SetModuleTransparency:
-    case eProc_SetModuleTransparency2:
-        uwChannelNumber = (eProcedureId == eProc_SetModuleTransparency) ? (unsigned short)stParam.uDummy.uParam.lValue : stParam.uDummy.uParam.uwValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        if (hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_3dData->hArrayOfChannels == NULL)
-            break;
-        hNewSuperObjPerso = hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_3dData->hArrayOfChannels ? hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_3dData->hArrayOfChannels[uwChannelNumber].hSupObject : NULL;
-        if (hNewSuperObjPerso == NULL)
-            break;
-        hNewSuperObjPerso->ulFlags |= 0x10000;
-    case eProc_SetTransparency:
-        xValue = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
-        if (xValue < 0.0f)
-            xValue = 0.0f;
-        else if (xValue > 255.0f)
-            xValue = 255.0f;
-        hNewSuperObjPerso->fTransparenceLevel = xValue;
-        if (eProcedureId == eProc_SetTransparency)
-            PLA_fn_vUpdateTransparencyForModules(hNewSuperObjPerso);
-        break;
-
-    case eProc_ModuleTransparentDisplay:
-    case eProc_ModuleTransparentDisplay2:
-        uwChannelNumber = (eProcedureId == eProc_ModuleTransparentDisplay) ? (unsigned short)stParam.uDummy.uParam.lValue : stParam.uDummy.uParam.uwValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        if (hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_3dData->hArrayOfChannels == NULL)
-            break;
-        hModule = hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_3dData->hArrayOfChannels ? hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_3dData->hArrayOfChannels[uwChannelNumber].hSupObject : NULL;
-        if (hModule == NULL)
-            break;
-        bModule = 1;
-    case eProc_TransparentDisplay:
-        lValue = hNewSuperObjPerso->lDrawModeMask;
-        if (stParam.uDummy.uParam.lValue)
-            lValue &= ~8;
+        p_szString = fn_szGetStringFromTextOrStringParam(&stParam);
+        hCine = CINE_fn_pFindCine(p_szString);
+        if (hCine != NULL)
+            fn_vLaunchEngineCinematics(hCine);
         else
-        {
-            lValue |= 8;
-            if (bModule)
-                hModule->ulFlags &= ~0x10000;
-        }
-        if (!bModule)
-        {
-            hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_3dData->lDrawMask = lValue;
-            hNewSuperObjPerso->lDrawModeMask = lValue;
-        }
-        else
-            hModule->lDrawModeMask = lValue;
-        break;
+            Erm_fn_iMessageBox("Try to start an undefined cinematic", "Cinematic error", 0x40030);
+        return p_stTree;
     }
 
     return p_stTree;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3037–3080 */
-/* addr: 0x00228850  size: 436 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3037
- *   +0x0018 -> line 3038
- *   +0x0020 -> line 3047
- *   +0x0038 -> line 3050
- *   +0x0058 -> line 3053
- *   +0x0064 -> line 3054
- *   +0x0068 -> line 3053
- *   +0x006c -> line 3055
- *   +0x0074 -> line 3058
- *   +0x00f4 -> line 3064
- *   +0x00fc -> line 3066
- *   +0x010c -> line 3067
- *   +0x0110 -> line 3070
- *   +0x0198 -> line 3079
- *   +0x019c -> line 3080
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stSkinMaterialProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stLoadingLevel(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    short xIndex;
     tdstGetSetParam_ stParam;
     tdeProcedureId_ eProcedureId;
-    static GLI_tdstMaterial_* hMaterial;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
-
-    switch (eProcedureId)
-    {
-    case eProc_SkinMaterial:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        hMaterial = stParam.uDummy.uParam.hVisualMaterial;
-        if (hMaterial)
-            fn_vUpdateCharacterSkinList(hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_3dData, hMaterial, 0);
-        break;
-    case eProc_SkinIndex:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        xIndex = stParam.uDummy.uParam.wValue;
-        fn_vUpdateCharacterSkinList(hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_3dData, hMaterial, xIndex);
-        break;
-    }
-
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3018–3030 */
-/* addr: 0x00228a10  size: 128 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3018
- *   +0x0010 -> line 3020
- *   +0x001c -> line 3022
- *   +0x0028 -> line 3023
- *   +0x0034 -> line 3025
- *   +0x0044 -> line 3026
- *   +0x0050 -> line 3028
- *   +0x0054 -> line 3027
- *   +0x0058 -> line 3028
- *   +0x005c -> line 3027
- *   +0x0060 -> line 3028
- *   +0x0064 -> line 3027
- *   +0x0068 -> line 3028
- *   +0x006c -> line 3029
- *   +0x0078 -> line 3030
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-#pragma auto_inline on
-void fn_vUpdateCharacterSkinList(tdst3dData_* h_3dData, GLI_tdstMaterial_* hMaterial, short _xSkinIndex)
-{
-    unsigned int i;
-
-    for (i = 0; i < h_3dData->NbSkinMaterials; i++)
-    {
-        if (h_3dData->hSkinMaterial[i] == (int)hMaterial)
-        {
-            h_3dData->xSkinIndex[i] = _xSkinIndex;
-            return;
-        }
-    }
-    if (i != 4)
-    {
-        h_3dData->hSkinMaterial[i] = (int)hMaterial;
-        h_3dData->xSkinIndex[i] = _xSkinIndex;
-        h_3dData->NbSkinMaterials++;
-    }
-}
-#pragma auto_inline reset
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 2935–2962 */
-/* addr: 0x00228a90  size: 136 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2935
- *   +0x0018 -> line 2936
- *   +0x0020 -> line 2943
- *   +0x0038 -> line 2946
- *   +0x004c -> line 2949
- *   +0x0054 -> line 2951
- *   +0x0064 -> line 2952
- *   +0x006c -> line 2961
- *   +0x0070 -> line 2962
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stDisplayProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    tdeProcedureId_ eProcedureId;
-
     eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
 
-    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
-
-    switch (eProcedureId)
-    {
-    case eProc_DefaultDisplay:
-        {
-            int lMask = hNewSuperObjPerso->lDrawModeMask | 8;
-            hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_3dData->lDrawMask = lMask;
-            hNewSuperObjPerso->lDrawModeMask = lMask;
-        }
-        break;
-    }
-
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 2900–2928 */
-/* addr: 0x00228b20  size: 168 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2900
- *   +0x0008 -> line 2904
- *   +0x000c -> line 2900
- *   +0x0018 -> line 2904
- *   +0x0020 -> line 2905
- *   +0x0024 -> line 2904
- *   +0x0028 -> line 2907
- *   +0x003c -> line 2909
- *   +0x0044 -> line 2910
- *   +0x004c -> line 2912
- *   +0x0058 -> line 2913
- *   +0x0060 -> line 2915
- *   +0x0068 -> line 2916
- *   +0x0074 -> line 2918
- *   +0x007c -> line 2922
- *   +0x0084 -> line 2925
- *   +0x008c -> line 2927
- *   +0x0090 -> line 2928
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stChangeActionRandomProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    void* hIdCard;
-    tdstDynam_* h_Dynam;
-    tdstState_* h_WantedState;
-    DNM_stDynamics* p_stDynamics;
-    tdstGetSetParam_ stParam;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    h_WantedState = stParam.uDummy.uParam.tdxstHandleToState;
-
-    if (PLA_fn_bSetNewStateWithRandom(p_SuperObjPerso, h_WantedState))
-    {
-        h_Dynam = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;
-        if (h_Dynam)
-        {
-            p_stDynamics = fn_p_stDynamGetDynamics(h_Dynam);
-            if (p_stDynamics)
-            {
-                hIdCard = (void*)fn_hGetStateMechanicsIdCard(h_WantedState);
-                if ((void*)p_stDynamics->m_tdstDynamicsBaseBlock.m_pCurrentIdCard != hIdCard)
-                    DNM_fn_vChangeIdCard(p_stDynamics, hIdCard);
-            }
-        }
-    }
+    if (eProcedureId != eProc_SkipLoading_SetLoadingLevel) return p_stTree;
     else
     {
-        fn_vSetProcedureActionReturn(2);
-    }
-
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 2760–2895 */
-/* addr: 0x00228bd0  size: 584 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2760
- *   +0x0020 -> line 2766
- *   +0x0024 -> line 2760
- *   +0x0028 -> line 2764
- *   +0x002c -> line 2760
- *   +0x0034 -> line 2768
- *   +0x0038 -> line 2765
- *   +0x003c -> line 2773
- *   +0x0054 -> line 2775
- *   +0x0068 -> line 2815
- *   +0x00e4 -> line 2818
- *   +0x00ec -> line 2825
- *   +0x00fc -> line 2826
- *   +0x0100 -> line 2828
- *   +0x0108 -> line 2835
- *   +0x0118 -> line 2836
- *   +0x011c -> line 2835
- *   +0x0120 -> line 2838
- *   +0x0130 -> line 2839
- *   +0x0134 -> line 2841
- *   +0x013c -> line 2846
- *   +0x0148 -> line 2847
- *   +0x014c -> line 2846
- *   +0x0150 -> line 2851
- *   +0x0158 -> line 2854
- *   +0x0168 -> line 2855
- *   +0x016c -> line 2854
- *   +0x0170 -> line 2857
- *   +0x0174 -> line 2863
- *   +0x0180 -> line 2865
- *   +0x0190 -> line 2866
- *   +0x0194 -> line 2865
- *   +0x0198 -> line 2871
- *   +0x01c4 -> line 2873
- *   +0x01d0 -> line 2874
- *   +0x01d8 -> line 2876
- *   +0x01e4 -> line 2877
- *   +0x01ec -> line 2879
- *   +0x01f4 -> line 2880
- *   +0x0200 -> line 2882
- *   +0x0208 -> line 2886
- *   +0x0210 -> line 2889
- *   +0x0218 -> line 2892
- *   +0x021c -> line 2894
- *   +0x0220 -> line 2895
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stChangeActionProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ stParam;
-    tdstState_* h_WantedState;
-    unsigned char bHandleSkippedEventsIfRelevant;
-    unsigned int ulNbFramesForMerging;
-    float xNLParameter;
-    unsigned char bProportional;
-    tdeProcedureId_ eProcedureId;
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    tdstDynam_* h_Dynam;
-    DNM_stDynamics* p_stDynamics;
-    void* hIdCard;
-
-    bProportional = 0;
-    ulNbFramesForMerging = 0;
-    xNLParameter = 0.0f;
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    h_WantedState = stParam.uDummy.uParam.tdxstHandleToState;
-
-    switch (eProcedureId)
-    {
-    case eProc_ChangeActionSmoothNoSpeed:
-        g_bNoSpeedForIntermAnim = 1;
-    case eProc_ChangeActionSmooth:
-    case eProc_ChangeActionForceSmooth:
-    case eProc_ChangeActionRandomSmooth:
-    case eProc_ChangeActionWithEventsSmooth:
         p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        ulNbFramesForMerging = stParam.uDummy.uParam.ulValue;
-        break;
-    case eProc_ChangeActionSmoothNL:
-    case eProc_ChangeActionForceSmoothNL:
-    case eProc_ChangeActionRandomSmoothNL:
-    case eProc_ChangeActionWithEventsSmoothNL:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        ulNbFramesForMerging = stParam.uDummy.uParam.ulValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        xNLParameter = stParam.uDummy.uParam.xValue;
-        break;
-    case eProc_ChangeActionSmoothProportional:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        ulNbFramesForMerging = stParam.uDummy.uParam.ulValue;
-        bProportional = 1;
-        break;
-    case eProc_ChangeActionSmoothSymetric:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        ulNbFramesForMerging = stParam.uDummy.uParam.ulValue;
-        bProportional = 2;
-        break;
-    }
 
-    bHandleSkippedEventsIfRelevant = 0;
-    if (eProcedureId == eProc_ChangeActionWithEvents)
-    {
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        bHandleSkippedEventsIfRelevant = stParam.uDummy.uParam.ucValue;
-    }
-
-    if (PLA_fn_bSetNewState(hNewSuperObjPerso, h_WantedState, eProcedureId == eProc_ChangeActionForce, bHandleSkippedEventsIfRelevant, 0, ulNbFramesForMerging, xNLParameter, bProportional))
-    {
-        h_Dynam = hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;
-        if (h_Dynam)
+        switch ((char)((stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue))
         {
-            p_stDynamics = fn_p_stDynamGetDynamics(h_Dynam);
-            if (p_stDynamics)
-            {
-                hIdCard = (void*)fn_hGetStateMechanicsIdCard(h_WantedState);
-                if ((void*)p_stDynamics->m_tdstDynamicsBaseBlock.m_pCurrentIdCard != hIdCard)
-                    DNM_fn_vChangeIdCard(p_stDynamics, hIdCard);
-            }
+        case 1:
+            GAM_fn_vSetLoadingLevel("S");
+            break;
+
+        case 2:
+            GAM_fn_vSetLoadingLevel("M");
+            break;
+
+        default:
+            GAM_fn_vSetLoadingLevel(NULL);
+            
         }
-    }
-    else
-    {
-        fn_vSetProcedureActionReturn(2);
-    }
-    g_bNoSpeedForIntermAnim = 0;
 
+    }
     return p_stTree;
 }
 
-/* MatSp.h inline: the VU0 macro-mode instructions have no C form. */
-inline void MAT_fn_vApplyOnVertex(MTH3D_tdstVector_* VectDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* VectA)
+tdstNodeInterpret_* fn_p_stDataPath(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    MTH4D_tdstVector_ Vtmp;
-    MTH4D_tdstMatrix_* p_stMatrix;
-    MTH4D_tdstVector_* p_stVtmp;
-
-    p_stMatrix = &_hTransform->stTransformMatrix; p_stVtmp = &Vtmp;
-    ((unsigned int*)&Vtmp)[0] = ((unsigned int*)VectA)[0]; ((unsigned int*)&Vtmp)[1] = ((unsigned int*)VectA)[1]; ((unsigned int*)&Vtmp)[2] = ((unsigned int*)VectA)[2];
-    asm {
-        lqc2 vf1, 0x0(p_stVtmp)
-        lqc2 vf2, 0x0(p_stMatrix)
-        lqc2 vf3, 0x10(p_stMatrix)
-        lqc2 vf4, 0x20(p_stMatrix)
-        lqc2 vf5, 0x30(p_stMatrix)
-        vmulax.xyzw ACC, vf2, vf1x
-        vmadday.xyzw ACC, vf3, vf1y
-        vmaddaz.xyzw ACC, vf4, vf1z
-        vmaddw.xyzw vf6, vf5, vf0w
-        nop
-        nop
-        sqc2 vf6, 0x0(p_stVtmp)
-    }
-    ((unsigned int*)VectDest)[0] = ((unsigned int*)&Vtmp)[0]; ((unsigned int*)VectDest)[1] = ((unsigned int*)&Vtmp)[1]; ((unsigned int*)VectDest)[2] = ((unsigned int*)&Vtmp)[2];
-}
-
-inline void MTH3D_M_vSetVectorElements(MTH3D_tdstVector_* VectDest, float x, float y, float z)
-{
-    VectDest->xX = x; VectDest->xY = y; VectDest->xZ = z;
-}
-
-inline void MTH3D_M_vSubVector(MTH3D_tdstVector_* VectDest, MTH3D_tdstVector_* VectA, MTH3D_tdstVector_* VectB)
-{
-    VectDest->xX = VectA->xX - VectB->xX; VectDest->xY = VectA->xY - VectB->xY; VectDest->xZ = VectA->xZ - VectB->xZ;
-}
-
-inline void MTH3D_M_vCopyVector(MTH3D_tdstVector_* VectDest, MTH3D_tdstVector_* VectA)
-{
-    ((int*)VectDest)[0] = ((int*)VectA)[0]; ((int*)VectDest)[1] = ((int*)VectA)[1]; ((int*)VectDest)[2] = ((int*)VectA)[2];
-}
-
-inline MTH3D_tdstVector_* POS_fn_p_stGetTranslationVector(MAT_tdstTransformation_* hMatrix)
-{
-    return (MTH3D_tdstVector_*)&hMatrix->stTransformMatrix.stCol_3;
-}
-
-void MEC_vTurnAbsolute(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stVector);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 2674–2746 */
-/* addr: 0x00228e20  size: 652 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2674
- *   +0x002c -> line 2680
- *   +0x0030 -> line 2686
- *   +0x0048 -> line 2690
- *   +0x005c -> line 2692
- *   +0x006c -> line 2697
- *   +0x0078 -> line 2698
- *   +0x0080 -> line 2700
- *   +0x008c -> line 2701
- *   +0x0094 -> line 2705
- *   +0x0098 -> line 2707
- *   +0x009c -> line 2705
- *   +0x00b4 -> line 2707
- *   +0x00d0 -> line 2715
- *   +0x00dc -> line 2716
- *   +0x00e0 -> line 2715
- *   +0x00e4 -> line 2716
- *   +0x0104 -> line 2718
- *   +0x0114 -> line 2719
- *   +0x0134 -> line 2721
- *   +0x0144 -> line 2722
- *   +0x0148 -> line 2721
- *   +0x014c -> line 2722
- *   +0x0168 -> line 2724
- *   +0x016c -> line 2725
- *   +0x0170 -> line 2724
- *   +0x0174 -> line 2725
- *   +0x0178 -> line 2724
- *   +0x017c -> line 2725
- *   +0x01ec -> line 2727
- *   +0x01f4 -> line 2731
- *   +0x020c -> line 2732
- *   +0x0214 -> line 2737
- *   +0x021c -> line 2740
- *   +0x0230 -> line 2741
- *   +0x0238 -> line 2740
- *   +0x0258 -> line 2741
- *   +0x0260 -> line 2745
- *   +0x0264 -> line 2746
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stTurnPersoProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ stParam;
-    tdstDynam_* h_Dynam;
-    DNM_stDynamics* p_stDynamic;
-    HIE_tdstSuperObject_* p_stAimedObject;
-    MTH3D_tdstVector_ stVertexDirection;
-    MTH3D_tdstVector_ stVertex1;
-    tdeProcedureId_ eProcedureId;
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    p_stAimedObject = fn_h_StandardGameGetSuperObject(stParam.uDummy.uParam.p_stEngObjValue->h_StandardGame);
-
-    h_Dynam = hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;
-    if (h_Dynam)
-    {
-        p_stDynamic = fn_p_stDynamGetDynamics(h_Dynam);
-        if (p_stDynamic)
-        {
-            MTH3D_M_vCopyVector(&stVertex1, POS_fn_p_stGetTranslationVector(hNewSuperObjPerso->hGlobalMatrix));
-
-            switch (eProcedureId)
-            {
-            case eProc_DeltaTurnPerso:
-                {
-                    float xX, xY, xZ;
-
-                    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-                    xX = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
-                    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-                    xY = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
-                    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-                    xZ = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
-
-                    MTH3D_M_vSetVectorElements(&stVertexDirection, xX, xY, xZ);
-                    MAT_fn_vApplyOnVertex(&stVertexDirection, p_stAimedObject->hGlobalMatrix, &stVertexDirection);
-                }
-                break;
-
-            case eProc_TurnPerso:
-                MTH3D_M_vCopyVector(&stVertexDirection, POS_fn_p_stGetTranslationVector(p_stAimedObject->hGlobalMatrix));
-                break;
-
-            default:
-                return p_stTree;
-            }
-
-            MTH3D_M_vSubVector(&stVertexDirection, &stVertexDirection, &stVertex1);
-            MEC_vTurnAbsolute(p_stDynamic, &stVertexDirection);
-        }
-    }
-
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 2621–2665 */
-/* addr: 0x00239400  size: 328 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2621
- *   +0x0020 -> line 2624
- *   +0x0024 -> line 2633
- *   +0x003c -> line 2637
- *   +0x004c -> line 2638
- *   +0x0050 -> line 2637
- *   +0x0054 -> line 2638
- *   +0x0070 -> line 2640
- *   +0x007c -> line 2641
- *   +0x0084 -> line 2643
- *   +0x008c -> line 2644
- *   +0x0094 -> line 2647
- *   +0x00b0 -> line 2651
- *   +0x00b4 -> line 2650
- *   +0x00b8 -> line 2651
- *   +0x00c0 -> line 2650
- *   +0x00c4 -> line 2651
- *   +0x0100 -> line 2652
- *   +0x010c -> line 2653
- *   +0x0114 -> line 2656
- *   +0x0128 -> line 2664
- *   +0x012c -> line 2665
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stTurnProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ stParam;
-    float xAngle;
-    float xAngleRad;
-    tdeProcedureId_ eProcedureId;
-    DNM_stDynamics* p_stDynamics;
-    tdstDynam_* hDynam;
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    xAngle = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
-
-    hDynam = hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;
-    if (hDynam)
-    {
-        p_stDynamics = fn_p_stDynamGetDynamics(hDynam);
-        if (p_stDynamics != NULL)
-        {
-            switch (eProcedureId)
-            {
-            case eProc_Turn:
-                xAngleRad = 0.017453292f * xAngle;
-                xAngleRad = xAngleRad * (0.001f * g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime);
-                MEC_vTurnAroundZAxis(p_stDynamics, xAngleRad);
-                break;
-            case eProc_Turn2:
-                MEC_vTurnAroundZAxis(p_stDynamics, 0.017453292f * xAngle);
-                break;
-            }
-        }
-    }
-
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 2575–2615 */
-/* addr: 0x00239550  size: 184 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2575
- *   +0x0008 -> line 2584
- *   +0x000c -> line 2575
- *   +0x001c -> line 2577
- *   +0x0028 -> line 2584
- *   +0x0030 -> line 2585
- *   +0x0034 -> line 2587
- *   +0x0038 -> line 2584
- *   +0x003c -> line 2587
- *   +0x0044 -> line 2603
- *   +0x0048 -> line 2587
- *   +0x004c -> line 2603
- *   +0x0070 -> line 2604
- *   +0x0098 -> line 2614
- *   +0x009c -> line 2615
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stChangeMyComportIntelligenceAndReflexProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    AI_tdstMind_* p_stMind;
-    tdstComport_* p_stIntell;
-    tdstComport_* p_stReflex;
-    tdstGetSetParam_ stParam;
-
-    p_stMind = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    p_stIntell = stParam.uDummy.uParam.pComport;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    p_stReflex = stParam.uDummy.uParam.pComport;
-
-    fn_vInternalChangeComportProcedure(p_stMind->p_stIntelligence, p_stIntell, 0);
-    fn_vInternalChangeComportProcedure(p_stMind->p_stReflex, p_stReflex, 0);
-
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 2535–2569 */
-/* addr: 0x00239610  size: 128 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2535
- *   +0x0014 -> line 2537
- *   +0x0020 -> line 2542
- *   +0x0028 -> line 2561
- *   +0x002c -> line 2542
- *   +0x0030 -> line 2561
- *   +0x0064 -> line 2568
- *   +0x0068 -> line 2569
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stChangeMyComportReflexProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    AI_tdstMind_* p_stMind;
-    tdstGetSetParam_ stParam;
-
-    p_stMind = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-
-    fn_vInternalChangeComportProcedure(p_stMind->p_stReflex, stParam.uDummy.uParam.pComport, p_stMind->bDoingIntel);
-
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 2497–2530 */
-/* addr: 0x00239690  size: 132 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2497
- *   +0x0010 -> line 2499
- *   +0x001c -> line 2504
- *   +0x0028 -> line 2522
- *   +0x006c -> line 2529
- *   +0x0070 -> line 2530
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stChangeMyComportIntelligenceProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    AI_tdstMind_* p_stMind;
-    tdstGetSetParam_ stParam;
-
-    p_stMind = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-
-    fn_vInternalChangeComportProcedure(p_stMind->p_stIntelligence, stParam.uDummy.uParam.pComport, !p_stMind->bDoingIntel);
-
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 2450–2492 */
-/* addr: 0x00239720  size: 188 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2450
- *   +0x0008 -> line 2459
- *   +0x000c -> line 2450
- *   +0x0018 -> line 2459
- *   +0x0024 -> line 2460
- *   +0x0034 -> line 2464
- *   +0x0038 -> line 2462
- *   +0x003c -> line 2464
- *   +0x0040 -> line 2462
- *   +0x0048 -> line 2464
- *   +0x0050 -> line 2467
- *   +0x0068 -> line 2484
- *   +0x00a0 -> line 2491
- *   +0x00a4 -> line 2492
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stChangeComportReflexProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    unsigned char bTest;
-    AI_tdstMind_* p_stMind;
-    HIE_tdstSuperObject_* p_stAimedObject;
-    tdstGetSetParam_ stParam;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    p_stAimedObject = fn_h_StandardGameGetSuperObject(stParam.uDummy.uParam.p_stEngObjValue->h_StandardGame);
-    p_stMind = p_stAimedObject->hLinkedObject.p_stCharacter->h_Brain->p_stMind;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-
-    bTest = (p_stAimedObject != p_SuperObjPerso) || p_stMind->bDoingIntel;
-    fn_vInternalChangeComportProcedure(p_stMind->p_stReflex, stParam.uDummy.uParam.pComport, bTest);
-
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 2395–2445 */
-/* addr: 0x002397e0  size: 220 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2395
- *   +0x0008 -> line 2404
- *   +0x000c -> line 2395
- *   +0x0018 -> line 2404
- *   +0x0024 -> line 2406
- *   +0x0030 -> line 2408
- *   +0x003c -> line 2409
- *   +0x0044 -> line 2412
- *   +0x0050 -> line 2416
- *   +0x0054 -> line 2414
- *   +0x0058 -> line 2416
- *   +0x005c -> line 2414
- *   +0x0064 -> line 2416
- *   +0x006c -> line 2419
- *   +0x0088 -> line 2437
- *   +0x00c0 -> line 2444
- *   +0x00c4 -> line 2445
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stChangeComportIntelligenceProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    AI_tdstMind_* p_stMind;
-    unsigned char bTest;
-    HIE_tdstSuperObject_* p_stAimedObject;
-    tdstGetSetParam_ stParam;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    if (stParam.uDummy.uParam.p_stEngObjValue == NULL)
-    {
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        return p_stTree;
-    }
-    p_stAimedObject = fn_h_StandardGameGetSuperObject(stParam.uDummy.uParam.p_stEngObjValue->h_StandardGame);
-    p_stMind = p_stAimedObject->hLinkedObject.p_stCharacter->h_Brain->p_stMind;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-
-    bTest = (p_stAimedObject != p_SuperObjPerso) || !p_stMind->bDoingIntel;
-    fn_vInternalChangeComportProcedure(p_stMind->p_stIntelligence, stParam.uDummy.uParam.pComport, bTest);
-
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 2347–2364 */
-/* addr: 0x002398c0  size: 72 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2347
- *   +0x000c -> line 2349
- *   +0x0018 -> line 2354
- *   +0x0028 -> line 2357
- *   +0x0030 -> line 2362
- *   +0x0038 -> line 2364
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-#pragma auto_inline on
-void fn_vInternalChangeComportProcedure(tdstIntelligence_* p_stAimedPersoIntelligenceOrReflex, tdstComport_* p_stComport, unsigned char _bContinueExecution)
-{
-    if (p_stAimedPersoIntelligenceOrReflex->p_stCurrentComport != p_stComport)
-    {
-        if (fn_ucChangeComportIntell(p_stAimedPersoIntelligenceOrReflex, p_stComport))
-        {
-            if (!_bContinueExecution)
-            {
-                iNumLoop = 0;
-                fn_vSetProcedureActionReturn(8);
-            }
-        }
-    }
-}
-#pragma auto_inline reset
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 2323–2335 */
-/* addr: 0x00239910  size: 120 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2323
- *   +0x0008 -> line 2329
- *   +0x000c -> line 2323
- *   +0x0010 -> line 2329
- *   +0x001c -> line 2331
- *   +0x0028 -> line 2332
- *   +0x0060 -> line 2334
- *   +0x0064 -> line 2335
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stTraceProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ stValue;
-    static int s_iActivated;
-
-
-
-
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-
-    if (s_iActivated)
-        printf("trace %d\n", (stValue.eType == E_vt_Float) ? MTH_M_xRealToLong(stValue.uDummy.uParam.xValue) : stValue.uDummy.uParam.lValue);
-
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 2317–2317 */
-/* addr: 0x00239990  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2317
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stNoneProcedure(tdstNodeInterpret_* p_stTree, tdstNodeInterpret_* p_stTree2)
-{
-    return p_stTree2;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 2280–2301 */
-/* addr: 0x002399a0  size: 112 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2280
- *   +0x0010 -> line 2283
- *   +0x0014 -> line 2286
- *   +0x0020 -> line 2289
- *   +0x0040 -> line 2292
- *   +0x0048 -> line 2293
- *   +0x0050 -> line 2295
- *   +0x0058 -> line 2300
- *   +0x005c -> line 2301
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stKeyboardProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdeProcedureId_ eProcedureId;
-    IPT_tdstEntryElement_* IPT_xHandle;
-    tdstGetSetParam_ stValue;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-    IPT_xHandle = (IPT_tdstEntryElement_*)stValue.uDummy.uParam.lValue;
-
-    switch (eProcedureId)
-    {
-    case eProc_DeactivateBut:
-        IPT_fn_vDesactivateEntryElement(IPT_xHandle);
-        break;
-    case eProc_ActivateBut:
-        IPT_fn_vActivateEntryElement(IPT_xHandle);
-        break;
-    }
-
-    return p_stTree;
-}
-
-void fn_vMSLightSetOnOff(tdstMSLight_* h_MSLight, unsigned char ucOnOff);
-void fn_vMSLightSetNearFar(tdstMSLight_* h_MSLight, float xNear, float xFar);
-void fn_vMSLightSetColorRGBA(tdstMSLight_* h_MSLight, float xR, float xG, float xB, float xA);
-void fn_vMSLightSetLittleAlpha(tdstMSLight_* h_MSLight, float xLittleAlpha);
-void fn_vMSLightSetBigAlpha(tdstMSLight_* h_MSLight, float xBigAlpha);
-void fn_vMSLightSetGiroPhare(tdstMSLight_* h_MSLight, unsigned char bOnOff, float xStep);
-void fn_vMSLightSetPulse(tdstMSLight_* h_MSLight, unsigned char bOnOff, float xStep, float xMaxRange);
-void fn_vMSLightSetTypeOfLight(tdstMSLight_* h_MSLight, unsigned short lTypeOfLight);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1988–2142 */
-/* addr: 0x00239a10  size: 912 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1988
- *   +0x0024 -> line 1989
- *   +0x0028 -> line 1996
- *   +0x0040 -> line 2000
- *   +0x0068 -> line 2002
- *   +0x0070 -> line 2004
- *   +0x0080 -> line 2010
- *   +0x00a8 -> line 2013
- *   +0x00b4 -> line 2019
- *   +0x00bc -> line 2023
- *   +0x00c8 -> line 2029
- *   +0x00d0 -> line 2036
- *   +0x00e0 -> line 2037
- *   +0x00e4 -> line 2036
- *   +0x00e8 -> line 2037
- *   +0x0108 -> line 2039
- *   +0x0118 -> line 2042
- *   +0x011c -> line 2039
- *   +0x0120 -> line 2042
- *   +0x0148 -> line 2044
- *   +0x0150 -> line 2050
- *   +0x0164 -> line 2051
- *   +0x0170 -> line 2052
- *   +0x0188 -> line 2057
- *   +0x0190 -> line 2065
- *   +0x01a0 -> line 2066
- *   +0x01a4 -> line 2065
- *   +0x01a8 -> line 2066
- *   +0x01c8 -> line 2067
- *   +0x01d0 -> line 2069
- *   +0x01e0 -> line 2071
- *   +0x01e4 -> line 2069
- *   +0x01e8 -> line 2071
- *   +0x020c -> line 2073
- *   +0x0214 -> line 2081
- *   +0x0224 -> line 2082
- *   +0x022c -> line 2084
- *   +0x0238 -> line 2082
- *   +0x023c -> line 2084
- *   +0x0244 -> line 2087
- *   +0x0248 -> line 2084
- *   +0x024c -> line 2087
- *   +0x0274 -> line 2089
- *   +0x027c -> line 2097
- *   +0x028c -> line 2098
- *   +0x0294 -> line 2100
- *   +0x02a0 -> line 2098
- *   +0x02a4 -> line 2100
- *   +0x02ac -> line 2101
- *   +0x02d0 -> line 2103
- *   +0x02e0 -> line 2106
- *   +0x02e4 -> line 2103
- *   +0x02e8 -> line 2106
- *   +0x0314 -> line 2108
- *   +0x031c -> line 2112
- *   +0x0328 -> line 2113
- *   +0x0330 -> line 2118
- *   +0x033c -> line 2119
- *   +0x0344 -> line 2124
- *   +0x0350 -> line 2125
- *   +0x0358 -> line 2129
- *   +0x0364 -> line 2130
- *   +0x036c -> line 2140
- *   +0x0370 -> line 2142
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stPersoLightProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdeProcedureId_ eProcedureId;
-    tdstMSLight_* h_MSLight;
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    tdstGetSetParam_ stParam;
-    GEO_tdstColor_ stColor;
-    unsigned char bOnOff;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
-
-    h_MSLight = M_GetEngineObject(hNewSuperObjPerso)->h_MSLight;
-    if (h_MSLight == NULL)
-        return fn_p_stSwapNextParameter2(p_stTree);
-
-    switch (eProcedureId)
-    {
-    case eProc_PersoLightOn:
-        fn_vMSLightSetOnOff(h_MSLight, 1);
-        return p_stTree;
-
-    case eProc_PersoLightOff:
-        fn_vMSLightSetOnOff(h_MSLight, 0);
-        return p_stTree;
-
-    case eProc_SetPersoLightNearFar:
-    {
-        float xNear;
-
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        xNear = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        fn_vMSLightSetNearFar(h_MSLight, xNear, (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue);
-        return p_stTree;
-    }
-
-    case eProc_SetPersoLightColor:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        fn_vConvertParamToColor(&stParam, &stColor);
-        fn_vMSLightSetColorRGBA(h_MSLight, stColor.xR, stColor.xG, stColor.xB, stColor.xA);
-        return p_stTree;
-
-    case eProc_SetPersoLightLittleBigAlpha:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        fn_vMSLightSetLittleAlpha(h_MSLight, (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue);
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        fn_vMSLightSetBigAlpha(h_MSLight, (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue);
-        return p_stTree;
-
-    case eProc_SetPersoLightGyrophare:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        bOnOff = stParam.uDummy.uParam.lValue ? 1 : 0;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        fn_vMSLightSetGiroPhare(h_MSLight, bOnOff, (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue);
-        return p_stTree;
-
-    case eProc_SetPersoLightPulse:
-    {
-        float xStep;
-
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        bOnOff = stParam.uDummy.uParam.lValue ? 1 : 0;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        xStep = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        fn_vMSLightSetPulse(h_MSLight, bOnOff, xStep, (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue);
-        return p_stTree;
-    }
-
-    case eProc_SetPersoLightParalleleType:
-        fn_vMSLightSetTypeOfLight(h_MSLight, 1);
-        return p_stTree;
-
-    case eProc_SetPersoLightSphericalType:
-        fn_vMSLightSetTypeOfLight(h_MSLight, 2);
-        return p_stTree;
-
-    case eProc_SetPersoLightHotSpotType:
-        fn_vMSLightSetTypeOfLight(h_MSLight, 3);
-        return p_stTree;
-
-    case eProc_SetPersoLightAmbientType:
-        fn_vMSLightSetTypeOfLight(h_MSLight, 4);
-        return p_stTree;
-    }
-
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1850–1983 */
-/* addr: 0x00239da0  size: 748 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1850
- *   +0x0018 -> line 1852
- *   +0x001c -> line 1858
- *   +0x0048 -> line 1863
- *   +0x0050 -> line 1864
- *   +0x0054 -> line 1863
- *   +0x0058 -> line 1864
- *   +0x0080 -> line 1871
- *   +0x008c -> line 1872
- *   +0x0098 -> line 1874
- *   +0x009c -> line 1877
- *   +0x00a4 -> line 1883
- *   +0x00b0 -> line 1884
- *   +0x00bc -> line 1886
- *   +0x00d0 -> line 1889
- *   +0x00d8 -> line 1896
- *   +0x00e0 -> line 1897
- *   +0x0104 -> line 1899
- *   +0x0108 -> line 1901
- *   +0x0118 -> line 1904
- *   +0x013c -> line 1906
- *   +0x014c -> line 1909
- *   +0x016c -> line 1912
- *   +0x0174 -> line 1919
- *   +0x017c -> line 1920
- *   +0x01a0 -> line 1922
- *   +0x01a4 -> line 1924
- *   +0x01b4 -> line 1927
- *   +0x01d4 -> line 1930
- *   +0x01dc -> line 1936
- *   +0x01e8 -> line 1939
- *   +0x0200 -> line 1940
- *   +0x0204 -> line 1947
- *   +0x0208 -> line 1940
- *   +0x020c -> line 1946
- *   +0x0210 -> line 1947
- *   +0x0214 -> line 1941
- *   +0x021c -> line 1940
- *   +0x0220 -> line 1942
- *   +0x0228 -> line 1941
- *   +0x022c -> line 1943
- *   +0x0234 -> line 1942
- *   +0x0238 -> line 1944
- *   +0x0240 -> line 1943
- *   +0x0244 -> line 1944
- *   +0x0248 -> line 1951
- *   +0x0254 -> line 1956
- *   +0x0260 -> line 1959
- *   +0x0278 -> line 1960
- *   +0x0280 -> line 1966
- *   +0x0284 -> line 1961
- *   +0x0288 -> line 1966
- *   +0x028c -> line 1967
- *   +0x0290 -> line 1962
- *   +0x0294 -> line 1963
- *   +0x0298 -> line 1964
- *   +0x029c -> line 1960
- *   +0x02a0 -> line 1961
- *   +0x02a8 -> line 1962
- *   +0x02ac -> line 1967
- *   +0x02b0 -> line 1962
- *   +0x02b4 -> line 1963
- *   +0x02bc -> line 1964
- *   +0x02c4 -> line 1971
- *   +0x02d0 -> line 1982
- *   +0x02d4 -> line 1983
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stFogProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    static char cGlobalFogIsOn;
+    char* pszChar;
     tdstGetSetParam_ stParam;
     tdeProcedureId_ eProcedureId;
-    GEO_tdstColor_ stColor;
 
     eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
 
     switch (eProcedureId)
     {
-    case eProc_FogActivate:
+    case eProc_SetDataPath:
         p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        if ((unsigned char)((stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue))
-            GLI_cGlobalFogIsOn = 1;
-        else
-            GLI_cGlobalFogIsOn = 0;
-        return p_stTree;
-
-    case eProc_SetFogColor:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        fn_vConvertParamToColor(&stParam, &stColor);
-        memcpy(&GLI_stFogColor, &stColor, sizeof(GEO_tdstColor_));
-        return p_stTree;
-
-    case eProc_SetFogNearFarInf:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        GLI_xFogNear = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        GLI_xFogFar = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        GLI_xFogInfinite = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
-        return p_stTree;
-
-    case eProc_SetFogBlend:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        GLI_xFogBlendNear = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        GLI_xFogBlendFar = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
-        return p_stTree;
-
-    case eProc_RestoreFog:
-        if (GLI_g_bSaveFog)
-        {
-            memcpy(&GLI_stFogColor, &GLI_g_stSaveFog.stColor, sizeof(GEO_tdstColor_));
-            GLI_xFogNear = GLI_g_stSaveFog.xDepthStart;
-            GLI_xFogFar = GLI_g_stSaveFog.xDepthEnd;
-            GLI_xFogInfinite = GLI_g_stSaveFog.xInfinite;
-            GLI_xFogBlendNear = GLI_g_stSaveFog.xBlendStart;
-            GLI_xFogBlendFar = GLI_g_stSaveFog.xBlendEnd;
-
-            GLI_g_bSaveFog = 0;
-            GLI_cGlobalFogIsOn = cGlobalFogIsOn;
-        }
-        return p_stTree;
-
-    case eProc_SaveFog:
-        if (!GLI_g_bSaveFog)
-        {
-            memcpy(&GLI_g_stSaveFog.stColor, &GLI_stFogColor, sizeof(GEO_tdstColor_));
-            GLI_g_stSaveFog.xDepthStart = GLI_xFogNear;
-            GLI_g_stSaveFog.xDepthEnd = GLI_xFogFar;
-            GLI_g_stSaveFog.xInfinite = GLI_xFogInfinite;
-            GLI_g_stSaveFog.xBlendStart = GLI_xFogBlendNear;
-            GLI_g_stSaveFog.xBlendEnd = GLI_xFogBlendFar;
-
-            GLI_g_bSaveFog = 1;
-            cGlobalFogIsOn = GLI_cGlobalFogIsOn;
-        }
+        pszChar = fn_szGetStringFromTextOrStringParam(&stParam);
+        fn_vSetGameDataPath(pszChar);
+        bChangedGamedataDirectory = 1;
         return p_stTree;
     }
 
     return p_stTree;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1801–1837 */
-/* addr: 0x0023a090  size: 168 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1801
- *   +0x001c -> line 1804
- *   +0x0020 -> line 1810
- *   +0x0038 -> line 1815
- *   +0x0048 -> line 1816
- *   +0x004c -> line 1818
- *   +0x006c -> line 1821
- *   +0x0078 -> line 1822
- *   +0x0080 -> line 1826
- *   +0x008c -> line 1827
- *   +0x0090 -> line 1837
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stChangeActivationChannelProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    tdeProcedureId_ eProcedureId;
-    unsigned short uwChannelNumber;
-    tdstGetSetParam_ stParam;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    uwChannelNumber = stParam.uDummy.uParam.uwValue;
-
-    switch (eProcedureId)
-    {
-    case eProc_ActivateChannel:
-        fn_vActivateChannel(hNewSuperObjPerso, uwChannelNumber, 1);
-        return p_stTree;
-
-    case eProc_DeactivateChannel:
-        fn_vActivateChannel(hNewSuperObjPerso, uwChannelNumber, 0);
-        return p_stTree;
-    }
-
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1759–1796 */
-/* addr: 0x0023a140  size: 72 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1759
- *   +0x0004 -> line 1762
- *   +0x0008 -> line 1759
- *   +0x0010 -> line 1760
- *   +0x0014 -> line 1762
- *   +0x0024 -> line 1765
- *   +0x002c -> line 1767
- *   +0x0034 -> line 1795
- *   +0x0038 -> line 1796
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stSaveGameProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stSetGameMode(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdeProcedureId_ eProcedureId;
     eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
     switch (eProcedureId) {
-    case eProc_QuitGame:
-        fn_vChangeEngineMode(2);
-        fn_vSetProcedureActionReturn(3);
+    case eProc_SetSingleplayerMode:
+        GAM_g_uwLoadingLevel &= ~2;
+        GAM_g_uwLoadingLevel |= 1;
+        break;
+    case eProc_SetMultiplayerMode:
+        GAM_g_uwLoadingLevel &= ~1;
+        GAM_g_uwLoadingLevel |= 2;
         break;
     }
     return p_stTree;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1704–1754 */
-/* addr: 0x0023a190  size: 268 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1704
- *   +0x0004 -> line 1705
- *   +0x0008 -> line 1704
- *   +0x000c -> line 1705
- *   +0x0010 -> line 1704
- *   +0x0014 -> line 1705
- *   +0x0018 -> line 1704
- *   +0x0024 -> line 1705
- *   +0x002c -> line 1710
- *   +0x0030 -> line 1706
- *   +0x0034 -> line 1710
- *   +0x003c -> line 1711
- *   +0x0048 -> line 1713
- *   +0x0078 -> line 1717
- *   +0x007c -> line 1718
- *   +0x0088 -> line 1721
- *   +0x0098 -> line 1723
- *   +0x00a8 -> line 1724
- *   +0x00b0 -> line 1730
- *   +0x00c0 -> line 1732
- *   +0x00c8 -> line 1737
- *   +0x00d8 -> line 1738
- *   +0x00e0 -> line 1742
- *   +0x00f0 -> line 1743
- *   +0x00f4 -> line 1754
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stModuleControlProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    int lModuleId;
-    tdeProcedureId_ eProcedureId;
-    tdstGetSetParam_ stParam1 = {0};
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    if (eProcedureId != eProc_ReleaseAllModulesControl)
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
-
-    switch (eProcedureId)
-    {
-    case eProc_TakeManyModulesControl:
-        lModuleId = stParam1.uDummy.uParam.lValue;
-        lModuleId--;
-        while (lModuleId >= 0)
-        {
-            fn_vTakeControlOfChannel(p_SuperObjPerso->hLinkedObject.p_stCharacter, lModuleId, 1);
-            lModuleId--;
-        }
-        return p_stTree;
-    case eProc_TakeModuleControl:
-        fn_vTakeControlOfChannel(p_SuperObjPerso->hLinkedObject.p_stCharacter, stParam1.uDummy.uParam.uwValue, 1);
-        return p_stTree;
-    case eProc_ReleaseModuleControl:
-        fn_vTakeControlOfChannel(p_SuperObjPerso->hLinkedObject.p_stCharacter, stParam1.uDummy.uParam.uwValue, 0);
-        return p_stTree;
-    case eProc_ReleaseAllModulesControl:
-        fn_vTakeControlOfChannel(p_SuperObjPerso->hLinkedObject.p_stCharacter, 0xffff, 0);
-        return p_stTree;
-    }
-
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1587–1662 */
-/* addr: 0x0023a2a0  size: 672 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1587
- *   +0x0008 -> line 1592
- *   +0x000c -> line 1587
- *   +0x0030 -> line 1589
- *   +0x0034 -> line 1592
- *   +0x003c -> line 1593
- *   +0x005c -> line 1601
- *   +0x0064 -> line 1602
- *   +0x0068 -> line 1601
- *   +0x006c -> line 1602
- *   +0x0078 -> line 1603
- *   +0x009c -> line 1604
- *   +0x00ac -> line 1605
- *   +0x00d8 -> line 1606
- *   +0x00e8 -> line 1607
- *   +0x00ec -> line 1606
- *   +0x00f0 -> line 1607
- *   +0x0118 -> line 1609
- *   +0x0120 -> line 1610
- *   +0x0124 -> line 1612
- *   +0x0140 -> line 1614
- *   +0x0148 -> line 1624
- *   +0x014c -> line 1620
- *   +0x0150 -> line 1622
- *   +0x0154 -> line 1624
- *   +0x015c -> line 1625
- *   +0x0168 -> line 1626
- *   +0x0174 -> line 1628
- *   +0x017c -> line 1626
- *   +0x0180 -> line 1628
- *   +0x0190 -> line 1629
- *   +0x0198 -> line 1631
- *   +0x01a0 -> line 1634
- *   +0x01b8 -> line 1635
- *   +0x01d8 -> line 1636
- *   +0x01e0 -> line 1638
- *   +0x01f4 -> line 1641
- *   +0x01f8 -> line 1640
- *   +0x01fc -> line 1641
- *   +0x0204 -> line 1642
- *   +0x022c -> line 1644
- *   +0x0234 -> line 1647
- *   +0x0244 -> line 1649
- *   +0x0250 -> line 1650
- *   +0x026c -> line 1652
- *   +0x0270 -> line 1662
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stBuildObjectTableFromTableAndStringProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    char* pszChar;
-    int lStart;
-    int lEnd;
-    float xScreenWidth;
-    tdeProcedureId_ eProcedureId;
-    short wNbObjectsInTargetTable;
-    short wTargetObject;
-    tdstObjectsTablesList_* hSourceObjectTable;
-    tdstObjectsTablesList_* hTargetTable;
-    short wNbObjectsInSourceTable;
-    short wSourceObject;
-    tdstGetSetParam_ stParam;
-    stTfmtStatus_ stStatus;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-
-    switch (eProcedureId)
-    {
-    case eProc_BuildObjectTableFromFormattedString:
-        pszChar = fn_szGetStringFromTextOrStringParam(&stParam);
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        xScreenWidth = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        lStart = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        lEnd = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
-        if (lStart < 0)
-            lStart = 0;
-        TFMT_wPositionModulesAccordingToText(&stStatus, p_SuperObjPerso, pszChar, lStart, lEnd, xScreenWidth, NULL, -1);
-        return p_stTree;
-    case eProc_BuildObjectTableFromTableAndString:
-        hTargetTable = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_3dData->h_CurrentObjectsTable;
-        wTargetObject = 0;
-        hSourceObjectTable = (tdstObjectsTablesList_*)stParam.uDummy.uParam.lValue;
-        wNbObjectsInTargetTable = (short)fn_uwGetObjectTableNumberOfelements(hTargetTable);
-        wNbObjectsInSourceTable = (short)fn_uwGetObjectTableNumberOfelements(hSourceObjectTable);
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        pszChar = fn_szGetStringFromTextOrStringParam(&stParam);
-        while (*pszChar != 0 && wTargetObject < wNbObjectsInTargetTable)
-        {
-            wSourceObject = toupper(*pszChar) - 0x20;
-            if (wSourceObject < 0 || wSourceObject >= wNbObjectsInSourceTable)
-                wSourceObject = 0;
-            fn_vCopyObjectFromObjectTabletoAnother(hTargetTable, hSourceObjectTable, (unsigned short)wTargetObject, (unsigned short)wSourceObject);
-            pszChar++;
-            wTargetObject++;
-        }
-        while (wTargetObject < wNbObjectsInTargetTable)
-        {
-            fn_vCopyObjectFromObjectTabletoAnother(hTargetTable, hSourceObjectTable, (unsigned short)wTargetObject, 0);
-            wTargetObject++;
-        }
-        return p_stTree;
-    }
-
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1514–1570 */
-/* addr: 0x0023a540  size: 212 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1514
- *   +0x0008 -> line 1519
- *   +0x000c -> line 1514
- *   +0x0018 -> line 1516
- *   +0x001c -> line 1519
- *   +0x0024 -> line 1521
- *   +0x004c -> line 1526
- *   +0x0050 -> line 1525
- *   +0x0054 -> line 1526
- *   +0x005c -> line 1527
- *   +0x0060 -> line 1526
- *   +0x0064 -> line 1527
- *   +0x0070 -> line 1532
- *   +0x0078 -> line 1538
- *   +0x007c -> line 1539
- *   +0x008c -> line 1541
- *   +0x0094 -> line 1543
- *   +0x009c -> line 1544
- *   +0x00a4 -> line 1551
- *   +0x00ac -> line 1555
- *   +0x00bc -> line 1570
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stLinkTableProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstObjectsTablesList_* hTable;
-    unsigned char ucObj1;
-    tdeProcedureId_ eProcedureId;
-    tdstGetSetParam_ stParam;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-
-    switch (eProcedureId)
-    {
-    case eProc_SwapLinkTableObjects:
-        ucObj1 = stParam.uDummy.uParam.ucValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        fn_vExchangeTwoObjectsInCurrentObjectsTable(p_SuperObjPerso, ucObj1, stParam.uDummy.uParam.ucValue);
-        return p_stTree;
-
-    case eProc_ReinitTableObjects:
-        hTable = stParam.uDummy.uParam.hObjectTable;
-        if (fn_d_hGetInitObjectsTable(hTable) != NULL)
-        {
-            fn_vReInitObjectTable(hTable);
-            PLA_fn_vStopCurrentMorphAnim(p_SuperObjPerso);
-            MOR_fn_vRemoveMorph2(p_SuperObjPerso);
-        }
-        return p_stTree;
-
-    case eProc_ChangeCurrentObjectTable:
-        p_SuperObjPerso->hLinkedObject.p_stCharacter->h_3dData->h_CurrentObjectsTable = stParam.uDummy.uParam.hObjectTable;
-        return p_stTree;
-    }
-
-    return p_stTree;
-}
-
-void fn_vAddList(tdstList_* p_stListA, tdstList_* p_stListB);
-void fn_vUnionList(tdstList_* p_stListA, tdstList_* p_stListB, tdstList_* p_stListC);
-void fn_vInterList(tdstList_* p_stListA, tdstList_* p_stListB, tdstList_* p_stListC);
-void fn_vDiffList(tdstList_* p_stListA, tdstList_* p_stListB, tdstList_* p_stListC);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1462–1507 */
-/* addr: 0x0023a620  size: 252 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1462
- *   +0x0008 -> line 1467
- *   +0x000c -> line 1462
- *   +0x0020 -> line 1464
- *   +0x0024 -> line 1467
- *   +0x002c -> line 1468
- *   +0x0030 -> line 1467
- *   +0x0034 -> line 1470
- *   +0x0044 -> line 1473
- *   +0x0050 -> line 1475
- *   +0x005c -> line 1476
- *   +0x0064 -> line 1479
- *   +0x0078 -> line 1482
- *   +0x00a4 -> line 1485
- *   +0x00ac -> line 1486
- *   +0x00b4 -> line 1490
- *   +0x00bc -> line 1491
- *   +0x00c4 -> line 1495
- *   +0x00d0 -> line 1496
- *   +0x00d8 -> line 1506
- *   +0x00dc -> line 1507
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stListEnsembleProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ stValue;
-    tdeProcedureId_ eProcedureId;
-    tdstList_* p_stListA;
-    tdstList_* p_stListB;
-    tdstList_* p_stListC;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-    p_stListA = *(tdstList_**)&stValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-    p_stListB = *(tdstList_**)&stValue;
-
-    if (eProcedureId == eProc_ListAdd)
-    {
-        fn_vAddList(p_stListA, p_stListB);
-        return p_stTree;
-    }
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-    p_stListC = *(tdstList_**)&stValue;
-
-    switch (eProcedureId)
-    {
-    case eProc_ListUnion:
-        fn_vUnionList(p_stListA, p_stListB, p_stListC);
-        break;
-    case eProc_ListInter:
-        fn_vInterList(p_stListA, p_stListB, p_stListC);
-        break;
-    case eProc_ListDiff:
-        fn_vDiffList(p_stListA, p_stListB, p_stListC);
-        break;
-    }
-    return p_stTree;
-}
-
-void fn_vPutInList(tdstList_* p_List, HIE_tdstSuperObject_* p_Perso);
-void fn_vInsertPersoAtPositionInList(tdstList_* p_List, HIE_tdstSuperObject_* p_Perso, unsigned char ucPosition);
-void fn_vDeletePersoAtPositionInList(tdstList_* p_List, unsigned char ucPosition);
-char fn_bFindPersoAndDeleteInList(tdstList_* p_List, HIE_tdstSuperObject_* p_Perso);
-tdstNodeInterpret_* fn_p_stListSelect(tdstList_* p_List, char b_cInverse, tdstNodeInterpret_* p_stTree);
-tdstNodeInterpret_* fn_p_stListSort(tdstList_* p_List, unsigned char ucWantedNbElt, char b_cIncrease, tdstNodeInterpret_* p_stTree);
-void fn_vSortListByFamily(tdstList_* p_List, tdstFamilyList_* hFamily);
-void fn_vSortListByModel(tdstList_* p_stList, AI_tdstAIModel_* _p_stModel);
-void fn_vFillListWithAllPersoOfAFamilly(tdstList_* _p_stList, HIE_tdstSuperObject_* _hFather, tdstFamilyList_* _hFamily);
-void fn_vFillListWithAllPersoOfAModel(tdstList_* _p_stList, HIE_tdstSuperObject_* _hFather, AI_tdstAIModel_* _p_stModel);
-HIE_tdstSuperObject_* fn_p_stGetPersoInList(tdstList_* p_List, unsigned char ucPosition);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1305–1457 */
-/* addr: 0x0023a720  size: 1080 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1305
- *   +0x0008 -> line 1310
- *   +0x000c -> line 1305
- *   +0x001c -> line 1307
- *   +0x0020 -> line 1310
- *   +0x0028 -> line 1313
- *   +0x0054 -> line 1317
- *   +0x0068 -> line 1319
- *   +0x0080 -> line 1320
- *   +0x0088 -> line 1324
- *   +0x00ac -> line 1326
- *   +0x00c8 -> line 1327
- *   +0x00d0 -> line 1331
- *   +0x00e0 -> line 1332
- *   +0x00e4 -> line 1331
- *   +0x00e8 -> line 1332
- *   +0x00f0 -> line 1333
- *   +0x00f8 -> line 1338
- *   +0x010c -> line 1340
- *   +0x0124 -> line 1341
- *   +0x012c -> line 1345
- *   +0x0144 -> line 1349
- *   +0x015c -> line 1354
- *   +0x017c -> line 1355
- *   +0x0198 -> line 1359
- *   +0x01a8 -> line 1360
- *   +0x01ac -> line 1359
- *   +0x01b0 -> line 1360
- *   +0x01b8 -> line 1361
- *   +0x01c0 -> line 1365
- *   +0x01d0 -> line 1366
- *   +0x01d4 -> line 1365
- *   +0x01d8 -> line 1366
- *   +0x01e0 -> line 1367
- *   +0x01e8 -> line 1377
- *   +0x0200 -> line 1380
- *   +0x0270 -> line 1383
- *   +0x0278 -> line 1392
- *   +0x0290 -> line 1395
- *   +0x0310 -> line 1397
- *   +0x0318 -> line 1407
- *   +0x032c -> line 1408
- *   +0x0330 -> line 1407
- *   +0x0334 -> line 1410
- *   +0x0340 -> line 1411
- *   +0x0348 -> line 1413
- *   +0x035c -> line 1414
- *   +0x0370 -> line 1416
- *   +0x0378 -> line 1417
- *   +0x0384 -> line 1418
- *   +0x0390 -> line 1420
- *   +0x0398 -> line 1429
- *   +0x03ac -> line 1430
- *   +0x03b0 -> line 1429
- *   +0x03b4 -> line 1432
- *   +0x03c0 -> line 1433
- *   +0x03c8 -> line 1436
- *   +0x03e8 -> line 1441
- *   +0x03f8 -> line 1443
- *   +0x0400 -> line 1444
- *   +0x040c -> line 1445
- *   +0x0418 -> line 1447
- *   +0x041c -> line 1457
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stListProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ stParam1;
-    tdstGetSetParam_ stParam2;
-    tdeProcedureId_ eProcedureId;
-    tdstList_* p_stList;
-    tdstFamilyList_* hFamily;
-    HIE_tdstSuperObject_* hPerso;
-    AI_tdstAIModel_* p_stModel;
-    unsigned char ucPos;
-    tdstBrain_* hBrain;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
-    p_stList = *(tdstList_**)&stParam1;
-
-    switch (eProcedureId)
-    {
-    case eProc_AddPersoInList:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
-        fn_vPutInList(p_stList, fn_h_StandardGameGetSuperObject(stParam1.uDummy.uParam.p_stEngObjValue->h_StandardGame));
-        return p_stTree;
-
-    case eProc_AddPersoInListAt:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam2);
-        fn_vInsertPersoAtPositionInList(p_stList, fn_h_StandardGameGetSuperObject(stParam1.uDummy.uParam.p_stEngObjValue->h_StandardGame), stParam2.uDummy.uParam.ucValue);
-        return p_stTree;
-
-    case eProc_DeletePersoAtInList:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
-        fn_vDeletePersoAtPositionInList(p_stList, stParam1.uDummy.uParam.ucValue);
-        return p_stTree;
-
-    case eProc_FindPersoAndDeleteInList:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
-        fn_bFindPersoAndDeleteInList(p_stList, fn_h_StandardGameGetSuperObject(stParam1.uDummy.uParam.p_stEngObjValue->h_StandardGame));
-        return p_stTree;
-
-    case eProc_ListSelect:
-        return fn_p_stListSelect(p_stList, 0, p_stTree);
-
-    case eProc_ListUnSelect:
-        p_stTree = fn_p_stListSelect(p_stList, 1, p_stTree);
-        return p_stTree;
-
-    case eProc_ListSort:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam2);
-        p_stTree = fn_p_stListSort(p_stList, stParam1.uDummy.uParam.ucValue, stParam2.uDummy.uParam.cValue, p_stTree);
-        return p_stTree;
-
-    case eProc_ListSortByFamily:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
-        fn_vSortListByFamily(p_stList, stParam1.uDummy.uParam.hFamily);
-        return p_stTree;
-
-    case eProc_ListSortByModel:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
-        fn_vSortListByModel(p_stList, stParam1.uDummy.uParam.p_stModel);
-        return p_stTree;
-
-    case eProc_FillListWithAllPersoOfAFamily:
-        p_stList->ucNbElt = 0;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam2);
-        hFamily = stParam2.uDummy.uParam.hFamily;
-        fn_vFillListWithAllPersoOfAFamilly(p_stList, gp_stDynamicWorld, hFamily);
-        return p_stTree;
-
-    case eProc_FillListWithAllPersoOfAModel:
-        p_stList->ucNbElt = 0;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam2);
-        p_stModel = stParam2.uDummy.uParam.p_stModel;
-        fn_vFillListWithAllPersoOfAModel(p_stList, gp_stDynamicWorld, p_stModel);
-        return p_stTree;
-
-    case eProc_DeleteFamilyInList:
-        ucPos = 0;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam2);
-        hFamily = stParam2.uDummy.uParam.hFamily;
-        while ((hPerso = fn_p_stGetPersoInList(p_stList, ucPos)) != NULL)
-        {
-            if (hPerso->hLinkedObject.p_stCharacter->h_3dData->h_Family == hFamily)
-                fn_vDeletePersoAtPositionInList(p_stList, ucPos);
-            else
-                ucPos++;
-        }
-        return p_stTree;
-
-    case eProc_DeleteModelInList:
-        ucPos = 0;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam2);
-        p_stModel = stParam2.uDummy.uParam.p_stModel;
-        while ((hPerso = fn_p_stGetPersoInList(p_stList, ucPos)) != NULL)
-        {
-            hBrain = hPerso->hLinkedObject.p_stCharacter->h_Brain;
-            if (hBrain && hBrain->p_stMind->p_stAIModel == p_stModel)
-                fn_vDeletePersoAtPositionInList(p_stList, ucPos);
-            else
-                ucPos++;
-        }
-        return p_stTree;
-    }
-
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1272–1296 */
-/* addr: 0x0023ab60  size: 292 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1272
- *   +0x0020 -> line 1276
- *   +0x0034 -> line 1279
- *   +0x0044 -> line 1282
- *   +0x004c -> line 1283
- *   +0x0054 -> line 1285
- *   +0x0064 -> line 1287
- *   +0x006c -> line 1292
- *   +0x0078 -> line 1294
- *   +0x00f8 -> line 1295
- *   +0x0108 -> line 1296
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-#pragma auto_inline on
-void fn_vFillListWithAllPersoOfAModel(tdstList_* _p_stList, HIE_tdstSuperObject_* _hFather, AI_tdstAIModel_* _p_stModel)
-{
-    tdstBrain_* hBrain;
-    HIE_tdstSuperObject_* hChild;
-
-    if (_p_stList->ucNbElt >= _p_stList->ucMaxSize)
-        return;
-    if (_hFather->ulTypeOfLinkedObject == 2)
-    {
-        hBrain = _hFather->hLinkedObject.p_stCharacter->h_Brain;
-        if (hBrain && hBrain->p_stMind->p_stAIModel == _p_stModel)
-            fn_vPutInList(_p_stList, _hFather);
-    }
-    for (hChild = _hFather->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn)
-        fn_vFillListWithAllPersoOfAModel(_p_stList, hChild, _p_stModel);
-}
-#pragma auto_inline reset
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1249–1268 */
-/* addr: 0x0023ac90  size: 268 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1249
- *   +0x0020 -> line 1253
- *   +0x0034 -> line 1256
- *   +0x0044 -> line 1258
- *   +0x0058 -> line 1260
- *   +0x0060 -> line 1264
- *   +0x006c -> line 1266
- *   +0x00e0 -> line 1267
- *   +0x00f0 -> line 1268
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-#pragma auto_inline on
-void fn_vFillListWithAllPersoOfAFamilly(tdstList_* _p_stList, HIE_tdstSuperObject_* _hFather, tdstFamilyList_* _hFamily)
-{
-    HIE_tdstSuperObject_* hChild;
-
-    if (_p_stList->ucNbElt >= _p_stList->ucMaxSize)
-        return;
-    if (_hFather->ulTypeOfLinkedObject == 2 && _hFather->hLinkedObject.p_stCharacter->h_3dData->h_Family == _hFamily)
-        fn_vPutInList(_p_stList, _hFather);
-    for (hChild = _hFather->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn)
-        fn_vFillListWithAllPersoOfAFamilly(_p_stList, hChild, _hFamily);
-}
-#pragma auto_inline reset
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1148–1242 */
-/* addr: 0x0023ada0  size: 412 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1148
- *   +0x0008 -> line 1153
- *   +0x000c -> line 1148
- *   +0x0020 -> line 1150
- *   +0x0024 -> line 1153
- *   +0x0030 -> line 1163
- *   +0x003c -> line 1167
- *   +0x0048 -> line 1168
- *   +0x004c -> line 1170
- *   +0x005c -> line 1173
- *   +0x0060 -> line 1170
- *   +0x0064 -> line 1173
- *   +0x0074 -> line 1174
- *   +0x007c -> line 1180
- *   +0x008c -> line 1184
- *   +0x0098 -> line 1186
- *   +0x00ac -> line 1187
- *   +0x00b4 -> line 1189
- *   +0x00c0 -> line 1191
- *   +0x00d4 -> line 1192
- *   +0x00dc -> line 1199
- *   +0x00f0 -> line 1204
- *   +0x00f8 -> line 1205
- *   +0x0100 -> line 1209
- *   +0x0110 -> line 1210
- *   +0x0118 -> line 1213
- *   +0x012c -> line 1221
- *   +0x0144 -> line 1222
- *   +0x014c -> line 1225
- *   +0x0160 -> line 1230
- *   +0x0178 -> line 1241
- *   +0x017c -> line 1242
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stListZDDZDEProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stDoNotLoadTextures(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdeProcedureId_ eProcedureId;
-    unsigned short xMask;
-    unsigned short xPersoMask;
-    tdstList_* p_stList;
-    short xIndex;
     tdstGetSetParam_ stValue;
 
     eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
 
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-    p_stList = (tdstList_*)stValue.uDummy.uParam.lValue;
 
-    if (eProcedureId == eProc_ListAffectTypeZDEWithTypeZDE)
+    switch (eProcedureId)
     {
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-        xPersoMask = stValue.uDummy.uParam.uwValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-        fn_vAffectTypeZdeWithTypeZdeInList(p_stList, p_SuperObjPerso, xPersoMask, stValue.uDummy.uParam.uwValue);
+    case eProc_DoNotLoadTextures:
+        fn_vSetUnusedTextures(stValue.uDummy.uParam.lValue);
+        break;
     }
-    else
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stSAV2SaveProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdeProcedureId_ eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    tdstGetSetParam_ stParam;
+    char* p_szElementName = NULL;
+    char* p_szElementOptions;
+    SAV2_tdeDataType_ ucType;
+    unsigned char bStatic;
+    unsigned char bSave;
+    unsigned int i;
+    AI_tdstMind_* p_stMind;
+    unsigned char ucArrayId;
+    tdstArray_* p_stArray;
+    unsigned int ulMyVarSize;
+    SAV2_tdeDataType_ eDataType;
+    HIE_tdstSuperObject_* p_stResultOwnerPerso;
+
+    if (eProcedureId != eProc_SAV2_DeleteAllPipeline && eProcedureId != eProc_SAV2_DeleteAll && eProcedureId != eProc_SAV2_ActualizeExistingSave && eProcedureId != eProc_SAV2_GetSaveNameFromSaveNumber && eProcedureId != eProc_SAV2_AutoSaveOnDisk)
     {
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-        xIndex = stValue.uDummy.uParam.wValue;
-        if (eProcedureId == eProc_ListAffectPersoZDD)
-        {
-            fn_vAffectZddInList(p_stList, p_SuperObjPerso, 0, xIndex);
-        }
-        else if (eProcedureId == eProc_ListAffectModuleZDD)
-        {
-            fn_vAffectZddInList(p_stList, p_SuperObjPerso, 1, xIndex);
-        }
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        p_szElementName = fn_szGetStringFromTextOrStringParam(&stParam);
+    }
+
+    switch (eProcedureId)
+    {
+    case eProc_SAV2_DeclareField:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        p_szElementOptions = fn_szGetStringFromTextOrStringParam(&stParam);
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        ulMyVarSize = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
+        SAV2_fn_vFindGoodTypeAndOptionsFromString(p_szElementOptions, &eDataType, &bStatic, &bSave);
+        SAV2_fn_vDeclareAField(p_szElementName, eDataType, ulMyVarSize, bStatic, bSave);
+        return p_stTree;
+
+    case eProc_SAV2_DeleteField:
+        SAV2_fn_vDeleteAField(p_szElementName);
+        return p_stTree;
+
+    case eProc_SAV2_DeleteAllPipeline:
+        SAV2_fn_vDeleteAllPipeline();
+        return p_stTree;
+
+    case eProc_SAV2_DeleteAll:
+        SAV2_fn_vDeleteAllList();
+        return p_stTree;
+
+    case eProc_SAV2_SetValue:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        SAV2_fn_vSetASingleValue(p_szElementName, &stParam);
+        return p_stTree;
+
+    case eProc_SAV2_SetValueIndex:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        i = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        SAV2_fn_vSetAValueAtIndex(p_szElementName, i, &stParam);
+        return p_stTree;
+
+    case eProc_SAV2_AddSingleValueInPipeline:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        SAV2_fn_vSetValueInPipeline(p_szElementName, &stParam);
+        return p_stTree;
+
+    case eProc_SAV2_AddArrayInPipeline:
+    case eProc_SAV2_AddArrayForSave:
+        if (p_stTree->eType == 2)
+            p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree + 1, &p_stResultOwnerPerso);
         else
+            p_stResultOwnerPerso = p_SuperObjPerso;
+        ucArrayId = p_stTree->uDummy.uParam.ucValue;
+        p_stMind = p_stResultOwnerPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind;
+        p_stArray = (tdstArray_*)(p_stMind->p_stDsgMem->p_cDsgMemBuffer + (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucArrayId].ulOffsetInDsgMem);
+        ulMyVarSize = p_stArray->ucMaxSize;
+        fn_ucGetDsgVar(ucArrayId, 0, p_stMind, &stParam);
+        ucType = SAV2_fn_eGiveElementTypeFromAIType(stParam.eType);
+        if (eProcedureId == eProc_SAV2_AddArrayForSave)
+            SAV2_fn_vDeclareAField(p_szElementName, ucType, ulMyVarSize, 1, 1);
+        else
+            SAV2_fn_vDeclareAField(p_szElementName, ucType, ulMyVarSize, 1, 0);
+        for (i = 0; i < ulMyVarSize; i++)
         {
-            if (eProcedureId == eProc_ListAffectPersoZDE || eProcedureId == eProc_ListAffectModuleZDE)
-            {
-                GMT_fn_vResetEntireMask(&xMask);
-            }
-            else
-            {
-                p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-                xMask = stValue.uDummy.uParam.uwValue;
-            }
-            if (eProcedureId == eProc_ListAffectPersoZDE || eProcedureId == eProc_ListAffectPersoTypeZDE)
-            {
-                fn_vAffectZdeInList(p_stList, p_SuperObjPerso, 0, xIndex, xMask);
-            }
-            else if (eProcedureId == eProc_ListAffectModuleZDE || eProcedureId == eProc_ListAffectModuleTypeZDE)
-            {
-                fn_vAffectZdeInList(p_stList, p_SuperObjPerso, 1, xIndex, xMask);
-            }
+            fn_ucGetDsgVar(ucArrayId, i, p_stMind, &stParam);
+            SAV2_fn_vSetAValueAtIndex(p_szElementName, i, &stParam);
         }
+        return p_stTree + 1;
 
-    }
-
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1095–1139 */
-/* addr: 0x0023af40  size: 416 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1095
- *   +0x0008 -> line 1099
- *   +0x000c -> line 1095
- *   +0x001c -> line 1097
- *   +0x0020 -> line 1099
- *   +0x0028 -> line 1104
- *   +0x0068 -> line 1107
- *   +0x00bc -> line 1112
- *   +0x00c4 -> line 1113
- *   +0x00cc -> line 1117
- *   +0x00d4 -> line 1118
- *   +0x00dc -> line 1123
- *   +0x0130 -> line 1128
- *   +0x0184 -> line 1139
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stHitPointsMaxProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdeProcedureId_ eProcedureId;
-    tdstEngineObject_* p_stObject;
-    tdstGetSetParam_ stParam;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-
-    switch (eProcedureId)
-    {
-    case eProc_SetHitPointsMax:
-    {
-        tdstGetSetParam_ stValue;
-
-        p_stObject = stParam.uDummy.uParam.p_stEngObjValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-        fn_vSetHitPointsMax(p_stObject, (stValue.eType == E_vt_Float) ? MTH_M_xRealToLong(stValue.uDummy.uParam.xValue) : stValue.uDummy.uParam.lValue);
-        return p_stTree;
-    }
-    case eProc_SetHitPointsMaxToInitValue:
-        fn_vSetHitPointsMaxToInitValue(stParam.uDummy.uParam.p_stEngObjValue);
-        return p_stTree;
-    case eProc_SetHitPointsMaxToMaxValue:
-        fn_vSetHitPointsMaxToMaxValue(stParam.uDummy.uParam.p_stEngObjValue);
-        return p_stTree;
-    case eProc_AddHitPointsMax:
-    {
-        tdstGetSetParam_ stValue;
-
-        p_stObject = stParam.uDummy.uParam.p_stEngObjValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-        fn_vAddHitPointsMax(p_stObject, (stValue.eType == E_vt_Float) ? MTH_M_xRealToLong(stValue.uDummy.uParam.xValue) : stValue.uDummy.uParam.lValue);
-        return p_stTree;
-    }
-    case eProc_SubHitPointsMax:
-    {
-        tdstGetSetParam_ stValue;
-
-        p_stObject = stParam.uDummy.uParam.p_stEngObjValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-        fn_ucSubHitPointsMax(p_stObject, (stValue.eType == E_vt_Float) ? MTH_M_xRealToLong(stValue.uDummy.uParam.xValue) : stValue.uDummy.uParam.lValue);
-        return p_stTree;
-    }
-    }
-
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1037–1088 */
-/* addr: 0x0023b0e0  size: 452 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1037
- *   +0x0008 -> line 1041
- *   +0x000c -> line 1037
- *   +0x001c -> line 1039
- *   +0x0020 -> line 1041
- *   +0x0028 -> line 1046
- *   +0x0050 -> line 1049
- *   +0x00a8 -> line 1055
- *   +0x00b0 -> line 1054
- *   +0x00b4 -> line 1055
- *   +0x00bc -> line 1056
- *   +0x00c0 -> line 1055
- *   +0x00c4 -> line 1056
- *   +0x00cc -> line 1058
- *   +0x00d4 -> line 1062
- *   +0x00dc -> line 1063
- *   +0x00e4 -> line 1068
- *   +0x00ec -> line 1069
- *   +0x00f4 -> line 1074
- *   +0x014c -> line 1078
- *   +0x01a4 -> line 1087
- *   +0x01a8 -> line 1088
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stHitPointsProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ stParam;
-    tdeProcedureId_ eProcedureId;
-    tdstEngineObject_* hPerso1;
-    tdstEngineObject_* hPerso;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-
-    switch (eProcedureId)
-    {
-    case eProc_SetHitPoints:
-    {
-        tdstGetSetParam_ stValue;
-
-        hPerso = stParam.uDummy.uParam.p_stEngObjValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-        fn_vSetHitPoints(hPerso, (stValue.eType == E_vt_Float) ? MTH_M_xRealToLong(stValue.uDummy.uParam.xValue) : stValue.uDummy.uParam.lValue);
-        return p_stTree;
-    }
-    case eProc_SetHitPointsInit:
-        hPerso1 = stParam.uDummy.uParam.p_stEngObjValue;
+    case eProc_SAV2_AddSingleValueForSave:
         p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        fn_vSetHitPointsInit(hPerso1, stParam.uDummy.uParam.ucValue);
+        SAV2_fn_vSetValueForSave(p_szElementName, &stParam);
         return p_stTree;
-    case eProc_SetHitPointsToInitValue:
-        fn_vSetHitPointsToInitValue(stParam.uDummy.uParam.p_stEngObjValue);
-        return p_stTree;
-    case eProc_SetHitPointsToMaxValue:
-        fn_vSetHitPointsToMaxValue(stParam.uDummy.uParam.p_stEngObjValue);
-        return p_stTree;
-    case eProc_AddHitPoints:
-    {
-        tdstGetSetParam_ stValue;
 
-        hPerso = stParam.uDummy.uParam.p_stEngObjValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-        fn_vAddHitPoints(hPerso, (stValue.eType == E_vt_Float) ? MTH_M_xRealToLong(stValue.uDummy.uParam.xValue) : stValue.uDummy.uParam.lValue);
+    case eProc_SAV2_GetValueString:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        SAV2_fn_xGetASingleValue(p_szElementName, &stParam);
+        SAV2_fn_vDeletePipelineElement(p_szElementName);
         return p_stTree;
-    }
-    case eProc_SubHitPoints:
-    {
-        tdstGetSetParam_ stValue;
 
-        hPerso = stParam.uDummy.uParam.p_stEngObjValue;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-        fn_ucSubHitPoints(hPerso, (stValue.eType == E_vt_Float) ? MTH_M_xRealToLong(stValue.uDummy.uParam.xValue) : stValue.uDummy.uParam.lValue);
+    case eProc_SAV2_GetValueStringIndex:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        i = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        SAV2_fn_xGetAValueAtIndex(p_szElementName, i, &stParam);
         return p_stTree;
+
+    case eProc_SAV2_GetArray:
+    {
+        HIE_tdstSuperObject_* p_stOwner;
+
+        if (p_stTree->eType == 2)
+            p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree + 1, &p_stOwner);
+        else
+            p_stOwner = p_SuperObjPerso;
+        ucArrayId = p_stTree->uDummy.uParam.ucValue;
+        p_stMind = p_stOwner->hLinkedObject.p_stCharacter->h_Brain->p_stMind;
+        p_stArray = (tdstArray_*)(p_stMind->p_stDsgMem->p_cDsgMemBuffer + (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucArrayId].ulOffsetInDsgMem);
+        ulMyVarSize = p_stArray->ucMaxSize;
+        for (i = 0; i < ulMyVarSize; i++)
+        {
+            fn_ucGetDsgVar(ucArrayId, i, p_stMind, &stParam);
+            SAV2_fn_xGetAValueAtIndex(p_szElementName, i, &stParam);
+            fn_ucSetDsgVar(ucArrayId, i, p_stMind, &stParam);
+        }
+        SAV2_fn_vDeletePipelineElement(p_szElementName);
+        return p_stTree + 1;
     }
+
+    case eProc_SAV2_SaveOnDisk:
+        SAV2_fn_bSaveAllOnDisk(p_szElementName);
+        return p_stTree;
+
+    case eProc_SAV2_AutoSaveOnDisk:
+        if (g_DoAutoSaveWhenChangeMap == 1)
+        {
+            PS2MC_fn_vStopPrompts();
+            fn_vR3StoreInitScore();
+            SAV2_fn_bSaveAllOnDisk(g_CurrentSaveName);
+        }
+        return p_stTree;
+
+    case eProc_SAV2_LoadOnDisk:
+        SAV2_fn_bReadAllFromDisk(p_szElementName);
+        return p_stTree;
+
+    case eProc_SAV2_RemoveSaveOnDisk:
+        SAV2_fn_bRemoveSaveFromDisk(p_szElementName);
+        return p_stTree;
+
+    case eProc_SAV2_ActualizeExistingSave:
+        SAV2_fn_bActualizeExistingSave();
+        return p_stTree;
+
+    case eProc_SAV2_GetSaveNameFromSaveNumber:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        p_szElementOptions = SAV2_fn_p_szGetSaveNameOfSaveNumber((unsigned char)((stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue));
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        strcpy(fn_szGetStringFromTextOrStringParam(&stParam), p_szElementOptions);
+        return p_stTree;
     }
 
     return p_stTree;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1016–1030 */
-/* addr: 0x0023b2b0  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1016
- *   +0x0008 -> line 1022
- *   +0x0010 -> line 1030
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stLogWindowProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stSCT_UltraProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    tdstGetSetParam_ stParam;
+    tdeProcedureId_ eProcedureId;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+
+    switch (eProcedureId)
+    {
+    case eProc_SCT_EnableSectorSynchro:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        GAM_fn_vSetObjectSectorSynchro(hNewSuperObjPerso, fn_h_StandardGameGetSuperObject(stParam.uDummy.uParam.p_stEngObjValue->h_StandardGame));
+        return p_stTree;
+
+    case eProc_SCT_DisableSectorSynchro:
+        GAM_fn_vSetObjectSectorSynchro(hNewSuperObjPerso, NULL);
+        return p_stTree;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stPortalActivationProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    HIE_tdstSuperObject_* param0;
+    tdeProcedureId_ eProcedureId;
+    tdstGetSetParam_ stParam;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    param0 = stParam.uDummy.uParam.hSuperObject;
+
+    switch (eProcedureId)
+    {
+    case eProc_ActivePortal:
+        param0->ulTypeOfLinkedObject = 0x40;
+        return p_stTree;
+    case eProc_DeactivePortal:
+        param0->ulTypeOfLinkedObject = 0x20;
+        return p_stTree;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stLogFileProcedure(tdstNodeInterpret_* p_stTree, tdstNodeInterpret_* p_stTree2)
+{
+    return p_stTree2;
+}
+
+tdstNodeInterpret_* fn_p_stFFBProcedures(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstGetSetParam_ stParam;
+    tdeProcedureId_ eProcedureId;
+    unsigned char ucPadNumber;
+    unsigned int ulCurrentTime;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    ulCurrentTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+    ucPadNumber = 0;
+
+    if (eProcedureId != eProc_FFBDeleteAllPreCreatedEffectForAllPad && eProcedureId != eProc_FFBStopAllEffectForAllPad && eProcedureId != eProc_FFBPauseAllEffectForAllPad && eProcedureId != eProc_FFBResumeAllEffectForAllPad)
+    {
+        /* Not original source, needs cleaning up (temp defers the p_stTree move after the pad check) */
+        tdstNodeInterpret_* p_stNext;
+
+        p_stNext = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        ucPadNumber = stParam.uDummy.uParam.ucValue;
+        if (ucPadNumber > 15)
+        {
+            ucPadNumber = 0;
+        }
+        p_stTree = p_stNext;
+    }
+
+    switch (eProcedureId)
+    {
+    case eProc_FFBDeletePreCreatedEffect:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        IPT_fn_vDeletePreCreatedConstantFFBEffect(ucPadNumber, stParam.uDummy.uParam.cValue);
+        break;
+    case eProc_FFBDeleteAllPreCreatedEffectForAPad:
+        IPT_fn_vDeleteAllPreCreatedConstantFFBEffectForDevice(ucPadNumber);
+        break;
+    case eProc_FFBDeleteAllPreCreatedEffectForAllPad:
+        IPT_fn_vDeleteAllPreCreatedConstantFFBEffectForAllDevices();
+        break;
+    case eProc_FFBStartPreCreatedEffect:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        IPT_fn_vStartPreCreatedFFBEffect(ulCurrentTime, ucPadNumber, stParam.uDummy.uParam.cValue);
+        break;
+    case eProc_FFBStopPreCreatedEffect:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        IPT_fn_vStopPreCreatedFFBEffect(ulCurrentTime, ucPadNumber, stParam.uDummy.uParam.cValue);
+        break;
+    case eProc_FFBStopAllEffectForAPad:
+        IPT_fn_vStopAllConstantFFBEffectForDevice(ulCurrentTime, ucPadNumber);
+        break;
+    case eProc_FFBStopAllEffectForAllPad:
+        IPT_fn_vStopAllConstantFFBEffectForAllDevices(ulCurrentTime);
+        break;
+    case eProc_FFBPauseAllEffectForAllPad:
+        IPT_fn_vPauseAllConstantFFBEffectForAllDevices(ulCurrentTime);
+        break;
+    case eProc_FFBResumeAllEffectForAllPad:
+        IPT_fn_vResumeAllConstantFFBEffectForAllDevices(ulCurrentTime);
+        break;
+    case eProc_FFBStopEffect:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        IPT_fn_vStopFFBEffect(ulCurrentTime, ucPadNumber, stParam.uDummy.uParam.cValue);
+        break;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stHandleFamilyDynamicLoad(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstFamilyList_* hFamily;
+    tdeProcedureId_ eProcedureId;
+    tdstGetSetParam_ stParam;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+
+    hFamily = stParam.uDummy.uParam.hFamily;
+    switch (eProcedureId)
+    {
+    case eProc_SetFamilyToLoad:
+        GAM_fn_vSetFamilyToLoad(hFamily);
+        break;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stHandleActorDynamicLoad(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstEngineObject_* p_stEngineObject;
+    tdeProcedureId_ eProcedureId;
+    tdstGetSetParam_ stParam;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+
+    p_stEngineObject = stParam.uDummy.uParam.p_stEngObjValue;
+    switch (eProcedureId)
+    {
+    case eProc_SetActorToLoad:
+        GAM_fn_vSetActorToLoad(p_stEngineObject);
+        break;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stMonitoringStart(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstGetSetParam_ stParam;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    fn_bBbStartMonitoring((stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue);
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stMonitoringStop(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstGetSetParam_ stParam;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    fn_bBbStopMonitoring((stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue);
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stCreateToby(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    long ID;
+    tdstGetSetParam_ stParam;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    ID = (int)((stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue);
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    Toby_Allocate(ID, (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue);
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stAddSegmentToToby(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    MTH3D_tdstVector_ stPt1;
+    MTH3D_tdstVector_ stPt2;
+    tdstGetSetParam_ stParam;
+    int ID;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    ID = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    stPt1 = stParam.uDummy.uParam.stVectorValue;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    stPt2 = stParam.uDummy.uParam.stVectorValue;
+
+    Toby_AddSegment(ID, &stPt1, &stPt2);
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stTobySetTransparency(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstGetSetParam_ stParam;
+    int lValue;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    lValue = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+
+    Toby_SetTransparency(lValue, stParam.uDummy.uParam.xValue);
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stTobyDestroy(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstGetSetParam_ stParam;
+    int lValue;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    lValue = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
+
+    Toby_Destroy(lValue);
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stTobySetMaterial(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstGetSetParam_ stParam;
+    int lValue;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    lValue = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+
+    Toby_SetMaterial((void*)lValue, stParam.uDummy.uParam.hVisualMaterial);
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stValidateMemoryCard(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    int stParam[4];
+    tdstNodeInterpret_* result = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, (tdstGetSetParam_*)stParam);
+    SVG_fn_SetAsCurrentMemoryCard(((unsigned char*)stParam)[0]);
+    return result;
+}
+
+tdstNodeInterpret_* fn_p_stAddMemoryCardString(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    char* pszString;
+    int pos;
+    tdstGetSetParam_ stParam;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    pos = stParam.uDummy.uParam.ucValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    pszString = fn_szGetStringFromTextOrStringParam(&stParam);
+
+    MC_AddString(pos, pszString);
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stScreenProc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstGetSetParam_ stParam;
+    tdeProcedureId_ eProcedureId;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    switch (eProcedureId)
+    {
+    case eProc_EnableWidescreen:
+        GLI_g_bWideScreenMode = 1;
+        break;
+    case eProc_DisableWidescreen:
+        GLI_g_bWideScreenMode = 0;
+        break;
+    case eProc_SetDisplayFrequency:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        if (stParam.uDummy.uParam.lValue == 50)
+            GLI_fn_vSwitchTo50Hz();
+        else
+            GLI_fn_vSwitchTo60Hz();
+        break;
+    }
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stMCProc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdeProcedureId_ eProcedureId;
+    eProcedureId = *(tdeProcedureId_*)((char*)p_stTree - 8);
+    switch (eProcedureId)
+    {
+        case eProc_SetSaveGameAccessType:
+        {
+            int stParam[4];
+            p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, (tdstGetSetParam_*)stParam);
+            MC_ManagmentState = stParam[0];
+        }
+        break;
+    }
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stBulletTimeProc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdeProcedureId_ eProcedureId;
+    eProcedureId = *(tdeProcedureId_*)((char*)p_stTree - 8);
+    switch (eProcedureId)
+    {
+        case eProc_SetFakeSpeedPercentage:
+        {
+            int stParam[4];
+            p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, (tdstGetSetParam_*)stParam);
+            g_iFalseTime = stParam[0];
+        }
+        break;
+    }
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stDemoProc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    int stParam[4];
+    tdeProcedureId_ eProcedureId;
+    eProcedureId = *(tdeProcedureId_*)((char*)p_stTree - 8);
+    if (eProcedureId != eProc_ExitFromDemo) {
+        return p_stTree;
+    }
+    return fn_p_stEvalTree(p_SuperObjPerso, p_stTree, (tdstGetSetParam_*)&stParam[0]);
+}
+
+tdstNodeInterpret_* fn_p_stSetCurrentValueAsInit(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    HIE_tdstSuperObject_* p_stResultOwnerPerso;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator((p_stTree - 1)->uDummy.uId.eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+
+    if (p_stTree->eType == 2)
+        p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree + 1, &p_stResultOwnerPerso);
+    else
+        p_stResultOwnerPerso = p_SuperObjPerso;
+
+    return p_stTree + 1;
+}
+
+tdstNodeInterpret_* fn_p_stWaterEffect_SetRandomPerturbationGeneration(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstGetSetParam_ stParam;
+    long lValue;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    lValue = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    lValue = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stWaterEffect_GenerateImpulse(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     int stParam[4];
     return fn_p_stEvalTree(p_SuperObjPerso, p_stTree, (tdstGetSetParam_*)stParam);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 962–1007 */
-/* addr: 0x0023b2d0  size: 244 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 962
- *   +0x001c -> line 963
- *   +0x0020 -> line 969
- *   +0x0038 -> line 972
- *   +0x004c -> line 976
- *   +0x0058 -> line 978
- *   +0x0060 -> line 980
- *   +0x0074 -> line 987
- *   +0x0078 -> line 990
- *   +0x0084 -> line 987
- *   +0x0088 -> line 992
- *   +0x0094 -> line 994
- *   +0x0098 -> line 992
- *   +0x009c -> line 996
- *   +0x00a0 -> line 994
- *   +0x00a4 -> line 996
- *   +0x00a8 -> line 994
- *   +0x00ac -> line 995
- *   +0x00b0 -> line 994
- *   +0x00b4 -> line 995
- *   +0x00cc -> line 996
- *   +0x00d4 -> line 998
- *   +0x00d8 -> line 1000
- *   +0x00dc -> line 1007
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-HIE_tdstSuperObject_* CAM_fn_hCineInfoGetSuperObjectTargeted(tdstInternalStructurCineinfo_* hCineinfo);
-
-tdstNodeInterpret_* fn_p_stDynamProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stWaterEffect_GenerateSplash(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    unsigned int ulIndex;
-    tdstCineinfo_* hCineinfo;
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    tdeProcedureId_ eProcedureId;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
-
-    switch (eProcedureId)
-    {
-    case 0xAD:
-        if (g_stEngineStructure.h_StdCamCaracter)
-        {
-            hCineinfo = g_stEngineStructure.h_StdCamCaracter->hLinkedObject.p_stCharacter->h_Cineinfo;
-            if (CAM_fn_hCineInfoGetSuperObjectTargeted(hCineinfo->hCurrent) == hNewSuperObjPerso)
-            {
-                MTH3D_tdstVector_* p_stPos = (MTH3D_tdstVector_*)&hNewSuperObjPerso->hGlobalMatrix->stTransformMatrix.stCol_3;
-                for (ulIndex = 0; ulIndex < 8; ulIndex++)
-                {
-                    hCineinfo->AveragePosition.a_CheckedTime[ulIndex] = 0.03f;
-                    hCineinfo->AveragePosition.a_CheckedSpeed[ulIndex].xX = 0.0f; hCineinfo->AveragePosition.a_CheckedSpeed[ulIndex].xY = 0.0f; hCineinfo->AveragePosition.a_CheckedSpeed[ulIndex].xZ = 0.0f;
-                    *(int*)&hCineinfo->AveragePosition.a_CheckedPos[ulIndex].xX = *(int*)&p_stPos->xX; *(int*)&hCineinfo->AveragePosition.a_CheckedPos[ulIndex].xY = *(int*)&p_stPos->xY; *(int*)&hCineinfo->AveragePosition.a_CheckedPos[ulIndex].xZ = *(int*)&p_stPos->xZ;
-                }
-            }
-        }
-        return p_stTree;
-    }
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 922–956 */
-/* addr: 0x0023b3d0  size: 172 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 922
- *   +0x0008 -> line 931
- *   +0x000c -> line 922
- *   +0x0014 -> line 924
- *   +0x0018 -> line 931
- *   +0x0030 -> line 937
- *   +0x0044 -> line 941
- *   +0x0094 -> line 945
- *   +0x0098 -> line 956
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stMiscMoreProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdeProcedureId_ eProcedureId;
-    tdstGetSetParam_ stParam1;
-    tdstGetSetParam_ stParam2;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam2);
-
-    switch (eProcedureId)
-    {
-    case eProc_PlayerIsDeadWithPlacement:
-        fn_vSnifThePlayerIsDeadWithResurrectionAt(
-            stParam1.uDummy.uParam.p_stEngObjValue ? fn_h_StandardGameGetSuperObject(stParam1.uDummy.uParam.p_stEngObjValue->h_StandardGame) : NULL,
-            stParam2.uDummy.uParam.p_stEngObjValue ? fn_h_StandardGameGetSuperObject(stParam2.uDummy.uParam.p_stEngObjValue->h_StandardGame) : NULL);
-        return p_stTree;
-    }
-
-    return p_stTree;
-}
-
-void fn_vSaveEngineClock(void);
-void fn_vLoadEngineClock(void);
-void HIE_fn_vInvalidateHierarchy(HIE_tdstSuperObject_* _hSprObj);
-void HIE_fn_vChangeFather(HIE_tdstSuperObject_* _hSprObj, HIE_tdstSuperObject_* _hNewFather, unsigned char _bAtHead);
-tdstNodeMainCharacter_* MC_fn_hGetFirstMainCharNode(void);
-void MC_fn_vSetNewMainCharacter(tdstNodeMainCharacter_* hNode, HIE_tdstSuperObject_* hCharacter);
-void fn_vForceActiveAnObject(tdstEngineObject_* p_stObject);
-void fn_vDesactiveAnObject(tdstEngineObject_* p_stObject);
-int strcasecmp(const char* s1, const char* s2);
-void GAM_fn_vAskToChangeLevel(char* szNewLevelName, unsigned char bSaveGame);
-void GAM_fn_vAskToChangeLevelWithTransition(char* szNewLevelName, unsigned char bSaveGame);
-void fn_vR3ReInitScore(void);
-void fn_v3dDataSetGlobalAccelerationFactor(float fFactor);
-int DNM_fn_eIdentityCardGetType(void* _hCurrent);
-void MEC_fn_vFreePlatformLink(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj);
-void fn_vReputCharacterSuperObjectAtTheWorld(HIE_tdstSuperObject_* hSupObj);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 732–915 */
-/* addr: 0x0023b480  size: 876 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 732
- *   +0x0008 -> line 736
- *   +0x000c -> line 732
- *   +0x0024 -> line 734
- *   +0x0028 -> line 736
- *   +0x0030 -> line 738
- *   +0x00ac -> line 742
- *   +0x00b0 -> line 746
- *   +0x00c8 -> line 749
- *   +0x00d0 -> line 751
- *   +0x00e0 -> line 754
- *   +0x00ec -> line 759
- *   +0x00f0 -> line 761
- *   +0x00f8 -> line 763
- *   +0x0100 -> line 769
- *   +0x0108 -> line 773
- *   +0x0114 -> line 774
- *   +0x011c -> line 777
- *   +0x0120 -> line 779
- *   +0x012c -> line 784
- *   +0x0130 -> line 785
- *   +0x0134 -> line 784
- *   +0x0138 -> line 785
- *   +0x013c -> line 787
- *   +0x0144 -> line 790
- *   +0x014c -> line 795
- *   +0x0158 -> line 797
- *   +0x0168 -> line 799
- *   +0x0170 -> line 800
- *   +0x0178 -> line 802
- *   +0x0184 -> line 803
- *   +0x01b8 -> line 806
- *   +0x01c0 -> line 810
- *   +0x01c8 -> line 812
- *   +0x01d4 -> line 813
- *   +0x01d8 -> line 815
- *   +0x01dc -> line 817
- *   +0x01ec -> line 820
- *   +0x01f4 -> line 824
- *   +0x0218 -> line 825
- *   +0x0220 -> line 832
- *   +0x0228 -> line 834
- *   +0x0230 -> line 838
- *   +0x0238 -> line 839
- *   +0x0240 -> line 848
- *   +0x024c -> line 849
- *   +0x0264 -> line 851
- *   +0x0270 -> line 852
- *   +0x0278 -> line 854
- *   +0x0280 -> line 857
- *   +0x0290 -> line 860
- *   +0x02a8 -> line 862
- *   +0x02bc -> line 863
- *   +0x02c4 -> line 866
- *   +0x02d0 -> line 869
- *   +0x02e0 -> line 873
- *   +0x02e4 -> line 881
- *   +0x02f0 -> line 885
- *   +0x0308 -> line 886
- *   +0x0320 -> line 894
- *   +0x0328 -> line 898
- *   +0x032c -> line 899
- *   +0x0334 -> line 900
- *   +0x033c -> line 904
- *   +0x0344 -> line 905
- *   +0x0348 -> line 915
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stMiscProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ stValue;
-    tdeProcedureId_ eProcedureId;
-    tdstEngineObject_* p_stObj;
-    unsigned char bFreeze;
-    tdstStandardGame_* hStdGame;
-    unsigned char bPlatform;
-    HIE_tdstSuperObject_* hChild;
-    tdstDynam_* hDynam;
-    DNM_stDynamics* p_stDynamic;
-    char* pMapName;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-
-    switch (eProcedureId)
-    {
-    case eProc_ForcePersoHandling:
-        p_stObj = stValue.uDummy.uParam.p_stEngObjValue;
-        if (g_stEngineStructure.stEngineTimer.ulTrameNumber == p_stObj->h_StandardGame->ulLastTrame)
-        {
-            p_stObj->h_StandardGame->ulLastTrame = g_stEngineStructure.stEngineTimer.ulTrameNumber - 1;
-            HIE_fn_vInvalidateHierarchy(fn_h_StandardGameGetSuperObject(p_stObj->h_StandardGame));
-        }
-        return p_stTree;
-
-    case eProc_HierFreezeEngine:
-        bFreeze = stValue.uDummy.uParam.ucValue;
-        if (bFreeze)
-            fn_vSaveEngineClock();
-        else if (g_stEngineStructure.bEngineFrozen)
-            fn_vLoadEngineClock();
-        g_stEngineStructure.bEngineFrozen = bFreeze;
-        return p_stTree;
-
-    case eProc_HierSetPlatformType:
-        hStdGame = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_StandardGame;
-        bPlatform = stValue.uDummy.uParam.ucValue;
-        if (hStdGame->ucPlatFormType != bPlatform)
-        {
-            if (hStdGame->ucPlatFormType)
-            {
-                for (hChild = p_SuperObjPerso->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn)
-                {
-                    if (hChild->ulTypeOfLinkedObject == 2)
-                    {
-                        hDynam = hChild->hLinkedObject.p_stCharacter->h_Dynam;
-                        if (hDynam)
-                        {
-                            p_stDynamic = fn_p_stDynamGetDynamics(hDynam);
-                            if (p_stDynamic)
-                            {
-                                if ((unsigned char)(p_stDynamic->m_tdstDynamicsBaseBlock.m_pCurrentIdCard && DNM_fn_eIdentityCardGetType((void*)p_stDynamic->m_tdstDynamicsBaseBlock.m_pCurrentIdCard) == 1))
-                                    MEC_fn_vFreePlatformLink(p_stDynamic, hChild);
-                            }
-                        }
-                        fn_vReputCharacterSuperObjectAtTheWorld(hChild);
-                    }
-                }
-            }
-            hStdGame->ucPlatFormType = bPlatform;
-            HIE_fn_vChangeFather(p_SuperObjPerso, p_SuperObjPerso->hFatherDyn, bPlatform);
-        }
-        return p_stTree;
-
-    case eProc_SetMainActor:
-        MC_fn_vSetNewMainCharacter(MC_fn_hGetFirstMainCharNode(), fn_h_StandardGameGetSuperObject(stValue.uDummy.uParam.p_stEngObjValue->h_StandardGame));
-        return p_stTree;
-
-    case eProc_ActivateObject:
-        fn_vForceActiveAnObject(stValue.uDummy.uParam.p_stEngObjValue);
-        return p_stTree;
-
-    case eProc_DesactivateObject:
-        fn_vDesactiveAnObject(stValue.uDummy.uParam.p_stEngObjValue);
-        return p_stTree;
-
-    case eProc_ChangeMapNoAutosave:
-    case eProc_ChangeMap:
-        pMapName = fn_szGetStringFromTextOrStringParam(&stValue);
-        if (!strcasecmp(pMapName, "menumap"))
-        {
-            GAM_fn_vAskToChangeLevel(SAV2_g_LevelNameToSave, 0);
-            fn_vR3ReInitScore();
-        }
-        else
-        {
-            GAM_fn_vAskToChangeLevel(pMapName, eProcedureId == eProc_ChangeMap);
-            if (!strcasecmp(pMapName, "staff"))
-                strcpy(SAV2_g_LevelNameToSave, "endgame");
-            else
-                strcpy(SAV2_g_LevelNameToSave, pMapName);
-            if (g_DoAutoSaveWhenChangeMap == 1)
-                GLI_g_PerformAutosaveAfterVideo = 1;
-        }
-        return p_stTree;
-
-    case eProc_ChangeMapWithTransition:
-        GAM_fn_vAskToChangeLevelWithTransition(fn_szGetStringFromTextOrStringParam(&stValue), eProcedureId == eProc_ChangeMap);
-        strcpy(SAV2_g_LevelNameToSave, fn_szGetStringFromTextOrStringParam(&stValue));
-        return p_stTree;
-
-    case eProc_SetActionReturn:
-        g_ucNewActionReturn = stValue.uDummy.uParam.cValue;
-        g_ucUseDefaultActionReturn = 1;
-        return p_stTree;
-
-    case eProc_SetGlobalAccelerationFactorForAnims:
-        fn_v3dDataSetGlobalAccelerationFactor(stValue.uDummy.uParam.xValue);
-        return p_stTree;
-    }
-
-    return p_stTree;
-}
-
-inline void fn_vResetCheapCharacterList(unsigned int ulInd)
-{
-    _tdstCheapCharacterList* pCheapList = &g_aListOfCheapCharacterList[ulInd];
-    unsigned int i;
-
-    pCheapList->NumberOfCheapCharacter = 0;
-    pCheapList->pReferenceObject = NULL;
-    pCheapList->ulOptionFlags = 0;
-    for (i = 0; i < pCheapList->MaxNumberOfCheapCharacter; i++)
-        pCheapList->List[i].cActivity = 0;
-    pCheapList->hAuraVisualMaterial = NULL;
-    pCheapList->bAurasNeedToBeDrawn = 0;
-}
-
-void fn_vKillEngineObjectOrAlwaysByPointer(tdstEngineObject_* p_stObject);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 629–715 */
-/* addr: 0x0023b7f0  size: 704 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 629
- *   +0x0004 -> line 639
- *   +0x0008 -> line 629
- *   +0x0028 -> line 636
- *   +0x002c -> line 629
- *   +0x0030 -> line 630
- *   +0x0034 -> line 639
- *   +0x0050 -> line 642
- *   +0x0078 -> line 644
- *   +0x007c -> line 642
- *   +0x0080 -> line 644
- *   +0x0084 -> line 642
- *   +0x0088 -> line 644
- *   +0x008c -> line 642
- *   +0x0094 -> line 644
- *   +0x00ac -> line 647
- *   +0x00b0 -> line 650
- *   +0x00c8 -> line 652
- *   +0x00fc -> line 654
- *   +0x0144 -> line 655
- *   +0x0158 -> line 661
- *   +0x0160 -> line 664
- *   +0x0188 -> line 666
- *   +0x0190 -> line 671
- *   +0x01a8 -> line 674
- *   +0x01b0 -> line 679
- *   +0x01b8 -> line 682
- *   +0x01bc -> line 679
- *   +0x01c0 -> line 685
- *   +0x01d4 -> line 687
- *   +0x0208 -> line 689
- *   +0x024c -> line 690
- *   +0x0260 -> line 696
- *   +0x0268 -> line 699
- *   +0x0290 -> line 701
- *   +0x0298 -> line 704
- *   +0x029c -> line 715
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stKillPersoAndClearVariableProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdeProcedureId_ eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-    tdstEngineObject_* hKilledObject;
     tdstGetSetParam_ stParam;
-    AI_tdstMind_* p_stMind;
-    unsigned char ucVarId;
-    unsigned int i;
-    _tdstCheapCharacterList* pCheapList = g_aListOfCheapCharacterList;
-    HIE_tdstSuperObject_* p_stResultOwnerPerso;
+    long lValue;
 
-    switch (eProcedureId)
-    {
-    case eProc_KillPersoAndClearVariable:
-        if (p_stTree->eType == 2)
-            p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree + 1, &p_stResultOwnerPerso);
-        else
-            p_stResultOwnerPerso = p_SuperObjPerso;
-        ucVarId = p_stTree->uDummy.uParam.ucValue;
-        p_stMind = p_stResultOwnerPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    lValue = (stParam.eType == E_vt_Float) ? 0 : stParam.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    lValue = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
+    return p_stTree;
+}
 
-        if (fn_ucGetDsgVar(ucVarId, 0, p_stMind, &stParam) == 1)
-        {
-            hKilledObject = stParam.uDummy.uParam.p_stEngObjValue;
-
-            for (i = 0; i < g_lNbListOfCheapCharacterList; i++)
-            {
-                if (pCheapList[i].NumberOfCheapCharacter && M_GetEngineObject(pCheapList[i].pReferenceObject) == hKilledObject)
-                    fn_vResetCheapCharacterList(i);
-            }
-
-            fn_vKillEngineObjectOrAlwaysByPointer(hKilledObject);
-
-            if (hKilledObject == M_GetEngineObject(p_SuperObjPerso))
-                fn_vSetProcedureActionReturn(3);
-
-            stParam.uDummy.uParam.p_stEngObjValue = NULL;
-            fn_ucSetDsgVar(ucVarId, 0, p_stMind, &stParam);
-        }
-        return p_stTree + 1;
-
-    case eProc_KillPerso:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        hKilledObject = stParam.uDummy.uParam.p_stEngObjValue;
-
-        for (i = 0; i < g_lNbListOfCheapCharacterList; i++)
-        {
-            if (pCheapList[i].NumberOfCheapCharacter && M_GetEngineObject(pCheapList[i].pReferenceObject) == hKilledObject)
-                fn_vResetCheapCharacterList(i);
-        }
-
-        fn_vKillEngineObjectOrAlwaysByPointer(hKilledObject);
-
-        if (hKilledObject == M_GetEngineObject(p_SuperObjPerso))
-            fn_vSetProcedureActionReturn(3);
-        return p_stTree;
-    }
+tdstNodeInterpret_* fn_p_stSFX_ActivateLightReflection(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstGetSetParam_ stParam;
+    long lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    if (stParam.eType == E_vt_Float) lValue = MTH_M_xRealToLong(stParam.uDummy.uParam.xValue);
 
     return p_stTree;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 626–626 */
-/* addr: 0x0023bab0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 626
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stDeletePersoFromGameProcedure(tdstNodeInterpret_* p_stTree, tdstNodeInterpret_* p_stTree2)
+tdstNodeInterpret_* fn_p_stSFX_ActivateWaterCircles(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstGetSetParam_ stParam;
+    long lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    if (stParam.eType == E_vt_Float) lValue = MTH_M_xRealToLong(stParam.uDummy.uParam.xValue);
+
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stGcSetActiveMcSlot(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    int stParam[4];
+    return fn_p_stEvalTree(p_SuperObjPerso, p_stTree, (tdstGetSetParam_*)stParam);
+}
+
+tdstNodeInterpret_* fn_p_stGcResetToIpl(tdstNodeInterpret_* p_stTree, tdstNodeInterpret_* p_stTree2)
 {
     return p_stTree2;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 500–566 */
-/* addr: 0x0023bac0  size: 296 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 500
- *   +0x0004 -> line 502
- *   +0x0008 -> line 500
- *   +0x001c -> line 501
- *   +0x0020 -> line 502
- *   +0x0050 -> line 506
- *   +0x0058 -> line 511
- *   +0x0080 -> line 512
- *   +0x0084 -> line 514
- *   +0x008c -> line 515
- *   +0x0098 -> line 518
- *   +0x00a0 -> line 521
- *   +0x00a8 -> line 527
- *   +0x00b4 -> line 529
- *   +0x00bc -> line 535
- *   +0x00c4 -> line 536
- *   +0x00cc -> line 538
- *   +0x00d8 -> line 540
- *   +0x00e0 -> line 543
- *   +0x00e8 -> line 544
- *   +0x00f0 -> line 546
- *   +0x00f8 -> line 551
- *   +0x0104 -> line 555
- *   +0x010c -> line 556
- *   +0x0110 -> line 566
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stMiscNoProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    void* hMecIdCard;
-    DNM_stDynamics* p_stDynamics;
-    tdstDynam_* h_Dynam;
-    tdstComport_* p_stComport;
-    tdstIntelligence_* p_stIntelligence;
-    tdeProcedureId_ eProcedureId;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-
-    switch (eProcedureId)
-    {
-    case eProc_IgnoreTraceFlagForNextPicking:
-        g_ulOverRideRayTraceSpoMask = 0;
-        return p_stTree;
-    case eProc_BreakAI:
-    {
-        AI_tdstMind_* p_stMind;
-
-        p_stMind = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind;
-        if (p_stMind->bDoingIntel)
-            p_stIntelligence = p_stMind->p_stIntelligence;
-        else
-            p_stIntelligence = p_stMind->p_stReflex;
-        p_stComport = p_stIntelligence->p_stCurrentComport;
-        fn_vInitActionTable(p_stIntelligence);
-        if (p_stComport->p_stSchedule == NULL)
-            p_stIntelligence->p_stCurrentSchedule = NULL;
-        else
-            p_stIntelligence->p_stCurrentSchedule = p_stComport->p_stSchedule->p_stNodeInterpret;
-        iNumLoop = 0;
-        fn_vSetProcedureActionReturn(11);
-        return p_stTree;
-    }
-    case eProc_ResetDynamicsWithCard:
-        h_Dynam = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;
-        if (h_Dynam)
-        {
-            p_stDynamics = fn_p_stDynamGetDynamics(h_Dynam);
-            if (p_stDynamics)
-            {
-                hMecIdCard = (void*)fn_h_GetCurrentDNMIdCard(p_SuperObjPerso);
-                if (hMecIdCard)
-                    DNM_fn_vChangeIdCard(p_stDynamics, hMecIdCard);
-            }
-        }
-        return p_stTree;
-    case eProc_PlayerIsDead:
-        fn_vSnifThePlayerIsDead();
-        return p_stTree;
-    }
-
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 431–492 */
-/* addr: 0x0023bbf0  size: 420 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 431
- *   +0x0020 -> line 432
- *   +0x0024 -> line 439
- *   +0x003c -> line 442
- *   +0x0080 -> line 446
- *   +0x008c -> line 448
- *   +0x0090 -> line 446
- *   +0x0094 -> line 448
- *   +0x00cc -> line 450
- *   +0x00d4 -> line 456
- *   +0x00d8 -> line 455
- *   +0x00e8 -> line 456
- *   +0x00f0 -> line 461
- *   +0x00fc -> line 463
- *   +0x0100 -> line 461
- *   +0x0104 -> line 463
- *   +0x013c -> line 464
- *   +0x0144 -> line 470
- *   +0x0150 -> line 472
- *   +0x0160 -> line 474
- *   +0x0168 -> line 479
- *   +0x0174 -> line 480
- *   +0x0184 -> line 481
- *   +0x0188 -> line 492
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stMiscUltraProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    tdstGetSetParam_ stParam;
-    tdeProcedureId_ eProcedureId;
-
-    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
-
-    switch (eProcedureId)
-    {
-    case eProc_SetCharacterPriority:
-    {
-        tdstEngineObject_* p_stCharacter;
-
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        p_stCharacter = hNewSuperObjPerso->hLinkedObject.p_stCharacter;
-        CS_fn_vSetCharacterPriority(p_stCharacter->h_CollSet, (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue);
-        return p_stTree;
-    }
-    case eProc_EraseLastGoThroughMaterial:
-        hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->hLastCollidedGoThroughMaterial = (GMT_tdstGameMaterial_*)0xcdcdcdcd;
-        return p_stTree;
-    case eProc_FactorAnimationFrameRate:
-    {
-        tdstEngineObject_* p_stCharacter;
-
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        p_stCharacter = hNewSuperObjPerso->hLinkedObject.p_stCharacter;
-        fn_v3dDataFactorFrameRate(p_stCharacter->h_3dData, (stParam.eType == E_vt_Float) ? (unsigned int)MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.ulValue);
-        return p_stTree;
-    }
-    case eProc_SetGoThroughMechanicsHandling:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->bWarnMechanicsFlag = stParam.uDummy.uParam.cValue;
-        return p_stTree;
-    case eProc_SetDynamicAlwaysActive:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        fn_vChangeDynamicAlwaysActiveState(hNewSuperObjPerso, (int)stParam.uDummy.uParam.ucValue);
-        return p_stTree;
-    }
-
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 232–277 */
-/* addr: 0x0023bda0  size: 284 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 232
- *   +0x0004 -> line 237
- *   +0x0008 -> line 232
- *   +0x0024 -> line 233
- *   +0x0028 -> line 237
- *   +0x0044 -> line 242
- *   +0x0054 -> line 243
- *   +0x0058 -> line 242
- *   +0x005c -> line 248
- *   +0x0070 -> line 251
- *   +0x009c -> line 254
- *   +0x00a4 -> line 255
- *   +0x00ac -> line 257
- *   +0x00b4 -> line 258
- *   +0x00bc -> line 260
- *   +0x00c4 -> line 261
- *   +0x00cc -> line 263
- *   +0x00d4 -> line 264
- *   +0x00dc -> line 266
- *   +0x00e4 -> line 267
- *   +0x00ec -> line 270
- *   +0x00f4 -> line 272
- *   +0x00fc -> line 276
- *   +0x0100 -> line 277
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stR3SetValue(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_st2DMenuProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdeProcedureId_ eProcedureId;
-    tdstGetSetParam_ stParam;
-    unsigned int ulIndEnv;
-    unsigned int ulValue;
-
     eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-    ulIndEnv = 0;
-    switch (eProcedureId)
-    {
-    case eProc_R3SetScore:
-    case eProc_R3SetNbCage:
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        ulIndEnv = stParam.uDummy.uParam.lValue;
+    switch (eProcedureId) {
+    case eProc_Begin2DMenu:
+        ActivateInGameMenu2D();
+        break;
+    case eProc_Begin2DMenuStart:
+        ActivateInGameMenu2DStart();
+        break;
+    case eProc_Begin2DMenuPhoto:
+        ActivateInGameMenu2DPhoto();
+        break;
+    case eProc_Begin2DMenuBonus:
+        ActivateInGameMenu2DBonus(0);
+        break;
+    case eProc_Begin2DMenuBonusExit:
+        ActivateInGameMenu2DBonus(1);
+        break;
+    default:
         break;
     }
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stAllowNormalsRecomputing(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstGetSetParam_ stParam;
+    long lValue;
+
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    ulValue = stParam.uDummy.uParam.lValue;
+    lValue = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
 
-    switch (eProcedureId)
-    {
-    case eProc_R3SetScore:
-        fn_vR3SetEnvScoreWithRevisit(ulIndEnv, ulValue);
-        break;
-    case eProc_R3SetNbCage:
-        fn_vR3SetEnvNbCage(ulIndEnv, ulValue);
-        break;
-    case eProc_R3SetCurrentEnvNumber:
-        fn_vR3SetCurrentEnvNumber(ulValue);
-        break;
-    case eProc_R3SetNbCineOpen:
-        fn_vR3SetNbCineOpen(ulValue);
-        break;
-    case eProc_R3SetNbBonusOpen:
-        fn_vR3SetNbBonusOpen(ulValue);
-        break;
-    case eProc_R3SetAutoSave:
-        g_DoAutoSaveWhenChangeMap = ulValue;
-        break;
-    case eProc_R3SetEndOfGame:
-        fn_vR3SetEndOfGame(ulValue);
-        break;
-    }
+    if (lValue == 0)
 
+        p_SuperObjPerso->ulFlags &= ~0x200000;
+
+    else
+        p_SuperObjPerso->ulFlags |= 0x200000;
     return p_stTree;
 }

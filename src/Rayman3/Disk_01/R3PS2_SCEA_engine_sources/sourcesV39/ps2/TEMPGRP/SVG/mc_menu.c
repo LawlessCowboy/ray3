@@ -91,18 +91,61 @@ anon_enum_0003f5a6 MC_Messages;
 char* strcpy();
 int SVG_fn_s32ReadNextName(int _iPort, int _iSlot, char* _szFileName, int _not_first, char* _pRes);
 
-void MC_CheckStrings(void)
-{
-    int i;
-
-    for (i = 0; i < 32; i++)
-    {
-        if (!MC_Strings[i])
-        {
-            strcpy(MC_Strings[i], MC_BackupStrings[i]);
-        }
-    }
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void MC_CheckStrings(void);
+void MC_AddString(int Number, char* String);
+void MC_SetBackgroundMaterial(void* pMaterial);
+int MC_XButtonPressed(void);
+int MC_TriangleButtonPressed(void);
+int MC_SquareButtonPressed(void);
+int MC_XorOButtonsPressed(void);
+int MC_XorTriangleButtonsPressed(void);
+int MC_SquareOrTriangleButtonsPressed(void);
+void MC_WaitForXAndOButtonRelease(void);
+void MC_WaitForXAndTriangleButtonRelease(void);
+void MC_WaitForSquareAndTriangleButtonRelease(void);
+void MC_WaitForXButtonRelease(void);
+void MC_WaitForTriangleButtonRelease(void);
+void MC_WaitForSquareButtonRelease(void);
+void MC_DrawString(char* String, float YPos);
+void MC_PrintMessage(char* String, float Y_Pos);
+int MC_PrintMessageAndWaitForYesNoFormat(char* String, float Y_Pos);
+int MC_PrintMessageAndWaitForYesNo(char* String, float Y_Pos);
+int MC_PrintMessageAndWaitForYesNoMC(char* String, float Y_Pos);
+int MC_PrintMessageAndWaitForSquareTriangleMC(char* String, float Y_Pos);
+int MC_AskForInsertion(void);
+int MC_LoadAskForInsertion(void);
+int MC_ManageFormatting(void);
+int MC_AreYouSure(void);
+int MC_Changed(void);
+int MC_NotEnoughtSpace(char* p_szUnused);
+int MC_NotEnoughtSpaceBoot(void);
+int MC_AskForOverwrite(char* SavingName);
+int MC_AskForOverwriteSettings(char* SavingName);
+int MC_AskToReconnectPad(int PadNumber);
+int MC_Save(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize);
+int MC_Load(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize);
+int MC_Present(void);
+int MC_Formatted(void);
+int MC_MemoryCardChanged(void);
+void MC_AknowledgeMemoryCard(void);
+int MC_SaveGameAlreadyExist(char* SavingName);
+int MC_Format(void);
+int MC_CheckNeededSize(char* p_szUnused, int iUnused);
+int MC_HasEnoughtSpace(void);
+int MC_Boot(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize);
+int MC_NewGameLoad(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize);
+int MC_NewGameSaveOnLock(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize);
+int MC_NewGameSaveOnEmpty(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize);
+int MC_LoadGame(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize);
+int MC_LoadSettings(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize);
+int MC_SaveSettingsPart1(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize);
+int MC_SaveSettingsOnEmpty(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize);
+int MC_SaveSettingsOnLock(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize);
+int MC_CheckLanguages(void);
+int LoadPartieMenu(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize, char* SavingName, int bSavingOptions);
+int SauvePartieMenu(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize, char* SavingName, int bSavingOptions);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 309–354 */
 /* addr: 0x00137780  size: 420 bytes */
@@ -135,13 +178,6 @@ void MC_CheckStrings(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void MC_AddString(int Number, char* String)
-{
-    char* pDest;
-    char* psrc;
-    char* p;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 380–383 */
 /* addr: 0x00137930  size: 40 bytes */
@@ -153,11 +189,6 @@ void MC_AddString(int Number, char* String)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void MC_SetBackgroundMaterial(void* pMaterial)
-{
-    if (MC_g_MemoryCardOperationBackGroundTexture == 0)
-        MC_g_MemoryCardOperationBackGroundTexture = (int)pMaterial;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 411–432 */
 /* addr: 0x00137960  size: 152 bytes */
@@ -184,26 +215,6 @@ int scePadRead(int port, int slot, unsigned char* rdata);
 #pragma optimization_level 2
 #pragma peephole off
 
-int MC_XButtonPressed(void)
-{
-    MC_AskToReconnectPad(0);
-
-    if (scePadRead(0, 0, rdata) > 0)
-    {
-        paddata = 0xffff ^ ((rdata[2] << 8) | rdata[3]);
-    }
-    else
-    {
-        paddata = 0;
-    }
-
-    if (paddata & 0x40)
-    {
-        return 1;
-    }
-    return 0;
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 435–452 */
 /* addr: 0x00137a00  size: 152 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -220,25 +231,6 @@ int MC_XButtonPressed(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_TriangleButtonPressed(void)
-{
-    MC_AskToReconnectPad(0);
-
-    if (scePadRead(0, 0, rdata) > 0)
-    {
-        paddata = 0xffff ^ ((rdata[2] << 8) | rdata[3]);
-    }
-    else
-    {
-        paddata = 0;
-    }
-
-    if (paddata & 0x10)
-    {
-        return 4;
-    }
-    return 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 455–472 */
 /* addr: 0x00137aa0  size: 152 bytes */
@@ -256,25 +248,6 @@ int MC_TriangleButtonPressed(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_SquareButtonPressed(void)
-{
-    MC_AskToReconnectPad(0);
-
-    if (scePadRead(0, 0, rdata) > 0)
-    {
-        paddata = 0xffff ^ ((rdata[2] << 8) | rdata[3]);
-    }
-    else
-    {
-        paddata = 0;
-    }
-
-    if (paddata & 0x80)
-    {
-        return 5;
-    }
-    return 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 501–532 */
 /* addr: 0x00137b40  size: 180 bytes */
@@ -294,29 +267,6 @@ int MC_SquareButtonPressed(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_XorOButtonsPressed(void)
-{
-    MC_AskToReconnectPad(0);
-
-    if (scePadRead(0, 0, rdata) > 0)
-    {
-        paddata = 0xffff ^ ((rdata[2] << 8) | rdata[3]);
-    }
-    else
-    {
-        paddata = 0;
-    }
-
-    if (paddata & 0x40)
-    {
-        return 1;
-    }
-    else if (paddata & 0x20)
-    {
-        return 2;
-    }
-    return 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 535–566 */
 /* addr: 0x00137c00  size: 180 bytes */
@@ -336,29 +286,6 @@ int MC_XorOButtonsPressed(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_XorTriangleButtonsPressed(void)
-{
-    MC_AskToReconnectPad(0);
-
-    if (scePadRead(0, 0, rdata) > 0)
-    {
-        paddata = 0xffff ^ ((rdata[2] << 8) | rdata[3]);
-    }
-    else
-    {
-        paddata = 0;
-    }
-
-    if (paddata & 0x40)
-    {
-        return 1;
-    }
-    else if (paddata & 0x10)
-    {
-        return 4;
-    }
-    return 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 569–590 */
 /* addr: 0x00137cc0  size: 180 bytes */
@@ -378,29 +305,6 @@ int MC_XorTriangleButtonsPressed(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_SquareOrTriangleButtonsPressed(void)
-{
-    MC_AskToReconnectPad(0);
-
-    if (scePadRead(0, 0, rdata) > 0)
-    {
-        paddata = 0xffff ^ ((rdata[2] << 8) | rdata[3]);
-    }
-    else
-    {
-        paddata = 0;
-    }
-
-    if (paddata & 0x80)
-    {
-        return 5;
-    }
-    else if (paddata & 0x10)
-    {
-        return 4;
-    }
-    return 0;
-}
 
 #pragma optimization_level 0
 #pragma peephole on
@@ -415,11 +319,6 @@ int MC_SquareOrTriangleButtonsPressed(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void MC_WaitForXAndOButtonRelease(void)
-{
-    MC_AskToReconnectPad(0);
-    while (MC_XorOButtonsPressed()) {}
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 605–612 */
 /* addr: 0x00137dd0  size: 72 bytes */
@@ -431,11 +330,6 @@ void MC_WaitForXAndOButtonRelease(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void MC_WaitForXAndTriangleButtonRelease(void)
-{
-    MC_AskToReconnectPad(0);
-    while (MC_XorTriangleButtonsPressed()) {}
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 615–622 */
 /* addr: 0x00137e20  size: 72 bytes */
@@ -447,11 +341,6 @@ void MC_WaitForXAndTriangleButtonRelease(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void MC_WaitForSquareAndTriangleButtonRelease(void)
-{
-    MC_AskToReconnectPad(0);
-    while (MC_SquareOrTriangleButtonsPressed()) {}
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 626–635 */
 /* addr: 0x00137e70  size: 72 bytes */
@@ -463,11 +352,6 @@ void MC_WaitForSquareAndTriangleButtonRelease(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void MC_WaitForXButtonRelease(void)
-{
-    MC_AskToReconnectPad(0);
-    while (MC_XButtonPressed()) {}
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 638–646 */
 /* addr: 0x00137ec0  size: 72 bytes */
@@ -479,11 +363,6 @@ void MC_WaitForXButtonRelease(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void MC_WaitForTriangleButtonRelease(void)
-{
-    MC_AskToReconnectPad(0);
-    while (MC_TriangleButtonPressed()) {}
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 649–657 */
 /* addr: 0x00137f10  size: 72 bytes */
@@ -495,11 +374,6 @@ void MC_WaitForTriangleButtonRelease(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void MC_WaitForSquareButtonRelease(void)
-{
-    MC_AskToReconnectPad(0);
-    while (MC_SquareButtonPressed()) {}
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 664–693 */
 /* addr: 0x00137f60  size: 208 bytes */
@@ -528,23 +402,6 @@ void TXT_vAfficheSpecial(char* String, float* a3_Pos);
  * (MC_LoadAskForInsertion and MC_Changed depend on it too). */
 #pragma peephole off
 
-void MC_DrawString(char* String, float YPos)
-{
-    char TapStr[4];
-    char AppoStr[512];
-    float a3_Pos[3];
-
-    strcpy(TapStr, "1");
-    sprintf(AppoStr, String, TapStr);
-    a3_Pos[0] = 500.0f;
-    a3_Pos[1] = YPos;
-    a3_Pos[2] = 10.0f;
-    TXT_vAfficheSpecial(AppoStr, a3_Pos);
-    memcpy(&MC_SavedString[512], &MC_SavedString[256], 255);
-    memcpy(&MC_SavedString[256], &MC_SavedString[0], 255);
-    memcpy(&MC_SavedString[0], AppoStr, 255);
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 696–704 */
 /* addr: 0x00138030  size: 96 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -561,16 +418,6 @@ void MC_DrawString(char* String, float YPos)
  */
 void GLI_vRestoreSavedFrameBuffer(void);
 void MC_SwapBuffers(void);
-
-void MC_PrintMessage(char* String, float Y_Pos)
-{
-    GLI_vRestoreSavedFrameBuffer();
-    MC_DrawString(String, Y_Pos);
-    MC_SwapBuffers();
-    GLI_vRestoreSavedFrameBuffer();
-    MC_DrawString(String, Y_Pos);
-    MC_SwapBuffers();
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 768–803 */
 /* addr: 0x00138090  size: 240 bytes */
@@ -600,32 +447,6 @@ void MC_PrintMessage(char* String, float Y_Pos)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_PrintMessageAndWaitForYesNoFormat(char* String, float Y_Pos)
-{
-    int Step = 0;
-    int Blue = 10;
-    int Button;
-    GLI_vRestoreSavedFrameBuffer();
-    MC_DrawString(String, Y_Pos);
-    MC_SwapBuffers();
-    GLI_vRestoreSavedFrameBuffer();
-    MC_DrawString(String, Y_Pos);
-    MC_SwapBuffers();
-    MC_WaitForXAndOButtonRelease();
-    MC_WaitForTriangleButtonRelease();
-    MC_WaitForSquareButtonRelease();
-    do
-    {
-        GLI_vRestoreSavedFrameBuffer();
-        MC_DrawString(String, Y_Pos);
-        MC_SwapBuffers();
-    } while (!(Button = MC_SquareOrTriangleButtonsPressed()));
-    MC_WaitForXAndOButtonRelease();
-    MC_WaitForTriangleButtonRelease();
-    MC_WaitForSquareButtonRelease();
-    TXT_g_ulDefaultColor = -1;
-    return Button;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 807–830 */
 /* addr: 0x00138180  size: 168 bytes */
@@ -647,24 +468,6 @@ int MC_PrintMessageAndWaitForYesNoFormat(char* String, float Y_Pos)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_PrintMessageAndWaitForYesNo(char* String, float Y_Pos)
-{
-    int Button;
-    GLI_vRestoreSavedFrameBuffer();
-    MC_DrawString(String, Y_Pos);
-    MC_SwapBuffers();
-    MC_DrawString(String, Y_Pos);
-    MC_SwapBuffers();
-    MC_WaitForXAndOButtonRelease();
-    do
-    {
-        GLI_vRestoreSavedFrameBuffer();
-        MC_DrawString(String, Y_Pos);
-        MC_SwapBuffers();
-    } while (!(Button = MC_XorTriangleButtonsPressed()));
-    MC_WaitForXAndTriangleButtonRelease();
-    return Button;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 833–858 */
 /* addr: 0x00138230  size: 204 bytes */
@@ -688,28 +491,6 @@ int MC_PrintMessageAndWaitForYesNo(char* String, float Y_Pos)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_PrintMessageAndWaitForYesNoMC(char* String, float Y_Pos)
-{
-    int Button;
-    GLI_vRestoreSavedFrameBuffer();
-    MC_DrawString(String, Y_Pos);
-    MC_SwapBuffers();
-    MC_DrawString(String, Y_Pos);
-    MC_SwapBuffers();
-    MC_WaitForXAndOButtonRelease();
-    do
-    {
-        GLI_vRestoreSavedFrameBuffer();
-        MC_DrawString(String, Y_Pos);
-        MC_SwapBuffers();
-    } while (!(Button = MC_XorTriangleButtonsPressed()) && MC_Present());
-    if (!MC_Present())
-    {
-        Button = -1;
-    }
-    MC_WaitForXAndTriangleButtonRelease();
-    return Button;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 861–886 */
 /* addr: 0x00138300  size: 204 bytes */
@@ -733,28 +514,6 @@ int MC_PrintMessageAndWaitForYesNoMC(char* String, float Y_Pos)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_PrintMessageAndWaitForSquareTriangleMC(char* String, float Y_Pos)
-{
-    int Button;
-    GLI_vRestoreSavedFrameBuffer();
-    MC_DrawString(String, Y_Pos);
-    MC_SwapBuffers();
-    MC_DrawString(String, Y_Pos);
-    MC_SwapBuffers();
-    MC_WaitForXAndOButtonRelease();
-    do
-    {
-        GLI_vRestoreSavedFrameBuffer();
-        MC_DrawString(String, Y_Pos);
-        MC_SwapBuffers();
-    } while (!(Button = MC_SquareOrTriangleButtonsPressed()) && MC_Present());
-    if (!MC_Present())
-    {
-        Button = -1;
-    }
-    MC_WaitForSquareAndTriangleButtonRelease();
-    return Button;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 924–966 */
 /* addr: 0x001383d0  size: 288 bytes */
@@ -782,37 +541,6 @@ int MC_PrintMessageAndWaitForSquareTriangleMC(char* String, float Y_Pos)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-/* The retail keeps the dead 'li s0,-1' store of the -1 initialised local
- * (peephole off) but has only ONE 'move a2,s1' for the sprintf() call, while
- * MWCC's level 0 emits the argument move twice with peephole off and folds
- * the dead store with peephole on.  See the recorded attempt. */
-
-int MC_AskForInsertion(void)
-{
-    char buffer[2048];
-    int Button = -1;
-    int Value = 0xDF;
-    sprintf(buffer, MC_Strings[0], Value);
-    GLI_vRestoreSavedFrameBuffer();
-    MC_DrawString(MC_Strings[0], 450.0f);
-    MC_SwapBuffers();
-    MC_DrawString(MC_Strings[0], 450.0f);
-    MC_SwapBuffers();
-    MC_WaitForXButtonRelease();
-    do
-    {
-        GLI_vRestoreSavedFrameBuffer();
-        MC_DrawString(MC_Strings[0], 450.0f);
-        MC_SwapBuffers();
-    } while (!(Button = MC_TriangleButtonPressed()) && !MC_Present());
-    MC_WaitForXButtonRelease();
-    MC_WaitForTriangleButtonRelease();
-    if (MC_Present() && MC_HasEnoughtSpace())
-    {
-        Button = 1;
-    }
-    return Button;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 969–1000 */
 /* addr: 0x001384f0  size: 252 bytes */
@@ -838,28 +566,6 @@ int MC_AskForInsertion(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_LoadAskForInsertion(void)
-{
-    int Button;
-    Button = -1;
-    GLI_vRestoreSavedFrameBuffer();
-    MC_DrawString(MC_Strings[13], 450.0f);
-    MC_SwapBuffers();
-    MC_DrawString(MC_Strings[13], 450.0f);
-    MC_SwapBuffers();
-    MC_WaitForXButtonRelease();
-    do
-    {
-        GLI_vRestoreSavedFrameBuffer();
-        MC_DrawString(MC_Strings[13], 450.0f);
-        MC_SwapBuffers();
-    } while (!(Button = MC_TriangleButtonPressed()) && !MC_Present());
-    MC_WaitForXButtonRelease();
-    MC_WaitForTriangleButtonRelease();
-    if (MC_Present() && MC_HasEnoughtSpace())
-        Button = 1;
-    return Button;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 1029–1082 */
 /* addr: 0x001385f0  size: 440 bytes */
@@ -890,10 +596,6 @@ int MC_LoadAskForInsertion(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_ManageFormatting(void)
-{
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 1108–1145 */
 /* addr: 0x001387b0  size: 252 bytes */
@@ -922,11 +624,6 @@ int MC_ManageFormatting(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_AreYouSure(void)
-{
-    int Button;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 1199–1239 */
 /* addr: 0x001388b0  size: 224 bytes */
@@ -952,28 +649,6 @@ int MC_AreYouSure(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-int MC_Changed(void)
-{
-    int Button = -1;
-    MC_WaitForXButtonRelease();
-    MC_WaitForTriangleButtonRelease();
-    GLI_vRestoreSavedFrameBuffer();
-    MC_DrawString(MC_Strings[19], 450.0f);
-    MC_SwapBuffers();
-    GLI_vRestoreSavedFrameBuffer();
-    do
-    {
-        GLI_vRestoreSavedFrameBuffer();
-        MC_DrawString(MC_Strings[19], 450.0f);
-        MC_SwapBuffers();
-    } while (!(Button = MC_TriangleButtonPressed()) && !MC_Present());
-    MC_WaitForXButtonRelease();
-    MC_WaitForTriangleButtonRelease();
-    if (Button == 4)
-        return 2;
-    return 3;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 1242–1274 */
 /* addr: 0x00138990  size: 244 bytes */
@@ -1006,35 +681,6 @@ int MC_HasEnoughtSpace(void);
  * See the recorded attempt. */
 #pragma peephole on
 
-/* The debug record lists no parameters, but the retail frame reserves a home
- * for one leading parameter the body never reads (see MC_AskForOverwrite). */
-int MC_NotEnoughtSpace(char* p_szUnused)
-{
-    int Button;
-    MC_WaitForXButtonRelease();
-    MC_DrawString(MC_Strings[1], 450.0f);
-    MC_SwapBuffers();
-    GLI_vRestoreSavedFrameBuffer();
-    MC_DrawString(MC_Strings[1], 450.0f);
-    MC_SwapBuffers();
-    MC_WaitForXButtonRelease();
-    do
-    {
-        GLI_vRestoreSavedFrameBuffer();
-        MC_DrawString(MC_Strings[1], 450.0f);
-        MC_SwapBuffers();
-    } while (!(Button = MC_XorTriangleButtonsPressed()) && !MC_HasEnoughtSpace());
-    if (MC_HasEnoughtSpace())
-    {
-        Button = 1;
-    }
-    if (Button == 4)
-    {
-        return 0;
-    }
-    return 3;
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 1277–1309 */
 /* addr: 0x00138a90  size: 244 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1059,11 +705,6 @@ int MC_NotEnoughtSpace(char* p_szUnused)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_NotEnoughtSpaceBoot(void)
-{
-    int Button;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 1313–1342 */
 /* addr: 0x00138b90  size: 112 bytes */
@@ -1079,20 +720,6 @@ int MC_NotEnoughtSpaceBoot(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_AskForOverwrite(char* SavingName)
-{
-    int Button;
-    Button = MC_PrintMessageAndWaitForSquareTriangleMC(MC_Strings[12], 450.0f);
-    if (Button == -1)
-    {
-        return 3;
-    }
-    else if (Button == 4)
-    {
-        return 2;
-    }
-    return 4;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 1345–1357 */
 /* addr: 0x00138c00  size: 112 bytes */
@@ -1108,20 +735,6 @@ int MC_AskForOverwrite(char* SavingName)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_AskForOverwriteSettings(char* SavingName)
-{
-    int Button;
-    Button = MC_PrintMessageAndWaitForSquareTriangleMC(MC_Strings[23], 450.0f);
-    if (Button == -1)
-    {
-        return 3;
-    }
-    else if (Button == 4)
-    {
-        return 2;
-    }
-    return 4;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 1361–1403 */
 /* addr: 0x00138c70  size: 276 bytes */
@@ -1150,32 +763,6 @@ int MC_AskForOverwriteSettings(char* SavingName)
 int INOPS2_fn_wJoyCheckConnection(int _wJoystickNum);
 void* memset();
 
-int MC_AskToReconnectPad(int PadNumber)
-{
-    char PadStr[4];
-    char FinalString[255];
-    if (INOPS2_fn_wJoyCheckConnection(PadNumber) == 0)
-    {
-        memset(PadStr, 0, 4);
-        PadStr[0] = '1' + (char)g_axPadMapping[PadNumber].iPort;
-        sprintf(FinalString, MC_Strings[18], PadStr, PadStr);
-        GLI_vRestoreSavedFrameBuffer();
-        MC_DrawString(FinalString, 450.0f);
-        MC_SwapBuffers();
-        GLI_vRestoreSavedFrameBuffer();
-        MC_DrawString(FinalString, 450.0f);
-        MC_SwapBuffers();
-        do
-        {
-            PadStr[0] = 0;
-            GLI_vRestoreSavedFrameBuffer();
-            MC_DrawString(FinalString, 450.0f);
-            MC_SwapBuffers();
-        } while (!INOPS2_fn_wJoyCheckConnection(PadNumber));
-        MC_WaitForXButtonRelease();
-    }
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 1515–1548 */
 /* addr: 0x00138d90  size: 196 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1194,23 +781,6 @@ int MC_AskToReconnectPad(int PadNumber)
 int SVG_fn_s32SaveGameReal(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize);
 int MC_Present(void);
 
-int MC_Save(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
-{
-    MC_PrintMessage(MC_Strings[9], 400.0f);
-    if (SVG_fn_s32SaveGameReal(_iPort, _iSlot, _szSonyCompliantName, _szTitle, _pData, _u32DataSize) == 1)
-    {
-        return 1;
-    }
-    if (MC_Present() == 0)
-    {
-        if (MC_PrintMessageAndWaitForYesNo(MC_Strings[11], 400.0f) == 4)
-        {
-            return 2;
-        }
-    }
-    return 3;
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 1585–1598 */
 /* addr: 0x00138e60  size: 160 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1228,23 +798,6 @@ int MC_Save(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, 
 int SVG_fn_s32LoadGameReal(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize);
 int MC_Present(void);
 
-int MC_Load(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
-{
-    MC_PrintMessage(MC_Strings[17], 400.0f);
-    if (MC_Present())
-    {
-        if (SVG_fn_s32LoadGameReal(_iPort, _iSlot, _szSonyCompliantName, _szTitle, _pData, _u32DataSize) == 1)
-        {
-            return 1;
-        }
-        else
-        {
-            return 0;
-        }
-    }
-    return 0;
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 1605–1628 */
 /* addr: 0x00138f00  size: 84 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1261,20 +814,6 @@ int MC_Load(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, 
 int SVG_fn_s32Query(int _iPort, int _iSlot, int* _pFormatted);
 int SVG_fn_s32QueryAndCheckSpace(int _iPort, int _iSlot, int* _pFormatted, int _bCheckSpace, int _iNeeded);
 
-
-int MC_Present(void)
-{
-    int Value;
-    int Bidon;
-    Bidon = 0;
-    Value = SVG_fn_s32Query(0, 0, &Bidon);
-    if (Value == 0)
-    {
-        return 0;
-    }
-    return 1;
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 1632–1636 */
 /* addr: 0x00138f60  size: 84 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1286,13 +825,6 @@ int MC_Present(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_Formatted(void)
-{
-    int Bidon;
-    Bidon = 0;
-    if (SVG_fn_s32QueryAndCheckSpace(0, 0, &Bidon, 1, 0) == -11) return 0;
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 1644–1650 */
 /* addr: 0x00138fc0  size: 60 bytes */
@@ -1308,14 +840,6 @@ int MC_Formatted(void)
 int MC_Present(void);
 int SVG_fn_iGetChangeInMC0(void);
 
-int MC_MemoryCardChanged(void)
-{
-    if (MC_Present() == 0)
-        return 0;
-    else
-        return SVG_fn_iGetChangeInMC0();
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 1654–1657 */
 /* addr: 0x00139000  size: 32 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1325,10 +849,6 @@ int MC_MemoryCardChanged(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void MC_AknowledgeMemoryCard(void)
-{
-    SVG_fn_iGetChangeInMC0AndReset();
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 1663–1678 */
 /* addr: 0x00139020  size: 112 bytes */
@@ -1347,20 +867,6 @@ void MC_AknowledgeMemoryCard(void)
 /* One instruction short: the retail keeps the dead 'daddu s0,zero,zero' that
  * initialises iIsAGamePresent before the call result overwrites it; every
  * available MWCC build folds that store away.  See the recorded attempt. */
-int MC_SaveGameAlreadyExist(char* SavingName)
-{
-    int iIsAGamePresent;
-    char name[2048];
-
-    iIsAGamePresent = 0;
-    strcpy(name, SavingName);
-    iIsAGamePresent = SVG_fn_s32ReadNextName(0, 0, name, 0, 0);
-    if (iIsAGamePresent)
-    {
-        return 1;
-    }
-    return 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 1731–1740 */
 /* addr: 0x00139090  size: 72 bytes */
@@ -1374,16 +880,6 @@ int MC_SaveGameAlreadyExist(char* SavingName)
  * compare a candidate object's line table as an extra checkpoint.
  */
 int SVG_fn_s32Format(int _iPort, int _iSlot);
-
-int MC_Format(void)
-{
-    switch (SVG_fn_s32Format(0, 0)) {
-    case 0:
-        return 1;
-    default:
-        return 0;
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 1750–1914 */
 /* addr: 0x001390e0  size: 252 bytes */
@@ -1421,30 +917,7 @@ int MC_Format(void)
  * zero-initialisation stores (see the SVG level-0 dead-store insight). */
 #pragma push
 #pragma peephole off
-int MC_CheckNeededSize(char* p_szUnused, int iUnused)
-{
-    int Button = 0;
-    int iFreeSpace = 0;
-    MC_WaitForXButtonRelease();
-    MC_WaitForTriangleButtonRelease();
-    MC_DrawString(MC_Strings[1], 450.0f);
-    MC_SwapBuffers();
-    GLI_vRestoreSavedFrameBuffer();
-    MC_DrawString(MC_Strings[1], 450.0f);
-    MC_SwapBuffers();
-    MC_WaitForXButtonRelease();
-    do
-    {
-        GLI_vRestoreSavedFrameBuffer();
-        MC_DrawString(MC_Strings[1], 450.0f);
-        MC_SwapBuffers();
-    } while (!(Button = MC_TriangleButtonPressed()) && MC_Present());
-    if (Button == 4)
-    {
-        return 2;
-    }
-    return 3;
-}
+
 #pragma pop
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 2108–2123 */
@@ -1465,29 +938,6 @@ int MC_CheckNeededSize(char* p_szUnused, int iUnused)
 /* One instruction short: the retail keeps the dead 'daddu s0,zero,zero' that
  * initialises ulValue before it is overwritten with 0xdf; every available MWCC
  * build folds that store into the later one.  See the recorded attempt. */
-int MC_HasEnoughtSpace(void)
-{
-    int Bidon;
-    unsigned int ulValue;
-    ulValue = 0;
-    Bidon = 0;
-    /* Not original source: dead test that keeps the initial ulValue = 0 alive
-       (retail has move s0,zero before the sw zero); the real code is lost. */
-    if (ulValue) ulValue = 0;
-
-
-
-    ulValue = 0xdf;
-
-    SVG_fn_s32QueryAndCheckSpace(0, 0, &Bidon, 1, 0);
-    if ((unsigned int)Bidon < ulValue)
-    {
-        return 0;
-    }
-
-
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 2126–2218 */
 /* addr: 0x00139250  size: 576 bytes */
@@ -1534,15 +984,6 @@ int MC_HasEnoughtSpace(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_Boot(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
-{
-    char str[512];
-    int Retry;
-    int Bidon;
-    unsigned int ulValue;
-    int ReturnValue;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 2221–2328 */
 /* addr: 0x00139490  size: 752 bytes */
@@ -1594,16 +1035,6 @@ int MC_Boot(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_NewGameLoad(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
-{
-    int Exit;
-    int Retry;
-    int Bidon;
-    unsigned int ulValue;
-    int ReturnValue;
-    char str[255];
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 2331–2435 */
 /* addr: 0x00139780  size: 756 bytes */
@@ -1655,15 +1086,6 @@ int MC_NewGameLoad(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _sz
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_NewGameSaveOnLock(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
-{
-    char str[512];
-    int Exit;
-    int Retry;
-    unsigned int ulValue;
-    int ReturnValue;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 2558–2653 */
 /* addr: 0x00139a80  size: 716 bytes */
@@ -1713,15 +1135,6 @@ int MC_NewGameSaveOnLock(int _iPort, int _iSlot, char* _szSonyCompliantName, cha
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_NewGameSaveOnEmpty(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
-{
-    char str[512];
-    int Exit;
-    int Retry;
-    unsigned int ulValue;
-    int ReturnValue;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 2657–2762 */
 /* addr: 0x00139d50  size: 796 bytes */
@@ -1771,15 +1184,6 @@ int MC_NewGameSaveOnEmpty(int _iPort, int _iSlot, char* _szSonyCompliantName, ch
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_LoadGame(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
-{
-    char str[512];
-    int Exit;
-    int Retry;
-    unsigned int ulValue;
-    int ReturnValue;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 2765–2860 */
 /* addr: 0x0013a070  size: 644 bytes */
@@ -1825,15 +1229,6 @@ int MC_LoadGame(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTit
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_LoadSettings(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
-{
-    char str[512];
-    int Exit;
-    int Retry;
-    unsigned int ulValue;
-    int ReturnValue;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 2863–2940 */
 /* addr: 0x0013a300  size: 548 bytes */
@@ -1877,15 +1272,6 @@ int MC_LoadSettings(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _s
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_SaveSettingsPart1(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
-{
-    char str[512];
-    int Exit;
-    int Retry;
-    unsigned int ulValue;
-    int ReturnValue;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 2943–3031 */
 /* addr: 0x0013a530  size: 716 bytes */
@@ -1935,15 +1321,6 @@ int MC_SaveSettingsPart1(int _iPort, int _iSlot, char* _szSonyCompliantName, cha
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_SaveSettingsOnEmpty(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
-{
-    char str[512];
-    int Exit;
-    int Retry;
-    unsigned int ulValue;
-    int ReturnValue;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 3035–3130 */
 /* addr: 0x0013a800  size: 696 bytes */
@@ -1993,16 +1370,6 @@ int MC_SaveSettingsOnEmpty(int _iPort, int _iSlot, char* _szSonyCompliantName, c
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_SaveSettingsOnLock(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
-{
-    int Exit;
-    int Retry;
-    int Bidon;
-    unsigned int ulValue;
-    int ReturnValue;
-    char str[512];
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 3133–3174 */
 /* addr: 0x0013aac0  size: 364 bytes */
@@ -2040,12 +1407,6 @@ int MC_SaveSettingsOnLock(int _iPort, int _iSlot, char* _szSonyCompliantName, ch
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_CheckLanguages(void)
-{
-    int Button;
-    int i;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 3177–3288 */
 /* addr: 0x0013ac30  size: 1076 bytes */
@@ -2129,11 +1490,6 @@ int MC_CheckLanguages(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int LoadPartieMenu(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize, char* SavingName, int bSavingOptions)
-{
-    int RetVal;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 3291–3294 */
 /* addr: 0x0013b070  size: 96 bytes */
@@ -2144,7 +1500,793 @@ int LoadPartieMenu(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _sz
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
 int SauvePartieMenu(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize, char* SavingName, int bSavingOptions)
 {
     return LoadPartieMenu(_iPort, _iSlot, _szSonyCompliantName, _szTitle, _pData, _u32DataSize, SavingName, bSavingOptions);
+}
+
+int LoadPartieMenu(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize, char* SavingName, int bSavingOptions)
+{
+    int RetVal;
+    /* TODO: decompile from asm/... */
+}
+
+int MC_CheckLanguages(void)
+{
+    int Button;
+    int i;
+    /* TODO: decompile from asm/... */
+}
+
+int MC_SaveSettingsOnLock(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
+{
+    int Exit;
+    int Retry;
+    int Bidon;
+    unsigned int ulValue;
+    int ReturnValue;
+    char str[512];
+    /* TODO: decompile from asm/... */
+}
+
+int MC_SaveSettingsOnEmpty(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
+{
+    char str[512];
+    int Exit;
+    int Retry;
+    unsigned int ulValue;
+    int ReturnValue;
+    /* TODO: decompile from asm/... */
+}
+
+int MC_SaveSettingsPart1(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
+{
+    char str[512];
+    int Exit;
+    int Retry;
+    unsigned int ulValue;
+    int ReturnValue;
+    /* TODO: decompile from asm/... */
+}
+
+int MC_LoadSettings(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
+{
+    char str[512];
+    int Exit;
+    int Retry;
+    unsigned int ulValue;
+    int ReturnValue;
+    /* TODO: decompile from asm/... */
+}
+
+int MC_LoadGame(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
+{
+    char str[512];
+    int Exit;
+    int Retry;
+    unsigned int ulValue;
+    int ReturnValue;
+    /* TODO: decompile from asm/... */
+}
+
+int MC_NewGameSaveOnEmpty(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
+{
+    char str[512];
+    int Exit;
+    int Retry;
+    unsigned int ulValue;
+    int ReturnValue;
+    /* TODO: decompile from asm/... */
+}
+
+int MC_NewGameSaveOnLock(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
+{
+    char str[512];
+    int Exit;
+    int Retry;
+    unsigned int ulValue;
+    int ReturnValue;
+    /* TODO: decompile from asm/... */
+}
+
+int MC_NewGameLoad(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
+{
+    int Exit;
+    int Retry;
+    int Bidon;
+    unsigned int ulValue;
+    int ReturnValue;
+    char str[255];
+    /* TODO: decompile from asm/... */
+}
+
+int MC_Boot(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
+{
+    char str[512];
+    int Retry;
+    int Bidon;
+    unsigned int ulValue;
+    int ReturnValue;
+    /* TODO: decompile from asm/... */
+}
+
+int MC_HasEnoughtSpace(void)
+{
+    int Bidon;
+    unsigned int ulValue;
+    ulValue = 0;
+    Bidon = 0;
+    /* Not original source: dead test that keeps the initial ulValue = 0 alive
+       (retail has move s0,zero before the sw zero); the real code is lost. */
+    if (ulValue) ulValue = 0;
+
+    ulValue = 0xdf;
+
+    SVG_fn_s32QueryAndCheckSpace(0, 0, &Bidon, 1, 0);
+    if ((unsigned int)Bidon < ulValue)
+    {
+        return 0;
+    }
+
+    return 1;
+}
+
+#pragma peephole off
+int MC_CheckNeededSize(char* p_szUnused, int iUnused)
+{
+    int Button = 0;
+    int iFreeSpace = 0;
+    MC_WaitForXButtonRelease();
+    MC_WaitForTriangleButtonRelease();
+    MC_DrawString(MC_Strings[1], 450.0f);
+    MC_SwapBuffers();
+    GLI_vRestoreSavedFrameBuffer();
+    MC_DrawString(MC_Strings[1], 450.0f);
+    MC_SwapBuffers();
+    MC_WaitForXButtonRelease();
+    do
+    {
+        GLI_vRestoreSavedFrameBuffer();
+        MC_DrawString(MC_Strings[1], 450.0f);
+        MC_SwapBuffers();
+    } while (!(Button = MC_TriangleButtonPressed()) && MC_Present());
+    if (Button == 4)
+    {
+        return 2;
+    }
+    return 3;
+}
+#pragma peephole reset
+
+int MC_Format(void)
+{
+    switch (SVG_fn_s32Format(0, 0)) {
+    case 0:
+        return 1;
+    default:
+        return 0;
+    }
+}
+
+int MC_SaveGameAlreadyExist(char* SavingName)
+{
+    int iIsAGamePresent;
+    char name[2048];
+
+    iIsAGamePresent = 0;
+    strcpy(name, SavingName);
+    iIsAGamePresent = SVG_fn_s32ReadNextName(0, 0, name, 0, 0);
+    if (iIsAGamePresent)
+    {
+        return 1;
+    }
+    return 0;
+}
+
+void MC_AknowledgeMemoryCard(void)
+{
+    SVG_fn_iGetChangeInMC0AndReset();
+}
+
+int MC_MemoryCardChanged(void)
+{
+    if (MC_Present() == 0)
+        return 0;
+    else
+        return SVG_fn_iGetChangeInMC0();
+}
+
+int MC_Formatted(void)
+{
+    int Bidon;
+    Bidon = 0;
+    if (SVG_fn_s32QueryAndCheckSpace(0, 0, &Bidon, 1, 0) == -11) return 0;
+    return 1;
+}
+
+int MC_Present(void)
+{
+    int Value;
+    int Bidon;
+    Bidon = 0;
+    Value = SVG_fn_s32Query(0, 0, &Bidon);
+    if (Value == 0)
+    {
+        return 0;
+    }
+    return 1;
+}
+
+int MC_Load(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
+{
+    MC_PrintMessage(MC_Strings[17], 400.0f);
+    if (MC_Present())
+    {
+        if (SVG_fn_s32LoadGameReal(_iPort, _iSlot, _szSonyCompliantName, _szTitle, _pData, _u32DataSize) == 1)
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+    return 0;
+}
+
+int MC_Save(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
+{
+    MC_PrintMessage(MC_Strings[9], 400.0f);
+    if (SVG_fn_s32SaveGameReal(_iPort, _iSlot, _szSonyCompliantName, _szTitle, _pData, _u32DataSize) == 1)
+    {
+        return 1;
+    }
+    if (MC_Present() == 0)
+    {
+        if (MC_PrintMessageAndWaitForYesNo(MC_Strings[11], 400.0f) == 4)
+        {
+            return 2;
+        }
+    }
+    return 3;
+}
+
+int MC_AskToReconnectPad(int PadNumber)
+{
+    char PadStr[4];
+    char FinalString[255];
+    if (INOPS2_fn_wJoyCheckConnection(PadNumber) == 0)
+    {
+        memset(PadStr, 0, 4);
+        PadStr[0] = '1' + (char)g_axPadMapping[PadNumber].iPort;
+        sprintf(FinalString, MC_Strings[18], PadStr, PadStr);
+        GLI_vRestoreSavedFrameBuffer();
+        MC_DrawString(FinalString, 450.0f);
+        MC_SwapBuffers();
+        GLI_vRestoreSavedFrameBuffer();
+        MC_DrawString(FinalString, 450.0f);
+        MC_SwapBuffers();
+        do
+        {
+            PadStr[0] = 0;
+            GLI_vRestoreSavedFrameBuffer();
+            MC_DrawString(FinalString, 450.0f);
+            MC_SwapBuffers();
+        } while (!INOPS2_fn_wJoyCheckConnection(PadNumber));
+        MC_WaitForXButtonRelease();
+    }
+}
+
+int MC_AskForOverwriteSettings(char* SavingName)
+{
+    int Button;
+    Button = MC_PrintMessageAndWaitForSquareTriangleMC(MC_Strings[23], 450.0f);
+    if (Button == -1)
+    {
+        return 3;
+    }
+    else if (Button == 4)
+    {
+        return 2;
+    }
+    return 4;
+}
+
+int MC_AskForOverwrite(char* SavingName)
+{
+    int Button;
+    Button = MC_PrintMessageAndWaitForSquareTriangleMC(MC_Strings[12], 450.0f);
+    if (Button == -1)
+    {
+        return 3;
+    }
+    else if (Button == 4)
+    {
+        return 2;
+    }
+    return 4;
+}
+
+int MC_NotEnoughtSpaceBoot(void)
+{
+    int Button;
+    /* TODO: decompile from asm/... */
+}
+
+/* The debug record lists no parameters, but the retail frame reserves a home
+ * for one leading parameter the body never reads (see MC_AskForOverwrite). */
+int MC_NotEnoughtSpace(char* p_szUnused)
+{
+    int Button;
+    MC_WaitForXButtonRelease();
+    MC_DrawString(MC_Strings[1], 450.0f);
+    MC_SwapBuffers();
+    GLI_vRestoreSavedFrameBuffer();
+    MC_DrawString(MC_Strings[1], 450.0f);
+    MC_SwapBuffers();
+    MC_WaitForXButtonRelease();
+    do
+    {
+        GLI_vRestoreSavedFrameBuffer();
+        MC_DrawString(MC_Strings[1], 450.0f);
+        MC_SwapBuffers();
+    } while (!(Button = MC_XorTriangleButtonsPressed()) && !MC_HasEnoughtSpace());
+    if (MC_HasEnoughtSpace())
+    {
+        Button = 1;
+    }
+    if (Button == 4)
+    {
+        return 0;
+    }
+    return 3;
+}
+
+#pragma peephole off
+int MC_Changed(void)
+{
+    int Button = -1;
+    MC_WaitForXButtonRelease();
+    MC_WaitForTriangleButtonRelease();
+    GLI_vRestoreSavedFrameBuffer();
+    MC_DrawString(MC_Strings[19], 450.0f);
+    MC_SwapBuffers();
+    GLI_vRestoreSavedFrameBuffer();
+    do
+    {
+        GLI_vRestoreSavedFrameBuffer();
+        MC_DrawString(MC_Strings[19], 450.0f);
+        MC_SwapBuffers();
+    } while (!(Button = MC_TriangleButtonPressed()) && !MC_Present());
+    MC_WaitForXButtonRelease();
+    MC_WaitForTriangleButtonRelease();
+    if (Button == 4)
+        return 2;
+    return 3;
+}
+#pragma peephole reset
+
+#pragma peephole off
+int MC_AreYouSure(void)
+{
+    int Button;
+    /* TODO: decompile from asm/... */
+}
+#pragma peephole reset
+
+#pragma peephole off
+int MC_ManageFormatting(void)
+{
+    /* TODO: decompile from asm/... */
+}
+#pragma peephole reset
+
+#pragma peephole off
+int MC_LoadAskForInsertion(void)
+{
+    int Button;
+    Button = -1;
+    GLI_vRestoreSavedFrameBuffer();
+    MC_DrawString(MC_Strings[13], 450.0f);
+    MC_SwapBuffers();
+    MC_DrawString(MC_Strings[13], 450.0f);
+    MC_SwapBuffers();
+    MC_WaitForXButtonRelease();
+    do
+    {
+        GLI_vRestoreSavedFrameBuffer();
+        MC_DrawString(MC_Strings[13], 450.0f);
+        MC_SwapBuffers();
+    } while (!(Button = MC_TriangleButtonPressed()) && !MC_Present());
+    MC_WaitForXButtonRelease();
+    MC_WaitForTriangleButtonRelease();
+    if (MC_Present() && MC_HasEnoughtSpace())
+        Button = 1;
+    return Button;
+}
+#pragma peephole reset
+
+#pragma peephole off
+/* The retail keeps the dead 'li s0,-1' store of the -1 initialised local
+ * (peephole off) but has only ONE 'move a2,s1' for the sprintf() call, while
+ * MWCC's level 0 emits the argument move twice with peephole off and folds
+ * the dead store with peephole on.  See the recorded attempt. */
+
+int MC_AskForInsertion(void)
+{
+    char buffer[2048];
+    int Button = -1;
+    int Value = 0xDF;
+    sprintf(buffer, MC_Strings[0], Value);
+    GLI_vRestoreSavedFrameBuffer();
+    MC_DrawString(MC_Strings[0], 450.0f);
+    MC_SwapBuffers();
+    MC_DrawString(MC_Strings[0], 450.0f);
+    MC_SwapBuffers();
+    MC_WaitForXButtonRelease();
+    do
+    {
+        GLI_vRestoreSavedFrameBuffer();
+        MC_DrawString(MC_Strings[0], 450.0f);
+        MC_SwapBuffers();
+    } while (!(Button = MC_TriangleButtonPressed()) && !MC_Present());
+    MC_WaitForXButtonRelease();
+    MC_WaitForTriangleButtonRelease();
+    if (MC_Present() && MC_HasEnoughtSpace())
+    {
+        Button = 1;
+    }
+    return Button;
+}
+#pragma peephole reset
+
+#pragma peephole off
+int MC_PrintMessageAndWaitForSquareTriangleMC(char* String, float Y_Pos)
+{
+    int Button;
+    GLI_vRestoreSavedFrameBuffer();
+    MC_DrawString(String, Y_Pos);
+    MC_SwapBuffers();
+    MC_DrawString(String, Y_Pos);
+    MC_SwapBuffers();
+    MC_WaitForXAndOButtonRelease();
+    do
+    {
+        GLI_vRestoreSavedFrameBuffer();
+        MC_DrawString(String, Y_Pos);
+        MC_SwapBuffers();
+    } while (!(Button = MC_SquareOrTriangleButtonsPressed()) && MC_Present());
+    if (!MC_Present())
+    {
+        Button = -1;
+    }
+    MC_WaitForSquareAndTriangleButtonRelease();
+    return Button;
+}
+#pragma peephole reset
+
+#pragma peephole off
+int MC_PrintMessageAndWaitForYesNoMC(char* String, float Y_Pos)
+{
+    int Button;
+    GLI_vRestoreSavedFrameBuffer();
+    MC_DrawString(String, Y_Pos);
+    MC_SwapBuffers();
+    MC_DrawString(String, Y_Pos);
+    MC_SwapBuffers();
+    MC_WaitForXAndOButtonRelease();
+    do
+    {
+        GLI_vRestoreSavedFrameBuffer();
+        MC_DrawString(String, Y_Pos);
+        MC_SwapBuffers();
+    } while (!(Button = MC_XorTriangleButtonsPressed()) && MC_Present());
+    if (!MC_Present())
+    {
+        Button = -1;
+    }
+    MC_WaitForXAndTriangleButtonRelease();
+    return Button;
+}
+#pragma peephole reset
+
+#pragma peephole off
+int MC_PrintMessageAndWaitForYesNo(char* String, float Y_Pos)
+{
+    int Button;
+    GLI_vRestoreSavedFrameBuffer();
+    MC_DrawString(String, Y_Pos);
+    MC_SwapBuffers();
+    MC_DrawString(String, Y_Pos);
+    MC_SwapBuffers();
+    MC_WaitForXAndOButtonRelease();
+    do
+    {
+        GLI_vRestoreSavedFrameBuffer();
+        MC_DrawString(String, Y_Pos);
+        MC_SwapBuffers();
+    } while (!(Button = MC_XorTriangleButtonsPressed()));
+    MC_WaitForXAndTriangleButtonRelease();
+    return Button;
+}
+#pragma peephole reset
+
+#pragma peephole off
+int MC_PrintMessageAndWaitForYesNoFormat(char* String, float Y_Pos)
+{
+    int Step = 0;
+    int Blue = 10;
+    int Button;
+    GLI_vRestoreSavedFrameBuffer();
+    MC_DrawString(String, Y_Pos);
+    MC_SwapBuffers();
+    GLI_vRestoreSavedFrameBuffer();
+    MC_DrawString(String, Y_Pos);
+    MC_SwapBuffers();
+    MC_WaitForXAndOButtonRelease();
+    MC_WaitForTriangleButtonRelease();
+    MC_WaitForSquareButtonRelease();
+    do
+    {
+        GLI_vRestoreSavedFrameBuffer();
+        MC_DrawString(String, Y_Pos);
+        MC_SwapBuffers();
+    } while (!(Button = MC_SquareOrTriangleButtonsPressed()));
+    MC_WaitForXAndOButtonRelease();
+    MC_WaitForTriangleButtonRelease();
+    MC_WaitForSquareButtonRelease();
+    TXT_g_ulDefaultColor = -1;
+    return Button;
+}
+#pragma peephole reset
+
+#pragma peephole off
+void MC_PrintMessage(char* String, float Y_Pos)
+{
+    GLI_vRestoreSavedFrameBuffer();
+    MC_DrawString(String, Y_Pos);
+    MC_SwapBuffers();
+    GLI_vRestoreSavedFrameBuffer();
+    MC_DrawString(String, Y_Pos);
+    MC_SwapBuffers();
+}
+#pragma peephole reset
+
+#pragma peephole off
+void MC_DrawString(char* String, float YPos)
+{
+    char TapStr[4];
+    char AppoStr[512];
+    float a3_Pos[3];
+
+    strcpy(TapStr, "1");
+    sprintf(AppoStr, String, TapStr);
+    a3_Pos[0] = 500.0f;
+    a3_Pos[1] = YPos;
+    a3_Pos[2] = 10.0f;
+    TXT_vAfficheSpecial(AppoStr, a3_Pos);
+    memcpy(&MC_SavedString[512], &MC_SavedString[256], 255);
+    memcpy(&MC_SavedString[256], &MC_SavedString[0], 255);
+    memcpy(&MC_SavedString[0], AppoStr, 255);
+}
+#pragma peephole reset
+
+void MC_WaitForSquareButtonRelease(void)
+{
+    MC_AskToReconnectPad(0);
+    while (MC_SquareButtonPressed()) {}
+}
+
+void MC_WaitForTriangleButtonRelease(void)
+{
+    MC_AskToReconnectPad(0);
+    while (MC_TriangleButtonPressed()) {}
+}
+
+void MC_WaitForXButtonRelease(void)
+{
+    MC_AskToReconnectPad(0);
+    while (MC_XButtonPressed()) {}
+}
+
+void MC_WaitForSquareAndTriangleButtonRelease(void)
+{
+    MC_AskToReconnectPad(0);
+    while (MC_SquareOrTriangleButtonsPressed()) {}
+}
+
+void MC_WaitForXAndTriangleButtonRelease(void)
+{
+    MC_AskToReconnectPad(0);
+    while (MC_XorTriangleButtonsPressed()) {}
+}
+
+void MC_WaitForXAndOButtonRelease(void)
+{
+    MC_AskToReconnectPad(0);
+    while (MC_XorOButtonsPressed()) {}
+}
+
+#pragma optimization_level 2
+#pragma peephole off
+int MC_SquareOrTriangleButtonsPressed(void)
+{
+    MC_AskToReconnectPad(0);
+
+    if (scePadRead(0, 0, rdata) > 0)
+    {
+        paddata = 0xffff ^ ((rdata[2] << 8) | rdata[3]);
+    }
+    else
+    {
+        paddata = 0;
+    }
+
+    if (paddata & 0x80)
+    {
+        return 5;
+    }
+    else if (paddata & 0x10)
+    {
+        return 4;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma optimization_level reset
+
+#pragma optimization_level 2
+#pragma peephole off
+int MC_XorTriangleButtonsPressed(void)
+{
+    MC_AskToReconnectPad(0);
+
+    if (scePadRead(0, 0, rdata) > 0)
+    {
+        paddata = 0xffff ^ ((rdata[2] << 8) | rdata[3]);
+    }
+    else
+    {
+        paddata = 0;
+    }
+
+    if (paddata & 0x40)
+    {
+        return 1;
+    }
+    else if (paddata & 0x10)
+    {
+        return 4;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma optimization_level reset
+
+#pragma optimization_level 2
+#pragma peephole off
+int MC_XorOButtonsPressed(void)
+{
+    MC_AskToReconnectPad(0);
+
+    if (scePadRead(0, 0, rdata) > 0)
+    {
+        paddata = 0xffff ^ ((rdata[2] << 8) | rdata[3]);
+    }
+    else
+    {
+        paddata = 0;
+    }
+
+    if (paddata & 0x40)
+    {
+        return 1;
+    }
+    else if (paddata & 0x20)
+    {
+        return 2;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma optimization_level reset
+
+#pragma optimization_level 2
+#pragma peephole off
+int MC_SquareButtonPressed(void)
+{
+    MC_AskToReconnectPad(0);
+
+    if (scePadRead(0, 0, rdata) > 0)
+    {
+        paddata = 0xffff ^ ((rdata[2] << 8) | rdata[3]);
+    }
+    else
+    {
+        paddata = 0;
+    }
+
+    if (paddata & 0x80)
+    {
+        return 5;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma optimization_level reset
+
+#pragma optimization_level 2
+#pragma peephole off
+int MC_TriangleButtonPressed(void)
+{
+    MC_AskToReconnectPad(0);
+
+    if (scePadRead(0, 0, rdata) > 0)
+    {
+        paddata = 0xffff ^ ((rdata[2] << 8) | rdata[3]);
+    }
+    else
+    {
+        paddata = 0;
+    }
+
+    if (paddata & 0x10)
+    {
+        return 4;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma optimization_level reset
+
+#pragma optimization_level 2
+#pragma peephole off
+int MC_XButtonPressed(void)
+{
+    MC_AskToReconnectPad(0);
+
+    if (scePadRead(0, 0, rdata) > 0)
+    {
+        paddata = 0xffff ^ ((rdata[2] << 8) | rdata[3]);
+    }
+    else
+    {
+        paddata = 0;
+    }
+
+    if (paddata & 0x40)
+    {
+        return 1;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma optimization_level reset
+
+void MC_SetBackgroundMaterial(void* pMaterial)
+{
+    if (MC_g_MemoryCardOperationBackGroundTexture == 0)
+        MC_g_MemoryCardOperationBackGroundTexture = (int)pMaterial;
+}
+
+void MC_AddString(int Number, char* String)
+{
+    char* pDest;
+    char* psrc;
+    char* p;
+    /* TODO: decompile from asm/... */
+}
+
+void MC_CheckStrings(void)
+{
+    int i;
+
+    for (i = 0; i < 32; i++)
+    {
+        if (!MC_Strings[i])
+        {
+            strcpy(MC_Strings[i], MC_BackupStrings[i]);
+        }
+    }
 }

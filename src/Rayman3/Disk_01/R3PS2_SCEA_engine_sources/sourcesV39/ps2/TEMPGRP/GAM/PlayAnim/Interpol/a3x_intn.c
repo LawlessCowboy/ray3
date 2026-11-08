@@ -1314,23 +1314,27 @@ inline long MTH_M_xRealToLong(float x)
     return r;
 }
 
-void fn_v_InitSinTab(void)
-{
-    int slCnt;
-
-    for (slCnt = 0; slCnt < 0x1000L; slCnt++)
-    {
-        ax_SinTab[slCnt] = (short)MTH_M_xRealToLong(32767.0f * sinf(6.2831855f * (float)slCnt / 8192.0f) + 0.5f);
-    }
-    for (slCnt = 0x1000; slCnt < 0x2000L; slCnt++)
-    {
-        ax_SinTab[slCnt] = (short)MTH_M_xRealToLong(32767.0f * sinf(6.2831855f * (float)slCnt / 8192.0f) - 0.5f);
-    }
-    for (slCnt = 0; slCnt < 0x2000L; slCnt++)
-    {
-        ax_AcosTab[slCnt] = acosf(2.0f * (float)slCnt / 8191.0f - 1.0f);
-    }
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void fn_v_InitSinTab(void);
+void fn_vComputeFinalFrameMatrixForInterAnim(HIE_tdstSuperObject_* p_stSuperObject, tdstAnim3d_* _p_stAnim3d);
+void fn_vComputeFinalFrameMatrix(HIE_tdstSuperObject_* p_stSuperObject, tdstAnim3d_* _p_stAnim3d, float _xFrame);
+int fn_v_MergePositions(tdstChannel_* p_stChannel, tdstAChannel_* p_stCurrentChannel, unsigned char bHierarchized);
+void fn_vUpdateFrameMatrixForSubAnim(void* _p_stSuperObject, tdstAnim3d_* _p_stAnim3d, float _xFrame, tdstAChannel_* d_stChannelArray, unsigned char bMergeWithMainAnim);
+void fn_vUpdateFrameForSubAnim(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame, unsigned char _ucAnimLevel);
+int fn_bTestSamePosition(tdstAnim3d_* p_stPreviousAnim, tdstAnim3d_* p_stNextAnim, unsigned short uwPreviousFrame, unsigned short uwNextFrame);
+unsigned short fn_uwGetFrameInNextAnimForIntermAnim(tdstAnim3d_* p_stTempoAnim);
+void fn_vDeleteIntermediateAnimation(tdstAnim3d_* p_stTempoAnim);
+tdstAnim3d_* fn_p_stCreateIntermediateAnimation(tdstAnim3d_* p_stPreviousAnim, tdstAnim3d_* p_stNextAnim, unsigned short uwPreviousFrame, unsigned short uwNextFrame, unsigned int ulNumberOfFramesForIntermAnim, float xNLParameter);
+tdstCouple_* fn_p_stGetHierarchy(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame, unsigned int* p_ulNewNbCouples);
+void fn_vUpdateFrameMatrixForInterAnim(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAnim3d, float _xFrame, unsigned char ucForceUpdate, tdstAChannel_* d_stChannelArray);
+void fn_vUpdateFrameForInterAnim(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame);
+MTH3D_tdstVector_* fn_p_stGetLinearSpeedVectorForInterAnim(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame);
+MTH3D_tdstMatrix_* fn_p_stGetAngularSpeedMatrix(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame, MTH3D_tdstMatrix_* p_stMatrix);
+MTH3D_tdstVector_* fn_p_stGetLinearSpeedVector(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame);
+void fn_vUpdateFrameMatrix(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAnim3d, float _xFrame, unsigned char ucForceUpdate, tdstAChannel_* d_stChannelArray);
+void fn_vUpdateFrame(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame);
+tdstEvent_* fn_p_GetEventsAddress(tdstAnim3d_* _p_stAnim3d);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 2025–2099 */
 /* addr: 0x0027c440  size: 364 bytes */
@@ -1362,37 +1366,6 @@ int fn_v_MergePositions(tdstChannel_* p_stChannel, tdstAChannel_* p_stCurrentCha
 inline unsigned int fn_ulFrameFromFloat(float xFrame)
 {
     return (unsigned int)xFrame;
-}
-
-void fn_vComputeFinalFrameMatrixForInterAnim(HIE_tdstSuperObject_* p_stSuperObject, tdstAnim3d_* _p_stAnim3d)
-{
-    unsigned char bHierarchized;
-    unsigned short uwCnt1;
-    unsigned short uwPreviousT_NTTO;
-    tdstChannel_* p_stPreviousChannel;
-    tdstA3dGENERAL_* p_stPreviousA3dGeneral;
-    tdstA3dGENERAL_ForTransitions_* p_stA3dGENERAL;
-    /* Not original source, needs cleaning up: retail loads the channel array before the first call; debug lists no local for it. */
-    tdstAChannel_* hArrayOfChannels;
-    extern tdstA3dGENERAL_ForTransitions_* fn_p_GetA3dGENERALForTransitions(unsigned short);
-
-    hArrayOfChannels = p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData->hArrayOfChannels;
-
-    p_stA3dGENERAL = fn_p_GetA3dGENERALForTransitions(_p_stAnim3d->uwNumOfA3dGENERAL);
-    p_stPreviousA3dGeneral = fn_p_GetA3dGENERAL(p_stA3dGENERAL->uwPrevious, p_stA3dGENERAL->uwPreviousFrame);
-
-    fn_p_GetA3dGENERAL(p_stA3dGENERAL->uwNext, p_stA3dGENERAL->uwNextFrame);
-
-    uwPreviousT_NTTO = gp_stOnlyFrames[p_stPreviousA3dGeneral->uwNumOfFirstOnlyFrame + p_stA3dGENERAL->uwPreviousFrame].uwNumOfSavedFrame;
-    for (uwCnt1 = 0, p_stPreviousChannel = &gp_stChannels[p_stPreviousA3dGeneral->uwNumOfFirstChannel]; uwCnt1 < p_stPreviousA3dGeneral->uwNumberOfChannels; uwCnt1++, p_stPreviousChannel++)
-    {
-        if ((p_stPreviousChannel->uwChannelNumber != 0xFFFF) && !hArrayOfChannels[p_stPreviousChannel->uwChannelNumber].bControlledChannel && !hArrayOfChannels[p_stPreviousChannel->uwChannelNumber].bLipsChannel)
-        {
-            bHierarchized = (gp_stNTTO[gp_FramesNumOfNTTO[p_stPreviousChannel->uwNumOfFirstFrame + uwPreviousT_NTTO]].uwTypeOfObject != 0xFFFF) ? (unsigned char)(gp_stNTTO[gp_FramesNumOfNTTO[p_stPreviousChannel->uwNumOfFirstFrame + uwPreviousT_NTTO]].uwTypeOfObject & 0x800) : 0;
-
-            fn_v_MergePositions(p_stPreviousChannel, &hArrayOfChannels[p_stPreviousChannel->uwChannelNumber], bHierarchized);
-        }
-    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 1959–2018 */
@@ -1432,41 +1405,6 @@ void fn_vComputeFinalFrameMatrixForInterAnim(HIE_tdstSuperObject_* p_stSuperObje
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vComputeFinalFrameMatrix(HIE_tdstSuperObject_* p_stSuperObject, tdstAnim3d_* _p_stAnim3d, float _xFrame)
-{
-    unsigned short uwCnt1;
-    tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
-    tdstChannel_* p_stCurrentChannel;
-    tdstAChannel_* hArrayOfChannels;
-    unsigned short uwT_NTTO;
-    unsigned char bHierarchized;
-
-    uwT_NTTO = (unsigned short)fn_ulFrameFromFloat(_xFrame);
-    if (uwT_NTTO < _p_stAnim3d->uwNumberOfFrames)
-    {
-        if (_p_stAnim3d->ucFlagMergeAnim)
-        {
-            fn_vComputeFinalFrameMatrixForInterAnim(p_stSuperObject, _p_stAnim3d);
-            return;
-        }
-
-        hArrayOfChannels = p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData->hArrayOfChannels;
-
-        p_stCurrentA3dGENERAL = fn_p_GetA3dGENERAL(_p_stAnim3d->uwNumOfA3dGENERAL, 0);
-        p_stCurrentChannel = &gp_stChannels[p_stCurrentA3dGENERAL->uwNumOfFirstChannel];
-        uwT_NTTO = *(unsigned short*)((int)gp_stOnlyFrames + (p_stCurrentA3dGENERAL->uwNumOfFirstOnlyFrame + uwT_NTTO) * sizeof(tdstOnlyFrame_) + 0xc);
-
-        for (uwCnt1 = 0; uwCnt1 < p_stCurrentA3dGENERAL->uwNumberOfChannels; uwCnt1++, p_stCurrentChannel++)
-        {
-            if ((p_stCurrentChannel->uwChannelNumber != 0xFFFF) && !hArrayOfChannels[p_stCurrentChannel->uwChannelNumber].bControlledChannel && !hArrayOfChannels[p_stCurrentChannel->uwChannelNumber].bLipsChannel)
-            {
-                bHierarchized = (gp_stNTTO[gp_FramesNumOfNTTO[p_stCurrentChannel->uwNumOfFirstFrame + uwT_NTTO]].uwTypeOfObject != 0xFFFF) ? (unsigned char)(gp_stNTTO[gp_FramesNumOfNTTO[p_stCurrentChannel->uwNumOfFirstFrame + uwT_NTTO]].uwTypeOfObject & 0x800) : 0;
-
-                fn_v_MergePositions(p_stCurrentChannel, &hArrayOfChannels[p_stCurrentChannel->uwChannelNumber], bHierarchized);
-            }
-        }
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 1784–1952 */
 /* addr: 0x0027c770  size: 1976 bytes */
@@ -1547,16 +1485,6 @@ void fn_vComputeFinalFrameMatrix(HIE_tdstSuperObject_* p_stSuperObject, tdstAnim
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_v_MergePositions(tdstChannel_* p_stChannel, tdstAChannel_* p_stCurrentChannel, unsigned char bHierarchized)
-{
-    float xRatio;
-    MAT_tdstTransformation_ stTempTransform;
-    MTH3D_tdstVector_ stVector2;
-    MTH3D_tdstVector_ stVector;
-    float a4_xQuat[4];
-    unsigned char i;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 1592–1775 */
 /* addr: 0x0027cf30  size: 2056 bytes */
@@ -1680,20 +1608,6 @@ int fn_v_MergePositions(tdstChannel_* p_stChannel, tdstAChannel_* p_stCurrentCha
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vUpdateFrameMatrixForSubAnim(void* _p_stSuperObject, tdstAnim3d_* _p_stAnim3d, float _xFrame, tdstAChannel_* d_stChannelArray, unsigned char bMergeWithMainAnim)
-{
-    float xTmp;
-    float xDT;
-    tdstKeyFrame_* p_stOldKeyFrame;
-    tdstKeyFrame_* p_stCurrentKeyFrame;
-    unsigned short* p_CurrentFrameNumOfNTTO;
-    unsigned char bHierarchized;
-    unsigned short uwCnt1;
-    unsigned short uwT_NTTO;
-    tdstChannel_* p_stCurrentChannel;
-    tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 1521–1584 */
 /* addr: 0x0027d740  size: 552 bytes */
@@ -1746,52 +1660,6 @@ void fn_vUpdateFrameMatrixForSubAnim(void* _p_stSuperObject, tdstAnim3d_* _p_stA
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vUpdateFrameForSubAnim(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame, unsigned char _ucAnimLevel)
-{
-    tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
-    tdstChannel_* p_stCurrentChannel;
-    unsigned short uwT_NTTO;
-    unsigned short uwCnt1;
-    unsigned short uwCnt2;
-    tdstElement3d_* p_stCurrentElement3d;
-    unsigned short* p_CurrentFrameNumOfNTTO;
-
-    p_stCurrentA3dGENERAL = fn_p_GetA3dGENERAL(_p_stAnim3d->uwNumOfA3dGENERAL, _uwFrame);
-    p_stCurrentChannel = &gp_stChannels[p_stCurrentA3dGENERAL->uwNumOfFirstChannel];
-    uwT_NTTO = *(unsigned short*)((int)gp_stOnlyFrames + (p_stCurrentA3dGENERAL->uwNumOfFirstOnlyFrame + _uwFrame) * sizeof(tdstOnlyFrame_) + 0xc);
-
-    for (uwCnt1 = 0; uwCnt1 < p_stCurrentA3dGENERAL->uwNumberOfChannels; p_stCurrentChannel++, uwCnt1++)
-    {
-        p_CurrentFrameNumOfNTTO = &gp_FramesNumOfNTTO[p_stCurrentChannel->uwNumOfFirstFrame + uwT_NTTO];
-        p_stCurrentElement3d = _p_stFrame->p_stArrayOfElts3d;
-        for (uwCnt2 = 0; uwCnt2 < _p_stFrame->p_stAnim->ucMaxNumberOfElements; uwCnt2++)
-        {
-            if (p_stCurrentChannel->uwChannelNumber == p_stCurrentElement3d[uwCnt2].ucChannelNumber)
-            {
-                if (*p_CurrentFrameNumOfNTTO != 0xFFFF)
-                {
-                    p_stCurrentElement3d = (p_stCurrentElement3d[uwCnt2].wElement = gp_stNTTO[*p_CurrentFrameNumOfNTTO].ucNumberInTable, &p_stCurrentElement3d[uwCnt2]);
-                    p_stCurrentElement3d->ucChannelNumber = p_stCurrentChannel->uwChannelNumber;
-                    p_stCurrentElement3d->bf1ActiveStatus = 1;
-                    p_stCurrentElement3d->eTypeOfElement = gp_stNTTO[*p_CurrentFrameNumOfNTTO].uwTypeOfObject;
-                    p_stCurrentElement3d->ucTransparency = gp_stNTTO[*p_CurrentFrameNumOfNTTO].ucTransparency;
-                    p_stCurrentElement3d->ucAnimLevel = _ucAnimLevel;
-                }
-                else
-                {
-                    p_stCurrentElement3d = &p_stCurrentElement3d[uwCnt2];
-                    p_stCurrentElement3d->wElement = 0xFFFF;
-                    p_stCurrentElement3d->ucChannelNumber = p_stCurrentChannel->uwChannelNumber;
-                    p_stCurrentElement3d->bf1ActiveStatus = 1;
-                    p_stCurrentElement3d->eTypeOfElement = 2;
-                    p_stCurrentElement3d->ucTransparency = 0;
-                    p_stCurrentElement3d->ucAnimLevel = 0xFF;
-                }
-                break;
-            }
-        }
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 1328–1514 */
 /* addr: 0x0027d970  size: 872 bytes */
@@ -1847,68 +1715,6 @@ void fn_vUpdateFrameForSubAnim(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_bTestSamePosition(tdstAnim3d_* p_stPreviousAnim, tdstAnim3d_* p_stNextAnim, unsigned short uwPreviousFrame, unsigned short uwNextFrame)
-{
-    tdstA3dGENERAL_* p_stPreviousA3dGeneral;
-    tdstA3dGENERAL_* p_stNextA3dGeneral;
-    tdstChannel_* p_stPreviousChannel;
-    tdstChannel_* p_stCurrentChannel;
-    tdstKeyFrame_* p_stOldKeyFrame;
-    tdstKeyFrame_* p_stNewKeyFrame;
-    tdstKeyFrame_* p_stPreviousKeyFrame;
-    tdstKeyFrame_* p_stNextKeyFrame;
-    tdstKeyFrame_* a256_p_stPrevKeyFrames[256];
-    tdstKeyFrame_* a256_p_stNextKeyFrames[256];
-    tdstKeyFrame_** pPrevKeyFrames;
-    tdstKeyFrame_** pNextKeyFrames;
-    unsigned short uwCnt1;
-
-    memset(a256_p_stPrevKeyFrames, 0, sizeof(a256_p_stPrevKeyFrames));
-    memset(a256_p_stNextKeyFrames, 0, sizeof(a256_p_stNextKeyFrames));
-
-    p_stPreviousA3dGeneral = fn_p_GetA3dGENERAL(p_stPreviousAnim->uwNumOfA3dGENERAL, uwPreviousFrame);
-    pPrevKeyFrames = a256_p_stPrevKeyFrames;
-    p_stPreviousChannel = &gp_stChannels[p_stPreviousA3dGeneral->uwNumOfFirstChannel];
-    for (uwCnt1 = 0; uwCnt1 < p_stPreviousA3dGeneral->uwNumberOfChannels; uwCnt1++)
-    {
-        if (p_stPreviousChannel->uwChannelNumber != 0xFFFF)
-        {
-            p_stOldKeyFrame = &gp_stKeyFrames[gp_FramesKFIndex[p_stPreviousChannel->ulNumOfFirstFrameKF + uwPreviousFrame]];
-            if ((p_stOldKeyFrame->uwMask & 0x80) && (p_stOldKeyFrame->uwMask & 0x200))
-                p_stOldKeyFrame = &gp_stKeyFrames[gp_FramesKFIndex[p_stPreviousChannel->ulNumOfFirstFrameKF]];
-            pPrevKeyFrames[uwCnt1] = p_stOldKeyFrame;
-        }
-        p_stPreviousChannel++;
-    }
-
-    p_stNextA3dGeneral = fn_p_GetA3dGENERAL(p_stNextAnim->uwNumOfA3dGENERAL, uwNextFrame);
-    pNextKeyFrames = a256_p_stNextKeyFrames;
-    p_stCurrentChannel = &gp_stChannels[p_stNextA3dGeneral->uwNumOfFirstChannel];
-    for (uwCnt1 = 0; uwCnt1 < p_stNextA3dGeneral->uwNumberOfChannels; uwCnt1++)
-    {
-        if (p_stCurrentChannel->uwChannelNumber != 0xFFFF)
-        {
-            p_stNewKeyFrame = &gp_stKeyFrames[gp_FramesKFIndex[p_stCurrentChannel->ulNumOfFirstFrameKF + uwNextFrame]];
-            if ((p_stNewKeyFrame->uwMask & 0x80) && (p_stNewKeyFrame->uwMask & 0x200))
-                p_stNewKeyFrame = &gp_stKeyFrames[gp_FramesKFIndex[p_stCurrentChannel->ulNumOfFirstFrameKF]];
-            pNextKeyFrames[uwCnt1] = p_stNewKeyFrame;
-        }
-        p_stCurrentChannel++;
-    }
-
-    for (uwCnt1 = 0; uwCnt1 < p_stPreviousA3dGeneral->uwNumberOfChannels; uwCnt1++)
-    {
-        if (memcmp(&gp_a3_xVectors[a256_p_stPrevKeyFrames[uwCnt1]->uwNumOfPosition], &gp_a3_xVectors[a256_p_stNextKeyFrames[uwCnt1]->uwNumOfPosition], sizeof(MTH3D_tdstVector_)))
-            return 0;
-        if (memcmp(&gp_a4_xQuaternions[a256_p_stPrevKeyFrames[uwCnt1]->uwNumOfQuatOri], &gp_a4_xQuaternions[a256_p_stNextKeyFrames[uwCnt1]->uwNumOfQuatOri], 8))
-            return 0;
-        if (memcmp(&gp_a3_xVectors[a256_p_stPrevKeyFrames[uwCnt1]->uwNumOfScaleValues], &gp_a3_xVectors[a256_p_stNextKeyFrames[uwCnt1]->uwNumOfScaleValues], sizeof(MTH3D_tdstVector_)) ||
-            memcmp(&gp_a4_xQuaternions[a256_p_stPrevKeyFrames[uwCnt1]->uwNumOfQuatSca], &gp_a4_xQuaternions[a256_p_stNextKeyFrames[uwCnt1]->uwNumOfQuatSca], 8))
-            return 0;
-    }
-
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 1319–1324 */
 /* addr: 0x0027dce0  size: 32 bytes */
@@ -1921,13 +1727,6 @@ int fn_bTestSamePosition(tdstAnim3d_* p_stPreviousAnim, tdstAnim3d_* p_stNextAni
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned short fn_uwGetFrameInNextAnimForIntermAnim(tdstAnim3d_* p_stTempoAnim)
-{
-    tdstA3dGENERAL_ForTransitions_* p_stA3dGENERAL;
-    extern tdstA3dGENERAL_ForTransitions_* fn_p_GetA3dGENERALForTransitions(unsigned short);
-    p_stA3dGENERAL = fn_p_GetA3dGENERALForTransitions(p_stTempoAnim->uwNumOfA3dGENERAL);
-    return p_stA3dGENERAL->uwNextFrame;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 1310–1315 */
 /* addr: 0x0027dd00  size: 76 bytes */
@@ -1941,13 +1740,6 @@ unsigned short fn_uwGetFrameInNextAnimForIntermAnim(tdstAnim3d_* p_stTempoAnim)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vDeleteIntermediateAnimation(tdstAnim3d_* p_stTempoAnim)
-{
-    fn_vReleaseMergeA3dGeneral(p_stTempoAnim->uwNumOfA3dGENERAL);
-    if (p_stTempoAnim->d_stMorphDataArray != NULL)
-        HMU_fn_vFree(&p_stTempoAnim->d_stMorphDataArray, 1);
-    HMU_fn_vFree(&p_stTempoAnim, 1);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 1172–1306 */
 /* addr: 0x0027dd50  size: 800 bytes */
@@ -2043,24 +1835,6 @@ void fn_vDeleteIntermediateAnimation(tdstAnim3d_* p_stTempoAnim)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstAnim3d_* fn_p_stCreateIntermediateAnimation(tdstAnim3d_* p_stPreviousAnim, tdstAnim3d_* p_stNextAnim, unsigned short uwPreviousFrame, unsigned short uwNextFrame, unsigned int ulNumberOfFramesForIntermAnim, float xNLParameter)
-{
-    unsigned short* p_NextFrameNumOfNTTO;
-    unsigned short* p_CurrentFrameNumOfNTTO;
-    unsigned short uwCnt2;
-    unsigned short uwCnt1;
-    int iNbMorphTask;
-    unsigned short uwT_NextNTTO;
-    unsigned short uwT_CurrentNTTO;
-    tdstChannel_* p_stNextChannel;
-    tdstChannel_* p_stCurrentChannel;
-    stMorphData ax_stTempoMorphArray[64];
-    tdstA3dGENERAL_* p_stNextA3dGENERAL;
-    tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
-    tdstA3dGENERAL_ForTransitions_* p_stA3dGENERAL;
-    tdstAnim3d_* p_stNewAnim;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 1149–1168 */
 /* addr: 0x0027e070  size: 156 bytes */
@@ -2080,21 +1854,6 @@ tdstAnim3d_* fn_p_stCreateIntermediateAnimation(tdstAnim3d_* p_stPreviousAnim, t
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-tdstCouple_* fn_p_stGetHierarchy(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame, unsigned int* p_ulNewNbCouples)
-{
-    tdstOnlyFrame_* p_stCurrentOnlyFrame;
-    tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
-
-    if (_uwFrame >= _p_stAnim3d->uwNumberOfFrames)
-        _uwFrame = _p_stAnim3d->uwNumberOfFrames - 1;
-    p_stCurrentA3dGENERAL = fn_p_GetA3dGENERAL(_p_stAnim3d->uwNumOfA3dGENERAL, _uwFrame);
-    p_stCurrentOnlyFrame = &gp_stOnlyFrames[p_stCurrentA3dGENERAL->uwNumOfFirstOnlyFrame + _uwFrame];
-    *p_ulNewNbCouples = p_stCurrentOnlyFrame->uwHierarchyNbCouples;
-    if (p_stCurrentOnlyFrame->uwHierarchyNbCouples)
-        return &gp_stHierarchies[p_stCurrentOnlyFrame->uwNumOfFirstHierarchyCouple];
-    return NULL;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 970–1145 */
 /* addr: 0x0027e110  size: 1000 bytes */
@@ -2166,26 +1925,6 @@ tdstCouple_* fn_p_stGetHierarchy(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFra
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vUpdateFrameMatrixForInterAnim(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAnim3d, float _xFrame, unsigned char ucForceUpdate, tdstAChannel_* d_stChannelArray)
-{
-    tdstKeyFrame_ CurrentKeyFrame2;
-    tdstKeyFrame_ OldKeyFrame2;
-    float xDT;
-    tdstKeyFrame_* p_stOldKeyFrame;
-    tdstKeyFrame_* p_stCurrentKeyFrame;
-    tdstKeyFrame_* p_stNextKeyFrame;
-    tdstKeyFrame_* p_stPreviousKeyFrame;
-    unsigned short* p_PreviousFrameNumOfNTTO;
-    unsigned char bHierarchized;
-    unsigned short uwCnt1;
-    unsigned short uwPreviousT_NTTO;
-    tdstChannel_* p_stNextChannel;
-    tdstChannel_* p_stPreviousChannel;
-    tdstA3dGENERAL_* p_stNextA3dGeneral;
-    tdstA3dGENERAL_* p_stPreviousA3dGeneral;
-    tdstA3dGENERAL_ForTransitions_* p_stA3dGENERAL;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 829–961 */
 /* addr: 0x0027e500  size: 792 bytes */
@@ -2255,20 +1994,6 @@ void fn_vUpdateFrameMatrixForInterAnim(void* _p_stSuperObject, tdstFrame3d_* _p_
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vUpdateFrameForInterAnim(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame)
-{
-    unsigned short* p_CurrentFrameNumOfNTTO;
-    float a4_xQuatOri[4];
-    tdstElement3d_* p_stCurrentElement3d;
-    unsigned short uwCnt1;
-    unsigned short uwT_NTTO;
-    unsigned short uwNumOfA3dGENERAL;
-    tdstChannel_* p_stCurrentChannel;
-    tdstOnlyFrame_* p_stCurrentOnlyFrame;
-    tdstA3dGENERAL_* p_stPreviousA3dGeneral;
-    tdstA3dGENERAL_ForTransitions_* p_stA3dGENERAL;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 762–820 */
 /* addr: 0x0027e820  size: 696 bytes */
@@ -2323,54 +2048,6 @@ void fn_vUpdateFrameForInterAnim(void* _p_stSuperObject, tdstFrame3d_* _p_stFram
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-MTH3D_tdstVector_* fn_p_stGetLinearSpeedVectorForInterAnim(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame)
-{
-    tdstA3dGENERAL_ForTransitions_* p_stCurrentA3dGENERAL;
-    tdstA3dGENERAL_* p_stPreviousA3dGeneral;
-    tdstA3dGENERAL_* p_stNextA3dGeneral;
-    tdstOnlyFrame_* p_stPreviousOnlyFrame;
-    tdstOnlyFrame_* p_stCurrentOnlyFrame;
-    float fRatio;
-    MTH3D_tdstVector_ stPreviousSpeed;
-    MTH3D_tdstVector_ stNextSpeed;
-    extern tdstA3dGENERAL_ForTransitions_* fn_p_GetA3dGENERALForTransitions(unsigned short);
-
-    if (_uwFrame >= _p_stAnim3d->uwNumberOfFrames)
-        return NULL;
-
-    p_stCurrentA3dGENERAL = fn_p_GetA3dGENERALForTransitions(_p_stAnim3d->uwNumOfA3dGENERAL);
-    p_stPreviousA3dGeneral = fn_p_GetA3dGENERAL(p_stCurrentA3dGENERAL->uwPrevious, p_stCurrentA3dGENERAL->uwPreviousFrame);
-    p_stNextA3dGeneral = fn_p_GetA3dGENERAL(p_stCurrentA3dGENERAL->uwNext, 0);
-
-    p_stPreviousOnlyFrame = &gp_stOnlyFrames[p_stPreviousA3dGeneral->uwNumOfFirstOnlyFrame + p_stCurrentA3dGENERAL->uwPreviousFrame];
-    p_stCurrentOnlyFrame = &gp_stOnlyFrames[p_stNextA3dGeneral->uwNumOfFirstOnlyFrame];
-
-    fRatio = (float)_uwFrame / (float)_p_stAnim3d->uwNumberOfFrames;
-    if (fRatio != 0.0f)
-        fRatio = fRatio * ((1.0f + fRatio * p_stCurrentA3dGENERAL->xNLParameter) - p_stCurrentA3dGENERAL->xNLParameter);
-
-    if ((p_stCurrentOnlyFrame->uwNumOfSpeedVector == 0xFFFF) || (p_stCurrentA3dGENERAL->uwNoSpeed != 0))
-        memset(&stNextSpeed, 0, sizeof(stNextSpeed));
-    else
-        memcpy(&stNextSpeed, &gp_a3_xVectors[p_stCurrentOnlyFrame->uwNumOfSpeedVector], sizeof(stNextSpeed));
-
-    if ((p_stPreviousOnlyFrame->uwNumOfSpeedVector == 0xFFFF) || (p_stCurrentA3dGENERAL->uwNoSpeed != 0))
-        memset(&stPreviousSpeed, 0, sizeof(stPreviousSpeed));
-    else
-        memcpy(&stPreviousSpeed, &gp_a3_xVectors[p_stPreviousOnlyFrame->uwNumOfSpeedVector], sizeof(stPreviousSpeed));
-
-    g_stTempoVector.xX = stNextSpeed.xX - stPreviousSpeed.xX;
-    g_stTempoVector.xY = stNextSpeed.xY - stPreviousSpeed.xY;
-    g_stTempoVector.xZ = stNextSpeed.xZ - stPreviousSpeed.xZ;
-    g_stTempoVector.xX = fRatio * g_stTempoVector.xX;
-    g_stTempoVector.xY = fRatio * g_stTempoVector.xY;
-    g_stTempoVector.xZ = fRatio * g_stTempoVector.xZ;
-    g_stTempoVector.xX = stPreviousSpeed.xX + g_stTempoVector.xX;
-    g_stTempoVector.xY = stPreviousSpeed.xY + g_stTempoVector.xY;
-    g_stTempoVector.xZ = stPreviousSpeed.xZ + g_stTempoVector.xZ;
-
-    return &g_stTempoVector;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 713–749 */
 /* addr: 0x0027eae0  size: 176 bytes */
@@ -2394,25 +2071,6 @@ MTH3D_tdstVector_* fn_p_stGetLinearSpeedVectorForInterAnim(tdstAnim3d_* _p_stAni
 void fn_v_QuatToMatrix(float (*_a3a3_xMtx)[3], float* _a4_xQuat);
 void fn_v_ExpandQuat(float* _a4_xQuatD, short* _a4_xQuatS);
 
-MTH3D_tdstMatrix_* fn_p_stGetAngularSpeedMatrix(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame, MTH3D_tdstMatrix_* p_stMatrix)
-{
-    float a4_xQuatOri[4];
-    tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
-
-    if (_uwFrame >= _p_stAnim3d->uwNumberOfFrames)
-        return NULL;
-    p_stCurrentA3dGENERAL = fn_p_GetA3dGENERAL(_p_stAnim3d->uwNumOfA3dGENERAL, _uwFrame);
-    _uwFrame -= p_stCurrentA3dGENERAL->uwStartFrame;
-    {
-        tdstOnlyFrame_* p_stCurrentOnlyFrame = &gp_stOnlyFrames[p_stCurrentA3dGENERAL->uwNumOfFirstOnlyFrame + _uwFrame];
-        if (p_stCurrentOnlyFrame->uwNumOfAngularSpeedQuat == 0xFFFF)
-            return NULL;
-        fn_v_ExpandQuat(a4_xQuatOri, gp_a4_xQuaternions[p_stCurrentOnlyFrame->uwNumOfAngularSpeedQuat]);
-    }
-    fn_v_QuatToMatrix((float (*)[3])p_stMatrix, a4_xQuatOri);
-    return p_stMatrix;
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 667–703 */
 /* addr: 0x0027eb90  size: 176 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -2430,23 +2088,6 @@ MTH3D_tdstMatrix_* fn_p_stGetAngularSpeedMatrix(tdstAnim3d_* _p_stAnim3d, unsign
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-MTH3D_tdstVector_* fn_p_stGetLinearSpeedVector(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame)
-{
-    tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
-
-    if (_p_stAnim3d->ucFlagMergeAnim)
-        return fn_p_stGetLinearSpeedVectorForInterAnim(_p_stAnim3d, _uwFrame);
-    if (_uwFrame >= _p_stAnim3d->uwNumberOfFrames)
-        return NULL;
-    p_stCurrentA3dGENERAL = fn_p_GetA3dGENERAL(_p_stAnim3d->uwNumOfA3dGENERAL, _uwFrame);
-    _uwFrame -= p_stCurrentA3dGENERAL->uwStartFrame;
-    {
-        tdstOnlyFrame_* p_stCurrentOnlyFrame = &gp_stOnlyFrames[p_stCurrentA3dGENERAL->uwNumOfFirstOnlyFrame + _uwFrame];
-        if (p_stCurrentOnlyFrame->uwNumOfSpeedVector == 0xFFFF)
-            return NULL;
-        return &gp_a3_xVectors[p_stCurrentOnlyFrame->uwNumOfSpeedVector];
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 517–654 */
 /* addr: 0x0027ec40  size: 972 bytes */
@@ -2507,21 +2148,6 @@ MTH3D_tdstVector_* fn_p_stGetLinearSpeedVector(tdstAnim3d_* _p_stAnim3d, unsigne
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vUpdateFrameMatrix(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAnim3d, float _xFrame, unsigned char ucForceUpdate, tdstAChannel_* d_stChannelArray)
-{
-    float xTmp;
-    float xDT;
-    tdstKeyFrame_* p_stOldKeyFrame;
-    tdstKeyFrame_* p_stCurrentKeyFrame;
-    unsigned short* p_CurrentFrameNumOfNTTO;
-    float xNoInterpol;
-    unsigned char bHierarchized;
-    unsigned short uwCnt1;
-    unsigned short uwT_NTTO;
-    tdstChannel_* p_stCurrentChannel;
-    tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 355–505 */
 /* addr: 0x0027f010  size: 804 bytes */
@@ -2590,6 +2216,20 @@ void fn_vUpdateFrameMatrix(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tds
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 303–303 */
+/* addr: 0x0027f340  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 303
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+tdstEvent_* fn_p_GetEventsAddress(tdstAnim3d_* _p_stAnim3d)
+{
+    return _p_stAnim3d->d_stAnimEvent;
+}
+
 void fn_vUpdateFrame(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame)
 {
     tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
@@ -2692,14 +2332,411 @@ void fn_vUpdateFrame(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 303–303 */
-/* addr: 0x0027f340  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 303
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstEvent_* fn_p_GetEventsAddress(tdstAnim3d_* _p_stAnim3d)
+void fn_vUpdateFrameMatrix(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAnim3d, float _xFrame, unsigned char ucForceUpdate, tdstAChannel_* d_stChannelArray)
 {
-    return _p_stAnim3d->d_stAnimEvent;
+    float xTmp;
+    float xDT;
+    tdstKeyFrame_* p_stOldKeyFrame;
+    tdstKeyFrame_* p_stCurrentKeyFrame;
+    unsigned short* p_CurrentFrameNumOfNTTO;
+    float xNoInterpol;
+    unsigned char bHierarchized;
+    unsigned short uwCnt1;
+    unsigned short uwT_NTTO;
+    tdstChannel_* p_stCurrentChannel;
+    tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
+    /* TODO: decompile from asm/... */
+}
+
+MTH3D_tdstVector_* fn_p_stGetLinearSpeedVector(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame)
+{
+    tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
+
+    if (_p_stAnim3d->ucFlagMergeAnim)
+        return fn_p_stGetLinearSpeedVectorForInterAnim(_p_stAnim3d, _uwFrame);
+    if (_uwFrame >= _p_stAnim3d->uwNumberOfFrames)
+        return NULL;
+    p_stCurrentA3dGENERAL = fn_p_GetA3dGENERAL(_p_stAnim3d->uwNumOfA3dGENERAL, _uwFrame);
+    _uwFrame -= p_stCurrentA3dGENERAL->uwStartFrame;
+    {
+        tdstOnlyFrame_* p_stCurrentOnlyFrame = &gp_stOnlyFrames[p_stCurrentA3dGENERAL->uwNumOfFirstOnlyFrame + _uwFrame];
+        if (p_stCurrentOnlyFrame->uwNumOfSpeedVector == 0xFFFF)
+            return NULL;
+        return &gp_a3_xVectors[p_stCurrentOnlyFrame->uwNumOfSpeedVector];
+    }
+}
+
+MTH3D_tdstMatrix_* fn_p_stGetAngularSpeedMatrix(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame, MTH3D_tdstMatrix_* p_stMatrix)
+{
+    float a4_xQuatOri[4];
+    tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
+
+    if (_uwFrame >= _p_stAnim3d->uwNumberOfFrames)
+        return NULL;
+    p_stCurrentA3dGENERAL = fn_p_GetA3dGENERAL(_p_stAnim3d->uwNumOfA3dGENERAL, _uwFrame);
+    _uwFrame -= p_stCurrentA3dGENERAL->uwStartFrame;
+    {
+        tdstOnlyFrame_* p_stCurrentOnlyFrame = &gp_stOnlyFrames[p_stCurrentA3dGENERAL->uwNumOfFirstOnlyFrame + _uwFrame];
+        if (p_stCurrentOnlyFrame->uwNumOfAngularSpeedQuat == 0xFFFF)
+            return NULL;
+        fn_v_ExpandQuat(a4_xQuatOri, gp_a4_xQuaternions[p_stCurrentOnlyFrame->uwNumOfAngularSpeedQuat]);
+    }
+    fn_v_QuatToMatrix((float (*)[3])p_stMatrix, a4_xQuatOri);
+    return p_stMatrix;
+}
+
+MTH3D_tdstVector_* fn_p_stGetLinearSpeedVectorForInterAnim(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame)
+{
+    tdstA3dGENERAL_ForTransitions_* p_stCurrentA3dGENERAL;
+    tdstA3dGENERAL_* p_stPreviousA3dGeneral;
+    tdstA3dGENERAL_* p_stNextA3dGeneral;
+    tdstOnlyFrame_* p_stPreviousOnlyFrame;
+    tdstOnlyFrame_* p_stCurrentOnlyFrame;
+    float fRatio;
+    MTH3D_tdstVector_ stPreviousSpeed;
+    MTH3D_tdstVector_ stNextSpeed;
+    extern tdstA3dGENERAL_ForTransitions_* fn_p_GetA3dGENERALForTransitions(unsigned short);
+
+    if (_uwFrame >= _p_stAnim3d->uwNumberOfFrames)
+        return NULL;
+
+    p_stCurrentA3dGENERAL = fn_p_GetA3dGENERALForTransitions(_p_stAnim3d->uwNumOfA3dGENERAL);
+    p_stPreviousA3dGeneral = fn_p_GetA3dGENERAL(p_stCurrentA3dGENERAL->uwPrevious, p_stCurrentA3dGENERAL->uwPreviousFrame);
+    p_stNextA3dGeneral = fn_p_GetA3dGENERAL(p_stCurrentA3dGENERAL->uwNext, 0);
+
+    p_stPreviousOnlyFrame = &gp_stOnlyFrames[p_stPreviousA3dGeneral->uwNumOfFirstOnlyFrame + p_stCurrentA3dGENERAL->uwPreviousFrame];
+    p_stCurrentOnlyFrame = &gp_stOnlyFrames[p_stNextA3dGeneral->uwNumOfFirstOnlyFrame];
+
+    fRatio = (float)_uwFrame / (float)_p_stAnim3d->uwNumberOfFrames;
+    if (fRatio != 0.0f)
+        fRatio = fRatio * ((1.0f + fRatio * p_stCurrentA3dGENERAL->xNLParameter) - p_stCurrentA3dGENERAL->xNLParameter);
+
+    if ((p_stCurrentOnlyFrame->uwNumOfSpeedVector == 0xFFFF) || (p_stCurrentA3dGENERAL->uwNoSpeed != 0))
+        memset(&stNextSpeed, 0, sizeof(stNextSpeed));
+    else
+        memcpy(&stNextSpeed, &gp_a3_xVectors[p_stCurrentOnlyFrame->uwNumOfSpeedVector], sizeof(stNextSpeed));
+
+    if ((p_stPreviousOnlyFrame->uwNumOfSpeedVector == 0xFFFF) || (p_stCurrentA3dGENERAL->uwNoSpeed != 0))
+        memset(&stPreviousSpeed, 0, sizeof(stPreviousSpeed));
+    else
+        memcpy(&stPreviousSpeed, &gp_a3_xVectors[p_stPreviousOnlyFrame->uwNumOfSpeedVector], sizeof(stPreviousSpeed));
+
+    g_stTempoVector.xX = stNextSpeed.xX - stPreviousSpeed.xX;
+    g_stTempoVector.xY = stNextSpeed.xY - stPreviousSpeed.xY;
+    g_stTempoVector.xZ = stNextSpeed.xZ - stPreviousSpeed.xZ;
+    g_stTempoVector.xX = fRatio * g_stTempoVector.xX;
+    g_stTempoVector.xY = fRatio * g_stTempoVector.xY;
+    g_stTempoVector.xZ = fRatio * g_stTempoVector.xZ;
+    g_stTempoVector.xX = stPreviousSpeed.xX + g_stTempoVector.xX;
+    g_stTempoVector.xY = stPreviousSpeed.xY + g_stTempoVector.xY;
+    g_stTempoVector.xZ = stPreviousSpeed.xZ + g_stTempoVector.xZ;
+
+    return &g_stTempoVector;
+}
+
+void fn_vUpdateFrameForInterAnim(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame)
+{
+    unsigned short* p_CurrentFrameNumOfNTTO;
+    float a4_xQuatOri[4];
+    tdstElement3d_* p_stCurrentElement3d;
+    unsigned short uwCnt1;
+    unsigned short uwT_NTTO;
+    unsigned short uwNumOfA3dGENERAL;
+    tdstChannel_* p_stCurrentChannel;
+    tdstOnlyFrame_* p_stCurrentOnlyFrame;
+    tdstA3dGENERAL_* p_stPreviousA3dGeneral;
+    tdstA3dGENERAL_ForTransitions_* p_stA3dGENERAL;
+    /* TODO: decompile from asm/... */
+}
+
+void fn_vUpdateFrameMatrixForInterAnim(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAnim3d, float _xFrame, unsigned char ucForceUpdate, tdstAChannel_* d_stChannelArray)
+{
+    tdstKeyFrame_ CurrentKeyFrame2;
+    tdstKeyFrame_ OldKeyFrame2;
+    float xDT;
+    tdstKeyFrame_* p_stOldKeyFrame;
+    tdstKeyFrame_* p_stCurrentKeyFrame;
+    tdstKeyFrame_* p_stNextKeyFrame;
+    tdstKeyFrame_* p_stPreviousKeyFrame;
+    unsigned short* p_PreviousFrameNumOfNTTO;
+    unsigned char bHierarchized;
+    unsigned short uwCnt1;
+    unsigned short uwPreviousT_NTTO;
+    tdstChannel_* p_stNextChannel;
+    tdstChannel_* p_stPreviousChannel;
+    tdstA3dGENERAL_* p_stNextA3dGeneral;
+    tdstA3dGENERAL_* p_stPreviousA3dGeneral;
+    tdstA3dGENERAL_ForTransitions_* p_stA3dGENERAL;
+    /* TODO: decompile from asm/... */
+}
+
+tdstCouple_* fn_p_stGetHierarchy(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame, unsigned int* p_ulNewNbCouples)
+{
+    tdstOnlyFrame_* p_stCurrentOnlyFrame;
+    tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
+
+    if (_uwFrame >= _p_stAnim3d->uwNumberOfFrames)
+        _uwFrame = _p_stAnim3d->uwNumberOfFrames - 1;
+    p_stCurrentA3dGENERAL = fn_p_GetA3dGENERAL(_p_stAnim3d->uwNumOfA3dGENERAL, _uwFrame);
+    p_stCurrentOnlyFrame = &gp_stOnlyFrames[p_stCurrentA3dGENERAL->uwNumOfFirstOnlyFrame + _uwFrame];
+    *p_ulNewNbCouples = p_stCurrentOnlyFrame->uwHierarchyNbCouples;
+    if (p_stCurrentOnlyFrame->uwHierarchyNbCouples)
+        return &gp_stHierarchies[p_stCurrentOnlyFrame->uwNumOfFirstHierarchyCouple];
+    return NULL;
+}
+
+tdstAnim3d_* fn_p_stCreateIntermediateAnimation(tdstAnim3d_* p_stPreviousAnim, tdstAnim3d_* p_stNextAnim, unsigned short uwPreviousFrame, unsigned short uwNextFrame, unsigned int ulNumberOfFramesForIntermAnim, float xNLParameter)
+{
+    unsigned short* p_NextFrameNumOfNTTO;
+    unsigned short* p_CurrentFrameNumOfNTTO;
+    unsigned short uwCnt2;
+    unsigned short uwCnt1;
+    int iNbMorphTask;
+    unsigned short uwT_NextNTTO;
+    unsigned short uwT_CurrentNTTO;
+    tdstChannel_* p_stNextChannel;
+    tdstChannel_* p_stCurrentChannel;
+    stMorphData ax_stTempoMorphArray[64];
+    tdstA3dGENERAL_* p_stNextA3dGENERAL;
+    tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
+    tdstA3dGENERAL_ForTransitions_* p_stA3dGENERAL;
+    tdstAnim3d_* p_stNewAnim;
+    /* TODO: decompile from asm/... */
+}
+
+void fn_vDeleteIntermediateAnimation(tdstAnim3d_* p_stTempoAnim)
+{
+    fn_vReleaseMergeA3dGeneral(p_stTempoAnim->uwNumOfA3dGENERAL);
+    if (p_stTempoAnim->d_stMorphDataArray != NULL)
+        HMU_fn_vFree(&p_stTempoAnim->d_stMorphDataArray, 1);
+    HMU_fn_vFree(&p_stTempoAnim, 1);
+}
+
+unsigned short fn_uwGetFrameInNextAnimForIntermAnim(tdstAnim3d_* p_stTempoAnim)
+{
+    tdstA3dGENERAL_ForTransitions_* p_stA3dGENERAL;
+    extern tdstA3dGENERAL_ForTransitions_* fn_p_GetA3dGENERALForTransitions(unsigned short);
+    p_stA3dGENERAL = fn_p_GetA3dGENERALForTransitions(p_stTempoAnim->uwNumOfA3dGENERAL);
+    return p_stA3dGENERAL->uwNextFrame;
+}
+
+int fn_bTestSamePosition(tdstAnim3d_* p_stPreviousAnim, tdstAnim3d_* p_stNextAnim, unsigned short uwPreviousFrame, unsigned short uwNextFrame)
+{
+    tdstA3dGENERAL_* p_stPreviousA3dGeneral;
+    tdstA3dGENERAL_* p_stNextA3dGeneral;
+    tdstChannel_* p_stPreviousChannel;
+    tdstChannel_* p_stCurrentChannel;
+    tdstKeyFrame_* p_stOldKeyFrame;
+    tdstKeyFrame_* p_stNewKeyFrame;
+    tdstKeyFrame_* p_stPreviousKeyFrame;
+    tdstKeyFrame_* p_stNextKeyFrame;
+    tdstKeyFrame_* a256_p_stPrevKeyFrames[256];
+    tdstKeyFrame_* a256_p_stNextKeyFrames[256];
+    tdstKeyFrame_** pPrevKeyFrames;
+    tdstKeyFrame_** pNextKeyFrames;
+    unsigned short uwCnt1;
+
+    memset(a256_p_stPrevKeyFrames, 0, sizeof(a256_p_stPrevKeyFrames));
+    memset(a256_p_stNextKeyFrames, 0, sizeof(a256_p_stNextKeyFrames));
+
+    p_stPreviousA3dGeneral = fn_p_GetA3dGENERAL(p_stPreviousAnim->uwNumOfA3dGENERAL, uwPreviousFrame);
+    pPrevKeyFrames = a256_p_stPrevKeyFrames;
+    p_stPreviousChannel = &gp_stChannels[p_stPreviousA3dGeneral->uwNumOfFirstChannel];
+    for (uwCnt1 = 0; uwCnt1 < p_stPreviousA3dGeneral->uwNumberOfChannels; uwCnt1++)
+    {
+        if (p_stPreviousChannel->uwChannelNumber != 0xFFFF)
+        {
+            p_stOldKeyFrame = &gp_stKeyFrames[gp_FramesKFIndex[p_stPreviousChannel->ulNumOfFirstFrameKF + uwPreviousFrame]];
+            if ((p_stOldKeyFrame->uwMask & 0x80) && (p_stOldKeyFrame->uwMask & 0x200))
+                p_stOldKeyFrame = &gp_stKeyFrames[gp_FramesKFIndex[p_stPreviousChannel->ulNumOfFirstFrameKF]];
+            pPrevKeyFrames[uwCnt1] = p_stOldKeyFrame;
+        }
+        p_stPreviousChannel++;
+    }
+
+    p_stNextA3dGeneral = fn_p_GetA3dGENERAL(p_stNextAnim->uwNumOfA3dGENERAL, uwNextFrame);
+    pNextKeyFrames = a256_p_stNextKeyFrames;
+    p_stCurrentChannel = &gp_stChannels[p_stNextA3dGeneral->uwNumOfFirstChannel];
+    for (uwCnt1 = 0; uwCnt1 < p_stNextA3dGeneral->uwNumberOfChannels; uwCnt1++)
+    {
+        if (p_stCurrentChannel->uwChannelNumber != 0xFFFF)
+        {
+            p_stNewKeyFrame = &gp_stKeyFrames[gp_FramesKFIndex[p_stCurrentChannel->ulNumOfFirstFrameKF + uwNextFrame]];
+            if ((p_stNewKeyFrame->uwMask & 0x80) && (p_stNewKeyFrame->uwMask & 0x200))
+                p_stNewKeyFrame = &gp_stKeyFrames[gp_FramesKFIndex[p_stCurrentChannel->ulNumOfFirstFrameKF]];
+            pNextKeyFrames[uwCnt1] = p_stNewKeyFrame;
+        }
+        p_stCurrentChannel++;
+    }
+
+    for (uwCnt1 = 0; uwCnt1 < p_stPreviousA3dGeneral->uwNumberOfChannels; uwCnt1++)
+    {
+        if (memcmp(&gp_a3_xVectors[a256_p_stPrevKeyFrames[uwCnt1]->uwNumOfPosition], &gp_a3_xVectors[a256_p_stNextKeyFrames[uwCnt1]->uwNumOfPosition], sizeof(MTH3D_tdstVector_)))
+            return 0;
+        if (memcmp(&gp_a4_xQuaternions[a256_p_stPrevKeyFrames[uwCnt1]->uwNumOfQuatOri], &gp_a4_xQuaternions[a256_p_stNextKeyFrames[uwCnt1]->uwNumOfQuatOri], 8))
+            return 0;
+        if (memcmp(&gp_a3_xVectors[a256_p_stPrevKeyFrames[uwCnt1]->uwNumOfScaleValues], &gp_a3_xVectors[a256_p_stNextKeyFrames[uwCnt1]->uwNumOfScaleValues], sizeof(MTH3D_tdstVector_)) ||
+            memcmp(&gp_a4_xQuaternions[a256_p_stPrevKeyFrames[uwCnt1]->uwNumOfQuatSca], &gp_a4_xQuaternions[a256_p_stNextKeyFrames[uwCnt1]->uwNumOfQuatSca], 8))
+            return 0;
+    }
+
+    return 1;
+}
+
+void fn_vUpdateFrameForSubAnim(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame, unsigned char _ucAnimLevel)
+{
+    tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
+    tdstChannel_* p_stCurrentChannel;
+    unsigned short uwT_NTTO;
+    unsigned short uwCnt1;
+    unsigned short uwCnt2;
+    tdstElement3d_* p_stCurrentElement3d;
+    unsigned short* p_CurrentFrameNumOfNTTO;
+
+    p_stCurrentA3dGENERAL = fn_p_GetA3dGENERAL(_p_stAnim3d->uwNumOfA3dGENERAL, _uwFrame);
+    p_stCurrentChannel = &gp_stChannels[p_stCurrentA3dGENERAL->uwNumOfFirstChannel];
+    uwT_NTTO = *(unsigned short*)((int)gp_stOnlyFrames + (p_stCurrentA3dGENERAL->uwNumOfFirstOnlyFrame + _uwFrame) * sizeof(tdstOnlyFrame_) + 0xc);
+
+    for (uwCnt1 = 0; uwCnt1 < p_stCurrentA3dGENERAL->uwNumberOfChannels; p_stCurrentChannel++, uwCnt1++)
+    {
+        p_CurrentFrameNumOfNTTO = &gp_FramesNumOfNTTO[p_stCurrentChannel->uwNumOfFirstFrame + uwT_NTTO];
+        p_stCurrentElement3d = _p_stFrame->p_stArrayOfElts3d;
+        for (uwCnt2 = 0; uwCnt2 < _p_stFrame->p_stAnim->ucMaxNumberOfElements; uwCnt2++)
+        {
+            if (p_stCurrentChannel->uwChannelNumber == p_stCurrentElement3d[uwCnt2].ucChannelNumber)
+            {
+                if (*p_CurrentFrameNumOfNTTO != 0xFFFF)
+                {
+                    p_stCurrentElement3d = (p_stCurrentElement3d[uwCnt2].wElement = gp_stNTTO[*p_CurrentFrameNumOfNTTO].ucNumberInTable, &p_stCurrentElement3d[uwCnt2]);
+                    p_stCurrentElement3d->ucChannelNumber = p_stCurrentChannel->uwChannelNumber;
+                    p_stCurrentElement3d->bf1ActiveStatus = 1;
+                    p_stCurrentElement3d->eTypeOfElement = gp_stNTTO[*p_CurrentFrameNumOfNTTO].uwTypeOfObject;
+                    p_stCurrentElement3d->ucTransparency = gp_stNTTO[*p_CurrentFrameNumOfNTTO].ucTransparency;
+                    p_stCurrentElement3d->ucAnimLevel = _ucAnimLevel;
+                }
+                else
+                {
+                    p_stCurrentElement3d = &p_stCurrentElement3d[uwCnt2];
+                    p_stCurrentElement3d->wElement = 0xFFFF;
+                    p_stCurrentElement3d->ucChannelNumber = p_stCurrentChannel->uwChannelNumber;
+                    p_stCurrentElement3d->bf1ActiveStatus = 1;
+                    p_stCurrentElement3d->eTypeOfElement = 2;
+                    p_stCurrentElement3d->ucTransparency = 0;
+                    p_stCurrentElement3d->ucAnimLevel = 0xFF;
+                }
+                break;
+            }
+        }
+    }
+}
+
+void fn_vUpdateFrameMatrixForSubAnim(void* _p_stSuperObject, tdstAnim3d_* _p_stAnim3d, float _xFrame, tdstAChannel_* d_stChannelArray, unsigned char bMergeWithMainAnim)
+{
+    float xTmp;
+    float xDT;
+    tdstKeyFrame_* p_stOldKeyFrame;
+    tdstKeyFrame_* p_stCurrentKeyFrame;
+    unsigned short* p_CurrentFrameNumOfNTTO;
+    unsigned char bHierarchized;
+    unsigned short uwCnt1;
+    unsigned short uwT_NTTO;
+    tdstChannel_* p_stCurrentChannel;
+    tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
+    /* TODO: decompile from asm/... */
+}
+
+int fn_v_MergePositions(tdstChannel_* p_stChannel, tdstAChannel_* p_stCurrentChannel, unsigned char bHierarchized)
+{
+    float xRatio;
+    MAT_tdstTransformation_ stTempTransform;
+    MTH3D_tdstVector_ stVector2;
+    MTH3D_tdstVector_ stVector;
+    float a4_xQuat[4];
+    unsigned char i;
+    /* TODO: decompile from asm/... */
+}
+
+void fn_vComputeFinalFrameMatrix(HIE_tdstSuperObject_* p_stSuperObject, tdstAnim3d_* _p_stAnim3d, float _xFrame)
+{
+    unsigned short uwCnt1;
+    tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
+    tdstChannel_* p_stCurrentChannel;
+    tdstAChannel_* hArrayOfChannels;
+    unsigned short uwT_NTTO;
+    unsigned char bHierarchized;
+
+    uwT_NTTO = (unsigned short)fn_ulFrameFromFloat(_xFrame);
+    if (uwT_NTTO < _p_stAnim3d->uwNumberOfFrames)
+    {
+        if (_p_stAnim3d->ucFlagMergeAnim)
+        {
+            fn_vComputeFinalFrameMatrixForInterAnim(p_stSuperObject, _p_stAnim3d);
+            return;
+        }
+
+        hArrayOfChannels = p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData->hArrayOfChannels;
+
+        p_stCurrentA3dGENERAL = fn_p_GetA3dGENERAL(_p_stAnim3d->uwNumOfA3dGENERAL, 0);
+        p_stCurrentChannel = &gp_stChannels[p_stCurrentA3dGENERAL->uwNumOfFirstChannel];
+        uwT_NTTO = *(unsigned short*)((int)gp_stOnlyFrames + (p_stCurrentA3dGENERAL->uwNumOfFirstOnlyFrame + uwT_NTTO) * sizeof(tdstOnlyFrame_) + 0xc);
+
+        for (uwCnt1 = 0; uwCnt1 < p_stCurrentA3dGENERAL->uwNumberOfChannels; uwCnt1++, p_stCurrentChannel++)
+        {
+            if ((p_stCurrentChannel->uwChannelNumber != 0xFFFF) && !hArrayOfChannels[p_stCurrentChannel->uwChannelNumber].bControlledChannel && !hArrayOfChannels[p_stCurrentChannel->uwChannelNumber].bLipsChannel)
+            {
+                bHierarchized = (gp_stNTTO[gp_FramesNumOfNTTO[p_stCurrentChannel->uwNumOfFirstFrame + uwT_NTTO]].uwTypeOfObject != 0xFFFF) ? (unsigned char)(gp_stNTTO[gp_FramesNumOfNTTO[p_stCurrentChannel->uwNumOfFirstFrame + uwT_NTTO]].uwTypeOfObject & 0x800) : 0;
+
+                fn_v_MergePositions(p_stCurrentChannel, &hArrayOfChannels[p_stCurrentChannel->uwChannelNumber], bHierarchized);
+            }
+        }
+    }
+}
+
+void fn_vComputeFinalFrameMatrixForInterAnim(HIE_tdstSuperObject_* p_stSuperObject, tdstAnim3d_* _p_stAnim3d)
+{
+    unsigned char bHierarchized;
+    unsigned short uwCnt1;
+    unsigned short uwPreviousT_NTTO;
+    tdstChannel_* p_stPreviousChannel;
+    tdstA3dGENERAL_* p_stPreviousA3dGeneral;
+    tdstA3dGENERAL_ForTransitions_* p_stA3dGENERAL;
+    /* Not original source, needs cleaning up: retail loads the channel array before the first call; debug lists no local for it. */
+    tdstAChannel_* hArrayOfChannels;
+    extern tdstA3dGENERAL_ForTransitions_* fn_p_GetA3dGENERALForTransitions(unsigned short);
+
+    hArrayOfChannels = p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData->hArrayOfChannels;
+
+    p_stA3dGENERAL = fn_p_GetA3dGENERALForTransitions(_p_stAnim3d->uwNumOfA3dGENERAL);
+    p_stPreviousA3dGeneral = fn_p_GetA3dGENERAL(p_stA3dGENERAL->uwPrevious, p_stA3dGENERAL->uwPreviousFrame);
+
+    fn_p_GetA3dGENERAL(p_stA3dGENERAL->uwNext, p_stA3dGENERAL->uwNextFrame);
+
+    uwPreviousT_NTTO = gp_stOnlyFrames[p_stPreviousA3dGeneral->uwNumOfFirstOnlyFrame + p_stA3dGENERAL->uwPreviousFrame].uwNumOfSavedFrame;
+    for (uwCnt1 = 0, p_stPreviousChannel = &gp_stChannels[p_stPreviousA3dGeneral->uwNumOfFirstChannel]; uwCnt1 < p_stPreviousA3dGeneral->uwNumberOfChannels; uwCnt1++, p_stPreviousChannel++)
+    {
+        if ((p_stPreviousChannel->uwChannelNumber != 0xFFFF) && !hArrayOfChannels[p_stPreviousChannel->uwChannelNumber].bControlledChannel && !hArrayOfChannels[p_stPreviousChannel->uwChannelNumber].bLipsChannel)
+        {
+            bHierarchized = (gp_stNTTO[gp_FramesNumOfNTTO[p_stPreviousChannel->uwNumOfFirstFrame + uwPreviousT_NTTO]].uwTypeOfObject != 0xFFFF) ? (unsigned char)(gp_stNTTO[gp_FramesNumOfNTTO[p_stPreviousChannel->uwNumOfFirstFrame + uwPreviousT_NTTO]].uwTypeOfObject & 0x800) : 0;
+
+            fn_v_MergePositions(p_stPreviousChannel, &hArrayOfChannels[p_stPreviousChannel->uwChannelNumber], bHierarchized);
+        }
+    }
+}
+
+void fn_v_InitSinTab(void)
+{
+    int slCnt;
+
+    for (slCnt = 0; slCnt < 0x1000L; slCnt++)
+    {
+        ax_SinTab[slCnt] = (short)MTH_M_xRealToLong(32767.0f * sinf(6.2831855f * (float)slCnt / 8192.0f) + 0.5f);
+    }
+    for (slCnt = 0x1000; slCnt < 0x2000L; slCnt++)
+    {
+        ax_SinTab[slCnt] = (short)MTH_M_xRealToLong(32767.0f * sinf(6.2831855f * (float)slCnt / 8192.0f) - 0.5f);
+    }
+    for (slCnt = 0; slCnt < 0x2000L; slCnt++)
+    {
+        ax_AcosTab[slCnt] = acosf(2.0f * (float)slCnt / 8191.0f - 1.0f);
+    }
 }

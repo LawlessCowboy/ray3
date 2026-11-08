@@ -95,15 +95,12 @@ struct COL_tdstOctree_ {
 MTH3D_tdstVector_ COL_g_a6_stBoxSidesNormal[6];
 COL_tdstDoubledIndex_ COL_g_a12_stBoxEdges[12];
 
-unsigned char COL_fn_bDetectCollisionBetweenTwoParallelBoxes(MTH3D_tdstVector_* _p_stFirstBoxMaxPoint, MTH3D_tdstVector_* _p_stFirstBoxMinPoint, MTH3D_tdstVector_* _p_stSecondBoxMaxPoint, MTH3D_tdstVector_* _p_stSecondBoxMinPoint)
-{
-    if ((_p_stSecondBoxMaxPoint->xX > _p_stFirstBoxMinPoint->xX) && (_p_stSecondBoxMinPoint->xX < _p_stFirstBoxMaxPoint->xX) && (_p_stSecondBoxMaxPoint->xY > _p_stFirstBoxMinPoint->xY) && (_p_stSecondBoxMinPoint->xY < _p_stFirstBoxMaxPoint->xY) && (_p_stSecondBoxMaxPoint->xZ > _p_stFirstBoxMinPoint->xZ) && (_p_stSecondBoxMinPoint->xZ < _p_stFirstBoxMaxPoint->xZ))
-    {
-        return 1;
-    }
-
-    return 0;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+unsigned char COL_fn_bDetectCollisionBetweenTwoParallelBoxes(MTH3D_tdstVector_* _p_stFirstBoxMaxPoint, MTH3D_tdstVector_* _p_stFirstBoxMinPoint, MTH3D_tdstVector_* _p_stSecondBoxMaxPoint, MTH3D_tdstVector_* _p_stSecondBoxMinPoint);
+void COL_fn_vComputeBoundingBoxOfSphereAndBox(MTH3D_tdstVector_* p_stMinBounding, MTH3D_tdstVector_* p_stMaxBounding, MTH3D_tdstVector_* p_stSphereCenter, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, float xSphereRadius);
+void COL_fn_vComputeBoundingBoxOfSphere(MTH3D_tdstVector_* p_stMinBounding, MTH3D_tdstVector_* p_stMaxBounding, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius);
+void COL_fn_vMinMaxBox2VerticesBox(MTH3D_tdstVector_* a8_stBoxDest, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint);
 
 /* R5900 min.s/max.s; MWCC compiles the C comparison as compare-and-branch. */
 inline float MTH_M_xMin(float _xA, float _xB)
@@ -118,6 +115,28 @@ inline float MTH_M_xMax(float _xA, float _xB)
     float _xResult;
     asm { max.s _xResult, _xA, _xB }
     return _xResult;
+}
+
+void COL_fn_vMinMaxBox2VerticesBox(MTH3D_tdstVector_* a8_stBoxDest, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint)
+{
+    a8_stBoxDest[0].xX = p_stMinPoint->xX; a8_stBoxDest[0].xY = p_stMinPoint->xY; a8_stBoxDest[0].xZ = p_stMinPoint->xZ;
+    a8_stBoxDest[1].xX = p_stMinPoint->xX; a8_stBoxDest[1].xY = p_stMinPoint->xY; a8_stBoxDest[1].xZ = p_stMaxPoint->xZ;
+    a8_stBoxDest[2].xX = p_stMinPoint->xX; a8_stBoxDest[2].xY = p_stMaxPoint->xY; a8_stBoxDest[2].xZ = p_stMinPoint->xZ;
+    a8_stBoxDest[3].xX = p_stMinPoint->xX; a8_stBoxDest[3].xY = p_stMaxPoint->xY; a8_stBoxDest[3].xZ = p_stMaxPoint->xZ;
+    a8_stBoxDest[4].xX = p_stMaxPoint->xX; a8_stBoxDest[4].xY = p_stMinPoint->xY; a8_stBoxDest[4].xZ = p_stMinPoint->xZ;
+    a8_stBoxDest[5].xX = p_stMaxPoint->xX; a8_stBoxDest[5].xY = p_stMinPoint->xY; a8_stBoxDest[5].xZ = p_stMaxPoint->xZ;
+    a8_stBoxDest[6].xX = p_stMaxPoint->xX; a8_stBoxDest[6].xY = p_stMaxPoint->xY; a8_stBoxDest[6].xZ = p_stMinPoint->xZ;
+    a8_stBoxDest[7].xX = p_stMaxPoint->xX; a8_stBoxDest[7].xY = p_stMaxPoint->xY; a8_stBoxDest[7].xZ = p_stMaxPoint->xZ;
+}
+
+void COL_fn_vComputeBoundingBoxOfSphere(MTH3D_tdstVector_* p_stMinBounding, MTH3D_tdstVector_* p_stMaxBounding, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius)
+{
+    p_stMinBounding->xX = p_stSphereCenter->xX - xSphereRadius;
+    p_stMinBounding->xY = p_stSphereCenter->xY - xSphereRadius;
+    p_stMinBounding->xZ = p_stSphereCenter->xZ - xSphereRadius;
+    p_stMaxBounding->xX = p_stSphereCenter->xX + xSphereRadius;
+    p_stMaxBounding->xY = p_stSphereCenter->xY + xSphereRadius;
+    p_stMaxBounding->xZ = p_stSphereCenter->xZ + xSphereRadius;
 }
 
 void COL_fn_vComputeBoundingBoxOfSphereAndBox(MTH3D_tdstVector_* p_stMinBounding, MTH3D_tdstVector_* p_stMaxBounding, MTH3D_tdstVector_* p_stSphereCenter, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, float xSphereRadius)
@@ -137,24 +156,12 @@ void COL_fn_vComputeBoundingBoxOfSphereAndBox(MTH3D_tdstVector_* p_stMinBounding
     p_stMaxBounding->xZ = MTH_M_xMax(xValue, p_stMaxPoint->xZ);
 }
 
-void COL_fn_vComputeBoundingBoxOfSphere(MTH3D_tdstVector_* p_stMinBounding, MTH3D_tdstVector_* p_stMaxBounding, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius)
+unsigned char COL_fn_bDetectCollisionBetweenTwoParallelBoxes(MTH3D_tdstVector_* _p_stFirstBoxMaxPoint, MTH3D_tdstVector_* _p_stFirstBoxMinPoint, MTH3D_tdstVector_* _p_stSecondBoxMaxPoint, MTH3D_tdstVector_* _p_stSecondBoxMinPoint)
 {
-    p_stMinBounding->xX = p_stSphereCenter->xX - xSphereRadius;
-    p_stMinBounding->xY = p_stSphereCenter->xY - xSphereRadius;
-    p_stMinBounding->xZ = p_stSphereCenter->xZ - xSphereRadius;
-    p_stMaxBounding->xX = p_stSphereCenter->xX + xSphereRadius;
-    p_stMaxBounding->xY = p_stSphereCenter->xY + xSphereRadius;
-    p_stMaxBounding->xZ = p_stSphereCenter->xZ + xSphereRadius;
-}
+    if ((_p_stSecondBoxMaxPoint->xX > _p_stFirstBoxMinPoint->xX) && (_p_stSecondBoxMinPoint->xX < _p_stFirstBoxMaxPoint->xX) && (_p_stSecondBoxMaxPoint->xY > _p_stFirstBoxMinPoint->xY) && (_p_stSecondBoxMinPoint->xY < _p_stFirstBoxMaxPoint->xY) && (_p_stSecondBoxMaxPoint->xZ > _p_stFirstBoxMinPoint->xZ) && (_p_stSecondBoxMinPoint->xZ < _p_stFirstBoxMaxPoint->xZ))
+    {
+        return 1;
+    }
 
-void COL_fn_vMinMaxBox2VerticesBox(MTH3D_tdstVector_* a8_stBoxDest, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint)
-{
-    a8_stBoxDest[0].xX = p_stMinPoint->xX; a8_stBoxDest[0].xY = p_stMinPoint->xY; a8_stBoxDest[0].xZ = p_stMinPoint->xZ;
-    a8_stBoxDest[1].xX = p_stMinPoint->xX; a8_stBoxDest[1].xY = p_stMinPoint->xY; a8_stBoxDest[1].xZ = p_stMaxPoint->xZ;
-    a8_stBoxDest[2].xX = p_stMinPoint->xX; a8_stBoxDest[2].xY = p_stMaxPoint->xY; a8_stBoxDest[2].xZ = p_stMinPoint->xZ;
-    a8_stBoxDest[3].xX = p_stMinPoint->xX; a8_stBoxDest[3].xY = p_stMaxPoint->xY; a8_stBoxDest[3].xZ = p_stMaxPoint->xZ;
-    a8_stBoxDest[4].xX = p_stMaxPoint->xX; a8_stBoxDest[4].xY = p_stMinPoint->xY; a8_stBoxDest[4].xZ = p_stMinPoint->xZ;
-    a8_stBoxDest[5].xX = p_stMaxPoint->xX; a8_stBoxDest[5].xY = p_stMinPoint->xY; a8_stBoxDest[5].xZ = p_stMaxPoint->xZ;
-    a8_stBoxDest[6].xX = p_stMaxPoint->xX; a8_stBoxDest[6].xY = p_stMaxPoint->xY; a8_stBoxDest[6].xZ = p_stMinPoint->xZ;
-    a8_stBoxDest[7].xX = p_stMaxPoint->xX; a8_stBoxDest[7].xY = p_stMaxPoint->xY; a8_stBoxDest[7].xZ = p_stMaxPoint->xZ;
+    return 0;
 }

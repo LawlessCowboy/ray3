@@ -1063,70 +1063,15 @@ struct SDC_VertexArrays_ {
     int pSDLs; /* +0x20 */
 };
 
-void GLI_vGetVertexPointersFromSDCStructure(SDC_VertexArrays_* pSDC, unsigned int iElement, float (**pVOrg)[4], float (**pUV1)[4], float (**pUV2)[4], float (**pUVChrome)[4], float (**pNormals)[4])
-{
-    unsigned int NbVertices;
-    unsigned int NbVerticesAligned;
-    unsigned int NbVerticesAlignedUVs;
-    float (*pVA)[4];
-    GLI_tdstMaterial_* hVisualMaterial;
-    unsigned int stage;
-    unsigned int NbStages;
-    unsigned int bMultiTexture;
-    unsigned int LayerTypes;
-    unsigned int Type;
-
-    pVA = pSDC->pArrayOfVertexArrays[iElement];
-
-    Type = pSDC->OptType & 0xF;
-    if (Type == 6 || Type == 4 || Type == 5)
-    {
-        NbVerticesAligned = ((unsigned int*)pVA)[1];
-        NbVerticesAlignedUVs = ((unsigned int*)pVA)[2];
-        pVA++;
-    }
-    else
-    {
-        NbVertices = pSDC->pNbTrianglesPerElement[iElement] * 3;
-        NbVerticesAligned = NbVertices;
-        NbVerticesAlignedUVs = (NbVertices + 3) >> 2;
-    }
-
-    *pVOrg = pVA;
-    pVA += NbVerticesAligned;
-    hVisualMaterial = pSDC->pArrayOfMaterials[iElement];
-
-    if (hVisualMaterial && hVisualMaterial->ulNbTextureStages) NbStages = hVisualMaterial->ulNbTextureStages; else NbStages = 0;
-    if (NbStages == 0) { NbStages++; bMultiTexture = 0; } else bMultiTexture = 1;
-
-    LayerTypes = 0;
-    if (bMultiTexture)
-    {
-        for (stage = 0; stage < NbStages; stage++)
-        {
-            switch (hVisualMaterial->a_stMultiMaterial[stage].c_UVSource)
-            {
-            case 0:
-                LayerTypes |= 1;
-                break;
-            case 1:
-                LayerTypes |= 2;
-                break;
-            case 4:
-                LayerTypes |= 4;
-                break;
-            }
-        }
-    }
-    else
-        LayerTypes = 1;
-
-    if (LayerTypes & 1) { *pUV1 = pVA; pVA += NbVerticesAlignedUVs; }
-    if (LayerTypes & 2) { *pUV2 = pVA; pVA += NbVerticesAlignedUVs; }
-    if (LayerTypes & 4) { *pUVChrome = pVA; pVA += NbVerticesAligned; }
-
-    *pNormals = pVA;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+extern "C" void GLI_vGetVertexPointersFromSDCStructure(SDC_VertexArrays_* pSDC, unsigned int iElement, float (**pVOrg)[4], float (**pUV1)[4], float (**pUV2)[4], float (**pUVChrome)[4], float (**pNormals)[4]);
+extern "C" void GLIPS2_vManageLightsForThisCharacter(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int bBoundingSphere, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius);
+extern "C" void GLI_vCalculateLightingMatricesForCheap(HIE_tdstSuperObject_* _hSprObj, GLI_tdstMaterial_* pMat);
+extern "C" void GLI_vCalculateLightingMatrices(GLI_tdstMaterial_* pMat);
+extern "C" void GLI_vCalculateLightingMatricesGhost(void);
+int GLI_vSetParaSphericalLight(GLI_tdstLight_* pLight, unsigned int LightID, float (*LightPos)[4][4], float (*LightColor)[4][4], float (*AmbientLight)[4]);
+int GLI_vSetSphericalLight(GLI_tdstLight_* pLight, unsigned int LightID, float (*LightPos)[4][4], float (*LightColor)[4][4], float (*AmbientLight)[4]);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLLights.cpp lines 939–1079 */
 /* addr: 0x002db510  size: 564 bytes */
@@ -1211,127 +1156,6 @@ extern "C" int GLI_xSetViewportLightsOnOff(int bOnOff);
 extern "C" void GLI_vResetTableOfActiveLightsForChar(int bReset);
 extern "C" void GLI_vAddInternalLightToViewport(GLD_tdstViewportAttributes_* hVpt, MTH3D_tdstVector_* pAmbient, MTH3D_tdstVector_* pDirection, MTH3D_tdstVector_* pColor);
 extern "C" void GLI_vAddInternalLightToViewportGhost(GLD_tdstViewportAttributes_* hVpt, MTH3D_tdstVector_* pAmbient, MTH3D_tdstVector_* pDirection, MTH3D_tdstVector_* pColor);
-
-void GLIPS2_vManageLightsForThisCharacter(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int bBoundingSphere, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius)
-{
-    GLI_tdstLight_** ppLights = (GLI_tdstLight_**)gs_aDEF_p_CurrentListOfLight;
-    unsigned char* pLightActivity = g_ucTableOfActiveLightsForChar;
-    float stAbsCenter[4];
-    float Vect[4];
-    float xSquare;
-    float stDist;
-    int iCpt;
-    int iDist;
-    float* pCenter;
-    float* pVect;
-    MAT_tdstTransformation_* pMatrix;
-
-    if (_hSprObj->lIL_Status < 2 || _hSprObj->lIL_Status > 3)
-    {
-        if (bBoundingSphere)
-        {
-            GLI_tdstLight_* pLight;
-
-            pCenter = stAbsCenter;
-            pVect = Vect;
-            pMatrix = _hSprObj->hGlobalMatrix;
-
-            stAbsCenter[0] = p_stSphereCenter->xX;
-            stAbsCenter[1] = p_stSphereCenter->xY;
-            stAbsCenter[2] = p_stSphereCenter->xZ;
-            stAbsCenter[3] = 1.0f;
-
-            {
-                float* pMat = (float*)&pMatrix->stTransformMatrix;
-
-                asm {
-                    lqc2 vf5, 0x0(pCenter)
-                    lqc2 vf1, 0x0(pMat)
-                    lqc2 vf2, 0x10(pMat)
-                    lqc2 vf3, 0x20(pMat)
-                    lqc2 vf4, 0x30(pMat)
-                    vmulax.xyzw ACC, vf1, vf5x
-                    vmadday.xyzw ACC, vf2, vf5y
-                    vmaddaz.xyzw ACC, vf3, vf5z
-                    vmaddw.xyzw vf9, vf4, vf5w
-                    sqc2 vf9, 0x0(pVect)
-                }
-            }
-
-            for (iCpt = 0; iCpt < gs_CurrentNumberOfLightInViewport; iCpt++)
-            {
-                pLight = ppLights[iCpt];
-                if (pLight == NULL)
-                    continue;
-                if (pLight->lTypeOfLight == 1 || pLight->lTypeOfLight == 4)
-                {
-                    pLight->bValid = 1;
-                    pLightActivity[iCpt] = 1;
-                }
-                else if (pLight->lTypeOfLight == 2 || pLight->lTypeOfLight == 7)
-                {
-                    float* pLightPos = (float*)&pLight->stMatrix.stTransformMatrix.stCol_3;
-
-                    xSquare = xSphereRadius + pLight->xFar;
-                    xSquare = xSquare * xSquare;
-
-                    asm {
-                        lqc2 vf1, 0x0(pVect)
-                        lqc2 vf2, 0x0(pLightPos)
-                        vsub.xyz vf3, vf1, vf2
-                        vmul.xyz vf5, vf3, vf3
-                        vaddy.x vf5, vf5, vf5y
-                        vaddz.x vf5, vf5, vf5z
-                        qmfc2.ni iDist, vf5
-                        mtc1 iDist, stDist
-                    }
-
-                    if (stDist <= xSquare)
-                    {
-                        pLight->bValid = 1;
-                        pLightActivity[iCpt] = 1;
-                    }
-                    else
-                    {
-                        pLight->bValid = 0;
-                        pLightActivity[iCpt] = 0;
-                    }
-                }
-                else
-                {
-                    pLight->bValid = 0;
-                    pLightActivity[iCpt] = 0;
-                }
-            }
-        }
-        else
-        {
-            GLI_xSetViewportLightsOnOff(_hSprObj->lIL_Status);
-            GLI_vResetTableOfActiveLightsForChar(1);
-        }
-
-        if (_hSprObj->lIL_Status == 1)
-        {
-            GLI_vAddInternalLightToViewport(_hVpt, &_hSprObj->stIL_AmbientColor, &_hSprObj->stIL_ParallelDirection, &_hSprObj->stIL_ParallelColor);
-        }
-    }
-    else
-    {
-        if (_hSprObj->lIL_Status == 3)
-        {
-            GLI_xSetViewportLightsOnOff(0);
-            GhostAmbient[3] = _hSprObj->stIL_AmbientColor.xX;
-            GhostParallel1[3] = _hSprObj->stIL_ParallelColor.xX;
-            GhostParallel2[3] = _hSprObj->stIL_ParallelColor.xY;
-            GLI_vAddInternalLightToViewportGhost(_hVpt, &_hSprObj->stIL_AmbientColor, &_hSprObj->stIL_ParallelDirection, &_hSprObj->stIL_ParallelColor);
-        }
-        else
-        {
-            GLI_xSetViewportLightsOnOff(0);
-            GLI_vAddInternalLightToViewport(_hVpt, &_hSprObj->stIL_AmbientColor, &_hSprObj->stIL_ParallelDirection, &_hSprObj->stIL_ParallelColor);
-        }
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLLights.cpp lines 792–898 */
 /* addr: 0x002db750  size: 592 bytes */
@@ -1431,102 +1255,6 @@ extern "C" void sceVu0TransposeMatrix(float (*m0)[4], float (*m1)[4]);
 int GLI_vSetSphericalLight(GLI_tdstLight_* pLight, unsigned int LightID, float (*LightPos)[4][4], float (*LightColor)[4][4], float (*AmbientLight)[4]);
 int GLI_vSetParaSphericalLight(GLI_tdstLight_* pLight, unsigned int LightID, float (*LightPos)[4][4], float (*LightColor)[4][4], float (*AmbientLight)[4]);
 extern "C" void sceVu0TransposeMatrix(float (*m0)[4], float (*m1)[4]);
-
-void GLI_vCalculateLightingMatricesForCheap(HIE_tdstSuperObject_* _hSprObj, GLI_tdstMaterial_* pMat)
-{
-    float Diffuse[4];
-    float* pAmbient;
-    float (*pPos)[4];
-    float (*pCol)[4];
-
-    {
-        float* pZero = vZeroVect;
-
-        pAmbient = GLI_g_AmbientLight;
-        pPos = GLI_g_LightPositions;
-        pCol = GLI_g_LightColors;
-
-        asm {
-            lqc2 vf1, 0x0(pZero)
-            sqc2 vf1, 0x0(pAmbient)
-            sqc2 vf1, 0x0(pPos)
-            sqc2 vf1, 0x10(pPos)
-            sqc2 vf1, 0x20(pPos)
-            sqc2 vf1, 0x30(pPos)
-            sqc2 vf1, 0x0(pCol)
-            sqc2 vf1, 0x10(pCol)
-            sqc2 vf1, 0x20(pCol)
-            sqc2 vf1, 0x30(pCol)
-        }
-    }
-
-    if (pMat)
-    {
-        Diffuse[0] = pMat->stDiffuse.xR;
-        Diffuse[1] = pMat->stDiffuse.xG;
-        Diffuse[2] = pMat->stDiffuse.xB;
-        Diffuse[3] = pMat->stDiffuse.xA;
-        pAmbient[0] = 0.5f * pMat->stAmbient.xR;
-        pAmbient[1] = 0.5f * pMat->stAmbient.xG;
-        pAmbient[2] = 0.5f * pMat->stAmbient.xB;
-        pAmbient[3] = 0.5f * pMat->stAmbient.xA;
-    }
-
-    if (_hSprObj->lIL_Status == 1 || _hSprObj->lIL_Status == 2)
-    {
-        pAmbient[0] += 0.5f * _hSprObj->stIL_AmbientColor.xX;
-        pAmbient[1] += 0.5f * _hSprObj->stIL_AmbientColor.xY;
-        pAmbient[2] += 0.5f * _hSprObj->stIL_AmbientColor.xZ;
-        pAmbient[3] += 0.5f;
-        pPos[0][0] = -_hSprObj->stIL_ParallelDirection.xX;
-        pPos[0][1] = -_hSprObj->stIL_ParallelDirection.xY;
-        pPos[0][2] = -_hSprObj->stIL_ParallelDirection.xZ;
-        pPos[0][3] = 0.0f;
-        pCol[0][0] = _hSprObj->stIL_ParallelColor.xX;
-        pCol[0][1] = _hSprObj->stIL_ParallelColor.xY;
-        pCol[0][2] = _hSprObj->stIL_ParallelColor.xZ;
-        pCol[0][3] = 1.0f;
-        sceVu0ScaleVector(pCol[0], pCol[0], 0.5f);
-    }
-    else
-    {
-        pAmbient[0] += 0.1f;
-        pAmbient[1] += 0.1f;
-        pAmbient[2] += 0.1f;
-        pAmbient[3] += 0.5f;
-        pPos[0][0] = 0.0f;
-        pPos[0][1] = 0.0f;
-        pPos[0][2] = 1.0f;
-        pPos[0][3] = 0.0f;
-        pCol[0][0] = 0.8f;
-        pCol[0][1] = 0.8f;
-        pCol[0][2] = 0.8f;
-        pCol[0][3] = 1.0f;
-        sceVu0ScaleVector(pCol[0], pCol[0], 0.5f);
-    }
-
-    sceVu0TransposeMatrix(pPos, pPos);
-
-    {
-        float* pDiffuse = Diffuse;
-
-        asm {
-            lqc2 vf1, 0x0(pDiffuse)
-            lqc2 vf2, 0x0(pCol)
-            lqc2 vf3, 0x10(pCol)
-            lqc2 vf4, 0x20(pCol)
-            lqc2 vf5, 0x30(pCol)
-            vmul.xyzw vf2, vf2, vf1
-            vmul.xyzw vf3, vf3, vf1
-            vmul.xyzw vf4, vf4, vf1
-            vmul.xyzw vf5, vf5, vf1
-            sqc2 vf2, 0x0(pCol)
-            sqc2 vf3, 0x10(pCol)
-            sqc2 vf4, 0x20(pCol)
-            sqc2 vf5, 0x30(pCol)
-        }
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLLights.cpp lines 508–788 */
 /* addr: 0x002db9a0  size: 912 bytes */
@@ -1646,6 +1374,427 @@ void GLI_vCalculateLightingMatricesForCheap(HIE_tdstSuperObject_* _hSprObj, GLI_
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLLights.cpp lines 419–491 */
+/* addr: 0x002dbd30  size: 356 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 419
+ *   +0x0004 -> line 428
+ *   +0x0010 -> line 419
+ *   +0x0014 -> line 428
+ *   +0x0020 -> line 430
+ *   +0x0024 -> line 431
+ *   +0x0028 -> line 432
+ *   +0x002c -> line 433
+ *   +0x0030 -> line 434
+ *   +0x0034 -> line 438
+ *   +0x0044 -> line 439
+ *   +0x0048 -> line 440
+ *   +0x004c -> line 458
+ *   +0x0054 -> line 455
+ *   +0x005c -> line 453
+ *   +0x0060 -> line 458
+ *   +0x0068 -> line 459
+ *   +0x0078 -> line 461
+ *   +0x0084 -> line 462
+ *   +0x0088 -> line 461
+ *   +0x008c -> line 481
+ *   +0x0090 -> line 462
+ *   +0x0094 -> line 481
+ *   +0x0098 -> line 461
+ *   +0x009c -> line 471
+ *   +0x00a0 -> line 481
+ *   +0x00b0 -> line 461
+ *   +0x00c0 -> line 462
+ *   +0x00c4 -> line 464
+ *   +0x00cc -> line 465
+ *   +0x00d8 -> line 466
+ *   +0x00e4 -> line 471
+ *   +0x00f0 -> line 472
+ *   +0x0100 -> line 473
+ *   +0x0104 -> line 476
+ *   +0x010c -> line 473
+ *   +0x0118 -> line 477
+ *   +0x0120 -> line 478
+ *   +0x0128 -> line 474
+ *   +0x0130 -> line 479
+ *   +0x0138 -> line 482
+ *   +0x013c -> line 483
+ *   +0x0140 -> line 484
+ *   +0x0144 -> line 485
+ *   +0x0148 -> line 489
+ *   +0x0158 -> line 491
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+extern "C" void MAT_fn_vInvert(MAT_tdstTransformation_* _p_stDest, MAT_tdstTransformation_* _p_stSrc);
+extern "C" void MAT_fn_vApplyOnVector(MTH3D_tdstVector_* _p_stDest, MAT_tdstTransformation_* _p_stTransform, MTH3D_tdstVector_* _p_stSrc);
+extern "C" void sceVu0TransposeMatrix(float (*m0)[4], float (*m1)[4]);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLLights.cpp lines 319–413 */
+/* addr: 0x002dbea0  size: 372 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 319
+ *   +0x0004 -> line 323
+ *   +0x0008 -> line 319
+ *   +0x000c -> line 323
+ *   +0x001c -> line 325
+ *   +0x0020 -> line 326
+ *   +0x0024 -> line 327
+ *   +0x0028 -> line 328
+ *   +0x002c -> line 329
+ *   +0x0030 -> line 330
+ *   +0x0034 -> line 331
+ *   +0x0038 -> line 334
+ *   +0x003c -> line 335
+ *   +0x0040 -> line 336
+ *   +0x0044 -> line 337
+ *   +0x0048 -> line 339
+ *   +0x004c -> line 340
+ *   +0x0050 -> line 342
+ *   +0x0054 -> line 343
+ *   +0x0058 -> line 344
+ *   +0x005c -> line 345
+ *   +0x0060 -> line 346
+ *   +0x0064 -> line 355
+ *   +0x0078 -> line 357
+ *   +0x0084 -> line 358
+ *   +0x0088 -> line 359
+ *   +0x008c -> line 362
+ *   +0x0094 -> line 373
+ *   +0x00c0 -> line 382
+ *   +0x00c4 -> line 383
+ *   +0x00cc -> line 379
+ *   +0x00d0 -> line 384
+ *   +0x00d4 -> line 382
+ *   +0x00d8 -> line 384
+ *   +0x00dc -> line 388
+ *   +0x00e0 -> line 385
+ *   +0x00e4 -> line 387
+ *   +0x00e8 -> line 385
+ *   +0x00ec -> line 388
+ *   +0x00f0 -> line 389
+ *   +0x00f8 -> line 379
+ *   +0x00fc -> line 390
+ *   +0x0100 -> line 379
+ *   +0x0104 -> line 382
+ *   +0x0108 -> line 390
+ *   +0x010c -> line 379
+ *   +0x0110 -> line 382
+ *   +0x0114 -> line 379
+ *   +0x011c -> line 382
+ *   +0x0120 -> line 383
+ *   +0x012c -> line 384
+ *   +0x0138 -> line 385
+ *   +0x013c -> line 387
+ *   +0x0144 -> line 388
+ *   +0x014c -> line 389
+ *   +0x0154 -> line 390
+ *   +0x015c -> line 409
+ *   +0x0164 -> line 412
+ *   +0x0168 -> line 413
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+extern "C" void sceVu0ScaleVector(float* v0, float* v1, float s);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLLights.cpp lines 146–310 */
+/* addr: 0x002dc020  size: 400 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 150
+ *   +0x0004 -> line 146
+ *   +0x0008 -> line 150
+ *   +0x0018 -> line 152
+ *   +0x001c -> line 153
+ *   +0x0020 -> line 154
+ *   +0x0024 -> line 155
+ *   +0x0028 -> line 156
+ *   +0x002c -> line 157
+ *   +0x0030 -> line 158
+ *   +0x0034 -> line 161
+ *   +0x0038 -> line 162
+ *   +0x003c -> line 163
+ *   +0x0040 -> line 164
+ *   +0x0044 -> line 166
+ *   +0x0048 -> line 167
+ *   +0x004c -> line 169
+ *   +0x0050 -> line 170
+ *   +0x0054 -> line 171
+ *   +0x0058 -> line 172
+ *   +0x005c -> line 173
+ *   +0x0060 -> line 182
+ *   +0x0074 -> line 184
+ *   +0x0080 -> line 185
+ *   +0x0084 -> line 186
+ *   +0x0088 -> line 189
+ *   +0x0090 -> line 193
+ *   +0x00a4 -> line 195
+ *   +0x00a8 -> line 196
+ *   +0x00b0 -> line 200
+ *   +0x00bc -> line 203
+ *   +0x00c8 -> line 205
+ *   +0x00cc -> line 206
+ *   +0x00d0 -> line 205
+ *   +0x00d4 -> line 211
+ *   +0x00d8 -> line 206
+ *   +0x00e8 -> line 207
+ *   +0x00fc -> line 208
+ *   +0x0110 -> line 209
+ *   +0x0120 -> line 211
+ *   +0x0128 -> line 215
+ *   +0x012c -> line 236
+ *   +0x013c -> line 215
+ *   +0x0140 -> line 216
+ *   +0x0148 -> line 217
+ *   +0x0150 -> line 218
+ *   +0x0158 -> line 240
+ *   +0x015c -> line 241
+ *   +0x0160 -> line 243
+ *   +0x0168 -> line 244
+ *   +0x016c -> line 245
+ *   +0x0170 -> line 246
+ *   +0x0174 -> line 247
+ *   +0x0178 -> line 249
+ *   +0x017c -> line 251
+ *   +0x0180 -> line 252
+ *   +0x0184 -> line 262
+ *   +0x0188 -> line 310
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+int GLI_vSetSphericalLight(GLI_tdstLight_* pLight, unsigned int LightID, float (*LightPos)[4][4], float (*LightColor)[4][4], float (*AmbientLight)[4])
+{
+    float TempVect[4];
+    float fNorm;
+    float xDamp;
+    int iSqDist;
+
+    {
+        MTH4D_tdstMatrix_* pLightMatrix = &pLight->stMatrix.stTransformMatrix;
+        float* pCenter = (float*)(GLI_BIG_GLOBALS_p_stObj + 0x30);
+        MTH4D_tdstMatrix_* pObjMatrix = &((MAT_tdstTransformation_*)g_p_stCurrentMatrix)->stTransformMatrix;
+
+        asm {
+            .set noreorder
+            lqc2 vf1, 0x0(pCenter)
+            lqc2 vf2, 0x30(pLightMatrix)
+            lqc2 vf4, 0x0(pObjMatrix)
+            vaddx.w vf1, vf0, vf0x
+            lqc2 vf5, 0x10(pObjMatrix)
+            lqc2 vf6, 0x20(pObjMatrix)
+            lqc2 vf7, 0x30(pObjMatrix)
+            vmulax.xyzw ACC, vf4, vf1x
+            vmadday.xyzw ACC, vf5, vf1y
+            vmaddaz.xyzw ACC, vf6, vf1z
+            vmaddw.xyzw vf9, vf7, vf1w
+            vsub.xyz vf10, vf2, vf9
+            vsub.w vf10, vf0, vf0
+            vmul.xyz vf11, vf10, vf10
+            vaddy.x vf11, vf11, vf11y
+            vaddz.x vf11, vf11, vf11z
+            qmfc2.ni iSqDist, vf11
+            mtc1 iSqDist, fNorm
+            .set reorder
+        }
+    }
+
+    if (fNorm > pLight->SqFar)
+    {
+        float* pZero = vZeroVect;
+        float* pDst = (*LightPos)[LightID];
+
+        asm {
+            lqc2 vf1, 0x0(pZero)
+            sqc2 vf1, 0x0(pDst)
+        }
+        return 0;
+    }
+
+    if (fNorm <= pLight->SqNear)
+        xDamp = 0.5f;
+    else
+        xDamp = pLight->OOSqDiv * (pLight->SqFar - fNorm);
+
+    if (pLight->bIsPainting)
+    {
+        xDamp *= 2.0f;
+        AmbientLight[0][0] += xDamp * pLight->stColor.xR;
+        AmbientLight[0][1] += xDamp * pLight->stColor.xG;
+        AmbientLight[0][2] += xDamp * pLight->stColor.xB;
+        AmbientLight[0][3] += xDamp * pLight->stColor.xA;
+        return 0;
+    }
+
+    TempVect[0] = pLight->stColor.xR;
+    TempVect[1] = pLight->stColor.xG;
+    TempVect[2] = pLight->stColor.xB;
+    TempVect[3] = pLight->stColor.xA;
+
+    {
+        float* pPos = (*LightPos)[LightID];
+        float* pTemp = TempVect;
+        float* pCol = (*LightColor)[LightID];
+        int iVal;
+
+        asm {
+            vrsqrt $Q, $vf0w, $vf11x
+            vsub.xyzw $vf6, $vf0, $vf0
+            mfc1 iSqDist, xDamp
+            nop
+            qmtc2.ni iSqDist, $vf9
+            lqc2 $vf11, 0x0(pTemp)
+            vmulx.xyzw $vf11, $vf11, $vf9x
+            sqc2 $vf11, 0x0(pCol)
+            vwaitq
+            vmulq.xyz $vf6, $vf10, $Q
+            sqc2 $vf6, 0x0(pPos)
+        }
+    }
+
+    return 1;
+}
+
+int GLI_vSetParaSphericalLight(GLI_tdstLight_* pLight, unsigned int LightID, float (*LightPos)[4][4], float (*LightColor)[4][4], float (*AmbientLight)[4])
+{
+    MTH3D_tdstVector_ stVect;
+    float xDamp;
+    float fNorm;
+
+    {
+        MTH4D_tdstMatrix_* pLightMatrix = &pLight->stMatrix.stTransformMatrix;
+        float* pCenter = (float*)(GLI_BIG_GLOBALS_p_stObj + 0x30); /* p_stObj->xBoudingSphereCenter */
+        MTH4D_tdstMatrix_* pObjMatrix = &((MAT_tdstTransformation_*)g_p_stCurrentMatrix)->stTransformMatrix;
+        int iSqDist;
+
+        /* VU0 macro mode: squared distance from the light to the object's
+           bounding-sphere centre (no C form). */
+        asm {
+            .set noreorder
+            lqc2 vf1, 0x0(pCenter)
+            lqc2 vf2, 0x30(pLightMatrix)
+            lqc2 vf4, 0x0(pObjMatrix)
+            vaddx.w vf1, vf0, vf0x
+            lqc2 vf5, 0x10(pObjMatrix)
+            lqc2 vf6, 0x20(pObjMatrix)
+            lqc2 vf7, 0x30(pObjMatrix)
+            vmulax.xyzw ACC, vf4, vf1x
+            vmadday.xyzw ACC, vf5, vf1y
+            vmaddaz.xyzw ACC, vf6, vf1z
+            vmaddw.xyzw vf9, vf7, vf1w
+            vsub.xyz vf10, vf2, vf9
+            vsub.w vf10, vf0, vf0
+            vmul.xyz vf11, vf10, vf10
+            vaddy.x vf11, vf11, vf11y
+            vaddz.x vf11, vf11, vf11z
+            qmfc2 iSqDist, vf11
+            mtc1 iSqDist, fNorm
+            .set reorder
+        }
+    }
+
+    if (fNorm > pLight->SqFar)
+    {
+        float* pZero = vZeroVect;
+        float* pDst = (*LightPos)[LightID];
+
+        asm {
+            lqc2 vf1, 0x0(pZero)
+            sqc2 vf1, 0x0(pDst)
+        }
+        return 0;
+    }
+
+    if (fNorm <= pLight->SqNear)
+        xDamp = 0.5f;
+    else
+        xDamp = pLight->OOSqDiv * (pLight->SqFar - fNorm);
+
+    *(int*)&stVect.xX = *(int*)&pLight->stMatrix.stTransformMatrix.stCol_2.xX; *(int*)&stVect.xY = *(int*)&pLight->stMatrix.stTransformMatrix.stCol_2.xY; *(int*)&stVect.xZ = *(int*)&pLight->stMatrix.stTransformMatrix.stCol_2.xZ;
+    (*LightPos)[LightID][0] = -stVect.xX;
+    (*LightPos)[LightID][1] = -stVect.xY;
+    (*LightPos)[LightID][2] = -stVect.xZ;
+    (*LightPos)[LightID][3] = 0.0f;
+    (*LightColor)[LightID][0] = pLight->stColor.xR;
+    (*LightColor)[LightID][1] = pLight->stColor.xG;
+    (*LightColor)[LightID][2] = pLight->stColor.xB;
+    (*LightColor)[LightID][3] = pLight->stColor.xA;
+
+    sceVu0ScaleVector((*LightColor)[LightID], (*LightColor)[LightID], xDamp);
+
+    return 1;
+}
+
+void GLI_vCalculateLightingMatricesGhost(void)
+{
+    MAT_tdstTransformation_ TempMat;
+    float fNorm;
+    MTH3D_tdstVector_ stVect2;
+    MTH3D_tdstVector_ stVect;
+
+    {
+        float* pZero = vZeroVect;
+        float (*pPositions)[4] = GLI_g_LightPositions;
+        float (*pColors)[4] = GLI_g_LightColors;
+
+        /* VU0 quadword copies: lqc2/sqc2 have no C form. */
+        asm {
+            lqc2 vf1, 0x0(pZero)
+            sqc2 vf1, 0x20(pPositions)
+            sqc2 vf1, 0x30(pPositions)
+            sqc2 vf1, 0x20(pColors)
+            sqc2 vf1, 0x30(pColors)
+        }
+    }
+    {
+        float* pDst = GLI_g_AmbientLight;
+        float* pSrc = GhostAmbient;
+
+        asm {
+            lqc2 vf1, 0x0(pSrc)
+            sqc2 vf1, 0x0(pDst)
+        }
+    }
+
+    stVect.xX = 0.0f;
+    stVect.xY = 0.0f;
+    stVect.xZ = 1.0f;
+
+    MAT_fn_vInvert(&TempMat, (MAT_tdstTransformation_*)GLI_BIG_GLOBALS_gs_st_CameraMatrix);
+    MAT_fn_vApplyOnVector(&stVect2, &TempMat, &stVect);
+
+    fNorm = stVect2.xX * stVect2.xX + stVect2.xY * stVect2.xY + stVect2.xZ * stVect2.xZ;
+    fNorm = 1.0f / fNorm;
+
+    stVect2.xX = stVect2.xX * fNorm;
+    stVect2.xY = stVect2.xY * fNorm;
+    stVect2.xZ = stVect2.xZ * fNorm;
+
+    GLI_g_LightPositions[0][0] = -stVect2.xX;
+    GLI_g_LightPositions[0][1] = -stVect2.xY;
+    GLI_g_LightPositions[0][2] = -stVect2.xZ;
+    GLI_g_LightPositions[0][3] = 0.0f;
+    GLI_g_LightPositions[1][0] = stVect2.xX;
+    GLI_g_LightPositions[1][1] = stVect2.xY;
+    GLI_g_LightPositions[1][2] = stVect2.xZ;
+    GLI_g_LightPositions[1][3] = 0.0f;
+
+    {
+        float (*pColors)[4] = GLI_g_LightColors;
+        float* pParallel1 = GhostParallel1;
+        float* pParallel2 = GhostParallel2;
+
+        asm {
+            lqc2 vf1, 0x0(pParallel1)
+            lqc2 vf2, 0x0(pParallel2)
+            sqc2 vf1, 0x0(pColors)
+            sqc2 vf2, 0x10(pColors)
+        }
+    }
+
+    sceVu0TransposeMatrix(GLI_g_LightPositions, GLI_g_LightPositions);
+}
+
 void GLI_vCalculateLightingMatrices(GLI_tdstMaterial_* pMat)
 {
     float Diffuse[4];
@@ -1817,421 +1966,284 @@ void GLI_vCalculateLightingMatrices(GLI_tdstMaterial_* pMat)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLLights.cpp lines 419–491 */
-/* addr: 0x002dbd30  size: 356 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 419
- *   +0x0004 -> line 428
- *   +0x0010 -> line 419
- *   +0x0014 -> line 428
- *   +0x0020 -> line 430
- *   +0x0024 -> line 431
- *   +0x0028 -> line 432
- *   +0x002c -> line 433
- *   +0x0030 -> line 434
- *   +0x0034 -> line 438
- *   +0x0044 -> line 439
- *   +0x0048 -> line 440
- *   +0x004c -> line 458
- *   +0x0054 -> line 455
- *   +0x005c -> line 453
- *   +0x0060 -> line 458
- *   +0x0068 -> line 459
- *   +0x0078 -> line 461
- *   +0x0084 -> line 462
- *   +0x0088 -> line 461
- *   +0x008c -> line 481
- *   +0x0090 -> line 462
- *   +0x0094 -> line 481
- *   +0x0098 -> line 461
- *   +0x009c -> line 471
- *   +0x00a0 -> line 481
- *   +0x00b0 -> line 461
- *   +0x00c0 -> line 462
- *   +0x00c4 -> line 464
- *   +0x00cc -> line 465
- *   +0x00d8 -> line 466
- *   +0x00e4 -> line 471
- *   +0x00f0 -> line 472
- *   +0x0100 -> line 473
- *   +0x0104 -> line 476
- *   +0x010c -> line 473
- *   +0x0118 -> line 477
- *   +0x0120 -> line 478
- *   +0x0128 -> line 474
- *   +0x0130 -> line 479
- *   +0x0138 -> line 482
- *   +0x013c -> line 483
- *   +0x0140 -> line 484
- *   +0x0144 -> line 485
- *   +0x0148 -> line 489
- *   +0x0158 -> line 491
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-extern "C" void MAT_fn_vInvert(MAT_tdstTransformation_* _p_stDest, MAT_tdstTransformation_* _p_stSrc);
-extern "C" void MAT_fn_vApplyOnVector(MTH3D_tdstVector_* _p_stDest, MAT_tdstTransformation_* _p_stTransform, MTH3D_tdstVector_* _p_stSrc);
-extern "C" void sceVu0TransposeMatrix(float (*m0)[4], float (*m1)[4]);
-
-void GLI_vCalculateLightingMatricesGhost(void)
+void GLI_vCalculateLightingMatricesForCheap(HIE_tdstSuperObject_* _hSprObj, GLI_tdstMaterial_* pMat)
 {
-    MAT_tdstTransformation_ TempMat;
-    float fNorm;
-    MTH3D_tdstVector_ stVect2;
-    MTH3D_tdstVector_ stVect;
+    float Diffuse[4];
+    float* pAmbient;
+    float (*pPos)[4];
+    float (*pCol)[4];
 
     {
         float* pZero = vZeroVect;
-        float (*pPositions)[4] = GLI_g_LightPositions;
-        float (*pColors)[4] = GLI_g_LightColors;
 
-        /* VU0 quadword copies: lqc2/sqc2 have no C form. */
+        pAmbient = GLI_g_AmbientLight;
+        pPos = GLI_g_LightPositions;
+        pCol = GLI_g_LightColors;
+
         asm {
             lqc2 vf1, 0x0(pZero)
-            sqc2 vf1, 0x20(pPositions)
-            sqc2 vf1, 0x30(pPositions)
-            sqc2 vf1, 0x20(pColors)
-            sqc2 vf1, 0x30(pColors)
+            sqc2 vf1, 0x0(pAmbient)
+            sqc2 vf1, 0x0(pPos)
+            sqc2 vf1, 0x10(pPos)
+            sqc2 vf1, 0x20(pPos)
+            sqc2 vf1, 0x30(pPos)
+            sqc2 vf1, 0x0(pCol)
+            sqc2 vf1, 0x10(pCol)
+            sqc2 vf1, 0x20(pCol)
+            sqc2 vf1, 0x30(pCol)
         }
     }
+
+    if (pMat)
     {
-        float* pDst = GLI_g_AmbientLight;
-        float* pSrc = GhostAmbient;
+        Diffuse[0] = pMat->stDiffuse.xR;
+        Diffuse[1] = pMat->stDiffuse.xG;
+        Diffuse[2] = pMat->stDiffuse.xB;
+        Diffuse[3] = pMat->stDiffuse.xA;
+        pAmbient[0] = 0.5f * pMat->stAmbient.xR;
+        pAmbient[1] = 0.5f * pMat->stAmbient.xG;
+        pAmbient[2] = 0.5f * pMat->stAmbient.xB;
+        pAmbient[3] = 0.5f * pMat->stAmbient.xA;
+    }
+
+    if (_hSprObj->lIL_Status == 1 || _hSprObj->lIL_Status == 2)
+    {
+        pAmbient[0] += 0.5f * _hSprObj->stIL_AmbientColor.xX;
+        pAmbient[1] += 0.5f * _hSprObj->stIL_AmbientColor.xY;
+        pAmbient[2] += 0.5f * _hSprObj->stIL_AmbientColor.xZ;
+        pAmbient[3] += 0.5f;
+        pPos[0][0] = -_hSprObj->stIL_ParallelDirection.xX;
+        pPos[0][1] = -_hSprObj->stIL_ParallelDirection.xY;
+        pPos[0][2] = -_hSprObj->stIL_ParallelDirection.xZ;
+        pPos[0][3] = 0.0f;
+        pCol[0][0] = _hSprObj->stIL_ParallelColor.xX;
+        pCol[0][1] = _hSprObj->stIL_ParallelColor.xY;
+        pCol[0][2] = _hSprObj->stIL_ParallelColor.xZ;
+        pCol[0][3] = 1.0f;
+        sceVu0ScaleVector(pCol[0], pCol[0], 0.5f);
+    }
+    else
+    {
+        pAmbient[0] += 0.1f;
+        pAmbient[1] += 0.1f;
+        pAmbient[2] += 0.1f;
+        pAmbient[3] += 0.5f;
+        pPos[0][0] = 0.0f;
+        pPos[0][1] = 0.0f;
+        pPos[0][2] = 1.0f;
+        pPos[0][3] = 0.0f;
+        pCol[0][0] = 0.8f;
+        pCol[0][1] = 0.8f;
+        pCol[0][2] = 0.8f;
+        pCol[0][3] = 1.0f;
+        sceVu0ScaleVector(pCol[0], pCol[0], 0.5f);
+    }
+
+    sceVu0TransposeMatrix(pPos, pPos);
+
+    {
+        float* pDiffuse = Diffuse;
 
         asm {
-            lqc2 vf1, 0x0(pSrc)
-            sqc2 vf1, 0x0(pDst)
+            lqc2 vf1, 0x0(pDiffuse)
+            lqc2 vf2, 0x0(pCol)
+            lqc2 vf3, 0x10(pCol)
+            lqc2 vf4, 0x20(pCol)
+            lqc2 vf5, 0x30(pCol)
+            vmul.xyzw vf2, vf2, vf1
+            vmul.xyzw vf3, vf3, vf1
+            vmul.xyzw vf4, vf4, vf1
+            vmul.xyzw vf5, vf5, vf1
+            sqc2 vf2, 0x0(pCol)
+            sqc2 vf3, 0x10(pCol)
+            sqc2 vf4, 0x20(pCol)
+            sqc2 vf5, 0x30(pCol)
         }
     }
-
-    stVect.xX = 0.0f;
-    stVect.xY = 0.0f;
-    stVect.xZ = 1.0f;
-
-    MAT_fn_vInvert(&TempMat, (MAT_tdstTransformation_*)GLI_BIG_GLOBALS_gs_st_CameraMatrix);
-    MAT_fn_vApplyOnVector(&stVect2, &TempMat, &stVect);
-
-    fNorm = stVect2.xX * stVect2.xX + stVect2.xY * stVect2.xY + stVect2.xZ * stVect2.xZ;
-    fNorm = 1.0f / fNorm;
-
-    stVect2.xX = stVect2.xX * fNorm;
-    stVect2.xY = stVect2.xY * fNorm;
-    stVect2.xZ = stVect2.xZ * fNorm;
-
-    GLI_g_LightPositions[0][0] = -stVect2.xX;
-    GLI_g_LightPositions[0][1] = -stVect2.xY;
-    GLI_g_LightPositions[0][2] = -stVect2.xZ;
-    GLI_g_LightPositions[0][3] = 0.0f;
-    GLI_g_LightPositions[1][0] = stVect2.xX;
-    GLI_g_LightPositions[1][1] = stVect2.xY;
-    GLI_g_LightPositions[1][2] = stVect2.xZ;
-    GLI_g_LightPositions[1][3] = 0.0f;
-
-    {
-        float (*pColors)[4] = GLI_g_LightColors;
-        float* pParallel1 = GhostParallel1;
-        float* pParallel2 = GhostParallel2;
-
-        asm {
-            lqc2 vf1, 0x0(pParallel1)
-            lqc2 vf2, 0x0(pParallel2)
-            sqc2 vf1, 0x0(pColors)
-            sqc2 vf2, 0x10(pColors)
-        }
-    }
-
-    sceVu0TransposeMatrix(GLI_g_LightPositions, GLI_g_LightPositions);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLLights.cpp lines 319–413 */
-/* addr: 0x002dbea0  size: 372 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 319
- *   +0x0004 -> line 323
- *   +0x0008 -> line 319
- *   +0x000c -> line 323
- *   +0x001c -> line 325
- *   +0x0020 -> line 326
- *   +0x0024 -> line 327
- *   +0x0028 -> line 328
- *   +0x002c -> line 329
- *   +0x0030 -> line 330
- *   +0x0034 -> line 331
- *   +0x0038 -> line 334
- *   +0x003c -> line 335
- *   +0x0040 -> line 336
- *   +0x0044 -> line 337
- *   +0x0048 -> line 339
- *   +0x004c -> line 340
- *   +0x0050 -> line 342
- *   +0x0054 -> line 343
- *   +0x0058 -> line 344
- *   +0x005c -> line 345
- *   +0x0060 -> line 346
- *   +0x0064 -> line 355
- *   +0x0078 -> line 357
- *   +0x0084 -> line 358
- *   +0x0088 -> line 359
- *   +0x008c -> line 362
- *   +0x0094 -> line 373
- *   +0x00c0 -> line 382
- *   +0x00c4 -> line 383
- *   +0x00cc -> line 379
- *   +0x00d0 -> line 384
- *   +0x00d4 -> line 382
- *   +0x00d8 -> line 384
- *   +0x00dc -> line 388
- *   +0x00e0 -> line 385
- *   +0x00e4 -> line 387
- *   +0x00e8 -> line 385
- *   +0x00ec -> line 388
- *   +0x00f0 -> line 389
- *   +0x00f8 -> line 379
- *   +0x00fc -> line 390
- *   +0x0100 -> line 379
- *   +0x0104 -> line 382
- *   +0x0108 -> line 390
- *   +0x010c -> line 379
- *   +0x0110 -> line 382
- *   +0x0114 -> line 379
- *   +0x011c -> line 382
- *   +0x0120 -> line 383
- *   +0x012c -> line 384
- *   +0x0138 -> line 385
- *   +0x013c -> line 387
- *   +0x0144 -> line 388
- *   +0x014c -> line 389
- *   +0x0154 -> line 390
- *   +0x015c -> line 409
- *   +0x0164 -> line 412
- *   +0x0168 -> line 413
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-extern "C" void sceVu0ScaleVector(float* v0, float* v1, float s);
-
-int GLI_vSetParaSphericalLight(GLI_tdstLight_* pLight, unsigned int LightID, float (*LightPos)[4][4], float (*LightColor)[4][4], float (*AmbientLight)[4])
+void GLIPS2_vManageLightsForThisCharacter(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int bBoundingSphere, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius)
 {
-    MTH3D_tdstVector_ stVect;
-    float xDamp;
-    float fNorm;
+    GLI_tdstLight_** ppLights = (GLI_tdstLight_**)gs_aDEF_p_CurrentListOfLight;
+    unsigned char* pLightActivity = g_ucTableOfActiveLightsForChar;
+    float stAbsCenter[4];
+    float Vect[4];
+    float xSquare;
+    float stDist;
+    int iCpt;
+    int iDist;
+    float* pCenter;
+    float* pVect;
+    MAT_tdstTransformation_* pMatrix;
 
+    if (_hSprObj->lIL_Status < 2 || _hSprObj->lIL_Status > 3)
     {
-        MTH4D_tdstMatrix_* pLightMatrix = &pLight->stMatrix.stTransformMatrix;
-        float* pCenter = (float*)(GLI_BIG_GLOBALS_p_stObj + 0x30); /* p_stObj->xBoudingSphereCenter */
-        MTH4D_tdstMatrix_* pObjMatrix = &((MAT_tdstTransformation_*)g_p_stCurrentMatrix)->stTransformMatrix;
-        int iSqDist;
+        if (bBoundingSphere)
+        {
+            GLI_tdstLight_* pLight;
 
-        /* VU0 macro mode: squared distance from the light to the object's
-           bounding-sphere centre (no C form). */
-        asm {
-            .set noreorder
-            lqc2 vf1, 0x0(pCenter)
-            lqc2 vf2, 0x30(pLightMatrix)
-            lqc2 vf4, 0x0(pObjMatrix)
-            vaddx.w vf1, vf0, vf0x
-            lqc2 vf5, 0x10(pObjMatrix)
-            lqc2 vf6, 0x20(pObjMatrix)
-            lqc2 vf7, 0x30(pObjMatrix)
-            vmulax.xyzw ACC, vf4, vf1x
-            vmadday.xyzw ACC, vf5, vf1y
-            vmaddaz.xyzw ACC, vf6, vf1z
-            vmaddw.xyzw vf9, vf7, vf1w
-            vsub.xyz vf10, vf2, vf9
-            vsub.w vf10, vf0, vf0
-            vmul.xyz vf11, vf10, vf10
-            vaddy.x vf11, vf11, vf11y
-            vaddz.x vf11, vf11, vf11z
-            qmfc2 iSqDist, vf11
-            mtc1 iSqDist, fNorm
-            .set reorder
+            pCenter = stAbsCenter;
+            pVect = Vect;
+            pMatrix = _hSprObj->hGlobalMatrix;
+
+            stAbsCenter[0] = p_stSphereCenter->xX;
+            stAbsCenter[1] = p_stSphereCenter->xY;
+            stAbsCenter[2] = p_stSphereCenter->xZ;
+            stAbsCenter[3] = 1.0f;
+
+            {
+                float* pMat = (float*)&pMatrix->stTransformMatrix;
+
+                asm {
+                    lqc2 vf5, 0x0(pCenter)
+                    lqc2 vf1, 0x0(pMat)
+                    lqc2 vf2, 0x10(pMat)
+                    lqc2 vf3, 0x20(pMat)
+                    lqc2 vf4, 0x30(pMat)
+                    vmulax.xyzw ACC, vf1, vf5x
+                    vmadday.xyzw ACC, vf2, vf5y
+                    vmaddaz.xyzw ACC, vf3, vf5z
+                    vmaddw.xyzw vf9, vf4, vf5w
+                    sqc2 vf9, 0x0(pVect)
+                }
+            }
+
+            for (iCpt = 0; iCpt < gs_CurrentNumberOfLightInViewport; iCpt++)
+            {
+                pLight = ppLights[iCpt];
+                if (pLight == NULL)
+                    continue;
+                if (pLight->lTypeOfLight == 1 || pLight->lTypeOfLight == 4)
+                {
+                    pLight->bValid = 1;
+                    pLightActivity[iCpt] = 1;
+                }
+                else if (pLight->lTypeOfLight == 2 || pLight->lTypeOfLight == 7)
+                {
+                    float* pLightPos = (float*)&pLight->stMatrix.stTransformMatrix.stCol_3;
+
+                    xSquare = xSphereRadius + pLight->xFar;
+                    xSquare = xSquare * xSquare;
+
+                    asm {
+                        lqc2 vf1, 0x0(pVect)
+                        lqc2 vf2, 0x0(pLightPos)
+                        vsub.xyz vf3, vf1, vf2
+                        vmul.xyz vf5, vf3, vf3
+                        vaddy.x vf5, vf5, vf5y
+                        vaddz.x vf5, vf5, vf5z
+                        qmfc2.ni iDist, vf5
+                        mtc1 iDist, stDist
+                    }
+
+                    if (stDist <= xSquare)
+                    {
+                        pLight->bValid = 1;
+                        pLightActivity[iCpt] = 1;
+                    }
+                    else
+                    {
+                        pLight->bValid = 0;
+                        pLightActivity[iCpt] = 0;
+                    }
+                }
+                else
+                {
+                    pLight->bValid = 0;
+                    pLightActivity[iCpt] = 0;
+                }
+            }
+        }
+        else
+        {
+            GLI_xSetViewportLightsOnOff(_hSprObj->lIL_Status);
+            GLI_vResetTableOfActiveLightsForChar(1);
+        }
+
+        if (_hSprObj->lIL_Status == 1)
+        {
+            GLI_vAddInternalLightToViewport(_hVpt, &_hSprObj->stIL_AmbientColor, &_hSprObj->stIL_ParallelDirection, &_hSprObj->stIL_ParallelColor);
         }
     }
-
-    if (fNorm > pLight->SqFar)
-    {
-        float* pZero = vZeroVect;
-        float* pDst = (*LightPos)[LightID];
-
-        asm {
-            lqc2 vf1, 0x0(pZero)
-            sqc2 vf1, 0x0(pDst)
-        }
-        return 0;
-    }
-
-    if (fNorm <= pLight->SqNear)
-        xDamp = 0.5f;
     else
-        xDamp = pLight->OOSqDiv * (pLight->SqFar - fNorm);
-
-    *(int*)&stVect.xX = *(int*)&pLight->stMatrix.stTransformMatrix.stCol_2.xX; *(int*)&stVect.xY = *(int*)&pLight->stMatrix.stTransformMatrix.stCol_2.xY; *(int*)&stVect.xZ = *(int*)&pLight->stMatrix.stTransformMatrix.stCol_2.xZ;
-    (*LightPos)[LightID][0] = -stVect.xX;
-    (*LightPos)[LightID][1] = -stVect.xY;
-    (*LightPos)[LightID][2] = -stVect.xZ;
-    (*LightPos)[LightID][3] = 0.0f;
-    (*LightColor)[LightID][0] = pLight->stColor.xR;
-    (*LightColor)[LightID][1] = pLight->stColor.xG;
-    (*LightColor)[LightID][2] = pLight->stColor.xB;
-    (*LightColor)[LightID][3] = pLight->stColor.xA;
-
-    sceVu0ScaleVector((*LightColor)[LightID], (*LightColor)[LightID], xDamp);
-
-    return 1;
+    {
+        if (_hSprObj->lIL_Status == 3)
+        {
+            GLI_xSetViewportLightsOnOff(0);
+            GhostAmbient[3] = _hSprObj->stIL_AmbientColor.xX;
+            GhostParallel1[3] = _hSprObj->stIL_ParallelColor.xX;
+            GhostParallel2[3] = _hSprObj->stIL_ParallelColor.xY;
+            GLI_vAddInternalLightToViewportGhost(_hVpt, &_hSprObj->stIL_AmbientColor, &_hSprObj->stIL_ParallelDirection, &_hSprObj->stIL_ParallelColor);
+        }
+        else
+        {
+            GLI_xSetViewportLightsOnOff(0);
+            GLI_vAddInternalLightToViewport(_hVpt, &_hSprObj->stIL_AmbientColor, &_hSprObj->stIL_ParallelDirection, &_hSprObj->stIL_ParallelColor);
+        }
+    }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLLights.cpp lines 146–310 */
-/* addr: 0x002dc020  size: 400 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 150
- *   +0x0004 -> line 146
- *   +0x0008 -> line 150
- *   +0x0018 -> line 152
- *   +0x001c -> line 153
- *   +0x0020 -> line 154
- *   +0x0024 -> line 155
- *   +0x0028 -> line 156
- *   +0x002c -> line 157
- *   +0x0030 -> line 158
- *   +0x0034 -> line 161
- *   +0x0038 -> line 162
- *   +0x003c -> line 163
- *   +0x0040 -> line 164
- *   +0x0044 -> line 166
- *   +0x0048 -> line 167
- *   +0x004c -> line 169
- *   +0x0050 -> line 170
- *   +0x0054 -> line 171
- *   +0x0058 -> line 172
- *   +0x005c -> line 173
- *   +0x0060 -> line 182
- *   +0x0074 -> line 184
- *   +0x0080 -> line 185
- *   +0x0084 -> line 186
- *   +0x0088 -> line 189
- *   +0x0090 -> line 193
- *   +0x00a4 -> line 195
- *   +0x00a8 -> line 196
- *   +0x00b0 -> line 200
- *   +0x00bc -> line 203
- *   +0x00c8 -> line 205
- *   +0x00cc -> line 206
- *   +0x00d0 -> line 205
- *   +0x00d4 -> line 211
- *   +0x00d8 -> line 206
- *   +0x00e8 -> line 207
- *   +0x00fc -> line 208
- *   +0x0110 -> line 209
- *   +0x0120 -> line 211
- *   +0x0128 -> line 215
- *   +0x012c -> line 236
- *   +0x013c -> line 215
- *   +0x0140 -> line 216
- *   +0x0148 -> line 217
- *   +0x0150 -> line 218
- *   +0x0158 -> line 240
- *   +0x015c -> line 241
- *   +0x0160 -> line 243
- *   +0x0168 -> line 244
- *   +0x016c -> line 245
- *   +0x0170 -> line 246
- *   +0x0174 -> line 247
- *   +0x0178 -> line 249
- *   +0x017c -> line 251
- *   +0x0180 -> line 252
- *   +0x0184 -> line 262
- *   +0x0188 -> line 310
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int GLI_vSetSphericalLight(GLI_tdstLight_* pLight, unsigned int LightID, float (*LightPos)[4][4], float (*LightColor)[4][4], float (*AmbientLight)[4])
+void GLI_vGetVertexPointersFromSDCStructure(SDC_VertexArrays_* pSDC, unsigned int iElement, float (**pVOrg)[4], float (**pUV1)[4], float (**pUV2)[4], float (**pUVChrome)[4], float (**pNormals)[4])
 {
-    float TempVect[4];
-    float fNorm;
-    float xDamp;
-    int iSqDist;
+    unsigned int NbVertices;
+    unsigned int NbVerticesAligned;
+    unsigned int NbVerticesAlignedUVs;
+    float (*pVA)[4];
+    GLI_tdstMaterial_* hVisualMaterial;
+    unsigned int stage;
+    unsigned int NbStages;
+    unsigned int bMultiTexture;
+    unsigned int LayerTypes;
+    unsigned int Type;
 
+    pVA = pSDC->pArrayOfVertexArrays[iElement];
+
+    Type = pSDC->OptType & 0xF;
+    if (Type == 6 || Type == 4 || Type == 5)
     {
-        MTH4D_tdstMatrix_* pLightMatrix = &pLight->stMatrix.stTransformMatrix;
-        float* pCenter = (float*)(GLI_BIG_GLOBALS_p_stObj + 0x30);
-        MTH4D_tdstMatrix_* pObjMatrix = &((MAT_tdstTransformation_*)g_p_stCurrentMatrix)->stTransformMatrix;
-
-        asm {
-            .set noreorder
-            lqc2 vf1, 0x0(pCenter)
-            lqc2 vf2, 0x30(pLightMatrix)
-            lqc2 vf4, 0x0(pObjMatrix)
-            vaddx.w vf1, vf0, vf0x
-            lqc2 vf5, 0x10(pObjMatrix)
-            lqc2 vf6, 0x20(pObjMatrix)
-            lqc2 vf7, 0x30(pObjMatrix)
-            vmulax.xyzw ACC, vf4, vf1x
-            vmadday.xyzw ACC, vf5, vf1y
-            vmaddaz.xyzw ACC, vf6, vf1z
-            vmaddw.xyzw vf9, vf7, vf1w
-            vsub.xyz vf10, vf2, vf9
-            vsub.w vf10, vf0, vf0
-            vmul.xyz vf11, vf10, vf10
-            vaddy.x vf11, vf11, vf11y
-            vaddz.x vf11, vf11, vf11z
-            qmfc2.ni iSqDist, vf11
-            mtc1 iSqDist, fNorm
-            .set reorder
-        }
+        NbVerticesAligned = ((unsigned int*)pVA)[1];
+        NbVerticesAlignedUVs = ((unsigned int*)pVA)[2];
+        pVA++;
     }
-
-    if (fNorm > pLight->SqFar)
-    {
-        float* pZero = vZeroVect;
-        float* pDst = (*LightPos)[LightID];
-
-        asm {
-            lqc2 vf1, 0x0(pZero)
-            sqc2 vf1, 0x0(pDst)
-        }
-        return 0;
-    }
-
-    if (fNorm <= pLight->SqNear)
-        xDamp = 0.5f;
     else
-        xDamp = pLight->OOSqDiv * (pLight->SqFar - fNorm);
-
-    if (pLight->bIsPainting)
     {
-        xDamp *= 2.0f;
-        AmbientLight[0][0] += xDamp * pLight->stColor.xR;
-        AmbientLight[0][1] += xDamp * pLight->stColor.xG;
-        AmbientLight[0][2] += xDamp * pLight->stColor.xB;
-        AmbientLight[0][3] += xDamp * pLight->stColor.xA;
-        return 0;
+        NbVertices = pSDC->pNbTrianglesPerElement[iElement] * 3;
+        NbVerticesAligned = NbVertices;
+        NbVerticesAlignedUVs = (NbVertices + 3) >> 2;
     }
 
-    TempVect[0] = pLight->stColor.xR;
-    TempVect[1] = pLight->stColor.xG;
-    TempVect[2] = pLight->stColor.xB;
-    TempVect[3] = pLight->stColor.xA;
+    *pVOrg = pVA;
+    pVA += NbVerticesAligned;
+    hVisualMaterial = pSDC->pArrayOfMaterials[iElement];
 
+    if (hVisualMaterial && hVisualMaterial->ulNbTextureStages) NbStages = hVisualMaterial->ulNbTextureStages; else NbStages = 0;
+    if (NbStages == 0) { NbStages++; bMultiTexture = 0; } else bMultiTexture = 1;
+
+    LayerTypes = 0;
+    if (bMultiTexture)
     {
-        float* pPos = (*LightPos)[LightID];
-        float* pTemp = TempVect;
-        float* pCol = (*LightColor)[LightID];
-        int iVal;
-
-        asm {
-            vrsqrt $Q, $vf0w, $vf11x
-            vsub.xyzw $vf6, $vf0, $vf0
-            mfc1 iSqDist, xDamp
-            nop
-            qmtc2.ni iSqDist, $vf9
-            lqc2 $vf11, 0x0(pTemp)
-            vmulx.xyzw $vf11, $vf11, $vf9x
-            sqc2 $vf11, 0x0(pCol)
-            vwaitq
-            vmulq.xyz $vf6, $vf10, $Q
-            sqc2 $vf6, 0x0(pPos)
+        for (stage = 0; stage < NbStages; stage++)
+        {
+            switch (hVisualMaterial->a_stMultiMaterial[stage].c_UVSource)
+            {
+            case 0:
+                LayerTypes |= 1;
+                break;
+            case 1:
+                LayerTypes |= 2;
+                break;
+            case 4:
+                LayerTypes |= 4;
+                break;
+            }
         }
     }
+    else
+        LayerTypes = 1;
 
-    return 1;
+    if (LayerTypes & 1) { *pUV1 = pVA; pVA += NbVerticesAlignedUVs; }
+    if (LayerTypes & 2) { *pUV2 = pVA; pVA += NbVerticesAlignedUVs; }
+    if (LayerTypes & 4) { *pUVChrome = pVA; pVA += NbVerticesAligned; }
+
+    *pNormals = pVA;
 }

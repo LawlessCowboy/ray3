@@ -95,43 +95,14 @@ struct GLI_SpecificPS2GL_Structure_ {
 
 extern void (*PS2glLiberator)(void*);
 
-void GLI_vCleanSpecificStructure(GLI_SpecificPS2GL_Structure_* pTemp)
-{
-    if (pTemp)
-    {
-        pTemp->Flags = 0;
-        if (pTemp->SpriteGenArray)
-            PS2glLiberator((void*)pTemp->SpriteGenArray);
-        pTemp->SpriteGenArray = 0;
-        if (pTemp->glDisplayLists)
-            PS2glLiberator((void*)pTemp->glDisplayLists);
-        if (pTemp->pVertexArrayHandles)
-            PS2glLiberator((void*)pTemp->pVertexArrayHandles);
-        pTemp->pVertexArrayHandles = 0;
-        PS2glLiberator(pTemp);
-    }
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void GLI_vCleanSpecificStructure(GLI_SpecificPS2GL_Structure_* pTemp);
+void GLI_vClearViewportRegion(void);
+void GLI_vDisplayFrame(float* a3_fPosition, float* a3_fDirection, float _f_Transparency, GLD_tdstViewportAttributes_* _p_stViewport);
 
 float GLI_vGetGlobalAlpha(void);
 void GLI_vSetGlobalAlpha(float Alpha);
-
-void GLI_vClearViewportRegion(void)
-{
-    float OldZValue;
-    float f_SaveAlpha;
-
-    OldZValue = GLI_g_fZValueForSprite;
-    GLI_g_fZValueForSprite = 0.0f;
-    f_SaveAlpha = GLI_vGetGlobalAlpha();
-    GLI_vSetGlobalAlpha(255.0f);
-    g_GLI_bForceAAAColor = 0;
-    gs_hDefaultMaterial->stAmbient.xR = (float)(GLI_gs_lBackGroundColor & 0xff) / 255.0f;
-    gs_hDefaultMaterial->stAmbient.xG = (float)((GLI_gs_lBackGroundColor >> 8) & 0xff) / 255.0f;
-    gs_hDefaultMaterial->stAmbient.xB = (float)((GLI_gs_lBackGroundColor >> 16) & 0xff) / 255.0f;
-    g_bCanResize2DSpriteWithPercentAccordingToViewportRatio = 1;
-    GLI_vSetGlobalAlpha(f_SaveAlpha);
-    GLI_g_fZValueForSprite = OldZValue;
-}
 
 void GLI_vEndWorldSprites(void);
 void GLI_vDraw2DSpriteWithPercent(GLD_tdstViewportAttributes_* p_stVpt, float xMinX, float xMinY, float xMaxX, float xMaxY, GLI_tdstMaterial_* hMaterial);
@@ -161,4 +132,39 @@ void GLI_vDisplayFrame(float* a3_fPosition, float* a3_fDirection, float _f_Trans
 
     g_bDrawingBlackFrame = 0;
     GLI_vSetGlobalAlpha(f_SaveAlpha);
+}
+
+void GLI_vClearViewportRegion(void)
+{
+    float OldZValue;
+    float f_SaveAlpha;
+
+    OldZValue = GLI_g_fZValueForSprite;
+    GLI_g_fZValueForSprite = 0.0f;
+    f_SaveAlpha = GLI_vGetGlobalAlpha();
+    GLI_vSetGlobalAlpha(255.0f);
+    g_GLI_bForceAAAColor = 0;
+    gs_hDefaultMaterial->stAmbient.xR = (float)(GLI_gs_lBackGroundColor & 0xff) / 255.0f;
+    gs_hDefaultMaterial->stAmbient.xG = (float)((GLI_gs_lBackGroundColor >> 8) & 0xff) / 255.0f;
+    gs_hDefaultMaterial->stAmbient.xB = (float)((GLI_gs_lBackGroundColor >> 16) & 0xff) / 255.0f;
+    g_bCanResize2DSpriteWithPercentAccordingToViewportRatio = 1;
+    GLI_vSetGlobalAlpha(f_SaveAlpha);
+    GLI_g_fZValueForSprite = OldZValue;
+}
+
+void GLI_vCleanSpecificStructure(GLI_SpecificPS2GL_Structure_* pTemp)
+{
+    if (pTemp)
+    {
+        pTemp->Flags = 0;
+        if (pTemp->SpriteGenArray)
+            PS2glLiberator((void*)pTemp->SpriteGenArray);
+        pTemp->SpriteGenArray = 0;
+        if (pTemp->glDisplayLists)
+            PS2glLiberator((void*)pTemp->glDisplayLists);
+        if (pTemp->pVertexArrayHandles)
+            PS2glLiberator((void*)pTemp->pVertexArrayHandles);
+        pTemp->pVertexArrayHandles = 0;
+        PS2glLiberator(pTemp);
+    }
 }

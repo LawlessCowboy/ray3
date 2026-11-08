@@ -1225,144 +1225,15 @@ _GL_BUFFERINFO g_stBufferInfo;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glHint(unsigned int target, unsigned int mode)
-{
-    switch (target)
-    {
-    case 0xF30:
-        g_aDmaTag = mode;
-        break;
-    case 0xF11:
-        g_PS2glContext.uiBoundingSphereBits = mode;
-        break;
-    case 0xF09:
-        g_PS2glContext.uiFastPathBits = mode;
-        break;
-    case 0xF10:
-        if ((mode & 0x600) != (g_PS2glContext.uiDmaOmitDataBits & 0x600))
-        {
-            if (mode & 0x200)
-                *(int*)g_PS2glContext.pnColorMatMasks |= 0x200;
-            else
-                *(int*)g_PS2glContext.pnColorMatMasks &= ~0x200;
-            if (mode & 0x400)
-                *(int*)g_PS2glContext.pnColorMatMasks |= 0x100;
-            else
-                *(int*)g_PS2glContext.pnColorMatMasks &= ~0x100;
-        }
-        g_PS2glContext.uiDmaOmitDataBits = mode;
-        break;
-    case 0x450:
-        g_PS2glContext.eClippingFunction = mode;
-        break;
-    case 0xF08:
-        g_PS2glContext.usDontUpdateBits = mode;
-        break;
-    case 0x451:
-        g_PS2glContext.bAlphaChannelReduce = mode;
-        break;
-    case 0xF42:
-        g_fBSMultiplicator = *(float*)mode;
-        break;
-    case 0xF15:
-        g_PS2glContext.uiStaticDisplayListMaxSize = mode;
-        break;
-    case 0xF16:
-        g_PS2glContext.uiStaticDisplayListBits &= ~0xFFFFFF;
-        g_PS2glContext.uiStaticDisplayListBits |= (mode & 0xFFFFFF);
-        break;
-    case 0xF17:
-        g_PS2glContext.ucSDLObjectReserveSize = mode;
-        break;
-    case 0xF22:
-        PS2glSDLInstancing((unsigned int*)mode);
-        break;
-    case 0x439:
-        g_PS2glContext.iMipMapCoeff = (int)mode - 0x800;
-        break;
-    case 0x441:
-        if (mode == 0)
-            mode = 0x10000;
-        {
-            unsigned int uiHalf = mode >> 1;
-            mode = uiHalf >> 4;
-        }
-        if (uiMaxVifDmaBufLength != mode)
-        {
-            uiMaxVifDmaBufLength = mode;
-            if (g_PS2glContext.pVIFDMABuf != NULL)
-                PS2glLiberator((void*)((unsigned int)g_PS2glContext.pVIFDMABufUnaligned & 0xCFFFFFFF));
-            g_PS2glContext.pVIFDMABufUnaligned = (float(*)[4])((unsigned int)PS2glAllocator64((uiMaxVifDmaBufLength << 5) + 0x40) | 0x30000000);
-            g_PS2glContext.pVIFDMABuf = (float(*)[4])((((unsigned int)g_PS2glContext.pVIFDMABufUnaligned) + 0x3F) & ~0x3F);
-            g_PS2glContext.pVIFIBufTail = g_PS2glContext.pVIFDMABuf; g_PS2glContext.pVIFInBuf = g_PS2glContext.pVIFDMABuf;
-            g_PS2glContext.pVIFOutBuf = &g_PS2glContext.pVIFDMABuf[uiMaxVifDmaBufLength];
-        }
-        break;
-    case 0x442:
-        if (g_PS2glContext.eSPRMode != mode)
-        {
-            if (g_stSPRInfo.uiState & 1)
-                WaitDMAFromSPR();
-            if (mode == 1)
-                g_stSPRInfo.uiState = 4;
-            else if (mode == 0)
-                g_stSPRInfo.uiState = 0;
-            else
-                g_stSPRInfo.uiState = 8;
-            g_PS2glContext.eSPRMode = mode;
-        }
-        break;
-    case 0x443:
-        g_PS2glContext.eTexConvMode = mode;
-        break;
-    case 0x445:
-        g_PS2glContext.eClutConvMode = mode;
-        break;
-    case 0x444:
-        g_PS2glContext.eTexUserMaintainMode = mode;
-        break;
-    case 0xF05:
-        if (mode == 1)
-            g_PS2glContext.nEnableBits |= 0x40000;
-        else
-            g_PS2glContext.nEnableBits &= ~0x40000;
-        break;
-    case 0x446:
-        g_PS2glContext.uiMotionBlurIntensity = mode;
-        break;
-    case 0x447:
-        g_PS2glContext.bSPRSynchronization = mode;
-        break;
-    case 0x449:
-    {
-        unsigned int uiDepth;
-        if (mode >= 0x20)
-            uiDepth = 0x20;
-        else
-            uiDepth = 0x10;
-        g_PS2glContext.iAccumDepth = uiDepth;
-    }
-    break;
-    case 0xF40:
-        *(struct tagPS2glVector4*)vColorLimit128 = *(struct tagPS2glVector4*)mode;
-        break;
-    case 0xF41:
-        *(struct tagPS2glVector4*)vColorLimit255 = *(struct tagPS2glVector4*)mode;
-        break;
-    case 0xF12:
-        *(struct tagPS2glMatrix4*)&g_PS2glContext.mFrustumNormal[0][0] = *(struct tagPS2glMatrix4*)mode;
-        break;
-    case 0xF13:
-        *(struct tagPS2glMatrix4*)&g_PS2glContext.mGuardBandNormal[0][0] = *(struct tagPS2glMatrix4*)mode;
-        break;
-    case 0xF43:
-    case 0xF44:
-    case 0xF45:
-    case 0xF46:
-        PS2glInternalSetScreenCalebration(target, mode);
-        break;
-    }
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void impPS2glHint(unsigned int target, unsigned int mode);
+void impPS2glFrontFace(unsigned int mode);
+void impPS2glCullFace(unsigned int mode);
+unsigned char impPS2glIsEnabled(unsigned int cap);
+void impPS2glDisable(unsigned int cap);
+void impPS2glEnable(unsigned int cap);
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_EnableDisable.c lines 1024–1026 */
 /* addr: 0x0014eb50  size: 24 bytes */
@@ -1375,11 +1246,6 @@ void impPS2glHint(unsigned int target, unsigned int mode)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glFrontFace(unsigned int mode)
-{
-    g_PS2glContext.eFrontFaceMode = mode;
-    g_PS2glContext.bCullfaceChanged = 1;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_EnableDisable.c lines 1017–1019 */
 /* addr: 0x0014eb70  size: 24 bytes */
@@ -1392,11 +1258,6 @@ void impPS2glFrontFace(unsigned int mode)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glCullFace(unsigned int mode)
-{
-    g_PS2glContext.eCullFaceMode = mode;
-    g_PS2glContext.bCullfaceChanged = 1;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_EnableDisable.c lines 712–1012 */
 /* addr: 0x0014eb90  size: 2612 bytes */
@@ -1543,6 +1404,788 @@ void impPS2glCullFace(unsigned int mode)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_EnableDisable.c lines 373–707 */
+/* addr: 0x0014f5d0  size: 3476 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 373
+ *   +0x02fc -> line 379
+ *   +0x030c -> line 380
+ *   +0x0314 -> line 384
+ *   +0x0320 -> line 389
+ *   +0x032c -> line 384
+ *   +0x0338 -> line 389
+ *   +0x033c -> line 384
+ *   +0x0340 -> line 389
+ *   +0x0350 -> line 384
+ *   +0x0354 -> line 389
+ *   +0x0358 -> line 384
+ *   +0x035c -> line 389
+ *   +0x0388 -> line 390
+ *   +0x0390 -> line 393
+ *   +0x0398 -> line 394
+ *   +0x03ac -> line 393
+ *   +0x03b0 -> line 394
+ *   +0x03c4 -> line 393
+ *   +0x03c8 -> line 394
+ *   +0x03cc -> line 393
+ *   +0x03d0 -> line 394
+ *   +0x03e0 -> line 395
+ *   +0x03e8 -> line 400
+ *   +0x03fc -> line 401
+ *   +0x0404 -> line 407
+ *   +0x0408 -> line 406
+ *   +0x0410 -> line 407
+ *   +0x0424 -> line 406
+ *   +0x0428 -> line 407
+ *   +0x043c -> line 406
+ *   +0x0440 -> line 407
+ *   +0x0444 -> line 406
+ *   +0x0448 -> line 407
+ *   +0x0458 -> line 408
+ *   +0x0460 -> line 413
+ *   +0x0468 -> line 415
+ *   +0x0470 -> line 413
+ *   +0x0474 -> line 415
+ *   +0x0478 -> line 413
+ *   +0x0480 -> line 415
+ *   +0x0488 -> line 416
+ *   +0x0490 -> line 420
+ *   +0x0494 -> line 421
+ *   +0x0498 -> line 420
+ *   +0x04a0 -> line 421
+ *   +0x04ac -> line 422
+ *   +0x04b4 -> line 426
+ *   +0x04bc -> line 427
+ *   +0x04cc -> line 428
+ *   +0x04d4 -> line 427
+ *   +0x04d8 -> line 426
+ *   +0x04dc -> line 427
+ *   +0x04f0 -> line 426
+ *   +0x04f4 -> line 427
+ *   +0x04f8 -> line 426
+ *   +0x04fc -> line 427
+ *   +0x0510 -> line 428
+ *   +0x053c -> line 429
+ *   +0x0544 -> line 432
+ *   +0x054c -> line 435
+ *   +0x0554 -> line 436
+ *   +0x0568 -> line 435
+ *   +0x056c -> line 436
+ *   +0x0580 -> line 435
+ *   +0x0584 -> line 436
+ *   +0x0588 -> line 435
+ *   +0x058c -> line 436
+ *   +0x059c -> line 437
+ *   +0x05a4 -> line 441
+ *   +0x05a8 -> line 440
+ *   +0x05b0 -> line 441
+ *   +0x05c4 -> line 440
+ *   +0x05c8 -> line 441
+ *   +0x05dc -> line 442
+ *   +0x05e0 -> line 441
+ *   +0x05e4 -> line 442
+ *   +0x05e8 -> line 441
+ *   +0x05ec -> line 440
+ *   +0x05f4 -> line 441
+ *   +0x0604 -> line 443
+ *   +0x060c -> line 447
+ *   +0x0614 -> line 449
+ *   +0x0618 -> line 447
+ *   +0x061c -> line 449
+ *   +0x0620 -> line 447
+ *   +0x0628 -> line 450
+ *   +0x0630 -> line 458
+ *   +0x0634 -> line 457
+ *   +0x063c -> line 458
+ *   +0x0644 -> line 457
+ *   +0x064c -> line 459
+ *   +0x0654 -> line 462
+ *   +0x0658 -> line 461
+ *   +0x0660 -> line 462
+ *   +0x0668 -> line 461
+ *   +0x0670 -> line 463
+ *   +0x0678 -> line 466
+ *   +0x067c -> line 465
+ *   +0x0684 -> line 466
+ *   +0x068c -> line 465
+ *   +0x0694 -> line 467
+ *   +0x069c -> line 470
+ *   +0x06a0 -> line 469
+ *   +0x06a8 -> line 470
+ *   +0x06b0 -> line 469
+ *   +0x06b8 -> line 471
+ *   +0x06c0 -> line 474
+ *   +0x06c4 -> line 473
+ *   +0x06cc -> line 474
+ *   +0x06d4 -> line 473
+ *   +0x06dc -> line 475
+ *   +0x06e4 -> line 478
+ *   +0x06e8 -> line 477
+ *   +0x06f0 -> line 478
+ *   +0x06f8 -> line 477
+ *   +0x0700 -> line 479
+ *   +0x0708 -> line 482
+ *   +0x070c -> line 481
+ *   +0x0714 -> line 482
+ *   +0x071c -> line 481
+ *   +0x0724 -> line 483
+ *   +0x072c -> line 486
+ *   +0x0730 -> line 485
+ *   +0x0738 -> line 486
+ *   +0x0740 -> line 485
+ *   +0x0748 -> line 487
+ *   +0x0750 -> line 491
+ *   +0x0760 -> line 492
+ *   +0x0768 -> line 496
+ *   +0x0778 -> line 497
+ *   +0x0780 -> line 501
+ *   +0x0790 -> line 502
+ *   +0x0798 -> line 508
+ *   +0x07a8 -> line 509
+ *   +0x07b0 -> line 513
+ *   +0x07c0 -> line 514
+ *   +0x07c8 -> line 518
+ *   +0x07d8 -> line 519
+ *   +0x07e0 -> line 523
+ *   +0x07f0 -> line 524
+ *   +0x07f8 -> line 528
+ *   +0x0808 -> line 529
+ *   +0x0810 -> line 533
+ *   +0x0820 -> line 534
+ *   +0x0828 -> line 538
+ *   +0x0838 -> line 539
+ *   +0x0840 -> line 543
+ *   +0x0850 -> line 544
+ *   +0x0858 -> line 548
+ *   +0x0868 -> line 549
+ *   +0x0870 -> line 556
+ *   +0x0884 -> line 557
+ *   +0x088c -> line 561
+ *   +0x08a0 -> line 562
+ *   +0x08a8 -> line 566
+ *   +0x08bc -> line 567
+ *   +0x08c4 -> line 571
+ *   +0x08d8 -> line 572
+ *   +0x08e0 -> line 576
+ *   +0x08f4 -> line 577
+ *   +0x08fc -> line 581
+ *   +0x0910 -> line 582
+ *   +0x0918 -> line 586
+ *   +0x092c -> line 587
+ *   +0x0934 -> line 591
+ *   +0x0948 -> line 592
+ *   +0x0950 -> line 596
+ *   +0x0964 -> line 597
+ *   +0x096c -> line 602
+ *   +0x097c -> line 603
+ *   +0x0984 -> line 607
+ *   +0x0994 -> line 608
+ *   +0x099c -> line 612
+ *   +0x09ac -> line 613
+ *   +0x09b4 -> line 616
+ *   +0x09bc -> line 617
+ *   +0x09d4 -> line 616
+ *   +0x09d8 -> line 617
+ *   +0x09e8 -> line 618
+ *   +0x09ec -> line 617
+ *   +0x09f0 -> line 618
+ *   +0x09f4 -> line 617
+ *   +0x09f8 -> line 618
+ *   +0x0a08 -> line 619
+ *   +0x0a0c -> line 618
+ *   +0x0a10 -> line 619
+ *   +0x0a14 -> line 618
+ *   +0x0a18 -> line 616
+ *   +0x0a1c -> line 619
+ *   +0x0a20 -> line 616
+ *   +0x0a24 -> line 619
+ *   +0x0a28 -> line 617
+ *   +0x0a2c -> line 620
+ *   +0x0a34 -> line 617
+ *   +0x0a44 -> line 618
+ *   +0x0a4c -> line 619
+ *   +0x0a54 -> line 618
+ *   +0x0a6c -> line 619
+ *   +0x0a80 -> line 620
+ *   +0x0a88 -> line 621
+ *   +0x0ad0 -> line 623
+ *   +0x0b0c -> line 625
+ *   +0x0b14 -> line 628
+ *   +0x0b24 -> line 629
+ *   +0x0b2c -> line 635
+ *   +0x0b34 -> line 640
+ *   +0x0b40 -> line 635
+ *   +0x0b4c -> line 640
+ *   +0x0b50 -> line 635
+ *   +0x0b54 -> line 640
+ *   +0x0b64 -> line 635
+ *   +0x0b68 -> line 640
+ *   +0x0b6c -> line 635
+ *   +0x0b70 -> line 640
+ *   +0x0b9c -> line 641
+ *   +0x0ba4 -> line 647
+ *   +0x0ba8 -> line 644
+ *   +0x0bb0 -> line 646
+ *   +0x0bd0 -> line 647
+ *   +0x0bd8 -> line 644
+ *   +0x0be4 -> line 646
+ *   +0x0c14 -> line 648
+ *   +0x0c1c -> line 651
+ *   +0x0c2c -> line 652
+ *   +0x0c34 -> line 656
+ *   +0x0c44 -> line 657
+ *   +0x0c4c -> line 661
+ *   +0x0c5c -> line 662
+ *   +0x0c64 -> line 666
+ *   +0x0c74 -> line 667
+ *   +0x0c7c -> line 671
+ *   +0x0c8c -> line 672
+ *   +0x0c94 -> line 674
+ *   +0x0ca4 -> line 675
+ *   +0x0cac -> line 677
+ *   +0x0cc0 -> line 678
+ *   +0x0cc8 -> line 680
+ *   +0x0cdc -> line 681
+ *   +0x0ce4 -> line 683
+ *   +0x0cf8 -> line 684
+ *   +0x0d00 -> line 689
+ *   +0x0d10 -> line 690
+ *   +0x0d18 -> line 692
+ *   +0x0d28 -> line 693
+ *   +0x0d30 -> line 695
+ *   +0x0d40 -> line 696
+ *   +0x0d48 -> line 698
+ *   +0x0d58 -> line 699
+ *   +0x0d60 -> line 701
+ *   +0x0d70 -> line 702
+ *   +0x0d78 -> line 704
+ *   +0x0d8c -> line 707
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_EnableDisable.c lines 18–366 */
+/* addr: 0x00150370  size: 3056 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 18
+ *   +0x0004 -> line 20
+ *   +0x030c -> line 26
+ *   +0x0318 -> line 27
+ *   +0x0320 -> line 31
+ *   +0x032c -> line 35
+ *   +0x0334 -> line 31
+ *   +0x0340 -> line 35
+ *   +0x0344 -> line 31
+ *   +0x0348 -> line 35
+ *   +0x035c -> line 31
+ *   +0x0360 -> line 35
+ *   +0x0364 -> line 31
+ *   +0x0368 -> line 35
+ *   +0x0378 -> line 36
+ *   +0x0380 -> line 40
+ *   +0x0384 -> line 39
+ *   +0x0388 -> line 40
+ *   +0x0398 -> line 39
+ *   +0x039c -> line 40
+ *   +0x03b0 -> line 39
+ *   +0x03b4 -> line 40
+ *   +0x03b8 -> line 39
+ *   +0x03bc -> line 40
+ *   +0x03cc -> line 41
+ *   +0x03d4 -> line 46
+ *   +0x03e4 -> line 47
+ *   +0x03ec -> line 53
+ *   +0x03f0 -> line 52
+ *   +0x03f4 -> line 53
+ *   +0x0404 -> line 52
+ *   +0x0408 -> line 53
+ *   +0x041c -> line 52
+ *   +0x0420 -> line 53
+ *   +0x0424 -> line 52
+ *   +0x0428 -> line 53
+ *   +0x0438 -> line 54
+ *   +0x0440 -> line 58
+ *   +0x0444 -> line 60
+ *   +0x0448 -> line 58
+ *   +0x044c -> line 60
+ *   +0x0450 -> line 58
+ *   +0x0458 -> line 60
+ *   +0x0460 -> line 61
+ *   +0x0468 -> line 64
+ *   +0x046c -> line 63
+ *   +0x0474 -> line 64
+ *   +0x047c -> line 63
+ *   +0x0484 -> line 65
+ *   +0x048c -> line 69
+ *   +0x0490 -> line 70
+ *   +0x0494 -> line 69
+ *   +0x0498 -> line 70
+ *   +0x049c -> line 69
+ *   +0x04a0 -> line 70
+ *   +0x04a4 -> line 71
+ *   +0x04ac -> line 78
+ *   +0x04b0 -> line 75
+ *   +0x04b4 -> line 78
+ *   +0x04c4 -> line 75
+ *   +0x04c8 -> line 78
+ *   +0x04d8 -> line 82
+ *   +0x04dc -> line 78
+ *   +0x04e0 -> line 82
+ *   +0x04e4 -> line 78
+ *   +0x04ec -> line 75
+ *   +0x04f0 -> line 82
+ *   +0x04f4 -> line 75
+ *   +0x04f8 -> line 78
+ *   +0x0508 -> line 82
+ *   +0x052c -> line 84
+ *   +0x0534 -> line 85
+ *   +0x053c -> line 86
+ *   +0x0544 -> line 87
+ *   +0x0548 -> line 93
+ *   +0x0588 -> line 95
+ *   +0x0590 -> line 99
+ *   +0x0594 -> line 98
+ *   +0x0598 -> line 99
+ *   +0x05a8 -> line 98
+ *   +0x05ac -> line 99
+ *   +0x05c0 -> line 98
+ *   +0x05c4 -> line 99
+ *   +0x05c8 -> line 98
+ *   +0x05cc -> line 99
+ *   +0x05dc -> line 100
+ *   +0x05e4 -> line 104
+ *   +0x05e8 -> line 103
+ *   +0x05ec -> line 104
+ *   +0x0600 -> line 103
+ *   +0x0604 -> line 104
+ *   +0x0618 -> line 105
+ *   +0x061c -> line 104
+ *   +0x0620 -> line 105
+ *   +0x0624 -> line 104
+ *   +0x0628 -> line 103
+ *   +0x0630 -> line 104
+ *   +0x0640 -> line 106
+ *   +0x0648 -> line 112
+ *   +0x064c -> line 110
+ *   +0x0650 -> line 112
+ *   +0x0654 -> line 110
+ *   +0x0658 -> line 112
+ *   +0x065c -> line 110
+ *   +0x0664 -> line 113
+ *   +0x066c -> line 121
+ *   +0x0670 -> line 120
+ *   +0x0674 -> line 121
+ *   +0x067c -> line 120
+ *   +0x0684 -> line 122
+ *   +0x068c -> line 125
+ *   +0x0690 -> line 124
+ *   +0x0694 -> line 125
+ *   +0x069c -> line 124
+ *   +0x06a4 -> line 126
+ *   +0x06ac -> line 129
+ *   +0x06b0 -> line 128
+ *   +0x06b4 -> line 129
+ *   +0x06bc -> line 128
+ *   +0x06c4 -> line 130
+ *   +0x06cc -> line 133
+ *   +0x06d0 -> line 132
+ *   +0x06d4 -> line 133
+ *   +0x06dc -> line 132
+ *   +0x06e4 -> line 134
+ *   +0x06ec -> line 137
+ *   +0x06f0 -> line 136
+ *   +0x06f4 -> line 137
+ *   +0x06fc -> line 136
+ *   +0x0704 -> line 138
+ *   +0x070c -> line 141
+ *   +0x0710 -> line 140
+ *   +0x0714 -> line 141
+ *   +0x071c -> line 140
+ *   +0x0724 -> line 142
+ *   +0x072c -> line 145
+ *   +0x0730 -> line 144
+ *   +0x0734 -> line 145
+ *   +0x073c -> line 144
+ *   +0x0744 -> line 146
+ *   +0x074c -> line 149
+ *   +0x0750 -> line 148
+ *   +0x0754 -> line 149
+ *   +0x075c -> line 148
+ *   +0x0764 -> line 150
+ *   +0x076c -> line 154
+ *   +0x0778 -> line 155
+ *   +0x0780 -> line 159
+ *   +0x078c -> line 160
+ *   +0x0794 -> line 164
+ *   +0x07a0 -> line 165
+ *   +0x07a8 -> line 171
+ *   +0x07b4 -> line 172
+ *   +0x07bc -> line 176
+ *   +0x07c8 -> line 177
+ *   +0x07d0 -> line 181
+ *   +0x07dc -> line 182
+ *   +0x07e4 -> line 186
+ *   +0x07f0 -> line 187
+ *   +0x07f8 -> line 191
+ *   +0x0804 -> line 192
+ *   +0x080c -> line 196
+ *   +0x0818 -> line 197
+ *   +0x0820 -> line 201
+ *   +0x082c -> line 202
+ *   +0x0834 -> line 206
+ *   +0x0840 -> line 207
+ *   +0x0848 -> line 211
+ *   +0x0854 -> line 212
+ *   +0x085c -> line 219
+ *   +0x086c -> line 220
+ *   +0x0874 -> line 224
+ *   +0x0884 -> line 225
+ *   +0x088c -> line 229
+ *   +0x089c -> line 230
+ *   +0x08a4 -> line 234
+ *   +0x08b4 -> line 235
+ *   +0x08bc -> line 239
+ *   +0x08cc -> line 240
+ *   +0x08d4 -> line 244
+ *   +0x08e4 -> line 245
+ *   +0x08ec -> line 249
+ *   +0x08fc -> line 250
+ *   +0x0904 -> line 254
+ *   +0x0914 -> line 255
+ *   +0x091c -> line 259
+ *   +0x092c -> line 260
+ *   +0x0934 -> line 264
+ *   +0x0940 -> line 265
+ *   +0x0948 -> line 269
+ *   +0x0954 -> line 270
+ *   +0x095c -> line 274
+ *   +0x0968 -> line 275
+ *   +0x0970 -> line 278
+ *   +0x0974 -> line 279
+ *   +0x0978 -> line 278
+ *   +0x097c -> line 279
+ *   +0x09a4 -> line 278
+ *   +0x09a8 -> line 279
+ *   +0x09c4 -> line 281
+ *   +0x09cc -> line 284
+ *   +0x09d8 -> line 285
+ *   +0x09e0 -> line 291
+ *   +0x09ec -> line 295
+ *   +0x09f4 -> line 291
+ *   +0x0a00 -> line 295
+ *   +0x0a04 -> line 291
+ *   +0x0a08 -> line 295
+ *   +0x0a1c -> line 291
+ *   +0x0a20 -> line 295
+ *   +0x0a24 -> line 291
+ *   +0x0a28 -> line 295
+ *   +0x0a38 -> line 297
+ *   +0x0a40 -> line 302
+ *   +0x0a44 -> line 300
+ *   +0x0a48 -> line 301
+ *   +0x0a64 -> line 302
+ *   +0x0a6c -> line 300
+ *   +0x0a78 -> line 301
+ *   +0x0a90 -> line 303
+ *   +0x0a98 -> line 306
+ *   +0x0aa4 -> line 307
+ *   +0x0aac -> line 311
+ *   +0x0ab8 -> line 312
+ *   +0x0ac0 -> line 316
+ *   +0x0acc -> line 317
+ *   +0x0ad4 -> line 321
+ *   +0x0ae0 -> line 322
+ *   +0x0ae8 -> line 326
+ *   +0x0af4 -> line 327
+ *   +0x0afc -> line 330
+ *   +0x0b08 -> line 331
+ *   +0x0b10 -> line 333
+ *   +0x0b1c -> line 334
+ *   +0x0b24 -> line 336
+ *   +0x0b34 -> line 337
+ *   +0x0b3c -> line 339
+ *   +0x0b4c -> line 340
+ *   +0x0b54 -> line 342
+ *   +0x0b64 -> line 343
+ *   +0x0b6c -> line 348
+ *   +0x0b78 -> line 349
+ *   +0x0b80 -> line 351
+ *   +0x0b8c -> line 352
+ *   +0x0b94 -> line 354
+ *   +0x0ba0 -> line 355
+ *   +0x0ba8 -> line 357
+ *   +0x0bb4 -> line 358
+ *   +0x0bbc -> line 360
+ *   +0x0bc8 -> line 361
+ *   +0x0bd0 -> line 363
+ *   +0x0be4 -> line 366
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void impPS2glEnable(unsigned int cap)
+{
+    switch (cap)
+    {
+    case 0xB50:
+        g_PS2glContext.nLightBits |= 0x400;
+        break;
+    case 0xDE1:
+        g_PS2glContext.nTextureEnableBits |= (g_PS2glContext.iCurTextureSet == 0 ? 2 : 0x200);
+        g_gsContext.PRMODE.TME = 1;
+        g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        break;
+    case 0xBC0:
+        g_PS2glContext.nEnableBits |= 0x400;
+        g_gsContext.TEST_1.ATE = 1;
+        g_gsContext.ModFlgs.TEST_1_Modified = 1;
+        break;
+    case 0xD80:
+        g_PS2glContext.nEvaluatorBits |= 0x10000000;
+        break;
+    case 0xBE2:
+        g_PS2glContext.nEnableBits |= 0x100;
+        g_gsContext.PRMODE.ABE = 1;
+        g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        break;
+    case 0xB57:
+        g_PS2glContext.nLightBits |= 0x200;
+        g_PS2glContext.pnColorMatMasks[0] |= 1;
+        break;
+    case 0xB58:
+        g_PS2glContext.nLightBits &= ~0x400;
+        g_PS2glContext.bPointLighting = 1;
+        break;
+    case 0xB44:
+        g_PS2glContext.bCullfaceChanged = 1;
+        g_PS2glContext.nEnableBits |= 0x2000;
+        break;
+    case 0xB71:
+        g_PS2glContext.nEnableBits |= 0x800;
+        {
+            unsigned int uiZTST = 1;
+            g_gsContext.TEST_1.ZTE = 1;
+            g_gsContext.ModFlgs.TEST_1_Modified = 1;
+            switch (g_PS2glContext.eDepthFunc)
+            {
+            case 0x200:
+                uiZTST = 0;
+                break;
+            case 0x201:
+                uiZTST = 3;
+                break;
+            case 0x202:
+                break;
+            case 0x203:
+                uiZTST = 2;
+                break;
+            case 0x204:
+                break;
+            case 0x205:
+                break;
+            case 0x206:
+                break;
+            case 0x207:
+                break;
+            }
+            g_gsContext.TEST_1.ZTST = uiZTST;
+            g_gsContext.ModFlgs.TEST_1_Modified = 1;
+        }
+        break;
+    case 0xBD0:
+        g_PS2glContext.nEnableBits |= 0x200;
+        g_gsContext.COLCLAMP.CLAMP = 1;
+        g_gsContext.ModFlgs.COLCLAMP_Modified = 1;
+        break;
+    case 0xB60:
+        g_PS2glContext.nEnableBits |= 0x80;
+        g_gsContext.PRMODE.FGE = 1;
+        g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        g_PS2glContext.pbFogging[0] = 1;
+        break;
+    case 0xBA1:
+        g_PS2glContext.nLightBits |= 0x100;
+        g_PS2glContext.pbNormalize[0] = 1;
+        break;
+    case 0x4000:
+        g_PS2glContext.nLightBits |= 0x1;
+        g_PS2glContext.bLightsChanged = 1;
+        break;
+    case 0x4001:
+        g_PS2glContext.nLightBits |= 0x2;
+        g_PS2glContext.bLightsChanged = 1;
+        break;
+    case 0x4002:
+        g_PS2glContext.nLightBits |= 0x4;
+        g_PS2glContext.bLightsChanged = 1;
+        break;
+    case 0x4003:
+        g_PS2glContext.nLightBits |= 0x8;
+        g_PS2glContext.bLightsChanged = 1;
+        break;
+    case 0x4004:
+        g_PS2glContext.nLightBits |= 0x10;
+        g_PS2glContext.bLightsChanged = 1;
+        break;
+    case 0x4005:
+        g_PS2glContext.nLightBits |= 0x20;
+        g_PS2glContext.bLightsChanged = 1;
+        break;
+    case 0x4006:
+        g_PS2glContext.nLightBits |= 0x40;
+        g_PS2glContext.bLightsChanged = 1;
+        break;
+    case 0x4007:
+        g_PS2glContext.nLightBits |= 0x80;
+        g_PS2glContext.bLightsChanged = 1;
+        break;
+    case 0xB20:
+        g_PS2glContext.nEnableBits |= 0x2;
+        break;
+    case 0xB24:
+        g_PS2glContext.nEnableBits |= 0x4;
+        break;
+    case 0xBF1:
+        g_PS2glContext.nEnableBits |= 0x1000;
+        break;
+    case 0xD90:
+        g_PS2glContext.nEvaluatorBits |= 0x400;
+        break;
+    case 0xD91:
+        g_PS2glContext.nEvaluatorBits |= 0x800;
+        break;
+    case 0xD92:
+        g_PS2glContext.nEvaluatorBits |= 0x1000;
+        break;
+    case 0xD93:
+        g_PS2glContext.nEvaluatorBits |= 0x10;
+        break;
+    case 0xD94:
+        g_PS2glContext.nEvaluatorBits |= 0x20;
+        break;
+    case 0xD95:
+        g_PS2glContext.nEvaluatorBits |= 0x40;
+        break;
+    case 0xD96:
+        g_PS2glContext.nEvaluatorBits |= 0x80;
+        break;
+    case 0xD97:
+        g_PS2glContext.nEvaluatorBits |= 0x100;
+        break;
+    case 0xD98:
+        g_PS2glContext.nEvaluatorBits |= 0x200;
+        break;
+    case 0xDB0:
+        g_PS2glContext.nEvaluatorBits |= 0x400000;
+        break;
+    case 0xDB1:
+        g_PS2glContext.nEvaluatorBits |= 0x800000;
+        break;
+    case 0xDB2:
+        g_PS2glContext.nEvaluatorBits |= 0x1000000;
+        break;
+    case 0xDB3:
+        g_PS2glContext.nEvaluatorBits |= 0x10000;
+        break;
+    case 0xDB4:
+        g_PS2glContext.nEvaluatorBits |= 0x20000;
+        break;
+    case 0xDB5:
+        g_PS2glContext.nEvaluatorBits |= 0x40000;
+        break;
+    case 0xDB6:
+        g_PS2glContext.nEvaluatorBits |= 0x80000;
+        break;
+    case 0xDB7:
+        g_PS2glContext.nEvaluatorBits |= 0x100000;
+        break;
+    case 0xDB8:
+        g_PS2glContext.nEvaluatorBits |= 0x200000;
+        break;
+    case 0xB10:
+        g_PS2glContext.nEnableBits |= 0x1;
+        break;
+    case 0xB41:
+        g_PS2glContext.nEnableBits |= 0x8;
+        break;
+    case 0xB42:
+        g_PS2glContext.nEnableBits |= 0x10;
+        break;
+    case 0xC11:
+        g_PS2glContext.nEnableBits |= 0x20;
+        impPS2glScissor((int)g_PS2glContext.vScissorBox[0], (int)g_PS2glContext.vScissorBox[1], (int)g_PS2glContext.vScissorBox[2], (int)g_PS2glContext.vScissorBox[3]);
+        break;
+    case 0xB90:
+        g_PS2glContext.nEnableBits |= 0x40;
+        break;
+    case 0xDE0:
+        g_PS2glContext.nTextureEnableBits |= (g_PS2glContext.iCurTextureSet == 0 ? 1 : 0x100);
+        g_gsContext.PRMODE.TME = 1;
+        g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        break;
+    case 0x8513:
+        g_PS2glContext.nTextureEnableBits |= 0x8;
+        g_gsContext.PRMODE.TME = 1;
+        g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        g_PS2glContext.eOldBeginMode = ~0;
+        break;
+    case 0x81FB:
+        g_PS2glContext.nTextureEnableBits |= 0x10;
+        break;
+    case 0xC63:
+        g_PS2glContext.pCurTexture->nTexGenBits |= 0x8;
+        break;
+    case 0xC62:
+        g_PS2glContext.pCurTexture->nTexGenBits |= 0x4;
+        break;
+    case 0xC60:
+        g_PS2glContext.pCurTexture->nTexGenBits |= 0x1;
+        break;
+    case 0xC61:
+        g_PS2glContext.pCurTexture->nTexGenBits |= 0x2;
+        break;
+    case 0xF01:
+        g_PS2glContext.nEnableBits |= 0x4000;
+        break;
+    case 0xF02:
+        g_PS2glContext.nEnableBits |= 0x8000;
+        break;
+    case 0xF03:
+        g_PS2glContext.nEnableBits |= 0x10000;
+        break;
+    case 0xF04:
+        g_PS2glContext.nEnableBits |= 0x20000;
+        break;
+    case 0xF05:
+        g_PS2glContext.nEnableBits |= 0x40000;
+        break;
+    case 0x3000:
+        g_PS2glContext.nClipBits |= 0x1;
+        break;
+    case 0x3001:
+        g_PS2glContext.nClipBits |= 0x2;
+        break;
+    case 0x3002:
+        g_PS2glContext.nClipBits |= 0x4;
+        break;
+    case 0x3003:
+        g_PS2glContext.nClipBits |= 0x8;
+        break;
+    case 0x3004:
+        g_PS2glContext.nClipBits |= 0x10;
+        break;
+    case 0x3005:
+        g_PS2glContext.nClipBits |= 0x20;
+        break;
+    }
+}
+
+void impPS2glDisable(unsigned int cap)
+{
+    /* TODO: decompile from asm/... */
+}
+
 unsigned char impPS2glIsEnabled(unsigned int cap)
 {
     switch (cap)
@@ -1823,781 +2466,153 @@ unsigned char impPS2glIsEnabled(unsigned int cap)
     return 0;
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_EnableDisable.c lines 373–707 */
-/* addr: 0x0014f5d0  size: 3476 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 373
- *   +0x02fc -> line 379
- *   +0x030c -> line 380
- *   +0x0314 -> line 384
- *   +0x0320 -> line 389
- *   +0x032c -> line 384
- *   +0x0338 -> line 389
- *   +0x033c -> line 384
- *   +0x0340 -> line 389
- *   +0x0350 -> line 384
- *   +0x0354 -> line 389
- *   +0x0358 -> line 384
- *   +0x035c -> line 389
- *   +0x0388 -> line 390
- *   +0x0390 -> line 393
- *   +0x0398 -> line 394
- *   +0x03ac -> line 393
- *   +0x03b0 -> line 394
- *   +0x03c4 -> line 393
- *   +0x03c8 -> line 394
- *   +0x03cc -> line 393
- *   +0x03d0 -> line 394
- *   +0x03e0 -> line 395
- *   +0x03e8 -> line 400
- *   +0x03fc -> line 401
- *   +0x0404 -> line 407
- *   +0x0408 -> line 406
- *   +0x0410 -> line 407
- *   +0x0424 -> line 406
- *   +0x0428 -> line 407
- *   +0x043c -> line 406
- *   +0x0440 -> line 407
- *   +0x0444 -> line 406
- *   +0x0448 -> line 407
- *   +0x0458 -> line 408
- *   +0x0460 -> line 413
- *   +0x0468 -> line 415
- *   +0x0470 -> line 413
- *   +0x0474 -> line 415
- *   +0x0478 -> line 413
- *   +0x0480 -> line 415
- *   +0x0488 -> line 416
- *   +0x0490 -> line 420
- *   +0x0494 -> line 421
- *   +0x0498 -> line 420
- *   +0x04a0 -> line 421
- *   +0x04ac -> line 422
- *   +0x04b4 -> line 426
- *   +0x04bc -> line 427
- *   +0x04cc -> line 428
- *   +0x04d4 -> line 427
- *   +0x04d8 -> line 426
- *   +0x04dc -> line 427
- *   +0x04f0 -> line 426
- *   +0x04f4 -> line 427
- *   +0x04f8 -> line 426
- *   +0x04fc -> line 427
- *   +0x0510 -> line 428
- *   +0x053c -> line 429
- *   +0x0544 -> line 432
- *   +0x054c -> line 435
- *   +0x0554 -> line 436
- *   +0x0568 -> line 435
- *   +0x056c -> line 436
- *   +0x0580 -> line 435
- *   +0x0584 -> line 436
- *   +0x0588 -> line 435
- *   +0x058c -> line 436
- *   +0x059c -> line 437
- *   +0x05a4 -> line 441
- *   +0x05a8 -> line 440
- *   +0x05b0 -> line 441
- *   +0x05c4 -> line 440
- *   +0x05c8 -> line 441
- *   +0x05dc -> line 442
- *   +0x05e0 -> line 441
- *   +0x05e4 -> line 442
- *   +0x05e8 -> line 441
- *   +0x05ec -> line 440
- *   +0x05f4 -> line 441
- *   +0x0604 -> line 443
- *   +0x060c -> line 447
- *   +0x0614 -> line 449
- *   +0x0618 -> line 447
- *   +0x061c -> line 449
- *   +0x0620 -> line 447
- *   +0x0628 -> line 450
- *   +0x0630 -> line 458
- *   +0x0634 -> line 457
- *   +0x063c -> line 458
- *   +0x0644 -> line 457
- *   +0x064c -> line 459
- *   +0x0654 -> line 462
- *   +0x0658 -> line 461
- *   +0x0660 -> line 462
- *   +0x0668 -> line 461
- *   +0x0670 -> line 463
- *   +0x0678 -> line 466
- *   +0x067c -> line 465
- *   +0x0684 -> line 466
- *   +0x068c -> line 465
- *   +0x0694 -> line 467
- *   +0x069c -> line 470
- *   +0x06a0 -> line 469
- *   +0x06a8 -> line 470
- *   +0x06b0 -> line 469
- *   +0x06b8 -> line 471
- *   +0x06c0 -> line 474
- *   +0x06c4 -> line 473
- *   +0x06cc -> line 474
- *   +0x06d4 -> line 473
- *   +0x06dc -> line 475
- *   +0x06e4 -> line 478
- *   +0x06e8 -> line 477
- *   +0x06f0 -> line 478
- *   +0x06f8 -> line 477
- *   +0x0700 -> line 479
- *   +0x0708 -> line 482
- *   +0x070c -> line 481
- *   +0x0714 -> line 482
- *   +0x071c -> line 481
- *   +0x0724 -> line 483
- *   +0x072c -> line 486
- *   +0x0730 -> line 485
- *   +0x0738 -> line 486
- *   +0x0740 -> line 485
- *   +0x0748 -> line 487
- *   +0x0750 -> line 491
- *   +0x0760 -> line 492
- *   +0x0768 -> line 496
- *   +0x0778 -> line 497
- *   +0x0780 -> line 501
- *   +0x0790 -> line 502
- *   +0x0798 -> line 508
- *   +0x07a8 -> line 509
- *   +0x07b0 -> line 513
- *   +0x07c0 -> line 514
- *   +0x07c8 -> line 518
- *   +0x07d8 -> line 519
- *   +0x07e0 -> line 523
- *   +0x07f0 -> line 524
- *   +0x07f8 -> line 528
- *   +0x0808 -> line 529
- *   +0x0810 -> line 533
- *   +0x0820 -> line 534
- *   +0x0828 -> line 538
- *   +0x0838 -> line 539
- *   +0x0840 -> line 543
- *   +0x0850 -> line 544
- *   +0x0858 -> line 548
- *   +0x0868 -> line 549
- *   +0x0870 -> line 556
- *   +0x0884 -> line 557
- *   +0x088c -> line 561
- *   +0x08a0 -> line 562
- *   +0x08a8 -> line 566
- *   +0x08bc -> line 567
- *   +0x08c4 -> line 571
- *   +0x08d8 -> line 572
- *   +0x08e0 -> line 576
- *   +0x08f4 -> line 577
- *   +0x08fc -> line 581
- *   +0x0910 -> line 582
- *   +0x0918 -> line 586
- *   +0x092c -> line 587
- *   +0x0934 -> line 591
- *   +0x0948 -> line 592
- *   +0x0950 -> line 596
- *   +0x0964 -> line 597
- *   +0x096c -> line 602
- *   +0x097c -> line 603
- *   +0x0984 -> line 607
- *   +0x0994 -> line 608
- *   +0x099c -> line 612
- *   +0x09ac -> line 613
- *   +0x09b4 -> line 616
- *   +0x09bc -> line 617
- *   +0x09d4 -> line 616
- *   +0x09d8 -> line 617
- *   +0x09e8 -> line 618
- *   +0x09ec -> line 617
- *   +0x09f0 -> line 618
- *   +0x09f4 -> line 617
- *   +0x09f8 -> line 618
- *   +0x0a08 -> line 619
- *   +0x0a0c -> line 618
- *   +0x0a10 -> line 619
- *   +0x0a14 -> line 618
- *   +0x0a18 -> line 616
- *   +0x0a1c -> line 619
- *   +0x0a20 -> line 616
- *   +0x0a24 -> line 619
- *   +0x0a28 -> line 617
- *   +0x0a2c -> line 620
- *   +0x0a34 -> line 617
- *   +0x0a44 -> line 618
- *   +0x0a4c -> line 619
- *   +0x0a54 -> line 618
- *   +0x0a6c -> line 619
- *   +0x0a80 -> line 620
- *   +0x0a88 -> line 621
- *   +0x0ad0 -> line 623
- *   +0x0b0c -> line 625
- *   +0x0b14 -> line 628
- *   +0x0b24 -> line 629
- *   +0x0b2c -> line 635
- *   +0x0b34 -> line 640
- *   +0x0b40 -> line 635
- *   +0x0b4c -> line 640
- *   +0x0b50 -> line 635
- *   +0x0b54 -> line 640
- *   +0x0b64 -> line 635
- *   +0x0b68 -> line 640
- *   +0x0b6c -> line 635
- *   +0x0b70 -> line 640
- *   +0x0b9c -> line 641
- *   +0x0ba4 -> line 647
- *   +0x0ba8 -> line 644
- *   +0x0bb0 -> line 646
- *   +0x0bd0 -> line 647
- *   +0x0bd8 -> line 644
- *   +0x0be4 -> line 646
- *   +0x0c14 -> line 648
- *   +0x0c1c -> line 651
- *   +0x0c2c -> line 652
- *   +0x0c34 -> line 656
- *   +0x0c44 -> line 657
- *   +0x0c4c -> line 661
- *   +0x0c5c -> line 662
- *   +0x0c64 -> line 666
- *   +0x0c74 -> line 667
- *   +0x0c7c -> line 671
- *   +0x0c8c -> line 672
- *   +0x0c94 -> line 674
- *   +0x0ca4 -> line 675
- *   +0x0cac -> line 677
- *   +0x0cc0 -> line 678
- *   +0x0cc8 -> line 680
- *   +0x0cdc -> line 681
- *   +0x0ce4 -> line 683
- *   +0x0cf8 -> line 684
- *   +0x0d00 -> line 689
- *   +0x0d10 -> line 690
- *   +0x0d18 -> line 692
- *   +0x0d28 -> line 693
- *   +0x0d30 -> line 695
- *   +0x0d40 -> line 696
- *   +0x0d48 -> line 698
- *   +0x0d58 -> line 699
- *   +0x0d60 -> line 701
- *   +0x0d70 -> line 702
- *   +0x0d78 -> line 704
- *   +0x0d8c -> line 707
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void impPS2glDisable(unsigned int cap)
+void impPS2glCullFace(unsigned int mode)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.eCullFaceMode = mode;
+    g_PS2glContext.bCullfaceChanged = 1;
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_EnableDisable.c lines 18–366 */
-/* addr: 0x00150370  size: 3056 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 18
- *   +0x0004 -> line 20
- *   +0x030c -> line 26
- *   +0x0318 -> line 27
- *   +0x0320 -> line 31
- *   +0x032c -> line 35
- *   +0x0334 -> line 31
- *   +0x0340 -> line 35
- *   +0x0344 -> line 31
- *   +0x0348 -> line 35
- *   +0x035c -> line 31
- *   +0x0360 -> line 35
- *   +0x0364 -> line 31
- *   +0x0368 -> line 35
- *   +0x0378 -> line 36
- *   +0x0380 -> line 40
- *   +0x0384 -> line 39
- *   +0x0388 -> line 40
- *   +0x0398 -> line 39
- *   +0x039c -> line 40
- *   +0x03b0 -> line 39
- *   +0x03b4 -> line 40
- *   +0x03b8 -> line 39
- *   +0x03bc -> line 40
- *   +0x03cc -> line 41
- *   +0x03d4 -> line 46
- *   +0x03e4 -> line 47
- *   +0x03ec -> line 53
- *   +0x03f0 -> line 52
- *   +0x03f4 -> line 53
- *   +0x0404 -> line 52
- *   +0x0408 -> line 53
- *   +0x041c -> line 52
- *   +0x0420 -> line 53
- *   +0x0424 -> line 52
- *   +0x0428 -> line 53
- *   +0x0438 -> line 54
- *   +0x0440 -> line 58
- *   +0x0444 -> line 60
- *   +0x0448 -> line 58
- *   +0x044c -> line 60
- *   +0x0450 -> line 58
- *   +0x0458 -> line 60
- *   +0x0460 -> line 61
- *   +0x0468 -> line 64
- *   +0x046c -> line 63
- *   +0x0474 -> line 64
- *   +0x047c -> line 63
- *   +0x0484 -> line 65
- *   +0x048c -> line 69
- *   +0x0490 -> line 70
- *   +0x0494 -> line 69
- *   +0x0498 -> line 70
- *   +0x049c -> line 69
- *   +0x04a0 -> line 70
- *   +0x04a4 -> line 71
- *   +0x04ac -> line 78
- *   +0x04b0 -> line 75
- *   +0x04b4 -> line 78
- *   +0x04c4 -> line 75
- *   +0x04c8 -> line 78
- *   +0x04d8 -> line 82
- *   +0x04dc -> line 78
- *   +0x04e0 -> line 82
- *   +0x04e4 -> line 78
- *   +0x04ec -> line 75
- *   +0x04f0 -> line 82
- *   +0x04f4 -> line 75
- *   +0x04f8 -> line 78
- *   +0x0508 -> line 82
- *   +0x052c -> line 84
- *   +0x0534 -> line 85
- *   +0x053c -> line 86
- *   +0x0544 -> line 87
- *   +0x0548 -> line 93
- *   +0x0588 -> line 95
- *   +0x0590 -> line 99
- *   +0x0594 -> line 98
- *   +0x0598 -> line 99
- *   +0x05a8 -> line 98
- *   +0x05ac -> line 99
- *   +0x05c0 -> line 98
- *   +0x05c4 -> line 99
- *   +0x05c8 -> line 98
- *   +0x05cc -> line 99
- *   +0x05dc -> line 100
- *   +0x05e4 -> line 104
- *   +0x05e8 -> line 103
- *   +0x05ec -> line 104
- *   +0x0600 -> line 103
- *   +0x0604 -> line 104
- *   +0x0618 -> line 105
- *   +0x061c -> line 104
- *   +0x0620 -> line 105
- *   +0x0624 -> line 104
- *   +0x0628 -> line 103
- *   +0x0630 -> line 104
- *   +0x0640 -> line 106
- *   +0x0648 -> line 112
- *   +0x064c -> line 110
- *   +0x0650 -> line 112
- *   +0x0654 -> line 110
- *   +0x0658 -> line 112
- *   +0x065c -> line 110
- *   +0x0664 -> line 113
- *   +0x066c -> line 121
- *   +0x0670 -> line 120
- *   +0x0674 -> line 121
- *   +0x067c -> line 120
- *   +0x0684 -> line 122
- *   +0x068c -> line 125
- *   +0x0690 -> line 124
- *   +0x0694 -> line 125
- *   +0x069c -> line 124
- *   +0x06a4 -> line 126
- *   +0x06ac -> line 129
- *   +0x06b0 -> line 128
- *   +0x06b4 -> line 129
- *   +0x06bc -> line 128
- *   +0x06c4 -> line 130
- *   +0x06cc -> line 133
- *   +0x06d0 -> line 132
- *   +0x06d4 -> line 133
- *   +0x06dc -> line 132
- *   +0x06e4 -> line 134
- *   +0x06ec -> line 137
- *   +0x06f0 -> line 136
- *   +0x06f4 -> line 137
- *   +0x06fc -> line 136
- *   +0x0704 -> line 138
- *   +0x070c -> line 141
- *   +0x0710 -> line 140
- *   +0x0714 -> line 141
- *   +0x071c -> line 140
- *   +0x0724 -> line 142
- *   +0x072c -> line 145
- *   +0x0730 -> line 144
- *   +0x0734 -> line 145
- *   +0x073c -> line 144
- *   +0x0744 -> line 146
- *   +0x074c -> line 149
- *   +0x0750 -> line 148
- *   +0x0754 -> line 149
- *   +0x075c -> line 148
- *   +0x0764 -> line 150
- *   +0x076c -> line 154
- *   +0x0778 -> line 155
- *   +0x0780 -> line 159
- *   +0x078c -> line 160
- *   +0x0794 -> line 164
- *   +0x07a0 -> line 165
- *   +0x07a8 -> line 171
- *   +0x07b4 -> line 172
- *   +0x07bc -> line 176
- *   +0x07c8 -> line 177
- *   +0x07d0 -> line 181
- *   +0x07dc -> line 182
- *   +0x07e4 -> line 186
- *   +0x07f0 -> line 187
- *   +0x07f8 -> line 191
- *   +0x0804 -> line 192
- *   +0x080c -> line 196
- *   +0x0818 -> line 197
- *   +0x0820 -> line 201
- *   +0x082c -> line 202
- *   +0x0834 -> line 206
- *   +0x0840 -> line 207
- *   +0x0848 -> line 211
- *   +0x0854 -> line 212
- *   +0x085c -> line 219
- *   +0x086c -> line 220
- *   +0x0874 -> line 224
- *   +0x0884 -> line 225
- *   +0x088c -> line 229
- *   +0x089c -> line 230
- *   +0x08a4 -> line 234
- *   +0x08b4 -> line 235
- *   +0x08bc -> line 239
- *   +0x08cc -> line 240
- *   +0x08d4 -> line 244
- *   +0x08e4 -> line 245
- *   +0x08ec -> line 249
- *   +0x08fc -> line 250
- *   +0x0904 -> line 254
- *   +0x0914 -> line 255
- *   +0x091c -> line 259
- *   +0x092c -> line 260
- *   +0x0934 -> line 264
- *   +0x0940 -> line 265
- *   +0x0948 -> line 269
- *   +0x0954 -> line 270
- *   +0x095c -> line 274
- *   +0x0968 -> line 275
- *   +0x0970 -> line 278
- *   +0x0974 -> line 279
- *   +0x0978 -> line 278
- *   +0x097c -> line 279
- *   +0x09a4 -> line 278
- *   +0x09a8 -> line 279
- *   +0x09c4 -> line 281
- *   +0x09cc -> line 284
- *   +0x09d8 -> line 285
- *   +0x09e0 -> line 291
- *   +0x09ec -> line 295
- *   +0x09f4 -> line 291
- *   +0x0a00 -> line 295
- *   +0x0a04 -> line 291
- *   +0x0a08 -> line 295
- *   +0x0a1c -> line 291
- *   +0x0a20 -> line 295
- *   +0x0a24 -> line 291
- *   +0x0a28 -> line 295
- *   +0x0a38 -> line 297
- *   +0x0a40 -> line 302
- *   +0x0a44 -> line 300
- *   +0x0a48 -> line 301
- *   +0x0a64 -> line 302
- *   +0x0a6c -> line 300
- *   +0x0a78 -> line 301
- *   +0x0a90 -> line 303
- *   +0x0a98 -> line 306
- *   +0x0aa4 -> line 307
- *   +0x0aac -> line 311
- *   +0x0ab8 -> line 312
- *   +0x0ac0 -> line 316
- *   +0x0acc -> line 317
- *   +0x0ad4 -> line 321
- *   +0x0ae0 -> line 322
- *   +0x0ae8 -> line 326
- *   +0x0af4 -> line 327
- *   +0x0afc -> line 330
- *   +0x0b08 -> line 331
- *   +0x0b10 -> line 333
- *   +0x0b1c -> line 334
- *   +0x0b24 -> line 336
- *   +0x0b34 -> line 337
- *   +0x0b3c -> line 339
- *   +0x0b4c -> line 340
- *   +0x0b54 -> line 342
- *   +0x0b64 -> line 343
- *   +0x0b6c -> line 348
- *   +0x0b78 -> line 349
- *   +0x0b80 -> line 351
- *   +0x0b8c -> line 352
- *   +0x0b94 -> line 354
- *   +0x0ba0 -> line 355
- *   +0x0ba8 -> line 357
- *   +0x0bb4 -> line 358
- *   +0x0bbc -> line 360
- *   +0x0bc8 -> line 361
- *   +0x0bd0 -> line 363
- *   +0x0be4 -> line 366
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void impPS2glEnable(unsigned int cap)
+void impPS2glFrontFace(unsigned int mode)
 {
-    switch (cap)
+    g_PS2glContext.eFrontFaceMode = mode;
+    g_PS2glContext.bCullfaceChanged = 1;
+}
+
+void impPS2glHint(unsigned int target, unsigned int mode)
+{
+    switch (target)
     {
-    case 0xB50:
-        g_PS2glContext.nLightBits |= 0x400;
+    case 0xF30:
+        g_aDmaTag = mode;
         break;
-    case 0xDE1:
-        g_PS2glContext.nTextureEnableBits |= (g_PS2glContext.iCurTextureSet == 0 ? 2 : 0x200);
-        g_gsContext.PRMODE.TME = 1;
-        g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    case 0xF11:
+        g_PS2glContext.uiBoundingSphereBits = mode;
         break;
-    case 0xBC0:
-        g_PS2glContext.nEnableBits |= 0x400;
-        g_gsContext.TEST_1.ATE = 1;
-        g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    case 0xF09:
+        g_PS2glContext.uiFastPathBits = mode;
         break;
-    case 0xD80:
-        g_PS2glContext.nEvaluatorBits |= 0x10000000;
-        break;
-    case 0xBE2:
-        g_PS2glContext.nEnableBits |= 0x100;
-        g_gsContext.PRMODE.ABE = 1;
-        g_gsContext.ModFlgs.PRMODE_Modified = 1;
-        break;
-    case 0xB57:
-        g_PS2glContext.nLightBits |= 0x200;
-        g_PS2glContext.pnColorMatMasks[0] |= 1;
-        break;
-    case 0xB58:
-        g_PS2glContext.nLightBits &= ~0x400;
-        g_PS2glContext.bPointLighting = 1;
-        break;
-    case 0xB44:
-        g_PS2glContext.bCullfaceChanged = 1;
-        g_PS2glContext.nEnableBits |= 0x2000;
-        break;
-    case 0xB71:
-        g_PS2glContext.nEnableBits |= 0x800;
+    case 0xF10:
+        if ((mode & 0x600) != (g_PS2glContext.uiDmaOmitDataBits & 0x600))
         {
-            unsigned int uiZTST = 1;
-            g_gsContext.TEST_1.ZTE = 1;
-            g_gsContext.ModFlgs.TEST_1_Modified = 1;
-            switch (g_PS2glContext.eDepthFunc)
-            {
-            case 0x200:
-                uiZTST = 0;
-                break;
-            case 0x201:
-                uiZTST = 3;
-                break;
-            case 0x202:
-                break;
-            case 0x203:
-                uiZTST = 2;
-                break;
-            case 0x204:
-                break;
-            case 0x205:
-                break;
-            case 0x206:
-                break;
-            case 0x207:
-                break;
-            }
-            g_gsContext.TEST_1.ZTST = uiZTST;
-            g_gsContext.ModFlgs.TEST_1_Modified = 1;
+            if (mode & 0x200)
+                *(int*)g_PS2glContext.pnColorMatMasks |= 0x200;
+            else
+                *(int*)g_PS2glContext.pnColorMatMasks &= ~0x200;
+            if (mode & 0x400)
+                *(int*)g_PS2glContext.pnColorMatMasks |= 0x100;
+            else
+                *(int*)g_PS2glContext.pnColorMatMasks &= ~0x100;
+        }
+        g_PS2glContext.uiDmaOmitDataBits = mode;
+        break;
+    case 0x450:
+        g_PS2glContext.eClippingFunction = mode;
+        break;
+    case 0xF08:
+        g_PS2glContext.usDontUpdateBits = mode;
+        break;
+    case 0x451:
+        g_PS2glContext.bAlphaChannelReduce = mode;
+        break;
+    case 0xF42:
+        g_fBSMultiplicator = *(float*)mode;
+        break;
+    case 0xF15:
+        g_PS2glContext.uiStaticDisplayListMaxSize = mode;
+        break;
+    case 0xF16:
+        g_PS2glContext.uiStaticDisplayListBits &= ~0xFFFFFF;
+        g_PS2glContext.uiStaticDisplayListBits |= (mode & 0xFFFFFF);
+        break;
+    case 0xF17:
+        g_PS2glContext.ucSDLObjectReserveSize = mode;
+        break;
+    case 0xF22:
+        PS2glSDLInstancing((unsigned int*)mode);
+        break;
+    case 0x439:
+        g_PS2glContext.iMipMapCoeff = (int)mode - 0x800;
+        break;
+    case 0x441:
+        if (mode == 0)
+            mode = 0x10000;
+        {
+            unsigned int uiHalf = mode >> 1;
+            mode = uiHalf >> 4;
+        }
+        if (uiMaxVifDmaBufLength != mode)
+        {
+            uiMaxVifDmaBufLength = mode;
+            if (g_PS2glContext.pVIFDMABuf != NULL)
+                PS2glLiberator((void*)((unsigned int)g_PS2glContext.pVIFDMABufUnaligned & 0xCFFFFFFF));
+            g_PS2glContext.pVIFDMABufUnaligned = (float(*)[4])((unsigned int)PS2glAllocator64((uiMaxVifDmaBufLength << 5) + 0x40) | 0x30000000);
+            g_PS2glContext.pVIFDMABuf = (float(*)[4])((((unsigned int)g_PS2glContext.pVIFDMABufUnaligned) + 0x3F) & ~0x3F);
+            g_PS2glContext.pVIFIBufTail = g_PS2glContext.pVIFDMABuf; g_PS2glContext.pVIFInBuf = g_PS2glContext.pVIFDMABuf;
+            g_PS2glContext.pVIFOutBuf = &g_PS2glContext.pVIFDMABuf[uiMaxVifDmaBufLength];
         }
         break;
-    case 0xBD0:
-        g_PS2glContext.nEnableBits |= 0x200;
-        g_gsContext.COLCLAMP.CLAMP = 1;
-        g_gsContext.ModFlgs.COLCLAMP_Modified = 1;
+    case 0x442:
+        if (g_PS2glContext.eSPRMode != mode)
+        {
+            if (g_stSPRInfo.uiState & 1)
+                WaitDMAFromSPR();
+            if (mode == 1)
+                g_stSPRInfo.uiState = 4;
+            else if (mode == 0)
+                g_stSPRInfo.uiState = 0;
+            else
+                g_stSPRInfo.uiState = 8;
+            g_PS2glContext.eSPRMode = mode;
+        }
         break;
-    case 0xB60:
-        g_PS2glContext.nEnableBits |= 0x80;
-        g_gsContext.PRMODE.FGE = 1;
-        g_gsContext.ModFlgs.PRMODE_Modified = 1;
-        g_PS2glContext.pbFogging[0] = 1;
+    case 0x443:
+        g_PS2glContext.eTexConvMode = mode;
         break;
-    case 0xBA1:
-        g_PS2glContext.nLightBits |= 0x100;
-        g_PS2glContext.pbNormalize[0] = 1;
+    case 0x445:
+        g_PS2glContext.eClutConvMode = mode;
         break;
-    case 0x4000:
-        g_PS2glContext.nLightBits |= 0x1;
-        g_PS2glContext.bLightsChanged = 1;
-        break;
-    case 0x4001:
-        g_PS2glContext.nLightBits |= 0x2;
-        g_PS2glContext.bLightsChanged = 1;
-        break;
-    case 0x4002:
-        g_PS2glContext.nLightBits |= 0x4;
-        g_PS2glContext.bLightsChanged = 1;
-        break;
-    case 0x4003:
-        g_PS2glContext.nLightBits |= 0x8;
-        g_PS2glContext.bLightsChanged = 1;
-        break;
-    case 0x4004:
-        g_PS2glContext.nLightBits |= 0x10;
-        g_PS2glContext.bLightsChanged = 1;
-        break;
-    case 0x4005:
-        g_PS2glContext.nLightBits |= 0x20;
-        g_PS2glContext.bLightsChanged = 1;
-        break;
-    case 0x4006:
-        g_PS2glContext.nLightBits |= 0x40;
-        g_PS2glContext.bLightsChanged = 1;
-        break;
-    case 0x4007:
-        g_PS2glContext.nLightBits |= 0x80;
-        g_PS2glContext.bLightsChanged = 1;
-        break;
-    case 0xB20:
-        g_PS2glContext.nEnableBits |= 0x2;
-        break;
-    case 0xB24:
-        g_PS2glContext.nEnableBits |= 0x4;
-        break;
-    case 0xBF1:
-        g_PS2glContext.nEnableBits |= 0x1000;
-        break;
-    case 0xD90:
-        g_PS2glContext.nEvaluatorBits |= 0x400;
-        break;
-    case 0xD91:
-        g_PS2glContext.nEvaluatorBits |= 0x800;
-        break;
-    case 0xD92:
-        g_PS2glContext.nEvaluatorBits |= 0x1000;
-        break;
-    case 0xD93:
-        g_PS2glContext.nEvaluatorBits |= 0x10;
-        break;
-    case 0xD94:
-        g_PS2glContext.nEvaluatorBits |= 0x20;
-        break;
-    case 0xD95:
-        g_PS2glContext.nEvaluatorBits |= 0x40;
-        break;
-    case 0xD96:
-        g_PS2glContext.nEvaluatorBits |= 0x80;
-        break;
-    case 0xD97:
-        g_PS2glContext.nEvaluatorBits |= 0x100;
-        break;
-    case 0xD98:
-        g_PS2glContext.nEvaluatorBits |= 0x200;
-        break;
-    case 0xDB0:
-        g_PS2glContext.nEvaluatorBits |= 0x400000;
-        break;
-    case 0xDB1:
-        g_PS2glContext.nEvaluatorBits |= 0x800000;
-        break;
-    case 0xDB2:
-        g_PS2glContext.nEvaluatorBits |= 0x1000000;
-        break;
-    case 0xDB3:
-        g_PS2glContext.nEvaluatorBits |= 0x10000;
-        break;
-    case 0xDB4:
-        g_PS2glContext.nEvaluatorBits |= 0x20000;
-        break;
-    case 0xDB5:
-        g_PS2glContext.nEvaluatorBits |= 0x40000;
-        break;
-    case 0xDB6:
-        g_PS2glContext.nEvaluatorBits |= 0x80000;
-        break;
-    case 0xDB7:
-        g_PS2glContext.nEvaluatorBits |= 0x100000;
-        break;
-    case 0xDB8:
-        g_PS2glContext.nEvaluatorBits |= 0x200000;
-        break;
-    case 0xB10:
-        g_PS2glContext.nEnableBits |= 0x1;
-        break;
-    case 0xB41:
-        g_PS2glContext.nEnableBits |= 0x8;
-        break;
-    case 0xB42:
-        g_PS2glContext.nEnableBits |= 0x10;
-        break;
-    case 0xC11:
-        g_PS2glContext.nEnableBits |= 0x20;
-        impPS2glScissor((int)g_PS2glContext.vScissorBox[0], (int)g_PS2glContext.vScissorBox[1], (int)g_PS2glContext.vScissorBox[2], (int)g_PS2glContext.vScissorBox[3]);
-        break;
-    case 0xB90:
-        g_PS2glContext.nEnableBits |= 0x40;
-        break;
-    case 0xDE0:
-        g_PS2glContext.nTextureEnableBits |= (g_PS2glContext.iCurTextureSet == 0 ? 1 : 0x100);
-        g_gsContext.PRMODE.TME = 1;
-        g_gsContext.ModFlgs.PRMODE_Modified = 1;
-        break;
-    case 0x8513:
-        g_PS2glContext.nTextureEnableBits |= 0x8;
-        g_gsContext.PRMODE.TME = 1;
-        g_gsContext.ModFlgs.PRMODE_Modified = 1;
-        g_PS2glContext.eOldBeginMode = ~0;
-        break;
-    case 0x81FB:
-        g_PS2glContext.nTextureEnableBits |= 0x10;
-        break;
-    case 0xC63:
-        g_PS2glContext.pCurTexture->nTexGenBits |= 0x8;
-        break;
-    case 0xC62:
-        g_PS2glContext.pCurTexture->nTexGenBits |= 0x4;
-        break;
-    case 0xC60:
-        g_PS2glContext.pCurTexture->nTexGenBits |= 0x1;
-        break;
-    case 0xC61:
-        g_PS2glContext.pCurTexture->nTexGenBits |= 0x2;
-        break;
-    case 0xF01:
-        g_PS2glContext.nEnableBits |= 0x4000;
-        break;
-    case 0xF02:
-        g_PS2glContext.nEnableBits |= 0x8000;
-        break;
-    case 0xF03:
-        g_PS2glContext.nEnableBits |= 0x10000;
-        break;
-    case 0xF04:
-        g_PS2glContext.nEnableBits |= 0x20000;
+    case 0x444:
+        g_PS2glContext.eTexUserMaintainMode = mode;
         break;
     case 0xF05:
-        g_PS2glContext.nEnableBits |= 0x40000;
+        if (mode == 1)
+            g_PS2glContext.nEnableBits |= 0x40000;
+        else
+            g_PS2glContext.nEnableBits &= ~0x40000;
         break;
-    case 0x3000:
-        g_PS2glContext.nClipBits |= 0x1;
+    case 0x446:
+        g_PS2glContext.uiMotionBlurIntensity = mode;
         break;
-    case 0x3001:
-        g_PS2glContext.nClipBits |= 0x2;
+    case 0x447:
+        g_PS2glContext.bSPRSynchronization = mode;
         break;
-    case 0x3002:
-        g_PS2glContext.nClipBits |= 0x4;
+    case 0x449:
+    {
+        unsigned int uiDepth;
+        if (mode >= 0x20)
+            uiDepth = 0x20;
+        else
+            uiDepth = 0x10;
+        g_PS2glContext.iAccumDepth = uiDepth;
+    }
+    break;
+    case 0xF40:
+        *(struct tagPS2glVector4*)vColorLimit128 = *(struct tagPS2glVector4*)mode;
         break;
-    case 0x3003:
-        g_PS2glContext.nClipBits |= 0x8;
+    case 0xF41:
+        *(struct tagPS2glVector4*)vColorLimit255 = *(struct tagPS2glVector4*)mode;
         break;
-    case 0x3004:
-        g_PS2glContext.nClipBits |= 0x10;
+    case 0xF12:
+        *(struct tagPS2glMatrix4*)&g_PS2glContext.mFrustumNormal[0][0] = *(struct tagPS2glMatrix4*)mode;
         break;
-    case 0x3005:
-        g_PS2glContext.nClipBits |= 0x20;
+    case 0xF13:
+        *(struct tagPS2glMatrix4*)&g_PS2glContext.mGuardBandNormal[0][0] = *(struct tagPS2glMatrix4*)mode;
+        break;
+    case 0xF43:
+    case 0xF44:
+    case 0xF45:
+    case 0xF46:
+        PS2glInternalSetScreenCalebration(target, mode);
         break;
     }
 }

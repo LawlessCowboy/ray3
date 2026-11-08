@@ -439,66 +439,33 @@ HIE_tdstSuperObject_* SECT_fn_hResearchInWhatSectorIAm(HIE_tdstSuperObject_* SEC
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SCT_fn_vGetSymMatrixOfCameraInMirror(MAT_tdstTransformation_* hMatrixOfCamera, MAT_tdstTransformation_* hMatrixOfSymCamera, MTH3D_tdstVector_* pstGlobalPositionOfSymCamera, MTH3D_tdstVector_* pstGlobalNormalOfMirror, MTH3D_tdstVector_* pstGlobalPointOfMirror)
-{
-    MAT_tdstTransformation_ stGlobalMatrixOfCamera;
-    MAT_tdstTransformation_ stMulMatrixScale;
-    MAT_tdstTransformation_ stTempMatrixForMultiplication;
-    MTH3D_tdstVector_ stTransVector;
-    float xTemp;
-    MTH3D_tdstVector_ stTransVectorOfCamera;
-    MTH3D_tdstVector_ pstModuleAxes[3];
-    float a22;
-    float a33;
-    float a12;
-    float a13;
-    float a23;
 
-    /* Compute the global matrix of the camera */
-    MAT_fn_vSetIdentity(&stGlobalMatrixOfCamera);
-    MAT_fn_vInvert(&stGlobalMatrixOfCamera, hMatrixOfCamera);
-
-    /* Compute the symmetry matrix */
-    MAT_fn_vSetIdentity(&stMulMatrixScale);
-
-
-    a22 = 1.0f - 2.0f * (pstGlobalNormalOfMirror->xY * pstGlobalNormalOfMirror->xY);
-    a33 = 1.0f - 2.0f * (pstGlobalNormalOfMirror->xZ * pstGlobalNormalOfMirror->xZ);
-    a12 = -2.0f * (pstGlobalNormalOfMirror->xX * pstGlobalNormalOfMirror->xY);
-    a13 = -2.0f * (pstGlobalNormalOfMirror->xX * pstGlobalNormalOfMirror->xZ);
-    a23 = -2.0f * (pstGlobalNormalOfMirror->xY * pstGlobalNormalOfMirror->xZ);
-
-    MTH3D_M_vSetVectorElements(&pstModuleAxes[0], 1.0f - 2.0f * (pstGlobalNormalOfMirror->xX * pstGlobalNormalOfMirror->xX), a12, a13);
-    MTH3D_M_vSetVectorElements(&pstModuleAxes[1], a12, a22, a23);
-    MTH3D_M_vSetVectorElements(&pstModuleAxes[2], a13, a23, a33);
-
-    MAT_fn_vSetRotationVectors(&stMulMatrixScale, &pstModuleAxes[0], &pstModuleAxes[1], &pstModuleAxes[2]);
-
-
-
-
-
-
-    MAT_M_vGetTranslation(&stGlobalMatrixOfCamera, &stTransVectorOfCamera);
-    MTH3D_M_vSubVector(&stTransVector, &stTransVectorOfCamera, pstGlobalPointOfMirror);
-
-    xTemp = -2.0f * MTH3D_xDotProductVector(&stTransVector, pstGlobalNormalOfMirror);
-
-    MTH3D_M_vMulScalarVector(&stTransVector, xTemp, pstGlobalNormalOfMirror);
-
-    MTH3D_M_vAddVector(&stTransVector, &stTransVector, &stTransVectorOfCamera);
-
-
-    stTempMatrixForMultiplication = stGlobalMatrixOfCamera;
-    MAT_fn_vCompose(&stGlobalMatrixOfCamera, &stMulMatrixScale, &stTempMatrixForMultiplication);
-
-    MAT_M_vSetTranslation(&stGlobalMatrixOfCamera, &stTransVector);
-    *(int*)&pstGlobalPositionOfSymCamera->xX = ((int*)&stTransVector)[0]; *(int*)&pstGlobalPositionOfSymCamera->xY = ((int*)&stTransVector)[1]; *(int*)&pstGlobalPositionOfSymCamera->xZ = ((int*)&stTransVector)[2];
-
-
-    MAT_fn_vSetIdentity(hMatrixOfSymCamera);
-    MAT_fn_vInvert(hMatrixOfSymCamera, &stGlobalMatrixOfCamera);
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void SCT_fn_vGetSymMatrixOfCameraInMirror(MAT_tdstTransformation_* hMatrixOfCamera, MAT_tdstTransformation_* hMatrixOfSymCamera, MTH3D_tdstVector_* pstGlobalPositionOfSymCamera, MTH3D_tdstVector_* pstGlobalNormalOfMirror, MTH3D_tdstVector_* pstGlobalPointOfMirror);
+MTH3D_tdstVector_* SECT_fn_p_stGetMaxPointInBorder(SECT_tdstSector_* _hSector);
+MTH3D_tdstVector_* SECT_fn_p_stGetMinPointInBorder(SECT_tdstSector_* _hSector);
+float fn_xGetSectorZFar(HIE_tdstSuperObject_* _hSprObjSector);
+void SECT_fn_vInitActivationSector(HIE_tdstSuperObject_* hSectorRoot);
+HIE_tdstSuperObject_* SECT_fn_hResolveSectorNextActivity(HIE_tdstSuperObject_* _hSectorObject);
+int SECT_fn_bIsSectorNewlyInactive(HIE_tdstSuperObject_* _hSectorObject);
+int SECT_fn_bIsSectorNewlyActive(HIE_tdstSuperObject_* _hSectorObject);
+int SECT_fn_cSetWantedActivity(HIE_tdstSuperObject_* _hSectorObject, char _cWantedActivity);
+char fn_cGetSectorCameraType(HIE_tdstSuperObject_* _hSprObjSector);
+unsigned char SECT_fn_bIsThisSectorVirtual(HIE_tdstSuperObject_* _hSprObjSector);
+void SECT_fn_vAddTailDNMLightsListNode(HIE_tdstSuperObject_* hSector, SECT_tdstListOfDNMLights_* hNode);
+void SECT_fn_vIsolateDNMLightsListNode(SECT_tdstListOfDNMLights_* hNode);
+void SECT_fn_vAddHeadCharListNode(HIE_tdstSuperObject_* hSector, SECT_tdstListOfSOCharacters_* hNode);
+void SECT_fn_vAddTailCharListNode(HIE_tdstSuperObject_* hSector, SECT_tdstListOfSOCharacters_* hNode);
+void SECT_fn_vIsolateCharListNode(SECT_tdstListOfSOCharacters_* hNode);
+void SCT_fn_vTestChangeSectorWithHistory(void* _pUnused, MTH3D_tdstVector_* _p_stAfterAbsolutePosition, HIE_tdstSuperObject_** _p_hSectorSOWhereIWas);
+HIE_tdstSuperObject_* SECT_fn_hResearchInWhatSectorIAm(HIE_tdstSuperObject_* SECT_hFatherSector, MTH3D_tdstVector_* p_stAbsolutePosition);
+int SECT_fn_bIsInBorderBox(MTH3D_tdstVector_* _p_stPosition, SECT_tdstSector_* _hSector);
+void SECT_fn_vSetHandleOfLightsInDNMLightsList(SECT_tdstListOfDNMLights_* hDNMLightsElement, GLI_tdstLight_* hDNMLights);
+SECT_tdstListOfDNMLights_* SECT_fn_hCreateElementLstDNMLights(void);
+void SECT_fn_vSetCharacterPointerInCharacterList(SECT_tdstListOfSOCharacters_* hCharacterElement, HIE_tdstSuperObject_* hSectorSuperObject);
+SECT_tdstListOfSOCharacters_* SECT_fn_hCreateElementLstCharacter(void);
+void SECT_fn_vGetMaxPointInBorder(SECT_tdstSector_* _hSector, MTH3D_tdstVector_* _p_stMaxPoint);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 1025–1025 */
 /* addr: 0x0031c310  size: 8 bytes */
@@ -507,10 +474,6 @@ void SCT_fn_vGetSymMatrixOfCameraInMirror(MAT_tdstTransformation_* hMatrixOfCame
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-MTH3D_tdstVector_* SECT_fn_p_stGetMaxPointInBorder(SECT_tdstSector_* _hSector)
-{
-    return &_hSector->stMinMaxPoints[1];
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 1019–1019 */
 /* addr: 0x0031c320  size: 8 bytes */
@@ -519,10 +482,6 @@ MTH3D_tdstVector_* SECT_fn_p_stGetMaxPointInBorder(SECT_tdstSector_* _hSector)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-MTH3D_tdstVector_* SECT_fn_p_stGetMinPointInBorder(SECT_tdstSector_* _hSector)
-{
-    return &_hSector->stMinMaxPoints[0];
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 1013–1014 */
 /* addr: 0x0031c330  size: 12 bytes */
@@ -532,10 +491,6 @@ MTH3D_tdstVector_* SECT_fn_p_stGetMinPointInBorder(SECT_tdstSector_* _hSector)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-float fn_xGetSectorZFar(HIE_tdstSuperObject_* _hSprObjSector)
-{
-    return ((SECT_tdstSector_ *)_hSprObjSector->hLinkedObject.p_stSector)->xZFar;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 993–1002 */
 /* addr: 0x0031c340  size: 56 bytes */
@@ -551,26 +506,6 @@ float fn_xGetSectorZFar(HIE_tdstSuperObject_* _hSprObjSector)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SECT_fn_vInitActivationSector(HIE_tdstSuperObject_* hSectorRoot)
-{
-    HIE_tdstSuperObject_* hCurrentSector;
-    SECT_tdstSector_* param0;
-
-    hCurrentSector = hSectorRoot->hFirstElementDyn;
-    if (hCurrentSector)
-    {
-        do
-        {
-            param0 = hCurrentSector->hLinkedObject.p_stSector;
-            param0->cCurrentActivity = -1;
-            param0->ucInList = 0;
-            param0->h_PreviousSectorInList = 0;
-            param0->h_NextSectorInList = 0;
-            hCurrentSector = hCurrentSector->hNextBrotherDyn;
-        } while (hCurrentSector);
-    }
-    SECT_fnvInitGlobalsForActivity();
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 960–982 */
 /* addr: 0x0031c380  size: 192 bytes */
@@ -591,25 +526,6 @@ void SECT_fn_vInitActivationSector(HIE_tdstSuperObject_* hSectorRoot)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-HIE_tdstSuperObject_* SECT_fn_hResolveSectorNextActivity(HIE_tdstSuperObject_* _hSectorObject)
-{
-    SECT_tdstSector_* hSector;
-    HIE_tdstSuperObject_* hNextSector;
-
-    hSector = _hSectorObject->hLinkedObject.p_stSector;
-    if (!hSector->ucInList)
-        return NULL;
-    hNextSector = hSector->h_NextSectorInList;
-    if (SECT_fn_bIsSectorNewlyActive(_hSectorObject))
-        SECT_fn_vActivateSector(_hSectorObject);
-    else if (SECT_fn_bIsSectorNewlyInactive(_hSectorObject))
-    {
-        SECT_fn_vDesactivateSector(_hSectorObject);
-        SECT_fn_vRemoveSectorFromList(_hSectorObject);
-    }
-    hSector->cWantedActivity = -1;
-    return hNextSector;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 951–956 */
 /* addr: 0x0031c440  size: 44 bytes */
@@ -621,11 +537,6 @@ HIE_tdstSuperObject_* SECT_fn_hResolveSectorNextActivity(HIE_tdstSuperObject_* _
  * compare a candidate object's line table as an extra checkpoint.
  */
 #pragma auto_inline on
-int SECT_fn_bIsSectorNewlyInactive(HIE_tdstSuperObject_* _hSectorObject)
-{
-    SECT_tdstSector_* param0 = _hSectorObject->hLinkedObject.p_stSector;
-    return (param0->cWantedActivity == 0) && (param0->cCurrentActivity != param0->cWantedActivity);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 941–946 */
 /* addr: 0x0031c470  size: 44 bytes */
@@ -636,11 +547,7 @@ int SECT_fn_bIsSectorNewlyInactive(HIE_tdstSuperObject_* _hSectorObject)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int SECT_fn_bIsSectorNewlyActive(HIE_tdstSuperObject_* _hSectorObject)
-{
-    SECT_tdstSector_* param0 = _hSectorObject->hLinkedObject.p_stSector;
-    return (param0->cWantedActivity == 1) && (param0->cCurrentActivity != param0->cWantedActivity);
-}
+
 #pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 905–936 */
@@ -664,33 +571,6 @@ int SECT_fn_bIsSectorNewlyActive(HIE_tdstSuperObject_* _hSectorObject)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int SECT_fn_cSetWantedActivity(HIE_tdstSuperObject_* _hSectorObject, char _cWantedActivity)
-{
-    SECT_tdstSector_* hSector;
-
-    hSector = _hSectorObject->hLinkedObject.p_stSector;
-    if (_cWantedActivity == -1)
-        return 0;
-    if (hSector->cWantedActivity == _cWantedActivity)
-        return 0;
-    switch (hSector->cWantedActivity)
-    {
-    case -1:
-        hSector->cWantedActivity = _cWantedActivity;
-        break;
-    case 0:
-        if (_cWantedActivity == 1)
-        {
-            hSector->cWantedActivity = _cWantedActivity;
-        }
-        break;
-    }
-    if (_cWantedActivity == 1 && !hSector->ucInList)
-    {
-        SECT_fn_vAddSectorInList(_hSectorObject);
-    }
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 894–895 */
 /* addr: 0x0031c540  size: 12 bytes */
@@ -700,10 +580,6 @@ int SECT_fn_cSetWantedActivity(HIE_tdstSuperObject_* _hSectorObject, char _cWant
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-char fn_cGetSectorCameraType(HIE_tdstSuperObject_* _hSprObjSector)
-{
-    return ((SECT_tdstSector_ *)_hSprObjSector->hLinkedObject.p_stSector)->cCameraType;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 884–885 */
 /* addr: 0x0031c550  size: 12 bytes */
@@ -713,10 +589,6 @@ char fn_cGetSectorCameraType(HIE_tdstSuperObject_* _hSprObjSector)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char SECT_fn_bIsThisSectorVirtual(HIE_tdstSuperObject_* _hSprObjSector)
-{
-    return ((SECT_tdstSector_ *)_hSprObjSector->hLinkedObject.p_stSector)->xVirtual;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 504–505 */
 /* addr: 0x0031c560  size: 216 bytes */
@@ -726,10 +598,6 @@ unsigned char SECT_fn_bIsThisSectorVirtual(HIE_tdstSuperObject_* _hSprObjSector)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SECT_fn_vAddTailDNMLightsListNode(HIE_tdstSuperObject_* hSector, SECT_tdstListOfDNMLights_* hNode)
-{
-    if (hNode->hNextBrotherDyn) hNode->hNextBrotherDyn->hPrevBrotherDyn = hNode->hPrevBrotherDyn; if (hNode->hPrevBrotherDyn) hNode->hPrevBrotherDyn->hNextBrotherDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn) { hNode->hFatherDyn->lNumberOfElementsDyn--; if (hNode->hFatherDyn->hFirstElementDyn == hNode) hNode->hFatherDyn->hFirstElementDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn->hLastElementDyn == hNode) hNode->hFatherDyn->hLastElementDyn = hNode->hPrevBrotherDyn; } hNode->hNextBrotherDyn = NULL; hNode->hPrevBrotherDyn = NULL; hNode->hFatherDyn = NULL; hNode->hNextBrotherDyn = NULL; hNode->hPrevBrotherDyn = hSector->hLinkedObject.p_stSector->stListOfDNMLights.hLastElementDyn; hNode->hFatherDyn = &hSector->hLinkedObject.p_stSector->stListOfDNMLights; if (hSector->hLinkedObject.p_stSector->stListOfDNMLights.hFirstElementDyn == NULL) hSector->hLinkedObject.p_stSector->stListOfDNMLights.hFirstElementDyn = hNode; else hSector->hLinkedObject.p_stSector->stListOfDNMLights.hLastElementDyn->hNextBrotherDyn = hNode; hSector->hLinkedObject.p_stSector->stListOfDNMLights.hLastElementDyn = hNode; hSector->hLinkedObject.p_stSector->stListOfDNMLights.lNumberOfElementsDyn++;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 498–499 */
 /* addr: 0x0031c640  size: 132 bytes */
@@ -739,10 +607,6 @@ void SECT_fn_vAddTailDNMLightsListNode(HIE_tdstSuperObject_* hSector, SECT_tdstL
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SECT_fn_vIsolateDNMLightsListNode(SECT_tdstListOfDNMLights_* hNode)
-{
-    if (hNode->hNextBrotherDyn) hNode->hNextBrotherDyn->hPrevBrotherDyn = hNode->hPrevBrotherDyn; if (hNode->hPrevBrotherDyn) hNode->hPrevBrotherDyn->hNextBrotherDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn) { hNode->hFatherDyn->lNumberOfElementsDyn--; if (hNode->hFatherDyn->hFirstElementDyn == hNode) hNode->hFatherDyn->hFirstElementDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn->hLastElementDyn == hNode) hNode->hFatherDyn->hLastElementDyn = hNode->hPrevBrotherDyn; } hNode->hNextBrotherDyn = NULL; hNode->hPrevBrotherDyn = NULL; hNode->hFatherDyn = NULL;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 492–493 */
 /* addr: 0x0031c6d0  size: 212 bytes */
@@ -752,10 +616,6 @@ void SECT_fn_vIsolateDNMLightsListNode(SECT_tdstListOfDNMLights_* hNode)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SECT_fn_vAddHeadCharListNode(HIE_tdstSuperObject_* hSector, SECT_tdstListOfSOCharacters_* hNode)
-{
-    if (hNode->hNextBrotherDyn) hNode->hNextBrotherDyn->hPrevBrotherDyn = hNode->hPrevBrotherDyn; if (hNode->hPrevBrotherDyn) hNode->hPrevBrotherDyn->hNextBrotherDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn) { hNode->hFatherDyn->lNumberOfElementsDyn--; if (hNode->hFatherDyn->hFirstElementDyn == hNode) hNode->hFatherDyn->hFirstElementDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn->hLastElementDyn == hNode) hNode->hFatherDyn->hLastElementDyn = hNode->hPrevBrotherDyn; } hNode->hNextBrotherDyn = NULL; hNode->hPrevBrotherDyn = NULL; hNode->hFatherDyn = NULL; hNode->hPrevBrotherDyn = NULL; hNode->hNextBrotherDyn = hSector->hLinkedObject.p_stSector->stListOfCharacters.hFirstElementDyn; hNode->hFatherDyn = &hSector->hLinkedObject.p_stSector->stListOfCharacters; if (hSector->hLinkedObject.p_stSector->stListOfCharacters.hLastElementDyn == NULL) hSector->hLinkedObject.p_stSector->stListOfCharacters.hLastElementDyn = hNode; else hSector->hLinkedObject.p_stSector->stListOfCharacters.hFirstElementDyn->hPrevBrotherDyn = hNode; hSector->hLinkedObject.p_stSector->stListOfCharacters.hFirstElementDyn = hNode; hSector->hLinkedObject.p_stSector->stListOfCharacters.lNumberOfElementsDyn++;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 486–487 */
 /* addr: 0x0031c7b0  size: 212 bytes */
@@ -765,10 +625,6 @@ void SECT_fn_vAddHeadCharListNode(HIE_tdstSuperObject_* hSector, SECT_tdstListOf
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SECT_fn_vAddTailCharListNode(HIE_tdstSuperObject_* hSector, SECT_tdstListOfSOCharacters_* hNode)
-{
-    if (hNode->hNextBrotherDyn) hNode->hNextBrotherDyn->hPrevBrotherDyn = hNode->hPrevBrotherDyn; if (hNode->hPrevBrotherDyn) hNode->hPrevBrotherDyn->hNextBrotherDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn) { hNode->hFatherDyn->lNumberOfElementsDyn--; if (hNode->hFatherDyn->hFirstElementDyn == hNode) hNode->hFatherDyn->hFirstElementDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn->hLastElementDyn == hNode) hNode->hFatherDyn->hLastElementDyn = hNode->hPrevBrotherDyn; } hNode->hNextBrotherDyn = NULL; hNode->hPrevBrotherDyn = NULL; hNode->hFatherDyn = NULL; hNode->hNextBrotherDyn = NULL; hNode->hPrevBrotherDyn = hSector->hLinkedObject.p_stSector->stListOfCharacters.hLastElementDyn; hNode->hFatherDyn = &hSector->hLinkedObject.p_stSector->stListOfCharacters; if (hSector->hLinkedObject.p_stSector->stListOfCharacters.hFirstElementDyn == NULL) hSector->hLinkedObject.p_stSector->stListOfCharacters.hFirstElementDyn = hNode; else hSector->hLinkedObject.p_stSector->stListOfCharacters.hLastElementDyn->hNextBrotherDyn = hNode; hSector->hLinkedObject.p_stSector->stListOfCharacters.hLastElementDyn = hNode; hSector->hLinkedObject.p_stSector->stListOfCharacters.lNumberOfElementsDyn++;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 480–481 */
 /* addr: 0x0031c890  size: 132 bytes */
@@ -778,10 +634,6 @@ void SECT_fn_vAddTailCharListNode(HIE_tdstSuperObject_* hSector, SECT_tdstListOf
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SECT_fn_vIsolateCharListNode(SECT_tdstListOfSOCharacters_* hNode)
-{
-    if (hNode->hNextBrotherDyn) hNode->hNextBrotherDyn->hPrevBrotherDyn = hNode->hPrevBrotherDyn; if (hNode->hPrevBrotherDyn) hNode->hPrevBrotherDyn->hNextBrotherDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn) { hNode->hFatherDyn->lNumberOfElementsDyn--; if (hNode->hFatherDyn->hFirstElementDyn == hNode) hNode->hFatherDyn->hFirstElementDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn->hLastElementDyn == hNode) hNode->hFatherDyn->hLastElementDyn = hNode->hPrevBrotherDyn; } hNode->hNextBrotherDyn = NULL; hNode->hPrevBrotherDyn = NULL; hNode->hFatherDyn = NULL;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 360–409 */
 /* addr: 0x0031c920  size: 876 bytes */
@@ -810,46 +662,6 @@ void SECT_fn_vIsolateCharListNode(SECT_tdstListOfSOCharacters_* hNode)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SCT_fn_vTestChangeSectorWithHistory(void* _pUnused, MTH3D_tdstVector_* _p_stAfterAbsolutePosition, HIE_tdstSuperObject_** _p_hSectorSOWhereIWas)
-{
-    SECT_tdstListOfSOSectorsInCollisionInteraction_* hCollisionNode;
-    SECT_tdstSector_* hSectorObject;
-    SECT_tdstSector_* hCurrentSectorObject;
-    HIE_tdstSuperObject_* param0;
-    int iInd;
-
-    param0 = *_p_hSectorSOWhereIWas;
-    hCurrentSectorObject = param0->hLinkedObject.p_stSector;
-
-    if (SECT_M_bIsInBorderBox(_p_stAfterAbsolutePosition, hCurrentSectorObject) && !hCurrentSectorObject->xVirtual)
-    {
-        for (iInd = param0->hLinkedObject.p_stSector->stListOfSectorsInCollisionInteraction.lNumberOfElementsOpt, hCollisionNode = param0->hLinkedObject.p_stSector->stListOfSectorsInCollisionInteraction.hFirstElementOpt; iInd > 0; iInd--, hCollisionNode++)
-        {
-            HIE_tdstSuperObject_* hSectorSO = hCollisionNode->hPointerOfSectorSO;
-            hSectorObject = hSectorSO->hLinkedObject.p_stSector;
-            if (hSectorObject->cPriority <= hCurrentSectorObject->cPriority)
-                return;
-            if (!hSectorObject->xVirtual && SECT_M_bIsInBorderBox(_p_stAfterAbsolutePosition, hSectorObject))
-            {
-                *_p_hSectorSOWhereIWas = hSectorSO;
-                return;
-            }
-        }
-        return;
-    }
-
-    for (iInd = param0->hLinkedObject.p_stSector->stListOfSectorsInCollisionInteraction.lNumberOfElementsOpt, hCollisionNode = param0->hLinkedObject.p_stSector->stListOfSectorsInCollisionInteraction.hFirstElementOpt; iInd > 0; iInd--, hCollisionNode++)
-    {
-        HIE_tdstSuperObject_* hSectorSO = hCollisionNode->hPointerOfSectorSO;
-        hSectorObject = hSectorSO->hLinkedObject.p_stSector;
-        if (!hSectorObject->xVirtual && SECT_M_bIsInBorderBox(_p_stAfterAbsolutePosition, hSectorObject))
-        {
-            *_p_hSectorSOWhereIWas = hSectorSO;
-            return;
-        }
-    }
-    *_p_hSectorSOWhereIWas = SECT_fn_hResearchInWhatSectorIAm(param0->hFatherDyn, _p_stAfterAbsolutePosition);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 277–352 */
 /* addr: 0x0031cc90  size: 608 bytes */
@@ -928,6 +740,131 @@ inline int SECT_M_bIsInBorderBox(MTH3D_tdstVector_* _p_stPosition, SECT_tdstSect
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 242–261 */
+/* addr: 0x0031cef0  size: 224 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 246
+ *   +0x0004 -> line 242
+ *   +0x0008 -> line 246
+ *   +0x0010 -> line 250
+ *   +0x0014 -> line 246
+ *   +0x0020 -> line 247
+ *   +0x0038 -> line 250
+ *   +0x0060 -> line 251
+ *   +0x006c -> line 253
+ *   +0x0098 -> line 254
+ *   +0x00a4 -> line 256
+ *   +0x00d0 -> line 257
+ *   +0x00d4 -> line 261
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 237–237 */
+/* addr: 0x0031cfd0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 237
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 220–228 */
+/* addr: 0x0031cfe0  size: 44 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 220
+ *   +0x0004 -> line 224
+ *   +0x0008 -> line 220
+ *   +0x000c -> line 224
+ *   +0x0014 -> line 226
+ *   +0x0020 -> line 228
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 217–217 */
+/* addr: 0x0031d010  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 217
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 200–208 */
+/* addr: 0x0031d020  size: 44 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 200
+ *   +0x0004 -> line 204
+ *   +0x0008 -> line 200
+ *   +0x000c -> line 204
+ *   +0x0014 -> line 206
+ *   +0x0020 -> line 208
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 187–188 */
+/* addr: 0x0031d050  size: 28 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 187
+ *   +0x0014 -> line 188
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void SECT_fn_vGetMaxPointInBorder(SECT_tdstSector_* _hSector, MTH3D_tdstVector_* _p_stMaxPoint)
+{
+    ((unsigned int*)_p_stMaxPoint)[0] = ((unsigned int*)&_hSector->stMinMaxPoints[1])[0];
+    ((unsigned int*)_p_stMaxPoint)[1] = ((unsigned int*)&_hSector->stMinMaxPoints[1])[1];
+    ((unsigned int*)_p_stMaxPoint)[2] = ((unsigned int*)&_hSector->stMinMaxPoints[1])[2];
+}
+
+SECT_tdstListOfSOCharacters_* SECT_fn_hCreateElementLstCharacter(void)
+{
+    SECT_tdstListOfSOCharacters_* hCharacterElement;
+
+    hCharacterElement = (SECT_tdstListOfSOCharacters_ *)HMU_fn_p_vMalloc(0x10, 0);
+    hCharacterElement->hNextBrotherDyn = NULL;
+    hCharacterElement->hPrevBrotherDyn = NULL;
+    hCharacterElement->hFatherDyn = NULL;
+    return hCharacterElement;
+}
+
+void SECT_fn_vSetCharacterPointerInCharacterList(SECT_tdstListOfSOCharacters_* hCharacterElement, HIE_tdstSuperObject_* hSectorSuperObject)
+{
+    hCharacterElement->hPointerOfCharacter = hSectorSuperObject;
+}
+
+SECT_tdstListOfDNMLights_* SECT_fn_hCreateElementLstDNMLights(void)
+{
+    SECT_tdstListOfDNMLights_* hDNMLightsElement;
+
+    hDNMLightsElement = (SECT_tdstListOfDNMLights_ *)HMU_fn_p_vMalloc(0x10, 0);
+    hDNMLightsElement->hNextBrotherDyn = NULL;
+    hDNMLightsElement->hPrevBrotherDyn = NULL;
+    hDNMLightsElement->hFatherDyn = NULL;
+    return hDNMLightsElement;
+}
+
+void SECT_fn_vSetHandleOfLightsInDNMLightsList(SECT_tdstListOfDNMLights_* hDNMLightsElement, GLI_tdstLight_* hDNMLights)
+{
+    hDNMLightsElement->hDNMLights = hDNMLights;
+}
+
+int SECT_fn_bIsInBorderBox(MTH3D_tdstVector_* _p_stPosition, SECT_tdstSector_* _hSector)
+{
+    SECT_tduVectorWords_ stMin;
+    SECT_tduVectorWords_ stMax;
+    stMin.i[0] = *(unsigned int*)&_hSector->stMinMaxPoints[0].xX; stMin.i[1] = *(unsigned int*)&_hSector->stMinMaxPoints[0].xY; stMin.i[2] = *(unsigned int*)&_hSector->stMinMaxPoints[0].xZ;
+    stMax.i[0] = *(unsigned int*)&_hSector->stMinMaxPoints[1].xX; stMax.i[1] = *(unsigned int*)&_hSector->stMinMaxPoints[1].xY; stMax.i[2] = *(unsigned int*)&_hSector->stMinMaxPoints[1].xZ;
+    if (_p_stPosition->xX < stMin.v.xX || _p_stPosition->xX > stMax.v.xX)
+        return 0;
+    if (_p_stPosition->xY < stMin.v.xY || _p_stPosition->xY > stMax.v.xY)
+        return 0;
+    if (_p_stPosition->xZ < stMin.v.xZ || _p_stPosition->xZ > stMax.v.xZ)
+        return 0;
+    return 1;
+}
+
 HIE_tdstSuperObject_* SECT_fn_hResearchInWhatSectorIAm(HIE_tdstSuperObject_* SECT_hFatherSector, MTH3D_tdstVector_* p_stAbsolutePosition)
 {
     SECT_tdstSector_* param0;
@@ -994,121 +931,231 @@ HIE_tdstSuperObject_* SECT_fn_hResearchInWhatSectorIAm(HIE_tdstSuperObject_* SEC
     return hSectorWhereIAm;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 242–261 */
-/* addr: 0x0031cef0  size: 224 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 246
- *   +0x0004 -> line 242
- *   +0x0008 -> line 246
- *   +0x0010 -> line 250
- *   +0x0014 -> line 246
- *   +0x0020 -> line 247
- *   +0x0038 -> line 250
- *   +0x0060 -> line 251
- *   +0x006c -> line 253
- *   +0x0098 -> line 254
- *   +0x00a4 -> line 256
- *   +0x00d0 -> line 257
- *   +0x00d4 -> line 261
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int SECT_fn_bIsInBorderBox(MTH3D_tdstVector_* _p_stPosition, SECT_tdstSector_* _hSector)
+void SCT_fn_vTestChangeSectorWithHistory(void* _pUnused, MTH3D_tdstVector_* _p_stAfterAbsolutePosition, HIE_tdstSuperObject_** _p_hSectorSOWhereIWas)
 {
-    SECT_tduVectorWords_ stMin;
-    SECT_tduVectorWords_ stMax;
-    stMin.i[0] = *(unsigned int*)&_hSector->stMinMaxPoints[0].xX; stMin.i[1] = *(unsigned int*)&_hSector->stMinMaxPoints[0].xY; stMin.i[2] = *(unsigned int*)&_hSector->stMinMaxPoints[0].xZ;
-    stMax.i[0] = *(unsigned int*)&_hSector->stMinMaxPoints[1].xX; stMax.i[1] = *(unsigned int*)&_hSector->stMinMaxPoints[1].xY; stMax.i[2] = *(unsigned int*)&_hSector->stMinMaxPoints[1].xZ;
-    if (_p_stPosition->xX < stMin.v.xX || _p_stPosition->xX > stMax.v.xX)
+    SECT_tdstListOfSOSectorsInCollisionInteraction_* hCollisionNode;
+    SECT_tdstSector_* hSectorObject;
+    SECT_tdstSector_* hCurrentSectorObject;
+    HIE_tdstSuperObject_* param0;
+    int iInd;
+
+    param0 = *_p_hSectorSOWhereIWas;
+    hCurrentSectorObject = param0->hLinkedObject.p_stSector;
+
+    if (SECT_M_bIsInBorderBox(_p_stAfterAbsolutePosition, hCurrentSectorObject) && !hCurrentSectorObject->xVirtual)
+    {
+        for (iInd = param0->hLinkedObject.p_stSector->stListOfSectorsInCollisionInteraction.lNumberOfElementsOpt, hCollisionNode = param0->hLinkedObject.p_stSector->stListOfSectorsInCollisionInteraction.hFirstElementOpt; iInd > 0; iInd--, hCollisionNode++)
+        {
+            HIE_tdstSuperObject_* hSectorSO = hCollisionNode->hPointerOfSectorSO;
+            hSectorObject = hSectorSO->hLinkedObject.p_stSector;
+            if (hSectorObject->cPriority <= hCurrentSectorObject->cPriority)
+                return;
+            if (!hSectorObject->xVirtual && SECT_M_bIsInBorderBox(_p_stAfterAbsolutePosition, hSectorObject))
+            {
+                *_p_hSectorSOWhereIWas = hSectorSO;
+                return;
+            }
+        }
+        return;
+    }
+
+    for (iInd = param0->hLinkedObject.p_stSector->stListOfSectorsInCollisionInteraction.lNumberOfElementsOpt, hCollisionNode = param0->hLinkedObject.p_stSector->stListOfSectorsInCollisionInteraction.hFirstElementOpt; iInd > 0; iInd--, hCollisionNode++)
+    {
+        HIE_tdstSuperObject_* hSectorSO = hCollisionNode->hPointerOfSectorSO;
+        hSectorObject = hSectorSO->hLinkedObject.p_stSector;
+        if (!hSectorObject->xVirtual && SECT_M_bIsInBorderBox(_p_stAfterAbsolutePosition, hSectorObject))
+        {
+            *_p_hSectorSOWhereIWas = hSectorSO;
+            return;
+        }
+    }
+    *_p_hSectorSOWhereIWas = SECT_fn_hResearchInWhatSectorIAm(param0->hFatherDyn, _p_stAfterAbsolutePosition);
+}
+
+void SECT_fn_vIsolateCharListNode(SECT_tdstListOfSOCharacters_* hNode)
+{
+    if (hNode->hNextBrotherDyn) hNode->hNextBrotherDyn->hPrevBrotherDyn = hNode->hPrevBrotherDyn; if (hNode->hPrevBrotherDyn) hNode->hPrevBrotherDyn->hNextBrotherDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn) { hNode->hFatherDyn->lNumberOfElementsDyn--; if (hNode->hFatherDyn->hFirstElementDyn == hNode) hNode->hFatherDyn->hFirstElementDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn->hLastElementDyn == hNode) hNode->hFatherDyn->hLastElementDyn = hNode->hPrevBrotherDyn; } hNode->hNextBrotherDyn = NULL; hNode->hPrevBrotherDyn = NULL; hNode->hFatherDyn = NULL;
+}
+
+void SECT_fn_vAddTailCharListNode(HIE_tdstSuperObject_* hSector, SECT_tdstListOfSOCharacters_* hNode)
+{
+    if (hNode->hNextBrotherDyn) hNode->hNextBrotherDyn->hPrevBrotherDyn = hNode->hPrevBrotherDyn; if (hNode->hPrevBrotherDyn) hNode->hPrevBrotherDyn->hNextBrotherDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn) { hNode->hFatherDyn->lNumberOfElementsDyn--; if (hNode->hFatherDyn->hFirstElementDyn == hNode) hNode->hFatherDyn->hFirstElementDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn->hLastElementDyn == hNode) hNode->hFatherDyn->hLastElementDyn = hNode->hPrevBrotherDyn; } hNode->hNextBrotherDyn = NULL; hNode->hPrevBrotherDyn = NULL; hNode->hFatherDyn = NULL; hNode->hNextBrotherDyn = NULL; hNode->hPrevBrotherDyn = hSector->hLinkedObject.p_stSector->stListOfCharacters.hLastElementDyn; hNode->hFatherDyn = &hSector->hLinkedObject.p_stSector->stListOfCharacters; if (hSector->hLinkedObject.p_stSector->stListOfCharacters.hFirstElementDyn == NULL) hSector->hLinkedObject.p_stSector->stListOfCharacters.hFirstElementDyn = hNode; else hSector->hLinkedObject.p_stSector->stListOfCharacters.hLastElementDyn->hNextBrotherDyn = hNode; hSector->hLinkedObject.p_stSector->stListOfCharacters.hLastElementDyn = hNode; hSector->hLinkedObject.p_stSector->stListOfCharacters.lNumberOfElementsDyn++;
+}
+
+void SECT_fn_vAddHeadCharListNode(HIE_tdstSuperObject_* hSector, SECT_tdstListOfSOCharacters_* hNode)
+{
+    if (hNode->hNextBrotherDyn) hNode->hNextBrotherDyn->hPrevBrotherDyn = hNode->hPrevBrotherDyn; if (hNode->hPrevBrotherDyn) hNode->hPrevBrotherDyn->hNextBrotherDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn) { hNode->hFatherDyn->lNumberOfElementsDyn--; if (hNode->hFatherDyn->hFirstElementDyn == hNode) hNode->hFatherDyn->hFirstElementDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn->hLastElementDyn == hNode) hNode->hFatherDyn->hLastElementDyn = hNode->hPrevBrotherDyn; } hNode->hNextBrotherDyn = NULL; hNode->hPrevBrotherDyn = NULL; hNode->hFatherDyn = NULL; hNode->hPrevBrotherDyn = NULL; hNode->hNextBrotherDyn = hSector->hLinkedObject.p_stSector->stListOfCharacters.hFirstElementDyn; hNode->hFatherDyn = &hSector->hLinkedObject.p_stSector->stListOfCharacters; if (hSector->hLinkedObject.p_stSector->stListOfCharacters.hLastElementDyn == NULL) hSector->hLinkedObject.p_stSector->stListOfCharacters.hLastElementDyn = hNode; else hSector->hLinkedObject.p_stSector->stListOfCharacters.hFirstElementDyn->hPrevBrotherDyn = hNode; hSector->hLinkedObject.p_stSector->stListOfCharacters.hFirstElementDyn = hNode; hSector->hLinkedObject.p_stSector->stListOfCharacters.lNumberOfElementsDyn++;
+}
+
+void SECT_fn_vIsolateDNMLightsListNode(SECT_tdstListOfDNMLights_* hNode)
+{
+    if (hNode->hNextBrotherDyn) hNode->hNextBrotherDyn->hPrevBrotherDyn = hNode->hPrevBrotherDyn; if (hNode->hPrevBrotherDyn) hNode->hPrevBrotherDyn->hNextBrotherDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn) { hNode->hFatherDyn->lNumberOfElementsDyn--; if (hNode->hFatherDyn->hFirstElementDyn == hNode) hNode->hFatherDyn->hFirstElementDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn->hLastElementDyn == hNode) hNode->hFatherDyn->hLastElementDyn = hNode->hPrevBrotherDyn; } hNode->hNextBrotherDyn = NULL; hNode->hPrevBrotherDyn = NULL; hNode->hFatherDyn = NULL;
+}
+
+void SECT_fn_vAddTailDNMLightsListNode(HIE_tdstSuperObject_* hSector, SECT_tdstListOfDNMLights_* hNode)
+{
+    if (hNode->hNextBrotherDyn) hNode->hNextBrotherDyn->hPrevBrotherDyn = hNode->hPrevBrotherDyn; if (hNode->hPrevBrotherDyn) hNode->hPrevBrotherDyn->hNextBrotherDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn) { hNode->hFatherDyn->lNumberOfElementsDyn--; if (hNode->hFatherDyn->hFirstElementDyn == hNode) hNode->hFatherDyn->hFirstElementDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn->hLastElementDyn == hNode) hNode->hFatherDyn->hLastElementDyn = hNode->hPrevBrotherDyn; } hNode->hNextBrotherDyn = NULL; hNode->hPrevBrotherDyn = NULL; hNode->hFatherDyn = NULL; hNode->hNextBrotherDyn = NULL; hNode->hPrevBrotherDyn = hSector->hLinkedObject.p_stSector->stListOfDNMLights.hLastElementDyn; hNode->hFatherDyn = &hSector->hLinkedObject.p_stSector->stListOfDNMLights; if (hSector->hLinkedObject.p_stSector->stListOfDNMLights.hFirstElementDyn == NULL) hSector->hLinkedObject.p_stSector->stListOfDNMLights.hFirstElementDyn = hNode; else hSector->hLinkedObject.p_stSector->stListOfDNMLights.hLastElementDyn->hNextBrotherDyn = hNode; hSector->hLinkedObject.p_stSector->stListOfDNMLights.hLastElementDyn = hNode; hSector->hLinkedObject.p_stSector->stListOfDNMLights.lNumberOfElementsDyn++;
+}
+
+unsigned char SECT_fn_bIsThisSectorVirtual(HIE_tdstSuperObject_* _hSprObjSector)
+{
+    return ((SECT_tdstSector_ *)_hSprObjSector->hLinkedObject.p_stSector)->xVirtual;
+}
+
+char fn_cGetSectorCameraType(HIE_tdstSuperObject_* _hSprObjSector)
+{
+    return ((SECT_tdstSector_ *)_hSprObjSector->hLinkedObject.p_stSector)->cCameraType;
+}
+
+int SECT_fn_cSetWantedActivity(HIE_tdstSuperObject_* _hSectorObject, char _cWantedActivity)
+{
+    SECT_tdstSector_* hSector;
+
+    hSector = _hSectorObject->hLinkedObject.p_stSector;
+    if (_cWantedActivity == -1)
         return 0;
-    if (_p_stPosition->xY < stMin.v.xY || _p_stPosition->xY > stMax.v.xY)
+    if (hSector->cWantedActivity == _cWantedActivity)
         return 0;
-    if (_p_stPosition->xZ < stMin.v.xZ || _p_stPosition->xZ > stMax.v.xZ)
-        return 0;
+    switch (hSector->cWantedActivity)
+    {
+    case -1:
+        hSector->cWantedActivity = _cWantedActivity;
+        break;
+    case 0:
+        if (_cWantedActivity == 1)
+        {
+            hSector->cWantedActivity = _cWantedActivity;
+        }
+        break;
+    }
+    if (_cWantedActivity == 1 && !hSector->ucInList)
+    {
+        SECT_fn_vAddSectorInList(_hSectorObject);
+    }
     return 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 237–237 */
-/* addr: 0x0031cfd0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 237
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void SECT_fn_vSetHandleOfLightsInDNMLightsList(SECT_tdstListOfDNMLights_* hDNMLightsElement, GLI_tdstLight_* hDNMLights)
+#pragma auto_inline on
+int SECT_fn_bIsSectorNewlyActive(HIE_tdstSuperObject_* _hSectorObject)
 {
-    hDNMLightsElement->hDNMLights = hDNMLights;
+    SECT_tdstSector_* param0 = _hSectorObject->hLinkedObject.p_stSector;
+    return (param0->cWantedActivity == 1) && (param0->cCurrentActivity != param0->cWantedActivity);
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+int SECT_fn_bIsSectorNewlyInactive(HIE_tdstSuperObject_* _hSectorObject)
+{
+    SECT_tdstSector_* param0 = _hSectorObject->hLinkedObject.p_stSector;
+    return (param0->cWantedActivity == 0) && (param0->cCurrentActivity != param0->cWantedActivity);
+}
+#pragma auto_inline reset
+
+HIE_tdstSuperObject_* SECT_fn_hResolveSectorNextActivity(HIE_tdstSuperObject_* _hSectorObject)
+{
+    SECT_tdstSector_* hSector;
+    HIE_tdstSuperObject_* hNextSector;
+
+    hSector = _hSectorObject->hLinkedObject.p_stSector;
+    if (!hSector->ucInList)
+        return NULL;
+    hNextSector = hSector->h_NextSectorInList;
+    if (SECT_fn_bIsSectorNewlyActive(_hSectorObject))
+        SECT_fn_vActivateSector(_hSectorObject);
+    else if (SECT_fn_bIsSectorNewlyInactive(_hSectorObject))
+    {
+        SECT_fn_vDesactivateSector(_hSectorObject);
+        SECT_fn_vRemoveSectorFromList(_hSectorObject);
+    }
+    hSector->cWantedActivity = -1;
+    return hNextSector;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 220–228 */
-/* addr: 0x0031cfe0  size: 44 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 220
- *   +0x0004 -> line 224
- *   +0x0008 -> line 220
- *   +0x000c -> line 224
- *   +0x0014 -> line 226
- *   +0x0020 -> line 228
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-SECT_tdstListOfDNMLights_* SECT_fn_hCreateElementLstDNMLights(void)
+void SECT_fn_vInitActivationSector(HIE_tdstSuperObject_* hSectorRoot)
 {
-    SECT_tdstListOfDNMLights_* hDNMLightsElement;
+    HIE_tdstSuperObject_* hCurrentSector;
+    SECT_tdstSector_* param0;
 
-    hDNMLightsElement = (SECT_tdstListOfDNMLights_ *)HMU_fn_p_vMalloc(0x10, 0);
-    hDNMLightsElement->hNextBrotherDyn = NULL;
-    hDNMLightsElement->hPrevBrotherDyn = NULL;
-    hDNMLightsElement->hFatherDyn = NULL;
-    return hDNMLightsElement;
+    hCurrentSector = hSectorRoot->hFirstElementDyn;
+    if (hCurrentSector)
+    {
+        do
+        {
+            param0 = hCurrentSector->hLinkedObject.p_stSector;
+            param0->cCurrentActivity = -1;
+            param0->ucInList = 0;
+            param0->h_PreviousSectorInList = 0;
+            param0->h_NextSectorInList = 0;
+            hCurrentSector = hCurrentSector->hNextBrotherDyn;
+        } while (hCurrentSector);
+    }
+    SECT_fnvInitGlobalsForActivity();
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 217–217 */
-/* addr: 0x0031d010  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 217
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void SECT_fn_vSetCharacterPointerInCharacterList(SECT_tdstListOfSOCharacters_* hCharacterElement, HIE_tdstSuperObject_* hSectorSuperObject)
+float fn_xGetSectorZFar(HIE_tdstSuperObject_* _hSprObjSector)
 {
-    hCharacterElement->hPointerOfCharacter = hSectorSuperObject;
+    return ((SECT_tdstSector_ *)_hSprObjSector->hLinkedObject.p_stSector)->xZFar;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 200–208 */
-/* addr: 0x0031d020  size: 44 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 200
- *   +0x0004 -> line 204
- *   +0x0008 -> line 200
- *   +0x000c -> line 204
- *   +0x0014 -> line 206
- *   +0x0020 -> line 208
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-SECT_tdstListOfSOCharacters_* SECT_fn_hCreateElementLstCharacter(void)
+MTH3D_tdstVector_* SECT_fn_p_stGetMinPointInBorder(SECT_tdstSector_* _hSector)
 {
-    SECT_tdstListOfSOCharacters_* hCharacterElement;
-
-    hCharacterElement = (SECT_tdstListOfSOCharacters_ *)HMU_fn_p_vMalloc(0x10, 0);
-    hCharacterElement->hNextBrotherDyn = NULL;
-    hCharacterElement->hPrevBrotherDyn = NULL;
-    hCharacterElement->hFatherDyn = NULL;
-    return hCharacterElement;
+    return &_hSector->stMinMaxPoints[0];
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 187–188 */
-/* addr: 0x0031d050  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 187
- *   +0x0014 -> line 188
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void SECT_fn_vGetMaxPointInBorder(SECT_tdstSector_* _hSector, MTH3D_tdstVector_* _p_stMaxPoint)
+MTH3D_tdstVector_* SECT_fn_p_stGetMaxPointInBorder(SECT_tdstSector_* _hSector)
 {
-    ((unsigned int*)_p_stMaxPoint)[0] = ((unsigned int*)&_hSector->stMinMaxPoints[1])[0];
-    ((unsigned int*)_p_stMaxPoint)[1] = ((unsigned int*)&_hSector->stMinMaxPoints[1])[1];
-    ((unsigned int*)_p_stMaxPoint)[2] = ((unsigned int*)&_hSector->stMinMaxPoints[1])[2];
+    return &_hSector->stMinMaxPoints[1];
+}
+
+void SCT_fn_vGetSymMatrixOfCameraInMirror(MAT_tdstTransformation_* hMatrixOfCamera, MAT_tdstTransformation_* hMatrixOfSymCamera, MTH3D_tdstVector_* pstGlobalPositionOfSymCamera, MTH3D_tdstVector_* pstGlobalNormalOfMirror, MTH3D_tdstVector_* pstGlobalPointOfMirror)
+{
+    MAT_tdstTransformation_ stGlobalMatrixOfCamera;
+    MAT_tdstTransformation_ stMulMatrixScale;
+    MAT_tdstTransformation_ stTempMatrixForMultiplication;
+    MTH3D_tdstVector_ stTransVector;
+    float xTemp;
+    MTH3D_tdstVector_ stTransVectorOfCamera;
+    MTH3D_tdstVector_ pstModuleAxes[3];
+    float a22;
+    float a33;
+    float a12;
+    float a13;
+    float a23;
+
+    /* Compute the global matrix of the camera */
+    MAT_fn_vSetIdentity(&stGlobalMatrixOfCamera);
+    MAT_fn_vInvert(&stGlobalMatrixOfCamera, hMatrixOfCamera);
+
+    /* Compute the symmetry matrix */
+    MAT_fn_vSetIdentity(&stMulMatrixScale);
+
+    a22 = 1.0f - 2.0f * (pstGlobalNormalOfMirror->xY * pstGlobalNormalOfMirror->xY);
+    a33 = 1.0f - 2.0f * (pstGlobalNormalOfMirror->xZ * pstGlobalNormalOfMirror->xZ);
+    a12 = -2.0f * (pstGlobalNormalOfMirror->xX * pstGlobalNormalOfMirror->xY);
+    a13 = -2.0f * (pstGlobalNormalOfMirror->xX * pstGlobalNormalOfMirror->xZ);
+    a23 = -2.0f * (pstGlobalNormalOfMirror->xY * pstGlobalNormalOfMirror->xZ);
+
+    MTH3D_M_vSetVectorElements(&pstModuleAxes[0], 1.0f - 2.0f * (pstGlobalNormalOfMirror->xX * pstGlobalNormalOfMirror->xX), a12, a13);
+    MTH3D_M_vSetVectorElements(&pstModuleAxes[1], a12, a22, a23);
+    MTH3D_M_vSetVectorElements(&pstModuleAxes[2], a13, a23, a33);
+
+    MAT_fn_vSetRotationVectors(&stMulMatrixScale, &pstModuleAxes[0], &pstModuleAxes[1], &pstModuleAxes[2]);
+
+    MAT_M_vGetTranslation(&stGlobalMatrixOfCamera, &stTransVectorOfCamera);
+    MTH3D_M_vSubVector(&stTransVector, &stTransVectorOfCamera, pstGlobalPointOfMirror);
+
+    xTemp = -2.0f * MTH3D_xDotProductVector(&stTransVector, pstGlobalNormalOfMirror);
+
+    MTH3D_M_vMulScalarVector(&stTransVector, xTemp, pstGlobalNormalOfMirror);
+
+    MTH3D_M_vAddVector(&stTransVector, &stTransVector, &stTransVectorOfCamera);
+
+    stTempMatrixForMultiplication = stGlobalMatrixOfCamera;
+    MAT_fn_vCompose(&stGlobalMatrixOfCamera, &stMulMatrixScale, &stTempMatrixForMultiplication);
+
+    MAT_M_vSetTranslation(&stGlobalMatrixOfCamera, &stTransVector);
+    *(int*)&pstGlobalPositionOfSymCamera->xX = ((int*)&stTransVector)[0]; *(int*)&pstGlobalPositionOfSymCamera->xY = ((int*)&stTransVector)[1]; *(int*)&pstGlobalPositionOfSymCamera->xZ = ((int*)&stTransVector)[2];
+
+    MAT_fn_vSetIdentity(hMatrixOfSymCamera);
+    MAT_fn_vInvert(hMatrixOfSymCamera, &stGlobalMatrixOfCamera);
 }

@@ -1303,18 +1303,18 @@ int printf(const char* fmt, ...);
 void WaitDMAFromSPR(void);
 void FlushCache(int operation);
 
-void VU1SendPackage(_sceDmaTag* pTag)
-{
-    if (sceGsSyncPath(0, 0))
-        printf("In VU1SendPackage, SyncPath failure!\n");
-    if (g_stSPRInfo.uiState & 1)
-        WaitDMAFromSPR();
-    FlushCache(0);
-    *(volatile unsigned int*)0x10009020 = 0;
-    *(volatile unsigned int*)0x10009030 = (unsigned int)pTag;
-    *(volatile unsigned int*)0x1000E010 = 2;
-    *(volatile unsigned int*)0x10009000 = 0x145;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void VU1SendPackage(_sceDmaTag* pTag);
+unsigned int PS2auxInitWindow(void);
+void PS2auxInitPosition(int x, int y, int w, int h);
+void PS2auxInitDisplayMode(unsigned int eMode);
+void PS2auxSwapBuffers(void);
+unsigned int KeyDown(int key, unsigned int status);
+unsigned int MouseDown(int x, int y, unsigned int button);
+unsigned int MouseUp(int x, int y, unsigned int button);
+unsigned int MouseLoc(int x, int y, unsigned int button);
+void DefaultHandleExpose(int param0, int param1);
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GLAUX\PS2GLAUX.c lines 584–643 */
 /* addr: 0x001859c0  size: 400 bytes */
@@ -1387,55 +1387,6 @@ void VU1SendPackage(_sceDmaTag* pTag)
  */
 void PS2glInit(void);
 unsigned int PS2glInitBuffers(_GL_BUFFERINFO* pBufferInfo);
-
-unsigned int PS2auxInitWindow(void)
-{
-    _GL_BUFFERINFO stBufferInfo;
-    if (!g_bInitDisplayModeInvoked && !g_bEnvInitialized)
-    {
-        PS2glInit();
-    }
-    if ((g_eDisplayMode & 2) == 0)
-    {
-        g_bSingleBuffer = 1;
-    }
-    stBufferInfo.iFrameBufferDepth = (g_eDisplayMode & 0x400) ? 0x10 : 0x20;
-    stBufferInfo.iDepthBufferDepth = (g_eDisplayMode & 0x20) ? 0x18 : 0x10;
-    stBufferInfo.iStencilBufferDepth = (g_eDisplayMode & 0x40) ? 0 : 0;
-    stBufferInfo.iAccumBufferDepth = (g_eDisplayMode & 8) ? g_PS2glContext.iAccumDepth : 0;
-    if (g_eDisplayMode & 8)
-    {
-        stBufferInfo.iAccumBufferDepth = g_PS2glContext.iAccumDepth;
-    }
-    else
-    {
-        g_PS2glContext.iAccumDepth = 0;
-        stBufferInfo.iAccumBufferDepth = 0;
-    }
-    stBufferInfo.iAuxBufferBase = (g_eDisplayMode & 0x80) ? 1 : 0;
-    stBufferInfo.bDoubleBufferMode = (g_eDisplayMode & 2) ? 1 : 0;
-    stBufferInfo.bPlainBufferMode = (g_eDisplayMode & 0x800) ? 1 : 0;
-    stBufferInfo.iScreenWidth = g_iScreenWidth;
-    stBufferInfo.iScreenHeight = g_iScreenHeight;
-    stBufferInfo.iSecondBufferWidth = g_iSecondBufferWidth;
-    stBufferInfo.iSecondBufferHeight = g_iSecondBufferHeight;
-    stBufferInfo.iSecondBufferWidthPower = g_iSecondBufferWidthPower;
-    stBufferInfo.iSecondBufferHeightPower = g_iSecondBufferHeightPower;
-    stBufferInfo.iSuperWidth = g_iSuperWidth;
-    stBufferInfo.iSuperHeight = g_iSuperHeight;
-    PS2glInitBuffers(&stBufferInfo);
-    if (!g_bEnvInitialized)
-    {
-        g_bEnvInitialized = 1;
-        ReshapeFunc = (int)DefaultHandleReshape;
-        ExposeFunc = (int)DefaultHandleExpose;
-        MouseUpFunc = (int)MouseUp;
-        MouseDownFunc = (int)MouseDown;
-        MouseMoveFunc = (int)MouseLoc;
-        KeyDownFunc = (int)KeyDown;
-    }
-    return 0;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GLAUX\PS2GLAUX.c lines 495–580 */
 /* addr: 0x00185b50  size: 496 bytes */
@@ -1512,6 +1463,339 @@ unsigned int PS2auxInitWindow(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GLAUX\PS2GLAUX.c lines 471–482 */
+/* addr: 0x00185d40  size: 44 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 471
+ *   +0x0008 -> line 476
+ *   +0x0014 -> line 478
+ *   +0x0018 -> line 480
+ *   +0x0020 -> line 482
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GLAUX\PS2GLAUX.c lines 337–337 */
+/* addr: 0x00185d70  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 337
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GLAUX\PS2GLAUX.c lines 240–257 */
+/* addr: 0x00185d80  size: 172 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 240
+ *   +0x0024 -> line 245
+ *   +0x0030 -> line 247
+ *   +0x003c -> line 249
+ *   +0x005c -> line 251
+ *   +0x0068 -> line 252
+ *   +0x006c -> line 253
+ *   +0x0070 -> line 252
+ *   +0x0074 -> line 254
+ *   +0x0088 -> line 256
+ *   +0x008c -> line 257
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GLAUX\PS2GLAUX.c lines 203–237 */
+/* addr: 0x00185e30  size: 308 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 203
+ *   +0x0010 -> line 209
+ *   +0x0014 -> line 203
+ *   +0x0038 -> line 209
+ *   +0x0040 -> line 211
+ *   +0x0058 -> line 213
+ *   +0x005c -> line 212
+ *   +0x0060 -> line 215
+ *   +0x0064 -> line 214
+ *   +0x0068 -> line 215
+ *   +0x006c -> line 216
+ *   +0x0078 -> line 217
+ *   +0x007c -> line 218
+ *   +0x0080 -> line 219
+ *   +0x0090 -> line 221
+ *   +0x0094 -> line 220
+ *   +0x0098 -> line 223
+ *   +0x009c -> line 222
+ *   +0x00a0 -> line 223
+ *   +0x00a4 -> line 224
+ *   +0x00b0 -> line 225
+ *   +0x00b4 -> line 226
+ *   +0x00b8 -> line 227
+ *   +0x00c8 -> line 229
+ *   +0x00cc -> line 228
+ *   +0x00d0 -> line 231
+ *   +0x00d4 -> line 230
+ *   +0x00d8 -> line 231
+ *   +0x00dc -> line 232
+ *   +0x00e8 -> line 233
+ *   +0x00ec -> line 234
+ *   +0x00f0 -> line 233
+ *   +0x00f4 -> line 235
+ *   +0x0108 -> line 236
+ *   +0x010c -> line 237
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GLAUX\PS2GLAUX.c lines 166–200 */
+/* addr: 0x00185f70  size: 308 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 166
+ *   +0x0010 -> line 172
+ *   +0x0014 -> line 166
+ *   +0x0038 -> line 172
+ *   +0x0040 -> line 174
+ *   +0x0058 -> line 176
+ *   +0x005c -> line 175
+ *   +0x0060 -> line 178
+ *   +0x0064 -> line 177
+ *   +0x0068 -> line 178
+ *   +0x006c -> line 179
+ *   +0x0078 -> line 180
+ *   +0x007c -> line 181
+ *   +0x0080 -> line 182
+ *   +0x0090 -> line 184
+ *   +0x0094 -> line 183
+ *   +0x0098 -> line 186
+ *   +0x009c -> line 185
+ *   +0x00a0 -> line 186
+ *   +0x00a4 -> line 187
+ *   +0x00b0 -> line 188
+ *   +0x00b4 -> line 189
+ *   +0x00b8 -> line 190
+ *   +0x00c8 -> line 192
+ *   +0x00cc -> line 191
+ *   +0x00d0 -> line 194
+ *   +0x00d4 -> line 193
+ *   +0x00d8 -> line 194
+ *   +0x00dc -> line 195
+ *   +0x00e8 -> line 196
+ *   +0x00ec -> line 197
+ *   +0x00f0 -> line 196
+ *   +0x00f4 -> line 198
+ *   +0x0108 -> line 199
+ *   +0x010c -> line 200
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GLAUX\PS2GLAUX.c lines 129–163 */
+/* addr: 0x001860b0  size: 308 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 129
+ *   +0x0010 -> line 135
+ *   +0x0014 -> line 129
+ *   +0x0038 -> line 135
+ *   +0x0040 -> line 137
+ *   +0x0058 -> line 139
+ *   +0x005c -> line 138
+ *   +0x0060 -> line 141
+ *   +0x0064 -> line 140
+ *   +0x0068 -> line 141
+ *   +0x006c -> line 142
+ *   +0x0078 -> line 143
+ *   +0x007c -> line 144
+ *   +0x0080 -> line 145
+ *   +0x0090 -> line 147
+ *   +0x0094 -> line 146
+ *   +0x0098 -> line 149
+ *   +0x009c -> line 148
+ *   +0x00a0 -> line 149
+ *   +0x00a4 -> line 150
+ *   +0x00b0 -> line 151
+ *   +0x00b4 -> line 152
+ *   +0x00b8 -> line 153
+ *   +0x00c8 -> line 155
+ *   +0x00cc -> line 154
+ *   +0x00d0 -> line 157
+ *   +0x00d4 -> line 156
+ *   +0x00d8 -> line 157
+ *   +0x00dc -> line 158
+ *   +0x00e8 -> line 159
+ *   +0x00ec -> line 160
+ *   +0x00f0 -> line 159
+ *   +0x00f4 -> line 161
+ *   +0x0108 -> line 162
+ *   +0x010c -> line 163
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GLAUX\PS2GLAUX.c lines 126–126 */
+/* addr: 0x001861f0  size: 8 bytes */
+/* Signature completed from the same-TU declaration record (MWCC omits unreferenced parameters from definitions). */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 126
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void DefaultHandleExpose(int param0, int param1)
+{
+    /* TODO: decompile from asm/... */
+}
+
+unsigned int MouseLoc(int x, int y, unsigned int button)
+{
+    _AUX_EVENTREC info;
+    unsigned int flag;
+    int i;
+
+    flag = 0;
+    for (i = 0; i < g_mouseLocTableCount; i++)
+    {
+            if ((button & 1) == mouseLocTable[i].mouseField)
+            {
+                info.event = 64;
+                info.data[0] = x;
+                info.data[1] = y;
+                info.data[3] = 1;
+                (*mouseLocTable[i].MouseFunc)(&info);
+                flag |= 1;
+            }
+            if ((button & 2) == mouseLocTable[i].mouseField)
+            {
+                info.event = 64;
+                info.data[0] = x;
+                info.data[1] = y;
+                info.data[3] = 2;
+                (*mouseLocTable[i].MouseFunc)(&info);
+                flag |= 1;
+            }
+            if ((button & 4) == mouseLocTable[i].mouseField)
+            {
+                info.event = 64;
+                info.data[0] = x;
+                info.data[1] = y;
+                info.data[3] = 4;
+                (*mouseLocTable[i].MouseFunc)(&info);
+                flag |= 1;
+            }
+    }
+    return flag;
+}
+
+unsigned int MouseUp(int x, int y, unsigned int button)
+{
+    _AUX_EVENTREC info;
+    unsigned int flag;
+    int i;
+
+    flag = 0;
+    for (i = 0; i < g_mouseUpTableCount; i++)
+    {
+            if ((button & 1) == mouseUpTable[i].mouseField)
+            {
+                info.event = 32;
+                info.data[0] = x;
+                info.data[1] = y;
+                info.data[3] = 1;
+                (*mouseUpTable[i].MouseFunc)(&info);
+                flag |= 1;
+            }
+            if ((button & 2) == mouseUpTable[i].mouseField)
+            {
+                info.event = 32;
+                info.data[0] = x;
+                info.data[1] = y;
+                info.data[3] = 2;
+                (*mouseUpTable[i].MouseFunc)(&info);
+                flag |= 1;
+            }
+            if ((button & 4) == mouseUpTable[i].mouseField)
+            {
+                info.event = 32;
+                info.data[0] = x;
+                info.data[1] = y;
+                info.data[3] = 4;
+                (*mouseUpTable[i].MouseFunc)(&info);
+                flag |= 1;
+            }
+    }
+    return flag;
+}
+
+unsigned int MouseDown(int x, int y, unsigned int button)
+{
+    _AUX_EVENTREC info;
+    unsigned int flag;
+    int i;
+
+    flag = 0;
+    for (i = 0; i < g_mouseDownTableCount; i++)
+    {
+            if ((button & 1) == mouseDownTable[i].mouseField)
+            {
+                info.event = 16;
+                info.data[0] = x;
+                info.data[1] = y;
+                info.data[3] = 1;
+                (*mouseDownTable[i].MouseFunc)(&info);
+                flag |= 1;
+            }
+            if ((button & 2) == mouseDownTable[i].mouseField)
+            {
+                info.event = 16;
+                info.data[0] = x;
+                info.data[1] = y;
+                info.data[3] = 2;
+                (*mouseDownTable[i].MouseFunc)(&info);
+                flag |= 1;
+            }
+            if ((button & 4) == mouseDownTable[i].mouseField)
+            {
+                info.event = 16;
+                info.data[0] = x;
+                info.data[1] = y;
+                info.data[3] = 4;
+                (*mouseDownTable[i].MouseFunc)(&info);
+                flag |= 1;
+            }
+    }
+    return flag;
+}
+
+unsigned int KeyDown(int key, unsigned int status)
+{
+    unsigned int flag;
+    int i;
+
+    flag = 0;
+    if (g_keyTableCount)
+    {
+        for (i = 0; i < g_keyTableCount; i++)
+        {
+            if (key == keyTable[i].keyField && status == keyTable[i].keyStatus)
+            {
+                (*keyTable[i].KeyFunc)();
+                flag |= 1;
+            }
+        }
+    }
+    return flag;
+}
+
+void PS2auxSwapBuffers(void)
+{
+    PS2glSwapBuffers();
+}
+
+void PS2auxInitDisplayMode(unsigned int eMode)
+{
+    g_eDisplayMode = eMode;
+    if (!g_bInitDisplayModeInvoked) {
+        g_bInitDisplayModeInvoked = 1;
+        PS2glInit();
+    }
+}
+
 void PS2auxInitPosition(int x, int y, int w, int h)
 {
     if (w >= 0x280)
@@ -1596,328 +1880,64 @@ void PS2auxInitPosition(int x, int y, int w, int h)
     }
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GLAUX\PS2GLAUX.c lines 471–482 */
-/* addr: 0x00185d40  size: 44 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 471
- *   +0x0008 -> line 476
- *   +0x0014 -> line 478
- *   +0x0018 -> line 480
- *   +0x0020 -> line 482
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-void PS2auxInitDisplayMode(unsigned int eMode)
+unsigned int PS2auxInitWindow(void)
 {
-    g_eDisplayMode = eMode;
-    if (!g_bInitDisplayModeInvoked) {
-        g_bInitDisplayModeInvoked = 1;
+    _GL_BUFFERINFO stBufferInfo;
+    if (!g_bInitDisplayModeInvoked && !g_bEnvInitialized)
+    {
         PS2glInit();
     }
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GLAUX\PS2GLAUX.c lines 337–337 */
-/* addr: 0x00185d70  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 337
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void PS2auxSwapBuffers(void)
-{
-    PS2glSwapBuffers();
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GLAUX\PS2GLAUX.c lines 240–257 */
-/* addr: 0x00185d80  size: 172 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 240
- *   +0x0024 -> line 245
- *   +0x0030 -> line 247
- *   +0x003c -> line 249
- *   +0x005c -> line 251
- *   +0x0068 -> line 252
- *   +0x006c -> line 253
- *   +0x0070 -> line 252
- *   +0x0074 -> line 254
- *   +0x0088 -> line 256
- *   +0x008c -> line 257
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned int KeyDown(int key, unsigned int status)
-{
-    unsigned int flag;
-    int i;
-
-    flag = 0;
-    if (g_keyTableCount)
+    if ((g_eDisplayMode & 2) == 0)
     {
-        for (i = 0; i < g_keyTableCount; i++)
-        {
-            if (key == keyTable[i].keyField && status == keyTable[i].keyStatus)
-            {
-                (*keyTable[i].KeyFunc)();
-                flag |= 1;
-            }
-        }
+        g_bSingleBuffer = 1;
     }
-    return flag;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GLAUX\PS2GLAUX.c lines 203–237 */
-/* addr: 0x00185e30  size: 308 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 203
- *   +0x0010 -> line 209
- *   +0x0014 -> line 203
- *   +0x0038 -> line 209
- *   +0x0040 -> line 211
- *   +0x0058 -> line 213
- *   +0x005c -> line 212
- *   +0x0060 -> line 215
- *   +0x0064 -> line 214
- *   +0x0068 -> line 215
- *   +0x006c -> line 216
- *   +0x0078 -> line 217
- *   +0x007c -> line 218
- *   +0x0080 -> line 219
- *   +0x0090 -> line 221
- *   +0x0094 -> line 220
- *   +0x0098 -> line 223
- *   +0x009c -> line 222
- *   +0x00a0 -> line 223
- *   +0x00a4 -> line 224
- *   +0x00b0 -> line 225
- *   +0x00b4 -> line 226
- *   +0x00b8 -> line 227
- *   +0x00c8 -> line 229
- *   +0x00cc -> line 228
- *   +0x00d0 -> line 231
- *   +0x00d4 -> line 230
- *   +0x00d8 -> line 231
- *   +0x00dc -> line 232
- *   +0x00e8 -> line 233
- *   +0x00ec -> line 234
- *   +0x00f0 -> line 233
- *   +0x00f4 -> line 235
- *   +0x0108 -> line 236
- *   +0x010c -> line 237
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned int MouseDown(int x, int y, unsigned int button)
-{
-    _AUX_EVENTREC info;
-    unsigned int flag;
-    int i;
-
-    flag = 0;
-    for (i = 0; i < g_mouseDownTableCount; i++)
+    stBufferInfo.iFrameBufferDepth = (g_eDisplayMode & 0x400) ? 0x10 : 0x20;
+    stBufferInfo.iDepthBufferDepth = (g_eDisplayMode & 0x20) ? 0x18 : 0x10;
+    stBufferInfo.iStencilBufferDepth = (g_eDisplayMode & 0x40) ? 0 : 0;
+    stBufferInfo.iAccumBufferDepth = (g_eDisplayMode & 8) ? g_PS2glContext.iAccumDepth : 0;
+    if (g_eDisplayMode & 8)
     {
-            if ((button & 1) == mouseDownTable[i].mouseField)
-            {
-                info.event = 16;
-                info.data[0] = x;
-                info.data[1] = y;
-                info.data[3] = 1;
-                (*mouseDownTable[i].MouseFunc)(&info);
-                flag |= 1;
-            }
-            if ((button & 2) == mouseDownTable[i].mouseField)
-            {
-                info.event = 16;
-                info.data[0] = x;
-                info.data[1] = y;
-                info.data[3] = 2;
-                (*mouseDownTable[i].MouseFunc)(&info);
-                flag |= 1;
-            }
-            if ((button & 4) == mouseDownTable[i].mouseField)
-            {
-                info.event = 16;
-                info.data[0] = x;
-                info.data[1] = y;
-                info.data[3] = 4;
-                (*mouseDownTable[i].MouseFunc)(&info);
-                flag |= 1;
-            }
+        stBufferInfo.iAccumBufferDepth = g_PS2glContext.iAccumDepth;
     }
-    return flag;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GLAUX\PS2GLAUX.c lines 166–200 */
-/* addr: 0x00185f70  size: 308 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 166
- *   +0x0010 -> line 172
- *   +0x0014 -> line 166
- *   +0x0038 -> line 172
- *   +0x0040 -> line 174
- *   +0x0058 -> line 176
- *   +0x005c -> line 175
- *   +0x0060 -> line 178
- *   +0x0064 -> line 177
- *   +0x0068 -> line 178
- *   +0x006c -> line 179
- *   +0x0078 -> line 180
- *   +0x007c -> line 181
- *   +0x0080 -> line 182
- *   +0x0090 -> line 184
- *   +0x0094 -> line 183
- *   +0x0098 -> line 186
- *   +0x009c -> line 185
- *   +0x00a0 -> line 186
- *   +0x00a4 -> line 187
- *   +0x00b0 -> line 188
- *   +0x00b4 -> line 189
- *   +0x00b8 -> line 190
- *   +0x00c8 -> line 192
- *   +0x00cc -> line 191
- *   +0x00d0 -> line 194
- *   +0x00d4 -> line 193
- *   +0x00d8 -> line 194
- *   +0x00dc -> line 195
- *   +0x00e8 -> line 196
- *   +0x00ec -> line 197
- *   +0x00f0 -> line 196
- *   +0x00f4 -> line 198
- *   +0x0108 -> line 199
- *   +0x010c -> line 200
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned int MouseUp(int x, int y, unsigned int button)
-{
-    _AUX_EVENTREC info;
-    unsigned int flag;
-    int i;
-
-    flag = 0;
-    for (i = 0; i < g_mouseUpTableCount; i++)
+    else
     {
-            if ((button & 1) == mouseUpTable[i].mouseField)
-            {
-                info.event = 32;
-                info.data[0] = x;
-                info.data[1] = y;
-                info.data[3] = 1;
-                (*mouseUpTable[i].MouseFunc)(&info);
-                flag |= 1;
-            }
-            if ((button & 2) == mouseUpTable[i].mouseField)
-            {
-                info.event = 32;
-                info.data[0] = x;
-                info.data[1] = y;
-                info.data[3] = 2;
-                (*mouseUpTable[i].MouseFunc)(&info);
-                flag |= 1;
-            }
-            if ((button & 4) == mouseUpTable[i].mouseField)
-            {
-                info.event = 32;
-                info.data[0] = x;
-                info.data[1] = y;
-                info.data[3] = 4;
-                (*mouseUpTable[i].MouseFunc)(&info);
-                flag |= 1;
-            }
+        g_PS2glContext.iAccumDepth = 0;
+        stBufferInfo.iAccumBufferDepth = 0;
     }
-    return flag;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GLAUX\PS2GLAUX.c lines 129–163 */
-/* addr: 0x001860b0  size: 308 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 129
- *   +0x0010 -> line 135
- *   +0x0014 -> line 129
- *   +0x0038 -> line 135
- *   +0x0040 -> line 137
- *   +0x0058 -> line 139
- *   +0x005c -> line 138
- *   +0x0060 -> line 141
- *   +0x0064 -> line 140
- *   +0x0068 -> line 141
- *   +0x006c -> line 142
- *   +0x0078 -> line 143
- *   +0x007c -> line 144
- *   +0x0080 -> line 145
- *   +0x0090 -> line 147
- *   +0x0094 -> line 146
- *   +0x0098 -> line 149
- *   +0x009c -> line 148
- *   +0x00a0 -> line 149
- *   +0x00a4 -> line 150
- *   +0x00b0 -> line 151
- *   +0x00b4 -> line 152
- *   +0x00b8 -> line 153
- *   +0x00c8 -> line 155
- *   +0x00cc -> line 154
- *   +0x00d0 -> line 157
- *   +0x00d4 -> line 156
- *   +0x00d8 -> line 157
- *   +0x00dc -> line 158
- *   +0x00e8 -> line 159
- *   +0x00ec -> line 160
- *   +0x00f0 -> line 159
- *   +0x00f4 -> line 161
- *   +0x0108 -> line 162
- *   +0x010c -> line 163
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned int MouseLoc(int x, int y, unsigned int button)
-{
-    _AUX_EVENTREC info;
-    unsigned int flag;
-    int i;
-
-    flag = 0;
-    for (i = 0; i < g_mouseLocTableCount; i++)
+    stBufferInfo.iAuxBufferBase = (g_eDisplayMode & 0x80) ? 1 : 0;
+    stBufferInfo.bDoubleBufferMode = (g_eDisplayMode & 2) ? 1 : 0;
+    stBufferInfo.bPlainBufferMode = (g_eDisplayMode & 0x800) ? 1 : 0;
+    stBufferInfo.iScreenWidth = g_iScreenWidth;
+    stBufferInfo.iScreenHeight = g_iScreenHeight;
+    stBufferInfo.iSecondBufferWidth = g_iSecondBufferWidth;
+    stBufferInfo.iSecondBufferHeight = g_iSecondBufferHeight;
+    stBufferInfo.iSecondBufferWidthPower = g_iSecondBufferWidthPower;
+    stBufferInfo.iSecondBufferHeightPower = g_iSecondBufferHeightPower;
+    stBufferInfo.iSuperWidth = g_iSuperWidth;
+    stBufferInfo.iSuperHeight = g_iSuperHeight;
+    PS2glInitBuffers(&stBufferInfo);
+    if (!g_bEnvInitialized)
     {
-            if ((button & 1) == mouseLocTable[i].mouseField)
-            {
-                info.event = 64;
-                info.data[0] = x;
-                info.data[1] = y;
-                info.data[3] = 1;
-                (*mouseLocTable[i].MouseFunc)(&info);
-                flag |= 1;
-            }
-            if ((button & 2) == mouseLocTable[i].mouseField)
-            {
-                info.event = 64;
-                info.data[0] = x;
-                info.data[1] = y;
-                info.data[3] = 2;
-                (*mouseLocTable[i].MouseFunc)(&info);
-                flag |= 1;
-            }
-            if ((button & 4) == mouseLocTable[i].mouseField)
-            {
-                info.event = 64;
-                info.data[0] = x;
-                info.data[1] = y;
-                info.data[3] = 4;
-                (*mouseLocTable[i].MouseFunc)(&info);
-                flag |= 1;
-            }
+        g_bEnvInitialized = 1;
+        ReshapeFunc = (int)DefaultHandleReshape;
+        ExposeFunc = (int)DefaultHandleExpose;
+        MouseUpFunc = (int)MouseUp;
+        MouseDownFunc = (int)MouseDown;
+        MouseMoveFunc = (int)MouseLoc;
+        KeyDownFunc = (int)KeyDown;
     }
-    return flag;
+    return 0;
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GLAUX\PS2GLAUX.c lines 126–126 */
-/* addr: 0x001861f0  size: 8 bytes */
-/* Signature completed from the same-TU declaration record (MWCC omits unreferenced parameters from definitions). */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 126
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void DefaultHandleExpose(int param0, int param1)
+void VU1SendPackage(_sceDmaTag* pTag)
 {
-    /* TODO: decompile from asm/... */
+    if (sceGsSyncPath(0, 0))
+        printf("In VU1SendPackage, SyncPath failure!\n");
+    if (g_stSPRInfo.uiState & 1)
+        WaitDMAFromSPR();
+    FlushCache(0);
+    *(volatile unsigned int*)0x10009020 = 0;
+    *(volatile unsigned int*)0x10009030 = (unsigned int)pTag;
+    *(volatile unsigned int*)0x1000E010 = 2;
+    *(volatile unsigned int*)0x10009000 = 0x145;
 }

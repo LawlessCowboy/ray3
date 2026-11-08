@@ -1654,28 +1654,41 @@ tagListData** PS2glSearchList(unsigned int list);
 void PS2glCallSDL(tagListData* pListData);
 void PS2glExecuteListData(tagListData* pData);
 
-void impPS2glCallLists(int n, unsigned int type, void* lists)
-{
-    int I;
-    unsigned int list;
-
-    list = 0;
-    for (I = 0; I < n; I++)
-    {
-        switch (type)
-        {
-        case 0x1402: case 0x1403: list = *(unsigned short*)lists; lists = (unsigned short*)lists + 1; break;
-        case 0x1404: case 0x1405: list = *(unsigned int*)lists; lists = (unsigned int*)lists + 1; break;
-        case 0x1406: list = (unsigned int)*(float*)lists; lists = (float*)lists + 1; break;
-        case 0x1409: list = (list << 8) + *(unsigned char*)lists; lists = (unsigned char*)lists + 1;
-        case 0x1408: list = (list << 8) + *(unsigned char*)lists; lists = (unsigned char*)lists + 1;
-        case 0x1407: list = (list << 8) + *(unsigned char*)lists; lists = (unsigned char*)lists + 1;
-        case 0x1400: case 0x1401:
-            list = (list << 8) + *(unsigned char*)lists; lists = (unsigned char*)lists + 1; break;
-        }
-        { tagListData* pListData = *PS2glSearchList(g_PS2glContext.uiListBase + list); if (pListData->pDmaBuffer) PS2glCallSDL(pListData); else PS2glExecuteListData(pListData); }
-    }
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void impPS2glCallLists(int n, unsigned int type, void* lists);
+void impPS2glCallList(unsigned int list);
+unsigned int PS2glSDLModificationHelper(unsigned int pname, unsigned int* params);
+void PS2glCallSDL(tagListData* pListData);
+void PS2glReinitAfterSDLs(void);
+void PS2glSDLInstancing(unsigned int* pIDs);
+void impPS2glEndList(void);
+int PS2glComposeStaticDisplayList(tagListData* pListData);
+void impPS2glNewList(unsigned int list, unsigned int mode);
+void impPS2glPartialDeleteLists(unsigned int list);
+void impPS2glDeleteLists(unsigned int list, int range);
+unsigned int impPS2glGenLists(int range);
+unsigned char impPS2glIsList(unsigned int list);
+void impPS2glListBase(unsigned int base);
+void PS2glExecuteListData(tagListData* pData);
+int PS2glCountListObject(tagListData* pData);
+void PS2glAddPrimBuffer(tagGLprimbuf* pBuf, unsigned char EOP);
+void PS2glListSaveBuffer(unsigned char EOP);
+void PS2glComputeBSfromBB(float* pfvBS, float* pBB);
+void PS2glMergeBB(float* pDstBB, float* pSrcBB);
+void PS2glComputeBS(float* pfvBS, float (*pV)[4], int iCount, float* pBB, unsigned char bDivQ);
+void PS2glListAssembleQuads(void);
+void PS2glResetPrimBuffer(void);
+void PS2glListSaveVBuf(unsigned char EOP);
+void PS2glSaveListCall(unsigned int eCode, float (*pData)[4]);
+void PS2glSaveListCallMultiTex(unsigned int eCode, unsigned int texture, float (*pData)[4]);
+tagGLlistnode* PS2glListAllocNode(int cbParams);
+void* PS2glListSaveParam(void* pParam, int cbParam);
+void* PS2glListSaveParamSpace(int cbParam);
+void PS2glFreeListData(tagListData* pDataOfList);
+void PS2glFreeListDataPartially(tagListData* pDataOfList);
+tagListData** PS2glAddLists(unsigned int list, int range);
+tagListData** PS2glSearchList(unsigned int list);
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 2363–2387 */
 /* addr: 0x001510e0  size: 68 bytes */
@@ -1693,19 +1706,6 @@ void impPS2glCallLists(int n, unsigned int type, void* lists)
 tagListData** PS2glSearchList(unsigned int list);
 void PS2glCallSDL(tagListData* pListData);
 void PS2glExecuteListData(tagListData* pData);
-
-void impPS2glCallList(unsigned int list)
-{
-    tagListData** ppListData;
-    tagListData* pListData;
-
-    ppListData = PS2glSearchList(list);
-    pListData = *ppListData;
-    if (pListData->pDmaBuffer)
-        PS2glCallSDL(pListData);
-    else
-        PS2glExecuteListData(pListData);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 2251–2358 */
 /* addr: 0x00151130  size: 512 bytes */
@@ -1771,110 +1771,6 @@ void impPS2glCallList(unsigned int list)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned int PS2glSDLModificationHelper(unsigned int pname, unsigned int* params)
-{
-    unsigned int uiReturn;
-    tagListData* pListData;
-    tagListData** ppListData;
-    int iDmaBufferOffset;
-    unsigned int uiSDLIndicesSize;
-    unsigned int uiTargetObject;
-    unsigned int uiMask;
-    int i;
-    int iCount;
-    unsigned int* pCurrent;
-    tag_stMultiTextureParameters* pMTP;
-    tag_stVU1MatriceL* param0;
-    unsigned int uiLastStructureSize;
-
-    pListData = NULL;
-    ppListData = PS2glSearchList(params[0]);
-    if (ppListData)
-    {
-        pListData = *ppListData;
-        if (pListData->pDmaBuffer)
-            uiReturn = 1;
-        else
-            uiReturn = 0;
-    }
-    else
-    {
-        uiReturn = 0;
-    }
-    if (uiReturn)
-    {
-        uiSDLIndicesSize = pListData->uiSDLIndicesSize;
-        iDmaBufferOffset = (int)pListData->pLastExecDmaBuffer;
-        iDmaBufferOffset -= (int)pListData->pDmaBuffer;
-        uiTargetObject = params[1];
-        uiMask = 0;
-        iCount = 0;
-        pCurrent = (unsigned int*)pListData->pSDLIndices;
-        uiReturn = 0;
-        for (i = 0; i < uiSDLIndicesSize; i++)
-        {
-            uiMask = pCurrent[1];
-            if (!(uiMask & 0x80000000))
-            {
-                if (iCount == uiTargetObject)
-                    break;
-                iCount++;
-            }
-            pCurrent += 2;
-        }
-        if (iCount == uiTargetObject)
-        {
-            pMTP = (tag_stMultiTextureParameters*)pCurrent[0];
-            if (iDmaBufferOffset)
-                pMTP = (tag_stMultiTextureParameters*)((char*)pMTP + iDmaBufferOffset);
-            pMTP = (tag_stMultiTextureParameters*)((char*)pMTP + 0xA0);
-            if (pname == 0xF38)
-                return (unsigned int)&pMTP->fTexture0UOffset;
-            uiLastStructureSize = sizeof(tag_stMultiTextureParameters);
-            if (uiMask & 0x01000000)
-            {
-                pMTP = pMTP + 1;
-                if (pname == 0xF31)
-                    return (unsigned int)((tag_stVU1MatriceTinSDL*)pMTP)->mLocalWorld;
-                if (pname == 0xF33)
-                    return (unsigned int)((tag_stVU1MatriceTinSDL*)pMTP)->mNormal;
-                uiLastStructureSize = sizeof(tag_stVU1MatriceTinSDL);
-            }
-            else if (uiMask & 0x00100000)
-            {
-                pMTP = pMTP + 1;
-                if (pname == 0xF32)
-                    return (unsigned int)((tag_stVU1MatriceT*)pMTP)->mModelView;
-                if (pname == 0xF33)
-                    return (unsigned int)((tag_stVU1MatriceT*)pMTP)->mNormal;
-                uiLastStructureSize = sizeof(tag_stVU1MatriceT);
-            }
-            if (uiMask & 0x04000000)
-            {
-                pMTP = (tag_stMultiTextureParameters*)((char*)pMTP + uiLastStructureSize);
-                uiLastStructureSize = 0x90;
-            }
-            else if (uiMask & 0x08000000)
-            {
-                pMTP = (tag_stMultiTextureParameters*)((char*)pMTP + uiLastStructureSize);
-                uiLastStructureSize = 0x20;
-            }
-            if (uiMask & 0x00200000)
-            {
-                param0 = (tag_stVU1MatriceL*)((char*)pMTP + uiLastStructureSize);
-                if (pname == 0xF34)
-                    return (unsigned int)param0->mDiffuseLightColor;
-                if (pname == 0xF35)
-                    return (unsigned int)param0->mDiffuseLightPosition;
-                if (pname == 0xF36)
-                    return (unsigned int)param0->mSpecularLightColor;
-                if (pname == 0xF37)
-                    return (unsigned int)param0->mSpecularLightReflection;
-            }
-        }
-    }
-    return uiReturn;
-}
 
 extern void impPS2glBegin(unsigned int mode);
 extern void impPS2glEnd(void);
@@ -1960,113 +1856,6 @@ extern void VU1UpdateMatriceOutsideSDL(tagGLcontext* pctx);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glCallSDL(tagListData* pListData)
-{
-    _sceDmaTag* pDmaTag;
-    tagGLcontext* pctx;
-    unsigned int uiSize;
-    int i;
-    tagGLtexblock theDefaultTexBlock;
-
-    pctx = &g_PS2glContext;
-    if ((int)pListData->pDmaBuffer == 1)
-        return;
-    if (!(pctx->uiStaticDisplayListBits & 0x1000))
-    {
-        if (!(pListData->uiSDLBits & 0x100))
-        {
-            pctx->bMatrixChanged = 1;
-            impPS2glBegin(4);
-            impPS2glEnd();
-        }
-        else
-        {
-            if ((pctx->uiStaticDisplayListBits & 0x10) && !(pctx->usDontUpdateBits & 1))
-            {
-                if ((pctx->nTextureEnableBits & 8) && pctx->bTexCubeChanged)
-                {
-                    PS2glUpdateTexture(0x8513);
-                    pctx->bTexCubeChanged = 0;
-                }
-                else if ((pctx->nTextureEnableBits & 2) && pctx->abTex2DChanged[0])
-                {
-                    PS2glUpdateTexture(0xde1);
-                    pctx->abTex2DChanged[0] = 0;
-                }
-                else if ((pctx->nTextureEnableBits & 1) && pctx->abTex1DChanged[0])
-                {
-                    PS2glUpdateTexture(0xde0);
-                    pctx->abTex1DChanged[0] = 0;
-                }
-                PS2glActiveTextureARB(1);
-                if ((pctx->nTextureEnableBits & 0x200) && pctx->abTex2DChanged[1])
-                {
-                    PS2glUpdateTexture(0xde1);
-                    pctx->abTex2DChanged[1] = 0;
-                }
-                else if ((pctx->nTextureEnableBits & 0x100) && pctx->abTex1DChanged[1])
-                {
-                    PS2glUpdateTexture(0xde0);
-                    pctx->abTex1DChanged[1] = 0;
-                }
-                PS2glActiveTextureARB(0);
-            }
-            if (!(pctx->usDontUpdateBits & 2))
-            {
-                if (g_gsContext.ModFlgs)
-                    GsUpdate();
-            }
-            else
-            {
-                if (g_gsContext.ModFlgs)
-                    GsUpdateLimited();
-            }
-            VU1UpdateMatriceOutsideSDL(&g_PS2glContext);
-        }
-    }
-    if (!(pctx->uiStaticDisplayListBits & 0x30000))
-    {
-        if (!VU1BufferFreeSpace())
-            impPS2glFlush();
-        pDmaTag = (_sceDmaTag*)pctx->pVIFIBufTail;
-        pctx->pVIFIBufTail++;
-        pDmaTag->qwc = 0;
-        pDmaTag->id = 0x50;
-        pDmaTag->next = (_sceDmaTag*)pListData->pDmaBuffer;
-        pDmaTag->p[1] = 0;
-        pDmaTag->p[0] = 0;
-        pListData->pLastExecDmaBuffer = pListData->pDmaBuffer;
-    }
-    else if (pctx->uiStaticDisplayListBits & 0x10000)
-    {
-        uiSize = pListData->uiSDLSize - 1;
-        if (VU1BufferFreeSpace() < uiSize)
-            impPS2glFlush();
-        memcpy(pctx->pVIFIBufTail, pListData->pDmaBuffer, uiSize << 4);
-        pListData->pLastExecDmaBuffer = pctx->pVIFIBufTail;
-        pctx->pVIFIBufTail += uiSize;
-    }
-    if (!(pctx->uiStaticDisplayListBits & 0x2000))
-        g_gsContext.ModFlgs |= pListData->ModFlgs;
-    if (!(pctx->uiStaticDisplayListBits & 0x4010))
-    {
-        tagGLtexblock theBlock = {0x3FF, 0, pctx->iMaxTexBlockCount};
-        theDefaultTexBlock = theBlock;
-        for (i = 0; i < 512; i++)
-        {
-            if (pctx->aTexName[i].bAllocated)
-                pctx->aTexName[i].bResident = 0;
-        }
-        for (i = 0; i < pctx->iMaxTexBlockCount; i++)
-            pctx->aBlockMap[i] = theDefaultTexBlock;
-        for (i = 0; i < 10; i++)
-            pctx->aTexLevelCount[i] = 0;
-        *(unsigned char*)((unsigned int)pctx->iCurTextureSet + (int)pctx->abTex2DChanged) = 1;
-        i = pctx->iCurTextureSet;
-        *(unsigned char*)((unsigned int)pctx->abTex1DChanged + i) = 1;
-        pctx->bTexCubeChanged = 1;
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 2106–2137 */
 /* addr: 0x00151710  size: 360 bytes */
@@ -2096,31 +1885,6 @@ void PS2glCallSDL(tagListData* pListData)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glReinitAfterSDLs(void)
-{
-    int i;
-    tagGLcontext* pctx;
-
-    pctx = &g_PS2glContext;
-    if (g_gsContext.ModFlgs)
-        GsUpdate();
-    {
-        tagGLtexblock theDefaultTexBlock = {0x3FF, 0, pctx->iMaxTexBlockCount};
-        for (i = 0; i < 512; i++)
-        {
-            if (pctx->aTexName[i].bAllocated)
-                pctx->aTexName[i].bResident = 0;
-        }
-        for (i = 0; i < pctx->iMaxTexBlockCount; i++)
-            pctx->aBlockMap[i] = theDefaultTexBlock;
-    }
-    for (i = 0; i < 10; i++)
-        pctx->aTexLevelCount[i] = 0;
-    *(unsigned char*)((unsigned int)pctx->iCurTextureSet + (int)pctx->abTex2DChanged) = 1;
-    i = pctx->iCurTextureSet;
-    *(unsigned char*)((unsigned int)pctx->abTex1DChanged + i) = 1;
-    pctx->bTexCubeChanged = 1;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 2026–2102 */
 /* addr: 0x00151880  size: 348 bytes */
@@ -2166,50 +1930,6 @@ void PS2glReinitAfterSDLs(void)
 tagListData** PS2glAddLists(unsigned int list, int range);
 void PS2glFreeListData(tagListData* pDataOfList);
 
-void PS2glSDLInstancing(unsigned int* pIDs)
-{
-    unsigned int uiRealSize;
-    int* param0;
-    tagListData* pSrcListData;
-    tagListData** ppListData;
-    int iOffset;
-    tagListData* pDstListData;
-    int i;
-
-    pSrcListData = *PS2glSearchList(pIDs[1]);
-    ppListData = PS2glSearchList(pIDs[0]);
-    if (!ppListData)
-    {
-        if (!(ppListData = PS2glAddLists(pIDs[0], 1)))
-        {
-            printf("Error:SDL can't add the destination list!\n");
-            pIDs[0] = 0;
-            return;
-        }
-    }
-    if (*ppListData)
-        PS2glFreeListData(*ppListData);
-    pDstListData = *ppListData = (tagListData*)PS2glAllocator(sizeof(tagListData));
-    memcpy(pDstListData, pSrcListData, sizeof(tagListData));
-    pDstListData->pDatas = NULL;
-    pDstListData->pCalls = NULL;
-    pDstListData->pPrimBufTail = NULL;
-    pDstListData->pPrimBufHead = NULL;
-    uiRealSize = pDstListData->uiSDLSize * 16;
-    pDstListData->pLastExecDmaBuffer = pDstListData->pDmaBuffer = (float (*)[4])PS2glAllocator(uiRealSize);
-    memcpy(pDstListData->pDmaBuffer, pSrcListData->pDmaBuffer, uiRealSize);
-    iOffset = (char*)pDstListData->pDmaBuffer - (char*)pSrcListData->pDmaBuffer;
-    uiRealSize = pDstListData->uiSDLIndicesSize * 8;
-    pDstListData->pSDLIndices = (int)PS2glAllocator(uiRealSize);
-    memcpy((void*)pDstListData->pSDLIndices, (void*)pSrcListData->pSDLIndices, uiRealSize);
-    param0 = (int*)pDstListData->pSDLIndices;
-    for (i = 0; i < pDstListData->uiSDLIndicesSize; i++)
-    {
-        *param0 += iOffset;
-        param0 += 2;
-    }
-}
-
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1971–2023 */
 /* addr: 0x001519e0  size: 316 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -2250,46 +1970,6 @@ void PS2glSDLInstancing(unsigned int* pIDs)
 void PS2glBegin(unsigned int mode);
 void PS2glEnd(void);
 int PS2glComposeStaticDisplayList(tagListData* pListData);
-
-void impPS2glEndList(void)
-{
-    tagGLlistcalls* pCalls;
-    tagGLlistcalls* pCurCalls;
-
-    if (!g_PS2glContext.pCurListData)
-    {
-        printf("Error: glEndList was called without a preceding glNewList.\n");
-        return;
-    }
-    pCalls = g_PS2glContext.pCurListCalls;
-    if (pCalls && pCalls->cbCalls < 0x400)
-    {
-        g_PS2glContext.pCurListCalls = pCurCalls = ((tagGLlistcalls* (*)(void*, unsigned int))PS2glReallocator)(pCalls, pCalls->cbCalls + 8);
-        if (!g_PS2glContext.pPreListCalls)
-            g_PS2glContext.pCurListData->pCalls = pCurCalls;
-        else
-            g_PS2glContext.pPreListCalls->pNext = pCurCalls;
-    }
-    if (!g_PS2glContext.bFinalCompile && g_PS2glListVBuf.nCount)
-    {
-        PS2glBegin(0);
-        PS2glEnd();
-    }
-    g_PS2glContext.bInBeginEndPair = 0;
-    g_pPS2glApiTable = (int)&g_PS2glApiTableImp;
-    if (g_PS2glContext.pCurListData->eMode == 0x1301 || g_PS2glContext.pCurListData->eMode == 0x1303)
-    {
-        if (g_PS2glContext.pCurListData->pDmaBuffer)
-            PS2glCallSDL(g_PS2glContext.pCurListData);
-        else
-            PS2glExecuteListData(g_PS2glContext.pCurListData);
-    }
-    else if ((g_PS2glContext.uiStaticDisplayListBits & 3) == 3)
-    {
-        PS2glComposeStaticDisplayList(g_PS2glContext.pCurListData);
-    }
-    g_PS2glContext.pCurListData = NULL;
-}
 
 void PS2glFreeListDataPartially(tagListData* pDataOfList);
 void PS2glFreeListData(tagListData* pDataOfList);
@@ -2408,122 +2088,6 @@ void PS2glFreeListData(tagListData* pDataOfList);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int PS2glComposeStaticDisplayList(tagListData* pListData)
-{
-    int i;
-    float (*pOldVIFTail)[4];
-    float (*pOldVIFInBuf)[4];
-    unsigned int uiOldMaxVifDmaBufLength;
-    unsigned int uiOldSDLBits;
-    _sceDmaTag* pDmaTag;
-    void* pData;
-    int count;
-    unsigned int uiRealSize;
-    void* pData2;
-    int* param0;
-    int iOffset;
-
-    pOldVIFTail = g_PS2glContext.pVIFIBufTail;
-    pData = (void*)PS2GL_SDL_DataBufferToUse;
-    uiOldMaxVifDmaBufLength = uiMaxVifDmaBufLength;
-    pOldVIFInBuf = g_PS2glContext.pVIFInBuf;
-    if (pData)
-    {
-        pData = (void*)PS2GL_SDL_DataBufferToUse;
-    }
-    else
-    {
-        pData = PS2glAllocator(pListData->uiSDLSize << 4);
-        if (!pData)
-            return 0;
-    }
-    impPS2glBegin(4);
-    impPS2glEnd();
-    if (pListData->uiSDLBits & 0x100)
-        g_PS2glContext.bMatrixChanged = 1;
-    if (!(pListData->uiSDLBits & 0x10))
-    {
-        g_PS2glContext.abTex2DChanged[g_PS2glContext.iCurTextureSet] = 1;
-        g_PS2glContext.abTex1DChanged[g_PS2glContext.iCurTextureSet] = 1;
-        g_PS2glContext.bTexCubeChanged = 1;
-    }
-    uiMaxVifDmaBufLength = pListData->uiSDLSize;
-    g_PS2glContext.pVIFInBuf = (float (*)[4])pData;
-    g_PS2glContext.pVIFIBufTail = (float (*)[4])pData;
-    pListData->pDmaBuffer = (float (*)[4])pData;
-    count = PS2glCountListObject(pListData);
-    if (count)
-    {
-        pListData->pSDLIndices = (int)PS2glAllocator((count * ((pListData->uiSDLBits & 0x800) ? 4 : 2)) << 2);
-    }
-    if (!(pListData->uiSDLBits & 0x10))
-    {
-        tagGLtexblock theDefaultTexBlock = {0x3FF, 0, g_PS2glContext.iMaxTexBlockCount};
-        for (i = 0; i < 512; i++)
-        {
-            if (g_PS2glContext.aTexName[i].bAllocated)
-                g_PS2glContext.aTexName[i].bResident = 0;
-        }
-        for (i = 0; i < g_PS2glContext.iMaxTexBlockCount; i++)
-            g_PS2glContext.aBlockMap[i] = theDefaultTexBlock;
-        for (i = 0; i < 10; i++)
-            g_PS2glContext.aTexLevelCount[i] = 0;
-    }
-    uiOldSDLBits = g_PS2glContext.uiStaticDisplayListBits;
-    g_PS2glContext.uiStaticDisplayListBits = pListData->uiSDLBits;
-    *(unsigned long*)&g_gsContext.GlobalModFlgs = 0;
-    g_PS2glContext.pCurListData = pListData;
-    g_PS2glContext.uiStaticDisplayListBits |= 0x01000000;
-    PS2glExecuteListData(pListData);
-    g_PS2glContext.uiStaticDisplayListBits = uiOldSDLBits;
-    pListData->uiSDLIndicesSize >>= 1;
-    g_PS2glContext.pCurListData = NULL;
-    pListData->ModFlgs = *(unsigned long*)&g_gsContext.GlobalModFlgs & 0x1FFFD0560000;
-    if (pListData->uiSDLBits & 4)
-        pListData->ModFlgs |= 0x100000;
-    pDmaTag = (_sceDmaTag*)g_PS2glContext.pVIFIBufTail;
-    pDmaTag->qwc = 0;
-    pDmaTag->mark = 0;
-    pDmaTag->id = 0x60;
-    pDmaTag->next = (_sceDmaTag*)pListData->pDmaBuffer;
-    pDmaTag->p[1] = 0;
-    pDmaTag->p[0] = 0;
-    if (!PS2GL_g_DontReallocSDLs || PS2GL_SDL_DataBufferToUse)
-    {
-        if ((VU1BufferFreeSpace() > 0x400) || PS2GL_SDL_DataBufferToUse)
-        {
-            uiRealSize = (((int)g_PS2glContext.pVIFIBufTail - (int)g_PS2glContext.pVIFInBuf) / 16) + 1;
-            pListData->uiSDLSize = uiRealSize;
-            uiRealSize <<= 4;
-            pData2 = PS2glAllocator(uiRealSize);
-            if (pData2)
-            {
-                pListData->pDmaBuffer = (float (*)[4])pData2;
-                memcpy(pListData->pDmaBuffer, g_PS2glContext.pVIFInBuf, uiRealSize);
-                iOffset = (int)pListData->pDmaBuffer - (int)g_PS2glContext.pVIFInBuf;
-                param0 = (int*)pListData->pSDLIndices;
-                for (i = 0; i < pListData->uiSDLIndicesSize; i++)
-                {
-                    *param0 += iOffset;
-                    param0 += 2;
-                }
-                if (!PS2GL_SDL_DataBufferToUse)
-                    PS2glLiberator(g_PS2glContext.pVIFInBuf);
-            }
-            else
-            {
-                printf("******** Panic in PS2GL ************* !!\n");
-            }
-        }
-    }
-    pListData->pLastExecDmaBuffer = pListData->pDmaBuffer;
-    if (!(pListData->ModFlgs & 8))
-        PS2glFreeListDataPartially(pListData);
-    uiMaxVifDmaBufLength = uiOldMaxVifDmaBufLength;
-    g_PS2glContext.pVIFIBufTail = pOldVIFTail;
-    g_PS2glContext.pVIFInBuf = pOldVIFInBuf;
-    return 1;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1722–1783 */
 /* addr: 0x00151fb0  size: 464 bytes */
@@ -2598,47 +2162,6 @@ int PS2glComposeStaticDisplayList(tagListData* pListData)
  */
 extern void PS2glFreeListData(tagListData* pData);
 extern void* memset(void* dst, int c, unsigned int n);
-void impPS2glNewList(unsigned int list, unsigned int mode)
-{
-    tagListData* pData;
-    tagListData** ppData;
-
-    ppData = PS2glSearchList(list);
-    if ((unsigned int)g_pPS2glApiTable == (unsigned int)&g_PS2glApiTableList)
-        printf("CAUTION: Missing glEndList before glNewList!\n");
-    if (ppData == NULL)
-    {
-        if ((ppData = PS2glAddLists(list, 1)) == NULL)
-            return;
-    }
-    if (*ppData != NULL)
-        PS2glFreeListData(*ppData);
-    *ppData = pData = (tagListData*)PS2glAllocator(0x38);
-    memset(pData, 0, 0x38);
-    g_PS2glContext.pCurListData = pData;
-    g_PS2glContext.pCurListCalls = NULL;
-    g_PS2glContext.pPreListCalls = NULL;
-    *(quad*)g_PS2glContext.valistColor[0] = *(quad*)g_PS2glContext.vacurColor[0];
-    *(quad*)g_PS2glContext.valistColor[1] = *(quad*)g_PS2glContext.vacurColor[1];
-    *(quad*)g_PS2glContext.vlistNormal = *(quad*)g_PS2glContext.vcurNormal;
-    *(quad*)g_PS2glContext.valistTexCoords[0] = *(quad*)g_PS2glContext.vacurTexCoords[0];
-    *(quad*)g_PS2glContext.valistTexCoords[1] = *(quad*)g_PS2glContext.vacurTexCoords[1];
-    pData->eMode = mode;
-    if (g_PS2glContext.uiStaticDisplayListBits & 1)
-        pData->pDmaBuffer = (float (*)[4])1;
-    pData->uiSDLBits = g_PS2glContext.uiStaticDisplayListBits;
-    pData->uiSDLSize = g_PS2glContext.uiStaticDisplayListMaxSize;
-    pData->ucSDLObjectReserveSize = g_PS2glContext.ucSDLObjectReserveSize;
-    g_PS2glContext.pCurListVData = g_PS2glListVBuf.avData;
-    g_PS2glContext.pCurListVCode = g_PS2glListVBuf.abCode;
-    g_PS2glContext.pCurListTexUnit = (int*)g_PS2glListVBuf.aeTexUnit;
-    g_PS2glListVBuf.nCount = 0;
-    if ((mode == 0x1302) || (mode == 0x1303))
-    {
-    }
-    g_pPS2glApiTable = (int)&g_PS2glApiTableList;
-    g_PS2glContext.bFinalCompile = 1;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1702–1718 */
 /* addr: 0x00152180  size: 84 bytes */
@@ -2656,23 +2179,6 @@ void impPS2glNewList(unsigned int list, unsigned int mode)
  * compare a candidate object's line table as an extra checkpoint.
  */
 void PS2glFreeListData(tagListData* pDataOfList);
-
-void impPS2glPartialDeleteLists(unsigned int list)
-{
-    int I;
-    tagListNodeSingle* pSingleIndex;
-
-    pSingleIndex = g_PS2glContext.ListPool.aSingleIndex;
-    for (I = 0; I < 64; I++, pSingleIndex++)
-    {
-        if (pSingleIndex->nIndex == list)
-        {
-            PS2glFreeListData(pSingleIndex->pData);
-            pSingleIndex->pData = NULL;
-            return;
-        }
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1604–1695 */
 /* addr: 0x001521e0  size: 600 bytes */
@@ -2738,97 +2244,6 @@ void impPS2glPartialDeleteLists(unsigned int list)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glDeleteLists(unsigned int list, int range)
-{
-    tagListNodeSingle* pSingleIndex;
-    tagListNode* pNode;
-    tagListNode* pNodePre;
-    int I;
-    int iNewNodeSize;
-    int iNewSize;
-    tagListNode* pNode1;
-    int iNodeSize;
-    int iDel;
-    tagListData** ppData;
-    tagListData** param0;
-    int iMove;
-
-    pSingleIndex = g_PS2glContext.ListPool.aSingleIndex;
-    pNodePre = NULL;
-    pNode = g_PS2glContext.ListPool.pFirstNode;
-    if (range <= 0)
-        return;
-    if (range == 1)
-    {
-        for (I = 0; I < 64; I++, pSingleIndex++)
-        {
-            if (pSingleIndex->nIndex == list)
-            {
-                PS2glFreeListData(pSingleIndex->pData);
-                pSingleIndex->nIndex = 0;
-                pSingleIndex->pData = NULL;
-                return;
-            }
-        }
-    }
-    while (pNode)
-    {
-        if ((pNode->nIndex < list) && (list < pNode->nIndex + pNode->iSize))
-        {
-            iNewNodeSize = list - pNode->nIndex;
-            iNewSize = (iNewNodeSize - 1) * 4 + sizeof(tagListNode);
-            pNode1 = (tagListNode*)PS2glAllocator(iNewSize);
-            memcpy(pNode1, pNode, iNewSize);
-            pNode1->iSize = iNewNodeSize;
-            pNode1->pNext = pNode;
-            if (pNodePre == NULL)
-            {
-                g_PS2glContext.ListPool.pFirstNode = pNode1;
-            }
-            else
-            {
-                pNodePre->pNext = pNode1->pNext;
-            }
-            pNode->nIndex = list;
-            pNode->iSize -= iNewNodeSize;
-            memcpy(pNode->apData, (void*)pNode->apData[iNewNodeSize], iNewNodeSize * 4);
-        }
-        if (pNode->nIndex == list)
-        {
-            iNodeSize = pNode->iSize;
-            iDel = (iNodeSize < range) ? iNodeSize : range;
-            ppData = (tagListData**)pNode->apData;
-            for (; iDel > 0; iDel--)
-                PS2glFreeListData(*ppData++);
-            if (range < iNodeSize)
-            {
-                iMove = iNodeSize - range;
-                param0 = (tagListData**)pNode->apData;
-                for (; iMove > 0; iMove--)
-                    *param0++ = *ppData++;
-                return;
-            }
-            if (pNode->pNext == NULL)
-                g_PS2glContext.ListPool.pLastNode = pNodePre;
-            if (pNodePre == NULL)
-            {
-                g_PS2glContext.ListPool.pFirstNode = pNode->pNext;
-            }
-            else
-            {
-                pNodePre->pNext = pNode->pNext;
-            }
-            PS2glLiberator(pNode);
-            if (iNodeSize < range)
-            {
-                impPS2glDeleteLists(list + iNodeSize, range - iNodeSize);
-            }
-            return;
-        }
-        pNodePre = pNode;
-        pNode = pNode->pNext;
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1596–1601 */
 /* addr: 0x00152440  size: 96 bytes */
@@ -2846,17 +2261,6 @@ void impPS2glDeleteLists(unsigned int list, int range)
  */
 tagListData** PS2glAddLists(unsigned int list, int range);
 
-unsigned int impPS2glGenLists(int range)
-{
-    unsigned int nIndex;
-
-    nIndex = g_PS2glContext.ListPool.nFreeIndex;
-    if (!PS2glAddLists(nIndex, range))
-        return 0;
-    g_PS2glContext.ListPool.nFreeIndex += range;
-    return nIndex;
-}
-
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1582–1584 */
 /* addr: 0x001524a0  size: 32 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -2870,11 +2274,6 @@ unsigned int impPS2glGenLists(int range)
  */
 tagListData** PS2glSearchList(unsigned int list);
 
-unsigned char impPS2glIsList(unsigned int list)
-{
-    return PS2glSearchList(list) != 0;
-}
-
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1578–1579 */
 /* addr: 0x001524c0  size: 12 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -2883,10 +2282,6 @@ unsigned char impPS2glIsList(unsigned int list)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glListBase(unsigned int base)
-{
-    g_PS2glContext.uiListBase = base;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1531–1570 */
 /* addr: 0x001524d0  size: 192 bytes */
@@ -2912,30 +2307,6 @@ void impPS2glListBase(unsigned int base)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glExecuteListData(tagListData* pData)
-{
-    unsigned int cbNode;
-    tagGLlistcalls* pCalls;
-    tagGLlistnode* pNode;
-    unsigned int cbCalls;
-
-    pCalls = pData->pCalls;
-    g_PS2glContext.bInDisplayListExecution = 1;
-    while (pCalls)
-    {
-        pNode = (tagGLlistnode*)pCalls->aNodes;
-        cbCalls = 0;
-        while (pCalls && cbCalls < pCalls->cbCalls)
-        {
-            if (pNode->cbParamCount) pNode->pfns.pfnPlayParam(pNode->aParams); else pNode->pfns.pfnPlayVoid();
-            cbNode = pNode->cbParamCount + 8;
-            pNode = (tagGLlistnode*)((char*)pNode + cbNode);
-            cbCalls += cbNode;
-        }
-        pCalls = pCalls->pNext;
-    }
-    g_PS2glContext.bInDisplayListExecution = 0;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1498–1528 */
 /* addr: 0x00152590  size: 160 bytes */
@@ -2959,42 +2330,6 @@ void PS2glExecuteListData(tagListData* pData)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int PS2glCountListObject(tagListData* pData)
-{
-    tagGLlistcalls* pCalls;
-    tagGLlistnode* pNode;
-    unsigned int cbCalls;
-    unsigned int cbNode;
-    int iCount;
-
-    pCalls = pData->pCalls;
-    iCount = 0;
-    while (pCalls)
-    {
-        pNode = (tagGLlistnode*)pCalls->aNodes;
-        cbCalls = 0;
-        while (pCalls && (cbCalls < pCalls->cbCalls))
-        {
-            cbNode = pNode->cbParamCount;
-            if (cbNode)
-            {
-                if ((pNode->pfns.pfnPlayParam == (void (*)(void*))plyPS2glBegin) ||
-                    (pNode->pfns.pfnPlayParam == (void (*)(void*))plyPS2glDrawArrays) ||
-                    (pNode->pfns.pfnPlayParam == (void (*)(void*))plyPS2glDrawElements))
-                {
-                    iCount++;
-                    /* Not original source: a redundant reload the compiler removes,
-                       found by the permuter; it gives cbNode retail's register. */
-                    cbNode = pNode->cbParamCount;
-                }
-            }
-            pNode = (tagGLlistnode*)((char*)pNode + (cbNode + 8));
-            cbCalls += cbNode + 8;
-        }
-        pCalls = pCalls->pNext;
-    }
-    return iCount;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1446–1480 */
 /* addr: 0x00152630  size: 136 bytes */
@@ -3016,33 +2351,6 @@ int PS2glCountListObject(tagListData* pData)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glAddPrimBuffer(tagGLprimbuf* pBuf, unsigned char EOP)
-{
-    pBuf->bEOP = EOP;
-    if (g_PS2glContext.pCurPrimBuf == NULL)
-    {
-        *g_PS2glContext.ppCurPrimBufHead = pBuf;
-        if (g_PS2glContext.pCurListData->pPrimBufTail)
-        {
-            g_PS2glContext.pCurListData->pPrimBufTail->pNext = pBuf;
-        }
-        else
-        {
-            g_PS2glContext.pCurListData->pPrimBufHead = pBuf;
-            g_PS2glContext.pCurListData->pPrimBufTail = pBuf;
-        }
-    }
-    else
-    {
-        g_PS2glContext.pCurPrimBuf->pNext = pBuf;
-        g_PS2glContext.pCurPrimBuf->tagDma.next = &pBuf->tagDma;
-    }
-    g_PS2glContext.pCurPrimBuf = pBuf;
-    pBuf->tagDma.next = NULL;
-    pBuf->pNext = NULL;
-    if (EOP)
-        g_PS2glContext.pCurListData->pPrimBufTail = pBuf;
-}
 
 #define VIFCODE(p) ((tagstVIFCode*)&(*(p))[3])
 void PS2glListBufferTriangleStripToTriangle(float (*pBuf)[4], int iSrcStart, int iDstStart);
@@ -3666,6 +2974,1044 @@ void PS2glMergeBB(float* pDstBB, float* pSrcBB);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 671–678 */
+/* addr: 0x00153d50  size: 124 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 671
+ *   +0x000c -> line 673
+ *   +0x0014 -> line 671
+ *   +0x0018 -> line 672
+ *   +0x0020 -> line 671
+ *   +0x0024 -> line 673
+ *   +0x0028 -> line 671
+ *   +0x002c -> line 673
+ *   +0x0030 -> line 674
+ *   +0x0034 -> line 672
+ *   +0x003c -> line 674
+ *   +0x0040 -> line 677
+ *   +0x004c -> line 675
+ *   +0x0050 -> line 677
+ *   +0x0054 -> line 675
+ *   +0x005c -> line 676
+ *   +0x0068 -> line 677
+ *   +0x0074 -> line 678
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+/* sqrt.s has no C form under the baseline (MWCC calls sqrtf). */
+inline float PS2gl_xSqrt(float x)
+{
+    float r;
+    asm { sqrt.s r, x }
+    return r;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 641–665 */
+/* addr: 0x00153dd0  size: 148 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 641
+ *   +0x0008 -> line 645
+ *   +0x0020 -> line 646
+ *   +0x0028 -> line 649
+ *   +0x0040 -> line 650
+ *   +0x0048 -> line 653
+ *   +0x0050 -> line 651
+ *   +0x0054 -> line 653
+ *   +0x005c -> line 654
+ *   +0x0064 -> line 659
+ *   +0x0068 -> line 661
+ *   +0x006c -> line 659
+ *   +0x0070 -> line 661
+ *   +0x0074 -> line 659
+ *   +0x0078 -> line 661
+ *   +0x008c -> line 665
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 563–635 */
+/* addr: 0x00153e70  size: 628 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 563
+ *   +0x0008 -> line 565
+ *   +0x000c -> line 570
+ *   +0x0010 -> line 566
+ *   +0x0014 -> line 570
+ *   +0x0018 -> line 567
+ *   +0x001c -> line 565
+ *   +0x0020 -> line 566
+ *   +0x0024 -> line 567
+ *   +0x0028 -> line 570
+ *   +0x0030 -> line 572
+ *   +0x0034 -> line 573
+ *   +0x0044 -> line 574
+ *   +0x0050 -> line 575
+ *   +0x0060 -> line 576
+ *   +0x0068 -> line 577
+ *   +0x006c -> line 578
+ *   +0x007c -> line 579
+ *   +0x0088 -> line 580
+ *   +0x0098 -> line 581
+ *   +0x00a0 -> line 582
+ *   +0x00a4 -> line 583
+ *   +0x00b4 -> line 584
+ *   +0x00c0 -> line 585
+ *   +0x00d0 -> line 586
+ *   +0x00d8 -> line 588
+ *   +0x00e8 -> line 589
+ *   +0x00f0 -> line 592
+ *   +0x00fc -> line 598
+ *   +0x0100 -> line 593
+ *   +0x0104 -> line 598
+ *   +0x0108 -> line 594
+ *   +0x010c -> line 595
+ *   +0x0110 -> line 592
+ *   +0x0114 -> line 596
+ *   +0x0118 -> line 593
+ *   +0x011c -> line 595
+ *   +0x0120 -> line 594
+ *   +0x0124 -> line 593
+ *   +0x0128 -> line 594
+ *   +0x012c -> line 598
+ *   +0x0134 -> line 600
+ *   +0x0138 -> line 601
+ *   +0x013c -> line 600
+ *   +0x0140 -> line 601
+ *   +0x0144 -> line 602
+ *   +0x0154 -> line 603
+ *   +0x0160 -> line 604
+ *   +0x0170 -> line 605
+ *   +0x0178 -> line 606
+ *   +0x0180 -> line 607
+ *   +0x0190 -> line 608
+ *   +0x0198 -> line 609
+ *   +0x01a8 -> line 610
+ *   +0x01b0 -> line 611
+ *   +0x01b8 -> line 612
+ *   +0x01c8 -> line 613
+ *   +0x01d0 -> line 614
+ *   +0x01e0 -> line 615
+ *   +0x01e8 -> line 617
+ *   +0x01f8 -> line 619
+ *   +0x020c -> line 620
+ *   +0x0214 -> line 621
+ *   +0x0218 -> line 622
+ *   +0x0220 -> line 624
+ *   +0x0224 -> line 625
+ *   +0x0228 -> line 626
+ *   +0x022c -> line 627
+ *   +0x0230 -> line 628
+ *   +0x0234 -> line 629
+ *   +0x0238 -> line 631
+ *   +0x0240 -> line 634
+ *   +0x024c -> line 632
+ *   +0x0250 -> line 633
+ *   +0x0254 -> line 632
+ *   +0x0258 -> line 633
+ *   +0x025c -> line 634
+ *   +0x026c -> line 635
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 453–552 */
+/* addr: 0x001540f0  size: 552 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 453
+ *   +0x0004 -> line 462
+ *   +0x0008 -> line 453
+ *   +0x000c -> line 492
+ *   +0x0010 -> line 462
+ *   +0x0014 -> line 465
+ *   +0x0018 -> line 462
+ *   +0x001c -> line 465
+ *   +0x0020 -> line 483
+ *   +0x0024 -> line 474
+ *   +0x0030 -> line 466
+ *   +0x0034 -> line 474
+ *   +0x0038 -> line 466
+ *   +0x003c -> line 483
+ *   +0x0040 -> line 467
+ *   +0x0044 -> line 475
+ *   +0x0048 -> line 467
+ *   +0x004c -> line 484
+ *   +0x0050 -> line 468
+ *   +0x0054 -> line 476
+ *   +0x0058 -> line 468
+ *   +0x005c -> line 485
+ *   +0x0060 -> line 470
+ *   +0x0064 -> line 477
+ *   +0x0068 -> line 470
+ *   +0x006c -> line 486
+ *   +0x0070 -> line 471
+ *   +0x0074 -> line 479
+ *   +0x0078 -> line 471
+ *   +0x007c -> line 488
+ *   +0x0080 -> line 480
+ *   +0x0084 -> line 492
+ *   +0x0090 -> line 494
+ *   +0x0094 -> line 501
+ *   +0x0098 -> line 494
+ *   +0x009c -> line 495
+ *   +0x00a4 -> line 496
+ *   +0x00ac -> line 497
+ *   +0x00b4 -> line 498
+ *   +0x00bc -> line 499
+ *   +0x00c4 -> line 501
+ *   +0x00d4 -> line 503
+ *   +0x00dc -> line 504
+ *   +0x00e4 -> line 505
+ *   +0x00ec -> line 506
+ *   +0x00f4 -> line 507
+ *   +0x00fc -> line 508
+ *   +0x0100 -> line 509
+ *   +0x0108 -> line 512
+ *   +0x0110 -> line 513
+ *   +0x0118 -> line 514
+ *   +0x0120 -> line 515
+ *   +0x0128 -> line 516
+ *   +0x0130 -> line 517
+ *   +0x0138 -> line 519
+ *   +0x0140 -> line 520
+ *   +0x0148 -> line 521
+ *   +0x0150 -> line 522
+ *   +0x0158 -> line 523
+ *   +0x0160 -> line 524
+ *   +0x0168 -> line 528
+ *   +0x016c -> line 550
+ *   +0x0170 -> line 544
+ *   +0x0174 -> line 550
+ *   +0x0178 -> line 544
+ *   +0x0184 -> line 545
+ *   +0x0194 -> line 528
+ *   +0x0198 -> line 529
+ *   +0x01a0 -> line 530
+ *   +0x01a8 -> line 531
+ *   +0x01b0 -> line 532
+ *   +0x01b8 -> line 533
+ *   +0x01c0 -> line 545
+ *   +0x01c4 -> line 535
+ *   +0x01c8 -> line 544
+ *   +0x01cc -> line 535
+ *   +0x01d0 -> line 536
+ *   +0x01d8 -> line 537
+ *   +0x01e0 -> line 538
+ *   +0x01e8 -> line 539
+ *   +0x01f0 -> line 540
+ *   +0x01f8 -> line 545
+ *   +0x01fc -> line 550
+ *   +0x0208 -> line 551
+ *   +0x021c -> line 552
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 412–422 */
+/* addr: 0x00154320  size: 108 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 421
+ *   +0x0008 -> line 412
+ *   +0x0010 -> line 413
+ *   +0x0018 -> line 414
+ *   +0x0020 -> line 415
+ *   +0x0028 -> line 417
+ *   +0x0030 -> line 418
+ *   +0x0038 -> line 412
+ *   +0x0040 -> line 413
+ *   +0x0048 -> line 414
+ *   +0x0050 -> line 415
+ *   +0x0058 -> line 417
+ *   +0x0060 -> line 418
+ *   +0x0064 -> line 422
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 361–387 */
+/* addr: 0x00154390  size: 328 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 361
+ *   +0x0004 -> line 362
+ *   +0x0008 -> line 361
+ *   +0x0014 -> line 362
+ *   +0x0030 -> line 364
+ *   +0x0040 -> line 365
+ *   +0x0050 -> line 367
+ *   +0x005c -> line 369
+ *   +0x0070 -> line 370
+ *   +0x0088 -> line 371
+ *   +0x00a0 -> line 372
+ *   +0x00bc -> line 374
+ *   +0x00d4 -> line 375
+ *   +0x00f0 -> line 378
+ *   +0x00fc -> line 381
+ *   +0x0100 -> line 382
+ *   +0x0104 -> line 381
+ *   +0x0108 -> line 382
+ *   +0x0114 -> line 383
+ *   +0x0124 -> line 385
+ *   +0x0134 -> line 387
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 346–358 */
+/* addr: 0x001544e0  size: 164 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 346
+ *   +0x0004 -> line 347
+ *   +0x0008 -> line 346
+ *   +0x0018 -> line 347
+ *   +0x0028 -> line 349
+ *   +0x0030 -> line 352
+ *   +0x0048 -> line 354
+ *   +0x0060 -> line 356
+ *   +0x0078 -> line 357
+ *   +0x007c -> line 356
+ *   +0x0080 -> line 357
+ *   +0x0090 -> line 358
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 332–342 */
+/* addr: 0x00154590  size: 176 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 332
+ *   +0x0004 -> line 333
+ *   +0x0008 -> line 332
+ *   +0x0020 -> line 333
+ *   +0x0030 -> line 335
+ *   +0x0038 -> line 338
+ *   +0x0050 -> line 339
+ *   +0x0068 -> line 340
+ *   +0x0080 -> line 341
+ *   +0x0084 -> line 340
+ *   +0x0088 -> line 341
+ *   +0x0098 -> line 342
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 294–328 */
+/* addr: 0x00154640  size: 204 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 294
+ *   +0x0004 -> line 295
+ *   +0x0008 -> line 294
+ *   +0x0018 -> line 295
+ *   +0x001c -> line 300
+ *   +0x0020 -> line 301
+ *   +0x0024 -> line 302
+ *   +0x0030 -> line 305
+ *   +0x004c -> line 308
+ *   +0x0058 -> line 309
+ *   +0x0068 -> line 311
+ *   +0x006c -> line 312
+ *   +0x0074 -> line 315
+ *   +0x0078 -> line 316
+ *   +0x0088 -> line 318
+ *   +0x0090 -> line 319
+ *   +0x0094 -> line 320
+ *   +0x0098 -> line 322
+ *   +0x00a4 -> line 323
+ *   +0x00a8 -> line 325
+ *   +0x00b4 -> line 328
+ *   +0x00b8 -> line 327
+ *   +0x00bc -> line 328
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 272–291 */
+/* addr: 0x00154710  size: 188 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 272
+ *   +0x001c -> line 273
+ *   +0x002c -> line 274
+ *   +0x0034 -> line 275
+ *   +0x003c -> line 274
+ *   +0x0040 -> line 275
+ *   +0x0048 -> line 276
+ *   +0x005c -> line 279
+ *   +0x0068 -> line 280
+ *   +0x006c -> line 283
+ *   +0x0070 -> line 280
+ *   +0x0074 -> line 281
+ *   +0x0078 -> line 282
+ *   +0x007c -> line 283
+ *   +0x0080 -> line 284
+ *   +0x0088 -> line 285
+ *   +0x0094 -> line 286
+ *   +0x009c -> line 288
+ *   +0x00a0 -> line 290
+ *   +0x00a4 -> line 291
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 251–269 */
+/* addr: 0x001547d0  size: 156 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 251
+ *   +0x0010 -> line 252
+ *   +0x0020 -> line 253
+ *   +0x002c -> line 254
+ *   +0x0040 -> line 257
+ *   +0x004c -> line 258
+ *   +0x0050 -> line 261
+ *   +0x0054 -> line 258
+ *   +0x0058 -> line 259
+ *   +0x005c -> line 260
+ *   +0x0060 -> line 261
+ *   +0x0064 -> line 262
+ *   +0x006c -> line 263
+ *   +0x0078 -> line 264
+ *   +0x0080 -> line 266
+ *   +0x0084 -> line 268
+ *   +0x0088 -> line 269
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 178–248 */
+/* addr: 0x00154870  size: 372 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 178
+ *   +0x001c -> line 183
+ *   +0x0024 -> line 188
+ *   +0x0028 -> line 186
+ *   +0x002c -> line 187
+ *   +0x0030 -> line 188
+ *   +0x003c -> line 190
+ *   +0x0048 -> line 191
+ *   +0x004c -> line 192
+ *   +0x0058 -> line 194
+ *   +0x0064 -> line 195
+ *   +0x0068 -> line 209
+ *   +0x0070 -> line 212
+ *   +0x0074 -> line 211
+ *   +0x0078 -> line 212
+ *   +0x0080 -> line 213
+ *   +0x0084 -> line 214
+ *   +0x0090 -> line 217
+ *   +0x0098 -> line 220
+ *   +0x00b0 -> line 221
+ *   +0x00c8 -> line 222
+ *   +0x00e0 -> line 223
+ *   +0x00ec -> line 225
+ *   +0x00f8 -> line 228
+ *   +0x0100 -> line 242
+ *   +0x0118 -> line 243
+ *   +0x0130 -> line 244
+ *   +0x013c -> line 246
+ *   +0x0148 -> line 247
+ *   +0x0154 -> line 248
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 101–175 */
+/* addr: 0x001549f0  size: 176 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 101
+ *   +0x0014 -> line 106
+ *   +0x001c -> line 123
+ *   +0x0020 -> line 128
+ *   +0x0028 -> line 135
+ *   +0x0034 -> line 136
+ *   +0x0038 -> line 137
+ *   +0x0048 -> line 153
+ *   +0x0050 -> line 157
+ *   +0x005c -> line 162
+ *   +0x0068 -> line 163
+ *   +0x006c -> line 164
+ *   +0x0070 -> line 165
+ *   +0x007c -> line 170
+ *   +0x0088 -> line 171
+ *   +0x008c -> line 172
+ *   +0x0090 -> line 174
+ *   +0x0098 -> line 175
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 56–98 */
+/* addr: 0x00154aa0  size: 232 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 56
+ *   +0x0014 -> line 61
+ *   +0x0024 -> line 62
+ *   +0x0034 -> line 64
+ *   +0x003c -> line 70
+ *   +0x0040 -> line 68
+ *   +0x0044 -> line 72
+ *   +0x0050 -> line 76
+ *   +0x0054 -> line 77
+ *   +0x005c -> line 79
+ *   +0x006c -> line 80
+ *   +0x0070 -> line 83
+ *   +0x0084 -> line 84
+ *   +0x0088 -> line 87
+ *   +0x008c -> line 85
+ *   +0x0090 -> line 83
+ *   +0x0094 -> line 86
+ *   +0x0098 -> line 87
+ *   +0x00a4 -> line 89
+ *   +0x00b4 -> line 90
+ *   +0x00b8 -> line 91
+ *   +0x00bc -> line 93
+ *   +0x00cc -> line 95
+ *   +0x00d4 -> line 98
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 30–53 */
+/* addr: 0x00154b90  size: 132 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 31
+ *   +0x0004 -> line 30
+ *   +0x0008 -> line 31
+ *   +0x000c -> line 30
+ *   +0x0010 -> line 38
+ *   +0x0014 -> line 40
+ *   +0x0020 -> line 41
+ *   +0x0028 -> line 42
+ *   +0x0038 -> line 44
+ *   +0x0040 -> line 46
+ *   +0x0048 -> line 47
+ *   +0x0060 -> line 48
+ *   +0x006c -> line 49
+ *   +0x0070 -> line 50
+ *   +0x0078 -> line 52
+ *   +0x007c -> line 53
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+tagListData** PS2glSearchList(unsigned int list)
+{
+    tagListNodeSingle* pSingleIndex;
+    int iOffset;
+    tagListNode* pNode;
+    int I;
+
+    pNode = g_PS2glContext.ListPool.pFirstNode;
+    pSingleIndex = g_PS2glContext.ListPool.aSingleIndex;
+    for (I = 0; I < 64; I++, pSingleIndex++)
+    {
+        if (pSingleIndex->nIndex == list)
+            return &pSingleIndex->pData;
+    }
+    while (pNode)
+    {
+        iOffset = list - pNode->nIndex;
+        if ((iOffset >= 0) && (iOffset < pNode->iSize))
+            return (tagListData**)&pNode->apData[iOffset];
+        pNode = pNode->pNext;
+    }
+    return NULL;
+}
+
+tagListData** PS2glAddLists(unsigned int list, int range)
+{
+    tagListNode* pNode;
+    tagListNodeSingle* pSingleIndex;
+    int I;
+
+    if (!list)
+        return NULL;
+    if (range <= 0)
+        return NULL;
+    if (range == 1)
+    {
+        for (I = 0, pSingleIndex = g_PS2glContext.ListPool.aSingleIndex; I < 64; I++, pSingleIndex++)
+        {
+            if (!pSingleIndex->nIndex)
+            {
+                pSingleIndex->nIndex = list;
+                return &pSingleIndex->pData;
+            }
+        }
+    }
+    pNode = (tagListNode*)PS2glAllocator(sizeof(tagListNode) + (range - 1) * sizeof(int));
+    pNode->iSize = range;
+    pNode->nIndex = list;
+    pNode->pNext = NULL;
+    memset(pNode->apData, 0, range * sizeof(int));
+    if (g_PS2glContext.ListPool.pLastNode)
+        g_PS2glContext.ListPool.pLastNode->pNext = pNode;
+    g_PS2glContext.ListPool.pLastNode = pNode;
+    if (!g_PS2glContext.ListPool.pFirstNode)
+        g_PS2glContext.ListPool.pFirstNode = pNode;
+    return (tagListData**)pNode->apData;
+}
+
+void PS2glFreeListDataPartially(tagListData* pDataOfList)
+{
+    tagGLprimbuf* pPrimBuf;
+    tagGLprimbuf* pNext;
+    tagGLlistcalls* pCalls;
+
+    if (pDataOfList)
+    {
+        pCalls = pDataOfList->pCalls;
+        pPrimBuf = pDataOfList->pPrimBufHead;
+        while (pCalls)
+        {
+            tagGLlistcalls* pNextCalls = pCalls->pNext;
+            PS2glLiberator(pCalls);
+            pCalls = pNextCalls;
+        }
+        pDataOfList->pCalls = NULL;
+        while (pPrimBuf)
+        {
+            pNext = pPrimBuf->pNext;
+            if (pPrimBuf->pCode)
+            {
+                PS2glLiberator((void*)pPrimBuf->pCode);
+                pPrimBuf->pCode = 0;
+            }
+            if (pPrimBuf->pData)
+            {
+                PS2glLiberator(pPrimBuf->pData);
+                pPrimBuf->pData = NULL;
+            }
+            pPrimBuf = pNext;
+        }
+    }
+}
+
+void PS2glFreeListData(tagListData* pDataOfList)
+{
+    tagGLprimbuf* pNext;
+    tagGLlistdatas* pDatas;
+    tagGLprimbuf* pPrimBuf;
+    tagGLlistcalls* pCalls;
+
+    if (pDataOfList)
+    {
+        pCalls = pDataOfList->pCalls;
+        pDatas = pDataOfList->pDatas;
+        pPrimBuf = pDataOfList->pPrimBufHead;
+        if ((unsigned int)pDataOfList->pDmaBuffer > 1)
+        {
+            PS2glLiberator(pDataOfList->pDmaBuffer);
+            pDataOfList->pDmaBuffer = NULL;
+            if (pDataOfList->pSDLIndices)
+            {
+                PS2glLiberator((void*)pDataOfList->pSDLIndices);
+                pDataOfList->pSDLIndices = 0;
+            }
+        }
+        while (pCalls)
+        {
+            tagGLlistcalls* pNextCalls = pCalls->pNext;
+            PS2glLiberator(pCalls);
+            pCalls = pNextCalls;
+        }
+        while (pDatas)
+        {
+            tagGLlistdatas* pNextDatas = pDatas->pNext;
+            if (pDatas->apData[0])
+                PS2glLiberator((void*)pDatas->apData[0]);
+            if (pDatas->apData[1])
+                PS2glLiberator((void*)pDatas->apData[1]);
+            if (pDatas->apData[2])
+                PS2glLiberator((void*)pDatas->apData[2]);
+            PS2glLiberator(pDatas);
+            pDatas = pNextDatas;
+        }
+        while (pPrimBuf)
+        {
+            pNext = pPrimBuf->pNext;
+            if (pPrimBuf->pCode)
+                PS2glLiberator((void*)pPrimBuf->pCode);
+            if (pPrimBuf->pData)
+                PS2glLiberator(pPrimBuf->pData);
+            PS2glLiberator(pPrimBuf);
+            pPrimBuf = pNext;
+        }
+        PS2glLiberator(pDataOfList);
+    }
+}
+
+void* PS2glListSaveParamSpace(int cbParam)
+{
+    tagGLlistdatas* pDatas;
+    tagGLlistdatas* pCurDatas;
+    void* pBuf;
+
+    pBuf = PS2glAllocator(cbParam);
+    pDatas = g_PS2glContext.pCurListData->pDatas;
+    if ((pDatas == NULL) || (pDatas->apData[2] != 0))
+    {
+        pCurDatas = (tagGLlistdatas*)PS2glAllocator(16);
+        pCurDatas->apData[1] = pCurDatas->apData[2] = 0;
+        pCurDatas->apData[0] = (int)pBuf;
+        pCurDatas->pNext = pDatas;
+        g_PS2glContext.pCurListData->pDatas = pCurDatas;
+    }
+    else if (pDatas->apData[1] == 0)
+    {
+        pDatas->apData[1] = (int)pBuf;
+    }
+    else
+    {
+        pDatas->apData[2] = (int)pBuf;
+    }
+    return pBuf;
+}
+
+void* PS2glListSaveParam(void* pParam, int cbParam)
+{
+    tagGLlistdatas* pDatas;
+    tagGLlistdatas* pCurDatas;
+    void* pBuf;
+
+    pBuf = PS2glAllocator(cbParam);
+    pDatas = g_PS2glContext.pCurListData->pDatas;
+    memcpy(pBuf, pParam, cbParam);
+    if ((pDatas == NULL) || (pDatas->apData[2] != 0))
+    {
+        pCurDatas = (tagGLlistdatas*)PS2glAllocator(16);
+        pCurDatas->apData[1] = pCurDatas->apData[2] = 0;
+        pCurDatas->apData[0] = (int)pBuf;
+        pCurDatas->pNext = pDatas;
+        g_PS2glContext.pCurListData->pDatas = pCurDatas;
+    }
+    else if (pDatas->apData[1] == 0)
+    {
+        pDatas->apData[1] = (int)pBuf;
+    }
+    else
+    {
+        pDatas->apData[2] = (int)pBuf;
+    }
+    return pBuf;
+}
+
+tagGLlistnode* PS2glListAllocNode(int cbParams)
+{
+    tagGLlistcalls* pCurCalls = g_PS2glContext.pCurListCalls;
+    tagGLlistnode* param0;
+    int cbNode;
+    int cbTotal;
+
+    cbNode = cbParams + 8;
+    cbParams -= cbNode;
+    cbTotal = (cbNode + 3) & ~3;
+    cbParams += cbTotal;
+    if ((pCurCalls == NULL) || (pCurCalls->cbCalls + cbTotal > 0x400))
+    {
+        pCurCalls = (tagGLlistcalls*)PS2glAllocator(0x408);
+        if (g_PS2glContext.pCurListCalls == NULL)
+        {
+            g_PS2glContext.pCurListData->pCalls = pCurCalls;
+        }
+        else
+        {
+            g_PS2glContext.pCurListCalls->pNext = pCurCalls;
+            g_PS2glContext.pPreListCalls = g_PS2glContext.pCurListCalls;
+        }
+        g_PS2glContext.pCurListCalls = pCurCalls;
+        pCurCalls->cbCalls = 0;
+        pCurCalls->pNext = 0;
+    }
+    cbNode = pCurCalls->cbCalls;
+    param0 = (tagGLlistnode*)((int)pCurCalls->aNodes + cbNode);
+    param0->cbParamCount = cbParams;
+    pCurCalls->cbCalls += cbTotal;
+    return param0;
+}
+
+void PS2glSaveListCallMultiTex(unsigned int eCode, unsigned int texture, float (*pData)[4])
+{
+    if (g_PS2glListVBuf.nCount >= 256)
+        PS2glListSaveVBuf(0);
+    *g_PS2glContext.pCurListVCode++ = (unsigned char)eCode;
+    *g_PS2glContext.pCurListTexUnit++ = texture;
+    *(quad*)g_PS2glContext.pCurListVData++ = *(quad*)pData;
+    g_PS2glListVBuf.nCount++;
+}
+
+void PS2glSaveListCall(unsigned int eCode, float (*pData)[4])
+{
+    if (g_PS2glListVBuf.nCount >= 256)
+        PS2glListSaveVBuf(0);
+    *g_PS2glContext.pCurListVCode++ = (unsigned char)eCode;
+    *g_PS2glContext.pCurListTexUnit++ = 0;
+    *(quad*)g_PS2glContext.pCurListVData++ = *(quad*)pData;
+    g_PS2glListVBuf.nCount++;
+}
+
+void PS2glListSaveVBuf(unsigned char EOP)
+{
+    tagGLprimbuf* pBuf;
+
+    if (g_PS2glContext.bInBeginEndPair && g_PS2glListVBuf.nCount)
+    {
+        pBuf = (tagGLprimbuf*)PS2glAllocator(sizeof(tagGLprimbuf));
+        memset(pBuf, 0, sizeof(tagGLprimbuf));
+        pBuf->nCount = g_PS2glListVBuf.nCount;
+        pBuf->pCode = (int)PS2glAllocator(g_PS2glListVBuf.nCount);
+        pBuf->pData = (float (*)[4])PS2glAllocator(g_PS2glListVBuf.nCount * 16);
+        memcpy((void*)pBuf->pCode, g_PS2glListVBuf.abCode, g_PS2glListVBuf.nCount);
+        memcpy(pBuf->pData, g_PS2glListVBuf.avData, g_PS2glListVBuf.nCount * 16);
+        pBuf->pTexUnit = (int)PS2glAllocator(g_PS2glListVBuf.nCount * 4);
+        memcpy((void*)pBuf->pTexUnit, g_PS2glListVBuf.aeTexUnit, g_PS2glListVBuf.nCount * 4);
+        PS2glAddPrimBuffer(pBuf, EOP);
+    }
+    g_PS2glListVBuf.nCount = 0;
+    g_PS2glContext.pCurListVCode = g_PS2glListVBuf.abCode;
+    g_PS2glContext.pCurListVData = g_PS2glListVBuf.avData;
+    g_PS2glContext.pCurListTexUnit = (int*)g_PS2glListVBuf.aeTexUnit;
+}
+
+void PS2glResetPrimBuffer(void)
+{
+    g_PS2glContext.pVBuf = g_PS2glContext.pVBuf0;
+    g_PS2glContext.pNBuf = g_PS2glContext.pNBuf0;
+    g_PS2glContext.pCBuf = g_PS2glContext.pCBuf0;
+    g_PS2glContext.pTBuf = g_PS2glContext.pTBuf0;
+    g_PS2glContext.pCBuf_b = g_PS2glContext.pCBuf0_b;
+    g_PS2glContext.pTBuf_b = g_PS2glContext.pTBuf0_b;
+    g_PS2glContext.iBufCount = 0;
+}
+
+void PS2glListAssembleQuads(void)
+{
+    float (*pV1)[4];
+    float (*param0)[4];
+    float (*pC1)[4];
+    float (*pT1)[4];
+    float (*pC1_b)[4];
+    float (*pT1_b)[4];
+    int iQuadCount;
+    int I;
+    float (*pV)[4];
+    float (*pN)[4];
+    float (*pC)[4];
+    float (*pT)[4];
+    float (*pC_b)[4];
+    float (*pT_b)[4];
+
+    iQuadCount = g_PS2glContext.iBufCount >> 2;
+    pV = g_PS2glContext.pVBuf0;
+    pN = g_PS2glContext.pNBuf0;
+    pC = g_PS2glContext.pCBuf0;
+    pT = g_PS2glContext.pTBuf0;
+    pC_b = g_PS2glContext.pCBuf0_b;
+    pT_b = g_PS2glContext.pTBuf0_b;
+    pV1 = pV + iQuadCount * 6;
+    param0 = pN + iQuadCount * 6;
+    pC1 = pC + iQuadCount * 6;
+    pT1 = pT + iQuadCount * 6;
+    pC1_b = pC_b + iQuadCount * 6;
+    pT1_b = pT_b + iQuadCount * 6;
+    pV += g_PS2glContext.iBufCount;
+    pN += g_PS2glContext.iBufCount;
+    pC += g_PS2glContext.iBufCount;
+    pT += g_PS2glContext.iBufCount;
+    pC_b += g_PS2glContext.iBufCount;
+    pT_b += g_PS2glContext.iBufCount;
+    for (I = 0; I < iQuadCount; I++)
+    {
+        *(quad*)(pV1 - 1) = *(quad*)(pV - 1);
+        *(quad*)(pV1 - 2) = *(quad*)(pV - 2);
+        *(quad*)(pV1 - 4) = *(quad*)(pV - 1);
+        *(quad*)(pV1 - 3) = *(quad*)(pV - 3);
+        *(quad*)(pV1 - 5) = *(quad*)(pV - 3);
+        *(quad*)(pV1 - 6) = *(quad*)(pV - 4);
+        if (g_PS2glContext.nLightBits & 0x400)
+        {
+            *(quad*)(param0 - 1) = *(quad*)(pN - 1);
+            *(quad*)(param0 - 2) = *(quad*)(pN - 2);
+            *(quad*)(param0 - 4) = *(quad*)(pN - 1);
+            *(quad*)(param0 - 3) = *(quad*)(pN - 3);
+            *(quad*)(param0 - 5) = *(quad*)(pN - 3);
+            *(quad*)(param0 - 6) = *(quad*)(pN - 4);
+        }
+        else
+        {
+            *(quad*)(pC1 - 1) = *(quad*)(pC - 1);
+            *(quad*)(pC1 - 2) = *(quad*)(pC - 2);
+            *(quad*)(pC1 - 4) = *(quad*)(pC - 1);
+            *(quad*)(pC1 - 3) = *(quad*)(pC - 3);
+            *(quad*)(pC1 - 5) = *(quad*)(pC - 3);
+            *(quad*)(pC1 - 6) = *(quad*)(pC - 4);
+            *(quad*)(pC1_b - 1) = *(quad*)(pC_b - 1);
+            *(quad*)(pC1_b - 2) = *(quad*)(pC_b - 2);
+            *(quad*)(pC1_b - 4) = *(quad*)(pC_b - 1);
+            *(quad*)(pC1_b - 3) = *(quad*)(pC_b - 3);
+            *(quad*)(pC1_b - 5) = *(quad*)(pC_b - 3);
+            *(quad*)(pC1_b - 6) = *(quad*)(pC_b - 4);
+        }
+        *(quad*)(pT1 - 1) = *(quad*)(pT - 1);
+        *(quad*)(pT1 - 2) = *(quad*)(pT - 2);
+        *(quad*)(pT1 - 4) = *(quad*)(pT - 1);
+        *(quad*)(pT1 - 3) = *(quad*)(pT - 3);
+        *(quad*)(pT1 - 5) = *(quad*)(pT - 3);
+        *(quad*)(pT1 - 6) = *(quad*)(pT - 4);
+        *(quad*)(pT1_b - 1) = *(quad*)(pT_b - 1);
+        *(quad*)(pT1_b - 2) = *(quad*)(pT_b - 2);
+        *(quad*)(pT1_b - 4) = *(quad*)(pT_b - 1);
+        *(quad*)(pT1_b - 3) = *(quad*)(pT_b - 3);
+        *(quad*)(pT1_b - 5) = *(quad*)(pT_b - 3);
+        *(quad*)(pT1_b - 6) = *(quad*)(pT_b - 4);
+        pV1 -= 6;
+        param0 -= 6;
+        pC1 -= 6;
+        pT1 -= 6;
+        pC1_b -= 6;
+        pT1_b -= 6;
+        pV -= 4;
+        pN -= 4;
+        pC -= 4;
+        pT -= 4;
+        pC_b -= 4;
+        pT_b -= 4;
+    }
+    g_PS2glContext.iBufCount = iQuadCount * 6;
+}
+
+void PS2glComputeBS(float* pfvBS, float (*pV)[4], int iCount, float* pBB, unsigned char bDivQ)
+{
+    int i;
+    float fNX;
+    float fPX;
+    float fNY;
+    float fPY;
+    float fNZ;
+    float fPZ;
+    float fTemp;
+    float fQ;
+    float fWidth;
+    float fHeight;
+    float fDepth;
+
+    if (!bDivQ)
+    {
+        fPX = (*pV)[0];
+        fPY = (*pV)[1];
+        fPZ = (*pV)[2];
+        fNX = fPX;
+        fNY = fPY;
+        fNZ = fPZ;
+        pV++;
+        for (i = 1; i < iCount; i++)
+        {
+            fTemp = (*pV)[0];
+            if (fTemp < fNX)
+                fNX = fTemp;
+            else if (fTemp > fPX)
+                fPX = fTemp;
+            fTemp = (*pV)[1];
+            if (fTemp < fNY)
+                fNY = fTemp;
+            else if (fTemp > fPY)
+                fPY = fTemp;
+            fTemp = (*pV)[2];
+            if (fTemp < fNZ)
+                fNZ = fTemp;
+            else if (fTemp > fPZ)
+                fPZ = fTemp;
+            pV++;
+        }
+    }
+    else
+    {
+        fQ = 1.0f / (*pV)[3];
+        fPX = (*pV)[0] * fQ;
+        fPY = (*pV)[1] * fQ;
+        fPZ = (*pV)[2] * fQ;
+        fNX = fPX;
+        fNY = fPY;
+        fNZ = fPZ;
+        pV++;
+        for (i = 1; i < iCount; i++)
+        {
+            fQ = 1.0f / (*pV)[3];
+            fTemp = (*pV)[0] * fQ;
+            if (fTemp < fNX)
+                fNX = fTemp;
+            else if (fTemp > fPX)
+                fPX = fTemp;
+            fTemp = (*pV)[1] * fQ;
+            if (fTemp < fNY)
+                fNY = fTemp;
+            else if (fTemp > fPY)
+                fPY = fTemp;
+            fTemp = (*pV)[2] * fQ;
+            if (fTemp < fNZ)
+                fNZ = fTemp;
+            else if (fTemp > fPZ)
+                fPZ = fTemp;
+            pV++;
+        }
+    }
+    fWidth = 0.5f * (fPX - fNX);
+    fHeight = 0.5f * (fPY - fNY);
+    fDepth = 0.5f * (fPZ - fNZ);
+    if (pBB)
+    {
+        pBB[0] = fNX;
+        pBB[1] = fPX;
+        pBB[2] = fNY;
+        pBB[3] = fPY;
+        pBB[4] = fNZ;
+        pBB[5] = fPZ;
+    }
+    pfvBS[0] = fNX + fWidth;
+    pfvBS[1] = fNY + fHeight;
+    pfvBS[2] = fNZ + fDepth;
+    pfvBS[3] = PS2gl_xSqrt(g_fBSMultiplicator * (fWidth * fWidth + fHeight * fHeight + fDepth * fDepth));
+}
+
+void PS2glMergeBB(float* pDstBB, float* pSrcBB)
+{
+    int i;
+
+    if (pSrcBB)
+    {
+        for (i = 0; i < 3; i++, pDstBB += 2)
+        {
+            if (pDstBB[0] > pSrcBB[0])
+                pDstBB[0] = pSrcBB[0];
+            if (pDstBB[1] < pSrcBB[1])
+                pDstBB[1] = pSrcBB[1];
+            pSrcBB += 2;
+        }
+    }
+    else
+    {
+        pDstBB[0] = 16777215.0f;
+        /* The retail line table gives the last five stores one source line;
+           keeping them together reproduces its DWARF line entries. */
+        pDstBB[1] = -16777215.0f; pDstBB[2] = 16777215.0f; pDstBB[3] = -16777215.0f; pDstBB[4] = 16777215.0f; pDstBB[5] = -16777215.0f;
+    }
+}
+
+void PS2glComputeBSfromBB(float* pfvBS, float* pBB)
+{
+    float* pfFirst;
+    float fHeight;
+    float fDepth;
+    float fWidth;
+
+    /* Not original source, needs cleaning up: found by the permuter. Reading
+       pBB[0] through a pointer local swaps the f5/f6 temporaries as retail has them. */
+    fWidth = 0.5f * (pBB[1] - (*(pfFirst = &pBB[0])));
+    fHeight = 0.5f * (pBB[3] - pBB[2]);
+    fDepth = 0.5f * (pBB[5] - pBB[4]);
+    pfvBS[0] = pBB[0] + fWidth;
+    pfvBS[1] = pBB[2] + fHeight;
+    pfvBS[2] = pBB[4] + fDepth;
+    pfvBS[3] = PS2gl_xSqrt(g_fBSMultiplicator * (fWidth * fWidth + fHeight * fHeight + fDepth * fDepth));
+}
+
 void PS2glListSaveBuffer(unsigned char EOP)
 {
     unsigned int cbPartSize;
@@ -4172,1025 +4518,740 @@ void PS2glListSaveBuffer(unsigned char EOP)
     }
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 671–678 */
-/* addr: 0x00153d50  size: 124 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 671
- *   +0x000c -> line 673
- *   +0x0014 -> line 671
- *   +0x0018 -> line 672
- *   +0x0020 -> line 671
- *   +0x0024 -> line 673
- *   +0x0028 -> line 671
- *   +0x002c -> line 673
- *   +0x0030 -> line 674
- *   +0x0034 -> line 672
- *   +0x003c -> line 674
- *   +0x0040 -> line 677
- *   +0x004c -> line 675
- *   +0x0050 -> line 677
- *   +0x0054 -> line 675
- *   +0x005c -> line 676
- *   +0x0068 -> line 677
- *   +0x0074 -> line 678
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-/* sqrt.s has no C form under the baseline (MWCC calls sqrtf). */
-inline float PS2gl_xSqrt(float x)
+void PS2glAddPrimBuffer(tagGLprimbuf* pBuf, unsigned char EOP)
 {
-    float r;
-    asm { sqrt.s r, x }
-    return r;
-}
-
-void PS2glComputeBSfromBB(float* pfvBS, float* pBB)
-{
-    float* pfFirst;
-    float fHeight;
-    float fDepth;
-    float fWidth;
-
-    /* Not original source, needs cleaning up: found by the permuter. Reading
-       pBB[0] through a pointer local swaps the f5/f6 temporaries as retail has them. */
-    fWidth = 0.5f * (pBB[1] - (*(pfFirst = &pBB[0])));
-    fHeight = 0.5f * (pBB[3] - pBB[2]);
-    fDepth = 0.5f * (pBB[5] - pBB[4]);
-    pfvBS[0] = pBB[0] + fWidth;
-    pfvBS[1] = pBB[2] + fHeight;
-    pfvBS[2] = pBB[4] + fDepth;
-    pfvBS[3] = PS2gl_xSqrt(g_fBSMultiplicator * (fWidth * fWidth + fHeight * fHeight + fDepth * fDepth));
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 641–665 */
-/* addr: 0x00153dd0  size: 148 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 641
- *   +0x0008 -> line 645
- *   +0x0020 -> line 646
- *   +0x0028 -> line 649
- *   +0x0040 -> line 650
- *   +0x0048 -> line 653
- *   +0x0050 -> line 651
- *   +0x0054 -> line 653
- *   +0x005c -> line 654
- *   +0x0064 -> line 659
- *   +0x0068 -> line 661
- *   +0x006c -> line 659
- *   +0x0070 -> line 661
- *   +0x0074 -> line 659
- *   +0x0078 -> line 661
- *   +0x008c -> line 665
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void PS2glMergeBB(float* pDstBB, float* pSrcBB)
-{
-    int i;
-
-    if (pSrcBB)
+    pBuf->bEOP = EOP;
+    if (g_PS2glContext.pCurPrimBuf == NULL)
     {
-        for (i = 0; i < 3; i++, pDstBB += 2)
+        *g_PS2glContext.ppCurPrimBufHead = pBuf;
+        if (g_PS2glContext.pCurListData->pPrimBufTail)
         {
-            if (pDstBB[0] > pSrcBB[0])
-                pDstBB[0] = pSrcBB[0];
-            if (pDstBB[1] < pSrcBB[1])
-                pDstBB[1] = pSrcBB[1];
-            pSrcBB += 2;
-        }
-    }
-    else
-    {
-        pDstBB[0] = 16777215.0f;
-        /* The retail line table gives the last five stores one source line;
-           keeping them together reproduces its DWARF line entries. */
-        pDstBB[1] = -16777215.0f; pDstBB[2] = 16777215.0f; pDstBB[3] = -16777215.0f; pDstBB[4] = 16777215.0f; pDstBB[5] = -16777215.0f;
-    }
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 563–635 */
-/* addr: 0x00153e70  size: 628 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 563
- *   +0x0008 -> line 565
- *   +0x000c -> line 570
- *   +0x0010 -> line 566
- *   +0x0014 -> line 570
- *   +0x0018 -> line 567
- *   +0x001c -> line 565
- *   +0x0020 -> line 566
- *   +0x0024 -> line 567
- *   +0x0028 -> line 570
- *   +0x0030 -> line 572
- *   +0x0034 -> line 573
- *   +0x0044 -> line 574
- *   +0x0050 -> line 575
- *   +0x0060 -> line 576
- *   +0x0068 -> line 577
- *   +0x006c -> line 578
- *   +0x007c -> line 579
- *   +0x0088 -> line 580
- *   +0x0098 -> line 581
- *   +0x00a0 -> line 582
- *   +0x00a4 -> line 583
- *   +0x00b4 -> line 584
- *   +0x00c0 -> line 585
- *   +0x00d0 -> line 586
- *   +0x00d8 -> line 588
- *   +0x00e8 -> line 589
- *   +0x00f0 -> line 592
- *   +0x00fc -> line 598
- *   +0x0100 -> line 593
- *   +0x0104 -> line 598
- *   +0x0108 -> line 594
- *   +0x010c -> line 595
- *   +0x0110 -> line 592
- *   +0x0114 -> line 596
- *   +0x0118 -> line 593
- *   +0x011c -> line 595
- *   +0x0120 -> line 594
- *   +0x0124 -> line 593
- *   +0x0128 -> line 594
- *   +0x012c -> line 598
- *   +0x0134 -> line 600
- *   +0x0138 -> line 601
- *   +0x013c -> line 600
- *   +0x0140 -> line 601
- *   +0x0144 -> line 602
- *   +0x0154 -> line 603
- *   +0x0160 -> line 604
- *   +0x0170 -> line 605
- *   +0x0178 -> line 606
- *   +0x0180 -> line 607
- *   +0x0190 -> line 608
- *   +0x0198 -> line 609
- *   +0x01a8 -> line 610
- *   +0x01b0 -> line 611
- *   +0x01b8 -> line 612
- *   +0x01c8 -> line 613
- *   +0x01d0 -> line 614
- *   +0x01e0 -> line 615
- *   +0x01e8 -> line 617
- *   +0x01f8 -> line 619
- *   +0x020c -> line 620
- *   +0x0214 -> line 621
- *   +0x0218 -> line 622
- *   +0x0220 -> line 624
- *   +0x0224 -> line 625
- *   +0x0228 -> line 626
- *   +0x022c -> line 627
- *   +0x0230 -> line 628
- *   +0x0234 -> line 629
- *   +0x0238 -> line 631
- *   +0x0240 -> line 634
- *   +0x024c -> line 632
- *   +0x0250 -> line 633
- *   +0x0254 -> line 632
- *   +0x0258 -> line 633
- *   +0x025c -> line 634
- *   +0x026c -> line 635
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void PS2glComputeBS(float* pfvBS, float (*pV)[4], int iCount, float* pBB, unsigned char bDivQ)
-{
-    int i;
-    float fNX;
-    float fPX;
-    float fNY;
-    float fPY;
-    float fNZ;
-    float fPZ;
-    float fTemp;
-    float fQ;
-    float fWidth;
-    float fHeight;
-    float fDepth;
-
-    if (!bDivQ)
-    {
-        fPX = (*pV)[0];
-        fPY = (*pV)[1];
-        fPZ = (*pV)[2];
-        fNX = fPX;
-        fNY = fPY;
-        fNZ = fPZ;
-        pV++;
-        for (i = 1; i < iCount; i++)
-        {
-            fTemp = (*pV)[0];
-            if (fTemp < fNX)
-                fNX = fTemp;
-            else if (fTemp > fPX)
-                fPX = fTemp;
-            fTemp = (*pV)[1];
-            if (fTemp < fNY)
-                fNY = fTemp;
-            else if (fTemp > fPY)
-                fPY = fTemp;
-            fTemp = (*pV)[2];
-            if (fTemp < fNZ)
-                fNZ = fTemp;
-            else if (fTemp > fPZ)
-                fPZ = fTemp;
-            pV++;
-        }
-    }
-    else
-    {
-        fQ = 1.0f / (*pV)[3];
-        fPX = (*pV)[0] * fQ;
-        fPY = (*pV)[1] * fQ;
-        fPZ = (*pV)[2] * fQ;
-        fNX = fPX;
-        fNY = fPY;
-        fNZ = fPZ;
-        pV++;
-        for (i = 1; i < iCount; i++)
-        {
-            fQ = 1.0f / (*pV)[3];
-            fTemp = (*pV)[0] * fQ;
-            if (fTemp < fNX)
-                fNX = fTemp;
-            else if (fTemp > fPX)
-                fPX = fTemp;
-            fTemp = (*pV)[1] * fQ;
-            if (fTemp < fNY)
-                fNY = fTemp;
-            else if (fTemp > fPY)
-                fPY = fTemp;
-            fTemp = (*pV)[2] * fQ;
-            if (fTemp < fNZ)
-                fNZ = fTemp;
-            else if (fTemp > fPZ)
-                fPZ = fTemp;
-            pV++;
-        }
-    }
-    fWidth = 0.5f * (fPX - fNX);
-    fHeight = 0.5f * (fPY - fNY);
-    fDepth = 0.5f * (fPZ - fNZ);
-    if (pBB)
-    {
-        pBB[0] = fNX;
-        pBB[1] = fPX;
-        pBB[2] = fNY;
-        pBB[3] = fPY;
-        pBB[4] = fNZ;
-        pBB[5] = fPZ;
-    }
-    pfvBS[0] = fNX + fWidth;
-    pfvBS[1] = fNY + fHeight;
-    pfvBS[2] = fNZ + fDepth;
-    pfvBS[3] = PS2gl_xSqrt(g_fBSMultiplicator * (fWidth * fWidth + fHeight * fHeight + fDepth * fDepth));
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 453–552 */
-/* addr: 0x001540f0  size: 552 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 453
- *   +0x0004 -> line 462
- *   +0x0008 -> line 453
- *   +0x000c -> line 492
- *   +0x0010 -> line 462
- *   +0x0014 -> line 465
- *   +0x0018 -> line 462
- *   +0x001c -> line 465
- *   +0x0020 -> line 483
- *   +0x0024 -> line 474
- *   +0x0030 -> line 466
- *   +0x0034 -> line 474
- *   +0x0038 -> line 466
- *   +0x003c -> line 483
- *   +0x0040 -> line 467
- *   +0x0044 -> line 475
- *   +0x0048 -> line 467
- *   +0x004c -> line 484
- *   +0x0050 -> line 468
- *   +0x0054 -> line 476
- *   +0x0058 -> line 468
- *   +0x005c -> line 485
- *   +0x0060 -> line 470
- *   +0x0064 -> line 477
- *   +0x0068 -> line 470
- *   +0x006c -> line 486
- *   +0x0070 -> line 471
- *   +0x0074 -> line 479
- *   +0x0078 -> line 471
- *   +0x007c -> line 488
- *   +0x0080 -> line 480
- *   +0x0084 -> line 492
- *   +0x0090 -> line 494
- *   +0x0094 -> line 501
- *   +0x0098 -> line 494
- *   +0x009c -> line 495
- *   +0x00a4 -> line 496
- *   +0x00ac -> line 497
- *   +0x00b4 -> line 498
- *   +0x00bc -> line 499
- *   +0x00c4 -> line 501
- *   +0x00d4 -> line 503
- *   +0x00dc -> line 504
- *   +0x00e4 -> line 505
- *   +0x00ec -> line 506
- *   +0x00f4 -> line 507
- *   +0x00fc -> line 508
- *   +0x0100 -> line 509
- *   +0x0108 -> line 512
- *   +0x0110 -> line 513
- *   +0x0118 -> line 514
- *   +0x0120 -> line 515
- *   +0x0128 -> line 516
- *   +0x0130 -> line 517
- *   +0x0138 -> line 519
- *   +0x0140 -> line 520
- *   +0x0148 -> line 521
- *   +0x0150 -> line 522
- *   +0x0158 -> line 523
- *   +0x0160 -> line 524
- *   +0x0168 -> line 528
- *   +0x016c -> line 550
- *   +0x0170 -> line 544
- *   +0x0174 -> line 550
- *   +0x0178 -> line 544
- *   +0x0184 -> line 545
- *   +0x0194 -> line 528
- *   +0x0198 -> line 529
- *   +0x01a0 -> line 530
- *   +0x01a8 -> line 531
- *   +0x01b0 -> line 532
- *   +0x01b8 -> line 533
- *   +0x01c0 -> line 545
- *   +0x01c4 -> line 535
- *   +0x01c8 -> line 544
- *   +0x01cc -> line 535
- *   +0x01d0 -> line 536
- *   +0x01d8 -> line 537
- *   +0x01e0 -> line 538
- *   +0x01e8 -> line 539
- *   +0x01f0 -> line 540
- *   +0x01f8 -> line 545
- *   +0x01fc -> line 550
- *   +0x0208 -> line 551
- *   +0x021c -> line 552
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void PS2glListAssembleQuads(void)
-{
-    float (*pV1)[4];
-    float (*param0)[4];
-    float (*pC1)[4];
-    float (*pT1)[4];
-    float (*pC1_b)[4];
-    float (*pT1_b)[4];
-    int iQuadCount;
-    int I;
-    float (*pV)[4];
-    float (*pN)[4];
-    float (*pC)[4];
-    float (*pT)[4];
-    float (*pC_b)[4];
-    float (*pT_b)[4];
-
-    iQuadCount = g_PS2glContext.iBufCount >> 2;
-    pV = g_PS2glContext.pVBuf0;
-    pN = g_PS2glContext.pNBuf0;
-    pC = g_PS2glContext.pCBuf0;
-    pT = g_PS2glContext.pTBuf0;
-    pC_b = g_PS2glContext.pCBuf0_b;
-    pT_b = g_PS2glContext.pTBuf0_b;
-    pV1 = pV + iQuadCount * 6;
-    param0 = pN + iQuadCount * 6;
-    pC1 = pC + iQuadCount * 6;
-    pT1 = pT + iQuadCount * 6;
-    pC1_b = pC_b + iQuadCount * 6;
-    pT1_b = pT_b + iQuadCount * 6;
-    pV += g_PS2glContext.iBufCount;
-    pN += g_PS2glContext.iBufCount;
-    pC += g_PS2glContext.iBufCount;
-    pT += g_PS2glContext.iBufCount;
-    pC_b += g_PS2glContext.iBufCount;
-    pT_b += g_PS2glContext.iBufCount;
-    for (I = 0; I < iQuadCount; I++)
-    {
-        *(quad*)(pV1 - 1) = *(quad*)(pV - 1);
-        *(quad*)(pV1 - 2) = *(quad*)(pV - 2);
-        *(quad*)(pV1 - 4) = *(quad*)(pV - 1);
-        *(quad*)(pV1 - 3) = *(quad*)(pV - 3);
-        *(quad*)(pV1 - 5) = *(quad*)(pV - 3);
-        *(quad*)(pV1 - 6) = *(quad*)(pV - 4);
-        if (g_PS2glContext.nLightBits & 0x400)
-        {
-            *(quad*)(param0 - 1) = *(quad*)(pN - 1);
-            *(quad*)(param0 - 2) = *(quad*)(pN - 2);
-            *(quad*)(param0 - 4) = *(quad*)(pN - 1);
-            *(quad*)(param0 - 3) = *(quad*)(pN - 3);
-            *(quad*)(param0 - 5) = *(quad*)(pN - 3);
-            *(quad*)(param0 - 6) = *(quad*)(pN - 4);
+            g_PS2glContext.pCurListData->pPrimBufTail->pNext = pBuf;
         }
         else
         {
-            *(quad*)(pC1 - 1) = *(quad*)(pC - 1);
-            *(quad*)(pC1 - 2) = *(quad*)(pC - 2);
-            *(quad*)(pC1 - 4) = *(quad*)(pC - 1);
-            *(quad*)(pC1 - 3) = *(quad*)(pC - 3);
-            *(quad*)(pC1 - 5) = *(quad*)(pC - 3);
-            *(quad*)(pC1 - 6) = *(quad*)(pC - 4);
-            *(quad*)(pC1_b - 1) = *(quad*)(pC_b - 1);
-            *(quad*)(pC1_b - 2) = *(quad*)(pC_b - 2);
-            *(quad*)(pC1_b - 4) = *(quad*)(pC_b - 1);
-            *(quad*)(pC1_b - 3) = *(quad*)(pC_b - 3);
-            *(quad*)(pC1_b - 5) = *(quad*)(pC_b - 3);
-            *(quad*)(pC1_b - 6) = *(quad*)(pC_b - 4);
+            g_PS2glContext.pCurListData->pPrimBufHead = pBuf;
+            g_PS2glContext.pCurListData->pPrimBufTail = pBuf;
         }
-        *(quad*)(pT1 - 1) = *(quad*)(pT - 1);
-        *(quad*)(pT1 - 2) = *(quad*)(pT - 2);
-        *(quad*)(pT1 - 4) = *(quad*)(pT - 1);
-        *(quad*)(pT1 - 3) = *(quad*)(pT - 3);
-        *(quad*)(pT1 - 5) = *(quad*)(pT - 3);
-        *(quad*)(pT1 - 6) = *(quad*)(pT - 4);
-        *(quad*)(pT1_b - 1) = *(quad*)(pT_b - 1);
-        *(quad*)(pT1_b - 2) = *(quad*)(pT_b - 2);
-        *(quad*)(pT1_b - 4) = *(quad*)(pT_b - 1);
-        *(quad*)(pT1_b - 3) = *(quad*)(pT_b - 3);
-        *(quad*)(pT1_b - 5) = *(quad*)(pT_b - 3);
-        *(quad*)(pT1_b - 6) = *(quad*)(pT_b - 4);
-        pV1 -= 6;
-        param0 -= 6;
-        pC1 -= 6;
-        pT1 -= 6;
-        pC1_b -= 6;
-        pT1_b -= 6;
-        pV -= 4;
-        pN -= 4;
-        pC -= 4;
-        pT -= 4;
-        pC_b -= 4;
-        pT_b -= 4;
-    }
-    g_PS2glContext.iBufCount = iQuadCount * 6;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 412–422 */
-/* addr: 0x00154320  size: 108 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 421
- *   +0x0008 -> line 412
- *   +0x0010 -> line 413
- *   +0x0018 -> line 414
- *   +0x0020 -> line 415
- *   +0x0028 -> line 417
- *   +0x0030 -> line 418
- *   +0x0038 -> line 412
- *   +0x0040 -> line 413
- *   +0x0048 -> line 414
- *   +0x0050 -> line 415
- *   +0x0058 -> line 417
- *   +0x0060 -> line 418
- *   +0x0064 -> line 422
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void PS2glResetPrimBuffer(void)
-{
-    g_PS2glContext.pVBuf = g_PS2glContext.pVBuf0;
-    g_PS2glContext.pNBuf = g_PS2glContext.pNBuf0;
-    g_PS2glContext.pCBuf = g_PS2glContext.pCBuf0;
-    g_PS2glContext.pTBuf = g_PS2glContext.pTBuf0;
-    g_PS2glContext.pCBuf_b = g_PS2glContext.pCBuf0_b;
-    g_PS2glContext.pTBuf_b = g_PS2glContext.pTBuf0_b;
-    g_PS2glContext.iBufCount = 0;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 361–387 */
-/* addr: 0x00154390  size: 328 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 361
- *   +0x0004 -> line 362
- *   +0x0008 -> line 361
- *   +0x0014 -> line 362
- *   +0x0030 -> line 364
- *   +0x0040 -> line 365
- *   +0x0050 -> line 367
- *   +0x005c -> line 369
- *   +0x0070 -> line 370
- *   +0x0088 -> line 371
- *   +0x00a0 -> line 372
- *   +0x00bc -> line 374
- *   +0x00d4 -> line 375
- *   +0x00f0 -> line 378
- *   +0x00fc -> line 381
- *   +0x0100 -> line 382
- *   +0x0104 -> line 381
- *   +0x0108 -> line 382
- *   +0x0114 -> line 383
- *   +0x0124 -> line 385
- *   +0x0134 -> line 387
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void PS2glListSaveVBuf(unsigned char EOP)
-{
-    tagGLprimbuf* pBuf;
-
-    if (g_PS2glContext.bInBeginEndPair && g_PS2glListVBuf.nCount)
-    {
-        pBuf = (tagGLprimbuf*)PS2glAllocator(sizeof(tagGLprimbuf));
-        memset(pBuf, 0, sizeof(tagGLprimbuf));
-        pBuf->nCount = g_PS2glListVBuf.nCount;
-        pBuf->pCode = (int)PS2glAllocator(g_PS2glListVBuf.nCount);
-        pBuf->pData = (float (*)[4])PS2glAllocator(g_PS2glListVBuf.nCount * 16);
-        memcpy((void*)pBuf->pCode, g_PS2glListVBuf.abCode, g_PS2glListVBuf.nCount);
-        memcpy(pBuf->pData, g_PS2glListVBuf.avData, g_PS2glListVBuf.nCount * 16);
-        pBuf->pTexUnit = (int)PS2glAllocator(g_PS2glListVBuf.nCount * 4);
-        memcpy((void*)pBuf->pTexUnit, g_PS2glListVBuf.aeTexUnit, g_PS2glListVBuf.nCount * 4);
-        PS2glAddPrimBuffer(pBuf, EOP);
-    }
-    g_PS2glListVBuf.nCount = 0;
-    g_PS2glContext.pCurListVCode = g_PS2glListVBuf.abCode;
-    g_PS2glContext.pCurListVData = g_PS2glListVBuf.avData;
-    g_PS2glContext.pCurListTexUnit = (int*)g_PS2glListVBuf.aeTexUnit;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 346–358 */
-/* addr: 0x001544e0  size: 164 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 346
- *   +0x0004 -> line 347
- *   +0x0008 -> line 346
- *   +0x0018 -> line 347
- *   +0x0028 -> line 349
- *   +0x0030 -> line 352
- *   +0x0048 -> line 354
- *   +0x0060 -> line 356
- *   +0x0078 -> line 357
- *   +0x007c -> line 356
- *   +0x0080 -> line 357
- *   +0x0090 -> line 358
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void PS2glSaveListCall(unsigned int eCode, float (*pData)[4])
-{
-    if (g_PS2glListVBuf.nCount >= 256)
-        PS2glListSaveVBuf(0);
-    *g_PS2glContext.pCurListVCode++ = (unsigned char)eCode;
-    *g_PS2glContext.pCurListTexUnit++ = 0;
-    *(quad*)g_PS2glContext.pCurListVData++ = *(quad*)pData;
-    g_PS2glListVBuf.nCount++;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 332–342 */
-/* addr: 0x00154590  size: 176 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 332
- *   +0x0004 -> line 333
- *   +0x0008 -> line 332
- *   +0x0020 -> line 333
- *   +0x0030 -> line 335
- *   +0x0038 -> line 338
- *   +0x0050 -> line 339
- *   +0x0068 -> line 340
- *   +0x0080 -> line 341
- *   +0x0084 -> line 340
- *   +0x0088 -> line 341
- *   +0x0098 -> line 342
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void PS2glSaveListCallMultiTex(unsigned int eCode, unsigned int texture, float (*pData)[4])
-{
-    if (g_PS2glListVBuf.nCount >= 256)
-        PS2glListSaveVBuf(0);
-    *g_PS2glContext.pCurListVCode++ = (unsigned char)eCode;
-    *g_PS2glContext.pCurListTexUnit++ = texture;
-    *(quad*)g_PS2glContext.pCurListVData++ = *(quad*)pData;
-    g_PS2glListVBuf.nCount++;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 294–328 */
-/* addr: 0x00154640  size: 204 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 294
- *   +0x0004 -> line 295
- *   +0x0008 -> line 294
- *   +0x0018 -> line 295
- *   +0x001c -> line 300
- *   +0x0020 -> line 301
- *   +0x0024 -> line 302
- *   +0x0030 -> line 305
- *   +0x004c -> line 308
- *   +0x0058 -> line 309
- *   +0x0068 -> line 311
- *   +0x006c -> line 312
- *   +0x0074 -> line 315
- *   +0x0078 -> line 316
- *   +0x0088 -> line 318
- *   +0x0090 -> line 319
- *   +0x0094 -> line 320
- *   +0x0098 -> line 322
- *   +0x00a4 -> line 323
- *   +0x00a8 -> line 325
- *   +0x00b4 -> line 328
- *   +0x00b8 -> line 327
- *   +0x00bc -> line 328
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tagGLlistnode* PS2glListAllocNode(int cbParams)
-{
-    tagGLlistcalls* pCurCalls = g_PS2glContext.pCurListCalls;
-    tagGLlistnode* param0;
-    int cbNode;
-    int cbTotal;
-
-    cbNode = cbParams + 8;
-    cbParams -= cbNode;
-    cbTotal = (cbNode + 3) & ~3;
-    cbParams += cbTotal;
-    if ((pCurCalls == NULL) || (pCurCalls->cbCalls + cbTotal > 0x400))
-    {
-        pCurCalls = (tagGLlistcalls*)PS2glAllocator(0x408);
-        if (g_PS2glContext.pCurListCalls == NULL)
-        {
-            g_PS2glContext.pCurListData->pCalls = pCurCalls;
-        }
-        else
-        {
-            g_PS2glContext.pCurListCalls->pNext = pCurCalls;
-            g_PS2glContext.pPreListCalls = g_PS2glContext.pCurListCalls;
-        }
-        g_PS2glContext.pCurListCalls = pCurCalls;
-        pCurCalls->cbCalls = 0;
-        pCurCalls->pNext = 0;
-    }
-    cbNode = pCurCalls->cbCalls;
-    param0 = (tagGLlistnode*)((int)pCurCalls->aNodes + cbNode);
-    param0->cbParamCount = cbParams;
-    pCurCalls->cbCalls += cbTotal;
-    return param0;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 272–291 */
-/* addr: 0x00154710  size: 188 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 272
- *   +0x001c -> line 273
- *   +0x002c -> line 274
- *   +0x0034 -> line 275
- *   +0x003c -> line 274
- *   +0x0040 -> line 275
- *   +0x0048 -> line 276
- *   +0x005c -> line 279
- *   +0x0068 -> line 280
- *   +0x006c -> line 283
- *   +0x0070 -> line 280
- *   +0x0074 -> line 281
- *   +0x0078 -> line 282
- *   +0x007c -> line 283
- *   +0x0080 -> line 284
- *   +0x0088 -> line 285
- *   +0x0094 -> line 286
- *   +0x009c -> line 288
- *   +0x00a0 -> line 290
- *   +0x00a4 -> line 291
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void* PS2glListSaveParam(void* pParam, int cbParam)
-{
-    tagGLlistdatas* pDatas;
-    tagGLlistdatas* pCurDatas;
-    void* pBuf;
-
-    pBuf = PS2glAllocator(cbParam);
-    pDatas = g_PS2glContext.pCurListData->pDatas;
-    memcpy(pBuf, pParam, cbParam);
-    if ((pDatas == NULL) || (pDatas->apData[2] != 0))
-    {
-        pCurDatas = (tagGLlistdatas*)PS2glAllocator(16);
-        pCurDatas->apData[1] = pCurDatas->apData[2] = 0;
-        pCurDatas->apData[0] = (int)pBuf;
-        pCurDatas->pNext = pDatas;
-        g_PS2glContext.pCurListData->pDatas = pCurDatas;
-    }
-    else if (pDatas->apData[1] == 0)
-    {
-        pDatas->apData[1] = (int)pBuf;
     }
     else
     {
-        pDatas->apData[2] = (int)pBuf;
+        g_PS2glContext.pCurPrimBuf->pNext = pBuf;
+        g_PS2glContext.pCurPrimBuf->tagDma.next = &pBuf->tagDma;
     }
-    return pBuf;
+    g_PS2glContext.pCurPrimBuf = pBuf;
+    pBuf->tagDma.next = NULL;
+    pBuf->pNext = NULL;
+    if (EOP)
+        g_PS2glContext.pCurListData->pPrimBufTail = pBuf;
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 251–269 */
-/* addr: 0x001547d0  size: 156 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 251
- *   +0x0010 -> line 252
- *   +0x0020 -> line 253
- *   +0x002c -> line 254
- *   +0x0040 -> line 257
- *   +0x004c -> line 258
- *   +0x0050 -> line 261
- *   +0x0054 -> line 258
- *   +0x0058 -> line 259
- *   +0x005c -> line 260
- *   +0x0060 -> line 261
- *   +0x0064 -> line 262
- *   +0x006c -> line 263
- *   +0x0078 -> line 264
- *   +0x0080 -> line 266
- *   +0x0084 -> line 268
- *   +0x0088 -> line 269
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void* PS2glListSaveParamSpace(int cbParam)
+int PS2glCountListObject(tagListData* pData)
 {
-    tagGLlistdatas* pDatas;
-    tagGLlistdatas* pCurDatas;
-    void* pBuf;
-
-    pBuf = PS2glAllocator(cbParam);
-    pDatas = g_PS2glContext.pCurListData->pDatas;
-    if ((pDatas == NULL) || (pDatas->apData[2] != 0))
-    {
-        pCurDatas = (tagGLlistdatas*)PS2glAllocator(16);
-        pCurDatas->apData[1] = pCurDatas->apData[2] = 0;
-        pCurDatas->apData[0] = (int)pBuf;
-        pCurDatas->pNext = pDatas;
-        g_PS2glContext.pCurListData->pDatas = pCurDatas;
-    }
-    else if (pDatas->apData[1] == 0)
-    {
-        pDatas->apData[1] = (int)pBuf;
-    }
-    else
-    {
-        pDatas->apData[2] = (int)pBuf;
-    }
-    return pBuf;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 178–248 */
-/* addr: 0x00154870  size: 372 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 178
- *   +0x001c -> line 183
- *   +0x0024 -> line 188
- *   +0x0028 -> line 186
- *   +0x002c -> line 187
- *   +0x0030 -> line 188
- *   +0x003c -> line 190
- *   +0x0048 -> line 191
- *   +0x004c -> line 192
- *   +0x0058 -> line 194
- *   +0x0064 -> line 195
- *   +0x0068 -> line 209
- *   +0x0070 -> line 212
- *   +0x0074 -> line 211
- *   +0x0078 -> line 212
- *   +0x0080 -> line 213
- *   +0x0084 -> line 214
- *   +0x0090 -> line 217
- *   +0x0098 -> line 220
- *   +0x00b0 -> line 221
- *   +0x00c8 -> line 222
- *   +0x00e0 -> line 223
- *   +0x00ec -> line 225
- *   +0x00f8 -> line 228
- *   +0x0100 -> line 242
- *   +0x0118 -> line 243
- *   +0x0130 -> line 244
- *   +0x013c -> line 246
- *   +0x0148 -> line 247
- *   +0x0154 -> line 248
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void PS2glFreeListData(tagListData* pDataOfList)
-{
-    tagGLprimbuf* pNext;
-    tagGLlistdatas* pDatas;
-    tagGLprimbuf* pPrimBuf;
     tagGLlistcalls* pCalls;
+    tagGLlistnode* pNode;
+    unsigned int cbCalls;
+    unsigned int cbNode;
+    int iCount;
 
-    if (pDataOfList)
+    pCalls = pData->pCalls;
+    iCount = 0;
+    while (pCalls)
     {
-        pCalls = pDataOfList->pCalls;
-        pDatas = pDataOfList->pDatas;
-        pPrimBuf = pDataOfList->pPrimBufHead;
-        if ((unsigned int)pDataOfList->pDmaBuffer > 1)
+        pNode = (tagGLlistnode*)pCalls->aNodes;
+        cbCalls = 0;
+        while (pCalls && (cbCalls < pCalls->cbCalls))
         {
-            PS2glLiberator(pDataOfList->pDmaBuffer);
-            pDataOfList->pDmaBuffer = NULL;
-            if (pDataOfList->pSDLIndices)
+            cbNode = pNode->cbParamCount;
+            if (cbNode)
             {
-                PS2glLiberator((void*)pDataOfList->pSDLIndices);
-                pDataOfList->pSDLIndices = 0;
+                if ((pNode->pfns.pfnPlayParam == (void (*)(void*))plyPS2glBegin) ||
+                    (pNode->pfns.pfnPlayParam == (void (*)(void*))plyPS2glDrawArrays) ||
+                    (pNode->pfns.pfnPlayParam == (void (*)(void*))plyPS2glDrawElements))
+                {
+                    iCount++;
+                    /* Not original source: a redundant reload the compiler removes,
+                       found by the permuter; it gives cbNode retail's register. */
+                    cbNode = pNode->cbParamCount;
+                }
             }
+            pNode = (tagGLlistnode*)((char*)pNode + (cbNode + 8));
+            cbCalls += cbNode + 8;
         }
-        while (pCalls)
-        {
-            tagGLlistcalls* pNextCalls = pCalls->pNext;
-            PS2glLiberator(pCalls);
-            pCalls = pNextCalls;
-        }
-        while (pDatas)
-        {
-            tagGLlistdatas* pNextDatas = pDatas->pNext;
-            if (pDatas->apData[0])
-                PS2glLiberator((void*)pDatas->apData[0]);
-            if (pDatas->apData[1])
-                PS2glLiberator((void*)pDatas->apData[1]);
-            if (pDatas->apData[2])
-                PS2glLiberator((void*)pDatas->apData[2]);
-            PS2glLiberator(pDatas);
-            pDatas = pNextDatas;
-        }
-        while (pPrimBuf)
-        {
-            pNext = pPrimBuf->pNext;
-            if (pPrimBuf->pCode)
-                PS2glLiberator((void*)pPrimBuf->pCode);
-            if (pPrimBuf->pData)
-                PS2glLiberator(pPrimBuf->pData);
-            PS2glLiberator(pPrimBuf);
-            pPrimBuf = pNext;
-        }
-        PS2glLiberator(pDataOfList);
+        pCalls = pCalls->pNext;
     }
+    return iCount;
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 101–175 */
-/* addr: 0x001549f0  size: 176 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 101
- *   +0x0014 -> line 106
- *   +0x001c -> line 123
- *   +0x0020 -> line 128
- *   +0x0028 -> line 135
- *   +0x0034 -> line 136
- *   +0x0038 -> line 137
- *   +0x0048 -> line 153
- *   +0x0050 -> line 157
- *   +0x005c -> line 162
- *   +0x0068 -> line 163
- *   +0x006c -> line 164
- *   +0x0070 -> line 165
- *   +0x007c -> line 170
- *   +0x0088 -> line 171
- *   +0x008c -> line 172
- *   +0x0090 -> line 174
- *   +0x0098 -> line 175
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void PS2glFreeListDataPartially(tagListData* pDataOfList)
+void PS2glExecuteListData(tagListData* pData)
 {
-    tagGLprimbuf* pPrimBuf;
-    tagGLprimbuf* pNext;
+    unsigned int cbNode;
     tagGLlistcalls* pCalls;
+    tagGLlistnode* pNode;
+    unsigned int cbCalls;
 
-    if (pDataOfList)
+    pCalls = pData->pCalls;
+    g_PS2glContext.bInDisplayListExecution = 1;
+    while (pCalls)
     {
-        pCalls = pDataOfList->pCalls;
-        pPrimBuf = pDataOfList->pPrimBufHead;
-        while (pCalls)
+        pNode = (tagGLlistnode*)pCalls->aNodes;
+        cbCalls = 0;
+        while (pCalls && cbCalls < pCalls->cbCalls)
         {
-            tagGLlistcalls* pNextCalls = pCalls->pNext;
-            PS2glLiberator(pCalls);
-            pCalls = pNextCalls;
+            if (pNode->cbParamCount) pNode->pfns.pfnPlayParam(pNode->aParams); else pNode->pfns.pfnPlayVoid();
+            cbNode = pNode->cbParamCount + 8;
+            pNode = (tagGLlistnode*)((char*)pNode + cbNode);
+            cbCalls += cbNode;
         }
-        pDataOfList->pCalls = NULL;
-        while (pPrimBuf)
-        {
-            pNext = pPrimBuf->pNext;
-            if (pPrimBuf->pCode)
-            {
-                PS2glLiberator((void*)pPrimBuf->pCode);
-                pPrimBuf->pCode = 0;
-            }
-            if (pPrimBuf->pData)
-            {
-                PS2glLiberator(pPrimBuf->pData);
-                pPrimBuf->pData = NULL;
-            }
-            pPrimBuf = pNext;
-        }
+        pCalls = pCalls->pNext;
     }
+    g_PS2glContext.bInDisplayListExecution = 0;
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 56–98 */
-/* addr: 0x00154aa0  size: 232 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 56
- *   +0x0014 -> line 61
- *   +0x0024 -> line 62
- *   +0x0034 -> line 64
- *   +0x003c -> line 70
- *   +0x0040 -> line 68
- *   +0x0044 -> line 72
- *   +0x0050 -> line 76
- *   +0x0054 -> line 77
- *   +0x005c -> line 79
- *   +0x006c -> line 80
- *   +0x0070 -> line 83
- *   +0x0084 -> line 84
- *   +0x0088 -> line 87
- *   +0x008c -> line 85
- *   +0x0090 -> line 83
- *   +0x0094 -> line 86
- *   +0x0098 -> line 87
- *   +0x00a4 -> line 89
- *   +0x00b4 -> line 90
- *   +0x00b8 -> line 91
- *   +0x00bc -> line 93
- *   +0x00cc -> line 95
- *   +0x00d4 -> line 98
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tagListData** PS2glAddLists(unsigned int list, int range)
+void impPS2glListBase(unsigned int base)
 {
-    tagListNode* pNode;
+    g_PS2glContext.uiListBase = base;
+}
+
+unsigned char impPS2glIsList(unsigned int list)
+{
+    return PS2glSearchList(list) != 0;
+}
+
+unsigned int impPS2glGenLists(int range)
+{
+    unsigned int nIndex;
+
+    nIndex = g_PS2glContext.ListPool.nFreeIndex;
+    if (!PS2glAddLists(nIndex, range))
+        return 0;
+    g_PS2glContext.ListPool.nFreeIndex += range;
+    return nIndex;
+}
+
+void impPS2glDeleteLists(unsigned int list, int range)
+{
     tagListNodeSingle* pSingleIndex;
+    tagListNode* pNode;
+    tagListNode* pNodePre;
     int I;
+    int iNewNodeSize;
+    int iNewSize;
+    tagListNode* pNode1;
+    int iNodeSize;
+    int iDel;
+    tagListData** ppData;
+    tagListData** param0;
+    int iMove;
 
-    if (!list)
-        return NULL;
+    pSingleIndex = g_PS2glContext.ListPool.aSingleIndex;
+    pNodePre = NULL;
+    pNode = g_PS2glContext.ListPool.pFirstNode;
     if (range <= 0)
-        return NULL;
+        return;
     if (range == 1)
     {
-        for (I = 0, pSingleIndex = g_PS2glContext.ListPool.aSingleIndex; I < 64; I++, pSingleIndex++)
+        for (I = 0; I < 64; I++, pSingleIndex++)
         {
-            if (!pSingleIndex->nIndex)
+            if (pSingleIndex->nIndex == list)
             {
-                pSingleIndex->nIndex = list;
-                return &pSingleIndex->pData;
+                PS2glFreeListData(pSingleIndex->pData);
+                pSingleIndex->nIndex = 0;
+                pSingleIndex->pData = NULL;
+                return;
             }
         }
     }
-    pNode = (tagListNode*)PS2glAllocator(sizeof(tagListNode) + (range - 1) * sizeof(int));
-    pNode->iSize = range;
-    pNode->nIndex = list;
-    pNode->pNext = NULL;
-    memset(pNode->apData, 0, range * sizeof(int));
-    if (g_PS2glContext.ListPool.pLastNode)
-        g_PS2glContext.ListPool.pLastNode->pNext = pNode;
-    g_PS2glContext.ListPool.pLastNode = pNode;
-    if (!g_PS2glContext.ListPool.pFirstNode)
-        g_PS2glContext.ListPool.pFirstNode = pNode;
-    return (tagListData**)pNode->apData;
+    while (pNode)
+    {
+        if ((pNode->nIndex < list) && (list < pNode->nIndex + pNode->iSize))
+        {
+            iNewNodeSize = list - pNode->nIndex;
+            iNewSize = (iNewNodeSize - 1) * 4 + sizeof(tagListNode);
+            pNode1 = (tagListNode*)PS2glAllocator(iNewSize);
+            memcpy(pNode1, pNode, iNewSize);
+            pNode1->iSize = iNewNodeSize;
+            pNode1->pNext = pNode;
+            if (pNodePre == NULL)
+            {
+                g_PS2glContext.ListPool.pFirstNode = pNode1;
+            }
+            else
+            {
+                pNodePre->pNext = pNode1->pNext;
+            }
+            pNode->nIndex = list;
+            pNode->iSize -= iNewNodeSize;
+            memcpy(pNode->apData, (void*)pNode->apData[iNewNodeSize], iNewNodeSize * 4);
+        }
+        if (pNode->nIndex == list)
+        {
+            iNodeSize = pNode->iSize;
+            iDel = (iNodeSize < range) ? iNodeSize : range;
+            ppData = (tagListData**)pNode->apData;
+            for (; iDel > 0; iDel--)
+                PS2glFreeListData(*ppData++);
+            if (range < iNodeSize)
+            {
+                iMove = iNodeSize - range;
+                param0 = (tagListData**)pNode->apData;
+                for (; iMove > 0; iMove--)
+                    *param0++ = *ppData++;
+                return;
+            }
+            if (pNode->pNext == NULL)
+                g_PS2glContext.ListPool.pLastNode = pNodePre;
+            if (pNodePre == NULL)
+            {
+                g_PS2glContext.ListPool.pFirstNode = pNode->pNext;
+            }
+            else
+            {
+                pNodePre->pNext = pNode->pNext;
+            }
+            PS2glLiberator(pNode);
+            if (iNodeSize < range)
+            {
+                impPS2glDeleteLists(list + iNodeSize, range - iNodeSize);
+            }
+            return;
+        }
+        pNodePre = pNode;
+        pNode = pNode->pNext;
+    }
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 30–53 */
-/* addr: 0x00154b90  size: 132 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 31
- *   +0x0004 -> line 30
- *   +0x0008 -> line 31
- *   +0x000c -> line 30
- *   +0x0010 -> line 38
- *   +0x0014 -> line 40
- *   +0x0020 -> line 41
- *   +0x0028 -> line 42
- *   +0x0038 -> line 44
- *   +0x0040 -> line 46
- *   +0x0048 -> line 47
- *   +0x0060 -> line 48
- *   +0x006c -> line 49
- *   +0x0070 -> line 50
- *   +0x0078 -> line 52
- *   +0x007c -> line 53
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tagListData** PS2glSearchList(unsigned int list)
+void impPS2glPartialDeleteLists(unsigned int list)
 {
-    tagListNodeSingle* pSingleIndex;
-    int iOffset;
-    tagListNode* pNode;
     int I;
+    tagListNodeSingle* pSingleIndex;
 
-    pNode = g_PS2glContext.ListPool.pFirstNode;
     pSingleIndex = g_PS2glContext.ListPool.aSingleIndex;
     for (I = 0; I < 64; I++, pSingleIndex++)
     {
         if (pSingleIndex->nIndex == list)
-            return &pSingleIndex->pData;
+        {
+            PS2glFreeListData(pSingleIndex->pData);
+            pSingleIndex->pData = NULL;
+            return;
+        }
     }
-    while (pNode)
+}
+
+void impPS2glNewList(unsigned int list, unsigned int mode)
+{
+    tagListData* pData;
+    tagListData** ppData;
+
+    ppData = PS2glSearchList(list);
+    if ((unsigned int)g_pPS2glApiTable == (unsigned int)&g_PS2glApiTableList)
+        printf("CAUTION: Missing glEndList before glNewList!\n");
+    if (ppData == NULL)
     {
-        iOffset = list - pNode->nIndex;
-        if ((iOffset >= 0) && (iOffset < pNode->iSize))
-            return (tagListData**)&pNode->apData[iOffset];
-        pNode = pNode->pNext;
+        if ((ppData = PS2glAddLists(list, 1)) == NULL)
+            return;
     }
-    return NULL;
+    if (*ppData != NULL)
+        PS2glFreeListData(*ppData);
+    *ppData = pData = (tagListData*)PS2glAllocator(0x38);
+    memset(pData, 0, 0x38);
+    g_PS2glContext.pCurListData = pData;
+    g_PS2glContext.pCurListCalls = NULL;
+    g_PS2glContext.pPreListCalls = NULL;
+    *(quad*)g_PS2glContext.valistColor[0] = *(quad*)g_PS2glContext.vacurColor[0];
+    *(quad*)g_PS2glContext.valistColor[1] = *(quad*)g_PS2glContext.vacurColor[1];
+    *(quad*)g_PS2glContext.vlistNormal = *(quad*)g_PS2glContext.vcurNormal;
+    *(quad*)g_PS2glContext.valistTexCoords[0] = *(quad*)g_PS2glContext.vacurTexCoords[0];
+    *(quad*)g_PS2glContext.valistTexCoords[1] = *(quad*)g_PS2glContext.vacurTexCoords[1];
+    pData->eMode = mode;
+    if (g_PS2glContext.uiStaticDisplayListBits & 1)
+        pData->pDmaBuffer = (float (*)[4])1;
+    pData->uiSDLBits = g_PS2glContext.uiStaticDisplayListBits;
+    pData->uiSDLSize = g_PS2glContext.uiStaticDisplayListMaxSize;
+    pData->ucSDLObjectReserveSize = g_PS2glContext.ucSDLObjectReserveSize;
+    g_PS2glContext.pCurListVData = g_PS2glListVBuf.avData;
+    g_PS2glContext.pCurListVCode = g_PS2glListVBuf.abCode;
+    g_PS2glContext.pCurListTexUnit = (int*)g_PS2glListVBuf.aeTexUnit;
+    g_PS2glListVBuf.nCount = 0;
+    if ((mode == 0x1302) || (mode == 0x1303))
+    {
+    }
+    g_pPS2glApiTable = (int)&g_PS2glApiTableList;
+    g_PS2glContext.bFinalCompile = 1;
+}
+
+int PS2glComposeStaticDisplayList(tagListData* pListData)
+{
+    int i;
+    float (*pOldVIFTail)[4];
+    float (*pOldVIFInBuf)[4];
+    unsigned int uiOldMaxVifDmaBufLength;
+    unsigned int uiOldSDLBits;
+    _sceDmaTag* pDmaTag;
+    void* pData;
+    int count;
+    unsigned int uiRealSize;
+    void* pData2;
+    int* param0;
+    int iOffset;
+
+    pOldVIFTail = g_PS2glContext.pVIFIBufTail;
+    pData = (void*)PS2GL_SDL_DataBufferToUse;
+    uiOldMaxVifDmaBufLength = uiMaxVifDmaBufLength;
+    pOldVIFInBuf = g_PS2glContext.pVIFInBuf;
+    if (pData)
+    {
+        pData = (void*)PS2GL_SDL_DataBufferToUse;
+    }
+    else
+    {
+        pData = PS2glAllocator(pListData->uiSDLSize << 4);
+        if (!pData)
+            return 0;
+    }
+    impPS2glBegin(4);
+    impPS2glEnd();
+    if (pListData->uiSDLBits & 0x100)
+        g_PS2glContext.bMatrixChanged = 1;
+    if (!(pListData->uiSDLBits & 0x10))
+    {
+        g_PS2glContext.abTex2DChanged[g_PS2glContext.iCurTextureSet] = 1;
+        g_PS2glContext.abTex1DChanged[g_PS2glContext.iCurTextureSet] = 1;
+        g_PS2glContext.bTexCubeChanged = 1;
+    }
+    uiMaxVifDmaBufLength = pListData->uiSDLSize;
+    g_PS2glContext.pVIFInBuf = (float (*)[4])pData;
+    g_PS2glContext.pVIFIBufTail = (float (*)[4])pData;
+    pListData->pDmaBuffer = (float (*)[4])pData;
+    count = PS2glCountListObject(pListData);
+    if (count)
+    {
+        pListData->pSDLIndices = (int)PS2glAllocator((count * ((pListData->uiSDLBits & 0x800) ? 4 : 2)) << 2);
+    }
+    if (!(pListData->uiSDLBits & 0x10))
+    {
+        tagGLtexblock theDefaultTexBlock = {0x3FF, 0, g_PS2glContext.iMaxTexBlockCount};
+        for (i = 0; i < 512; i++)
+        {
+            if (g_PS2glContext.aTexName[i].bAllocated)
+                g_PS2glContext.aTexName[i].bResident = 0;
+        }
+        for (i = 0; i < g_PS2glContext.iMaxTexBlockCount; i++)
+            g_PS2glContext.aBlockMap[i] = theDefaultTexBlock;
+        for (i = 0; i < 10; i++)
+            g_PS2glContext.aTexLevelCount[i] = 0;
+    }
+    uiOldSDLBits = g_PS2glContext.uiStaticDisplayListBits;
+    g_PS2glContext.uiStaticDisplayListBits = pListData->uiSDLBits;
+    *(unsigned long*)&g_gsContext.GlobalModFlgs = 0;
+    g_PS2glContext.pCurListData = pListData;
+    g_PS2glContext.uiStaticDisplayListBits |= 0x01000000;
+    PS2glExecuteListData(pListData);
+    g_PS2glContext.uiStaticDisplayListBits = uiOldSDLBits;
+    pListData->uiSDLIndicesSize >>= 1;
+    g_PS2glContext.pCurListData = NULL;
+    pListData->ModFlgs = *(unsigned long*)&g_gsContext.GlobalModFlgs & 0x1FFFD0560000;
+    if (pListData->uiSDLBits & 4)
+        pListData->ModFlgs |= 0x100000;
+    pDmaTag = (_sceDmaTag*)g_PS2glContext.pVIFIBufTail;
+    pDmaTag->qwc = 0;
+    pDmaTag->mark = 0;
+    pDmaTag->id = 0x60;
+    pDmaTag->next = (_sceDmaTag*)pListData->pDmaBuffer;
+    pDmaTag->p[1] = 0;
+    pDmaTag->p[0] = 0;
+    if (!PS2GL_g_DontReallocSDLs || PS2GL_SDL_DataBufferToUse)
+    {
+        if ((VU1BufferFreeSpace() > 0x400) || PS2GL_SDL_DataBufferToUse)
+        {
+            uiRealSize = (((int)g_PS2glContext.pVIFIBufTail - (int)g_PS2glContext.pVIFInBuf) / 16) + 1;
+            pListData->uiSDLSize = uiRealSize;
+            uiRealSize <<= 4;
+            pData2 = PS2glAllocator(uiRealSize);
+            if (pData2)
+            {
+                pListData->pDmaBuffer = (float (*)[4])pData2;
+                memcpy(pListData->pDmaBuffer, g_PS2glContext.pVIFInBuf, uiRealSize);
+                iOffset = (int)pListData->pDmaBuffer - (int)g_PS2glContext.pVIFInBuf;
+                param0 = (int*)pListData->pSDLIndices;
+                for (i = 0; i < pListData->uiSDLIndicesSize; i++)
+                {
+                    *param0 += iOffset;
+                    param0 += 2;
+                }
+                if (!PS2GL_SDL_DataBufferToUse)
+                    PS2glLiberator(g_PS2glContext.pVIFInBuf);
+            }
+            else
+            {
+                printf("******** Panic in PS2GL ************* !!\n");
+            }
+        }
+    }
+    pListData->pLastExecDmaBuffer = pListData->pDmaBuffer;
+    if (!(pListData->ModFlgs & 8))
+        PS2glFreeListDataPartially(pListData);
+    uiMaxVifDmaBufLength = uiOldMaxVifDmaBufLength;
+    g_PS2glContext.pVIFIBufTail = pOldVIFTail;
+    g_PS2glContext.pVIFInBuf = pOldVIFInBuf;
+    return 1;
+}
+
+void impPS2glEndList(void)
+{
+    tagGLlistcalls* pCalls;
+    tagGLlistcalls* pCurCalls;
+
+    if (!g_PS2glContext.pCurListData)
+    {
+        printf("Error: glEndList was called without a preceding glNewList.\n");
+        return;
+    }
+    pCalls = g_PS2glContext.pCurListCalls;
+    if (pCalls && pCalls->cbCalls < 0x400)
+    {
+        g_PS2glContext.pCurListCalls = pCurCalls = ((tagGLlistcalls* (*)(void*, unsigned int))PS2glReallocator)(pCalls, pCalls->cbCalls + 8);
+        if (!g_PS2glContext.pPreListCalls)
+            g_PS2glContext.pCurListData->pCalls = pCurCalls;
+        else
+            g_PS2glContext.pPreListCalls->pNext = pCurCalls;
+    }
+    if (!g_PS2glContext.bFinalCompile && g_PS2glListVBuf.nCount)
+    {
+        PS2glBegin(0);
+        PS2glEnd();
+    }
+    g_PS2glContext.bInBeginEndPair = 0;
+    g_pPS2glApiTable = (int)&g_PS2glApiTableImp;
+    if (g_PS2glContext.pCurListData->eMode == 0x1301 || g_PS2glContext.pCurListData->eMode == 0x1303)
+    {
+        if (g_PS2glContext.pCurListData->pDmaBuffer)
+            PS2glCallSDL(g_PS2glContext.pCurListData);
+        else
+            PS2glExecuteListData(g_PS2glContext.pCurListData);
+    }
+    else if ((g_PS2glContext.uiStaticDisplayListBits & 3) == 3)
+    {
+        PS2glComposeStaticDisplayList(g_PS2glContext.pCurListData);
+    }
+    g_PS2glContext.pCurListData = NULL;
+}
+
+void PS2glSDLInstancing(unsigned int* pIDs)
+{
+    unsigned int uiRealSize;
+    int* param0;
+    tagListData* pSrcListData;
+    tagListData** ppListData;
+    int iOffset;
+    tagListData* pDstListData;
+    int i;
+
+    pSrcListData = *PS2glSearchList(pIDs[1]);
+    ppListData = PS2glSearchList(pIDs[0]);
+    if (!ppListData)
+    {
+        if (!(ppListData = PS2glAddLists(pIDs[0], 1)))
+        {
+            printf("Error:SDL can't add the destination list!\n");
+            pIDs[0] = 0;
+            return;
+        }
+    }
+    if (*ppListData)
+        PS2glFreeListData(*ppListData);
+    pDstListData = *ppListData = (tagListData*)PS2glAllocator(sizeof(tagListData));
+    memcpy(pDstListData, pSrcListData, sizeof(tagListData));
+    pDstListData->pDatas = NULL;
+    pDstListData->pCalls = NULL;
+    pDstListData->pPrimBufTail = NULL;
+    pDstListData->pPrimBufHead = NULL;
+    uiRealSize = pDstListData->uiSDLSize * 16;
+    pDstListData->pLastExecDmaBuffer = pDstListData->pDmaBuffer = (float (*)[4])PS2glAllocator(uiRealSize);
+    memcpy(pDstListData->pDmaBuffer, pSrcListData->pDmaBuffer, uiRealSize);
+    iOffset = (char*)pDstListData->pDmaBuffer - (char*)pSrcListData->pDmaBuffer;
+    uiRealSize = pDstListData->uiSDLIndicesSize * 8;
+    pDstListData->pSDLIndices = (int)PS2glAllocator(uiRealSize);
+    memcpy((void*)pDstListData->pSDLIndices, (void*)pSrcListData->pSDLIndices, uiRealSize);
+    param0 = (int*)pDstListData->pSDLIndices;
+    for (i = 0; i < pDstListData->uiSDLIndicesSize; i++)
+    {
+        *param0 += iOffset;
+        param0 += 2;
+    }
+}
+
+void PS2glReinitAfterSDLs(void)
+{
+    int i;
+    tagGLcontext* pctx;
+
+    pctx = &g_PS2glContext;
+    if (g_gsContext.ModFlgs)
+        GsUpdate();
+    {
+        tagGLtexblock theDefaultTexBlock = {0x3FF, 0, pctx->iMaxTexBlockCount};
+        for (i = 0; i < 512; i++)
+        {
+            if (pctx->aTexName[i].bAllocated)
+                pctx->aTexName[i].bResident = 0;
+        }
+        for (i = 0; i < pctx->iMaxTexBlockCount; i++)
+            pctx->aBlockMap[i] = theDefaultTexBlock;
+    }
+    for (i = 0; i < 10; i++)
+        pctx->aTexLevelCount[i] = 0;
+    *(unsigned char*)((unsigned int)pctx->iCurTextureSet + (int)pctx->abTex2DChanged) = 1;
+    i = pctx->iCurTextureSet;
+    *(unsigned char*)((unsigned int)pctx->abTex1DChanged + i) = 1;
+    pctx->bTexCubeChanged = 1;
+}
+
+void PS2glCallSDL(tagListData* pListData)
+{
+    _sceDmaTag* pDmaTag;
+    tagGLcontext* pctx;
+    unsigned int uiSize;
+    int i;
+    tagGLtexblock theDefaultTexBlock;
+
+    pctx = &g_PS2glContext;
+    if ((int)pListData->pDmaBuffer == 1)
+        return;
+    if (!(pctx->uiStaticDisplayListBits & 0x1000))
+    {
+        if (!(pListData->uiSDLBits & 0x100))
+        {
+            pctx->bMatrixChanged = 1;
+            impPS2glBegin(4);
+            impPS2glEnd();
+        }
+        else
+        {
+            if ((pctx->uiStaticDisplayListBits & 0x10) && !(pctx->usDontUpdateBits & 1))
+            {
+                if ((pctx->nTextureEnableBits & 8) && pctx->bTexCubeChanged)
+                {
+                    PS2glUpdateTexture(0x8513);
+                    pctx->bTexCubeChanged = 0;
+                }
+                else if ((pctx->nTextureEnableBits & 2) && pctx->abTex2DChanged[0])
+                {
+                    PS2glUpdateTexture(0xde1);
+                    pctx->abTex2DChanged[0] = 0;
+                }
+                else if ((pctx->nTextureEnableBits & 1) && pctx->abTex1DChanged[0])
+                {
+                    PS2glUpdateTexture(0xde0);
+                    pctx->abTex1DChanged[0] = 0;
+                }
+                PS2glActiveTextureARB(1);
+                if ((pctx->nTextureEnableBits & 0x200) && pctx->abTex2DChanged[1])
+                {
+                    PS2glUpdateTexture(0xde1);
+                    pctx->abTex2DChanged[1] = 0;
+                }
+                else if ((pctx->nTextureEnableBits & 0x100) && pctx->abTex1DChanged[1])
+                {
+                    PS2glUpdateTexture(0xde0);
+                    pctx->abTex1DChanged[1] = 0;
+                }
+                PS2glActiveTextureARB(0);
+            }
+            if (!(pctx->usDontUpdateBits & 2))
+            {
+                if (g_gsContext.ModFlgs)
+                    GsUpdate();
+            }
+            else
+            {
+                if (g_gsContext.ModFlgs)
+                    GsUpdateLimited();
+            }
+            VU1UpdateMatriceOutsideSDL(&g_PS2glContext);
+        }
+    }
+    if (!(pctx->uiStaticDisplayListBits & 0x30000))
+    {
+        if (!VU1BufferFreeSpace())
+            impPS2glFlush();
+        pDmaTag = (_sceDmaTag*)pctx->pVIFIBufTail;
+        pctx->pVIFIBufTail++;
+        pDmaTag->qwc = 0;
+        pDmaTag->id = 0x50;
+        pDmaTag->next = (_sceDmaTag*)pListData->pDmaBuffer;
+        pDmaTag->p[1] = 0;
+        pDmaTag->p[0] = 0;
+        pListData->pLastExecDmaBuffer = pListData->pDmaBuffer;
+    }
+    else if (pctx->uiStaticDisplayListBits & 0x10000)
+    {
+        uiSize = pListData->uiSDLSize - 1;
+        if (VU1BufferFreeSpace() < uiSize)
+            impPS2glFlush();
+        memcpy(pctx->pVIFIBufTail, pListData->pDmaBuffer, uiSize << 4);
+        pListData->pLastExecDmaBuffer = pctx->pVIFIBufTail;
+        pctx->pVIFIBufTail += uiSize;
+    }
+    if (!(pctx->uiStaticDisplayListBits & 0x2000))
+        g_gsContext.ModFlgs |= pListData->ModFlgs;
+    if (!(pctx->uiStaticDisplayListBits & 0x4010))
+    {
+        tagGLtexblock theBlock = {0x3FF, 0, pctx->iMaxTexBlockCount};
+        theDefaultTexBlock = theBlock;
+        for (i = 0; i < 512; i++)
+        {
+            if (pctx->aTexName[i].bAllocated)
+                pctx->aTexName[i].bResident = 0;
+        }
+        for (i = 0; i < pctx->iMaxTexBlockCount; i++)
+            pctx->aBlockMap[i] = theDefaultTexBlock;
+        for (i = 0; i < 10; i++)
+            pctx->aTexLevelCount[i] = 0;
+        *(unsigned char*)((unsigned int)pctx->iCurTextureSet + (int)pctx->abTex2DChanged) = 1;
+        i = pctx->iCurTextureSet;
+        *(unsigned char*)((unsigned int)pctx->abTex1DChanged + i) = 1;
+        pctx->bTexCubeChanged = 1;
+    }
+}
+
+unsigned int PS2glSDLModificationHelper(unsigned int pname, unsigned int* params)
+{
+    unsigned int uiReturn;
+    tagListData* pListData;
+    tagListData** ppListData;
+    int iDmaBufferOffset;
+    unsigned int uiSDLIndicesSize;
+    unsigned int uiTargetObject;
+    unsigned int uiMask;
+    int i;
+    int iCount;
+    unsigned int* pCurrent;
+    tag_stMultiTextureParameters* pMTP;
+    tag_stVU1MatriceL* param0;
+    unsigned int uiLastStructureSize;
+
+    pListData = NULL;
+    ppListData = PS2glSearchList(params[0]);
+    if (ppListData)
+    {
+        pListData = *ppListData;
+        if (pListData->pDmaBuffer)
+            uiReturn = 1;
+        else
+            uiReturn = 0;
+    }
+    else
+    {
+        uiReturn = 0;
+    }
+    if (uiReturn)
+    {
+        uiSDLIndicesSize = pListData->uiSDLIndicesSize;
+        iDmaBufferOffset = (int)pListData->pLastExecDmaBuffer;
+        iDmaBufferOffset -= (int)pListData->pDmaBuffer;
+        uiTargetObject = params[1];
+        uiMask = 0;
+        iCount = 0;
+        pCurrent = (unsigned int*)pListData->pSDLIndices;
+        uiReturn = 0;
+        for (i = 0; i < uiSDLIndicesSize; i++)
+        {
+            uiMask = pCurrent[1];
+            if (!(uiMask & 0x80000000))
+            {
+                if (iCount == uiTargetObject)
+                    break;
+                iCount++;
+            }
+            pCurrent += 2;
+        }
+        if (iCount == uiTargetObject)
+        {
+            pMTP = (tag_stMultiTextureParameters*)pCurrent[0];
+            if (iDmaBufferOffset)
+                pMTP = (tag_stMultiTextureParameters*)((char*)pMTP + iDmaBufferOffset);
+            pMTP = (tag_stMultiTextureParameters*)((char*)pMTP + 0xA0);
+            if (pname == 0xF38)
+                return (unsigned int)&pMTP->fTexture0UOffset;
+            uiLastStructureSize = sizeof(tag_stMultiTextureParameters);
+            if (uiMask & 0x01000000)
+            {
+                pMTP = pMTP + 1;
+                if (pname == 0xF31)
+                    return (unsigned int)((tag_stVU1MatriceTinSDL*)pMTP)->mLocalWorld;
+                if (pname == 0xF33)
+                    return (unsigned int)((tag_stVU1MatriceTinSDL*)pMTP)->mNormal;
+                uiLastStructureSize = sizeof(tag_stVU1MatriceTinSDL);
+            }
+            else if (uiMask & 0x00100000)
+            {
+                pMTP = pMTP + 1;
+                if (pname == 0xF32)
+                    return (unsigned int)((tag_stVU1MatriceT*)pMTP)->mModelView;
+                if (pname == 0xF33)
+                    return (unsigned int)((tag_stVU1MatriceT*)pMTP)->mNormal;
+                uiLastStructureSize = sizeof(tag_stVU1MatriceT);
+            }
+            if (uiMask & 0x04000000)
+            {
+                pMTP = (tag_stMultiTextureParameters*)((char*)pMTP + uiLastStructureSize);
+                uiLastStructureSize = 0x90;
+            }
+            else if (uiMask & 0x08000000)
+            {
+                pMTP = (tag_stMultiTextureParameters*)((char*)pMTP + uiLastStructureSize);
+                uiLastStructureSize = 0x20;
+            }
+            if (uiMask & 0x00200000)
+            {
+                param0 = (tag_stVU1MatriceL*)((char*)pMTP + uiLastStructureSize);
+                if (pname == 0xF34)
+                    return (unsigned int)param0->mDiffuseLightColor;
+                if (pname == 0xF35)
+                    return (unsigned int)param0->mDiffuseLightPosition;
+                if (pname == 0xF36)
+                    return (unsigned int)param0->mSpecularLightColor;
+                if (pname == 0xF37)
+                    return (unsigned int)param0->mSpecularLightReflection;
+            }
+        }
+    }
+    return uiReturn;
+}
+
+void impPS2glCallList(unsigned int list)
+{
+    tagListData** ppListData;
+    tagListData* pListData;
+
+    ppListData = PS2glSearchList(list);
+    pListData = *ppListData;
+    if (pListData->pDmaBuffer)
+        PS2glCallSDL(pListData);
+    else
+        PS2glExecuteListData(pListData);
+}
+
+void impPS2glCallLists(int n, unsigned int type, void* lists)
+{
+    int I;
+    unsigned int list;
+
+    list = 0;
+    for (I = 0; I < n; I++)
+    {
+        switch (type)
+        {
+        case 0x1402: case 0x1403: list = *(unsigned short*)lists; lists = (unsigned short*)lists + 1; break;
+        case 0x1404: case 0x1405: list = *(unsigned int*)lists; lists = (unsigned int*)lists + 1; break;
+        case 0x1406: list = (unsigned int)*(float*)lists; lists = (float*)lists + 1; break;
+        case 0x1409: list = (list << 8) + *(unsigned char*)lists; lists = (unsigned char*)lists + 1;
+        case 0x1408: list = (list << 8) + *(unsigned char*)lists; lists = (unsigned char*)lists + 1;
+        case 0x1407: list = (list << 8) + *(unsigned char*)lists; lists = (unsigned char*)lists + 1;
+        case 0x1400: case 0x1401:
+            list = (list << 8) + *(unsigned char*)lists; lists = (unsigned char*)lists + 1; break;
+        }
+        { tagListData* pListData = *PS2glSearchList(g_PS2glContext.uiListBase + list); if (pListData->pDmaBuffer) PS2glCallSDL(pListData); else PS2glExecuteListData(pListData); }
+    }
 }

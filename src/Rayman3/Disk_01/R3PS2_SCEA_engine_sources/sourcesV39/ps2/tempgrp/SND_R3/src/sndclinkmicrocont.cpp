@@ -64,7 +64,6 @@ struct sTreeNode : sTreeLink {
     spair m_oValue; /* +0x10 */
 };
 
-
 struct iterator_base {
     sTreeLink* _Ptr; /* +0x0 */
 };
@@ -316,24 +315,6 @@ struct CLinkMicroCont : usnd::smap<int, CLinkMicro*, usnd::less<int>, usnd::sall
     int mfn_s32AddMicroInstance(void);
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinkmicrocont.cpp lines 37–87 */
 /* addr: 0x001cf620  size: 284 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -361,32 +342,9 @@ struct CLinkMicroCont : usnd::smap<int, CLinkMicro*, usnd::less<int>, usnd::sall
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char CLinkMicro::mfn_bApplyPositionAndVelocity(void)
-{
-    _stVector st_Position;
-    _stVector st_Velocity;
-    _stVector st_Normal;
-    _stVector st_Tangent;
-    unsigned char b_Answer = 0;
 
-    if (mrstIMicro->pfnPosition(ms32MicroId, &st_Position))
-    {
-        mroMicro->fv_vSetPos(st_Position.f32x, st_Position.f32y, st_Position.f32z);
-        b_Answer = 1;
-    }
-    if (mrstIMicro->pfnVelocity(ms32MicroId, &st_Velocity))
-    {
-        mroMicro->fv_vSetSpeed(st_Velocity.f32x, st_Velocity.f32y, st_Velocity.f32z);
-    }
-    if (mrstIMicro->pfnNormal(ms32MicroId, &st_Normal) && mrstIMicro->pfnTangent(ms32MicroId, &st_Tangent))
-    {
-        mroMicro->fv_vSetOrientation(st_Normal.f32x, st_Normal.f32y, st_Normal.f32z,
-                                     st_Tangent.f32y * st_Normal.f32z - st_Tangent.f32z * st_Normal.f32y,
-                                     st_Tangent.f32x * st_Normal.f32z - st_Tangent.f32z * st_Normal.f32x,
-                                     st_Tangent.f32x * st_Normal.f32y - st_Tangent.f32y * st_Normal.f32x);
-    }
-    return b_Answer;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinkmicrocont.cpp lines 116–119 */
 /* addr: 0x001cf740  size: 156 bytes */
@@ -399,12 +357,6 @@ unsigned char CLinkMicro::mfn_bApplyPositionAndVelocity(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-CLinkMicroCont& CLinkMicroCont::mfn_roGetInstance(void)
-{
-    static CLinkMicroCont o_LinkMicroCont;
-
-    return o_LinkMicroCont;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinkmicrocont.cpp lines 104–114 */
 /* addr: 0x001cfb20  size: 148 bytes */
@@ -417,17 +369,6 @@ CLinkMicroCont& CLinkMicroCont::mfn_roGetInstance(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char CLinkMicroCont::mfn_bSynchroMicroInstance(void)
-{
-    iterator it;
-    unsigned char b_Answer = 1;
-
-    for (it = begin(); it != end(); ++it)
-    {
-        b_Answer = (*it).second->mfn_bApplyPositionAndVelocity() && b_Answer;
-    }
-    return b_Answer;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinkmicrocont.cpp lines 97–102 */
 /* addr: 0x001cfbc0  size: 212 bytes */
@@ -440,6 +381,93 @@ unsigned char CLinkMicroCont::mfn_bSynchroMicroInstance(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinkmicrocont.cpp lines 77–90 */
+/* addr: 0x001cfca0  size: 516 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 77
+ *   +0x0008 -> line 82
+ *   +0x000c -> line 77
+ *   +0x001c -> line 82
+ *   +0x0020 -> line 77
+ *   +0x0024 -> line 82
+ *   +0x0028 -> line 77
+ *   +0x002c -> line 81
+ *   +0x0030 -> line 82
+ *   +0x00ec -> line 83
+ *   +0x00f4 -> line 84
+ *   +0x01bc -> line 85
+ *   +0x01d0 -> line 86
+ *   +0x01e0 -> line 87
+ *   +0x01e4 -> line 89
+ *   +0x01e8 -> line 90
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinkmicrocont.cpp lines 44–64 */
+/* addr: 0x001cffa0  size: 236 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 44
+ *   +0x001c -> line 49
+ *   +0x0030 -> line 50
+ *   +0x0038 -> line 51
+ *   +0x0050 -> line 54
+ *   +0x008c -> line 55
+ *   +0x0094 -> line 56
+ *   +0x00b0 -> line 58
+ *   +0x00b8 -> line 60
+ *   +0x00cc -> line 62
+ *   +0x00d0 -> line 64
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+int CLinkMicroCont::mfn_s32AddMicroInstance(void)
+{
+    int s32_Answer = -1;
+    CMicrophone* po_Microphone;
+
+    po_Microphone = usnd::CMicroManager::fs_roGetInst().f_poCreateMicrophone();
+    if (po_Microphone)
+    {
+        static int s32_MicroId = 1;
+        CLinkMicro* po_LinkMicro = new CLinkMicro(&mstIMicro, ++s32_MicroId, po_Microphone);
+        if (po_LinkMicro)
+        {
+            usnd::spair<const int, CLinkMicro*> o_Pair(s32_MicroId, po_LinkMicro);
+            insert(o_Pair);
+            s32_Answer = s32_MicroId;
+        }
+        else
+        {
+            usnd::CMicroManager::fs_roGetInst().f_bDeleteMicrophone(po_Microphone);
+        }
+    }
+    return s32_Answer;
+}
+
+unsigned char CLinkMicroCont::mfn_bRemoveMicroInstance(int s32_MicroId)
+{
+    unsigned char b_Answer = 0;
+    iterator it = _Tr.lower_bound(s32_MicroId);
+
+    if (it == _Tr.end() || _Tr.key_compare(s32_MicroId, _Tr._Key(it._Mynode())))
+    {
+        it = _Tr.end();
+    }
+    if (it._Ptr != _Tr._GetHead())
+    {
+        CLinkMicro* pMicro = (*it).second;
+
+        _Tr.erase(_Tr.find(s32_MicroId));
+        usnd::CMicroManager::fs_roGetInst().f_bDeleteMicrophone(pMicro->mroMicro);
+        usnd_free(pMicro);
+        b_Answer = 1;
+    }
+    return b_Answer;
+}
+
 unsigned char CLinkMicroCont::mfn_bSetMicroInterface(const _tdstAllRetMicroSound* pst_IMicro)
 {
     unsigned char b_Answer = 0;
@@ -467,86 +495,48 @@ unsigned char CLinkMicroCont::mfn_bSetMicroInterface(const _tdstAllRetMicroSound
     return b_Answer;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinkmicrocont.cpp lines 77–90 */
-/* addr: 0x001cfca0  size: 516 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 77
- *   +0x0008 -> line 82
- *   +0x000c -> line 77
- *   +0x001c -> line 82
- *   +0x0020 -> line 77
- *   +0x0024 -> line 82
- *   +0x0028 -> line 77
- *   +0x002c -> line 81
- *   +0x0030 -> line 82
- *   +0x00ec -> line 83
- *   +0x00f4 -> line 84
- *   +0x01bc -> line 85
- *   +0x01d0 -> line 86
- *   +0x01e0 -> line 87
- *   +0x01e4 -> line 89
- *   +0x01e8 -> line 90
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned char CLinkMicroCont::mfn_bRemoveMicroInstance(int s32_MicroId)
+unsigned char CLinkMicroCont::mfn_bSynchroMicroInstance(void)
 {
-    unsigned char b_Answer = 0;
-    iterator it = _Tr.lower_bound(s32_MicroId);
+    iterator it;
+    unsigned char b_Answer = 1;
 
-    if (it == _Tr.end() || _Tr.key_compare(s32_MicroId, _Tr._Key(it._Mynode())))
+    for (it = begin(); it != end(); ++it)
     {
-        it = _Tr.end();
-    }
-    if (it._Ptr != _Tr._GetHead())
-    {
-        CLinkMicro* pMicro = (*it).second;
-
-        _Tr.erase(_Tr.find(s32_MicroId));
-        usnd::CMicroManager::fs_roGetInst().f_bDeleteMicrophone(pMicro->mroMicro);
-        usnd_free(pMicro);
-        b_Answer = 1;
+        b_Answer = (*it).second->mfn_bApplyPositionAndVelocity() && b_Answer;
     }
     return b_Answer;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinkmicrocont.cpp lines 44–64 */
-/* addr: 0x001cffa0  size: 236 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 44
- *   +0x001c -> line 49
- *   +0x0030 -> line 50
- *   +0x0038 -> line 51
- *   +0x0050 -> line 54
- *   +0x008c -> line 55
- *   +0x0094 -> line 56
- *   +0x00b0 -> line 58
- *   +0x00b8 -> line 60
- *   +0x00cc -> line 62
- *   +0x00d0 -> line 64
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int CLinkMicroCont::mfn_s32AddMicroInstance(void)
+CLinkMicroCont& CLinkMicroCont::mfn_roGetInstance(void)
 {
-    int s32_Answer = -1;
-    CMicrophone* po_Microphone;
+    static CLinkMicroCont o_LinkMicroCont;
 
-    po_Microphone = usnd::CMicroManager::fs_roGetInst().f_poCreateMicrophone();
-    if (po_Microphone)
+    return o_LinkMicroCont;
+}
+
+unsigned char CLinkMicro::mfn_bApplyPositionAndVelocity(void)
+{
+    _stVector st_Position;
+    _stVector st_Velocity;
+    _stVector st_Normal;
+    _stVector st_Tangent;
+    unsigned char b_Answer = 0;
+
+    if (mrstIMicro->pfnPosition(ms32MicroId, &st_Position))
     {
-        static int s32_MicroId = 1;
-        CLinkMicro* po_LinkMicro = new CLinkMicro(&mstIMicro, ++s32_MicroId, po_Microphone);
-        if (po_LinkMicro)
-        {
-            usnd::spair<const int, CLinkMicro*> o_Pair(s32_MicroId, po_LinkMicro);
-            insert(o_Pair);
-            s32_Answer = s32_MicroId;
-        }
-        else
-        {
-            usnd::CMicroManager::fs_roGetInst().f_bDeleteMicrophone(po_Microphone);
-        }
+        mroMicro->fv_vSetPos(st_Position.f32x, st_Position.f32y, st_Position.f32z);
+        b_Answer = 1;
     }
-    return s32_Answer;
+    if (mrstIMicro->pfnVelocity(ms32MicroId, &st_Velocity))
+    {
+        mroMicro->fv_vSetSpeed(st_Velocity.f32x, st_Velocity.f32y, st_Velocity.f32z);
+    }
+    if (mrstIMicro->pfnNormal(ms32MicroId, &st_Normal) && mrstIMicro->pfnTangent(ms32MicroId, &st_Tangent))
+    {
+        mroMicro->fv_vSetOrientation(st_Normal.f32x, st_Normal.f32y, st_Normal.f32z,
+                                     st_Tangent.f32y * st_Normal.f32z - st_Tangent.f32z * st_Normal.f32y,
+                                     st_Tangent.f32x * st_Normal.f32z - st_Tangent.f32z * st_Normal.f32x,
+                                     st_Tangent.f32x * st_Normal.f32y - st_Tangent.f32y * st_Normal.f32x);
+    }
+    return b_Answer;
 }

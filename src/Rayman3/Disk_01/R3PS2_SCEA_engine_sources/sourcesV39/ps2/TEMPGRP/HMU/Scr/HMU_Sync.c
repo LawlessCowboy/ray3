@@ -11,15 +11,11 @@ unsigned char HMU_g_bInitialized;
 unsigned char HMU_g_bHMU_CS_Created;
 _stCriticalSection g_stHMU_CS;
 
-unsigned char HMU_fn_bIsInitialized(void)
-{
-    return HMU_g_bInitialized;
-}
-
-void HMU_fn_vLeaveCriticalSection(void)
-{
-    PS2_fn_vLeaveCriticalSection(&g_stHMU_CS);
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+unsigned char HMU_fn_bIsInitialized(void);
+void HMU_fn_vLeaveCriticalSection(void);
+void HMU_fn_vEnterCriticalSection(void);
 
 void HMU_fn_vEnterCriticalSection(void)
 {
@@ -32,4 +28,14 @@ void HMU_fn_vEnterCriticalSection(void)
         }
     }
     PS2_fn_vEnterCriticalSection(&g_stHMU_CS);
+}
+
+void HMU_fn_vLeaveCriticalSection(void)
+{
+    PS2_fn_vLeaveCriticalSection(&g_stHMU_CS);
+}
+
+unsigned char HMU_fn_bIsInitialized(void)
+{
+    return HMU_g_bInitialized;
 }

@@ -49,9 +49,15 @@ struct tdstMetaActionEntry_ {
 
 tdstMetaActionEntry_ a_stMetaActionTable[13];
 
-tdfn_MetaActionFunction_ fn_p_fn_pGetMetaActionFunctionPtr(tdeMetaActionId_ eMetaActionId)
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+tdfn_MetaActionFunction_ fn_p_fn_pGetMetaActionFunctionPtr(tdeMetaActionId_ eMetaActionId);
+tdfn_MetaActionInitFunction_ fn_p_fn_pGetMetaActionInitFunctionPtr(tdeMetaActionId_ eMetaActionId);
+char* szGetMetaActionTypeInParamFromId(tdeMetaActionId_ eMetaActionId);
+
+char* szGetMetaActionTypeInParamFromId(tdeMetaActionId_ eMetaActionId)
 {
-    return a_stMetaActionTable[eMetaActionId].p_fn_ucMetaActionFunction;
+    return a_stMetaActionTable[eMetaActionId].szMetaActionTypeParam;
 }
 
 tdfn_MetaActionInitFunction_ fn_p_fn_pGetMetaActionInitFunctionPtr(tdeMetaActionId_ eMetaActionId)
@@ -59,7 +65,7 @@ tdfn_MetaActionInitFunction_ fn_p_fn_pGetMetaActionInitFunctionPtr(tdeMetaAction
     return a_stMetaActionTable[eMetaActionId].p_fn_p_stMetaActionInitFunction;
 }
 
-char* szGetMetaActionTypeInParamFromId(tdeMetaActionId_ eMetaActionId)
+tdfn_MetaActionFunction_ fn_p_fn_pGetMetaActionFunctionPtr(tdeMetaActionId_ eMetaActionId)
 {
-    return a_stMetaActionTable[eMetaActionId].szMetaActionTypeParam;
+    return a_stMetaActionTable[eMetaActionId].p_fn_ucMetaActionFunction;
 }

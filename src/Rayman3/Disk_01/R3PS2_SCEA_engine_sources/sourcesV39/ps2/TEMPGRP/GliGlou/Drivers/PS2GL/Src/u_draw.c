@@ -2485,11 +2485,38 @@ void exit(int status);
         GLD_bDeleteDevice(0);            \
     }
 
-void GLD_vCloseErr(void)
-{
-    GLD_M_vCloseAll();
-    exit(-4);
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void GLD_vCloseErr(void);
+void GLI_v_DrawMirrorSuperObject(GLD_tdstViewportAttributes_* p_stVpt, HIE_tdstSuperObject_* _hSO);
+void GLI_DRV_SendAllTransparentEITs(void);
+void GLI_vDisplayAllShadows(void);
+void GLI_SendShadowElementToViewport(int param0, GEO_tdstGeometricObject_* p_stObj);
+void GLI_vAddShadowObject(float* p1, float* p2, float* p3, float* p4, GLI_tdstMaterial_* ShadowMat);
+void GLI_vInitSimpleShadowArrays(void);
+void GLI_DRV_xSendElementTIToClip_TRIANGLES(void);
+void GLI_CalculateBoundingBoxForElement(GEO_tdstElementIndexedTriangles_* p_stEIT, MTH3D_tdstVector_* p_stMin, MTH3D_tdstVector_* p_stMax);
+void GLI_vDMASendTransparentObject(unsigned int DisplayList);
+void GLI_vDMASendObject(unsigned int hSdl);
+void GLI_vGet2DPercentPointFrom3DWorldPoint(GLD_tdstViewportAttributes_* p_stVpt, MTH3D_tdstVector_* pDestination2D, MTH3D_tdstVector_* pSource3D);
+void GLI_vSetFIXFullScreenOrthoProjection(void);
+void GLI_vSetFullScreenOrthoProjection(void);
+void GLI_vInitGLProjectionMatrix(void);
+void TakeCareOfCinemascopePS2(void);
+void GLI_vReinitViewport(void);
+void glFrustumf(float left, float right, float bottom, float top, float zNear, float zFar);
+GLI_tdstTexture_* GLI_xRefreshAnimatedTextureIfNeeded(GLI_tdstMaterial_* hVisualMaterial);
+void GLI_DRV_vSetCommonGLRenderStates(void);
+void GLI_vResetTempList(void);
+void GLI_vAllocateTempLists(void);
+void GLI_vReinitFrame(unsigned int SwapBuffers);
+void DisplayShadowVolumes(void);
+void DrawTriangles(void);
+void GLI_vAddShadowVolumeDisplayList(void);
+void GLI_vRemoveScissors(void);
+void GLI_vSetScissors(GLD_tdstViewportAttributes_* _p_stFixViewportAttr);
+GLI_SpecificPS2GL_Structure_* GLI_pstGetSpecificStructureFromEIT(GEO_tdstElementIndexedTriangles_* p_stEIT);
+GLI_SpecificPS2GL_Structure_* GLI_vAllocateSpecificStructure(unsigned int NbMultiTextureMaterials, GEO_tdstElementIndexedTriangles_* p_stEIT);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 1751–1959 */
 /* addr: 0x002acdf0  size: 2388 bytes */
@@ -2637,30 +2664,6 @@ void GLD_vCloseErr(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_v_DrawMirrorSuperObject(GLD_tdstViewportAttributes_* p_stVpt, HIE_tdstSuperObject_* _hSO)
-{
-    unsigned char zTst;
-    float MaxV;
-    float MaxU;
-    float MinV;
-    float MinU;
-    unsigned int U1;
-    unsigned int I3;
-    unsigned int I2;
-    unsigned int I1;
-    unsigned int face;
-    float a16_fWorldMatrix[16];
-    GEO_tdstElementIndexedTriangles_* p_stEIT;
-    int j;
-    GEO_tdstGeometricObject_* pObj;
-    short i;
-    short xNbLodDefinitions;
-    GEO_tdstVisualSet_* hVisualSet;
-    float fADC;
-    PO_tdstPhysicalObject_* PO;
-    IPO_tdstInstanciatedPhysicalObject_* hIPO;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 1665–1748 */
 /* addr: 0x002ad750  size: 952 bytes */
@@ -2718,11 +2721,6 @@ void GLI_v_DrawMirrorSuperObject(GLD_tdstViewportAttributes_* p_stVpt, HIE_tdstS
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_DRV_SendAllTransparentEITs(void)
-{
-    unsigned char zTst;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 1576–1636 */
 /* addr: 0x002adb10  size: 856 bytes */
@@ -2822,13 +2820,6 @@ void GLI_DRV_SendAllTransparentEITs(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vDisplayAllShadows(void)
-{
-    float Temp[4];
-    unsigned int NbVertices;
-    float a16_fWorldMatrix[16];
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 1564–1570 */
 /* addr: 0x002ade70  size: 40 bytes */
@@ -2840,13 +2831,6 @@ void GLI_vDisplayAllShadows(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_SendShadowElementToViewport(int param0, GEO_tdstGeometricObject_* p_stObj)
-{
-    float* pVert;
-    GLI_BIG_GLOBALS_xGlobalAlpha = 1.0f;
-    pVert = (float*)p_stObj->d_stListOfPoints;
-    GLI_vAddShadowObject(pVert, pVert + 3, pVert + 6, pVert + 9, **(GLI_tdstMaterial_***)p_stObj->d_stListOfElements);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 1519–1554 */
 /* addr: 0x002adea0  size: 456 bytes */
@@ -2920,34 +2904,6 @@ void GLI_SendShadowElementToViewport(int param0, GEO_tdstGeometricObject_* p_stO
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vAddShadowObject(float* p1, float* p2, float* p3, float* p4, GLI_tdstMaterial_* ShadowMat)
-{
-    unsigned int i;
-
-    i = GLI_g_NbSimpleShadows + GLI_g_SimpleShadowBegin;
-    if (i < 64) {
-        GLI_g_NbSimpleShadows++;
-        GLI_g_SimpleShadowMaterial = (int)ShadowMat;
-        GLI_g_SimpleShadowsPos[6 * i][0] = p1[0];
-        GLI_g_SimpleShadowsPos[6 * i][1] = p1[1];
-        GLI_g_SimpleShadowsPos[6 * i][2] = p1[2];
-        GLI_g_SimpleShadowsPos[6 * i + 1][0] = p2[0];
-        GLI_g_SimpleShadowsPos[6 * i + 1][1] = p2[1];
-        GLI_g_SimpleShadowsPos[6 * i + 1][2] = p2[2];
-        GLI_g_SimpleShadowsPos[6 * i + 2][0] = p3[0];
-        GLI_g_SimpleShadowsPos[6 * i + 2][1] = p3[1];
-        GLI_g_SimpleShadowsPos[6 * i + 2][2] = p3[2];
-        GLI_g_SimpleShadowsPos[6 * i + 3][0] = p1[0];
-        GLI_g_SimpleShadowsPos[6 * i + 3][1] = p1[1];
-        GLI_g_SimpleShadowsPos[6 * i + 3][2] = p1[2];
-        GLI_g_SimpleShadowsPos[6 * i + 4][0] = p3[0];
-        GLI_g_SimpleShadowsPos[6 * i + 4][1] = p3[1];
-        GLI_g_SimpleShadowsPos[6 * i + 4][2] = p3[2];
-        GLI_g_SimpleShadowsPos[6 * i + 5][0] = p4[0];
-        GLI_g_SimpleShadowsPos[6 * i + 5][1] = p4[1];
-        GLI_g_SimpleShadowsPos[6 * i + 5][2] = p4[2];
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 1480–1516 */
 /* addr: 0x002ae070  size: 216 bytes */
@@ -3002,40 +2958,6 @@ void GLI_vAddShadowObject(float* p1, float* p2, float* p3, float* p4, GLI_tdstMa
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vInitSimpleShadowArrays(void)
-{
-    unsigned int i;
-    unsigned int idx;
-    for (i = 0; i < 384; i++) {
-        GLI_g_SimpleShadowsRLIs[i][0] = 127.0f;
-        GLI_g_SimpleShadowsRLIs[i][1] = 127.0f;
-        GLI_g_SimpleShadowsRLIs[i][2] = 127.0f;
-        GLI_g_SimpleShadowsRLIs[i][3] = 127.0f;
-        GLI_g_SimpleShadowsUVs[i][0] = 0.0f;
-        GLI_g_SimpleShadowsUVs[i][1] = 0.0f;
-        GLI_g_SimpleShadowsUVs[i][2] = 0.0f;
-        GLI_g_SimpleShadowsUVs[i][3] = 0.0f;
-        GLI_g_SimpleShadowsPos[i][0] = 0.0f;
-        GLI_g_SimpleShadowsPos[i][1] = 0.0f;
-        GLI_g_SimpleShadowsPos[i][2] = 0.0f;
-        GLI_g_SimpleShadowsPos[i][3] = 1.0f;
-    }
-    for (i = 0; i < 64; i++) {
-        idx = 6 * i;
-        GLI_g_SimpleShadowsUVs[idx][0] = 0.0f;
-        GLI_g_SimpleShadowsUVs[idx][1] = 0.0f;
-        GLI_g_SimpleShadowsUVs[idx + 1][0] = 1.0f;
-        GLI_g_SimpleShadowsUVs[idx + 1][1] = 0.0f;
-        GLI_g_SimpleShadowsUVs[idx + 2][0] = 1.0f;
-        GLI_g_SimpleShadowsUVs[idx + 2][1] = 1.0f;
-        GLI_g_SimpleShadowsUVs[idx + 3][0] = 0.0f;
-        GLI_g_SimpleShadowsUVs[idx + 3][1] = 0.0f;
-        GLI_g_SimpleShadowsUVs[idx + 4][0] = 1.0f;
-        GLI_g_SimpleShadowsUVs[idx + 4][1] = 1.0f;
-        GLI_g_SimpleShadowsUVs[idx + 5][0] = 0.0f;
-        GLI_g_SimpleShadowsUVs[idx + 5][1] = 1.0f;
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 1465–1465 */
 /* addr: 0x002ae150  size: 8 bytes */
@@ -3044,9 +2966,6 @@ void GLI_vInitSimpleShadowArrays(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_DRV_xSendElementTIToClip_TRIANGLES(void)
-{
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 1380–1438 */
 /* addr: 0x002ae160  size: 628 bytes */
@@ -3098,56 +3017,6 @@ void GLI_DRV_xSendElementTIToClip_TRIANGLES(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_CalculateBoundingBoxForElement(GEO_tdstElementIndexedTriangles_* p_stEIT, MTH3D_tdstVector_* p_stMin, MTH3D_tdstVector_* p_stMax)
-{
-    MTH3D_tdstVector_* p_stPoints;
-    unsigned int i;
-    GEO_tdstTripledIndex_* p_stListOfFacesTripled;
-    float X;
-    float Y;
-    float Z;
-    float xMax;
-    float yMax;
-    float zMax;
-    p_stListOfFacesTripled = p_stEIT->d_stListOfFacesTripled;
-    p_stPoints = *(MTH3D_tdstVector_**)GLI_BIG_GLOBALS_p_stObj;
-    X = ((float *)((char *)p_stPoints + 0))[3 * p_stListOfFacesTripled->a3_xIndex[0]];
-    Y = ((float *)((char *)p_stPoints + 4))[3 * p_stListOfFacesTripled->a3_xIndex[0]];
-    Z = ((float *)((char *)p_stPoints + 8))[3 * p_stListOfFacesTripled->a3_xIndex[0]];
-    xMax = X;
-    yMax = Y;
-    zMax = Z;
-    for (i = p_stEIT->xNbFaces; i > 0; i--) {
-        MTH3D_tdstVector_* pV = &p_stPoints[p_stListOfFacesTripled->a3_xIndex[0]];
-        if (pV->xX < X) X = pV->xX;
-        if (pV->xY < Y) Y = pV->xY;
-        if (pV->xZ < Z) Z = pV->xZ;
-        if (pV->xX > xMax) xMax = pV->xX;
-        if (pV->xY > yMax) yMax = pV->xY;
-        if (pV->xZ > zMax) zMax = pV->xZ;
-        pV = &p_stPoints[p_stListOfFacesTripled->a3_xIndex[1]];
-        if (pV->xX < X) X = pV->xX;
-        if (pV->xY < Y) Y = pV->xY;
-        if (pV->xZ < Z) Z = pV->xZ;
-        if (pV->xX > xMax) xMax = pV->xX;
-        if (pV->xY > yMax) yMax = pV->xY;
-        if (pV->xZ > zMax) zMax = pV->xZ;
-        pV = &p_stPoints[p_stListOfFacesTripled->a3_xIndex[2]];
-        if (pV->xX < X) X = pV->xX;
-        if (pV->xY < Y) Y = pV->xY;
-        if (pV->xZ < Z) Z = pV->xZ;
-        if (pV->xX > xMax) xMax = pV->xX;
-        if (pV->xY > yMax) yMax = pV->xY;
-        if (pV->xZ > zMax) zMax = pV->xZ;
-        p_stListOfFacesTripled++;
-    }
-    p_stMin->xX = X;
-    p_stMin->xY = Y;
-    p_stMin->xZ = Z;
-    p_stMax->xX = xMax;
-    p_stMax->xY = yMax;
-    p_stMax->xZ = zMax;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 1349–1353 */
 /* addr: 0x002ae3e0  size: 72 bytes */
@@ -3163,14 +3032,6 @@ void GLI_CalculateBoundingBoxForElement(GEO_tdstElementIndexedTriangles_* p_stEI
 extern void SDL_UpdateFogs(unsigned int hSDL);
 extern void SDL_Draw(unsigned int hSDL);
 
-void GLI_vDMASendTransparentObject(unsigned int DisplayList)
-{
-    if (GLI_g_ListOfDMADL_Current < 100) {
-        GLI_g_ListOfDMADL[GLI_g_ListOfDMADL_Current++] = DisplayList;
-        SDL_UpdateFogs(DisplayList);
-    }
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 1327–1334 */
 /* addr: 0x002ae430  size: 44 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3181,11 +3042,6 @@ void GLI_vDMASendTransparentObject(unsigned int DisplayList)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vDMASendObject(unsigned int hSdl)
-{
-    SDL_UpdateFogs(hSdl);
-    SDL_Draw(hSdl);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 1164–1218 */
 /* addr: 0x002ae460  size: 320 bytes */
@@ -3224,15 +3080,6 @@ void GLI_vDMASendObject(unsigned int hSdl)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vGet2DPercentPointFrom3DWorldPoint(GLD_tdstViewportAttributes_* p_stVpt, MTH3D_tdstVector_* pDestination2D, MTH3D_tdstVector_* pSource3D)
-{
-    float fInv;
-    float a4_fCameraVector[4];
-    float a4_fWorldVector[4];
-    float a16_fProjectionMatrix[4][4];
-    float a16_fWorldMatrix[4][4];
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 1145–1160 */
 /* addr: 0x002ae5a0  size: 396 bytes */
@@ -3282,31 +3129,6 @@ extern void PS2glMatrixMode(unsigned int mode);
 extern void PS2glLoadIdentity(void);
 extern void PS2glOrtho(float left, float right, float bottom, float top, float zNear, float zFar);
 
-void GLI_vSetFIXFullScreenOrthoProjection(void)
-{
-    if (GLI_g_ProjectionMode == 2) {
-        return;
-    }
-    g_PS2glContext.nLightBits &= ~0x400;
-    g_PS2glContext.nEnableBits &= ~0x800;
-    g_gsContext.TEST_1.ZTE = 1;
-    g_gsContext.ModFlgs.TEST_1_Modified = 1;
-    g_gsContext.TEST_1.ZTST = 1;
-    g_gsContext.ModFlgs.TEST_1_Modified = 1;
-    g_PS2glContext.nEnableBits &= ~0x80;
-    g_gsContext.PRMODE.FGE = 0;
-    g_gsContext.ModFlgs.PRMODE_Modified = 1;
-    *(unsigned char*)g_PS2glContext.pbFogging = 0;
-    PS2glMatrixMode(0x1701);
-    PS2glLoadIdentity();
-    PS2glOrtho(0.0f, 100.0f, 100.0f, 0.0f, -1.0f, 1.0f);
-    PS2glMatrixMode(0x1702);
-    PS2glLoadIdentity();
-    PS2glMatrixMode(0x1700);
-    PS2glLoadIdentity();
-    GLI_g_ProjectionMode = 2;
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 1121–1141 */
 /* addr: 0x002ae730  size: 404 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3353,31 +3175,6 @@ void GLI_vSetFIXFullScreenOrthoProjection(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vSetFullScreenOrthoProjection(void)
-{
-    if (GLI_g_ProjectionMode == 2) {
-        return;
-    }
-    GLI_g_ProjMatrixHasChanged = 1;
-    g_PS2glContext.nLightBits &= ~0x400;
-    g_PS2glContext.nEnableBits &= ~0x800;
-    g_gsContext.TEST_1.ZTE = 1;
-    g_gsContext.ModFlgs.TEST_1_Modified = 1;
-    g_gsContext.TEST_1.ZTST = 1;
-    g_gsContext.ModFlgs.TEST_1_Modified = 1;
-    g_PS2glContext.nEnableBits &= ~0x80;
-    g_gsContext.PRMODE.FGE = 0;
-    g_gsContext.ModFlgs.PRMODE_Modified = 1;
-    *(unsigned char*)g_PS2glContext.pbFogging = 0;
-    PS2glMatrixMode(0x1701);
-    PS2glLoadIdentity();
-    PS2glOrtho(0.0f, 100.0f, 100.0f, 0.0f, -1.0f, 1.0f);
-    PS2glMatrixMode(0x1702);
-    PS2glLoadIdentity();
-    PS2glMatrixMode(0x1700);
-    PS2glLoadIdentity();
-    GLI_g_ProjectionMode = 2;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 1032–1117 */
 /* addr: 0x002ae8d0  size: 768 bytes */
@@ -3407,13 +3204,6 @@ void GLI_vSetFullScreenOrthoProjection(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vInitGLProjectionMatrix(void)
-{
-    float g_fxAngle;
-    float g_fCurrentRatio;
-    float TransformedxAngle;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 981–1029 */
 /* addr: 0x002aebd0  size: 956 bytes */
@@ -3506,11 +3296,6 @@ void GLI_vInitGLProjectionMatrix(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void TakeCareOfCinemascopePS2(void)
-{
-    float Height;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 953–965 */
 /* addr: 0x002aef90  size: 52 bytes */
@@ -3528,15 +3313,6 @@ void TakeCareOfCinemascopePS2(void)
  */
 void GLI_DRV_vSetCommonGLRenderStates(void);
 extern void GLI_vClearSendMatStates(void);
-
-void GLI_vReinitViewport(void)
-{
-    GLI_DRV_vSetCommonGLRenderStates();
-    GLI_g_ProjectionMode = 0xffff;
-    GLI_vClearSendMatStates();
-    GLI_g_LastSuperObj = 0;
-    g_PS2glContext.usDontUpdateBits = 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 894–919 */
 /* addr: 0x002aefd0  size: 212 bytes */
@@ -3575,21 +3351,6 @@ void GLI_vReinitViewport(void)
  */
 extern void sceVu0MulMatrix(float dest[4][4], float left[4][4], float right[4][4]);
 
-void glFrustumf(float left, float right, float bottom, float top, float zNear, float zFar)
-{
-    float m[4][4];
-    float twonears = 2.0f * zNear;
-    float oorminusl = 1.0f / (right - left);
-    float ootminusb = 1.0f / (top - bottom);
-    float oofminusn = 1.0f / (zFar - zNear);
-    m[0][0] = twonears * oorminusl; m[1][0] = 0.0f; m[2][0] = (right + left) * oorminusl; m[3][0] = 0.0f;
-    m[0][1] = 0.0f; m[1][1] = twonears * ootminusb; m[2][1] = (top + bottom) * ootminusb; m[3][1] = 0.0f;
-    m[0][2] = 0.0f; m[1][2] = 0.0f; m[2][2] = -(zFar + zNear) * oofminusn; m[3][2] = -(twonears * zFar) * oofminusn;
-    m[0][3] = 0.0f; m[1][3] = 0.0f; m[2][3] = -1.0f; m[3][3] = 0.0f;
-    sceVu0MulMatrix(*g_PS2glContext.pCurMatrix, *g_PS2glContext.pCurMatrix, m);
-    g_PS2glContext.bMatrixChanged = 1;
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 863–874 */
 /* addr: 0x002af0b0  size: 72 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3603,18 +3364,6 @@ void glFrustumf(float left, float right, float bottom, float top, float zNear, f
  * compare a candidate object's line table as an extra checkpoint.
  */
 extern void GLI_xRefreshAnimatedTexture(GLI_tdstMaterial_* hMaterial);
-
-GLI_tdstTexture_* GLI_xRefreshAnimatedTextureIfNeeded(GLI_tdstMaterial_* hVisualMaterial)
-{
-    if (hVisualMaterial) {
-        if (hVisualMaterial->lNumberOfDisplayNode > 1) {
-            GLI_BIG_GLOBALS_hCurrentMaterial = (int)hVisualMaterial;
-            GLI_xRefreshAnimatedTexture(hVisualMaterial);
-        }
-        return hVisualMaterial->p_stTexture;
-    }
-    return 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 786–858 */
 /* addr: 0x002af100  size: 860 bytes */
@@ -3703,67 +3452,6 @@ extern void PS2glColor4fv(const float* v);
 extern void PS2glVertex4f(float x, float y, float z, float w);
 extern void GLI_vInitGLProjectionMatrix(void);
 
-void GLI_DRV_vSetCommonGLRenderStates(void)
-{
-    unsigned char zTst;
-    if (GLI_g_ChristianSlaterMode) {
-        PS2glTexParameteri(0xDE1, 0x2800, 0x2600);
-        PS2glTexParameteri(0xDE1, 0x2801, 0x2600);
-        PS2glTexParameteri(0xDE1, 0x2800, 0x2600);
-        PS2glTexParameteri(0xDE1, 0x2801, 0x2600);
-    }
-    else {
-        PS2glTexParameteri(0xDE1, 0x2800, 0x2601);
-        PS2glTexParameteri(0xDE1, 0x2801, 0x2701);
-    }
-    if (GLI_g_StereoVisionMode == 2) {
-        PS2glColorMask(0, 1, 1, 0);
-    }
-    else if (GLI_g_StereoVisionMode == 1) {
-        PS2glColorMask(1, 0, 0, 0);
-    }
-    PS2glDepthFunc(0x203);
-    g_PS2glContext.bCullfaceChanged = 1;
-    g_PS2glContext.nEnableBits &= ~0x2000;
-    PS2glCullFace(0x405);
-    g_PS2glContext.nEnableBits |= 0x100;
-    g_gsContext.PRMODE.ABE = 1;
-    g_gsContext.ModFlgs.PRMODE_Modified = 1;
-    PS2glBlendFunc(0x302, 0x303);
-    PS2glDepthMask(0);
-    g_PS2glContext.nEnableBits |= 0x800;
-    zTst = 1;
-    g_gsContext.TEST_1.ZTE = 1;
-    g_gsContext.ModFlgs.TEST_1_Modified = 1;
-    switch (g_PS2glContext.eDepthFunc) {
-    case 0x200: zTst = 0; break;
-    case 0x207: zTst = 1; break;
-    case 0x203: zTst = 2; break;
-    case 0x201: zTst = 3; break;
-    case 0x202:
-    case 0x204:
-    case 0x205:
-    case 0x206:
-        break;
-    }
-    g_gsContext.TEST_1.ZTST = zTst;
-    g_gsContext.ModFlgs.TEST_1_Modified = 1;
-    g_PS2glContext.nEnableBits &= ~0x100;
-    g_gsContext.PRMODE.ABE = 0;
-    g_gsContext.ModFlgs.PRMODE_Modified = 1;
-    g_PS2glContext.nEnableBits &= ~0x400;
-    g_gsContext.TEST_1.ATE = 0;
-    g_gsContext.ModFlgs.TEST_1_Modified = 1;
-    PS2glTexEnvf(0x2300, 0x2200, 8448.0f);
-    g_PS2glContext.nLightBits &= ~0x400;
-    PS2glLightModelfv(0xB53, light_ambient0);
-    PS2glLightModeli(0xF00, 1);
-    PS2glMateriali(0x404, 0x1601, 0xA);
-    GLI_g_ProjectionMode = 0xffff;
-    GLI_vClearSendMatStates();
-    GLI_g_HasVertexTransparency = 0;
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 724–724 */
 /* addr: 0x002af460  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3771,9 +3459,6 @@ void GLI_DRV_vSetCommonGLRenderStates(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vResetTempList(void)
-{
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 720–720 */
 /* addr: 0x002af470  size: 8 bytes */
@@ -3782,9 +3467,6 @@ void GLI_vResetTempList(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vAllocateTempLists(void)
-{
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 672–712 */
 /* addr: 0x002af480  size: 140 bytes */
@@ -3815,29 +3497,6 @@ extern void GLI_vReinitSprites(void);
 extern void GLIPS2_vReinitMatrixDeformations(void);
 extern void VAC_ReinitForNewFrame(int hContainer);
 extern void GLI_vRemovePointLightsAfterProcessing(void);
-
-void GLI_vReinitFrame(unsigned int SwapBuffers)
-{
-    GLI_g_ProjectionMode = 0;
-    GLI_vReinitTempVertexArrays();
-    GLI_g_TextureMatrixIsIdentity = 0;
-    g_PS2glContext.usDontUpdateBits = 0;
-    GLI_g_SimpleShadowBegin = 0;
-    GLI_g_NbSimpleShadows = 0;
-    GLI_vClearSendMatStates();
-    Global_pCurrentActor = 0;
-    GLI_g_CurrentSpriteGenIndex = 0;
-    if (SwapBuffers) {
-        GLI_g_CurrentSpriteGenFrame ^= 1;
-        GLI_g_NumberOfShadowVolumes = 0;
-        GLI_vReinitSprites();
-        GLIPS2_vReinitMatrixDeformations();
-        if (GLI_g_hVAContainer) { VAC_ReinitForNewFrame(GLI_g_hVAContainer); }
-    }
-    else {
-        GLI_vRemovePointLightsAfterProcessing();
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 505–650 */
 /* addr: 0x002af510  size: 1976 bytes */
@@ -3983,14 +3642,6 @@ void GLI_vReinitFrame(unsigned int SwapBuffers)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void DisplayShadowVolumes(void)
-{
-    unsigned char zTst;
-    float CColor;
-    unsigned int CountB;
-    unsigned int CountF;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 343–396 */
 /* addr: 0x002afcd0  size: 988 bytes */
@@ -4067,6 +3718,170 @@ void DisplayShadowVolumes(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 285–286 */
+/* addr: 0x002b00b0  size: 16 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 285
+ *   +0x0008 -> line 286
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 254–256 */
+/* addr: 0x002b00c0  size: 588 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 254
+ *   +0x0160 -> line 255
+ *   +0x0244 -> line 256
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 233–250 */
+/* addr: 0x002b0310  size: 428 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 233
+ *   +0x0004 -> line 235
+ *   +0x0008 -> line 233
+ *   +0x0010 -> line 235
+ *   +0x0068 -> line 236
+ *   +0x0074 -> line 244
+ *   +0x0078 -> line 236
+ *   +0x0090 -> line 244
+ *   +0x0094 -> line 236
+ *   +0x00a0 -> line 244
+ *   +0x00a4 -> line 236
+ *   +0x00d8 -> line 245
+ *   +0x00dc -> line 236
+ *   +0x00e0 -> line 245
+ *   +0x00e8 -> line 236
+ *   +0x0110 -> line 238
+ *   +0x0114 -> line 239
+ *   +0x0118 -> line 242
+ *   +0x011c -> line 241
+ *   +0x0120 -> line 244
+ *   +0x0124 -> line 245
+ *   +0x0128 -> line 242
+ *   +0x012c -> line 247
+ *   +0x0130 -> line 241
+ *   +0x0134 -> line 244
+ *   +0x013c -> line 245
+ *   +0x0140 -> line 247
+ *   +0x0144 -> line 244
+ *   +0x0148 -> line 245
+ *   +0x014c -> line 244
+ *   +0x0154 -> line 245
+ *   +0x0158 -> line 246
+ *   +0x015c -> line 245
+ *   +0x0168 -> line 248
+ *   +0x016c -> line 246
+ *   +0x017c -> line 247
+ *   +0x0180 -> line 246
+ *   +0x0188 -> line 247
+ *   +0x0194 -> line 248
+ *   +0x019c -> line 250
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 227–227 */
+/* addr: 0x002b04c0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 227
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 157–220 */
+/* addr: 0x002b04d0  size: 368 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 157
+ *   +0x001c -> line 165
+ *   +0x0028 -> line 170
+ *   +0x002c -> line 165
+ *   +0x0030 -> line 171
+ *   +0x0034 -> line 172
+ *   +0x0038 -> line 173
+ *   +0x003c -> line 174
+ *   +0x0040 -> line 176
+ *   +0x004c -> line 178
+ *   +0x0058 -> line 179
+ *   +0x005c -> line 180
+ *   +0x0064 -> line 183
+ *   +0x0068 -> line 188
+ *   +0x0070 -> line 190
+ *   +0x0074 -> line 195
+ *   +0x0084 -> line 202
+ *   +0x0088 -> line 195
+ *   +0x008c -> line 202
+ *   +0x00a8 -> line 206
+ *   +0x012c -> line 213
+ *   +0x0134 -> line 206
+ *   +0x0140 -> line 213
+ *   +0x0148 -> line 214
+ *   +0x0150 -> line 216
+ *   +0x0154 -> line 218
+ *   +0x0158 -> line 220
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+GLI_SpecificPS2GL_Structure_* GLI_vAllocateSpecificStructure(unsigned int NbMultiTextureMaterials, GEO_tdstElementIndexedTriangles_* p_stEIT)
+{
+    unsigned int i;
+    GLI_SpecificPS2GL_Structure_* pTemp;
+    pTemp = (GLI_SpecificPS2GL_Structure_*)PS2glAllocator64(0x60);
+    pTemp->glDisplayLists = 0;
+    pTemp->SpriteGenArray = 0;
+    pTemp->pVertexArrayHandles = 0;
+    pTemp->LastFrame = 0;
+    pTemp->WasOutlinedOrDynamicallyLit = 0;
+    if (GLI_BIG_GLOBALS_p_stObj) {
+        GLI_CalculateBoundingBoxForElement(p_stEIT, &pTemp->stMin, &pTemp->stMax);
+        pTemp->BoundingBoxValid = 1;
+    }
+    else {
+        pTemp->BoundingBoxValid = 0;
+    }
+    pTemp->NbStages = NbMultiTextureMaterials;
+    if (!NbMultiTextureMaterials) {
+        NbMultiTextureMaterials++;
+    }
+    pTemp->glDisplayLists = (int)PS2glAllocator64((NbMultiTextureMaterials + 1) * sizeof(int));
+    for (i = 0; i < NbMultiTextureMaterials + 1; i++) {
+        ((int*)pTemp->glDisplayLists)[i] = 0;
+    }
+    pTemp->Flags = 15;
+    p_stEIT->glDisplayList = (unsigned int)pTemp;
+    return pTemp;
+}
+
+GLI_SpecificPS2GL_Structure_* GLI_pstGetSpecificStructureFromEIT(GEO_tdstElementIndexedTriangles_* p_stEIT)
+{
+    return (GLI_SpecificPS2GL_Structure_*)p_stEIT->glDisplayList;
+}
+
+void GLI_vSetScissors(GLD_tdstViewportAttributes_* _p_stFixViewportAttr)
+{
+    int height;
+    int width;
+    int y;
+    int x;
+    /* TODO: decompile from asm/... */
+}
+
+void GLI_vRemoveScissors(void)
+{
+    unsigned char zTst;
+    /* TODO: decompile from asm/... */
+}
+
+void GLI_vAddShadowVolumeDisplayList(void)
+{
+    GLI_g_NumberOfShadowVolumes++;
+}
+
 void DrawTriangles(void)
 {
     unsigned char zTst;
@@ -4126,160 +3941,400 @@ void DrawTriangles(void)
     NbTrianglesToDisplay = 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 285–286 */
-/* addr: 0x002b00b0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 285
- *   +0x0008 -> line 286
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GLI_vAddShadowVolumeDisplayList(void)
+void DisplayShadowVolumes(void)
 {
-    GLI_g_NumberOfShadowVolumes++;
+    unsigned char zTst;
+    float CColor;
+    unsigned int CountB;
+    unsigned int CountF;
+    /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 254–256 */
-/* addr: 0x002b00c0  size: 588 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 254
- *   +0x0160 -> line 255
- *   +0x0244 -> line 256
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GLI_vRemoveScissors(void)
+void GLI_vReinitFrame(unsigned int SwapBuffers)
+{
+    GLI_g_ProjectionMode = 0;
+    GLI_vReinitTempVertexArrays();
+    GLI_g_TextureMatrixIsIdentity = 0;
+    g_PS2glContext.usDontUpdateBits = 0;
+    GLI_g_SimpleShadowBegin = 0;
+    GLI_g_NbSimpleShadows = 0;
+    GLI_vClearSendMatStates();
+    Global_pCurrentActor = 0;
+    GLI_g_CurrentSpriteGenIndex = 0;
+    if (SwapBuffers) {
+        GLI_g_CurrentSpriteGenFrame ^= 1;
+        GLI_g_NumberOfShadowVolumes = 0;
+        GLI_vReinitSprites();
+        GLIPS2_vReinitMatrixDeformations();
+        if (GLI_g_hVAContainer) { VAC_ReinitForNewFrame(GLI_g_hVAContainer); }
+    }
+    else {
+        GLI_vRemovePointLightsAfterProcessing();
+    }
+}
+
+void GLI_vAllocateTempLists(void)
+{
+}
+
+void GLI_vResetTempList(void)
+{
+}
+
+void GLI_DRV_vSetCommonGLRenderStates(void)
+{
+    unsigned char zTst;
+    if (GLI_g_ChristianSlaterMode) {
+        PS2glTexParameteri(0xDE1, 0x2800, 0x2600);
+        PS2glTexParameteri(0xDE1, 0x2801, 0x2600);
+        PS2glTexParameteri(0xDE1, 0x2800, 0x2600);
+        PS2glTexParameteri(0xDE1, 0x2801, 0x2600);
+    }
+    else {
+        PS2glTexParameteri(0xDE1, 0x2800, 0x2601);
+        PS2glTexParameteri(0xDE1, 0x2801, 0x2701);
+    }
+    if (GLI_g_StereoVisionMode == 2) {
+        PS2glColorMask(0, 1, 1, 0);
+    }
+    else if (GLI_g_StereoVisionMode == 1) {
+        PS2glColorMask(1, 0, 0, 0);
+    }
+    PS2glDepthFunc(0x203);
+    g_PS2glContext.bCullfaceChanged = 1;
+    g_PS2glContext.nEnableBits &= ~0x2000;
+    PS2glCullFace(0x405);
+    g_PS2glContext.nEnableBits |= 0x100;
+    g_gsContext.PRMODE.ABE = 1;
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    PS2glBlendFunc(0x302, 0x303);
+    PS2glDepthMask(0);
+    g_PS2glContext.nEnableBits |= 0x800;
+    zTst = 1;
+    g_gsContext.TEST_1.ZTE = 1;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    switch (g_PS2glContext.eDepthFunc) {
+    case 0x200: zTst = 0; break;
+    case 0x207: zTst = 1; break;
+    case 0x203: zTst = 2; break;
+    case 0x201: zTst = 3; break;
+    case 0x202:
+    case 0x204:
+    case 0x205:
+    case 0x206:
+        break;
+    }
+    g_gsContext.TEST_1.ZTST = zTst;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    g_PS2glContext.nEnableBits &= ~0x100;
+    g_gsContext.PRMODE.ABE = 0;
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    g_PS2glContext.nEnableBits &= ~0x400;
+    g_gsContext.TEST_1.ATE = 0;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    PS2glTexEnvf(0x2300, 0x2200, 8448.0f);
+    g_PS2glContext.nLightBits &= ~0x400;
+    PS2glLightModelfv(0xB53, light_ambient0);
+    PS2glLightModeli(0xF00, 1);
+    PS2glMateriali(0x404, 0x1601, 0xA);
+    GLI_g_ProjectionMode = 0xffff;
+    GLI_vClearSendMatStates();
+    GLI_g_HasVertexTransparency = 0;
+}
+
+GLI_tdstTexture_* GLI_xRefreshAnimatedTextureIfNeeded(GLI_tdstMaterial_* hVisualMaterial)
+{
+    if (hVisualMaterial) {
+        if (hVisualMaterial->lNumberOfDisplayNode > 1) {
+            GLI_BIG_GLOBALS_hCurrentMaterial = (int)hVisualMaterial;
+            GLI_xRefreshAnimatedTexture(hVisualMaterial);
+        }
+        return hVisualMaterial->p_stTexture;
+    }
+    return 0;
+}
+
+void glFrustumf(float left, float right, float bottom, float top, float zNear, float zFar)
+{
+    float m[4][4];
+    float twonears = 2.0f * zNear;
+    float oorminusl = 1.0f / (right - left);
+    float ootminusb = 1.0f / (top - bottom);
+    float oofminusn = 1.0f / (zFar - zNear);
+    m[0][0] = twonears * oorminusl; m[1][0] = 0.0f; m[2][0] = (right + left) * oorminusl; m[3][0] = 0.0f;
+    m[0][1] = 0.0f; m[1][1] = twonears * ootminusb; m[2][1] = (top + bottom) * ootminusb; m[3][1] = 0.0f;
+    m[0][2] = 0.0f; m[1][2] = 0.0f; m[2][2] = -(zFar + zNear) * oofminusn; m[3][2] = -(twonears * zFar) * oofminusn;
+    m[0][3] = 0.0f; m[1][3] = 0.0f; m[2][3] = -1.0f; m[3][3] = 0.0f;
+    sceVu0MulMatrix(*g_PS2glContext.pCurMatrix, *g_PS2glContext.pCurMatrix, m);
+    g_PS2glContext.bMatrixChanged = 1;
+}
+
+void GLI_vReinitViewport(void)
+{
+    GLI_DRV_vSetCommonGLRenderStates();
+    GLI_g_ProjectionMode = 0xffff;
+    GLI_vClearSendMatStates();
+    GLI_g_LastSuperObj = 0;
+    g_PS2glContext.usDontUpdateBits = 0;
+}
+
+void TakeCareOfCinemascopePS2(void)
+{
+    float Height;
+    /* TODO: decompile from asm/... */
+}
+
+void GLI_vInitGLProjectionMatrix(void)
+{
+    float g_fxAngle;
+    float g_fCurrentRatio;
+    float TransformedxAngle;
+    /* TODO: decompile from asm/... */
+}
+
+void GLI_vSetFullScreenOrthoProjection(void)
+{
+    if (GLI_g_ProjectionMode == 2) {
+        return;
+    }
+    GLI_g_ProjMatrixHasChanged = 1;
+    g_PS2glContext.nLightBits &= ~0x400;
+    g_PS2glContext.nEnableBits &= ~0x800;
+    g_gsContext.TEST_1.ZTE = 1;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    g_gsContext.TEST_1.ZTST = 1;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    g_PS2glContext.nEnableBits &= ~0x80;
+    g_gsContext.PRMODE.FGE = 0;
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    *(unsigned char*)g_PS2glContext.pbFogging = 0;
+    PS2glMatrixMode(0x1701);
+    PS2glLoadIdentity();
+    PS2glOrtho(0.0f, 100.0f, 100.0f, 0.0f, -1.0f, 1.0f);
+    PS2glMatrixMode(0x1702);
+    PS2glLoadIdentity();
+    PS2glMatrixMode(0x1700);
+    PS2glLoadIdentity();
+    GLI_g_ProjectionMode = 2;
+}
+
+void GLI_vSetFIXFullScreenOrthoProjection(void)
+{
+    if (GLI_g_ProjectionMode == 2) {
+        return;
+    }
+    g_PS2glContext.nLightBits &= ~0x400;
+    g_PS2glContext.nEnableBits &= ~0x800;
+    g_gsContext.TEST_1.ZTE = 1;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    g_gsContext.TEST_1.ZTST = 1;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    g_PS2glContext.nEnableBits &= ~0x80;
+    g_gsContext.PRMODE.FGE = 0;
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    *(unsigned char*)g_PS2glContext.pbFogging = 0;
+    PS2glMatrixMode(0x1701);
+    PS2glLoadIdentity();
+    PS2glOrtho(0.0f, 100.0f, 100.0f, 0.0f, -1.0f, 1.0f);
+    PS2glMatrixMode(0x1702);
+    PS2glLoadIdentity();
+    PS2glMatrixMode(0x1700);
+    PS2glLoadIdentity();
+    GLI_g_ProjectionMode = 2;
+}
+
+void GLI_vGet2DPercentPointFrom3DWorldPoint(GLD_tdstViewportAttributes_* p_stVpt, MTH3D_tdstVector_* pDestination2D, MTH3D_tdstVector_* pSource3D)
+{
+    float fInv;
+    float a4_fCameraVector[4];
+    float a4_fWorldVector[4];
+    float a16_fProjectionMatrix[4][4];
+    float a16_fWorldMatrix[4][4];
+    /* TODO: decompile from asm/... */
+}
+
+void GLI_vDMASendObject(unsigned int hSdl)
+{
+    SDL_UpdateFogs(hSdl);
+    SDL_Draw(hSdl);
+}
+
+void GLI_vDMASendTransparentObject(unsigned int DisplayList)
+{
+    if (GLI_g_ListOfDMADL_Current < 100) {
+        GLI_g_ListOfDMADL[GLI_g_ListOfDMADL_Current++] = DisplayList;
+        SDL_UpdateFogs(DisplayList);
+    }
+}
+
+void GLI_CalculateBoundingBoxForElement(GEO_tdstElementIndexedTriangles_* p_stEIT, MTH3D_tdstVector_* p_stMin, MTH3D_tdstVector_* p_stMax)
+{
+    MTH3D_tdstVector_* p_stPoints;
+    unsigned int i;
+    GEO_tdstTripledIndex_* p_stListOfFacesTripled;
+    float X;
+    float Y;
+    float Z;
+    float xMax;
+    float yMax;
+    float zMax;
+    p_stListOfFacesTripled = p_stEIT->d_stListOfFacesTripled;
+    p_stPoints = *(MTH3D_tdstVector_**)GLI_BIG_GLOBALS_p_stObj;
+    X = ((float *)((char *)p_stPoints + 0))[3 * p_stListOfFacesTripled->a3_xIndex[0]];
+    Y = ((float *)((char *)p_stPoints + 4))[3 * p_stListOfFacesTripled->a3_xIndex[0]];
+    Z = ((float *)((char *)p_stPoints + 8))[3 * p_stListOfFacesTripled->a3_xIndex[0]];
+    xMax = X;
+    yMax = Y;
+    zMax = Z;
+    for (i = p_stEIT->xNbFaces; i > 0; i--) {
+        MTH3D_tdstVector_* pV = &p_stPoints[p_stListOfFacesTripled->a3_xIndex[0]];
+        if (pV->xX < X) X = pV->xX;
+        if (pV->xY < Y) Y = pV->xY;
+        if (pV->xZ < Z) Z = pV->xZ;
+        if (pV->xX > xMax) xMax = pV->xX;
+        if (pV->xY > yMax) yMax = pV->xY;
+        if (pV->xZ > zMax) zMax = pV->xZ;
+        pV = &p_stPoints[p_stListOfFacesTripled->a3_xIndex[1]];
+        if (pV->xX < X) X = pV->xX;
+        if (pV->xY < Y) Y = pV->xY;
+        if (pV->xZ < Z) Z = pV->xZ;
+        if (pV->xX > xMax) xMax = pV->xX;
+        if (pV->xY > yMax) yMax = pV->xY;
+        if (pV->xZ > zMax) zMax = pV->xZ;
+        pV = &p_stPoints[p_stListOfFacesTripled->a3_xIndex[2]];
+        if (pV->xX < X) X = pV->xX;
+        if (pV->xY < Y) Y = pV->xY;
+        if (pV->xZ < Z) Z = pV->xZ;
+        if (pV->xX > xMax) xMax = pV->xX;
+        if (pV->xY > yMax) yMax = pV->xY;
+        if (pV->xZ > zMax) zMax = pV->xZ;
+        p_stListOfFacesTripled++;
+    }
+    p_stMin->xX = X;
+    p_stMin->xY = Y;
+    p_stMin->xZ = Z;
+    p_stMax->xX = xMax;
+    p_stMax->xY = yMax;
+    p_stMax->xZ = zMax;
+}
+
+void GLI_DRV_xSendElementTIToClip_TRIANGLES(void)
+{
+}
+
+void GLI_vInitSimpleShadowArrays(void)
+{
+    unsigned int i;
+    unsigned int idx;
+    for (i = 0; i < 384; i++) {
+        GLI_g_SimpleShadowsRLIs[i][0] = 127.0f;
+        GLI_g_SimpleShadowsRLIs[i][1] = 127.0f;
+        GLI_g_SimpleShadowsRLIs[i][2] = 127.0f;
+        GLI_g_SimpleShadowsRLIs[i][3] = 127.0f;
+        GLI_g_SimpleShadowsUVs[i][0] = 0.0f;
+        GLI_g_SimpleShadowsUVs[i][1] = 0.0f;
+        GLI_g_SimpleShadowsUVs[i][2] = 0.0f;
+        GLI_g_SimpleShadowsUVs[i][3] = 0.0f;
+        GLI_g_SimpleShadowsPos[i][0] = 0.0f;
+        GLI_g_SimpleShadowsPos[i][1] = 0.0f;
+        GLI_g_SimpleShadowsPos[i][2] = 0.0f;
+        GLI_g_SimpleShadowsPos[i][3] = 1.0f;
+    }
+    for (i = 0; i < 64; i++) {
+        idx = 6 * i;
+        GLI_g_SimpleShadowsUVs[idx][0] = 0.0f;
+        GLI_g_SimpleShadowsUVs[idx][1] = 0.0f;
+        GLI_g_SimpleShadowsUVs[idx + 1][0] = 1.0f;
+        GLI_g_SimpleShadowsUVs[idx + 1][1] = 0.0f;
+        GLI_g_SimpleShadowsUVs[idx + 2][0] = 1.0f;
+        GLI_g_SimpleShadowsUVs[idx + 2][1] = 1.0f;
+        GLI_g_SimpleShadowsUVs[idx + 3][0] = 0.0f;
+        GLI_g_SimpleShadowsUVs[idx + 3][1] = 0.0f;
+        GLI_g_SimpleShadowsUVs[idx + 4][0] = 1.0f;
+        GLI_g_SimpleShadowsUVs[idx + 4][1] = 1.0f;
+        GLI_g_SimpleShadowsUVs[idx + 5][0] = 0.0f;
+        GLI_g_SimpleShadowsUVs[idx + 5][1] = 1.0f;
+    }
+}
+
+void GLI_vAddShadowObject(float* p1, float* p2, float* p3, float* p4, GLI_tdstMaterial_* ShadowMat)
+{
+    unsigned int i;
+
+    i = GLI_g_NbSimpleShadows + GLI_g_SimpleShadowBegin;
+    if (i < 64) {
+        GLI_g_NbSimpleShadows++;
+        GLI_g_SimpleShadowMaterial = (int)ShadowMat;
+        GLI_g_SimpleShadowsPos[6 * i][0] = p1[0];
+        GLI_g_SimpleShadowsPos[6 * i][1] = p1[1];
+        GLI_g_SimpleShadowsPos[6 * i][2] = p1[2];
+        GLI_g_SimpleShadowsPos[6 * i + 1][0] = p2[0];
+        GLI_g_SimpleShadowsPos[6 * i + 1][1] = p2[1];
+        GLI_g_SimpleShadowsPos[6 * i + 1][2] = p2[2];
+        GLI_g_SimpleShadowsPos[6 * i + 2][0] = p3[0];
+        GLI_g_SimpleShadowsPos[6 * i + 2][1] = p3[1];
+        GLI_g_SimpleShadowsPos[6 * i + 2][2] = p3[2];
+        GLI_g_SimpleShadowsPos[6 * i + 3][0] = p1[0];
+        GLI_g_SimpleShadowsPos[6 * i + 3][1] = p1[1];
+        GLI_g_SimpleShadowsPos[6 * i + 3][2] = p1[2];
+        GLI_g_SimpleShadowsPos[6 * i + 4][0] = p3[0];
+        GLI_g_SimpleShadowsPos[6 * i + 4][1] = p3[1];
+        GLI_g_SimpleShadowsPos[6 * i + 4][2] = p3[2];
+        GLI_g_SimpleShadowsPos[6 * i + 5][0] = p4[0];
+        GLI_g_SimpleShadowsPos[6 * i + 5][1] = p4[1];
+        GLI_g_SimpleShadowsPos[6 * i + 5][2] = p4[2];
+    }
+}
+
+void GLI_SendShadowElementToViewport(int param0, GEO_tdstGeometricObject_* p_stObj)
+{
+    float* pVert;
+    GLI_BIG_GLOBALS_xGlobalAlpha = 1.0f;
+    pVert = (float*)p_stObj->d_stListOfPoints;
+    GLI_vAddShadowObject(pVert, pVert + 3, pVert + 6, pVert + 9, **(GLI_tdstMaterial_***)p_stObj->d_stListOfElements);
+}
+
+void GLI_vDisplayAllShadows(void)
+{
+    float Temp[4];
+    unsigned int NbVertices;
+    float a16_fWorldMatrix[16];
+    /* TODO: decompile from asm/... */
+}
+
+void GLI_DRV_SendAllTransparentEITs(void)
 {
     unsigned char zTst;
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 233–250 */
-/* addr: 0x002b0310  size: 428 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 233
- *   +0x0004 -> line 235
- *   +0x0008 -> line 233
- *   +0x0010 -> line 235
- *   +0x0068 -> line 236
- *   +0x0074 -> line 244
- *   +0x0078 -> line 236
- *   +0x0090 -> line 244
- *   +0x0094 -> line 236
- *   +0x00a0 -> line 244
- *   +0x00a4 -> line 236
- *   +0x00d8 -> line 245
- *   +0x00dc -> line 236
- *   +0x00e0 -> line 245
- *   +0x00e8 -> line 236
- *   +0x0110 -> line 238
- *   +0x0114 -> line 239
- *   +0x0118 -> line 242
- *   +0x011c -> line 241
- *   +0x0120 -> line 244
- *   +0x0124 -> line 245
- *   +0x0128 -> line 242
- *   +0x012c -> line 247
- *   +0x0130 -> line 241
- *   +0x0134 -> line 244
- *   +0x013c -> line 245
- *   +0x0140 -> line 247
- *   +0x0144 -> line 244
- *   +0x0148 -> line 245
- *   +0x014c -> line 244
- *   +0x0154 -> line 245
- *   +0x0158 -> line 246
- *   +0x015c -> line 245
- *   +0x0168 -> line 248
- *   +0x016c -> line 246
- *   +0x017c -> line 247
- *   +0x0180 -> line 246
- *   +0x0188 -> line 247
- *   +0x0194 -> line 248
- *   +0x019c -> line 250
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GLI_vSetScissors(GLD_tdstViewportAttributes_* _p_stFixViewportAttr)
+void GLI_v_DrawMirrorSuperObject(GLD_tdstViewportAttributes_* p_stVpt, HIE_tdstSuperObject_* _hSO)
 {
-    int height;
-    int width;
-    int y;
-    int x;
+    unsigned char zTst;
+    float MaxV;
+    float MaxU;
+    float MinV;
+    float MinU;
+    unsigned int U1;
+    unsigned int I3;
+    unsigned int I2;
+    unsigned int I1;
+    unsigned int face;
+    float a16_fWorldMatrix[16];
+    GEO_tdstElementIndexedTriangles_* p_stEIT;
+    int j;
+    GEO_tdstGeometricObject_* pObj;
+    short i;
+    short xNbLodDefinitions;
+    GEO_tdstVisualSet_* hVisualSet;
+    float fADC;
+    PO_tdstPhysicalObject_* PO;
+    IPO_tdstInstanciatedPhysicalObject_* hIPO;
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 227–227 */
-/* addr: 0x002b04c0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 227
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-GLI_SpecificPS2GL_Structure_* GLI_pstGetSpecificStructureFromEIT(GEO_tdstElementIndexedTriangles_* p_stEIT)
+void GLD_vCloseErr(void)
 {
-    return (GLI_SpecificPS2GL_Structure_*)p_stEIT->glDisplayList;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 157–220 */
-/* addr: 0x002b04d0  size: 368 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 157
- *   +0x001c -> line 165
- *   +0x0028 -> line 170
- *   +0x002c -> line 165
- *   +0x0030 -> line 171
- *   +0x0034 -> line 172
- *   +0x0038 -> line 173
- *   +0x003c -> line 174
- *   +0x0040 -> line 176
- *   +0x004c -> line 178
- *   +0x0058 -> line 179
- *   +0x005c -> line 180
- *   +0x0064 -> line 183
- *   +0x0068 -> line 188
- *   +0x0070 -> line 190
- *   +0x0074 -> line 195
- *   +0x0084 -> line 202
- *   +0x0088 -> line 195
- *   +0x008c -> line 202
- *   +0x00a8 -> line 206
- *   +0x012c -> line 213
- *   +0x0134 -> line 206
- *   +0x0140 -> line 213
- *   +0x0148 -> line 214
- *   +0x0150 -> line 216
- *   +0x0154 -> line 218
- *   +0x0158 -> line 220
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-GLI_SpecificPS2GL_Structure_* GLI_vAllocateSpecificStructure(unsigned int NbMultiTextureMaterials, GEO_tdstElementIndexedTriangles_* p_stEIT)
-{
-    unsigned int i;
-    GLI_SpecificPS2GL_Structure_* pTemp;
-    pTemp = (GLI_SpecificPS2GL_Structure_*)PS2glAllocator64(0x60);
-    pTemp->glDisplayLists = 0;
-    pTemp->SpriteGenArray = 0;
-    pTemp->pVertexArrayHandles = 0;
-    pTemp->LastFrame = 0;
-    pTemp->WasOutlinedOrDynamicallyLit = 0;
-    if (GLI_BIG_GLOBALS_p_stObj) {
-        GLI_CalculateBoundingBoxForElement(p_stEIT, &pTemp->stMin, &pTemp->stMax);
-        pTemp->BoundingBoxValid = 1;
-    }
-    else {
-        pTemp->BoundingBoxValid = 0;
-    }
-    pTemp->NbStages = NbMultiTextureMaterials;
-    if (!NbMultiTextureMaterials) {
-        NbMultiTextureMaterials++;
-    }
-    pTemp->glDisplayLists = (int)PS2glAllocator64((NbMultiTextureMaterials + 1) * sizeof(int));
-    for (i = 0; i < NbMultiTextureMaterials + 1; i++) {
-        ((int*)pTemp->glDisplayLists)[i] = 0;
-    }
-    pTemp->Flags = 15;
-    p_stEIT->glDisplayList = (unsigned int)pTemp;
-    return pTemp;
+    GLD_M_vCloseAll();
+    exit(-4);
 }

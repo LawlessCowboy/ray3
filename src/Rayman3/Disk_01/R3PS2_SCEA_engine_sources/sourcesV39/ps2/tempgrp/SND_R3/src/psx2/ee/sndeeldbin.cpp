@@ -404,163 +404,22 @@ extern "C" int SND_fn_bLoadBank(char* pch_NameWithoutExt);
 
 /* Retail expands this into SND_fn_bLoadBank and also keeps it out of line. */
 #pragma auto_inline on
-void fs_vUppercase(char* p)
-{
-    for (; *p; p++) {
-        if (*p >= 'a' && *p <= 'z')
-            *p -= 'a' - 'A';
-    }
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void fs_vUppercase(char* p);
+void fn_vUpdateSwitches(const char* pIdStr);
+void fn_vLoadSwitches(CBankDesc* po_BankDesc);
+extern "C" void SND_fn_vFinishLoad(char* pIdStr);
+extern "C" void SND_fn_vStartLoad(void);
+extern "C" _SND_tdstBlockEvent* SND_fn_pstGetBlockEventFromId(unsigned int u32_EvtId);
+extern "C" int SND_fn_bUnloadBank(char* pIdStr);
+extern "C" int SND_fn_bLoadBank(char* pch_NameWithoutExt);
+unsigned char fn_s8Digit(unsigned char s8_Digit);
+extern "C" int SND_fn_bDesInitDataLoadSnd(void);
+extern "C" int SND_fn_bInitDataLoadSnd(void);
+
 #pragma auto_inline reset
-
-/* The debug record for the retail function at 0x00187a60 names it
-   _NilElmt__Q24usnd9streebase, but the ELF symbol there is the indexed
-   const conversion operator of usnd::CIdObjPtr<usnd::CResData>, which is
-   defined with the class template above (the ms_pfnConvert reference keeps
-   the compiler from folding it away, so the retail's out-of-line copy is
-   emitted). */
-
-void fn_vUpdateSwitches(const char* pIdStr)
-{
-    char ch_Path[1024];
-
-    sprintf(ch_Path, "\\%sBIN\\WORLD\\SOUND\\%s.SMT;1", fn_szGetGameDataPath(), pIdStr);
-    strcpy(ch_Path, FMN_SCE_AddBaseDirectory(ch_Path));
-    fs_vUppercase(ch_Path);
-
-    CTextFileSrc o_File("");
-
-    if (o_File.mfn_bOpen(ch_Path))
-    {
-        sstring o_Sentence;
-        CPS2IdObjLoader oLoader;
-
-        SwitchMgr::fs_vClearTexture();
-
-        while (o_File.mfn_bRead(o_Sentence))
-        {
-            SwitchMgr::fs_vAddTexture(atoi(o_Sentence.c_str()));
-        }
-
-        sprintf(ch_Path, "\\%sBIN\\WORLD\\SOUND\\FIXESW.HX2;1", fn_szGetGameDataPath());
-        strcpy(ch_Path, FMN_SCE_AddBaseDirectory(ch_Path));
-        fs_vUppercase(ch_Path);
-
-        oLoader.f_bLoadBank(ch_Path);
-        SwitchMgr::fs_vUpdateWaves(&oLoader);
-        oLoader.fv_FlushCache();
-        oLoader.f_vClearIndex();
-    }
-}
-
-void fn_vLoadSwitches(CBankDesc* po_BankDesc)
-{
-    TS_UUIDSet::iterator it;
-
-    g_pSoundCache = fn_pvMallocInBinaryPreservingTheCurrentMode(0x7D000);
-
-    usnd::CPS2FileSrcFlow::fs_vUseCache(g_pSoundCache, 0x7D000);
-
-    SND_fn_bLoadBank("fixeSW");
-
-    for (it = gs_oListToLoad.begin(); it != gs_oListToLoad.end(); ++it)
-    {
-        if ((*it).m_uiHighWord == 1)
-        {
-            CUUID switchId;
-            CSwitchResData* pSwitchData;
-            CEventResData* pEventData;
-
-            po_BankDesc->mfn_poAddCResDataAlone(*it);
-            pEventData = (CEventResData*)usnd::CIdObjPtrMgr::fs_roGetInst().f_poGetIdObj(*it);
-            if (pEventData)
-            {
-                switchId = pEventData->m_pTargetRes.f_roGetId();
-                po_BankDesc->mfn_poAddCResDataAlone(switchId);
-                pSwitchData = (CSwitchResData*)usnd::CIdObjPtrMgr::fs_roGetInst().f_poGetIdObj(switchId);
-                if (pSwitchData)
-                {
-                    SwitchMgr::fs_vAdd(pSwitchData);
-                }
-            }
-        }
-    }
-
-    SwitchMgr::fs_vUpdateWaves(gro_BankLoader);
-
-    gs_oListToLoad._Tr.clear();
-
-    gro_BankLoader->fv_FlushCache();
-    gro_BankLoader->f_vClearIndex();
-
-    usnd::CPS2FileSrcFlow::fs_vStopCache();
-    fn_vFreeInBinaryPreservingTheCurrentMode(g_pSoundCache);
-}
-
-void SND_fn_vFinishLoad(char* pIdStr)
-{
-    TS_UUIDSet::iterator it;
-    CBankDesc* po_BankDesc;
-    int iStepSize;
-    unsigned int uiTime;
-    int iNbBanks;
-
-    iStepSize = 0;
-    uiTime = usnd_uiGetTime();
-
-    po_BankDesc = gro_BankCont->mfn_poAddBankDesc(pIdStr);
-
-    if (CD_ProgressCallBack)
-    {
-        iNbBanks = gs_oListToLoad._Tr._Size;
-        iStepSize = (LS_fn_iRemainingSizeToLoad() - 1300000) / iNbBanks;
-    }
-
-    for (it = gs_oListToLoad.begin(); it != gs_oListToLoad.end(); ++it)
-    {
-        po_BankDesc->mfn_poAddCResData(*it);
-
-        if (CD_ProgressCallBack)
-            ((void (*)(int))CD_ProgressCallBack)(iStepSize);
-    }
-
-    gs_oListToLoad._Tr.clear();
-
-    printf("TIME spent to read the HX2 files \n");
-    printf("FINISH Time = %d\n", usnd_uiGetTime() - uiTime);
-
-    uiTime = usnd_uiGetTime();
-
-    usnd::CPS2WaveFileIdObj::fs_vLoadStatic();
-
-    printf("TIME spent to load the sound ressources in SPU RAM \n");
-    printf("FINISH Time = %d\n", usnd_uiGetTime() - uiTime);
-
-    gro_BankLoader->fv_FlushCache();
-    gro_BankLoader->f_vClearIndex();
-
-    usnd::CPS2FileSrcFlow::fs_vStopCache();
-    fn_vFreeInBinaryPreservingTheCurrentMode(g_pSoundCache);
-
-    if (!strcmp("fixe", pIdStr))
-    {
-        fn_vLoadSwitches(po_BankDesc);
-    }
-}
-
-void SND_fn_vStartLoad(void)
-{
-    g_pSoundCache = fn_pvMallocInBinaryPreservingTheCurrentMode(0x7D000);
-    usnd::CPS2FileSrcFlow::fs_vUseCache(g_pSoundCache, 0x7D000);
-}
-
-_SND_tdstBlockEvent* SND_fn_pstGetBlockEventFromId(unsigned int u32_EvtId)
-{
-    CEventResData* po_Answer;
-
-    po_Answer = (CEventResData*)usnd::CIdObjPtrMgr::fs_roGetInst().f_poGetIdObj(CUUID(1, u32_EvtId));
-    return (_SND_tdstBlockEvent*)po_Answer;
-}
 
 static inline void fs_vUpdateSwitchTextures(void)
 {
@@ -571,23 +430,49 @@ static inline void fs_vUpdateSwitchTextures(void)
     SwitchMgr::fs_vUpdateWaves(gro_BankLoader);
 }
 
-int SND_fn_bUnloadBank(char* pIdStr)
+unsigned char fn_bSetLanguage(void);
+
+#pragma auto_inline on
+void fs_vUppercase(char* p)
 {
-    int b_Answer;
+    for (; *p; p++) {
+        if (*p >= 'a' && *p <= 'z')
+            *p -= 'a' - 'A';
+    }
+}
 
-    b_Answer = 0;
-    if (gro_BankCont->mfn_bRemoveBankDesc(pIdStr))
-        b_Answer = 1;
+int SND_fn_bInitDataLoadSnd(void)
+{
+    fn_bSetLanguage();
+    return 1;
+}
 
-    gro_BankLoader->fv_FlushCache();
-    gro_BankLoader->f_vClearIndex();
+int SND_fn_bDesInitDataLoadSnd(void)
+{
+    return 1;
+}
 
-    SND_fn_vClearLastTheme();
+unsigned char fn_s8Digit(unsigned char s8_Digit)
+{
+    unsigned char s8_Answer;
 
-    if (strncmp(pIdStr, "transit", 7))
-        fs_vUpdateSwitchTextures();
+    if (s8_Digit >= '0' && s8_Digit <= '9') {
+        s8_Answer = s8_Digit - '0';
+    }
+    else {
+        if (s8_Digit >= 'A' && s8_Digit <= 'F') {
+            s8_Answer = s8_Digit - 'A' + 10;
+        }
+        else {
+            if (s8_Digit >= 'a' && s8_Digit <= 'f') {
+                s8_Answer = s8_Digit - 'a' + 10;
+            }
+            else
+                s8_Answer = 0;
+        }
+    }
 
-    return b_Answer;
+    return s8_Answer;
 }
 
 int SND_fn_bLoadBank(char* pch_NameWithoutExt)
@@ -642,37 +527,170 @@ int SND_fn_bLoadBank(char* pch_NameWithoutExt)
     return 1;
 }
 
-unsigned char fn_s8Digit(unsigned char s8_Digit)
+int SND_fn_bUnloadBank(char* pIdStr)
 {
-    unsigned char s8_Answer;
+    int b_Answer;
 
-    if (s8_Digit >= '0' && s8_Digit <= '9') {
-        s8_Answer = s8_Digit - '0';
+    b_Answer = 0;
+    if (gro_BankCont->mfn_bRemoveBankDesc(pIdStr))
+        b_Answer = 1;
+
+    gro_BankLoader->fv_FlushCache();
+    gro_BankLoader->f_vClearIndex();
+
+    SND_fn_vClearLastTheme();
+
+    if (strncmp(pIdStr, "transit", 7))
+        fs_vUpdateSwitchTextures();
+
+    return b_Answer;
+}
+
+_SND_tdstBlockEvent* SND_fn_pstGetBlockEventFromId(unsigned int u32_EvtId)
+{
+    CEventResData* po_Answer;
+
+    po_Answer = (CEventResData*)usnd::CIdObjPtrMgr::fs_roGetInst().f_poGetIdObj(CUUID(1, u32_EvtId));
+    return (_SND_tdstBlockEvent*)po_Answer;
+}
+
+void SND_fn_vStartLoad(void)
+{
+    g_pSoundCache = fn_pvMallocInBinaryPreservingTheCurrentMode(0x7D000);
+    usnd::CPS2FileSrcFlow::fs_vUseCache(g_pSoundCache, 0x7D000);
+}
+
+void SND_fn_vFinishLoad(char* pIdStr)
+{
+    TS_UUIDSet::iterator it;
+    CBankDesc* po_BankDesc;
+    int iStepSize;
+    unsigned int uiTime;
+    int iNbBanks;
+
+    iStepSize = 0;
+    uiTime = usnd_uiGetTime();
+
+    po_BankDesc = gro_BankCont->mfn_poAddBankDesc(pIdStr);
+
+    if (CD_ProgressCallBack)
+    {
+        iNbBanks = gs_oListToLoad._Tr._Size;
+        iStepSize = (LS_fn_iRemainingSizeToLoad() - 1300000) / iNbBanks;
     }
-    else {
-        if (s8_Digit >= 'A' && s8_Digit <= 'F') {
-            s8_Answer = s8_Digit - 'A' + 10;
-        }
-        else {
-            if (s8_Digit >= 'a' && s8_Digit <= 'f') {
-                s8_Answer = s8_Digit - 'a' + 10;
+
+    for (it = gs_oListToLoad.begin(); it != gs_oListToLoad.end(); ++it)
+    {
+        po_BankDesc->mfn_poAddCResData(*it);
+
+        if (CD_ProgressCallBack)
+            ((void (*)(int))CD_ProgressCallBack)(iStepSize);
+    }
+
+    gs_oListToLoad._Tr.clear();
+
+    printf("TIME spent to read the HX2 files \n");
+    printf("FINISH Time = %d\n", usnd_uiGetTime() - uiTime);
+
+    uiTime = usnd_uiGetTime();
+
+    usnd::CPS2WaveFileIdObj::fs_vLoadStatic();
+
+    printf("TIME spent to load the sound ressources in SPU RAM \n");
+    printf("FINISH Time = %d\n", usnd_uiGetTime() - uiTime);
+
+    gro_BankLoader->fv_FlushCache();
+    gro_BankLoader->f_vClearIndex();
+
+    usnd::CPS2FileSrcFlow::fs_vStopCache();
+    fn_vFreeInBinaryPreservingTheCurrentMode(g_pSoundCache);
+
+    if (!strcmp("fixe", pIdStr))
+    {
+        fn_vLoadSwitches(po_BankDesc);
+    }
+}
+
+void fn_vLoadSwitches(CBankDesc* po_BankDesc)
+{
+    TS_UUIDSet::iterator it;
+
+    g_pSoundCache = fn_pvMallocInBinaryPreservingTheCurrentMode(0x7D000);
+
+    usnd::CPS2FileSrcFlow::fs_vUseCache(g_pSoundCache, 0x7D000);
+
+    SND_fn_bLoadBank("fixeSW");
+
+    for (it = gs_oListToLoad.begin(); it != gs_oListToLoad.end(); ++it)
+    {
+        if ((*it).m_uiHighWord == 1)
+        {
+            CUUID switchId;
+            CSwitchResData* pSwitchData;
+            CEventResData* pEventData;
+
+            po_BankDesc->mfn_poAddCResDataAlone(*it);
+            pEventData = (CEventResData*)usnd::CIdObjPtrMgr::fs_roGetInst().f_poGetIdObj(*it);
+            if (pEventData)
+            {
+                switchId = pEventData->m_pTargetRes.f_roGetId();
+                po_BankDesc->mfn_poAddCResDataAlone(switchId);
+                pSwitchData = (CSwitchResData*)usnd::CIdObjPtrMgr::fs_roGetInst().f_poGetIdObj(switchId);
+                if (pSwitchData)
+                {
+                    SwitchMgr::fs_vAdd(pSwitchData);
+                }
             }
-            else
-                s8_Answer = 0;
         }
     }
 
-    return s8_Answer;
+    SwitchMgr::fs_vUpdateWaves(gro_BankLoader);
+
+    gs_oListToLoad._Tr.clear();
+
+    gro_BankLoader->fv_FlushCache();
+    gro_BankLoader->f_vClearIndex();
+
+    usnd::CPS2FileSrcFlow::fs_vStopCache();
+    fn_vFreeInBinaryPreservingTheCurrentMode(g_pSoundCache);
 }
 
-int SND_fn_bDesInitDataLoadSnd(void)
-{
-    return 1;
-}
+/* The debug record for the retail function at 0x00187a60 names it
+   _NilElmt__Q24usnd9streebase, but the ELF symbol there is the indexed
+   const conversion operator of usnd::CIdObjPtr<usnd::CResData>, which is
+   defined with the class template above (the ms_pfnConvert reference keeps
+   the compiler from folding it away, so the retail's out-of-line copy is
+   emitted). */
 
-unsigned char fn_bSetLanguage(void);
-int SND_fn_bInitDataLoadSnd(void)
+void fn_vUpdateSwitches(const char* pIdStr)
 {
-    fn_bSetLanguage();
-    return 1;
+    char ch_Path[1024];
+
+    sprintf(ch_Path, "\\%sBIN\\WORLD\\SOUND\\%s.SMT;1", fn_szGetGameDataPath(), pIdStr);
+    strcpy(ch_Path, FMN_SCE_AddBaseDirectory(ch_Path));
+    fs_vUppercase(ch_Path);
+
+    CTextFileSrc o_File("");
+
+    if (o_File.mfn_bOpen(ch_Path))
+    {
+        sstring o_Sentence;
+        CPS2IdObjLoader oLoader;
+
+        SwitchMgr::fs_vClearTexture();
+
+        while (o_File.mfn_bRead(o_Sentence))
+        {
+            SwitchMgr::fs_vAddTexture(atoi(o_Sentence.c_str()));
+        }
+
+        sprintf(ch_Path, "\\%sBIN\\WORLD\\SOUND\\FIXESW.HX2;1", fn_szGetGameDataPath());
+        strcpy(ch_Path, FMN_SCE_AddBaseDirectory(ch_Path));
+        fs_vUppercase(ch_Path);
+
+        oLoader.f_bLoadBank(ch_Path);
+        SwitchMgr::fs_vUpdateWaves(&oLoader);
+        oLoader.fv_FlushCache();
+        oLoader.f_vClearIndex();
+    }
 }

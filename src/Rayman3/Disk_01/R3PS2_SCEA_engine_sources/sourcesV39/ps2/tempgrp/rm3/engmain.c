@@ -10,10 +10,13 @@ int p_fn_v_EngMain_Net;
 int p_fn_v_EngMain_Engine;
 int p_fn_v_EngMain_Display;
 
-void fn_v_EngMain_VBLCallback(void)
-{
-    PS2_fn_vWakeupMainThread();
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void fn_v_EngMain_VBLCallback(void);
+void fn_v_EngMain_MainLoop(void);
+void fn_v_EngMain_GlobalInitAfterCreateFrame(void);
+void fn_v_EngMain_GlobalInitBeforeCreateFrame(void);
+void fn_v_EngMain_ModuleInit(void);
 
 extern void fn_v_EngMain_EmptyFunction__Fv(void);
 extern unsigned char fn_bEndOfGame(void);
@@ -21,6 +24,29 @@ extern unsigned char fn_bEndOfOneStep(void);
 extern void fn_vChooseTheGoodInit(void);
 extern void fn_vChooseTheGoodDesInit(void);
 extern void fn_vOneTrame(void);
+
+extern unsigned char g_ucErmModuleId;
+extern unsigned char g_ucMmgModuleId;
+extern unsigned char Erm_fn_ucInitErrMsg(void);
+extern void Mmg_fn_vFirstInitMmgModule(unsigned char ucMaxNbChannel);
+extern void GMT_fn_vInitFor3DOS(void);
+
+void fn_v_EngMain_ModuleInit(void)
+{
+    if (g_ucErmModuleId == 0xff) g_ucErmModuleId = Erm_fn_ucInitErrMsg();
+    if (g_ucMmgModuleId == 0xff) g_ucMmgModuleId = Erm_fn_ucInitErrMsg();
+    Mmg_fn_vFirstInitMmgModule(10);
+    GMT_fn_vInitFor3DOS();
+}
+
+void fn_v_EngMain_GlobalInitBeforeCreateFrame(void)
+{
+    fn_vInitEngineWhenInitApplication();
+}
+
+void fn_v_EngMain_GlobalInitAfterCreateFrame(void)
+{
+}
 
 void fn_v_EngMain_MainLoop(void)
 {
@@ -36,25 +62,7 @@ void fn_v_EngMain_MainLoop(void)
     }
 }
 
-void fn_v_EngMain_GlobalInitAfterCreateFrame(void)
+void fn_v_EngMain_VBLCallback(void)
 {
-}
-
-void fn_v_EngMain_GlobalInitBeforeCreateFrame(void)
-{
-    fn_vInitEngineWhenInitApplication();
-}
-
-extern unsigned char g_ucErmModuleId;
-extern unsigned char g_ucMmgModuleId;
-extern unsigned char Erm_fn_ucInitErrMsg(void);
-extern void Mmg_fn_vFirstInitMmgModule(unsigned char ucMaxNbChannel);
-extern void GMT_fn_vInitFor3DOS(void);
-
-void fn_v_EngMain_ModuleInit(void)
-{
-    if (g_ucErmModuleId == 0xff) g_ucErmModuleId = Erm_fn_ucInitErrMsg();
-    if (g_ucMmgModuleId == 0xff) g_ucMmgModuleId = Erm_fn_ucInitErrMsg();
-    Mmg_fn_vFirstInitMmgModule(10);
-    GMT_fn_vInitFor3DOS();
+    PS2_fn_vWakeupMainThread();
 }

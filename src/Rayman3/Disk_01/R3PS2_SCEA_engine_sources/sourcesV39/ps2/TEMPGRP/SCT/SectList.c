@@ -27,34 +27,24 @@ HIE_tdstSuperObject_* SECT_g_hActiveSectorList_Head;
 HIE_tdstSuperObject_* SECT_g_hActiveSectorList_Tail;
 unsigned short SECT_g_uwActiveSectorList_NumberOfElements;
 
-unsigned char SAI_fn_bInsertBoolInTable(void* _p_vValue, unsigned char ucMask, unsigned short _eFlags)
-{
-    return SAI_fn_bInsertAnElementInList(&SAI_g_stInternalStructure, _p_vValue, ucMask, 0x8000, _eFlags);
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+unsigned char SAI_fn_bInsertBoolInTable(void* _p_vValue, unsigned char ucMask, unsigned short _eFlags);
+void SECT_fnvInitGlobalsForActivity(void);
+HIE_tdstSuperObject_* SECT_fn_hGetActiveSectorListNext(HIE_tdstSuperObject_* _hCurrentSO);
+HIE_tdstSuperObject_* SECT_fn_hGetActiveSectorListHead(void);
+void SECT_fn_vDesactivateSector(HIE_tdstSuperObject_* _hSectorSO);
+void SECT_fn_vRemoveSectorFromList(HIE_tdstSuperObject_* _hSectorSO);
+void SECT_fn_vActivateSector(HIE_tdstSuperObject_* _hSectorSO);
 
-void SECT_fnvInitGlobalsForActivity(void)
+void SECT_fn_vActivateSector(HIE_tdstSuperObject_* _hSectorSO)
 {
-    SECT_g_hActiveSectorList_Head = SECT_g_hActiveSectorList_Tail = 0;
-}
+    SECT_tdstSector_* hSector;
+    hSector = _hSectorSO->hLinkedObject.p_stSector;
 
-HIE_tdstSuperObject_* SECT_fn_hGetActiveSectorListNext(HIE_tdstSuperObject_* _hCurrentSO)
-{
-    return _hCurrentSO->hLinkedObject.p_stSector->h_NextSectorInList;
-}
-
-HIE_tdstSuperObject_* SECT_fn_hGetActiveSectorListHead(void)
-{
-    return (HIE_tdstSuperObject_ *)SECT_g_hActiveSectorList_Head;
-}
-
-void SECT_fn_vDesactivateSector(HIE_tdstSuperObject_* _hSectorSO)
-{
-    SECT_tdstSector_* param0;
-    param0 = _hSectorSO->hLinkedObject.p_stSector;
-
-    if (param0->cCurrentActivity != 0)
+    if (hSector->cCurrentActivity != 1)
     {
-        param0->cCurrentActivity = 0;
+        hSector->cCurrentActivity = 1;
     }
 }
 
@@ -88,13 +78,33 @@ void SECT_fn_vRemoveSectorFromList(HIE_tdstSuperObject_* _hSectorSO)
     }
 }
 
-void SECT_fn_vActivateSector(HIE_tdstSuperObject_* _hSectorSO)
+void SECT_fn_vDesactivateSector(HIE_tdstSuperObject_* _hSectorSO)
 {
-    SECT_tdstSector_* hSector;
-    hSector = _hSectorSO->hLinkedObject.p_stSector;
+    SECT_tdstSector_* param0;
+    param0 = _hSectorSO->hLinkedObject.p_stSector;
 
-    if (hSector->cCurrentActivity != 1)
+    if (param0->cCurrentActivity != 0)
     {
-        hSector->cCurrentActivity = 1;
+        param0->cCurrentActivity = 0;
     }
+}
+
+HIE_tdstSuperObject_* SECT_fn_hGetActiveSectorListHead(void)
+{
+    return (HIE_tdstSuperObject_ *)SECT_g_hActiveSectorList_Head;
+}
+
+HIE_tdstSuperObject_* SECT_fn_hGetActiveSectorListNext(HIE_tdstSuperObject_* _hCurrentSO)
+{
+    return _hCurrentSO->hLinkedObject.p_stSector->h_NextSectorInList;
+}
+
+void SECT_fnvInitGlobalsForActivity(void)
+{
+    SECT_g_hActiveSectorList_Head = SECT_g_hActiveSectorList_Tail = 0;
+}
+
+unsigned char SAI_fn_bInsertBoolInTable(void* _p_vValue, unsigned char ucMask, unsigned short _eFlags)
+{
+    return SAI_fn_bInsertAnElementInList(&SAI_g_stInternalStructure, _p_vValue, ucMask, 0x8000, _eFlags);
 }

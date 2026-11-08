@@ -1774,76 +1774,44 @@ extern char* strncpy(char* dst, const char* src, unsigned int n);
 extern void TXT_vAfficheSimpleWithColor(GLD_tdstViewportAttributes_* stVpt, char* String, float x, float y, float z, unsigned int ulTextColor);
 extern void TXT_fn_fComputePixelLengthOfString(char* _szText, float* W, float* H);
 
-void fn_vDisplayScrollTextMenu2D(float X, float Y, float W, char* szText, unsigned int ulTextColor)
-{
-    char szTmp[30];
-    int N;
-    int ulLen;
-    float fL;
-    float fH;
-
-    TXT_vAfficheSimpleWithColor(g_p_stVpt, szText + g_NumFirstCharForScroll, X - g_OffsetXForScroll, Y, 0.0f, ulTextColor);
-
-    g_OffsetXForScroll = g_OffsetXForScroll + g_OffsetStepForScroll;
-
-    if (g_OffsetXForScroll <= 20.0f)
-    {
-        return;
-    }
-
-    N = 0;
-    while (szText[g_NumFirstCharForScroll + N] == '\\')
-    {
-        N++;
-        if (szText[g_NumFirstCharForScroll + N] == 'f')
-        {
-            N++;
-            while (szText[g_NumFirstCharForScroll + N] != ':')
-            {
-                N++;
-            }
-            N++;
-        }
-        else if (szText[g_NumFirstCharForScroll + N] == 'c')
-        {
-            N++;
-            while (szText[g_NumFirstCharForScroll + N] != ':')
-            {
-                N++;
-            }
-            N++;
-            while (szText[g_NumFirstCharForScroll + N] != ':')
-            {
-                N++;
-            }
-            N++;
-            while (szText[g_NumFirstCharForScroll + N] != ':')
-            {
-                N++;
-            }
-            N++;
-        }
-    }
-
-    ulLen = N + 1;
-
-    strncpy(szTmp, szText + g_NumFirstCharForScroll, ulLen);
-    szTmp[ulLen] = 0;
-
-    TXT_fn_fComputePixelLengthOfString(szTmp, &fL, &fH);
-
-    fL = 100.0f * (fL / (float)g_p_stVpt->dwWidth);
-    fH = 100.0f * (fH / (float)g_p_stVpt->dwHeight);
-
-    g_OffsetXForScroll = g_OffsetXForScroll - 10.0f * fL;
-    g_NumFirstCharForScroll += N + 1;
-
-    if (g_NumFirstCharForScroll > strlen(szText))
-    {
-        g_NumFirstCharForScroll = 0;
-        g_OffsetXForScroll = -W;
-    }
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void fn_vDisplayScrollTextMenu2D(float X, float Y, float W, char* szText, unsigned int ulTextColor);
+void fn_vManageMenu2D(void);
+void fn_vChangeCurrentValue(char Value);
+void fn_vInterruptMenu2D(int bPauseMenu);
+void ReturnFromSubMenu(void);
+void fn_vGotoSubMenu(int SubPage);
+void fn_vPreviousSelection(void);
+void fn_vNextSelection(void);
+void fn_vPreviousSelectionNoWrap(void);
+void fn_vNextSelectionNoWrap(void);
+void fn_vReinitGrayedEntries(int PageNumber);
+void fn_vInitInGameMenu2D(void);
+void fn_vInitMenuPages(void);
+void fn_vInitMaterialForMenu(void);
+void DesinitGameMenu2D(void);
+void CloseInGameMenu2D(void);
+void ActivateInGameMenu2D(void);
+void ActivateInGameMenu2DStart(void);
+void ActivateInGameMenu2DPhoto(void);
+void M2D_fn_vDisplayEndOfGameRecapPage(void);
+void ActivateInGameMenu2DBonus(int WithExit);
+void fn_vR3SetNbCineOpen(unsigned int ulNum);
+void fn_vR3SetNbBonusOpen(unsigned int ulNum);
+void fn_vR3SetCurrentEnvNumber(unsigned int ulNum);
+void fn_vUpdatePlayerGameName(void);
+void fn_vR3ReInitScore(void);
+void fn_vR3StoreInitScore(void);
+unsigned int fn_ulR3GetEnvNbCage(unsigned int ulIndE);
+unsigned int fn_ulR3GetEnvScoreWithRevisit(unsigned int ulIndE);
+unsigned int fn_ulR3GetEnvScore(unsigned int ulIndE);
+void fn_vR3SetEnvNbCage(unsigned int ulIndE, unsigned int ulNbCage);
+void fn_vR3SetEnvScoreWithRevisit(unsigned int ulIndE, unsigned int ulScore);
+void fn_vR3RecomputeGlobalScore(void);
+unsigned int M2D_fn_ulGetRevisitEnvironmentNumber(void);
+void M2D_fn_vForbidExitFromMenu(void);
+void fn_vR3SetEndOfGame(unsigned int ulValue);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 2031–2966 */
 /* addr: 0x00296990  size: 10476 bytes */
@@ -2348,6 +2316,2504 @@ static inline void M2D_fn_vGotoShortcutPage(int Page)
     else
     {
         fn_vPlaySoundInGameMenu2D(10);
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 1905–1982 */
+/* addr: 0x00299280  size: 508 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1905
+ *   +0x0004 -> line 1907
+ *   +0x0008 -> line 1905
+ *   +0x000c -> line 1907
+ *   +0x0010 -> line 1905
+ *   +0x001c -> line 1907
+ *   +0x0058 -> line 1909
+ *   +0x0060 -> line 1910
+ *   +0x0094 -> line 1913
+ *   +0x00e4 -> line 1917
+ *   +0x00fc -> line 1926
+ *   +0x0104 -> line 1930
+ *   +0x012c -> line 1934
+ *   +0x0134 -> line 1937
+ *   +0x013c -> line 1939
+ *   +0x0148 -> line 1942
+ *   +0x0150 -> line 1945
+ *   +0x0160 -> line 1947
+ *   +0x0178 -> line 1951
+ *   +0x0180 -> line 1954
+ *   +0x018c -> line 1955
+ *   +0x01c0 -> line 1964
+ *   +0x01c8 -> line 1967
+ *   +0x01d4 -> line 1973
+ *   +0x01dc -> line 1978
+ *   +0x01e8 -> line 1982
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+extern void fn_vSetStereoGameMenu2D(unsigned int uiSet);
+extern void IPT_fn_vStopFFBEffect(unsigned int ulCurrentTime, unsigned char ucPadNumber, signed char cEffectNumber);
+extern void IPT_fn_vResumeAllConstantFFBEffectForAllDevices(unsigned int ulTime);
+extern void IPT_fn_vPauseAllConstantFFBEffectForAllDevices(unsigned int ulTime);
+extern signed char IPT_fn_cCreateAndLaunchConstantFFBEffect(unsigned int ulCurrentTime, unsigned char ucPadNumber, float xFadeInStartValue, float xFadeInTime, float xConstantValue, float xConstantTime, float xFadeOutStopValue, float xFadeOutTime);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 1812–1821 */
+/* addr: 0x00299480  size: 60 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1812
+ *   +0x0008 -> line 1814
+ *   +0x0010 -> line 1815
+ *   +0x0018 -> line 1818
+ *   +0x0024 -> line 1820
+ *   +0x0034 -> line 1821
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 1720–1803 */
+/* addr: 0x002994c0  size: 1116 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1720
+ *   +0x0004 -> line 1722
+ *   +0x0008 -> line 1720
+ *   +0x000c -> line 1722
+ *   +0x0014 -> line 1724
+ *   +0x006c -> line 1732
+ *   +0x0070 -> line 1736
+ *   +0x007c -> line 1738
+ *   +0x0180 -> line 1743
+ *   +0x01fc -> line 1751
+ *   +0x0210 -> line 1752
+ *   +0x0218 -> line 1753
+ *   +0x0230 -> line 1766
+ *   +0x0240 -> line 1768
+ *   +0x0248 -> line 1769
+ *   +0x024c -> line 1768
+ *   +0x0258 -> line 1770
+ *   +0x025c -> line 1768
+ *   +0x0260 -> line 1771
+ *   +0x0264 -> line 1770
+ *   +0x0268 -> line 1771
+ *   +0x026c -> line 1768
+ *   +0x0270 -> line 1771
+ *   +0x028c -> line 1776
+ *   +0x0290 -> line 1777
+ *   +0x0294 -> line 1778
+ *   +0x0298 -> line 1779
+ *   +0x029c -> line 1782
+ *   +0x02a0 -> line 1781
+ *   +0x02a8 -> line 1782
+ *   +0x03a0 -> line 1783
+ *   +0x03a8 -> line 1785
+ *   +0x03d8 -> line 1789
+ *   +0x042c -> line 1796
+ *   +0x0438 -> line 1797
+ *   +0x0440 -> line 1798
+ *   +0x0444 -> line 1799
+ *   +0x0448 -> line 1800
+ *   +0x044c -> line 1803
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+extern void GAM_fn_vSetVolumeMusic(int s32_Value);
+extern void GAM_fn_vSetVolumeSound(int s32_Value);
+extern void GAM_fn_vSetVolumeMenu(int s32_Value);
+extern void GAM_fn_vSetVolumeAmbiance(int s32_Value);
+extern void GAM_fn_vSetVolumeVoice(int s32_Value);
+extern unsigned int PS2MC_fn_iGetFunctionResult(int FlagID);
+extern void PS2MC_vClearFlag(int FlagID);
+extern void VID_fn_vNextVideoToPlay(char* p_szVideoName, unsigned char bCanBeInterrupt, unsigned char bLoop);
+extern void VID_fn_vPlayVideoAfterLevel(void);
+extern void GAM_fn_vAskToChangeLevel(char* szNewLevelName, int lParameter);
+extern void DesinitGameMenu2D(void);
+extern void CloseInGameMenu2D(void);
+extern void fn_vLoadEngineClock(void);
+extern void IPT_fn_vResumeAllConstantFFBEffectForAllDevices(unsigned int ulTime);
+extern void IPT_fn_vPauseAllConstantFFBEffectForAllDevices(unsigned int ulTime);
+extern void GLI_vFreeTempMaterial(int* ppMaterial);
+
+static inline unsigned char fn_bIsSaveOK(void)
+{
+    switch (PS2MC_fn_iGetFunctionResult(0))
+    {
+    case 1:
+        PS2MC_vClearFlag(0);
+        return 1;
+    case 2:
+        PS2MC_vClearFlag(0);
+        return 0;
+    default:
+        printf("ERROR ! fn_bIsSaveOK called when save still in progress \n");
+        return 0;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 1657–1715 */
+/* addr: 0x00299920  size: 580 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1657
+ *   +0x0010 -> line 1659
+ *   +0x0018 -> line 1661
+ *   +0x0028 -> line 1666
+ *   +0x002c -> line 1664
+ *   +0x0030 -> line 1666
+ *   +0x0038 -> line 1665
+ *   +0x003c -> line 1663
+ *   +0x0040 -> line 1665
+ *   +0x0044 -> line 1666
+ *   +0x0048 -> line 1664
+ *   +0x004c -> line 1666
+ *   +0x005c -> line 1671
+ *   +0x0060 -> line 1667
+ *   +0x0064 -> line 1668
+ *   +0x0068 -> line 1669
+ *   +0x006c -> line 1671
+ *   +0x00a4 -> line 1679
+ *   +0x00ac -> line 1695
+ *   +0x00b4 -> line 1697
+ *   +0x00c4 -> line 1700
+ *   +0x00f8 -> line 1704
+ *   +0x0100 -> line 1707
+ *   +0x0134 -> line 1713
+ *   +0x0234 -> line 1715
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 1625–1654 */
+/* addr: 0x00299b70  size: 304 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1625
+ *   +0x0008 -> line 1626
+ *   +0x0014 -> line 1628
+ *   +0x005c -> line 1629
+ *   +0x0068 -> line 1632
+ *   +0x007c -> line 1634
+ *   +0x0084 -> line 1635
+ *   +0x008c -> line 1636
+ *   +0x0094 -> line 1638
+ *   +0x0098 -> line 1640
+ *   +0x00a0 -> line 1642
+ *   +0x00a8 -> line 1645
+ *   +0x00d8 -> line 1647
+ *   +0x00e0 -> line 1650
+ *   +0x011c -> line 1652
+ *   +0x0124 -> line 1654
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 1593–1622 */
+/* addr: 0x00299ca0  size: 252 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1593
+ *   +0x0004 -> line 1594
+ *   +0x0008 -> line 1593
+ *   +0x000c -> line 1594
+ *   +0x0040 -> line 1596
+ *   +0x0058 -> line 1597
+ *   +0x0060 -> line 1600
+ *   +0x007c -> line 1602
+ *   +0x0080 -> line 1604
+ *   +0x0088 -> line 1606
+ *   +0x008c -> line 1608
+ *   +0x0094 -> line 1610
+ *   +0x0098 -> line 1613
+ *   +0x00a4 -> line 1615
+ *   +0x00ac -> line 1618
+ *   +0x00e8 -> line 1620
+ *   +0x00f0 -> line 1622
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 1556–1589 */
+/* addr: 0x00299da0  size: 404 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1556
+ *   +0x0008 -> line 1559
+ *   +0x0014 -> line 1561
+ *   +0x005c -> line 1565
+ *   +0x0064 -> line 1568
+ *   +0x0078 -> line 1574
+ *   +0x0080 -> line 1576
+ *   +0x0084 -> line 1578
+ *   +0x008c -> line 1580
+ *   +0x0094 -> line 1583
+ *   +0x009c -> line 1585
+ *   +0x00d8 -> line 1587
+ *   +0x0188 -> line 1589
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 1520–1553 */
+/* addr: 0x00299f40  size: 428 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1520
+ *   +0x0004 -> line 1523
+ *   +0x0008 -> line 1520
+ *   +0x000c -> line 1523
+ *   +0x0044 -> line 1525
+ *   +0x005c -> line 1529
+ *   +0x0064 -> line 1532
+ *   +0x0080 -> line 1534
+ *   +0x0084 -> line 1535
+ *   +0x008c -> line 1542
+ *   +0x0094 -> line 1544
+ *   +0x009c -> line 1547
+ *   +0x00a4 -> line 1549
+ *   +0x00e0 -> line 1551
+ *   +0x01a0 -> line 1553
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 1444–1465 */
+/* addr: 0x0029a0f0  size: 256 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1444
+ *   +0x0004 -> line 1446
+ *   +0x0068 -> line 1447
+ *   +0x0080 -> line 1450
+ *   +0x00bc -> line 1453
+ *   +0x00c8 -> line 1454
+ *   +0x00f4 -> line 1455
+ *   +0x00f8 -> line 1465
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 1400–1409 */
+/* addr: 0x0029a1f0  size: 44 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1400
+ *   +0x0008 -> line 1404
+ *   +0x0010 -> line 1406
+ *   +0x0018 -> line 1407
+ *   +0x0020 -> line 1409
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vInitMaterialForMenu(void);
+void fn_vInitMenuPages(void);
+void GLI_vProcessRegisteredTextures(void);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 1137–1394 */
+/* addr: 0x0029a220  size: 4360 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1137
+ *   +0x0004 -> line 1145
+ *   +0x0008 -> line 1137
+ *   +0x000c -> line 1149
+ *   +0x0010 -> line 1137
+ *   +0x0020 -> line 1145
+ *   +0x0024 -> line 1146
+ *   +0x002c -> line 1149
+ *   +0x007c -> line 1154
+ *   +0x0140 -> line 1157
+ *   +0x0198 -> line 1158
+ *   +0x019c -> line 1157
+ *   +0x01a0 -> line 1158
+ *   +0x01a4 -> line 1157
+ *   +0x01ac -> line 1158
+ *   +0x01b4 -> line 1165
+ *   +0x01c0 -> line 1164
+ *   +0x01c4 -> line 1166
+ *   +0x0204 -> line 1167
+ *   +0x021c -> line 1169
+ *   +0x0220 -> line 1167
+ *   +0x0244 -> line 1169
+ *   +0x027c -> line 1171
+ *   +0x02b8 -> line 1173
+ *   +0x02f4 -> line 1175
+ *   +0x0330 -> line 1176
+ *   +0x033c -> line 1177
+ *   +0x0368 -> line 1184
+ *   +0x0374 -> line 1183
+ *   +0x0378 -> line 1185
+ *   +0x0398 -> line 1194
+ *   +0x039c -> line 1190
+ *   +0x03a0 -> line 1194
+ *   +0x03a4 -> line 1190
+ *   +0x03b0 -> line 1194
+ *   +0x03c8 -> line 1196
+ *   +0x03e4 -> line 1202
+ *   +0x0400 -> line 1204
+ *   +0x041c -> line 1208
+ *   +0x0420 -> line 1207
+ *   +0x0424 -> line 1208
+ *   +0x0428 -> line 1217
+ *   +0x0430 -> line 1207
+ *   +0x0434 -> line 1217
+ *   +0x0438 -> line 1218
+ *   +0x0478 -> line 1220
+ *   +0x0490 -> line 1229
+ *   +0x0494 -> line 1220
+ *   +0x04b8 -> line 1229
+ *   +0x0518 -> line 1231
+ *   +0x0578 -> line 1234
+ *   +0x05d0 -> line 1244
+ *   +0x05d4 -> line 1245
+ *   +0x05d8 -> line 1244
+ *   +0x05dc -> line 1246
+ *   +0x05e0 -> line 1245
+ *   +0x0608 -> line 1246
+ *   +0x0640 -> line 1250
+ *   +0x0644 -> line 1252
+ *   +0x0648 -> line 1250
+ *   +0x064c -> line 1253
+ *   +0x0650 -> line 1251
+ *   +0x0654 -> line 1253
+ *   +0x0658 -> line 1252
+ *   +0x065c -> line 1253
+ *   +0x0664 -> line 1252
+ *   +0x0668 -> line 1251
+ *   +0x066c -> line 1252
+ *   +0x0680 -> line 1253
+ *   +0x0684 -> line 1252
+ *   +0x0688 -> line 1253
+ *   +0x0690 -> line 1267
+ *   +0x0694 -> line 1268
+ *   +0x0698 -> line 1267
+ *   +0x069c -> line 1269
+ *   +0x06a0 -> line 1268
+ *   +0x06c8 -> line 1269
+ *   +0x0700 -> line 1271
+ *   +0x0718 -> line 1273
+ *   +0x071c -> line 1271
+ *   +0x0740 -> line 1273
+ *   +0x07a0 -> line 1275
+ *   +0x0800 -> line 1277
+ *   +0x0858 -> line 1281
+ *   +0x085c -> line 1282
+ *   +0x0860 -> line 1281
+ *   +0x0864 -> line 1283
+ *   +0x0868 -> line 1282
+ *   +0x0890 -> line 1283
+ *   +0x08c8 -> line 1285
+ *   +0x08e0 -> line 1290
+ *   +0x08e4 -> line 1285
+ *   +0x0908 -> line 1290
+ *   +0x0940 -> line 1292
+ *   +0x097c -> line 1294
+ *   +0x09b8 -> line 1297
+ *   +0x09f4 -> line 1302
+ *   +0x09f8 -> line 1303
+ *   +0x09fc -> line 1302
+ *   +0x0a00 -> line 1304
+ *   +0x0a04 -> line 1303
+ *   +0x0a2c -> line 1304
+ *   +0x0a64 -> line 1305
+ *   +0x0b54 -> line 1310
+ *   +0x0b58 -> line 1311
+ *   +0x0b5c -> line 1310
+ *   +0x0b60 -> line 1312
+ *   +0x0b64 -> line 1311
+ *   +0x0b8c -> line 1312
+ *   +0x0bc4 -> line 1313
+ *   +0x0bcc -> line 1314
+ *   +0x0bd0 -> line 1319
+ *   +0x0bd4 -> line 1313
+ *   +0x0bdc -> line 1314
+ *   +0x0be4 -> line 1318
+ *   +0x0be8 -> line 1319
+ *   +0x0bf0 -> line 1320
+ *   +0x0bf4 -> line 1313
+ *   +0x0c0c -> line 1314
+ *   +0x0c10 -> line 1313
+ *   +0x0c14 -> line 1314
+ *   +0x0c18 -> line 1318
+ *   +0x0c1c -> line 1319
+ *   +0x0c3c -> line 1320
+ *   +0x0c74 -> line 1324
+ *   +0x0c78 -> line 1325
+ *   +0x0c7c -> line 1324
+ *   +0x0c80 -> line 1326
+ *   +0x0c84 -> line 1325
+ *   +0x0cac -> line 1326
+ *   +0x0ce4 -> line 1327
+ *   +0x0cec -> line 1328
+ *   +0x0cf0 -> line 1334
+ *   +0x0cf4 -> line 1327
+ *   +0x0cfc -> line 1328
+ *   +0x0d04 -> line 1333
+ *   +0x0d08 -> line 1334
+ *   +0x0d10 -> line 1335
+ *   +0x0d14 -> line 1327
+ *   +0x0d2c -> line 1328
+ *   +0x0d30 -> line 1327
+ *   +0x0d34 -> line 1328
+ *   +0x0d38 -> line 1333
+ *   +0x0d3c -> line 1334
+ *   +0x0d5c -> line 1335
+ *   +0x0d94 -> line 1340
+ *   +0x0d98 -> line 1341
+ *   +0x0d9c -> line 1340
+ *   +0x0da0 -> line 1342
+ *   +0x0da4 -> line 1341
+ *   +0x0dcc -> line 1342
+ *   +0x0e04 -> line 1352
+ *   +0x0e08 -> line 1353
+ *   +0x0e0c -> line 1352
+ *   +0x0e10 -> line 1354
+ *   +0x0e14 -> line 1353
+ *   +0x0e18 -> line 1354
+ *   +0x0e1c -> line 1353
+ *   +0x0e20 -> line 1354
+ *   +0x0e24 -> line 1353
+ *   +0x0e28 -> line 1354
+ *   +0x0e2c -> line 1353
+ *   +0x0e44 -> line 1354
+ *   +0x0e48 -> line 1353
+ *   +0x0e4c -> line 1354
+ *   +0x0e54 -> line 1355
+ *   +0x0e6c -> line 1357
+ *   +0x0e70 -> line 1355
+ *   +0x0e94 -> line 1357
+ *   +0x0ecc -> line 1359
+ *   +0x0f08 -> line 1361
+ *   +0x0f44 -> line 1363
+ *   +0x0f80 -> line 1368
+ *   +0x0f84 -> line 1369
+ *   +0x0f88 -> line 1368
+ *   +0x0f8c -> line 1370
+ *   +0x0f90 -> line 1369
+ *   +0x0f94 -> line 1370
+ *   +0x0f98 -> line 1369
+ *   +0x0f9c -> line 1370
+ *   +0x0fa0 -> line 1369
+ *   +0x0fa4 -> line 1370
+ *   +0x0fa8 -> line 1369
+ *   +0x0fc0 -> line 1370
+ *   +0x0fc4 -> line 1369
+ *   +0x0fc8 -> line 1370
+ *   +0x0fd0 -> line 1371
+ *   +0x0fe4 -> line 1373
+ *   +0x0fe8 -> line 1371
+ *   +0x100c -> line 1373
+ *   +0x1044 -> line 1378
+ *   +0x104c -> line 1383
+ *   +0x1054 -> line 1389
+ *   +0x1060 -> line 1388
+ *   +0x1064 -> line 1389
+ *   +0x1088 -> line 1390
+ *   +0x1090 -> line 1391
+ *   +0x1098 -> line 1390
+ *   +0x10a0 -> line 1391
+ *   +0x10a8 -> line 1390
+ *   +0x10c0 -> line 1391
+ *   +0x10c4 -> line 1390
+ *   +0x10c8 -> line 1391
+ *   +0x10ec -> line 1394
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+extern char* FON_fn_szGetTextPointerForHandle(int hString);
+extern int fn_vDefinePalVideoPages(int IndSubMenuPage);
+extern int fn_vDefineProgressiveScanPages(int IndSubMenuPage);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 897–975 */
+/* addr: 0x0029b330  size: 1780 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 897
+ *   +0x0008 -> line 901
+ *   +0x0010 -> line 903
+ *   +0x0018 -> line 906
+ *   +0x0064 -> line 909
+ *   +0x006c -> line 912
+ *   +0x00b8 -> line 917
+ *   +0x00c0 -> line 921
+ *   +0x0110 -> line 922
+ *   +0x0164 -> line 923
+ *   +0x01b8 -> line 924
+ *   +0x020c -> line 925
+ *   +0x0260 -> line 926
+ *   +0x02b4 -> line 927
+ *   +0x0308 -> line 928
+ *   +0x035c -> line 929
+ *   +0x03b0 -> line 932
+ *   +0x0404 -> line 934
+ *   +0x0458 -> line 937
+ *   +0x04ac -> line 940
+ *   +0x04f8 -> line 942
+ *   +0x04fc -> line 940
+ *   +0x0500 -> line 942
+ *   +0x0504 -> line 954
+ *   +0x0508 -> line 945
+ *   +0x0510 -> line 940
+ *   +0x0518 -> line 945
+ *   +0x0520 -> line 948
+ *   +0x0530 -> line 951
+ *   +0x053c -> line 954
+ *   +0x058c -> line 957
+ *   +0x05e0 -> line 960
+ *   +0x0634 -> line 967
+ *   +0x0638 -> line 960
+ *   +0x063c -> line 963
+ *   +0x0648 -> line 967
+ *   +0x0694 -> line 973
+ *   +0x06e8 -> line 975
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 840–886 */
+/* addr: 0x0029ba30  size: 440 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 840
+ *   +0x0004 -> line 846
+ *   +0x0008 -> line 840
+ *   +0x000c -> line 846
+ *   +0x0010 -> line 841
+ *   +0x0014 -> line 842
+ *   +0x0018 -> line 846
+ *   +0x0034 -> line 851
+ *   +0x0044 -> line 853
+ *   +0x0148 -> line 856
+ *   +0x0150 -> line 857
+ *   +0x0158 -> line 858
+ *   +0x0160 -> line 874
+ *   +0x0164 -> line 859
+ *   +0x0168 -> line 874
+ *   +0x016c -> line 860
+ *   +0x0170 -> line 874
+ *   +0x0178 -> line 875
+ *   +0x0180 -> line 878
+ *   +0x0190 -> line 880
+ *   +0x01a4 -> line 884
+ *   +0x01ac -> line 886
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+extern void fn_vDeinitSoundInGameMenu2D(unsigned int uiResume);
+extern void GAM_fn_vSetVolumeMusic(int s32_Value);
+extern void GAM_fn_vSetVolumeSound(int s32_Value);
+extern void GAM_fn_vSetVolumeMenu(int s32_Value);
+extern void GAM_fn_vSetVolumeAmbiance(int s32_Value);
+extern void GAM_fn_vSetVolumeVoice(int s32_Value);
+extern void PS2M2D_vReinitMenuTextures(void);
+extern void GLI_vFreeTempMaterial(int* ppMaterial);
+extern void fn_vLoadEngineClock(void);
+extern void IPT_fn_vStopFFBEffect(unsigned int ulCurrentTime, unsigned char ucPadNumber, signed char cEffectNumber);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 622–646 */
+/* addr: 0x0029bbf0  size: 104 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 622
+ *   +0x0008 -> line 625
+ *   +0x0010 -> line 627
+ *   +0x0020 -> line 628
+ *   +0x0028 -> line 629
+ *   +0x002c -> line 638
+ *   +0x0030 -> line 629
+ *   +0x0034 -> line 636
+ *   +0x003c -> line 638
+ *   +0x0044 -> line 640
+ *   +0x004c -> line 641
+ *   +0x0054 -> line 644
+ *   +0x005c -> line 646
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+extern void fn_vLoadEngineClock(void);
+extern void IPT_fn_vResumeAllConstantFFBEffectForAllDevices(unsigned int ulTime);
+extern void IPT_fn_vPauseAllConstantFFBEffectForAllDevices(unsigned int ulTime);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 584–605 */
+/* addr: 0x0029bc60  size: 232 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 584
+ *   +0x0004 -> line 590
+ *   +0x0008 -> line 584
+ *   +0x000c -> line 590
+ *   +0x0014 -> line 585
+ *   +0x0018 -> line 586
+ *   +0x001c -> line 587
+ *   +0x0020 -> line 588
+ *   +0x0024 -> line 589
+ *   +0x0028 -> line 590
+ *   +0x00b0 -> line 593
+ *   +0x00bc -> line 594
+ *   +0x00c8 -> line 597
+ *   +0x00cc -> line 603
+ *   +0x00d4 -> line 604
+ *   +0x00dc -> line 605
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 542–581 */
+/* addr: 0x0029bd50  size: 292 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 542
+ *   +0x0004 -> line 553
+ *   +0x0008 -> line 542
+ *   +0x000c -> line 544
+ *   +0x0010 -> line 549
+ *   +0x0014 -> line 553
+ *   +0x0018 -> line 544
+ *   +0x001c -> line 545
+ *   +0x0020 -> line 546
+ *   +0x0024 -> line 547
+ *   +0x0028 -> line 553
+ *   +0x002c -> line 549
+ *   +0x0030 -> line 548
+ *   +0x0034 -> line 553
+ *   +0x00bc -> line 555
+ *   +0x00c4 -> line 571
+ *   +0x00c8 -> line 557
+ *   +0x00d0 -> line 556
+ *   +0x00d4 -> line 571
+ *   +0x00d8 -> line 556
+ *   +0x00dc -> line 571
+ *   +0x0110 -> line 576
+ *   +0x0118 -> line 581
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int PS2MC_fn_bHasBootCheckBeenDoneYet(void);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 509–537 */
+/* addr: 0x0029be80  size: 452 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 509
+ *   +0x0004 -> line 511
+ *   +0x0008 -> line 509
+ *   +0x000c -> line 515
+ *   +0x0010 -> line 511
+ *   +0x0014 -> line 512
+ *   +0x0018 -> line 513
+ *   +0x001c -> line 514
+ *   +0x0020 -> line 516
+ *   +0x0024 -> line 518
+ *   +0x0028 -> line 515
+ *   +0x002c -> line 518
+ *   +0x0034 -> line 516
+ *   +0x0038 -> line 518
+ *   +0x00c0 -> line 520
+ *   +0x00c8 -> line 524
+ *   +0x00cc -> line 529
+ *   +0x00d0 -> line 524
+ *   +0x00d4 -> line 533
+ *   +0x00d8 -> line 525
+ *   +0x00e0 -> line 526
+ *   +0x00e8 -> line 528
+ *   +0x00f0 -> line 530
+ *   +0x00f8 -> line 531
+ *   +0x0100 -> line 532
+ *   +0x0104 -> line 533
+ *   +0x0170 -> line 534
+ *   +0x01a4 -> line 535
+ *   +0x01b8 -> line 537
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 489–505 */
+/* addr: 0x0029c050  size: 228 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 489
+ *   +0x0004 -> line 490
+ *   +0x0008 -> line 489
+ *   +0x000c -> line 494
+ *   +0x0010 -> line 490
+ *   +0x0014 -> line 491
+ *   +0x0018 -> line 492
+ *   +0x001c -> line 493
+ *   +0x0020 -> line 495
+ *   +0x0024 -> line 497
+ *   +0x0028 -> line 494
+ *   +0x002c -> line 497
+ *   +0x0034 -> line 495
+ *   +0x0038 -> line 497
+ *   +0x00c0 -> line 499
+ *   +0x00c8 -> line 503
+ *   +0x00cc -> line 502
+ *   +0x00d0 -> line 503
+ *   +0x00d4 -> line 504
+ *   +0x00d8 -> line 505
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 466–486 */
+/* addr: 0x0029c140  size: 304 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 466
+ *   +0x0004 -> line 474
+ *   +0x0008 -> line 466
+ *   +0x000c -> line 474
+ *   +0x0010 -> line 466
+ *   +0x0018 -> line 473
+ *   +0x001c -> line 474
+ *   +0x0020 -> line 467
+ *   +0x0024 -> line 468
+ *   +0x0028 -> line 470
+ *   +0x002c -> line 471
+ *   +0x0030 -> line 473
+ *   +0x0034 -> line 474
+ *   +0x0038 -> line 472
+ *   +0x003c -> line 474
+ *   +0x00c0 -> line 476
+ *   +0x00c8 -> line 477
+ *   +0x00cc -> line 484
+ *   +0x00d0 -> line 477
+ *   +0x00d4 -> line 480
+ *   +0x00d8 -> line 478
+ *   +0x00dc -> line 481
+ *   +0x00e0 -> line 478
+ *   +0x00e4 -> line 479
+ *   +0x00e8 -> line 480
+ *   +0x00ec -> line 479
+ *   +0x00f0 -> line 482
+ *   +0x00f4 -> line 484
+ *   +0x00f8 -> line 482
+ *   +0x00fc -> line 484
+ *   +0x0100 -> line 482
+ *   +0x0104 -> line 484
+ *   +0x0120 -> line 486
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 418–418 */
+/* addr: 0x0029c270  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 418
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 411–411 */
+/* addr: 0x0029c280  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 411
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 394–404 */
+/* addr: 0x0029c290  size: 72 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 394
+ *   +0x0004 -> line 395
+ *   +0x0018 -> line 396
+ *   +0x001c -> line 397
+ *   +0x0028 -> line 401
+ *   +0x003c -> line 402
+ *   +0x0040 -> line 404
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 386–386 */
+/* addr: 0x0029c2e0  size: 96 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 386
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 368–381 */
+/* addr: 0x0029c340  size: 1016 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 368
+ *   +0x000c -> line 370
+ *   +0x0010 -> line 371
+ *   +0x0014 -> line 370
+ *   +0x0018 -> line 371
+ *   +0x001c -> line 375
+ *   +0x0150 -> line 376
+ *   +0x02b0 -> line 380
+ *   +0x02b4 -> line 378
+ *   +0x02bc -> line 380
+ *   +0x02c0 -> line 376
+ *   +0x02c4 -> line 378
+ *   +0x02c8 -> line 380
+ *   +0x03f0 -> line 381
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 335–361 */
+/* addr: 0x0029c740  size: 2372 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 335
+ *   +0x0138 -> line 337
+ *   +0x0144 -> line 339
+ *   +0x0148 -> line 342
+ *   +0x014c -> line 340
+ *   +0x0150 -> line 342
+ *   +0x0160 -> line 339
+ *   +0x0164 -> line 340
+ *   +0x0168 -> line 342
+ *   +0x02c8 -> line 344
+ *   +0x041c -> line 347
+ *   +0x0560 -> line 349
+ *   +0x069c -> line 356
+ *   +0x07d0 -> line 357
+ *   +0x07e0 -> line 356
+ *   +0x07e8 -> line 357
+ *   +0x093c -> line 361
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 327–328 */
+/* addr: 0x0029d090  size: 24 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 327
+ *   +0x0010 -> line 328
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 310–323 */
+/* addr: 0x0029d0b0  size: 712 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 310
+ *   +0x0138 -> line 312
+ *   +0x0144 -> line 316
+ *   +0x0164 -> line 322
+ *   +0x02c0 -> line 323
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 300–306 */
+/* addr: 0x0029d380  size: 360 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 300
+ *   +0x0138 -> line 303
+ *   +0x0160 -> line 306
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 294–296 */
+/* addr: 0x0029d4f0  size: 36 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 294
+ *   +0x000c -> line 295
+ *   +0x001c -> line 296
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 268–289 */
+/* addr: 0x0029d520  size: 736 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 268
+ *   +0x000c -> line 270
+ *   +0x0018 -> line 272
+ *   +0x0020 -> line 274
+ *   +0x0028 -> line 277
+ *   +0x002c -> line 279
+ *   +0x004c -> line 283
+ *   +0x0054 -> line 285
+ *   +0x01a4 -> line 288
+ *   +0x02d8 -> line 289
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 251–255 */
+/* addr: 0x0029d800  size: 320 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 251
+ *   +0x0004 -> line 252
+ *   +0x0008 -> line 251
+ *   +0x0010 -> line 253
+ *   +0x0130 -> line 254
+ *   +0x0138 -> line 255
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 221–227 */
+/* addr: 0x0029d940  size: 36 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 221
+ *   +0x001c -> line 227
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 214–215 */
+/* addr: 0x0029d970  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 214
+ *   +0x0004 -> line 215
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 203–203 */
+/* addr: 0x0029d980  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 203
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void fn_vR3SetEndOfGame(unsigned int ulValue)
+{
+    g_EndOfGameIsDone = ulValue;
+}
+
+void M2D_fn_vForbidExitFromMenu(void)
+{
+    g_ExitForbidden = 1;
+}
+
+unsigned int M2D_fn_ulGetRevisitEnvironmentNumber(void)
+{
+    if (g_RevisitMode != 0) {
+    } else {
+        return 0;
+    }
+    return g_RevisitIndCurrentEnv;
+}
+
+void fn_vR3RecomputeGlobalScore(void)
+{
+    int i;
+    int offset;
+    anon_2 *p;
+
+    g_aEnvValue[0].ulScore = 0;
+
+    i = 1;
+    offset = 8;
+    do
+    {
+        p = (anon_2 *)((char *)g_aEnvValue + offset);
+        g_aEnvValue[0].ulScore += p[0].ulScore;
+        g_aEnvValue[0].ulScore += p[1].ulScore;
+        g_aEnvValue[0].ulScore += p[2].ulScore;
+        g_aEnvValue[0].ulScore += p[3].ulScore;
+        g_aEnvValue[0].ulScore += p[4].ulScore;
+        g_aEnvValue[0].ulScore += p[5].ulScore;
+        g_aEnvValue[0].ulScore += p[6].ulScore;
+        g_aEnvValue[0].ulScore += p[7].ulScore;
+        i += 8;
+        offset += 64;
+    } while (i < 2);
+
+    offset = i * 8;
+    if (i < 10)
+    {
+        do
+        {
+            p = (anon_2 *)((char *)g_aEnvValue + offset);
+            g_aEnvValue[0].ulScore += p->ulScore;
+            i++;
+            offset += 8;
+        } while (i < 10);
+    }
+
+    g_RevisitCurrentGlobalScore = g_aEnvValue[0].ulScore;
+}
+
+void fn_vR3SetEnvScoreWithRevisit(unsigned int ulIndE, unsigned int ulScore)
+{
+    int i;
+    int offset;
+    anon_2 *p;
+
+    if (ulIndE < 10)
+    {
+        if (g_RevisitMode != 0)
+        {
+            if (ulIndE == 0)
+            {
+                g_RevisitCurrentGlobalScore = ulScore;
+            }
+            else
+            {
+                g_RevisitCurrentEnvScore = ulScore;
+            }
+
+            if (g_aEnvValue[ulIndE].ulScore < ulScore)
+            {
+                g_aEnvValue[ulIndE].ulScore = ulScore;
+            }
+        }
+        else
+        {
+            if (ulIndE < 10)
+            {
+                g_aEnvValue[ulIndE].ulScore = ulScore;
+            }
+
+            g_aEnvValue[0].ulScore = 0;
+
+            i = 1;
+            offset = 8;
+            do
+            {
+                p = (anon_2 *)((char *)g_aEnvValue + offset);
+                g_aEnvValue[0].ulScore += p[0].ulScore;
+                g_aEnvValue[0].ulScore += p[1].ulScore;
+                g_aEnvValue[0].ulScore += p[2].ulScore;
+                g_aEnvValue[0].ulScore += p[3].ulScore;
+                g_aEnvValue[0].ulScore += p[4].ulScore;
+                g_aEnvValue[0].ulScore += p[5].ulScore;
+                g_aEnvValue[0].ulScore += p[6].ulScore;
+                g_aEnvValue[0].ulScore += p[7].ulScore;
+                i += 8;
+                offset += 64;
+            } while (i < 2);
+
+            offset = i * 8;
+            if (i < 10)
+            {
+                do
+                {
+                    p = (anon_2 *)((char *)g_aEnvValue + offset);
+                    g_aEnvValue[0].ulScore += p->ulScore;
+                    i++;
+                    offset += 8;
+                } while (i < 10);
+            }
+
+            g_RevisitCurrentGlobalScore = g_aEnvValue[0].ulScore;
+        }
+    }
+
+    g_aEnvValue[0].ulScore = 0;
+
+    i = 1;
+    offset = 8;
+    do
+    {
+        p = (anon_2 *)((char *)g_aEnvValue + offset);
+        g_aEnvValue[0].ulScore += p[0].ulScore;
+        g_aEnvValue[0].ulScore += p[1].ulScore;
+        g_aEnvValue[0].ulScore += p[2].ulScore;
+        g_aEnvValue[0].ulScore += p[3].ulScore;
+        g_aEnvValue[0].ulScore += p[4].ulScore;
+        g_aEnvValue[0].ulScore += p[5].ulScore;
+        g_aEnvValue[0].ulScore += p[6].ulScore;
+        g_aEnvValue[0].ulScore += p[7].ulScore;
+        i += 8;
+        offset += 64;
+    } while (i < 2);
+
+    offset = i * 8;
+    if (i < 10)
+    {
+        do
+        {
+            p = (anon_2 *)((char *)g_aEnvValue + offset);
+            g_aEnvValue[0].ulScore += p->ulScore;
+            i++;
+            offset += 8;
+        } while (i < 10);
+    }
+
+    g_RevisitCurrentGlobalScore = g_aEnvValue[0].ulScore;
+}
+
+void fn_vR3SetEnvNbCage(unsigned int ulIndE, unsigned int ulNbCage)
+{
+    if (ulIndE < 10)
+        g_aEnvValue[ulIndE].ulNbCage = ulNbCage;
+}
+
+unsigned int fn_ulR3GetEnvScore(unsigned int ulIndE)
+{
+    int i;
+    int offset;
+    anon_2 *p;
+
+    g_aEnvValue[0].ulScore = 0;
+
+    i = 1;
+    offset = 8;
+    do
+    {
+        p = (anon_2 *)((char *)g_aEnvValue + offset);
+        g_aEnvValue[0].ulScore += p[0].ulScore;
+        g_aEnvValue[0].ulScore += p[1].ulScore;
+        g_aEnvValue[0].ulScore += p[2].ulScore;
+        g_aEnvValue[0].ulScore += p[3].ulScore;
+        g_aEnvValue[0].ulScore += p[4].ulScore;
+        g_aEnvValue[0].ulScore += p[5].ulScore;
+        g_aEnvValue[0].ulScore += p[6].ulScore;
+        g_aEnvValue[0].ulScore += p[7].ulScore;
+        i += 8;
+        offset += 64;
+    } while (i < 2);
+
+    offset = i * 8;
+    if (i < 10)
+    {
+        do
+        {
+            p = (anon_2 *)((char *)g_aEnvValue + offset);
+            g_aEnvValue[0].ulScore += p->ulScore;
+            i++;
+            offset += 8;
+        } while (i < 10);
+    }
+
+    g_RevisitCurrentGlobalScore = g_aEnvValue[0].ulScore;
+
+    if (ulIndE < 10)
+    {
+        return g_aEnvValue[ulIndE].ulScore;
+    }
+
+    return 0;
+}
+
+unsigned int fn_ulR3GetEnvScoreWithRevisit(unsigned int ulIndE)
+{
+    int i;
+    int offset;
+    anon_2 *p;
+
+    g_aEnvValue[0].ulScore = 0;
+
+    i = 1;
+    offset = 8;
+    do
+    {
+        p = (anon_2 *)((char *)g_aEnvValue + offset);
+        g_aEnvValue[0].ulScore += p[0].ulScore;
+        g_aEnvValue[0].ulScore += p[1].ulScore;
+        g_aEnvValue[0].ulScore += p[2].ulScore;
+        g_aEnvValue[0].ulScore += p[3].ulScore;
+        g_aEnvValue[0].ulScore += p[4].ulScore;
+        g_aEnvValue[0].ulScore += p[5].ulScore;
+        g_aEnvValue[0].ulScore += p[6].ulScore;
+        g_aEnvValue[0].ulScore += p[7].ulScore;
+        i += 8;
+        offset += 64;
+    } while (i < 2);
+
+    offset = i * 8;
+    if (i < 10)
+    {
+        do
+        {
+            p = (anon_2 *)((char *)g_aEnvValue + offset);
+            g_aEnvValue[0].ulScore += p->ulScore;
+            i++;
+            offset += 8;
+        } while (i < 10);
+    }
+
+    g_RevisitCurrentGlobalScore = g_aEnvValue[0].ulScore;
+
+    if (g_RevisitMode != 0)
+    {
+        if (ulIndE == 0)
+        {
+            return g_RevisitCurrentGlobalScore;
+        }
+
+        return g_RevisitCurrentEnvScore;
+    }
+    else
+    {
+        g_aEnvValue[0].ulScore = 0;
+
+        i = 1;
+        offset = 8;
+        do
+        {
+            p = (anon_2 *)((char *)g_aEnvValue + offset);
+            g_aEnvValue[0].ulScore += p[0].ulScore;
+            g_aEnvValue[0].ulScore += p[1].ulScore;
+            g_aEnvValue[0].ulScore += p[2].ulScore;
+            g_aEnvValue[0].ulScore += p[3].ulScore;
+            g_aEnvValue[0].ulScore += p[4].ulScore;
+            g_aEnvValue[0].ulScore += p[5].ulScore;
+            g_aEnvValue[0].ulScore += p[6].ulScore;
+            g_aEnvValue[0].ulScore += p[7].ulScore;
+            i += 8;
+            offset += 64;
+        } while (i < 2);
+
+        offset = i * 8;
+        if (i < 10)
+        {
+            do
+            {
+                p = (anon_2 *)((char *)g_aEnvValue + offset);
+                g_aEnvValue[0].ulScore += p->ulScore;
+                i++;
+                offset += 8;
+            } while (i < 10);
+        }
+
+        g_RevisitCurrentGlobalScore = g_aEnvValue[0].ulScore;
+
+        if (ulIndE < 10)
+        {
+            return g_aEnvValue[ulIndE].ulScore;
+        }
+
+        return 0;
+    }
+}
+
+unsigned int fn_ulR3GetEnvNbCage(unsigned int ulIndE)
+{
+    return g_aEnvValue[ulIndE].ulNbCage;
+}
+
+void fn_vR3StoreInitScore(void)
+{
+    fn_vR3InlineRecomputeGlobalScore();
+    if (g_RevisitMode != 0)
+    {
+        g_RevisitEnvScoreAtBeginingOfLevel = g_RevisitCurrentEnvScore;
+        g_RevisitGlobalScoreAtBeginingOfLevel = g_RevisitCurrentGlobalScore;
+        if (g_RevisitEnvScoreAtBeginingOfLevel > fn_ulR3InlineGetEnvScore(g_IndCurrentEnv))
+            fn_vR3InlineSetEnvScore(g_IndCurrentEnv, g_RevisitEnvScoreAtBeginingOfLevel);
+        if (fn_ulR3InlineGetEnvScore(0) < g_RevisitGlobalScoreAtBeginingOfLevel)
+            fn_vR3InlineSetEnvScore(0, g_RevisitGlobalScoreAtBeginingOfLevel);
+    }
+    g_GlobalScoreAtBeginingOfLevel = fn_ulR3InlineGetEnvScore(0);
+    g_CurrentEnvScoreAtBeginingOfLevel = fn_ulR3InlineGetEnvScore(g_IndCurrentEnv);
+    g_CurrentEnvInit = g_IndCurrentEnv;
+}
+
+void fn_vR3ReInitScore(void)
+{
+    if (g_RevisitMode != 0)
+    {
+        g_RevisitCurrentEnvScore = g_RevisitEnvScoreAtBeginingOfLevel;
+        g_RevisitCurrentGlobalScore = g_RevisitGlobalScoreAtBeginingOfLevel;
+    }
+
+    fn_vR3InlineRecomputeGlobalScore();
+    fn_vR3InlineSetEnvScore(g_IndCurrentEnv, g_CurrentEnvScoreAtBeginingOfLevel);
+    g_IndCurrentEnv = g_CurrentEnvInit;
+    fn_vR3InlineRecomputeGlobalScore();
+}
+
+void fn_vUpdatePlayerGameName(void)
+{
+    strcpy(g_CurrentSaveName, g_aFileEntryArray[g_CurrentSelection + aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry].Name);
+}
+
+void fn_vR3SetCurrentEnvNumber(unsigned int ulNum)
+{
+    g_IndCurrentEnv = ulNum;
+    if (g_IndCurrentEnv > g_MaxIndCurrentEnv)
+        g_MaxIndCurrentEnv = g_IndCurrentEnv;
+    if (g_IndCurrentEnv != g_CurrentEnvInit)
+    {
+
+        g_CurrentEnvScoreAtBeginingOfLevel = g_aEnvValue[g_IndCurrentEnv].ulScore;
+        g_CurrentEnvInit = g_IndCurrentEnv;
+    }
+}
+
+void fn_vR3SetNbBonusOpen(unsigned int ulNum)
+{
+    g_NbArcadeOpen = ulNum;
+}
+
+void fn_vR3SetNbCineOpen(unsigned int ulNum)
+{
+    g_NbCinematicOpen = ulNum;
+}
+
+void ActivateInGameMenu2DBonus(int WithExit)
+{
+    g_NotRight = 0;
+    g_NotLeft = 0;
+    g_NoBonusShortcut = 0;
+    g_NoGameShortcut = 0;
+    g_CurrentMenu2DPage = g_BonusPage;
+    g_IsSaveOK = 0;
+    aMenu2DPages[g_GamePage].abGrayed[2] = 0;
+    fn_vSaveEngineClock();
+    g_CurrentActionMenu2D = eActionBeginOfPage;
+    g_stEngineStructure.bEngineFrozen = 1;
+    g_CurrentIndSubMenu = -1;
+    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount++;
+    g_InGameMenu2DActivated = 1;
+    IPT_fn_vReadInput(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount++;
+    IPT_fn_vReadInput(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+    g_CurrentSelection = 0;
+    PS2M2D_vReinitMenuTextures();
+    fn_vInitSoundInGameMenu2D(1);
+    g_2DMenuID = 3;
+    g_BonusWithExit = WithExit;
+    g_XTextLeft = 39.0f;
+    g_MaxIndCurrentEnv = 1;
+    g_IndCurrentEnv = -1;
+    g_ExitForbidden = WithExit ? 0 : 1;
+    aMenu2DPages[g_GamePage].abGrayed[2] = 1;
+}
+
+void M2D_fn_vDisplayEndOfGameRecapPage(void)
+{
+    g_NotRight = 1;
+    g_NotLeft = 1;
+    g_NoBonusShortcut = 1;
+    g_NoGameShortcut = 1;
+    g_CurrentMenu2DPage = g_RecapMenuPage;
+    g_2DMenuID = 4;
+    aMenu2DPages[g_GamePage].abGrayed[2] = 0;
+    fn_vSaveEngineClock();
+    g_CurrentActionMenu2D = eActionBeginOfPage;
+    g_stEngineStructure.bEngineFrozen = 1;
+    g_CurrentIndSubMenu = -1;
+    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount++;
+    g_InGameMenu2DActivated = 1;
+    IPT_fn_vReadInput(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount++;
+    IPT_fn_vReadInput(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+    g_CurrentSelection = 0;
+    PS2M2D_vReinitMenuTextures();
+    fn_vInitSoundInGameMenu2D(0);
+    g_CurrentSelectedCharNumber = 0;
+    g_XTextLeft = 39.0f;
+    g_XText = 39.0f;
+}
+
+void ActivateInGameMenu2DPhoto(void)
+{
+    unsigned int i;
+    char* p;
+
+    g_NotRight = 1;
+    g_NotLeft = 1;
+    g_NoBonusShortcut = 1;
+    g_NoGameShortcut = 1;
+    g_CurrentMenu2DPage = g_PhotoMenuPage;
+    g_2DMenuID = 2;
+    aMenu2DPages[g_GamePage].abGrayed[2] = 0;
+    fn_vSaveEngineClock();
+    g_CurrentActionMenu2D = eActionBeginOfPage;
+    g_stEngineStructure.bEngineFrozen = 1;
+    g_CurrentIndSubMenu = -1;
+    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount++;
+    g_InGameMenu2DActivated = 1;
+    IPT_fn_vReadInput(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount++;
+    IPT_fn_vReadInput(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+    g_CurrentSelection = 0;
+    PS2M2D_vReinitMenuTextures();
+    fn_vInitSoundInGameMenu2D(0);
+    g_CurrentSelectedCharNumber = 0;
+    g_NbColForSelection = 10;
+    g_NbLineForSelection = 5;
+    g_CurrentColForSelection = 6;
+    g_CurrentLineForSelection = 4;
+    g_NbCharForSaveName = 7;
+    g_XTextLeft = 18.0f;
+    g_XText = 18.0f;
+
+    i = 0;
+    do
+    {
+        p = g_CurrentNameForSavePage;
+        p[i] = 0;
+        p[i + 1] = 0;
+        p[i + 2] = 0;
+        p[i + 3] = 0;
+        p[i + 4] = 0;
+        p[i + 5] = 0;
+        p[i + 6] = 0;
+        p[i + 7] = 0;
+        i += 8;
+    } while (i < 2);
+
+    if (i < 10)
+    {
+        do
+        {
+            p = g_CurrentNameForSavePage;
+            p[i] = 0;
+            i++;
+        } while (i < 10);
+    }
+
+    PS2MC_vClearFlag(0);
+    PS2MC_vClearFlag(5);
+    g_CurrentNameForSavePage[0] = 0;
+    PS2MC_g_NbFilesFound = 0;
+    PS2MC_fn_vGetMemoryCardScreenShotsHeaders(g_aFileEntryArray, 100, &PS2MC_g_NbFilesFound);
+    MNU_g_SavingScreenshot = 1;
+    g_CurrentSelectedCharNumber = strlen(g_CurrentNameForSavePage);
+}
+
+void ActivateInGameMenu2DStart(void)
+{
+    g_NotRight = 1;
+    g_NotLeft = 1;
+    g_NoBonusShortcut = 1;
+    g_NoGameShortcut = 1;
+    g_CurrentMenu2DPage = g_StartMenuPage;
+    g_IsSaveOK = 0;
+    aMenu2DPages[g_GamePage].abGrayed[2] = 0;
+    fn_vSaveEngineClock();
+    g_CurrentActionMenu2D = eActionBeginOfPage;
+    g_stEngineStructure.bEngineFrozen = 1;
+    g_CurrentIndSubMenu = -1;
+    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount++;
+    g_InGameMenu2DActivated = 1;
+    IPT_fn_vReadInput(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount++;
+    IPT_fn_vReadInput(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+    g_CurrentSelection = 0;
+    PS2M2D_vReinitMenuTextures();
+    fn_vInitSoundInGameMenu2D(1);
+    g_XTextLeft = 39.0f;
+    g_2DMenuID = 1;
+    aMenu2DPages[g_StartMenuPage].abGrayed[1] = 1;
+    if (g_CurrentSelection == 1)
+        fn_vPreviousSelection();
+    PS2MC_fn_bHasBootCheckBeenDoneYet();
+}
+
+void ActivateInGameMenu2D(void)
+{
+    g_NotRight = 0;
+    g_NotLeft = 0;
+    g_NoBonusShortcut = 0;
+    g_NoGameShortcut = 0;
+    g_2DMenuID = 0;
+    aMenu2DPages[g_GamePage].abGrayed[2] = 0;
+    fn_vSaveEngineClock();
+    g_CurrentActionMenu2D = eActionBeginOfPage;
+    g_stEngineStructure.bEngineFrozen = 1;
+    g_CurrentIndSubMenu = -1;
+    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount++;
+    g_InGameMenu2DActivated = 1;
+    IPT_fn_vReadInput(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount++;
+    IPT_fn_vReadInput(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+    g_CurrentSelection = 0;
+    PS2M2D_vReinitMenuTextures();
+    if (g_IndCurrentEnv > 0)
+    {
+        g_CurrentMenu2DPage = g_IndCurrentEnv - 1;
+    }
+    else
+    {
+        g_CurrentMenu2DPage = 0;
+    }
+    fn_vInitSoundInGameMenu2D(1);
+    g_XTextLeft = 39.0f;
+}
+
+void CloseInGameMenu2D(void)
+{
+    unsigned int ulCurrentTime;
+
+    DesinitGameMenu2D();
+
+    if (g_stEngineStructure.bEngineFrozen)
+        fn_vLoadEngineClock();
+    g_stEngineStructure.bEngineFrozen = 0;
+
+    ulCurrentTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+    g_InGameMenu2DActivated = 0;
+
+    if (MENU_g_bVibration)
+    {
+        IPT_fn_vResumeAllConstantFFBEffectForAllDevices(ulCurrentTime);
+    }
+    else
+    {
+        IPT_fn_vPauseAllConstantFFBEffectForAllDevices(ulCurrentTime);
+    }
+}
+
+void DesinitGameMenu2D(void)
+{
+    g_CurrentSelection = 0;
+    g_EndRevisit = 0;
+    g_ExitForbidden = 0;
+
+    fn_vDeinitSoundInGameMenu2D((g_2DMenuID != 2) ? 1 : 0);
+
+    if (g_CurrentMenu2DPage == g_AudioOptionPage)
+    {
+        GAM_fn_vSetVolumeMusic(g_aNbGradOn[0] * 127 / 10); GAM_fn_vSetVolumeSound(g_aNbGradOn[1] * 127 / 10); GAM_fn_vSetVolumeMenu(g_aNbGradOn[1] * 127 / 10); GAM_fn_vSetVolumeAmbiance(g_aNbGradOn[1] * 127 / 10); GAM_fn_vSetVolumeVoice(g_aNbGradOn[2] * 127 / 10);
+    }
+
+    PS2M2D_vReinitMenuTextures();
+    GLI_vFreeTempMaterial(&g_hFixMaterialForAlbum[0]);
+    GLI_vFreeTempMaterial(&g_hFixMaterialForAlbum[1]);
+    g_bAlbumInitialized = 0;
+    g_bAlbumIsWorking = 0;
+    g_bAlbumLoadInProgress = 0;
+
+    if (g_stEngineStructure.bEngineFrozen)
+        fn_vLoadEngineClock();
+
+    if (g_MenuVibrationEffect != -1)
+    {
+        IPT_fn_vStopFFBEffect(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount, 0, (signed char)g_MenuVibrationEffect);
+
+        g_MenuVibrationEffect = -1;
+    }
+}
+
+void fn_vInitMaterialForMenu(void)
+{
+    InitPS2Menu2DTextures();
+    M2D_StartBGLoading();
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_gen.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 2);
+        EnableAlphaTest(hMat);
+        g_hBGMaterialForMenu2D = (int)hMat;
+        M2D_StartFixLoading();
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_fix.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        g_hFixMaterialForMenu2D = (int)hMat;
+        M2D_StartTitlesLoading();
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_jard.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        aMenu2DPages[0].hMaterial = hMat;
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_fore.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        aMenu2DPages[1].hMaterial = hMat;
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_mara.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        aMenu2DPages[2].hMaterial = hMat;
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_land.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        aMenu2DPages[3].hMaterial = hMat;
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_dese.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        aMenu2DPages[4].hMaterial = hMat;
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_abra.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        aMenu2DPages[5].hMaterial = hMat;
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_mont.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        aMenu2DPages[6].hMaterial = hMat;
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_blac.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        aMenu2DPages[7].hMaterial = hMat;
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_donj.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        aMenu2DPages[8].hMaterial = hMat;
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_bonu.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        aMenu2DPages[9].hMaterial = hMat;
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_game.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        aMenu2DPages[10].hMaterial = hMat;
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_opti.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        aMenu2DPages[11].hMaterial = hMat;
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_sav.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        aMenu2DPages[13].hMaterial = 0;
+        aMenu2DPages[12].hMaterial = hMat;
+        aMenu2DPages[14].hMaterial = aMenu2DPages[11].hMaterial;
+        aMenu2DPages[15].hMaterial = aMenu2DPages[14].hMaterial;
+        aMenu2DPages[16].hMaterial = aMenu2DPages[15].hMaterial;
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_arca.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        aMenu2DPages[17].hMaterial = hMat;
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_flms.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        aMenu2DPages[18].hMaterial = hMat;
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_phts.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        aMenu2DPages[19].hMaterial = hMat;
+        aMenu2DPages[20].hMaterial = aMenu2DPages[19].hMaterial;
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_film.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        g_hFixMaterialForSelectedFilms = (int)hMat;
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_bouc.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        g_hFixMaterialForArcadeAndFilms = (int)hMat;
+    }
+
+}
+
+void fn_vInitMenuPages(void)
+{
+    GEO_tdstColor_ stColor;
+    int IndSubMenuPage;
+    int i;
+    int j;
+
+    g_FirstCineNameText = 9;
+    g_FirstArcadeNameText = 18;
+
+    stColor.xA = 0.5f;
+    stColor.xR = 0.1f;
+    stColor.xG = 0.7f;
+    stColor.xB = 0.7f;
+
+    GLI_xCreateMaterial(&g_hSelectedFrameMaterialForMenu2D);
+    GLI_xSetMaterialAmbientCoef(g_hSelectedFrameMaterialForMenu2D, &stColor);
+    GLI_xSetMaterialDiffuseCoef(g_hSelectedFrameMaterialForMenu2D, &stColor);
+    GLI_Material_fn_lSetTextureOp(g_hSelectedFrameMaterialForMenu2D, 0, 3);
+
+    for (i = 0; i < 10; i++)
+    {
+        g_aEnvValue[i].ulNbCage = 0;
+        g_aEnvValue[i].ulScore = 0;
+    }
+
+    g_GlobalScoreAtBeginingOfLevel = 0;
+    g_CurrentEnvScoreAtBeginingOfLevel = 0;
+    g_RevisitGlobalScoreAtBeginingOfLevel = 0;
+    g_RevisitEnvScoreAtBeginingOfLevel = 0;
+    g_RevisitCurrentEnvScore = 0;
+    g_EndOfGameIsDone = 0;
+    g_CurrentEnvInit = 1;
+
+    for (j = 1; j < 10; j++)
+    {
+        aMenu2DPages[j - 1].eTypePage = 2;
+        strcpy(aMenu2DPages[j - 1].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[j - 1].hText));
+        aMenu2DPages[j - 1].NbSelection = 0;
+        aMenu2DPages[j - 1].NbEntry = 0;
+    }
+
+    g_BonusPage = 9;
+    aMenu2DPages[g_BonusPage].eTypePage = 8;
+    strcpy(aMenu2DPages[g_BonusPage].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[43].hText));
+    aMenu2DPages[g_BonusPage].NbEntry = aMenu2DPages[g_BonusPage].NbSelection = 4;
+    strcpy(aMenu2DPages[g_BonusPage].aText[0], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[44].hText));
+    strcpy(aMenu2DPages[g_BonusPage].aText[1], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[45].hText));
+    strcpy(aMenu2DPages[g_BonusPage].aText[2], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[47].hText));
+    strcpy(aMenu2DPages[g_BonusPage].aText[3], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[49].hText));
+    if (!g_EndOfGameIsDone)
+    {
+        aMenu2DPages[g_BonusPage].abGrayed[3] = 1;
+    }
+
+    g_GamePage = 10;
+    aMenu2DPages[10].eTypePage = 3;
+    strcpy(aMenu2DPages[10].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[55].hText));
+    aMenu2DPages[10].NbEntry = aMenu2DPages[10].NbSelection = 4;
+    strcpy(aMenu2DPages[10].aText[0], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[51].hText));
+    strcpy(aMenu2DPages[10].aText[1], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[37].hText));
+    strcpy(aMenu2DPages[10].aText[2], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[30].hText));
+    strcpy(aMenu2DPages[10].aText[3], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[56].hText));
+
+    g_CurrentActionMenu2D = 3;
+    IndSubMenuPage = g_NbMenu2DPages = 11;
+
+    g_OptionsPage = 11;
+    aMenu2DPages[g_OptionsPage].eTypePage = 4;
+    strcpy(aMenu2DPages[g_OptionsPage].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[51].hText));
+    aMenu2DPages[g_OptionsPage].NbEntry = aMenu2DPages[g_OptionsPage].NbSelection = 3;
+    i = 0;
+    strcpy(aMenu2DPages[g_OptionsPage].aText[i++], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[52].hText));
+    strcpy(aMenu2DPages[g_OptionsPage].aText[i++], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[53].hText));
+    strcpy(aMenu2DPages[g_OptionsPage].aText[i++], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[54].hText));
+
+    g_LoadPage = IndSubMenuPage + 1;
+    aMenu2DPages[g_LoadPage].eTypePage = 1;
+    strcpy(aMenu2DPages[g_LoadPage].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[37].hText));
+
+    g_SavePage = IndSubMenuPage + 2;
+    g_PhotoMenuPage = g_SavePage;
+    aMenu2DPages[g_SavePage].eTypePage = 0;
+    strcpy(aMenu2DPages[g_SavePage].Title, "");
+
+    g_ControlOptionPage = IndSubMenuPage + 3;
+    aMenu2DPages[g_ControlOptionPage].eTypePage = 5;
+    strcpy(aMenu2DPages[g_ControlOptionPage].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[52].hText));
+    aMenu2DPages[g_ControlOptionPage].NbEntry = aMenu2DPages[g_ControlOptionPage].NbSelection = 3;
+    i = 0;
+    strcpy(aMenu2DPages[g_ControlOptionPage].aText[i++], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[65].hText));
+    strcpy(aMenu2DPages[g_ControlOptionPage].aText[i++], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[66].hText));
+    strcpy(aMenu2DPages[g_ControlOptionPage].aText[i++], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[67].hText));
+
+    g_AudioOptionPage = IndSubMenuPage + 4;
+    aMenu2DPages[g_AudioOptionPage].eTypePage = 6;
+    strcpy(aMenu2DPages[g_AudioOptionPage].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[53].hText));
+    aMenu2DPages[g_AudioOptionPage].NbEntry = aMenu2DPages[g_AudioOptionPage].NbSelection = 4;
+    strcpy(aMenu2DPages[g_AudioOptionPage].aText[0], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[62].hText));
+    strcpy(aMenu2DPages[g_AudioOptionPage].aText[1], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[63].hText));
+    strcpy(aMenu2DPages[g_AudioOptionPage].aText[2], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[64].hText));
+    strcpy(aMenu2DPages[g_AudioOptionPage].aText[3], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[70].hText));
+
+    g_VideoOptionPage = IndSubMenuPage + 5;
+    aMenu2DPages[g_VideoOptionPage].eTypePage = 7;
+    strcpy(aMenu2DPages[g_VideoOptionPage].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[54].hText));
+    aMenu2DPages[g_VideoOptionPage].NbEntry = aMenu2DPages[g_VideoOptionPage].NbSelection = 3;
+    strcpy(aMenu2DPages[g_VideoOptionPage].aText[0], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[87].hText));
+    strcpy(aMenu2DPages[g_VideoOptionPage].aText[1], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[86].hText));
+    strcpy(aMenu2DPages[g_VideoOptionPage].aText[2], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[97].hText));
+
+    g_ArcadePage = IndSubMenuPage + 6;
+    aMenu2DPages[g_ArcadePage].eTypePage = 9;
+    strcpy(aMenu2DPages[g_ArcadePage].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[44].hText));
+    aMenu2DPages[g_ArcadePage].NbSelection = 4;
+    aMenu2DPages[g_ArcadePage].NbEntry = 9;
+
+    g_CinematicPage = IndSubMenuPage + 7;
+    aMenu2DPages[g_CinematicPage].eTypePage = 10;
+    strcpy(aMenu2DPages[g_CinematicPage].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[45].hText));
+
+    g_XTraPage = IndSubMenuPage + 8;
+    aMenu2DPages[g_XTraPage].eTypePage = 11;
+    strcpy(aMenu2DPages[g_XTraPage].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[47].hText));
+    aMenu2DPages[g_XTraPage].NbSelection = 4;
+    aMenu2DPages[g_XTraPage].NbEntry = 9;
+
+    g_AlbumPage = IndSubMenuPage + 9;
+    aMenu2DPages[g_AlbumPage].eTypePage = 12;
+    strcpy(aMenu2DPages[g_AlbumPage].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[46].hText));
+
+    g_HallOfFamePage = IndSubMenuPage + 10;
+    aMenu2DPages[g_HallOfFamePage].eTypePage = 13;
+    strcpy(aMenu2DPages[g_HallOfFamePage].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[49].hText));
+
+    g_StartMenuPage = IndSubMenuPage + 11;
+    aMenu2DPages[g_StartMenuPage].eTypePage = 14;
+    strcpy(aMenu2DPages[g_StartMenuPage].Title, "");
+    aMenu2DPages[g_StartMenuPage].NbEntry = aMenu2DPages[g_StartMenuPage].NbSelection = 4;
+    strcpy(aMenu2DPages[g_StartMenuPage].aText[0], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[71].hText));
+    strcpy(aMenu2DPages[g_StartMenuPage].aText[1], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[31].hText));
+    strcpy(aMenu2DPages[g_StartMenuPage].aText[2], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[51].hText));
+    strcpy(aMenu2DPages[g_StartMenuPage].aText[3], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[46].hText));
+
+    g_CenterScreenPage = IndSubMenuPage + 12;
+    aMenu2DPages[g_CenterScreenPage].eTypePage = 15;
+    strcpy(aMenu2DPages[g_CenterScreenPage].Title, "");
+    aMenu2DPages[g_CenterScreenPage].NbEntry = aMenu2DPages[g_CenterScreenPage].NbSelection = 0;
+    strcpy(aMenu2DPages[g_CenterScreenPage].aText[0], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[89].hText));
+
+    IndSubMenuPage = fn_vDefinePalVideoPages(IndSubMenuPage + 13);
+    IndSubMenuPage = fn_vDefineProgressiveScanPages(IndSubMenuPage);
+
+    g_RecapMenuPage = IndSubMenuPage;
+    strcpy(aMenu2DPages[g_RecapMenuPage].Title, "");
+    aMenu2DPages[g_RecapMenuPage].eTypePage = 22;
+    aMenu2DPages[g_CenterScreenPage].NbSelection = 0;
+    aMenu2DPages[g_RecapMenuPage].NbEntry = 0;
+}
+
+void fn_vInitInGameMenu2D(void)
+{
+    fn_vInitMaterialForMenu();
+    fn_vInitMenuPages();
+    GLI_vProcessRegisteredTextures();
+}
+
+void fn_vReinitGrayedEntries(int PageNumber)
+{
+    int i;
+    tdstMenu2DPages_* p;
+
+    i = 0;
+    do
+    {
+        p = &aMenu2DPages[PageNumber];
+        p->abGrayed[i] = 0;
+        p->abGrayed[i + 1] = 0;
+        p->abGrayed[i + 2] = 0;
+        p->abGrayed[i + 3] = 0;
+        p->abGrayed[i + 4] = 0;
+        p->abGrayed[i + 5] = 0;
+        p->abGrayed[i + 6] = 0;
+        p->abGrayed[i + 7] = 0;
+        i += 8;
+    } while (i < 2);
+
+    if (i < 10)
+    {
+        do
+        {
+            p = &aMenu2DPages[PageNumber];
+            p->abGrayed[i] = 0;
+            i++;
+        } while (i < 10);
+    }
+
+    if (g_2DMenuID == 3)
+        aMenu2DPages[g_GamePage].abGrayed[2] = 1;
+
+    if (!g_EndOfGameIsDone)
+    {
+        aMenu2DPages[g_BonusPage].abGrayed[3] = 1;
+    }
+
+    g_MustCheckMC = 1;
+}
+
+void fn_vNextSelectionNoWrap(void)
+{
+    unsigned int u32Sound2Play;
+
+    u32Sound2Play = 2;
+
+    if (g_CurrentSelection == aMenu2DPages[g_CurrentMenu2DPage].NbSelection - 1)
+    {
+        if (aMenu2DPages[g_CurrentMenu2DPage].NbSelection == aMenu2DPages[g_CurrentMenu2DPage].NbEntry)
+        {
+            u32Sound2Play = 10;
+        }
+        else
+        {
+            if (aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry !=
+                aMenu2DPages[g_CurrentMenu2DPage].NbEntry - aMenu2DPages[g_CurrentMenu2DPage].NbSelection)
+            {
+                aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry++;
+            }
+            else
+            {
+                u32Sound2Play = 10;
+            }
+        }
+    }
+    else
+    {
+        g_CurrentSelection++;
+    }
+
+    fn_vPlaySoundInGameMenu2D(u32Sound2Play);
+
+    if (aMenu2DPages[g_CurrentMenu2DPage].abGrayed[g_CurrentSelection] != 0)
+    {
+        u32Sound2Play = 2;
+
+        if (g_CurrentSelection == aMenu2DPages[g_CurrentMenu2DPage].NbSelection - 1)
+        {
+            if (aMenu2DPages[g_CurrentMenu2DPage].NbSelection == aMenu2DPages[g_CurrentMenu2DPage].NbEntry)
+            {
+                u32Sound2Play = 10;
+            }
+            else
+            {
+                if (aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry !=
+                    aMenu2DPages[g_CurrentMenu2DPage].NbEntry - aMenu2DPages[g_CurrentMenu2DPage].NbSelection)
+                {
+                    aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry++;
+                }
+                else
+                {
+                    u32Sound2Play = 10;
+                }
+            }
+        }
+        else
+        {
+            g_CurrentSelection++;
+        }
+
+        fn_vPlaySoundInGameMenu2D(u32Sound2Play);
+
+        if (aMenu2DPages[g_CurrentMenu2DPage].abGrayed[g_CurrentSelection] != 0)
+        {
+            fn_vNextSelectionNoWrap();
+        }
+    }
+}
+
+void fn_vPreviousSelectionNoWrap(void)
+{
+    unsigned int u32Sound2Play;
+
+    u32Sound2Play = 2;
+
+    if (g_CurrentSelection == 0)
+    {
+        if (aMenu2DPages[g_CurrentMenu2DPage].NbSelection == aMenu2DPages[g_CurrentMenu2DPage].NbEntry)
+        {
+            u32Sound2Play = 10;
+        }
+        else
+        {
+            if (aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry == 0)
+            {
+                u32Sound2Play = 10;
+            }
+            else
+            {
+                aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry--;
+            }
+        }
+    }
+    else
+    {
+        g_CurrentSelection--;
+    }
+
+    fn_vPlaySoundInGameMenu2D(u32Sound2Play);
+
+    if (aMenu2DPages[g_CurrentMenu2DPage].abGrayed[g_CurrentSelection] != 0)
+    {
+        u32Sound2Play = 2;
+
+        if (g_CurrentSelection == 0)
+        {
+            if (aMenu2DPages[g_CurrentMenu2DPage].NbSelection == aMenu2DPages[g_CurrentMenu2DPage].NbEntry)
+            {
+                u32Sound2Play = 10;
+            }
+            else
+            {
+                if (aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry == 0)
+                {
+                    u32Sound2Play = 10;
+                }
+                else
+                {
+                    aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry--;
+                }
+            }
+        }
+        else
+        {
+            g_CurrentSelection--;
+        }
+
+        fn_vPlaySoundInGameMenu2D(u32Sound2Play);
+
+        if (aMenu2DPages[g_CurrentMenu2DPage].abGrayed[g_CurrentSelection] != 0)
+        {
+            fn_vPreviousSelectionNoWrap();
+        }
+    }
+}
+
+void fn_vNextSelection(void)
+{
+    if (g_CurrentSelection == aMenu2DPages[g_CurrentMenu2DPage].NbSelection - 1)
+    {
+        if (aMenu2DPages[g_CurrentMenu2DPage].NbSelection == aMenu2DPages[g_CurrentMenu2DPage].NbEntry)
+        {
+            g_CurrentSelection = 0;
+        }
+        else
+        {
+            if (aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry == aMenu2DPages[g_CurrentMenu2DPage].NbEntry - aMenu2DPages[g_CurrentMenu2DPage].NbSelection)
+            {
+                aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry = 0;
+                g_CurrentSelection = 0;
+            }
+            else
+            {
+                aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry++;
+            }
+        }
+    }
+    else
+    {
+        g_CurrentSelection++;
+    }
+
+    if (aMenu2DPages[g_CurrentMenu2DPage].NbSelection != 0)
+    {
+        fn_vPlaySoundInGameMenu2D(2);
+    }
+
+    if (aMenu2DPages[g_CurrentMenu2DPage].abGrayed[g_CurrentSelection] != 0)
+    {
+        fn_vNextSelection();
+    }
+}
+
+void fn_vPreviousSelection(void)
+{
+    if (g_CurrentSelection == 0)
+    {
+        if (aMenu2DPages[g_CurrentMenu2DPage].NbSelection == aMenu2DPages[g_CurrentMenu2DPage].NbEntry)
+        {
+            g_CurrentSelection = aMenu2DPages[g_CurrentMenu2DPage].NbSelection - 1;
+        }
+        else
+        {
+            if (aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry == 0)
+            {
+                aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry = aMenu2DPages[g_CurrentMenu2DPage].NbEntry - aMenu2DPages[g_CurrentMenu2DPage].NbSelection;
+                g_CurrentSelection = aMenu2DPages[g_CurrentMenu2DPage].NbSelection - 1;
+            }
+            else
+            {
+                aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry--;
+            }
+        }
+    }
+    else
+    {
+        g_CurrentSelection--;
+    }
+
+    if (aMenu2DPages[g_CurrentMenu2DPage].NbSelection != 0)
+    {
+        fn_vPlaySoundInGameMenu2D(2);
+    }
+
+    if (aMenu2DPages[g_CurrentMenu2DPage].abGrayed[g_CurrentSelection] != 0)
+    {
+        fn_vPreviousSelection();
+    }
+}
+
+void fn_vGotoSubMenu(int SubPage)
+{
+    int i;
+    tdstMenu2DPages_* p;
+
+    fn_vPlaySoundInGameMenu2D(4);
+
+    if (g_CurrentIndSubMenu < 4)
+    {
+        g_NextPage = SubPage;
+        g_CurrentActionMenu2D = 2;
+        g_GotoRight = 1;
+        g_aSubMenuReturn[++g_CurrentIndSubMenu] = g_CurrentMenu2DPage;
+
+        g_NotRight = 1;
+        g_NotLeft = 1;
+        g_NoBonusShortcut = 1;
+        g_NoGameShortcut = 1;
+
+        if (SubPage == g_VideoOptionPage ||
+            SubPage == g_AlbumPage ||
+            SubPage == g_HallOfFamePage ||
+            (SubPage == g_CinematicPage && g_NbCinematicOpen == 0))
+        {
+            g_NoValidate = 1;
+        }
+
+        if (SubPage == g_VideoOptionPage)
+        {
+            if (g_2DMenuID == 1)
+            {
+                aMenu2DPages[g_VideoOptionPage].NbEntry = aMenu2DPages[g_VideoOptionPage].NbSelection = 3;
+            }
+            else
+            {
+                aMenu2DPages[g_VideoOptionPage].NbEntry = aMenu2DPages[g_VideoOptionPage].NbSelection = 2;
+            }
+        }
+
+        i = 0;
+        do
+        {
+            p = &aMenu2DPages[SubPage];
+            p->abGrayed[i] = 0;
+            p->abGrayed[i + 1] = 0;
+            p->abGrayed[i + 2] = 0;
+            p->abGrayed[i + 3] = 0;
+            p->abGrayed[i + 4] = 0;
+            p->abGrayed[i + 5] = 0;
+            p->abGrayed[i + 6] = 0;
+            p->abGrayed[i + 7] = 0;
+            i += 8;
+        } while (i < 2);
+
+        if (i < 10)
+        {
+            do
+            {
+                p = &aMenu2DPages[SubPage];
+                p->abGrayed[i] = 0;
+                i++;
+            } while (i < 10);
+        }
+
+        if (g_2DMenuID == 3)
+            aMenu2DPages[g_GamePage].abGrayed[2] = 1;
+
+        if (!g_EndOfGameIsDone)
+        {
+            aMenu2DPages[g_BonusPage].abGrayed[3] = 1;
+        }
+
+        g_MustCheckMC = 1;
+    }
+}
+
+void ReturnFromSubMenu(void)
+{
+    int i;
+    tdstMenu2DPages_* p;
+    unsigned int ulResult;
+    unsigned char bPlayVideo;
+    char* szLevelName;
+
+    fn_vPlaySoundInGameMenu2D(4);
+
+    if (g_CurrentMenu2DPage == g_ControlOptionPage ||
+        g_CurrentMenu2DPage == g_AudioOptionPage ||
+        g_CurrentMenu2DPage == g_VideoOptionPage ||
+        g_CurrentMenu2DPage == g_AlbumPage ||
+        g_CurrentMenu2DPage == g_HallOfFamePage ||
+        g_CurrentMenu2DPage == g_CinematicPage && g_NbCinematicOpen == 0)
+    {
+        g_NoValidate = 0;
+    }
+
+    if (g_CurrentMenu2DPage == g_AudioOptionPage)
+    {
+        GAM_fn_vSetVolumeMusic(g_aNbGradOn[0] * 127 / 10);
+        GAM_fn_vSetVolumeSound(g_aNbGradOn[1] * 127 / 10);
+        GAM_fn_vSetVolumeMenu(g_aNbGradOn[1] * 127 / 10);
+        GAM_fn_vSetVolumeAmbiance(g_aNbGradOn[1] * 127 / 10);
+        GAM_fn_vSetVolumeVoice(g_aNbGradOn[2] * 127 / 10);
+    }
+
+    if (g_2DMenuID == 1 && g_CurrentMenu2DPage == g_SavePage)
+    {
+        bPlayVideo = fn_bIsSaveOK();
+
+        if (bPlayVideo)
+        {
+            g_IsSaveOK = 0;
+            VID_fn_vNextVideoToPlay((char *)g_aCinematicName[0], 1, 0);
+            VID_fn_vPlayVideoAfterLevel();
+            szLevelName = (char *)g_aMapName[1];
+            CloseInGameMenu2D();
+            GAM_fn_vAskToChangeLevel(szLevelName, 0);
+        }
+    }
+
+    if (g_CurrentIndSubMenu > -1)
+    {
+        g_NextPage = g_aSubMenuReturn[g_CurrentIndSubMenu];
+        g_CurrentIndSubMenu--;
+        g_GotoRight = 1;
+        g_CurrentActionMenu2D = 2;
+
+        if (g_CurrentIndSubMenu == -1)
+        {
+            if (g_2DMenuID == 0 || g_2DMenuID == 3)
+            {
+                g_NotRight = 0;
+                g_NotLeft = 0;
+                g_NoBonusShortcut = 0;
+                g_NoGameShortcut = 0;
+            }
+        }
+
+        g_MustCheckMC = 1;
+
+        p = &aMenu2DPages[g_NextPage];
+        for (i = 0; i < 10; i++)
+        {
+            p->abGrayed[i] = 0;
+        }
+
+        if (g_2DMenuID == 3)
+        {
+            aMenu2DPages[g_GamePage].abGrayed[2] = 1;
+        }
+
+        if (!g_EndOfGameIsDone)
+        {
+            aMenu2DPages[g_BonusPage].abGrayed[3] = 1;
+        }
+
+        g_MustCheckMC = 1;
+    }
+    else if (g_2DMenuID != 1 && !g_ExitForbidden)
+    {
+        if (g_2DMenuID != 3 || g_BonusWithExit == 1)
+        {
+            DesinitGameMenu2D();
+
+            if (g_stEngineStructure.bEngineFrozen)
+            {
+                fn_vLoadEngineClock();
+            }
+
+            g_stEngineStructure.bEngineFrozen = 0;
+            g_InGameMenu2DActivated = 0;
+
+            ulResult = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+            if (MENU_g_bVibration)
+            {
+                IPT_fn_vResumeAllConstantFFBEffectForAllDevices(ulResult);
+            }
+            else
+            {
+                IPT_fn_vPauseAllConstantFFBEffectForAllDevices(ulResult);
+            }
+        }
+    }
+
+    GLI_vFreeTempMaterial(&g_hFixMaterialForAlbum[0]);
+    GLI_vFreeTempMaterial(&g_hFixMaterialForAlbum[1]);
+    g_bAlbumInitialized = 0;
+    g_bAlbumIsWorking = 0;
+    g_bAlbumLoadInProgress = 0;
+}
+
+void fn_vInterruptMenu2D(int bPauseMenu)
+{
+    if (bPauseMenu)
+    {
+        g_Menu2D_IsInterrupted++;
+    }
+    else
+    {
+        g_Menu2D_IsInterrupted--;
+    }
+    if (g_Menu2D_IsInterrupted < 0) g_Menu2D_IsInterrupted = 0;
+}
+
+void fn_vChangeCurrentValue(char Value)
+{
+    if (aMenu2DPages[g_CurrentMenu2DPage].aValue[g_CurrentSelection] != Value)
+    {
+        fn_vPlaySoundInGameMenu2D(3);
+        aMenu2DPages[g_CurrentMenu2DPage].aValue[g_CurrentSelection] = Value;
+    }
+
+    switch (aMenu2DPages[g_CurrentMenu2DPage].eTypePage)
+    {
+    case eVideoOptionTypePage:
+        switch (g_CurrentSelection)
+        {
+        case 1:
+            GLI_g_bWideScreenMode = Value;
+            break;
+        }
+        break;
+
+    case eControlOptionTypePage:
+        switch (g_CurrentSelection)
+        {
+        case 0:
+            MENU_g_bInversionVert = Value;
+            break;
+        case 1:
+            MENU_g_bInversionHor = Value;
+            break;
+        case 2:
+            if (MENU_g_bVibration != Value)
+            {
+                MENU_g_bVibration = Value;
+
+                if (Value != 0)
+                {
+                    if (g_MenuVibrationEffect != -1)
+                    {
+                        IPT_fn_vStopFFBEffect(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount, 0, g_MenuVibrationEffect);
+                        g_MenuVibrationEffect = -1;
+                    }
+
+                    IPT_fn_vResumeAllConstantFFBEffectForAllDevices(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+                    g_MenuVibrationEffect = IPT_fn_cCreateAndLaunchConstantFFBEffect(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount, 0, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f);
+                }
+                else
+                {
+                    IPT_fn_vPauseAllConstantFFBEffectForAllDevices(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+                }
+            }
+            break;
+        }
+        break;
+
+    case eAudioOptionTypePage:
+        fn_vSetStereoGameMenu2D(Value);
+        break;
     }
 }
 
@@ -3215,2474 +5681,73 @@ void fn_vManageMenu2D(void)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 1905–1982 */
-/* addr: 0x00299280  size: 508 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1905
- *   +0x0004 -> line 1907
- *   +0x0008 -> line 1905
- *   +0x000c -> line 1907
- *   +0x0010 -> line 1905
- *   +0x001c -> line 1907
- *   +0x0058 -> line 1909
- *   +0x0060 -> line 1910
- *   +0x0094 -> line 1913
- *   +0x00e4 -> line 1917
- *   +0x00fc -> line 1926
- *   +0x0104 -> line 1930
- *   +0x012c -> line 1934
- *   +0x0134 -> line 1937
- *   +0x013c -> line 1939
- *   +0x0148 -> line 1942
- *   +0x0150 -> line 1945
- *   +0x0160 -> line 1947
- *   +0x0178 -> line 1951
- *   +0x0180 -> line 1954
- *   +0x018c -> line 1955
- *   +0x01c0 -> line 1964
- *   +0x01c8 -> line 1967
- *   +0x01d4 -> line 1973
- *   +0x01dc -> line 1978
- *   +0x01e8 -> line 1982
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-extern void fn_vSetStereoGameMenu2D(unsigned int uiSet);
-extern void IPT_fn_vStopFFBEffect(unsigned int ulCurrentTime, unsigned char ucPadNumber, signed char cEffectNumber);
-extern void IPT_fn_vResumeAllConstantFFBEffectForAllDevices(unsigned int ulTime);
-extern void IPT_fn_vPauseAllConstantFFBEffectForAllDevices(unsigned int ulTime);
-extern signed char IPT_fn_cCreateAndLaunchConstantFFBEffect(unsigned int ulCurrentTime, unsigned char ucPadNumber, float xFadeInStartValue, float xFadeInTime, float xConstantValue, float xConstantTime, float xFadeOutStopValue, float xFadeOutTime);
-
-void fn_vChangeCurrentValue(char Value)
+void fn_vDisplayScrollTextMenu2D(float X, float Y, float W, char* szText, unsigned int ulTextColor)
 {
-    if (aMenu2DPages[g_CurrentMenu2DPage].aValue[g_CurrentSelection] != Value)
+    char szTmp[30];
+    int N;
+    int ulLen;
+    float fL;
+    float fH;
+
+    TXT_vAfficheSimpleWithColor(g_p_stVpt, szText + g_NumFirstCharForScroll, X - g_OffsetXForScroll, Y, 0.0f, ulTextColor);
+
+    g_OffsetXForScroll = g_OffsetXForScroll + g_OffsetStepForScroll;
+
+    if (g_OffsetXForScroll <= 20.0f)
     {
-        fn_vPlaySoundInGameMenu2D(3);
-        aMenu2DPages[g_CurrentMenu2DPage].aValue[g_CurrentSelection] = Value;
+        return;
     }
 
-    switch (aMenu2DPages[g_CurrentMenu2DPage].eTypePage)
+    N = 0;
+    while (szText[g_NumFirstCharForScroll + N] == '\\')
     {
-    case eVideoOptionTypePage:
-        switch (g_CurrentSelection)
+        N++;
+        if (szText[g_NumFirstCharForScroll + N] == 'f')
         {
-        case 1:
-            GLI_g_bWideScreenMode = Value;
-            break;
-        }
-        break;
-
-    case eControlOptionTypePage:
-        switch (g_CurrentSelection)
-        {
-        case 0:
-            MENU_g_bInversionVert = Value;
-            break;
-        case 1:
-            MENU_g_bInversionHor = Value;
-            break;
-        case 2:
-            if (MENU_g_bVibration != Value)
+            N++;
+            while (szText[g_NumFirstCharForScroll + N] != ':')
             {
-                MENU_g_bVibration = Value;
-
-                if (Value != 0)
-                {
-                    if (g_MenuVibrationEffect != -1)
-                    {
-                        IPT_fn_vStopFFBEffect(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount, 0, g_MenuVibrationEffect);
-                        g_MenuVibrationEffect = -1;
-                    }
-
-                    IPT_fn_vResumeAllConstantFFBEffectForAllDevices(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
-                    g_MenuVibrationEffect = IPT_fn_cCreateAndLaunchConstantFFBEffect(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount, 0, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f);
-                }
-                else
-                {
-                    IPT_fn_vPauseAllConstantFFBEffectForAllDevices(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
-                }
+                N++;
             }
-            break;
+            N++;
         }
-        break;
-
-    case eAudioOptionTypePage:
-        fn_vSetStereoGameMenu2D(Value);
-        break;
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 1812–1821 */
-/* addr: 0x00299480  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1812
- *   +0x0008 -> line 1814
- *   +0x0010 -> line 1815
- *   +0x0018 -> line 1818
- *   +0x0024 -> line 1820
- *   +0x0034 -> line 1821
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vInterruptMenu2D(int bPauseMenu)
-{
-    if (bPauseMenu)
-    {
-        g_Menu2D_IsInterrupted++;
-    }
-    else
-    {
-        g_Menu2D_IsInterrupted--;
-    }
-    if (g_Menu2D_IsInterrupted < 0) g_Menu2D_IsInterrupted = 0;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 1720–1803 */
-/* addr: 0x002994c0  size: 1116 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1720
- *   +0x0004 -> line 1722
- *   +0x0008 -> line 1720
- *   +0x000c -> line 1722
- *   +0x0014 -> line 1724
- *   +0x006c -> line 1732
- *   +0x0070 -> line 1736
- *   +0x007c -> line 1738
- *   +0x0180 -> line 1743
- *   +0x01fc -> line 1751
- *   +0x0210 -> line 1752
- *   +0x0218 -> line 1753
- *   +0x0230 -> line 1766
- *   +0x0240 -> line 1768
- *   +0x0248 -> line 1769
- *   +0x024c -> line 1768
- *   +0x0258 -> line 1770
- *   +0x025c -> line 1768
- *   +0x0260 -> line 1771
- *   +0x0264 -> line 1770
- *   +0x0268 -> line 1771
- *   +0x026c -> line 1768
- *   +0x0270 -> line 1771
- *   +0x028c -> line 1776
- *   +0x0290 -> line 1777
- *   +0x0294 -> line 1778
- *   +0x0298 -> line 1779
- *   +0x029c -> line 1782
- *   +0x02a0 -> line 1781
- *   +0x02a8 -> line 1782
- *   +0x03a0 -> line 1783
- *   +0x03a8 -> line 1785
- *   +0x03d8 -> line 1789
- *   +0x042c -> line 1796
- *   +0x0438 -> line 1797
- *   +0x0440 -> line 1798
- *   +0x0444 -> line 1799
- *   +0x0448 -> line 1800
- *   +0x044c -> line 1803
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-extern void GAM_fn_vSetVolumeMusic(int s32_Value);
-extern void GAM_fn_vSetVolumeSound(int s32_Value);
-extern void GAM_fn_vSetVolumeMenu(int s32_Value);
-extern void GAM_fn_vSetVolumeAmbiance(int s32_Value);
-extern void GAM_fn_vSetVolumeVoice(int s32_Value);
-extern unsigned int PS2MC_fn_iGetFunctionResult(int FlagID);
-extern void PS2MC_vClearFlag(int FlagID);
-extern void VID_fn_vNextVideoToPlay(char* p_szVideoName, unsigned char bCanBeInterrupt, unsigned char bLoop);
-extern void VID_fn_vPlayVideoAfterLevel(void);
-extern void GAM_fn_vAskToChangeLevel(char* szNewLevelName, int lParameter);
-extern void DesinitGameMenu2D(void);
-extern void CloseInGameMenu2D(void);
-extern void fn_vLoadEngineClock(void);
-extern void IPT_fn_vResumeAllConstantFFBEffectForAllDevices(unsigned int ulTime);
-extern void IPT_fn_vPauseAllConstantFFBEffectForAllDevices(unsigned int ulTime);
-extern void GLI_vFreeTempMaterial(int* ppMaterial);
-
-static inline unsigned char fn_bIsSaveOK(void)
-{
-    switch (PS2MC_fn_iGetFunctionResult(0))
-    {
-    case 1:
-        PS2MC_vClearFlag(0);
-        return 1;
-    case 2:
-        PS2MC_vClearFlag(0);
-        return 0;
-    default:
-        printf("ERROR ! fn_bIsSaveOK called when save still in progress \n");
-        return 0;
-    }
-}
-
-void ReturnFromSubMenu(void)
-{
-    int i;
-    tdstMenu2DPages_* p;
-    unsigned int ulResult;
-    unsigned char bPlayVideo;
-    char* szLevelName;
-
-    fn_vPlaySoundInGameMenu2D(4);
-
-    if (g_CurrentMenu2DPage == g_ControlOptionPage ||
-        g_CurrentMenu2DPage == g_AudioOptionPage ||
-        g_CurrentMenu2DPage == g_VideoOptionPage ||
-        g_CurrentMenu2DPage == g_AlbumPage ||
-        g_CurrentMenu2DPage == g_HallOfFamePage ||
-        g_CurrentMenu2DPage == g_CinematicPage && g_NbCinematicOpen == 0)
-    {
-        g_NoValidate = 0;
-    }
-
-    if (g_CurrentMenu2DPage == g_AudioOptionPage)
-    {
-        GAM_fn_vSetVolumeMusic(g_aNbGradOn[0] * 127 / 10);
-        GAM_fn_vSetVolumeSound(g_aNbGradOn[1] * 127 / 10);
-        GAM_fn_vSetVolumeMenu(g_aNbGradOn[1] * 127 / 10);
-        GAM_fn_vSetVolumeAmbiance(g_aNbGradOn[1] * 127 / 10);
-        GAM_fn_vSetVolumeVoice(g_aNbGradOn[2] * 127 / 10);
-    }
-
-    if (g_2DMenuID == 1 && g_CurrentMenu2DPage == g_SavePage)
-    {
-        bPlayVideo = fn_bIsSaveOK();
-
-        if (bPlayVideo)
+        else if (szText[g_NumFirstCharForScroll + N] == 'c')
         {
-            g_IsSaveOK = 0;
-            VID_fn_vNextVideoToPlay((char *)g_aCinematicName[0], 1, 0);
-            VID_fn_vPlayVideoAfterLevel();
-            szLevelName = (char *)g_aMapName[1];
-            CloseInGameMenu2D();
-            GAM_fn_vAskToChangeLevel(szLevelName, 0);
-        }
-    }
-
-    if (g_CurrentIndSubMenu > -1)
-    {
-        g_NextPage = g_aSubMenuReturn[g_CurrentIndSubMenu];
-        g_CurrentIndSubMenu--;
-        g_GotoRight = 1;
-        g_CurrentActionMenu2D = 2;
-
-        if (g_CurrentIndSubMenu == -1)
-        {
-            if (g_2DMenuID == 0 || g_2DMenuID == 3)
+            N++;
+            while (szText[g_NumFirstCharForScroll + N] != ':')
             {
-                g_NotRight = 0;
-                g_NotLeft = 0;
-                g_NoBonusShortcut = 0;
-                g_NoGameShortcut = 0;
+                N++;
             }
-        }
-
-        g_MustCheckMC = 1;
-
-        p = &aMenu2DPages[g_NextPage];
-        for (i = 0; i < 10; i++)
-        {
-            p->abGrayed[i] = 0;
-        }
-
-        if (g_2DMenuID == 3)
-        {
-            aMenu2DPages[g_GamePage].abGrayed[2] = 1;
-        }
-
-        if (!g_EndOfGameIsDone)
-        {
-            aMenu2DPages[g_BonusPage].abGrayed[3] = 1;
-        }
-
-        g_MustCheckMC = 1;
-    }
-    else if (g_2DMenuID != 1 && !g_ExitForbidden)
-    {
-        if (g_2DMenuID != 3 || g_BonusWithExit == 1)
-        {
-            DesinitGameMenu2D();
-
-            if (g_stEngineStructure.bEngineFrozen)
+            N++;
+            while (szText[g_NumFirstCharForScroll + N] != ':')
             {
-                fn_vLoadEngineClock();
+                N++;
             }
-
-            g_stEngineStructure.bEngineFrozen = 0;
-            g_InGameMenu2DActivated = 0;
-
-            ulResult = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
-            if (MENU_g_bVibration)
+            N++;
+            while (szText[g_NumFirstCharForScroll + N] != ':')
             {
-                IPT_fn_vResumeAllConstantFFBEffectForAllDevices(ulResult);
+                N++;
             }
-            else
-            {
-                IPT_fn_vPauseAllConstantFFBEffectForAllDevices(ulResult);
-            }
+            N++;
         }
     }
 
-    GLI_vFreeTempMaterial(&g_hFixMaterialForAlbum[0]);
-    GLI_vFreeTempMaterial(&g_hFixMaterialForAlbum[1]);
-    g_bAlbumInitialized = 0;
-    g_bAlbumIsWorking = 0;
-    g_bAlbumLoadInProgress = 0;
-}
+    ulLen = N + 1;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 1657–1715 */
-/* addr: 0x00299920  size: 580 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1657
- *   +0x0010 -> line 1659
- *   +0x0018 -> line 1661
- *   +0x0028 -> line 1666
- *   +0x002c -> line 1664
- *   +0x0030 -> line 1666
- *   +0x0038 -> line 1665
- *   +0x003c -> line 1663
- *   +0x0040 -> line 1665
- *   +0x0044 -> line 1666
- *   +0x0048 -> line 1664
- *   +0x004c -> line 1666
- *   +0x005c -> line 1671
- *   +0x0060 -> line 1667
- *   +0x0064 -> line 1668
- *   +0x0068 -> line 1669
- *   +0x006c -> line 1671
- *   +0x00a4 -> line 1679
- *   +0x00ac -> line 1695
- *   +0x00b4 -> line 1697
- *   +0x00c4 -> line 1700
- *   +0x00f8 -> line 1704
- *   +0x0100 -> line 1707
- *   +0x0134 -> line 1713
- *   +0x0234 -> line 1715
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vGotoSubMenu(int SubPage)
-{
-    int i;
-    tdstMenu2DPages_* p;
+    strncpy(szTmp, szText + g_NumFirstCharForScroll, ulLen);
+    szTmp[ulLen] = 0;
 
-    fn_vPlaySoundInGameMenu2D(4);
+    TXT_fn_fComputePixelLengthOfString(szTmp, &fL, &fH);
 
-    if (g_CurrentIndSubMenu < 4)
+    fL = 100.0f * (fL / (float)g_p_stVpt->dwWidth);
+    fH = 100.0f * (fH / (float)g_p_stVpt->dwHeight);
+
+    g_OffsetXForScroll = g_OffsetXForScroll - 10.0f * fL;
+    g_NumFirstCharForScroll += N + 1;
+
+    if (g_NumFirstCharForScroll > strlen(szText))
     {
-        g_NextPage = SubPage;
-        g_CurrentActionMenu2D = 2;
-        g_GotoRight = 1;
-        g_aSubMenuReturn[++g_CurrentIndSubMenu] = g_CurrentMenu2DPage;
-
-        g_NotRight = 1;
-        g_NotLeft = 1;
-        g_NoBonusShortcut = 1;
-        g_NoGameShortcut = 1;
-
-        if (SubPage == g_VideoOptionPage ||
-            SubPage == g_AlbumPage ||
-            SubPage == g_HallOfFamePage ||
-            (SubPage == g_CinematicPage && g_NbCinematicOpen == 0))
-        {
-            g_NoValidate = 1;
-        }
-
-        if (SubPage == g_VideoOptionPage)
-        {
-            if (g_2DMenuID == 1)
-            {
-                aMenu2DPages[g_VideoOptionPage].NbEntry = aMenu2DPages[g_VideoOptionPage].NbSelection = 3;
-            }
-            else
-            {
-                aMenu2DPages[g_VideoOptionPage].NbEntry = aMenu2DPages[g_VideoOptionPage].NbSelection = 2;
-            }
-        }
-
-        i = 0;
-        do
-        {
-            p = &aMenu2DPages[SubPage];
-            p->abGrayed[i] = 0;
-            p->abGrayed[i + 1] = 0;
-            p->abGrayed[i + 2] = 0;
-            p->abGrayed[i + 3] = 0;
-            p->abGrayed[i + 4] = 0;
-            p->abGrayed[i + 5] = 0;
-            p->abGrayed[i + 6] = 0;
-            p->abGrayed[i + 7] = 0;
-            i += 8;
-        } while (i < 2);
-
-        if (i < 10)
-        {
-            do
-            {
-                p = &aMenu2DPages[SubPage];
-                p->abGrayed[i] = 0;
-                i++;
-            } while (i < 10);
-        }
-
-        if (g_2DMenuID == 3)
-            aMenu2DPages[g_GamePage].abGrayed[2] = 1;
-
-        if (!g_EndOfGameIsDone)
-        {
-            aMenu2DPages[g_BonusPage].abGrayed[3] = 1;
-        }
-
-        g_MustCheckMC = 1;
+        g_NumFirstCharForScroll = 0;
+        g_OffsetXForScroll = -W;
     }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 1625–1654 */
-/* addr: 0x00299b70  size: 304 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1625
- *   +0x0008 -> line 1626
- *   +0x0014 -> line 1628
- *   +0x005c -> line 1629
- *   +0x0068 -> line 1632
- *   +0x007c -> line 1634
- *   +0x0084 -> line 1635
- *   +0x008c -> line 1636
- *   +0x0094 -> line 1638
- *   +0x0098 -> line 1640
- *   +0x00a0 -> line 1642
- *   +0x00a8 -> line 1645
- *   +0x00d8 -> line 1647
- *   +0x00e0 -> line 1650
- *   +0x011c -> line 1652
- *   +0x0124 -> line 1654
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vPreviousSelection(void)
-{
-    if (g_CurrentSelection == 0)
-    {
-        if (aMenu2DPages[g_CurrentMenu2DPage].NbSelection == aMenu2DPages[g_CurrentMenu2DPage].NbEntry)
-        {
-            g_CurrentSelection = aMenu2DPages[g_CurrentMenu2DPage].NbSelection - 1;
-        }
-        else
-        {
-            if (aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry == 0)
-            {
-                aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry = aMenu2DPages[g_CurrentMenu2DPage].NbEntry - aMenu2DPages[g_CurrentMenu2DPage].NbSelection;
-                g_CurrentSelection = aMenu2DPages[g_CurrentMenu2DPage].NbSelection - 1;
-            }
-            else
-            {
-                aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry--;
-            }
-        }
-    }
-    else
-    {
-        g_CurrentSelection--;
-    }
-
-    if (aMenu2DPages[g_CurrentMenu2DPage].NbSelection != 0)
-    {
-        fn_vPlaySoundInGameMenu2D(2);
-    }
-
-    if (aMenu2DPages[g_CurrentMenu2DPage].abGrayed[g_CurrentSelection] != 0)
-    {
-        fn_vPreviousSelection();
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 1593–1622 */
-/* addr: 0x00299ca0  size: 252 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1593
- *   +0x0004 -> line 1594
- *   +0x0008 -> line 1593
- *   +0x000c -> line 1594
- *   +0x0040 -> line 1596
- *   +0x0058 -> line 1597
- *   +0x0060 -> line 1600
- *   +0x007c -> line 1602
- *   +0x0080 -> line 1604
- *   +0x0088 -> line 1606
- *   +0x008c -> line 1608
- *   +0x0094 -> line 1610
- *   +0x0098 -> line 1613
- *   +0x00a4 -> line 1615
- *   +0x00ac -> line 1618
- *   +0x00e8 -> line 1620
- *   +0x00f0 -> line 1622
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vNextSelection(void)
-{
-    if (g_CurrentSelection == aMenu2DPages[g_CurrentMenu2DPage].NbSelection - 1)
-    {
-        if (aMenu2DPages[g_CurrentMenu2DPage].NbSelection == aMenu2DPages[g_CurrentMenu2DPage].NbEntry)
-        {
-            g_CurrentSelection = 0;
-        }
-        else
-        {
-            if (aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry == aMenu2DPages[g_CurrentMenu2DPage].NbEntry - aMenu2DPages[g_CurrentMenu2DPage].NbSelection)
-            {
-                aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry = 0;
-                g_CurrentSelection = 0;
-            }
-            else
-            {
-                aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry++;
-            }
-        }
-    }
-    else
-    {
-        g_CurrentSelection++;
-    }
-
-    if (aMenu2DPages[g_CurrentMenu2DPage].NbSelection != 0)
-    {
-        fn_vPlaySoundInGameMenu2D(2);
-    }
-
-    if (aMenu2DPages[g_CurrentMenu2DPage].abGrayed[g_CurrentSelection] != 0)
-    {
-        fn_vNextSelection();
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 1556–1589 */
-/* addr: 0x00299da0  size: 404 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1556
- *   +0x0008 -> line 1559
- *   +0x0014 -> line 1561
- *   +0x005c -> line 1565
- *   +0x0064 -> line 1568
- *   +0x0078 -> line 1574
- *   +0x0080 -> line 1576
- *   +0x0084 -> line 1578
- *   +0x008c -> line 1580
- *   +0x0094 -> line 1583
- *   +0x009c -> line 1585
- *   +0x00d8 -> line 1587
- *   +0x0188 -> line 1589
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vPreviousSelectionNoWrap(void)
-{
-    unsigned int u32Sound2Play;
-
-    u32Sound2Play = 2;
-
-    if (g_CurrentSelection == 0)
-    {
-        if (aMenu2DPages[g_CurrentMenu2DPage].NbSelection == aMenu2DPages[g_CurrentMenu2DPage].NbEntry)
-        {
-            u32Sound2Play = 10;
-        }
-        else
-        {
-            if (aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry == 0)
-            {
-                u32Sound2Play = 10;
-            }
-            else
-            {
-                aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry--;
-            }
-        }
-    }
-    else
-    {
-        g_CurrentSelection--;
-    }
-
-    fn_vPlaySoundInGameMenu2D(u32Sound2Play);
-
-    if (aMenu2DPages[g_CurrentMenu2DPage].abGrayed[g_CurrentSelection] != 0)
-    {
-        u32Sound2Play = 2;
-
-        if (g_CurrentSelection == 0)
-        {
-            if (aMenu2DPages[g_CurrentMenu2DPage].NbSelection == aMenu2DPages[g_CurrentMenu2DPage].NbEntry)
-            {
-                u32Sound2Play = 10;
-            }
-            else
-            {
-                if (aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry == 0)
-                {
-                    u32Sound2Play = 10;
-                }
-                else
-                {
-                    aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry--;
-                }
-            }
-        }
-        else
-        {
-            g_CurrentSelection--;
-        }
-
-        fn_vPlaySoundInGameMenu2D(u32Sound2Play);
-
-        if (aMenu2DPages[g_CurrentMenu2DPage].abGrayed[g_CurrentSelection] != 0)
-        {
-            fn_vPreviousSelectionNoWrap();
-        }
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 1520–1553 */
-/* addr: 0x00299f40  size: 428 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1520
- *   +0x0004 -> line 1523
- *   +0x0008 -> line 1520
- *   +0x000c -> line 1523
- *   +0x0044 -> line 1525
- *   +0x005c -> line 1529
- *   +0x0064 -> line 1532
- *   +0x0080 -> line 1534
- *   +0x0084 -> line 1535
- *   +0x008c -> line 1542
- *   +0x0094 -> line 1544
- *   +0x009c -> line 1547
- *   +0x00a4 -> line 1549
- *   +0x00e0 -> line 1551
- *   +0x01a0 -> line 1553
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vNextSelectionNoWrap(void)
-{
-    unsigned int u32Sound2Play;
-
-    u32Sound2Play = 2;
-
-    if (g_CurrentSelection == aMenu2DPages[g_CurrentMenu2DPage].NbSelection - 1)
-    {
-        if (aMenu2DPages[g_CurrentMenu2DPage].NbSelection == aMenu2DPages[g_CurrentMenu2DPage].NbEntry)
-        {
-            u32Sound2Play = 10;
-        }
-        else
-        {
-            if (aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry !=
-                aMenu2DPages[g_CurrentMenu2DPage].NbEntry - aMenu2DPages[g_CurrentMenu2DPage].NbSelection)
-            {
-                aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry++;
-            }
-            else
-            {
-                u32Sound2Play = 10;
-            }
-        }
-    }
-    else
-    {
-        g_CurrentSelection++;
-    }
-
-    fn_vPlaySoundInGameMenu2D(u32Sound2Play);
-
-    if (aMenu2DPages[g_CurrentMenu2DPage].abGrayed[g_CurrentSelection] != 0)
-    {
-        u32Sound2Play = 2;
-
-        if (g_CurrentSelection == aMenu2DPages[g_CurrentMenu2DPage].NbSelection - 1)
-        {
-            if (aMenu2DPages[g_CurrentMenu2DPage].NbSelection == aMenu2DPages[g_CurrentMenu2DPage].NbEntry)
-            {
-                u32Sound2Play = 10;
-            }
-            else
-            {
-                if (aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry !=
-                    aMenu2DPages[g_CurrentMenu2DPage].NbEntry - aMenu2DPages[g_CurrentMenu2DPage].NbSelection)
-                {
-                    aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry++;
-                }
-                else
-                {
-                    u32Sound2Play = 10;
-                }
-            }
-        }
-        else
-        {
-            g_CurrentSelection++;
-        }
-
-        fn_vPlaySoundInGameMenu2D(u32Sound2Play);
-
-        if (aMenu2DPages[g_CurrentMenu2DPage].abGrayed[g_CurrentSelection] != 0)
-        {
-            fn_vNextSelectionNoWrap();
-        }
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 1444–1465 */
-/* addr: 0x0029a0f0  size: 256 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1444
- *   +0x0004 -> line 1446
- *   +0x0068 -> line 1447
- *   +0x0080 -> line 1450
- *   +0x00bc -> line 1453
- *   +0x00c8 -> line 1454
- *   +0x00f4 -> line 1455
- *   +0x00f8 -> line 1465
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vReinitGrayedEntries(int PageNumber)
-{
-    int i;
-    tdstMenu2DPages_* p;
-
-    i = 0;
-    do
-    {
-        p = &aMenu2DPages[PageNumber];
-        p->abGrayed[i] = 0;
-        p->abGrayed[i + 1] = 0;
-        p->abGrayed[i + 2] = 0;
-        p->abGrayed[i + 3] = 0;
-        p->abGrayed[i + 4] = 0;
-        p->abGrayed[i + 5] = 0;
-        p->abGrayed[i + 6] = 0;
-        p->abGrayed[i + 7] = 0;
-        i += 8;
-    } while (i < 2);
-
-    if (i < 10)
-    {
-        do
-        {
-            p = &aMenu2DPages[PageNumber];
-            p->abGrayed[i] = 0;
-            i++;
-        } while (i < 10);
-    }
-
-    if (g_2DMenuID == 3)
-        aMenu2DPages[g_GamePage].abGrayed[2] = 1;
-
-    if (!g_EndOfGameIsDone)
-    {
-        aMenu2DPages[g_BonusPage].abGrayed[3] = 1;
-    }
-
-    g_MustCheckMC = 1;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 1400–1409 */
-/* addr: 0x0029a1f0  size: 44 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1400
- *   +0x0008 -> line 1404
- *   +0x0010 -> line 1406
- *   +0x0018 -> line 1407
- *   +0x0020 -> line 1409
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vInitMaterialForMenu(void);
-void fn_vInitMenuPages(void);
-void GLI_vProcessRegisteredTextures(void);
-
-void fn_vInitInGameMenu2D(void)
-{
-    fn_vInitMaterialForMenu();
-    fn_vInitMenuPages();
-    GLI_vProcessRegisteredTextures();
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 1137–1394 */
-/* addr: 0x0029a220  size: 4360 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1137
- *   +0x0004 -> line 1145
- *   +0x0008 -> line 1137
- *   +0x000c -> line 1149
- *   +0x0010 -> line 1137
- *   +0x0020 -> line 1145
- *   +0x0024 -> line 1146
- *   +0x002c -> line 1149
- *   +0x007c -> line 1154
- *   +0x0140 -> line 1157
- *   +0x0198 -> line 1158
- *   +0x019c -> line 1157
- *   +0x01a0 -> line 1158
- *   +0x01a4 -> line 1157
- *   +0x01ac -> line 1158
- *   +0x01b4 -> line 1165
- *   +0x01c0 -> line 1164
- *   +0x01c4 -> line 1166
- *   +0x0204 -> line 1167
- *   +0x021c -> line 1169
- *   +0x0220 -> line 1167
- *   +0x0244 -> line 1169
- *   +0x027c -> line 1171
- *   +0x02b8 -> line 1173
- *   +0x02f4 -> line 1175
- *   +0x0330 -> line 1176
- *   +0x033c -> line 1177
- *   +0x0368 -> line 1184
- *   +0x0374 -> line 1183
- *   +0x0378 -> line 1185
- *   +0x0398 -> line 1194
- *   +0x039c -> line 1190
- *   +0x03a0 -> line 1194
- *   +0x03a4 -> line 1190
- *   +0x03b0 -> line 1194
- *   +0x03c8 -> line 1196
- *   +0x03e4 -> line 1202
- *   +0x0400 -> line 1204
- *   +0x041c -> line 1208
- *   +0x0420 -> line 1207
- *   +0x0424 -> line 1208
- *   +0x0428 -> line 1217
- *   +0x0430 -> line 1207
- *   +0x0434 -> line 1217
- *   +0x0438 -> line 1218
- *   +0x0478 -> line 1220
- *   +0x0490 -> line 1229
- *   +0x0494 -> line 1220
- *   +0x04b8 -> line 1229
- *   +0x0518 -> line 1231
- *   +0x0578 -> line 1234
- *   +0x05d0 -> line 1244
- *   +0x05d4 -> line 1245
- *   +0x05d8 -> line 1244
- *   +0x05dc -> line 1246
- *   +0x05e0 -> line 1245
- *   +0x0608 -> line 1246
- *   +0x0640 -> line 1250
- *   +0x0644 -> line 1252
- *   +0x0648 -> line 1250
- *   +0x064c -> line 1253
- *   +0x0650 -> line 1251
- *   +0x0654 -> line 1253
- *   +0x0658 -> line 1252
- *   +0x065c -> line 1253
- *   +0x0664 -> line 1252
- *   +0x0668 -> line 1251
- *   +0x066c -> line 1252
- *   +0x0680 -> line 1253
- *   +0x0684 -> line 1252
- *   +0x0688 -> line 1253
- *   +0x0690 -> line 1267
- *   +0x0694 -> line 1268
- *   +0x0698 -> line 1267
- *   +0x069c -> line 1269
- *   +0x06a0 -> line 1268
- *   +0x06c8 -> line 1269
- *   +0x0700 -> line 1271
- *   +0x0718 -> line 1273
- *   +0x071c -> line 1271
- *   +0x0740 -> line 1273
- *   +0x07a0 -> line 1275
- *   +0x0800 -> line 1277
- *   +0x0858 -> line 1281
- *   +0x085c -> line 1282
- *   +0x0860 -> line 1281
- *   +0x0864 -> line 1283
- *   +0x0868 -> line 1282
- *   +0x0890 -> line 1283
- *   +0x08c8 -> line 1285
- *   +0x08e0 -> line 1290
- *   +0x08e4 -> line 1285
- *   +0x0908 -> line 1290
- *   +0x0940 -> line 1292
- *   +0x097c -> line 1294
- *   +0x09b8 -> line 1297
- *   +0x09f4 -> line 1302
- *   +0x09f8 -> line 1303
- *   +0x09fc -> line 1302
- *   +0x0a00 -> line 1304
- *   +0x0a04 -> line 1303
- *   +0x0a2c -> line 1304
- *   +0x0a64 -> line 1305
- *   +0x0b54 -> line 1310
- *   +0x0b58 -> line 1311
- *   +0x0b5c -> line 1310
- *   +0x0b60 -> line 1312
- *   +0x0b64 -> line 1311
- *   +0x0b8c -> line 1312
- *   +0x0bc4 -> line 1313
- *   +0x0bcc -> line 1314
- *   +0x0bd0 -> line 1319
- *   +0x0bd4 -> line 1313
- *   +0x0bdc -> line 1314
- *   +0x0be4 -> line 1318
- *   +0x0be8 -> line 1319
- *   +0x0bf0 -> line 1320
- *   +0x0bf4 -> line 1313
- *   +0x0c0c -> line 1314
- *   +0x0c10 -> line 1313
- *   +0x0c14 -> line 1314
- *   +0x0c18 -> line 1318
- *   +0x0c1c -> line 1319
- *   +0x0c3c -> line 1320
- *   +0x0c74 -> line 1324
- *   +0x0c78 -> line 1325
- *   +0x0c7c -> line 1324
- *   +0x0c80 -> line 1326
- *   +0x0c84 -> line 1325
- *   +0x0cac -> line 1326
- *   +0x0ce4 -> line 1327
- *   +0x0cec -> line 1328
- *   +0x0cf0 -> line 1334
- *   +0x0cf4 -> line 1327
- *   +0x0cfc -> line 1328
- *   +0x0d04 -> line 1333
- *   +0x0d08 -> line 1334
- *   +0x0d10 -> line 1335
- *   +0x0d14 -> line 1327
- *   +0x0d2c -> line 1328
- *   +0x0d30 -> line 1327
- *   +0x0d34 -> line 1328
- *   +0x0d38 -> line 1333
- *   +0x0d3c -> line 1334
- *   +0x0d5c -> line 1335
- *   +0x0d94 -> line 1340
- *   +0x0d98 -> line 1341
- *   +0x0d9c -> line 1340
- *   +0x0da0 -> line 1342
- *   +0x0da4 -> line 1341
- *   +0x0dcc -> line 1342
- *   +0x0e04 -> line 1352
- *   +0x0e08 -> line 1353
- *   +0x0e0c -> line 1352
- *   +0x0e10 -> line 1354
- *   +0x0e14 -> line 1353
- *   +0x0e18 -> line 1354
- *   +0x0e1c -> line 1353
- *   +0x0e20 -> line 1354
- *   +0x0e24 -> line 1353
- *   +0x0e28 -> line 1354
- *   +0x0e2c -> line 1353
- *   +0x0e44 -> line 1354
- *   +0x0e48 -> line 1353
- *   +0x0e4c -> line 1354
- *   +0x0e54 -> line 1355
- *   +0x0e6c -> line 1357
- *   +0x0e70 -> line 1355
- *   +0x0e94 -> line 1357
- *   +0x0ecc -> line 1359
- *   +0x0f08 -> line 1361
- *   +0x0f44 -> line 1363
- *   +0x0f80 -> line 1368
- *   +0x0f84 -> line 1369
- *   +0x0f88 -> line 1368
- *   +0x0f8c -> line 1370
- *   +0x0f90 -> line 1369
- *   +0x0f94 -> line 1370
- *   +0x0f98 -> line 1369
- *   +0x0f9c -> line 1370
- *   +0x0fa0 -> line 1369
- *   +0x0fa4 -> line 1370
- *   +0x0fa8 -> line 1369
- *   +0x0fc0 -> line 1370
- *   +0x0fc4 -> line 1369
- *   +0x0fc8 -> line 1370
- *   +0x0fd0 -> line 1371
- *   +0x0fe4 -> line 1373
- *   +0x0fe8 -> line 1371
- *   +0x100c -> line 1373
- *   +0x1044 -> line 1378
- *   +0x104c -> line 1383
- *   +0x1054 -> line 1389
- *   +0x1060 -> line 1388
- *   +0x1064 -> line 1389
- *   +0x1088 -> line 1390
- *   +0x1090 -> line 1391
- *   +0x1098 -> line 1390
- *   +0x10a0 -> line 1391
- *   +0x10a8 -> line 1390
- *   +0x10c0 -> line 1391
- *   +0x10c4 -> line 1390
- *   +0x10c8 -> line 1391
- *   +0x10ec -> line 1394
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-extern char* FON_fn_szGetTextPointerForHandle(int hString);
-extern int fn_vDefinePalVideoPages(int IndSubMenuPage);
-extern int fn_vDefineProgressiveScanPages(int IndSubMenuPage);
-
-void fn_vInitMenuPages(void)
-{
-    GEO_tdstColor_ stColor;
-    int IndSubMenuPage;
-    int i;
-    int j;
-
-    g_FirstCineNameText = 9;
-    g_FirstArcadeNameText = 18;
-
-    stColor.xA = 0.5f;
-    stColor.xR = 0.1f;
-    stColor.xG = 0.7f;
-    stColor.xB = 0.7f;
-
-    GLI_xCreateMaterial(&g_hSelectedFrameMaterialForMenu2D);
-    GLI_xSetMaterialAmbientCoef(g_hSelectedFrameMaterialForMenu2D, &stColor);
-    GLI_xSetMaterialDiffuseCoef(g_hSelectedFrameMaterialForMenu2D, &stColor);
-    GLI_Material_fn_lSetTextureOp(g_hSelectedFrameMaterialForMenu2D, 0, 3);
-
-    for (i = 0; i < 10; i++)
-    {
-        g_aEnvValue[i].ulNbCage = 0;
-        g_aEnvValue[i].ulScore = 0;
-    }
-
-    g_GlobalScoreAtBeginingOfLevel = 0;
-    g_CurrentEnvScoreAtBeginingOfLevel = 0;
-    g_RevisitGlobalScoreAtBeginingOfLevel = 0;
-    g_RevisitEnvScoreAtBeginingOfLevel = 0;
-    g_RevisitCurrentEnvScore = 0;
-    g_EndOfGameIsDone = 0;
-    g_CurrentEnvInit = 1;
-
-    for (j = 1; j < 10; j++)
-    {
-        aMenu2DPages[j - 1].eTypePage = 2;
-        strcpy(aMenu2DPages[j - 1].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[j - 1].hText));
-        aMenu2DPages[j - 1].NbSelection = 0;
-        aMenu2DPages[j - 1].NbEntry = 0;
-    }
-
-    g_BonusPage = 9;
-    aMenu2DPages[g_BonusPage].eTypePage = 8;
-    strcpy(aMenu2DPages[g_BonusPage].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[43].hText));
-    aMenu2DPages[g_BonusPage].NbEntry = aMenu2DPages[g_BonusPage].NbSelection = 4;
-    strcpy(aMenu2DPages[g_BonusPage].aText[0], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[44].hText));
-    strcpy(aMenu2DPages[g_BonusPage].aText[1], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[45].hText));
-    strcpy(aMenu2DPages[g_BonusPage].aText[2], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[47].hText));
-    strcpy(aMenu2DPages[g_BonusPage].aText[3], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[49].hText));
-    if (!g_EndOfGameIsDone)
-    {
-        aMenu2DPages[g_BonusPage].abGrayed[3] = 1;
-    }
-
-    g_GamePage = 10;
-    aMenu2DPages[10].eTypePage = 3;
-    strcpy(aMenu2DPages[10].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[55].hText));
-    aMenu2DPages[10].NbEntry = aMenu2DPages[10].NbSelection = 4;
-    strcpy(aMenu2DPages[10].aText[0], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[51].hText));
-    strcpy(aMenu2DPages[10].aText[1], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[37].hText));
-    strcpy(aMenu2DPages[10].aText[2], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[30].hText));
-    strcpy(aMenu2DPages[10].aText[3], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[56].hText));
-
-    g_CurrentActionMenu2D = 3;
-    IndSubMenuPage = g_NbMenu2DPages = 11;
-
-    g_OptionsPage = 11;
-    aMenu2DPages[g_OptionsPage].eTypePage = 4;
-    strcpy(aMenu2DPages[g_OptionsPage].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[51].hText));
-    aMenu2DPages[g_OptionsPage].NbEntry = aMenu2DPages[g_OptionsPage].NbSelection = 3;
-    i = 0;
-    strcpy(aMenu2DPages[g_OptionsPage].aText[i++], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[52].hText));
-    strcpy(aMenu2DPages[g_OptionsPage].aText[i++], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[53].hText));
-    strcpy(aMenu2DPages[g_OptionsPage].aText[i++], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[54].hText));
-
-    g_LoadPage = IndSubMenuPage + 1;
-    aMenu2DPages[g_LoadPage].eTypePage = 1;
-    strcpy(aMenu2DPages[g_LoadPage].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[37].hText));
-
-    g_SavePage = IndSubMenuPage + 2;
-    g_PhotoMenuPage = g_SavePage;
-    aMenu2DPages[g_SavePage].eTypePage = 0;
-    strcpy(aMenu2DPages[g_SavePage].Title, "");
-
-    g_ControlOptionPage = IndSubMenuPage + 3;
-    aMenu2DPages[g_ControlOptionPage].eTypePage = 5;
-    strcpy(aMenu2DPages[g_ControlOptionPage].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[52].hText));
-    aMenu2DPages[g_ControlOptionPage].NbEntry = aMenu2DPages[g_ControlOptionPage].NbSelection = 3;
-    i = 0;
-    strcpy(aMenu2DPages[g_ControlOptionPage].aText[i++], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[65].hText));
-    strcpy(aMenu2DPages[g_ControlOptionPage].aText[i++], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[66].hText));
-    strcpy(aMenu2DPages[g_ControlOptionPage].aText[i++], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[67].hText));
-
-    g_AudioOptionPage = IndSubMenuPage + 4;
-    aMenu2DPages[g_AudioOptionPage].eTypePage = 6;
-    strcpy(aMenu2DPages[g_AudioOptionPage].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[53].hText));
-    aMenu2DPages[g_AudioOptionPage].NbEntry = aMenu2DPages[g_AudioOptionPage].NbSelection = 4;
-    strcpy(aMenu2DPages[g_AudioOptionPage].aText[0], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[62].hText));
-    strcpy(aMenu2DPages[g_AudioOptionPage].aText[1], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[63].hText));
-    strcpy(aMenu2DPages[g_AudioOptionPage].aText[2], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[64].hText));
-    strcpy(aMenu2DPages[g_AudioOptionPage].aText[3], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[70].hText));
-
-    g_VideoOptionPage = IndSubMenuPage + 5;
-    aMenu2DPages[g_VideoOptionPage].eTypePage = 7;
-    strcpy(aMenu2DPages[g_VideoOptionPage].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[54].hText));
-    aMenu2DPages[g_VideoOptionPage].NbEntry = aMenu2DPages[g_VideoOptionPage].NbSelection = 3;
-    strcpy(aMenu2DPages[g_VideoOptionPage].aText[0], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[87].hText));
-    strcpy(aMenu2DPages[g_VideoOptionPage].aText[1], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[86].hText));
-    strcpy(aMenu2DPages[g_VideoOptionPage].aText[2], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[97].hText));
-
-    g_ArcadePage = IndSubMenuPage + 6;
-    aMenu2DPages[g_ArcadePage].eTypePage = 9;
-    strcpy(aMenu2DPages[g_ArcadePage].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[44].hText));
-    aMenu2DPages[g_ArcadePage].NbSelection = 4;
-    aMenu2DPages[g_ArcadePage].NbEntry = 9;
-
-    g_CinematicPage = IndSubMenuPage + 7;
-    aMenu2DPages[g_CinematicPage].eTypePage = 10;
-    strcpy(aMenu2DPages[g_CinematicPage].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[45].hText));
-
-    g_XTraPage = IndSubMenuPage + 8;
-    aMenu2DPages[g_XTraPage].eTypePage = 11;
-    strcpy(aMenu2DPages[g_XTraPage].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[47].hText));
-    aMenu2DPages[g_XTraPage].NbSelection = 4;
-    aMenu2DPages[g_XTraPage].NbEntry = 9;
-
-    g_AlbumPage = IndSubMenuPage + 9;
-    aMenu2DPages[g_AlbumPage].eTypePage = 12;
-    strcpy(aMenu2DPages[g_AlbumPage].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[46].hText));
-
-    g_HallOfFamePage = IndSubMenuPage + 10;
-    aMenu2DPages[g_HallOfFamePage].eTypePage = 13;
-    strcpy(aMenu2DPages[g_HallOfFamePage].Title, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[49].hText));
-
-    g_StartMenuPage = IndSubMenuPage + 11;
-    aMenu2DPages[g_StartMenuPage].eTypePage = 14;
-    strcpy(aMenu2DPages[g_StartMenuPage].Title, "");
-    aMenu2DPages[g_StartMenuPage].NbEntry = aMenu2DPages[g_StartMenuPage].NbSelection = 4;
-    strcpy(aMenu2DPages[g_StartMenuPage].aText[0], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[71].hText));
-    strcpy(aMenu2DPages[g_StartMenuPage].aText[1], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[31].hText));
-    strcpy(aMenu2DPages[g_StartMenuPage].aText[2], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[51].hText));
-    strcpy(aMenu2DPages[g_StartMenuPage].aText[3], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[46].hText));
-
-    g_CenterScreenPage = IndSubMenuPage + 12;
-    aMenu2DPages[g_CenterScreenPage].eTypePage = 15;
-    strcpy(aMenu2DPages[g_CenterScreenPage].Title, "");
-    aMenu2DPages[g_CenterScreenPage].NbEntry = aMenu2DPages[g_CenterScreenPage].NbSelection = 0;
-    strcpy(aMenu2DPages[g_CenterScreenPage].aText[0], FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[89].hText));
-
-    IndSubMenuPage = fn_vDefinePalVideoPages(IndSubMenuPage + 13);
-    IndSubMenuPage = fn_vDefineProgressiveScanPages(IndSubMenuPage);
-
-    g_RecapMenuPage = IndSubMenuPage;
-    strcpy(aMenu2DPages[g_RecapMenuPage].Title, "");
-    aMenu2DPages[g_RecapMenuPage].eTypePage = 22;
-    aMenu2DPages[g_CenterScreenPage].NbSelection = 0;
-    aMenu2DPages[g_RecapMenuPage].NbEntry = 0;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 897–975 */
-/* addr: 0x0029b330  size: 1780 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 897
- *   +0x0008 -> line 901
- *   +0x0010 -> line 903
- *   +0x0018 -> line 906
- *   +0x0064 -> line 909
- *   +0x006c -> line 912
- *   +0x00b8 -> line 917
- *   +0x00c0 -> line 921
- *   +0x0110 -> line 922
- *   +0x0164 -> line 923
- *   +0x01b8 -> line 924
- *   +0x020c -> line 925
- *   +0x0260 -> line 926
- *   +0x02b4 -> line 927
- *   +0x0308 -> line 928
- *   +0x035c -> line 929
- *   +0x03b0 -> line 932
- *   +0x0404 -> line 934
- *   +0x0458 -> line 937
- *   +0x04ac -> line 940
- *   +0x04f8 -> line 942
- *   +0x04fc -> line 940
- *   +0x0500 -> line 942
- *   +0x0504 -> line 954
- *   +0x0508 -> line 945
- *   +0x0510 -> line 940
- *   +0x0518 -> line 945
- *   +0x0520 -> line 948
- *   +0x0530 -> line 951
- *   +0x053c -> line 954
- *   +0x058c -> line 957
- *   +0x05e0 -> line 960
- *   +0x0634 -> line 967
- *   +0x0638 -> line 960
- *   +0x063c -> line 963
- *   +0x0648 -> line 967
- *   +0x0694 -> line 973
- *   +0x06e8 -> line 975
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vInitMaterialForMenu(void)
-{
-    InitPS2Menu2DTextures();
-    M2D_StartBGLoading();
-    {
-        GLI_tdstTexture_* hTex;
-        GLI_tdstMaterial_* hMat;
-
-        GLI_xCreateMaterial(&hMat);
-        GLI_xSetMaterialType(hMat, -9);
-        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_gen.tga");
-        GLI_xSetMaterialTexture(hMat, hTex);
-        GLI_Material_fn_lSetTextureOp(hMat, 0, 2);
-        EnableAlphaTest(hMat);
-        g_hBGMaterialForMenu2D = (int)hMat;
-        M2D_StartFixLoading();
-    }
-
-    {
-        GLI_tdstTexture_* hTex;
-        GLI_tdstMaterial_* hMat;
-
-        GLI_xCreateMaterial(&hMat);
-        GLI_xSetMaterialType(hMat, -9);
-        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_fix.tga");
-        GLI_xSetMaterialTexture(hMat, hTex);
-        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
-        EnableAlpha(hMat);
-        g_hFixMaterialForMenu2D = (int)hMat;
-        M2D_StartTitlesLoading();
-    }
-
-    {
-        GLI_tdstTexture_* hTex;
-        GLI_tdstMaterial_* hMat;
-
-        GLI_xCreateMaterial(&hMat);
-        GLI_xSetMaterialType(hMat, -9);
-        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_jard.tga");
-        GLI_xSetMaterialTexture(hMat, hTex);
-        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
-        EnableAlpha(hMat);
-        aMenu2DPages[0].hMaterial = hMat;
-    }
-
-    {
-        GLI_tdstTexture_* hTex;
-        GLI_tdstMaterial_* hMat;
-
-        GLI_xCreateMaterial(&hMat);
-        GLI_xSetMaterialType(hMat, -9);
-        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_fore.tga");
-        GLI_xSetMaterialTexture(hMat, hTex);
-        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
-        EnableAlpha(hMat);
-        aMenu2DPages[1].hMaterial = hMat;
-    }
-
-    {
-        GLI_tdstTexture_* hTex;
-        GLI_tdstMaterial_* hMat;
-
-        GLI_xCreateMaterial(&hMat);
-        GLI_xSetMaterialType(hMat, -9);
-        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_mara.tga");
-        GLI_xSetMaterialTexture(hMat, hTex);
-        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
-        EnableAlpha(hMat);
-        aMenu2DPages[2].hMaterial = hMat;
-    }
-
-    {
-        GLI_tdstTexture_* hTex;
-        GLI_tdstMaterial_* hMat;
-
-        GLI_xCreateMaterial(&hMat);
-        GLI_xSetMaterialType(hMat, -9);
-        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_land.tga");
-        GLI_xSetMaterialTexture(hMat, hTex);
-        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
-        EnableAlpha(hMat);
-        aMenu2DPages[3].hMaterial = hMat;
-    }
-
-    {
-        GLI_tdstTexture_* hTex;
-        GLI_tdstMaterial_* hMat;
-
-        GLI_xCreateMaterial(&hMat);
-        GLI_xSetMaterialType(hMat, -9);
-        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_dese.tga");
-        GLI_xSetMaterialTexture(hMat, hTex);
-        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
-        EnableAlpha(hMat);
-        aMenu2DPages[4].hMaterial = hMat;
-    }
-
-    {
-        GLI_tdstTexture_* hTex;
-        GLI_tdstMaterial_* hMat;
-
-        GLI_xCreateMaterial(&hMat);
-        GLI_xSetMaterialType(hMat, -9);
-        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_abra.tga");
-        GLI_xSetMaterialTexture(hMat, hTex);
-        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
-        EnableAlpha(hMat);
-        aMenu2DPages[5].hMaterial = hMat;
-    }
-
-    {
-        GLI_tdstTexture_* hTex;
-        GLI_tdstMaterial_* hMat;
-
-        GLI_xCreateMaterial(&hMat);
-        GLI_xSetMaterialType(hMat, -9);
-        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_mont.tga");
-        GLI_xSetMaterialTexture(hMat, hTex);
-        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
-        EnableAlpha(hMat);
-        aMenu2DPages[6].hMaterial = hMat;
-    }
-
-    {
-        GLI_tdstTexture_* hTex;
-        GLI_tdstMaterial_* hMat;
-
-        GLI_xCreateMaterial(&hMat);
-        GLI_xSetMaterialType(hMat, -9);
-        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_blac.tga");
-        GLI_xSetMaterialTexture(hMat, hTex);
-        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
-        EnableAlpha(hMat);
-        aMenu2DPages[7].hMaterial = hMat;
-    }
-
-    {
-        GLI_tdstTexture_* hTex;
-        GLI_tdstMaterial_* hMat;
-
-        GLI_xCreateMaterial(&hMat);
-        GLI_xSetMaterialType(hMat, -9);
-        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_donj.tga");
-        GLI_xSetMaterialTexture(hMat, hTex);
-        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
-        EnableAlpha(hMat);
-        aMenu2DPages[8].hMaterial = hMat;
-    }
-
-    {
-        GLI_tdstTexture_* hTex;
-        GLI_tdstMaterial_* hMat;
-
-        GLI_xCreateMaterial(&hMat);
-        GLI_xSetMaterialType(hMat, -9);
-        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_bonu.tga");
-        GLI_xSetMaterialTexture(hMat, hTex);
-        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
-        EnableAlpha(hMat);
-        aMenu2DPages[9].hMaterial = hMat;
-    }
-
-    {
-        GLI_tdstTexture_* hTex;
-        GLI_tdstMaterial_* hMat;
-
-        GLI_xCreateMaterial(&hMat);
-        GLI_xSetMaterialType(hMat, -9);
-        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_game.tga");
-        GLI_xSetMaterialTexture(hMat, hTex);
-        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
-        EnableAlpha(hMat);
-        aMenu2DPages[10].hMaterial = hMat;
-    }
-
-    {
-        GLI_tdstTexture_* hTex;
-        GLI_tdstMaterial_* hMat;
-
-        GLI_xCreateMaterial(&hMat);
-        GLI_xSetMaterialType(hMat, -9);
-        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_opti.tga");
-        GLI_xSetMaterialTexture(hMat, hTex);
-        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
-        EnableAlpha(hMat);
-        aMenu2DPages[11].hMaterial = hMat;
-    }
-
-    {
-        GLI_tdstTexture_* hTex;
-        GLI_tdstMaterial_* hMat;
-
-        GLI_xCreateMaterial(&hMat);
-        GLI_xSetMaterialType(hMat, -9);
-        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_sav.tga");
-        GLI_xSetMaterialTexture(hMat, hTex);
-        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
-        EnableAlpha(hMat);
-        aMenu2DPages[13].hMaterial = 0;
-        aMenu2DPages[12].hMaterial = hMat;
-        aMenu2DPages[14].hMaterial = aMenu2DPages[11].hMaterial;
-        aMenu2DPages[15].hMaterial = aMenu2DPages[14].hMaterial;
-        aMenu2DPages[16].hMaterial = aMenu2DPages[15].hMaterial;
-    }
-
-    {
-        GLI_tdstTexture_* hTex;
-        GLI_tdstMaterial_* hMat;
-
-        GLI_xCreateMaterial(&hMat);
-        GLI_xSetMaterialType(hMat, -9);
-        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_arca.tga");
-        GLI_xSetMaterialTexture(hMat, hTex);
-        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
-        EnableAlpha(hMat);
-        aMenu2DPages[17].hMaterial = hMat;
-    }
-
-    {
-        GLI_tdstTexture_* hTex;
-        GLI_tdstMaterial_* hMat;
-
-        GLI_xCreateMaterial(&hMat);
-        GLI_xSetMaterialType(hMat, -9);
-        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_flms.tga");
-        GLI_xSetMaterialTexture(hMat, hTex);
-        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
-        EnableAlpha(hMat);
-        aMenu2DPages[18].hMaterial = hMat;
-    }
-
-    {
-        GLI_tdstTexture_* hTex;
-        GLI_tdstMaterial_* hMat;
-
-        GLI_xCreateMaterial(&hMat);
-        GLI_xSetMaterialType(hMat, -9);
-        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_phts.tga");
-        GLI_xSetMaterialTexture(hMat, hTex);
-        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
-        EnableAlpha(hMat);
-        aMenu2DPages[19].hMaterial = hMat;
-        aMenu2DPages[20].hMaterial = aMenu2DPages[19].hMaterial;
-    }
-
-    {
-        GLI_tdstTexture_* hTex;
-        GLI_tdstMaterial_* hMat;
-
-        GLI_xCreateMaterial(&hMat);
-        GLI_xSetMaterialType(hMat, -9);
-        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_film.tga");
-        GLI_xSetMaterialTexture(hMat, hTex);
-        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
-        EnableAlpha(hMat);
-        g_hFixMaterialForSelectedFilms = (int)hMat;
-    }
-
-    {
-        GLI_tdstTexture_* hTex;
-        GLI_tdstMaterial_* hMat;
-
-        GLI_xCreateMaterial(&hMat);
-        GLI_xSetMaterialType(hMat, -9);
-        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_bouc.tga");
-        GLI_xSetMaterialTexture(hMat, hTex);
-        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
-        EnableAlpha(hMat);
-        g_hFixMaterialForArcadeAndFilms = (int)hMat;
-    }
-
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 840–886 */
-/* addr: 0x0029ba30  size: 440 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 840
- *   +0x0004 -> line 846
- *   +0x0008 -> line 840
- *   +0x000c -> line 846
- *   +0x0010 -> line 841
- *   +0x0014 -> line 842
- *   +0x0018 -> line 846
- *   +0x0034 -> line 851
- *   +0x0044 -> line 853
- *   +0x0148 -> line 856
- *   +0x0150 -> line 857
- *   +0x0158 -> line 858
- *   +0x0160 -> line 874
- *   +0x0164 -> line 859
- *   +0x0168 -> line 874
- *   +0x016c -> line 860
- *   +0x0170 -> line 874
- *   +0x0178 -> line 875
- *   +0x0180 -> line 878
- *   +0x0190 -> line 880
- *   +0x01a4 -> line 884
- *   +0x01ac -> line 886
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-extern void fn_vDeinitSoundInGameMenu2D(unsigned int uiResume);
-extern void GAM_fn_vSetVolumeMusic(int s32_Value);
-extern void GAM_fn_vSetVolumeSound(int s32_Value);
-extern void GAM_fn_vSetVolumeMenu(int s32_Value);
-extern void GAM_fn_vSetVolumeAmbiance(int s32_Value);
-extern void GAM_fn_vSetVolumeVoice(int s32_Value);
-extern void PS2M2D_vReinitMenuTextures(void);
-extern void GLI_vFreeTempMaterial(int* ppMaterial);
-extern void fn_vLoadEngineClock(void);
-extern void IPT_fn_vStopFFBEffect(unsigned int ulCurrentTime, unsigned char ucPadNumber, signed char cEffectNumber);
-
-void DesinitGameMenu2D(void)
-{
-    g_CurrentSelection = 0;
-    g_EndRevisit = 0;
-    g_ExitForbidden = 0;
-
-    fn_vDeinitSoundInGameMenu2D((g_2DMenuID != 2) ? 1 : 0);
-
-    if (g_CurrentMenu2DPage == g_AudioOptionPage)
-    {
-        GAM_fn_vSetVolumeMusic(g_aNbGradOn[0] * 127 / 10); GAM_fn_vSetVolumeSound(g_aNbGradOn[1] * 127 / 10); GAM_fn_vSetVolumeMenu(g_aNbGradOn[1] * 127 / 10); GAM_fn_vSetVolumeAmbiance(g_aNbGradOn[1] * 127 / 10); GAM_fn_vSetVolumeVoice(g_aNbGradOn[2] * 127 / 10);
-    }
-
-    PS2M2D_vReinitMenuTextures();
-    GLI_vFreeTempMaterial(&g_hFixMaterialForAlbum[0]);
-    GLI_vFreeTempMaterial(&g_hFixMaterialForAlbum[1]);
-    g_bAlbumInitialized = 0;
-    g_bAlbumIsWorking = 0;
-    g_bAlbumLoadInProgress = 0;
-
-    if (g_stEngineStructure.bEngineFrozen)
-        fn_vLoadEngineClock();
-
-    if (g_MenuVibrationEffect != -1)
-    {
-        IPT_fn_vStopFFBEffect(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount, 0, (signed char)g_MenuVibrationEffect);
-
-        g_MenuVibrationEffect = -1;
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 622–646 */
-/* addr: 0x0029bbf0  size: 104 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 622
- *   +0x0008 -> line 625
- *   +0x0010 -> line 627
- *   +0x0020 -> line 628
- *   +0x0028 -> line 629
- *   +0x002c -> line 638
- *   +0x0030 -> line 629
- *   +0x0034 -> line 636
- *   +0x003c -> line 638
- *   +0x0044 -> line 640
- *   +0x004c -> line 641
- *   +0x0054 -> line 644
- *   +0x005c -> line 646
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-extern void fn_vLoadEngineClock(void);
-extern void IPT_fn_vResumeAllConstantFFBEffectForAllDevices(unsigned int ulTime);
-extern void IPT_fn_vPauseAllConstantFFBEffectForAllDevices(unsigned int ulTime);
-
-void CloseInGameMenu2D(void)
-{
-    unsigned int ulCurrentTime;
-
-    DesinitGameMenu2D();
-
-    if (g_stEngineStructure.bEngineFrozen)
-        fn_vLoadEngineClock();
-    g_stEngineStructure.bEngineFrozen = 0;
-
-    ulCurrentTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
-    g_InGameMenu2DActivated = 0;
-
-    if (MENU_g_bVibration)
-    {
-        IPT_fn_vResumeAllConstantFFBEffectForAllDevices(ulCurrentTime);
-    }
-    else
-    {
-        IPT_fn_vPauseAllConstantFFBEffectForAllDevices(ulCurrentTime);
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 584–605 */
-/* addr: 0x0029bc60  size: 232 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 584
- *   +0x0004 -> line 590
- *   +0x0008 -> line 584
- *   +0x000c -> line 590
- *   +0x0014 -> line 585
- *   +0x0018 -> line 586
- *   +0x001c -> line 587
- *   +0x0020 -> line 588
- *   +0x0024 -> line 589
- *   +0x0028 -> line 590
- *   +0x00b0 -> line 593
- *   +0x00bc -> line 594
- *   +0x00c8 -> line 597
- *   +0x00cc -> line 603
- *   +0x00d4 -> line 604
- *   +0x00dc -> line 605
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void ActivateInGameMenu2D(void)
-{
-    g_NotRight = 0;
-    g_NotLeft = 0;
-    g_NoBonusShortcut = 0;
-    g_NoGameShortcut = 0;
-    g_2DMenuID = 0;
-    aMenu2DPages[g_GamePage].abGrayed[2] = 0;
-    fn_vSaveEngineClock();
-    g_CurrentActionMenu2D = eActionBeginOfPage;
-    g_stEngineStructure.bEngineFrozen = 1;
-    g_CurrentIndSubMenu = -1;
-    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount++;
-    g_InGameMenu2DActivated = 1;
-    IPT_fn_vReadInput(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
-    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount++;
-    IPT_fn_vReadInput(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
-    g_CurrentSelection = 0;
-    PS2M2D_vReinitMenuTextures();
-    if (g_IndCurrentEnv > 0)
-    {
-        g_CurrentMenu2DPage = g_IndCurrentEnv - 1;
-    }
-    else
-    {
-        g_CurrentMenu2DPage = 0;
-    }
-    fn_vInitSoundInGameMenu2D(1);
-    g_XTextLeft = 39.0f;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 542–581 */
-/* addr: 0x0029bd50  size: 292 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 542
- *   +0x0004 -> line 553
- *   +0x0008 -> line 542
- *   +0x000c -> line 544
- *   +0x0010 -> line 549
- *   +0x0014 -> line 553
- *   +0x0018 -> line 544
- *   +0x001c -> line 545
- *   +0x0020 -> line 546
- *   +0x0024 -> line 547
- *   +0x0028 -> line 553
- *   +0x002c -> line 549
- *   +0x0030 -> line 548
- *   +0x0034 -> line 553
- *   +0x00bc -> line 555
- *   +0x00c4 -> line 571
- *   +0x00c8 -> line 557
- *   +0x00d0 -> line 556
- *   +0x00d4 -> line 571
- *   +0x00d8 -> line 556
- *   +0x00dc -> line 571
- *   +0x0110 -> line 576
- *   +0x0118 -> line 581
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int PS2MC_fn_bHasBootCheckBeenDoneYet(void);
-void ActivateInGameMenu2DStart(void)
-{
-    g_NotRight = 1;
-    g_NotLeft = 1;
-    g_NoBonusShortcut = 1;
-    g_NoGameShortcut = 1;
-    g_CurrentMenu2DPage = g_StartMenuPage;
-    g_IsSaveOK = 0;
-    aMenu2DPages[g_GamePage].abGrayed[2] = 0;
-    fn_vSaveEngineClock();
-    g_CurrentActionMenu2D = eActionBeginOfPage;
-    g_stEngineStructure.bEngineFrozen = 1;
-    g_CurrentIndSubMenu = -1;
-    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount++;
-    g_InGameMenu2DActivated = 1;
-    IPT_fn_vReadInput(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
-    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount++;
-    IPT_fn_vReadInput(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
-    g_CurrentSelection = 0;
-    PS2M2D_vReinitMenuTextures();
-    fn_vInitSoundInGameMenu2D(1);
-    g_XTextLeft = 39.0f;
-    g_2DMenuID = 1;
-    aMenu2DPages[g_StartMenuPage].abGrayed[1] = 1;
-    if (g_CurrentSelection == 1)
-        fn_vPreviousSelection();
-    PS2MC_fn_bHasBootCheckBeenDoneYet();
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 509–537 */
-/* addr: 0x0029be80  size: 452 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 509
- *   +0x0004 -> line 511
- *   +0x0008 -> line 509
- *   +0x000c -> line 515
- *   +0x0010 -> line 511
- *   +0x0014 -> line 512
- *   +0x0018 -> line 513
- *   +0x001c -> line 514
- *   +0x0020 -> line 516
- *   +0x0024 -> line 518
- *   +0x0028 -> line 515
- *   +0x002c -> line 518
- *   +0x0034 -> line 516
- *   +0x0038 -> line 518
- *   +0x00c0 -> line 520
- *   +0x00c8 -> line 524
- *   +0x00cc -> line 529
- *   +0x00d0 -> line 524
- *   +0x00d4 -> line 533
- *   +0x00d8 -> line 525
- *   +0x00e0 -> line 526
- *   +0x00e8 -> line 528
- *   +0x00f0 -> line 530
- *   +0x00f8 -> line 531
- *   +0x0100 -> line 532
- *   +0x0104 -> line 533
- *   +0x0170 -> line 534
- *   +0x01a4 -> line 535
- *   +0x01b8 -> line 537
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void ActivateInGameMenu2DPhoto(void)
-{
-    unsigned int i;
-    char* p;
-
-    g_NotRight = 1;
-    g_NotLeft = 1;
-    g_NoBonusShortcut = 1;
-    g_NoGameShortcut = 1;
-    g_CurrentMenu2DPage = g_PhotoMenuPage;
-    g_2DMenuID = 2;
-    aMenu2DPages[g_GamePage].abGrayed[2] = 0;
-    fn_vSaveEngineClock();
-    g_CurrentActionMenu2D = eActionBeginOfPage;
-    g_stEngineStructure.bEngineFrozen = 1;
-    g_CurrentIndSubMenu = -1;
-    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount++;
-    g_InGameMenu2DActivated = 1;
-    IPT_fn_vReadInput(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
-    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount++;
-    IPT_fn_vReadInput(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
-    g_CurrentSelection = 0;
-    PS2M2D_vReinitMenuTextures();
-    fn_vInitSoundInGameMenu2D(0);
-    g_CurrentSelectedCharNumber = 0;
-    g_NbColForSelection = 10;
-    g_NbLineForSelection = 5;
-    g_CurrentColForSelection = 6;
-    g_CurrentLineForSelection = 4;
-    g_NbCharForSaveName = 7;
-    g_XTextLeft = 18.0f;
-    g_XText = 18.0f;
-
-    i = 0;
-    do
-    {
-        p = g_CurrentNameForSavePage;
-        p[i] = 0;
-        p[i + 1] = 0;
-        p[i + 2] = 0;
-        p[i + 3] = 0;
-        p[i + 4] = 0;
-        p[i + 5] = 0;
-        p[i + 6] = 0;
-        p[i + 7] = 0;
-        i += 8;
-    } while (i < 2);
-
-    if (i < 10)
-    {
-        do
-        {
-            p = g_CurrentNameForSavePage;
-            p[i] = 0;
-            i++;
-        } while (i < 10);
-    }
-
-    PS2MC_vClearFlag(0);
-    PS2MC_vClearFlag(5);
-    g_CurrentNameForSavePage[0] = 0;
-    PS2MC_g_NbFilesFound = 0;
-    PS2MC_fn_vGetMemoryCardScreenShotsHeaders(g_aFileEntryArray, 100, &PS2MC_g_NbFilesFound);
-    MNU_g_SavingScreenshot = 1;
-    g_CurrentSelectedCharNumber = strlen(g_CurrentNameForSavePage);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 489–505 */
-/* addr: 0x0029c050  size: 228 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 489
- *   +0x0004 -> line 490
- *   +0x0008 -> line 489
- *   +0x000c -> line 494
- *   +0x0010 -> line 490
- *   +0x0014 -> line 491
- *   +0x0018 -> line 492
- *   +0x001c -> line 493
- *   +0x0020 -> line 495
- *   +0x0024 -> line 497
- *   +0x0028 -> line 494
- *   +0x002c -> line 497
- *   +0x0034 -> line 495
- *   +0x0038 -> line 497
- *   +0x00c0 -> line 499
- *   +0x00c8 -> line 503
- *   +0x00cc -> line 502
- *   +0x00d0 -> line 503
- *   +0x00d4 -> line 504
- *   +0x00d8 -> line 505
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void M2D_fn_vDisplayEndOfGameRecapPage(void)
-{
-    g_NotRight = 1;
-    g_NotLeft = 1;
-    g_NoBonusShortcut = 1;
-    g_NoGameShortcut = 1;
-    g_CurrentMenu2DPage = g_RecapMenuPage;
-    g_2DMenuID = 4;
-    aMenu2DPages[g_GamePage].abGrayed[2] = 0;
-    fn_vSaveEngineClock();
-    g_CurrentActionMenu2D = eActionBeginOfPage;
-    g_stEngineStructure.bEngineFrozen = 1;
-    g_CurrentIndSubMenu = -1;
-    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount++;
-    g_InGameMenu2DActivated = 1;
-    IPT_fn_vReadInput(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
-    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount++;
-    IPT_fn_vReadInput(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
-    g_CurrentSelection = 0;
-    PS2M2D_vReinitMenuTextures();
-    fn_vInitSoundInGameMenu2D(0);
-    g_CurrentSelectedCharNumber = 0;
-    g_XTextLeft = 39.0f;
-    g_XText = 39.0f;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 466–486 */
-/* addr: 0x0029c140  size: 304 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 466
- *   +0x0004 -> line 474
- *   +0x0008 -> line 466
- *   +0x000c -> line 474
- *   +0x0010 -> line 466
- *   +0x0018 -> line 473
- *   +0x001c -> line 474
- *   +0x0020 -> line 467
- *   +0x0024 -> line 468
- *   +0x0028 -> line 470
- *   +0x002c -> line 471
- *   +0x0030 -> line 473
- *   +0x0034 -> line 474
- *   +0x0038 -> line 472
- *   +0x003c -> line 474
- *   +0x00c0 -> line 476
- *   +0x00c8 -> line 477
- *   +0x00cc -> line 484
- *   +0x00d0 -> line 477
- *   +0x00d4 -> line 480
- *   +0x00d8 -> line 478
- *   +0x00dc -> line 481
- *   +0x00e0 -> line 478
- *   +0x00e4 -> line 479
- *   +0x00e8 -> line 480
- *   +0x00ec -> line 479
- *   +0x00f0 -> line 482
- *   +0x00f4 -> line 484
- *   +0x00f8 -> line 482
- *   +0x00fc -> line 484
- *   +0x0100 -> line 482
- *   +0x0104 -> line 484
- *   +0x0120 -> line 486
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void ActivateInGameMenu2DBonus(int WithExit)
-{
-    g_NotRight = 0;
-    g_NotLeft = 0;
-    g_NoBonusShortcut = 0;
-    g_NoGameShortcut = 0;
-    g_CurrentMenu2DPage = g_BonusPage;
-    g_IsSaveOK = 0;
-    aMenu2DPages[g_GamePage].abGrayed[2] = 0;
-    fn_vSaveEngineClock();
-    g_CurrentActionMenu2D = eActionBeginOfPage;
-    g_stEngineStructure.bEngineFrozen = 1;
-    g_CurrentIndSubMenu = -1;
-    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount++;
-    g_InGameMenu2DActivated = 1;
-    IPT_fn_vReadInput(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
-    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount++;
-    IPT_fn_vReadInput(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
-    g_CurrentSelection = 0;
-    PS2M2D_vReinitMenuTextures();
-    fn_vInitSoundInGameMenu2D(1);
-    g_2DMenuID = 3;
-    g_BonusWithExit = WithExit;
-    g_XTextLeft = 39.0f;
-    g_MaxIndCurrentEnv = 1;
-    g_IndCurrentEnv = -1;
-    g_ExitForbidden = WithExit ? 0 : 1;
-    aMenu2DPages[g_GamePage].abGrayed[2] = 1;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 418–418 */
-/* addr: 0x0029c270  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 418
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vR3SetNbCineOpen(unsigned int ulNum)
-{
-    g_NbCinematicOpen = ulNum;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 411–411 */
-/* addr: 0x0029c280  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 411
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vR3SetNbBonusOpen(unsigned int ulNum)
-{
-    g_NbArcadeOpen = ulNum;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 394–404 */
-/* addr: 0x0029c290  size: 72 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 394
- *   +0x0004 -> line 395
- *   +0x0018 -> line 396
- *   +0x001c -> line 397
- *   +0x0028 -> line 401
- *   +0x003c -> line 402
- *   +0x0040 -> line 404
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vR3SetCurrentEnvNumber(unsigned int ulNum)
-{
-    g_IndCurrentEnv = ulNum;
-    if (g_IndCurrentEnv > g_MaxIndCurrentEnv)
-        g_MaxIndCurrentEnv = g_IndCurrentEnv;
-    if (g_IndCurrentEnv != g_CurrentEnvInit)
-    {
-
-
-
-        g_CurrentEnvScoreAtBeginingOfLevel = g_aEnvValue[g_IndCurrentEnv].ulScore;
-        g_CurrentEnvInit = g_IndCurrentEnv;
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 386–386 */
-/* addr: 0x0029c2e0  size: 96 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 386
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vUpdatePlayerGameName(void)
-{
-    strcpy(g_CurrentSaveName, g_aFileEntryArray[g_CurrentSelection + aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry].Name);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 368–381 */
-/* addr: 0x0029c340  size: 1016 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 368
- *   +0x000c -> line 370
- *   +0x0010 -> line 371
- *   +0x0014 -> line 370
- *   +0x0018 -> line 371
- *   +0x001c -> line 375
- *   +0x0150 -> line 376
- *   +0x02b0 -> line 380
- *   +0x02b4 -> line 378
- *   +0x02bc -> line 380
- *   +0x02c0 -> line 376
- *   +0x02c4 -> line 378
- *   +0x02c8 -> line 380
- *   +0x03f0 -> line 381
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vR3ReInitScore(void)
-{
-    if (g_RevisitMode != 0)
-    {
-        g_RevisitCurrentEnvScore = g_RevisitEnvScoreAtBeginingOfLevel;
-        g_RevisitCurrentGlobalScore = g_RevisitGlobalScoreAtBeginingOfLevel;
-    }
-
-    fn_vR3InlineRecomputeGlobalScore();
-    fn_vR3InlineSetEnvScore(g_IndCurrentEnv, g_CurrentEnvScoreAtBeginingOfLevel);
-    g_IndCurrentEnv = g_CurrentEnvInit;
-    fn_vR3InlineRecomputeGlobalScore();
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 335–361 */
-/* addr: 0x0029c740  size: 2372 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 335
- *   +0x0138 -> line 337
- *   +0x0144 -> line 339
- *   +0x0148 -> line 342
- *   +0x014c -> line 340
- *   +0x0150 -> line 342
- *   +0x0160 -> line 339
- *   +0x0164 -> line 340
- *   +0x0168 -> line 342
- *   +0x02c8 -> line 344
- *   +0x041c -> line 347
- *   +0x0560 -> line 349
- *   +0x069c -> line 356
- *   +0x07d0 -> line 357
- *   +0x07e0 -> line 356
- *   +0x07e8 -> line 357
- *   +0x093c -> line 361
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vR3StoreInitScore(void)
-{
-    fn_vR3InlineRecomputeGlobalScore();
-    if (g_RevisitMode != 0)
-    {
-        g_RevisitEnvScoreAtBeginingOfLevel = g_RevisitCurrentEnvScore;
-        g_RevisitGlobalScoreAtBeginingOfLevel = g_RevisitCurrentGlobalScore;
-        if (g_RevisitEnvScoreAtBeginingOfLevel > fn_ulR3InlineGetEnvScore(g_IndCurrentEnv))
-            fn_vR3InlineSetEnvScore(g_IndCurrentEnv, g_RevisitEnvScoreAtBeginingOfLevel);
-        if (fn_ulR3InlineGetEnvScore(0) < g_RevisitGlobalScoreAtBeginingOfLevel)
-            fn_vR3InlineSetEnvScore(0, g_RevisitGlobalScoreAtBeginingOfLevel);
-    }
-    g_GlobalScoreAtBeginingOfLevel = fn_ulR3InlineGetEnvScore(0);
-    g_CurrentEnvScoreAtBeginingOfLevel = fn_ulR3InlineGetEnvScore(g_IndCurrentEnv);
-    g_CurrentEnvInit = g_IndCurrentEnv;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 327–328 */
-/* addr: 0x0029d090  size: 24 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 327
- *   +0x0010 -> line 328
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned int fn_ulR3GetEnvNbCage(unsigned int ulIndE)
-{
-    return g_aEnvValue[ulIndE].ulNbCage;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 310–323 */
-/* addr: 0x0029d0b0  size: 712 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 310
- *   +0x0138 -> line 312
- *   +0x0144 -> line 316
- *   +0x0164 -> line 322
- *   +0x02c0 -> line 323
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned int fn_ulR3GetEnvScoreWithRevisit(unsigned int ulIndE)
-{
-    int i;
-    int offset;
-    anon_2 *p;
-
-    g_aEnvValue[0].ulScore = 0;
-
-    i = 1;
-    offset = 8;
-    do
-    {
-        p = (anon_2 *)((char *)g_aEnvValue + offset);
-        g_aEnvValue[0].ulScore += p[0].ulScore;
-        g_aEnvValue[0].ulScore += p[1].ulScore;
-        g_aEnvValue[0].ulScore += p[2].ulScore;
-        g_aEnvValue[0].ulScore += p[3].ulScore;
-        g_aEnvValue[0].ulScore += p[4].ulScore;
-        g_aEnvValue[0].ulScore += p[5].ulScore;
-        g_aEnvValue[0].ulScore += p[6].ulScore;
-        g_aEnvValue[0].ulScore += p[7].ulScore;
-        i += 8;
-        offset += 64;
-    } while (i < 2);
-
-    offset = i * 8;
-    if (i < 10)
-    {
-        do
-        {
-            p = (anon_2 *)((char *)g_aEnvValue + offset);
-            g_aEnvValue[0].ulScore += p->ulScore;
-            i++;
-            offset += 8;
-        } while (i < 10);
-    }
-
-    g_RevisitCurrentGlobalScore = g_aEnvValue[0].ulScore;
-
-    if (g_RevisitMode != 0)
-    {
-        if (ulIndE == 0)
-        {
-            return g_RevisitCurrentGlobalScore;
-        }
-
-        return g_RevisitCurrentEnvScore;
-    }
-    else
-    {
-        g_aEnvValue[0].ulScore = 0;
-
-        i = 1;
-        offset = 8;
-        do
-        {
-            p = (anon_2 *)((char *)g_aEnvValue + offset);
-            g_aEnvValue[0].ulScore += p[0].ulScore;
-            g_aEnvValue[0].ulScore += p[1].ulScore;
-            g_aEnvValue[0].ulScore += p[2].ulScore;
-            g_aEnvValue[0].ulScore += p[3].ulScore;
-            g_aEnvValue[0].ulScore += p[4].ulScore;
-            g_aEnvValue[0].ulScore += p[5].ulScore;
-            g_aEnvValue[0].ulScore += p[6].ulScore;
-            g_aEnvValue[0].ulScore += p[7].ulScore;
-            i += 8;
-            offset += 64;
-        } while (i < 2);
-
-        offset = i * 8;
-        if (i < 10)
-        {
-            do
-            {
-                p = (anon_2 *)((char *)g_aEnvValue + offset);
-                g_aEnvValue[0].ulScore += p->ulScore;
-                i++;
-                offset += 8;
-            } while (i < 10);
-        }
-
-        g_RevisitCurrentGlobalScore = g_aEnvValue[0].ulScore;
-
-        if (ulIndE < 10)
-        {
-            return g_aEnvValue[ulIndE].ulScore;
-        }
-
-        return 0;
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 300–306 */
-/* addr: 0x0029d380  size: 360 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 300
- *   +0x0138 -> line 303
- *   +0x0160 -> line 306
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned int fn_ulR3GetEnvScore(unsigned int ulIndE)
-{
-    int i;
-    int offset;
-    anon_2 *p;
-
-    g_aEnvValue[0].ulScore = 0;
-
-    i = 1;
-    offset = 8;
-    do
-    {
-        p = (anon_2 *)((char *)g_aEnvValue + offset);
-        g_aEnvValue[0].ulScore += p[0].ulScore;
-        g_aEnvValue[0].ulScore += p[1].ulScore;
-        g_aEnvValue[0].ulScore += p[2].ulScore;
-        g_aEnvValue[0].ulScore += p[3].ulScore;
-        g_aEnvValue[0].ulScore += p[4].ulScore;
-        g_aEnvValue[0].ulScore += p[5].ulScore;
-        g_aEnvValue[0].ulScore += p[6].ulScore;
-        g_aEnvValue[0].ulScore += p[7].ulScore;
-        i += 8;
-        offset += 64;
-    } while (i < 2);
-
-    offset = i * 8;
-    if (i < 10)
-    {
-        do
-        {
-            p = (anon_2 *)((char *)g_aEnvValue + offset);
-            g_aEnvValue[0].ulScore += p->ulScore;
-            i++;
-            offset += 8;
-        } while (i < 10);
-    }
-
-    g_RevisitCurrentGlobalScore = g_aEnvValue[0].ulScore;
-
-    if (ulIndE < 10)
-    {
-        return g_aEnvValue[ulIndE].ulScore;
-    }
-
-    return 0;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 294–296 */
-/* addr: 0x0029d4f0  size: 36 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 294
- *   +0x000c -> line 295
- *   +0x001c -> line 296
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vR3SetEnvNbCage(unsigned int ulIndE, unsigned int ulNbCage)
-{
-    if (ulIndE < 10)
-        g_aEnvValue[ulIndE].ulNbCage = ulNbCage;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 268–289 */
-/* addr: 0x0029d520  size: 736 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 268
- *   +0x000c -> line 270
- *   +0x0018 -> line 272
- *   +0x0020 -> line 274
- *   +0x0028 -> line 277
- *   +0x002c -> line 279
- *   +0x004c -> line 283
- *   +0x0054 -> line 285
- *   +0x01a4 -> line 288
- *   +0x02d8 -> line 289
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vR3SetEnvScoreWithRevisit(unsigned int ulIndE, unsigned int ulScore)
-{
-    int i;
-    int offset;
-    anon_2 *p;
-
-    if (ulIndE < 10)
-    {
-        if (g_RevisitMode != 0)
-        {
-            if (ulIndE == 0)
-            {
-                g_RevisitCurrentGlobalScore = ulScore;
-            }
-            else
-            {
-                g_RevisitCurrentEnvScore = ulScore;
-            }
-
-            if (g_aEnvValue[ulIndE].ulScore < ulScore)
-            {
-                g_aEnvValue[ulIndE].ulScore = ulScore;
-            }
-        }
-        else
-        {
-            if (ulIndE < 10)
-            {
-                g_aEnvValue[ulIndE].ulScore = ulScore;
-            }
-
-            g_aEnvValue[0].ulScore = 0;
-
-            i = 1;
-            offset = 8;
-            do
-            {
-                p = (anon_2 *)((char *)g_aEnvValue + offset);
-                g_aEnvValue[0].ulScore += p[0].ulScore;
-                g_aEnvValue[0].ulScore += p[1].ulScore;
-                g_aEnvValue[0].ulScore += p[2].ulScore;
-                g_aEnvValue[0].ulScore += p[3].ulScore;
-                g_aEnvValue[0].ulScore += p[4].ulScore;
-                g_aEnvValue[0].ulScore += p[5].ulScore;
-                g_aEnvValue[0].ulScore += p[6].ulScore;
-                g_aEnvValue[0].ulScore += p[7].ulScore;
-                i += 8;
-                offset += 64;
-            } while (i < 2);
-
-            offset = i * 8;
-            if (i < 10)
-            {
-                do
-                {
-                    p = (anon_2 *)((char *)g_aEnvValue + offset);
-                    g_aEnvValue[0].ulScore += p->ulScore;
-                    i++;
-                    offset += 8;
-                } while (i < 10);
-            }
-
-            g_RevisitCurrentGlobalScore = g_aEnvValue[0].ulScore;
-        }
-    }
-
-    g_aEnvValue[0].ulScore = 0;
-
-    i = 1;
-    offset = 8;
-    do
-    {
-        p = (anon_2 *)((char *)g_aEnvValue + offset);
-        g_aEnvValue[0].ulScore += p[0].ulScore;
-        g_aEnvValue[0].ulScore += p[1].ulScore;
-        g_aEnvValue[0].ulScore += p[2].ulScore;
-        g_aEnvValue[0].ulScore += p[3].ulScore;
-        g_aEnvValue[0].ulScore += p[4].ulScore;
-        g_aEnvValue[0].ulScore += p[5].ulScore;
-        g_aEnvValue[0].ulScore += p[6].ulScore;
-        g_aEnvValue[0].ulScore += p[7].ulScore;
-        i += 8;
-        offset += 64;
-    } while (i < 2);
-
-    offset = i * 8;
-    if (i < 10)
-    {
-        do
-        {
-            p = (anon_2 *)((char *)g_aEnvValue + offset);
-            g_aEnvValue[0].ulScore += p->ulScore;
-            i++;
-            offset += 8;
-        } while (i < 10);
-    }
-
-    g_RevisitCurrentGlobalScore = g_aEnvValue[0].ulScore;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 251–255 */
-/* addr: 0x0029d800  size: 320 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 251
- *   +0x0004 -> line 252
- *   +0x0008 -> line 251
- *   +0x0010 -> line 253
- *   +0x0130 -> line 254
- *   +0x0138 -> line 255
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vR3RecomputeGlobalScore(void)
-{
-    int i;
-    int offset;
-    anon_2 *p;
-
-    g_aEnvValue[0].ulScore = 0;
-
-    i = 1;
-    offset = 8;
-    do
-    {
-        p = (anon_2 *)((char *)g_aEnvValue + offset);
-        g_aEnvValue[0].ulScore += p[0].ulScore;
-        g_aEnvValue[0].ulScore += p[1].ulScore;
-        g_aEnvValue[0].ulScore += p[2].ulScore;
-        g_aEnvValue[0].ulScore += p[3].ulScore;
-        g_aEnvValue[0].ulScore += p[4].ulScore;
-        g_aEnvValue[0].ulScore += p[5].ulScore;
-        g_aEnvValue[0].ulScore += p[6].ulScore;
-        g_aEnvValue[0].ulScore += p[7].ulScore;
-        i += 8;
-        offset += 64;
-    } while (i < 2);
-
-    offset = i * 8;
-    if (i < 10)
-    {
-        do
-        {
-            p = (anon_2 *)((char *)g_aEnvValue + offset);
-            g_aEnvValue[0].ulScore += p->ulScore;
-            i++;
-            offset += 8;
-        } while (i < 10);
-    }
-
-    g_RevisitCurrentGlobalScore = g_aEnvValue[0].ulScore;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 221–227 */
-/* addr: 0x0029d940  size: 36 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 221
- *   +0x001c -> line 227
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned int M2D_fn_ulGetRevisitEnvironmentNumber(void)
-{
-    if (g_RevisitMode != 0) {
-    } else {
-        return 0;
-    }
-    return g_RevisitIndCurrentEnv;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 214–215 */
-/* addr: 0x0029d970  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 214
- *   +0x0004 -> line 215
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void M2D_fn_vForbidExitFromMenu(void)
-{
-    g_ExitForbidden = 1;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 203–203 */
-/* addr: 0x0029d980  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 203
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vR3SetEndOfGame(unsigned int ulValue)
-{
-    g_EndOfGameIsDone = ulValue;
 }

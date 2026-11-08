@@ -6,18 +6,25 @@
 
 int dpcmp(double left, double right);
 
-int _dpfgt(double left, double right)
-{
-    return dpcmp(left, right) > 0;
-}
-
-int _dpflt(double left, double right)
-{
-    return dpcmp(left, right) < 0;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+int _dpfgt(double left, double right);
+int _dpflt(double left, double right);
+double _d_utod(unsigned int ui);
+float _f_ulltof(unsigned long long ul);
 
 double __floatdidf(long long l);
 float __floatdisf(long long l);
+
+float _f_ulltof(unsigned long long ul)
+{
+    float f;
+
+    if ((long long)ul > 0)
+        return __floatdisf(ul);
+    f = __floatdisf((ul >> 1) | (ul & 1));
+    return f + f;
+}
 
 double _d_utod(unsigned int ui)
 {
@@ -30,12 +37,12 @@ double _d_utod(unsigned int ui)
     return d + d;
 }
 
-float _f_ulltof(unsigned long long ul)
+int _dpflt(double left, double right)
 {
-    float f;
+    return dpcmp(left, right) < 0;
+}
 
-    if ((long long)ul > 0)
-        return __floatdisf(ul);
-    f = __floatdisf((ul >> 1) | (ul & 1));
-    return f + f;
+int _dpfgt(double left, double right)
+{
+    return dpcmp(left, right) > 0;
 }

@@ -1851,54 +1851,20 @@ struct tdst3dData_ {
 
 tdstEngineStructure_ g_stEngineStructure;
 
-void fn_vInitDistanceWaypoint(void)
-{
-    g_DistanceWaypointMin = 0.0f;
-    g_DistanceWaypointMax = 0.0f;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void fn_vInitDistanceWaypoint(void);
+unsigned char fn_ucFrozenWait(HIE_tdstSuperObject_* p_SuperObjPerso);
+tdstNodeInterpret_* fn_p_stFrozenWaitInit(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+int fn_ucWaitEndOfAnim(HIE_tdstSuperObject_* p_SuperObjPerso);
+int fn_ucWaitEndOfAction(HIE_tdstSuperObject_* p_SuperObjPerso);
+int fn_ucExecuteAction(HIE_tdstSuperObject_* p_SuperObjPerso);
+tdstNodeInterpret_* fn_p_stExecuteActionInit(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
 
 int fn_lGetActionParamlValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso);
 
-unsigned char fn_ucFrozenWait(HIE_tdstSuperObject_* p_SuperObjPerso)
-{
-    int lReturn;
-
-
-
-    if (g_stEngineStructure.stEngineTimer.ulCurrentTimerCount < (unsigned int)fn_lGetActionParamlValue(0, p_SuperObjPerso))
-        lReturn = 1;
-    else
-        lReturn = 4;
-
-
-
-
-
-
-
-
-    return lReturn;
-}
-
 tdstNodeInterpret_* fn_p_stDefaultActionInit(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
 void fn_vSetActionParamlValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso, int lValue);
-
-tdstNodeInterpret_* fn_p_stFrozenWaitInit(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    p_stTree = fn_p_stDefaultActionInit(p_SuperObjPerso, p_stTree);
-    fn_vSetActionParamlValue(0, p_SuperObjPerso, g_stEngineStructure.stEngineTimer.ulCurrentTimerCount + fn_lGetActionParamlValue(0, p_SuperObjPerso));
-    return p_stTree;
-}
-
-int fn_ucWaitEndOfAnim(HIE_tdstSuperObject_* p_SuperObjPerso)
-{
-    return PLA_fn_bTestIfEndOfAnim(p_SuperObjPerso) ? 4 : 1;
-}
-
-int fn_ucWaitEndOfAction(HIE_tdstSuperObject_* p_SuperObjPerso)
-{
-    return PLA_fn_bTestIfEndOfAction(p_SuperObjPerso) ? 4 : 1;
-}
 
 tdstState_* fn_xGetActionParamStateValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso);
 int PLA_fn_bSetNewState(HIE_tdstSuperObject_* p_stSuperObject, tdstState_* h_WantedState, unsigned char _bForce, unsigned char _bHandleSkippedEventsIfRelevant, unsigned char _bIgnoreTransitions, unsigned int ulNbFrameForIntermAnim, float xNLParameter, unsigned char bProportionnal);
@@ -1906,18 +1872,6 @@ void fn_vSetActionParamlValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperOb
 void fn_vSetActionParamStateValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso, tdstState_* hState);
 int PLA_fn_bTestCurrentAction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstState_* h_FirstStateOfAction);
 int PLA_fn_bTestIfEndOfAction(HIE_tdstSuperObject_* p_SuperObjPerso);
-
-int fn_ucExecuteAction(HIE_tdstSuperObject_* p_SuperObjPerso)
-{
-    tdstState_* h_WantedState;
-
-    h_WantedState = fn_xGetActionParamStateValue(1, p_SuperObjPerso);
-    if (fn_lGetActionParamlValue(0, p_SuperObjPerso) == 0)
-        return 4;
-    if (PLA_fn_bTestCurrentAction(p_SuperObjPerso, h_WantedState) == 0)
-        return 4;
-    return PLA_fn_bTestIfEndOfAction(p_SuperObjPerso) ? 4 : 1;
-}
 
 tdstNodeInterpret_* fn_p_stExecuteActionInit(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
@@ -1941,4 +1895,51 @@ tdstNodeInterpret_* fn_p_stExecuteActionInit(HIE_tdstSuperObject_* p_SuperObjPer
     }
     fn_vSetActionParamStateValue(1, p_SuperObjPerso, h_WantedState);
     return p_stTree;
+}
+
+int fn_ucExecuteAction(HIE_tdstSuperObject_* p_SuperObjPerso)
+{
+    tdstState_* h_WantedState;
+
+    h_WantedState = fn_xGetActionParamStateValue(1, p_SuperObjPerso);
+    if (fn_lGetActionParamlValue(0, p_SuperObjPerso) == 0)
+        return 4;
+    if (PLA_fn_bTestCurrentAction(p_SuperObjPerso, h_WantedState) == 0)
+        return 4;
+    return PLA_fn_bTestIfEndOfAction(p_SuperObjPerso) ? 4 : 1;
+}
+
+int fn_ucWaitEndOfAction(HIE_tdstSuperObject_* p_SuperObjPerso)
+{
+    return PLA_fn_bTestIfEndOfAction(p_SuperObjPerso) ? 4 : 1;
+}
+
+int fn_ucWaitEndOfAnim(HIE_tdstSuperObject_* p_SuperObjPerso)
+{
+    return PLA_fn_bTestIfEndOfAnim(p_SuperObjPerso) ? 4 : 1;
+}
+
+tdstNodeInterpret_* fn_p_stFrozenWaitInit(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    p_stTree = fn_p_stDefaultActionInit(p_SuperObjPerso, p_stTree);
+    fn_vSetActionParamlValue(0, p_SuperObjPerso, g_stEngineStructure.stEngineTimer.ulCurrentTimerCount + fn_lGetActionParamlValue(0, p_SuperObjPerso));
+    return p_stTree;
+}
+
+unsigned char fn_ucFrozenWait(HIE_tdstSuperObject_* p_SuperObjPerso)
+{
+    int lReturn;
+
+    if (g_stEngineStructure.stEngineTimer.ulCurrentTimerCount < (unsigned int)fn_lGetActionParamlValue(0, p_SuperObjPerso))
+        lReturn = 1;
+    else
+        lReturn = 4;
+
+    return lReturn;
+}
+
+void fn_vInitDistanceWaypoint(void)
+{
+    g_DistanceWaypointMin = 0.0f;
+    g_DistanceWaypointMax = 0.0f;
 }

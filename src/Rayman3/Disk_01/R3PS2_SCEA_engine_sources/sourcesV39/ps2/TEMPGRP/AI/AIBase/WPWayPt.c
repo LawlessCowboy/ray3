@@ -54,10 +54,19 @@ struct tdstNodeInterpret_ {
 float g_DistanceWaypointMin;
 float g_DistanceWaypointMax;
 
-void WPG_fn_vSetAllocMode(void)
-{
-    GAM_fn_vPushAllocMode(2);
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void WPG_fn_vSetAllocMode(void);
+void WP_fnv_WayPoint_ComputeLocation(WP_tdstWayPoint_* _hWayPoint, MTH3D_tdstVector_* _p_stVertex);
+unsigned char WP_fnb_WayPoint_IsDynamic(WP_tdstWayPoint_* _hWayPoint);
+void WP_fnv_WayPoint_SetRadius(WP_tdstWayPoint_* _hWayPoint, float _xNewRadius);
+float WP_fnx_WayPoint_GetRadius(WP_tdstWayPoint_* _hWayPoint);
+void WP_fnv_WayPoint_SetVertex(WP_tdstWayPoint_* _hWayPoint, MTH3D_tdstVector_* _pstNewVector);
+void WP_fnv_WayPoint_GetVertex(WP_tdstWayPoint_* _hWayPoint, MTH3D_tdstVector_* _pstVector);
+float fn_xGetDistanceWaypointMax(void);
+float fn_xGetDistanceWaypointMin(void);
+void fn_vSetDistanceWaypointMax(float xDistWP);
+void fn_vSetDistanceWaypointMin(float xDistWP);
 
 /* MatSp.h inline: the VU0 macro-mode instructions have no C form. */
 inline void MAT_fn_vApplyOnVertex(MTH3D_tdstVector_* VectDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* VectA)
@@ -85,6 +94,55 @@ inline void MAT_fn_vApplyOnVertex(MTH3D_tdstVector_* VectDest, MAT_tdstTransform
     *(unsigned int*)&VectDest->xX = *(unsigned int*)&Vtmp.xX; *(unsigned int*)&VectDest->xY = *(unsigned int*)&Vtmp.xY; *(unsigned int*)&VectDest->xZ = *(unsigned int*)&Vtmp.xZ;
 }
 
+void fn_vSetDistanceWaypointMin(float xDistWP)
+{
+    g_DistanceWaypointMin = xDistWP;
+}
+
+void fn_vSetDistanceWaypointMax(float xDistWP)
+{
+    g_DistanceWaypointMax = xDistWP;
+}
+
+float fn_xGetDistanceWaypointMin(void)
+{
+    return g_DistanceWaypointMin;
+}
+
+float fn_xGetDistanceWaypointMax(void)
+{
+    return g_DistanceWaypointMax;
+}
+
+void WP_fnv_WayPoint_GetVertex(WP_tdstWayPoint_* _hWayPoint, MTH3D_tdstVector_* _pstVector)
+{
+    MTH3D_tdstVector_ stVertex = _hWayPoint->m_stVertex;
+
+    *_pstVector = stVertex;
+}
+
+void WP_fnv_WayPoint_SetVertex(WP_tdstWayPoint_* _hWayPoint, MTH3D_tdstVector_* _pstNewVector)
+{
+    MTH3D_tdstVector_ stNewVector = *_pstNewVector;
+
+    _hWayPoint->m_stVertex = stNewVector;
+}
+
+float WP_fnx_WayPoint_GetRadius(WP_tdstWayPoint_* _hWayPoint)
+{
+    return _hWayPoint->m_xRadius;
+}
+
+void WP_fnv_WayPoint_SetRadius(WP_tdstWayPoint_* _hWayPoint, float _xNewRadius)
+{
+    _hWayPoint->m_xRadius = _xNewRadius;
+}
+
+unsigned char WP_fnb_WayPoint_IsDynamic(WP_tdstWayPoint_* _hWayPoint)
+{
+    return _hWayPoint->m_hSuperObject != 0;
+}
+
 void WP_fnv_WayPoint_ComputeLocation(WP_tdstWayPoint_* _hWayPoint, MTH3D_tdstVector_* _p_stVertex)
 {
     MTH3D_tdstVector_ stWPVertex;
@@ -98,51 +156,7 @@ void WP_fnv_WayPoint_ComputeLocation(WP_tdstWayPoint_* _hWayPoint, MTH3D_tdstVec
         *_p_stVertex = _hWayPoint->m_stVertex;
 }
 
-unsigned char WP_fnb_WayPoint_IsDynamic(WP_tdstWayPoint_* _hWayPoint)
+void WPG_fn_vSetAllocMode(void)
 {
-    return _hWayPoint->m_hSuperObject != 0;
-}
-
-void WP_fnv_WayPoint_SetRadius(WP_tdstWayPoint_* _hWayPoint, float _xNewRadius)
-{
-    _hWayPoint->m_xRadius = _xNewRadius;
-}
-
-float WP_fnx_WayPoint_GetRadius(WP_tdstWayPoint_* _hWayPoint)
-{
-    return _hWayPoint->m_xRadius;
-}
-
-void WP_fnv_WayPoint_SetVertex(WP_tdstWayPoint_* _hWayPoint, MTH3D_tdstVector_* _pstNewVector)
-{
-    MTH3D_tdstVector_ stNewVector = *_pstNewVector;
-
-    _hWayPoint->m_stVertex = stNewVector;
-}
-
-void WP_fnv_WayPoint_GetVertex(WP_tdstWayPoint_* _hWayPoint, MTH3D_tdstVector_* _pstVector)
-{
-    MTH3D_tdstVector_ stVertex = _hWayPoint->m_stVertex;
-
-    *_pstVector = stVertex;
-}
-
-float fn_xGetDistanceWaypointMax(void)
-{
-    return g_DistanceWaypointMax;
-}
-
-float fn_xGetDistanceWaypointMin(void)
-{
-    return g_DistanceWaypointMin;
-}
-
-void fn_vSetDistanceWaypointMax(float xDistWP)
-{
-    g_DistanceWaypointMax = xDistWP;
-}
-
-void fn_vSetDistanceWaypointMin(float xDistWP)
-{
-    g_DistanceWaypointMin = xDistWP;
+    GAM_fn_vPushAllocMode(2);
 }

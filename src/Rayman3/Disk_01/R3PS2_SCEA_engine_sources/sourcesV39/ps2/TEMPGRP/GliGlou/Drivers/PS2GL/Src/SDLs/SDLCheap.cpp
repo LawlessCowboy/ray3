@@ -2384,48 +2384,16 @@ extern "C" float FRR(float fMin, float fMax);
 /* Not original source, needs cleaning up: the extractor spells this C++ function by its mangled name. */
 extern "C" void CHEAP_DrawAuras__FP17GLI_tdstMaterial_PA4_fUiPff(GLI_tdstMaterial_* pMat, float (*pParticleList)[4], unsigned int NbSprites, float* pSizes, float SizeRange);
 
-void CHEAP_DisplayAllAuras(void)
-{
-    _tdstCheapCharacter* param0;
-    unsigned int StartNum;
-    unsigned int i;
-    unsigned int k;
-    unsigned int Num;
-    _tdstCheapCharacterList* pl;
-    float (*pV)[4];
-
-    pV = CHEAP_AuraVertexArrays;
-    if (SCT_g_DrawingMirrored)
-        return;
-    Num = 0;
-    for (i = 0; i < g_lNbListOfCheapCharacterList; i++)
-    {
-        pl = &g_aListOfCheapCharacterList[i];
-        if (pl->hAuraVisualMaterial && pl->bAurasNeedToBeDrawn)
-        {
-            pl->bAurasNeedToBeDrawn = 0;
-            StartNum = Num;
-            for (k = 0; k < pl->NumberOfCheapCharacter; k++)
-            {
-                param0 = &pl->List[k];
-                if (param0->cActivity && Num < 250)
-                {
-                    pV[0][0] = param0->stPosition.xX;
-                    pV[0][1] = param0->stPosition.xY;
-                    pV[0][2] = param0->stPosition.xZ;
-                    pV[1][0] = 0.5f;
-                    pV[1][1] = 0.5f;
-                    pV[1][2] = 0.5f;
-                    pV[1][3] = pl->fAuraTransparencyMidLevel + FRR(-pl->fAuraTransparencyBlinkRange, pl->fAuraTransparencyBlinkRange);
-                    pV += 2;
-                    Num++;
-                }
-            }
-            if (Num - StartNum >= 4)
-                CHEAP_DrawAuras__FP17GLI_tdstMaterial_PA4_fUiPff(pl->hAuraVisualMaterial, &CHEAP_AuraVertexArrays[StartNum * 2], Num - StartNum, pl->p_fAuraSizes, pl->fAuraSizeBlinkRange);
-        }
-    }
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+extern "C" void CHEAP_DisplayAllAuras(void);
+extern "C" void HIE_fn_SendListOfFakeInstanceToViewport(_tdstCheapCharacterList* CharacterList);
+extern "C" void HIE_fn_CleanAllListOfFakeInstanceToViewport(void);
+extern "C" void CHEAP_UpdateAllRefs(void);
+extern "C" void CHEAP_DisplayAllSDLs(int bTransparent);
+void CHEAP_SendModulesToViewportRT(HIE_tdstSuperObject_* _hSprObj, MTH4D_tdstMatrix_** ppCurrentMatrix);
+void CHEAP_SendModulesToViewport(HIE_tdstSuperObject_* _hSprObj, MTH4D_tdstMatrix_** ppCurrentMatrix, char* p_cActivity);
+void HIE_fn_vFastPS2ForcedRefreshHierarchy(HIE_tdstSuperObject_* _hSprObj);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCheap.cpp lines 1188–1285 */
 /* addr: 0x002d8cf0  size: 832 bytes */
@@ -2774,24 +2742,6 @@ void CHEAP_DrawAuras__FP17GLI_tdstMaterial_PA4_fUiPff(GLI_tdstMaterial_* pMat, f
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void HIE_fn_SendListOfFakeInstanceToViewport(_tdstCheapCharacterList* CharacterList)
-{
-    MTH3D_tdstVector_ stVecK;
-    MTH3D_tdstVector_ stVecJ;
-    MTH3D_tdstVector_ stVecI;
-    void* pTempData;
-    MTH4D_tdstMatrix_* pSourceMatrix;
-    MTH4D_tdstMatrix_* param0;
-    MTH4D_tdstMatrix_* pStartMatrix;
-    MTH4D_tdstMatrix_* pCurrentMatrix;
-    unsigned int NbMatrices;
-    float MyVect[4];
-    HIE_tdstSuperObject_* g_hFakeInstance;
-    HIE_tdstSuperObject_* hChild;
-    unsigned int j;
-    unsigned int i;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCheap.cpp lines 707–748 */
 /* addr: 0x002d9a10  size: 208 bytes */
@@ -2873,29 +2823,6 @@ void CHEAP_SearchMaterial__FP20HIE_tdstSuperObject_PP17MTH4D_tdstMatrix_Pc(HIE_t
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void HIE_fn_CleanAllListOfFakeInstanceToViewport(void)
-{
-    unsigned int i;
-    _tdstCheapCharacterList* pCheapList;
-    C_Sdl* pSdl;
-
-    pCheapList = g_aListOfCheapCharacterList;
-    for (i = 0; i < g_lNbListOfCheapCharacterList; i++)
-    {
-        if (pCheapList[i].SDL)
-        {
-            pSdl = (C_Sdl*)pCheapList[i].SDL;
-            delete pSdl;
-            pCheapList[i].SDL = 0;
-            if (pCheapList[i].pMatrixList)
-            {
-                PS2glLiberator(pCheapList[i].pMatrixList);
-                pCheapList[i].pMatrixList = NULL;
-                pCheapList[i].NbMatrices = 0;
-            }
-        }
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCheap.cpp lines 645–678 */
 /* addr: 0x002d9bb0  size: 324 bytes */
@@ -2990,18 +2917,6 @@ void CHEAP_UpdateDeformation__FP20HIE_tdstSuperObject_(HIE_tdstSuperObject_* _hS
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CHEAP_UpdateAllRefs(void)
-{
-    unsigned int i;
-
-    for (i = 0; i < GLI_g_CurrentNbCheapSDLs; i++)
-    {
-        if (GLI_g_CheapSDLs[i])
-            GLI_g_CheapSDLs[i]->ProcessAllRefs();
-    }
-
-    GLI_g_CurrentNbCheapSDLsForViewport = 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCheap.cpp lines 591–627 */
 /* addr: 0x002d9d70  size: 136 bytes */
@@ -3019,20 +2934,6 @@ void CHEAP_UpdateAllRefs(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CHEAP_DisplayAllSDLs(int bTransparent)
-{
-    unsigned int i;
-
-    GLI_vSetOptimizedSDC(1);
-    for (i = GLI_g_CurrentNbCheapSDLsForViewport; i < GLI_g_CurrentNbCheapSDLs; i++)
-    {
-        if (bTransparent == GLI_g_CheapSDLs[i]->m_bIsTransparent)
-        {
-            GLI_g_CheapSDLs[i]->Draw(0);
-        }
-    }
-    GLI_vSetOptimizedSDC(0);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCheap.cpp lines 551–578 */
 /* addr: 0x002d9e00  size: 428 bytes */
@@ -3058,32 +2959,6 @@ extern "C" void CHEAP_StoreMatrix__FPP17MTH4D_tdstMatrix_(MTH4D_tdstMatrix_** pC
 extern "C" void HIE_fn_vFastPS2ForcedPushMatrixRT__FP20HIE_tdstSuperObject_(HIE_tdstSuperObject_* _hSprObj);
 
 #pragma auto_inline on
-void CHEAP_SendModulesToViewportRT(HIE_tdstSuperObject_* _hSprObj, MTH4D_tdstMatrix_** ppCurrentMatrix)
-{
-    GEO_tdstVisualSet_* p_stVisualSet;
-    GEO_tdstGeometricObject_* p_stObj;
-    HIE_tdstSuperObject_* hChild;
-
-    HIE_fn_vFastPS2ForcedPushMatrixRT__FP20HIE_tdstSuperObject_(_hSprObj);
-    if (_hSprObj->ulTypeOfLinkedObject == 8)
-    {
-        p_stObj = PO_fn_hGetVisualSet(_hSprObj->hLinkedObject.p_stPhysicalObject)->d_p_stLodDefinitions[0].p_stGeometricObject;
-        if (p_stObj)
-        {
-            if (p_stObj->pSDC_Data)
-            {
-                if ((((SDC_VertexArrays_*)p_stObj->pSDC_Data)->OptType & 0xf) == 6)
-                    CHEAP_StoreMatrix__FPP17MTH4D_tdstMatrix_(ppCurrentMatrix);
-            }
-        }
-    }
-    for (hChild = _hSprObj->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn)
-    {
-        if (hChild->ulTypeOfLinkedObject != 2)
-            CHEAP_SendModulesToViewportRT(hChild, ppCurrentMatrix);
-    }
-    PS2_MatStackIndex--;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCheap.cpp lines 460–547 */
 /* addr: 0x002d9fb0  size: 596 bytes */
@@ -3131,72 +3006,6 @@ void CHEAP_SendModulesToViewportRT(HIE_tdstSuperObject_* _hSprObj, MTH4D_tdstMat
 extern "C" int printf(const char*, ...);
 extern "C" void HIE_fn_vFastPS2ForcedPushMatrix__FP20HIE_tdstSuperObject_(HIE_tdstSuperObject_* _hSprObj);
 extern "C" void CHEAP_DrawActorInstance__FP24GEO_tdstGeometricObject_PP17MTH4D_tdstMatrix_Pc(GEO_tdstGeometricObject_* p_stObj, MTH4D_tdstMatrix_** ppCurrentMatrix, char* p_cActivity);
-
-void CHEAP_SendModulesToViewport(HIE_tdstSuperObject_* _hSprObj, MTH4D_tdstMatrix_** ppCurrentMatrix, char* p_cActivity)
-{
-    SDC_VertexArrays_* pSDC;
-    GEO_tdstVisualSet_* p_stVisualSet;
-    GEO_tdstGeometricObject_* p_stObj;
-    HIE_tdstSuperObject_* hChild;
-
-    if (CHEAP_IS_NOT_VALID)
-        return;
-
-    HIE_fn_vFastPS2ForcedPushMatrix__FP20HIE_tdstSuperObject_(_hSprObj);
-    Global_CharacterModuleBeingDisplayed = (int)_hSprObj;
-    if (_hSprObj->ulTypeOfLinkedObject == 8)
-    {
-        p_stVisualSet = PO_fn_hGetVisualSet(_hSprObj->hLinkedObject.p_stPhysicalObject);
-        p_stObj = p_stVisualSet->d_p_stLodDefinitions[0].p_stGeometricObject;
-        GLI_BIG_GLOBALS_p_stObj = (int)p_stObj;
-        if (p_stObj)
-        {
-            pSDC = (SDC_VertexArrays_*)p_stObj->pSDC_Data;
-            if (pSDC)
-            {
-                if ((pSDC->OptType & 0xf) == 6)
-                {
-                    CHEAP_DrawActorInstance__FP24GEO_tdstGeometricObject_PP17MTH4D_tdstMatrix_Pc(p_stObj, ppCurrentMatrix, p_cActivity);
-                }
-            }
-            else
-            {
-                CHEAP_IS_NOT_VALID = 1;
-                printf("Something wrong in Cheap Character List.. Non Valid Actor\n");
-                HIE_vFastPS2PopMatrix();
-                return;
-            }
-        }
-        else
-        {
-            printf("Something wrong in Cheap Character List.. OBJ NULL\n");
-            CHEAP_IS_NOT_VALID = 1;
-            HIE_vFastPS2PopMatrix();
-            return;
-        }
-    }
-    else if (_hSprObj->ulTypeOfLinkedObject != 1)
-    {
-        printf("Something wrong in Cheap Character List.. NOT A PO !!\n");
-        CHEAP_IS_NOT_VALID = 1;
-        HIE_vFastPS2PopMatrix();
-        return;
-    }
-
-    if (CHEAP_IS_NOT_VALID)
-    {
-        HIE_vFastPS2PopMatrix();
-        return;
-    }
-
-    for (hChild = _hSprObj->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn)
-    {
-        if (hChild->ulTypeOfLinkedObject != 2)
-            CHEAP_SendModulesToViewport(hChild, ppCurrentMatrix, p_cActivity);
-    }
-
-    HIE_vFastPS2PopMatrix();
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCheap.cpp lines 346–457 */
 /* addr: 0x002da210  size: 1180 bytes */
@@ -3544,16 +3353,6 @@ void CHEAP_DrawLastSDC__Fv(void)
 extern "C" void HIE_fn_vFastPS2ForcedPushMatrix__FP20HIE_tdstSuperObject_(HIE_tdstSuperObject_* _hSprObj);
 void HIE_fn_vFastPS2ForcedRefreshHierarchy(HIE_tdstSuperObject_* _hSprObj);
 
-void HIE_fn_vFastPS2ForcedRefreshHierarchy(HIE_tdstSuperObject_* _hSprObj)
-{
-    HIE_tdstSuperObject_* hChild;
-
-    HIE_fn_vFastPS2ForcedPushMatrix__FP20HIE_tdstSuperObject_(_hSprObj);
-    for (hChild = _hSprObj->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn)
-        HIE_fn_vFastPS2ForcedRefreshHierarchy(hChild);
-    HIE_vFastPS2PopMatrix();
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCheap.cpp lines 158–199 */
 /* addr: 0x002daa80  size: 180 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3799,6 +3598,229 @@ void CHEAP_StoreMatrix__FPP17MTH4D_tdstMatrix_(MTH4D_tdstMatrix_** pCurrentMatri
         sqc2 vf4, 0x30(pDst)
     }
 
-
     (*pCurrentMatrix)++;
+}
+
+#pragma auto_inline reset
+#pragma auto_inline on
+void HIE_fn_vFastPS2ForcedRefreshHierarchy(HIE_tdstSuperObject_* _hSprObj)
+{
+    HIE_tdstSuperObject_* hChild;
+
+    HIE_fn_vFastPS2ForcedPushMatrix__FP20HIE_tdstSuperObject_(_hSprObj);
+    for (hChild = _hSprObj->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn)
+        HIE_fn_vFastPS2ForcedRefreshHierarchy(hChild);
+    HIE_vFastPS2PopMatrix();
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+void CHEAP_SendModulesToViewport(HIE_tdstSuperObject_* _hSprObj, MTH4D_tdstMatrix_** ppCurrentMatrix, char* p_cActivity)
+{
+    SDC_VertexArrays_* pSDC;
+    GEO_tdstVisualSet_* p_stVisualSet;
+    GEO_tdstGeometricObject_* p_stObj;
+    HIE_tdstSuperObject_* hChild;
+
+    if (CHEAP_IS_NOT_VALID)
+        return;
+
+    HIE_fn_vFastPS2ForcedPushMatrix__FP20HIE_tdstSuperObject_(_hSprObj);
+    Global_CharacterModuleBeingDisplayed = (int)_hSprObj;
+    if (_hSprObj->ulTypeOfLinkedObject == 8)
+    {
+        p_stVisualSet = PO_fn_hGetVisualSet(_hSprObj->hLinkedObject.p_stPhysicalObject);
+        p_stObj = p_stVisualSet->d_p_stLodDefinitions[0].p_stGeometricObject;
+        GLI_BIG_GLOBALS_p_stObj = (int)p_stObj;
+        if (p_stObj)
+        {
+            pSDC = (SDC_VertexArrays_*)p_stObj->pSDC_Data;
+            if (pSDC)
+            {
+                if ((pSDC->OptType & 0xf) == 6)
+                {
+                    CHEAP_DrawActorInstance__FP24GEO_tdstGeometricObject_PP17MTH4D_tdstMatrix_Pc(p_stObj, ppCurrentMatrix, p_cActivity);
+                }
+            }
+            else
+            {
+                CHEAP_IS_NOT_VALID = 1;
+                printf("Something wrong in Cheap Character List.. Non Valid Actor\n");
+                HIE_vFastPS2PopMatrix();
+                return;
+            }
+        }
+        else
+        {
+            printf("Something wrong in Cheap Character List.. OBJ NULL\n");
+            CHEAP_IS_NOT_VALID = 1;
+            HIE_vFastPS2PopMatrix();
+            return;
+        }
+    }
+    else if (_hSprObj->ulTypeOfLinkedObject != 1)
+    {
+        printf("Something wrong in Cheap Character List.. NOT A PO !!\n");
+        CHEAP_IS_NOT_VALID = 1;
+        HIE_vFastPS2PopMatrix();
+        return;
+    }
+
+    if (CHEAP_IS_NOT_VALID)
+    {
+        HIE_vFastPS2PopMatrix();
+        return;
+    }
+
+    for (hChild = _hSprObj->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn)
+    {
+        if (hChild->ulTypeOfLinkedObject != 2)
+            CHEAP_SendModulesToViewport(hChild, ppCurrentMatrix, p_cActivity);
+    }
+
+    HIE_vFastPS2PopMatrix();
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+void CHEAP_SendModulesToViewportRT(HIE_tdstSuperObject_* _hSprObj, MTH4D_tdstMatrix_** ppCurrentMatrix)
+{
+    GEO_tdstVisualSet_* p_stVisualSet;
+    GEO_tdstGeometricObject_* p_stObj;
+    HIE_tdstSuperObject_* hChild;
+
+    HIE_fn_vFastPS2ForcedPushMatrixRT__FP20HIE_tdstSuperObject_(_hSprObj);
+    if (_hSprObj->ulTypeOfLinkedObject == 8)
+    {
+        p_stObj = PO_fn_hGetVisualSet(_hSprObj->hLinkedObject.p_stPhysicalObject)->d_p_stLodDefinitions[0].p_stGeometricObject;
+        if (p_stObj)
+        {
+            if (p_stObj->pSDC_Data)
+            {
+                if ((((SDC_VertexArrays_*)p_stObj->pSDC_Data)->OptType & 0xf) == 6)
+                    CHEAP_StoreMatrix__FPP17MTH4D_tdstMatrix_(ppCurrentMatrix);
+            }
+        }
+    }
+    for (hChild = _hSprObj->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn)
+    {
+        if (hChild->ulTypeOfLinkedObject != 2)
+            CHEAP_SendModulesToViewportRT(hChild, ppCurrentMatrix);
+    }
+    PS2_MatStackIndex--;
+}
+#pragma auto_inline reset
+
+void CHEAP_DisplayAllSDLs(int bTransparent)
+{
+    unsigned int i;
+
+    GLI_vSetOptimizedSDC(1);
+    for (i = GLI_g_CurrentNbCheapSDLsForViewport; i < GLI_g_CurrentNbCheapSDLs; i++)
+    {
+        if (bTransparent == GLI_g_CheapSDLs[i]->m_bIsTransparent)
+        {
+            GLI_g_CheapSDLs[i]->Draw(0);
+        }
+    }
+    GLI_vSetOptimizedSDC(0);
+}
+
+void CHEAP_UpdateAllRefs(void)
+{
+    unsigned int i;
+
+    for (i = 0; i < GLI_g_CurrentNbCheapSDLs; i++)
+    {
+        if (GLI_g_CheapSDLs[i])
+            GLI_g_CheapSDLs[i]->ProcessAllRefs();
+    }
+
+    GLI_g_CurrentNbCheapSDLsForViewport = 0;
+}
+
+void HIE_fn_CleanAllListOfFakeInstanceToViewport(void)
+{
+    unsigned int i;
+    _tdstCheapCharacterList* pCheapList;
+    C_Sdl* pSdl;
+
+    pCheapList = g_aListOfCheapCharacterList;
+    for (i = 0; i < g_lNbListOfCheapCharacterList; i++)
+    {
+        if (pCheapList[i].SDL)
+        {
+            pSdl = (C_Sdl*)pCheapList[i].SDL;
+            delete pSdl;
+            pCheapList[i].SDL = 0;
+            if (pCheapList[i].pMatrixList)
+            {
+                PS2glLiberator(pCheapList[i].pMatrixList);
+                pCheapList[i].pMatrixList = NULL;
+                pCheapList[i].NbMatrices = 0;
+            }
+        }
+    }
+}
+
+void HIE_fn_SendListOfFakeInstanceToViewport(_tdstCheapCharacterList* CharacterList)
+{
+    MTH3D_tdstVector_ stVecK;
+    MTH3D_tdstVector_ stVecJ;
+    MTH3D_tdstVector_ stVecI;
+    void* pTempData;
+    MTH4D_tdstMatrix_* pSourceMatrix;
+    MTH4D_tdstMatrix_* param0;
+    MTH4D_tdstMatrix_* pStartMatrix;
+    MTH4D_tdstMatrix_* pCurrentMatrix;
+    unsigned int NbMatrices;
+    float MyVect[4];
+    HIE_tdstSuperObject_* g_hFakeInstance;
+    HIE_tdstSuperObject_* hChild;
+    unsigned int j;
+    unsigned int i;
+    /* TODO: decompile from asm/... */
+}
+
+void CHEAP_DisplayAllAuras(void)
+{
+    _tdstCheapCharacter* param0;
+    unsigned int StartNum;
+    unsigned int i;
+    unsigned int k;
+    unsigned int Num;
+    _tdstCheapCharacterList* pl;
+    float (*pV)[4];
+
+    pV = CHEAP_AuraVertexArrays;
+    if (SCT_g_DrawingMirrored)
+        return;
+    Num = 0;
+    for (i = 0; i < g_lNbListOfCheapCharacterList; i++)
+    {
+        pl = &g_aListOfCheapCharacterList[i];
+        if (pl->hAuraVisualMaterial && pl->bAurasNeedToBeDrawn)
+        {
+            pl->bAurasNeedToBeDrawn = 0;
+            StartNum = Num;
+            for (k = 0; k < pl->NumberOfCheapCharacter; k++)
+            {
+                param0 = &pl->List[k];
+                if (param0->cActivity && Num < 250)
+                {
+                    pV[0][0] = param0->stPosition.xX;
+                    pV[0][1] = param0->stPosition.xY;
+                    pV[0][2] = param0->stPosition.xZ;
+                    pV[1][0] = 0.5f;
+                    pV[1][1] = 0.5f;
+                    pV[1][2] = 0.5f;
+                    pV[1][3] = pl->fAuraTransparencyMidLevel + FRR(-pl->fAuraTransparencyBlinkRange, pl->fAuraTransparencyBlinkRange);
+                    pV += 2;
+                    Num++;
+                }
+            }
+            if (Num - StartNum >= 4)
+                CHEAP_DrawAuras__FP17GLI_tdstMaterial_PA4_fUiPff(pl->hAuraVisualMaterial, &CHEAP_AuraVertexArrays[StartNum * 2], Num - StartNum, pl->p_fAuraSizes, pl->fAuraSizeBlinkRange);
+        }
+    }
 }

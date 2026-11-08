@@ -1149,6 +1149,143 @@ void GLI_xSetMaterialType(GLI_tdstMaterial_* hMaterial, unsigned int xMType);
 void GEO_vSetVisualMaterialOfIndexedSphere(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfSphere, GLI_tdstMaterial_* hVisualMaterial);
 void GEO_vEndModifyObject(GEO_tdstGeometricObject_* hObject);
 
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+GEO_tdstGeometricObject_* fn_pCreateSphere(float x, float y, float z, float xRadius);
+void fn_vMSSoundSetMechaCharacter(tdstMSSound_* h_MSSound, HIE_tdstSuperObject_* _hMechaCharacter);
+HIE_tdstSuperObject_* fn_hMSSoundGetMechaCharacter(tdstMSSound_* h_MSSound);
+void fn_vMSSoundSetBackGroundDistance(tdstMSSound_* h_MSSound, int _xBackGroundDistance);
+int fn_xMSSoundGetBackGroundDistance(tdstMSSound_* h_MSSound);
+void fn_vMSSoundSetSaturationDistance(tdstMSSound_* h_MSSound, int _xSaturationDistance);
+int fn_xMSSoundGetSaturationDistance(tdstMSSound_* h_MSSound);
+void fn_vMSSoundCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc);
+void fn_vMSSoundDesinit(tdstEngineObject_* p_stObject);
+void fn_vMSSoundInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit);
+void fn_vMSSoundFree(tdstEngineObject_* p_stObject);
+void fn_vMSSoundAlloc(tdstEngineObject_* p_stObject);
+
+int SAI_fn_bRemoveValueFromTable(void* _p_vValue, int _eFlags);
+
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+void SND_fn_vGetDefaultRollOff(_RollOffParam* p_stRollOff);
+int SAI_fn_bInsertLongInTable(void* _p_vValue, int _eFlags);
+int SAI_fn_bInsertCharInTable(void* _p_vValue, int _eFlags);
+
+void fn_vMSSoundAlloc(tdstEngineObject_* p_stObject)
+{
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (p_stObject->h_MSSound) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 13, -1, 255, 255, NULL);
+    }
+
+    {
+        tdstMSSound_* hMSSound = (tdstMSSound_*)HMU_fn_p_vMalloc(sizeof(tdstMSSound_), 0);
+        SND_fn_vGetDefaultRollOff(&hMSSound->stRollOff);
+        hMSSound->hMechaCharacter = NULL;
+        p_stObject->h_MSSound = hMSSound;
+    }
+
+    {
+        _RollOffParam* p_stRollOff = &p_stObject->h_MSSound->stRollOff;
+        SAI_fn_bInsertLongInTable(&p_stRollOff->rDistSatur, 0x32);
+        SAI_fn_bInsertLongInTable(&p_stRollOff->rDistBackGround, 0x32);
+        SAI_fn_bInsertCharInTable(&p_stRollOff->ucBackgroundVol, 0x32);
+    }
+}
+
+void fn_vMSSoundFree(tdstEngineObject_* p_stObject)
+{
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!p_stObject->h_MSSound) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+
+    {
+        _RollOffParam* p_stRollOff = &p_stObject->h_MSSound->stRollOff;
+        SAI_fn_bRemoveValueFromTable(&p_stRollOff->rDistSatur, 0x32);
+        SAI_fn_bRemoveValueFromTable(&p_stRollOff->rDistBackGround, 0x32);
+        SAI_fn_bRemoveValueFromTable(&p_stRollOff->ucBackgroundVol, 0x32);
+    }
+}
+
+void fn_vMSSoundInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
+{
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!p_stObject->h_MSSound) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+
+    switch (eObjectInit)
+    {
+    case OTI_WhenGameStart:
+    case OTI_ReinitTheMap:
+    case OTI_LoadSavedGame:
+        break;
+    case OTI_MapLoaded:
+        {
+            _RollOffParam* p_stRollOff = &p_stObject->h_MSSound->stRollOff;
+            SAI_fn_bInsertLongInTable(&p_stRollOff->rDistSatur, 0x32);
+            SAI_fn_bInsertLongInTable(&p_stRollOff->rDistBackGround, 0x32);
+            SAI_fn_bInsertCharInTable(&p_stRollOff->ucBackgroundVol, 0x32);
+        }
+        p_stObject->h_MSSound->hMechaCharacter = NULL;
+        break;
+    case OTI_PlayerDead:
+        break;
+    }
+}
+
+void fn_vMSSoundDesinit(tdstEngineObject_* p_stObject)
+{
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!p_stObject->h_MSSound) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+}
+
+void fn_vMSSoundCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc)
+{
+    memcpy(_p_stObjectDest->h_MSSound, _p_stObjectSrc->h_MSSound, 0x10);
+}
+
+int fn_xMSSoundGetSaturationDistance(tdstMSSound_* h_MSSound)
+{
+    return *(int*)((unsigned char*)h_MSSound + 0x0);
+}
+
+void fn_vMSSoundSetSaturationDistance(tdstMSSound_* h_MSSound, int _xSaturationDistance)
+{
+    *(int*)((unsigned char*)h_MSSound + 0x0) = _xSaturationDistance;
+}
+
+int fn_xMSSoundGetBackGroundDistance(tdstMSSound_* h_MSSound)
+{
+    return *(int*)((unsigned char*)h_MSSound + 0x4);
+}
+
+void fn_vMSSoundSetBackGroundDistance(tdstMSSound_* h_MSSound, int _xBackGroundDistance)
+{
+    *(int*)((unsigned char*)h_MSSound + 0x4) = _xBackGroundDistance;
+}
+
+HIE_tdstSuperObject_* fn_hMSSoundGetMechaCharacter(tdstMSSound_* h_MSSound)
+{
+    return *(HIE_tdstSuperObject_* *)((unsigned char*)h_MSSound + 0xC);
+}
+
+void fn_vMSSoundSetMechaCharacter(tdstMSSound_* h_MSSound, HIE_tdstSuperObject_* _hMechaCharacter)
+{
+    *(HIE_tdstSuperObject_* *)((unsigned char*)h_MSSound + 0xC) = _hMechaCharacter;
+}
+
 GEO_tdstGeometricObject_* fn_pCreateSphere(float x, float y, float z, float xRadius)
 {
     GEO_tdstGeometricObject_* p_stSphere;
@@ -1191,126 +1328,4 @@ GEO_tdstGeometricObject_* fn_pCreateSphere(float x, float y, float z, float xRad
     GEO_vSetVisualMaterialOfIndexedSphere(p_stSphere, hElement, 0, hMaterial);
     GEO_vEndModifyObject(p_stSphere);
     return p_stSphere;
-}
-
-void fn_vMSSoundSetMechaCharacter(tdstMSSound_* h_MSSound, HIE_tdstSuperObject_* _hMechaCharacter)
-{
-    *(HIE_tdstSuperObject_* *)((unsigned char*)h_MSSound + 0xC) = _hMechaCharacter;
-}
-
-HIE_tdstSuperObject_* fn_hMSSoundGetMechaCharacter(tdstMSSound_* h_MSSound)
-{
-    return *(HIE_tdstSuperObject_* *)((unsigned char*)h_MSSound + 0xC);
-}
-
-void fn_vMSSoundSetBackGroundDistance(tdstMSSound_* h_MSSound, int _xBackGroundDistance)
-{
-    *(int*)((unsigned char*)h_MSSound + 0x4) = _xBackGroundDistance;
-}
-
-int fn_xMSSoundGetBackGroundDistance(tdstMSSound_* h_MSSound)
-{
-    return *(int*)((unsigned char*)h_MSSound + 0x4);
-}
-
-void fn_vMSSoundSetSaturationDistance(tdstMSSound_* h_MSSound, int _xSaturationDistance)
-{
-    *(int*)((unsigned char*)h_MSSound + 0x0) = _xSaturationDistance;
-}
-
-int fn_xMSSoundGetSaturationDistance(tdstMSSound_* h_MSSound)
-{
-    return *(int*)((unsigned char*)h_MSSound + 0x0);
-}
-
-void fn_vMSSoundCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc)
-{
-    memcpy(_p_stObjectDest->h_MSSound, _p_stObjectSrc->h_MSSound, 0x10);
-}
-
-void fn_vMSSoundDesinit(tdstEngineObject_* p_stObject)
-{
-    if (!p_stObject) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
-    }
-    if (!p_stObject->h_MSSound) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
-    }
-}
-
-void fn_vMSSoundInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
-{
-    if (!p_stObject) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
-    }
-    if (!p_stObject->h_MSSound) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
-    }
-
-    switch (eObjectInit)
-    {
-    case OTI_WhenGameStart:
-    case OTI_ReinitTheMap:
-    case OTI_LoadSavedGame:
-        break;
-    case OTI_MapLoaded:
-        {
-            _RollOffParam* p_stRollOff = &p_stObject->h_MSSound->stRollOff;
-            SAI_fn_bInsertLongInTable(&p_stRollOff->rDistSatur, 0x32);
-            SAI_fn_bInsertLongInTable(&p_stRollOff->rDistBackGround, 0x32);
-            SAI_fn_bInsertCharInTable(&p_stRollOff->ucBackgroundVol, 0x32);
-        }
-        p_stObject->h_MSSound->hMechaCharacter = NULL;
-        break;
-    case OTI_PlayerDead:
-        break;
-    }
-}
-
-int SAI_fn_bRemoveValueFromTable(void* _p_vValue, int _eFlags);
-
-void fn_vMSSoundFree(tdstEngineObject_* p_stObject)
-{
-    if (!p_stObject) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
-    }
-    if (!p_stObject->h_MSSound) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
-    }
-
-    {
-        _RollOffParam* p_stRollOff = &p_stObject->h_MSSound->stRollOff;
-        SAI_fn_bRemoveValueFromTable(&p_stRollOff->rDistSatur, 0x32);
-        SAI_fn_bRemoveValueFromTable(&p_stRollOff->rDistBackGround, 0x32);
-        SAI_fn_bRemoveValueFromTable(&p_stRollOff->ucBackgroundVol, 0x32);
-    }
-}
-
-void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
-void SND_fn_vGetDefaultRollOff(_RollOffParam* p_stRollOff);
-int SAI_fn_bInsertLongInTable(void* _p_vValue, int _eFlags);
-int SAI_fn_bInsertCharInTable(void* _p_vValue, int _eFlags);
-
-void fn_vMSSoundAlloc(tdstEngineObject_* p_stObject)
-{
-    if (!p_stObject) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
-    }
-    if (p_stObject->h_MSSound) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 13, -1, 255, 255, NULL);
-    }
-
-    {
-        tdstMSSound_* hMSSound = (tdstMSSound_*)HMU_fn_p_vMalloc(sizeof(tdstMSSound_), 0);
-        SND_fn_vGetDefaultRollOff(&hMSSound->stRollOff);
-        hMSSound->hMechaCharacter = NULL;
-        p_stObject->h_MSSound = hMSSound;
-    }
-
-    {
-        _RollOffParam* p_stRollOff = &p_stObject->h_MSSound->stRollOff;
-        SAI_fn_bInsertLongInTable(&p_stRollOff->rDistSatur, 0x32);
-        SAI_fn_bInsertLongInTable(&p_stRollOff->rDistBackGround, 0x32);
-        SAI_fn_bInsertCharInTable(&p_stRollOff->ucBackgroundVol, 0x32);
-    }
 }

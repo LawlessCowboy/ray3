@@ -51,6 +51,320 @@ void Mmg_fn_v_SetModeAlloc(unsigned char ucModuleId, unsigned char ucNewMode, un
 void* fn_p_vGenAlloc(unsigned int ulSize, unsigned char ucChannel);
 void* memset(void* s, int c, size_t n);
 
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+void HMU_fn_vSetMemoriesInBinaryMode(void);
+void HMU_fn_vInitBinaryMemory(unsigned int _ulNormalMemSize);
+unsigned char HMU_fn_ucGetTransition2NormalMemoryBlock(void);
+unsigned char HMU_fn_ucGetTransition1NormalMemoryBlock(void);
+void HMU_fn_vSetMemoriesInTransition2Mode(void);
+void HMU_fn_vSetMemoriesInTransition1Mode(void);
+void HMU_fn_vDeleteTransition2Memories(void);
+void HMU_fn_vDeleteTransition1Memories(void);
+void HMU_fn_vInitTempTransition2Memory(unsigned int _ulTempMemSize);
+void HMU_fn_vInitNormalTransition2Memory(unsigned int _ulNormalMemSize);
+void HMU_fn_vInitTempTransition1Memory(unsigned int _ulTempMemSize);
+void HMU_fn_vInitNormalTransition1Memory(unsigned int _ulNormalMemSize);
+unsigned char HMU_fn_ucGetLevelNormalMemoryBlock(void);
+unsigned char HMU_fn_ucGetFixNormalMemoryBlock(void);
+unsigned char HMU_fn_ucGetActualTempMemoryBlockUsed(void);
+unsigned char HMU_fn_ucGetActualNormalMemoryBlockUsed(void);
+void HMU_fn_vSetActualTempMemoryBlock(unsigned char ucBlocNumber);
+void HMU_fn_vSetActualNormalMemoryBlock(unsigned char ucBlocNumber);
+void HMU_fn_vSetMemoriesInLevelMode(void);
+void HMU_fn_vSetMemoriesInFixMode(void);
+void HMU_fn_vDeleteLevelMemories(void);
+void HMU_fn_vInitTempLevelMemory(unsigned int _ulTempMemSize);
+void HMU_fn_vInitNormalLevelMemory(unsigned int _ulNormalMemSize);
+void HMU_fn_vInitTempFixMemory(unsigned int _ulTempMemSize);
+void HMU_fn_vInitNormalFixMemory(unsigned int _ulNormalMemSize);
+void HMU_fn_vFirstInit(void);
+
+/* Retail passes a third argument (a2 = 100000); the debug declaration has two. */
+void Mmg_fn_v_InitMmg(unsigned char ucModuleId, unsigned char ucMaxBlocksNb, unsigned int ulMaxNbOfMalloc);
+extern unsigned char Erm_fn_ucInitErrMsg(void);
+void Mmg_fn_cCheckAlignmentValidity(void);
+
+void HMU_fn_vFirstInit(void)
+{
+    HMU_fn_vCreateCriticalSection();
+    HMU_fn_vEnterCriticalSection();
+
+    if (g_ucHMUModuleId == 0xff) g_ucHMUModuleId = Erm_fn_ucInitErrMsg();
+    Mmg_fn_v_InitMmg(g_ucHMUModuleId, E_ucHMUMaxBlocksNb, 100000);
+    Mmg_fn_cCheckAlignmentValidity();
+
+    HMU_g_stMemoryStructure.m_eActualNormalMemoryBlock = E_ucHMUFixNormalMemoryBlock;
+    HMU_g_stMemoryStructure.m_eActualTempMemoryBlock = E_ucHMUFixTempMemoryBlock;
+    HMU_g_stMemoryStructure.bUseDynamicMemory[E_ucHMUFixNormalMemoryBlock] = 0;
+    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMUFixNormalMemoryBlock] = 0;
+    HMU_g_stMemoryStructure.bUseDynamicMemory[E_ucHMUFixTempMemoryBlock] = 0;
+    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMUFixTempMemoryBlock] = 0;
+    HMU_g_stMemoryStructure.bUseDynamicMemory[E_ucHMULevelNormalMemoryBlock] = 0;
+    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMULevelNormalMemoryBlock] = 0;
+    HMU_g_stMemoryStructure.bUseDynamicMemory[E_ucHMULevelTempMemoryBlock] = 0;
+    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMULevelTempMemoryBlock] = 0;
+    HMU_g_stMemoryStructure.bUseDynamicMemory[E_ucHMUTransition1NormalMemoryBlock] = 0;
+    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMUTransition1NormalMemoryBlock] = 0;
+    HMU_g_stMemoryStructure.bUseDynamicMemory[E_ucHMUTransition1TempMemoryBlock] = 0;
+    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMUTransition1TempMemoryBlock] = 0;
+    HMU_g_stMemoryStructure.bUseDynamicMemory[E_ucHMUTransition2NormalMemoryBlock] = 0;
+    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMUTransition2NormalMemoryBlock] = 0;
+    HMU_g_stMemoryStructure.bUseDynamicMemory[E_ucHMUTransition2TempMemoryBlock] = 0;
+    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMUTransition2TempMemoryBlock] = 0;
+
+    HMU_g_bInitialized = 1;
+
+    HMU_fn_vLeaveCriticalSection();
+}
+
+void HMU_fn_vInitNormalFixMemory(unsigned int _ulNormalMemSize)
+{
+    HMU_fn_vEnterCriticalSection();
+
+    Mmg_fn_vInitSpecificBlock(E_ucHMUFixNormalMemoryBlock, g_ucHMUModuleId, g_a_p_stMmgModuleBlocksInfo[g_ucHMUModuleId], _ulNormalMemSize, 100000, 4, 13);
+
+    HMU_g_stMemoryStructure.bUseDynamicMemory[E_ucHMUFixNormalMemoryBlock] = 0;
+    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMUFixNormalMemoryBlock] = 1;
+
+    HMU_fn_vLeaveCriticalSection();
+}
+
+void HMU_fn_vInitTempFixMemory(unsigned int _ulTempMemSize)
+{
+    HMU_fn_vEnterCriticalSection();
+
+    Mmg_fn_vInitSpecificBlock(E_ucHMUFixTempMemoryBlock, g_ucHMUModuleId, g_a_p_stMmgModuleBlocksInfo[g_ucHMUModuleId], _ulTempMemSize, 100000, 4, 12);
+
+    HMU_g_stMemoryStructure.bUseDynamicMemory[E_ucHMUFixTempMemoryBlock] = 0;
+    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMUFixTempMemoryBlock] = 1;
+
+    HMU_fn_vLeaveCriticalSection();
+}
+
+void HMU_fn_vInitNormalLevelMemory(unsigned int _ulNormalMemSize)
+{
+    HMU_fn_vEnterCriticalSection();
+
+    Mmg_fn_vInitSpecificBlock(E_ucHMULevelNormalMemoryBlock, g_ucHMUModuleId, g_a_p_stMmgModuleBlocksInfo[g_ucHMUModuleId], _ulNormalMemSize, 100000, 4, 13);
+
+    HMU_g_stMemoryStructure.bUseDynamicMemory[E_ucHMULevelNormalMemoryBlock] = 0;
+    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMULevelNormalMemoryBlock] = 1;
+
+    HMU_fn_vLeaveCriticalSection();
+}
+
+void HMU_fn_vInitTempLevelMemory(unsigned int _ulTempMemSize)
+{
+    HMU_fn_vEnterCriticalSection();
+
+    Mmg_fn_vInitSpecificBlock(E_ucHMULevelTempMemoryBlock, g_ucHMUModuleId, g_a_p_stMmgModuleBlocksInfo[g_ucHMUModuleId], _ulTempMemSize, 100000, 4, 12);
+
+    HMU_g_stMemoryStructure.bUseDynamicMemory[E_ucHMULevelTempMemoryBlock] = 0;
+    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMULevelTempMemoryBlock] = 1;
+
+    HMU_fn_vLeaveCriticalSection();
+}
+
+void HMU_fn_vDeleteLevelMemories(void)
+{
+    HMU_fn_vEnterCriticalSection();
+
+    Mmg_fn_vDeleteBlock(E_ucHMULevelNormalMemoryBlock, g_ucHMUModuleId, g_a_p_stMmgModuleBlocksInfo[g_ucHMUModuleId]);
+    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMULevelNormalMemoryBlock] = 0;
+
+    Mmg_fn_vDeleteBlock(E_ucHMULevelTempMemoryBlock, g_ucHMUModuleId, g_a_p_stMmgModuleBlocksInfo[g_ucHMUModuleId]);
+    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMULevelTempMemoryBlock] = 0;
+
+    HMU_fn_vLeaveCriticalSection();
+}
+
+void HMU_fn_vSetMemoriesInFixMode(void)
+{
+    HMU_fn_vEnterCriticalSection();
+    HMU_g_stMemoryStructure.m_eActualNormalMemoryBlock = E_ucHMUFixNormalMemoryBlock;
+    HMU_g_stMemoryStructure.m_eActualTempMemoryBlock = E_ucHMUFixTempMemoryBlock;
+    HMU_fn_vLeaveCriticalSection();
+}
+
+void HMU_fn_vSetMemoriesInLevelMode(void)
+{
+    HMU_fn_vEnterCriticalSection();
+    HMU_g_stMemoryStructure.m_eActualNormalMemoryBlock = E_ucHMULevelNormalMemoryBlock;
+    HMU_g_stMemoryStructure.m_eActualTempMemoryBlock = E_ucHMULevelTempMemoryBlock;
+    HMU_fn_vLeaveCriticalSection();
+}
+
+void HMU_fn_vSetActualNormalMemoryBlock(unsigned char ucBlocNumber)
+{
+    HMU_fn_vEnterCriticalSection();
+    HMU_g_stMemoryStructure.m_eActualNormalMemoryBlock = ucBlocNumber;
+    HMU_fn_vLeaveCriticalSection();
+}
+
+void HMU_fn_vSetActualTempMemoryBlock(unsigned char ucBlocNumber)
+{
+    HMU_fn_vEnterCriticalSection();
+    HMU_g_stMemoryStructure.m_eActualTempMemoryBlock = ucBlocNumber;
+    HMU_fn_vLeaveCriticalSection();
+}
+
+unsigned char HMU_fn_ucGetActualNormalMemoryBlockUsed(void)
+{
+    unsigned char ucReturn;
+    HMU_fn_vEnterCriticalSection();
+    ucReturn = HMU_g_stMemoryStructure.m_eActualNormalMemoryBlock;
+    HMU_fn_vLeaveCriticalSection();
+    return ucReturn;
+}
+
+unsigned char HMU_fn_ucGetActualTempMemoryBlockUsed(void)
+{
+    unsigned char ucReturn;
+    HMU_fn_vEnterCriticalSection();
+    ucReturn = HMU_g_stMemoryStructure.m_eActualTempMemoryBlock;
+    HMU_fn_vLeaveCriticalSection();
+    return ucReturn;
+}
+
+unsigned char HMU_fn_ucGetFixNormalMemoryBlock(void)
+{
+    HMU_fn_vEnterCriticalSection();
+    HMU_fn_vLeaveCriticalSection();
+    return E_ucHMUFixNormalMemoryBlock;
+}
+
+unsigned char HMU_fn_ucGetLevelNormalMemoryBlock(void)
+{
+    HMU_fn_vEnterCriticalSection();
+    HMU_fn_vLeaveCriticalSection();
+    return 2;
+}
+
+void HMU_fn_vInitNormalTransition1Memory(unsigned int _ulNormalMemSize)
+{
+    HMU_fn_vEnterCriticalSection();
+
+    Mmg_fn_vInitSpecificBlock(E_ucHMUTransition1NormalMemoryBlock, g_ucHMUModuleId, g_a_p_stMmgModuleBlocksInfo[g_ucHMUModuleId], _ulNormalMemSize, 100000, 4, 13);
+
+    HMU_g_stMemoryStructure.bUseDynamicMemory[E_ucHMUTransition1NormalMemoryBlock] = 0;
+    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMUTransition1NormalMemoryBlock] = 1;
+
+    HMU_fn_vLeaveCriticalSection();
+}
+
+void HMU_fn_vInitTempTransition1Memory(unsigned int _ulTempMemSize)
+{
+    HMU_fn_vEnterCriticalSection();
+
+    Mmg_fn_vInitSpecificBlock(E_ucHMUTransition1TempMemoryBlock, g_ucHMUModuleId, g_a_p_stMmgModuleBlocksInfo[g_ucHMUModuleId], _ulTempMemSize, 100000, 4, 12);
+
+    HMU_g_stMemoryStructure.bUseDynamicMemory[E_ucHMUTransition1TempMemoryBlock] = 0;
+    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMUTransition1TempMemoryBlock] = 1;
+
+    HMU_fn_vLeaveCriticalSection();
+}
+
+void HMU_fn_vInitNormalTransition2Memory(unsigned int _ulNormalMemSize)
+{
+    HMU_fn_vEnterCriticalSection();
+
+    Mmg_fn_vInitSpecificBlock(E_ucHMUTransition2NormalMemoryBlock, g_ucHMUModuleId, g_a_p_stMmgModuleBlocksInfo[g_ucHMUModuleId], _ulNormalMemSize, 100000, 4, 13);
+
+    HMU_g_stMemoryStructure.bUseDynamicMemory[E_ucHMUTransition2NormalMemoryBlock] = 0;
+    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMUTransition2NormalMemoryBlock] = 1;
+
+    HMU_fn_vLeaveCriticalSection();
+}
+
+void HMU_fn_vInitTempTransition2Memory(unsigned int _ulTempMemSize)
+{
+    HMU_fn_vEnterCriticalSection();
+
+    Mmg_fn_vInitSpecificBlock(E_ucHMUTransition2TempMemoryBlock, g_ucHMUModuleId, g_a_p_stMmgModuleBlocksInfo[g_ucHMUModuleId], _ulTempMemSize, 100000, 4, 12);
+
+    HMU_g_stMemoryStructure.bUseDynamicMemory[E_ucHMUTransition2TempMemoryBlock] = 0;
+    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMUTransition2TempMemoryBlock] = 1;
+
+    HMU_fn_vLeaveCriticalSection();
+}
+
+void HMU_fn_vDeleteTransition1Memories(void)
+{
+    HMU_fn_vEnterCriticalSection();
+
+    Mmg_fn_vDeleteBlock(E_ucHMUTransition1NormalMemoryBlock, g_ucHMUModuleId, g_a_p_stMmgModuleBlocksInfo[g_ucHMUModuleId]);
+    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMUTransition1NormalMemoryBlock] = 0;
+
+    Mmg_fn_vDeleteBlock(E_ucHMUTransition1TempMemoryBlock, g_ucHMUModuleId, g_a_p_stMmgModuleBlocksInfo[g_ucHMUModuleId]);
+    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMUTransition1TempMemoryBlock] = 0;
+
+    HMU_fn_vLeaveCriticalSection();
+}
+
+void HMU_fn_vDeleteTransition2Memories(void)
+{
+    HMU_fn_vEnterCriticalSection();
+
+    Mmg_fn_vDeleteBlock(E_ucHMUTransition2NormalMemoryBlock, g_ucHMUModuleId, g_a_p_stMmgModuleBlocksInfo[g_ucHMUModuleId]);
+    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMUTransition2NormalMemoryBlock] = 0;
+
+    Mmg_fn_vDeleteBlock(E_ucHMUTransition2TempMemoryBlock, g_ucHMUModuleId, g_a_p_stMmgModuleBlocksInfo[g_ucHMUModuleId]);
+    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMUTransition2TempMemoryBlock] = 0;
+
+    HMU_fn_vLeaveCriticalSection();
+}
+
+void HMU_fn_vSetMemoriesInTransition1Mode(void)
+{
+    HMU_fn_vEnterCriticalSection();
+    HMU_g_stMemoryStructure.m_eActualNormalMemoryBlock = E_ucHMUTransition1NormalMemoryBlock;
+    HMU_g_stMemoryStructure.m_eActualTempMemoryBlock = E_ucHMUTransition1TempMemoryBlock;
+    HMU_fn_vLeaveCriticalSection();
+}
+
+void HMU_fn_vSetMemoriesInTransition2Mode(void)
+{
+    HMU_fn_vEnterCriticalSection();
+    HMU_g_stMemoryStructure.m_eActualNormalMemoryBlock = E_ucHMUTransition2NormalMemoryBlock;
+    HMU_g_stMemoryStructure.m_eActualTempMemoryBlock = E_ucHMUTransition2TempMemoryBlock;
+    HMU_fn_vLeaveCriticalSection();
+}
+
+unsigned char HMU_fn_ucGetTransition1NormalMemoryBlock(void)
+{
+    HMU_fn_vEnterCriticalSection();
+    HMU_fn_vLeaveCriticalSection();
+    return 4;
+}
+
+unsigned char HMU_fn_ucGetTransition2NormalMemoryBlock(void)
+{
+    HMU_fn_vEnterCriticalSection();
+    HMU_fn_vLeaveCriticalSection();
+    return 6;
+}
+
+void HMU_fn_vInitBinaryMemory(unsigned int _ulNormalMemSize)
+{
+    HMU_fn_vEnterCriticalSection();
+
+    Mmg_fn_vInitSpecificBlock(E_ucHMUBinaryMemoryBlock, g_ucHMUModuleId, g_a_p_stMmgModuleBlocksInfo[g_ucHMUModuleId], _ulNormalMemSize, 100000, 4, 12);
+
+    HMU_g_stMemoryStructure.bUseDynamicMemory[E_ucHMUBinaryMemoryBlock] = 0;
+    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMUBinaryMemoryBlock] = 1;
+
+    HMU_fn_vLeaveCriticalSection();
+}
+
+void HMU_fn_vSetMemoriesInBinaryMode(void)
+{
+    HMU_fn_vEnterCriticalSection();
+    HMU_g_stMemoryStructure.m_eActualNormalMemoryBlock = E_ucHMUBinaryMemoryBlock;
+    HMU_fn_vLeaveCriticalSection();
+}
+
 void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc)
 {
     void* p_vReturn;
@@ -103,291 +417,4 @@ void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc)
     HMU_g_stMemoryStructure.u32NumberOfAllocation[eMemoryBlockUse]++;
     HMU_fn_vLeaveCriticalSection();
     return p_vReturn;
-}
-
-void HMU_fn_vSetMemoriesInBinaryMode(void)
-{
-    HMU_fn_vEnterCriticalSection();
-    HMU_g_stMemoryStructure.m_eActualNormalMemoryBlock = E_ucHMUBinaryMemoryBlock;
-    HMU_fn_vLeaveCriticalSection();
-}
-
-void HMU_fn_vInitBinaryMemory(unsigned int _ulNormalMemSize)
-{
-    HMU_fn_vEnterCriticalSection();
-
-    Mmg_fn_vInitSpecificBlock(E_ucHMUBinaryMemoryBlock, g_ucHMUModuleId, g_a_p_stMmgModuleBlocksInfo[g_ucHMUModuleId], _ulNormalMemSize, 100000, 4, 12);
-
-    HMU_g_stMemoryStructure.bUseDynamicMemory[E_ucHMUBinaryMemoryBlock] = 0;
-    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMUBinaryMemoryBlock] = 1;
-
-    HMU_fn_vLeaveCriticalSection();
-}
-
-unsigned char HMU_fn_ucGetTransition2NormalMemoryBlock(void)
-{
-    HMU_fn_vEnterCriticalSection();
-    HMU_fn_vLeaveCriticalSection();
-    return 6;
-}
-
-unsigned char HMU_fn_ucGetTransition1NormalMemoryBlock(void)
-{
-    HMU_fn_vEnterCriticalSection();
-    HMU_fn_vLeaveCriticalSection();
-    return 4;
-}
-
-void HMU_fn_vSetMemoriesInTransition2Mode(void)
-{
-    HMU_fn_vEnterCriticalSection();
-    HMU_g_stMemoryStructure.m_eActualNormalMemoryBlock = E_ucHMUTransition2NormalMemoryBlock;
-    HMU_g_stMemoryStructure.m_eActualTempMemoryBlock = E_ucHMUTransition2TempMemoryBlock;
-    HMU_fn_vLeaveCriticalSection();
-}
-
-void HMU_fn_vSetMemoriesInTransition1Mode(void)
-{
-    HMU_fn_vEnterCriticalSection();
-    HMU_g_stMemoryStructure.m_eActualNormalMemoryBlock = E_ucHMUTransition1NormalMemoryBlock;
-    HMU_g_stMemoryStructure.m_eActualTempMemoryBlock = E_ucHMUTransition1TempMemoryBlock;
-    HMU_fn_vLeaveCriticalSection();
-}
-
-void HMU_fn_vDeleteTransition2Memories(void)
-{
-    HMU_fn_vEnterCriticalSection();
-
-    Mmg_fn_vDeleteBlock(E_ucHMUTransition2NormalMemoryBlock, g_ucHMUModuleId, g_a_p_stMmgModuleBlocksInfo[g_ucHMUModuleId]);
-    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMUTransition2NormalMemoryBlock] = 0;
-
-    Mmg_fn_vDeleteBlock(E_ucHMUTransition2TempMemoryBlock, g_ucHMUModuleId, g_a_p_stMmgModuleBlocksInfo[g_ucHMUModuleId]);
-    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMUTransition2TempMemoryBlock] = 0;
-
-
-    HMU_fn_vLeaveCriticalSection();
-}
-
-void HMU_fn_vDeleteTransition1Memories(void)
-{
-    HMU_fn_vEnterCriticalSection();
-
-    Mmg_fn_vDeleteBlock(E_ucHMUTransition1NormalMemoryBlock, g_ucHMUModuleId, g_a_p_stMmgModuleBlocksInfo[g_ucHMUModuleId]);
-    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMUTransition1NormalMemoryBlock] = 0;
-
-    Mmg_fn_vDeleteBlock(E_ucHMUTransition1TempMemoryBlock, g_ucHMUModuleId, g_a_p_stMmgModuleBlocksInfo[g_ucHMUModuleId]);
-    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMUTransition1TempMemoryBlock] = 0;
-
-
-    HMU_fn_vLeaveCriticalSection();
-}
-
-void HMU_fn_vInitTempTransition2Memory(unsigned int _ulTempMemSize)
-{
-    HMU_fn_vEnterCriticalSection();
-
-    Mmg_fn_vInitSpecificBlock(E_ucHMUTransition2TempMemoryBlock, g_ucHMUModuleId, g_a_p_stMmgModuleBlocksInfo[g_ucHMUModuleId], _ulTempMemSize, 100000, 4, 12);
-
-    HMU_g_stMemoryStructure.bUseDynamicMemory[E_ucHMUTransition2TempMemoryBlock] = 0;
-    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMUTransition2TempMemoryBlock] = 1;
-
-    HMU_fn_vLeaveCriticalSection();
-}
-
-void HMU_fn_vInitNormalTransition2Memory(unsigned int _ulNormalMemSize)
-{
-    HMU_fn_vEnterCriticalSection();
-
-    Mmg_fn_vInitSpecificBlock(E_ucHMUTransition2NormalMemoryBlock, g_ucHMUModuleId, g_a_p_stMmgModuleBlocksInfo[g_ucHMUModuleId], _ulNormalMemSize, 100000, 4, 13);
-
-    HMU_g_stMemoryStructure.bUseDynamicMemory[E_ucHMUTransition2NormalMemoryBlock] = 0;
-    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMUTransition2NormalMemoryBlock] = 1;
-
-    HMU_fn_vLeaveCriticalSection();
-}
-
-void HMU_fn_vInitTempTransition1Memory(unsigned int _ulTempMemSize)
-{
-    HMU_fn_vEnterCriticalSection();
-
-    Mmg_fn_vInitSpecificBlock(E_ucHMUTransition1TempMemoryBlock, g_ucHMUModuleId, g_a_p_stMmgModuleBlocksInfo[g_ucHMUModuleId], _ulTempMemSize, 100000, 4, 12);
-
-    HMU_g_stMemoryStructure.bUseDynamicMemory[E_ucHMUTransition1TempMemoryBlock] = 0;
-    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMUTransition1TempMemoryBlock] = 1;
-
-    HMU_fn_vLeaveCriticalSection();
-}
-
-void HMU_fn_vInitNormalTransition1Memory(unsigned int _ulNormalMemSize)
-{
-    HMU_fn_vEnterCriticalSection();
-
-    Mmg_fn_vInitSpecificBlock(E_ucHMUTransition1NormalMemoryBlock, g_ucHMUModuleId, g_a_p_stMmgModuleBlocksInfo[g_ucHMUModuleId], _ulNormalMemSize, 100000, 4, 13);
-
-    HMU_g_stMemoryStructure.bUseDynamicMemory[E_ucHMUTransition1NormalMemoryBlock] = 0;
-    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMUTransition1NormalMemoryBlock] = 1;
-
-    HMU_fn_vLeaveCriticalSection();
-}
-
-unsigned char HMU_fn_ucGetLevelNormalMemoryBlock(void)
-{
-    HMU_fn_vEnterCriticalSection();
-    HMU_fn_vLeaveCriticalSection();
-    return 2;
-}
-
-unsigned char HMU_fn_ucGetFixNormalMemoryBlock(void)
-{
-    HMU_fn_vEnterCriticalSection();
-    HMU_fn_vLeaveCriticalSection();
-    return E_ucHMUFixNormalMemoryBlock;
-}
-
-unsigned char HMU_fn_ucGetActualTempMemoryBlockUsed(void)
-{
-    unsigned char ucReturn;
-    HMU_fn_vEnterCriticalSection();
-    ucReturn = HMU_g_stMemoryStructure.m_eActualTempMemoryBlock;
-    HMU_fn_vLeaveCriticalSection();
-    return ucReturn;
-}
-
-unsigned char HMU_fn_ucGetActualNormalMemoryBlockUsed(void)
-{
-    unsigned char ucReturn;
-    HMU_fn_vEnterCriticalSection();
-    ucReturn = HMU_g_stMemoryStructure.m_eActualNormalMemoryBlock;
-    HMU_fn_vLeaveCriticalSection();
-    return ucReturn;
-}
-
-void HMU_fn_vSetActualTempMemoryBlock(unsigned char ucBlocNumber)
-{
-    HMU_fn_vEnterCriticalSection();
-    HMU_g_stMemoryStructure.m_eActualTempMemoryBlock = ucBlocNumber;
-    HMU_fn_vLeaveCriticalSection();
-}
-
-void HMU_fn_vSetActualNormalMemoryBlock(unsigned char ucBlocNumber)
-{
-    HMU_fn_vEnterCriticalSection();
-    HMU_g_stMemoryStructure.m_eActualNormalMemoryBlock = ucBlocNumber;
-    HMU_fn_vLeaveCriticalSection();
-}
-
-void HMU_fn_vSetMemoriesInLevelMode(void)
-{
-    HMU_fn_vEnterCriticalSection();
-    HMU_g_stMemoryStructure.m_eActualNormalMemoryBlock = E_ucHMULevelNormalMemoryBlock;
-    HMU_g_stMemoryStructure.m_eActualTempMemoryBlock = E_ucHMULevelTempMemoryBlock;
-    HMU_fn_vLeaveCriticalSection();
-}
-
-void HMU_fn_vSetMemoriesInFixMode(void)
-{
-    HMU_fn_vEnterCriticalSection();
-    HMU_g_stMemoryStructure.m_eActualNormalMemoryBlock = E_ucHMUFixNormalMemoryBlock;
-    HMU_g_stMemoryStructure.m_eActualTempMemoryBlock = E_ucHMUFixTempMemoryBlock;
-    HMU_fn_vLeaveCriticalSection();
-}
-
-void HMU_fn_vDeleteLevelMemories(void)
-{
-    HMU_fn_vEnterCriticalSection();
-
-    Mmg_fn_vDeleteBlock(E_ucHMULevelNormalMemoryBlock, g_ucHMUModuleId, g_a_p_stMmgModuleBlocksInfo[g_ucHMUModuleId]);
-    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMULevelNormalMemoryBlock] = 0;
-
-    Mmg_fn_vDeleteBlock(E_ucHMULevelTempMemoryBlock, g_ucHMUModuleId, g_a_p_stMmgModuleBlocksInfo[g_ucHMUModuleId]);
-    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMULevelTempMemoryBlock] = 0;
-
-
-    HMU_fn_vLeaveCriticalSection();
-}
-
-void HMU_fn_vInitTempLevelMemory(unsigned int _ulTempMemSize)
-{
-    HMU_fn_vEnterCriticalSection();
-
-    Mmg_fn_vInitSpecificBlock(E_ucHMULevelTempMemoryBlock, g_ucHMUModuleId, g_a_p_stMmgModuleBlocksInfo[g_ucHMUModuleId], _ulTempMemSize, 100000, 4, 12);
-
-    HMU_g_stMemoryStructure.bUseDynamicMemory[E_ucHMULevelTempMemoryBlock] = 0;
-    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMULevelTempMemoryBlock] = 1;
-
-    HMU_fn_vLeaveCriticalSection();
-}
-
-void HMU_fn_vInitNormalLevelMemory(unsigned int _ulNormalMemSize)
-{
-    HMU_fn_vEnterCriticalSection();
-
-    Mmg_fn_vInitSpecificBlock(E_ucHMULevelNormalMemoryBlock, g_ucHMUModuleId, g_a_p_stMmgModuleBlocksInfo[g_ucHMUModuleId], _ulNormalMemSize, 100000, 4, 13);
-
-    HMU_g_stMemoryStructure.bUseDynamicMemory[E_ucHMULevelNormalMemoryBlock] = 0;
-    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMULevelNormalMemoryBlock] = 1;
-
-    HMU_fn_vLeaveCriticalSection();
-}
-
-void HMU_fn_vInitTempFixMemory(unsigned int _ulTempMemSize)
-{
-    HMU_fn_vEnterCriticalSection();
-
-    Mmg_fn_vInitSpecificBlock(E_ucHMUFixTempMemoryBlock, g_ucHMUModuleId, g_a_p_stMmgModuleBlocksInfo[g_ucHMUModuleId], _ulTempMemSize, 100000, 4, 12);
-
-    HMU_g_stMemoryStructure.bUseDynamicMemory[E_ucHMUFixTempMemoryBlock] = 0;
-    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMUFixTempMemoryBlock] = 1;
-
-    HMU_fn_vLeaveCriticalSection();
-}
-
-void HMU_fn_vInitNormalFixMemory(unsigned int _ulNormalMemSize)
-{
-    HMU_fn_vEnterCriticalSection();
-
-    Mmg_fn_vInitSpecificBlock(E_ucHMUFixNormalMemoryBlock, g_ucHMUModuleId, g_a_p_stMmgModuleBlocksInfo[g_ucHMUModuleId], _ulNormalMemSize, 100000, 4, 13);
-
-    HMU_g_stMemoryStructure.bUseDynamicMemory[E_ucHMUFixNormalMemoryBlock] = 0;
-    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMUFixNormalMemoryBlock] = 1;
-
-    HMU_fn_vLeaveCriticalSection();
-}
-
-/* Retail passes a third argument (a2 = 100000); the debug declaration has two. */
-void Mmg_fn_v_InitMmg(unsigned char ucModuleId, unsigned char ucMaxBlocksNb, unsigned int ulMaxNbOfMalloc);
-extern unsigned char Erm_fn_ucInitErrMsg(void);
-void Mmg_fn_cCheckAlignmentValidity(void);
-
-void HMU_fn_vFirstInit(void)
-{
-    HMU_fn_vCreateCriticalSection();
-    HMU_fn_vEnterCriticalSection();
-
-    if (g_ucHMUModuleId == 0xff) g_ucHMUModuleId = Erm_fn_ucInitErrMsg();
-    Mmg_fn_v_InitMmg(g_ucHMUModuleId, E_ucHMUMaxBlocksNb, 100000);
-    Mmg_fn_cCheckAlignmentValidity();
-
-    HMU_g_stMemoryStructure.m_eActualNormalMemoryBlock = E_ucHMUFixNormalMemoryBlock;
-    HMU_g_stMemoryStructure.m_eActualTempMemoryBlock = E_ucHMUFixTempMemoryBlock;
-    HMU_g_stMemoryStructure.bUseDynamicMemory[E_ucHMUFixNormalMemoryBlock] = 0;
-    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMUFixNormalMemoryBlock] = 0;
-    HMU_g_stMemoryStructure.bUseDynamicMemory[E_ucHMUFixTempMemoryBlock] = 0;
-    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMUFixTempMemoryBlock] = 0;
-    HMU_g_stMemoryStructure.bUseDynamicMemory[E_ucHMULevelNormalMemoryBlock] = 0;
-    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMULevelNormalMemoryBlock] = 0;
-    HMU_g_stMemoryStructure.bUseDynamicMemory[E_ucHMULevelTempMemoryBlock] = 0;
-    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMULevelTempMemoryBlock] = 0;
-    HMU_g_stMemoryStructure.bUseDynamicMemory[E_ucHMUTransition1NormalMemoryBlock] = 0;
-    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMUTransition1NormalMemoryBlock] = 0;
-    HMU_g_stMemoryStructure.bUseDynamicMemory[E_ucHMUTransition1TempMemoryBlock] = 0;
-    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMUTransition1TempMemoryBlock] = 0;
-    HMU_g_stMemoryStructure.bUseDynamicMemory[E_ucHMUTransition2NormalMemoryBlock] = 0;
-    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMUTransition2NormalMemoryBlock] = 0;
-    HMU_g_stMemoryStructure.bUseDynamicMemory[E_ucHMUTransition2TempMemoryBlock] = 0;
-    HMU_g_stMemoryStructure.bIsInitialized[E_ucHMUTransition2TempMemoryBlock] = 0;
-
-    HMU_g_bInitialized = 1;
-
-    HMU_fn_vLeaveCriticalSection();
 }

@@ -51,16 +51,15 @@ extern char g_ucIndex1;
 extern char g_ucIndex2;
 extern float g_xPercent;
 
-void HIE_vSetCharactereRLI(unsigned char ucNbRLI, unsigned char ucIndex1, unsigned char ucIndex2, float xPercent)
-{
-    if (ucNbRLI <= 2 || ucNbRLI >= 0)
-    {
-        g_ucNbRLIUse = ucNbRLI;
-        g_ucIndex1 = (char)ucIndex1 - 1;
-        g_ucIndex2 = (char)ucIndex2 - 1;
-        g_xPercent = xPercent;
-    }
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void HIE_vSetCharactereRLI(unsigned char ucNbRLI, unsigned char ucIndex1, unsigned char ucIndex2, float xPercent);
+short TMR_fn_wWait(unsigned int ulTimeToWait);
+short TMR_fn_wResetTimer(short wTimerHandle);
+short TMR_fn_wReadTimer(short wTimerHandle, _stTimerCount* p_stTimerCount);
+short TMR_fn_wSetTimerValue(short wTimerHandle, _stTimerCount* p_stValue);
+short TMR_fn_wStartTimer(short wTimerHandle);
+short TMR_fn_wCreateTimer(short wTimerType);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Tmr\Timer.c lines 551–561 */
 /* addr: 0x00322bd0  size: 92 bytes */
@@ -75,19 +74,6 @@ void HIE_vSetCharactereRLI(unsigned char ucNbRLI, unsigned char ucIndex1, unsign
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-short TMR_fn_wWait(unsigned int ulTimeToWait)
-{
-
-    if (!TimerLibOk)
-    {
-        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 2, -1, 255, 255, NULL);
-        return 0x7FFF;
-    }
-
-    fn_vTimerWait(ulTimeToWait * 294912);
-
-    return 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Tmr\Timer.c lines 443–475 */
 /* addr: 0x00322c30  size: 380 bytes */
@@ -124,42 +110,6 @@ short TMR_fn_wWait(unsigned int ulTimeToWait)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-short TMR_fn_wResetTimer(short wTimerHandle)
-{
-    if (!TimerLibOk)
-    {
-        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 2, -1, 255, 255, NULL);
-        return 0x7FFF;
-    }
-
-    if (wTimerHandle >= 16)
-    {
-        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 5, -1, 255, 255, NULL);
-        return 0x7FFF;
-    }
-
-    if (a_stTimerTab[wTimerHandle].m_wTimerState == 0)
-    {
-        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 5, -1, 255, 255, NULL);
-        return 0x7FFF;
-    }
-
-    if (a_stTimerTab[wTimerHandle].m_wTimerType > 2)
-    {
-        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 6, -1, 255, 255, NULL);
-        return 0x7FFF;
-    }
-
-    a_stTimerTab[wTimerHandle].m_wTimerState = 1;
-    a_stTimerTab[wTimerHandle].m_stTimerCount_InitValue.m_ulLowPart = 0;
-    a_stTimerTab[wTimerHandle].m_stTimerCount_InitValue.m_ulHighPart = 0;
-    a_stTimerTab[wTimerHandle].m_stTimerCount_LastValue.m_ulLowPart = 0;
-    a_stTimerTab[wTimerHandle].m_stTimerCount_LastValue.m_ulHighPart = 0;
-    a_stTimerTab[wTimerHandle].m_stTimerCount_TotalValue.m_ulLowPart = 0;
-    a_stTimerTab[wTimerHandle].m_stTimerCount_TotalValue.m_ulHighPart = 0;
-
-    return 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Tmr\Timer.c lines 366–436 */
 /* addr: 0x00322db0  size: 756 bytes */
@@ -218,6 +168,226 @@ short TMR_fn_wResetTimer(short wTimerHandle)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Tmr\Timer.c lines 332–359 */
+/* addr: 0x003230b0  size: 272 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 332
+ *   +0x0008 -> line 335
+ *   +0x0014 -> line 337
+ *   +0x0038 -> line 338
+ *   +0x0040 -> line 340
+ *   +0x0050 -> line 342
+ *   +0x0074 -> line 343
+ *   +0x007c -> line 345
+ *   +0x0098 -> line 347
+ *   +0x00bc -> line 348
+ *   +0x00c4 -> line 353
+ *   +0x00d0 -> line 356
+ *   +0x00d4 -> line 353
+ *   +0x00d8 -> line 356
+ *   +0x00dc -> line 354
+ *   +0x00e0 -> line 356
+ *   +0x00e4 -> line 354
+ *   +0x00e8 -> line 356
+ *   +0x00ec -> line 354
+ *   +0x00f0 -> line 353
+ *   +0x00f4 -> line 358
+ *   +0x00f8 -> line 354
+ *   +0x0100 -> line 356
+ *   +0x0104 -> line 359
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Tmr\Timer.c lines 154–200 */
+/* addr: 0x003231c0  size: 400 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 154
+ *   +0x0010 -> line 158
+ *   +0x001c -> line 160
+ *   +0x0040 -> line 161
+ *   +0x0048 -> line 163
+ *   +0x0058 -> line 165
+ *   +0x007c -> line 166
+ *   +0x0084 -> line 168
+ *   +0x009c -> line 170
+ *   +0x00c0 -> line 171
+ *   +0x00c8 -> line 173
+ *   +0x00e4 -> line 175
+ *   +0x0108 -> line 176
+ *   +0x0110 -> line 186
+ *   +0x0118 -> line 188
+ *   +0x0128 -> line 189
+ *   +0x0134 -> line 188
+ *   +0x0138 -> line 191
+ *   +0x013c -> line 189
+ *   +0x0144 -> line 191
+ *   +0x0150 -> line 193
+ *   +0x0154 -> line 194
+ *   +0x0158 -> line 193
+ *   +0x015c -> line 194
+ *   +0x0160 -> line 193
+ *   +0x0164 -> line 194
+ *   +0x0168 -> line 193
+ *   +0x016c -> line 194
+ *   +0x0170 -> line 197
+ *   +0x0174 -> line 199
+ *   +0x0178 -> line 197
+ *   +0x017c -> line 200
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Tmr\Timer.c lines 110–147 */
+/* addr: 0x00323350  size: 436 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 110
+ *   +0x0008 -> line 113
+ *   +0x0014 -> line 115
+ *   +0x0038 -> line 116
+ *   +0x0040 -> line 118
+ *   +0x0050 -> line 120
+ *   +0x0074 -> line 121
+ *   +0x007c -> line 123
+ *   +0x008c -> line 125
+ *   +0x00b0 -> line 126
+ *   +0x00b8 -> line 128
+ *   +0x00d0 -> line 130
+ *   +0x00f4 -> line 131
+ *   +0x00fc -> line 134
+ *   +0x010c -> line 135
+ *   +0x0140 -> line 136
+ *   +0x014c -> line 138
+ *   +0x0170 -> line 139
+ *   +0x0178 -> line 142
+ *   +0x0180 -> line 143
+ *   +0x0184 -> line 142
+ *   +0x018c -> line 143
+ *   +0x019c -> line 144
+ *   +0x01a8 -> line 147
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+short TMR_fn_wCreateTimer(short wTimerType)
+{
+    short i;
+
+    if (!TimerLibOk)
+    {
+        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 2, -1, 255, 255, NULL);
+        return 0x7FFF;
+    }
+
+    if (wTimerCount == 16)
+    {
+        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 7, -1, 255, 255, NULL);
+        return 0x7FFF;
+    }
+
+    if (wTimerType > 2)
+    {
+        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 3, -1, 255, 255, NULL);
+        return 0x7FFF;
+    }
+
+    if (a3_ulTimerFrequency[wTimerType] == 0)
+    {
+        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 4, -1, 255, 255, NULL);
+        return 0x7FFF;
+    }
+
+    for (i = 0; i < 16; i++)
+    {
+        if (a_stTimerTab[i].m_wTimerState == 0)
+        {
+            break;
+        }
+    }
+
+    if (i == 16)
+    {
+        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 7, -1, 255, 255, NULL);
+        return 0x7FFF;
+    }
+
+    a_stTimerTab[i].m_wTimerType = wTimerType;
+    a_stTimerTab[i].m_wTimerState = 1;
+    wTimerCount++;
+
+    return i;
+}
+
+short TMR_fn_wStartTimer(short wTimerHandle)
+{
+    _stTimerCount stValue;
+
+    if (!TimerLibOk)
+    {
+        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 2, -1, 255, 255, NULL);
+        return 0x7FFF;
+    }
+
+    if (wTimerHandle >= 16)
+    {
+        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 5, -1, 255, 255, NULL);
+        return 0x7FFF;
+    }
+
+    if (a_stTimerTab[wTimerHandle].m_wTimerState == 0)
+    {
+        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 5, -1, 255, 255, NULL);
+        return 0x7FFF;
+    }
+
+    if (a_stTimerTab[wTimerHandle].m_wTimerType > 2)
+    {
+        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 6, -1, 255, 255, NULL);
+        return 0x7FFF;
+    }
+
+    fn_vTimerGetCounter(a_stTimerTab[wTimerHandle].m_wTimerType, &stValue);
+
+    a_stTimerTab[wTimerHandle].m_stTimerCount_InitValue.m_ulLowPart = stValue.m_ulLowPart;
+    a_stTimerTab[wTimerHandle].m_stTimerCount_InitValue.m_ulHighPart = stValue.m_ulHighPart;
+
+    if (a_stTimerTab[wTimerHandle].m_wTimerState != 4)
+    {
+        a_stTimerTab[wTimerHandle].m_stTimerCount_TotalValue.m_ulLowPart = 0;
+        a_stTimerTab[wTimerHandle].m_stTimerCount_TotalValue.m_ulHighPart = 0;
+    }
+    a_stTimerTab[wTimerHandle].m_wTimerState = 2;
+
+    return 0;
+}
+
+short TMR_fn_wSetTimerValue(short wTimerHandle, _stTimerCount* p_stValue)
+{
+    if (!TimerLibOk)
+    {
+        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 2, -1, 255, 255, NULL);
+        return 0x7FFF;
+    }
+
+    if (wTimerHandle >= 16)
+    {
+        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 5, -1, 255, 255, NULL);
+        return 0x7FFF;
+    }
+
+    if (a_stTimerTab[wTimerHandle].m_wTimerType > 2)
+    {
+        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 6, -1, 255, 255, NULL);
+        return 0x7FFF;
+    }
+
+    a_stTimerTab[wTimerHandle].m_stTimerCount_TotalValue.m_ulLowPart = p_stValue->m_ulLowPart;
+    a_stTimerTab[wTimerHandle].m_stTimerCount_TotalValue.m_ulHighPart = p_stValue->m_ulHighPart;
+    a_stTimerTab[wTimerHandle].m_wTimerState = 4;
+    return 0;
+}
+
 short TMR_fn_wReadTimer(short wTimerHandle, _stTimerCount* p_stTimerCount)
 {
     if (!TimerLibOk)
@@ -281,104 +451,9 @@ short TMR_fn_wReadTimer(short wTimerHandle, _stTimerCount* p_stTimerCount)
 
     return 0;
 }
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Tmr\Timer.c lines 332–359 */
-/* addr: 0x003230b0  size: 272 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 332
- *   +0x0008 -> line 335
- *   +0x0014 -> line 337
- *   +0x0038 -> line 338
- *   +0x0040 -> line 340
- *   +0x0050 -> line 342
- *   +0x0074 -> line 343
- *   +0x007c -> line 345
- *   +0x0098 -> line 347
- *   +0x00bc -> line 348
- *   +0x00c4 -> line 353
- *   +0x00d0 -> line 356
- *   +0x00d4 -> line 353
- *   +0x00d8 -> line 356
- *   +0x00dc -> line 354
- *   +0x00e0 -> line 356
- *   +0x00e4 -> line 354
- *   +0x00e8 -> line 356
- *   +0x00ec -> line 354
- *   +0x00f0 -> line 353
- *   +0x00f4 -> line 358
- *   +0x00f8 -> line 354
- *   +0x0100 -> line 356
- *   +0x0104 -> line 359
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-short TMR_fn_wSetTimerValue(short wTimerHandle, _stTimerCount* p_stValue)
+
+short TMR_fn_wResetTimer(short wTimerHandle)
 {
-    if (!TimerLibOk)
-    {
-        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 2, -1, 255, 255, NULL);
-        return 0x7FFF;
-    }
-
-    if (wTimerHandle >= 16)
-    {
-        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 5, -1, 255, 255, NULL);
-        return 0x7FFF;
-    }
-
-    if (a_stTimerTab[wTimerHandle].m_wTimerType > 2)
-    {
-        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 6, -1, 255, 255, NULL);
-        return 0x7FFF;
-    }
-
-    a_stTimerTab[wTimerHandle].m_stTimerCount_TotalValue.m_ulLowPart = p_stValue->m_ulLowPart;
-    a_stTimerTab[wTimerHandle].m_stTimerCount_TotalValue.m_ulHighPart = p_stValue->m_ulHighPart;
-    a_stTimerTab[wTimerHandle].m_wTimerState = 4;
-    return 0;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Tmr\Timer.c lines 154–200 */
-/* addr: 0x003231c0  size: 400 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 154
- *   +0x0010 -> line 158
- *   +0x001c -> line 160
- *   +0x0040 -> line 161
- *   +0x0048 -> line 163
- *   +0x0058 -> line 165
- *   +0x007c -> line 166
- *   +0x0084 -> line 168
- *   +0x009c -> line 170
- *   +0x00c0 -> line 171
- *   +0x00c8 -> line 173
- *   +0x00e4 -> line 175
- *   +0x0108 -> line 176
- *   +0x0110 -> line 186
- *   +0x0118 -> line 188
- *   +0x0128 -> line 189
- *   +0x0134 -> line 188
- *   +0x0138 -> line 191
- *   +0x013c -> line 189
- *   +0x0144 -> line 191
- *   +0x0150 -> line 193
- *   +0x0154 -> line 194
- *   +0x0158 -> line 193
- *   +0x015c -> line 194
- *   +0x0160 -> line 193
- *   +0x0164 -> line 194
- *   +0x0168 -> line 193
- *   +0x016c -> line 194
- *   +0x0170 -> line 197
- *   +0x0174 -> line 199
- *   +0x0178 -> line 197
- *   +0x017c -> line 200
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-short TMR_fn_wStartTimer(short wTimerHandle)
-{
-    _stTimerCount stValue;
-
     if (!TimerLibOk)
     {
         Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 2, -1, 255, 255, NULL);
@@ -403,54 +478,19 @@ short TMR_fn_wStartTimer(short wTimerHandle)
         return 0x7FFF;
     }
 
-    fn_vTimerGetCounter(a_stTimerTab[wTimerHandle].m_wTimerType, &stValue);
-
-    a_stTimerTab[wTimerHandle].m_stTimerCount_InitValue.m_ulLowPart = stValue.m_ulLowPart;
-    a_stTimerTab[wTimerHandle].m_stTimerCount_InitValue.m_ulHighPart = stValue.m_ulHighPart;
-
-    if (a_stTimerTab[wTimerHandle].m_wTimerState != 4)
-    {
-        a_stTimerTab[wTimerHandle].m_stTimerCount_TotalValue.m_ulLowPart = 0;
-        a_stTimerTab[wTimerHandle].m_stTimerCount_TotalValue.m_ulHighPart = 0;
-    }
-    a_stTimerTab[wTimerHandle].m_wTimerState = 2;
+    a_stTimerTab[wTimerHandle].m_wTimerState = 1;
+    a_stTimerTab[wTimerHandle].m_stTimerCount_InitValue.m_ulLowPart = 0;
+    a_stTimerTab[wTimerHandle].m_stTimerCount_InitValue.m_ulHighPart = 0;
+    a_stTimerTab[wTimerHandle].m_stTimerCount_LastValue.m_ulLowPart = 0;
+    a_stTimerTab[wTimerHandle].m_stTimerCount_LastValue.m_ulHighPart = 0;
+    a_stTimerTab[wTimerHandle].m_stTimerCount_TotalValue.m_ulLowPart = 0;
+    a_stTimerTab[wTimerHandle].m_stTimerCount_TotalValue.m_ulHighPart = 0;
 
     return 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Tmr\Timer.c lines 110–147 */
-/* addr: 0x00323350  size: 436 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 110
- *   +0x0008 -> line 113
- *   +0x0014 -> line 115
- *   +0x0038 -> line 116
- *   +0x0040 -> line 118
- *   +0x0050 -> line 120
- *   +0x0074 -> line 121
- *   +0x007c -> line 123
- *   +0x008c -> line 125
- *   +0x00b0 -> line 126
- *   +0x00b8 -> line 128
- *   +0x00d0 -> line 130
- *   +0x00f4 -> line 131
- *   +0x00fc -> line 134
- *   +0x010c -> line 135
- *   +0x0140 -> line 136
- *   +0x014c -> line 138
- *   +0x0170 -> line 139
- *   +0x0178 -> line 142
- *   +0x0180 -> line 143
- *   +0x0184 -> line 142
- *   +0x018c -> line 143
- *   +0x019c -> line 144
- *   +0x01a8 -> line 147
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-short TMR_fn_wCreateTimer(short wTimerType)
+short TMR_fn_wWait(unsigned int ulTimeToWait)
 {
-    short i;
 
     if (!TimerLibOk)
     {
@@ -458,41 +498,18 @@ short TMR_fn_wCreateTimer(short wTimerType)
         return 0x7FFF;
     }
 
-    if (wTimerCount == 16)
+    fn_vTimerWait(ulTimeToWait * 294912);
+
+    return 0;
+}
+
+void HIE_vSetCharactereRLI(unsigned char ucNbRLI, unsigned char ucIndex1, unsigned char ucIndex2, float xPercent)
+{
+    if (ucNbRLI <= 2 || ucNbRLI >= 0)
     {
-        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 7, -1, 255, 255, NULL);
-        return 0x7FFF;
+        g_ucNbRLIUse = ucNbRLI;
+        g_ucIndex1 = (char)ucIndex1 - 1;
+        g_ucIndex2 = (char)ucIndex2 - 1;
+        g_xPercent = xPercent;
     }
-
-    if (wTimerType > 2)
-    {
-        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 3, -1, 255, 255, NULL);
-        return 0x7FFF;
-    }
-
-    if (a3_ulTimerFrequency[wTimerType] == 0)
-    {
-        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 4, -1, 255, 255, NULL);
-        return 0x7FFF;
-    }
-
-    for (i = 0; i < 16; i++)
-    {
-        if (a_stTimerTab[i].m_wTimerState == 0)
-        {
-            break;
-        }
-    }
-
-    if (i == 16)
-    {
-        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 7, -1, 255, 255, NULL);
-        return 0x7FFF;
-    }
-
-    a_stTimerTab[i].m_wTimerType = wTimerType;
-    a_stTimerTab[i].m_wTimerState = 1;
-    wTimerCount++;
-
-    return i;
 }

@@ -23,6 +23,33 @@ void Mmg_fn_v_InitMmg(unsigned char ucModuleId, unsigned char ucMaxBlocksNb, uns
 void Mmg_fn_cCheckAlignmentValidity(void);
 void Mmg_fn_vInitSpecificBlock(unsigned char _ucBlockId, unsigned char _ucModuleId, int _p_stMyBlocksInfo, unsigned int _ulSize, unsigned int _ulMaxNbOfMalloc, unsigned char _ucAlignment, unsigned char _ucMode);
 
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void SAV2_fn_vFirstInit(void);
+void fn_vBbFrameManagement(void);
+int fn_bBbStopMonitoring(void);
+int fn_bBbStartMonitoring(void);
+short fn_wBbDeclareVariable2Monitor(void);
+
+short fn_wBbDeclareVariable2Monitor(void)
+{
+    return -1;
+}
+
+int fn_bBbStartMonitoring(void)
+{
+    return 0;
+}
+
+int fn_bBbStopMonitoring(void)
+{
+    return 0;
+}
+
+void fn_vBbFrameManagement(void)
+{
+}
+
 void SAV2_fn_vFirstInit(void)
 {
     if (g_ucSAV2ModuleId == 0xFF)
@@ -39,23 +66,4 @@ void SAV2_fn_vFirstInit(void)
     SAV2_g_ulSizeByType[4] = 4;
     SAV2_g_ulSizeByType[5] = 4;
     SAV2_g_ulSizeByType[6] = 4;
-}
-
-void fn_vBbFrameManagement(void)
-{
-}
-
-int fn_bBbStopMonitoring(void)
-{
-    return 0;
-}
-
-int fn_bBbStartMonitoring(void)
-{
-    return 0;
-}
-
-short fn_wBbDeclareVariable2Monitor(void)
-{
-    return -1;
 }

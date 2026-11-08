@@ -1053,10 +1053,25 @@ tdstEngineStructure_ g_stEngineStructure;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-PO_tdstPhysicalObject_* IPO_fn_hGetPhysicalObject(IPO_tdstInstanciatedPhysicalObject_* _hInstanciatedPhysicalObject)
-{
-    return _hInstanciatedPhysicalObject->_hPhysicalObject;
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+PO_tdstPhysicalObject_* IPO_fn_hGetPhysicalObject(IPO_tdstInstanciatedPhysicalObject_* _hInstanciatedPhysicalObject);
+void IPO_fn_vSetRadiosityFromIndex(IPO_tdstInstanciatedPhysicalObject_* _hInstanciatedPhysicalObject, char _cRadiosityIndex);
+void IPO_fn_vInternalComputeRLI_Add(IPO_tdstInstanciatedPhysicalObject_* _hIPO, float _fRatio, float _fPreviousRatio);
+void IPO_fn_vInternalComputeRLI_Normal(IPO_tdstInstanciatedPhysicalObject_* _hIPO, float _fRatio);
+inline void IPO_fn_vInternalComputeRLI(IPO_tdstInstanciatedPhysicalObject_* _hIPO, float _fRatio);
+void IPO_fn_vComputeRadiosity(IPO_tdstInstanciatedPhysicalObject_* _hIPO);
+void IPO_fn_vUpdateAllIPOAfterTransition(HIE_tdstSuperObject_* _hSO);
+void IPO_fn_vFrameEndForRLITables(void);
+void IPO_fn_vFrameInitForRLITables(void);
+void IPO_fn_vSetAddRLITable(char _cIndexToReach, unsigned int _ulChangeDuration, float _fFinalRatio);
+void IPO_fn_vSetChangeOfRLITable(char _cIndexToReach, unsigned int _ulChangeDuration, char _cIncrementOrJump);
+void IPO_fn_vSetRLITransitionsBlocking(char _cBlocking);
+char IPO_fn_bRLITransitionInProgress(void);
+unsigned char IPO_fn_ucGetRLITableIndex(char* _szRLITableName);
+void IPO_fn_vReInitIPO(HIE_tdstSuperObject_* _hSO);
+void IPO_fn_vLevelReInitRLI(void);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 763–849 */
 /* addr: 0x002f1c00  size: 920 bytes */
@@ -1122,6 +1137,802 @@ PO_tdstPhysicalObject_* IPO_fn_hGetPhysicalObject(IPO_tdstInstanciatedPhysicalOb
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 637–720 */
+/* addr: 0x002f1fa0  size: 620 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 637
+ *   +0x0020 -> line 643
+ *   +0x0030 -> line 645
+ *   +0x004c -> line 646
+ *   +0x0058 -> line 650
+ *   +0x0068 -> line 651
+ *   +0x008c -> line 656
+ *   +0x0090 -> line 651
+ *   +0x0094 -> line 656
+ *   +0x00a0 -> line 658
+ *   +0x00a4 -> line 656
+ *   +0x00a8 -> line 658
+ *   +0x00b0 -> line 660
+ *   +0x00c4 -> line 684
+ *   +0x00d0 -> line 717
+ *   +0x00d8 -> line 684
+ *   +0x00dc -> line 694
+ *   +0x00e0 -> line 717
+ *   +0x00e4 -> line 684
+ *   +0x0108 -> line 685
+ *   +0x0134 -> line 687
+ *   +0x0160 -> line 688
+ *   +0x018c -> line 690
+ *   +0x01b8 -> line 691
+ *   +0x01e4 -> line 693
+ *   +0x0210 -> line 694
+ *   +0x0238 -> line 717
+ *   +0x024c -> line 720
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 516–631 */
+/* addr: 0x002f2210  size: 920 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 516
+ *   +0x0004 -> line 517
+ *   +0x0008 -> line 516
+ *   +0x000c -> line 517
+ *   +0x0010 -> line 516
+ *   +0x0038 -> line 529
+ *   +0x003c -> line 517
+ *   +0x0040 -> line 529
+ *   +0x0048 -> line 531
+ *   +0x0054 -> line 536
+ *   +0x0088 -> line 541
+ *   +0x00b8 -> line 543
+ *   +0x00bc -> line 541
+ *   +0x00c0 -> line 543
+ *   +0x00cc -> line 547
+ *   +0x0100 -> line 551
+ *   +0x0134 -> line 552
+ *   +0x0138 -> line 551
+ *   +0x013c -> line 552
+ *   +0x0148 -> line 554
+ *   +0x014c -> line 552
+ *   +0x0150 -> line 554
+ *   +0x0170 -> line 555
+ *   +0x018c -> line 556
+ *   +0x019c -> line 559
+ *   +0x01b4 -> line 566
+ *   +0x01c8 -> line 571
+ *   +0x01dc -> line 591
+ *   +0x01e8 -> line 613
+ *   +0x01f0 -> line 611
+ *   +0x0204 -> line 613
+ *   +0x0208 -> line 591
+ *   +0x0234 -> line 592
+ *   +0x0268 -> line 593
+ *   +0x029c -> line 594
+ *   +0x02d4 -> line 611
+ *   +0x02e8 -> line 613
+ *   +0x02fc -> line 616
+ *   +0x0318 -> line 618
+ *   +0x0320 -> line 622
+ *   +0x0324 -> line 629
+ *   +0x0328 -> line 622
+ *   +0x032c -> line 627
+ *   +0x0330 -> line 623
+ *   +0x0334 -> line 629
+ *   +0x0338 -> line 624
+ *   +0x033c -> line 627
+ *   +0x0340 -> line 625
+ *   +0x0344 -> line 627
+ *   +0x0348 -> line 629
+ *   +0x034c -> line 627
+ *   +0x0350 -> line 629
+ *   +0x0364 -> line 630
+ *   +0x0368 -> line 631
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 482–511 */
+/* addr: 0x002f25b0  size: 200 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 482
+ *   +0x0004 -> line 483
+ *   +0x0008 -> line 482
+ *   +0x0010 -> line 483
+ *   +0x001c -> line 485
+ *   +0x0024 -> line 488
+ *   +0x0028 -> line 492
+ *   +0x002c -> line 488
+ *   +0x0030 -> line 489
+ *   +0x0034 -> line 492
+ *   +0x003c -> line 496
+ *   +0x0044 -> line 497
+ *   +0x0050 -> line 499
+ *   +0x00a0 -> line 502
+ *   +0x00a4 -> line 506
+ *   +0x00a8 -> line 502
+ *   +0x00ac -> line 503
+ *   +0x00b0 -> line 506
+ *   +0x00b8 -> line 511
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+static inline float IPO_fn_fGetPreviousRatio(IPO_tdstInstanciatedPhysicalObject_* _hIPO)
+{
+    if (IPO_g_cChangeMode == 2)
+    {
+        if (_hIPO->ulLastTransitionID != IPO_g_ulCurrentTransitionID)
+            return 0.0f;
+        else
+            return _hIPO->fLastRatioUsed;
+    }
+    else if (IPO_g_cChangeMode == 1)
+        return 0.0f;
+    return 0.0f;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 471–477 */
+/* addr: 0x002f2680  size: 212 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 471
+ *   +0x000c -> line 473
+ *   +0x0018 -> line 475
+ *   +0x00c4 -> line 477
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 448–467 */
+/* addr: 0x002f2760  size: 468 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 448
+ *   +0x0014 -> line 453
+ *   +0x0020 -> line 455
+ *   +0x00b8 -> line 456
+ *   +0x00c8 -> line 459
+ *   +0x00d8 -> line 461
+ *   +0x00dc -> line 464
+ *   +0x0118 -> line 465
+ *   +0x01bc -> line 467
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+static inline int IPO_fn_bIsUpToDate(IPO_tdstInstanciatedPhysicalObject_* _hIPO)
+{
+    if (_hIPO->ulLastTransitionID != IPO_g_ulCurrentTransitionID)
+        return 0;
+    if (_hIPO->fLastRatioUsed != IPO_g_fPreviousGlobalRatio)
+        return 0;
+    return 1;
+}
+
+#pragma auto_inline on
+
+#pragma auto_inline reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 390–444 */
+/* addr: 0x002f2940  size: 500 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 390
+ *   +0x0010 -> line 391
+ *   +0x001c -> line 398
+ *   +0x002c -> line 400
+ *   +0x004c -> line 402
+ *   +0x0050 -> line 404
+ *   +0x0054 -> line 402
+ *   +0x0058 -> line 404
+ *   +0x0064 -> line 406
+ *   +0x0068 -> line 407
+ *   +0x0070 -> line 410
+ *   +0x0078 -> line 412
+ *   +0x0080 -> line 410
+ *   +0x0090 -> line 417
+ *   +0x0098 -> line 418
+ *   +0x00a4 -> line 420
+ *   +0x012c -> line 423
+ *   +0x0134 -> line 425
+ *   +0x0138 -> line 427
+ *   +0x0140 -> line 430
+ *   +0x0144 -> line 433
+ *   +0x0148 -> line 430
+ *   +0x014c -> line 433
+ *   +0x01d0 -> line 436
+ *   +0x01d4 -> line 438
+ *   +0x01d8 -> line 439
+ *   +0x01dc -> line 441
+ *   +0x01e0 -> line 444
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 346–382 */
+/* addr: 0x002f2b40  size: 280 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 346
+ *   +0x000c -> line 349
+ *   +0x0048 -> line 354
+ *   +0x004c -> line 351
+ *   +0x0050 -> line 354
+ *   +0x0054 -> line 349
+ *   +0x005c -> line 352
+ *   +0x0064 -> line 351
+ *   +0x0068 -> line 354
+ *   +0x0070 -> line 356
+ *   +0x0090 -> line 358
+ *   +0x0098 -> line 359
+ *   +0x00a4 -> line 361
+ *   +0x00c0 -> line 363
+ *   +0x00d4 -> line 367
+ *   +0x00dc -> line 368
+ *   +0x00ec -> line 370
+ *   +0x0100 -> line 375
+ *   +0x0108 -> line 377
+ *   +0x010c -> line 380
+ *   +0x0110 -> line 382
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 297–336 */
+/* addr: 0x002f2c60  size: 284 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 297
+ *   +0x000c -> line 300
+ *   +0x0028 -> line 301
+ *   +0x0030 -> line 303
+ *   +0x0048 -> line 306
+ *   +0x0060 -> line 310
+ *   +0x0064 -> line 312
+ *   +0x006c -> line 314
+ *   +0x0070 -> line 316
+ *   +0x0078 -> line 320
+ *   +0x007c -> line 319
+ *   +0x0080 -> line 320
+ *   +0x0084 -> line 322
+ *   +0x0088 -> line 323
+ *   +0x008c -> line 320
+ *   +0x0090 -> line 325
+ *   +0x00d0 -> line 328
+ *   +0x00ec -> line 329
+ *   +0x00f8 -> line 333
+ *   +0x00fc -> line 332
+ *   +0x0100 -> line 333
+ *   +0x0104 -> line 335
+ *   +0x0108 -> line 332
+ *   +0x010c -> line 335
+ *   +0x0114 -> line 336
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 245–290 */
+/* addr: 0x002f2d80  size: 452 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 245
+ *   +0x000c -> line 248
+ *   +0x0028 -> line 249
+ *   +0x0030 -> line 251
+ *   +0x0048 -> line 254
+ *   +0x0058 -> line 255
+ *   +0x0078 -> line 257
+ *   +0x007c -> line 259
+ *   +0x0084 -> line 264
+ *   +0x0088 -> line 263
+ *   +0x008c -> line 264
+ *   +0x0090 -> line 262
+ *   +0x0098 -> line 265
+ *   +0x00a0 -> line 268
+ *   +0x00a4 -> line 271
+ *   +0x00ac -> line 276
+ *   +0x00b0 -> line 270
+ *   +0x00b4 -> line 273
+ *   +0x00b8 -> line 274
+ *   +0x00bc -> line 268
+ *   +0x00c4 -> line 271
+ *   +0x00cc -> line 276
+ *   +0x00d0 -> line 268
+ *   +0x00d4 -> line 276
+ *   +0x00dc -> line 277
+ *   +0x0130 -> line 279
+ *   +0x017c -> line 282
+ *   +0x0198 -> line 283
+ *   +0x01a4 -> line 289
+ *   +0x01a8 -> line 286
+ *   +0x01b0 -> line 287
+ *   +0x01b4 -> line 289
+ *   +0x01bc -> line 290
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 234–234 */
+/* addr: 0x002f2f50  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 234
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 228–228 */
+/* addr: 0x002f2f60  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 228
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 212–222 */
+/* addr: 0x002f2f70  size: 132 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 212
+ *   +0x001c -> line 214
+ *   +0x0024 -> line 216
+ *   +0x0038 -> line 217
+ *   +0x0048 -> line 218
+ *   +0x0054 -> line 219
+ *   +0x0068 -> line 221
+ *   +0x006c -> line 222
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 150–183 */
+/* addr: 0x002f3000  size: 244 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 150
+ *   +0x0014 -> line 155
+ *   +0x0020 -> line 157
+ *   +0x0090 -> line 158
+ *   +0x00a0 -> line 161
+ *   +0x00b0 -> line 163
+ *   +0x00b4 -> line 166
+ *   +0x00bc -> line 169
+ *   +0x00c8 -> line 172
+ *   +0x00d0 -> line 173
+ *   +0x00d4 -> line 174
+ *   +0x00dc -> line 183
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+#pragma auto_inline on
+
+#pragma auto_inline reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 107–141 */
+/* addr: 0x002f3100  size: 208 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 107
+ *   +0x0004 -> line 111
+ *   +0x0008 -> line 107
+ *   +0x0014 -> line 140
+ *   +0x0018 -> line 113
+ *   +0x001c -> line 115
+ *   +0x0020 -> line 111
+ *   +0x0024 -> line 117
+ *   +0x0028 -> line 119
+ *   +0x002c -> line 121
+ *   +0x0030 -> line 123
+ *   +0x0034 -> line 124
+ *   +0x0038 -> line 125
+ *   +0x003c -> line 127
+ *   +0x0040 -> line 130
+ *   +0x0044 -> line 131
+ *   +0x0048 -> line 132
+ *   +0x004c -> line 133
+ *   +0x0050 -> line 136
+ *   +0x0054 -> line 140
+ *   +0x00bc -> line 141
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void IPO_fn_vLevelReInitRLI(void)
+{
+    IPO_g_cBlockingTransitions = 1;
+
+    IPO_g_cChangeMode = 0;
+
+    IPO_g_ulCurrentTransitionID = 0;
+
+    IPO_g_cTransitionInProgress = 0;
+
+    IPO_g_ulChangeDuration = 0;
+
+    IPO_g_ulCurrentTime = 0;
+
+    IPO_g_fCurrentIncrementRatio = 0.0f;
+    IPO_g_fCurrentGlobalRatio = 0.0f;
+    IPO_g_fPreviousGlobalRatio = 0.0f;
+
+    IPO_g_fIncrementByMilliSecond = 0.0f;
+
+    IPO_g_ucCurrentRadiosityIndex = 0;
+    IPO_g_ucNextRadiosityIndex = 0;
+    IPO_g_ucRadiosityIndexToReach = 0;
+    IPO_g_ucRadiosityIndexToAdd = 0;
+
+    IPO_g_fAddWantedRatio = 0.0f;
+
+    IPO_fn_vReInitIPO((HIE_tdstSuperObject_*)gp_stActualWorld);
+}
+
+#pragma auto_inline on
+void IPO_fn_vReInitIPO(HIE_tdstSuperObject_* _hSO)
+{
+    IPO_tdstInstanciatedPhysicalObject_* hIPO;
+    HIE_tdstSuperObject_* hChild;
+
+    for (hChild = _hSO->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn)
+    {
+        IPO_fn_vReInitIPO(hChild);
+    }
+
+    if (_hSO->ulTypeOfLinkedObject == 0x20)
+    {
+        hIPO = _hSO->hLinkedObject.p_stInstanciatedPhysicalObject;
+
+        GLI_vResetVertexColorsForIPO(hIPO);
+
+        if (hIPO->_hCurrentRadiosity)
+        {
+            IPO_fn_vSetRadiosityFromIndex(hIPO, 0);
+            hIPO->fLastRatioUsed = 0.0f;
+            hIPO->ulLastTransitionID = -1;
+        }
+    }
+}
+#pragma auto_inline reset
+
+unsigned char IPO_fn_ucGetRLITableIndex(char* _szRLITableName)
+{
+    int lI;
+
+    for (lI = 0; lI < IPO_g_ucNumberOfRLITables; lI++)
+    {
+        if (IPO_g_a_szAdditionnalRLITables[lI] != NULL)
+        {
+            if (strcasecmp(IPO_g_a_szAdditionnalRLITables[lI], _szRLITableName) == 0)
+            {
+                return (unsigned char)lI;
+            }
+        }
+    }
+
+    return 0xff;
+}
+
+char IPO_fn_bRLITransitionInProgress(void)
+{
+    return IPO_g_cTransitionInProgress;
+}
+
+void IPO_fn_vSetRLITransitionsBlocking(char _cBlocking)
+{
+    IPO_g_cBlockingTransitions = _cBlocking;
+}
+
+void IPO_fn_vSetChangeOfRLITable(char _cIndexToReach, unsigned int _ulChangeDuration, char _cIncrementOrJump)
+{
+    if (IPO_g_ucNumberOfRLITables == 0)
+        return;
+
+    if ((_cIndexToReach >= IPO_g_ucNumberOfRLITables) || (_cIndexToReach < 0))
+        return;
+
+    if (IPO_g_cBlockingTransitions && IPO_g_cTransitionInProgress)
+        return;
+
+    if (_cIncrementOrJump == 0)
+        IPO_g_ucRadiosityIndexToReach = (unsigned char)((IPO_g_ucCurrentRadiosityIndex + _cIndexToReach) % IPO_g_ucNumberOfRLITables);
+    else
+        IPO_g_ucRadiosityIndexToReach = (unsigned char)_cIndexToReach;
+
+    if (_ulChangeDuration == 0)
+    {
+        IPO_g_ucNextRadiosityIndex = IPO_g_ucRadiosityIndexToReach;
+        IPO_g_fCurrentIncrementRatio = 0.0f;
+        IPO_g_fCurrentGlobalRatio = 1.0f;
+        IPO_g_ucCurrentRadiosityIndex = IPO_g_ucRadiosityIndexToReach;
+    }
+    else
+    {
+        IPO_g_ucNextRadiosityIndex = (unsigned char)((IPO_g_ucCurrentRadiosityIndex + 1) % IPO_g_ucNumberOfRLITables);
+
+        IPO_g_ulChangeDuration = _ulChangeDuration;
+        IPO_g_ulCurrentTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - 1;
+
+        IPO_g_fCurrentIncrementRatio = 0.0f;
+        IPO_g_fCurrentGlobalRatio = 0.0f;
+
+        if (IPO_g_ucCurrentRadiosityIndex < IPO_g_ucRadiosityIndexToReach)
+            IPO_g_fIncrementByMilliSecond = (float)(IPO_g_ucRadiosityIndexToReach - IPO_g_ucCurrentRadiosityIndex) / (float)_ulChangeDuration;
+        else
+            IPO_g_fIncrementByMilliSecond = (float)(IPO_g_ucRadiosityIndexToReach + (IPO_g_ucNumberOfRLITables - IPO_g_ucCurrentRadiosityIndex)) / (float)_ulChangeDuration;
+
+        if (IPO_g_fIncrementByMilliSecond == 0.0f)
+            IPO_g_fIncrementByMilliSecond = 1e-9f;
+    }
+
+    IPO_g_cTransitionInProgress = 1;
+    IPO_g_cChangeMode = 1;
+    IPO_g_ulCurrentTransitionID++;
+}
+
+void IPO_fn_vSetAddRLITable(char _cIndexToReach, unsigned int _ulChangeDuration, float _fFinalRatio)
+{
+    if (IPO_g_ucNumberOfRLITables == 0)
+        return;
+
+    if ((_cIndexToReach >= IPO_g_ucNumberOfRLITables) || (_cIndexToReach < 0))
+        return;
+
+    if (IPO_g_cBlockingTransitions && IPO_g_cTransitionInProgress)
+        return;
+
+    if (_fFinalRatio == 0.0f)
+        return;
+
+    IPO_g_ucRadiosityIndexToAdd = (unsigned char)_cIndexToReach;
+    IPO_g_fAddWantedRatio = _fFinalRatio;
+    if (_ulChangeDuration == 0)
+    {
+        IPO_g_fCurrentGlobalRatio = _fFinalRatio;
+        IPO_g_fIncrementByMilliSecond = 0.0f;
+    }
+    else
+    {
+        IPO_g_ulChangeDuration = _ulChangeDuration;
+        IPO_g_ulCurrentTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - 1;
+        IPO_g_fCurrentIncrementRatio = 0.0f;
+        IPO_g_fCurrentGlobalRatio = 0.0f;
+        IPO_g_fIncrementByMilliSecond = _fFinalRatio / (float)_ulChangeDuration;
+        if (IPO_g_fIncrementByMilliSecond == 0.0f)
+            IPO_g_fIncrementByMilliSecond = 1e-9f;
+    }
+
+    IPO_g_cTransitionInProgress = 1;
+    IPO_g_cChangeMode = 2;
+    IPO_g_ulCurrentTransitionID++;
+}
+
+void IPO_fn_vFrameInitForRLITables(void)
+{
+    unsigned int ulCurrentTime;
+    unsigned int lDelta;
+    float fDelta;
+
+    if (IPO_g_cTransitionInProgress)
+    {
+        ulCurrentTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount; lDelta = (int)(ulCurrentTime - IPO_g_ulCurrentTime); fDelta = lDelta >= 0 ? (float)lDelta : (float)((int)((unsigned int)lDelta >> 1) | (lDelta & 1)) + (float)((int)((unsigned int)lDelta >> 1) | (lDelta & 1)); IPO_g_fCurrentIncrementRatio = IPO_g_fIncrementByMilliSecond * fDelta;
+        IPO_g_fPreviousGlobalRatio = IPO_g_fCurrentGlobalRatio;
+        IPO_g_fCurrentGlobalRatio = IPO_g_fCurrentGlobalRatio + IPO_g_fCurrentIncrementRatio;
+        if (IPO_g_cChangeMode == 1)
+        {
+            if (IPO_g_fCurrentGlobalRatio > 1.0f)
+                IPO_g_fCurrentGlobalRatio = 1.0f;
+        }
+        else if (IPO_g_cChangeMode == 2)
+        {
+            if (IPO_g_fAddWantedRatio >= 0.0f)
+            {
+                if (IPO_g_fCurrentGlobalRatio > IPO_g_fAddWantedRatio)
+                {
+                    IPO_g_fCurrentGlobalRatio = IPO_g_fAddWantedRatio;
+                }
+            }
+            else if (IPO_g_fAddWantedRatio <= 0.0f)
+            {
+                if (IPO_g_fCurrentGlobalRatio < IPO_g_fAddWantedRatio)
+                {
+                    IPO_g_fCurrentGlobalRatio = IPO_g_fAddWantedRatio;
+                }
+            }
+        }
+        else
+        {
+            IPO_g_cTransitionInProgress = 0;
+        }
+        IPO_g_ulCurrentTime = ulCurrentTime;
+    }
+}
+
+void IPO_fn_vFrameEndForRLITables(void)
+{
+    char cMustEndTransition;
+
+    if (IPO_g_cTransitionInProgress)
+    {
+        cMustEndTransition = 0;
+        if (IPO_g_cChangeMode == 1)
+        {
+            if (IPO_g_fCurrentGlobalRatio >= 1.0f)
+            {
+                IPO_g_ucCurrentRadiosityIndex = IPO_g_ucNextRadiosityIndex;
+                if (IPO_g_ucCurrentRadiosityIndex == IPO_g_ucRadiosityIndexToReach)
+                {
+                    cMustEndTransition = 1;
+                }
+                else
+                {
+                    IPO_g_fCurrentGlobalRatio = 0.0f;
+                    IPO_g_fCurrentIncrementRatio = 0.0f;
+                    IPO_g_ucNextRadiosityIndex = (unsigned char)((IPO_g_ucCurrentRadiosityIndex + 1) % IPO_g_ucNumberOfRLITables);
+                }
+            }
+        }
+        else if (IPO_g_cChangeMode == 2)
+        {
+            cMustEndTransition = (IPO_g_fAddWantedRatio > 0.0f && IPO_g_fCurrentGlobalRatio >= IPO_g_fAddWantedRatio) || (IPO_g_fAddWantedRatio < 0.0f && IPO_g_fCurrentGlobalRatio <= IPO_g_fAddWantedRatio);
+        }
+        else
+        {
+            cMustEndTransition = 1;
+        }
+        if (cMustEndTransition)
+        {
+            IPO_g_fPreviousGlobalRatio = IPO_g_fCurrentGlobalRatio;
+            IPO_fn_vUpdateAllIPOAfterTransition(gp_stActualWorld);
+            IPO_g_cChangeMode = 0;
+            IPO_g_fCurrentIncrementRatio = 0.0f;
+            IPO_g_fCurrentGlobalRatio = 0.0f;
+            IPO_g_cTransitionInProgress = 0;
+        }
+    }
+}
+
+#pragma auto_inline on
+void IPO_fn_vUpdateAllIPOAfterTransition(HIE_tdstSuperObject_* _hSO)
+{
+    IPO_tdstInstanciatedPhysicalObject_* hIPO;
+    HIE_tdstSuperObject_* hChild;
+
+    for (hChild = _hSO->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn)
+    {
+        IPO_fn_vUpdateAllIPOAfterTransition(hChild);
+    }
+
+    if (_hSO->ulTypeOfLinkedObject == 0x20)
+    {
+        hIPO = _hSO->hLinkedObject.p_stInstanciatedPhysicalObject;
+
+        if (!IPO_fn_bIsUpToDate(hIPO))
+            IPO_fn_vInternalComputeRLI(hIPO, IPO_g_fCurrentGlobalRatio);
+    }
+}
+#pragma auto_inline reset
+
+void IPO_fn_vComputeRadiosity(IPO_tdstInstanciatedPhysicalObject_* _hIPO)
+{
+    if (IPO_g_cTransitionInProgress)
+    {
+        IPO_fn_vInternalComputeRLI(_hIPO, IPO_g_fCurrentGlobalRatio);
+    }
+}
+
+inline void IPO_fn_vInternalComputeRLI(IPO_tdstInstanciatedPhysicalObject_* _hIPO, float _fRatio)
+{
+    if (IPO_g_cChangeMode == 1)
+    {
+        IPO_fn_vInternalComputeRLI_Normal(_hIPO, _fRatio);
+
+        _hIPO->fLastRatioUsed = IPO_g_fCurrentGlobalRatio;
+        _hIPO->ulLastTransitionID = IPO_g_ulCurrentTransitionID;
+
+        GLI_vResetVertexColorsForIPO(_hIPO);
+    }
+    else if (IPO_g_cChangeMode == 2)
+    {
+        IPO_fn_vInternalComputeRLI_Add(_hIPO, _fRatio, IPO_fn_fGetPreviousRatio(_hIPO));
+
+        _hIPO->fLastRatioUsed = IPO_g_fCurrentGlobalRatio;
+        _hIPO->ulLastTransitionID = IPO_g_ulCurrentTransitionID;
+
+        GLI_vResetVertexColorsForIPO(_hIPO);
+    }
+}
+
+void IPO_fn_vInternalComputeRLI_Normal(IPO_tdstInstanciatedPhysicalObject_* _hIPO, float _fRatio)
+{
+    float* p_fUV_LM2;
+    float* p_fUV_LM1;
+    float* p_fUV_LM;
+    ISI_tdstColor_* p_tdstColorResult;
+    ISI_tdstColor_* p_tdstUsedColor2;
+    ISI_tdstColor_* param0;
+    ISI_tdstColor_* p_tdstColor2;
+    ISI_tdstColor_* p_tdstColor1;
+    short xNumberOfVerticesInCurrent;
+    short xNumberOfVertices2;
+    short xNumberOfVertices1;
+    short xCurrentVertex;
+    float fOtherRatio;
+
+    fOtherRatio = 1.0f - _fRatio;
+
+    if (_hIPO->_hCurrentRadiosity == NULL)
+        return;
+
+    p_tdstColorResult = ISI_fn_dGetVertexRLI(_hIPO->_hCurrentRadiosity);
+    p_tdstColor1 = _hIPO->a_hRadiosity[IPO_g_ucCurrentRadiosityIndex] ? ISI_fn_dGetVertexRLI(_hIPO->a_hRadiosity[IPO_g_ucCurrentRadiosityIndex]) : NULL;
+    p_tdstColor2 = _hIPO->a_hRadiosity[IPO_g_ucNextRadiosityIndex] ? ISI_fn_dGetVertexRLI(_hIPO->a_hRadiosity[IPO_g_ucNextRadiosityIndex]) : NULL;
+
+    xNumberOfVerticesInCurrent = ISI_fn_xGetNbVertexRLILOD(_hIPO->_hCurrentRadiosity, 0);
+    xNumberOfVertices1 = _hIPO->a_hRadiosity[IPO_g_ucCurrentRadiosityIndex] ? ISI_fn_xGetNbVertexRLILOD(_hIPO->a_hRadiosity[IPO_g_ucCurrentRadiosityIndex], 0) : xNumberOfVerticesInCurrent;
+    xNumberOfVertices2 = _hIPO->a_hRadiosity[IPO_g_ucNextRadiosityIndex] ? ISI_fn_xGetNbVertexRLILOD(_hIPO->a_hRadiosity[IPO_g_ucNextRadiosityIndex], 0) : xNumberOfVerticesInCurrent;
+    xNumberOfVertices1 = (xNumberOfVertices1 < xNumberOfVertices2) ? xNumberOfVertices1 : xNumberOfVertices2;
+
+    p_fUV_LM1 = (float*)ISI_fn_dGetVertexRLILODLightMapU(_hIPO->a_hRadiosity[IPO_g_ucCurrentRadiosityIndex], 0);
+    p_fUV_LM2 = (float*)ISI_fn_dGetVertexRLILODLightMapU(_hIPO->a_hRadiosity[IPO_g_ucNextRadiosityIndex], 0);
+    p_fUV_LM = (float*)ISI_fn_dGetVertexRLILODLightMapU(_hIPO->_hCurrentRadiosity, 0);
+
+    for (xCurrentVertex = 0; xCurrentVertex < xNumberOfVertices1; xCurrentVertex++)
+    {
+        param0 = (p_tdstColor1 == NULL) ? &IPO_g_tdstBlack : &p_tdstColor1[xCurrentVertex];
+        p_tdstUsedColor2 = (p_tdstColor2 == NULL) ? &IPO_g_tdstBlack : &p_tdstColor2[xCurrentVertex];
+
+        p_tdstColorResult[xCurrentVertex].xRed = (short)(fOtherRatio * (float)param0->xRed + _fRatio * (float)p_tdstUsedColor2->xRed);
+        p_tdstColorResult[xCurrentVertex].xGreen = (short)(fOtherRatio * (float)param0->xGreen + _fRatio * (float)p_tdstUsedColor2->xGreen);
+        p_tdstColorResult[xCurrentVertex].xBlue = (short)(fOtherRatio * (float)param0->xBlue + _fRatio * (float)p_tdstUsedColor2->xBlue);
+        p_tdstColorResult[xCurrentVertex].xAlpha = (short)(fOtherRatio * (float)param0->xAlpha + _fRatio * (float)p_tdstUsedColor2->xAlpha);
+
+        p_fUV_LM[xCurrentVertex] = fOtherRatio * p_fUV_LM1[xCurrentVertex] + _fRatio * p_fUV_LM2[xCurrentVertex];
+    }
+
+    if (xNumberOfVertices1 < xNumberOfVerticesInCurrent)
+    {
+        for (xCurrentVertex = xNumberOfVertices1; xCurrentVertex < xNumberOfVerticesInCurrent; xCurrentVertex++)
+        {
+            p_tdstColorResult[xCurrentVertex].xRed = 0;
+            p_tdstColorResult[xCurrentVertex].xGreen = 0;
+            p_tdstColorResult[xCurrentVertex].xBlue = 0;
+            p_tdstColorResult[xCurrentVertex].xAlpha = 0;
+            p_fUV_LM[xCurrentVertex] = 0.5f;
+        }
+    }
+}
+
+void IPO_fn_vInternalComputeRLI_Add(IPO_tdstInstanciatedPhysicalObject_* _hIPO, float _fRatio, float _fPreviousRatio)
+{
+    short xNumberOfVerticesToUse;
+    short xNumberOfVerticesInSource;
+    short xNumberOfVerticesInCurrent;
+    short xCurrentVertex;
+    ISI_tdstColor_* p_tdstColor2;
+    ISI_tdstColor_* p_tdstColor1;
+
+    if (_hIPO->_hCurrentRadiosity == NULL)
+        return;
+
+    if (_hIPO->a_hRadiosity[IPO_g_ucRadiosityIndexToAdd] == NULL)
+        return;
+
+    p_tdstColor1 = ISI_fn_dGetVertexRLI(_hIPO->a_hRadiosity[IPO_g_ucRadiosityIndexToAdd]);
+
+    xNumberOfVerticesInCurrent = ISI_fn_xGetNbVertexRLILOD(_hIPO->_hCurrentRadiosity, 0);
+    xNumberOfVerticesInSource = ISI_fn_xGetNbVertexRLILOD(_hIPO->a_hRadiosity[IPO_g_ucRadiosityIndexToAdd], 0);
+
+    xNumberOfVerticesToUse = (xNumberOfVerticesInCurrent <= xNumberOfVerticesInSource) ? xNumberOfVerticesInCurrent : xNumberOfVerticesInSource;
+
+    p_tdstColor2 = ISI_fn_dGetVertexRLI(_hIPO->_hCurrentRadiosity);
+
+    for (xCurrentVertex = 0; xCurrentVertex < xNumberOfVerticesToUse; xCurrentVertex++)
+    {
+        p_tdstColor2[xCurrentVertex].xRed = p_tdstColor2[xCurrentVertex].xRed - (short)(_fPreviousRatio * (float)p_tdstColor1[xCurrentVertex].xRed);
+        p_tdstColor2[xCurrentVertex].xRed = p_tdstColor2[xCurrentVertex].xRed + (short)(_fRatio * (float)p_tdstColor1[xCurrentVertex].xRed);
+
+        p_tdstColor2[xCurrentVertex].xGreen = p_tdstColor2[xCurrentVertex].xGreen - (short)(_fPreviousRatio * (float)p_tdstColor1[xCurrentVertex].xGreen);
+        p_tdstColor2[xCurrentVertex].xGreen = p_tdstColor2[xCurrentVertex].xGreen + (short)(_fRatio * (float)p_tdstColor1[xCurrentVertex].xGreen);
+
+        p_tdstColor2[xCurrentVertex].xBlue = p_tdstColor2[xCurrentVertex].xBlue - (short)(_fPreviousRatio * (float)p_tdstColor1[xCurrentVertex].xBlue);
+        p_tdstColor2[xCurrentVertex].xBlue = p_tdstColor2[xCurrentVertex].xBlue + (short)(_fRatio * (float)p_tdstColor1[xCurrentVertex].xBlue);
+
+        p_tdstColor2[xCurrentVertex].xAlpha = p_tdstColor2[xCurrentVertex].xAlpha - (short)(_fPreviousRatio * (float)p_tdstColor1[xCurrentVertex].xAlpha);
+        p_tdstColor2[xCurrentVertex].xAlpha = p_tdstColor2[xCurrentVertex].xAlpha + (short)(_fRatio * (float)p_tdstColor1[xCurrentVertex].xAlpha);
+    }
+}
+
 void IPO_fn_vSetRadiosityFromIndex(IPO_tdstInstanciatedPhysicalObject_* _hInstanciatedPhysicalObject, char _cRadiosityIndex)
 {
     GLI_vResetVertexColorsForIPO(_hInstanciatedPhysicalObject);
@@ -1194,778 +2005,7 @@ void IPO_fn_vSetRadiosityFromIndex(IPO_tdstInstanciatedPhysicalObject_* _hInstan
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 637–720 */
-/* addr: 0x002f1fa0  size: 620 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 637
- *   +0x0020 -> line 643
- *   +0x0030 -> line 645
- *   +0x004c -> line 646
- *   +0x0058 -> line 650
- *   +0x0068 -> line 651
- *   +0x008c -> line 656
- *   +0x0090 -> line 651
- *   +0x0094 -> line 656
- *   +0x00a0 -> line 658
- *   +0x00a4 -> line 656
- *   +0x00a8 -> line 658
- *   +0x00b0 -> line 660
- *   +0x00c4 -> line 684
- *   +0x00d0 -> line 717
- *   +0x00d8 -> line 684
- *   +0x00dc -> line 694
- *   +0x00e0 -> line 717
- *   +0x00e4 -> line 684
- *   +0x0108 -> line 685
- *   +0x0134 -> line 687
- *   +0x0160 -> line 688
- *   +0x018c -> line 690
- *   +0x01b8 -> line 691
- *   +0x01e4 -> line 693
- *   +0x0210 -> line 694
- *   +0x0238 -> line 717
- *   +0x024c -> line 720
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void IPO_fn_vInternalComputeRLI_Add(IPO_tdstInstanciatedPhysicalObject_* _hIPO, float _fRatio, float _fPreviousRatio)
+PO_tdstPhysicalObject_* IPO_fn_hGetPhysicalObject(IPO_tdstInstanciatedPhysicalObject_* _hInstanciatedPhysicalObject)
 {
-    short xNumberOfVerticesToUse;
-    short xNumberOfVerticesInSource;
-    short xNumberOfVerticesInCurrent;
-    short xCurrentVertex;
-    ISI_tdstColor_* p_tdstColor2;
-    ISI_tdstColor_* p_tdstColor1;
-
-    if (_hIPO->_hCurrentRadiosity == NULL)
-        return;
-
-    if (_hIPO->a_hRadiosity[IPO_g_ucRadiosityIndexToAdd] == NULL)
-        return;
-
-    p_tdstColor1 = ISI_fn_dGetVertexRLI(_hIPO->a_hRadiosity[IPO_g_ucRadiosityIndexToAdd]);
-
-    xNumberOfVerticesInCurrent = ISI_fn_xGetNbVertexRLILOD(_hIPO->_hCurrentRadiosity, 0);
-    xNumberOfVerticesInSource = ISI_fn_xGetNbVertexRLILOD(_hIPO->a_hRadiosity[IPO_g_ucRadiosityIndexToAdd], 0);
-
-    xNumberOfVerticesToUse = (xNumberOfVerticesInCurrent <= xNumberOfVerticesInSource) ? xNumberOfVerticesInCurrent : xNumberOfVerticesInSource;
-
-    p_tdstColor2 = ISI_fn_dGetVertexRLI(_hIPO->_hCurrentRadiosity);
-
-    for (xCurrentVertex = 0; xCurrentVertex < xNumberOfVerticesToUse; xCurrentVertex++)
-    {
-        p_tdstColor2[xCurrentVertex].xRed = p_tdstColor2[xCurrentVertex].xRed - (short)(_fPreviousRatio * (float)p_tdstColor1[xCurrentVertex].xRed);
-        p_tdstColor2[xCurrentVertex].xRed = p_tdstColor2[xCurrentVertex].xRed + (short)(_fRatio * (float)p_tdstColor1[xCurrentVertex].xRed);
-
-        p_tdstColor2[xCurrentVertex].xGreen = p_tdstColor2[xCurrentVertex].xGreen - (short)(_fPreviousRatio * (float)p_tdstColor1[xCurrentVertex].xGreen);
-        p_tdstColor2[xCurrentVertex].xGreen = p_tdstColor2[xCurrentVertex].xGreen + (short)(_fRatio * (float)p_tdstColor1[xCurrentVertex].xGreen);
-
-        p_tdstColor2[xCurrentVertex].xBlue = p_tdstColor2[xCurrentVertex].xBlue - (short)(_fPreviousRatio * (float)p_tdstColor1[xCurrentVertex].xBlue);
-        p_tdstColor2[xCurrentVertex].xBlue = p_tdstColor2[xCurrentVertex].xBlue + (short)(_fRatio * (float)p_tdstColor1[xCurrentVertex].xBlue);
-
-        p_tdstColor2[xCurrentVertex].xAlpha = p_tdstColor2[xCurrentVertex].xAlpha - (short)(_fPreviousRatio * (float)p_tdstColor1[xCurrentVertex].xAlpha);
-        p_tdstColor2[xCurrentVertex].xAlpha = p_tdstColor2[xCurrentVertex].xAlpha + (short)(_fRatio * (float)p_tdstColor1[xCurrentVertex].xAlpha);
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 516–631 */
-/* addr: 0x002f2210  size: 920 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 516
- *   +0x0004 -> line 517
- *   +0x0008 -> line 516
- *   +0x000c -> line 517
- *   +0x0010 -> line 516
- *   +0x0038 -> line 529
- *   +0x003c -> line 517
- *   +0x0040 -> line 529
- *   +0x0048 -> line 531
- *   +0x0054 -> line 536
- *   +0x0088 -> line 541
- *   +0x00b8 -> line 543
- *   +0x00bc -> line 541
- *   +0x00c0 -> line 543
- *   +0x00cc -> line 547
- *   +0x0100 -> line 551
- *   +0x0134 -> line 552
- *   +0x0138 -> line 551
- *   +0x013c -> line 552
- *   +0x0148 -> line 554
- *   +0x014c -> line 552
- *   +0x0150 -> line 554
- *   +0x0170 -> line 555
- *   +0x018c -> line 556
- *   +0x019c -> line 559
- *   +0x01b4 -> line 566
- *   +0x01c8 -> line 571
- *   +0x01dc -> line 591
- *   +0x01e8 -> line 613
- *   +0x01f0 -> line 611
- *   +0x0204 -> line 613
- *   +0x0208 -> line 591
- *   +0x0234 -> line 592
- *   +0x0268 -> line 593
- *   +0x029c -> line 594
- *   +0x02d4 -> line 611
- *   +0x02e8 -> line 613
- *   +0x02fc -> line 616
- *   +0x0318 -> line 618
- *   +0x0320 -> line 622
- *   +0x0324 -> line 629
- *   +0x0328 -> line 622
- *   +0x032c -> line 627
- *   +0x0330 -> line 623
- *   +0x0334 -> line 629
- *   +0x0338 -> line 624
- *   +0x033c -> line 627
- *   +0x0340 -> line 625
- *   +0x0344 -> line 627
- *   +0x0348 -> line 629
- *   +0x034c -> line 627
- *   +0x0350 -> line 629
- *   +0x0364 -> line 630
- *   +0x0368 -> line 631
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void IPO_fn_vInternalComputeRLI_Normal(IPO_tdstInstanciatedPhysicalObject_* _hIPO, float _fRatio)
-{
-    float* p_fUV_LM2;
-    float* p_fUV_LM1;
-    float* p_fUV_LM;
-    ISI_tdstColor_* p_tdstColorResult;
-    ISI_tdstColor_* p_tdstUsedColor2;
-    ISI_tdstColor_* param0;
-    ISI_tdstColor_* p_tdstColor2;
-    ISI_tdstColor_* p_tdstColor1;
-    short xNumberOfVerticesInCurrent;
-    short xNumberOfVertices2;
-    short xNumberOfVertices1;
-    short xCurrentVertex;
-    float fOtherRatio;
-
-    fOtherRatio = 1.0f - _fRatio;
-
-    if (_hIPO->_hCurrentRadiosity == NULL)
-        return;
-
-    p_tdstColorResult = ISI_fn_dGetVertexRLI(_hIPO->_hCurrentRadiosity);
-    p_tdstColor1 = _hIPO->a_hRadiosity[IPO_g_ucCurrentRadiosityIndex] ? ISI_fn_dGetVertexRLI(_hIPO->a_hRadiosity[IPO_g_ucCurrentRadiosityIndex]) : NULL;
-    p_tdstColor2 = _hIPO->a_hRadiosity[IPO_g_ucNextRadiosityIndex] ? ISI_fn_dGetVertexRLI(_hIPO->a_hRadiosity[IPO_g_ucNextRadiosityIndex]) : NULL;
-
-    xNumberOfVerticesInCurrent = ISI_fn_xGetNbVertexRLILOD(_hIPO->_hCurrentRadiosity, 0);
-    xNumberOfVertices1 = _hIPO->a_hRadiosity[IPO_g_ucCurrentRadiosityIndex] ? ISI_fn_xGetNbVertexRLILOD(_hIPO->a_hRadiosity[IPO_g_ucCurrentRadiosityIndex], 0) : xNumberOfVerticesInCurrent;
-    xNumberOfVertices2 = _hIPO->a_hRadiosity[IPO_g_ucNextRadiosityIndex] ? ISI_fn_xGetNbVertexRLILOD(_hIPO->a_hRadiosity[IPO_g_ucNextRadiosityIndex], 0) : xNumberOfVerticesInCurrent;
-    xNumberOfVertices1 = (xNumberOfVertices1 < xNumberOfVertices2) ? xNumberOfVertices1 : xNumberOfVertices2;
-
-    p_fUV_LM1 = (float*)ISI_fn_dGetVertexRLILODLightMapU(_hIPO->a_hRadiosity[IPO_g_ucCurrentRadiosityIndex], 0);
-    p_fUV_LM2 = (float*)ISI_fn_dGetVertexRLILODLightMapU(_hIPO->a_hRadiosity[IPO_g_ucNextRadiosityIndex], 0);
-    p_fUV_LM = (float*)ISI_fn_dGetVertexRLILODLightMapU(_hIPO->_hCurrentRadiosity, 0);
-
-    for (xCurrentVertex = 0; xCurrentVertex < xNumberOfVertices1; xCurrentVertex++)
-    {
-        param0 = (p_tdstColor1 == NULL) ? &IPO_g_tdstBlack : &p_tdstColor1[xCurrentVertex];
-        p_tdstUsedColor2 = (p_tdstColor2 == NULL) ? &IPO_g_tdstBlack : &p_tdstColor2[xCurrentVertex];
-
-        p_tdstColorResult[xCurrentVertex].xRed = (short)(fOtherRatio * (float)param0->xRed + _fRatio * (float)p_tdstUsedColor2->xRed);
-        p_tdstColorResult[xCurrentVertex].xGreen = (short)(fOtherRatio * (float)param0->xGreen + _fRatio * (float)p_tdstUsedColor2->xGreen);
-        p_tdstColorResult[xCurrentVertex].xBlue = (short)(fOtherRatio * (float)param0->xBlue + _fRatio * (float)p_tdstUsedColor2->xBlue);
-        p_tdstColorResult[xCurrentVertex].xAlpha = (short)(fOtherRatio * (float)param0->xAlpha + _fRatio * (float)p_tdstUsedColor2->xAlpha);
-
-        p_fUV_LM[xCurrentVertex] = fOtherRatio * p_fUV_LM1[xCurrentVertex] + _fRatio * p_fUV_LM2[xCurrentVertex];
-    }
-
-    if (xNumberOfVertices1 < xNumberOfVerticesInCurrent)
-    {
-        for (xCurrentVertex = xNumberOfVertices1; xCurrentVertex < xNumberOfVerticesInCurrent; xCurrentVertex++)
-        {
-            p_tdstColorResult[xCurrentVertex].xRed = 0;
-            p_tdstColorResult[xCurrentVertex].xGreen = 0;
-            p_tdstColorResult[xCurrentVertex].xBlue = 0;
-            p_tdstColorResult[xCurrentVertex].xAlpha = 0;
-            p_fUV_LM[xCurrentVertex] = 0.5f;
-        }
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 482–511 */
-/* addr: 0x002f25b0  size: 200 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 482
- *   +0x0004 -> line 483
- *   +0x0008 -> line 482
- *   +0x0010 -> line 483
- *   +0x001c -> line 485
- *   +0x0024 -> line 488
- *   +0x0028 -> line 492
- *   +0x002c -> line 488
- *   +0x0030 -> line 489
- *   +0x0034 -> line 492
- *   +0x003c -> line 496
- *   +0x0044 -> line 497
- *   +0x0050 -> line 499
- *   +0x00a0 -> line 502
- *   +0x00a4 -> line 506
- *   +0x00a8 -> line 502
- *   +0x00ac -> line 503
- *   +0x00b0 -> line 506
- *   +0x00b8 -> line 511
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-static inline float IPO_fn_fGetPreviousRatio(IPO_tdstInstanciatedPhysicalObject_* _hIPO)
-{
-    if (IPO_g_cChangeMode == 2)
-    {
-        if (_hIPO->ulLastTransitionID != IPO_g_ulCurrentTransitionID)
-            return 0.0f;
-        else
-            return _hIPO->fLastRatioUsed;
-    }
-    else if (IPO_g_cChangeMode == 1)
-        return 0.0f;
-    return 0.0f;
-}
-
-inline void IPO_fn_vInternalComputeRLI(IPO_tdstInstanciatedPhysicalObject_* _hIPO, float _fRatio)
-{
-    if (IPO_g_cChangeMode == 1)
-    {
-        IPO_fn_vInternalComputeRLI_Normal(_hIPO, _fRatio);
-
-        _hIPO->fLastRatioUsed = IPO_g_fCurrentGlobalRatio;
-        _hIPO->ulLastTransitionID = IPO_g_ulCurrentTransitionID;
-
-        GLI_vResetVertexColorsForIPO(_hIPO);
-    }
-    else if (IPO_g_cChangeMode == 2)
-    {
-        IPO_fn_vInternalComputeRLI_Add(_hIPO, _fRatio, IPO_fn_fGetPreviousRatio(_hIPO));
-
-        _hIPO->fLastRatioUsed = IPO_g_fCurrentGlobalRatio;
-        _hIPO->ulLastTransitionID = IPO_g_ulCurrentTransitionID;
-
-        GLI_vResetVertexColorsForIPO(_hIPO);
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 471–477 */
-/* addr: 0x002f2680  size: 212 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 471
- *   +0x000c -> line 473
- *   +0x0018 -> line 475
- *   +0x00c4 -> line 477
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void IPO_fn_vComputeRadiosity(IPO_tdstInstanciatedPhysicalObject_* _hIPO)
-{
-    if (IPO_g_cTransitionInProgress)
-    {
-        IPO_fn_vInternalComputeRLI(_hIPO, IPO_g_fCurrentGlobalRatio);
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 448–467 */
-/* addr: 0x002f2760  size: 468 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 448
- *   +0x0014 -> line 453
- *   +0x0020 -> line 455
- *   +0x00b8 -> line 456
- *   +0x00c8 -> line 459
- *   +0x00d8 -> line 461
- *   +0x00dc -> line 464
- *   +0x0118 -> line 465
- *   +0x01bc -> line 467
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-static inline int IPO_fn_bIsUpToDate(IPO_tdstInstanciatedPhysicalObject_* _hIPO)
-{
-    if (_hIPO->ulLastTransitionID != IPO_g_ulCurrentTransitionID)
-        return 0;
-    if (_hIPO->fLastRatioUsed != IPO_g_fPreviousGlobalRatio)
-        return 0;
-    return 1;
-}
-
-#pragma auto_inline on
-void IPO_fn_vUpdateAllIPOAfterTransition(HIE_tdstSuperObject_* _hSO)
-{
-    IPO_tdstInstanciatedPhysicalObject_* hIPO;
-    HIE_tdstSuperObject_* hChild;
-
-    for (hChild = _hSO->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn)
-    {
-        IPO_fn_vUpdateAllIPOAfterTransition(hChild);
-    }
-
-    if (_hSO->ulTypeOfLinkedObject == 0x20)
-    {
-        hIPO = _hSO->hLinkedObject.p_stInstanciatedPhysicalObject;
-
-        if (!IPO_fn_bIsUpToDate(hIPO))
-            IPO_fn_vInternalComputeRLI(hIPO, IPO_g_fCurrentGlobalRatio);
-    }
-}
-#pragma auto_inline reset
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 390–444 */
-/* addr: 0x002f2940  size: 500 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 390
- *   +0x0010 -> line 391
- *   +0x001c -> line 398
- *   +0x002c -> line 400
- *   +0x004c -> line 402
- *   +0x0050 -> line 404
- *   +0x0054 -> line 402
- *   +0x0058 -> line 404
- *   +0x0064 -> line 406
- *   +0x0068 -> line 407
- *   +0x0070 -> line 410
- *   +0x0078 -> line 412
- *   +0x0080 -> line 410
- *   +0x0090 -> line 417
- *   +0x0098 -> line 418
- *   +0x00a4 -> line 420
- *   +0x012c -> line 423
- *   +0x0134 -> line 425
- *   +0x0138 -> line 427
- *   +0x0140 -> line 430
- *   +0x0144 -> line 433
- *   +0x0148 -> line 430
- *   +0x014c -> line 433
- *   +0x01d0 -> line 436
- *   +0x01d4 -> line 438
- *   +0x01d8 -> line 439
- *   +0x01dc -> line 441
- *   +0x01e0 -> line 444
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void IPO_fn_vFrameEndForRLITables(void)
-{
-    char cMustEndTransition;
-
-    if (IPO_g_cTransitionInProgress)
-    {
-        cMustEndTransition = 0;
-        if (IPO_g_cChangeMode == 1)
-        {
-            if (IPO_g_fCurrentGlobalRatio >= 1.0f)
-            {
-                IPO_g_ucCurrentRadiosityIndex = IPO_g_ucNextRadiosityIndex;
-                if (IPO_g_ucCurrentRadiosityIndex == IPO_g_ucRadiosityIndexToReach)
-                {
-                    cMustEndTransition = 1;
-                }
-                else
-                {
-                    IPO_g_fCurrentGlobalRatio = 0.0f;
-                    IPO_g_fCurrentIncrementRatio = 0.0f;
-                    IPO_g_ucNextRadiosityIndex = (unsigned char)((IPO_g_ucCurrentRadiosityIndex + 1) % IPO_g_ucNumberOfRLITables);
-                }
-            }
-        }
-        else if (IPO_g_cChangeMode == 2)
-        {
-            cMustEndTransition = (IPO_g_fAddWantedRatio > 0.0f && IPO_g_fCurrentGlobalRatio >= IPO_g_fAddWantedRatio) || (IPO_g_fAddWantedRatio < 0.0f && IPO_g_fCurrentGlobalRatio <= IPO_g_fAddWantedRatio);
-        }
-        else
-        {
-            cMustEndTransition = 1;
-        }
-        if (cMustEndTransition)
-        {
-            IPO_g_fPreviousGlobalRatio = IPO_g_fCurrentGlobalRatio;
-            IPO_fn_vUpdateAllIPOAfterTransition(gp_stActualWorld);
-            IPO_g_cChangeMode = 0;
-            IPO_g_fCurrentIncrementRatio = 0.0f;
-            IPO_g_fCurrentGlobalRatio = 0.0f;
-            IPO_g_cTransitionInProgress = 0;
-        }
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 346–382 */
-/* addr: 0x002f2b40  size: 280 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 346
- *   +0x000c -> line 349
- *   +0x0048 -> line 354
- *   +0x004c -> line 351
- *   +0x0050 -> line 354
- *   +0x0054 -> line 349
- *   +0x005c -> line 352
- *   +0x0064 -> line 351
- *   +0x0068 -> line 354
- *   +0x0070 -> line 356
- *   +0x0090 -> line 358
- *   +0x0098 -> line 359
- *   +0x00a4 -> line 361
- *   +0x00c0 -> line 363
- *   +0x00d4 -> line 367
- *   +0x00dc -> line 368
- *   +0x00ec -> line 370
- *   +0x0100 -> line 375
- *   +0x0108 -> line 377
- *   +0x010c -> line 380
- *   +0x0110 -> line 382
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void IPO_fn_vFrameInitForRLITables(void)
-{
-    unsigned int ulCurrentTime;
-    unsigned int lDelta;
-    float fDelta;
-
-    if (IPO_g_cTransitionInProgress)
-    {
-        ulCurrentTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount; lDelta = (int)(ulCurrentTime - IPO_g_ulCurrentTime); fDelta = lDelta >= 0 ? (float)lDelta : (float)((int)((unsigned int)lDelta >> 1) | (lDelta & 1)) + (float)((int)((unsigned int)lDelta >> 1) | (lDelta & 1)); IPO_g_fCurrentIncrementRatio = IPO_g_fIncrementByMilliSecond * fDelta;
-        IPO_g_fPreviousGlobalRatio = IPO_g_fCurrentGlobalRatio;
-        IPO_g_fCurrentGlobalRatio = IPO_g_fCurrentGlobalRatio + IPO_g_fCurrentIncrementRatio;
-        if (IPO_g_cChangeMode == 1)
-        {
-            if (IPO_g_fCurrentGlobalRatio > 1.0f)
-                IPO_g_fCurrentGlobalRatio = 1.0f;
-        }
-        else if (IPO_g_cChangeMode == 2)
-        {
-            if (IPO_g_fAddWantedRatio >= 0.0f)
-            {
-                if (IPO_g_fCurrentGlobalRatio > IPO_g_fAddWantedRatio)
-                {
-                    IPO_g_fCurrentGlobalRatio = IPO_g_fAddWantedRatio;
-                }
-            }
-            else if (IPO_g_fAddWantedRatio <= 0.0f)
-            {
-                if (IPO_g_fCurrentGlobalRatio < IPO_g_fAddWantedRatio)
-                {
-                    IPO_g_fCurrentGlobalRatio = IPO_g_fAddWantedRatio;
-                }
-            }
-        }
-        else
-        {
-            IPO_g_cTransitionInProgress = 0;
-        }
-        IPO_g_ulCurrentTime = ulCurrentTime;
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 297–336 */
-/* addr: 0x002f2c60  size: 284 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 297
- *   +0x000c -> line 300
- *   +0x0028 -> line 301
- *   +0x0030 -> line 303
- *   +0x0048 -> line 306
- *   +0x0060 -> line 310
- *   +0x0064 -> line 312
- *   +0x006c -> line 314
- *   +0x0070 -> line 316
- *   +0x0078 -> line 320
- *   +0x007c -> line 319
- *   +0x0080 -> line 320
- *   +0x0084 -> line 322
- *   +0x0088 -> line 323
- *   +0x008c -> line 320
- *   +0x0090 -> line 325
- *   +0x00d0 -> line 328
- *   +0x00ec -> line 329
- *   +0x00f8 -> line 333
- *   +0x00fc -> line 332
- *   +0x0100 -> line 333
- *   +0x0104 -> line 335
- *   +0x0108 -> line 332
- *   +0x010c -> line 335
- *   +0x0114 -> line 336
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void IPO_fn_vSetAddRLITable(char _cIndexToReach, unsigned int _ulChangeDuration, float _fFinalRatio)
-{
-    if (IPO_g_ucNumberOfRLITables == 0)
-        return;
-
-    if ((_cIndexToReach >= IPO_g_ucNumberOfRLITables) || (_cIndexToReach < 0))
-        return;
-
-    if (IPO_g_cBlockingTransitions && IPO_g_cTransitionInProgress)
-        return;
-
-    if (_fFinalRatio == 0.0f)
-        return;
-
-    IPO_g_ucRadiosityIndexToAdd = (unsigned char)_cIndexToReach;
-    IPO_g_fAddWantedRatio = _fFinalRatio;
-    if (_ulChangeDuration == 0)
-    {
-        IPO_g_fCurrentGlobalRatio = _fFinalRatio;
-        IPO_g_fIncrementByMilliSecond = 0.0f;
-    }
-    else
-    {
-        IPO_g_ulChangeDuration = _ulChangeDuration;
-        IPO_g_ulCurrentTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - 1;
-        IPO_g_fCurrentIncrementRatio = 0.0f;
-        IPO_g_fCurrentGlobalRatio = 0.0f;
-        IPO_g_fIncrementByMilliSecond = _fFinalRatio / (float)_ulChangeDuration;
-        if (IPO_g_fIncrementByMilliSecond == 0.0f)
-            IPO_g_fIncrementByMilliSecond = 1e-9f;
-    }
-
-    IPO_g_cTransitionInProgress = 1;
-    IPO_g_cChangeMode = 2;
-    IPO_g_ulCurrentTransitionID++;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 245–290 */
-/* addr: 0x002f2d80  size: 452 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 245
- *   +0x000c -> line 248
- *   +0x0028 -> line 249
- *   +0x0030 -> line 251
- *   +0x0048 -> line 254
- *   +0x0058 -> line 255
- *   +0x0078 -> line 257
- *   +0x007c -> line 259
- *   +0x0084 -> line 264
- *   +0x0088 -> line 263
- *   +0x008c -> line 264
- *   +0x0090 -> line 262
- *   +0x0098 -> line 265
- *   +0x00a0 -> line 268
- *   +0x00a4 -> line 271
- *   +0x00ac -> line 276
- *   +0x00b0 -> line 270
- *   +0x00b4 -> line 273
- *   +0x00b8 -> line 274
- *   +0x00bc -> line 268
- *   +0x00c4 -> line 271
- *   +0x00cc -> line 276
- *   +0x00d0 -> line 268
- *   +0x00d4 -> line 276
- *   +0x00dc -> line 277
- *   +0x0130 -> line 279
- *   +0x017c -> line 282
- *   +0x0198 -> line 283
- *   +0x01a4 -> line 289
- *   +0x01a8 -> line 286
- *   +0x01b0 -> line 287
- *   +0x01b4 -> line 289
- *   +0x01bc -> line 290
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void IPO_fn_vSetChangeOfRLITable(char _cIndexToReach, unsigned int _ulChangeDuration, char _cIncrementOrJump)
-{
-    if (IPO_g_ucNumberOfRLITables == 0)
-        return;
-
-    if ((_cIndexToReach >= IPO_g_ucNumberOfRLITables) || (_cIndexToReach < 0))
-        return;
-
-    if (IPO_g_cBlockingTransitions && IPO_g_cTransitionInProgress)
-        return;
-
-    if (_cIncrementOrJump == 0)
-        IPO_g_ucRadiosityIndexToReach = (unsigned char)((IPO_g_ucCurrentRadiosityIndex + _cIndexToReach) % IPO_g_ucNumberOfRLITables);
-    else
-        IPO_g_ucRadiosityIndexToReach = (unsigned char)_cIndexToReach;
-
-    if (_ulChangeDuration == 0)
-    {
-        IPO_g_ucNextRadiosityIndex = IPO_g_ucRadiosityIndexToReach;
-        IPO_g_fCurrentIncrementRatio = 0.0f;
-        IPO_g_fCurrentGlobalRatio = 1.0f;
-        IPO_g_ucCurrentRadiosityIndex = IPO_g_ucRadiosityIndexToReach;
-    }
-    else
-    {
-        IPO_g_ucNextRadiosityIndex = (unsigned char)((IPO_g_ucCurrentRadiosityIndex + 1) % IPO_g_ucNumberOfRLITables);
-
-        IPO_g_ulChangeDuration = _ulChangeDuration;
-        IPO_g_ulCurrentTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - 1;
-
-        IPO_g_fCurrentIncrementRatio = 0.0f;
-        IPO_g_fCurrentGlobalRatio = 0.0f;
-
-        if (IPO_g_ucCurrentRadiosityIndex < IPO_g_ucRadiosityIndexToReach)
-            IPO_g_fIncrementByMilliSecond = (float)(IPO_g_ucRadiosityIndexToReach - IPO_g_ucCurrentRadiosityIndex) / (float)_ulChangeDuration;
-        else
-            IPO_g_fIncrementByMilliSecond = (float)(IPO_g_ucRadiosityIndexToReach + (IPO_g_ucNumberOfRLITables - IPO_g_ucCurrentRadiosityIndex)) / (float)_ulChangeDuration;
-
-        if (IPO_g_fIncrementByMilliSecond == 0.0f)
-            IPO_g_fIncrementByMilliSecond = 1e-9f;
-    }
-
-    IPO_g_cTransitionInProgress = 1;
-    IPO_g_cChangeMode = 1;
-    IPO_g_ulCurrentTransitionID++;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 234–234 */
-/* addr: 0x002f2f50  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 234
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void IPO_fn_vSetRLITransitionsBlocking(char _cBlocking)
-{
-    IPO_g_cBlockingTransitions = _cBlocking;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 228–228 */
-/* addr: 0x002f2f60  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 228
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-char IPO_fn_bRLITransitionInProgress(void)
-{
-    return IPO_g_cTransitionInProgress;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 212–222 */
-/* addr: 0x002f2f70  size: 132 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 212
- *   +0x001c -> line 214
- *   +0x0024 -> line 216
- *   +0x0038 -> line 217
- *   +0x0048 -> line 218
- *   +0x0054 -> line 219
- *   +0x0068 -> line 221
- *   +0x006c -> line 222
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned char IPO_fn_ucGetRLITableIndex(char* _szRLITableName)
-{
-    int lI;
-
-    for (lI = 0; lI < IPO_g_ucNumberOfRLITables; lI++)
-    {
-        if (IPO_g_a_szAdditionnalRLITables[lI] != NULL)
-        {
-            if (strcasecmp(IPO_g_a_szAdditionnalRLITables[lI], _szRLITableName) == 0)
-            {
-                return (unsigned char)lI;
-            }
-        }
-    }
-
-    return 0xff;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 150–183 */
-/* addr: 0x002f3000  size: 244 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 150
- *   +0x0014 -> line 155
- *   +0x0020 -> line 157
- *   +0x0090 -> line 158
- *   +0x00a0 -> line 161
- *   +0x00b0 -> line 163
- *   +0x00b4 -> line 166
- *   +0x00bc -> line 169
- *   +0x00c8 -> line 172
- *   +0x00d0 -> line 173
- *   +0x00d4 -> line 174
- *   +0x00dc -> line 183
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-#pragma auto_inline on
-void IPO_fn_vReInitIPO(HIE_tdstSuperObject_* _hSO)
-{
-    IPO_tdstInstanciatedPhysicalObject_* hIPO;
-    HIE_tdstSuperObject_* hChild;
-
-    for (hChild = _hSO->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn)
-    {
-        IPO_fn_vReInitIPO(hChild);
-    }
-
-    if (_hSO->ulTypeOfLinkedObject == 0x20)
-    {
-        hIPO = _hSO->hLinkedObject.p_stInstanciatedPhysicalObject;
-
-        GLI_vResetVertexColorsForIPO(hIPO);
-
-        if (hIPO->_hCurrentRadiosity)
-        {
-            IPO_fn_vSetRadiosityFromIndex(hIPO, 0);
-            hIPO->fLastRatioUsed = 0.0f;
-            hIPO->ulLastTransitionID = -1;
-        }
-    }
-}
-#pragma auto_inline reset
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 107–141 */
-/* addr: 0x002f3100  size: 208 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 107
- *   +0x0004 -> line 111
- *   +0x0008 -> line 107
- *   +0x0014 -> line 140
- *   +0x0018 -> line 113
- *   +0x001c -> line 115
- *   +0x0020 -> line 111
- *   +0x0024 -> line 117
- *   +0x0028 -> line 119
- *   +0x002c -> line 121
- *   +0x0030 -> line 123
- *   +0x0034 -> line 124
- *   +0x0038 -> line 125
- *   +0x003c -> line 127
- *   +0x0040 -> line 130
- *   +0x0044 -> line 131
- *   +0x0048 -> line 132
- *   +0x004c -> line 133
- *   +0x0050 -> line 136
- *   +0x0054 -> line 140
- *   +0x00bc -> line 141
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void IPO_fn_vLevelReInitRLI(void)
-{
-    IPO_g_cBlockingTransitions = 1;
-
-    IPO_g_cChangeMode = 0;
-
-    IPO_g_ulCurrentTransitionID = 0;
-
-    IPO_g_cTransitionInProgress = 0;
-
-    IPO_g_ulChangeDuration = 0;
-
-    IPO_g_ulCurrentTime = 0;
-
-    IPO_g_fCurrentIncrementRatio = 0.0f;
-    IPO_g_fCurrentGlobalRatio = 0.0f;
-    IPO_g_fPreviousGlobalRatio = 0.0f;
-
-    IPO_g_fIncrementByMilliSecond = 0.0f;
-
-    IPO_g_ucCurrentRadiosityIndex = 0;
-    IPO_g_ucNextRadiosityIndex = 0;
-    IPO_g_ucRadiosityIndexToReach = 0;
-    IPO_g_ucRadiosityIndexToAdd = 0;
-
-    IPO_g_fAddWantedRatio = 0.0f;
-
-    IPO_fn_vReInitIPO((HIE_tdstSuperObject_*)gp_stActualWorld);
+    return _hInstanciatedPhysicalObject->_hPhysicalObject;
 }

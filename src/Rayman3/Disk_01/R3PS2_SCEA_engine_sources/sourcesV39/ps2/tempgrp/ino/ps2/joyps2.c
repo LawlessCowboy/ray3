@@ -82,10 +82,17 @@ int g_EngineHasBeenPausedBecauseOfMC;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned short INO_fn_uwJoyPreviousDirections(stDevice* _hDev)
-{
-    return ((stJoystickState*)_hDev->m_p_stLastState)->m_uwDirections;
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+unsigned short INO_fn_uwJoyPreviousDirections(stDevice* _hDev);
+short INOPS2_fn_wReadJoystick(stDevice* _p_stDev);
+short INOPS2_fn_wJoyCheckConnectionFast(short _wJoystickNum);
+short INOPS2_fn_wJoyCheckConnection(short _wJoystickNum);
+short INOPS2_fn_wJoyGetJoystickCaps(int _unused, stJoystickCaps* _p_stJoyCaps);
+short INOPS2_fn_wRegisterJoystick(short _wJoystickNum);
+short INOPS2_fn_wInit(void);
+short fn_wJoyGetJoystickState(short _wJoystickNum, stJoystickState* _p_stJoyState, stJoystickCaps* _p_stJoyCaps);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\joyps2.c lines 791–802 */
 /* addr: 0x002eef90  size: 280 bytes */
@@ -108,25 +115,6 @@ unsigned short INO_fn_uwJoyPreviousDirections(stDevice* _hDev)
 void* memcpy(void* dst, const void* src, size_t n);
 short fn_wJoyGetJoystickState(short _wJoystickNum, stJoystickState* _p_stJoyState, stJoystickCaps* _p_stJoyCaps);
 
-short INOPS2_fn_wReadJoystick(stDevice* _p_stDev)
-{
-    stJoystickState* p_stState;
-    stJoystickCaps* p_stCaps;
-    short wReturn;
-    short wPort;
-
-    p_stState = (stJoystickState*)_p_stDev->m_p_stState;
-
-    p_stCaps = (stJoystickCaps*)_p_stDev->m_p_stCaps;
-    wPort = _p_stDev->m_wPort;
-
-    memcpy(_p_stDev->m_p_stLastState, p_stState, sizeof(stJoystickState));
-    wReturn = fn_wJoyGetJoystickState(wPort, p_stState, p_stCaps);
-    p_stState->m_uwDirections = 0; if (p_stState->m_a_fAxisValue[0] < -0.1f) p_stState->m_uwDirections |= 1; else if (p_stState->m_a_fAxisValue[0] > 0.1f) p_stState->m_uwDirections |= 2; if (p_stState->m_a_fAxisValue[1] > 0.1f) p_stState->m_uwDirections |= 8; else if (p_stState->m_a_fAxisValue[1] < -0.1f) p_stState->m_uwDirections |= 4;
-
-    return wReturn;
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\joyps2.c lines 772–773 */
 /* addr: 0x002ef0b0  size: 44 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -135,10 +123,6 @@ short INOPS2_fn_wReadJoystick(stDevice* _p_stDev)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-short INOPS2_fn_wJoyCheckConnectionFast(short _wJoystickNum)
-{
-    return !gs_a_DeconnectedJoy[(int)_wJoystickNum];
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\joyps2.c lines 737–765 */
 /* addr: 0x002ef0e0  size: 656 bytes */
@@ -183,13 +167,6 @@ short INOPS2_fn_wJoyCheckConnectionFast(short _wJoystickNum)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-short INOPS2_fn_wJoyCheckConnection(short _wJoystickNum)
-{
-    int iSlot;
-    int iPort;
-    unsigned char act_align[6];
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\joyps2.c lines 723–729 */
 /* addr: 0x002ef370  size: 28 bytes */
@@ -203,14 +180,6 @@ short INOPS2_fn_wJoyCheckConnection(short _wJoystickNum)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-short INOPS2_fn_wJoyGetJoystickCaps(int _unused, stJoystickCaps* _p_stJoyCaps)
-{
-    _p_stJoyCaps->m_a_stAxisCaps[0].m_lRange = 128;
-    _p_stJoyCaps->m_a_stAxisCaps[1].m_lRange = 128;
-    _p_stJoyCaps->m_a_stAxisCaps[3].m_lRange = 128;
-    _p_stJoyCaps->m_a_stAxisCaps[4].m_lRange = 128;
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\joyps2.c lines 623–684 */
 /* addr: 0x002ef390  size: 876 bytes */
@@ -250,13 +219,6 @@ short INOPS2_fn_wJoyGetJoystickCaps(int _unused, stJoystickCaps* _p_stJoyCaps)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-short INOPS2_fn_wRegisterJoystick(short _wJoystickNum)
-{
-    int iSlot;
-    int iPort;
-    int s_bBlackBoxPadDeclared;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\joyps2.c lines 598–605 */
 /* addr: 0x002ef700  size: 88 bytes */
@@ -270,13 +232,6 @@ short INOPS2_fn_wRegisterJoystick(short _wJoystickNum)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-short INOPS2_fn_wInit(void)
-{
-    if (gs_iScePadInit)
-        return 1;
-    gs_iScePadInit = scePadInit(0);
-    return gs_iScePadInit == 1 ? 1 : -1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\joyps2.c lines 325–587 */
 /* addr: 0x002ef760  size: 2324 bytes */
@@ -370,6 +325,7 @@ short INOPS2_fn_wInit(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
 short fn_wJoyGetJoystickState(short _wJoystickNum, stJoystickState* _p_stJoyState, stJoystickCaps* _p_stJoyCaps)
 {
     short xButton;
@@ -382,4 +338,66 @@ short fn_wJoyGetJoystickState(short _wJoystickNum, stJoystickState* _p_stJoyStat
     int v1;
     PS2_tdstControllerData_ stContData;
     /* TODO: decompile from asm/... */
+}
+
+short INOPS2_fn_wInit(void)
+{
+    if (gs_iScePadInit)
+        return 1;
+    gs_iScePadInit = scePadInit(0);
+    return gs_iScePadInit == 1 ? 1 : -1;
+}
+
+short INOPS2_fn_wRegisterJoystick(short _wJoystickNum)
+{
+    int iSlot;
+    int iPort;
+    int s_bBlackBoxPadDeclared;
+    /* TODO: decompile from asm/... */
+}
+
+short INOPS2_fn_wJoyGetJoystickCaps(int _unused, stJoystickCaps* _p_stJoyCaps)
+{
+    _p_stJoyCaps->m_a_stAxisCaps[0].m_lRange = 128;
+    _p_stJoyCaps->m_a_stAxisCaps[1].m_lRange = 128;
+    _p_stJoyCaps->m_a_stAxisCaps[3].m_lRange = 128;
+    _p_stJoyCaps->m_a_stAxisCaps[4].m_lRange = 128;
+    return 1;
+}
+
+short INOPS2_fn_wJoyCheckConnection(short _wJoystickNum)
+{
+    int iSlot;
+    int iPort;
+    unsigned char act_align[6];
+    /* TODO: decompile from asm/... */
+}
+
+short INOPS2_fn_wJoyCheckConnectionFast(short _wJoystickNum)
+{
+    return !gs_a_DeconnectedJoy[(int)_wJoystickNum];
+}
+
+short INOPS2_fn_wReadJoystick(stDevice* _p_stDev)
+{
+    stJoystickState* p_stState;
+    stJoystickCaps* p_stCaps;
+    short wReturn;
+    short wPort;
+
+    p_stState = (stJoystickState*)_p_stDev->m_p_stState;
+
+    p_stCaps = (stJoystickCaps*)_p_stDev->m_p_stCaps;
+    wPort = _p_stDev->m_wPort;
+
+    memcpy(_p_stDev->m_p_stLastState, p_stState, sizeof(stJoystickState));
+    wReturn = fn_wJoyGetJoystickState(wPort, p_stState, p_stCaps);
+    p_stState->m_uwDirections = 0; if (p_stState->m_a_fAxisValue[0] < -0.1f) p_stState->m_uwDirections |= 1; else if (p_stState->m_a_fAxisValue[0] > 0.1f) p_stState->m_uwDirections |= 2; if (p_stState->m_a_fAxisValue[1] > 0.1f) p_stState->m_uwDirections |= 8; else if (p_stState->m_a_fAxisValue[1] < -0.1f) p_stState->m_uwDirections |= 4;
+
+    return wReturn;
+}
+
+unsigned short INO_fn_uwJoyPreviousDirections(stDevice* _hDev)
+{
+    return ((stJoystickState*)_hDev->m_p_stLastState)->m_uwDirections;
 }

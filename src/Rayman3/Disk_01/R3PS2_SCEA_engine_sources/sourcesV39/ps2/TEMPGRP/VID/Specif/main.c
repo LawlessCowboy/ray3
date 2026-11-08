@@ -239,10 +239,16 @@ int SND_g_iEnoughSound;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void ErrMessage(char* message)
-{
-    printf("[ Error ] %s\n", message);
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void ErrMessage(char* message);
+void defMain(void);
+void initAll(char* bsfilename, float fVolume);
+void fn_vAllocBuffers64(void);
+void switchThread(void);
+int readMpeg(anon_2* vd, anon_0* rb, anon_8* file, int interruptable);
+unsigned int movie(char* name, int interruptable, float fVolume);
 
 int GetThreadId(void);
 int ReferThreadStatus(int tid, ThreadParam* info);
@@ -257,15 +263,6 @@ int RotateThreadReadyQueue(int prio);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void defMain(void)
-{
-    ThreadParam th_param;
-
-    while (1)
-    {
-        ReferThreadStatus(GetThreadId(), &th_param); RotateThreadReadyQueue(th_param.currentPriority);
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\main.c lines 372–485 */
 /* addr: 0x00130910  size: 564 bytes */
@@ -334,40 +331,6 @@ int StartThread(int th, void* arg);
 int strFileOpen(anon_8* file, char* filename);
 void fn_vAllocBuffers64(void);
 
-void initAll(char* bsfilename, float fVolume)
-{
-    ThreadParam th_param;
-    int lang;
-
-    *(volatile unsigned int*)0x1000E000 |= 3;
-    *(volatile unsigned int*)0x1000E010 = 4;
-    fn_vAllocBuffers64();
-    readBufCreate(readBuf);
-    sceMpegInit();
-    videoDecCreate(&videoDec, mpegWork, 0x196768, viBufData, viBufTag, 0x100, timeStamp, 0x200);
-    videoDecSetStream(&videoDec, 0, 0, &videoCallback);
-    lang = GAM_fn_iGetCurrentLanguageNb(); VID_g_iHasAudio = 0; switch (lang) { case 0: case 1: case 2: case 3: case 4: break; default: lang = 1; break; }
-    videoDecSetStream(&videoDec, 4, lang, &vagCallbackLeft);
-    vagInit(fVolume); InitGlDevice();
-    ReferThreadStatus(GetThreadId(), &th_param);
-    th_param.initPriority = th_param.currentPriority;
-    th_param.entry = (void (*)(void*))defMain;
-    th_param.stack = defStack;
-    th_param.stackSize = 0x800;
-    th_param.gpReg = (int)&_gp;
-    th_param.option = 0;
-    defaultTh = CreateThread(&th_param, 0x800, (void*)defMain, th_param.currentPriority);
-    StartThread(defaultTh, 0);
-    th_param.entry = (void (*)(void*))videoDecMain;
-    th_param.stack = videoDecStack;
-    th_param.stackSize = 0x4000;
-    th_param.gpReg = (int)&_gp;
-    th_param.option = 0;
-    videoDecTh = CreateThread(&th_param, 0x4000, (void*)videoDecMain, th_param.currentPriority);
-    StartThread(videoDecTh, &videoDec);
-    while (strFileOpen(&infile, bsfilename) == 0) ; g_start_it = 0;
-}
-
 void* fn_pvMallocInBinaryPreservingTheCurrentMode(unsigned int size);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\main.c lines 314–333 */
@@ -415,24 +378,6 @@ void* fn_pvMallocInBinaryPreservingTheCurrentMode(unsigned int size);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vAllocBuffers64(void)
-{
-    a7_p_vBuffers64_Pointers[0] = fn_pvMallocInBinaryPreservingTheCurrentMode(0x104F);
-    a7_p_vBuffers64_Pointers[1] = fn_pvMallocInBinaryPreservingTheCurrentMode(0x1967A7);
-    a7_p_vBuffers64_Pointers[2] = fn_pvMallocInBinaryPreservingTheCurrentMode(0x83F);
-    a7_p_vBuffers64_Pointers[3] = 0;
-    a7_p_vBuffers64_Pointers[4] = fn_pvMallocInBinaryPreservingTheCurrentMode(0x8003F);
-    a7_p_vBuffers64_Pointers[5] = fn_pvMallocInBinaryPreservingTheCurrentMode(0x403F);
-    a7_p_vBuffers64_Pointers[6] = fn_pvMallocInBinaryPreservingTheCurrentMode(0x16807F);
-    a7_p_vBuffers64_Pointers[7] = fn_pvMallocInBinaryPreservingTheCurrentMode(0x2804B);
-    viBufTag = ((int)a7_p_vBuffers64_Pointers[0] + 0x3F) & ~0x3F;
-    mpegWork = ((int)a7_p_vBuffers64_Pointers[1] + 0x3F) & ~0x3F;
-    defStack = ((int)a7_p_vBuffers64_Pointers[2] + 0x3F) & ~0x3F;
-    viBufData = ((int)a7_p_vBuffers64_Pointers[4] + 0x3F) & ~0x3F;
-    videoDecStack = ((int)a7_p_vBuffers64_Pointers[5] + 0x3F) & ~0x3F;
-    zeFrame = ((int)a7_p_vBuffers64_Pointers[6] + 0x3F) & ~0x3F;
-    readBuf = (anon_0*)(((int)a7_p_vBuffers64_Pointers[7] + 0x3F) & ~0x3F);
-}
 
 #pragma auto_inline on
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\main.c lines 297–301 */
@@ -445,13 +390,7 @@ void fn_vAllocBuffers64(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void switchThread(void)
-{
-    ThreadParam th_param;
 
-    ReferThreadStatus(GetThreadId(), &th_param);
-    RotateThreadReadyQueue(th_param.currentPriority);
-}
 #pragma auto_inline reset
 
 int scePadRead(int port, int slot, unsigned char* rdata);
@@ -539,6 +478,47 @@ inline void GAM_vClearCop0Register24(void)
 #pragma opt_propagation off
 #pragma opt_loop_invariants off
 #pragma opt_strength_reduction off
+
+#pragma opt_loop_invariants reset
+#pragma opt_strength_reduction reset
+#pragma pop
+
+int vagStop(void);
+void readBufDelete(anon_0* b);
+int TerminateThread(int th);
+int DeleteThread(int th);
+int videoDecDelete(anon_2* vd);
+void DesinitGlDevice(void);
+int strFileClose(anon_8* file);
+void fn_vFreeInBinaryPreservingTheCurrentMode(void* p);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\main.c lines 127–139 */
+/* addr: 0x00130f90  size: 216 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 127
+ *   +0x0010 -> line 129
+ *   +0x0018 -> line 131
+ *   +0x0034 -> line 133
+ *   +0x00c0 -> line 139
+ *   +0x00cc -> line 138
+ *   +0x00d0 -> line 139
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+unsigned int movie(char* name, int interruptable, float fVolume)
+{
+    int i;
+
+    initAll(name, fVolume);
+    readMpeg(&videoDec, readBuf, &infile, interruptable);
+    vagStop(); readBufDelete(readBuf); TerminateThread(videoDecTh); DeleteThread(videoDecTh); TerminateThread(defaultTh); DeleteThread(defaultTh); videoDecDelete(&videoDec); DesinitGlDevice(); strFileClose(&infile); for (i = 0; i < 8; i++) { if (a7_p_vBuffers64_Pointers[i]) fn_vFreeInBinaryPreservingTheCurrentMode(a7_p_vBuffers64_Pointers[i]); }
+    return controller_val;
+}
+
+#pragma opt_propagation off
+#pragma opt_loop_invariants off
+#pragma opt_strength_reduction off
 int readMpeg(anon_2* vd, anon_0* rb, anon_8* file, int interruptable)
 {
     int isPaused;
@@ -611,38 +591,84 @@ int readMpeg(anon_2* vd, anon_0* rb, anon_8* file, int interruptable)
     GAM_vClearCop0Register24();
     return 1;
 }
-#pragma opt_loop_invariants reset
 #pragma opt_strength_reduction reset
-#pragma pop
+#pragma opt_loop_invariants reset
+#pragma opt_propagation reset
 
-int vagStop(void);
-void readBufDelete(anon_0* b);
-int TerminateThread(int th);
-int DeleteThread(int th);
-int videoDecDelete(anon_2* vd);
-void DesinitGlDevice(void);
-int strFileClose(anon_8* file);
-void fn_vFreeInBinaryPreservingTheCurrentMode(void* p);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\main.c lines 127–139 */
-/* addr: 0x00130f90  size: 216 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 127
- *   +0x0010 -> line 129
- *   +0x0018 -> line 131
- *   +0x0034 -> line 133
- *   +0x00c0 -> line 139
- *   +0x00cc -> line 138
- *   +0x00d0 -> line 139
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned int movie(char* name, int interruptable, float fVolume)
+#pragma auto_inline on
+void switchThread(void)
 {
-    int i;
+    ThreadParam th_param;
 
-    initAll(name, fVolume);
-    readMpeg(&videoDec, readBuf, &infile, interruptable);
-    vagStop(); readBufDelete(readBuf); TerminateThread(videoDecTh); DeleteThread(videoDecTh); TerminateThread(defaultTh); DeleteThread(defaultTh); videoDecDelete(&videoDec); DesinitGlDevice(); strFileClose(&infile); for (i = 0; i < 8; i++) { if (a7_p_vBuffers64_Pointers[i]) fn_vFreeInBinaryPreservingTheCurrentMode(a7_p_vBuffers64_Pointers[i]); }
-    return controller_val;
+    ReferThreadStatus(GetThreadId(), &th_param);
+    RotateThreadReadyQueue(th_param.currentPriority);
+}
+#pragma auto_inline reset
+
+void fn_vAllocBuffers64(void)
+{
+    a7_p_vBuffers64_Pointers[0] = fn_pvMallocInBinaryPreservingTheCurrentMode(0x104F);
+    a7_p_vBuffers64_Pointers[1] = fn_pvMallocInBinaryPreservingTheCurrentMode(0x1967A7);
+    a7_p_vBuffers64_Pointers[2] = fn_pvMallocInBinaryPreservingTheCurrentMode(0x83F);
+    a7_p_vBuffers64_Pointers[3] = 0;
+    a7_p_vBuffers64_Pointers[4] = fn_pvMallocInBinaryPreservingTheCurrentMode(0x8003F);
+    a7_p_vBuffers64_Pointers[5] = fn_pvMallocInBinaryPreservingTheCurrentMode(0x403F);
+    a7_p_vBuffers64_Pointers[6] = fn_pvMallocInBinaryPreservingTheCurrentMode(0x16807F);
+    a7_p_vBuffers64_Pointers[7] = fn_pvMallocInBinaryPreservingTheCurrentMode(0x2804B);
+    viBufTag = ((int)a7_p_vBuffers64_Pointers[0] + 0x3F) & ~0x3F;
+    mpegWork = ((int)a7_p_vBuffers64_Pointers[1] + 0x3F) & ~0x3F;
+    defStack = ((int)a7_p_vBuffers64_Pointers[2] + 0x3F) & ~0x3F;
+    viBufData = ((int)a7_p_vBuffers64_Pointers[4] + 0x3F) & ~0x3F;
+    videoDecStack = ((int)a7_p_vBuffers64_Pointers[5] + 0x3F) & ~0x3F;
+    zeFrame = ((int)a7_p_vBuffers64_Pointers[6] + 0x3F) & ~0x3F;
+    readBuf = (anon_0*)(((int)a7_p_vBuffers64_Pointers[7] + 0x3F) & ~0x3F);
+}
+
+void initAll(char* bsfilename, float fVolume)
+{
+    ThreadParam th_param;
+    int lang;
+
+    *(volatile unsigned int*)0x1000E000 |= 3;
+    *(volatile unsigned int*)0x1000E010 = 4;
+    fn_vAllocBuffers64();
+    readBufCreate(readBuf);
+    sceMpegInit();
+    videoDecCreate(&videoDec, mpegWork, 0x196768, viBufData, viBufTag, 0x100, timeStamp, 0x200);
+    videoDecSetStream(&videoDec, 0, 0, &videoCallback);
+    lang = GAM_fn_iGetCurrentLanguageNb(); VID_g_iHasAudio = 0; switch (lang) { case 0: case 1: case 2: case 3: case 4: break; default: lang = 1; break; }
+    videoDecSetStream(&videoDec, 4, lang, &vagCallbackLeft);
+    vagInit(fVolume); InitGlDevice();
+    ReferThreadStatus(GetThreadId(), &th_param);
+    th_param.initPriority = th_param.currentPriority;
+    th_param.entry = (void (*)(void*))defMain;
+    th_param.stack = defStack;
+    th_param.stackSize = 0x800;
+    th_param.gpReg = (int)&_gp;
+    th_param.option = 0;
+    defaultTh = CreateThread(&th_param, 0x800, (void*)defMain, th_param.currentPriority);
+    StartThread(defaultTh, 0);
+    th_param.entry = (void (*)(void*))videoDecMain;
+    th_param.stack = videoDecStack;
+    th_param.stackSize = 0x4000;
+    th_param.gpReg = (int)&_gp;
+    th_param.option = 0;
+    videoDecTh = CreateThread(&th_param, 0x4000, (void*)videoDecMain, th_param.currentPriority);
+    StartThread(videoDecTh, &videoDec);
+    while (strFileOpen(&infile, bsfilename) == 0) ; g_start_it = 0;
+}
+
+void defMain(void)
+{
+    ThreadParam th_param;
+
+    while (1)
+    {
+        ReferThreadStatus(GetThreadId(), &th_param); RotateThreadReadyQueue(th_param.currentPriority);
+    }
+}
+
+void ErrMessage(char* message)
+{
+    printf("[ Error ] %s\n", message);
 }

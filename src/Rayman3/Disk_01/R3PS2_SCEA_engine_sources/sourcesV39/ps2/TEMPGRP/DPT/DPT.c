@@ -10,13 +10,18 @@
 char DPT_g_szTrueSaveGamePath[256];
 tdstDataPath_ g_stDataPath;
 
-tdstDataPath_* fn_szGetGameDataPath(void)
-{
-    return &g_stDataPath;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+tdstDataPath_* fn_szGetGameDataPath(void);
+void fn_vSetGameDataPath(char* _p_szPath);
 
 void fn_vSetGameDataPath(char* _p_szPath)
 {
     strcpy(g_stDataPath.szGameData, _p_szPath);
     strupr(g_stDataPath.szGameData);
+}
+
+tdstDataPath_* fn_szGetGameDataPath(void)
+{
+    return &g_stDataPath;
 }

@@ -473,9 +473,11 @@ def prepare(entry: dict) -> Path:
         f'exec python3 "{ROOT / "tools" / "permute_bridge.py"}" compile "{job}" "$@"\n',
         encoding='utf-8')
     compile_script.chmod(0o755)
+    # Without '-m mips:5900' objdump prints the R5900 ld/sd/lq/sq words as
+    # '.word', and upstream's scorer then ignores register differences in them.
     (job / 'settings.toml').write_text(
         f'func_name = "{entry["name"]}"\ncompiler_type = "mwcc"\n'
-        'objdump_command = "mipsel-linux-gnu-objdump -dr"\n', encoding='utf-8')
+        'objdump_command = "mipsel-linux-gnu-objdump -dr -m mips:5900"\n', encoding='utf-8')
     (job / 'README.md').write_text(
         '# Rayman relocation-aware permuter job\n\n'
         'Edit `candidate.c` or replace only the body from `function.c`, then run:\n\n'

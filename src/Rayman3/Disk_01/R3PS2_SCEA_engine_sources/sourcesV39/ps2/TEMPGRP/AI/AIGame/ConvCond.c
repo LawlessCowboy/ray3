@@ -57,6 +57,16 @@ struct tdstConditionEntry_ {
 
 tdstConditionEntry_ a_stConditionTable[178];
 
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+tdstNodeInterpret_* fn_p_stEvalCondition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+unsigned char fn_ucGetConditionUltraOperator(tdeCondId_ eCondId);
+
+unsigned char fn_ucGetConditionUltraOperator(tdeCondId_ eCondId)
+{
+    return a_stConditionTable[eCondId].bUltraCondtionFlag;
+}
+
 tdstNodeInterpret_* fn_p_stEvalCondition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     int lValue = 0;
@@ -68,9 +78,4 @@ tdstNodeInterpret_* fn_p_stEvalCondition(HIE_tdstSuperObject_* p_SuperObjPerso, 
     bValue = lValue ? 1 : 0;
     *(int *)p_stValue = bValue;
     *(tdeVariableType_ *)((unsigned char *)p_stValue + 0xC) = E_vt_Integer;
-}
-
-unsigned char fn_ucGetConditionUltraOperator(tdeCondId_ eCondId)
-{
-    return a_stConditionTable[eCondId].bUltraCondtionFlag;
 }

@@ -9,7 +9,6 @@ extern "C" int usnd_memcmp(void* pvDest, void* pvSrc, unsigned int uiSize);
 extern "C" void SND_fn_vSynchroSound(void);
 inline void* operator new(size_t, void* p) { return p; }
 
-
 /* Recovered aggregate layouts from MWCC debug type records. */
 namespace usnd { struct CVarAccess; }
 typedef usnd::CVarAccess CVarAccess;
@@ -718,6 +717,36 @@ struct CPS2WaveFileIdObj {
 }
 extern "C" void usnd_memcpy(void* pvDest, void* pvSrc, unsigned int uiSize);
 
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+
+struct SwitchMgr {
+    static unsigned int ms_nbTex;
+    static unsigned int ms_nbTexMax;
+    static char* ms_pTex;
+    static CResData** ms_pDel;
+    static unsigned int ms_nbDel;
+    static unsigned int ms_maxDel;
+    static SwitchData* ms_pList;
+    static void fs_vAddDataToDelete(CResData*);
+    static void fs_vStopAll(void);
+    static void fs_vUpdateWaves(CPS2IdObjLoader*);
+    static void fs_vClearTexture(void);
+    static void fs_vAddTexture(unsigned int);
+    static void fs_vAdd(CSwitchResData*);
+    /* Inline list search; the name is not recovered (retail keeps pData in a
+       saved register, as an inlined parameter). */
+    static SwitchData* fs_pFindData(CResData* pData)
+    {
+        SwitchData* pTmp;
+        for (pTmp = ms_pList; pTmp && !pTmp->f_bFindData(pData); pTmp = pTmp->m_pNext) ;
+        return pTmp;
+    }
+};
+
+unsigned int SwitchMgr::ms_nbTex;
+unsigned int SwitchMgr::ms_nbTexMax;
+
 /* The retail debug attributes this method to AGO.c lines 93-143, but it is
  * C++ (usnd templates and constructors) and belongs with SwitchData. */
 void SwitchData::RebuildSwitch(void)
@@ -761,149 +790,122 @@ void SwitchData::RebuildSwitch(void)
     }
 }
 
-struct SwitchMgr {
-    static unsigned int ms_nbTex;
-    static unsigned int ms_nbTexMax;
-    static char* ms_pTex;
-    static CResData** ms_pDel;
-    static unsigned int ms_nbDel;
-    static unsigned int ms_maxDel;
-    static SwitchData* ms_pList;
-    static void fs_vAddDataToDelete(CResData*);
-    static void fs_vStopAll(void);
-    static void fs_vUpdateWaves(CPS2IdObjLoader*);
-    static void fs_vClearTexture(void);
-    static void fs_vAddTexture(unsigned int);
-    static void fs_vAdd(CSwitchResData*);
-    /* Inline list search; the name is not recovered (retail keeps pData in a
-       saved register, as an inlined parameter). */
-    static SwitchData* fs_pFindData(CResData* pData)
-    {
-        SwitchData* pTmp;
-        for (pTmp = ms_pList; pTmp && !pTmp->f_bFindData(pData); pTmp = pTmp->m_pNext) ;
-        return pTmp;
-    }
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-unsigned int SwitchMgr::ms_nbTex;
-unsigned int SwitchMgr::ms_nbTexMax;
-
-void Jingle::fs_vAddJingle(int s32_ObjectId, int s32_TypeId, int s32_HandleId, int iVolumeLine)
+void SwitchData::f_vUpdateWaves(char* pTex, unsigned int nbTex, CPS2IdObjLoader* pLoader)
 {
-    int uVol;
-    JingleList* pList;
+    int nb;
+    unsigned int j;
+    unsigned int i;
 
-    for (pList = ms_pFirst; pList && (pList->m_iVolumeLine != iVolumeLine); pList = pList->m_pNext)
-        ;
-    if (pList == NULL)
+    for (i = 0; i < m_nbElt; i++)
     {
-        uVol = SND_fn_s32GetVolumeLineSound(iVolumeLine);
-        pList = new JingleList(iVolumeLine, uVol);
-        if (pList)
+        for (j = 0; (j < nbTex) && (m_pElt[i].m_uiVal != pTex[j]); j++) ;
+
+        if (pLoader && (m_pElt[i].m_pData == NULL) && ((j != nbTex) || (m_uiDefault == i)))
         {
-            pList->m_pNext = ms_pFirst;
-            pList->m_pPrev = NULL;
-            if (ms_pFirst)
-                ms_pFirst->m_pPrev = pList;
-            ms_pFirst = pList;
-            SND_fn_vSetVolumeLineSound(iVolumeLine, uVol);
+            m_pElt[i].m_pData = (CResData*)usnd::CIdObjPtrMgr::fs_roGetInst().f_poGetIdObj(m_pElt[i].m_oId);
+            if (m_pElt[i].m_pData == NULL)
+            {
+                m_pElt[i].m_pData = (CResData*)pLoader->f_poLoadIdObj(m_pElt[i].m_oId);
+                if (m_pElt[i].m_pData)
+                {
+                    CUUID aId[20];
+                    while ((nb = usnd::CIdObjPtrMgr::fs_roGetInst().f_uiGetPendingReferences(aId, 20)) != 0)
+                    {
+                        if (nb > 20)
+                            nb = 20;
+                        pLoader->f_vPreloadObjects(aId, nb);
+                    }
+                }
+            }
         }
-    }
-    if (pList)
-    {
-        JingleElt* pElt = new JingleElt(s32_ObjectId, s32_TypeId, s32_HandleId);
-        if (pElt)
+        else if (m_pElt[i].m_pData && (i != m_uiDefault) && (j == nbTex))
         {
-            pElt->m_pNext = pList->m_pFirst;
-            pElt->m_pPrev = NULL;
-            if (pList->m_pFirst)
-                pList->m_pFirst->m_pPrev = pElt;
-            pList->m_pFirst = pElt;
+            CResData* pData = m_pElt[i].m_pData;
+            m_pElt[i].m_pData = NULL;
+            SwitchMgr::fs_vAddDataToDelete(pData);
         }
     }
 }
 
-void SwitchMgr::fs_vAddDataToDelete(CResData* pData)
+unsigned char SwitchData::f_bFindData(CResData* pData)
 {
-    CResData** pDel;
-    int i;
+    unsigned int i;
+    for (i = 0; (i < m_nbElt) && (m_pElt[i].m_pData != pData); i++) ;
 
-    for (i = 0; (i < ms_nbDel) && (ms_pDel[i] != pData); i++) ;
+    return i != m_nbElt;
+}
 
-    if (i == ms_nbDel)
+void SwitchMgr::fs_vAdd(CSwitchResData* pSwitchData)
+{
+    void* ptr;
+
+    ptr = usnd_malloc(sizeof(SwitchData));
+    if (ptr)
     {
-        if (ms_maxDel == ms_nbDel)
-        {
-            ms_maxDel += 16;
-            pDel = (CResData**)usnd_malloc(ms_maxDel * sizeof(CResData*));
-            if (ms_pDel)
-            {
-                usnd_memcpy(pDel, ms_pDel, ms_nbDel * sizeof(CResData*));
-                usnd_free(ms_pDel);
-            }
-            ms_pDel = pDel;
-        }
-        ms_pDel[ms_nbDel] = pData;
-        ms_nbDel++;
+        ms_pList = new (ptr) SwitchData(pSwitchData, ms_pList);
     }
+}
+
+void SwitchMgr::fs_vAddTexture(unsigned int uiTexture)
+{
+    char* pTex;
+
+    if (ms_nbTexMax == ms_nbTex)
+    {
+        ms_nbTexMax += 16;
+        pTex = (char*)usnd_malloc(ms_nbTexMax);
+        if (ms_pTex)
+        {
+            usnd_memcpy(pTex, ms_pTex, ms_nbTex);
+            usnd_free(ms_pTex);
+        }
+        ms_pTex = pTex;
+    }
+    ms_pTex[ms_nbTex] = uiTexture;
+    ms_nbTex++;
+}
+
+void SwitchMgr::fs_vClearTexture(void)
+{
+    SwitchMgr::ms_nbTexMax = 0;
+    SwitchMgr::ms_nbTex = 0;
+}
+
+void SwitchMgr::fs_vUpdateWaves(CPS2IdObjLoader* pLoader)
+{
+    SwitchData* pTmp;
+    unsigned int i;
+
+    pTmp = ms_pList;
+    while (pTmp)
+    {
+        pTmp->f_vUpdateWaves(ms_pTex, ms_nbTex, pLoader);
+        pTmp = pTmp->m_pNext;
+    }
+
+    if (pLoader)
+    {
+        usnd::CPS2WaveFileIdObj::fs_vLoadStatic();
+    }
+
+    fn_bLockSound(false);
+    fs_vStopAll();
+
+    pTmp = ms_pList;
+    while (pTmp)
+    {
+        pTmp->RebuildSwitch();
+        pTmp = pTmp->m_pNext;
+    }
+    fn_vUnlockSound();
+
+    for (i = 0; i < ms_nbDel; i++)
+    {
+        pTmp = fs_pFindData(ms_pDel[i]);
+        if (pTmp == NULL)
+            delete ms_pDel[i];
+    }
+    ms_nbDel = 0;
 }
 
 void SwitchMgr::fs_vStopAll(void)
@@ -961,120 +963,62 @@ void SwitchMgr::fs_vStopAll(void)
     }
 }
 
-void SwitchMgr::fs_vUpdateWaves(CPS2IdObjLoader* pLoader)
+void SwitchMgr::fs_vAddDataToDelete(CResData* pData)
 {
-    SwitchData* pTmp;
-    unsigned int i;
+    CResData** pDel;
+    int i;
 
-    pTmp = ms_pList;
-    while (pTmp)
+    for (i = 0; (i < ms_nbDel) && (ms_pDel[i] != pData); i++) ;
+
+    if (i == ms_nbDel)
     {
-        pTmp->f_vUpdateWaves(ms_pTex, ms_nbTex, pLoader);
-        pTmp = pTmp->m_pNext;
-    }
-
-    if (pLoader)
-    {
-        usnd::CPS2WaveFileIdObj::fs_vLoadStatic();
-    }
-
-    fn_bLockSound(false);
-    fs_vStopAll();
-
-    pTmp = ms_pList;
-    while (pTmp)
-    {
-        pTmp->RebuildSwitch();
-        pTmp = pTmp->m_pNext;
-    }
-    fn_vUnlockSound();
-
-    for (i = 0; i < ms_nbDel; i++)
-    {
-        pTmp = fs_pFindData(ms_pDel[i]);
-        if (pTmp == NULL)
-            delete ms_pDel[i];
-    }
-    ms_nbDel = 0;
-}
-
-void SwitchMgr::fs_vClearTexture(void)
-{
-    SwitchMgr::ms_nbTexMax = 0;
-    SwitchMgr::ms_nbTex = 0;
-}
-
-void SwitchMgr::fs_vAddTexture(unsigned int uiTexture)
-{
-    char* pTex;
-
-    if (ms_nbTexMax == ms_nbTex)
-    {
-        ms_nbTexMax += 16;
-        pTex = (char*)usnd_malloc(ms_nbTexMax);
-        if (ms_pTex)
+        if (ms_maxDel == ms_nbDel)
         {
-            usnd_memcpy(pTex, ms_pTex, ms_nbTex);
-            usnd_free(ms_pTex);
-        }
-        ms_pTex = pTex;
-    }
-    ms_pTex[ms_nbTex] = uiTexture;
-    ms_nbTex++;
-}
-
-void SwitchMgr::fs_vAdd(CSwitchResData* pSwitchData)
-{
-    void* ptr;
-
-    ptr = usnd_malloc(sizeof(SwitchData));
-    if (ptr)
-    {
-        ms_pList = new (ptr) SwitchData(pSwitchData, ms_pList);
-    }
-}
-
-unsigned char SwitchData::f_bFindData(CResData* pData)
-{
-    unsigned int i;
-    for (i = 0; (i < m_nbElt) && (m_pElt[i].m_pData != pData); i++) ;
-
-    return i != m_nbElt;
-}
-
-void SwitchData::f_vUpdateWaves(char* pTex, unsigned int nbTex, CPS2IdObjLoader* pLoader)
-{
-    int nb;
-    unsigned int j;
-    unsigned int i;
-
-    for (i = 0; i < m_nbElt; i++)
-    {
-        for (j = 0; (j < nbTex) && (m_pElt[i].m_uiVal != pTex[j]); j++) ;
-
-        if (pLoader && (m_pElt[i].m_pData == NULL) && ((j != nbTex) || (m_uiDefault == i)))
-        {
-            m_pElt[i].m_pData = (CResData*)usnd::CIdObjPtrMgr::fs_roGetInst().f_poGetIdObj(m_pElt[i].m_oId);
-            if (m_pElt[i].m_pData == NULL)
+            ms_maxDel += 16;
+            pDel = (CResData**)usnd_malloc(ms_maxDel * sizeof(CResData*));
+            if (ms_pDel)
             {
-                m_pElt[i].m_pData = (CResData*)pLoader->f_poLoadIdObj(m_pElt[i].m_oId);
-                if (m_pElt[i].m_pData)
-                {
-                    CUUID aId[20];
-                    while ((nb = usnd::CIdObjPtrMgr::fs_roGetInst().f_uiGetPendingReferences(aId, 20)) != 0)
-                    {
-                        if (nb > 20)
-                            nb = 20;
-                        pLoader->f_vPreloadObjects(aId, nb);
-                    }
-                }
+                usnd_memcpy(pDel, ms_pDel, ms_nbDel * sizeof(CResData*));
+                usnd_free(ms_pDel);
             }
+            ms_pDel = pDel;
         }
-        else if (m_pElt[i].m_pData && (i != m_uiDefault) && (j == nbTex))
+        ms_pDel[ms_nbDel] = pData;
+        ms_nbDel++;
+    }
+}
+
+void Jingle::fs_vAddJingle(int s32_ObjectId, int s32_TypeId, int s32_HandleId, int iVolumeLine)
+{
+    int uVol;
+    JingleList* pList;
+
+    for (pList = ms_pFirst; pList && (pList->m_iVolumeLine != iVolumeLine); pList = pList->m_pNext)
+        ;
+    if (pList == NULL)
+    {
+        uVol = SND_fn_s32GetVolumeLineSound(iVolumeLine);
+        pList = new JingleList(iVolumeLine, uVol);
+        if (pList)
         {
-            CResData* pData = m_pElt[i].m_pData;
-            m_pElt[i].m_pData = NULL;
-            SwitchMgr::fs_vAddDataToDelete(pData);
+            pList->m_pNext = ms_pFirst;
+            pList->m_pPrev = NULL;
+            if (ms_pFirst)
+                ms_pFirst->m_pPrev = pList;
+            ms_pFirst = pList;
+            SND_fn_vSetVolumeLineSound(iVolumeLine, uVol);
+        }
+    }
+    if (pList)
+    {
+        JingleElt* pElt = new JingleElt(s32_ObjectId, s32_TypeId, s32_HandleId);
+        if (pElt)
+        {
+            pElt->m_pNext = pList->m_pFirst;
+            pElt->m_pPrev = NULL;
+            if (pList->m_pFirst)
+                pList->m_pFirst->m_pPrev = pElt;
+            pList->m_pFirst = pElt;
         }
     }
 }

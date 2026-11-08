@@ -2943,87 +2943,28 @@ int SND_fn_iGetNbMusicMarkerSlots(void);
 stMusicMarkerSlot* SND_fn_p_stGetMusicMarkerSlots(void);
 void fn_vOnAIErm_M_UpdateLastError(int FatalErrorNum, char* szMsg);
 
-tdstNodeInterpret_* fn_p_stMusicMarkerSlotControlFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    tdeFuncId_ eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
-    int lSlotId;
-    stMusicMarkerSlot* p_stMarkerSlots;
-
-    switch (eFuncId)
-    {
-
-        case eProc_SND_GetMusicMarker:
-            p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
-            lSlotId = (p_stValue->eType == E_vt_Float ? MTH_M_xRealToLong(p_stValue->uDummy.uParam.xValue) : p_stValue->uDummy.uParam.lValue) - 1;
-
-            if (lSlotId < SND_fn_iGetNbMusicMarkerSlots() && lSlotId >= 0)
-            {
-                p_stMarkerSlots = SND_fn_p_stGetMusicMarkerSlots();
-                p_stValue->uDummy.uParam.szString = *(int*)((char*)&p_stMarkerSlots[0].szBuffer + lSlotId * 40); p_stValue->eType = E_vt_String;
-
-            }
-            break;
-        default:
-            fn_vOnAIErm_M_UpdateLastError(39, NULL);
-    }
-    return p_stTree;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+tdstNodeInterpret_* fn_p_stMusicMarkerSlotControlFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stIsSoundPlaying(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stOptionGetTypeVolume(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stOptionGetHandleState(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stOptionGetHandle(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
 
 tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
 int SND_fn_bIsSoundPlaying(_SND_tduRefEvt u_RefEvt);
 
-tdstNodeInterpret_* fn_p_stIsSoundPlaying(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    _SND_tduRefEvt u_RefEvt;
-    unsigned char bIsPlaying;
-    tdstGetSetParam_ st_Param;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
-    u_RefEvt.Id = st_Param.uDummy.uParam.ulValue;
-
-    bIsPlaying = SND_fn_bIsSoundPlaying(u_RefEvt);
-
-    p_stValue->uDummy.uParam.lValue = bIsPlaying;
-    p_stValue->eType = E_vt_Integer;
-    return p_stTree;
-}
-
 int SND_fn_s32GetVolumeLineSound(int s32_LineId);
 
-tdstNodeInterpret_* fn_p_stOptionGetTypeVolume(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+int SND_fn_s32GetSoundHandleState(int s32_ObjectId, int s32_TypeId, int s32_HandleId);
+
+tdstNodeInterpret_* fn_p_stOptionGetHandle(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    int s32_LineId;
-    tdeFuncId_ eFuncId;
-
-    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
-
-    switch (eFuncId)
-    {
-        case eFunc_SND_GetMenuSndVolume:
-            s32_LineId = g_lSoundVolumeLineMenu;
-            break;
-        case eFunc_SND_GetMusicVolume:
-            s32_LineId = g_lSoundVolumeLineMusic;
-            break;
-        case eFunc_SND_GetSoundVolume:
-            s32_LineId = g_lSoundVolumeLineSound;
-            break;
-        case eFunc_SND_GetVoiceVolume:
-            s32_LineId = g_lSoundVolumeLineVoices;
-            break;
-        case eFunc_SND_GetAmbianceVolume:
-            s32_LineId = g_lSoundVolumeLineAmbiance;
-            break;
-        default:
-            s32_LineId = -1;
-            break;
-    }
-
-    p_stValue->uDummy.uParam.lValue = SND_fn_s32GetVolumeLineSound(s32_LineId); p_stValue->eType = E_vt_Integer;
+    (void)p_SuperObjPerso;
+    *(int*)p_stValue = SND_fn_hGetCurrentSoundHandle();
+    *(int*)((char*)p_stValue + 0xC) = 6;
     return p_stTree;
 }
-
-int SND_fn_s32GetSoundHandleState(int s32_ObjectId, int s32_TypeId, int s32_HandleId);
 
 tdstNodeInterpret_* fn_p_stOptionGetHandleState(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
@@ -3063,10 +3004,77 @@ tdstNodeInterpret_* fn_p_stOptionGetHandleState(HIE_tdstSuperObject_* p_SuperObj
     return p_stTree;
 }
 
-tdstNodeInterpret_* fn_p_stOptionGetHandle(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stOptionGetTypeVolume(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    (void)p_SuperObjPerso;
-    *(int*)p_stValue = SND_fn_hGetCurrentSoundHandle();
-    *(int*)((char*)p_stValue + 0xC) = 6;
+    int s32_LineId;
+    tdeFuncId_ eFuncId;
+
+    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
+
+    switch (eFuncId)
+    {
+        case eFunc_SND_GetMenuSndVolume:
+            s32_LineId = g_lSoundVolumeLineMenu;
+            break;
+        case eFunc_SND_GetMusicVolume:
+            s32_LineId = g_lSoundVolumeLineMusic;
+            break;
+        case eFunc_SND_GetSoundVolume:
+            s32_LineId = g_lSoundVolumeLineSound;
+            break;
+        case eFunc_SND_GetVoiceVolume:
+            s32_LineId = g_lSoundVolumeLineVoices;
+            break;
+        case eFunc_SND_GetAmbianceVolume:
+            s32_LineId = g_lSoundVolumeLineAmbiance;
+            break;
+        default:
+            s32_LineId = -1;
+            break;
+    }
+
+    p_stValue->uDummy.uParam.lValue = SND_fn_s32GetVolumeLineSound(s32_LineId); p_stValue->eType = E_vt_Integer;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stIsSoundPlaying(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    _SND_tduRefEvt u_RefEvt;
+    unsigned char bIsPlaying;
+    tdstGetSetParam_ st_Param;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
+    u_RefEvt.Id = st_Param.uDummy.uParam.ulValue;
+
+    bIsPlaying = SND_fn_bIsSoundPlaying(u_RefEvt);
+
+    p_stValue->uDummy.uParam.lValue = bIsPlaying;
+    p_stValue->eType = E_vt_Integer;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stMusicMarkerSlotControlFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    tdeFuncId_ eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
+    int lSlotId;
+    stMusicMarkerSlot* p_stMarkerSlots;
+
+    switch (eFuncId)
+    {
+
+        case eProc_SND_GetMusicMarker:
+            p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+            lSlotId = (p_stValue->eType == E_vt_Float ? MTH_M_xRealToLong(p_stValue->uDummy.uParam.xValue) : p_stValue->uDummy.uParam.lValue) - 1;
+
+            if (lSlotId < SND_fn_iGetNbMusicMarkerSlots() && lSlotId >= 0)
+            {
+                p_stMarkerSlots = SND_fn_p_stGetMusicMarkerSlots();
+                p_stValue->uDummy.uParam.szString = *(int*)((char*)&p_stMarkerSlots[0].szBuffer + lSlotId * 40); p_stValue->eType = E_vt_String;
+
+            }
+            break;
+        default:
+            fn_vOnAIErm_M_UpdateLastError(39, NULL);
+    }
     return p_stTree;
 }

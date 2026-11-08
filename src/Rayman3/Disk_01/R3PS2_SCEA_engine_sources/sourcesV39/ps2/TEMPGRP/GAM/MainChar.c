@@ -96,8 +96,47 @@ struct DNM_stDynamics {
 
 tdstEngineStructure_ g_stEngineStructure;
 
-
 void SND_fn_vResetLastMarker(void);
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+int fn_bGetVectorFromPhonem(MTH3D_tdstVector_* p_stVector, char cPhonem, tdstFamilyList_* p_stFamily);
+HIE_tdstSuperObject_* MC_fn_hGetNewMainCharacter(tdstNodeMainCharacter_* hMainCharNode);
+void MC_fn_vSetNewMainCharacter(tdstNodeMainCharacter_* hMainCharNode, HIE_tdstSuperObject_* hCharacter);
+tdstNodeMainCharacter_* MC_fn_hGetNextMainCharNode(tdstNodeMainCharacter_* hMainCharNode);
+tdstNodeMainCharacter_* MC_fn_hGetFirstMainCharNode(void);
+HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(tdstNodeMainCharacter_* hMainCharNode);
+void MC_fn_vSetCharacterInMainCharacterNode(tdstNodeMainCharacter_* hMainCharNode, HIE_tdstSuperObject_* hCharacter);
+
+void MC_fn_vSetCharacterInMainCharacterNode(tdstNodeMainCharacter_* hMainCharNode, HIE_tdstSuperObject_* hCharacter)
+{
+    hMainCharNode->hCharacter = hCharacter;
+}
+
+HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(tdstNodeMainCharacter_* hMainCharNode)
+{
+    return hMainCharNode->hCharacter;
+}
+
+tdstNodeMainCharacter_* MC_fn_hGetFirstMainCharNode(void)
+{
+    return g_stEngineStructure.hMainCharacterList.hFirstElementDyn;
+}
+
+tdstNodeMainCharacter_* MC_fn_hGetNextMainCharNode(tdstNodeMainCharacter_* hMainCharNode)
+{
+    return hMainCharNode->hNextBrotherDyn;
+}
+
+void MC_fn_vSetNewMainCharacter(tdstNodeMainCharacter_* hMainCharNode, HIE_tdstSuperObject_* hCharacter)
+{
+    hMainCharNode->hNewCharacterForTheNextFrame = hCharacter;
+}
+
+HIE_tdstSuperObject_* MC_fn_hGetNewMainCharacter(tdstNodeMainCharacter_* hMainCharNode)
+{
+    return hMainCharNode->hNewCharacterForTheNextFrame;
+}
 
 int fn_bGetVectorFromPhonem(MTH3D_tdstVector_* p_stVector, char cPhonem, tdstFamilyList_* p_stFamily)
 {
@@ -135,34 +174,4 @@ int fn_bGetVectorFromPhonem(MTH3D_tdstVector_* p_stVector, char cPhonem, tdstFam
     }
 
     return 1;
-}
-
-HIE_tdstSuperObject_* MC_fn_hGetNewMainCharacter(tdstNodeMainCharacter_* hMainCharNode)
-{
-    return hMainCharNode->hNewCharacterForTheNextFrame;
-}
-
-void MC_fn_vSetNewMainCharacter(tdstNodeMainCharacter_* hMainCharNode, HIE_tdstSuperObject_* hCharacter)
-{
-    hMainCharNode->hNewCharacterForTheNextFrame = hCharacter;
-}
-
-tdstNodeMainCharacter_* MC_fn_hGetNextMainCharNode(tdstNodeMainCharacter_* hMainCharNode)
-{
-    return hMainCharNode->hNextBrotherDyn;
-}
-
-tdstNodeMainCharacter_* MC_fn_hGetFirstMainCharNode(void)
-{
-    return g_stEngineStructure.hMainCharacterList.hFirstElementDyn;
-}
-
-HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(tdstNodeMainCharacter_* hMainCharNode)
-{
-    return hMainCharNode->hCharacter;
-}
-
-void MC_fn_vSetCharacterInMainCharacterNode(tdstNodeMainCharacter_* hMainCharNode, HIE_tdstSuperObject_* hCharacter)
-{
-    hMainCharNode->hCharacter = hCharacter;
 }

@@ -1,3 +1,7 @@
+/* PS2GL is built with -inline on, which only inlines helpers defined earlier;
+   deferring codegen lets the double wrappers inline the float recorders that
+   are defined after them (reverse address order). */
+#pragma defer_codegen on
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c */
 /* Language: C */
 /* Compiler: MW MIPS C Compiler */
@@ -2834,167 +2838,525 @@ void plyPS2glClientActiveTextureARB(anon_138*);
 void plyPS2glActiveTextureARB(anon_138*);
 void plyPS2glAccum(anon_29*);
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 6139–6148 */
-void recPS2glGetColorTableParameterfvEXT(unsigned int target, unsigned int pname, float* params)
-{
-    anon_78* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_78));
-    pParam = (anon_78*)pNode->aParams;
-    pParam->target = target;
-    pParam->pname = pname;
-    pParam->params = (int)params;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glGetColorTableParameterfvEXT;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 6135–6135 */
-void plyPS2glGetColorTableParameterfvEXT(anon_78* pParam)
-{
-    impPS2glGetColorTableParameterfvEXT(pParam->target, pParam->pname, pParam->params);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 6115–6124 */
-void recPS2glGetColorTableParameterivEXT(unsigned int target, unsigned int pname, int* params)
-{
-    anon_132* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_132));
-    pParam = (anon_132*)pNode->aParams;
-    pParam->target = target;
-    pParam->pname = pname;
-    pParam->params = (int)params;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glGetColorTableParameterivEXT;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 6111–6111 */
-void plyPS2glGetColorTableParameterivEXT(anon_132* pParam)
-{
-    impPS2glGetColorTableParameterivEXT(pParam->target, pParam->pname, pParam->params);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 6090–6100 */
-void recPS2glGetColorTableEXT(unsigned int target, unsigned int format, unsigned int type, void* data)
-{
-    anon_38* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_38));
-    pParam = (anon_38*)pNode->aParams;
-    pParam->target = target;
-    pParam->format = format;
-    pParam->type = type;
-    pParam->data = (int)data;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glGetColorTableEXT;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 6086–6086 */
-void plyPS2glGetColorTableEXT(anon_38* pParam)
-{
-    impPS2glGetColorTableEXT(pParam->target, pParam->format, pParam->type, pParam->data);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 6062–6074 */
-void recPS2glColorSubTableEXT(unsigned int target, int start, int count, unsigned int format, unsigned int type, void* data)
-{
-    anon_121* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_121));
-    pParam = (anon_121*)pNode->aParams;
-    pParam->target = target;
-    pParam->start = start;
-    pParam->count = count;
-    pParam->format = format;
-    pParam->type = type;
-    pParam->data = (int)data;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glColorSubTableEXT;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 6058–6058 */
-void plyPS2glColorSubTableEXT(anon_121* pParam)
-{
-    impPS2glColorSubTableEXT(pParam->target, pParam->start, pParam->count, pParam->format, pParam->type, pParam->data);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 6031–6043 */
-void recPS2glColorTableEXT(unsigned int target, unsigned int internalFormat, int width, unsigned int format, unsigned int type, void* data)
-{
-    anon_127* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_127));
-    pParam = (anon_127*)pNode->aParams;
-    pParam->target = target;
-    pParam->internalFormat = internalFormat;
-    pParam->width = width;
-    pParam->format = format;
-    pParam->type = type;
-    pParam->data = (int)data;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glColorTableEXT;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 6027–6027 */
-void plyPS2glColorTableEXT(anon_127* pParam)
-{
-    impPS2glColorTableEXT(pParam->target, pParam->internalFormat, pParam->width, pParam->format, pParam->type, pParam->data);
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void recPS2glGetColorTableParameterfvEXT(unsigned int target, unsigned int pname, float* params);
+void plyPS2glGetColorTableParameterfvEXT(anon_78* pParam);
+void recPS2glGetColorTableParameterivEXT(unsigned int target, unsigned int pname, int* params);
+void plyPS2glGetColorTableParameterivEXT(anon_132* pParam);
+void recPS2glGetColorTableEXT(unsigned int target, unsigned int format, unsigned int type, void* data);
+void plyPS2glGetColorTableEXT(anon_38* pParam);
+void recPS2glColorSubTableEXT(unsigned int target, int start, int count, unsigned int format, unsigned int type, void* data);
+void plyPS2glColorSubTableEXT(anon_121* pParam);
+void recPS2glColorTableEXT(unsigned int target, unsigned int internalFormat, int width, unsigned int format, unsigned int type, void* data);
+void plyPS2glColorTableEXT(anon_127* pParam);
+void recPS2glSetGsRegister(int address, unsigned long value, unsigned long mask);
+void plyPS2glSetGsRegister(anon_181* pParam);
+void recPS2glViewport(int x, int y, int width, int height);
+void plyPS2glViewport(anon_37* pParam);
+void recPS2glVertex4sv(short* v);
+void recPS2glVertex4iv(int* v);
+void recPS2glVertex4fv(float* v);
+void recPS2glVertex4dv(double* v);
+void recPS2glVertex3sv(short* v);
+void recPS2glVertex3iv(int* v);
+void recPS2glVertex3fv(float* v);
+void recPS2glVertex3dv(double* v);
+void recPS2glVertex2sv(short* v);
+void recPS2glVertex2iv(int* v);
+void recPS2glVertex2fv(float* v);
+void recPS2glVertex2dv(double* v);
+void recPS2glVertex4s(short x, short y, short z, short w);
+void recPS2glVertex4i(int x, int y, int z, int w);
+void recPS2glVertex4d(double X, double Y, double Z, double W);
+void recPS2glVertex4f(float x, float y, float z, float w);
+void recPS2glVertex3s(short x, short y, short z);
+void recPS2glVertex3i(int x, int y, int z);
+void recPS2glVertex3f(float x, float y, float z);
+void recPS2glVertex3d(double x, double y, double z);
+void recPS2glVertex2s(short x, short y);
+void recPS2glVertex2i(int x, int y);
+void recPS2glVertex2f(float x, float y);
+void recPS2glVertex2d(double x, double y);
+void recPS2glTranslatef(float x, float y, float z);
+void plyPS2glTranslatef(anon_133* pParam);
+void recPS2glTranslated(double x, double y, double z);
+void recPS2glTexSubImage2D(unsigned int target, int level, int xoffset, int yoffset, int width, int height, unsigned int format, unsigned int type, void* pixels);
+void plyPS2glTexSubImage2D(anon_28* pParam);
+void recPS2glTexSubImage1D(unsigned int target, int level, int xoffset, int width, unsigned int format, unsigned int type, void* pixels);
+void plyPS2glTexSubImage1D(anon_176* pParam);
+void recPS2glTexParameteri(unsigned int target, unsigned int pname, int param);
+void recPS2glTexParameteriv(unsigned int target, unsigned int pname, int* params);
+void plyPS2glTexParameteriv(anon_41* pParam);
+void plyPS2glTexParameteri(anon_109* pParam);
+void recPS2glTexParameterf(unsigned int target, unsigned int pname, float param);
+void recPS2glTexParameterfv(unsigned int target, unsigned int pname, float* params);
+void plyPS2glTexParameterfv(anon_22* pParam);
+void plyPS2glTexParameterf(anon_101* pParam);
+void recPS2glTexImage2D(unsigned int target, int level, int components, int width, int height, int border, unsigned int format, unsigned int type, void* pixels);
+void plyPS2glTexImage2D(anon_49* pParam);
+void recPS2glTexImage1D(unsigned int target, int level, int components, int width, int border, unsigned int format, unsigned int type, void* pixels);
+void plyPS2glTexImage1D(anon_175* pParam);
+void recPS2glTexGeni(unsigned int coord, unsigned int pname, int param);
+void recPS2glTexGeniv(unsigned int coord, unsigned int pname, int* params);
+void plyPS2glTexGeniv(anon_26* pParam);
+void plyPS2glTexGeni(anon_103* pParam);
+void recPS2glTexGenf(unsigned int coord, unsigned int pname, float param);
+void recPS2glTexGenfv(unsigned int coord, unsigned int pname, float* params);
+void plyPS2glTexGenfv(anon_153* pParam);
+void plyPS2glTexGenf(anon_79* pParam);
+void recPS2glTexGend(unsigned int coord, unsigned int pname, double param);
+void recPS2glTexGendv(unsigned int coord, unsigned int pname, double* params);
+void plyPS2glTexGendv(anon_122* pParam);
+void recPS2glTexEnvi(unsigned int target, unsigned int pname, int param);
+void recPS2glTexEnviv(unsigned int target, unsigned int pname, int* params);
+void plyPS2glTexEnviv(anon_106* pParam);
+void plyPS2glTexEnvi(anon_8* pParam);
+void recPS2glTexEnvf(unsigned int target, unsigned int pname, float param);
+void recPS2glTexEnvfv(unsigned int target, unsigned int pname, float* params);
+void plyPS2glTexEnvfv(anon_97* pParam);
+void plyPS2glTexEnvf(anon_71* pParam);
+void recPS2glMultiTexCoord4fvARB(unsigned int texture, float* v);
+void recPS2glMultiTexCoord4dvARB(unsigned int texture, double* v);
+void recPS2glMultiTexCoord4ivARB(unsigned int texture, int* v);
+void recPS2glMultiTexCoord4svARB(unsigned int texture, short* v);
+void recPS2glMultiTexCoord4fARB(unsigned int texture, float s, float t, float r, float q);
+void recPS2glMultiTexCoord4dARB(unsigned int texture, double s, double t, double r, double q);
+void recPS2glMultiTexCoord4iARB(unsigned int texture, int s, int t, int r, int q);
+void recPS2glMultiTexCoord4sARB(unsigned int texture, short s, short t, short r, short q);
+void recPS2glMultiTexCoord3fvARB(unsigned int texture, float* v);
+void recPS2glMultiTexCoord3dvARB(unsigned int texture, double* v);
+void recPS2glMultiTexCoord3ivARB(unsigned int texture, int* v);
+void recPS2glMultiTexCoord3svARB(unsigned int texture, short* v);
+void recPS2glMultiTexCoord3fARB(unsigned int texture, float s, float t, float r);
+void recPS2glMultiTexCoord3dARB(unsigned int texture, double s, double t, double r);
+void recPS2glMultiTexCoord3iARB(unsigned int texture, int s, int t, int r);
+void recPS2glMultiTexCoord3sARB(unsigned int texture, short s, short t, short r);
+void recPS2glMultiTexCoord2fvARB(unsigned int texture, float* v);
+void recPS2glMultiTexCoord2dvARB(unsigned int texture, double* v);
+void recPS2glMultiTexCoord2ivARB(unsigned int texture, int* v);
+void recPS2glMultiTexCoord2svARB(unsigned int texture, short* v);
+void recPS2glMultiTexCoord2fARB(unsigned int texture, float s, float t);
+void recPS2glMultiTexCoord2dARB(unsigned int texture, double s, double t);
+void recPS2glMultiTexCoord2iARB(unsigned int texture, int s, int t);
+void recPS2glMultiTexCoord2sARB(unsigned int texture, short s, short t);
+void recPS2glMultiTexCoord1fvARB(unsigned int texture, float* v);
+void recPS2glMultiTexCoord1dvARB(unsigned int texture, double* v);
+void recPS2glMultiTexCoord1ivARB(unsigned int texture, int* v);
+void recPS2glMultiTexCoord1svARB(unsigned int texture, short* v);
+void recPS2glMultiTexCoord1fARB(unsigned int texture, float s);
+void recPS2glMultiTexCoord1dARB(unsigned int texture, double s);
+void recPS2glMultiTexCoord1iARB(unsigned int texture, int s);
+void recPS2glMultiTexCoord1sARB(unsigned int texture, short s);
+void recPS2glTexCoord4fv(float* v);
+void recPS2glTexCoord4dv(double* v);
+void recPS2glTexCoord4iv(int* v);
+void recPS2glTexCoord4sv(short* v);
+void recPS2glTexCoord4f(float s, float t, float r, float q);
+void recPS2glTexCoord4d(double s, double t, double r, double q);
+void recPS2glTexCoord4i(int s, int t, int r, int q);
+void recPS2glTexCoord4s(short s, short t, short r, short q);
+void recPS2glTexCoord3fv(float* v);
+void recPS2glTexCoord3dv(double* v);
+void recPS2glTexCoord3iv(int* v);
+void recPS2glTexCoord3sv(short* v);
+void recPS2glTexCoord3f(float s, float t, float r);
+void recPS2glTexCoord3d(double s, double t, double r);
+void recPS2glTexCoord3i(int s, int t, int r);
+void recPS2glTexCoord3s(short s, short t, short r);
+void recPS2glTexCoord2fv(float* v);
+void recPS2glTexCoord2dv(double* v);
+void recPS2glTexCoord2iv(int* v);
+void recPS2glTexCoord2sv(short* v);
+void recPS2glTexCoord2f(float s, float t);
+void recPS2glTexCoord2d(double s, double t);
+void recPS2glTexCoord2i(int s, int t);
+void recPS2glTexCoord2s(short s, short t);
+void recPS2glTexCoord1fv(float* v);
+void recPS2glTexCoord1dv(double* v);
+void recPS2glTexCoord1iv(int* v);
+void recPS2glTexCoord1sv(short* v);
+void recPS2glTexCoord1f(float s);
+void recPS2glTexCoord1d(double s);
+void recPS2glTexCoord1i(int s);
+void recPS2glTexCoord1s(short s);
+void recPS2glStencilOp(unsigned int fail, unsigned int zfail, unsigned int zpass);
+void plyPS2glStencilOp(anon_16* pParam);
+void recPS2glStencilMask(unsigned int mask);
+void plyPS2glStencilMask(anon_21* pParam);
+void recPS2glStencilFunc(unsigned int func, int ref, unsigned int mask);
+void plyPS2glStencilFunc(anon_100* pParam);
+void recPS2glShadeModel(unsigned int mode);
+void plyPS2glShadeModel(anon_162* pParam);
+void recPS2glScissor(int x, int y, int width, int height);
+void plyPS2glScissor(anon_46* pParam);
+void recPS2glScalef(float x, float y, float z);
+void plyPS2glScalef(anon_112* pParam);
+void recPS2glScaled(double x, double y, double z);
+void recPS2glRotatef(float angle, float x, float y, float z);
+void plyPS2glRotatef(anon_131* pParam);
+void recPS2glRotated(double angle, double x, double y, double z);
+void recPS2glRects(short x1, short y1, short x2, short y2);
+void recPS2glRectsv(short* v1, short* v2);
+void plyPS2glRects(anon_58* pParam);
+void recPS2glRecti(int x1, int y1, int x2, int y2);
+void recPS2glRectiv(int* v1, int* v2);
+void plyPS2glRecti(anon_39* pParam);
+void recPS2glRectf(float x1, float y1, float x2, float y2);
+void recPS2glRectfv(float* v1, float* v2);
+void plyPS2glRectf(anon_10* pParam);
+void recPS2glRectdv(double* v1, double* v2);
+void recPS2glRectd(double x1, double y1, double x2, double y2);
+void recPS2glReadBuffer(unsigned int mode);
+void plyPS2glReadBuffer(anon_25* pParam);
+void recPS2glRasterPos4s(short x, short y, short z, short w);
+void recPS2glRasterPos4sv(short* v);
+void plyPS2glRasterPos4s(anon_7* pParam);
+void recPS2glRasterPos4i(int x, int y, int z, int w);
+void recPS2glRasterPos4iv(int* v);
+void plyPS2glRasterPos4i(anon_149* pParam);
+void recPS2glRasterPos4f(float x, float y, float z, float w);
+void recPS2glRasterPos4fv(float* v);
+void plyPS2glRasterPos4f(anon_125* pParam);
+void recPS2glRasterPos4dv(double* v);
+void recPS2glRasterPos4d(double x, double y, double z, double w);
+void recPS2glRasterPos3s(short x, short y, short z);
+void recPS2glRasterPos3sv(short* v);
+void plyPS2glRasterPos3s(anon_57* pParam);
+void recPS2glRasterPos3i(int x, int y, int z);
+void recPS2glRasterPos3iv(int* v);
+void plyPS2glRasterPos3i(anon_34* pParam);
+void recPS2glRasterPos3f(float x, float y, float z);
+void recPS2glRasterPos3fv(float* v);
+void plyPS2glRasterPos3f(anon_76* pParam);
+void recPS2glRasterPos3dv(double* v);
+void recPS2glRasterPos3d(double x, double y, double z);
+void recPS2glRasterPos2s(short x, short y);
+void recPS2glRasterPos2sv(short* v);
+void plyPS2glRasterPos2s(anon_45* param0);
+void recPS2glRasterPos2i(int x, int y);
+void recPS2glRasterPos2iv(int* v);
+void plyPS2glRasterPos2i(anon_62* param0);
+void recPS2glRasterPos2f(float x, float y);
+void recPS2glRasterPos2fv(float* v);
+void plyPS2glRasterPos2f(anon_13* pParam);
+void recPS2glRasterPos2dv(double* v);
+void recPS2glRasterPos2d(double x, double y);
+void recPS2glPushName(unsigned int name);
+void plyPS2glPushName(anon_85* pParam);
+void recPS2glPushMatrix(void);
+void recPS2glPushClientAttrib(unsigned int mask);
+void plyPS2glPushClientAttrib(anon_189* pParam);
+void recPS2glPushAttrib(unsigned int mask);
+void plyPS2glPushAttrib(anon_1* pParam);
+void recPS2glPrioritizeTextures(int n, unsigned int* textures, float* priorities);
+void plyPS2glPrioritizeTextures(anon_67* pParam);
+void recPS2glPopName(void);
+void recPS2glPopMatrix(void);
+void recPS2glPopClientAttrib(void);
+void recPS2glPopAttrib(void);
+void recPS2glPolygonStipple(unsigned char* mask);
+void plyPS2glPolygonStipple(anon_184* pParam);
+void recPS2glPolygonOffset(float factor, float units);
+void plyPS2glPolygonOffset(anon_92* pParam);
+void recPS2glPolygonMode(unsigned int face, unsigned int mode);
+void plyPS2glPolygonMode(anon_50* param0);
+void recPS2glPointSize(float size);
+void plyPS2glPointSize(anon_124* pParam);
+void recPS2glPixelZoom(float xfactor, float yfactor);
+void plyPS2glPixelZoom(anon_0* pParam);
+void recPS2glPixelTransferi(unsigned int pname, int param);
+void plyPS2glPixelTransferi(anon_54* param0);
+void recPS2glPixelTransferf(unsigned int pname, float param);
+void plyPS2glPixelTransferf(anon_4* param0);
+void recPS2glPixelMapusv(unsigned int map, int mapsize, unsigned short* values);
+void plyPS2glPixelMapusv(anon_59* pParam);
+void recPS2glPixelMapuiv(unsigned int map, int mapsize, unsigned int* values);
+void plyPS2glPixelMapuiv(anon_12* pParam);
+void recPS2glPixelMapfv(unsigned int map, int mapsize, float* values);
+void plyPS2glPixelMapfv(anon_51* pParam);
+void recPS2glPassThrough(float token);
+void plyPS2glPassThrough(anon_110* pParam);
+void recPS2glOrtho(float left, float right, float bottom, float top, float zNear, float zFar);
+void plyPS2glOrtho(anon_82* pParam);
+void recPS2glNormal3fv(float* v);
+void recPS2glNormal3dv(double* v);
+void recPS2glNormal3iv(int* v);
+void recPS2glNormal3sv(short* v);
+void recPS2glNormal3bv(signed char* v);
+void recPS2glNormal3f(float nx, float ny, float nz);
+void recPS2glNormal3d(double nx, double ny, double nz);
+void recPS2glNormal3i(int nx, int ny, int nz);
+void recPS2glNormal3s(short nx, short ny, short nz);
+void recPS2glNormal3b(signed char nx, signed char ny, signed char nz);
+void recPS2glNewList(unsigned int list, unsigned int mode);
+void plyPS2glNewList(anon_63* param0);
+void recPS2glMultMatrixf(float* m);
+void plyPS2glMultMatrixf(anon_117* pParam);
+void recPS2glMultMatrixd(double* m);
+void plyPS2glMultMatrixd(anon_107* pParam);
+void recPS2glMatrixMode(unsigned int mode);
+void plyPS2glMatrixMode(anon_108* pParam);
+void recPS2glMateriali(unsigned int face, unsigned int pname, int param);
+void recPS2glMaterialiv(unsigned int face, unsigned int pname, int* params);
+void plyPS2glMaterialiv(anon_115* pParam);
+void plyPS2glMateriali(anon_35* pParam);
+void recPS2glMaterialf(unsigned int face, unsigned int pname, float param);
+void recPS2glMaterialfv(unsigned int face, unsigned int pname, float* params);
+void plyPS2glMaterialfv(anon_134* pParam);
+void plyPS2glMaterialf(anon_52* pParam);
+void recPS2glMapGrid2f(int un, float u1, float u2, int vn, float v1, float v2);
+void plyPS2glMapGrid2f(anon_113* pParam);
+void recPS2glMapGrid2d(int un, double u1, double u2, int vn, double v1, double v2);
+void recPS2glMapGrid1f(int un, float u1, float u2);
+void plyPS2glMapGrid1f(anon_88* pParam);
+void recPS2glMapGrid1d(int un, double u1, double u2);
+void recPS2glMap2f(unsigned int target, float u1, float u2, int ustride, int uorder, float v1, float v2, int vstride, int vorder, float* points);
+void plyPS2glMap2f(anon_94* pParam);
+void recPS2glMap2d(unsigned int target, double u1, double u2, int ustride, int uorder, double v1, double v2, int vstride, int vorder, double* points);
+void plyPS2glMap2d(anon_44* pParam);
+void recPS2glMap1f(unsigned int target, float u1, float u2, int stride, int order, float* points);
+void plyPS2glMap1f(anon_3* pParam);
+void recPS2glMap1d(unsigned int target, double u1, double u2, int stride, int order, double* points);
+void plyPS2glMap1d(anon_167* pParam);
+void recPS2glLogicOp(unsigned int opcode);
+void plyPS2glLogicOp(anon_174* pParam);
+void recPS2glLoadName(unsigned int name);
+void plyPS2glLoadName(anon_177* pParam);
+void recPS2glLoadMatrixf(float* m);
+void plyPS2glLoadMatrixf(anon_168* pParam);
+void recPS2glLoadMatrixd(double* m);
+void plyPS2glLoadMatrixd(anon_160* pParam);
+void recPS2glLoadIdentity(void);
+void recPS2glListBase(unsigned int base);
+void plyPS2glListBase(anon_86* pParam);
+void recPS2glLineWidth(float width);
+void plyPS2glLineWidth(anon_87* pParam);
+void recPS2glLineStipple(int factor, unsigned short pattern);
+void plyPS2glLineStipple(anon_48* param0);
+void recPS2glLightf(unsigned int light, unsigned int pname, float param);
+void recPS2glLightfv(unsigned int light, unsigned int pname, float* params);
+void recPS2glLighti(unsigned int light, unsigned int pname, int param);
+void recPS2glLightiv(unsigned int light, unsigned int pname, int* params);
+void plyPS2glLighti(anon_61* pParam);
+void plyPS2glLightfv(anon_118* pParam);
+void plyPS2glLightf(anon_77* pParam);
+void recPS2glLightModeli(unsigned int pname, int param);
+void recPS2glLightModeliv(unsigned int pname, int* params);
+void plyPS2glLightModeliv(anon_105* param0);
+void plyPS2glLightModeli(anon_74* param0);
+void recPS2glLightModelf(unsigned int pname, float param);
+void recPS2glLightModelfv(unsigned int pname, float* params);
+void plyPS2glLightModelfv(anon_47* param0);
+void plyPS2glLightModelf(anon_6* param0);
+void recPS2glInitNames(void);
+void recPS2glIndexubv(unsigned char* c);
+void plyPS2glIndexubv(anon_130* pParam);
+void recPS2glIndexub(unsigned char c);
+void plyPS2glIndexub(anon_135* pParam);
+void recPS2glIndexsv(short* c);
+void plyPS2glIndexsv(anon_137* pParam);
+void recPS2glIndexs(short c);
+void plyPS2glIndexs(anon_140* pParam);
+void recPS2glIndexiv(int* c);
+void plyPS2glIndexiv(anon_141* pParam);
+void recPS2glIndexi(int c);
+void plyPS2glIndexi(anon_146* pParam);
+void recPS2glIndexfv(float* c);
+void plyPS2glIndexfv(anon_148* pParam);
+void recPS2glIndexf(float c);
+void plyPS2glIndexf(anon_152* pParam);
+void recPS2glIndexdv(double* c);
+void recPS2glIndexd(double c);
+void recPS2glIndexMask(unsigned int mask);
+void plyPS2glIndexMask(anon_36* pParam);
+void recPS2glHint(unsigned int target, unsigned int mode);
+void plyPS2glHint(anon_123* param0);
+void recPS2glFrustum(double left, double right, double bottom, double top, double zNear, double zFar);
+void plyPS2glFrustum(anon_142* pParam);
+void recPS2glFrontFace(unsigned int mode);
+void plyPS2glFrontFace(anon_163* pParam);
+void recPS2glFogi(unsigned int pname, int param);
+void recPS2glFogiv(unsigned int pname, int* params);
+void plyPS2glFogiv(anon_69* param0);
+void plyPS2glFogi(anon_23* param0);
+void recPS2glFogf(unsigned int pname, float param);
+void recPS2glFogfv(unsigned int pname, float* params);
+void plyPS2glFogfv(anon_70* param0);
+void plyPS2glFogf(anon_15* param0);
+void recPS2glEvalPoint2(int i, int j);
+void plyPS2glEvalPoint2(anon_68* param0);
+void recPS2glEvalPoint1(int i);
+void plyPS2glEvalPoint1(anon_73* pParam);
+void recPS2glEvalMesh2(unsigned int mode, int i1, int i2, int j1, int j2);
+void plyPS2glEvalMesh2(anon_95* pParam);
+void recPS2glEvalMesh1(unsigned int mode, int i1, int i2);
+void plyPS2glEvalMesh1(anon_43* pParam);
+void recPS2glEvalCoord2f(float u, float v);
+void recPS2glEvalCoord2fv(float* u);
+void plyPS2glEvalCoord2f(anon_55* pParam);
+void recPS2glEvalCoord2dv(double* u);
+void recPS2glEvalCoord2d(double u, double v);
+void recPS2glEvalCoord1fv(float* u);
+void plyPS2glEvalCoord1fv(anon_183* pParam);
+void recPS2glEvalCoord1f(float u);
+void plyPS2glEvalCoord1f(anon_186* pParam);
+void recPS2glEvalCoord1dv(double* u);
+void recPS2glEvalCoord1d(double u);
+void recPS2glEnd(void);
+void recPS2glEnableClientState(unsigned int array);
+void plyPS2glEnableClientState(anon_156* pParam);
+void recPS2glEnable(unsigned int cap);
+void plyPS2glEnable(anon_159* pParam);
+void recPS2glEdgeFlagv(unsigned char* flag);
+void plyPS2glEdgeFlagv(anon_161* pParam);
+void recPS2glEdgeFlag(unsigned char flag);
+void plyPS2glEdgeFlag(anon_164* pParam);
+void recPS2glDrawPixels(int width, int height, unsigned int format, unsigned int type, void* pixels);
+void plyPS2glDrawPixels(anon_5* pParam);
+void recPS2glDrawElements(unsigned int mode, int count, unsigned int type, void* indices);
+void plyPS2glDrawElements(anon_11* pParam);
+void recPS2glDrawBuffer(unsigned int mode);
+void plyPS2glDrawBuffer(anon_84* pParam);
+void recPS2glDrawArrays(unsigned int mode, int first, int count);
+void plyPS2glDrawArrays(anon_80* pParam);
+void recPS2glDisableClientState(unsigned int array);
+void plyPS2glDisableClientState(anon_171* pParam);
+void recPS2glDisable(unsigned int cap);
+void plyPS2glDisable(anon_172* pParam);
+void recPS2glDepthRange(double zNear, double zFar);
+void plyPS2glDepthRange(anon_75* param0);
+void recPS2glDepthMask(unsigned char flag);
+void plyPS2glDepthMask(anon_144* pParam);
+void recPS2glDepthFunc(unsigned int func);
+void plyPS2glDepthFunc(anon_147* pParam);
+void recPS2glCullFace(unsigned int mode);
+void plyPS2glCullFace(anon_151* pParam);
+void recPS2glCopyTexSubImage2D(unsigned int target, int level, int xoffset, int yoffset, int x, int y, int width, int height);
+void plyPS2glCopyTexSubImage2D(anon_90* pParam);
+void recPS2glCopyTexSubImage1D(unsigned int target, int level, int xoffset, int x, int y, int width);
+void plyPS2glCopyTexSubImage1D(anon_91* pParam);
+void recPS2glCopyTexImage2D(unsigned int target, int level, unsigned int internalFormat, int x, int y, int width, int height, int border);
+void plyPS2glCopyTexImage2D(anon_24* pParam);
+void recPS2glCopyTexImage1D(unsigned int target, int level, unsigned int internalFormat, int x, int y, int width, int border);
+void plyPS2glCopyTexImage1D(anon_14* pParam);
+void recPS2glCopyPixels(int x, int y, int width, int height, unsigned int type);
+void plyPS2glCopyPixels(anon_27* pParam);
+void recPS2glColorMaterial(unsigned int face, unsigned int mode);
+void plyPS2glColorMaterial(anon_32* param0);
+void recPS2glColorMask(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha);
+void plyPS2glColorMask(anon_154* pParam);
+void recPS2glMultiColor4usvARB(unsigned int texture, unsigned short* v);
+void recPS2glMultiColor4uivARB(unsigned int texture, unsigned int* v);
+void recPS2glMultiColor4ubvARB(unsigned int texture, unsigned char* v);
+void recPS2glMultiColor4svARB(unsigned int texture, short* v);
+void recPS2glMultiColor4ivARB(unsigned int texture, int* v);
+void recPS2glMultiColor4fvARB(unsigned int texture, float* v);
+void recPS2glMultiColor4dvARB(unsigned int texture, double* v);
+void recPS2glMultiColor4bvARB(unsigned int texture, signed char* v);
+void recPS2glMultiColor3usvARB(unsigned int texture, unsigned short* v);
+void recPS2glMultiColor3uivARB(unsigned int texture, unsigned int* v);
+void recPS2glMultiColor3ubvARB(unsigned int texture, unsigned char* v);
+void recPS2glMultiColor3svARB(unsigned int texture, short* v);
+void recPS2glMultiColor3ivARB(unsigned int texture, int* v);
+void recPS2glMultiColor3fvARB(unsigned int texture, float* v);
+void recPS2glMultiColor3dvARB(unsigned int texture, double* v);
+void recPS2glMultiColor3bvARB(unsigned int texture, signed char* v);
+void recPS2glMultiColor4usARB(unsigned int texture, unsigned short red, unsigned short green, unsigned short blue, unsigned short alpha);
+void recPS2glMultiColor4uiARB(unsigned int texture, unsigned int red, unsigned int green, unsigned int blue, unsigned int alpha);
+void recPS2glMultiColor4ubARB(unsigned int texture, unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha);
+void recPS2glMultiColor4sARB(unsigned int texture, short red, short green, short blue, short alpha);
+void recPS2glMultiColor4iARB(unsigned int texture, int red, int green, int blue, int alpha);
+void recPS2glMultiColor4dARB(unsigned int texture, double R, double G, double B, double A);
+void recPS2glMultiColor4fARB(unsigned int texture, float red, float green, float blue, float alpha);
+void recPS2glMultiColor4bARB(unsigned int texture, signed char red, signed char green, signed char blue, signed char alpha);
+void recPS2glMultiColor3usARB(unsigned int texture, unsigned short red, unsigned short green, unsigned short blue);
+void recPS2glMultiColor3uiARB(unsigned int texture, unsigned int red, unsigned int green, unsigned int blue);
+void recPS2glMultiColor3ubARB(unsigned int texture, unsigned char red, unsigned char green, unsigned char blue);
+void recPS2glMultiColor3sARB(unsigned int texture, short red, short green, short blue);
+void recPS2glMultiColor3iARB(unsigned int texture, int red, int green, int blue);
+void recPS2glMultiColor3fARB(unsigned int texture, float red, float green, float blue);
+void recPS2glMultiColor3dARB(unsigned int texture, double red, double green, double blue);
+void recPS2glMultiColor3bARB(unsigned int texture, signed char red, signed char green, signed char blue);
+void recPS2glColor4usv(unsigned short* v);
+void recPS2glColor4uiv(unsigned int* v);
+void recPS2glColor4ubv(unsigned char* v);
+void recPS2glColor4sv(short* v);
+void recPS2glColor4iv(int* v);
+void recPS2glColor4fv(float* v);
+void recPS2glColor4dv(double* v);
+void recPS2glColor4bv(signed char* v);
+void recPS2glColor3usv(unsigned short* v);
+void recPS2glColor3uiv(unsigned int* v);
+void recPS2glColor3ubv(unsigned char* v);
+void recPS2glColor3sv(short* v);
+void recPS2glColor3iv(int* v);
+void recPS2glColor3fv(float* v);
+void recPS2glColor3dv(double* v);
+void recPS2glColor3bv(signed char* v);
+void recPS2glColor4us(unsigned short red, unsigned short green, unsigned short blue, unsigned short alpha);
+void recPS2glColor4ui(unsigned int red, unsigned int green, unsigned int blue, unsigned int alpha);
+void recPS2glColor4ub(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha);
+void recPS2glColor4s(short red, short green, short blue, short alpha);
+void recPS2glColor4i(int red, int green, int blue, int alpha);
+void recPS2glColor4d(double R, double G, double B, double A);
+void recPS2glColor4f(float red, float green, float blue, float alpha);
+void recPS2glColor4b(signed char red, signed char green, signed char blue, signed char alpha);
+void recPS2glColor3us(unsigned short red, unsigned short green, unsigned short blue);
+void recPS2glColor3ui(unsigned int red, unsigned int green, unsigned int blue);
+void recPS2glColor3ub(unsigned char red, unsigned char green, unsigned char blue);
+void recPS2glColor3s(short red, short green, short blue);
+void recPS2glColor3i(int red, int green, int blue);
+void recPS2glColor3f(float red, float green, float blue);
+void recPS2glColor3d(double red, double green, double blue);
+void recPS2glColor3b(signed char red, signed char green, signed char blue);
+void recPS2glClipPlane(unsigned int plane, double* equation);
+void plyPS2glClipPlane(anon_89* param0);
+void recPS2glClearStencil(int s);
+void plyPS2glClearStencil(anon_93* pParam);
+void recPS2glClearIndex(float c);
+void plyPS2glClearIndex(anon_96* pParam);
+void recPS2glClearDepth(double depth);
+void plyPS2glClearDepth(anon_98* pParam);
+void recPS2glClearColor(float red, float green, float blue, float alpha);
+void plyPS2glClearColor(anon_136* pParam);
+void recPS2glClearAccum(float red, float green, float blue, float alpha);
+void plyPS2glClearAccum(anon_20* pParam);
+void recPS2glClear(unsigned int mask);
+void plyPS2glClear(anon_81* pParam);
+void recPS2glCallLists(int n, unsigned int type, void* lists);
+void plyPS2glCallLists(anon_111* pParam);
+void recPS2glCallList(unsigned int list);
+void plyPS2glCallList(anon_170* pParam);
+void recPS2glBlendFunc(unsigned int sfactor, unsigned int dfactor);
+void plyPS2glBlendFunc(anon_65* param0);
+void recPS2glBitmap(int width, int height, float xorig, float yorig, float xmove, float ymove, unsigned char* bitmap);
+void plyPS2glBitmap(anon_83* pParam);
+void recPS2glBindTexture(unsigned int target, unsigned int texture);
+void plyPS2glBindTexture(anon_40* param0);
+void recPS2glBegin(unsigned int mode);
+int Mode2Prim(unsigned int mode);
+void PS2glExecuteListVBuf(tagGLprimbuf* pPrimBuf);
+void plyPS2glBegin(anon_64* pParam);
+void recPS2glArrayElement(int i);
+void plyPS2glArrayElement(anon_166* pParam);
+void recPS2glAlphaFunc(unsigned int func, float ref);
+void plyPS2glAlphaFunc(anon_60* param0);
+void recPS2glClientActiveTextureARB(unsigned int texture);
+void plyPS2glClientActiveTextureARB(anon_138* pParam);
+void recPS2glActiveTextureARB(unsigned int texture);
+void plyPS2glActiveTextureARB(anon_138* pParam);
+void recPS2glAccum(unsigned int op, float value);
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 6000–6007 */
 /* worker A */
 void* memcpy(void* dest, const void* src, unsigned int count);
 void impPS2glSetGsRegister(int, unsigned long, unsigned long);
-void recPS2glSetGsRegister(int address, unsigned long value, unsigned long mask)
-{
-    tagGLlistnode* pNode;
-    anon_181* pParam;
-    pNode = PS2glListAllocNode(sizeof(anon_181));
-    pParam = (anon_181*)pNode->aParams;
-    pParam->address = address;
-    memcpy(&pParam->value, &value, 8);
-    memcpy(&pParam->mask, &mask, 8);
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glSetGsRegister;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5991–5997 */
-void plyPS2glSetGsRegister(anon_181* pParam)
-{
-    unsigned long value;
-    unsigned long mask;
-    memcpy(&value, &pParam->value, 8);
-    memcpy(&mask, &pParam->mask, 8);
-    impPS2glSetGsRegister(pParam->address, value, mask);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5968–5976 */
-void recPS2glViewport(int x, int y, int width, int height)
-{
-    anon_37* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_37));
-    pParam = (anon_37*)pNode->aParams;
-    pParam->x = x;
-    pParam->y = y;
-    pParam->width = width;
-    pParam->height = height;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glViewport;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5964–5964 */
-void plyPS2glViewport(anon_37* pParam)
-{
-    impPS2glViewport(pParam->x, pParam->y, pParam->width, pParam->height);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5942–5942 */
 #pragma optimize_for_size off
-void recPS2glVertex4sv(short* v)
-{
-    recPS2glVertex4f(v[0] / 32767.0f, v[1] / 32767.0f, v[2] / 32767.0f, v[3] / 32767.0f);
-}
-#pragma optimize_for_size reset
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5936–5936 */
-void recPS2glVertex4iv(int* v)
-{
-    recPS2glVertex4f(v[0] / 2147483648.0f, v[1] / 2147483648.0f, v[2] / 2147483648.0f, v[3] / 2147483648.0f);
-}
+#pragma optimize_for_size reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5891–5932 */
 /* worker A */
@@ -3007,3319 +3369,246 @@ inline quad* PS2glAsQuad(float* p)
     return (quad*)p;
 }
 
-void recPS2glVertex4fv(float* v)
-{
-    if (!g_PS2glContext.bFinalCompile) {
-        PS2glSaveListCall(4, (float (*)[4])v);
-    } else {
-        if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) {
-            if (g_PS2glContext.pCurParamBegin->mode == 7)
-                PS2glListAssembleQuads();
-            PS2glListSaveBuffer(0);
-        }
-        *PS2glAsQuad(*g_PS2glContext.pVBuf++) = *PS2glAsQuad((float*)v);
-        *PS2glAsQuad(*g_PS2glContext.pNBuf++) = *PS2glAsQuad(g_PS2glContext.vlistNormal);
-        *PS2glAsQuad(*g_PS2glContext.pCBuf++) = *PS2glAsQuad(g_PS2glContext.valistColor[0]);
-        *PS2glAsQuad(*g_PS2glContext.pCBuf_b++) = *PS2glAsQuad(g_PS2glContext.valistColor[1]);
-        *PS2glAsQuad(*g_PS2glContext.pTBuf++) = *PS2glAsQuad(g_PS2glContext.valistTexCoords[0]);
-        *PS2glAsQuad(*g_PS2glContext.pTBuf_b++) = *PS2glAsQuad(g_PS2glContext.valistTexCoords[1]);
-        g_PS2glContext.iBufCount++;
-    }
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5886–5888 */
-void recPS2glVertex4dv(double* v)
-{
-    recPS2glVertex4f((float)v[0], (float)v[1], (float)v[2], (float)v[3]);
-}
-
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5882–5882 */
 #pragma optimize_for_size off
-void recPS2glVertex3sv(short* v)
-{
-    recPS2glVertex4f(v[0] / 32767.0f, v[1] / 32767.0f, v[2] / 32767.0f, 1.0f);
-}
+
 #pragma optimize_for_size reset
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5877–5877 */
-void recPS2glVertex3iv(int* v)
-{
-    recPS2glVertex4f(v[0] / 2147483648.0f, v[1] / 2147483648.0f, v[2] / 2147483648.0f, 1.0f);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5872–5872 */
-void recPS2glVertex3fv(float* v)
-{
-    recPS2glVertex4f(v[0], v[1], v[2], 1.0f);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5866–5868 */
-void recPS2glVertex3dv(double* v)
-{
-    recPS2glVertex4f((float)v[0], (float)v[1], (float)v[2], 1.0f);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5862–5862 */
 #pragma optimize_for_size off
-void recPS2glVertex2sv(short* v)
-{
-    recPS2glVertex4f(v[0] / 32767.0f, v[1] / 32767.0f, 0.0f, 1.0f);
-}
+
 #pragma optimize_for_size reset
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5857–5857 */
-void recPS2glVertex2iv(int* v)
-{
-    recPS2glVertex4f(v[0] / 2147483648.0f, v[1] / 2147483648.0f, 0.0f, 1.0f);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5852–5852 */
-void recPS2glVertex2fv(float* v)
-{
-    recPS2glVertex4f(v[0], v[1], 0.0f, 1.0f);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5846–5848 */
-void recPS2glVertex2dv(double* v)
-{
-    recPS2glVertex4f((float)v[0], (float)v[1], 0.0f, 1.0f);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5842–5842 */
 #pragma optimize_for_size off
-void recPS2glVertex4s(short x, short y, short z, short w)
-{
-    recPS2glVertex4f(x / 32767.0f, y / 32767.0f, z / 32767.0f, w / 32767.0f);
-}
+
 #pragma optimize_for_size reset
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5837–5837 */
-void recPS2glVertex4i(int x, int y, int z, int w)
-{
-    recPS2glVertex4f(x / 2147483648.0f, y / 2147483648.0f, z / 2147483648.0f, w / 2147483648.0f);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5831–5833 */
-void recPS2glVertex4d(double X, double Y, double Z, double W)
-{
-    recPS2glVertex4f((float)X, (float)Y, (float)Z, (float)W);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5780–5828 */
-void recPS2glVertex4f(float x, float y, float z, float w)
-{
-    float V[1][4];
-    if (!g_PS2glContext.bFinalCompile) {
-        V[0][0] = x; V[0][1] = y; V[0][2] = z; V[0][3] = w;
-        PS2glSaveListCall(4, V);
-    } else {
-        if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) {
-            if (g_PS2glContext.pCurParamBegin->mode == 7)
-                PS2glListAssembleQuads();
-            PS2glListSaveBuffer(0);
-        }
-        (*g_PS2glContext.pVBuf)[0] = x;
-        (*g_PS2glContext.pVBuf)[1] = y;
-        (*g_PS2glContext.pVBuf)[2] = z;
-        (*g_PS2glContext.pVBuf++)[3] = w;
-        *PS2glAsQuad(*g_PS2glContext.pNBuf++) = *PS2glAsQuad(g_PS2glContext.vlistNormal);
-        *PS2glAsQuad(*g_PS2glContext.pCBuf++) = *PS2glAsQuad(g_PS2glContext.valistColor[0]);
-        *PS2glAsQuad(*g_PS2glContext.pCBuf_b++) = *PS2glAsQuad(g_PS2glContext.valistColor[1]);
-        *PS2glAsQuad(*g_PS2glContext.pTBuf++) = *PS2glAsQuad(g_PS2glContext.valistTexCoords[0]);
-        *PS2glAsQuad(*g_PS2glContext.pTBuf_b++) = *PS2glAsQuad(g_PS2glContext.valistTexCoords[1]);
-        g_PS2glContext.iBufCount++;
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5776–5776 */
 #pragma optimize_for_size off
-void recPS2glVertex3s(short x, short y, short z)
-{
-    recPS2glVertex4f(x / 32767.0f, y / 32767.0f, z / 32767.0f, 1.0f);
-}
+
 #pragma optimize_for_size reset
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5771–5771 */
-void recPS2glVertex3i(int x, int y, int z)
-{
-    recPS2glVertex4f(x / 2147483648.0f, y / 2147483648.0f, z / 2147483648.0f, 1.0f);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5766–5766 */
-void recPS2glVertex3f(float x, float y, float z)
-{
-    recPS2glVertex4f(x, y, z, 1.0f);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5760–5762 */
-void recPS2glVertex3d(double x, double y, double z)
-{
-    recPS2glVertex4f((float)x, (float)y, (float)z, 1.0f);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5756–5756 */
 #pragma optimize_for_size off
-void recPS2glVertex2s(short x, short y)
-{
-    recPS2glVertex4f(x / 32767.0f, y / 32767.0f, 0.0f, 1.0f);
-}
+
 #pragma optimize_for_size reset
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5751–5751 */
-void recPS2glVertex2i(int x, int y)
-{
-    recPS2glVertex4f(x / 2147483648.0f, y / 2147483648.0f, 0.0f, 1.0f);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5746–5746 */
-void recPS2glVertex2f(float x, float y)
-{
-    recPS2glVertex4f(x, y, 0.0f, 1.0f);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5740–5742 */
-void recPS2glVertex2d(double x, double y)
-{
-    recPS2glVertex4f((float)x, (float)y, 0.0f, 1.0f);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5724–5731 */
 #pragma auto_inline on
-void recPS2glTranslatef(float x, float y, float z)
-{
-    tagGLlistnode* pNode;
-    anon_133* pParam;
-    pNode = PS2glListAllocNode(sizeof(anon_133));
-    pParam = (anon_133*)pNode->aParams;
-    pParam->x = x;
-    pParam->y = y;
-    pParam->z = z;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTranslatef;
-}
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5720–5720 */
-void plyPS2glTranslatef(anon_133* pParam)
-{
-    impPS2glTranslatef(pParam->x, pParam->y, pParam->z);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5705–5707 */
-void recPS2glTranslated(double x, double y, double z)
-{
-    recPS2glTranslatef((float)x, (float)y, (float)z);
-}
 #pragma auto_inline reset
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5687–5700 */
-void recPS2glTexSubImage2D(unsigned int target, int level, int xoffset, int yoffset, int width, int height, unsigned int format, unsigned int type, void* pixels)
-{
-    anon_28* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_28));
-    pParam = (anon_28*)pNode->aParams;
-    pParam->target = target;
-    pParam->level = level;
-    pParam->xoffset = xoffset;
-    pParam->yoffset = yoffset;
-    pParam->width = width;
-    pParam->height = height;
-    pParam->format = format;
-    pParam->type = type;
-    pParam->pixels = (int)pixels;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexSubImage2D;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5682–5684 */
 void impPS2glTexSubImage2D(unsigned int target, int level, int xoffset, int yoffset, int width, int height, unsigned int format, unsigned int type, void* pixels);
-void plyPS2glTexSubImage2D(anon_28* pParam)
-{
-    impPS2glTexSubImage2D(pParam->target, pParam->level, pParam->xoffset, pParam->yoffset, pParam->width, pParam->height, pParam->format, pParam->type, *(void**)&pParam->pixels);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5653–5664 */
-void recPS2glTexSubImage1D(unsigned int target, int level, int xoffset, int width, unsigned int format, unsigned int type, void* pixels)
-{
-    anon_176* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_176));
-    pParam = (anon_176*)pNode->aParams;
-    pParam->target = target;
-    pParam->level = level;
-    pParam->xoffset = xoffset;
-    pParam->width = width;
-    pParam->format = format;
-    pParam->type = type;
-    pParam->pixels = (int)pixels;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexSubImage1D;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5649–5649 */
 void impPS2glTexSubImage1D(unsigned int, int, int, int, unsigned int, unsigned int, void*);
 
-void plyPS2glTexSubImage1D(anon_176* pParam)
-{
-    impPS2glTexSubImage1D(pParam->target, pParam->level, pParam->xoffset, pParam->width, pParam->format, pParam->type, *(void**)&pParam->pixels);
-}
-
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5595–5602 */
 #pragma auto_inline on
-void recPS2glTexParameteri(unsigned int target, unsigned int pname, int param)
-{
-    anon_109* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_109));
-    pParam = (anon_109*)pNode->aParams;
-    pParam->target = target;
-    pParam->pname = pname;
-    pParam->param = param;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexParameteri;
-}
+
 #pragma auto_inline reset
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5619–5632 */
-void recPS2glTexParameteriv(unsigned int target, unsigned int pname, int* params)
-{
-    tagGLlistnode* pNode;
-    anon_41* pParam;
-    if (pname == 0x1004)
-    {
-        pNode = PS2glListAllocNode(sizeof(anon_41));
-        pParam = (anon_41*)pNode->aParams;
-        pParam->target = target;
-        pParam->pname = pname;
-        pParam->params = (int)PS2glListSaveParam(params, 16);
-        pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexParameteriv;
-    }
-    else
-    {
-        recPS2glTexParameteri(target, pname, *params);
-    }
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5615–5615 */
-void plyPS2glTexParameteriv(anon_41* pParam)
-{
-    impPS2glTexParameteriv(pParam->target, pParam->pname, pParam->params);
-}
-
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5591–5591 */
-void plyPS2glTexParameteri(anon_109* pParam)
-{
-    impPS2glTexParameteri(pParam->target, pParam->pname, pParam->param);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5541–5548 */
 #pragma auto_inline on
-void recPS2glTexParameterf(unsigned int target, unsigned int pname, float param)
-{
-    anon_101* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_101));
-    pParam = (anon_101*)pNode->aParams;
-    pParam->target = target;
-    pParam->pname = pname;
-    pParam->param = param;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexParameterf;
-}
+
 #pragma auto_inline reset
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5565–5578 */
-void recPS2glTexParameterfv(unsigned int target, unsigned int pname, float* params)
-{
-    tagGLlistnode* pNode;
-    anon_22* pParam;
-    if (pname == 0x1004)
-    {
-        pNode = PS2glListAllocNode(sizeof(anon_22));
-        pParam = (anon_22*)pNode->aParams;
-        pParam->target = target;
-        pParam->pname = pname;
-        pParam->params = (int)PS2glListSaveParam(params, 16);
-        pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexParameterfv;
-    }
-    else
-    {
-        recPS2glTexParameterf(target, pname, *params);
-    }
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5561–5561 */
-void plyPS2glTexParameterfv(anon_22* pParam)
-{
-    impPS2glTexParameterfv(pParam->target, pParam->pname, pParam->params);
-}
-
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5537–5537 */
-void plyPS2glTexParameterf(anon_101* pParam)
-{
-    impPS2glTexParameterf(pParam->target, pParam->pname, pParam->param);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5511–5524 */
-void recPS2glTexImage2D(unsigned int target, int level, int components, int width, int height, int border, unsigned int format, unsigned int type, void* pixels)
-{
-    anon_49* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_49));
-    pParam = (anon_49*)pNode->aParams;
-    pParam->target = target;
-    pParam->level = level;
-    pParam->components = components;
-    pParam->width = width;
-    pParam->height = height;
-    pParam->border = border;
-    pParam->format = format;
-    pParam->type = type;
-    pParam->pixels = (int)pixels;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexImage2D;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5506–5508 */
 void impPS2glTexImage2D(unsigned int target, int level, int components, int width, int height, int border, unsigned int format, unsigned int type, void* pixels);
-void plyPS2glTexImage2D(anon_49* pParam)
-{
-    impPS2glTexImage2D(pParam->target, pParam->level, pParam->components, pParam->width, pParam->height, pParam->border, pParam->format, pParam->type, *(void**)&pParam->pixels);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5476–5488 */
-void recPS2glTexImage1D(unsigned int target, int level, int components, int width, int border, unsigned int format, unsigned int type, void* pixels)
-{
-    anon_175* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_175));
-    pParam = (anon_175*)pNode->aParams;
-    pParam->target = target;
-    pParam->level = level;
-    pParam->components = components;
-    pParam->width = width;
-    pParam->border = border;
-    pParam->format = format;
-    pParam->type = type;
-    pParam->pixels = (int)pixels;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexImage1D;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5472–5472 */
 void impPS2glTexImage1D(unsigned int target, int level, int components, int width, int border, unsigned int format, unsigned int type, void* pixels);
-void plyPS2glTexImage1D(anon_175* pParam)
-{
-    impPS2glTexImage1D(pParam->target, pParam->level, pParam->components, pParam->width, pParam->border, pParam->format, pParam->type, *(void**)&pParam->pixels);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5417–5424 */
 #pragma auto_inline on
-void recPS2glTexGeni(unsigned int coord, unsigned int pname, int param)
-{
-    anon_103* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_103));
-    pParam = (anon_103*)pNode->aParams;
-    pParam->coord = coord;
-    pParam->pname = pname;
-    pParam->param = param;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexGeni;
-}
+
 #pragma auto_inline reset
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5441–5454 */
-void recPS2glTexGeniv(unsigned int coord, unsigned int pname, int* params)
-{
-    tagGLlistnode* pNode;
-    anon_26* pParam;
-    if (pname == 0x2501 || pname == 0x2502)
-    {
-        pNode = PS2glListAllocNode(sizeof(anon_26));
-        pParam = (anon_26*)pNode->aParams;
-        pParam->coord = coord;
-        pParam->pname = pname;
-        pParam->params = (int)PS2glListSaveParam(params, 16);
-        pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexGeniv;
-    }
-    else
-    {
-        recPS2glTexGeni(coord, pname, *params);
-    }
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5437–5437 */
-void plyPS2glTexGeniv(anon_26* pParam)
-{
-    impPS2glTexGeniv(pParam->coord, pParam->pname, pParam->params);
-}
-
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5413–5413 */
-void plyPS2glTexGeni(anon_103* pParam)
-{
-    impPS2glTexGeni(pParam->coord, pParam->pname, pParam->param);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5363–5370 */
 #pragma auto_inline on
-void recPS2glTexGenf(unsigned int coord, unsigned int pname, float param)
-{
-    tagGLlistnode* pNode;
-    anon_79* pParam;
-    pNode = PS2glListAllocNode(sizeof(anon_79));
-    pParam = (anon_79*)pNode->aParams;
-    pParam->coord = coord;
-    pParam->pname = pname;
-    pParam->param = param;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexGenf;
-}
+
 #pragma auto_inline reset
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5387–5400 */
-void recPS2glTexGenfv(unsigned int coord, unsigned int pname, float* params)
-{
-    tagGLlistnode* pNode;
-    anon_153* pParam;
-    if (pname == 0x2501 || pname == 0x2502)
-    {
-        pNode = PS2glListAllocNode(sizeof(anon_153));
-        pParam = (anon_153*)pNode->aParams;
-        pParam->coord = coord;
-        pParam->pname = pname;
-        pParam->params = (int)PS2glListSaveParam(params, 16);
-        pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexGenfv;
-    }
-    else
-    {
-        recPS2glTexGenf(coord, pname, *params);
-    }
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5383–5383 */
-void plyPS2glTexGenfv(anon_153* pParam)
-{
-    impPS2glTexGenfv(pParam->coord, pParam->pname, pParam->params);
-}
-
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5359–5359 */
-void plyPS2glTexGenf(anon_79* pParam)
-{
-    impPS2glTexGenf(pParam->coord, pParam->pname, pParam->param);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5314–5316 */
 #pragma auto_inline on
-void recPS2glTexGend(unsigned int coord, unsigned int pname, double param)
-{
-    recPS2glTexGenf(coord, pname, (float)param);
-}
+
 #pragma auto_inline reset
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5333–5346 */
-void recPS2glTexGendv(unsigned int coord, unsigned int pname, double* params)
-{
-    tagGLlistnode* pNode;
-    anon_122* pParam;
-    if (pname == 0x2501 || pname == 0x2502)
-    {
-        pNode = PS2glListAllocNode(sizeof(anon_122));
-        pParam = (anon_122*)pNode->aParams;
-        pParam->coord = coord;
-        pParam->pname = pname;
-        pParam->params = (int)PS2glListSaveParam(params, 4 * sizeof(double));
-        pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexGendv;
-    }
-    else
-    {
-        recPS2glTexGenf(coord, pname, (float)*params);
-    }
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5329–5329 */
-void plyPS2glTexGendv(anon_122* pParam)
-{
-    impPS2glTexGendv(pParam->coord, pParam->pname, pParam->params);
-}
-
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5271–5278 */
 #pragma auto_inline on
-void recPS2glTexEnvi(unsigned int target, unsigned int pname, int param)
-{
-    anon_8* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_8));
-    pParam = (anon_8*)pNode->aParams;
-    pParam->target = target;
-    pParam->pname = pname;
-    pParam->param = param;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexEnvi;
-}
+
 #pragma auto_inline reset
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5295–5309 */
-void recPS2glTexEnviv(unsigned int target, unsigned int pname, int* params)
-{
-    tagGLlistnode* pNode;
-    anon_106* pParam;
-    if (pname == 0x2200)
-    {
-        recPS2glTexEnvi(target, pname, *params);
-    }
-    else
-    {
-        pNode = PS2glListAllocNode(sizeof(anon_106));
-        pParam = (anon_106*)pNode->aParams;
-        pParam->target = target;
-        pParam->pname = pname;
-        pParam->params = (int)PS2glListSaveParam(params, 16);
-        pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexEnviv;
-    }
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5291–5291 */
-void plyPS2glTexEnviv(anon_106* pParam)
-{
-    impPS2glTexEnviv(pParam->target, pParam->pname, pParam->params);
-}
-
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5267–5267 */
-void plyPS2glTexEnvi(anon_8* pParam)
-{
-    impPS2glTexEnvi(pParam->target, pParam->pname, pParam->param);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5216–5223 */
 #pragma auto_inline on
-void recPS2glTexEnvf(unsigned int target, unsigned int pname, float param)
-{
-    anon_71* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_71));
-    pParam = (anon_71*)pNode->aParams;
-    pParam->target = target;
-    pParam->pname = pname;
-    pParam->param = param;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexEnvf;
-}
+
 #pragma auto_inline reset
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5240–5254 */
-void recPS2glTexEnvfv(unsigned int target, unsigned int pname, float* params)
-{
-    tagGLlistnode* pNode;
-    anon_97* pParam;
-    if (pname == 0x2200)
-    {
-        recPS2glTexEnvf(target, pname, *params);
-    }
-    else
-    {
-        pNode = PS2glListAllocNode(sizeof(anon_97));
-        pParam = (anon_97*)pNode->aParams;
-        pParam->target = target;
-        pParam->pname = pname;
-        pParam->params = (int)PS2glListSaveParam(params, 16);
-        pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexEnvfv;
-    }
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5236–5236 */
-void plyPS2glTexEnvfv(anon_97* pParam)
-{
-    impPS2glTexEnvfv(pParam->target, pParam->pname, pParam->params);
-}
-
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5212–5212 */
-void plyPS2glTexEnvf(anon_71* pParam)
-{
-    impPS2glTexEnvf(pParam->target, pParam->pname, pParam->param);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5183–5191 */
-void recPS2glMultiTexCoord4fvARB(unsigned int texture, float* v)
-{
-    *(quad*)g_PS2glContext.valistTexCoords[texture] = *(quad*)v; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5178–5180 */
-void recPS2glMultiTexCoord4dvARB(unsigned int texture, double* v)
-{
-    float s, t, r, q;
-    q = (float)v[3]; r = (float)v[2]; t = (float)v[1]; s = (float)v[0];
-    g_PS2glContext.valistTexCoords[texture][0] = s; g_PS2glContext.valistTexCoords[texture][1] = t; g_PS2glContext.valistTexCoords[texture][2] = r; g_PS2glContext.valistTexCoords[texture][3] = q; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5172–5175 */
-void recPS2glMultiTexCoord4ivARB(unsigned int texture, int* v)
-{
-    float s, t, r, q;
-    q = (float)v[3] / 2147483648.0f; r = (float)v[2] / 2147483648.0f; t = (float)v[1] / 2147483648.0f; s = (float)v[0] / 2147483648.0f;
-    g_PS2glContext.valistTexCoords[texture][0] = s; g_PS2glContext.valistTexCoords[texture][1] = t; g_PS2glContext.valistTexCoords[texture][2] = r; g_PS2glContext.valistTexCoords[texture][3] = q; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5166–5169 */
-void recPS2glMultiTexCoord4svARB(unsigned int texture, short* v)
-{
-    float s, t, r, q;
-    q = (float)v[3] / 32767.0f; r = (float)v[2] / 32767.0f; t = (float)v[1] / 32767.0f; s = (float)v[0] / 32767.0f;
-    g_PS2glContext.valistTexCoords[texture][0] = s; g_PS2glContext.valistTexCoords[texture][1] = t; g_PS2glContext.valistTexCoords[texture][2] = r; g_PS2glContext.valistTexCoords[texture][3] = q; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5152–5163 */
-void recPS2glMultiTexCoord4fARB(unsigned int texture, float s, float t, float r, float q)
-{
-    g_PS2glContext.valistTexCoords[texture][0] = (float)s; g_PS2glContext.valistTexCoords[texture][1] = (float)t; g_PS2glContext.valistTexCoords[texture][2] = (float)r; g_PS2glContext.valistTexCoords[texture][3] = (float)q; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5147–5149 */
-void recPS2glMultiTexCoord4dARB(unsigned int texture, double s, double t, double r, double q)
-{
-    g_PS2glContext.valistTexCoords[texture][0] = (float)s; g_PS2glContext.valistTexCoords[texture][1] = (float)t; g_PS2glContext.valistTexCoords[texture][2] = (float)r; g_PS2glContext.valistTexCoords[texture][3] = (float)q; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5141–5144 */
-void recPS2glMultiTexCoord4iARB(unsigned int texture, int s, int t, int r, int q)
-{
-    g_PS2glContext.valistTexCoords[texture][0] = (float)s / 2147483648.0f; g_PS2glContext.valistTexCoords[texture][1] = (float)t / 2147483648.0f; g_PS2glContext.valistTexCoords[texture][2] = (float)r / 2147483648.0f; g_PS2glContext.valistTexCoords[texture][3] = (float)q / 2147483648.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5135–5138 */
-void recPS2glMultiTexCoord4sARB(unsigned int texture, short s, short t, short r, short q)
-{
-    g_PS2glContext.valistTexCoords[texture][0] = (float)s / 32767.0f; g_PS2glContext.valistTexCoords[texture][1] = (float)t / 32767.0f; g_PS2glContext.valistTexCoords[texture][2] = (float)r / 32767.0f; g_PS2glContext.valistTexCoords[texture][3] = (float)q / 32767.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5129–5131 */
-void recPS2glMultiTexCoord3fvARB(unsigned int texture, float* v)
-{
-    float s, t, r;
-    r = v[2]; t = v[1]; s = v[0];
-    g_PS2glContext.valistTexCoords[texture][0] = s; g_PS2glContext.valistTexCoords[texture][1] = t; g_PS2glContext.valistTexCoords[texture][2] = r; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5124–5126 */
-void recPS2glMultiTexCoord3dvARB(unsigned int texture, double* v)
-{
-    float s, t, r;
-    r = (float)v[2]; t = (float)v[1]; s = (float)v[0];
-    g_PS2glContext.valistTexCoords[texture][0] = s; g_PS2glContext.valistTexCoords[texture][1] = t; g_PS2glContext.valistTexCoords[texture][2] = r; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5119–5121 */
-void recPS2glMultiTexCoord3ivARB(unsigned int texture, int* v)
-{
-    float s, t, r;
-    r = (float)v[2] / 2147483648.0f; t = (float)v[1] / 2147483648.0f; s = (float)v[0] / 2147483648.0f;
-    g_PS2glContext.valistTexCoords[texture][0] = s; g_PS2glContext.valistTexCoords[texture][1] = t; g_PS2glContext.valistTexCoords[texture][2] = r; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5114–5116 */
-void recPS2glMultiTexCoord3svARB(unsigned int texture, short* v)
-{
-    float s, t, r;
-    r = (float)v[2] / 32767.0f; t = (float)v[1] / 32767.0f; s = (float)v[0] / 32767.0f;
-    g_PS2glContext.valistTexCoords[texture][0] = s; g_PS2glContext.valistTexCoords[texture][1] = t; g_PS2glContext.valistTexCoords[texture][2] = r; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5101–5111 */
-void recPS2glMultiTexCoord3fARB(unsigned int texture, float s, float t, float r)
-{
-    g_PS2glContext.valistTexCoords[texture][0] = (float)s; g_PS2glContext.valistTexCoords[texture][1] = (float)t; g_PS2glContext.valistTexCoords[texture][2] = (float)r; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5096–5098 */
-void recPS2glMultiTexCoord3dARB(unsigned int texture, double s, double t, double r)
-{
-    g_PS2glContext.valistTexCoords[texture][0] = (float)s; g_PS2glContext.valistTexCoords[texture][1] = (float)t; g_PS2glContext.valistTexCoords[texture][2] = (float)r; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5091–5093 */
-void recPS2glMultiTexCoord3iARB(unsigned int texture, int s, int t, int r)
-{
-    g_PS2glContext.valistTexCoords[texture][0] = (float)s / 2147483648.0f; g_PS2glContext.valistTexCoords[texture][1] = (float)t / 2147483648.0f; g_PS2glContext.valistTexCoords[texture][2] = (float)r / 2147483648.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5086–5088 */
-void recPS2glMultiTexCoord3sARB(unsigned int texture, short s, short t, short r)
-{
-    g_PS2glContext.valistTexCoords[texture][0] = (float)s / 32767.0f; g_PS2glContext.valistTexCoords[texture][1] = (float)t / 32767.0f; g_PS2glContext.valistTexCoords[texture][2] = (float)r / 32767.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5080–5082 */
-void recPS2glMultiTexCoord2fvARB(unsigned int texture, float* v)
-{
-    float s, t;
-    t = v[1]; s = v[0];
-    g_PS2glContext.valistTexCoords[texture][0] = s; g_PS2glContext.valistTexCoords[texture][1] = t; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5075–5077 */
-void recPS2glMultiTexCoord2dvARB(unsigned int texture, double* v)
-{
-    float s, t;
-    t = (float)v[1]; s = (float)v[0];
-    g_PS2glContext.valistTexCoords[texture][0] = s; g_PS2glContext.valistTexCoords[texture][1] = t; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5070–5072 */
-void recPS2glMultiTexCoord2ivARB(unsigned int texture, int* v)
-{
-    float s, t;
-    t = (float)v[1] / 2147483648.0f; s = (float)v[0] / 2147483648.0f;
-    g_PS2glContext.valistTexCoords[texture][0] = s; g_PS2glContext.valistTexCoords[texture][1] = t; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5065–5067 */
-void recPS2glMultiTexCoord2svARB(unsigned int texture, short* v)
-{
-    float s, t;
-    t = (float)v[1] / 32767.0f; s = (float)v[0] / 32767.0f;
-    g_PS2glContext.valistTexCoords[texture][0] = s; g_PS2glContext.valistTexCoords[texture][1] = t; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5053–5062 */
-void recPS2glMultiTexCoord2fARB(unsigned int texture, float s, float t)
-{
-    g_PS2glContext.valistTexCoords[texture][0] = (float)s; g_PS2glContext.valistTexCoords[texture][1] = (float)t; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5048–5050 */
-void recPS2glMultiTexCoord2dARB(unsigned int texture, double s, double t)
-{
-    g_PS2glContext.valistTexCoords[texture][0] = (float)s; g_PS2glContext.valistTexCoords[texture][1] = (float)t; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5043–5045 */
-void recPS2glMultiTexCoord2iARB(unsigned int texture, int s, int t)
-{
-    g_PS2glContext.valistTexCoords[texture][0] = (float)s / 2147483648.0f; g_PS2glContext.valistTexCoords[texture][1] = (float)t / 2147483648.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5038–5040 */
-void recPS2glMultiTexCoord2sARB(unsigned int texture, short s, short t)
-{
-    g_PS2glContext.valistTexCoords[texture][0] = (float)s / 32767.0f; g_PS2glContext.valistTexCoords[texture][1] = (float)t / 32767.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5032–5034 */
-void recPS2glMultiTexCoord1fvARB(unsigned int texture, float* v)
-{
-    g_PS2glContext.valistTexCoords[texture][0] = v[0]; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5027–5029 */
-void recPS2glMultiTexCoord1dvARB(unsigned int texture, double* v)
-{
-    g_PS2glContext.valistTexCoords[texture][0] = (float)v[0]; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5022–5024 */
-void recPS2glMultiTexCoord1ivARB(unsigned int texture, int* v)
-{
-    g_PS2glContext.valistTexCoords[texture][0] = (float)v[0] / 2147483648.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5017–5019 */
-void recPS2glMultiTexCoord1svARB(unsigned int texture, short* v)
-{
-    g_PS2glContext.valistTexCoords[texture][0] = (float)v[0] / 32767.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5006–5014 */
-void recPS2glMultiTexCoord1fARB(unsigned int texture, float s)
-{
-    g_PS2glContext.valistTexCoords[texture][0] = s; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5001–5003 */
-void recPS2glMultiTexCoord1dARB(unsigned int texture, double s)
-{
-    g_PS2glContext.valistTexCoords[texture][0] = (float)s; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4996–4998 */
-void recPS2glMultiTexCoord1iARB(unsigned int texture, int s)
-{
-    g_PS2glContext.valistTexCoords[texture][0] = (float)s / 2147483648.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4991–4993 */
-void recPS2glMultiTexCoord1sARB(unsigned int texture, short s)
-{
-    g_PS2glContext.valistTexCoords[texture][0] = (float)s / 32767.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4968–4987 */
-void recPS2glTexCoord4fv(float* v)
-{
-    *(quad*)g_PS2glContext.valistTexCoords[0] = *(quad*)v; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4963–4965 */
-void recPS2glTexCoord4dv(double* v)
-{
-    float s, t, r, q;
-    q = (float)v[3]; r = (float)v[2]; t = (float)v[1]; s = (float)v[0];
-    (*g_PS2glContext.pvlistTexCoord)[0] = s; (*g_PS2glContext.pvlistTexCoord)[1] = t; (*g_PS2glContext.pvlistTexCoord)[2] = r; (*g_PS2glContext.pvlistTexCoord)[3] = q; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4957–4960 */
-void recPS2glTexCoord4iv(int* v)
-{
-    float s, t, r, q;
-    q = (float)v[3] / 2147483648.0f; r = (float)v[2] / 2147483648.0f; t = (float)v[1] / 2147483648.0f; s = (float)v[0] / 2147483648.0f;
-    (*g_PS2glContext.pvlistTexCoord)[0] = s; (*g_PS2glContext.pvlistTexCoord)[1] = t; (*g_PS2glContext.pvlistTexCoord)[2] = r; (*g_PS2glContext.pvlistTexCoord)[3] = q; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4951–4954 */
-void recPS2glTexCoord4sv(short* v)
-{
-    float s, t, r, q;
-    q = (float)v[3] / 32767.0f; r = (float)v[2] / 32767.0f; t = (float)v[1] / 32767.0f; s = (float)v[0] / 32767.0f;
-    (*g_PS2glContext.pvlistTexCoord)[0] = s; (*g_PS2glContext.pvlistTexCoord)[1] = t; (*g_PS2glContext.pvlistTexCoord)[2] = r; (*g_PS2glContext.pvlistTexCoord)[3] = q; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4928–4948 */
-void recPS2glTexCoord4f(float s, float t, float r, float q)
-{
-    (*g_PS2glContext.pvlistTexCoord)[0] = s; (*g_PS2glContext.pvlistTexCoord)[1] = t; (*g_PS2glContext.pvlistTexCoord)[2] = r; (*g_PS2glContext.pvlistTexCoord)[3] = q; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4923–4925 */
-void recPS2glTexCoord4d(double s, double t, double r, double q)
-{
-    (*g_PS2glContext.pvlistTexCoord)[0] = (float)s; (*g_PS2glContext.pvlistTexCoord)[1] = (float)t; (*g_PS2glContext.pvlistTexCoord)[2] = (float)r; (*g_PS2glContext.pvlistTexCoord)[3] = (float)q; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4917–4920 */
-void recPS2glTexCoord4i(int s, int t, int r, int q)
-{
-    (*g_PS2glContext.pvlistTexCoord)[0] = (float)s / 2147483648.0f; (*g_PS2glContext.pvlistTexCoord)[1] = (float)t / 2147483648.0f; (*g_PS2glContext.pvlistTexCoord)[2] = (float)r / 2147483648.0f; (*g_PS2glContext.pvlistTexCoord)[3] = (float)q / 2147483648.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4911–4914 */
-void recPS2glTexCoord4s(short s, short t, short r, short q)
-{
-    (*g_PS2glContext.pvlistTexCoord)[0] = (float)s / 32767.0f; (*g_PS2glContext.pvlistTexCoord)[1] = (float)t / 32767.0f; (*g_PS2glContext.pvlistTexCoord)[2] = (float)r / 32767.0f; (*g_PS2glContext.pvlistTexCoord)[3] = (float)q / 32767.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4905–4907 */
-void recPS2glTexCoord3fv(float* v)
-{
-    float s, t, r;
-    r = v[2]; t = v[1]; s = v[0];
-    g_PS2glContext.valistTexCoords[0][0] = s; g_PS2glContext.valistTexCoords[0][1] = t; g_PS2glContext.valistTexCoords[0][2] = r; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4900–4902 */
-void recPS2glTexCoord3dv(double* v)
-{
-    float s, t, r;
-    r = (float)v[2]; t = (float)v[1]; s = (float)v[0];
-    g_PS2glContext.valistTexCoords[0][0] = s; g_PS2glContext.valistTexCoords[0][1] = t; g_PS2glContext.valistTexCoords[0][2] = r; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4895–4897 */
-void recPS2glTexCoord3iv(int* v)
-{
-    float s, t, r;
-    r = (float)v[2] / 2147483648.0f; t = (float)v[1] / 2147483648.0f; s = (float)v[0] / 2147483648.0f;
-    g_PS2glContext.valistTexCoords[0][0] = s; g_PS2glContext.valistTexCoords[0][1] = t; g_PS2glContext.valistTexCoords[0][2] = r; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4890–4892 */
-void recPS2glTexCoord3sv(short* v)
-{
-    float s, t, r;
-    r = (float)v[2] / 32767.0f; t = (float)v[1] / 32767.0f; s = (float)v[0] / 32767.0f;
-    g_PS2glContext.valistTexCoords[0][0] = s; g_PS2glContext.valistTexCoords[0][1] = t; g_PS2glContext.valistTexCoords[0][2] = r; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4862–4887 */
-void recPS2glTexCoord3f(float s, float t, float r)
-{
-    g_PS2glContext.valistTexCoords[0][0] = s; g_PS2glContext.valistTexCoords[0][1] = t; g_PS2glContext.valistTexCoords[0][2] = r; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4857–4859 */
-void recPS2glTexCoord3d(double s, double t, double r)
-{
-    g_PS2glContext.valistTexCoords[0][0] = (float)s; g_PS2glContext.valistTexCoords[0][1] = (float)t; g_PS2glContext.valistTexCoords[0][2] = (float)r; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4852–4854 */
-void recPS2glTexCoord3i(int s, int t, int r)
-{
-    g_PS2glContext.valistTexCoords[0][0] = (float)s / 2147483648.0f; g_PS2glContext.valistTexCoords[0][1] = (float)t / 2147483648.0f; g_PS2glContext.valistTexCoords[0][2] = (float)r / 2147483648.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4847–4849 */
-void recPS2glTexCoord3s(short s, short t, short r)
-{
-    g_PS2glContext.valistTexCoords[0][0] = (float)s / 32767.0f; g_PS2glContext.valistTexCoords[0][1] = (float)t / 32767.0f; g_PS2glContext.valistTexCoords[0][2] = (float)r / 32767.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4841–4843 */
-void recPS2glTexCoord2fv(float* v)
-{
-    float s = v[0], t = v[1];
-    g_PS2glContext.valistTexCoords[0][0] = s; g_PS2glContext.valistTexCoords[0][1] = t; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4836–4838 */
-void recPS2glTexCoord2dv(double* v)
-{
-    float s, t;
-    t = (float)v[1]; s = (float)v[0];
-    g_PS2glContext.valistTexCoords[0][0] = s; g_PS2glContext.valistTexCoords[0][1] = t; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4831–4833 */
-void recPS2glTexCoord2iv(int* v)
-{
-    float s, t;
-    t = (float)v[1] / 2147483648.0f; s = (float)v[0] / 2147483648.0f;
-    g_PS2glContext.valistTexCoords[0][0] = s; g_PS2glContext.valistTexCoords[0][1] = t; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4826–4828 */
-void recPS2glTexCoord2sv(short* v)
-{
-    float s, t;
-    t = (float)v[1] / 32767.0f; s = (float)v[0] / 32767.0f;
-    g_PS2glContext.valistTexCoords[0][0] = s; g_PS2glContext.valistTexCoords[0][1] = t; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4801–4823 */
 void PS2glSaveListCall(unsigned int eCode, float (*pData)[4]);
-void recPS2glTexCoord2f(float s, float t)
-{
-    g_PS2glContext.valistTexCoords[0][0] = s;
-    g_PS2glContext.valistTexCoords[0][1] = t;
-    if (!g_PS2glContext.bFinalCompile)
-        PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4796–4798 */
-void recPS2glTexCoord2d(double s, double t)
-{
-    g_PS2glContext.valistTexCoords[0][0] = (float)s; g_PS2glContext.valistTexCoords[0][1] = (float)t; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4791–4793 */
-void recPS2glTexCoord2i(int s, int t)
-{
-    g_PS2glContext.valistTexCoords[0][0] = (float)s / 2147483648.0f; g_PS2glContext.valistTexCoords[0][1] = (float)t / 2147483648.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4786–4788 */
-void recPS2glTexCoord2s(short s, short t)
-{
-    g_PS2glContext.valistTexCoords[0][0] = (float)s / 32767.0f; g_PS2glContext.valistTexCoords[0][1] = (float)t / 32767.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4780–4782 */
-void recPS2glTexCoord1fv(float* v)
-{
-    g_PS2glContext.valistTexCoords[0][0] = v[0];
-    if (!g_PS2glContext.bFinalCompile)
-        PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4775–4777 */
-void recPS2glTexCoord1dv(double* v)
-{
-    g_PS2glContext.valistTexCoords[0][0] = (float)v[0]; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4770–4772 */
-void recPS2glTexCoord1iv(int* v)
-{
-    g_PS2glContext.valistTexCoords[0][0] = (float)v[0] / 2147483648.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4765–4767 */
-void recPS2glTexCoord1sv(short* v)
-{
-    g_PS2glContext.valistTexCoords[0][0] = (float)v[0] / 32767.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4742–4762 */
-void recPS2glTexCoord1f(float s)
-{
-    g_PS2glContext.valistTexCoords[0][0] = s;
-    if (!g_PS2glContext.bFinalCompile)
-        PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4737–4739 */
-void recPS2glTexCoord1d(double s)
-{
-    g_PS2glContext.valistTexCoords[0][0] = (float)s; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4732–4734 */
-void recPS2glTexCoord1i(int s)
-{
-    g_PS2glContext.valistTexCoords[0][0] = (float)s / 2147483648.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4727–4729 */
-void recPS2glTexCoord1s(short s)
-{
-    g_PS2glContext.valistTexCoords[0][0] = (float)s / 32767.0f;
-    if (!g_PS2glContext.bFinalCompile)
-        PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4710–4717 */
-void recPS2glStencilOp(unsigned int fail, unsigned int zfail, unsigned int zpass)
-{
-    anon_16* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_16));
-    pParam = (anon_16*)pNode->aParams;
-    pParam->fail = fail;
-    pParam->zfail = zfail;
-    pParam->zpass = zpass;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glStencilOp;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4706–4706 */
-void plyPS2glStencilOp(anon_16* pParam)
-{
-    impPS2glStencilOp(pParam->fail, pParam->zfail, pParam->zpass);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4688–4693 */
-void recPS2glStencilMask(unsigned int mask)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_21));
-    ((anon_21*)pNode->aParams)->mask = mask;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glStencilMask;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4684–4684 */
-void plyPS2glStencilMask(anon_21* pParam)
-{
-    impPS2glStencilMask(pParam->mask);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4666–4673 */
-void recPS2glStencilFunc(unsigned int func, int ref, unsigned int mask)
-{
-    anon_100* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_100));
-    pParam = (anon_100*)pNode->aParams;
-    pParam->func = func;
-    pParam->ref = ref;
-    pParam->mask = mask;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glStencilFunc;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4662–4662 */
-void plyPS2glStencilFunc(anon_100* pParam)
-{
-    impPS2glStencilFunc(pParam->func, pParam->ref, pParam->mask);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4644–4649 */
-void recPS2glShadeModel(unsigned int mode)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_162));
-    ((anon_162*)pNode->aParams)->mode = mode;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glShadeModel;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4640–4640 */
-void plyPS2glShadeModel(anon_162* pParam)
-{
-    impPS2glShadeModel(pParam->mode);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4621–4629 */
-void recPS2glScissor(int x, int y, int width, int height)
-{
-    anon_46* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_46));
-    pParam = (anon_46*)pNode->aParams;
-    pParam->x = x;
-    pParam->y = y;
-    pParam->width = width;
-    pParam->height = height;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glScissor;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4617–4617 */
-void plyPS2glScissor(anon_46* pParam)
-{
-    impPS2glScissor(pParam->x, pParam->y, pParam->width, pParam->height);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4596–4603 */
 #pragma auto_inline on
-void recPS2glScalef(float x, float y, float z)
-{
-    tagGLlistnode* pNode;
-    anon_112* pParam;
-    pNode = PS2glListAllocNode(sizeof(anon_112));
-    pParam = (anon_112*)pNode->aParams;
-    pParam->x = x;
-    pParam->y = y;
-    pParam->z = z;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glScalef;
-}
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4592–4592 */
-void plyPS2glScalef(anon_112* pParam)
-{
-    impPS2glScalef(pParam->x, pParam->y, pParam->z);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4577–4579 */
-void recPS2glScaled(double x, double y, double z)
-{
-    recPS2glScalef((float)x, (float)y, (float)z);
-}
 #pragma auto_inline reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4564–4572 */
 #pragma auto_inline on
-void recPS2glRotatef(float angle, float x, float y, float z)
-{
-    tagGLlistnode* pNode;
-    anon_131* pParam;
-    pNode = PS2glListAllocNode(sizeof(anon_131));
-    pParam = (anon_131*)pNode->aParams;
-    pParam->angle = angle;
-    pParam->x = x;
-    pParam->y = y;
-    pParam->z = z;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRotatef;
-}
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4560–4560 */
-void plyPS2glRotatef(anon_131* pParam)
-{
-    impPS2glRotatef(pParam->angle, pParam->x, pParam->y, pParam->z);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4544–4546 */
-void recPS2glRotated(double angle, double x, double y, double z)
-{
-    recPS2glRotatef((float)angle, (float)x, (float)y, (float)z);
-}
 #pragma auto_inline reset
 
 #pragma auto_inline on
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4524–4532 */
-void recPS2glRects(short x1, short y1, short x2, short y2)
-{
-    anon_58* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_58));
-    pParam = (anon_58*)pNode->aParams;
-    pParam->x1 = x1;
-    pParam->y1 = y1;
-    pParam->x2 = x2;
-    pParam->y2 = y2;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRects;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4537–4539 */
-void recPS2glRectsv(short* v1, short* v2)
-{
-    recPS2glRects(v1[0], v1[1], v2[0], v2[1]);
-}
 
 #pragma auto_inline reset
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4520–4520 */
-void plyPS2glRects(anon_58* pParam)
-{
-    impPS2glRects(pParam->x1, pParam->y1, pParam->x2, pParam->y2);
-}
 
 #pragma auto_inline on
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4491–4499 */
-void recPS2glRecti(int x1, int y1, int x2, int y2)
-{
-    anon_39* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_39));
-    pParam = (anon_39*)pNode->aParams;
-    pParam->x1 = x1;
-    pParam->y1 = y1;
-    pParam->x2 = x2;
-    pParam->y2 = y2;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRecti;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4504–4506 */
-void recPS2glRectiv(int* v1, int* v2)
-{
-    recPS2glRecti(v1[0], v1[1], v2[0], v2[1]);
-}
 
 #pragma auto_inline reset
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4487–4487 */
-void plyPS2glRecti(anon_39* pParam)
-{
-    impPS2glRecti(pParam->x1, pParam->y1, pParam->x2, pParam->y2);
-}
 
 #pragma auto_inline on
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4458–4466 */
-void recPS2glRectf(float x1, float y1, float x2, float y2)
-{
-    tagGLlistnode* pNode;
-    anon_10* pParam;
-    pNode = PS2glListAllocNode(sizeof(anon_10));
-    pParam = (anon_10*)pNode->aParams;
-    pParam->x1 = x1;
-    pParam->y1 = y1;
-    pParam->x2 = x2;
-    pParam->y2 = y2;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRectf;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4471–4473 */
-void recPS2glRectfv(float* v1, float* v2)
-{
-    recPS2glRectf(v1[0], v1[1], v2[0], v2[1]);
-}
 
 #pragma auto_inline reset
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4454–4454 */
-void plyPS2glRectf(anon_10* pParam)
-{
-    impPS2glRectf(pParam->x1, pParam->y1, pParam->x2, pParam->y2);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4438–4440 */
-void recPS2glRectdv(double* v1, double* v2)
-{
-    recPS2glRectf((float)v1[0], (float)v1[1], (float)v2[0], (float)v2[1]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4431–4433 */
-void recPS2glRectd(double x1, double y1, double x2, double y2)
-{
-    recPS2glRectf((float)x1, (float)y1, (float)x2, (float)y2);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4421–4426 */
-void recPS2glReadBuffer(unsigned int mode)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_25));
-    ((anon_25*)pNode->aParams)->mode = mode;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glReadBuffer;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4417–4417 */
-void plyPS2glReadBuffer(anon_25* pParam)
-{
-    impPS2glReadBuffer(pParam->mode);
-}
 
 #pragma auto_inline on
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4391–4399 */
-void recPS2glRasterPos4s(short x, short y, short z, short w)
-{
-    anon_7* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_7));
-    pParam = (anon_7*)pNode->aParams;
-    pParam->x = x;
-    pParam->y = y;
-    pParam->z = z;
-    pParam->w = w;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRasterPos4s;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4404–4406 */
-void recPS2glRasterPos4sv(short* v)
-{
-    recPS2glRasterPos4s(v[0], v[1], v[2], v[3]);
-}
 
 #pragma auto_inline reset
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4387–4387 */
-void plyPS2glRasterPos4s(anon_7* pParam)
-{
-    impPS2glRasterPos4s(pParam->x, pParam->y, pParam->z, pParam->w);
-}
 
 #pragma auto_inline on
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4358–4366 */
-void recPS2glRasterPos4i(int x, int y, int z, int w)
-{
-    anon_149* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_149));
-    pParam = (anon_149*)pNode->aParams;
-    pParam->x = x;
-    pParam->y = y;
-    pParam->z = z;
-    pParam->w = w;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRasterPos4i;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4371–4373 */
-void recPS2glRasterPos4iv(int* v)
-{
-    recPS2glRasterPos4i(v[0], v[1], v[2], v[3]);
-}
 
 #pragma auto_inline reset
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4354–4354 */
-void plyPS2glRasterPos4i(anon_149* pParam)
-{
-    impPS2glRasterPos4i(pParam->x, pParam->y, pParam->z, pParam->w);
-}
 
 #pragma auto_inline on
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4325–4333 */
-void recPS2glRasterPos4f(float x, float y, float z, float w)
-{
-    tagGLlistnode* pNode;
-    anon_125* pParam;
-    pNode = PS2glListAllocNode(sizeof(anon_125));
-    pParam = (anon_125*)pNode->aParams;
-    pParam->x = x;
-    pParam->y = y;
-    pParam->z = z;
-    pParam->w = w;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRasterPos4f;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4338–4340 */
-void recPS2glRasterPos4fv(float* v)
-{
-    recPS2glRasterPos4f(v[0], v[1], v[2], v[3]);
-}
 
 #pragma auto_inline reset
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4321–4321 */
-void plyPS2glRasterPos4f(anon_125* pParam)
-{
-    impPS2glRasterPos4f(pParam->x, pParam->y, pParam->z, pParam->w);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4305–4307 */
-void recPS2glRasterPos4dv(double* v)
-{
-    recPS2glRasterPos4f((float)v[0], (float)v[1], (float)v[2], (float)v[3]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4298–4300 */
-void recPS2glRasterPos4d(double x, double y, double z, double w)
-{
-    recPS2glRasterPos4f((float)x, (float)y, (float)z, (float)w);
-}
 
 #pragma auto_inline on
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4279–4286 */
-void recPS2glRasterPos3s(short x, short y, short z)
-{
-    anon_57* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_57));
-    pParam = (anon_57*)pNode->aParams;
-    pParam->x = x;
-    pParam->y = y;
-    pParam->z = z;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRasterPos3s;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4291–4293 */
-void recPS2glRasterPos3sv(short* v)
-{
-    recPS2glRasterPos3s(v[0], v[1], v[2]);
-}
 
 #pragma auto_inline reset
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4275–4275 */
-void plyPS2glRasterPos3s(anon_57* pParam)
-{
-    impPS2glRasterPos3s(pParam->x, pParam->y, pParam->z);
-}
 
 #pragma auto_inline on
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4248–4255 */
-void recPS2glRasterPos3i(int x, int y, int z)
-{
-    anon_34* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_34));
-    pParam = (anon_34*)pNode->aParams;
-    pParam->x = x;
-    pParam->y = y;
-    pParam->z = z;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRasterPos3i;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4260–4262 */
-void recPS2glRasterPos3iv(int* v)
-{
-    recPS2glRasterPos3i(v[0], v[1], v[2]);
-}
 
 #pragma auto_inline reset
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4244–4244 */
-void plyPS2glRasterPos3i(anon_34* pParam)
-{
-    impPS2glRasterPos3i(pParam->x, pParam->y, pParam->z);
-}
 
 #pragma auto_inline on
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4217–4224 */
-void recPS2glRasterPos3f(float x, float y, float z)
-{
-    tagGLlistnode* pNode;
-    anon_76* pParam;
-    pNode = PS2glListAllocNode(sizeof(anon_76));
-    pParam = (anon_76*)pNode->aParams;
-    pParam->x = x;
-    pParam->y = y;
-    pParam->z = z;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRasterPos3f;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4229–4231 */
-void recPS2glRasterPos3fv(float* v)
-{
-    recPS2glRasterPos3f(v[0], v[1], v[2]);
-}
 
 #pragma auto_inline reset
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4213–4213 */
-void plyPS2glRasterPos3f(anon_76* pParam)
-{
-    impPS2glRasterPos3f(pParam->x, pParam->y, pParam->z);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4198–4200 */
-void recPS2glRasterPos3dv(double* v)
-{
-    recPS2glRasterPos3f((float)v[0], (float)v[1], (float)v[2]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4191–4193 */
-void recPS2glRasterPos3d(double x, double y, double z)
-{
-    recPS2glRasterPos3f((float)x, (float)y, (float)z);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4173–4179 */
 #pragma auto_inline on
-void recPS2glRasterPos2s(short x, short y)
-{
-    anon_45* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_45));
-    pParam = (anon_45*)pNode->aParams;
-    pParam->x = x;
-    pParam->y = y;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRasterPos2s;
-}
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4184–4186 */
-void recPS2glRasterPos2sv(short* v)
-{
-    recPS2glRasterPos2s(v[0], v[1]);
-}
 #pragma auto_inline reset
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4169–4169 */
-void plyPS2glRasterPos2s(anon_45* param0)
-{
-    impPS2glRasterPos2s(param0->x, param0->y);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4144–4150 */
 #pragma auto_inline on
-void recPS2glRasterPos2i(int x, int y)
-{
-    anon_62* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_62));
-    pParam = (anon_62*)pNode->aParams;
-    pParam->x = x;
-    pParam->y = y;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRasterPos2i;
-}
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4155–4157 */
-void recPS2glRasterPos2iv(int* v)
-{
-    recPS2glRasterPos2i(v[0], v[1]);
-}
 #pragma auto_inline reset
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4140–4140 */
-void plyPS2glRasterPos2i(anon_62* param0)
-{
-    impPS2glRasterPos2i(param0->x, param0->y);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4115–4121 */
 #pragma auto_inline on
-void recPS2glRasterPos2f(float x, float y)
-{
-    tagGLlistnode* pNode;
-    anon_13* pParam;
-    pNode = PS2glListAllocNode(sizeof(anon_13));
-    pParam = (anon_13*)pNode->aParams;
-    pParam->x = x;
-    pParam->y = y;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRasterPos2f;
-}
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4126–4128 */
-void recPS2glRasterPos2fv(float* v)
-{
-    recPS2glRasterPos2f(v[0], v[1]);
-}
 #pragma auto_inline reset
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4111–4111 */
-void plyPS2glRasterPos2f(anon_13* pParam)
-{
-    impPS2glRasterPos2f(pParam->x, pParam->y);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4097–4099 */
-void recPS2glRasterPos2dv(double* v)
-{
-    recPS2glRasterPos2f((float)v[0], (float)v[1]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4090–4092 */
-void recPS2glRasterPos2d(double x, double y)
-{
-    recPS2glRasterPos2f(x, y);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4080–4085 */
-void recPS2glPushName(unsigned int name)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_85));
-    ((anon_85*)pNode->aParams)->name = name;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPushName;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4076–4076 */
-void plyPS2glPushName(anon_85* pParam)
-{
-    impPS2glPushName(pParam->name);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4062–4065 */
-void recPS2glPushMatrix(void)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(0);
-    pNode->pfns.pfnPlayVoid = impPS2glPushMatrix;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4052–4057 */
-void recPS2glPushClientAttrib(unsigned int mask)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_189));
-    ((anon_189*)pNode->aParams)->mask = mask;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPushClientAttrib;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4048–4048 */
-void plyPS2glPushClientAttrib(anon_189* pParam)
-{
-    impPS2glPushClientAttrib(pParam->mask);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4032–4037 */
-void recPS2glPushAttrib(unsigned int mask)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_1));
-    ((anon_1*)pNode->aParams)->mask = mask;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPushAttrib;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4028–4028 */
-void plyPS2glPushAttrib(anon_1* pParam)
-{
-    impPS2glPushAttrib(pParam->mask);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4010–4017 */
-void recPS2glPrioritizeTextures(int n, unsigned int* textures, float* priorities)
-{
-    tagGLlistnode* pNode;
-    anon_67* pParam;
-    pNode = PS2glListAllocNode(sizeof(anon_67));
-    pParam = (anon_67*)pNode->aParams;
-    pParam->n = n;
-    pParam->textures = (int)PS2glListSaveParam(textures, n * sizeof(unsigned int));
-    pParam->priorities = (int)PS2glListSaveParam(priorities, n * sizeof(float));
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPrioritizeTextures;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4006–4006 */
-void plyPS2glPrioritizeTextures(anon_67* pParam)
-{
-    impPS2glPrioritizeTextures(pParam->n, pParam->textures, pParam->priorities);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3990–3993 */
-void recPS2glPopName(void)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(0);
-    pNode->pfns.pfnPlayVoid = impPS2glPopName;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3982–3985 */
-void recPS2glPopMatrix(void)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(0);
-    pNode->pfns.pfnPlayVoid = impPS2glPopMatrix;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3974–3977 */
-void recPS2glPopClientAttrib(void)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(0);
-    pNode->pfns.pfnPlayVoid = impPS2glPopClientAttrib;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3966–3969 */
-void recPS2glPopAttrib(void)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(0);
-    pNode->pfns.pfnPlayVoid = impPS2glPopAttrib;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3956–3961 */
-void recPS2glPolygonStipple(unsigned char* mask)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_184));
-    ((anon_184*)pNode->aParams)->mask = (int)PS2glListSaveParam(mask, 0x400);
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPolygonStipple;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3952–3952 */
-void plyPS2glPolygonStipple(anon_184* pParam)
-{
-    impPS2glPolygonStipple((void*)(pParam->mask));
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3935–3941 */
-void recPS2glPolygonOffset(float factor, float units)
-{
-    anon_92* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_92));
-    pParam = (anon_92*)pNode->aParams;
-    pParam->factor = factor;
-    pParam->units = units;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPolygonOffset;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3931–3931 */
-void plyPS2glPolygonOffset(anon_92* pParam)
-{
-    impPS2glPolygonOffset(pParam->factor, pParam->units);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3913–3919 */
-void recPS2glPolygonMode(unsigned int face, unsigned int mode)
-{
-    anon_50* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_50));
-    pParam = (anon_50*)pNode->aParams;
-    pParam->face = face;
-    pParam->mode = mode;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPolygonMode;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3909–3909 */
-void plyPS2glPolygonMode(anon_50* param0)
-{
-    impPS2glPolygonMode(param0->face, param0->mode);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3892–3897 */
-void recPS2glPointSize(float size)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_124));
-    ((anon_124*)pNode->aParams)->size = size;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPointSize;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3888–3888 */
-void plyPS2glPointSize(anon_124* pParam)
-{
-    impPS2glPointSize(pParam->size);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3871–3877 */
-void recPS2glPixelZoom(float xfactor, float yfactor)
-{
-    anon_0* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_0));
-    pParam = (anon_0*)pNode->aParams;
-    pParam->xfactor = xfactor;
-    pParam->yfactor = yfactor;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPixelZoom;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3867–3867 */
-void plyPS2glPixelZoom(anon_0* pParam)
-{
-    impPS2glPixelZoom(pParam->xfactor, pParam->yfactor);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3849–3855 */
-void recPS2glPixelTransferi(unsigned int pname, int param)
-{
-    anon_54* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_54));
-    pParam = (anon_54*)pNode->aParams;
-    pParam->pname = pname;
-    pParam->param = param;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPixelTransferi;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3845–3845 */
-void plyPS2glPixelTransferi(anon_54* param0)
-{
-    impPS2glPixelTransferi(param0->pname, param0->param);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3827–3833 */
-void recPS2glPixelTransferf(unsigned int pname, float param)
-{
-    anon_4* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_4));
-    pParam = (anon_4*)pNode->aParams;
-    pParam->pname = pname;
-    pParam->param = param;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPixelTransferf;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3823–3823 */
-void plyPS2glPixelTransferf(anon_4* param0)
-{
-    impPS2glPixelTransferf(param0->pname, param0->param);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3804–3811 */
-void recPS2glPixelMapusv(unsigned int map, int mapsize, unsigned short* values)
-{
-    tagGLlistnode* pNode;
-    anon_59* pParam;
-    pNode = PS2glListAllocNode(sizeof(anon_59));
-    pParam = (anon_59*)pNode->aParams;
-    pParam->map = map;
-    pParam->mapsize = mapsize;
-    pParam->values = (int)PS2glListSaveParam(values, mapsize * sizeof(unsigned short));
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPixelMapusv;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3800–3800 */
-void plyPS2glPixelMapusv(anon_59* pParam)
-{
-    impPS2glPixelMapusv(pParam->map, pParam->mapsize, pParam->values);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3780–3787 */
-void recPS2glPixelMapuiv(unsigned int map, int mapsize, unsigned int* values)
-{
-    tagGLlistnode* pNode;
-    anon_12* pParam;
-    pNode = PS2glListAllocNode(sizeof(anon_12));
-    pParam = (anon_12*)pNode->aParams;
-    pParam->map = map;
-    pParam->mapsize = mapsize;
-    pParam->values = (int)PS2glListSaveParam(values, mapsize * sizeof(unsigned int));
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPixelMapuiv;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3776–3776 */
-void plyPS2glPixelMapuiv(anon_12* pParam)
-{
-    impPS2glPixelMapuiv(pParam->map, pParam->mapsize, pParam->values);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3756–3763 */
-void recPS2glPixelMapfv(unsigned int map, int mapsize, float* values)
-{
-    tagGLlistnode* pNode;
-    anon_51* pParam;
-    pNode = PS2glListAllocNode(sizeof(anon_51));
-    pParam = (anon_51*)pNode->aParams;
-    pParam->map = map;
-    pParam->mapsize = mapsize;
-    pParam->values = (int)PS2glListSaveParam(values, mapsize * sizeof(float));
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPixelMapfv;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3752–3752 */
-void plyPS2glPixelMapfv(anon_51* pParam)
-{
-    impPS2glPixelMapfv(pParam->map, pParam->mapsize, pParam->values);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3734–3739 */
-void recPS2glPassThrough(float token)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_110));
-    ((anon_110*)pNode->aParams)->token = token;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPassThrough;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3730–3730 */
-void plyPS2glPassThrough(anon_110* pParam)
-{
-    impPS2glPassThrough(pParam->token);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3703–3719 */
 /* worker A */
 void impPS2glOrtho(float, float, float, float, float, float);
-void recPS2glOrtho(float left, float right, float bottom, float top, float zNear, float zFar)
-{
-    unsigned int tmp;
-    anon_82* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_82) + 4);
-    tmp = (unsigned int)pNode; tmp = tmp + ((~tmp + 1) & 7); pNode = (tagGLlistnode*)tmp;
-    pParam = (anon_82*)pNode->aParams;
-    pParam->left = left;
-    pParam->right = right;
-    pParam->bottom = bottom;
-    pParam->top = top;
-    pParam->zNear = zNear;
-    pParam->zFar = zFar;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glOrtho;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3698–3700 */
-void plyPS2glOrtho(anon_82* pParam)
-{
-    impPS2glOrtho(pParam->left, pParam->right, pParam->bottom, pParam->top, pParam->zNear, pParam->zFar);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3666–3676 */
-void recPS2glNormal3fv(float* v)
-{
-    g_PS2glContext.vlistNormal[0] = v[0]; g_PS2glContext.vlistNormal[1] = v[1]; g_PS2glContext.vlistNormal[2] = v[2]; g_PS2glContext.vlistNormal[3] = 0.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(2, (float (*)[4])g_PS2glContext.vlistNormal);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3661–3663 */
-void recPS2glNormal3dv(double* v)
-{
-    float x, y, z;
-    z = (float)v[2]; y = (float)v[1]; x = (float)v[0];
-    g_PS2glContext.vlistNormal[0] = x; g_PS2glContext.vlistNormal[1] = y; g_PS2glContext.vlistNormal[2] = z; g_PS2glContext.vlistNormal[3] = 0.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(2, (float (*)[4])g_PS2glContext.vlistNormal);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3656–3658 */
-void recPS2glNormal3iv(int* v)
-{
-    float z = (float)v[2] / 2147483648.0f, y = (float)v[1] / 2147483648.0f, x = (float)v[0] / 2147483648.0f;
-    g_PS2glContext.vlistNormal[0] = x; g_PS2glContext.vlistNormal[1] = y; g_PS2glContext.vlistNormal[2] = z; g_PS2glContext.vlistNormal[3] = 0.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(2, (float (*)[4])g_PS2glContext.vlistNormal);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3651–3653 */
-void recPS2glNormal3sv(short* v)
-{
-    float x, y, z;
-    z = (float)v[2] / 32767.0f; y = (float)v[1] / 32767.0f; x = (float)v[0] / 32767.0f;
-    g_PS2glContext.vlistNormal[0] = x; g_PS2glContext.vlistNormal[1] = y; g_PS2glContext.vlistNormal[2] = z; g_PS2glContext.vlistNormal[3] = 0.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(2, (float (*)[4])g_PS2glContext.vlistNormal);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3646–3648 */
-void recPS2glNormal3bv(signed char* v)
-{
-    float x, y, z;
-    z = (float)v[2] / 127.0f; y = (float)v[1] / 127.0f; x = (float)v[0] / 127.0f;
-    g_PS2glContext.vlistNormal[0] = x; g_PS2glContext.vlistNormal[1] = y; g_PS2glContext.vlistNormal[2] = z; g_PS2glContext.vlistNormal[3] = 0.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(2, (float (*)[4])g_PS2glContext.vlistNormal);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3633–3643 */
-void recPS2glNormal3f(float nx, float ny, float nz)
-{
-    g_PS2glContext.vlistNormal[0] = nx; g_PS2glContext.vlistNormal[1] = ny; g_PS2glContext.vlistNormal[2] = nz; g_PS2glContext.vlistNormal[3] = 0.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(2, (float (*)[4])g_PS2glContext.vlistNormal);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3628–3630 */
-void recPS2glNormal3d(double nx, double ny, double nz)
-{
-    g_PS2glContext.vlistNormal[0] = (float)nx; g_PS2glContext.vlistNormal[1] = (float)ny; g_PS2glContext.vlistNormal[2] = (float)nz; g_PS2glContext.vlistNormal[3] = 0.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(2, (float (*)[4])g_PS2glContext.vlistNormal);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3623–3625 */
-void recPS2glNormal3i(int nx, int ny, int nz)
-{
-    g_PS2glContext.vlistNormal[0] = (float)nx / 2147483648.0f; g_PS2glContext.vlistNormal[1] = (float)ny / 2147483648.0f; g_PS2glContext.vlistNormal[2] = (float)nz / 2147483648.0f; g_PS2glContext.vlistNormal[3] = 0.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(2, (float (*)[4])g_PS2glContext.vlistNormal);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3618–3620 */
-void recPS2glNormal3s(short nx, short ny, short nz)
-{
-    g_PS2glContext.vlistNormal[0] = (float)nx / 32767.0f; g_PS2glContext.vlistNormal[1] = (float)ny / 32767.0f; g_PS2glContext.vlistNormal[2] = (float)nz / 32767.0f; g_PS2glContext.vlistNormal[3] = 0.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(2, (float (*)[4])g_PS2glContext.vlistNormal);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3613–3615 */
-void recPS2glNormal3b(signed char nx, signed char ny, signed char nz)
-{
-    g_PS2glContext.vlistNormal[0] = (float)nx / 127.0f; g_PS2glContext.vlistNormal[1] = (float)ny / 127.0f; g_PS2glContext.vlistNormal[2] = (float)nz / 127.0f; g_PS2glContext.vlistNormal[3] = 0.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(2, (float (*)[4])g_PS2glContext.vlistNormal);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3597–3603 */
-void recPS2glNewList(unsigned int list, unsigned int mode)
-{
-    anon_63* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_63));
-    pParam = (anon_63*)pNode->aParams;
-    pParam->list = list;
-    pParam->mode = mode;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glNewList;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3593–3593 */
-void plyPS2glNewList(anon_63* param0)
-{
-    impPS2glNewList(param0->list, param0->mode);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3576–3581 */
-void recPS2glMultMatrixf(float* m)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_117));
-    ((anon_117*)pNode->aParams)->m = (int)PS2glListSaveParam(m, 0x40);
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glMultMatrixf;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3572–3572 */
-void plyPS2glMultMatrixf(anon_117* pParam)
-{
-    impPS2glMultMatrixf((void*)(pParam->m));
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3556–3561 */
-void recPS2glMultMatrixd(double* m)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_107));
-    ((anon_107*)pNode->aParams)->m = (int)PS2glListSaveParam(m, 0x80);
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glMultMatrixd;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3552–3552 */
-void plyPS2glMultMatrixd(anon_107* pParam)
-{
-    impPS2glMultMatrixd((void*)(pParam->m));
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3536–3541 */
-void recPS2glMatrixMode(unsigned int mode)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_108));
-    ((anon_108*)pNode->aParams)->mode = mode;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glMatrixMode;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3532–3532 */
-void plyPS2glMatrixMode(anon_108* pParam)
-{
-    impPS2glMatrixMode(pParam->mode);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3483–3490 */
 #pragma auto_inline on
-void recPS2glMateriali(unsigned int face, unsigned int pname, int param)
-{
-    anon_35* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_35));
-    pParam = (anon_35*)pNode->aParams;
-    pParam->face = face;
-    pParam->pname = pname;
-    pParam->param = param;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glMateriali;
-}
+
 #pragma auto_inline reset
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3507–3521 */
-void recPS2glMaterialiv(unsigned int face, unsigned int pname, int* params)
-{
-    tagGLlistnode* pNode;
-    anon_115* pParam;
-    if (pname == 0x1601)
-    {
-        recPS2glMateriali(face, pname, *params);
-    }
-    else
-    {
-        pNode = PS2glListAllocNode(sizeof(anon_115));
-        pParam = (anon_115*)pNode->aParams;
-        pParam->face = face;
-        pParam->pname = pname;
-        pParam->params = (int)PS2glListSaveParam(params, 16);
-        pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glMaterialiv;
-    }
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3503–3503 */
-void plyPS2glMaterialiv(anon_115* pParam)
-{
-    impPS2glMaterialiv(pParam->face, pParam->pname, pParam->params);
-}
-
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3479–3479 */
-void plyPS2glMateriali(anon_35* pParam)
-{
-    impPS2glMateriali(pParam->face, pParam->pname, pParam->param);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3428–3435 */
 #pragma auto_inline on
-void recPS2glMaterialf(unsigned int face, unsigned int pname, float param)
-{
-    anon_52* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_52));
-    pParam = (anon_52*)pNode->aParams;
-    pParam->face = face;
-    pParam->pname = pname;
-    pParam->param = param;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glMaterialf;
-}
+
 #pragma auto_inline reset
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3452–3466 */
-void recPS2glMaterialfv(unsigned int face, unsigned int pname, float* params)
-{
-    tagGLlistnode* pNode;
-    anon_134* pParam;
-    if (pname == 0x1601)
-    {
-        recPS2glMaterialf(face, pname, *params);
-    }
-    else
-    {
-        pNode = PS2glListAllocNode(sizeof(anon_134));
-        pParam = (anon_134*)pNode->aParams;
-        pParam->face = face;
-        pParam->pname = pname;
-        pParam->params = (int)PS2glListSaveParam(params, 16);
-        pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glMaterialfv;
-    }
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3448–3448 */
-void plyPS2glMaterialfv(anon_134* pParam)
-{
-    impPS2glMaterialfv(pParam->face, pParam->pname, pParam->params);
-}
-
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3424–3424 */
-void plyPS2glMaterialf(anon_52* pParam)
-{
-    impPS2glMaterialf(pParam->face, pParam->pname, pParam->param);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3401–3411 */
 #pragma auto_inline on
-void recPS2glMapGrid2f(int un, float u1, float u2, int vn, float v1, float v2)
-{
-    tagGLlistnode* pNode;
-    anon_113* pParam;
-    pNode = PS2glListAllocNode(sizeof(anon_113));
-    pParam = (anon_113*)pNode->aParams;
-    pParam->un = un;
-    pParam->u1 = u1;
-    pParam->u2 = u2;
-    pParam->vn = vn;
-    pParam->v1 = v1;
-    pParam->v2 = v2;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glMapGrid2f;
-}
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3397–3397 */
-void plyPS2glMapGrid2f(anon_113* pParam)
-{
-    impPS2glMapGrid2f(pParam->un, pParam->u1, pParam->u2, pParam->vn, pParam->v1, pParam->v2);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3379–3381 */
-void recPS2glMapGrid2d(int un, double u1, double u2, int vn, double v1, double v2)
-{
-    recPS2glMapGrid2f(un, (float)u1, (float)u2, vn, (float)v1, (float)v2);
-}
 #pragma auto_inline reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3367–3374 */
 #pragma auto_inline on
-void recPS2glMapGrid1f(int un, float u1, float u2)
-{
-    tagGLlistnode* pNode;
-    anon_88* pParam;
-    pNode = PS2glListAllocNode(sizeof(anon_88));
-    pParam = (anon_88*)pNode->aParams;
-    pParam->un = un;
-    pParam->u1 = u1;
-    pParam->u2 = u2;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glMapGrid1f;
-}
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3363–3363 */
-void plyPS2glMapGrid1f(anon_88* pParam)
-{
-    impPS2glMapGrid1f(pParam->un, pParam->u1, pParam->u2);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3348–3350 */
-void recPS2glMapGrid1d(int un, double u1, double u2)
-{
-    recPS2glMapGrid1f(un, (float)u1, (float)u2);
-}
 #pragma auto_inline reset
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3329–3343 */
-void recPS2glMap2f(unsigned int target, float u1, float u2, int ustride, int uorder, float v1, float v2, int vstride, int vorder, float* points)
-{
-    tagGLlistnode* pNode;
-    anon_94* pParam;
-    pNode = PS2glListAllocNode(sizeof(anon_94));
-    pParam = (anon_94*)pNode->aParams;
-    pParam->target = target;
-    pParam->u1 = u1;
-    pParam->u2 = u2;
-    pParam->ustride = ustride;
-    pParam->uorder = uorder;
-    pParam->v1 = v1;
-    pParam->v2 = v2;
-    pParam->vstride = vstride;
-    pParam->vorder = vorder;
-    pParam->points = (int)PS2glListSaveParam(points, vstride * vorder * sizeof(float));
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glMap2f;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3325–3325 */
 /* Full callback signature is preserved in tagPS2glApiTable. */
 void impPS2glMap2f(unsigned int target, float u1, float u2, int ustride, int uorder, float v1, float v2, int vstride, int vorder, float* points);
-void plyPS2glMap2f(anon_94* pParam)
-{
-    impPS2glMap2f(pParam->target, pParam->u1, pParam->u2, pParam->ustride, pParam->uorder, pParam->v1, pParam->v2, pParam->vstride, pParam->vorder, *(float**)&pParam->points);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3285–3305 */
-void recPS2glMap2d(unsigned int target, double u1, double u2, int ustride, int uorder, double v1, double v2, int vstride, int vorder, double* points)
-{
-    unsigned int tmp;
-    anon_44* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_44) + 4);
-    tmp = (unsigned int)pNode; tmp = tmp + ((~tmp + 1) & 7); pNode = (tagGLlistnode*)tmp;
-    pParam = (anon_44*)pNode->aParams;
-    pParam->target = target;
-    pParam->u1 = u1;
-    pParam->u2 = u2;
-    pParam->ustride = ustride;
-    pParam->uorder = uorder;
-    pParam->v1 = v1;
-    pParam->v2 = v2;
-    pParam->vstride = vstride;
-    pParam->vorder = vorder;
-    pParam->points = (int)PS2glListSaveParam(points, vstride * vorder * sizeof(double));
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glMap2d;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3280–3282 */
 void impPS2glMap2d(unsigned int target, double u1, double u2, int ustride, int uorder, double v1, double v2, int vstride, int vorder, double* points);
-void plyPS2glMap2d(anon_44* pParam)
-{
-    impPS2glMap2d(pParam->target, pParam->u1, pParam->u2, pParam->ustride, pParam->uorder, pParam->v1, pParam->v2, pParam->vstride, pParam->vorder, (double*)pParam->points);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3251–3261 */
-void recPS2glMap1f(unsigned int target, float u1, float u2, int stride, int order, float* points)
-{
-    tagGLlistnode* pNode;
-    anon_3* pParam;
-    pNode = PS2glListAllocNode(sizeof(anon_3));
-    pParam = (anon_3*)pNode->aParams;
-    pParam->target = target;
-    pParam->u1 = u1;
-    pParam->u2 = u2;
-    pParam->stride = stride;
-    pParam->order = order;
-    pParam->points = (int)PS2glListSaveParam(points, stride * order * sizeof(float));
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glMap1f;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3247–3247 */
-void plyPS2glMap1f(anon_3* pParam)
-{
-    impPS2glMap1f(pParam->target, pParam->u1, pParam->u2, pParam->stride, pParam->order, pParam->points);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3215–3231 */
-void recPS2glMap1d(unsigned int target, double u1, double u2, int stride, int order, double* points)
-{
-    unsigned int tmp;
-    anon_167* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_167) + 4);
-    tmp = (unsigned int)pNode; tmp = tmp + ((~tmp + 1) & 7); pNode = (tagGLlistnode*)tmp;
-    pParam = (anon_167*)pNode->aParams;
-    pParam->target = target;
-    pParam->u1 = u1;
-    pParam->u2 = u2;
-    pParam->stride = stride;
-    pParam->order = order;
-    pParam->points = (int)PS2glListSaveParam(points, stride * order * sizeof(double));
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glMap1d;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3211–3211 */
-void plyPS2glMap1d(anon_167* pParam)
-{
-    impPS2glMap1d(pParam->target, pParam->u1, pParam->u2, pParam->stride, pParam->order, pParam->points);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3190–3195 */
-void recPS2glLogicOp(unsigned int opcode)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_174));
-    ((anon_174*)pNode->aParams)->opcode = opcode;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLogicOp;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3186–3186 */
-void plyPS2glLogicOp(anon_174* pParam)
-{
-    impPS2glLogicOp(pParam->opcode);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3170–3175 */
-void recPS2glLoadName(unsigned int name)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_177));
-    ((anon_177*)pNode->aParams)->name = name;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLoadName;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3166–3166 */
-void plyPS2glLoadName(anon_177* pParam)
-{
-    impPS2glLoadName(pParam->name);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3150–3155 */
-void recPS2glLoadMatrixf(float* m)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_168));
-    ((anon_168*)pNode->aParams)->m = (int)PS2glListSaveParam(m, 0x40);
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLoadMatrixf;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3146–3146 */
-void plyPS2glLoadMatrixf(anon_168* pParam)
-{
-    impPS2glLoadMatrixf((void*)(pParam->m));
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3130–3135 */
-void recPS2glLoadMatrixd(double* m)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_160));
-    ((anon_160*)pNode->aParams)->m = (int)PS2glListSaveParam(m, 0x80);
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLoadMatrixd;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3126–3126 */
-void plyPS2glLoadMatrixd(anon_160* pParam)
-{
-    impPS2glLoadMatrixd((void*)(pParam->m));
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3112–3115 */
-void recPS2glLoadIdentity(void)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(0);
-    pNode->pfns.pfnPlayVoid = impPS2glLoadIdentity;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3102–3107 */
-void recPS2glListBase(unsigned int base)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_86));
-    ((anon_86*)pNode->aParams)->base = base;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glListBase;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3098–3098 */
-void plyPS2glListBase(anon_86* pParam)
-{
-    impPS2glListBase(pParam->base);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3082–3087 */
-void recPS2glLineWidth(float width)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_87));
-    ((anon_87*)pNode->aParams)->width = width;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLineWidth;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3078–3078 */
-void plyPS2glLineWidth(anon_87* pParam)
-{
-    impPS2glLineWidth(pParam->width);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3061–3067 */
-void recPS2glLineStipple(int factor, unsigned short pattern)
-{
-    anon_48* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_48));
-    pParam = (anon_48*)pNode->aParams;
-    pParam->factor = factor;
-    pParam->pattern = pattern;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLineStipple;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3057–3057 */
-void plyPS2glLineStipple(anon_48* param0)
-{
-    impPS2glLineStipple(param0->factor, param0->pattern);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3024–3045 */
 /* worker B */
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2937–2944 */
 #pragma auto_inline on
 #pragma auto_inline on
-void recPS2glLightf(unsigned int light, unsigned int pname, float param)
-{
-    anon_77* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_77));
-    pParam = (anon_77*)pNode->aParams;
-    pParam->light = light;
-    pParam->pname = pname;
-    pParam->param = param;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLightf;
-}
+
 #pragma auto_inline reset
 
 #pragma auto_inline reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2963–2983 */
 #pragma auto_inline on
-void recPS2glLightfv(unsigned int light, unsigned int pname, float* params)
-{
-    anon_118* pParam;
-    tagGLlistnode* pNode;
-    switch (pname)
-    {
-    case 0x1200:
-    case 0x1201:
-    case 0x1202:
-    case 0x1203:
-    case 0x1204:
-        pNode = PS2glListAllocNode(sizeof(anon_118));
-        pParam = (anon_118*)pNode->aParams;
-        pParam->light = light;
-        pParam->pname = pname;
-        memcpy(pParam->params, params, sizeof(pParam->params));
-        pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLightfv;
-        break;
-    default:
-        recPS2glLightf(light, pname, *params);
-        break;
-    }
-}
 
 #pragma auto_inline reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3000–3007 */
 #pragma auto_inline on
-void recPS2glLighti(unsigned int light, unsigned int pname, int param)
-{
-    anon_61* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_61));
-    pParam = (anon_61*)pNode->aParams;
-    pParam->light = light;
-    pParam->pname = pname;
-    pParam->param = param;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLighti;
-}
 
 #pragma auto_inline reset
-
-void recPS2glLightiv(unsigned int light, unsigned int pname, int* params)
-{
-    float fparams[4];
-    switch (pname)
-    {
-    case 0x1200:
-    case 0x1201:
-    case 0x1202:
-    case 0x1203:
-    case 0x1204:
-        fparams[0] = (float)params[0];
-        fparams[1] = (float)params[1];
-        fparams[2] = (float)params[2];
-        fparams[3] = (float)params[3];
-        recPS2glLightfv(light, pname, fparams);
-        return;
-    default:
-        recPS2glLighti(light, pname, *params);
-        break;
-    }
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2996–2996 */
-void plyPS2glLighti(anon_61* pParam)
-{
-    impPS2glLighti(pParam->light, pParam->pname, pParam->param);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2956–2960 */
 void* memcpy(void* dest, const void* src, unsigned int count);
 void impPS2glLightfv(unsigned int light, unsigned int pname, float* params);
-void plyPS2glLightfv(anon_118* pParam)
-{
-    float vParam[4];
-    memcpy(vParam, pParam->params, sizeof(vParam));
-    impPS2glLightfv(pParam->light, pParam->pname, vParam);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2933–2933 */
-void plyPS2glLightf(anon_77* pParam)
-{
-    impPS2glLightf(pParam->light, pParam->pname, pParam->param);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2886–2892 */
 #pragma auto_inline on
-void recPS2glLightModeli(unsigned int pname, int param)
-{
-    anon_74* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_74));
-    pParam = (anon_74*)pNode->aParams;
-    pParam->pname = pname;
-    pParam->param = param;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLightModeli;
-}
+
 #pragma auto_inline reset
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2908–2920 */
-void recPS2glLightModeliv(unsigned int pname, int* params)
-{
-    tagGLlistnode* pNode;
-    anon_105* pParam;
-    if (pname == 0xB53)
-    {
-        pNode = PS2glListAllocNode(sizeof(anon_105));
-        pParam = (anon_105*)pNode->aParams;
-        pParam->pname = pname;
-        pParam->params = (int)PS2glListSaveParam(params, 16);
-        pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLightModeliv;
-    }
-    else
-    {
-        recPS2glLightModeli(pname, *params);
-    }
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2904–2904 */
-void plyPS2glLightModeliv(anon_105* param0)
-{
-    impPS2glLightModeliv(param0->pname, param0->params);
-}
-
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2882–2882 */
-void plyPS2glLightModeli(anon_74* param0)
-{
-    impPS2glLightModeli(param0->pname, param0->param);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2837–2843 */
 #pragma auto_inline on
-void recPS2glLightModelf(unsigned int pname, float param)
-{
-    anon_6* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_6));
-    pParam = (anon_6*)pNode->aParams;
-    pParam->pname = pname;
-    pParam->param = param;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLightModelf;
-}
+
 #pragma auto_inline reset
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2859–2870 */
-void recPS2glLightModelfv(unsigned int pname, float* params)
-{
-    tagGLlistnode* pNode;
-    anon_47* pParam;
-    if (pname == 0xB53)
-    {
-        pNode = PS2glListAllocNode(sizeof(anon_47));
-        pParam = (anon_47*)pNode->aParams;
-        pParam->pname = pname;
-        pParam->params = (int)PS2glListSaveParam(params, 16);
-        pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLightModelfv;
-    }
-    else
-    {
-        recPS2glLightModelf(pname, *params);
-    }
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2855–2855 */
-void plyPS2glLightModelfv(anon_47* param0)
-{
-    impPS2glLightModelfv(param0->pname, param0->params);
-}
-
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2833–2833 */
-void plyPS2glLightModelf(anon_6* param0)
-{
-    impPS2glLightModelf(param0->pname, param0->param);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2818–2821 */
-void recPS2glInitNames(void)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(0);
-    pNode->pfns.pfnPlayVoid = impPS2glInitNames;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2808–2813 */
-void recPS2glIndexubv(unsigned char* c)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_130));
-    ((anon_130*)pNode->aParams)->c = (int)c;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glIndexubv;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2804–2804 */
-void plyPS2glIndexubv(anon_130* pParam)
-{
-    impPS2glIndexubv((void*)(pParam->c));
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2788–2793 */
-void recPS2glIndexub(unsigned char c)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_135));
-    ((anon_135*)pNode->aParams)->c = c;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glIndexub;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2784–2784 */
-void plyPS2glIndexub(anon_135* pParam)
-{
-    impPS2glIndexub(pParam->c);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2768–2773 */
-void recPS2glIndexsv(short* c)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_137));
-    ((anon_137*)pNode->aParams)->c = (int)c;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glIndexsv;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2764–2764 */
-void plyPS2glIndexsv(anon_137* pParam)
-{
-    impPS2glIndexsv((void*)(pParam->c));
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2748–2753 */
-void recPS2glIndexs(short c)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_140));
-    ((anon_140*)pNode->aParams)->c = c;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glIndexs;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2744–2744 */
-void plyPS2glIndexs(anon_140* pParam)
-{
-    impPS2glIndexs(pParam->c);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2728–2733 */
-void recPS2glIndexiv(int* c)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_141));
-    ((anon_141*)pNode->aParams)->c = (int)c;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glIndexiv;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2724–2724 */
-void plyPS2glIndexiv(anon_141* pParam)
-{
-    impPS2glIndexiv((void*)(pParam->c));
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2708–2713 */
-void recPS2glIndexi(int c)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_146));
-    ((anon_146*)pNode->aParams)->c = c;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glIndexi;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2704–2704 */
-void plyPS2glIndexi(anon_146* pParam)
-{
-    impPS2glIndexi(pParam->c);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2688–2693 */
-void recPS2glIndexfv(float* c)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_148));
-    ((anon_148*)pNode->aParams)->c = (int)c;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glIndexfv;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2684–2684 */
-void plyPS2glIndexfv(anon_148* pParam)
-{
-    impPS2glIndexfv((void*)(pParam->c));
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2668–2673 */
 #pragma auto_inline on
-void recPS2glIndexf(float c)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_152));
-    ((anon_152*)pNode->aParams)->c = c;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glIndexf;
-}
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2664–2664 */
-void plyPS2glIndexf(anon_152* pParam)
-{
-    impPS2glIndexf(pParam->c);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2651–2653 */
-void recPS2glIndexdv(double* c)
-{
-    recPS2glIndexf((float)c[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2644–2646 */
-void recPS2glIndexd(double c)
-{
-    recPS2glIndexf((float)c);
-}
 #pragma auto_inline reset
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2634–2639 */
-void recPS2glIndexMask(unsigned int mask)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_36));
-    ((anon_36*)pNode->aParams)->mask = mask;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glIndexMask;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2630–2630 */
-void plyPS2glIndexMask(anon_36* pParam)
-{
-    impPS2glIndexMask(pParam->mask);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2613–2619 */
-void recPS2glHint(unsigned int target, unsigned int mode)
-{
-    anon_123* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_123));
-    pParam = (anon_123*)pNode->aParams;
-    pParam->target = target;
-    pParam->mode = mode;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glHint;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2609–2609 */
-void plyPS2glHint(anon_123* param0)
-{
-    impPS2glHint(param0->target, param0->mode);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2581–2597 */
-void recPS2glFrustum(double left, double right, double bottom, double top, double zNear, double zFar)
-{
-    unsigned int tmp;
-    anon_142* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_142) + 4);
-    tmp = (unsigned int)pNode; pNode = (tagGLlistnode*)(tmp + ((~tmp + 1) & 7));
-    pParam = (anon_142*)pNode->aParams;
-    pParam->left = left;
-    pParam->right = right;
-    pParam->bottom = bottom;
-    pParam->top = top;
-    pParam->zNear = zNear;
-    pParam->zFar = zFar;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glFrustum;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2577–2577 */
-void plyPS2glFrustum(anon_142* pParam)
-{
-    impPS2glFrustum(pParam->left, pParam->right, pParam->bottom, pParam->top, pParam->zNear, pParam->zFar);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2556–2561 */
-void recPS2glFrontFace(unsigned int mode)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_163));
-    ((anon_163*)pNode->aParams)->mode = mode;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glFrontFace;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2552–2552 */
-void plyPS2glFrontFace(anon_163* pParam)
-{
-    impPS2glFrontFace(pParam->mode);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2508–2514 */
 #pragma auto_inline on
-void recPS2glFogi(unsigned int pname, int param)
-{
-    anon_23* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_23));
-    pParam = (anon_23*)pNode->aParams;
-    pParam->pname = pname;
-    pParam->param = param;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glFogi;
-}
+
 #pragma auto_inline reset
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2530–2541 */
-void recPS2glFogiv(unsigned int pname, int* params)
-{
-    tagGLlistnode* pNode;
-    anon_69* pParam;
-    if (pname == 0xB66)
-    {
-        pNode = PS2glListAllocNode(sizeof(anon_69));
-        pParam = (anon_69*)pNode->aParams;
-        pParam->pname = pname;
-        pParam->params = (int)PS2glListSaveParam(params, 16);
-        pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glFogiv;
-    }
-    else
-    {
-        recPS2glFogi(pname, *params);
-    }
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2526–2526 */
-void plyPS2glFogiv(anon_69* param0)
-{
-    impPS2glFogiv(param0->pname, param0->params);
-}
-
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2504–2504 */
-void plyPS2glFogi(anon_23* param0)
-{
-    impPS2glFogi(param0->pname, param0->param);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2459–2465 */
 #pragma auto_inline on
-void recPS2glFogf(unsigned int pname, float param)
-{
-    anon_15* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_15));
-    pParam = (anon_15*)pNode->aParams;
-    pParam->pname = pname;
-    pParam->param = param;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glFogf;
-}
+
 #pragma auto_inline reset
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2481–2492 */
-void recPS2glFogfv(unsigned int pname, float* params)
-{
-    tagGLlistnode* pNode;
-    anon_70* pParam;
-    if (pname == 0xB66)
-    {
-        pNode = PS2glListAllocNode(sizeof(anon_70));
-        pParam = (anon_70*)pNode->aParams;
-        pParam->pname = pname;
-        pParam->params = (int)PS2glListSaveParam(params, 16);
-        pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glFogfv;
-    }
-    else
-    {
-        recPS2glFogf(pname, *params);
-    }
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2477–2477 */
-void plyPS2glFogfv(anon_70* param0)
-{
-    impPS2glFogfv(param0->pname, param0->params);
-}
-
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2455–2455 */
-void plyPS2glFogf(anon_15* param0)
-{
-    impPS2glFogf(param0->pname, param0->param);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2437–2443 */
-void recPS2glEvalPoint2(int i, int j)
-{
-    anon_68* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_68));
-    pParam = (anon_68*)pNode->aParams;
-    pParam->i = i;
-    pParam->j = j;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glEvalPoint2;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2433–2433 */
-void plyPS2glEvalPoint2(anon_68* param0)
-{
-    impPS2glEvalPoint2(param0->i, param0->j);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2416–2421 */
-void recPS2glEvalPoint1(int i)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_73));
-    ((anon_73*)pNode->aParams)->i = i;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glEvalPoint1;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2412–2412 */
-void plyPS2glEvalPoint1(anon_73* pParam)
-{
-    impPS2glEvalPoint1(pParam->i);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2392–2401 */
-void recPS2glEvalMesh2(unsigned int mode, int i1, int i2, int j1, int j2)
-{
-    anon_95* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_95));
-    pParam = (anon_95*)pNode->aParams;
-    pParam->mode = mode;
-    pParam->i1 = i1;
-    pParam->i2 = i2;
-    pParam->j1 = j1;
-    pParam->j2 = j2;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glEvalMesh2;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2388–2388 */
-void plyPS2glEvalMesh2(anon_95* pParam)
-{
-    impPS2glEvalMesh2(pParam->mode, pParam->i1, pParam->i2, pParam->j1, pParam->j2);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2366–2373 */
-void recPS2glEvalMesh1(unsigned int mode, int i1, int i2)
-{
-    anon_43* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_43));
-    pParam = (anon_43*)pNode->aParams;
-    pParam->mode = mode;
-    pParam->i1 = i1;
-    pParam->i2 = i2;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glEvalMesh1;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2362–2362 */
-void plyPS2glEvalMesh1(anon_43* pParam)
-{
-    impPS2glEvalMesh1(pParam->mode, pParam->i1, pParam->i2);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2336–2342 */
 #pragma auto_inline on
-void recPS2glEvalCoord2f(float u, float v)
-{
-    tagGLlistnode* pNode;
-    anon_55* pParam;
-    pNode = PS2glListAllocNode(sizeof(anon_55));
-    pParam = (anon_55*)pNode->aParams;
-    pParam->u = u;
-    pParam->v = v;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glEvalCoord2f;
-}
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2347–2349 */
-void recPS2glEvalCoord2fv(float* u)
-{
-    recPS2glEvalCoord2f(u[0], u[1]);
-}
 #pragma auto_inline reset
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2332–2332 */
-void plyPS2glEvalCoord2f(anon_55* pParam)
-{
-    impPS2glEvalCoord2f(pParam->u, pParam->v);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2318–2320 */
-void recPS2glEvalCoord2dv(double* u)
-{
-    recPS2glEvalCoord2f((float)u[0], (float)u[1]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2311–2313 */
-void recPS2glEvalCoord2d(double u, double v)
-{
-    recPS2glEvalCoord2f((float)u, (float)v);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2301–2306 */
-void recPS2glEvalCoord1fv(float* u)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_183));
-    ((anon_183*)pNode->aParams)->u = (int)u;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glEvalCoord1fv;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2297–2297 */
-void plyPS2glEvalCoord1fv(anon_183* pParam)
-{
-    impPS2glEvalCoord1fv((void*)(pParam->u));
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2281–2286 */
 #pragma auto_inline on
-void recPS2glEvalCoord1f(float u)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_186));
-    ((anon_186*)pNode->aParams)->u = u;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glEvalCoord1f;
-}
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2277–2277 */
-void plyPS2glEvalCoord1f(anon_186* pParam)
-{
-    impPS2glEvalCoord1f(pParam->u);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2264–2266 */
-void recPS2glEvalCoord1dv(double* u)
-{
-    recPS2glEvalCoord1f((float)u[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2257–2259 */
-void recPS2glEvalCoord1d(double u)
-{
-    recPS2glEvalCoord1f((float)u);
-}
 #pragma auto_inline reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2210–2242 */
 /* worker B */
 void PS2glListSaveVBuf(unsigned char EOP);
 void PS2glComputeBSfromBB(float* pfvBS, float* pBB);
-void recPS2glEnd(void)
-{
-    unsigned int mode;
-    if (g_PS2glContext.bFinalCompile)
-    {
-        mode = g_PS2glContext.pCurParamBegin->mode;
-        if (mode == 7)
-            PS2glListAssembleQuads();
-        PS2glListSaveBuffer(1);
-        if (g_PS2glContext.nTextureEnableBits & 8)
-        {
-            if (mode == 5 || mode == 6 || mode == 9)
-                g_PS2glContext.pCurParamBegin->mode = 4;
-        }
-    }
-    else
-    {
-        PS2glListSaveVBuf(1);
-    }
-    if (g_PS2glContext.uiBoundingSphereBits & 2)
-        PS2glComputeBSfromBB((float*)pLastBeginParam, g_PS2glContext.faObjectBoundingBox);
-    *(quad*)g_PS2glContext.pGifTagBuf0 = *(quad*)vOldGifTag;
-    g_PS2glContext.bInBeginEndPair = 0;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2200–2205 */
-void recPS2glEnableClientState(unsigned int array)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_156));
-    ((anon_156*)pNode->aParams)->array = array;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glEnableClientState;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2196–2196 */
-void plyPS2glEnableClientState(anon_156* pParam)
-{
-    impPS2glEnableClientState(pParam->array);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2180–2185 */
-void recPS2glEnable(unsigned int cap)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_159));
-    ((anon_159*)pNode->aParams)->cap = cap;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glEnable;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2176–2176 */
-void plyPS2glEnable(anon_159* pParam)
-{
-    impPS2glEnable(pParam->cap);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2160–2165 */
-void recPS2glEdgeFlagv(unsigned char* flag)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_161));
-    ((anon_161*)pNode->aParams)->flag = (int)flag;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glEdgeFlagv;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2156–2156 */
-void plyPS2glEdgeFlagv(anon_161* pParam)
-{
-    impPS2glEdgeFlagv((void*)(pParam->flag));
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2140–2145 */
-void recPS2glEdgeFlag(unsigned char flag)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_164));
-    ((anon_164*)pNode->aParams)->flag = flag;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glEdgeFlag;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2136–2136 */
-void plyPS2glEdgeFlag(anon_164* pParam)
-{
-    impPS2glEdgeFlag(pParam->flag);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2116–2125 */
-void recPS2glDrawPixels(int width, int height, unsigned int format, unsigned int type, void* pixels)
-{
-    anon_5* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_5));
-    pParam = (anon_5*)pNode->aParams;
-    pParam->width = width;
-    pParam->height = height;
-    pParam->format = format;
-    pParam->type = type;
-    pParam->pixels = (int)pixels;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glDrawPixels;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2112–2112 */
-void plyPS2glDrawPixels(anon_5* pParam)
-{
-    impPS2glDrawPixels(pParam->width, pParam->height, pParam->format, pParam->type, pParam->pixels);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2089–2097 */
-void recPS2glDrawElements(unsigned int mode, int count, unsigned int type, void* indices)
-{
-    tagGLlistnode* pNode;
-    anon_11* pParam;
-    int sz;
-    pNode = PS2glListAllocNode(sizeof(anon_11));
-    pParam = (anon_11*)pNode->aParams;
-    pParam->mode = mode;
-    pParam->count = count;
-    pParam->type = type;
-    sz = 0;
-    switch (type)
-    {
-    case 0x1400:
-        sz = 4;
-        break;
-    case 0x1401:
-        sz = 4;
-        break;
-    case 0x1402:
-        sz = 4;
-        break;
-    case 0x1403:
-        sz = 4;
-        break;
-    case 0x1404:
-        sz = 4;
-        break;
-    case 0x1405:
-        sz = 4;
-        break;
-    case 0x1406:
-        sz = 4;
-        break;
-    case 0x1407:
-        sz = 2;
-        break;
-    case 0x1408:
-        sz = 3;
-        break;
-    case 0x1409:
-        sz = 4;
-        break;
-    }
-    pParam->indices = (int)PS2glListSaveParam(indices, count * sz);
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glDrawElements;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2085–2085 */
-void plyPS2glDrawElements(anon_11* pParam)
-{
-    impPS2glDrawElements(pParam->mode, pParam->count, pParam->type, pParam->indices);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2074–2079 */
-void recPS2glDrawBuffer(unsigned int mode)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_84));
-    ((anon_84*)pNode->aParams)->mode = mode;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glDrawBuffer;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2070–2070 */
-void plyPS2glDrawBuffer(anon_84* pParam)
-{
-    impPS2glDrawBuffer(pParam->mode);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2025–2059 */
 int PS2glInternalArraysSize(unsigned int mode, int count);
 int PS2glListSaveParamSpace(int space);
 void PS2glInternalDrawArrays(unsigned int mode, int first, int count, int stride, unsigned int flags);
-
-void recPS2glDrawArrays(unsigned int mode, int first, int count)
-{
-    anon_80* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_80));
-    pParam = (anon_80*)pNode->aParams;
-    pParam->mode = mode;
-    pParam->first = first;
-    pParam->count = count;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glDrawArrays;
-    if (g_PS2glContext.VertexArray.stride < 0)
-    {
-        if (pParam->count != 0)
-        {
-            g_aDmaTag = PS2glListSaveParamSpace(PS2glInternalArraysSize(mode, count) << 4);
-            pParam->pBuf = (float (*)[4])g_aDmaTag;
-            *(quad*)vOldGifTag = *(quad*)g_PS2glContext.pGifTagBuf0;
-            g_PS2glContext.pGifTagBuf0->PRIM = Mode2Prim(mode);
-            g_PS2glContext.iPackageBSIndex = 0;
-            PS2glInternalDrawArrays(pParam->mode, pParam->first, pParam->count, g_PS2glContext.VertexArray.stride, 0);
-            memcpy(pParam, g_PS2glContext.vObjectBS, 16);
-            *(quad*)g_PS2glContext.pGifTagBuf0 = *(quad*)vOldGifTag;
-            pParam->packageCount = iDmaTagCount;
-        }
-        else
-        {
-            pParam->pBuf = (float (*)[4])0x10;
-            g_PS2glContext.iPackageBSIndex = 0;
-            pParam->packageCount = iDmaTagCount;
-        }
-    }
-    else
-    {
-        pParam->pBuf = 0;
-    }
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1970–2022 */
 void impPS2glBegin(unsigned int mode);
@@ -6329,1085 +3618,158 @@ void impPS2glFlush(void);
 int VU1BufferFreeSpace(void);
 void GsUpdate(void);
 
-void plyPS2glDrawArrays(anon_80* pParam)
-{
-    _sceDmaTag* pDmaTag;
-    tagListData* pListData;
-    if (pParam->pBuf == 0)
-        impPS2glDrawArrays(pParam->mode, pParam->first, pParam->count);
-    else
-    {
-        if (g_PS2glContext.eClippingFunction != -1)
-        {
-            if (g_PS2glContext.nEnableBits & 0x4000)
-            {
-                if (g_gsContext.ModFlgs)
-                    GsUpdate();
-            }
-            else
-            {
-                if (g_PS2glContext.uiBoundingSphereBits & 3)
-                    memcpy(g_PS2glContext.vObjectBS, pParam, 16);
-                impPS2glBegin(pParam->mode);
-                impPS2glEnd();
-            }
-            if (VU1BufferFreeSpace() == 0)
-                impPS2glFlush();
-            pDmaTag = (_sceDmaTag*)g_PS2glContext.pVIFIBufTail++;
-            pDmaTag->qwc = 0;
-            if (pParam->count != 0)
-            {
-                pDmaTag->id = 0x50;
-                pDmaTag->next = (_sceDmaTag*)pParam->pBuf;
-            }
-            else
-            {
-                pDmaTag->id = 0x10;
-                pDmaTag->next = 0;
-            }
-            pDmaTag->p[1] = 0; pDmaTag->p[0] = 0;
-            if ((g_PS2glContext.uiStaticDisplayListBits & 0x1000800) == 0x1000800)
-            {
-                pListData = g_PS2glContext.pCurListData;
-                pListData->pSDLIndices[pListData->uiSDLIndicesSize++] = (int)pDmaTag;
-                pListData->pSDLIndices[pListData->uiSDLIndicesSize] = 0x81000000;
-                if (pParam->count == 0)
-                    pListData->pSDLIndices[pListData->uiSDLIndicesSize] |= 0x02000000;
-                pListData->uiSDLIndicesSize++;
-            }
-        }
-    }
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1957–1962 */
-void recPS2glDisableClientState(unsigned int array)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_171));
-    ((anon_171*)pNode->aParams)->array = array;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glDisableClientState;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1953–1953 */
-void plyPS2glDisableClientState(anon_171* pParam)
-{
-    impPS2glDisableClientState(pParam->array);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1937–1942 */
-void recPS2glDisable(unsigned int cap)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_172));
-    ((anon_172*)pNode->aParams)->cap = cap;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glDisable;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1933–1933 */
-void plyPS2glDisable(anon_172* pParam)
-{
-    impPS2glDisable(pParam->cap);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1916–1922 */
-void recPS2glDepthRange(double zNear, double zFar)
-{
-    anon_75* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_75));
-    pParam = (anon_75*)pNode->aParams;
-    pParam->zNear = zNear;
-    pParam->zFar = zFar;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glDepthRange;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1912–1912 */
-void plyPS2glDepthRange(anon_75* param0)
-{
-    impPS2glDepthRange(param0->zNear, param0->zFar);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1895–1900 */
-void recPS2glDepthMask(unsigned char flag)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_144));
-    ((anon_144*)pNode->aParams)->flag = flag;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glDepthMask;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1891–1891 */
-void plyPS2glDepthMask(anon_144* pParam)
-{
-    impPS2glDepthMask(pParam->flag);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1875–1880 */
-void recPS2glDepthFunc(unsigned int func)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_147));
-    ((anon_147*)pNode->aParams)->func = func;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glDepthFunc;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1871–1871 */
-void plyPS2glDepthFunc(anon_147* pParam)
-{
-    impPS2glDepthFunc(pParam->func);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1855–1860 */
-void recPS2glCullFace(unsigned int mode)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_151));
-    ((anon_151*)pNode->aParams)->mode = mode;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glCullFace;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1851–1851 */
-void plyPS2glCullFace(anon_151* pParam)
-{
-    impPS2glCullFace(pParam->mode);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1828–1840 */
-void recPS2glCopyTexSubImage2D(unsigned int target, int level, int xoffset, int yoffset, int x, int y, int width, int height)
-{
-    anon_90* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_90));
-    pParam = (anon_90*)pNode->aParams;
-    pParam->target = target;
-    pParam->level = level;
-    pParam->xoffset = xoffset;
-    pParam->yoffset = yoffset;
-    pParam->x = x;
-    pParam->y = y;
-    pParam->width = width;
-    pParam->height = height;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glCopyTexSubImage2D;
-}
-
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1824–1824 */
 void impPS2glCopyTexSubImage2D(unsigned int, int, int, int, int, int, int, int);
-
-void plyPS2glCopyTexSubImage2D(anon_90* pParam)
-{
-    impPS2glCopyTexSubImage2D(pParam->target, pParam->level, pParam->xoffset, pParam->yoffset, pParam->x, pParam->y, pParam->width, pParam->height);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1796–1806 */
-void recPS2glCopyTexSubImage1D(unsigned int target, int level, int xoffset, int x, int y, int width)
-{
-    anon_91* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_91));
-    pParam = (anon_91*)pNode->aParams;
-    pParam->target = target;
-    pParam->level = level;
-    pParam->xoffset = xoffset;
-    pParam->x = x;
-    pParam->y = y;
-    pParam->width = width;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glCopyTexSubImage1D;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1792–1792 */
-void plyPS2glCopyTexSubImage1D(anon_91* pParam)
-{
-    impPS2glCopyTexSubImage1D(pParam->target, pParam->level, pParam->xoffset, pParam->x, pParam->y, pParam->width);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1764–1776 */
-void recPS2glCopyTexImage2D(unsigned int target, int level, unsigned int internalFormat, int x, int y, int width, int height, int border)
-{
-    anon_24* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_24));
-    pParam = (anon_24*)pNode->aParams;
-    pParam->target = target;
-    pParam->level = level;
-    pParam->internalFormat = internalFormat;
-    pParam->x = x;
-    pParam->y = y;
-    pParam->width = width;
-    pParam->height = height;
-    pParam->border = border;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glCopyTexImage2D;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1760–1760 */
 void impPS2glCopyTexImage2D(unsigned int, int, unsigned int, int, int, int, int, int);
 
-void plyPS2glCopyTexImage2D(anon_24* pParam)
-{
-    impPS2glCopyTexImage2D(pParam->target, pParam->level, pParam->internalFormat, pParam->x, pParam->y, pParam->width, pParam->height, pParam->border);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1731–1742 */
-void recPS2glCopyTexImage1D(unsigned int target, int level, unsigned int internalFormat, int x, int y, int width, int border)
-{
-    anon_14* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_14));
-    pParam = (anon_14*)pNode->aParams;
-    pParam->target = target;
-    pParam->level = level;
-    pParam->internalFormat = internalFormat;
-    pParam->x = x;
-    pParam->y = y;
-    pParam->width = width;
-    pParam->border = border;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glCopyTexImage1D;
-}
-
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1727–1727 */
 void impPS2glCopyTexImage1D(unsigned int, int, unsigned int, int, int, int, int);
 
-void plyPS2glCopyTexImage1D(anon_14* pParam)
-{
-    impPS2glCopyTexImage1D(pParam->target, pParam->level, pParam->internalFormat, pParam->x, pParam->y, pParam->width, pParam->border);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1701–1710 */
-void recPS2glCopyPixels(int x, int y, int width, int height, unsigned int type)
-{
-    anon_27* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_27));
-    pParam = (anon_27*)pNode->aParams;
-    pParam->x = x;
-    pParam->y = y;
-    pParam->width = width;
-    pParam->height = height;
-    pParam->type = type;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glCopyPixels;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1697–1697 */
-void plyPS2glCopyPixels(anon_27* pParam)
-{
-    impPS2glCopyPixels(pParam->x, pParam->y, pParam->width, pParam->height, pParam->type);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1650–1656 */
-void recPS2glColorMaterial(unsigned int face, unsigned int mode)
-{
-    anon_32* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_32));
-    pParam = (anon_32*)pNode->aParams;
-    pParam->face = face;
-    pParam->mode = mode;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glColorMaterial;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1646–1646 */
-void plyPS2glColorMaterial(anon_32* param0)
-{
-    impPS2glColorMaterial(param0->face, param0->mode);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1626–1634 */
-void recPS2glColorMask(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha)
-{
-    anon_154* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_154));
-    pParam = (anon_154*)pNode->aParams;
-    pParam->red = red;
-    pParam->green = green;
-    pParam->blue = blue;
-    pParam->alpha = alpha;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glColorMask;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1622–1622 */
-void plyPS2glColorMask(anon_154* pParam)
-{
-    impPS2glColorMask(pParam->red, pParam->green, pParam->blue, pParam->alpha);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1596–1599 */
-void recPS2glMultiColor4usvARB(unsigned int texture, unsigned short* v)
-{
-    float red, green, blue, alpha;
-    alpha = (float)v[3] / 65535.0f; blue = (float)v[2] / 65535.0f; green = (float)v[1] / 65535.0f; red = (float)v[0] / 65535.0f;
-    g_PS2glContext.valistColor[texture][0] = red; g_PS2glContext.valistColor[texture][1] = green; g_PS2glContext.valistColor[texture][2] = blue; g_PS2glContext.valistColor[texture][3] = alpha; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1590–1593 */
-void recPS2glMultiColor4uivARB(unsigned int texture, unsigned int* v)
-{
-    float red, green, blue, alpha;
-    alpha = (float)v[3] / 4294967295.0f; blue = (float)v[2] / 4294967295.0f; green = (float)v[1] / 4294967295.0f; red = (float)v[0] / 4294967295.0f;
-    g_PS2glContext.valistColor[texture][0] = red; g_PS2glContext.valistColor[texture][1] = green; g_PS2glContext.valistColor[texture][2] = blue; g_PS2glContext.valistColor[texture][3] = alpha; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1584–1587 */
-void recPS2glMultiColor4ubvARB(unsigned int texture, unsigned char* v)
-{
-    float red, green, blue, alpha;
-    alpha = (float)v[3] / 255.0f; blue = (float)v[2] / 255.0f; green = (float)v[1] / 255.0f; red = (float)v[0] / 255.0f;
-    g_PS2glContext.valistColor[texture][0] = red; g_PS2glContext.valistColor[texture][1] = green; g_PS2glContext.valistColor[texture][2] = blue; g_PS2glContext.valistColor[texture][3] = alpha; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1578–1581 */
-void recPS2glMultiColor4svARB(unsigned int texture, short* v)
-{
-    float red, green, blue, alpha;
-    alpha = (float)v[3] / 32767.0f; blue = (float)v[2] / 32767.0f; green = (float)v[1] / 32767.0f; red = (float)v[0] / 32767.0f;
-    g_PS2glContext.valistColor[texture][0] = red; g_PS2glContext.valistColor[texture][1] = green; g_PS2glContext.valistColor[texture][2] = blue; g_PS2glContext.valistColor[texture][3] = alpha; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1572–1575 */
-void recPS2glMultiColor4ivARB(unsigned int texture, int* v)
-{
-    float alpha, blue, green, red;
-    alpha = (float)v[3] / 2147483647.0f; blue = (float)v[2] / 2147483647.0f; green = (float)v[1] / 2147483647.0f; red = (float)v[0] / 2147483647.0f;
-    g_PS2glContext.valistColor[texture][0] = red; g_PS2glContext.valistColor[texture][1] = green; g_PS2glContext.valistColor[texture][2] = blue; g_PS2glContext.valistColor[texture][3] = alpha; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1561–1569 */
-void recPS2glMultiColor4fvARB(unsigned int texture, float* v)
-{
-    *(quad*)g_PS2glContext.valistColor[texture] = *(quad*)v; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1556–1558 */
-void recPS2glMultiColor4dvARB(unsigned int texture, double* v)
-{
-    float red, green, blue, alpha;
-    alpha = (float)v[3]; blue = (float)v[2]; green = (float)v[1]; red = (float)v[0];
-    g_PS2glContext.valistColor[texture][0] = red; g_PS2glContext.valistColor[texture][1] = green; g_PS2glContext.valistColor[texture][2] = blue; g_PS2glContext.valistColor[texture][3] = alpha; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1551–1553 */
-void recPS2glMultiColor4bvARB(unsigned int texture, signed char* v)
-{
-    float red, green, blue, alpha;
-    alpha = (float)v[3] / 127.0f; blue = (float)v[2] / 127.0f; green = (float)v[1] / 127.0f; red = (float)v[0] / 127.0f;
-    g_PS2glContext.valistColor[texture][0] = red; g_PS2glContext.valistColor[texture][1] = green; g_PS2glContext.valistColor[texture][2] = blue; g_PS2glContext.valistColor[texture][3] = alpha; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1546–1548 */
-void recPS2glMultiColor3usvARB(unsigned int texture, unsigned short* v)
-{
-    float red, green, blue;
-    blue = (float)v[2] / 65535.0f; green = (float)v[1] / 65535.0f; red = (float)v[0] / 65535.0f;
-    g_PS2glContext.valistColor[texture][0] = red; g_PS2glContext.valistColor[texture][1] = green; g_PS2glContext.valistColor[texture][2] = blue; g_PS2glContext.valistColor[texture][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1541–1543 */
-void recPS2glMultiColor3uivARB(unsigned int texture, unsigned int* v)
-{
-    float red, green, blue;
-    blue = (float)v[2] / 4294967295.0f; green = (float)v[1] / 4294967295.0f; red = (float)v[0] / 4294967295.0f;
-    g_PS2glContext.valistColor[texture][0] = red; g_PS2glContext.valistColor[texture][1] = green; g_PS2glContext.valistColor[texture][2] = blue; g_PS2glContext.valistColor[texture][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1536–1538 */
-void recPS2glMultiColor3ubvARB(unsigned int texture, unsigned char* v)
-{
-    float red, green, blue;
-    blue = (float)v[2] / 255.0f; green = (float)v[1] / 255.0f; red = (float)v[0] / 255.0f;
-    g_PS2glContext.valistColor[texture][0] = red; g_PS2glContext.valistColor[texture][1] = green; g_PS2glContext.valistColor[texture][2] = blue; g_PS2glContext.valistColor[texture][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1531–1533 */
-void recPS2glMultiColor3svARB(unsigned int texture, short* v)
-{
-    float red, green, blue;
-    blue = (float)v[2] / 32767.0f; green = (float)v[1] / 32767.0f; red = (float)v[0] / 32767.0f;
-    g_PS2glContext.valistColor[texture][0] = red; g_PS2glContext.valistColor[texture][1] = green; g_PS2glContext.valistColor[texture][2] = blue; g_PS2glContext.valistColor[texture][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1526–1528 */
-void recPS2glMultiColor3ivARB(unsigned int texture, int* v)
-{
-    float blue, green, red;
-    blue = (float)v[2] / 2147483647.0f; green = (float)v[1] / 2147483647.0f; red = (float)v[0] / 2147483647.0f;
-    g_PS2glContext.valistColor[texture][0] = red; g_PS2glContext.valistColor[texture][1] = green; g_PS2glContext.valistColor[texture][2] = blue; g_PS2glContext.valistColor[texture][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1521–1523 */
-void recPS2glMultiColor3fvARB(unsigned int texture, float* v)
-{
-    float red, green, blue;
-    blue = v[2]; green = v[1]; red = v[0];
-    g_PS2glContext.valistColor[texture][0] = red; g_PS2glContext.valistColor[texture][1] = green; g_PS2glContext.valistColor[texture][2] = blue; g_PS2glContext.valistColor[texture][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1516–1518 */
-void recPS2glMultiColor3dvARB(unsigned int texture, double* v)
-{
-    float red, green, blue;
-    blue = (float)v[2]; green = (float)v[1]; red = (float)v[0];
-    g_PS2glContext.valistColor[texture][0] = red; g_PS2glContext.valistColor[texture][1] = green; g_PS2glContext.valistColor[texture][2] = blue; g_PS2glContext.valistColor[texture][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1511–1513 */
-void recPS2glMultiColor3bvARB(unsigned int texture, signed char* v)
-{
-    float red, green, blue;
-    blue = (float)v[2] / 127.0f; green = (float)v[1] / 127.0f; red = (float)v[0] / 127.0f;
-    g_PS2glContext.valistColor[texture][0] = red; g_PS2glContext.valistColor[texture][1] = green; g_PS2glContext.valistColor[texture][2] = blue; g_PS2glContext.valistColor[texture][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1505–1508 */
-void recPS2glMultiColor4usARB(unsigned int texture, unsigned short red, unsigned short green, unsigned short blue, unsigned short alpha)
-{
-    g_PS2glContext.valistColor[texture][0] = (float)red / 65535.0f; g_PS2glContext.valistColor[texture][1] = (float)green / 65535.0f; g_PS2glContext.valistColor[texture][2] = (float)blue / 65535.0f; g_PS2glContext.valistColor[texture][3] = (float)alpha / 65535.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1499–1502 */
-void recPS2glMultiColor4uiARB(unsigned int texture, unsigned int red, unsigned int green, unsigned int blue, unsigned int alpha)
-{
-    g_PS2glContext.valistColor[texture][0] = (float)red / 4294967295.0f; g_PS2glContext.valistColor[texture][1] = (float)green / 4294967295.0f; g_PS2glContext.valistColor[texture][2] = (float)blue / 4294967295.0f; g_PS2glContext.valistColor[texture][3] = (float)alpha / 4294967295.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1493–1496 */
-void recPS2glMultiColor4ubARB(unsigned int texture, unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha)
-{
-    g_PS2glContext.valistColor[texture][0] = (float)red / 255.0f; g_PS2glContext.valistColor[texture][1] = (float)green / 255.0f; g_PS2glContext.valistColor[texture][2] = (float)blue / 255.0f; g_PS2glContext.valistColor[texture][3] = (float)alpha / 255.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1487–1490 */
-void recPS2glMultiColor4sARB(unsigned int texture, short red, short green, short blue, short alpha)
-{
-    g_PS2glContext.valistColor[texture][0] = (float)red / 32767.0f; g_PS2glContext.valistColor[texture][1] = (float)green / 32767.0f; g_PS2glContext.valistColor[texture][2] = (float)blue / 32767.0f; g_PS2glContext.valistColor[texture][3] = (float)alpha / 32767.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1481–1484 */
-void recPS2glMultiColor4iARB(unsigned int texture, int red, int green, int blue, int alpha)
-{
-    g_PS2glContext.valistColor[texture][0] = (float)red / 2147483647.0f; g_PS2glContext.valistColor[texture][1] = (float)green / 2147483647.0f; g_PS2glContext.valistColor[texture][2] = (float)blue / 2147483647.0f; g_PS2glContext.valistColor[texture][3] = (float)alpha / 2147483647.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1476–1478 */
-void recPS2glMultiColor4dARB(unsigned int texture, double R, double G, double B, double A)
-{
-    g_PS2glContext.valistColor[texture][0] = (float)R; g_PS2glContext.valistColor[texture][1] = (float)G; g_PS2glContext.valistColor[texture][2] = (float)B; g_PS2glContext.valistColor[texture][3] = (float)A; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1462–1473 */
-void recPS2glMultiColor4fARB(unsigned int texture, float red, float green, float blue, float alpha)
-{
-    g_PS2glContext.valistColor[texture][0] = red; g_PS2glContext.valistColor[texture][1] = green; g_PS2glContext.valistColor[texture][2] = blue; g_PS2glContext.valistColor[texture][3] = alpha; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1456–1459 */
-void recPS2glMultiColor4bARB(unsigned int texture, signed char red, signed char green, signed char blue, signed char alpha)
-{
-    g_PS2glContext.valistColor[texture][0] = (float)red / 127.0f; g_PS2glContext.valistColor[texture][1] = (float)green / 127.0f; g_PS2glContext.valistColor[texture][2] = (float)blue / 127.0f; g_PS2glContext.valistColor[texture][3] = (float)alpha / 127.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1450–1453 */
-void recPS2glMultiColor3usARB(unsigned int texture, unsigned short red, unsigned short green, unsigned short blue)
-{
-    g_PS2glContext.valistColor[texture][0] = (float)red / 65535.0f; g_PS2glContext.valistColor[texture][1] = (float)green / 65535.0f; g_PS2glContext.valistColor[texture][2] = (float)blue / 65535.0f; g_PS2glContext.valistColor[texture][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1445–1447 */
-void recPS2glMultiColor3uiARB(unsigned int texture, unsigned int red, unsigned int green, unsigned int blue)
-{
-    g_PS2glContext.valistColor[texture][0] = (float)red / 4294967295.0f; g_PS2glContext.valistColor[texture][1] = (float)green / 4294967295.0f; g_PS2glContext.valistColor[texture][2] = (float)blue / 4294967295.0f; g_PS2glContext.valistColor[texture][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1440–1442 */
-void recPS2glMultiColor3ubARB(unsigned int texture, unsigned char red, unsigned char green, unsigned char blue)
-{
-    g_PS2glContext.valistColor[texture][0] = (float)red / 255.0f; g_PS2glContext.valistColor[texture][1] = (float)green / 255.0f; g_PS2glContext.valistColor[texture][2] = (float)blue / 255.0f; g_PS2glContext.valistColor[texture][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1435–1437 */
-void recPS2glMultiColor3sARB(unsigned int texture, short red, short green, short blue)
-{
-    g_PS2glContext.valistColor[texture][0] = (float)red / 32767.0f; g_PS2glContext.valistColor[texture][1] = (float)green / 32767.0f; g_PS2glContext.valistColor[texture][2] = (float)blue / 32767.0f; g_PS2glContext.valistColor[texture][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1430–1432 */
-void recPS2glMultiColor3iARB(unsigned int texture, int red, int green, int blue)
-{
-    g_PS2glContext.valistColor[texture][0] = (float)red / 2147483647.0f; g_PS2glContext.valistColor[texture][1] = (float)green / 2147483647.0f; g_PS2glContext.valistColor[texture][2] = (float)blue / 2147483647.0f; g_PS2glContext.valistColor[texture][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1425–1427 */
-void recPS2glMultiColor3fARB(unsigned int texture, float red, float green, float blue)
-{
-    g_PS2glContext.valistColor[texture][0] = red; g_PS2glContext.valistColor[texture][1] = green; g_PS2glContext.valistColor[texture][2] = blue; g_PS2glContext.valistColor[texture][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1420–1422 */
-void recPS2glMultiColor3dARB(unsigned int texture, double red, double green, double blue)
-{
-    g_PS2glContext.valistColor[texture][0] = (float)red; g_PS2glContext.valistColor[texture][1] = (float)green; g_PS2glContext.valistColor[texture][2] = (float)blue; g_PS2glContext.valistColor[texture][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1415–1417 */
-void recPS2glMultiColor3bARB(unsigned int texture, signed char red, signed char green, signed char blue)
-{
-    g_PS2glContext.valistColor[texture][0] = (float)red / 127.0f; g_PS2glContext.valistColor[texture][1] = (float)green / 127.0f; g_PS2glContext.valistColor[texture][2] = (float)blue / 127.0f; g_PS2glContext.valistColor[texture][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1407–1410 */
-void recPS2glColor4usv(unsigned short* v)
-{
-    float red, green, blue, alpha;
-    alpha = (float)v[3] / 65535.0f; blue = (float)v[2] / 65535.0f; green = (float)v[1] / 65535.0f; red = (float)v[0] / 65535.0f;
-    g_PS2glContext.valistColor[0][0] = red; g_PS2glContext.valistColor[0][1] = green; g_PS2glContext.valistColor[0][2] = blue; g_PS2glContext.valistColor[0][3] = alpha; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1401–1404 */
-void recPS2glColor4uiv(unsigned int* v)
-{
-    float red, green, blue, alpha;
-    alpha = (float)v[3] / 4294967295.0f; blue = (float)v[2] / 4294967295.0f; green = (float)v[1] / 4294967295.0f; red = (float)v[0] / 4294967295.0f;
-    g_PS2glContext.valistColor[0][0] = red; g_PS2glContext.valistColor[0][1] = green; g_PS2glContext.valistColor[0][2] = blue; g_PS2glContext.valistColor[0][3] = alpha; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1395–1398 */
-void recPS2glColor4ubv(unsigned char* v)
-{
-    float red, green, blue, alpha;
-    alpha = (float)v[3] / 255.0f; blue = (float)v[2] / 255.0f; green = (float)v[1] / 255.0f; red = (float)v[0] / 255.0f;
-    g_PS2glContext.valistColor[0][0] = red; g_PS2glContext.valistColor[0][1] = green; g_PS2glContext.valistColor[0][2] = blue; g_PS2glContext.valistColor[0][3] = alpha; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1389–1392 */
-void recPS2glColor4sv(short* v)
-{
-    float alpha, blue, green, red;
-    alpha = (float)v[3] / 32767.0f; blue = (float)v[2] / 32767.0f; green = (float)v[1] / 32767.0f; red = (float)v[0] / 32767.0f;
-    g_PS2glContext.valistColor[0][0] = red; g_PS2glContext.valistColor[0][1] = green; g_PS2glContext.valistColor[0][2] = blue; g_PS2glContext.valistColor[0][3] = alpha; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1383–1386 */
-void recPS2glColor4iv(int* v)
-{
-    int alpha, blue, green, red;
-    alpha = v[3]; blue = v[2]; green = v[1]; red = v[0];
-    g_PS2glContext.valistColor[0][3] = (float)alpha / 2147483647.0f; g_PS2glContext.valistColor[0][2] = (float)blue / 2147483647.0f; g_PS2glContext.valistColor[0][1] = (float)green / 2147483647.0f; g_PS2glContext.valistColor[0][0] = (float)red / 2147483647.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1360–1380 */
-void recPS2glColor4fv(float* v)
-{
-    *(quad*)g_PS2glContext.valistColor[0] = *(quad*)v; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1355–1357 */
-void recPS2glColor4dv(double* v)
-{
-    float red, green, blue, alpha;
-    alpha = (float)v[3]; blue = (float)v[2]; green = (float)v[1]; red = (float)v[0];
-    g_PS2glContext.valistColor[0][0] = red; g_PS2glContext.valistColor[0][1] = green; g_PS2glContext.valistColor[0][2] = blue; g_PS2glContext.valistColor[0][3] = alpha; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1350–1352 */
-void recPS2glColor4bv(signed char* v)
-{
-    float alpha, blue, green, red;
-    alpha = (float)v[3] / 127.0f; blue = (float)v[2] / 127.0f; green = (float)v[1] / 127.0f; red = (float)v[0] / 127.0f;
-    g_PS2glContext.valistColor[0][0] = red; g_PS2glContext.valistColor[0][1] = green; g_PS2glContext.valistColor[0][2] = blue; g_PS2glContext.valistColor[0][3] = alpha; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1345–1347 */
-void recPS2glColor3usv(unsigned short* v)
-{
-    float red, green, blue;
-    blue = (float)v[2] / 65535.0f; green = (float)v[1] / 65535.0f; red = (float)v[0] / 65535.0f;
-    g_PS2glContext.valistColor[0][0] = red; g_PS2glContext.valistColor[0][1] = green; g_PS2glContext.valistColor[0][2] = blue; g_PS2glContext.valistColor[0][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1340–1342 */
-void recPS2glColor3uiv(unsigned int* v)
-{
-    float red, green, blue;
-    blue = (float)v[2] / 4294967295.0f; green = (float)v[1] / 4294967295.0f; red = (float)v[0] / 4294967295.0f;
-    g_PS2glContext.valistColor[0][0] = red; g_PS2glContext.valistColor[0][1] = green; g_PS2glContext.valistColor[0][2] = blue; g_PS2glContext.valistColor[0][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1335–1337 */
-void recPS2glColor3ubv(unsigned char* v)
-{
-    float red, green, blue;
-    blue = (float)v[2] / 255.0f; green = (float)v[1] / 255.0f; red = (float)v[0] / 255.0f;
-    g_PS2glContext.valistColor[0][0] = red; g_PS2glContext.valistColor[0][1] = green; g_PS2glContext.valistColor[0][2] = blue; g_PS2glContext.valistColor[0][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1330–1332 */
-void recPS2glColor3sv(short* v)
-{
-    float blue, green, red;
-    blue = (float)v[2] / 32767.0f; green = (float)v[1] / 32767.0f; red = (float)v[0] / 32767.0f;
-    g_PS2glContext.valistColor[0][3] = 1.0f; g_PS2glContext.valistColor[0][2] = blue; g_PS2glContext.valistColor[0][1] = green; g_PS2glContext.valistColor[0][0] = red; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1325–1327 */
-void recPS2glColor3iv(int* v)
-{
-    float blue, green, red;
-    blue = (float)v[2] / 2147483647.0f; green = (float)v[1] / 2147483647.0f; red = (float)v[0] / 2147483647.0f;
-    g_PS2glContext.valistColor[0][3] = 1.0f; g_PS2glContext.valistColor[0][2] = blue; g_PS2glContext.valistColor[0][1] = green; g_PS2glContext.valistColor[0][0] = red; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1320–1322 */
-void recPS2glColor3fv(float* v)
-{
-    float red, green, blue;
-    blue = v[2]; green = v[1]; red = v[0];
-    g_PS2glContext.valistColor[0][0] = red; g_PS2glContext.valistColor[0][1] = green; g_PS2glContext.valistColor[0][2] = blue; g_PS2glContext.valistColor[0][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1315–1317 */
-void recPS2glColor3dv(double* v)
-{
-    float red, green, blue;
-    blue = (float)v[2]; green = (float)v[1]; red = (float)v[0];
-    g_PS2glContext.valistColor[0][0] = red; g_PS2glContext.valistColor[0][1] = green; g_PS2glContext.valistColor[0][2] = blue; g_PS2glContext.valistColor[0][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1310–1312 */
-void recPS2glColor3bv(signed char* v)
-{
-    float blue, green, red;
-    blue = (float)v[2] / 127.0f; green = (float)v[1] / 127.0f; red = (float)v[0] / 127.0f;
-    g_PS2glContext.valistColor[0][3] = 1.0f; g_PS2glContext.valistColor[0][2] = blue; g_PS2glContext.valistColor[0][1] = green; g_PS2glContext.valistColor[0][0] = red; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1304–1307 */
-void recPS2glColor4us(unsigned short red, unsigned short green, unsigned short blue, unsigned short alpha)
-{
-    g_PS2glContext.valistColor[0][0] = (float)red / 65535.0f; g_PS2glContext.valistColor[0][1] = (float)green / 65535.0f; g_PS2glContext.valistColor[0][2] = (float)blue / 65535.0f; g_PS2glContext.valistColor[0][3] = (float)alpha / 65535.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1298–1301 */
-void recPS2glColor4ui(unsigned int red, unsigned int green, unsigned int blue, unsigned int alpha)
-{
-    g_PS2glContext.valistColor[0][0] = (float)red / 4294967295.0f; g_PS2glContext.valistColor[0][1] = (float)green / 4294967295.0f; g_PS2glContext.valistColor[0][2] = (float)blue / 4294967295.0f; g_PS2glContext.valistColor[0][3] = (float)alpha / 4294967295.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1292–1295 */
-void recPS2glColor4ub(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha)
-{
-    g_PS2glContext.valistColor[0][0] = (float)red / 255.0f; g_PS2glContext.valistColor[0][1] = (float)green / 255.0f; g_PS2glContext.valistColor[0][2] = (float)blue / 255.0f; g_PS2glContext.valistColor[0][3] = (float)alpha / 255.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1286–1289 */
-void recPS2glColor4s(short red, short green, short blue, short alpha)
-{
-    g_PS2glContext.valistColor[0][0] = (float)red / 32767.0f; g_PS2glContext.valistColor[0][1] = (float)green / 32767.0f; g_PS2glContext.valistColor[0][2] = (float)blue / 32767.0f; g_PS2glContext.valistColor[0][3] = (float)alpha / 32767.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1280–1283 */
-void recPS2glColor4i(int red, int green, int blue, int alpha)
-{
-    g_PS2glContext.valistColor[0][0] = (float)red / 2147483647.0f; g_PS2glContext.valistColor[0][1] = (float)green / 2147483647.0f; g_PS2glContext.valistColor[0][2] = (float)blue / 2147483647.0f; g_PS2glContext.valistColor[0][3] = (float)alpha / 2147483647.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1275–1277 */
-void recPS2glColor4d(double R, double G, double B, double A)
-{
-    g_PS2glContext.valistColor[0][0] = (float)R; g_PS2glContext.valistColor[0][1] = (float)G; g_PS2glContext.valistColor[0][2] = (float)B; g_PS2glContext.valistColor[0][3] = (float)A; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1243–1272 */
-void recPS2glColor4f(float red, float green, float blue, float alpha)
-{
-    g_PS2glContext.valistColor[0][0] = red; g_PS2glContext.valistColor[0][1] = green; g_PS2glContext.valistColor[0][2] = blue; g_PS2glContext.valistColor[0][3] = alpha; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1237–1240 */
-void recPS2glColor4b(signed char red, signed char green, signed char blue, signed char alpha)
-{
-    g_PS2glContext.valistColor[0][0] = (float)red / 127.0f; g_PS2glContext.valistColor[0][1] = (float)green / 127.0f; g_PS2glContext.valistColor[0][2] = (float)blue / 127.0f; g_PS2glContext.valistColor[0][3] = (float)alpha / 127.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1231–1234 */
-void recPS2glColor3us(unsigned short red, unsigned short green, unsigned short blue)
-{
-    g_PS2glContext.valistColor[0][0] = (float)red / 65535.0f; g_PS2glContext.valistColor[0][1] = (float)green / 65535.0f; g_PS2glContext.valistColor[0][2] = (float)blue / 65535.0f; g_PS2glContext.valistColor[0][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1226–1228 */
-void recPS2glColor3ui(unsigned int red, unsigned int green, unsigned int blue)
-{
-    g_PS2glContext.valistColor[0][0] = (float)red / 4294967295.0f; g_PS2glContext.valistColor[0][1] = (float)green / 4294967295.0f; g_PS2glContext.valistColor[0][2] = (float)blue / 4294967295.0f; g_PS2glContext.valistColor[0][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1221–1223 */
-void recPS2glColor3ub(unsigned char red, unsigned char green, unsigned char blue)
-{
-    g_PS2glContext.valistColor[0][0] = (float)red / 255.0f; g_PS2glContext.valistColor[0][1] = (float)green / 255.0f; g_PS2glContext.valistColor[0][2] = (float)blue / 255.0f; g_PS2glContext.valistColor[0][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1216–1218 */
-void recPS2glColor3s(short red, short green, short blue)
-{
-    g_PS2glContext.valistColor[0][0] = (float)red / 32767.0f; g_PS2glContext.valistColor[0][1] = (float)green / 32767.0f; g_PS2glContext.valistColor[0][2] = (float)blue / 32767.0f; g_PS2glContext.valistColor[0][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1211–1213 */
-void recPS2glColor3i(int red, int green, int blue)
-{
-    g_PS2glContext.valistColor[0][0] = (float)red / 2147483647.0f; g_PS2glContext.valistColor[0][1] = (float)green / 2147483647.0f; g_PS2glContext.valistColor[0][2] = (float)blue / 2147483647.0f; g_PS2glContext.valistColor[0][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1206–1208 */
-void recPS2glColor3f(float red, float green, float blue)
-{
-    g_PS2glContext.valistColor[0][0] = red; g_PS2glContext.valistColor[0][1] = green; g_PS2glContext.valistColor[0][2] = blue; g_PS2glContext.valistColor[0][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1201–1203 */
-void recPS2glColor3d(double red, double green, double blue)
-{
-    g_PS2glContext.valistColor[0][0] = (float)red; g_PS2glContext.valistColor[0][1] = (float)green; g_PS2glContext.valistColor[0][2] = (float)blue; g_PS2glContext.valistColor[0][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1196–1198 */
-void recPS2glColor3b(signed char red, signed char green, signed char blue)
-{
-    g_PS2glContext.valistColor[0][0] = (float)red / 127.0f; g_PS2glContext.valistColor[0][1] = (float)green / 127.0f; g_PS2glContext.valistColor[0][2] = (float)blue / 127.0f; g_PS2glContext.valistColor[0][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1181–1187 */
-void recPS2glClipPlane(unsigned int plane, double* equation)
-{
-    tagGLlistnode* pNode;
-    anon_89* pParam;
-    pNode = PS2glListAllocNode(sizeof(anon_89));
-    pParam = (anon_89*)pNode->aParams;
-    pParam->plane = plane;
-    pParam->equation = (int)PS2glListSaveParam(equation, 4 * sizeof(double));
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glClipPlane;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1177–1177 */
-void plyPS2glClipPlane(anon_89* param0)
-{
-    impPS2glClipPlane(param0->plane, (double*)param0->equation);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1160–1165 */
-void recPS2glClearStencil(int s)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_93));
-    ((anon_93*)pNode->aParams)->s = s;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glClearStencil;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1156–1156 */
-void plyPS2glClearStencil(anon_93* pParam)
-{
-    impPS2glClearStencil(pParam->s);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1140–1145 */
-void recPS2glClearIndex(float c)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_96));
-    ((anon_96*)pNode->aParams)->c = c;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glClearIndex;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1136–1136 */
-void plyPS2glClearIndex(anon_96* pParam)
-{
-    impPS2glClearIndex(pParam->c);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1120–1125 */
-void recPS2glClearDepth(double depth)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_98));
-    ((anon_98*)pNode->aParams)->depth = depth;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glClearDepth;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1116–1116 */
-void plyPS2glClearDepth(anon_98* pParam)
-{
-    impPS2glClearDepth(pParam->depth);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1097–1105 */
-void recPS2glClearColor(float red, float green, float blue, float alpha)
-{
-    anon_136* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_136));
-    pParam = (anon_136*)pNode->aParams;
-    pParam->red = red;
-    pParam->green = green;
-    pParam->blue = blue;
-    pParam->alpha = alpha;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glClearColor;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1093–1093 */
-void plyPS2glClearColor(anon_136* pParam)
-{
-    impPS2glClearColor(pParam->red, pParam->green, pParam->blue, pParam->alpha);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1071–1079 */
-void recPS2glClearAccum(float red, float green, float blue, float alpha)
-{
-    anon_20* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_20));
-    pParam = (anon_20*)pNode->aParams;
-    pParam->red = red;
-    pParam->green = green;
-    pParam->blue = blue;
-    pParam->alpha = alpha;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glClearAccum;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1067–1067 */
-void plyPS2glClearAccum(anon_20* pParam)
-{
-    impPS2glClearAccum(pParam->red, pParam->green, pParam->blue, pParam->alpha);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1048–1053 */
-void recPS2glClear(unsigned int mask)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_81));
-    ((anon_81*)pNode->aParams)->mask = mask;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glClear;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1044–1044 */
-void plyPS2glClear(anon_81* pParam)
-{
-    impPS2glClear(pParam->mask);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1026–1033 */
-void recPS2glCallLists(int n, unsigned int type, void* lists)
-{
-    tagGLlistnode* pNode;
-    anon_111* pParam;
-    int sz;
-    pNode = PS2glListAllocNode(sizeof(anon_111));
-    pParam = (anon_111*)pNode->aParams;
-    pParam->n = n;
-    pParam->type = type;
-    sz = 0;
-    switch (type)
-    {
-    case 0x1400:
-        sz = 4;
-        break;
-    case 0x1401:
-        sz = 4;
-        break;
-    case 0x1402:
-        sz = 4;
-        break;
-    case 0x1403:
-        sz = 4;
-        break;
-    case 0x1404:
-        sz = 4;
-        break;
-    case 0x1405:
-        sz = 4;
-        break;
-    case 0x1406:
-        sz = 4;
-        break;
-    case 0x1407:
-        sz = 2;
-        break;
-    case 0x1408:
-        sz = 3;
-        break;
-    case 0x1409:
-        sz = 4;
-        break;
-    }
-    pParam->lists = (int)PS2glListSaveParam(lists, n * sz);
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glCallLists;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1022–1022 */
-void plyPS2glCallLists(anon_111* pParam)
-{
-    impPS2glCallLists(pParam->n, pParam->type, pParam->lists);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1004–1009 */
-void recPS2glCallList(unsigned int list)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_170));
-    ((anon_170*)pNode->aParams)->list = list;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glCallList;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1000–1000 */
-void plyPS2glCallList(anon_170* pParam)
-{
-    impPS2glCallList(pParam->list);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 983–989 */
-void recPS2glBlendFunc(unsigned int sfactor, unsigned int dfactor)
-{
-    anon_65* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_65));
-    pParam = (anon_65*)pNode->aParams;
-    pParam->sfactor = sfactor;
-    pParam->dfactor = dfactor;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glBlendFunc;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 979–979 */
-void plyPS2glBlendFunc(anon_65* param0)
-{
-    impPS2glBlendFunc(param0->sfactor, param0->dfactor);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 956–967 */
-void recPS2glBitmap(int width, int height, float xorig, float yorig, float xmove, float ymove, unsigned char* bitmap)
-{
-    tagGLlistnode* pNode;
-    anon_83* pParam;
-    pNode = PS2glListAllocNode(sizeof(anon_83));
-    pParam = (anon_83*)pNode->aParams;
-    pParam->width = width;
-    pParam->height = height;
-    pParam->xorig = xorig;
-    pParam->yorig = yorig;
-    pParam->xmove = xmove;
-    pParam->ymove = ymove;
-    pParam->bitmap = (int)PS2glListSaveParam(bitmap, width * height);
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glBitmap;
-}
-
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 952–952 */
 void impPS2glBitmap(int, int, float, float, float, float, unsigned char*);
-
-void plyPS2glBitmap(anon_83* pParam)
-{
-    impPS2glBitmap(pParam->width, pParam->height, pParam->xorig, pParam->yorig, pParam->xmove, pParam->ymove, *(unsigned char**)&pParam->bitmap);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 929–935 */
-void recPS2glBindTexture(unsigned int target, unsigned int texture)
-{
-    anon_40* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_40));
-    pParam = (anon_40*)pNode->aParams;
-    pParam->target = target;
-    pParam->texture = texture;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glBindTexture;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 925–925 */
-void plyPS2glBindTexture(anon_40* param0)
-{
-    impPS2glBindTexture(param0->target, param0->texture);
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 860–912 */
 /* worker B */
 int Mode2Prim(unsigned int mode);
 void PS2glMergeBB(float* pDstBB, float* pSrcBB);
 void PS2glResetPrimBuffer(void);
-void recPS2glBegin(unsigned int mode)
-{
-    anon_64* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_64) + 4);
-    pParam = (anon_64*)pNode->aParams;
-    pLastBeginParam = (int)pParam;
-    pParam->bFinalCompile = g_PS2glContext.bFinalCompile;
-    pParam->mode = mode;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glBegin;
-    g_PS2glContext.pCurPrimBuf = 0;
-    pParam->pPrimBuf = 0;
-    if (g_PS2glContext.uiBoundingSphereBits & 2)
-        PS2glMergeBB(g_PS2glContext.faObjectBoundingBox, 0);
-    else
-        memcpy(pParam, g_PS2glContext.vObjectBS, 16);
-    g_PS2glContext.ppCurPrimBufHead = &pParam->pPrimBuf;
-    g_PS2glContext.iBufLimit = (mode == 7) ? 0x28 : 0x3c;
-    if (g_PS2glContext.nTextureEnableBits & 8)
-    {
-        if (mode == 5 || mode == 6 || mode == 9)
-            g_PS2glContext.iBufLimit = 0x16;
-    }
-    g_PS2glContext.pCurParamBegin = pParam;
-    *(quad*)vOldGifTag = *(quad*)g_PS2glContext.pGifTagBuf0;
-    g_PS2glContext.pGifTagBuf0->PRIM = Mode2Prim(mode);
-    PS2glResetPrimBuffer();
-    g_PS2glContext.iPackageBSIndex = 0;
-    g_PS2glContext.bInBeginEndPair = 1;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 810–855 */
-int Mode2Prim(unsigned int mode)
-{
-    int iReturn;
-    switch (mode) {
-    case 4:
-        iReturn = 3;
-        break;
-    case 5:
-    case 8:
-        if (g_PS2glContext.nTextureEnableBits & 8)
-            iReturn = 3;
-        else
-            iReturn = 4;
-        break;
-    case 6:
-    case 9:
-        if (g_PS2glContext.nTextureEnableBits & 8)
-            iReturn = 3;
-        else
-            iReturn = 5;
-        break;
-    case 7:
-        iReturn = 3;
-        break;
-    case 1:
-        iReturn = 1;
-        break;
-    case 3:
-        iReturn = 2;
-        break;
-    case 2:
-        iReturn = 2;
-        break;
-    case 0:
-        iReturn = 0;
-        break;
-    case 10:
-        iReturn = 6;
-        break;
-    default:
-        iReturn = 3;
-        break;
-    }
-    return iReturn;
-}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 718–803 */
 void PS2glAssembleQuads(void);
 void PS2glFlushBuffer(int mode);
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 618–715 */
+/* worker B */
+void PS2glVU1ListTexCoordsCubeMappingVectorTo2D(tagGLprimbuf* pPrimBuf);
+void impPS2glBegin(unsigned int mode);
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 511–517 */
+void recPS2glAccum(unsigned int op, float value)
+{
+    anon_29* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_29));
+    pParam = (anon_29*)pNode->aParams;
+    pParam->op = op;
+    pParam->value = value;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glAccum;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 531–531 */
+void plyPS2glActiveTextureARB(anon_138* pParam)
+{
+    impPS2glActiveTextureARB(pParam->texture);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 535–540 */
+void recPS2glActiveTextureARB(unsigned int texture)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_138));
+    ((anon_138*)pNode->aParams)->texture = texture;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glActiveTextureARB;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 546–546 */
+void plyPS2glClientActiveTextureARB(anon_138* pParam)
+{
+    impPS2glClientActiveTextureARB(pParam->texture);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 550–555 */
+void recPS2glClientActiveTextureARB(unsigned int texture)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_138));
+    ((anon_138*)pNode->aParams)->texture = texture;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glClientActiveTextureARB;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 569–569 */
+void plyPS2glAlphaFunc(anon_60* param0)
+{
+    impPS2glAlphaFunc(param0->func, param0->ref);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 573–579 */
+void recPS2glAlphaFunc(unsigned int func, float ref)
+{
+    anon_60* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_60));
+    pParam = (anon_60*)pNode->aParams;
+    pParam->func = func;
+    pParam->ref = ref;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glAlphaFunc;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 590–590 */
+void plyPS2glArrayElement(anon_166* pParam)
+{
+    impPS2glArrayElement(pParam->i);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 594–599 */
+void recPS2glArrayElement(int i)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_166));
+    ((anon_166*)pNode->aParams)->i = i;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glArrayElement;
+}
+
+void plyPS2glBegin(anon_64* pParam)
+{
+    _sceDmaTag* pDmaTag;
+    tagListData* pListData;
+    tagGLprimbuf* pPrimBufTemp;
+    tagGLprimbuf* pPrimBuf;
+    pPrimBuf = pParam->pPrimBuf;
+    if (g_PS2glContext.eClippingFunction != -1)
+    {
+        if (g_PS2glContext.uiBoundingSphereBits & 3)
+            memcpy(g_PS2glContext.vObjectBS, pParam, 16);
+        impPS2glBegin(pParam->mode);
+        if (pParam->bFinalCompile)
+        {
+            if (pPrimBuf != 0 && pPrimBuf->tagGif.NLOOP > 0)
+            {
+                pPrimBufTemp = pPrimBuf;
+                if (g_PS2glContext.nTextureEnableBits & 8)
+                {
+                    if (pPrimBufTemp != 0)
+                    {
+                        do
+                        {
+                            PS2glVU1ListTexCoordsCubeMappingVectorTo2D(pPrimBufTemp);
+                            if (pPrimBufTemp->bEOP)
+                                break;
+                            pPrimBufTemp = pPrimBufTemp->pNext;
+                        } while (pPrimBufTemp != 0);
+                    }
+                }
+                pDmaTag = (_sceDmaTag*)g_PS2glContext.pVIFIBufTail++;
+                pDmaTag->qwc = 0;
+                pDmaTag->id = 0x50;
+                pDmaTag->next = &pPrimBuf->tagDma;
+                pDmaTag->p[1] = 0; pDmaTag->p[0] = 0;
+                if ((g_PS2glContext.uiStaticDisplayListBits & 0x1000800) == 0x1000800)
+                {
+                    pListData = g_PS2glContext.pCurListData;
+                    pListData->pSDLIndices[pListData->uiSDLIndicesSize++] = (int)pDmaTag;
+                    pListData->pSDLIndices[pListData->uiSDLIndicesSize++] = 0x80000000;
+                }
+            }
+        }
+        else
+        {
+            PS2glExecuteListVBuf(pPrimBuf);
+        }
+        g_PS2glContext.bInBeginEndPair = 0;
+    }
+}
 
 void PS2glExecuteListVBuf(tagGLprimbuf* pPrimBuf)
 {
@@ -7466,132 +3828,4500 @@ void PS2glExecuteListVBuf(tagGLprimbuf* pPrimBuf)
     PS2glFlushBuffer(1);
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 618–715 */
-/* worker B */
-void PS2glVU1ListTexCoordsCubeMappingVectorTo2D(tagGLprimbuf* pPrimBuf);
-void impPS2glBegin(unsigned int mode);
-void plyPS2glBegin(anon_64* pParam)
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 810–855 */
+int Mode2Prim(unsigned int mode)
+{
+    int iReturn;
+    switch (mode) {
+    case 4:
+        iReturn = 3;
+        break;
+    case 5:
+    case 8:
+        if (g_PS2glContext.nTextureEnableBits & 8)
+            iReturn = 3;
+        else
+            iReturn = 4;
+        break;
+    case 6:
+    case 9:
+        if (g_PS2glContext.nTextureEnableBits & 8)
+            iReturn = 3;
+        else
+            iReturn = 5;
+        break;
+    case 7:
+        iReturn = 3;
+        break;
+    case 1:
+        iReturn = 1;
+        break;
+    case 3:
+        iReturn = 2;
+        break;
+    case 2:
+        iReturn = 2;
+        break;
+    case 0:
+        iReturn = 0;
+        break;
+    case 10:
+        iReturn = 6;
+        break;
+    default:
+        iReturn = 3;
+        break;
+    }
+    return iReturn;
+}
+
+void recPS2glBegin(unsigned int mode)
+{
+    anon_64* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_64) + 4);
+    pParam = (anon_64*)pNode->aParams;
+    pLastBeginParam = (int)pParam;
+    pParam->bFinalCompile = g_PS2glContext.bFinalCompile;
+    pParam->mode = mode;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glBegin;
+    g_PS2glContext.pCurPrimBuf = 0;
+    pParam->pPrimBuf = 0;
+    if (g_PS2glContext.uiBoundingSphereBits & 2)
+        PS2glMergeBB(g_PS2glContext.faObjectBoundingBox, 0);
+    else
+        memcpy(pParam, g_PS2glContext.vObjectBS, 16);
+    g_PS2glContext.ppCurPrimBufHead = &pParam->pPrimBuf;
+    g_PS2glContext.iBufLimit = (mode == 7) ? 0x28 : 0x3c;
+    if (g_PS2glContext.nTextureEnableBits & 8)
+    {
+        if (mode == 5 || mode == 6 || mode == 9)
+            g_PS2glContext.iBufLimit = 0x16;
+    }
+    g_PS2glContext.pCurParamBegin = pParam;
+    *(quad*)vOldGifTag = *(quad*)g_PS2glContext.pGifTagBuf0;
+    g_PS2glContext.pGifTagBuf0->PRIM = Mode2Prim(mode);
+    PS2glResetPrimBuffer();
+    g_PS2glContext.iPackageBSIndex = 0;
+    g_PS2glContext.bInBeginEndPair = 1;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 925–925 */
+void plyPS2glBindTexture(anon_40* param0)
+{
+    impPS2glBindTexture(param0->target, param0->texture);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 929–935 */
+void recPS2glBindTexture(unsigned int target, unsigned int texture)
+{
+    anon_40* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_40));
+    pParam = (anon_40*)pNode->aParams;
+    pParam->target = target;
+    pParam->texture = texture;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glBindTexture;
+}
+
+void plyPS2glBitmap(anon_83* pParam)
+{
+    impPS2glBitmap(pParam->width, pParam->height, pParam->xorig, pParam->yorig, pParam->xmove, pParam->ymove, *(unsigned char**)&pParam->bitmap);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 956–967 */
+void recPS2glBitmap(int width, int height, float xorig, float yorig, float xmove, float ymove, unsigned char* bitmap)
+{
+    tagGLlistnode* pNode;
+    anon_83* pParam;
+    pNode = PS2glListAllocNode(sizeof(anon_83));
+    pParam = (anon_83*)pNode->aParams;
+    pParam->width = width;
+    pParam->height = height;
+    pParam->xorig = xorig;
+    pParam->yorig = yorig;
+    pParam->xmove = xmove;
+    pParam->ymove = ymove;
+    pParam->bitmap = (int)PS2glListSaveParam(bitmap, width * height);
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glBitmap;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 979–979 */
+void plyPS2glBlendFunc(anon_65* param0)
+{
+    impPS2glBlendFunc(param0->sfactor, param0->dfactor);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 983–989 */
+void recPS2glBlendFunc(unsigned int sfactor, unsigned int dfactor)
+{
+    anon_65* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_65));
+    pParam = (anon_65*)pNode->aParams;
+    pParam->sfactor = sfactor;
+    pParam->dfactor = dfactor;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glBlendFunc;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1000–1000 */
+void plyPS2glCallList(anon_170* pParam)
+{
+    impPS2glCallList(pParam->list);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1004–1009 */
+void recPS2glCallList(unsigned int list)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_170));
+    ((anon_170*)pNode->aParams)->list = list;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glCallList;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1022–1022 */
+void plyPS2glCallLists(anon_111* pParam)
+{
+    impPS2glCallLists(pParam->n, pParam->type, pParam->lists);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1026–1033 */
+void recPS2glCallLists(int n, unsigned int type, void* lists)
+{
+    tagGLlistnode* pNode;
+    anon_111* pParam;
+    int sz;
+    pNode = PS2glListAllocNode(sizeof(anon_111));
+    pParam = (anon_111*)pNode->aParams;
+    pParam->n = n;
+    pParam->type = type;
+    sz = 0;
+    switch (type)
+    {
+    case 0x1400:
+        sz = 4;
+        break;
+    case 0x1401:
+        sz = 4;
+        break;
+    case 0x1402:
+        sz = 4;
+        break;
+    case 0x1403:
+        sz = 4;
+        break;
+    case 0x1404:
+        sz = 4;
+        break;
+    case 0x1405:
+        sz = 4;
+        break;
+    case 0x1406:
+        sz = 4;
+        break;
+    case 0x1407:
+        sz = 2;
+        break;
+    case 0x1408:
+        sz = 3;
+        break;
+    case 0x1409:
+        sz = 4;
+        break;
+    }
+    pParam->lists = (int)PS2glListSaveParam(lists, n * sz);
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glCallLists;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1044–1044 */
+void plyPS2glClear(anon_81* pParam)
+{
+    impPS2glClear(pParam->mask);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1048–1053 */
+void recPS2glClear(unsigned int mask)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_81));
+    ((anon_81*)pNode->aParams)->mask = mask;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glClear;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1067–1067 */
+void plyPS2glClearAccum(anon_20* pParam)
+{
+    impPS2glClearAccum(pParam->red, pParam->green, pParam->blue, pParam->alpha);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1071–1079 */
+void recPS2glClearAccum(float red, float green, float blue, float alpha)
+{
+    anon_20* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_20));
+    pParam = (anon_20*)pNode->aParams;
+    pParam->red = red;
+    pParam->green = green;
+    pParam->blue = blue;
+    pParam->alpha = alpha;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glClearAccum;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1093–1093 */
+void plyPS2glClearColor(anon_136* pParam)
+{
+    impPS2glClearColor(pParam->red, pParam->green, pParam->blue, pParam->alpha);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1097–1105 */
+void recPS2glClearColor(float red, float green, float blue, float alpha)
+{
+    anon_136* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_136));
+    pParam = (anon_136*)pNode->aParams;
+    pParam->red = red;
+    pParam->green = green;
+    pParam->blue = blue;
+    pParam->alpha = alpha;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glClearColor;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1116–1116 */
+void plyPS2glClearDepth(anon_98* pParam)
+{
+    impPS2glClearDepth(pParam->depth);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1120–1125 */
+void recPS2glClearDepth(double depth)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_98));
+    ((anon_98*)pNode->aParams)->depth = depth;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glClearDepth;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1136–1136 */
+void plyPS2glClearIndex(anon_96* pParam)
+{
+    impPS2glClearIndex(pParam->c);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1140–1145 */
+void recPS2glClearIndex(float c)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_96));
+    ((anon_96*)pNode->aParams)->c = c;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glClearIndex;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1156–1156 */
+void plyPS2glClearStencil(anon_93* pParam)
+{
+    impPS2glClearStencil(pParam->s);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1160–1165 */
+void recPS2glClearStencil(int s)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_93));
+    ((anon_93*)pNode->aParams)->s = s;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glClearStencil;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1177–1177 */
+void plyPS2glClipPlane(anon_89* param0)
+{
+    impPS2glClipPlane(param0->plane, (double*)param0->equation);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1181–1187 */
+void recPS2glClipPlane(unsigned int plane, double* equation)
+{
+    tagGLlistnode* pNode;
+    anon_89* pParam;
+    pNode = PS2glListAllocNode(sizeof(anon_89));
+    pParam = (anon_89*)pNode->aParams;
+    pParam->plane = plane;
+    pParam->equation = (int)PS2glListSaveParam(equation, 4 * sizeof(double));
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glClipPlane;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1196–1198 */
+void recPS2glColor3b(signed char red, signed char green, signed char blue)
+{
+    g_PS2glContext.valistColor[0][0] = (float)red / 127.0f; g_PS2glContext.valistColor[0][1] = (float)green / 127.0f; g_PS2glContext.valistColor[0][2] = (float)blue / 127.0f; g_PS2glContext.valistColor[0][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1201–1203 */
+void recPS2glColor3d(double red, double green, double blue)
+{
+    g_PS2glContext.valistColor[0][0] = (float)red; g_PS2glContext.valistColor[0][1] = (float)green; g_PS2glContext.valistColor[0][2] = (float)blue; g_PS2glContext.valistColor[0][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1206–1208 */
+void recPS2glColor3f(float red, float green, float blue)
+{
+    g_PS2glContext.valistColor[0][0] = red; g_PS2glContext.valistColor[0][1] = green; g_PS2glContext.valistColor[0][2] = blue; g_PS2glContext.valistColor[0][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1211–1213 */
+void recPS2glColor3i(int red, int green, int blue)
+{
+    g_PS2glContext.valistColor[0][0] = (float)red / 2147483647.0f; g_PS2glContext.valistColor[0][1] = (float)green / 2147483647.0f; g_PS2glContext.valistColor[0][2] = (float)blue / 2147483647.0f; g_PS2glContext.valistColor[0][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1216–1218 */
+void recPS2glColor3s(short red, short green, short blue)
+{
+    g_PS2glContext.valistColor[0][0] = (float)red / 32767.0f; g_PS2glContext.valistColor[0][1] = (float)green / 32767.0f; g_PS2glContext.valistColor[0][2] = (float)blue / 32767.0f; g_PS2glContext.valistColor[0][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1221–1223 */
+void recPS2glColor3ub(unsigned char red, unsigned char green, unsigned char blue)
+{
+    g_PS2glContext.valistColor[0][0] = (float)red / 255.0f; g_PS2glContext.valistColor[0][1] = (float)green / 255.0f; g_PS2glContext.valistColor[0][2] = (float)blue / 255.0f; g_PS2glContext.valistColor[0][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1226–1228 */
+void recPS2glColor3ui(unsigned int red, unsigned int green, unsigned int blue)
+{
+    g_PS2glContext.valistColor[0][0] = (float)red / 4294967295.0f; g_PS2glContext.valistColor[0][1] = (float)green / 4294967295.0f; g_PS2glContext.valistColor[0][2] = (float)blue / 4294967295.0f; g_PS2glContext.valistColor[0][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1231–1234 */
+void recPS2glColor3us(unsigned short red, unsigned short green, unsigned short blue)
+{
+    g_PS2glContext.valistColor[0][0] = (float)red / 65535.0f; g_PS2glContext.valistColor[0][1] = (float)green / 65535.0f; g_PS2glContext.valistColor[0][2] = (float)blue / 65535.0f; g_PS2glContext.valistColor[0][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1237–1240 */
+void recPS2glColor4b(signed char red, signed char green, signed char blue, signed char alpha)
+{
+    g_PS2glContext.valistColor[0][0] = (float)red / 127.0f; g_PS2glContext.valistColor[0][1] = (float)green / 127.0f; g_PS2glContext.valistColor[0][2] = (float)blue / 127.0f; g_PS2glContext.valistColor[0][3] = (float)alpha / 127.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1243–1272 */
+void recPS2glColor4f(float red, float green, float blue, float alpha)
+{
+    g_PS2glContext.valistColor[0][0] = red; g_PS2glContext.valistColor[0][1] = green; g_PS2glContext.valistColor[0][2] = blue; g_PS2glContext.valistColor[0][3] = alpha; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1275–1277 */
+void recPS2glColor4d(double R, double G, double B, double A)
+{
+    g_PS2glContext.valistColor[0][0] = (float)R; g_PS2glContext.valistColor[0][1] = (float)G; g_PS2glContext.valistColor[0][2] = (float)B; g_PS2glContext.valistColor[0][3] = (float)A; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1280–1283 */
+void recPS2glColor4i(int red, int green, int blue, int alpha)
+{
+    g_PS2glContext.valistColor[0][0] = (float)red / 2147483647.0f; g_PS2glContext.valistColor[0][1] = (float)green / 2147483647.0f; g_PS2glContext.valistColor[0][2] = (float)blue / 2147483647.0f; g_PS2glContext.valistColor[0][3] = (float)alpha / 2147483647.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1286–1289 */
+void recPS2glColor4s(short red, short green, short blue, short alpha)
+{
+    g_PS2glContext.valistColor[0][0] = (float)red / 32767.0f; g_PS2glContext.valistColor[0][1] = (float)green / 32767.0f; g_PS2glContext.valistColor[0][2] = (float)blue / 32767.0f; g_PS2glContext.valistColor[0][3] = (float)alpha / 32767.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1292–1295 */
+void recPS2glColor4ub(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha)
+{
+    g_PS2glContext.valistColor[0][0] = (float)red / 255.0f; g_PS2glContext.valistColor[0][1] = (float)green / 255.0f; g_PS2glContext.valistColor[0][2] = (float)blue / 255.0f; g_PS2glContext.valistColor[0][3] = (float)alpha / 255.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1298–1301 */
+void recPS2glColor4ui(unsigned int red, unsigned int green, unsigned int blue, unsigned int alpha)
+{
+    g_PS2glContext.valistColor[0][0] = (float)red / 4294967295.0f; g_PS2glContext.valistColor[0][1] = (float)green / 4294967295.0f; g_PS2glContext.valistColor[0][2] = (float)blue / 4294967295.0f; g_PS2glContext.valistColor[0][3] = (float)alpha / 4294967295.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1304–1307 */
+void recPS2glColor4us(unsigned short red, unsigned short green, unsigned short blue, unsigned short alpha)
+{
+    g_PS2glContext.valistColor[0][0] = (float)red / 65535.0f; g_PS2glContext.valistColor[0][1] = (float)green / 65535.0f; g_PS2glContext.valistColor[0][2] = (float)blue / 65535.0f; g_PS2glContext.valistColor[0][3] = (float)alpha / 65535.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1310–1312 */
+void recPS2glColor3bv(signed char* v)
+{
+    float blue, green, red;
+    blue = (float)v[2] / 127.0f; green = (float)v[1] / 127.0f; red = (float)v[0] / 127.0f;
+    g_PS2glContext.valistColor[0][3] = 1.0f; g_PS2glContext.valistColor[0][2] = blue; g_PS2glContext.valistColor[0][1] = green; g_PS2glContext.valistColor[0][0] = red; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1315–1317 */
+void recPS2glColor3dv(double* v)
+{
+    float red, green, blue;
+    blue = (float)v[2]; green = (float)v[1]; red = (float)v[0];
+    g_PS2glContext.valistColor[0][0] = red; g_PS2glContext.valistColor[0][1] = green; g_PS2glContext.valistColor[0][2] = blue; g_PS2glContext.valistColor[0][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1320–1322 */
+void recPS2glColor3fv(float* v)
+{
+    float red, green, blue;
+    blue = v[2]; green = v[1]; red = v[0];
+    g_PS2glContext.valistColor[0][0] = red; g_PS2glContext.valistColor[0][1] = green; g_PS2glContext.valistColor[0][2] = blue; g_PS2glContext.valistColor[0][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1325–1327 */
+void recPS2glColor3iv(int* v)
+{
+    float blue, green, red;
+    blue = (float)v[2] / 2147483647.0f; green = (float)v[1] / 2147483647.0f; red = (float)v[0] / 2147483647.0f;
+    g_PS2glContext.valistColor[0][3] = 1.0f; g_PS2glContext.valistColor[0][2] = blue; g_PS2glContext.valistColor[0][1] = green; g_PS2glContext.valistColor[0][0] = red; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1330–1332 */
+void recPS2glColor3sv(short* v)
+{
+    float blue, green, red;
+    blue = (float)v[2] / 32767.0f; green = (float)v[1] / 32767.0f; red = (float)v[0] / 32767.0f;
+    g_PS2glContext.valistColor[0][3] = 1.0f; g_PS2glContext.valistColor[0][2] = blue; g_PS2glContext.valistColor[0][1] = green; g_PS2glContext.valistColor[0][0] = red; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1335–1337 */
+void recPS2glColor3ubv(unsigned char* v)
+{
+    float red, green, blue;
+    blue = (float)v[2] / 255.0f; green = (float)v[1] / 255.0f; red = (float)v[0] / 255.0f;
+    g_PS2glContext.valistColor[0][0] = red; g_PS2glContext.valistColor[0][1] = green; g_PS2glContext.valistColor[0][2] = blue; g_PS2glContext.valistColor[0][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1340–1342 */
+void recPS2glColor3uiv(unsigned int* v)
+{
+    float red, green, blue;
+    blue = (float)v[2] / 4294967295.0f; green = (float)v[1] / 4294967295.0f; red = (float)v[0] / 4294967295.0f;
+    g_PS2glContext.valistColor[0][0] = red; g_PS2glContext.valistColor[0][1] = green; g_PS2glContext.valistColor[0][2] = blue; g_PS2glContext.valistColor[0][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1345–1347 */
+void recPS2glColor3usv(unsigned short* v)
+{
+    float red, green, blue;
+    blue = (float)v[2] / 65535.0f; green = (float)v[1] / 65535.0f; red = (float)v[0] / 65535.0f;
+    g_PS2glContext.valistColor[0][0] = red; g_PS2glContext.valistColor[0][1] = green; g_PS2glContext.valistColor[0][2] = blue; g_PS2glContext.valistColor[0][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1350–1352 */
+void recPS2glColor4bv(signed char* v)
+{
+    float alpha, blue, green, red;
+    alpha = (float)v[3] / 127.0f; blue = (float)v[2] / 127.0f; green = (float)v[1] / 127.0f; red = (float)v[0] / 127.0f;
+    g_PS2glContext.valistColor[0][0] = red; g_PS2glContext.valistColor[0][1] = green; g_PS2glContext.valistColor[0][2] = blue; g_PS2glContext.valistColor[0][3] = alpha; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1355–1357 */
+void recPS2glColor4dv(double* v)
+{
+    float red, green, blue, alpha;
+    alpha = (float)v[3]; blue = (float)v[2]; green = (float)v[1]; red = (float)v[0];
+    g_PS2glContext.valistColor[0][0] = red; g_PS2glContext.valistColor[0][1] = green; g_PS2glContext.valistColor[0][2] = blue; g_PS2glContext.valistColor[0][3] = alpha; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1360–1380 */
+void recPS2glColor4fv(float* v)
+{
+    *(quad*)g_PS2glContext.valistColor[0] = *(quad*)v; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1383–1386 */
+void recPS2glColor4iv(int* v)
+{
+    int alpha, blue, green, red;
+    alpha = v[3]; blue = v[2]; green = v[1]; red = v[0];
+    g_PS2glContext.valistColor[0][3] = (float)alpha / 2147483647.0f; g_PS2glContext.valistColor[0][2] = (float)blue / 2147483647.0f; g_PS2glContext.valistColor[0][1] = (float)green / 2147483647.0f; g_PS2glContext.valistColor[0][0] = (float)red / 2147483647.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1389–1392 */
+void recPS2glColor4sv(short* v)
+{
+    float alpha, blue, green, red;
+    alpha = (float)v[3] / 32767.0f; blue = (float)v[2] / 32767.0f; green = (float)v[1] / 32767.0f; red = (float)v[0] / 32767.0f;
+    g_PS2glContext.valistColor[0][0] = red; g_PS2glContext.valistColor[0][1] = green; g_PS2glContext.valistColor[0][2] = blue; g_PS2glContext.valistColor[0][3] = alpha; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1395–1398 */
+void recPS2glColor4ubv(unsigned char* v)
+{
+    float red, green, blue, alpha;
+    alpha = (float)v[3] / 255.0f; blue = (float)v[2] / 255.0f; green = (float)v[1] / 255.0f; red = (float)v[0] / 255.0f;
+    g_PS2glContext.valistColor[0][0] = red; g_PS2glContext.valistColor[0][1] = green; g_PS2glContext.valistColor[0][2] = blue; g_PS2glContext.valistColor[0][3] = alpha; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1401–1404 */
+void recPS2glColor4uiv(unsigned int* v)
+{
+    float red, green, blue, alpha;
+    alpha = (float)v[3] / 4294967295.0f; blue = (float)v[2] / 4294967295.0f; green = (float)v[1] / 4294967295.0f; red = (float)v[0] / 4294967295.0f;
+    g_PS2glContext.valistColor[0][0] = red; g_PS2glContext.valistColor[0][1] = green; g_PS2glContext.valistColor[0][2] = blue; g_PS2glContext.valistColor[0][3] = alpha; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1407–1410 */
+void recPS2glColor4usv(unsigned short* v)
+{
+    float red, green, blue, alpha;
+    alpha = (float)v[3] / 65535.0f; blue = (float)v[2] / 65535.0f; green = (float)v[1] / 65535.0f; red = (float)v[0] / 65535.0f;
+    g_PS2glContext.valistColor[0][0] = red; g_PS2glContext.valistColor[0][1] = green; g_PS2glContext.valistColor[0][2] = blue; g_PS2glContext.valistColor[0][3] = alpha; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(0, &g_PS2glContext.valistColor[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1415–1417 */
+void recPS2glMultiColor3bARB(unsigned int texture, signed char red, signed char green, signed char blue)
+{
+    g_PS2glContext.valistColor[texture][0] = (float)red / 127.0f; g_PS2glContext.valistColor[texture][1] = (float)green / 127.0f; g_PS2glContext.valistColor[texture][2] = (float)blue / 127.0f; g_PS2glContext.valistColor[texture][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1420–1422 */
+void recPS2glMultiColor3dARB(unsigned int texture, double red, double green, double blue)
+{
+    g_PS2glContext.valistColor[texture][0] = (float)red; g_PS2glContext.valistColor[texture][1] = (float)green; g_PS2glContext.valistColor[texture][2] = (float)blue; g_PS2glContext.valistColor[texture][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1425–1427 */
+void recPS2glMultiColor3fARB(unsigned int texture, float red, float green, float blue)
+{
+    g_PS2glContext.valistColor[texture][0] = red; g_PS2glContext.valistColor[texture][1] = green; g_PS2glContext.valistColor[texture][2] = blue; g_PS2glContext.valistColor[texture][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1430–1432 */
+void recPS2glMultiColor3iARB(unsigned int texture, int red, int green, int blue)
+{
+    g_PS2glContext.valistColor[texture][0] = (float)red / 2147483647.0f; g_PS2glContext.valistColor[texture][1] = (float)green / 2147483647.0f; g_PS2glContext.valistColor[texture][2] = (float)blue / 2147483647.0f; g_PS2glContext.valistColor[texture][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1435–1437 */
+void recPS2glMultiColor3sARB(unsigned int texture, short red, short green, short blue)
+{
+    g_PS2glContext.valistColor[texture][0] = (float)red / 32767.0f; g_PS2glContext.valistColor[texture][1] = (float)green / 32767.0f; g_PS2glContext.valistColor[texture][2] = (float)blue / 32767.0f; g_PS2glContext.valistColor[texture][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1440–1442 */
+void recPS2glMultiColor3ubARB(unsigned int texture, unsigned char red, unsigned char green, unsigned char blue)
+{
+    g_PS2glContext.valistColor[texture][0] = (float)red / 255.0f; g_PS2glContext.valistColor[texture][1] = (float)green / 255.0f; g_PS2glContext.valistColor[texture][2] = (float)blue / 255.0f; g_PS2glContext.valistColor[texture][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1445–1447 */
+void recPS2glMultiColor3uiARB(unsigned int texture, unsigned int red, unsigned int green, unsigned int blue)
+{
+    g_PS2glContext.valistColor[texture][0] = (float)red / 4294967295.0f; g_PS2glContext.valistColor[texture][1] = (float)green / 4294967295.0f; g_PS2glContext.valistColor[texture][2] = (float)blue / 4294967295.0f; g_PS2glContext.valistColor[texture][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1450–1453 */
+void recPS2glMultiColor3usARB(unsigned int texture, unsigned short red, unsigned short green, unsigned short blue)
+{
+    g_PS2glContext.valistColor[texture][0] = (float)red / 65535.0f; g_PS2glContext.valistColor[texture][1] = (float)green / 65535.0f; g_PS2glContext.valistColor[texture][2] = (float)blue / 65535.0f; g_PS2glContext.valistColor[texture][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1456–1459 */
+void recPS2glMultiColor4bARB(unsigned int texture, signed char red, signed char green, signed char blue, signed char alpha)
+{
+    g_PS2glContext.valistColor[texture][0] = (float)red / 127.0f; g_PS2glContext.valistColor[texture][1] = (float)green / 127.0f; g_PS2glContext.valistColor[texture][2] = (float)blue / 127.0f; g_PS2glContext.valistColor[texture][3] = (float)alpha / 127.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1462–1473 */
+void recPS2glMultiColor4fARB(unsigned int texture, float red, float green, float blue, float alpha)
+{
+    g_PS2glContext.valistColor[texture][0] = red; g_PS2glContext.valistColor[texture][1] = green; g_PS2glContext.valistColor[texture][2] = blue; g_PS2glContext.valistColor[texture][3] = alpha; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1476–1478 */
+void recPS2glMultiColor4dARB(unsigned int texture, double R, double G, double B, double A)
+{
+    g_PS2glContext.valistColor[texture][0] = (float)R; g_PS2glContext.valistColor[texture][1] = (float)G; g_PS2glContext.valistColor[texture][2] = (float)B; g_PS2glContext.valistColor[texture][3] = (float)A; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1481–1484 */
+void recPS2glMultiColor4iARB(unsigned int texture, int red, int green, int blue, int alpha)
+{
+    g_PS2glContext.valistColor[texture][0] = (float)red / 2147483647.0f; g_PS2glContext.valistColor[texture][1] = (float)green / 2147483647.0f; g_PS2glContext.valistColor[texture][2] = (float)blue / 2147483647.0f; g_PS2glContext.valistColor[texture][3] = (float)alpha / 2147483647.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1487–1490 */
+void recPS2glMultiColor4sARB(unsigned int texture, short red, short green, short blue, short alpha)
+{
+    g_PS2glContext.valistColor[texture][0] = (float)red / 32767.0f; g_PS2glContext.valistColor[texture][1] = (float)green / 32767.0f; g_PS2glContext.valistColor[texture][2] = (float)blue / 32767.0f; g_PS2glContext.valistColor[texture][3] = (float)alpha / 32767.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1493–1496 */
+void recPS2glMultiColor4ubARB(unsigned int texture, unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha)
+{
+    g_PS2glContext.valistColor[texture][0] = (float)red / 255.0f; g_PS2glContext.valistColor[texture][1] = (float)green / 255.0f; g_PS2glContext.valistColor[texture][2] = (float)blue / 255.0f; g_PS2glContext.valistColor[texture][3] = (float)alpha / 255.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1499–1502 */
+void recPS2glMultiColor4uiARB(unsigned int texture, unsigned int red, unsigned int green, unsigned int blue, unsigned int alpha)
+{
+    g_PS2glContext.valistColor[texture][0] = (float)red / 4294967295.0f; g_PS2glContext.valistColor[texture][1] = (float)green / 4294967295.0f; g_PS2glContext.valistColor[texture][2] = (float)blue / 4294967295.0f; g_PS2glContext.valistColor[texture][3] = (float)alpha / 4294967295.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1505–1508 */
+void recPS2glMultiColor4usARB(unsigned int texture, unsigned short red, unsigned short green, unsigned short blue, unsigned short alpha)
+{
+    g_PS2glContext.valistColor[texture][0] = (float)red / 65535.0f; g_PS2glContext.valistColor[texture][1] = (float)green / 65535.0f; g_PS2glContext.valistColor[texture][2] = (float)blue / 65535.0f; g_PS2glContext.valistColor[texture][3] = (float)alpha / 65535.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1511–1513 */
+void recPS2glMultiColor3bvARB(unsigned int texture, signed char* v)
+{
+    float red, green, blue;
+    blue = (float)v[2] / 127.0f; green = (float)v[1] / 127.0f; red = (float)v[0] / 127.0f;
+    g_PS2glContext.valistColor[texture][0] = red; g_PS2glContext.valistColor[texture][1] = green; g_PS2glContext.valistColor[texture][2] = blue; g_PS2glContext.valistColor[texture][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1516–1518 */
+void recPS2glMultiColor3dvARB(unsigned int texture, double* v)
+{
+    float red, green, blue;
+    blue = (float)v[2]; green = (float)v[1]; red = (float)v[0];
+    g_PS2glContext.valistColor[texture][0] = red; g_PS2glContext.valistColor[texture][1] = green; g_PS2glContext.valistColor[texture][2] = blue; g_PS2glContext.valistColor[texture][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1521–1523 */
+void recPS2glMultiColor3fvARB(unsigned int texture, float* v)
+{
+    float red, green, blue;
+    blue = v[2]; green = v[1]; red = v[0];
+    g_PS2glContext.valistColor[texture][0] = red; g_PS2glContext.valistColor[texture][1] = green; g_PS2glContext.valistColor[texture][2] = blue; g_PS2glContext.valistColor[texture][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1526–1528 */
+void recPS2glMultiColor3ivARB(unsigned int texture, int* v)
+{
+    float blue, green, red;
+    blue = (float)v[2] / 2147483647.0f; green = (float)v[1] / 2147483647.0f; red = (float)v[0] / 2147483647.0f;
+    g_PS2glContext.valistColor[texture][0] = red; g_PS2glContext.valistColor[texture][1] = green; g_PS2glContext.valistColor[texture][2] = blue; g_PS2glContext.valistColor[texture][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1531–1533 */
+void recPS2glMultiColor3svARB(unsigned int texture, short* v)
+{
+    float red, green, blue;
+    blue = (float)v[2] / 32767.0f; green = (float)v[1] / 32767.0f; red = (float)v[0] / 32767.0f;
+    g_PS2glContext.valistColor[texture][0] = red; g_PS2glContext.valistColor[texture][1] = green; g_PS2glContext.valistColor[texture][2] = blue; g_PS2glContext.valistColor[texture][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1536–1538 */
+void recPS2glMultiColor3ubvARB(unsigned int texture, unsigned char* v)
+{
+    float red, green, blue;
+    blue = (float)v[2] / 255.0f; green = (float)v[1] / 255.0f; red = (float)v[0] / 255.0f;
+    g_PS2glContext.valistColor[texture][0] = red; g_PS2glContext.valistColor[texture][1] = green; g_PS2glContext.valistColor[texture][2] = blue; g_PS2glContext.valistColor[texture][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1541–1543 */
+void recPS2glMultiColor3uivARB(unsigned int texture, unsigned int* v)
+{
+    float red, green, blue;
+    blue = (float)v[2] / 4294967295.0f; green = (float)v[1] / 4294967295.0f; red = (float)v[0] / 4294967295.0f;
+    g_PS2glContext.valistColor[texture][0] = red; g_PS2glContext.valistColor[texture][1] = green; g_PS2glContext.valistColor[texture][2] = blue; g_PS2glContext.valistColor[texture][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1546–1548 */
+void recPS2glMultiColor3usvARB(unsigned int texture, unsigned short* v)
+{
+    float red, green, blue;
+    blue = (float)v[2] / 65535.0f; green = (float)v[1] / 65535.0f; red = (float)v[0] / 65535.0f;
+    g_PS2glContext.valistColor[texture][0] = red; g_PS2glContext.valistColor[texture][1] = green; g_PS2glContext.valistColor[texture][2] = blue; g_PS2glContext.valistColor[texture][3] = 1.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1551–1553 */
+void recPS2glMultiColor4bvARB(unsigned int texture, signed char* v)
+{
+    float red, green, blue, alpha;
+    alpha = (float)v[3] / 127.0f; blue = (float)v[2] / 127.0f; green = (float)v[1] / 127.0f; red = (float)v[0] / 127.0f;
+    g_PS2glContext.valistColor[texture][0] = red; g_PS2glContext.valistColor[texture][1] = green; g_PS2glContext.valistColor[texture][2] = blue; g_PS2glContext.valistColor[texture][3] = alpha; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1556–1558 */
+void recPS2glMultiColor4dvARB(unsigned int texture, double* v)
+{
+    float red, green, blue, alpha;
+    alpha = (float)v[3]; blue = (float)v[2]; green = (float)v[1]; red = (float)v[0];
+    g_PS2glContext.valistColor[texture][0] = red; g_PS2glContext.valistColor[texture][1] = green; g_PS2glContext.valistColor[texture][2] = blue; g_PS2glContext.valistColor[texture][3] = alpha; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1561–1569 */
+void recPS2glMultiColor4fvARB(unsigned int texture, float* v)
+{
+    *(quad*)g_PS2glContext.valistColor[texture] = *(quad*)v; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1572–1575 */
+void recPS2glMultiColor4ivARB(unsigned int texture, int* v)
+{
+    float alpha, blue, green, red;
+    alpha = (float)v[3] / 2147483647.0f; blue = (float)v[2] / 2147483647.0f; green = (float)v[1] / 2147483647.0f; red = (float)v[0] / 2147483647.0f;
+    g_PS2glContext.valistColor[texture][0] = red; g_PS2glContext.valistColor[texture][1] = green; g_PS2glContext.valistColor[texture][2] = blue; g_PS2glContext.valistColor[texture][3] = alpha; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1578–1581 */
+void recPS2glMultiColor4svARB(unsigned int texture, short* v)
+{
+    float red, green, blue, alpha;
+    alpha = (float)v[3] / 32767.0f; blue = (float)v[2] / 32767.0f; green = (float)v[1] / 32767.0f; red = (float)v[0] / 32767.0f;
+    g_PS2glContext.valistColor[texture][0] = red; g_PS2glContext.valistColor[texture][1] = green; g_PS2glContext.valistColor[texture][2] = blue; g_PS2glContext.valistColor[texture][3] = alpha; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1584–1587 */
+void recPS2glMultiColor4ubvARB(unsigned int texture, unsigned char* v)
+{
+    float red, green, blue, alpha;
+    alpha = (float)v[3] / 255.0f; blue = (float)v[2] / 255.0f; green = (float)v[1] / 255.0f; red = (float)v[0] / 255.0f;
+    g_PS2glContext.valistColor[texture][0] = red; g_PS2glContext.valistColor[texture][1] = green; g_PS2glContext.valistColor[texture][2] = blue; g_PS2glContext.valistColor[texture][3] = alpha; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1590–1593 */
+void recPS2glMultiColor4uivARB(unsigned int texture, unsigned int* v)
+{
+    float red, green, blue, alpha;
+    alpha = (float)v[3] / 4294967295.0f; blue = (float)v[2] / 4294967295.0f; green = (float)v[1] / 4294967295.0f; red = (float)v[0] / 4294967295.0f;
+    g_PS2glContext.valistColor[texture][0] = red; g_PS2glContext.valistColor[texture][1] = green; g_PS2glContext.valistColor[texture][2] = blue; g_PS2glContext.valistColor[texture][3] = alpha; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1596–1599 */
+void recPS2glMultiColor4usvARB(unsigned int texture, unsigned short* v)
+{
+    float red, green, blue, alpha;
+    alpha = (float)v[3] / 65535.0f; blue = (float)v[2] / 65535.0f; green = (float)v[1] / 65535.0f; red = (float)v[0] / 65535.0f;
+    g_PS2glContext.valistColor[texture][0] = red; g_PS2glContext.valistColor[texture][1] = green; g_PS2glContext.valistColor[texture][2] = blue; g_PS2glContext.valistColor[texture][3] = alpha; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(6, texture, &g_PS2glContext.valistColor[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1622–1622 */
+void plyPS2glColorMask(anon_154* pParam)
+{
+    impPS2glColorMask(pParam->red, pParam->green, pParam->blue, pParam->alpha);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1626–1634 */
+void recPS2glColorMask(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha)
+{
+    anon_154* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_154));
+    pParam = (anon_154*)pNode->aParams;
+    pParam->red = red;
+    pParam->green = green;
+    pParam->blue = blue;
+    pParam->alpha = alpha;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glColorMask;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1646–1646 */
+void plyPS2glColorMaterial(anon_32* param0)
+{
+    impPS2glColorMaterial(param0->face, param0->mode);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1650–1656 */
+void recPS2glColorMaterial(unsigned int face, unsigned int mode)
+{
+    anon_32* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_32));
+    pParam = (anon_32*)pNode->aParams;
+    pParam->face = face;
+    pParam->mode = mode;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glColorMaterial;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1697–1697 */
+void plyPS2glCopyPixels(anon_27* pParam)
+{
+    impPS2glCopyPixels(pParam->x, pParam->y, pParam->width, pParam->height, pParam->type);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1701–1710 */
+void recPS2glCopyPixels(int x, int y, int width, int height, unsigned int type)
+{
+    anon_27* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_27));
+    pParam = (anon_27*)pNode->aParams;
+    pParam->x = x;
+    pParam->y = y;
+    pParam->width = width;
+    pParam->height = height;
+    pParam->type = type;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glCopyPixels;
+}
+
+void plyPS2glCopyTexImage1D(anon_14* pParam)
+{
+    impPS2glCopyTexImage1D(pParam->target, pParam->level, pParam->internalFormat, pParam->x, pParam->y, pParam->width, pParam->border);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1731–1742 */
+void recPS2glCopyTexImage1D(unsigned int target, int level, unsigned int internalFormat, int x, int y, int width, int border)
+{
+    anon_14* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_14));
+    pParam = (anon_14*)pNode->aParams;
+    pParam->target = target;
+    pParam->level = level;
+    pParam->internalFormat = internalFormat;
+    pParam->x = x;
+    pParam->y = y;
+    pParam->width = width;
+    pParam->border = border;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glCopyTexImage1D;
+}
+
+void plyPS2glCopyTexImage2D(anon_24* pParam)
+{
+    impPS2glCopyTexImage2D(pParam->target, pParam->level, pParam->internalFormat, pParam->x, pParam->y, pParam->width, pParam->height, pParam->border);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1764–1776 */
+void recPS2glCopyTexImage2D(unsigned int target, int level, unsigned int internalFormat, int x, int y, int width, int height, int border)
+{
+    anon_24* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_24));
+    pParam = (anon_24*)pNode->aParams;
+    pParam->target = target;
+    pParam->level = level;
+    pParam->internalFormat = internalFormat;
+    pParam->x = x;
+    pParam->y = y;
+    pParam->width = width;
+    pParam->height = height;
+    pParam->border = border;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glCopyTexImage2D;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1792–1792 */
+void plyPS2glCopyTexSubImage1D(anon_91* pParam)
+{
+    impPS2glCopyTexSubImage1D(pParam->target, pParam->level, pParam->xoffset, pParam->x, pParam->y, pParam->width);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1796–1806 */
+void recPS2glCopyTexSubImage1D(unsigned int target, int level, int xoffset, int x, int y, int width)
+{
+    anon_91* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_91));
+    pParam = (anon_91*)pNode->aParams;
+    pParam->target = target;
+    pParam->level = level;
+    pParam->xoffset = xoffset;
+    pParam->x = x;
+    pParam->y = y;
+    pParam->width = width;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glCopyTexSubImage1D;
+}
+
+void plyPS2glCopyTexSubImage2D(anon_90* pParam)
+{
+    impPS2glCopyTexSubImage2D(pParam->target, pParam->level, pParam->xoffset, pParam->yoffset, pParam->x, pParam->y, pParam->width, pParam->height);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1828–1840 */
+void recPS2glCopyTexSubImage2D(unsigned int target, int level, int xoffset, int yoffset, int x, int y, int width, int height)
+{
+    anon_90* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_90));
+    pParam = (anon_90*)pNode->aParams;
+    pParam->target = target;
+    pParam->level = level;
+    pParam->xoffset = xoffset;
+    pParam->yoffset = yoffset;
+    pParam->x = x;
+    pParam->y = y;
+    pParam->width = width;
+    pParam->height = height;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glCopyTexSubImage2D;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1851–1851 */
+void plyPS2glCullFace(anon_151* pParam)
+{
+    impPS2glCullFace(pParam->mode);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1855–1860 */
+void recPS2glCullFace(unsigned int mode)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_151));
+    ((anon_151*)pNode->aParams)->mode = mode;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glCullFace;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1871–1871 */
+void plyPS2glDepthFunc(anon_147* pParam)
+{
+    impPS2glDepthFunc(pParam->func);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1875–1880 */
+void recPS2glDepthFunc(unsigned int func)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_147));
+    ((anon_147*)pNode->aParams)->func = func;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glDepthFunc;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1891–1891 */
+void plyPS2glDepthMask(anon_144* pParam)
+{
+    impPS2glDepthMask(pParam->flag);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1895–1900 */
+void recPS2glDepthMask(unsigned char flag)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_144));
+    ((anon_144*)pNode->aParams)->flag = flag;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glDepthMask;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1912–1912 */
+void plyPS2glDepthRange(anon_75* param0)
+{
+    impPS2glDepthRange(param0->zNear, param0->zFar);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1916–1922 */
+void recPS2glDepthRange(double zNear, double zFar)
+{
+    anon_75* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_75));
+    pParam = (anon_75*)pNode->aParams;
+    pParam->zNear = zNear;
+    pParam->zFar = zFar;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glDepthRange;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1933–1933 */
+void plyPS2glDisable(anon_172* pParam)
+{
+    impPS2glDisable(pParam->cap);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1937–1942 */
+void recPS2glDisable(unsigned int cap)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_172));
+    ((anon_172*)pNode->aParams)->cap = cap;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glDisable;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1953–1953 */
+void plyPS2glDisableClientState(anon_171* pParam)
+{
+    impPS2glDisableClientState(pParam->array);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1957–1962 */
+void recPS2glDisableClientState(unsigned int array)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_171));
+    ((anon_171*)pNode->aParams)->array = array;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glDisableClientState;
+}
+
+void plyPS2glDrawArrays(anon_80* pParam)
 {
     _sceDmaTag* pDmaTag;
     tagListData* pListData;
-    tagGLprimbuf* pPrimBufTemp;
-    tagGLprimbuf* pPrimBuf;
-    pPrimBuf = pParam->pPrimBuf;
-    if (g_PS2glContext.eClippingFunction != -1)
+    if (pParam->pBuf == 0)
+        impPS2glDrawArrays(pParam->mode, pParam->first, pParam->count);
+    else
     {
-        if (g_PS2glContext.uiBoundingSphereBits & 3)
-            memcpy(g_PS2glContext.vObjectBS, pParam, 16);
-        impPS2glBegin(pParam->mode);
-        if (pParam->bFinalCompile)
+        if (g_PS2glContext.eClippingFunction != -1)
         {
-            if (pPrimBuf != 0 && pPrimBuf->tagGif.NLOOP > 0)
+            if (g_PS2glContext.nEnableBits & 0x4000)
             {
-                pPrimBufTemp = pPrimBuf;
-                if (g_PS2glContext.nTextureEnableBits & 8)
-                {
-                    if (pPrimBufTemp != 0)
-                    {
-                        do
-                        {
-                            PS2glVU1ListTexCoordsCubeMappingVectorTo2D(pPrimBufTemp);
-                            if (pPrimBufTemp->bEOP)
-                                break;
-                            pPrimBufTemp = pPrimBufTemp->pNext;
-                        } while (pPrimBufTemp != 0);
-                    }
-                }
-                pDmaTag = (_sceDmaTag*)g_PS2glContext.pVIFIBufTail++;
-                pDmaTag->qwc = 0;
+                if (g_gsContext.ModFlgs)
+                    GsUpdate();
+            }
+            else
+            {
+                if (g_PS2glContext.uiBoundingSphereBits & 3)
+                    memcpy(g_PS2glContext.vObjectBS, pParam, 16);
+                impPS2glBegin(pParam->mode);
+                impPS2glEnd();
+            }
+            if (VU1BufferFreeSpace() == 0)
+                impPS2glFlush();
+            pDmaTag = (_sceDmaTag*)g_PS2glContext.pVIFIBufTail++;
+            pDmaTag->qwc = 0;
+            if (pParam->count != 0)
+            {
                 pDmaTag->id = 0x50;
-                pDmaTag->next = &pPrimBuf->tagDma;
-                pDmaTag->p[1] = 0; pDmaTag->p[0] = 0;
-                if ((g_PS2glContext.uiStaticDisplayListBits & 0x1000800) == 0x1000800)
-                {
-                    pListData = g_PS2glContext.pCurListData;
-                    pListData->pSDLIndices[pListData->uiSDLIndicesSize++] = (int)pDmaTag;
-                    pListData->pSDLIndices[pListData->uiSDLIndicesSize++] = 0x80000000;
-                }
+                pDmaTag->next = (_sceDmaTag*)pParam->pBuf;
+            }
+            else
+            {
+                pDmaTag->id = 0x10;
+                pDmaTag->next = 0;
+            }
+            pDmaTag->p[1] = 0; pDmaTag->p[0] = 0;
+            if ((g_PS2glContext.uiStaticDisplayListBits & 0x1000800) == 0x1000800)
+            {
+                pListData = g_PS2glContext.pCurListData;
+                pListData->pSDLIndices[pListData->uiSDLIndicesSize++] = (int)pDmaTag;
+                pListData->pSDLIndices[pListData->uiSDLIndicesSize] = 0x81000000;
+                if (pParam->count == 0)
+                    pListData->pSDLIndices[pListData->uiSDLIndicesSize] |= 0x02000000;
+                pListData->uiSDLIndicesSize++;
             }
         }
-        else
-        {
-            PS2glExecuteListVBuf(pPrimBuf);
-        }
-        g_PS2glContext.bInBeginEndPair = 0;
     }
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 594–599 */
-void recPS2glArrayElement(int i)
+void recPS2glDrawArrays(unsigned int mode, int first, int count)
 {
+    anon_80* pParam;
     tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_166));
-    ((anon_166*)pNode->aParams)->i = i;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glArrayElement;
+    pNode = PS2glListAllocNode(sizeof(anon_80));
+    pParam = (anon_80*)pNode->aParams;
+    pParam->mode = mode;
+    pParam->first = first;
+    pParam->count = count;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glDrawArrays;
+    if (g_PS2glContext.VertexArray.stride < 0)
+    {
+        if (pParam->count != 0)
+        {
+            g_aDmaTag = PS2glListSaveParamSpace(PS2glInternalArraysSize(mode, count) << 4);
+            pParam->pBuf = (float (*)[4])g_aDmaTag;
+            *(quad*)vOldGifTag = *(quad*)g_PS2glContext.pGifTagBuf0;
+            g_PS2glContext.pGifTagBuf0->PRIM = Mode2Prim(mode);
+            g_PS2glContext.iPackageBSIndex = 0;
+            PS2glInternalDrawArrays(pParam->mode, pParam->first, pParam->count, g_PS2glContext.VertexArray.stride, 0);
+            memcpy(pParam, g_PS2glContext.vObjectBS, 16);
+            *(quad*)g_PS2glContext.pGifTagBuf0 = *(quad*)vOldGifTag;
+            pParam->packageCount = iDmaTagCount;
+        }
+        else
+        {
+            pParam->pBuf = (float (*)[4])0x10;
+            g_PS2glContext.iPackageBSIndex = 0;
+            pParam->packageCount = iDmaTagCount;
+        }
+    }
+    else
+    {
+        pParam->pBuf = 0;
+    }
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 590–590 */
-void plyPS2glArrayElement(anon_166* pParam)
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2070–2070 */
+void plyPS2glDrawBuffer(anon_84* pParam)
 {
-    impPS2glArrayElement(pParam->i);
+    impPS2glDrawBuffer(pParam->mode);
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 573–579 */
-void recPS2glAlphaFunc(unsigned int func, float ref)
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2074–2079 */
+void recPS2glDrawBuffer(unsigned int mode)
 {
-    anon_60* pParam;
     tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_60));
-    pParam = (anon_60*)pNode->aParams;
+    pNode = PS2glListAllocNode(sizeof(anon_84));
+    ((anon_84*)pNode->aParams)->mode = mode;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glDrawBuffer;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2085–2085 */
+void plyPS2glDrawElements(anon_11* pParam)
+{
+    impPS2glDrawElements(pParam->mode, pParam->count, pParam->type, pParam->indices);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2089–2097 */
+void recPS2glDrawElements(unsigned int mode, int count, unsigned int type, void* indices)
+{
+    tagGLlistnode* pNode;
+    anon_11* pParam;
+    int sz;
+    pNode = PS2glListAllocNode(sizeof(anon_11));
+    pParam = (anon_11*)pNode->aParams;
+    pParam->mode = mode;
+    pParam->count = count;
+    pParam->type = type;
+    sz = 0;
+    switch (type)
+    {
+    case 0x1400:
+        sz = 4;
+        break;
+    case 0x1401:
+        sz = 4;
+        break;
+    case 0x1402:
+        sz = 4;
+        break;
+    case 0x1403:
+        sz = 4;
+        break;
+    case 0x1404:
+        sz = 4;
+        break;
+    case 0x1405:
+        sz = 4;
+        break;
+    case 0x1406:
+        sz = 4;
+        break;
+    case 0x1407:
+        sz = 2;
+        break;
+    case 0x1408:
+        sz = 3;
+        break;
+    case 0x1409:
+        sz = 4;
+        break;
+    }
+    pParam->indices = (int)PS2glListSaveParam(indices, count * sz);
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glDrawElements;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2112–2112 */
+void plyPS2glDrawPixels(anon_5* pParam)
+{
+    impPS2glDrawPixels(pParam->width, pParam->height, pParam->format, pParam->type, pParam->pixels);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2116–2125 */
+void recPS2glDrawPixels(int width, int height, unsigned int format, unsigned int type, void* pixels)
+{
+    anon_5* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_5));
+    pParam = (anon_5*)pNode->aParams;
+    pParam->width = width;
+    pParam->height = height;
+    pParam->format = format;
+    pParam->type = type;
+    pParam->pixels = (int)pixels;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glDrawPixels;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2136–2136 */
+void plyPS2glEdgeFlag(anon_164* pParam)
+{
+    impPS2glEdgeFlag(pParam->flag);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2140–2145 */
+void recPS2glEdgeFlag(unsigned char flag)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_164));
+    ((anon_164*)pNode->aParams)->flag = flag;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glEdgeFlag;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2156–2156 */
+void plyPS2glEdgeFlagv(anon_161* pParam)
+{
+    impPS2glEdgeFlagv((void*)(pParam->flag));
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2160–2165 */
+void recPS2glEdgeFlagv(unsigned char* flag)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_161));
+    ((anon_161*)pNode->aParams)->flag = (int)flag;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glEdgeFlagv;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2176–2176 */
+void plyPS2glEnable(anon_159* pParam)
+{
+    impPS2glEnable(pParam->cap);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2180–2185 */
+void recPS2glEnable(unsigned int cap)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_159));
+    ((anon_159*)pNode->aParams)->cap = cap;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glEnable;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2196–2196 */
+void plyPS2glEnableClientState(anon_156* pParam)
+{
+    impPS2glEnableClientState(pParam->array);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2200–2205 */
+void recPS2glEnableClientState(unsigned int array)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_156));
+    ((anon_156*)pNode->aParams)->array = array;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glEnableClientState;
+}
+
+void recPS2glEnd(void)
+{
+    unsigned int mode;
+    if (g_PS2glContext.bFinalCompile)
+    {
+        mode = g_PS2glContext.pCurParamBegin->mode;
+        if (mode == 7)
+            PS2glListAssembleQuads();
+        PS2glListSaveBuffer(1);
+        if (g_PS2glContext.nTextureEnableBits & 8)
+        {
+            if (mode == 5 || mode == 6 || mode == 9)
+                g_PS2glContext.pCurParamBegin->mode = 4;
+        }
+    }
+    else
+    {
+        PS2glListSaveVBuf(1);
+    }
+    if (g_PS2glContext.uiBoundingSphereBits & 2)
+        PS2glComputeBSfromBB((float*)pLastBeginParam, g_PS2glContext.faObjectBoundingBox);
+    *(quad*)g_PS2glContext.pGifTagBuf0 = *(quad*)vOldGifTag;
+    g_PS2glContext.bInBeginEndPair = 0;
+}
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2257–2259 */
+void recPS2glEvalCoord1d(double u)
+{
+    recPS2glEvalCoord1f((float)u);
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2264–2266 */
+void recPS2glEvalCoord1dv(double* u)
+{
+    recPS2glEvalCoord1f((float)u[0]);
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2277–2277 */
+void plyPS2glEvalCoord1f(anon_186* pParam)
+{
+    impPS2glEvalCoord1f(pParam->u);
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+void recPS2glEvalCoord1f(float u)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_186));
+    ((anon_186*)pNode->aParams)->u = u;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glEvalCoord1f;
+}
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2297–2297 */
+void plyPS2glEvalCoord1fv(anon_183* pParam)
+{
+    impPS2glEvalCoord1fv((void*)(pParam->u));
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2301–2306 */
+void recPS2glEvalCoord1fv(float* u)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_183));
+    ((anon_183*)pNode->aParams)->u = (int)u;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glEvalCoord1fv;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2311–2313 */
+void recPS2glEvalCoord2d(double u, double v)
+{
+    recPS2glEvalCoord2f((float)u, (float)v);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2318–2320 */
+void recPS2glEvalCoord2dv(double* u)
+{
+    recPS2glEvalCoord2f((float)u[0], (float)u[1]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2332–2332 */
+void plyPS2glEvalCoord2f(anon_55* pParam)
+{
+    impPS2glEvalCoord2f(pParam->u, pParam->v);
+}
+
+#pragma auto_inline on
+void recPS2glEvalCoord2f(float u, float v)
+{
+    tagGLlistnode* pNode;
+    anon_55* pParam;
+    pNode = PS2glListAllocNode(sizeof(anon_55));
+    pParam = (anon_55*)pNode->aParams;
+    pParam->u = u;
+    pParam->v = v;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glEvalCoord2f;
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2347–2349 */
+void recPS2glEvalCoord2fv(float* u)
+{
+    recPS2glEvalCoord2f(u[0], u[1]);
+}
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2362–2362 */
+void plyPS2glEvalMesh1(anon_43* pParam)
+{
+    impPS2glEvalMesh1(pParam->mode, pParam->i1, pParam->i2);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2366–2373 */
+void recPS2glEvalMesh1(unsigned int mode, int i1, int i2)
+{
+    anon_43* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_43));
+    pParam = (anon_43*)pNode->aParams;
+    pParam->mode = mode;
+    pParam->i1 = i1;
+    pParam->i2 = i2;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glEvalMesh1;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2388–2388 */
+void plyPS2glEvalMesh2(anon_95* pParam)
+{
+    impPS2glEvalMesh2(pParam->mode, pParam->i1, pParam->i2, pParam->j1, pParam->j2);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2392–2401 */
+void recPS2glEvalMesh2(unsigned int mode, int i1, int i2, int j1, int j2)
+{
+    anon_95* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_95));
+    pParam = (anon_95*)pNode->aParams;
+    pParam->mode = mode;
+    pParam->i1 = i1;
+    pParam->i2 = i2;
+    pParam->j1 = j1;
+    pParam->j2 = j2;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glEvalMesh2;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2412–2412 */
+void plyPS2glEvalPoint1(anon_73* pParam)
+{
+    impPS2glEvalPoint1(pParam->i);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2416–2421 */
+void recPS2glEvalPoint1(int i)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_73));
+    ((anon_73*)pNode->aParams)->i = i;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glEvalPoint1;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2433–2433 */
+void plyPS2glEvalPoint2(anon_68* param0)
+{
+    impPS2glEvalPoint2(param0->i, param0->j);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2437–2443 */
+void recPS2glEvalPoint2(int i, int j)
+{
+    anon_68* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_68));
+    pParam = (anon_68*)pNode->aParams;
+    pParam->i = i;
+    pParam->j = j;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glEvalPoint2;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2455–2455 */
+void plyPS2glFogf(anon_15* param0)
+{
+    impPS2glFogf(param0->pname, param0->param);
+}
+
+#pragma auto_inline on
+void recPS2glFogf(unsigned int pname, float param)
+{
+    anon_15* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_15));
+    pParam = (anon_15*)pNode->aParams;
+    pParam->pname = pname;
+    pParam->param = param;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glFogf;
+}
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2477–2477 */
+void plyPS2glFogfv(anon_70* param0)
+{
+    impPS2glFogfv(param0->pname, param0->params);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2481–2492 */
+void recPS2glFogfv(unsigned int pname, float* params)
+{
+    tagGLlistnode* pNode;
+    anon_70* pParam;
+    if (pname == 0xB66)
+    {
+        pNode = PS2glListAllocNode(sizeof(anon_70));
+        pParam = (anon_70*)pNode->aParams;
+        pParam->pname = pname;
+        pParam->params = (int)PS2glListSaveParam(params, 16);
+        pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glFogfv;
+    }
+    else
+    {
+        recPS2glFogf(pname, *params);
+    }
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2504–2504 */
+void plyPS2glFogi(anon_23* param0)
+{
+    impPS2glFogi(param0->pname, param0->param);
+}
+
+#pragma auto_inline on
+void recPS2glFogi(unsigned int pname, int param)
+{
+    anon_23* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_23));
+    pParam = (anon_23*)pNode->aParams;
+    pParam->pname = pname;
+    pParam->param = param;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glFogi;
+}
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2526–2526 */
+void plyPS2glFogiv(anon_69* param0)
+{
+    impPS2glFogiv(param0->pname, param0->params);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2530–2541 */
+void recPS2glFogiv(unsigned int pname, int* params)
+{
+    tagGLlistnode* pNode;
+    anon_69* pParam;
+    if (pname == 0xB66)
+    {
+        pNode = PS2glListAllocNode(sizeof(anon_69));
+        pParam = (anon_69*)pNode->aParams;
+        pParam->pname = pname;
+        pParam->params = (int)PS2glListSaveParam(params, 16);
+        pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glFogiv;
+    }
+    else
+    {
+        recPS2glFogi(pname, *params);
+    }
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2552–2552 */
+void plyPS2glFrontFace(anon_163* pParam)
+{
+    impPS2glFrontFace(pParam->mode);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2556–2561 */
+void recPS2glFrontFace(unsigned int mode)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_163));
+    ((anon_163*)pNode->aParams)->mode = mode;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glFrontFace;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2577–2577 */
+void plyPS2glFrustum(anon_142* pParam)
+{
+    impPS2glFrustum(pParam->left, pParam->right, pParam->bottom, pParam->top, pParam->zNear, pParam->zFar);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2581–2597 */
+void recPS2glFrustum(double left, double right, double bottom, double top, double zNear, double zFar)
+{
+    unsigned int tmp;
+    anon_142* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_142) + 4);
+    tmp = (unsigned int)pNode; pNode = (tagGLlistnode*)(tmp + ((~tmp + 1) & 7));
+    pParam = (anon_142*)pNode->aParams;
+    pParam->left = left;
+    pParam->right = right;
+    pParam->bottom = bottom;
+    pParam->top = top;
+    pParam->zNear = zNear;
+    pParam->zFar = zFar;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glFrustum;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2609–2609 */
+void plyPS2glHint(anon_123* param0)
+{
+    impPS2glHint(param0->target, param0->mode);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2613–2619 */
+void recPS2glHint(unsigned int target, unsigned int mode)
+{
+    anon_123* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_123));
+    pParam = (anon_123*)pNode->aParams;
+    pParam->target = target;
+    pParam->mode = mode;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glHint;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2630–2630 */
+void plyPS2glIndexMask(anon_36* pParam)
+{
+    impPS2glIndexMask(pParam->mask);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2634–2639 */
+void recPS2glIndexMask(unsigned int mask)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_36));
+    ((anon_36*)pNode->aParams)->mask = mask;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glIndexMask;
+}
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2644–2646 */
+void recPS2glIndexd(double c)
+{
+    recPS2glIndexf((float)c);
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2651–2653 */
+void recPS2glIndexdv(double* c)
+{
+    recPS2glIndexf((float)c[0]);
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2664–2664 */
+void plyPS2glIndexf(anon_152* pParam)
+{
+    impPS2glIndexf(pParam->c);
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+void recPS2glIndexf(float c)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_152));
+    ((anon_152*)pNode->aParams)->c = c;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glIndexf;
+}
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2684–2684 */
+void plyPS2glIndexfv(anon_148* pParam)
+{
+    impPS2glIndexfv((void*)(pParam->c));
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2688–2693 */
+void recPS2glIndexfv(float* c)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_148));
+    ((anon_148*)pNode->aParams)->c = (int)c;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glIndexfv;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2704–2704 */
+void plyPS2glIndexi(anon_146* pParam)
+{
+    impPS2glIndexi(pParam->c);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2708–2713 */
+void recPS2glIndexi(int c)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_146));
+    ((anon_146*)pNode->aParams)->c = c;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glIndexi;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2724–2724 */
+void plyPS2glIndexiv(anon_141* pParam)
+{
+    impPS2glIndexiv((void*)(pParam->c));
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2728–2733 */
+void recPS2glIndexiv(int* c)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_141));
+    ((anon_141*)pNode->aParams)->c = (int)c;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glIndexiv;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2744–2744 */
+void plyPS2glIndexs(anon_140* pParam)
+{
+    impPS2glIndexs(pParam->c);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2748–2753 */
+void recPS2glIndexs(short c)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_140));
+    ((anon_140*)pNode->aParams)->c = c;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glIndexs;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2764–2764 */
+void plyPS2glIndexsv(anon_137* pParam)
+{
+    impPS2glIndexsv((void*)(pParam->c));
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2768–2773 */
+void recPS2glIndexsv(short* c)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_137));
+    ((anon_137*)pNode->aParams)->c = (int)c;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glIndexsv;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2784–2784 */
+void plyPS2glIndexub(anon_135* pParam)
+{
+    impPS2glIndexub(pParam->c);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2788–2793 */
+void recPS2glIndexub(unsigned char c)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_135));
+    ((anon_135*)pNode->aParams)->c = c;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glIndexub;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2804–2804 */
+void plyPS2glIndexubv(anon_130* pParam)
+{
+    impPS2glIndexubv((void*)(pParam->c));
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2808–2813 */
+void recPS2glIndexubv(unsigned char* c)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_130));
+    ((anon_130*)pNode->aParams)->c = (int)c;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glIndexubv;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2818–2821 */
+void recPS2glInitNames(void)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(0);
+    pNode->pfns.pfnPlayVoid = impPS2glInitNames;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2833–2833 */
+void plyPS2glLightModelf(anon_6* param0)
+{
+    impPS2glLightModelf(param0->pname, param0->param);
+}
+
+#pragma auto_inline on
+void recPS2glLightModelf(unsigned int pname, float param)
+{
+    anon_6* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_6));
+    pParam = (anon_6*)pNode->aParams;
+    pParam->pname = pname;
+    pParam->param = param;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLightModelf;
+}
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2855–2855 */
+void plyPS2glLightModelfv(anon_47* param0)
+{
+    impPS2glLightModelfv(param0->pname, param0->params);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2859–2870 */
+void recPS2glLightModelfv(unsigned int pname, float* params)
+{
+    tagGLlistnode* pNode;
+    anon_47* pParam;
+    if (pname == 0xB53)
+    {
+        pNode = PS2glListAllocNode(sizeof(anon_47));
+        pParam = (anon_47*)pNode->aParams;
+        pParam->pname = pname;
+        pParam->params = (int)PS2glListSaveParam(params, 16);
+        pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLightModelfv;
+    }
+    else
+    {
+        recPS2glLightModelf(pname, *params);
+    }
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2882–2882 */
+void plyPS2glLightModeli(anon_74* param0)
+{
+    impPS2glLightModeli(param0->pname, param0->param);
+}
+
+#pragma auto_inline on
+void recPS2glLightModeli(unsigned int pname, int param)
+{
+    anon_74* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_74));
+    pParam = (anon_74*)pNode->aParams;
+    pParam->pname = pname;
+    pParam->param = param;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLightModeli;
+}
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2904–2904 */
+void plyPS2glLightModeliv(anon_105* param0)
+{
+    impPS2glLightModeliv(param0->pname, param0->params);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2908–2920 */
+void recPS2glLightModeliv(unsigned int pname, int* params)
+{
+    tagGLlistnode* pNode;
+    anon_105* pParam;
+    if (pname == 0xB53)
+    {
+        pNode = PS2glListAllocNode(sizeof(anon_105));
+        pParam = (anon_105*)pNode->aParams;
+        pParam->pname = pname;
+        pParam->params = (int)PS2glListSaveParam(params, 16);
+        pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLightModeliv;
+    }
+    else
+    {
+        recPS2glLightModeli(pname, *params);
+    }
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2933–2933 */
+void plyPS2glLightf(anon_77* pParam)
+{
+    impPS2glLightf(pParam->light, pParam->pname, pParam->param);
+}
+
+#pragma auto_inline on
+void recPS2glLightf(unsigned int light, unsigned int pname, float param)
+{
+    anon_77* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_77));
+    pParam = (anon_77*)pNode->aParams;
+    pParam->light = light;
+    pParam->pname = pname;
+    pParam->param = param;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLightf;
+}
+#pragma auto_inline reset
+
+void plyPS2glLightfv(anon_118* pParam)
+{
+    float vParam[4];
+    memcpy(vParam, pParam->params, sizeof(vParam));
+    impPS2glLightfv(pParam->light, pParam->pname, vParam);
+}
+
+#pragma auto_inline on
+void recPS2glLightfv(unsigned int light, unsigned int pname, float* params)
+{
+    anon_118* pParam;
+    tagGLlistnode* pNode;
+    switch (pname)
+    {
+    case 0x1200:
+    case 0x1201:
+    case 0x1202:
+    case 0x1203:
+    case 0x1204:
+        pNode = PS2glListAllocNode(sizeof(anon_118));
+        pParam = (anon_118*)pNode->aParams;
+        pParam->light = light;
+        pParam->pname = pname;
+        memcpy(pParam->params, params, sizeof(pParam->params));
+        pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLightfv;
+        break;
+    default:
+        recPS2glLightf(light, pname, *params);
+        break;
+    }
+}
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2996–2996 */
+void plyPS2glLighti(anon_61* pParam)
+{
+    impPS2glLighti(pParam->light, pParam->pname, pParam->param);
+}
+
+#pragma auto_inline on
+void recPS2glLighti(unsigned int light, unsigned int pname, int param)
+{
+    anon_61* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_61));
+    pParam = (anon_61*)pNode->aParams;
+    pParam->light = light;
+    pParam->pname = pname;
+    pParam->param = param;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLighti;
+}
+#pragma auto_inline reset
+
+void recPS2glLightiv(unsigned int light, unsigned int pname, int* params)
+{
+    float fparams[4];
+    switch (pname)
+    {
+    case 0x1200:
+    case 0x1201:
+    case 0x1202:
+    case 0x1203:
+    case 0x1204:
+        fparams[0] = (float)params[0];
+        fparams[1] = (float)params[1];
+        fparams[2] = (float)params[2];
+        fparams[3] = (float)params[3];
+        recPS2glLightfv(light, pname, fparams);
+        return;
+    default:
+        recPS2glLighti(light, pname, *params);
+        break;
+    }
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3057–3057 */
+void plyPS2glLineStipple(anon_48* param0)
+{
+    impPS2glLineStipple(param0->factor, param0->pattern);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3061–3067 */
+void recPS2glLineStipple(int factor, unsigned short pattern)
+{
+    anon_48* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_48));
+    pParam = (anon_48*)pNode->aParams;
+    pParam->factor = factor;
+    pParam->pattern = pattern;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLineStipple;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3078–3078 */
+void plyPS2glLineWidth(anon_87* pParam)
+{
+    impPS2glLineWidth(pParam->width);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3082–3087 */
+void recPS2glLineWidth(float width)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_87));
+    ((anon_87*)pNode->aParams)->width = width;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLineWidth;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3098–3098 */
+void plyPS2glListBase(anon_86* pParam)
+{
+    impPS2glListBase(pParam->base);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3102–3107 */
+void recPS2glListBase(unsigned int base)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_86));
+    ((anon_86*)pNode->aParams)->base = base;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glListBase;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3112–3115 */
+void recPS2glLoadIdentity(void)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(0);
+    pNode->pfns.pfnPlayVoid = impPS2glLoadIdentity;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3126–3126 */
+void plyPS2glLoadMatrixd(anon_160* pParam)
+{
+    impPS2glLoadMatrixd((void*)(pParam->m));
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3130–3135 */
+void recPS2glLoadMatrixd(double* m)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_160));
+    ((anon_160*)pNode->aParams)->m = (int)PS2glListSaveParam(m, 0x80);
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLoadMatrixd;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3146–3146 */
+void plyPS2glLoadMatrixf(anon_168* pParam)
+{
+    impPS2glLoadMatrixf((void*)(pParam->m));
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3150–3155 */
+void recPS2glLoadMatrixf(float* m)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_168));
+    ((anon_168*)pNode->aParams)->m = (int)PS2glListSaveParam(m, 0x40);
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLoadMatrixf;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3166–3166 */
+void plyPS2glLoadName(anon_177* pParam)
+{
+    impPS2glLoadName(pParam->name);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3170–3175 */
+void recPS2glLoadName(unsigned int name)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_177));
+    ((anon_177*)pNode->aParams)->name = name;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLoadName;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3186–3186 */
+void plyPS2glLogicOp(anon_174* pParam)
+{
+    impPS2glLogicOp(pParam->opcode);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3190–3195 */
+void recPS2glLogicOp(unsigned int opcode)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_174));
+    ((anon_174*)pNode->aParams)->opcode = opcode;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLogicOp;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3211–3211 */
+void plyPS2glMap1d(anon_167* pParam)
+{
+    impPS2glMap1d(pParam->target, pParam->u1, pParam->u2, pParam->stride, pParam->order, pParam->points);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3215–3231 */
+void recPS2glMap1d(unsigned int target, double u1, double u2, int stride, int order, double* points)
+{
+    unsigned int tmp;
+    anon_167* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_167) + 4);
+    tmp = (unsigned int)pNode; tmp = tmp + ((~tmp + 1) & 7); pNode = (tagGLlistnode*)tmp;
+    pParam = (anon_167*)pNode->aParams;
+    pParam->target = target;
+    pParam->u1 = u1;
+    pParam->u2 = u2;
+    pParam->stride = stride;
+    pParam->order = order;
+    pParam->points = (int)PS2glListSaveParam(points, stride * order * sizeof(double));
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glMap1d;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3247–3247 */
+void plyPS2glMap1f(anon_3* pParam)
+{
+    impPS2glMap1f(pParam->target, pParam->u1, pParam->u2, pParam->stride, pParam->order, pParam->points);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3251–3261 */
+void recPS2glMap1f(unsigned int target, float u1, float u2, int stride, int order, float* points)
+{
+    tagGLlistnode* pNode;
+    anon_3* pParam;
+    pNode = PS2glListAllocNode(sizeof(anon_3));
+    pParam = (anon_3*)pNode->aParams;
+    pParam->target = target;
+    pParam->u1 = u1;
+    pParam->u2 = u2;
+    pParam->stride = stride;
+    pParam->order = order;
+    pParam->points = (int)PS2glListSaveParam(points, stride * order * sizeof(float));
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glMap1f;
+}
+
+void plyPS2glMap2d(anon_44* pParam)
+{
+    impPS2glMap2d(pParam->target, pParam->u1, pParam->u2, pParam->ustride, pParam->uorder, pParam->v1, pParam->v2, pParam->vstride, pParam->vorder, (double*)pParam->points);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3285–3305 */
+void recPS2glMap2d(unsigned int target, double u1, double u2, int ustride, int uorder, double v1, double v2, int vstride, int vorder, double* points)
+{
+    unsigned int tmp;
+    anon_44* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_44) + 4);
+    tmp = (unsigned int)pNode; tmp = tmp + ((~tmp + 1) & 7); pNode = (tagGLlistnode*)tmp;
+    pParam = (anon_44*)pNode->aParams;
+    pParam->target = target;
+    pParam->u1 = u1;
+    pParam->u2 = u2;
+    pParam->ustride = ustride;
+    pParam->uorder = uorder;
+    pParam->v1 = v1;
+    pParam->v2 = v2;
+    pParam->vstride = vstride;
+    pParam->vorder = vorder;
+    pParam->points = (int)PS2glListSaveParam(points, vstride * vorder * sizeof(double));
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glMap2d;
+}
+
+void plyPS2glMap2f(anon_94* pParam)
+{
+    impPS2glMap2f(pParam->target, pParam->u1, pParam->u2, pParam->ustride, pParam->uorder, pParam->v1, pParam->v2, pParam->vstride, pParam->vorder, *(float**)&pParam->points);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3329–3343 */
+void recPS2glMap2f(unsigned int target, float u1, float u2, int ustride, int uorder, float v1, float v2, int vstride, int vorder, float* points)
+{
+    tagGLlistnode* pNode;
+    anon_94* pParam;
+    pNode = PS2glListAllocNode(sizeof(anon_94));
+    pParam = (anon_94*)pNode->aParams;
+    pParam->target = target;
+    pParam->u1 = u1;
+    pParam->u2 = u2;
+    pParam->ustride = ustride;
+    pParam->uorder = uorder;
+    pParam->v1 = v1;
+    pParam->v2 = v2;
+    pParam->vstride = vstride;
+    pParam->vorder = vorder;
+    pParam->points = (int)PS2glListSaveParam(points, vstride * vorder * sizeof(float));
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glMap2f;
+}
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3348–3350 */
+void recPS2glMapGrid1d(int un, double u1, double u2)
+{
+    recPS2glMapGrid1f(un, (float)u1, (float)u2);
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3363–3363 */
+void plyPS2glMapGrid1f(anon_88* pParam)
+{
+    impPS2glMapGrid1f(pParam->un, pParam->u1, pParam->u2);
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+void recPS2glMapGrid1f(int un, float u1, float u2)
+{
+    tagGLlistnode* pNode;
+    anon_88* pParam;
+    pNode = PS2glListAllocNode(sizeof(anon_88));
+    pParam = (anon_88*)pNode->aParams;
+    pParam->un = un;
+    pParam->u1 = u1;
+    pParam->u2 = u2;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glMapGrid1f;
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3379–3381 */
+void recPS2glMapGrid2d(int un, double u1, double u2, int vn, double v1, double v2)
+{
+    recPS2glMapGrid2f(un, (float)u1, (float)u2, vn, (float)v1, (float)v2);
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3397–3397 */
+void plyPS2glMapGrid2f(anon_113* pParam)
+{
+    impPS2glMapGrid2f(pParam->un, pParam->u1, pParam->u2, pParam->vn, pParam->v1, pParam->v2);
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+void recPS2glMapGrid2f(int un, float u1, float u2, int vn, float v1, float v2)
+{
+    tagGLlistnode* pNode;
+    anon_113* pParam;
+    pNode = PS2glListAllocNode(sizeof(anon_113));
+    pParam = (anon_113*)pNode->aParams;
+    pParam->un = un;
+    pParam->u1 = u1;
+    pParam->u2 = u2;
+    pParam->vn = vn;
+    pParam->v1 = v1;
+    pParam->v2 = v2;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glMapGrid2f;
+}
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3424–3424 */
+void plyPS2glMaterialf(anon_52* pParam)
+{
+    impPS2glMaterialf(pParam->face, pParam->pname, pParam->param);
+}
+
+#pragma auto_inline on
+void recPS2glMaterialf(unsigned int face, unsigned int pname, float param)
+{
+    anon_52* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_52));
+    pParam = (anon_52*)pNode->aParams;
+    pParam->face = face;
+    pParam->pname = pname;
+    pParam->param = param;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glMaterialf;
+}
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3448–3448 */
+void plyPS2glMaterialfv(anon_134* pParam)
+{
+    impPS2glMaterialfv(pParam->face, pParam->pname, pParam->params);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3452–3466 */
+void recPS2glMaterialfv(unsigned int face, unsigned int pname, float* params)
+{
+    tagGLlistnode* pNode;
+    anon_134* pParam;
+    if (pname == 0x1601)
+    {
+        recPS2glMaterialf(face, pname, *params);
+    }
+    else
+    {
+        pNode = PS2glListAllocNode(sizeof(anon_134));
+        pParam = (anon_134*)pNode->aParams;
+        pParam->face = face;
+        pParam->pname = pname;
+        pParam->params = (int)PS2glListSaveParam(params, 16);
+        pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glMaterialfv;
+    }
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3479–3479 */
+void plyPS2glMateriali(anon_35* pParam)
+{
+    impPS2glMateriali(pParam->face, pParam->pname, pParam->param);
+}
+
+#pragma auto_inline on
+void recPS2glMateriali(unsigned int face, unsigned int pname, int param)
+{
+    anon_35* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_35));
+    pParam = (anon_35*)pNode->aParams;
+    pParam->face = face;
+    pParam->pname = pname;
+    pParam->param = param;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glMateriali;
+}
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3503–3503 */
+void plyPS2glMaterialiv(anon_115* pParam)
+{
+    impPS2glMaterialiv(pParam->face, pParam->pname, pParam->params);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3507–3521 */
+void recPS2glMaterialiv(unsigned int face, unsigned int pname, int* params)
+{
+    tagGLlistnode* pNode;
+    anon_115* pParam;
+    if (pname == 0x1601)
+    {
+        recPS2glMateriali(face, pname, *params);
+    }
+    else
+    {
+        pNode = PS2glListAllocNode(sizeof(anon_115));
+        pParam = (anon_115*)pNode->aParams;
+        pParam->face = face;
+        pParam->pname = pname;
+        pParam->params = (int)PS2glListSaveParam(params, 16);
+        pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glMaterialiv;
+    }
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3532–3532 */
+void plyPS2glMatrixMode(anon_108* pParam)
+{
+    impPS2glMatrixMode(pParam->mode);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3536–3541 */
+void recPS2glMatrixMode(unsigned int mode)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_108));
+    ((anon_108*)pNode->aParams)->mode = mode;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glMatrixMode;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3552–3552 */
+void plyPS2glMultMatrixd(anon_107* pParam)
+{
+    impPS2glMultMatrixd((void*)(pParam->m));
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3556–3561 */
+void recPS2glMultMatrixd(double* m)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_107));
+    ((anon_107*)pNode->aParams)->m = (int)PS2glListSaveParam(m, 0x80);
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glMultMatrixd;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3572–3572 */
+void plyPS2glMultMatrixf(anon_117* pParam)
+{
+    impPS2glMultMatrixf((void*)(pParam->m));
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3576–3581 */
+void recPS2glMultMatrixf(float* m)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_117));
+    ((anon_117*)pNode->aParams)->m = (int)PS2glListSaveParam(m, 0x40);
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glMultMatrixf;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3593–3593 */
+void plyPS2glNewList(anon_63* param0)
+{
+    impPS2glNewList(param0->list, param0->mode);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3597–3603 */
+void recPS2glNewList(unsigned int list, unsigned int mode)
+{
+    anon_63* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_63));
+    pParam = (anon_63*)pNode->aParams;
+    pParam->list = list;
+    pParam->mode = mode;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glNewList;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3613–3615 */
+void recPS2glNormal3b(signed char nx, signed char ny, signed char nz)
+{
+    g_PS2glContext.vlistNormal[0] = (float)nx / 127.0f; g_PS2glContext.vlistNormal[1] = (float)ny / 127.0f; g_PS2glContext.vlistNormal[2] = (float)nz / 127.0f; g_PS2glContext.vlistNormal[3] = 0.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(2, (float (*)[4])g_PS2glContext.vlistNormal);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3618–3620 */
+void recPS2glNormal3s(short nx, short ny, short nz)
+{
+    g_PS2glContext.vlistNormal[0] = (float)nx / 32767.0f; g_PS2glContext.vlistNormal[1] = (float)ny / 32767.0f; g_PS2glContext.vlistNormal[2] = (float)nz / 32767.0f; g_PS2glContext.vlistNormal[3] = 0.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(2, (float (*)[4])g_PS2glContext.vlistNormal);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3623–3625 */
+void recPS2glNormal3i(int nx, int ny, int nz)
+{
+    g_PS2glContext.vlistNormal[0] = (float)nx / 2147483648.0f; g_PS2glContext.vlistNormal[1] = (float)ny / 2147483648.0f; g_PS2glContext.vlistNormal[2] = (float)nz / 2147483648.0f; g_PS2glContext.vlistNormal[3] = 0.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(2, (float (*)[4])g_PS2glContext.vlistNormal);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3628–3630 */
+void recPS2glNormal3d(double nx, double ny, double nz)
+{
+    g_PS2glContext.vlistNormal[0] = (float)nx; g_PS2glContext.vlistNormal[1] = (float)ny; g_PS2glContext.vlistNormal[2] = (float)nz; g_PS2glContext.vlistNormal[3] = 0.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(2, (float (*)[4])g_PS2glContext.vlistNormal);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3633–3643 */
+void recPS2glNormal3f(float nx, float ny, float nz)
+{
+    g_PS2glContext.vlistNormal[0] = nx; g_PS2glContext.vlistNormal[1] = ny; g_PS2glContext.vlistNormal[2] = nz; g_PS2glContext.vlistNormal[3] = 0.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(2, (float (*)[4])g_PS2glContext.vlistNormal);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3646–3648 */
+void recPS2glNormal3bv(signed char* v)
+{
+    float x, y, z;
+    z = (float)v[2] / 127.0f; y = (float)v[1] / 127.0f; x = (float)v[0] / 127.0f;
+    g_PS2glContext.vlistNormal[0] = x; g_PS2glContext.vlistNormal[1] = y; g_PS2glContext.vlistNormal[2] = z; g_PS2glContext.vlistNormal[3] = 0.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(2, (float (*)[4])g_PS2glContext.vlistNormal);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3651–3653 */
+void recPS2glNormal3sv(short* v)
+{
+    float x, y, z;
+    z = (float)v[2] / 32767.0f; y = (float)v[1] / 32767.0f; x = (float)v[0] / 32767.0f;
+    g_PS2glContext.vlistNormal[0] = x; g_PS2glContext.vlistNormal[1] = y; g_PS2glContext.vlistNormal[2] = z; g_PS2glContext.vlistNormal[3] = 0.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(2, (float (*)[4])g_PS2glContext.vlistNormal);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3656–3658 */
+void recPS2glNormal3iv(int* v)
+{
+    float z = (float)v[2] / 2147483648.0f, y = (float)v[1] / 2147483648.0f, x = (float)v[0] / 2147483648.0f;
+    g_PS2glContext.vlistNormal[0] = x; g_PS2glContext.vlistNormal[1] = y; g_PS2glContext.vlistNormal[2] = z; g_PS2glContext.vlistNormal[3] = 0.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(2, (float (*)[4])g_PS2glContext.vlistNormal);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3661–3663 */
+void recPS2glNormal3dv(double* v)
+{
+    float x, y, z;
+    z = (float)v[2]; y = (float)v[1]; x = (float)v[0];
+    g_PS2glContext.vlistNormal[0] = x; g_PS2glContext.vlistNormal[1] = y; g_PS2glContext.vlistNormal[2] = z; g_PS2glContext.vlistNormal[3] = 0.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(2, (float (*)[4])g_PS2glContext.vlistNormal);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3666–3676 */
+void recPS2glNormal3fv(float* v)
+{
+    g_PS2glContext.vlistNormal[0] = v[0]; g_PS2glContext.vlistNormal[1] = v[1]; g_PS2glContext.vlistNormal[2] = v[2]; g_PS2glContext.vlistNormal[3] = 0.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(2, (float (*)[4])g_PS2glContext.vlistNormal);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3698–3700 */
+void plyPS2glOrtho(anon_82* pParam)
+{
+    impPS2glOrtho(pParam->left, pParam->right, pParam->bottom, pParam->top, pParam->zNear, pParam->zFar);
+}
+
+void recPS2glOrtho(float left, float right, float bottom, float top, float zNear, float zFar)
+{
+    unsigned int tmp;
+    anon_82* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_82) + 4);
+    tmp = (unsigned int)pNode; tmp = tmp + ((~tmp + 1) & 7); pNode = (tagGLlistnode*)tmp;
+    pParam = (anon_82*)pNode->aParams;
+    pParam->left = left;
+    pParam->right = right;
+    pParam->bottom = bottom;
+    pParam->top = top;
+    pParam->zNear = zNear;
+    pParam->zFar = zFar;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glOrtho;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3730–3730 */
+void plyPS2glPassThrough(anon_110* pParam)
+{
+    impPS2glPassThrough(pParam->token);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3734–3739 */
+void recPS2glPassThrough(float token)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_110));
+    ((anon_110*)pNode->aParams)->token = token;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPassThrough;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3752–3752 */
+void plyPS2glPixelMapfv(anon_51* pParam)
+{
+    impPS2glPixelMapfv(pParam->map, pParam->mapsize, pParam->values);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3756–3763 */
+void recPS2glPixelMapfv(unsigned int map, int mapsize, float* values)
+{
+    tagGLlistnode* pNode;
+    anon_51* pParam;
+    pNode = PS2glListAllocNode(sizeof(anon_51));
+    pParam = (anon_51*)pNode->aParams;
+    pParam->map = map;
+    pParam->mapsize = mapsize;
+    pParam->values = (int)PS2glListSaveParam(values, mapsize * sizeof(float));
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPixelMapfv;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3776–3776 */
+void plyPS2glPixelMapuiv(anon_12* pParam)
+{
+    impPS2glPixelMapuiv(pParam->map, pParam->mapsize, pParam->values);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3780–3787 */
+void recPS2glPixelMapuiv(unsigned int map, int mapsize, unsigned int* values)
+{
+    tagGLlistnode* pNode;
+    anon_12* pParam;
+    pNode = PS2glListAllocNode(sizeof(anon_12));
+    pParam = (anon_12*)pNode->aParams;
+    pParam->map = map;
+    pParam->mapsize = mapsize;
+    pParam->values = (int)PS2glListSaveParam(values, mapsize * sizeof(unsigned int));
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPixelMapuiv;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3800–3800 */
+void plyPS2glPixelMapusv(anon_59* pParam)
+{
+    impPS2glPixelMapusv(pParam->map, pParam->mapsize, pParam->values);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3804–3811 */
+void recPS2glPixelMapusv(unsigned int map, int mapsize, unsigned short* values)
+{
+    tagGLlistnode* pNode;
+    anon_59* pParam;
+    pNode = PS2glListAllocNode(sizeof(anon_59));
+    pParam = (anon_59*)pNode->aParams;
+    pParam->map = map;
+    pParam->mapsize = mapsize;
+    pParam->values = (int)PS2glListSaveParam(values, mapsize * sizeof(unsigned short));
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPixelMapusv;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3823–3823 */
+void plyPS2glPixelTransferf(anon_4* param0)
+{
+    impPS2glPixelTransferf(param0->pname, param0->param);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3827–3833 */
+void recPS2glPixelTransferf(unsigned int pname, float param)
+{
+    anon_4* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_4));
+    pParam = (anon_4*)pNode->aParams;
+    pParam->pname = pname;
+    pParam->param = param;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPixelTransferf;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3845–3845 */
+void plyPS2glPixelTransferi(anon_54* param0)
+{
+    impPS2glPixelTransferi(param0->pname, param0->param);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3849–3855 */
+void recPS2glPixelTransferi(unsigned int pname, int param)
+{
+    anon_54* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_54));
+    pParam = (anon_54*)pNode->aParams;
+    pParam->pname = pname;
+    pParam->param = param;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPixelTransferi;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3867–3867 */
+void plyPS2glPixelZoom(anon_0* pParam)
+{
+    impPS2glPixelZoom(pParam->xfactor, pParam->yfactor);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3871–3877 */
+void recPS2glPixelZoom(float xfactor, float yfactor)
+{
+    anon_0* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_0));
+    pParam = (anon_0*)pNode->aParams;
+    pParam->xfactor = xfactor;
+    pParam->yfactor = yfactor;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPixelZoom;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3888–3888 */
+void plyPS2glPointSize(anon_124* pParam)
+{
+    impPS2glPointSize(pParam->size);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3892–3897 */
+void recPS2glPointSize(float size)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_124));
+    ((anon_124*)pNode->aParams)->size = size;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPointSize;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3909–3909 */
+void plyPS2glPolygonMode(anon_50* param0)
+{
+    impPS2glPolygonMode(param0->face, param0->mode);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3913–3919 */
+void recPS2glPolygonMode(unsigned int face, unsigned int mode)
+{
+    anon_50* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_50));
+    pParam = (anon_50*)pNode->aParams;
+    pParam->face = face;
+    pParam->mode = mode;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPolygonMode;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3931–3931 */
+void plyPS2glPolygonOffset(anon_92* pParam)
+{
+    impPS2glPolygonOffset(pParam->factor, pParam->units);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3935–3941 */
+void recPS2glPolygonOffset(float factor, float units)
+{
+    anon_92* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_92));
+    pParam = (anon_92*)pNode->aParams;
+    pParam->factor = factor;
+    pParam->units = units;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPolygonOffset;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3952–3952 */
+void plyPS2glPolygonStipple(anon_184* pParam)
+{
+    impPS2glPolygonStipple((void*)(pParam->mask));
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3956–3961 */
+void recPS2glPolygonStipple(unsigned char* mask)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_184));
+    ((anon_184*)pNode->aParams)->mask = (int)PS2glListSaveParam(mask, 0x400);
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPolygonStipple;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3966–3969 */
+void recPS2glPopAttrib(void)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(0);
+    pNode->pfns.pfnPlayVoid = impPS2glPopAttrib;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3974–3977 */
+void recPS2glPopClientAttrib(void)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(0);
+    pNode->pfns.pfnPlayVoid = impPS2glPopClientAttrib;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3982–3985 */
+void recPS2glPopMatrix(void)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(0);
+    pNode->pfns.pfnPlayVoid = impPS2glPopMatrix;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3990–3993 */
+void recPS2glPopName(void)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(0);
+    pNode->pfns.pfnPlayVoid = impPS2glPopName;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4006–4006 */
+void plyPS2glPrioritizeTextures(anon_67* pParam)
+{
+    impPS2glPrioritizeTextures(pParam->n, pParam->textures, pParam->priorities);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4010–4017 */
+void recPS2glPrioritizeTextures(int n, unsigned int* textures, float* priorities)
+{
+    tagGLlistnode* pNode;
+    anon_67* pParam;
+    pNode = PS2glListAllocNode(sizeof(anon_67));
+    pParam = (anon_67*)pNode->aParams;
+    pParam->n = n;
+    pParam->textures = (int)PS2glListSaveParam(textures, n * sizeof(unsigned int));
+    pParam->priorities = (int)PS2glListSaveParam(priorities, n * sizeof(float));
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPrioritizeTextures;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4028–4028 */
+void plyPS2glPushAttrib(anon_1* pParam)
+{
+    impPS2glPushAttrib(pParam->mask);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4032–4037 */
+void recPS2glPushAttrib(unsigned int mask)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_1));
+    ((anon_1*)pNode->aParams)->mask = mask;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPushAttrib;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4048–4048 */
+void plyPS2glPushClientAttrib(anon_189* pParam)
+{
+    impPS2glPushClientAttrib(pParam->mask);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4052–4057 */
+void recPS2glPushClientAttrib(unsigned int mask)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_189));
+    ((anon_189*)pNode->aParams)->mask = mask;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPushClientAttrib;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4062–4065 */
+void recPS2glPushMatrix(void)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(0);
+    pNode->pfns.pfnPlayVoid = impPS2glPushMatrix;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4076–4076 */
+void plyPS2glPushName(anon_85* pParam)
+{
+    impPS2glPushName(pParam->name);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4080–4085 */
+void recPS2glPushName(unsigned int name)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_85));
+    ((anon_85*)pNode->aParams)->name = name;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPushName;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4090–4092 */
+void recPS2glRasterPos2d(double x, double y)
+{
+    recPS2glRasterPos2f(x, y);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4097–4099 */
+void recPS2glRasterPos2dv(double* v)
+{
+    recPS2glRasterPos2f((float)v[0], (float)v[1]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4111–4111 */
+void plyPS2glRasterPos2f(anon_13* pParam)
+{
+    impPS2glRasterPos2f(pParam->x, pParam->y);
+}
+
+#pragma auto_inline on
+void recPS2glRasterPos2f(float x, float y)
+{
+    tagGLlistnode* pNode;
+    anon_13* pParam;
+    pNode = PS2glListAllocNode(sizeof(anon_13));
+    pParam = (anon_13*)pNode->aParams;
+    pParam->x = x;
+    pParam->y = y;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRasterPos2f;
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4126–4128 */
+void recPS2glRasterPos2fv(float* v)
+{
+    recPS2glRasterPos2f(v[0], v[1]);
+}
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4140–4140 */
+void plyPS2glRasterPos2i(anon_62* param0)
+{
+    impPS2glRasterPos2i(param0->x, param0->y);
+}
+
+#pragma auto_inline on
+void recPS2glRasterPos2i(int x, int y)
+{
+    anon_62* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_62));
+    pParam = (anon_62*)pNode->aParams;
+    pParam->x = x;
+    pParam->y = y;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRasterPos2i;
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4155–4157 */
+void recPS2glRasterPos2iv(int* v)
+{
+    recPS2glRasterPos2i(v[0], v[1]);
+}
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4169–4169 */
+void plyPS2glRasterPos2s(anon_45* param0)
+{
+    impPS2glRasterPos2s(param0->x, param0->y);
+}
+
+#pragma auto_inline on
+void recPS2glRasterPos2s(short x, short y)
+{
+    anon_45* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_45));
+    pParam = (anon_45*)pNode->aParams;
+    pParam->x = x;
+    pParam->y = y;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRasterPos2s;
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4184–4186 */
+void recPS2glRasterPos2sv(short* v)
+{
+    recPS2glRasterPos2s(v[0], v[1]);
+}
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4191–4193 */
+void recPS2glRasterPos3d(double x, double y, double z)
+{
+    recPS2glRasterPos3f((float)x, (float)y, (float)z);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4198–4200 */
+void recPS2glRasterPos3dv(double* v)
+{
+    recPS2glRasterPos3f((float)v[0], (float)v[1], (float)v[2]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4213–4213 */
+void plyPS2glRasterPos3f(anon_76* pParam)
+{
+    impPS2glRasterPos3f(pParam->x, pParam->y, pParam->z);
+}
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4217–4224 */
+void recPS2glRasterPos3f(float x, float y, float z)
+{
+    tagGLlistnode* pNode;
+    anon_76* pParam;
+    pNode = PS2glListAllocNode(sizeof(anon_76));
+    pParam = (anon_76*)pNode->aParams;
+    pParam->x = x;
+    pParam->y = y;
+    pParam->z = z;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRasterPos3f;
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4229–4231 */
+void recPS2glRasterPos3fv(float* v)
+{
+    recPS2glRasterPos3f(v[0], v[1], v[2]);
+}
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4244–4244 */
+void plyPS2glRasterPos3i(anon_34* pParam)
+{
+    impPS2glRasterPos3i(pParam->x, pParam->y, pParam->z);
+}
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4248–4255 */
+void recPS2glRasterPos3i(int x, int y, int z)
+{
+    anon_34* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_34));
+    pParam = (anon_34*)pNode->aParams;
+    pParam->x = x;
+    pParam->y = y;
+    pParam->z = z;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRasterPos3i;
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4260–4262 */
+void recPS2glRasterPos3iv(int* v)
+{
+    recPS2glRasterPos3i(v[0], v[1], v[2]);
+}
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4275–4275 */
+void plyPS2glRasterPos3s(anon_57* pParam)
+{
+    impPS2glRasterPos3s(pParam->x, pParam->y, pParam->z);
+}
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4279–4286 */
+void recPS2glRasterPos3s(short x, short y, short z)
+{
+    anon_57* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_57));
+    pParam = (anon_57*)pNode->aParams;
+    pParam->x = x;
+    pParam->y = y;
+    pParam->z = z;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRasterPos3s;
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4291–4293 */
+void recPS2glRasterPos3sv(short* v)
+{
+    recPS2glRasterPos3s(v[0], v[1], v[2]);
+}
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4298–4300 */
+void recPS2glRasterPos4d(double x, double y, double z, double w)
+{
+    recPS2glRasterPos4f((float)x, (float)y, (float)z, (float)w);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4305–4307 */
+void recPS2glRasterPos4dv(double* v)
+{
+    recPS2glRasterPos4f((float)v[0], (float)v[1], (float)v[2], (float)v[3]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4321–4321 */
+void plyPS2glRasterPos4f(anon_125* pParam)
+{
+    impPS2glRasterPos4f(pParam->x, pParam->y, pParam->z, pParam->w);
+}
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4325–4333 */
+void recPS2glRasterPos4f(float x, float y, float z, float w)
+{
+    tagGLlistnode* pNode;
+    anon_125* pParam;
+    pNode = PS2glListAllocNode(sizeof(anon_125));
+    pParam = (anon_125*)pNode->aParams;
+    pParam->x = x;
+    pParam->y = y;
+    pParam->z = z;
+    pParam->w = w;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRasterPos4f;
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4338–4340 */
+void recPS2glRasterPos4fv(float* v)
+{
+    recPS2glRasterPos4f(v[0], v[1], v[2], v[3]);
+}
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4354–4354 */
+void plyPS2glRasterPos4i(anon_149* pParam)
+{
+    impPS2glRasterPos4i(pParam->x, pParam->y, pParam->z, pParam->w);
+}
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4358–4366 */
+void recPS2glRasterPos4i(int x, int y, int z, int w)
+{
+    anon_149* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_149));
+    pParam = (anon_149*)pNode->aParams;
+    pParam->x = x;
+    pParam->y = y;
+    pParam->z = z;
+    pParam->w = w;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRasterPos4i;
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4371–4373 */
+void recPS2glRasterPos4iv(int* v)
+{
+    recPS2glRasterPos4i(v[0], v[1], v[2], v[3]);
+}
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4387–4387 */
+void plyPS2glRasterPos4s(anon_7* pParam)
+{
+    impPS2glRasterPos4s(pParam->x, pParam->y, pParam->z, pParam->w);
+}
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4391–4399 */
+void recPS2glRasterPos4s(short x, short y, short z, short w)
+{
+    anon_7* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_7));
+    pParam = (anon_7*)pNode->aParams;
+    pParam->x = x;
+    pParam->y = y;
+    pParam->z = z;
+    pParam->w = w;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRasterPos4s;
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4404–4406 */
+void recPS2glRasterPos4sv(short* v)
+{
+    recPS2glRasterPos4s(v[0], v[1], v[2], v[3]);
+}
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4417–4417 */
+void plyPS2glReadBuffer(anon_25* pParam)
+{
+    impPS2glReadBuffer(pParam->mode);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4421–4426 */
+void recPS2glReadBuffer(unsigned int mode)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_25));
+    ((anon_25*)pNode->aParams)->mode = mode;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glReadBuffer;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4431–4433 */
+void recPS2glRectd(double x1, double y1, double x2, double y2)
+{
+    recPS2glRectf((float)x1, (float)y1, (float)x2, (float)y2);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4438–4440 */
+void recPS2glRectdv(double* v1, double* v2)
+{
+    recPS2glRectf((float)v1[0], (float)v1[1], (float)v2[0], (float)v2[1]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4454–4454 */
+void plyPS2glRectf(anon_10* pParam)
+{
+    impPS2glRectf(pParam->x1, pParam->y1, pParam->x2, pParam->y2);
+}
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4458–4466 */
+void recPS2glRectf(float x1, float y1, float x2, float y2)
+{
+    tagGLlistnode* pNode;
+    anon_10* pParam;
+    pNode = PS2glListAllocNode(sizeof(anon_10));
+    pParam = (anon_10*)pNode->aParams;
+    pParam->x1 = x1;
+    pParam->y1 = y1;
+    pParam->x2 = x2;
+    pParam->y2 = y2;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRectf;
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4471–4473 */
+void recPS2glRectfv(float* v1, float* v2)
+{
+    recPS2glRectf(v1[0], v1[1], v2[0], v2[1]);
+}
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4487–4487 */
+void plyPS2glRecti(anon_39* pParam)
+{
+    impPS2glRecti(pParam->x1, pParam->y1, pParam->x2, pParam->y2);
+}
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4491–4499 */
+void recPS2glRecti(int x1, int y1, int x2, int y2)
+{
+    anon_39* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_39));
+    pParam = (anon_39*)pNode->aParams;
+    pParam->x1 = x1;
+    pParam->y1 = y1;
+    pParam->x2 = x2;
+    pParam->y2 = y2;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRecti;
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4504–4506 */
+void recPS2glRectiv(int* v1, int* v2)
+{
+    recPS2glRecti(v1[0], v1[1], v2[0], v2[1]);
+}
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4520–4520 */
+void plyPS2glRects(anon_58* pParam)
+{
+    impPS2glRects(pParam->x1, pParam->y1, pParam->x2, pParam->y2);
+}
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4524–4532 */
+void recPS2glRects(short x1, short y1, short x2, short y2)
+{
+    anon_58* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_58));
+    pParam = (anon_58*)pNode->aParams;
+    pParam->x1 = x1;
+    pParam->y1 = y1;
+    pParam->x2 = x2;
+    pParam->y2 = y2;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRects;
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4537–4539 */
+void recPS2glRectsv(short* v1, short* v2)
+{
+    recPS2glRects(v1[0], v1[1], v2[0], v2[1]);
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4544–4546 */
+void recPS2glRotated(double angle, double x, double y, double z)
+{
+    recPS2glRotatef((float)angle, (float)x, (float)y, (float)z);
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4560–4560 */
+void plyPS2glRotatef(anon_131* pParam)
+{
+    impPS2glRotatef(pParam->angle, pParam->x, pParam->y, pParam->z);
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+void recPS2glRotatef(float angle, float x, float y, float z)
+{
+    tagGLlistnode* pNode;
+    anon_131* pParam;
+    pNode = PS2glListAllocNode(sizeof(anon_131));
+    pParam = (anon_131*)pNode->aParams;
+    pParam->angle = angle;
+    pParam->x = x;
+    pParam->y = y;
+    pParam->z = z;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRotatef;
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4577–4579 */
+void recPS2glScaled(double x, double y, double z)
+{
+    recPS2glScalef((float)x, (float)y, (float)z);
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4592–4592 */
+void plyPS2glScalef(anon_112* pParam)
+{
+    impPS2glScalef(pParam->x, pParam->y, pParam->z);
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+void recPS2glScalef(float x, float y, float z)
+{
+    tagGLlistnode* pNode;
+    anon_112* pParam;
+    pNode = PS2glListAllocNode(sizeof(anon_112));
+    pParam = (anon_112*)pNode->aParams;
+    pParam->x = x;
+    pParam->y = y;
+    pParam->z = z;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glScalef;
+}
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4617–4617 */
+void plyPS2glScissor(anon_46* pParam)
+{
+    impPS2glScissor(pParam->x, pParam->y, pParam->width, pParam->height);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4621–4629 */
+void recPS2glScissor(int x, int y, int width, int height)
+{
+    anon_46* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_46));
+    pParam = (anon_46*)pNode->aParams;
+    pParam->x = x;
+    pParam->y = y;
+    pParam->width = width;
+    pParam->height = height;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glScissor;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4640–4640 */
+void plyPS2glShadeModel(anon_162* pParam)
+{
+    impPS2glShadeModel(pParam->mode);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4644–4649 */
+void recPS2glShadeModel(unsigned int mode)
+{
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_162));
+    ((anon_162*)pNode->aParams)->mode = mode;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glShadeModel;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4662–4662 */
+void plyPS2glStencilFunc(anon_100* pParam)
+{
+    impPS2glStencilFunc(pParam->func, pParam->ref, pParam->mask);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4666–4673 */
+void recPS2glStencilFunc(unsigned int func, int ref, unsigned int mask)
+{
+    anon_100* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_100));
+    pParam = (anon_100*)pNode->aParams;
     pParam->func = func;
     pParam->ref = ref;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glAlphaFunc;
+    pParam->mask = mask;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glStencilFunc;
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 569–569 */
-void plyPS2glAlphaFunc(anon_60* param0)
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4684–4684 */
+void plyPS2glStencilMask(anon_21* pParam)
 {
-    impPS2glAlphaFunc(param0->func, param0->ref);
+    impPS2glStencilMask(pParam->mask);
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 550–555 */
-void recPS2glClientActiveTextureARB(unsigned int texture)
-{
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_138));
-    ((anon_138*)pNode->aParams)->texture = texture;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glClientActiveTextureARB;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 546–546 */
-void plyPS2glClientActiveTextureARB(anon_138* pParam)
-{
-    impPS2glClientActiveTextureARB(pParam->texture);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 535–540 */
-void recPS2glActiveTextureARB(unsigned int texture)
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4688–4693 */
+void recPS2glStencilMask(unsigned int mask)
 {
     tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_138));
-    ((anon_138*)pNode->aParams)->texture = texture;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glActiveTextureARB;
+    pNode = PS2glListAllocNode(sizeof(anon_21));
+    ((anon_21*)pNode->aParams)->mask = mask;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glStencilMask;
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 531–531 */
-void plyPS2glActiveTextureARB(anon_138* pParam)
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4706–4706 */
+void plyPS2glStencilOp(anon_16* pParam)
 {
-    impPS2glActiveTextureARB(pParam->texture);
+    impPS2glStencilOp(pParam->fail, pParam->zfail, pParam->zpass);
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 511–517 */
-void recPS2glAccum(unsigned int op, float value)
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4710–4717 */
+void recPS2glStencilOp(unsigned int fail, unsigned int zfail, unsigned int zpass)
 {
-    anon_29* pParam;
+    anon_16* pParam;
     tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_29));
-    pParam = (anon_29*)pNode->aParams;
-    pParam->op = op;
-    pParam->value = value;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glAccum;
+    pNode = PS2glListAllocNode(sizeof(anon_16));
+    pParam = (anon_16*)pNode->aParams;
+    pParam->fail = fail;
+    pParam->zfail = zfail;
+    pParam->zpass = zpass;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glStencilOp;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4727–4729 */
+void recPS2glTexCoord1s(short s)
+{
+    g_PS2glContext.valistTexCoords[0][0] = (float)s / 32767.0f;
+    if (!g_PS2glContext.bFinalCompile)
+        PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4732–4734 */
+void recPS2glTexCoord1i(int s)
+{
+    g_PS2glContext.valistTexCoords[0][0] = (float)s / 2147483648.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4737–4739 */
+void recPS2glTexCoord1d(double s)
+{
+    g_PS2glContext.valistTexCoords[0][0] = (float)s; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4742–4762 */
+void recPS2glTexCoord1f(float s)
+{
+    g_PS2glContext.valistTexCoords[0][0] = s;
+    if (!g_PS2glContext.bFinalCompile)
+        PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4765–4767 */
+void recPS2glTexCoord1sv(short* v)
+{
+    g_PS2glContext.valistTexCoords[0][0] = (float)v[0] / 32767.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4770–4772 */
+void recPS2glTexCoord1iv(int* v)
+{
+    g_PS2glContext.valistTexCoords[0][0] = (float)v[0] / 2147483648.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4775–4777 */
+void recPS2glTexCoord1dv(double* v)
+{
+    g_PS2glContext.valistTexCoords[0][0] = (float)v[0]; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4780–4782 */
+void recPS2glTexCoord1fv(float* v)
+{
+    g_PS2glContext.valistTexCoords[0][0] = v[0];
+    if (!g_PS2glContext.bFinalCompile)
+        PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4786–4788 */
+void recPS2glTexCoord2s(short s, short t)
+{
+    g_PS2glContext.valistTexCoords[0][0] = (float)s / 32767.0f; g_PS2glContext.valistTexCoords[0][1] = (float)t / 32767.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4791–4793 */
+void recPS2glTexCoord2i(int s, int t)
+{
+    g_PS2glContext.valistTexCoords[0][0] = (float)s / 2147483648.0f; g_PS2glContext.valistTexCoords[0][1] = (float)t / 2147483648.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4796–4798 */
+void recPS2glTexCoord2d(double s, double t)
+{
+    g_PS2glContext.valistTexCoords[0][0] = (float)s; g_PS2glContext.valistTexCoords[0][1] = (float)t; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
+}
+
+void recPS2glTexCoord2f(float s, float t)
+{
+    g_PS2glContext.valistTexCoords[0][0] = s;
+    g_PS2glContext.valistTexCoords[0][1] = t;
+    if (!g_PS2glContext.bFinalCompile)
+        PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4826–4828 */
+void recPS2glTexCoord2sv(short* v)
+{
+    float s, t;
+    t = (float)v[1] / 32767.0f; s = (float)v[0] / 32767.0f;
+    g_PS2glContext.valistTexCoords[0][0] = s; g_PS2glContext.valistTexCoords[0][1] = t; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4831–4833 */
+void recPS2glTexCoord2iv(int* v)
+{
+    float s, t;
+    t = (float)v[1] / 2147483648.0f; s = (float)v[0] / 2147483648.0f;
+    g_PS2glContext.valistTexCoords[0][0] = s; g_PS2glContext.valistTexCoords[0][1] = t; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4836–4838 */
+void recPS2glTexCoord2dv(double* v)
+{
+    float s, t;
+    t = (float)v[1]; s = (float)v[0];
+    g_PS2glContext.valistTexCoords[0][0] = s; g_PS2glContext.valistTexCoords[0][1] = t; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4841–4843 */
+void recPS2glTexCoord2fv(float* v)
+{
+    float s = v[0], t = v[1];
+    g_PS2glContext.valistTexCoords[0][0] = s; g_PS2glContext.valistTexCoords[0][1] = t; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4847–4849 */
+void recPS2glTexCoord3s(short s, short t, short r)
+{
+    g_PS2glContext.valistTexCoords[0][0] = (float)s / 32767.0f; g_PS2glContext.valistTexCoords[0][1] = (float)t / 32767.0f; g_PS2glContext.valistTexCoords[0][2] = (float)r / 32767.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4852–4854 */
+void recPS2glTexCoord3i(int s, int t, int r)
+{
+    g_PS2glContext.valistTexCoords[0][0] = (float)s / 2147483648.0f; g_PS2glContext.valistTexCoords[0][1] = (float)t / 2147483648.0f; g_PS2glContext.valistTexCoords[0][2] = (float)r / 2147483648.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4857–4859 */
+void recPS2glTexCoord3d(double s, double t, double r)
+{
+    g_PS2glContext.valistTexCoords[0][0] = (float)s; g_PS2glContext.valistTexCoords[0][1] = (float)t; g_PS2glContext.valistTexCoords[0][2] = (float)r; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4862–4887 */
+void recPS2glTexCoord3f(float s, float t, float r)
+{
+    g_PS2glContext.valistTexCoords[0][0] = s; g_PS2glContext.valistTexCoords[0][1] = t; g_PS2glContext.valistTexCoords[0][2] = r; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4890–4892 */
+void recPS2glTexCoord3sv(short* v)
+{
+    float s, t, r;
+    r = (float)v[2] / 32767.0f; t = (float)v[1] / 32767.0f; s = (float)v[0] / 32767.0f;
+    g_PS2glContext.valistTexCoords[0][0] = s; g_PS2glContext.valistTexCoords[0][1] = t; g_PS2glContext.valistTexCoords[0][2] = r; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4895–4897 */
+void recPS2glTexCoord3iv(int* v)
+{
+    float s, t, r;
+    r = (float)v[2] / 2147483648.0f; t = (float)v[1] / 2147483648.0f; s = (float)v[0] / 2147483648.0f;
+    g_PS2glContext.valistTexCoords[0][0] = s; g_PS2glContext.valistTexCoords[0][1] = t; g_PS2glContext.valistTexCoords[0][2] = r; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4900–4902 */
+void recPS2glTexCoord3dv(double* v)
+{
+    float s, t, r;
+    r = (float)v[2]; t = (float)v[1]; s = (float)v[0];
+    g_PS2glContext.valistTexCoords[0][0] = s; g_PS2glContext.valistTexCoords[0][1] = t; g_PS2glContext.valistTexCoords[0][2] = r; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4905–4907 */
+void recPS2glTexCoord3fv(float* v)
+{
+    float s, t, r;
+    r = v[2]; t = v[1]; s = v[0];
+    g_PS2glContext.valistTexCoords[0][0] = s; g_PS2glContext.valistTexCoords[0][1] = t; g_PS2glContext.valistTexCoords[0][2] = r; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4911–4914 */
+void recPS2glTexCoord4s(short s, short t, short r, short q)
+{
+    (*g_PS2glContext.pvlistTexCoord)[0] = (float)s / 32767.0f; (*g_PS2glContext.pvlistTexCoord)[1] = (float)t / 32767.0f; (*g_PS2glContext.pvlistTexCoord)[2] = (float)r / 32767.0f; (*g_PS2glContext.pvlistTexCoord)[3] = (float)q / 32767.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4917–4920 */
+void recPS2glTexCoord4i(int s, int t, int r, int q)
+{
+    (*g_PS2glContext.pvlistTexCoord)[0] = (float)s / 2147483648.0f; (*g_PS2glContext.pvlistTexCoord)[1] = (float)t / 2147483648.0f; (*g_PS2glContext.pvlistTexCoord)[2] = (float)r / 2147483648.0f; (*g_PS2glContext.pvlistTexCoord)[3] = (float)q / 2147483648.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4923–4925 */
+void recPS2glTexCoord4d(double s, double t, double r, double q)
+{
+    (*g_PS2glContext.pvlistTexCoord)[0] = (float)s; (*g_PS2glContext.pvlistTexCoord)[1] = (float)t; (*g_PS2glContext.pvlistTexCoord)[2] = (float)r; (*g_PS2glContext.pvlistTexCoord)[3] = (float)q; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4928–4948 */
+void recPS2glTexCoord4f(float s, float t, float r, float q)
+{
+    (*g_PS2glContext.pvlistTexCoord)[0] = s; (*g_PS2glContext.pvlistTexCoord)[1] = t; (*g_PS2glContext.pvlistTexCoord)[2] = r; (*g_PS2glContext.pvlistTexCoord)[3] = q; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4951–4954 */
+void recPS2glTexCoord4sv(short* v)
+{
+    float s, t, r, q;
+    q = (float)v[3] / 32767.0f; r = (float)v[2] / 32767.0f; t = (float)v[1] / 32767.0f; s = (float)v[0] / 32767.0f;
+    (*g_PS2glContext.pvlistTexCoord)[0] = s; (*g_PS2glContext.pvlistTexCoord)[1] = t; (*g_PS2glContext.pvlistTexCoord)[2] = r; (*g_PS2glContext.pvlistTexCoord)[3] = q; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4957–4960 */
+void recPS2glTexCoord4iv(int* v)
+{
+    float s, t, r, q;
+    q = (float)v[3] / 2147483648.0f; r = (float)v[2] / 2147483648.0f; t = (float)v[1] / 2147483648.0f; s = (float)v[0] / 2147483648.0f;
+    (*g_PS2glContext.pvlistTexCoord)[0] = s; (*g_PS2glContext.pvlistTexCoord)[1] = t; (*g_PS2glContext.pvlistTexCoord)[2] = r; (*g_PS2glContext.pvlistTexCoord)[3] = q; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4963–4965 */
+void recPS2glTexCoord4dv(double* v)
+{
+    float s, t, r, q;
+    q = (float)v[3]; r = (float)v[2]; t = (float)v[1]; s = (float)v[0];
+    (*g_PS2glContext.pvlistTexCoord)[0] = s; (*g_PS2glContext.pvlistTexCoord)[1] = t; (*g_PS2glContext.pvlistTexCoord)[2] = r; (*g_PS2glContext.pvlistTexCoord)[3] = q; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4968–4987 */
+void recPS2glTexCoord4fv(float* v)
+{
+    *(quad*)g_PS2glContext.valistTexCoords[0] = *(quad*)v; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4991–4993 */
+void recPS2glMultiTexCoord1sARB(unsigned int texture, short s)
+{
+    g_PS2glContext.valistTexCoords[texture][0] = (float)s / 32767.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4996–4998 */
+void recPS2glMultiTexCoord1iARB(unsigned int texture, int s)
+{
+    g_PS2glContext.valistTexCoords[texture][0] = (float)s / 2147483648.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5001–5003 */
+void recPS2glMultiTexCoord1dARB(unsigned int texture, double s)
+{
+    g_PS2glContext.valistTexCoords[texture][0] = (float)s; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5006–5014 */
+void recPS2glMultiTexCoord1fARB(unsigned int texture, float s)
+{
+    g_PS2glContext.valistTexCoords[texture][0] = s; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5017–5019 */
+void recPS2glMultiTexCoord1svARB(unsigned int texture, short* v)
+{
+    g_PS2glContext.valistTexCoords[texture][0] = (float)v[0] / 32767.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5022–5024 */
+void recPS2glMultiTexCoord1ivARB(unsigned int texture, int* v)
+{
+    g_PS2glContext.valistTexCoords[texture][0] = (float)v[0] / 2147483648.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5027–5029 */
+void recPS2glMultiTexCoord1dvARB(unsigned int texture, double* v)
+{
+    g_PS2glContext.valistTexCoords[texture][0] = (float)v[0]; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5032–5034 */
+void recPS2glMultiTexCoord1fvARB(unsigned int texture, float* v)
+{
+    g_PS2glContext.valistTexCoords[texture][0] = v[0]; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5038–5040 */
+void recPS2glMultiTexCoord2sARB(unsigned int texture, short s, short t)
+{
+    g_PS2glContext.valistTexCoords[texture][0] = (float)s / 32767.0f; g_PS2glContext.valistTexCoords[texture][1] = (float)t / 32767.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5043–5045 */
+void recPS2glMultiTexCoord2iARB(unsigned int texture, int s, int t)
+{
+    g_PS2glContext.valistTexCoords[texture][0] = (float)s / 2147483648.0f; g_PS2glContext.valistTexCoords[texture][1] = (float)t / 2147483648.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5048–5050 */
+void recPS2glMultiTexCoord2dARB(unsigned int texture, double s, double t)
+{
+    g_PS2glContext.valistTexCoords[texture][0] = (float)s; g_PS2glContext.valistTexCoords[texture][1] = (float)t; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5053–5062 */
+void recPS2glMultiTexCoord2fARB(unsigned int texture, float s, float t)
+{
+    g_PS2glContext.valistTexCoords[texture][0] = (float)s; g_PS2glContext.valistTexCoords[texture][1] = (float)t; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5065–5067 */
+void recPS2glMultiTexCoord2svARB(unsigned int texture, short* v)
+{
+    float s, t;
+    t = (float)v[1] / 32767.0f; s = (float)v[0] / 32767.0f;
+    g_PS2glContext.valistTexCoords[texture][0] = s; g_PS2glContext.valistTexCoords[texture][1] = t; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5070–5072 */
+void recPS2glMultiTexCoord2ivARB(unsigned int texture, int* v)
+{
+    float s, t;
+    t = (float)v[1] / 2147483648.0f; s = (float)v[0] / 2147483648.0f;
+    g_PS2glContext.valistTexCoords[texture][0] = s; g_PS2glContext.valistTexCoords[texture][1] = t; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5075–5077 */
+void recPS2glMultiTexCoord2dvARB(unsigned int texture, double* v)
+{
+    float s, t;
+    t = (float)v[1]; s = (float)v[0];
+    g_PS2glContext.valistTexCoords[texture][0] = s; g_PS2glContext.valistTexCoords[texture][1] = t; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5080–5082 */
+void recPS2glMultiTexCoord2fvARB(unsigned int texture, float* v)
+{
+    float s, t;
+    t = v[1]; s = v[0];
+    g_PS2glContext.valistTexCoords[texture][0] = s; g_PS2glContext.valistTexCoords[texture][1] = t; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5086–5088 */
+void recPS2glMultiTexCoord3sARB(unsigned int texture, short s, short t, short r)
+{
+    g_PS2glContext.valistTexCoords[texture][0] = (float)s / 32767.0f; g_PS2glContext.valistTexCoords[texture][1] = (float)t / 32767.0f; g_PS2glContext.valistTexCoords[texture][2] = (float)r / 32767.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5091–5093 */
+void recPS2glMultiTexCoord3iARB(unsigned int texture, int s, int t, int r)
+{
+    g_PS2glContext.valistTexCoords[texture][0] = (float)s / 2147483648.0f; g_PS2glContext.valistTexCoords[texture][1] = (float)t / 2147483648.0f; g_PS2glContext.valistTexCoords[texture][2] = (float)r / 2147483648.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5096–5098 */
+void recPS2glMultiTexCoord3dARB(unsigned int texture, double s, double t, double r)
+{
+    g_PS2glContext.valistTexCoords[texture][0] = (float)s; g_PS2glContext.valistTexCoords[texture][1] = (float)t; g_PS2glContext.valistTexCoords[texture][2] = (float)r; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5101–5111 */
+void recPS2glMultiTexCoord3fARB(unsigned int texture, float s, float t, float r)
+{
+    g_PS2glContext.valistTexCoords[texture][0] = (float)s; g_PS2glContext.valistTexCoords[texture][1] = (float)t; g_PS2glContext.valistTexCoords[texture][2] = (float)r; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5114–5116 */
+void recPS2glMultiTexCoord3svARB(unsigned int texture, short* v)
+{
+    float s, t, r;
+    r = (float)v[2] / 32767.0f; t = (float)v[1] / 32767.0f; s = (float)v[0] / 32767.0f;
+    g_PS2glContext.valistTexCoords[texture][0] = s; g_PS2glContext.valistTexCoords[texture][1] = t; g_PS2glContext.valistTexCoords[texture][2] = r; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5119–5121 */
+void recPS2glMultiTexCoord3ivARB(unsigned int texture, int* v)
+{
+    float s, t, r;
+    r = (float)v[2] / 2147483648.0f; t = (float)v[1] / 2147483648.0f; s = (float)v[0] / 2147483648.0f;
+    g_PS2glContext.valistTexCoords[texture][0] = s; g_PS2glContext.valistTexCoords[texture][1] = t; g_PS2glContext.valistTexCoords[texture][2] = r; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5124–5126 */
+void recPS2glMultiTexCoord3dvARB(unsigned int texture, double* v)
+{
+    float s, t, r;
+    r = (float)v[2]; t = (float)v[1]; s = (float)v[0];
+    g_PS2glContext.valistTexCoords[texture][0] = s; g_PS2glContext.valistTexCoords[texture][1] = t; g_PS2glContext.valistTexCoords[texture][2] = r; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5129–5131 */
+void recPS2glMultiTexCoord3fvARB(unsigned int texture, float* v)
+{
+    float s, t, r;
+    r = v[2]; t = v[1]; s = v[0];
+    g_PS2glContext.valistTexCoords[texture][0] = s; g_PS2glContext.valistTexCoords[texture][1] = t; g_PS2glContext.valistTexCoords[texture][2] = r; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5135–5138 */
+void recPS2glMultiTexCoord4sARB(unsigned int texture, short s, short t, short r, short q)
+{
+    g_PS2glContext.valistTexCoords[texture][0] = (float)s / 32767.0f; g_PS2glContext.valistTexCoords[texture][1] = (float)t / 32767.0f; g_PS2glContext.valistTexCoords[texture][2] = (float)r / 32767.0f; g_PS2glContext.valistTexCoords[texture][3] = (float)q / 32767.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5141–5144 */
+void recPS2glMultiTexCoord4iARB(unsigned int texture, int s, int t, int r, int q)
+{
+    g_PS2glContext.valistTexCoords[texture][0] = (float)s / 2147483648.0f; g_PS2glContext.valistTexCoords[texture][1] = (float)t / 2147483648.0f; g_PS2glContext.valistTexCoords[texture][2] = (float)r / 2147483648.0f; g_PS2glContext.valistTexCoords[texture][3] = (float)q / 2147483648.0f; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5147–5149 */
+void recPS2glMultiTexCoord4dARB(unsigned int texture, double s, double t, double r, double q)
+{
+    g_PS2glContext.valistTexCoords[texture][0] = (float)s; g_PS2glContext.valistTexCoords[texture][1] = (float)t; g_PS2glContext.valistTexCoords[texture][2] = (float)r; g_PS2glContext.valistTexCoords[texture][3] = (float)q; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5152–5163 */
+void recPS2glMultiTexCoord4fARB(unsigned int texture, float s, float t, float r, float q)
+{
+    g_PS2glContext.valistTexCoords[texture][0] = (float)s; g_PS2glContext.valistTexCoords[texture][1] = (float)t; g_PS2glContext.valistTexCoords[texture][2] = (float)r; g_PS2glContext.valistTexCoords[texture][3] = (float)q; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5166–5169 */
+void recPS2glMultiTexCoord4svARB(unsigned int texture, short* v)
+{
+    float s, t, r, q;
+    q = (float)v[3] / 32767.0f; r = (float)v[2] / 32767.0f; t = (float)v[1] / 32767.0f; s = (float)v[0] / 32767.0f;
+    g_PS2glContext.valistTexCoords[texture][0] = s; g_PS2glContext.valistTexCoords[texture][1] = t; g_PS2glContext.valistTexCoords[texture][2] = r; g_PS2glContext.valistTexCoords[texture][3] = q; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5172–5175 */
+void recPS2glMultiTexCoord4ivARB(unsigned int texture, int* v)
+{
+    float s, t, r, q;
+    q = (float)v[3] / 2147483648.0f; r = (float)v[2] / 2147483648.0f; t = (float)v[1] / 2147483648.0f; s = (float)v[0] / 2147483648.0f;
+    g_PS2glContext.valistTexCoords[texture][0] = s; g_PS2glContext.valistTexCoords[texture][1] = t; g_PS2glContext.valistTexCoords[texture][2] = r; g_PS2glContext.valistTexCoords[texture][3] = q; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5178–5180 */
+void recPS2glMultiTexCoord4dvARB(unsigned int texture, double* v)
+{
+    float s, t, r, q;
+    q = (float)v[3]; r = (float)v[2]; t = (float)v[1]; s = (float)v[0];
+    g_PS2glContext.valistTexCoords[texture][0] = s; g_PS2glContext.valistTexCoords[texture][1] = t; g_PS2glContext.valistTexCoords[texture][2] = r; g_PS2glContext.valistTexCoords[texture][3] = q; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5183–5191 */
+void recPS2glMultiTexCoord4fvARB(unsigned int texture, float* v)
+{
+    *(quad*)g_PS2glContext.valistTexCoords[texture] = *(quad*)v; if (!g_PS2glContext.bFinalCompile) PS2glSaveListCallMultiTex(5, texture, &g_PS2glContext.valistTexCoords[texture]);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5212–5212 */
+void plyPS2glTexEnvf(anon_71* pParam)
+{
+    impPS2glTexEnvf(pParam->target, pParam->pname, pParam->param);
+}
+
+#pragma auto_inline on
+void recPS2glTexEnvf(unsigned int target, unsigned int pname, float param)
+{
+    anon_71* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_71));
+    pParam = (anon_71*)pNode->aParams;
+    pParam->target = target;
+    pParam->pname = pname;
+    pParam->param = param;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexEnvf;
+}
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5236–5236 */
+void plyPS2glTexEnvfv(anon_97* pParam)
+{
+    impPS2glTexEnvfv(pParam->target, pParam->pname, pParam->params);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5240–5254 */
+void recPS2glTexEnvfv(unsigned int target, unsigned int pname, float* params)
+{
+    tagGLlistnode* pNode;
+    anon_97* pParam;
+    if (pname == 0x2200)
+    {
+        recPS2glTexEnvf(target, pname, *params);
+    }
+    else
+    {
+        pNode = PS2glListAllocNode(sizeof(anon_97));
+        pParam = (anon_97*)pNode->aParams;
+        pParam->target = target;
+        pParam->pname = pname;
+        pParam->params = (int)PS2glListSaveParam(params, 16);
+        pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexEnvfv;
+    }
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5267–5267 */
+void plyPS2glTexEnvi(anon_8* pParam)
+{
+    impPS2glTexEnvi(pParam->target, pParam->pname, pParam->param);
+}
+
+#pragma auto_inline on
+void recPS2glTexEnvi(unsigned int target, unsigned int pname, int param)
+{
+    anon_8* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_8));
+    pParam = (anon_8*)pNode->aParams;
+    pParam->target = target;
+    pParam->pname = pname;
+    pParam->param = param;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexEnvi;
+}
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5291–5291 */
+void plyPS2glTexEnviv(anon_106* pParam)
+{
+    impPS2glTexEnviv(pParam->target, pParam->pname, pParam->params);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5295–5309 */
+void recPS2glTexEnviv(unsigned int target, unsigned int pname, int* params)
+{
+    tagGLlistnode* pNode;
+    anon_106* pParam;
+    if (pname == 0x2200)
+    {
+        recPS2glTexEnvi(target, pname, *params);
+    }
+    else
+    {
+        pNode = PS2glListAllocNode(sizeof(anon_106));
+        pParam = (anon_106*)pNode->aParams;
+        pParam->target = target;
+        pParam->pname = pname;
+        pParam->params = (int)PS2glListSaveParam(params, 16);
+        pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexEnviv;
+    }
+}
+
+#pragma auto_inline on
+void recPS2glTexGend(unsigned int coord, unsigned int pname, double param)
+{
+    recPS2glTexGenf(coord, pname, (float)param);
+}
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5329–5329 */
+void plyPS2glTexGendv(anon_122* pParam)
+{
+    impPS2glTexGendv(pParam->coord, pParam->pname, pParam->params);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5333–5346 */
+void recPS2glTexGendv(unsigned int coord, unsigned int pname, double* params)
+{
+    tagGLlistnode* pNode;
+    anon_122* pParam;
+    if (pname == 0x2501 || pname == 0x2502)
+    {
+        pNode = PS2glListAllocNode(sizeof(anon_122));
+        pParam = (anon_122*)pNode->aParams;
+        pParam->coord = coord;
+        pParam->pname = pname;
+        pParam->params = (int)PS2glListSaveParam(params, 4 * sizeof(double));
+        pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexGendv;
+    }
+    else
+    {
+        recPS2glTexGenf(coord, pname, (float)*params);
+    }
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5359–5359 */
+void plyPS2glTexGenf(anon_79* pParam)
+{
+    impPS2glTexGenf(pParam->coord, pParam->pname, pParam->param);
+}
+
+#pragma auto_inline on
+void recPS2glTexGenf(unsigned int coord, unsigned int pname, float param)
+{
+    tagGLlistnode* pNode;
+    anon_79* pParam;
+    pNode = PS2glListAllocNode(sizeof(anon_79));
+    pParam = (anon_79*)pNode->aParams;
+    pParam->coord = coord;
+    pParam->pname = pname;
+    pParam->param = param;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexGenf;
+}
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5383–5383 */
+void plyPS2glTexGenfv(anon_153* pParam)
+{
+    impPS2glTexGenfv(pParam->coord, pParam->pname, pParam->params);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5387–5400 */
+void recPS2glTexGenfv(unsigned int coord, unsigned int pname, float* params)
+{
+    tagGLlistnode* pNode;
+    anon_153* pParam;
+    if (pname == 0x2501 || pname == 0x2502)
+    {
+        pNode = PS2glListAllocNode(sizeof(anon_153));
+        pParam = (anon_153*)pNode->aParams;
+        pParam->coord = coord;
+        pParam->pname = pname;
+        pParam->params = (int)PS2glListSaveParam(params, 16);
+        pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexGenfv;
+    }
+    else
+    {
+        recPS2glTexGenf(coord, pname, *params);
+    }
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5413–5413 */
+void plyPS2glTexGeni(anon_103* pParam)
+{
+    impPS2glTexGeni(pParam->coord, pParam->pname, pParam->param);
+}
+
+#pragma auto_inline on
+void recPS2glTexGeni(unsigned int coord, unsigned int pname, int param)
+{
+    anon_103* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_103));
+    pParam = (anon_103*)pNode->aParams;
+    pParam->coord = coord;
+    pParam->pname = pname;
+    pParam->param = param;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexGeni;
+}
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5437–5437 */
+void plyPS2glTexGeniv(anon_26* pParam)
+{
+    impPS2glTexGeniv(pParam->coord, pParam->pname, pParam->params);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5441–5454 */
+void recPS2glTexGeniv(unsigned int coord, unsigned int pname, int* params)
+{
+    tagGLlistnode* pNode;
+    anon_26* pParam;
+    if (pname == 0x2501 || pname == 0x2502)
+    {
+        pNode = PS2glListAllocNode(sizeof(anon_26));
+        pParam = (anon_26*)pNode->aParams;
+        pParam->coord = coord;
+        pParam->pname = pname;
+        pParam->params = (int)PS2glListSaveParam(params, 16);
+        pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexGeniv;
+    }
+    else
+    {
+        recPS2glTexGeni(coord, pname, *params);
+    }
+}
+
+void plyPS2glTexImage1D(anon_175* pParam)
+{
+    impPS2glTexImage1D(pParam->target, pParam->level, pParam->components, pParam->width, pParam->border, pParam->format, pParam->type, *(void**)&pParam->pixels);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5476–5488 */
+void recPS2glTexImage1D(unsigned int target, int level, int components, int width, int border, unsigned int format, unsigned int type, void* pixels)
+{
+    anon_175* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_175));
+    pParam = (anon_175*)pNode->aParams;
+    pParam->target = target;
+    pParam->level = level;
+    pParam->components = components;
+    pParam->width = width;
+    pParam->border = border;
+    pParam->format = format;
+    pParam->type = type;
+    pParam->pixels = (int)pixels;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexImage1D;
+}
+
+void plyPS2glTexImage2D(anon_49* pParam)
+{
+    impPS2glTexImage2D(pParam->target, pParam->level, pParam->components, pParam->width, pParam->height, pParam->border, pParam->format, pParam->type, *(void**)&pParam->pixels);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5511–5524 */
+void recPS2glTexImage2D(unsigned int target, int level, int components, int width, int height, int border, unsigned int format, unsigned int type, void* pixels)
+{
+    anon_49* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_49));
+    pParam = (anon_49*)pNode->aParams;
+    pParam->target = target;
+    pParam->level = level;
+    pParam->components = components;
+    pParam->width = width;
+    pParam->height = height;
+    pParam->border = border;
+    pParam->format = format;
+    pParam->type = type;
+    pParam->pixels = (int)pixels;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexImage2D;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5537–5537 */
+void plyPS2glTexParameterf(anon_101* pParam)
+{
+    impPS2glTexParameterf(pParam->target, pParam->pname, pParam->param);
+}
+
+#pragma auto_inline on
+void recPS2glTexParameterf(unsigned int target, unsigned int pname, float param)
+{
+    anon_101* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_101));
+    pParam = (anon_101*)pNode->aParams;
+    pParam->target = target;
+    pParam->pname = pname;
+    pParam->param = param;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexParameterf;
+}
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5561–5561 */
+void plyPS2glTexParameterfv(anon_22* pParam)
+{
+    impPS2glTexParameterfv(pParam->target, pParam->pname, pParam->params);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5565–5578 */
+void recPS2glTexParameterfv(unsigned int target, unsigned int pname, float* params)
+{
+    tagGLlistnode* pNode;
+    anon_22* pParam;
+    if (pname == 0x1004)
+    {
+        pNode = PS2glListAllocNode(sizeof(anon_22));
+        pParam = (anon_22*)pNode->aParams;
+        pParam->target = target;
+        pParam->pname = pname;
+        pParam->params = (int)PS2glListSaveParam(params, 16);
+        pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexParameterfv;
+    }
+    else
+    {
+        recPS2glTexParameterf(target, pname, *params);
+    }
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5591–5591 */
+void plyPS2glTexParameteri(anon_109* pParam)
+{
+    impPS2glTexParameteri(pParam->target, pParam->pname, pParam->param);
+}
+
+#pragma auto_inline on
+void recPS2glTexParameteri(unsigned int target, unsigned int pname, int param)
+{
+    anon_109* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_109));
+    pParam = (anon_109*)pNode->aParams;
+    pParam->target = target;
+    pParam->pname = pname;
+    pParam->param = param;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexParameteri;
+}
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5615–5615 */
+void plyPS2glTexParameteriv(anon_41* pParam)
+{
+    impPS2glTexParameteriv(pParam->target, pParam->pname, pParam->params);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5619–5632 */
+void recPS2glTexParameteriv(unsigned int target, unsigned int pname, int* params)
+{
+    tagGLlistnode* pNode;
+    anon_41* pParam;
+    if (pname == 0x1004)
+    {
+        pNode = PS2glListAllocNode(sizeof(anon_41));
+        pParam = (anon_41*)pNode->aParams;
+        pParam->target = target;
+        pParam->pname = pname;
+        pParam->params = (int)PS2glListSaveParam(params, 16);
+        pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexParameteriv;
+    }
+    else
+    {
+        recPS2glTexParameteri(target, pname, *params);
+    }
+}
+
+void plyPS2glTexSubImage1D(anon_176* pParam)
+{
+    impPS2glTexSubImage1D(pParam->target, pParam->level, pParam->xoffset, pParam->width, pParam->format, pParam->type, *(void**)&pParam->pixels);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5653–5664 */
+void recPS2glTexSubImage1D(unsigned int target, int level, int xoffset, int width, unsigned int format, unsigned int type, void* pixels)
+{
+    anon_176* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_176));
+    pParam = (anon_176*)pNode->aParams;
+    pParam->target = target;
+    pParam->level = level;
+    pParam->xoffset = xoffset;
+    pParam->width = width;
+    pParam->format = format;
+    pParam->type = type;
+    pParam->pixels = (int)pixels;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexSubImage1D;
+}
+
+void plyPS2glTexSubImage2D(anon_28* pParam)
+{
+    impPS2glTexSubImage2D(pParam->target, pParam->level, pParam->xoffset, pParam->yoffset, pParam->width, pParam->height, pParam->format, pParam->type, *(void**)&pParam->pixels);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5687–5700 */
+void recPS2glTexSubImage2D(unsigned int target, int level, int xoffset, int yoffset, int width, int height, unsigned int format, unsigned int type, void* pixels)
+{
+    anon_28* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_28));
+    pParam = (anon_28*)pNode->aParams;
+    pParam->target = target;
+    pParam->level = level;
+    pParam->xoffset = xoffset;
+    pParam->yoffset = yoffset;
+    pParam->width = width;
+    pParam->height = height;
+    pParam->format = format;
+    pParam->type = type;
+    pParam->pixels = (int)pixels;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexSubImage2D;
+}
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5705–5707 */
+void recPS2glTranslated(double x, double y, double z)
+{
+    recPS2glTranslatef((float)x, (float)y, (float)z);
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5720–5720 */
+void plyPS2glTranslatef(anon_133* pParam)
+{
+    impPS2glTranslatef(pParam->x, pParam->y, pParam->z);
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+void recPS2glTranslatef(float x, float y, float z)
+{
+    tagGLlistnode* pNode;
+    anon_133* pParam;
+    pNode = PS2glListAllocNode(sizeof(anon_133));
+    pParam = (anon_133*)pNode->aParams;
+    pParam->x = x;
+    pParam->y = y;
+    pParam->z = z;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTranslatef;
+}
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5740–5742 */
+void recPS2glVertex2d(double x, double y)
+{
+    recPS2glVertex4f((float)x, (float)y, 0.0f, 1.0f);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5746–5746 */
+void recPS2glVertex2f(float x, float y)
+{
+    recPS2glVertex4f(x, y, 0.0f, 1.0f);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5751–5751 */
+void recPS2glVertex2i(int x, int y)
+{
+    recPS2glVertex4f(x / 2147483648.0f, y / 2147483648.0f, 0.0f, 1.0f);
+}
+
+#pragma optimize_for_size off
+void recPS2glVertex2s(short x, short y)
+{
+    recPS2glVertex4f(x / 32767.0f, y / 32767.0f, 0.0f, 1.0f);
+}
+#pragma optimize_for_size reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5760–5762 */
+void recPS2glVertex3d(double x, double y, double z)
+{
+    recPS2glVertex4f((float)x, (float)y, (float)z, 1.0f);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5766–5766 */
+void recPS2glVertex3f(float x, float y, float z)
+{
+    recPS2glVertex4f(x, y, z, 1.0f);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5771–5771 */
+void recPS2glVertex3i(int x, int y, int z)
+{
+    recPS2glVertex4f(x / 2147483648.0f, y / 2147483648.0f, z / 2147483648.0f, 1.0f);
+}
+
+#pragma optimize_for_size off
+void recPS2glVertex3s(short x, short y, short z)
+{
+    recPS2glVertex4f(x / 32767.0f, y / 32767.0f, z / 32767.0f, 1.0f);
+}
+#pragma optimize_for_size reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5780–5828 */
+void recPS2glVertex4f(float x, float y, float z, float w)
+{
+    float V[1][4];
+    if (!g_PS2glContext.bFinalCompile) {
+        V[0][0] = x; V[0][1] = y; V[0][2] = z; V[0][3] = w;
+        PS2glSaveListCall(4, V);
+    } else {
+        if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) {
+            if (g_PS2glContext.pCurParamBegin->mode == 7)
+                PS2glListAssembleQuads();
+            PS2glListSaveBuffer(0);
+        }
+        (*g_PS2glContext.pVBuf)[0] = x;
+        (*g_PS2glContext.pVBuf)[1] = y;
+        (*g_PS2glContext.pVBuf)[2] = z;
+        (*g_PS2glContext.pVBuf++)[3] = w;
+        *PS2glAsQuad(*g_PS2glContext.pNBuf++) = *PS2glAsQuad(g_PS2glContext.vlistNormal);
+        *PS2glAsQuad(*g_PS2glContext.pCBuf++) = *PS2glAsQuad(g_PS2glContext.valistColor[0]);
+        *PS2glAsQuad(*g_PS2glContext.pCBuf_b++) = *PS2glAsQuad(g_PS2glContext.valistColor[1]);
+        *PS2glAsQuad(*g_PS2glContext.pTBuf++) = *PS2glAsQuad(g_PS2glContext.valistTexCoords[0]);
+        *PS2glAsQuad(*g_PS2glContext.pTBuf_b++) = *PS2glAsQuad(g_PS2glContext.valistTexCoords[1]);
+        g_PS2glContext.iBufCount++;
+    }
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5831–5833 */
+void recPS2glVertex4d(double X, double Y, double Z, double W)
+{
+    recPS2glVertex4f((float)X, (float)Y, (float)Z, (float)W);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5837–5837 */
+void recPS2glVertex4i(int x, int y, int z, int w)
+{
+    recPS2glVertex4f(x / 2147483648.0f, y / 2147483648.0f, z / 2147483648.0f, w / 2147483648.0f);
+}
+
+#pragma optimize_for_size off
+void recPS2glVertex4s(short x, short y, short z, short w)
+{
+    recPS2glVertex4f(x / 32767.0f, y / 32767.0f, z / 32767.0f, w / 32767.0f);
+}
+#pragma optimize_for_size reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5846–5848 */
+void recPS2glVertex2dv(double* v)
+{
+    float x = (float)v[0];
+    float y = (float)v[1];
+    recPS2glVertex4f(x, y, 0.0f, 1.0f);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5852–5852 */
+void recPS2glVertex2fv(float* v)
+{
+    recPS2glVertex4f(v[0], v[1], 0.0f, 1.0f);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5857–5857 */
+void recPS2glVertex2iv(int* v)
+{
+    recPS2glVertex4f(v[0] / 2147483648.0f, v[1] / 2147483648.0f, 0.0f, 1.0f);
+}
+
+#pragma optimize_for_size off
+void recPS2glVertex2sv(short* v)
+{
+    recPS2glVertex4f(v[0] / 32767.0f, v[1] / 32767.0f, 0.0f, 1.0f);
+}
+#pragma optimize_for_size reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5866–5868 */
+void recPS2glVertex3dv(double* v)
+{
+    recPS2glVertex4f((float)v[0], (float)v[1], (float)v[2], 1.0f);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5872–5872 */
+void recPS2glVertex3fv(float* v)
+{
+    recPS2glVertex4f(v[0], v[1], v[2], 1.0f);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5877–5877 */
+void recPS2glVertex3iv(int* v)
+{
+    recPS2glVertex4f(v[0] / 2147483648.0f, v[1] / 2147483648.0f, v[2] / 2147483648.0f, 1.0f);
+}
+
+#pragma optimize_for_size off
+void recPS2glVertex3sv(short* v)
+{
+    recPS2glVertex4f(v[0] / 32767.0f, v[1] / 32767.0f, v[2] / 32767.0f, 1.0f);
+}
+#pragma optimize_for_size reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5886–5888 */
+void recPS2glVertex4dv(double* v)
+{
+    recPS2glVertex4f((float)v[0], (float)v[1], (float)v[2], (float)v[3]);
+}
+
+void recPS2glVertex4fv(float* v)
+{
+    if (!g_PS2glContext.bFinalCompile) {
+        PS2glSaveListCall(4, (float (*)[4])v);
+    } else {
+        if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) {
+            if (g_PS2glContext.pCurParamBegin->mode == 7)
+                PS2glListAssembleQuads();
+            PS2glListSaveBuffer(0);
+        }
+        *PS2glAsQuad(*g_PS2glContext.pVBuf++) = *PS2glAsQuad((float*)v);
+        *PS2glAsQuad(*g_PS2glContext.pNBuf++) = *PS2glAsQuad(g_PS2glContext.vlistNormal);
+        *PS2glAsQuad(*g_PS2glContext.pCBuf++) = *PS2glAsQuad(g_PS2glContext.valistColor[0]);
+        *PS2glAsQuad(*g_PS2glContext.pCBuf_b++) = *PS2glAsQuad(g_PS2glContext.valistColor[1]);
+        *PS2glAsQuad(*g_PS2glContext.pTBuf++) = *PS2glAsQuad(g_PS2glContext.valistTexCoords[0]);
+        *PS2glAsQuad(*g_PS2glContext.pTBuf_b++) = *PS2glAsQuad(g_PS2glContext.valistTexCoords[1]);
+        g_PS2glContext.iBufCount++;
+    }
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5936–5936 */
+void recPS2glVertex4iv(int* v)
+{
+    recPS2glVertex4f(v[0] / 2147483648.0f, v[1] / 2147483648.0f, v[2] / 2147483648.0f, v[3] / 2147483648.0f);
+}
+
+#pragma optimize_for_size off
+void recPS2glVertex4sv(short* v)
+{
+    recPS2glVertex4f(v[0] / 32767.0f, v[1] / 32767.0f, v[2] / 32767.0f, v[3] / 32767.0f);
+}
+#pragma optimize_for_size reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5964–5964 */
+void plyPS2glViewport(anon_37* pParam)
+{
+    impPS2glViewport(pParam->x, pParam->y, pParam->width, pParam->height);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5968–5976 */
+void recPS2glViewport(int x, int y, int width, int height)
+{
+    anon_37* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_37));
+    pParam = (anon_37*)pNode->aParams;
+    pParam->x = x;
+    pParam->y = y;
+    pParam->width = width;
+    pParam->height = height;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glViewport;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5991–5997 */
+void plyPS2glSetGsRegister(anon_181* pParam)
+{
+    unsigned long value;
+    unsigned long mask;
+    memcpy(&value, &pParam->value, 8);
+    memcpy(&mask, &pParam->mask, 8);
+    impPS2glSetGsRegister(pParam->address, value, mask);
+}
+
+void recPS2glSetGsRegister(int address, unsigned long value, unsigned long mask)
+{
+    tagGLlistnode* pNode;
+    anon_181* pParam;
+    pNode = PS2glListAllocNode(sizeof(anon_181));
+    pParam = (anon_181*)pNode->aParams;
+    pParam->address = address;
+    memcpy(&pParam->value, &value, 8);
+    memcpy(&pParam->mask, &mask, 8);
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glSetGsRegister;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 6027–6027 */
+void plyPS2glColorTableEXT(anon_127* pParam)
+{
+    impPS2glColorTableEXT(pParam->target, pParam->internalFormat, pParam->width, pParam->format, pParam->type, pParam->data);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 6031–6043 */
+void recPS2glColorTableEXT(unsigned int target, unsigned int internalFormat, int width, unsigned int format, unsigned int type, void* data)
+{
+    anon_127* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_127));
+    pParam = (anon_127*)pNode->aParams;
+    pParam->target = target;
+    pParam->internalFormat = internalFormat;
+    pParam->width = width;
+    pParam->format = format;
+    pParam->type = type;
+    pParam->data = (int)data;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glColorTableEXT;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 6058–6058 */
+void plyPS2glColorSubTableEXT(anon_121* pParam)
+{
+    impPS2glColorSubTableEXT(pParam->target, pParam->start, pParam->count, pParam->format, pParam->type, pParam->data);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 6062–6074 */
+void recPS2glColorSubTableEXT(unsigned int target, int start, int count, unsigned int format, unsigned int type, void* data)
+{
+    anon_121* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_121));
+    pParam = (anon_121*)pNode->aParams;
+    pParam->target = target;
+    pParam->start = start;
+    pParam->count = count;
+    pParam->format = format;
+    pParam->type = type;
+    pParam->data = (int)data;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glColorSubTableEXT;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 6086–6086 */
+void plyPS2glGetColorTableEXT(anon_38* pParam)
+{
+    impPS2glGetColorTableEXT(pParam->target, pParam->format, pParam->type, pParam->data);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 6090–6100 */
+void recPS2glGetColorTableEXT(unsigned int target, unsigned int format, unsigned int type, void* data)
+{
+    anon_38* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_38));
+    pParam = (anon_38*)pNode->aParams;
+    pParam->target = target;
+    pParam->format = format;
+    pParam->type = type;
+    pParam->data = (int)data;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glGetColorTableEXT;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 6111–6111 */
+void plyPS2glGetColorTableParameterivEXT(anon_132* pParam)
+{
+    impPS2glGetColorTableParameterivEXT(pParam->target, pParam->pname, pParam->params);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 6115–6124 */
+void recPS2glGetColorTableParameterivEXT(unsigned int target, unsigned int pname, int* params)
+{
+    anon_132* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_132));
+    pParam = (anon_132*)pNode->aParams;
+    pParam->target = target;
+    pParam->pname = pname;
+    pParam->params = (int)params;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glGetColorTableParameterivEXT;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 6135–6135 */
+void plyPS2glGetColorTableParameterfvEXT(anon_78* pParam)
+{
+    impPS2glGetColorTableParameterfvEXT(pParam->target, pParam->pname, pParam->params);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 6139–6148 */
+void recPS2glGetColorTableParameterfvEXT(unsigned int target, unsigned int pname, float* params)
+{
+    anon_78* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_78));
+    pParam = (anon_78*)pNode->aParams;
+    pParam->target = target;
+    pParam->pname = pname;
+    pParam->params = (int)params;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glGetColorTableParameterfvEXT;
 }

@@ -851,14 +851,13 @@ char HIE_cDetectObjectIntersectSegmentWithSuperObject(MTH3D_tdstVector_* p_stVer
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-MAT_tdstTransformation_* GEO_fn_hCreateMatrix(void)
-{
-    MAT_tdstTransformation_* hReturn;
 
-    hReturn = (MAT_tdstTransformation_ *)HMU_fn_p_vMalloc(0x60, 0);
-    MAT_fn_vSetIdentity(hReturn);
-    return hReturn;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+MAT_tdstTransformation_* GEO_fn_hCreateMatrix(void);
+int HIE_bDetectIntersectSegmentWithSuperObject(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, HIE_tdstSuperObject_* _hSprObj);
+char HIE_cDetectObjectIntersectSegmentWithSuperObject(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, HIE_tdstSuperObject_* _hSprObj, char cTypeOfSearch, int* a_lHandleOnResult, short* p_NbOfObjectsFound);
+unsigned char HIE_bIntersectSegmentWithFirstSuperObject(MTH3D_tdstVector_* _p_stVertexA, MTH3D_tdstVector_* _p_stVectAB, HIE_tdstSuperObject_* hSprObj, MTH3D_tdstVector_* _p_stHit, MTH3D_tdstVector_* _p_stNormal, HIE_tdstSuperObject_** _p_hSprObjHit, GMT_tdstCollideMaterial_** _p_hColMat);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HiePick.c lines 1307–1316 */
 /* addr: 0x00320470  size: 64 bytes */
@@ -875,15 +874,6 @@ MAT_tdstTransformation_* GEO_fn_hCreateMatrix(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int HIE_bDetectIntersectSegmentWithSuperObject(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, HIE_tdstSuperObject_* _hSprObj)
-{
-    short NumberOfObjectsFound;
-    int lResult;
-
-    lResult = 0;
-    NumberOfObjectsFound = 0;
-    return 1 ^ (HIE_cDetectObjectIntersectSegmentWithSuperObject(p_stVertexA, p_stVectAB, _hSprObj, 0, &lResult, &NumberOfObjectsFound) == 0);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HiePick.c lines 1081–1298 */
 /* addr: 0x003204b0  size: 1564 bytes */
@@ -986,32 +976,6 @@ int HIE_bDetectIntersectSegmentWithSuperObject(MTH3D_tdstVector_* p_stVertexA, M
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-char HIE_cDetectObjectIntersectSegmentWithSuperObject(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, HIE_tdstSuperObject_* _hSprObj, char cTypeOfSearch, int* a_lHandleOnResult, short* p_NbOfObjectsFound)
-{
-    short i;
-    short TempNb;
-    char cTempResult;
-    int a_lTempHandleOnResult[50];
-    tdstPhysicalCollSet_* hCollSet;
-    MTH3D_tdstVector_* p_stMaxPoint;
-    MTH3D_tdstVector_* p_stMinPoint;
-    HIE_tdstSuperObject_* hChild;
-    PIC_tdstPickedObject_ stPickedObject;
-    unsigned char bIntersect;
-    COL_tdstCollideObject_* hSentCollideObject;
-    MTH3D_tdstVector_ stVectAB;
-    MTH3D_tdstVector_ stVertexALocal;
-    MAT_tdstTransformation_ stInvMatrix;
-    MTH3D_tdstVector_* p_stTranslation;
-    GEO_tdstGeometricObject_* hSentGeometricObject;
-    int lType;
-    MTH3D_tdstVector_ stMaxPoint;
-    MTH3D_tdstVector_ stMinPoint;
-    unsigned char bBoxBoundingVolume;
-    COL_tdstParallelBox_* hParallelBox;
-    COL_tdstBoundingSphere_* hBoundingSphere;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HiePick.c lines 958–1023 */
 /* addr: 0x00320b50  size: 832 bytes */
@@ -1044,6 +1008,7 @@ char HIE_cDetectObjectIntersectSegmentWithSuperObject(MTH3D_tdstVector_* p_stVer
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
 unsigned char HIE_bIntersectSegmentWithFirstSuperObject(MTH3D_tdstVector_* _p_stVertexA, MTH3D_tdstVector_* _p_stVectAB, HIE_tdstSuperObject_* hSprObj, MTH3D_tdstVector_* _p_stHit, MTH3D_tdstVector_* _p_stNormal, HIE_tdstSuperObject_** _p_hSprObjHit, GMT_tdstCollideMaterial_** _p_hColMat)
 {
     GMT_tdstGameMaterial_* hMaterial;
@@ -1054,4 +1019,50 @@ unsigned char HIE_bIntersectSegmentWithFirstSuperObject(MTH3D_tdstVector_* _p_st
     COL_tdstCollideObject_* p_stCollObject;
     HIE_tdstPickInfo_ aDEF_stIntersInfo[3];
     /* TODO: decompile from asm/... */
+}
+
+char HIE_cDetectObjectIntersectSegmentWithSuperObject(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, HIE_tdstSuperObject_* _hSprObj, char cTypeOfSearch, int* a_lHandleOnResult, short* p_NbOfObjectsFound)
+{
+    short i;
+    short TempNb;
+    char cTempResult;
+    int a_lTempHandleOnResult[50];
+    tdstPhysicalCollSet_* hCollSet;
+    MTH3D_tdstVector_* p_stMaxPoint;
+    MTH3D_tdstVector_* p_stMinPoint;
+    HIE_tdstSuperObject_* hChild;
+    PIC_tdstPickedObject_ stPickedObject;
+    unsigned char bIntersect;
+    COL_tdstCollideObject_* hSentCollideObject;
+    MTH3D_tdstVector_ stVectAB;
+    MTH3D_tdstVector_ stVertexALocal;
+    MAT_tdstTransformation_ stInvMatrix;
+    MTH3D_tdstVector_* p_stTranslation;
+    GEO_tdstGeometricObject_* hSentGeometricObject;
+    int lType;
+    MTH3D_tdstVector_ stMaxPoint;
+    MTH3D_tdstVector_ stMinPoint;
+    unsigned char bBoxBoundingVolume;
+    COL_tdstParallelBox_* hParallelBox;
+    COL_tdstBoundingSphere_* hBoundingSphere;
+    /* TODO: decompile from asm/... */
+}
+
+int HIE_bDetectIntersectSegmentWithSuperObject(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, HIE_tdstSuperObject_* _hSprObj)
+{
+    short NumberOfObjectsFound;
+    int lResult;
+
+    lResult = 0;
+    NumberOfObjectsFound = 0;
+    return 1 ^ (HIE_cDetectObjectIntersectSegmentWithSuperObject(p_stVertexA, p_stVectAB, _hSprObj, 0, &lResult, &NumberOfObjectsFound) == 0);
+}
+
+MAT_tdstTransformation_* GEO_fn_hCreateMatrix(void)
+{
+    MAT_tdstTransformation_* hReturn;
+
+    hReturn = (MAT_tdstTransformation_ *)HMU_fn_p_vMalloc(0x60, 0);
+    MAT_fn_vSetIdentity(hReturn);
+    return hReturn;
 }

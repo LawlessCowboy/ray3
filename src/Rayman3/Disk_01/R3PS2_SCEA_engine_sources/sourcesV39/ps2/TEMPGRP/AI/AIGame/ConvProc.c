@@ -50,12 +50,17 @@ tdstProcedureEntry_ a_stProcedureTable[876];
  * the debug extractor.  Spell the recovered callback type explicitly. */
 typedef tdstNodeInterpret_ *(*tdstProcedureFunction_)(HIE_tdstSuperObject_ *, tdstNodeInterpret_ *);
 
-tdstProcedureFunction_ fn_p_fn_pGetProcedureFunctionPtr(tdeProcedureId_ eProcedureId)
-{
-    return a_stProcedureTable[eProcedureId].p_fn_p_stProcedureFunction;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+tdstProcedureFunction_ fn_p_fn_pGetProcedureFunctionPtr(tdeProcedureId_ eProcedureId);
+unsigned char fn_ucGetProcedureUltraOperator(tdeProcedureId_ eProcId);
 
 unsigned char fn_ucGetProcedureUltraOperator(tdeProcedureId_ eProcId)
 {
     return a_stProcedureTable[eProcId].bUltraProcedureFlag;
+}
+
+tdstProcedureFunction_ fn_p_fn_pGetProcedureFunctionPtr(tdeProcedureId_ eProcedureId)
+{
+    return a_stProcedureTable[eProcedureId].p_fn_p_stProcedureFunction;
 }

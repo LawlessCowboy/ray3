@@ -806,10 +806,39 @@ unsigned char g_ucGameModuleId;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned int fn_ulDynamSizeOf(void)
-{
-    return 0x0C;
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+unsigned int fn_ulDynamSizeOf(void);
+GLI_tdstLight_* HIE_fn_hGetSuperObjectLight(HIE_tdstSuperObject_* p_SuperObjPerso);
+void fn_vMSLightSetRLIParameter(tdstMSLight_* hMSLight, int lNbRLI, int lIndex1, int lIndex2, int lPercent);
+unsigned char fn_ucGetNumberOfRLIFromCharacter(HIE_tdstSuperObject_* hSprObj, unsigned char* p_ucIndex1, unsigned char* p_ucIndex2, float* p_xPercent);
+void fn_vUpdateLight(HIE_tdstSuperObject_* hSupObject);
+float fn_xComputeAngleOfPerso(HIE_tdstSuperObject_* p_SuperObjPerso);
+unsigned char fn_bMSLightGetPulse(tdstMSLight_* h_MSLight);
+void fn_vMSLightSetPulse(tdstMSLight_* h_MSLight, unsigned char bOnOff, float xStep, float xMaxRange);
+unsigned char fn_bMSLightGetGiroPhare(tdstMSLight_* h_MSLight);
+void fn_vMSLightSetGiroPhare(tdstMSLight_* h_MSLight, unsigned char bOnOff, float xStep);
+unsigned char fn_bMSLightGetOnlyLocalLight(tdstMSLight_* h_MSLight);
+void fn_vMSLightSetOnlyLocalLight(tdstMSLight_* h_MSLight, unsigned char bOnlyLocalLight);
+unsigned char fn_bMSLightGetLocalLight(tdstMSLight_* h_MSLight);
+void fn_vMSLightSetLocalLight(tdstMSLight_* h_MSLight, unsigned char bLocalLight);
+GLI_tdstLight_* fn_p_stMSLightGetLight(tdstMSLight_* h_MSLight);
+void fn_vMSLightSetColorRGBA(tdstMSLight_* h_MSLight, float xR, float xG, float xB, float xA);
+void fn_vMSLightSetBigAlpha(tdstMSLight_* h_MSLight, float xBigAlpha);
+void fn_vMSLightSetLittleAlpha(tdstMSLight_* h_MSLight, float xLittleAlpha);
+void fn_vMSLightSetNearFar(tdstMSLight_* h_MSLight, float xNear, float xFar);
+void fn_vMSLightSetOnOff(tdstMSLight_* h_MSLight, unsigned char ucOnOff);
+void fn_vMSLightSetTypeOfLight(tdstMSLight_* h_MSLight, unsigned short lTypeOfLight);
+unsigned char fn_ucMSLightGetOnOff(tdstMSLight_* h_MSLight);
+int fn_hMSLightGetLightNodeInSector(tdstMSLight_* _hMSLight);
+void fn_vLightCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc);
+void fn_vLightDesinit(tdstEngineObject_* p_stObject);
+void fn_vLightInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit);
+void fn_vLightFree(tdstEngineObject_* p_stObject);
+void fn_vLightAlloc(tdstEngineObject_* p_stObject);
+unsigned int fn_ulLightSizeOf(void);
+GEO_tdstGeometricObject_* fn_pCreateCone(float xS, float yS, float zS, float xRadius);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1344–1353 */
 /* addr: 0x0026fdf0  size: 104 bytes */
@@ -822,27 +851,6 @@ unsigned int fn_ulDynamSizeOf(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-GLI_tdstLight_* HIE_fn_hGetSuperObjectLight(HIE_tdstSuperObject_* p_SuperObjPerso)
-{
-    tdstMSLight_* hMSLight;
-
-    if (p_SuperObjPerso->ulTypeOfLinkedObject == 2)
-    {
-
-        hMSLight = ((p_SuperObjPerso->ulTypeOfLinkedObject != 2) ? NULL : p_SuperObjPerso->hLinkedObject.p_stCharacter)->h_MSLight;
-
-        if (hMSLight != NULL)
-        {
-            if (hMSLight->bLocalLight == 0)
-            {
-                return NULL;
-            }
-            return hMSLight->p_stLight;
-        }
-        return NULL;
-    }
-    return NULL;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1327–1333 */
 /* addr: 0x0026fe60  size: 80 bytes */
@@ -856,15 +864,6 @@ GLI_tdstLight_* HIE_fn_hGetSuperObjectLight(HIE_tdstSuperObject_* p_SuperObjPers
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vMSLightSetRLIParameter(tdstMSLight_* hMSLight, int lNbRLI, int lIndex1, int lIndex2, int lPercent)
-{
-    if (hMSLight != NULL) {
-        hMSLight->ucNbRLIUse = lNbRLI;
-        hMSLight->ucFirstRLI = lIndex1;
-        hMSLight->ucSecondRLI = lIndex2;
-        hMSLight->ucBlendPercent = (float)(unsigned char)lPercent;
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1308–1313 */
 /* addr: 0x0026feb0  size: 92 bytes */
@@ -875,16 +874,6 @@ void fn_vMSLightSetRLIParameter(tdstMSLight_* hMSLight, int lNbRLI, int lIndex1,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetNumberOfRLIFromCharacter(HIE_tdstSuperObject_* hSprObj, unsigned char* p_ucIndex1, unsigned char* p_ucIndex2, float* p_xPercent)
-{
-    int new_var;
-    int lNbRLIUse;
-    float xPercent;
-    if (hSprObj->ulTypeOfLinkedObject == (new_var = 2))
-    {
-        tdstMSLight_* hMSLight = hSprObj->hLinkedObject.p_stCharacter->h_MSLight; if (hMSLight != NULL) { *p_ucIndex1 = hMSLight->ucFirstRLI; *p_ucIndex2 = hMSLight->ucSecondRLI; xPercent = hMSLight->ucBlendPercent; *p_xPercent = xPercent / 100.0f; lNbRLIUse = hMSLight->ucNbRLIUse; } else { lNbRLIUse = 0; } return (unsigned char)lNbRLIUse;
-    }
-    return 0; }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1159–1256 */
 /* addr: 0x0026ff10  size: 1780 bytes */
@@ -977,21 +966,6 @@ unsigned char fn_ucGetNumberOfRLIFromCharacter(HIE_tdstSuperObject_* hSprObj, un
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vUpdateLight(HIE_tdstSuperObject_* hSupObject)
-{
-    float xAnglePerso;
-    MTH3D_tdstVector_ stOffsetVect;
-    MTH3D_tdstVector_ stTransVect;
-    MTH3D_tdstVector_ stDirection;
-    MAT_tdstTransformation_ stMatrixD;
-    MAT_tdstTransformation_ stMatrix3;
-    MAT_tdstTransformation_ stMatrix2;
-    float x;
-    float step;
-    float y;
-    float z;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1116–1142 */
 /* addr: 0x00270610  size: 308 bytes */
@@ -1016,43 +990,6 @@ void fn_vUpdateLight(HIE_tdstSuperObject_* hSupObject)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-float fn_xComputeAngleOfPerso(HIE_tdstSuperObject_* p_SuperObjPerso)
-{
-    MTH3D_tdstVector_ p_stI;
-    MTH3D_tdstVector_ p_stJ;
-    MTH3D_tdstVector_ p_stK;
-    float xAngle;
-    float xSin;
-    float xCos;
-    float xHalfPi = 1.57079632679489661923f;
-
-    MAT_fn_vGetRotationVectors(p_SuperObjPerso->hLocalMatrix, &p_stI, &p_stJ, &p_stK);
-    xCos = p_stI.xX;
-    xSin = p_stI.xY;
-    if ((xCos > 1.175495e-38f) && (xCos < 1.175495e-38f))
-    {
-        xAngle = atanf(xSin / xCos);
-        if (xCos < 0.0f)
-        {
-            xAngle = 3.14159265358979323846f + xAngle; }
-        if (xAngle < 0.0f)
-        {
-            xAngle = 6.28318530717958647692f + xAngle; }
-        else if (!(xAngle < 6.28318530717958647692f))
-        {
-            xAngle = xAngle - 6.28318530717958647692f; }
-    }
-    else
-    {
-        if (xSin >= 0.0f)
-        {
-            xAngle = xHalfPi; }
-        else
-        {
-            xAngle = -xHalfPi; }
-    }
-    return xAngle;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1099–1099 */
 /* addr: 0x00270750  size: 8 bytes */
@@ -1061,10 +998,6 @@ float fn_xComputeAngleOfPerso(HIE_tdstSuperObject_* p_SuperObjPerso)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_bMSLightGetPulse(tdstMSLight_* h_MSLight)
-{
-    return h_MSLight->bPulsing;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1091–1094 */
 /* addr: 0x00270760  size: 16 bytes */
@@ -1075,12 +1008,6 @@ unsigned char fn_bMSLightGetPulse(tdstMSLight_* h_MSLight)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vMSLightSetPulse(tdstMSLight_* h_MSLight, unsigned char bOnOff, float xStep, float xMaxRange)
-{
-    h_MSLight->bPulsing = bOnOff;
-    h_MSLight->xStepPulse = xStep;
-    h_MSLight->xMaxRangePulse = xMaxRange;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1087–1087 */
 /* addr: 0x00270770  size: 8 bytes */
@@ -1089,10 +1016,6 @@ void fn_vMSLightSetPulse(tdstMSLight_* h_MSLight, unsigned char bOnOff, float xS
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_bMSLightGetGiroPhare(tdstMSLight_* h_MSLight)
-{
-    return h_MSLight->bGiroPhare;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1080–1082 */
 /* addr: 0x00270780  size: 12 bytes */
@@ -1102,11 +1025,6 @@ unsigned char fn_bMSLightGetGiroPhare(tdstMSLight_* h_MSLight)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vMSLightSetGiroPhare(tdstMSLight_* h_MSLight, unsigned char bOnOff, float xStep)
-{
-    h_MSLight->bGiroPhare = bOnOff;
-    h_MSLight->xStepGiro = xStep;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1076–1076 */
 /* addr: 0x00270790  size: 8 bytes */
@@ -1115,10 +1033,6 @@ void fn_vMSLightSetGiroPhare(tdstMSLight_* h_MSLight, unsigned char bOnOff, floa
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_bMSLightGetOnlyLocalLight(tdstMSLight_* h_MSLight)
-{
-    return h_MSLight->bOnlyLocalLight;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1072–1072 */
 /* addr: 0x002707a0  size: 8 bytes */
@@ -1127,10 +1041,6 @@ unsigned char fn_bMSLightGetOnlyLocalLight(tdstMSLight_* h_MSLight)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vMSLightSetOnlyLocalLight(tdstMSLight_* h_MSLight, unsigned char bOnlyLocalLight)
-{
-    h_MSLight->bOnlyLocalLight = bOnlyLocalLight;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1068–1068 */
 /* addr: 0x002707b0  size: 8 bytes */
@@ -1139,10 +1049,6 @@ void fn_vMSLightSetOnlyLocalLight(tdstMSLight_* h_MSLight, unsigned char bOnlyLo
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_bMSLightGetLocalLight(tdstMSLight_* h_MSLight)
-{
-    return h_MSLight->bLocalLight;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1064–1064 */
 /* addr: 0x002707c0  size: 8 bytes */
@@ -1151,10 +1057,6 @@ unsigned char fn_bMSLightGetLocalLight(tdstMSLight_* h_MSLight)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vMSLightSetLocalLight(tdstMSLight_* h_MSLight, unsigned char bLocalLight)
-{
-    h_MSLight->bLocalLight = bLocalLight;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1060–1060 */
 /* addr: 0x002707d0  size: 8 bytes */
@@ -1163,10 +1065,6 @@ void fn_vMSLightSetLocalLight(tdstMSLight_* h_MSLight, unsigned char bLocalLight
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-GLI_tdstLight_* fn_p_stMSLightGetLight(tdstMSLight_* h_MSLight)
-{
-    return h_MSLight->p_stLight;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1047–1055 */
 /* addr: 0x002707e0  size: 48 bytes */
@@ -1181,15 +1079,6 @@ GLI_tdstLight_* fn_p_stMSLightGetLight(tdstMSLight_* h_MSLight)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vMSLightSetColorRGBA(tdstMSLight_* h_MSLight, float xR, float xG, float xB, float xA)
-{
-    GEO_tdstColor_ stColor;
-    stColor.xR = xR;
-    stColor.xG = xG;
-    stColor.xB = xB;
-    stColor.xA = xA;
-    GLI_xSetLightColor(h_MSLight->p_stLight, &stColor);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1035–1039 */
 /* addr: 0x00270810  size: 76 bytes */
@@ -1205,13 +1094,6 @@ void fn_vMSLightSetColorRGBA(tdstMSLight_* h_MSLight, float xR, float xG, float 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vMSLightSetBigAlpha(tdstMSLight_* h_MSLight, float xBigAlpha)
-{
-    float xLittleIni;
-    float xBigIni;
-    GLI_vGetLightAlphas(h_MSLight->p_stLight, &xLittleIni, &xBigIni);
-    GLI_vSetLightAlphas(h_MSLight->p_stLight, xLittleIni, xBigAlpha);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1028–1032 */
 /* addr: 0x00270860  size: 76 bytes */
@@ -1227,13 +1109,6 @@ void fn_vMSLightSetBigAlpha(tdstMSLight_* h_MSLight, float xBigAlpha)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vMSLightSetLittleAlpha(tdstMSLight_* h_MSLight, float xLittleAlpha)
-{
-    float xLittleIni;
-    float xBigIni;
-    GLI_vGetLightAlphas(h_MSLight->p_stLight, &xLittleIni, &xBigIni);
-    GLI_vSetLightAlphas(h_MSLight->p_stLight, xLittleAlpha, xBigIni);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1017–1017 */
 /* addr: 0x002708b0  size: 8 bytes */
@@ -1242,10 +1117,6 @@ void fn_vMSLightSetLittleAlpha(tdstMSLight_* h_MSLight, float xLittleAlpha)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vMSLightSetNearFar(tdstMSLight_* h_MSLight, float xNear, float xFar)
-{
-    GLI_vSetLightNearFar(h_MSLight->p_stLight, xNear, xFar);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1012–1012 */
 /* addr: 0x002708c0  size: 12 bytes */
@@ -1254,17 +1125,6 @@ void fn_vMSLightSetNearFar(tdstMSLight_* h_MSLight, float xNear, float xFar)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vMSLightSetOnOff(tdstMSLight_* h_MSLight, unsigned char ucOnOff)
-{
-    GLI_xSetLightState(h_MSLight->p_stLight, (int)ucOnOff);
-}
-
-/* E:\\Rayman3\\Disk_01\\R3PS2_SCEA_engine_sources\\sourcesV39\\ps2\\TEMPGRP\\GAM\\Actions\\MSlight.c line 1009 */
-/* addr: 0x00270900  size: 12 bytes */
-void fn_vMSLightSetTypeOfLight(tdstMSLight_* h_MSLight, unsigned short lTypeOfLight)
-{
-    GLI_vSetLightType(h_MSLight->p_stLight, lTypeOfLight);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1003–1008 */
 /* addr: 0x002708d0  size: 36 bytes */
@@ -1276,12 +1136,6 @@ void fn_vMSLightSetTypeOfLight(tdstMSLight_* h_MSLight, unsigned short lTypeOfLi
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucMSLightGetOnOff(tdstMSLight_* h_MSLight)
-{
-    int lOnOff;
-    GLI_xGetLightState(h_MSLight->p_stLight, (unsigned char*)&lOnOff);
-    return lOnOff;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 714–714 */
 /* addr: 0x00270910  size: 8 bytes */
@@ -1290,10 +1144,6 @@ unsigned char fn_ucMSLightGetOnOff(tdstMSLight_* h_MSLight)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-/* function pointer */ int fn_hMSLightGetLightNodeInSector(tdstMSLight_* _hMSLight)
-{
-    return (int)_hMSLight->hLightInSector;
-}
 
 void* memcpy(void*, const void*, unsigned int);
 void GLI_vCopyLight(GLI_tdstLight_* p_stDest, GLI_tdstLight_* p_stSrc);
@@ -1314,21 +1164,6 @@ void GLI_vCopyLight(GLI_tdstLight_* p_stDest, GLI_tdstLight_* p_stSrc);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vLightCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc)
-{
-    GLI_tdstLight_* p_stLight;
-    SECT_tdstListOfDNMLights_* hLightInSector;
-
-    p_stLight = _p_stObjectDest->h_MSLight->p_stLight;
-    hLightInSector = _p_stObjectDest->h_MSLight->hLightInSector;
-
-    memcpy(_p_stObjectDest->h_MSLight, _p_stObjectSrc->h_MSLight, sizeof(tdstMSLight_));
-
-    _p_stObjectDest->h_MSLight->p_stLight = p_stLight;
-
-    GLI_vCopyLight(_p_stObjectDest->h_MSLight->p_stLight, _p_stObjectSrc->h_MSLight->p_stLight);
-    _p_stObjectDest->h_MSLight->hLightInSector = hLightInSector;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 652–671 */
 /* addr: 0x002709a0  size: 140 bytes */
@@ -1342,15 +1177,6 @@ void fn_vLightCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vLightDesinit(tdstEngineObject_* p_stObject)
-{
-    if (!p_stObject) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
-    }
-    if (!p_stObject->h_MSLight) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 552–597 */
 /* addr: 0x00270a30  size: 480 bytes */
@@ -1375,49 +1201,6 @@ void fn_vLightDesinit(tdstEngineObject_* p_stObject)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vLightInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
-{
-    HIE_tdstSuperObject_* hSuperObjFather;
-    MAT_tdstTransformation_ stMatrix2;
-    tdstMSLight_* hMSLight;
-
-    if (!p_stObject) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
-    }
-    if (!p_stObject->h_MSLight) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
-    }
-    switch (eObjectInit)
-    {
-        case OTI_WhenGameStart:
-        case OTI_MapLoaded:
-        case OTI_ReinitTheMap:
-        case OTI_LoadSavedGame:
-        case OTI_PlayerDead:
-        case OTI_AlwaysCreated:
-        {
-            hMSLight = p_stObject->h_MSLight; GLI_vStoreLightForInit(hMSLight->p_stLight, 0x32); SAI_fn_bInsertMTHVectorInTable(&hMSLight->stOffsetVect, 0x32); SAI_fn_bInsertMTHVectorInTable(&hMSLight->stAngle, 0x32); SAI_fn_bInsertCharInTable(&hMSLight->bPulsing, 0x32); SAI_fn_bInsertMTHRealInTable(&hMSLight->xStepPulse, 0x32); SAI_fn_bInsertMTHRealInTable(&hMSLight->xMaxRangePulse, 0x32); SAI_fn_bInsertCharInTable(&hMSLight->bLocalLight, 0x32); SAI_fn_bInsertCharInTable(&hMSLight->bOnlyLocalLight, 0x32); SAI_fn_bInsertCharInTable(&hMSLight->bGiroPhare, 0x32); SAI_fn_bInsertMTHRealInTable(&hMSLight->xStepGiro, 0x32); SAI_fn_bInsertMTHRealInTable(&hMSLight->xGiroAngle, 0x32);
-            if (3 == GLI_lGetLightType(p_stObject->h_MSLight->p_stLight))
-            {
-                p_stObject->h_MSLight->p_stVisuLight = fn_pCreateSphere(p_stObject->h_MSLight->stOffsetVect.xX, p_stObject->h_MSLight->stOffsetVect.xY, p_stObject->h_MSLight->stOffsetVect.xZ, 0.2f);
-            }
-            else
-            {
-                p_stObject->h_MSLight->p_stVisuLight = fn_pCreateCone(p_stObject->h_MSLight->stOffsetVect.xX, p_stObject->h_MSLight->stOffsetVect.xY, p_stObject->h_MSLight->stOffsetVect.xZ, 1.0f);
-            }
-            hSuperObjFather = fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame);
-            if (hSuperObjFather)
-            {
-                MAT_fn_vInvertRotation(&stMatrix2, hSuperObjFather->hLocalMatrix);
-                MAT_fn_vNormalize(&stMatrix2);
-                GLI_xSetLightMatrix(p_stObject->h_MSLight->p_stLight, &stMatrix2);
-            }
-        }
-        break;
-        default:
-            break;
-    }
-}
 
 void GLI_vRemoveLightForInit(GLI_tdstLight_* p_stLight, unsigned short eUserFlags);
 int SAI_fn_bRemoveValueFromTable(void* _p_vValue, int _eFlags);
@@ -1435,30 +1218,6 @@ int SAI_fn_bRemoveValueFromTable(void* _p_vValue, int _eFlags);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vLightFree(tdstEngineObject_* p_stObject)
-{
-    if (!p_stObject) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
-    }
-    if (!p_stObject->h_MSLight) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
-    }
-
-    {
-        tdstMSLight_* hMSLight = p_stObject->h_MSLight;
-        GLI_vRemoveLightForInit(hMSLight->p_stLight, 0x32);
-        SAI_fn_bRemoveValueFromTable(&hMSLight->stOffsetVect, 0x32);
-        SAI_fn_bRemoveValueFromTable(&hMSLight->stAngle, 0x32);
-        SAI_fn_bRemoveValueFromTable(&hMSLight->bPulsing, 0x32);
-        SAI_fn_bRemoveValueFromTable(&hMSLight->xStepPulse, 0x32);
-        SAI_fn_bRemoveValueFromTable(&hMSLight->xMaxRangePulse, 0x32);
-        SAI_fn_bRemoveValueFromTable(&hMSLight->bLocalLight, 0x32);
-        SAI_fn_bRemoveValueFromTable(&hMSLight->bOnlyLocalLight, 0x32);
-        SAI_fn_bRemoveValueFromTable(&hMSLight->bGiroPhare, 0x32);
-        SAI_fn_bRemoveValueFromTable(&hMSLight->xStepGiro, 0x32);
-        SAI_fn_bRemoveValueFromTable(&hMSLight->xGiroAngle, 0x32);
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 486–497 */
 /* addr: 0x00270d30  size: 340 bytes */
@@ -1474,19 +1233,6 @@ void fn_vLightFree(tdstEngineObject_* p_stObject)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vLightAlloc(tdstEngineObject_* p_stObject)
-{
-    tdstMSLight_* hMSLight;
-
-    if (!p_stObject) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
-    }
-    if (p_stObject->h_MSLight) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 13, -1, 255, 255, NULL);
-    }
-    hMSLight = (tdstMSLight_*)HMU_fn_p_vMalloc(0x40, 0); hMSLight->xGiroAngle = 0.0f; hMSLight->stOffsetVect.xX = 0.0f; hMSLight->stOffsetVect.xY = 0.0f; hMSLight->stOffsetVect.xZ = 0.0f; GLI_xCreateLight(&hMSLight->p_stLight, 1); hMSLight->hLightInSector = SECT_fn_hCreateElementLstDNMLights(); p_stObject->h_MSLight = hMSLight;
-    hMSLight = p_stObject->h_MSLight; GLI_vStoreLightForInit(hMSLight->p_stLight, 0x32); SAI_fn_bInsertMTHVectorInTable(&hMSLight->stOffsetVect, 0x32); SAI_fn_bInsertMTHVectorInTable(&hMSLight->stAngle, 0x32); SAI_fn_bInsertCharInTable(&hMSLight->bPulsing, 0x32); SAI_fn_bInsertMTHRealInTable(&hMSLight->xStepPulse, 0x32); SAI_fn_bInsertMTHRealInTable(&hMSLight->xMaxRangePulse, 0x32); SAI_fn_bInsertCharInTable(&hMSLight->bLocalLight, 0x32); SAI_fn_bInsertCharInTable(&hMSLight->bOnlyLocalLight, 0x32); SAI_fn_bInsertCharInTable(&hMSLight->bGiroPhare, 0x32); SAI_fn_bInsertMTHRealInTable(&hMSLight->xStepGiro, 0x32); SAI_fn_bInsertMTHRealInTable(&hMSLight->xGiroAngle, 0x32);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 472–472 */
 /* addr: 0x00270e90  size: 8 bytes */
@@ -1495,10 +1241,6 @@ void fn_vLightAlloc(tdstEngineObject_* p_stObject)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned int fn_ulLightSizeOf(void)
-{
-    return 0x40;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 234–288 */
 /* addr: 0x00270ea0  size: 432 bytes */
@@ -1550,6 +1292,7 @@ unsigned int fn_ulLightSizeOf(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
 GEO_tdstGeometricObject_* fn_pCreateCone(float xS, float yS, float zS, float xRadius)
 {
     GEO_tdstGeometricObject_* p_stSphere;
@@ -1592,4 +1335,323 @@ GEO_tdstGeometricObject_* fn_pCreateCone(float xS, float yS, float zS, float xRa
     GEO_vSetVisualMaterialOfIndexedCone(p_stSphere, hElement, 0, hMaterial);
     GEO_vEndModifyObject(p_stSphere);
     return p_stSphere;
+}
+
+unsigned int fn_ulLightSizeOf(void)
+{
+    return 0x40;
+}
+
+void fn_vLightAlloc(tdstEngineObject_* p_stObject)
+{
+    tdstMSLight_* hMSLight;
+
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (p_stObject->h_MSLight) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 13, -1, 255, 255, NULL);
+    }
+    hMSLight = (tdstMSLight_*)HMU_fn_p_vMalloc(0x40, 0); hMSLight->xGiroAngle = 0.0f; hMSLight->stOffsetVect.xX = 0.0f; hMSLight->stOffsetVect.xY = 0.0f; hMSLight->stOffsetVect.xZ = 0.0f; GLI_xCreateLight(&hMSLight->p_stLight, 1); hMSLight->hLightInSector = SECT_fn_hCreateElementLstDNMLights(); p_stObject->h_MSLight = hMSLight;
+    hMSLight = p_stObject->h_MSLight; GLI_vStoreLightForInit(hMSLight->p_stLight, 0x32); SAI_fn_bInsertMTHVectorInTable(&hMSLight->stOffsetVect, 0x32); SAI_fn_bInsertMTHVectorInTable(&hMSLight->stAngle, 0x32); SAI_fn_bInsertCharInTable(&hMSLight->bPulsing, 0x32); SAI_fn_bInsertMTHRealInTable(&hMSLight->xStepPulse, 0x32); SAI_fn_bInsertMTHRealInTable(&hMSLight->xMaxRangePulse, 0x32); SAI_fn_bInsertCharInTable(&hMSLight->bLocalLight, 0x32); SAI_fn_bInsertCharInTable(&hMSLight->bOnlyLocalLight, 0x32); SAI_fn_bInsertCharInTable(&hMSLight->bGiroPhare, 0x32); SAI_fn_bInsertMTHRealInTable(&hMSLight->xStepGiro, 0x32); SAI_fn_bInsertMTHRealInTable(&hMSLight->xGiroAngle, 0x32);
+}
+
+void fn_vLightFree(tdstEngineObject_* p_stObject)
+{
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!p_stObject->h_MSLight) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+
+    {
+        tdstMSLight_* hMSLight = p_stObject->h_MSLight;
+        GLI_vRemoveLightForInit(hMSLight->p_stLight, 0x32);
+        SAI_fn_bRemoveValueFromTable(&hMSLight->stOffsetVect, 0x32);
+        SAI_fn_bRemoveValueFromTable(&hMSLight->stAngle, 0x32);
+        SAI_fn_bRemoveValueFromTable(&hMSLight->bPulsing, 0x32);
+        SAI_fn_bRemoveValueFromTable(&hMSLight->xStepPulse, 0x32);
+        SAI_fn_bRemoveValueFromTable(&hMSLight->xMaxRangePulse, 0x32);
+        SAI_fn_bRemoveValueFromTable(&hMSLight->bLocalLight, 0x32);
+        SAI_fn_bRemoveValueFromTable(&hMSLight->bOnlyLocalLight, 0x32);
+        SAI_fn_bRemoveValueFromTable(&hMSLight->bGiroPhare, 0x32);
+        SAI_fn_bRemoveValueFromTable(&hMSLight->xStepGiro, 0x32);
+        SAI_fn_bRemoveValueFromTable(&hMSLight->xGiroAngle, 0x32);
+    }
+}
+
+void fn_vLightInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
+{
+    HIE_tdstSuperObject_* hSuperObjFather;
+    MAT_tdstTransformation_ stMatrix2;
+    tdstMSLight_* hMSLight;
+
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!p_stObject->h_MSLight) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+    switch (eObjectInit)
+    {
+        case OTI_WhenGameStart:
+        case OTI_MapLoaded:
+        case OTI_ReinitTheMap:
+        case OTI_LoadSavedGame:
+        case OTI_PlayerDead:
+        case OTI_AlwaysCreated:
+        {
+            hMSLight = p_stObject->h_MSLight; GLI_vStoreLightForInit(hMSLight->p_stLight, 0x32); SAI_fn_bInsertMTHVectorInTable(&hMSLight->stOffsetVect, 0x32); SAI_fn_bInsertMTHVectorInTable(&hMSLight->stAngle, 0x32); SAI_fn_bInsertCharInTable(&hMSLight->bPulsing, 0x32); SAI_fn_bInsertMTHRealInTable(&hMSLight->xStepPulse, 0x32); SAI_fn_bInsertMTHRealInTable(&hMSLight->xMaxRangePulse, 0x32); SAI_fn_bInsertCharInTable(&hMSLight->bLocalLight, 0x32); SAI_fn_bInsertCharInTable(&hMSLight->bOnlyLocalLight, 0x32); SAI_fn_bInsertCharInTable(&hMSLight->bGiroPhare, 0x32); SAI_fn_bInsertMTHRealInTable(&hMSLight->xStepGiro, 0x32); SAI_fn_bInsertMTHRealInTable(&hMSLight->xGiroAngle, 0x32);
+            if (3 == GLI_lGetLightType(p_stObject->h_MSLight->p_stLight))
+            {
+                p_stObject->h_MSLight->p_stVisuLight = fn_pCreateSphere(p_stObject->h_MSLight->stOffsetVect.xX, p_stObject->h_MSLight->stOffsetVect.xY, p_stObject->h_MSLight->stOffsetVect.xZ, 0.2f);
+            }
+            else
+            {
+                p_stObject->h_MSLight->p_stVisuLight = fn_pCreateCone(p_stObject->h_MSLight->stOffsetVect.xX, p_stObject->h_MSLight->stOffsetVect.xY, p_stObject->h_MSLight->stOffsetVect.xZ, 1.0f);
+            }
+            hSuperObjFather = fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame);
+            if (hSuperObjFather)
+            {
+                MAT_fn_vInvertRotation(&stMatrix2, hSuperObjFather->hLocalMatrix);
+                MAT_fn_vNormalize(&stMatrix2);
+                GLI_xSetLightMatrix(p_stObject->h_MSLight->p_stLight, &stMatrix2);
+            }
+        }
+        break;
+        default:
+            break;
+    }
+}
+
+void fn_vLightDesinit(tdstEngineObject_* p_stObject)
+{
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!p_stObject->h_MSLight) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+}
+
+void fn_vLightCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc)
+{
+    GLI_tdstLight_* p_stLight;
+    SECT_tdstListOfDNMLights_* hLightInSector;
+
+    p_stLight = _p_stObjectDest->h_MSLight->p_stLight;
+    hLightInSector = _p_stObjectDest->h_MSLight->hLightInSector;
+
+    memcpy(_p_stObjectDest->h_MSLight, _p_stObjectSrc->h_MSLight, sizeof(tdstMSLight_));
+
+    _p_stObjectDest->h_MSLight->p_stLight = p_stLight;
+
+    GLI_vCopyLight(_p_stObjectDest->h_MSLight->p_stLight, _p_stObjectSrc->h_MSLight->p_stLight);
+    _p_stObjectDest->h_MSLight->hLightInSector = hLightInSector;
+}
+
+/* function pointer */ int fn_hMSLightGetLightNodeInSector(tdstMSLight_* _hMSLight)
+{
+    return (int)_hMSLight->hLightInSector;
+}
+
+/* E:\\Rayman3\\Disk_01\\R3PS2_SCEA_engine_sources\\sourcesV39\\ps2\\TEMPGRP\\GAM\\Actions\\MSlight.c line 1009 */
+/* addr: 0x00270900  size: 12 bytes */
+void fn_vMSLightSetTypeOfLight(tdstMSLight_* h_MSLight, unsigned short lTypeOfLight)
+{
+    GLI_vSetLightType(h_MSLight->p_stLight, lTypeOfLight);
+}
+
+unsigned char fn_ucMSLightGetOnOff(tdstMSLight_* h_MSLight)
+{
+    int lOnOff;
+    GLI_xGetLightState(h_MSLight->p_stLight, (unsigned char*)&lOnOff);
+    return lOnOff;
+}
+
+void fn_vMSLightSetOnOff(tdstMSLight_* h_MSLight, unsigned char ucOnOff)
+{
+    GLI_xSetLightState(h_MSLight->p_stLight, (int)ucOnOff);
+}
+
+void fn_vMSLightSetNearFar(tdstMSLight_* h_MSLight, float xNear, float xFar)
+{
+    GLI_vSetLightNearFar(h_MSLight->p_stLight, xNear, xFar);
+}
+
+void fn_vMSLightSetLittleAlpha(tdstMSLight_* h_MSLight, float xLittleAlpha)
+{
+    float xLittleIni;
+    float xBigIni;
+    GLI_vGetLightAlphas(h_MSLight->p_stLight, &xLittleIni, &xBigIni);
+    GLI_vSetLightAlphas(h_MSLight->p_stLight, xLittleAlpha, xBigIni);
+}
+
+void fn_vMSLightSetBigAlpha(tdstMSLight_* h_MSLight, float xBigAlpha)
+{
+    float xLittleIni;
+    float xBigIni;
+    GLI_vGetLightAlphas(h_MSLight->p_stLight, &xLittleIni, &xBigIni);
+    GLI_vSetLightAlphas(h_MSLight->p_stLight, xLittleIni, xBigAlpha);
+}
+
+void fn_vMSLightSetColorRGBA(tdstMSLight_* h_MSLight, float xR, float xG, float xB, float xA)
+{
+    GEO_tdstColor_ stColor;
+    stColor.xR = xR;
+    stColor.xG = xG;
+    stColor.xB = xB;
+    stColor.xA = xA;
+    GLI_xSetLightColor(h_MSLight->p_stLight, &stColor);
+}
+
+GLI_tdstLight_* fn_p_stMSLightGetLight(tdstMSLight_* h_MSLight)
+{
+    return h_MSLight->p_stLight;
+}
+
+void fn_vMSLightSetLocalLight(tdstMSLight_* h_MSLight, unsigned char bLocalLight)
+{
+    h_MSLight->bLocalLight = bLocalLight;
+}
+
+unsigned char fn_bMSLightGetLocalLight(tdstMSLight_* h_MSLight)
+{
+    return h_MSLight->bLocalLight;
+}
+
+void fn_vMSLightSetOnlyLocalLight(tdstMSLight_* h_MSLight, unsigned char bOnlyLocalLight)
+{
+    h_MSLight->bOnlyLocalLight = bOnlyLocalLight;
+}
+
+unsigned char fn_bMSLightGetOnlyLocalLight(tdstMSLight_* h_MSLight)
+{
+    return h_MSLight->bOnlyLocalLight;
+}
+
+void fn_vMSLightSetGiroPhare(tdstMSLight_* h_MSLight, unsigned char bOnOff, float xStep)
+{
+    h_MSLight->bGiroPhare = bOnOff;
+    h_MSLight->xStepGiro = xStep;
+}
+
+unsigned char fn_bMSLightGetGiroPhare(tdstMSLight_* h_MSLight)
+{
+    return h_MSLight->bGiroPhare;
+}
+
+void fn_vMSLightSetPulse(tdstMSLight_* h_MSLight, unsigned char bOnOff, float xStep, float xMaxRange)
+{
+    h_MSLight->bPulsing = bOnOff;
+    h_MSLight->xStepPulse = xStep;
+    h_MSLight->xMaxRangePulse = xMaxRange;
+}
+
+unsigned char fn_bMSLightGetPulse(tdstMSLight_* h_MSLight)
+{
+    return h_MSLight->bPulsing;
+}
+
+float fn_xComputeAngleOfPerso(HIE_tdstSuperObject_* p_SuperObjPerso)
+{
+    MTH3D_tdstVector_ p_stI;
+    MTH3D_tdstVector_ p_stJ;
+    MTH3D_tdstVector_ p_stK;
+    float xAngle;
+    float xSin;
+    float xCos;
+    float xHalfPi = 1.57079632679489661923f;
+
+    MAT_fn_vGetRotationVectors(p_SuperObjPerso->hLocalMatrix, &p_stI, &p_stJ, &p_stK);
+    xCos = p_stI.xX;
+    xSin = p_stI.xY;
+    if ((xCos > 1.175495e-38f) && (xCos < 1.175495e-38f))
+    {
+        xAngle = atanf(xSin / xCos);
+        if (xCos < 0.0f)
+        {
+            xAngle = 3.14159265358979323846f + xAngle; }
+        if (xAngle < 0.0f)
+        {
+            xAngle = 6.28318530717958647692f + xAngle; }
+        else if (!(xAngle < 6.28318530717958647692f))
+        {
+            xAngle = xAngle - 6.28318530717958647692f; }
+    }
+    else
+    {
+        if (xSin >= 0.0f)
+        {
+            xAngle = xHalfPi; }
+        else
+        {
+            xAngle = -xHalfPi; }
+    }
+    return xAngle;
+}
+
+void fn_vUpdateLight(HIE_tdstSuperObject_* hSupObject)
+{
+    float xAnglePerso;
+    MTH3D_tdstVector_ stOffsetVect;
+    MTH3D_tdstVector_ stTransVect;
+    MTH3D_tdstVector_ stDirection;
+    MAT_tdstTransformation_ stMatrixD;
+    MAT_tdstTransformation_ stMatrix3;
+    MAT_tdstTransformation_ stMatrix2;
+    float x;
+    float step;
+    float y;
+    float z;
+    /* TODO: decompile from asm/... */
+}
+
+unsigned char fn_ucGetNumberOfRLIFromCharacter(HIE_tdstSuperObject_* hSprObj, unsigned char* p_ucIndex1, unsigned char* p_ucIndex2, float* p_xPercent)
+{
+    int new_var;
+    int lNbRLIUse;
+    float xPercent;
+    if (hSprObj->ulTypeOfLinkedObject == (new_var = 2))
+    {
+        tdstMSLight_* hMSLight = hSprObj->hLinkedObject.p_stCharacter->h_MSLight; if (hMSLight != NULL) { *p_ucIndex1 = hMSLight->ucFirstRLI; *p_ucIndex2 = hMSLight->ucSecondRLI; xPercent = hMSLight->ucBlendPercent; *p_xPercent = xPercent / 100.0f; lNbRLIUse = hMSLight->ucNbRLIUse; } else { lNbRLIUse = 0; } return (unsigned char)lNbRLIUse;
+    }
+    return 0; }
+
+void fn_vMSLightSetRLIParameter(tdstMSLight_* hMSLight, int lNbRLI, int lIndex1, int lIndex2, int lPercent)
+{
+    if (hMSLight != NULL) {
+        hMSLight->ucNbRLIUse = lNbRLI;
+        hMSLight->ucFirstRLI = lIndex1;
+        hMSLight->ucSecondRLI = lIndex2;
+        hMSLight->ucBlendPercent = (float)(unsigned char)lPercent;
+    }
+}
+
+GLI_tdstLight_* HIE_fn_hGetSuperObjectLight(HIE_tdstSuperObject_* p_SuperObjPerso)
+{
+    tdstMSLight_* hMSLight;
+
+    if (p_SuperObjPerso->ulTypeOfLinkedObject == 2)
+    {
+
+        hMSLight = ((p_SuperObjPerso->ulTypeOfLinkedObject != 2) ? NULL : p_SuperObjPerso->hLinkedObject.p_stCharacter)->h_MSLight;
+
+        if (hMSLight != NULL)
+        {
+            if (hMSLight->bLocalLight == 0)
+            {
+                return NULL;
+            }
+            return hMSLight->p_stLight;
+        }
+        return NULL;
+    }
+    return NULL;
+}
+
+unsigned int fn_ulDynamSizeOf(void)
+{
+    return 0x0C;
 }

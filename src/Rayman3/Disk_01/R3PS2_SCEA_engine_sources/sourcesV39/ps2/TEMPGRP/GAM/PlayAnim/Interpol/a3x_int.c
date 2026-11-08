@@ -25,10 +25,14 @@ short ax_SinTab[8192];
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstA3dGENERAL_* fn_p_GetA3dGENERAL(unsigned short _uwNumOfA3dGENERAL)
-{
-    return gp_stA3dGENERAL + _uwNumOfA3dGENERAL;
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+tdstA3dGENERAL_* fn_p_GetA3dGENERAL(unsigned short _uwNumOfA3dGENERAL);
+void fn_v_QuatSlerp(float* _a4_xQuatD, float* _a4_xQuatS1, float* _a4_xQuatS2, float _xT);
+float fn_xRModulus(float xValue, float xModulus);
+void fn_v_QuatToMatrix(float (*_a3a3_xMtx)[3], float* _a4_xQuat);
+void fn_v_ExpandQuat(float* _a4_xQuatD, short* _a4_xQuatS);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_int.c lines 534–591 */
 /* addr: 0x0027bea0  size: 476 bytes */
@@ -65,16 +69,6 @@ tdstA3dGENERAL_* fn_p_GetA3dGENERAL(unsigned short _uwNumOfA3dGENERAL)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_v_QuatSlerp(float* _a4_xQuatD, float* _a4_xQuatS1, float* _a4_xQuatS2, float _xT)
-{
-    float xCoef3;
-    float xCoef2;
-    float xCoef1;
-    float xTbyOmega;
-    float xSinOmega;
-    float xCosOmega;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_int.c lines 519–525 */
 /* addr: 0x0027c080  size: 60 bytes */
@@ -87,20 +81,6 @@ void fn_v_QuatSlerp(float* _a4_xQuatD, float* _a4_xQuatS1, float* _a4_xQuatS2, f
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-float fn_xRModulus(float xValue, float xModulus)
-{
-    register float xTempo;
-
-    xTempo = xModulus;
-    if (xModulus <= xValue)
-    {
-        do
-        {
-            xTempo = xTempo + xModulus;
-        } while (xTempo <= xValue);
-    }
-    return xValue - (xTempo - xModulus);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_int.c lines 398–418 */
 /* addr: 0x0027c0c0  size: 300 bytes */
@@ -133,6 +113,28 @@ float fn_xRModulus(float xValue, float xModulus)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_int.c lines 86–90 */
+/* addr: 0x0027c1f0  size: 112 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 86
+ *   +0x0024 -> line 87
+ *   +0x003c -> line 88
+ *   +0x0054 -> line 89
+ *   +0x0068 -> line 90
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void fn_v_ExpandQuat(float* _a4_xQuatD, short* _a4_xQuatS)
+{
+    float xCoef = 1.0f / 32767.0f;
+    _a4_xQuatD[0] = _a4_xQuatS[0] * xCoef;
+    _a4_xQuatD[1] = _a4_xQuatS[1] * xCoef;
+    _a4_xQuatD[2] = _a4_xQuatS[2] * xCoef;
+    _a4_xQuatD[3] = _a4_xQuatS[3] * xCoef;
+}
+
 void fn_v_QuatToMatrix(float (*_a3a3_xMtx)[3], float* _a4_xQuat)
 {
     float xXS;
@@ -172,22 +174,33 @@ void fn_v_QuatToMatrix(float (*_a3a3_xMtx)[3], float* _a4_xQuat)
     _a3a3_xMtx[2][2] = 1.0f - (xXX + xYY);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_int.c lines 86–90 */
-/* addr: 0x0027c1f0  size: 112 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 86
- *   +0x0024 -> line 87
- *   +0x003c -> line 88
- *   +0x0054 -> line 89
- *   +0x0068 -> line 90
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_v_ExpandQuat(float* _a4_xQuatD, short* _a4_xQuatS)
+float fn_xRModulus(float xValue, float xModulus)
 {
-    float xCoef = 1.0f / 32767.0f;
-    _a4_xQuatD[0] = _a4_xQuatS[0] * xCoef;
-    _a4_xQuatD[1] = _a4_xQuatS[1] * xCoef;
-    _a4_xQuatD[2] = _a4_xQuatS[2] * xCoef;
-    _a4_xQuatD[3] = _a4_xQuatS[3] * xCoef;
+    register float xTempo;
+
+    xTempo = xModulus;
+    if (xModulus <= xValue)
+    {
+        do
+        {
+            xTempo = xTempo + xModulus;
+        } while (xTempo <= xValue);
+    }
+    return xValue - (xTempo - xModulus);
+}
+
+void fn_v_QuatSlerp(float* _a4_xQuatD, float* _a4_xQuatS1, float* _a4_xQuatS2, float _xT)
+{
+    float xCoef3;
+    float xCoef2;
+    float xCoef1;
+    float xTbyOmega;
+    float xSinOmega;
+    float xCosOmega;
+    /* TODO: decompile from asm/... */
+}
+
+tdstA3dGENERAL_* fn_p_GetA3dGENERAL(unsigned short _uwNumOfA3dGENERAL)
+{
+    return gp_stA3dGENERAL + _uwNumOfA3dGENERAL;
 }

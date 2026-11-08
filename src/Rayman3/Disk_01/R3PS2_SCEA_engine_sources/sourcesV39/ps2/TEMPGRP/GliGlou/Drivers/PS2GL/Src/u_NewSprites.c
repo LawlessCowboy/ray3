@@ -1253,17 +1253,15 @@ extern int DelayedFreesInit;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vInitDelayedFrees(void)
-{
-    unsigned int i;
-    DelayedFreesInit = 1;
-    for (i = 0; i < 2000; i++)
-    {
 
-        GLI_g_DelayedFrees[i].Pointer = 0;
-        GLI_g_DelayedFrees[i].DisplayList = 0;
-    }
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void GLI_vInitDelayedFrees(void);
+void GLI_vDisplayBigBossLifeBars(void);
+void GLI_vDisplayLifeBars(void);
+void GLI_vDesinitBigBossLifeBars(void);
+void GLI_vAddBigBossLifeBars(float PosRightX, float PosBottomY, float CurrentLife, float MaxLife, float CenterIcon, GLI_tdstMaterial_* pMat, float fAlpha);
+void GLI_vDesinitLifeBars(void);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_NewSprites.c lines 3068–3328 */
 /* addr: 0x002cc190  size: 2648 bytes */
@@ -1481,35 +1479,6 @@ void GLI_vInitDelayedFrees(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vDisplayBigBossLifeBars(void)
-{
-    int a_bLifeBar[3];
-    float fY4b;
-    float fY4a;
-    float fX4b;
-    float fX4a;
-    float fADC;
-    unsigned int iCurrentIcon;
-    float Life_fXCurrent;
-    float Life_fX5a;
-    float Life_fX6a;
-    float Life_fY4b;
-    float Life_fY4a;
-    float Life_fX4b;
-    float Life_fX4a;
-    float fExtendScreenSize;
-    float fTexToScreenY;
-    float fTexToScreenX;
-    float fX3;
-    float fYTopNew;
-    float fX2;
-    float BBLB_MainSizeX;
-    float fYBottom;
-    float fXRight;
-    float fYTop;
-    float fXLeft;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_NewSprites.c lines 2767–3065 */
 /* addr: 0x002ccbf0  size: 4004 bytes */
@@ -1823,6 +1792,63 @@ void GLI_vDisplayBigBossLifeBars(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_NewSprites.c lines 2712–2712 */
+/* addr: 0x002cdba0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2712
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_NewSprites.c lines 2699–2707 */
+/* addr: 0x002cdbb0  size: 68 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2699
+ *   +0x0004 -> line 2706
+ *   +0x0008 -> line 2699
+ *   +0x000c -> line 2706
+ *   +0x0010 -> line 2700
+ *   +0x0018 -> line 2701
+ *   +0x0020 -> line 2702
+ *   +0x0028 -> line 2703
+ *   +0x0030 -> line 2704
+ *   +0x0038 -> line 2705
+ *   +0x003c -> line 2707
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_NewSprites.c lines 2676–2676 */
+/* addr: 0x002cdc00  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2676
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void GLI_vDesinitLifeBars(void)
+{
+    GLI_g_LifeBarIsInit = 0;
+}
+
+void GLI_vAddBigBossLifeBars(float PosRightX, float PosBottomY, float CurrentLife, float MaxLife, float CenterIcon, GLI_tdstMaterial_* pMat, float fAlpha)
+{
+    GLI_g_BigBossLifeBar.PosRightX = PosRightX;
+    GLI_g_BigBossLifeBarIsInit = 1;
+    GLI_g_BigBossLifeBar.PosBottomY = PosBottomY;
+    GLI_g_BigBossLifeBar.CurrentLife = CurrentLife;
+    GLI_g_BigBossLifeBar.MaxLife = MaxLife;
+    GLI_g_BigBossLifeBar.CenterIcon = CenterIcon;
+    GLI_g_BigBossLifeBar.pMat = pMat;
+    GLI_g_BigBossLifeBar.fAlpha = fAlpha;
+}
+
+void GLI_vDesinitBigBossLifeBars(void)
+{
+    GLI_g_BigBossLifeBarIsInit = 0;
+}
+
 void GLI_vDisplayLifeBars(void)
 {
     float CurrentLife;
@@ -1864,55 +1890,44 @@ void GLI_vDisplayLifeBars(void)
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_NewSprites.c lines 2712–2712 */
-/* addr: 0x002cdba0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2712
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GLI_vDesinitBigBossLifeBars(void)
+void GLI_vDisplayBigBossLifeBars(void)
 {
-    GLI_g_BigBossLifeBarIsInit = 0;
+    int a_bLifeBar[3];
+    float fY4b;
+    float fY4a;
+    float fX4b;
+    float fX4a;
+    float fADC;
+    unsigned int iCurrentIcon;
+    float Life_fXCurrent;
+    float Life_fX5a;
+    float Life_fX6a;
+    float Life_fY4b;
+    float Life_fY4a;
+    float Life_fX4b;
+    float Life_fX4a;
+    float fExtendScreenSize;
+    float fTexToScreenY;
+    float fTexToScreenX;
+    float fX3;
+    float fYTopNew;
+    float fX2;
+    float BBLB_MainSizeX;
+    float fYBottom;
+    float fXRight;
+    float fYTop;
+    float fXLeft;
+    /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_NewSprites.c lines 2699–2707 */
-/* addr: 0x002cdbb0  size: 68 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2699
- *   +0x0004 -> line 2706
- *   +0x0008 -> line 2699
- *   +0x000c -> line 2706
- *   +0x0010 -> line 2700
- *   +0x0018 -> line 2701
- *   +0x0020 -> line 2702
- *   +0x0028 -> line 2703
- *   +0x0030 -> line 2704
- *   +0x0038 -> line 2705
- *   +0x003c -> line 2707
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GLI_vAddBigBossLifeBars(float PosRightX, float PosBottomY, float CurrentLife, float MaxLife, float CenterIcon, GLI_tdstMaterial_* pMat, float fAlpha)
+void GLI_vInitDelayedFrees(void)
 {
-    GLI_g_BigBossLifeBar.PosRightX = PosRightX;
-    GLI_g_BigBossLifeBarIsInit = 1;
-    GLI_g_BigBossLifeBar.PosBottomY = PosBottomY;
-    GLI_g_BigBossLifeBar.CurrentLife = CurrentLife;
-    GLI_g_BigBossLifeBar.MaxLife = MaxLife;
-    GLI_g_BigBossLifeBar.CenterIcon = CenterIcon;
-    GLI_g_BigBossLifeBar.pMat = pMat;
-    GLI_g_BigBossLifeBar.fAlpha = fAlpha;
-}
+    unsigned int i;
+    DelayedFreesInit = 1;
+    for (i = 0; i < 2000; i++)
+    {
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_NewSprites.c lines 2676–2676 */
-/* addr: 0x002cdc00  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2676
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GLI_vDesinitLifeBars(void)
-{
-    GLI_g_LifeBarIsInit = 0;
+        GLI_g_DelayedFrees[i].Pointer = 0;
+        GLI_g_DelayedFrees[i].DisplayList = 0;
+    }
 }

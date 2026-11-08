@@ -25,13 +25,15 @@ float Fog_RandomValue;
 char g_bForceWhiteFog;
 extern float GLI_g_xBrightness;
 
-void GLI_fn_vSetBrightness(int _lValue)
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void GLI_fn_vSetBrightness(int _lValue);
+void GLI_vFogOff(void);
+void GLI_vFogOn(void);
+
+void GLI_vFogOn(void)
 {
-    if (_lValue < 0)
-        _lValue = 0;
-    else if (_lValue >= 100)
-        _lValue = 100;
-    GLI_g_xBrightness = (float)_lValue / 100.0f;
+    GLI_BIG_GLOBALS_xFogIsOn = 1;
 }
 
 void GLI_vFogOff(void)
@@ -40,7 +42,11 @@ void GLI_vFogOff(void)
     GLI_BIG_GLOBALS_xFogIsOn = 0;
 }
 
-void GLI_vFogOn(void)
+void GLI_fn_vSetBrightness(int _lValue)
 {
-    GLI_BIG_GLOBALS_xFogIsOn = 1;
+    if (_lValue < 0)
+        _lValue = 0;
+    else if (_lValue >= 100)
+        _lValue = 100;
+    GLI_g_xBrightness = (float)_lValue / 100.0f;
 }

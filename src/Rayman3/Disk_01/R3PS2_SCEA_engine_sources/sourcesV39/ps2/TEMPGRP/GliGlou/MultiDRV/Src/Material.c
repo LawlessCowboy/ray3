@@ -936,68 +936,202 @@ float g_AGO_AnimTimeScale;
 extern GLI_tdstMaterial_* GLI_g_StaticCopyOfArrayOfVisualMaterial[];
 extern GLI_tdstMaterial_** GLI_g_pArrayOfVisualMaterial;
 
-GLI_tdstMaterial_* fn_hGetVisualMaterialFromIndex(unsigned short uwIndex)
-{
-    return GLI_g_pArrayOfVisualMaterial[uwIndex];
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+GLI_tdstMaterial_* fn_hGetVisualMaterialFromIndex(unsigned short uwIndex);
+int GLI_Material_fn_lSetTextureOp(GLI_tdstMaterial_* _hVisualMat, int _lIndex, int _lTextureOp);
+void GLI_vRefreshMultiTexturePart(GLI_tdstMaterial_* _pst_Material);
+void GLI_Material_fn_vInitMultiTexturePart(GLI_tdstMaterial_* _hVisualMat);
+void GLI_xRefreshAnimatedTexture(GLI_tdstMaterial_* hMaterial);
+void GLI_vRefreshAllCyclingTextures(float fCoefOfMultiplication);
+void GLI_vUnLockAnimatedTexture(GLI_tdstMaterial_* _hMaterial);
+void GLI_vLockAnimatedTexture(GLI_tdstMaterial_* _hMaterial);
+void GLI_vSetCurrentAnimatedTextureNumber(GLI_tdstMaterial_* hMaterial, int lTextureNumber);
+int GLI_lGetCurrentAnimatedTextureNumber(GLI_tdstMaterial_* hMaterial);
+int GLI_lGetMaterialNumberOfAnimatedTexture(GLI_tdstMaterial_* hMaterial);
+void GLI_xSetMaterialTextureScrollingOnOff(GLI_tdstMaterial_* hMaterial, int bSwitch);
+void GLI_xGetMaterialTextureScrollingCoef(GLI_tdstMaterial_* hMaterial, int lUnused, int* p_bSwitch, float* p_fUSpeed, float* p_fVSpeed);
+void GLI_xSetMaterialTextureDecalage(GLI_tdstMaterial_* hMaterial, float fUSpeed, float fVSpeed, int unused, int bSwitch);
+void GLI_xSetMaterialTextureScrollingCoef(GLI_tdstMaterial_* hMaterial, int lUnused, int bSwitch, float fUSpeed, float fVSpeed);
+void GLI_xSetMaterialTexture(GLI_tdstMaterial_* hMaterial, GLI_tdstTexture_* p_stTexture);
+void GLI_vSetMaterialAsChromed(void);
+void GLI_xSetMaterialType(GLI_tdstMaterial_* hMaterial, unsigned int xMType);
+void GLI_xGetMaterialSpecularCoef(GLI_tdstMaterial_* hMaterial, int* p_lSpecularExponent, GEO_tdstColor_* p_stColor);
+void GLI_xSetMaterialSpecularCoef(GLI_tdstMaterial_* hMaterial, int lSpecularExponent, GEO_tdstColor_* p_stColor);
+void GLI_xGetMaterialDiffuseCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor);
+void GLI_xSetMaterialDiffuseCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor);
+void GLI_xGetMaterialColor(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor);
+void GLI_xSetMaterialColor(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor);
+void GLI_xGetMaterialAmbientCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor);
+void GLI_xSetMaterialAmbientCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor);
 
-int GLI_Material_fn_lSetTextureOp(GLI_tdstMaterial_* _hVisualMat, int _lIndex, int _lTextureOp)
-{
-    /* Not original source: permuter-derived (unsigned index mask and extra
-       temporary) to get retail's addu operand order; verified MATCH. */
-    int new_var;
-    int lOffset;
-    if (_lIndex < 0 || _lIndex >= 4)
-        return 0;
-    new_var = _lIndex * 80;
-    lOffset = new_var;
-    ((char*)&_hVisualMat->a_stMultiMaterial[0].c_Operator)[lOffset & 0xFFFFFFFFu] = _lTextureOp;
-    return 1;
-}
+unsigned char fn_bIsEngineInPause(void);
+unsigned char EngineIsFrozen(void);
 
-void GLI_vRefreshMultiTexturePart(GLI_tdstMaterial_* _pst_Material)
+void GLI_xSetMaterialAmbientCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor)
 {
-    float fSin;
-    float fCos;
-    anon_0* pst_MTM;
-    unsigned int i;
-    pst_MTM = &_pst_Material->a_stMultiMaterial[0];
-    for (i = 0; i < _pst_Material->ulNbTextureStages; i++)
+    if (hMaterial->stAmbient.xR != p_stColor->xR || hMaterial->stAmbient.xG != p_stColor->xG || hMaterial->stAmbient.xB != p_stColor->xB || hMaterial->stAmbient.xA != p_stColor->xA)
     {
-        if (pst_MTM->c_Flags & 0x8)
-        {
-            pst_MTM->fStaticAngle += pst_MTM->fDynamicAngle * gs_fCoefOfMultiplicationForScolledTextures;
-            fCos = cosf(pst_MTM->fStaticAngle);
-            fSin = sinf(pst_MTM->fStaticAngle);
-            pst_MTM->st_UVStaticPos.stMat[0][0] = fCos * pst_MTM->fScaleU;
-            pst_MTM->st_UVStaticPos.stMat[0][1] = fSin * pst_MTM->fScaleU;
-            pst_MTM->st_UVStaticPos.stMat[1][0] = -fSin * pst_MTM->fScaleV;
-            pst_MTM->st_UVStaticPos.stMat[1][1] = fCos * pst_MTM->fScaleV;
-        }
-        pst_MTM->st_UVStaticPos.stTrans[0] += pst_MTM->st_UVDynamicPos.stTrans[0] * gs_fCoefOfMultiplicationForScolledTextures;
-        pst_MTM->st_UVStaticPos.stTrans[1] += pst_MTM->st_UVDynamicPos.stTrans[1] * gs_fCoefOfMultiplicationForScolledTextures;
-        pst_MTM++;
+        hMaterial->stAmbient = *p_stColor;
+        GLI_xSetUpdateGeometricForMaterialCoefChange();
     }
 }
 
-void GLI_Material_fn_vInitMultiTexturePart(GLI_tdstMaterial_* _hVisualMat)
+void GLI_xGetMaterialAmbientCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor)
 {
-    anon_0* pst_MTM;
-    anon_0* pst_LastMTM;
+    *(GEO_tdstColor_*)p_stColor = hMaterial->stAmbient;
+}
 
+void GLI_xSetMaterialColor(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor)
+{
+    GLI_xSetUpdateGeometricForMaterialCoefChange();
+    hMaterial->stColor = *p_stColor;
+}
 
-    memset(_hVisualMat->a_stMultiMaterial, 0, sizeof(_hVisualMat->a_stMultiMaterial));
-    _hVisualMat->ulNbTextureStages = 0;
+void GLI_xGetMaterialColor(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor)
+{
+    *(GEO_tdstColor_*)p_stColor = hMaterial->stColor;
+}
 
-    pst_MTM = _hVisualMat->a_stMultiMaterial;
-    pst_LastMTM = pst_MTM + 4;
+void GLI_xSetMaterialDiffuseCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor)
+{
+    GLI_xSetUpdateGeometricForMaterialCoefChange();
+    hMaterial->stDiffuse = *p_stColor;
+}
 
-    for (; pst_MTM < pst_LastMTM; pst_MTM++)
+void GLI_xGetMaterialDiffuseCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor)
+{
+    *(GEO_tdstColor_*)p_stColor = hMaterial->stDiffuse;
+}
+
+void GLI_xSetMaterialSpecularCoef(GLI_tdstMaterial_* hMaterial, int lSpecularExponent, GEO_tdstColor_* p_stColor)
+{
+    GLI_xSetUpdateGeometricForMaterialCoefChange();
+    hMaterial->stSpecular = *p_stColor;
+    hMaterial->lSpecularExponent = lSpecularExponent;
+}
+
+void GLI_xGetMaterialSpecularCoef(GLI_tdstMaterial_* hMaterial, int* p_lSpecularExponent, GEO_tdstColor_* p_stColor)
+{
+    *p_stColor = hMaterial->stSpecular;
+    *p_lSpecularExponent = hMaterial->lSpecularExponent;
+}
+
+void GLI_xSetMaterialType(GLI_tdstMaterial_* hMaterial, unsigned int xMType)
+{
+    hMaterial->xMaterialType = xMType;
+}
+
+void GLI_vSetMaterialAsChromed(void)
+{
+}
+
+void GLI_xSetMaterialTexture(GLI_tdstMaterial_* hMaterial, GLI_tdstTexture_* p_stTexture)
+{
+    hMaterial->p_stTexture = p_stTexture;
+    if (p_stTexture != NULL)
     {
-        pst_MTM->st_UVStaticPos.stMat[0][0] = 1.0f;
-        pst_MTM->st_UVStaticPos.stMat[1][1] = 1.0f;
-        pst_MTM->st_UVDynamicPos.stMat[0][0] = 1.0f;
-        pst_MTM->st_UVDynamicPos.stMat[1][1] = 1.0f;
+        if (p_stTexture->lTextureCaps & 0x8)
+        {
+            hMaterial->xMaterialType &= ~0x400;
+        }
+        if (p_stTexture->lTextureCaps & 0x40)
+            hMaterial->xMaterialType &= 0xF7FFFFFF;
+        else
+        {
+            hMaterial->xMaterialType |= 0x08000000;
+        }
+    }
+    else
+    {
+        hMaterial->xMaterialType |= 0x08000000;
+    }
+}
+
+void GLI_xSetMaterialTextureScrollingCoef(GLI_tdstMaterial_* hMaterial, int lUnused, int bSwitch, float fUSpeed, float fVSpeed)
+{
+    hMaterial->a_stMultiMaterial[0].st_UVDynamicPos.stTrans[0] = fUSpeed;
+    hMaterial->a_stMultiMaterial[0].st_UVDynamicPos.stTrans[1] = fVSpeed;
+    hMaterial->fAddU = hMaterial->fConstantAddU = fUSpeed;
+    hMaterial->fAddV = hMaterial->fConstantAddV = fVSpeed;
+    hMaterial->lIncrementIsEnable = bSwitch;
+    if (fUSpeed == 0.0f && fVSpeed == 0.0f)
+        hMaterial->lIncrementIsEnable = 0;
+}
+
+void GLI_xSetMaterialTextureDecalage(GLI_tdstMaterial_* hMaterial, float fUSpeed, float fVSpeed, int unused, int bSwitch)
+{
+    (void)unused;
+    hMaterial->fAddU = fUSpeed;
+    hMaterial->fAddV = fVSpeed;
+    hMaterial->lIncrementIsEnable = bSwitch;
+}
+
+void GLI_xGetMaterialTextureScrollingCoef(GLI_tdstMaterial_* hMaterial, int lUnused, int* p_bSwitch, float* p_fUSpeed, float* p_fVSpeed)
+{
+    *p_fUSpeed = hMaterial->a_stMultiMaterial[0].st_UVDynamicPos.stTrans[0];
+    *p_fVSpeed = hMaterial->a_stMultiMaterial[0].st_UVDynamicPos.stTrans[1];
+    *p_bSwitch = hMaterial->lIncrementIsEnable;
+}
+
+void GLI_xSetMaterialTextureScrollingOnOff(GLI_tdstMaterial_* hMaterial, int bSwitch)
+{
+    /* Retail tests the same U-translation value twice. */
+    if (!bSwitch || hMaterial->a_stMultiMaterial[0].st_UVDynamicPos.stTrans[0] != 0.0f || hMaterial->a_stMultiMaterial[0].st_UVDynamicPos.stTrans[0] != 0.0f)
+        hMaterial->lIncrementIsEnable = bSwitch;
+}
+
+int GLI_lGetMaterialNumberOfAnimatedTexture(GLI_tdstMaterial_* hMaterial)
+{
+    return hMaterial->lNumberOfDisplayNode;
+}
+
+int GLI_lGetCurrentAnimatedTextureNumber(GLI_tdstMaterial_* hMaterial)
+{
+    int lNumber = 1;
+    GLI_tdstAnimatedTextureNode_* p_Node;
+    p_Node = hMaterial->p_stFistAnimatedTExtureNode;
+    while (p_Node != hMaterial->p_stActualAnimatedTExtureNode) {
+        lNumber++;
+        p_Node = p_Node->p_stNextDisplayNode;
+    }
+    if (p_Node == hMaterial->p_stActualAnimatedTExtureNode)
+        return lNumber;
+    else
+        return 0;
+}
+
+void GLI_vSetCurrentAnimatedTextureNumber(GLI_tdstMaterial_* hMaterial, int lTextureNumber)
+{
+    GLI_tdstAnimatedTextureNode_* p_Node;
+    int lNumber = 1;
+    p_Node = hMaterial->p_stFistAnimatedTExtureNode;
+    while (p_Node && lNumber != lTextureNumber) {
+        lNumber++;
+        p_Node = p_Node->p_stNextDisplayNode;
+    }
+    hMaterial->p_stActualAnimatedTExtureNode = p_Node ? p_Node : hMaterial->p_stFistAnimatedTExtureNode;
+}
+
+void GLI_vLockAnimatedTexture(GLI_tdstMaterial_* _hMaterial)
+{
+    _hMaterial->xIsLocked = 1;
+}
+
+void GLI_vUnLockAnimatedTexture(GLI_tdstMaterial_* _hMaterial)
+{
+    _hMaterial->xIsLocked = 0;
+}
+
+void GLI_vRefreshAllCyclingTextures(float fCoefOfMultiplication)
+{
+    if (!fn_bIsEngineInPause() && !EngineIsFrozen())
+    {
+        gs_fCoefOfMultiplicationForScolledTextures = fCoefOfMultiplication;
+        gs_fCoefOfMultiplicationForAnimatedTexture += fCoefOfMultiplication;
+        if (gs_fCoefOfMultiplicationForAnimatedTexture > 10000000.0f)
+            gs_fCoefOfMultiplicationForAnimatedTexture = 0.0f;
+        gs_lActualRefreshNumberForScolledTextures++;
     }
 }
 
@@ -1073,172 +1207,66 @@ void GLI_xRefreshAnimatedTexture(GLI_tdstMaterial_* hMaterial)
         hMaterial->lActualRefreshNumber = gs_lActualRefreshNumberForScolledTextures;
 }
 
-unsigned char fn_bIsEngineInPause(void);
-unsigned char EngineIsFrozen(void);
-
-void GLI_vRefreshAllCyclingTextures(float fCoefOfMultiplication)
+void GLI_Material_fn_vInitMultiTexturePart(GLI_tdstMaterial_* _hVisualMat)
 {
-    if (!fn_bIsEngineInPause() && !EngineIsFrozen())
+    anon_0* pst_MTM;
+    anon_0* pst_LastMTM;
+
+    memset(_hVisualMat->a_stMultiMaterial, 0, sizeof(_hVisualMat->a_stMultiMaterial));
+    _hVisualMat->ulNbTextureStages = 0;
+
+    pst_MTM = _hVisualMat->a_stMultiMaterial;
+    pst_LastMTM = pst_MTM + 4;
+
+    for (; pst_MTM < pst_LastMTM; pst_MTM++)
     {
-        gs_fCoefOfMultiplicationForScolledTextures = fCoefOfMultiplication;
-        gs_fCoefOfMultiplicationForAnimatedTexture += fCoefOfMultiplication;
-        if (gs_fCoefOfMultiplicationForAnimatedTexture > 10000000.0f)
-            gs_fCoefOfMultiplicationForAnimatedTexture = 0.0f;
-        gs_lActualRefreshNumberForScolledTextures++;
+        pst_MTM->st_UVStaticPos.stMat[0][0] = 1.0f;
+        pst_MTM->st_UVStaticPos.stMat[1][1] = 1.0f;
+        pst_MTM->st_UVDynamicPos.stMat[0][0] = 1.0f;
+        pst_MTM->st_UVDynamicPos.stMat[1][1] = 1.0f;
     }
 }
 
-void GLI_vUnLockAnimatedTexture(GLI_tdstMaterial_* _hMaterial)
+void GLI_vRefreshMultiTexturePart(GLI_tdstMaterial_* _pst_Material)
 {
-    _hMaterial->xIsLocked = 0;
-}
-
-void GLI_vLockAnimatedTexture(GLI_tdstMaterial_* _hMaterial)
-{
-    _hMaterial->xIsLocked = 1;
-}
-
-void GLI_vSetCurrentAnimatedTextureNumber(GLI_tdstMaterial_* hMaterial, int lTextureNumber)
-{
-    GLI_tdstAnimatedTextureNode_* p_Node;
-    int lNumber = 1;
-    p_Node = hMaterial->p_stFistAnimatedTExtureNode;
-    while (p_Node && lNumber != lTextureNumber) {
-        lNumber++;
-        p_Node = p_Node->p_stNextDisplayNode;
+    float fSin;
+    float fCos;
+    anon_0* pst_MTM;
+    unsigned int i;
+    pst_MTM = &_pst_Material->a_stMultiMaterial[0];
+    for (i = 0; i < _pst_Material->ulNbTextureStages; i++)
+    {
+        if (pst_MTM->c_Flags & 0x8)
+        {
+            pst_MTM->fStaticAngle += pst_MTM->fDynamicAngle * gs_fCoefOfMultiplicationForScolledTextures;
+            fCos = cosf(pst_MTM->fStaticAngle);
+            fSin = sinf(pst_MTM->fStaticAngle);
+            pst_MTM->st_UVStaticPos.stMat[0][0] = fCos * pst_MTM->fScaleU;
+            pst_MTM->st_UVStaticPos.stMat[0][1] = fSin * pst_MTM->fScaleU;
+            pst_MTM->st_UVStaticPos.stMat[1][0] = -fSin * pst_MTM->fScaleV;
+            pst_MTM->st_UVStaticPos.stMat[1][1] = fCos * pst_MTM->fScaleV;
+        }
+        pst_MTM->st_UVStaticPos.stTrans[0] += pst_MTM->st_UVDynamicPos.stTrans[0] * gs_fCoefOfMultiplicationForScolledTextures;
+        pst_MTM->st_UVStaticPos.stTrans[1] += pst_MTM->st_UVDynamicPos.stTrans[1] * gs_fCoefOfMultiplicationForScolledTextures;
+        pst_MTM++;
     }
-    hMaterial->p_stActualAnimatedTExtureNode = p_Node ? p_Node : hMaterial->p_stFistAnimatedTExtureNode;
 }
 
-int GLI_lGetCurrentAnimatedTextureNumber(GLI_tdstMaterial_* hMaterial)
+int GLI_Material_fn_lSetTextureOp(GLI_tdstMaterial_* _hVisualMat, int _lIndex, int _lTextureOp)
 {
-    int lNumber = 1;
-    GLI_tdstAnimatedTextureNode_* p_Node;
-    p_Node = hMaterial->p_stFistAnimatedTExtureNode;
-    while (p_Node != hMaterial->p_stActualAnimatedTExtureNode) {
-        lNumber++;
-        p_Node = p_Node->p_stNextDisplayNode;
-    }
-    if (p_Node == hMaterial->p_stActualAnimatedTExtureNode)
-        return lNumber;
-    else
+    /* Not original source: permuter-derived (unsigned index mask and extra
+       temporary) to get retail's addu operand order; verified MATCH. */
+    int new_var;
+    int lOffset;
+    if (_lIndex < 0 || _lIndex >= 4)
         return 0;
+    new_var = _lIndex * 80;
+    lOffset = new_var;
+    ((char*)&_hVisualMat->a_stMultiMaterial[0].c_Operator)[lOffset & 0xFFFFFFFFu] = _lTextureOp;
+    return 1;
 }
 
-int GLI_lGetMaterialNumberOfAnimatedTexture(GLI_tdstMaterial_* hMaterial)
+GLI_tdstMaterial_* fn_hGetVisualMaterialFromIndex(unsigned short uwIndex)
 {
-    return hMaterial->lNumberOfDisplayNode;
-}
-
-void GLI_xSetMaterialTextureScrollingOnOff(GLI_tdstMaterial_* hMaterial, int bSwitch)
-{
-    /* Retail tests the same U-translation value twice. */
-    if (!bSwitch || hMaterial->a_stMultiMaterial[0].st_UVDynamicPos.stTrans[0] != 0.0f || hMaterial->a_stMultiMaterial[0].st_UVDynamicPos.stTrans[0] != 0.0f)
-        hMaterial->lIncrementIsEnable = bSwitch;
-}
-
-void GLI_xGetMaterialTextureScrollingCoef(GLI_tdstMaterial_* hMaterial, int lUnused, int* p_bSwitch, float* p_fUSpeed, float* p_fVSpeed)
-{
-    *p_fUSpeed = hMaterial->a_stMultiMaterial[0].st_UVDynamicPos.stTrans[0];
-    *p_fVSpeed = hMaterial->a_stMultiMaterial[0].st_UVDynamicPos.stTrans[1];
-    *p_bSwitch = hMaterial->lIncrementIsEnable;
-}
-
-void GLI_xSetMaterialTextureDecalage(GLI_tdstMaterial_* hMaterial, float fUSpeed, float fVSpeed, int unused, int bSwitch)
-{
-    (void)unused;
-    hMaterial->fAddU = fUSpeed;
-    hMaterial->fAddV = fVSpeed;
-    hMaterial->lIncrementIsEnable = bSwitch;
-}
-
-void GLI_xSetMaterialTextureScrollingCoef(GLI_tdstMaterial_* hMaterial, int lUnused, int bSwitch, float fUSpeed, float fVSpeed)
-{
-    hMaterial->a_stMultiMaterial[0].st_UVDynamicPos.stTrans[0] = fUSpeed;
-    hMaterial->a_stMultiMaterial[0].st_UVDynamicPos.stTrans[1] = fVSpeed;
-    hMaterial->fAddU = hMaterial->fConstantAddU = fUSpeed;
-    hMaterial->fAddV = hMaterial->fConstantAddV = fVSpeed;
-    hMaterial->lIncrementIsEnable = bSwitch;
-    if (fUSpeed == 0.0f && fVSpeed == 0.0f)
-        hMaterial->lIncrementIsEnable = 0;
-}
-
-void GLI_xSetMaterialTexture(GLI_tdstMaterial_* hMaterial, GLI_tdstTexture_* p_stTexture)
-{
-    hMaterial->p_stTexture = p_stTexture;
-    if (p_stTexture != NULL)
-    {
-        if (p_stTexture->lTextureCaps & 0x8)
-        {
-            hMaterial->xMaterialType &= ~0x400;
-        }
-        if (p_stTexture->lTextureCaps & 0x40)
-            hMaterial->xMaterialType &= 0xF7FFFFFF;
-        else
-        {
-            hMaterial->xMaterialType |= 0x08000000;
-        }
-    }
-    else
-    {
-        hMaterial->xMaterialType |= 0x08000000;
-    }
-}
-
-void GLI_vSetMaterialAsChromed(void)
-{
-}
-
-void GLI_xSetMaterialType(GLI_tdstMaterial_* hMaterial, unsigned int xMType)
-{
-    hMaterial->xMaterialType = xMType;
-}
-
-void GLI_xGetMaterialSpecularCoef(GLI_tdstMaterial_* hMaterial, int* p_lSpecularExponent, GEO_tdstColor_* p_stColor)
-{
-    *p_stColor = hMaterial->stSpecular;
-    *p_lSpecularExponent = hMaterial->lSpecularExponent;
-}
-
-void GLI_xSetMaterialSpecularCoef(GLI_tdstMaterial_* hMaterial, int lSpecularExponent, GEO_tdstColor_* p_stColor)
-{
-    GLI_xSetUpdateGeometricForMaterialCoefChange();
-    hMaterial->stSpecular = *p_stColor;
-    hMaterial->lSpecularExponent = lSpecularExponent;
-}
-
-void GLI_xGetMaterialDiffuseCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor)
-{
-    *(GEO_tdstColor_*)p_stColor = hMaterial->stDiffuse;
-}
-
-void GLI_xSetMaterialDiffuseCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor)
-{
-    GLI_xSetUpdateGeometricForMaterialCoefChange();
-    hMaterial->stDiffuse = *p_stColor;
-}
-
-void GLI_xGetMaterialColor(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor)
-{
-    *(GEO_tdstColor_*)p_stColor = hMaterial->stColor;
-}
-
-void GLI_xSetMaterialColor(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor)
-{
-    GLI_xSetUpdateGeometricForMaterialCoefChange();
-    hMaterial->stColor = *p_stColor;
-}
-
-void GLI_xGetMaterialAmbientCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor)
-{
-    *(GEO_tdstColor_*)p_stColor = hMaterial->stAmbient;
-}
-
-void GLI_xSetMaterialAmbientCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor)
-{
-    if (hMaterial->stAmbient.xR != p_stColor->xR || hMaterial->stAmbient.xG != p_stColor->xG || hMaterial->stAmbient.xB != p_stColor->xB || hMaterial->stAmbient.xA != p_stColor->xA)
-    {
-        hMaterial->stAmbient = *p_stColor;
-        GLI_xSetUpdateGeometricForMaterialCoefChange();
-    }
+    return GLI_g_pArrayOfVisualMaterial[uwIndex];
 }

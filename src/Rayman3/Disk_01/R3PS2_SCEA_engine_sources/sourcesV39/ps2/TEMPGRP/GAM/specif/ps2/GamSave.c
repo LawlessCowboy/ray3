@@ -739,19 +739,16 @@ extern void VID_fn_vSetVideoSoundVolume(unsigned int ulVideoSoundVolume);
 #define M_Max(a, b) (((a) > (b)) ? (a) : (b))
 #define M_Clamp(x, lo, hi) M_Max(lo, M_Min(x, hi))
 
-void fn_vValidateAllOption(void)
-{
-    g_stGameOptions.s32VolumeSound = M_Clamp(g_stGameOptions.s32VolumeSound, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineSound, g_stGameOptions.s32VolumeSound); VID_fn_vSetVideoSoundVolume(g_stGameOptions.s32VolumeSound);
-    g_stGameOptions.s32VolumeVoice = M_Clamp(g_stGameOptions.s32VolumeVoice, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineVoices, g_stGameOptions.s32VolumeVoice);
-    g_stGameOptions.s32VolumeMusic = M_Clamp(g_stGameOptions.s32VolumeMusic, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineMusic, g_stGameOptions.s32VolumeMusic);
-    g_stGameOptions.s32VolumeAmbiance = M_Clamp(g_stGameOptions.s32VolumeAmbiance, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineAmbiance, g_stGameOptions.s32VolumeAmbiance);
-    g_stGameOptions.s32VolumeMenu = M_Clamp(g_stGameOptions.s32VolumeAmbiance, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineMenu, g_stGameOptions.s32VolumeMenu);
-}
-
-int GAM_fn_iGetCurrentLanguageNb(void)
-{
-    return g_stEngineStructure.ucCurrentLanguage;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void fn_vValidateAllOption(void);
+int GAM_fn_iGetCurrentLanguageNb(void);
+int fn_lCheckVMSConnexion(unsigned char _bFullCheck);
+unsigned char fn_bLoadUnknowFileFromSlot(int drive, char* fname, void** bufData, int* fileSize);
+unsigned char fn_bSaveFileInSlot(int drive, char* fileName, char* vmsComment, int bootRomComment, int gameName, int iconPalette, int iconData, unsigned short nbIcon, unsigned short iconSpeed, int visualData, unsigned short visualType, void* saveData, unsigned int dataSize);
+unsigned char GAM_fn_bUpdateSavingFile(void);
+int fn_iCompareSlotDate(void* p_v1, void* p_v2);
+unsigned char fn_bLoadLevelSaveGameAfterLoadLevel(void);
 
 int VMS_lLoadFileAndExtractUnknowData(int drive, char* fname, char** bufData, int* fileSize);
 void fn_vDecryptBuffer(unsigned char* p_ucBuffer, int lLen);
@@ -798,59 +795,6 @@ inline unsigned char fn_bIsSavedFileUnchanged(void)
     return 1;
 }
 
-int fn_lCheckVMSConnexion(unsigned char _bFullCheck)
-{
-    int lStatus;
-
-    lStatus = 1;
-
-    if (SVG_fn_bGetActiveVms() == -1)
-    {
-        lStatus = 0;
-    }
-    else if (!SVG_fn_bIsActivVmsConnected())
-    {
-        lStatus = -1;
-    }
-    else if (_bFullCheck)
-    {
-        if (!fn_bIsSavedFileUnchanged())
-            lStatus = -2;
-    }
-
-    return lStatus;
-}
-
-unsigned char fn_bLoadUnknowFileFromSlot(int drive, char* fname, void** bufData, int* fileSize)
-{
-    int lCheckSum2;
-    char* pData;
-    int lCheckSum1;
-    int lret;
-
-    lret = VMS_lLoadFileAndExtractUnknowData(drive, fname, &pData, fileSize);
-
-    if (lret != 1)
-        return 0;
-
-    *bufData = malloc(*fileSize - 16);
-    memcpy(*bufData, pData + 16, *fileSize - 16);
-    free(pData);
-    *fileSize -= 16;
-
-    fn_vDecryptBuffer((unsigned char*)*bufData, *fileSize);
-    lCheckSum1 = fn_vCheckSum((unsigned char*)*bufData, *fileSize - 4);
-    memcpy(&lCheckSum2, (char*)*bufData + *fileSize - 4, 4);
-
-    if (lCheckSum1 != lCheckSum2)
-    {
-        free(*bufData);
-        return 0;
-    }
-
-    *fileSize -= 4;
-}
-
 extern unsigned int strlen(const char* s);
 extern char* strcpy(char* dst, const char* src);
 extern int strncmp(const char* a, const char* b, unsigned int n);
@@ -862,32 +806,6 @@ void fn_vEncryptBuffer(unsigned char* p_ucBuffer, int lLen);
  * saveData/dataSize from the 4th/5th stack argument slots, matching the
  * 13-parameter Dreamcast-style VMS call in vm_backup.c (VMS_fn_bFclose).
  * szDirName is not in the debug record; its size only sets the frame. */
-unsigned char fn_bSaveFileInSlot(int drive, char* fileName, char* vmsComment, int bootRomComment,
-    int gameName, int iconPalette, int iconData, unsigned short nbIcon, unsigned short iconSpeed,
-    int visualData, unsigned short visualType, void* saveData, unsigned int dataSize)
-{
-    char* pData;
-    char Title[32];
-    char szDirName[64];
-    int lCheckSum;
-
-    pData = (char*)__alloca(dataSize + 20);
-
-    memcpy(pData, vmsComment, (strlen(vmsComment) + 1 > 16) ? 16 : strlen(vmsComment) + 1);
-
-    lCheckSum = fn_vCheckSum((unsigned char*)saveData, dataSize);
-    memcpy(pData + 16, saveData, dataSize);
-    memcpy(pData + 16 + dataSize, &lCheckSum, 4);
-
-    Title[0] = 0;
-    strcpy(szDirName, SVG_fn_szGetSonyCompliantDirName(""));
-    if (strncmp(fileName, szDirName, strlen(szDirName)) == 0)
-        strcpy(Title, fileName + strlen(szDirName));
-
-    fn_vEncryptBuffer((unsigned char*)pData + 16, dataSize + 4);
-
-    return SVG_fn_s32SaveGame((&g_axPadMapping)[drive].iPort, (&g_axPadMapping)[drive].iSlot, fileName, Title, pData, dataSize + 20) == 1;
-}
 
 extern int strcmp(const char* a, const char* b);
 extern char* strncpy(char* dst, const char* src, unsigned int n);
@@ -938,6 +856,16 @@ inline void fn_vFillSlotName(tdstSaveGameSlot_* p_stSlot, char* szFilename)
     p_stSlot->szNewSlotName[3] = ' ';
     strncpy(&p_stSlot->szNewSlotName[4], szComment, 4);
     p_stSlot->szNewSlotName[9] = 0;
+}
+
+unsigned char fn_bLoadLevelSaveGameAfterLoadLevel(void)
+{
+    return 0;
+}
+
+int fn_iCompareSlotDate(void* p_v1, void* p_v2)
+{
+    return (*(unsigned int*)p_v1 > *(unsigned int*)p_v2) ? -1 : ((*(unsigned int*)p_v1 < *(unsigned int*)p_v2) ? 1 : 0);
 }
 
 unsigned char GAM_fn_bUpdateSavingFile(void)
@@ -994,12 +922,96 @@ unsigned char GAM_fn_bUpdateSavingFile(void)
     return 1;
 }
 
-int fn_iCompareSlotDate(void* p_v1, void* p_v2)
+unsigned char fn_bSaveFileInSlot(int drive, char* fileName, char* vmsComment, int bootRomComment,
+    int gameName, int iconPalette, int iconData, unsigned short nbIcon, unsigned short iconSpeed,
+    int visualData, unsigned short visualType, void* saveData, unsigned int dataSize)
 {
-    return (*(unsigned int*)p_v1 > *(unsigned int*)p_v2) ? -1 : ((*(unsigned int*)p_v1 < *(unsigned int*)p_v2) ? 1 : 0);
+    char* pData;
+    char Title[32];
+    char szDirName[64];
+    int lCheckSum;
+
+    pData = (char*)__alloca(dataSize + 20);
+
+    memcpy(pData, vmsComment, (strlen(vmsComment) + 1 > 16) ? 16 : strlen(vmsComment) + 1);
+
+    lCheckSum = fn_vCheckSum((unsigned char*)saveData, dataSize);
+    memcpy(pData + 16, saveData, dataSize);
+    memcpy(pData + 16 + dataSize, &lCheckSum, 4);
+
+    Title[0] = 0;
+    strcpy(szDirName, SVG_fn_szGetSonyCompliantDirName(""));
+    if (strncmp(fileName, szDirName, strlen(szDirName)) == 0)
+        strcpy(Title, fileName + strlen(szDirName));
+
+    fn_vEncryptBuffer((unsigned char*)pData + 16, dataSize + 4);
+
+    return SVG_fn_s32SaveGame((&g_axPadMapping)[drive].iPort, (&g_axPadMapping)[drive].iSlot, fileName, Title, pData, dataSize + 20) == 1;
 }
 
-unsigned char fn_bLoadLevelSaveGameAfterLoadLevel(void)
+unsigned char fn_bLoadUnknowFileFromSlot(int drive, char* fname, void** bufData, int* fileSize)
 {
-    return 0;
+    int lCheckSum2;
+    char* pData;
+    int lCheckSum1;
+    int lret;
+
+    lret = VMS_lLoadFileAndExtractUnknowData(drive, fname, &pData, fileSize);
+
+    if (lret != 1)
+        return 0;
+
+    *bufData = malloc(*fileSize - 16);
+    memcpy(*bufData, pData + 16, *fileSize - 16);
+    free(pData);
+    *fileSize -= 16;
+
+    fn_vDecryptBuffer((unsigned char*)*bufData, *fileSize);
+    lCheckSum1 = fn_vCheckSum((unsigned char*)*bufData, *fileSize - 4);
+    memcpy(&lCheckSum2, (char*)*bufData + *fileSize - 4, 4);
+
+    if (lCheckSum1 != lCheckSum2)
+    {
+        free(*bufData);
+        return 0;
+    }
+
+    *fileSize -= 4;
+}
+
+int fn_lCheckVMSConnexion(unsigned char _bFullCheck)
+{
+    int lStatus;
+
+    lStatus = 1;
+
+    if (SVG_fn_bGetActiveVms() == -1)
+    {
+        lStatus = 0;
+    }
+    else if (!SVG_fn_bIsActivVmsConnected())
+    {
+        lStatus = -1;
+    }
+    else if (_bFullCheck)
+    {
+        if (!fn_bIsSavedFileUnchanged())
+            lStatus = -2;
+    }
+
+    return lStatus;
+}
+
+int GAM_fn_iGetCurrentLanguageNb(void)
+{
+    return g_stEngineStructure.ucCurrentLanguage;
+}
+
+void fn_vValidateAllOption(void)
+{
+    g_stGameOptions.s32VolumeSound = M_Clamp(g_stGameOptions.s32VolumeSound, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineSound, g_stGameOptions.s32VolumeSound); VID_fn_vSetVideoSoundVolume(g_stGameOptions.s32VolumeSound);
+    g_stGameOptions.s32VolumeVoice = M_Clamp(g_stGameOptions.s32VolumeVoice, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineVoices, g_stGameOptions.s32VolumeVoice);
+    g_stGameOptions.s32VolumeMusic = M_Clamp(g_stGameOptions.s32VolumeMusic, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineMusic, g_stGameOptions.s32VolumeMusic);
+    g_stGameOptions.s32VolumeAmbiance = M_Clamp(g_stGameOptions.s32VolumeAmbiance, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineAmbiance, g_stGameOptions.s32VolumeAmbiance);
+    g_stGameOptions.s32VolumeMenu = M_Clamp(g_stGameOptions.s32VolumeAmbiance, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineMenu, g_stGameOptions.s32VolumeMenu);
 }

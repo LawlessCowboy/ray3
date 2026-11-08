@@ -93,6 +93,100 @@ struct GLI_tdstCamera_ {
     GLI_tdst2DVertex_ stTrans; /* +0x90 */
 };
 
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void GLI_xSerialProjection(GLI_tdstCamera_* p_stCam, int lNbOfVertex, MTH4D_tdstVector_* p_stSource, GLI_tdstAligned2DVector_* p_stDest);
+void GLI_vComputeTextures(void);
+void GLI_vRealyComputeLod(GLI_tdstTexture_* p_stTexture);
+void GLI_fn_vCloseBigFileTextures(void);
+void GLI_fn_vOpenBigFileTextures(void);
+void GLI_vIniTextRead(void);
+int GLI_lGetLog2n(int ln);
+void GLI_TEX_vKillMemoryChannel(unsigned char ucCurrentChannel);
+
+void GLI_DRV_vUnLoadTextures(void);
+void GLI_vUnCompressExistantTexture(void);
+void GLI_vRealyComputeLod(GLI_tdstTexture_* p_stTexture);
+int GLI_lGetBigestSizeOfTexture(void);
+/* Called with three arguments here; the driver definition's debug record
+ * drops its unreferenced parameters. */
+void GLI_DRV_vDownLoadTextures(int bRestore, int lTextureMode, int bReloading);
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+void HMU_fn_vFree(void** p_vPointer, unsigned char bTempMalloc);
+
+int GLI_lGetLog2n(int ln);
+
+void GLI_vUnloadTexturePartial(unsigned char ucChannel);
+void GLI_fn_vUnallocTextureInChannel(unsigned char _ucChannel);
+
+void GLI_TEX_vKillMemoryChannel(unsigned char ucCurrentChannel)
+{
+    GLI_vUnloadTexturePartial(ucCurrentChannel);
+    GLI_fn_vUnallocTextureInChannel(ucCurrentChannel);
+}
+
+int GLI_lGetLog2n(int ln)
+{
+    return ln > 0x2000 ? 13 :
+           ln > 0x1000 ? 12 :
+           ln > 0x800 ? 11 :
+           ln > 0x400 ? 10 :
+           ln > 0x200 ? 9 :
+           ln > 0x100 ? 8 :
+           ln > 0x80 ? 7 :
+           ln > 0x40 ? 6 :
+           ln > 0x20 ? 5 :
+           ln > 0x10 ? 4 :
+           ln > 8 ? 3 :
+           ln > 4 ? 2 :
+           ln > 2;
+}
+
+void GLI_vIniTextRead(void)
+{
+    GLI_fn_vUnallocAllTextures();
+    gs_lNumberOfTextureToCreate = 0;
+}
+
+void GLI_fn_vOpenBigFileTextures(void)
+{
+}
+
+void GLI_fn_vCloseBigFileTextures(void)
+{
+}
+
+void GLI_vRealyComputeLod(GLI_tdstTexture_* p_stTexture)
+{
+    if (p_stTexture->lHeight <= 1 || p_stTexture->lWidth <= 1)
+        return;
+
+    if (GLI_lGetLog2n(p_stTexture->lHeight) < GLI_lGetLog2n(p_stTexture->lWidth))
+        p_stTexture->lNumberOfLod = GLI_lGetLog2n(p_stTexture->lHeight) + 1;
+    else
+        p_stTexture->lNumberOfLod = GLI_lGetLog2n(p_stTexture->lWidth) + 1;
+}
+
+void GLI_vComputeTextures(void)
+{
+    int i;
+
+    GLI_DRV_vUnLoadTextures();
+    GLI_vUnCompressExistantTexture();
+    for (i = 0; i < 400; i++)
+    {
+        if (((int*)gs_aDEFTableOfTextureMemoryChannels)[i] != 0xC0DE0005 && ((GLI_tdstTexture_**)gs_aDEFTableOfTextureAlreadyRead)[i]->lNumberOfLod)
+            GLI_vRealyComputeLod(((GLI_tdstTexture_**)gs_aDEFTableOfTextureAlreadyRead)[i]);
+    }
+    GLI_gs_lConvertBufferMipMappingSizeInBytes = GLI_lGetBigestSizeOfTexture();
+    if (GLI_gs_lConvertBufferMipMappingSizeInBytes)
+        GLI_gs_p_ConvertBufferMipMapping = (int)HMU_fn_p_vMalloc(GLI_gs_lConvertBufferMipMappingSizeInBytes, 1);
+    GLI_g_ulNumberOfLoadedTexture = 0;
+    GLI_DRV_vDownLoadTextures(0, g_lTextureMode, 0);
+    if (GLI_gs_lConvertBufferMipMappingSizeInBytes)
+        HMU_fn_vFree((void**)&GLI_gs_p_ConvertBufferMipMapping, 1);
+}
+
 void GLI_xSerialProjection(GLI_tdstCamera_* p_stCam, int lNbOfVertex, MTH4D_tdstVector_* p_stSource, GLI_tdstAligned2DVector_* p_stDest)
 {
     GLI_tdstAligned2DVector_* p_stDestLast = p_stDest + lNbOfVertex;
@@ -134,87 +228,4 @@ void GLI_xSerialProjection(GLI_tdstCamera_* p_stCam, int lNbOfVertex, MTH4D_tdst
             } }
         break;
     }
-}
-
-void GLI_DRV_vUnLoadTextures(void);
-void GLI_vUnCompressExistantTexture(void);
-void GLI_vRealyComputeLod(GLI_tdstTexture_* p_stTexture);
-int GLI_lGetBigestSizeOfTexture(void);
-/* Called with three arguments here; the driver definition's debug record
- * drops its unreferenced parameters. */
-void GLI_DRV_vDownLoadTextures(int bRestore, int lTextureMode, int bReloading);
-void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
-void HMU_fn_vFree(void** p_vPointer, unsigned char bTempMalloc);
-
-void GLI_vComputeTextures(void)
-{
-    int i;
-
-    GLI_DRV_vUnLoadTextures();
-    GLI_vUnCompressExistantTexture();
-    for (i = 0; i < 400; i++)
-    {
-        if (((int*)gs_aDEFTableOfTextureMemoryChannels)[i] != 0xC0DE0005 && ((GLI_tdstTexture_**)gs_aDEFTableOfTextureAlreadyRead)[i]->lNumberOfLod)
-            GLI_vRealyComputeLod(((GLI_tdstTexture_**)gs_aDEFTableOfTextureAlreadyRead)[i]);
-    }
-    GLI_gs_lConvertBufferMipMappingSizeInBytes = GLI_lGetBigestSizeOfTexture();
-    if (GLI_gs_lConvertBufferMipMappingSizeInBytes)
-        GLI_gs_p_ConvertBufferMipMapping = (int)HMU_fn_p_vMalloc(GLI_gs_lConvertBufferMipMappingSizeInBytes, 1);
-    GLI_g_ulNumberOfLoadedTexture = 0;
-    GLI_DRV_vDownLoadTextures(0, g_lTextureMode, 0);
-    if (GLI_gs_lConvertBufferMipMappingSizeInBytes)
-        HMU_fn_vFree((void**)&GLI_gs_p_ConvertBufferMipMapping, 1);
-}
-
-int GLI_lGetLog2n(int ln);
-
-void GLI_vRealyComputeLod(GLI_tdstTexture_* p_stTexture)
-{
-    if (p_stTexture->lHeight <= 1 || p_stTexture->lWidth <= 1)
-        return;
-
-    if (GLI_lGetLog2n(p_stTexture->lHeight) < GLI_lGetLog2n(p_stTexture->lWidth))
-        p_stTexture->lNumberOfLod = GLI_lGetLog2n(p_stTexture->lHeight) + 1;
-    else
-        p_stTexture->lNumberOfLod = GLI_lGetLog2n(p_stTexture->lWidth) + 1;
-}
-
-void GLI_fn_vCloseBigFileTextures(void)
-{
-}
-
-void GLI_fn_vOpenBigFileTextures(void)
-{
-}
-
-void GLI_vIniTextRead(void)
-{
-    GLI_fn_vUnallocAllTextures();
-    gs_lNumberOfTextureToCreate = 0;
-}
-
-int GLI_lGetLog2n(int ln)
-{
-    return ln > 0x2000 ? 13 :
-           ln > 0x1000 ? 12 :
-           ln > 0x800 ? 11 :
-           ln > 0x400 ? 10 :
-           ln > 0x200 ? 9 :
-           ln > 0x100 ? 8 :
-           ln > 0x80 ? 7 :
-           ln > 0x40 ? 6 :
-           ln > 0x20 ? 5 :
-           ln > 0x10 ? 4 :
-           ln > 8 ? 3 :
-           ln > 4 ? 2 :
-           ln > 2;
-}
-
-void GLI_vUnloadTexturePartial(unsigned char ucChannel);
-void GLI_fn_vUnallocTextureInChannel(unsigned char _ucChannel);
-
-void GLI_TEX_vKillMemoryChannel(unsigned char ucCurrentChannel)
-{
-    GLI_vUnloadTexturePartial(ucCurrentChannel);
-    GLI_fn_vUnallocTextureInChannel(ucCurrentChannel);
 }

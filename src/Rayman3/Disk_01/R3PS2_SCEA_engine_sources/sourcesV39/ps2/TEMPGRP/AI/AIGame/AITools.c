@@ -3122,14 +3122,22 @@ struct SECT_tdstSector_ {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vConvertColorToParam(GEO_tdstColor_* p_stColor, tdstGetSetParam_* p_stParam)
-{
-    p_stParam->uDummy.uParam.ColorValue.Component.Red = (unsigned int)(100.0f * p_stColor->xR);
-    p_stParam->uDummy.uParam.ColorValue.Component.Green = (unsigned int)(100.0f * p_stColor->xG);
-    p_stParam->uDummy.uParam.ColorValue.Component.Blue = (unsigned int)(100.0f * p_stColor->xB);
-    p_stParam->uDummy.uParam.ColorValue.Component.Alpha = (unsigned int)(100.0f * p_stColor->xA);
-    p_stParam->eType = E_vt_Color;
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void fn_vConvertColorToParam(GEO_tdstColor_* p_stColor, tdstGetSetParam_* p_stParam);
+void fn_vConvertParamToColor(tdstGetSetParam_* p_stParam, GEO_tdstColor_* p_stColor);
+unsigned char fn_ucInternalTurn(HIE_tdstSuperObject_* p_SuperObjPerso, float xAngle);
+unsigned char fn_ucAreThereFloatIfYesConvertThem(tdstGetSetParam_* p_stParam1, tdstGetSetParam_* p_stParam2);
+unsigned char fn_ucIsThereFloatIfYesConvertItToInteger(tdstGetSetParam_* p_stParam);
+float fn_xRealModuloAround(float xFrom, float xModulus, float xValue);
+DNM_stReport* fn_pstGetDNMReport(HIE_tdstSuperObject_* p_SuperObjPerso);
+float fn_xComputeBestEcartDirectionAngle(float xAngleFollowed, float xAngleToFollow);
+float fn_xComputeDirectionAngle(MTH3D_tdstVector_* p_stVector);
+float fn_xExtendedDistanceBetweenPerso(HIE_tdstSuperObject_* param0, HIE_tdstSuperObject_* p_SuperObjPerso2, unsigned char ucFlags);
+float fn_xDistanceBetweenPersoAndWP(HIE_tdstSuperObject_* p_SuperObjPerso, WP_tdstWayPoint_* hWP);
+void fn_vGetCenterOfBoundingVolume(HIE_tdstSuperObject_* hPerso, MTH3D_tdstVector_* p_stVertex);
+char* fn_szGetStringFromTextOrStringParam(tdstGetSetParam_* p_stValue);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AITools.c lines 527–542 */
 /* addr: 0x00201040  size: 588 bytes */
@@ -3150,48 +3158,6 @@ void fn_vConvertColorToParam(GEO_tdstColor_* p_stColor, tdstGetSetParam_* p_stPa
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vConvertParamToColor(tdstGetSetParam_* p_stParam, GEO_tdstColor_* p_stColor)
-{
-    float fValue;
-    float lValue;
-    float fScale = 0.01f;
-    lValue = (float)p_stParam->uDummy.uParam.ColorValue.Component.Red;
-    if (lValue < 0.0f) {
-        fValue = 0.0f;
-    } else if (lValue > 100.0f) {
-        fValue = 1.0f;
-    } else {
-        fValue = lValue * fScale;
-    }
-    p_stColor->xR = fValue;
-    lValue = (float)p_stParam->uDummy.uParam.ColorValue.Component.Green;
-    if (lValue < 0.0f) {
-        fValue = 0.0f;
-    } else if (lValue > 100.0f) {
-        fValue = 1.0f;
-    } else {
-        fValue = lValue * fScale;
-    }
-    p_stColor->xG = fValue;
-    lValue = (float)p_stParam->uDummy.uParam.ColorValue.Component.Blue;
-    if (lValue < 0.0f) {
-        fValue = 0.0f;
-    } else if (lValue > 100.0f) {
-        fValue = 1.0f;
-    } else {
-        fValue = lValue * fScale;
-    }
-    p_stColor->xB = fValue;
-    lValue = (float)p_stParam->uDummy.uParam.ColorValue.Component.Alpha;
-    if (lValue < 0.0f) {
-        fValue = 0.0f;
-    } else if (lValue > 100.0f) {
-        fValue = 1.0f;
-    } else {
-        fValue = lValue * fScale;
-    }
-    p_stColor->xA = fValue;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AITools.c lines 500–518 */
 /* addr: 0x00201290  size: 80 bytes */
@@ -3211,20 +3177,6 @@ void fn_vConvertParamToColor(tdstGetSetParam_* p_stParam, GEO_tdstColor_* p_stCo
 void MEC_vTurnAroundZAxis(DNM_stDynamics* p_stDynamic, float xAngle);
 DNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_* h_Dynam);
 
-unsigned char fn_ucInternalTurn(HIE_tdstSuperObject_* p_SuperObjPerso, float xAngle)
-{
-    tdstDynam_* h_Dynam;
-    DNM_stDynamics* pstDynamic;
-
-    h_Dynam = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;
-    if (h_Dynam && (pstDynamic = fn_p_stDynamGetDynamics(h_Dynam)))
-    {
-        MEC_vTurnAroundZAxis(pstDynamic, xAngle);
-        return 1;
-    }
-    return 0;
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AITools.c lines 434–451 */
 /* addr: 0x002012e0  size: 92 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3240,24 +3192,6 @@ unsigned char fn_ucInternalTurn(HIE_tdstSuperObject_* p_SuperObjPerso, float xAn
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucAreThereFloatIfYesConvertThem(tdstGetSetParam_* p_stParam1, tdstGetSetParam_* p_stParam2)
-{
-    unsigned char ucIsThereFloat;
-
-    ucIsThereFloat = (p_stParam1->eType == 8);
-    if (ucIsThereFloat)
-    {
-        if (p_stParam2->eType != 8)
-            p_stParam2->uDummy.uParam.xValue = (float)p_stParam2->uDummy.uParam.lValue;
-    }
-    else
-    {
-        ucIsThereFloat = (p_stParam2->eType == 8);
-        if (ucIsThereFloat)
-            p_stParam1->uDummy.uParam.xValue = (float)p_stParam1->uDummy.uParam.lValue;
-    }
-    return ucIsThereFloat;
-}
 
 /* Engine float-to-int conversion: retail converts through $f30 at 164 sites
  * in 77 game functions ("cvt.w.s $f30, x; mfc1 r, $f30"), a register MWCC
@@ -3289,31 +3223,6 @@ inline long MTH_M_xRealToLong(float _xValue)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucIsThereFloatIfYesConvertItToInteger(tdstGetSetParam_* p_stParam)
-{
-    int lValue;
-    unsigned char ucIsThereFloat;
-    ucIsThereFloat = (p_stParam->eType == E_vt_Float);
-    if (ucIsThereFloat)
-    {
-
-
-
-        if ((p_stParam->uDummy.uParam.xValue < 2147483648.0f) && (p_stParam->uDummy.uParam.xValue > -2147483648.0f))
-
-            lValue = MTH_M_xRealToLong(p_stParam->uDummy.uParam.xValue);
-        else if (p_stParam->uDummy.uParam.xValue > 0.0f)
-            lValue = 0x7FFFFFFF;
-
-        else
-            lValue = 0x80000001;
-
-        p_stParam->uDummy.uParam.lValue = lValue;
-        p_stParam->eType = E_vt_Integer;
-    }
-
-    return ucIsThereFloat;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AITools.c lines 380–396 */
 /* addr: 0x002013f0  size: 100 bytes */
@@ -3329,18 +3238,6 @@ unsigned char fn_ucIsThereFloatIfYesConvertItToInteger(tdstGetSetParam_* p_stPar
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-float fn_xRealModuloAround(float xFrom, float xModulus, float xValue)
-{
-    xValue -= xFrom;
-    while (xValue < 0.0f) {
-        xValue += xModulus;
-    }
-    while (xValue >= xModulus) {
-        xValue -= xModulus;
-    }
-    xValue += xFrom;
-    return xValue;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AITools.c lines 362–371 */
 /* addr: 0x00201460  size: 76 bytes */
@@ -3354,19 +3251,6 @@ float fn_xRealModuloAround(float xFrom, float xModulus, float xValue)
  * compare a candidate object's line table as an extra checkpoint.
  */
 DNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_* h_Dynam);
-
-DNM_stReport* fn_pstGetDNMReport(HIE_tdstSuperObject_* p_SuperObjPerso)
-{
-    DNM_stDynamics* p_stDynamics;
-    tdstDynam_* h_Dynam;
-
-
-
-    if (!(h_Dynam = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam))
-        return NULL;
-
-    p_stDynamics = fn_p_stDynamGetDynamics(h_Dynam); return (p_stDynamics == NULL) ? NULL : p_stDynamics->m_tdstDynamicsBaseBlock.m_pstReport;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AITools.c lines 317–333 */
 /* addr: 0x002014b0  size: 136 bytes */
@@ -3382,20 +3266,6 @@ DNM_stReport* fn_pstGetDNMReport(HIE_tdstSuperObject_* p_SuperObjPerso)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-float fn_xComputeBestEcartDirectionAngle(float xAngleFollowed, float xAngleToFollow)
-{
-    float xDeltaAngle;
-    float xPi = 3.14159265358979323846f;
-    xDeltaAngle = xAngleToFollow - xAngleFollowed;
-    if (xDeltaAngle > 0.0f) {
-        if (xDeltaAngle > xPi) {
-            xDeltaAngle -= (float)6.28318530717958647692;
-        }
-    } else if (xDeltaAngle < -xPi) {
-        xDeltaAngle = (float)6.28318530717958647692 + xDeltaAngle;
-    }
-    return xDeltaAngle;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AITools.c lines 291–311 */
 /* addr: 0x00201540  size: 260 bytes */
@@ -3420,33 +3290,6 @@ float fn_xComputeBestEcartDirectionAngle(float xAngleFollowed, float xAngleToFol
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-float fn_xComputeDirectionAngle(MTH3D_tdstVector_* p_stVector)
-{
-    float xAngle;
-    float xRealY;
-    float xRealX;
-    float xHalfPi = 1.57079632679489661923f;
-    xRealX = p_stVector->xX;
-    xRealY = p_stVector->xY;
-    if (xRealX) {
-        xAngle = atanf(xRealY / xRealX);
-    } else if (xRealY < 0.0f) {
-        xAngle = -xHalfPi;
-    } else {
-        xAngle = xHalfPi;
-    }
-    if (xRealX < 0.0f) {
-        xAngle = 3.14159265358979323846f + xAngle;
-    }
-    if (xAngle < 0.0f) {
-        xAngle = 6.28318530717958647692f + xAngle;
-    }
-    xAngle = xHalfPi + xAngle;
-    if (xAngle > 6.28318530717958647692f) {
-        xAngle -= 6.28318530717958647692f;
-    }
-    return xAngle;
-}
 
 void MAT_fn_vApplyOnVertex(MTH3D_tdstVector_* VectDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* VectA);
 void MAT_fn_vInvertRotation(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hSource);
@@ -3479,74 +3322,6 @@ void MAT_fn_vApplyOnVector(MTH3D_tdstVector_* _p_stDest, MAT_tdstTransformation_
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-float fn_xExtendedDistanceBetweenPerso(HIE_tdstSuperObject_* param0, HIE_tdstSuperObject_* p_SuperObjPerso2, unsigned char ucFlags)
-{
-    MAT_tdstTransformation_ stMatrix;
-    MTH3D_tdstVector_ stVertex1;
-    MTH3D_tdstVector_ stVertex2;
-    COL_tdstBoundingSphere_* hBoundingSphere;
-    float xX, xY, xZ;
-    float xDist;
-    if (ucFlags & 0x80) {
-        hBoundingSphere = (COL_tdstBoundingSphere_*)param0->hCollideBoundingVolume;
-        if (hBoundingSphere) {
-            MAT_fn_vApplyOnVertex(&stVertex1, param0->hGlobalMatrix, (MTH3D_tdstVector_*)&hBoundingSphere->stCenterPoint);
-        } else {
-            unsigned int* p_ulPos = (unsigned int*)&param0->hGlobalMatrix->stTransformMatrix.stCol_3;
-            ((unsigned int*)&stVertex1)[0] = p_ulPos[0];
-            ((unsigned int*)&stVertex1)[1] = p_ulPos[1];
-            ((unsigned int*)&stVertex1)[2] = p_ulPos[2];
-        }
-        hBoundingSphere = (COL_tdstBoundingSphere_*)p_SuperObjPerso2->hCollideBoundingVolume;
-        if (hBoundingSphere) {
-            MAT_fn_vApplyOnVertex(&stVertex2, p_SuperObjPerso2->hGlobalMatrix, (MTH3D_tdstVector_*)&hBoundingSphere->stCenterPoint);
-        } else {
-            unsigned int* p_ulPos = (unsigned int*)&p_SuperObjPerso2->hGlobalMatrix->stTransformMatrix.stCol_3;
-            ((unsigned int*)&stVertex2)[0] = p_ulPos[0];
-            ((unsigned int*)&stVertex2)[1] = p_ulPos[1];
-            ((unsigned int*)&stVertex2)[2] = p_ulPos[2];
-        }
-    } else {
-        unsigned int* p_ulPos1 = (unsigned int*)&param0->hGlobalMatrix->stTransformMatrix.stCol_3;
-        unsigned int* p_ulPos2 = (unsigned int*)&p_SuperObjPerso2->hGlobalMatrix->stTransformMatrix.stCol_3;
-        ((unsigned int*)&stVertex1)[0] = p_ulPos1[0];
-        ((unsigned int*)&stVertex1)[1] = p_ulPos1[1];
-        ((unsigned int*)&stVertex1)[2] = p_ulPos1[2];
-        ((unsigned int*)&stVertex2)[0] = p_ulPos2[0];
-        ((unsigned int*)&stVertex2)[1] = p_ulPos2[1];
-        ((unsigned int*)&stVertex2)[2] = p_ulPos2[2];
-    }
-    xX = stVertex1.xX - stVertex2.xX; stVertex1.xX = xX; xY = stVertex1.xY - stVertex2.xY; stVertex1.xY = xY; xZ = stVertex1.xZ - stVertex2.xZ; stVertex1.xZ = xZ;
-    if ((ucFlags & 7) != 7) {
-        MAT_fn_vInvertRotation(&stMatrix, p_SuperObjPerso2->hGlobalMatrix);
-        MAT_fn_vApplyOnVector(&stVertex1, &stMatrix, &stVertex1);
-    }
-    xZ = stVertex1.xZ; xX = stVertex1.xX; xY = stVertex1.xY;
-    switch (ucFlags & 7) {
-    case 1:
-        return xX;
-    case 2:
-        return xY;
-    case 4:
-        return xZ;
-    case 3:
-        MTH_SQR2_TO(xX, xX, xY);
-        break;
-    case 5:
-        MTH_SQR2_TO(xX, xX, xZ);
-        break;
-    case 6:
-        MTH_SQR2_TO(xX, xY, xZ);
-        break;
-    case 0:
-        return 0.0f;
-    case 7:
-        MTH_SQR3_TO(xX, xX, xY, xZ);
-        break;
-    }
-    MTH_SQRT_TO(xDist, xX);
-    return xDist;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AITools.c lines 184–191 */
 /* addr: 0x002018e0  size: 144 bytes */
@@ -3562,18 +3337,6 @@ float fn_xExtendedDistanceBetweenPerso(HIE_tdstSuperObject_* param0, HIE_tdstSup
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-float fn_xDistanceBetweenPersoAndWP(HIE_tdstSuperObject_* p_SuperObjPerso, WP_tdstWayPoint_* hWP)
-{
-    MTH3D_tdstVector_ stVertex1;
-    MTH3D_tdstVector_ stVertex2;
-    float xX, xY, xZ, xSqr;
-    float xDist;
-    unsigned int* p_ulPos = (unsigned int*)&p_SuperObjPerso->hGlobalMatrix->stTransformMatrix.stCol_3; ((unsigned int*)&stVertex1)[0] = p_ulPos[0]; ((unsigned int*)&stVertex1)[1] = p_ulPos[1]; ((unsigned int*)&stVertex1)[2] = p_ulPos[2];
-    WP_fnv_WayPoint_ComputeLocation(hWP, &stVertex2);
-    xX = stVertex1.xX - stVertex2.xX; stVertex1.xX = xX; xY = stVertex1.xY - stVertex2.xY; stVertex1.xY = xY; xZ = stVertex1.xZ - stVertex2.xZ; stVertex1.xZ = xZ;
-    xZ = stVertex1.xZ; xX = stVertex1.xX; xY = stVertex1.xY; MTH_SQR3_TO(xSqr, xX, xY, xZ); MTH_SQRT_TO(xDist, xSqr);
-    return xDist;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AITools.c lines 168–181 */
 /* addr: 0x00201970  size: 168 bytes */
@@ -3644,20 +3407,6 @@ static inline void MAT_fn_vApplyOnVertexInlined(MTH3D_tdstVector_* VectDest, MAT
     *(unsigned int*)&VectDest->xX = *(unsigned int*)&Vtmp.xX; *(unsigned int*)&VectDest->xY = *(unsigned int*)&Vtmp.xY; *(unsigned int*)&VectDest->xZ = *(unsigned int*)&Vtmp.xZ;
 }
 
-void fn_vGetCenterOfBoundingVolume(HIE_tdstSuperObject_* hPerso, MTH3D_tdstVector_* p_stVertex)
-{
-    COL_tdstBoundingSphere_* hBoundingSphere;
-    hBoundingSphere = (COL_tdstBoundingSphere_*)hPerso->hCollideBoundingVolume;
-    if (hBoundingSphere) {
-        MAT_fn_vApplyOnVertexInlined(p_stVertex, hPerso->hGlobalMatrix, (MTH3D_tdstVector_*)&hBoundingSphere->stCenterPoint);
-    } else {
-        unsigned int* p_ulPos = (unsigned int*)&hPerso->hGlobalMatrix->stTransformMatrix.stCol_3;
-        ((unsigned int*)p_stVertex)[0] = p_ulPos[0];
-        ((unsigned int*)p_stVertex)[1] = p_ulPos[1];
-        ((unsigned int*)p_stVertex)[2] = p_ulPos[2];
-    }
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AITools.c lines 133–145 */
 /* addr: 0x00201a20  size: 64 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3672,6 +3421,7 @@ void fn_vGetCenterOfBoundingVolume(HIE_tdstSuperObject_* hPerso, MTH3D_tdstVecto
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
 char* fn_szGetStringFromTextOrStringParam(tdstGetSetParam_* p_stValue)
 {
     char* pszString;
@@ -3682,4 +3432,276 @@ char* fn_szGetStringFromTextOrStringParam(tdstGetSetParam_* p_stValue)
         pszString = FON_fn_szGetTextPointerForHandle(p_stValue->uDummy.uParam.hText);
     }
     return pszString;
+}
+
+void fn_vGetCenterOfBoundingVolume(HIE_tdstSuperObject_* hPerso, MTH3D_tdstVector_* p_stVertex)
+{
+    COL_tdstBoundingSphere_* hBoundingSphere;
+    hBoundingSphere = (COL_tdstBoundingSphere_*)hPerso->hCollideBoundingVolume;
+    if (hBoundingSphere) {
+        MAT_fn_vApplyOnVertexInlined(p_stVertex, hPerso->hGlobalMatrix, (MTH3D_tdstVector_*)&hBoundingSphere->stCenterPoint);
+    } else {
+        unsigned int* p_ulPos = (unsigned int*)&hPerso->hGlobalMatrix->stTransformMatrix.stCol_3;
+        ((unsigned int*)p_stVertex)[0] = p_ulPos[0];
+        ((unsigned int*)p_stVertex)[1] = p_ulPos[1];
+        ((unsigned int*)p_stVertex)[2] = p_ulPos[2];
+    }
+}
+
+float fn_xDistanceBetweenPersoAndWP(HIE_tdstSuperObject_* p_SuperObjPerso, WP_tdstWayPoint_* hWP)
+{
+    MTH3D_tdstVector_ stVertex1;
+    MTH3D_tdstVector_ stVertex2;
+    float xX, xY, xZ, xSqr;
+    float xDist;
+    unsigned int* p_ulPos = (unsigned int*)&p_SuperObjPerso->hGlobalMatrix->stTransformMatrix.stCol_3; ((unsigned int*)&stVertex1)[0] = p_ulPos[0]; ((unsigned int*)&stVertex1)[1] = p_ulPos[1]; ((unsigned int*)&stVertex1)[2] = p_ulPos[2];
+    WP_fnv_WayPoint_ComputeLocation(hWP, &stVertex2);
+    xX = stVertex1.xX - stVertex2.xX; stVertex1.xX = xX; xY = stVertex1.xY - stVertex2.xY; stVertex1.xY = xY; xZ = stVertex1.xZ - stVertex2.xZ; stVertex1.xZ = xZ;
+    xZ = stVertex1.xZ; xX = stVertex1.xX; xY = stVertex1.xY; MTH_SQR3_TO(xSqr, xX, xY, xZ); MTH_SQRT_TO(xDist, xSqr);
+    return xDist;
+}
+
+float fn_xExtendedDistanceBetweenPerso(HIE_tdstSuperObject_* param0, HIE_tdstSuperObject_* p_SuperObjPerso2, unsigned char ucFlags)
+{
+    MAT_tdstTransformation_ stMatrix;
+    MTH3D_tdstVector_ stVertex1;
+    MTH3D_tdstVector_ stVertex2;
+    COL_tdstBoundingSphere_* hBoundingSphere;
+    float xX, xY, xZ;
+    float xDist;
+    if (ucFlags & 0x80) {
+        hBoundingSphere = (COL_tdstBoundingSphere_*)param0->hCollideBoundingVolume;
+        if (hBoundingSphere) {
+            MAT_fn_vApplyOnVertex(&stVertex1, param0->hGlobalMatrix, (MTH3D_tdstVector_*)&hBoundingSphere->stCenterPoint);
+        } else {
+            unsigned int* p_ulPos = (unsigned int*)&param0->hGlobalMatrix->stTransformMatrix.stCol_3;
+            ((unsigned int*)&stVertex1)[0] = p_ulPos[0];
+            ((unsigned int*)&stVertex1)[1] = p_ulPos[1];
+            ((unsigned int*)&stVertex1)[2] = p_ulPos[2];
+        }
+        hBoundingSphere = (COL_tdstBoundingSphere_*)p_SuperObjPerso2->hCollideBoundingVolume;
+        if (hBoundingSphere) {
+            MAT_fn_vApplyOnVertex(&stVertex2, p_SuperObjPerso2->hGlobalMatrix, (MTH3D_tdstVector_*)&hBoundingSphere->stCenterPoint);
+        } else {
+            unsigned int* p_ulPos = (unsigned int*)&p_SuperObjPerso2->hGlobalMatrix->stTransformMatrix.stCol_3;
+            ((unsigned int*)&stVertex2)[0] = p_ulPos[0];
+            ((unsigned int*)&stVertex2)[1] = p_ulPos[1];
+            ((unsigned int*)&stVertex2)[2] = p_ulPos[2];
+        }
+    } else {
+        unsigned int* p_ulPos1 = (unsigned int*)&param0->hGlobalMatrix->stTransformMatrix.stCol_3;
+        unsigned int* p_ulPos2 = (unsigned int*)&p_SuperObjPerso2->hGlobalMatrix->stTransformMatrix.stCol_3;
+        ((unsigned int*)&stVertex1)[0] = p_ulPos1[0];
+        ((unsigned int*)&stVertex1)[1] = p_ulPos1[1];
+        ((unsigned int*)&stVertex1)[2] = p_ulPos1[2];
+        ((unsigned int*)&stVertex2)[0] = p_ulPos2[0];
+        ((unsigned int*)&stVertex2)[1] = p_ulPos2[1];
+        ((unsigned int*)&stVertex2)[2] = p_ulPos2[2];
+    }
+    xX = stVertex1.xX - stVertex2.xX; stVertex1.xX = xX; xY = stVertex1.xY - stVertex2.xY; stVertex1.xY = xY; xZ = stVertex1.xZ - stVertex2.xZ; stVertex1.xZ = xZ;
+    if ((ucFlags & 7) != 7) {
+        MAT_fn_vInvertRotation(&stMatrix, p_SuperObjPerso2->hGlobalMatrix);
+        MAT_fn_vApplyOnVector(&stVertex1, &stMatrix, &stVertex1);
+    }
+    xZ = stVertex1.xZ; xX = stVertex1.xX; xY = stVertex1.xY;
+    switch (ucFlags & 7) {
+    case 1:
+        return xX;
+    case 2:
+        return xY;
+    case 4:
+        return xZ;
+    case 3:
+        MTH_SQR2_TO(xX, xX, xY);
+        break;
+    case 5:
+        MTH_SQR2_TO(xX, xX, xZ);
+        break;
+    case 6:
+        MTH_SQR2_TO(xX, xY, xZ);
+        break;
+    case 0:
+        return 0.0f;
+    case 7:
+        MTH_SQR3_TO(xX, xX, xY, xZ);
+        break;
+    }
+    MTH_SQRT_TO(xDist, xX);
+    return xDist;
+}
+
+float fn_xComputeDirectionAngle(MTH3D_tdstVector_* p_stVector)
+{
+    float xAngle;
+    float xRealY;
+    float xRealX;
+    float xHalfPi = 1.57079632679489661923f;
+    xRealX = p_stVector->xX;
+    xRealY = p_stVector->xY;
+    if (xRealX) {
+        xAngle = atanf(xRealY / xRealX);
+    } else if (xRealY < 0.0f) {
+        xAngle = -xHalfPi;
+    } else {
+        xAngle = xHalfPi;
+    }
+    if (xRealX < 0.0f) {
+        xAngle = 3.14159265358979323846f + xAngle;
+    }
+    if (xAngle < 0.0f) {
+        xAngle = 6.28318530717958647692f + xAngle;
+    }
+    xAngle = xHalfPi + xAngle;
+    if (xAngle > 6.28318530717958647692f) {
+        xAngle -= 6.28318530717958647692f;
+    }
+    return xAngle;
+}
+
+float fn_xComputeBestEcartDirectionAngle(float xAngleFollowed, float xAngleToFollow)
+{
+    float xDeltaAngle;
+    float xPi = 3.14159265358979323846f;
+    xDeltaAngle = xAngleToFollow - xAngleFollowed;
+    if (xDeltaAngle > 0.0f) {
+        if (xDeltaAngle > xPi) {
+            xDeltaAngle -= (float)6.28318530717958647692;
+        }
+    } else if (xDeltaAngle < -xPi) {
+        xDeltaAngle = (float)6.28318530717958647692 + xDeltaAngle;
+    }
+    return xDeltaAngle;
+}
+
+DNM_stReport* fn_pstGetDNMReport(HIE_tdstSuperObject_* p_SuperObjPerso)
+{
+    DNM_stDynamics* p_stDynamics;
+    tdstDynam_* h_Dynam;
+
+    if (!(h_Dynam = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam))
+        return NULL;
+
+    p_stDynamics = fn_p_stDynamGetDynamics(h_Dynam); return (p_stDynamics == NULL) ? NULL : p_stDynamics->m_tdstDynamicsBaseBlock.m_pstReport;
+}
+
+float fn_xRealModuloAround(float xFrom, float xModulus, float xValue)
+{
+    xValue -= xFrom;
+    while (xValue < 0.0f) {
+        xValue += xModulus;
+    }
+    while (xValue >= xModulus) {
+        xValue -= xModulus;
+    }
+    xValue += xFrom;
+    return xValue;
+}
+
+unsigned char fn_ucIsThereFloatIfYesConvertItToInteger(tdstGetSetParam_* p_stParam)
+{
+    int lValue;
+    unsigned char ucIsThereFloat;
+    ucIsThereFloat = (p_stParam->eType == E_vt_Float);
+    if (ucIsThereFloat)
+    {
+
+        if ((p_stParam->uDummy.uParam.xValue < 2147483648.0f) && (p_stParam->uDummy.uParam.xValue > -2147483648.0f))
+
+            lValue = MTH_M_xRealToLong(p_stParam->uDummy.uParam.xValue);
+        else if (p_stParam->uDummy.uParam.xValue > 0.0f)
+            lValue = 0x7FFFFFFF;
+
+        else
+            lValue = 0x80000001;
+
+        p_stParam->uDummy.uParam.lValue = lValue;
+        p_stParam->eType = E_vt_Integer;
+    }
+
+    return ucIsThereFloat;
+}
+
+unsigned char fn_ucAreThereFloatIfYesConvertThem(tdstGetSetParam_* p_stParam1, tdstGetSetParam_* p_stParam2)
+{
+    unsigned char ucIsThereFloat;
+
+    ucIsThereFloat = (p_stParam1->eType == 8);
+    if (ucIsThereFloat)
+    {
+        if (p_stParam2->eType != 8)
+            p_stParam2->uDummy.uParam.xValue = (float)p_stParam2->uDummy.uParam.lValue;
+    }
+    else
+    {
+        ucIsThereFloat = (p_stParam2->eType == 8);
+        if (ucIsThereFloat)
+            p_stParam1->uDummy.uParam.xValue = (float)p_stParam1->uDummy.uParam.lValue;
+    }
+    return ucIsThereFloat;
+}
+
+unsigned char fn_ucInternalTurn(HIE_tdstSuperObject_* p_SuperObjPerso, float xAngle)
+{
+    tdstDynam_* h_Dynam;
+    DNM_stDynamics* pstDynamic;
+
+    h_Dynam = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;
+    if (h_Dynam && (pstDynamic = fn_p_stDynamGetDynamics(h_Dynam)))
+    {
+        MEC_vTurnAroundZAxis(pstDynamic, xAngle);
+        return 1;
+    }
+    return 0;
+}
+
+void fn_vConvertParamToColor(tdstGetSetParam_* p_stParam, GEO_tdstColor_* p_stColor)
+{
+    float fValue;
+    float lValue;
+    float fScale = 0.01f;
+    lValue = (float)p_stParam->uDummy.uParam.ColorValue.Component.Red;
+    if (lValue < 0.0f) {
+        fValue = 0.0f;
+    } else if (lValue > 100.0f) {
+        fValue = 1.0f;
+    } else {
+        fValue = lValue * fScale;
+    }
+    p_stColor->xR = fValue;
+    lValue = (float)p_stParam->uDummy.uParam.ColorValue.Component.Green;
+    if (lValue < 0.0f) {
+        fValue = 0.0f;
+    } else if (lValue > 100.0f) {
+        fValue = 1.0f;
+    } else {
+        fValue = lValue * fScale;
+    }
+    p_stColor->xG = fValue;
+    lValue = (float)p_stParam->uDummy.uParam.ColorValue.Component.Blue;
+    if (lValue < 0.0f) {
+        fValue = 0.0f;
+    } else if (lValue > 100.0f) {
+        fValue = 1.0f;
+    } else {
+        fValue = lValue * fScale;
+    }
+    p_stColor->xB = fValue;
+    lValue = (float)p_stParam->uDummy.uParam.ColorValue.Component.Alpha;
+    if (lValue < 0.0f) {
+        fValue = 0.0f;
+    } else if (lValue > 100.0f) {
+        fValue = 1.0f;
+    } else {
+        fValue = lValue * fScale;
+    }
+    p_stColor->xA = fValue;
+}
+
+void fn_vConvertColorToParam(GEO_tdstColor_* p_stColor, tdstGetSetParam_* p_stParam)
+{
+    p_stParam->uDummy.uParam.ColorValue.Component.Red = (unsigned int)(100.0f * p_stColor->xR);
+    p_stParam->uDummy.uParam.ColorValue.Component.Green = (unsigned int)(100.0f * p_stColor->xG);
+    p_stParam->uDummy.uParam.ColorValue.Component.Blue = (unsigned int)(100.0f * p_stColor->xB);
+    p_stParam->uDummy.uParam.ColorValue.Component.Alpha = (unsigned int)(100.0f * p_stColor->xA);
+    p_stParam->eType = E_vt_Color;
 }

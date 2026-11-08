@@ -146,29 +146,29 @@ extern "C" tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjP
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stSetCheapCharacterOptions(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ stParam;
-    unsigned int ulBit;
-    unsigned int ulValue;
-    tdeProcedureId_ eProcedureId;
-    _tdstCheapCharacterList* pCheapList;
 
-    eProcedureId = (p_stTree - 1)->uDummy;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    pCheapList = &g_aListOfCheapCharacterList[stParam.uParam.ulValue];
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    ulBit = stParam.uParam.ulValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    ulValue = stParam.uParam.ulValue;
-    if (eProcedureId == 848) {
-        if (ulValue == 1)
-            pCheapList->ulOptionFlags |= 1 << (ulBit - 1);
-        else
-            pCheapList->ulOptionFlags &= ~(1 << (ulBit - 1));
-    }
-    return p_stTree;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+extern "C" tdstNodeInterpret_* fn_p_stSetCheapCharacterOptions(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+extern "C" tdstNodeInterpret_* fn_p_stSetCheapCharacterListAura(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+extern "C" tdstNodeInterpret_* fn_p_stActivateCheapCharacter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+extern "C" tdstNodeInterpret_* fn_p_stResetCheapCharacterList(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+extern "C" void AddCheapCharacter(unsigned int ulInd, MTH3D_tdstVector_* pPos);
+extern "C" tdstNodeInterpret_* fn_p_stAddCheapCharacter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+extern "C" tdstNodeInterpret_* fn_p_stSetCheapCharacterPos(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+extern "C" tdstNodeInterpret_* fn_p_stSetCheapCharacterMode(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+extern "C" tdstNodeInterpret_* fn_p_stSetCheapCharacterRefObj(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+extern "C" tdstNodeInterpret_* fn_p_stSetCheapCharacterTimer(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+extern "C" tdstNodeInterpret_* fn_p_stSetCheapCharacterDistance(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+extern "C" tdstNodeInterpret_* fn_p_stGetCheapCharacter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+extern "C" tdstNodeInterpret_* fn_p_stTestCheapCharacterList(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+extern "C" tdstNodeInterpret_* fn_p_stCreateCheapCharacterList(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+extern "C" unsigned int TestPositionOfCheapCharacter(unsigned int ulIndList, HIE_tdstSuperObject_* hCharacter);
+extern "C" void ActivateCheapCharacter(unsigned int ulInd, unsigned int ulIndChar, unsigned char bActivate);
+extern "C" void AddCheapCharacterListAura(unsigned int ulInd, GLI_tdstMaterial_* hVisualMaterial, MTH3D_tdstVector_* pSizeParam, float fTransparencyParam, float fTransparencyBlinkParam);
+extern "C" int lCreateCheapCharacterList(unsigned int ulMax, HIE_tdstSuperObject_* pRefObj);
+extern "C" void InitCheapCharacterList(unsigned int ulInd, unsigned int ulMax, HIE_tdstSuperObject_* pRefObj);
+extern "C" void InitListOfCheapCharacterList(void);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 607–639 */
 /* addr: 0x00229180  size: 264 bytes */
@@ -202,27 +202,6 @@ tdstNodeInterpret_* fn_p_stSetCheapCharacterOptions(HIE_tdstSuperObject_* p_Supe
  * compare a candidate object's line table as an extra checkpoint.
  */
 extern "C" void AddCheapCharacterListAura(unsigned int, GLI_tdstMaterial_*, MTH3D_tdstVector_*, float, float);
-tdstNodeInterpret_* fn_p_stSetCheapCharacterListAura(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    float fTransparencyBlinkParam;
-    float fTransparencyParam;
-    unsigned int ulInd;
-    GLI_tdstMaterial_* hVisualMaterial;
-    MTH3D_tdstVector_ vSizeParam;
-    tdstGetSetParam_ stParam;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    ulInd = stParam.uParam.ulValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    hVisualMaterial = stParam.uParam.hVisualMaterial;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    vSizeParam = stParam.uParam.stVectorValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    fTransparencyParam = (stParam.eType == 8) ? stParam.uParam.xValue : (float)stParam.uParam.lValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    fTransparencyBlinkParam = (stParam.eType == 8) ? stParam.uParam.xValue : (float)stParam.uParam.lValue;
-    AddCheapCharacterListAura(ulInd, hVisualMaterial, &vSizeParam, fTransparencyParam, fTransparencyBlinkParam);
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 568–603 */
 /* addr: 0x00229290  size: 176 bytes */
@@ -255,29 +234,6 @@ tdstNodeInterpret_* fn_p_stSetCheapCharacterListAura(HIE_tdstSuperObject_* p_Sup
  * the char* temp below reproduces.  Under MWCC 3.0 the body is register
  * equivalent to the retail one; 3.0.1 duplicates the index computation in the
  * else branch (4 bytes too long). */
-tdstNodeInterpret_* fn_p_stActivateCheapCharacter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ stParam;
-    unsigned int ulIndChar;
-    tdeProcedureId_ eProcedureId;
-    _tdstCheapCharacterList* pCheapList;
-    char* pc;
-
-    eProcedureId = (p_stTree - 1)->uDummy;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    pCheapList = &g_aListOfCheapCharacterList[stParam.uParam.ulValue];
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    ulIndChar = stParam.uParam.ulValue;
-    if (ulIndChar < pCheapList->NumberOfCheapCharacter) {
-        pc = (char*)pCheapList;
-        pc = pc + 0x34;
-        if (eProcedureId == 846)
-            ((char*)pc)[ulIndChar * 48] = 1;
-        else
-            ((char*)pc)[ulIndChar * 48] = 0;
-    }
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 554–564 */
 /* addr: 0x00229340  size: 128 bytes */
@@ -293,23 +249,6 @@ tdstNodeInterpret_* fn_p_stActivateCheapCharacter(HIE_tdstSuperObject_* p_SuperO
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stResetCheapCharacterList(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ stParam;
-    _tdstCheapCharacterList* pCheapList;
-    unsigned int i;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    pCheapList = &g_aListOfCheapCharacterList[stParam.uParam.ulValue];
-    pCheapList->NumberOfCheapCharacter = 0;
-    pCheapList->pReferenceObject = NULL;
-    pCheapList->ulOptionFlags = 0;
-    for (i = 0; i < pCheapList->MaxNumberOfCheapCharacter; i++)
-        pCheapList->List[i].cActivity = 0;
-    pCheapList->hAuraVisualMaterial = NULL;
-    pCheapList->bAurasNeedToBeDrawn = 0;
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 530–550 */
 /* addr: 0x002293c0  size: 384 bytes */
@@ -340,64 +279,8 @@ tdstNodeInterpret_* fn_p_stResetCheapCharacterList(HIE_tdstSuperObject_* p_Super
  * the list base before adding the scaled character index; only the char*
  * temp plus the dead iIndex assignment reproduces that. */
 #pragma auto_inline on
-extern "C" void AddCheapCharacter(unsigned int ulInd, MTH3D_tdstVector_* pPos)
-{
-    _tdstCheapCharacterList* pCheapList;
-    char* pc;
-    int iIndex;
 
-    pCheapList = &g_aListOfCheapCharacterList[ulInd];
-    if (pCheapList->NumberOfCheapCharacter < pCheapList->MaxNumberOfCheapCharacter) {
-        if (pCheapList->NumberOfCheapCharacter < pCheapList->MaxNumberOfCheapCharacter) {
-            pc = (char*)pCheapList;
-            pc = pc + 0x10;
-            ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = pPos->x;
-            pc = (char*)pCheapList;
-            pc = pc + 0x14;
-            ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = pPos->y;
-            pc = (char*)pCheapList;
-            pc = pc + 0x18;
-            ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = pPos->z;
-            pc = (char*)pCheapList;
-            pc = pc + 0x20;
-            ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = 0.0f;
-            pc = (char*)pCheapList;
-            pc = pc + 0x24;
-            ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = 0.0f;
-            pc = (char*)pCheapList;
-            pc = pc + 0x28;
-            ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = 0.0f;
-            pc = (char*)pCheapList;
-            pc = pc + 0x34;
-            ((char*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 48] = 1;
-            pc = (char*)pCheapList;
-            pc = pc + 0x30;
-            ((unsigned int*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = 0;
-            pCheapList->NumberOfCheapCharacter++;
-        }
-    }
-}
 #pragma auto_inline reset
-
-/* Not original source: the retail build inlines AddCheapCharacter() here and
- * keeps the whole inlined body on the call statement's line (543), and it
- * keeps the stPosition copy in memory.  Writing the body out with the vector
- * copy at its point of use reproduces the retail bytes and line map. */
-tdstNodeInterpret_* fn_p_stAddCheapCharacter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    unsigned int ulInd;
-    tdstGetSetParam_ stParam;
-    _tdstCheapCharacterList* pCheapList;
-    char* pc;
-    int iIndex;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    ulInd = stParam.uParam.ulValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    MTH3D_tdstVector_ stPosition = stParam.uParam.stVectorValue;
-    pCheapList = &g_aListOfCheapCharacterList[ulInd]; if (pCheapList->NumberOfCheapCharacter < pCheapList->MaxNumberOfCheapCharacter) { if (pCheapList->NumberOfCheapCharacter < pCheapList->MaxNumberOfCheapCharacter) { pc = (char*)pCheapList; pc = pc + 0x10; ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = stPosition.x; pc = (char*)pCheapList; pc = pc + 0x14; ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = stPosition.y; pc = (char*)pCheapList; pc = pc + 0x18; ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = stPosition.z; pc = (char*)pCheapList; pc = pc + 0x20; ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = 0.0f; pc = (char*)pCheapList; pc = pc + 0x24; ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = 0.0f; pc = (char*)pCheapList; pc = pc + 0x28; ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = 0.0f; pc = (char*)pCheapList; pc = pc + 0x34; ((char*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 48] = 1; pc = (char*)pCheapList; pc = pc + 0x30; ((unsigned int*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = 0; pCheapList->NumberOfCheapCharacter++; } }
-    return p_stTree;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 479–526 */
 /* addr: 0x00229540  size: 432 bytes */
@@ -442,6 +325,642 @@ tdstNodeInterpret_* fn_p_stAddCheapCharacter(HIE_tdstSuperObject_* p_SuperObjPer
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 461–475 */
+/* addr: 0x00229700  size: 92 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 461
+ *   +0x0008 -> line 466
+ *   +0x000c -> line 461
+ *   +0x0010 -> line 466
+ *   +0x0018 -> line 470
+ *   +0x001c -> line 466
+ *   +0x0020 -> line 467
+ *   +0x0024 -> line 470
+ *   +0x002c -> line 473
+ *   +0x004c -> line 475
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 442–457 */
+/* addr: 0x00229760  size: 116 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 442
+ *   +0x0008 -> line 448
+ *   +0x000c -> line 442
+ *   +0x0014 -> line 448
+ *   +0x001c -> line 449
+ *   +0x0020 -> line 452
+ *   +0x0024 -> line 448
+ *   +0x0028 -> line 452
+ *   +0x0034 -> line 453
+ *   +0x0040 -> line 455
+ *   +0x005c -> line 456
+ *   +0x0060 -> line 457
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 423–438 */
+/* addr: 0x002297e0  size: 92 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 423
+ *   +0x0008 -> line 429
+ *   +0x000c -> line 423
+ *   +0x0010 -> line 429
+ *   +0x0018 -> line 433
+ *   +0x001c -> line 429
+ *   +0x0020 -> line 430
+ *   +0x0024 -> line 433
+ *   +0x002c -> line 436
+ *   +0x004c -> line 438
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 399–419 */
+/* addr: 0x00229840  size: 152 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 399
+ *   +0x0008 -> line 406
+ *   +0x000c -> line 399
+ *   +0x0014 -> line 400
+ *   +0x0018 -> line 406
+ *   +0x0020 -> line 410
+ *   +0x0024 -> line 406
+ *   +0x0028 -> line 407
+ *   +0x002c -> line 410
+ *   +0x0034 -> line 413
+ *   +0x0040 -> line 414
+ *   +0x0064 -> line 416
+ *   +0x0084 -> line 419
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 362–391 */
+/* addr: 0x002298e0  size: 204 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 362
+ *   +0x0010 -> line 365
+ *   +0x0018 -> line 369
+ *   +0x0024 -> line 372
+ *   +0x0050 -> line 375
+ *   +0x0064 -> line 376
+ *   +0x006c -> line 378
+ *   +0x0080 -> line 379
+ *   +0x0088 -> line 381
+ *   +0x00a8 -> line 389
+ *   +0x00b4 -> line 390
+ *   +0x00b8 -> line 391
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 340–358 */
+/* addr: 0x002299b0  size: 312 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 340
+ *   +0x0018 -> line 346
+ *   +0x001c -> line 340
+ *   +0x0020 -> line 346
+ *   +0x0028 -> line 350
+ *   +0x002c -> line 346
+ *   +0x0030 -> line 347
+ *   +0x0034 -> line 350
+ *   +0x0040 -> line 351
+ *   +0x004c -> line 353
+ *   +0x00fc -> line 354
+ *   +0x010c -> line 356
+ *   +0x0114 -> line 357
+ *   +0x0118 -> line 356
+ *   +0x011c -> line 358
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 303–334 */
+/* addr: 0x00229af0  size: 200 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 303
+ *   +0x001c -> line 313
+ *   +0x0038 -> line 316
+ *   +0x0048 -> line 319
+ *   +0x004c -> line 317
+ *   +0x0050 -> line 319
+ *   +0x0080 -> line 321
+ *   +0x0088 -> line 328
+ *   +0x0090 -> line 329
+ *   +0x0098 -> line 331
+ *   +0x00ac -> line 333
+ *   +0x00b0 -> line 334
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 167–242 */
+/* addr: 0x00229bc0  size: 476 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 167
+ *   +0x0008 -> line 172
+ *   +0x001c -> line 182
+ *   +0x0020 -> line 172
+ *   +0x0024 -> line 174
+ *   +0x002c -> line 167
+ *   +0x0030 -> line 175
+ *   +0x0034 -> line 168
+ *   +0x0038 -> line 180
+ *   +0x0040 -> line 182
+ *   +0x0048 -> line 184
+ *   +0x0054 -> line 188
+ *   +0x005c -> line 187
+ *   +0x0064 -> line 189
+ *   +0x006c -> line 188
+ *   +0x0070 -> line 189
+ *   +0x0074 -> line 187
+ *   +0x0078 -> line 190
+ *   +0x0088 -> line 192
+ *   +0x0098 -> line 195
+ *   +0x009c -> line 194
+ *   +0x00a0 -> line 197
+ *   +0x00b0 -> line 199
+ *   +0x00b4 -> line 200
+ *   +0x00bc -> line 203
+ *   +0x00d0 -> line 205
+ *   +0x00e0 -> line 207
+ *   +0x00f4 -> line 209
+ *   +0x00fc -> line 210
+ *   +0x0104 -> line 218
+ *   +0x0108 -> line 209
+ *   +0x011c -> line 210
+ *   +0x0134 -> line 218
+ *   +0x013c -> line 221
+ *   +0x0144 -> line 223
+ *   +0x0158 -> line 225
+ *   +0x0160 -> line 233
+ *   +0x0164 -> line 225
+ *   +0x0178 -> line 233
+ *   +0x0184 -> line 235
+ *   +0x01a4 -> line 237
+ *   +0x01c8 -> line 238
+ *   +0x01d0 -> line 241
+ *   +0x01d4 -> line 242
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 156–157 */
+/* addr: 0x00229da0  size: 60 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 156
+ *   +0x0034 -> line 157
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 137–152 */
+/* addr: 0x00229de0  size: 228 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 140
+ *   +0x0004 -> line 137
+ *   +0x0008 -> line 140
+ *   +0x000c -> line 137
+ *   +0x001c -> line 140
+ *   +0x0038 -> line 141
+ *   +0x0060 -> line 142
+ *   +0x007c -> line 143
+ *   +0x00a0 -> line 145
+ *   +0x00a4 -> line 149
+ *   +0x00a8 -> line 146
+ *   +0x00ac -> line 149
+ *   +0x00bc -> line 146
+ *   +0x00c0 -> line 147
+ *   +0x00c4 -> line 150
+ *   +0x00c8 -> line 147
+ *   +0x00cc -> line 148
+ *   +0x00d4 -> line 149
+ *   +0x00d8 -> line 150
+ *   +0x00dc -> line 152
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 106–128 */
+/* addr: 0x00229ed0  size: 308 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 106
+ *   +0x0018 -> line 108
+ *   +0x002c -> line 115
+ *   +0x0034 -> line 117
+ *   +0x0040 -> line 118
+ *   +0x0044 -> line 117
+ *   +0x0050 -> line 119
+ *   +0x0054 -> line 121
+ *   +0x0058 -> line 122
+ *   +0x005c -> line 123
+ *   +0x0060 -> line 125
+ *   +0x0064 -> line 117
+ *   +0x0068 -> line 125
+ *   +0x006c -> line 118
+ *   +0x0074 -> line 126
+ *   +0x0078 -> line 118
+ *   +0x008c -> line 119
+ *   +0x00a8 -> line 121
+ *   +0x00c0 -> line 122
+ *   +0x00d8 -> line 123
+ *   +0x00f0 -> line 125
+ *   +0x0108 -> line 126
+ *   +0x0120 -> line 127
+ *   +0x012c -> line 128
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 73–84 */
+/* addr: 0x0022a010  size: 84 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 73
+ *   +0x000c -> line 78
+ *   +0x002c -> line 80
+ *   +0x0034 -> line 81
+ *   +0x0040 -> line 83
+ *   +0x0044 -> line 84
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+#pragma auto_inline on
+
+#pragma auto_inline reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 39–69 */
+/* addr: 0x0022a070  size: 152 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 39
+ *   +0x0004 -> line 45
+ *   +0x0008 -> line 39
+ *   +0x001c -> line 45
+ *   +0x0024 -> line 46
+ *   +0x0028 -> line 47
+ *   +0x002c -> line 49
+ *   +0x0030 -> line 48
+ *   +0x0034 -> line 50
+ *   +0x0038 -> line 49
+ *   +0x003c -> line 63
+ *   +0x0040 -> line 50
+ *   +0x0044 -> line 52
+ *   +0x0048 -> line 51
+ *   +0x004c -> line 63
+ *   +0x0050 -> line 52
+ *   +0x0054 -> line 53
+ *   +0x0058 -> line 56
+ *   +0x005c -> line 57
+ *   +0x0060 -> line 59
+ *   +0x0064 -> line 63
+ *   +0x0070 -> line 65
+ *   +0x007c -> line 66
+ *   +0x0080 -> line 65
+ *   +0x0084 -> line 66
+ *   +0x0090 -> line 69
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 28–34 */
+/* addr: 0x0022a110  size: 32 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 28
+ *   +0x0008 -> line 31
+ *   +0x0010 -> line 33
+ *   +0x0014 -> line 34
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void InitListOfCheapCharacterList(void)
+{
+    HIE_fn_CleanAllListOfFakeInstanceToViewport();
+    g_lNbListOfCheapCharacterList = 0;
+}
+
+void InitCheapCharacterList(unsigned int ulInd, unsigned int ulMax, HIE_tdstSuperObject_* pRefObj)
+{
+    unsigned int i;
+    _tdstCheapCharacterList* pCheapList;
+
+    pCheapList = &g_aListOfCheapCharacterList[ulInd];
+    pCheapList->NumberOfCheapCharacter = 0;
+    if (ulMax > 40)
+        ulMax = 40;
+    pCheapList->MaxNumberOfCheapCharacter = ulMax;
+    pCheapList->pReferenceObject = pRefObj;
+    pCheapList->fSquaredMinDistance = 1.0f;
+    pCheapList->fSquaredMaxDistance = 10.0f;
+    pCheapList->lTimer = 0;
+    pCheapList->cTestMode = 1;
+    pCheapList->ulOptionFlags = 0;
+    pCheapList->SDL = 0;
+    pCheapList->pMatrixList = NULL;
+    pCheapList->hAuraVisualMaterial = NULL;
+    pCheapList->bAurasNeedToBeDrawn = 0;
+    for (i = 0; i < ulMax; i++) {
+        MTH3D_tdstVector_* p = (MTH3D_tdstVector_*)&pCheapList->List[i];
+        asm { sqc2 vf0, 0(p) }
+    }
+}
+
+#pragma auto_inline on
+int lCreateCheapCharacterList(unsigned int ulMax, HIE_tdstSuperObject_* pRefObj)
+{
+    int lListIndex;
+
+    if (g_lNbListOfCheapCharacterList < 10)
+        lListIndex = g_lNbListOfCheapCharacterList++;
+    else
+        lListIndex = -1;
+    if (lListIndex >= 0)
+        InitCheapCharacterList(lListIndex, ulMax, pRefObj);
+    return lListIndex;
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+extern "C" void AddCheapCharacter(unsigned int ulInd, MTH3D_tdstVector_* pPos)
+{
+    _tdstCheapCharacterList* pCheapList;
+    char* pc;
+    int iIndex;
+
+    pCheapList = &g_aListOfCheapCharacterList[ulInd];
+    if (pCheapList->NumberOfCheapCharacter < pCheapList->MaxNumberOfCheapCharacter) {
+        if (pCheapList->NumberOfCheapCharacter < pCheapList->MaxNumberOfCheapCharacter) {
+            pc = (char*)pCheapList;
+            pc = pc + 0x10;
+            ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = pPos->x;
+            pc = (char*)pCheapList;
+            pc = pc + 0x14;
+            ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = pPos->y;
+            pc = (char*)pCheapList;
+            pc = pc + 0x18;
+            ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = pPos->z;
+            pc = (char*)pCheapList;
+            pc = pc + 0x20;
+            ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = 0.0f;
+            pc = (char*)pCheapList;
+            pc = pc + 0x24;
+            ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = 0.0f;
+            pc = (char*)pCheapList;
+            pc = pc + 0x28;
+            ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = 0.0f;
+            pc = (char*)pCheapList;
+            pc = pc + 0x34;
+            ((char*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 48] = 1;
+            pc = (char*)pCheapList;
+            pc = pc + 0x30;
+            ((unsigned int*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = 0;
+            pCheapList->NumberOfCheapCharacter++;
+        }
+    }
+}
+#pragma auto_inline reset
+
+void AddCheapCharacterListAura(unsigned int ulInd, GLI_tdstMaterial_* hVisualMaterial, MTH3D_tdstVector_* pSizeParam, float fTransparencyParam, float fTransparencyBlinkParam)
+{
+    _tdstCheapCharacterList* param0;
+    param0 = &g_aListOfCheapCharacterList[ulInd];
+    if (pSizeParam->x - pSizeParam->z < 0.0f)
+        pSizeParam->z = pSizeParam->x;
+    if (pSizeParam->y - pSizeParam->z < 0.0f)
+        pSizeParam->z = pSizeParam->y;
+    if (fTransparencyParam - fTransparencyBlinkParam < 0.0f)
+        fTransparencyBlinkParam = fTransparencyParam;
+    if (fTransparencyParam + fTransparencyBlinkParam > 255.0f)
+        fTransparencyBlinkParam = 255.0f - fTransparencyParam;
+    param0->hAuraVisualMaterial = hVisualMaterial;
+    param0->p_fAuraSizes[0] = pSizeParam->x;
+    param0->p_fAuraSizes[1] = pSizeParam->y;
+    param0->fAuraSizeBlinkRange = pSizeParam->z;
+    param0->fAuraTransparencyMidLevel = (1.0f / 255.0f) * fTransparencyParam;
+    param0->fAuraTransparencyBlinkRange = (1.0f / 255.0f) * fTransparencyBlinkParam;
+    param0->bAurasNeedToBeDrawn = 0;
+}
+
+void ActivateCheapCharacter(unsigned int ulInd, unsigned int ulIndChar, unsigned char bActivate)
+{
+    g_aListOfCheapCharacterList[ulInd].List[ulIndChar].cActivity = bActivate ? 1 : 0;
+}
+
+unsigned int TestPositionOfCheapCharacter(unsigned int ulIndList, HIE_tdstSuperObject_* hCharacter)
+{
+    _tdstCheapCharacterList* pCheapList;
+    float x;
+    float y;
+    float z;
+    float fSquaredDistance;
+    float fMinSqDistance;
+    float fMaxSqDistance;
+    unsigned int i;
+    MTH3D_tdstVector_* pPos;
+    char* pc;
+    int iIndex;
+
+    fMinSqDistance = 1e9f;
+    fMaxSqDistance = 0.0f;
+    pCheapList = &g_aListOfCheapCharacterList[ulIndList];
+    pCheapList->lIndOfFurthestDesactivateCharacter = 40;
+    pCheapList->lIndOfClosestDesactivateCharacter = 40;
+    pPos = &hCharacter->hGlobalMatrix->stPos;
+    for (i = 0; i < pCheapList->NumberOfCheapCharacter; i++) {
+        if (pCheapList->List[i].cActivity != 0) {
+            x = pCheapList->List[i].stPosition.x - pPos->x;
+            y = pCheapList->List[i].stPosition.y - pPos->y;
+            z = pCheapList->List[i].stPosition.z - pPos->z;
+            fSquaredDistance = x * x + y * y + z * z;
+            if (fSquaredDistance < fMinSqDistance) {
+                pCheapList->lIndOfClosestDesactivateCharacter = i;
+                fMinSqDistance = fSquaredDistance;
+            }
+            if (!(fSquaredDistance < fMaxSqDistance)) {
+                fMaxSqDistance = fSquaredDistance;
+                pCheapList->lIndOfFurthestDesactivateCharacter = i;
+            }
+        }
+    }
+    if ((pCheapList->cTestMode & 1) && fMinSqDistance <= pCheapList->fSquaredMinDistance) {
+        pc = (char*)pCheapList;
+        pc = pc + 0x34;
+        ((char*)pc)[iIndex = pCheapList->lIndOfClosestDesactivateCharacter * 48] = 0;
+        pc = (char*)pCheapList;
+        pc = pc + 0x30;
+        ((unsigned int*)pc)[iIndex = pCheapList->lIndOfClosestDesactivateCharacter * 12] = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+        return 2;
+    }
+    if (pCheapList->cTestMode & 2) {
+        if (!(fMaxSqDistance < pCheapList->fSquaredMaxDistance)) {
+            pc = (char*)pCheapList;
+            pc = pc + 0x34;
+            ((char*)pc)[iIndex = pCheapList->lIndOfFurthestDesactivateCharacter * 48] = 0;
+            if (pCheapList->cTestMode == 3) {
+                pc = (char*)pCheapList;
+                pc = pc + 0x30;
+                ((unsigned int*)pc)[iIndex = pCheapList->lIndOfFurthestDesactivateCharacter * 12] = 0;
+            } else {
+                pc = (char*)pCheapList;
+                pc = pc + 0x30;
+                ((unsigned int*)pc)[iIndex = pCheapList->lIndOfFurthestDesactivateCharacter * 12] = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+            }
+            return 2;
+        }
+    }
+    return 0;
+}
+
+tdstNodeInterpret_* fn_p_stCreateCheapCharacterList(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    unsigned int ulMax;
+    tdstGetSetParam_ stParam;
+    int lListIndex;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator((p_stTree - 1)->uDummy), p_SuperObjPerso, &hNewSuperObjPerso);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    ulMax = stParam.uParam.ulValue;
+    lListIndex = lCreateCheapCharacterList(ulMax, hNewSuperObjPerso);
+    if (lListIndex >= 0) {
+        p_stValue->uParam.lValue = lListIndex;
+        p_stValue->eType = (tdeVariableType_)6;
+    } else {
+        Erm_fn_iMessageBox("too many cheap character lists", "ERROR", 0x10);
+    }
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stTestCheapCharacterList(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    HIE_tdstSuperObject_* hCharacter;
+    unsigned int ulInd;
+    unsigned int ulTestRes;
+    tdstGetSetParam_ stParam;
+    _tdstCheapCharacterList* pCheapList;
+    unsigned int i;
+    char* pcAlias; /* Not original source, needs cleaning up (permuter alias) */
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    ulInd = stParam.uParam.ulValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    hCharacter = fn_h_StandardGameGetSuperObject(stParam.uParam.p_stEngObjValue->hStandardGame);
+    pCheapList = &g_aListOfCheapCharacterList[ulInd];
+    pCheapList->lIndOfReactivateCharacter = 0;
+    if (pCheapList->lTimer != 0) {
+        for (i = 0; i < pCheapList->NumberOfCheapCharacter; i++) {
+            if (pCheapList->List[i].cActivity == 0 && pCheapList->List[i].lTakenTime != 0
+                && g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - pCheapList->List[i].lTakenTime >= pCheapList->lTimer) {
+                int iIndex = i * 48;
+                char* pc;
+                ulTestRes = 1;
+                pc = (char*)pCheapList + 0x34;
+                pc[iIndex] = 1;
+                pCheapList->lIndOfReactivateCharacter = i;
+                pc = (char*)pCheapList + 0x30;
+                *(unsigned int*)((pcAlias = pc) + iIndex) = 0;
+                goto done;
+            }
+        }
+    }
+    ulTestRes = 0;
+done:
+    ulTestRes += TestPositionOfCheapCharacter(ulInd, hCharacter);
+    p_stValue->uParam.ulValue = ulTestRes;
+    p_stValue->eType = (tdeVariableType_)6;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stGetCheapCharacter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    tdeFuncId_ eFuncId;
+    unsigned int ulRes;
+    unsigned int ulIndList;
+    tdstGetSetParam_ stParam;
+
+    eFuncId = (p_stTree - 1)->uDummy;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    ulIndList = stParam.uParam.ulValue;
+    switch (eFuncId) {
+    case 134:
+        ulRes = g_aListOfCheapCharacterList[ulIndList].lIndOfClosestDesactivateCharacter;
+        break;
+    case 135:
+        ulRes = g_aListOfCheapCharacterList[ulIndList].lIndOfFurthestDesactivateCharacter;
+        break;
+    case 136:
+        ulRes = g_aListOfCheapCharacterList[ulIndList].lIndOfReactivateCharacter;
+        break;
+    default:
+        ulRes = 0;
+        break;
+    }
+    p_stValue->uParam.ulValue = ulRes;
+    p_stValue->eType = (tdeVariableType_)6;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stSetCheapCharacterDistance(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdeProcedureId_ eProcedureId;
+    tdstGetSetParam_ stParam;
+    float fDistance;
+    unsigned int ulInd;
+
+    eProcedureId = (p_stTree - 1)->uDummy;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    ulInd = stParam.uParam.ulValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    fDistance = stParam.uParam.xValue;
+    if (eProcedureId == 836)
+        g_aListOfCheapCharacterList[ulInd].fSquaredMinDistance = fDistance * fDistance;
+    else
+        g_aListOfCheapCharacterList[ulInd].fSquaredMaxDistance = fDistance * fDistance;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stSetCheapCharacterTimer(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    unsigned int ulInd;
+    tdstGetSetParam_ stParam;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    ulInd = stParam.uParam.ulValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    g_aListOfCheapCharacterList[ulInd].lTimer = stParam.uParam.ulValue;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stSetCheapCharacterRefObj(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    unsigned int ulInd;
+    HIE_tdstSuperObject_* hCharacter;
+    tdstGetSetParam_ stParam;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    ulInd = stParam.uParam.ulValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    hCharacter = fn_h_StandardGameGetSuperObject(stParam.uParam.p_stEngObjValue->hStandardGame);
+    g_aListOfCheapCharacterList[ulInd].pReferenceObject = hCharacter;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stSetCheapCharacterMode(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    unsigned int ulInd;
+    tdstGetSetParam_ stParam;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    ulInd = stParam.uParam.ulValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    g_aListOfCheapCharacterList[ulInd].cTestMode = stParam.uParam.cValue;
+    return p_stTree;
+}
+
 /* Not original source in two places: the retail branch layout needs the
  * guard written as an early return (it branches to the body on beqz and keeps
  * the skip as the fall-through), and the 843 branch needs the scaled index in
@@ -510,581 +1029,110 @@ tdstNodeInterpret_* fn_p_stSetCheapCharacterPos(HIE_tdstSuperObject_* p_SuperObj
     return p_stTree;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 461–475 */
-/* addr: 0x00229700  size: 92 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 461
- *   +0x0008 -> line 466
- *   +0x000c -> line 461
- *   +0x0010 -> line 466
- *   +0x0018 -> line 470
- *   +0x001c -> line 466
- *   +0x0020 -> line 467
- *   +0x0024 -> line 470
- *   +0x002c -> line 473
- *   +0x004c -> line 475
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stSetCheapCharacterMode(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+/* Not original source: the retail build inlines AddCheapCharacter() here and
+ * keeps the whole inlined body on the call statement's line (543), and it
+ * keeps the stPosition copy in memory.  Writing the body out with the vector
+ * copy at its point of use reproduces the retail bytes and line map. */
+tdstNodeInterpret_* fn_p_stAddCheapCharacter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     unsigned int ulInd;
-    tdstGetSetParam_ stParam;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    ulInd = stParam.uParam.ulValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    g_aListOfCheapCharacterList[ulInd].cTestMode = stParam.uParam.cValue;
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 442–457 */
-/* addr: 0x00229760  size: 116 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 442
- *   +0x0008 -> line 448
- *   +0x000c -> line 442
- *   +0x0014 -> line 448
- *   +0x001c -> line 449
- *   +0x0020 -> line 452
- *   +0x0024 -> line 448
- *   +0x0028 -> line 452
- *   +0x0034 -> line 453
- *   +0x0040 -> line 455
- *   +0x005c -> line 456
- *   +0x0060 -> line 457
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stSetCheapCharacterRefObj(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    unsigned int ulInd;
-    HIE_tdstSuperObject_* hCharacter;
-    tdstGetSetParam_ stParam;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    ulInd = stParam.uParam.ulValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    hCharacter = fn_h_StandardGameGetSuperObject(stParam.uParam.p_stEngObjValue->hStandardGame);
-    g_aListOfCheapCharacterList[ulInd].pReferenceObject = hCharacter;
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 423–438 */
-/* addr: 0x002297e0  size: 92 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 423
- *   +0x0008 -> line 429
- *   +0x000c -> line 423
- *   +0x0010 -> line 429
- *   +0x0018 -> line 433
- *   +0x001c -> line 429
- *   +0x0020 -> line 430
- *   +0x0024 -> line 433
- *   +0x002c -> line 436
- *   +0x004c -> line 438
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stSetCheapCharacterTimer(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    unsigned int ulInd;
-    tdstGetSetParam_ stParam;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    ulInd = stParam.uParam.ulValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    g_aListOfCheapCharacterList[ulInd].lTimer = stParam.uParam.ulValue;
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 399–419 */
-/* addr: 0x00229840  size: 152 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 399
- *   +0x0008 -> line 406
- *   +0x000c -> line 399
- *   +0x0014 -> line 400
- *   +0x0018 -> line 406
- *   +0x0020 -> line 410
- *   +0x0024 -> line 406
- *   +0x0028 -> line 407
- *   +0x002c -> line 410
- *   +0x0034 -> line 413
- *   +0x0040 -> line 414
- *   +0x0064 -> line 416
- *   +0x0084 -> line 419
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stSetCheapCharacterDistance(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdeProcedureId_ eProcedureId;
-    tdstGetSetParam_ stParam;
-    float fDistance;
-    unsigned int ulInd;
-
-    eProcedureId = (p_stTree - 1)->uDummy;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    ulInd = stParam.uParam.ulValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    fDistance = stParam.uParam.xValue;
-    if (eProcedureId == 836)
-        g_aListOfCheapCharacterList[ulInd].fSquaredMinDistance = fDistance * fDistance;
-    else
-        g_aListOfCheapCharacterList[ulInd].fSquaredMaxDistance = fDistance * fDistance;
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 362–391 */
-/* addr: 0x002298e0  size: 204 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 362
- *   +0x0010 -> line 365
- *   +0x0018 -> line 369
- *   +0x0024 -> line 372
- *   +0x0050 -> line 375
- *   +0x0064 -> line 376
- *   +0x006c -> line 378
- *   +0x0080 -> line 379
- *   +0x0088 -> line 381
- *   +0x00a8 -> line 389
- *   +0x00b4 -> line 390
- *   +0x00b8 -> line 391
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stGetCheapCharacter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    tdeFuncId_ eFuncId;
-    unsigned int ulRes;
-    unsigned int ulIndList;
-    tdstGetSetParam_ stParam;
-
-    eFuncId = (p_stTree - 1)->uDummy;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    ulIndList = stParam.uParam.ulValue;
-    switch (eFuncId) {
-    case 134:
-        ulRes = g_aListOfCheapCharacterList[ulIndList].lIndOfClosestDesactivateCharacter;
-        break;
-    case 135:
-        ulRes = g_aListOfCheapCharacterList[ulIndList].lIndOfFurthestDesactivateCharacter;
-        break;
-    case 136:
-        ulRes = g_aListOfCheapCharacterList[ulIndList].lIndOfReactivateCharacter;
-        break;
-    default:
-        ulRes = 0;
-        break;
-    }
-    p_stValue->uParam.ulValue = ulRes;
-    p_stValue->eType = (tdeVariableType_)6;
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 340–358 */
-/* addr: 0x002299b0  size: 312 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 340
- *   +0x0018 -> line 346
- *   +0x001c -> line 340
- *   +0x0020 -> line 346
- *   +0x0028 -> line 350
- *   +0x002c -> line 346
- *   +0x0030 -> line 347
- *   +0x0034 -> line 350
- *   +0x0040 -> line 351
- *   +0x004c -> line 353
- *   +0x00fc -> line 354
- *   +0x010c -> line 356
- *   +0x0114 -> line 357
- *   +0x0118 -> line 356
- *   +0x011c -> line 358
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stTestCheapCharacterList(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    HIE_tdstSuperObject_* hCharacter;
-    unsigned int ulInd;
-    unsigned int ulTestRes;
     tdstGetSetParam_ stParam;
     _tdstCheapCharacterList* pCheapList;
-    unsigned int i;
-    char* pcAlias; /* Not original source, needs cleaning up (permuter alias) */
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    ulInd = stParam.uParam.ulValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    hCharacter = fn_h_StandardGameGetSuperObject(stParam.uParam.p_stEngObjValue->hStandardGame);
-    pCheapList = &g_aListOfCheapCharacterList[ulInd];
-    pCheapList->lIndOfReactivateCharacter = 0;
-    if (pCheapList->lTimer != 0) {
-        for (i = 0; i < pCheapList->NumberOfCheapCharacter; i++) {
-            if (pCheapList->List[i].cActivity == 0 && pCheapList->List[i].lTakenTime != 0
-                && g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - pCheapList->List[i].lTakenTime >= pCheapList->lTimer) {
-                int iIndex = i * 48;
-                char* pc;
-                ulTestRes = 1;
-                pc = (char*)pCheapList + 0x34;
-                pc[iIndex] = 1;
-                pCheapList->lIndOfReactivateCharacter = i;
-                pc = (char*)pCheapList + 0x30;
-                *(unsigned int*)((pcAlias = pc) + iIndex) = 0;
-                goto done;
-            }
-        }
-    }
-    ulTestRes = 0;
-done:
-    ulTestRes += TestPositionOfCheapCharacter(ulInd, hCharacter);
-    p_stValue->uParam.ulValue = ulTestRes;
-    p_stValue->eType = (tdeVariableType_)6;
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 303–334 */
-/* addr: 0x00229af0  size: 200 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 303
- *   +0x001c -> line 313
- *   +0x0038 -> line 316
- *   +0x0048 -> line 319
- *   +0x004c -> line 317
- *   +0x0050 -> line 319
- *   +0x0080 -> line 321
- *   +0x0088 -> line 328
- *   +0x0090 -> line 329
- *   +0x0098 -> line 331
- *   +0x00ac -> line 333
- *   +0x00b0 -> line 334
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstNodeInterpret_* fn_p_stCreateCheapCharacterList(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    unsigned int ulMax;
-    tdstGetSetParam_ stParam;
-    int lListIndex;
-
-    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator((p_stTree - 1)->uDummy), p_SuperObjPerso, &hNewSuperObjPerso);
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    ulMax = stParam.uParam.ulValue;
-    lListIndex = lCreateCheapCharacterList(ulMax, hNewSuperObjPerso);
-    if (lListIndex >= 0) {
-        p_stValue->uParam.lValue = lListIndex;
-        p_stValue->eType = (tdeVariableType_)6;
-    } else {
-        Erm_fn_iMessageBox("too many cheap character lists", "ERROR", 0x10);
-    }
-    return p_stTree;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 167–242 */
-/* addr: 0x00229bc0  size: 476 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 167
- *   +0x0008 -> line 172
- *   +0x001c -> line 182
- *   +0x0020 -> line 172
- *   +0x0024 -> line 174
- *   +0x002c -> line 167
- *   +0x0030 -> line 175
- *   +0x0034 -> line 168
- *   +0x0038 -> line 180
- *   +0x0040 -> line 182
- *   +0x0048 -> line 184
- *   +0x0054 -> line 188
- *   +0x005c -> line 187
- *   +0x0064 -> line 189
- *   +0x006c -> line 188
- *   +0x0070 -> line 189
- *   +0x0074 -> line 187
- *   +0x0078 -> line 190
- *   +0x0088 -> line 192
- *   +0x0098 -> line 195
- *   +0x009c -> line 194
- *   +0x00a0 -> line 197
- *   +0x00b0 -> line 199
- *   +0x00b4 -> line 200
- *   +0x00bc -> line 203
- *   +0x00d0 -> line 205
- *   +0x00e0 -> line 207
- *   +0x00f4 -> line 209
- *   +0x00fc -> line 210
- *   +0x0104 -> line 218
- *   +0x0108 -> line 209
- *   +0x011c -> line 210
- *   +0x0134 -> line 218
- *   +0x013c -> line 221
- *   +0x0144 -> line 223
- *   +0x0158 -> line 225
- *   +0x0160 -> line 233
- *   +0x0164 -> line 225
- *   +0x0178 -> line 233
- *   +0x0184 -> line 235
- *   +0x01a4 -> line 237
- *   +0x01c8 -> line 238
- *   +0x01d0 -> line 241
- *   +0x01d4 -> line 242
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned int TestPositionOfCheapCharacter(unsigned int ulIndList, HIE_tdstSuperObject_* hCharacter)
-{
-    _tdstCheapCharacterList* pCheapList;
-    float x;
-    float y;
-    float z;
-    float fSquaredDistance;
-    float fMinSqDistance;
-    float fMaxSqDistance;
-    unsigned int i;
-    MTH3D_tdstVector_* pPos;
     char* pc;
     int iIndex;
 
-    fMinSqDistance = 1e9f;
-    fMaxSqDistance = 0.0f;
-    pCheapList = &g_aListOfCheapCharacterList[ulIndList];
-    pCheapList->lIndOfFurthestDesactivateCharacter = 40;
-    pCheapList->lIndOfClosestDesactivateCharacter = 40;
-    pPos = &hCharacter->hGlobalMatrix->stPos;
-    for (i = 0; i < pCheapList->NumberOfCheapCharacter; i++) {
-        if (pCheapList->List[i].cActivity != 0) {
-            x = pCheapList->List[i].stPosition.x - pPos->x;
-            y = pCheapList->List[i].stPosition.y - pPos->y;
-            z = pCheapList->List[i].stPosition.z - pPos->z;
-            fSquaredDistance = x * x + y * y + z * z;
-            if (fSquaredDistance < fMinSqDistance) {
-                pCheapList->lIndOfClosestDesactivateCharacter = i;
-                fMinSqDistance = fSquaredDistance;
-            }
-            if (!(fSquaredDistance < fMaxSqDistance)) {
-                fMaxSqDistance = fSquaredDistance;
-                pCheapList->lIndOfFurthestDesactivateCharacter = i;
-            }
-        }
-    }
-    if ((pCheapList->cTestMode & 1) && fMinSqDistance <= pCheapList->fSquaredMinDistance) {
-        pc = (char*)pCheapList;
-        pc = pc + 0x34;
-        ((char*)pc)[iIndex = pCheapList->lIndOfClosestDesactivateCharacter * 48] = 0;
-        pc = (char*)pCheapList;
-        pc = pc + 0x30;
-        ((unsigned int*)pc)[iIndex = pCheapList->lIndOfClosestDesactivateCharacter * 12] = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
-        return 2;
-    }
-    if (pCheapList->cTestMode & 2) {
-        if (!(fMaxSqDistance < pCheapList->fSquaredMaxDistance)) {
-            pc = (char*)pCheapList;
-            pc = pc + 0x34;
-            ((char*)pc)[iIndex = pCheapList->lIndOfFurthestDesactivateCharacter * 48] = 0;
-            if (pCheapList->cTestMode == 3) {
-                pc = (char*)pCheapList;
-                pc = pc + 0x30;
-                ((unsigned int*)pc)[iIndex = pCheapList->lIndOfFurthestDesactivateCharacter * 12] = 0;
-            } else {
-                pc = (char*)pCheapList;
-                pc = pc + 0x30;
-                ((unsigned int*)pc)[iIndex = pCheapList->lIndOfFurthestDesactivateCharacter * 12] = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
-            }
-            return 2;
-        }
-    }
-    return 0;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    ulInd = stParam.uParam.ulValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    MTH3D_tdstVector_ stPosition = stParam.uParam.stVectorValue;
+    pCheapList = &g_aListOfCheapCharacterList[ulInd]; if (pCheapList->NumberOfCheapCharacter < pCheapList->MaxNumberOfCheapCharacter) { if (pCheapList->NumberOfCheapCharacter < pCheapList->MaxNumberOfCheapCharacter) { pc = (char*)pCheapList; pc = pc + 0x10; ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = stPosition.x; pc = (char*)pCheapList; pc = pc + 0x14; ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = stPosition.y; pc = (char*)pCheapList; pc = pc + 0x18; ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = stPosition.z; pc = (char*)pCheapList; pc = pc + 0x20; ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = 0.0f; pc = (char*)pCheapList; pc = pc + 0x24; ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = 0.0f; pc = (char*)pCheapList; pc = pc + 0x28; ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = 0.0f; pc = (char*)pCheapList; pc = pc + 0x34; ((char*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 48] = 1; pc = (char*)pCheapList; pc = pc + 0x30; ((unsigned int*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = 0; pCheapList->NumberOfCheapCharacter++; } }
+    return p_stTree;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 156–157 */
-/* addr: 0x00229da0  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 156
- *   +0x0034 -> line 157
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void ActivateCheapCharacter(unsigned int ulInd, unsigned int ulIndChar, unsigned char bActivate)
+tdstNodeInterpret_* fn_p_stResetCheapCharacterList(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    g_aListOfCheapCharacterList[ulInd].List[ulIndChar].cActivity = bActivate ? 1 : 0;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 137–152 */
-/* addr: 0x00229de0  size: 228 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 140
- *   +0x0004 -> line 137
- *   +0x0008 -> line 140
- *   +0x000c -> line 137
- *   +0x001c -> line 140
- *   +0x0038 -> line 141
- *   +0x0060 -> line 142
- *   +0x007c -> line 143
- *   +0x00a0 -> line 145
- *   +0x00a4 -> line 149
- *   +0x00a8 -> line 146
- *   +0x00ac -> line 149
- *   +0x00bc -> line 146
- *   +0x00c0 -> line 147
- *   +0x00c4 -> line 150
- *   +0x00c8 -> line 147
- *   +0x00cc -> line 148
- *   +0x00d4 -> line 149
- *   +0x00d8 -> line 150
- *   +0x00dc -> line 152
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void AddCheapCharacterListAura(unsigned int ulInd, GLI_tdstMaterial_* hVisualMaterial, MTH3D_tdstVector_* pSizeParam, float fTransparencyParam, float fTransparencyBlinkParam)
-{
-    _tdstCheapCharacterList* param0;
-    param0 = &g_aListOfCheapCharacterList[ulInd];
-    if (pSizeParam->x - pSizeParam->z < 0.0f)
-        pSizeParam->z = pSizeParam->x;
-    if (pSizeParam->y - pSizeParam->z < 0.0f)
-        pSizeParam->z = pSizeParam->y;
-    if (fTransparencyParam - fTransparencyBlinkParam < 0.0f)
-        fTransparencyBlinkParam = fTransparencyParam;
-    if (fTransparencyParam + fTransparencyBlinkParam > 255.0f)
-        fTransparencyBlinkParam = 255.0f - fTransparencyParam;
-    param0->hAuraVisualMaterial = hVisualMaterial;
-    param0->p_fAuraSizes[0] = pSizeParam->x;
-    param0->p_fAuraSizes[1] = pSizeParam->y;
-    param0->fAuraSizeBlinkRange = pSizeParam->z;
-    param0->fAuraTransparencyMidLevel = (1.0f / 255.0f) * fTransparencyParam;
-    param0->fAuraTransparencyBlinkRange = (1.0f / 255.0f) * fTransparencyBlinkParam;
-    param0->bAurasNeedToBeDrawn = 0;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 106–128 */
-/* addr: 0x00229ed0  size: 308 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 106
- *   +0x0018 -> line 108
- *   +0x002c -> line 115
- *   +0x0034 -> line 117
- *   +0x0040 -> line 118
- *   +0x0044 -> line 117
- *   +0x0050 -> line 119
- *   +0x0054 -> line 121
- *   +0x0058 -> line 122
- *   +0x005c -> line 123
- *   +0x0060 -> line 125
- *   +0x0064 -> line 117
- *   +0x0068 -> line 125
- *   +0x006c -> line 118
- *   +0x0074 -> line 126
- *   +0x0078 -> line 118
- *   +0x008c -> line 119
- *   +0x00a8 -> line 121
- *   +0x00c0 -> line 122
- *   +0x00d8 -> line 123
- *   +0x00f0 -> line 125
- *   +0x0108 -> line 126
- *   +0x0120 -> line 127
- *   +0x012c -> line 128
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 73–84 */
-/* addr: 0x0022a010  size: 84 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 73
- *   +0x000c -> line 78
- *   +0x002c -> line 80
- *   +0x0034 -> line 81
- *   +0x0040 -> line 83
- *   +0x0044 -> line 84
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-#pragma auto_inline on
-int lCreateCheapCharacterList(unsigned int ulMax, HIE_tdstSuperObject_* pRefObj)
-{
-    int lListIndex;
-
-    if (g_lNbListOfCheapCharacterList < 10)
-        lListIndex = g_lNbListOfCheapCharacterList++;
-    else
-        lListIndex = -1;
-    if (lListIndex >= 0)
-        InitCheapCharacterList(lListIndex, ulMax, pRefObj);
-    return lListIndex;
-}
-#pragma auto_inline reset
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 39–69 */
-/* addr: 0x0022a070  size: 152 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 39
- *   +0x0004 -> line 45
- *   +0x0008 -> line 39
- *   +0x001c -> line 45
- *   +0x0024 -> line 46
- *   +0x0028 -> line 47
- *   +0x002c -> line 49
- *   +0x0030 -> line 48
- *   +0x0034 -> line 50
- *   +0x0038 -> line 49
- *   +0x003c -> line 63
- *   +0x0040 -> line 50
- *   +0x0044 -> line 52
- *   +0x0048 -> line 51
- *   +0x004c -> line 63
- *   +0x0050 -> line 52
- *   +0x0054 -> line 53
- *   +0x0058 -> line 56
- *   +0x005c -> line 57
- *   +0x0060 -> line 59
- *   +0x0064 -> line 63
- *   +0x0070 -> line 65
- *   +0x007c -> line 66
- *   +0x0080 -> line 65
- *   +0x0084 -> line 66
- *   +0x0090 -> line 69
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void InitCheapCharacterList(unsigned int ulInd, unsigned int ulMax, HIE_tdstSuperObject_* pRefObj)
-{
-    unsigned int i;
+    tdstGetSetParam_ stParam;
     _tdstCheapCharacterList* pCheapList;
+    unsigned int i;
 
-    pCheapList = &g_aListOfCheapCharacterList[ulInd];
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    pCheapList = &g_aListOfCheapCharacterList[stParam.uParam.ulValue];
     pCheapList->NumberOfCheapCharacter = 0;
-    if (ulMax > 40)
-        ulMax = 40;
-    pCheapList->MaxNumberOfCheapCharacter = ulMax;
-    pCheapList->pReferenceObject = pRefObj;
-    pCheapList->fSquaredMinDistance = 1.0f;
-    pCheapList->fSquaredMaxDistance = 10.0f;
-    pCheapList->lTimer = 0;
-    pCheapList->cTestMode = 1;
+    pCheapList->pReferenceObject = NULL;
     pCheapList->ulOptionFlags = 0;
-    pCheapList->SDL = 0;
-    pCheapList->pMatrixList = NULL;
+    for (i = 0; i < pCheapList->MaxNumberOfCheapCharacter; i++)
+        pCheapList->List[i].cActivity = 0;
     pCheapList->hAuraVisualMaterial = NULL;
     pCheapList->bAurasNeedToBeDrawn = 0;
-    for (i = 0; i < ulMax; i++) {
-        MTH3D_tdstVector_* p = (MTH3D_tdstVector_*)&pCheapList->List[i];
-        asm { sqc2 vf0, 0(p) }
-    }
+    return p_stTree;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 28–34 */
-/* addr: 0x0022a110  size: 32 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 28
- *   +0x0008 -> line 31
- *   +0x0010 -> line 33
- *   +0x0014 -> line 34
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void InitListOfCheapCharacterList(void)
+tdstNodeInterpret_* fn_p_stActivateCheapCharacter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    HIE_fn_CleanAllListOfFakeInstanceToViewport();
-    g_lNbListOfCheapCharacterList = 0;
+    tdstGetSetParam_ stParam;
+    unsigned int ulIndChar;
+    tdeProcedureId_ eProcedureId;
+    _tdstCheapCharacterList* pCheapList;
+    char* pc;
+
+    eProcedureId = (p_stTree - 1)->uDummy;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    pCheapList = &g_aListOfCheapCharacterList[stParam.uParam.ulValue];
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    ulIndChar = stParam.uParam.ulValue;
+    if (ulIndChar < pCheapList->NumberOfCheapCharacter) {
+        pc = (char*)pCheapList;
+        pc = pc + 0x34;
+        if (eProcedureId == 846)
+            ((char*)pc)[ulIndChar * 48] = 1;
+        else
+            ((char*)pc)[ulIndChar * 48] = 0;
+    }
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stSetCheapCharacterListAura(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    float fTransparencyBlinkParam;
+    float fTransparencyParam;
+    unsigned int ulInd;
+    GLI_tdstMaterial_* hVisualMaterial;
+    MTH3D_tdstVector_ vSizeParam;
+    tdstGetSetParam_ stParam;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    ulInd = stParam.uParam.ulValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    hVisualMaterial = stParam.uParam.hVisualMaterial;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    vSizeParam = stParam.uParam.stVectorValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    fTransparencyParam = (stParam.eType == 8) ? stParam.uParam.xValue : (float)stParam.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    fTransparencyBlinkParam = (stParam.eType == 8) ? stParam.uParam.xValue : (float)stParam.uParam.lValue;
+    AddCheapCharacterListAura(ulInd, hVisualMaterial, &vSizeParam, fTransparencyParam, fTransparencyBlinkParam);
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stSetCheapCharacterOptions(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstGetSetParam_ stParam;
+    unsigned int ulBit;
+    unsigned int ulValue;
+    tdeProcedureId_ eProcedureId;
+    _tdstCheapCharacterList* pCheapList;
+
+    eProcedureId = (p_stTree - 1)->uDummy;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    pCheapList = &g_aListOfCheapCharacterList[stParam.uParam.ulValue];
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    ulBit = stParam.uParam.ulValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    ulValue = stParam.uParam.ulValue;
+    if (eProcedureId == 848) {
+        if (ulValue == 1)
+            pCheapList->ulOptionFlags |= 1 << (ulBit - 1);
+        else
+            pCheapList->ulOptionFlags &= ~(1 << (ulBit - 1));
+    }
+    return p_stTree;
 }

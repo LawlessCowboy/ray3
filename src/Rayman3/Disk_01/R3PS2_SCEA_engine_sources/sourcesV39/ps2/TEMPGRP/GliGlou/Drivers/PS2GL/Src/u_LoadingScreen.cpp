@@ -1197,23 +1197,14 @@ struct LifeBarStruct_ {
 extern struct LifeBarStruct_ GLI_g_TheLifeBar;
 extern unsigned int GLI_g_LifeBarIsInit;
 
-void GLI_vAddLifeBars(float PosRightX, float PosBottomY, float CirclePerCent, float CurrentLife, float MaxLife, float CenterIcon, GLI_tdstMaterial_* pMat, float fAlpha)
-{
-    GLI_g_TheLifeBar.PosRightX = PosRightX;
-    GLI_g_TheLifeBar.PosBottomY = PosBottomY;
-    GLI_g_TheLifeBar.CirclePerCent = CirclePerCent;
-    GLI_g_TheLifeBar.CurrentLife = CurrentLife;
-    GLI_g_TheLifeBar.MaxLife = MaxLife;
-    GLI_g_TheLifeBar.CenterIcon = CenterIcon;
-    GLI_g_TheLifeBar.pMat = pMat;
-    GLI_g_TheLifeBar.fAlpha = fAlpha;
-    GLI_g_LifeBarIsInit = 1;
-    if (GLI_g_TheLifeBar.MaxLife > 100.0f)
-    {
-        GLI_g_TheLifeBar.CurrentLife = 100.0f * GLI_g_TheLifeBar.CurrentLife / GLI_g_TheLifeBar.MaxLife;
-        GLI_g_TheLifeBar.MaxLife = 100.0f;
-    }
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+extern "C" void GLI_vAddLifeBars(float PosRightX, float PosBottomY, float CirclePerCent, float CurrentLife, float MaxLife, float CenterIcon, GLI_tdstMaterial_* pMat, float fAlpha);
+extern "C" int LS_fn_iRemainingSizeToLoad(void);
+extern "C" void LS_FinallyIThinkIOnlyHaveThisSizeLeftToLoad(int SizeLeft);
+extern "C" void LS_Process(void* pData);
+extern "C" void LS_Destroy(void);
+extern "C" void LS_Create(void);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 782–786 */
 /* addr: 0x002cdca0  size: 40 bytes */
@@ -1224,12 +1215,6 @@ void GLI_vAddLifeBars(float PosRightX, float PosBottomY, float CirclePerCent, fl
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int LS_fn_iRemainingSizeToLoad(void)
-{
-    int iReturn;
-    iReturn = g_ProgressSizeToRead - g_ProgressSizeHaveRead;
-    return iReturn > 0 ? iReturn : 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 765–778 */
 /* addr: 0x002cdcd0  size: 240 bytes */
@@ -1245,17 +1230,6 @@ int LS_fn_iRemainingSizeToLoad(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void LS_FinallyIThinkIOnlyHaveThisSizeLeftToLoad(int SizeLeft)
-{
-    float Percent;
-    Percent = 2.0f * (float)(g_ProgressSizeHaveRead / 2) / (2.0f * (float)(g_ProgressSizeToRead / 2));
-    if (Percent > 0.99f)
-        Percent = 0.99f;
-    if (Percent < 0.01f)
-        Percent = 0.01f;
-    g_ProgressSizeToRead = (int)((float)SizeLeft / (1.0f - Percent));
-    g_ProgressSizeHaveRead = g_ProgressSizeToRead - SizeLeft;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 726–735 */
 /* addr: 0x002cddc0  size: 132 bytes */
@@ -1269,16 +1243,6 @@ void LS_FinallyIThinkIOnlyHaveThisSizeLeftToLoad(int SizeLeft)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void LS_Process(void* pData)
-{
-    while (pLS && (LoadingInProgress || !pLS->m_Finished)) {
-        if (pLS && (LoadingInProgress || !pLS->m_Finished))
-            pLS->Display();
-
-        if (!pLS->m_Finished)
-            PS2auxSwapBuffers();
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 687–715 */
 /* addr: 0x002cde50  size: 236 bytes */
@@ -1295,19 +1259,6 @@ void LS_Process(void* pData)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void LS_Destroy(void)
-{
-    LoadingInProgress = 0;
-    if (pLS)
-    {
-        WaitSema(pLS->m_SemaPhore);
-        TerminateThread(LS_iThreadID); DeleteThread(LS_iThreadID);
-        PS2auxSwapBuffers();
-        PS2auxSwapBuffers();
-        { C_LoadingScreen* p = pLS; if (p) { p->m_bDataIsValid = 0; DeleteSema(p->m_SemaPhore); if (p->m_ModelTextureName) { PS2glDeleteTextures(1, &p->m_ModelTextureName); p->m_ModelTextureName = 0; } if (p->m_ModelTextureData) { PS2glLiberator(p->m_ModelTextureData); p->m_ModelTextureData = 0; } if (p->m_BackGroundTextureName) { PS2glDeleteTextures(1, &p->m_BackGroundTextureName); p->m_BackGroundTextureName = 0; } if (p->m_BackGroundTextureData) { PS2glLiberator(p->m_BackGroundTextureData); p->m_BackGroundTextureData = 0; } PS2MC_RemoveCurrentMessage(); PS2glLiberator(p); } }
-        pLS = NULL; PS2glGsSyncPath();
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 663–684 */
 /* addr: 0x002cdf40  size: 340 bytes */
@@ -1330,29 +1281,6 @@ void LS_Destroy(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void LS_Create(void)
-{
-    SemaParam Semaphore;
-    ThreadParam Thread;
-    static char stack[4096];
-    PS2glFlush();
-    PS2glFinish();
-    C_LoadingScreen* p = (C_LoadingScreen*)PS2glAllocator64(sizeof(C_LoadingScreen)); if (p) p->C_LoadingScreen(); pLS = p;
-    if (!pLS->m_bDataIsValid)
-    {
-        if (pLS) { LoadingInProgress = 0; WaitSema(pLS->m_SemaPhore); TerminateThread(LS_iThreadID); DeleteThread(LS_iThreadID); PS2auxSwapBuffers(); PS2auxSwapBuffers(); { C_LoadingScreen* q = pLS; if (q) { q->m_bDataIsValid = 0; DeleteSema(q->m_SemaPhore); q->FreeTexture(&q->m_ModelTextureData, &q->m_ModelTextureName); q->FreeTexture(&q->m_BackGroundTextureData, &q->m_BackGroundTextureName); PS2MC_RemoveCurrentMessage(); PS2glLiberator(q); } } pLS = NULL; PS2glGsSyncPath(); }
-    }
-    else
-    {
-        LoadingInProgress = 1;
-        Thread.entry = LS_Process; Thread.stack = (int)stack; Thread.stackSize = 0x1000; Thread.gpReg = (int)(&_gp); Thread.initPriority = 10;
-        LS_iThreadID = CreateThread(&Thread);
-        StartThread(LS_iThreadID, 0);
-        Semaphore.initCount = 0;
-        Semaphore.maxCount = 0;
-        pLS->m_SemaPhore = CreateSema(&Semaphore);
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 504–640 */
 /* addr: 0x002ce0a0  size: 1804 bytes */
@@ -1506,11 +1434,6 @@ void LS_Create(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void C_LoadingScreen::Display(void)
-{
-    float pRGBColor[4];
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 416–483 */
 /* addr: 0x002ce7b0  size: 912 bytes */
@@ -1584,6 +1507,135 @@ void C_LoadingScreen::Display(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 394–413 */
+/* addr: 0x002ceb40  size: 296 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 394
+ *   +0x0004 -> line 395
+ *   +0x0008 -> line 394
+ *   +0x0048 -> line 395
+ *   +0x0050 -> line 396
+ *   +0x0064 -> line 398
+ *   +0x0070 -> line 399
+ *   +0x007c -> line 400
+ *   +0x0088 -> line 401
+ *   +0x0094 -> line 402
+ *   +0x00a0 -> line 403
+ *   +0x00ac -> line 405
+ *   +0x00b8 -> line 406
+ *   +0x00c4 -> line 407
+ *   +0x00d0 -> line 408
+ *   +0x00dc -> line 409
+ *   +0x00e8 -> line 410
+ *   +0x00f4 -> line 412
+ *   +0x00fc -> line 413
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 304–315 */
+/* addr: 0x002cec70  size: 96 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 304
+ *   +0x0014 -> line 305
+ *   +0x0020 -> line 307
+ *   +0x002c -> line 308
+ *   +0x0030 -> line 310
+ *   +0x003c -> line 312
+ *   +0x0048 -> line 313
+ *   +0x004c -> line 315
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 268–300 */
+/* addr: 0x002cecd0  size: 276 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 268
+ *   +0x0004 -> line 270
+ *   +0x0008 -> line 268
+ *   +0x000c -> line 278
+ *   +0x0010 -> line 268
+ *   +0x0014 -> line 270
+ *   +0x0018 -> line 271
+ *   +0x001c -> line 274
+ *   +0x0020 -> line 275
+ *   +0x0028 -> line 276
+ *   +0x0030 -> line 278
+ *   +0x0034 -> line 280
+ *   +0x0038 -> line 282
+ *   +0x0044 -> line 284
+ *   +0x0090 -> line 289
+ *   +0x009c -> line 291
+ *   +0x00b0 -> line 292
+ *   +0x00b8 -> line 294
+ *   +0x00cc -> line 296
+ *   +0x00e0 -> line 297
+ *   +0x00f8 -> line 299
+ *   +0x00fc -> line 300
+ *   +0x0100 -> line 299
+ *   +0x0104 -> line 300
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+C_LoadingScreen::C_LoadingScreen(void)
+{
+    char TempString[128];
+    m_FadeValue = 1.0f;
+    m_Finished = 0;
+    m_bDataIsValid = 0;
+    m_BackGroundTextureData = 0; m_ModelTextureData = 0;
+    m_BackGroundTextureName = 0; m_ModelTextureName = 0;
+    m_SemaPhore = -1;
+    m_fTime = 0;
+    if (g_iLoadingScreenBackgroundNumber == 0)
+    {
+        g_iLoadingScreenBackgroundNumber = (int)(1.0f + 7.0f * (float)rand() / 2147483648.0f);
+    }
+    g_iLoadingScreenBackgroundNumber = g_iLoadingScreenBackgroundNumber + 1;
+    if (g_iLoadingScreenBackgroundNumber <= 0 || g_iLoadingScreenBackgroundNumber > 8)
+        g_iLoadingScreenBackgroundNumber = 1;
+    sprintf(TempString, "cdrom0:\\LSBIN\\LODPS20%d.TXR", g_iLoadingScreenBackgroundNumber);
+    LoadTexture(TempString, &m_BackGroundTextureData, &m_BackGroundTextureName);
+    LoadTexture("cdrom0:\\LSBIN\\LODMECA.TXR", &m_ModelTextureData, &m_ModelTextureName);
+    m_bDataIsValid = 1;
+}
+
+void C_LoadingScreen::FreeTexture(unsigned int** ppTextureData, unsigned int* pTextureName)
+{
+    if (*pTextureName)
+    {
+        PS2glDeleteTextures(1, pTextureName);
+        *pTextureName = 0;
+    }
+    if (*ppTextureData)
+    {
+        PS2glLiberator(*ppTextureData);
+        *ppTextureData = NULL;
+    }
+}
+
+void C_LoadingScreen::DrawQuad(float X1, float Y1, float X2, float Y2, float U1, float V1, float U2, float V2, float R, float G, float B, float A)
+{
+    PS2glBegin(4);
+    PS2glColor4f(R, G, B, A);
+    PS2glTexCoord2f(U1, V1);
+    PS2glVertex2f(X1, Y1);
+    PS2glTexCoord2f(U2, V1);
+    PS2glVertex2f(X2, Y1);
+    PS2glTexCoord2f(U2, V2);
+    PS2glVertex2f(X2, Y2);
+    PS2glTexCoord2f(U1, V1);
+    PS2glVertex2f(X1, Y1);
+    PS2glTexCoord2f(U2, V2);
+    PS2glVertex2f(X2, Y2);
+    PS2glTexCoord2f(U1, V2);
+    PS2glVertex2f(X1, Y2);
+    PS2glEnd();
+}
+
 void C_LoadingScreen::DisplayWheelWork(float XX, float YY, float fSize, float fSpeed)
 {
     int i;
@@ -1634,127 +1686,94 @@ void C_LoadingScreen::DisplayWheelWork(float XX, float YY, float fSize, float fS
     PS2glEnd();
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 394–413 */
-/* addr: 0x002ceb40  size: 296 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 394
- *   +0x0004 -> line 395
- *   +0x0008 -> line 394
- *   +0x0048 -> line 395
- *   +0x0050 -> line 396
- *   +0x0064 -> line 398
- *   +0x0070 -> line 399
- *   +0x007c -> line 400
- *   +0x0088 -> line 401
- *   +0x0094 -> line 402
- *   +0x00a0 -> line 403
- *   +0x00ac -> line 405
- *   +0x00b8 -> line 406
- *   +0x00c4 -> line 407
- *   +0x00d0 -> line 408
- *   +0x00dc -> line 409
- *   +0x00e8 -> line 410
- *   +0x00f4 -> line 412
- *   +0x00fc -> line 413
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void C_LoadingScreen::DrawQuad(float X1, float Y1, float X2, float Y2, float U1, float V1, float U2, float V2, float R, float G, float B, float A)
+void C_LoadingScreen::Display(void)
 {
-    PS2glBegin(4);
-    PS2glColor4f(R, G, B, A);
-    PS2glTexCoord2f(U1, V1);
-    PS2glVertex2f(X1, Y1);
-    PS2glTexCoord2f(U2, V1);
-    PS2glVertex2f(X2, Y1);
-    PS2glTexCoord2f(U2, V2);
-    PS2glVertex2f(X2, Y2);
-    PS2glTexCoord2f(U1, V1);
-    PS2glVertex2f(X1, Y1);
-    PS2glTexCoord2f(U2, V2);
-    PS2glVertex2f(X2, Y2);
-    PS2glTexCoord2f(U1, V2);
-    PS2glVertex2f(X1, Y2);
-    PS2glEnd();
+    float pRGBColor[4];
+    /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 304–315 */
-/* addr: 0x002cec70  size: 96 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 304
- *   +0x0014 -> line 305
- *   +0x0020 -> line 307
- *   +0x002c -> line 308
- *   +0x0030 -> line 310
- *   +0x003c -> line 312
- *   +0x0048 -> line 313
- *   +0x004c -> line 315
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void C_LoadingScreen::FreeTexture(unsigned int** ppTextureData, unsigned int* pTextureName)
+void LS_Create(void)
 {
-    if (*pTextureName)
+    SemaParam Semaphore;
+    ThreadParam Thread;
+    static char stack[4096];
+    PS2glFlush();
+    PS2glFinish();
+    C_LoadingScreen* p = (C_LoadingScreen*)PS2glAllocator64(sizeof(C_LoadingScreen)); if (p) p->C_LoadingScreen(); pLS = p;
+    if (!pLS->m_bDataIsValid)
     {
-        PS2glDeleteTextures(1, pTextureName);
-        *pTextureName = 0;
+        if (pLS) { LoadingInProgress = 0; WaitSema(pLS->m_SemaPhore); TerminateThread(LS_iThreadID); DeleteThread(LS_iThreadID); PS2auxSwapBuffers(); PS2auxSwapBuffers(); { C_LoadingScreen* q = pLS; if (q) { q->m_bDataIsValid = 0; DeleteSema(q->m_SemaPhore); q->FreeTexture(&q->m_ModelTextureData, &q->m_ModelTextureName); q->FreeTexture(&q->m_BackGroundTextureData, &q->m_BackGroundTextureName); PS2MC_RemoveCurrentMessage(); PS2glLiberator(q); } } pLS = NULL; PS2glGsSyncPath(); }
     }
-    if (*ppTextureData)
+    else
     {
-        PS2glLiberator(*ppTextureData);
-        *ppTextureData = NULL;
+        LoadingInProgress = 1;
+        Thread.entry = LS_Process; Thread.stack = (int)stack; Thread.stackSize = 0x1000; Thread.gpReg = (int)(&_gp); Thread.initPriority = 10;
+        LS_iThreadID = CreateThread(&Thread);
+        StartThread(LS_iThreadID, 0);
+        Semaphore.initCount = 0;
+        Semaphore.maxCount = 0;
+        pLS->m_SemaPhore = CreateSema(&Semaphore);
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 268–300 */
-/* addr: 0x002cecd0  size: 276 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 268
- *   +0x0004 -> line 270
- *   +0x0008 -> line 268
- *   +0x000c -> line 278
- *   +0x0010 -> line 268
- *   +0x0014 -> line 270
- *   +0x0018 -> line 271
- *   +0x001c -> line 274
- *   +0x0020 -> line 275
- *   +0x0028 -> line 276
- *   +0x0030 -> line 278
- *   +0x0034 -> line 280
- *   +0x0038 -> line 282
- *   +0x0044 -> line 284
- *   +0x0090 -> line 289
- *   +0x009c -> line 291
- *   +0x00b0 -> line 292
- *   +0x00b8 -> line 294
- *   +0x00cc -> line 296
- *   +0x00e0 -> line 297
- *   +0x00f8 -> line 299
- *   +0x00fc -> line 300
- *   +0x0100 -> line 299
- *   +0x0104 -> line 300
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-C_LoadingScreen::C_LoadingScreen(void)
+void LS_Destroy(void)
 {
-    char TempString[128];
-    m_FadeValue = 1.0f;
-    m_Finished = 0;
-    m_bDataIsValid = 0;
-    m_BackGroundTextureData = 0; m_ModelTextureData = 0;
-    m_BackGroundTextureName = 0; m_ModelTextureName = 0;
-    m_SemaPhore = -1;
-    m_fTime = 0;
-    if (g_iLoadingScreenBackgroundNumber == 0)
+    LoadingInProgress = 0;
+    if (pLS)
     {
-        g_iLoadingScreenBackgroundNumber = (int)(1.0f + 7.0f * (float)rand() / 2147483648.0f);
+        WaitSema(pLS->m_SemaPhore);
+        TerminateThread(LS_iThreadID); DeleteThread(LS_iThreadID);
+        PS2auxSwapBuffers();
+        PS2auxSwapBuffers();
+        { C_LoadingScreen* p = pLS; if (p) { p->m_bDataIsValid = 0; DeleteSema(p->m_SemaPhore); if (p->m_ModelTextureName) { PS2glDeleteTextures(1, &p->m_ModelTextureName); p->m_ModelTextureName = 0; } if (p->m_ModelTextureData) { PS2glLiberator(p->m_ModelTextureData); p->m_ModelTextureData = 0; } if (p->m_BackGroundTextureName) { PS2glDeleteTextures(1, &p->m_BackGroundTextureName); p->m_BackGroundTextureName = 0; } if (p->m_BackGroundTextureData) { PS2glLiberator(p->m_BackGroundTextureData); p->m_BackGroundTextureData = 0; } PS2MC_RemoveCurrentMessage(); PS2glLiberator(p); } }
+        pLS = NULL; PS2glGsSyncPath();
     }
-    g_iLoadingScreenBackgroundNumber = g_iLoadingScreenBackgroundNumber + 1;
-    if (g_iLoadingScreenBackgroundNumber <= 0 || g_iLoadingScreenBackgroundNumber > 8)
-        g_iLoadingScreenBackgroundNumber = 1;
-    sprintf(TempString, "cdrom0:\\LSBIN\\LODPS20%d.TXR", g_iLoadingScreenBackgroundNumber);
-    LoadTexture(TempString, &m_BackGroundTextureData, &m_BackGroundTextureName);
-    LoadTexture("cdrom0:\\LSBIN\\LODMECA.TXR", &m_ModelTextureData, &m_ModelTextureName);
-    m_bDataIsValid = 1;
+}
+
+void LS_Process(void* pData)
+{
+    while (pLS && (LoadingInProgress || !pLS->m_Finished)) {
+        if (pLS && (LoadingInProgress || !pLS->m_Finished))
+            pLS->Display();
+
+        if (!pLS->m_Finished)
+            PS2auxSwapBuffers();
+    }
+}
+
+void LS_FinallyIThinkIOnlyHaveThisSizeLeftToLoad(int SizeLeft)
+{
+    float Percent;
+    Percent = 2.0f * (float)(g_ProgressSizeHaveRead / 2) / (2.0f * (float)(g_ProgressSizeToRead / 2));
+    if (Percent > 0.99f)
+        Percent = 0.99f;
+    if (Percent < 0.01f)
+        Percent = 0.01f;
+    g_ProgressSizeToRead = (int)((float)SizeLeft / (1.0f - Percent));
+    g_ProgressSizeHaveRead = g_ProgressSizeToRead - SizeLeft;
+}
+
+int LS_fn_iRemainingSizeToLoad(void)
+{
+    int iReturn;
+    iReturn = g_ProgressSizeToRead - g_ProgressSizeHaveRead;
+    return iReturn > 0 ? iReturn : 0;
+}
+
+void GLI_vAddLifeBars(float PosRightX, float PosBottomY, float CirclePerCent, float CurrentLife, float MaxLife, float CenterIcon, GLI_tdstMaterial_* pMat, float fAlpha)
+{
+    GLI_g_TheLifeBar.PosRightX = PosRightX;
+    GLI_g_TheLifeBar.PosBottomY = PosBottomY;
+    GLI_g_TheLifeBar.CirclePerCent = CirclePerCent;
+    GLI_g_TheLifeBar.CurrentLife = CurrentLife;
+    GLI_g_TheLifeBar.MaxLife = MaxLife;
+    GLI_g_TheLifeBar.CenterIcon = CenterIcon;
+    GLI_g_TheLifeBar.pMat = pMat;
+    GLI_g_TheLifeBar.fAlpha = fAlpha;
+    GLI_g_LifeBarIsInit = 1;
+    if (GLI_g_TheLifeBar.MaxLife > 100.0f)
+    {
+        GLI_g_TheLifeBar.CurrentLife = 100.0f * GLI_g_TheLifeBar.CurrentLife / GLI_g_TheLifeBar.MaxLife;
+        GLI_g_TheLifeBar.MaxLife = 100.0f;
+    }
 }

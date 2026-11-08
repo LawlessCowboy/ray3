@@ -82,10 +82,11 @@ src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Dri
 # register pair comes out swapped. All 16 other functions of the file (including
 # its nine pre-existing recorded matches) still MATCH under 3.0.3.
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/CollObj.c
-# GAM/Clock.c: left on the 3.0.1 baseline on purpose.  Under 3.0.3
-# fn_ulDetermineUsefulDT reaches 600/604 (one nop short) but
-# fn_vStartEngineClock loses its match (276/276 with different bytes), and
-# fn_vFakeTimer regresses too, so 3.0.1 keeps strictly more.
+# GAM/Clock.c: fn_ulDetermineUsefulDT inlines its (unsigned int)float return
+# conversion, which 3.0.1 lowers to a jal fptoui.  With the functions in their
+# original source-line order (retail emits them in reverse), all nine
+# functions MATCH under 3.0.3-pad7b; under 3.0.1 the file matches 8/9.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Clock.c
 # GliGlou/Drivers/PS2GL/Src/Init_PS2GL.c: TR_Report inlines the
 # (unsigned int)float conversion (lui 0x4f00 / c.le.s 2^31 / trunc.w.s / or
 # 0x80000000) which 3.0.1 lowers to a jal fptoui; all 23 pre-existing

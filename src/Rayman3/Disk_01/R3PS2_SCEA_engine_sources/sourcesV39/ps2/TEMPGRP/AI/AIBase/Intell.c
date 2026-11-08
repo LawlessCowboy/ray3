@@ -138,17 +138,56 @@ tdstNodeInterpret_* fn_p_stEvalSubRoutine(
     tdstGetSetParam_* p_stValue,
     tdstMacro_* p_stMacro);
 
-void fn_vSetFieldTypeComport(void)
-{
-    return;
-}
-
-tdstNodeInterpret_* fn_p_stEvalCineRef(void* p_stContext, tdstNodeInterpret_* p_stTree)
-{
-    (void)p_stContext;
-    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
-    return p_stTree;
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void fn_vSetFieldTypeComport(void);
+tdstNodeInterpret_* fn_p_stEvalCineRef(void* p_stContext, tdstNodeInterpret_* p_stTree);
+unsigned char fn_bIntelligenceEngine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstIntelligence_* p_stIntelligence);
+unsigned char fn_ucIntelligenceScheduleEngine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstIntelligence_* p_stIntelligence);
+unsigned char fn_ucIntelligenceRulesEngine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstIntelligence_* p_stIntelligence);
+tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stIntelligenceEvalTreeEngine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stEvalMetaAction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stSkipThisArgument(tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stSwapNextParameter2(tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stSwapNextParameter(tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stEvalProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+void fn_vSetProcedureActionReturn(unsigned char ucActionReturn);
+tdstNodeInterpret_* fn_p_stEvalFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stEvalNULL(void* p_stContext, tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stEvalGraph(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stEvalCaps(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stEvalLight(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stEvalVisualMaterialRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stEvalGameMaterialRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stEvalParticleGenerator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stEvalTextRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stEvalComportRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stEvalEndMacro(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stEvalBeginMacro(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stEvalEndOfTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stEvalFamilyRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stEvalSoundEventRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stEvalLipsSynchroRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stEvalString(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stEvalMask(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stEvalDsgVarId(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stEvalModuleRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stEvalWayPointRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stEvalConstantVector(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stEvalVector(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stEvalReal(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stEvalActionRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stEvalPersoRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stEvalObjectTableRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stEvalSOLinksRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stEvalSuperObjectRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stEvalButton(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stEvalConstant(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stEvalField(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stEvalModelRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stEvalColor(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stEvalMacro(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
 
 unsigned char fn_ucIsRuleInActionTable(tdstIntelligence_* p_stIntelligence, unsigned char ucNumRule);
 tdstNodeInterpret_* fn_p_stGetTableAction(tdstIntelligence_* p_stIntelligence, unsigned char ucNEntry);
@@ -169,81 +208,509 @@ static inline void fn_vSetScheduleFromActionTable(tdstIntelligence_* p_stIntelli
     }
 }
 
-unsigned char fn_bIntelligenceEngine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstIntelligence_* p_stIntelligence)
-{
-    unsigned char ReturnValue;
-    unsigned char ucReturn;
-
-    ReturnValue = 0;
-    do
-    {
-        bSomethingDone = 0;
-        ucReturn = fn_ucIntelligenceRulesEngine(p_SuperObjPerso, p_stIntelligence);
-        if ((ucReturn & 8) != 8)
-        {
-            if ((ucReturn & 1) == 1 || bSomethingDone)
-            {
-                fn_vSetScheduleFromActionTable(p_stIntelligence);
-            }
-            else
-            {
-                ucReturn = fn_ucIntelligenceScheduleEngine(p_SuperObjPerso, p_stIntelligence);
-            }
-        }
-        ReturnValue |= bSomethingDone;
-    } while ((ucReturn & 8) == 8 && (ucReturn & 1) != 1 && !GROS_ANTIBUG_DE_LA_MORT_QUI_TUE);
-
-    if (GROS_ANTIBUG_DE_LA_MORT_QUI_TUE)
-    {
-        GROS_ANTIBUG_DE_LA_MORT_QUI_TUE = 0;
-        printf("Gros antibug qui tache tellement que meme SKIP y peut rien faire !\n");
-        iNumLoop = 0;
-    }
-
-    return ReturnValue;
-}
-
 tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
 tdstNodeInterpret_* fn_p_stIntelligenceEvalTreeEngine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
 
-unsigned char fn_ucIntelligenceScheduleEngine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstIntelligence_* p_stIntelligence)
+void fn_vUnuseCurrentActionTableEntry(tdstIntelligence_* p_stIntelligence);
+void fn_vUnuseAllRulesWhichHaveGreaterNumRule(tdstIntelligence_* p_stIntelligence, unsigned char ucNumRule);
+
+#pragma auto_inline on
+
+#pragma auto_inline reset
+
+static inline unsigned char fn_ucGetActionReturn(unsigned char ucActionReturn, tdstNodeInterpret_* p_stTree, unsigned char ucDepthInit)
 {
-    unsigned char ucReturn;
-    tdstGetSetParam_ stValue;
-    unsigned char ucIndTabAction;
-    tdstNodeInterpret_* p_stTree;
-
-    g_p_stIntelligence = (int)p_stIntelligence;
-    ucIsInSchedule = 1;
-
-    p_stTree = p_stIntelligence->p_stCurrentSchedule;
-
-    if (p_stTree == NULL)
+    if ((g_ucNewActionReturn & 0x20) != 0x20)
     {
-        return 0x10;
+        if (!g_ucUseDefaultActionReturn)
+        {
+            if (!((ucActionReturn & 4) == 4 && (unsigned char)(p_stTree->ucDepth == ucDepthInit)))
+            {
+                ucActionReturn &= 0x1c;
+                ucActionReturn |= g_ucNewActionReturn;
+            }
+            g_ucNewActionReturn = 0x20;
+            g_ucUseDefaultActionReturn = 1;
+        }
+        else
+            g_ucUseDefaultActionReturn = 0;
+    }
+    return ucActionReturn;
+}
+
+typedef unsigned char (*tdfn_MetaActionFunction_)(HIE_tdstSuperObject_*);
+typedef tdstNodeInterpret_* (*tdfn_MetaActionInitFunction_)(HIE_tdstSuperObject_*, tdstNodeInterpret_*);
+tdfn_MetaActionFunction_ fn_p_fn_pGetMetaActionFunctionPtr(tdeMetaActionId_ eMetaActionId);
+tdfn_MetaActionInitFunction_ fn_p_fn_pGetMetaActionInitFunctionPtr(tdeMetaActionId_ eMetaActionId);
+unsigned char fn_ucIsRuleAndNodeInActionTable(tdstIntelligence_* p_stIntelligence, unsigned char ucNumRule, tdstNodeInterpret_* p_stNode);
+unsigned char fn_ucFindPlaceInActionTable(tdstIntelligence_* p_stIntelligence);
+void fn_vUseCurrentActionTableEntry(tdstIntelligence_* p_stIntelligence, unsigned char ucNRule, tdstNodeInterpret_* p_stNode);
+void fn_vOnAIErm_M_UpdateLastError(int FatalErrorNum, char* szMsg);
+
+/* Same walk as fn_p_stSkipThisArgument, but the retail inlined copy here
+ * reads the depth after stepping the pointer. */
+static inline tdstNodeInterpret_* fn_p_stSkipArgumentInline(tdstNodeInterpret_* p_stTree)
+{
+    unsigned char ucDepth;
+    p_stTree++;
+    ucDepth = (p_stTree - 1)->ucDepth;
+    while (p_stTree->ucDepth > ucDepth && p_stTree->eType != 8) {
+        p_stTree++;
+    }
+    return p_stTree;
+}
+
+tdstNodeInterpret_* (*fn_p_fn_pGetProcedureFunctionPtr(tdeProcedureId_ eProcedureId))(HIE_tdstSuperObject_*, tdstNodeInterpret_*);
+
+tdstNodeInterpret_* (*fn_p_fn_pGetFunctionFunctionPtr(tdeFuncId_ eFuncId))(HIE_tdstSuperObject_*, tdstNodeInterpret_*, tdstGetSetParam_*);
+
+unsigned char fn_ucGetFieldValue(tdeFieldId_ eFieldId, HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam);
+void fn_vOnAIErm_M_UpdateLastError(int FatalErrorNum, char* szMsg);
+
+tdstNodeInterpret_* fn_p_stEvalMacro(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    return fn_p_stEvalSubRoutine(p_SuperObjPerso, p_stTree, p_stValue, p_stTree->uDummy.uParam.p_stMacro);
+}
+
+tdstNodeInterpret_* fn_p_stEvalColor(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.ulValue;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_Color;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEvalModelRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.ulValue;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_Model;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEvalField(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    unsigned char bResult;
+    bResult = fn_ucGetFieldValue(p_stTree->uDummy.uId.eFieldId, p_SuperObjPerso, p_stValue);
+    if (!bResult)
+        fn_vOnAIErm_M_UpdateLastError(10, 0);
+    return ++p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEvalConstant(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.ulValue;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_Integer;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEvalButton(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.ulValue;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_Button;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEvalSuperObjectRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.ulValue;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_SuperObject;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEvalSOLinksRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.ulValue;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_SOLinks;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEvalObjectTableRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.ulValue;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_ObjectTable;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEvalPersoRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.ulValue;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_Perso;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEvalActionRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.ulValue;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_Action;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEvalReal(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    *(float *)&p_stValue->uDummy.uParam.ulValue = *(float *)&p_stTree->uDummy.uParam.ulValue;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_Float;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEvalVector(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    tdstNodeInterpret_* p_stTreeInit;
+    float x;
+    float y;
+    float z;
+
+    p_stTreeInit = p_stTree;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTreeInit + 1, p_stValue);
+    if (p_stValue->eType == E_vt_Float)
+        x = *(float *)&p_stValue->uDummy.uParam.ulValue;
+    else
+        x = (float)*(int *)&p_stValue->uDummy.uParam.ulValue;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    if (p_stValue->eType == E_vt_Float)
+        y = *(float *)&p_stValue->uDummy.uParam.ulValue;
+    else
+        y = (float)*(int *)&p_stValue->uDummy.uParam.ulValue;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    if (p_stValue->eType == E_vt_Float)
+        z = *(float *)&p_stValue->uDummy.uParam.ulValue;
+    else
+        z = (float)*(int *)&p_stValue->uDummy.uParam.ulValue;
+
+    ((float *)&p_stValue->uDummy.uParam)[0] = x;
+    ((float *)&p_stValue->uDummy.uParam)[1] = y;
+    ((float *)&p_stValue->uDummy.uParam)[2] = z;
+    p_stValue->eType = E_vt_Vector;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEvalConstantVector(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    ((int *)&p_stValue->uDummy.uParam)[0] = ((int *)p_stTree->uDummy.uParam.p_stVectorValue)[0];
+    ((int *)&p_stValue->uDummy.uParam)[1] = ((int *)p_stTree->uDummy.uParam.p_stVectorValue)[1];
+    ((int *)&p_stValue->uDummy.uParam)[2] = ((int *)p_stTree->uDummy.uParam.p_stVectorValue)[2];
+    p_stValue->eType = E_vt_Vector;
+    return ++p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEvalWayPointRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    p_stValue->uDummy.uParam.m_hWayPoint = p_stTree->uDummy.uParam.m_hWayPoint;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_WayPoint;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEvalModuleRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    p_stValue->uDummy.uParam.p_stModel = p_stTree->uDummy.uParam.p_stModel;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_Module;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEvalDsgVarId(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.ulValue;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_DsgVarId;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEvalMask(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.uwValue;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_Mask;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEvalString(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    p_stValue->uDummy.uParam.szString = p_stTree->uDummy.uParam.szString;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_String;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEvalLipsSynchroRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    p_stValue->uDummy.uParam.hLipsSynchro = p_stTree->uDummy.uParam.hLipsSynchro;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_LipsSynchro;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEvalSoundEventRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    p_stValue->uDummy.uParam.pSoundEvent = p_stTree->uDummy.uParam.pSoundEvent;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_SoundEvent;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEvalFamilyRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    p_stValue->uDummy.uParam.hFamily = p_stTree->uDummy.uParam.hFamily;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_Family;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEvalEndOfTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    p_stValue->uDummy.uParam.lValue = 16;
+    p_stValue->eType = E_vt_MetaActionReturn;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEvalBeginMacro(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    p_stValue->uDummy.uParam.lValue = 0;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_MetaActionReturn;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEvalEndMacro(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    p_stValue->uDummy.uParam.lValue = 0;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_MetaActionReturn;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEvalComportRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    p_stValue->uDummy.uParam.pComport = p_stTree->uDummy.uParam.pComport;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_Comport;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEvalTextRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    p_stValue->uDummy.uParam.hText = p_stTree->uDummy.uParam.hText;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_Text;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEvalParticleGenerator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    p_stValue->uDummy.uParam.hParticleGenerator = p_stTree->uDummy.uParam.hParticleGenerator;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_ParticleGenerator;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEvalGameMaterialRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    p_stValue->uDummy.uParam.hGameMaterial = p_stTree->uDummy.uParam.hGameMaterial;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_GameMaterial;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEvalVisualMaterialRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    p_stValue->uDummy.uParam.hVisualMaterial = p_stTree->uDummy.uParam.hVisualMaterial;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_VisualMaterial;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEvalLight(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    p_stValue->uDummy.uParam.p_stLight = p_stTree->uDummy.uParam.p_stLight;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_Light;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEvalCaps(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.ulValue;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_Caps;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEvalGraph(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    p_stValue->uDummy.uParam.hGraph = p_stTree->uDummy.uParam.hGraph;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_Graph;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEvalNULL(void* p_stContext, tdstNodeInterpret_* p_stTree)
+{
+    (void)p_stContext;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEvalFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    tdstNodeInterpret_* (*p_fn_p_stFunctionFunctionPtr)(HIE_tdstSuperObject_*, tdstNodeInterpret_*, tdstGetSetParam_*);
+
+    p_fn_p_stFunctionFunctionPtr = fn_p_fn_pGetFunctionFunctionPtr(p_stTree->uDummy.uId.eFuncId);
+    return p_fn_p_stFunctionFunctionPtr(p_SuperObjPerso, p_stTree + 1, p_stValue);
+}
+
+void fn_vSetProcedureActionReturn(unsigned char ucActionReturn)
+{
+    ucProcedureActionReturn = ucActionReturn;
+}
+
+tdstNodeInterpret_* fn_p_stEvalProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    tdstNodeInterpret_* (*p_fn_p_stProcedureFunctionPtr)(HIE_tdstSuperObject_*, tdstNodeInterpret_*);
+
+    p_fn_p_stProcedureFunctionPtr = fn_p_fn_pGetProcedureFunctionPtr(p_stTree->uDummy.uId.eProcedureId);
+    ucProcedureActionReturn = 0;
+    p_stTree = p_fn_p_stProcedureFunctionPtr(p_SuperObjPerso, ++p_stTree);
+    p_stValue->uDummy.uParam.ulValue = ucProcedureActionReturn & ~4;
+    p_stValue->eType = E_vt_MetaActionReturn;
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stSwapNextParameter(tdstNodeInterpret_* p_stTree)
+{
+    unsigned char ucDepth;
+    ucDepth = p_stTree->ucDepth;
+    p_stTree++;
+    while (p_stTree->ucDepth >= ucDepth && p_stTree->eType != 8) {
+        p_stTree++;
+    }
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stSwapNextParameter2(tdstNodeInterpret_* p_stTree)
+{
+    unsigned char ucDepth;
+    ucDepth = (p_stTree - 1)->ucDepth;
+    while (p_stTree->ucDepth > ucDepth && p_stTree->eType != 8) {
+        p_stTree++;
+    }
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stSkipThisArgument(tdstNodeInterpret_* p_stTree)
+{
+    unsigned char ucDepth;
+    ucDepth = p_stTree->ucDepth;
+    p_stTree++;
+    while (p_stTree->ucDepth > ucDepth && p_stTree->eType != 8) {
+        p_stTree++;
+    }
+    return p_stTree;
+}
+
+tdstNodeInterpret_* fn_p_stEvalMetaAction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    tdstNodeInterpret_* p_stTreeInit;
+    tdeMetaActionId_ eMetaActionId;
+
+    p_stTreeInit = g_ucIsInMacro ? (tdstNodeInterpret_*)g_p_stTreeMacro : p_stTree;
+    if ((((tdstIntelligence_*)g_p_stIntelligence)->p_stActionTable->ucCurrentEntry = fn_ucIsRuleAndNodeInActionTable((tdstIntelligence_*)g_p_stIntelligence, g_ucNRule, p_stTreeInit)) < ((tdstIntelligence_*)g_p_stIntelligence)->p_stActionTable->ucNbEntries)
+    {
+        eMetaActionId = p_stTree->uDummy.uId.eMetaActionId;
+        if (p_stTree->uwNodeToSkip)
+        {
+            p_stTree += p_stTree->uwNodeToSkip;
+        }
+        else
+        {
+            p_stTreeInit = p_stTree;
+            p_stTree = fn_p_stSkipArgumentInline(p_stTree);
+            p_stTreeInit->uwNodeToSkip = p_stTree - p_stTreeInit;
+        }
+        p_stValue->uDummy.uParam.ulValue = fn_p_fn_pGetMetaActionFunctionPtr(eMetaActionId)(p_SuperObjPerso); p_stValue->eType = E_vt_MetaActionReturn;
+        bSomethingDone = 1;
+        return p_stTree;
+    }
+    else
+    {
+        fn_vUnuseAllRulesWhichHaveGreaterNumRule((tdstIntelligence_*)g_p_stIntelligence, g_ucNRule);
+        if ((((tdstIntelligence_*)g_p_stIntelligence)->p_stActionTable->ucCurrentEntry = fn_ucFindPlaceInActionTable((tdstIntelligence_*)g_p_stIntelligence)) < ((tdstIntelligence_*)g_p_stIntelligence)->p_stActionTable->ucNbEntries)
+        {
+            fn_vUseCurrentActionTableEntry((tdstIntelligence_*)g_p_stIntelligence, g_ucNRule, p_stTree);
+            eMetaActionId = p_stTree->uDummy.uId.eMetaActionId;
+            bSomethingDone = 1;
+            p_stTree = fn_p_fn_pGetMetaActionInitFunctionPtr(eMetaActionId)(p_SuperObjPerso, p_stTree + 1); p_stValue->uDummy.uParam.ulValue = fn_p_fn_pGetMetaActionFunctionPtr(eMetaActionId)(p_SuperObjPerso); p_stValue->eType = E_vt_MetaActionReturn; return p_stTree;
+        }
+        else
+        {
+            fn_vOnAIErm_M_UpdateLastError(0x18, 0);
+            p_stValue->uDummy.uParam.ulValue = 0; p_stValue->eType = E_vt_MetaActionReturn;
+            return NULL;
+        }
+    }
+}
+
+#pragma auto_inline on
+tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    return a_stTypeTable[p_stTree->eType].p_fn_p_stEvalTypePtr(p_SuperObjPerso, p_stTree, p_stValue);
+}
+#pragma auto_inline reset
+
+tdstNodeInterpret_* fn_p_stIntelligenceEvalTreeEngine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    unsigned char ucDepthInit;
+    unsigned char ucActionReturn;
+
+    while (1)
+    {
+        ucDepthInit = p_stTree->ucDepth;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        ucActionReturn = fn_ucGetActionReturn(p_stValue->uDummy.uParam.ucValue, p_stTree, ucDepthInit);
+
+        if ((ucActionReturn & 0x10) == 0x10 || (ucActionReturn & 8) == 8)
+        {
+            p_stValue->uDummy.uParam.lValue = ucActionReturn;
+            p_stValue->eType = E_vt_MetaActionReturn;
+            return p_stTree;
+        }
+
+        if ((ucActionReturn & 4) == 4)
+        {
+            fn_vUnuseCurrentActionTableEntry((tdstIntelligence_*)g_p_stIntelligence);
+        }
+
+        if ((ucActionReturn & 1) == 1)
+        {
+            fn_vUnuseAllRulesWhichHaveGreaterNumRule((tdstIntelligence_*)g_p_stIntelligence, g_ucNRule);
+            break;
+        }
+
+        if (p_stTree->eType == 8)
+        {
+            ucActionReturn = 0x10;
+            break;
+        }
+
+        if ((ucActionReturn & 2) == 2)
+            break;
+        if (ucIsInSchedule)
+            ((tdstIntelligence_*)g_p_stIntelligence)->p_stCurrentSchedule = p_stTree;
     }
 
-    g_ucNRule = 0;
-    ucIndTabAction = fn_ucIsRuleInActionTable(p_stIntelligence, 0);
-    if (ucIndTabAction < p_stIntelligence->p_stActionTable->ucNbEntries)
-    {
-        p_stTree = fn_p_stGetTableAction(p_stIntelligence, ucIndTabAction);
-    }
-
-    if (p_stTree->eType == 8)
-    {
-        p_stTree = p_stIntelligence->p_stCurrentComport->p_stSchedule->p_stNodeInterpret;
-    }
-
-    p_stTree = fn_p_stIntelligenceEvalTreeEngine(p_SuperObjPerso, p_stTree, &stValue);
-    ucReturn = stValue.uDummy.uParam.ucValue;
-
-    if ((ucReturn & 8) != 8 && (ucReturn & 2) != 2)
-    {
-        p_stIntelligence->p_stCurrentSchedule = p_stTree;
-    }
-
-    return ucReturn;
+    p_stValue->uDummy.uParam.ulValue = ucActionReturn;
+    p_stValue->eType = E_vt_MetaActionReturn;
+    return p_stTree;
 }
 
 unsigned char fn_ucIntelligenceRulesEngine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstIntelligence_* p_stIntelligence)
@@ -295,500 +762,88 @@ restart:
     return 0;
 }
 
-void fn_vUnuseCurrentActionTableEntry(tdstIntelligence_* p_stIntelligence);
-void fn_vUnuseAllRulesWhichHaveGreaterNumRule(tdstIntelligence_* p_stIntelligence, unsigned char ucNumRule);
-
-#pragma auto_inline on
-tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+unsigned char fn_ucIntelligenceScheduleEngine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstIntelligence_* p_stIntelligence)
 {
-    return a_stTypeTable[p_stTree->eType].p_fn_p_stEvalTypePtr(p_SuperObjPerso, p_stTree, p_stValue);
-}
-#pragma auto_inline reset
+    unsigned char ucReturn;
+    tdstGetSetParam_ stValue;
+    unsigned char ucIndTabAction;
+    tdstNodeInterpret_* p_stTree;
 
-static inline unsigned char fn_ucGetActionReturn(unsigned char ucActionReturn, tdstNodeInterpret_* p_stTree, unsigned char ucDepthInit)
-{
-    if ((g_ucNewActionReturn & 0x20) != 0x20)
+    g_p_stIntelligence = (int)p_stIntelligence;
+    ucIsInSchedule = 1;
+
+    p_stTree = p_stIntelligence->p_stCurrentSchedule;
+
+    if (p_stTree == NULL)
     {
-        if (!g_ucUseDefaultActionReturn)
+        return 0x10;
+    }
+
+    g_ucNRule = 0;
+    ucIndTabAction = fn_ucIsRuleInActionTable(p_stIntelligence, 0);
+    if (ucIndTabAction < p_stIntelligence->p_stActionTable->ucNbEntries)
+    {
+        p_stTree = fn_p_stGetTableAction(p_stIntelligence, ucIndTabAction);
+    }
+
+    if (p_stTree->eType == 8)
+    {
+        p_stTree = p_stIntelligence->p_stCurrentComport->p_stSchedule->p_stNodeInterpret;
+    }
+
+    p_stTree = fn_p_stIntelligenceEvalTreeEngine(p_SuperObjPerso, p_stTree, &stValue);
+    ucReturn = stValue.uDummy.uParam.ucValue;
+
+    if ((ucReturn & 8) != 8 && (ucReturn & 2) != 2)
+    {
+        p_stIntelligence->p_stCurrentSchedule = p_stTree;
+    }
+
+    return ucReturn;
+}
+
+unsigned char fn_bIntelligenceEngine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstIntelligence_* p_stIntelligence)
+{
+    unsigned char ReturnValue;
+    unsigned char ucReturn;
+
+    ReturnValue = 0;
+    do
+    {
+        bSomethingDone = 0;
+        ucReturn = fn_ucIntelligenceRulesEngine(p_SuperObjPerso, p_stIntelligence);
+        if ((ucReturn & 8) != 8)
         {
-            if (!((ucActionReturn & 4) == 4 && (unsigned char)(p_stTree->ucDepth == ucDepthInit)))
+            if ((ucReturn & 1) == 1 || bSomethingDone)
             {
-                ucActionReturn &= 0x1c;
-                ucActionReturn |= g_ucNewActionReturn;
+                fn_vSetScheduleFromActionTable(p_stIntelligence);
             }
-            g_ucNewActionReturn = 0x20;
-            g_ucUseDefaultActionReturn = 1;
+            else
+            {
+                ucReturn = fn_ucIntelligenceScheduleEngine(p_SuperObjPerso, p_stIntelligence);
+            }
         }
-        else
-            g_ucUseDefaultActionReturn = 0;
-    }
-    return ucActionReturn;
-}
+        ReturnValue |= bSomethingDone;
+    } while ((ucReturn & 8) == 8 && (ucReturn & 1) != 1 && !GROS_ANTIBUG_DE_LA_MORT_QUI_TUE);
 
-tdstNodeInterpret_* fn_p_stIntelligenceEvalTreeEngine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    unsigned char ucDepthInit;
-    unsigned char ucActionReturn;
-
-    while (1)
+    if (GROS_ANTIBUG_DE_LA_MORT_QUI_TUE)
     {
-        ucDepthInit = p_stTree->ucDepth;
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
-        ucActionReturn = fn_ucGetActionReturn(p_stValue->uDummy.uParam.ucValue, p_stTree, ucDepthInit);
-
-        if ((ucActionReturn & 0x10) == 0x10 || (ucActionReturn & 8) == 8)
-        {
-            p_stValue->uDummy.uParam.lValue = ucActionReturn;
-            p_stValue->eType = E_vt_MetaActionReturn;
-            return p_stTree;
-        }
-
-        if ((ucActionReturn & 4) == 4)
-        {
-            fn_vUnuseCurrentActionTableEntry((tdstIntelligence_*)g_p_stIntelligence);
-        }
-
-        if ((ucActionReturn & 1) == 1)
-        {
-            fn_vUnuseAllRulesWhichHaveGreaterNumRule((tdstIntelligence_*)g_p_stIntelligence, g_ucNRule);
-            break;
-        }
-
-        if (p_stTree->eType == 8)
-        {
-            ucActionReturn = 0x10;
-            break;
-        }
-
-        if ((ucActionReturn & 2) == 2)
-            break;
-        if (ucIsInSchedule)
-            ((tdstIntelligence_*)g_p_stIntelligence)->p_stCurrentSchedule = p_stTree;
+        GROS_ANTIBUG_DE_LA_MORT_QUI_TUE = 0;
+        printf("Gros antibug qui tache tellement que meme SKIP y peut rien faire !\n");
+        iNumLoop = 0;
     }
 
-    p_stValue->uDummy.uParam.ulValue = ucActionReturn;
-    p_stValue->eType = E_vt_MetaActionReturn;
-    return p_stTree;
+    return ReturnValue;
 }
 
-typedef unsigned char (*tdfn_MetaActionFunction_)(HIE_tdstSuperObject_*);
-typedef tdstNodeInterpret_* (*tdfn_MetaActionInitFunction_)(HIE_tdstSuperObject_*, tdstNodeInterpret_*);
-tdfn_MetaActionFunction_ fn_p_fn_pGetMetaActionFunctionPtr(tdeMetaActionId_ eMetaActionId);
-tdfn_MetaActionInitFunction_ fn_p_fn_pGetMetaActionInitFunctionPtr(tdeMetaActionId_ eMetaActionId);
-unsigned char fn_ucIsRuleAndNodeInActionTable(tdstIntelligence_* p_stIntelligence, unsigned char ucNumRule, tdstNodeInterpret_* p_stNode);
-unsigned char fn_ucFindPlaceInActionTable(tdstIntelligence_* p_stIntelligence);
-void fn_vUseCurrentActionTableEntry(tdstIntelligence_* p_stIntelligence, unsigned char ucNRule, tdstNodeInterpret_* p_stNode);
-void fn_vOnAIErm_M_UpdateLastError(int FatalErrorNum, char* szMsg);
-
-/* Same walk as fn_p_stSkipThisArgument, but the retail inlined copy here
- * reads the depth after stepping the pointer. */
-static inline tdstNodeInterpret_* fn_p_stSkipArgumentInline(tdstNodeInterpret_* p_stTree)
-{
-    unsigned char ucDepth;
-    p_stTree++;
-    ucDepth = (p_stTree - 1)->ucDepth;
-    while (p_stTree->ucDepth > ucDepth && p_stTree->eType != 8) {
-        p_stTree++;
-    }
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stEvalMetaAction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    tdstNodeInterpret_* p_stTreeInit;
-    tdeMetaActionId_ eMetaActionId;
-
-    p_stTreeInit = g_ucIsInMacro ? (tdstNodeInterpret_*)g_p_stTreeMacro : p_stTree;
-    if ((((tdstIntelligence_*)g_p_stIntelligence)->p_stActionTable->ucCurrentEntry = fn_ucIsRuleAndNodeInActionTable((tdstIntelligence_*)g_p_stIntelligence, g_ucNRule, p_stTreeInit)) < ((tdstIntelligence_*)g_p_stIntelligence)->p_stActionTable->ucNbEntries)
-    {
-        eMetaActionId = p_stTree->uDummy.uId.eMetaActionId;
-        if (p_stTree->uwNodeToSkip)
-        {
-            p_stTree += p_stTree->uwNodeToSkip;
-        }
-        else
-        {
-            p_stTreeInit = p_stTree;
-            p_stTree = fn_p_stSkipArgumentInline(p_stTree);
-            p_stTreeInit->uwNodeToSkip = p_stTree - p_stTreeInit;
-        }
-        p_stValue->uDummy.uParam.ulValue = fn_p_fn_pGetMetaActionFunctionPtr(eMetaActionId)(p_SuperObjPerso); p_stValue->eType = E_vt_MetaActionReturn;
-        bSomethingDone = 1;
-        return p_stTree;
-    }
-    else
-    {
-        fn_vUnuseAllRulesWhichHaveGreaterNumRule((tdstIntelligence_*)g_p_stIntelligence, g_ucNRule);
-        if ((((tdstIntelligence_*)g_p_stIntelligence)->p_stActionTable->ucCurrentEntry = fn_ucFindPlaceInActionTable((tdstIntelligence_*)g_p_stIntelligence)) < ((tdstIntelligence_*)g_p_stIntelligence)->p_stActionTable->ucNbEntries)
-        {
-            fn_vUseCurrentActionTableEntry((tdstIntelligence_*)g_p_stIntelligence, g_ucNRule, p_stTree);
-            eMetaActionId = p_stTree->uDummy.uId.eMetaActionId;
-            bSomethingDone = 1;
-            p_stTree = fn_p_fn_pGetMetaActionInitFunctionPtr(eMetaActionId)(p_SuperObjPerso, p_stTree + 1); p_stValue->uDummy.uParam.ulValue = fn_p_fn_pGetMetaActionFunctionPtr(eMetaActionId)(p_SuperObjPerso); p_stValue->eType = E_vt_MetaActionReturn; return p_stTree;
-        }
-        else
-        {
-            fn_vOnAIErm_M_UpdateLastError(0x18, 0);
-            p_stValue->uDummy.uParam.ulValue = 0; p_stValue->eType = E_vt_MetaActionReturn;
-            return NULL;
-        }
-    }
-}
-
-tdstNodeInterpret_* fn_p_stSkipThisArgument(tdstNodeInterpret_* p_stTree)
-{
-    unsigned char ucDepth;
-    ucDepth = p_stTree->ucDepth;
-    p_stTree++;
-    while (p_stTree->ucDepth > ucDepth && p_stTree->eType != 8) {
-        p_stTree++;
-    }
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stSwapNextParameter2(tdstNodeInterpret_* p_stTree)
-{
-    unsigned char ucDepth;
-    ucDepth = (p_stTree - 1)->ucDepth;
-    while (p_stTree->ucDepth > ucDepth && p_stTree->eType != 8) {
-        p_stTree++;
-    }
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stSwapNextParameter(tdstNodeInterpret_* p_stTree)
-{
-    unsigned char ucDepth;
-    ucDepth = p_stTree->ucDepth;
-    p_stTree++;
-    while (p_stTree->ucDepth >= ucDepth && p_stTree->eType != 8) {
-        p_stTree++;
-    }
-    return p_stTree;
-}
-
-tdstNodeInterpret_* (*fn_p_fn_pGetProcedureFunctionPtr(tdeProcedureId_ eProcedureId))(HIE_tdstSuperObject_*, tdstNodeInterpret_*);
-
-tdstNodeInterpret_* fn_p_stEvalProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    tdstNodeInterpret_* (*p_fn_p_stProcedureFunctionPtr)(HIE_tdstSuperObject_*, tdstNodeInterpret_*);
-
-    p_fn_p_stProcedureFunctionPtr = fn_p_fn_pGetProcedureFunctionPtr(p_stTree->uDummy.uId.eProcedureId);
-    ucProcedureActionReturn = 0;
-    p_stTree = p_fn_p_stProcedureFunctionPtr(p_SuperObjPerso, ++p_stTree);
-    p_stValue->uDummy.uParam.ulValue = ucProcedureActionReturn & ~4;
-    p_stValue->eType = E_vt_MetaActionReturn;
-    return p_stTree;
-}
-
-void fn_vSetProcedureActionReturn(unsigned char ucActionReturn)
-{
-    ucProcedureActionReturn = ucActionReturn;
-}
-
-tdstNodeInterpret_* (*fn_p_fn_pGetFunctionFunctionPtr(tdeFuncId_ eFuncId))(HIE_tdstSuperObject_*, tdstNodeInterpret_*, tdstGetSetParam_*);
-
-tdstNodeInterpret_* fn_p_stEvalFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    tdstNodeInterpret_* (*p_fn_p_stFunctionFunctionPtr)(HIE_tdstSuperObject_*, tdstNodeInterpret_*, tdstGetSetParam_*);
-
-    p_fn_p_stFunctionFunctionPtr = fn_p_fn_pGetFunctionFunctionPtr(p_stTree->uDummy.uId.eFuncId);
-    return p_fn_p_stFunctionFunctionPtr(p_SuperObjPerso, p_stTree + 1, p_stValue);
-}
-
-tdstNodeInterpret_* fn_p_stEvalNULL(void* p_stContext, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stEvalCineRef(void* p_stContext, tdstNodeInterpret_* p_stTree)
 {
     (void)p_stContext;
     p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
     return p_stTree;
 }
 
-tdstNodeInterpret_* fn_p_stEvalGraph(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+void fn_vSetFieldTypeComport(void)
 {
-    p_stValue->uDummy.uParam.hGraph = p_stTree->uDummy.uParam.hGraph;
-    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
-    p_stValue->eType = E_vt_Graph;
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stEvalCaps(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.ulValue;
-    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
-    p_stValue->eType = E_vt_Caps;
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stEvalLight(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    p_stValue->uDummy.uParam.p_stLight = p_stTree->uDummy.uParam.p_stLight;
-    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
-    p_stValue->eType = E_vt_Light;
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stEvalVisualMaterialRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    p_stValue->uDummy.uParam.hVisualMaterial = p_stTree->uDummy.uParam.hVisualMaterial;
-    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
-    p_stValue->eType = E_vt_VisualMaterial;
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stEvalGameMaterialRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    p_stValue->uDummy.uParam.hGameMaterial = p_stTree->uDummy.uParam.hGameMaterial;
-    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
-    p_stValue->eType = E_vt_GameMaterial;
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stEvalParticleGenerator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    p_stValue->uDummy.uParam.hParticleGenerator = p_stTree->uDummy.uParam.hParticleGenerator;
-    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
-    p_stValue->eType = E_vt_ParticleGenerator;
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stEvalTextRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    p_stValue->uDummy.uParam.hText = p_stTree->uDummy.uParam.hText;
-    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
-    p_stValue->eType = E_vt_Text;
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stEvalComportRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    p_stValue->uDummy.uParam.pComport = p_stTree->uDummy.uParam.pComport;
-    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
-    p_stValue->eType = E_vt_Comport;
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stEvalEndMacro(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    p_stValue->uDummy.uParam.lValue = 0;
-    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
-    p_stValue->eType = E_vt_MetaActionReturn;
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stEvalBeginMacro(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    p_stValue->uDummy.uParam.lValue = 0;
-    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
-    p_stValue->eType = E_vt_MetaActionReturn;
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stEvalEndOfTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    p_stValue->uDummy.uParam.lValue = 16;
-    p_stValue->eType = E_vt_MetaActionReturn;
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stEvalFamilyRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    p_stValue->uDummy.uParam.hFamily = p_stTree->uDummy.uParam.hFamily;
-    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
-    p_stValue->eType = E_vt_Family;
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stEvalSoundEventRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    p_stValue->uDummy.uParam.pSoundEvent = p_stTree->uDummy.uParam.pSoundEvent;
-    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
-    p_stValue->eType = E_vt_SoundEvent;
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stEvalLipsSynchroRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    p_stValue->uDummy.uParam.hLipsSynchro = p_stTree->uDummy.uParam.hLipsSynchro;
-    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
-    p_stValue->eType = E_vt_LipsSynchro;
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stEvalString(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    p_stValue->uDummy.uParam.szString = p_stTree->uDummy.uParam.szString;
-    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
-    p_stValue->eType = E_vt_String;
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stEvalMask(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.uwValue;
-    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
-    p_stValue->eType = E_vt_Mask;
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stEvalDsgVarId(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.ulValue;
-    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
-    p_stValue->eType = E_vt_DsgVarId;
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stEvalModuleRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    p_stValue->uDummy.uParam.p_stModel = p_stTree->uDummy.uParam.p_stModel;
-    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
-    p_stValue->eType = E_vt_Module;
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stEvalWayPointRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    p_stValue->uDummy.uParam.m_hWayPoint = p_stTree->uDummy.uParam.m_hWayPoint;
-    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
-    p_stValue->eType = E_vt_WayPoint;
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stEvalConstantVector(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    ((int *)&p_stValue->uDummy.uParam)[0] = ((int *)p_stTree->uDummy.uParam.p_stVectorValue)[0];
-    ((int *)&p_stValue->uDummy.uParam)[1] = ((int *)p_stTree->uDummy.uParam.p_stVectorValue)[1];
-    ((int *)&p_stValue->uDummy.uParam)[2] = ((int *)p_stTree->uDummy.uParam.p_stVectorValue)[2];
-    p_stValue->eType = E_vt_Vector;
-    return ++p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stEvalVector(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    tdstNodeInterpret_* p_stTreeInit;
-    float x;
-    float y;
-    float z;
-
-    p_stTreeInit = p_stTree;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTreeInit + 1, p_stValue);
-    if (p_stValue->eType == E_vt_Float)
-        x = *(float *)&p_stValue->uDummy.uParam.ulValue;
-    else
-        x = (float)*(int *)&p_stValue->uDummy.uParam.ulValue;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
-    if (p_stValue->eType == E_vt_Float)
-        y = *(float *)&p_stValue->uDummy.uParam.ulValue;
-    else
-        y = (float)*(int *)&p_stValue->uDummy.uParam.ulValue;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
-    if (p_stValue->eType == E_vt_Float)
-        z = *(float *)&p_stValue->uDummy.uParam.ulValue;
-    else
-        z = (float)*(int *)&p_stValue->uDummy.uParam.ulValue;
-
-    ((float *)&p_stValue->uDummy.uParam)[0] = x;
-    ((float *)&p_stValue->uDummy.uParam)[1] = y;
-    ((float *)&p_stValue->uDummy.uParam)[2] = z;
-    p_stValue->eType = E_vt_Vector;
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stEvalReal(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    *(float *)&p_stValue->uDummy.uParam.ulValue = *(float *)&p_stTree->uDummy.uParam.ulValue;
-    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
-    p_stValue->eType = E_vt_Float;
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stEvalActionRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.ulValue;
-    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
-    p_stValue->eType = E_vt_Action;
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stEvalPersoRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.ulValue;
-    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
-    p_stValue->eType = E_vt_Perso;
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stEvalObjectTableRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.ulValue;
-    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
-    p_stValue->eType = E_vt_ObjectTable;
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stEvalSOLinksRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.ulValue;
-    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
-    p_stValue->eType = E_vt_SOLinks;
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stEvalSuperObjectRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.ulValue;
-    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
-    p_stValue->eType = E_vt_SuperObject;
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stEvalButton(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.ulValue;
-    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
-    p_stValue->eType = E_vt_Button;
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stEvalConstant(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.ulValue;
-    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
-    p_stValue->eType = E_vt_Integer;
-    return p_stTree;
-}
-
-unsigned char fn_ucGetFieldValue(tdeFieldId_ eFieldId, HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam);
-void fn_vOnAIErm_M_UpdateLastError(int FatalErrorNum, char* szMsg);
-
-tdstNodeInterpret_* fn_p_stEvalField(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    unsigned char bResult;
-    bResult = fn_ucGetFieldValue(p_stTree->uDummy.uId.eFieldId, p_SuperObjPerso, p_stValue);
-    if (!bResult)
-        fn_vOnAIErm_M_UpdateLastError(10, 0);
-    return ++p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stEvalModelRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.ulValue;
-    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
-    p_stValue->eType = E_vt_Model;
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stEvalColor(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.ulValue;
-    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
-    p_stValue->eType = E_vt_Color;
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stEvalMacro(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    return fn_p_stEvalSubRoutine(p_SuperObjPerso, p_stTree, p_stValue, p_stTree->uDummy.uParam.p_stMacro);
+    return;
 }

@@ -11,25 +11,15 @@
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct tdstPhysicalCollSet_ tdstPhysicalCollSet_;
 
-void Mmg_fn_cCheckAlignmentValidity(void)
-{
-    /* TODO: decompile from asm/... */
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void Mmg_fn_cCheckAlignmentValidity(void);
+void MOR_fn_vDeletePhysicalObject(PO_tdstPhysicalObject_* _pPhysicalObject);
+void MOR_fn_vDeleteGeometricObject(GEO_tdstGeometricObject_** p_hObj);
 
 void HMU_fn_vFree(void** p_vPointer, unsigned char bTempMalloc);
 
 void MOR_fn_vDeleteGeometricObject(GEO_tdstGeometricObject_** p_hObj);
-void MOR_fn_vDeletePhysicalObject(PO_tdstPhysicalObject_* _pPhysicalObject)
-{
-    short i;
-
-    for (i = 0; i < _pPhysicalObject->_hVisualSet->xNbLodDefinitions; i++)
-        MOR_fn_vDeleteGeometricObject((GEO_tdstGeometricObject_**)&_pPhysicalObject->_hVisualSet->d_p_stLodDefinitions[i]);
-    HMU_fn_vFree((void**)&_pPhysicalObject->_hVisualSet->d_xThresholdsTable, 1);
-    HMU_fn_vFree((void**)&_pPhysicalObject->_hVisualSet->d_p_stLodDefinitions, 1);
-    HMU_fn_vFree((void**)&_pPhysicalObject->_hVisualSet, 1);
-    HMU_fn_vFree((void**)&_pPhysicalObject, 1);
-}
 
 void GLI_DRV_vFreeVertexBuffersForElementsInObject(GEO_tdstGeometricObject_* pObj, int lFlag);
 
@@ -85,4 +75,21 @@ void MOR_fn_vDeleteGeometricObject(GEO_tdstGeometricObject_** p_hObj)
         HMU_fn_vFree((void**)&p_hObject->d_stListOfEdges, 1);
     HMU_fn_vFree((void**)&p_hObject, 1);
     *p_hObj = NULL;
+}
+
+void MOR_fn_vDeletePhysicalObject(PO_tdstPhysicalObject_* _pPhysicalObject)
+{
+    short i;
+
+    for (i = 0; i < _pPhysicalObject->_hVisualSet->xNbLodDefinitions; i++)
+        MOR_fn_vDeleteGeometricObject((GEO_tdstGeometricObject_**)&_pPhysicalObject->_hVisualSet->d_p_stLodDefinitions[i]);
+    HMU_fn_vFree((void**)&_pPhysicalObject->_hVisualSet->d_xThresholdsTable, 1);
+    HMU_fn_vFree((void**)&_pPhysicalObject->_hVisualSet->d_p_stLodDefinitions, 1);
+    HMU_fn_vFree((void**)&_pPhysicalObject->_hVisualSet, 1);
+    HMU_fn_vFree((void**)&_pPhysicalObject, 1);
+}
+
+void Mmg_fn_cCheckAlignmentValidity(void)
+{
+    /* TODO: decompile from asm/... */
 }

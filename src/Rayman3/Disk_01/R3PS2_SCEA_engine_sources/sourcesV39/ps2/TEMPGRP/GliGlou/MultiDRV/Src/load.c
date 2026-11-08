@@ -162,31 +162,52 @@ typedef union {
     int i[4];
 } GLI_UV4;
 
-void GLI_xSerialLinearOp(int lNbOfVertex, MTH3D_tdstVector_* p_stSource, GLI_tdstAligned3DVector_* p_stDest, MAT_tdstTransformation_* p_stMatrix)
-{
-    GLI_UV4 stX;
-    GLI_UV4 stY;
-    GLI_UV4 stZ;
-    GLI_UV4 stTrans;
-    GLI_tdstAligned3DVector_* param0;
-    float fSwapValue;
-
-    param0 = p_stDest + lNbOfVertex;
-    stX.i[0] = *(int*)&p_stMatrix->stTransformMatrix.stCol_0.xX; stX.i[1] = *(int*)&p_stMatrix->stTransformMatrix.stCol_0.xY; stX.i[2] = *(int*)&p_stMatrix->stTransformMatrix.stCol_0.xZ; stY.i[0] = *(int*)&p_stMatrix->stTransformMatrix.stCol_1.xX; stY.i[1] = *(int*)&p_stMatrix->stTransformMatrix.stCol_1.xY; stY.i[2] = *(int*)&p_stMatrix->stTransformMatrix.stCol_1.xZ; stZ.i[0] = *(int*)&p_stMatrix->stTransformMatrix.stCol_2.xX; stZ.i[1] = *(int*)&p_stMatrix->stTransformMatrix.stCol_2.xY; stZ.i[2] = *(int*)&p_stMatrix->stTransformMatrix.stCol_2.xZ;
-    fSwapValue = stX.v.xY; stX.v.xY = stY.v.xX; stY.v.xX = fSwapValue;
-    fSwapValue = stX.v.xZ; stX.v.xZ = stZ.v.xX; stZ.v.xX = fSwapValue;
-    fSwapValue = stY.v.xZ; stY.v.xZ = stZ.v.xY; stZ.v.xY = fSwapValue;
-    stTrans.i[0] = *(int*)&p_stMatrix->stTransformMatrix.stCol_3.xX; stTrans.i[1] = *(int*)&p_stMatrix->stTransformMatrix.stCol_3.xY; stTrans.i[2] = *(int*)&p_stMatrix->stTransformMatrix.stCol_3.xZ;
-    for (; p_stDest < param0; p_stDest++, p_stSource++)
-    {
-        p_stDest->xX = stTrans.v.xX + MTH3D_M_xDotProduct(stX.v.xX, p_stSource->xX, stX.v.xY, p_stSource->xY, stX.v.xZ, p_stSource->xZ);
-        p_stDest->xY = stTrans.v.xY + MTH3D_M_xDotProduct(stY.v.xX, p_stSource->xX, stY.v.xY, p_stSource->xY, stY.v.xZ, p_stSource->xZ);
-        p_stDest->xZ = stTrans.v.xZ + MTH3D_M_xDotProduct(stZ.v.xX, p_stSource->xX, stZ.v.xY, p_stSource->xY, stZ.v.xZ, p_stSource->xZ);
-    }
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void GLI_xSerialLinearOp(int lNbOfVertex, MTH3D_tdstVector_* p_stSource, GLI_tdstAligned3DVector_* p_stDest, MAT_tdstTransformation_* p_stMatrix);
+void GLI_fnvPrecalculateStuffForAllMaterials(void);
+int GLI_Precalc_IsMaterialTransparent(GLI_tdstMaterial_* hVisualMaterial);
 
 int GLI_Precalc_IsMaterialTransparent(GLI_tdstMaterial_* hVisualMaterial);
 void GLI_vAssignOptimizedFunctionToMaterial(GLI_tdstMaterial_* hVisualMaterial);
+
+int GLI_Precalc_IsMaterialTransparent(GLI_tdstMaterial_* hVisualMaterial)
+{
+    anon_0* pMat;
+    GLI_tdstTexturePS2GL_* p_stSpecParam;
+    int ReturnValue;
+
+    ReturnValue = 0;
+    if (hVisualMaterial)
+    {
+        if (hVisualMaterial->ulNbTextureStages)
+        {
+            pMat = hVisualMaterial->a_stMultiMaterial;
+            if (pMat)
+            {
+                if (pMat->c_Operator != 2 && pMat->c_Operator != 6 && pMat->c_Operator != 8)
+                    ReturnValue = 1;
+            }
+        }
+        else if (hVisualMaterial->p_stTexture && (p_stSpecParam = (GLI_tdstTexturePS2GL_*)hVisualMaterial->p_stTexture->p_stSpecParam))
+        {
+            if (p_stSpecParam->TextureID)
+            {
+                pMat = hVisualMaterial->a_stMultiMaterial;
+                if (pMat)
+                {
+                    if ((hVisualMaterial->p_stTexture->lTextureCaps & 2) == 2 || (hVisualMaterial->p_stTexture->lTextureCaps & 0x100) == 0x100 || (hVisualMaterial->a_stMultiMaterial[0].ulTextureProperties & 0x40))
+                        ReturnValue = 0;
+                    else if ((hVisualMaterial->p_stTexture->lTextureCaps & 8) == 8 || (hVisualMaterial->p_stTexture->lTextureCaps & 0x20) == 0x20)
+                        ReturnValue = 1;
+                    else if (hVisualMaterial->a_stMultiMaterial[0].ulTextureProperties & 0x20)
+                        ReturnValue = 1;
+                }
+            }
+        }
+    }
+    return ReturnValue;
+}
 
 void GLI_fnvPrecalculateStuffForAllMaterials(void)
 {
@@ -225,40 +246,25 @@ void GLI_fnvPrecalculateStuffForAllMaterials(void)
     }
 }
 
-int GLI_Precalc_IsMaterialTransparent(GLI_tdstMaterial_* hVisualMaterial)
+void GLI_xSerialLinearOp(int lNbOfVertex, MTH3D_tdstVector_* p_stSource, GLI_tdstAligned3DVector_* p_stDest, MAT_tdstTransformation_* p_stMatrix)
 {
-    anon_0* pMat;
-    GLI_tdstTexturePS2GL_* p_stSpecParam;
-    int ReturnValue;
+    GLI_UV4 stX;
+    GLI_UV4 stY;
+    GLI_UV4 stZ;
+    GLI_UV4 stTrans;
+    GLI_tdstAligned3DVector_* param0;
+    float fSwapValue;
 
-    ReturnValue = 0;
-    if (hVisualMaterial)
+    param0 = p_stDest + lNbOfVertex;
+    stX.i[0] = *(int*)&p_stMatrix->stTransformMatrix.stCol_0.xX; stX.i[1] = *(int*)&p_stMatrix->stTransformMatrix.stCol_0.xY; stX.i[2] = *(int*)&p_stMatrix->stTransformMatrix.stCol_0.xZ; stY.i[0] = *(int*)&p_stMatrix->stTransformMatrix.stCol_1.xX; stY.i[1] = *(int*)&p_stMatrix->stTransformMatrix.stCol_1.xY; stY.i[2] = *(int*)&p_stMatrix->stTransformMatrix.stCol_1.xZ; stZ.i[0] = *(int*)&p_stMatrix->stTransformMatrix.stCol_2.xX; stZ.i[1] = *(int*)&p_stMatrix->stTransformMatrix.stCol_2.xY; stZ.i[2] = *(int*)&p_stMatrix->stTransformMatrix.stCol_2.xZ;
+    fSwapValue = stX.v.xY; stX.v.xY = stY.v.xX; stY.v.xX = fSwapValue;
+    fSwapValue = stX.v.xZ; stX.v.xZ = stZ.v.xX; stZ.v.xX = fSwapValue;
+    fSwapValue = stY.v.xZ; stY.v.xZ = stZ.v.xY; stZ.v.xY = fSwapValue;
+    stTrans.i[0] = *(int*)&p_stMatrix->stTransformMatrix.stCol_3.xX; stTrans.i[1] = *(int*)&p_stMatrix->stTransformMatrix.stCol_3.xY; stTrans.i[2] = *(int*)&p_stMatrix->stTransformMatrix.stCol_3.xZ;
+    for (; p_stDest < param0; p_stDest++, p_stSource++)
     {
-        if (hVisualMaterial->ulNbTextureStages)
-        {
-            pMat = hVisualMaterial->a_stMultiMaterial;
-            if (pMat)
-            {
-                if (pMat->c_Operator != 2 && pMat->c_Operator != 6 && pMat->c_Operator != 8)
-                    ReturnValue = 1;
-            }
-        }
-        else if (hVisualMaterial->p_stTexture && (p_stSpecParam = (GLI_tdstTexturePS2GL_*)hVisualMaterial->p_stTexture->p_stSpecParam))
-        {
-            if (p_stSpecParam->TextureID)
-            {
-                pMat = hVisualMaterial->a_stMultiMaterial;
-                if (pMat)
-                {
-                    if ((hVisualMaterial->p_stTexture->lTextureCaps & 2) == 2 || (hVisualMaterial->p_stTexture->lTextureCaps & 0x100) == 0x100 || (hVisualMaterial->a_stMultiMaterial[0].ulTextureProperties & 0x40))
-                        ReturnValue = 0;
-                    else if ((hVisualMaterial->p_stTexture->lTextureCaps & 8) == 8 || (hVisualMaterial->p_stTexture->lTextureCaps & 0x20) == 0x20)
-                        ReturnValue = 1;
-                    else if (hVisualMaterial->a_stMultiMaterial[0].ulTextureProperties & 0x20)
-                        ReturnValue = 1;
-                }
-            }
-        }
+        p_stDest->xX = stTrans.v.xX + MTH3D_M_xDotProduct(stX.v.xX, p_stSource->xX, stX.v.xY, p_stSource->xY, stX.v.xZ, p_stSource->xZ);
+        p_stDest->xY = stTrans.v.xY + MTH3D_M_xDotProduct(stY.v.xX, p_stSource->xX, stY.v.xY, p_stSource->xY, stY.v.xZ, p_stSource->xZ);
+        p_stDest->xZ = stTrans.v.xZ + MTH3D_M_xDotProduct(stZ.v.xX, p_stSource->xX, stZ.v.xY, p_stSource->xY, stZ.v.xZ, p_stSource->xZ);
     }
-    return ReturnValue;
 }

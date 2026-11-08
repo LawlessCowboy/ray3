@@ -1298,16 +1298,6 @@ extern unsigned int GLI_g_CurrentStage;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vClearSendMatStates(void)
-{
-    GLI_g_Previous_Material_Was_Opaque = 0;
-    GLI_g_p_stLastTexture = 0;
-    GLI_g_LastCyclingMode = 0xff;
-    GLI_g_LastTextureMode = 0;
-    GLI_g_DontRefreshAnimated = 0;
-    g_TextMatrixIsIdentity = 0;
-    GLI_g_CurrentStage = 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 2488–2512 */
 /* addr: 0x002c4830  size: 324 bytes */
@@ -1357,25 +1347,6 @@ void GLI_vClearSendMatStates(void)
 void PS2glBindTexture(unsigned int target, unsigned int texture);
 void PS2glColorTableEXT(unsigned int target, unsigned int internalformat, int width, unsigned int format, unsigned int type, void* table);
 void PS2glTexImage2D(unsigned int target, int level, int internalformat, int width, int height, int border, unsigned int format, unsigned int type, void* pixels);
-
-int GLI_iGetOneMenuTextureNames(void)
-{
-    int TexName;
-
-    TexName = GLI_g_TextureNames[0][GLI_g_NbTexturesForThisBloc[0]++];
-    g_PS2glContext.nTextureEnableBits |= g_PS2glContext.iCurTextureSet == 0 ? 2 : 0x200; g_gsContext.PRMODE.TME = 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;
-    PS2glBindTexture(0xDE1, TexName);
-    g_PS2glContext.eTexUserMaintainMode = 2;
-    g_PS2glContext.eTexConvMode = 3;
-    g_PS2glContext.eClutConvMode = 2;
-    if (!GLI_g_CurrentTexture)
-        GLI_g_CurrentTexture = GLI_g_TextureMemSpace[0];
-    PS2glColorTableEXT(0xDE1, 0x8058, 0x100, 0x1908, 0x1401, (void*)GLI_g_CurrentTexture);
-    PS2glTexImage2D(0xDE1, 0, 0x1900, 0x200, 0x200, 0, 0x80E5, 0x1401, (void*)(GLI_g_CurrentTexture + 0x400));
-    g_PS2glContext.eTexUserMaintainMode = 0;
-    g_PS2glContext.eTexConvMode = 0;
-    return TexName;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 2410–2480 */
 /* addr: 0x002c4980  size: 700 bytes */
@@ -1443,57 +1414,6 @@ inline void GLI_vAllocTextureOfMaterial(GLI_tdstMaterial_* pMaterial)
     }
 }
 
-void GLI_vUncompressScreenShotIntoMaterial(GLI_tdstMaterial_** ppMaterial)
-{
-    GLI_tdstTexturePS2GL_* p_stSpecParam;
-    GLI_tdstMaterial_* pMaterial;
-    GLI_tdstTexture_* p_stTexture;
-
-    if (*ppMaterial == NULL)
-        GLI_xCreateMaterialPS2GL(ppMaterial);
-    if (*ppMaterial == NULL)
-        return;
-    g_PS2glContext.nTextureEnableBits |= g_PS2glContext.iCurTextureSet == 0 ? 2 : 0x200; g_gsContext.PRMODE.TME = 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;
-    pMaterial = *ppMaterial;
-    if (pMaterial->p_stTexture == NULL)
-    {
-        GLI_vAllocTextureOfMaterial(pMaterial);
-        p_stTexture = pMaterial->p_stTexture;
-        if (p_stTexture == NULL)
-        {
-            GLI_vFreeTempMaterial(ppMaterial);
-            return;
-        }
-        p_stTexture->lHeight = 0x100;
-        p_stTexture->lWidth = 0x100;
-        p_stTexture->lRealHeight = 0x100;
-        p_stTexture->lRealWidth = 0x100;
-        strcpy(p_stTexture->a255_cFileName, "Screenshot");
-        p_stTexture->p_vBitMap = (int)PS2glAllocator64(0x30000);
-        if (p_stTexture->p_vBitMap == 0)
-        {
-            GLI_vFreeTempMaterial(ppMaterial);
-            return;
-        }
-    }
-    p_stTexture = pMaterial->p_stTexture;
-    if (p_stTexture->p_stSpecParam)
-    {
-        PS2glDeleteTextures(1, &p_stTexture->p_stSpecParam);
-        PS2glLiberator(p_stTexture->p_stSpecParam);
-        p_stTexture->p_stSpecParam = NULL;
-    }
-    p_stTexture->p_stSpecParam = (GLI_tdstTexturePS2GL_*)PS2glAllocator64(4);
-    p_stSpecParam = p_stTexture->p_stSpecParam;
-    GLI_vUncompress_256x256_Screenshot((unsigned char*)p_stTexture->p_vBitMap, (unsigned char*)GLI_g_ScreenShotLoadingBuffer);
-    p_stTexture->bIsAvailable = 2;
-    PS2glGenTextures(1, p_stSpecParam);
-    g_PS2glContext.eTexUserMaintainMode = 2;
-    g_PS2glContext.eTexConvMode = 0;
-    PS2glBindTexture(0xDE1, p_stSpecParam->TextureID);
-    PS2glTexImage2D(0xDE1, 0, 0x1907, p_stTexture->lWidth, p_stTexture->lHeight, 0, 0x1907, 0x1401, (void*)p_stTexture->p_vBitMap);
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 2388–2407 */
 /* addr: 0x002c4c40  size: 220 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1515,30 +1435,7 @@ void GLI_vUncompressScreenShotIntoMaterial(GLI_tdstMaterial_** ppMaterial)
 void GLI_vFreeTempTexture(GLI_tdstTexture_* p_stTexture);
 
 #pragma auto_inline on
-void GLI_vFreeTempMaterial(GLI_tdstMaterial_** ppMaterial)
-{
-    if (*ppMaterial)
-    {
-        GLI_tdstMaterial_* p_stMaterial = *ppMaterial;
-        GLI_tdstTexture_* p_stTexture;
 
-        if (p_stMaterial->p_stTexture)
-        {
-            if (p_stMaterial->p_stTexture->p_vBitMap)
-            {
-                PS2glLiberator((void*)p_stMaterial->p_stTexture->p_vBitMap);
-                p_stMaterial->p_stTexture->p_vBitMap = 0;
-            }
-            p_stTexture = p_stMaterial->p_stTexture;
-            GLI_vFreeTempTexture(p_stTexture);
-            if (p_stMaterial->p_stTexture)
-                PS2glLiberator(p_stMaterial->p_stTexture);
-            p_stMaterial->p_stTexture = NULL;
-        }
-        PS2glLiberator(p_stMaterial);
-    }
-    *ppMaterial = NULL;
-}
 #pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 2342–2367 */
@@ -1562,23 +1459,7 @@ void PS2_fn_vLeaveGLCriticalSection(void);
 /* Not original source, needs cleaning up: retail inlines this into GLI_vFreeTempMaterial
    (deferred inlining); scoped auto_inline reproduces that without affecting other functions. */
 #pragma auto_inline on
-void GLI_vFreeTempTexture(GLI_tdstTexture_* p_stTexture)
-{
-    GLI_tdstTexturePS2GL_* p_stSpecParam;
 
-    if (p_stTexture != NULL)
-    {
-        p_stSpecParam = p_stTexture->p_stSpecParam;
-        if (p_stSpecParam != NULL)
-        {
-            PS2_fn_vEnterGLCriticalSection();
-            PS2glDeleteTextures(1, p_stSpecParam);
-            PS2_fn_vLeaveGLCriticalSection();
-            PS2glLiberator(p_stTexture->p_stSpecParam);
-            p_stTexture->p_stSpecParam = NULL;
-        }
-    }
-}
 #pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 2297–2328 */
@@ -1618,39 +1499,6 @@ void GLI_vFreeTempTexture(GLI_tdstTexture_* p_stTexture)
 void GLI_vUnLockAnimatedTexture(GLI_tdstMaterial_* p_stMaterial);
 void GLI_Material_fn_vInitMultiTexturePart(GLI_tdstMaterial_* p_stMaterial);
 
-void GLI_xCreateMaterialPS2GL(GLI_tdstMaterial_** hMaterial)
-{
-    *hMaterial = (GLI_tdstMaterial_*)PS2glAllocator64(sizeof(GLI_tdstMaterial_));
-
-    if (*hMaterial != NULL)
-    {
-        (*hMaterial)->stAmbient.xR = 0.0f;
-        (*hMaterial)->stAmbient.xG = 0.1f;
-        (*hMaterial)->stAmbient.xB = 0.1f;
-
-        (*hMaterial)->stDiffuse.xR = 0.8f;
-        (*hMaterial)->stDiffuse.xG = 0.8f;
-        (*hMaterial)->stDiffuse.xB = 0.8f;
-
-        (*hMaterial)->stColor.xR = 1.0f;
-        (*hMaterial)->stColor.xG = 0.0f;
-        (*hMaterial)->stColor.xB = 1.0f;
-
-        (*hMaterial)->p_stTexture = NULL;
-        (*hMaterial)->xMaterialType = 0xFFFFFFFF;
-        (*hMaterial)->lIncrementIsEnable = 0;
-
-        (*hMaterial)->p_stFistAnimatedTExtureNode = NULL;
-        (*hMaterial)->p_stActualAnimatedTExtureNode = NULL;
-        (*hMaterial)->lNumberOfDisplayNode = 0;
-        (*hMaterial)->xActualDisplayTimeSinceStartOfLastTexture = gs_fCoefOfMultiplicationForAnimatedTexture;
-        (*hMaterial)->lActualRefreshNumber = gs_lActualRefreshNumberForScolledTextures;
-
-        GLI_vUnLockAnimatedTexture(*hMaterial);
-        GLI_Material_fn_vInitMultiTexturePart(*hMaterial);
-    }
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 2273–2282 */
 /* addr: 0x002c4e80  size: 72 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1664,14 +1512,6 @@ void GLI_xCreateMaterialPS2GL(GLI_tdstMaterial_** hMaterial)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int GLI_bLoadSnapShotTexture(char* _pFileName)
-{
-    if (GLI_g_ScreenShotLoadingBuffer == 0) {
-        GLI_g_ScreenShotLoadingBuffer = (int)malloc(81924);
-    }
-    PS2MC_fn_vLoadScreenShot(_pFileName, (char*)GLI_g_ScreenShotLoadingBuffer);
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 2257–2257 */
 /* addr: 0x002c4ed0  size: 8 bytes */
@@ -1680,10 +1520,6 @@ int GLI_bLoadSnapShotTexture(char* _pFileName)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void ProcessSky(void)
-{
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 2029–2132 */
 /* addr: 0x002c4ee0  size: 784 bytes */
@@ -1750,72 +1586,6 @@ inline void GLI_vUnLoadRasterFontMaterial(void)
         GLI_g_RasterFontData = 0;
         GLI_g_RasterFont = 0;
     }
-}
-
-void GLI_vFreeTextureBloc(unsigned int TextureBlocId)
-{
-    unsigned int Channel;
-    GLI_tdstTexture_* p_stTexture;
-    unsigned int lTextureCounter;
-    int ChannelHigh;
-    int ChannelLow;
-
-    if (GLI_g_NbTexturesAllocatedForThisBloc[TextureBlocId] == 0)
-        return;
-    ChannelLow = GLI_g_BaseChannelForThisBloc[TextureBlocId];
-    ChannelHigh = ChannelLow + 1;
-    if (ChannelLow >= 4)
-    {
-        Channel = (ChannelLow - 4) >> 1;
-        for (lTextureCounter = 0; lTextureCounter < GLI_g_NbTransitionTextures[Channel]; lTextureCounter++)
-        {
-            p_stTexture = (GLI_tdstTexture_*)GLI_g_TransitionTextureInformation[Channel][lTextureCounter];
-            if (p_stTexture)
-            {
-                if (p_stTexture->bIsAvailable && p_stTexture->p_stSpecParam)
-                {
-                    PS2_fn_vEnterGLCriticalSection();
-                    PS2glLiberator(p_stTexture->p_stSpecParam);
-                    PS2_fn_vLeaveGLCriticalSection();
-                }
-                p_stTexture->p_stSpecParam = NULL;
-                p_stTexture->bIsAvailable = 0;
-            }
-        }
-        GLI_g_NbTransitionTextures[Channel] = 0;
-    }
-    else
-    {
-        for (lTextureCounter = 0; lTextureCounter < 400; lTextureCounter++)
-        {
-            if (((int*)gs_aDEFTableOfTextureMemoryChannels)[lTextureCounter] != 0xC0DE0005 && (((int*)gs_aDEFTableOfTextureMemoryChannels)[lTextureCounter] == ChannelLow || ((int*)gs_aDEFTableOfTextureMemoryChannels)[lTextureCounter] == ChannelHigh))
-            {
-                p_stTexture = ((GLI_tdstTexture_**)gs_aDEFTableOfTextureAlreadyRead)[lTextureCounter];
-                if (p_stTexture)
-                {
-                    if (p_stTexture->bIsAvailable && p_stTexture->p_stSpecParam)
-                    {
-                        PS2_fn_vEnterGLCriticalSection();
-                        PS2glLiberator(p_stTexture->p_stSpecParam);
-                        PS2_fn_vLeaveGLCriticalSection();
-                    }
-                    p_stTexture->p_stSpecParam = NULL;
-                    p_stTexture->bIsAvailable = 0;
-                }
-            }
-        }
-    }
-    PS2_fn_vEnterGLCriticalSection();
-    PS2glDeleteTextures(GLI_g_NbTexturesAllocatedForThisBloc[TextureBlocId], GLI_g_TextureNames[TextureBlocId]);
-    PS2_fn_vLeaveGLCriticalSection();
-    GLI_g_NbTexturesAllocatedForThisBloc[TextureBlocId] = 0;
-    if (TextureBlocId == 2 || TextureBlocId == 3)
-        fn_pfnCurrentTransitionDeallocator()((void*)GLI_g_TextureMemSpace[TextureBlocId]);
-    else
-        fn_vFreeInBinaryPreservingTheCurrentMode((void*)GLI_g_TextureMemSpace[TextureBlocId]);
-    GLI_g_TextureMemSpace[TextureBlocId] = 0;
-    if (TextureBlocId == 0 && GLI_g_RasterFont)
-        GLI_vUnLoadRasterFontMaterial();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 1763–2009 */
@@ -1958,123 +1728,6 @@ inline void GLI_vLoadTextureFile(GLI_tdstTexture_* p_stTexture)
 void* fn_pvMallocInBinaryPreservingTheCurrentMode(unsigned int size);
 void GLI_vLoadRasterFontMaterial(void);
 
-void LoadTextureBlocInternal(int DestTextureBlocID, int ChannelId)
-{
-    unsigned int Flag;
-    unsigned int GL_iTextureFormat;
-    int i;
-    GLI_tdstTexturePS2GL_* p_stSpecParam;
-    GLI_tdstTexture_* p_stTexture;
-    unsigned int NbTexturesInBloc;
-    unsigned int ChannelHigh;
-    unsigned int ChannelLow;
-    unsigned int lTextureCounter;
-
-    if (ChannelId < 0 || ChannelId > 7)
-    {
-        printf("Wrong channel\n");
-        return;
-    }
-    ChannelLow = ChannelId & ~1;
-    ChannelHigh = ChannelLow + 1;
-    GLI_g_BaseChannelForThisBloc[DestTextureBlocID] = ChannelLow;
-    NbTexturesInBloc = 0;
-    for (lTextureCounter = 0; lTextureCounter < 400; lTextureCounter++)
-    {
-        unsigned int Channel = ((unsigned int*)gs_aDEFTableOfTextureMemoryChannels)[lTextureCounter];
-        if (Channel != 0xC0DE0005 && ((int*)gs_aDEFTableOfTextureAlreadyRead)[lTextureCounter] != 0)
-        {
-            if (ChannelLow == Channel || ChannelHigh == Channel)
-                NbTexturesInBloc++;
-        }
-    }
-    if (ChannelLow == 0)
-        NbTexturesInBloc = NbTexturesInBloc + 3 + M2D_fn_iNbTexturesNeededForMenu();
-    GLI_g_NbTexturesAllocatedForThisBloc[DestTextureBlocID] = NbTexturesInBloc;
-    PS2_fn_vEnterGLCriticalSection();
-    PS2glGenTextures(GLI_g_NbTexturesAllocatedForThisBloc[DestTextureBlocID], GLI_g_TextureNames[DestTextureBlocID]);
-    PS2_fn_vLeaveGLCriticalSection();
-    if (GLI_g_CreatingTBF)
-    {
-        GLI_g_TextureMemSpace[DestTextureBlocID] = (int)fn_pvMallocInBinaryPreservingTheCurrentMode(0x400000);
-        GLI_g_CurrentTexture = GLI_g_CurrentTextureBuffer = GLI_g_TextureMemSpace[DestTextureBlocID];
-    }
-    else
-    {
-        GLI_g_CurrentTexture = GLI_g_CurrentTextureBuffer = GLI_g_TextureMemSpace[DestTextureBlocID];
-    }
-    GLI_g_NbTexturesForThisBloc[DestTextureBlocID] = 0;
-    for (lTextureCounter = 0; lTextureCounter < 400; lTextureCounter++)
-    {
-        unsigned int Channel = ((unsigned int*)gs_aDEFTableOfTextureMemoryChannels)[lTextureCounter];
-        if (Channel != 0xC0DE0005 && (ChannelLow == Channel || ChannelHigh == Channel))
-        {
-            p_stTexture = ((GLI_tdstTexture_**)gs_aDEFTableOfTextureAlreadyRead)[lTextureCounter];
-            if (p_stTexture)
-            {
-                if (ChannelLow >= 4)
-                {
-                    unsigned int Transition = (ChannelLow - 4) >> 1;
-                    GLI_g_TransitionTextureInformation[Transition][GLI_g_NbTransitionTextures[Transition]++] = (int)p_stTexture;
-                }
-                PS2_fn_vEnterGLCriticalSection();
-                p_stTexture->p_stSpecParam = (GLI_tdstTexturePS2GL_*)PS2glAllocator64(4);
-                PS2_fn_vLeaveGLCriticalSection();
-                p_stSpecParam = p_stTexture->p_stSpecParam;
-                p_stSpecParam->TextureID = GLI_g_TextureNames[DestTextureBlocID][GLI_g_NbTexturesForThisBloc[DestTextureBlocID]++];
-                for (i = 0; p_stTexture->a255_cFileName[i] != 0; i++)
-                    p_stTexture->a255_cFileName[i] = toupper(p_stTexture->a255_cFileName[i]);
-                GLI_vLoadTextureFile(p_stTexture);
-                p_stTexture->bIsAvailable = ChannelHigh;
-                if (strstr(p_stTexture->a255_cFileName, "_AD"))
-                {
-                    p_stTexture->lTextureCaps |= 0x20;
-                }
-                else if (strstr(p_stTexture->a255_cFileName, "_NZ"))
-                {
-                    p_stTexture->lTextureCaps &= ~8;
-                    p_stTexture->lTextureCaps |= 2;
-                }
-                switch (*(unsigned char*)&GLI_g_ExternalTextureHeader)
-                {
-                case 1:
-                    p_stTexture->lTextureCaps &= ~0xA;
-                    break;
-                case 2:
-                    p_stTexture->lTextureCaps &= ~0x22;
-                    p_stTexture->lTextureCaps |= 8;
-                    break;
-                case 4:
-                    p_stTexture->lTextureCaps &= ~0x28;
-                    p_stTexture->lTextureCaps |= 2;
-                    break;
-                case 8:
-                    p_stTexture->lTextureCaps &= ~0xA;
-                    p_stTexture->lTextureCaps |= 0x20;
-                    break;
-                }
-                p_stTexture->lTextureCaps &= ~4;
-                if (GLI_g_ExternalTextureHeader & 0x100)
-                    p_stTexture->lTextureCaps |= 4;
-                if ((p_stTexture->lTextureCaps & 8) == 8 || (p_stTexture->lTextureCaps & 2) == 2)
-                    GL_iTextureFormat = 0x1908;
-                else
-                    GL_iTextureFormat = 0x1907;
-                g_LevelTextureLoaded++;
-                Flag = GLI_g_GlobalBpp;
-                if (GL_iTextureFormat == 0x1908)
-                    Flag |= 0x10000000;
-                GLI_vRegisterTextureWithFlags(GLI_g_CurrentTexture, p_stSpecParam->TextureID, Flag, p_stTexture);
-            }
-        }
-    }
-    if (ChannelLow == 0)
-        GLI_vLoadRasterFontMaterial();
-    printf("Loaded %d texture in bloc %d\n", GLI_g_NbTexturesForThisBloc[DestTextureBlocID], DestTextureBlocID);
-    printf("Textures Loaded : %d\n", g_LevelTextureLoaded);
-    GLI_vCloseTXCFile();
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 1755–1757 */
 /* addr: 0x002c57d0  size: 40 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -2086,11 +1739,6 @@ void LoadTextureBlocInternal(int DestTextureBlocID, int ChannelId)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void DisableAlphaTest(GLI_tdstMaterial_* p_stMaterial)
-{
-    p_stMaterial->p_stTexture->lTextureCaps &= ~0x100;
-    p_stMaterial->a_stMultiMaterial[0].ulTextureProperties &= ~0x40;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 1750–1752 */
 /* addr: 0x002c5800  size: 32 bytes */
@@ -2101,11 +1749,6 @@ void DisableAlphaTest(GLI_tdstMaterial_* p_stMaterial)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void EnableAlphaTest(GLI_tdstMaterial_* p_stMaterial)
-{
-    p_stMaterial->p_stTexture->lTextureCaps |= 0x100;
-    p_stMaterial->a_stMultiMaterial[0].ulTextureProperties |= 0x40;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 1740–1741 */
 /* addr: 0x002c5820  size: 20 bytes */
@@ -2115,10 +1758,6 @@ void EnableAlphaTest(GLI_tdstMaterial_* p_stMaterial)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void EnableAlpha(GLI_tdstMaterial_* p_stMaterial)
-{
-    p_stMaterial->p_stTexture->lTextureCaps |= 8;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 1705–1733 */
 /* addr: 0x002c5840  size: 132 bytes */
@@ -2137,21 +1776,6 @@ void EnableAlpha(GLI_tdstMaterial_* p_stMaterial)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int GLI_iLoadMenuTexture(GLI_tdstTexture_** pp_stTexture, char* TxrName)
-{
-    GLI_tdstTexture_* p_stTexture;
-
-    *pp_stTexture = p_stTexture = (GLI_tdstTexture_*)PS2glAllocator64(0xCC);
-    if (p_stTexture == NULL)
-    {
-        return 0;
-    }
-    memset(p_stTexture, 0, 0xCC);
-    strcpy(p_stTexture->a255_cFileName, TxrName);
-    p_stTexture->p_stSpecParam = (GLI_tdstTexturePS2GL_*)PS2glAllocator64(4);
-    p_stTexture->p_stSpecParam->TextureID = 0;
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 1684–1686 */
 /* addr: 0x002c58d0  size: 24 bytes */
@@ -2161,11 +1785,6 @@ int GLI_iLoadMenuTexture(GLI_tdstTexture_** pp_stTexture, char* TxrName)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vReloadMenuTextureData(GLI_tdstMaterial_* pMaterial, void* pWhereToLoad, int TextureName, unsigned int MaxSize)
-{
-    pMaterial->p_stTexture->p_stSpecParam->TextureID = TextureName;
-    GLI_iLoadTexture(pMaterial->p_stTexture, pWhereToLoad, MaxSize);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 1549–1677 */
 /* addr: 0x002c58f0  size: 500 bytes */
@@ -2234,51 +1853,6 @@ inline void GLI_vRegisterLoadedTexture(int pTextureData, unsigned int TextureNam
         pRegistered->Flags = Bpp | 0x10000000;
         pRegistered->p_stTexture = p_stTexture;
     }
-}
-int GLI_iLoadTexture(GLI_tdstTexture_* p_stTexture, void* pWhereDoIPutTheData, int MaxFileSize)
-{
-    char* ptr;
-    GLI_tdstTexturePS2GL_* param0;
-    S_TXR_Header_* pHeader;
-    int FileSize;
-    char buffer[1024];
-    int ReadHandle;
-    unsigned int TheFile;
-
-    sprintf(buffer, "\\%s;1", PLD_szPrependGamedataName(p_stTexture->a255_cFileName));
-    for (ptr = buffer; *ptr != 0; ptr++)
-        *ptr = toupper(*ptr);
-    TheFile = fn_uiOpenStream(buffer);
-    if (TheFile == -1)
-        return 0;
-    FileSize = fn_bStreamSize(TheFile);
-    if (FileSize > MaxFileSize)
-        FileSize = MaxFileSize;
-    FlushCache(0);
-    InvalidDCache(pWhereDoIPutTheData, (char*)pWhereDoIPutTheData + FileSize + 1);
-    ReadHandle = fn_uiReadStream(TheFile, 0, pWhereDoIPutTheData, FileSize, 0);
-    fn_bSyncStream(ReadHandle);
-    pHeader = (S_TXR_Header_*)pWhereDoIPutTheData;
-    p_stTexture->lHeight = pHeader->SizeY;
-    p_stTexture->lWidth = pHeader->SizeX;
-    p_stTexture->lRealHeight = pHeader->SizeY;
-    p_stTexture->lRealWidth = pHeader->SizeX;
-    param0 = p_stTexture->p_stSpecParam;
-    p_stTexture->bIsAvailable = 1;
-    g_LevelTextureLoaded++;
-    GLI_g_CurrentTextureBuffer = GLI_g_CurrentTexture = (int)((char*)pHeader + 0x10);
-    {
-        unsigned int Flag = pHeader->Flags & 0xF;
-        if (Flag == 1)
-            GLI_g_GlobalBpp = 4;
-        else if (Flag == 2)
-            GLI_g_GlobalBpp = 8;
-        else if (Flag == 4)
-            GLI_g_GlobalBpp = 0x20;
-    }
-    GLI_vRegisterLoadedTexture(GLI_g_CurrentTexture, param0->TextureID, GLI_g_GlobalBpp, p_stTexture);
-    fn_vCloseStream(TheFile);
-    return FileSize;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 1454–1537 */
@@ -2351,56 +1925,6 @@ int GLI_iLoadTexture(GLI_tdstTexture_* p_stTexture, void* pWhereDoIPutTheData, i
  * compare a candidate object's line table as an extra checkpoint.
  */
 extern int CD_OpenFileWithNameConversion(char*);
-void GLI_vLoadRasterFontMaterial(void)
-{
-    unsigned int Flag;
-    GLI_tdstTexture_* p_stTexture;
-    GLI_tdstTexturePS2GL_* p_stSpecParam;
-    int TheFile;
-    int FileSize;
-    S_TXR_Header_* pHeader;
-
-    GLI_g_RasterFontMaterial.p_stTexture = &GLI_g_RasterFontTexture;
-    memset(&GLI_g_RasterFontTexture, 0, sizeof(GLI_tdstTexture_));
-    GLI_g_RasterFontTexture.lHeight = 0x100;
-    GLI_g_RasterFontTexture.lWidth = 0x100;
-    GLI_g_RasterFontTexture.lRealHeight = 0x100;
-    GLI_g_RasterFontTexture.lRealWidth = 0x100;
-    TheFile = CD_OpenFileWithNameConversion(PLD_szPrependGamedataName("\\VIG\\RASTFNT.TXR"));
-    if (TheFile < 0)
-    {
-        GLI_g_RasterFont = 0;
-        return;
-    }
-    p_stTexture = &GLI_g_RasterFontTexture;
-    FileSize = CD_Length(TheFile);
-    CD_Seek(TheFile, 0, 0);
-    GLI_g_RasterFontData = (int)malloc(FileSize);
-    CD_Read(TheFile, GLI_g_RasterFontData, FileSize);
-    pHeader = (S_TXR_Header_*)GLI_g_RasterFontData;
-    GLI_g_RasterFontTexture.lHeight = pHeader->SizeY;
-    GLI_g_RasterFontTexture.lWidth = pHeader->SizeX;
-    GLI_g_RasterFontTexture.lRealHeight = pHeader->SizeY;
-    GLI_g_RasterFontTexture.lRealWidth = pHeader->SizeX;
-    GLI_g_RasterFontTexture.p_stSpecParam = (GLI_tdstTexturePS2GL_*)PS2glAllocator64(4);
-    p_stSpecParam = GLI_g_RasterFontTexture.p_stSpecParam;
-    p_stSpecParam->TextureID = GLI_g_TextureNames[0][GLI_g_NbTexturesForThisBloc[0]];
-    GLI_g_NbTexturesForThisBloc[0]++;
-    strcpy(GLI_g_RasterFontTexture.a255_cFileName, "\\VIG\\RASTFNT.TXR");
-    GLI_g_RasterFontTexture.bIsAvailable = 1;
-    g_LevelTextureLoaded++;
-    GLI_g_CurrentTextureBuffer = GLI_g_CurrentTexture = GLI_g_RasterFontData + 0x10;
-    Flag = pHeader->Flags & 0xF;
-    if (Flag == 1)
-        GLI_g_GlobalBpp = 4;
-    else if (Flag == 2)
-        GLI_g_GlobalBpp = 8;
-    else if (Flag == 4)
-        GLI_g_GlobalBpp = 0x20;
-    GLI_vRegisterLoadedTexture(GLI_g_CurrentTexture, p_stSpecParam->TextureID, GLI_g_GlobalBpp, p_stTexture);
-    GLI_g_RasterFont = (int)&GLI_g_RasterFontMaterial;
-    CD_Close(TheFile);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 1072–1209 */
 /* addr: 0x002c5d40  size: 1340 bytes */
@@ -2501,6 +2025,861 @@ inline unsigned int GLI_uiGetMipmapTextureSize(unsigned int SizeX, unsigned int 
 void GLI_vOpenTXCFile(void);
 void TBF_vCreateEmptyTexture(void);
 void TBF_vWriteTexture(int pData, unsigned int SizeX, unsigned int SizeY, unsigned int Flags);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 977–1012 */
+/* addr: 0x002c6280  size: 268 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 977
+ *   +0x0004 -> line 983
+ *   +0x0008 -> line 977
+ *   +0x000c -> line 981
+ *   +0x0010 -> line 977
+ *   +0x0014 -> line 983
+ *   +0x0018 -> line 977
+ *   +0x001c -> line 983
+ *   +0x0030 -> line 985
+ *   +0x003c -> line 987
+ *   +0x0048 -> line 988
+ *   +0x0050 -> line 991
+ *   +0x0058 -> line 993
+ *   +0x0070 -> line 997
+ *   +0x007c -> line 1003
+ *   +0x008c -> line 1005
+ *   +0x00a0 -> line 1007
+ *   +0x00b4 -> line 1008
+ *   +0x00c8 -> line 1010
+ *   +0x00e4 -> line 1011
+ *   +0x00f8 -> line 1012
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+extern char* PLD_szPrependGamedataName(char*);
+extern int CD_OpenFileWithNameConversion(char*);
+void ReadFromBufferedCD(int MyFile, char* Dest, unsigned int Size);
+char* strstr(const char* s1, const char* s2);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 938–972 */
+/* addr: 0x002c6390  size: 232 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 938
+ *   +0x0020 -> line 943
+ *   +0x0038 -> line 947
+ *   +0x0044 -> line 950
+ *   +0x0048 -> line 949
+ *   +0x004c -> line 950
+ *   +0x0060 -> line 953
+ *   +0x0074 -> line 954
+ *   +0x0078 -> line 957
+ *   +0x007c -> line 955
+ *   +0x0080 -> line 959
+ *   +0x0088 -> line 961
+ *   +0x009c -> line 962
+ *   +0x00a4 -> line 965
+ *   +0x00ac -> line 968
+ *   +0x00c0 -> line 969
+ *   +0x00cc -> line 972
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 888–912 */
+/* addr: 0x002c6480  size: 220 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 888
+ *   +0x0014 -> line 893
+ *   +0x001c -> line 895
+ *   +0x0024 -> line 897
+ *   +0x0038 -> line 898
+ *   +0x003c -> line 899
+ *   +0x0050 -> line 902
+ *   +0x0054 -> line 900
+ *   +0x005c -> line 903
+ *   +0x00a0 -> line 907
+ *   +0x00b8 -> line 909
+ *   +0x00c8 -> line 912
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void CTL_Load_Ini_File(void);
+
+int toupper(char c);
+char* strstr(const char* s1, const char* s2);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 801–881 */
+/* addr: 0x002c6560  size: 608 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 801
+ *   +0x0024 -> line 810
+ *   +0x0030 -> line 812
+ *   +0x0034 -> line 814
+ *   +0x0050 -> line 816
+ *   +0x0058 -> line 818
+ *   +0x005c -> line 819
+ *   +0x0064 -> line 822
+ *   +0x0070 -> line 823
+ *   +0x0080 -> line 825
+ *   +0x0084 -> line 830
+ *   +0x0088 -> line 825
+ *   +0x008c -> line 830
+ *   +0x0090 -> line 825
+ *   +0x0094 -> line 826
+ *   +0x0098 -> line 825
+ *   +0x009c -> line 828
+ *   +0x00a0 -> line 825
+ *   +0x00ac -> line 830
+ *   +0x00b4 -> line 831
+ *   +0x00bc -> line 834
+ *   +0x00d0 -> line 836
+ *   +0x00ec -> line 837
+ *   +0x00fc -> line 847
+ *   +0x0108 -> line 853
+ *   +0x010c -> line 851
+ *   +0x0110 -> line 853
+ *   +0x0114 -> line 851
+ *   +0x0118 -> line 853
+ *   +0x0128 -> line 854
+ *   +0x0138 -> line 856
+ *   +0x0148 -> line 857
+ *   +0x014c -> line 856
+ *   +0x0150 -> line 860
+ *   +0x015c -> line 861
+ *   +0x0170 -> line 863
+ *   +0x0180 -> line 865
+ *   +0x0190 -> line 867
+ *   +0x01a4 -> line 868
+ *   +0x01c0 -> line 869
+ *   +0x01d8 -> line 870
+ *   +0x01f4 -> line 871
+ *   +0x020c -> line 875
+ *   +0x0218 -> line 876
+ *   +0x0220 -> line 878
+ *   +0x022c -> line 879
+ *   +0x0234 -> line 881
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 769–798 */
+/* addr: 0x002c67c0  size: 328 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 769
+ *   +0x0018 -> line 772
+ *   +0x001c -> line 769
+ *   +0x0020 -> line 777
+ *   +0x0024 -> line 776
+ *   +0x0028 -> line 780
+ *   +0x006c -> line 783
+ *   +0x0078 -> line 784
+ *   +0x00a8 -> line 786
+ *   +0x00bc -> line 787
+ *   +0x00c4 -> line 788
+ *   +0x00c8 -> line 789
+ *   +0x00e8 -> line 791
+ *   +0x0100 -> line 793
+ *   +0x0118 -> line 795
+ *   +0x0128 -> line 797
+ *   +0x012c -> line 798
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+/* Not original source, needs cleaning up: one-character read from the INI buffer
+   (retail expands it on a single line). */
+static inline int CTL_iReadChar(char* pc)
+{
+    if (CTL_BufferPos >= CTL_BufferSize)
+        return 0;
+    else
+    {
+        *pc = *(char*)(CTL_Buffer + CTL_BufferPos++);
+        return 1;
+    }
+}
+
+/* The debug record lists only (TempLine); the retail code reads it from a1 and
+   CTL_Load_Ini_File passes the INI file handle first. */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 604–697 */
+/* addr: 0x002c6910  size: 972 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 604
+ *   +0x0004 -> line 616
+ *   +0x0008 -> line 604
+ *   +0x000c -> line 615
+ *   +0x0010 -> line 604
+ *   +0x0014 -> line 619
+ *   +0x0018 -> line 604
+ *   +0x002c -> line 612
+ *   +0x0030 -> line 613
+ *   +0x0034 -> line 619
+ *   +0x0038 -> line 616
+ *   +0x0040 -> line 615
+ *   +0x0048 -> line 617
+ *   +0x004c -> line 619
+ *   +0x0054 -> line 621
+ *   +0x007c -> line 622
+ *   +0x0080 -> line 625
+ *   +0x0084 -> line 623
+ *   +0x0088 -> line 622
+ *   +0x0090 -> line 623
+ *   +0x00a4 -> line 625
+ *   +0x00ac -> line 627
+ *   +0x00bc -> line 628
+ *   +0x00c4 -> line 631
+ *   +0x00d4 -> line 633
+ *   +0x00dc -> line 635
+ *   +0x00e8 -> line 638
+ *   +0x0110 -> line 639
+ *   +0x0114 -> line 642
+ *   +0x0118 -> line 640
+ *   +0x011c -> line 639
+ *   +0x0124 -> line 640
+ *   +0x0138 -> line 642
+ *   +0x0140 -> line 644
+ *   +0x0150 -> line 645
+ *   +0x0158 -> line 648
+ *   +0x0168 -> line 650
+ *   +0x0170 -> line 652
+ *   +0x0178 -> line 654
+ *   +0x018c -> line 658
+ *   +0x0190 -> line 659
+ *   +0x01ac -> line 664
+ *   +0x01b8 -> line 666
+ *   +0x01e0 -> line 667
+ *   +0x01e4 -> line 668
+ *   +0x01e8 -> line 669
+ *   +0x01ec -> line 670
+ *   +0x01f8 -> line 672
+ *   +0x01fc -> line 673
+ *   +0x0208 -> line 672
+ *   +0x0210 -> line 673
+ *   +0x02a8 -> line 674
+ *   +0x02b0 -> line 677
+ *   +0x02cc -> line 678
+ *   +0x02fc -> line 680
+ *   +0x0300 -> line 681
+ *   +0x0304 -> line 680
+ *   +0x030c -> line 681
+ *   +0x0320 -> line 684
+ *   +0x0328 -> line 687
+ *   +0x0344 -> line 688
+ *   +0x0374 -> line 690
+ *   +0x0378 -> line 691
+ *   +0x037c -> line 690
+ *   +0x0384 -> line 691
+ *   +0x03a0 -> line 695
+ *   +0x03a8 -> line 696
+ *   +0x03b0 -> line 697
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 558–558 */
+/* addr: 0x002c6ce0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 558
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 549–554 */
+/* addr: 0x002c6cf0  size: 112 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 549
+ *   +0x0018 -> line 550
+ *   +0x0058 -> line 554
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 498–538 */
+/* addr: 0x002c6d60  size: 96 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 498
+ *   +0x0008 -> line 502
+ *   +0x0014 -> line 508
+ *   +0x0020 -> line 512
+ *   +0x0028 -> line 517
+ *   +0x0034 -> line 518
+ *   +0x0040 -> line 520
+ *   +0x004c -> line 537
+ *   +0x0054 -> line 538
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vLoadTBF_File(int DestBlocId, int SourceBlocId);
+void GLI_vProcessRegisteredTextures(void);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 486–486 */
+/* addr: 0x002c6dc0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 486
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vLoadTBF_File(int DestBlocId, int SourceBlocId);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 404–476 */
+/* addr: 0x002c6dd0  size: 364 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 404
+ *   +0x0004 -> line 411
+ *   +0x0008 -> line 404
+ *   +0x0018 -> line 411
+ *   +0x0048 -> line 414
+ *   +0x0060 -> line 415
+ *   +0x0068 -> line 417
+ *   +0x0080 -> line 418
+ *   +0x0088 -> line 422
+ *   +0x00ac -> line 434
+ *   +0x00c8 -> line 438
+ *   +0x00f8 -> line 441
+ *   +0x0100 -> line 442
+ *   +0x0108 -> line 444
+ *   +0x0110 -> line 445
+ *   +0x0118 -> line 449
+ *   +0x0128 -> line 453
+ *   +0x0130 -> line 456
+ *   +0x0134 -> line 459
+ *   +0x0140 -> line 461
+ *   +0x014c -> line 473
+ *   +0x0154 -> line 474
+ *   +0x0158 -> line 476
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+extern int TBF_pReadFix(void);
+extern int TBF_pReadLevel(char* szLevelName);
+extern int TBF_pReadLevelTRSBloc(char* szLevelName, int SourceBlocId);
+extern void TBF_vCreateFix(void);
+extern void TBF_vCreateLevel(char* szLevelName);
+extern void TBF_vCreateLevelTRSBloc(char* szLevelName, int SourceBlocId);
+extern void TBF_vClose(void);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 372–400 */
+/* addr: 0x002c6f40  size: 296 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 372
+ *   +0x0014 -> line 378
+ *   +0x001c -> line 379
+ *   +0x0034 -> line 381
+ *   +0x003c -> line 379
+ *   +0x0080 -> line 381
+ *   +0x0088 -> line 383
+ *   +0x008c -> line 384
+ *   +0x0090 -> line 383
+ *   +0x0094 -> line 384
+ *   +0x0098 -> line 383
+ *   +0x009c -> line 384
+ *   +0x00a8 -> line 387
+ *   +0x00b0 -> line 389
+ *   +0x00bc -> line 390
+ *   +0x00c8 -> line 392
+ *   +0x00cc -> line 390
+ *   +0x00d4 -> line 391
+ *   +0x00dc -> line 392
+ *   +0x00e8 -> line 395
+ *   +0x00f4 -> line 397
+ *   +0x0108 -> line 399
+ *   +0x010c -> line 400
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void LS_Destroy(void);
+void PS2glBindTexture(unsigned int target, unsigned int texture);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 284–284 */
+/* addr: 0x002c7070  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 284
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 165–184 */
+/* addr: 0x002c7080  size: 152 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 165
+ *   +0x0008 -> line 166
+ *   +0x0010 -> line 168
+ *   +0x0018 -> line 169
+ *   +0x0024 -> line 171
+ *   +0x0034 -> line 172
+ *   +0x0044 -> line 173
+ *   +0x0054 -> line 174
+ *   +0x0064 -> line 176
+ *   +0x0074 -> line 177
+ *   +0x0084 -> line 181
+ *   +0x008c -> line 184
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+unsigned int GAM_fn_uwGetEngineLoading(void);
+void* HMU_fn_p_vMalloc(unsigned int size, int iExtra);
+void HMU_fn_vSetMemoriesInBinaryMode(void);
+void HMU_fn_vFree(void* p_vPointer, int iTempMalloc);
+int GAM_fn_bIsEngineInFixMode(void);
+void HMU_fn_vSetMemoriesInFixMode(void);
+int GAM_fn_bIsEngineInLevelMode(void);
+void HMU_fn_vSetMemoriesInLevelMode(void);
+int GAM_fn_bIsEngineInTransitionMode(void);
+void GAM_fn_vSetEngineInTransitionMode(void);
+
+#pragma auto_inline on
+
+#pragma auto_inline reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 140–162 */
+/* addr: 0x002c7120  size: 156 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 140
+ *   +0x000c -> line 143
+ *   +0x0014 -> line 144
+ *   +0x0020 -> line 147
+ *   +0x0030 -> line 148
+ *   +0x0040 -> line 149
+ *   +0x0050 -> line 150
+ *   +0x0060 -> line 152
+ *   +0x0070 -> line 153
+ *   +0x0080 -> line 157
+ *   +0x0088 -> line 161
+ *   +0x008c -> line 162
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+#pragma auto_inline on
+
+#pragma auto_inline reset
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void GLI_vClearSendMatStates(void);
+int GLI_iGetOneMenuTextureNames(void);
+void GLI_vUncompressScreenShotIntoMaterial(GLI_tdstMaterial_** ppMaterial);
+void GLI_vFreeTempMaterial(GLI_tdstMaterial_** ppMaterial);
+void GLI_vFreeTempTexture(GLI_tdstTexture_* p_stTexture);
+void GLI_xCreateMaterialPS2GL(GLI_tdstMaterial_** hMaterial);
+int GLI_bLoadSnapShotTexture(char* _pFileName);
+void ProcessSky(void);
+void GLI_vFreeTextureBloc(unsigned int TextureBlocId);
+void LoadTextureBlocInternal(int DestTextureBlocID, int ChannelId);
+void DisableAlphaTest(GLI_tdstMaterial_* p_stMaterial);
+void EnableAlphaTest(GLI_tdstMaterial_* p_stMaterial);
+void EnableAlpha(GLI_tdstMaterial_* p_stMaterial);
+int GLI_iLoadMenuTexture(GLI_tdstTexture_** pp_stTexture, char* TxrName);
+void GLI_vReloadMenuTextureData(GLI_tdstMaterial_* pMaterial, void* pWhereToLoad, int TextureName, unsigned int MaxSize);
+int GLI_iLoadTexture(GLI_tdstTexture_* p_stTexture, void* pWhereDoIPutTheData, int MaxFileSize);
+void GLI_vLoadRasterFontMaterial(void);
+int GLI_xLoadTextureTXR(GLI_tdstTexture_* p_stTexture, char* FileName);
+void GLI_vOpenTXCFile(void);
+void ReadFromBufferedCD(int MyFile, char* Dest, unsigned int Size);
+void CTL_SetCurrentMap(char* Map);
+void CTL_Load_Ini_File(void);
+int CTL_ReadLine(int MyFile, char* TempLine);
+void GLI_v_SendTextureBitmapToPS2GL(GLI_tdstTexture_* p_stTexture, unsigned int ulUnused, unsigned int uTexFormat);
+void GLI_DRV_vUnLoadTextures(void);
+void GLI_vUnloadTexturePartial(unsigned char ucChannel);
+void GLI_DRV_vDownLoadTextures(void);
+void LoadTextureBloc(int DestTextureBlocID, int ChannelId);
+void GLI_vLoadTBF_File(int DestBlocId, int SourceBlocId);
+void GLI_vProcessRegisteredTextures(void);
+void GLI_vSetLoadingFix(int BoolVal);
+void fn_vFreeInBinaryPreservingTheCurrentMode(void* pointer);
+void* fn_pvMallocInBinaryPreservingTheCurrentMode(unsigned int size);
+
+#pragma auto_inline on
+void* fn_pvMallocInBinaryPreservingTheCurrentMode(unsigned int size)
+{
+    void* pointer;
+
+    HMU_fn_vSetMemoriesInBinaryMode();
+    pointer = HMU_fn_p_vMalloc(size, 0);
+    if (GAM_fn_bIsEngineInFixMode())
+    {
+        HMU_fn_vSetMemoriesInFixMode();
+    }
+    else if (GAM_fn_bIsEngineInLevelMode())
+    {
+        HMU_fn_vSetMemoriesInLevelMode();
+    }
+    else if (GAM_fn_bIsEngineInTransitionMode())
+    {
+        GAM_fn_vSetEngineInTransitionMode();
+    }
+    else
+    {
+        printf("Bad Allocation Mode\n");
+    }
+    return pointer;
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+void fn_vFreeInBinaryPreservingTheCurrentMode(void* pointer)
+{
+    GAM_fn_uwGetEngineLoading();
+    HMU_fn_vSetMemoriesInBinaryMode();
+    HMU_fn_vFree(&pointer, 0);
+    if (GAM_fn_bIsEngineInFixMode())
+    {
+        HMU_fn_vSetMemoriesInFixMode();
+    }
+    else if (GAM_fn_bIsEngineInLevelMode())
+    {
+        HMU_fn_vSetMemoriesInLevelMode();
+    }
+    else if (GAM_fn_bIsEngineInTransitionMode())
+    {
+        GAM_fn_vSetEngineInTransitionMode();
+    }
+    else
+    {
+        printf("Bad Allocation Mode\n");
+    }
+}
+#pragma auto_inline reset
+
+void GLI_vSetLoadingFix(int BoolVal)
+{
+    GLI_gs_LoadingFix = BoolVal;
+}
+
+void GLI_vProcessRegisteredTextures(void)
+{
+    unsigned int i;
+    unsigned int GL_iTextureFormat;
+    GLI_st_RegisteredTexture_* pReg;
+
+    LS_Destroy();
+    g_PS2glContext.nTextureEnableBits |= g_PS2glContext.iCurTextureSet == 0 ? 2 : 0x200; g_gsContext.PRMODE.TME = 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    for (i = 0; i < GLI_g_NbTexturesToRegister; i++)
+    {
+        pReg = &GLI_g_RegisteredTextures[i];
+        if (pReg->Flags & 0x10000000)
+            GL_iTextureFormat = 0x1908;
+        else
+            GL_iTextureFormat = 0x1907;
+        PS2_fn_vEnterGLCriticalSection();
+        PS2glBindTexture(0xDE1, pReg->TextureName);
+        GLI_g_GlobalBpp = pReg->Flags & 0xEFFFFFFF;
+        GLI_g_CurrentTexture = pReg->pTextureData;
+        GLI_v_SendTextureBitmapToPS2GL(pReg->p_stTexture, 0, GL_iTextureFormat);
+        PS2_fn_vLeaveGLCriticalSection();
+    }
+    GLI_g_NbTexturesToRegister = 0;
+}
+
+void GLI_vLoadTBF_File(int DestBlocId, int SourceBlocId)
+{
+    switch (DestBlocId)
+    {
+    case 0:
+        GLI_g_TextureMemSpace[DestBlocId] = TBF_pReadFix();
+        break;
+    case 1:
+        GLI_g_TextureMemSpace[DestBlocId] = TBF_pReadLevel(GLI_g_MapBeingLoaded);
+        break;
+    case 2:
+    case 3:
+        GLI_g_TextureMemSpace[DestBlocId] = TBF_pReadLevelTRSBloc(GLI_g_MapBeingLoaded, SourceBlocId);
+        break;
+    }
+    if (!GLI_g_TextureMemSpace[DestBlocId])
+    {
+        GLI_g_CreatingTBF = 1;
+        switch (DestBlocId)
+        {
+        case 0:
+            TBF_vCreateFix();
+            break;
+        case 1:
+            TBF_vCreateLevel(GLI_g_MapBeingLoaded);
+            break;
+        case 2:
+        case 3:
+            TBF_vCreateLevelTRSBloc(GLI_g_MapBeingLoaded, SourceBlocId);
+            break;
+        }
+    }
+    else
+    {
+        GLI_g_CurrentTBF_Buffer = GLI_g_TextureMemSpace[DestBlocId];
+    }
+    LoadTextureBlocInternal(DestBlocId, SourceBlocId);
+    if (GLI_g_CreatingTBF)
+    {
+        TBF_vClose();
+        GLI_g_CreatingTBF = 0;
+    }
+}
+
+void LoadTextureBloc(int DestTextureBlocID, int ChannelId)
+{
+    GLI_vLoadTBF_File(DestTextureBlocID, ChannelId);
+}
+
+void GLI_DRV_vDownLoadTextures(void)
+{
+    Bug_Please_ReloadMenu_40 = 0;
+    if (GLI_gs_LoadingFix)
+    {
+        GLI_vLoadTBF_File(0, 0);
+    }
+    else
+    {
+        GLI_vLoadTBF_File(2, 4);
+        GLI_vLoadTBF_File(3, 6);
+        GLI_vLoadTBF_File(1, 2);
+    }
+    GLI_vProcessRegisteredTextures();
+}
+
+void GLI_vUnloadTexturePartial(unsigned char ucChannel) { int i; int channel; int offset = 0;
+    channel = ucChannel; i = 0; do { if ((unsigned char)(channel & 0xFE) == *(int*)((char*)GLI_g_BaseChannelForThisBloc + offset)) { GLI_vFreeTextureBloc(i); } i++; offset += 4; } while (i < 4);
+}
+
+void GLI_DRV_vUnLoadTextures(void)
+{
+    GLI_vFreeTextureBloc(1);
+}
+
+/* The debug record lists (p_stTexture, uTexFormat), but the retail body reads the format
+   from a2 and overwrites a1 unread, and GLI_vProcessRegisteredTextures passes (tex, 0, format). */
+void GLI_v_SendTextureBitmapToPS2GL(GLI_tdstTexture_* p_stTexture, unsigned int ulUnused, unsigned int uTexFormat)
+{
+    unsigned int CurrentSize;
+    unsigned char* ptr;
+    unsigned int ty;
+    unsigned int tx;
+    unsigned int CurrentLevel;
+
+    tx = p_stTexture->lWidth;
+    ty = p_stTexture->lHeight;
+    g_PS2glContext.eTexUserMaintainMode = 2;
+    g_PS2glContext.eTexConvMode = 3;
+    g_PS2glContext.eClutConvMode = 2;
+    if (GLI_g_GlobalBpp == 0x20)
+    {
+        PS2glTexImage2D(0xDE1, 0, uTexFormat, p_stTexture->lWidth, p_stTexture->lHeight, 0, 0x1908, 0x1401, (void*)GLI_g_CurrentTexture);
+        GLI_g_LoadedTexturesNumber++;
+        GLI_g_LoadedTexturesSize += p_stTexture->lWidth * p_stTexture->lHeight * 4;
+        if (uTexFormat == 0x1907)
+            printf("Opaque + de 256 couleurs : %s\n", p_stTexture->a255_cFileName);
+        else
+            printf("Transparente + de 256 couleurs : %s\n", p_stTexture->a255_cFileName);
+    }
+    else if (GLI_g_GlobalBpp == 0x18)
+    {
+        PS2glTexImage2D(0xDE1, 0, uTexFormat, p_stTexture->lWidth, p_stTexture->lHeight, 0, 0x1908, 0x1401, (void*)GLI_g_CurrentTexture);
+        GLI_g_LoadedTexturesNumber++;
+        GLI_g_LoadedTexturesSize += p_stTexture->lWidth * p_stTexture->lHeight * 4;
+        if (uTexFormat == 0x1907)
+            printf("Opaque + de 256 couleurs : %s\n", p_stTexture->a255_cFileName);
+        else
+            printf("Transparente + de 256 couleurs : %s\n", p_stTexture->a255_cFileName);
+    }
+    else if (GLI_g_GlobalBpp == 8)
+    {
+        if ((p_stTexture->lTextureCaps & 4) == 4)
+        {
+            ptr = (unsigned char*)(GLI_g_CurrentTexture + 0x400);
+            PS2glColorTableEXT(0xDE1, 0x8058, 0x100, 0x1908, 0x1401, (void*)GLI_g_CurrentTexture);
+            CurrentLevel = 0;
+            while (tx > 1)
+            {
+                PS2glTexImage2D(0xDE1, CurrentLevel, 0x1900, tx, tx, 0, 0x80E5, 0x1401, ptr);
+                CurrentSize = tx * tx;
+                CurrentLevel++;
+                tx >>= 1;
+                ptr += CurrentSize;
+            }
+            GLI_g_LoadedTexturesNumber++;
+            {
+                float fSize = 1.34f;
+                fSize *= (float)(unsigned int)(p_stTexture->lWidth * p_stTexture->lHeight);
+                GLI_g_LoadedTexturesSize += (((unsigned int)fSize + 15) & ~15) + 0x400;
+            }
+        }
+        else
+        {
+            PS2glColorTableEXT(0xDE1, 0x8058, 0x100, 0x1908, 0x1401, (void*)GLI_g_CurrentTexture);
+            PS2glTexImage2D(0xDE1, 0, 0x1900, tx, ty, 0, 0x80E5, 0x1401, (void*)(GLI_g_CurrentTexture + 0x400));
+            GLI_g_LoadedTexturesNumber++;
+            GLI_g_LoadedTexturesSize += p_stTexture->lWidth * p_stTexture->lHeight + 0x400;
+        }
+    }
+    else
+    {
+        PS2glColorTableEXT(0xDE1, 0x8058, 0x10, 0x1908, 0x1401, (void*)GLI_g_CurrentTexture);
+        PS2glTexImage2D(0xDE1, 0, 0x1900, tx, ty, 0, 0x80E4, 0x1401, (void*)(GLI_g_CurrentTexture + 0x40));
+        GLI_g_LoadedTexturesNumber++;
+        GLI_g_LoadedTexturesSize += ((int)(p_stTexture->lWidth * p_stTexture->lHeight) >> 1) + 0x40;
+    }
+    g_PS2glContext.eTexUserMaintainMode = 0;
+    g_PS2glContext.eTexConvMode = 0;
+}
+
+int CTL_ReadLine(int MyFile, char* TempLine)
+{
+    char c;
+    int i;
+    int eof;
+
+    eof = 0;
+    do
+    {
+        TempLine[0] = 0;
+        i = 0;
+        do
+        {
+            if (CTL_iReadChar(&c) != 1)
+                eof = 1;
+            else if (c != ' ' && c != '\t' && c != '\n' && c != '\r')
+            {
+                TempLine[i] = toupper(c);
+                i++;
+                TempLine[i] = 0;
+            }
+        } while (!eof && c != '\n' && c != '\r');
+        if (TempLine[0] == ';')
+            TempLine[0] = 0;
+    } while (TempLine[0] == 0 && !eof);
+    if (TempLine[0] == 0)
+        return 0;
+    return 1;
+}
+
+void CTL_Load_Ini_File(void)
+{
+    int MyFile;
+    char TempLine[1024];
+    CTL_MapInfo_* pMap;
+    unsigned int CurrentMap;
+    unsigned int CurrentTexture;
+    char* TempBuffer;
+    unsigned int FileSize;
+    char* split1;
+
+    if (CTL_Initialized)
+        return;
+    CTL_Initialized = 1;
+    MyFile = CD_OpenFileWithNameConversion(PLD_szPrependGamedataName("CTL.CTL"));
+    if (MyFile < 0)
+    {
+        CTL_g_Infos.NumberOfMapsInIniFile = 0;
+        return;
+    }
+    FileSize = CD_Length(MyFile);
+    CD_Seek(MyFile, 0, 0);
+    TempBuffer = (char*)__alloca(FileSize);
+    CTL_BufferPos = 0;
+    CTL_BufferSize = FileSize;
+    CD_Read(MyFile, CTL_Buffer = (int)TempBuffer, FileSize);
+    CD_Close(MyFile);
+    if (CTL_ReadLine(MyFile, TempLine) && strstr(TempLine, "MAPS:") == TempLine)
+    {
+        sscanf(TempLine, "MAPS:%d", &CTL_g_Infos.NumberOfMapsInIniFile);
+        for (CurrentMap = 0; CurrentMap < CTL_g_Infos.NumberOfMapsInIniFile; CurrentMap++)
+        {
+            pMap = &CTL_g_Infos.Maps[CurrentMap];
+            if (!CTL_ReadLine(MyFile, TempLine))
+                goto error;
+            if (TempLine[0] != '[')
+                goto error;
+            split1 = strstr(TempLine, ":");
+            *split1 = 0;
+            strcpy(pMap->MapName, TempLine + 1);
+            sscanf(split1 + 1, "%d]", &pMap->NumberOfFilesToLoad);
+            pMap->StringPointers = (int)malloc(pMap->NumberOfFilesToLoad * 4);
+            for (CurrentTexture = 0; CurrentTexture < pMap->NumberOfFilesToLoad; CurrentTexture++)
+            {
+                if (!CTL_ReadLine(MyFile, TempLine))
+                    goto error;
+                ((int*)pMap->StringPointers)[CurrentTexture] = (int)malloc(strlen(TempLine) + 1);
+                strcpy(((char**)pMap->StringPointers)[CurrentTexture], TempLine);
+            }
+        }
+        printf("TextINI file loaded with success!!\n");
+        return;
+    }
+error:
+    printf("\n\nERROR PROCESSING CTL.CTL\n\n");
+    CTL_g_Infos.NumberOfMapsInIniFile = 0;
+}
+
+void CTL_SetCurrentMap(char* Map)
+{
+    char Temp[16];
+    int i;
+
+    i = 0;
+    CTL_Load_Ini_File();
+    for (; Map[i]; i++)
+        /* Not original source, needs cleaning up: the int-cast address keeps
+         * sp+0x30 and the index as a separate addu, as in retail. */
+        *(char*)((int)Temp + i) = toupper(Map[i]);
+    *(char*)((int)Temp + i) = 0;
+    for (i = 0; i < CTL_g_Infos.NumberOfMapsInIniFile && !strstr(CTL_g_Infos.Maps[i].MapName, Temp); i++)
+        ;
+    CTL_g_CurrentMap = i;
+    if (i == CTL_g_Infos.NumberOfMapsInIniFile)
+        CTL_g_CurrentMap = -1;
+    strcpy(GLI_g_MapBeingLoaded, Temp);
+}
+
+void ReadFromBufferedCD(int MyFile, char* Dest, unsigned int Size)
+{
+    int AlreadyReadSize;
+
+    if (BufferPosition + Size > BufferHasRead)
+    {
+        AlreadyReadSize = 0;
+        if (BufferPosition < BufferHasRead)
+        {
+            AlreadyReadSize = BufferHasRead - BufferPosition;
+            memcpy(Dest, ReadBuffer + BufferPosition, AlreadyReadSize);
+        }
+        CD_Read(MyFile, ReadBuffer, 0x5000);
+        Size -= AlreadyReadSize;
+        BufferPosition = 0;
+        BufferHasRead = 0x5000;
+        if (Size)
+        {
+            memcpy(Dest + AlreadyReadSize, ReadBuffer, Size);
+            BufferPosition += Size;
+        }
+    }
+    else
+    {
+        memcpy(Dest, ReadBuffer + BufferPosition, Size);
+        BufferPosition += Size;
+    }
+}
+
+void GLI_vOpenTXCFile(void)
+{
+    char* pTemp;
+    int TextSize;
+    int i;
+
+    GLI_g_TXC_Opened = 1;
+    GLI_g_TXC_File = CD_OpenFileWithNameConversion(PLD_szPrependGamedataName("TEXTURES.TXC"));
+    if (GLI_g_TXC_File < 0)
+    {
+        printf("\n\nOUHHH !! TEXTURES.TXC NOT FOUND !!!\n\n");
+        return;
+    }
+    CD_Read(GLI_g_TXC_File, &GLI_g_TXC_NumberOfFiles, 4);
+    pTXCHeaders = (ConcatFileHeader_*)malloc(GLI_g_TXC_NumberOfFiles * sizeof(ConcatFileHeader_));
+    for (i = 0; i < GLI_g_TXC_NumberOfFiles; i++)
+    {
+        ReadFromBufferedCD(GLI_g_TXC_File, (char*)&TextSize, 4);
+        ReadFromBufferedCD(GLI_g_TXC_File, pTXCHeaders[i].Name, TextSize);
+        pTemp = strstr(pTXCHeaders[i].Name, ".TXR");
+        if (pTemp)
+            strcpy(pTemp, ".TGA");
+        ReadFromBufferedCD(GLI_g_TXC_File, (char*)&pTXCHeaders[i].PositionInFile, 4);
+    }
+}
 
 int GLI_xLoadTextureTXR(GLI_tdstTexture_* p_stTexture, char* FileName)
 {
@@ -2619,806 +2998,496 @@ int GLI_xLoadTextureTXR(GLI_tdstTexture_* p_stTexture, char* FileName)
     return 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 977–1012 */
-/* addr: 0x002c6280  size: 268 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 977
- *   +0x0004 -> line 983
- *   +0x0008 -> line 977
- *   +0x000c -> line 981
- *   +0x0010 -> line 977
- *   +0x0014 -> line 983
- *   +0x0018 -> line 977
- *   +0x001c -> line 983
- *   +0x0030 -> line 985
- *   +0x003c -> line 987
- *   +0x0048 -> line 988
- *   +0x0050 -> line 991
- *   +0x0058 -> line 993
- *   +0x0070 -> line 997
- *   +0x007c -> line 1003
- *   +0x008c -> line 1005
- *   +0x00a0 -> line 1007
- *   +0x00b4 -> line 1008
- *   +0x00c8 -> line 1010
- *   +0x00e4 -> line 1011
- *   +0x00f8 -> line 1012
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-extern char* PLD_szPrependGamedataName(char*);
-extern int CD_OpenFileWithNameConversion(char*);
-void ReadFromBufferedCD(int MyFile, char* Dest, unsigned int Size);
-char* strstr(const char* s1, const char* s2);
-
-void GLI_vOpenTXCFile(void)
+void GLI_vLoadRasterFontMaterial(void)
 {
-    char* pTemp;
-    int TextSize;
-    int i;
+    unsigned int Flag;
+    GLI_tdstTexture_* p_stTexture;
+    GLI_tdstTexturePS2GL_* p_stSpecParam;
+    int TheFile;
+    int FileSize;
+    S_TXR_Header_* pHeader;
 
-    GLI_g_TXC_Opened = 1;
-    GLI_g_TXC_File = CD_OpenFileWithNameConversion(PLD_szPrependGamedataName("TEXTURES.TXC"));
-    if (GLI_g_TXC_File < 0)
+    GLI_g_RasterFontMaterial.p_stTexture = &GLI_g_RasterFontTexture;
+    memset(&GLI_g_RasterFontTexture, 0, sizeof(GLI_tdstTexture_));
+    GLI_g_RasterFontTexture.lHeight = 0x100;
+    GLI_g_RasterFontTexture.lWidth = 0x100;
+    GLI_g_RasterFontTexture.lRealHeight = 0x100;
+    GLI_g_RasterFontTexture.lRealWidth = 0x100;
+    TheFile = CD_OpenFileWithNameConversion(PLD_szPrependGamedataName("\\VIG\\RASTFNT.TXR"));
+    if (TheFile < 0)
     {
-        printf("\n\nOUHHH !! TEXTURES.TXC NOT FOUND !!!\n\n");
+        GLI_g_RasterFont = 0;
         return;
     }
-    CD_Read(GLI_g_TXC_File, &GLI_g_TXC_NumberOfFiles, 4);
-    pTXCHeaders = (ConcatFileHeader_*)malloc(GLI_g_TXC_NumberOfFiles * sizeof(ConcatFileHeader_));
-    for (i = 0; i < GLI_g_TXC_NumberOfFiles; i++)
-    {
-        ReadFromBufferedCD(GLI_g_TXC_File, (char*)&TextSize, 4);
-        ReadFromBufferedCD(GLI_g_TXC_File, pTXCHeaders[i].Name, TextSize);
-        pTemp = strstr(pTXCHeaders[i].Name, ".TXR");
-        if (pTemp)
-            strcpy(pTemp, ".TGA");
-        ReadFromBufferedCD(GLI_g_TXC_File, (char*)&pTXCHeaders[i].PositionInFile, 4);
-    }
+    p_stTexture = &GLI_g_RasterFontTexture;
+    FileSize = CD_Length(TheFile);
+    CD_Seek(TheFile, 0, 0);
+    GLI_g_RasterFontData = (int)malloc(FileSize);
+    CD_Read(TheFile, GLI_g_RasterFontData, FileSize);
+    pHeader = (S_TXR_Header_*)GLI_g_RasterFontData;
+    GLI_g_RasterFontTexture.lHeight = pHeader->SizeY;
+    GLI_g_RasterFontTexture.lWidth = pHeader->SizeX;
+    GLI_g_RasterFontTexture.lRealHeight = pHeader->SizeY;
+    GLI_g_RasterFontTexture.lRealWidth = pHeader->SizeX;
+    GLI_g_RasterFontTexture.p_stSpecParam = (GLI_tdstTexturePS2GL_*)PS2glAllocator64(4);
+    p_stSpecParam = GLI_g_RasterFontTexture.p_stSpecParam;
+    p_stSpecParam->TextureID = GLI_g_TextureNames[0][GLI_g_NbTexturesForThisBloc[0]];
+    GLI_g_NbTexturesForThisBloc[0]++;
+    strcpy(GLI_g_RasterFontTexture.a255_cFileName, "\\VIG\\RASTFNT.TXR");
+    GLI_g_RasterFontTexture.bIsAvailable = 1;
+    g_LevelTextureLoaded++;
+    GLI_g_CurrentTextureBuffer = GLI_g_CurrentTexture = GLI_g_RasterFontData + 0x10;
+    Flag = pHeader->Flags & 0xF;
+    if (Flag == 1)
+        GLI_g_GlobalBpp = 4;
+    else if (Flag == 2)
+        GLI_g_GlobalBpp = 8;
+    else if (Flag == 4)
+        GLI_g_GlobalBpp = 0x20;
+    GLI_vRegisterLoadedTexture(GLI_g_CurrentTexture, p_stSpecParam->TextureID, GLI_g_GlobalBpp, p_stTexture);
+    GLI_g_RasterFont = (int)&GLI_g_RasterFontMaterial;
+    CD_Close(TheFile);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 938–972 */
-/* addr: 0x002c6390  size: 232 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 938
- *   +0x0020 -> line 943
- *   +0x0038 -> line 947
- *   +0x0044 -> line 950
- *   +0x0048 -> line 949
- *   +0x004c -> line 950
- *   +0x0060 -> line 953
- *   +0x0074 -> line 954
- *   +0x0078 -> line 957
- *   +0x007c -> line 955
- *   +0x0080 -> line 959
- *   +0x0088 -> line 961
- *   +0x009c -> line 962
- *   +0x00a4 -> line 965
- *   +0x00ac -> line 968
- *   +0x00c0 -> line 969
- *   +0x00cc -> line 972
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void ReadFromBufferedCD(int MyFile, char* Dest, unsigned int Size)
+int GLI_iLoadTexture(GLI_tdstTexture_* p_stTexture, void* pWhereDoIPutTheData, int MaxFileSize)
 {
-    int AlreadyReadSize;
+    char* ptr;
+    GLI_tdstTexturePS2GL_* param0;
+    S_TXR_Header_* pHeader;
+    int FileSize;
+    char buffer[1024];
+    int ReadHandle;
+    unsigned int TheFile;
 
-    if (BufferPosition + Size > BufferHasRead)
-    {
-        AlreadyReadSize = 0;
-        if (BufferPosition < BufferHasRead)
-        {
-            AlreadyReadSize = BufferHasRead - BufferPosition;
-            memcpy(Dest, ReadBuffer + BufferPosition, AlreadyReadSize);
-        }
-        CD_Read(MyFile, ReadBuffer, 0x5000);
-        Size -= AlreadyReadSize;
-        BufferPosition = 0;
-        BufferHasRead = 0x5000;
-        if (Size)
-        {
-            memcpy(Dest + AlreadyReadSize, ReadBuffer, Size);
-            BufferPosition += Size;
-        }
-    }
-    else
-    {
-        memcpy(Dest, ReadBuffer + BufferPosition, Size);
-        BufferPosition += Size;
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 888–912 */
-/* addr: 0x002c6480  size: 220 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 888
- *   +0x0014 -> line 893
- *   +0x001c -> line 895
- *   +0x0024 -> line 897
- *   +0x0038 -> line 898
- *   +0x003c -> line 899
- *   +0x0050 -> line 902
- *   +0x0054 -> line 900
- *   +0x005c -> line 903
- *   +0x00a0 -> line 907
- *   +0x00b8 -> line 909
- *   +0x00c8 -> line 912
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void CTL_Load_Ini_File(void);
-
-int toupper(char c);
-char* strstr(const char* s1, const char* s2);
-
-void CTL_SetCurrentMap(char* Map)
-{
-    char Temp[16];
-    int i;
-
-    i = 0;
-    CTL_Load_Ini_File();
-    for (; Map[i]; i++)
-        /* Not original source, needs cleaning up: the int-cast address keeps
-         * sp+0x30 and the index as a separate addu, as in retail. */
-        *(char*)((int)Temp + i) = toupper(Map[i]);
-    *(char*)((int)Temp + i) = 0;
-    for (i = 0; i < CTL_g_Infos.NumberOfMapsInIniFile && !strstr(CTL_g_Infos.Maps[i].MapName, Temp); i++)
-        ;
-    CTL_g_CurrentMap = i;
-    if (i == CTL_g_Infos.NumberOfMapsInIniFile)
-        CTL_g_CurrentMap = -1;
-    strcpy(GLI_g_MapBeingLoaded, Temp);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 801–881 */
-/* addr: 0x002c6560  size: 608 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 801
- *   +0x0024 -> line 810
- *   +0x0030 -> line 812
- *   +0x0034 -> line 814
- *   +0x0050 -> line 816
- *   +0x0058 -> line 818
- *   +0x005c -> line 819
- *   +0x0064 -> line 822
- *   +0x0070 -> line 823
- *   +0x0080 -> line 825
- *   +0x0084 -> line 830
- *   +0x0088 -> line 825
- *   +0x008c -> line 830
- *   +0x0090 -> line 825
- *   +0x0094 -> line 826
- *   +0x0098 -> line 825
- *   +0x009c -> line 828
- *   +0x00a0 -> line 825
- *   +0x00ac -> line 830
- *   +0x00b4 -> line 831
- *   +0x00bc -> line 834
- *   +0x00d0 -> line 836
- *   +0x00ec -> line 837
- *   +0x00fc -> line 847
- *   +0x0108 -> line 853
- *   +0x010c -> line 851
- *   +0x0110 -> line 853
- *   +0x0114 -> line 851
- *   +0x0118 -> line 853
- *   +0x0128 -> line 854
- *   +0x0138 -> line 856
- *   +0x0148 -> line 857
- *   +0x014c -> line 856
- *   +0x0150 -> line 860
- *   +0x015c -> line 861
- *   +0x0170 -> line 863
- *   +0x0180 -> line 865
- *   +0x0190 -> line 867
- *   +0x01a4 -> line 868
- *   +0x01c0 -> line 869
- *   +0x01d8 -> line 870
- *   +0x01f4 -> line 871
- *   +0x020c -> line 875
- *   +0x0218 -> line 876
- *   +0x0220 -> line 878
- *   +0x022c -> line 879
- *   +0x0234 -> line 881
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void CTL_Load_Ini_File(void)
-{
-    int MyFile;
-    char TempLine[1024];
-    CTL_MapInfo_* pMap;
-    unsigned int CurrentMap;
-    unsigned int CurrentTexture;
-    char* TempBuffer;
-    unsigned int FileSize;
-    char* split1;
-
-    if (CTL_Initialized)
-        return;
-    CTL_Initialized = 1;
-    MyFile = CD_OpenFileWithNameConversion(PLD_szPrependGamedataName("CTL.CTL"));
-    if (MyFile < 0)
-    {
-        CTL_g_Infos.NumberOfMapsInIniFile = 0;
-        return;
-    }
-    FileSize = CD_Length(MyFile);
-    CD_Seek(MyFile, 0, 0);
-    TempBuffer = (char*)__alloca(FileSize);
-    CTL_BufferPos = 0;
-    CTL_BufferSize = FileSize;
-    CD_Read(MyFile, CTL_Buffer = (int)TempBuffer, FileSize);
-    CD_Close(MyFile);
-    if (CTL_ReadLine(MyFile, TempLine) && strstr(TempLine, "MAPS:") == TempLine)
-    {
-        sscanf(TempLine, "MAPS:%d", &CTL_g_Infos.NumberOfMapsInIniFile);
-        for (CurrentMap = 0; CurrentMap < CTL_g_Infos.NumberOfMapsInIniFile; CurrentMap++)
-        {
-            pMap = &CTL_g_Infos.Maps[CurrentMap];
-            if (!CTL_ReadLine(MyFile, TempLine))
-                goto error;
-            if (TempLine[0] != '[')
-                goto error;
-            split1 = strstr(TempLine, ":");
-            *split1 = 0;
-            strcpy(pMap->MapName, TempLine + 1);
-            sscanf(split1 + 1, "%d]", &pMap->NumberOfFilesToLoad);
-            pMap->StringPointers = (int)malloc(pMap->NumberOfFilesToLoad * 4);
-            for (CurrentTexture = 0; CurrentTexture < pMap->NumberOfFilesToLoad; CurrentTexture++)
-            {
-                if (!CTL_ReadLine(MyFile, TempLine))
-                    goto error;
-                ((int*)pMap->StringPointers)[CurrentTexture] = (int)malloc(strlen(TempLine) + 1);
-                strcpy(((char**)pMap->StringPointers)[CurrentTexture], TempLine);
-            }
-        }
-        printf("TextINI file loaded with success!!\n");
-        return;
-    }
-error:
-    printf("\n\nERROR PROCESSING CTL.CTL\n\n");
-    CTL_g_Infos.NumberOfMapsInIniFile = 0;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 769–798 */
-/* addr: 0x002c67c0  size: 328 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 769
- *   +0x0018 -> line 772
- *   +0x001c -> line 769
- *   +0x0020 -> line 777
- *   +0x0024 -> line 776
- *   +0x0028 -> line 780
- *   +0x006c -> line 783
- *   +0x0078 -> line 784
- *   +0x00a8 -> line 786
- *   +0x00bc -> line 787
- *   +0x00c4 -> line 788
- *   +0x00c8 -> line 789
- *   +0x00e8 -> line 791
- *   +0x0100 -> line 793
- *   +0x0118 -> line 795
- *   +0x0128 -> line 797
- *   +0x012c -> line 798
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-/* Not original source, needs cleaning up: one-character read from the INI buffer
-   (retail expands it on a single line). */
-static inline int CTL_iReadChar(char* pc)
-{
-    if (CTL_BufferPos >= CTL_BufferSize)
+    sprintf(buffer, "\\%s;1", PLD_szPrependGamedataName(p_stTexture->a255_cFileName));
+    for (ptr = buffer; *ptr != 0; ptr++)
+        *ptr = toupper(*ptr);
+    TheFile = fn_uiOpenStream(buffer);
+    if (TheFile == -1)
         return 0;
-    else
+    FileSize = fn_bStreamSize(TheFile);
+    if (FileSize > MaxFileSize)
+        FileSize = MaxFileSize;
+    FlushCache(0);
+    InvalidDCache(pWhereDoIPutTheData, (char*)pWhereDoIPutTheData + FileSize + 1);
+    ReadHandle = fn_uiReadStream(TheFile, 0, pWhereDoIPutTheData, FileSize, 0);
+    fn_bSyncStream(ReadHandle);
+    pHeader = (S_TXR_Header_*)pWhereDoIPutTheData;
+    p_stTexture->lHeight = pHeader->SizeY;
+    p_stTexture->lWidth = pHeader->SizeX;
+    p_stTexture->lRealHeight = pHeader->SizeY;
+    p_stTexture->lRealWidth = pHeader->SizeX;
+    param0 = p_stTexture->p_stSpecParam;
+    p_stTexture->bIsAvailable = 1;
+    g_LevelTextureLoaded++;
+    GLI_g_CurrentTextureBuffer = GLI_g_CurrentTexture = (int)((char*)pHeader + 0x10);
     {
-        *pc = *(char*)(CTL_Buffer + CTL_BufferPos++);
-        return 1;
+        unsigned int Flag = pHeader->Flags & 0xF;
+        if (Flag == 1)
+            GLI_g_GlobalBpp = 4;
+        else if (Flag == 2)
+            GLI_g_GlobalBpp = 8;
+        else if (Flag == 4)
+            GLI_g_GlobalBpp = 0x20;
     }
+    GLI_vRegisterLoadedTexture(GLI_g_CurrentTexture, param0->TextureID, GLI_g_GlobalBpp, p_stTexture);
+    fn_vCloseStream(TheFile);
+    return FileSize;
 }
 
-/* The debug record lists only (TempLine); the retail code reads it from a1 and
-   CTL_Load_Ini_File passes the INI file handle first. */
-int CTL_ReadLine(int MyFile, char* TempLine)
+void GLI_vReloadMenuTextureData(GLI_tdstMaterial_* pMaterial, void* pWhereToLoad, int TextureName, unsigned int MaxSize)
 {
-    char c;
-    int i;
-    int eof;
+    pMaterial->p_stTexture->p_stSpecParam->TextureID = TextureName;
+    GLI_iLoadTexture(pMaterial->p_stTexture, pWhereToLoad, MaxSize);
+}
 
-    eof = 0;
-    do
+int GLI_iLoadMenuTexture(GLI_tdstTexture_** pp_stTexture, char* TxrName)
+{
+    GLI_tdstTexture_* p_stTexture;
+
+    *pp_stTexture = p_stTexture = (GLI_tdstTexture_*)PS2glAllocator64(0xCC);
+    if (p_stTexture == NULL)
     {
-        TempLine[0] = 0;
-        i = 0;
-        do
-        {
-            if (CTL_iReadChar(&c) != 1)
-                eof = 1;
-            else if (c != ' ' && c != '\t' && c != '\n' && c != '\r')
-            {
-                TempLine[i] = toupper(c);
-                i++;
-                TempLine[i] = 0;
-            }
-        } while (!eof && c != '\n' && c != '\r');
-        if (TempLine[0] == ';')
-            TempLine[0] = 0;
-    } while (TempLine[0] == 0 && !eof);
-    if (TempLine[0] == 0)
         return 0;
+    }
+    memset(p_stTexture, 0, 0xCC);
+    strcpy(p_stTexture->a255_cFileName, TxrName);
+    p_stTexture->p_stSpecParam = (GLI_tdstTexturePS2GL_*)PS2glAllocator64(4);
+    p_stTexture->p_stSpecParam->TextureID = 0;
     return 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 604–697 */
-/* addr: 0x002c6910  size: 972 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 604
- *   +0x0004 -> line 616
- *   +0x0008 -> line 604
- *   +0x000c -> line 615
- *   +0x0010 -> line 604
- *   +0x0014 -> line 619
- *   +0x0018 -> line 604
- *   +0x002c -> line 612
- *   +0x0030 -> line 613
- *   +0x0034 -> line 619
- *   +0x0038 -> line 616
- *   +0x0040 -> line 615
- *   +0x0048 -> line 617
- *   +0x004c -> line 619
- *   +0x0054 -> line 621
- *   +0x007c -> line 622
- *   +0x0080 -> line 625
- *   +0x0084 -> line 623
- *   +0x0088 -> line 622
- *   +0x0090 -> line 623
- *   +0x00a4 -> line 625
- *   +0x00ac -> line 627
- *   +0x00bc -> line 628
- *   +0x00c4 -> line 631
- *   +0x00d4 -> line 633
- *   +0x00dc -> line 635
- *   +0x00e8 -> line 638
- *   +0x0110 -> line 639
- *   +0x0114 -> line 642
- *   +0x0118 -> line 640
- *   +0x011c -> line 639
- *   +0x0124 -> line 640
- *   +0x0138 -> line 642
- *   +0x0140 -> line 644
- *   +0x0150 -> line 645
- *   +0x0158 -> line 648
- *   +0x0168 -> line 650
- *   +0x0170 -> line 652
- *   +0x0178 -> line 654
- *   +0x018c -> line 658
- *   +0x0190 -> line 659
- *   +0x01ac -> line 664
- *   +0x01b8 -> line 666
- *   +0x01e0 -> line 667
- *   +0x01e4 -> line 668
- *   +0x01e8 -> line 669
- *   +0x01ec -> line 670
- *   +0x01f8 -> line 672
- *   +0x01fc -> line 673
- *   +0x0208 -> line 672
- *   +0x0210 -> line 673
- *   +0x02a8 -> line 674
- *   +0x02b0 -> line 677
- *   +0x02cc -> line 678
- *   +0x02fc -> line 680
- *   +0x0300 -> line 681
- *   +0x0304 -> line 680
- *   +0x030c -> line 681
- *   +0x0320 -> line 684
- *   +0x0328 -> line 687
- *   +0x0344 -> line 688
- *   +0x0374 -> line 690
- *   +0x0378 -> line 691
- *   +0x037c -> line 690
- *   +0x0384 -> line 691
- *   +0x03a0 -> line 695
- *   +0x03a8 -> line 696
- *   +0x03b0 -> line 697
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-/* The debug record lists (p_stTexture, uTexFormat), but the retail body reads the format
-   from a2 and overwrites a1 unread, and GLI_vProcessRegisteredTextures passes (tex, 0, format). */
-void GLI_v_SendTextureBitmapToPS2GL(GLI_tdstTexture_* p_stTexture, unsigned int ulUnused, unsigned int uTexFormat)
+void EnableAlpha(GLI_tdstMaterial_* p_stMaterial)
 {
-    unsigned int CurrentSize;
-    unsigned char* ptr;
-    unsigned int ty;
-    unsigned int tx;
-    unsigned int CurrentLevel;
+    p_stMaterial->p_stTexture->lTextureCaps |= 8;
+}
 
-    tx = p_stTexture->lWidth;
-    ty = p_stTexture->lHeight;
+void EnableAlphaTest(GLI_tdstMaterial_* p_stMaterial)
+{
+    p_stMaterial->p_stTexture->lTextureCaps |= 0x100;
+    p_stMaterial->a_stMultiMaterial[0].ulTextureProperties |= 0x40;
+}
+
+void DisableAlphaTest(GLI_tdstMaterial_* p_stMaterial)
+{
+    p_stMaterial->p_stTexture->lTextureCaps &= ~0x100;
+    p_stMaterial->a_stMultiMaterial[0].ulTextureProperties &= ~0x40;
+}
+
+void LoadTextureBlocInternal(int DestTextureBlocID, int ChannelId)
+{
+    unsigned int Flag;
+    unsigned int GL_iTextureFormat;
+    int i;
+    GLI_tdstTexturePS2GL_* p_stSpecParam;
+    GLI_tdstTexture_* p_stTexture;
+    unsigned int NbTexturesInBloc;
+    unsigned int ChannelHigh;
+    unsigned int ChannelLow;
+    unsigned int lTextureCounter;
+
+    if (ChannelId < 0 || ChannelId > 7)
+    {
+        printf("Wrong channel\n");
+        return;
+    }
+    ChannelLow = ChannelId & ~1;
+    ChannelHigh = ChannelLow + 1;
+    GLI_g_BaseChannelForThisBloc[DestTextureBlocID] = ChannelLow;
+    NbTexturesInBloc = 0;
+    for (lTextureCounter = 0; lTextureCounter < 400; lTextureCounter++)
+    {
+        unsigned int Channel = ((unsigned int*)gs_aDEFTableOfTextureMemoryChannels)[lTextureCounter];
+        if (Channel != 0xC0DE0005 && ((int*)gs_aDEFTableOfTextureAlreadyRead)[lTextureCounter] != 0)
+        {
+            if (ChannelLow == Channel || ChannelHigh == Channel)
+                NbTexturesInBloc++;
+        }
+    }
+    if (ChannelLow == 0)
+        NbTexturesInBloc = NbTexturesInBloc + 3 + M2D_fn_iNbTexturesNeededForMenu();
+    GLI_g_NbTexturesAllocatedForThisBloc[DestTextureBlocID] = NbTexturesInBloc;
+    PS2_fn_vEnterGLCriticalSection();
+    PS2glGenTextures(GLI_g_NbTexturesAllocatedForThisBloc[DestTextureBlocID], GLI_g_TextureNames[DestTextureBlocID]);
+    PS2_fn_vLeaveGLCriticalSection();
+    if (GLI_g_CreatingTBF)
+    {
+        GLI_g_TextureMemSpace[DestTextureBlocID] = (int)fn_pvMallocInBinaryPreservingTheCurrentMode(0x400000);
+        GLI_g_CurrentTexture = GLI_g_CurrentTextureBuffer = GLI_g_TextureMemSpace[DestTextureBlocID];
+    }
+    else
+    {
+        GLI_g_CurrentTexture = GLI_g_CurrentTextureBuffer = GLI_g_TextureMemSpace[DestTextureBlocID];
+    }
+    GLI_g_NbTexturesForThisBloc[DestTextureBlocID] = 0;
+    for (lTextureCounter = 0; lTextureCounter < 400; lTextureCounter++)
+    {
+        unsigned int Channel = ((unsigned int*)gs_aDEFTableOfTextureMemoryChannels)[lTextureCounter];
+        if (Channel != 0xC0DE0005 && (ChannelLow == Channel || ChannelHigh == Channel))
+        {
+            p_stTexture = ((GLI_tdstTexture_**)gs_aDEFTableOfTextureAlreadyRead)[lTextureCounter];
+            if (p_stTexture)
+            {
+                if (ChannelLow >= 4)
+                {
+                    unsigned int Transition = (ChannelLow - 4) >> 1;
+                    GLI_g_TransitionTextureInformation[Transition][GLI_g_NbTransitionTextures[Transition]++] = (int)p_stTexture;
+                }
+                PS2_fn_vEnterGLCriticalSection();
+                p_stTexture->p_stSpecParam = (GLI_tdstTexturePS2GL_*)PS2glAllocator64(4);
+                PS2_fn_vLeaveGLCriticalSection();
+                p_stSpecParam = p_stTexture->p_stSpecParam;
+                p_stSpecParam->TextureID = GLI_g_TextureNames[DestTextureBlocID][GLI_g_NbTexturesForThisBloc[DestTextureBlocID]++];
+                for (i = 0; p_stTexture->a255_cFileName[i] != 0; i++)
+                    p_stTexture->a255_cFileName[i] = toupper(p_stTexture->a255_cFileName[i]);
+                GLI_vLoadTextureFile(p_stTexture);
+                p_stTexture->bIsAvailable = ChannelHigh;
+                if (strstr(p_stTexture->a255_cFileName, "_AD"))
+                {
+                    p_stTexture->lTextureCaps |= 0x20;
+                }
+                else if (strstr(p_stTexture->a255_cFileName, "_NZ"))
+                {
+                    p_stTexture->lTextureCaps &= ~8;
+                    p_stTexture->lTextureCaps |= 2;
+                }
+                switch (*(unsigned char*)&GLI_g_ExternalTextureHeader)
+                {
+                case 1:
+                    p_stTexture->lTextureCaps &= ~0xA;
+                    break;
+                case 2:
+                    p_stTexture->lTextureCaps &= ~0x22;
+                    p_stTexture->lTextureCaps |= 8;
+                    break;
+                case 4:
+                    p_stTexture->lTextureCaps &= ~0x28;
+                    p_stTexture->lTextureCaps |= 2;
+                    break;
+                case 8:
+                    p_stTexture->lTextureCaps &= ~0xA;
+                    p_stTexture->lTextureCaps |= 0x20;
+                    break;
+                }
+                p_stTexture->lTextureCaps &= ~4;
+                if (GLI_g_ExternalTextureHeader & 0x100)
+                    p_stTexture->lTextureCaps |= 4;
+                if ((p_stTexture->lTextureCaps & 8) == 8 || (p_stTexture->lTextureCaps & 2) == 2)
+                    GL_iTextureFormat = 0x1908;
+                else
+                    GL_iTextureFormat = 0x1907;
+                g_LevelTextureLoaded++;
+                Flag = GLI_g_GlobalBpp;
+                if (GL_iTextureFormat == 0x1908)
+                    Flag |= 0x10000000;
+                GLI_vRegisterTextureWithFlags(GLI_g_CurrentTexture, p_stSpecParam->TextureID, Flag, p_stTexture);
+            }
+        }
+    }
+    if (ChannelLow == 0)
+        GLI_vLoadRasterFontMaterial();
+    printf("Loaded %d texture in bloc %d\n", GLI_g_NbTexturesForThisBloc[DestTextureBlocID], DestTextureBlocID);
+    printf("Textures Loaded : %d\n", g_LevelTextureLoaded);
+    GLI_vCloseTXCFile();
+}
+
+void GLI_vFreeTextureBloc(unsigned int TextureBlocId)
+{
+    unsigned int Channel;
+    GLI_tdstTexture_* p_stTexture;
+    unsigned int lTextureCounter;
+    int ChannelHigh;
+    int ChannelLow;
+
+    if (GLI_g_NbTexturesAllocatedForThisBloc[TextureBlocId] == 0)
+        return;
+    ChannelLow = GLI_g_BaseChannelForThisBloc[TextureBlocId];
+    ChannelHigh = ChannelLow + 1;
+    if (ChannelLow >= 4)
+    {
+        Channel = (ChannelLow - 4) >> 1;
+        for (lTextureCounter = 0; lTextureCounter < GLI_g_NbTransitionTextures[Channel]; lTextureCounter++)
+        {
+            p_stTexture = (GLI_tdstTexture_*)GLI_g_TransitionTextureInformation[Channel][lTextureCounter];
+            if (p_stTexture)
+            {
+                if (p_stTexture->bIsAvailable && p_stTexture->p_stSpecParam)
+                {
+                    PS2_fn_vEnterGLCriticalSection();
+                    PS2glLiberator(p_stTexture->p_stSpecParam);
+                    PS2_fn_vLeaveGLCriticalSection();
+                }
+                p_stTexture->p_stSpecParam = NULL;
+                p_stTexture->bIsAvailable = 0;
+            }
+        }
+        GLI_g_NbTransitionTextures[Channel] = 0;
+    }
+    else
+    {
+        for (lTextureCounter = 0; lTextureCounter < 400; lTextureCounter++)
+        {
+            if (((int*)gs_aDEFTableOfTextureMemoryChannels)[lTextureCounter] != 0xC0DE0005 && (((int*)gs_aDEFTableOfTextureMemoryChannels)[lTextureCounter] == ChannelLow || ((int*)gs_aDEFTableOfTextureMemoryChannels)[lTextureCounter] == ChannelHigh))
+            {
+                p_stTexture = ((GLI_tdstTexture_**)gs_aDEFTableOfTextureAlreadyRead)[lTextureCounter];
+                if (p_stTexture)
+                {
+                    if (p_stTexture->bIsAvailable && p_stTexture->p_stSpecParam)
+                    {
+                        PS2_fn_vEnterGLCriticalSection();
+                        PS2glLiberator(p_stTexture->p_stSpecParam);
+                        PS2_fn_vLeaveGLCriticalSection();
+                    }
+                    p_stTexture->p_stSpecParam = NULL;
+                    p_stTexture->bIsAvailable = 0;
+                }
+            }
+        }
+    }
+    PS2_fn_vEnterGLCriticalSection();
+    PS2glDeleteTextures(GLI_g_NbTexturesAllocatedForThisBloc[TextureBlocId], GLI_g_TextureNames[TextureBlocId]);
+    PS2_fn_vLeaveGLCriticalSection();
+    GLI_g_NbTexturesAllocatedForThisBloc[TextureBlocId] = 0;
+    if (TextureBlocId == 2 || TextureBlocId == 3)
+        fn_pfnCurrentTransitionDeallocator()((void*)GLI_g_TextureMemSpace[TextureBlocId]);
+    else
+        fn_vFreeInBinaryPreservingTheCurrentMode((void*)GLI_g_TextureMemSpace[TextureBlocId]);
+    GLI_g_TextureMemSpace[TextureBlocId] = 0;
+    if (TextureBlocId == 0 && GLI_g_RasterFont)
+        GLI_vUnLoadRasterFontMaterial();
+}
+
+void ProcessSky(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+int GLI_bLoadSnapShotTexture(char* _pFileName)
+{
+    if (GLI_g_ScreenShotLoadingBuffer == 0) {
+        GLI_g_ScreenShotLoadingBuffer = (int)malloc(81924);
+    }
+    PS2MC_fn_vLoadScreenShot(_pFileName, (char*)GLI_g_ScreenShotLoadingBuffer);
+    return 1;
+}
+
+void GLI_xCreateMaterialPS2GL(GLI_tdstMaterial_** hMaterial)
+{
+    *hMaterial = (GLI_tdstMaterial_*)PS2glAllocator64(sizeof(GLI_tdstMaterial_));
+
+    if (*hMaterial != NULL)
+    {
+        (*hMaterial)->stAmbient.xR = 0.0f;
+        (*hMaterial)->stAmbient.xG = 0.1f;
+        (*hMaterial)->stAmbient.xB = 0.1f;
+
+        (*hMaterial)->stDiffuse.xR = 0.8f;
+        (*hMaterial)->stDiffuse.xG = 0.8f;
+        (*hMaterial)->stDiffuse.xB = 0.8f;
+
+        (*hMaterial)->stColor.xR = 1.0f;
+        (*hMaterial)->stColor.xG = 0.0f;
+        (*hMaterial)->stColor.xB = 1.0f;
+
+        (*hMaterial)->p_stTexture = NULL;
+        (*hMaterial)->xMaterialType = 0xFFFFFFFF;
+        (*hMaterial)->lIncrementIsEnable = 0;
+
+        (*hMaterial)->p_stFistAnimatedTExtureNode = NULL;
+        (*hMaterial)->p_stActualAnimatedTExtureNode = NULL;
+        (*hMaterial)->lNumberOfDisplayNode = 0;
+        (*hMaterial)->xActualDisplayTimeSinceStartOfLastTexture = gs_fCoefOfMultiplicationForAnimatedTexture;
+        (*hMaterial)->lActualRefreshNumber = gs_lActualRefreshNumberForScolledTextures;
+
+        GLI_vUnLockAnimatedTexture(*hMaterial);
+        GLI_Material_fn_vInitMultiTexturePart(*hMaterial);
+    }
+}
+
+#pragma auto_inline on
+void GLI_vFreeTempTexture(GLI_tdstTexture_* p_stTexture)
+{
+    GLI_tdstTexturePS2GL_* p_stSpecParam;
+
+    if (p_stTexture != NULL)
+    {
+        p_stSpecParam = p_stTexture->p_stSpecParam;
+        if (p_stSpecParam != NULL)
+        {
+            PS2_fn_vEnterGLCriticalSection();
+            PS2glDeleteTextures(1, p_stSpecParam);
+            PS2_fn_vLeaveGLCriticalSection();
+            PS2glLiberator(p_stTexture->p_stSpecParam);
+            p_stTexture->p_stSpecParam = NULL;
+        }
+    }
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+void GLI_vFreeTempMaterial(GLI_tdstMaterial_** ppMaterial)
+{
+    if (*ppMaterial)
+    {
+        GLI_tdstMaterial_* p_stMaterial = *ppMaterial;
+        GLI_tdstTexture_* p_stTexture;
+
+        if (p_stMaterial->p_stTexture)
+        {
+            if (p_stMaterial->p_stTexture->p_vBitMap)
+            {
+                PS2glLiberator((void*)p_stMaterial->p_stTexture->p_vBitMap);
+                p_stMaterial->p_stTexture->p_vBitMap = 0;
+            }
+            p_stTexture = p_stMaterial->p_stTexture;
+            GLI_vFreeTempTexture(p_stTexture);
+            if (p_stMaterial->p_stTexture)
+                PS2glLiberator(p_stMaterial->p_stTexture);
+            p_stMaterial->p_stTexture = NULL;
+        }
+        PS2glLiberator(p_stMaterial);
+    }
+    *ppMaterial = NULL;
+}
+#pragma auto_inline reset
+
+void GLI_vUncompressScreenShotIntoMaterial(GLI_tdstMaterial_** ppMaterial)
+{
+    GLI_tdstTexturePS2GL_* p_stSpecParam;
+    GLI_tdstMaterial_* pMaterial;
+    GLI_tdstTexture_* p_stTexture;
+
+    if (*ppMaterial == NULL)
+        GLI_xCreateMaterialPS2GL(ppMaterial);
+    if (*ppMaterial == NULL)
+        return;
+    g_PS2glContext.nTextureEnableBits |= g_PS2glContext.iCurTextureSet == 0 ? 2 : 0x200; g_gsContext.PRMODE.TME = 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    pMaterial = *ppMaterial;
+    if (pMaterial->p_stTexture == NULL)
+    {
+        GLI_vAllocTextureOfMaterial(pMaterial);
+        p_stTexture = pMaterial->p_stTexture;
+        if (p_stTexture == NULL)
+        {
+            GLI_vFreeTempMaterial(ppMaterial);
+            return;
+        }
+        p_stTexture->lHeight = 0x100;
+        p_stTexture->lWidth = 0x100;
+        p_stTexture->lRealHeight = 0x100;
+        p_stTexture->lRealWidth = 0x100;
+        strcpy(p_stTexture->a255_cFileName, "Screenshot");
+        p_stTexture->p_vBitMap = (int)PS2glAllocator64(0x30000);
+        if (p_stTexture->p_vBitMap == 0)
+        {
+            GLI_vFreeTempMaterial(ppMaterial);
+            return;
+        }
+    }
+    p_stTexture = pMaterial->p_stTexture;
+    if (p_stTexture->p_stSpecParam)
+    {
+        PS2glDeleteTextures(1, &p_stTexture->p_stSpecParam);
+        PS2glLiberator(p_stTexture->p_stSpecParam);
+        p_stTexture->p_stSpecParam = NULL;
+    }
+    p_stTexture->p_stSpecParam = (GLI_tdstTexturePS2GL_*)PS2glAllocator64(4);
+    p_stSpecParam = p_stTexture->p_stSpecParam;
+    GLI_vUncompress_256x256_Screenshot((unsigned char*)p_stTexture->p_vBitMap, (unsigned char*)GLI_g_ScreenShotLoadingBuffer);
+    p_stTexture->bIsAvailable = 2;
+    PS2glGenTextures(1, p_stSpecParam);
+    g_PS2glContext.eTexUserMaintainMode = 2;
+    g_PS2glContext.eTexConvMode = 0;
+    PS2glBindTexture(0xDE1, p_stSpecParam->TextureID);
+    PS2glTexImage2D(0xDE1, 0, 0x1907, p_stTexture->lWidth, p_stTexture->lHeight, 0, 0x1907, 0x1401, (void*)p_stTexture->p_vBitMap);
+}
+
+int GLI_iGetOneMenuTextureNames(void)
+{
+    int TexName;
+
+    TexName = GLI_g_TextureNames[0][GLI_g_NbTexturesForThisBloc[0]++];
+    g_PS2glContext.nTextureEnableBits |= g_PS2glContext.iCurTextureSet == 0 ? 2 : 0x200; g_gsContext.PRMODE.TME = 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    PS2glBindTexture(0xDE1, TexName);
     g_PS2glContext.eTexUserMaintainMode = 2;
     g_PS2glContext.eTexConvMode = 3;
     g_PS2glContext.eClutConvMode = 2;
-    if (GLI_g_GlobalBpp == 0x20)
-    {
-        PS2glTexImage2D(0xDE1, 0, uTexFormat, p_stTexture->lWidth, p_stTexture->lHeight, 0, 0x1908, 0x1401, (void*)GLI_g_CurrentTexture);
-        GLI_g_LoadedTexturesNumber++;
-        GLI_g_LoadedTexturesSize += p_stTexture->lWidth * p_stTexture->lHeight * 4;
-        if (uTexFormat == 0x1907)
-            printf("Opaque + de 256 couleurs : %s\n", p_stTexture->a255_cFileName);
-        else
-            printf("Transparente + de 256 couleurs : %s\n", p_stTexture->a255_cFileName);
-    }
-    else if (GLI_g_GlobalBpp == 0x18)
-    {
-        PS2glTexImage2D(0xDE1, 0, uTexFormat, p_stTexture->lWidth, p_stTexture->lHeight, 0, 0x1908, 0x1401, (void*)GLI_g_CurrentTexture);
-        GLI_g_LoadedTexturesNumber++;
-        GLI_g_LoadedTexturesSize += p_stTexture->lWidth * p_stTexture->lHeight * 4;
-        if (uTexFormat == 0x1907)
-            printf("Opaque + de 256 couleurs : %s\n", p_stTexture->a255_cFileName);
-        else
-            printf("Transparente + de 256 couleurs : %s\n", p_stTexture->a255_cFileName);
-    }
-    else if (GLI_g_GlobalBpp == 8)
-    {
-        if ((p_stTexture->lTextureCaps & 4) == 4)
-        {
-            ptr = (unsigned char*)(GLI_g_CurrentTexture + 0x400);
-            PS2glColorTableEXT(0xDE1, 0x8058, 0x100, 0x1908, 0x1401, (void*)GLI_g_CurrentTexture);
-            CurrentLevel = 0;
-            while (tx > 1)
-            {
-                PS2glTexImage2D(0xDE1, CurrentLevel, 0x1900, tx, tx, 0, 0x80E5, 0x1401, ptr);
-                CurrentSize = tx * tx;
-                CurrentLevel++;
-                tx >>= 1;
-                ptr += CurrentSize;
-            }
-            GLI_g_LoadedTexturesNumber++;
-            {
-                float fSize = 1.34f;
-                fSize *= (float)(unsigned int)(p_stTexture->lWidth * p_stTexture->lHeight);
-                GLI_g_LoadedTexturesSize += (((unsigned int)fSize + 15) & ~15) + 0x400;
-            }
-        }
-        else
-        {
-            PS2glColorTableEXT(0xDE1, 0x8058, 0x100, 0x1908, 0x1401, (void*)GLI_g_CurrentTexture);
-            PS2glTexImage2D(0xDE1, 0, 0x1900, tx, ty, 0, 0x80E5, 0x1401, (void*)(GLI_g_CurrentTexture + 0x400));
-            GLI_g_LoadedTexturesNumber++;
-            GLI_g_LoadedTexturesSize += p_stTexture->lWidth * p_stTexture->lHeight + 0x400;
-        }
-    }
-    else
-    {
-        PS2glColorTableEXT(0xDE1, 0x8058, 0x10, 0x1908, 0x1401, (void*)GLI_g_CurrentTexture);
-        PS2glTexImage2D(0xDE1, 0, 0x1900, tx, ty, 0, 0x80E4, 0x1401, (void*)(GLI_g_CurrentTexture + 0x40));
-        GLI_g_LoadedTexturesNumber++;
-        GLI_g_LoadedTexturesSize += ((int)(p_stTexture->lWidth * p_stTexture->lHeight) >> 1) + 0x40;
-    }
+    if (!GLI_g_CurrentTexture)
+        GLI_g_CurrentTexture = GLI_g_TextureMemSpace[0];
+    PS2glColorTableEXT(0xDE1, 0x8058, 0x100, 0x1908, 0x1401, (void*)GLI_g_CurrentTexture);
+    PS2glTexImage2D(0xDE1, 0, 0x1900, 0x200, 0x200, 0, 0x80E5, 0x1401, (void*)(GLI_g_CurrentTexture + 0x400));
     g_PS2glContext.eTexUserMaintainMode = 0;
     g_PS2glContext.eTexConvMode = 0;
+    return TexName;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 558–558 */
-/* addr: 0x002c6ce0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 558
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GLI_DRV_vUnLoadTextures(void)
+void GLI_vClearSendMatStates(void)
 {
-    GLI_vFreeTextureBloc(1);
+    GLI_g_Previous_Material_Was_Opaque = 0;
+    GLI_g_p_stLastTexture = 0;
+    GLI_g_LastCyclingMode = 0xff;
+    GLI_g_LastTextureMode = 0;
+    GLI_g_DontRefreshAnimated = 0;
+    g_TextMatrixIsIdentity = 0;
+    GLI_g_CurrentStage = 0;
 }
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 549–554 */
-/* addr: 0x002c6cf0  size: 112 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 549
- *   +0x0018 -> line 550
- *   +0x0058 -> line 554
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GLI_vUnloadTexturePartial(unsigned char ucChannel) { int i; int channel; int offset = 0;
-    channel = ucChannel; i = 0; do { if ((unsigned char)(channel & 0xFE) == *(int*)((char*)GLI_g_BaseChannelForThisBloc + offset)) { GLI_vFreeTextureBloc(i); } i++; offset += 4; } while (i < 4);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 498–538 */
-/* addr: 0x002c6d60  size: 96 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 498
- *   +0x0008 -> line 502
- *   +0x0014 -> line 508
- *   +0x0020 -> line 512
- *   +0x0028 -> line 517
- *   +0x0034 -> line 518
- *   +0x0040 -> line 520
- *   +0x004c -> line 537
- *   +0x0054 -> line 538
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GLI_vLoadTBF_File(int DestBlocId, int SourceBlocId);
-void GLI_vProcessRegisteredTextures(void);
-
-void GLI_DRV_vDownLoadTextures(void)
-{
-    Bug_Please_ReloadMenu_40 = 0;
-    if (GLI_gs_LoadingFix)
-    {
-        GLI_vLoadTBF_File(0, 0);
-    }
-    else
-    {
-        GLI_vLoadTBF_File(2, 4);
-        GLI_vLoadTBF_File(3, 6);
-        GLI_vLoadTBF_File(1, 2);
-    }
-    GLI_vProcessRegisteredTextures();
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 486–486 */
-/* addr: 0x002c6dc0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 486
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GLI_vLoadTBF_File(int DestBlocId, int SourceBlocId);
-
-void LoadTextureBloc(int DestTextureBlocID, int ChannelId)
-{
-    GLI_vLoadTBF_File(DestTextureBlocID, ChannelId);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 404–476 */
-/* addr: 0x002c6dd0  size: 364 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 404
- *   +0x0004 -> line 411
- *   +0x0008 -> line 404
- *   +0x0018 -> line 411
- *   +0x0048 -> line 414
- *   +0x0060 -> line 415
- *   +0x0068 -> line 417
- *   +0x0080 -> line 418
- *   +0x0088 -> line 422
- *   +0x00ac -> line 434
- *   +0x00c8 -> line 438
- *   +0x00f8 -> line 441
- *   +0x0100 -> line 442
- *   +0x0108 -> line 444
- *   +0x0110 -> line 445
- *   +0x0118 -> line 449
- *   +0x0128 -> line 453
- *   +0x0130 -> line 456
- *   +0x0134 -> line 459
- *   +0x0140 -> line 461
- *   +0x014c -> line 473
- *   +0x0154 -> line 474
- *   +0x0158 -> line 476
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-extern int TBF_pReadFix(void);
-extern int TBF_pReadLevel(char* szLevelName);
-extern int TBF_pReadLevelTRSBloc(char* szLevelName, int SourceBlocId);
-extern void TBF_vCreateFix(void);
-extern void TBF_vCreateLevel(char* szLevelName);
-extern void TBF_vCreateLevelTRSBloc(char* szLevelName, int SourceBlocId);
-extern void TBF_vClose(void);
-
-void GLI_vLoadTBF_File(int DestBlocId, int SourceBlocId)
-{
-    switch (DestBlocId)
-    {
-    case 0:
-        GLI_g_TextureMemSpace[DestBlocId] = TBF_pReadFix();
-        break;
-    case 1:
-        GLI_g_TextureMemSpace[DestBlocId] = TBF_pReadLevel(GLI_g_MapBeingLoaded);
-        break;
-    case 2:
-    case 3:
-        GLI_g_TextureMemSpace[DestBlocId] = TBF_pReadLevelTRSBloc(GLI_g_MapBeingLoaded, SourceBlocId);
-        break;
-    }
-    if (!GLI_g_TextureMemSpace[DestBlocId])
-    {
-        GLI_g_CreatingTBF = 1;
-        switch (DestBlocId)
-        {
-        case 0:
-            TBF_vCreateFix();
-            break;
-        case 1:
-            TBF_vCreateLevel(GLI_g_MapBeingLoaded);
-            break;
-        case 2:
-        case 3:
-            TBF_vCreateLevelTRSBloc(GLI_g_MapBeingLoaded, SourceBlocId);
-            break;
-        }
-    }
-    else
-    {
-        GLI_g_CurrentTBF_Buffer = GLI_g_TextureMemSpace[DestBlocId];
-    }
-    LoadTextureBlocInternal(DestBlocId, SourceBlocId);
-    if (GLI_g_CreatingTBF)
-    {
-        TBF_vClose();
-        GLI_g_CreatingTBF = 0;
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 372–400 */
-/* addr: 0x002c6f40  size: 296 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 372
- *   +0x0014 -> line 378
- *   +0x001c -> line 379
- *   +0x0034 -> line 381
- *   +0x003c -> line 379
- *   +0x0080 -> line 381
- *   +0x0088 -> line 383
- *   +0x008c -> line 384
- *   +0x0090 -> line 383
- *   +0x0094 -> line 384
- *   +0x0098 -> line 383
- *   +0x009c -> line 384
- *   +0x00a8 -> line 387
- *   +0x00b0 -> line 389
- *   +0x00bc -> line 390
- *   +0x00c8 -> line 392
- *   +0x00cc -> line 390
- *   +0x00d4 -> line 391
- *   +0x00dc -> line 392
- *   +0x00e8 -> line 395
- *   +0x00f4 -> line 397
- *   +0x0108 -> line 399
- *   +0x010c -> line 400
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void LS_Destroy(void);
-void PS2glBindTexture(unsigned int target, unsigned int texture);
-
-void GLI_vProcessRegisteredTextures(void)
-{
-    unsigned int i;
-    unsigned int GL_iTextureFormat;
-    GLI_st_RegisteredTexture_* pReg;
-
-    LS_Destroy();
-    g_PS2glContext.nTextureEnableBits |= g_PS2glContext.iCurTextureSet == 0 ? 2 : 0x200; g_gsContext.PRMODE.TME = 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;
-    for (i = 0; i < GLI_g_NbTexturesToRegister; i++)
-    {
-        pReg = &GLI_g_RegisteredTextures[i];
-        if (pReg->Flags & 0x10000000)
-            GL_iTextureFormat = 0x1908;
-        else
-            GL_iTextureFormat = 0x1907;
-        PS2_fn_vEnterGLCriticalSection();
-        PS2glBindTexture(0xDE1, pReg->TextureName);
-        GLI_g_GlobalBpp = pReg->Flags & 0xEFFFFFFF;
-        GLI_g_CurrentTexture = pReg->pTextureData;
-        GLI_v_SendTextureBitmapToPS2GL(pReg->p_stTexture, 0, GL_iTextureFormat);
-        PS2_fn_vLeaveGLCriticalSection();
-    }
-    GLI_g_NbTexturesToRegister = 0;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 284–284 */
-/* addr: 0x002c7070  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 284
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GLI_vSetLoadingFix(int BoolVal)
-{
-    GLI_gs_LoadingFix = BoolVal;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 165–184 */
-/* addr: 0x002c7080  size: 152 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 165
- *   +0x0008 -> line 166
- *   +0x0010 -> line 168
- *   +0x0018 -> line 169
- *   +0x0024 -> line 171
- *   +0x0034 -> line 172
- *   +0x0044 -> line 173
- *   +0x0054 -> line 174
- *   +0x0064 -> line 176
- *   +0x0074 -> line 177
- *   +0x0084 -> line 181
- *   +0x008c -> line 184
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned int GAM_fn_uwGetEngineLoading(void);
-void* HMU_fn_p_vMalloc(unsigned int size, int iExtra);
-void HMU_fn_vSetMemoriesInBinaryMode(void);
-void HMU_fn_vFree(void* p_vPointer, int iTempMalloc);
-int GAM_fn_bIsEngineInFixMode(void);
-void HMU_fn_vSetMemoriesInFixMode(void);
-int GAM_fn_bIsEngineInLevelMode(void);
-void HMU_fn_vSetMemoriesInLevelMode(void);
-int GAM_fn_bIsEngineInTransitionMode(void);
-void GAM_fn_vSetEngineInTransitionMode(void);
-
-#pragma auto_inline on
-void fn_vFreeInBinaryPreservingTheCurrentMode(void* pointer)
-{
-    GAM_fn_uwGetEngineLoading();
-    HMU_fn_vSetMemoriesInBinaryMode();
-    HMU_fn_vFree(&pointer, 0);
-    if (GAM_fn_bIsEngineInFixMode())
-    {
-        HMU_fn_vSetMemoriesInFixMode();
-    }
-    else if (GAM_fn_bIsEngineInLevelMode())
-    {
-        HMU_fn_vSetMemoriesInLevelMode();
-    }
-    else if (GAM_fn_bIsEngineInTransitionMode())
-    {
-        GAM_fn_vSetEngineInTransitionMode();
-    }
-    else
-    {
-        printf("Bad Allocation Mode\n");
-    }
-}
-#pragma auto_inline reset
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 140–162 */
-/* addr: 0x002c7120  size: 156 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 140
- *   +0x000c -> line 143
- *   +0x0014 -> line 144
- *   +0x0020 -> line 147
- *   +0x0030 -> line 148
- *   +0x0040 -> line 149
- *   +0x0050 -> line 150
- *   +0x0060 -> line 152
- *   +0x0070 -> line 153
- *   +0x0080 -> line 157
- *   +0x0088 -> line 161
- *   +0x008c -> line 162
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-#pragma auto_inline on
-void* fn_pvMallocInBinaryPreservingTheCurrentMode(unsigned int size)
-{
-    void* pointer;
-
-    HMU_fn_vSetMemoriesInBinaryMode();
-    pointer = HMU_fn_p_vMalloc(size, 0);
-    if (GAM_fn_bIsEngineInFixMode())
-    {
-        HMU_fn_vSetMemoriesInFixMode();
-    }
-    else if (GAM_fn_bIsEngineInLevelMode())
-    {
-        HMU_fn_vSetMemoriesInLevelMode();
-    }
-    else if (GAM_fn_bIsEngineInTransitionMode())
-    {
-        GAM_fn_vSetEngineInTransitionMode();
-    }
-    else
-    {
-        printf("Bad Allocation Mode\n");
-    }
-    return pointer;
-}
-#pragma auto_inline reset

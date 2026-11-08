@@ -25,64 +25,24 @@ extern void* fn_pvTransitionAllocatorOdd(unsigned int u32Size);
 extern void fn_vTransitionDeallocatorEven(void* pvPointer);
 extern void fn_vTransitionDeallocatorOdd(void* pvPointer);
 
-transition_deallocator_t fn_pfnCurrentTransitionDeallocator(void)
-{
-    int TransitionNumber;
-    TransitionNumber = g_lTransitionBloc;
-    if (g_bDoTransition)
-        TransitionNumber = TransitionNumber == 1 ? 2 : 1;
-    return TransitionNumber == 2 ? fn_vTransitionDeallocatorOdd : fn_vTransitionDeallocatorEven;
-}
-
-transition_allocator_t fn_pfnCurrentTransitionAllocator(void)
-{
-    return g_lTransitionBloc == 2 ? fn_pvTransitionAllocatorOdd : fn_pvTransitionAllocatorEven;
-}
-
-void fn_vResetTransitionAllocatorEven(void)
-{
-    fn_vResetAllocator(g_stTransitionAllocator[1]);
-}
-
-void fn_vTransitionDeallocatorEven(void* pvPointer)
-{
-    fn_vFreeAllocator(g_stTransitionAllocator[1], pvPointer);
-}
-
-void* fn_pvTransitionAllocatorEven(unsigned int u32Size)
-{
-    return fn_pvAllocAllocator(g_stTransitionAllocator[1], u32Size);
-}
-
-void fn_vResetTransitionAllocatorOdd(void)
-{
-    fn_vResetAllocator(g_stTransitionAllocator[0]);
-}
-
-void fn_vTransitionDeallocatorOdd(void* pvPointer)
-{
-    fn_vFreeAllocator(g_stTransitionAllocator[0], pvPointer);
-}
-
-void* fn_pvTransitionAllocatorOdd(unsigned int u32Size)
-{
-    return fn_pvAllocAllocator(g_stTransitionAllocator[0], u32Size);
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+transition_deallocator_t fn_pfnCurrentTransitionDeallocator(void);
+transition_allocator_t fn_pfnCurrentTransitionAllocator(void);
+void fn_vResetTransitionAllocatorEven(void);
+void fn_vTransitionDeallocatorEven(void* pvPointer);
+void* fn_pvTransitionAllocatorEven(unsigned int u32Size);
+void fn_vResetTransitionAllocatorOdd(void);
+void fn_vTransitionDeallocatorOdd(void* pvPointer);
+void* fn_pvTransitionAllocatorOdd(unsigned int u32Size);
+void fn_vInitTransitionAllocPools(unsigned int u32Size);
+void fn_vOneTrameThread(void);
+void fn_vEndTransitionSynchro(void);
+void fn_vHandleMemoryBlockSwitch(anon_enum_0093e9cf eEvent);
 
 extern void* HMU_fn_p_vMalloc(unsigned int ulSize, int lFlags);
 extern void fn_vInitAllocator(int* p_stAllocator, unsigned int u32Size, char* pcBuffer);
 extern void fn_vInitTransitionAllocPools(unsigned int u32Size);
-
-void fn_vInitTransitionAllocPools(unsigned int u32Size)
-{
-    char* pcBuffer;
-
-    pcBuffer = (char*)HMU_fn_p_vMalloc(u32Size, 0);
-    fn_vInitAllocator(g_stTransitionAllocator[0], u32Size, pcBuffer);
-
-    pcBuffer = (char*)HMU_fn_p_vMalloc(u32Size, 0);
-    fn_vInitAllocator(g_stTransitionAllocator[1], u32Size, pcBuffer);
-}
 
 extern void PS2_fn_vWaitTransitionOn(void);
 extern void PS2_fn_vTriggerTransitionOff(void);
@@ -93,6 +53,36 @@ extern void fn_vOneTrame(void);
 extern int printf(const char* format, ...);
 extern unsigned char g_bTransitionIsRunning;
 extern unsigned char g_ucEngineState;
+
+extern unsigned char HMU_fn_ucGetActualNormalMemoryBlockUsed(void);
+extern unsigned char HMU_fn_ucGetActualTempMemoryBlockUsed(void);
+extern void HMU_fn_vSetActualNormalMemoryBlock(unsigned char ucBlock);
+extern void HMU_fn_vSetActualTempMemoryBlock(unsigned char ucBlock);
+extern void fn_vHandleMemoryBlockSwitch(anon_enum_0093e9cf eEvent);
+extern unsigned char ucCurrentNormalMemoryBlockBeforePlayingOneTrame;
+extern unsigned char ucCurrentTempMemoryBlockBeforePlayingOneTrame;
+
+void fn_vHandleMemoryBlockSwitch(anon_enum_0093e9cf eEvent)
+{
+    switch (eEvent)
+    {
+    case 0:
+        ucCurrentNormalMemoryBlockBeforePlayingOneTrame = HMU_fn_ucGetActualNormalMemoryBlockUsed();
+        ucCurrentTempMemoryBlockBeforePlayingOneTrame = HMU_fn_ucGetActualTempMemoryBlockUsed();
+        break;
+    case 1:
+        HMU_fn_vSetActualNormalMemoryBlock(ucCurrentNormalMemoryBlockBeforePlayingOneTrame);
+        HMU_fn_vSetActualTempMemoryBlock(ucCurrentTempMemoryBlockBeforePlayingOneTrame);
+        break;
+    }
+}
+
+void fn_vEndTransitionSynchro(void)
+{
+    g_bLoadInProgress = 0;
+    PS2_fn_vWaitTransitionOff();
+    sceGsSyncPath(0, 0);
+}
 
 void fn_vOneTrameThread(void)
 {
@@ -126,32 +116,57 @@ void fn_vOneTrameThread(void)
     }
 }
 
-void fn_vEndTransitionSynchro(void)
+void fn_vInitTransitionAllocPools(unsigned int u32Size)
 {
-    g_bLoadInProgress = 0;
-    PS2_fn_vWaitTransitionOff();
-    sceGsSyncPath(0, 0);
+    char* pcBuffer;
+
+    pcBuffer = (char*)HMU_fn_p_vMalloc(u32Size, 0);
+    fn_vInitAllocator(g_stTransitionAllocator[0], u32Size, pcBuffer);
+
+    pcBuffer = (char*)HMU_fn_p_vMalloc(u32Size, 0);
+    fn_vInitAllocator(g_stTransitionAllocator[1], u32Size, pcBuffer);
 }
 
-extern unsigned char HMU_fn_ucGetActualNormalMemoryBlockUsed(void);
-extern unsigned char HMU_fn_ucGetActualTempMemoryBlockUsed(void);
-extern void HMU_fn_vSetActualNormalMemoryBlock(unsigned char ucBlock);
-extern void HMU_fn_vSetActualTempMemoryBlock(unsigned char ucBlock);
-extern void fn_vHandleMemoryBlockSwitch(anon_enum_0093e9cf eEvent);
-extern unsigned char ucCurrentNormalMemoryBlockBeforePlayingOneTrame;
-extern unsigned char ucCurrentTempMemoryBlockBeforePlayingOneTrame;
-
-void fn_vHandleMemoryBlockSwitch(anon_enum_0093e9cf eEvent)
+void* fn_pvTransitionAllocatorOdd(unsigned int u32Size)
 {
-    switch (eEvent)
-    {
-    case 0:
-        ucCurrentNormalMemoryBlockBeforePlayingOneTrame = HMU_fn_ucGetActualNormalMemoryBlockUsed();
-        ucCurrentTempMemoryBlockBeforePlayingOneTrame = HMU_fn_ucGetActualTempMemoryBlockUsed();
-        break;
-    case 1:
-        HMU_fn_vSetActualNormalMemoryBlock(ucCurrentNormalMemoryBlockBeforePlayingOneTrame);
-        HMU_fn_vSetActualTempMemoryBlock(ucCurrentTempMemoryBlockBeforePlayingOneTrame);
-        break;
-    }
+    return fn_pvAllocAllocator(g_stTransitionAllocator[0], u32Size);
+}
+
+void fn_vTransitionDeallocatorOdd(void* pvPointer)
+{
+    fn_vFreeAllocator(g_stTransitionAllocator[0], pvPointer);
+}
+
+void fn_vResetTransitionAllocatorOdd(void)
+{
+    fn_vResetAllocator(g_stTransitionAllocator[0]);
+}
+
+void* fn_pvTransitionAllocatorEven(unsigned int u32Size)
+{
+    return fn_pvAllocAllocator(g_stTransitionAllocator[1], u32Size);
+}
+
+void fn_vTransitionDeallocatorEven(void* pvPointer)
+{
+    fn_vFreeAllocator(g_stTransitionAllocator[1], pvPointer);
+}
+
+void fn_vResetTransitionAllocatorEven(void)
+{
+    fn_vResetAllocator(g_stTransitionAllocator[1]);
+}
+
+transition_allocator_t fn_pfnCurrentTransitionAllocator(void)
+{
+    return g_lTransitionBloc == 2 ? fn_pvTransitionAllocatorOdd : fn_pvTransitionAllocatorEven;
+}
+
+transition_deallocator_t fn_pfnCurrentTransitionDeallocator(void)
+{
+    int TransitionNumber;
+    TransitionNumber = g_lTransitionBloc;
+    if (g_bDoTransition)
+        TransitionNumber = TransitionNumber == 1 ? 2 : 1;
+    return TransitionNumber == 2 ? fn_vTransitionDeallocatorOdd : fn_vTransitionDeallocatorEven;
 }

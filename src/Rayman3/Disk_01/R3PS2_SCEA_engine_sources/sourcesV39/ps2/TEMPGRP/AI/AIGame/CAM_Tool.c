@@ -3175,25 +3175,29 @@ void CAM_fn_vAverageSpeed(tdstCineinfo_* _hCineinfo, float xTimeWindow, MTH3D_td
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vForceBestPosition(HIE_tdstSuperObject_* _hCamera)
-{
-    CAM_tdstUpdateCamera_ stStruct;
 
-    CAM_fn_vSetCineinfoWorkFromCurrent(_hCamera->hLinkedObject.p_stCharacter->h_Cineinfo);
-    CAM_fn_vInitCameraStructure(_hCamera, &stStruct);
-    cRefAxisIsAlreadyComputed = (stStruct.hCineinfoWork->uwIAFlags & 0x4000) ? 1 : 0;
-    cNoDynChangeTheta = (stStruct.hCineinfoWork->uwIAFlags & 0x20) ? 1 : 0;
-    cCanTestStatic = 1;
-    CAM_fn_vComputeReferencePoint(&stStruct);
-    CAM_fn_vComputeTarget(&stStruct);
-    CAM_fn_vComputeRealWantedPos(&stStruct);
-    CAM_fn_vComputeMovePosWithDynTheta(&stStruct);
-    if (stStruct.hCineinfoCurrent->hSuperObjectTargeted != NULL)
-    {
-        CAM_fn_vForceFailureVisibility(&stStruct);
-        CAM_fn_vComputeFailureVisibility(&stStruct);
-    }
-}
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void CAM_fn_vForceBestPosition(HIE_tdstSuperObject_* _hCamera);
+void CAM_fn_vSendParametersToParsing(CAM_tdstUpdateCamera_* _p_stStruct);
+void CAM_fn_vInitCameraStructure(HIE_tdstSuperObject_* _hSuperObjPerso, CAM_tdstUpdateCamera_* _p_stStruct);
+void Cam_fn_vComputeMovingOnRail(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stWantedPosition, MTH3D_tdstVector_* _p_stWpPosition, MTH3D_tdstVector_* _p_stPreviousWpPosition, float _xDistWanted);
+float Cam_fn_xComputeProjectionRail(MTH3D_tdstVector_* _p_stTargetedPersoPos, MTH3D_tdstVector_* _p_stWpPosition, MTH3D_tdstVector_* _p_stDestWpPosition);
+void CAM_fn_vGetPersoSightAxis(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stAxis, MTH3D_tdstVector_* _p_stAxisZ);
+float CAM_fn_xSetAngleInInterval02Pi(float _xAngle);
+float CAM_fn_xSetAngleInIntervalPiPi(float _xAngle);
+void CAM_fn_vComputeAnglesBetweenTwoVectors(MTH3D_tdstVector_* _p_stUnusedVector, MTH3D_tdstVector_* _p_stOrgVector, MTH3D_tdstVector_* _p_stDestVector, float* _p_xHorizontalAngle, float* _p_xVerticalAngle, MTH3D_tdstVector_* _p_stRefAxisZ);
+unsigned char CAM_fn_bEqualVectorWithEpsilon(MTH3D_tdstVector_* _p_stVector1, MTH3D_tdstVector_* _p_stVector2, float _xEpsilon);
+float CAM_fn_xComputeRotation(MTH3D_tdstVector_* _p_stDestVector, MTH3D_tdstVector_* _p_stSrcVector, MTH3D_tdstVector_* _p_stAxisVector);
+void CAM_fn_vComputeProjection(MTH3D_tdstVector_* _p_sDestVector, MTH3D_tdstVector_* _p_sSrcVector, MTH3D_tdstVector_* _p_sNormVector);
+HIE_tdstSuperObject_* CAM_fn_hGetFather(HIE_tdstSuperObject_* _h_SuperObjPerso);
+unsigned char CAM_fn_bPersoOnFace(HIE_tdstSuperObject_* _h_SuperObjPerso, MTH3D_tdstVector_* _p_stNormal);
+unsigned char CAM_fn_bPersoIsTurning(HIE_tdstSuperObject_* _h_SuperObjPerso, float* _p_xAngularSpeed);
+unsigned char CAM_fn_bPersoIsMoving(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stMove);
+void CAM_fn_vForceCameraTgt(HIE_tdstSuperObject_* _hSuperObjCamera, MTH3D_tdstVector_* _p_stPosition, MTH3D_tdstVector_* _p_stRefAxisZ);
+void CAM_fn_vForceCameraPos(HIE_tdstSuperObject_* _hSuperObjCamera, MTH3D_tdstVector_* _p_stPosition);
+void CAM_fn_vSetResetInternalFlag(tdstCineinfo_* _hCineInfo, unsigned short* _p_uwCurrentValue, unsigned short* _p_uwVisibilityValue, unsigned short* _p_uwWorkValue, int _lTypeOfChange, int _lChangingMode, unsigned short _uwFlag);
+void CAM_memcpy(void* dest, void* src, int size);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 847–966 */
 /* addr: 0x00209aa0  size: 812 bytes */
@@ -3265,13 +3269,6 @@ void CAM_fn_vForceBestPosition(HIE_tdstSuperObject_* _hCamera)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vSendParametersToParsing(CAM_tdstUpdateCamera_* _p_stStruct)
-{
-    tdstDynam_* h_Dynam;
-    DNM_stDynamics* p_stDynamics;
-    stMACDPID* p_stMACDPID;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 761–828 */
 /* addr: 0x00209dd0  size: 704 bytes */
@@ -3306,28 +3303,6 @@ void CAM_fn_vSendParametersToParsing(CAM_tdstUpdateCamera_* _p_stStruct)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vInitCameraStructure(HIE_tdstSuperObject_* _hSuperObjPerso, CAM_tdstUpdateCamera_* _p_stStruct)
-{
-    DNM_stDynamics* p_stDynamics;
-    MAT_tdstTransformation_* pMatrix;
-    MTH3D_tdstVector_ stTempVector;
-
-    memset(_p_stStruct, 0, 0xD0);
-    p_stDynamics = fn_p_stDynamGetDynamics(_hSuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam);
-    _p_stStruct->p_stDynamics = p_stDynamics;
-    _p_stStruct->p_stReport = _p_stStruct->p_stDynamics->m_tdstDynamicsBaseBlock.m_pstReport;
-    _p_stStruct->hCineinfo = _hSuperObjPerso->hLinkedObject.p_stCharacter->h_Cineinfo;
-    _p_stStruct->hCineinfoWork = _hSuperObjPerso->hLinkedObject.p_stCharacter->h_Cineinfo->hWork;
-    _p_stStruct->hCineinfoCurrent = _hSuperObjPerso->hLinkedObject.p_stCharacter->h_Cineinfo->hCurrent;
-    _p_stStruct->hCineinfoInit = _hSuperObjPerso->hLinkedObject.p_stCharacter->h_Cineinfo->hInit;
-    _p_stStruct->hCineinfoVisibility = _hSuperObjPerso->hLinkedObject.p_stCharacter->h_Cineinfo->hVisibility;
-    _p_stStruct->hSuperObjCamera = _hSuperObjPerso;
-    pMatrix = _hSuperObjPerso->hGlobalMatrix; *(int*)&_p_stStruct->stCurrentCameraPos.xX = *(int*)&pMatrix->stTransformMatrix.stCol_3.xX; *(int*)&_p_stStruct->stCurrentCameraPos.xY = *(int*)&pMatrix->stTransformMatrix.stCol_3.xY; *(int*)&_p_stStruct->stCurrentCameraPos.xZ = *(int*)&pMatrix->stTransformMatrix.stCol_3.xZ;
-    if (_p_stStruct->hCineinfoCurrent->hSuperObjectTargeted)
-    {
-        CAM_fn_vAverageSpeed(_p_stStruct->hCineinfo, CAM_g_stCameraConstants.xAverageForComputeLinearSpeed, &stTempVector);
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 643–745 */
 /* addr: 0x0020a090  size: 1096 bytes */
@@ -3397,16 +3372,6 @@ void CAM_fn_vInitCameraStructure(HIE_tdstSuperObject_* _hSuperObjPerso, CAM_tdst
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Cam_fn_vComputeMovingOnRail(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stWantedPosition, MTH3D_tdstVector_* _p_stWpPosition, MTH3D_tdstVector_* _p_stPreviousWpPosition, float _xDistWanted)
-{
-    float xNorm;
-    char cCameraIsOnWp;
-    float xSqrNorm;
-    float xFactor;
-    MTH3D_tdstVector_ stWpDestination;
-    MTH3D_tdstVector_ stRailAxis;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 598–628 */
 /* addr: 0x0020a4e0  size: 312 bytes */
@@ -3434,32 +3399,6 @@ void Cam_fn_vComputeMovingOnRail(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstV
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-float Cam_fn_xComputeProjectionRail(MTH3D_tdstVector_* _p_stTargetedPersoPos, MTH3D_tdstVector_* _p_stWpPosition, MTH3D_tdstVector_* _p_stDestWpPosition)
-{
-    float xFactor;
-    float xAx, xAy, xAz, xBx, xBy, xBz, xNorm2, xD1, xD2, xX, xY, xZ, xSqr;
-
-    xAx = _p_stTargetedPersoPos->xX - _p_stWpPosition->xX; xAy = _p_stTargetedPersoPos->xY - _p_stWpPosition->xY; xAz = _p_stTargetedPersoPos->xZ - _p_stWpPosition->xZ;
-    xBx = _p_stDestWpPosition->xX - _p_stWpPosition->xX; xBy = _p_stDestWpPosition->xY - _p_stWpPosition->xY; xBz = _p_stDestWpPosition->xZ - _p_stWpPosition->xZ;
-
-    MTH_SQR3_TO(xNorm2, xBx, xBy, xBz);
-    if (xNorm2 == 0.0f)
-    {
-        return 3.4028220466166163e+38f;
-    }
-    xFactor = (xBx * xAx + xBy * xAy + xBz * xAz) / xNorm2;
-
-    if (xFactor < 0.0f)
-    {
-        xX = _p_stWpPosition->xX - _p_stTargetedPersoPos->xX; xY = _p_stWpPosition->xY - _p_stTargetedPersoPos->xY; xZ = _p_stWpPosition->xZ - _p_stTargetedPersoPos->xZ; MTH_SQR3_TO(xSqr, xX, xY, xZ); asm { sqrt.s xD1, xSqr }
-        xX = _p_stDestWpPosition->xX - _p_stTargetedPersoPos->xX; xY = _p_stDestWpPosition->xY - _p_stTargetedPersoPos->xY; xZ = _p_stDestWpPosition->xZ - _p_stTargetedPersoPos->xZ; MTH_SQR3_TO(xSqr, xX, xY, xZ); asm { sqrt.s xD2, xSqr }
-
-        if (xD1 <= xD2) return xD1; else return xD2;
-    }
-
-    xZ = xFactor * xBz + _p_stWpPosition->xZ - _p_stTargetedPersoPos->xZ; xY = xFactor * xBy + _p_stWpPosition->xY - _p_stTargetedPersoPos->xY; xX = xFactor * xBx + _p_stWpPosition->xX - _p_stTargetedPersoPos->xX; MTH_SQR3_TO(xSqr, xX, xY, xZ); asm { sqrt.s xD1, xSqr }
-    return xD1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 537–573 */
 /* addr: 0x0020a620  size: 256 bytes */
@@ -3479,29 +3418,6 @@ float Cam_fn_xComputeProjectionRail(MTH3D_tdstVector_* _p_stTargetedPersoPos, MT
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vGetPersoSightAxis(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stAxis, MTH3D_tdstVector_* _p_stAxisZ)
-{
-    CAMUV3 stFirstComplementaryAxis;
-    CAMUV3 stSecondComplementaryAxis;
-    CAMUV3 stTmpVector1;
-    CAMUV3 stTmpVector2;
-    unsigned char ucChannel;
-    HIE_tdstSuperObject_* hPerso;
-
-    hPerso = _p_stStruct->hCineinfoWork->hSuperObjectTargeted;
-    fn_vGetPersoSightAxisSystem(_p_stStruct->hCineinfo, _p_stAxis, &stFirstComplementaryAxis.stVector, &stSecondComplementaryAxis.stVector);
-    ucChannel = (unsigned char)_p_stStruct->hCineinfoWork->cChannel;
-    if (ucChannel != 255)
-    {
-        tdstAChannel_* p_stChannels = hPerso->hLinkedObject.p_stCharacter->h_3dData->hArrayOfChannels; if (p_stChannels) hPerso = p_stChannels[(unsigned char)_p_stStruct->hCineinfoWork->cChannel].hSupObject; else hPerso = NULL;
-    }
-    MAT_fn_vGetRotationVectors(hPerso->hGlobalMatrix, &stTmpVector1.stVector, _p_stAxis, &stTmpVector2.stVector);
-    if (_p_stAxisZ != NULL)
-    {
-        *(int*)&_p_stAxisZ->xX = stTmpVector2.aiWords[0]; *(int*)&_p_stAxisZ->xY = stTmpVector2.aiWords[1]; *(int*)&_p_stAxisZ->xZ = stTmpVector2.aiWords[2];
-    }
-    _p_stAxis->xX = -_p_stAxis->xX; _p_stAxis->xY = -_p_stAxis->xY; _p_stAxis->xZ = -_p_stAxis->xZ;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 492–498 */
 /* addr: 0x0020a720  size: 88 bytes */
@@ -3514,16 +3430,6 @@ void CAM_fn_vGetPersoSightAxis(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVec
  * compare a candidate object's line table as an extra checkpoint.
  */
 #pragma auto_inline on
-float CAM_fn_xSetAngleInInterval02Pi(float _xAngle)
-{
-    if (_xAngle < 0.0f)
-        return _xAngle + 6.2831855f;
-
-    if (_xAngle >= 6.2831855f)
-        _xAngle -= 6.2831855f;
-
-    return _xAngle;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 477–483 */
 /* addr: 0x0020a780  size: 96 bytes */
@@ -3536,20 +3442,6 @@ float CAM_fn_xSetAngleInInterval02Pi(float _xAngle)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-float CAM_fn_xSetAngleInIntervalPiPi(float _xAngle)
-{
-    /* The debug record lists no locals; holding pi in one keeps retail's neg.s of the loaded
-       constant for -pi instead of a second folded constant (probably a macro in the original). */
-    float xPi = 3.1415927f;
-
-    if (_xAngle > xPi)
-        return _xAngle - 6.2831855f;
-
-    if (_xAngle <= -xPi)
-        _xAngle = 6.2831855f + _xAngle;
-
-    return _xAngle;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 463–468 */
 /* addr: 0x0020a7e0  size: 400 bytes */
@@ -3562,15 +3454,6 @@ float CAM_fn_xSetAngleInIntervalPiPi(float _xAngle)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vComputeAnglesBetweenTwoVectors(MTH3D_tdstVector_* _p_stUnusedVector, MTH3D_tdstVector_* _p_stOrgVector, MTH3D_tdstVector_* _p_stDestVector, float* _p_xHorizontalAngle, float* _p_xVerticalAngle, MTH3D_tdstVector_* _p_stRefAxisZ)
-{
-    float xPi = 3.1415927f;
-    float xValue;
-    float* pVert = _p_xVerticalAngle;
-    *_p_xHorizontalAngle = CAM_fn_xComputeHorizontalAngle(_p_stOrgVector, _p_stDestVector, _p_stRefAxisZ);
-    *pVert = CAM_fn_xComputeVerticalAngle(_p_stOrgVector, _p_stDestVector, _p_stRefAxisZ);
-    xValue = *_p_xVerticalAngle; if (MTH_xAbs(xValue) > 3.1415927f / 2.0f) { if (xValue > 0.0f) *_p_xVerticalAngle = xPi - xValue; else *_p_xVerticalAngle = -xPi - xValue; } *_p_xHorizontalAngle = CAM_fn_xSetAngleInInterval02Pi(*_p_xHorizontalAngle); *_p_xVerticalAngle = CAM_fn_xSetAngleInInterval02Pi(*_p_xVerticalAngle);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 409–416 */
 /* addr: 0x0020a970  size: 80 bytes */
@@ -3582,15 +3465,6 @@ void CAM_fn_vComputeAnglesBetweenTwoVectors(MTH3D_tdstVector_* _p_stUnusedVector
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char CAM_fn_bEqualVectorWithEpsilon(MTH3D_tdstVector_* _p_stVector1, MTH3D_tdstVector_* _p_stVector2, float _xEpsilon)
-{
-    float xDx, xDy, xDz, xSqrNorm;
-    xDx = _p_stVector1->xX - _p_stVector2->xX; xDy = _p_stVector1->xY - _p_stVector2->xY; xDz = _p_stVector1->xZ - _p_stVector2->xZ;
-    MTH_SQR3_TO(xSqrNorm, xDx, xDy, xDz);
-
-
-    if (xSqrNorm > _xEpsilon * _xEpsilon) return 0; return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 360–389 */
 /* addr: 0x0020a9c0  size: 668 bytes */
@@ -3614,14 +3488,6 @@ unsigned char CAM_fn_bEqualVectorWithEpsilon(MTH3D_tdstVector_* _p_stVector1, MT
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-float CAM_fn_xComputeRotation(MTH3D_tdstVector_* _p_stDestVector, MTH3D_tdstVector_* _p_stSrcVector, MTH3D_tdstVector_* _p_stAxisVector)
-{
-    float xNorm;
-    MTH3D_tdstVector_ VectTmp;
-    float xDenom;
-    float xCos;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 338–347 */
 /* addr: 0x0020ac60  size: 136 bytes */
@@ -3634,22 +3500,6 @@ float CAM_fn_xComputeRotation(MTH3D_tdstVector_* _p_stDestVector, MTH3D_tdstVect
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vComputeProjection(MTH3D_tdstVector_* _p_sDestVector, MTH3D_tdstVector_* _p_sSrcVector, MTH3D_tdstVector_* _p_sNormVector)
-{
-    float xScalar;
-    float xNx, xNy, xNz;
-
-    xScalar = MTH_xDotProduct3(_p_sSrcVector->xX, _p_sNormVector->xX, _p_sSrcVector->xY, _p_sNormVector->xY, _p_sSrcVector->xZ, _p_sNormVector->xZ);
-    if (xScalar != 0.0f)
-    {
-        xNx = _p_sNormVector->xX; xNy = _p_sNormVector->xY; xNz = _p_sNormVector->xZ; _p_sDestVector->xX = _p_sSrcVector->xX - xScalar * xNx; _p_sDestVector->xY = _p_sSrcVector->xY - xScalar * xNy; _p_sDestVector->xZ = _p_sSrcVector->xZ - xScalar * xNz;
-    }
-    else
-    {
-        /* Not original source, needs cleaning up: retail copies the vector through one integer register (lw/sw); a struct assignment uses FP loads. */
-        *(int*)&_p_sDestVector->xX = *(int*)&_p_sSrcVector->xX; *(int*)&_p_sDestVector->xY = *(int*)&_p_sSrcVector->xY; *(int*)&_p_sDestVector->xZ = *(int*)&_p_sSrcVector->xZ;
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 301–319 */
 /* addr: 0x0020acf0  size: 120 bytes */
@@ -3669,24 +3519,6 @@ void CAM_fn_vComputeProjection(MTH3D_tdstVector_* _p_sDestVector, MTH3D_tdstVect
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-HIE_tdstSuperObject_* CAM_fn_hGetFather(HIE_tdstSuperObject_* _h_SuperObjPerso)
-{
-    DNM_stDynamics* p_stDynamics;
-    tdstDynam_* h_Dynam;
-
-    if (_h_SuperObjPerso == NULL)
-        return NULL;
-    h_Dynam = _h_SuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;
-    if (h_Dynam == NULL)
-        return NULL;
-    p_stDynamics = fn_p_stDynamGetDynamics(h_Dynam);
-    if (p_stDynamics == NULL)
-        return NULL;
-
-    if (!((p_stDynamics->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0)) return NULL;
-
-    return p_stDynamics->m_tdstDynamicsComplexBlock.m_hPlatform;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 267–293 */
 /* addr: 0x0020ad70  size: 148 bytes */
@@ -3710,28 +3542,6 @@ HIE_tdstSuperObject_* CAM_fn_hGetFather(HIE_tdstSuperObject_* _h_SuperObjPerso)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char CAM_fn_bPersoOnFace(HIE_tdstSuperObject_* _h_SuperObjPerso, MTH3D_tdstVector_* _p_stNormal)
-{
-    DNM_stReport* param0;
-    DNM_stDynamics* p_stDynamics;
-    tdstDynam_* h_Dynam;
-
-    h_Dynam = _h_SuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;
-    if (h_Dynam == NULL)
-        return 0;
-    p_stDynamics = fn_p_stDynamGetDynamics(h_Dynam);
-    if (p_stDynamics == NULL)
-        return 0;
-    param0 = p_stDynamics->m_tdstDynamicsBaseBlock.m_pstReport;
-    if (param0 == NULL)
-        return 0;
-
-    if (!(param0->m_ulCurrSurfaceState & 1))
-        return 0;
-
-    *(int*)&_p_stNormal->xX = *(int*)&param0->m_stGround.m_stNorm.xX; *(int*)&_p_stNormal->xY = *(int*)&param0->m_stGround.m_stNorm.xY; *(int*)&_p_stNormal->xZ = *(int*)&param0->m_stGround.m_stNorm.xZ;
-    return 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 228–259 */
 /* addr: 0x0020ae10  size: 160 bytes */
@@ -3758,37 +3568,6 @@ unsigned char CAM_fn_bPersoOnFace(HIE_tdstSuperObject_* _h_SuperObjPerso, MTH3D_
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char CAM_fn_bPersoIsTurning(HIE_tdstSuperObject_* _h_SuperObjPerso, float* _p_xAngularSpeed)
-{
-    float xAngle;
-    DNM_stReport* p_stReport;
-    DNM_stDynamics* p_stDynamics;
-    tdstDynam_* h_Dynam;
-
-    if (_p_xAngularSpeed)
-        *_p_xAngularSpeed = 0.0f;
-
-    h_Dynam = _h_SuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;
-    if (h_Dynam == NULL)
-        return 0;
-    p_stDynamics = fn_p_stDynamGetDynamics(h_Dynam);
-    if (p_stDynamics == NULL)
-        return 0;
-    p_stReport = p_stDynamics->m_tdstDynamicsBaseBlock.m_pstReport;
-    if (p_stReport == NULL)
-        return 0;
-
-    xAngle = p_stReport->m_stAbsoluteCurrSpeed.m_stAngular.m_xAngle;
-
-    if (xAngle > CAM_g_stCameraConstants.xMinAngularSpeedTgtPerso)
-    {
-        if (_p_xAngularSpeed)
-            *_p_xAngularSpeed = xAngle;
-        return 1;
-    }
-
-    return 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 201–220 */
 /* addr: 0x0020aeb0  size: 176 bytes */
@@ -3807,30 +3586,6 @@ unsigned char CAM_fn_bPersoIsTurning(HIE_tdstSuperObject_* _h_SuperObjPerso, flo
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char CAM_fn_bPersoIsMoving(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stMove)
-{
-    /* Not original source, needs cleaning up: the word view of stMove keeps
-     * retail's lw/sw copy of the vector. */
-    union { MTH3D_tdstVector_ v; int i[3]; } stMove;
-    float xNorm, xX, xY, xZ;
-
-    CAM_fn_vAverageSpeed(_p_stStruct->hCineinfo, CAM_g_stCameraConstants.xAverageForComputeLinearSpeed, &stMove.v);
-    xX = stMove.v.xX; xY = stMove.v.xY; xZ = stMove.v.xZ; MTH_SQR3_TO(xNorm, xX, xY, xZ); asm { sqrt.s xNorm, xNorm } if (xNorm > CAM_g_stCameraConstants.xMinLinearSpeedTgtPerso)
-    {
-        if (_p_stMove)
-        {
-            *(int*)&_p_stMove->xX = stMove.i[0]; *(int*)&_p_stMove->xY = stMove.i[1]; *(int*)&_p_stMove->xZ = stMove.i[2];
-        }
-        return 1;
-    }
-
-    if (_p_stMove)
-    {
-        *(int*)&_p_stMove->xX = 0; *(int*)&_p_stMove->xY = 0; *(int*)&_p_stMove->xZ = 0;
-    }
-
-    return 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 142–193 */
 /* addr: 0x0020af60  size: 268 bytes */
@@ -3853,28 +3608,6 @@ unsigned char CAM_fn_bPersoIsMoving(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_td
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vForceCameraTgt(HIE_tdstSuperObject_* _hSuperObjCamera, MTH3D_tdstVector_* _p_stPosition, MTH3D_tdstVector_* _p_stRefAxisZ)
-{
-    CAMUV3 stX;
-    CAMUV3 stY;
-    CAMUV3 stZ;
-    CAMUV3 stCameraPosition;
-    DNM_stParsingDatas* p_stParsingDatas;
-    DNM_stReport* p_stReport;
-    tdstDynam_* h_Dynam;
-    MAT_tdstTransformation_* hMatrix;
-
-    h_Dynam = _hSuperObjCamera->hLinkedObject.p_stCharacter->h_Dynam;
-    p_stReport = fn_pstGetDNMReport(_hSuperObjCamera);
-    p_stParsingDatas = fn_p_stDynamGetParsingDatas(h_Dynam);
-    hMatrix = _hSuperObjCamera->hGlobalMatrix; stCameraPosition.aiWords[0] = ((int*)&hMatrix->stTransformMatrix.stCol_3)[0]; stCameraPosition.aiWords[1] = ((int*)&hMatrix->stTransformMatrix.stCol_3)[1]; stCameraPosition.aiWords[2] = ((int*)&hMatrix->stTransformMatrix.stCol_3)[2];
-    stZ.aiWords[0] = ((int*)_p_stRefAxisZ)[0]; stZ.aiWords[1] = ((int*)_p_stRefAxisZ)[1]; stZ.aiWords[2] = ((int*)_p_stRefAxisZ)[2];
-    CAM_fn_vComputeCameraSystemAxis(fn_p_stDynamGetDynamics(h_Dynam), _hSuperObjCamera, &stCameraPosition.stVector, _p_stPosition, &stX.stVector, &stY.stVector, &stZ.stVector);
-    MAT_fn_vSetRotationVectors(_hSuperObjCamera->hLocalMatrix, &stX.stVector, &stY.stVector, &stZ.stVector);
-    MAT_fn_vSetRotationVectors(_hSuperObjCamera->hGlobalMatrix, &stX.stVector, &stY.stVector, &stZ.stVector);
-    *(int*)&p_stParsingDatas->stVector.xX = *(int*)&_p_stPosition->xX; *(int*)&p_stParsingDatas->stVector.xY = *(int*)&_p_stPosition->xY; *(int*)&p_stParsingDatas->stVector.xZ = *(int*)&_p_stPosition->xZ;
-    p_stReport->m_stAbsolutePrevPosition.m_stLinear.xX = 0.0f; p_stReport->m_stAbsolutePrevPosition.m_stLinear.xY = 0.0f; p_stReport->m_stAbsolutePrevPosition.m_stLinear.xZ = 0.0f;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 106–129 */
 /* addr: 0x0020b070  size: 200 bytes */
@@ -3906,23 +3639,6 @@ inline void CAM_fn_vSetTranslationInline(MAT_tdstTransformation_* hMatrix, float
     hMatrix->stTransformMatrix.stCol_3.xW = 1.0f;
 }
 
-void CAM_fn_vForceCameraPos(HIE_tdstSuperObject_* _hSuperObjCamera, MTH3D_tdstVector_* _p_stPosition)
-{
-    DNM_stReport* p_stReport;
-
-    p_stReport = fn_pstGetDNMReport(_hSuperObjCamera);
-
-    CAM_fn_vSetTranslationInline(_hSuperObjCamera->hGlobalMatrix, (float*)_p_stPosition);
-    CAM_fn_vSetTranslationInline(_hSuperObjCamera->hLocalMatrix, (float*)_p_stPosition);
-
-    p_stReport->m_stAbsolutePrevSpeed.m_stLinear.xX = 0.0f; p_stReport->m_stAbsolutePrevSpeed.m_stLinear.xY = 0.0f; p_stReport->m_stAbsolutePrevSpeed.m_stLinear.xZ = 0.0f;
-
-    if (!fn_bIsTransitionInProgress())
-    {
-        fn_vSectInfoInitForSingleCharacter(_hSuperObjCamera, _p_stPosition);
-    }
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 74–98 */
 /* addr: 0x0020b140  size: 224 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3947,6 +3663,51 @@ void CAM_fn_vForceCameraPos(HIE_tdstSuperObject_* _hSuperObjCamera, MTH3D_tdstVe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 47–57 */
+/* addr: 0x0020b220  size: 96 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 47
+ *   +0x000c -> line 49
+ *   +0x0010 -> line 50
+ *   +0x0014 -> line 51
+ *   +0x0018 -> line 49
+ *   +0x0024 -> line 51
+ *   +0x0030 -> line 52
+ *   +0x0038 -> line 54
+ *   +0x003c -> line 55
+ *   +0x0040 -> line 54
+ *   +0x004c -> line 56
+ *   +0x0058 -> line 57
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+#pragma auto_inline reset
+#pragma auto_inline on
+void CAM_memcpy(void* dest, void* src, int size)
+{
+    int lsize;
+    int* pdest;
+    int* psrc;
+
+    lsize = size;
+    pdest = (int*)dest;
+    psrc = (int*)src;
+    while (lsize >= 4)
+    {
+        *pdest++ = *psrc++;
+        lsize -= 4;
+    }
+    while (lsize)
+    {
+        *(char*)pdest++ = *(char*)psrc++;
+        lsize--;
+    }
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
 void CAM_fn_vSetResetInternalFlag(tdstCineinfo_* _hCineInfo, unsigned short* _p_uwCurrentValue, unsigned short* _p_uwVisibilityValue, unsigned short* _p_uwWorkValue, int _lTypeOfChange, int _lChangingMode, unsigned short _uwFlag)
 {
     if (_lTypeOfChange == 1)
@@ -3973,42 +3734,351 @@ void CAM_fn_vSetResetInternalFlag(tdstCineinfo_* _hCineInfo, unsigned short* _p_
         }
     }
 }
+#pragma auto_inline reset
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 47–57 */
-/* addr: 0x0020b220  size: 96 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 47
- *   +0x000c -> line 49
- *   +0x0010 -> line 50
- *   +0x0014 -> line 51
- *   +0x0018 -> line 49
- *   +0x0024 -> line 51
- *   +0x0030 -> line 52
- *   +0x0038 -> line 54
- *   +0x003c -> line 55
- *   +0x0040 -> line 54
- *   +0x004c -> line 56
- *   +0x0058 -> line 57
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void CAM_memcpy(void* dest, void* src, int size)
+#pragma auto_inline on
+void CAM_fn_vForceCameraPos(HIE_tdstSuperObject_* _hSuperObjCamera, MTH3D_tdstVector_* _p_stPosition)
 {
-    int lsize;
-    int* pdest;
-    int* psrc;
+    DNM_stReport* p_stReport;
 
-    lsize = size;
-    pdest = (int*)dest;
-    psrc = (int*)src;
-    while (lsize >= 4)
+    p_stReport = fn_pstGetDNMReport(_hSuperObjCamera);
+
+    CAM_fn_vSetTranslationInline(_hSuperObjCamera->hGlobalMatrix, (float*)_p_stPosition);
+    CAM_fn_vSetTranslationInline(_hSuperObjCamera->hLocalMatrix, (float*)_p_stPosition);
+
+    p_stReport->m_stAbsolutePrevSpeed.m_stLinear.xX = 0.0f; p_stReport->m_stAbsolutePrevSpeed.m_stLinear.xY = 0.0f; p_stReport->m_stAbsolutePrevSpeed.m_stLinear.xZ = 0.0f;
+
+    if (!fn_bIsTransitionInProgress())
     {
-        *pdest++ = *psrc++;
-        lsize -= 4;
+        fn_vSectInfoInitForSingleCharacter(_hSuperObjCamera, _p_stPosition);
     }
-    while (lsize)
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+void CAM_fn_vForceCameraTgt(HIE_tdstSuperObject_* _hSuperObjCamera, MTH3D_tdstVector_* _p_stPosition, MTH3D_tdstVector_* _p_stRefAxisZ)
+{
+    CAMUV3 stX;
+    CAMUV3 stY;
+    CAMUV3 stZ;
+    CAMUV3 stCameraPosition;
+    DNM_stParsingDatas* p_stParsingDatas;
+    DNM_stReport* p_stReport;
+    tdstDynam_* h_Dynam;
+    MAT_tdstTransformation_* hMatrix;
+
+    h_Dynam = _hSuperObjCamera->hLinkedObject.p_stCharacter->h_Dynam;
+    p_stReport = fn_pstGetDNMReport(_hSuperObjCamera);
+    p_stParsingDatas = fn_p_stDynamGetParsingDatas(h_Dynam);
+    hMatrix = _hSuperObjCamera->hGlobalMatrix; stCameraPosition.aiWords[0] = ((int*)&hMatrix->stTransformMatrix.stCol_3)[0]; stCameraPosition.aiWords[1] = ((int*)&hMatrix->stTransformMatrix.stCol_3)[1]; stCameraPosition.aiWords[2] = ((int*)&hMatrix->stTransformMatrix.stCol_3)[2];
+    stZ.aiWords[0] = ((int*)_p_stRefAxisZ)[0]; stZ.aiWords[1] = ((int*)_p_stRefAxisZ)[1]; stZ.aiWords[2] = ((int*)_p_stRefAxisZ)[2];
+    CAM_fn_vComputeCameraSystemAxis(fn_p_stDynamGetDynamics(h_Dynam), _hSuperObjCamera, &stCameraPosition.stVector, _p_stPosition, &stX.stVector, &stY.stVector, &stZ.stVector);
+    MAT_fn_vSetRotationVectors(_hSuperObjCamera->hLocalMatrix, &stX.stVector, &stY.stVector, &stZ.stVector);
+    MAT_fn_vSetRotationVectors(_hSuperObjCamera->hGlobalMatrix, &stX.stVector, &stY.stVector, &stZ.stVector);
+    *(int*)&p_stParsingDatas->stVector.xX = *(int*)&_p_stPosition->xX; *(int*)&p_stParsingDatas->stVector.xY = *(int*)&_p_stPosition->xY; *(int*)&p_stParsingDatas->stVector.xZ = *(int*)&_p_stPosition->xZ;
+    p_stReport->m_stAbsolutePrevPosition.m_stLinear.xX = 0.0f; p_stReport->m_stAbsolutePrevPosition.m_stLinear.xY = 0.0f; p_stReport->m_stAbsolutePrevPosition.m_stLinear.xZ = 0.0f;
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+unsigned char CAM_fn_bPersoIsMoving(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stMove)
+{
+    /* Not original source, needs cleaning up: the word view of stMove keeps
+     * retail's lw/sw copy of the vector. */
+    union { MTH3D_tdstVector_ v; int i[3]; } stMove;
+    float xNorm, xX, xY, xZ;
+
+    CAM_fn_vAverageSpeed(_p_stStruct->hCineinfo, CAM_g_stCameraConstants.xAverageForComputeLinearSpeed, &stMove.v);
+    xX = stMove.v.xX; xY = stMove.v.xY; xZ = stMove.v.xZ; MTH_SQR3_TO(xNorm, xX, xY, xZ); asm { sqrt.s xNorm, xNorm } if (xNorm > CAM_g_stCameraConstants.xMinLinearSpeedTgtPerso)
     {
-        *(char*)pdest++ = *(char*)psrc++;
-        lsize--;
+        if (_p_stMove)
+        {
+            *(int*)&_p_stMove->xX = stMove.i[0]; *(int*)&_p_stMove->xY = stMove.i[1]; *(int*)&_p_stMove->xZ = stMove.i[2];
+        }
+        return 1;
+    }
+
+    if (_p_stMove)
+    {
+        *(int*)&_p_stMove->xX = 0; *(int*)&_p_stMove->xY = 0; *(int*)&_p_stMove->xZ = 0;
+    }
+
+    return 0;
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+unsigned char CAM_fn_bPersoIsTurning(HIE_tdstSuperObject_* _h_SuperObjPerso, float* _p_xAngularSpeed)
+{
+    float xAngle;
+    DNM_stReport* p_stReport;
+    DNM_stDynamics* p_stDynamics;
+    tdstDynam_* h_Dynam;
+
+    if (_p_xAngularSpeed)
+        *_p_xAngularSpeed = 0.0f;
+
+    h_Dynam = _h_SuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;
+    if (h_Dynam == NULL)
+        return 0;
+    p_stDynamics = fn_p_stDynamGetDynamics(h_Dynam);
+    if (p_stDynamics == NULL)
+        return 0;
+    p_stReport = p_stDynamics->m_tdstDynamicsBaseBlock.m_pstReport;
+    if (p_stReport == NULL)
+        return 0;
+
+    xAngle = p_stReport->m_stAbsoluteCurrSpeed.m_stAngular.m_xAngle;
+
+    if (xAngle > CAM_g_stCameraConstants.xMinAngularSpeedTgtPerso)
+    {
+        if (_p_xAngularSpeed)
+            *_p_xAngularSpeed = xAngle;
+        return 1;
+    }
+
+    return 0;
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+unsigned char CAM_fn_bPersoOnFace(HIE_tdstSuperObject_* _h_SuperObjPerso, MTH3D_tdstVector_* _p_stNormal)
+{
+    DNM_stReport* param0;
+    DNM_stDynamics* p_stDynamics;
+    tdstDynam_* h_Dynam;
+
+    h_Dynam = _h_SuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;
+    if (h_Dynam == NULL)
+        return 0;
+    p_stDynamics = fn_p_stDynamGetDynamics(h_Dynam);
+    if (p_stDynamics == NULL)
+        return 0;
+    param0 = p_stDynamics->m_tdstDynamicsBaseBlock.m_pstReport;
+    if (param0 == NULL)
+        return 0;
+
+    if (!(param0->m_ulCurrSurfaceState & 1))
+        return 0;
+
+    *(int*)&_p_stNormal->xX = *(int*)&param0->m_stGround.m_stNorm.xX; *(int*)&_p_stNormal->xY = *(int*)&param0->m_stGround.m_stNorm.xY; *(int*)&_p_stNormal->xZ = *(int*)&param0->m_stGround.m_stNorm.xZ;
+    return 1;
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+HIE_tdstSuperObject_* CAM_fn_hGetFather(HIE_tdstSuperObject_* _h_SuperObjPerso)
+{
+    DNM_stDynamics* p_stDynamics;
+    tdstDynam_* h_Dynam;
+
+    if (_h_SuperObjPerso == NULL)
+        return NULL;
+    h_Dynam = _h_SuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;
+    if (h_Dynam == NULL)
+        return NULL;
+    p_stDynamics = fn_p_stDynamGetDynamics(h_Dynam);
+    if (p_stDynamics == NULL)
+        return NULL;
+
+    if (!((p_stDynamics->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0)) return NULL;
+
+    return p_stDynamics->m_tdstDynamicsComplexBlock.m_hPlatform;
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+void CAM_fn_vComputeProjection(MTH3D_tdstVector_* _p_sDestVector, MTH3D_tdstVector_* _p_sSrcVector, MTH3D_tdstVector_* _p_sNormVector)
+{
+    float xScalar;
+    float xNx, xNy, xNz;
+
+    xScalar = MTH_xDotProduct3(_p_sSrcVector->xX, _p_sNormVector->xX, _p_sSrcVector->xY, _p_sNormVector->xY, _p_sSrcVector->xZ, _p_sNormVector->xZ);
+    if (xScalar != 0.0f)
+    {
+        xNx = _p_sNormVector->xX; xNy = _p_sNormVector->xY; xNz = _p_sNormVector->xZ; _p_sDestVector->xX = _p_sSrcVector->xX - xScalar * xNx; _p_sDestVector->xY = _p_sSrcVector->xY - xScalar * xNy; _p_sDestVector->xZ = _p_sSrcVector->xZ - xScalar * xNz;
+    }
+    else
+    {
+        /* Not original source, needs cleaning up: retail copies the vector through one integer register (lw/sw); a struct assignment uses FP loads. */
+        *(int*)&_p_sDestVector->xX = *(int*)&_p_sSrcVector->xX; *(int*)&_p_sDestVector->xY = *(int*)&_p_sSrcVector->xY; *(int*)&_p_sDestVector->xZ = *(int*)&_p_sSrcVector->xZ;
+    }
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+float CAM_fn_xComputeRotation(MTH3D_tdstVector_* _p_stDestVector, MTH3D_tdstVector_* _p_stSrcVector, MTH3D_tdstVector_* _p_stAxisVector)
+{
+    float xNorm;
+    MTH3D_tdstVector_ VectTmp;
+    float xDenom;
+    float xCos;
+    /* TODO: decompile from asm/... */
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+unsigned char CAM_fn_bEqualVectorWithEpsilon(MTH3D_tdstVector_* _p_stVector1, MTH3D_tdstVector_* _p_stVector2, float _xEpsilon)
+{
+    float xDx, xDy, xDz, xSqrNorm;
+    xDx = _p_stVector1->xX - _p_stVector2->xX; xDy = _p_stVector1->xY - _p_stVector2->xY; xDz = _p_stVector1->xZ - _p_stVector2->xZ;
+    MTH_SQR3_TO(xSqrNorm, xDx, xDy, xDz);
+
+    if (xSqrNorm > _xEpsilon * _xEpsilon) return 0; return 1;
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+void CAM_fn_vComputeAnglesBetweenTwoVectors(MTH3D_tdstVector_* _p_stUnusedVector, MTH3D_tdstVector_* _p_stOrgVector, MTH3D_tdstVector_* _p_stDestVector, float* _p_xHorizontalAngle, float* _p_xVerticalAngle, MTH3D_tdstVector_* _p_stRefAxisZ)
+{
+    float xPi = 3.1415927f;
+    float xValue;
+    float* pVert = _p_xVerticalAngle;
+    *_p_xHorizontalAngle = CAM_fn_xComputeHorizontalAngle(_p_stOrgVector, _p_stDestVector, _p_stRefAxisZ);
+    *pVert = CAM_fn_xComputeVerticalAngle(_p_stOrgVector, _p_stDestVector, _p_stRefAxisZ);
+    xValue = *_p_xVerticalAngle; if (MTH_xAbs(xValue) > 3.1415927f / 2.0f) { if (xValue > 0.0f) *_p_xVerticalAngle = xPi - xValue; else *_p_xVerticalAngle = -xPi - xValue; } *_p_xHorizontalAngle = CAM_fn_xSetAngleInInterval02Pi(*_p_xHorizontalAngle); *_p_xVerticalAngle = CAM_fn_xSetAngleInInterval02Pi(*_p_xVerticalAngle);
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+float CAM_fn_xSetAngleInIntervalPiPi(float _xAngle)
+{
+    /* The debug record lists no locals; holding pi in one keeps retail's neg.s of the loaded
+       constant for -pi instead of a second folded constant (probably a macro in the original). */
+    float xPi = 3.1415927f;
+
+    if (_xAngle > xPi)
+        return _xAngle - 6.2831855f;
+
+    if (_xAngle <= -xPi)
+        _xAngle = 6.2831855f + _xAngle;
+
+    return _xAngle;
+}
+#pragma auto_inline reset
+
+#pragma auto_inline on
+float CAM_fn_xSetAngleInInterval02Pi(float _xAngle)
+{
+    if (_xAngle < 0.0f)
+        return _xAngle + 6.2831855f;
+
+    if (_xAngle >= 6.2831855f)
+        _xAngle -= 6.2831855f;
+
+    return _xAngle;
+}
+#pragma auto_inline reset
+
+void CAM_fn_vGetPersoSightAxis(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stAxis, MTH3D_tdstVector_* _p_stAxisZ)
+{
+    CAMUV3 stFirstComplementaryAxis;
+    CAMUV3 stSecondComplementaryAxis;
+    CAMUV3 stTmpVector1;
+    CAMUV3 stTmpVector2;
+    unsigned char ucChannel;
+    HIE_tdstSuperObject_* hPerso;
+
+    hPerso = _p_stStruct->hCineinfoWork->hSuperObjectTargeted;
+    fn_vGetPersoSightAxisSystem(_p_stStruct->hCineinfo, _p_stAxis, &stFirstComplementaryAxis.stVector, &stSecondComplementaryAxis.stVector);
+    ucChannel = (unsigned char)_p_stStruct->hCineinfoWork->cChannel;
+    if (ucChannel != 255)
+    {
+        tdstAChannel_* p_stChannels = hPerso->hLinkedObject.p_stCharacter->h_3dData->hArrayOfChannels; if (p_stChannels) hPerso = p_stChannels[(unsigned char)_p_stStruct->hCineinfoWork->cChannel].hSupObject; else hPerso = NULL;
+    }
+    MAT_fn_vGetRotationVectors(hPerso->hGlobalMatrix, &stTmpVector1.stVector, _p_stAxis, &stTmpVector2.stVector);
+    if (_p_stAxisZ != NULL)
+    {
+        *(int*)&_p_stAxisZ->xX = stTmpVector2.aiWords[0]; *(int*)&_p_stAxisZ->xY = stTmpVector2.aiWords[1]; *(int*)&_p_stAxisZ->xZ = stTmpVector2.aiWords[2];
+    }
+    _p_stAxis->xX = -_p_stAxis->xX; _p_stAxis->xY = -_p_stAxis->xY; _p_stAxis->xZ = -_p_stAxis->xZ;
+}
+
+float Cam_fn_xComputeProjectionRail(MTH3D_tdstVector_* _p_stTargetedPersoPos, MTH3D_tdstVector_* _p_stWpPosition, MTH3D_tdstVector_* _p_stDestWpPosition)
+{
+    float xFactor;
+    float xAx, xAy, xAz, xBx, xBy, xBz, xNorm2, xD1, xD2, xX, xY, xZ, xSqr;
+
+    xAx = _p_stTargetedPersoPos->xX - _p_stWpPosition->xX; xAy = _p_stTargetedPersoPos->xY - _p_stWpPosition->xY; xAz = _p_stTargetedPersoPos->xZ - _p_stWpPosition->xZ;
+    xBx = _p_stDestWpPosition->xX - _p_stWpPosition->xX; xBy = _p_stDestWpPosition->xY - _p_stWpPosition->xY; xBz = _p_stDestWpPosition->xZ - _p_stWpPosition->xZ;
+
+    MTH_SQR3_TO(xNorm2, xBx, xBy, xBz);
+    if (xNorm2 == 0.0f)
+    {
+        return 3.4028220466166163e+38f;
+    }
+    xFactor = (xBx * xAx + xBy * xAy + xBz * xAz) / xNorm2;
+
+    if (xFactor < 0.0f)
+    {
+        xX = _p_stWpPosition->xX - _p_stTargetedPersoPos->xX; xY = _p_stWpPosition->xY - _p_stTargetedPersoPos->xY; xZ = _p_stWpPosition->xZ - _p_stTargetedPersoPos->xZ; MTH_SQR3_TO(xSqr, xX, xY, xZ); asm { sqrt.s xD1, xSqr }
+        xX = _p_stDestWpPosition->xX - _p_stTargetedPersoPos->xX; xY = _p_stDestWpPosition->xY - _p_stTargetedPersoPos->xY; xZ = _p_stDestWpPosition->xZ - _p_stTargetedPersoPos->xZ; MTH_SQR3_TO(xSqr, xX, xY, xZ); asm { sqrt.s xD2, xSqr }
+
+        if (xD1 <= xD2) return xD1; else return xD2;
+    }
+
+    xZ = xFactor * xBz + _p_stWpPosition->xZ - _p_stTargetedPersoPos->xZ; xY = xFactor * xBy + _p_stWpPosition->xY - _p_stTargetedPersoPos->xY; xX = xFactor * xBx + _p_stWpPosition->xX - _p_stTargetedPersoPos->xX; MTH_SQR3_TO(xSqr, xX, xY, xZ); asm { sqrt.s xD1, xSqr }
+    return xD1;
+}
+
+void Cam_fn_vComputeMovingOnRail(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stWantedPosition, MTH3D_tdstVector_* _p_stWpPosition, MTH3D_tdstVector_* _p_stPreviousWpPosition, float _xDistWanted)
+{
+    float xNorm;
+    char cCameraIsOnWp;
+    float xSqrNorm;
+    float xFactor;
+    MTH3D_tdstVector_ stWpDestination;
+    MTH3D_tdstVector_ stRailAxis;
+    /* TODO: decompile from asm/... */
+}
+
+void CAM_fn_vInitCameraStructure(HIE_tdstSuperObject_* _hSuperObjPerso, CAM_tdstUpdateCamera_* _p_stStruct)
+{
+    DNM_stDynamics* p_stDynamics;
+    MAT_tdstTransformation_* pMatrix;
+    MTH3D_tdstVector_ stTempVector;
+
+    memset(_p_stStruct, 0, 0xD0);
+    p_stDynamics = fn_p_stDynamGetDynamics(_hSuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam);
+    _p_stStruct->p_stDynamics = p_stDynamics;
+    _p_stStruct->p_stReport = _p_stStruct->p_stDynamics->m_tdstDynamicsBaseBlock.m_pstReport;
+    _p_stStruct->hCineinfo = _hSuperObjPerso->hLinkedObject.p_stCharacter->h_Cineinfo;
+    _p_stStruct->hCineinfoWork = _hSuperObjPerso->hLinkedObject.p_stCharacter->h_Cineinfo->hWork;
+    _p_stStruct->hCineinfoCurrent = _hSuperObjPerso->hLinkedObject.p_stCharacter->h_Cineinfo->hCurrent;
+    _p_stStruct->hCineinfoInit = _hSuperObjPerso->hLinkedObject.p_stCharacter->h_Cineinfo->hInit;
+    _p_stStruct->hCineinfoVisibility = _hSuperObjPerso->hLinkedObject.p_stCharacter->h_Cineinfo->hVisibility;
+    _p_stStruct->hSuperObjCamera = _hSuperObjPerso;
+    pMatrix = _hSuperObjPerso->hGlobalMatrix; *(int*)&_p_stStruct->stCurrentCameraPos.xX = *(int*)&pMatrix->stTransformMatrix.stCol_3.xX; *(int*)&_p_stStruct->stCurrentCameraPos.xY = *(int*)&pMatrix->stTransformMatrix.stCol_3.xY; *(int*)&_p_stStruct->stCurrentCameraPos.xZ = *(int*)&pMatrix->stTransformMatrix.stCol_3.xZ;
+    if (_p_stStruct->hCineinfoCurrent->hSuperObjectTargeted)
+    {
+        CAM_fn_vAverageSpeed(_p_stStruct->hCineinfo, CAM_g_stCameraConstants.xAverageForComputeLinearSpeed, &stTempVector);
+    }
+}
+
+void CAM_fn_vSendParametersToParsing(CAM_tdstUpdateCamera_* _p_stStruct)
+{
+    tdstDynam_* h_Dynam;
+    DNM_stDynamics* p_stDynamics;
+    stMACDPID* p_stMACDPID;
+    /* TODO: decompile from asm/... */
+}
+
+void CAM_fn_vForceBestPosition(HIE_tdstSuperObject_* _hCamera)
+{
+    CAM_tdstUpdateCamera_ stStruct;
+
+    CAM_fn_vSetCineinfoWorkFromCurrent(_hCamera->hLinkedObject.p_stCharacter->h_Cineinfo);
+    CAM_fn_vInitCameraStructure(_hCamera, &stStruct);
+    cRefAxisIsAlreadyComputed = (stStruct.hCineinfoWork->uwIAFlags & 0x4000) ? 1 : 0;
+    cNoDynChangeTheta = (stStruct.hCineinfoWork->uwIAFlags & 0x20) ? 1 : 0;
+    cCanTestStatic = 1;
+    CAM_fn_vComputeReferencePoint(&stStruct);
+    CAM_fn_vComputeTarget(&stStruct);
+    CAM_fn_vComputeRealWantedPos(&stStruct);
+    CAM_fn_vComputeMovePosWithDynTheta(&stStruct);
+    if (stStruct.hCineinfoCurrent->hSuperObjectTargeted != NULL)
+    {
+        CAM_fn_vForceFailureVisibility(&stStruct);
+        CAM_fn_vComputeFailureVisibility(&stStruct);
     }
 }

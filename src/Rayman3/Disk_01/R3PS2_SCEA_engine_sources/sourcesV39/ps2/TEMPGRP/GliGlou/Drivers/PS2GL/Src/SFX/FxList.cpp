@@ -68,25 +68,68 @@ inline C_BaseFx::~C_BaseFx()
 {
 }
 
-C_FireFx::~C_FireFx()
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+
+#pragma auto_inline on
+
+#pragma auto_inline reset
+
+C_FxList::C_FxList(void)
 {
-    if (m_pData)
-    {
-        ((void (*)(void*))PS2glLiberator)(m_pData);
-        m_pData = 0;
-    }
+    pFirst = 0;
 }
 
-C_BaseFx* C_FxList::SearchElement(void* pSearchKey)
+C_FxList::~C_FxList()
+{
+    DeleteAll();
+}
+
+#pragma auto_inline on
+void C_FxList::DeleteAll(void)
 {
     tdstBaseFxListElement_* p;
+    tdstBaseFxListElement_* pNext;
 
     p = pFirst;
-    while (p && (p->pFx->m_pSearchKey != (int)pSearchKey))
-        p = p->pNext;
-    if (p && (p->pFx->m_pSearchKey == (int)pSearchKey))
-        return p->pFx;
-    return NULL;
+    while (p)
+    {
+        pNext = p->pNext;
+        delete p->pFx;
+        ((void (*)(void*))PS2glLiberator)(p);
+        p = pNext;
+    }
+    pFirst = NULL;
+}
+#pragma auto_inline reset
+
+void C_FxList::DeleteAllNoFree(void)
+{
+    tdstBaseFxListElement_* p;
+    tdstBaseFxListElement_* pNext;
+
+    p = pFirst;
+    while (p)
+    {
+        pNext = p->pNext;
+        ((void (*)(void*))PS2glLiberator)(p);
+        p = pNext;
+    }
+    pFirst = NULL;
+}
+
+void C_FxList::DeleteAllSDLs(void)
+{
+    tdstBaseFxListElement_* p;
+    tdstBaseFxListElement_* pNext;
+
+    p = pFirst;
+    while (p)
+    {
+        pNext = p->pNext;
+        p->pFx->DeleteSDLs();
+        p = pNext;
+    }
 }
 
 void C_FxList::vAddElement(C_BaseFx* pElement)
@@ -108,59 +151,23 @@ void C_FxList::vAddElement(C_BaseFx* pElement)
     p->pNext = pNew;
 }
 
-void C_FxList::DeleteAllSDLs(void)
+C_BaseFx* C_FxList::SearchElement(void* pSearchKey)
 {
     tdstBaseFxListElement_* p;
-    tdstBaseFxListElement_* pNext;
 
     p = pFirst;
-    while (p)
+    while (p && (p->pFx->m_pSearchKey != (int)pSearchKey))
+        p = p->pNext;
+    if (p && (p->pFx->m_pSearchKey == (int)pSearchKey))
+        return p->pFx;
+    return NULL;
+}
+
+C_FireFx::~C_FireFx()
+{
+    if (m_pData)
     {
-        pNext = p->pNext;
-        p->pFx->DeleteSDLs();
-        p = pNext;
+        ((void (*)(void*))PS2glLiberator)(m_pData);
+        m_pData = 0;
     }
-}
-
-void C_FxList::DeleteAllNoFree(void)
-{
-    tdstBaseFxListElement_* p;
-    tdstBaseFxListElement_* pNext;
-
-    p = pFirst;
-    while (p)
-    {
-        pNext = p->pNext;
-        ((void (*)(void*))PS2glLiberator)(p);
-        p = pNext;
-    }
-    pFirst = NULL;
-}
-
-#pragma auto_inline on
-void C_FxList::DeleteAll(void)
-{
-    tdstBaseFxListElement_* p;
-    tdstBaseFxListElement_* pNext;
-
-    p = pFirst;
-    while (p)
-    {
-        pNext = p->pNext;
-        delete p->pFx;
-        ((void (*)(void*))PS2glLiberator)(p);
-        p = pNext;
-    }
-    pFirst = NULL;
-}
-#pragma auto_inline reset
-
-C_FxList::~C_FxList()
-{
-    DeleteAll();
-}
-
-C_FxList::C_FxList(void)
-{
-    pFirst = 0;
 }

@@ -97,13 +97,23 @@ extern void Erm_fn_v_UpdateLastError(unsigned short uwStartOfWarningsId, unsigne
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char MEC_fn_bWallNormal(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stNormal)
-{
-    if (p_stNormal->xZ > -p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope) { if (p_stNormal->xZ < p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope) {
-        return 1;
-    } }
-    return 0;
-}
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+unsigned char MEC_fn_bWallNormal(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stNormal);
+void Mmg_fn_vEnableAllocationError(void);
+void Mmg_fn_vDisableAllocationError(void);
+void Mmg_fn_v_InitMmg(unsigned char ucModuleId, unsigned char ucMaxBlocksNb);
+void Mmg_fn_vFirstInitMmgModule(unsigned char ucMaxNbChannel);
+void Mmg_fn_v_SetModeAlloc(unsigned char ucModuleId, unsigned char ucNewMode, unsigned char ucChannel);
+void Mmg_fn_vWhereIs(void* p_vPtr, unsigned short* p_uwModuleBlockId, void** pp_vBeginAdr);
+void fn_vGenFree(void* p_vMemBlock, unsigned char ucChannel);
+void fn_p_vGenAlloc(unsigned int ulSize, unsigned char ucChannel);
+void fn_vStaFree(void* p_vMemBlock, unsigned char ucChannel);
+void* fn_p_vStaAlloc(unsigned int ulSize, unsigned char ucChannel);
+unsigned long long* fn_p_vDynAlloc(unsigned int ulSize);
+void Mmg_fn_vDeleteBlock(unsigned char ucBlockId, unsigned char ucMode, tdstBlockInfoPriv_* p_stMyBlocksInfo);
+void Mmg_fn_vInitSpecificBlock(unsigned char _ucBlockId, tdstBlockInfoPriv_* _p_stMyBlocksInfo, unsigned int _ulSize, unsigned char _ucAlignment, unsigned char _ucMode);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 5152–5153 */
 /* addr: 0x00314000  size: 12 bytes */
@@ -113,10 +123,6 @@ unsigned char MEC_fn_bWallNormal(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_*
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Mmg_fn_vEnableAllocationError(void)
-{
-    Mmg_g_bAllocationError = 1;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 5148–5148 */
 /* addr: 0x00314010  size: 8 bytes */
@@ -125,10 +131,6 @@ void Mmg_fn_vEnableAllocationError(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Mmg_fn_vDisableAllocationError(void)
-{
-    Mmg_g_bAllocationError = 0;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 4624–4708 */
 /* addr: 0x00314020  size: 156 bytes */
@@ -146,18 +148,6 @@ void Mmg_fn_vDisableAllocationError(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Mmg_fn_v_InitMmg(unsigned char ucModuleId, unsigned char ucMaxBlocksNb)
-{
-    unsigned char ucI;
-    tdstBlockInfoPriv_* p_stMyBlockInfo;
-    if (ucMaxBlocksNb > 0) {
-        g_a_p_stMmgModuleBlocksInfo[ucModuleId] = malloc(ucMaxBlocksNb * sizeof(tdstBlockInfoPriv_));
-        for (p_stMyBlockInfo = (tdstBlockInfoPriv_*)g_a_p_stMmgModuleBlocksInfo[ucModuleId], ucI = 0; ucI < ucMaxBlocksNb; ucI++, p_stMyBlockInfo++) {
-            p_stMyBlockInfo->p_cBeginBlock = -1;
-        }
-        g_a_ucBlocksNbInModule[ucModuleId] = ucMaxBlocksNb;
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 4511–4587 */
 /* addr: 0x003140c0  size: 216 bytes */
@@ -183,18 +173,6 @@ void Mmg_fn_v_InitMmg(unsigned char ucModuleId, unsigned char ucMaxBlocksNb)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Mmg_fn_vFirstInitMmgModule(unsigned char ucMaxNbChannel)
-{
-    unsigned char ucI;
-    g_d_stCurrentModeInfo = malloc(ucMaxNbChannel * sizeof(tdstCurrentModeInfo_));
-    g_stGeneralChannelInfo.d_stTabChannelInfo = (tdstChannelInfo_*)malloc(ucMaxNbChannel * sizeof(tdstChannelInfo_));
-    g_stGeneralChannelInfo.ucMAxNbChannel = ucMaxNbChannel;
-    g_stGeneralChannelInfo.ucNbchannelUsed = 1;
-    for (ucI = 0; ucI < 255; ucI++) {
-        g_a_p_stMmgModuleBlocksInfo[ucI] = 0;
-    }
-    PS2_fn_vCreateCriticalSection(&g_MmgCriticalSection);
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 4480–4497 */
 /* addr: 0x003141a0  size: 104 bytes */
@@ -209,18 +187,6 @@ void Mmg_fn_vFirstInitMmgModule(unsigned char ucMaxNbChannel)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Mmg_fn_v_SetModeAlloc(unsigned char ucModuleId, unsigned char ucNewMode, unsigned char ucChannel)
-{
-    /* Retail addresses the mode-info array as (base + field offset) + index,
-     * so the member offset is never folded into the store.  The shifted cast
-     * reproduces that; it is not the original source spelling. */
-    ((tdstCurrentModeInfo_*)(&((tdstCurrentModeInfo_*)g_d_stCurrentModeInfo)->ucMode))[ucChannel].ucModuleId = ucNewMode;
-    ((tdstCurrentModeInfo_*)g_d_stCurrentModeInfo)[ucChannel].ucModuleId = ucModuleId;
-    if ((unsigned char)ucNewMode != 0xFF) {
-        *(int*)&((tdstCurrentModeInfo_*)(&((tdstCurrentModeInfo_*)g_d_stCurrentModeInfo)->p_vTdstBlockInfoOrTdstDynInfo))[ucChannel] =
-            g_a_p_stMmgModuleBlocksInfo[ucModuleId] + ucNewMode * 16;
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 4221–4264 */
 /* addr: 0x00314210  size: 384 bytes */
@@ -256,56 +222,6 @@ void Mmg_fn_v_SetModeAlloc(unsigned char ucModuleId, unsigned char ucNewMode, un
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Mmg_fn_vWhereIs(void* p_vPtr, unsigned short* p_uwModuleBlockId, void** pp_vBeginAdr)
-{
-    tdstBlockInfoPriv_* a_stMyBlockInfo;
-    unsigned char ucBlockId;
-    unsigned char ucModuleId;
-    static unsigned char lastModuleId;
-    static unsigned char lastBlockId;
-    /* Retail keeps the last searched module/block pair in file storage; the
-     * range test is spelled as a failure-first chain because MWCC 3.0.1 drops
-     * an unsigned "<=" that is combined with a ">=" in an && chain. */
-    if (g_a_p_stMmgModuleBlocksInfo[lastModuleId] != 0) {
-        if (lastBlockId < g_a_ucBlocksNbInModule[lastModuleId]) {
-            a_stMyBlockInfo = (tdstBlockInfoPriv_*)g_a_p_stMmgModuleBlocksInfo[lastModuleId];
-            a_stMyBlockInfo += lastBlockId;
-            if (a_stMyBlockInfo->p_cBeginBlock == -1) {
-                /* not in this block */
-            } else if ((unsigned int)p_vPtr < (unsigned int)a_stMyBlockInfo->p_cBeginBlock) {
-                /* not in this block */
-            } else if ((unsigned int)a_stMyBlockInfo->p_cEndBlock < (unsigned int)p_vPtr) {
-                /* not in this block */
-            } else {
-                *p_uwModuleBlockId = (unsigned short)((lastModuleId << 8) | lastBlockId);
-                *pp_vBeginAdr = (void*)a_stMyBlockInfo->p_cBeginBlock;
-                return;
-            }
-        }
-    }
-    *p_uwModuleBlockId = 0xFFFF;
-    for (ucModuleId = 0; ucModuleId < g_ucErmNbOfModule && *p_uwModuleBlockId == 0xFFFF; ucModuleId++) {
-        a_stMyBlockInfo = (tdstBlockInfoPriv_*)g_a_p_stMmgModuleBlocksInfo[ucModuleId];
-        if (a_stMyBlockInfo != NULL) {
-            for (ucBlockId = 0; ucBlockId < g_a_ucBlocksNbInModule[ucModuleId] && *p_uwModuleBlockId == 0xFFFF; ucBlockId++, a_stMyBlockInfo++) {
-                if (a_stMyBlockInfo == NULL) {
-                    /* no block table */
-                } else if (a_stMyBlockInfo->p_cBeginBlock == -1) {
-                    /* not in this block */
-                } else if ((unsigned int)p_vPtr < (unsigned int)a_stMyBlockInfo->p_cBeginBlock) {
-                    /* not in this block */
-                } else if ((unsigned int)a_stMyBlockInfo->p_cEndBlock < (unsigned int)p_vPtr) {
-                    /* not in this block */
-                } else {
-                    *p_uwModuleBlockId = (unsigned short)((ucModuleId << 8) | ucBlockId);
-                    *pp_vBeginAdr = (void*)a_stMyBlockInfo->p_cBeginBlock;
-                    lastModuleId = ucModuleId;
-                    lastBlockId = ucBlockId;
-                }
-            }
-        }
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 2755–2782 */
 /* addr: 0x00314390  size: 112 bytes */
@@ -328,25 +244,6 @@ void PS2_fn_vEnterCriticalSection(_stCriticalSection* p_stCS);
 void PS2_fn_vLeaveCriticalSection(_stCriticalSection* p_stCS);
 void free(void* ptr);
 
-void fn_vGenFree(void* p_vMemBlock, unsigned char ucChannel)
-{
-    /* Permuter-found match (register allocation); the dead if re-reading the
-     * channel info is not original source and needs cleaning up. */
-    if (((tdstCurrentModeInfo_*)(&((tdstCurrentModeInfo_*)g_d_stCurrentModeInfo)->ucMode))[ucChannel].ucModuleId != 0xff)
-    {
-        fn_vStaFree(p_vMemBlock, ucChannel);
-    }
-    else
-    {
-        PS2_fn_vEnterCriticalSection(&g_MmgCriticalSection);
-        free((char*)p_vMemBlock - 16);
-        if (((tdstCurrentModeInfo_*)(&((tdstCurrentModeInfo_*)g_d_stCurrentModeInfo)->ucMode))[ucChannel].ucModuleId && ((tdstCurrentModeInfo_*)(&((tdstCurrentModeInfo_*)g_d_stCurrentModeInfo)->ucMode))[ucChannel].ucModuleId)
-        {
-        }
-        PS2_fn_vLeaveCriticalSection(&g_MmgCriticalSection);
-    }
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 2632–2745 */
 /* addr: 0x00314400  size: 80 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -360,24 +257,6 @@ void fn_vGenFree(void* p_vMemBlock, unsigned char ucChannel)
  */
 void* fn_p_vStaAlloc(unsigned int ulSize, unsigned char ucChannel);
 unsigned long long* fn_p_vDynAlloc(unsigned int ulSize);
-
-void fn_p_vGenAlloc(unsigned int ulSize, unsigned char ucChannel)
-{
-    /* Permuter-found match (register allocation); the dead if and the
-     * long long temporary are not original source and need cleaning up. */
-    long long new_var;
-    if (((tdstCurrentModeInfo_*)(&((tdstCurrentModeInfo_*)(new_var = g_d_stCurrentModeInfo))->ucMode))[ucChannel].ucModuleId != 0xff)
-    {
-        fn_p_vStaAlloc(ulSize, ucChannel);
-    }
-    else
-    {
-        if ((!((tdstCurrentModeInfo_*)(&((tdstCurrentModeInfo_*)g_d_stCurrentModeInfo)->ucMode))[ucChannel].ucModuleId) && (!((tdstCurrentModeInfo_*)(&((tdstCurrentModeInfo_*)g_d_stCurrentModeInfo)->ucMode))[ucChannel].ucModuleId))
-        {
-        }
-        fn_p_vDynAlloc(ulSize);
-    }
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 1304–1518 */
 /* addr: 0x00314450  size: 492 bytes */
@@ -421,15 +300,6 @@ void fn_p_vGenAlloc(unsigned int ulSize, unsigned char ucChannel)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vStaFree(void* p_vMemBlock, unsigned char ucChannel)
-{
-    long double* param0;
-    long double* p_uaAfterFreeSpace;
-    long double* p_uaSizeMalloc;
-    long double* p_uaNextFree;
-    tdstBlockInfoPriv_* p_stMyBlockInfo;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 961–1292 */
 /* addr: 0x00314640  size: 1144 bytes */
@@ -517,6 +387,167 @@ void fn_vStaFree(void* p_vMemBlock, unsigned char ucChannel)
  * what is still missing is the exact register allocation (the retail keeps
  * the size in $s0, the block info in $s1, the previous cell in $s2, the
  * "found" flag in $s3 and the current cell in $s4) and the line table. */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 594–692 */
+/* addr: 0x00314ac0  size: 268 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 594
+ *   +0x0014 -> line 617
+ *   +0x001c -> line 622
+ *   +0x0024 -> line 625
+ *   +0x0030 -> line 627
+ *   +0x0048 -> line 633
+ *   +0x005c -> line 638
+ *   +0x0074 -> line 640
+ *   +0x007c -> line 645
+ *   +0x00a0 -> line 650
+ *   +0x00a8 -> line 652
+ *   +0x00cc -> line 654
+ *   +0x00d8 -> line 655
+ *   +0x00e0 -> line 689
+ *   +0x00e4 -> line 660
+ *   +0x00e8 -> line 689
+ *   +0x00f4 -> line 690
+ *   +0x00f8 -> line 692
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 544–576 */
+/* addr: 0x00314bd0  size: 56 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 544
+ *   +0x0004 -> line 545
+ *   +0x0008 -> line 544
+ *   +0x000c -> line 545
+ *   +0x0010 -> line 544
+ *   +0x0014 -> line 545
+ *   +0x0018 -> line 567
+ *   +0x0020 -> line 574
+ *   +0x0028 -> line 576
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 215–441 */
+/* addr: 0x00314c10  size: 720 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 215
+ *   +0x0004 -> line 220
+ *   +0x0008 -> line 215
+ *   +0x000c -> line 237
+ *   +0x0010 -> line 215
+ *   +0x0014 -> line 220
+ *   +0x0018 -> line 215
+ *   +0x001c -> line 237
+ *   +0x0020 -> line 215
+ *   +0x0044 -> line 237
+ *   +0x0058 -> line 247
+ *   +0x0068 -> line 249
+ *   +0x0070 -> line 251
+ *   +0x0074 -> line 253
+ *   +0x008c -> line 254
+ *   +0x0090 -> line 297
+ *   +0x00b0 -> line 312
+ *   +0x00c0 -> line 319
+ *   +0x00c4 -> line 322
+ *   +0x00d8 -> line 324
+ *   +0x00e0 -> line 332
+ *   +0x0104 -> line 338
+ *   +0x010c -> line 343
+ *   +0x0130 -> line 346
+ *   +0x0138 -> line 351
+ *   +0x013c -> line 354
+ *   +0x0140 -> line 355
+ *   +0x0148 -> line 363
+ *   +0x014c -> line 356
+ *   +0x0150 -> line 363
+ *   +0x0154 -> line 357
+ *   +0x0158 -> line 363
+ *   +0x015c -> line 383
+ *   +0x0160 -> line 363
+ *   +0x0164 -> line 383
+ *   +0x016c -> line 384
+ *   +0x017c -> line 385
+ *   +0x018c -> line 386
+ *   +0x01a8 -> line 391
+ *   +0x01b0 -> line 399
+ *   +0x01b8 -> line 400
+ *   +0x01bc -> line 401
+ *   +0x01d0 -> line 402
+ *   +0x01d4 -> line 412
+ *   +0x01d8 -> line 405
+ *   +0x01dc -> line 410
+ *   +0x01e0 -> line 405
+ *   +0x01e8 -> line 412
+ *   +0x01f0 -> line 413
+ *   +0x0200 -> line 414
+ *   +0x0204 -> line 415
+ *   +0x021c -> line 416
+ *   +0x0220 -> line 419
+ *   +0x0224 -> line 423
+ *   +0x023c -> line 424
+ *   +0x0240 -> line 426
+ *   +0x0244 -> line 427
+ *   +0x0248 -> line 430
+ *   +0x0260 -> line 431
+ *   +0x029c -> line 438
+ *   +0x02a0 -> line 441
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void Mmg_fn_vInitSpecificBlock(unsigned char _ucBlockId, tdstBlockInfoPriv_* _p_stMyBlocksInfo, unsigned int _ulSize, unsigned char _ucAlignment, unsigned char _ucMode)
+{
+    tdstInformationHeaderOfBolckWithoutFree_* param0;
+    unsigned int lTemporaryValue;
+    unsigned char ucAlignment;
+    tdstBlockInfoPriv_* p_stMyBlockInfo;
+    long double* p_uaPtr;
+    unsigned int ulI;
+    char* p_cBegin;
+    /* TODO: decompile from asm/... */
+}
+
+void Mmg_fn_vDeleteBlock(unsigned char ucBlockId, unsigned char ucMode, tdstBlockInfoPriv_* p_stMyBlocksInfo)
+{
+    tdstBlockInfoPriv_* p_stMyBlockInfo;
+    p_stMyBlockInfo = p_stMyBlocksInfo + ucBlockId;
+    free((void*)p_stMyBlockInfo->p_cBeginBlock);
+    p_stMyBlockInfo->p_cBeginBlock = -1;
+}
+
+unsigned long long* fn_p_vDynAlloc(unsigned int ulSize)
+{
+    unsigned long long* p_uaMalloc;
+    unsigned int ulMalloc;
+    unsigned int ulAligned;
+    if (ulSize == 0) {
+        return 0;
+    }
+    PS2_fn_vEnterCriticalSection(&g_MmgCriticalSection);
+    if (ulSize & 0xF) {
+        ulSize = (ulSize & 0xFFFFFFF0) + 0x10;
+    }
+    ulMalloc = (ulSize >> 4) + 1;
+    p_uaMalloc = (unsigned long long*)malloc(ulMalloc * 16);
+    ulAligned = (unsigned int)p_uaMalloc;
+    if (ulAligned & 0xF) {
+        ulAligned = (ulAligned & 0xFFFFFFF0) + 0x10;
+    }
+    if ((unsigned int)p_uaMalloc != ulAligned) {
+        Erm_fn_v_UpdateLastError(0x1D, g_ucMmgModuleId, 0, 3, -1, 0xFF, 0xFF, 0);
+    }
+    if (p_uaMalloc == 0) {
+        Erm_fn_v_UpdateLastError(0x1D, g_ucMmgModuleId, 0, 0x20, -1, 0xFF, 0xFF, 0);
+        PS2_fn_vLeaveCriticalSection(&g_MmgCriticalSection);
+        return 0;
+    }
+    *(tdstFreeCell_*)p_uaMalloc = (tdstFreeCell_)(unsigned long long)ulMalloc;
+    PS2_fn_vLeaveCriticalSection(&g_MmgCriticalSection);
+    return (unsigned long long*)((char*)p_uaMalloc + 16);
+}
+
 void* fn_p_vStaAlloc(unsigned int ulSize, unsigned char ucChannel)
 {
     char* param0;
@@ -660,159 +691,157 @@ void* fn_p_vStaAlloc(unsigned int ulSize, unsigned char ucChannel)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 594–692 */
-/* addr: 0x00314ac0  size: 268 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 594
- *   +0x0014 -> line 617
- *   +0x001c -> line 622
- *   +0x0024 -> line 625
- *   +0x0030 -> line 627
- *   +0x0048 -> line 633
- *   +0x005c -> line 638
- *   +0x0074 -> line 640
- *   +0x007c -> line 645
- *   +0x00a0 -> line 650
- *   +0x00a8 -> line 652
- *   +0x00cc -> line 654
- *   +0x00d8 -> line 655
- *   +0x00e0 -> line 689
- *   +0x00e4 -> line 660
- *   +0x00e8 -> line 689
- *   +0x00f4 -> line 690
- *   +0x00f8 -> line 692
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned long long* fn_p_vDynAlloc(unsigned int ulSize)
+void fn_vStaFree(void* p_vMemBlock, unsigned char ucChannel)
 {
-    unsigned long long* p_uaMalloc;
-    unsigned int ulMalloc;
-    unsigned int ulAligned;
-    if (ulSize == 0) {
-        return 0;
-    }
-    PS2_fn_vEnterCriticalSection(&g_MmgCriticalSection);
-    if (ulSize & 0xF) {
-        ulSize = (ulSize & 0xFFFFFFF0) + 0x10;
-    }
-    ulMalloc = (ulSize >> 4) + 1;
-    p_uaMalloc = (unsigned long long*)malloc(ulMalloc * 16);
-    ulAligned = (unsigned int)p_uaMalloc;
-    if (ulAligned & 0xF) {
-        ulAligned = (ulAligned & 0xFFFFFFF0) + 0x10;
-    }
-    if ((unsigned int)p_uaMalloc != ulAligned) {
-        Erm_fn_v_UpdateLastError(0x1D, g_ucMmgModuleId, 0, 3, -1, 0xFF, 0xFF, 0);
-    }
-    if (p_uaMalloc == 0) {
-        Erm_fn_v_UpdateLastError(0x1D, g_ucMmgModuleId, 0, 0x20, -1, 0xFF, 0xFF, 0);
-        PS2_fn_vLeaveCriticalSection(&g_MmgCriticalSection);
-        return 0;
-    }
-    *(tdstFreeCell_*)p_uaMalloc = (tdstFreeCell_)(unsigned long long)ulMalloc;
-    PS2_fn_vLeaveCriticalSection(&g_MmgCriticalSection);
-    return (unsigned long long*)((char*)p_uaMalloc + 16);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 544–576 */
-/* addr: 0x00314bd0  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 544
- *   +0x0004 -> line 545
- *   +0x0008 -> line 544
- *   +0x000c -> line 545
- *   +0x0010 -> line 544
- *   +0x0014 -> line 545
- *   +0x0018 -> line 567
- *   +0x0020 -> line 574
- *   +0x0028 -> line 576
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void Mmg_fn_vDeleteBlock(unsigned char ucBlockId, unsigned char ucMode, tdstBlockInfoPriv_* p_stMyBlocksInfo)
-{
+    long double* param0;
+    long double* p_uaAfterFreeSpace;
+    long double* p_uaSizeMalloc;
+    long double* p_uaNextFree;
     tdstBlockInfoPriv_* p_stMyBlockInfo;
-    p_stMyBlockInfo = p_stMyBlocksInfo + ucBlockId;
-    free((void*)p_stMyBlockInfo->p_cBeginBlock);
-    p_stMyBlockInfo->p_cBeginBlock = -1;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 215–441 */
-/* addr: 0x00314c10  size: 720 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 215
- *   +0x0004 -> line 220
- *   +0x0008 -> line 215
- *   +0x000c -> line 237
- *   +0x0010 -> line 215
- *   +0x0014 -> line 220
- *   +0x0018 -> line 215
- *   +0x001c -> line 237
- *   +0x0020 -> line 215
- *   +0x0044 -> line 237
- *   +0x0058 -> line 247
- *   +0x0068 -> line 249
- *   +0x0070 -> line 251
- *   +0x0074 -> line 253
- *   +0x008c -> line 254
- *   +0x0090 -> line 297
- *   +0x00b0 -> line 312
- *   +0x00c0 -> line 319
- *   +0x00c4 -> line 322
- *   +0x00d8 -> line 324
- *   +0x00e0 -> line 332
- *   +0x0104 -> line 338
- *   +0x010c -> line 343
- *   +0x0130 -> line 346
- *   +0x0138 -> line 351
- *   +0x013c -> line 354
- *   +0x0140 -> line 355
- *   +0x0148 -> line 363
- *   +0x014c -> line 356
- *   +0x0150 -> line 363
- *   +0x0154 -> line 357
- *   +0x0158 -> line 363
- *   +0x015c -> line 383
- *   +0x0160 -> line 363
- *   +0x0164 -> line 383
- *   +0x016c -> line 384
- *   +0x017c -> line 385
- *   +0x018c -> line 386
- *   +0x01a8 -> line 391
- *   +0x01b0 -> line 399
- *   +0x01b8 -> line 400
- *   +0x01bc -> line 401
- *   +0x01d0 -> line 402
- *   +0x01d4 -> line 412
- *   +0x01d8 -> line 405
- *   +0x01dc -> line 410
- *   +0x01e0 -> line 405
- *   +0x01e8 -> line 412
- *   +0x01f0 -> line 413
- *   +0x0200 -> line 414
- *   +0x0204 -> line 415
- *   +0x021c -> line 416
- *   +0x0220 -> line 419
- *   +0x0224 -> line 423
- *   +0x023c -> line 424
- *   +0x0240 -> line 426
- *   +0x0244 -> line 427
- *   +0x0248 -> line 430
- *   +0x0260 -> line 431
- *   +0x029c -> line 438
- *   +0x02a0 -> line 441
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void Mmg_fn_vInitSpecificBlock(unsigned char _ucBlockId, tdstBlockInfoPriv_* _p_stMyBlocksInfo, unsigned int _ulSize, unsigned char _ucAlignment, unsigned char _ucMode)
-{
-    tdstInformationHeaderOfBolckWithoutFree_* param0;
-    unsigned int lTemporaryValue;
-    unsigned char ucAlignment;
-    tdstBlockInfoPriv_* p_stMyBlockInfo;
-    long double* p_uaPtr;
-    unsigned int ulI;
-    char* p_cBegin;
     /* TODO: decompile from asm/... */
+}
+
+void fn_p_vGenAlloc(unsigned int ulSize, unsigned char ucChannel)
+{
+    /* Permuter-found match (register allocation); the dead if and the
+     * long long temporary are not original source and need cleaning up. */
+    long long new_var;
+    if (((tdstCurrentModeInfo_*)(&((tdstCurrentModeInfo_*)(new_var = g_d_stCurrentModeInfo))->ucMode))[ucChannel].ucModuleId != 0xff)
+    {
+        fn_p_vStaAlloc(ulSize, ucChannel);
+    }
+    else
+    {
+        if ((!((tdstCurrentModeInfo_*)(&((tdstCurrentModeInfo_*)g_d_stCurrentModeInfo)->ucMode))[ucChannel].ucModuleId) && (!((tdstCurrentModeInfo_*)(&((tdstCurrentModeInfo_*)g_d_stCurrentModeInfo)->ucMode))[ucChannel].ucModuleId))
+        {
+        }
+        fn_p_vDynAlloc(ulSize);
+    }
+}
+
+void fn_vGenFree(void* p_vMemBlock, unsigned char ucChannel)
+{
+    /* Permuter-found match (register allocation); the dead if re-reading the
+     * channel info is not original source and needs cleaning up. */
+    if (((tdstCurrentModeInfo_*)(&((tdstCurrentModeInfo_*)g_d_stCurrentModeInfo)->ucMode))[ucChannel].ucModuleId != 0xff)
+    {
+        fn_vStaFree(p_vMemBlock, ucChannel);
+    }
+    else
+    {
+        PS2_fn_vEnterCriticalSection(&g_MmgCriticalSection);
+        free((char*)p_vMemBlock - 16);
+        if (((tdstCurrentModeInfo_*)(&((tdstCurrentModeInfo_*)g_d_stCurrentModeInfo)->ucMode))[ucChannel].ucModuleId && ((tdstCurrentModeInfo_*)(&((tdstCurrentModeInfo_*)g_d_stCurrentModeInfo)->ucMode))[ucChannel].ucModuleId)
+        {
+        }
+        PS2_fn_vLeaveCriticalSection(&g_MmgCriticalSection);
+    }
+}
+
+void Mmg_fn_vWhereIs(void* p_vPtr, unsigned short* p_uwModuleBlockId, void** pp_vBeginAdr)
+{
+    tdstBlockInfoPriv_* a_stMyBlockInfo;
+    unsigned char ucBlockId;
+    unsigned char ucModuleId;
+    static unsigned char lastModuleId;
+    static unsigned char lastBlockId;
+    /* Retail keeps the last searched module/block pair in file storage; the
+     * range test is spelled as a failure-first chain because MWCC 3.0.1 drops
+     * an unsigned "<=" that is combined with a ">=" in an && chain. */
+    if (g_a_p_stMmgModuleBlocksInfo[lastModuleId] != 0) {
+        if (lastBlockId < g_a_ucBlocksNbInModule[lastModuleId]) {
+            a_stMyBlockInfo = (tdstBlockInfoPriv_*)g_a_p_stMmgModuleBlocksInfo[lastModuleId];
+            a_stMyBlockInfo += lastBlockId;
+            if (a_stMyBlockInfo->p_cBeginBlock == -1) {
+                /* not in this block */
+            } else if ((unsigned int)p_vPtr < (unsigned int)a_stMyBlockInfo->p_cBeginBlock) {
+                /* not in this block */
+            } else if ((unsigned int)a_stMyBlockInfo->p_cEndBlock < (unsigned int)p_vPtr) {
+                /* not in this block */
+            } else {
+                *p_uwModuleBlockId = (unsigned short)((lastModuleId << 8) | lastBlockId);
+                *pp_vBeginAdr = (void*)a_stMyBlockInfo->p_cBeginBlock;
+                return;
+            }
+        }
+    }
+    *p_uwModuleBlockId = 0xFFFF;
+    for (ucModuleId = 0; ucModuleId < g_ucErmNbOfModule && *p_uwModuleBlockId == 0xFFFF; ucModuleId++) {
+        a_stMyBlockInfo = (tdstBlockInfoPriv_*)g_a_p_stMmgModuleBlocksInfo[ucModuleId];
+        if (a_stMyBlockInfo != NULL) {
+            for (ucBlockId = 0; ucBlockId < g_a_ucBlocksNbInModule[ucModuleId] && *p_uwModuleBlockId == 0xFFFF; ucBlockId++, a_stMyBlockInfo++) {
+                if (a_stMyBlockInfo == NULL) {
+                    /* no block table */
+                } else if (a_stMyBlockInfo->p_cBeginBlock == -1) {
+                    /* not in this block */
+                } else if ((unsigned int)p_vPtr < (unsigned int)a_stMyBlockInfo->p_cBeginBlock) {
+                    /* not in this block */
+                } else if ((unsigned int)a_stMyBlockInfo->p_cEndBlock < (unsigned int)p_vPtr) {
+                    /* not in this block */
+                } else {
+                    *p_uwModuleBlockId = (unsigned short)((ucModuleId << 8) | ucBlockId);
+                    *pp_vBeginAdr = (void*)a_stMyBlockInfo->p_cBeginBlock;
+                    lastModuleId = ucModuleId;
+                    lastBlockId = ucBlockId;
+                }
+            }
+        }
+    }
+}
+
+void Mmg_fn_v_SetModeAlloc(unsigned char ucModuleId, unsigned char ucNewMode, unsigned char ucChannel)
+{
+    /* Retail addresses the mode-info array as (base + field offset) + index,
+     * so the member offset is never folded into the store.  The shifted cast
+     * reproduces that; it is not the original source spelling. */
+    ((tdstCurrentModeInfo_*)(&((tdstCurrentModeInfo_*)g_d_stCurrentModeInfo)->ucMode))[ucChannel].ucModuleId = ucNewMode;
+    ((tdstCurrentModeInfo_*)g_d_stCurrentModeInfo)[ucChannel].ucModuleId = ucModuleId;
+    if ((unsigned char)ucNewMode != 0xFF) {
+        *(int*)&((tdstCurrentModeInfo_*)(&((tdstCurrentModeInfo_*)g_d_stCurrentModeInfo)->p_vTdstBlockInfoOrTdstDynInfo))[ucChannel] =
+            g_a_p_stMmgModuleBlocksInfo[ucModuleId] + ucNewMode * 16;
+    }
+}
+
+void Mmg_fn_vFirstInitMmgModule(unsigned char ucMaxNbChannel)
+{
+    unsigned char ucI;
+    g_d_stCurrentModeInfo = malloc(ucMaxNbChannel * sizeof(tdstCurrentModeInfo_));
+    g_stGeneralChannelInfo.d_stTabChannelInfo = (tdstChannelInfo_*)malloc(ucMaxNbChannel * sizeof(tdstChannelInfo_));
+    g_stGeneralChannelInfo.ucMAxNbChannel = ucMaxNbChannel;
+    g_stGeneralChannelInfo.ucNbchannelUsed = 1;
+    for (ucI = 0; ucI < 255; ucI++) {
+        g_a_p_stMmgModuleBlocksInfo[ucI] = 0;
+    }
+    PS2_fn_vCreateCriticalSection(&g_MmgCriticalSection);
+}
+
+void Mmg_fn_v_InitMmg(unsigned char ucModuleId, unsigned char ucMaxBlocksNb)
+{
+    unsigned char ucI;
+    tdstBlockInfoPriv_* p_stMyBlockInfo;
+    if (ucMaxBlocksNb > 0) {
+        g_a_p_stMmgModuleBlocksInfo[ucModuleId] = malloc(ucMaxBlocksNb * sizeof(tdstBlockInfoPriv_));
+        for (p_stMyBlockInfo = (tdstBlockInfoPriv_*)g_a_p_stMmgModuleBlocksInfo[ucModuleId], ucI = 0; ucI < ucMaxBlocksNb; ucI++, p_stMyBlockInfo++) {
+            p_stMyBlockInfo->p_cBeginBlock = -1;
+        }
+        g_a_ucBlocksNbInModule[ucModuleId] = ucMaxBlocksNb;
+    }
+}
+
+void Mmg_fn_vDisableAllocationError(void)
+{
+    Mmg_g_bAllocationError = 0;
+}
+
+void Mmg_fn_vEnableAllocationError(void)
+{
+    Mmg_g_bAllocationError = 1;
+}
+
+unsigned char MEC_fn_bWallNormal(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stNormal)
+{
+    if (p_stNormal->xZ > -p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope) { if (p_stNormal->xZ < p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope) {
+        return 1;
+    } }
+    return 0;
 }
