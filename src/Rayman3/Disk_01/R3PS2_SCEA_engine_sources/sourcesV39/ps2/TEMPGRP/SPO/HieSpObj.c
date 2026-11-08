@@ -285,26 +285,200 @@ int gd_hFixSPOSave[32];
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+struct HIE_tdstPickInfo_ {
+    HIE_tdstSuperObject_* hSprObject; /* +0x0 */
+    GEO_tdstGeometricObject_* hGeoObject; /* +0x4 */
+    COL_tdstCollideObject_* hCollideObject; /* +0x8 */
+    PIC_tdstPickedObject_ stPickedObject; /* +0xc */
+};
+struct COL_tdstBoundingSphere_ {
+    MTH4D_tdstVector_ stCenterPoint; /* +0x0 */
+    float xRadius; /* +0x10 */
+};
+
+extern unsigned char SHW_g_bCurrentlyDrawingShadow;
+extern unsigned int g_ulSpoMask;
+unsigned int fn_ulStandardGameGetCustomBitsSO(HIE_tdstSuperObject_* _hSO);
+void HIE_fn_vPushMatrix(HIE_tdstSuperObject_* _hSprObj);
+MTH3D_tdstVector_* COL_fn_pGetMinPointOfParallelBox(COL_tdstParallelBox_* _hBox);
+MTH3D_tdstVector_* COL_fn_pGetMaxPointOfParallelBox(COL_tdstParallelBox_* _hBox);
+void MAT_fn_vApplyOnVertex(MTH3D_tdstVector_* VectDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* VectA);
+void MAT_fn_vApplyOnVector(MTH3D_tdstVector_* _p_stDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stSource);
+void MAT_fn_vInvert(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hSource);
+float MAT_fn_xGetMaxScaleNonOpt(MAT_tdstTransformation_* _hTransform);
+unsigned char INT_fn_bDetectIntersectSegmentWithSphere(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius);
+unsigned char INT_fn_bDetectIntersectSegmentWithBox(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, float* _p_xT);
+tdstPhysicalCollSet_* PO_fn_hGetCollideSet(PO_tdstPhysicalObject_* hPO);
+PO_tdstPhysicalObject_* IPO_fn_hGetPhysicalObject(IPO_tdstInstanciatedPhysicalObject_* hIPO);
+COL_tdstCollideObject_* PCS_fn_hGetZdrGeoObjOfPhysicalCollSet(tdstPhysicalCollSet_* _hPhyCollSet);
+COL_tdstCollideObject_* fn_hMakeOneObjectFromManyZdx(unsigned char _ucZoneType, HIE_tdstSuperObject_* _hCharacter);
+int PIC_bIntersectSegmentWithCollideObject(MTH3D_tdstVector_* p_stCameraPos, MTH3D_tdstVector_* p_stVertex12, COL_tdstCollideObject_* p_stObject, PIC_tdstPickedObject_* p_stPickedObject);
+
+/* MatSp.h inline MAT_fn_vApplyOnVertex: the VU0 macro-mode instructions have no
+   C form.  Retail expands it at one call site of
+   fn_xIntersectSegmentWithRepositioningSuperObject and calls this unit's
+   out-of-line copy (0x00320ad0) at the other; MWCC cannot split one function
+   that way, so the expanded site uses this static copy. */
+static inline void MAT_M_vApplyOnVertex(MTH3D_tdstVector_* VectDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* VectA)
+{
+    MTH4D_tdstVector_ Vtmp;
+    MTH4D_tdstMatrix_* p_stMatrix;
+    MTH4D_tdstVector_* p_stVtmp;
+
+    p_stMatrix = &_hTransform->stTransformMatrix; p_stVtmp = &Vtmp;
+    *(unsigned int*)&Vtmp.xX = ((unsigned int*)VectA)[0]; *(unsigned int*)&Vtmp.xY = ((unsigned int*)VectA)[1]; *(unsigned int*)&Vtmp.xZ = ((unsigned int*)VectA)[2];
+    asm {
+        lqc2 vf1, 0x0(p_stVtmp)
+        lqc2 vf2, 0x0(p_stMatrix)
+        lqc2 vf3, 0x10(p_stMatrix)
+        lqc2 vf4, 0x20(p_stMatrix)
+        lqc2 vf5, 0x30(p_stMatrix)
+        vmulax.xyzw ACC, vf2, vf1x
+        vmadday.xyzw ACC, vf3, vf1y
+        vmaddaz.xyzw ACC, vf4, vf1z
+        vmaddw.xyzw vf6, vf5, vf0w
+        nop
+        nop
+        sqc2 vf6, 0x0(p_stVtmp)
+    }
+    *(unsigned int*)&VectDest->xX = *(unsigned int*)&Vtmp.xX; *(unsigned int*)&VectDest->xY = *(unsigned int*)&Vtmp.xY; *(unsigned int*)&VectDest->xZ = *(unsigned int*)&Vtmp.xZ;
+}
+
+inline float MAT_M_xGetMaxScale(MAT_tdstTransformation_* _hTransform)
+{
+    if (_hTransform->eType == MAT_eTransform_Identity || _hTransform->eType == MAT_eTransform_Translation || _hTransform->eType == MAT_eTransform_Rotation)
+        return 1.0f;
+    return MAT_fn_xGetMaxScaleNonOpt(_hTransform);
+}
+
+#define HIE_M_vPopMatrix() \
+    if (HIE_g_lNbMatrixInStack) { \
+        HIE_g_lNbMatrixInStack--; \
+        g_p_stCurrentMatrix = HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1]; \
+    }
 short fn_xIntersectSegmentWithRepositioningSuperObject(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, HIE_tdstSuperObject_* _hSprObj, HIE_tdstPickInfo_* p_stPickInfo, short* p_xNbPickInfo)
 {
+    static COL_tdstBoundingSphere_* hBoundingSphere;
+    static COL_tdstParallelBox_* hParallelBox;
+    static COL_tdstCollideObject_* hSentObject;
+    static MTH3D_tdstVector_ stMinPoint;
+    static MTH3D_tdstVector_ stMaxPoint;
+    static unsigned char bBoxBoundingVolume;
+    static unsigned char bIntersect;
+    static int lType;
+    static MTH3D_tdstVector_ stVertexALocal;
+    static MTH3D_tdstVector_ stVectAB;
+    static MAT_tdstTransformation_ stInvMatrix;
+    static PIC_tdstPickedObject_ stPickedObject;
     tdstPhysicalCollSet_* hCollSet;
     MTH3D_tdstVector_* p_stMaxPoint;
     MTH3D_tdstVector_* p_stMinPoint;
     unsigned int ulSpoFlags;
     HIE_tdstSuperObject_* hChild;
-    unsigned char bIntersect;
-    PIC_tdstPickedObject_ stPickedObject;
-    COL_tdstCollideObject_* hSentObject;
-    MTH3D_tdstVector_ stVectAB;
-    MTH3D_tdstVector_ stVertexALocal;
-    MAT_tdstTransformation_ stInvMatrix;
-    int lType;
-    MTH3D_tdstVector_ stMaxPoint;
-    MTH3D_tdstVector_ stMinPoint;
-    unsigned char bBoxBoundingVolume;
-    COL_tdstParallelBox_* hParallelBox;
-    COL_tdstBoundingSphere_* hBoundingSphere;
-    /* TODO: decompile from asm/... */
+
+    ulSpoFlags = _hSprObj->ulFlags;
+    if (!SHW_g_bCurrentlyDrawingShadow && (ulSpoFlags & 1))
+        return *p_xNbPickInfo;
+
+    lType = _hSprObj->ulTypeOfLinkedObject;
+    if (lType != 2) {
+        if (ulSpoFlags & g_ulSpoMask)
+            return *p_xNbPickInfo;
+    } else {
+        if (!fn_ulStandardGameGetCustomBitsSO(_hSprObj) & 0x200)
+            return *p_xNbPickInfo;
+    }
+
+    hBoundingSphere = NULL;
+    hParallelBox = NULL;
+    hSentObject = NULL;
+    HIE_fn_vPushMatrix(_hSprObj);
+
+    bBoxBoundingVolume = ulSpoFlags & 0x10;
+    if (bBoxBoundingVolume) {
+        hParallelBox = (COL_tdstParallelBox_*)_hSprObj->hCollideBoundingVolume;
+        if (hParallelBox) {
+            MTH3D_tdstVector_* p_stTranslation;
+
+            p_stMinPoint = COL_fn_pGetMinPointOfParallelBox(hParallelBox);
+            p_stMaxPoint = COL_fn_pGetMaxPointOfParallelBox(hParallelBox);
+            p_stTranslation = (MTH3D_tdstVector_*)&_hSprObj->hGlobalMatrix->stTransformMatrix.stCol_3;
+            stMinPoint.xX = p_stMinPoint->xX + p_stTranslation->xX; stMinPoint.xY = p_stMinPoint->xY + p_stTranslation->xY; stMinPoint.xZ = p_stMinPoint->xZ + p_stTranslation->xZ;
+            stMaxPoint.xX = p_stMaxPoint->xX + p_stTranslation->xX; stMaxPoint.xY = p_stMaxPoint->xY + p_stTranslation->xY; stMaxPoint.xZ = p_stMaxPoint->xZ + p_stTranslation->xZ;
+        }
+    } else {
+        hBoundingSphere = (COL_tdstBoundingSphere_*)_hSprObj->hCollideBoundingVolume;
+    }
+
+    if (!hBoundingSphere && !hParallelBox) {
+        bIntersect = 1;
+    } else if (!bBoxBoundingVolume) {
+        MTH3D_tdstVector_ stCenter;
+        MAT_tdstTransformation_* hMatrix = _hSprObj->hGlobalMatrix;
+
+        MAT_fn_vApplyOnVertex(&stCenter, hMatrix, (MTH3D_tdstVector_*)&hBoundingSphere->stCenterPoint);
+        bIntersect = INT_fn_bDetectIntersectSegmentWithSphere(p_stVertexA, p_stVectAB, &stCenter, hBoundingSphere->xRadius * MAT_M_xGetMaxScale(hMatrix));
+    } else {
+        bIntersect = INT_fn_bDetectIntersectSegmentWithBox(p_stVertexA, p_stVectAB, &stMinPoint, &stMaxPoint, NULL);
+    }
+
+    if (bIntersect) {
+        if (lType & 0x600) {
+            hSentObject = NULL;
+        } else if (lType & 0x18) {
+            hCollSet = PO_fn_hGetCollideSet(_hSprObj->hLinkedObject.p_stPhysicalObject);
+            hSentObject = hCollSet ? PCS_fn_hGetZdrGeoObjOfPhysicalCollSet(hCollSet) : NULL;
+        } else if (lType & 0x60) {
+            hCollSet = PO_fn_hGetCollideSet(IPO_fn_hGetPhysicalObject(_hSprObj->hLinkedObject.p_stInstanciatedPhysicalObject));
+            hSentObject = hCollSet ? PCS_fn_hGetZdrGeoObjOfPhysicalCollSet(hCollSet) : NULL;
+        } else if (lType == 2) {
+            hSentObject = fn_hMakeOneObjectFromManyZdx(3, _hSprObj);
+        }
+
+        if (hSentObject) {
+            if (ulSpoFlags & 4) {
+                stVertexALocal.xX = p_stVertexA->xX - _hSprObj->hGlobalMatrix->stTransformMatrix.stCol_3.xX;
+                stVertexALocal.xY = p_stVertexA->xY - _hSprObj->hGlobalMatrix->stTransformMatrix.stCol_3.xY;
+                stVertexALocal.xZ = p_stVertexA->xZ - _hSprObj->hGlobalMatrix->stTransformMatrix.stCol_3.xZ;
+                stVectAB.xX = p_stVectAB->xX;
+                stVectAB.xY = p_stVectAB->xY;
+                stVectAB.xZ = p_stVectAB->xZ;
+            } else {
+                MAT_fn_vInvert(&stInvMatrix, _hSprObj->hGlobalMatrix);
+                MAT_M_vApplyOnVertex(&stVertexALocal, &stInvMatrix, p_stVertexA);
+                MAT_fn_vApplyOnVector(&stVectAB, &stInvMatrix, p_stVectAB);
+            }
+
+            if (PIC_bIntersectSegmentWithCollideObject(&stVertexALocal, &stVectAB, hSentObject, &stPickedObject)) {
+                if (*p_xNbPickInfo == 0) {
+                    p_stPickInfo->stPickedObject = stPickedObject;
+                    p_stPickInfo->hSprObject = _hSprObj;
+                    p_stPickInfo->hGeoObject = NULL;
+                    p_stPickInfo->hCollideObject = hSentObject;
+                    *p_xNbPickInfo = 1;
+                    p_stVectAB->xX = stPickedObject.aDEF_stDataOfElement[0].stHit.xX - p_stVertexA->xX;
+                    p_stVectAB->xY = stPickedObject.aDEF_stDataOfElement[0].stHit.xY - p_stVertexA->xY;
+                    p_stVectAB->xZ = stPickedObject.aDEF_stDataOfElement[0].stHit.xZ - p_stVertexA->xZ;
+                } else if (stPickedObject.aDEF_stDataOfElement[0].xDistance < p_stPickInfo->stPickedObject.aDEF_stDataOfElement[0].xDistance) {
+                    p_stPickInfo->stPickedObject = stPickedObject;
+                    p_stPickInfo->hSprObject = _hSprObj;
+                    p_stPickInfo->hGeoObject = NULL;
+                    p_stPickInfo->hCollideObject = hSentObject;
+                    p_stVectAB->xX = stPickedObject.aDEF_stDataOfElement[0].stHit.xX - p_stVertexA->xX;
+                    p_stVectAB->xY = stPickedObject.aDEF_stDataOfElement[0].stHit.xY - p_stVertexA->xY;
+                    p_stVectAB->xZ = stPickedObject.aDEF_stDataOfElement[0].stHit.xZ - p_stVertexA->xZ;
+                }
+            }
+        }
+    }
+
+    if (bIntersect || (unsigned char)((_hSprObj->ulFlags & 0x200) >> 8)) {
+        for (hChild = _hSprObj->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn)
+            fn_xIntersectSegmentWithRepositioningSuperObject(p_stVertexA, p_stVectAB, hChild, p_stPickInfo, p_xNbPickInfo);
+    }
+
+    HIE_M_vPopMatrix();
+    return *p_xNbPickInfo;
 }
 
 MAT_tdstTransformation_* HIE_fn_pGetCurrentInCamCoordsMatrixFastPS2(void);
@@ -480,6 +654,11 @@ void HIE_fn_vApplyFunctionOnHierarchy(HIE_tdstSuperObject_* _hSprObj, void (*_fn
         _fn_vApplyFunction(hChild); for (hChild2 = hChild->hFirstElementDyn; hChild2; hChild2 = hChild2->hNextBrotherDyn) { _fn_vApplyFunction(hChild2); for (hChild3 = hChild2->hFirstElementDyn; hChild3; hChild3 = hChild3->hNextBrotherDyn) { HIE_fn_vApplyFunctionOnHierarchy(hChild3, _fn_vApplyFunction); } } }
 }
 
+/* Retail inlines the recursive walkers HIE_fn_vInvalidateHierarchy and
+   HIE_fn_vRefreshHierarchy two levels deep, with their per-node helper inlined
+   at the first two levels: auto-inlining with an inline depth of 2. */
+#pragma auto_inline on
+#pragma inline_depth(2)
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 504–512 */
 /* addr: 0x00321760  size: 256 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -504,12 +683,10 @@ void HIE_fn_vInvalidateOneGlobalMatrix(HIE_tdstSuperObject_* _hSprObj);
 void HIE_fn_vInvalidateHierarchy(HIE_tdstSuperObject_* _hSprObj)
 {
     HIE_tdstSuperObject_* hChild;
-    HIE_tdstSuperObject_* hChild2;
-    HIE_tdstSuperObject_* hChild3;
 
-    HIE_M_vInvalidateOneGlobalMatrix(_hSprObj);
-    for (hChild = _hSprObj->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn) {
-        HIE_M_vInvalidateOneGlobalMatrix(hChild); for (hChild2 = hChild->hFirstElementDyn; hChild2; hChild2 = hChild2->hNextBrotherDyn) { HIE_fn_vInvalidateOneGlobalMatrix(hChild2); for (hChild3 = hChild2->hFirstElementDyn; hChild3; hChild3 = hChild3->hNextBrotherDyn) { HIE_fn_vInvalidateHierarchy(hChild3); } } }
+    HIE_fn_vInvalidateOneGlobalMatrix(_hSprObj);
+    for (hChild = _hSprObj->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn)
+        HIE_fn_vInvalidateHierarchy(hChild);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 491–501 */
@@ -524,10 +701,15 @@ void HIE_fn_vInvalidateHierarchy(HIE_tdstSuperObject_* _hSprObj)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void HIE_fn_vPushMatrix(HIE_tdstSuperObject_* _hSprObj);
 void HIE_fn_vRefreshHierarchy(HIE_tdstSuperObject_* _hSprObj)
 {
     HIE_tdstSuperObject_* hChild;
-    /* TODO: decompile from asm/... */
+
+    HIE_fn_vPushMatrix(_hSprObj);
+    for (hChild = _hSprObj->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn)
+        HIE_fn_vRefreshHierarchy(hChild);
+    HIE_M_vPopMatrix();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 472–483 */
@@ -958,10 +1140,33 @@ void HIE_fn_vIsolate(HIE_tdstSuperObject_* _hSprObj)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+unsigned char fn_ucStdGameCheckValidity(HIE_tdstSuperObject_* _h_SprObj);
 void HIE_fn_SO_SwitchSuperImposedTab(int lParam)
 {
     int i;
-    /* TODO: decompile from asm/... */
+
+    if (lParam) {
+        if (g_xFixIndex) {
+            for (i = 0; i < g_xFixIndex; i++) {
+                gd_hFixSPOSave[g_xFixIndexSave++] = gd_hFixSPO[i];
+                gd_ucContextOfSPOSave[i] = g_ucContext;
+            }
+            g_xFixIndex = 0;
+        }
+        g_ucContext++;
+    } else {
+        g_ucContext--;
+        if (g_xFixIndexSave) {
+            g_xFixIndex = 0;
+            while (g_xFixIndexSave > 0 && gd_ucContextOfSPOSave[g_xFixIndexSave - 1] == g_ucContext) {
+                if (fn_ucStdGameCheckValidity((HIE_tdstSuperObject_*)gd_hFixSPOSave[g_xFixIndexSave - 1])) {
+                    gd_hFixSPO[g_xFixIndex] = gd_hFixSPOSave[g_xFixIndexSave - 1];
+                    g_xFixIndex++;
+                }
+                g_xFixIndexSave--;
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 142–143 */

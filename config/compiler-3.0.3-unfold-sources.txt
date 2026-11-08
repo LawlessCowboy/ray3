@@ -33,3 +33,8 @@ src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/ZdxStuf
 # h_Target +4 and the previous channel's -0x84 unfolded); all 11 other recorded
 # matches still MATCH, 0 lost.
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/TextFrmt.c
+# GAM/GameMenu2D/DefineMenu2D.c: +4 (fn_vNextSelection, fn_vPreviousSelection,
+# fn_vNextSelectionNoWrap, fn_vPreviousSelectionNoWrap: retail forms
+# aMenu2DPages[page].abGrayed[sel] as %lo(+0x22e) + row, 'addiu r,r,0', + sel);
+# all 30 other recorded matches still MATCH, 0 lost.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c
