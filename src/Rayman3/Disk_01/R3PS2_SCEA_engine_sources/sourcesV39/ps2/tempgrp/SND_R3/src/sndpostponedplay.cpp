@@ -462,51 +462,8 @@ struct CActorModifiers {
  * the extractor named it after the PostponedPlay data member ms_uiMaxPlay.
  * TODO: reconstruct the usnd::stree template instantiation. */
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndpostponedplay.cpp lines 169–175 */
-/* addr: 0x001d0350  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 169
- *   +0x0008 -> line 171
- *   +0x0010 -> line 172
- *   +0x0030 -> line 175
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndpostponedplay.cpp lines 151–161 */
-/* addr: 0x001d0390  size: 52 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 151
- *   +0x0008 -> line 154
- *   +0x000c -> line 156
- *   +0x0010 -> line 154
- *   +0x0014 -> line 156
- *   +0x0018 -> line 157
- *   +0x001c -> line 158
- *   +0x002c -> line 161
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndpostponedplay.cpp lines 127–142 */
-/* addr: 0x001d03d0  size: 204 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 127
- *   +0x0028 -> line 129
- *   +0x002c -> line 131
- *   +0x0034 -> line 133
- *   +0x0090 -> line 136
- *   +0x0094 -> line 135
- *   +0x0098 -> line 138
- *   +0x009c -> line 139
- *   +0x00a8 -> line 141
- *   +0x00ac -> line 142
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndpostponedplay.cpp lines 114–122 */
 /* addr: 0x001d04a0  size: 68 bytes */
@@ -558,26 +515,6 @@ unsigned char PostponedPlay::fs_bIsSoundPlaying(usnd::CResData* po_ResData, CExt
     return 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndpostponedplay.cpp lines 65–92 */
-/* addr: 0x001d0540  size: 232 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 65
- *   +0x000c -> line 69
- *   +0x0014 -> line 71
- *   +0x0050 -> line 74
- *   +0x0054 -> line 75
- *   +0x005c -> line 77
- *   +0x0070 -> line 80
- *   +0x0074 -> line 83
- *   +0x0084 -> line 85
- *   +0x00a0 -> line 88
- *   +0x00ac -> line 89
- *   +0x00d0 -> line 91
- *   +0x00d4 -> line 92
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndpostponedplay.cpp lines 43–60 */
 /* addr: 0x001d0630  size: 304 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -613,6 +550,25 @@ unsigned char PostponedPlay::fs_bPlay(const CEventResData& ro_EventResData, int 
     return bRet;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndpostponedplay.cpp lines 65–92 */
+/* addr: 0x001d0540  size: 232 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 65
+ *   +0x000c -> line 69
+ *   +0x0014 -> line 71
+ *   +0x0050 -> line 74
+ *   +0x0054 -> line 75
+ *   +0x005c -> line 77
+ *   +0x0070 -> line 80
+ *   +0x0074 -> line 83
+ *   +0x0084 -> line 85
+ *   +0x00a0 -> line 88
+ *   +0x00ac -> line 89
+ *   +0x00d0 -> line 91
+ *   +0x00d4 -> line 92
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PostponedPlay::fs_vSynchro(void)
 {
     PostponedPlay* e;
@@ -640,6 +596,22 @@ void PostponedPlay::fs_vSynchro(void)
     ms_uiCount = 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndpostponedplay.cpp lines 127–142 */
+/* addr: 0x001d03d0  size: 204 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 127
+ *   +0x0028 -> line 129
+ *   +0x002c -> line 131
+ *   +0x0034 -> line 133
+ *   +0x0090 -> line 136
+ *   +0x0094 -> line 135
+ *   +0x0098 -> line 138
+ *   +0x009c -> line 139
+ *   +0x00a8 -> line 141
+ *   +0x00ac -> line 142
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char PostponedPlay::fs_bExecute(int s32_CmdId, const CUUID& roId, CExtraEventActor* pEActor)
 {
     unsigned char bRet = 0;
@@ -659,6 +631,20 @@ unsigned char PostponedPlay::fs_bExecute(int s32_CmdId, const CUUID& roId, CExtr
     return bRet;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndpostponedplay.cpp lines 151–161 */
+/* addr: 0x001d0390  size: 52 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 151
+ *   +0x0008 -> line 154
+ *   +0x000c -> line 156
+ *   +0x0010 -> line 154
+ *   +0x0014 -> line 156
+ *   +0x0018 -> line 157
+ *   +0x001c -> line 158
+ *   +0x002c -> line 161
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PostponedPlay::fs_vEmpty(void)
 {
     while (ms_pFirst) {
@@ -670,6 +656,16 @@ void PostponedPlay::fs_vEmpty(void)
     ms_pLast = 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndpostponedplay.cpp lines 169–175 */
+/* addr: 0x001d0350  size: 56 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 169
+ *   +0x0008 -> line 171
+ *   +0x0010 -> line 172
+ *   +0x0030 -> line 175
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char PostponedPlay::fs_bIsPending(CExtraEventActor* pEActor)
 {
     PostponedPlay* e;

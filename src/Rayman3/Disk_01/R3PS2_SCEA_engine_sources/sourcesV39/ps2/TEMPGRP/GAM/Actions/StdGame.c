@@ -1200,14 +1200,6 @@ struct AI_tdstMind_ {
 
 unsigned char g_ucGameModuleId;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 129–129 */
-/* addr: 0x00274140  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 129
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 unsigned int fn_ulSectInfoSizeOf(void);
@@ -1233,188 +1225,97 @@ void fn_vStdGameInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectIn
 void fn_vStdGameFree(tdstEngineObject_* p_stObject);
 void fn_vStdGameAlloc(tdstEngineObject_* p_stObject);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 787–789 */
-/* addr: 0x00274150  size: 16 bytes */
+int SAI_fn_bRemoveValueFromTable(void* _p_vValue, int _eFlags);
+typedef struct tdstNodeMainCharacter_ tdstNodeMainCharacter_;
+tdstNodeMainCharacter_* MC_fn_hGetFirstMainCharNode(void);
+HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(tdstNodeMainCharacter_* hMainCharNode);
+
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 305–316 */
+/* addr: 0x00274a70  size: 276 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 787
- *   +0x0008 -> line 789
+ *   +0x0000 -> line 305
+ *   +0x0010 -> line 306
+ *   +0x0018 -> line 307
+ *   +0x0044 -> line 309
+ *   +0x0050 -> line 310
+ *   +0x007c -> line 313
+ *   +0x00d4 -> line 315
+ *   +0x0104 -> line 316
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 706–715 */
-/* addr: 0x00274160  size: 92 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 706
- *   +0x0014 -> line 709
- *   +0x001c -> line 711
- *   +0x0028 -> line 712
- *   +0x002c -> line 711
- *   +0x0040 -> line 712
- *   +0x0054 -> line 715
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+void fn_vStdGameAlloc(tdstEngineObject_* p_stObject)
+{
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (p_stObject->h_StandardGame) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 13, -1, 255, 255, NULL);
+    }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 691–700 */
-/* addr: 0x002741c0  size: 92 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 691
- *   +0x0014 -> line 694
- *   +0x001c -> line 696
- *   +0x003c -> line 697
- *   +0x0054 -> line 700
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+    {
+        tdstStandardGame_* hStdGame = (tdstStandardGame_*)HMU_fn_p_vMalloc(sizeof(tdstStandardGame_), 0);
+        hStdGame->ulAICustomBits = 0;
+        hStdGame->ucTransparencyZoneMin = 70;
+        hStdGame->ucTransparencyZoneMax = 80;
+        hStdGame->ucMiscFlags &= ~1;
+        hStdGame->ucMiscFlags |= 2;
+        hStdGame->ucHitPoints = 0;
+        hStdGame->ucHitPointsMax = 0;
+        hStdGame->ucTooFarLimit = 70;
+        hStdGame->eInitFlagWhenOutOfZone = 5;
+        hStdGame->eInitFlagWhenDeadOrTaken = 2;
+        p_stObject->h_StandardGame = hStdGame;
+    }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 681–685 */
-/* addr: 0x00274220  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 681
- *   +0x0014 -> line 683
- *   +0x0030 -> line 685
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+    {
+        tdstStandardGame_* hStdGame = p_stObject->h_StandardGame;
+        hStdGame->ucSaveHitPoints = hStdGame->ucHitPoints;
+        hStdGame->ucSaveHitPointsMax = hStdGame->ucHitPointsMax;
+        hStdGame->ucSaveMiscFlags = hStdGame->ucMiscFlags & 7;
+        hStdGame->ulSaveCustomBits = hStdGame->ulCustomBits;
+        hStdGame->ulSaveAICustomBits = hStdGame->ulAICustomBits;
+    }
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 672–677 */
-/* addr: 0x00274260  size: 60 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 352–366 */
+/* addr: 0x00274980  size: 240 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 672
- *   +0x0014 -> line 674
- *   +0x0034 -> line 677
+ *   +0x0000 -> line 352
+ *   +0x0010 -> line 353
+ *   +0x0018 -> line 354
+ *   +0x0044 -> line 356
+ *   +0x0050 -> line 357
+ *   +0x007c -> line 359
+ *   +0x009c -> line 361
+ *   +0x00b8 -> line 362
+ *   +0x00e0 -> line 366
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void fn_vStdGameFree(tdstEngineObject_* p_stObject)
+{
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!p_stObject->h_StandardGame) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 664–668 */
-/* addr: 0x002742a0  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 664
- *   +0x0014 -> line 666
- *   +0x0030 -> line 668
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+    if (p_stObject->h_StandardGame->eInitFlagWhenDeadOrTaken == 5)
+        SAI_fn_bRemoveValueFromTable(&p_stObject->h_StandardGame->ucMiscFlags, 0x200);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 655–660 */
-/* addr: 0x002742e0  size: 64 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 655
- *   +0x0014 -> line 657
- *   +0x0034 -> line 659
- *   +0x0038 -> line 660
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 649–651 */
-/* addr: 0x00274320  size: 36 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 649
- *   +0x0008 -> line 650
- *   +0x001c -> line 651
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 643–645 */
-/* addr: 0x00274350  size: 36 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 643
- *   +0x0008 -> line 644
- *   +0x001c -> line 645
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 638–639 */
-/* addr: 0x00274380  size: 24 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 638
- *   +0x0010 -> line 639
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 624–625 */
-/* addr: 0x002743a0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 624
- *   +0x0008 -> line 625
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 619–620 */
-/* addr: 0x002743b0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 619
- *   +0x0008 -> line 620
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 609–615 */
-/* addr: 0x002743c0  size: 32 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 609
- *   +0x0008 -> line 611
- *   +0x0018 -> line 615
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 603–604 */
-/* addr: 0x002743e0  size: 24 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 603
- *   +0x0010 -> line 604
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 586–586 */
-/* addr: 0x00274400  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 586
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 565–566 */
-/* addr: 0x00274410  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 565
- *   +0x0008 -> line 566
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 560–561 */
-/* addr: 0x00274420  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 560
- *   +0x0008 -> line 561
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 501–520 */
-/* addr: 0x00274430  size: 224 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 501
- *   +0x0014 -> line 502
- *   +0x001c -> line 503
- *   +0x0048 -> line 505
- *   +0x0054 -> line 506
- *   +0x0080 -> line 508
- *   +0x00bc -> line 515
- *   +0x00cc -> line 520
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+    if (p_stObject == MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode())->hLinkedObject.p_stCharacter)
+    {
+        tdstStandardGame_* hStdGame = p_stObject->h_StandardGame;
+        SAI_fn_bRemoveValueFromTable(&hStdGame->ucHitPoints, 0x80);
+        SAI_fn_bRemoveValueFromTable(&hStdGame->ucHitPointsMax, 0x80);
+        SAI_fn_bRemoveValueFromTable(&hStdGame->ucHitPointsMaxMax, 0x80);
+    }
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 380–487 */
 /* addr: 0x00274510  size: 1132 bytes */
@@ -1478,100 +1379,6 @@ void fn_vStdGameAlloc(tdstEngineObject_* p_stObject);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-int SAI_fn_bRemoveValueFromTable(void* _p_vValue, int _eFlags);
-typedef struct tdstNodeMainCharacter_ tdstNodeMainCharacter_;
-tdstNodeMainCharacter_* MC_fn_hGetFirstMainCharNode(void);
-HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(tdstNodeMainCharacter_* hMainCharNode);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 352–366 */
-/* addr: 0x00274980  size: 240 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 352
- *   +0x0010 -> line 353
- *   +0x0018 -> line 354
- *   +0x0044 -> line 356
- *   +0x0050 -> line 357
- *   +0x007c -> line 359
- *   +0x009c -> line 361
- *   +0x00b8 -> line 362
- *   +0x00e0 -> line 366
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 305–316 */
-/* addr: 0x00274a70  size: 276 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 305
- *   +0x0010 -> line 306
- *   +0x0018 -> line 307
- *   +0x0044 -> line 309
- *   +0x0050 -> line 310
- *   +0x007c -> line 313
- *   +0x00d4 -> line 315
- *   +0x0104 -> line 316
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-void fn_vStdGameAlloc(tdstEngineObject_* p_stObject)
-{
-    if (!p_stObject) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
-    }
-    if (p_stObject->h_StandardGame) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 13, -1, 255, 255, NULL);
-    }
-
-    {
-        tdstStandardGame_* hStdGame = (tdstStandardGame_*)HMU_fn_p_vMalloc(sizeof(tdstStandardGame_), 0);
-        hStdGame->ulAICustomBits = 0;
-        hStdGame->ucTransparencyZoneMin = 70;
-        hStdGame->ucTransparencyZoneMax = 80;
-        hStdGame->ucMiscFlags &= ~1;
-        hStdGame->ucMiscFlags |= 2;
-        hStdGame->ucHitPoints = 0;
-        hStdGame->ucHitPointsMax = 0;
-        hStdGame->ucTooFarLimit = 70;
-        hStdGame->eInitFlagWhenOutOfZone = 5;
-        hStdGame->eInitFlagWhenDeadOrTaken = 2;
-        p_stObject->h_StandardGame = hStdGame;
-    }
-
-    {
-        tdstStandardGame_* hStdGame = p_stObject->h_StandardGame;
-        hStdGame->ucSaveHitPoints = hStdGame->ucHitPoints;
-        hStdGame->ucSaveHitPointsMax = hStdGame->ucHitPointsMax;
-        hStdGame->ucSaveMiscFlags = hStdGame->ucMiscFlags & 7;
-        hStdGame->ulSaveCustomBits = hStdGame->ulCustomBits;
-        hStdGame->ulSaveAICustomBits = hStdGame->ulAICustomBits;
-    }
-}
-
-void fn_vStdGameFree(tdstEngineObject_* p_stObject)
-{
-    if (!p_stObject) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
-    }
-    if (!p_stObject->h_StandardGame) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
-    }
-
-    if (p_stObject->h_StandardGame->eInitFlagWhenDeadOrTaken == 5)
-        SAI_fn_bRemoveValueFromTable(&p_stObject->h_StandardGame->ucMiscFlags, 0x200);
-
-    if (p_stObject == MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode())->hLinkedObject.p_stCharacter)
-    {
-        tdstStandardGame_* hStdGame = p_stObject->h_StandardGame;
-        SAI_fn_bRemoveValueFromTable(&hStdGame->ucHitPoints, 0x80);
-        SAI_fn_bRemoveValueFromTable(&hStdGame->ucHitPointsMax, 0x80);
-        SAI_fn_bRemoveValueFromTable(&hStdGame->ucHitPointsMaxMax, 0x80);
-    }
-}
-
 void fn_vStdGameInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
 {
     tdstStandardGame_* h_StdGame;
@@ -1579,6 +1386,20 @@ void fn_vStdGameInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectIn
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 501–520 */
+/* addr: 0x00274430  size: 224 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 501
+ *   +0x0014 -> line 502
+ *   +0x001c -> line 503
+ *   +0x0048 -> line 505
+ *   +0x0054 -> line 506
+ *   +0x0080 -> line 508
+ *   +0x00bc -> line 515
+ *   +0x00cc -> line 520
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vStdGameDesinit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
 {
     if (!p_stObject) {
@@ -1600,26 +1421,66 @@ void fn_vStdGameDesinit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjec
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 560–561 */
+/* addr: 0x00274420  size: 16 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 560
+ *   +0x0008 -> line 561
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vSetHitPointsToInitValue(tdstEngineObject_* _p_stObject)
 {
     _p_stObject->h_StandardGame->ucHitPoints = _p_stObject->h_StandardGame->ucSaveHitPoints;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 565–566 */
+/* addr: 0x00274410  size: 16 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 565
+ *   +0x0008 -> line 566
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vSetHitPointsMaxToInitValue(tdstEngineObject_* _p_stObject)
 {
     _p_stObject->h_StandardGame->ucHitPointsMax = _p_stObject->h_StandardGame->ucSaveHitPointsMax;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 586–586 */
+/* addr: 0x00274400  size: 16 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 586
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vStdGameCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc)
 {
     memcpy(_p_stObjectDest->h_StandardGame, _p_stObjectSrc->h_StandardGame, sizeof(tdstStandardGame_));
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 603–604 */
+/* addr: 0x002743e0  size: 24 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 603
+ *   +0x0010 -> line 604
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* h_StdGame)
 {
     return h_StdGame != NULL ? h_StdGame->h_SuperObject : NULL;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 609–615 */
+/* addr: 0x002743c0  size: 32 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 609
+ *   +0x0008 -> line 611
+ *   +0x0018 -> line 615
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vStandardGameSetSuperObject(tdstStandardGame_* h_StdGame, HIE_tdstSuperObject_* h_SuperObject)
 {
     h_StdGame->h_SuperObject = h_SuperObject;
@@ -1629,21 +1490,54 @@ void fn_vStandardGameSetSuperObject(tdstStandardGame_* h_StdGame, HIE_tdstSuperO
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 619–620 */
+/* addr: 0x002743b0  size: 16 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 619
+ *   +0x0008 -> line 620
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned int fn_ulStandardGameGetCustomBitsSO(HIE_tdstSuperObject_* hSupObj)
 {
     return hSupObj->hLinkedObject.p_stCharacter->h_StandardGame->ulCustomBits;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 624–625 */
+/* addr: 0x002743a0  size: 16 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 624
+ *   +0x0008 -> line 625
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vStandardGameSetCustomBitsSO(HIE_tdstSuperObject_* hSupObj, unsigned int ulCustomBits)
 {
     hSupObj->hLinkedObject.p_stCharacter->h_StandardGame->ulCustomBits = ulCustomBits;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 638–639 */
+/* addr: 0x00274380  size: 24 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 638
+ *   +0x0010 -> line 639
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_bStandardGameIsAPlatform(HIE_tdstSuperObject_* hSupObj)
 {
     return hSupObj->hLinkedObject.p_stCharacter->h_StandardGame->ucPlatFormType == 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 643–645 */
+/* addr: 0x00274350  size: 36 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 643
+ *   +0x0008 -> line 644
+ *   +0x001c -> line 645
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucStandardGameGetTransparencyZoneMinSO(HIE_tdstSuperObject_* hSupObj)
 {
     tdstStandardGame_* hStdGame;
@@ -1651,6 +1545,15 @@ unsigned char fn_ucStandardGameGetTransparencyZoneMinSO(HIE_tdstSuperObject_* hS
     return hStdGame ? hStdGame->ucTransparencyZoneMin : 0x46;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 649–651 */
+/* addr: 0x00274320  size: 36 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 649
+ *   +0x0008 -> line 650
+ *   +0x001c -> line 651
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucStandardGameGetTransparencyZoneMaxSO(HIE_tdstSuperObject_* hSupObj)
 {
     tdstStandardGame_* hStdGame;
@@ -1658,6 +1561,16 @@ unsigned char fn_ucStandardGameGetTransparencyZoneMaxSO(HIE_tdstSuperObject_* hS
     return hStdGame ? hStdGame->ucTransparencyZoneMax : 0x50;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 655–660 */
+/* addr: 0x002742e0  size: 64 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 655
+ *   +0x0014 -> line 657
+ *   +0x0034 -> line 659
+ *   +0x0038 -> line 660
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 float fn_xStandardGameGetCustomFloatSO(HIE_tdstSuperObject_* _hSO, long _lIndex)
 {
     tdstEngineObject_* p_stObject;
@@ -1671,6 +1584,15 @@ float fn_xStandardGameGetCustomFloatSO(HIE_tdstSuperObject_* _hSO, long _lIndex)
     else xValue = 0.0f; return xValue;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 664–668 */
+/* addr: 0x002742a0  size: 56 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 664
+ *   +0x0014 -> line 666
+ *   +0x0030 -> line 668
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vStandardGameSetCustomFloatSO(HIE_tdstSuperObject_* _hSO, long _lIndex, float _xValue)
 {
     tdstEngineObject_* p_stObject;
@@ -1682,6 +1604,15 @@ void fn_vStandardGameSetCustomFloatSO(HIE_tdstSuperObject_* _hSO, long _lIndex, 
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 672–677 */
+/* addr: 0x00274260  size: 60 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 672
+ *   +0x0014 -> line 674
+ *   +0x0034 -> line 677
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int fn_lStandardGameGetCustomLongSO(HIE_tdstSuperObject_* _hSO, long _lIndex)
 {
     int lValue = 0;
@@ -1693,6 +1624,15 @@ int fn_lStandardGameGetCustomLongSO(HIE_tdstSuperObject_* _hSO, long _lIndex)
     return lValue;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 681–685 */
+/* addr: 0x00274220  size: 56 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 681
+ *   +0x0014 -> line 683
+ *   +0x0030 -> line 685
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vStandardGameSetCustomLongSO(HIE_tdstSuperObject_* _hSO, long _lIndex, int _lValue)
 {
     tdstEngineObject_* p_stObject;
@@ -1704,6 +1644,17 @@ void fn_vStandardGameSetCustomLongSO(HIE_tdstSuperObject_* _hSO, long _lIndex, i
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 691–700 */
+/* addr: 0x002741c0  size: 92 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 691
+ *   +0x0014 -> line 694
+ *   +0x001c -> line 696
+ *   +0x003c -> line 697
+ *   +0x0054 -> line 700
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vStandardGameGetCustomVectorSO(HIE_tdstSuperObject_* _hSO, long _lIndex, MTH3D_tdstVector_* _p_stVec)
 {
     MTH3D_tdstVector_* p_stTmpVec;
@@ -1715,6 +1666,19 @@ void fn_vStandardGameGetCustomVectorSO(HIE_tdstSuperObject_* _hSO, long _lIndex,
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 706–715 */
+/* addr: 0x00274160  size: 92 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 706
+ *   +0x0014 -> line 709
+ *   +0x001c -> line 711
+ *   +0x0028 -> line 712
+ *   +0x002c -> line 711
+ *   +0x0040 -> line 712
+ *   +0x0054 -> line 715
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vStandardGameSetCustomVectorSO(HIE_tdstSuperObject_* _hSO, long _lIndex, MTH3D_tdstVector_* _p_stVec)
 {
     MTH3D_tdstVector_* p_stTmpVec;
@@ -1726,11 +1690,26 @@ void fn_vStandardGameSetCustomVectorSO(HIE_tdstSuperObject_* _hSO, long _lIndex,
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 787–789 */
+/* addr: 0x00274150  size: 16 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 787
+ *   +0x0008 -> line 789
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucStdGameCheckValidity(HIE_tdstSuperObject_* _h_SprObj)
 {
     return _h_SprObj->hLinkedObject.p_stCharacter->h_StandardGame != 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 129–129 */
+/* addr: 0x00274140  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 129
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned int fn_ulSectInfoSizeOf(void)
 {
     return 0x18;

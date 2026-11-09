@@ -1637,22 +1637,6 @@ extern int g_bCinemascopeOn;
 extern unsigned int g_a2_ulPos[2];
 extern unsigned int g_a2_ulSize[2];
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 224–234 */
-/* addr: 0x0025ff20  size: 84 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 224
- *   +0x0018 -> line 226
- *   +0x001c -> line 227
- *   +0x0020 -> line 228
- *   +0x0024 -> line 229
- *   +0x0028 -> line 231
- *   +0x0030 -> line 232
- *   +0x0048 -> line 233
- *   +0x004c -> line 234
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 void fn_vToggleCinemascope(int bValue);
@@ -1672,34 +1656,6 @@ void fn_vTreatDynamicHierarchyOfPlatForms(HIE_tdstSuperObject_* hSuperObj);
 void fn_vTreatDynamicHierarchy(HIE_tdstSuperObject_* hSuperObj, HIE_tdstSuperObject_* hMainChar, MTH3D_tdstVector_* p_stMainCharTranslation);
 void GAM_fn_vUpdateTooFarFlag(HIE_tdstSuperObject_* _hSO);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 2045–2085 */
-/* addr: 0x0025ff80  size: 1012 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2045
- *   +0x0004 -> line 2050
- *   +0x0008 -> line 2045
- *   +0x0028 -> line 2050
- *   +0x002c -> line 2053
- *   +0x0040 -> line 2055
- *   +0x0048 -> line 2056
- *   +0x0120 -> line 2057
- *   +0x0138 -> line 2060
- *   +0x0140 -> line 2061
- *   +0x0148 -> line 2062
- *   +0x0158 -> line 2063
- *   +0x0164 -> line 2065
- *   +0x0174 -> line 2067
- *   +0x01dc -> line 2072
- *   +0x02b0 -> line 2074
- *   +0x02c0 -> line 2077
- *   +0x02c4 -> line 2078
- *   +0x02cc -> line 2082
- *   +0x02d4 -> line 2083
- *   +0x03a0 -> line 2084
- *   +0x03cc -> line 2085
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern void HIE_fn_vSuperObjectAddHead(HIE_tdstSuperObject_* hFather, HIE_tdstSuperObject_* hChild);
 extern void HIE_fn_vSuperObjectAddTail(HIE_tdstSuperObject_* hFather, HIE_tdstSuperObject_* hChild);
 extern HIE_tdstSuperObject_* HIE_fn_hGetElementFormFixViewport(short xIndex);
@@ -1730,50 +1686,12 @@ inline void GAM_vActivateActor(HIE_tdstSuperObject_* hActor, unsigned char bIsAn
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 2016–2041 */
-/* addr: 0x00260520  size: 328 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2016
- *   +0x0010 -> line 2020
- *   +0x001c -> line 2022
- *   +0x0024 -> line 2024
- *   +0x0034 -> line 2028
- *   +0x0048 -> line 2033
- *   +0x004c -> line 2035
- *   +0x0108 -> line 2036
- *   +0x0114 -> line 2037
- *   +0x0118 -> line 2039
- *   +0x0124 -> line 2040
- *   +0x0130 -> line 2041
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern HIE_tdstSuperObject_* SECT_fn_hGetActiveSectorListHead(void);
 extern HIE_tdstSuperObject_* SECT_fn_hGetActiveSectorListNext(HIE_tdstSuperObject_* hSectorSO);
 extern int SECT_fn_bIsSectorNewlyActive(HIE_tdstSuperObject_* hSectorSO);
 extern void HIE_fn_vSuperObjectAddHead(HIE_tdstSuperObject_* hFather, HIE_tdstSuperObject_* hChild);
 extern void HIE_fn_vSuperObjectAddTail(HIE_tdstSuperObject_* hFather, HIE_tdstSuperObject_* hChild);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 1982–2012 */
-/* addr: 0x00260670  size: 620 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1982
- *   +0x0010 -> line 1987
- *   +0x0028 -> line 1989
- *   +0x0048 -> line 1993
- *   +0x0054 -> line 1995
- *   +0x0064 -> line 1997
- *   +0x006c -> line 1999
- *   +0x0080 -> line 2001
- *   +0x014c -> line 2002
- *   +0x0158 -> line 2005
- *   +0x0228 -> line 2008
- *   +0x023c -> line 2010
- *   +0x0240 -> line 2011
- *   +0x0258 -> line 2012
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* The dynamic list operations are macros in retail: they expand in place. */
 #define GAM_M_ListIsolate(h) \
     if ((h)->hNextBrotherDyn != NULL) \
@@ -1820,58 +1738,6 @@ extern HIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectNextBrother(HIE_tdstSupe
 HIE_tdstSuperObject_* fn_h_SectInfoGetCurrentSector(tdstSectInfo_*);
 int CAM_fn_bSuperObjectIsACamera(HIE_tdstSuperObject_*);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 1821–1914 */
-/* addr: 0x002608e0  size: 740 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1821
- *   +0x0024 -> line 1825
- *   +0x0028 -> line 1821
- *   +0x002c -> line 1828
- *   +0x0034 -> line 1832
- *   +0x0044 -> line 1838
- *   +0x004c -> line 1840
- *   +0x0054 -> line 1841
- *   +0x0060 -> line 1845
- *   +0x0078 -> line 1847
- *   +0x007c -> line 1848
- *   +0x0080 -> line 1850
- *   +0x0088 -> line 1851
- *   +0x0090 -> line 1854
- *   +0x0098 -> line 1855
- *   +0x009c -> line 1854
- *   +0x00a4 -> line 1856
- *   +0x00b0 -> line 1858
- *   +0x00c8 -> line 1863
- *   +0x00d0 -> line 1865
- *   +0x00e0 -> line 1867
- *   +0x00ec -> line 1871
- *   +0x00f8 -> line 1873
- *   +0x0100 -> line 1874
- *   +0x0110 -> line 1878
- *   +0x0128 -> line 1880
- *   +0x0130 -> line 1881
- *   +0x0168 -> line 1883
- *   +0x016c -> line 1884
- *   +0x0170 -> line 1887
- *   +0x0180 -> line 1888
- *   +0x0184 -> line 1889
- *   +0x0190 -> line 1891
- *   +0x019c -> line 1893
- *   +0x01a4 -> line 1896
- *   +0x01ac -> line 1897
- *   +0x01d0 -> line 1899
- *   +0x01dc -> line 1900
- *   +0x01e0 -> line 1901
- *   +0x01e8 -> line 1903
- *   +0x0240 -> line 1904
- *   +0x024c -> line 1905
- *   +0x0254 -> line 1906
- *   +0x0260 -> line 1909
- *   +0x0280 -> line 1912
- *   +0x02b8 -> line 1914
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern int SECT_fn_cSetWantedActivity(HIE_tdstSuperObject_* hSectorSO, char cActivity);
 extern HIE_tdstSuperObject_* SECT_fn_hResolveSectorNextActivity(HIE_tdstSuperObject_* hSectorSO);
 extern int MC_fn_hGetFirstMainCharNode(void);
@@ -1893,87 +1759,9 @@ inline void GAM_vSetSectorActivity(HIE_tdstSuperObject_* hSector, char cActivity
         SECT_fn_cSetWantedActivity(hActivityList->hPointerOfSectorSO, cActivity);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 1662–1687 */
-/* addr: 0x00260bd0  size: 260 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1662
- *   +0x0010 -> line 1666
- *   +0x0020 -> line 1668
- *   +0x0048 -> line 1670
- *   +0x0054 -> line 1672
- *   +0x0060 -> line 1674
- *   +0x0070 -> line 1676
- *   +0x007c -> line 1677
- *   +0x0090 -> line 1678
- *   +0x009c -> line 1679
- *   +0x00a0 -> line 1680
- *   +0x00ac -> line 1681
- *   +0x00b0 -> line 1682
- *   +0x00bc -> line 1683
- *   +0x00d0 -> line 1684
- *   +0x00dc -> line 1685
- *   +0x00e0 -> line 1686
- *   +0x00f0 -> line 1687
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern void PLA_fn_vDesInitAllChildOfCharacter(HIE_tdstSuperObject_* p_stSuperObject, tdstEngineObject_* p_stObject);
 extern void SND_fn_vKillObjectSound2(HIE_tdstSuperObject_* p_stSuperObject, int s32_TypeId);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 1613–1650 */
-/* addr: 0x00260ce0  size: 668 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1613
- *   +0x001c -> line 1620
- *   +0x0038 -> line 1622
- *   +0x0058 -> line 1625
- *   +0x0060 -> line 1626
- *   +0x0074 -> line 1628
- *   +0x013c -> line 1629
- *   +0x0148 -> line 1632
- *   +0x0218 -> line 1636
- *   +0x0230 -> line 1639
- *   +0x0238 -> line 1642
- *   +0x023c -> line 1641
- *   +0x0240 -> line 1642
- *   +0x0244 -> line 1641
- *   +0x0248 -> line 1644
- *   +0x025c -> line 1647
- *   +0x0260 -> line 1648
- *   +0x0264 -> line 1647
- *   +0x0268 -> line 1648
- *   +0x026c -> line 1647
- *   +0x0270 -> line 1648
- *   +0x027c -> line 1649
- *   +0x0280 -> line 1650
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 1591–1596 */
-/* addr: 0x00260f80  size: 124 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1591
- *   +0x0074 -> line 1596
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 1561–1579 */
-/* addr: 0x00261000  size: 252 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1561
- *   +0x0008 -> line 1568
- *   +0x0024 -> line 1571
- *   +0x0078 -> line 1574
- *   +0x0084 -> line 1575
- *   +0x00e0 -> line 1576
- *   +0x00e4 -> line 1575
- *   +0x00e8 -> line 1576
- *   +0x00f0 -> line 1579
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int MC_fn_hGetFirstMainCharNode(void);
 HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(int);
 HIE_tdstSuperObject_* fn_h_SectInfoGetCurrentSector(tdstSectInfo_*);
@@ -1992,21 +1780,6 @@ inline int GAM_fn_lGetNbPersoActiveInSector(SECT_tdstSector_* hSector)
     return lCount;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 1509–1525 */
-/* addr: 0x00261100  size: 468 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1509
- *   +0x0014 -> line 1513
- *   +0x0024 -> line 1514
- *   +0x0038 -> line 1516
- *   +0x0048 -> line 1518
- *   +0x0060 -> line 1520
- *   +0x0078 -> line 1522
- *   +0x0118 -> line 1524
- *   +0x01b8 -> line 1525
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern HIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectNextBrother(HIE_tdstSuperObject_* hSuperObject);
 extern void HIE_fn_vChangeFather(HIE_tdstSuperObject_* hSuperObject, HIE_tdstSuperObject_* hNewFather, int lFlag);
 inline void fn_vDestructFatherSonLinksOfWorld(HIE_tdstSuperObject_* hWorld)
@@ -2030,14 +1803,6 @@ inline void fn_vDestructFatherSonLinksOfWorld(HIE_tdstSuperObject_* hWorld)
         }
     }
 }
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 1476–1476 */
-/* addr: 0x002612e0  size: 20 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1476
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 
 void GAM_fn_vInitTableOfMovedOnes(void);
 void SND_fn_vSynchroSound(void);
@@ -2089,6 +1854,374 @@ static inline int fn_hGetFixedCamera(void)
 inline void GAM_vClearCop0Register24(void)
 {
     asm volatile { mtbpc zero }
+}
+
+static inline void GAM_vCopyCurrentSector(tdstEngineObject_* p_stDest, HIE_tdstSuperObject_* hSource)
+{
+    fn_vSectInfoSetCurrentSector(p_stDest->h_SectInfo, fn_h_SectInfoGetCurrentSector(hSource->hLinkedObject.p_stCharacter->h_SectInfo));
+}
+
+extern void HIE_fn_vPushMatrix(HIE_tdstSuperObject_* hSuperObject);
+extern HIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectPrevBrother(HIE_tdstSuperObject_* hSuperObject);
+extern void fn_vTreatCharactersInSector(HIE_tdstSuperObject_* hCharacter);
+void GAM_fn_vUpdateTooFarFlag(HIE_tdstSuperObject_* _hSO);
+inline unsigned char GAM_ucTestMiscFlag(tdstStandardGame_* p_stGame, unsigned char ucMask)
+{
+    return (p_stGame->ucMiscFlags & ucMask) ? 1 : 0;
+}
+
+/* R5900 absolute value: MWCC never emits abs.s from plain C. */
+inline float GAM_xAbs(float x)
+{
+    float r;
+    asm { abs.s r, x }
+    return r;
+}
+
+extern int MC_fn_hGetNextMainCharNode(int hNode);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 597–645 */
+/* addr: 0x00261e10  size: 344 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 597
+ *   +0x0014 -> line 600
+ *   +0x001c -> line 606
+ *   +0x0024 -> line 610
+ *   +0x002c -> line 612
+ *   +0x0038 -> line 614
+ *   +0x0040 -> line 616
+ *   +0x0048 -> line 617
+ *   +0x006c -> line 619
+ *   +0x0074 -> line 620
+ *   +0x007c -> line 621
+ *   +0x0080 -> line 622
+ *   +0x0088 -> line 625
+ *   +0x0090 -> line 626
+ *   +0x0098 -> line 629
+ *   +0x009c -> line 633
+ *   +0x00a0 -> line 635
+ *   +0x00a4 -> line 633
+ *   +0x00c8 -> line 635
+ *   +0x0118 -> line 638
+ *   +0x0120 -> line 639
+ *   +0x0128 -> line 643
+ *   +0x0134 -> line 644
+ *   +0x0140 -> line 645
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GAM_fn_vUpdateTooFarFlag(HIE_tdstSuperObject_* _hSO)
+{
+    tdstStandardGame_* hStdGame;
+    int hMCN;
+    HIE_tdstSuperObject_* hMainActor;
+    MTH3D_tdstVector_ stDiff;
+    MAT_tdstTransformation_* hMainMatrix;
+
+    hStdGame = _hSO->hLinkedObject.p_stCharacter->h_StandardGame;
+    if (hStdGame != NULL)
+    {
+        hStdGame->ucMiscFlags |= 0x80;
+        for (hMCN = MC_fn_hGetFirstMainCharNode(); hMCN != 0; )
+        {
+            hMainActor = MC_fn_hGetCharacterInMainCharacterNode(hMCN);
+            if (((unsigned char)((hMainActor->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 1) ? 1 : 0)))
+            {
+                hMCN = MC_fn_hGetNextMainCharNode(hMCN);
+                continue;
+            }
+            if (_hSO == hMainActor)
+            {
+                hStdGame->ucMiscFlags &= ~0x80;
+                return;
+            }
+            hMainMatrix = hMainActor->hGlobalMatrix;
+            stDiff.xX = _hSO->hGlobalMatrix->stTransformMatrix.stCol_3.xX - hMainMatrix->stTransformMatrix.stCol_3.xX;
+            stDiff.xY = _hSO->hGlobalMatrix->stTransformMatrix.stCol_3.xY - hMainMatrix->stTransformMatrix.stCol_3.xY;
+            stDiff.xZ = _hSO->hGlobalMatrix->stTransformMatrix.stCol_3.xZ - hMainMatrix->stTransformMatrix.stCol_3.xZ;
+            if (GAM_xAbs(stDiff.xZ) + (GAM_xAbs(stDiff.xX) + GAM_xAbs(stDiff.xY))
+                < (float)(unsigned int)hStdGame->ucTooFarLimit)
+            {
+                hStdGame->ucMiscFlags &= ~0x80;
+                return;
+            }
+            hMCN = MC_fn_hGetNextMainCharNode(hMCN);
+        }
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 655–746 */
+/* addr: 0x00261b30  size: 732 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 655
+ *   +0x0004 -> line 662
+ *   +0x0008 -> line 655
+ *   +0x0028 -> line 662
+ *   +0x0034 -> line 665
+ *   +0x003c -> line 667
+ *   +0x0084 -> line 677
+ *   +0x008c -> line 681
+ *   +0x0098 -> line 682
+ *   +0x00a4 -> line 685
+ *   +0x00c8 -> line 688
+ *   +0x00d0 -> line 690
+ *   +0x00d8 -> line 691
+ *   +0x00e0 -> line 695
+ *   +0x00f4 -> line 697
+ *   +0x00fc -> line 701
+ *   +0x0108 -> line 710
+ *   +0x013c -> line 711
+ *   +0x0148 -> line 713
+ *   +0x0160 -> line 716
+ *   +0x0174 -> line 718
+ *   +0x0194 -> line 719
+ *   +0x01a8 -> line 720
+ *   +0x01bc -> line 722
+ *   +0x01c4 -> line 727
+ *   +0x01d8 -> line 729
+ *   +0x01f8 -> line 731
+ *   +0x0208 -> line 733
+ *   +0x021c -> line 735
+ *   +0x0224 -> line 738
+ *   +0x022c -> line 739
+ *   +0x0240 -> line 741
+ *   +0x0260 -> line 742
+ *   +0x0270 -> line 743
+ *   +0x0284 -> line 744
+ *   +0x0288 -> line 745
+ *   +0x02bc -> line 746
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vTreatDynamicHierarchy(HIE_tdstSuperObject_* hSuperObj, HIE_tdstSuperObject_* hMainChar, MTH3D_tdstVector_* p_stMainCharTranslation)
+{
+    tdstStandardGame_* hStdGame;
+    tdstEngineObject_* p_stObj;
+    HIE_tdstSuperObject_* hPrevChild;
+    HIE_tdstSuperObject_* hNextChild;
+    HIE_tdstSuperObject_* hChild;
+
+    if (hSuperObj->ulTypeOfLinkedObject == 2)
+    {
+        p_stObj = hSuperObj->hLinkedObject.p_stCharacter;
+        hStdGame = p_stObj->h_StandardGame;
+        if (hStdGame == NULL
+            || (!hStdGame->ucPlatFormType
+                && (GAM_ucTestMiscFlag(p_stObj->h_StandardGame, 4) != 1
+                    || g_stEngineStructure.stEngineTimer.ulTrameNumber == hStdGame->ulLastTrame)))
+        {
+            return;
+        }
+        HIE_fn_vPushMatrix(hSuperObj);
+        if (!hStdGame->ucPlatFormType)
+        {
+            if (!g_stEngineStructure.bEngineFrozen || (hStdGame->ulCustomBits & 0x100000))
+            {
+                if (hSuperObj == hMainChar)
+                    hStdGame->ucMiscFlags &= ~0x80;
+                else if (hStdGame->ulCustomBits & 0x4C0000)
+                    GAM_fn_vUpdateTooFarFlag(hSuperObj);
+                fn_vTreatCharactersInSector(hSuperObj);
+            }
+            if (HIE_g_lNbMatrixInStack)
+            {
+                HIE_g_lNbMatrixInStack--;
+                g_p_stCurrentMatrix = HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1];
+            }
+            HIE_fn_vPushMatrix(hSuperObj);
+            if (hSuperObj == MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode()))
+            {
+                for (hChild = hSuperObj->hFirstElementDyn, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hChild); hChild != NULL; hChild = hNextChild, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hNextChild))
+                {
+                    if (hChild->ulTypeOfLinkedObject == 2)
+                    {
+                        if (!CAM_fn_bSuperObjectIsACamera(hChild))
+                            fn_vTreatDynamicHierarchy(hChild, hMainChar, p_stMainCharTranslation);
+                    }
+                }
+            }
+        }
+        else
+        {
+            for (hChild = hSuperObj->hLastElementDyn, hPrevChild = HIE_fn_hForceGetSuperObjectPrevBrother(hChild); hChild != NULL; hChild = hPrevChild, hPrevChild = HIE_fn_hForceGetSuperObjectPrevBrother(hPrevChild))
+            {
+                if (hChild->ulTypeOfLinkedObject == 2)
+                {
+                    if (!CAM_fn_bSuperObjectIsACamera(hSuperObj))
+                        fn_vTreatDynamicHierarchy(hChild, hMainChar, p_stMainCharTranslation);
+                }
+            }
+        }
+    }
+    else
+    {
+        HIE_fn_vPushMatrix(hSuperObj);
+        for (hChild = hSuperObj->hFirstElementDyn, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hChild); hChild != NULL; hChild = hNextChild, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hNextChild))
+        {
+            if (hChild->ulTypeOfLinkedObject == 2)
+            {
+                if (!CAM_fn_bSuperObjectIsACamera(hChild))
+                    fn_vTreatDynamicHierarchy(hChild, hMainChar, p_stMainCharTranslation);
+            }
+        }
+    }
+    if (HIE_g_lNbMatrixInStack)
+    {
+        HIE_g_lNbMatrixInStack--;
+        g_p_stCurrentMatrix = HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1];
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 752–830 */
+/* addr: 0x00261970  size: 440 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 752
+ *   +0x0014 -> line 757
+ *   +0x001c -> line 763
+ *   +0x0024 -> line 764
+ *   +0x002c -> line 766
+ *   +0x0040 -> line 771
+ *   +0x004c -> line 775
+ *   +0x0060 -> line 778
+ *   +0x0070 -> line 780
+ *   +0x0078 -> line 782
+ *   +0x00c0 -> line 800
+ *   +0x00cc -> line 802
+ *   +0x00dc -> line 806
+ *   +0x00e4 -> line 808
+ *   +0x00ec -> line 809
+ *   +0x00f8 -> line 813
+ *   +0x010c -> line 815
+ *   +0x0114 -> line 817
+ *   +0x0118 -> line 818
+ *   +0x0120 -> line 819
+ *   +0x0128 -> line 820
+ *   +0x0158 -> line 828
+ *   +0x0170 -> line 829
+ *   +0x01a0 -> line 830
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vTreatDynamicHierarchyOfPlatForms(HIE_tdstSuperObject_* hSuperObj)
+{
+    HIE_tdstSuperObject_* hSprObjCamera;
+    HIE_tdstSuperObject_* hNextChild;
+    HIE_tdstSuperObject_* hMainChar;
+    tdstEngineObject_* p_stObj;
+    tdstStandardGame_* hStdGame;
+    HIE_tdstSuperObject_* hChild;
+
+    hMainChar = NULL;
+    hSprObjCamera = CAM_fn_hGetActiveCamera(0);
+    if (hSprObjCamera != NULL)
+        hMainChar = CAM_fn_hCineInfoGetSuperObjectTargeted(hSprObjCamera->hLinkedObject.p_stCharacter->h_Cineinfo->hCurrent);
+    HIE_fn_vPushMatrix(hSuperObj);
+    for (hChild = hSuperObj->hFirstElementDyn, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hChild); hChild != NULL; hChild = hNextChild, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hNextChild))
+    {
+        if (hChild->ulTypeOfLinkedObject == 2)
+        {
+            p_stObj = hChild->hLinkedObject.p_stCharacter;
+            hStdGame = p_stObj->h_StandardGame;
+            if (hStdGame != NULL
+                && GAM_ucTestMiscFlag(p_stObj->h_StandardGame, 4) == 1
+                && (!g_stEngineStructure.bEngineFrozen || !(hStdGame->ulCustomBits ^ 0x100000)))
+            {
+                if (!hStdGame->ucPlatFormType)
+                    break;
+                if (g_stEngineStructure.stEngineTimer.ulTrameNumber != hStdGame->ulLastTrame)
+                {
+                    if (hChild == hMainChar)
+                        hStdGame->ucMiscFlags &= ~0x80;
+                    else if (hStdGame->ulCustomBits & 0x4C0000)
+                        GAM_fn_vUpdateTooFarFlag(hChild);
+                    HIE_fn_vPushMatrix(hChild);
+                    fn_vTreatCharactersInSector(hChild);
+                    if (HIE_g_lNbMatrixInStack)
+                    {
+                        HIE_g_lNbMatrixInStack--;
+                        g_p_stCurrentMatrix = HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1];
+                    }
+                }
+            }
+        }
+    }
+    if (HIE_g_lNbMatrixInStack)
+    {
+        HIE_g_lNbMatrixInStack--;
+        g_p_stCurrentMatrix = HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1];
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 838–908 */
+/* addr: 0x002617c0  size: 424 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 838
+ *   +0x001c -> line 844
+ *   +0x0024 -> line 845
+ *   +0x005c -> line 856
+ *   +0x0064 -> line 858
+ *   +0x0068 -> line 861
+ *   +0x009c -> line 871
+ *   +0x00a4 -> line 872
+ *   +0x00ac -> line 874
+ *   +0x00bc -> line 879
+ *   +0x00c4 -> line 880
+ *   +0x00cc -> line 883
+ *   +0x00e0 -> line 885
+ *   +0x00e8 -> line 888
+ *   +0x00f4 -> line 889
+ *   +0x00f8 -> line 892
+ *   +0x012c -> line 893
+ *   +0x0134 -> line 903
+ *   +0x0140 -> line 905
+ *   +0x014c -> line 906
+ *   +0x0160 -> line 907
+ *   +0x0190 -> line 908
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vTreatCameraHierarchy(HIE_tdstSuperObject_* hSuperObj, unsigned char bForcedActivity)
+{
+    HIE_tdstSuperObject_* hSprObjCamera;
+    tdstStandardGame_* hStdGame;
+    unsigned char bTmp;
+    tdstEngineObject_* p_stObj;
+    HIE_tdstSuperObject_* hChild;
+
+    bTmp = 0;
+    HIE_fn_vPushMatrix(hSuperObj);
+    if (hSuperObj->ulTypeOfLinkedObject == 2
+        && (!g_stEngineStructure.bEngineFrozen || (hSuperObj->hLinkedObject.p_stCharacter->h_StandardGame->ulCustomBits & 0x100000)))
+    {
+        p_stObj = hSuperObj->hLinkedObject.p_stCharacter;
+        if (bForcedActivity)
+            bTmp = 1;
+        if (GAM_ucTestMiscFlag(p_stObj->h_StandardGame, 2) == 1
+            && g_stEngineStructure.stEngineTimer.ulTrameNumber != p_stObj->h_StandardGame->ulLastTrame)
+        {
+            hSprObjCamera = CAM_fn_hGetActiveCamera(0);
+            if (hSprObjCamera != NULL)
+                CAM_fn_hCineInfoGetSuperObjectTargeted(hSprObjCamera->hLinkedObject.p_stCharacter->h_Cineinfo->hCurrent);
+            hStdGame = hSuperObj->hLinkedObject.p_stCharacter->h_StandardGame;
+            if (hStdGame != NULL && (hStdGame->ulCustomBits & 0x4C0000))
+                GAM_fn_vUpdateTooFarFlag(hSuperObj);
+            fn_vTreatCharactersInSector(hSuperObj);
+            bTmp = 1;
+        }
+        if (HIE_g_lNbMatrixInStack)
+        {
+            HIE_g_lNbMatrixInStack--;
+            g_p_stCurrentMatrix = HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1];
+        }
+        HIE_fn_vPushMatrix(hSuperObj);
+    }
+    for (hChild = hSuperObj->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn)
+        fn_vTreatCameraHierarchy(hChild, bTmp);
+    if (HIE_g_lNbMatrixInStack)
+    {
+        HIE_g_lNbMatrixInStack--;
+        g_p_stCurrentMatrix = HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1];
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 933–1458 */
@@ -2170,376 +2303,6 @@ inline void GAM_vClearCop0Register24(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-static inline void GAM_vCopyCurrentSector(tdstEngineObject_* p_stDest, HIE_tdstSuperObject_* hSource)
-{
-    fn_vSectInfoSetCurrentSector(p_stDest->h_SectInfo, fn_h_SectInfoGetCurrentSector(hSource->hLinkedObject.p_stCharacter->h_SectInfo));
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 838–908 */
-/* addr: 0x002617c0  size: 424 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 838
- *   +0x001c -> line 844
- *   +0x0024 -> line 845
- *   +0x005c -> line 856
- *   +0x0064 -> line 858
- *   +0x0068 -> line 861
- *   +0x009c -> line 871
- *   +0x00a4 -> line 872
- *   +0x00ac -> line 874
- *   +0x00bc -> line 879
- *   +0x00c4 -> line 880
- *   +0x00cc -> line 883
- *   +0x00e0 -> line 885
- *   +0x00e8 -> line 888
- *   +0x00f4 -> line 889
- *   +0x00f8 -> line 892
- *   +0x012c -> line 893
- *   +0x0134 -> line 903
- *   +0x0140 -> line 905
- *   +0x014c -> line 906
- *   +0x0160 -> line 907
- *   +0x0190 -> line 908
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-extern void HIE_fn_vPushMatrix(HIE_tdstSuperObject_* hSuperObject);
-extern HIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectPrevBrother(HIE_tdstSuperObject_* hSuperObject);
-extern void fn_vTreatCharactersInSector(HIE_tdstSuperObject_* hCharacter);
-void GAM_fn_vUpdateTooFarFlag(HIE_tdstSuperObject_* _hSO);
-inline unsigned char GAM_ucTestMiscFlag(tdstStandardGame_* p_stGame, unsigned char ucMask)
-{
-    return (p_stGame->ucMiscFlags & ucMask) ? 1 : 0;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 752–830 */
-/* addr: 0x00261970  size: 440 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 752
- *   +0x0014 -> line 757
- *   +0x001c -> line 763
- *   +0x0024 -> line 764
- *   +0x002c -> line 766
- *   +0x0040 -> line 771
- *   +0x004c -> line 775
- *   +0x0060 -> line 778
- *   +0x0070 -> line 780
- *   +0x0078 -> line 782
- *   +0x00c0 -> line 800
- *   +0x00cc -> line 802
- *   +0x00dc -> line 806
- *   +0x00e4 -> line 808
- *   +0x00ec -> line 809
- *   +0x00f8 -> line 813
- *   +0x010c -> line 815
- *   +0x0114 -> line 817
- *   +0x0118 -> line 818
- *   +0x0120 -> line 819
- *   +0x0128 -> line 820
- *   +0x0158 -> line 828
- *   +0x0170 -> line 829
- *   +0x01a0 -> line 830
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 655–746 */
-/* addr: 0x00261b30  size: 732 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 655
- *   +0x0004 -> line 662
- *   +0x0008 -> line 655
- *   +0x0028 -> line 662
- *   +0x0034 -> line 665
- *   +0x003c -> line 667
- *   +0x0084 -> line 677
- *   +0x008c -> line 681
- *   +0x0098 -> line 682
- *   +0x00a4 -> line 685
- *   +0x00c8 -> line 688
- *   +0x00d0 -> line 690
- *   +0x00d8 -> line 691
- *   +0x00e0 -> line 695
- *   +0x00f4 -> line 697
- *   +0x00fc -> line 701
- *   +0x0108 -> line 710
- *   +0x013c -> line 711
- *   +0x0148 -> line 713
- *   +0x0160 -> line 716
- *   +0x0174 -> line 718
- *   +0x0194 -> line 719
- *   +0x01a8 -> line 720
- *   +0x01bc -> line 722
- *   +0x01c4 -> line 727
- *   +0x01d8 -> line 729
- *   +0x01f8 -> line 731
- *   +0x0208 -> line 733
- *   +0x021c -> line 735
- *   +0x0224 -> line 738
- *   +0x022c -> line 739
- *   +0x0240 -> line 741
- *   +0x0260 -> line 742
- *   +0x0270 -> line 743
- *   +0x0284 -> line 744
- *   +0x0288 -> line 745
- *   +0x02bc -> line 746
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 597–645 */
-/* addr: 0x00261e10  size: 344 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 597
- *   +0x0014 -> line 600
- *   +0x001c -> line 606
- *   +0x0024 -> line 610
- *   +0x002c -> line 612
- *   +0x0038 -> line 614
- *   +0x0040 -> line 616
- *   +0x0048 -> line 617
- *   +0x006c -> line 619
- *   +0x0074 -> line 620
- *   +0x007c -> line 621
- *   +0x0080 -> line 622
- *   +0x0088 -> line 625
- *   +0x0090 -> line 626
- *   +0x0098 -> line 629
- *   +0x009c -> line 633
- *   +0x00a0 -> line 635
- *   +0x00a4 -> line 633
- *   +0x00c8 -> line 635
- *   +0x0118 -> line 638
- *   +0x0120 -> line 639
- *   +0x0128 -> line 643
- *   +0x0134 -> line 644
- *   +0x0140 -> line 645
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-/* R5900 absolute value: MWCC never emits abs.s from plain C. */
-inline float GAM_xAbs(float x)
-{
-    float r;
-    asm { abs.s r, x }
-    return r;
-}
-
-extern int MC_fn_hGetNextMainCharNode(int hNode);
-
-void GAM_fn_vUpdateTooFarFlag(HIE_tdstSuperObject_* _hSO)
-{
-    tdstStandardGame_* hStdGame;
-    int hMCN;
-    HIE_tdstSuperObject_* hMainActor;
-    MTH3D_tdstVector_ stDiff;
-    MAT_tdstTransformation_* hMainMatrix;
-
-    hStdGame = _hSO->hLinkedObject.p_stCharacter->h_StandardGame;
-    if (hStdGame != NULL)
-    {
-        hStdGame->ucMiscFlags |= 0x80;
-        for (hMCN = MC_fn_hGetFirstMainCharNode(); hMCN != 0; )
-        {
-            hMainActor = MC_fn_hGetCharacterInMainCharacterNode(hMCN);
-            if (((unsigned char)((hMainActor->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 1) ? 1 : 0)))
-            {
-                hMCN = MC_fn_hGetNextMainCharNode(hMCN);
-                continue;
-            }
-            if (_hSO == hMainActor)
-            {
-                hStdGame->ucMiscFlags &= ~0x80;
-                return;
-            }
-            hMainMatrix = hMainActor->hGlobalMatrix;
-            stDiff.xX = _hSO->hGlobalMatrix->stTransformMatrix.stCol_3.xX - hMainMatrix->stTransformMatrix.stCol_3.xX;
-            stDiff.xY = _hSO->hGlobalMatrix->stTransformMatrix.stCol_3.xY - hMainMatrix->stTransformMatrix.stCol_3.xY;
-            stDiff.xZ = _hSO->hGlobalMatrix->stTransformMatrix.stCol_3.xZ - hMainMatrix->stTransformMatrix.stCol_3.xZ;
-            if (GAM_xAbs(stDiff.xZ) + (GAM_xAbs(stDiff.xX) + GAM_xAbs(stDiff.xY))
-                < (float)(unsigned int)hStdGame->ucTooFarLimit)
-            {
-                hStdGame->ucMiscFlags &= ~0x80;
-                return;
-            }
-            hMCN = MC_fn_hGetNextMainCharNode(hMCN);
-        }
-    }
-}
-
-void fn_vTreatDynamicHierarchy(HIE_tdstSuperObject_* hSuperObj, HIE_tdstSuperObject_* hMainChar, MTH3D_tdstVector_* p_stMainCharTranslation)
-{
-    tdstStandardGame_* hStdGame;
-    tdstEngineObject_* p_stObj;
-    HIE_tdstSuperObject_* hPrevChild;
-    HIE_tdstSuperObject_* hNextChild;
-    HIE_tdstSuperObject_* hChild;
-
-    if (hSuperObj->ulTypeOfLinkedObject == 2)
-    {
-        p_stObj = hSuperObj->hLinkedObject.p_stCharacter;
-        hStdGame = p_stObj->h_StandardGame;
-        if (hStdGame == NULL
-            || (!hStdGame->ucPlatFormType
-                && (GAM_ucTestMiscFlag(p_stObj->h_StandardGame, 4) != 1
-                    || g_stEngineStructure.stEngineTimer.ulTrameNumber == hStdGame->ulLastTrame)))
-        {
-            return;
-        }
-        HIE_fn_vPushMatrix(hSuperObj);
-        if (!hStdGame->ucPlatFormType)
-        {
-            if (!g_stEngineStructure.bEngineFrozen || (hStdGame->ulCustomBits & 0x100000))
-            {
-                if (hSuperObj == hMainChar)
-                    hStdGame->ucMiscFlags &= ~0x80;
-                else if (hStdGame->ulCustomBits & 0x4C0000)
-                    GAM_fn_vUpdateTooFarFlag(hSuperObj);
-                fn_vTreatCharactersInSector(hSuperObj);
-            }
-            if (HIE_g_lNbMatrixInStack)
-            {
-                HIE_g_lNbMatrixInStack--;
-                g_p_stCurrentMatrix = HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1];
-            }
-            HIE_fn_vPushMatrix(hSuperObj);
-            if (hSuperObj == MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode()))
-            {
-                for (hChild = hSuperObj->hFirstElementDyn, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hChild); hChild != NULL; hChild = hNextChild, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hNextChild))
-                {
-                    if (hChild->ulTypeOfLinkedObject == 2)
-                    {
-                        if (!CAM_fn_bSuperObjectIsACamera(hChild))
-                            fn_vTreatDynamicHierarchy(hChild, hMainChar, p_stMainCharTranslation);
-                    }
-                }
-            }
-        }
-        else
-        {
-            for (hChild = hSuperObj->hLastElementDyn, hPrevChild = HIE_fn_hForceGetSuperObjectPrevBrother(hChild); hChild != NULL; hChild = hPrevChild, hPrevChild = HIE_fn_hForceGetSuperObjectPrevBrother(hPrevChild))
-            {
-                if (hChild->ulTypeOfLinkedObject == 2)
-                {
-                    if (!CAM_fn_bSuperObjectIsACamera(hSuperObj))
-                        fn_vTreatDynamicHierarchy(hChild, hMainChar, p_stMainCharTranslation);
-                }
-            }
-        }
-    }
-    else
-    {
-        HIE_fn_vPushMatrix(hSuperObj);
-        for (hChild = hSuperObj->hFirstElementDyn, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hChild); hChild != NULL; hChild = hNextChild, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hNextChild))
-        {
-            if (hChild->ulTypeOfLinkedObject == 2)
-            {
-                if (!CAM_fn_bSuperObjectIsACamera(hChild))
-                    fn_vTreatDynamicHierarchy(hChild, hMainChar, p_stMainCharTranslation);
-            }
-        }
-    }
-    if (HIE_g_lNbMatrixInStack)
-    {
-        HIE_g_lNbMatrixInStack--;
-        g_p_stCurrentMatrix = HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1];
-    }
-}
-
-void fn_vTreatDynamicHierarchyOfPlatForms(HIE_tdstSuperObject_* hSuperObj)
-{
-    HIE_tdstSuperObject_* hSprObjCamera;
-    HIE_tdstSuperObject_* hNextChild;
-    HIE_tdstSuperObject_* hMainChar;
-    tdstEngineObject_* p_stObj;
-    tdstStandardGame_* hStdGame;
-    HIE_tdstSuperObject_* hChild;
-
-    hMainChar = NULL;
-    hSprObjCamera = CAM_fn_hGetActiveCamera(0);
-    if (hSprObjCamera != NULL)
-        hMainChar = CAM_fn_hCineInfoGetSuperObjectTargeted(hSprObjCamera->hLinkedObject.p_stCharacter->h_Cineinfo->hCurrent);
-    HIE_fn_vPushMatrix(hSuperObj);
-    for (hChild = hSuperObj->hFirstElementDyn, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hChild); hChild != NULL; hChild = hNextChild, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hNextChild))
-    {
-        if (hChild->ulTypeOfLinkedObject == 2)
-        {
-            p_stObj = hChild->hLinkedObject.p_stCharacter;
-            hStdGame = p_stObj->h_StandardGame;
-            if (hStdGame != NULL
-                && GAM_ucTestMiscFlag(p_stObj->h_StandardGame, 4) == 1
-                && (!g_stEngineStructure.bEngineFrozen || !(hStdGame->ulCustomBits ^ 0x100000)))
-            {
-                if (!hStdGame->ucPlatFormType)
-                    break;
-                if (g_stEngineStructure.stEngineTimer.ulTrameNumber != hStdGame->ulLastTrame)
-                {
-                    if (hChild == hMainChar)
-                        hStdGame->ucMiscFlags &= ~0x80;
-                    else if (hStdGame->ulCustomBits & 0x4C0000)
-                        GAM_fn_vUpdateTooFarFlag(hChild);
-                    HIE_fn_vPushMatrix(hChild);
-                    fn_vTreatCharactersInSector(hChild);
-                    if (HIE_g_lNbMatrixInStack)
-                    {
-                        HIE_g_lNbMatrixInStack--;
-                        g_p_stCurrentMatrix = HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1];
-                    }
-                }
-            }
-        }
-    }
-    if (HIE_g_lNbMatrixInStack)
-    {
-        HIE_g_lNbMatrixInStack--;
-        g_p_stCurrentMatrix = HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1];
-    }
-}
-
-void fn_vTreatCameraHierarchy(HIE_tdstSuperObject_* hSuperObj, unsigned char bForcedActivity)
-{
-    HIE_tdstSuperObject_* hSprObjCamera;
-    tdstStandardGame_* hStdGame;
-    unsigned char bTmp;
-    tdstEngineObject_* p_stObj;
-    HIE_tdstSuperObject_* hChild;
-
-    bTmp = 0;
-    HIE_fn_vPushMatrix(hSuperObj);
-    if (hSuperObj->ulTypeOfLinkedObject == 2
-        && (!g_stEngineStructure.bEngineFrozen || (hSuperObj->hLinkedObject.p_stCharacter->h_StandardGame->ulCustomBits & 0x100000)))
-    {
-        p_stObj = hSuperObj->hLinkedObject.p_stCharacter;
-        if (bForcedActivity)
-            bTmp = 1;
-        if (GAM_ucTestMiscFlag(p_stObj->h_StandardGame, 2) == 1
-            && g_stEngineStructure.stEngineTimer.ulTrameNumber != p_stObj->h_StandardGame->ulLastTrame)
-        {
-            hSprObjCamera = CAM_fn_hGetActiveCamera(0);
-            if (hSprObjCamera != NULL)
-                CAM_fn_hCineInfoGetSuperObjectTargeted(hSprObjCamera->hLinkedObject.p_stCharacter->h_Cineinfo->hCurrent);
-            hStdGame = hSuperObj->hLinkedObject.p_stCharacter->h_StandardGame;
-            if (hStdGame != NULL && (hStdGame->ulCustomBits & 0x4C0000))
-                GAM_fn_vUpdateTooFarFlag(hSuperObj);
-            fn_vTreatCharactersInSector(hSuperObj);
-            bTmp = 1;
-        }
-        if (HIE_g_lNbMatrixInStack)
-        {
-            HIE_g_lNbMatrixInStack--;
-            g_p_stCurrentMatrix = HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1];
-        }
-        HIE_fn_vPushMatrix(hSuperObj);
-    }
-    for (hChild = hSuperObj->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn)
-        fn_vTreatCameraHierarchy(hChild, bTmp);
-    if (HIE_g_lNbMatrixInStack)
-    {
-        HIE_g_lNbMatrixInStack--;
-        g_p_stCurrentMatrix = HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1];
-    }
-}
-
 void fn_vEngine(void)
 {
     unsigned char bSectorChange = 1;
@@ -2661,6 +2424,13 @@ void fn_vEngine(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 1476–1476 */
+/* addr: 0x002612e0  size: 20 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1476
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vReputCharacterSuperObjectAtTheWorld(HIE_tdstSuperObject_* h_SupObject)
 {
     HIE_tdstSuperObject_* h_Character = h_SupObject->hLinkedObject.p_stSuperObject;
@@ -2669,6 +2439,21 @@ void fn_vReputCharacterSuperObjectAtTheWorld(HIE_tdstSuperObject_* h_SupObject)
                          *(unsigned char*)((char*)h_Character->hLinkedObject.p_stSuperObject + 0x28));
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 1509–1525 */
+/* addr: 0x00261100  size: 468 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1509
+ *   +0x0014 -> line 1513
+ *   +0x0024 -> line 1514
+ *   +0x0038 -> line 1516
+ *   +0x0048 -> line 1518
+ *   +0x0060 -> line 1520
+ *   +0x0078 -> line 1522
+ *   +0x0118 -> line 1524
+ *   +0x01b8 -> line 1525
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vDestructAllFatherSonLinks(void)
 {
     HIE_tdstSuperObject_* hMainCharacter;
@@ -2685,6 +2470,21 @@ void fn_vDestructAllFatherSonLinks(void)
     fn_vDestructFatherSonLinksOfWorld((HIE_tdstSuperObject_*)gp_stInactiveDynamicWorld);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 1561–1579 */
+/* addr: 0x00261000  size: 252 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1561
+ *   +0x0008 -> line 1568
+ *   +0x0024 -> line 1571
+ *   +0x0078 -> line 1574
+ *   +0x0084 -> line 1575
+ *   +0x00e0 -> line 1576
+ *   +0x00e4 -> line 1575
+ *   +0x00e8 -> line 1576
+ *   +0x00f0 -> line 1579
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int GAM_fn_lGetNbPersoActive(void)
 {
     int i;
@@ -2701,6 +2501,14 @@ int GAM_fn_lGetNbPersoActive(void)
     return lNbPerso;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 1591–1596 */
+/* addr: 0x00260f80  size: 124 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1591
+ *   +0x0074 -> line 1596
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char GAM_fn_bIsCharacterActive(HIE_tdstSuperObject_* hSuperObj)
 {
     /* hFather is not in the debug locals (probably a macro temporary); the cached
@@ -2709,6 +2517,35 @@ unsigned char GAM_fn_bIsCharacterActive(HIE_tdstSuperObject_* hSuperObj)
     return ((hFather == (HIE_tdstSuperObject_*)gp_stDynamicWorld || hFather->hFatherDyn == (HIE_tdstSuperObject_*)gp_stDynamicWorld) && ((unsigned char)(((((hSuperObj->ulTypeOfLinkedObject != 2) ? NULL : hSuperObj->hLinkedObject.p_stCharacter)->h_StandardGame->ucMiscFlags & 4) ? 1 : 0)) == 1));
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 1613–1650 */
+/* addr: 0x00260ce0  size: 668 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1613
+ *   +0x001c -> line 1620
+ *   +0x0038 -> line 1622
+ *   +0x0058 -> line 1625
+ *   +0x0060 -> line 1626
+ *   +0x0074 -> line 1628
+ *   +0x013c -> line 1629
+ *   +0x0148 -> line 1632
+ *   +0x0218 -> line 1636
+ *   +0x0230 -> line 1639
+ *   +0x0238 -> line 1642
+ *   +0x023c -> line 1641
+ *   +0x0240 -> line 1642
+ *   +0x0244 -> line 1641
+ *   +0x0248 -> line 1644
+ *   +0x025c -> line 1647
+ *   +0x0260 -> line 1648
+ *   +0x0264 -> line 1647
+ *   +0x0268 -> line 1648
+ *   +0x026c -> line 1647
+ *   +0x0270 -> line 1648
+ *   +0x027c -> line 1649
+ *   +0x0280 -> line 1650
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vClearDynamicHierarchy(HIE_tdstSuperObject_* _hSOCurrentSector)
 {
     char cCounter;
@@ -2746,6 +2583,30 @@ void fn_vClearDynamicHierarchy(HIE_tdstSuperObject_* _hSOCurrentSector)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 1662–1687 */
+/* addr: 0x00260bd0  size: 260 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1662
+ *   +0x0010 -> line 1666
+ *   +0x0020 -> line 1668
+ *   +0x0048 -> line 1670
+ *   +0x0054 -> line 1672
+ *   +0x0060 -> line 1674
+ *   +0x0070 -> line 1676
+ *   +0x007c -> line 1677
+ *   +0x0090 -> line 1678
+ *   +0x009c -> line 1679
+ *   +0x00a0 -> line 1680
+ *   +0x00ac -> line 1681
+ *   +0x00b0 -> line 1682
+ *   +0x00bc -> line 1683
+ *   +0x00d0 -> line 1684
+ *   +0x00dc -> line 1685
+ *   +0x00e0 -> line 1686
+ *   +0x00f0 -> line 1687
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vDesinitInactivePerso(void)
 {
     HIE_tdstSuperObject_* hCharacter;
@@ -2774,6 +2635,58 @@ void fn_vDesinitInactivePerso(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 1821–1914 */
+/* addr: 0x002608e0  size: 740 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1821
+ *   +0x0024 -> line 1825
+ *   +0x0028 -> line 1821
+ *   +0x002c -> line 1828
+ *   +0x0034 -> line 1832
+ *   +0x0044 -> line 1838
+ *   +0x004c -> line 1840
+ *   +0x0054 -> line 1841
+ *   +0x0060 -> line 1845
+ *   +0x0078 -> line 1847
+ *   +0x007c -> line 1848
+ *   +0x0080 -> line 1850
+ *   +0x0088 -> line 1851
+ *   +0x0090 -> line 1854
+ *   +0x0098 -> line 1855
+ *   +0x009c -> line 1854
+ *   +0x00a4 -> line 1856
+ *   +0x00b0 -> line 1858
+ *   +0x00c8 -> line 1863
+ *   +0x00d0 -> line 1865
+ *   +0x00e0 -> line 1867
+ *   +0x00ec -> line 1871
+ *   +0x00f8 -> line 1873
+ *   +0x0100 -> line 1874
+ *   +0x0110 -> line 1878
+ *   +0x0128 -> line 1880
+ *   +0x0130 -> line 1881
+ *   +0x0168 -> line 1883
+ *   +0x016c -> line 1884
+ *   +0x0170 -> line 1887
+ *   +0x0180 -> line 1888
+ *   +0x0184 -> line 1889
+ *   +0x0190 -> line 1891
+ *   +0x019c -> line 1893
+ *   +0x01a4 -> line 1896
+ *   +0x01ac -> line 1897
+ *   +0x01d0 -> line 1899
+ *   +0x01dc -> line 1900
+ *   +0x01e0 -> line 1901
+ *   +0x01e8 -> line 1903
+ *   +0x0240 -> line 1904
+ *   +0x024c -> line 1905
+ *   +0x0254 -> line 1906
+ *   +0x0260 -> line 1909
+ *   +0x0280 -> line 1912
+ *   +0x02b8 -> line 1914
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GAM_fn_vUpdateDynamicHierarchy_New(void)
 {
     int hMCN;
@@ -2838,6 +2751,26 @@ void GAM_fn_vUpdateDynamicHierarchy_New(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 1982–2012 */
+/* addr: 0x00260670  size: 620 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1982
+ *   +0x0010 -> line 1987
+ *   +0x0028 -> line 1989
+ *   +0x0048 -> line 1993
+ *   +0x0054 -> line 1995
+ *   +0x0064 -> line 1997
+ *   +0x006c -> line 1999
+ *   +0x0080 -> line 2001
+ *   +0x014c -> line 2002
+ *   +0x0158 -> line 2005
+ *   +0x0228 -> line 2008
+ *   +0x023c -> line 2010
+ *   +0x0240 -> line 2011
+ *   +0x0258 -> line 2012
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GAM_fn_vRemoveActorsFromNewlyInactiveSectors(void)
 {
     HIE_tdstSuperObject_* hSector;
@@ -2869,6 +2802,24 @@ void GAM_fn_vRemoveActorsFromNewlyInactiveSectors(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 2016–2041 */
+/* addr: 0x00260520  size: 328 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2016
+ *   +0x0010 -> line 2020
+ *   +0x001c -> line 2022
+ *   +0x0024 -> line 2024
+ *   +0x0034 -> line 2028
+ *   +0x0048 -> line 2033
+ *   +0x004c -> line 2035
+ *   +0x0108 -> line 2036
+ *   +0x0114 -> line 2037
+ *   +0x0118 -> line 2039
+ *   +0x0124 -> line 2040
+ *   +0x0130 -> line 2041
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GAM_fn_vAddActorsFromNewlyActiveSectors(void)
 {
     SECT_tdstListOfSOCharacters_* hCharacterList;
@@ -2904,6 +2855,34 @@ void GAM_fn_vAddActorsFromNewlyActiveSectors(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 2045–2085 */
+/* addr: 0x0025ff80  size: 1012 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2045
+ *   +0x0004 -> line 2050
+ *   +0x0008 -> line 2045
+ *   +0x0028 -> line 2050
+ *   +0x002c -> line 2053
+ *   +0x0040 -> line 2055
+ *   +0x0048 -> line 2056
+ *   +0x0120 -> line 2057
+ *   +0x0138 -> line 2060
+ *   +0x0140 -> line 2061
+ *   +0x0148 -> line 2062
+ *   +0x0158 -> line 2063
+ *   +0x0164 -> line 2065
+ *   +0x0174 -> line 2067
+ *   +0x01dc -> line 2072
+ *   +0x02b0 -> line 2074
+ *   +0x02c0 -> line 2077
+ *   +0x02c4 -> line 2078
+ *   +0x02cc -> line 2082
+ *   +0x02d4 -> line 2083
+ *   +0x03a0 -> line 2084
+ *   +0x03cc -> line 2085
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GAM_fn_vAddAlwaysActiveActors(unsigned char _bIsAnInit)
 {
     HIE_tdstSuperObject_* hFixSPO;
@@ -2955,6 +2934,21 @@ void GAM_fn_vAddAlwaysActiveActors(unsigned char _bIsAnInit)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 224–234 */
+/* addr: 0x0025ff20  size: 84 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 224
+ *   +0x0018 -> line 226
+ *   +0x001c -> line 227
+ *   +0x0020 -> line 228
+ *   +0x0024 -> line 229
+ *   +0x0028 -> line 231
+ *   +0x0030 -> line 232
+ *   +0x0048 -> line 233
+ *   +0x004c -> line 234
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vToggleCinemascope(int bValue)
 {
     if (bValue && (g_bCinemascopeOn != 1))

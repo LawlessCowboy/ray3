@@ -1037,71 +1037,6 @@ static inline float AGO2_xDotVector(MTH3D_tdstVector_* p_stA, MTH3D_tdstVector_*
 AGO2_Part_* AGO2_bIsTypeAlreadyExists(unsigned int PartType);
 /* Function symbols are declared by their recovered definitions below. */
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 139–240 */
-/* addr: 0x001e0dc0  size: 532 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 139
- *   +0x0014 -> line 146
- *   +0x0024 -> line 148
- *   +0x0030 -> line 149
- *   +0x0038 -> line 157
- *   +0x0044 -> line 161
- *   +0x004c -> line 160
- *   +0x0054 -> line 161
- *   +0x0088 -> line 163
- *   +0x0090 -> line 166
- *   +0x009c -> line 172
- *   +0x00a4 -> line 177
- *   +0x00ac -> line 178
- *   +0x00bc -> line 192
- *   +0x00cc -> line 194
- *   +0x00d0 -> line 192
- *   +0x00dc -> line 194
- *   +0x00e8 -> line 192
- *   +0x00ec -> line 194
- *   +0x00f4 -> line 196
- *   +0x0104 -> line 198
- *   +0x0108 -> line 199
- *   +0x0114 -> line 201
- *   +0x0118 -> line 202
- *   +0x011c -> line 204
- *   +0x0120 -> line 202
- *   +0x0124 -> line 205
- *   +0x0134 -> line 215
- *   +0x0158 -> line 218
- *   +0x015c -> line 215
- *   +0x0168 -> line 218
- *   +0x0174 -> line 220
- *   +0x0178 -> line 232
- *   +0x0180 -> line 220
- *   +0x0188 -> line 232
- *   +0x018c -> line 221
- *   +0x0190 -> line 225
- *   +0x0194 -> line 220
- *   +0x0198 -> line 221
- *   +0x019c -> line 225
- *   +0x01a0 -> line 220
- *   +0x01a8 -> line 221
- *   +0x01ac -> line 220
- *   +0x01b0 -> line 225
- *   +0x01b4 -> line 221
- *   +0x01b8 -> line 225
- *   +0x01bc -> line 226
- *   +0x01c0 -> line 227
- *   +0x01c4 -> line 231
- *   +0x01d0 -> line 232
- *   +0x01dc -> line 235
- *   +0x01e0 -> line 234
- *   +0x01e4 -> line 235
- *   +0x01ec -> line 234
- *   +0x01f0 -> line 239
- *   +0x01f4 -> line 234
- *   +0x01f8 -> line 239
- *   +0x01fc -> line 240
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 unsigned int AGO2_MEM_Alloc(unsigned int Size);
@@ -1166,322 +1101,6 @@ void AGO2_vDestroyAllParts(void);
 AGO2_Part_* AGO2_vCreatePart(unsigned int ulParticleType, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber);
 void AGO2_vFirstInitAndRegisterAGO2Types(void);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 4276–4312 */
-/* addr: 0x001e0fe0  size: 372 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4276
- *   +0x0004 -> line 4283
- *   +0x0008 -> line 4276
- *   +0x000c -> line 4283
- *   +0x0018 -> line 4284
- *   +0x0030 -> line 4286
- *   +0x003c -> line 4289
- *   +0x0040 -> line 4290
- *   +0x006c -> line 4293
- *   +0x0070 -> line 4294
- *   +0x0074 -> line 4293
- *   +0x0078 -> line 4295
- *   +0x007c -> line 4293
- *   +0x0080 -> line 4296
- *   +0x0084 -> line 4293
- *   +0x0088 -> line 4300
- *   +0x008c -> line 4293
- *   +0x0098 -> line 4296
- *   +0x009c -> line 4293
- *   +0x00a0 -> line 4298
- *   +0x00a8 -> line 4293
- *   +0x00ac -> line 4294
- *   +0x00b8 -> line 4293
- *   +0x00bc -> line 4298
- *   +0x00c0 -> line 4299
- *   +0x00c4 -> line 4298
- *   +0x00d0 -> line 4295
- *   +0x00d4 -> line 4294
- *   +0x00d8 -> line 4298
- *   +0x00e0 -> line 4299
- *   +0x00e8 -> line 4298
- *   +0x00f0 -> line 4295
- *   +0x00f4 -> line 4294
- *   +0x00f8 -> line 4298
- *   +0x00fc -> line 4295
- *   +0x0100 -> line 4299
- *   +0x0104 -> line 4295
- *   +0x0108 -> line 4294
- *   +0x010c -> line 4300
- *   +0x0110 -> line 4299
- *   +0x0114 -> line 4300
- *   +0x0118 -> line 4299
- *   +0x011c -> line 4300
- *   +0x0120 -> line 4296
- *   +0x0124 -> line 4299
- *   +0x0128 -> line 4295
- *   +0x012c -> line 4304
- *   +0x0130 -> line 4296
- *   +0x0134 -> line 4295
- *   +0x0138 -> line 4305
- *   +0x013c -> line 4296
- *   +0x0140 -> line 4300
- *   +0x014c -> line 4301
- *   +0x0150 -> line 4306
- *   +0x0154 -> line 4308
- *   +0x0158 -> line 4301
- *   +0x0160 -> line 4309
- *   +0x0164 -> line 4310
- *   +0x0168 -> line 4312
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 4270–4270 */
-/* addr: 0x001e1160  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4270
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3932–4057 */
-/* addr: 0x001e1170  size: 1484 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3932
- *   +0x0004 -> line 3941
- *   +0x0008 -> line 3932
- *   +0x000c -> line 3941
- *   +0x0010 -> line 3932
- *   +0x0014 -> line 3941
- *   +0x0018 -> line 3932
- *   +0x0024 -> line 3952
- *   +0x0028 -> line 3932
- *   +0x002c -> line 3952
- *   +0x0030 -> line 3932
- *   +0x0034 -> line 3944
- *   +0x0038 -> line 3932
- *   +0x003c -> line 3944
- *   +0x0040 -> line 3932
- *   +0x0068 -> line 3941
- *   +0x006c -> line 3952
- *   +0x0070 -> line 3954
- *   +0x0074 -> line 3952
- *   +0x0078 -> line 3943
- *   +0x007c -> line 3941
- *   +0x0080 -> line 3954
- *   +0x009c -> line 3959
- *   +0x00a0 -> line 3963
- *   +0x00a4 -> line 3960
- *   +0x00a8 -> line 3961
- *   +0x00b0 -> line 3967
- *   +0x00c4 -> line 3968
- *   +0x00c8 -> line 3967
- *   +0x00d4 -> line 3968
- *   +0x00e0 -> line 3967
- *   +0x00e4 -> line 3968
- *   +0x00f0 -> line 3967
- *   +0x00f4 -> line 3972
- *   +0x00f8 -> line 3968
- *   +0x00fc -> line 3972
- *   +0x0124 -> line 3968
- *   +0x0128 -> line 3972
- *   +0x012c -> line 3973
- *   +0x0130 -> line 3972
- *   +0x0134 -> line 3973
- *   +0x0138 -> line 3972
- *   +0x013c -> line 3973
- *   +0x0144 -> line 3972
- *   +0x0148 -> line 3976
- *   +0x014c -> line 3973
- *   +0x0150 -> line 3972
- *   +0x0154 -> line 3976
- *   +0x0158 -> line 3973
- *   +0x015c -> line 3972
- *   +0x0160 -> line 3976
- *   +0x0194 -> line 3977
- *   +0x01d0 -> line 3978
- *   +0x020c -> line 3979
- *   +0x0244 -> line 3982
- *   +0x0250 -> line 3988
- *   +0x0254 -> line 3979
- *   +0x0258 -> line 3988
- *   +0x025c -> line 3982
- *   +0x0260 -> line 3988
- *   +0x0264 -> line 3983
- *   +0x0268 -> line 3988
- *   +0x0274 -> line 3984
- *   +0x0278 -> line 3988
- *   +0x027c -> line 3989
- *   +0x0280 -> line 3988
- *   +0x0284 -> line 3989
- *   +0x0288 -> line 3988
- *   +0x028c -> line 3989
- *   +0x0290 -> line 3990
- *   +0x0294 -> line 3989
- *   +0x0298 -> line 3992
- *   +0x029c -> line 3989
- *   +0x02a0 -> line 3990
- *   +0x02a4 -> line 3988
- *   +0x02a8 -> line 3990
- *   +0x02ac -> line 3985
- *   +0x02b0 -> line 3990
- *   +0x02b4 -> line 3991
- *   +0x02b8 -> line 3990
- *   +0x02bc -> line 3991
- *   +0x02c0 -> line 3990
- *   +0x02c4 -> line 3991
- *   +0x02cc -> line 3994
- *   +0x02d0 -> line 3991
- *   +0x02d4 -> line 3992
- *   +0x02d8 -> line 3990
- *   +0x02dc -> line 3992
- *   +0x02e0 -> line 3994
- *   +0x02e4 -> line 3992
- *   +0x02e8 -> line 3993
- *   +0x02ec -> line 3992
- *   +0x02f0 -> line 3993
- *   +0x02f4 -> line 3992
- *   +0x02f8 -> line 3993
- *   +0x0304 -> line 3992
- *   +0x0308 -> line 3994
- *   +0x0314 -> line 3999
- *   +0x0318 -> line 3994
- *   +0x0320 -> line 3995
- *   +0x0330 -> line 3999
- *   +0x033c -> line 4000
- *   +0x0350 -> line 4001
- *   +0x0358 -> line 3994
- *   +0x035c -> line 4001
- *   +0x0360 -> line 4004
- *   +0x0364 -> line 3995
- *   +0x0368 -> line 4004
- *   +0x0374 -> line 4005
- *   +0x0388 -> line 4006
- *   +0x0390 -> line 4008
- *   +0x0398 -> line 4010
- *   +0x03a0 -> line 4011
- *   +0x03b0 -> line 4019
- *   +0x03b8 -> line 4020
- *   +0x03bc -> line 4036
- *   +0x03c0 -> line 4021
- *   +0x03c4 -> line 4036
- *   +0x03c8 -> line 4027
- *   +0x03cc -> line 4036
- *   +0x03d0 -> line 4023
- *   +0x03d4 -> line 4036
- *   +0x03e0 -> line 4024
- *   +0x03e4 -> line 4019
- *   +0x03e8 -> line 4036
- *   +0x03f4 -> line 4019
- *   +0x03f8 -> line 4036
- *   +0x03fc -> line 4019
- *   +0x0400 -> line 4036
- *   +0x0410 -> line 4020
- *   +0x041c -> line 4021
- *   +0x0428 -> line 4022
- *   +0x0434 -> line 4027
- *   +0x0440 -> line 4023
- *   +0x0444 -> line 4024
- *   +0x0448 -> line 4027
- *   +0x044c -> line 4023
- *   +0x0454 -> line 4024
- *   +0x045c -> line 4027
- *   +0x0464 -> line 4031
- *   +0x046c -> line 4028
- *   +0x0474 -> line 4031
- *   +0x0478 -> line 4028
- *   +0x0480 -> line 4031
- *   +0x0484 -> line 4029
- *   +0x0494 -> line 4028
- *   +0x0498 -> line 4029
- *   +0x049c -> line 4031
- *   +0x04a0 -> line 4032
- *   +0x04b4 -> line 4033
- *   +0x04c8 -> line 4036
- *   +0x04d0 -> line 4037
- *   +0x050c -> line 4038
- *   +0x0514 -> line 4039
- *   +0x051c -> line 4042
- *   +0x0568 -> line 4053
- *   +0x056c -> line 4054
- *   +0x0570 -> line 4053
- *   +0x0574 -> line 4054
- *   +0x0580 -> line 4057
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3826–3912 */
-/* addr: 0x001e1740  size: 980 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3826
- *   +0x0008 -> line 3842
- *   +0x000c -> line 3826
- *   +0x0010 -> line 3842
- *   +0x0014 -> line 3826
- *   +0x004c -> line 3838
- *   +0x0054 -> line 3833
- *   +0x0058 -> line 3838
- *   +0x0060 -> line 3839
- *   +0x0068 -> line 3842
- *   +0x006c -> line 3839
- *   +0x0074 -> line 3840
- *   +0x0084 -> line 3842
- *   +0x00e4 -> line 3844
- *   +0x00f4 -> line 3863
- *   +0x0110 -> line 3876
- *   +0x0118 -> line 3866
- *   +0x011c -> line 3867
- *   +0x0120 -> line 3870
- *   +0x0124 -> line 3871
- *   +0x0128 -> line 3865
- *   +0x0130 -> line 3876
- *   +0x0134 -> line 3872
- *   +0x0138 -> line 3865
- *   +0x013c -> line 3866
- *   +0x0140 -> line 3872
- *   +0x0144 -> line 3865
- *   +0x015c -> line 3866
- *   +0x0174 -> line 3867
- *   +0x0178 -> line 3866
- *   +0x0188 -> line 3867
- *   +0x01b0 -> line 3869
- *   +0x01c4 -> line 3870
- *   +0x01d8 -> line 3871
- *   +0x01e8 -> line 3876
- *   +0x01f0 -> line 3878
- *   +0x01f8 -> line 3879
- *   +0x0214 -> line 3889
- *   +0x0218 -> line 3882
- *   +0x021c -> line 3883
- *   +0x0220 -> line 3886
- *   +0x0224 -> line 3887
- *   +0x0228 -> line 3889
- *   +0x0238 -> line 3881
- *   +0x0240 -> line 3889
- *   +0x0244 -> line 3881
- *   +0x0248 -> line 3882
- *   +0x024c -> line 3889
- *   +0x0250 -> line 3881
- *   +0x0264 -> line 3882
- *   +0x026c -> line 3889
- *   +0x0270 -> line 3882
- *   +0x0280 -> line 3883
- *   +0x0284 -> line 3882
- *   +0x0290 -> line 3883
- *   +0x02b4 -> line 3885
- *   +0x02c4 -> line 3886
- *   +0x02d4 -> line 3887
- *   +0x02e4 -> line 3889
- *   +0x02f4 -> line 3902
- *   +0x02f8 -> line 3897
- *   +0x02fc -> line 3902
- *   +0x0304 -> line 3900
- *   +0x0308 -> line 3902
- *   +0x030c -> line 3897
- *   +0x0320 -> line 3898
- *   +0x0338 -> line 3902
- *   +0x0354 -> line 3905
- *   +0x0390 -> line 3912
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 static inline void AGO2_vCylinderPoint(MTH3D_tdstVector_* pDst, MTH3D_tdstVector_* pBase, float c, MTH3D_tdstVector_* pV1, float s, MTH3D_tdstVector_* pV2)
 {
     pDst->xX = pBase->xX + c * pV1->xX + s * pV2->xX;
@@ -1489,352 +1108,6 @@ static inline void AGO2_vCylinderPoint(MTH3D_tdstVector_* pDst, MTH3D_tdstVector
     pDst->xZ = pBase->xZ + c * pV1->xZ + s * pV2->xZ;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3822–3823 */
-/* addr: 0x001e1b20  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3822
- *   +0x0008 -> line 3823
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3815–3818 */
-/* addr: 0x001e1b30  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3815
- *   +0x0004 -> line 3817
- *   +0x0008 -> line 3818
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3740–3804 */
-/* addr: 0x001e1b40  size: 572 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3740
- *   +0x0020 -> line 3749
- *   +0x002c -> line 3750
- *   +0x0034 -> line 3752
- *   +0x0040 -> line 3753
- *   +0x0048 -> line 3754
- *   +0x0050 -> line 3761
- *   +0x0058 -> line 3763
- *   +0x0070 -> line 3764
- *   +0x0084 -> line 3765
- *   +0x0094 -> line 3767
- *   +0x00b0 -> line 3769
- *   +0x00b4 -> line 3772
- *   +0x00bc -> line 3776
- *   +0x00d0 -> line 3789
- *   +0x00d8 -> line 3784
- *   +0x00dc -> line 3776
- *   +0x00e4 -> line 3777
- *   +0x00f4 -> line 3778
- *   +0x0104 -> line 3781
- *   +0x0118 -> line 3783
- *   +0x0124 -> line 3789
- *   +0x012c -> line 3794
- *   +0x013c -> line 3795
- *   +0x014c -> line 3796
- *   +0x0164 -> line 3794
- *   +0x0168 -> line 3796
- *   +0x0174 -> line 3795
- *   +0x0178 -> line 3796
- *   +0x0194 -> line 3794
- *   +0x0198 -> line 3796
- *   +0x01a4 -> line 3795
- *   +0x01a8 -> line 3796
- *   +0x01c4 -> line 3794
- *   +0x01c8 -> line 3796
- *   +0x01d4 -> line 3795
- *   +0x01d8 -> line 3796
- *   +0x01ec -> line 3798
- *   +0x01f0 -> line 3800
- *   +0x01f4 -> line 3801
- *   +0x0208 -> line 3803
- *   +0x021c -> line 3804
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3608–3736 */
-/* addr: 0x001e1d80  size: 1220 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3608
- *   +0x0050 -> line 3623
- *   +0x0068 -> line 3624
- *   +0x0088 -> line 3625
- *   +0x0094 -> line 3627
- *   +0x0098 -> line 3629
- *   +0x009c -> line 3628
- *   +0x00a4 -> line 3629
- *   +0x00ac -> line 3633
- *   +0x00b4 -> line 3634
- *   +0x00bc -> line 3636
- *   +0x00c4 -> line 3637
- *   +0x00cc -> line 3644
- *   +0x00d0 -> line 3645
- *   +0x00d8 -> line 3639
- *   +0x00dc -> line 3645
- *   +0x00f0 -> line 3646
- *   +0x00f8 -> line 3645
- *   +0x00fc -> line 3646
- *   +0x0118 -> line 3647
- *   +0x011c -> line 3659
- *   +0x0120 -> line 3647
- *   +0x0124 -> line 3659
- *   +0x0128 -> line 3647
- *   +0x012c -> line 3659
- *   +0x0130 -> line 3647
- *   +0x013c -> line 3659
- *   +0x0144 -> line 3663
- *   +0x014c -> line 3662
- *   +0x0150 -> line 3661
- *   +0x0154 -> line 3663
- *   +0x015c -> line 3664
- *   +0x0164 -> line 3663
- *   +0x0168 -> line 3664
- *   +0x0178 -> line 3666
- *   +0x0190 -> line 3668
- *   +0x01a0 -> line 3670
- *   +0x01ac -> line 3671
- *   +0x01b4 -> line 3672
- *   +0x01b8 -> line 3671
- *   +0x01bc -> line 3672
- *   +0x01c4 -> line 3673
- *   +0x01d0 -> line 3676
- *   +0x01d4 -> line 3706
- *   +0x01d8 -> line 3693
- *   +0x01dc -> line 3676
- *   +0x01e8 -> line 3677
- *   +0x01ec -> line 3676
- *   +0x01f0 -> line 3677
- *   +0x0200 -> line 3689
- *   +0x0204 -> line 3678
- *   +0x0208 -> line 3689
- *   +0x020c -> line 3678
- *   +0x0218 -> line 3680
- *   +0x022c -> line 3681
- *   +0x023c -> line 3685
- *   +0x0240 -> line 3681
- *   +0x0244 -> line 3682
- *   +0x0248 -> line 3685
- *   +0x024c -> line 3682
- *   +0x0254 -> line 3684
- *   +0x0268 -> line 3706
- *   +0x026c -> line 3693
- *   +0x0270 -> line 3708
- *   +0x0274 -> line 3685
- *   +0x0278 -> line 3708
- *   +0x027c -> line 3685
- *   +0x0284 -> line 3686
- *   +0x0294 -> line 3688
- *   +0x02a0 -> line 3706
- *   +0x02a4 -> line 3688
- *   +0x02ac -> line 3689
- *   +0x02b0 -> line 3706
- *   +0x02b4 -> line 3689
- *   +0x02bc -> line 3707
- *   +0x02c4 -> line 3709
- *   +0x02c8 -> line 3690
- *   +0x02cc -> line 3709
- *   +0x02d0 -> line 3690
- *   +0x02d8 -> line 3693
- *   +0x02ec -> line 3697
- *   +0x0300 -> line 3701
- *   +0x0314 -> line 3706
- *   +0x0318 -> line 3707
- *   +0x031c -> line 3708
- *   +0x0320 -> line 3712
- *   +0x035c -> line 3713
- *   +0x039c -> line 3714
- *   +0x03ac -> line 3725
- *   +0x03b0 -> line 3714
- *   +0x03e0 -> line 3717
- *   +0x03e8 -> line 3718
- *   +0x03f0 -> line 3720
- *   +0x03f4 -> line 3721
- *   +0x03fc -> line 3723
- *   +0x0400 -> line 3729
- *   +0x0448 -> line 3730
- *   +0x0470 -> line 3733
- *   +0x0474 -> line 3735
- *   +0x0478 -> line 3736
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3459–3603 */
-/* addr: 0x001e2250  size: 856 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3459
- *   +0x0004 -> line 3464
- *   +0x0008 -> line 3459
- *   +0x000c -> line 3464
- *   +0x0010 -> line 3459
- *   +0x0014 -> line 3469
- *   +0x0018 -> line 3459
- *   +0x001c -> line 3465
- *   +0x0020 -> line 3459
- *   +0x0024 -> line 3465
- *   +0x0028 -> line 3459
- *   +0x002c -> line 3468
- *   +0x0030 -> line 3459
- *   +0x0038 -> line 3464
- *   +0x003c -> line 3468
- *   +0x0044 -> line 3469
- *   +0x0048 -> line 3464
- *   +0x004c -> line 3468
- *   +0x0054 -> line 3469
- *   +0x0058 -> line 3468
- *   +0x005c -> line 3469
- *   +0x0064 -> line 3470
- *   +0x0080 -> line 3472
- *   +0x0084 -> line 3473
- *   +0x0088 -> line 3472
- *   +0x008c -> line 3473
- *   +0x0090 -> line 3472
- *   +0x0094 -> line 3473
- *   +0x00a0 -> line 3474
- *   +0x00bc -> line 3476
- *   +0x00c0 -> line 3477
- *   +0x00c4 -> line 3476
- *   +0x00c8 -> line 3477
- *   +0x00cc -> line 3476
- *   +0x00d0 -> line 3477
- *   +0x00dc -> line 3478
- *   +0x00f8 -> line 3480
- *   +0x0104 -> line 3481
- *   +0x0118 -> line 3482
- *   +0x0134 -> line 3484
- *   +0x0140 -> line 3485
- *   +0x0154 -> line 3486
- *   +0x0170 -> line 3488
- *   +0x017c -> line 3491
- *   +0x0180 -> line 3488
- *   +0x0184 -> line 3490
- *   +0x018c -> line 3491
- *   +0x0194 -> line 3488
- *   +0x0198 -> line 3490
- *   +0x01a0 -> line 3491
- *   +0x01a8 -> line 3492
- *   +0x01c4 -> line 3494
- *   +0x01d8 -> line 3495
- *   +0x01dc -> line 3494
- *   +0x01e0 -> line 3495
- *   +0x01e4 -> line 3494
- *   +0x01e8 -> line 3495
- *   +0x01f0 -> line 3496
- *   +0x020c -> line 3498
- *   +0x0220 -> line 3499
- *   +0x0224 -> line 3498
- *   +0x0228 -> line 3499
- *   +0x022c -> line 3498
- *   +0x0230 -> line 3499
- *   +0x0238 -> line 3500
- *   +0x0254 -> line 3502
- *   +0x0268 -> line 3503
- *   +0x026c -> line 3502
- *   +0x0270 -> line 3503
- *   +0x0274 -> line 3502
- *   +0x0278 -> line 3503
- *   +0x0280 -> line 3504
- *   +0x029c -> line 3506
- *   +0x02a8 -> line 3509
- *   +0x02ac -> line 3506
- *   +0x02b0 -> line 3508
- *   +0x02b4 -> line 3509
- *   +0x02bc -> line 3508
- *   +0x02c4 -> line 3506
- *   +0x02c8 -> line 3508
- *   +0x02d4 -> line 3509
- *   +0x02dc -> line 3510
- *   +0x02f8 -> line 3512
- *   +0x02fc -> line 3513
- *   +0x0300 -> line 3512
- *   +0x0304 -> line 3513
- *   +0x0308 -> line 3512
- *   +0x030c -> line 3513
- *   +0x0310 -> line 3512
- *   +0x0314 -> line 3513
- *   +0x031c -> line 3514
- *   +0x0338 -> line 3603
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3380–3453 */
-/* addr: 0x001e25b0  size: 552 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3380
- *   +0x0004 -> line 3384
- *   +0x0008 -> line 3380
- *   +0x000c -> line 3384
- *   +0x0010 -> line 3380
- *   +0x0014 -> line 3384
- *   +0x0018 -> line 3380
- *   +0x0020 -> line 3384
- *   +0x0034 -> line 3404
- *   +0x0038 -> line 3384
- *   +0x003c -> line 3385
- *   +0x0044 -> line 3384
- *   +0x004c -> line 3385
- *   +0x0050 -> line 3401
- *   +0x0054 -> line 3404
- *   +0x0058 -> line 3384
- *   +0x0060 -> line 3385
- *   +0x0064 -> line 3384
- *   +0x0068 -> line 3385
- *   +0x007c -> line 3404
- *   +0x0080 -> line 3385
- *   +0x0084 -> line 3386
- *   +0x0088 -> line 3385
- *   +0x008c -> line 3386
- *   +0x0090 -> line 3385
- *   +0x0094 -> line 3386
- *   +0x0098 -> line 3404
- *   +0x009c -> line 3385
- *   +0x00ac -> line 3390
- *   +0x00b0 -> line 3388
- *   +0x00b4 -> line 3404
- *   +0x00b8 -> line 3388
- *   +0x00bc -> line 3386
- *   +0x00d0 -> line 3388
- *   +0x00d4 -> line 3390
- *   +0x00dc -> line 3388
- *   +0x00e8 -> line 3390
- *   +0x00f0 -> line 3388
- *   +0x00fc -> line 3389
- *   +0x0110 -> line 3390
- *   +0x0130 -> line 3400
- *   +0x0134 -> line 3402
- *   +0x0138 -> line 3400
- *   +0x013c -> line 3402
- *   +0x0140 -> line 3392
- *   +0x0144 -> line 3402
- *   +0x0148 -> line 3389
- *   +0x014c -> line 3392
- *   +0x0158 -> line 3402
- *   +0x015c -> line 3393
- *   +0x0160 -> line 3400
- *   +0x0164 -> line 3393
- *   +0x0170 -> line 3394
- *   +0x0174 -> line 3404
- *   +0x0180 -> line 3394
- *   +0x018c -> line 3396
- *   +0x0198 -> line 3397
- *   +0x01a4 -> line 3398
- *   +0x01b0 -> line 3400
- *   +0x01bc -> line 3401
- *   +0x01c8 -> line 3402
- *   +0x01d0 -> line 3404
- *   +0x01d4 -> line 3402
- *   +0x01d8 -> line 3404
- *   +0x01e4 -> line 3412
- *   +0x0214 -> line 3453
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 static inline void AGO2_vRotateIceVector(MTH3D_tdstVector_* pDst, MTH3D_tdstVector_* pSrc)
 {
     float y = 0.5318607f * pSrc->xY + 0.84683186f * pSrc->xZ;
@@ -1845,342 +1118,3167 @@ static inline void AGO2_vRotateIceVector(MTH3D_tdstVector_* pDst, MTH3D_tdstVect
     pDst->xZ = -0.8959621f * -pSrc->xX - -0.4441306f * z;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3356–3357 */
-/* addr: 0x001e27e0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3356
- *   +0x0008 -> line 3357
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+extern int GLI_vDrawWorldSpriteWithUVsOpt(MTH3D_tdstVector_* param0, GLI_tdstMaterial_* hVisualMaterial, float SizeX, float SizeY, float U1, float V1, float U2, float V2, GLD_tdstViewportAttributes_* _p_stViewport, unsigned int AnimTime);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3349–3351 */
-/* addr: 0x001e27f0  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3349
- *   +0x0004 -> line 3351
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+extern char* AGO2_MEM_GetPointerFromHandle(unsigned int Handle);
+/* Callers pass the viewport first and the two sizes in f12/f13; the recovered
+   GLI_vDisplaySerialLeaves definition drops them (Bees/Flow keep them). */
+extern void GLI_vDisplaySerialLeaves(GLD_tdstViewportAttributes_* pViewport, AGO2_LeavesParticle_* pParticleArray, int NumberOfParticles, void* pMaterial, float sx, float sy);
+extern void GLI_vDisplaySerialFlow(GLD_tdstViewportAttributes_* param0, AGO2_FlowParticle_* pParticleArray, int NumberOfParticles, void* pMaterial, float sx, float sy);
+/* AGO2_DisplayBees passes pMaterial2 in t0 as well; the recovered definition omits it. */
+extern void GLI_vDisplaySerialBees(GLD_tdstViewportAttributes_* pViewport, AGO2_BeeParticle_* _pParticleArray_, int NumberOfParticles, void* pMaterial, void* pMaterial2, float sx, float sy);
+extern void GLI_vDisplaySerialFlowBlured(GLD_tdstViewportAttributes_* param0, AGO2_FlowParticle_* pParticleArray, int NumberOfParticles, void* pMaterial, float sx, float sy);
+extern void GLI_vDisplaySerialParticleRain(GLD_tdstViewportAttributes_* param0, AGO2_RainParticle_* pParticleArray, int NumberOfParticles, void* pMaterial, float sx, float sy);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3300–3345 */
-/* addr: 0x001e2800  size: 216 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3300
- *   +0x0018 -> line 3309
- *   +0x0024 -> line 3310
- *   +0x002c -> line 3312
- *   +0x0038 -> line 3313
- *   +0x0040 -> line 3314
- *   +0x0048 -> line 3319
- *   +0x0050 -> line 3321
- *   +0x006c -> line 3323
- *   +0x0074 -> line 3325
- *   +0x00a0 -> line 3336
- *   +0x00a8 -> line 3340
- *   +0x00ac -> line 3341
- *   +0x00c0 -> line 3345
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+static inline void AGO2_vAddToVector(AGO_V4D_* p_stVector, float xX, float xY, float xZ)
+{
+    p_stVector->xX = xX + p_stVector->xX;
+    p_stVector->xY = xY + p_stVector->xY;
+    p_stVector->xZ = xZ + p_stVector->xZ;
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3254–3296 */
-/* addr: 0x001e28e0  size: 224 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3254
- *   +0x0018 -> line 3263
- *   +0x0024 -> line 3264
- *   +0x002c -> line 3266
- *   +0x0038 -> line 3267
- *   +0x0040 -> line 3268
- *   +0x0048 -> line 3273
- *   +0x0050 -> line 3275
- *   +0x006c -> line 3277
- *   +0x007c -> line 3279
- *   +0x00a8 -> line 3290
- *   +0x00b0 -> line 3294
- *   +0x00b4 -> line 3295
- *   +0x00c8 -> line 3296
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+static inline float AGO2_xSqrDistance(MTH3D_tdstVector_* p_stA, MTH3D_tdstVector_* p_stB)
+{
+    return AGO2_xSqrNorm(p_stA->xX - p_stB->xX, p_stA->xY - p_stB->xY, p_stA->xZ - p_stB->xZ);
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3162–3250 */
-/* addr: 0x001e29c0  size: 1096 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3162
- *   +0x0044 -> line 3170
- *   +0x0050 -> line 3171
- *   +0x0058 -> line 3173
- *   +0x0064 -> line 3174
- *   +0x006c -> line 3175
- *   +0x0074 -> line 3182
- *   +0x007c -> line 3184
- *   +0x0088 -> line 3185
- *   +0x008c -> line 3184
- *   +0x0094 -> line 3185
- *   +0x00a4 -> line 3192
- *   +0x00a8 -> line 3198
- *   +0x00ac -> line 3192
- *   +0x00b0 -> line 3198
- *   +0x00b4 -> line 3192
- *   +0x00b8 -> line 3187
- *   +0x00bc -> line 3198
- *   +0x00c0 -> line 3205
- *   +0x00c8 -> line 3192
- *   +0x00d0 -> line 3193
- *   +0x00e4 -> line 3194
- *   +0x0104 -> line 3192
- *   +0x0108 -> line 3194
- *   +0x0118 -> line 3193
- *   +0x011c -> line 3194
- *   +0x0140 -> line 3192
- *   +0x0144 -> line 3194
- *   +0x0154 -> line 3193
- *   +0x0158 -> line 3194
- *   +0x017c -> line 3192
- *   +0x0180 -> line 3194
- *   +0x0190 -> line 3193
- *   +0x0194 -> line 3194
- *   +0x01ac -> line 3198
- *   +0x01c8 -> line 3200
- *   +0x01e0 -> line 3201
- *   +0x01f8 -> line 3202
- *   +0x0210 -> line 3211
- *   +0x0214 -> line 3215
- *   +0x0218 -> line 3211
- *   +0x021c -> line 3215
- *   +0x0220 -> line 3212
- *   +0x0224 -> line 3211
- *   +0x0228 -> line 3213
- *   +0x022c -> line 3212
- *   +0x0230 -> line 3213
- *   +0x0234 -> line 3215
- *   +0x0238 -> line 3216
- *   +0x0240 -> line 3217
- *   +0x024c -> line 3222
- *   +0x0250 -> line 3219
- *   +0x0258 -> line 3220
- *   +0x0260 -> line 3222
- *   +0x0264 -> line 3220
- *   +0x0268 -> line 3222
- *   +0x026c -> line 3223
- *   +0x0274 -> line 3224
- *   +0x0280 -> line 3229
- *   +0x0284 -> line 3225
- *   +0x028c -> line 3227
- *   +0x0294 -> line 3229
- *   +0x0298 -> line 3227
- *   +0x029c -> line 3229
- *   +0x02a0 -> line 3230
- *   +0x02a8 -> line 3231
- *   +0x02b4 -> line 3232
- *   +0x02b8 -> line 3235
- *   +0x02bc -> line 3232
- *   +0x02c0 -> line 3235
- *   +0x02c4 -> line 3233
- *   +0x02c8 -> line 3234
- *   +0x02cc -> line 3233
- *   +0x02d0 -> line 3232
- *   +0x02d4 -> line 3233
- *   +0x02dc -> line 3235
- *   +0x02e4 -> line 3240
- *   +0x02f0 -> line 3241
- *   +0x02f4 -> line 3240
- *   +0x02fc -> line 3241
- *   +0x0304 -> line 3242
- *   +0x0308 -> line 3241
- *   +0x0310 -> line 3242
- *   +0x0330 -> line 3240
- *   +0x0334 -> line 3242
- *   +0x0344 -> line 3241
- *   +0x0348 -> line 3242
- *   +0x036c -> line 3240
- *   +0x0370 -> line 3242
- *   +0x0380 -> line 3241
- *   +0x0384 -> line 3242
- *   +0x03a8 -> line 3240
- *   +0x03ac -> line 3242
- *   +0x03bc -> line 3241
- *   +0x03c0 -> line 3242
- *   +0x03d4 -> line 3244
- *   +0x03d8 -> line 3246
- *   +0x03dc -> line 3247
- *   +0x03f0 -> line 3249
- *   +0x0404 -> line 3250
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+/* The retail creation callback has the full 16-parameter prototype stored in
+ * g_pAGO2Types[].pCreationFunction; the debug record only keeps the
+ * parameters this function actually reads (ulParticleType, Vector1..4,
+ * pMaterial1/2, xParam1..4 and pLaunchingCharacter are unused here). */
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2962–3158 */
-/* addr: 0x001e2e10  size: 2388 bytes */
+/* Retail callers pass the viewport (a2) and animation time (a3) as well as the
+   four parameters in VUSprites.cpp's recovered definition. */
+extern int GLI_vDrawWorldSpriteOpt(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMaterial, float SizeX, float SizeY, GLD_tdstViewportAttributes_* p_stViewport, unsigned int AnimTime);
+extern void GLI_vSetGlobalAlpha(float Alpha);
+
+#pragma auto_inline on
+
+#pragma auto_inline reset
+
+float GLI_vGetGlobalAlpha(void);
+void GLI_vEndWorldSprites(void);
+/* Called with the viewport and the wall; the recovered definition takes none. */
+extern void AGO2_vDisplayWall(GLD_tdstViewportAttributes_* p_stViewport, AGO2_WallExplosion_* p);
+
+void AGO2_vDestroyAllParts(void);
+
+void AGO2_MEM_Init(void);
+void GLI_v_StartDrawingRain(GLD_tdstViewportAttributes_* p_stViewport);
+void GLI_v_StopDrawingRain(GLD_tdstViewportAttributes_* p_stViewport);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 416–489 */
+/* addr: 0x001e9ac0  size: 1668 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2962
- *   +0x0058 -> line 2979
- *   +0x006c -> line 2980
- *   +0x008c -> line 2981
- *   +0x0098 -> line 2983
- *   +0x009c -> line 2985
- *   +0x00a0 -> line 2984
- *   +0x00a8 -> line 2985
- *   +0x00b0 -> line 2989
- *   +0x00b8 -> line 2990
- *   +0x00c0 -> line 2992
- *   +0x00c8 -> line 2993
- *   +0x00d0 -> line 3000
- *   +0x00d4 -> line 3001
- *   +0x00dc -> line 2995
- *   +0x00e0 -> line 3001
- *   +0x00f4 -> line 3002
- *   +0x00fc -> line 3001
- *   +0x0104 -> line 3002
- *   +0x0120 -> line 3003
- *   +0x0124 -> line 3015
- *   +0x0128 -> line 3003
- *   +0x012c -> line 3015
- *   +0x0130 -> line 3003
- *   +0x0134 -> line 3015
- *   +0x0138 -> line 3003
- *   +0x0144 -> line 3015
- *   +0x014c -> line 3018
- *   +0x0150 -> line 3019
- *   +0x0158 -> line 3017
- *   +0x015c -> line 3018
- *   +0x0160 -> line 3019
- *   +0x016c -> line 3020
- *   +0x0174 -> line 3019
- *   +0x0178 -> line 3020
- *   +0x0188 -> line 3022
- *   +0x01a0 -> line 3024
- *   +0x01fc -> line 3026
- *   +0x0208 -> line 3027
- *   +0x0210 -> line 3028
- *   +0x0214 -> line 3027
- *   +0x0218 -> line 3028
- *   +0x0220 -> line 3029
- *   +0x022c -> line 3032
- *   +0x0230 -> line 3049
- *   +0x0234 -> line 3063
- *   +0x023c -> line 3032
- *   +0x0248 -> line 3033
- *   +0x024c -> line 3032
- *   +0x0250 -> line 3033
- *   +0x0260 -> line 3034
- *   +0x0270 -> line 3036
- *   +0x0280 -> line 3037
- *   +0x0284 -> line 3036
- *   +0x0288 -> line 3037
- *   +0x0298 -> line 3038
- *   +0x029c -> line 3040
- *   +0x02a0 -> line 3038
- *   +0x02a8 -> line 3040
- *   +0x02b4 -> line 3041
- *   +0x02b8 -> line 3040
- *   +0x02bc -> line 3041
- *   +0x02cc -> line 3044
- *   +0x02d4 -> line 3045
- *   +0x02d8 -> line 3042
- *   +0x02e8 -> line 3044
- *   +0x02ec -> line 3045
- *   +0x02f0 -> line 3044
- *   +0x02f8 -> line 3045
- *   +0x02fc -> line 3049
- *   +0x0304 -> line 3045
- *   +0x030c -> line 3046
- *   +0x0318 -> line 3049
- *   +0x032c -> line 3053
- *   +0x0340 -> line 3057
- *   +0x0354 -> line 3063
- *   +0x0358 -> line 3065
- *   +0x0360 -> line 3073
- *   +0x0364 -> line 3065
- *   +0x0368 -> line 3073
- *   +0x036c -> line 3065
- *   +0x0370 -> line 3071
- *   +0x0374 -> line 3065
- *   +0x0384 -> line 3068
- *   +0x03a0 -> line 3071
- *   +0x03b8 -> line 3073
- *   +0x03c0 -> line 3076
- *   +0x03d8 -> line 3078
- *   +0x0414 -> line 3079
- *   +0x0430 -> line 3080
- *   +0x0438 -> line 3079
- *   +0x0450 -> line 3080
- *   +0x0464 -> line 3081
- *   +0x046c -> line 3082
- *   +0x0478 -> line 3083
- *   +0x0494 -> line 3085
- *   +0x0498 -> line 3086
- *   +0x049c -> line 3087
- *   +0x04a0 -> line 3089
- *   +0x04a8 -> line 3090
- *   +0x04c4 -> line 3093
- *   +0x0504 -> line 3094
- *   +0x0528 -> line 3095
- *   +0x052c -> line 3094
- *   +0x0530 -> line 3095
- *   +0x0534 -> line 3094
- *   +0x053c -> line 3095
- *   +0x0544 -> line 3096
- *   +0x0548 -> line 3095
- *   +0x0554 -> line 3096
- *   +0x055c -> line 3097
- *   +0x0560 -> line 3098
- *   +0x0564 -> line 3097
- *   +0x0568 -> line 3099
- *   +0x0570 -> line 3100
- *   +0x058c -> line 3103
- *   +0x05cc -> line 3104
- *   +0x05f0 -> line 3105
- *   +0x05f4 -> line 3104
- *   +0x05f8 -> line 3105
- *   +0x05fc -> line 3104
- *   +0x0604 -> line 3105
- *   +0x060c -> line 3106
- *   +0x0610 -> line 3105
- *   +0x061c -> line 3106
- *   +0x0624 -> line 3107
- *   +0x0628 -> line 3108
- *   +0x062c -> line 3107
- *   +0x0630 -> line 3108
- *   +0x0634 -> line 3109
- *   +0x0638 -> line 3117
- *   +0x0674 -> line 3118
- *   +0x06b4 -> line 3119
- *   +0x06f4 -> line 3123
- *   +0x0704 -> line 3125
- *   +0x0708 -> line 3123
- *   +0x0710 -> line 3125
- *   +0x0714 -> line 3123
- *   +0x0724 -> line 3125
- *   +0x072c -> line 3123
- *   +0x0730 -> line 3126
- *   +0x0734 -> line 3123
- *   +0x0738 -> line 3126
- *   +0x073c -> line 3123
- *   +0x0748 -> line 3126
- *   +0x0750 -> line 3123
- *   +0x0754 -> line 3127
- *   +0x0758 -> line 3123
- *   +0x075c -> line 3127
- *   +0x0768 -> line 3128
- *   +0x07d0 -> line 3135
- *   +0x07d4 -> line 3129
- *   +0x07f8 -> line 3137
- *   +0x083c -> line 3142
- *   +0x084c -> line 3147
- *   +0x0850 -> line 3142
- *   +0x0880 -> line 3145
- *   +0x0884 -> line 3149
- *   +0x0888 -> line 3151
- *   +0x08d0 -> line 3152
- *   +0x08f8 -> line 3155
- *   +0x08fc -> line 3157
- *   +0x0900 -> line 3158
+ *   +0x0000 -> line 416
+ *   +0x0004 -> line 419
+ *   +0x0008 -> line 416
+ *   +0x000c -> line 419
+ *   +0x0010 -> line 416
+ *   +0x0014 -> line 419
+ *   +0x0018 -> line 416
+ *   +0x001c -> line 419
+ *   +0x0028 -> line 424
+ *   +0x0074 -> line 441
+ *   +0x0078 -> line 443
+ *   +0x007c -> line 441
+ *   +0x0080 -> line 445
+ *   +0x0084 -> line 443
+ *   +0x0090 -> line 445
+ *   +0x0094 -> line 443
+ *   +0x0098 -> line 445
+ *   +0x009c -> line 443
+ *   +0x00a8 -> line 445
+ *   +0x00ac -> line 443
+ *   +0x00b0 -> line 449
+ *   +0x00b4 -> line 443
+ *   +0x00c0 -> line 449
+ *   +0x00c4 -> line 443
+ *   +0x00c8 -> line 449
+ *   +0x00cc -> line 443
+ *   +0x00d8 -> line 449
+ *   +0x00dc -> line 443
+ *   +0x00e0 -> line 461
+ *   +0x00e4 -> line 443
+ *   +0x00f0 -> line 461
+ *   +0x00f4 -> line 441
+ *   +0x00f8 -> line 445
+ *   +0x00fc -> line 441
+ *   +0x0100 -> line 475
+ *   +0x0104 -> line 441
+ *   +0x0108 -> line 475
+ *   +0x010c -> line 441
+ *   +0x0110 -> line 445
+ *   +0x0114 -> line 441
+ *   +0x0118 -> line 445
+ *   +0x011c -> line 441
+ *   +0x0120 -> line 445
+ *   +0x0134 -> line 441
+ *   +0x0138 -> line 447
+ *   +0x013c -> line 441
+ *   +0x0140 -> line 447
+ *   +0x0148 -> line 449
+ *   +0x014c -> line 447
+ *   +0x0150 -> line 449
+ *   +0x0154 -> line 447
+ *   +0x0160 -> line 449
+ *   +0x0164 -> line 447
+ *   +0x0168 -> line 449
+ *   +0x016c -> line 447
+ *   +0x0178 -> line 461
+ *   +0x017c -> line 447
+ *   +0x0180 -> line 461
+ *   +0x0184 -> line 441
+ *   +0x0188 -> line 451
+ *   +0x018c -> line 441
+ *   +0x0190 -> line 451
+ *   +0x0194 -> line 441
+ *   +0x0198 -> line 475
+ *   +0x019c -> line 441
+ *   +0x01a0 -> line 475
+ *   +0x01a4 -> line 443
+ *   +0x01b4 -> line 451
+ *   +0x01bc -> line 453
+ *   +0x01dc -> line 455
+ *   +0x020c -> line 457
+ *   +0x023c -> line 459
+ *   +0x027c -> line 461
+ *   +0x028c -> line 445
+ *   +0x0290 -> line 463
+ *   +0x0294 -> line 445
+ *   +0x0298 -> line 463
+ *   +0x029c -> line 445
+ *   +0x02a4 -> line 463
+ *   +0x02ac -> line 479
+ *   +0x02b0 -> line 463
+ *   +0x02b4 -> line 479
+ *   +0x02b8 -> line 463
+ *   +0x02bc -> line 465
+ *   +0x02cc -> line 467
+ *   +0x02dc -> line 469
+ *   +0x030c -> line 471
+ *   +0x033c -> line 473
+ *   +0x036c -> line 475
+ *   +0x037c -> line 445
+ *   +0x0380 -> line 477
+ *   +0x0384 -> line 445
+ *   +0x0388 -> line 477
+ *   +0x038c -> line 445
+ *   +0x0394 -> line 477
+ *   +0x039c -> line 479
+ *   +0x03ac -> line 445
+ *   +0x03bc -> line 479
+ *   +0x03c4 -> line 447
+ *   +0x03e4 -> line 449
+ *   +0x0404 -> line 451
+ *   +0x040c -> line 449
+ *   +0x0414 -> line 451
+ *   +0x041c -> line 449
+ *   +0x042c -> line 451
+ *   +0x044c -> line 453
+ *   +0x045c -> line 459
+ *   +0x0464 -> line 453
+ *   +0x047c -> line 455
+ *   +0x049c -> line 457
+ *   +0x04bc -> line 459
+ *   +0x04c4 -> line 479
+ *   +0x04cc -> line 459
+ *   +0x04d4 -> line 479
+ *   +0x04dc -> line 461
+ *   +0x050c -> line 467
+ *   +0x0514 -> line 463
+ *   +0x0544 -> line 465
+ *   +0x0564 -> line 467
+ *   +0x056c -> line 465
+ *   +0x057c -> line 467
+ *   +0x059c -> line 469
+ *   +0x05bc -> line 471
+ *   +0x05dc -> line 473
+ *   +0x05fc -> line 475
+ *   +0x0614 -> line 477
+ *   +0x061c -> line 475
+ *   +0x0634 -> line 477
+ *   +0x065c -> line 479
+ *   +0x066c -> line 489
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void AGO2_vFirstInitAndRegisterAGO2Types(void)
+{
+    int i;
+    float xAngle;
+
+    memset(g_pAGO2Types, 0, sizeof(g_pAGO2Types));
+    g_ulNumberOfAgos2 = 0;
+    AGO2_MEM_Init();
+    xAngle = 0.0f;
+    for (i = 0; i < 512; i++)
+    {
+        AGO2_g_pfCosTable[i] = PS2_dl_cosf(xAngle);
+        xAngle += 0.012271847f;
+    }
+
+    g_pAGO2Types[0].pStartDisplayFunction = NULL;
+    g_pAGO2Types[0].pDisplayFunction = NULL;
+    g_pAGO2Types[0].pEndDisplayFunction = NULL;
+    g_pAGO2Types[0].pProcessFunction = NULL;
+    g_pAGO2Types[0].pTransparencyFunction = NULL;
+    g_pAGO2Types[0].pSizingFunction = NULL;
+    g_pAGO2Types[0].pCreationFunction = NULL;
+
+    g_pAGO2Types[1].pStartDisplayFunction = NULL;
+    g_pAGO2Types[1].pDisplayFunction = AGO2_DisplayOrdinarySprite;
+    g_pAGO2Types[1].pEndDisplayFunction = NULL;
+    g_pAGO2Types[1].pProcessFunction = AGO2_ProcessSimpleParticleWithSpeedAndGravity;
+    g_pAGO2Types[1].pTransparencyFunction = AGO2_FadeNormal;
+    g_pAGO2Types[1].pSizingFunction = AGO2_ShrinkNormal;
+    g_pAGO2Types[1].pCreationFunction = (unsigned char (*)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int))AGO2_CreateOrdinaryParticle;
+
+    g_pAGO2Types[2].pStartDisplayFunction = GLI_v_StartDrawingRain;
+    g_pAGO2Types[2].pDisplayFunction = AGO2_DisplayRainParticleSpriteGroup;
+    g_pAGO2Types[2].pEndDisplayFunction = GLI_v_StopDrawingRain;
+    g_pAGO2Types[2].pProcessFunction = AGO2_ProcessRainParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit;
+    g_pAGO2Types[2].pTransparencyFunction = NULL;
+    g_pAGO2Types[2].pSizingFunction = NULL;
+    g_pAGO2Types[2].pCreationFunction = AGO2_CreateSerialCameraParticleRain;
+
+    g_pAGO2Types[3].pStartDisplayFunction = NULL;
+    g_pAGO2Types[3].pDisplayFunction = AGO2_DisplayLightning;
+    g_pAGO2Types[3].pEndDisplayFunction = NULL;
+    g_pAGO2Types[3].pProcessFunction = (void (*)(AGO2_Part_*))AGO2_ProcessLightning;
+    g_pAGO2Types[3].pTransparencyFunction = NULL;
+    g_pAGO2Types[3].pSizingFunction = NULL;
+    g_pAGO2Types[3].pCreationFunction = (unsigned char (*)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int))AGO2_CreateLightning;
+
+    g_pAGO2Types[4].pStartDisplayFunction = GLI_v_StartDrawingRain;
+    g_pAGO2Types[4].pDisplayFunction = AGO2_DisplayFlow;
+    g_pAGO2Types[4].pEndDisplayFunction = GLI_v_StopDrawingRain;
+    g_pAGO2Types[4].pProcessFunction = AGO2_ProcessFlow;
+    g_pAGO2Types[4].pTransparencyFunction = AGO2_FadeFlow;
+    g_pAGO2Types[4].pSizingFunction = NULL;
+    g_pAGO2Types[4].pCreationFunction = AGO2_CreateFlow;
+
+    g_pAGO2Types[5].pStartDisplayFunction = GLI_v_StartDrawingRain;
+    g_pAGO2Types[5].pDisplayFunction = AGO2_DisplayFlowMotionBlur;
+    g_pAGO2Types[5].pEndDisplayFunction = GLI_v_StopDrawingRain;
+    g_pAGO2Types[5].pProcessFunction = AGO2_ProcessFlow;
+    g_pAGO2Types[5].pTransparencyFunction = AGO2_FadeFlow;
+    g_pAGO2Types[5].pSizingFunction = NULL;
+    g_pAGO2Types[5].pCreationFunction = AGO2_CreateFlow;
+
+    g_pAGO2Types[6].pStartDisplayFunction = GLI_v_StartDrawingRain;
+    g_pAGO2Types[6].pDisplayFunction = AGO2_DisplayFlow;
+    g_pAGO2Types[6].pEndDisplayFunction = GLI_v_StopDrawingRain;
+    g_pAGO2Types[6].pProcessFunction = AGO2_ProcessSnowParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit;
+    g_pAGO2Types[6].pTransparencyFunction = NULL;
+    g_pAGO2Types[6].pSizingFunction = NULL;
+    g_pAGO2Types[6].pCreationFunction = AGO2_CreateSerialCameraParticleSnow;
+
+    g_pAGO2Types[7].pStartDisplayFunction = GLI_v_StartDrawingRain;
+    g_pAGO2Types[7].pDisplayFunction = AGO2_DisplayLeaves;
+    g_pAGO2Types[7].pEndDisplayFunction = GLI_v_StopDrawingRain;
+    g_pAGO2Types[7].pProcessFunction = AGO2_ProcessLeavesParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit;
+    g_pAGO2Types[7].pTransparencyFunction = NULL;
+    g_pAGO2Types[7].pSizingFunction = NULL;
+    g_pAGO2Types[7].pCreationFunction = (unsigned char (*)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int))AGO2_CreateSerialCameraParticleLeaves;
+
+    g_pAGO2Types[8].pStartDisplayFunction = NULL;
+    g_pAGO2Types[8].pDisplayFunction = AGO2_DisplayBees;
+    g_pAGO2Types[8].pEndDisplayFunction = NULL;
+    g_pAGO2Types[8].pProcessFunction = AGO2_ProcessBees;
+    g_pAGO2Types[8].pTransparencyFunction = NULL;
+    g_pAGO2Types[8].pSizingFunction = NULL;
+    g_pAGO2Types[8].pCreationFunction = AGO2_CreateBees;
+
+    g_pAGO2Types[9].pStartDisplayFunction = GLI_v_StartDrawingRain;
+    g_pAGO2Types[9].pDisplayFunction = AGO2_DisplayFlow;
+    g_pAGO2Types[9].pEndDisplayFunction = GLI_v_StopDrawingRain;
+    g_pAGO2Types[9].pProcessFunction = AGO2_ProcessFire;
+    g_pAGO2Types[9].pTransparencyFunction = AGO2_FadeFire;
+    g_pAGO2Types[9].pSizingFunction = AGO2_ShrinkFire;
+    g_pAGO2Types[9].pCreationFunction = AGO2_CreateFire;
+
+    g_pAGO2Types[10].pStartDisplayFunction = NULL;
+    g_pAGO2Types[10].pDisplayFunction = AGO2_DisplayFireWall;
+    g_pAGO2Types[10].pEndDisplayFunction = NULL;
+    g_pAGO2Types[10].pProcessFunction = (void (*)(AGO2_Part_*))AGO2_ProcessEmpty;
+    g_pAGO2Types[10].pTransparencyFunction = NULL;
+    g_pAGO2Types[10].pSizingFunction = NULL;
+    g_pAGO2Types[10].pCreationFunction = (unsigned char (*)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int))AGO2_CreateFireWall;
+
+    g_pAGO2Types[11].pStartDisplayFunction = NULL;
+    g_pAGO2Types[11].pDisplayFunction = AGO2_DisplayFFRing;
+    g_pAGO2Types[11].pEndDisplayFunction = NULL;
+    g_pAGO2Types[11].pProcessFunction = (void (*)(AGO2_Part_*))AGO2_ProcessEmpty;
+    g_pAGO2Types[11].pTransparencyFunction = NULL;
+    g_pAGO2Types[11].pSizingFunction = NULL;
+    g_pAGO2Types[11].pCreationFunction = (unsigned char (*)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int))AGO2_CreateFFRing;
+
+    g_pAGO2Types[12].pStartDisplayFunction = NULL;
+    g_pAGO2Types[12].pDisplayFunction = AGO2_DisplayFFWhirl;
+    g_pAGO2Types[12].pEndDisplayFunction = NULL;
+    g_pAGO2Types[12].pProcessFunction = (void (*)(AGO2_Part_*))AGO2_ProcessEmpty;
+    g_pAGO2Types[12].pTransparencyFunction = NULL;
+    g_pAGO2Types[12].pSizingFunction = NULL;
+    g_pAGO2Types[12].pCreationFunction = (unsigned char (*)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int))AGO2_CreateFFRing;
+
+    g_pAGO2Types[13].pStartDisplayFunction = NULL;
+    g_pAGO2Types[13].pDisplayFunction = AGO2_DisplayFireWall2;
+    g_pAGO2Types[13].pEndDisplayFunction = NULL;
+    g_pAGO2Types[13].pProcessFunction = (void (*)(AGO2_Part_*))AGO2_ProcessEmpty;
+    g_pAGO2Types[13].pTransparencyFunction = NULL;
+    g_pAGO2Types[13].pSizingFunction = NULL;
+    g_pAGO2Types[13].pCreationFunction = (unsigned char (*)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int))AGO2_CreateFireWall;
+
+    g_pAGO2Types[14].pStartDisplayFunction = NULL;
+    g_pAGO2Types[14].pDisplayFunction = AGO2_DisplayBalloon;
+    g_pAGO2Types[14].pEndDisplayFunction = NULL;
+    g_pAGO2Types[14].pProcessFunction = AGO2_ProcessBalloon;
+    g_pAGO2Types[14].pTransparencyFunction = NULL;
+    g_pAGO2Types[14].pSizingFunction = NULL;
+    g_pAGO2Types[14].pCreationFunction = (unsigned char (*)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int))AGO2_CreateBalloon;
+
+    g_pAGO2Types[15].pStartDisplayFunction = NULL;
+    g_pAGO2Types[15].pDisplayFunction = AGO2_DisplayForceField;
+    g_pAGO2Types[15].pEndDisplayFunction = NULL;
+    g_pAGO2Types[15].pProcessFunction = AGO2_ProcessForceField;
+    g_pAGO2Types[15].pTransparencyFunction = NULL;
+    g_pAGO2Types[15].pSizingFunction = NULL;
+    g_pAGO2Types[15].pCreationFunction = AGO2_CreateForceField;
+
+    g_pAGO2Types[16].pStartDisplayFunction = NULL;
+    g_pAGO2Types[16].pDisplayFunction = AGO2_DisplayIce;
+    g_pAGO2Types[16].pEndDisplayFunction = NULL;
+    g_pAGO2Types[16].pProcessFunction = AGO2_ProcessIce;
+    g_pAGO2Types[16].pTransparencyFunction = NULL;
+    g_pAGO2Types[16].pSizingFunction = NULL;
+    g_pAGO2Types[16].pCreationFunction = (unsigned char (*)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int))AGO2_CreateIce;
+
+    g_pAGO2Types[17].pStartDisplayFunction = NULL;
+    g_pAGO2Types[17].pDisplayFunction = AGO2_DisplayCylinder;
+    g_pAGO2Types[17].pEndDisplayFunction = NULL;
+    g_pAGO2Types[17].pProcessFunction = AGO2_ProcessDieAtOnce;
+    g_pAGO2Types[17].pTransparencyFunction = NULL;
+    g_pAGO2Types[17].pSizingFunction = NULL;
+    g_pAGO2Types[17].pCreationFunction = (unsigned char (*)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int))AGO2_CreateCylinder;
+
+    g_pAGO2Types[18].pStartDisplayFunction = NULL;
+    g_pAGO2Types[18].pDisplayFunction = AGO2_DisplayAuraStorm;
+    g_pAGO2Types[18].pEndDisplayFunction = NULL;
+    g_pAGO2Types[18].pProcessFunction = AGO2_ProcessDieAtOnce;
+    g_pAGO2Types[18].pTransparencyFunction = NULL;
+    g_pAGO2Types[18].pSizingFunction = NULL;
+    g_pAGO2Types[18].pCreationFunction = (unsigned char (*)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int))AGO2_CreateCylinder;
+
+    g_pAGO2Types[19].pStartDisplayFunction = GLI_v_StartDrawingRain;
+    g_pAGO2Types[19].pDisplayFunction = AGO2_DisplayRainParticleSpriteGroup;
+    g_pAGO2Types[19].pEndDisplayFunction = GLI_v_StopDrawingRain;
+    g_pAGO2Types[19].pProcessFunction = AGO2_ProcessRainNearCameraParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit;
+    g_pAGO2Types[19].pTransparencyFunction = NULL;
+    g_pAGO2Types[19].pSizingFunction = NULL;
+    g_pAGO2Types[19].pCreationFunction = AGO2_CreateSerialCameraParticleRain;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 523–578 */
+/* addr: 0x001e9800  size: 700 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 523
+ *   +0x0004 -> line 527
+ *   +0x0008 -> line 523
+ *   +0x0050 -> line 527
+ *   +0x008c -> line 530
+ *   +0x00d8 -> line 534
+ *   +0x00e0 -> line 537
+ *   +0x00f0 -> line 539
+ *   +0x00f4 -> line 537
+ *   +0x00f8 -> line 539
+ *   +0x00fc -> line 537
+ *   +0x0104 -> line 539
+ *   +0x010c -> line 541
+ *   +0x0110 -> line 542
+ *   +0x015c -> line 552
+ *   +0x0160 -> line 565
+ *   +0x0164 -> line 552
+ *   +0x0168 -> line 565
+ *   +0x016c -> line 553
+ *   +0x0170 -> line 565
+ *   +0x0174 -> line 553
+ *   +0x0178 -> line 565
+ *   +0x017c -> line 543
+ *   +0x0180 -> line 553
+ *   +0x0184 -> line 552
+ *   +0x0188 -> line 556
+ *   +0x018c -> line 558
+ *   +0x0190 -> line 565
+ *   +0x01a8 -> line 543
+ *   +0x01ac -> line 565
+ *   +0x01b0 -> line 544
+ *   +0x01b4 -> line 546
+ *   +0x01d4 -> line 547
+ *   +0x01f4 -> line 548
+ *   +0x01f8 -> line 549
+ *   +0x0200 -> line 550
+ *   +0x0208 -> line 551
+ *   +0x0210 -> line 552
+ *   +0x0218 -> line 553
+ *   +0x0220 -> line 554
+ *   +0x0228 -> line 556
+ *   +0x022c -> line 557
+ *   +0x0230 -> line 558
+ *   +0x0234 -> line 560
+ *   +0x0238 -> line 561
+ *   +0x023c -> line 565
+ *   +0x026c -> line 567
+ *   +0x0278 -> line 577
+ *   +0x027c -> line 578
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+AGO2_Part_* AGO2_vCreatePart(unsigned int ulParticleType, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber)
+{
+    float* p2;
+    float* p1;
+    AGO2_Part_* p;
+
+    if (g_ulNumberOfAgos2 == 300 || ulParticleType >= 50)
+        return NULL;
+
+    if (!g_pAGO2Types[ulParticleType].pDisplayFunction || !g_pAGO2Types[ulParticleType].pProcessFunction || !g_pAGO2Types[ulParticleType].pCreationFunction)
+        return NULL;
+
+    p = &g_pAGO2Parts[g_ulNumberOfAgos2];
+
+    memset(p, 0, sizeof(AGO2_Part_));
+    p->ulType = 0;
+    p->AnimTime = (unsigned int)g_ffFrameTime;
+    p->fAnimTimeScale = 1.0f;
+    p->ulBaseID = ulParticleType;
+    p1 = (float*)&p->Position; p2 = (float*)Position; p1[0] = p2[0]; p1[1] = p2[1]; p1[2] = p2[2]; p1[3] = p2[3];
+    p1 = (float*)&p->Direction; p2 = (float*)Direction; p1[0] = p2[0]; p1[1] = p2[1]; p1[2] = p2[2]; p1[3] = p2[3];
+    p->pMaterial1 = (int)pMaterial1;
+    p->pMaterial2 = (int)pMaterial2;
+    p->pDisplayFnct = g_pAGO2Types[ulParticleType].pDisplayFunction;
+    p->pProcessFnct = g_pAGO2Types[ulParticleType].pProcessFunction;
+    p->pTransparencyFunction = g_pAGO2Types[ulParticleType].pTransparencyFunction;
+    p->pSizingFunction = g_pAGO2Types[ulParticleType].pSizingFunction;
+    p->pLauchingCharacter = pLaunchingCharacter;
+    p->xTransparencySpeed = 100.0f;
+    p->xShrinkingSpeed = 1.0f;
+    p->xTransparency = 255.0f;
+    p->xLimit = 0.0f;
+    p->Channel = 0;
+
+    if (g_pAGO2Types[ulParticleType].pCreationFunction(ulParticleType, p, Position, Direction, Vector1, Vector2, Vector3, Vector4, pMaterial1, pMaterial2, xParam1, xParam2, xParam3, xParam4, pLaunchingCharacter, ParticleNumber))
+        g_ulNumberOfAgos2++;
+
+    return p;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 590–622 */
+/* addr: 0x001e9730  size: 196 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 590
+ *   +0x0014 -> line 597
+ *   +0x0018 -> line 590
+ *   +0x001c -> line 597
+ *   +0x0020 -> line 590
+ *   +0x0024 -> line 592
+ *   +0x0028 -> line 595
+ *   +0x002c -> line 591
+ *   +0x0030 -> line 599
+ *   +0x003c -> line 601
+ *   +0x004c -> line 603
+ *   +0x0058 -> line 605
+ *   +0x0060 -> line 608
+ *   +0x0068 -> line 611
+ *   +0x0070 -> line 614
+ *   +0x007c -> line 615
+ *   +0x0080 -> line 616
+ *   +0x0084 -> line 617
+ *   +0x0088 -> line 619
+ *   +0x008c -> line 620
+ *   +0x0098 -> line 621
+ *   +0x00a4 -> line 622
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO2_vDestroyAllParts(void)
+{
+    unsigned int Source;
+    unsigned int NumToSkip;
+    AGO2_Part_* psrc;
+    AGO2_Part_* pdst;
+    unsigned int Limit;
+
+    Source = 0;
+    NumToSkip = 0;
+    Limit = g_ulNumberOfAgos2;
+    pdst = g_pAGO2Parts;
+    psrc = pdst;
+    while (Source < Limit)
+    {
+        if (psrc->ulType & 1)
+        {
+            if (psrc->hGroup)
+            {
+                AGO2_MEM_FreeFromHandle(psrc->hGroup);
+            }
+            NumToSkip++;
+        }
+        else
+        {
+            if (psrc != pdst)
+            {
+                memcpy(pdst, psrc, sizeof(AGO2_Part_));
+            }
+            pdst++;
+        }
+        psrc++;
+        Source++;
+    }
+    g_ulNumberOfAgos2 -= NumToSkip;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 634–656 */
+/* addr: 0x001e9690  size: 160 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 634
+ *   +0x0010 -> line 639
+ *   +0x0018 -> line 641
+ *   +0x001c -> line 642
+ *   +0x0024 -> line 644
+ *   +0x002c -> line 647
+ *   +0x0040 -> line 650
+ *   +0x0058 -> line 653
+ *   +0x0074 -> line 654
+ *   +0x0078 -> line 655
+ *   +0x0088 -> line 656
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO2_vProcessAllParts(void)
+{
+    unsigned int i;
+    AGO2_Part_* p;
+
+    AGO2_vDestroyAllParts();
+
+    for (i = 0; i < g_ulNumberOfAgos2; i++)
+    {
+        p = &g_pAGO2Parts[i];
+
+        if (p->pProcessFnct)
+            p->pProcessFnct(p);
+
+        if (p->pTransparencyFunction)
+            p->pTransparencyFunction(p);
+
+        if (p->pSizingFunction)
+            p->pSizingFunction(p);
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 675–776 */
+/* addr: 0x001e92a0  size: 1008 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 675
+ *   +0x0034 -> line 691
+ *   +0x0040 -> line 693
+ *   +0x00b0 -> line 694
+ *   +0x0150 -> line 698
+ *   +0x0158 -> line 699
+ *   +0x01b8 -> line 700
+ *   +0x01c0 -> line 707
+ *   +0x01cc -> line 705
+ *   +0x01d0 -> line 706
+ *   +0x01d8 -> line 707
+ *   +0x0220 -> line 711
+ *   +0x0230 -> line 714
+ *   +0x0234 -> line 713
+ *   +0x0238 -> line 714
+ *   +0x024c -> line 715
+ *   +0x0250 -> line 714
+ *   +0x0254 -> line 715
+ *   +0x0258 -> line 714
+ *   +0x0270 -> line 715
+ *   +0x027c -> line 717
+ *   +0x0280 -> line 719
+ *   +0x0284 -> line 721
+ *   +0x0288 -> line 720
+ *   +0x0290 -> line 724
+ *   +0x0298 -> line 726
+ *   +0x02a4 -> line 728
+ *   +0x02bc -> line 732
+ *   +0x02c4 -> line 734
+ *   +0x02f0 -> line 736
+ *   +0x02f4 -> line 737
+ *   +0x0300 -> line 740
+ *   +0x030c -> line 743
+ *   +0x0310 -> line 744
+ *   +0x0314 -> line 746
+ *   +0x0318 -> line 748
+ *   +0x031c -> line 751
+ *   +0x0324 -> line 753
+ *   +0x0338 -> line 754
+ *   +0x0344 -> line 757
+ *   +0x0348 -> line 758
+ *   +0x0358 -> line 760
+ *   +0x0360 -> line 762
+ *   +0x0388 -> line 765
+ *   +0x0394 -> line 766
+ *   +0x0398 -> line 768
+ *   +0x03a4 -> line 770
+ *   +0x03ac -> line 773
+ *   +0x03b0 -> line 775
+ *   +0x03bc -> line 776
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO2_vDisplayAllParts(GLD_tdstViewportAttributes_* _p_stViewport)
+{
+    unsigned int i;
+    unsigned int j;
+    AGO2_Part_* p;
+    float xAlphaTemp;
+    int Found;
+    unsigned int BaseID;
+    void* pCurrentMaterial;
+    unsigned int NextMaterialIndex;
+    unsigned int DisplayPending;
+    unsigned int SkipThisOne;
+
+    g_AGO2_p_stViewport = (int)_p_stViewport;
+    xAlphaTemp = GLI_vGetGlobalAlpha();
+    for (i = 0; i < 50; i++)
+        g_pAGO2TypesDisplayed[i] = 0;
+    for (i = 0; i < g_ulNumberOfAgos2; i++)
+        g_pAGO2Parts[i].InternalHasBeenDisplayed = 0;
+    GLI_vEndWorldSprites();
+    for (i = 0; i < AGO2_g_NbWalls; i++)
+    {
+        AGO2_WallExplosion_* pWall = (AGO2_WallExplosion_*)AGO2_MEM_GetPointerFromHandle(AGO2_g_Walls[i]);
+        if (!pWall)
+            printf("AGO2MEM DECONNE UN MAX !!!\n");
+        else
+            AGO2_vDisplayWall((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, pWall);
+    }
+    AGO2_vTestExploseWall();
+    do
+    {
+        Found = 0;
+        for (i = 0; i < g_ulNumberOfAgos2 && g_pAGO2TypesDisplayed[g_pAGO2Parts[i].ulBaseID] == 1; i++);
+        if (i < g_ulNumberOfAgos2)
+        {
+            Found = 1;
+            BaseID = g_pAGO2Parts[i].ulBaseID;
+            g_pAGO2TypesDisplayed[BaseID] = Found;
+            do
+            {
+                j = i;
+                NextMaterialIndex = g_ulNumberOfAgos2;
+                pCurrentMaterial = NULL;
+                DisplayPending = 0;
+                for (; j < g_ulNumberOfAgos2; j++)
+                {
+                    p = &g_pAGO2Parts[j];
+                    if (p->ulBaseID == BaseID && !p->InternalHasBeenDisplayed)
+                    {
+                        SkipThisOne = 0;
+                        if (!DisplayPending)
+                        {
+                            if (g_pAGO2Types[BaseID].pStartDisplayFunction)
+                                g_pAGO2Types[BaseID].pStartDisplayFunction(_p_stViewport);
+                            pCurrentMaterial = (void*)p->pMaterial1;
+                            DisplayPending = 1;
+                        }
+                        else if ((void*)p->pMaterial1 != pCurrentMaterial)
+                        {
+                            NextMaterialIndex = j;
+                            SkipThisOne = 1;
+                        }
+                        g_AGO_AnimTimeScale = p->fAnimTimeScale;
+                        if (!SkipThisOne)
+                        {
+                            if (p->pDisplayFnct)
+                                p->pDisplayFnct(p);
+                            p->InternalHasBeenDisplayed = 1;
+                        }
+                    }
+                }
+                if (DisplayPending && g_pAGO2Types[BaseID].pEndDisplayFunction)
+                    g_pAGO2Types[BaseID].pEndDisplayFunction(_p_stViewport);
+            } while (NextMaterialIndex != g_ulNumberOfAgos2);
+        }
+    } while (Found);
+    GLI_vEndWorldSprites();
+    g_AGO_AnimTimeScale = 1.0f;
+    GLI_vSetGlobalAlpha(xAlphaTemp);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 782–786 */
+/* addr: 0x001e9230  size: 108 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 783
+ *   +0x0008 -> line 782
+ *   +0x0010 -> line 783
+ *   +0x0038 -> line 784
+ *   +0x0048 -> line 785
+ *   +0x0064 -> line 786
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+#pragma auto_inline on
+AGO2_Part_* AGO2_bIsTypeAlreadyExists(unsigned int PartType)
+{
+    unsigned int i;
+    i = 0;
+    for (; i < g_ulNumberOfAgos2 && g_pAGO2Parts[i].ulBaseID != PartType; i++);
+    if (i == g_ulNumberOfAgos2) return NULL;
+    return &g_pAGO2Parts[i];
+}
+#pragma auto_inline reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 790–799 */
+/* addr: 0x001e91e0  size: 80 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 791
+ *   +0x0004 -> line 790
+ *   +0x000c -> line 791
+ *   +0x0014 -> line 793
+ *   +0x0020 -> line 795
+ *   +0x002c -> line 796
+ *   +0x0030 -> line 795
+ *   +0x0034 -> line 797
+ *   +0x0038 -> line 798
+ *   +0x0048 -> line 799
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO2_vClearParticlesOfThatType(unsigned int PartType)
+{
+    unsigned int i;
+    unsigned int Offset;
+    AGO2_Part_* pParticle;
+    for (i = 0, Offset = 0; i < g_ulNumberOfAgos2; Offset += sizeof(AGO2_Part_), i++) {
+        pParticle = (AGO2_Part_*)((char*)g_pAGO2Parts + Offset);
+        if (PartType == pParticle->ulBaseID) {
+            pParticle->ulType |= 1;
+        }
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 804–813 */
+/* addr: 0x001e9180  size: 88 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 805
+ *   +0x0004 -> line 804
+ *   +0x000c -> line 805
+ *   +0x0014 -> line 807
+ *   +0x002c -> line 809
+ *   +0x003c -> line 811
+ *   +0x0040 -> line 812
+ *   +0x0050 -> line 813
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO2_vClearParticlesOfThatTypeWithChannel(unsigned int PartType, unsigned int Channel)
+{
+    unsigned int i;
+    for (i = 0; i < g_ulNumberOfAgos2; i++)
+    {
+
+        if ((PartType == g_pAGO2Parts[i].ulBaseID) && (Channel == g_pAGO2Parts[i].Channel))
+
+            g_pAGO2Parts[i].ulType |= 1;
+
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 896–907 */
+/* addr: 0x001e9120  size: 88 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 896
+ *   +0x000c -> line 897
+ *   +0x0018 -> line 898
+ *   +0x003c -> line 905
+ *   +0x0048 -> line 907
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO2_DisplayOrdinarySprite(AGO2_Part_* p)
+{
+    GLI_vSetGlobalAlpha(p->xTransparency);
+    if (GLI_vDrawWorldSpriteOpt((MTH3D_tdstVector_*)&p->Position, (GLI_tdstMaterial_*)p->pMaterial1, p->xSize[0], p->xSize[1], (GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, p->AnimTime))
+
+        p->ulType |= 1;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 921–925 */
+/* addr: 0x001e90b0  size: 108 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 921
+ *   +0x0020 -> line 922
+ *   +0x0038 -> line 923
+ *   +0x0050 -> line 924
+ *   +0x0064 -> line 925
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO2_ProcessSimpleParticleWithSpeedAndGravity(AGO2_Part_* p)
+{
+    p->Direction.xZ -= 9.81f * g_fTimeDifference;
+    p->Position.xX += p->Direction.xX * g_fTimeDifference;
+    p->Position.xY += p->Direction.xY * g_fTimeDifference;
+    p->Position.xZ += p->Direction.xZ * g_fTimeDifference;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 937–937 */
+/* addr: 0x001e90a0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 937
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+unsigned char AGO2_CreateOrdinaryParticle(void)
+{
+    return 1;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 950–960 */
+/* addr: 0x001e9030  size: 104 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 950
+ *   +0x000c -> line 951
+ *   +0x0014 -> line 950
+ *   +0x001c -> line 951
+ *   +0x002c -> line 953
+ *   +0x0030 -> line 954
+ *   +0x0038 -> line 955
+ *   +0x0040 -> line 956
+ *   +0x005c -> line 958
+ *   +0x0060 -> line 960
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO2_FadeNormal(AGO2_Part_* p)
+{
+    p->xTransparency -= g_fTimeDifference * p->xTransparencySpeed;
+    if (p->xTransparency < 0.0f)
+    {
+        p->xTransparency = 0.0f;
+        p->ulType |= 1;
+    }
+    else if (p->xTransparency >= 255.0f)
+
+        p->xTransparency = 255.0f;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1005–1011 */
+/* addr: 0x001e8fb0  size: 116 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1005
+ *   +0x000c -> line 1007
+ *   +0x0014 -> line 1005
+ *   +0x0020 -> line 1006
+ *   +0x0038 -> line 1007
+ *   +0x0060 -> line 1009
+ *   +0x006c -> line 1011
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO2_ShrinkNormal(AGO2_Part_* p)
+{
+    p->xSize[0] -= g_fTimeDifference * p->xShrinkingSpeed;
+    p->xSize[1] -= g_fTimeDifference * p->xShrinkingSpeed;
+    if (p->xSize[0] <= 0.0f || p->xSize[1] <= 0.0f)
+
+        p->ulType |= 1;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1026–1079 */
+/* addr: 0x001e8dd0  size: 480 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1026
+ *   +0x0030 -> line 1033
+ *   +0x0034 -> line 1034
+ *   +0x0040 -> line 1035
+ *   +0x004c -> line 1037
+ *   +0x0050 -> line 1039
+ *   +0x0054 -> line 1038
+ *   +0x005c -> line 1039
+ *   +0x0064 -> line 1043
+ *   +0x006c -> line 1044
+ *   +0x0074 -> line 1046
+ *   +0x0080 -> line 1047
+ *   +0x0088 -> line 1058
+ *   +0x008c -> line 1052
+ *   +0x0090 -> line 1058
+ *   +0x0094 -> line 1052
+ *   +0x0098 -> line 1053
+ *   +0x00a4 -> line 1054
+ *   +0x00a8 -> line 1058
+ *   +0x00b0 -> line 1060
+ *   +0x00b8 -> line 1061
+ *   +0x00c0 -> line 1062
+ *   +0x00c8 -> line 1065
+ *   +0x00cc -> line 1069
+ *   +0x00d0 -> line 1065
+ *   +0x00d4 -> line 1066
+ *   +0x00dc -> line 1067
+ *   +0x00e4 -> line 1070
+ *   +0x0124 -> line 1071
+ *   +0x0160 -> line 1072
+ *   +0x0174 -> line 1076
+ *   +0x0178 -> line 1072
+ *   +0x018c -> line 1076
+ *   +0x0190 -> line 1072
+ *   +0x01a8 -> line 1074
+ *   +0x01ac -> line 1076
+ *   +0x01b8 -> line 1078
+ *   +0x01bc -> line 1079
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+unsigned char AGO2_CreateFlow(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber)
+{
+    AGO2_FlowParticle_* pParticleArrayOrg;
+    unsigned int i;
+    AGO2_FlowParticle_* pParticleArray;
+
+    p->GroupNumber = ParticleNumber;
+    p->hGroup = AGO2_MEM_Alloc(ParticleNumber * sizeof(AGO2_FlowParticle_));
+    if (p->hGroup == 0)
+    {
+        p->GroupNumber = 0;
+        p->ulType |= 1;
+        return 0;
+    }
+    pParticleArrayOrg = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+    if (pParticleArrayOrg == NULL)
+    {
+        printf("AGO2MEM DECONNE UN MAX !!!\n");
+        return 0;
+    }
+    p->xTransparencySpeed = 100.0f;
+    p->xSize[0] = 0.1f;
+    p->xSize[1] = 0.1f;
+    p->xShrinkingSpeed = 0.1f;
+    pParticleArray = pParticleArrayOrg;
+    for (i = 0; i < ParticleNumber; i++)
+    {
+        rand();
+        rand();
+        rand();
+        pParticleArray->Position.xX = Position->xX;
+        pParticleArray->Position.xY = Position->xY;
+        pParticleArray->Position.xZ = Position->xZ;
+        pParticleArray->xTransparency = 255.0f;
+        pParticleArray->Direction.xX = Direction->xX + (-5.0f + 10.0f * (float)rand() / 2147483648.0f);
+        pParticleArray->Direction.xY = Direction->xY + (-5.0f + 10.0f * (float)rand() / 2147483648.0f);
+        pParticleArray->Direction.xZ = Direction->xZ + (-6.5f + 32.0f * (float)rand() / 2147483648.0f);
+        pParticleArray->Flags = 0;
+        pParticleArray++;
+    }
+    return 1;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1082–1131 */
+/* addr: 0x001e8c70  size: 344 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1082
+ *   +0x0010 -> line 1089
+ *   +0x001c -> line 1091
+ *   +0x0020 -> line 1092
+ *   +0x0028 -> line 1093
+ *   +0x0030 -> line 1096
+ *   +0x003c -> line 1097
+ *   +0x0044 -> line 1099
+ *   +0x0050 -> line 1100
+ *   +0x0058 -> line 1108
+ *   +0x005c -> line 1106
+ *   +0x0060 -> line 1105
+ *   +0x0064 -> line 1106
+ *   +0x0078 -> line 1108
+ *   +0x0080 -> line 1110
+ *   +0x0090 -> line 1113
+ *   +0x009c -> line 1115
+ *   +0x00a4 -> line 1116
+ *   +0x00ac -> line 1117
+ *   +0x00b4 -> line 1119
+ *   +0x00c8 -> line 1120
+ *   +0x00dc -> line 1121
+ *   +0x00f0 -> line 1124
+ *   +0x0104 -> line 1125
+ *   +0x0118 -> line 1126
+ *   +0x012c -> line 1128
+ *   +0x0130 -> line 1129
+ *   +0x0134 -> line 1130
+ *   +0x0148 -> line 1131
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO2_ProcessFlow(AGO2_Part_* p)
+{
+{
+    AGO2_FlowParticle_* param0;
+    unsigned int i;
+    float LocalG;
+    float TimeDiff;
+
+    if (!p->hGroup)
+    {
+        p->GroupNumber = 0;
+        p->ulType |= 1;
+        return;
+    }
+    param0 = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+    if (!param0)
+    {
+        printf("AGO2MEM DECONNE UN MAX !!!\n");
+        return;
+    }
+    TimeDiff = g_fTimeDifference;
+    LocalG = 2.0f * (9.81f * TimeDiff);
+    for (i = 0; i < p->GroupNumber; i++)
+    {
+        if (!(param0->Flags & 1))
+        {
+            param0->Direction.xZ -= LocalG;
+            param0->PreviousPosition.xX = param0->Position.xX;
+            param0->PreviousPosition.xY = param0->Position.xY;
+            param0->PreviousPosition.xZ = param0->Position.xZ;
+            param0->PreviousPosition.xX -= param0->Direction.xX * TimeDiff;
+            param0->PreviousPosition.xY -= param0->Direction.xY * TimeDiff;
+            param0->PreviousPosition.xZ -= param0->Direction.xZ * TimeDiff;
+            param0->Position.xX += param0->Direction.xX * TimeDiff;
+            param0->Position.xY += param0->Direction.xY * TimeDiff;
+            param0->Position.xZ += param0->Direction.xZ * TimeDiff;
+        }
+        param0++;
+    }
+}
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1134–1151 */
+/* addr: 0x001e8c00  size: 104 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1134
+ *   +0x0010 -> line 1138
+ *   +0x001c -> line 1143
+ *   +0x0024 -> line 1144
+ *   +0x002c -> line 1146
+ *   +0x0034 -> line 1147
+ *   +0x003c -> line 1150
+ *   +0x0058 -> line 1151
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO2_DisplayFlow(AGO2_Part_* p)
+{
+    AGO2_FlowParticle_* pParticleArray;
+
+    if (p->hGroup)
+    {
+        pParticleArray = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+        if (!pParticleArray)
+        {
+            printf("AGO2MEM DECONNE UN MAX !!!\n");
+            return;
+        }
+        GLI_vDisplaySerialFlow((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, pParticleArray, p->GroupNumber, (void*)p->pMaterial1, p->xSize[0], p->xSize[1]);
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1154–1171 */
+/* addr: 0x001e8b90  size: 104 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1154
+ *   +0x0010 -> line 1158
+ *   +0x001c -> line 1163
+ *   +0x0024 -> line 1164
+ *   +0x002c -> line 1166
+ *   +0x0034 -> line 1167
+ *   +0x003c -> line 1170
+ *   +0x0058 -> line 1171
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO2_DisplayFlowMotionBlur(AGO2_Part_* p)
+{
+    AGO2_FlowParticle_* pParticleArray;
+
+    if (p->hGroup)
+    {
+        pParticleArray = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+        if (!pParticleArray)
+        {
+            printf("AGO2MEM DECONNE UN MAX !!!\n");
+            return;
+        }
+        GLI_vDisplaySerialFlowBlured((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, pParticleArray, p->GroupNumber, (void*)p->pMaterial1, p->xSize[0], p->xSize[1]);
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1174–1223 */
+/* addr: 0x001e8a90  size: 244 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1174
+ *   +0x0010 -> line 1180
+ *   +0x001c -> line 1182
+ *   +0x0020 -> line 1183
+ *   +0x0028 -> line 1184
+ *   +0x0030 -> line 1187
+ *   +0x003c -> line 1188
+ *   +0x0044 -> line 1190
+ *   +0x0050 -> line 1191
+ *   +0x0058 -> line 1196
+ *   +0x005c -> line 1194
+ *   +0x0060 -> line 1196
+ *   +0x0064 -> line 1198
+ *   +0x0074 -> line 1200
+ *   +0x0084 -> line 1202
+ *   +0x008c -> line 1204
+ *   +0x009c -> line 1206
+ *   +0x00a0 -> line 1207
+ *   +0x00a8 -> line 1209
+ *   +0x00b0 -> line 1212
+ *   +0x00b4 -> line 1214
+ *   +0x00b8 -> line 1215
+ *   +0x00bc -> line 1216
+ *   +0x00d0 -> line 1218
+ *   +0x00d8 -> line 1221
+ *   +0x00e4 -> line 1223
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO2_FadeFlow(AGO2_Part_* p)
+{
+    AGO2_FlowParticle_* param0;
+    unsigned int i;
+    unsigned int OneIsAlive;
+    float TimeDiffTrsp;
+
+    if (!p->hGroup)
+    {
+        p->GroupNumber = 0;
+        p->ulType |= 1;
+        return;
+    }
+    param0 = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+    if (!param0)
+    {
+        printf("AGO2MEM DECONNE UN MAX !!!\n");
+        return;
+    }
+    OneIsAlive = 0;
+    TimeDiffTrsp = g_fTimeDifference * p->xTransparencySpeed;
+    for (i = 0; i < p->GroupNumber; i++)
+    {
+        if (!(param0->Flags & 1))
+        {
+            param0->xTransparency -= TimeDiffTrsp;
+            if (param0->xTransparency < 0.0f)
+            {
+                param0->xTransparency = 0.0f;
+                param0->Flags |= 1;
+            }
+            else
+            {
+                OneIsAlive = 1;
+            }
+        }
+        param0++;
+    }
+    if (!OneIsAlive)
+    {
+        p->ulType |= 1;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1238–1245 */
+/* addr: 0x001e8a60  size: 40 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1238
+ *   +0x0004 -> line 1239
+ *   +0x000c -> line 1240
+ *   +0x0014 -> line 1242
+ *   +0x0018 -> line 1241
+ *   +0x001c -> line 1244
+ *   +0x0020 -> line 1245
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+unsigned char AGO2_CreateLightning(unsigned int _unused, AGO2_Part_* p)
+{
+    p->xTransparencySpeed = 0.0f;
+    p->xSize[0] = 2.5f;
+    p->xSize[1] = 2.0f;
+    p->xShrinkingSpeed = 0.0f;
+    p->xTransparency = 255.0f;
+    return 1;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1250–1250 */
+/* addr: 0x001e8a50  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1250
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO2_ProcessLightning(void)
+{
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1253–1256 */
+/* addr: 0x001e8a00  size: 68 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1253
+ *   +0x0010 -> line 1254
+ *   +0x0028 -> line 1255
+ *   +0x0034 -> line 1256
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO2_DisplayLightning(AGO2_Part_* p)
+{
+    AGO2_Part_* pPart;
+
+    pPart = p;
+    GLI_v_DisplayLightning((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport,
+                            (MTH3D_tdstVector_*)&pPart->Position,
+                            (MTH3D_tdstVector_*)&pPart->Direction,
+                            pPart->pMaterial1, pPart->xSize[0]);
+    pPart->ulType |= 1;
+}
+
+/* Same parameter list as AGO2_CreateFlow: retail reads ParticleNumber from
+   the 16th-argument stack slot. */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1268–1330 */
+/* addr: 0x001e8660  size: 920 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1268
+ *   +0x0004 -> line 1275
+ *   +0x0008 -> line 1268
+ *   +0x000c -> line 1278
+ *   +0x0010 -> line 1268
+ *   +0x0014 -> line 1275
+ *   +0x0018 -> line 1268
+ *   +0x001c -> line 1278
+ *   +0x0020 -> line 1268
+ *   +0x002c -> line 1278
+ *   +0x0030 -> line 1268
+ *   +0x003c -> line 1276
+ *   +0x0040 -> line 1268
+ *   +0x0044 -> line 1276
+ *   +0x0048 -> line 1268
+ *   +0x005c -> line 1275
+ *   +0x007c -> line 1276
+ *   +0x009c -> line 1278
+ *   +0x0104 -> line 1282
+ *   +0x0108 -> line 1281
+ *   +0x010c -> line 1282
+ *   +0x011c -> line 1283
+ *   +0x0128 -> line 1285
+ *   +0x012c -> line 1287
+ *   +0x0130 -> line 1286
+ *   +0x0138 -> line 1287
+ *   +0x0140 -> line 1291
+ *   +0x0148 -> line 1292
+ *   +0x0150 -> line 1294
+ *   +0x015c -> line 1295
+ *   +0x0164 -> line 1300
+ *   +0x016c -> line 1298
+ *   +0x0170 -> line 1300
+ *   +0x0174 -> line 1304
+ *   +0x0178 -> line 1309
+ *   +0x017c -> line 1304
+ *   +0x0180 -> line 1305
+ *   +0x0184 -> line 1300
+ *   +0x0188 -> line 1309
+ *   +0x018c -> line 1300
+ *   +0x0190 -> line 1303
+ *   +0x0194 -> line 1304
+ *   +0x0198 -> line 1305
+ *   +0x019c -> line 1309
+ *   +0x01a4 -> line 1311
+ *   +0x01e0 -> line 1312
+ *   +0x0210 -> line 1313
+ *   +0x021c -> line 1318
+ *   +0x0220 -> line 1316
+ *   +0x0224 -> line 1313
+ *   +0x0234 -> line 1316
+ *   +0x0238 -> line 1313
+ *   +0x023c -> line 1320
+ *   +0x0240 -> line 1316
+ *   +0x0250 -> line 1317
+ *   +0x0254 -> line 1313
+ *   +0x0258 -> line 1317
+ *   +0x026c -> line 1318
+ *   +0x028c -> line 1321
+ *   +0x02c8 -> line 1322
+ *   +0x0308 -> line 1323
+ *   +0x031c -> line 1327
+ *   +0x0320 -> line 1323
+ *   +0x0334 -> line 1327
+ *   +0x0338 -> line 1323
+ *   +0x0350 -> line 1325
+ *   +0x0354 -> line 1327
+ *   +0x0360 -> line 1329
+ *   +0x0364 -> line 1330
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+unsigned char AGO2_CreateSerialCameraParticleRain(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber)
+{
+    unsigned int i;
+    float RandomValue;
+    float RandomValueX;
+    float RandomValueY;
+    AGO2_RainParticle_* pParticleArray;
+    AGO2_RainParticle_* pParticleArrayOrg;
+    float* p1;
+    float* p2;
+
+    p1 = (float*)&AGO_g_CameraCoordinatesForRain; p2 = (float*)&AGO_g_CameraDirectionForRain;
+    p1[0] = Position->xX; p1[1] = Position->xY; p1[2] = Position->xZ; p1[3] = Position->xW;
+    p2[0] = Direction->xX; p2[1] = Direction->xY; p2[2] = Direction->xZ; p2[3] = Direction->xW;
+
+    if (AGO2_bIsTypeAlreadyExists(ulParticleType))
+        return 0;
+
+    p->GroupNumber = ParticleNumber;
+    p->hGroup = AGO2_MEM_Alloc(ParticleNumber * sizeof(AGO2_RainParticle_));
+    if (p->hGroup == 0)
+    {
+        p->GroupNumber = 0;
+        p->ulType |= 1;
+        return 0;
+    }
+    pParticleArrayOrg = (AGO2_RainParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+    if (pParticleArrayOrg == NULL)
+    {
+        printf("AGO2MEM DECONNE UN MAX !!!\n");
+        return 0;
+    }
+    p->xLimit = AGO_g_CameraCoordinatesForRain.xZ - 6.0f;
+    p->xTransparencySpeed = 0.0f;
+    p->xSize[0] = 0.15f;
+    p->xSize[1] = 1.0f;
+    p->xShrinkingSpeed = 0.0f;
+    pParticleArray = pParticleArrayOrg;
+    for (i = 0; i < ParticleNumber; i++)
+    {
+        RandomValue = AGO2_M_xRand(10.0f, 50.0f);
+        RandomValueX = AGO2_M_xRand(-RandomValue, RandomValue);
+        RandomValueY = AGO2_M_xRand(-RandomValue, RandomValue);
+        pParticleArray->Position.xX = RandomValueX + (Position->xX + RandomValue * Direction->xX);
+        pParticleArray->Position.xY = RandomValueY + (Position->xY + RandomValue * Direction->xY);
+        pParticleArray->Position.xZ = 15.0f + (Position->xZ + RandomValue * Direction->xZ);
+        pParticleArray->xTransparency = 85.0f;
+        pParticleArray->Direction.xX = AGO2_M_xRand(10.5f, 20.5f);
+        pParticleArray->Direction.xY = AGO2_M_xRand(10.5f, 20.5f);
+        pParticleArray->Direction.xZ = AGO2_M_xRand(-60.0f, -30.0f);
+        pParticleArray->Flags = 0;
+        pParticleArray++;
+    }
+    return 1;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1333–1414 */
+/* addr: 0x001e8210  size: 1092 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1333
+ *   +0x0034 -> line 1341
+ *   +0x0040 -> line 1343
+ *   +0x0044 -> line 1344
+ *   +0x004c -> line 1345
+ *   +0x0054 -> line 1348
+ *   +0x0060 -> line 1349
+ *   +0x0068 -> line 1351
+ *   +0x0070 -> line 1352
+ *   +0x0078 -> line 1361
+ *   +0x00a0 -> line 1364
+ *   +0x00a4 -> line 1366
+ *   +0x00a8 -> line 1364
+ *   +0x00b0 -> line 1366
+ *   +0x00b8 -> line 1368
+ *   +0x00c8 -> line 1372
+ *   +0x00cc -> line 1379
+ *   +0x00d0 -> line 1380
+ *   +0x00d4 -> line 1381
+ *   +0x00d8 -> line 1372
+ *   +0x00e0 -> line 1374
+ *   +0x00f4 -> line 1375
+ *   +0x0108 -> line 1376
+ *   +0x011c -> line 1379
+ *   +0x0124 -> line 1380
+ *   +0x0128 -> line 1379
+ *   +0x0130 -> line 1380
+ *   +0x0138 -> line 1381
+ *   +0x013c -> line 1380
+ *   +0x0144 -> line 1381
+ *   +0x0154 -> line 1383
+ *   +0x01b8 -> line 1385
+ *   +0x01e8 -> line 1387
+ *   +0x0218 -> line 1393
+ *   +0x0254 -> line 1394
+ *   +0x0284 -> line 1395
+ *   +0x02b4 -> line 1396
+ *   +0x02c0 -> line 1401
+ *   +0x02c8 -> line 1396
+ *   +0x02d0 -> line 1401
+ *   +0x02d8 -> line 1396
+ *   +0x02e4 -> line 1405
+ *   +0x02e8 -> line 1402
+ *   +0x02ec -> line 1401
+ *   +0x02fc -> line 1402
+ *   +0x0300 -> line 1396
+ *   +0x0304 -> line 1402
+ *   +0x030c -> line 1396
+ *   +0x0310 -> line 1402
+ *   +0x0314 -> line 1403
+ *   +0x0318 -> line 1402
+ *   +0x0324 -> line 1403
+ *   +0x0340 -> line 1406
+ *   +0x037c -> line 1407
+ *   +0x03bc -> line 1408
+ *   +0x03f8 -> line 1412
+ *   +0x03fc -> line 1413
+ *   +0x0410 -> line 1414
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO2_ProcessRainParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit(AGO2_Part_* p)
+{
+    AGO2_RainParticle_* pParticleArray;
+    unsigned int i;
+    float LocalG;
+    float TimeDiff;
+    AGO_V4D_ v1;
+    float xNorm;
+    float RandomValue;
+    float RandomValueX;
+    float RandomValueY;
+    float RandomValueZ;
+
+    if (!p->hGroup)
+    {
+        p->GroupNumber = 0;
+        p->ulType |= 1;
+        return;
+    }
+    pParticleArray = (AGO2_RainParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+    if (!pParticleArray)
+    {
+        printf("AGO2MEM DECONNE UN MAX !!!\n");
+        return;
+    }
+    TimeDiff = g_fTimeDifference;
+    if (TimeDiff > 0.033333335f)
+        TimeDiff = 0.033333335f;
+    LocalG = 9.81f * TimeDiff;
+    for (i = 0; i < p->GroupNumber; pParticleArray++, i++)
+    {
+        if (pParticleArray->Flags & 1)
+            continue;
+        pParticleArray->Direction.xZ -= LocalG;
+        pParticleArray->Position.xX += pParticleArray->Direction.xX * TimeDiff;
+        pParticleArray->Position.xY += pParticleArray->Direction.xY * TimeDiff;
+        pParticleArray->Position.xZ += pParticleArray->Direction.xZ * TimeDiff;
+        MTH3D_M_vSubVector((MTH3D_tdstVector_*)&v1, (MTH3D_tdstVector_*)&pParticleArray->Position, (MTH3D_tdstVector_*)&AGO_g_CameraCoordinatesForRain);
+        AGO2_vNormalizeVector((MTH3D_tdstVector_*)&v1);
+        xNorm = AGO2_xDotVector((MTH3D_tdstVector_*)&v1, (MTH3D_tdstVector_*)&AGO_g_CameraDirectionForRain);
+        if (pParticleArray->Position.xZ < p->xLimit || xNorm < 0.85f)
+        {
+            RandomValue = AGO2_M_xRand(10.0f, 100.0f);
+            RandomValueX = AGO2_M_xRand(-RandomValue, RandomValue);
+            RandomValueY = AGO2_M_xRand(-RandomValue, RandomValue);
+            RandomValueZ = AGO2_M_xRand(-RandomValue, RandomValue);
+            pParticleArray->Position.xX = RandomValueX + (AGO_g_CameraCoordinatesForRain.xX + RandomValue * AGO_g_CameraDirectionForRain.xX);
+            pParticleArray->Position.xY = RandomValueY + (AGO_g_CameraCoordinatesForRain.xY + RandomValue * AGO_g_CameraDirectionForRain.xY);
+            pParticleArray->Position.xZ = RandomValueZ + (AGO_g_CameraCoordinatesForRain.xZ + RandomValue * AGO_g_CameraDirectionForRain.xZ);
+            pParticleArray->xTransparency = 85.0f;
+            pParticleArray->Direction.xX = AGO2_M_xRand(0.5f, 30.5f);
+            pParticleArray->Direction.xY = AGO2_M_xRand(0.5f, 30.5f);
+            pParticleArray->Direction.xZ = AGO2_M_xRand(-60.0f, -30.0f);
+        }
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1418–1499 */
+/* addr: 0x001e7dc0  size: 1092 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1418
+ *   +0x0034 -> line 1426
+ *   +0x0040 -> line 1428
+ *   +0x0044 -> line 1429
+ *   +0x004c -> line 1430
+ *   +0x0054 -> line 1433
+ *   +0x0060 -> line 1434
+ *   +0x0068 -> line 1436
+ *   +0x0070 -> line 1437
+ *   +0x0078 -> line 1446
+ *   +0x00a0 -> line 1449
+ *   +0x00a4 -> line 1451
+ *   +0x00a8 -> line 1449
+ *   +0x00b0 -> line 1451
+ *   +0x00b8 -> line 1453
+ *   +0x00c8 -> line 1457
+ *   +0x00cc -> line 1464
+ *   +0x00d0 -> line 1465
+ *   +0x00d4 -> line 1466
+ *   +0x00d8 -> line 1457
+ *   +0x00e0 -> line 1459
+ *   +0x00f4 -> line 1460
+ *   +0x0108 -> line 1461
+ *   +0x011c -> line 1464
+ *   +0x0124 -> line 1465
+ *   +0x0128 -> line 1464
+ *   +0x0130 -> line 1465
+ *   +0x0138 -> line 1466
+ *   +0x013c -> line 1465
+ *   +0x0144 -> line 1466
+ *   +0x0154 -> line 1468
+ *   +0x01b8 -> line 1470
+ *   +0x01e8 -> line 1472
+ *   +0x0218 -> line 1478
+ *   +0x0254 -> line 1479
+ *   +0x0284 -> line 1480
+ *   +0x02b4 -> line 1481
+ *   +0x02c0 -> line 1486
+ *   +0x02c8 -> line 1481
+ *   +0x02d0 -> line 1486
+ *   +0x02d8 -> line 1481
+ *   +0x02e4 -> line 1490
+ *   +0x02e8 -> line 1487
+ *   +0x02ec -> line 1486
+ *   +0x02fc -> line 1487
+ *   +0x0300 -> line 1481
+ *   +0x0304 -> line 1487
+ *   +0x030c -> line 1481
+ *   +0x0310 -> line 1487
+ *   +0x0314 -> line 1488
+ *   +0x0318 -> line 1487
+ *   +0x0324 -> line 1488
+ *   +0x0340 -> line 1491
+ *   +0x037c -> line 1492
+ *   +0x03bc -> line 1493
+ *   +0x03f8 -> line 1497
+ *   +0x03fc -> line 1498
+ *   +0x0410 -> line 1499
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO2_ProcessRainNearCameraParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit(AGO2_Part_* p)
+{
+    float RandomValueZ;
+    float RandomValueY;
+    float RandomValueX;
+    float RandomValue;
+    float xNorm;
+    AGO_V4D_ v1;
+    float TimeDiff;
+    float LocalG;
+    unsigned int i;
+    AGO2_RainParticle_* pParticleArray;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1502–1520 */
+/* addr: 0x001e7d50  size: 112 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1502
+ *   +0x0010 -> line 1505
+ *   +0x001c -> line 1510
+ *   +0x0028 -> line 1511
+ *   +0x0030 -> line 1513
+ *   +0x0038 -> line 1514
+ *   +0x0040 -> line 1517
+ *   +0x004c -> line 1519
+ *   +0x0060 -> line 1520
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO2_DisplayRainParticleSpriteGroup(AGO2_Part_* p)
+{
+    AGO2_RainParticle_* pParticleArray;
+
+    if (p->hGroup)
+    {
+        pParticleArray = (AGO2_RainParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+        if (!pParticleArray)
+        {
+            printf("AGO2MEM DECONNE UN MAX !!!\n");
+            return;
+        }
+        if (p->GroupNumber)
+            GLI_vDisplaySerialParticleRain((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, pParticleArray, p->GroupNumber, (void*)p->pMaterial1, p->xSize[0], p->xSize[1]);
+    }
+}
+
+/* Same parameter list as AGO2_CreateFlow: retail reads ParticleNumber from
+   the 16th-argument stack slot. */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1532–1599 */
+/* addr: 0x001e78b0  size: 1176 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1532
+ *   +0x0038 -> line 1538
+ *   +0x004c -> line 1540
+ *   +0x0058 -> line 1541
+ *   +0x005c -> line 1543
+ *   +0x0060 -> line 1541
+ *   +0x0064 -> line 1543
+ *   +0x006c -> line 1540
+ *   +0x0088 -> line 1541
+ *   +0x00a8 -> line 1543
+ *   +0x0114 -> line 1547
+ *   +0x0118 -> line 1546
+ *   +0x011c -> line 1547
+ *   +0x012c -> line 1548
+ *   +0x0138 -> line 1550
+ *   +0x013c -> line 1552
+ *   +0x0140 -> line 1551
+ *   +0x0148 -> line 1552
+ *   +0x0150 -> line 1556
+ *   +0x0158 -> line 1557
+ *   +0x0160 -> line 1559
+ *   +0x016c -> line 1560
+ *   +0x0174 -> line 1563
+ *   +0x0178 -> line 1565
+ *   +0x0184 -> line 1574
+ *   +0x0188 -> line 1569
+ *   +0x0190 -> line 1565
+ *   +0x0194 -> line 1574
+ *   +0x0198 -> line 1565
+ *   +0x019c -> line 1568
+ *   +0x01a0 -> line 1569
+ *   +0x01a4 -> line 1570
+ *   +0x01a8 -> line 1574
+ *   +0x01b0 -> line 1576
+ *   +0x01ec -> line 1577
+ *   +0x021c -> line 1578
+ *   +0x024c -> line 1581
+ *   +0x02c0 -> line 1582
+ *   +0x0338 -> line 1587
+ *   +0x033c -> line 1585
+ *   +0x0340 -> line 1587
+ *   +0x0344 -> line 1585
+ *   +0x0348 -> line 1589
+ *   +0x034c -> line 1585
+ *   +0x035c -> line 1586
+ *   +0x0374 -> line 1587
+ *   +0x038c -> line 1590
+ *   +0x03c8 -> line 1591
+ *   +0x0408 -> line 1592
+ *   +0x041c -> line 1596
+ *   +0x0420 -> line 1592
+ *   +0x0434 -> line 1596
+ *   +0x0438 -> line 1592
+ *   +0x0450 -> line 1594
+ *   +0x0454 -> line 1596
+ *   +0x0460 -> line 1598
+ *   +0x0464 -> line 1599
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+unsigned char AGO2_CreateSerialCameraParticleSnow(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber)
+{
+    unsigned int i;
+    float RandomValue;
+    float RandomValueX;
+    float RandomValueY;
+    AGO2_RainParticle_* pParticleArray;
+    AGO2_RainParticle_* pParticleArrayOrg;
+    float* p1;
+    float* p2;
+
+    if (ParticleNumber > 200)
+        ParticleNumber = 200;
+
+    p1 = (float*)&AGO_g_CameraCoordinatesForRain; p2 = (float*)&AGO_g_CameraDirectionForRain;
+    p1[0] = Position->xX; p1[1] = Position->xY; p1[2] = Position->xZ; p1[3] = Position->xW;
+    p2[0] = Direction->xX; p2[1] = Direction->xY; p2[2] = Direction->xZ; p2[3] = Direction->xW;
+
+    if (AGO2_bIsTypeAlreadyExists(ulParticleType))
+        return 0;
+
+    p->GroupNumber = ParticleNumber;
+    p->hGroup = AGO2_MEM_Alloc(ParticleNumber * sizeof(AGO2_RainParticle_));
+    if (p->hGroup == 0)
+    {
+        p->GroupNumber = 0;
+        p->ulType |= 1;
+        return 0;
+    }
+    pParticleArrayOrg = (AGO2_RainParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+    if (pParticleArrayOrg == NULL)
+    {
+        printf("AGO2MEM DECONNE UN MAX !!!\n");
+        return 0;
+    }
+    pParticleArray = pParticleArrayOrg;
+    i = 0;
+    p->xLimit = AGO_g_CameraCoordinatesForRain.xZ - 20.0f;
+    p->xTransparencySpeed = 0.0f;
+    p->xSize[0] = 0.15f;
+    p->xSize[1] = 0.15f;
+    p->xShrinkingSpeed = 0.0f;
+    for (; i < ParticleNumber; i++)
+    {
+        RandomValue = AGO2_M_xRand(10.0f, 100.0f);
+        RandomValueX = AGO2_M_xRand(-RandomValue, RandomValue);
+        RandomValueY = AGO2_M_xRand(-RandomValue, RandomValue);
+        pParticleArray->Pads[0] = (unsigned int)AGO2_M_xRand(0.2f, 1.2f);
+        pParticleArray->Pads[1] = (unsigned int)AGO2_M_xRand(-10.0f, 10.0f);
+        pParticleArray->Position.xX = RandomValueX + (Position->xX + RandomValue * Direction->xX);
+        pParticleArray->Position.xY = RandomValueY + (Position->xY + RandomValue * Direction->xY);
+        pParticleArray->Position.xZ = 15.0f + (Position->xZ + RandomValue * Direction->xZ);
+        pParticleArray->xTransparency = 150.0f;
+        pParticleArray->Direction.xX = AGO2_M_xRand(-6.0f, 6.0f);
+        pParticleArray->Direction.xY = AGO2_M_xRand(-6.0f, 6.0f);
+        pParticleArray->Direction.xZ = AGO2_M_xRand(-15.0f, -2.0f);
+        pParticleArray->Flags = 0;
+        pParticleArray++;
+    }
+    return 1;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1602–1681 */
+/* addr: 0x001e7330  size: 1404 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1602
+ *   +0x0034 -> line 1610
+ *   +0x0040 -> line 1612
+ *   +0x0044 -> line 1613
+ *   +0x004c -> line 1614
+ *   +0x0054 -> line 1617
+ *   +0x0060 -> line 1618
+ *   +0x0068 -> line 1620
+ *   +0x0070 -> line 1621
+ *   +0x0078 -> line 1630
+ *   +0x00a0 -> line 1635
+ *   +0x00ac -> line 1632
+ *   +0x00b0 -> line 1635
+ *   +0x00b4 -> line 1632
+ *   +0x00bc -> line 1635
+ *   +0x00c4 -> line 1637
+ *   +0x00d0 -> line 1639
+ *   +0x00e0 -> line 1642
+ *   +0x0114 -> line 1649
+ *   +0x0118 -> line 1650
+ *   +0x011c -> line 1651
+ *   +0x0120 -> line 1642
+ *   +0x012c -> line 1644
+ *   +0x0140 -> line 1645
+ *   +0x0154 -> line 1646
+ *   +0x0168 -> line 1649
+ *   +0x0170 -> line 1650
+ *   +0x0174 -> line 1649
+ *   +0x017c -> line 1650
+ *   +0x0184 -> line 1651
+ *   +0x0188 -> line 1650
+ *   +0x0190 -> line 1651
+ *   +0x01a0 -> line 1653
+ *   +0x0200 -> line 1655
+ *   +0x0260 -> line 1660
+ *   +0x029c -> line 1661
+ *   +0x02cc -> line 1662
+ *   +0x02fc -> line 1663
+ *   +0x032c -> line 1665
+ *   +0x03a0 -> line 1666
+ *   +0x0418 -> line 1669
+ *   +0x0420 -> line 1673
+ *   +0x0424 -> line 1669
+ *   +0x0430 -> line 1670
+ *   +0x0434 -> line 1669
+ *   +0x0440 -> line 1670
+ *   +0x0450 -> line 1671
+ *   +0x0454 -> line 1670
+ *   +0x0460 -> line 1671
+ *   +0x047c -> line 1674
+ *   +0x04b8 -> line 1675
+ *   +0x04f8 -> line 1676
+ *   +0x0534 -> line 1678
+ *   +0x0538 -> line 1680
+ *   +0x0548 -> line 1681
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO2_ProcessSnowParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit(AGO2_Part_* p)
+{
+    float RandomValueZ;
+    float RandomValueY;
+    float RandomValueX;
+    float RandomValue;
+    float xNorm;
+    AGO_V4D_ v1;
+    float TimeDiff;
+    float LocalG;
+    int i;
+    AGO2_RainParticle_* pParticleArray;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1694–1796 */
+/* addr: 0x001e6a40  size: 2288 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1694
+ *   +0x0004 -> line 1702
+ *   +0x0008 -> line 1694
+ *   +0x000c -> line 1705
+ *   +0x0010 -> line 1694
+ *   +0x0014 -> line 1702
+ *   +0x0018 -> line 1694
+ *   +0x001c -> line 1705
+ *   +0x0020 -> line 1694
+ *   +0x002c -> line 1705
+ *   +0x0030 -> line 1694
+ *   +0x0040 -> line 1703
+ *   +0x0044 -> line 1694
+ *   +0x0048 -> line 1703
+ *   +0x004c -> line 1694
+ *   +0x0064 -> line 1702
+ *   +0x0084 -> line 1703
+ *   +0x00a4 -> line 1705
+ *   +0x010c -> line 1709
+ *   +0x0110 -> line 1708
+ *   +0x0114 -> line 1709
+ *   +0x0124 -> line 1710
+ *   +0x0130 -> line 1712
+ *   +0x0134 -> line 1714
+ *   +0x0138 -> line 1713
+ *   +0x0140 -> line 1714
+ *   +0x0148 -> line 1718
+ *   +0x0150 -> line 1719
+ *   +0x0158 -> line 1721
+ *   +0x0164 -> line 1722
+ *   +0x016c -> line 1725
+ *   +0x0170 -> line 1727
+ *   +0x017c -> line 1736
+ *   +0x0180 -> line 1731
+ *   +0x0184 -> line 1727
+ *   +0x0188 -> line 1736
+ *   +0x018c -> line 1727
+ *   +0x0190 -> line 1730
+ *   +0x0194 -> line 1731
+ *   +0x0198 -> line 1732
+ *   +0x019c -> line 1736
+ *   +0x01a4 -> line 1738
+ *   +0x01e0 -> line 1739
+ *   +0x0210 -> line 1740
+ *   +0x0240 -> line 1743
+ *   +0x0278 -> line 1744
+ *   +0x028c -> line 1749
+ *   +0x0290 -> line 1744
+ *   +0x02a4 -> line 1751
+ *   +0x02a8 -> line 1744
+ *   +0x02c0 -> line 1747
+ *   +0x02c8 -> line 1749
+ *   +0x02cc -> line 1747
+ *   +0x02dc -> line 1748
+ *   +0x02f4 -> line 1749
+ *   +0x030c -> line 1752
+ *   +0x0348 -> line 1753
+ *   +0x0388 -> line 1755
+ *   +0x03c8 -> line 1757
+ *   +0x0404 -> line 1758
+ *   +0x0444 -> line 1759
+ *   +0x0480 -> line 1760
+ *   +0x04c8 -> line 1764
+ *   +0x0508 -> line 1765
+ *   +0x0548 -> line 1766
+ *   +0x0558 -> line 1768
+ *   +0x0560 -> line 1766
+ *   +0x0590 -> line 1768
+ *   +0x05c8 -> line 1773
+ *   +0x0608 -> line 1774
+ *   +0x064c -> line 1775
+ *   +0x0690 -> line 1777
+ *   +0x06c4 -> line 1779
+ *   +0x0728 -> line 1780
+ *   +0x0788 -> line 1781
+ *   +0x07dc -> line 1782
+ *   +0x0840 -> line 1793
+ *   +0x0844 -> line 1784
+ *   +0x0848 -> line 1793
+ *   +0x084c -> line 1784
+ *   +0x0868 -> line 1785
+ *   +0x0888 -> line 1787
+ *   +0x0890 -> line 1788
+ *   +0x0898 -> line 1789
+ *   +0x08a0 -> line 1791
+ *   +0x08a4 -> line 1793
+ *   +0x08b0 -> line 1795
+ *   +0x08b4 -> line 1796
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+unsigned char AGO2_CreateSerialCameraParticleLeaves(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, unsigned int ParticleNumber)
+{
+    float xNorm;
+    float* p2;
+    float* p1;
+    MTH3D_tdstVector_ V2;
+    AGO2_LeavesParticle_* pParticleArrayOrg;
+    AGO2_LeavesParticle_* pParticleArray;
+    float RandomValueY;
+    float RandomValueX;
+    float RandomValue;
+    unsigned int i;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1799–1954 */
+/* addr: 0x001e5e20  size: 3104 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1799
+ *   +0x0040 -> line 1812
+ *   +0x004c -> line 1814
+ *   +0x0050 -> line 1815
+ *   +0x0058 -> line 1816
+ *   +0x0060 -> line 1819
+ *   +0x006c -> line 1820
+ *   +0x0074 -> line 1822
+ *   +0x007c -> line 1823
+ *   +0x0084 -> line 1832
+ *   +0x00ac -> line 1840
+ *   +0x00b8 -> line 1842
+ *   +0x00c8 -> line 1846
+ *   +0x00d4 -> line 1849
+ *   +0x00d8 -> line 1846
+ *   +0x00dc -> line 1849
+ *   +0x00e8 -> line 1846
+ *   +0x00f8 -> line 1849
+ *   +0x013c -> line 1850
+ *   +0x01a0 -> line 1851
+ *   +0x01c0 -> line 1854
+ *   +0x01c4 -> line 1858
+ *   +0x01c8 -> line 1854
+ *   +0x01cc -> line 1853
+ *   +0x01d0 -> line 1862
+ *   +0x01d4 -> line 1858
+ *   +0x01e4 -> line 1854
+ *   +0x01e8 -> line 1858
+ *   +0x01ec -> line 1859
+ *   +0x01f0 -> line 1862
+ *   +0x01f4 -> line 1859
+ *   +0x01f8 -> line 1855
+ *   +0x01fc -> line 1859
+ *   +0x020c -> line 1860
+ *   +0x0214 -> line 1862
+ *   +0x0218 -> line 1860
+ *   +0x0228 -> line 1862
+ *   +0x0230 -> line 1864
+ *   +0x0238 -> line 1865
+ *   +0x0244 -> line 1867
+ *   +0x0258 -> line 1868
+ *   +0x026c -> line 1869
+ *   +0x0274 -> line 1871
+ *   +0x0280 -> line 1872
+ *   +0x028c -> line 1873
+ *   +0x029c -> line 1875
+ *   +0x02a8 -> line 1876
+ *   +0x02b4 -> line 1877
+ *   +0x02c4 -> line 1879
+ *   +0x0328 -> line 1880
+ *   +0x0390 -> line 1884
+ *   +0x0398 -> line 1885
+ *   +0x039c -> line 1884
+ *   +0x03a0 -> line 1886
+ *   +0x03a4 -> line 1885
+ *   +0x03a8 -> line 1884
+ *   +0x03b0 -> line 1885
+ *   +0x03b8 -> line 1886
+ *   +0x03bc -> line 1885
+ *   +0x03c4 -> line 1886
+ *   +0x03d4 -> line 1888
+ *   +0x0438 -> line 1890
+ *   +0x0498 -> line 1897
+ *   +0x04d4 -> line 1898
+ *   +0x0504 -> line 1899
+ *   +0x0534 -> line 1900
+ *   +0x0564 -> line 1903
+ *   +0x059c -> line 1904
+ *   +0x05b0 -> line 1907
+ *   +0x05b4 -> line 1904
+ *   +0x05c8 -> line 1911
+ *   +0x05cc -> line 1904
+ *   +0x05e4 -> line 1907
+ *   +0x05f4 -> line 1908
+ *   +0x05f8 -> line 1907
+ *   +0x0604 -> line 1908
+ *   +0x0614 -> line 1909
+ *   +0x0618 -> line 1908
+ *   +0x0624 -> line 1909
+ *   +0x0640 -> line 1912
+ *   +0x067c -> line 1913
+ *   +0x06bc -> line 1915
+ *   +0x06fc -> line 1917
+ *   +0x0738 -> line 1918
+ *   +0x0778 -> line 1919
+ *   +0x07b8 -> line 1920
+ *   +0x0800 -> line 1924
+ *   +0x0840 -> line 1925
+ *   +0x0880 -> line 1926
+ *   +0x0890 -> line 1928
+ *   +0x0898 -> line 1926
+ *   +0x08c8 -> line 1928
+ *   +0x0900 -> line 1933
+ *   +0x0940 -> line 1934
+ *   +0x0984 -> line 1935
+ *   +0x09c4 -> line 1937
+ *   +0x09f8 -> line 1939
+ *   +0x0a60 -> line 1940
+ *   +0x0ac0 -> line 1941
+ *   +0x0b14 -> line 1942
+ *   +0x0b78 -> line 1944
+ *   +0x0b98 -> line 1945
+ *   +0x0bb8 -> line 1947
+ *   +0x0bc0 -> line 1948
+ *   +0x0bc8 -> line 1949
+ *   +0x0bd0 -> line 1953
+ *   +0x0be0 -> line 1954
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO2_ProcessLeavesParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit(AGO2_Part_* p)
+{
+    float xNorm;
+    MTH3D_tdstVector_ V2;
+    float RandomValueZ;
+    float RandomValueY;
+    float RandomValueX;
+    float RandomValue;
+    float sin1;
+    float cos1;
+    MTH3D_tdstVector_ Norm;
+    float Dot2;
+    float Dot1;
+    AGO_V4D_ v1;
+    float TimeDiff;
+    int i;
+    AGO2_LeavesParticle_* pParticleArray;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1958–1975 */
+/* addr: 0x001e5db0  size: 104 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1958
+ *   +0x0010 -> line 1962
+ *   +0x001c -> line 1967
+ *   +0x0024 -> line 1968
+ *   +0x002c -> line 1970
+ *   +0x0034 -> line 1971
+ *   +0x003c -> line 1974
+ *   +0x0058 -> line 1975
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO2_DisplayLeaves(AGO2_Part_* p)
+{
+    AGO2_LeavesParticle_* pParticleArray;
+
+    if (p->hGroup)
+    {
+        pParticleArray = (AGO2_LeavesParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+        if (!pParticleArray)
+        {
+            printf("AGO2MEM DECONNE UN MAX !!!\n");
+            return;
+        }
+        GLI_vDisplaySerialLeaves((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, pParticleArray, p->GroupNumber, (void*)p->pMaterial1, p->xSize[0], p->xSize[1]);
+    }
+}
+
+/* Same parameter list as AGO2_CreateFlow: retail reads ParticleNumber from
+   the 16th-argument stack slot. */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1987–2052 */
+/* addr: 0x001e5930  size: 1140 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1987
+ *   +0x0004 -> line 1993
+ *   +0x0008 -> line 1987
+ *   +0x000c -> line 1993
+ *   +0x0010 -> line 1987
+ *   +0x0014 -> line 1997
+ *   +0x0018 -> line 1987
+ *   +0x001c -> line 1994
+ *   +0x0020 -> line 1987
+ *   +0x002c -> line 1994
+ *   +0x0030 -> line 1987
+ *   +0x003c -> line 1997
+ *   +0x0040 -> line 1987
+ *   +0x0050 -> line 1993
+ *   +0x0054 -> line 1987
+ *   +0x0058 -> line 1993
+ *   +0x0060 -> line 1994
+ *   +0x0080 -> line 1997
+ *   +0x00ec -> line 2001
+ *   +0x00f0 -> line 2000
+ *   +0x00f4 -> line 2001
+ *   +0x0104 -> line 2002
+ *   +0x0110 -> line 2004
+ *   +0x0114 -> line 2006
+ *   +0x0118 -> line 2005
+ *   +0x0120 -> line 2006
+ *   +0x0128 -> line 2010
+ *   +0x0130 -> line 2011
+ *   +0x0138 -> line 2013
+ *   +0x0144 -> line 2014
+ *   +0x014c -> line 2025
+ *   +0x0150 -> line 2019
+ *   +0x0154 -> line 2025
+ *   +0x0158 -> line 2019
+ *   +0x015c -> line 2020
+ *   +0x0164 -> line 2022
+ *   +0x0168 -> line 2020
+ *   +0x016c -> line 2022
+ *   +0x0170 -> line 2021
+ *   +0x0174 -> line 2025
+ *   +0x017c -> line 2027
+ *   +0x01b8 -> line 2028
+ *   +0x01e8 -> line 2029
+ *   +0x0218 -> line 2030
+ *   +0x0248 -> line 2032
+ *   +0x0288 -> line 2033
+ *   +0x02cc -> line 2034
+ *   +0x030c -> line 2037
+ *   +0x0318 -> line 2038
+ *   +0x0324 -> line 2039
+ *   +0x032c -> line 2042
+ *   +0x036c -> line 2043
+ *   +0x03ac -> line 2044
+ *   +0x03ec -> line 2046
+ *   +0x0400 -> line 2050
+ *   +0x0404 -> line 2046
+ *   +0x0418 -> line 2050
+ *   +0x041c -> line 2046
+ *   +0x0434 -> line 2048
+ *   +0x0438 -> line 2050
+ *   +0x0440 -> line 2051
+ *   +0x0444 -> line 2052
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+unsigned char AGO2_CreateBees(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber)
+{
+    unsigned int i;
+    float RandomValue;
+    float RandomValueX;
+    float RandomValueY;
+    float RandomValueZ;
+    AGO2_BeeParticle_* pParticleArray;
+    AGO2_BeeParticle_* pParticleArrayOrg;
+    float* p1;
+    float* p2;
+
+    Position->xZ += 1.0f;
+    p1 = (float*)&AGO_g_BeeTargetPosition; p2 = (float*)Position; p1[0] = p2[0]; p1[1] = p2[1]; p1[2] = p2[2]; p1[3] = p2[3];
+
+    if (AGO2_bIsTypeAlreadyExists(ulParticleType))
+        return 0;
+
+    p->GroupNumber = ParticleNumber;
+    p->hGroup = AGO2_MEM_Alloc(ParticleNumber * sizeof(AGO2_BeeParticle_));
+    if (p->hGroup == 0)
+    {
+        p->GroupNumber = 0;
+        p->ulType |= 1;
+        return 0;
+    }
+    pParticleArrayOrg = (AGO2_BeeParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+    if (pParticleArrayOrg == NULL)
+    {
+        printf("AGO2MEM DECONNE UN MAX !!!\n");
+        return 0;
+    }
+    p->xTransparencySpeed = 100.0f;
+    p->xSize[0] = 0.03f;
+    p->xSize[1] = 0.03f;
+    p->xShrinkingSpeed = 0.1f;
+    pParticleArray = pParticleArrayOrg;
+    for (i = 0; i < ParticleNumber; i++)
+    {
+        RandomValue = AGO2_M_xRand(60.0f, 150.0f);
+        RandomValueX = AGO2_M_xRand(-RandomValue, RandomValue);
+        RandomValueY = AGO2_M_xRand(-RandomValue, RandomValue);
+        RandomValueZ = AGO2_M_xRand(-RandomValue, RandomValue);
+        pParticleArray->Pads[0] = (int)AGO2_M_xRand(-5.0f, 5.0f);
+        pParticleArray->Pads[1] = (int)AGO2_M_xRand(-5.0f, 5.0f);
+        pParticleArray->xTransparency = AGO2_M_xRand(-5.0f, 5.0f);
+        pParticleArray->Position.xX = Position->xX + RandomValueX;
+        pParticleArray->Position.xY = Position->xY + RandomValueY;
+        pParticleArray->Position.xZ = Position->xZ + RandomValueZ;
+        pParticleArray->Direction.xX = AGO2_M_xRand(-5.0f, 5.0f);
+        pParticleArray->Direction.xY = AGO2_M_xRand(-5.0f, 5.0f);
+        pParticleArray->Direction.xZ = AGO2_M_xRand(-6.5f, 25.5f);
+        pParticleArray->Parameters.xX = AGO2_M_xRand(0.5f, 2.0f);
+        pParticleArray->Flags = 0;
+        pParticleArray++;
+    }
+    return 1;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2056–2112 */
+/* addr: 0x001e54e0  size: 1104 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2056
+ *   +0x0038 -> line 2064
+ *   +0x0044 -> line 2066
+ *   +0x0048 -> line 2067
+ *   +0x0050 -> line 2068
+ *   +0x0058 -> line 2071
+ *   +0x0064 -> line 2072
+ *   +0x006c -> line 2074
+ *   +0x0074 -> line 2075
+ *   +0x007c -> line 2078
+ *   +0x0080 -> line 2080
+ *   +0x0088 -> line 2082
+ *   +0x0098 -> line 2084
+ *   +0x00d4 -> line 2085
+ *   +0x00f0 -> line 2086
+ *   +0x00f8 -> line 2085
+ *   +0x0100 -> line 2086
+ *   +0x0118 -> line 2089
+ *   +0x0120 -> line 2087
+ *   +0x0134 -> line 2089
+ *   +0x014c -> line 2090
+ *   +0x01a8 -> line 2091
+ *   +0x01fc -> line 2092
+ *   +0x0220 -> line 2100
+ *   +0x0224 -> line 2097
+ *   +0x022c -> line 2100
+ *   +0x0234 -> line 2092
+ *   +0x0264 -> line 2097
+ *   +0x0270 -> line 2096
+ *   +0x0280 -> line 2097
+ *   +0x0290 -> line 2096
+ *   +0x0298 -> line 2097
+ *   +0x02ac -> line 2100
+ *   +0x02dc -> line 2103
+ *   +0x02f8 -> line 2104
+ *   +0x0314 -> line 2105
+ *   +0x0330 -> line 2107
+ *   +0x0398 -> line 2108
+ *   +0x03fc -> line 2109
+ *   +0x0400 -> line 2110
+ *   +0x0404 -> line 2111
+ *   +0x0418 -> line 2112
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO2_ProcessBees(AGO2_Part_* p)
+{
+    AGO2_BeeParticle_* pParticleArray;
+    unsigned int i;
+    float TimeDiff;
+    float Val;
+    MTH3D_tdstVector_ v2;
+    float xNorm;
+
+    if (!p->hGroup)
+    {
+        p->GroupNumber = 0;
+        p->ulType |= 1;
+        return;
+    }
+    pParticleArray = (AGO2_BeeParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+    if (!pParticleArray)
+    {
+        printf("AGO2MEM DECONNE UN MAX !!!\n");
+        return;
+    }
+    TimeDiff = g_fTimeDifference;
+    for (i = 0; i < p->GroupNumber; pParticleArray++, i++)
+    {
+        if (pParticleArray->Flags & 1)
+            continue;
+        Val = AGO2_xSqrDistance((MTH3D_tdstVector_*)&AGO_g_BeeTargetPosition, (MTH3D_tdstVector_*)&pParticleArray->Position) / 150.0f;
+        if (Val > 3.0f)
+            Val = 3.0f;
+        Val += 0.1f;
+        ((int*)&v2)[0] = ((int*)&AGO_g_BeeTargetPosition)[0];
+        ((int*)&v2)[1] = ((int*)&AGO_g_BeeTargetPosition)[1];
+        ((int*)&v2)[2] = ((int*)&AGO_g_BeeTargetPosition)[2];
+        v2.xX += (0.3f + Val) * AGO2_M_xRand(-2.0f, 2.0f) + (float)pParticleArray->Pads[0] * Val;
+        v2.xY += (0.3f + Val) * AGO2_M_xRand(-2.0f, 2.0f) + (float)pParticleArray->Pads[1] * Val;
+        v2.xZ += (0.3f + Val) * AGO2_M_xRand(-2.0f, 2.0f) + pParticleArray->xTransparency * Val;
+        AGO2_vAddToVector(&pParticleArray->Direction, v2.xX - ((MTH3D_tdstVector_*)&pParticleArray->Position)->xX, v2.xY - ((MTH3D_tdstVector_*)&pParticleArray->Position)->xY, v2.xZ - ((MTH3D_tdstVector_*)&pParticleArray->Position)->xZ);
+        MTH3D_M_vSubVector((MTH3D_tdstVector_*)&pParticleArray->PreviousPosition, (MTH3D_tdstVector_*)&AGO_g_BeeTargetPosition, (MTH3D_tdstVector_*)&pParticleArray->Position);
+        pParticleArray->Position.xX += pParticleArray->Parameters.xX * (pParticleArray->Direction.xX * TimeDiff);
+        pParticleArray->Position.xY += pParticleArray->Parameters.xX * (pParticleArray->Direction.xY * TimeDiff);
+        pParticleArray->Position.xZ += pParticleArray->Parameters.xX * (pParticleArray->Direction.xZ * TimeDiff);
+        AGO2_vNormalizeVector((MTH3D_tdstVector_*)&pParticleArray->Direction);
+        AGO2_vNormalizeVector((MTH3D_tdstVector_*)&pParticleArray->PreviousPosition);
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2116–2133 */
+/* addr: 0x001e5470  size: 108 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2116
+ *   +0x0010 -> line 2120
+ *   +0x001c -> line 2125
+ *   +0x0024 -> line 2126
+ *   +0x002c -> line 2128
+ *   +0x0034 -> line 2129
+ *   +0x003c -> line 2132
+ *   +0x005c -> line 2133
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO2_DisplayBees(AGO2_Part_* p)
+{
+    AGO2_FlowParticle_* pParticleArray;
+
+    if (p->hGroup)
+    {
+        pParticleArray = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+        if (!pParticleArray)
+        {
+            printf("AGO2MEM DECONNE UN MAX !!!\n");
+            return;
+        }
+        GLI_vDisplaySerialBees((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, (AGO2_BeeParticle_*)pParticleArray, p->GroupNumber, (void*)p->pMaterial1, (void*)p->pMaterial2, p->xSize[0], p->xSize[1]);
+    }
+}
+
+/* Same parameter list as AGO2_CreateFlow: retail reads ParticleNumber from
+   the 16th-argument stack slot. */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2145–2197 */
+/* addr: 0x001e51e0  size: 644 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2145
+ *   +0x0024 -> line 2153
+ *   +0x0030 -> line 2154
+ *   +0x0040 -> line 2155
+ *   +0x004c -> line 2157
+ *   +0x0050 -> line 2159
+ *   +0x0054 -> line 2158
+ *   +0x005c -> line 2159
+ *   +0x0064 -> line 2163
+ *   +0x006c -> line 2164
+ *   +0x0074 -> line 2166
+ *   +0x0080 -> line 2167
+ *   +0x0088 -> line 2178
+ *   +0x008c -> line 2172
+ *   +0x0094 -> line 2173
+ *   +0x009c -> line 2175
+ *   +0x00a0 -> line 2173
+ *   +0x00a4 -> line 2175
+ *   +0x00a8 -> line 2174
+ *   +0x00ac -> line 2178
+ *   +0x00b4 -> line 2181
+ *   +0x00fc -> line 2182
+ *   +0x0148 -> line 2183
+ *   +0x0174 -> line 2186
+ *   +0x0178 -> line 2183
+ *   +0x019c -> line 2188
+ *   +0x01d0 -> line 2189
+ *   +0x0204 -> line 2190
+ *   +0x0214 -> line 2194
+ *   +0x0218 -> line 2190
+ *   +0x024c -> line 2192
+ *   +0x0250 -> line 2193
+ *   +0x0254 -> line 2194
+ *   +0x0264 -> line 2197
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+unsigned char AGO2_CreateFire(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber)
+{
+    AGO2_FlowParticle_* pParticleArrayOrg;
+    unsigned int i;
+    AGO2_FlowParticle_* pParticleArray;
+
+    p->GroupNumber = ParticleNumber * 2;
+    p->hGroup = AGO2_MEM_Alloc(ParticleNumber * 2 * sizeof(AGO2_FlowParticle_));
+    if (p->hGroup == 0)
+    {
+        p->GroupNumber = 0;
+        p->ulType |= 1;
+        return 0;
+    }
+    pParticleArrayOrg = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+    if (pParticleArrayOrg == NULL)
+    {
+        printf("AGO2MEM DECONNE UN MAX !!!\n");
+        return 0;
+    }
+    p->xTransparencySpeed = 400.0f;
+    p->xSize[0] = 0.3f;
+    p->xSize[1] = 0.3f;
+    p->xShrinkingSpeed = 0.1f;
+    pParticleArray = pParticleArrayOrg;
+    for (i = 0; i < ParticleNumber * 2; i++)
+    {
+        pParticleArray->Position.xX = Position->xX + (-1.3f + (1.3f - -1.3f) * (float)rand() / 2147483648.0f);
+        pParticleArray->Position.xY = Position->xY + (-1.3f + (1.3f - -1.3f) * (float)rand() / 2147483648.0f);
+        pParticleArray->Position.xZ = Position->xZ + (-1.3f + (1.3f - -1.3f) * (float)rand() / 2147483648.0f);
+        pParticleArray->xTransparency = 255.0f;
+        pParticleArray->Direction.xX = -0.5f + (0.5f - -0.5f) * (float)rand() / 2147483648.0f;
+        pParticleArray->Direction.xY = -0.5f + (0.5f - -0.5f) * (float)rand() / 2147483648.0f;
+        pParticleArray->Direction.xZ = 1.5f + (1.6f - 1.5f) * (float)rand() / 2147483648.0f;
+        pParticleArray->Flags = 0;
+        pParticleArray++;
+    }
+    return 1;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2200–2248 */
+/* addr: 0x001e50c0  size: 280 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2200
+ *   +0x0010 -> line 2208
+ *   +0x001c -> line 2210
+ *   +0x0020 -> line 2211
+ *   +0x0028 -> line 2212
+ *   +0x0030 -> line 2215
+ *   +0x003c -> line 2216
+ *   +0x0044 -> line 2218
+ *   +0x0050 -> line 2219
+ *   +0x0058 -> line 2230
+ *   +0x0080 -> line 2232
+ *   +0x0084 -> line 2234
+ *   +0x0088 -> line 2232
+ *   +0x0090 -> line 2234
+ *   +0x0098 -> line 2236
+ *   +0x00a8 -> line 2239
+ *   +0x00b4 -> line 2241
+ *   +0x00c8 -> line 2242
+ *   +0x00dc -> line 2243
+ *   +0x00f0 -> line 2246
+ *   +0x00f4 -> line 2247
+ *   +0x0108 -> line 2248
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO2_ProcessFire(AGO2_Part_* p)
+{
+    AGO2_FlowParticle_* param0;
+    unsigned int i;
+    float TimeDiff;
+    float LocalG;
+
+    if (!p->hGroup)
+    {
+        p->GroupNumber = 0;
+        p->ulType |= 1;
+        return;
+    }
+    param0 = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+    if (!param0)
+    {
+        printf("AGO2MEM DECONNE UN MAX !!!\n");
+        return;
+    }
+    LocalG = (g_fTimeDifference > 0.033333335f) ? 0.033333335f : g_fTimeDifference;
+    TimeDiff = 9.81f * LocalG;
+    for (i = 0; i < p->GroupNumber; i++)
+    {
+        if (!(param0->Flags & 1))
+        {
+            param0->Direction.xZ += TimeDiff;
+            param0->Position.xX += param0->Direction.xX * LocalG;
+            param0->Position.xY += param0->Direction.xY * LocalG;
+            param0->Position.xZ += param0->Direction.xZ * LocalG;
+        }
+        param0++;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2251–2300 */
+/* addr: 0x001e4fc0  size: 244 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2251
+ *   +0x0010 -> line 2257
+ *   +0x001c -> line 2259
+ *   +0x0020 -> line 2260
+ *   +0x0028 -> line 2261
+ *   +0x0030 -> line 2264
+ *   +0x003c -> line 2265
+ *   +0x0044 -> line 2267
+ *   +0x0050 -> line 2268
+ *   +0x0058 -> line 2273
+ *   +0x005c -> line 2271
+ *   +0x0060 -> line 2273
+ *   +0x0064 -> line 2275
+ *   +0x0074 -> line 2277
+ *   +0x0084 -> line 2279
+ *   +0x008c -> line 2281
+ *   +0x009c -> line 2283
+ *   +0x00a0 -> line 2284
+ *   +0x00a8 -> line 2286
+ *   +0x00b0 -> line 2289
+ *   +0x00b4 -> line 2291
+ *   +0x00b8 -> line 2292
+ *   +0x00bc -> line 2293
+ *   +0x00d0 -> line 2295
+ *   +0x00d8 -> line 2298
+ *   +0x00e4 -> line 2300
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO2_FadeFire(AGO2_Part_* p)
+{
+    AGO2_FlowParticle_* param0;
+    unsigned int i;
+    unsigned int OneIsAlive;
+    float TimeDiffTrsp;
+
+    if (!p->hGroup)
+    {
+        p->GroupNumber = 0;
+        p->ulType |= 1;
+        return;
+    }
+    param0 = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+    if (!param0)
+    {
+        printf("AGO2MEM DECONNE UN MAX !!!\n");
+        return;
+    }
+    OneIsAlive = 0;
+    TimeDiffTrsp = g_fTimeDifference * p->xTransparencySpeed;
+    for (i = 0; i < p->GroupNumber; i++)
+    {
+        if (!(param0->Flags & 1))
+        {
+            param0->xTransparency -= TimeDiffTrsp;
+            if (param0->xTransparency < 0.0f)
+            {
+                param0->xTransparency = 0.0f;
+                param0->Flags |= 1;
+            }
+            else
+            {
+                OneIsAlive = 1;
+            }
+        }
+        param0++;
+    }
+    if (!OneIsAlive)
+    {
+        p->ulType |= 1;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2306–2316 */
+/* addr: 0x001e4f50  size: 100 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2306
+ *   +0x0010 -> line 2308
+ *   +0x0014 -> line 2311
+ *   +0x0020 -> line 2306
+ *   +0x0028 -> line 2308
+ *   +0x0030 -> line 2309
+ *   +0x003c -> line 2311
+ *   +0x0050 -> line 2314
+ *   +0x005c -> line 2316
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO2_ShrinkFire(AGO2_Part_* p)
+{
+    float Value;
+
+    Value = 1.0f - g_fTimeDifference * p->xShrinkingSpeed;
+
+    p->xSize[0] *= Value;
+    p->xSize[1] *= Value;
+
+    if (p->xSize[0] < 0.01f)
+
+        p->ulType |= 1;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2330–2330 */
+/* addr: 0x001e4f40  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2330
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO2_ProcessEmpty(void)
+{
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2334–2364 */
+/* addr: 0x001e4e20  size: 276 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2338
+ *   +0x000c -> line 2334
+ *   +0x0010 -> line 2335
+ *   +0x0018 -> line 2338
+ *   +0x0024 -> line 2340
+ *   +0x004c -> line 2343
+ *   +0x005c -> line 2344
+ *   +0x0060 -> line 2345
+ *   +0x0078 -> line 2347
+ *   +0x0080 -> line 2349
+ *   +0x0098 -> line 2351
+ *   +0x009c -> line 2349
+ *   +0x00a0 -> line 2351
+ *   +0x00bc -> line 2352
+ *   +0x00dc -> line 2355
+ *   +0x00e0 -> line 2353
+ *   +0x00e4 -> line 2358
+ *   +0x00e8 -> line 2359
+ *   +0x00f0 -> line 2361
+ *   +0x00f4 -> line 2360
+ *   +0x00f8 -> line 2363
+ *   +0x010c -> line 2364
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+unsigned char AGO2_CreateFireWall(int unused, AGO2_Part_* p, float xParam1)
+{
+    float* p2;
+    float* p1;
+    AGO2_Part_* pp;
+    unsigned int Found;
+    unsigned int i;
+
+    Found = 0;
+    i = 0;
+    while (i < g_ulNumberOfAgos2 && !Found)
+    {
+        if (p->ulBaseID == g_pAGO2Parts[i].ulBaseID && (int)xParam1 == (int)g_pAGO2Parts[i].Vector4.xX)
+            Found = 1;
+        else
+            i++;
+    }
+    if (Found)
+    {
+        pp = &g_pAGO2Parts[i];
+        p1 = (float*)&p->Position;
+        p2 = (float*)&pp->Position;
+        p2[0] = p1[0];
+        p2[1] = p1[1];
+        p2[2] = p1[2];
+        p2[3] = p1[3];
+        p2[4] = p1[4];
+        p2[5] = p1[5];
+        p2[6] = p1[6];
+        p2[7] = p1[7];
+        p = pp;
+        p->ulType = 0;
+    }
+    p->Vector4.xX = xParam1;
+    p->xSize[0] = 1.0f;
+    p->xSize[1] = 1.0f;
+    p->xTransparency = 255.0f;
+    if (Found)
+        return 0;
+    return 1;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2462–2549 */
+/* addr: 0x001e49b0  size: 1136 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2462
+ *   +0x0008 -> line 2466
+ *   +0x000c -> line 2462
+ *   +0x0010 -> line 2466
+ *   +0x0014 -> line 2462
+ *   +0x003c -> line 2466
+ *   +0x006c -> line 2467
+ *   +0x00cc -> line 2473
+ *   +0x00fc -> line 2476
+ *   +0x0100 -> line 2477
+ *   +0x0108 -> line 2480
+ *   +0x010c -> line 2481
+ *   +0x0110 -> line 2475
+ *   +0x0120 -> line 2476
+ *   +0x0128 -> line 2479
+ *   +0x012c -> line 2477
+ *   +0x0130 -> line 2480
+ *   +0x0134 -> line 2479
+ *   +0x0138 -> line 2480
+ *   +0x013c -> line 2481
+ *   +0x0140 -> line 2483
+ *   +0x0194 -> line 2484
+ *   +0x01ec -> line 2486
+ *   +0x01f8 -> line 2510
+ *   +0x01fc -> line 2509
+ *   +0x0200 -> line 2511
+ *   +0x0204 -> line 2507
+ *   +0x0210 -> line 2486
+ *   +0x0214 -> line 2511
+ *   +0x0218 -> line 2486
+ *   +0x0220 -> line 2511
+ *   +0x0224 -> line 2486
+ *   +0x0238 -> line 2488
+ *   +0x0248 -> line 2506
+ *   +0x0250 -> line 2507
+ *   +0x0254 -> line 2488
+ *   +0x0258 -> line 2506
+ *   +0x0260 -> line 2507
+ *   +0x0264 -> line 2488
+ *   +0x0268 -> line 2506
+ *   +0x0270 -> line 2507
+ *   +0x0274 -> line 2509
+ *   +0x0280 -> line 2510
+ *   +0x028c -> line 2511
+ *   +0x029c -> line 2513
+ *   +0x02d4 -> line 2515
+ *   +0x02dc -> line 2520
+ *   +0x02e0 -> line 2518
+ *   +0x02e4 -> line 2515
+ *   +0x02e8 -> line 2518
+ *   +0x02ec -> line 2513
+ *   +0x02f0 -> line 2515
+ *   +0x02f4 -> line 2516
+ *   +0x0300 -> line 2518
+ *   +0x030c -> line 2525
+ *   +0x0310 -> line 2522
+ *   +0x0314 -> line 2525
+ *   +0x0318 -> line 2527
+ *   +0x031c -> line 2525
+ *   +0x0338 -> line 2527
+ *   +0x0348 -> line 2530
+ *   +0x0390 -> line 2532
+ *   +0x03cc -> line 2540
+ *   +0x03d4 -> line 2541
+ *   +0x0400 -> line 2544
+ *   +0x0404 -> line 2543
+ *   +0x0408 -> line 2544
+ *   +0x040c -> line 2543
+ *   +0x0428 -> line 2544
+ *   +0x0430 -> line 2548
+ *   +0x043c -> line 2549
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO2_DisplayFireWall(AGO2_Part_* p)
+{
+    int y;
+    float TimeDif;
+    float V1;
+    float U1;
+    int CurrentAnim;
+    int i;
+    MTH3D_tdstVector_ Pos;
+    float xNorm;
+    MTH3D_tdstVector_ v2;
+    MTH3D_tdstVector_ v1;
+    MTH3D_tdstVector_ pdir;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2553–2640 */
+/* addr: 0x001e4580  size: 1072 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2553
+ *   +0x0008 -> line 2557
+ *   +0x000c -> line 2553
+ *   +0x0010 -> line 2557
+ *   +0x0014 -> line 2553
+ *   +0x003c -> line 2557
+ *   +0x006c -> line 2558
+ *   +0x00cc -> line 2564
+ *   +0x00fc -> line 2567
+ *   +0x0100 -> line 2568
+ *   +0x0108 -> line 2571
+ *   +0x010c -> line 2572
+ *   +0x0110 -> line 2566
+ *   +0x0120 -> line 2567
+ *   +0x0128 -> line 2570
+ *   +0x012c -> line 2568
+ *   +0x0130 -> line 2571
+ *   +0x0134 -> line 2570
+ *   +0x0138 -> line 2571
+ *   +0x013c -> line 2572
+ *   +0x0140 -> line 2574
+ *   +0x0194 -> line 2575
+ *   +0x01ec -> line 2577
+ *   +0x01f8 -> line 2601
+ *   +0x01fc -> line 2600
+ *   +0x0200 -> line 2602
+ *   +0x0204 -> line 2598
+ *   +0x0210 -> line 2577
+ *   +0x0214 -> line 2602
+ *   +0x0218 -> line 2577
+ *   +0x0220 -> line 2602
+ *   +0x0224 -> line 2577
+ *   +0x0238 -> line 2579
+ *   +0x0248 -> line 2597
+ *   +0x0250 -> line 2598
+ *   +0x0254 -> line 2579
+ *   +0x0258 -> line 2597
+ *   +0x0260 -> line 2598
+ *   +0x0264 -> line 2579
+ *   +0x0268 -> line 2597
+ *   +0x0270 -> line 2598
+ *   +0x0274 -> line 2600
+ *   +0x0280 -> line 2601
+ *   +0x028c -> line 2602
+ *   +0x029c -> line 2604
+ *   +0x02d4 -> line 2606
+ *   +0x02dc -> line 2611
+ *   +0x02e0 -> line 2609
+ *   +0x02e4 -> line 2606
+ *   +0x02e8 -> line 2609
+ *   +0x02ec -> line 2604
+ *   +0x02f0 -> line 2606
+ *   +0x02f4 -> line 2607
+ *   +0x0300 -> line 2609
+ *   +0x030c -> line 2616
+ *   +0x0310 -> line 2613
+ *   +0x0314 -> line 2616
+ *   +0x0318 -> line 2618
+ *   +0x031c -> line 2616
+ *   +0x0328 -> line 2621
+ *   +0x032c -> line 2618
+ *   +0x0330 -> line 2616
+ *   +0x0338 -> line 2618
+ *   +0x0344 -> line 2621
+ *   +0x0350 -> line 2623
+ *   +0x0388 -> line 2631
+ *   +0x0390 -> line 2632
+ *   +0x03c0 -> line 2635
+ *   +0x03c4 -> line 2634
+ *   +0x03c8 -> line 2635
+ *   +0x03cc -> line 2634
+ *   +0x03e8 -> line 2635
+ *   +0x03f0 -> line 2639
+ *   +0x03fc -> line 2640
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO2_DisplayFireWall2(AGO2_Part_* p)
+{
+    MTH3D_tdstVector_ pdir;
+    MTH3D_tdstVector_ v1;
+    MTH3D_tdstVector_ v2;
+    float xNorm;
+    MTH3D_tdstVector_ Pos;
+    int i;
+    int CurrentAnim;
+    float U1;
+    float V1;
+    float TimeDif;
+    int y;
+
+    MTH3D_M_vSubVector((MTH3D_tdstVector_*)&pdir, (MTH3D_tdstVector_*)&p->Direction, (MTH3D_tdstVector_*)&p->Position);
+    AGO2_vNormalizeVector((MTH3D_tdstVector_*)&pdir);
+    MTH3D_M_vSetVectorElements(&Pos, 0.0f, 0.0f, 1.0f);
+    ((MTH3D_tdstVector_*)&v2)->xX = Pos.xY * ((MTH3D_tdstVector_*)&pdir)->xZ - Pos.xZ * ((MTH3D_tdstVector_*)&pdir)->xY;
+    ((MTH3D_tdstVector_*)&v2)->xY = Pos.xZ * ((MTH3D_tdstVector_*)&pdir)->xX - Pos.xX * ((MTH3D_tdstVector_*)&pdir)->xZ;
+    ((MTH3D_tdstVector_*)&v2)->xZ = Pos.xX * ((MTH3D_tdstVector_*)&pdir)->xY - Pos.xY * ((MTH3D_tdstVector_*)&pdir)->xX;
+    MTH3D_M_vAddVector((MTH3D_tdstVector_*)&v1, &Pos, (MTH3D_tdstVector_*)&v2);
+    ((MTH3D_tdstVector_*)&v2)->xX = Pos.xX - ((MTH3D_tdstVector_*)&v2)->xX;
+    ((MTH3D_tdstVector_*)&v2)->xY = Pos.xY - ((MTH3D_tdstVector_*)&v2)->xY;
+    ((MTH3D_tdstVector_*)&v2)->xZ = ((MTH3D_tdstVector_*)&v1)->xZ;
+    AGO2_vNormalizeVector((MTH3D_tdstVector_*)&v1);
+    AGO2_vNormalizeVector((MTH3D_tdstVector_*)&v2);
+    MTH3D_M_vMulScalarVector((MTH3D_tdstVector_*)&pdir, 10.0f, (MTH3D_tdstVector_*)&pdir);
+    MTH3D_M_vSubVector((MTH3D_tdstVector_*)&v1, (MTH3D_tdstVector_*)&p->Position, (MTH3D_tdstVector_*)&pdir);
+    MTH3D_M_vAddVector((MTH3D_tdstVector_*)&v2, (MTH3D_tdstVector_*)&p->Position, (MTH3D_tdstVector_*)&pdir);
+    TimeDif = 0.0f;
+    ((MTH3D_tdstVector_*)&pdir)->xX = (1.0f / 30.0f) * (((MTH3D_tdstVector_*)&v2)->xX - ((MTH3D_tdstVector_*)&v1)->xX);
+    ((MTH3D_tdstVector_*)&pdir)->xY = (1.0f / 30.0f) * (((MTH3D_tdstVector_*)&v2)->xY - ((MTH3D_tdstVector_*)&v1)->xY);
+    ((MTH3D_tdstVector_*)&pdir)->xZ = (1.0f / 30.0f) * (((MTH3D_tdstVector_*)&v2)->xZ - ((MTH3D_tdstVector_*)&v1)->xZ);
+    Pos.xX = ((MTH3D_tdstVector_*)&v1)->xX + ((MTH3D_tdstVector_*)&pdir)->xX * TimeDif;
+    Pos.xY = ((MTH3D_tdstVector_*)&v1)->xY + ((MTH3D_tdstVector_*)&pdir)->xY * TimeDif;
+    Pos.xZ = 2.0f + (((MTH3D_tdstVector_*)&v1)->xZ + ((MTH3D_tdstVector_*)&pdir)->xZ * TimeDif);
+    CurrentAnim = (int)(16.0f * (1.3333334f * (g_ffFrameTime - (float)p->AnimTime) - (float)(int)(1.3333334f * (g_ffFrameTime - (float)p->AnimTime))));
+    for (i = 0; i < 30; i++)
+    {
+        y = CurrentAnim >> 2;
+        U1 = (float)(CurrentAnim - (y << 2)) / 4.0f;
+        V1 = (float)y / 4.0f;
+        GLI_vSetGlobalAlpha(255.0f);
+        GLI_vDrawWorldSpriteWithUVsOpt(&Pos, (GLI_tdstMaterial_*)p->pMaterial1, 3.0f, 3.0f, U1, V1, 0.25f + U1, 0.25f + V1, (GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, p->AnimTime);
+        CurrentAnim += i + 10;
+        while (CurrentAnim >= 16)
+            CurrentAnim -= 16;
+        Pos.xX += ((MTH3D_tdstVector_*)&pdir)->xX;
+        Pos.xY += ((MTH3D_tdstVector_*)&pdir)->xY;
+        Pos.xZ += ((MTH3D_tdstVector_*)&pdir)->xZ;
+    }
+    p->ulType |= 1;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2646–2650 */
+/* addr: 0x001e4560  size: 28 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2646
+ *   +0x0004 -> line 2647
+ *   +0x000c -> line 2648
+ *   +0x0010 -> line 2649
+ *   +0x0014 -> line 2650
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+unsigned char AGO2_CreateFFRing(int unused, AGO2_Part_* p, float xParam1)
+{
+    (void)unused;
+    p->xSize[0] = xParam1;
+    p->xSize[1] = 1.0f;
+    p->xTransparency = 255.0f;
+    return 1;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2656–2778 */
+/* addr: 0x001e3ee0  size: 1652 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2656
+ *   +0x0004 -> line 2666
+ *   +0x0008 -> line 2656
+ *   +0x000c -> line 2666
+ *   +0x0010 -> line 2656
+ *   +0x0018 -> line 2669
+ *   +0x001c -> line 2656
+ *   +0x0020 -> line 2669
+ *   +0x0024 -> line 2656
+ *   +0x003c -> line 2666
+ *   +0x0040 -> line 2669
+ *   +0x0044 -> line 2666
+ *   +0x0048 -> line 2669
+ *   +0x004c -> line 2671
+ *   +0x0060 -> line 2672
+ *   +0x0070 -> line 2674
+ *   +0x0074 -> line 2672
+ *   +0x0078 -> line 2674
+ *   +0x0080 -> line 2676
+ *   +0x0084 -> line 2679
+ *   +0x0090 -> line 2676
+ *   +0x0094 -> line 2681
+ *   +0x009c -> line 2676
+ *   +0x00a0 -> line 2683
+ *   +0x00b0 -> line 2676
+ *   +0x00b4 -> line 2683
+ *   +0x00b8 -> line 2676
+ *   +0x00bc -> line 2677
+ *   +0x00c4 -> line 2684
+ *   +0x00c8 -> line 2677
+ *   +0x00d4 -> line 2678
+ *   +0x00dc -> line 2679
+ *   +0x00f4 -> line 2680
+ *   +0x010c -> line 2681
+ *   +0x011c -> line 2684
+ *   +0x012c -> line 2685
+ *   +0x013c -> line 2690
+ *   +0x0140 -> line 2685
+ *   +0x0144 -> line 2690
+ *   +0x0148 -> line 2687
+ *   +0x014c -> line 2696
+ *   +0x0150 -> line 2685
+ *   +0x0154 -> line 2692
+ *   +0x0158 -> line 2696
+ *   +0x0164 -> line 2687
+ *   +0x016c -> line 2690
+ *   +0x0170 -> line 2692
+ *   +0x0178 -> line 2687
+ *   +0x0180 -> line 2688
+ *   +0x0194 -> line 2689
+ *   +0x019c -> line 2690
+ *   +0x01b4 -> line 2691
+ *   +0x01cc -> line 2692
+ *   +0x01e0 -> line 2696
+ *   +0x01ec -> line 2698
+ *   +0x0214 -> line 2700
+ *   +0x022c -> line 2702
+ *   +0x0238 -> line 2703
+ *   +0x0244 -> line 2705
+ *   +0x024c -> line 2707
+ *   +0x0258 -> line 2710
+ *   +0x0268 -> line 2714
+ *   +0x026c -> line 2707
+ *   +0x0270 -> line 2714
+ *   +0x0274 -> line 2707
+ *   +0x0284 -> line 2708
+ *   +0x0288 -> line 2714
+ *   +0x028c -> line 2710
+ *   +0x0290 -> line 2714
+ *   +0x0294 -> line 2708
+ *   +0x02a8 -> line 2709
+ *   +0x02ac -> line 2710
+ *   +0x02b0 -> line 2715
+ *   +0x02b4 -> line 2709
+ *   +0x02b8 -> line 2710
+ *   +0x02d4 -> line 2711
+ *   +0x02f0 -> line 2712
+ *   +0x02fc -> line 2715
+ *   +0x0308 -> line 2716
+ *   +0x0310 -> line 2718
+ *   +0x0318 -> line 2716
+ *   +0x031c -> line 2725
+ *   +0x0320 -> line 2718
+ *   +0x0324 -> line 2725
+ *   +0x0328 -> line 2718
+ *   +0x032c -> line 2725
+ *   +0x0330 -> line 2721
+ *   +0x0334 -> line 2725
+ *   +0x0338 -> line 2721
+ *   +0x033c -> line 2718
+ *   +0x0340 -> line 2721
+ *   +0x0348 -> line 2718
+ *   +0x0354 -> line 2719
+ *   +0x035c -> line 2721
+ *   +0x0364 -> line 2719
+ *   +0x0374 -> line 2720
+ *   +0x037c -> line 2721
+ *   +0x0398 -> line 2722
+ *   +0x03b4 -> line 2723
+ *   +0x03c4 -> line 2725
+ *   +0x03d0 -> line 2727
+ *   +0x03fc -> line 2734
+ *   +0x0400 -> line 2732
+ *   +0x0408 -> line 2733
+ *   +0x0410 -> line 2736
+ *   +0x0414 -> line 2734
+ *   +0x0424 -> line 2736
+ *   +0x042c -> line 2739
+ *   +0x043c -> line 2740
+ *   +0x044c -> line 2742
+ *   +0x0450 -> line 2740
+ *   +0x0454 -> line 2742
+ *   +0x0460 -> line 2746
+ *   +0x0468 -> line 2751
+ *   +0x0474 -> line 2744
+ *   +0x0478 -> line 2751
+ *   +0x047c -> line 2744
+ *   +0x048c -> line 2745
+ *   +0x0494 -> line 2746
+ *   +0x0498 -> line 2752
+ *   +0x049c -> line 2745
+ *   +0x04a8 -> line 2746
+ *   +0x04b8 -> line 2747
+ *   +0x04cc -> line 2748
+ *   +0x04e0 -> line 2749
+ *   +0x04e8 -> line 2752
+ *   +0x04f8 -> line 2753
+ *   +0x0508 -> line 2755
+ *   +0x050c -> line 2753
+ *   +0x0510 -> line 2755
+ *   +0x051c -> line 2753
+ *   +0x0520 -> line 2759
+ *   +0x0528 -> line 2757
+ *   +0x0530 -> line 2755
+ *   +0x0534 -> line 2757
+ *   +0x0540 -> line 2758
+ *   +0x0548 -> line 2759
+ *   +0x054c -> line 2764
+ *   +0x0550 -> line 2758
+ *   +0x055c -> line 2759
+ *   +0x056c -> line 2760
+ *   +0x0580 -> line 2761
+ *   +0x0594 -> line 2762
+ *   +0x059c -> line 2764
+ *   +0x05a4 -> line 2766
+ *   +0x05ac -> line 2767
+ *   +0x05b4 -> line 2766
+ *   +0x05b8 -> line 2767
+ *   +0x05d0 -> line 2769
+ *   +0x05ec -> line 2771
+ *   +0x0614 -> line 2772
+ *   +0x063c -> line 2775
+ *   +0x0648 -> line 2778
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO2_DisplayFFRing(AGO2_Part_* p)
+{
+    int i;
+    int j;
+    float p1b[3];
+    float p1h[3];
+    float p2b[3];
+    float p2h[3];
+    float cos1;
+    float sin1;
+    float CurrentHeight;
+    float AlphaVal;
+    float CurrentAngle;
+
+    CurrentAngle = 5.0f * g_ffFrameTime;
+    p->Direction.xX *= 0.5f;
+    cos1 = 0.25f * PS2_dl_cosf(CurrentAngle);
+    sin1 = 0.25f * PS2_dl_sinf(CurrentAngle);
+    for (i = 0; (float)i < 12.0f; i++)
+    {
+        p1b[0] = p->Position.xX + p->Direction.xY * cos1;
+        p1b[1] = p->Position.xY + p->Direction.xY * sin1;
+        p1b[2] = p->Position.xZ;
+        p1h[0] = p->Position.xX + 1.1f * (p->Direction.xZ * cos1);
+        p1h[1] = p->Position.xY + 1.1f * (p->Direction.xZ * sin1);
+        p1h[2] = p->Position.xZ + 2.0f * p->Direction.xX;
+        CurrentAngle += 0.5235988f;
+        cos1 = 0.25f * PS2_dl_cosf(CurrentAngle);
+        sin1 = 0.25f * PS2_dl_sinf(CurrentAngle);
+        p2b[0] = p->Position.xX + p->Direction.xY * cos1;
+        p2b[1] = p->Position.xY + p->Direction.xY * sin1;
+        p2b[2] = p->Position.xZ;
+        p2h[0] = p->Position.xX + 1.1f * (p->Direction.xZ * cos1);
+        p2h[1] = p->Position.xY + 1.1f * (p->Direction.xZ * sin1);
+        p2h[2] = p->Position.xZ + 2.0f * p->Direction.xX;
+        GLI_vDrawWorldQuadOpt((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, p2b, p1b, p1h, p2h, (GLI_tdstMaterial_*)p->pMaterial1);
+    }
+
+    CurrentAngle = -5.6549869f * g_ffFrameTime;
+    cos1 = PS2_dl_cosf(CurrentAngle);
+    sin1 = PS2_dl_sinf(CurrentAngle);
+    for (i = 0; (float)i < 12.0f; i++)
+    {
+        p1b[0] = p->Position.xX + 0.25f * (p->Direction.xY * cos1);
+        p1b[1] = p->Position.xY + 0.25f * (p->Direction.xY * sin1);
+        p1b[2] = p->Position.xZ;
+        p1h[0] = p->Position.xX + 0.3f * (1.1f * (p->Direction.xZ * cos1));
+        p1h[1] = p->Position.xY + 0.3f * (1.1f * (p->Direction.xZ * sin1));
+        p1h[2] = p->Position.xZ + p->Direction.xX;
+        CurrentAngle += 0.5235988f;
+        cos1 = PS2_dl_cosf(CurrentAngle);
+        sin1 = PS2_dl_sinf(CurrentAngle);
+        p2b[0] = p->Position.xX + 0.25f * (p->Direction.xY * cos1);
+        p2b[1] = p->Position.xY + 0.25f * (p->Direction.xY * sin1);
+        p2b[2] = p->Position.xZ;
+        p2h[0] = p->Position.xX + 0.3f * (1.1f * (p->Direction.xZ * cos1));
+        p2h[1] = p->Position.xY + 0.3f * (1.1f * (p->Direction.xZ * sin1));
+        p2h[2] = p->Position.xZ + p->Direction.xX;
+        GLI_vDrawWorldQuadOpt((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, p2b, p1b, p1h, p2h, (GLI_tdstMaterial_*)p->pMaterial1);
+    }
+
+    CurrentHeight = -1.0f;
+    AlphaVal = 255.0f;
+    CurrentAngle = 30.75f * -g_ffFrameTime;
+    for (j = 0; (float)j < 5.0f; j++)
+    {
+        cos1 = 0.25f * PS2_dl_cosf(CurrentAngle);
+        sin1 = 0.25f * PS2_dl_sinf(CurrentAngle);
+        for (i = 0; (float)i < 12.0f; i++)
+        {
+            p1b[0] = p->Position.xX + p->Direction.xY * cos1;
+            p1b[1] = p->Position.xY + p->Direction.xY * sin1;
+            p1b[2] = 2.3f + (p->Position.xZ + CurrentHeight);
+            p1h[0] = p->Position.xX + p->Direction.xY * cos1;
+            p1h[1] = p->Position.xY + p->Direction.xY * sin1;
+            p1h[2] = p->Position.xZ + CurrentHeight;
+            CurrentAngle += 0.5235988f;
+            cos1 = 0.25f * PS2_dl_cosf(CurrentAngle);
+            sin1 = 0.25f * PS2_dl_sinf(CurrentAngle);
+            CurrentHeight += 0.2f;
+            p2b[0] = p->Position.xX + p->Direction.xY * cos1;
+            p2b[1] = p->Position.xY + p->Direction.xY * sin1;
+            p2b[2] = 2.3f + (p->Position.xZ + CurrentHeight);
+            p2h[0] = p->Position.xX + p->Direction.xY * cos1;
+            p2h[1] = p->Position.xY + p->Direction.xY * sin1;
+            p2h[2] = p->Position.xZ + CurrentHeight;
+            GLI_vSetGlobalAlpha(AlphaVal);
+            AlphaVal -= 5.0f;
+            if (AlphaVal <= 0.0f)
+                AlphaVal = 0.0f;
+            GLI_vDrawWorldQuadOpt((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, p2b, p1b, p1h, p2h, (GLI_tdstMaterial_*)p->pMaterial1);
+        }
+    }
+    p->ulType |= 1;
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2782–2935 */
 /* addr: 0x001e3770  size: 1896 bytes */
@@ -2368,3201 +4466,6 @@ static inline void AGO2_vRotateIceVector(MTH3D_tdstVector_* pDst, MTH3D_tdstVect
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2656–2778 */
-/* addr: 0x001e3ee0  size: 1652 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2656
- *   +0x0004 -> line 2666
- *   +0x0008 -> line 2656
- *   +0x000c -> line 2666
- *   +0x0010 -> line 2656
- *   +0x0018 -> line 2669
- *   +0x001c -> line 2656
- *   +0x0020 -> line 2669
- *   +0x0024 -> line 2656
- *   +0x003c -> line 2666
- *   +0x0040 -> line 2669
- *   +0x0044 -> line 2666
- *   +0x0048 -> line 2669
- *   +0x004c -> line 2671
- *   +0x0060 -> line 2672
- *   +0x0070 -> line 2674
- *   +0x0074 -> line 2672
- *   +0x0078 -> line 2674
- *   +0x0080 -> line 2676
- *   +0x0084 -> line 2679
- *   +0x0090 -> line 2676
- *   +0x0094 -> line 2681
- *   +0x009c -> line 2676
- *   +0x00a0 -> line 2683
- *   +0x00b0 -> line 2676
- *   +0x00b4 -> line 2683
- *   +0x00b8 -> line 2676
- *   +0x00bc -> line 2677
- *   +0x00c4 -> line 2684
- *   +0x00c8 -> line 2677
- *   +0x00d4 -> line 2678
- *   +0x00dc -> line 2679
- *   +0x00f4 -> line 2680
- *   +0x010c -> line 2681
- *   +0x011c -> line 2684
- *   +0x012c -> line 2685
- *   +0x013c -> line 2690
- *   +0x0140 -> line 2685
- *   +0x0144 -> line 2690
- *   +0x0148 -> line 2687
- *   +0x014c -> line 2696
- *   +0x0150 -> line 2685
- *   +0x0154 -> line 2692
- *   +0x0158 -> line 2696
- *   +0x0164 -> line 2687
- *   +0x016c -> line 2690
- *   +0x0170 -> line 2692
- *   +0x0178 -> line 2687
- *   +0x0180 -> line 2688
- *   +0x0194 -> line 2689
- *   +0x019c -> line 2690
- *   +0x01b4 -> line 2691
- *   +0x01cc -> line 2692
- *   +0x01e0 -> line 2696
- *   +0x01ec -> line 2698
- *   +0x0214 -> line 2700
- *   +0x022c -> line 2702
- *   +0x0238 -> line 2703
- *   +0x0244 -> line 2705
- *   +0x024c -> line 2707
- *   +0x0258 -> line 2710
- *   +0x0268 -> line 2714
- *   +0x026c -> line 2707
- *   +0x0270 -> line 2714
- *   +0x0274 -> line 2707
- *   +0x0284 -> line 2708
- *   +0x0288 -> line 2714
- *   +0x028c -> line 2710
- *   +0x0290 -> line 2714
- *   +0x0294 -> line 2708
- *   +0x02a8 -> line 2709
- *   +0x02ac -> line 2710
- *   +0x02b0 -> line 2715
- *   +0x02b4 -> line 2709
- *   +0x02b8 -> line 2710
- *   +0x02d4 -> line 2711
- *   +0x02f0 -> line 2712
- *   +0x02fc -> line 2715
- *   +0x0308 -> line 2716
- *   +0x0310 -> line 2718
- *   +0x0318 -> line 2716
- *   +0x031c -> line 2725
- *   +0x0320 -> line 2718
- *   +0x0324 -> line 2725
- *   +0x0328 -> line 2718
- *   +0x032c -> line 2725
- *   +0x0330 -> line 2721
- *   +0x0334 -> line 2725
- *   +0x0338 -> line 2721
- *   +0x033c -> line 2718
- *   +0x0340 -> line 2721
- *   +0x0348 -> line 2718
- *   +0x0354 -> line 2719
- *   +0x035c -> line 2721
- *   +0x0364 -> line 2719
- *   +0x0374 -> line 2720
- *   +0x037c -> line 2721
- *   +0x0398 -> line 2722
- *   +0x03b4 -> line 2723
- *   +0x03c4 -> line 2725
- *   +0x03d0 -> line 2727
- *   +0x03fc -> line 2734
- *   +0x0400 -> line 2732
- *   +0x0408 -> line 2733
- *   +0x0410 -> line 2736
- *   +0x0414 -> line 2734
- *   +0x0424 -> line 2736
- *   +0x042c -> line 2739
- *   +0x043c -> line 2740
- *   +0x044c -> line 2742
- *   +0x0450 -> line 2740
- *   +0x0454 -> line 2742
- *   +0x0460 -> line 2746
- *   +0x0468 -> line 2751
- *   +0x0474 -> line 2744
- *   +0x0478 -> line 2751
- *   +0x047c -> line 2744
- *   +0x048c -> line 2745
- *   +0x0494 -> line 2746
- *   +0x0498 -> line 2752
- *   +0x049c -> line 2745
- *   +0x04a8 -> line 2746
- *   +0x04b8 -> line 2747
- *   +0x04cc -> line 2748
- *   +0x04e0 -> line 2749
- *   +0x04e8 -> line 2752
- *   +0x04f8 -> line 2753
- *   +0x0508 -> line 2755
- *   +0x050c -> line 2753
- *   +0x0510 -> line 2755
- *   +0x051c -> line 2753
- *   +0x0520 -> line 2759
- *   +0x0528 -> line 2757
- *   +0x0530 -> line 2755
- *   +0x0534 -> line 2757
- *   +0x0540 -> line 2758
- *   +0x0548 -> line 2759
- *   +0x054c -> line 2764
- *   +0x0550 -> line 2758
- *   +0x055c -> line 2759
- *   +0x056c -> line 2760
- *   +0x0580 -> line 2761
- *   +0x0594 -> line 2762
- *   +0x059c -> line 2764
- *   +0x05a4 -> line 2766
- *   +0x05ac -> line 2767
- *   +0x05b4 -> line 2766
- *   +0x05b8 -> line 2767
- *   +0x05d0 -> line 2769
- *   +0x05ec -> line 2771
- *   +0x0614 -> line 2772
- *   +0x063c -> line 2775
- *   +0x0648 -> line 2778
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2646–2650 */
-/* addr: 0x001e4560  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2646
- *   +0x0004 -> line 2647
- *   +0x000c -> line 2648
- *   +0x0010 -> line 2649
- *   +0x0014 -> line 2650
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2553–2640 */
-/* addr: 0x001e4580  size: 1072 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2553
- *   +0x0008 -> line 2557
- *   +0x000c -> line 2553
- *   +0x0010 -> line 2557
- *   +0x0014 -> line 2553
- *   +0x003c -> line 2557
- *   +0x006c -> line 2558
- *   +0x00cc -> line 2564
- *   +0x00fc -> line 2567
- *   +0x0100 -> line 2568
- *   +0x0108 -> line 2571
- *   +0x010c -> line 2572
- *   +0x0110 -> line 2566
- *   +0x0120 -> line 2567
- *   +0x0128 -> line 2570
- *   +0x012c -> line 2568
- *   +0x0130 -> line 2571
- *   +0x0134 -> line 2570
- *   +0x0138 -> line 2571
- *   +0x013c -> line 2572
- *   +0x0140 -> line 2574
- *   +0x0194 -> line 2575
- *   +0x01ec -> line 2577
- *   +0x01f8 -> line 2601
- *   +0x01fc -> line 2600
- *   +0x0200 -> line 2602
- *   +0x0204 -> line 2598
- *   +0x0210 -> line 2577
- *   +0x0214 -> line 2602
- *   +0x0218 -> line 2577
- *   +0x0220 -> line 2602
- *   +0x0224 -> line 2577
- *   +0x0238 -> line 2579
- *   +0x0248 -> line 2597
- *   +0x0250 -> line 2598
- *   +0x0254 -> line 2579
- *   +0x0258 -> line 2597
- *   +0x0260 -> line 2598
- *   +0x0264 -> line 2579
- *   +0x0268 -> line 2597
- *   +0x0270 -> line 2598
- *   +0x0274 -> line 2600
- *   +0x0280 -> line 2601
- *   +0x028c -> line 2602
- *   +0x029c -> line 2604
- *   +0x02d4 -> line 2606
- *   +0x02dc -> line 2611
- *   +0x02e0 -> line 2609
- *   +0x02e4 -> line 2606
- *   +0x02e8 -> line 2609
- *   +0x02ec -> line 2604
- *   +0x02f0 -> line 2606
- *   +0x02f4 -> line 2607
- *   +0x0300 -> line 2609
- *   +0x030c -> line 2616
- *   +0x0310 -> line 2613
- *   +0x0314 -> line 2616
- *   +0x0318 -> line 2618
- *   +0x031c -> line 2616
- *   +0x0328 -> line 2621
- *   +0x032c -> line 2618
- *   +0x0330 -> line 2616
- *   +0x0338 -> line 2618
- *   +0x0344 -> line 2621
- *   +0x0350 -> line 2623
- *   +0x0388 -> line 2631
- *   +0x0390 -> line 2632
- *   +0x03c0 -> line 2635
- *   +0x03c4 -> line 2634
- *   +0x03c8 -> line 2635
- *   +0x03cc -> line 2634
- *   +0x03e8 -> line 2635
- *   +0x03f0 -> line 2639
- *   +0x03fc -> line 2640
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-extern int GLI_vDrawWorldSpriteWithUVsOpt(MTH3D_tdstVector_* param0, GLI_tdstMaterial_* hVisualMaterial, float SizeX, float SizeY, float U1, float V1, float U2, float V2, GLD_tdstViewportAttributes_* _p_stViewport, unsigned int AnimTime);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2462–2549 */
-/* addr: 0x001e49b0  size: 1136 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2462
- *   +0x0008 -> line 2466
- *   +0x000c -> line 2462
- *   +0x0010 -> line 2466
- *   +0x0014 -> line 2462
- *   +0x003c -> line 2466
- *   +0x006c -> line 2467
- *   +0x00cc -> line 2473
- *   +0x00fc -> line 2476
- *   +0x0100 -> line 2477
- *   +0x0108 -> line 2480
- *   +0x010c -> line 2481
- *   +0x0110 -> line 2475
- *   +0x0120 -> line 2476
- *   +0x0128 -> line 2479
- *   +0x012c -> line 2477
- *   +0x0130 -> line 2480
- *   +0x0134 -> line 2479
- *   +0x0138 -> line 2480
- *   +0x013c -> line 2481
- *   +0x0140 -> line 2483
- *   +0x0194 -> line 2484
- *   +0x01ec -> line 2486
- *   +0x01f8 -> line 2510
- *   +0x01fc -> line 2509
- *   +0x0200 -> line 2511
- *   +0x0204 -> line 2507
- *   +0x0210 -> line 2486
- *   +0x0214 -> line 2511
- *   +0x0218 -> line 2486
- *   +0x0220 -> line 2511
- *   +0x0224 -> line 2486
- *   +0x0238 -> line 2488
- *   +0x0248 -> line 2506
- *   +0x0250 -> line 2507
- *   +0x0254 -> line 2488
- *   +0x0258 -> line 2506
- *   +0x0260 -> line 2507
- *   +0x0264 -> line 2488
- *   +0x0268 -> line 2506
- *   +0x0270 -> line 2507
- *   +0x0274 -> line 2509
- *   +0x0280 -> line 2510
- *   +0x028c -> line 2511
- *   +0x029c -> line 2513
- *   +0x02d4 -> line 2515
- *   +0x02dc -> line 2520
- *   +0x02e0 -> line 2518
- *   +0x02e4 -> line 2515
- *   +0x02e8 -> line 2518
- *   +0x02ec -> line 2513
- *   +0x02f0 -> line 2515
- *   +0x02f4 -> line 2516
- *   +0x0300 -> line 2518
- *   +0x030c -> line 2525
- *   +0x0310 -> line 2522
- *   +0x0314 -> line 2525
- *   +0x0318 -> line 2527
- *   +0x031c -> line 2525
- *   +0x0338 -> line 2527
- *   +0x0348 -> line 2530
- *   +0x0390 -> line 2532
- *   +0x03cc -> line 2540
- *   +0x03d4 -> line 2541
- *   +0x0400 -> line 2544
- *   +0x0404 -> line 2543
- *   +0x0408 -> line 2544
- *   +0x040c -> line 2543
- *   +0x0428 -> line 2544
- *   +0x0430 -> line 2548
- *   +0x043c -> line 2549
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2334–2364 */
-/* addr: 0x001e4e20  size: 276 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2338
- *   +0x000c -> line 2334
- *   +0x0010 -> line 2335
- *   +0x0018 -> line 2338
- *   +0x0024 -> line 2340
- *   +0x004c -> line 2343
- *   +0x005c -> line 2344
- *   +0x0060 -> line 2345
- *   +0x0078 -> line 2347
- *   +0x0080 -> line 2349
- *   +0x0098 -> line 2351
- *   +0x009c -> line 2349
- *   +0x00a0 -> line 2351
- *   +0x00bc -> line 2352
- *   +0x00dc -> line 2355
- *   +0x00e0 -> line 2353
- *   +0x00e4 -> line 2358
- *   +0x00e8 -> line 2359
- *   +0x00f0 -> line 2361
- *   +0x00f4 -> line 2360
- *   +0x00f8 -> line 2363
- *   +0x010c -> line 2364
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2330–2330 */
-/* addr: 0x001e4f40  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2330
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2306–2316 */
-/* addr: 0x001e4f50  size: 100 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2306
- *   +0x0010 -> line 2308
- *   +0x0014 -> line 2311
- *   +0x0020 -> line 2306
- *   +0x0028 -> line 2308
- *   +0x0030 -> line 2309
- *   +0x003c -> line 2311
- *   +0x0050 -> line 2314
- *   +0x005c -> line 2316
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2251–2300 */
-/* addr: 0x001e4fc0  size: 244 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2251
- *   +0x0010 -> line 2257
- *   +0x001c -> line 2259
- *   +0x0020 -> line 2260
- *   +0x0028 -> line 2261
- *   +0x0030 -> line 2264
- *   +0x003c -> line 2265
- *   +0x0044 -> line 2267
- *   +0x0050 -> line 2268
- *   +0x0058 -> line 2273
- *   +0x005c -> line 2271
- *   +0x0060 -> line 2273
- *   +0x0064 -> line 2275
- *   +0x0074 -> line 2277
- *   +0x0084 -> line 2279
- *   +0x008c -> line 2281
- *   +0x009c -> line 2283
- *   +0x00a0 -> line 2284
- *   +0x00a8 -> line 2286
- *   +0x00b0 -> line 2289
- *   +0x00b4 -> line 2291
- *   +0x00b8 -> line 2292
- *   +0x00bc -> line 2293
- *   +0x00d0 -> line 2295
- *   +0x00d8 -> line 2298
- *   +0x00e4 -> line 2300
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2200–2248 */
-/* addr: 0x001e50c0  size: 280 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2200
- *   +0x0010 -> line 2208
- *   +0x001c -> line 2210
- *   +0x0020 -> line 2211
- *   +0x0028 -> line 2212
- *   +0x0030 -> line 2215
- *   +0x003c -> line 2216
- *   +0x0044 -> line 2218
- *   +0x0050 -> line 2219
- *   +0x0058 -> line 2230
- *   +0x0080 -> line 2232
- *   +0x0084 -> line 2234
- *   +0x0088 -> line 2232
- *   +0x0090 -> line 2234
- *   +0x0098 -> line 2236
- *   +0x00a8 -> line 2239
- *   +0x00b4 -> line 2241
- *   +0x00c8 -> line 2242
- *   +0x00dc -> line 2243
- *   +0x00f0 -> line 2246
- *   +0x00f4 -> line 2247
- *   +0x0108 -> line 2248
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2145–2197 */
-/* addr: 0x001e51e0  size: 644 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2145
- *   +0x0024 -> line 2153
- *   +0x0030 -> line 2154
- *   +0x0040 -> line 2155
- *   +0x004c -> line 2157
- *   +0x0050 -> line 2159
- *   +0x0054 -> line 2158
- *   +0x005c -> line 2159
- *   +0x0064 -> line 2163
- *   +0x006c -> line 2164
- *   +0x0074 -> line 2166
- *   +0x0080 -> line 2167
- *   +0x0088 -> line 2178
- *   +0x008c -> line 2172
- *   +0x0094 -> line 2173
- *   +0x009c -> line 2175
- *   +0x00a0 -> line 2173
- *   +0x00a4 -> line 2175
- *   +0x00a8 -> line 2174
- *   +0x00ac -> line 2178
- *   +0x00b4 -> line 2181
- *   +0x00fc -> line 2182
- *   +0x0148 -> line 2183
- *   +0x0174 -> line 2186
- *   +0x0178 -> line 2183
- *   +0x019c -> line 2188
- *   +0x01d0 -> line 2189
- *   +0x0204 -> line 2190
- *   +0x0214 -> line 2194
- *   +0x0218 -> line 2190
- *   +0x024c -> line 2192
- *   +0x0250 -> line 2193
- *   +0x0254 -> line 2194
- *   +0x0264 -> line 2197
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-extern char* AGO2_MEM_GetPointerFromHandle(unsigned int Handle);
-/* Callers pass the viewport first and the two sizes in f12/f13; the recovered
-   GLI_vDisplaySerialLeaves definition drops them (Bees/Flow keep them). */
-extern void GLI_vDisplaySerialLeaves(GLD_tdstViewportAttributes_* pViewport, AGO2_LeavesParticle_* pParticleArray, int NumberOfParticles, void* pMaterial, float sx, float sy);
-extern void GLI_vDisplaySerialFlow(GLD_tdstViewportAttributes_* param0, AGO2_FlowParticle_* pParticleArray, int NumberOfParticles, void* pMaterial, float sx, float sy);
-/* AGO2_DisplayBees passes pMaterial2 in t0 as well; the recovered definition omits it. */
-extern void GLI_vDisplaySerialBees(GLD_tdstViewportAttributes_* pViewport, AGO2_BeeParticle_* _pParticleArray_, int NumberOfParticles, void* pMaterial, void* pMaterial2, float sx, float sy);
-extern void GLI_vDisplaySerialFlowBlured(GLD_tdstViewportAttributes_* param0, AGO2_FlowParticle_* pParticleArray, int NumberOfParticles, void* pMaterial, float sx, float sy);
-extern void GLI_vDisplaySerialParticleRain(GLD_tdstViewportAttributes_* param0, AGO2_RainParticle_* pParticleArray, int NumberOfParticles, void* pMaterial, float sx, float sy);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2116–2133 */
-/* addr: 0x001e5470  size: 108 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2116
- *   +0x0010 -> line 2120
- *   +0x001c -> line 2125
- *   +0x0024 -> line 2126
- *   +0x002c -> line 2128
- *   +0x0034 -> line 2129
- *   +0x003c -> line 2132
- *   +0x005c -> line 2133
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2056–2112 */
-/* addr: 0x001e54e0  size: 1104 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2056
- *   +0x0038 -> line 2064
- *   +0x0044 -> line 2066
- *   +0x0048 -> line 2067
- *   +0x0050 -> line 2068
- *   +0x0058 -> line 2071
- *   +0x0064 -> line 2072
- *   +0x006c -> line 2074
- *   +0x0074 -> line 2075
- *   +0x007c -> line 2078
- *   +0x0080 -> line 2080
- *   +0x0088 -> line 2082
- *   +0x0098 -> line 2084
- *   +0x00d4 -> line 2085
- *   +0x00f0 -> line 2086
- *   +0x00f8 -> line 2085
- *   +0x0100 -> line 2086
- *   +0x0118 -> line 2089
- *   +0x0120 -> line 2087
- *   +0x0134 -> line 2089
- *   +0x014c -> line 2090
- *   +0x01a8 -> line 2091
- *   +0x01fc -> line 2092
- *   +0x0220 -> line 2100
- *   +0x0224 -> line 2097
- *   +0x022c -> line 2100
- *   +0x0234 -> line 2092
- *   +0x0264 -> line 2097
- *   +0x0270 -> line 2096
- *   +0x0280 -> line 2097
- *   +0x0290 -> line 2096
- *   +0x0298 -> line 2097
- *   +0x02ac -> line 2100
- *   +0x02dc -> line 2103
- *   +0x02f8 -> line 2104
- *   +0x0314 -> line 2105
- *   +0x0330 -> line 2107
- *   +0x0398 -> line 2108
- *   +0x03fc -> line 2109
- *   +0x0400 -> line 2110
- *   +0x0404 -> line 2111
- *   +0x0418 -> line 2112
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-static inline void AGO2_vAddToVector(AGO_V4D_* p_stVector, float xX, float xY, float xZ)
-{
-    p_stVector->xX = xX + p_stVector->xX;
-    p_stVector->xY = xY + p_stVector->xY;
-    p_stVector->xZ = xZ + p_stVector->xZ;
-}
-
-static inline float AGO2_xSqrDistance(MTH3D_tdstVector_* p_stA, MTH3D_tdstVector_* p_stB)
-{
-    return AGO2_xSqrNorm(p_stA->xX - p_stB->xX, p_stA->xY - p_stB->xY, p_stA->xZ - p_stB->xZ);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1987–2052 */
-/* addr: 0x001e5930  size: 1140 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1987
- *   +0x0004 -> line 1993
- *   +0x0008 -> line 1987
- *   +0x000c -> line 1993
- *   +0x0010 -> line 1987
- *   +0x0014 -> line 1997
- *   +0x0018 -> line 1987
- *   +0x001c -> line 1994
- *   +0x0020 -> line 1987
- *   +0x002c -> line 1994
- *   +0x0030 -> line 1987
- *   +0x003c -> line 1997
- *   +0x0040 -> line 1987
- *   +0x0050 -> line 1993
- *   +0x0054 -> line 1987
- *   +0x0058 -> line 1993
- *   +0x0060 -> line 1994
- *   +0x0080 -> line 1997
- *   +0x00ec -> line 2001
- *   +0x00f0 -> line 2000
- *   +0x00f4 -> line 2001
- *   +0x0104 -> line 2002
- *   +0x0110 -> line 2004
- *   +0x0114 -> line 2006
- *   +0x0118 -> line 2005
- *   +0x0120 -> line 2006
- *   +0x0128 -> line 2010
- *   +0x0130 -> line 2011
- *   +0x0138 -> line 2013
- *   +0x0144 -> line 2014
- *   +0x014c -> line 2025
- *   +0x0150 -> line 2019
- *   +0x0154 -> line 2025
- *   +0x0158 -> line 2019
- *   +0x015c -> line 2020
- *   +0x0164 -> line 2022
- *   +0x0168 -> line 2020
- *   +0x016c -> line 2022
- *   +0x0170 -> line 2021
- *   +0x0174 -> line 2025
- *   +0x017c -> line 2027
- *   +0x01b8 -> line 2028
- *   +0x01e8 -> line 2029
- *   +0x0218 -> line 2030
- *   +0x0248 -> line 2032
- *   +0x0288 -> line 2033
- *   +0x02cc -> line 2034
- *   +0x030c -> line 2037
- *   +0x0318 -> line 2038
- *   +0x0324 -> line 2039
- *   +0x032c -> line 2042
- *   +0x036c -> line 2043
- *   +0x03ac -> line 2044
- *   +0x03ec -> line 2046
- *   +0x0400 -> line 2050
- *   +0x0404 -> line 2046
- *   +0x0418 -> line 2050
- *   +0x041c -> line 2046
- *   +0x0434 -> line 2048
- *   +0x0438 -> line 2050
- *   +0x0440 -> line 2051
- *   +0x0444 -> line 2052
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1958–1975 */
-/* addr: 0x001e5db0  size: 104 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1958
- *   +0x0010 -> line 1962
- *   +0x001c -> line 1967
- *   +0x0024 -> line 1968
- *   +0x002c -> line 1970
- *   +0x0034 -> line 1971
- *   +0x003c -> line 1974
- *   +0x0058 -> line 1975
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1799–1954 */
-/* addr: 0x001e5e20  size: 3104 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1799
- *   +0x0040 -> line 1812
- *   +0x004c -> line 1814
- *   +0x0050 -> line 1815
- *   +0x0058 -> line 1816
- *   +0x0060 -> line 1819
- *   +0x006c -> line 1820
- *   +0x0074 -> line 1822
- *   +0x007c -> line 1823
- *   +0x0084 -> line 1832
- *   +0x00ac -> line 1840
- *   +0x00b8 -> line 1842
- *   +0x00c8 -> line 1846
- *   +0x00d4 -> line 1849
- *   +0x00d8 -> line 1846
- *   +0x00dc -> line 1849
- *   +0x00e8 -> line 1846
- *   +0x00f8 -> line 1849
- *   +0x013c -> line 1850
- *   +0x01a0 -> line 1851
- *   +0x01c0 -> line 1854
- *   +0x01c4 -> line 1858
- *   +0x01c8 -> line 1854
- *   +0x01cc -> line 1853
- *   +0x01d0 -> line 1862
- *   +0x01d4 -> line 1858
- *   +0x01e4 -> line 1854
- *   +0x01e8 -> line 1858
- *   +0x01ec -> line 1859
- *   +0x01f0 -> line 1862
- *   +0x01f4 -> line 1859
- *   +0x01f8 -> line 1855
- *   +0x01fc -> line 1859
- *   +0x020c -> line 1860
- *   +0x0214 -> line 1862
- *   +0x0218 -> line 1860
- *   +0x0228 -> line 1862
- *   +0x0230 -> line 1864
- *   +0x0238 -> line 1865
- *   +0x0244 -> line 1867
- *   +0x0258 -> line 1868
- *   +0x026c -> line 1869
- *   +0x0274 -> line 1871
- *   +0x0280 -> line 1872
- *   +0x028c -> line 1873
- *   +0x029c -> line 1875
- *   +0x02a8 -> line 1876
- *   +0x02b4 -> line 1877
- *   +0x02c4 -> line 1879
- *   +0x0328 -> line 1880
- *   +0x0390 -> line 1884
- *   +0x0398 -> line 1885
- *   +0x039c -> line 1884
- *   +0x03a0 -> line 1886
- *   +0x03a4 -> line 1885
- *   +0x03a8 -> line 1884
- *   +0x03b0 -> line 1885
- *   +0x03b8 -> line 1886
- *   +0x03bc -> line 1885
- *   +0x03c4 -> line 1886
- *   +0x03d4 -> line 1888
- *   +0x0438 -> line 1890
- *   +0x0498 -> line 1897
- *   +0x04d4 -> line 1898
- *   +0x0504 -> line 1899
- *   +0x0534 -> line 1900
- *   +0x0564 -> line 1903
- *   +0x059c -> line 1904
- *   +0x05b0 -> line 1907
- *   +0x05b4 -> line 1904
- *   +0x05c8 -> line 1911
- *   +0x05cc -> line 1904
- *   +0x05e4 -> line 1907
- *   +0x05f4 -> line 1908
- *   +0x05f8 -> line 1907
- *   +0x0604 -> line 1908
- *   +0x0614 -> line 1909
- *   +0x0618 -> line 1908
- *   +0x0624 -> line 1909
- *   +0x0640 -> line 1912
- *   +0x067c -> line 1913
- *   +0x06bc -> line 1915
- *   +0x06fc -> line 1917
- *   +0x0738 -> line 1918
- *   +0x0778 -> line 1919
- *   +0x07b8 -> line 1920
- *   +0x0800 -> line 1924
- *   +0x0840 -> line 1925
- *   +0x0880 -> line 1926
- *   +0x0890 -> line 1928
- *   +0x0898 -> line 1926
- *   +0x08c8 -> line 1928
- *   +0x0900 -> line 1933
- *   +0x0940 -> line 1934
- *   +0x0984 -> line 1935
- *   +0x09c4 -> line 1937
- *   +0x09f8 -> line 1939
- *   +0x0a60 -> line 1940
- *   +0x0ac0 -> line 1941
- *   +0x0b14 -> line 1942
- *   +0x0b78 -> line 1944
- *   +0x0b98 -> line 1945
- *   +0x0bb8 -> line 1947
- *   +0x0bc0 -> line 1948
- *   +0x0bc8 -> line 1949
- *   +0x0bd0 -> line 1953
- *   +0x0be0 -> line 1954
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1694–1796 */
-/* addr: 0x001e6a40  size: 2288 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1694
- *   +0x0004 -> line 1702
- *   +0x0008 -> line 1694
- *   +0x000c -> line 1705
- *   +0x0010 -> line 1694
- *   +0x0014 -> line 1702
- *   +0x0018 -> line 1694
- *   +0x001c -> line 1705
- *   +0x0020 -> line 1694
- *   +0x002c -> line 1705
- *   +0x0030 -> line 1694
- *   +0x0040 -> line 1703
- *   +0x0044 -> line 1694
- *   +0x0048 -> line 1703
- *   +0x004c -> line 1694
- *   +0x0064 -> line 1702
- *   +0x0084 -> line 1703
- *   +0x00a4 -> line 1705
- *   +0x010c -> line 1709
- *   +0x0110 -> line 1708
- *   +0x0114 -> line 1709
- *   +0x0124 -> line 1710
- *   +0x0130 -> line 1712
- *   +0x0134 -> line 1714
- *   +0x0138 -> line 1713
- *   +0x0140 -> line 1714
- *   +0x0148 -> line 1718
- *   +0x0150 -> line 1719
- *   +0x0158 -> line 1721
- *   +0x0164 -> line 1722
- *   +0x016c -> line 1725
- *   +0x0170 -> line 1727
- *   +0x017c -> line 1736
- *   +0x0180 -> line 1731
- *   +0x0184 -> line 1727
- *   +0x0188 -> line 1736
- *   +0x018c -> line 1727
- *   +0x0190 -> line 1730
- *   +0x0194 -> line 1731
- *   +0x0198 -> line 1732
- *   +0x019c -> line 1736
- *   +0x01a4 -> line 1738
- *   +0x01e0 -> line 1739
- *   +0x0210 -> line 1740
- *   +0x0240 -> line 1743
- *   +0x0278 -> line 1744
- *   +0x028c -> line 1749
- *   +0x0290 -> line 1744
- *   +0x02a4 -> line 1751
- *   +0x02a8 -> line 1744
- *   +0x02c0 -> line 1747
- *   +0x02c8 -> line 1749
- *   +0x02cc -> line 1747
- *   +0x02dc -> line 1748
- *   +0x02f4 -> line 1749
- *   +0x030c -> line 1752
- *   +0x0348 -> line 1753
- *   +0x0388 -> line 1755
- *   +0x03c8 -> line 1757
- *   +0x0404 -> line 1758
- *   +0x0444 -> line 1759
- *   +0x0480 -> line 1760
- *   +0x04c8 -> line 1764
- *   +0x0508 -> line 1765
- *   +0x0548 -> line 1766
- *   +0x0558 -> line 1768
- *   +0x0560 -> line 1766
- *   +0x0590 -> line 1768
- *   +0x05c8 -> line 1773
- *   +0x0608 -> line 1774
- *   +0x064c -> line 1775
- *   +0x0690 -> line 1777
- *   +0x06c4 -> line 1779
- *   +0x0728 -> line 1780
- *   +0x0788 -> line 1781
- *   +0x07dc -> line 1782
- *   +0x0840 -> line 1793
- *   +0x0844 -> line 1784
- *   +0x0848 -> line 1793
- *   +0x084c -> line 1784
- *   +0x0868 -> line 1785
- *   +0x0888 -> line 1787
- *   +0x0890 -> line 1788
- *   +0x0898 -> line 1789
- *   +0x08a0 -> line 1791
- *   +0x08a4 -> line 1793
- *   +0x08b0 -> line 1795
- *   +0x08b4 -> line 1796
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1602–1681 */
-/* addr: 0x001e7330  size: 1404 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1602
- *   +0x0034 -> line 1610
- *   +0x0040 -> line 1612
- *   +0x0044 -> line 1613
- *   +0x004c -> line 1614
- *   +0x0054 -> line 1617
- *   +0x0060 -> line 1618
- *   +0x0068 -> line 1620
- *   +0x0070 -> line 1621
- *   +0x0078 -> line 1630
- *   +0x00a0 -> line 1635
- *   +0x00ac -> line 1632
- *   +0x00b0 -> line 1635
- *   +0x00b4 -> line 1632
- *   +0x00bc -> line 1635
- *   +0x00c4 -> line 1637
- *   +0x00d0 -> line 1639
- *   +0x00e0 -> line 1642
- *   +0x0114 -> line 1649
- *   +0x0118 -> line 1650
- *   +0x011c -> line 1651
- *   +0x0120 -> line 1642
- *   +0x012c -> line 1644
- *   +0x0140 -> line 1645
- *   +0x0154 -> line 1646
- *   +0x0168 -> line 1649
- *   +0x0170 -> line 1650
- *   +0x0174 -> line 1649
- *   +0x017c -> line 1650
- *   +0x0184 -> line 1651
- *   +0x0188 -> line 1650
- *   +0x0190 -> line 1651
- *   +0x01a0 -> line 1653
- *   +0x0200 -> line 1655
- *   +0x0260 -> line 1660
- *   +0x029c -> line 1661
- *   +0x02cc -> line 1662
- *   +0x02fc -> line 1663
- *   +0x032c -> line 1665
- *   +0x03a0 -> line 1666
- *   +0x0418 -> line 1669
- *   +0x0420 -> line 1673
- *   +0x0424 -> line 1669
- *   +0x0430 -> line 1670
- *   +0x0434 -> line 1669
- *   +0x0440 -> line 1670
- *   +0x0450 -> line 1671
- *   +0x0454 -> line 1670
- *   +0x0460 -> line 1671
- *   +0x047c -> line 1674
- *   +0x04b8 -> line 1675
- *   +0x04f8 -> line 1676
- *   +0x0534 -> line 1678
- *   +0x0538 -> line 1680
- *   +0x0548 -> line 1681
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1532–1599 */
-/* addr: 0x001e78b0  size: 1176 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1532
- *   +0x0038 -> line 1538
- *   +0x004c -> line 1540
- *   +0x0058 -> line 1541
- *   +0x005c -> line 1543
- *   +0x0060 -> line 1541
- *   +0x0064 -> line 1543
- *   +0x006c -> line 1540
- *   +0x0088 -> line 1541
- *   +0x00a8 -> line 1543
- *   +0x0114 -> line 1547
- *   +0x0118 -> line 1546
- *   +0x011c -> line 1547
- *   +0x012c -> line 1548
- *   +0x0138 -> line 1550
- *   +0x013c -> line 1552
- *   +0x0140 -> line 1551
- *   +0x0148 -> line 1552
- *   +0x0150 -> line 1556
- *   +0x0158 -> line 1557
- *   +0x0160 -> line 1559
- *   +0x016c -> line 1560
- *   +0x0174 -> line 1563
- *   +0x0178 -> line 1565
- *   +0x0184 -> line 1574
- *   +0x0188 -> line 1569
- *   +0x0190 -> line 1565
- *   +0x0194 -> line 1574
- *   +0x0198 -> line 1565
- *   +0x019c -> line 1568
- *   +0x01a0 -> line 1569
- *   +0x01a4 -> line 1570
- *   +0x01a8 -> line 1574
- *   +0x01b0 -> line 1576
- *   +0x01ec -> line 1577
- *   +0x021c -> line 1578
- *   +0x024c -> line 1581
- *   +0x02c0 -> line 1582
- *   +0x0338 -> line 1587
- *   +0x033c -> line 1585
- *   +0x0340 -> line 1587
- *   +0x0344 -> line 1585
- *   +0x0348 -> line 1589
- *   +0x034c -> line 1585
- *   +0x035c -> line 1586
- *   +0x0374 -> line 1587
- *   +0x038c -> line 1590
- *   +0x03c8 -> line 1591
- *   +0x0408 -> line 1592
- *   +0x041c -> line 1596
- *   +0x0420 -> line 1592
- *   +0x0434 -> line 1596
- *   +0x0438 -> line 1592
- *   +0x0450 -> line 1594
- *   +0x0454 -> line 1596
- *   +0x0460 -> line 1598
- *   +0x0464 -> line 1599
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1502–1520 */
-/* addr: 0x001e7d50  size: 112 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1502
- *   +0x0010 -> line 1505
- *   +0x001c -> line 1510
- *   +0x0028 -> line 1511
- *   +0x0030 -> line 1513
- *   +0x0038 -> line 1514
- *   +0x0040 -> line 1517
- *   +0x004c -> line 1519
- *   +0x0060 -> line 1520
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1418–1499 */
-/* addr: 0x001e7dc0  size: 1092 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1418
- *   +0x0034 -> line 1426
- *   +0x0040 -> line 1428
- *   +0x0044 -> line 1429
- *   +0x004c -> line 1430
- *   +0x0054 -> line 1433
- *   +0x0060 -> line 1434
- *   +0x0068 -> line 1436
- *   +0x0070 -> line 1437
- *   +0x0078 -> line 1446
- *   +0x00a0 -> line 1449
- *   +0x00a4 -> line 1451
- *   +0x00a8 -> line 1449
- *   +0x00b0 -> line 1451
- *   +0x00b8 -> line 1453
- *   +0x00c8 -> line 1457
- *   +0x00cc -> line 1464
- *   +0x00d0 -> line 1465
- *   +0x00d4 -> line 1466
- *   +0x00d8 -> line 1457
- *   +0x00e0 -> line 1459
- *   +0x00f4 -> line 1460
- *   +0x0108 -> line 1461
- *   +0x011c -> line 1464
- *   +0x0124 -> line 1465
- *   +0x0128 -> line 1464
- *   +0x0130 -> line 1465
- *   +0x0138 -> line 1466
- *   +0x013c -> line 1465
- *   +0x0144 -> line 1466
- *   +0x0154 -> line 1468
- *   +0x01b8 -> line 1470
- *   +0x01e8 -> line 1472
- *   +0x0218 -> line 1478
- *   +0x0254 -> line 1479
- *   +0x0284 -> line 1480
- *   +0x02b4 -> line 1481
- *   +0x02c0 -> line 1486
- *   +0x02c8 -> line 1481
- *   +0x02d0 -> line 1486
- *   +0x02d8 -> line 1481
- *   +0x02e4 -> line 1490
- *   +0x02e8 -> line 1487
- *   +0x02ec -> line 1486
- *   +0x02fc -> line 1487
- *   +0x0300 -> line 1481
- *   +0x0304 -> line 1487
- *   +0x030c -> line 1481
- *   +0x0310 -> line 1487
- *   +0x0314 -> line 1488
- *   +0x0318 -> line 1487
- *   +0x0324 -> line 1488
- *   +0x0340 -> line 1491
- *   +0x037c -> line 1492
- *   +0x03bc -> line 1493
- *   +0x03f8 -> line 1497
- *   +0x03fc -> line 1498
- *   +0x0410 -> line 1499
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1333–1414 */
-/* addr: 0x001e8210  size: 1092 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1333
- *   +0x0034 -> line 1341
- *   +0x0040 -> line 1343
- *   +0x0044 -> line 1344
- *   +0x004c -> line 1345
- *   +0x0054 -> line 1348
- *   +0x0060 -> line 1349
- *   +0x0068 -> line 1351
- *   +0x0070 -> line 1352
- *   +0x0078 -> line 1361
- *   +0x00a0 -> line 1364
- *   +0x00a4 -> line 1366
- *   +0x00a8 -> line 1364
- *   +0x00b0 -> line 1366
- *   +0x00b8 -> line 1368
- *   +0x00c8 -> line 1372
- *   +0x00cc -> line 1379
- *   +0x00d0 -> line 1380
- *   +0x00d4 -> line 1381
- *   +0x00d8 -> line 1372
- *   +0x00e0 -> line 1374
- *   +0x00f4 -> line 1375
- *   +0x0108 -> line 1376
- *   +0x011c -> line 1379
- *   +0x0124 -> line 1380
- *   +0x0128 -> line 1379
- *   +0x0130 -> line 1380
- *   +0x0138 -> line 1381
- *   +0x013c -> line 1380
- *   +0x0144 -> line 1381
- *   +0x0154 -> line 1383
- *   +0x01b8 -> line 1385
- *   +0x01e8 -> line 1387
- *   +0x0218 -> line 1393
- *   +0x0254 -> line 1394
- *   +0x0284 -> line 1395
- *   +0x02b4 -> line 1396
- *   +0x02c0 -> line 1401
- *   +0x02c8 -> line 1396
- *   +0x02d0 -> line 1401
- *   +0x02d8 -> line 1396
- *   +0x02e4 -> line 1405
- *   +0x02e8 -> line 1402
- *   +0x02ec -> line 1401
- *   +0x02fc -> line 1402
- *   +0x0300 -> line 1396
- *   +0x0304 -> line 1402
- *   +0x030c -> line 1396
- *   +0x0310 -> line 1402
- *   +0x0314 -> line 1403
- *   +0x0318 -> line 1402
- *   +0x0324 -> line 1403
- *   +0x0340 -> line 1406
- *   +0x037c -> line 1407
- *   +0x03bc -> line 1408
- *   +0x03f8 -> line 1412
- *   +0x03fc -> line 1413
- *   +0x0410 -> line 1414
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1268–1330 */
-/* addr: 0x001e8660  size: 920 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1268
- *   +0x0004 -> line 1275
- *   +0x0008 -> line 1268
- *   +0x000c -> line 1278
- *   +0x0010 -> line 1268
- *   +0x0014 -> line 1275
- *   +0x0018 -> line 1268
- *   +0x001c -> line 1278
- *   +0x0020 -> line 1268
- *   +0x002c -> line 1278
- *   +0x0030 -> line 1268
- *   +0x003c -> line 1276
- *   +0x0040 -> line 1268
- *   +0x0044 -> line 1276
- *   +0x0048 -> line 1268
- *   +0x005c -> line 1275
- *   +0x007c -> line 1276
- *   +0x009c -> line 1278
- *   +0x0104 -> line 1282
- *   +0x0108 -> line 1281
- *   +0x010c -> line 1282
- *   +0x011c -> line 1283
- *   +0x0128 -> line 1285
- *   +0x012c -> line 1287
- *   +0x0130 -> line 1286
- *   +0x0138 -> line 1287
- *   +0x0140 -> line 1291
- *   +0x0148 -> line 1292
- *   +0x0150 -> line 1294
- *   +0x015c -> line 1295
- *   +0x0164 -> line 1300
- *   +0x016c -> line 1298
- *   +0x0170 -> line 1300
- *   +0x0174 -> line 1304
- *   +0x0178 -> line 1309
- *   +0x017c -> line 1304
- *   +0x0180 -> line 1305
- *   +0x0184 -> line 1300
- *   +0x0188 -> line 1309
- *   +0x018c -> line 1300
- *   +0x0190 -> line 1303
- *   +0x0194 -> line 1304
- *   +0x0198 -> line 1305
- *   +0x019c -> line 1309
- *   +0x01a4 -> line 1311
- *   +0x01e0 -> line 1312
- *   +0x0210 -> line 1313
- *   +0x021c -> line 1318
- *   +0x0220 -> line 1316
- *   +0x0224 -> line 1313
- *   +0x0234 -> line 1316
- *   +0x0238 -> line 1313
- *   +0x023c -> line 1320
- *   +0x0240 -> line 1316
- *   +0x0250 -> line 1317
- *   +0x0254 -> line 1313
- *   +0x0258 -> line 1317
- *   +0x026c -> line 1318
- *   +0x028c -> line 1321
- *   +0x02c8 -> line 1322
- *   +0x0308 -> line 1323
- *   +0x031c -> line 1327
- *   +0x0320 -> line 1323
- *   +0x0334 -> line 1327
- *   +0x0338 -> line 1323
- *   +0x0350 -> line 1325
- *   +0x0354 -> line 1327
- *   +0x0360 -> line 1329
- *   +0x0364 -> line 1330
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1253–1256 */
-/* addr: 0x001e8a00  size: 68 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1253
- *   +0x0010 -> line 1254
- *   +0x0028 -> line 1255
- *   +0x0034 -> line 1256
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1250–1250 */
-/* addr: 0x001e8a50  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1250
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1238–1245 */
-/* addr: 0x001e8a60  size: 40 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1238
- *   +0x0004 -> line 1239
- *   +0x000c -> line 1240
- *   +0x0014 -> line 1242
- *   +0x0018 -> line 1241
- *   +0x001c -> line 1244
- *   +0x0020 -> line 1245
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1174–1223 */
-/* addr: 0x001e8a90  size: 244 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1174
- *   +0x0010 -> line 1180
- *   +0x001c -> line 1182
- *   +0x0020 -> line 1183
- *   +0x0028 -> line 1184
- *   +0x0030 -> line 1187
- *   +0x003c -> line 1188
- *   +0x0044 -> line 1190
- *   +0x0050 -> line 1191
- *   +0x0058 -> line 1196
- *   +0x005c -> line 1194
- *   +0x0060 -> line 1196
- *   +0x0064 -> line 1198
- *   +0x0074 -> line 1200
- *   +0x0084 -> line 1202
- *   +0x008c -> line 1204
- *   +0x009c -> line 1206
- *   +0x00a0 -> line 1207
- *   +0x00a8 -> line 1209
- *   +0x00b0 -> line 1212
- *   +0x00b4 -> line 1214
- *   +0x00b8 -> line 1215
- *   +0x00bc -> line 1216
- *   +0x00d0 -> line 1218
- *   +0x00d8 -> line 1221
- *   +0x00e4 -> line 1223
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1154–1171 */
-/* addr: 0x001e8b90  size: 104 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1154
- *   +0x0010 -> line 1158
- *   +0x001c -> line 1163
- *   +0x0024 -> line 1164
- *   +0x002c -> line 1166
- *   +0x0034 -> line 1167
- *   +0x003c -> line 1170
- *   +0x0058 -> line 1171
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1134–1151 */
-/* addr: 0x001e8c00  size: 104 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1134
- *   +0x0010 -> line 1138
- *   +0x001c -> line 1143
- *   +0x0024 -> line 1144
- *   +0x002c -> line 1146
- *   +0x0034 -> line 1147
- *   +0x003c -> line 1150
- *   +0x0058 -> line 1151
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1082–1131 */
-/* addr: 0x001e8c70  size: 344 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1082
- *   +0x0010 -> line 1089
- *   +0x001c -> line 1091
- *   +0x0020 -> line 1092
- *   +0x0028 -> line 1093
- *   +0x0030 -> line 1096
- *   +0x003c -> line 1097
- *   +0x0044 -> line 1099
- *   +0x0050 -> line 1100
- *   +0x0058 -> line 1108
- *   +0x005c -> line 1106
- *   +0x0060 -> line 1105
- *   +0x0064 -> line 1106
- *   +0x0078 -> line 1108
- *   +0x0080 -> line 1110
- *   +0x0090 -> line 1113
- *   +0x009c -> line 1115
- *   +0x00a4 -> line 1116
- *   +0x00ac -> line 1117
- *   +0x00b4 -> line 1119
- *   +0x00c8 -> line 1120
- *   +0x00dc -> line 1121
- *   +0x00f0 -> line 1124
- *   +0x0104 -> line 1125
- *   +0x0118 -> line 1126
- *   +0x012c -> line 1128
- *   +0x0130 -> line 1129
- *   +0x0134 -> line 1130
- *   +0x0148 -> line 1131
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1026–1079 */
-/* addr: 0x001e8dd0  size: 480 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1026
- *   +0x0030 -> line 1033
- *   +0x0034 -> line 1034
- *   +0x0040 -> line 1035
- *   +0x004c -> line 1037
- *   +0x0050 -> line 1039
- *   +0x0054 -> line 1038
- *   +0x005c -> line 1039
- *   +0x0064 -> line 1043
- *   +0x006c -> line 1044
- *   +0x0074 -> line 1046
- *   +0x0080 -> line 1047
- *   +0x0088 -> line 1058
- *   +0x008c -> line 1052
- *   +0x0090 -> line 1058
- *   +0x0094 -> line 1052
- *   +0x0098 -> line 1053
- *   +0x00a4 -> line 1054
- *   +0x00a8 -> line 1058
- *   +0x00b0 -> line 1060
- *   +0x00b8 -> line 1061
- *   +0x00c0 -> line 1062
- *   +0x00c8 -> line 1065
- *   +0x00cc -> line 1069
- *   +0x00d0 -> line 1065
- *   +0x00d4 -> line 1066
- *   +0x00dc -> line 1067
- *   +0x00e4 -> line 1070
- *   +0x0124 -> line 1071
- *   +0x0160 -> line 1072
- *   +0x0174 -> line 1076
- *   +0x0178 -> line 1072
- *   +0x018c -> line 1076
- *   +0x0190 -> line 1072
- *   +0x01a8 -> line 1074
- *   +0x01ac -> line 1076
- *   +0x01b8 -> line 1078
- *   +0x01bc -> line 1079
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-/* The retail creation callback has the full 16-parameter prototype stored in
- * g_pAGO2Types[].pCreationFunction; the debug record only keeps the
- * parameters this function actually reads (ulParticleType, Vector1..4,
- * pMaterial1/2, xParam1..4 and pLaunchingCharacter are unused here). */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1005–1011 */
-/* addr: 0x001e8fb0  size: 116 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1005
- *   +0x000c -> line 1007
- *   +0x0014 -> line 1005
- *   +0x0020 -> line 1006
- *   +0x0038 -> line 1007
- *   +0x0060 -> line 1009
- *   +0x006c -> line 1011
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 950–960 */
-/* addr: 0x001e9030  size: 104 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 950
- *   +0x000c -> line 951
- *   +0x0014 -> line 950
- *   +0x001c -> line 951
- *   +0x002c -> line 953
- *   +0x0030 -> line 954
- *   +0x0038 -> line 955
- *   +0x0040 -> line 956
- *   +0x005c -> line 958
- *   +0x0060 -> line 960
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 937–937 */
-/* addr: 0x001e90a0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 937
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 921–925 */
-/* addr: 0x001e90b0  size: 108 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 921
- *   +0x0020 -> line 922
- *   +0x0038 -> line 923
- *   +0x0050 -> line 924
- *   +0x0064 -> line 925
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 896–907 */
-/* addr: 0x001e9120  size: 88 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 896
- *   +0x000c -> line 897
- *   +0x0018 -> line 898
- *   +0x003c -> line 905
- *   +0x0048 -> line 907
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-/* Retail callers pass the viewport (a2) and animation time (a3) as well as the
-   four parameters in VUSprites.cpp's recovered definition. */
-extern int GLI_vDrawWorldSpriteOpt(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMaterial, float SizeX, float SizeY, GLD_tdstViewportAttributes_* p_stViewport, unsigned int AnimTime);
-extern void GLI_vSetGlobalAlpha(float Alpha);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 804–813 */
-/* addr: 0x001e9180  size: 88 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 805
- *   +0x0004 -> line 804
- *   +0x000c -> line 805
- *   +0x0014 -> line 807
- *   +0x002c -> line 809
- *   +0x003c -> line 811
- *   +0x0040 -> line 812
- *   +0x0050 -> line 813
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 790–799 */
-/* addr: 0x001e91e0  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 791
- *   +0x0004 -> line 790
- *   +0x000c -> line 791
- *   +0x0014 -> line 793
- *   +0x0020 -> line 795
- *   +0x002c -> line 796
- *   +0x0030 -> line 795
- *   +0x0034 -> line 797
- *   +0x0038 -> line 798
- *   +0x0048 -> line 799
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 782–786 */
-/* addr: 0x001e9230  size: 108 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 783
- *   +0x0008 -> line 782
- *   +0x0010 -> line 783
- *   +0x0038 -> line 784
- *   +0x0048 -> line 785
- *   +0x0064 -> line 786
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-#pragma auto_inline on
-
-#pragma auto_inline reset
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 675–776 */
-/* addr: 0x001e92a0  size: 1008 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 675
- *   +0x0034 -> line 691
- *   +0x0040 -> line 693
- *   +0x00b0 -> line 694
- *   +0x0150 -> line 698
- *   +0x0158 -> line 699
- *   +0x01b8 -> line 700
- *   +0x01c0 -> line 707
- *   +0x01cc -> line 705
- *   +0x01d0 -> line 706
- *   +0x01d8 -> line 707
- *   +0x0220 -> line 711
- *   +0x0230 -> line 714
- *   +0x0234 -> line 713
- *   +0x0238 -> line 714
- *   +0x024c -> line 715
- *   +0x0250 -> line 714
- *   +0x0254 -> line 715
- *   +0x0258 -> line 714
- *   +0x0270 -> line 715
- *   +0x027c -> line 717
- *   +0x0280 -> line 719
- *   +0x0284 -> line 721
- *   +0x0288 -> line 720
- *   +0x0290 -> line 724
- *   +0x0298 -> line 726
- *   +0x02a4 -> line 728
- *   +0x02bc -> line 732
- *   +0x02c4 -> line 734
- *   +0x02f0 -> line 736
- *   +0x02f4 -> line 737
- *   +0x0300 -> line 740
- *   +0x030c -> line 743
- *   +0x0310 -> line 744
- *   +0x0314 -> line 746
- *   +0x0318 -> line 748
- *   +0x031c -> line 751
- *   +0x0324 -> line 753
- *   +0x0338 -> line 754
- *   +0x0344 -> line 757
- *   +0x0348 -> line 758
- *   +0x0358 -> line 760
- *   +0x0360 -> line 762
- *   +0x0388 -> line 765
- *   +0x0394 -> line 766
- *   +0x0398 -> line 768
- *   +0x03a4 -> line 770
- *   +0x03ac -> line 773
- *   +0x03b0 -> line 775
- *   +0x03bc -> line 776
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-float GLI_vGetGlobalAlpha(void);
-void GLI_vEndWorldSprites(void);
-/* Called with the viewport and the wall; the recovered definition takes none. */
-extern void AGO2_vDisplayWall(GLD_tdstViewportAttributes_* p_stViewport, AGO2_WallExplosion_* p);
-
-void AGO2_vDestroyAllParts(void);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 634–656 */
-/* addr: 0x001e9690  size: 160 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 634
- *   +0x0010 -> line 639
- *   +0x0018 -> line 641
- *   +0x001c -> line 642
- *   +0x0024 -> line 644
- *   +0x002c -> line 647
- *   +0x0040 -> line 650
- *   +0x0058 -> line 653
- *   +0x0074 -> line 654
- *   +0x0078 -> line 655
- *   +0x0088 -> line 656
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 590–622 */
-/* addr: 0x001e9730  size: 196 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 590
- *   +0x0014 -> line 597
- *   +0x0018 -> line 590
- *   +0x001c -> line 597
- *   +0x0020 -> line 590
- *   +0x0024 -> line 592
- *   +0x0028 -> line 595
- *   +0x002c -> line 591
- *   +0x0030 -> line 599
- *   +0x003c -> line 601
- *   +0x004c -> line 603
- *   +0x0058 -> line 605
- *   +0x0060 -> line 608
- *   +0x0068 -> line 611
- *   +0x0070 -> line 614
- *   +0x007c -> line 615
- *   +0x0080 -> line 616
- *   +0x0084 -> line 617
- *   +0x0088 -> line 619
- *   +0x008c -> line 620
- *   +0x0098 -> line 621
- *   +0x00a4 -> line 622
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 523–578 */
-/* addr: 0x001e9800  size: 700 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 523
- *   +0x0004 -> line 527
- *   +0x0008 -> line 523
- *   +0x0050 -> line 527
- *   +0x008c -> line 530
- *   +0x00d8 -> line 534
- *   +0x00e0 -> line 537
- *   +0x00f0 -> line 539
- *   +0x00f4 -> line 537
- *   +0x00f8 -> line 539
- *   +0x00fc -> line 537
- *   +0x0104 -> line 539
- *   +0x010c -> line 541
- *   +0x0110 -> line 542
- *   +0x015c -> line 552
- *   +0x0160 -> line 565
- *   +0x0164 -> line 552
- *   +0x0168 -> line 565
- *   +0x016c -> line 553
- *   +0x0170 -> line 565
- *   +0x0174 -> line 553
- *   +0x0178 -> line 565
- *   +0x017c -> line 543
- *   +0x0180 -> line 553
- *   +0x0184 -> line 552
- *   +0x0188 -> line 556
- *   +0x018c -> line 558
- *   +0x0190 -> line 565
- *   +0x01a8 -> line 543
- *   +0x01ac -> line 565
- *   +0x01b0 -> line 544
- *   +0x01b4 -> line 546
- *   +0x01d4 -> line 547
- *   +0x01f4 -> line 548
- *   +0x01f8 -> line 549
- *   +0x0200 -> line 550
- *   +0x0208 -> line 551
- *   +0x0210 -> line 552
- *   +0x0218 -> line 553
- *   +0x0220 -> line 554
- *   +0x0228 -> line 556
- *   +0x022c -> line 557
- *   +0x0230 -> line 558
- *   +0x0234 -> line 560
- *   +0x0238 -> line 561
- *   +0x023c -> line 565
- *   +0x026c -> line 567
- *   +0x0278 -> line 577
- *   +0x027c -> line 578
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 416–489 */
-/* addr: 0x001e9ac0  size: 1668 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 416
- *   +0x0004 -> line 419
- *   +0x0008 -> line 416
- *   +0x000c -> line 419
- *   +0x0010 -> line 416
- *   +0x0014 -> line 419
- *   +0x0018 -> line 416
- *   +0x001c -> line 419
- *   +0x0028 -> line 424
- *   +0x0074 -> line 441
- *   +0x0078 -> line 443
- *   +0x007c -> line 441
- *   +0x0080 -> line 445
- *   +0x0084 -> line 443
- *   +0x0090 -> line 445
- *   +0x0094 -> line 443
- *   +0x0098 -> line 445
- *   +0x009c -> line 443
- *   +0x00a8 -> line 445
- *   +0x00ac -> line 443
- *   +0x00b0 -> line 449
- *   +0x00b4 -> line 443
- *   +0x00c0 -> line 449
- *   +0x00c4 -> line 443
- *   +0x00c8 -> line 449
- *   +0x00cc -> line 443
- *   +0x00d8 -> line 449
- *   +0x00dc -> line 443
- *   +0x00e0 -> line 461
- *   +0x00e4 -> line 443
- *   +0x00f0 -> line 461
- *   +0x00f4 -> line 441
- *   +0x00f8 -> line 445
- *   +0x00fc -> line 441
- *   +0x0100 -> line 475
- *   +0x0104 -> line 441
- *   +0x0108 -> line 475
- *   +0x010c -> line 441
- *   +0x0110 -> line 445
- *   +0x0114 -> line 441
- *   +0x0118 -> line 445
- *   +0x011c -> line 441
- *   +0x0120 -> line 445
- *   +0x0134 -> line 441
- *   +0x0138 -> line 447
- *   +0x013c -> line 441
- *   +0x0140 -> line 447
- *   +0x0148 -> line 449
- *   +0x014c -> line 447
- *   +0x0150 -> line 449
- *   +0x0154 -> line 447
- *   +0x0160 -> line 449
- *   +0x0164 -> line 447
- *   +0x0168 -> line 449
- *   +0x016c -> line 447
- *   +0x0178 -> line 461
- *   +0x017c -> line 447
- *   +0x0180 -> line 461
- *   +0x0184 -> line 441
- *   +0x0188 -> line 451
- *   +0x018c -> line 441
- *   +0x0190 -> line 451
- *   +0x0194 -> line 441
- *   +0x0198 -> line 475
- *   +0x019c -> line 441
- *   +0x01a0 -> line 475
- *   +0x01a4 -> line 443
- *   +0x01b4 -> line 451
- *   +0x01bc -> line 453
- *   +0x01dc -> line 455
- *   +0x020c -> line 457
- *   +0x023c -> line 459
- *   +0x027c -> line 461
- *   +0x028c -> line 445
- *   +0x0290 -> line 463
- *   +0x0294 -> line 445
- *   +0x0298 -> line 463
- *   +0x029c -> line 445
- *   +0x02a4 -> line 463
- *   +0x02ac -> line 479
- *   +0x02b0 -> line 463
- *   +0x02b4 -> line 479
- *   +0x02b8 -> line 463
- *   +0x02bc -> line 465
- *   +0x02cc -> line 467
- *   +0x02dc -> line 469
- *   +0x030c -> line 471
- *   +0x033c -> line 473
- *   +0x036c -> line 475
- *   +0x037c -> line 445
- *   +0x0380 -> line 477
- *   +0x0384 -> line 445
- *   +0x0388 -> line 477
- *   +0x038c -> line 445
- *   +0x0394 -> line 477
- *   +0x039c -> line 479
- *   +0x03ac -> line 445
- *   +0x03bc -> line 479
- *   +0x03c4 -> line 447
- *   +0x03e4 -> line 449
- *   +0x0404 -> line 451
- *   +0x040c -> line 449
- *   +0x0414 -> line 451
- *   +0x041c -> line 449
- *   +0x042c -> line 451
- *   +0x044c -> line 453
- *   +0x045c -> line 459
- *   +0x0464 -> line 453
- *   +0x047c -> line 455
- *   +0x049c -> line 457
- *   +0x04bc -> line 459
- *   +0x04c4 -> line 479
- *   +0x04cc -> line 459
- *   +0x04d4 -> line 479
- *   +0x04dc -> line 461
- *   +0x050c -> line 467
- *   +0x0514 -> line 463
- *   +0x0544 -> line 465
- *   +0x0564 -> line 467
- *   +0x056c -> line 465
- *   +0x057c -> line 467
- *   +0x059c -> line 469
- *   +0x05bc -> line 471
- *   +0x05dc -> line 473
- *   +0x05fc -> line 475
- *   +0x0614 -> line 477
- *   +0x061c -> line 475
- *   +0x0634 -> line 477
- *   +0x065c -> line 479
- *   +0x066c -> line 489
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void AGO2_MEM_Init(void);
-void GLI_v_StartDrawingRain(GLD_tdstViewportAttributes_* p_stViewport);
-void GLI_v_StopDrawingRain(GLD_tdstViewportAttributes_* p_stViewport);
-
-void AGO2_vFirstInitAndRegisterAGO2Types(void)
-{
-    int i;
-    float xAngle;
-
-    memset(g_pAGO2Types, 0, sizeof(g_pAGO2Types));
-    g_ulNumberOfAgos2 = 0;
-    AGO2_MEM_Init();
-    xAngle = 0.0f;
-    for (i = 0; i < 512; i++)
-    {
-        AGO2_g_pfCosTable[i] = PS2_dl_cosf(xAngle);
-        xAngle += 0.012271847f;
-    }
-
-    g_pAGO2Types[0].pStartDisplayFunction = NULL;
-    g_pAGO2Types[0].pDisplayFunction = NULL;
-    g_pAGO2Types[0].pEndDisplayFunction = NULL;
-    g_pAGO2Types[0].pProcessFunction = NULL;
-    g_pAGO2Types[0].pTransparencyFunction = NULL;
-    g_pAGO2Types[0].pSizingFunction = NULL;
-    g_pAGO2Types[0].pCreationFunction = NULL;
-
-    g_pAGO2Types[1].pStartDisplayFunction = NULL;
-    g_pAGO2Types[1].pDisplayFunction = AGO2_DisplayOrdinarySprite;
-    g_pAGO2Types[1].pEndDisplayFunction = NULL;
-    g_pAGO2Types[1].pProcessFunction = AGO2_ProcessSimpleParticleWithSpeedAndGravity;
-    g_pAGO2Types[1].pTransparencyFunction = AGO2_FadeNormal;
-    g_pAGO2Types[1].pSizingFunction = AGO2_ShrinkNormal;
-    g_pAGO2Types[1].pCreationFunction = (unsigned char (*)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int))AGO2_CreateOrdinaryParticle;
-
-    g_pAGO2Types[2].pStartDisplayFunction = GLI_v_StartDrawingRain;
-    g_pAGO2Types[2].pDisplayFunction = AGO2_DisplayRainParticleSpriteGroup;
-    g_pAGO2Types[2].pEndDisplayFunction = GLI_v_StopDrawingRain;
-    g_pAGO2Types[2].pProcessFunction = AGO2_ProcessRainParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit;
-    g_pAGO2Types[2].pTransparencyFunction = NULL;
-    g_pAGO2Types[2].pSizingFunction = NULL;
-    g_pAGO2Types[2].pCreationFunction = AGO2_CreateSerialCameraParticleRain;
-
-    g_pAGO2Types[3].pStartDisplayFunction = NULL;
-    g_pAGO2Types[3].pDisplayFunction = AGO2_DisplayLightning;
-    g_pAGO2Types[3].pEndDisplayFunction = NULL;
-    g_pAGO2Types[3].pProcessFunction = (void (*)(AGO2_Part_*))AGO2_ProcessLightning;
-    g_pAGO2Types[3].pTransparencyFunction = NULL;
-    g_pAGO2Types[3].pSizingFunction = NULL;
-    g_pAGO2Types[3].pCreationFunction = (unsigned char (*)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int))AGO2_CreateLightning;
-
-    g_pAGO2Types[4].pStartDisplayFunction = GLI_v_StartDrawingRain;
-    g_pAGO2Types[4].pDisplayFunction = AGO2_DisplayFlow;
-    g_pAGO2Types[4].pEndDisplayFunction = GLI_v_StopDrawingRain;
-    g_pAGO2Types[4].pProcessFunction = AGO2_ProcessFlow;
-    g_pAGO2Types[4].pTransparencyFunction = AGO2_FadeFlow;
-    g_pAGO2Types[4].pSizingFunction = NULL;
-    g_pAGO2Types[4].pCreationFunction = AGO2_CreateFlow;
-
-    g_pAGO2Types[5].pStartDisplayFunction = GLI_v_StartDrawingRain;
-    g_pAGO2Types[5].pDisplayFunction = AGO2_DisplayFlowMotionBlur;
-    g_pAGO2Types[5].pEndDisplayFunction = GLI_v_StopDrawingRain;
-    g_pAGO2Types[5].pProcessFunction = AGO2_ProcessFlow;
-    g_pAGO2Types[5].pTransparencyFunction = AGO2_FadeFlow;
-    g_pAGO2Types[5].pSizingFunction = NULL;
-    g_pAGO2Types[5].pCreationFunction = AGO2_CreateFlow;
-
-    g_pAGO2Types[6].pStartDisplayFunction = GLI_v_StartDrawingRain;
-    g_pAGO2Types[6].pDisplayFunction = AGO2_DisplayFlow;
-    g_pAGO2Types[6].pEndDisplayFunction = GLI_v_StopDrawingRain;
-    g_pAGO2Types[6].pProcessFunction = AGO2_ProcessSnowParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit;
-    g_pAGO2Types[6].pTransparencyFunction = NULL;
-    g_pAGO2Types[6].pSizingFunction = NULL;
-    g_pAGO2Types[6].pCreationFunction = AGO2_CreateSerialCameraParticleSnow;
-
-    g_pAGO2Types[7].pStartDisplayFunction = GLI_v_StartDrawingRain;
-    g_pAGO2Types[7].pDisplayFunction = AGO2_DisplayLeaves;
-    g_pAGO2Types[7].pEndDisplayFunction = GLI_v_StopDrawingRain;
-    g_pAGO2Types[7].pProcessFunction = AGO2_ProcessLeavesParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit;
-    g_pAGO2Types[7].pTransparencyFunction = NULL;
-    g_pAGO2Types[7].pSizingFunction = NULL;
-    g_pAGO2Types[7].pCreationFunction = (unsigned char (*)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int))AGO2_CreateSerialCameraParticleLeaves;
-
-    g_pAGO2Types[8].pStartDisplayFunction = NULL;
-    g_pAGO2Types[8].pDisplayFunction = AGO2_DisplayBees;
-    g_pAGO2Types[8].pEndDisplayFunction = NULL;
-    g_pAGO2Types[8].pProcessFunction = AGO2_ProcessBees;
-    g_pAGO2Types[8].pTransparencyFunction = NULL;
-    g_pAGO2Types[8].pSizingFunction = NULL;
-    g_pAGO2Types[8].pCreationFunction = AGO2_CreateBees;
-
-    g_pAGO2Types[9].pStartDisplayFunction = GLI_v_StartDrawingRain;
-    g_pAGO2Types[9].pDisplayFunction = AGO2_DisplayFlow;
-    g_pAGO2Types[9].pEndDisplayFunction = GLI_v_StopDrawingRain;
-    g_pAGO2Types[9].pProcessFunction = AGO2_ProcessFire;
-    g_pAGO2Types[9].pTransparencyFunction = AGO2_FadeFire;
-    g_pAGO2Types[9].pSizingFunction = AGO2_ShrinkFire;
-    g_pAGO2Types[9].pCreationFunction = AGO2_CreateFire;
-
-    g_pAGO2Types[10].pStartDisplayFunction = NULL;
-    g_pAGO2Types[10].pDisplayFunction = AGO2_DisplayFireWall;
-    g_pAGO2Types[10].pEndDisplayFunction = NULL;
-    g_pAGO2Types[10].pProcessFunction = (void (*)(AGO2_Part_*))AGO2_ProcessEmpty;
-    g_pAGO2Types[10].pTransparencyFunction = NULL;
-    g_pAGO2Types[10].pSizingFunction = NULL;
-    g_pAGO2Types[10].pCreationFunction = (unsigned char (*)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int))AGO2_CreateFireWall;
-
-    g_pAGO2Types[11].pStartDisplayFunction = NULL;
-    g_pAGO2Types[11].pDisplayFunction = AGO2_DisplayFFRing;
-    g_pAGO2Types[11].pEndDisplayFunction = NULL;
-    g_pAGO2Types[11].pProcessFunction = (void (*)(AGO2_Part_*))AGO2_ProcessEmpty;
-    g_pAGO2Types[11].pTransparencyFunction = NULL;
-    g_pAGO2Types[11].pSizingFunction = NULL;
-    g_pAGO2Types[11].pCreationFunction = (unsigned char (*)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int))AGO2_CreateFFRing;
-
-    g_pAGO2Types[12].pStartDisplayFunction = NULL;
-    g_pAGO2Types[12].pDisplayFunction = AGO2_DisplayFFWhirl;
-    g_pAGO2Types[12].pEndDisplayFunction = NULL;
-    g_pAGO2Types[12].pProcessFunction = (void (*)(AGO2_Part_*))AGO2_ProcessEmpty;
-    g_pAGO2Types[12].pTransparencyFunction = NULL;
-    g_pAGO2Types[12].pSizingFunction = NULL;
-    g_pAGO2Types[12].pCreationFunction = (unsigned char (*)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int))AGO2_CreateFFRing;
-
-    g_pAGO2Types[13].pStartDisplayFunction = NULL;
-    g_pAGO2Types[13].pDisplayFunction = AGO2_DisplayFireWall2;
-    g_pAGO2Types[13].pEndDisplayFunction = NULL;
-    g_pAGO2Types[13].pProcessFunction = (void (*)(AGO2_Part_*))AGO2_ProcessEmpty;
-    g_pAGO2Types[13].pTransparencyFunction = NULL;
-    g_pAGO2Types[13].pSizingFunction = NULL;
-    g_pAGO2Types[13].pCreationFunction = (unsigned char (*)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int))AGO2_CreateFireWall;
-
-    g_pAGO2Types[14].pStartDisplayFunction = NULL;
-    g_pAGO2Types[14].pDisplayFunction = AGO2_DisplayBalloon;
-    g_pAGO2Types[14].pEndDisplayFunction = NULL;
-    g_pAGO2Types[14].pProcessFunction = AGO2_ProcessBalloon;
-    g_pAGO2Types[14].pTransparencyFunction = NULL;
-    g_pAGO2Types[14].pSizingFunction = NULL;
-    g_pAGO2Types[14].pCreationFunction = (unsigned char (*)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int))AGO2_CreateBalloon;
-
-    g_pAGO2Types[15].pStartDisplayFunction = NULL;
-    g_pAGO2Types[15].pDisplayFunction = AGO2_DisplayForceField;
-    g_pAGO2Types[15].pEndDisplayFunction = NULL;
-    g_pAGO2Types[15].pProcessFunction = AGO2_ProcessForceField;
-    g_pAGO2Types[15].pTransparencyFunction = NULL;
-    g_pAGO2Types[15].pSizingFunction = NULL;
-    g_pAGO2Types[15].pCreationFunction = AGO2_CreateForceField;
-
-    g_pAGO2Types[16].pStartDisplayFunction = NULL;
-    g_pAGO2Types[16].pDisplayFunction = AGO2_DisplayIce;
-    g_pAGO2Types[16].pEndDisplayFunction = NULL;
-    g_pAGO2Types[16].pProcessFunction = AGO2_ProcessIce;
-    g_pAGO2Types[16].pTransparencyFunction = NULL;
-    g_pAGO2Types[16].pSizingFunction = NULL;
-    g_pAGO2Types[16].pCreationFunction = (unsigned char (*)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int))AGO2_CreateIce;
-
-    g_pAGO2Types[17].pStartDisplayFunction = NULL;
-    g_pAGO2Types[17].pDisplayFunction = AGO2_DisplayCylinder;
-    g_pAGO2Types[17].pEndDisplayFunction = NULL;
-    g_pAGO2Types[17].pProcessFunction = AGO2_ProcessDieAtOnce;
-    g_pAGO2Types[17].pTransparencyFunction = NULL;
-    g_pAGO2Types[17].pSizingFunction = NULL;
-    g_pAGO2Types[17].pCreationFunction = (unsigned char (*)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int))AGO2_CreateCylinder;
-
-    g_pAGO2Types[18].pStartDisplayFunction = NULL;
-    g_pAGO2Types[18].pDisplayFunction = AGO2_DisplayAuraStorm;
-    g_pAGO2Types[18].pEndDisplayFunction = NULL;
-    g_pAGO2Types[18].pProcessFunction = AGO2_ProcessDieAtOnce;
-    g_pAGO2Types[18].pTransparencyFunction = NULL;
-    g_pAGO2Types[18].pSizingFunction = NULL;
-    g_pAGO2Types[18].pCreationFunction = (unsigned char (*)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int))AGO2_CreateCylinder;
-
-    g_pAGO2Types[19].pStartDisplayFunction = GLI_v_StartDrawingRain;
-    g_pAGO2Types[19].pDisplayFunction = AGO2_DisplayRainParticleSpriteGroup;
-    g_pAGO2Types[19].pEndDisplayFunction = GLI_v_StopDrawingRain;
-    g_pAGO2Types[19].pProcessFunction = AGO2_ProcessRainNearCameraParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit;
-    g_pAGO2Types[19].pTransparencyFunction = NULL;
-    g_pAGO2Types[19].pSizingFunction = NULL;
-    g_pAGO2Types[19].pCreationFunction = AGO2_CreateSerialCameraParticleRain;
-}
-
-AGO2_Part_* AGO2_vCreatePart(unsigned int ulParticleType, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber)
-{
-    float* p2;
-    float* p1;
-    AGO2_Part_* p;
-
-    if (g_ulNumberOfAgos2 == 300 || ulParticleType >= 50)
-        return NULL;
-
-    if (!g_pAGO2Types[ulParticleType].pDisplayFunction || !g_pAGO2Types[ulParticleType].pProcessFunction || !g_pAGO2Types[ulParticleType].pCreationFunction)
-        return NULL;
-
-    p = &g_pAGO2Parts[g_ulNumberOfAgos2];
-
-    memset(p, 0, sizeof(AGO2_Part_));
-    p->ulType = 0;
-    p->AnimTime = (unsigned int)g_ffFrameTime;
-    p->fAnimTimeScale = 1.0f;
-    p->ulBaseID = ulParticleType;
-    p1 = (float*)&p->Position; p2 = (float*)Position; p1[0] = p2[0]; p1[1] = p2[1]; p1[2] = p2[2]; p1[3] = p2[3];
-    p1 = (float*)&p->Direction; p2 = (float*)Direction; p1[0] = p2[0]; p1[1] = p2[1]; p1[2] = p2[2]; p1[3] = p2[3];
-    p->pMaterial1 = (int)pMaterial1;
-    p->pMaterial2 = (int)pMaterial2;
-    p->pDisplayFnct = g_pAGO2Types[ulParticleType].pDisplayFunction;
-    p->pProcessFnct = g_pAGO2Types[ulParticleType].pProcessFunction;
-    p->pTransparencyFunction = g_pAGO2Types[ulParticleType].pTransparencyFunction;
-    p->pSizingFunction = g_pAGO2Types[ulParticleType].pSizingFunction;
-    p->pLauchingCharacter = pLaunchingCharacter;
-    p->xTransparencySpeed = 100.0f;
-    p->xShrinkingSpeed = 1.0f;
-    p->xTransparency = 255.0f;
-    p->xLimit = 0.0f;
-    p->Channel = 0;
-
-    if (g_pAGO2Types[ulParticleType].pCreationFunction(ulParticleType, p, Position, Direction, Vector1, Vector2, Vector3, Vector4, pMaterial1, pMaterial2, xParam1, xParam2, xParam3, xParam4, pLaunchingCharacter, ParticleNumber))
-        g_ulNumberOfAgos2++;
-
-    return p;
-}
-
-void AGO2_vDestroyAllParts(void)
-{
-    unsigned int Source;
-    unsigned int NumToSkip;
-    AGO2_Part_* psrc;
-    AGO2_Part_* pdst;
-    unsigned int Limit;
-
-    Source = 0;
-    NumToSkip = 0;
-    Limit = g_ulNumberOfAgos2;
-    pdst = g_pAGO2Parts;
-    psrc = pdst;
-    while (Source < Limit)
-    {
-        if (psrc->ulType & 1)
-        {
-            if (psrc->hGroup)
-            {
-                AGO2_MEM_FreeFromHandle(psrc->hGroup);
-            }
-            NumToSkip++;
-        }
-        else
-        {
-            if (psrc != pdst)
-            {
-                memcpy(pdst, psrc, sizeof(AGO2_Part_));
-            }
-            pdst++;
-        }
-        psrc++;
-        Source++;
-    }
-    g_ulNumberOfAgos2 -= NumToSkip;
-}
-
-void AGO2_vProcessAllParts(void)
-{
-    unsigned int i;
-    AGO2_Part_* p;
-
-    AGO2_vDestroyAllParts();
-
-    for (i = 0; i < g_ulNumberOfAgos2; i++)
-    {
-        p = &g_pAGO2Parts[i];
-
-        if (p->pProcessFnct)
-            p->pProcessFnct(p);
-
-        if (p->pTransparencyFunction)
-            p->pTransparencyFunction(p);
-
-        if (p->pSizingFunction)
-            p->pSizingFunction(p);
-    }
-}
-
-void AGO2_vDisplayAllParts(GLD_tdstViewportAttributes_* _p_stViewport)
-{
-    unsigned int i;
-    unsigned int j;
-    AGO2_Part_* p;
-    float xAlphaTemp;
-    int Found;
-    unsigned int BaseID;
-    void* pCurrentMaterial;
-    unsigned int NextMaterialIndex;
-    unsigned int DisplayPending;
-    unsigned int SkipThisOne;
-
-    g_AGO2_p_stViewport = (int)_p_stViewport;
-    xAlphaTemp = GLI_vGetGlobalAlpha();
-    for (i = 0; i < 50; i++)
-        g_pAGO2TypesDisplayed[i] = 0;
-    for (i = 0; i < g_ulNumberOfAgos2; i++)
-        g_pAGO2Parts[i].InternalHasBeenDisplayed = 0;
-    GLI_vEndWorldSprites();
-    for (i = 0; i < AGO2_g_NbWalls; i++)
-    {
-        AGO2_WallExplosion_* pWall = (AGO2_WallExplosion_*)AGO2_MEM_GetPointerFromHandle(AGO2_g_Walls[i]);
-        if (!pWall)
-            printf("AGO2MEM DECONNE UN MAX !!!\n");
-        else
-            AGO2_vDisplayWall((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, pWall);
-    }
-    AGO2_vTestExploseWall();
-    do
-    {
-        Found = 0;
-        for (i = 0; i < g_ulNumberOfAgos2 && g_pAGO2TypesDisplayed[g_pAGO2Parts[i].ulBaseID] == 1; i++);
-        if (i < g_ulNumberOfAgos2)
-        {
-            Found = 1;
-            BaseID = g_pAGO2Parts[i].ulBaseID;
-            g_pAGO2TypesDisplayed[BaseID] = Found;
-            do
-            {
-                j = i;
-                NextMaterialIndex = g_ulNumberOfAgos2;
-                pCurrentMaterial = NULL;
-                DisplayPending = 0;
-                for (; j < g_ulNumberOfAgos2; j++)
-                {
-                    p = &g_pAGO2Parts[j];
-                    if (p->ulBaseID == BaseID && !p->InternalHasBeenDisplayed)
-                    {
-                        SkipThisOne = 0;
-                        if (!DisplayPending)
-                        {
-                            if (g_pAGO2Types[BaseID].pStartDisplayFunction)
-                                g_pAGO2Types[BaseID].pStartDisplayFunction(_p_stViewport);
-                            pCurrentMaterial = (void*)p->pMaterial1;
-                            DisplayPending = 1;
-                        }
-                        else if ((void*)p->pMaterial1 != pCurrentMaterial)
-                        {
-                            NextMaterialIndex = j;
-                            SkipThisOne = 1;
-                        }
-                        g_AGO_AnimTimeScale = p->fAnimTimeScale;
-                        if (!SkipThisOne)
-                        {
-                            if (p->pDisplayFnct)
-                                p->pDisplayFnct(p);
-                            p->InternalHasBeenDisplayed = 1;
-                        }
-                    }
-                }
-                if (DisplayPending && g_pAGO2Types[BaseID].pEndDisplayFunction)
-                    g_pAGO2Types[BaseID].pEndDisplayFunction(_p_stViewport);
-            } while (NextMaterialIndex != g_ulNumberOfAgos2);
-        }
-    } while (Found);
-    GLI_vEndWorldSprites();
-    g_AGO_AnimTimeScale = 1.0f;
-    GLI_vSetGlobalAlpha(xAlphaTemp);
-}
-
-#pragma auto_inline on
-AGO2_Part_* AGO2_bIsTypeAlreadyExists(unsigned int PartType)
-{
-    unsigned int i;
-    i = 0;
-    for (; i < g_ulNumberOfAgos2 && g_pAGO2Parts[i].ulBaseID != PartType; i++);
-    if (i == g_ulNumberOfAgos2) return NULL;
-    return &g_pAGO2Parts[i];
-}
-#pragma auto_inline reset
-
-void AGO2_vClearParticlesOfThatType(unsigned int PartType)
-{
-    unsigned int i;
-    unsigned int Offset;
-    AGO2_Part_* pParticle;
-    for (i = 0, Offset = 0; i < g_ulNumberOfAgos2; Offset += sizeof(AGO2_Part_), i++) {
-        pParticle = (AGO2_Part_*)((char*)g_pAGO2Parts + Offset);
-        if (PartType == pParticle->ulBaseID) {
-            pParticle->ulType |= 1;
-        }
-    }
-}
-
-void AGO2_vClearParticlesOfThatTypeWithChannel(unsigned int PartType, unsigned int Channel)
-{
-    unsigned int i;
-    for (i = 0; i < g_ulNumberOfAgos2; i++)
-    {
-
-        if ((PartType == g_pAGO2Parts[i].ulBaseID) && (Channel == g_pAGO2Parts[i].Channel))
-
-            g_pAGO2Parts[i].ulType |= 1;
-
-    }
-}
-
-void AGO2_DisplayOrdinarySprite(AGO2_Part_* p)
-{
-    GLI_vSetGlobalAlpha(p->xTransparency);
-    if (GLI_vDrawWorldSpriteOpt((MTH3D_tdstVector_*)&p->Position, (GLI_tdstMaterial_*)p->pMaterial1, p->xSize[0], p->xSize[1], (GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, p->AnimTime))
-
-        p->ulType |= 1;
-}
-
-void AGO2_ProcessSimpleParticleWithSpeedAndGravity(AGO2_Part_* p)
-{
-    p->Direction.xZ -= 9.81f * g_fTimeDifference;
-    p->Position.xX += p->Direction.xX * g_fTimeDifference;
-    p->Position.xY += p->Direction.xY * g_fTimeDifference;
-    p->Position.xZ += p->Direction.xZ * g_fTimeDifference;
-}
-
-unsigned char AGO2_CreateOrdinaryParticle(void)
-{
-    return 1;
-}
-
-void AGO2_FadeNormal(AGO2_Part_* p)
-{
-    p->xTransparency -= g_fTimeDifference * p->xTransparencySpeed;
-    if (p->xTransparency < 0.0f)
-    {
-        p->xTransparency = 0.0f;
-        p->ulType |= 1;
-    }
-    else if (p->xTransparency >= 255.0f)
-
-        p->xTransparency = 255.0f;
-}
-
-void AGO2_ShrinkNormal(AGO2_Part_* p)
-{
-    p->xSize[0] -= g_fTimeDifference * p->xShrinkingSpeed;
-    p->xSize[1] -= g_fTimeDifference * p->xShrinkingSpeed;
-    if (p->xSize[0] <= 0.0f || p->xSize[1] <= 0.0f)
-
-        p->ulType |= 1;
-}
-
-unsigned char AGO2_CreateFlow(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber)
-{
-    AGO2_FlowParticle_* pParticleArrayOrg;
-    unsigned int i;
-    AGO2_FlowParticle_* pParticleArray;
-
-    p->GroupNumber = ParticleNumber;
-    p->hGroup = AGO2_MEM_Alloc(ParticleNumber * sizeof(AGO2_FlowParticle_));
-    if (p->hGroup == 0)
-    {
-        p->GroupNumber = 0;
-        p->ulType |= 1;
-        return 0;
-    }
-    pParticleArrayOrg = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-    if (pParticleArrayOrg == NULL)
-    {
-        printf("AGO2MEM DECONNE UN MAX !!!\n");
-        return 0;
-    }
-    p->xTransparencySpeed = 100.0f;
-    p->xSize[0] = 0.1f;
-    p->xSize[1] = 0.1f;
-    p->xShrinkingSpeed = 0.1f;
-    pParticleArray = pParticleArrayOrg;
-    for (i = 0; i < ParticleNumber; i++)
-    {
-        rand();
-        rand();
-        rand();
-        pParticleArray->Position.xX = Position->xX;
-        pParticleArray->Position.xY = Position->xY;
-        pParticleArray->Position.xZ = Position->xZ;
-        pParticleArray->xTransparency = 255.0f;
-        pParticleArray->Direction.xX = Direction->xX + (-5.0f + 10.0f * (float)rand() / 2147483648.0f);
-        pParticleArray->Direction.xY = Direction->xY + (-5.0f + 10.0f * (float)rand() / 2147483648.0f);
-        pParticleArray->Direction.xZ = Direction->xZ + (-6.5f + 32.0f * (float)rand() / 2147483648.0f);
-        pParticleArray->Flags = 0;
-        pParticleArray++;
-    }
-    return 1;
-}
-
-void AGO2_ProcessFlow(AGO2_Part_* p)
-{
-{
-    AGO2_FlowParticle_* param0;
-    unsigned int i;
-    float LocalG;
-    float TimeDiff;
-
-    if (!p->hGroup)
-    {
-        p->GroupNumber = 0;
-        p->ulType |= 1;
-        return;
-    }
-    param0 = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-    if (!param0)
-    {
-        printf("AGO2MEM DECONNE UN MAX !!!\n");
-        return;
-    }
-    TimeDiff = g_fTimeDifference;
-    LocalG = 2.0f * (9.81f * TimeDiff);
-    for (i = 0; i < p->GroupNumber; i++)
-    {
-        if (!(param0->Flags & 1))
-        {
-            param0->Direction.xZ -= LocalG;
-            param0->PreviousPosition.xX = param0->Position.xX;
-            param0->PreviousPosition.xY = param0->Position.xY;
-            param0->PreviousPosition.xZ = param0->Position.xZ;
-            param0->PreviousPosition.xX -= param0->Direction.xX * TimeDiff;
-            param0->PreviousPosition.xY -= param0->Direction.xY * TimeDiff;
-            param0->PreviousPosition.xZ -= param0->Direction.xZ * TimeDiff;
-            param0->Position.xX += param0->Direction.xX * TimeDiff;
-            param0->Position.xY += param0->Direction.xY * TimeDiff;
-            param0->Position.xZ += param0->Direction.xZ * TimeDiff;
-        }
-        param0++;
-    }
-}
-}
-
-void AGO2_DisplayFlow(AGO2_Part_* p)
-{
-    AGO2_FlowParticle_* pParticleArray;
-
-    if (p->hGroup)
-    {
-        pParticleArray = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-        if (!pParticleArray)
-        {
-            printf("AGO2MEM DECONNE UN MAX !!!\n");
-            return;
-        }
-        GLI_vDisplaySerialFlow((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, pParticleArray, p->GroupNumber, (void*)p->pMaterial1, p->xSize[0], p->xSize[1]);
-    }
-}
-
-void AGO2_DisplayFlowMotionBlur(AGO2_Part_* p)
-{
-    AGO2_FlowParticle_* pParticleArray;
-
-    if (p->hGroup)
-    {
-        pParticleArray = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-        if (!pParticleArray)
-        {
-            printf("AGO2MEM DECONNE UN MAX !!!\n");
-            return;
-        }
-        GLI_vDisplaySerialFlowBlured((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, pParticleArray, p->GroupNumber, (void*)p->pMaterial1, p->xSize[0], p->xSize[1]);
-    }
-}
-
-void AGO2_FadeFlow(AGO2_Part_* p)
-{
-    AGO2_FlowParticle_* param0;
-    unsigned int i;
-    unsigned int OneIsAlive;
-    float TimeDiffTrsp;
-
-    if (!p->hGroup)
-    {
-        p->GroupNumber = 0;
-        p->ulType |= 1;
-        return;
-    }
-    param0 = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-    if (!param0)
-    {
-        printf("AGO2MEM DECONNE UN MAX !!!\n");
-        return;
-    }
-    OneIsAlive = 0;
-    TimeDiffTrsp = g_fTimeDifference * p->xTransparencySpeed;
-    for (i = 0; i < p->GroupNumber; i++)
-    {
-        if (!(param0->Flags & 1))
-        {
-            param0->xTransparency -= TimeDiffTrsp;
-            if (param0->xTransparency < 0.0f)
-            {
-                param0->xTransparency = 0.0f;
-                param0->Flags |= 1;
-            }
-            else
-            {
-                OneIsAlive = 1;
-            }
-        }
-        param0++;
-    }
-    if (!OneIsAlive)
-    {
-        p->ulType |= 1;
-    }
-}
-
-unsigned char AGO2_CreateLightning(unsigned int _unused, AGO2_Part_* p)
-{
-    p->xTransparencySpeed = 0.0f;
-    p->xSize[0] = 2.5f;
-    p->xSize[1] = 2.0f;
-    p->xShrinkingSpeed = 0.0f;
-    p->xTransparency = 255.0f;
-    return 1;
-}
-
-void AGO2_ProcessLightning(void)
-{
-}
-
-void AGO2_DisplayLightning(AGO2_Part_* p)
-{
-    AGO2_Part_* pPart;
-
-    pPart = p;
-    GLI_v_DisplayLightning((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport,
-                            (MTH3D_tdstVector_*)&pPart->Position,
-                            (MTH3D_tdstVector_*)&pPart->Direction,
-                            pPart->pMaterial1, pPart->xSize[0]);
-    pPart->ulType |= 1;
-}
-
-/* Same parameter list as AGO2_CreateFlow: retail reads ParticleNumber from
-   the 16th-argument stack slot. */
-unsigned char AGO2_CreateSerialCameraParticleRain(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber)
-{
-    unsigned int i;
-    float RandomValue;
-    float RandomValueX;
-    float RandomValueY;
-    AGO2_RainParticle_* pParticleArray;
-    AGO2_RainParticle_* pParticleArrayOrg;
-    float* p1;
-    float* p2;
-
-    p1 = (float*)&AGO_g_CameraCoordinatesForRain; p2 = (float*)&AGO_g_CameraDirectionForRain;
-    p1[0] = Position->xX; p1[1] = Position->xY; p1[2] = Position->xZ; p1[3] = Position->xW;
-    p2[0] = Direction->xX; p2[1] = Direction->xY; p2[2] = Direction->xZ; p2[3] = Direction->xW;
-
-    if (AGO2_bIsTypeAlreadyExists(ulParticleType))
-        return 0;
-
-    p->GroupNumber = ParticleNumber;
-    p->hGroup = AGO2_MEM_Alloc(ParticleNumber * sizeof(AGO2_RainParticle_));
-    if (p->hGroup == 0)
-    {
-        p->GroupNumber = 0;
-        p->ulType |= 1;
-        return 0;
-    }
-    pParticleArrayOrg = (AGO2_RainParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-    if (pParticleArrayOrg == NULL)
-    {
-        printf("AGO2MEM DECONNE UN MAX !!!\n");
-        return 0;
-    }
-    p->xLimit = AGO_g_CameraCoordinatesForRain.xZ - 6.0f;
-    p->xTransparencySpeed = 0.0f;
-    p->xSize[0] = 0.15f;
-    p->xSize[1] = 1.0f;
-    p->xShrinkingSpeed = 0.0f;
-    pParticleArray = pParticleArrayOrg;
-    for (i = 0; i < ParticleNumber; i++)
-    {
-        RandomValue = AGO2_M_xRand(10.0f, 50.0f);
-        RandomValueX = AGO2_M_xRand(-RandomValue, RandomValue);
-        RandomValueY = AGO2_M_xRand(-RandomValue, RandomValue);
-        pParticleArray->Position.xX = RandomValueX + (Position->xX + RandomValue * Direction->xX);
-        pParticleArray->Position.xY = RandomValueY + (Position->xY + RandomValue * Direction->xY);
-        pParticleArray->Position.xZ = 15.0f + (Position->xZ + RandomValue * Direction->xZ);
-        pParticleArray->xTransparency = 85.0f;
-        pParticleArray->Direction.xX = AGO2_M_xRand(10.5f, 20.5f);
-        pParticleArray->Direction.xY = AGO2_M_xRand(10.5f, 20.5f);
-        pParticleArray->Direction.xZ = AGO2_M_xRand(-60.0f, -30.0f);
-        pParticleArray->Flags = 0;
-        pParticleArray++;
-    }
-    return 1;
-}
-
-void AGO2_ProcessRainParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit(AGO2_Part_* p)
-{
-    AGO2_RainParticle_* pParticleArray;
-    unsigned int i;
-    float LocalG;
-    float TimeDiff;
-    AGO_V4D_ v1;
-    float xNorm;
-    float RandomValue;
-    float RandomValueX;
-    float RandomValueY;
-    float RandomValueZ;
-
-    if (!p->hGroup)
-    {
-        p->GroupNumber = 0;
-        p->ulType |= 1;
-        return;
-    }
-    pParticleArray = (AGO2_RainParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-    if (!pParticleArray)
-    {
-        printf("AGO2MEM DECONNE UN MAX !!!\n");
-        return;
-    }
-    TimeDiff = g_fTimeDifference;
-    if (TimeDiff > 0.033333335f)
-        TimeDiff = 0.033333335f;
-    LocalG = 9.81f * TimeDiff;
-    for (i = 0; i < p->GroupNumber; pParticleArray++, i++)
-    {
-        if (pParticleArray->Flags & 1)
-            continue;
-        pParticleArray->Direction.xZ -= LocalG;
-        pParticleArray->Position.xX += pParticleArray->Direction.xX * TimeDiff;
-        pParticleArray->Position.xY += pParticleArray->Direction.xY * TimeDiff;
-        pParticleArray->Position.xZ += pParticleArray->Direction.xZ * TimeDiff;
-        MTH3D_M_vSubVector((MTH3D_tdstVector_*)&v1, (MTH3D_tdstVector_*)&pParticleArray->Position, (MTH3D_tdstVector_*)&AGO_g_CameraCoordinatesForRain);
-        AGO2_vNormalizeVector((MTH3D_tdstVector_*)&v1);
-        xNorm = AGO2_xDotVector((MTH3D_tdstVector_*)&v1, (MTH3D_tdstVector_*)&AGO_g_CameraDirectionForRain);
-        if (pParticleArray->Position.xZ < p->xLimit || xNorm < 0.85f)
-        {
-            RandomValue = AGO2_M_xRand(10.0f, 100.0f);
-            RandomValueX = AGO2_M_xRand(-RandomValue, RandomValue);
-            RandomValueY = AGO2_M_xRand(-RandomValue, RandomValue);
-            RandomValueZ = AGO2_M_xRand(-RandomValue, RandomValue);
-            pParticleArray->Position.xX = RandomValueX + (AGO_g_CameraCoordinatesForRain.xX + RandomValue * AGO_g_CameraDirectionForRain.xX);
-            pParticleArray->Position.xY = RandomValueY + (AGO_g_CameraCoordinatesForRain.xY + RandomValue * AGO_g_CameraDirectionForRain.xY);
-            pParticleArray->Position.xZ = RandomValueZ + (AGO_g_CameraCoordinatesForRain.xZ + RandomValue * AGO_g_CameraDirectionForRain.xZ);
-            pParticleArray->xTransparency = 85.0f;
-            pParticleArray->Direction.xX = AGO2_M_xRand(0.5f, 30.5f);
-            pParticleArray->Direction.xY = AGO2_M_xRand(0.5f, 30.5f);
-            pParticleArray->Direction.xZ = AGO2_M_xRand(-60.0f, -30.0f);
-        }
-    }
-}
-
-void AGO2_ProcessRainNearCameraParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit(AGO2_Part_* p)
-{
-    float RandomValueZ;
-    float RandomValueY;
-    float RandomValueX;
-    float RandomValue;
-    float xNorm;
-    AGO_V4D_ v1;
-    float TimeDiff;
-    float LocalG;
-    unsigned int i;
-    AGO2_RainParticle_* pParticleArray;
-    /* TODO: decompile from asm/... */
-}
-
-void AGO2_DisplayRainParticleSpriteGroup(AGO2_Part_* p)
-{
-    AGO2_RainParticle_* pParticleArray;
-
-    if (p->hGroup)
-    {
-        pParticleArray = (AGO2_RainParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-        if (!pParticleArray)
-        {
-            printf("AGO2MEM DECONNE UN MAX !!!\n");
-            return;
-        }
-        if (p->GroupNumber)
-            GLI_vDisplaySerialParticleRain((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, pParticleArray, p->GroupNumber, (void*)p->pMaterial1, p->xSize[0], p->xSize[1]);
-    }
-}
-
-/* Same parameter list as AGO2_CreateFlow: retail reads ParticleNumber from
-   the 16th-argument stack slot. */
-unsigned char AGO2_CreateSerialCameraParticleSnow(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber)
-{
-    unsigned int i;
-    float RandomValue;
-    float RandomValueX;
-    float RandomValueY;
-    AGO2_RainParticle_* pParticleArray;
-    AGO2_RainParticle_* pParticleArrayOrg;
-    float* p1;
-    float* p2;
-
-    if (ParticleNumber > 200)
-        ParticleNumber = 200;
-
-    p1 = (float*)&AGO_g_CameraCoordinatesForRain; p2 = (float*)&AGO_g_CameraDirectionForRain;
-    p1[0] = Position->xX; p1[1] = Position->xY; p1[2] = Position->xZ; p1[3] = Position->xW;
-    p2[0] = Direction->xX; p2[1] = Direction->xY; p2[2] = Direction->xZ; p2[3] = Direction->xW;
-
-    if (AGO2_bIsTypeAlreadyExists(ulParticleType))
-        return 0;
-
-    p->GroupNumber = ParticleNumber;
-    p->hGroup = AGO2_MEM_Alloc(ParticleNumber * sizeof(AGO2_RainParticle_));
-    if (p->hGroup == 0)
-    {
-        p->GroupNumber = 0;
-        p->ulType |= 1;
-        return 0;
-    }
-    pParticleArrayOrg = (AGO2_RainParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-    if (pParticleArrayOrg == NULL)
-    {
-        printf("AGO2MEM DECONNE UN MAX !!!\n");
-        return 0;
-    }
-    pParticleArray = pParticleArrayOrg;
-    i = 0;
-    p->xLimit = AGO_g_CameraCoordinatesForRain.xZ - 20.0f;
-    p->xTransparencySpeed = 0.0f;
-    p->xSize[0] = 0.15f;
-    p->xSize[1] = 0.15f;
-    p->xShrinkingSpeed = 0.0f;
-    for (; i < ParticleNumber; i++)
-    {
-        RandomValue = AGO2_M_xRand(10.0f, 100.0f);
-        RandomValueX = AGO2_M_xRand(-RandomValue, RandomValue);
-        RandomValueY = AGO2_M_xRand(-RandomValue, RandomValue);
-        pParticleArray->Pads[0] = (unsigned int)AGO2_M_xRand(0.2f, 1.2f);
-        pParticleArray->Pads[1] = (unsigned int)AGO2_M_xRand(-10.0f, 10.0f);
-        pParticleArray->Position.xX = RandomValueX + (Position->xX + RandomValue * Direction->xX);
-        pParticleArray->Position.xY = RandomValueY + (Position->xY + RandomValue * Direction->xY);
-        pParticleArray->Position.xZ = 15.0f + (Position->xZ + RandomValue * Direction->xZ);
-        pParticleArray->xTransparency = 150.0f;
-        pParticleArray->Direction.xX = AGO2_M_xRand(-6.0f, 6.0f);
-        pParticleArray->Direction.xY = AGO2_M_xRand(-6.0f, 6.0f);
-        pParticleArray->Direction.xZ = AGO2_M_xRand(-15.0f, -2.0f);
-        pParticleArray->Flags = 0;
-        pParticleArray++;
-    }
-    return 1;
-}
-
-void AGO2_ProcessSnowParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit(AGO2_Part_* p)
-{
-    float RandomValueZ;
-    float RandomValueY;
-    float RandomValueX;
-    float RandomValue;
-    float xNorm;
-    AGO_V4D_ v1;
-    float TimeDiff;
-    float LocalG;
-    int i;
-    AGO2_RainParticle_* pParticleArray;
-    /* TODO: decompile from asm/... */
-}
-
-unsigned char AGO2_CreateSerialCameraParticleLeaves(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, unsigned int ParticleNumber)
-{
-    float xNorm;
-    float* p2;
-    float* p1;
-    MTH3D_tdstVector_ V2;
-    AGO2_LeavesParticle_* pParticleArrayOrg;
-    AGO2_LeavesParticle_* pParticleArray;
-    float RandomValueY;
-    float RandomValueX;
-    float RandomValue;
-    unsigned int i;
-    /* TODO: decompile from asm/... */
-}
-
-void AGO2_ProcessLeavesParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit(AGO2_Part_* p)
-{
-    float xNorm;
-    MTH3D_tdstVector_ V2;
-    float RandomValueZ;
-    float RandomValueY;
-    float RandomValueX;
-    float RandomValue;
-    float sin1;
-    float cos1;
-    MTH3D_tdstVector_ Norm;
-    float Dot2;
-    float Dot1;
-    AGO_V4D_ v1;
-    float TimeDiff;
-    int i;
-    AGO2_LeavesParticle_* pParticleArray;
-    /* TODO: decompile from asm/... */
-}
-
-void AGO2_DisplayLeaves(AGO2_Part_* p)
-{
-    AGO2_LeavesParticle_* pParticleArray;
-
-    if (p->hGroup)
-    {
-        pParticleArray = (AGO2_LeavesParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-        if (!pParticleArray)
-        {
-            printf("AGO2MEM DECONNE UN MAX !!!\n");
-            return;
-        }
-        GLI_vDisplaySerialLeaves((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, pParticleArray, p->GroupNumber, (void*)p->pMaterial1, p->xSize[0], p->xSize[1]);
-    }
-}
-
-/* Same parameter list as AGO2_CreateFlow: retail reads ParticleNumber from
-   the 16th-argument stack slot. */
-unsigned char AGO2_CreateBees(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber)
-{
-    unsigned int i;
-    float RandomValue;
-    float RandomValueX;
-    float RandomValueY;
-    float RandomValueZ;
-    AGO2_BeeParticle_* pParticleArray;
-    AGO2_BeeParticle_* pParticleArrayOrg;
-    float* p1;
-    float* p2;
-
-    Position->xZ += 1.0f;
-    p1 = (float*)&AGO_g_BeeTargetPosition; p2 = (float*)Position; p1[0] = p2[0]; p1[1] = p2[1]; p1[2] = p2[2]; p1[3] = p2[3];
-
-    if (AGO2_bIsTypeAlreadyExists(ulParticleType))
-        return 0;
-
-    p->GroupNumber = ParticleNumber;
-    p->hGroup = AGO2_MEM_Alloc(ParticleNumber * sizeof(AGO2_BeeParticle_));
-    if (p->hGroup == 0)
-    {
-        p->GroupNumber = 0;
-        p->ulType |= 1;
-        return 0;
-    }
-    pParticleArrayOrg = (AGO2_BeeParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-    if (pParticleArrayOrg == NULL)
-    {
-        printf("AGO2MEM DECONNE UN MAX !!!\n");
-        return 0;
-    }
-    p->xTransparencySpeed = 100.0f;
-    p->xSize[0] = 0.03f;
-    p->xSize[1] = 0.03f;
-    p->xShrinkingSpeed = 0.1f;
-    pParticleArray = pParticleArrayOrg;
-    for (i = 0; i < ParticleNumber; i++)
-    {
-        RandomValue = AGO2_M_xRand(60.0f, 150.0f);
-        RandomValueX = AGO2_M_xRand(-RandomValue, RandomValue);
-        RandomValueY = AGO2_M_xRand(-RandomValue, RandomValue);
-        RandomValueZ = AGO2_M_xRand(-RandomValue, RandomValue);
-        pParticleArray->Pads[0] = (int)AGO2_M_xRand(-5.0f, 5.0f);
-        pParticleArray->Pads[1] = (int)AGO2_M_xRand(-5.0f, 5.0f);
-        pParticleArray->xTransparency = AGO2_M_xRand(-5.0f, 5.0f);
-        pParticleArray->Position.xX = Position->xX + RandomValueX;
-        pParticleArray->Position.xY = Position->xY + RandomValueY;
-        pParticleArray->Position.xZ = Position->xZ + RandomValueZ;
-        pParticleArray->Direction.xX = AGO2_M_xRand(-5.0f, 5.0f);
-        pParticleArray->Direction.xY = AGO2_M_xRand(-5.0f, 5.0f);
-        pParticleArray->Direction.xZ = AGO2_M_xRand(-6.5f, 25.5f);
-        pParticleArray->Parameters.xX = AGO2_M_xRand(0.5f, 2.0f);
-        pParticleArray->Flags = 0;
-        pParticleArray++;
-    }
-    return 1;
-}
-
-void AGO2_ProcessBees(AGO2_Part_* p)
-{
-    AGO2_BeeParticle_* pParticleArray;
-    unsigned int i;
-    float TimeDiff;
-    float Val;
-    MTH3D_tdstVector_ v2;
-    float xNorm;
-
-    if (!p->hGroup)
-    {
-        p->GroupNumber = 0;
-        p->ulType |= 1;
-        return;
-    }
-    pParticleArray = (AGO2_BeeParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-    if (!pParticleArray)
-    {
-        printf("AGO2MEM DECONNE UN MAX !!!\n");
-        return;
-    }
-    TimeDiff = g_fTimeDifference;
-    for (i = 0; i < p->GroupNumber; pParticleArray++, i++)
-    {
-        if (pParticleArray->Flags & 1)
-            continue;
-        Val = AGO2_xSqrDistance((MTH3D_tdstVector_*)&AGO_g_BeeTargetPosition, (MTH3D_tdstVector_*)&pParticleArray->Position) / 150.0f;
-        if (Val > 3.0f)
-            Val = 3.0f;
-        Val += 0.1f;
-        ((int*)&v2)[0] = ((int*)&AGO_g_BeeTargetPosition)[0];
-        ((int*)&v2)[1] = ((int*)&AGO_g_BeeTargetPosition)[1];
-        ((int*)&v2)[2] = ((int*)&AGO_g_BeeTargetPosition)[2];
-        v2.xX += (0.3f + Val) * AGO2_M_xRand(-2.0f, 2.0f) + (float)pParticleArray->Pads[0] * Val;
-        v2.xY += (0.3f + Val) * AGO2_M_xRand(-2.0f, 2.0f) + (float)pParticleArray->Pads[1] * Val;
-        v2.xZ += (0.3f + Val) * AGO2_M_xRand(-2.0f, 2.0f) + pParticleArray->xTransparency * Val;
-        AGO2_vAddToVector(&pParticleArray->Direction, v2.xX - ((MTH3D_tdstVector_*)&pParticleArray->Position)->xX, v2.xY - ((MTH3D_tdstVector_*)&pParticleArray->Position)->xY, v2.xZ - ((MTH3D_tdstVector_*)&pParticleArray->Position)->xZ);
-        MTH3D_M_vSubVector((MTH3D_tdstVector_*)&pParticleArray->PreviousPosition, (MTH3D_tdstVector_*)&AGO_g_BeeTargetPosition, (MTH3D_tdstVector_*)&pParticleArray->Position);
-        pParticleArray->Position.xX += pParticleArray->Parameters.xX * (pParticleArray->Direction.xX * TimeDiff);
-        pParticleArray->Position.xY += pParticleArray->Parameters.xX * (pParticleArray->Direction.xY * TimeDiff);
-        pParticleArray->Position.xZ += pParticleArray->Parameters.xX * (pParticleArray->Direction.xZ * TimeDiff);
-        AGO2_vNormalizeVector((MTH3D_tdstVector_*)&pParticleArray->Direction);
-        AGO2_vNormalizeVector((MTH3D_tdstVector_*)&pParticleArray->PreviousPosition);
-    }
-}
-
-void AGO2_DisplayBees(AGO2_Part_* p)
-{
-    AGO2_FlowParticle_* pParticleArray;
-
-    if (p->hGroup)
-    {
-        pParticleArray = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-        if (!pParticleArray)
-        {
-            printf("AGO2MEM DECONNE UN MAX !!!\n");
-            return;
-        }
-        GLI_vDisplaySerialBees((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, (AGO2_BeeParticle_*)pParticleArray, p->GroupNumber, (void*)p->pMaterial1, (void*)p->pMaterial2, p->xSize[0], p->xSize[1]);
-    }
-}
-
-/* Same parameter list as AGO2_CreateFlow: retail reads ParticleNumber from
-   the 16th-argument stack slot. */
-unsigned char AGO2_CreateFire(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber)
-{
-    AGO2_FlowParticle_* pParticleArrayOrg;
-    unsigned int i;
-    AGO2_FlowParticle_* pParticleArray;
-
-    p->GroupNumber = ParticleNumber * 2;
-    p->hGroup = AGO2_MEM_Alloc(ParticleNumber * 2 * sizeof(AGO2_FlowParticle_));
-    if (p->hGroup == 0)
-    {
-        p->GroupNumber = 0;
-        p->ulType |= 1;
-        return 0;
-    }
-    pParticleArrayOrg = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-    if (pParticleArrayOrg == NULL)
-    {
-        printf("AGO2MEM DECONNE UN MAX !!!\n");
-        return 0;
-    }
-    p->xTransparencySpeed = 400.0f;
-    p->xSize[0] = 0.3f;
-    p->xSize[1] = 0.3f;
-    p->xShrinkingSpeed = 0.1f;
-    pParticleArray = pParticleArrayOrg;
-    for (i = 0; i < ParticleNumber * 2; i++)
-    {
-        pParticleArray->Position.xX = Position->xX + (-1.3f + (1.3f - -1.3f) * (float)rand() / 2147483648.0f);
-        pParticleArray->Position.xY = Position->xY + (-1.3f + (1.3f - -1.3f) * (float)rand() / 2147483648.0f);
-        pParticleArray->Position.xZ = Position->xZ + (-1.3f + (1.3f - -1.3f) * (float)rand() / 2147483648.0f);
-        pParticleArray->xTransparency = 255.0f;
-        pParticleArray->Direction.xX = -0.5f + (0.5f - -0.5f) * (float)rand() / 2147483648.0f;
-        pParticleArray->Direction.xY = -0.5f + (0.5f - -0.5f) * (float)rand() / 2147483648.0f;
-        pParticleArray->Direction.xZ = 1.5f + (1.6f - 1.5f) * (float)rand() / 2147483648.0f;
-        pParticleArray->Flags = 0;
-        pParticleArray++;
-    }
-    return 1;
-}
-
-void AGO2_ProcessFire(AGO2_Part_* p)
-{
-    AGO2_FlowParticle_* param0;
-    unsigned int i;
-    float TimeDiff;
-    float LocalG;
-
-    if (!p->hGroup)
-    {
-        p->GroupNumber = 0;
-        p->ulType |= 1;
-        return;
-    }
-    param0 = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-    if (!param0)
-    {
-        printf("AGO2MEM DECONNE UN MAX !!!\n");
-        return;
-    }
-    LocalG = (g_fTimeDifference > 0.033333335f) ? 0.033333335f : g_fTimeDifference;
-    TimeDiff = 9.81f * LocalG;
-    for (i = 0; i < p->GroupNumber; i++)
-    {
-        if (!(param0->Flags & 1))
-        {
-            param0->Direction.xZ += TimeDiff;
-            param0->Position.xX += param0->Direction.xX * LocalG;
-            param0->Position.xY += param0->Direction.xY * LocalG;
-            param0->Position.xZ += param0->Direction.xZ * LocalG;
-        }
-        param0++;
-    }
-}
-
-void AGO2_FadeFire(AGO2_Part_* p)
-{
-    AGO2_FlowParticle_* param0;
-    unsigned int i;
-    unsigned int OneIsAlive;
-    float TimeDiffTrsp;
-
-    if (!p->hGroup)
-    {
-        p->GroupNumber = 0;
-        p->ulType |= 1;
-        return;
-    }
-    param0 = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
-    if (!param0)
-    {
-        printf("AGO2MEM DECONNE UN MAX !!!\n");
-        return;
-    }
-    OneIsAlive = 0;
-    TimeDiffTrsp = g_fTimeDifference * p->xTransparencySpeed;
-    for (i = 0; i < p->GroupNumber; i++)
-    {
-        if (!(param0->Flags & 1))
-        {
-            param0->xTransparency -= TimeDiffTrsp;
-            if (param0->xTransparency < 0.0f)
-            {
-                param0->xTransparency = 0.0f;
-                param0->Flags |= 1;
-            }
-            else
-            {
-                OneIsAlive = 1;
-            }
-        }
-        param0++;
-    }
-    if (!OneIsAlive)
-    {
-        p->ulType |= 1;
-    }
-}
-
-void AGO2_ShrinkFire(AGO2_Part_* p)
-{
-    float Value;
-
-    Value = 1.0f - g_fTimeDifference * p->xShrinkingSpeed;
-
-    p->xSize[0] *= Value;
-    p->xSize[1] *= Value;
-
-    if (p->xSize[0] < 0.01f)
-
-        p->ulType |= 1;
-}
-
-void AGO2_ProcessEmpty(void)
-{
-}
-
-unsigned char AGO2_CreateFireWall(int unused, AGO2_Part_* p, float xParam1)
-{
-    float* p2;
-    float* p1;
-    AGO2_Part_* pp;
-    unsigned int Found;
-    unsigned int i;
-
-    Found = 0;
-    i = 0;
-    while (i < g_ulNumberOfAgos2 && !Found)
-    {
-        if (p->ulBaseID == g_pAGO2Parts[i].ulBaseID && (int)xParam1 == (int)g_pAGO2Parts[i].Vector4.xX)
-            Found = 1;
-        else
-            i++;
-    }
-    if (Found)
-    {
-        pp = &g_pAGO2Parts[i];
-        p1 = (float*)&p->Position;
-        p2 = (float*)&pp->Position;
-        p2[0] = p1[0];
-        p2[1] = p1[1];
-        p2[2] = p1[2];
-        p2[3] = p1[3];
-        p2[4] = p1[4];
-        p2[5] = p1[5];
-        p2[6] = p1[6];
-        p2[7] = p1[7];
-        p = pp;
-        p->ulType = 0;
-    }
-    p->Vector4.xX = xParam1;
-    p->xSize[0] = 1.0f;
-    p->xSize[1] = 1.0f;
-    p->xTransparency = 255.0f;
-    if (Found)
-        return 0;
-    return 1;
-}
-
-void AGO2_DisplayFireWall(AGO2_Part_* p)
-{
-    int y;
-    float TimeDif;
-    float V1;
-    float U1;
-    int CurrentAnim;
-    int i;
-    MTH3D_tdstVector_ Pos;
-    float xNorm;
-    MTH3D_tdstVector_ v2;
-    MTH3D_tdstVector_ v1;
-    MTH3D_tdstVector_ pdir;
-    /* TODO: decompile from asm/... */
-}
-
-void AGO2_DisplayFireWall2(AGO2_Part_* p)
-{
-    MTH3D_tdstVector_ pdir;
-    MTH3D_tdstVector_ v1;
-    MTH3D_tdstVector_ v2;
-    float xNorm;
-    MTH3D_tdstVector_ Pos;
-    int i;
-    int CurrentAnim;
-    float U1;
-    float V1;
-    float TimeDif;
-    int y;
-
-    MTH3D_M_vSubVector((MTH3D_tdstVector_*)&pdir, (MTH3D_tdstVector_*)&p->Direction, (MTH3D_tdstVector_*)&p->Position);
-    AGO2_vNormalizeVector((MTH3D_tdstVector_*)&pdir);
-    MTH3D_M_vSetVectorElements(&Pos, 0.0f, 0.0f, 1.0f);
-    ((MTH3D_tdstVector_*)&v2)->xX = Pos.xY * ((MTH3D_tdstVector_*)&pdir)->xZ - Pos.xZ * ((MTH3D_tdstVector_*)&pdir)->xY;
-    ((MTH3D_tdstVector_*)&v2)->xY = Pos.xZ * ((MTH3D_tdstVector_*)&pdir)->xX - Pos.xX * ((MTH3D_tdstVector_*)&pdir)->xZ;
-    ((MTH3D_tdstVector_*)&v2)->xZ = Pos.xX * ((MTH3D_tdstVector_*)&pdir)->xY - Pos.xY * ((MTH3D_tdstVector_*)&pdir)->xX;
-    MTH3D_M_vAddVector((MTH3D_tdstVector_*)&v1, &Pos, (MTH3D_tdstVector_*)&v2);
-    ((MTH3D_tdstVector_*)&v2)->xX = Pos.xX - ((MTH3D_tdstVector_*)&v2)->xX;
-    ((MTH3D_tdstVector_*)&v2)->xY = Pos.xY - ((MTH3D_tdstVector_*)&v2)->xY;
-    ((MTH3D_tdstVector_*)&v2)->xZ = ((MTH3D_tdstVector_*)&v1)->xZ;
-    AGO2_vNormalizeVector((MTH3D_tdstVector_*)&v1);
-    AGO2_vNormalizeVector((MTH3D_tdstVector_*)&v2);
-    MTH3D_M_vMulScalarVector((MTH3D_tdstVector_*)&pdir, 10.0f, (MTH3D_tdstVector_*)&pdir);
-    MTH3D_M_vSubVector((MTH3D_tdstVector_*)&v1, (MTH3D_tdstVector_*)&p->Position, (MTH3D_tdstVector_*)&pdir);
-    MTH3D_M_vAddVector((MTH3D_tdstVector_*)&v2, (MTH3D_tdstVector_*)&p->Position, (MTH3D_tdstVector_*)&pdir);
-    TimeDif = 0.0f;
-    ((MTH3D_tdstVector_*)&pdir)->xX = (1.0f / 30.0f) * (((MTH3D_tdstVector_*)&v2)->xX - ((MTH3D_tdstVector_*)&v1)->xX);
-    ((MTH3D_tdstVector_*)&pdir)->xY = (1.0f / 30.0f) * (((MTH3D_tdstVector_*)&v2)->xY - ((MTH3D_tdstVector_*)&v1)->xY);
-    ((MTH3D_tdstVector_*)&pdir)->xZ = (1.0f / 30.0f) * (((MTH3D_tdstVector_*)&v2)->xZ - ((MTH3D_tdstVector_*)&v1)->xZ);
-    Pos.xX = ((MTH3D_tdstVector_*)&v1)->xX + ((MTH3D_tdstVector_*)&pdir)->xX * TimeDif;
-    Pos.xY = ((MTH3D_tdstVector_*)&v1)->xY + ((MTH3D_tdstVector_*)&pdir)->xY * TimeDif;
-    Pos.xZ = 2.0f + (((MTH3D_tdstVector_*)&v1)->xZ + ((MTH3D_tdstVector_*)&pdir)->xZ * TimeDif);
-    CurrentAnim = (int)(16.0f * (1.3333334f * (g_ffFrameTime - (float)p->AnimTime) - (float)(int)(1.3333334f * (g_ffFrameTime - (float)p->AnimTime))));
-    for (i = 0; i < 30; i++)
-    {
-        y = CurrentAnim >> 2;
-        U1 = (float)(CurrentAnim - (y << 2)) / 4.0f;
-        V1 = (float)y / 4.0f;
-        GLI_vSetGlobalAlpha(255.0f);
-        GLI_vDrawWorldSpriteWithUVsOpt(&Pos, (GLI_tdstMaterial_*)p->pMaterial1, 3.0f, 3.0f, U1, V1, 0.25f + U1, 0.25f + V1, (GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, p->AnimTime);
-        CurrentAnim += i + 10;
-        while (CurrentAnim >= 16)
-            CurrentAnim -= 16;
-        Pos.xX += ((MTH3D_tdstVector_*)&pdir)->xX;
-        Pos.xY += ((MTH3D_tdstVector_*)&pdir)->xY;
-        Pos.xZ += ((MTH3D_tdstVector_*)&pdir)->xZ;
-    }
-    p->ulType |= 1;
-}
-
-unsigned char AGO2_CreateFFRing(int unused, AGO2_Part_* p, float xParam1)
-{
-    (void)unused;
-    p->xSize[0] = xParam1;
-    p->xSize[1] = 1.0f;
-    p->xTransparency = 255.0f;
-    return 1;
-}
-
-void AGO2_DisplayFFRing(AGO2_Part_* p)
-{
-    int i;
-    int j;
-    float p1b[3];
-    float p1h[3];
-    float p2b[3];
-    float p2h[3];
-    float cos1;
-    float sin1;
-    float CurrentHeight;
-    float AlphaVal;
-    float CurrentAngle;
-
-    CurrentAngle = 5.0f * g_ffFrameTime;
-    p->Direction.xX *= 0.5f;
-    cos1 = 0.25f * PS2_dl_cosf(CurrentAngle);
-    sin1 = 0.25f * PS2_dl_sinf(CurrentAngle);
-    for (i = 0; (float)i < 12.0f; i++)
-    {
-        p1b[0] = p->Position.xX + p->Direction.xY * cos1;
-        p1b[1] = p->Position.xY + p->Direction.xY * sin1;
-        p1b[2] = p->Position.xZ;
-        p1h[0] = p->Position.xX + 1.1f * (p->Direction.xZ * cos1);
-        p1h[1] = p->Position.xY + 1.1f * (p->Direction.xZ * sin1);
-        p1h[2] = p->Position.xZ + 2.0f * p->Direction.xX;
-        CurrentAngle += 0.5235988f;
-        cos1 = 0.25f * PS2_dl_cosf(CurrentAngle);
-        sin1 = 0.25f * PS2_dl_sinf(CurrentAngle);
-        p2b[0] = p->Position.xX + p->Direction.xY * cos1;
-        p2b[1] = p->Position.xY + p->Direction.xY * sin1;
-        p2b[2] = p->Position.xZ;
-        p2h[0] = p->Position.xX + 1.1f * (p->Direction.xZ * cos1);
-        p2h[1] = p->Position.xY + 1.1f * (p->Direction.xZ * sin1);
-        p2h[2] = p->Position.xZ + 2.0f * p->Direction.xX;
-        GLI_vDrawWorldQuadOpt((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, p2b, p1b, p1h, p2h, (GLI_tdstMaterial_*)p->pMaterial1);
-    }
-
-    CurrentAngle = -5.6549869f * g_ffFrameTime;
-    cos1 = PS2_dl_cosf(CurrentAngle);
-    sin1 = PS2_dl_sinf(CurrentAngle);
-    for (i = 0; (float)i < 12.0f; i++)
-    {
-        p1b[0] = p->Position.xX + 0.25f * (p->Direction.xY * cos1);
-        p1b[1] = p->Position.xY + 0.25f * (p->Direction.xY * sin1);
-        p1b[2] = p->Position.xZ;
-        p1h[0] = p->Position.xX + 0.3f * (1.1f * (p->Direction.xZ * cos1));
-        p1h[1] = p->Position.xY + 0.3f * (1.1f * (p->Direction.xZ * sin1));
-        p1h[2] = p->Position.xZ + p->Direction.xX;
-        CurrentAngle += 0.5235988f;
-        cos1 = PS2_dl_cosf(CurrentAngle);
-        sin1 = PS2_dl_sinf(CurrentAngle);
-        p2b[0] = p->Position.xX + 0.25f * (p->Direction.xY * cos1);
-        p2b[1] = p->Position.xY + 0.25f * (p->Direction.xY * sin1);
-        p2b[2] = p->Position.xZ;
-        p2h[0] = p->Position.xX + 0.3f * (1.1f * (p->Direction.xZ * cos1));
-        p2h[1] = p->Position.xY + 0.3f * (1.1f * (p->Direction.xZ * sin1));
-        p2h[2] = p->Position.xZ + p->Direction.xX;
-        GLI_vDrawWorldQuadOpt((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, p2b, p1b, p1h, p2h, (GLI_tdstMaterial_*)p->pMaterial1);
-    }
-
-    CurrentHeight = -1.0f;
-    AlphaVal = 255.0f;
-    CurrentAngle = 30.75f * -g_ffFrameTime;
-    for (j = 0; (float)j < 5.0f; j++)
-    {
-        cos1 = 0.25f * PS2_dl_cosf(CurrentAngle);
-        sin1 = 0.25f * PS2_dl_sinf(CurrentAngle);
-        for (i = 0; (float)i < 12.0f; i++)
-        {
-            p1b[0] = p->Position.xX + p->Direction.xY * cos1;
-            p1b[1] = p->Position.xY + p->Direction.xY * sin1;
-            p1b[2] = 2.3f + (p->Position.xZ + CurrentHeight);
-            p1h[0] = p->Position.xX + p->Direction.xY * cos1;
-            p1h[1] = p->Position.xY + p->Direction.xY * sin1;
-            p1h[2] = p->Position.xZ + CurrentHeight;
-            CurrentAngle += 0.5235988f;
-            cos1 = 0.25f * PS2_dl_cosf(CurrentAngle);
-            sin1 = 0.25f * PS2_dl_sinf(CurrentAngle);
-            CurrentHeight += 0.2f;
-            p2b[0] = p->Position.xX + p->Direction.xY * cos1;
-            p2b[1] = p->Position.xY + p->Direction.xY * sin1;
-            p2b[2] = 2.3f + (p->Position.xZ + CurrentHeight);
-            p2h[0] = p->Position.xX + p->Direction.xY * cos1;
-            p2h[1] = p->Position.xY + p->Direction.xY * sin1;
-            p2h[2] = p->Position.xZ + CurrentHeight;
-            GLI_vSetGlobalAlpha(AlphaVal);
-            AlphaVal -= 5.0f;
-            if (AlphaVal <= 0.0f)
-                AlphaVal = 0.0f;
-            GLI_vDrawWorldQuadOpt((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, p2b, p1b, p1h, p2h, (GLI_tdstMaterial_*)p->pMaterial1);
-        }
-    }
-    p->ulType |= 1;
-}
-
 void AGO2_DisplayFFWhirl(AGO2_Part_* p)
 {
     int i;
@@ -5686,6 +4589,176 @@ void AGO2_DisplayFFWhirl(AGO2_Part_* p)
 
 /* Same parameter list as AGO2_CreateFlow: retail reads ParticleNumber from
    the 16th-argument stack slot. */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2962–3158 */
+/* addr: 0x001e2e10  size: 2388 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2962
+ *   +0x0058 -> line 2979
+ *   +0x006c -> line 2980
+ *   +0x008c -> line 2981
+ *   +0x0098 -> line 2983
+ *   +0x009c -> line 2985
+ *   +0x00a0 -> line 2984
+ *   +0x00a8 -> line 2985
+ *   +0x00b0 -> line 2989
+ *   +0x00b8 -> line 2990
+ *   +0x00c0 -> line 2992
+ *   +0x00c8 -> line 2993
+ *   +0x00d0 -> line 3000
+ *   +0x00d4 -> line 3001
+ *   +0x00dc -> line 2995
+ *   +0x00e0 -> line 3001
+ *   +0x00f4 -> line 3002
+ *   +0x00fc -> line 3001
+ *   +0x0104 -> line 3002
+ *   +0x0120 -> line 3003
+ *   +0x0124 -> line 3015
+ *   +0x0128 -> line 3003
+ *   +0x012c -> line 3015
+ *   +0x0130 -> line 3003
+ *   +0x0134 -> line 3015
+ *   +0x0138 -> line 3003
+ *   +0x0144 -> line 3015
+ *   +0x014c -> line 3018
+ *   +0x0150 -> line 3019
+ *   +0x0158 -> line 3017
+ *   +0x015c -> line 3018
+ *   +0x0160 -> line 3019
+ *   +0x016c -> line 3020
+ *   +0x0174 -> line 3019
+ *   +0x0178 -> line 3020
+ *   +0x0188 -> line 3022
+ *   +0x01a0 -> line 3024
+ *   +0x01fc -> line 3026
+ *   +0x0208 -> line 3027
+ *   +0x0210 -> line 3028
+ *   +0x0214 -> line 3027
+ *   +0x0218 -> line 3028
+ *   +0x0220 -> line 3029
+ *   +0x022c -> line 3032
+ *   +0x0230 -> line 3049
+ *   +0x0234 -> line 3063
+ *   +0x023c -> line 3032
+ *   +0x0248 -> line 3033
+ *   +0x024c -> line 3032
+ *   +0x0250 -> line 3033
+ *   +0x0260 -> line 3034
+ *   +0x0270 -> line 3036
+ *   +0x0280 -> line 3037
+ *   +0x0284 -> line 3036
+ *   +0x0288 -> line 3037
+ *   +0x0298 -> line 3038
+ *   +0x029c -> line 3040
+ *   +0x02a0 -> line 3038
+ *   +0x02a8 -> line 3040
+ *   +0x02b4 -> line 3041
+ *   +0x02b8 -> line 3040
+ *   +0x02bc -> line 3041
+ *   +0x02cc -> line 3044
+ *   +0x02d4 -> line 3045
+ *   +0x02d8 -> line 3042
+ *   +0x02e8 -> line 3044
+ *   +0x02ec -> line 3045
+ *   +0x02f0 -> line 3044
+ *   +0x02f8 -> line 3045
+ *   +0x02fc -> line 3049
+ *   +0x0304 -> line 3045
+ *   +0x030c -> line 3046
+ *   +0x0318 -> line 3049
+ *   +0x032c -> line 3053
+ *   +0x0340 -> line 3057
+ *   +0x0354 -> line 3063
+ *   +0x0358 -> line 3065
+ *   +0x0360 -> line 3073
+ *   +0x0364 -> line 3065
+ *   +0x0368 -> line 3073
+ *   +0x036c -> line 3065
+ *   +0x0370 -> line 3071
+ *   +0x0374 -> line 3065
+ *   +0x0384 -> line 3068
+ *   +0x03a0 -> line 3071
+ *   +0x03b8 -> line 3073
+ *   +0x03c0 -> line 3076
+ *   +0x03d8 -> line 3078
+ *   +0x0414 -> line 3079
+ *   +0x0430 -> line 3080
+ *   +0x0438 -> line 3079
+ *   +0x0450 -> line 3080
+ *   +0x0464 -> line 3081
+ *   +0x046c -> line 3082
+ *   +0x0478 -> line 3083
+ *   +0x0494 -> line 3085
+ *   +0x0498 -> line 3086
+ *   +0x049c -> line 3087
+ *   +0x04a0 -> line 3089
+ *   +0x04a8 -> line 3090
+ *   +0x04c4 -> line 3093
+ *   +0x0504 -> line 3094
+ *   +0x0528 -> line 3095
+ *   +0x052c -> line 3094
+ *   +0x0530 -> line 3095
+ *   +0x0534 -> line 3094
+ *   +0x053c -> line 3095
+ *   +0x0544 -> line 3096
+ *   +0x0548 -> line 3095
+ *   +0x0554 -> line 3096
+ *   +0x055c -> line 3097
+ *   +0x0560 -> line 3098
+ *   +0x0564 -> line 3097
+ *   +0x0568 -> line 3099
+ *   +0x0570 -> line 3100
+ *   +0x058c -> line 3103
+ *   +0x05cc -> line 3104
+ *   +0x05f0 -> line 3105
+ *   +0x05f4 -> line 3104
+ *   +0x05f8 -> line 3105
+ *   +0x05fc -> line 3104
+ *   +0x0604 -> line 3105
+ *   +0x060c -> line 3106
+ *   +0x0610 -> line 3105
+ *   +0x061c -> line 3106
+ *   +0x0624 -> line 3107
+ *   +0x0628 -> line 3108
+ *   +0x062c -> line 3107
+ *   +0x0630 -> line 3108
+ *   +0x0634 -> line 3109
+ *   +0x0638 -> line 3117
+ *   +0x0674 -> line 3118
+ *   +0x06b4 -> line 3119
+ *   +0x06f4 -> line 3123
+ *   +0x0704 -> line 3125
+ *   +0x0708 -> line 3123
+ *   +0x0710 -> line 3125
+ *   +0x0714 -> line 3123
+ *   +0x0724 -> line 3125
+ *   +0x072c -> line 3123
+ *   +0x0730 -> line 3126
+ *   +0x0734 -> line 3123
+ *   +0x0738 -> line 3126
+ *   +0x073c -> line 3123
+ *   +0x0748 -> line 3126
+ *   +0x0750 -> line 3123
+ *   +0x0754 -> line 3127
+ *   +0x0758 -> line 3123
+ *   +0x075c -> line 3127
+ *   +0x0768 -> line 3128
+ *   +0x07d0 -> line 3135
+ *   +0x07d4 -> line 3129
+ *   +0x07f8 -> line 3137
+ *   +0x083c -> line 3142
+ *   +0x084c -> line 3147
+ *   +0x0850 -> line 3142
+ *   +0x0880 -> line 3145
+ *   +0x0884 -> line 3149
+ *   +0x0888 -> line 3151
+ *   +0x08d0 -> line 3152
+ *   +0x08f8 -> line 3155
+ *   +0x08fc -> line 3157
+ *   +0x0900 -> line 3158
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char AGO2_CreateBalloon(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber)
 {
     unsigned int i;
@@ -5820,6 +4893,112 @@ unsigned char AGO2_CreateBalloon(unsigned int ulParticleType, AGO2_Part_* p, AGO
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3162–3250 */
+/* addr: 0x001e29c0  size: 1096 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3162
+ *   +0x0044 -> line 3170
+ *   +0x0050 -> line 3171
+ *   +0x0058 -> line 3173
+ *   +0x0064 -> line 3174
+ *   +0x006c -> line 3175
+ *   +0x0074 -> line 3182
+ *   +0x007c -> line 3184
+ *   +0x0088 -> line 3185
+ *   +0x008c -> line 3184
+ *   +0x0094 -> line 3185
+ *   +0x00a4 -> line 3192
+ *   +0x00a8 -> line 3198
+ *   +0x00ac -> line 3192
+ *   +0x00b0 -> line 3198
+ *   +0x00b4 -> line 3192
+ *   +0x00b8 -> line 3187
+ *   +0x00bc -> line 3198
+ *   +0x00c0 -> line 3205
+ *   +0x00c8 -> line 3192
+ *   +0x00d0 -> line 3193
+ *   +0x00e4 -> line 3194
+ *   +0x0104 -> line 3192
+ *   +0x0108 -> line 3194
+ *   +0x0118 -> line 3193
+ *   +0x011c -> line 3194
+ *   +0x0140 -> line 3192
+ *   +0x0144 -> line 3194
+ *   +0x0154 -> line 3193
+ *   +0x0158 -> line 3194
+ *   +0x017c -> line 3192
+ *   +0x0180 -> line 3194
+ *   +0x0190 -> line 3193
+ *   +0x0194 -> line 3194
+ *   +0x01ac -> line 3198
+ *   +0x01c8 -> line 3200
+ *   +0x01e0 -> line 3201
+ *   +0x01f8 -> line 3202
+ *   +0x0210 -> line 3211
+ *   +0x0214 -> line 3215
+ *   +0x0218 -> line 3211
+ *   +0x021c -> line 3215
+ *   +0x0220 -> line 3212
+ *   +0x0224 -> line 3211
+ *   +0x0228 -> line 3213
+ *   +0x022c -> line 3212
+ *   +0x0230 -> line 3213
+ *   +0x0234 -> line 3215
+ *   +0x0238 -> line 3216
+ *   +0x0240 -> line 3217
+ *   +0x024c -> line 3222
+ *   +0x0250 -> line 3219
+ *   +0x0258 -> line 3220
+ *   +0x0260 -> line 3222
+ *   +0x0264 -> line 3220
+ *   +0x0268 -> line 3222
+ *   +0x026c -> line 3223
+ *   +0x0274 -> line 3224
+ *   +0x0280 -> line 3229
+ *   +0x0284 -> line 3225
+ *   +0x028c -> line 3227
+ *   +0x0294 -> line 3229
+ *   +0x0298 -> line 3227
+ *   +0x029c -> line 3229
+ *   +0x02a0 -> line 3230
+ *   +0x02a8 -> line 3231
+ *   +0x02b4 -> line 3232
+ *   +0x02b8 -> line 3235
+ *   +0x02bc -> line 3232
+ *   +0x02c0 -> line 3235
+ *   +0x02c4 -> line 3233
+ *   +0x02c8 -> line 3234
+ *   +0x02cc -> line 3233
+ *   +0x02d0 -> line 3232
+ *   +0x02d4 -> line 3233
+ *   +0x02dc -> line 3235
+ *   +0x02e4 -> line 3240
+ *   +0x02f0 -> line 3241
+ *   +0x02f4 -> line 3240
+ *   +0x02fc -> line 3241
+ *   +0x0304 -> line 3242
+ *   +0x0308 -> line 3241
+ *   +0x0310 -> line 3242
+ *   +0x0330 -> line 3240
+ *   +0x0334 -> line 3242
+ *   +0x0344 -> line 3241
+ *   +0x0348 -> line 3242
+ *   +0x036c -> line 3240
+ *   +0x0370 -> line 3242
+ *   +0x0380 -> line 3241
+ *   +0x0384 -> line 3242
+ *   +0x03a8 -> line 3240
+ *   +0x03ac -> line 3242
+ *   +0x03bc -> line 3241
+ *   +0x03c0 -> line 3242
+ *   +0x03d4 -> line 3244
+ *   +0x03d8 -> line 3246
+ *   +0x03dc -> line 3247
+ *   +0x03f0 -> line 3249
+ *   +0x0404 -> line 3250
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO2_ProcessBalloon(AGO2_Part_* p)
 {
     AGO2_BalloonPart_* pParticleArray;
@@ -5899,6 +5078,26 @@ void AGO2_ProcessBalloon(AGO2_Part_* p)
         p->ulType |= 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3254–3296 */
+/* addr: 0x001e28e0  size: 224 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3254
+ *   +0x0018 -> line 3263
+ *   +0x0024 -> line 3264
+ *   +0x002c -> line 3266
+ *   +0x0038 -> line 3267
+ *   +0x0040 -> line 3268
+ *   +0x0048 -> line 3273
+ *   +0x0050 -> line 3275
+ *   +0x006c -> line 3277
+ *   +0x007c -> line 3279
+ *   +0x00a8 -> line 3290
+ *   +0x00b0 -> line 3294
+ *   +0x00b4 -> line 3295
+ *   +0x00c8 -> line 3296
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO2_DisplayForceField(AGO2_Part_* p)
 {
     AGO2_BalloonPart_* pParticleArrayOrg;
@@ -5937,6 +5136,26 @@ void AGO2_DisplayForceField(AGO2_Part_* p)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3300–3345 */
+/* addr: 0x001e2800  size: 216 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3300
+ *   +0x0018 -> line 3309
+ *   +0x0024 -> line 3310
+ *   +0x002c -> line 3312
+ *   +0x0038 -> line 3313
+ *   +0x0040 -> line 3314
+ *   +0x0048 -> line 3319
+ *   +0x0050 -> line 3321
+ *   +0x006c -> line 3323
+ *   +0x0074 -> line 3325
+ *   +0x00a0 -> line 3336
+ *   +0x00a8 -> line 3340
+ *   +0x00ac -> line 3341
+ *   +0x00c0 -> line 3345
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO2_DisplayBalloon(AGO2_Part_* p)
 {
     AGO2_BalloonPart_* pParticleArrayOrg;
@@ -5975,17 +5194,105 @@ void AGO2_DisplayBalloon(AGO2_Part_* p)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3349–3351 */
+/* addr: 0x001e27f0  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3349
+ *   +0x0004 -> line 3351
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char AGO2_CreateIce(int unused, AGO2_Part_* p, float xParam1)
 {
     p->Vector1.xX = xParam1;
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3356–3357 */
+/* addr: 0x001e27e0  size: 16 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3356
+ *   +0x0008 -> line 3357
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO2_ProcessIce(AGO2_Part_* p)
 {
     p->ulType |= 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3380–3453 */
+/* addr: 0x001e25b0  size: 552 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3380
+ *   +0x0004 -> line 3384
+ *   +0x0008 -> line 3380
+ *   +0x000c -> line 3384
+ *   +0x0010 -> line 3380
+ *   +0x0014 -> line 3384
+ *   +0x0018 -> line 3380
+ *   +0x0020 -> line 3384
+ *   +0x0034 -> line 3404
+ *   +0x0038 -> line 3384
+ *   +0x003c -> line 3385
+ *   +0x0044 -> line 3384
+ *   +0x004c -> line 3385
+ *   +0x0050 -> line 3401
+ *   +0x0054 -> line 3404
+ *   +0x0058 -> line 3384
+ *   +0x0060 -> line 3385
+ *   +0x0064 -> line 3384
+ *   +0x0068 -> line 3385
+ *   +0x007c -> line 3404
+ *   +0x0080 -> line 3385
+ *   +0x0084 -> line 3386
+ *   +0x0088 -> line 3385
+ *   +0x008c -> line 3386
+ *   +0x0090 -> line 3385
+ *   +0x0094 -> line 3386
+ *   +0x0098 -> line 3404
+ *   +0x009c -> line 3385
+ *   +0x00ac -> line 3390
+ *   +0x00b0 -> line 3388
+ *   +0x00b4 -> line 3404
+ *   +0x00b8 -> line 3388
+ *   +0x00bc -> line 3386
+ *   +0x00d0 -> line 3388
+ *   +0x00d4 -> line 3390
+ *   +0x00dc -> line 3388
+ *   +0x00e8 -> line 3390
+ *   +0x00f0 -> line 3388
+ *   +0x00fc -> line 3389
+ *   +0x0110 -> line 3390
+ *   +0x0130 -> line 3400
+ *   +0x0134 -> line 3402
+ *   +0x0138 -> line 3400
+ *   +0x013c -> line 3402
+ *   +0x0140 -> line 3392
+ *   +0x0144 -> line 3402
+ *   +0x0148 -> line 3389
+ *   +0x014c -> line 3392
+ *   +0x0158 -> line 3402
+ *   +0x015c -> line 3393
+ *   +0x0160 -> line 3400
+ *   +0x0164 -> line 3393
+ *   +0x0170 -> line 3394
+ *   +0x0174 -> line 3404
+ *   +0x0180 -> line 3394
+ *   +0x018c -> line 3396
+ *   +0x0198 -> line 3397
+ *   +0x01a4 -> line 3398
+ *   +0x01b0 -> line 3400
+ *   +0x01bc -> line 3401
+ *   +0x01c8 -> line 3402
+ *   +0x01d0 -> line 3404
+ *   +0x01d4 -> line 3402
+ *   +0x01d8 -> line 3404
+ *   +0x01e4 -> line 3412
+ *   +0x0214 -> line 3453
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void DisplayIcePic(AGO2_Part_* p, float radius, float smallRadius, MTH3D_tdstVector_* Temp1, MTH3D_tdstVector_* Temp2, MTH3D_tdstVector_* Temp3)
 {
     MTH3D_tdstVector_ DestVtx;
@@ -6020,6 +5327,104 @@ void DisplayIcePic(AGO2_Part_* p, float radius, float smallRadius, MTH3D_tdstVec
     GLI_vDrawWorldQuadWithUVsOpt((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, (float*)&SourceVtx2, (float*)&SourceVtx1, (float*)&DestVtx, (float*)&SourceVtx3, 0.0f, 0.0f, 1.0f, 1.0f, (GLI_tdstMaterial_*)p->pMaterial1);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3459–3603 */
+/* addr: 0x001e2250  size: 856 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3459
+ *   +0x0004 -> line 3464
+ *   +0x0008 -> line 3459
+ *   +0x000c -> line 3464
+ *   +0x0010 -> line 3459
+ *   +0x0014 -> line 3469
+ *   +0x0018 -> line 3459
+ *   +0x001c -> line 3465
+ *   +0x0020 -> line 3459
+ *   +0x0024 -> line 3465
+ *   +0x0028 -> line 3459
+ *   +0x002c -> line 3468
+ *   +0x0030 -> line 3459
+ *   +0x0038 -> line 3464
+ *   +0x003c -> line 3468
+ *   +0x0044 -> line 3469
+ *   +0x0048 -> line 3464
+ *   +0x004c -> line 3468
+ *   +0x0054 -> line 3469
+ *   +0x0058 -> line 3468
+ *   +0x005c -> line 3469
+ *   +0x0064 -> line 3470
+ *   +0x0080 -> line 3472
+ *   +0x0084 -> line 3473
+ *   +0x0088 -> line 3472
+ *   +0x008c -> line 3473
+ *   +0x0090 -> line 3472
+ *   +0x0094 -> line 3473
+ *   +0x00a0 -> line 3474
+ *   +0x00bc -> line 3476
+ *   +0x00c0 -> line 3477
+ *   +0x00c4 -> line 3476
+ *   +0x00c8 -> line 3477
+ *   +0x00cc -> line 3476
+ *   +0x00d0 -> line 3477
+ *   +0x00dc -> line 3478
+ *   +0x00f8 -> line 3480
+ *   +0x0104 -> line 3481
+ *   +0x0118 -> line 3482
+ *   +0x0134 -> line 3484
+ *   +0x0140 -> line 3485
+ *   +0x0154 -> line 3486
+ *   +0x0170 -> line 3488
+ *   +0x017c -> line 3491
+ *   +0x0180 -> line 3488
+ *   +0x0184 -> line 3490
+ *   +0x018c -> line 3491
+ *   +0x0194 -> line 3488
+ *   +0x0198 -> line 3490
+ *   +0x01a0 -> line 3491
+ *   +0x01a8 -> line 3492
+ *   +0x01c4 -> line 3494
+ *   +0x01d8 -> line 3495
+ *   +0x01dc -> line 3494
+ *   +0x01e0 -> line 3495
+ *   +0x01e4 -> line 3494
+ *   +0x01e8 -> line 3495
+ *   +0x01f0 -> line 3496
+ *   +0x020c -> line 3498
+ *   +0x0220 -> line 3499
+ *   +0x0224 -> line 3498
+ *   +0x0228 -> line 3499
+ *   +0x022c -> line 3498
+ *   +0x0230 -> line 3499
+ *   +0x0238 -> line 3500
+ *   +0x0254 -> line 3502
+ *   +0x0268 -> line 3503
+ *   +0x026c -> line 3502
+ *   +0x0270 -> line 3503
+ *   +0x0274 -> line 3502
+ *   +0x0278 -> line 3503
+ *   +0x0280 -> line 3504
+ *   +0x029c -> line 3506
+ *   +0x02a8 -> line 3509
+ *   +0x02ac -> line 3506
+ *   +0x02b0 -> line 3508
+ *   +0x02b4 -> line 3509
+ *   +0x02bc -> line 3508
+ *   +0x02c4 -> line 3506
+ *   +0x02c8 -> line 3508
+ *   +0x02d4 -> line 3509
+ *   +0x02dc -> line 3510
+ *   +0x02f8 -> line 3512
+ *   +0x02fc -> line 3513
+ *   +0x0300 -> line 3512
+ *   +0x0304 -> line 3513
+ *   +0x0308 -> line 3512
+ *   +0x030c -> line 3513
+ *   +0x0310 -> line 3512
+ *   +0x0314 -> line 3513
+ *   +0x031c -> line 3514
+ *   +0x0338 -> line 3603
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO2_DisplayIce(AGO2_Part_* p)
 {
     float radius;
@@ -6082,6 +5487,113 @@ void AGO2_DisplayIce(AGO2_Part_* p)
 
 /* Same parameter list as AGO2_CreateFlow: retail reads ParticleNumber from
    the 16th-argument stack slot. */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3608–3736 */
+/* addr: 0x001e1d80  size: 1220 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3608
+ *   +0x0050 -> line 3623
+ *   +0x0068 -> line 3624
+ *   +0x0088 -> line 3625
+ *   +0x0094 -> line 3627
+ *   +0x0098 -> line 3629
+ *   +0x009c -> line 3628
+ *   +0x00a4 -> line 3629
+ *   +0x00ac -> line 3633
+ *   +0x00b4 -> line 3634
+ *   +0x00bc -> line 3636
+ *   +0x00c4 -> line 3637
+ *   +0x00cc -> line 3644
+ *   +0x00d0 -> line 3645
+ *   +0x00d8 -> line 3639
+ *   +0x00dc -> line 3645
+ *   +0x00f0 -> line 3646
+ *   +0x00f8 -> line 3645
+ *   +0x00fc -> line 3646
+ *   +0x0118 -> line 3647
+ *   +0x011c -> line 3659
+ *   +0x0120 -> line 3647
+ *   +0x0124 -> line 3659
+ *   +0x0128 -> line 3647
+ *   +0x012c -> line 3659
+ *   +0x0130 -> line 3647
+ *   +0x013c -> line 3659
+ *   +0x0144 -> line 3663
+ *   +0x014c -> line 3662
+ *   +0x0150 -> line 3661
+ *   +0x0154 -> line 3663
+ *   +0x015c -> line 3664
+ *   +0x0164 -> line 3663
+ *   +0x0168 -> line 3664
+ *   +0x0178 -> line 3666
+ *   +0x0190 -> line 3668
+ *   +0x01a0 -> line 3670
+ *   +0x01ac -> line 3671
+ *   +0x01b4 -> line 3672
+ *   +0x01b8 -> line 3671
+ *   +0x01bc -> line 3672
+ *   +0x01c4 -> line 3673
+ *   +0x01d0 -> line 3676
+ *   +0x01d4 -> line 3706
+ *   +0x01d8 -> line 3693
+ *   +0x01dc -> line 3676
+ *   +0x01e8 -> line 3677
+ *   +0x01ec -> line 3676
+ *   +0x01f0 -> line 3677
+ *   +0x0200 -> line 3689
+ *   +0x0204 -> line 3678
+ *   +0x0208 -> line 3689
+ *   +0x020c -> line 3678
+ *   +0x0218 -> line 3680
+ *   +0x022c -> line 3681
+ *   +0x023c -> line 3685
+ *   +0x0240 -> line 3681
+ *   +0x0244 -> line 3682
+ *   +0x0248 -> line 3685
+ *   +0x024c -> line 3682
+ *   +0x0254 -> line 3684
+ *   +0x0268 -> line 3706
+ *   +0x026c -> line 3693
+ *   +0x0270 -> line 3708
+ *   +0x0274 -> line 3685
+ *   +0x0278 -> line 3708
+ *   +0x027c -> line 3685
+ *   +0x0284 -> line 3686
+ *   +0x0294 -> line 3688
+ *   +0x02a0 -> line 3706
+ *   +0x02a4 -> line 3688
+ *   +0x02ac -> line 3689
+ *   +0x02b0 -> line 3706
+ *   +0x02b4 -> line 3689
+ *   +0x02bc -> line 3707
+ *   +0x02c4 -> line 3709
+ *   +0x02c8 -> line 3690
+ *   +0x02cc -> line 3709
+ *   +0x02d0 -> line 3690
+ *   +0x02d8 -> line 3693
+ *   +0x02ec -> line 3697
+ *   +0x0300 -> line 3701
+ *   +0x0314 -> line 3706
+ *   +0x0318 -> line 3707
+ *   +0x031c -> line 3708
+ *   +0x0320 -> line 3712
+ *   +0x035c -> line 3713
+ *   +0x039c -> line 3714
+ *   +0x03ac -> line 3725
+ *   +0x03b0 -> line 3714
+ *   +0x03e0 -> line 3717
+ *   +0x03e8 -> line 3718
+ *   +0x03f0 -> line 3720
+ *   +0x03f4 -> line 3721
+ *   +0x03fc -> line 3723
+ *   +0x0400 -> line 3729
+ *   +0x0448 -> line 3730
+ *   +0x0470 -> line 3733
+ *   +0x0474 -> line 3735
+ *   +0x0478 -> line 3736
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char AGO2_CreateForceField(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber)
 {
     unsigned int i;
@@ -6171,6 +5683,54 @@ unsigned char AGO2_CreateForceField(unsigned int ulParticleType, AGO2_Part_* p, 
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3740–3804 */
+/* addr: 0x001e1b40  size: 572 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3740
+ *   +0x0020 -> line 3749
+ *   +0x002c -> line 3750
+ *   +0x0034 -> line 3752
+ *   +0x0040 -> line 3753
+ *   +0x0048 -> line 3754
+ *   +0x0050 -> line 3761
+ *   +0x0058 -> line 3763
+ *   +0x0070 -> line 3764
+ *   +0x0084 -> line 3765
+ *   +0x0094 -> line 3767
+ *   +0x00b0 -> line 3769
+ *   +0x00b4 -> line 3772
+ *   +0x00bc -> line 3776
+ *   +0x00d0 -> line 3789
+ *   +0x00d8 -> line 3784
+ *   +0x00dc -> line 3776
+ *   +0x00e4 -> line 3777
+ *   +0x00f4 -> line 3778
+ *   +0x0104 -> line 3781
+ *   +0x0118 -> line 3783
+ *   +0x0124 -> line 3789
+ *   +0x012c -> line 3794
+ *   +0x013c -> line 3795
+ *   +0x014c -> line 3796
+ *   +0x0164 -> line 3794
+ *   +0x0168 -> line 3796
+ *   +0x0174 -> line 3795
+ *   +0x0178 -> line 3796
+ *   +0x0194 -> line 3794
+ *   +0x0198 -> line 3796
+ *   +0x01a4 -> line 3795
+ *   +0x01a8 -> line 3796
+ *   +0x01c4 -> line 3794
+ *   +0x01c8 -> line 3796
+ *   +0x01d4 -> line 3795
+ *   +0x01d8 -> line 3796
+ *   +0x01ec -> line 3798
+ *   +0x01f0 -> line 3800
+ *   +0x01f4 -> line 3801
+ *   +0x0208 -> line 3803
+ *   +0x021c -> line 3804
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO2_ProcessForceField(AGO2_Part_* p)
 {
     AGO2_BalloonPart_* pParticleArray;
@@ -6221,6 +5781,15 @@ void AGO2_ProcessForceField(AGO2_Part_* p)
         p->ulType |= 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3815–3818 */
+/* addr: 0x001e1b30  size: 16 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3815
+ *   +0x0004 -> line 3817
+ *   +0x0008 -> line 3818
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char AGO2_CreateCylinder(int unused, AGO2_Part_* p, float xParam1, float xParam2)
 {
     p->Vector1.xX = xParam1;
@@ -6228,11 +5797,94 @@ unsigned char AGO2_CreateCylinder(int unused, AGO2_Part_* p, float xParam1, floa
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3822–3823 */
+/* addr: 0x001e1b20  size: 16 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3822
+ *   +0x0008 -> line 3823
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO2_ProcessDieAtOnce(AGO2_Part_* p)
 {
     p->ulType |= 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3826–3912 */
+/* addr: 0x001e1740  size: 980 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3826
+ *   +0x0008 -> line 3842
+ *   +0x000c -> line 3826
+ *   +0x0010 -> line 3842
+ *   +0x0014 -> line 3826
+ *   +0x004c -> line 3838
+ *   +0x0054 -> line 3833
+ *   +0x0058 -> line 3838
+ *   +0x0060 -> line 3839
+ *   +0x0068 -> line 3842
+ *   +0x006c -> line 3839
+ *   +0x0074 -> line 3840
+ *   +0x0084 -> line 3842
+ *   +0x00e4 -> line 3844
+ *   +0x00f4 -> line 3863
+ *   +0x0110 -> line 3876
+ *   +0x0118 -> line 3866
+ *   +0x011c -> line 3867
+ *   +0x0120 -> line 3870
+ *   +0x0124 -> line 3871
+ *   +0x0128 -> line 3865
+ *   +0x0130 -> line 3876
+ *   +0x0134 -> line 3872
+ *   +0x0138 -> line 3865
+ *   +0x013c -> line 3866
+ *   +0x0140 -> line 3872
+ *   +0x0144 -> line 3865
+ *   +0x015c -> line 3866
+ *   +0x0174 -> line 3867
+ *   +0x0178 -> line 3866
+ *   +0x0188 -> line 3867
+ *   +0x01b0 -> line 3869
+ *   +0x01c4 -> line 3870
+ *   +0x01d8 -> line 3871
+ *   +0x01e8 -> line 3876
+ *   +0x01f0 -> line 3878
+ *   +0x01f8 -> line 3879
+ *   +0x0214 -> line 3889
+ *   +0x0218 -> line 3882
+ *   +0x021c -> line 3883
+ *   +0x0220 -> line 3886
+ *   +0x0224 -> line 3887
+ *   +0x0228 -> line 3889
+ *   +0x0238 -> line 3881
+ *   +0x0240 -> line 3889
+ *   +0x0244 -> line 3881
+ *   +0x0248 -> line 3882
+ *   +0x024c -> line 3889
+ *   +0x0250 -> line 3881
+ *   +0x0264 -> line 3882
+ *   +0x026c -> line 3889
+ *   +0x0270 -> line 3882
+ *   +0x0280 -> line 3883
+ *   +0x0284 -> line 3882
+ *   +0x0290 -> line 3883
+ *   +0x02b4 -> line 3885
+ *   +0x02c4 -> line 3886
+ *   +0x02d4 -> line 3887
+ *   +0x02e4 -> line 3889
+ *   +0x02f4 -> line 3902
+ *   +0x02f8 -> line 3897
+ *   +0x02fc -> line 3902
+ *   +0x0304 -> line 3900
+ *   +0x0308 -> line 3902
+ *   +0x030c -> line 3897
+ *   +0x0320 -> line 3898
+ *   +0x0338 -> line 3902
+ *   +0x0354 -> line 3905
+ *   +0x0390 -> line 3912
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO2_DisplayCylinder(AGO2_Part_* p)
 {
     float radius;
@@ -6284,6 +5936,172 @@ void AGO2_DisplayCylinder(AGO2_Part_* p)
     GLI_vDrawWorldQuadWithUVsOpt((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, (float*)&FirstP1, (float*)&P1, (float*)&P2, (float*)&FirstP2, CurrentV + 0.1f, 0.0f, CurrentV, 1.0f, (GLI_tdstMaterial_*)p->pMaterial1);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3932–4057 */
+/* addr: 0x001e1170  size: 1484 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3932
+ *   +0x0004 -> line 3941
+ *   +0x0008 -> line 3932
+ *   +0x000c -> line 3941
+ *   +0x0010 -> line 3932
+ *   +0x0014 -> line 3941
+ *   +0x0018 -> line 3932
+ *   +0x0024 -> line 3952
+ *   +0x0028 -> line 3932
+ *   +0x002c -> line 3952
+ *   +0x0030 -> line 3932
+ *   +0x0034 -> line 3944
+ *   +0x0038 -> line 3932
+ *   +0x003c -> line 3944
+ *   +0x0040 -> line 3932
+ *   +0x0068 -> line 3941
+ *   +0x006c -> line 3952
+ *   +0x0070 -> line 3954
+ *   +0x0074 -> line 3952
+ *   +0x0078 -> line 3943
+ *   +0x007c -> line 3941
+ *   +0x0080 -> line 3954
+ *   +0x009c -> line 3959
+ *   +0x00a0 -> line 3963
+ *   +0x00a4 -> line 3960
+ *   +0x00a8 -> line 3961
+ *   +0x00b0 -> line 3967
+ *   +0x00c4 -> line 3968
+ *   +0x00c8 -> line 3967
+ *   +0x00d4 -> line 3968
+ *   +0x00e0 -> line 3967
+ *   +0x00e4 -> line 3968
+ *   +0x00f0 -> line 3967
+ *   +0x00f4 -> line 3972
+ *   +0x00f8 -> line 3968
+ *   +0x00fc -> line 3972
+ *   +0x0124 -> line 3968
+ *   +0x0128 -> line 3972
+ *   +0x012c -> line 3973
+ *   +0x0130 -> line 3972
+ *   +0x0134 -> line 3973
+ *   +0x0138 -> line 3972
+ *   +0x013c -> line 3973
+ *   +0x0144 -> line 3972
+ *   +0x0148 -> line 3976
+ *   +0x014c -> line 3973
+ *   +0x0150 -> line 3972
+ *   +0x0154 -> line 3976
+ *   +0x0158 -> line 3973
+ *   +0x015c -> line 3972
+ *   +0x0160 -> line 3976
+ *   +0x0194 -> line 3977
+ *   +0x01d0 -> line 3978
+ *   +0x020c -> line 3979
+ *   +0x0244 -> line 3982
+ *   +0x0250 -> line 3988
+ *   +0x0254 -> line 3979
+ *   +0x0258 -> line 3988
+ *   +0x025c -> line 3982
+ *   +0x0260 -> line 3988
+ *   +0x0264 -> line 3983
+ *   +0x0268 -> line 3988
+ *   +0x0274 -> line 3984
+ *   +0x0278 -> line 3988
+ *   +0x027c -> line 3989
+ *   +0x0280 -> line 3988
+ *   +0x0284 -> line 3989
+ *   +0x0288 -> line 3988
+ *   +0x028c -> line 3989
+ *   +0x0290 -> line 3990
+ *   +0x0294 -> line 3989
+ *   +0x0298 -> line 3992
+ *   +0x029c -> line 3989
+ *   +0x02a0 -> line 3990
+ *   +0x02a4 -> line 3988
+ *   +0x02a8 -> line 3990
+ *   +0x02ac -> line 3985
+ *   +0x02b0 -> line 3990
+ *   +0x02b4 -> line 3991
+ *   +0x02b8 -> line 3990
+ *   +0x02bc -> line 3991
+ *   +0x02c0 -> line 3990
+ *   +0x02c4 -> line 3991
+ *   +0x02cc -> line 3994
+ *   +0x02d0 -> line 3991
+ *   +0x02d4 -> line 3992
+ *   +0x02d8 -> line 3990
+ *   +0x02dc -> line 3992
+ *   +0x02e0 -> line 3994
+ *   +0x02e4 -> line 3992
+ *   +0x02e8 -> line 3993
+ *   +0x02ec -> line 3992
+ *   +0x02f0 -> line 3993
+ *   +0x02f4 -> line 3992
+ *   +0x02f8 -> line 3993
+ *   +0x0304 -> line 3992
+ *   +0x0308 -> line 3994
+ *   +0x0314 -> line 3999
+ *   +0x0318 -> line 3994
+ *   +0x0320 -> line 3995
+ *   +0x0330 -> line 3999
+ *   +0x033c -> line 4000
+ *   +0x0350 -> line 4001
+ *   +0x0358 -> line 3994
+ *   +0x035c -> line 4001
+ *   +0x0360 -> line 4004
+ *   +0x0364 -> line 3995
+ *   +0x0368 -> line 4004
+ *   +0x0374 -> line 4005
+ *   +0x0388 -> line 4006
+ *   +0x0390 -> line 4008
+ *   +0x0398 -> line 4010
+ *   +0x03a0 -> line 4011
+ *   +0x03b0 -> line 4019
+ *   +0x03b8 -> line 4020
+ *   +0x03bc -> line 4036
+ *   +0x03c0 -> line 4021
+ *   +0x03c4 -> line 4036
+ *   +0x03c8 -> line 4027
+ *   +0x03cc -> line 4036
+ *   +0x03d0 -> line 4023
+ *   +0x03d4 -> line 4036
+ *   +0x03e0 -> line 4024
+ *   +0x03e4 -> line 4019
+ *   +0x03e8 -> line 4036
+ *   +0x03f4 -> line 4019
+ *   +0x03f8 -> line 4036
+ *   +0x03fc -> line 4019
+ *   +0x0400 -> line 4036
+ *   +0x0410 -> line 4020
+ *   +0x041c -> line 4021
+ *   +0x0428 -> line 4022
+ *   +0x0434 -> line 4027
+ *   +0x0440 -> line 4023
+ *   +0x0444 -> line 4024
+ *   +0x0448 -> line 4027
+ *   +0x044c -> line 4023
+ *   +0x0454 -> line 4024
+ *   +0x045c -> line 4027
+ *   +0x0464 -> line 4031
+ *   +0x046c -> line 4028
+ *   +0x0474 -> line 4031
+ *   +0x0478 -> line 4028
+ *   +0x0480 -> line 4031
+ *   +0x0484 -> line 4029
+ *   +0x0494 -> line 4028
+ *   +0x0498 -> line 4029
+ *   +0x049c -> line 4031
+ *   +0x04a0 -> line 4032
+ *   +0x04b4 -> line 4033
+ *   +0x04c8 -> line 4036
+ *   +0x04d0 -> line 4037
+ *   +0x050c -> line 4038
+ *   +0x0514 -> line 4039
+ *   +0x051c -> line 4042
+ *   +0x0568 -> line 4053
+ *   +0x056c -> line 4054
+ *   +0x0570 -> line 4053
+ *   +0x0574 -> line 4054
+ *   +0x0580 -> line 4057
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO2_DisplayAuraStorm(AGO2_Part_* p)
 {
     int HalfSphere;
@@ -6313,10 +6131,82 @@ void AGO2_DisplayAuraStorm(AGO2_Part_* p)
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 4270–4270 */
+/* addr: 0x001e1160  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4270
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO2_vTestWall(void)
 {
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 4276–4312 */
+/* addr: 0x001e0fe0  size: 372 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4276
+ *   +0x0004 -> line 4283
+ *   +0x0008 -> line 4276
+ *   +0x000c -> line 4283
+ *   +0x0018 -> line 4284
+ *   +0x0030 -> line 4286
+ *   +0x003c -> line 4289
+ *   +0x0040 -> line 4290
+ *   +0x006c -> line 4293
+ *   +0x0070 -> line 4294
+ *   +0x0074 -> line 4293
+ *   +0x0078 -> line 4295
+ *   +0x007c -> line 4293
+ *   +0x0080 -> line 4296
+ *   +0x0084 -> line 4293
+ *   +0x0088 -> line 4300
+ *   +0x008c -> line 4293
+ *   +0x0098 -> line 4296
+ *   +0x009c -> line 4293
+ *   +0x00a0 -> line 4298
+ *   +0x00a8 -> line 4293
+ *   +0x00ac -> line 4294
+ *   +0x00b8 -> line 4293
+ *   +0x00bc -> line 4298
+ *   +0x00c0 -> line 4299
+ *   +0x00c4 -> line 4298
+ *   +0x00d0 -> line 4295
+ *   +0x00d4 -> line 4294
+ *   +0x00d8 -> line 4298
+ *   +0x00e0 -> line 4299
+ *   +0x00e8 -> line 4298
+ *   +0x00f0 -> line 4295
+ *   +0x00f4 -> line 4294
+ *   +0x00f8 -> line 4298
+ *   +0x00fc -> line 4295
+ *   +0x0100 -> line 4299
+ *   +0x0104 -> line 4295
+ *   +0x0108 -> line 4294
+ *   +0x010c -> line 4300
+ *   +0x0110 -> line 4299
+ *   +0x0114 -> line 4300
+ *   +0x0118 -> line 4299
+ *   +0x011c -> line 4300
+ *   +0x0120 -> line 4296
+ *   +0x0124 -> line 4299
+ *   +0x0128 -> line 4295
+ *   +0x012c -> line 4304
+ *   +0x0130 -> line 4296
+ *   +0x0134 -> line 4295
+ *   +0x0138 -> line 4305
+ *   +0x013c -> line 4296
+ *   +0x0140 -> line 4300
+ *   +0x014c -> line 4301
+ *   +0x0150 -> line 4306
+ *   +0x0154 -> line 4308
+ *   +0x0158 -> line 4301
+ *   +0x0160 -> line 4309
+ *   +0x0164 -> line 4310
+ *   +0x0168 -> line 4312
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO2_vTestExploseWall(void)
 {
     AGO2_WallExplosionPart_ OriginalPart;
@@ -6357,6 +6247,70 @@ void AGO2_vTestExploseWall(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 139–240 */
+/* addr: 0x001e0dc0  size: 532 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 139
+ *   +0x0014 -> line 146
+ *   +0x0024 -> line 148
+ *   +0x0030 -> line 149
+ *   +0x0038 -> line 157
+ *   +0x0044 -> line 161
+ *   +0x004c -> line 160
+ *   +0x0054 -> line 161
+ *   +0x0088 -> line 163
+ *   +0x0090 -> line 166
+ *   +0x009c -> line 172
+ *   +0x00a4 -> line 177
+ *   +0x00ac -> line 178
+ *   +0x00bc -> line 192
+ *   +0x00cc -> line 194
+ *   +0x00d0 -> line 192
+ *   +0x00dc -> line 194
+ *   +0x00e8 -> line 192
+ *   +0x00ec -> line 194
+ *   +0x00f4 -> line 196
+ *   +0x0104 -> line 198
+ *   +0x0108 -> line 199
+ *   +0x0114 -> line 201
+ *   +0x0118 -> line 202
+ *   +0x011c -> line 204
+ *   +0x0120 -> line 202
+ *   +0x0124 -> line 205
+ *   +0x0134 -> line 215
+ *   +0x0158 -> line 218
+ *   +0x015c -> line 215
+ *   +0x0168 -> line 218
+ *   +0x0174 -> line 220
+ *   +0x0178 -> line 232
+ *   +0x0180 -> line 220
+ *   +0x0188 -> line 232
+ *   +0x018c -> line 221
+ *   +0x0190 -> line 225
+ *   +0x0194 -> line 220
+ *   +0x0198 -> line 221
+ *   +0x019c -> line 225
+ *   +0x01a0 -> line 220
+ *   +0x01a8 -> line 221
+ *   +0x01ac -> line 220
+ *   +0x01b0 -> line 225
+ *   +0x01b4 -> line 221
+ *   +0x01b8 -> line 225
+ *   +0x01bc -> line 226
+ *   +0x01c0 -> line 227
+ *   +0x01c4 -> line 231
+ *   +0x01d0 -> line 232
+ *   +0x01dc -> line 235
+ *   +0x01e0 -> line 234
+ *   +0x01e4 -> line 235
+ *   +0x01ec -> line 234
+ *   +0x01f0 -> line 239
+ *   +0x01f4 -> line 234
+ *   +0x01f8 -> line 239
+ *   +0x01fc -> line 240
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned int AGO2_MEM_Alloc(unsigned int Size)
 {
     unsigned int Difference;

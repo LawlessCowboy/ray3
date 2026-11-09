@@ -729,6 +729,953 @@ inline float PS2glSqrt(float x)
 void sceVu0MulMatrix(float dest[4][4], float left[4][4], float right[4][4]);
 _GL_BUFFERINFO g_stBufferInfo;
 
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void PS2glInitContext(tagGLcontext* pCtx);
+void impPS2glDepthRange(double zNear, double zFar);
+void impPS2glViewport(int x, int y, int width, int height);
+void PS2glViewOrg(float xOrg, float yOrg);
+void impPS2glOrtho(float left, float right, float bottom, float top, float zNear, float zFar);
+void PS2glGenOrthoMatrix(float (*m)[4], float left, float right, float bottom, float top, float zNear, float zFar);
+void PS2glBoundingSphereParameters(float fov, float aspect, float zNear, float zFar, float zNearTolerantCulling, float zFarTolerantCulling);
+void impPS2glFrustum(double left, double right, double bottom, double top, double zNear, double zFar);
+void impPS2glPopMatrix(void);
+void impPS2glPushMatrix(void);
+void impPS2glLoadIdentity(void);
+void impPS2glLoadMatrixf(float* m);
+void impPS2glLoadMatrixd(double* m);
+void impPS2glScalef(float x, float y, float z);
+void impPS2glScaled(double x, double y, double z);
+void impPS2glTranslatef(float x, float y, float z);
+void impPS2glTranslated(double x, double y, double z);
+void impPS2glRotatef(float angle, float x, float y, float z);
+void impPS2glRotated(double angle, double x, double y, double z);
+void impPS2glMultMatrixf(float* m);
+void impPS2glMultMatrixd(double* dm);
+void impPS2glMatrixMode(unsigned int mode);
+void PS2glGenRotationMatrix(float angle, float x, float y, float z, float (*m)[4]);
+
+void PS2glGenOrthoMatrix(float (*m)[4], float left, float right, float bottom, float top, float zNear, float zFar);
+void sceVu0CopyMatrix(float dest[4][4], float src[4][4]);
+
+/* Scoped peephole off: with it the pCurStack++ store and the source pointer
+ * load keep retail's register order (measured pragma sweep; was EQUIVALENT). */
+
+/* Not original source, needs cleaning up: scoped auto-inline so impPS2glLoadMatrixd inlines impPS2glLoadMatrixf. */
+#pragma auto_inline on
+
+/* Not original source, needs cleaning up: retail inlines a copy of
+ * impPS2glLoadMatrixf whose matrix pointer is loaded before the source
+ * quadwords; this inline copy reproduces that schedule. */
+inline void PS2GL_vLoadMatrixfInline(float* m)
+{
+    __int128* dest;
+    __int128 v0, v1, v2, v3;
+    dest = (__int128*)g_PS2glContext.pCurMatrix;
+    v0 = ((const volatile __int128*)m)[0];
+    v1 = ((const volatile __int128*)m)[1];
+    v2 = ((const volatile __int128*)m)[2];
+    v3 = ((const volatile __int128*)m)[3];
+    dest[0] = v0;
+    dest[1] = v1;
+    dest[2] = v2;
+    dest[3] = v3;
+    g_PS2glContext.bMatrixChanged = 1;
+}
+
+#pragma auto_inline reset
+
+void PS2glGenRotationMatrix(float angle, float x, float y, float z, float (*m)[4]);
+void sceVu0MulMatrix(float dest[4][4], float left[4][4], float right[4][4]);
+
+void sceVu0MulMatrix(float dest[4][4], float left[4][4], float right[4][4]);
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void PS2glInitContext(tagGLcontext* pCtx);
+void PS2glGenRotationMatrix(float angle, float x, float y, float z, float (*m)[4]);
+void impPS2glMatrixMode(unsigned int mode);
+void impPS2glMultMatrixd(double* dm);
+void impPS2glMultMatrixf(float* m);
+void impPS2glRotated(double angle, double x, double y, double z);
+void impPS2glRotatef(float angle, float x, float y, float z);
+void impPS2glTranslated(double x, double y, double z);
+void impPS2glTranslatef(float x, float y, float z);
+void impPS2glScaled(double x, double y, double z);
+void impPS2glScalef(float x, float y, float z);
+void impPS2glLoadMatrixd(double* m);
+void impPS2glLoadMatrixf(float* m);
+void impPS2glLoadIdentity(void);
+void impPS2glPushMatrix(void);
+void impPS2glPopMatrix(void);
+void impPS2glFrustum(double left, double right, double bottom, double top, double zNear, double zFar);
+void PS2glBoundingSphereParameters(float fov, float aspect, float zNear, float zFar, float zNearTolerantCulling, float zFarTolerantCulling);
+void PS2glGenOrthoMatrix(float (*m)[4], float left, float right, float bottom, float top, float zNear, float zFar);
+void impPS2glOrtho(float left, float right, float bottom, float top, float zNear, float zFar);
+void PS2glViewOrg(float xOrg, float yOrg);
+void impPS2glViewport(int x, int y, int width, int height);
+void impPS2glDepthRange(double zNear, double zFar);
+
+#pragma auto_inline on
+
+#pragma auto_inline reset
+
+#pragma auto_inline on
+
+#pragma auto_inline reset
+
+#pragma push
+#pragma peephole off
+
+#pragma pop
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 238–346 */
+/* addr: 0x00181b00  size: 364 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 238
+ *   +0x0004 -> line 243
+ *   +0x0008 -> line 238
+ *   +0x000c -> line 243
+ *   +0x0010 -> line 238
+ *   +0x0014 -> line 243
+ *   +0x0018 -> line 238
+ *   +0x0020 -> line 243
+ *   +0x0024 -> line 238
+ *   +0x003c -> line 243
+ *   +0x0044 -> line 244
+ *   +0x0050 -> line 246
+ *   +0x0064 -> line 248
+ *   +0x007c -> line 251
+ *   +0x008c -> line 252
+ *   +0x0094 -> line 255
+ *   +0x0098 -> line 323
+ *   +0x009c -> line 256
+ *   +0x00a0 -> line 257
+ *   +0x00a4 -> line 323
+ *   +0x00a8 -> line 325
+ *   +0x00ac -> line 323
+ *   +0x00b0 -> line 325
+ *   +0x00bc -> line 326
+ *   +0x00c4 -> line 327
+ *   +0x00c8 -> line 322
+ *   +0x00cc -> line 327
+ *   +0x00d0 -> line 326
+ *   +0x00d4 -> line 321
+ *   +0x00d8 -> line 330
+ *   +0x00dc -> line 326
+ *   +0x00e0 -> line 327
+ *   +0x00e8 -> line 328
+ *   +0x00ec -> line 330
+ *   +0x00f0 -> line 331
+ *   +0x0100 -> line 337
+ *   +0x0108 -> line 332
+ *   +0x010c -> line 335
+ *   +0x0110 -> line 320
+ *   +0x0114 -> line 332
+ *   +0x0118 -> line 337
+ *   +0x011c -> line 332
+ *   +0x0124 -> line 333
+ *   +0x0128 -> line 336
+ *   +0x012c -> line 335
+ *   +0x0130 -> line 336
+ *   +0x0134 -> line 337
+ *   +0x0138 -> line 338
+ *   +0x013c -> line 340
+ *   +0x0140 -> line 341
+ *   +0x0144 -> line 342
+ *   +0x0148 -> line 343
+ *   +0x014c -> line 346
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void PS2glGenRotationMatrix(float angle, float x, float y, float z, float (*m)[4])
+{
+    float mag;
+    float s;
+    float c;
+    float xs;
+    float ys;
+    float zs;
+    float one_c;
+
+    s = sinf(angle * 0.017453292f);
+    c = cosf(angle * 0.017453292f);
+    mag = x * x + y * y + z * z;
+    mag = PS2glSqrt(mag);
+    if (mag == 0.0f)
+    {
+        memcpy(m, matIdentity, 64);
+        return;
+    }
+    xs = x / mag;
+    ys = y / mag;
+    zs = z / mag;
+    one_c = 1.0f - c;
+    m[0][0] = c + xs * xs * one_c;
+    m[1][0] = xs * ys * one_c - zs * s;
+    m[2][0] = zs * xs * one_c + ys * s;
+    m[3][0] = 0.0f;
+    m[0][1] = xs * ys * one_c + zs * s;
+    m[1][1] = c + ys * ys * one_c;
+    m[2][1] = ys * zs * one_c - xs * s;
+    m[3][1] = 0.0f;
+    m[0][2] = zs * xs * one_c - ys * s;
+    m[1][2] = ys * zs * one_c + xs * s;
+    m[2][2] = c + zs * zs * one_c;
+    m[3][2] = 0.0f;
+    m[0][3] = 0.0f;
+    m[1][3] = 0.0f;
+    m[2][3] = 0.0f;
+    m[3][3] = 1.0f;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 352–373 */
+/* addr: 0x001819d0  size: 304 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 352
+ *   +0x002c -> line 356
+ *   +0x0030 -> line 355
+ *   +0x003c -> line 356
+ *   +0x0044 -> line 357
+ *   +0x0048 -> line 356
+ *   +0x004c -> line 357
+ *   +0x0068 -> line 358
+ *   +0x0070 -> line 361
+ *   +0x0074 -> line 360
+ *   +0x0080 -> line 361
+ *   +0x0088 -> line 362
+ *   +0x008c -> line 361
+ *   +0x0090 -> line 362
+ *   +0x00ac -> line 363
+ *   +0x00b4 -> line 365
+ *   +0x00c4 -> line 366
+ *   +0x00c8 -> line 365
+ *   +0x00d4 -> line 366
+ *   +0x00d8 -> line 365
+ *   +0x00dc -> line 366
+ *   +0x00e4 -> line 367
+ *   +0x00e8 -> line 366
+ *   +0x00ec -> line 367
+ *   +0x0110 -> line 368
+ *   +0x0118 -> line 370
+ *   +0x0120 -> line 372
+ *   +0x0128 -> line 373
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void impPS2glMatrixMode(unsigned int mode)
+{
+    switch (mode)
+    {
+    case 0x1700:
+        g_PS2glContext.pCurMatrix = &g_PS2glContext.ModelViewMatrix;
+        g_PS2glContext.piCurStackDepth = (int)&g_PS2glContext.nModelViewStackDepth;
+        g_PS2glContext.pCurStack = &g_PS2glContext.ModelViewStack[g_PS2glContext.nModelViewStackDepth];
+        break;
+    case 0x1701:
+        g_PS2glContext.pCurMatrix = &g_PS2glContext.ProjectionMatrix;
+        g_PS2glContext.piCurStackDepth = (int)&g_PS2glContext.nProjectionStackDepth;
+        g_PS2glContext.pCurStack = &g_PS2glContext.ProjectionStack[g_PS2glContext.nProjectionStackDepth];
+        break;
+    case 0x1702:
+        g_PS2glContext.pCurMatrix = &g_PS2glContext.TextureMatrix[g_PS2glContext.iCurTextureSet];
+        g_PS2glContext.piCurStackDepth = (int)&g_PS2glContext.nTextureStackDepths[g_PS2glContext.iCurTextureSet];
+        g_PS2glContext.pCurStack = &g_PS2glContext.TextureStacks[g_PS2glContext.iCurTextureSet][*(int*)g_PS2glContext.piCurStackDepth];
+        break;
+    default:
+        return;
+    }
+    g_PS2glContext.eMatrixMode = mode;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 377–385 */
+/* addr: 0x001818c0  size: 268 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 377
+ *   +0x0014 -> line 381
+ *   +0x00d8 -> line 382
+ *   +0x00ec -> line 384
+ *   +0x00f8 -> line 385
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void impPS2glMultMatrixd(double* dm)
+{
+    float m[4][4];
+    float *p = (float*)&m;
+
+    *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++;
+    sceVu0MulMatrix(*g_PS2glContext.pCurMatrix, *g_PS2glContext.pCurMatrix, m);
+
+    g_PS2glContext.bMatrixChanged = 1;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 388–396 */
+/* addr: 0x00181880  size: 52 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 388
+ *   +0x000c -> line 393
+ *   +0x001c -> line 395
+ *   +0x0028 -> line 396
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void impPS2glMultMatrixf(float* m)
+{
+    sceVu0MulMatrix(*g_PS2glContext.pCurMatrix, *g_PS2glContext.pCurMatrix, (float (*)[4])m);
+    g_PS2glContext.bMatrixChanged = 1;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 399–406 */
+/* addr: 0x001817d0  size: 176 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 399
+ *   +0x0028 -> line 402
+ *   +0x006c -> line 403
+ *   +0x0080 -> line 405
+ *   +0x008c -> line 406
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void impPS2glRotated(double angle, double x, double y, double z)
+{
+    float m[4][4];
+
+    PS2glGenRotationMatrix((float)angle, (float)x, (float)y, (float)z, m);
+    sceVu0MulMatrix(*g_PS2glContext.pCurMatrix, *g_PS2glContext.pCurMatrix, m);
+    g_PS2glContext.bMatrixChanged = 1;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 409–416 */
+/* addr: 0x00181790  size: 60 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 409
+ *   +0x0008 -> line 412
+ *   +0x0010 -> line 413
+ *   +0x0024 -> line 415
+ *   +0x0030 -> line 416
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void impPS2glRotatef(float angle, float x, float y, float z)
+{
+    float m[4][4];
+
+    PS2glGenRotationMatrix(angle, x, y, z, m);
+    sceVu0MulMatrix(*g_PS2glContext.pCurMatrix, *g_PS2glContext.pCurMatrix, m);
+    g_PS2glContext.bMatrixChanged = 1;
+}
+
+/* The retail DWARF line table gives this function three source lines: the
+ * declaration, one body line and the closing brace, so the matrix pointer,
+ * the four column updates and the bMatrixChanged store all share one line.
+ * The four columns are written out explicitly: a loop makes MWCC swap the
+ * operands of the first mul.s, which does not match the retail code. */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 419–422 */
+/* addr: 0x00181620  size: 360 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 419
+ *   +0x0004 -> line 421
+ *   +0x0008 -> line 419
+ *   +0x0028 -> line 421
+ *   +0x0148 -> line 422
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void impPS2glTranslated(double x, double y, double z)
+{
+    float (*m)[4] = *g_PS2glContext.pCurMatrix; m[3][0] = m[3][0] + (m[0][0] * (float)x + m[1][0] * (float)y + m[2][0] * (float)z); m[3][1] = m[3][1] + (m[0][1] * (float)x + m[1][1] * (float)y + m[2][1] * (float)z); m[3][2] = m[3][2] + (m[0][2] * (float)x + m[1][2] * (float)y + m[2][2] * (float)z); m[3][3] = m[3][3] + (m[0][3] * (float)x + m[1][3] * (float)y + m[2][3] * (float)z); g_PS2glContext.bMatrixChanged = 1;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 426–435 */
+/* addr: 0x00181560  size: 184 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 426
+ *   +0x0004 -> line 434
+ *   +0x0008 -> line 426
+ *   +0x000c -> line 429
+ *   +0x0010 -> line 434
+ *   +0x0014 -> line 429
+ *   +0x0038 -> line 430
+ *   +0x0060 -> line 431
+ *   +0x0088 -> line 432
+ *   +0x00b0 -> line 435
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void impPS2glTranslatef(float x, float y, float z)
+{
+    float* param0 = (float*)*g_PS2glContext.pCurMatrix;
+    param0[12] = param0[0] * x + param0[4] * y + param0[8] * z + param0[12];
+    param0[13] = param0[1] * x + param0[5] * y + param0[9] * z + param0[13];
+    param0[14] = param0[2] * x + param0[6] * y + param0[10] * z + param0[14];
+    param0[15] = param0[3] * x + param0[7] * y + param0[11] * z + param0[15];
+    g_PS2glContext.bMatrixChanged = 1;
+}
+
+/* The retail DWARF line table gives this function three source lines: the
+ * declaration, one body line and the closing brace, so the matrix pointer,
+ * the twelve row updates and the bMatrixChanged store all share one line. */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 438–441 */
+/* addr: 0x00181420  size: 320 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 438
+ *   +0x0004 -> line 440
+ *   +0x0008 -> line 438
+ *   +0x0024 -> line 440
+ *   +0x0124 -> line 441
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void impPS2glScaled(double x, double y, double z)
+{
+    float (*m)[4] = *g_PS2glContext.pCurMatrix; m[0][0] *= (float)x; m[1][0] *= (float)y; m[2][0] *= (float)z; m[0][1] *= (float)x; m[1][1] *= (float)y; m[2][1] *= (float)z; m[0][2] *= (float)x; m[1][2] *= (float)y; m[2][2] *= (float)z; m[0][3] *= (float)x; m[1][3] *= (float)y; m[2][3] *= (float)z; g_PS2glContext.bMatrixChanged = 1;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 445–454 */
+/* addr: 0x00181370  size: 168 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 445
+ *   +0x0004 -> line 453
+ *   +0x0008 -> line 445
+ *   +0x000c -> line 448
+ *   +0x0010 -> line 453
+ *   +0x0014 -> line 448
+ *   +0x0034 -> line 449
+ *   +0x0058 -> line 450
+ *   +0x007c -> line 451
+ *   +0x00a0 -> line 454
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void impPS2glScalef(float x, float y, float z)
+{
+    float* param0 = (float*)*g_PS2glContext.pCurMatrix;
+    param0[0] *= x; param0[4] *= y; param0[8] *= z;
+    param0[1] *= x; param0[5] *= y; param0[9] *= z;
+    param0[2] *= x; param0[6] *= y; param0[10] *= z;
+    param0[3] *= x; param0[7] *= y; param0[11] *= z;
+    g_PS2glContext.bMatrixChanged = 1;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 458–465 */
+/* addr: 0x00181240  size: 292 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 458
+ *   +0x0014 -> line 463
+ *   +0x00d8 -> line 464
+ *   +0x0110 -> line 465
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+#pragma auto_inline on
+void impPS2glLoadMatrixd(double* m)
+{
+    float fm[16];
+    float *p = (float*)&fm;
+
+    *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++;
+    PS2GL_vLoadMatrixfInline(fm);
+}
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 473–476 */
+/* addr: 0x00181200  size: 56 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 473
+ *   +0x000c -> line 475
+ *   +0x0010 -> line 473
+ *   +0x001c -> line 475
+ *   +0x0020 -> line 473
+ *   +0x0030 -> line 476
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+#pragma auto_inline on
+void impPS2glLoadMatrixf(float* m)
+{
+    __int128 v3, v2, v1, v0;
+    __int128* dest;
+    v0 = ((const volatile __int128*)m)[0];
+    v1 = ((const volatile __int128*)m)[1];
+    v2 = ((const volatile __int128*)m)[2];
+    v3 = ((const volatile __int128*)m)[3];
+    dest = (__int128*)g_PS2glContext.pCurMatrix;
+    dest[0] = v0;
+    dest[1] = v1;
+    dest[2] = v2;
+    dest[3] = v3;
+    g_PS2glContext.bMatrixChanged = 1;
+}
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 481–484 */
+/* addr: 0x001811c0  size: 64 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 481
+ *   +0x0014 -> line 483
+ *   +0x0018 -> line 481
+ *   +0x0020 -> line 483
+ *   +0x0024 -> line 481
+ *   +0x0038 -> line 484
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void impPS2glLoadIdentity(void)
+{
+    __int128 v3, v2, v1, v0;
+    __int128* dest = (__int128*)g_PS2glContext.pCurMatrix;
+    v0 = ((const volatile __int128*)matIdentity)[0];
+    v1 = ((const volatile __int128*)matIdentity)[1];
+    v2 = ((const volatile __int128*)matIdentity)[2];
+    v3 = ((const volatile __int128*)matIdentity)[3];
+    dest[0] = v0;
+    dest[1] = v1;
+    dest[2] = v2;
+    dest[3] = v3;
+    g_PS2glContext.bMatrixChanged = 1;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 490–492 */
+/* addr: 0x00181160  size: 84 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 490
+ *   +0x0020 -> line 491
+ *   +0x0024 -> line 490
+ *   +0x0040 -> line 491
+ *   +0x004c -> line 492
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+#pragma peephole off
+void impPS2glPushMatrix(void)
+{
+    __int128 v3, v2, v1, v0;
+    __int128* dest = (__int128*)g_PS2glContext.pCurStack++;
+    const volatile __int128* src = (const volatile __int128*)g_PS2glContext.pCurMatrix;
+    v0 = src[0];
+    v1 = src[1];
+    v2 = src[2];
+    v3 = src[3];
+    dest[0] = v0;
+    dest[1] = v1;
+    dest[2] = v2;
+    dest[3] = v3;
+    ++*(int*)g_PS2glContext.piCurStackDepth;
+}
+#pragma peephole reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 497–501 */
+/* addr: 0x00181100  size: 96 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 497
+ *   +0x0004 -> line 500
+ *   +0x0008 -> line 497
+ *   +0x0010 -> line 498
+ *   +0x0014 -> line 497
+ *   +0x001c -> line 498
+ *   +0x0038 -> line 500
+ *   +0x003c -> line 498
+ *   +0x0058 -> line 501
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void impPS2glPopMatrix(void)
+{
+    __int128 v3, v2, v1, v0;
+    __int128* dest;
+    const volatile __int128* src;
+    --*(int*)g_PS2glContext.piCurStackDepth;
+    src = (const volatile __int128*)g_PS2glContext.pCurStack;
+    src -= 4;
+    g_PS2glContext.pCurStack--;
+    dest = (__int128*)g_PS2glContext.pCurMatrix;
+    v0 = src[0];
+    v1 = src[1];
+    v2 = src[2];
+    v3 = src[3];
+    dest[0] = v0;
+    dest[1] = v1;
+    dest[2] = v2;
+    dest[3] = v3;
+    g_PS2glContext.bMatrixChanged = 1;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 507–529 */
+/* addr: 0x00180f20  size: 480 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 507
+ *   +0x0004 -> line 520
+ *   +0x0008 -> line 507
+ *   +0x0044 -> line 520
+ *   +0x00a4 -> line 521
+ *   +0x00ac -> line 520
+ *   +0x00b0 -> line 521
+ *   +0x00f8 -> line 522
+ *   +0x0100 -> line 521
+ *   +0x0104 -> line 522
+ *   +0x017c -> line 526
+ *   +0x0180 -> line 523
+ *   +0x0184 -> line 526
+ *   +0x0188 -> line 522
+ *   +0x018c -> line 523
+ *   +0x0190 -> line 526
+ *   +0x0194 -> line 523
+ *   +0x01a0 -> line 526
+ *   +0x01a8 -> line 528
+ *   +0x01b4 -> line 529
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void impPS2glFrustum(double left, double right, double bottom, double top, double zNear, double zFar)
+{
+    float m[4][4];
+
+    m[0][0] = (float)((2.0 * zNear) / (right - left)); m[1][0] = 0.0f; m[2][0] = (float)((right + left) / (right - left)); m[3][0] = 0.0f;
+    m[0][1] = 0.0f; m[1][1] = (float)((2.0 * zNear) / (top - bottom)); m[2][1] = (float)((top + bottom) / (top - bottom)); m[3][1] = 0.0f;
+    m[0][2] = 0.0f; m[1][2] = 0.0f; m[2][2] = (float)(-(zFar + zNear) / (zFar - zNear)); m[3][2] = (float)(-(2.0 * zFar * zNear) / (zFar - zNear));
+    m[0][3] = 0.0f; m[1][3] = 0.0f; m[2][3] = -1.0f; m[3][3] = 0.0f;
+    sceVu0MulMatrix(*g_PS2glContext.pCurMatrix, *g_PS2glContext.pCurMatrix, m);
+    g_PS2glContext.bMatrixChanged = 1;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 532–605 */
+/* addr: 0x00180c60  size: 704 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 532
+ *   +0x0004 -> line 537
+ *   +0x0008 -> line 532
+ *   +0x000c -> line 537
+ *   +0x0010 -> line 532
+ *   +0x0014 -> line 537
+ *   +0x0018 -> line 532
+ *   +0x001c -> line 537
+ *   +0x0020 -> line 532
+ *   +0x0024 -> line 537
+ *   +0x0028 -> line 532
+ *   +0x002c -> line 538
+ *   +0x0030 -> line 532
+ *   +0x0038 -> line 537
+ *   +0x0040 -> line 532
+ *   +0x0058 -> line 538
+ *   +0x006c -> line 539
+ *   +0x0074 -> line 540
+ *   +0x0090 -> line 541
+ *   +0x0094 -> line 543
+ *   +0x00a4 -> line 544
+ *   +0x00b0 -> line 546
+ *   +0x00b8 -> line 548
+ *   +0x00bc -> line 547
+ *   +0x00c0 -> line 548
+ *   +0x00d4 -> line 552
+ *   +0x00d8 -> line 549
+ *   +0x00dc -> line 553
+ *   +0x00e0 -> line 559
+ *   +0x00e4 -> line 552
+ *   +0x00ec -> line 554
+ *   +0x00f4 -> line 555
+ *   +0x00f8 -> line 559
+ *   +0x0104 -> line 560
+ *   +0x0110 -> line 569
+ *   +0x0114 -> line 560
+ *   +0x0120 -> line 570
+ *   +0x0124 -> line 561
+ *   +0x0128 -> line 569
+ *   +0x012c -> line 564
+ *   +0x0130 -> line 570
+ *   +0x0134 -> line 569
+ *   +0x0138 -> line 570
+ *   +0x013c -> line 565
+ *   +0x0148 -> line 566
+ *   +0x0150 -> line 570
+ *   +0x0158 -> line 571
+ *   +0x015c -> line 570
+ *   +0x0160 -> line 571
+ *   +0x0178 -> line 574
+ *   +0x0180 -> line 576
+ *   +0x0184 -> line 575
+ *   +0x0188 -> line 576
+ *   +0x019c -> line 580
+ *   +0x01a0 -> line 577
+ *   +0x01a4 -> line 581
+ *   +0x01a8 -> line 587
+ *   +0x01ac -> line 580
+ *   +0x01b4 -> line 582
+ *   +0x01bc -> line 583
+ *   +0x01c0 -> line 587
+ *   +0x01cc -> line 588
+ *   +0x01e4 -> line 597
+ *   +0x01e8 -> line 589
+ *   +0x01ec -> line 598
+ *   +0x01f0 -> line 592
+ *   +0x01f4 -> line 597
+ *   +0x01f8 -> line 593
+ *   +0x01fc -> line 597
+ *   +0x0200 -> line 598
+ *   +0x0208 -> line 599
+ *   +0x020c -> line 604
+ *   +0x0210 -> line 593
+ *   +0x0218 -> line 594
+ *   +0x0220 -> line 595
+ *   +0x0224 -> line 597
+ *   +0x0244 -> line 598
+ *   +0x0264 -> line 599
+ *   +0x0268 -> line 600
+ *   +0x0270 -> line 601
+ *   +0x0278 -> line 602
+ *   +0x0280 -> line 604
+ *   +0x0288 -> line 605
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void PS2glBoundingSphereParameters(float fov, float aspect, float zNear, float zFar, float zNearTolerantCulling, float zFarTolerantCulling)
+{
+    float fTemp;
+    float fFovX;
+    int iWindowHeight;
+    int iWindowWidth;
+    float mGuardBandNormal[4][4];
+    float mFrustumNormal[4][4];
+    float fAngle;
+    float fAngle2;
+
+    fFovX = (3.1415927f * fov) / 360.0f;
+    iWindowWidth = g_stBufferInfo.iScreenWidth;
+    iWindowHeight = g_stBufferInfo.iScreenHeight;
+    if (g_stBufferInfo.bPlainBufferMode == 0 && iWindowHeight >= 0x1C0)
+        iWindowHeight >>= 1;
+    fTemp = tanf(fFovX);
+    fAngle = atanf(aspect * fTemp);
+    mFrustumNormal[0][0] = cosf(fAngle);
+    mFrustumNormal[0][1] = -cosf(fAngle);
+    mFrustumNormal[0][2] = 0.0f;
+    mFrustumNormal[0][3] = 0.0f;
+    mFrustumNormal[1][0] = 0.0f;
+    mFrustumNormal[1][1] = 0.0f;
+    mFrustumNormal[1][2] = cosf(fFovX);
+    mFrustumNormal[1][3] = -cosf(fFovX);
+    mFrustumNormal[2][0] = -sinf(fAngle);
+    mFrustumNormal[2][1] = -sinf(fAngle);
+    mFrustumNormal[2][2] = -sinf(fFovX);
+    mFrustumNormal[2][3] = -sinf(fFovX);
+    mFrustumNormal[3][0] = 0.0f;
+    mFrustumNormal[3][1] = 0.0f;
+    mFrustumNormal[3][2] = 0.0f;
+    mFrustumNormal[3][3] = 0.0f;
+    fTemp = fTemp * 4096.0f;
+    fAngle = atanf(fTemp / (float)iWindowHeight);
+    fTemp = fTemp * aspect;
+    fAngle2 = atanf(fTemp / (float)iWindowWidth);
+    mGuardBandNormal[0][0] = cosf(fAngle2);
+    mGuardBandNormal[0][1] = -cosf(fAngle2);
+    mGuardBandNormal[0][2] = 0.0f;
+    mGuardBandNormal[0][3] = 0.0f;
+    mGuardBandNormal[1][0] = 0.0f;
+    mGuardBandNormal[1][1] = 0.0f;
+    mGuardBandNormal[1][2] = cosf(fAngle);
+    mGuardBandNormal[1][3] = -cosf(fAngle);
+    mGuardBandNormal[2][0] = -sinf(fAngle2);
+    mGuardBandNormal[2][1] = -sinf(fAngle2);
+    mGuardBandNormal[2][2] = -sinf(fAngle);
+    mGuardBandNormal[2][3] = -sinf(fAngle);
+    mGuardBandNormal[3][0] = 0.0f;
+    mGuardBandNormal[3][1] = 0.0f;
+    mGuardBandNormal[3][2] = 0.0f;
+    mGuardBandNormal[3][3] = 0.0f;
+    ((__int128*)g_PS2glContext.mFrustumNormal)[0] = ((__int128*)mFrustumNormal)[0];
+    ((__int128*)g_PS2glContext.mFrustumNormal)[1] = ((__int128*)mFrustumNormal)[1];
+    ((__int128*)g_PS2glContext.mFrustumNormal)[2] = ((__int128*)mFrustumNormal)[2];
+    ((__int128*)g_PS2glContext.mFrustumNormal)[3] = ((__int128*)mFrustumNormal)[3];
+    ((__int128*)g_PS2glContext.mGuardBandNormal)[0] = ((__int128*)mGuardBandNormal)[0];
+    ((__int128*)g_PS2glContext.mGuardBandNormal)[1] = ((__int128*)mGuardBandNormal)[1];
+    ((__int128*)g_PS2glContext.mGuardBandNormal)[2] = ((__int128*)mGuardBandNormal)[2];
+    ((__int128*)g_PS2glContext.mGuardBandNormal)[3] = ((__int128*)mGuardBandNormal)[3];
+    g_PS2glContext.vZNearFar[0] = zNear;
+    g_PS2glContext.vZNearFar[1] = zFar;
+    g_PS2glContext.vZNearFar[2] = zNearTolerantCulling;
+    g_PS2glContext.vZNearFar[3] = zFarTolerantCulling;
+    g_PS2glContext.bBSParamChanged = 1;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 615–632 */
+/* addr: 0x00180bd0  size: 144 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 615
+ *   +0x000c -> line 627
+ *   +0x0010 -> line 615
+ *   +0x0014 -> line 627
+ *   +0x0024 -> line 616
+ *   +0x0028 -> line 627
+ *   +0x0030 -> line 616
+ *   +0x0034 -> line 627
+ *   +0x0038 -> line 628
+ *   +0x0050 -> line 617
+ *   +0x0054 -> line 628
+ *   +0x0058 -> line 617
+ *   +0x005c -> line 628
+ *   +0x0060 -> line 629
+ *   +0x007c -> line 630
+ *   +0x0088 -> line 632
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void PS2glGenOrthoMatrix(float (*m)[4], float left, float right, float bottom, float top, float zNear, float zFar)
+{
+    float fDivFN;
+    float fDivTB;
+    float fDivRL;
+
+    fDivRL = 1.0f / (right - left);
+    fDivTB = 1.0f / (top - bottom);
+    fDivFN = 1.0f / (zNear - zFar);
+    m[0][0] = fDivRL + fDivRL;
+    m[1][0] = 0.0f;
+    m[2][0] = 0.0f;
+    m[3][0] = fDivRL * -(right + left);
+    m[0][1] = 0.0f;
+    m[1][1] = fDivTB + fDivTB;
+    m[2][1] = 0.0f;
+    m[3][1] = fDivTB * -(top + bottom);
+    m[0][2] = 0.0f;
+    m[1][2] = 0.0f;
+    m[2][2] = fDivFN + fDivFN;
+    m[3][2] = fDivFN * (zFar + zNear);
+    m[0][3] = 0.0f;
+    m[1][3] = 0.0f;
+    m[2][3] = 0.0f;
+    m[3][3] = 1.0f;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 637–646 */
+/* addr: 0x00180b80  size: 76 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 637
+ *   +0x0008 -> line 640
+ *   +0x0010 -> line 641
+ *   +0x0024 -> line 643
+ *   +0x0034 -> line 645
+ *   +0x0040 -> line 646
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void impPS2glOrtho(float left, float right, float bottom, float top, float zNear, float zFar)
+{
+    float m[4][4];
+
+    PS2glGenOrthoMatrix(m, left, right, bottom, top, zNear, zFar);
+    sceVu0MulMatrix(*g_PS2glContext.pCurMatrix, *g_PS2glContext.pCurMatrix, m);
+    sceVu0CopyMatrix(g_PS2glContext.GuardBandProjectionMatrix, m);
+    g_PS2glContext.bMatrixChanged = 1;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 650–656 */
+/* addr: 0x00180b20  size: 96 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 650
+ *   +0x0004 -> line 655
+ *   +0x0008 -> line 650
+ *   +0x0014 -> line 655
+ *   +0x001c -> line 650
+ *   +0x0020 -> line 651
+ *   +0x0028 -> line 650
+ *   +0x002c -> line 651
+ *   +0x0038 -> line 652
+ *   +0x0040 -> line 653
+ *   +0x0048 -> line 650
+ *   +0x0050 -> line 651
+ *   +0x0058 -> line 656
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void PS2glViewOrg(float xOrg, float yOrg)
+{
+    g_PS2glContext.ViewPort[0] = g_PS2glContext.ViewPort[0] + (xOrg - g_PS2glContext.ViewOrg[0]);
+    g_PS2glContext.bMatrixChanged = 1;
+    g_PS2glContext.ViewPort[1] = g_PS2glContext.ViewPort[1] + (yOrg - g_PS2glContext.ViewOrg[1]);
+    g_PS2glContext.ViewOrg[0] = xOrg;
+    g_PS2glContext.ViewOrg[1] = yOrg;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 662–696 */
+/* addr: 0x00180a90  size: 136 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 662
+ *   +0x0014 -> line 695
+ *   +0x0018 -> line 664
+ *   +0x0020 -> line 665
+ *   +0x0028 -> line 664
+ *   +0x002c -> line 665
+ *   +0x0034 -> line 664
+ *   +0x0038 -> line 665
+ *   +0x003c -> line 695
+ *   +0x0044 -> line 664
+ *   +0x004c -> line 665
+ *   +0x0054 -> line 667
+ *   +0x005c -> line 665
+ *   +0x006c -> line 667
+ *   +0x0078 -> line 668
+ *   +0x0080 -> line 696
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void impPS2glViewport(int x, int y, int width, int height)
+{
+    if (g_PS2glContext.bFrameMode)
+        height >>= 1;
+    g_PS2glContext.ViewPort[0] = g_PS2glContext.ViewOrg[0] + (float)x;
+    g_PS2glContext.ViewPort[1] = g_PS2glContext.ViewOrg[1] + (float)y + (float)height;
+    g_PS2glContext.ViewPort[2] = (float)width;
+    g_PS2glContext.ViewPort[3] = -(float)height;
+    g_PS2glContext.bMatrixChanged = 1;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 699–721 */
+/* addr: 0x00180910  size: 384 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 699
+ *   +0x0004 -> line 705
+ *   +0x0008 -> line 699
+ *   +0x000c -> line 705
+ *   +0x0010 -> line 699
+ *   +0x0020 -> line 705
+ *   +0x004c -> line 707
+ *   +0x005c -> line 708
+ *   +0x006c -> line 709
+ *   +0x0080 -> line 710
+ *   +0x008c -> line 714
+ *   +0x00cc -> line 715
+ *   +0x010c -> line 717
+ *   +0x0124 -> line 718
+ *   +0x012c -> line 717
+ *   +0x0130 -> line 718
+ *   +0x0134 -> line 717
+ *   +0x013c -> line 718
+ *   +0x014c -> line 720
+ *   +0x0150 -> line 718
+ *   +0x0158 -> line 720
+ *   +0x0160 -> line 718
+ *   +0x0168 -> line 721
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void impPS2glDepthRange(double zNear, double zFar)
+{
+    switch (g_PS2glContext.iDepthBufferBitDepth)
+    {
+    case 16: g_PS2glContext.DepthRange[0] = 65500.0f; break;
+    case 24: g_PS2glContext.DepthRange[0] = 16777000.0f; break;
+    case 32: g_PS2glContext.DepthRange[0] = 4294960128.0f; break;
+    default: g_PS2glContext.DepthRange[0] = 16777000.0f; break;
+    }
+    zNear = (zNear < 0.0) ? 0.0 : ((zNear > 1.0) ? 1.0 : zNear);
+    zFar = (zFar < 0.0) ? 0.0 : ((zFar > 1.0) ? 1.0 : zFar);
+    g_PS2glContext.DepthRange[1] = g_PS2glContext.DepthRange[0] * (1.0f - (float)zFar);
+    g_PS2glContext.DepthRange[0] = g_PS2glContext.DepthRange[0] * (1.0f - (float)zNear);
+    g_PS2glContext.bMatrixChanged = 1;
+}
+
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 26–644 */
 /* addr: 0x00180390  size: 1404 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -845,968 +1792,6 @@ _GL_BUFFERINFO g_stBufferInfo;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* The functions below are in their original source-line order (retail
- * emits them in reverse); these prototypes keep earlier calls valid. */
-void PS2glInitContext(tagGLcontext* pCtx);
-void impPS2glDepthRange(double zNear, double zFar);
-void impPS2glViewport(int x, int y, int width, int height);
-void PS2glViewOrg(float xOrg, float yOrg);
-void impPS2glOrtho(float left, float right, float bottom, float top, float zNear, float zFar);
-void PS2glGenOrthoMatrix(float (*m)[4], float left, float right, float bottom, float top, float zNear, float zFar);
-void PS2glBoundingSphereParameters(float fov, float aspect, float zNear, float zFar, float zNearTolerantCulling, float zFarTolerantCulling);
-void impPS2glFrustum(double left, double right, double bottom, double top, double zNear, double zFar);
-void impPS2glPopMatrix(void);
-void impPS2glPushMatrix(void);
-void impPS2glLoadIdentity(void);
-void impPS2glLoadMatrixf(float* m);
-void impPS2glLoadMatrixd(double* m);
-void impPS2glScalef(float x, float y, float z);
-void impPS2glScaled(double x, double y, double z);
-void impPS2glTranslatef(float x, float y, float z);
-void impPS2glTranslated(double x, double y, double z);
-void impPS2glRotatef(float angle, float x, float y, float z);
-void impPS2glRotated(double angle, double x, double y, double z);
-void impPS2glMultMatrixf(float* m);
-void impPS2glMultMatrixd(double* dm);
-void impPS2glMatrixMode(unsigned int mode);
-void PS2glGenRotationMatrix(float angle, float x, float y, float z, float (*m)[4]);
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 699–721 */
-/* addr: 0x00180910  size: 384 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 699
- *   +0x0004 -> line 705
- *   +0x0008 -> line 699
- *   +0x000c -> line 705
- *   +0x0010 -> line 699
- *   +0x0020 -> line 705
- *   +0x004c -> line 707
- *   +0x005c -> line 708
- *   +0x006c -> line 709
- *   +0x0080 -> line 710
- *   +0x008c -> line 714
- *   +0x00cc -> line 715
- *   +0x010c -> line 717
- *   +0x0124 -> line 718
- *   +0x012c -> line 717
- *   +0x0130 -> line 718
- *   +0x0134 -> line 717
- *   +0x013c -> line 718
- *   +0x014c -> line 720
- *   +0x0150 -> line 718
- *   +0x0158 -> line 720
- *   +0x0160 -> line 718
- *   +0x0168 -> line 721
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 662–696 */
-/* addr: 0x00180a90  size: 136 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 662
- *   +0x0014 -> line 695
- *   +0x0018 -> line 664
- *   +0x0020 -> line 665
- *   +0x0028 -> line 664
- *   +0x002c -> line 665
- *   +0x0034 -> line 664
- *   +0x0038 -> line 665
- *   +0x003c -> line 695
- *   +0x0044 -> line 664
- *   +0x004c -> line 665
- *   +0x0054 -> line 667
- *   +0x005c -> line 665
- *   +0x006c -> line 667
- *   +0x0078 -> line 668
- *   +0x0080 -> line 696
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 650–656 */
-/* addr: 0x00180b20  size: 96 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 650
- *   +0x0004 -> line 655
- *   +0x0008 -> line 650
- *   +0x0014 -> line 655
- *   +0x001c -> line 650
- *   +0x0020 -> line 651
- *   +0x0028 -> line 650
- *   +0x002c -> line 651
- *   +0x0038 -> line 652
- *   +0x0040 -> line 653
- *   +0x0048 -> line 650
- *   +0x0050 -> line 651
- *   +0x0058 -> line 656
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 637–646 */
-/* addr: 0x00180b80  size: 76 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 637
- *   +0x0008 -> line 640
- *   +0x0010 -> line 641
- *   +0x0024 -> line 643
- *   +0x0034 -> line 645
- *   +0x0040 -> line 646
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void PS2glGenOrthoMatrix(float (*m)[4], float left, float right, float bottom, float top, float zNear, float zFar);
-void sceVu0CopyMatrix(float dest[4][4], float src[4][4]);
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 615–632 */
-/* addr: 0x00180bd0  size: 144 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 615
- *   +0x000c -> line 627
- *   +0x0010 -> line 615
- *   +0x0014 -> line 627
- *   +0x0024 -> line 616
- *   +0x0028 -> line 627
- *   +0x0030 -> line 616
- *   +0x0034 -> line 627
- *   +0x0038 -> line 628
- *   +0x0050 -> line 617
- *   +0x0054 -> line 628
- *   +0x0058 -> line 617
- *   +0x005c -> line 628
- *   +0x0060 -> line 629
- *   +0x007c -> line 630
- *   +0x0088 -> line 632
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 532–605 */
-/* addr: 0x00180c60  size: 704 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 532
- *   +0x0004 -> line 537
- *   +0x0008 -> line 532
- *   +0x000c -> line 537
- *   +0x0010 -> line 532
- *   +0x0014 -> line 537
- *   +0x0018 -> line 532
- *   +0x001c -> line 537
- *   +0x0020 -> line 532
- *   +0x0024 -> line 537
- *   +0x0028 -> line 532
- *   +0x002c -> line 538
- *   +0x0030 -> line 532
- *   +0x0038 -> line 537
- *   +0x0040 -> line 532
- *   +0x0058 -> line 538
- *   +0x006c -> line 539
- *   +0x0074 -> line 540
- *   +0x0090 -> line 541
- *   +0x0094 -> line 543
- *   +0x00a4 -> line 544
- *   +0x00b0 -> line 546
- *   +0x00b8 -> line 548
- *   +0x00bc -> line 547
- *   +0x00c0 -> line 548
- *   +0x00d4 -> line 552
- *   +0x00d8 -> line 549
- *   +0x00dc -> line 553
- *   +0x00e0 -> line 559
- *   +0x00e4 -> line 552
- *   +0x00ec -> line 554
- *   +0x00f4 -> line 555
- *   +0x00f8 -> line 559
- *   +0x0104 -> line 560
- *   +0x0110 -> line 569
- *   +0x0114 -> line 560
- *   +0x0120 -> line 570
- *   +0x0124 -> line 561
- *   +0x0128 -> line 569
- *   +0x012c -> line 564
- *   +0x0130 -> line 570
- *   +0x0134 -> line 569
- *   +0x0138 -> line 570
- *   +0x013c -> line 565
- *   +0x0148 -> line 566
- *   +0x0150 -> line 570
- *   +0x0158 -> line 571
- *   +0x015c -> line 570
- *   +0x0160 -> line 571
- *   +0x0178 -> line 574
- *   +0x0180 -> line 576
- *   +0x0184 -> line 575
- *   +0x0188 -> line 576
- *   +0x019c -> line 580
- *   +0x01a0 -> line 577
- *   +0x01a4 -> line 581
- *   +0x01a8 -> line 587
- *   +0x01ac -> line 580
- *   +0x01b4 -> line 582
- *   +0x01bc -> line 583
- *   +0x01c0 -> line 587
- *   +0x01cc -> line 588
- *   +0x01e4 -> line 597
- *   +0x01e8 -> line 589
- *   +0x01ec -> line 598
- *   +0x01f0 -> line 592
- *   +0x01f4 -> line 597
- *   +0x01f8 -> line 593
- *   +0x01fc -> line 597
- *   +0x0200 -> line 598
- *   +0x0208 -> line 599
- *   +0x020c -> line 604
- *   +0x0210 -> line 593
- *   +0x0218 -> line 594
- *   +0x0220 -> line 595
- *   +0x0224 -> line 597
- *   +0x0244 -> line 598
- *   +0x0264 -> line 599
- *   +0x0268 -> line 600
- *   +0x0270 -> line 601
- *   +0x0278 -> line 602
- *   +0x0280 -> line 604
- *   +0x0288 -> line 605
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 507–529 */
-/* addr: 0x00180f20  size: 480 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 507
- *   +0x0004 -> line 520
- *   +0x0008 -> line 507
- *   +0x0044 -> line 520
- *   +0x00a4 -> line 521
- *   +0x00ac -> line 520
- *   +0x00b0 -> line 521
- *   +0x00f8 -> line 522
- *   +0x0100 -> line 521
- *   +0x0104 -> line 522
- *   +0x017c -> line 526
- *   +0x0180 -> line 523
- *   +0x0184 -> line 526
- *   +0x0188 -> line 522
- *   +0x018c -> line 523
- *   +0x0190 -> line 526
- *   +0x0194 -> line 523
- *   +0x01a0 -> line 526
- *   +0x01a8 -> line 528
- *   +0x01b4 -> line 529
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 497–501 */
-/* addr: 0x00181100  size: 96 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 497
- *   +0x0004 -> line 500
- *   +0x0008 -> line 497
- *   +0x0010 -> line 498
- *   +0x0014 -> line 497
- *   +0x001c -> line 498
- *   +0x0038 -> line 500
- *   +0x003c -> line 498
- *   +0x0058 -> line 501
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 490–492 */
-/* addr: 0x00181160  size: 84 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 490
- *   +0x0020 -> line 491
- *   +0x0024 -> line 490
- *   +0x0040 -> line 491
- *   +0x004c -> line 492
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-/* Scoped peephole off: with it the pCurStack++ store and the source pointer
- * load keep retail's register order (measured pragma sweep; was EQUIVALENT). */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 481–484 */
-/* addr: 0x001811c0  size: 64 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 481
- *   +0x0014 -> line 483
- *   +0x0018 -> line 481
- *   +0x0020 -> line 483
- *   +0x0024 -> line 481
- *   +0x0038 -> line 484
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 473–476 */
-/* addr: 0x00181200  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 473
- *   +0x000c -> line 475
- *   +0x0010 -> line 473
- *   +0x001c -> line 475
- *   +0x0020 -> line 473
- *   +0x0030 -> line 476
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-/* Not original source, needs cleaning up: scoped auto-inline so impPS2glLoadMatrixd inlines impPS2glLoadMatrixf. */
-#pragma auto_inline on
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 458–465 */
-/* addr: 0x00181240  size: 292 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 458
- *   +0x0014 -> line 463
- *   +0x00d8 -> line 464
- *   +0x0110 -> line 465
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-/* Not original source, needs cleaning up: retail inlines a copy of
- * impPS2glLoadMatrixf whose matrix pointer is loaded before the source
- * quadwords; this inline copy reproduces that schedule. */
-inline void PS2GL_vLoadMatrixfInline(float* m)
-{
-    __int128* dest;
-    __int128 v0, v1, v2, v3;
-    dest = (__int128*)g_PS2glContext.pCurMatrix;
-    v0 = ((const volatile __int128*)m)[0];
-    v1 = ((const volatile __int128*)m)[1];
-    v2 = ((const volatile __int128*)m)[2];
-    v3 = ((const volatile __int128*)m)[3];
-    dest[0] = v0;
-    dest[1] = v1;
-    dest[2] = v2;
-    dest[3] = v3;
-    g_PS2glContext.bMatrixChanged = 1;
-}
-
-#pragma auto_inline reset
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 445–454 */
-/* addr: 0x00181370  size: 168 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 445
- *   +0x0004 -> line 453
- *   +0x0008 -> line 445
- *   +0x000c -> line 448
- *   +0x0010 -> line 453
- *   +0x0014 -> line 448
- *   +0x0034 -> line 449
- *   +0x0058 -> line 450
- *   +0x007c -> line 451
- *   +0x00a0 -> line 454
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 438–441 */
-/* addr: 0x00181420  size: 320 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 438
- *   +0x0004 -> line 440
- *   +0x0008 -> line 438
- *   +0x0024 -> line 440
- *   +0x0124 -> line 441
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 426–435 */
-/* addr: 0x00181560  size: 184 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 426
- *   +0x0004 -> line 434
- *   +0x0008 -> line 426
- *   +0x000c -> line 429
- *   +0x0010 -> line 434
- *   +0x0014 -> line 429
- *   +0x0038 -> line 430
- *   +0x0060 -> line 431
- *   +0x0088 -> line 432
- *   +0x00b0 -> line 435
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 419–422 */
-/* addr: 0x00181620  size: 360 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 419
- *   +0x0004 -> line 421
- *   +0x0008 -> line 419
- *   +0x0028 -> line 421
- *   +0x0148 -> line 422
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 409–416 */
-/* addr: 0x00181790  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 409
- *   +0x0008 -> line 412
- *   +0x0010 -> line 413
- *   +0x0024 -> line 415
- *   +0x0030 -> line 416
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void PS2glGenRotationMatrix(float angle, float x, float y, float z, float (*m)[4]);
-void sceVu0MulMatrix(float dest[4][4], float left[4][4], float right[4][4]);
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 399–406 */
-/* addr: 0x001817d0  size: 176 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 399
- *   +0x0028 -> line 402
- *   +0x006c -> line 403
- *   +0x0080 -> line 405
- *   +0x008c -> line 406
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 388–396 */
-/* addr: 0x00181880  size: 52 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 388
- *   +0x000c -> line 393
- *   +0x001c -> line 395
- *   +0x0028 -> line 396
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void sceVu0MulMatrix(float dest[4][4], float left[4][4], float right[4][4]);
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 377–385 */
-/* addr: 0x001818c0  size: 268 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 377
- *   +0x0014 -> line 381
- *   +0x00d8 -> line 382
- *   +0x00ec -> line 384
- *   +0x00f8 -> line 385
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 352–373 */
-/* addr: 0x001819d0  size: 304 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 352
- *   +0x002c -> line 356
- *   +0x0030 -> line 355
- *   +0x003c -> line 356
- *   +0x0044 -> line 357
- *   +0x0048 -> line 356
- *   +0x004c -> line 357
- *   +0x0068 -> line 358
- *   +0x0070 -> line 361
- *   +0x0074 -> line 360
- *   +0x0080 -> line 361
- *   +0x0088 -> line 362
- *   +0x008c -> line 361
- *   +0x0090 -> line 362
- *   +0x00ac -> line 363
- *   +0x00b4 -> line 365
- *   +0x00c4 -> line 366
- *   +0x00c8 -> line 365
- *   +0x00d4 -> line 366
- *   +0x00d8 -> line 365
- *   +0x00dc -> line 366
- *   +0x00e4 -> line 367
- *   +0x00e8 -> line 366
- *   +0x00ec -> line 367
- *   +0x0110 -> line 368
- *   +0x0118 -> line 370
- *   +0x0120 -> line 372
- *   +0x0128 -> line 373
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 238–346 */
-/* addr: 0x00181b00  size: 364 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 238
- *   +0x0004 -> line 243
- *   +0x0008 -> line 238
- *   +0x000c -> line 243
- *   +0x0010 -> line 238
- *   +0x0014 -> line 243
- *   +0x0018 -> line 238
- *   +0x0020 -> line 243
- *   +0x0024 -> line 238
- *   +0x003c -> line 243
- *   +0x0044 -> line 244
- *   +0x0050 -> line 246
- *   +0x0064 -> line 248
- *   +0x007c -> line 251
- *   +0x008c -> line 252
- *   +0x0094 -> line 255
- *   +0x0098 -> line 323
- *   +0x009c -> line 256
- *   +0x00a0 -> line 257
- *   +0x00a4 -> line 323
- *   +0x00a8 -> line 325
- *   +0x00ac -> line 323
- *   +0x00b0 -> line 325
- *   +0x00bc -> line 326
- *   +0x00c4 -> line 327
- *   +0x00c8 -> line 322
- *   +0x00cc -> line 327
- *   +0x00d0 -> line 326
- *   +0x00d4 -> line 321
- *   +0x00d8 -> line 330
- *   +0x00dc -> line 326
- *   +0x00e0 -> line 327
- *   +0x00e8 -> line 328
- *   +0x00ec -> line 330
- *   +0x00f0 -> line 331
- *   +0x0100 -> line 337
- *   +0x0108 -> line 332
- *   +0x010c -> line 335
- *   +0x0110 -> line 320
- *   +0x0114 -> line 332
- *   +0x0118 -> line 337
- *   +0x011c -> line 332
- *   +0x0124 -> line 333
- *   +0x0128 -> line 336
- *   +0x012c -> line 335
- *   +0x0130 -> line 336
- *   +0x0134 -> line 337
- *   +0x0138 -> line 338
- *   +0x013c -> line 340
- *   +0x0140 -> line 341
- *   +0x0144 -> line 342
- *   +0x0148 -> line 343
- *   +0x014c -> line 346
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* The functions below are in their original source-line order (retail
- * emits them in reverse); these prototypes keep earlier calls valid. */
-void PS2glInitContext(tagGLcontext* pCtx);
-void PS2glGenRotationMatrix(float angle, float x, float y, float z, float (*m)[4]);
-void impPS2glMatrixMode(unsigned int mode);
-void impPS2glMultMatrixd(double* dm);
-void impPS2glMultMatrixf(float* m);
-void impPS2glRotated(double angle, double x, double y, double z);
-void impPS2glRotatef(float angle, float x, float y, float z);
-void impPS2glTranslated(double x, double y, double z);
-void impPS2glTranslatef(float x, float y, float z);
-void impPS2glScaled(double x, double y, double z);
-void impPS2glScalef(float x, float y, float z);
-void impPS2glLoadMatrixd(double* m);
-void impPS2glLoadMatrixf(float* m);
-void impPS2glLoadIdentity(void);
-void impPS2glPushMatrix(void);
-void impPS2glPopMatrix(void);
-void impPS2glFrustum(double left, double right, double bottom, double top, double zNear, double zFar);
-void PS2glBoundingSphereParameters(float fov, float aspect, float zNear, float zFar, float zNearTolerantCulling, float zFarTolerantCulling);
-void PS2glGenOrthoMatrix(float (*m)[4], float left, float right, float bottom, float top, float zNear, float zFar);
-void impPS2glOrtho(float left, float right, float bottom, float top, float zNear, float zFar);
-void PS2glViewOrg(float xOrg, float yOrg);
-void impPS2glViewport(int x, int y, int width, int height);
-void impPS2glDepthRange(double zNear, double zFar);
-
-#pragma auto_inline on
-
-#pragma auto_inline reset
-
-#pragma auto_inline on
-
-#pragma auto_inline reset
-
-#pragma push
-#pragma peephole off
-
-#pragma pop
-
-void PS2glGenRotationMatrix(float angle, float x, float y, float z, float (*m)[4])
-{
-    float mag;
-    float s;
-    float c;
-    float xs;
-    float ys;
-    float zs;
-    float one_c;
-
-    s = sinf(angle * 0.017453292f);
-    c = cosf(angle * 0.017453292f);
-    mag = x * x + y * y + z * z;
-    mag = PS2glSqrt(mag);
-    if (mag == 0.0f)
-    {
-        memcpy(m, matIdentity, 64);
-        return;
-    }
-    xs = x / mag;
-    ys = y / mag;
-    zs = z / mag;
-    one_c = 1.0f - c;
-    m[0][0] = c + xs * xs * one_c;
-    m[1][0] = xs * ys * one_c - zs * s;
-    m[2][0] = zs * xs * one_c + ys * s;
-    m[3][0] = 0.0f;
-    m[0][1] = xs * ys * one_c + zs * s;
-    m[1][1] = c + ys * ys * one_c;
-    m[2][1] = ys * zs * one_c - xs * s;
-    m[3][1] = 0.0f;
-    m[0][2] = zs * xs * one_c - ys * s;
-    m[1][2] = ys * zs * one_c + xs * s;
-    m[2][2] = c + zs * zs * one_c;
-    m[3][2] = 0.0f;
-    m[0][3] = 0.0f;
-    m[1][3] = 0.0f;
-    m[2][3] = 0.0f;
-    m[3][3] = 1.0f;
-}
-
-void impPS2glMatrixMode(unsigned int mode)
-{
-    switch (mode)
-    {
-    case 0x1700:
-        g_PS2glContext.pCurMatrix = &g_PS2glContext.ModelViewMatrix;
-        g_PS2glContext.piCurStackDepth = (int)&g_PS2glContext.nModelViewStackDepth;
-        g_PS2glContext.pCurStack = &g_PS2glContext.ModelViewStack[g_PS2glContext.nModelViewStackDepth];
-        break;
-    case 0x1701:
-        g_PS2glContext.pCurMatrix = &g_PS2glContext.ProjectionMatrix;
-        g_PS2glContext.piCurStackDepth = (int)&g_PS2glContext.nProjectionStackDepth;
-        g_PS2glContext.pCurStack = &g_PS2glContext.ProjectionStack[g_PS2glContext.nProjectionStackDepth];
-        break;
-    case 0x1702:
-        g_PS2glContext.pCurMatrix = &g_PS2glContext.TextureMatrix[g_PS2glContext.iCurTextureSet];
-        g_PS2glContext.piCurStackDepth = (int)&g_PS2glContext.nTextureStackDepths[g_PS2glContext.iCurTextureSet];
-        g_PS2glContext.pCurStack = &g_PS2glContext.TextureStacks[g_PS2glContext.iCurTextureSet][*(int*)g_PS2glContext.piCurStackDepth];
-        break;
-    default:
-        return;
-    }
-    g_PS2glContext.eMatrixMode = mode;
-}
-
-void impPS2glMultMatrixd(double* dm)
-{
-    float m[4][4];
-    float *p = (float*)&m;
-
-    *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++;
-    sceVu0MulMatrix(*g_PS2glContext.pCurMatrix, *g_PS2glContext.pCurMatrix, m);
-
-    g_PS2glContext.bMatrixChanged = 1;
-}
-
-void impPS2glMultMatrixf(float* m)
-{
-    sceVu0MulMatrix(*g_PS2glContext.pCurMatrix, *g_PS2glContext.pCurMatrix, (float (*)[4])m);
-    g_PS2glContext.bMatrixChanged = 1;
-}
-
-void impPS2glRotated(double angle, double x, double y, double z)
-{
-    float m[4][4];
-
-    PS2glGenRotationMatrix((float)angle, (float)x, (float)y, (float)z, m);
-    sceVu0MulMatrix(*g_PS2glContext.pCurMatrix, *g_PS2glContext.pCurMatrix, m);
-    g_PS2glContext.bMatrixChanged = 1;
-}
-
-void impPS2glRotatef(float angle, float x, float y, float z)
-{
-    float m[4][4];
-
-    PS2glGenRotationMatrix(angle, x, y, z, m);
-    sceVu0MulMatrix(*g_PS2glContext.pCurMatrix, *g_PS2glContext.pCurMatrix, m);
-    g_PS2glContext.bMatrixChanged = 1;
-}
-
-/* The retail DWARF line table gives this function three source lines: the
- * declaration, one body line and the closing brace, so the matrix pointer,
- * the four column updates and the bMatrixChanged store all share one line.
- * The four columns are written out explicitly: a loop makes MWCC swap the
- * operands of the first mul.s, which does not match the retail code. */
-void impPS2glTranslated(double x, double y, double z)
-{
-    float (*m)[4] = *g_PS2glContext.pCurMatrix; m[3][0] = m[3][0] + (m[0][0] * (float)x + m[1][0] * (float)y + m[2][0] * (float)z); m[3][1] = m[3][1] + (m[0][1] * (float)x + m[1][1] * (float)y + m[2][1] * (float)z); m[3][2] = m[3][2] + (m[0][2] * (float)x + m[1][2] * (float)y + m[2][2] * (float)z); m[3][3] = m[3][3] + (m[0][3] * (float)x + m[1][3] * (float)y + m[2][3] * (float)z); g_PS2glContext.bMatrixChanged = 1;
-}
-
-void impPS2glTranslatef(float x, float y, float z)
-{
-    float* param0 = (float*)*g_PS2glContext.pCurMatrix;
-    param0[12] = param0[0] * x + param0[4] * y + param0[8] * z + param0[12];
-    param0[13] = param0[1] * x + param0[5] * y + param0[9] * z + param0[13];
-    param0[14] = param0[2] * x + param0[6] * y + param0[10] * z + param0[14];
-    param0[15] = param0[3] * x + param0[7] * y + param0[11] * z + param0[15];
-    g_PS2glContext.bMatrixChanged = 1;
-}
-
-/* The retail DWARF line table gives this function three source lines: the
- * declaration, one body line and the closing brace, so the matrix pointer,
- * the twelve row updates and the bMatrixChanged store all share one line. */
-void impPS2glScaled(double x, double y, double z)
-{
-    float (*m)[4] = *g_PS2glContext.pCurMatrix; m[0][0] *= (float)x; m[1][0] *= (float)y; m[2][0] *= (float)z; m[0][1] *= (float)x; m[1][1] *= (float)y; m[2][1] *= (float)z; m[0][2] *= (float)x; m[1][2] *= (float)y; m[2][2] *= (float)z; m[0][3] *= (float)x; m[1][3] *= (float)y; m[2][3] *= (float)z; g_PS2glContext.bMatrixChanged = 1;
-}
-
-void impPS2glScalef(float x, float y, float z)
-{
-    float* param0 = (float*)*g_PS2glContext.pCurMatrix;
-    param0[0] *= x; param0[4] *= y; param0[8] *= z;
-    param0[1] *= x; param0[5] *= y; param0[9] *= z;
-    param0[2] *= x; param0[6] *= y; param0[10] *= z;
-    param0[3] *= x; param0[7] *= y; param0[11] *= z;
-    g_PS2glContext.bMatrixChanged = 1;
-}
-
-#pragma auto_inline on
-void impPS2glLoadMatrixd(double* m)
-{
-    float fm[16];
-    float *p = (float*)&fm;
-
-    *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++;
-    PS2GL_vLoadMatrixfInline(fm);
-}
-#pragma auto_inline reset
-
-#pragma auto_inline on
-void impPS2glLoadMatrixf(float* m)
-{
-    __int128 v3, v2, v1, v0;
-    __int128* dest;
-    v0 = ((const volatile __int128*)m)[0];
-    v1 = ((const volatile __int128*)m)[1];
-    v2 = ((const volatile __int128*)m)[2];
-    v3 = ((const volatile __int128*)m)[3];
-    dest = (__int128*)g_PS2glContext.pCurMatrix;
-    dest[0] = v0;
-    dest[1] = v1;
-    dest[2] = v2;
-    dest[3] = v3;
-    g_PS2glContext.bMatrixChanged = 1;
-}
-#pragma auto_inline reset
-
-void impPS2glLoadIdentity(void)
-{
-    __int128 v3, v2, v1, v0;
-    __int128* dest = (__int128*)g_PS2glContext.pCurMatrix;
-    v0 = ((const volatile __int128*)matIdentity)[0];
-    v1 = ((const volatile __int128*)matIdentity)[1];
-    v2 = ((const volatile __int128*)matIdentity)[2];
-    v3 = ((const volatile __int128*)matIdentity)[3];
-    dest[0] = v0;
-    dest[1] = v1;
-    dest[2] = v2;
-    dest[3] = v3;
-    g_PS2glContext.bMatrixChanged = 1;
-}
-
-#pragma peephole off
-void impPS2glPushMatrix(void)
-{
-    __int128 v3, v2, v1, v0;
-    __int128* dest = (__int128*)g_PS2glContext.pCurStack++;
-    const volatile __int128* src = (const volatile __int128*)g_PS2glContext.pCurMatrix;
-    v0 = src[0];
-    v1 = src[1];
-    v2 = src[2];
-    v3 = src[3];
-    dest[0] = v0;
-    dest[1] = v1;
-    dest[2] = v2;
-    dest[3] = v3;
-    ++*(int*)g_PS2glContext.piCurStackDepth;
-}
-#pragma peephole reset
-
-void impPS2glPopMatrix(void)
-{
-    __int128 v3, v2, v1, v0;
-    __int128* dest;
-    const volatile __int128* src;
-    --*(int*)g_PS2glContext.piCurStackDepth;
-    src = (const volatile __int128*)g_PS2glContext.pCurStack;
-    src -= 4;
-    g_PS2glContext.pCurStack--;
-    dest = (__int128*)g_PS2glContext.pCurMatrix;
-    v0 = src[0];
-    v1 = src[1];
-    v2 = src[2];
-    v3 = src[3];
-    dest[0] = v0;
-    dest[1] = v1;
-    dest[2] = v2;
-    dest[3] = v3;
-    g_PS2glContext.bMatrixChanged = 1;
-}
-
-void impPS2glFrustum(double left, double right, double bottom, double top, double zNear, double zFar)
-{
-    float m[4][4];
-
-    m[0][0] = (float)((2.0 * zNear) / (right - left)); m[1][0] = 0.0f; m[2][0] = (float)((right + left) / (right - left)); m[3][0] = 0.0f;
-    m[0][1] = 0.0f; m[1][1] = (float)((2.0 * zNear) / (top - bottom)); m[2][1] = (float)((top + bottom) / (top - bottom)); m[3][1] = 0.0f;
-    m[0][2] = 0.0f; m[1][2] = 0.0f; m[2][2] = (float)(-(zFar + zNear) / (zFar - zNear)); m[3][2] = (float)(-(2.0 * zFar * zNear) / (zFar - zNear));
-    m[0][3] = 0.0f; m[1][3] = 0.0f; m[2][3] = -1.0f; m[3][3] = 0.0f;
-    sceVu0MulMatrix(*g_PS2glContext.pCurMatrix, *g_PS2glContext.pCurMatrix, m);
-    g_PS2glContext.bMatrixChanged = 1;
-}
-
-void PS2glBoundingSphereParameters(float fov, float aspect, float zNear, float zFar, float zNearTolerantCulling, float zFarTolerantCulling)
-{
-    float fTemp;
-    float fFovX;
-    int iWindowHeight;
-    int iWindowWidth;
-    float mGuardBandNormal[4][4];
-    float mFrustumNormal[4][4];
-    float fAngle;
-    float fAngle2;
-
-    fFovX = (3.1415927f * fov) / 360.0f;
-    iWindowWidth = g_stBufferInfo.iScreenWidth;
-    iWindowHeight = g_stBufferInfo.iScreenHeight;
-    if (g_stBufferInfo.bPlainBufferMode == 0 && iWindowHeight >= 0x1C0)
-        iWindowHeight >>= 1;
-    fTemp = tanf(fFovX);
-    fAngle = atanf(aspect * fTemp);
-    mFrustumNormal[0][0] = cosf(fAngle);
-    mFrustumNormal[0][1] = -cosf(fAngle);
-    mFrustumNormal[0][2] = 0.0f;
-    mFrustumNormal[0][3] = 0.0f;
-    mFrustumNormal[1][0] = 0.0f;
-    mFrustumNormal[1][1] = 0.0f;
-    mFrustumNormal[1][2] = cosf(fFovX);
-    mFrustumNormal[1][3] = -cosf(fFovX);
-    mFrustumNormal[2][0] = -sinf(fAngle);
-    mFrustumNormal[2][1] = -sinf(fAngle);
-    mFrustumNormal[2][2] = -sinf(fFovX);
-    mFrustumNormal[2][3] = -sinf(fFovX);
-    mFrustumNormal[3][0] = 0.0f;
-    mFrustumNormal[3][1] = 0.0f;
-    mFrustumNormal[3][2] = 0.0f;
-    mFrustumNormal[3][3] = 0.0f;
-    fTemp = fTemp * 4096.0f;
-    fAngle = atanf(fTemp / (float)iWindowHeight);
-    fTemp = fTemp * aspect;
-    fAngle2 = atanf(fTemp / (float)iWindowWidth);
-    mGuardBandNormal[0][0] = cosf(fAngle2);
-    mGuardBandNormal[0][1] = -cosf(fAngle2);
-    mGuardBandNormal[0][2] = 0.0f;
-    mGuardBandNormal[0][3] = 0.0f;
-    mGuardBandNormal[1][0] = 0.0f;
-    mGuardBandNormal[1][1] = 0.0f;
-    mGuardBandNormal[1][2] = cosf(fAngle);
-    mGuardBandNormal[1][3] = -cosf(fAngle);
-    mGuardBandNormal[2][0] = -sinf(fAngle2);
-    mGuardBandNormal[2][1] = -sinf(fAngle2);
-    mGuardBandNormal[2][2] = -sinf(fAngle);
-    mGuardBandNormal[2][3] = -sinf(fAngle);
-    mGuardBandNormal[3][0] = 0.0f;
-    mGuardBandNormal[3][1] = 0.0f;
-    mGuardBandNormal[3][2] = 0.0f;
-    mGuardBandNormal[3][3] = 0.0f;
-    ((__int128*)g_PS2glContext.mFrustumNormal)[0] = ((__int128*)mFrustumNormal)[0];
-    ((__int128*)g_PS2glContext.mFrustumNormal)[1] = ((__int128*)mFrustumNormal)[1];
-    ((__int128*)g_PS2glContext.mFrustumNormal)[2] = ((__int128*)mFrustumNormal)[2];
-    ((__int128*)g_PS2glContext.mFrustumNormal)[3] = ((__int128*)mFrustumNormal)[3];
-    ((__int128*)g_PS2glContext.mGuardBandNormal)[0] = ((__int128*)mGuardBandNormal)[0];
-    ((__int128*)g_PS2glContext.mGuardBandNormal)[1] = ((__int128*)mGuardBandNormal)[1];
-    ((__int128*)g_PS2glContext.mGuardBandNormal)[2] = ((__int128*)mGuardBandNormal)[2];
-    ((__int128*)g_PS2glContext.mGuardBandNormal)[3] = ((__int128*)mGuardBandNormal)[3];
-    g_PS2glContext.vZNearFar[0] = zNear;
-    g_PS2glContext.vZNearFar[1] = zFar;
-    g_PS2glContext.vZNearFar[2] = zNearTolerantCulling;
-    g_PS2glContext.vZNearFar[3] = zFarTolerantCulling;
-    g_PS2glContext.bBSParamChanged = 1;
-}
-
-void PS2glGenOrthoMatrix(float (*m)[4], float left, float right, float bottom, float top, float zNear, float zFar)
-{
-    float fDivFN;
-    float fDivTB;
-    float fDivRL;
-
-    fDivRL = 1.0f / (right - left);
-    fDivTB = 1.0f / (top - bottom);
-    fDivFN = 1.0f / (zNear - zFar);
-    m[0][0] = fDivRL + fDivRL;
-    m[1][0] = 0.0f;
-    m[2][0] = 0.0f;
-    m[3][0] = fDivRL * -(right + left);
-    m[0][1] = 0.0f;
-    m[1][1] = fDivTB + fDivTB;
-    m[2][1] = 0.0f;
-    m[3][1] = fDivTB * -(top + bottom);
-    m[0][2] = 0.0f;
-    m[1][2] = 0.0f;
-    m[2][2] = fDivFN + fDivFN;
-    m[3][2] = fDivFN * (zFar + zNear);
-    m[0][3] = 0.0f;
-    m[1][3] = 0.0f;
-    m[2][3] = 0.0f;
-    m[3][3] = 1.0f;
-}
-
-void impPS2glOrtho(float left, float right, float bottom, float top, float zNear, float zFar)
-{
-    float m[4][4];
-
-    PS2glGenOrthoMatrix(m, left, right, bottom, top, zNear, zFar);
-    sceVu0MulMatrix(*g_PS2glContext.pCurMatrix, *g_PS2glContext.pCurMatrix, m);
-    sceVu0CopyMatrix(g_PS2glContext.GuardBandProjectionMatrix, m);
-    g_PS2glContext.bMatrixChanged = 1;
-}
-
-void PS2glViewOrg(float xOrg, float yOrg)
-{
-    g_PS2glContext.ViewPort[0] = g_PS2glContext.ViewPort[0] + (xOrg - g_PS2glContext.ViewOrg[0]);
-    g_PS2glContext.bMatrixChanged = 1;
-    g_PS2glContext.ViewPort[1] = g_PS2glContext.ViewPort[1] + (yOrg - g_PS2glContext.ViewOrg[1]);
-    g_PS2glContext.ViewOrg[0] = xOrg;
-    g_PS2glContext.ViewOrg[1] = yOrg;
-}
-
-void impPS2glViewport(int x, int y, int width, int height)
-{
-    if (g_PS2glContext.bFrameMode)
-        height >>= 1;
-    g_PS2glContext.ViewPort[0] = g_PS2glContext.ViewOrg[0] + (float)x;
-    g_PS2glContext.ViewPort[1] = g_PS2glContext.ViewOrg[1] + (float)y + (float)height;
-    g_PS2glContext.ViewPort[2] = (float)width;
-    g_PS2glContext.ViewPort[3] = -(float)height;
-    g_PS2glContext.bMatrixChanged = 1;
-}
-
-void impPS2glDepthRange(double zNear, double zFar)
-{
-    switch (g_PS2glContext.iDepthBufferBitDepth)
-    {
-    case 16: g_PS2glContext.DepthRange[0] = 65500.0f; break;
-    case 24: g_PS2glContext.DepthRange[0] = 16777000.0f; break;
-    case 32: g_PS2glContext.DepthRange[0] = 4294960128.0f; break;
-    default: g_PS2glContext.DepthRange[0] = 16777000.0f; break;
-    }
-    zNear = (zNear < 0.0) ? 0.0 : ((zNear > 1.0) ? 1.0 : zNear);
-    zFar = (zFar < 0.0) ? 0.0 : ((zFar > 1.0) ? 1.0 : zFar);
-    g_PS2glContext.DepthRange[1] = g_PS2glContext.DepthRange[0] * (1.0f - (float)zFar);
-    g_PS2glContext.DepthRange[0] = g_PS2glContext.DepthRange[0] * (1.0f - (float)zNear);
-    g_PS2glContext.bMatrixChanged = 1;
-}
-
 void PS2glInitContext(tagGLcontext* pCtx)
 {
     tagGsSetTex* pstGsSetTex;

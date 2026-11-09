@@ -1554,14 +1554,6 @@ extern tdstAnim3d_* fn_p_stGetAnimInState(tdstState_* p_stState);
 extern void fn_vAllocArrayOfElts3d(tdst3dData_* h_3dData, unsigned char ucNbElts);
 extern void HMU_fn_vFree(void** p_vPointer, unsigned char bTempMalloc);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 43–43 */
-/* addr: 0x0025b150  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 43
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 HIE_tdstSuperObject_* fn_hGetCharacterInAlwaysActiveCharacterNode(tdstAlwaysActiveCharacter_* hCharNode);
@@ -1579,32 +1571,6 @@ unsigned char fn_ucIsAnAlwaysObject(tdstEngineObject_* p_stEngineObject);
 void fn_vInitAlwaysModel(tdeObjectTreeInit_ eObjIniType);
 void fn_vKillAllAlwaysModel(void);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 1311–1327 */
-/* addr: 0x0025b160  size: 88 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1311
- *   +0x0008 -> line 1312
- *   +0x0010 -> line 1313
- *   +0x0020 -> line 1315
- *   +0x002c -> line 1322
- *   +0x0038 -> line 1324
- *   +0x003c -> line 1325
- *   +0x0040 -> line 1326
- *   +0x0050 -> line 1327
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 1252–1256 */
-/* addr: 0x0025b1c0  size: 112 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1252
- *   +0x0008 -> line 1253
- *   +0x0010 -> line 1255
- *   +0x0068 -> line 1256
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 static inline HIE_tdstSuperObject_* fn_hGetAlwaysGenerator(HIE_tdstSuperObject_* _hAlways)
 {
     if (_hAlways)
@@ -1616,123 +1582,149 @@ static inline HIE_tdstSuperObject_* fn_hGetAlwaysGenerator(HIE_tdstSuperObject_*
     return NULL;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 1187–1240 */
-/* addr: 0x0025b230  size: 268 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1187
- *   +0x0004 -> line 1198
- *   +0x0008 -> line 1187
- *   +0x001c -> line 1198
- *   +0x0020 -> line 1199
- *   +0x0028 -> line 1200
- *   +0x0038 -> line 1202
- *   +0x0044 -> line 1207
- *   +0x0048 -> line 1214
- *   +0x00c8 -> line 1233
- *   +0x00d0 -> line 1235
- *   +0x00dc -> line 1237
- *   +0x00e0 -> line 1239
- *   +0x00f0 -> line 1240
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 1053–1071 */
-/* addr: 0x0025b340  size: 116 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1057
- *   +0x0004 -> line 1053
- *   +0x0008 -> line 1057
- *   +0x0028 -> line 1059
- *   +0x0030 -> line 1060
- *   +0x0054 -> line 1067
- *   +0x005c -> line 1069
- *   +0x006c -> line 1071
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 991–1035 */
-/* addr: 0x0025b3c0  size: 360 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 991
- *   +0x001c -> line 998
- *   +0x0024 -> line 1000
- *   +0x0030 -> line 1004
- *   +0x0038 -> line 1007
- *   +0x004c -> line 1009
- *   +0x0054 -> line 1011
- *   +0x0080 -> line 1015
- *   +0x0098 -> line 1018
- *   +0x009c -> line 1020
- *   +0x00a8 -> line 1026
- *   +0x00c8 -> line 1027
- *   +0x00d0 -> line 1029
- *   +0x012c -> line 1032
- *   +0x0130 -> line 1029
- *   +0x0134 -> line 1033
- *   +0x014c -> line 1035
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 965–986 */
-/* addr: 0x0025b530  size: 144 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 965
- *   +0x0010 -> line 972
- *   +0x0018 -> line 974
- *   +0x0024 -> line 978
- *   +0x002c -> line 983
- *   +0x003c -> line 984
- *   +0x0060 -> line 985
- *   +0x007c -> line 986
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* Not original source, needs cleaning up: retail recomputes the
  * d_stAlwaysSuperObject[i] offset (i << 7) every iteration instead of
  * stepping a pointer; no natural loop, index type or accessor form
  * reproduced that, so strength reduction is disabled around the function. */
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 764–897 */
-/* addr: 0x0025b5c0  size: 364 bytes */
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+HIE_tdstSuperObject_* fn_hGetCharacterInAlwaysActiveCharacterNode(tdstAlwaysActiveCharacter_* hCharNode);
+void fn_vKillAllAlwaysModel(void);
+void fn_vInitAlwaysModel(tdeObjectTreeInit_ eObjIniType);
+unsigned char fn_ucIsAnAlwaysObject(tdstEngineObject_* p_stEngineObject);
+unsigned char fn_ucIsAnAlwaysModel(tdstEngineObject_* p_stEngineObject);
+HIE_tdstSuperObject_* fn_p_stDemoAllocateAlways(int otObjectModelType, HIE_tdstSuperObject_* p_stFatherSuperObject, HIE_tdstSuperObject_* _hGenerator, unsigned short uwAction, MAT_tdstTransformation_* p_stMatrix, short wAlwaysNumber);
+HIE_tdstSuperObject_* fn_p_stAllocateAlways(int otObjectModelType, HIE_tdstSuperObject_* p_stFatherSuperObject, HIE_tdstSuperObject_* _hGenerator, unsigned short uwAction, MAT_tdstTransformation_* p_stMatrix);
+void fn_vKillAlwaysByPersonalType(int otPersonalType);
+void fn_vKillAllAlwaysSDLs(void);
+void fn_vKillAllAlways(void);
+unsigned int fn_ulGetNumberOfAlwaysBelongingToMe(HIE_tdstSuperObject_* _hGenerator);
+void fn_vKillAllAlwaysInNonActiveSectors(void);
+unsigned char fn_ucIsAlwaysGeneratedByMe(HIE_tdstSuperObject_* _hAlways, HIE_tdstSuperObject_* _hGenerator);
+void fn_vClearUnusedAlwaysInDemoMode(void);
+
+#pragma push
+#pragma opt_strength_reduction off
+
+#pragma pop
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 344–367 */
+/* addr: 0x0025bee0  size: 148 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 764
- *   +0x0004 -> line 777
- *   +0x0008 -> line 764
- *   +0x000c -> line 780
- *   +0x0010 -> line 764
- *   +0x0018 -> line 777
- *   +0x001c -> line 764
- *   +0x0020 -> line 780
- *   +0x002c -> line 795
- *   +0x0034 -> line 798
- *   +0x0040 -> line 804
- *   +0x0044 -> line 807
- *   +0x0058 -> line 808
- *   +0x0080 -> line 833
- *   +0x008c -> line 839
- *   +0x0090 -> line 833
- *   +0x0094 -> line 839
- *   +0x009c -> line 840
- *   +0x00a8 -> line 841
- *   +0x00b0 -> line 843
- *   +0x00c0 -> line 870
- *   +0x00cc -> line 871
- *   +0x00d4 -> line 874
- *   +0x00dc -> line 877
- *   +0x00f0 -> line 879
- *   +0x0104 -> line 882
- *   +0x0114 -> line 883
- *   +0x0120 -> line 884
- *   +0x0134 -> line 885
- *   +0x0138 -> line 887
- *   +0x014c -> line 889
- *   +0x0154 -> line 897
+ *   +0x0000 -> line 344
+ *   +0x0004 -> line 350
+ *   +0x0008 -> line 344
+ *   +0x0014 -> line 350
+ *   +0x0034 -> line 354
+ *   +0x0050 -> line 357
+ *   +0x005c -> line 358
+ *   +0x0060 -> line 366
+ *   +0x0080 -> line 367
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void fn_vKillAllAlwaysModel(void)
+{
+    tdstAlwaysModelList_* h_AlwaysModelChild;
+    tdstAlwaysModelList_* h_AlwaysModelNextChild;
+
+    h_AlwaysModelChild = g_stAlways.ALW_h_LstAlwaysModel.hFirstElementDyn;
+    h_AlwaysModelNextChild = (h_AlwaysModelChild != NULL) ? h_AlwaysModelChild->hNextBrotherDyn : NULL;
+    while (h_AlwaysModelChild != NULL)
+    {
+        if (g_bMinimalLoading == 0 && fn_bIsInFix(h_AlwaysModelChild->p_stAlwaysObject))
+        {
+            fn_vDesinitOneObject(h_AlwaysModelChild->p_stAlwaysObject, 1);
+        }
+        h_AlwaysModelChild = h_AlwaysModelNextChild;
+        h_AlwaysModelNextChild = (h_AlwaysModelChild != NULL) ? h_AlwaysModelChild->hNextBrotherDyn : NULL;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 379–389 */
+/* addr: 0x0025be80  size: 84 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 379
+ *   +0x0004 -> line 385
+ *   +0x0008 -> line 379
+ *   +0x0014 -> line 385
+ *   +0x0020 -> line 387
+ *   +0x002c -> line 388
+ *   +0x0040 -> line 389
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vInitAlwaysModel(tdeObjectTreeInit_ eObjIniType)
+{
+    tdstAlwaysModelList_* h_AlwaysModelChild;
+
+    for (h_AlwaysModelChild = g_stAlways.ALW_h_LstAlwaysModel.hFirstElementDyn; h_AlwaysModelChild != NULL; h_AlwaysModelChild = h_AlwaysModelChild->hNextBrotherDyn)
+    {
+        fn_vInitOneObject(h_AlwaysModelChild->p_stAlwaysObject, eObjIniType);
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 401–402 */
+/* addr: 0x0025be60  size: 28 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 401
+ *   +0x0014 -> line 402
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+unsigned char fn_ucIsAnAlwaysObject(tdstEngineObject_* p_stEngineObject)
+{
+    unsigned int result;
+
+    result = 1;
+    result = (p_stEngineObject->h_StandardGame->ucMiscFlags & 0x10) ? result : 0;
+    return (unsigned char)result;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 419–429 */
+/* addr: 0x0025bdf0  size: 100 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 419
+ *   +0x0018 -> line 420
+ *   +0x0020 -> line 422
+ *   +0x002c -> line 424
+ *   +0x0040 -> line 425
+ *   +0x0048 -> line 426
+ *   +0x0058 -> line 428
+ *   +0x005c -> line 429
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+unsigned char fn_ucIsAnAlwaysModel(tdstEngineObject_* p_stEngineObject)
+{
+    tdstAlwaysModelList_* h_AlwaysModelChild;
+
+    if (p_stEngineObject->h_StandardGame->otObjectPersonalType >= 0x10000)
+        return 1;
+
+    for (h_AlwaysModelChild = g_stAlways.ALW_h_LstAlwaysModel.hFirstElementDyn; h_AlwaysModelChild; h_AlwaysModelChild = h_AlwaysModelChild->hNextBrotherDyn)
+    {
+        if (p_stEngineObject->h_StandardGame->otObjectPersonalType == h_AlwaysModelChild->p_stAlwaysObject->h_StandardGame->otObjectPersonalType)
+            return 1;
+    }
+
+    return 0;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 454–455 */
+/* addr: 0x0025bde0  size: 16 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 454
+ *   +0x0008 -> line 455
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+HIE_tdstSuperObject_* fn_p_stDemoAllocateAlways(int otObjectModelType, HIE_tdstSuperObject_* p_stFatherSuperObject, HIE_tdstSuperObject_* _hGenerator, unsigned short uwAction, MAT_tdstTransformation_* p_stMatrix, short wAlwaysNumber)
+{
+    g_swAlwaysNumber = wAlwaysNumber;
+    return fn_p_stAllocateAlways(otObjectModelType, p_stFatherSuperObject, _hGenerator, uwAction, p_stMatrix);
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 466–746 */
 /* addr: 0x0025b730  size: 1712 bytes */
@@ -1845,151 +1837,6 @@ static inline HIE_tdstSuperObject_* fn_hGetAlwaysGenerator(HIE_tdstSuperObject_*
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 454–455 */
-/* addr: 0x0025bde0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 454
- *   +0x0008 -> line 455
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 419–429 */
-/* addr: 0x0025bdf0  size: 100 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 419
- *   +0x0018 -> line 420
- *   +0x0020 -> line 422
- *   +0x002c -> line 424
- *   +0x0040 -> line 425
- *   +0x0048 -> line 426
- *   +0x0058 -> line 428
- *   +0x005c -> line 429
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 401–402 */
-/* addr: 0x0025be60  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 401
- *   +0x0014 -> line 402
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 379–389 */
-/* addr: 0x0025be80  size: 84 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 379
- *   +0x0004 -> line 385
- *   +0x0008 -> line 379
- *   +0x0014 -> line 385
- *   +0x0020 -> line 387
- *   +0x002c -> line 388
- *   +0x0040 -> line 389
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 344–367 */
-/* addr: 0x0025bee0  size: 148 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 344
- *   +0x0004 -> line 350
- *   +0x0008 -> line 344
- *   +0x0014 -> line 350
- *   +0x0034 -> line 354
- *   +0x0050 -> line 357
- *   +0x005c -> line 358
- *   +0x0060 -> line 366
- *   +0x0080 -> line 367
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* The functions below are in their original source-line order (retail
- * emits them in reverse); these prototypes keep earlier calls valid. */
-HIE_tdstSuperObject_* fn_hGetCharacterInAlwaysActiveCharacterNode(tdstAlwaysActiveCharacter_* hCharNode);
-void fn_vKillAllAlwaysModel(void);
-void fn_vInitAlwaysModel(tdeObjectTreeInit_ eObjIniType);
-unsigned char fn_ucIsAnAlwaysObject(tdstEngineObject_* p_stEngineObject);
-unsigned char fn_ucIsAnAlwaysModel(tdstEngineObject_* p_stEngineObject);
-HIE_tdstSuperObject_* fn_p_stDemoAllocateAlways(int otObjectModelType, HIE_tdstSuperObject_* p_stFatherSuperObject, HIE_tdstSuperObject_* _hGenerator, unsigned short uwAction, MAT_tdstTransformation_* p_stMatrix, short wAlwaysNumber);
-HIE_tdstSuperObject_* fn_p_stAllocateAlways(int otObjectModelType, HIE_tdstSuperObject_* p_stFatherSuperObject, HIE_tdstSuperObject_* _hGenerator, unsigned short uwAction, MAT_tdstTransformation_* p_stMatrix);
-void fn_vKillAlwaysByPersonalType(int otPersonalType);
-void fn_vKillAllAlwaysSDLs(void);
-void fn_vKillAllAlways(void);
-unsigned int fn_ulGetNumberOfAlwaysBelongingToMe(HIE_tdstSuperObject_* _hGenerator);
-void fn_vKillAllAlwaysInNonActiveSectors(void);
-unsigned char fn_ucIsAlwaysGeneratedByMe(HIE_tdstSuperObject_* _hAlways, HIE_tdstSuperObject_* _hGenerator);
-void fn_vClearUnusedAlwaysInDemoMode(void);
-
-#pragma push
-#pragma opt_strength_reduction off
-
-#pragma pop
-
-void fn_vKillAllAlwaysModel(void)
-{
-    tdstAlwaysModelList_* h_AlwaysModelChild;
-    tdstAlwaysModelList_* h_AlwaysModelNextChild;
-
-    h_AlwaysModelChild = g_stAlways.ALW_h_LstAlwaysModel.hFirstElementDyn;
-    h_AlwaysModelNextChild = (h_AlwaysModelChild != NULL) ? h_AlwaysModelChild->hNextBrotherDyn : NULL;
-    while (h_AlwaysModelChild != NULL)
-    {
-        if (g_bMinimalLoading == 0 && fn_bIsInFix(h_AlwaysModelChild->p_stAlwaysObject))
-        {
-            fn_vDesinitOneObject(h_AlwaysModelChild->p_stAlwaysObject, 1);
-        }
-        h_AlwaysModelChild = h_AlwaysModelNextChild;
-        h_AlwaysModelNextChild = (h_AlwaysModelChild != NULL) ? h_AlwaysModelChild->hNextBrotherDyn : NULL;
-    }
-}
-
-void fn_vInitAlwaysModel(tdeObjectTreeInit_ eObjIniType)
-{
-    tdstAlwaysModelList_* h_AlwaysModelChild;
-
-    for (h_AlwaysModelChild = g_stAlways.ALW_h_LstAlwaysModel.hFirstElementDyn; h_AlwaysModelChild != NULL; h_AlwaysModelChild = h_AlwaysModelChild->hNextBrotherDyn)
-    {
-        fn_vInitOneObject(h_AlwaysModelChild->p_stAlwaysObject, eObjIniType);
-    }
-}
-
-unsigned char fn_ucIsAnAlwaysObject(tdstEngineObject_* p_stEngineObject)
-{
-    unsigned int result;
-
-    result = 1;
-    result = (p_stEngineObject->h_StandardGame->ucMiscFlags & 0x10) ? result : 0;
-    return (unsigned char)result;
-}
-
-unsigned char fn_ucIsAnAlwaysModel(tdstEngineObject_* p_stEngineObject)
-{
-    tdstAlwaysModelList_* h_AlwaysModelChild;
-
-    if (p_stEngineObject->h_StandardGame->otObjectPersonalType >= 0x10000)
-        return 1;
-
-    for (h_AlwaysModelChild = g_stAlways.ALW_h_LstAlwaysModel.hFirstElementDyn; h_AlwaysModelChild; h_AlwaysModelChild = h_AlwaysModelChild->hNextBrotherDyn)
-    {
-        if (p_stEngineObject->h_StandardGame->otObjectPersonalType == h_AlwaysModelChild->p_stAlwaysObject->h_StandardGame->otObjectPersonalType)
-            return 1;
-    }
-
-    return 0;
-}
-
-HIE_tdstSuperObject_* fn_p_stDemoAllocateAlways(int otObjectModelType, HIE_tdstSuperObject_* p_stFatherSuperObject, HIE_tdstSuperObject_* _hGenerator, unsigned short uwAction, MAT_tdstTransformation_* p_stMatrix, short wAlwaysNumber)
-{
-    g_swAlwaysNumber = wAlwaysNumber;
-    return fn_p_stAllocateAlways(otObjectModelType, p_stFatherSuperObject, _hGenerator, uwAction, p_stMatrix);
-}
-
 HIE_tdstSuperObject_* fn_p_stAllocateAlways(int otObjectModelType, HIE_tdstSuperObject_* p_stFatherSuperObject, HIE_tdstSuperObject_* _hGenerator, unsigned short uwAction, MAT_tdstTransformation_* p_stMatrix)
 {
     HIE_tdstSuperObject_* h_stSuperObject;
@@ -2147,6 +1994,44 @@ HIE_tdstSuperObject_* fn_p_stAllocateAlways(int otObjectModelType, HIE_tdstSuper
     return NULL;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 764–897 */
+/* addr: 0x0025b5c0  size: 364 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 764
+ *   +0x0004 -> line 777
+ *   +0x0008 -> line 764
+ *   +0x000c -> line 780
+ *   +0x0010 -> line 764
+ *   +0x0018 -> line 777
+ *   +0x001c -> line 764
+ *   +0x0020 -> line 780
+ *   +0x002c -> line 795
+ *   +0x0034 -> line 798
+ *   +0x0040 -> line 804
+ *   +0x0044 -> line 807
+ *   +0x0058 -> line 808
+ *   +0x0080 -> line 833
+ *   +0x008c -> line 839
+ *   +0x0090 -> line 833
+ *   +0x0094 -> line 839
+ *   +0x009c -> line 840
+ *   +0x00a8 -> line 841
+ *   +0x00b0 -> line 843
+ *   +0x00c0 -> line 870
+ *   +0x00cc -> line 871
+ *   +0x00d4 -> line 874
+ *   +0x00dc -> line 877
+ *   +0x00f0 -> line 879
+ *   +0x0104 -> line 882
+ *   +0x0114 -> line 883
+ *   +0x0120 -> line 884
+ *   +0x0134 -> line 885
+ *   +0x0138 -> line 887
+ *   +0x014c -> line 889
+ *   +0x0154 -> line 897
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vKillAlwaysByPersonalType(int otPersonalType)
 {
     tdstEngineObject_* p_stEngineObject;
@@ -2195,6 +2080,20 @@ void fn_vKillAlwaysByPersonalType(int otPersonalType)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 965–986 */
+/* addr: 0x0025b530  size: 144 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 965
+ *   +0x0010 -> line 972
+ *   +0x0018 -> line 974
+ *   +0x0024 -> line 978
+ *   +0x002c -> line 983
+ *   +0x003c -> line 984
+ *   +0x0060 -> line 985
+ *   +0x007c -> line 986
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 #pragma opt_strength_reduction off
 void fn_vKillAllAlwaysSDLs(void)
 {
@@ -2211,6 +2110,29 @@ void fn_vKillAllAlwaysSDLs(void)
 }
 #pragma opt_strength_reduction reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 991–1035 */
+/* addr: 0x0025b3c0  size: 360 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 991
+ *   +0x001c -> line 998
+ *   +0x0024 -> line 1000
+ *   +0x0030 -> line 1004
+ *   +0x0038 -> line 1007
+ *   +0x004c -> line 1009
+ *   +0x0054 -> line 1011
+ *   +0x0080 -> line 1015
+ *   +0x0098 -> line 1018
+ *   +0x009c -> line 1020
+ *   +0x00a8 -> line 1026
+ *   +0x00c8 -> line 1027
+ *   +0x00d0 -> line 1029
+ *   +0x012c -> line 1032
+ *   +0x0130 -> line 1029
+ *   +0x0134 -> line 1033
+ *   +0x014c -> line 1035
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vKillAllAlways(void)
 {
     tdstEngineObject_* p_stEngineObject;
@@ -2249,6 +2171,20 @@ void fn_vKillAllAlways(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 1053–1071 */
+/* addr: 0x0025b340  size: 116 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1057
+ *   +0x0004 -> line 1053
+ *   +0x0008 -> line 1057
+ *   +0x0028 -> line 1059
+ *   +0x0030 -> line 1060
+ *   +0x0054 -> line 1067
+ *   +0x005c -> line 1069
+ *   +0x006c -> line 1071
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned int fn_ulGetNumberOfAlwaysBelongingToMe(HIE_tdstSuperObject_* _hGenerator)
 {
     tdstEngineObject_* hAlwaysObject;
@@ -2277,6 +2213,26 @@ unsigned int fn_ulGetNumberOfAlwaysBelongingToMe(HIE_tdstSuperObject_* _hGenerat
     return ulReturn;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 1187–1240 */
+/* addr: 0x0025b230  size: 268 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1187
+ *   +0x0004 -> line 1198
+ *   +0x0008 -> line 1187
+ *   +0x001c -> line 1198
+ *   +0x0020 -> line 1199
+ *   +0x0028 -> line 1200
+ *   +0x0038 -> line 1202
+ *   +0x0044 -> line 1207
+ *   +0x0048 -> line 1214
+ *   +0x00c8 -> line 1233
+ *   +0x00d0 -> line 1235
+ *   +0x00dc -> line 1237
+ *   +0x00e0 -> line 1239
+ *   +0x00f0 -> line 1240
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vKillAllAlwaysInNonActiveSectors(void)
 {
     tdstEngineObject_* p_stAlwaysEngObj;
@@ -2309,6 +2265,16 @@ void fn_vKillAllAlwaysInNonActiveSectors(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 1252–1256 */
+/* addr: 0x0025b1c0  size: 112 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1252
+ *   +0x0008 -> line 1253
+ *   +0x0010 -> line 1255
+ *   +0x0068 -> line 1256
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucIsAlwaysGeneratedByMe(HIE_tdstSuperObject_* _hAlways, HIE_tdstSuperObject_* _hGenerator)
 {
     HIE_tdstSuperObject_* hGen;
@@ -2318,6 +2284,21 @@ unsigned char fn_ucIsAlwaysGeneratedByMe(HIE_tdstSuperObject_* _hAlways, HIE_tds
     return (fn_hGetAlwaysGenerator(_hAlways) == _hGenerator);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 1311–1327 */
+/* addr: 0x0025b160  size: 88 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1311
+ *   +0x0008 -> line 1312
+ *   +0x0010 -> line 1313
+ *   +0x0020 -> line 1315
+ *   +0x002c -> line 1322
+ *   +0x0038 -> line 1324
+ *   +0x003c -> line 1325
+ *   +0x0040 -> line 1326
+ *   +0x0050 -> line 1327
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vClearUnusedAlwaysInDemoMode(void)
 {
     HIE_tdstSuperObject_** param0;
@@ -2336,6 +2317,13 @@ void fn_vClearUnusedAlwaysInDemoMode(void)
         param0++; hAlwaysSuperObject++; }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 43–43 */
+/* addr: 0x0025b150  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 43
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 HIE_tdstSuperObject_* fn_hGetCharacterInAlwaysActiveCharacterNode(tdstAlwaysActiveCharacter_* hCharNode)
 {
     return *(HIE_tdstSuperObject_* *)((char *)hCharNode + 0xc);

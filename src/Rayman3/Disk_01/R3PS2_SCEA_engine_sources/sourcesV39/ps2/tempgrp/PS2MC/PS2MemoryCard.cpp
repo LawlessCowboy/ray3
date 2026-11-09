@@ -29,6 +29,7 @@ typedef struct PS2MC_tdstIconAnimSection_ PS2MC_tdstIconAnimSection_;
 typedef struct sceCdCLOCK sceCdCLOCK;
 typedef struct _SceeMemCardFunctionResult _SceeMemCardFunctionResult;
 
+#pragma enumsalwaysint off
 typedef enum ESceeMemCardState {
     EMEMCARD_STATE_NULL = 255,
     EMEMCARD_STATE_IDLE = 0,
@@ -43,6 +44,7 @@ typedef enum ESceeMemCardState {
     EMEMCARD_STATE_SAVE_FILE = 9,
     EMEMCARD_STATE_NUM_STATES = 10,
 } ESceeMemCardState;
+#pragma enumsalwaysint reset
 
 typedef enum PS2MC_tdstState {
     STATE_DO_NOTHING = 0,
@@ -120,11 +122,13 @@ typedef enum PS2MC_tdstFunctionFlags {
     FFlag_End = 8,
 } PS2MC_tdstFunctionFlags;
 
+#pragma enumsalwaysint off
 typedef enum ESceeResult {
     E_FAIL = 0,
     E_SUCCESS = 1,
-    E_INDETERMINATE = 255,
+    E_INDETERMINATE = -1,
 } ESceeResult;
+#pragma enumsalwaysint reset
 
 struct sceMcIconSys {
     unsigned char Head[4]; /* +0x0 */
@@ -316,16 +320,6 @@ static sceMcTblGetDir PS2MC_fileListTable[20];
 unsigned int g_UserWarnedAboutAutoSave;
 unsigned int GLI_g_ChristianSlaterMode;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 158–163 */
-/* addr: 0x00327e70  size: 68 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 158
- *   +0x0014 -> line 159
- *   +0x001c -> line 162
- *   +0x003c -> line 163
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* Shared text-entry layout recovered in TXT/DisplayText.c. */
 struct _JFFTXT_ {
     int pString;
@@ -370,1163 +364,1521 @@ extern "C" void PS2MC_fn_vStartMachine(void);
 extern "C" void PS2MC_fn_vUpdateStatus(void);
 extern "C" unsigned int PS2MC_fn_uiInit(unsigned int Port, unsigned int Slot);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5542–5554 */
-/* addr: 0x0032a9c0  size: 184 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5542
- *   +0x000c -> line 5543
- *   +0x0018 -> line 5546
- *   +0x0020 -> line 5545
- *   +0x0024 -> line 5546
- *   +0x0088 -> line 5548
- *   +0x0094 -> line 5552
- *   +0x00a8 -> line 5554
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5533–5535 */
-/* addr: 0x0032aa80  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5533
- *   +0x0008 -> line 5535
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5526–5527 */
-/* addr: 0x0032aa90  size: 20 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5526
- *   +0x000c -> line 5527
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5519–5520 */
-/* addr: 0x0032aab0  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5519
- *   +0x0014 -> line 5520
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5512–5514 */
-/* addr: 0x0032aad0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5512
- *   +0x0008 -> line 5514
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5489–5490 */
-/* addr: 0x0032aae0  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5489
- *   +0x0004 -> line 5490
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5474–5475 */
-/* addr: 0x0032aaf0  size: 64 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5474
- *   +0x0038 -> line 5475
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5459–5460 */
-/* addr: 0x0032ab30  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5459
- *   +0x0008 -> line 5460
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5447–5449 */
-/* addr: 0x0032ab40  size: 196 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5447
- *   +0x0004 -> line 5448
- *   +0x0008 -> line 5447
- *   +0x0020 -> line 5448
- *   +0x00ac -> line 5449
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5434–5436 */
-/* addr: 0x0032ac10  size: 208 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5434
- *   +0x0004 -> line 5435
- *   +0x0008 -> line 5434
- *   +0x000c -> line 5435
- *   +0x0010 -> line 5434
- *   +0x0018 -> line 5435
- *   +0x00bc -> line 5436
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5420–5421 */
-/* addr: 0x0032ace0  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5420
- *   +0x0004 -> line 5421
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5403–5405 */
-/* addr: 0x0032acf0  size: 340 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5403
- *   +0x0004 -> line 5404
- *   +0x0008 -> line 5403
- *   +0x000c -> line 5404
- *   +0x0010 -> line 5403
- *   +0x0014 -> line 5404
- *   +0x0018 -> line 5403
- *   +0x001c -> line 5404
- *   +0x0140 -> line 5405
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5388–5389 */
-/* addr: 0x0032ae50  size: 64 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5388
- *   +0x0038 -> line 5389
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5374–5376 */
-/* addr: 0x0032ae90  size: 76 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5374
- *   +0x000c -> line 5375
- *   +0x003c -> line 5376
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern "C" void PS2MC_RemoveCurrentMessage(void);
 extern "C" void PS2MC_SetDisplayMessage(int, int);
+extern "C" unsigned int PS2MC_GetCurrentMessageAnswer(void);
+extern "C" void PS2MC_SetRequiredDataSizeForMessages(unsigned int);
+extern "C" ESceeResult sceeMemCardInit(char*, char*);
+extern "C" void sceeMemCardCreateUserDataFileName(char*, char*);
+extern "C" ESceeMemCardState sceeMemCardUpdate(int, int, _SceeMemCardStatus*);
+extern "C" ESceeResult sceeMemCardFindDir(unsigned int, unsigned int, char*, int*, int);
+extern "C" ESceeResult sceeMemCardGetNumFilesInDir(unsigned int, unsigned int, int*, char*);
+extern "C" int sceMcSync(int, int*, int*);
+extern "C" ESceeResult sceeMemCardCreateDir(unsigned int, unsigned int, char*);
+extern "C" ESceeResult sceeMemCardGetDirList(unsigned int, unsigned int, char*, int, unsigned int, int*, sceMcTblGetDir*);
+extern "C" int sceScfGetLocalTimefromRTC(sceCdCLOCK*);
+extern "C" size_t strlen(const char*);
+
+/* BCD <-> binary, as in the Sony libscf samples. */
+#define itob(i) ((i) / 10 * 16 + (i) % 10)
+#define btoi(b) (((b) >> 4) * 10 + ((b) & 0x0F))
+extern "C" ESceeResult sceeMemCardLoadFile(unsigned int, unsigned int, char*, char*, void*, unsigned int);
+extern "C" void InvalidDCache(void*, void*);
+extern "C" ESceeResult sceeMemCardFormat(unsigned int, unsigned int);
+extern "C" int sceMcGetDir(int, int, const char*, unsigned int, int, sceMcTblGetDir*);
+extern "C" char* FMN_SCE_ConvertPath2DVD(char*);
+extern "C" int CD_OpenFile(char*);
+extern "C" int CD_Length(int);
+extern "C" int CD_Seek(int, int, int);
+extern "C" int CD_Read(int, void*, int);
+extern "C" void CD_Close(int);
+extern "C" void* malloc(unsigned int);
+
+/* Retail copies m_uiCurrentSavingProcedure (and m_uiCheckDirReturnState) into
+ * m_uiState with a signed 'lb', although the fields themselves are compared
+ * with 'lbu', and reads it before the status store on the same source line:
+ * the copy goes through a char view of the field and an inline helper. */
+static inline void PS2MC_vReturnToState(C_PS2MC_Manager* p, char cState)
+{
+    p->m_MemoryCardInternalStatus.type = -10; p->m_uiState = cState;
+}
+
+static inline void PS2MC_vFillTestPattern(char* pBuffer, unsigned int ulSize)
+{
+    int i;
+    for (i = 0; i < ulSize; i++) pBuffer[i] = i & 0x7F;
+}
+
+static inline void PS2MC_vAcknowledgeChange(C_PS2MC_Manager* p)
+{
+    if (p->m_MemoryCardInternalStatus.type != -10)
+    {
+        p->m_PreviousMemoryCardInternalStatus = p->m_MemoryCardInternalStatus;
+    }
+    p->m_bMCChanged = 0;
+}
 extern "C" void FlushCache(void*);
-extern "C" int sceeMemCardSaveFile(unsigned int, unsigned int, char*, char*, void*, unsigned int);
+extern "C" signed char sceeMemCardSaveFile(unsigned int, unsigned int, char*, char*, void*, unsigned int);
 extern "C" int sceeMemCardGetFunctionResult(int, _SceeMemCardFunctionResult*);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5363–5364 */
-/* addr: 0x0032aee0  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5363
- *   +0x0014 -> line 5364
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+extern "C" void TXT_PauseGameIWantToDrawThisStringNumber(int _iStringNumber);
+extern "C" unsigned int PS2MC_fn_uiInit(unsigned int Port, unsigned int Slot);
+extern "C" void PS2MC_fn_vUpdateStatus(void);
+extern "C" void PS2MC_fn_vStartMachine(void);
+extern "C" void PS2MC_fn_vDoBootCheck(void);
+extern "C" void PS2MC_fn_vSaveGame(char* _pData, char* _pFileName, unsigned int SaveGameSizeInBytes);
+extern "C" void PS2MC_fn_vGetMemoryCardFileHeaders(MC_tdstFileEntry* _p_stEntryArray, unsigned int _NbMaxEntries, unsigned int* _p_uiNbFilesFound, int bFast);
+extern "C" void PS2MC_fn_vGetMemoryCardScreenShotsHeaders(MC_tdstFileEntry* _p_stEntryArray, unsigned int _NbMaxEntries, unsigned int* _p_uiNbFilesFound);
+extern "C" unsigned int PS2MC_fn_iGetFunctionResult(PS2MC_tdstFunctionFlags FlagID);
+extern "C" void PS2MC_fn_vStopPrompts(void);
+extern "C" void PS2MC_fn_vEnablePrompts(void);
+extern "C" void PS2MC_fn_vSaveScreenShot(char* _pData, char* _pFileName);
+extern "C" void* PS2MC_GetScreenShotPreviewData(void);
+extern "C" void PS2MC_fn_vLoadGame(char* _pFileName);
+extern "C" void PS2MC_fn_vLoadScreenShot(char* _pFileName, char* _pBuffer);
+extern "C" void* PS2MC_fn_pGetLoadGameBuffer(void);
+extern "C" int PS2MC_GetCurrentMemoryCardStatus(void);
+extern "C" int PS2MC_HasToCheckMCFull(void);
+extern "C" void PS2MC_vActivateMemoryCard(void);
+extern "C" void PS2MC_vClearFlag(int FlagID);
+extern "C" void PS2MC_DisableAutoSave(void);
+extern "C" int fn_bAutoSaveFinished(void);
+extern "C" int PS2MC_fn_bHasBootCheckBeenDoneYet(void);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5345–5347 */
-/* addr: 0x0032af00  size: 116 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 580–693 */
+/* addr: 0x00331bc0  size: 528 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5345
- *   +0x0004 -> line 5346
- *   +0x0008 -> line 5345
- *   +0x000c -> line 5346
- *   +0x0010 -> line 5345
- *   +0x0014 -> line 5346
- *   +0x0064 -> line 5347
+ *   +0x0000 -> line 580
+ *   +0x0024 -> line 585
+ *   +0x002c -> line 586
+ *   +0x0030 -> line 596
+ *   +0x0034 -> line 589
+ *   +0x0038 -> line 596
+ *   +0x003c -> line 590
+ *   +0x0040 -> line 596
+ *   +0x0050 -> line 597
+ *   +0x0058 -> line 601
+ *   +0x006c -> line 607
+ *   +0x0070 -> line 609
+ *   +0x007c -> line 611
+ *   +0x0088 -> line 613
+ *   +0x00a8 -> line 614
+ *   +0x00c0 -> line 615
+ *   +0x00d0 -> line 622
+ *   +0x00d8 -> line 629
+ *   +0x00f8 -> line 630
+ *   +0x0100 -> line 633
+ *   +0x010c -> line 635
+ *   +0x011c -> line 638
+ *   +0x0128 -> line 641
+ *   +0x0134 -> line 643
+ *   +0x0138 -> line 644
+ *   +0x0148 -> line 647
+ *   +0x0150 -> line 649
+ *   +0x015c -> line 655
+ *   +0x016c -> line 666
+ *   +0x0170 -> line 655
+ *   +0x0174 -> line 666
+ *   +0x0178 -> line 655
+ *   +0x017c -> line 666
+ *   +0x0180 -> line 655
+ *   +0x0188 -> line 666
+ *   +0x018c -> line 681
+ *   +0x019c -> line 685
+ *   +0x01a0 -> line 689
+ *   +0x01a4 -> line 685
+ *   +0x01a8 -> line 691
+ *   +0x01ac -> line 685
+ *   +0x01b0 -> line 689
+ *   +0x01b4 -> line 685
+ *   +0x01b8 -> line 689
+ *   +0x01bc -> line 685
+ *   +0x01c0 -> line 689
+ *   +0x01c4 -> line 685
+ *   +0x01c8 -> line 691
+ *   +0x01cc -> line 685
+ *   +0x01d8 -> line 689
+ *   +0x01e8 -> line 693
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+unsigned int C_PS2MC_Manager::Init(unsigned int _Port, unsigned int _Slot)
+{
+    ESceeResult RetValue;
+    unsigned int i;
+    int hFile;
+    int iLength;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5327–5329 */
-/* addr: 0x0032af80  size: 128 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5327
- *   +0x0004 -> line 5328
- *   +0x0008 -> line 5327
- *   +0x000c -> line 5328
- *   +0x0010 -> line 5327
- *   +0x0014 -> line 5328
- *   +0x0070 -> line 5329
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+    m_uiPort = _Port;
+    m_uiSlot = _Slot;
+    m_uiState = 0;
+    m_uiSubState = 0;
+    RetValue = sceeMemCardInit("BK", "SLKA-25078");
+    if (RetValue)
+    {
+        sceeMemCardCreateUserDataFileName(m_aFilePrefix, "");
+    }
+    for (i = 0; i < 2; i++)
+    {
+        m_MemoryCardInternalStatus.type = -10;
+        while (m_MemoryCardInternalStatus.type == -10)
+        {
+            m_MemoryCardModuleMode = sceeMemCardUpdate(m_uiPort, m_uiSlot, &m_MemoryCardInternalStatus);
+        }
+    }
+    for (i = 0; i < 1; i++)
+    {
+        hFile = CD_OpenFile(FMN_SCE_ConvertPath2DVD((char*)PS2MC_g_IconDesc[i].szFileNameRead));
+        if (hFile >= 0)
+        {
+            iLength = CD_Length(hFile);
+            CD_Seek(hFile, 0, 0);
+            PS2MC_g_IconDesc[i].pData = (int)malloc(iLength);
+            if (PS2MC_g_IconDesc[i].pData)
+            {
+                PS2MC_g_IconDesc[i].u32Size = iLength;
+                CD_Read(hFile, (void*)PS2MC_g_IconDesc[i].pData, iLength);
+            }
+            CD_Close(hFile);
+        }
+    }
+    m_RequiredGameDataSize = ((PS2MC_g_IconDesc[0].u32Size + 1023) >> 10) + 12;
+    m_RequiredPhotoSize = 125;
+    PS2MC_SetRequiredDataSizeForMessages(m_RequiredGameDataSize);
+    for (i = 0; i < 8; i++)
+    {
+        m_Flags[i] = -1;
+    }
+    m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+    return RetValue;
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5274–5291 */
-/* addr: 0x0032b000  size: 112 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 745–808 */
+/* addr: 0x00331a10  size: 432 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5274
- *   +0x0004 -> line 5275
- *   +0x0008 -> line 5274
- *   +0x0018 -> line 5275
- *   +0x0020 -> line 5277
- *   +0x0030 -> line 5282
- *   +0x0040 -> line 5284
- *   +0x004c -> line 5285
- *   +0x0054 -> line 5288
- *   +0x005c -> line 5291
+ *   +0x0000 -> line 745
+ *   +0x0004 -> line 747
+ *   +0x0008 -> line 745
+ *   +0x000c -> line 754
+ *   +0x0010 -> line 745
+ *   +0x0014 -> line 760
+ *   +0x0018 -> line 745
+ *   +0x0024 -> line 747
+ *   +0x0044 -> line 754
+ *   +0x004c -> line 760
+ *   +0x0054 -> line 766
+ *   +0x0058 -> line 769
+ *   +0x0064 -> line 747
+ *   +0x0068 -> line 766
+ *   +0x006c -> line 747
+ *   +0x0070 -> line 766
+ *   +0x0074 -> line 747
+ *   +0x007c -> line 754
+ *   +0x0094 -> line 760
+ *   +0x00ac -> line 766
+ *   +0x00b0 -> line 769
+ *   +0x00b8 -> line 772
+ *   +0x00c8 -> line 777
+ *   +0x00d0 -> line 779
+ *   +0x00ec -> line 780
+ *   +0x00f4 -> line 783
+ *   +0x010c -> line 786
+ *   +0x0120 -> line 789
+ *   +0x0124 -> line 792
+ *   +0x0128 -> line 789
+ *   +0x012c -> line 792
+ *   +0x0138 -> line 793
+ *   +0x0148 -> line 794
+ *   +0x0158 -> line 795
+ *   +0x0168 -> line 800
+ *   +0x0178 -> line 801
+ *   +0x0188 -> line 802
+ *   +0x0198 -> line 808
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void C_PS2MC_Manager::FillIconSys(char* _szTitleName, char bPhoto)
+{
+    char Title[66];
+    int bgcolor[4][4] = {{128, 0, 0, 0}, {0, 128, 0, 0}, {0, 0, 128, 0}, {128, 128, 128, 0}};
+    float lightdir[3][4] = {{0.5f, 0.5f, 0.5f, 0}, {0, -0.4f, -0.1f, 0}, {-0.5f, -0.5f, 0.5f, 0}};
+    float lightcol[3][4] = {{0.48f, 0.48f, 0.03f, 0}, {0.5f, 0.33f, 0.2f, 0}, {0.14f, 0.14f, 0.38f, 0}};
+    float ambient[4] = {0.5f, 0.5f, 0.5f, 0};
+    memset(&m_iconSys, 0, sizeof(m_iconSys));
+    strcpy((char*)m_iconSys.Head, "PS2D");
+    if (bPhoto)
+    {
+        sprintf(Title, "%s\n%s", "Rayman3 Photo", _szTitleName);
+    }
+    else
+    {
+        sprintf(Title, "%s\n%s\0", "Rayman3 Data", _szTitleName);
+    }
+    SVG_fn_szAsciiToSJIS((char*)m_iconSys.TitleName, 33, Title, &m_iconSys.OffsLF);
+    m_iconSys.TransRate = 0x60;
+    memcpy(m_iconSys.BgColor, bgcolor, sizeof(bgcolor));
+    memcpy(m_iconSys.LightDir, lightdir, sizeof(lightdir));
+    memcpy(m_iconSys.LightColor, lightcol, sizeof(lightcol));
+    memcpy(m_iconSys.Ambient, ambient, sizeof(ambient));
+    strcpy((char*)m_iconSys.FnameView, (char*)PS2MC_g_IconDesc[0].szFileNameSave);
+    strcpy((char*)m_iconSys.FnameCopy, (char*)PS2MC_g_IconDesc[0].szFileNameSave);
+    strcpy((char*)m_iconSys.FnameDel, (char*)PS2MC_g_IconDesc[0].szFileNameSave);
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5260–5261 */
-/* addr: 0x0032b070  size: 20 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 880–949 */
+/* addr: 0x00331780  size: 644 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5260
- *   +0x000c -> line 5261
+ *   +0x0000 -> line 880
+ *   +0x0004 -> line 881
+ *   +0x0008 -> line 880
+ *   +0x000c -> line 883
+ *   +0x0010 -> line 881
+ *   +0x0014 -> line 882
+ *   +0x001c -> line 916
+ *   +0x0020 -> line 883
+ *   +0x0024 -> line 884
+ *   +0x002c -> line 916
+ *   +0x0030 -> line 887
+ *   +0x0034 -> line 916
+ *   +0x0038 -> line 888
+ *   +0x003c -> line 916
+ *   +0x0040 -> line 889
+ *   +0x0044 -> line 916
+ *   +0x0048 -> line 890
+ *   +0x004c -> line 916
+ *   +0x0050 -> line 891
+ *   +0x0054 -> line 916
+ *   +0x0058 -> line 892
+ *   +0x005c -> line 917
+ *   +0x0060 -> line 893
+ *   +0x0064 -> line 918
+ *   +0x0068 -> line 894
+ *   +0x006c -> line 895
+ *   +0x0070 -> line 916
+ *   +0x009c -> line 917
+ *   +0x00c8 -> line 918
+ *   +0x00f4 -> line 920
+ *   +0x0120 -> line 921
+ *   +0x014c -> line 922
+ *   +0x0178 -> line 925
+ *   +0x01a4 -> line 926
+ *   +0x01d0 -> line 927
+ *   +0x01fc -> line 929
+ *   +0x0228 -> line 930
+ *   +0x0254 -> line 931
+ *   +0x027c -> line 949
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void C_PS2MC_Manager::CreateIconFile(void)
+{
+    PS2MC_tdstIconAnimSection_* pIconAnimation;
+    PS2MC_tdstIconVertex_* pIconVtx;
+    PS2MC_tdstIcon_* pIconHeader;
+    char* pData;
+    pIconHeader = (PS2MC_tdstIcon_*)&m_pUserIconFile[0];
+    pIconVtx = (PS2MC_tdstIconVertex_*)&m_pUserIconFile[5];
+    pIconAnimation = (PS2MC_tdstIconAnimSection_*)&m_pUserIconFile[77];
+    pData = (char*)&m_pUserIconFile[0];
+    pIconHeader->uiVersion = 0x10000;
+    pIconHeader->uiNBSP = 1;
+    pIconHeader->uiAttributes = 6;
+    pIconHeader->fBackFaceThreshold = 1.0f;
+    pIconHeader->nbVtx = 12;
+    pIconAnimation->uiNBSeq = 1;
+    pIconAnimation->uiNbFrame = 1;
+    pIconAnimation->fSpeed = 1.0f;
+    pIconAnimation->uiPlayOffset = 1;
+    pIconAnimation->uiNbKSP = 1;
+    pIconAnimation->uiKSPID = 1;
+    pIconAnimation->uiNBKF = 1;
+    pIconAnimation->uiKEYS[0] = 1;
+    pIconAnimation->uiKEYS[1] = 1;
+        pIconVtx[0].Pos[0] = -10240; pIconVtx[0].Pos[1] = -1536; pIconVtx[0].Pos[2] = 0; pIconVtx[0].Pos[3] = 1024; pIconVtx[0].Normal[0] = 716; pIconVtx[0].Normal[1] = 716; pIconVtx[0].Normal[2] = 716; pIconVtx[0].Normal[3] = 0; pIconVtx[0].ST[0] = 0; pIconVtx[0].ST[1] = 4096; pIconVtx[0].Color = 0xA0A0A0A0;
+        pIconVtx[1].Pos[0] = 10240; pIconVtx[1].Pos[1] = -1536; pIconVtx[1].Pos[2] = 0; pIconVtx[1].Pos[3] = 1024; pIconVtx[1].Normal[0] = 716; pIconVtx[1].Normal[1] = 716; pIconVtx[1].Normal[2] = 716; pIconVtx[1].Normal[3] = 0; pIconVtx[1].ST[0] = 4096; pIconVtx[1].ST[1] = 4096; pIconVtx[1].Color = 0xA0A0A0A0;
+        pIconVtx[2].Pos[0] = 10240; pIconVtx[2].Pos[1] = -18944; pIconVtx[2].Pos[2] = 0; pIconVtx[2].Pos[3] = 1024; pIconVtx[2].Normal[0] = 716; pIconVtx[2].Normal[1] = 716; pIconVtx[2].Normal[2] = 716; pIconVtx[2].Normal[3] = 0; pIconVtx[2].ST[0] = 4096; pIconVtx[2].ST[1] = 0; pIconVtx[2].Color = 0xA0A0A0A0;
+        pIconVtx[3].Pos[0] = -10240; pIconVtx[3].Pos[1] = -1536; pIconVtx[3].Pos[2] = 0; pIconVtx[3].Pos[3] = 1024; pIconVtx[3].Normal[0] = 716; pIconVtx[3].Normal[1] = 716; pIconVtx[3].Normal[2] = 716; pIconVtx[3].Normal[3] = 0; pIconVtx[3].ST[0] = 0; pIconVtx[3].ST[1] = 4096; pIconVtx[3].Color = 0xA0A0A0A0;
+        pIconVtx[4].Pos[0] = 10240; pIconVtx[4].Pos[1] = -18944; pIconVtx[4].Pos[2] = 0; pIconVtx[4].Pos[3] = 1024; pIconVtx[4].Normal[0] = 716; pIconVtx[4].Normal[1] = 716; pIconVtx[4].Normal[2] = 716; pIconVtx[4].Normal[3] = 0; pIconVtx[4].ST[0] = 4096; pIconVtx[4].ST[1] = 0; pIconVtx[4].Color = 0xA0A0A0A0;
+        pIconVtx[5].Pos[0] = -10240; pIconVtx[5].Pos[1] = -18944; pIconVtx[5].Pos[2] = 0; pIconVtx[5].Pos[3] = 1024; pIconVtx[5].Normal[0] = 716; pIconVtx[5].Normal[1] = 716; pIconVtx[5].Normal[2] = 716; pIconVtx[5].Normal[3] = 0; pIconVtx[5].ST[0] = 0; pIconVtx[5].ST[1] = 0; pIconVtx[5].Color = 0xA0A0A0A0;
+        pIconVtx[6].Pos[0] = -10240; pIconVtx[6].Pos[1] = -1536; pIconVtx[6].Pos[2] = 0; pIconVtx[6].Pos[3] = 1024; pIconVtx[6].Normal[0] = 716; pIconVtx[6].Normal[1] = 716; pIconVtx[6].Normal[2] = 716; pIconVtx[6].Normal[3] = 0; pIconVtx[6].ST[0] = 4096; pIconVtx[6].ST[1] = 4096; pIconVtx[6].Color = 0xA0A0A0A0;
+        pIconVtx[7].Pos[0] = -10240; pIconVtx[7].Pos[1] = -18944; pIconVtx[7].Pos[2] = 0; pIconVtx[7].Pos[3] = 1024; pIconVtx[7].Normal[0] = 716; pIconVtx[7].Normal[1] = 716; pIconVtx[7].Normal[2] = 716; pIconVtx[7].Normal[3] = 0; pIconVtx[7].ST[0] = 4096; pIconVtx[7].ST[1] = 0; pIconVtx[7].Color = 0xA0A0A0A0;
+        pIconVtx[8].Pos[0] = 10240; pIconVtx[8].Pos[1] = -18944; pIconVtx[8].Pos[2] = 0; pIconVtx[8].Pos[3] = 1024; pIconVtx[8].Normal[0] = 716; pIconVtx[8].Normal[1] = 716; pIconVtx[8].Normal[2] = 716; pIconVtx[8].Normal[3] = 0; pIconVtx[8].ST[0] = 0; pIconVtx[8].ST[1] = 0; pIconVtx[8].Color = 0xA0A0A0A0;
+        pIconVtx[9].Pos[0] = -10240; pIconVtx[9].Pos[1] = -1536; pIconVtx[9].Pos[2] = 0; pIconVtx[9].Pos[3] = 1024; pIconVtx[9].Normal[0] = 716; pIconVtx[9].Normal[1] = 716; pIconVtx[9].Normal[2] = 716; pIconVtx[9].Normal[3] = 0; pIconVtx[9].ST[0] = 4096; pIconVtx[9].ST[1] = 4096; pIconVtx[9].Color = 0xA0A0A0A0;
+        pIconVtx[10].Pos[0] = 10240; pIconVtx[10].Pos[1] = -18944; pIconVtx[10].Pos[2] = 0; pIconVtx[10].Pos[3] = 1024; pIconVtx[10].Normal[0] = 716; pIconVtx[10].Normal[1] = 716; pIconVtx[10].Normal[2] = 716; pIconVtx[10].Normal[3] = 0; pIconVtx[10].ST[0] = 0; pIconVtx[10].ST[1] = 0; pIconVtx[10].Color = 0xA0A0A0A0;
+        pIconVtx[11].Pos[0] = 10240; pIconVtx[11].Pos[1] = -1536; pIconVtx[11].Pos[2] = 0; pIconVtx[11].Pos[3] = 1024; pIconVtx[11].Normal[0] = 716; pIconVtx[11].Normal[1] = 716; pIconVtx[11].Normal[2] = 716; pIconVtx[11].Normal[3] = 0; pIconVtx[11].ST[0] = 0; pIconVtx[11].ST[1] = 4096;
+        pIconVtx[11].Color = 0xA0A0A0A0;
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5235–5236 */
-/* addr: 0x0032b090  size: 40 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 1065–1397 */
+/* addr: 0x00331100  size: 1664 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5235
- *   +0x0020 -> line 5236
+ *   +0x0000 -> line 1065
+ *   +0x0004 -> line 1072
+ *   +0x0008 -> line 1065
+ *   +0x0014 -> line 1072
+ *   +0x0028 -> line 1075
+ *   +0x002c -> line 1072
+ *   +0x0034 -> line 1075
+ *   +0x0048 -> line 1079
+ *   +0x005c -> line 1082
+ *   +0x007c -> line 1088
+ *   +0x0080 -> line 1085
+ *   +0x0084 -> line 1087
+ *   +0x008c -> line 1088
+ *   +0x00dc -> line 1091
+ *   +0x00e4 -> line 1093
+ *   +0x00f0 -> line 1095
+ *   +0x00f4 -> line 1096
+ *   +0x00f8 -> line 1101
+ *   +0x0104 -> line 1103
+ *   +0x0110 -> line 1105
+ *   +0x0118 -> line 1106
+ *   +0x0124 -> line 1108
+ *   +0x012c -> line 1115
+ *   +0x0154 -> line 1122
+ *   +0x0170 -> line 1124
+ *   +0x0178 -> line 1133
+ *   +0x0190 -> line 1136
+ *   +0x01a8 -> line 1144
+ *   +0x01f0 -> line 1146
+ *   +0x01fc -> line 1150
+ *   +0x0200 -> line 1154
+ *   +0x020c -> line 1156
+ *   +0x0218 -> line 1159
+ *   +0x022c -> line 1160
+ *   +0x0248 -> line 1162
+ *   +0x0258 -> line 1167
+ *   +0x0264 -> line 1168
+ *   +0x0268 -> line 1167
+ *   +0x026c -> line 1168
+ *   +0x0288 -> line 1169
+ *   +0x0290 -> line 1173
+ *   +0x0294 -> line 1177
+ *   +0x029c -> line 1178
+ *   +0x02b8 -> line 1181
+ *   +0x02bc -> line 1184
+ *   +0x02c8 -> line 1187
+ *   +0x02d8 -> line 1188
+ *   +0x02ec -> line 1192
+ *   +0x030c -> line 1193
+ *   +0x0314 -> line 1199
+ *   +0x031c -> line 1204
+ *   +0x0340 -> line 1207
+ *   +0x0348 -> line 1210
+ *   +0x0360 -> line 1212
+ *   +0x0378 -> line 1213
+ *   +0x0380 -> line 1216
+ *   +0x03a4 -> line 1223
+ *   +0x03ac -> line 1232
+ *   +0x03cc -> line 1235
+ *   +0x03f8 -> line 1236
+ *   +0x0400 -> line 1237
+ *   +0x0408 -> line 1239
+ *   +0x0418 -> line 1242
+ *   +0x041c -> line 1241
+ *   +0x0424 -> line 1242
+ *   +0x044c -> line 1243
+ *   +0x046c -> line 1248
+ *   +0x0474 -> line 1257
+ *   +0x0494 -> line 1259
+ *   +0x049c -> line 1260
+ *   +0x04a4 -> line 1263
+ *   +0x04ac -> line 1266
+ *   +0x04b4 -> line 1271
+ *   +0x04bc -> line 1273
+ *   +0x04c4 -> line 1279
+ *   +0x04cc -> line 1281
+ *   +0x04d4 -> line 1288
+ *   +0x04dc -> line 1290
+ *   +0x04e4 -> line 1294
+ *   +0x04ec -> line 1296
+ *   +0x04f4 -> line 1304
+ *   +0x04fc -> line 1306
+ *   +0x0504 -> line 1316
+ *   +0x050c -> line 1318
+ *   +0x0514 -> line 1327
+ *   +0x051c -> line 1329
+ *   +0x0524 -> line 1337
+ *   +0x052c -> line 1339
+ *   +0x0534 -> line 1343
+ *   +0x053c -> line 1345
+ *   +0x0544 -> line 1349
+ *   +0x054c -> line 1351
+ *   +0x0554 -> line 1361
+ *   +0x0564 -> line 1363
+ *   +0x057c -> line 1365
+ *   +0x05a0 -> line 1367
+ *   +0x05a8 -> line 1368
+ *   +0x05b4 -> line 1370
+ *   +0x05c8 -> line 1371
+ *   +0x05e4 -> line 1373
+ *   +0x05f4 -> line 1378
+ *   +0x05f8 -> line 1375
+ *   +0x05fc -> line 1378
+ *   +0x0618 -> line 1379
+ *   +0x0620 -> line 1380
+ *   +0x0640 -> line 1386
+ *   +0x0648 -> line 1390
+ *   +0x0668 -> line 1392
+ *   +0x0670 -> line 1397
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void C_PS2MC_Manager::UpdateStatus(void)
+{
+    m_MemoryCardModuleMode = sceeMemCardUpdate(m_uiPort, m_uiSlot, &m_MemoryCardInternalStatus);
+    if (m_MemoryCardInternalStatus.type != -10)
+    {
+        if (m_MemoryCardInternalStatus.type != 2)
+        {
+            m_MemoryCardInternalStatus.type = 0;
+        }
+        if (m_MemoryCardInternalStatus.type != m_PreviousMemoryCardInternalStatus.type)
+        {
+            m_bMCChanged = 1;
+            m_bNeedToCheckAndWarnForMCFull = 3;
+            PS2MC_vAcknowledgeChange(this);
+            m_bMCChangedSinceLastSave = 1;
+            if (m_bAutoSaveEnabled)
+            {
+                m_bNeedToWarnUserAboutAutoSaveDisabled = 1;
+                m_bAutoSaveEnabled = 0;
+            }
+        }
+    }
+    if (!m_bActivated) return;
+    if (m_bWillHaveToRestoreMenu2D)
+    {
+        m_bWillHaveToRestoreMenu2D--;
+        if (m_bWillHaveToRestoreMenu2D == 0)
+        {
+            fn_vInterruptMenu2D(0);
+        }
+    }
+    switch (m_uiState)
+    {
+        case STATE_DO_NOTHING:
+            break;
+        case STATE_ENTERING_IDLE:
+            m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+            break;
+        case STATE_IDLE:
+            if (m_MemoryCardInternalStatus.type == -10) break;
+            if (m_bMCChanged || m_bNeedToWarnUserAboutAutoSaveDisabled)
+            {
+                PS2MC_vAcknowledgeChange(this);
+                if (m_bAutoSaveEnabled)
+                {
+                    m_bNeedToWarnUserAboutAutoSaveDisabled = 0;
+                }
+                if (m_bNeedToWarnUserAboutAutoSaveDisabled)
+                {
+                    if (m_bPromptIsOn)
+                    {
+                        if (m_MemoryCardInternalStatus.type == 0)
+                        {
+                            PS2MC_SetDisplayMessage(MC_eRemovedMC_AutoSaveDisabled, m_RequiredGameDataSize);
+                        }
+                        else
+                        {
+                            PS2MC_SetDisplayMessage(MC_eChangedMC_AutoSaveDisabled, m_RequiredGameDataSize);
+                        }
+                        m_bCurrentlyWarningAboutMCRemoval = 1;
+                        m_MemoryCardInternalStatus.type = -10; m_uiState = 3; m_uiSubState = 0; m_uiNextState = 2;
+                    }
+                    else
+                    {
+                        m_bMemoryCardWasRemovedWhilePromptWasOff = 1;
+                    }
+                    m_bNeedToWarnUserAboutAutoSaveDisabled = 0;
+                }
+                else if (m_MemoryCardInternalStatus.type == 0 && m_bAutoSaveEnabled)
+                {
+                    m_bAutoSaveEnabled = 0;
+                    if (m_bPromptIsOn)
+                    {
+                        m_bCurrentlyWarningAboutMCRemoval = 1;
+                        PS2MC_SetDisplayMessage(MC_eRemovedMC_AutoSaveDisabled, m_RequiredGameDataSize);
+                        m_MemoryCardInternalStatus.type = -10; m_uiState = 3; m_uiSubState = 0; m_uiNextState = 2;
+                    }
+                    else
+                    {
+                        m_bMemoryCardWasRemovedWhilePromptWasOff = 1;
+                    }
+                }
+                else
+                {
+                    PS2MC_vReturnToState(this, *(char*)&m_uiIdleState); m_uiSubState = 0; m_uiNextState = 2; m_uiIdleState = 2;
+                }
+            }
+            else if (m_bNeedToCheckAndWarnForMCFull && m_bPromptIsOn)
+            {
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 5; m_uiSubState = 0; m_uiNextState = 2;
+            }
+            else
+            {
+                PS2MC_vReturnToState(this, *(char*)&m_uiIdleState); m_uiSubState = 0; m_uiNextState = 2; m_uiIdleState = 2;
+            }
+            break;
+        case STATE_WARNING:
+            switch (m_uiSubState)
+            {
+                case 0:
+                    g_EngineHasBeenPausedBecauseOfMC = 1; m_IPausedTheEngine++; if (m_IPausedTheEngine == 1) { fn_vPauseFromMemoryCard(); fn_vInterruptMenu2D(1); }
+                    m_uiSubState++;
+                    break;
+                case 1:
+                    if (PS2MC_GetCurrentMessageAnswer())
+                    {
+                        m_bCurrentlyWarningAboutMCRemoval = 0;
+                        if (m_IPausedTheEngine == 1) { g_EngineHasBeenPausedBecauseOfMC = 0; m_IPausedTheEngine = 0; fn_vUnpauseFromMemoryCard(); m_bWillHaveToRestoreMenu2D = 2; } else { m_IPausedTheEngine--; }
+                        PS2MC_vReturnToState(this, *(char*)&m_uiNextState); m_uiSubState = 0; m_uiNextState = 2;
+                    }
+                    break;
+            }
+            break;
+        case STATE_BOOT_CHECK:
+            if (m_bPreBootCheckWasDone && !g_GameHasNotStartedTheFirstBootCheck)
+            {
+                ManageBootCheck();
+            }
+            else
+            {
+                ManagePreBootCheck();
+            }
+            break;
+        case STATE_SAVE_ARE_YOU_SURE:
+            ManageAreYouSureBeforeSave();
+            break;
+        case STATE_SAVE_GAME:
+            ManageSaveGame();
+            break;
+        case STATE_LOAD_GAME:
+            ManageLoadGame();
+            break;
+        case STATE_LOAD_SCREENSHOT:
+            ManageLoadScreenShot();
+            break;
+        case STATE_AUTO_SAVE_GAME:
+            ManageAutoSaveGame();
+            break;
+        case STATE_MANAGE_CHECK_ONE_DIRECTORY:
+            ManageCheckOneDirectory();
+            break;
+        case STATE_MANAGE_FORMATTING:
+            ManageFormatting();
+            break;
+        case STATE_GET_SAVED_GAMES_ENTRIES:
+            ManageGetSavedGamesEntries();
+            break;
+        case STATE_GET_SCREENSHOTS_ENTRIES:
+            ManageGetScreenshotsEntries();
+            break;
+        case STATE_SAVE_SCREENSHOT:
+            ManageSaveScreenShot();
+            break;
+        case STATE_PROMPT_LAST_ERROR:
+            if (m_Flags[1] == 2)
+            {
+                PS2MC_SetDisplayMessage(*(char*)&m_AutoSaveErrorMessage, m_RequiredGameDataSize);
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 3; m_uiSubState = 0; m_uiNextState = 2;
+                m_Flags[1] = 0;
+            }
+            else if (m_bMemoryCardWasRemovedWhilePromptWasOff)
+            {
+                if (m_MemoryCardInternalStatus.type == 0)
+                {
+                    PS2MC_SetDisplayMessage(MC_eRemovedMC_AutoSaveDisabled, m_RequiredGameDataSize);
+                }
+                else
+                {
+                    PS2MC_SetDisplayMessage(MC_eChangedMC_AutoSaveDisabled, m_RequiredGameDataSize);
+                }
+                m_bMemoryCardWasRemovedWhilePromptWasOff = 0;
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 3; m_uiSubState = 0; m_uiNextState = 2;
+            }
+            else if (m_Flags[1] == 1 && !g_UserWarnedAboutAutoSave && !m_bAutoSaveWasntEvenTried)
+            {
+                g_UserWarnedAboutAutoSave = 1;
+            }
+            else
+            {
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+            }
+            m_Flags[1] = -1;
+            break;
+    }
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5223–5223 */
-/* addr: 0x0032b0c0  size: 8 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 1420–1549 */
+/* addr: 0x00330d00  size: 1016 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5223
+ *   +0x0000 -> line 1420
+ *   +0x0004 -> line 1425
+ *   +0x0008 -> line 1420
+ *   +0x000c -> line 1425
+ *   +0x0010 -> line 1420
+ *   +0x0018 -> line 1425
+ *   +0x0024 -> line 1428
+ *   +0x0050 -> line 1429
+ *   +0x0058 -> line 1432
+ *   +0x0098 -> line 1437
+ *   +0x009c -> line 1438
+ *   +0x00a0 -> line 1437
+ *   +0x00a4 -> line 1438
+ *   +0x00c8 -> line 1441
+ *   +0x00d4 -> line 1443
+ *   +0x00fc -> line 1444
+ *   +0x0104 -> line 1447
+ *   +0x010c -> line 1450
+ *   +0x0114 -> line 1455
+ *   +0x011c -> line 1458
+ *   +0x012c -> line 1460
+ *   +0x0134 -> line 1461
+ *   +0x013c -> line 1462
+ *   +0x0144 -> line 1464
+ *   +0x016c -> line 1467
+ *   +0x0174 -> line 1472
+ *   +0x0180 -> line 1474
+ *   +0x01a4 -> line 1475
+ *   +0x01b0 -> line 1477
+ *   +0x01d8 -> line 1478
+ *   +0x01e0 -> line 1481
+ *   +0x01e8 -> line 1483
+ *   +0x01f0 -> line 1486
+ *   +0x0218 -> line 1489
+ *   +0x0220 -> line 1494
+ *   +0x022c -> line 1496
+ *   +0x023c -> line 1498
+ *   +0x0244 -> line 1499
+ *   +0x024c -> line 1500
+ *   +0x0254 -> line 1502
+ *   +0x027c -> line 1505
+ *   +0x0284 -> line 1516
+ *   +0x02a4 -> line 1517
+ *   +0x02b4 -> line 1518
+ *   +0x02c4 -> line 1519
+ *   +0x02d4 -> line 1521
+ *   +0x02f8 -> line 1525
+ *   +0x0304 -> line 1527
+ *   +0x0330 -> line 1528
+ *   +0x0338 -> line 1531
+ *   +0x0358 -> line 1532
+ *   +0x0370 -> line 1534
+ *   +0x037c -> line 1535
+ *   +0x038c -> line 1536
+ *   +0x039c -> line 1538
+ *   +0x03b4 -> line 1541
+ *   +0x03c4 -> line 1542
+ *   +0x03d0 -> line 1543
+ *   +0x03d4 -> line 1542
+ *   +0x03d8 -> line 1543
+ *   +0x03e4 -> line 1549
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void C_PS2MC_Manager::ManageCheckOneDirectory(void)
+{
+    char TempString[1024];
+    int TotalDirectorySize;
+    int i;
+    _SceeMemCardFunctionResult functionResult;
+    int returnVal;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5203–5209 */
-/* addr: 0x0032b0d0  size: 88 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5203
- *   +0x0018 -> line 5205
- *   +0x0030 -> line 5208
- *   +0x0038 -> line 5205
- *   +0x003c -> line 5208
- *   +0x0044 -> line 5209
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+    if (m_MemoryCardInternalStatus.type == 0)
+    {
+        m_uiState = *(char*)&m_uiCheckDirReturnState; m_uiSubState = m_uiCheckDirReturnSubState; m_uiCheckDirReturnedSize = -1;
+        return;
+    }
+    TotalDirectorySize = 0;
+    switch (m_uiSubState)
+    {
+        case 0:
+        {
+            m_dirFound = -1;
+            returnVal = sceeMemCardFindDir(m_uiPort, m_uiSlot, m_aDirExtension, &m_dirFound, 0);
+            if (returnVal == E_FAIL)
+            {
+                m_uiState = *(char*)&m_uiCheckDirReturnState; m_uiSubState = m_uiCheckDirReturnSubState; m_uiCheckDirReturnedSize = -1;
+                return;
+            }
+            m_uiSubState++;
+            break;
+        }
+        case 1:
+        {
+            sceeMemCardGetFunctionResult(3, &functionResult);
+            if (functionResult.success == E_SUCCESS)
+            {
+                m_uiSubState++;
+            }
+            else if (functionResult.success == E_FAIL)
+            {
+                m_uiState = *(char*)&m_uiCheckDirReturnState; m_uiSubState = m_uiCheckDirReturnSubState; m_uiCheckDirReturnedSize = -1;
+            }
+            break;
+        }
+        case 2:
+        {
+            if (m_dirFound)
+            {
+                returnVal = sceeMemCardGetNumFilesInDir(m_uiPort, m_uiSlot, &m_dirFound, m_aDirExtension);
+                if (returnVal == E_FAIL)
+                {
+                    m_uiState = *(char*)&m_uiCheckDirReturnState; m_uiSubState = m_uiCheckDirReturnSubState; m_uiCheckDirReturnedSize = -1;
+                    return;
+                }
+                m_uiSubState++;
+            }
+            else
+            {
+                m_uiState = *(char*)&m_uiCheckDirReturnState; m_uiSubState = m_uiCheckDirReturnSubState; m_uiCheckDirReturnedSize = -1;
+            }
+            break;
+        }
+        case 3:
+        {
+            sceeMemCardGetFunctionResult(5, &functionResult);
+            if (functionResult.success == E_SUCCESS)
+            {
+                m_uiSubState++;
+            }
+            else if (functionResult.success == E_FAIL)
+            {
+                m_uiState = *(char*)&m_uiCheckDirReturnState; m_uiSubState = m_uiCheckDirReturnSubState; m_uiCheckDirReturnedSize = -1;
+            }
+            break;
+        }
+        case 4:
+        {
+            while (!sceMcSync(1, 0, &returnVal));
+            strcpy(TempString, "/");
+            Strcat(TempString, m_aFullFileName);
+            Strcat(TempString, "/*");
+            returnVal = sceMcGetDir(m_uiPort, m_uiSlot, TempString, 0, 20, PS2MC_fileListTable);
+            if (returnVal < 0)
+            {
+                m_uiState = *(char*)&m_uiCheckDirReturnState; m_uiSubState = m_uiCheckDirReturnSubState; m_uiCheckDirReturnedSize = -1;
+                return;
+            }
+            while (!sceMcSync(1, 0, &returnVal));
+            for (i = 0; i < returnVal; i++)
+            {
+                if (PS2MC_fileListTable[i].FileSizeByte)
+                {
+                    TotalDirectorySize += (PS2MC_fileListTable[i].FileSizeByte + 1023) >> 10;
+                }
+            }
+            TotalDirectorySize += (returnVal - 1) / 2;
+            m_uiCheckDirReturnedSize = TotalDirectorySize + 2;
+            m_uiState = *(char*)&m_uiCheckDirReturnState; m_uiSubState = m_uiCheckDirReturnSubState;
+            break;
+        }
+    }
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5037–5062 */
-/* addr: 0x0032b130  size: 444 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 1603–1898 */
+/* addr: 0x0032ff80  size: 3444 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5037
- *   +0x001c -> line 5038
- *   +0x0028 -> line 5041
- *   +0x002c -> line 5040
- *   +0x0030 -> line 5041
- *   +0x0038 -> line 5043
- *   +0x003c -> line 5042
- *   +0x0040 -> line 5043
- *   +0x0044 -> line 5042
- *   +0x004c -> line 5043
- *   +0x0050 -> line 5042
- *   +0x0054 -> line 5043
- *   +0x0060 -> line 5044
- *   +0x00bc -> line 5045
- *   +0x00c0 -> line 5047
- *   +0x00c4 -> line 5045
- *   +0x00d4 -> line 5047
- *   +0x00d8 -> line 5045
- *   +0x00dc -> line 5047
- *   +0x00e0 -> line 5045
- *   +0x011c -> line 5047
- *   +0x0124 -> line 5048
- *   +0x0138 -> line 5049
- *   +0x0148 -> line 5050
- *   +0x015c -> line 5051
- *   +0x0170 -> line 5052
- *   +0x0180 -> line 5053
- *   +0x0184 -> line 5054
- *   +0x018c -> line 5057
- *   +0x0198 -> line 5059
- *   +0x01a0 -> line 5060
- *   +0x01a4 -> line 5062
+ *   +0x0000 -> line 1603
+ *   +0x002c -> line 1607
+ *   +0x0044 -> line 1610
+ *   +0x0058 -> line 1613
+ *   +0x0084 -> line 1614
+ *   +0x008c -> line 1617
+ *   +0x00d0 -> line 1625
+ *   +0x00d4 -> line 1624
+ *   +0x00d8 -> line 1625
+ *   +0x00dc -> line 1624
+ *   +0x00e0 -> line 1625
+ *   +0x00e4 -> line 1624
+ *   +0x00e8 -> line 1625
+ *   +0x0110 -> line 1632
+ *   +0x0160 -> line 1633
+ *   +0x0174 -> line 1634
+ *   +0x0188 -> line 1636
+ *   +0x0190 -> line 1644
+ *   +0x019c -> line 1646
+ *   +0x01ac -> line 1650
+ *   +0x01c0 -> line 1653
+ *   +0x01ec -> line 1654
+ *   +0x01f4 -> line 1657
+ *   +0x01fc -> line 1659
+ *   +0x0204 -> line 1660
+ *   +0x020c -> line 1662
+ *   +0x0238 -> line 1665
+ *   +0x0240 -> line 1681
+ *   +0x0250 -> line 1685
+ *   +0x0254 -> line 1681
+ *   +0x0258 -> line 1685
+ *   +0x0278 -> line 1688
+ *   +0x027c -> line 1685
+ *   +0x0288 -> line 1688
+ *   +0x0290 -> line 1701
+ *   +0x0298 -> line 1699
+ *   +0x029c -> line 1701
+ *   +0x02a0 -> line 1700
+ *   +0x02a4 -> line 1701
+ *   +0x02b0 -> line 1713
+ *   +0x02b4 -> line 1701
+ *   +0x02b8 -> line 1713
+ *   +0x02bc -> line 1701
+ *   +0x02c0 -> line 1704
+ *   +0x02c4 -> line 1705
+ *   +0x02c8 -> line 1718
+ *   +0x02cc -> line 1701
+ *   +0x02d0 -> line 1713
+ *   +0x02d8 -> line 1702
+ *   +0x02e0 -> line 1701
+ *   +0x031c -> line 1702
+ *   +0x0324 -> line 1703
+ *   +0x032c -> line 1702
+ *   +0x0368 -> line 1703
+ *   +0x0370 -> line 1704
+ *   +0x0378 -> line 1703
+ *   +0x03b4 -> line 1704
+ *   +0x03bc -> line 1705
+ *   +0x03c4 -> line 1704
+ *   +0x03fc -> line 1705
+ *   +0x0444 -> line 1713
+ *   +0x0464 -> line 1714
+ *   +0x04c8 -> line 1718
+ *   +0x04d0 -> line 1742
+ *   +0x04dc -> line 1720
+ *   +0x04e0 -> line 1742
+ *   +0x04e4 -> line 1720
+ *   +0x04e8 -> line 1733
+ *   +0x04ec -> line 1736
+ *   +0x04f0 -> line 1733
+ *   +0x04f4 -> line 1736
+ *   +0x04f8 -> line 1720
+ *   +0x0518 -> line 1721
+ *   +0x0540 -> line 1722
+ *   +0x0568 -> line 1723
+ *   +0x0588 -> line 1724
+ *   +0x05a8 -> line 1725
+ *   +0x05d0 -> line 1729
+ *   +0x05dc -> line 1733
+ *   +0x05ec -> line 1736
+ *   +0x063c -> line 1742
+ *   +0x0640 -> line 1736
+ *   +0x0644 -> line 1742
+ *   +0x0648 -> line 1736
+ *   +0x0690 -> line 1742
+ *   +0x06a0 -> line 1743
+ *   +0x06e4 -> line 1746
+ *   +0x06e8 -> line 1747
+ *   +0x06ec -> line 1746
+ *   +0x06f0 -> line 1748
+ *   +0x06f4 -> line 1746
+ *   +0x06fc -> line 1747
+ *   +0x0700 -> line 1746
+ *   +0x0704 -> line 1747
+ *   +0x0718 -> line 1748
+ *   +0x0730 -> line 1761
+ *   +0x0740 -> line 1760
+ *   +0x0744 -> line 1761
+ *   +0x0750 -> line 1763
+ *   +0x0788 -> line 1767
+ *   +0x0814 -> line 1768
+ *   +0x0820 -> line 1767
+ *   +0x082c -> line 1768
+ *   +0x0894 -> line 1769
+ *   +0x08a0 -> line 1768
+ *   +0x08ac -> line 1769
+ *   +0x090c -> line 1770
+ *   +0x0910 -> line 1769
+ *   +0x091c -> line 1771
+ *   +0x0920 -> line 1770
+ *   +0x0924 -> line 1772
+ *   +0x0940 -> line 1773
+ *   +0x0948 -> line 1776
+ *   +0x095c -> line 1779
+ *   +0x0960 -> line 1782
+ *   +0x0964 -> line 1779
+ *   +0x0968 -> line 1783
+ *   +0x096c -> line 1779
+ *   +0x0974 -> line 1782
+ *   +0x0978 -> line 1785
+ *   +0x0980 -> line 1787
+ *   +0x099c -> line 1788
+ *   +0x09a4 -> line 1792
+ *   +0x09a8 -> line 1793
+ *   +0x09b0 -> line 1796
+ *   +0x09b8 -> line 1800
+ *   +0x09f0 -> line 1801
+ *   +0x0a04 -> line 1802
+ *   +0x0a3c -> line 1803
+ *   +0x0a50 -> line 1804
+ *   +0x0a64 -> line 1805
+ *   +0x0a9c -> line 1807
+ *   +0x0aa4 -> line 1808
+ *   +0x0ab8 -> line 1810
+ *   +0x0ae0 -> line 1814
+ *   +0x0af0 -> line 1818
+ *   +0x0b0c -> line 1819
+ *   +0x0b10 -> line 1818
+ *   +0x0b1c -> line 1819
+ *   +0x0b20 -> line 1818
+ *   +0x0b28 -> line 1819
+ *   +0x0b38 -> line 1821
+ *   +0x0b3c -> line 1819
+ *   +0x0b48 -> line 1821
+ *   +0x0b4c -> line 1819
+ *   +0x0b58 -> line 1820
+ *   +0x0b64 -> line 1821
+ *   +0x0b74 -> line 1824
+ *   +0x0b78 -> line 1827
+ *   +0x0b7c -> line 1824
+ *   +0x0b80 -> line 1828
+ *   +0x0b84 -> line 1824
+ *   +0x0b88 -> line 1831
+ *   +0x0b8c -> line 1824
+ *   +0x0b90 -> line 1831
+ *   +0x0b94 -> line 1827
+ *   +0x0b98 -> line 1831
+ *   +0x0b9c -> line 1828
+ *   +0x0ba0 -> line 1831
+ *   +0x0bac -> line 1832
+ *   +0x0bb4 -> line 1837
+ *   +0x0bbc -> line 1840
+ *   +0x0bc0 -> line 1842
+ *   +0x0bc8 -> line 1845
+ *   +0x0bd0 -> line 1848
+ *   +0x0bd8 -> line 1853
+ *   +0x0be4 -> line 1856
+ *   +0x0bf4 -> line 1858
+ *   +0x0c0c -> line 1859
+ *   +0x0c10 -> line 1858
+ *   +0x0c30 -> line 1859
+ *   +0x0c60 -> line 1860
+ *   +0x0c68 -> line 1861
+ *   +0x0c70 -> line 1864
+ *   +0x0c74 -> line 1865
+ *   +0x0c78 -> line 1864
+ *   +0x0c84 -> line 1865
+ *   +0x0c88 -> line 1864
+ *   +0x0ca8 -> line 1865
+ *   +0x0cd0 -> line 1872
+ *   +0x0cd4 -> line 1873
+ *   +0x0cdc -> line 1872
+ *   +0x0ce4 -> line 1873
+ *   +0x0cf4 -> line 1876
+ *   +0x0cf8 -> line 1879
+ *   +0x0cfc -> line 1876
+ *   +0x0d00 -> line 1880
+ *   +0x0d04 -> line 1876
+ *   +0x0d0c -> line 1879
+ *   +0x0d10 -> line 1883
+ *   +0x0d18 -> line 1884
+ *   +0x0d34 -> line 1889
+ *   +0x0d3c -> line 1892
+ *   +0x0d44 -> line 1898
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void C_PS2MC_Manager::ManageGetSavedGamesEntries(void)
+{
+    MC_tdstFileEntry Temp;
+    int bSwapped;
+    unsigned int Century;
+    _SceeMemCardFunctionResult functionResult;
+    int NameIndex;
+    sceCdCLOCK LocalTime;
+    unsigned int i;
+    ESceeResult Result;
+    static int CurrentEntry = 0;
+    static unsigned int HeaderData[4];
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 4961–4977 */
-/* addr: 0x0032b2f0  size: 448 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4961
- *   +0x0018 -> line 4962
- *   +0x0048 -> line 4964
- *   +0x004c -> line 4963
- *   +0x0050 -> line 4964
- *   +0x0054 -> line 4963
- *   +0x005c -> line 4964
- *   +0x0060 -> line 4963
- *   +0x0064 -> line 4964
- *   +0x0070 -> line 4965
- *   +0x00cc -> line 4966
- *   +0x00d0 -> line 4968
- *   +0x00d4 -> line 4966
- *   +0x00e4 -> line 4968
- *   +0x00e8 -> line 4966
- *   +0x00ec -> line 4968
- *   +0x00f0 -> line 4966
- *   +0x012c -> line 4968
- *   +0x0134 -> line 4969
- *   +0x0148 -> line 4970
- *   +0x0158 -> line 4971
- *   +0x016c -> line 4972
- *   +0x0180 -> line 4973
- *   +0x0190 -> line 4974
- *   +0x0198 -> line 4975
- *   +0x019c -> line 4976
- *   +0x01a0 -> line 4975
- *   +0x01a4 -> line 4976
- *   +0x01a8 -> line 4977
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+    if (m_MemoryCardInternalStatus.type == 0)
+    {
+        m_Flags[2] = 2; m_bWillHaveToRestoreMenu2D = 2; PS2MC_RemoveCurrentMessage(); m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+        return;
+    }
+    switch (m_uiSubState)
+    {
+        case 0:
+        {
+            m_iTotalNumberOfFilesInMC = 0;
+            Result = sceeMemCardGetDirList(m_uiPort, m_uiSlot, "S", 0, m_uiCurrentNbEntriesInArray, &m_iTotalNumberOfFilesInMC, m_pDirInfo);
+            if (Result == E_FAIL)
+            {
+                m_Flags[2] = 2; m_bWillHaveToRestoreMenu2D = 2; PS2MC_RemoveCurrentMessage(); m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+            }
+            else
+            {
+                m_uiSubState++;
+            }
+            if (!m_FastGetSavedGamesHeaders)
+            {
+                PS2MC_SetDisplayMessage(MC_eAccessingMemoryCard, m_RequiredGameDataSize);
+            }
+            break;
+        }
+        case 1:
+        {
+            sceeMemCardGetFunctionResult(6, &functionResult);
+            if (functionResult.success == E_SUCCESS)
+            {
+                if (m_iTotalNumberOfFilesInMC < 0)
+                {
+                    m_Flags[2] = 2; m_bWillHaveToRestoreMenu2D = 2; PS2MC_RemoveCurrentMessage(); m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                    return;
+                }
+                m_uiSubState++;
+            }
+            else if (functionResult.success == E_FAIL)
+            {
+                m_Flags[2] = 2; m_bWillHaveToRestoreMenu2D = 2; PS2MC_RemoveCurrentMessage(); m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                return;
+            }
+            break;
+        }
+        case 2:
+        {
+            NameIndex = strlen(m_aFilePrefix) + 1;
+            m_iTotalNumberOfFilesInMC = (m_iTotalNumberOfFilesInMC < m_uiCurrentNbEntriesInArray) ? m_iTotalNumberOfFilesInMC : m_uiCurrentNbEntriesInArray;
+            for (i = 0; i < m_iTotalNumberOfFilesInMC; i++)
+            {
+                LocalTime.stat = 0;
+                LocalTime.pad = 0;
+                LocalTime.second = itob(m_pDirInfo[i]._Modify.Sec % 100);
+                LocalTime.minute = itob(m_pDirInfo[i]._Modify.Min % 100);
+                LocalTime.hour = itob(m_pDirInfo[i]._Modify.Hour % 100);
+                LocalTime.day = itob(m_pDirInfo[i]._Modify.Day % 100);
+                LocalTime.month = itob(m_pDirInfo[i]._Modify.Month % 100);
+                Century = m_pDirInfo[i]._Modify.Year / 100 * 100;
+                LocalTime.year = itob((unsigned char)(m_pDirInfo[i]._Modify.Year - Century) % 100);
+                sceScfGetLocalTimefromRTC(&LocalTime);
+                LocalTime.second = btoi(LocalTime.second);
+                LocalTime.minute = btoi(LocalTime.minute);
+                LocalTime.hour = btoi(LocalTime.hour);
+                LocalTime.day = btoi(LocalTime.day);
+                LocalTime.month = btoi(LocalTime.month);
+                LocalTime.year = btoi(LocalTime.year);
+                m_pDirInfo[i]._Modify.Year = LocalTime.year + Century;
+                m_pCurrentFileEntryArray[i].Reserved_Key2 = m_pDirInfo[i]._Modify.Year;
+                m_pCurrentFileEntryArray[i].Reserved_Key = LocalTime.day * 86400 + LocalTime.month * 2678400 + LocalTime.hour * 3600 + LocalTime.minute * 60 + LocalTime.second;
+                strcpy(m_pCurrentFileEntryArray[i].Name, (char*)&m_pDirInfo[i].EntryName[NameIndex]);
+                sprintf(m_pCurrentFileEntryArray[i].DateTime, "%02d/%02d/%04d %02d:%02d:%02d", LocalTime.day, LocalTime.month, m_pDirInfo[i]._Modify.Year, LocalTime.hour, LocalTime.minute, LocalTime.second);
+                m_pCurrentFileEntryArray[i].ulNbCage = 0;
+                m_pCurrentFileEntryArray[i].ulScore = 0;
+            }
+            do
+            {
+                bSwapped = 0;
+                for (i = 1; i < m_iTotalNumberOfFilesInMC; i++)
+                {
+                    if (m_pCurrentFileEntryArray[i].Reserved_Key2 > m_pCurrentFileEntryArray[i - 1].Reserved_Key2 || (m_pCurrentFileEntryArray[i].Reserved_Key2 == m_pCurrentFileEntryArray[i - 1].Reserved_Key2 && m_pCurrentFileEntryArray[i].Reserved_Key > m_pCurrentFileEntryArray[i - 1].Reserved_Key))
+                    {
+                        Temp = m_pCurrentFileEntryArray[i - 1];
+                        m_pCurrentFileEntryArray[i - 1] = m_pCurrentFileEntryArray[i];
+                        m_pCurrentFileEntryArray[i] = Temp;
+                        bSwapped = 1;
+                    }
+                }
+            } while (bSwapped);
+            if (m_FastGetSavedGamesHeaders)
+            {
+                *(unsigned int*)m_p_uiNbFilesFound = m_iTotalNumberOfFilesInMC;
+                m_Flags[2] = 1; m_bWillHaveToRestoreMenu2D = 2; PS2MC_RemoveCurrentMessage(); m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+            }
+            else
+            {
+                CurrentEntry = 0;
+                m_uiSubState++;
+            }
+            break;
+        }
+        case 3:
+        {
+            strcpy(m_aGameName, m_pCurrentFileEntryArray[CurrentEntry].Name);
+            strcpy(m_aDirExtension, "S");
+            Strcat(m_aDirExtension, m_pCurrentFileEntryArray[CurrentEntry].Name);
+            strcpy(m_aFullFileName, m_aFilePrefix);
+            Strcat(m_aFullFileName, "S");
+            Strcat(m_aFullFileName, m_pCurrentFileEntryArray[CurrentEntry].Name);
+            FlushCache(0);
+            InvalidDCache(HeaderData, &HeaderData[2]);
+            Result = sceeMemCardLoadFile(m_uiPort, m_uiSlot, m_aDirExtension, m_aFullFileName, HeaderData, 8);
+            if (Result == E_FAIL)
+            {
+                m_pCurrentFileEntryArray[CurrentEntry].ulNbCage = 0;
+                m_pCurrentFileEntryArray[CurrentEntry].ulScore = 0;
+                CurrentEntry++;
+                if (CurrentEntry == m_iTotalNumberOfFilesInMC)
+                {
+                    *(unsigned int*)m_p_uiNbFilesFound = m_iTotalNumberOfFilesInMC;
+                    m_Flags[2] = 1; m_bWillHaveToRestoreMenu2D = 2; m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2; PS2MC_RemoveCurrentMessage();
+                }
+                else
+                {
+                    m_uiSubState = 3;
+                }
+            }
+            else
+            {
+                m_uiSubState++;
+            }
+            break;
+        }
+        case 4:
+        {
+            sceeMemCardGetFunctionResult(8, &functionResult);
+            if (functionResult.success == E_SUCCESS)
+            {
+                m_pCurrentFileEntryArray[CurrentEntry].ulNbCage = HeaderData[0];
+                m_pCurrentFileEntryArray[CurrentEntry].ulScore = HeaderData[1];
+            }
+            else if (functionResult.success == E_FAIL)
+            {
+                m_pCurrentFileEntryArray[CurrentEntry].ulNbCage = 0;
+                m_pCurrentFileEntryArray[CurrentEntry].ulScore = 0;
+            }
+            else
+            {
+                break;
+            }
+            CurrentEntry++;
+            if (CurrentEntry == m_iTotalNumberOfFilesInMC)
+            {
+                *(unsigned int*)m_p_uiNbFilesFound = m_iTotalNumberOfFilesInMC;
+                m_Flags[2] = 1; m_bWillHaveToRestoreMenu2D = 2; PS2MC_RemoveCurrentMessage(); m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+            }
+            else
+            {
+                m_uiSubState = 3;
+            }
+            break;
+        }
+    }
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 4905–4910 */
-/* addr: 0x0032b4b0  size: 96 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 1928–2111 */
+/* addr: 0x0032f660  size: 2324 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4905
- *   +0x0004 -> line 4906
- *   +0x0008 -> line 4905
- *   +0x000c -> line 4906
- *   +0x0014 -> line 4908
- *   +0x0028 -> line 4909
- *   +0x002c -> line 4908
- *   +0x0050 -> line 4909
- *   +0x0058 -> line 4910
+ *   +0x0000 -> line 1928
+ *   +0x0004 -> line 1933
+ *   +0x0008 -> line 1928
+ *   +0x000c -> line 1933
+ *   +0x0010 -> line 1928
+ *   +0x0034 -> line 1933
+ *   +0x0040 -> line 1936
+ *   +0x0064 -> line 1937
+ *   +0x006c -> line 1940
+ *   +0x0098 -> line 1948
+ *   +0x009c -> line 1947
+ *   +0x00a0 -> line 1948
+ *   +0x00a4 -> line 1947
+ *   +0x00a8 -> line 1948
+ *   +0x00ac -> line 1947
+ *   +0x00b0 -> line 1948
+ *   +0x00d8 -> line 1955
+ *   +0x011c -> line 1957
+ *   +0x0124 -> line 1965
+ *   +0x0130 -> line 1967
+ *   +0x0140 -> line 1971
+ *   +0x0154 -> line 1974
+ *   +0x0178 -> line 1975
+ *   +0x0180 -> line 1978
+ *   +0x0188 -> line 1980
+ *   +0x0190 -> line 1981
+ *   +0x0198 -> line 1983
+ *   +0x01bc -> line 1986
+ *   +0x01c4 -> line 2002
+ *   +0x01d4 -> line 2006
+ *   +0x01d8 -> line 2002
+ *   +0x01dc -> line 2006
+ *   +0x01fc -> line 2009
+ *   +0x0200 -> line 2006
+ *   +0x020c -> line 2009
+ *   +0x0214 -> line 2022
+ *   +0x021c -> line 2020
+ *   +0x0220 -> line 2022
+ *   +0x0224 -> line 2021
+ *   +0x0228 -> line 2022
+ *   +0x0234 -> line 2034
+ *   +0x0238 -> line 2022
+ *   +0x023c -> line 2034
+ *   +0x0240 -> line 2022
+ *   +0x0244 -> line 2025
+ *   +0x0248 -> line 2026
+ *   +0x024c -> line 2039
+ *   +0x0250 -> line 2022
+ *   +0x0254 -> line 2034
+ *   +0x025c -> line 2023
+ *   +0x0264 -> line 2022
+ *   +0x02a0 -> line 2023
+ *   +0x02a8 -> line 2024
+ *   +0x02b0 -> line 2023
+ *   +0x02ec -> line 2024
+ *   +0x02f4 -> line 2025
+ *   +0x02fc -> line 2024
+ *   +0x0338 -> line 2025
+ *   +0x0340 -> line 2026
+ *   +0x0348 -> line 2025
+ *   +0x0380 -> line 2026
+ *   +0x03c8 -> line 2034
+ *   +0x03e8 -> line 2035
+ *   +0x044c -> line 2039
+ *   +0x0454 -> line 2063
+ *   +0x0460 -> line 2041
+ *   +0x0464 -> line 2063
+ *   +0x0468 -> line 2041
+ *   +0x046c -> line 2054
+ *   +0x0470 -> line 2057
+ *   +0x0474 -> line 2054
+ *   +0x0478 -> line 2057
+ *   +0x047c -> line 2041
+ *   +0x049c -> line 2042
+ *   +0x04c4 -> line 2043
+ *   +0x04ec -> line 2044
+ *   +0x050c -> line 2045
+ *   +0x052c -> line 2046
+ *   +0x0554 -> line 2050
+ *   +0x0560 -> line 2054
+ *   +0x0570 -> line 2057
+ *   +0x05f0 -> line 2063
+ *   +0x05f4 -> line 2057
+ *   +0x0600 -> line 2063
+ *   +0x0604 -> line 2057
+ *   +0x0614 -> line 2063
+ *   +0x0624 -> line 2064
+ *   +0x0670 -> line 2065
+ *   +0x0690 -> line 2078
+ *   +0x06a0 -> line 2077
+ *   +0x06a4 -> line 2078
+ *   +0x06b0 -> line 2080
+ *   +0x06e8 -> line 2084
+ *   +0x0774 -> line 2085
+ *   +0x0780 -> line 2084
+ *   +0x078c -> line 2085
+ *   +0x07f4 -> line 2086
+ *   +0x0800 -> line 2085
+ *   +0x080c -> line 2086
+ *   +0x086c -> line 2087
+ *   +0x0870 -> line 2086
+ *   +0x087c -> line 2088
+ *   +0x0880 -> line 2087
+ *   +0x0884 -> line 2089
+ *   +0x08a0 -> line 2090
+ *   +0x08a8 -> line 2096
+ *   +0x08ac -> line 2099
+ *   +0x08b0 -> line 2096
+ *   +0x08b4 -> line 2100
+ *   +0x08b8 -> line 2096
+ *   +0x08bc -> line 2103
+ *   +0x08c0 -> line 2096
+ *   +0x08c4 -> line 2103
+ *   +0x08c8 -> line 2099
+ *   +0x08cc -> line 2103
+ *   +0x08d0 -> line 2100
+ *   +0x08d4 -> line 2103
+ *   +0x08e4 -> line 2111
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void C_PS2MC_Manager::ManageGetScreenshotsEntries(void)
+{
+    MC_tdstFileEntry Temp;
+    int bSwapped;
+    unsigned int Century;
+    _SceeMemCardFunctionResult functionResult;
+    int NameIndex;
+    sceCdCLOCK LocalTime;
+    unsigned int i;
+    ESceeResult Result;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 4394–4881 */
-/* addr: 0x0032b510  size: 2672 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4394
- *   +0x000c -> line 4399
- *   +0x0038 -> line 4406
- *   +0x0050 -> line 4409
- *   +0x0058 -> line 4412
- *   +0x006c -> line 4413
- *   +0x0070 -> line 4414
- *   +0x0078 -> line 4415
- *   +0x0088 -> line 4419
- *   +0x009c -> line 4420
- *   +0x00a0 -> line 4421
- *   +0x00a8 -> line 4422
- *   +0x00c8 -> line 4423
- *   +0x00d0 -> line 4428
- *   +0x00dc -> line 4429
- *   +0x00e0 -> line 4430
- *   +0x00e4 -> line 4431
- *   +0x00e8 -> line 4428
- *   +0x00ec -> line 4429
- *   +0x00f8 -> line 4430
- *   +0x0104 -> line 4431
- *   +0x0108 -> line 4436
- *   +0x0114 -> line 4453
- *   +0x0118 -> line 4436
- *   +0x0120 -> line 4453
- *   +0x014c -> line 4457
- *   +0x0154 -> line 4458
- *   +0x015c -> line 4459
- *   +0x0160 -> line 4458
- *   +0x0168 -> line 4460
- *   +0x0170 -> line 4461
- *   +0x01a4 -> line 4467
- *   +0x01ac -> line 4468
- *   +0x01b4 -> line 4469
- *   +0x01b8 -> line 4468
- *   +0x01c0 -> line 4470
- *   +0x01c8 -> line 4476
- *   +0x01d4 -> line 4478
- *   +0x01e8 -> line 4479
- *   +0x01ec -> line 4480
- *   +0x01f4 -> line 4488
- *   +0x01fc -> line 4496
- *   +0x0214 -> line 4499
- *   +0x022c -> line 4500
- *   +0x0234 -> line 4503
- *   +0x023c -> line 4504
- *   +0x0248 -> line 4508
- *   +0x024c -> line 4509
- *   +0x0250 -> line 4508
- *   +0x0254 -> line 4509
- *   +0x02a0 -> line 4510
- *   +0x02a8 -> line 4511
- *   +0x02b0 -> line 4515
- *   +0x02c0 -> line 4516
- *   +0x02c4 -> line 4520
- *   +0x02cc -> line 4530
- *   +0x02e4 -> line 4533
- *   +0x02e8 -> line 4535
- *   +0x02f0 -> line 4536
- *   +0x0310 -> line 4537
- *   +0x0318 -> line 4541
- *   +0x0320 -> line 4542
- *   +0x032c -> line 4546
- *   +0x033c -> line 4547
- *   +0x0344 -> line 4552
- *   +0x034c -> line 4559
- *   +0x0354 -> line 4560
- *   +0x0360 -> line 4563
- *   +0x0380 -> line 4564
- *   +0x0384 -> line 4566
- *   +0x038c -> line 4567
- *   +0x0394 -> line 4571
- *   +0x039c -> line 4572
- *   +0x03bc -> line 4574
- *   +0x03c4 -> line 4575
- *   +0x03d0 -> line 4578
- *   +0x03e0 -> line 4579
- *   +0x03e4 -> line 4582
- *   +0x03ec -> line 4589
- *   +0x0404 -> line 4592
- *   +0x041c -> line 4593
- *   +0x0424 -> line 4596
- *   +0x042c -> line 4597
- *   +0x0438 -> line 4601
- *   +0x0448 -> line 4602
- *   +0x044c -> line 4606
- *   +0x0454 -> line 4613
- *   +0x045c -> line 4614
- *   +0x0468 -> line 4617
- *   +0x0488 -> line 4618
- *   +0x048c -> line 4620
- *   +0x0494 -> line 4621
- *   +0x049c -> line 4625
- *   +0x04a4 -> line 4626
- *   +0x04c4 -> line 4629
- *   +0x04cc -> line 4636
- *   +0x04e0 -> line 4639
- *   +0x04e4 -> line 4640
- *   +0x04e8 -> line 4639
- *   +0x04ec -> line 4640
- *   +0x050c -> line 4643
- *   +0x0528 -> line 4645
- *   +0x053c -> line 4646
- *   +0x055c -> line 4647
- *   +0x0564 -> line 4650
- *   +0x056c -> line 4654
- *   +0x0574 -> line 4661
- *   +0x0580 -> line 4664
- *   +0x0590 -> line 4667
- *   +0x0598 -> line 4668
- *   +0x05a0 -> line 4669
- *   +0x05bc -> line 4672
- *   +0x05d0 -> line 4673
- *   +0x05f0 -> line 4676
- *   +0x05f8 -> line 4683
- *   +0x0604 -> line 4688
- *   +0x060c -> line 4692
- *   +0x0620 -> line 4693
- *   +0x0628 -> line 4696
- *   +0x0630 -> line 4704
- *   +0x063c -> line 4707
- *   +0x064c -> line 4709
- *   +0x0654 -> line 4710
- *   +0x065c -> line 4711
- *   +0x0678 -> line 4713
- *   +0x068c -> line 4714
- *   +0x06ac -> line 4717
- *   +0x06b4 -> line 4730
- *   +0x06bc -> line 4731
- *   +0x06f4 -> line 4735
- *   +0x0710 -> line 4737
- *   +0x0724 -> line 4738
- *   +0x0744 -> line 4739
- *   +0x074c -> line 4742
- *   +0x0754 -> line 4745
- *   +0x075c -> line 4754
- *   +0x0768 -> line 4757
- *   +0x0778 -> line 4759
- *   +0x0780 -> line 4760
- *   +0x0788 -> line 4761
- *   +0x07a4 -> line 4763
- *   +0x07b8 -> line 4764
- *   +0x07d8 -> line 4767
- *   +0x07e0 -> line 4779
- *   +0x07e8 -> line 4780
- *   +0x07f0 -> line 4781
- *   +0x081c -> line 4790
- *   +0x0838 -> line 4792
- *   +0x084c -> line 4793
- *   +0x086c -> line 4794
- *   +0x0874 -> line 4797
- *   +0x087c -> line 4800
- *   +0x0884 -> line 4807
- *   +0x0890 -> line 4810
- *   +0x08a0 -> line 4815
- *   +0x08a8 -> line 4816
- *   +0x08c4 -> line 4818
- *   +0x08d8 -> line 4819
- *   +0x08f8 -> line 4822
- *   +0x0900 -> line 4831
- *   +0x0910 -> line 4832
- *   +0x0918 -> line 4833
- *   +0x0944 -> line 4837
- *   +0x0960 -> line 4839
- *   +0x0974 -> line 4840
- *   +0x0994 -> line 4841
- *   +0x099c -> line 4844
- *   +0x09a4 -> line 4847
- *   +0x09ac -> line 4854
- *   +0x09b8 -> line 4857
- *   +0x09c8 -> line 4862
- *   +0x09d0 -> line 4863
- *   +0x09dc -> line 4864
- *   +0x09e0 -> line 4871
- *   +0x09e4 -> line 4864
- *   +0x09e8 -> line 4865
- *   +0x09ec -> line 4871
- *   +0x09f0 -> line 4865
- *   +0x09f4 -> line 4871
- *   +0x0a04 -> line 4872
- *   +0x0a0c -> line 4873
- *   +0x0a28 -> line 4875
- *   +0x0a3c -> line 4876
- *   +0x0a60 -> line 4881
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+    if (m_MemoryCardInternalStatus.type == 0)
+    {
+        m_Flags[3] = 2; m_bWillHaveToRestoreMenu2D = 2; m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+        return;
+    }
+    switch (m_uiSubState)
+    {
+        case 0:
+        {
+            m_iTotalNumberOfFilesInMC = 0;
+            Result = sceeMemCardGetDirList(m_uiPort, m_uiSlot, "P", 0, m_uiCurrentNbEntriesInArray, &m_iTotalNumberOfFilesInMC, m_pDirInfo);
+            if (Result == E_FAIL)
+            {
+                m_Flags[3] = 2; m_bWillHaveToRestoreMenu2D = 2; m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                return;
+            }
+            m_uiSubState++;
+            break;
+        }
+        case 1:
+        {
+            sceeMemCardGetFunctionResult(6, &functionResult);
+            if (functionResult.success == E_SUCCESS)
+            {
+                if (m_iTotalNumberOfFilesInMC < 0)
+                {
+                    m_Flags[3] = 2; m_bWillHaveToRestoreMenu2D = 2; m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                    return;
+                }
+                m_uiSubState++;
+            }
+            else if (functionResult.success == E_FAIL)
+            {
+                m_Flags[3] = 2; m_bWillHaveToRestoreMenu2D = 2; m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                return;
+            }
+            break;
+        }
+        case 2:
+        {
+            NameIndex = strlen(m_aFilePrefix) + 1;
+            m_iTotalNumberOfFilesInMC = (m_iTotalNumberOfFilesInMC < m_uiCurrentNbEntriesInArray) ? m_iTotalNumberOfFilesInMC : m_uiCurrentNbEntriesInArray;
+            for (i = 0; i < m_iTotalNumberOfFilesInMC; i++)
+            {
+                LocalTime.stat = 0;
+                LocalTime.pad = 0;
+                LocalTime.second = itob(m_pDirInfo[i]._Modify.Sec % 100);
+                LocalTime.minute = itob(m_pDirInfo[i]._Modify.Min % 100);
+                LocalTime.hour = itob(m_pDirInfo[i]._Modify.Hour % 100);
+                LocalTime.day = itob(m_pDirInfo[i]._Modify.Day % 100);
+                LocalTime.month = itob(m_pDirInfo[i]._Modify.Month % 100);
+                Century = m_pDirInfo[i]._Modify.Year / 100 * 100;
+                LocalTime.year = itob((unsigned char)(m_pDirInfo[i]._Modify.Year - Century) % 100);
+                sceScfGetLocalTimefromRTC(&LocalTime);
+                LocalTime.second = btoi(LocalTime.second);
+                LocalTime.minute = btoi(LocalTime.minute);
+                LocalTime.hour = btoi(LocalTime.hour);
+                LocalTime.day = btoi(LocalTime.day);
+                LocalTime.month = btoi(LocalTime.month);
+                LocalTime.year = btoi(LocalTime.year);
+                m_pDirInfo[i]._Modify.Year = LocalTime.year + Century;
+                m_pCurrentFileEntryArray[i].Reserved_Key2 = m_pDirInfo[i]._Modify.Year;
+                m_pCurrentFileEntryArray[i].Reserved_Key = LocalTime.day * 86400 + LocalTime.month * 2678400 + LocalTime.hour * 3600 + LocalTime.minute * 60 + LocalTime.second;
+                strcpy(m_pCurrentFileEntryArray[i].Name, (char*)&m_pDirInfo[i].EntryName[NameIndex]);
+                sprintf(m_pCurrentFileEntryArray[i].DateTime, "%02d/%02d/%04d %02d:%02d:%02d", LocalTime.day, LocalTime.month, m_pDirInfo[i]._Modify.Year, LocalTime.hour, LocalTime.minute, LocalTime.second);
+            }
+            do
+            {
+                bSwapped = 0;
+                for (i = 1; i < m_iTotalNumberOfFilesInMC; i++)
+                {
+                    if (m_pCurrentFileEntryArray[i].Reserved_Key2 > m_pCurrentFileEntryArray[i - 1].Reserved_Key2 || (m_pCurrentFileEntryArray[i].Reserved_Key2 == m_pCurrentFileEntryArray[i - 1].Reserved_Key2 && m_pCurrentFileEntryArray[i].Reserved_Key > m_pCurrentFileEntryArray[i - 1].Reserved_Key))
+                    {
+                        Temp = m_pCurrentFileEntryArray[i - 1];
+                        m_pCurrentFileEntryArray[i - 1] = m_pCurrentFileEntryArray[i];
+                        m_pCurrentFileEntryArray[i] = Temp;
+                        bSwapped = 1;
+                    }
+                }
+            } while (bSwapped);
+            *(unsigned int*)m_p_uiNbFilesFound = m_iTotalNumberOfFilesInMC;
+            m_Flags[3] = 1; m_bWillHaveToRestoreMenu2D = 2; m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+            break;
+        }
+    }
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 4194–4382 */
-/* addr: 0x0032bf80  size: 1328 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 2137–2206 */
+/* addr: 0x0032f490  size: 452 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4194
- *   +0x000c -> line 4198
- *   +0x0024 -> line 4200
- *   +0x006c -> line 4208
- *   +0x0084 -> line 4211
- *   +0x008c -> line 4214
- *   +0x00a4 -> line 4215
- *   +0x00a8 -> line 4217
- *   +0x00b0 -> line 4224
- *   +0x00b8 -> line 4229
- *   +0x00cc -> line 4232
- *   +0x00d4 -> line 4235
- *   +0x00e8 -> line 4236
- *   +0x00ec -> line 4237
- *   +0x00f4 -> line 4238
- *   +0x0104 -> line 4241
- *   +0x0118 -> line 4242
- *   +0x011c -> line 4243
- *   +0x0124 -> line 4246
- *   +0x0138 -> line 4247
- *   +0x013c -> line 4251
- *   +0x0144 -> line 4258
- *   +0x014c -> line 4259
- *   +0x0158 -> line 4262
- *   +0x0174 -> line 4263
- *   +0x0178 -> line 4267
- *   +0x0180 -> line 4271
- *   +0x023c -> line 4273
- *   +0x0244 -> line 4274
- *   +0x025c -> line 4276
- *   +0x028c -> line 4280
- *   +0x029c -> line 4282
- *   +0x02ac -> line 4283
- *   +0x02b0 -> line 4284
- *   +0x02b8 -> line 4287
- *   +0x02c0 -> line 4291
- *   +0x02c8 -> line 4298
- *   +0x02d4 -> line 4301
- *   +0x02e4 -> line 4304
- *   +0x0344 -> line 4305
- *   +0x0350 -> line 4307
- *   +0x03ac -> line 4312
- *   +0x03b4 -> line 4314
- *   +0x03b8 -> line 4316
- *   +0x03bc -> line 4314
- *   +0x03c0 -> line 4316
- *   +0x03dc -> line 4318
- *   +0x03e4 -> line 4321
- *   +0x03f4 -> line 4323
- *   +0x0408 -> line 4324
- *   +0x040c -> line 4325
- *   +0x0414 -> line 4329
- *   +0x041c -> line 4330
- *   +0x0420 -> line 4329
- *   +0x0424 -> line 4331
- *   +0x0428 -> line 4330
- *   +0x042c -> line 4336
- *   +0x0434 -> line 4337
- *   +0x0450 -> line 4339
- *   +0x0464 -> line 4341
- *   +0x0478 -> line 4342
- *   +0x047c -> line 4343
- *   +0x0484 -> line 4347
- *   +0x048c -> line 4348
- *   +0x0490 -> line 4347
- *   +0x0494 -> line 4349
- *   +0x0498 -> line 4348
- *   +0x049c -> line 4353
- *   +0x04a4 -> line 4357
- *   +0x04b8 -> line 4359
- *   +0x04c0 -> line 4361
- *   +0x04d0 -> line 4362
- *   +0x04d8 -> line 4364
- *   +0x04e0 -> line 4367
- *   +0x04ec -> line 4369
- *   +0x0500 -> line 4370
- *   +0x0504 -> line 4371
- *   +0x050c -> line 4374
- *   +0x0514 -> line 4375
- *   +0x0520 -> line 4382
+ *   +0x0000 -> line 2137
+ *   +0x000c -> line 2140
+ *   +0x0024 -> line 2143
+ *   +0x004c -> line 2150
+ *   +0x007c -> line 2152
+ *   +0x0088 -> line 2153
+ *   +0x008c -> line 2152
+ *   +0x0090 -> line 2153
+ *   +0x0094 -> line 2157
+ *   +0x009c -> line 2162
+ *   +0x00b4 -> line 2164
+ *   +0x00b8 -> line 2165
+ *   +0x00c0 -> line 2166
+ *   +0x00c4 -> line 2164
+ *   +0x00cc -> line 2165
+ *   +0x00d0 -> line 2166
+ *   +0x00dc -> line 2168
+ *   +0x00e0 -> line 2173
+ *   +0x00e8 -> line 2178
+ *   +0x0100 -> line 2180
+ *   +0x0108 -> line 2185
+ *   +0x0118 -> line 2186
+ *   +0x0124 -> line 2187
+ *   +0x0150 -> line 2188
+ *   +0x0154 -> line 2189
+ *   +0x015c -> line 2188
+ *   +0x0160 -> line 2189
+ *   +0x0170 -> line 2190
+ *   +0x0174 -> line 2189
+ *   +0x0178 -> line 2190
+ *   +0x017c -> line 2189
+ *   +0x0180 -> line 2190
+ *   +0x0184 -> line 2192
+ *   +0x018c -> line 2196
+ *   +0x0194 -> line 2201
+ *   +0x0198 -> line 2196
+ *   +0x019c -> line 2197
+ *   +0x01a8 -> line 2199
+ *   +0x01ac -> line 2201
+ *   +0x01b4 -> line 2206
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 3973–4183 */
-/* addr: 0x0032c4b0  size: 1392 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3973
- *   +0x000c -> line 3977
- *   +0x0024 -> line 3979
- *   +0x0080 -> line 3987
- *   +0x0098 -> line 3990
- *   +0x00a0 -> line 3993
- *   +0x00b8 -> line 3994
- *   +0x00bc -> line 3996
- *   +0x00c4 -> line 4007
- *   +0x00cc -> line 4011
- *   +0x00d4 -> line 4012
- *   +0x00f0 -> line 4015
- *   +0x00f8 -> line 4016
- *   +0x0118 -> line 4017
- *   +0x011c -> line 4019
- *   +0x0124 -> line 4020
- *   +0x012c -> line 4022
- *   +0x0130 -> line 4025
- *   +0x0138 -> line 4029
- *   +0x014c -> line 4032
- *   +0x0154 -> line 4035
- *   +0x0168 -> line 4036
- *   +0x016c -> line 4037
- *   +0x0174 -> line 4038
- *   +0x0184 -> line 4041
- *   +0x0198 -> line 4042
- *   +0x019c -> line 4043
- *   +0x01a4 -> line 4046
- *   +0x01b8 -> line 4047
- *   +0x01bc -> line 4051
- *   +0x01c4 -> line 4058
- *   +0x01cc -> line 4059
- *   +0x01d8 -> line 4062
- *   +0x01f4 -> line 4063
- *   +0x01f8 -> line 4067
- *   +0x0200 -> line 4071
- *   +0x02a4 -> line 4073
- *   +0x02ac -> line 4074
- *   +0x02c0 -> line 4076
- *   +0x02e8 -> line 4080
- *   +0x02f8 -> line 4082
- *   +0x0308 -> line 4083
- *   +0x030c -> line 4084
- *   +0x0314 -> line 4087
- *   +0x031c -> line 4091
- *   +0x0324 -> line 4098
- *   +0x0330 -> line 4101
- *   +0x0340 -> line 4103
- *   +0x0398 -> line 4104
- *   +0x03a0 -> line 4106
- *   +0x03dc -> line 4108
- *   +0x03f0 -> line 4109
- *   +0x03f4 -> line 4110
- *   +0x03fc -> line 4114
- *   +0x0404 -> line 4115
- *   +0x0408 -> line 4114
- *   +0x040c -> line 4116
- *   +0x0410 -> line 4115
- *   +0x0414 -> line 4118
- *   +0x041c -> line 4119
- *   +0x0438 -> line 4121
- *   +0x044c -> line 4123
- *   +0x0460 -> line 4124
- *   +0x0464 -> line 4125
- *   +0x046c -> line 4129
- *   +0x0474 -> line 4130
- *   +0x0478 -> line 4129
- *   +0x047c -> line 4131
- *   +0x0480 -> line 4130
- *   +0x0484 -> line 4135
- *   +0x048c -> line 4139
- *   +0x04a4 -> line 4141
- *   +0x04ac -> line 4143
- *   +0x04bc -> line 4144
- *   +0x04c4 -> line 4146
- *   +0x04cc -> line 4149
- *   +0x04d8 -> line 4151
- *   +0x04ec -> line 4152
- *   +0x04f0 -> line 4153
- *   +0x04f8 -> line 4156
- *   +0x0500 -> line 4157
- *   +0x0508 -> line 4162
- *   +0x0510 -> line 4166
- *   +0x0518 -> line 4167
- *   +0x0524 -> line 4172
- *   +0x052c -> line 4174
- *   +0x0530 -> line 4177
- *   +0x0534 -> line 4174
- *   +0x0538 -> line 4177
- *   +0x053c -> line 4175
- *   +0x0540 -> line 4177
- *   +0x0544 -> line 4176
- *   +0x0548 -> line 4177
- *   +0x055c -> line 4178
- *   +0x0560 -> line 4183
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 3379–3962 */
-/* addr: 0x0032ca20  size: 3356 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3379
- *   +0x000c -> line 3384
- *   +0x0038 -> line 3391
- *   +0x0050 -> line 3394
- *   +0x0058 -> line 3397
- *   +0x006c -> line 3398
- *   +0x0070 -> line 3399
- *   +0x0078 -> line 3400
- *   +0x0088 -> line 3404
- *   +0x009c -> line 3405
- *   +0x00a0 -> line 3406
- *   +0x00a8 -> line 3407
- *   +0x00c8 -> line 3408
- *   +0x00d0 -> line 3413
- *   +0x00dc -> line 3414
- *   +0x00e0 -> line 3415
- *   +0x00e4 -> line 3416
- *   +0x00e8 -> line 3413
- *   +0x00ec -> line 3414
- *   +0x00f8 -> line 3415
- *   +0x0104 -> line 3416
- *   +0x0108 -> line 3421
- *   +0x0114 -> line 3438
- *   +0x0118 -> line 3421
- *   +0x0120 -> line 3438
- *   +0x014c -> line 3442
- *   +0x0154 -> line 3443
- *   +0x015c -> line 3444
- *   +0x0160 -> line 3443
- *   +0x0168 -> line 3445
- *   +0x0170 -> line 3446
- *   +0x01a4 -> line 3452
- *   +0x01ac -> line 3453
- *   +0x01b4 -> line 3454
- *   +0x01b8 -> line 3453
- *   +0x01c0 -> line 3455
- *   +0x01c8 -> line 3460
- *   +0x01d4 -> line 3462
- *   +0x01e8 -> line 3463
- *   +0x01ec -> line 3464
- *   +0x01f4 -> line 3472
- *   +0x01fc -> line 3480
- *   +0x0214 -> line 3483
- *   +0x022c -> line 3484
- *   +0x0234 -> line 3487
- *   +0x023c -> line 3488
- *   +0x0248 -> line 3492
- *   +0x024c -> line 3493
- *   +0x0250 -> line 3492
- *   +0x0254 -> line 3493
- *   +0x02a0 -> line 3494
- *   +0x02a8 -> line 3495
- *   +0x02b0 -> line 3500
- *   +0x02c8 -> line 3501
- *   +0x02cc -> line 3502
- *   +0x02d0 -> line 3510
- *   +0x02d8 -> line 3520
- *   +0x02f0 -> line 3523
- *   +0x02f4 -> line 3525
- *   +0x02fc -> line 3526
- *   +0x031c -> line 3527
- *   +0x0324 -> line 3531
- *   +0x032c -> line 3532
- *   +0x0338 -> line 3536
- *   +0x0348 -> line 3537
- *   +0x0350 -> line 3542
- *   +0x0358 -> line 3549
- *   +0x0360 -> line 3550
- *   +0x036c -> line 3553
- *   +0x038c -> line 3554
- *   +0x0390 -> line 3555
- *   +0x0394 -> line 3557
- *   +0x039c -> line 3558
- *   +0x03a4 -> line 3562
- *   +0x03ac -> line 3563
- *   +0x03cc -> line 3564
- *   +0x03d4 -> line 3565
- *   +0x03e0 -> line 3568
- *   +0x03f0 -> line 3569
- *   +0x03f4 -> line 3572
- *   +0x03fc -> line 3579
- *   +0x0414 -> line 3582
- *   +0x042c -> line 3583
- *   +0x0434 -> line 3586
- *   +0x043c -> line 3587
- *   +0x0448 -> line 3591
- *   +0x0458 -> line 3592
- *   +0x045c -> line 3596
- *   +0x0464 -> line 3604
- *   +0x046c -> line 3605
- *   +0x0478 -> line 3608
- *   +0x0498 -> line 3609
- *   +0x049c -> line 3610
- *   +0x04a0 -> line 3612
- *   +0x04a8 -> line 3613
- *   +0x04b0 -> line 3617
- *   +0x04b8 -> line 3618
- *   +0x04d8 -> line 3621
- *   +0x04e0 -> line 3628
- *   +0x04f4 -> line 3631
- *   +0x04f8 -> line 3632
- *   +0x04fc -> line 3631
- *   +0x0500 -> line 3632
- *   +0x0520 -> line 3635
- *   +0x053c -> line 3637
- *   +0x0550 -> line 3638
- *   +0x0570 -> line 3639
- *   +0x0578 -> line 3642
- *   +0x0580 -> line 3646
- *   +0x0588 -> line 3653
- *   +0x0594 -> line 3656
- *   +0x05a4 -> line 3659
- *   +0x05ac -> line 3660
- *   +0x05b4 -> line 3661
- *   +0x05d0 -> line 3664
- *   +0x05e4 -> line 3665
- *   +0x0604 -> line 3668
- *   +0x060c -> line 3675
- *   +0x0618 -> line 3680
- *   +0x0620 -> line 3684
- *   +0x0634 -> line 3685
- *   +0x063c -> line 3688
- *   +0x0644 -> line 3696
- *   +0x0650 -> line 3699
- *   +0x0660 -> line 3701
- *   +0x0668 -> line 3702
- *   +0x0670 -> line 3703
- *   +0x068c -> line 3705
- *   +0x06a0 -> line 3706
- *   +0x06c0 -> line 3709
- *   +0x06c8 -> line 3721
- *   +0x06d0 -> line 3723
- *   +0x0704 -> line 3726
- *   +0x0720 -> line 3728
- *   +0x0734 -> line 3729
- *   +0x0754 -> line 3730
- *   +0x075c -> line 3733
- *   +0x0764 -> line 3736
- *   +0x076c -> line 3745
- *   +0x0778 -> line 3748
- *   +0x0788 -> line 3750
- *   +0x0790 -> line 3751
- *   +0x0798 -> line 3752
- *   +0x07b4 -> line 3754
- *   +0x07c8 -> line 3755
- *   +0x07e8 -> line 3758
- *   +0x07f0 -> line 3767
- *   +0x07f8 -> line 3769
- *   +0x082c -> line 3773
- *   +0x0848 -> line 3775
- *   +0x085c -> line 3776
- *   +0x087c -> line 3777
- *   +0x0884 -> line 3780
- *   +0x088c -> line 3783
- *   +0x0894 -> line 3790
- *   +0x08a0 -> line 3793
- *   +0x08b0 -> line 3802
- *   +0x08b8 -> line 3803
- *   +0x08d4 -> line 3805
- *   +0x08e8 -> line 3806
- *   +0x0908 -> line 3809
- *   +0x0910 -> line 3817
- *   +0x0918 -> line 3818
- *   +0x094c -> line 3822
- *   +0x0968 -> line 3824
- *   +0x097c -> line 3825
- *   +0x099c -> line 3826
- *   +0x09a4 -> line 3829
- *   +0x09ac -> line 3832
- *   +0x09b4 -> line 3840
- *   +0x09c0 -> line 3843
- *   +0x09d0 -> line 3845
- *   +0x09d8 -> line 3846
- *   +0x09e0 -> line 3847
- *   +0x09fc -> line 3849
- *   +0x0a10 -> line 3850
- *   +0x0a30 -> line 3853
- *   +0x0a38 -> line 3861
- *   +0x0a40 -> line 3862
- *   +0x0a74 -> line 3866
- *   +0x0a90 -> line 3868
- *   +0x0aa4 -> line 3869
- *   +0x0ac4 -> line 3870
- *   +0x0acc -> line 3873
- *   +0x0ad4 -> line 3876
- *   +0x0adc -> line 3883
- *   +0x0ae8 -> line 3886
- *   +0x0af8 -> line 3888
- *   +0x0b00 -> line 3889
- *   +0x0b08 -> line 3890
- *   +0x0b24 -> line 3892
- *   +0x0b38 -> line 3893
- *   +0x0b58 -> line 3896
- *   +0x0b60 -> line 3903
- *   +0x0b70 -> line 3904
- *   +0x0b78 -> line 3905
- *   +0x0ba4 -> line 3909
- *   +0x0bc0 -> line 3911
- *   +0x0bd4 -> line 3912
- *   +0x0bf4 -> line 3913
- *   +0x0bfc -> line 3916
- *   +0x0c04 -> line 3919
- *   +0x0c0c -> line 3926
- *   +0x0c18 -> line 3929
- *   +0x0c28 -> line 3931
- *   +0x0c38 -> line 3932
- *   +0x0c40 -> line 3933
- *   +0x0c48 -> line 3934
- *   +0x0c64 -> line 3936
- *   +0x0c78 -> line 3937
- *   +0x0c98 -> line 3940
- *   +0x0ca0 -> line 3944
- *   +0x0ca8 -> line 3945
- *   +0x0cb4 -> line 3950
- *   +0x0cbc -> line 3951
- *   +0x0cc8 -> line 3952
- *   +0x0ccc -> line 3956
- *   +0x0cd0 -> line 3952
- *   +0x0cd4 -> line 3955
- *   +0x0cd8 -> line 3953
- *   +0x0cdc -> line 3956
- *   +0x0ce0 -> line 3954
- *   +0x0ce4 -> line 3956
- *   +0x0ce8 -> line 3955
- *   +0x0cec -> line 3956
- *   +0x0cf0 -> line 3955
- *   +0x0cf8 -> line 3956
- *   +0x0d08 -> line 3957
- *   +0x0d0c -> line 3962
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 3278–3369 */
-/* addr: 0x0032d740  size: 528 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3278
- *   +0x0004 -> line 3282
- *   +0x0008 -> line 3278
- *   +0x000c -> line 3282
- *   +0x0010 -> line 3278
- *   +0x0014 -> line 3282
- *   +0x0020 -> line 3285
- *   +0x0028 -> line 3286
- *   +0x0048 -> line 3287
- *   +0x0050 -> line 3290
- *   +0x0084 -> line 3297
- *   +0x0094 -> line 3298
- *   +0x009c -> line 3300
- *   +0x00a4 -> line 3304
- *   +0x00ac -> line 3305
- *   +0x00b8 -> line 3308
- *   +0x00c8 -> line 3310
- *   +0x00cc -> line 3312
- *   +0x00d4 -> line 3313
- *   +0x00f0 -> line 3314
- *   +0x00f8 -> line 3317
- *   +0x0108 -> line 3318
- *   +0x0110 -> line 3320
- *   +0x0118 -> line 3321
- *   +0x0120 -> line 3323
- *   +0x0128 -> line 3324
- *   +0x0148 -> line 3327
- *   +0x0150 -> line 3331
- *   +0x0158 -> line 3332
- *   +0x0164 -> line 3335
- *   +0x0180 -> line 3336
- *   +0x0184 -> line 3337
- *   +0x0188 -> line 3339
- *   +0x0190 -> line 3340
- *   +0x0198 -> line 3342
- *   +0x01a8 -> line 3343
- *   +0x01b0 -> line 3346
- *   +0x01b8 -> line 3351
- *   +0x01c0 -> line 3352
- *   +0x01cc -> line 3355
- *   +0x01d4 -> line 3356
- *   +0x01dc -> line 3361
- *   +0x01f4 -> line 3362
- *   +0x01f8 -> line 3363
- *   +0x01fc -> line 3364
- *   +0x0200 -> line 3369
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 3124–3266 */
-/* addr: 0x0032d950  size: 920 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3124
- *   +0x0004 -> line 3133
- *   +0x0008 -> line 3124
- *   +0x000c -> line 3133
- *   +0x0010 -> line 3124
- *   +0x0014 -> line 3133
- *   +0x002c -> line 3136
- *   +0x006c -> line 3137
- *   +0x0074 -> line 3140
- *   +0x00b4 -> line 3147
- *   +0x00bc -> line 3156
- *   +0x00c0 -> line 3161
- *   +0x00d4 -> line 3165
- *   +0x00dc -> line 3180
- *   +0x00e4 -> line 3181
- *   +0x0118 -> line 3184
- *   +0x0134 -> line 3186
- *   +0x0174 -> line 3187
- *   +0x017c -> line 3190
- *   +0x0184 -> line 3193
- *   +0x018c -> line 3202
- *   +0x0194 -> line 3205
- *   +0x01a4 -> line 3207
- *   +0x01ac -> line 3208
- *   +0x01b4 -> line 3209
- *   +0x01d0 -> line 3211
- *   +0x0210 -> line 3214
- *   +0x0218 -> line 3222
- *   +0x0224 -> line 3224
- *   +0x022c -> line 3226
- *   +0x0258 -> line 3230
- *   +0x0274 -> line 3232
- *   +0x02b4 -> line 3233
- *   +0x02bc -> line 3236
- *   +0x02c4 -> line 3239
- *   +0x02cc -> line 3246
- *   +0x02d8 -> line 3249
- *   +0x02e8 -> line 3254
- *   +0x02f0 -> line 3255
- *   +0x02fc -> line 3256
- *   +0x0300 -> line 3257
- *   +0x0304 -> line 3256
- *   +0x0308 -> line 3257
- *   +0x0320 -> line 3258
- *   +0x0328 -> line 3259
- *   +0x0344 -> line 3261
- *   +0x0388 -> line 3266
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 2881–3078 */
-/* addr: 0x0032dcf0  size: 1284 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2881
- *   +0x0004 -> line 2886
- *   +0x0008 -> line 2881
- *   +0x0014 -> line 2886
- *   +0x0064 -> line 2891
- *   +0x0090 -> line 2897
- *   +0x0098 -> line 2898
- *   +0x00b8 -> line 2900
- *   +0x00bc -> line 2898
- *   +0x00c0 -> line 2901
- *   +0x00c8 -> line 2906
- *   +0x00d0 -> line 2907
- *   +0x00dc -> line 2911
- *   +0x00f0 -> line 2912
- *   +0x00f4 -> line 2914
- *   +0x00fc -> line 2915
- *   +0x0104 -> line 2920
- *   +0x0114 -> line 2921
- *   +0x0118 -> line 2929
- *   +0x0120 -> line 2935
- *   +0x0128 -> line 2936
- *   +0x0134 -> line 2940
- *   +0x014c -> line 2941
- *   +0x0150 -> line 2940
- *   +0x0158 -> line 2941
- *   +0x0164 -> line 2942
- *   +0x016c -> line 2943
- *   +0x0174 -> line 2944
- *   +0x017c -> line 2947
- *   +0x0188 -> line 2948
- *   +0x01a8 -> line 2950
- *   +0x01ac -> line 2951
- *   +0x01b4 -> line 2952
- *   +0x01bc -> line 2958
- *   +0x01d8 -> line 2959
- *   +0x01e0 -> line 2960
- *   +0x01e8 -> line 2962
- *   +0x01f0 -> line 2963
- *   +0x01f4 -> line 2962
- *   +0x0204 -> line 2963
- *   +0x0210 -> line 2964
- *   +0x0218 -> line 2965
- *   +0x0220 -> line 2966
- *   +0x0228 -> line 2969
- *   +0x0234 -> line 2970
- *   +0x0254 -> line 2971
- *   +0x0258 -> line 2972
- *   +0x025c -> line 2974
- *   +0x0264 -> line 2978
- *   +0x0290 -> line 2981
- *   +0x0298 -> line 2983
- *   +0x02b8 -> line 2984
- *   +0x02bc -> line 2983
- *   +0x02c0 -> line 2985
- *   +0x02c8 -> line 2988
- *   +0x02d0 -> line 2989
- *   +0x02dc -> line 2991
- *   +0x02e0 -> line 2992
- *   +0x02e8 -> line 2994
- *   +0x02f0 -> line 2996
- *   +0x0300 -> line 2997
- *   +0x0304 -> line 3000
- *   +0x030c -> line 3003
- *   +0x0324 -> line 3005
- *   +0x0338 -> line 3010
- *   +0x0358 -> line 3012
- *   +0x0360 -> line 3016
- *   +0x0374 -> line 3017
- *   +0x0388 -> line 3018
- *   +0x03a4 -> line 3020
- *   +0x03b8 -> line 3021
- *   +0x03d8 -> line 3022
- *   +0x03e0 -> line 3026
- *   +0x03e8 -> line 3030
- *   +0x03f0 -> line 3033
- *   +0x03fc -> line 3035
- *   +0x040c -> line 3038
- *   +0x0418 -> line 3039
- *   +0x0420 -> line 3040
- *   +0x0428 -> line 3041
- *   +0x0444 -> line 3044
- *   +0x0458 -> line 3045
- *   +0x0478 -> line 3047
- *   +0x0480 -> line 3054
- *   +0x0498 -> line 3059
- *   +0x04a0 -> line 3060
- *   +0x04a8 -> line 3063
- *   +0x04b0 -> line 3068
- *   +0x04c8 -> line 3071
- *   +0x04d0 -> line 3073
- *   +0x04f4 -> line 3078
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+void C_PS2MC_Manager::ManagePreBootCheck(void)
+{
+    static int LoopCount;
+    static signed char init;
+    if (!init) { LoopCount = 0; init = 1; }
+    switch (m_uiSubState)
+    {
+        case 0:
+        {
+            g_EngineHasBeenPausedBecauseOfMC = 1; m_IPausedTheEngine++; if (m_IPausedTheEngine == 1) { fn_vPauseFromMemoryCard(); fn_vInterruptMenu2D(1); }
+            m_MemoryCardInternalStatus.type = -10;
+            m_uiSubState = 100;
+            LoopCount = 0;
+            break;
+        }
+        case 100:
+        {
+            if (m_MemoryCardInternalStatus.type != -10)
+            {
+                LoopCount++;
+                m_MemoryCardInternalStatus.type = -10;
+                if (LoopCount == 5)
+                {
+                    LoopCount = 0;
+                    m_uiSubState = 101;
+                }
+            }
+            break;
+        }
+        case 101:
+        {
+            if (m_MemoryCardInternalStatus.type != -10)
+            {
+                if (m_MemoryCardInternalStatus.type == 0)
+                {
+                    m_bPreBootCheckWasDone = 1;
+                    m_bPreBootCheckHadNoMC = 1;
+                    if (m_IPausedTheEngine == 1) { g_EngineHasBeenPausedBecauseOfMC = 0; m_IPausedTheEngine = 0; fn_vUnpauseFromMemoryCard(); m_bWillHaveToRestoreMenu2D = 2; } else { m_IPausedTheEngine--; }
+                    m_Flags[4] = 1;
+                    m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                    m_bFirstBootCheckHasBeenDone = 1;
+                    m_bNeedToCheckAndWarnForMCFull = 0;
+                }
+                else
+                {
+                    m_bPreBootCheckWasDone = 1;
+                    m_bPreBootCheckHadNoMC = 0;
+                    g_GameHasNotStartedTheFirstBootCheck = 0;
+                    m_Flags[4] = 0; m_uiIdleState = 5;
+                }
+            }
+            break;
+        }
+    }
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 2218–2868 */
 /* addr: 0x0032e200  size: 4748 bytes */
@@ -1881,869 +2233,38 @@ extern "C" int sceeMemCardGetFunctionResult(int, _SceeMemCardFunctionResult*);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 2137–2206 */
-/* addr: 0x0032f490  size: 452 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2137
- *   +0x000c -> line 2140
- *   +0x0024 -> line 2143
- *   +0x004c -> line 2150
- *   +0x007c -> line 2152
- *   +0x0088 -> line 2153
- *   +0x008c -> line 2152
- *   +0x0090 -> line 2153
- *   +0x0094 -> line 2157
- *   +0x009c -> line 2162
- *   +0x00b4 -> line 2164
- *   +0x00b8 -> line 2165
- *   +0x00c0 -> line 2166
- *   +0x00c4 -> line 2164
- *   +0x00cc -> line 2165
- *   +0x00d0 -> line 2166
- *   +0x00dc -> line 2168
- *   +0x00e0 -> line 2173
- *   +0x00e8 -> line 2178
- *   +0x0100 -> line 2180
- *   +0x0108 -> line 2185
- *   +0x0118 -> line 2186
- *   +0x0124 -> line 2187
- *   +0x0150 -> line 2188
- *   +0x0154 -> line 2189
- *   +0x015c -> line 2188
- *   +0x0160 -> line 2189
- *   +0x0170 -> line 2190
- *   +0x0174 -> line 2189
- *   +0x0178 -> line 2190
- *   +0x017c -> line 2189
- *   +0x0180 -> line 2190
- *   +0x0184 -> line 2192
- *   +0x018c -> line 2196
- *   +0x0194 -> line 2201
- *   +0x0198 -> line 2196
- *   +0x019c -> line 2197
- *   +0x01a8 -> line 2199
- *   +0x01ac -> line 2201
- *   +0x01b4 -> line 2206
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 1928–2111 */
-/* addr: 0x0032f660  size: 2324 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1928
- *   +0x0004 -> line 1933
- *   +0x0008 -> line 1928
- *   +0x000c -> line 1933
- *   +0x0010 -> line 1928
- *   +0x0034 -> line 1933
- *   +0x0040 -> line 1936
- *   +0x0064 -> line 1937
- *   +0x006c -> line 1940
- *   +0x0098 -> line 1948
- *   +0x009c -> line 1947
- *   +0x00a0 -> line 1948
- *   +0x00a4 -> line 1947
- *   +0x00a8 -> line 1948
- *   +0x00ac -> line 1947
- *   +0x00b0 -> line 1948
- *   +0x00d8 -> line 1955
- *   +0x011c -> line 1957
- *   +0x0124 -> line 1965
- *   +0x0130 -> line 1967
- *   +0x0140 -> line 1971
- *   +0x0154 -> line 1974
- *   +0x0178 -> line 1975
- *   +0x0180 -> line 1978
- *   +0x0188 -> line 1980
- *   +0x0190 -> line 1981
- *   +0x0198 -> line 1983
- *   +0x01bc -> line 1986
- *   +0x01c4 -> line 2002
- *   +0x01d4 -> line 2006
- *   +0x01d8 -> line 2002
- *   +0x01dc -> line 2006
- *   +0x01fc -> line 2009
- *   +0x0200 -> line 2006
- *   +0x020c -> line 2009
- *   +0x0214 -> line 2022
- *   +0x021c -> line 2020
- *   +0x0220 -> line 2022
- *   +0x0224 -> line 2021
- *   +0x0228 -> line 2022
- *   +0x0234 -> line 2034
- *   +0x0238 -> line 2022
- *   +0x023c -> line 2034
- *   +0x0240 -> line 2022
- *   +0x0244 -> line 2025
- *   +0x0248 -> line 2026
- *   +0x024c -> line 2039
- *   +0x0250 -> line 2022
- *   +0x0254 -> line 2034
- *   +0x025c -> line 2023
- *   +0x0264 -> line 2022
- *   +0x02a0 -> line 2023
- *   +0x02a8 -> line 2024
- *   +0x02b0 -> line 2023
- *   +0x02ec -> line 2024
- *   +0x02f4 -> line 2025
- *   +0x02fc -> line 2024
- *   +0x0338 -> line 2025
- *   +0x0340 -> line 2026
- *   +0x0348 -> line 2025
- *   +0x0380 -> line 2026
- *   +0x03c8 -> line 2034
- *   +0x03e8 -> line 2035
- *   +0x044c -> line 2039
- *   +0x0454 -> line 2063
- *   +0x0460 -> line 2041
- *   +0x0464 -> line 2063
- *   +0x0468 -> line 2041
- *   +0x046c -> line 2054
- *   +0x0470 -> line 2057
- *   +0x0474 -> line 2054
- *   +0x0478 -> line 2057
- *   +0x047c -> line 2041
- *   +0x049c -> line 2042
- *   +0x04c4 -> line 2043
- *   +0x04ec -> line 2044
- *   +0x050c -> line 2045
- *   +0x052c -> line 2046
- *   +0x0554 -> line 2050
- *   +0x0560 -> line 2054
- *   +0x0570 -> line 2057
- *   +0x05f0 -> line 2063
- *   +0x05f4 -> line 2057
- *   +0x0600 -> line 2063
- *   +0x0604 -> line 2057
- *   +0x0614 -> line 2063
- *   +0x0624 -> line 2064
- *   +0x0670 -> line 2065
- *   +0x0690 -> line 2078
- *   +0x06a0 -> line 2077
- *   +0x06a4 -> line 2078
- *   +0x06b0 -> line 2080
- *   +0x06e8 -> line 2084
- *   +0x0774 -> line 2085
- *   +0x0780 -> line 2084
- *   +0x078c -> line 2085
- *   +0x07f4 -> line 2086
- *   +0x0800 -> line 2085
- *   +0x080c -> line 2086
- *   +0x086c -> line 2087
- *   +0x0870 -> line 2086
- *   +0x087c -> line 2088
- *   +0x0880 -> line 2087
- *   +0x0884 -> line 2089
- *   +0x08a0 -> line 2090
- *   +0x08a8 -> line 2096
- *   +0x08ac -> line 2099
- *   +0x08b0 -> line 2096
- *   +0x08b4 -> line 2100
- *   +0x08b8 -> line 2096
- *   +0x08bc -> line 2103
- *   +0x08c0 -> line 2096
- *   +0x08c4 -> line 2103
- *   +0x08c8 -> line 2099
- *   +0x08cc -> line 2103
- *   +0x08d0 -> line 2100
- *   +0x08d4 -> line 2103
- *   +0x08e4 -> line 2111
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 1603–1898 */
-/* addr: 0x0032ff80  size: 3444 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1603
- *   +0x002c -> line 1607
- *   +0x0044 -> line 1610
- *   +0x0058 -> line 1613
- *   +0x0084 -> line 1614
- *   +0x008c -> line 1617
- *   +0x00d0 -> line 1625
- *   +0x00d4 -> line 1624
- *   +0x00d8 -> line 1625
- *   +0x00dc -> line 1624
- *   +0x00e0 -> line 1625
- *   +0x00e4 -> line 1624
- *   +0x00e8 -> line 1625
- *   +0x0110 -> line 1632
- *   +0x0160 -> line 1633
- *   +0x0174 -> line 1634
- *   +0x0188 -> line 1636
- *   +0x0190 -> line 1644
- *   +0x019c -> line 1646
- *   +0x01ac -> line 1650
- *   +0x01c0 -> line 1653
- *   +0x01ec -> line 1654
- *   +0x01f4 -> line 1657
- *   +0x01fc -> line 1659
- *   +0x0204 -> line 1660
- *   +0x020c -> line 1662
- *   +0x0238 -> line 1665
- *   +0x0240 -> line 1681
- *   +0x0250 -> line 1685
- *   +0x0254 -> line 1681
- *   +0x0258 -> line 1685
- *   +0x0278 -> line 1688
- *   +0x027c -> line 1685
- *   +0x0288 -> line 1688
- *   +0x0290 -> line 1701
- *   +0x0298 -> line 1699
- *   +0x029c -> line 1701
- *   +0x02a0 -> line 1700
- *   +0x02a4 -> line 1701
- *   +0x02b0 -> line 1713
- *   +0x02b4 -> line 1701
- *   +0x02b8 -> line 1713
- *   +0x02bc -> line 1701
- *   +0x02c0 -> line 1704
- *   +0x02c4 -> line 1705
- *   +0x02c8 -> line 1718
- *   +0x02cc -> line 1701
- *   +0x02d0 -> line 1713
- *   +0x02d8 -> line 1702
- *   +0x02e0 -> line 1701
- *   +0x031c -> line 1702
- *   +0x0324 -> line 1703
- *   +0x032c -> line 1702
- *   +0x0368 -> line 1703
- *   +0x0370 -> line 1704
- *   +0x0378 -> line 1703
- *   +0x03b4 -> line 1704
- *   +0x03bc -> line 1705
- *   +0x03c4 -> line 1704
- *   +0x03fc -> line 1705
- *   +0x0444 -> line 1713
- *   +0x0464 -> line 1714
- *   +0x04c8 -> line 1718
- *   +0x04d0 -> line 1742
- *   +0x04dc -> line 1720
- *   +0x04e0 -> line 1742
- *   +0x04e4 -> line 1720
- *   +0x04e8 -> line 1733
- *   +0x04ec -> line 1736
- *   +0x04f0 -> line 1733
- *   +0x04f4 -> line 1736
- *   +0x04f8 -> line 1720
- *   +0x0518 -> line 1721
- *   +0x0540 -> line 1722
- *   +0x0568 -> line 1723
- *   +0x0588 -> line 1724
- *   +0x05a8 -> line 1725
- *   +0x05d0 -> line 1729
- *   +0x05dc -> line 1733
- *   +0x05ec -> line 1736
- *   +0x063c -> line 1742
- *   +0x0640 -> line 1736
- *   +0x0644 -> line 1742
- *   +0x0648 -> line 1736
- *   +0x0690 -> line 1742
- *   +0x06a0 -> line 1743
- *   +0x06e4 -> line 1746
- *   +0x06e8 -> line 1747
- *   +0x06ec -> line 1746
- *   +0x06f0 -> line 1748
- *   +0x06f4 -> line 1746
- *   +0x06fc -> line 1747
- *   +0x0700 -> line 1746
- *   +0x0704 -> line 1747
- *   +0x0718 -> line 1748
- *   +0x0730 -> line 1761
- *   +0x0740 -> line 1760
- *   +0x0744 -> line 1761
- *   +0x0750 -> line 1763
- *   +0x0788 -> line 1767
- *   +0x0814 -> line 1768
- *   +0x0820 -> line 1767
- *   +0x082c -> line 1768
- *   +0x0894 -> line 1769
- *   +0x08a0 -> line 1768
- *   +0x08ac -> line 1769
- *   +0x090c -> line 1770
- *   +0x0910 -> line 1769
- *   +0x091c -> line 1771
- *   +0x0920 -> line 1770
- *   +0x0924 -> line 1772
- *   +0x0940 -> line 1773
- *   +0x0948 -> line 1776
- *   +0x095c -> line 1779
- *   +0x0960 -> line 1782
- *   +0x0964 -> line 1779
- *   +0x0968 -> line 1783
- *   +0x096c -> line 1779
- *   +0x0974 -> line 1782
- *   +0x0978 -> line 1785
- *   +0x0980 -> line 1787
- *   +0x099c -> line 1788
- *   +0x09a4 -> line 1792
- *   +0x09a8 -> line 1793
- *   +0x09b0 -> line 1796
- *   +0x09b8 -> line 1800
- *   +0x09f0 -> line 1801
- *   +0x0a04 -> line 1802
- *   +0x0a3c -> line 1803
- *   +0x0a50 -> line 1804
- *   +0x0a64 -> line 1805
- *   +0x0a9c -> line 1807
- *   +0x0aa4 -> line 1808
- *   +0x0ab8 -> line 1810
- *   +0x0ae0 -> line 1814
- *   +0x0af0 -> line 1818
- *   +0x0b0c -> line 1819
- *   +0x0b10 -> line 1818
- *   +0x0b1c -> line 1819
- *   +0x0b20 -> line 1818
- *   +0x0b28 -> line 1819
- *   +0x0b38 -> line 1821
- *   +0x0b3c -> line 1819
- *   +0x0b48 -> line 1821
- *   +0x0b4c -> line 1819
- *   +0x0b58 -> line 1820
- *   +0x0b64 -> line 1821
- *   +0x0b74 -> line 1824
- *   +0x0b78 -> line 1827
- *   +0x0b7c -> line 1824
- *   +0x0b80 -> line 1828
- *   +0x0b84 -> line 1824
- *   +0x0b88 -> line 1831
- *   +0x0b8c -> line 1824
- *   +0x0b90 -> line 1831
- *   +0x0b94 -> line 1827
- *   +0x0b98 -> line 1831
- *   +0x0b9c -> line 1828
- *   +0x0ba0 -> line 1831
- *   +0x0bac -> line 1832
- *   +0x0bb4 -> line 1837
- *   +0x0bbc -> line 1840
- *   +0x0bc0 -> line 1842
- *   +0x0bc8 -> line 1845
- *   +0x0bd0 -> line 1848
- *   +0x0bd8 -> line 1853
- *   +0x0be4 -> line 1856
- *   +0x0bf4 -> line 1858
- *   +0x0c0c -> line 1859
- *   +0x0c10 -> line 1858
- *   +0x0c30 -> line 1859
- *   +0x0c60 -> line 1860
- *   +0x0c68 -> line 1861
- *   +0x0c70 -> line 1864
- *   +0x0c74 -> line 1865
- *   +0x0c78 -> line 1864
- *   +0x0c84 -> line 1865
- *   +0x0c88 -> line 1864
- *   +0x0ca8 -> line 1865
- *   +0x0cd0 -> line 1872
- *   +0x0cd4 -> line 1873
- *   +0x0cdc -> line 1872
- *   +0x0ce4 -> line 1873
- *   +0x0cf4 -> line 1876
- *   +0x0cf8 -> line 1879
- *   +0x0cfc -> line 1876
- *   +0x0d00 -> line 1880
- *   +0x0d04 -> line 1876
- *   +0x0d0c -> line 1879
- *   +0x0d10 -> line 1883
- *   +0x0d18 -> line 1884
- *   +0x0d34 -> line 1889
- *   +0x0d3c -> line 1892
- *   +0x0d44 -> line 1898
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 1420–1549 */
-/* addr: 0x00330d00  size: 1016 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1420
- *   +0x0004 -> line 1425
- *   +0x0008 -> line 1420
- *   +0x000c -> line 1425
- *   +0x0010 -> line 1420
- *   +0x0018 -> line 1425
- *   +0x0024 -> line 1428
- *   +0x0050 -> line 1429
- *   +0x0058 -> line 1432
- *   +0x0098 -> line 1437
- *   +0x009c -> line 1438
- *   +0x00a0 -> line 1437
- *   +0x00a4 -> line 1438
- *   +0x00c8 -> line 1441
- *   +0x00d4 -> line 1443
- *   +0x00fc -> line 1444
- *   +0x0104 -> line 1447
- *   +0x010c -> line 1450
- *   +0x0114 -> line 1455
- *   +0x011c -> line 1458
- *   +0x012c -> line 1460
- *   +0x0134 -> line 1461
- *   +0x013c -> line 1462
- *   +0x0144 -> line 1464
- *   +0x016c -> line 1467
- *   +0x0174 -> line 1472
- *   +0x0180 -> line 1474
- *   +0x01a4 -> line 1475
- *   +0x01b0 -> line 1477
- *   +0x01d8 -> line 1478
- *   +0x01e0 -> line 1481
- *   +0x01e8 -> line 1483
- *   +0x01f0 -> line 1486
- *   +0x0218 -> line 1489
- *   +0x0220 -> line 1494
- *   +0x022c -> line 1496
- *   +0x023c -> line 1498
- *   +0x0244 -> line 1499
- *   +0x024c -> line 1500
- *   +0x0254 -> line 1502
- *   +0x027c -> line 1505
- *   +0x0284 -> line 1516
- *   +0x02a4 -> line 1517
- *   +0x02b4 -> line 1518
- *   +0x02c4 -> line 1519
- *   +0x02d4 -> line 1521
- *   +0x02f8 -> line 1525
- *   +0x0304 -> line 1527
- *   +0x0330 -> line 1528
- *   +0x0338 -> line 1531
- *   +0x0358 -> line 1532
- *   +0x0370 -> line 1534
- *   +0x037c -> line 1535
- *   +0x038c -> line 1536
- *   +0x039c -> line 1538
- *   +0x03b4 -> line 1541
- *   +0x03c4 -> line 1542
- *   +0x03d0 -> line 1543
- *   +0x03d4 -> line 1542
- *   +0x03d8 -> line 1543
- *   +0x03e4 -> line 1549
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 1065–1397 */
-/* addr: 0x00331100  size: 1664 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1065
- *   +0x0004 -> line 1072
- *   +0x0008 -> line 1065
- *   +0x0014 -> line 1072
- *   +0x0028 -> line 1075
- *   +0x002c -> line 1072
- *   +0x0034 -> line 1075
- *   +0x0048 -> line 1079
- *   +0x005c -> line 1082
- *   +0x007c -> line 1088
- *   +0x0080 -> line 1085
- *   +0x0084 -> line 1087
- *   +0x008c -> line 1088
- *   +0x00dc -> line 1091
- *   +0x00e4 -> line 1093
- *   +0x00f0 -> line 1095
- *   +0x00f4 -> line 1096
- *   +0x00f8 -> line 1101
- *   +0x0104 -> line 1103
- *   +0x0110 -> line 1105
- *   +0x0118 -> line 1106
- *   +0x0124 -> line 1108
- *   +0x012c -> line 1115
- *   +0x0154 -> line 1122
- *   +0x0170 -> line 1124
- *   +0x0178 -> line 1133
- *   +0x0190 -> line 1136
- *   +0x01a8 -> line 1144
- *   +0x01f0 -> line 1146
- *   +0x01fc -> line 1150
- *   +0x0200 -> line 1154
- *   +0x020c -> line 1156
- *   +0x0218 -> line 1159
- *   +0x022c -> line 1160
- *   +0x0248 -> line 1162
- *   +0x0258 -> line 1167
- *   +0x0264 -> line 1168
- *   +0x0268 -> line 1167
- *   +0x026c -> line 1168
- *   +0x0288 -> line 1169
- *   +0x0290 -> line 1173
- *   +0x0294 -> line 1177
- *   +0x029c -> line 1178
- *   +0x02b8 -> line 1181
- *   +0x02bc -> line 1184
- *   +0x02c8 -> line 1187
- *   +0x02d8 -> line 1188
- *   +0x02ec -> line 1192
- *   +0x030c -> line 1193
- *   +0x0314 -> line 1199
- *   +0x031c -> line 1204
- *   +0x0340 -> line 1207
- *   +0x0348 -> line 1210
- *   +0x0360 -> line 1212
- *   +0x0378 -> line 1213
- *   +0x0380 -> line 1216
- *   +0x03a4 -> line 1223
- *   +0x03ac -> line 1232
- *   +0x03cc -> line 1235
- *   +0x03f8 -> line 1236
- *   +0x0400 -> line 1237
- *   +0x0408 -> line 1239
- *   +0x0418 -> line 1242
- *   +0x041c -> line 1241
- *   +0x0424 -> line 1242
- *   +0x044c -> line 1243
- *   +0x046c -> line 1248
- *   +0x0474 -> line 1257
- *   +0x0494 -> line 1259
- *   +0x049c -> line 1260
- *   +0x04a4 -> line 1263
- *   +0x04ac -> line 1266
- *   +0x04b4 -> line 1271
- *   +0x04bc -> line 1273
- *   +0x04c4 -> line 1279
- *   +0x04cc -> line 1281
- *   +0x04d4 -> line 1288
- *   +0x04dc -> line 1290
- *   +0x04e4 -> line 1294
- *   +0x04ec -> line 1296
- *   +0x04f4 -> line 1304
- *   +0x04fc -> line 1306
- *   +0x0504 -> line 1316
- *   +0x050c -> line 1318
- *   +0x0514 -> line 1327
- *   +0x051c -> line 1329
- *   +0x0524 -> line 1337
- *   +0x052c -> line 1339
- *   +0x0534 -> line 1343
- *   +0x053c -> line 1345
- *   +0x0544 -> line 1349
- *   +0x054c -> line 1351
- *   +0x0554 -> line 1361
- *   +0x0564 -> line 1363
- *   +0x057c -> line 1365
- *   +0x05a0 -> line 1367
- *   +0x05a8 -> line 1368
- *   +0x05b4 -> line 1370
- *   +0x05c8 -> line 1371
- *   +0x05e4 -> line 1373
- *   +0x05f4 -> line 1378
- *   +0x05f8 -> line 1375
- *   +0x05fc -> line 1378
- *   +0x0618 -> line 1379
- *   +0x0620 -> line 1380
- *   +0x0640 -> line 1386
- *   +0x0648 -> line 1390
- *   +0x0668 -> line 1392
- *   +0x0670 -> line 1397
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 880–949 */
-/* addr: 0x00331780  size: 644 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 880
- *   +0x0004 -> line 881
- *   +0x0008 -> line 880
- *   +0x000c -> line 883
- *   +0x0010 -> line 881
- *   +0x0014 -> line 882
- *   +0x001c -> line 916
- *   +0x0020 -> line 883
- *   +0x0024 -> line 884
- *   +0x002c -> line 916
- *   +0x0030 -> line 887
- *   +0x0034 -> line 916
- *   +0x0038 -> line 888
- *   +0x003c -> line 916
- *   +0x0040 -> line 889
- *   +0x0044 -> line 916
- *   +0x0048 -> line 890
- *   +0x004c -> line 916
- *   +0x0050 -> line 891
- *   +0x0054 -> line 916
- *   +0x0058 -> line 892
- *   +0x005c -> line 917
- *   +0x0060 -> line 893
- *   +0x0064 -> line 918
- *   +0x0068 -> line 894
- *   +0x006c -> line 895
- *   +0x0070 -> line 916
- *   +0x009c -> line 917
- *   +0x00c8 -> line 918
- *   +0x00f4 -> line 920
- *   +0x0120 -> line 921
- *   +0x014c -> line 922
- *   +0x0178 -> line 925
- *   +0x01a4 -> line 926
- *   +0x01d0 -> line 927
- *   +0x01fc -> line 929
- *   +0x0228 -> line 930
- *   +0x0254 -> line 931
- *   +0x027c -> line 949
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 745–808 */
-/* addr: 0x00331a10  size: 432 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 745
- *   +0x0004 -> line 747
- *   +0x0008 -> line 745
- *   +0x000c -> line 754
- *   +0x0010 -> line 745
- *   +0x0014 -> line 760
- *   +0x0018 -> line 745
- *   +0x0024 -> line 747
- *   +0x0044 -> line 754
- *   +0x004c -> line 760
- *   +0x0054 -> line 766
- *   +0x0058 -> line 769
- *   +0x0064 -> line 747
- *   +0x0068 -> line 766
- *   +0x006c -> line 747
- *   +0x0070 -> line 766
- *   +0x0074 -> line 747
- *   +0x007c -> line 754
- *   +0x0094 -> line 760
- *   +0x00ac -> line 766
- *   +0x00b0 -> line 769
- *   +0x00b8 -> line 772
- *   +0x00c8 -> line 777
- *   +0x00d0 -> line 779
- *   +0x00ec -> line 780
- *   +0x00f4 -> line 783
- *   +0x010c -> line 786
- *   +0x0120 -> line 789
- *   +0x0124 -> line 792
- *   +0x0128 -> line 789
- *   +0x012c -> line 792
- *   +0x0138 -> line 793
- *   +0x0148 -> line 794
- *   +0x0158 -> line 795
- *   +0x0168 -> line 800
- *   +0x0178 -> line 801
- *   +0x0188 -> line 802
- *   +0x0198 -> line 808
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 580–693 */
-/* addr: 0x00331bc0  size: 528 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 580
- *   +0x0024 -> line 585
- *   +0x002c -> line 586
- *   +0x0030 -> line 596
- *   +0x0034 -> line 589
- *   +0x0038 -> line 596
- *   +0x003c -> line 590
- *   +0x0040 -> line 596
- *   +0x0050 -> line 597
- *   +0x0058 -> line 601
- *   +0x006c -> line 607
- *   +0x0070 -> line 609
- *   +0x007c -> line 611
- *   +0x0088 -> line 613
- *   +0x00a8 -> line 614
- *   +0x00c0 -> line 615
- *   +0x00d0 -> line 622
- *   +0x00d8 -> line 629
- *   +0x00f8 -> line 630
- *   +0x0100 -> line 633
- *   +0x010c -> line 635
- *   +0x011c -> line 638
- *   +0x0128 -> line 641
- *   +0x0134 -> line 643
- *   +0x0138 -> line 644
- *   +0x0148 -> line 647
- *   +0x0150 -> line 649
- *   +0x015c -> line 655
- *   +0x016c -> line 666
- *   +0x0170 -> line 655
- *   +0x0174 -> line 666
- *   +0x0178 -> line 655
- *   +0x017c -> line 666
- *   +0x0180 -> line 655
- *   +0x0188 -> line 666
- *   +0x018c -> line 681
- *   +0x019c -> line 685
- *   +0x01a0 -> line 689
- *   +0x01a4 -> line 685
- *   +0x01a8 -> line 691
- *   +0x01ac -> line 685
- *   +0x01b0 -> line 689
- *   +0x01b4 -> line 685
- *   +0x01b8 -> line 689
- *   +0x01bc -> line 685
- *   +0x01c0 -> line 689
- *   +0x01c4 -> line 685
- *   +0x01c8 -> line 691
- *   +0x01cc -> line 685
- *   +0x01d8 -> line 689
- *   +0x01e8 -> line 693
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* The functions below are in their original source-line order (retail
- * emits them in reverse); these prototypes keep earlier calls valid. */
-extern "C" void TXT_PauseGameIWantToDrawThisStringNumber(int _iStringNumber);
-extern "C" unsigned int PS2MC_fn_uiInit(unsigned int Port, unsigned int Slot);
-extern "C" void PS2MC_fn_vUpdateStatus(void);
-extern "C" void PS2MC_fn_vStartMachine(void);
-extern "C" void PS2MC_fn_vDoBootCheck(void);
-extern "C" void PS2MC_fn_vSaveGame(char* _pData, char* _pFileName, unsigned int SaveGameSizeInBytes);
-extern "C" void PS2MC_fn_vGetMemoryCardFileHeaders(MC_tdstFileEntry* _p_stEntryArray, unsigned int _NbMaxEntries, unsigned int* _p_uiNbFilesFound, int bFast);
-extern "C" void PS2MC_fn_vGetMemoryCardScreenShotsHeaders(MC_tdstFileEntry* _p_stEntryArray, unsigned int _NbMaxEntries, unsigned int* _p_uiNbFilesFound);
-extern "C" unsigned int PS2MC_fn_iGetFunctionResult(PS2MC_tdstFunctionFlags FlagID);
-extern "C" void PS2MC_fn_vStopPrompts(void);
-extern "C" void PS2MC_fn_vEnablePrompts(void);
-extern "C" void PS2MC_fn_vSaveScreenShot(char* _pData, char* _pFileName);
-extern "C" void* PS2MC_GetScreenShotPreviewData(void);
-extern "C" void PS2MC_fn_vLoadGame(char* _pFileName);
-extern "C" void PS2MC_fn_vLoadScreenShot(char* _pFileName, char* _pBuffer);
-extern "C" void* PS2MC_fn_pGetLoadGameBuffer(void);
-extern "C" int PS2MC_GetCurrentMemoryCardStatus(void);
-extern "C" int PS2MC_HasToCheckMCFull(void);
-extern "C" void PS2MC_vActivateMemoryCard(void);
-extern "C" void PS2MC_vClearFlag(int FlagID);
-extern "C" void PS2MC_DisableAutoSave(void);
-extern "C" int fn_bAutoSaveFinished(void);
-extern "C" int PS2MC_fn_bHasBootCheckBeenDoneYet(void);
-
-unsigned int C_PS2MC_Manager::Init(unsigned int _Port, unsigned int _Slot)
+void C_PS2MC_Manager::ManageBootCheck(void)
 {
-    int iLength;
-    int hFile;
-    unsigned int i;
-    ESceeResult RetValue;
-    /* TODO: decompile from asm/... */
-}
-
-void C_PS2MC_Manager::FillIconSys(char* _szTitleName, char bPhoto)
-{
-    char Title[66];
-    int bgcolor[4][4] = {{128, 0, 0, 0}, {0, 128, 0, 0}, {0, 0, 128, 0}, {128, 128, 128, 0}};
-    float lightdir[3][4] = {{0.5f, 0.5f, 0.5f, 0}, {0, -0.4f, -0.1f, 0}, {-0.5f, -0.5f, 0.5f, 0}};
-    float lightcol[3][4] = {{0.48f, 0.48f, 0.03f, 0}, {0.5f, 0.33f, 0.2f, 0}, {0.14f, 0.14f, 0.38f, 0}};
-    float ambient[4] = {0.5f, 0.5f, 0.5f, 0};
-    memset(&m_iconSys, 0, sizeof(m_iconSys));
-    strcpy((char*)m_iconSys.Head, "PS2D");
-    if (bPhoto)
-    {
-        sprintf(Title, "%s\n%s", "Rayman3 Photo", _szTitleName);
-    }
-    else
-    {
-        sprintf(Title, "%s\n%s\0", "Rayman3 Data", _szTitleName);
-    }
-    SVG_fn_szAsciiToSJIS((char*)m_iconSys.TitleName, 33, Title, &m_iconSys.OffsLF);
-    m_iconSys.TransRate = 0x60;
-    memcpy(m_iconSys.BgColor, bgcolor, sizeof(bgcolor));
-    memcpy(m_iconSys.LightDir, lightdir, sizeof(lightdir));
-    memcpy(m_iconSys.LightColor, lightcol, sizeof(lightcol));
-    memcpy(m_iconSys.Ambient, ambient, sizeof(ambient));
-    strcpy((char*)m_iconSys.FnameView, (char*)PS2MC_g_IconDesc[0].szFileNameSave);
-    strcpy((char*)m_iconSys.FnameCopy, (char*)PS2MC_g_IconDesc[0].szFileNameSave);
-    strcpy((char*)m_iconSys.FnameDel, (char*)PS2MC_g_IconDesc[0].szFileNameSave);
-}
-
-void C_PS2MC_Manager::CreateIconFile(void)
-{
-    PS2MC_tdstIconAnimSection_* pIconAnimation;
-    PS2MC_tdstIconVertex_* pIconVtx;
-    PS2MC_tdstIcon_* pIconHeader;
-    char* pData;
-    pIconHeader = (PS2MC_tdstIcon_*)&m_pUserIconFile[0];
-    pIconVtx = (PS2MC_tdstIconVertex_*)&m_pUserIconFile[5];
-    pIconAnimation = (PS2MC_tdstIconAnimSection_*)&m_pUserIconFile[77];
-    pData = (char*)&m_pUserIconFile[0];
-    pIconHeader->uiVersion = 0x10000;
-    pIconHeader->uiNBSP = 1;
-    pIconHeader->uiAttributes = 6;
-    pIconHeader->fBackFaceThreshold = 1.0f;
-    pIconHeader->nbVtx = 12;
-    pIconAnimation->uiNBSeq = 1;
-    pIconAnimation->uiNbFrame = 1;
-    pIconAnimation->fSpeed = 1.0f;
-    pIconAnimation->uiPlayOffset = 1;
-    pIconAnimation->uiNbKSP = 1;
-    pIconAnimation->uiKSPID = 1;
-    pIconAnimation->uiNBKF = 1;
-    pIconAnimation->uiKEYS[0] = 1;
-    pIconAnimation->uiKEYS[1] = 1;
-        pIconVtx[0].Pos[0] = -10240; pIconVtx[0].Pos[1] = -1536; pIconVtx[0].Pos[2] = 0; pIconVtx[0].Pos[3] = 1024; pIconVtx[0].Normal[0] = 716; pIconVtx[0].Normal[1] = 716; pIconVtx[0].Normal[2] = 716; pIconVtx[0].Normal[3] = 0; pIconVtx[0].ST[0] = 0; pIconVtx[0].ST[1] = 4096; pIconVtx[0].Color = 0xA0A0A0A0;
-        pIconVtx[1].Pos[0] = 10240; pIconVtx[1].Pos[1] = -1536; pIconVtx[1].Pos[2] = 0; pIconVtx[1].Pos[3] = 1024; pIconVtx[1].Normal[0] = 716; pIconVtx[1].Normal[1] = 716; pIconVtx[1].Normal[2] = 716; pIconVtx[1].Normal[3] = 0; pIconVtx[1].ST[0] = 4096; pIconVtx[1].ST[1] = 4096; pIconVtx[1].Color = 0xA0A0A0A0;
-        pIconVtx[2].Pos[0] = 10240; pIconVtx[2].Pos[1] = -18944; pIconVtx[2].Pos[2] = 0; pIconVtx[2].Pos[3] = 1024; pIconVtx[2].Normal[0] = 716; pIconVtx[2].Normal[1] = 716; pIconVtx[2].Normal[2] = 716; pIconVtx[2].Normal[3] = 0; pIconVtx[2].ST[0] = 4096; pIconVtx[2].ST[1] = 0; pIconVtx[2].Color = 0xA0A0A0A0;
-        pIconVtx[3].Pos[0] = -10240; pIconVtx[3].Pos[1] = -1536; pIconVtx[3].Pos[2] = 0; pIconVtx[3].Pos[3] = 1024; pIconVtx[3].Normal[0] = 716; pIconVtx[3].Normal[1] = 716; pIconVtx[3].Normal[2] = 716; pIconVtx[3].Normal[3] = 0; pIconVtx[3].ST[0] = 0; pIconVtx[3].ST[1] = 4096; pIconVtx[3].Color = 0xA0A0A0A0;
-        pIconVtx[4].Pos[0] = 10240; pIconVtx[4].Pos[1] = -18944; pIconVtx[4].Pos[2] = 0; pIconVtx[4].Pos[3] = 1024; pIconVtx[4].Normal[0] = 716; pIconVtx[4].Normal[1] = 716; pIconVtx[4].Normal[2] = 716; pIconVtx[4].Normal[3] = 0; pIconVtx[4].ST[0] = 4096; pIconVtx[4].ST[1] = 0; pIconVtx[4].Color = 0xA0A0A0A0;
-        pIconVtx[5].Pos[0] = -10240; pIconVtx[5].Pos[1] = -18944; pIconVtx[5].Pos[2] = 0; pIconVtx[5].Pos[3] = 1024; pIconVtx[5].Normal[0] = 716; pIconVtx[5].Normal[1] = 716; pIconVtx[5].Normal[2] = 716; pIconVtx[5].Normal[3] = 0; pIconVtx[5].ST[0] = 0; pIconVtx[5].ST[1] = 0; pIconVtx[5].Color = 0xA0A0A0A0;
-        pIconVtx[6].Pos[0] = -10240; pIconVtx[6].Pos[1] = -1536; pIconVtx[6].Pos[2] = 0; pIconVtx[6].Pos[3] = 1024; pIconVtx[6].Normal[0] = 716; pIconVtx[6].Normal[1] = 716; pIconVtx[6].Normal[2] = 716; pIconVtx[6].Normal[3] = 0; pIconVtx[6].ST[0] = 4096; pIconVtx[6].ST[1] = 4096; pIconVtx[6].Color = 0xA0A0A0A0;
-        pIconVtx[7].Pos[0] = -10240; pIconVtx[7].Pos[1] = -18944; pIconVtx[7].Pos[2] = 0; pIconVtx[7].Pos[3] = 1024; pIconVtx[7].Normal[0] = 716; pIconVtx[7].Normal[1] = 716; pIconVtx[7].Normal[2] = 716; pIconVtx[7].Normal[3] = 0; pIconVtx[7].ST[0] = 4096; pIconVtx[7].ST[1] = 0; pIconVtx[7].Color = 0xA0A0A0A0;
-        pIconVtx[8].Pos[0] = 10240; pIconVtx[8].Pos[1] = -18944; pIconVtx[8].Pos[2] = 0; pIconVtx[8].Pos[3] = 1024; pIconVtx[8].Normal[0] = 716; pIconVtx[8].Normal[1] = 716; pIconVtx[8].Normal[2] = 716; pIconVtx[8].Normal[3] = 0; pIconVtx[8].ST[0] = 0; pIconVtx[8].ST[1] = 0; pIconVtx[8].Color = 0xA0A0A0A0;
-        pIconVtx[9].Pos[0] = -10240; pIconVtx[9].Pos[1] = -1536; pIconVtx[9].Pos[2] = 0; pIconVtx[9].Pos[3] = 1024; pIconVtx[9].Normal[0] = 716; pIconVtx[9].Normal[1] = 716; pIconVtx[9].Normal[2] = 716; pIconVtx[9].Normal[3] = 0; pIconVtx[9].ST[0] = 4096; pIconVtx[9].ST[1] = 4096; pIconVtx[9].Color = 0xA0A0A0A0;
-        pIconVtx[10].Pos[0] = 10240; pIconVtx[10].Pos[1] = -18944; pIconVtx[10].Pos[2] = 0; pIconVtx[10].Pos[3] = 1024; pIconVtx[10].Normal[0] = 716; pIconVtx[10].Normal[1] = 716; pIconVtx[10].Normal[2] = 716; pIconVtx[10].Normal[3] = 0; pIconVtx[10].ST[0] = 0; pIconVtx[10].ST[1] = 0; pIconVtx[10].Color = 0xA0A0A0A0;
-        pIconVtx[11].Pos[0] = 10240; pIconVtx[11].Pos[1] = -1536; pIconVtx[11].Pos[2] = 0; pIconVtx[11].Pos[3] = 1024; pIconVtx[11].Normal[0] = 716; pIconVtx[11].Normal[1] = 716; pIconVtx[11].Normal[2] = 716; pIconVtx[11].Normal[3] = 0; pIconVtx[11].ST[0] = 0; pIconVtx[11].ST[1] = 4096;
-        pIconVtx[11].Color = 0xA0A0A0A0;
-}
-
-void C_PS2MC_Manager::UpdateStatus(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void C_PS2MC_Manager::ManageCheckOneDirectory(void)
-{
-    char TempString[1024];
-    int TotalDirectorySize;
-    int i;
-    _SceeMemCardFunctionResult functionResult;
-    int returnVal;
-    /* TODO: decompile from asm/... */
-}
-
-void C_PS2MC_Manager::ManageGetSavedGamesEntries(void)
-{
-    MC_tdstFileEntry Temp;
-    int bSwapped;
-    unsigned int Century;
-    sceCdCLOCK LocalTime;
     int NameIndex;
-    _SceeMemCardFunctionResult functionResult;
-    unsigned int i;
     ESceeResult Result;
-    static int CurrentEntry;
-    unsigned int HeaderData[4];
-    static signed char init;
-    /* TODO: decompile from asm/... */
-}
-
-void C_PS2MC_Manager::ManageGetScreenshotsEntries(void)
-{
-    MC_tdstFileEntry Temp;
-    int bSwapped;
-    unsigned int Century;
-    sceCdCLOCK LocalTime;
-    int NameIndex;
     _SceeMemCardFunctionResult functionResult;
-    unsigned int i;
-    ESceeResult Result;
-    /* TODO: decompile from asm/... */
-}
+    static int Copy_m_bNeedToCheckAndWarnForMCFull;
+    static int b_InWarningMode = 0;
+    static int FirstBootCheck = 1;
+    static int LoopCount = 0;
 
-void C_PS2MC_Manager::ManagePreBootCheck(void)
-{
-    static int LoopCount;
-    static signed char init;
-    if (!init) { LoopCount = 0; init = 1; }
+    m_bPreBootCheckHadNoMC = 0;
+    if (m_MemoryCardInternalStatus.type == 0)
+    {
+        m_bNeedToCheckAndWarnForMCFull = 0;
+    }
+    if (!m_bPromptIsOn)
+    {
+        if (b_InWarningMode)
+        {
+            PS2MC_RemoveCurrentMessage();
+            if (m_IPausedTheEngine == 1) { g_EngineHasBeenPausedBecauseOfMC = 0; m_IPausedTheEngine = 0; fn_vUnpauseFromMemoryCard(); m_bWillHaveToRestoreMenu2D = 2; } else { m_IPausedTheEngine--; }
+            b_InWarningMode = 0;
+        }
+        m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+        m_Flags[4] = 1;
+        return;
+    }
     switch (m_uiSubState)
     {
         case 0:
         {
-            g_EngineHasBeenPausedBecauseOfMC = 1; m_IPausedTheEngine++; if (m_IPausedTheEngine == 1) { fn_vPauseFromMemoryCard(); fn_vInterruptMenu2D(1); }
+            b_InWarningMode = 0;
             m_MemoryCardInternalStatus.type = -10;
             m_uiSubState = 100;
             LoopCount = 0;
@@ -2765,52 +2286,664 @@ void C_PS2MC_Manager::ManagePreBootCheck(void)
         }
         case 101:
         {
-            if (m_MemoryCardInternalStatus.type != -10)
+            if (m_MemoryCardInternalStatus.type == -10) break;
+            Copy_m_bNeedToCheckAndWarnForMCFull = m_bNeedToCheckAndWarnForMCFull;
+            m_bNeedToCheckAndWarnForMCFull = 0;
+            if (m_MemoryCardInternalStatus.type == 0)
             {
-                if (m_MemoryCardInternalStatus.type == 0)
+                if (FirstBootCheck)
                 {
-                    m_bPreBootCheckWasDone = 1;
-                    m_bPreBootCheckHadNoMC = 1;
-                    if (m_IPausedTheEngine == 1) { g_EngineHasBeenPausedBecauseOfMC = 0; m_IPausedTheEngine = 0; fn_vUnpauseFromMemoryCard(); m_bWillHaveToRestoreMenu2D = 2; } else { m_IPausedTheEngine--; }
-                    m_Flags[4] = 1;
-                    m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
-                    m_bFirstBootCheckHasBeenDone = 1;
-                    m_bNeedToCheckAndWarnForMCFull = 0;
+                    PS2MC_SetDisplayMessage(MC_eNoMCAtBoot, m_RequiredGameDataSize);
+                    b_InWarningMode = 1; g_EngineHasBeenPausedBecauseOfMC = 1; m_IPausedTheEngine++; if (m_IPausedTheEngine == 1) { fn_vPauseFromMemoryCard(); fn_vInterruptMenu2D(1); }
+                    m_uiSubState = 20;
                 }
                 else
                 {
-                    m_bPreBootCheckWasDone = 1;
-                    m_bPreBootCheckHadNoMC = 0;
-                    g_GameHasNotStartedTheFirstBootCheck = 0;
-                    m_Flags[4] = 0; m_uiIdleState = 5;
+                    m_Flags[4] = 1;
+                    m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                    m_bFirstBootCheckHasBeenDone = 1;
                 }
+            }
+            else if (m_MemoryCardInternalStatus.formatStatus == 0)
+            {
+                m_Flags[4] = 1; m_bFirstBootCheckHasBeenDone = 1;
+                if (FirstBootCheck) { if (m_IPausedTheEngine == 1) { g_EngineHasBeenPausedBecauseOfMC = 0; m_IPausedTheEngine = 0; fn_vUnpauseFromMemoryCard(); m_bWillHaveToRestoreMenu2D = 2; } else { m_IPausedTheEngine--; } }
+                FirstBootCheck = 0;
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+            }
+            else if (m_MemoryCardInternalStatus.numFreeClusters < m_RequiredGameDataSize && (Copy_m_bNeedToCheckAndWarnForMCFull & 1))
+            {
+                m_iTotalNumberOfFilesInMC = 0;
+                Result = sceeMemCardGetDirList(m_uiPort, m_uiSlot, "S", 0, 120, &m_iTotalNumberOfFilesInMC, m_pDirInfo);
+                if (Result == E_FAIL)
+                {
+                    m_Flags[4] = 1; m_bFirstBootCheckHasBeenDone = 1;
+                    if (FirstBootCheck) { if (m_IPausedTheEngine == 1) { g_EngineHasBeenPausedBecauseOfMC = 0; m_IPausedTheEngine = 0; fn_vUnpauseFromMemoryCard(); m_bWillHaveToRestoreMenu2D = 2; } else { m_IPausedTheEngine--; } }
+                    FirstBootCheck = 0;
+                    m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                }
+                else
+                {
+                    m_uiSubState = 1;
+                }
+            }
+            else
+            {
+                m_uiSubState = 10;
+            }
+            break;
+        }
+        case 1:
+        {
+            sceeMemCardGetFunctionResult(6, &functionResult);
+            if (functionResult.success == E_SUCCESS)
+            {
+                if (m_iTotalNumberOfFilesInMC < 0 || m_MemoryCardInternalStatus.type == 0)
+                {
+                    if (FirstBootCheck)
+                    {
+                        PS2MC_SetDisplayMessage(MC_eNoMCAtBoot, m_RequiredGameDataSize);
+                        b_InWarningMode = 1; g_EngineHasBeenPausedBecauseOfMC = 1; m_IPausedTheEngine++; if (m_IPausedTheEngine == 1) { fn_vPauseFromMemoryCard(); fn_vInterruptMenu2D(1); }
+                        m_uiSubState = 20;
+                    }
+                    else
+                    {
+                        m_Flags[4] = 1; m_bFirstBootCheckHasBeenDone = 1;
+                        m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                    }
+                }
+                else
+                {
+                    m_uiSubState++;
+                }
+            }
+            else if (functionResult.success == E_FAIL || m_MemoryCardInternalStatus.type == 0)
+            {
+                if (FirstBootCheck && m_MemoryCardInternalStatus.type == 0)
+                {
+                    PS2MC_SetDisplayMessage(MC_eNoMCAtBoot, m_RequiredGameDataSize);
+                    b_InWarningMode = 1; g_EngineHasBeenPausedBecauseOfMC = 1; m_IPausedTheEngine++; if (m_IPausedTheEngine == 1) { fn_vPauseFromMemoryCard(); fn_vInterruptMenu2D(1); }
+                    m_uiSubState = 20;
+                }
+                else
+                {
+                    m_Flags[4] = 1; m_bFirstBootCheckHasBeenDone = 1;
+                    if (FirstBootCheck) { if (m_IPausedTheEngine == 1) { g_EngineHasBeenPausedBecauseOfMC = 0; m_IPausedTheEngine = 0; fn_vUnpauseFromMemoryCard(); m_bWillHaveToRestoreMenu2D = 2; } else { m_IPausedTheEngine--; } }
+                    FirstBootCheck = 0;
+                    m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                }
+            }
+            break;
+        }
+        case 2:
+        {
+            if (m_iTotalNumberOfFilesInMC == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eFullMCForSavedGame, m_RequiredGameDataSize);
+                b_InWarningMode = 1; g_EngineHasBeenPausedBecauseOfMC = 1; m_IPausedTheEngine++; if (m_IPausedTheEngine == 1) { fn_vPauseFromMemoryCard(); fn_vInterruptMenu2D(1); }
+                m_uiSubState = 5;
+            }
+            else
+            {
+                m_uiBC_CurrentIndex = 0;
+                m_uiSubState++;
+            }
+            break;
+        }
+        case 3:
+        {
+            strcpy(m_aFullFileName, (char*)m_pDirInfo[m_uiBC_CurrentIndex].EntryName);
+            NameIndex = strlen(m_aFilePrefix);
+            strcpy(m_aDirExtension, (char*)&m_pDirInfo[m_uiBC_CurrentIndex].EntryName[NameIndex]);
+            m_uiCheckDirReturnState = *(char*)&m_uiState; m_uiCheckDirReturnedSize = -1; m_uiCheckDirReturnSubState = 4; m_uiState = 4; m_uiSubState = 0;
+            break;
+        }
+        case 4:
+        {
+            if (m_uiCheckDirReturnedSize + m_MemoryCardInternalStatus.numFreeClusters >= m_RequiredGameDataSize)
+            {
+                PS2MC_SetDisplayMessage(MC_eFullMCWithSG, m_RequiredGameDataSize);
+                b_InWarningMode = 1; g_EngineHasBeenPausedBecauseOfMC = 1; m_IPausedTheEngine++; if (m_IPausedTheEngine == 1) { fn_vPauseFromMemoryCard(); fn_vInterruptMenu2D(1); }
+                m_uiSubState = 5;
+            }
+            else
+            {
+                m_uiBC_CurrentIndex++;
+                if (m_uiBC_CurrentIndex == m_iTotalNumberOfFilesInMC)
+                {
+                    PS2MC_SetDisplayMessage(MC_eFullMCForSavedGame, m_RequiredGameDataSize);
+                    b_InWarningMode = 1; g_EngineHasBeenPausedBecauseOfMC = 1; m_IPausedTheEngine++; if (m_IPausedTheEngine == 1) { fn_vPauseFromMemoryCard(); fn_vInterruptMenu2D(1); }
+                    m_uiSubState = 5;
+                }
+                else
+                {
+                    m_uiSubState--;
+                }
+            }
+            break;
+        }
+        case 5:
+        {
+            if (m_MemoryCardInternalStatus.type == 0)
+            {
+                if (FirstBootCheck)
+                {
+                    PS2MC_SetDisplayMessage(MC_eNoMCAtBoot, m_RequiredGameDataSize);
+                    if (!b_InWarningMode) { b_InWarningMode = 1; g_EngineHasBeenPausedBecauseOfMC = 1; m_IPausedTheEngine++; if (m_IPausedTheEngine == 1) { fn_vPauseFromMemoryCard(); fn_vInterruptMenu2D(1); } }
+                    m_uiSubState = 20;
+                }
+                else
+                {
+                    PS2MC_RemoveCurrentMessage();
+                    if (m_IPausedTheEngine == 1) { g_EngineHasBeenPausedBecauseOfMC = 0; m_IPausedTheEngine = 0; fn_vUnpauseFromMemoryCard(); m_bWillHaveToRestoreMenu2D = 2; } else { m_IPausedTheEngine--; }
+                    b_InWarningMode = 0;
+                    m_Flags[4] = 1; m_bFirstBootCheckHasBeenDone = 1;
+                    m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                }
+            }
+            else if (PS2MC_GetCurrentMessageAnswer())
+            {
+                if (m_IPausedTheEngine == 1) { g_EngineHasBeenPausedBecauseOfMC = 0; m_IPausedTheEngine = 0; fn_vUnpauseFromMemoryCard(); m_bWillHaveToRestoreMenu2D = 2; } else { m_IPausedTheEngine--; }
+                b_InWarningMode = 0;
+                m_uiSubState = 10;
+            }
+            break;
+        }
+        case 10:
+        {
+            if (!(Copy_m_bNeedToCheckAndWarnForMCFull & 2))
+            {
+                m_Flags[4] = 1; m_bFirstBootCheckHasBeenDone = 1;
+                if (FirstBootCheck) { if (m_IPausedTheEngine == 1) { g_EngineHasBeenPausedBecauseOfMC = 0; m_IPausedTheEngine = 0; fn_vUnpauseFromMemoryCard(); m_bWillHaveToRestoreMenu2D = 2; } else { m_IPausedTheEngine--; } }
+                FirstBootCheck = 0;
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+            }
+            else if (m_MemoryCardInternalStatus.type == 0)
+            {
+                if (FirstBootCheck)
+                {
+                    PS2MC_SetDisplayMessage(MC_eNoMCAtBoot, m_RequiredGameDataSize);
+                    b_InWarningMode = 1; g_EngineHasBeenPausedBecauseOfMC = 1; m_IPausedTheEngine++; if (m_IPausedTheEngine == 1) { fn_vPauseFromMemoryCard(); fn_vInterruptMenu2D(1); }
+                    m_uiSubState = 20;
+                }
+                else
+                {
+                    m_Flags[4] = 1; m_bFirstBootCheckHasBeenDone = 1;
+                    m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                }
+            }
+            else if (m_MemoryCardInternalStatus.numFreeClusters < m_RequiredPhotoSize)
+            {
+                m_iTotalNumberOfFilesInMC = 0;
+                Result = sceeMemCardGetDirList(m_uiPort, m_uiSlot, "P", 0, 120, &m_iTotalNumberOfFilesInMC, m_pDirInfo);
+                if (Result == E_FAIL)
+                {
+                    m_Flags[4] = 1; m_bFirstBootCheckHasBeenDone = 1;
+                    if (FirstBootCheck) { if (m_IPausedTheEngine == 1) { g_EngineHasBeenPausedBecauseOfMC = 0; m_IPausedTheEngine = 0; fn_vUnpauseFromMemoryCard(); m_bWillHaveToRestoreMenu2D = 2; } else { m_IPausedTheEngine--; } }
+                    FirstBootCheck = 0;
+                    m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                }
+                else
+                {
+                    m_uiSubState++;
+                }
+            }
+            else
+            {
+                m_Flags[4] = 1; m_bFirstBootCheckHasBeenDone = 1;
+                if (FirstBootCheck) { if (m_IPausedTheEngine == 1) { g_EngineHasBeenPausedBecauseOfMC = 0; m_IPausedTheEngine = 0; fn_vUnpauseFromMemoryCard(); m_bWillHaveToRestoreMenu2D = 2; } else { m_IPausedTheEngine--; } }
+                FirstBootCheck = 0;
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+            }
+            break;
+        }
+        case 11:
+        {
+            sceeMemCardGetFunctionResult(6, &functionResult);
+            if (functionResult.success == E_SUCCESS)
+            {
+                if (m_iTotalNumberOfFilesInMC == 0)
+                {
+                    PS2MC_SetDisplayMessage(MC_eFullMCForPhotos, m_RequiredPhotoSize);
+                    b_InWarningMode = 1; g_EngineHasBeenPausedBecauseOfMC = 1; m_IPausedTheEngine++; if (m_IPausedTheEngine == 1) { fn_vPauseFromMemoryCard(); fn_vInterruptMenu2D(1); }
+                    m_uiSubState = 21;
+                }
+                else
+                {
+                    m_uiBC_CurrentIndex = 0;
+                    m_uiSubState++;
+                }
+            }
+            else if (functionResult.success == E_FAIL)
+            {
+                PS2MC_SetDisplayMessage(MC_eFullMCForPhotos, m_RequiredPhotoSize);
+                b_InWarningMode = 1; g_EngineHasBeenPausedBecauseOfMC = 1; m_IPausedTheEngine++; if (m_IPausedTheEngine == 1) { fn_vPauseFromMemoryCard(); fn_vInterruptMenu2D(1); }
+                m_uiSubState = 21;
+            }
+            break;
+        }
+        case 12:
+        {
+            strcpy(m_aFullFileName, (char*)m_pDirInfo[m_uiBC_CurrentIndex].EntryName);
+            NameIndex = strlen(m_aFilePrefix);
+            strcpy(m_aDirExtension, (char*)&m_pDirInfo[m_uiBC_CurrentIndex].EntryName[NameIndex]);
+            m_uiCheckDirReturnState = *(char*)&m_uiState; m_uiCheckDirReturnedSize = -1; m_uiCheckDirReturnSubState = 13; m_uiState = 4; m_uiSubState = 0;
+            break;
+        }
+        case 13:
+        {
+            if (m_MemoryCardInternalStatus.type == 0)
+            {
+                if (FirstBootCheck)
+                {
+                    PS2MC_SetDisplayMessage(MC_eNoMCAtBoot, m_RequiredGameDataSize);
+                    if (!b_InWarningMode) { b_InWarningMode = 1; g_EngineHasBeenPausedBecauseOfMC = 1; m_IPausedTheEngine++; if (m_IPausedTheEngine == 1) { fn_vPauseFromMemoryCard(); fn_vInterruptMenu2D(1); } }
+                    m_uiSubState = 20;
+                }
+                else
+                {
+                    m_Flags[4] = 1; m_bFirstBootCheckHasBeenDone = 1;
+                    m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                }
+            }
+            else if (m_uiCheckDirReturnedSize + m_MemoryCardInternalStatus.numFreeClusters >= m_RequiredPhotoSize)
+            {
+                PS2MC_SetDisplayMessage(MC_eFullMCForPhotosWithPhotos, m_RequiredPhotoSize);
+                b_InWarningMode = 1; g_EngineHasBeenPausedBecauseOfMC = 1; m_IPausedTheEngine++; if (m_IPausedTheEngine == 1) { fn_vPauseFromMemoryCard(); fn_vInterruptMenu2D(1); }
+                m_uiSubState = 21;
+            }
+            else
+            {
+                m_uiBC_CurrentIndex++;
+                if (m_uiBC_CurrentIndex == m_iTotalNumberOfFilesInMC)
+                {
+                    PS2MC_SetDisplayMessage(MC_eFullMCForPhotos, m_RequiredPhotoSize);
+                    b_InWarningMode = 1; g_EngineHasBeenPausedBecauseOfMC = 1; m_IPausedTheEngine++; if (m_IPausedTheEngine == 1) { fn_vPauseFromMemoryCard(); fn_vInterruptMenu2D(1); }
+                    m_uiSubState = 21;
+                }
+                else
+                {
+                    m_uiSubState--;
+                }
+            }
+            break;
+        }
+        case 20:
+        {
+            if (m_MemoryCardInternalStatus.type != 0)
+            {
+                if (FirstBootCheck)
+                {
+                    PS2MC_RemoveCurrentMessage();
+                    if (m_IPausedTheEngine == 1) { g_EngineHasBeenPausedBecauseOfMC = 0; m_IPausedTheEngine = 0; fn_vUnpauseFromMemoryCard(); m_bWillHaveToRestoreMenu2D = 2; } else { m_IPausedTheEngine--; }
+                    b_InWarningMode = 0;
+                    m_uiSubState = 0;
+                }
+            }
+            else if (PS2MC_GetCurrentMessageAnswer() == 1)
+            {
+                PS2MC_SetDisplayMessage(MC_eNoMCAtBootScreenShots, m_RequiredPhotoSize);
+                m_uiSubState = 22;
+            }
+            break;
+        }
+        case 22:
+        {
+            if (m_MemoryCardInternalStatus.type != 0)
+            {
+                if (FirstBootCheck)
+                {
+                    PS2MC_RemoveCurrentMessage();
+                    if (m_IPausedTheEngine == 1) { g_EngineHasBeenPausedBecauseOfMC = 0; m_IPausedTheEngine = 0; fn_vUnpauseFromMemoryCard(); m_bWillHaveToRestoreMenu2D = 2; } else { m_IPausedTheEngine--; }
+                    b_InWarningMode = 0;
+                    m_uiSubState = 0;
+                }
+            }
+            else if (PS2MC_GetCurrentMessageAnswer() == 1)
+            {
+                PS2MC_RemoveCurrentMessage();
+                if (m_IPausedTheEngine == 1) { g_EngineHasBeenPausedBecauseOfMC = 0; m_IPausedTheEngine = 0; fn_vUnpauseFromMemoryCard(); m_bWillHaveToRestoreMenu2D = 2; } else { m_IPausedTheEngine--; }
+                if (FirstBootCheck) { if (m_IPausedTheEngine == 1) { g_EngineHasBeenPausedBecauseOfMC = 0; m_IPausedTheEngine = 0; fn_vUnpauseFromMemoryCard(); m_bWillHaveToRestoreMenu2D = 2; } else { m_IPausedTheEngine--; } }
+                FirstBootCheck = 0;
+                b_InWarningMode = 0;
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                m_Flags[4] = 1; m_bFirstBootCheckHasBeenDone = 1;
+            }
+            break;
+        }
+        case 21:
+        {
+            if (m_MemoryCardInternalStatus.type == 0)
+            {
+                if (FirstBootCheck)
+                {
+                    PS2MC_SetDisplayMessage(MC_eNoMCAtBoot, m_RequiredGameDataSize);
+                    if (!b_InWarningMode) { b_InWarningMode = 1; g_EngineHasBeenPausedBecauseOfMC = 1; m_IPausedTheEngine++; if (m_IPausedTheEngine == 1) { fn_vPauseFromMemoryCard(); fn_vInterruptMenu2D(1); } }
+                    m_uiSubState = 20;
+                }
+                else
+                {
+                    PS2MC_RemoveCurrentMessage();
+                    if (m_IPausedTheEngine == 1) { g_EngineHasBeenPausedBecauseOfMC = 0; m_IPausedTheEngine = 0; fn_vUnpauseFromMemoryCard(); m_bWillHaveToRestoreMenu2D = 2; } else { m_IPausedTheEngine--; }
+                    b_InWarningMode = 0;
+                    m_Flags[4] = 1; m_bFirstBootCheckHasBeenDone = 1;
+                    m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                }
+            }
+            else if (PS2MC_GetCurrentMessageAnswer())
+            {
+                PS2MC_RemoveCurrentMessage();
+                if (m_IPausedTheEngine == 1) { g_EngineHasBeenPausedBecauseOfMC = 0; m_IPausedTheEngine = 0; fn_vUnpauseFromMemoryCard(); m_bWillHaveToRestoreMenu2D = 2; } else { m_IPausedTheEngine--; }
+                b_InWarningMode = 0;
+                if (FirstBootCheck) { if (m_IPausedTheEngine == 1) { g_EngineHasBeenPausedBecauseOfMC = 0; m_IPausedTheEngine = 0; fn_vUnpauseFromMemoryCard(); m_bWillHaveToRestoreMenu2D = 2; } else { m_IPausedTheEngine--; } }
+                FirstBootCheck = 0;
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                m_Flags[4] = 1; m_bFirstBootCheckHasBeenDone = 1;
             }
             break;
         }
     }
 }
 
-void C_PS2MC_Manager::ManageBootCheck(void)
-{
-    int NameIndex;
-    ESceeResult Result;
-    _SceeMemCardFunctionResult functionResult;
-    int FirstBootCheck;
-    int b_InWarningMode;
-    int Copy_m_bNeedToCheckAndWarnForMCFull;
-    int LoopCount;
-    signed char init;
-    /* TODO: decompile from asm/... */
-}
-
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 2881–3078 */
+/* addr: 0x0032dcf0  size: 1284 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2881
+ *   +0x0004 -> line 2886
+ *   +0x0008 -> line 2881
+ *   +0x0014 -> line 2886
+ *   +0x0064 -> line 2891
+ *   +0x0090 -> line 2897
+ *   +0x0098 -> line 2898
+ *   +0x00b8 -> line 2900
+ *   +0x00bc -> line 2898
+ *   +0x00c0 -> line 2901
+ *   +0x00c8 -> line 2906
+ *   +0x00d0 -> line 2907
+ *   +0x00dc -> line 2911
+ *   +0x00f0 -> line 2912
+ *   +0x00f4 -> line 2914
+ *   +0x00fc -> line 2915
+ *   +0x0104 -> line 2920
+ *   +0x0114 -> line 2921
+ *   +0x0118 -> line 2929
+ *   +0x0120 -> line 2935
+ *   +0x0128 -> line 2936
+ *   +0x0134 -> line 2940
+ *   +0x014c -> line 2941
+ *   +0x0150 -> line 2940
+ *   +0x0158 -> line 2941
+ *   +0x0164 -> line 2942
+ *   +0x016c -> line 2943
+ *   +0x0174 -> line 2944
+ *   +0x017c -> line 2947
+ *   +0x0188 -> line 2948
+ *   +0x01a8 -> line 2950
+ *   +0x01ac -> line 2951
+ *   +0x01b4 -> line 2952
+ *   +0x01bc -> line 2958
+ *   +0x01d8 -> line 2959
+ *   +0x01e0 -> line 2960
+ *   +0x01e8 -> line 2962
+ *   +0x01f0 -> line 2963
+ *   +0x01f4 -> line 2962
+ *   +0x0204 -> line 2963
+ *   +0x0210 -> line 2964
+ *   +0x0218 -> line 2965
+ *   +0x0220 -> line 2966
+ *   +0x0228 -> line 2969
+ *   +0x0234 -> line 2970
+ *   +0x0254 -> line 2971
+ *   +0x0258 -> line 2972
+ *   +0x025c -> line 2974
+ *   +0x0264 -> line 2978
+ *   +0x0290 -> line 2981
+ *   +0x0298 -> line 2983
+ *   +0x02b8 -> line 2984
+ *   +0x02bc -> line 2983
+ *   +0x02c0 -> line 2985
+ *   +0x02c8 -> line 2988
+ *   +0x02d0 -> line 2989
+ *   +0x02dc -> line 2991
+ *   +0x02e0 -> line 2992
+ *   +0x02e8 -> line 2994
+ *   +0x02f0 -> line 2996
+ *   +0x0300 -> line 2997
+ *   +0x0304 -> line 3000
+ *   +0x030c -> line 3003
+ *   +0x0324 -> line 3005
+ *   +0x0338 -> line 3010
+ *   +0x0358 -> line 3012
+ *   +0x0360 -> line 3016
+ *   +0x0374 -> line 3017
+ *   +0x0388 -> line 3018
+ *   +0x03a4 -> line 3020
+ *   +0x03b8 -> line 3021
+ *   +0x03d8 -> line 3022
+ *   +0x03e0 -> line 3026
+ *   +0x03e8 -> line 3030
+ *   +0x03f0 -> line 3033
+ *   +0x03fc -> line 3035
+ *   +0x040c -> line 3038
+ *   +0x0418 -> line 3039
+ *   +0x0420 -> line 3040
+ *   +0x0428 -> line 3041
+ *   +0x0444 -> line 3044
+ *   +0x0458 -> line 3045
+ *   +0x0478 -> line 3047
+ *   +0x0480 -> line 3054
+ *   +0x0498 -> line 3059
+ *   +0x04a0 -> line 3060
+ *   +0x04a8 -> line 3063
+ *   +0x04b0 -> line 3068
+ *   +0x04c8 -> line 3071
+ *   +0x04d0 -> line 3073
+ *   +0x04f4 -> line 3078
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void C_PS2MC_Manager::ManageFormatting(void)
 {
     _SceeMemCardFunctionResult functionResult;
     int returnVal;
     unsigned int Value;
-    /* TODO: decompile from asm/... */
+
+    switch (m_uiSubState)
+    {
+        case 0:
+        {
+            if (m_MemoryCardInternalStatus.type != -10 && (m_MemoryCardInternalStatus.type != 2 || m_MemoryCardInternalStatus.formatStatus))
+            {
+                PS2MC_RemoveCurrentMessage();
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 6; m_uiSubState = 0; m_uiNextState = 2;
+                m_bMCChanged = 1;
+                break;
+            }
+            Value = PS2MC_GetCurrentMessageAnswer();
+            if (Value == 2)
+            {
+                PS2MC_SetDisplayMessage(MC_eCancelSave, m_RequiredGameDataSize);
+                m_uiSubState = 1;
+            }
+            else if (Value == 1)
+            {
+                PS2MC_SetDisplayMessage(MC_eAreYouSureFormat, m_RequiredGameDataSize);
+                m_uiSubState = 3;
+            }
+            break;
+        }
+        case 1:
+        {
+            Value = PS2MC_GetCurrentMessageAnswer();
+            if (Value == 1)
+            {
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                if (m_uiCurrentSavingProcedure == STATE_SAVE_GAME)
+                {
+                    m_Flags[0] = 2;
+                }
+                else if (m_uiCurrentSavingProcedure == STATE_SAVE_SCREENSHOT)
+                {
+                    m_Flags[5] = 2;
+                }
+                else
+                {
+                    printf("\n\nERROR Wrong Saving Procedure !!!\n\n");
+                    while (1) ;
+                }
+                m_bWillHaveToRestoreMenu2D = 2;
+            }
+            else if (Value == 2)
+            {
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 6; m_uiSubState = 0; m_uiNextState = 2;
+            }
+            else if (Value == 3)
+            {
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                if (m_uiCurrentSavingProcedure == STATE_SAVE_GAME)
+                {
+                    m_Flags[0] = 1;
+                }
+                else if (m_uiCurrentSavingProcedure == STATE_SAVE_SCREENSHOT)
+                {
+                    m_Flags[5] = 1;
+                }
+                else
+                {
+                    printf("\n\nERROR Wrong Saving Procedure !!!\n\n");
+                    while (1) ;
+                }
+                m_bWillHaveToRestoreMenu2D = 2;
+            }
+            break;
+        }
+        case 3:
+        {
+            if (m_MemoryCardInternalStatus.type != -10 && (m_MemoryCardInternalStatus.type != 2 || m_MemoryCardInternalStatus.formatStatus))
+            {
+                PS2MC_RemoveCurrentMessage();
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 6; m_uiSubState = 0; m_uiNextState = 2;
+                m_bMCChanged = 1;
+                break;
+            }
+            Value = PS2MC_GetCurrentMessageAnswer();
+            if (Value == 1)
+            {
+                m_uiSubState = 20;
+            }
+            else if (Value == 2)
+            {
+                PS2MC_SetDisplayMessage(MC_eCancelSave, m_RequiredGameDataSize);
+                m_uiSubState = 1;
+            }
+            break;
+        }
+        case 20:
+        {
+            if (m_MemoryCardInternalStatus.type == -10) break;
+            if (m_MemoryCardInternalStatus.formatStatus == 1)
+            {
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 6; m_uiSubState = 0; m_uiNextState = 2;
+                m_bMCChanged = 1;
+                break;
+            }
+            PS2MC_SetDisplayMessage(MC_eFormatting, m_RequiredGameDataSize);
+            if (sceeMemCardFormat(m_uiPort, m_uiSlot) == E_FAIL || m_MemoryCardInternalStatus.type == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eErrorWhileFormatting, m_RequiredGameDataSize);
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 3; m_uiSubState = 0; m_uiNextState = 6;
+            }
+            else
+            {
+                m_uiSubState++;
+            }
+            break;
+        }
+        case 21:
+        {
+            sceeMemCardGetFunctionResult(2, &functionResult);
+            if (functionResult.success == E_SUCCESS)
+            {
+                m_MemoryCardInternalStatus.type = -10;
+                m_uiSubState++;
+            }
+            else if (functionResult.success == E_FAIL || m_MemoryCardInternalStatus.type == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eErrorWhileFormatting, m_RequiredGameDataSize);
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 3; m_uiSubState = 0; m_uiNextState = 6;
+            }
+            break;
+        }
+        case 22:
+        {
+            if (m_MemoryCardInternalStatus.type == -10) break;
+            m_MemoryCardInternalStatus.type = -10;
+            m_uiSubState++;
+            break;
+        }
+        case 23:
+        {
+            if (m_MemoryCardInternalStatus.type == -10) break;
+            PS2MC_RemoveCurrentMessage();
+            PS2MC_vReturnToState(this, *(char*)&m_uiCurrentSavingProcedure); m_uiSubState = 0; m_uiNextState = 2;
+            break;
+        }
+    }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 3124–3266 */
+/* addr: 0x0032d950  size: 920 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3124
+ *   +0x0004 -> line 3133
+ *   +0x0008 -> line 3124
+ *   +0x000c -> line 3133
+ *   +0x0010 -> line 3124
+ *   +0x0014 -> line 3133
+ *   +0x002c -> line 3136
+ *   +0x006c -> line 3137
+ *   +0x0074 -> line 3140
+ *   +0x00b4 -> line 3147
+ *   +0x00bc -> line 3156
+ *   +0x00c0 -> line 3161
+ *   +0x00d4 -> line 3165
+ *   +0x00dc -> line 3180
+ *   +0x00e4 -> line 3181
+ *   +0x0118 -> line 3184
+ *   +0x0134 -> line 3186
+ *   +0x0174 -> line 3187
+ *   +0x017c -> line 3190
+ *   +0x0184 -> line 3193
+ *   +0x018c -> line 3202
+ *   +0x0194 -> line 3205
+ *   +0x01a4 -> line 3207
+ *   +0x01ac -> line 3208
+ *   +0x01b4 -> line 3209
+ *   +0x01d0 -> line 3211
+ *   +0x0210 -> line 3214
+ *   +0x0218 -> line 3222
+ *   +0x0224 -> line 3224
+ *   +0x022c -> line 3226
+ *   +0x0258 -> line 3230
+ *   +0x0274 -> line 3232
+ *   +0x02b4 -> line 3233
+ *   +0x02bc -> line 3236
+ *   +0x02c4 -> line 3239
+ *   +0x02cc -> line 3246
+ *   +0x02d8 -> line 3249
+ *   +0x02e8 -> line 3254
+ *   +0x02f0 -> line 3255
+ *   +0x02fc -> line 3256
+ *   +0x0300 -> line 3257
+ *   +0x0304 -> line 3256
+ *   +0x0308 -> line 3257
+ *   +0x0320 -> line 3258
+ *   +0x0328 -> line 3259
+ *   +0x0344 -> line 3261
+ *   +0x0388 -> line 3266
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void C_PS2MC_Manager::ManageAutoSaveGame(void)
 {
     _SceeMemCardFunctionResult functionResult;
@@ -2914,48 +3047,1716 @@ void C_PS2MC_Manager::ManageAutoSaveGame(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 3278–3369 */
+/* addr: 0x0032d740  size: 528 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3278
+ *   +0x0004 -> line 3282
+ *   +0x0008 -> line 3278
+ *   +0x000c -> line 3282
+ *   +0x0010 -> line 3278
+ *   +0x0014 -> line 3282
+ *   +0x0020 -> line 3285
+ *   +0x0028 -> line 3286
+ *   +0x0048 -> line 3287
+ *   +0x0050 -> line 3290
+ *   +0x0084 -> line 3297
+ *   +0x0094 -> line 3298
+ *   +0x009c -> line 3300
+ *   +0x00a4 -> line 3304
+ *   +0x00ac -> line 3305
+ *   +0x00b8 -> line 3308
+ *   +0x00c8 -> line 3310
+ *   +0x00cc -> line 3312
+ *   +0x00d4 -> line 3313
+ *   +0x00f0 -> line 3314
+ *   +0x00f8 -> line 3317
+ *   +0x0108 -> line 3318
+ *   +0x0110 -> line 3320
+ *   +0x0118 -> line 3321
+ *   +0x0120 -> line 3323
+ *   +0x0128 -> line 3324
+ *   +0x0148 -> line 3327
+ *   +0x0150 -> line 3331
+ *   +0x0158 -> line 3332
+ *   +0x0164 -> line 3335
+ *   +0x0180 -> line 3336
+ *   +0x0184 -> line 3337
+ *   +0x0188 -> line 3339
+ *   +0x0190 -> line 3340
+ *   +0x0198 -> line 3342
+ *   +0x01a8 -> line 3343
+ *   +0x01b0 -> line 3346
+ *   +0x01b8 -> line 3351
+ *   +0x01c0 -> line 3352
+ *   +0x01cc -> line 3355
+ *   +0x01d4 -> line 3356
+ *   +0x01dc -> line 3361
+ *   +0x01f4 -> line 3362
+ *   +0x01f8 -> line 3363
+ *   +0x01fc -> line 3364
+ *   +0x0200 -> line 3369
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void C_PS2MC_Manager::ManageAreYouSureBeforeSave(void)
 {
     unsigned int Value;
-    /* TODO: decompile from asm/... */
+
+    if (m_MemoryCardInternalStatus.type == 0)
+    {
+        PS2MC_RemoveCurrentMessage();
+        PS2MC_vReturnToState(this, *(char*)&m_uiCurrentSavingProcedure); m_uiSubState = 0; m_uiNextState = 2;
+        return;
+    }
+    switch (m_uiSubState)
+    {
+        case 0:
+        {
+            PS2MC_SetDisplayMessage(MC_eAreYouSureSave, m_RequiredGameDataSize);
+            m_uiSubState++;
+            break;
+        }
+        case 1:
+        {
+            Value = PS2MC_GetCurrentMessageAnswer();
+            if (Value == 2)
+            {
+                if (m_uiCurrentSavingProcedure == STATE_SAVE_SCREENSHOT)
+                {
+                    m_Flags[5] = 2;
+                    m_bWillHaveToRestoreMenu2D = 2;
+                    PS2MC_RemoveCurrentMessage();
+                    m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                }
+                else
+                {
+                    PS2MC_SetDisplayMessage(MC_eAreYouSureSaveNo, m_RequiredGameDataSize);
+                    m_uiSubState++;
+                }
+            }
+            else if (Value == 1)
+            {
+                PS2MC_RemoveCurrentMessage();
+                PS2MC_vReturnToState(this, *(char*)&m_uiCurrentSavingProcedure); m_uiSubState = 0; m_uiNextState = 2;
+            }
+            break;
+        }
+        case 2:
+        {
+            Value = PS2MC_GetCurrentMessageAnswer();
+            if (Value == 2)
+            {
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                m_Flags[0] = 2;
+                m_bAutoSaveEnabled = 0;
+                m_bWillHaveToRestoreMenu2D = 2;
+            }
+            else if (Value == 1)
+            {
+                PS2MC_SetDisplayMessage(MC_eCancelSaveYesNo, m_RequiredGameDataSize);
+                m_uiSubState++;
+            }
+            break;
+        }
+        case 3:
+        {
+            Value = PS2MC_GetCurrentMessageAnswer();
+            if (Value == 2)
+            {
+                m_uiSubState = 0;
+            }
+            else if (Value == 1)
+            {
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                m_Flags[0] = 1;
+                m_bAutoSaveEnabled = 0;
+                m_bWillHaveToRestoreMenu2D = 2;
+            }
+            break;
+        }
+    }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 3379–3962 */
+/* addr: 0x0032ca20  size: 3356 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3379
+ *   +0x000c -> line 3384
+ *   +0x0038 -> line 3391
+ *   +0x0050 -> line 3394
+ *   +0x0058 -> line 3397
+ *   +0x006c -> line 3398
+ *   +0x0070 -> line 3399
+ *   +0x0078 -> line 3400
+ *   +0x0088 -> line 3404
+ *   +0x009c -> line 3405
+ *   +0x00a0 -> line 3406
+ *   +0x00a8 -> line 3407
+ *   +0x00c8 -> line 3408
+ *   +0x00d0 -> line 3413
+ *   +0x00dc -> line 3414
+ *   +0x00e0 -> line 3415
+ *   +0x00e4 -> line 3416
+ *   +0x00e8 -> line 3413
+ *   +0x00ec -> line 3414
+ *   +0x00f8 -> line 3415
+ *   +0x0104 -> line 3416
+ *   +0x0108 -> line 3421
+ *   +0x0114 -> line 3438
+ *   +0x0118 -> line 3421
+ *   +0x0120 -> line 3438
+ *   +0x014c -> line 3442
+ *   +0x0154 -> line 3443
+ *   +0x015c -> line 3444
+ *   +0x0160 -> line 3443
+ *   +0x0168 -> line 3445
+ *   +0x0170 -> line 3446
+ *   +0x01a4 -> line 3452
+ *   +0x01ac -> line 3453
+ *   +0x01b4 -> line 3454
+ *   +0x01b8 -> line 3453
+ *   +0x01c0 -> line 3455
+ *   +0x01c8 -> line 3460
+ *   +0x01d4 -> line 3462
+ *   +0x01e8 -> line 3463
+ *   +0x01ec -> line 3464
+ *   +0x01f4 -> line 3472
+ *   +0x01fc -> line 3480
+ *   +0x0214 -> line 3483
+ *   +0x022c -> line 3484
+ *   +0x0234 -> line 3487
+ *   +0x023c -> line 3488
+ *   +0x0248 -> line 3492
+ *   +0x024c -> line 3493
+ *   +0x0250 -> line 3492
+ *   +0x0254 -> line 3493
+ *   +0x02a0 -> line 3494
+ *   +0x02a8 -> line 3495
+ *   +0x02b0 -> line 3500
+ *   +0x02c8 -> line 3501
+ *   +0x02cc -> line 3502
+ *   +0x02d0 -> line 3510
+ *   +0x02d8 -> line 3520
+ *   +0x02f0 -> line 3523
+ *   +0x02f4 -> line 3525
+ *   +0x02fc -> line 3526
+ *   +0x031c -> line 3527
+ *   +0x0324 -> line 3531
+ *   +0x032c -> line 3532
+ *   +0x0338 -> line 3536
+ *   +0x0348 -> line 3537
+ *   +0x0350 -> line 3542
+ *   +0x0358 -> line 3549
+ *   +0x0360 -> line 3550
+ *   +0x036c -> line 3553
+ *   +0x038c -> line 3554
+ *   +0x0390 -> line 3555
+ *   +0x0394 -> line 3557
+ *   +0x039c -> line 3558
+ *   +0x03a4 -> line 3562
+ *   +0x03ac -> line 3563
+ *   +0x03cc -> line 3564
+ *   +0x03d4 -> line 3565
+ *   +0x03e0 -> line 3568
+ *   +0x03f0 -> line 3569
+ *   +0x03f4 -> line 3572
+ *   +0x03fc -> line 3579
+ *   +0x0414 -> line 3582
+ *   +0x042c -> line 3583
+ *   +0x0434 -> line 3586
+ *   +0x043c -> line 3587
+ *   +0x0448 -> line 3591
+ *   +0x0458 -> line 3592
+ *   +0x045c -> line 3596
+ *   +0x0464 -> line 3604
+ *   +0x046c -> line 3605
+ *   +0x0478 -> line 3608
+ *   +0x0498 -> line 3609
+ *   +0x049c -> line 3610
+ *   +0x04a0 -> line 3612
+ *   +0x04a8 -> line 3613
+ *   +0x04b0 -> line 3617
+ *   +0x04b8 -> line 3618
+ *   +0x04d8 -> line 3621
+ *   +0x04e0 -> line 3628
+ *   +0x04f4 -> line 3631
+ *   +0x04f8 -> line 3632
+ *   +0x04fc -> line 3631
+ *   +0x0500 -> line 3632
+ *   +0x0520 -> line 3635
+ *   +0x053c -> line 3637
+ *   +0x0550 -> line 3638
+ *   +0x0570 -> line 3639
+ *   +0x0578 -> line 3642
+ *   +0x0580 -> line 3646
+ *   +0x0588 -> line 3653
+ *   +0x0594 -> line 3656
+ *   +0x05a4 -> line 3659
+ *   +0x05ac -> line 3660
+ *   +0x05b4 -> line 3661
+ *   +0x05d0 -> line 3664
+ *   +0x05e4 -> line 3665
+ *   +0x0604 -> line 3668
+ *   +0x060c -> line 3675
+ *   +0x0618 -> line 3680
+ *   +0x0620 -> line 3684
+ *   +0x0634 -> line 3685
+ *   +0x063c -> line 3688
+ *   +0x0644 -> line 3696
+ *   +0x0650 -> line 3699
+ *   +0x0660 -> line 3701
+ *   +0x0668 -> line 3702
+ *   +0x0670 -> line 3703
+ *   +0x068c -> line 3705
+ *   +0x06a0 -> line 3706
+ *   +0x06c0 -> line 3709
+ *   +0x06c8 -> line 3721
+ *   +0x06d0 -> line 3723
+ *   +0x0704 -> line 3726
+ *   +0x0720 -> line 3728
+ *   +0x0734 -> line 3729
+ *   +0x0754 -> line 3730
+ *   +0x075c -> line 3733
+ *   +0x0764 -> line 3736
+ *   +0x076c -> line 3745
+ *   +0x0778 -> line 3748
+ *   +0x0788 -> line 3750
+ *   +0x0790 -> line 3751
+ *   +0x0798 -> line 3752
+ *   +0x07b4 -> line 3754
+ *   +0x07c8 -> line 3755
+ *   +0x07e8 -> line 3758
+ *   +0x07f0 -> line 3767
+ *   +0x07f8 -> line 3769
+ *   +0x082c -> line 3773
+ *   +0x0848 -> line 3775
+ *   +0x085c -> line 3776
+ *   +0x087c -> line 3777
+ *   +0x0884 -> line 3780
+ *   +0x088c -> line 3783
+ *   +0x0894 -> line 3790
+ *   +0x08a0 -> line 3793
+ *   +0x08b0 -> line 3802
+ *   +0x08b8 -> line 3803
+ *   +0x08d4 -> line 3805
+ *   +0x08e8 -> line 3806
+ *   +0x0908 -> line 3809
+ *   +0x0910 -> line 3817
+ *   +0x0918 -> line 3818
+ *   +0x094c -> line 3822
+ *   +0x0968 -> line 3824
+ *   +0x097c -> line 3825
+ *   +0x099c -> line 3826
+ *   +0x09a4 -> line 3829
+ *   +0x09ac -> line 3832
+ *   +0x09b4 -> line 3840
+ *   +0x09c0 -> line 3843
+ *   +0x09d0 -> line 3845
+ *   +0x09d8 -> line 3846
+ *   +0x09e0 -> line 3847
+ *   +0x09fc -> line 3849
+ *   +0x0a10 -> line 3850
+ *   +0x0a30 -> line 3853
+ *   +0x0a38 -> line 3861
+ *   +0x0a40 -> line 3862
+ *   +0x0a74 -> line 3866
+ *   +0x0a90 -> line 3868
+ *   +0x0aa4 -> line 3869
+ *   +0x0ac4 -> line 3870
+ *   +0x0acc -> line 3873
+ *   +0x0ad4 -> line 3876
+ *   +0x0adc -> line 3883
+ *   +0x0ae8 -> line 3886
+ *   +0x0af8 -> line 3888
+ *   +0x0b00 -> line 3889
+ *   +0x0b08 -> line 3890
+ *   +0x0b24 -> line 3892
+ *   +0x0b38 -> line 3893
+ *   +0x0b58 -> line 3896
+ *   +0x0b60 -> line 3903
+ *   +0x0b70 -> line 3904
+ *   +0x0b78 -> line 3905
+ *   +0x0ba4 -> line 3909
+ *   +0x0bc0 -> line 3911
+ *   +0x0bd4 -> line 3912
+ *   +0x0bf4 -> line 3913
+ *   +0x0bfc -> line 3916
+ *   +0x0c04 -> line 3919
+ *   +0x0c0c -> line 3926
+ *   +0x0c18 -> line 3929
+ *   +0x0c28 -> line 3931
+ *   +0x0c38 -> line 3932
+ *   +0x0c40 -> line 3933
+ *   +0x0c48 -> line 3934
+ *   +0x0c64 -> line 3936
+ *   +0x0c78 -> line 3937
+ *   +0x0c98 -> line 3940
+ *   +0x0ca0 -> line 3944
+ *   +0x0ca8 -> line 3945
+ *   +0x0cb4 -> line 3950
+ *   +0x0cbc -> line 3951
+ *   +0x0cc8 -> line 3952
+ *   +0x0ccc -> line 3956
+ *   +0x0cd0 -> line 3952
+ *   +0x0cd4 -> line 3955
+ *   +0x0cd8 -> line 3953
+ *   +0x0cdc -> line 3956
+ *   +0x0ce0 -> line 3954
+ *   +0x0ce4 -> line 3956
+ *   +0x0ce8 -> line 3955
+ *   +0x0cec -> line 3956
+ *   +0x0cf0 -> line 3955
+ *   +0x0cf8 -> line 3956
+ *   +0x0d08 -> line 3957
+ *   +0x0d0c -> line 3962
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void C_PS2MC_Manager::ManageSaveGame(void)
 {
     _SceeMemCardFunctionResult functionResult;
     int returnVal;
     unsigned int Value;
-    /* TODO: decompile from asm/... */
+
+    switch (m_uiSubState)
+    {
+        case 0:
+        {
+            if (m_MemoryCardInternalStatus.type == -10) break;
+            if (m_MemoryCardInternalStatus.type == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eNoMCForSave, m_RequiredGameDataSize);
+                m_uiSubState = 5;
+            }
+            else if (m_MemoryCardInternalStatus.formatStatus == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eUnformatted, m_RequiredGameDataSize);
+                m_uiSubState = 0;
+                m_uiCurrentSavingProcedure = STATE_SAVE_GAME;
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 9; m_uiSubState = 0; m_uiNextState = 2;
+            }
+            else
+            {
+                m_uiCheckDirReturnState = *(char*)&m_uiState; m_uiCheckDirReturnedSize = -1; m_uiCheckDirReturnSubState = 2; m_uiState = 4; m_uiSubState = 0;
+            }
+            break;
+        }
+        case 2:
+        {
+            returnVal = m_uiCheckDirReturnedSize;
+            if (returnVal == -1 && m_MemoryCardInternalStatus.numFreeClusters < m_RequiredGameDataSize)
+            {
+                PS2MC_SetDisplayMessage(MC_eFullMCCancelSave, m_RequiredGameDataSize);
+                m_bNeedToCheckAndWarnForMCFull &= ~1;
+                m_uiSubState = 7;
+            }
+            else if (returnVal > -1 && m_MemoryCardInternalStatus.numFreeClusters + returnVal < m_RequiredGameDataSize)
+            {
+                PS2MC_SetDisplayMessage(MC_eFullMCCancelSave, m_RequiredGameDataSize);
+                m_bNeedToCheckAndWarnForMCFull &= ~1;
+                m_uiSubState = 7;
+            }
+            else if (returnVal > -1)
+            {
+                PS2MC_SetDisplayMessage(MC_eOverwriteWarning, m_RequiredGameDataSize);
+                m_uiSubState = 3;
+            }
+            else
+            {
+                m_uiSubState = 10;
+            }
+            break;
+        }
+        case 3:
+        {
+            if (m_MemoryCardInternalStatus.type != 2)
+            {
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 7; m_uiSubState = 0; m_uiNextState = 2;
+                break;
+            }
+            Value = PS2MC_GetCurrentMessageAnswer();
+            if (Value == 1)
+            {
+                m_uiSubState = 10;
+                PS2MC_vAcknowledgeChange(this);
+            }
+            else if (Value == 2)
+            {
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                m_Flags[0] = 2;
+                m_bWillHaveToRestoreMenu2D = 2;
+                m_bAutoSaveEnabled = 0;
+            }
+            break;
+        }
+        case 5:
+        {
+            if (m_MemoryCardInternalStatus.type == 2)
+            {
+                m_bMCChanged = 1;
+                m_uiSubState = 0;
+                PS2MC_RemoveCurrentMessage();
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 6; m_uiSubState = 0; m_uiNextState = 2;
+            }
+            else if (PS2MC_GetCurrentMessageAnswer() == 1)
+            {
+                PS2MC_SetDisplayMessage(MC_eCancelSave, m_RequiredGameDataSize);
+                m_uiSubState++;
+            }
+            break;
+        }
+        case 6:
+        {
+            Value = PS2MC_GetCurrentMessageAnswer();
+            if (Value == 1)
+            {
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                m_Flags[0] = 2;
+                m_bAutoSaveEnabled = 0;
+                m_bWillHaveToRestoreMenu2D = 2;
+            }
+            else if (Value == 2)
+            {
+                PS2MC_RemoveCurrentMessage();
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 6; m_uiSubState = 0; m_uiNextState = 2;
+            }
+            else if (Value == 3)
+            {
+                PS2MC_SetDisplayMessage(MC_eCancelSaveYesNo, m_RequiredGameDataSize);
+                m_uiSubState = 8;
+            }
+            break;
+        }
+        case 7:
+        {
+            if (m_MemoryCardInternalStatus.type != 2)
+            {
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 7; m_uiSubState = 0; m_uiNextState = 2;
+                break;
+            }
+            if (PS2MC_GetCurrentMessageAnswer() == 1)
+            {
+                PS2MC_SetDisplayMessage(MC_eCancelSave, m_RequiredGameDataSize);
+                m_uiSubState = 6;
+            }
+            break;
+        }
+        case 8:
+        {
+            Value = PS2MC_GetCurrentMessageAnswer();
+            if (Value == 1)
+            {
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                m_Flags[0] = 1;
+                m_bAutoSaveEnabled = 0;
+                m_bWillHaveToRestoreMenu2D = 2;
+            }
+            else if (Value == 2)
+            {
+                PS2MC_RemoveCurrentMessage();
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 6; m_uiSubState = 0; m_uiNextState = 2;
+            }
+            break;
+        }
+        case 10:
+        {
+            PS2MC_SetDisplayMessage(MC_eSavingGame, m_RequiredGameDataSize);
+            m_dirFound = -1;
+            if (sceeMemCardFindDir(m_uiPort, m_uiSlot, m_aDirExtension, &m_dirFound, 0) == E_FAIL || m_MemoryCardInternalStatus.type == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eErrorWhileSaving, m_RequiredGameDataSize);
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 3; m_uiSubState = 0; m_uiNextState = 6;
+            }
+            else
+            {
+                m_uiSubState++;
+            }
+            break;
+        }
+        case 11:
+        {
+            sceeMemCardGetFunctionResult(3, &functionResult);
+            if (functionResult.success == E_SUCCESS)
+            {
+                m_uiSubState++;
+            }
+            else if (functionResult.success == E_FAIL || m_MemoryCardInternalStatus.type == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eErrorWhileSaving, m_RequiredGameDataSize);
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 3; m_uiSubState = 0; m_uiNextState = 6;
+            }
+            break;
+        }
+        case 12:
+        {
+            if (m_dirFound)
+            {
+                m_uiSubState += 2;
+            }
+            else
+            {
+                sceeMemCardCreateDir(m_uiPort, m_uiSlot, m_aDirExtension);
+                m_uiSubState++;
+            }
+            break;
+        }
+        case 13:
+        {
+            sceeMemCardGetFunctionResult(4, &functionResult);
+            if (functionResult.success == E_SUCCESS)
+            {
+                m_uiSubState++;
+            }
+            else if (functionResult.success == E_FAIL || m_MemoryCardInternalStatus.type == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eErrorWhileSaving, m_RequiredGameDataSize);
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 3; m_uiSubState = 0; m_uiNextState = 6;
+            }
+            break;
+        }
+        case 14:
+        {
+            FlushCache(0);
+            if (sceeMemCardSaveFile(m_uiPort, m_uiSlot, m_aDirExtension, m_aFullFileName, (void*)m_pDataToSave, 0x3DE) == 0L || m_MemoryCardInternalStatus.type == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eErrorWhileSaving, m_RequiredGameDataSize);
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 3; m_uiSubState = 0; m_uiNextState = 6;
+            }
+            else
+            {
+                m_uiSubState++;
+            }
+            break;
+        }
+        case 15:
+        {
+            sceeMemCardGetFunctionResult(9, &functionResult);
+            if (functionResult.success == E_SUCCESS)
+            {
+                m_uiSubState++;
+            }
+            else if (functionResult.success == E_FAIL || m_MemoryCardInternalStatus.type == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eErrorWhileSaving, m_RequiredGameDataSize);
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 3; m_uiSubState = 0; m_uiNextState = 6;
+            }
+            break;
+        }
+        case 16:
+        {
+            FlushCache(0);
+            if (sceeMemCardSaveFile(m_uiPort, m_uiSlot, m_aDirExtension, (char*)PS2MC_g_IconDesc[0].szFileNameSave, (void*)PS2MC_g_IconDesc[0].pData, PS2MC_g_IconDesc[0].u32Size) == 0L || m_MemoryCardInternalStatus.type == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eErrorWhileSaving, m_RequiredGameDataSize);
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 3; m_uiSubState = 0; m_uiNextState = 6;
+            }
+            else
+            {
+                m_uiSubState++;
+            }
+            break;
+        }
+        case 17:
+        {
+            sceeMemCardGetFunctionResult(9, &functionResult);
+            if (functionResult.success == E_SUCCESS)
+            {
+                m_uiSubState = 22;
+            }
+            else if (functionResult.success == E_FAIL || m_MemoryCardInternalStatus.type == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eErrorWhileSaving, m_RequiredGameDataSize);
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 3; m_uiSubState = 0; m_uiNextState = 6;
+            }
+            break;
+        }
+        case 18:
+        {
+            FlushCache(0);
+            if (sceeMemCardSaveFile(m_uiPort, m_uiSlot, m_aDirExtension, (char*)PS2MC_g_IconDesc[1].szFileNameSave, (void*)PS2MC_g_IconDesc[1].pData, PS2MC_g_IconDesc[1].u32Size) == 0L || m_MemoryCardInternalStatus.type == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eErrorWhileSaving, m_RequiredGameDataSize);
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 3; m_uiSubState = 0; m_uiNextState = 6;
+            }
+            else
+            {
+                m_uiSubState++;
+            }
+            break;
+        }
+        case 19:
+        {
+            sceeMemCardGetFunctionResult(9, &functionResult);
+            if (functionResult.success == E_SUCCESS)
+            {
+                m_uiSubState++;
+            }
+            else if (functionResult.success == E_FAIL || m_MemoryCardInternalStatus.type == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eErrorWhileSaving, m_RequiredGameDataSize);
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 3; m_uiSubState = 0; m_uiNextState = 6;
+            }
+            break;
+        }
+        case 20:
+        {
+            FlushCache(0);
+            if (sceeMemCardSaveFile(m_uiPort, m_uiSlot, m_aDirExtension, (char*)PS2MC_g_IconDesc[2].szFileNameSave, (void*)PS2MC_g_IconDesc[2].pData, PS2MC_g_IconDesc[2].u32Size) == 0L || m_MemoryCardInternalStatus.type == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eErrorWhileSaving, m_RequiredGameDataSize);
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 3; m_uiSubState = 0; m_uiNextState = 6;
+            }
+            else
+            {
+                m_uiSubState++;
+            }
+            break;
+        }
+        case 21:
+        {
+            sceeMemCardGetFunctionResult(9, &functionResult);
+            if (functionResult.success == E_SUCCESS)
+            {
+                m_uiSubState++;
+            }
+            else if (functionResult.success == E_FAIL || m_MemoryCardInternalStatus.type == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eErrorWhileSaving, m_RequiredGameDataSize);
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 3; m_uiSubState = 0; m_uiNextState = 6;
+            }
+            break;
+        }
+        case 22:
+        {
+            FillIconSys(m_aGameName, 0);
+            FlushCache(0);
+            if (sceeMemCardSaveFile(m_uiPort, m_uiSlot, m_aDirExtension, "icon.sys", &m_iconSys, 0x3C4) == 0L || m_MemoryCardInternalStatus.type == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eErrorWhileSaving, m_RequiredGameDataSize);
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 3; m_uiSubState = 0; m_uiNextState = 6;
+            }
+            else
+            {
+                m_uiSubState++;
+            }
+            break;
+        }
+        case 23:
+        {
+            sceeMemCardGetFunctionResult(9, &functionResult);
+            if (functionResult.success == E_SUCCESS)
+            {
+                PS2MC_SetDisplayMessage(MC_eSaveOk, m_RequiredGameDataSize);
+                m_uiSubState++;
+            }
+            else if (functionResult.success == E_FAIL || m_MemoryCardInternalStatus.type == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eErrorWhileSaving, m_RequiredGameDataSize);
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 3; m_uiSubState = 0; m_uiNextState = 6;
+            }
+            break;
+        }
+        case 24:
+        {
+            if (PS2MC_GetCurrentMessageAnswer() == 1)
+            {
+                PS2MC_RemoveCurrentMessage();
+                printf("Saved with success\n");
+                m_Flags[0] = 1;
+                m_bMCChangedSinceLastSave = 0;
+                m_bAutoSaveEnabled = 1;
+                m_bNeedToCheckAndWarnForMCFull &= ~1;
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                m_bWillHaveToRestoreMenu2D = 2;
+            }
+            break;
+        }
+    }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 3973–4183 */
+/* addr: 0x0032c4b0  size: 1392 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3973
+ *   +0x000c -> line 3977
+ *   +0x0024 -> line 3979
+ *   +0x0080 -> line 3987
+ *   +0x0098 -> line 3990
+ *   +0x00a0 -> line 3993
+ *   +0x00b8 -> line 3994
+ *   +0x00bc -> line 3996
+ *   +0x00c4 -> line 4007
+ *   +0x00cc -> line 4011
+ *   +0x00d4 -> line 4012
+ *   +0x00f0 -> line 4015
+ *   +0x00f8 -> line 4016
+ *   +0x0118 -> line 4017
+ *   +0x011c -> line 4019
+ *   +0x0124 -> line 4020
+ *   +0x012c -> line 4022
+ *   +0x0130 -> line 4025
+ *   +0x0138 -> line 4029
+ *   +0x014c -> line 4032
+ *   +0x0154 -> line 4035
+ *   +0x0168 -> line 4036
+ *   +0x016c -> line 4037
+ *   +0x0174 -> line 4038
+ *   +0x0184 -> line 4041
+ *   +0x0198 -> line 4042
+ *   +0x019c -> line 4043
+ *   +0x01a4 -> line 4046
+ *   +0x01b8 -> line 4047
+ *   +0x01bc -> line 4051
+ *   +0x01c4 -> line 4058
+ *   +0x01cc -> line 4059
+ *   +0x01d8 -> line 4062
+ *   +0x01f4 -> line 4063
+ *   +0x01f8 -> line 4067
+ *   +0x0200 -> line 4071
+ *   +0x02a4 -> line 4073
+ *   +0x02ac -> line 4074
+ *   +0x02c0 -> line 4076
+ *   +0x02e8 -> line 4080
+ *   +0x02f8 -> line 4082
+ *   +0x0308 -> line 4083
+ *   +0x030c -> line 4084
+ *   +0x0314 -> line 4087
+ *   +0x031c -> line 4091
+ *   +0x0324 -> line 4098
+ *   +0x0330 -> line 4101
+ *   +0x0340 -> line 4103
+ *   +0x0398 -> line 4104
+ *   +0x03a0 -> line 4106
+ *   +0x03dc -> line 4108
+ *   +0x03f0 -> line 4109
+ *   +0x03f4 -> line 4110
+ *   +0x03fc -> line 4114
+ *   +0x0404 -> line 4115
+ *   +0x0408 -> line 4114
+ *   +0x040c -> line 4116
+ *   +0x0410 -> line 4115
+ *   +0x0414 -> line 4118
+ *   +0x041c -> line 4119
+ *   +0x0438 -> line 4121
+ *   +0x044c -> line 4123
+ *   +0x0460 -> line 4124
+ *   +0x0464 -> line 4125
+ *   +0x046c -> line 4129
+ *   +0x0474 -> line 4130
+ *   +0x0478 -> line 4129
+ *   +0x047c -> line 4131
+ *   +0x0480 -> line 4130
+ *   +0x0484 -> line 4135
+ *   +0x048c -> line 4139
+ *   +0x04a4 -> line 4141
+ *   +0x04ac -> line 4143
+ *   +0x04bc -> line 4144
+ *   +0x04c4 -> line 4146
+ *   +0x04cc -> line 4149
+ *   +0x04d8 -> line 4151
+ *   +0x04ec -> line 4152
+ *   +0x04f0 -> line 4153
+ *   +0x04f8 -> line 4156
+ *   +0x0500 -> line 4157
+ *   +0x0508 -> line 4162
+ *   +0x0510 -> line 4166
+ *   +0x0518 -> line 4167
+ *   +0x0524 -> line 4172
+ *   +0x052c -> line 4174
+ *   +0x0530 -> line 4177
+ *   +0x0534 -> line 4174
+ *   +0x0538 -> line 4177
+ *   +0x053c -> line 4175
+ *   +0x0540 -> line 4177
+ *   +0x0544 -> line 4176
+ *   +0x0548 -> line 4177
+ *   +0x055c -> line 4178
+ *   +0x0560 -> line 4183
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void C_PS2MC_Manager::ManageLoadGame(void)
 {
     ESceeResult Result;
     _SceeMemCardFunctionResult functionResult;
     unsigned int Value;
-    int bRetry;
-    signed char init;
-    /* TODO: decompile from asm/... */
+    static int bRetry = 0;
+
+    switch (m_uiSubState)
+    {
+        case 0:
+        {
+            if (m_MemoryCardInternalStatus.type == -10) break;
+            if (m_MemoryCardInternalStatus.type == 0)
+            {
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                m_Flags[6] = 2;
+                m_bWillHaveToRestoreMenu2D = 2;
+            }
+            else
+            {
+                m_uiSubState = 10;
+            }
+            break;
+        }
+        case 1:
+        {
+            Value = PS2MC_GetCurrentMessageAnswer();
+            if (Value == 2 || m_MemoryCardInternalStatus.type == 0)
+            {
+                PS2MC_RemoveCurrentMessage();
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                m_Flags[6] = 2;
+                m_bWillHaveToRestoreMenu2D = 2;
+            }
+            else if (Value == 1)
+            {
+                m_uiSubState = 10;
+            }
+            break;
+        }
+        case 10:
+        {
+            if (m_MemoryCardInternalStatus.type == -10) break;
+            if (m_MemoryCardInternalStatus.type == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eErrorWhileLoadingBecauseMCRemoved, m_RequiredGameDataSize);
+                m_uiSubState = 11;
+            }
+            else if (m_MemoryCardInternalStatus.formatStatus == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eErrorWhileLoading, m_RequiredGameDataSize);
+                m_uiSubState = 11;
+            }
+            else
+            {
+                PS2MC_SetDisplayMessage(MC_eLoadingData, m_RequiredGameDataSize);
+                m_uiSubState = 12;
+            }
+            break;
+        }
+        case 11:
+        {
+            Value = PS2MC_GetCurrentMessageAnswer();
+            if (Value == 1)
+            {
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                m_Flags[6] = 2;
+                m_bWillHaveToRestoreMenu2D = 2;
+            }
+            break;
+        }
+        case 12:
+        {
+            PS2MC_vFillTestPattern((char*)m_pLoadSaveBuffer, 0x3DE);
+            FlushCache(0);
+            InvalidDCache(m_pLoadSaveBuffer, m_pLoadSaveBuffer + 0x3DE);
+            Result = sceeMemCardLoadFile(m_uiPort, m_uiSlot, m_aDirExtension, m_aFullFileName, m_pLoadSaveBuffer, 0x3DE);
+            if (Result == E_FAIL)
+            {
+                PS2MC_SetDisplayMessage(MC_eErrorWhileLoading, m_RequiredGameDataSize);
+                m_uiSubState = 11;
+            }
+            else
+            {
+                m_uiSubState++;
+            }
+            break;
+        }
+        case 13:
+        {
+            sceeMemCardGetFunctionResult(8, &functionResult);
+            if (functionResult.success == E_SUCCESS)
+            {
+                unsigned char* pSum = m_pLoadSaveBuffer; m_ulCheckSum = 0; int i = 0x3DA; if (i != 0) { do { m_ulCheckSum = m_ulCheckSum * 3 + ((i & 1) + 1) * (*pSum++ + (i & 1)); } while (--i != 0); }
+                unsigned char* pData = m_pLoadSaveBuffer;
+                if (((pData[0x3DA] << 24) | (pData[0x3DB] << 16) | (pData[0x3DC] << 8) | pData[0x3DD]) == m_ulCheckSum)
+                {
+                    PS2MC_SetDisplayMessage(MC_eLoadOk, m_RequiredGameDataSize);
+                    m_uiSubState = 20;
+                }
+                else
+                {
+                    m_MemoryCardInternalStatus.type = -10;
+                    bRetry = 3;
+                    m_uiSubState = 15;
+                }
+            }
+            else if (functionResult.success == E_FAIL || m_MemoryCardInternalStatus.type == 0)
+            {
+                if (m_MemoryCardInternalStatus.type == 0)
+                {
+                    PS2MC_SetDisplayMessage(MC_eErrorWhileLoadingBecauseMCRemoved, m_RequiredGameDataSize);
+                    m_uiSubState = 11;
+                }
+                else
+                {
+                    m_MemoryCardInternalStatus.type = -10;
+                    bRetry = 3;
+                    m_uiSubState = 15;
+                }
+            }
+            break;
+        }
+        case 15:
+        {
+            if (m_MemoryCardInternalStatus.type == -10) break;
+            if (m_MemoryCardInternalStatus.type == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eErrorWhileLoadingBecauseMCRemoved, m_RequiredGameDataSize);
+                m_uiSubState = 11;
+                bRetry = 0;
+            }
+            else if (bRetry == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eCorruptedFile, m_RequiredGameDataSize);
+                m_uiSubState = 11;
+            }
+            else
+            {
+                m_MemoryCardInternalStatus.type = -10;
+                bRetry--;
+            }
+            break;
+        }
+        case 20:
+        {
+            Value = PS2MC_GetCurrentMessageAnswer();
+            if (Value == 1)
+            {
+                PS2MC_RemoveCurrentMessage();
+                m_Flags[6] = 1;
+                m_bMCChangedSinceLastSave = 0;
+                m_bAutoSaveEnabled = 1;
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                m_bWillHaveToRestoreMenu2D = 2;
+            }
+            break;
+        }
+    }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 4194–4382 */
+/* addr: 0x0032bf80  size: 1328 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4194
+ *   +0x000c -> line 4198
+ *   +0x0024 -> line 4200
+ *   +0x006c -> line 4208
+ *   +0x0084 -> line 4211
+ *   +0x008c -> line 4214
+ *   +0x00a4 -> line 4215
+ *   +0x00a8 -> line 4217
+ *   +0x00b0 -> line 4224
+ *   +0x00b8 -> line 4229
+ *   +0x00cc -> line 4232
+ *   +0x00d4 -> line 4235
+ *   +0x00e8 -> line 4236
+ *   +0x00ec -> line 4237
+ *   +0x00f4 -> line 4238
+ *   +0x0104 -> line 4241
+ *   +0x0118 -> line 4242
+ *   +0x011c -> line 4243
+ *   +0x0124 -> line 4246
+ *   +0x0138 -> line 4247
+ *   +0x013c -> line 4251
+ *   +0x0144 -> line 4258
+ *   +0x014c -> line 4259
+ *   +0x0158 -> line 4262
+ *   +0x0174 -> line 4263
+ *   +0x0178 -> line 4267
+ *   +0x0180 -> line 4271
+ *   +0x023c -> line 4273
+ *   +0x0244 -> line 4274
+ *   +0x025c -> line 4276
+ *   +0x028c -> line 4280
+ *   +0x029c -> line 4282
+ *   +0x02ac -> line 4283
+ *   +0x02b0 -> line 4284
+ *   +0x02b8 -> line 4287
+ *   +0x02c0 -> line 4291
+ *   +0x02c8 -> line 4298
+ *   +0x02d4 -> line 4301
+ *   +0x02e4 -> line 4304
+ *   +0x0344 -> line 4305
+ *   +0x0350 -> line 4307
+ *   +0x03ac -> line 4312
+ *   +0x03b4 -> line 4314
+ *   +0x03b8 -> line 4316
+ *   +0x03bc -> line 4314
+ *   +0x03c0 -> line 4316
+ *   +0x03dc -> line 4318
+ *   +0x03e4 -> line 4321
+ *   +0x03f4 -> line 4323
+ *   +0x0408 -> line 4324
+ *   +0x040c -> line 4325
+ *   +0x0414 -> line 4329
+ *   +0x041c -> line 4330
+ *   +0x0420 -> line 4329
+ *   +0x0424 -> line 4331
+ *   +0x0428 -> line 4330
+ *   +0x042c -> line 4336
+ *   +0x0434 -> line 4337
+ *   +0x0450 -> line 4339
+ *   +0x0464 -> line 4341
+ *   +0x0478 -> line 4342
+ *   +0x047c -> line 4343
+ *   +0x0484 -> line 4347
+ *   +0x048c -> line 4348
+ *   +0x0490 -> line 4347
+ *   +0x0494 -> line 4349
+ *   +0x0498 -> line 4348
+ *   +0x049c -> line 4353
+ *   +0x04a4 -> line 4357
+ *   +0x04b8 -> line 4359
+ *   +0x04c0 -> line 4361
+ *   +0x04d0 -> line 4362
+ *   +0x04d8 -> line 4364
+ *   +0x04e0 -> line 4367
+ *   +0x04ec -> line 4369
+ *   +0x0500 -> line 4370
+ *   +0x0504 -> line 4371
+ *   +0x050c -> line 4374
+ *   +0x0514 -> line 4375
+ *   +0x0520 -> line 4382
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void C_PS2MC_Manager::ManageLoadScreenShot(void)
 {
     ESceeResult Result;
     _SceeMemCardFunctionResult functionResult;
     unsigned int Value;
-    int bRetry;
-    signed char init;
-    /* TODO: decompile from asm/... */
+    static int bRetry = 0;
+
+    switch (m_uiSubState)
+    {
+        case 0:
+        {
+            if (m_MemoryCardInternalStatus.type == -10) break;
+            if (m_MemoryCardInternalStatus.type == 0)
+            {
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                m_Flags[7] = 2;
+                m_bWillHaveToRestoreMenu2D = 2;
+            }
+            else
+            {
+                m_uiSubState = 10;
+            }
+            break;
+        }
+        case 10:
+        {
+            if (m_MemoryCardInternalStatus.type == -10) break;
+            if (m_MemoryCardInternalStatus.type == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eErrorWhileLoadingBecauseMCRemoved, m_RequiredPhotoSize);
+                m_uiSubState = 11;
+            }
+            else if (m_MemoryCardInternalStatus.formatStatus == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eErrorWhileLoading, m_RequiredPhotoSize);
+                m_uiSubState = 11;
+            }
+            else
+            {
+                PS2MC_SetDisplayMessage(MC_eLoadingData, m_RequiredPhotoSize);
+                m_uiSubState = 12;
+            }
+            break;
+        }
+        case 11:
+        {
+            Value = PS2MC_GetCurrentMessageAnswer();
+            if (Value == 1)
+            {
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                m_Flags[7] = 2;
+                m_bWillHaveToRestoreMenu2D = 2;
+            }
+            break;
+        }
+        case 12:
+        {
+            PS2MC_vFillTestPattern((char*)m_pScreenShotLoadBuffer, 0x14004);
+            FlushCache(0);
+            InvalidDCache(m_pLoadSaveBuffer, m_pLoadSaveBuffer + 0x14004);
+            Result = sceeMemCardLoadFile(m_uiPort, m_uiSlot, m_aDirExtension, m_aFullFileName, (void*)m_pScreenShotLoadBuffer, 0x14004);
+            if (Result == E_FAIL)
+            {
+                PS2MC_SetDisplayMessage(MC_eErrorWhileLoading, m_RequiredPhotoSize);
+                m_uiSubState = 11;
+            }
+            else
+            {
+                m_uiSubState++;
+            }
+            break;
+        }
+        case 13:
+        {
+            sceeMemCardGetFunctionResult(8, &functionResult);
+            if (functionResult.success == E_SUCCESS)
+            {
+                unsigned char* pSum = (unsigned char*)m_pScreenShotLoadBuffer; m_ulCheckSum = 0; int i = 0x14000; if (i != 0) { do { m_ulCheckSum = m_ulCheckSum * 3 + ((i & 1) + 1) * (*pSum++ + (i & 1)); } while (--i != 0); }
+                unsigned char* pData = (unsigned char*)m_pScreenShotLoadBuffer;
+                if (((pData[0x14000] << 24) | (pData[0x14001] << 16) | (pData[0x14002] << 8) | pData[0x14003]) == m_ulCheckSum)
+                {
+                    PS2MC_RemoveCurrentMessage();
+                    m_Flags[7] = 1;
+                    m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                    m_bWillHaveToRestoreMenu2D = 2;
+                }
+                else if (m_MemoryCardInternalStatus.type == 0)
+                {
+                    PS2MC_SetDisplayMessage(MC_eErrorWhileLoadingBecauseMCRemovedForPhotos, m_RequiredPhotoSize);
+                    m_uiSubState = 11;
+                }
+                else
+                {
+                    m_MemoryCardInternalStatus.type = -10;
+                    bRetry = 3;
+                    m_uiSubState = 15;
+                }
+            }
+            else if (functionResult.success == E_FAIL || m_MemoryCardInternalStatus.type == 0)
+            {
+                if (m_MemoryCardInternalStatus.type == 0)
+                {
+                    PS2MC_SetDisplayMessage(MC_eErrorWhileLoadingBecauseMCRemovedForPhotos, m_RequiredPhotoSize);
+                    m_uiSubState = 11;
+                }
+                else
+                {
+                    m_MemoryCardInternalStatus.type = -10;
+                    bRetry = 3;
+                    m_uiSubState = 15;
+                }
+            }
+            break;
+        }
+        case 15:
+        {
+            if (m_MemoryCardInternalStatus.type == -10) break;
+            if (m_MemoryCardInternalStatus.type == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eErrorWhileLoadingBecauseMCRemovedForPhotos, m_RequiredPhotoSize);
+                m_uiSubState = 11;
+                bRetry = 0;
+            }
+            else if (bRetry == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eCorruptedFile, m_RequiredPhotoSize);
+                m_uiSubState = 11;
+            }
+            else
+            {
+                m_MemoryCardInternalStatus.type = -10;
+                bRetry--;
+            }
+            break;
+        }
+    }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 4394–4881 */
+/* addr: 0x0032b510  size: 2672 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4394
+ *   +0x000c -> line 4399
+ *   +0x0038 -> line 4406
+ *   +0x0050 -> line 4409
+ *   +0x0058 -> line 4412
+ *   +0x006c -> line 4413
+ *   +0x0070 -> line 4414
+ *   +0x0078 -> line 4415
+ *   +0x0088 -> line 4419
+ *   +0x009c -> line 4420
+ *   +0x00a0 -> line 4421
+ *   +0x00a8 -> line 4422
+ *   +0x00c8 -> line 4423
+ *   +0x00d0 -> line 4428
+ *   +0x00dc -> line 4429
+ *   +0x00e0 -> line 4430
+ *   +0x00e4 -> line 4431
+ *   +0x00e8 -> line 4428
+ *   +0x00ec -> line 4429
+ *   +0x00f8 -> line 4430
+ *   +0x0104 -> line 4431
+ *   +0x0108 -> line 4436
+ *   +0x0114 -> line 4453
+ *   +0x0118 -> line 4436
+ *   +0x0120 -> line 4453
+ *   +0x014c -> line 4457
+ *   +0x0154 -> line 4458
+ *   +0x015c -> line 4459
+ *   +0x0160 -> line 4458
+ *   +0x0168 -> line 4460
+ *   +0x0170 -> line 4461
+ *   +0x01a4 -> line 4467
+ *   +0x01ac -> line 4468
+ *   +0x01b4 -> line 4469
+ *   +0x01b8 -> line 4468
+ *   +0x01c0 -> line 4470
+ *   +0x01c8 -> line 4476
+ *   +0x01d4 -> line 4478
+ *   +0x01e8 -> line 4479
+ *   +0x01ec -> line 4480
+ *   +0x01f4 -> line 4488
+ *   +0x01fc -> line 4496
+ *   +0x0214 -> line 4499
+ *   +0x022c -> line 4500
+ *   +0x0234 -> line 4503
+ *   +0x023c -> line 4504
+ *   +0x0248 -> line 4508
+ *   +0x024c -> line 4509
+ *   +0x0250 -> line 4508
+ *   +0x0254 -> line 4509
+ *   +0x02a0 -> line 4510
+ *   +0x02a8 -> line 4511
+ *   +0x02b0 -> line 4515
+ *   +0x02c0 -> line 4516
+ *   +0x02c4 -> line 4520
+ *   +0x02cc -> line 4530
+ *   +0x02e4 -> line 4533
+ *   +0x02e8 -> line 4535
+ *   +0x02f0 -> line 4536
+ *   +0x0310 -> line 4537
+ *   +0x0318 -> line 4541
+ *   +0x0320 -> line 4542
+ *   +0x032c -> line 4546
+ *   +0x033c -> line 4547
+ *   +0x0344 -> line 4552
+ *   +0x034c -> line 4559
+ *   +0x0354 -> line 4560
+ *   +0x0360 -> line 4563
+ *   +0x0380 -> line 4564
+ *   +0x0384 -> line 4566
+ *   +0x038c -> line 4567
+ *   +0x0394 -> line 4571
+ *   +0x039c -> line 4572
+ *   +0x03bc -> line 4574
+ *   +0x03c4 -> line 4575
+ *   +0x03d0 -> line 4578
+ *   +0x03e0 -> line 4579
+ *   +0x03e4 -> line 4582
+ *   +0x03ec -> line 4589
+ *   +0x0404 -> line 4592
+ *   +0x041c -> line 4593
+ *   +0x0424 -> line 4596
+ *   +0x042c -> line 4597
+ *   +0x0438 -> line 4601
+ *   +0x0448 -> line 4602
+ *   +0x044c -> line 4606
+ *   +0x0454 -> line 4613
+ *   +0x045c -> line 4614
+ *   +0x0468 -> line 4617
+ *   +0x0488 -> line 4618
+ *   +0x048c -> line 4620
+ *   +0x0494 -> line 4621
+ *   +0x049c -> line 4625
+ *   +0x04a4 -> line 4626
+ *   +0x04c4 -> line 4629
+ *   +0x04cc -> line 4636
+ *   +0x04e0 -> line 4639
+ *   +0x04e4 -> line 4640
+ *   +0x04e8 -> line 4639
+ *   +0x04ec -> line 4640
+ *   +0x050c -> line 4643
+ *   +0x0528 -> line 4645
+ *   +0x053c -> line 4646
+ *   +0x055c -> line 4647
+ *   +0x0564 -> line 4650
+ *   +0x056c -> line 4654
+ *   +0x0574 -> line 4661
+ *   +0x0580 -> line 4664
+ *   +0x0590 -> line 4667
+ *   +0x0598 -> line 4668
+ *   +0x05a0 -> line 4669
+ *   +0x05bc -> line 4672
+ *   +0x05d0 -> line 4673
+ *   +0x05f0 -> line 4676
+ *   +0x05f8 -> line 4683
+ *   +0x0604 -> line 4688
+ *   +0x060c -> line 4692
+ *   +0x0620 -> line 4693
+ *   +0x0628 -> line 4696
+ *   +0x0630 -> line 4704
+ *   +0x063c -> line 4707
+ *   +0x064c -> line 4709
+ *   +0x0654 -> line 4710
+ *   +0x065c -> line 4711
+ *   +0x0678 -> line 4713
+ *   +0x068c -> line 4714
+ *   +0x06ac -> line 4717
+ *   +0x06b4 -> line 4730
+ *   +0x06bc -> line 4731
+ *   +0x06f4 -> line 4735
+ *   +0x0710 -> line 4737
+ *   +0x0724 -> line 4738
+ *   +0x0744 -> line 4739
+ *   +0x074c -> line 4742
+ *   +0x0754 -> line 4745
+ *   +0x075c -> line 4754
+ *   +0x0768 -> line 4757
+ *   +0x0778 -> line 4759
+ *   +0x0780 -> line 4760
+ *   +0x0788 -> line 4761
+ *   +0x07a4 -> line 4763
+ *   +0x07b8 -> line 4764
+ *   +0x07d8 -> line 4767
+ *   +0x07e0 -> line 4779
+ *   +0x07e8 -> line 4780
+ *   +0x07f0 -> line 4781
+ *   +0x081c -> line 4790
+ *   +0x0838 -> line 4792
+ *   +0x084c -> line 4793
+ *   +0x086c -> line 4794
+ *   +0x0874 -> line 4797
+ *   +0x087c -> line 4800
+ *   +0x0884 -> line 4807
+ *   +0x0890 -> line 4810
+ *   +0x08a0 -> line 4815
+ *   +0x08a8 -> line 4816
+ *   +0x08c4 -> line 4818
+ *   +0x08d8 -> line 4819
+ *   +0x08f8 -> line 4822
+ *   +0x0900 -> line 4831
+ *   +0x0910 -> line 4832
+ *   +0x0918 -> line 4833
+ *   +0x0944 -> line 4837
+ *   +0x0960 -> line 4839
+ *   +0x0974 -> line 4840
+ *   +0x0994 -> line 4841
+ *   +0x099c -> line 4844
+ *   +0x09a4 -> line 4847
+ *   +0x09ac -> line 4854
+ *   +0x09b8 -> line 4857
+ *   +0x09c8 -> line 4862
+ *   +0x09d0 -> line 4863
+ *   +0x09dc -> line 4864
+ *   +0x09e0 -> line 4871
+ *   +0x09e4 -> line 4864
+ *   +0x09e8 -> line 4865
+ *   +0x09ec -> line 4871
+ *   +0x09f0 -> line 4865
+ *   +0x09f4 -> line 4871
+ *   +0x0a04 -> line 4872
+ *   +0x0a0c -> line 4873
+ *   +0x0a28 -> line 4875
+ *   +0x0a3c -> line 4876
+ *   +0x0a60 -> line 4881
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void C_PS2MC_Manager::ManageSaveScreenShot(void)
 {
     _SceeMemCardFunctionResult functionResult;
     int returnVal;
     unsigned int Value;
-    /* TODO: decompile from asm/... */
+
+    switch (m_uiSubState)
+    {
+        case 0:
+        {
+            if (m_MemoryCardInternalStatus.type == -10) break;
+            if (m_MemoryCardInternalStatus.type == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eNoMCForPhotos, m_RequiredPhotoSize);
+                m_uiSubState = 5;
+            }
+            else if (m_MemoryCardInternalStatus.formatStatus == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eUnformatted, m_RequiredPhotoSize);
+                m_uiSubState = 0;
+                m_uiCurrentSavingProcedure = STATE_SAVE_SCREENSHOT;
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 9; m_uiSubState = 0; m_uiNextState = 2;
+            }
+            else
+            {
+                m_uiCheckDirReturnState = *(char*)&m_uiState; m_uiCheckDirReturnedSize = -1; m_uiCheckDirReturnSubState = 2; m_uiState = 4; m_uiSubState = 0;
+            }
+            break;
+        }
+        case 2:
+        {
+            returnVal = m_uiCheckDirReturnedSize;
+            if (returnVal == -1 && m_MemoryCardInternalStatus.numFreeClusters < m_RequiredPhotoSize)
+            {
+                PS2MC_SetDisplayMessage(MC_eFullMCForPhotosCancelSave, m_RequiredPhotoSize);
+                m_bNeedToCheckAndWarnForMCFull &= ~2;
+                m_uiSubState = 7;
+            }
+            else if (returnVal > -1 && m_MemoryCardInternalStatus.numFreeClusters + returnVal < m_RequiredPhotoSize)
+            {
+                PS2MC_SetDisplayMessage(MC_eFullMCForPhotosCancelSave, m_RequiredPhotoSize);
+                m_bNeedToCheckAndWarnForMCFull &= ~2;
+                m_uiSubState = 7;
+            }
+            else if (returnVal > -1)
+            {
+                PS2MC_SetDisplayMessage(MC_eOverwriteWarningPhotos, m_RequiredPhotoSize);
+                m_uiSubState = 3;
+            }
+            else
+            {
+                m_uiSubState = 10;
+            }
+            break;
+        }
+        case 3:
+        {
+            if (m_MemoryCardInternalStatus.type != 2)
+            {
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 12; m_uiSubState = 0; m_uiNextState = 2;
+                break;
+            }
+            Value = PS2MC_GetCurrentMessageAnswer();
+            if (Value == 1)
+            {
+                m_uiSubState = 10;
+                PS2MC_vAcknowledgeChange(this);
+            }
+            else if (Value == 2)
+            {
+                PS2MC_SetDisplayMessage(MC_eCancelSave, m_RequiredPhotoSize);
+                m_uiSubState = 6;
+            }
+            break;
+        }
+        case 5:
+        {
+            if (m_MemoryCardInternalStatus.type == 2)
+            {
+                m_bMCChanged = 1;
+                m_uiSubState = 0;
+                PS2MC_RemoveCurrentMessage();
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 6; m_uiSubState = 0; m_uiNextState = 2;
+            }
+            else if (PS2MC_GetCurrentMessageAnswer() == 1)
+            {
+                PS2MC_SetDisplayMessage(MC_eCancelSave, m_RequiredPhotoSize);
+                m_uiSubState++;
+            }
+            break;
+        }
+        case 6:
+        {
+            Value = PS2MC_GetCurrentMessageAnswer();
+            if (Value == 1)
+            {
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                m_Flags[5] = 2;
+                m_bWillHaveToRestoreMenu2D = 2;
+            }
+            else if (Value == 2)
+            {
+                PS2MC_RemoveCurrentMessage();
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 6; m_uiSubState = 0; m_uiNextState = 2;
+            }
+            else if (Value == 3)
+            {
+                PS2MC_SetDisplayMessage(MC_eCancelSaveYesNo, m_RequiredPhotoSize);
+                m_uiSubState = 8;
+            }
+            break;
+        }
+        case 7:
+        {
+            if (m_MemoryCardInternalStatus.type != 2)
+            {
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 12; m_uiSubState = 0; m_uiNextState = 2;
+                break;
+            }
+            if (PS2MC_GetCurrentMessageAnswer() == 1)
+            {
+                PS2MC_SetDisplayMessage(MC_eCancelSave, m_RequiredPhotoSize);
+                m_uiSubState = 6;
+            }
+            break;
+        }
+        case 8:
+        {
+            Value = PS2MC_GetCurrentMessageAnswer();
+            if (Value == 1)
+            {
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                m_Flags[5] = 1;
+                m_bWillHaveToRestoreMenu2D = 2;
+            }
+            else if (Value == 2)
+            {
+                PS2MC_RemoveCurrentMessage();
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 6; m_uiSubState = 0; m_uiNextState = 2;
+            }
+            break;
+        }
+        case 10:
+        {
+            PS2MC_SetDisplayMessage(MC_eSavingGame, m_RequiredPhotoSize);
+            m_dirFound = -1;
+            if (sceeMemCardFindDir(m_uiPort, m_uiSlot, m_aDirExtension, &m_dirFound, 0) == E_FAIL || m_MemoryCardInternalStatus.type == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eErrorWhileSaving, m_RequiredPhotoSize);
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 3; m_uiSubState = 0; m_uiNextState = 6;
+            }
+            else
+            {
+                m_uiSubState++;
+            }
+            break;
+        }
+        case 11:
+        {
+            sceeMemCardGetFunctionResult(3, &functionResult);
+            if (functionResult.success == E_SUCCESS)
+            {
+                m_uiSubState++;
+            }
+            else if (functionResult.success == E_FAIL || m_MemoryCardInternalStatus.type == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eErrorWhileSaving, m_RequiredPhotoSize);
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 3; m_uiSubState = 0; m_uiNextState = 6;
+            }
+            break;
+        }
+        case 12:
+        {
+            if (m_dirFound)
+            {
+                m_uiSubState += 2;
+            }
+            else
+            {
+                sceeMemCardCreateDir(m_uiPort, m_uiSlot, m_aDirExtension);
+                m_uiSubState++;
+            }
+            break;
+        }
+        case 13:
+        {
+            sceeMemCardGetFunctionResult(4, &functionResult);
+            if (functionResult.success == E_SUCCESS)
+            {
+                m_uiSubState++;
+            }
+            else if (functionResult.success == E_FAIL || m_MemoryCardInternalStatus.type == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eErrorWhileSaving, m_RequiredPhotoSize);
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 3; m_uiSubState = 0; m_uiNextState = 6;
+            }
+            break;
+        }
+        case 14:
+        {
+            FlushCache(0);
+            if (sceeMemCardSaveFile(m_uiPort, m_uiSlot, m_aDirExtension, m_aFullFileName, (void*)m_pDataToSave, 0x14004) == 0L || m_MemoryCardInternalStatus.type == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eErrorWhileSaving, m_RequiredPhotoSize);
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 3; m_uiSubState = 0; m_uiNextState = 6;
+            }
+            else
+            {
+                m_uiSubState++;
+            }
+            break;
+        }
+        case 15:
+        {
+            sceeMemCardGetFunctionResult(9, &functionResult);
+            if (functionResult.success == E_SUCCESS)
+            {
+                m_uiSubState++;
+            }
+            else if (functionResult.success == E_FAIL || m_MemoryCardInternalStatus.type == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eErrorWhileSaving, m_RequiredPhotoSize);
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 3; m_uiSubState = 0; m_uiNextState = 6;
+            }
+            break;
+        }
+        case 16:
+        {
+            CreateIconFile();
+            FlushCache(0);
+            if (sceeMemCardSaveFile(m_uiPort, m_uiSlot, m_aDirExtension, (char*)PS2MC_g_IconDesc[0].szFileNameSave, m_pUserIconFile, 0x8158) == 0L || m_MemoryCardInternalStatus.type == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eErrorWhileSaving, m_RequiredPhotoSize);
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 3; m_uiSubState = 0; m_uiNextState = 6;
+            }
+            else
+            {
+                m_uiSubState++;
+            }
+            break;
+        }
+        case 17:
+        {
+            sceeMemCardGetFunctionResult(9, &functionResult);
+            if (functionResult.success == E_SUCCESS)
+            {
+                m_uiSubState = 22;
+            }
+            else if (functionResult.success == E_FAIL || m_MemoryCardInternalStatus.type == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eErrorWhileSaving, m_RequiredPhotoSize);
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 3; m_uiSubState = 0; m_uiNextState = 6;
+            }
+            break;
+        }
+        case 22:
+        {
+            FillIconSys(m_aGameName, 1);
+            FlushCache(0);
+            if (sceeMemCardSaveFile(m_uiPort, m_uiSlot, m_aDirExtension, "icon.sys", &m_iconSys, 0x3C4) == 0L || m_MemoryCardInternalStatus.type == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eErrorWhileSaving, m_RequiredPhotoSize);
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 3; m_uiSubState = 0; m_uiNextState = 6;
+            }
+            else
+            {
+                m_uiSubState++;
+            }
+            break;
+        }
+        case 23:
+        {
+            sceeMemCardGetFunctionResult(9, &functionResult);
+            if (functionResult.success == E_SUCCESS)
+            {
+                PS2MC_RemoveCurrentMessage();
+                printf("Saved with success\n");
+                m_Flags[5] = 1;
+                m_bWillHaveToRestoreMenu2D = 2;
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+            }
+            else if (functionResult.success == E_FAIL || m_MemoryCardInternalStatus.type == 0)
+            {
+                PS2MC_SetDisplayMessage(MC_eErrorWhileSaving, m_RequiredPhotoSize);
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 3; m_uiSubState = 0; m_uiNextState = 6;
+            }
+            break;
+        }
+    }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 4905–4910 */
+/* addr: 0x0032b4b0  size: 96 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4905
+ *   +0x0004 -> line 4906
+ *   +0x0008 -> line 4905
+ *   +0x000c -> line 4906
+ *   +0x0014 -> line 4908
+ *   +0x0028 -> line 4909
+ *   +0x002c -> line 4908
+ *   +0x0050 -> line 4909
+ *   +0x0058 -> line 4910
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void C_PS2MC_Manager::CalculateCheckSum(char* pDataOrg, unsigned int ulSize)
 {
     unsigned char* pData;
@@ -2970,11 +4771,98 @@ void C_PS2MC_Manager::CalculateCheckSum(char* pDataOrg, unsigned int ulSize)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 4961–4977 */
+/* addr: 0x0032b2f0  size: 448 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4961
+ *   +0x0018 -> line 4962
+ *   +0x0048 -> line 4964
+ *   +0x004c -> line 4963
+ *   +0x0050 -> line 4964
+ *   +0x0054 -> line 4963
+ *   +0x005c -> line 4964
+ *   +0x0060 -> line 4963
+ *   +0x0064 -> line 4964
+ *   +0x0070 -> line 4965
+ *   +0x00cc -> line 4966
+ *   +0x00d0 -> line 4968
+ *   +0x00d4 -> line 4966
+ *   +0x00e4 -> line 4968
+ *   +0x00e8 -> line 4966
+ *   +0x00ec -> line 4968
+ *   +0x00f0 -> line 4966
+ *   +0x012c -> line 4968
+ *   +0x0134 -> line 4969
+ *   +0x0148 -> line 4970
+ *   +0x0158 -> line 4971
+ *   +0x016c -> line 4972
+ *   +0x0180 -> line 4973
+ *   +0x0190 -> line 4974
+ *   +0x0198 -> line 4975
+ *   +0x019c -> line 4976
+ *   +0x01a0 -> line 4975
+ *   +0x01a4 -> line 4976
+ *   +0x01a8 -> line 4977
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void C_PS2MC_Manager::SaveGame(char* _pData, char* _pFileName)
 {
-    /* TODO: decompile from asm/... */
+    if (!strcmp(_pFileName, "PSONE")) GLI_g_ChristianSlaterMode = 1; else GLI_g_ChristianSlaterMode = 0;
+    m_pDataToSave = (int)m_pLoadSaveBuffer;
+    memcpy(m_pLoadSaveBuffer, _pData, 0x3DA);
+    unsigned char* pSum = m_pLoadSaveBuffer; m_ulCheckSum = 0; int i = 0x3DA; if (i != 0) { do { m_ulCheckSum = m_ulCheckSum * 3 + ((i & 1) + 1) * (*pSum++ + (i & 1)); } while (--i != 0); }
+    char* pData = (char*)m_pLoadSaveBuffer; pData[0x3DA] = m_ulCheckSum >> 24; pData[0x3DB] = m_ulCheckSum >> 16; pData[0x3DC] = m_ulCheckSum >> 8; pData[0x3DD] = m_ulCheckSum;
+    m_Flags[0] = 0;
+    strcpy(m_aGameName, _pFileName);
+    strcpy(m_aDirExtension, "S");
+    Strcat(m_aDirExtension, _pFileName);
+    strcpy(m_aFullFileName, m_aFilePrefix);
+    Strcat(m_aFullFileName, "S");
+    Strcat(m_aFullFileName, _pFileName);
+    fn_vInterruptMenu2D(1);
+    m_uiCurrentSavingProcedure = (unsigned char)STATE_SAVE_GAME;
+    m_uiIdleState = (unsigned char)STATE_SAVE_ARE_YOU_SURE;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5037–5062 */
+/* addr: 0x0032b130  size: 444 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 5037
+ *   +0x001c -> line 5038
+ *   +0x0028 -> line 5041
+ *   +0x002c -> line 5040
+ *   +0x0030 -> line 5041
+ *   +0x0038 -> line 5043
+ *   +0x003c -> line 5042
+ *   +0x0040 -> line 5043
+ *   +0x0044 -> line 5042
+ *   +0x004c -> line 5043
+ *   +0x0050 -> line 5042
+ *   +0x0054 -> line 5043
+ *   +0x0060 -> line 5044
+ *   +0x00bc -> line 5045
+ *   +0x00c0 -> line 5047
+ *   +0x00c4 -> line 5045
+ *   +0x00d4 -> line 5047
+ *   +0x00d8 -> line 5045
+ *   +0x00dc -> line 5047
+ *   +0x00e0 -> line 5045
+ *   +0x011c -> line 5047
+ *   +0x0124 -> line 5048
+ *   +0x0138 -> line 5049
+ *   +0x0148 -> line 5050
+ *   +0x015c -> line 5051
+ *   +0x0170 -> line 5052
+ *   +0x0180 -> line 5053
+ *   +0x0184 -> line 5054
+ *   +0x018c -> line 5057
+ *   +0x0198 -> line 5059
+ *   +0x01a0 -> line 5060
+ *   +0x01a4 -> line 5062
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void C_PS2MC_Manager::AutoSaveGame(char* _pData, char* _pFileName)
 {
     unsigned char* pData;
@@ -3005,6 +4893,18 @@ void C_PS2MC_Manager::AutoSaveGame(char* _pData, char* _pFileName)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5203–5209 */
+/* addr: 0x0032b0d0  size: 88 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 5203
+ *   +0x0018 -> line 5205
+ *   +0x0030 -> line 5208
+ *   +0x0038 -> line 5205
+ *   +0x003c -> line 5208
+ *   +0x0044 -> line 5209
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned int PS2MC_fn_uiInit(unsigned int Port, unsigned int Slot)
 {
     C_PS2MC_Manager* pManager = new C_PS2MC_Manager;
@@ -3012,11 +4912,26 @@ unsigned int PS2MC_fn_uiInit(unsigned int Port, unsigned int Slot)
     return pManager->Init(Port, Slot);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5223–5223 */
+/* addr: 0x0032b0c0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 5223
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PS2MC_fn_vUpdateStatus(void)
 {
     ((C_PS2MC_Manager*)PS2MC_g_Manager)->UpdateStatus();
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5235–5236 */
+/* addr: 0x0032b090  size: 40 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 5235
+ *   +0x0020 -> line 5236
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PS2MC_fn_vStartMachine(void)
 {
     C_PS2MC_Manager* pManager = (C_PS2MC_Manager*)PS2MC_g_Manager;
@@ -3026,6 +4941,14 @@ void PS2MC_fn_vStartMachine(void)
     pManager->m_uiNextState = (unsigned char)STATE_IDLE;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5260–5261 */
+/* addr: 0x0032b070  size: 20 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 5260
+ *   +0x000c -> line 5261
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PS2MC_fn_vDoBootCheck(void)
 {
     C_PS2MC_Manager* pManager = (C_PS2MC_Manager*)PS2MC_g_Manager;
@@ -3033,6 +4956,22 @@ void PS2MC_fn_vDoBootCheck(void)
     pManager->m_uiIdleState = 5;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5274–5291 */
+/* addr: 0x0032b000  size: 112 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 5274
+ *   +0x0004 -> line 5275
+ *   +0x0008 -> line 5274
+ *   +0x0018 -> line 5275
+ *   +0x0020 -> line 5277
+ *   +0x0030 -> line 5282
+ *   +0x0040 -> line 5284
+ *   +0x004c -> line 5285
+ *   +0x0054 -> line 5288
+ *   +0x005c -> line 5291
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PS2MC_fn_vSaveGame(char* _pData, char* _pFileName, unsigned int SaveGameSizeInBytes)
 {
     if (SaveGameSizeInBytes != 986)
@@ -3044,16 +4983,50 @@ void PS2MC_fn_vSaveGame(char* _pData, char* _pFileName, unsigned int SaveGameSiz
         pManager->SaveGame(_pData, _pFileName);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5327–5329 */
+/* addr: 0x0032af80  size: 128 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 5327
+ *   +0x0004 -> line 5328
+ *   +0x0008 -> line 5327
+ *   +0x000c -> line 5328
+ *   +0x0010 -> line 5327
+ *   +0x0014 -> line 5328
+ *   +0x0070 -> line 5329
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PS2MC_fn_vGetMemoryCardFileHeaders(MC_tdstFileEntry* _p_stEntryArray, unsigned int _NbMaxEntries, unsigned int* _p_uiNbFilesFound, int bFast)
 {
     C_PS2MC_Manager* pManager = (C_PS2MC_Manager*)PS2MC_g_Manager; pManager->m_FastGetSavedGamesHeaders = bFast; pManager->m_pCurrentFileEntryArray = _p_stEntryArray; pManager->m_uiCurrentNbEntriesInArray = _NbMaxEntries; pManager->m_uiNextEntry = 0; pManager->m_Flags[2] = 0; pManager->m_p_uiNbFilesFound = (int)_p_uiNbFilesFound; *(unsigned int*)pManager->m_p_uiNbFilesFound = 0; fn_vInterruptMenu2D(1); pManager->m_uiIdleState = (unsigned char)STATE_GET_SAVED_GAMES_ENTRIES;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5345–5347 */
+/* addr: 0x0032af00  size: 116 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 5345
+ *   +0x0004 -> line 5346
+ *   +0x0008 -> line 5345
+ *   +0x000c -> line 5346
+ *   +0x0010 -> line 5345
+ *   +0x0014 -> line 5346
+ *   +0x0064 -> line 5347
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PS2MC_fn_vGetMemoryCardScreenShotsHeaders(MC_tdstFileEntry* _p_stEntryArray, unsigned int _NbMaxEntries, unsigned int* _p_uiNbFilesFound)
 {
     C_PS2MC_Manager* pManager = (C_PS2MC_Manager*)PS2MC_g_Manager; pManager->m_pCurrentFileEntryArray = _p_stEntryArray; pManager->m_uiCurrentNbEntriesInArray = _NbMaxEntries; pManager->m_uiNextEntry = 0; pManager->m_Flags[3] = 0; pManager->m_p_uiNbFilesFound = (int)_p_uiNbFilesFound; *(unsigned int*)pManager->m_p_uiNbFilesFound = 0; fn_vInterruptMenu2D(1); pManager->m_uiIdleState = (unsigned char)STATE_GET_SCREENSHOTS_ENTRIES;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5363–5364 */
+/* addr: 0x0032aee0  size: 28 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 5363
+ *   +0x0014 -> line 5364
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned int PS2MC_fn_iGetFunctionResult(PS2MC_tdstFunctionFlags FlagID)
 {
     char* pFlags;
@@ -3064,56 +5037,160 @@ unsigned int PS2MC_fn_iGetFunctionResult(PS2MC_tdstFunctionFlags FlagID)
     return ((unsigned int*)pFlags)[iIndex = (unsigned int)FlagID & 0xff];
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5374–5376 */
+/* addr: 0x0032ae90  size: 76 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 5374
+ *   +0x000c -> line 5375
+ *   +0x003c -> line 5376
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PS2MC_fn_vStopPrompts(void)
 {
     C_PS2MC_Manager* pManager = (C_PS2MC_Manager*)PS2MC_g_Manager; PS2MC_RemoveCurrentMessage(); pManager->m_bPromptIsOn = 0; if (pManager->m_bCurrentlyWarningAboutMCRemoval) { pManager->m_bCurrentlyWarningAboutMCRemoval = 0; pManager->m_bMemoryCardWasRemovedWhilePromptWasOff = 1; }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5388–5389 */
+/* addr: 0x0032ae50  size: 64 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 5388
+ *   +0x0038 -> line 5389
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PS2MC_fn_vEnablePrompts(void)
 {
     C_PS2MC_Manager* pManager = (C_PS2MC_Manager*)PS2MC_g_Manager; if (!pManager->m_bPromptIsOn) { pManager->m_bPromptIsOn = 1; pManager->m_MemoryCardInternalStatus.type = -10; pManager->m_uiState = (unsigned char)STATE_PROMPT_LAST_ERROR; pManager->m_uiSubState = 0; pManager->m_uiNextState = (unsigned char)STATE_IDLE; }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5403–5405 */
+/* addr: 0x0032acf0  size: 340 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 5403
+ *   +0x0004 -> line 5404
+ *   +0x0008 -> line 5403
+ *   +0x000c -> line 5404
+ *   +0x0010 -> line 5403
+ *   +0x0014 -> line 5404
+ *   +0x0018 -> line 5403
+ *   +0x001c -> line 5404
+ *   +0x0140 -> line 5405
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PS2MC_fn_vSaveScreenShot(char* _pData, char* _pFileName)
 {
     C_PS2MC_Manager* pManager = (C_PS2MC_Manager*)PS2MC_g_Manager; pManager->m_pDataToSave = (int)_pData; pManager->CalculateCheckSum((char*)pManager->m_pDataToSave, 0x14004); char* pData = (char*)pManager->m_pDataToSave; pData[0x14000] = pManager->m_ulCheckSum >> 24; pData[0x14001] = pManager->m_ulCheckSum >> 16; pData[0x14002] = pManager->m_ulCheckSum >> 8; pData[0x14003] = pManager->m_ulCheckSum; pManager->m_Flags[5] = 0; strcpy(pManager->m_aGameName, _pFileName); strcpy(pManager->m_aDirExtension, "P"); Strcat(pManager->m_aDirExtension, _pFileName); strcpy(pManager->m_aFullFileName, pManager->m_aFilePrefix); Strcat(pManager->m_aFullFileName, "P"); Strcat(pManager->m_aFullFileName, _pFileName); fn_vInterruptMenu2D(1); pManager->m_uiCurrentSavingProcedure = (unsigned char)STATE_SAVE_SCREENSHOT; pManager->m_uiIdleState = (unsigned char)STATE_SAVE_ARE_YOU_SURE;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5420–5421 */
+/* addr: 0x0032ace0  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 5420
+ *   +0x0004 -> line 5421
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void* PS2MC_GetScreenShotPreviewData(void)
 {
     return (void*)((char*)PS2MC_g_Manager + 0x580);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5434–5436 */
+/* addr: 0x0032ac10  size: 208 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 5434
+ *   +0x0004 -> line 5435
+ *   +0x0008 -> line 5434
+ *   +0x000c -> line 5435
+ *   +0x0010 -> line 5434
+ *   +0x0018 -> line 5435
+ *   +0x00bc -> line 5436
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PS2MC_fn_vLoadGame(char* _pFileName)
 {
     C_PS2MC_Manager* pManager = (C_PS2MC_Manager*)PS2MC_g_Manager; if (!strcmp(_pFileName, "PSONE")) GLI_g_ChristianSlaterMode = 1; else GLI_g_ChristianSlaterMode = 0; pManager->m_Flags[6] = 0; strcpy(pManager->m_aGameName, _pFileName); strcpy(pManager->m_aDirExtension, "S"); Strcat(pManager->m_aDirExtension, _pFileName); strcpy(pManager->m_aFullFileName, pManager->m_aFilePrefix); Strcat(pManager->m_aFullFileName, "S"); Strcat(pManager->m_aFullFileName, _pFileName); fn_vInterruptMenu2D(1); pManager->m_uiIdleState = (unsigned char)STATE_LOAD_GAME;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5447–5449 */
+/* addr: 0x0032ab40  size: 196 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 5447
+ *   +0x0004 -> line 5448
+ *   +0x0008 -> line 5447
+ *   +0x0020 -> line 5448
+ *   +0x00ac -> line 5449
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PS2MC_fn_vLoadScreenShot(char* _pFileName, char* _pBuffer)
 {
     C_PS2MC_Manager* pManager = (C_PS2MC_Manager*)PS2MC_g_Manager; pManager->m_Flags[7] = 0; strcpy(pManager->m_aGameName, _pFileName); strcpy(pManager->m_aDirExtension, "P"); Strcat(pManager->m_aDirExtension, _pFileName); strcpy(pManager->m_aFullFileName, pManager->m_aFilePrefix); Strcat(pManager->m_aFullFileName, "P"); Strcat(pManager->m_aFullFileName, _pFileName); pManager->m_pScreenShotLoadBuffer = (int)_pBuffer; fn_vInterruptMenu2D(1); pManager->m_uiIdleState = (unsigned char)STATE_LOAD_SCREENSHOT;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5459–5460 */
+/* addr: 0x0032ab30  size: 16 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 5459
+ *   +0x0008 -> line 5460
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void* PS2MC_fn_pGetLoadGameBuffer(void)
 {
     return (void*)((char*)PS2MC_g_Manager + 0xA515);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5474–5475 */
+/* addr: 0x0032aaf0  size: 64 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 5474
+ *   +0x0038 -> line 5475
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int PS2MC_GetCurrentMemoryCardStatus(void)
 {
     C_PS2MC_Manager* pManager = (C_PS2MC_Manager*)PS2MC_g_Manager; if (*(int*)&pManager->m_MemoryCardInternalStatus != -10) return pManager->m_MemoryCardInternalStatus.type; else return pManager->m_PreviousMemoryCardInternalStatus.type;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5489–5490 */
+/* addr: 0x0032aae0  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 5489
+ *   +0x0004 -> line 5490
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int PS2MC_HasToCheckMCFull(void)
 {
     return ((C_PS2MC_Manager*)PS2MC_g_Manager)->m_bNeedToCheckAndWarnForMCFull;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5512–5514 */
+/* addr: 0x0032aad0  size: 16 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 5512
+ *   +0x0008 -> line 5514
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PS2MC_vActivateMemoryCard(void)
 {
     ((C_PS2MC_Manager*)PS2MC_g_Manager)->m_bActivated = 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5519–5520 */
+/* addr: 0x0032aab0  size: 28 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 5519
+ *   +0x0014 -> line 5520
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PS2MC_vClearFlag(int FlagID)
 {
     /* Not original source, needs cleaning up: the scaled-index assignment keeps
@@ -3121,6 +5198,14 @@ void PS2MC_vClearFlag(int FlagID)
     *(int *)((char *)&((C_PS2MC_Manager*)PS2MC_g_Manager)->m_Flags + (FlagID *= 4)) = 0xFFFFFFFF;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5526–5527 */
+/* addr: 0x0032aa90  size: 20 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 5526
+ *   +0x000c -> line 5527
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PS2MC_DisableAutoSave(void)
 {
     C_PS2MC_Manager* pManager = (C_PS2MC_Manager*)PS2MC_g_Manager;
@@ -3129,11 +5214,33 @@ void PS2MC_DisableAutoSave(void)
     pManager->m_bAutoSaveWasntEvenTried = 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5533–5535 */
+/* addr: 0x0032aa80  size: 16 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 5533
+ *   +0x0008 -> line 5535
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int fn_bAutoSaveFinished(void)
 {
     return ((C_PS2MC_Manager*)PS2MC_g_Manager)->m_Flags[1] != 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5542–5554 */
+/* addr: 0x0032a9c0  size: 184 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 5542
+ *   +0x000c -> line 5543
+ *   +0x0018 -> line 5546
+ *   +0x0020 -> line 5545
+ *   +0x0024 -> line 5546
+ *   +0x0088 -> line 5548
+ *   +0x0094 -> line 5552
+ *   +0x00a8 -> line 5554
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int PS2MC_fn_bHasBootCheckBeenDoneYet(void)
 {
     if (g_GameHasNotStartedTheFirstBootCheck)
@@ -3145,6 +5252,16 @@ int PS2MC_fn_bHasBootCheckBeenDoneYet(void)
     return ((C_PS2MC_Manager*)PS2MC_g_Manager)->m_bFirstBootCheckHasBeenDone;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 158–163 */
+/* addr: 0x00327e70  size: 68 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 158
+ *   +0x0014 -> line 159
+ *   +0x001c -> line 162
+ *   +0x003c -> line 163
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void TXT_PauseGameIWantToDrawThisStringNumber(int _iStringNumber)
 {
     _JFFTXT_* p;

@@ -292,6 +292,95 @@ COL_tdstGVForCollision_ COL_g_stGVForCol;
 COL_tdstCollisionCase_ COL_g_stCollisionCase[75];
 int COL_g_lMaxNumberOfCollisions;
 
+/* Reconstruction notes:
+ * - The retail parameter list is (float _xT, 3 vectors, 2 game materials, 2
+ *   shorts, an int handle, a short, 2 vectors, a float): with the o32 hard-float
+ *   ABI _xT arrives in f12 and _xSphereRadius in f13, the four pointers in
+ *   a0-a3, the static material in t0, the two geometry entities in t1/t2, the
+ *   parameter handle in t3 and the rest on the stack (0xc0/0xc8/0xd0(sp)).
+ * - GMT_fn_hGetCollideMaterial returns a pointer but the retail compares it
+ *   with -1, so the tests use an explicit -1 cast.
+ * - The retail keeps a 64-bit copy of _xStaticGeomEntity (daddu s0,v1,zero)
+ *   and compares it with 7 and 8; the case loop compares the case's
+ *   xStaticGeomEntity against it.
+ * - The two epsilon tests use 0.001f for the collision time and 0.005f for the
+ *   hit/normal components, and the abs.s is emitted in place on the difference,
+ *   so the comparison uses a statement-level asm (MWCC cannot emit abs.s from
+ *   plain C).
+ * - The obsolete-case removal block is duplicated in the retail (two copies of
+ *   the same memmove + collided-edge fix-up code), so the source has it twice.
+ * - The collided-edge index fix-up only increments the edges whose Ind is
+ *   greater than or equal to the removed case index; the retail's branch shape
+ *   ('slt' + 'bnez' to the loop increment) comes from a 'continue' in the loop.
+ * - The case index of the collided edge is the unsigned... no: the signed
+ *   byte offset of the case from COL_g_stCollisionCaseReal divided by the
+ *   case size (the retail uses the signed mult/mfhi division sequence).
+ * - TODO: the remaining residual is MWCC's branch polarity and register
+ *   allocation, not source shape: the candidate has the retail structure and
+ *   all 45 relocations, but 382 of 1728 bytes still differ.  The first
+ *   difference (+0x6c) is the material check, where the retail branches to the
+ *   case-adding code with 'beq (id & 4) == 4' while MWCC branches to the
+ *   return with 'bne'; the rest is the s0/s1/s2 and a2/a3 allocation and the
+ *   order of the two instructions in the element-counting loop.
+ */
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void COL_fn_vAddInStaticCollisionTable(float _xT, MTH3D_tdstVector_* _p_stTranslation, MTH3D_tdstVector_* _p_stHit, MTH3D_tdstVector_* _p_stNormal, GMT_tdstGameMaterial_* _hDynMat, GMT_tdstGameMaterial_* _hStatMat, short _xDynamicGeomEntity, short _xStaticGeomEntity, void* _p_vParameter1, short _sParameter2, MTH3D_tdstVector_* _p_stMovement, float _xSphereRadius, MTH3D_tdstVector_* _p_stEndPosition);
+void COL_fn_vGetCollidedEgde(int Ind, MTH3D_tdstVector_* _pV1, MTH3D_tdstVector_* _pV2, int* i);
+int COL_fn_iNbCollidedEdges(void);
+void COL_fn_vResetNbCollidedEdges(void);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollGOCo.c lines 71–71 */
+/* addr: 0x0024da10  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 71
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void COL_fn_vResetNbCollidedEdges(void)
+{
+    g_NbCollidedEdges = 0;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollGOCo.c lines 76–76 */
+/* addr: 0x0024da00  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 76
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int COL_fn_iNbCollidedEdges(void)
+{
+    return g_NbCollidedEdges;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollGOCo.c lines 80–83 */
+/* addr: 0x0024d9a0  size: 96 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 80
+ *   +0x0014 -> line 82
+ *   +0x0018 -> line 80
+ *   +0x001c -> line 82
+ *   +0x0020 -> line 80
+ *   +0x0024 -> line 82
+ *   +0x0028 -> line 80
+ *   +0x003c -> line 81
+ *   +0x0054 -> line 82
+ *   +0x0058 -> line 83
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void COL_fn_vGetCollidedEgde(int Ind, MTH3D_tdstVector_* _pV1, MTH3D_tdstVector_* _pV2, int* i)
+{
+{
+    MTH3D_M_vCopyVector(_pV1, &g_aCollidedEdges[Ind].A);
+    MTH3D_M_vCopyVector(_pV2, &g_aCollidedEdges[Ind].B);
+    *i = g_aCollidedEdges[Ind].Ind;
+}
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollGOCo.c lines 120–267 */
 /* addr: 0x0024d2e0  size: 1728 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -360,97 +449,6 @@ int COL_g_lMaxNumberOfCollisions;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-/* Reconstruction notes:
- * - The retail parameter list is (float _xT, 3 vectors, 2 game materials, 2
- *   shorts, an int handle, a short, 2 vectors, a float): with the o32 hard-float
- *   ABI _xT arrives in f12 and _xSphereRadius in f13, the four pointers in
- *   a0-a3, the static material in t0, the two geometry entities in t1/t2, the
- *   parameter handle in t3 and the rest on the stack (0xc0/0xc8/0xd0(sp)).
- * - GMT_fn_hGetCollideMaterial returns a pointer but the retail compares it
- *   with -1, so the tests use an explicit -1 cast.
- * - The retail keeps a 64-bit copy of _xStaticGeomEntity (daddu s0,v1,zero)
- *   and compares it with 7 and 8; the case loop compares the case's
- *   xStaticGeomEntity against it.
- * - The two epsilon tests use 0.001f for the collision time and 0.005f for the
- *   hit/normal components, and the abs.s is emitted in place on the difference,
- *   so the comparison uses a statement-level asm (MWCC cannot emit abs.s from
- *   plain C).
- * - The obsolete-case removal block is duplicated in the retail (two copies of
- *   the same memmove + collided-edge fix-up code), so the source has it twice.
- * - The collided-edge index fix-up only increments the edges whose Ind is
- *   greater than or equal to the removed case index; the retail's branch shape
- *   ('slt' + 'bnez' to the loop increment) comes from a 'continue' in the loop.
- * - The case index of the collided edge is the unsigned... no: the signed
- *   byte offset of the case from COL_g_stCollisionCaseReal divided by the
- *   case size (the retail uses the signed mult/mfhi division sequence).
- * - TODO: the remaining residual is MWCC's branch polarity and register
- *   allocation, not source shape: the candidate has the retail structure and
- *   all 45 relocations, but 382 of 1728 bytes still differ.  The first
- *   difference (+0x6c) is the material check, where the retail branches to the
- *   case-adding code with 'beq (id & 4) == 4' while MWCC branches to the
- *   return with 'bne'; the rest is the s0/s1/s2 and a2/a3 allocation and the
- *   order of the two instructions in the element-counting loop.
- */
-
-/* The functions below are in their original source-line order (retail
- * emits them in reverse); these prototypes keep earlier calls valid. */
-void COL_fn_vAddInStaticCollisionTable(float _xT, MTH3D_tdstVector_* _p_stTranslation, MTH3D_tdstVector_* _p_stHit, MTH3D_tdstVector_* _p_stNormal, GMT_tdstGameMaterial_* _hDynMat, GMT_tdstGameMaterial_* _hStatMat, short _xDynamicGeomEntity, short _xStaticGeomEntity, void* _p_vParameter1, short _sParameter2, MTH3D_tdstVector_* _p_stMovement, float _xSphereRadius, MTH3D_tdstVector_* _p_stEndPosition);
-void COL_fn_vGetCollidedEgde(int Ind, MTH3D_tdstVector_* _pV1, MTH3D_tdstVector_* _pV2, int* i);
-int COL_fn_iNbCollidedEdges(void);
-void COL_fn_vResetNbCollidedEdges(void);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollGOCo.c lines 80–83 */
-/* addr: 0x0024d9a0  size: 96 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 80
- *   +0x0014 -> line 82
- *   +0x0018 -> line 80
- *   +0x001c -> line 82
- *   +0x0020 -> line 80
- *   +0x0024 -> line 82
- *   +0x0028 -> line 80
- *   +0x003c -> line 81
- *   +0x0054 -> line 82
- *   +0x0058 -> line 83
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollGOCo.c lines 76–76 */
-/* addr: 0x0024da00  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 76
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollGOCo.c lines 71–71 */
-/* addr: 0x0024da10  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 71
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-void COL_fn_vResetNbCollidedEdges(void)
-{
-    g_NbCollidedEdges = 0;
-}
-
-int COL_fn_iNbCollidedEdges(void)
-{
-    return g_NbCollidedEdges;
-}
-
-void COL_fn_vGetCollidedEgde(int Ind, MTH3D_tdstVector_* _pV1, MTH3D_tdstVector_* _pV2, int* i)
-{
-{
-    MTH3D_M_vCopyVector(_pV1, &g_aCollidedEdges[Ind].A);
-    MTH3D_M_vCopyVector(_pV2, &g_aCollidedEdges[Ind].B);
-    *i = g_aCollidedEdges[Ind].Ind;
-}
-}
-
 void COL_fn_vAddInStaticCollisionTable(float _xT, MTH3D_tdstVector_* _p_stTranslation, MTH3D_tdstVector_* _p_stHit, MTH3D_tdstVector_* _p_stNormal, GMT_tdstGameMaterial_* _hDynMat, GMT_tdstGameMaterial_* _hStatMat, short _xDynamicGeomEntity, short _xStaticGeomEntity, void* _p_vParameter1, short _sParameter2, MTH3D_tdstVector_* _p_stMovement, float _xSphereRadius, MTH3D_tdstVector_* _p_stEndPosition)
 {
     long lStaticGeomEntity;

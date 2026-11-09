@@ -1342,34 +1342,6 @@ unsigned char g_ucZDCVisible;
 int g_hStaticCollisionGeoObj;
 int g_hCollisionGeoObj;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 70–90 */
-/* addr: 0x0026ac50  size: 224 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 70
- *   +0x0018 -> line 75
- *   +0x0020 -> line 77
- *   +0x0028 -> line 78
- *   +0x0034 -> line 80
- *   +0x0054 -> line 81
- *   +0x0058 -> line 82
- *   +0x0078 -> line 83
- *   +0x007c -> line 85
- *   +0x0080 -> line 88
- *   +0x0084 -> line 87
- *   +0x0088 -> line 85
- *   +0x008c -> line 86
- *   +0x0090 -> line 88
- *   +0x0094 -> line 87
- *   +0x0098 -> line 88
- *   +0x00a0 -> line 85
- *   +0x00a8 -> line 86
- *   +0x00b0 -> line 87
- *   +0x00b4 -> line 88
- *   +0x00bc -> line 89
- *   +0x00cc -> line 90
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void MAT_fn_vSetIdentity(MAT_tdstTransformation_* _hTransform);
 void MAT_fn_vSetRotationVectors(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stVecI, MTH3D_tdstVector_* _p_stVecJ, MTH3D_tdstVector_* _p_stVecK);
 void MAT_fn_vCompose(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hA, MAT_tdstTransformation_* _hB);
@@ -1410,78 +1382,17 @@ int fn_iCmpZoneSetIndex(void* p_stZSE1, void* p_stZSE2);
 void fn_vUpdateCurrentActivationForCharacter(HIE_tdstSuperObject_* _hCharacter);
 GMT_tdstGameMaterial_* fn_hIsTypeExistsInGeoObj(COL_tdstCollideObject_* _hGeoObj, unsigned short _wMaterialMask);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 2673–2682 */
-/* addr: 0x0026ad30  size: 48 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2673
- *   +0x0008 -> line 2676
- *   +0x0010 -> line 2679
- *   +0x0024 -> line 2682
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 tdstZdxList_* CS_fn_hGetZdxList(unsigned char ucZoneType, HIE_tdstSuperObject_* hSuperObj);
 
 #pragma auto_inline on
 
 #pragma auto_inline reset
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 2349–2393 */
-/* addr: 0x0026ad60  size: 132 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2349
- *   +0x0004 -> line 2353
- *   +0x0008 -> line 2349
- *   +0x000c -> line 2353
- *   +0x0018 -> line 2357
- *   +0x0028 -> line 2360
- *   +0x0038 -> line 2369
- *   +0x0040 -> line 2374
- *   +0x0050 -> line 2378
- *   +0x0060 -> line 2381
- *   +0x0070 -> line 2389
- *   +0x0078 -> line 2393
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void COL_vCreateCollideObject(COL_tdstCollideObject_** p_hObject, short xNbPoints, short xNbElements);
 void COL_vCreateElementSpheres(COL_tdstCollideObject_* hObject, short* p_hElement, short xNbSpheres);
 void COL_vCreateElementAlignedBoxes(COL_tdstCollideObject_* hObject, short* p_hElement, short xNbAlignedBoxes);
 void COL_vEndModifyObject(COL_tdstCollideObject_* hObject);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 2290–2344 */
-/* addr: 0x0026adf0  size: 684 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2290
- *   +0x0038 -> line 2304
- *   +0x005c -> line 2305
- *   +0x0088 -> line 2308
- *   +0x0090 -> line 2310
- *   +0x00a0 -> line 2312
- *   +0x00c4 -> line 2313
- *   +0x00e0 -> line 2314
- *   +0x00f8 -> line 2315
- *   +0x0120 -> line 2317
- *   +0x0128 -> line 2321
- *   +0x0138 -> line 2322
- *   +0x0154 -> line 2323
- *   +0x015c -> line 2325
- *   +0x017c -> line 2326
- *   +0x0198 -> line 2329
- *   +0x01b8 -> line 2330
- *   +0x01d4 -> line 2331
- *   +0x01ec -> line 2332
- *   +0x01f0 -> line 2334
- *   +0x01f8 -> line 2335
- *   +0x0218 -> line 2337
- *   +0x021c -> line 2338
- *   +0x0238 -> line 2340
- *   +0x0268 -> line 2342
- *   +0x0278 -> line 2343
- *   +0x027c -> line 2344
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 tdstZoneSetList_* fn_hGetCurrentZoneSetOfType(unsigned char _ucZoneType, tdstCollSet_* _hCollSet);
 unsigned int CS_fn_ulGetPrivilegedActivationZoneInCollSet(unsigned char _ucZoneType, tdstCollSet_* _hCollSet);
 unsigned char CS_fn_eGetPrivilegedActivationZone(unsigned char _ucZoneType, tdstCollSet_* _hCollSet, short _wIndex);
@@ -1493,72 +1404,11 @@ inline tdstZoneSetList_* ZDX_hGetZoneSet(HIE_tdstSuperObject_* _hCharacter, unsi
     return _hCharacter->hLinkedObject.p_stCharacter->h_CollSet ? fn_hGetCurrentZoneSetOfType(_ucType, _hCharacter->hLinkedObject.p_stCharacter->h_CollSet) : NULL;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 2279–2279 */
-/* addr: 0x0026b0a0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2279
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 2274–2274 */
-/* addr: 0x0026b0b0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2274
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 2173–2195 */
-/* addr: 0x0026b0c0  size: 352 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2173
- *   +0x0028 -> line 2178
- *   +0x002c -> line 2181
- *   +0x0034 -> line 2183
- *   +0x00f8 -> line 2184
- *   +0x0100 -> line 2188
- *   +0x0118 -> line 2189
- *   +0x0120 -> line 2191
- *   +0x0138 -> line 2194
- *   +0x0140 -> line 2195
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 COL_tdstCollideObject_* fn_hIsThisZoneActive(HIE_tdstSuperObject_* _hCharacter, unsigned char _ucZoneType, unsigned char _ucZoneNumber);
 tdstPhysicalCollSet_* PO_fn_hGetCollideSet(PO_tdstPhysicalObject_* _hPhysicalObject);
 COL_tdstCollideObject_* PCS_fn_hGetZddGeoObjOfPhysicalCollSet(tdstPhysicalCollSet_* _hPhyCollSet);
 void fn_vDetectAllObjectsInThisModule(HIE_tdstSuperObject_* _hCharacter, COL_tdstCollideObject_* _hModule, MAT_tdstTransformation_* _p_stMatrix, HIE_tdstSuperObject_** _p_hSuperObjTable, int _lMaxNumberOfObjects, int* _lCurrentNumberOfObjects);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 2091–2146 */
-/* addr: 0x0026b220  size: 616 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2091
- *   +0x0044 -> line 2099
- *   +0x0064 -> line 2101
- *   +0x0068 -> line 2102
- *   +0x0070 -> line 2104
- *   +0x0098 -> line 2106
- *   +0x00e8 -> line 2108
- *   +0x00f8 -> line 2110
- *   +0x0108 -> line 2117
- *   +0x0118 -> line 2119
- *   +0x0128 -> line 2121
- *   +0x0154 -> line 2123
- *   +0x0164 -> line 2125
- *   +0x0178 -> line 2127
- *   +0x017c -> line 2128
- *   +0x01a4 -> line 2130
- *   +0x01f8 -> line 2132
- *   +0x0208 -> line 2134
- *   +0x0218 -> line 2140
- *   +0x0224 -> line 2143
- *   +0x0228 -> line 2144
- *   +0x0234 -> line 2145
- *   +0x0238 -> line 2146
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 HIE_tdstSuperObject_* fn_h_SectInfoGetCurrentSector(tdstSectInfo_* h_SectInfo);
 void MAT_fn_vInvert(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hSource);
 void MAT_fn_vApplyOnVertex(MTH3D_tdstVector_* VectDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* VectA);
@@ -1576,286 +1426,23 @@ inline unsigned char fn_bIsCharacterInGeoObj(HIE_tdstSuperObject_* _hCharacter, 
     return INT_fn_bGetInclusionPointInCollideObject(&stPoint, _hGeoObj);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 1961–2039 */
-/* addr: 0x0026b510  size: 740 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1961
- *   +0x001c -> line 1984
- *   +0x0020 -> line 1961
- *   +0x0030 -> line 1985
- *   +0x0054 -> line 1986
- *   +0x0064 -> line 1987
- *   +0x0080 -> line 1988
- *   +0x0088 -> line 1990
- *   +0x00a8 -> line 1991
- *   +0x00c8 -> line 1994
- *   +0x00e8 -> line 1995
- *   +0x00f0 -> line 1997
- *   +0x0150 -> line 1998
- *   +0x0158 -> line 2002
- *   +0x0160 -> line 2003
- *   +0x0180 -> line 2005
- *   +0x0184 -> line 2006
- *   +0x01a0 -> line 2008
- *   +0x01d0 -> line 2010
- *   +0x01dc -> line 2011
- *   +0x01e4 -> line 2013
- *   +0x01f8 -> line 2016
- *   +0x0200 -> line 2019
- *   +0x0208 -> line 2022
- *   +0x0218 -> line 2025
- *   +0x0220 -> line 2026
- *   +0x0228 -> line 2028
- *   +0x0234 -> line 2029
- *   +0x023c -> line 2031
- *   +0x02a0 -> line 2032
- *   +0x02a8 -> line 2036
- *   +0x02ac -> line 2037
- *   +0x02b8 -> line 2038
- *   +0x02bc -> line 2039
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 1942–1950 */
-/* addr: 0x0026b800  size: 172 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1942
- *   +0x000c -> line 1946
- *   +0x0010 -> line 1942
- *   +0x0014 -> line 1946
- *   +0x0030 -> line 1947
- *   +0x0038 -> line 1948
- *   +0x0040 -> line 1949
- *   +0x0098 -> line 1950
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 COL_tdstCollideObject_* ZDX_fn_hGetGeoObjOfTypeAndMatrixFromZdxInfos(HIE_tdstSuperObject_* _hCharacter, unsigned char _ucZoneType, unsigned char _ucModuleOrCharacter, unsigned char _ucChannelNumber, MAT_tdstTransformation_** _p_hMatrix);
 void MAT_fn_vInvert(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hSource);
 void MAT_fn_vApplyOnVertex(MTH3D_tdstVector_* VectDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* VectA);
 COL_tdstCollideObject_* PCS_fn_hGetGeoObjOfPhysicalCollSet(unsigned char ucZoneType, tdstPhysicalCollSet_* _hPhyCollSet);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 1827–1924 */
-/* addr: 0x0026b8b0  size: 876 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1827
- *   +0x0038 -> line 1850
- *   +0x003c -> line 1827
- *   +0x0040 -> line 1851
- *   +0x0064 -> line 1853
- *   +0x0090 -> line 1855
- *   +0x0098 -> line 1857
- *   +0x00a4 -> line 1859
- *   +0x00c8 -> line 1860
- *   +0x00e0 -> line 1862
- *   +0x00fc -> line 1863
- *   +0x0104 -> line 1865
- *   +0x0130 -> line 1867
- *   +0x0138 -> line 1870
- *   +0x0148 -> line 1871
- *   +0x0164 -> line 1872
- *   +0x016c -> line 1874
- *   +0x018c -> line 1875
- *   +0x01b0 -> line 1878
- *   +0x01d0 -> line 1879
- *   +0x01e8 -> line 1881
- *   +0x0204 -> line 1882
- *   +0x020c -> line 1886
- *   +0x0214 -> line 1887
- *   +0x0234 -> line 1889
- *   +0x0238 -> line 1890
- *   +0x0254 -> line 1892
- *   +0x0288 -> line 1895
- *   +0x0294 -> line 1896
- *   +0x029c -> line 1898
- *   +0x02b0 -> line 1901
- *   +0x02b8 -> line 1904
- *   +0x02c0 -> line 1907
- *   +0x02d0 -> line 1910
- *   +0x02d8 -> line 1911
- *   +0x02e0 -> line 1913
- *   +0x02ec -> line 1914
- *   +0x0304 -> line 1916
- *   +0x0320 -> line 1917
- *   +0x0328 -> line 1921
- *   +0x032c -> line 1922
- *   +0x0338 -> line 1923
- *   +0x033c -> line 1924
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 GMT_tdstGameMaterial_* fn_hIsTypeExistsInGeoObj(COL_tdstCollideObject_* _hGeoObj, unsigned short _wMaterialMask);
 unsigned char fn_bIsThisZdeInClashWithCharacterZdeOfTypes(COL_tdstCollideObject_* _hGeoObj, MAT_tdstTransformation_* _hMatrix, HIE_tdstSuperObject_* _hCharacter, unsigned short _wMaterialMask);
 COL_tdstCollideObject_* PCS_fn_hGetZdeGeoObjOfPhysicalCollSet(tdstPhysicalCollSet_* _hPhyCollSet);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 1756–1812 */
-/* addr: 0x0026bc20  size: 552 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1756
- *   +0x0024 -> line 1764
- *   +0x0028 -> line 1756
- *   +0x0044 -> line 1764
- *   +0x0048 -> line 1762
- *   +0x004c -> line 1764
- *   +0x0068 -> line 1766
- *   +0x006c -> line 1767
- *   +0x0074 -> line 1769
- *   +0x009c -> line 1771
- *   +0x00ac -> line 1773
- *   +0x00c8 -> line 1776
- *   +0x00dc -> line 1778
- *   +0x00e8 -> line 1781
- *   +0x00ec -> line 1782
- *   +0x00f4 -> line 1786
- *   +0x0100 -> line 1788
- *   +0x0134 -> line 1790
- *   +0x0148 -> line 1792
- *   +0x015c -> line 1794
- *   +0x0160 -> line 1795
- *   +0x0188 -> line 1797
- *   +0x01a4 -> line 1800
- *   +0x01bc -> line 1803
- *   +0x01c8 -> line 1806
- *   +0x01cc -> line 1807
- *   +0x01d4 -> line 1809
- *   +0x01e0 -> line 1810
- *   +0x01f0 -> line 1811
- *   +0x01f8 -> line 1812
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 HIE_tdstSuperObject_* fn_h_SectInfoGetCurrentSector(tdstSectInfo_* h_SectInfo);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 1728–1741 */
-/* addr: 0x0026be50  size: 164 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1728
- *   +0x000c -> line 1733
- *   +0x0010 -> line 1728
- *   +0x0014 -> line 1733
- *   +0x0018 -> line 1728
- *   +0x002c -> line 1733
- *   +0x0038 -> line 1734
- *   +0x0044 -> line 1733
- *   +0x0048 -> line 1734
- *   +0x0054 -> line 1735
- *   +0x0064 -> line 1736
- *   +0x006c -> line 1738
- *   +0x008c -> line 1741
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 COL_tdstCollideObject_* ZDX_fn_hGetGeoObjOfTypeAndMatrixFromZdxInfos(HIE_tdstSuperObject_* _hCharacter, unsigned char _ucZoneType, unsigned char _ucModuleOrCharacter, unsigned char _ucChannelNumber, MAT_tdstTransformation_** _p_hMatrix);
 /* Declared without a narrow return type here: retail tests the result without an andi. */
 long INT_fn_bDetectIntersectGeomObjWithGeomObj(COL_tdstCollideObject_* p_stGeomObj1, MAT_tdstTransformation_* _p_stMatrix1, COL_tdstCollideObject_* p_stGeomObj2, MAT_tdstTransformation_* _p_stMatrix2, GMT_tdstGameMaterial_** _p_hMat1, GMT_tdstGameMaterial_** _p_hMat2);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 1704–1712 */
-/* addr: 0x0026bf00  size: 108 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1704
- *   +0x000c -> line 1708
- *   +0x0010 -> line 1704
- *   +0x0014 -> line 1708
- *   +0x0018 -> line 1704
- *   +0x0024 -> line 1708
- *   +0x0030 -> line 1710
- *   +0x0058 -> line 1712
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_bIsThisZdeInClashWithCharacterZdeOfTypes(COL_tdstCollideObject_* _hGeoObj, MAT_tdstTransformation_* _hMatrix, HIE_tdstSuperObject_* _hCharacter, unsigned short _wMaterialMask);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 1641–1690 */
-/* addr: 0x0026bf70  size: 320 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1641
- *   +0x001c -> line 1647
- *   +0x0024 -> line 1650
- *   +0x005c -> line 1651
- *   +0x0064 -> line 1652
- *   +0x006c -> line 1654
- *   +0x007c -> line 1656
- *   +0x00b4 -> line 1657
- *   +0x00bc -> line 1658
- *   +0x00c4 -> line 1665
- *   +0x00cc -> line 1666
- *   +0x00d4 -> line 1667
- *   +0x00dc -> line 1668
- *   +0x00e4 -> line 1669
- *   +0x00ec -> line 1670
- *   +0x00f4 -> line 1676
- *   +0x00f8 -> line 1677
- *   +0x0100 -> line 1682
- *   +0x0110 -> line 1683
- *   +0x0118 -> line 1685
- *   +0x011c -> line 1686
- *   +0x0124 -> line 1689
- *   +0x0128 -> line 1690
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 1487–1623 */
-/* addr: 0x0026c0b0  size: 1100 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1487
- *   +0x0004 -> line 1503
- *   +0x0008 -> line 1487
- *   +0x000c -> line 1503
- *   +0x0010 -> line 1487
- *   +0x0040 -> line 1503
- *   +0x0060 -> line 1504
- *   +0x0068 -> line 1510
- *   +0x006c -> line 1511
- *   +0x0070 -> line 1517
- *   +0x0094 -> line 1519
- *   +0x00c0 -> line 1522
- *   +0x00c8 -> line 1524
- *   +0x00d4 -> line 1526
- *   +0x00f8 -> line 1527
- *   +0x0118 -> line 1530
- *   +0x013c -> line 1533
- *   +0x0158 -> line 1535
- *   +0x0160 -> line 1539
- *   +0x0188 -> line 1541
- *   +0x0190 -> line 1544
- *   +0x01a0 -> line 1545
- *   +0x01bc -> line 1546
- *   +0x01c4 -> line 1548
- *   +0x01e4 -> line 1549
- *   +0x0208 -> line 1552
- *   +0x0228 -> line 1554
- *   +0x0248 -> line 1557
- *   +0x026c -> line 1560
- *   +0x0288 -> line 1562
- *   +0x0290 -> line 1567
- *   +0x0298 -> line 1568
- *   +0x02b8 -> line 1570
- *   +0x02bc -> line 1571
- *   +0x02d8 -> line 1573
- *   +0x0308 -> line 1581
- *   +0x0330 -> line 1584
- *   +0x033c -> line 1591
- *   +0x0348 -> line 1592
- *   +0x0350 -> line 1594
- *   +0x035c -> line 1595
- *   +0x0368 -> line 1597
- *   +0x0370 -> line 1600
- *   +0x0380 -> line 1603
- *   +0x0388 -> line 1604
- *   +0x0390 -> line 1606
- *   +0x039c -> line 1608
- *   +0x03c0 -> line 1611
- *   +0x03e4 -> line 1614
- *   +0x0400 -> line 1615
- *   +0x0408 -> line 1620
- *   +0x040c -> line 1621
- *   +0x0418 -> line 1622
- *   +0x041c -> line 1623
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_bObjectTableHasZde(tdstObjectsTablesList_* _hObjectTableList);
 inline HIE_tdstSuperObject_* fn_hGetChannelModule(tdstAChannel_* _hChannel)
 {
@@ -1864,178 +1451,33 @@ inline HIE_tdstSuperObject_* fn_hGetChannelModule(tdstAChannel_* _hChannel)
 
 int GMT_fn_xMultipleTestCollideIdentifierFromGameMaterial(GMT_tdstGameMaterial_* hGameMat, unsigned short xMask);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 1454–1479 */
-/* addr: 0x0026c500  size: 320 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1454
- *   +0x0030 -> line 1460
- *   +0x006c -> line 1461
- *   +0x0084 -> line 1463
- *   +0x00b8 -> line 1464
- *   +0x00d0 -> line 1465
- *   +0x00d8 -> line 1468
- *   +0x00e4 -> line 1469
- *   +0x00ec -> line 1471
- *   +0x00f8 -> line 1472
- *   +0x0100 -> line 1478
- *   +0x011c -> line 1479
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 COL_tdstCollideObject_* PCS_fn_hGetZdeGeoObjOfPhysicalCollSet(tdstPhysicalCollSet_* _hPhyCollSet);
 void fn_vGetAllCharacterInContactWithThisGeoObj(HIE_tdstSuperObject_* _hSuperObj, COL_tdstCollideObject_* _hGeoObj, MAT_tdstTransformation_* _hMatrix, HIE_tdstSuperObject_** _hSuperObjTable, unsigned short _wMaterialMask, int _lMaxNumberOfObjects, int* _p_lCurrentNumberofObjects);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 1355–1437 */
-/* addr: 0x0026c640  size: 752 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1355
- *   +0x0048 -> line 1361
- *   +0x0050 -> line 1362
- *   +0x0054 -> line 1361
- *   +0x005c -> line 1362
- *   +0x006c -> line 1366
- *   +0x008c -> line 1368
- *   +0x00a0 -> line 1370
- *   +0x00a4 -> line 1371
- *   +0x00ac -> line 1373
- *   +0x00d4 -> line 1378
- *   +0x00fc -> line 1379
- *   +0x0100 -> line 1382
- *   +0x0124 -> line 1383
- *   +0x0128 -> line 1386
- *   +0x0144 -> line 1389
- *   +0x0158 -> line 1393
- *   +0x0160 -> line 1396
- *   +0x0168 -> line 1398
- *   +0x0178 -> line 1400
- *   +0x018c -> line 1403
- *   +0x01b8 -> line 1405
- *   +0x01d0 -> line 1407
- *   +0x01e4 -> line 1409
- *   +0x01e8 -> line 1410
- *   +0x0210 -> line 1415
- *   +0x0238 -> line 1419
- *   +0x025c -> line 1420
- *   +0x0260 -> line 1423
- *   +0x027c -> line 1426
- *   +0x0290 -> line 1429
- *   +0x0298 -> line 1432
- *   +0x02a0 -> line 1434
- *   +0x02b0 -> line 1435
- *   +0x02bc -> line 1436
- *   +0x02c0 -> line 1437
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_bCollSetGetCharacterNoCollisionZdeWithProjectile(tdstCollSet_* _hCollSet);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 1319–1337 */
-/* addr: 0x0026c930  size: 188 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1319
- *   +0x002c -> line 1324
- *   +0x0030 -> line 1326
- *   +0x0038 -> line 1328
- *   +0x0050 -> line 1329
- *   +0x0058 -> line 1332
- *   +0x0070 -> line 1333
- *   +0x0078 -> line 1334
- *   +0x0094 -> line 1336
- *   +0x009c -> line 1337
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 COL_tdstCollideObject_* fn_hIsThisZoneActive(HIE_tdstSuperObject_* _hCharacter, unsigned char _ucZoneType, unsigned char _ucZoneNumber);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 679–701 */
-/* addr: 0x0026c9f0  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 679
- *   +0x0010 -> line 684
- *   +0x0018 -> line 700
- *   +0x0024 -> line 701
- *   +0x002c -> line 700
- *   +0x0034 -> line 701
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 tdstZdxList_* CS_fn_hGetZdxList(unsigned char ucZoneType, HIE_tdstSuperObject_* hSuperObj);
 
 #pragma auto_inline on
 
 #pragma auto_inline reset
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 537–655 */
-/* addr: 0x0026ca30  size: 172 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 537
- *   +0x0004 -> line 635
- *   +0x0008 -> line 537
- *   +0x0010 -> line 635
- *   +0x0030 -> line 640
- *   +0x0044 -> line 643
- *   +0x0048 -> line 642
- *   +0x004c -> line 645
- *   +0x0058 -> line 647
- *   +0x0060 -> line 648
- *   +0x0078 -> line 650
- *   +0x0080 -> line 651
- *   +0x0098 -> line 652
- *   +0x009c -> line 655
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern void qsort(void* base, unsigned int n, unsigned int size, int (*cmp)(void*, void*));
 int fn_iCmpZoneSetIndex(void* p_stZSE1, void* p_stZSE2);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 516–517 */
-/* addr: 0x0026cae0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 516
- *   +0x0008 -> line 517
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 231–294 */
-/* addr: 0x0026caf0  size: 456 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 231
- *   +0x0014 -> line 239
- *   +0x001c -> line 240
- *   +0x0024 -> line 243
- *   +0x002c -> line 245
- *   +0x0048 -> line 249
- *   +0x0054 -> line 251
- *   +0x0058 -> line 249
- *   +0x005c -> line 251
- *   +0x0060 -> line 249
- *   +0x0084 -> line 251
- *   +0x008c -> line 252
- *   +0x0094 -> line 255
- *   +0x00b8 -> line 256
- *   +0x00c0 -> line 259
- *   +0x00cc -> line 262
- *   +0x00d8 -> line 263
- *   +0x00e0 -> line 266
- *   +0x0104 -> line 267
- *   +0x010c -> line 270
- *   +0x0118 -> line 273
- *   +0x0124 -> line 274
- *   +0x012c -> line 277
- *   +0x0150 -> line 278
- *   +0x0158 -> line 281
- *   +0x0164 -> line 284
- *   +0x0170 -> line 285
- *   +0x0178 -> line 288
- *   +0x019c -> line 289
- *   +0x01a4 -> line 292
- *   +0x01b0 -> line 294
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 tdstCsaList_* CS_fn_hGetActivationList(unsigned char ucZoneType, HIE_tdstSuperObject_* hSuperObj);
 void fn_vSetCurrentZoneSetOfType(unsigned char _ucZoneType, tdstCollSet_* _hCollSet, tdstZoneSetList_* _hCurrentZoneSet);
+
+short COL_xGetCollideObjectNumberOfElementsMax(COL_tdstCollideObject_* hObject);
+short COL_xGetElementType(COL_tdstCollideObject_* hObject, short xElement);
+void COL_vGetGameMaterialOfIndexedTriangles(COL_tdstCollideObject_* hObject, short hElement, GMT_tdstGameMaterial_** p_hMaterial);
+short COL_lGetIndexedSphereNbSpheres(COL_tdstCollideObject_* _hObject, short hElement);
+GMT_tdstGameMaterial_* COL_hGetGameMaterialOfIndexedSphere(COL_tdstCollideObject_* hObject, short hElement, short xNumberOfSphere);
+short COL_lGetAlignedBoxNbBoxes(COL_tdstCollideObject_* hObject, short hElement);
+GMT_tdstGameMaterial_* COL_hGetGameMaterialOfIndexedAlignedBox(COL_tdstCollideObject_* hObject, short hElement, short xNumberOfAlignedBox);
+int GMT_fn_xMultipleTestCollideIdentifierFromGameMaterial(GMT_tdstGameMaterial_* hGameMat, unsigned short xMask);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 146–190 */
 /* addr: 0x0026ccc0  size: 516 bytes */
@@ -2069,15 +1511,6 @@ void fn_vSetCurrentZoneSetOfType(unsigned char _ucZoneType, tdstCollSet_* _hColl
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-short COL_xGetCollideObjectNumberOfElementsMax(COL_tdstCollideObject_* hObject);
-short COL_xGetElementType(COL_tdstCollideObject_* hObject, short xElement);
-void COL_vGetGameMaterialOfIndexedTriangles(COL_tdstCollideObject_* hObject, short hElement, GMT_tdstGameMaterial_** p_hMaterial);
-short COL_lGetIndexedSphereNbSpheres(COL_tdstCollideObject_* _hObject, short hElement);
-GMT_tdstGameMaterial_* COL_hGetGameMaterialOfIndexedSphere(COL_tdstCollideObject_* hObject, short hElement, short xNumberOfSphere);
-short COL_lGetAlignedBoxNbBoxes(COL_tdstCollideObject_* hObject, short hElement);
-GMT_tdstGameMaterial_* COL_hGetGameMaterialOfIndexedAlignedBox(COL_tdstCollideObject_* hObject, short hElement, short xNumberOfAlignedBox);
-int GMT_fn_xMultipleTestCollideIdentifierFromGameMaterial(GMT_tdstGameMaterial_* hGameMat, unsigned short xMask);
-
 GMT_tdstGameMaterial_* fn_hIsTypeExistsInGeoObj(COL_tdstCollideObject_* _hGeoObj, unsigned short _wMaterialMask)
 {
     short xIndex;
@@ -2131,6 +1564,43 @@ GMT_tdstGameMaterial_* fn_hIsTypeExistsInGeoObj(COL_tdstCollideObject_* _hGeoObj
     return NULL;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 231–294 */
+/* addr: 0x0026caf0  size: 456 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 231
+ *   +0x0014 -> line 239
+ *   +0x001c -> line 240
+ *   +0x0024 -> line 243
+ *   +0x002c -> line 245
+ *   +0x0048 -> line 249
+ *   +0x0054 -> line 251
+ *   +0x0058 -> line 249
+ *   +0x005c -> line 251
+ *   +0x0060 -> line 249
+ *   +0x0084 -> line 251
+ *   +0x008c -> line 252
+ *   +0x0094 -> line 255
+ *   +0x00b8 -> line 256
+ *   +0x00c0 -> line 259
+ *   +0x00cc -> line 262
+ *   +0x00d8 -> line 263
+ *   +0x00e0 -> line 266
+ *   +0x0104 -> line 267
+ *   +0x010c -> line 270
+ *   +0x0118 -> line 273
+ *   +0x0124 -> line 274
+ *   +0x012c -> line 277
+ *   +0x0150 -> line 278
+ *   +0x0158 -> line 281
+ *   +0x0164 -> line 284
+ *   +0x0170 -> line 285
+ *   +0x0178 -> line 288
+ *   +0x019c -> line 289
+ *   +0x01a4 -> line 292
+ *   +0x01b0 -> line 294
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vUpdateCurrentActivationForCharacter(HIE_tdstSuperObject_* _hCharacter)
 {
     short xIndex;
@@ -2189,11 +1659,39 @@ void fn_vUpdateCurrentActivationForCharacter(HIE_tdstSuperObject_* _hCharacter)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 516–517 */
+/* addr: 0x0026cae0  size: 16 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 516
+ *   +0x0008 -> line 517
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int fn_iCmpZoneSetIndex(void* p_stZSE1, void* p_stZSE2)
 {
     return *(unsigned short*)((char*)p_stZSE1 + 4) - *(unsigned short*)((char*)p_stZSE2 + 4);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 537–655 */
+/* addr: 0x0026ca30  size: 172 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 537
+ *   +0x0004 -> line 635
+ *   +0x0008 -> line 537
+ *   +0x0010 -> line 635
+ *   +0x0030 -> line 640
+ *   +0x0044 -> line 643
+ *   +0x0048 -> line 642
+ *   +0x004c -> line 645
+ *   +0x0058 -> line 647
+ *   +0x0060 -> line 648
+ *   +0x0078 -> line 650
+ *   +0x0080 -> line 651
+ *   +0x0098 -> line 652
+ *   +0x009c -> line 655
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int fn_bHadToCorrectActivationList(tdstCsaList_* _p_stCsaList)
 {
     int bResult;
@@ -2222,6 +1720,18 @@ int fn_bHadToCorrectActivationList(tdstCsaList_* _p_stCsaList)
     return bResult;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 679–701 */
+/* addr: 0x0026c9f0  size: 60 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 679
+ *   +0x0010 -> line 684
+ *   +0x0018 -> line 700
+ *   +0x0024 -> line 701
+ *   +0x002c -> line 700
+ *   +0x0034 -> line 701
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 #pragma auto_inline on
 COL_tdstCollideObject_* fn_hGetCollideZdxOfTypeAtIndex(unsigned char ucZoneType, unsigned short uwIndex, HIE_tdstSuperObject_* hSuperObj)
 {
@@ -2231,6 +1741,22 @@ COL_tdstCollideObject_* fn_hGetCollideZdxOfTypeAtIndex(unsigned char ucZoneType,
 }
 #pragma auto_inline reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 1319–1337 */
+/* addr: 0x0026c930  size: 188 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1319
+ *   +0x002c -> line 1324
+ *   +0x0030 -> line 1326
+ *   +0x0038 -> line 1328
+ *   +0x0050 -> line 1329
+ *   +0x0058 -> line 1332
+ *   +0x0070 -> line 1333
+ *   +0x0078 -> line 1334
+ *   +0x0094 -> line 1336
+ *   +0x009c -> line 1337
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vGetAllCharactersInContactWithThisZde(HIE_tdstSuperObject_* _hSuperObj, unsigned char _ucModuleOrCharacter, unsigned char _ucChannelNumber, HIE_tdstSuperObject_** _hSuperObjTable, unsigned short* _p_uwNumber, unsigned short _wMaterialMask)
 {
     int lCurrentNumberOfObjects;
@@ -2255,6 +1781,48 @@ void fn_vGetAllCharactersInContactWithThisZde(HIE_tdstSuperObject_* _hSuperObj, 
     *_p_uwNumber = lCurrentNumberOfObjects;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 1355–1437 */
+/* addr: 0x0026c640  size: 752 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1355
+ *   +0x0048 -> line 1361
+ *   +0x0050 -> line 1362
+ *   +0x0054 -> line 1361
+ *   +0x005c -> line 1362
+ *   +0x006c -> line 1366
+ *   +0x008c -> line 1368
+ *   +0x00a0 -> line 1370
+ *   +0x00a4 -> line 1371
+ *   +0x00ac -> line 1373
+ *   +0x00d4 -> line 1378
+ *   +0x00fc -> line 1379
+ *   +0x0100 -> line 1382
+ *   +0x0124 -> line 1383
+ *   +0x0128 -> line 1386
+ *   +0x0144 -> line 1389
+ *   +0x0158 -> line 1393
+ *   +0x0160 -> line 1396
+ *   +0x0168 -> line 1398
+ *   +0x0178 -> line 1400
+ *   +0x018c -> line 1403
+ *   +0x01b8 -> line 1405
+ *   +0x01d0 -> line 1407
+ *   +0x01e4 -> line 1409
+ *   +0x01e8 -> line 1410
+ *   +0x0210 -> line 1415
+ *   +0x0238 -> line 1419
+ *   +0x025c -> line 1420
+ *   +0x0260 -> line 1423
+ *   +0x027c -> line 1426
+ *   +0x0290 -> line 1429
+ *   +0x0298 -> line 1432
+ *   +0x02a0 -> line 1434
+ *   +0x02b0 -> line 1435
+ *   +0x02bc -> line 1436
+ *   +0x02c0 -> line 1437
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vGetAllCharacterInContactWithThisGeoObj(HIE_tdstSuperObject_* _hSuperObj, COL_tdstCollideObject_* _hGeoObj, MAT_tdstTransformation_* _hMatrix, HIE_tdstSuperObject_** _hSuperObjTable, unsigned short _wMaterialMask, int _lMaxNumberOfObjects, int* _p_lCurrentNumberOfObjects)
 {
     tdstCollSet_* hCollSet;
@@ -2316,6 +1884,24 @@ void fn_vGetAllCharacterInContactWithThisGeoObj(HIE_tdstSuperObject_* _hSuperObj
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 1454–1479 */
+/* addr: 0x0026c500  size: 320 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1454
+ *   +0x0030 -> line 1460
+ *   +0x006c -> line 1461
+ *   +0x0084 -> line 1463
+ *   +0x00b8 -> line 1464
+ *   +0x00d0 -> line 1465
+ *   +0x00d8 -> line 1468
+ *   +0x00e4 -> line 1469
+ *   +0x00ec -> line 1471
+ *   +0x00f8 -> line 1472
+ *   +0x0100 -> line 1478
+ *   +0x011c -> line 1479
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vGetAllCharactersInContactWithThisModuleZde(HIE_tdstSuperObject_* _hSuperObj, unsigned char _ucChannelNumber, HIE_tdstSuperObject_** _hSuperObjTable, unsigned short _wMaterialMask, int _lMaxNumberOfObjects, int* _p_lCurrentNumberofObjects)
 {
     tdstPhysicalCollSet_* hPhyCollSet;
@@ -2342,6 +1928,66 @@ void fn_vGetAllCharactersInContactWithThisModuleZde(HIE_tdstSuperObject_* _hSupe
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 1487–1623 */
+/* addr: 0x0026c0b0  size: 1100 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1487
+ *   +0x0004 -> line 1503
+ *   +0x0008 -> line 1487
+ *   +0x000c -> line 1503
+ *   +0x0010 -> line 1487
+ *   +0x0040 -> line 1503
+ *   +0x0060 -> line 1504
+ *   +0x0068 -> line 1510
+ *   +0x006c -> line 1511
+ *   +0x0070 -> line 1517
+ *   +0x0094 -> line 1519
+ *   +0x00c0 -> line 1522
+ *   +0x00c8 -> line 1524
+ *   +0x00d4 -> line 1526
+ *   +0x00f8 -> line 1527
+ *   +0x0118 -> line 1530
+ *   +0x013c -> line 1533
+ *   +0x0158 -> line 1535
+ *   +0x0160 -> line 1539
+ *   +0x0188 -> line 1541
+ *   +0x0190 -> line 1544
+ *   +0x01a0 -> line 1545
+ *   +0x01bc -> line 1546
+ *   +0x01c4 -> line 1548
+ *   +0x01e4 -> line 1549
+ *   +0x0208 -> line 1552
+ *   +0x0228 -> line 1554
+ *   +0x0248 -> line 1557
+ *   +0x026c -> line 1560
+ *   +0x0288 -> line 1562
+ *   +0x0290 -> line 1567
+ *   +0x0298 -> line 1568
+ *   +0x02b8 -> line 1570
+ *   +0x02bc -> line 1571
+ *   +0x02d8 -> line 1573
+ *   +0x0308 -> line 1581
+ *   +0x0330 -> line 1584
+ *   +0x033c -> line 1591
+ *   +0x0348 -> line 1592
+ *   +0x0350 -> line 1594
+ *   +0x035c -> line 1595
+ *   +0x0368 -> line 1597
+ *   +0x0370 -> line 1600
+ *   +0x0380 -> line 1603
+ *   +0x0388 -> line 1604
+ *   +0x0390 -> line 1606
+ *   +0x039c -> line 1608
+ *   +0x03c0 -> line 1611
+ *   +0x03e4 -> line 1614
+ *   +0x0400 -> line 1615
+ *   +0x0408 -> line 1620
+ *   +0x040c -> line 1621
+ *   +0x0418 -> line 1622
+ *   +0x041c -> line 1623
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_bIsThisZdeInClashWithCharacterZdeOfTypes(COL_tdstCollideObject_* _hGeoObj, MAT_tdstTransformation_* _hMatrix, HIE_tdstSuperObject_* _hCharacter, unsigned short _wMaterialMask)
 {
     tdstObjectsTablesList_* hObjectTable;
@@ -2442,6 +2088,35 @@ unsigned char fn_bIsThisZdeInClashWithCharacterZdeOfTypes(COL_tdstCollideObject_
     return 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 1641–1690 */
+/* addr: 0x0026bf70  size: 320 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1641
+ *   +0x001c -> line 1647
+ *   +0x0024 -> line 1650
+ *   +0x005c -> line 1651
+ *   +0x0064 -> line 1652
+ *   +0x006c -> line 1654
+ *   +0x007c -> line 1656
+ *   +0x00b4 -> line 1657
+ *   +0x00bc -> line 1658
+ *   +0x00c4 -> line 1665
+ *   +0x00cc -> line 1666
+ *   +0x00d4 -> line 1667
+ *   +0x00dc -> line 1668
+ *   +0x00e4 -> line 1669
+ *   +0x00ec -> line 1670
+ *   +0x00f4 -> line 1676
+ *   +0x00f8 -> line 1677
+ *   +0x0100 -> line 1682
+ *   +0x0110 -> line 1683
+ *   +0x0118 -> line 1685
+ *   +0x011c -> line 1686
+ *   +0x0124 -> line 1689
+ *   +0x0128 -> line 1690
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 COL_tdstCollideObject_* ZDX_fn_hGetGeoObjOfTypeAndMatrixFromZdxInfos(HIE_tdstSuperObject_* _hCharacter, unsigned char _ucZoneType, unsigned char _ucModuleOrCharacter, unsigned char _ucChannelNumber, MAT_tdstTransformation_** _p_hMatrix)
 {
     tdstPhysicalCollSet_* hPhyCollSet;
@@ -2491,6 +2166,20 @@ COL_tdstCollideObject_* ZDX_fn_hGetGeoObjOfTypeAndMatrixFromZdxInfos(HIE_tdstSup
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 1704–1712 */
+/* addr: 0x0026bf00  size: 108 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1704
+ *   +0x000c -> line 1708
+ *   +0x0010 -> line 1704
+ *   +0x0014 -> line 1708
+ *   +0x0018 -> line 1704
+ *   +0x0024 -> line 1708
+ *   +0x0030 -> line 1710
+ *   +0x0058 -> line 1712
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_bThisZdeFromOneVsAllZdeFromTwo(HIE_tdstSuperObject_* _hCharacterONE, unsigned char _ucModuleOrCharacter, unsigned char _ucChannelNumber, HIE_tdstSuperObject_* _hCharacterTWO, unsigned short _wMaterialMask)
 {
     COL_tdstCollideObject_* hGeoObj;
@@ -2503,6 +2192,25 @@ unsigned char fn_bThisZdeFromOneVsAllZdeFromTwo(HIE_tdstSuperObject_* _hCharacte
     return 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 1728–1741 */
+/* addr: 0x0026be50  size: 164 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1728
+ *   +0x000c -> line 1733
+ *   +0x0010 -> line 1728
+ *   +0x0014 -> line 1733
+ *   +0x0018 -> line 1728
+ *   +0x002c -> line 1733
+ *   +0x0038 -> line 1734
+ *   +0x0044 -> line 1733
+ *   +0x0048 -> line 1734
+ *   +0x0054 -> line 1735
+ *   +0x0064 -> line 1736
+ *   +0x006c -> line 1738
+ *   +0x008c -> line 1741
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_bThisZdeFromOneVsThisZdeFromTwo(HIE_tdstSuperObject_* _hCharacterONE, unsigned char _ucModuleOrCharacterForONE, unsigned char _ucChannelNumberForONE, HIE_tdstSuperObject_* _hCharacterTWO, unsigned char _ucModuleOrCharacterForTWO, unsigned char _ucChannelNumberForTWO)
 {
     MAT_tdstTransformation_* p_stMatrix1;
@@ -2519,6 +2227,42 @@ unsigned char fn_bThisZdeFromOneVsThisZdeFromTwo(HIE_tdstSuperObject_* _hCharact
     return INT_fn_bDetectIntersectGeomObjWithGeomObj(hGeoObj1, p_stMatrix1, hGeoObj2, p_stMatrix2, &hMat1, &hMat2) != 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 1756–1812 */
+/* addr: 0x0026bc20  size: 552 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1756
+ *   +0x0024 -> line 1764
+ *   +0x0028 -> line 1756
+ *   +0x0044 -> line 1764
+ *   +0x0048 -> line 1762
+ *   +0x004c -> line 1764
+ *   +0x0068 -> line 1766
+ *   +0x006c -> line 1767
+ *   +0x0074 -> line 1769
+ *   +0x009c -> line 1771
+ *   +0x00ac -> line 1773
+ *   +0x00c8 -> line 1776
+ *   +0x00dc -> line 1778
+ *   +0x00e8 -> line 1781
+ *   +0x00ec -> line 1782
+ *   +0x00f4 -> line 1786
+ *   +0x0100 -> line 1788
+ *   +0x0134 -> line 1790
+ *   +0x0148 -> line 1792
+ *   +0x015c -> line 1794
+ *   +0x0160 -> line 1795
+ *   +0x0188 -> line 1797
+ *   +0x01a4 -> line 1800
+ *   +0x01bc -> line 1803
+ *   +0x01c8 -> line 1806
+ *   +0x01cc -> line 1807
+ *   +0x01d4 -> line 1809
+ *   +0x01e0 -> line 1810
+ *   +0x01f0 -> line 1811
+ *   +0x01f8 -> line 1812
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vThisTypeVsThisType(HIE_tdstSuperObject_* _hCharacter, unsigned short _wCharacterMask, unsigned short _wOthersMask, HIE_tdstSuperObject_** _p_hObjectTable, unsigned short* _p_uwNumber)
 {
     unsigned short uwMaxNumber;
@@ -2581,6 +2325,55 @@ void fn_vThisTypeVsThisType(HIE_tdstSuperObject_* _hCharacter, unsigned short _w
     *_p_uwNumber = uwCurrentNumber;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 1827–1924 */
+/* addr: 0x0026b8b0  size: 876 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1827
+ *   +0x0038 -> line 1850
+ *   +0x003c -> line 1827
+ *   +0x0040 -> line 1851
+ *   +0x0064 -> line 1853
+ *   +0x0090 -> line 1855
+ *   +0x0098 -> line 1857
+ *   +0x00a4 -> line 1859
+ *   +0x00c8 -> line 1860
+ *   +0x00e0 -> line 1862
+ *   +0x00fc -> line 1863
+ *   +0x0104 -> line 1865
+ *   +0x0130 -> line 1867
+ *   +0x0138 -> line 1870
+ *   +0x0148 -> line 1871
+ *   +0x0164 -> line 1872
+ *   +0x016c -> line 1874
+ *   +0x018c -> line 1875
+ *   +0x01b0 -> line 1878
+ *   +0x01d0 -> line 1879
+ *   +0x01e8 -> line 1881
+ *   +0x0204 -> line 1882
+ *   +0x020c -> line 1886
+ *   +0x0214 -> line 1887
+ *   +0x0234 -> line 1889
+ *   +0x0238 -> line 1890
+ *   +0x0254 -> line 1892
+ *   +0x0288 -> line 1895
+ *   +0x0294 -> line 1896
+ *   +0x029c -> line 1898
+ *   +0x02b0 -> line 1901
+ *   +0x02b8 -> line 1904
+ *   +0x02c0 -> line 1907
+ *   +0x02d0 -> line 1910
+ *   +0x02d8 -> line 1911
+ *   +0x02e0 -> line 1913
+ *   +0x02ec -> line 1914
+ *   +0x0304 -> line 1916
+ *   +0x0320 -> line 1917
+ *   +0x0328 -> line 1921
+ *   +0x032c -> line 1922
+ *   +0x0338 -> line 1923
+ *   +0x033c -> line 1924
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_bThisTypeFromOneVsThisTypeFromTwo(HIE_tdstSuperObject_* _hCharacterONE, unsigned short _wMaterialMaskOfONE, HIE_tdstSuperObject_* _hCharacterTWO, unsigned short _wMaterialMaskOfTWO)
 {
     unsigned short uwCurrentIndexInActivation;
@@ -2664,6 +2457,20 @@ unsigned char fn_bThisTypeFromOneVsThisTypeFromTwo(HIE_tdstSuperObject_* _hChara
     return 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 1942–1950 */
+/* addr: 0x0026b800  size: 172 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1942
+ *   +0x000c -> line 1946
+ *   +0x0010 -> line 1942
+ *   +0x0014 -> line 1946
+ *   +0x0030 -> line 1947
+ *   +0x0038 -> line 1948
+ *   +0x0040 -> line 1949
+ *   +0x0098 -> line 1950
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_bIsCharacterTWODetectedByThisZddOfCharacterOne(HIE_tdstSuperObject_* _hCharacterONE, unsigned char _ucModuleOrCharacter, unsigned char _ucChannelNumber, HIE_tdstSuperObject_* _hCharacterTWO)
 {
     COL_tdstCollideObject_* hGeoObj;
@@ -2679,6 +2486,46 @@ unsigned char fn_bIsCharacterTWODetectedByThisZddOfCharacterOne(HIE_tdstSuperObj
     return fn_bIsCharacterInGeoObj(_hCharacterTWO, hGeoObj, p_stMatrix);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 1961–2039 */
+/* addr: 0x0026b510  size: 740 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1961
+ *   +0x001c -> line 1984
+ *   +0x0020 -> line 1961
+ *   +0x0030 -> line 1985
+ *   +0x0054 -> line 1986
+ *   +0x0064 -> line 1987
+ *   +0x0080 -> line 1988
+ *   +0x0088 -> line 1990
+ *   +0x00a8 -> line 1991
+ *   +0x00c8 -> line 1994
+ *   +0x00e8 -> line 1995
+ *   +0x00f0 -> line 1997
+ *   +0x0150 -> line 1998
+ *   +0x0158 -> line 2002
+ *   +0x0160 -> line 2003
+ *   +0x0180 -> line 2005
+ *   +0x0184 -> line 2006
+ *   +0x01a0 -> line 2008
+ *   +0x01d0 -> line 2010
+ *   +0x01dc -> line 2011
+ *   +0x01e4 -> line 2013
+ *   +0x01f8 -> line 2016
+ *   +0x0200 -> line 2019
+ *   +0x0208 -> line 2022
+ *   +0x0218 -> line 2025
+ *   +0x0220 -> line 2026
+ *   +0x0228 -> line 2028
+ *   +0x0234 -> line 2029
+ *   +0x023c -> line 2031
+ *   +0x02a0 -> line 2032
+ *   +0x02a8 -> line 2036
+ *   +0x02ac -> line 2037
+ *   +0x02b8 -> line 2038
+ *   +0x02bc -> line 2039
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_bIsCharacterTWODetectedByCharacterOne(HIE_tdstSuperObject_* _hCharacterONE, HIE_tdstSuperObject_* _hCharacterTWO)
 {
     unsigned short uwCurrentIndexInActivation;
@@ -2736,6 +2583,35 @@ unsigned char fn_bIsCharacterTWODetectedByCharacterOne(HIE_tdstSuperObject_* _hC
     return 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 2091–2146 */
+/* addr: 0x0026b220  size: 616 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2091
+ *   +0x0044 -> line 2099
+ *   +0x0064 -> line 2101
+ *   +0x0068 -> line 2102
+ *   +0x0070 -> line 2104
+ *   +0x0098 -> line 2106
+ *   +0x00e8 -> line 2108
+ *   +0x00f8 -> line 2110
+ *   +0x0108 -> line 2117
+ *   +0x0118 -> line 2119
+ *   +0x0128 -> line 2121
+ *   +0x0154 -> line 2123
+ *   +0x0164 -> line 2125
+ *   +0x0178 -> line 2127
+ *   +0x017c -> line 2128
+ *   +0x01a4 -> line 2130
+ *   +0x01f8 -> line 2132
+ *   +0x0208 -> line 2134
+ *   +0x0218 -> line 2140
+ *   +0x0224 -> line 2143
+ *   +0x0228 -> line 2144
+ *   +0x0234 -> line 2145
+ *   +0x0238 -> line 2146
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vDetectAllObjectsInThisModule(HIE_tdstSuperObject_* _hCharacter, COL_tdstCollideObject_* _hModule, MAT_tdstTransformation_* _p_stMatrix, HIE_tdstSuperObject_** _p_hSuperObjTable, int _lMaxNumberOfObjects, int* _lCurrentNumberOfObjects)
 {
     int i;
@@ -2788,6 +2664,22 @@ void fn_vDetectAllObjectsInThisModule(HIE_tdstSuperObject_* _hCharacter, COL_tds
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 2173–2195 */
+/* addr: 0x0026b0c0  size: 352 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2173
+ *   +0x0028 -> line 2178
+ *   +0x002c -> line 2181
+ *   +0x0034 -> line 2183
+ *   +0x00f8 -> line 2184
+ *   +0x0100 -> line 2188
+ *   +0x0118 -> line 2189
+ *   +0x0120 -> line 2191
+ *   +0x0138 -> line 2194
+ *   +0x0140 -> line 2195
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vGetAllObjectsInZdd(HIE_tdstSuperObject_* _hSuperObj, unsigned char _ucModuleOrCharacter, unsigned char _ucChannelNumber, HIE_tdstSuperObject_** _p_hSuperObjTable, unsigned short* _p_uwNumber)
 {
     int lCurrentNumberOfObjects;
@@ -2829,18 +2721,65 @@ void fn_vGetAllObjectsInZdd(HIE_tdstSuperObject_* _hSuperObj, unsigned char _ucM
     *_p_uwNumber = lCurrentNumberOfObjects;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 2274–2274 */
+/* addr: 0x0026b0b0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2274
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 COL_tdstCollideObject_* fn_hMakeOneObjectFromManyZdx(unsigned char _ucZoneType, HIE_tdstSuperObject_* _hCharacter)
 {
     return fn_hMakeOneObjectFromManyOthers(_ucZoneType, _hCharacter,
         (COL_tdstCollideObject_*)g_hCollisionGeoObj);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 2279–2279 */
+/* addr: 0x0026b0a0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2279
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 COL_tdstCollideObject_* fn_hStaticMakeOneObjectFromManyZdx(unsigned char _ucZoneType, HIE_tdstSuperObject_* _hCharacter)
 {
     return fn_hMakeOneObjectFromManyOthers(_ucZoneType, _hCharacter,
         (COL_tdstCollideObject_*)g_hStaticCollisionGeoObj);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 2290–2344 */
+/* addr: 0x0026adf0  size: 684 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2290
+ *   +0x0038 -> line 2304
+ *   +0x005c -> line 2305
+ *   +0x0088 -> line 2308
+ *   +0x0090 -> line 2310
+ *   +0x00a0 -> line 2312
+ *   +0x00c4 -> line 2313
+ *   +0x00e0 -> line 2314
+ *   +0x00f8 -> line 2315
+ *   +0x0120 -> line 2317
+ *   +0x0128 -> line 2321
+ *   +0x0138 -> line 2322
+ *   +0x0154 -> line 2323
+ *   +0x015c -> line 2325
+ *   +0x017c -> line 2326
+ *   +0x0198 -> line 2329
+ *   +0x01b8 -> line 2330
+ *   +0x01d4 -> line 2331
+ *   +0x01ec -> line 2332
+ *   +0x01f0 -> line 2334
+ *   +0x01f8 -> line 2335
+ *   +0x0218 -> line 2337
+ *   +0x021c -> line 2338
+ *   +0x0238 -> line 2340
+ *   +0x0268 -> line 2342
+ *   +0x0278 -> line 2343
+ *   +0x027c -> line 2344
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 COL_tdstCollideObject_* fn_hMakeOneObjectFromManyOthers(unsigned char _ucZoneType, HIE_tdstSuperObject_* _hCharacter, COL_tdstCollideObject_* _hTargetObject)
 {
     unsigned short uwCurrentIndexInActivation;
@@ -2898,6 +2837,24 @@ COL_tdstCollideObject_* fn_hMakeOneObjectFromManyOthers(unsigned char _ucZoneTyp
     return _hTargetObject;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 2349–2393 */
+/* addr: 0x0026ad60  size: 132 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2349
+ *   +0x0004 -> line 2353
+ *   +0x0008 -> line 2349
+ *   +0x000c -> line 2353
+ *   +0x0018 -> line 2357
+ *   +0x0028 -> line 2360
+ *   +0x0038 -> line 2369
+ *   +0x0040 -> line 2374
+ *   +0x0050 -> line 2378
+ *   +0x0060 -> line 2381
+ *   +0x0070 -> line 2389
+ *   +0x0078 -> line 2393
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vFirstTimeInitCollisionGeometricObject(void)
 {
     short hElement;
@@ -2913,6 +2870,16 @@ void fn_vFirstTimeInitCollisionGeometricObject(void)
     COL_vEndModifyObject((COL_tdstCollideObject_*)g_hStaticCollisionGeoObj);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 2673–2682 */
+/* addr: 0x0026ad30  size: 48 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2673
+ *   +0x0008 -> line 2676
+ *   +0x0010 -> line 2679
+ *   +0x0024 -> line 2682
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 #pragma auto_inline on
 int fn_lGetZdxListNumberOfElements(unsigned char ucZoneType, HIE_tdstSuperObject_* hSuperObj)
 {
@@ -2922,6 +2889,34 @@ int fn_lGetZdxListNumberOfElements(unsigned char ucZoneType, HIE_tdstSuperObject
 }
 #pragma auto_inline reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 70–90 */
+/* addr: 0x0026ac50  size: 224 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 70
+ *   +0x0018 -> line 75
+ *   +0x0020 -> line 77
+ *   +0x0028 -> line 78
+ *   +0x0034 -> line 80
+ *   +0x0054 -> line 81
+ *   +0x0058 -> line 82
+ *   +0x0078 -> line 83
+ *   +0x007c -> line 85
+ *   +0x0080 -> line 88
+ *   +0x0084 -> line 87
+ *   +0x0088 -> line 85
+ *   +0x008c -> line 86
+ *   +0x0090 -> line 88
+ *   +0x0094 -> line 87
+ *   +0x0098 -> line 88
+ *   +0x00a0 -> line 85
+ *   +0x00a8 -> line 86
+ *   +0x00b0 -> line 87
+ *   +0x00b4 -> line 88
+ *   +0x00bc -> line 89
+ *   +0x00cc -> line 90
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vTurnMatrixX(MAT_tdstTransformation_* _p_stMatrix, float _xAngle)
 {
     float xSin;

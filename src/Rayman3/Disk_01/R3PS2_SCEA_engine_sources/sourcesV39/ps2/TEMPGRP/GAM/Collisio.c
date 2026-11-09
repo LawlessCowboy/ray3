@@ -1507,18 +1507,6 @@ short TMR_fn_wCreateTimer(short wTimerType);
  * and divide the result with __udivdi3, so it returns a 64-bit count. */
 unsigned long long fn_ulTimerTickPerSecond(short wTimerType);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Collisio.c lines 72–79 */
-/* addr: 0x0025e6a0  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 72
- *   +0x0008 -> line 74
- *   +0x0010 -> line 77
- *   +0x001c -> line 78
- *   +0x0044 -> line 79
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 void fn_vFirstInitEngineClock(void);
@@ -1526,34 +1514,60 @@ void COL_fn_vStaticCollisionWithPartOfTreeForSector(HIE_tdstSuperObject_* _p_stE
 void COL_fn_vNewStaticCollisionForCharacter(HIE_tdstSuperObject_* _hCharacter, HIE_tdstSuperObject_* _hSector, MAT_tdstTransformation_* _p_stStartMatrix, MAT_tdstTransformation_* _p_stEndMatrix);
 void fn_vNewTestStaticCollideFor2Characters(HIE_tdstSuperObject_* hCharacter, COL_tdstCollideObject_* _hDynamicZdm, HIE_tdstSuperObject_* hStaticCharacter, MAT_tdstTransformation_* p_stStartMatrix, MAT_tdstTransformation_* p_stEndMatrix);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Collisio.c lines 607–702 */
-/* addr: 0x0025e6f0  size: 424 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Collisio.c lines 253–451 */
+/* addr: 0x0025ec00  size: 828 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 607
- *   +0x002c -> line 620
- *   +0x003c -> line 624
- *   +0x004c -> line 628
- *   +0x0054 -> line 632
- *   +0x005c -> line 635
- *   +0x006c -> line 637
- *   +0x0098 -> line 643
- *   +0x00b0 -> line 645
- *   +0x00bc -> line 647
- *   +0x00d4 -> line 648
- *   +0x00e0 -> line 649
- *   +0x00e8 -> line 677
- *   +0x00f8 -> line 679
- *   +0x0100 -> line 680
- *   +0x010c -> line 681
- *   +0x0114 -> line 683
- *   +0x011c -> line 684
- *   +0x0158 -> line 698
- *   +0x0164 -> line 700
- *   +0x017c -> line 701
- *   +0x0188 -> line 702
+ *   +0x0000 -> line 253
+ *   +0x0028 -> line 261
+ *   +0x002c -> line 253
+ *   +0x0038 -> line 261
+ *   +0x0060 -> line 265
+ *   +0x0070 -> line 268
+ *   +0x0074 -> line 269
+ *   +0x0078 -> line 272
+ *   +0x00ac -> line 275
+ *   +0x00bc -> line 277
+ *   +0x00c4 -> line 280
+ *   +0x00e8 -> line 287
+ *   +0x00f0 -> line 290
+ *   +0x0100 -> line 291
+ *   +0x0108 -> line 296
+ *   +0x0128 -> line 305
+ *   +0x0130 -> line 308
+ *   +0x0154 -> line 315
+ *   +0x015c -> line 318
+ *   +0x016c -> line 319
+ *   +0x0174 -> line 324
+ *   +0x0194 -> line 334
+ *   +0x0198 -> line 337
+ *   +0x01a8 -> line 338
+ *   +0x01d8 -> line 359
+ *   +0x01e0 -> line 361
+ *   +0x01ec -> line 363
+ *   +0x0210 -> line 365
+ *   +0x024c -> line 376
+ *   +0x0258 -> line 377
+ *   +0x0260 -> line 379
+ *   +0x0280 -> line 383
+ *   +0x02a0 -> line 442
+ *   +0x0300 -> line 449
+ *   +0x0304 -> line 450
+ *   +0x0310 -> line 451
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+void fn_vNewTestStaticCollideFor2Characters(HIE_tdstSuperObject_* hCharacter, COL_tdstCollideObject_* _hDynamicZdm, HIE_tdstSuperObject_* hStaticCharacter, MAT_tdstTransformation_* p_stStartMatrix, MAT_tdstTransformation_* p_stEndMatrix)
+{
+    COL_tdstCollideObject_* hStaticZdr;
+    HIE_tdstSuperObject_* hMainChar;
+    tdstCollSet_* hDynamicCollSet;
+    tdstCollSet_* hStaticCollSet;
+    tdstAChannel_* hChannel;
+    COL_tdstBoundingSphere_* hBoundingVolumeStaticCharacter;
+    COL_tdstBoundingSphere_* hBoundingVolumeCharacter;
+    /* TODO: decompile from asm/... */
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Collisio.c lines 461–595 */
 /* addr: 0x0025e8a0  size: 860 bytes */
@@ -1622,62 +1636,6 @@ void fn_vNewTestStaticCollideFor2Characters(HIE_tdstSuperObject_* hCharacter, CO
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Collisio.c lines 253–451 */
-/* addr: 0x0025ec00  size: 828 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 253
- *   +0x0028 -> line 261
- *   +0x002c -> line 253
- *   +0x0038 -> line 261
- *   +0x0060 -> line 265
- *   +0x0070 -> line 268
- *   +0x0074 -> line 269
- *   +0x0078 -> line 272
- *   +0x00ac -> line 275
- *   +0x00bc -> line 277
- *   +0x00c4 -> line 280
- *   +0x00e8 -> line 287
- *   +0x00f0 -> line 290
- *   +0x0100 -> line 291
- *   +0x0108 -> line 296
- *   +0x0128 -> line 305
- *   +0x0130 -> line 308
- *   +0x0154 -> line 315
- *   +0x015c -> line 318
- *   +0x016c -> line 319
- *   +0x0174 -> line 324
- *   +0x0194 -> line 334
- *   +0x0198 -> line 337
- *   +0x01a8 -> line 338
- *   +0x01d8 -> line 359
- *   +0x01e0 -> line 361
- *   +0x01ec -> line 363
- *   +0x0210 -> line 365
- *   +0x024c -> line 376
- *   +0x0258 -> line 377
- *   +0x0260 -> line 379
- *   +0x0280 -> line 383
- *   +0x02a0 -> line 442
- *   +0x0300 -> line 449
- *   +0x0304 -> line 450
- *   +0x0310 -> line 451
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-void fn_vNewTestStaticCollideFor2Characters(HIE_tdstSuperObject_* hCharacter, COL_tdstCollideObject_* _hDynamicZdm, HIE_tdstSuperObject_* hStaticCharacter, MAT_tdstTransformation_* p_stStartMatrix, MAT_tdstTransformation_* p_stEndMatrix)
-{
-    COL_tdstCollideObject_* hStaticZdr;
-    HIE_tdstSuperObject_* hMainChar;
-    tdstCollSet_* hDynamicCollSet;
-    tdstCollSet_* hStaticCollSet;
-    tdstAChannel_* hChannel;
-    COL_tdstBoundingSphere_* hBoundingVolumeStaticCharacter;
-    COL_tdstBoundingSphere_* hBoundingVolumeCharacter;
-    /* TODO: decompile from asm/... */
-}
-
 void COL_fn_vNewStaticCollisionForCharacter(HIE_tdstSuperObject_* _hCharacter, HIE_tdstSuperObject_* _hSector, MAT_tdstTransformation_* _p_stStartMatrix, MAT_tdstTransformation_* _p_stEndMatrix)
 {
     int i;
@@ -1692,6 +1650,34 @@ void COL_fn_vNewStaticCollisionForCharacter(HIE_tdstSuperObject_* _hCharacter, H
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Collisio.c lines 607–702 */
+/* addr: 0x0025e6f0  size: 424 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 607
+ *   +0x002c -> line 620
+ *   +0x003c -> line 624
+ *   +0x004c -> line 628
+ *   +0x0054 -> line 632
+ *   +0x005c -> line 635
+ *   +0x006c -> line 637
+ *   +0x0098 -> line 643
+ *   +0x00b0 -> line 645
+ *   +0x00bc -> line 647
+ *   +0x00d4 -> line 648
+ *   +0x00e0 -> line 649
+ *   +0x00e8 -> line 677
+ *   +0x00f8 -> line 679
+ *   +0x0100 -> line 680
+ *   +0x010c -> line 681
+ *   +0x0114 -> line 683
+ *   +0x011c -> line 684
+ *   +0x0158 -> line 698
+ *   +0x0164 -> line 700
+ *   +0x017c -> line 701
+ *   +0x0188 -> line 702
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void COL_fn_vStaticCollisionWithPartOfTreeForSector(HIE_tdstSuperObject_* _p_stEngineObj, HIE_tdstSuperObject_* _p_stSuperObj, COL_tdstCollideObject_* _p_stDynamicGeoColl, MAT_tdstTransformation_* _p_stStartMatrix, MAT_tdstTransformation_* _p_stEndMatrix)
 {
     void* hBoundingVolumeStatic;
@@ -1703,6 +1689,17 @@ void COL_fn_vStaticCollisionWithPartOfTreeForSector(HIE_tdstSuperObject_* _p_stE
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Collisio.c lines 72–79 */
+/* addr: 0x0025e6a0  size: 80 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 72
+ *   +0x0008 -> line 74
+ *   +0x0010 -> line 77
+ *   +0x001c -> line 78
+ *   +0x0044 -> line 79
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vFirstInitEngineClock(void)
 {
 

@@ -164,19 +164,6 @@ unsigned int IPT_g_ulPadAndJoyButtonFlag[16];
 IPT_tdstKeyAndPadDefine_* IPT_gd_hKeyAndPadDefine;
 extern IPT_tdstScriptValue_ IPT_g_hScriptKeyValue[];
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 37–49 */
-/* addr: 0x002f5910  size: 152 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 37
- *   +0x000c -> line 40
- *   +0x0010 -> line 41
- *   +0x0014 -> line 43
- *   +0x001c -> line 45
- *   +0x0028 -> line 46
- *   +0x0088 -> line 49
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern IPT_tdstKeyWordElement_* IPT_g_hNextParameter;
 extern IPT_tdstEntryElement_* g_h_ActualEntryInput;
 extern unsigned char (*IPT_p_fn_bIsKeyWordValid[28])(void);
@@ -196,27 +183,77 @@ unsigned char IPT_fn_bIsJustInvalidated(IPT_tdstEntryElement_* _hEntryElement);
 unsigned char IPT_fn_bIsValidated(IPT_tdstEntryElement_* _hEntryElement);
 unsigned char IPT_fn_bIsJustValidated(IPT_tdstEntryElement_* _hEntryElement);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 182–203 */
-/* addr: 0x002f59b0  size: 240 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 110–111 */
+/* addr: 0x002f5c10  size: 36 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 182
- *   +0x0004 -> line 186
- *   +0x0008 -> line 182
- *   +0x0024 -> line 186
- *   +0x0038 -> line 192
- *   +0x003c -> line 191
- *   +0x0040 -> line 192
- *   +0x0054 -> line 194
- *   +0x0058 -> line 196
- *   +0x00a0 -> line 197
- *   +0x00a8 -> line 198
- *   +0x00ac -> line 199
- *   +0x00b8 -> line 200
- *   +0x00c8 -> line 202
- *   +0x00cc -> line 203
+ *   +0x0000 -> line 110
+ *   +0x001c -> line 111
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+unsigned char IPT_fn_bIsJustValidated(IPT_tdstEntryElement_* _hEntryElement)
+{
+    return (_hEntryElement && (_hEntryElement->lState == 1)) ? (unsigned char)1 : (unsigned char)0;
+
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 115–116 */
+/* addr: 0x002f5be0  size: 48 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 115
+ *   +0x0028 -> line 116
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+unsigned char IPT_fn_bIsValidated(IPT_tdstEntryElement_* _hEntryElement)
+{
+    return ((_hEntryElement != NULL) && (_hEntryElement->lState > 0)) ?
+        (unsigned char)1 : (unsigned char)0;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 120–121 */
+/* addr: 0x002f5ba0  size: 52 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 120
+ *   +0x002c -> line 121
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+unsigned char IPT_fn_bIsJustInvalidated(IPT_tdstEntryElement_* _hEntryElement)
+{
+    return ((_hEntryElement != NULL) && (_hEntryElement->lState == -1)) ?
+        (unsigned char)1 : (unsigned char)0;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 125–126 */
+/* addr: 0x002f5b70  size: 40 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 125
+ *   +0x0020 -> line 126
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+unsigned char IPT_fn_bIsInvalidated(IPT_tdstEntryElement_* _hEntryElement)
+{
+    return ((_hEntryElement == NULL) || (_hEntryElement->lState < 0)) ?
+        (unsigned char)1 : (unsigned char)0;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 149–152 */
+/* addr: 0x002f5b50  size: 28 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 149
+ *   +0x0014 -> line 152
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+float IPT_fn_xGetAnalogicValue(IPT_tdstEntryElement_* _hEntryElement)
+{
+    if (_hEntryElement != NULL)
+        return _hEntryElement->xAnalogicValue;
+    return 0.0f;
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 161–179 */
 /* addr: 0x002f5aa0  size: 176 bytes */
@@ -241,83 +278,6 @@ unsigned char IPT_fn_bIsJustValidated(IPT_tdstEntryElement_* _hEntryElement);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 149–152 */
-/* addr: 0x002f5b50  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 149
- *   +0x0014 -> line 152
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 125–126 */
-/* addr: 0x002f5b70  size: 40 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 125
- *   +0x0020 -> line 126
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 120–121 */
-/* addr: 0x002f5ba0  size: 52 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 120
- *   +0x002c -> line 121
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 115–116 */
-/* addr: 0x002f5be0  size: 48 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 115
- *   +0x0028 -> line 116
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 110–111 */
-/* addr: 0x002f5c10  size: 36 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 110
- *   +0x001c -> line 111
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-unsigned char IPT_fn_bIsJustValidated(IPT_tdstEntryElement_* _hEntryElement)
-{
-    return (_hEntryElement && (_hEntryElement->lState == 1)) ? (unsigned char)1 : (unsigned char)0;
-
-}
-
-unsigned char IPT_fn_bIsValidated(IPT_tdstEntryElement_* _hEntryElement)
-{
-    return ((_hEntryElement != NULL) && (_hEntryElement->lState > 0)) ?
-        (unsigned char)1 : (unsigned char)0;
-}
-
-unsigned char IPT_fn_bIsJustInvalidated(IPT_tdstEntryElement_* _hEntryElement)
-{
-    return ((_hEntryElement != NULL) && (_hEntryElement->lState == -1)) ?
-        (unsigned char)1 : (unsigned char)0;
-}
-
-unsigned char IPT_fn_bIsInvalidated(IPT_tdstEntryElement_* _hEntryElement)
-{
-    return ((_hEntryElement == NULL) || (_hEntryElement->lState < 0)) ?
-        (unsigned char)1 : (unsigned char)0;
-}
-
-float IPT_fn_xGetAnalogicValue(IPT_tdstEntryElement_* _hEntryElement)
-{
-    if (_hEntryElement != NULL)
-        return _hEntryElement->xAnalogicValue;
-    return 0.0f;
-}
-
 unsigned char IPT_fn_bAKeyJustPressed(void)
 {
     unsigned short uwKeyCode;
@@ -345,6 +305,27 @@ unsigned char IPT_fn_bAKeyJustPressed(void)
     return 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 182–203 */
+/* addr: 0x002f59b0  size: 240 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 182
+ *   +0x0004 -> line 186
+ *   +0x0008 -> line 182
+ *   +0x0024 -> line 186
+ *   +0x0038 -> line 192
+ *   +0x003c -> line 191
+ *   +0x0040 -> line 192
+ *   +0x0054 -> line 194
+ *   +0x0058 -> line 196
+ *   +0x00a0 -> line 197
+ *   +0x00a8 -> line 198
+ *   +0x00ac -> line 199
+ *   +0x00b8 -> line 200
+ *   +0x00c8 -> line 202
+ *   +0x00cc -> line 203
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char IPT_fn_bAButtonPadJustPressed(void)
 {
     int j;
@@ -371,6 +352,19 @@ unsigned char IPT_fn_bAButtonPadJustPressed(void)
     return 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 37–49 */
+/* addr: 0x002f5910  size: 152 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 37
+ *   +0x000c -> line 40
+ *   +0x0010 -> line 41
+ *   +0x0014 -> line 43
+ *   +0x001c -> line 45
+ *   +0x0028 -> line 46
+ *   +0x0088 -> line 49
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char IPT_fn_bIsEntryActionValid(IPT_tdstEntryElement_* _hEntryElement)
 {
     /* The retail body keeps the keyword result in a saved register and masks

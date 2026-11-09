@@ -41,41 +41,30 @@ struct anon_2 {
 int isStrFileInit;
 anon_1 last_video_fd;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\strfile.c lines 208–227 */
-/* addr: 0x00131470  size: 76 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 208
- *   +0x0008 -> line 210
- *   +0x0014 -> line 213
- *   +0x0024 -> line 215
- *   +0x0030 -> line 218
- *   +0x0038 -> line 220
- *   +0x0040 -> line 227
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 int strFileRead(anon_0* file, void* buff, int size);
 int strFileClose(anon_0* file);
 int strFileOpen(anon_0* file, char* filename);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\strfile.c lines 193–201 */
-/* addr: 0x001314c0  size: 76 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 193
- *   +0x000c -> line 194
- *   +0x0018 -> line 195
- *   +0x0020 -> line 196
- *   +0x0028 -> line 197
- *   +0x0030 -> line 198
- *   +0x0038 -> line 201
- *   +0x003c -> line 200
- *   +0x0040 -> line 201
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+char* index(const char* s, int c);
+char* strncpy(char* s1, const char* s2, size_t n);
+int strcmp(const char* s1, const char* s2);
+size_t strlen(const char* s);
+char* strcpy(char* s1, const char* s2);
+int toupper(int c);
+int sprintf(char* s, const char* format, ...);
+int printf(const char* format, ...);
+void* sceSifAllocIopHeap(unsigned int size);
+int sceCdStInit(unsigned int bufmax, unsigned int bankmax, unsigned int iop_bufaddr);
+int PS2_fn_iGetCDMediaMode(void);
+int sceCdMmode(int media);
+int sceCdDiskReady(int mode);
+int SCEECdSearchFile(anon_1* fp, const char* name);
+int sceCdStStart(unsigned int lbn, anon_2* mode);
+int sceOpen(const char* filename, int flag, ...);
+int sceLseek(int fd, int offset, int where);
+int sceClose(int fd);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\strfile.c lines 55–186 */
 /* addr: 0x00131510  size: 804 bytes */
@@ -147,25 +136,6 @@ int strFileOpen(anon_0* file, char* filename);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-char* index(const char* s, int c);
-char* strncpy(char* s1, const char* s2, size_t n);
-int strcmp(const char* s1, const char* s2);
-size_t strlen(const char* s);
-char* strcpy(char* s1, const char* s2);
-int toupper(int c);
-int sprintf(char* s, const char* format, ...);
-int printf(const char* format, ...);
-void* sceSifAllocIopHeap(unsigned int size);
-int sceCdStInit(unsigned int bufmax, unsigned int bankmax, unsigned int iop_bufaddr);
-int PS2_fn_iGetCDMediaMode(void);
-int sceCdMmode(int media);
-int sceCdDiskReady(int mode);
-int SCEECdSearchFile(anon_1* fp, const char* name);
-int sceCdStStart(unsigned int lbn, anon_2* mode);
-int sceOpen(const char* filename, int flag, ...);
-int sceLseek(int fd, int offset, int where);
-int sceClose(int fd);
-
 int strFileOpen(anon_0* file, char* filename)
 {
     int ret;
@@ -268,6 +238,21 @@ int strFileOpen(anon_0* file, char* filename)
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\strfile.c lines 193–201 */
+/* addr: 0x001314c0  size: 76 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 193
+ *   +0x000c -> line 194
+ *   +0x0018 -> line 195
+ *   +0x0020 -> line 196
+ *   +0x0028 -> line 197
+ *   +0x0030 -> line 198
+ *   +0x0038 -> line 201
+ *   +0x003c -> line 200
+ *   +0x0040 -> line 201
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int strFileClose(anon_0* file)
 {
     if (file->isOnCD) {
@@ -279,6 +264,19 @@ int strFileClose(anon_0* file)
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\strfile.c lines 208–227 */
+/* addr: 0x00131470  size: 76 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 208
+ *   +0x0008 -> line 210
+ *   +0x0014 -> line 213
+ *   +0x0024 -> line 215
+ *   +0x0030 -> line 218
+ *   +0x0038 -> line 220
+ *   +0x0040 -> line 227
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int strFileRead(anon_0* file, void* buff, int size)
 {
     unsigned int err;

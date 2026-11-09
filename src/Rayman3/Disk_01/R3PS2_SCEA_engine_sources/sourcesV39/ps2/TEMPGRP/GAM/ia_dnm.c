@@ -1404,15 +1404,6 @@ int g_InGameMenu2DActivated;
 DNM_stDynamics* MEC_p_stDynamicsBaseMechanics(DNM_stDynamics*, HIE_tdstSuperObject_*, DNM_stParsingDatas*, void*, float);
 DNM_stDynamics* DNM_p_stDynamicsCameraMechanics(DNM_stDynamics*, HIE_tdstSuperObject_*, DNM_stParsingDatas*, void*, float);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ia_dnm.c lines 33–34 */
-/* addr: 0x00262510  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 33
- *   +0x0004 -> line 34
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 unsigned char fn_ucGetHitPoints(tdstEngineObject_* _p_stObject);
@@ -1489,35 +1480,6 @@ if (h_Dynam != NULL) \
 } \
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ia_dnm.c lines 325–488 */
-/* addr: 0x00262520  size: 1008 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 325
- *   +0x0020 -> line 327
- *   +0x0024 -> line 341
- *   +0x0028 -> line 327
- *   +0x002c -> line 341
- *   +0x0034 -> line 345
- *   +0x0044 -> line 348
- *   +0x0048 -> line 351
- *   +0x0068 -> line 355
- *   +0x0070 -> line 356
- *   +0x0078 -> line 363
- *   +0x0088 -> line 366
- *   +0x00c4 -> line 383
- *   +0x00d0 -> line 390
- *   +0x00e0 -> line 393
- *   +0x00e8 -> line 398
- *   +0x0138 -> line 424
- *   +0x0148 -> line 426
- *   +0x0158 -> line 427
- *   +0x028c -> line 428
- *   +0x0294 -> line 430
- *   +0x03cc -> line 488
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 void fn_v3dDataUpdateBrainCounter(HIE_tdstSuperObject_*);
 int fn_b3dDataCanComputeBrain(HIE_tdstSuperObject_*);
 void fn_vInitDistanceWaypoint(void);
@@ -1526,29 +1488,6 @@ void fn_vInitRecherchePerso(void);
 int fn_bDoReflexPerso(HIE_tdstSuperObject_*);
 int fn_bDoIntelligencePerso(HIE_tdstSuperObject_*);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ia_dnm.c lines 139–222 */
-/* addr: 0x00262910  size: 256 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 139
- *   +0x000c -> line 151
- *   +0x0014 -> line 153
- *   +0x0024 -> line 155
- *   +0x0034 -> line 157
- *   +0x0040 -> line 160
- *   +0x005c -> line 167
- *   +0x0078 -> line 168
- *   +0x009c -> line 193
- *   +0x00a4 -> line 194
- *   +0x00ac -> line 195
- *   +0x00b4 -> line 197
- *   +0x00c4 -> line 200
- *   +0x00d4 -> line 201
- *   +0x00e0 -> line 202
- *   +0x00e8 -> line 207
- *   +0x00f0 -> line 222
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 static inline unsigned short fn_uwGetBrainMainCounter(tdstEngineObject_* p_stObject)
 {
     unsigned short uwCounter = 0;
@@ -1556,35 +1495,7 @@ static inline unsigned short fn_uwGetBrainMainCounter(tdstEngineObject_* p_stObj
     return uwCounter;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ia_dnm.c lines 100–122 */
-/* addr: 0x00262a10  size: 156 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 100
- *   +0x0018 -> line 107
- *   +0x0028 -> line 109
- *   +0x0038 -> line 112
- *   +0x0044 -> line 113
- *   +0x0054 -> line 115
- *   +0x005c -> line 117
- *   +0x0074 -> line 120
- *   +0x007c -> line 121
- *   +0x0084 -> line 122
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 int fn_hGetStateMechanicsIdCard(tdstState_* h_State);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ia_dnm.c lines 77–85 */
-/* addr: 0x00262ab0  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 77
- *   +0x0008 -> line 81
- *   +0x0014 -> line 83
- *   +0x002c -> line 85
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ia_dnm.c lines 61–63 */
 /* addr: 0x00262af0  size: 28 bytes */
@@ -1603,6 +1514,17 @@ void InitArrayOfDynamicFunction(DNM_stDynamics* (**p_fnDynamicFunction)(DNM_stDy
 }
 
 /* Debug info says void, but the callee's handle is returned in $v0. */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ia_dnm.c lines 77–85 */
+/* addr: 0x00262ab0  size: 56 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 77
+ *   +0x0008 -> line 81
+ *   +0x0014 -> line 83
+ *   +0x002c -> line 85
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int fn_h_GetCurrentDNMIdCard(HIE_tdstSuperObject_* p_SuperObjPerso)
 {
     tdstState_* h_State;
@@ -1614,6 +1536,22 @@ int fn_h_GetCurrentDNMIdCard(HIE_tdstSuperObject_* p_SuperObjPerso)
     return fn_hGetStateMechanicsIdCard(h_State);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ia_dnm.c lines 100–122 */
+/* addr: 0x00262a10  size: 156 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 100
+ *   +0x0018 -> line 107
+ *   +0x0028 -> line 109
+ *   +0x0038 -> line 112
+ *   +0x0044 -> line 113
+ *   +0x0054 -> line 115
+ *   +0x005c -> line 117
+ *   +0x0074 -> line 120
+ *   +0x007c -> line 121
+ *   +0x0084 -> line 122
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vTransferSpeedInformationPLA_DNM(HIE_tdstSuperObject_* p_SuperObjPerso, float xLastFrame)
 {
     tdstDynam_* h_Dynam;
@@ -1639,6 +1577,29 @@ void fn_vTransferSpeedInformationPLA_DNM(HIE_tdstSuperObject_* p_SuperObjPerso, 
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ia_dnm.c lines 139–222 */
+/* addr: 0x00262910  size: 256 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 139
+ *   +0x000c -> line 151
+ *   +0x0014 -> line 153
+ *   +0x0024 -> line 155
+ *   +0x0034 -> line 157
+ *   +0x0040 -> line 160
+ *   +0x005c -> line 167
+ *   +0x0078 -> line 168
+ *   +0x009c -> line 193
+ *   +0x00a4 -> line 194
+ *   +0x00ac -> line 195
+ *   +0x00b4 -> line 197
+ *   +0x00c4 -> line 200
+ *   +0x00d4 -> line 201
+ *   +0x00e0 -> line 202
+ *   +0x00e8 -> line 207
+ *   +0x00f0 -> line 222
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vMakeCharacterThink(HIE_tdstSuperObject_* p_stSuperObj)
 {
     AI_tdstAIModel_* p_stAIModel;
@@ -1677,6 +1638,34 @@ void fn_vMakeCharacterThink(HIE_tdstSuperObject_* p_stSuperObj)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ia_dnm.c lines 325–488 */
+/* addr: 0x00262520  size: 1008 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 325
+ *   +0x0020 -> line 327
+ *   +0x0024 -> line 341
+ *   +0x0028 -> line 327
+ *   +0x002c -> line 341
+ *   +0x0034 -> line 345
+ *   +0x0044 -> line 348
+ *   +0x0048 -> line 351
+ *   +0x0068 -> line 355
+ *   +0x0070 -> line 356
+ *   +0x0078 -> line 363
+ *   +0x0088 -> line 366
+ *   +0x00c4 -> line 383
+ *   +0x00d0 -> line 390
+ *   +0x00e0 -> line 393
+ *   +0x00e8 -> line 398
+ *   +0x0138 -> line 424
+ *   +0x0148 -> line 426
+ *   +0x0158 -> line 427
+ *   +0x028c -> line 428
+ *   +0x0294 -> line 430
+ *   +0x03cc -> line 488
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vMakeCharacterReact(HIE_tdstSuperObject_* p_stSuperObj)
 {
     tdstStandardGame_* hStdGame;
@@ -1730,6 +1719,14 @@ void fn_vMakeCharacterReact(HIE_tdstSuperObject_* p_stSuperObj)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ia_dnm.c lines 33–34 */
+/* addr: 0x00262510  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 33
+ *   +0x0004 -> line 34
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucGetHitPoints(tdstEngineObject_* _p_stObject)
 {
     return _p_stObject->h_StandardGame->ucHitPoints;

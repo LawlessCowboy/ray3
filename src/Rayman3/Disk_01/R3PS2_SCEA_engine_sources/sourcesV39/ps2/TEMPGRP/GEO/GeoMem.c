@@ -6,6 +6,29 @@
 
 unsigned char g_ucGEOModuleId;
 
+/* Partial layouts: only the members used here are named. */
+typedef struct GEOMEM_tdstTransformation_ {
+    unsigned char _pad_00[0x44]; /* +0x0 */
+    float xTranslationY; /* +0x44: stTransformMatrix.stCol_3.xY */
+} GEOMEM_tdstTransformation_;
+
+typedef struct GEOMEM_tdstSuperObject_ {
+    unsigned char _pad_00[0x24]; /* +0x0 */
+    GEOMEM_tdstTransformation_* hGlobalMatrix; /* +0x24 */
+} GEOMEM_tdstSuperObject_;
+
+typedef struct GEOMEM_tdstEngineStructure_ {
+    unsigned char _pad_000[0x68]; /* +0x0 */
+    unsigned int ulTrameNumber; /* +0x68: stEngineTimer.ulTrameNumber */
+    unsigned char _pad_06c[0x5c]; /* +0x6c */
+    unsigned int ulRealTimeLowPart; /* +0xc8: stEngineTimer.stRealTimeCount.m_ulLowPart */
+    unsigned char _pad_0cc[0x560]; /* +0xcc */
+    GEOMEM_tdstSuperObject_* h_StdCamCaracter; /* +0x62c */
+} GEOMEM_tdstEngineStructure_;
+
+extern GEOMEM_tdstEngineStructure_ g_stEngineStructure;
+extern unsigned int g_uiAnotherRandom;
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoMem.c lines 16–37 */
 /* addr: 0x002a06d0  size: 428 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -49,29 +72,6 @@ unsigned char g_ucGEOModuleId;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-/* Partial layouts: only the members used here are named. */
-typedef struct GEOMEM_tdstTransformation_ {
-    unsigned char _pad_00[0x44]; /* +0x0 */
-    float xTranslationY; /* +0x44: stTransformMatrix.stCol_3.xY */
-} GEOMEM_tdstTransformation_;
-
-typedef struct GEOMEM_tdstSuperObject_ {
-    unsigned char _pad_00[0x24]; /* +0x0 */
-    GEOMEM_tdstTransformation_* hGlobalMatrix; /* +0x24 */
-} GEOMEM_tdstSuperObject_;
-
-typedef struct GEOMEM_tdstEngineStructure_ {
-    unsigned char _pad_000[0x68]; /* +0x0 */
-    unsigned int ulTrameNumber; /* +0x68: stEngineTimer.ulTrameNumber */
-    unsigned char _pad_06c[0x5c]; /* +0x6c */
-    unsigned int ulRealTimeLowPart; /* +0xc8: stEngineTimer.stRealTimeCount.m_ulLowPart */
-    unsigned char _pad_0cc[0x560]; /* +0xcc */
-    GEOMEM_tdstSuperObject_* h_StdCamCaracter; /* +0x62c */
-} GEOMEM_tdstEngineStructure_;
-
-extern GEOMEM_tdstEngineStructure_ g_stEngineStructure;
-extern unsigned int g_uiAnotherRandom;
-
 unsigned int fn_uiGetSomeBytes(unsigned int* _puiArray, unsigned int NbInts, unsigned int SomeOtherValue)
 {
     unsigned int Seeds[6];

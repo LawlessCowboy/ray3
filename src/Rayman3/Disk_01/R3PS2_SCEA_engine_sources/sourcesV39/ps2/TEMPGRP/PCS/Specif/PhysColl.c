@@ -170,6 +170,114 @@ extern GEO_tdstGeometricObject_* MOR_fn_xCopyGeometricObjectForMorph(GEO_tdstGeo
 
 extern int printf(const char* format, ...);
 
+/* Reconstruction notes:
+ * - The retail keeps _xStartIndexInObjectTable in its parameter home slot and
+ *   reloads it at both use points; 'volatile' reproduces that memory-resident
+ *   handling (and the retail's 0x100 frame).  A plain 'short' parameter is
+ *   kept in a register across the calls and no longer matches.
+ * - The retail debug record for this function lists the parameters
+ *   (_hActorSuperObject .. _xChannelIndex) and the locals uc, pNewPhysicalObject,
+ *   pEndPhysicalObject, pStartPhysicalObject, mp, xFreePosition, j and
+ *   xMorphListIndex; there is no uwChannel, so the (unsigned short) cast of
+ *   _xChannelIndex is written as an assignment expression inside the
+ *   fn_hMorphListIndex argument (MWCC then spills the cast value to 0xd0(sp)
+ *   and reloads it with lhu for fn_vPutMorphElementInChannel, exactly as the
+ *   retail does).
+ * - The objects table element's +4 field (h_Target) is the physical object
+ *   POINTER: the retail loads the field value, not its address.  The retail
+ *   addresses it as (base+4)+index*20 with the load at +0, i.e. the member
+ *   offset is not folded into the load displacement; the pointer-to-field
+ *   spelling '((char*)&table[0].h_Target + index*sizeof(elem))' reproduces
+ *   that, while table[index].h_Target folds the +4 into the load.  The loop
+ *   body keeps the folded form in the retail, so only the two straight-line
+ *   accesses use the idiom.
+ * - TODO: the remaining residual is MWCC instruction scheduling, not source
+ *   shape: the candidate is now the exact retail size (1596 bytes) with all
+ *   26 relocations resolved, but the retail evaluates the start-index
+ *   expression before the object-table chain (+0x21e) and reloads the volatile
+ *   _xStartIndexInObjectTable at the top of the morph-task setup block
+ *   (+0x374) where MWCC keeps it next to its use.  65 of 399 instructions
+ *   still differ, all of them the same instructions in a different order.
+ */
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+short MOR_fn_xPrepareMorph(HIE_tdstSuperObject_* _hActorSuperObject, volatile short _xStartIndexInObjectTable, short* _axEndIndexInObjectTable, unsigned char _ucNbTarget, int _iNbMillisecond, float* _axStart, float* _axEnd, unsigned char _ucMorphType, short _xChannelIndex);
+COL_tdstCollideObject_* PCS_fn_hGetGeoObjOfPhysicalCollSet(unsigned char ucZoneType, tdstPhysicalCollSet_* _hPhyCollSet);
+COL_tdstCollideObject_* PCS_fn_hGetZdmGeoObjOfPhysicalCollSet(tdstPhysicalCollSet_* _hPhyCollSet);
+COL_tdstCollideObject_* PCS_fn_hGetZdrGeoObjOfPhysicalCollSet(tdstPhysicalCollSet_* _hPhyCollSet);
+COL_tdstCollideObject_* PCS_fn_hGetZdeGeoObjOfPhysicalCollSet(tdstPhysicalCollSet_* _hPhyCollSet);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PCS\Specif\PhysColl.c lines 73–73 */
+/* addr: 0x00317fb0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 73
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+COL_tdstCollideObject_* PCS_fn_hGetZdeGeoObjOfPhysicalCollSet(tdstPhysicalCollSet_* _hPhyCollSet)
+{
+    return _hPhyCollSet->hZde;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PCS\Specif\PhysColl.c lines 86–86 */
+/* addr: 0x00317fa0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 86
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+COL_tdstCollideObject_* PCS_fn_hGetZdrGeoObjOfPhysicalCollSet(tdstPhysicalCollSet_* _hPhyCollSet)
+{
+    return _hPhyCollSet->hZdr;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PCS\Specif\PhysColl.c lines 99–99 */
+/* addr: 0x00317f90  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 99
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+COL_tdstCollideObject_* PCS_fn_hGetZdmGeoObjOfPhysicalCollSet(tdstPhysicalCollSet_* _hPhyCollSet)
+{
+    return _hPhyCollSet->hZdm;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PCS\Specif\PhysColl.c lines 112–130 */
+/* addr: 0x00317f30  size: 92 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 112
+ *   +0x0034 -> line 115
+ *   +0x003c -> line 118
+ *   +0x0044 -> line 121
+ *   +0x004c -> line 124
+ *   +0x0054 -> line 130
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+COL_tdstCollideObject_* PCS_fn_hGetGeoObjOfPhysicalCollSet(unsigned char ucZoneType, tdstPhysicalCollSet_* _hPhyCollSet)
+{
+    switch (ucZoneType)
+    {
+    case 0:
+
+        return _hPhyCollSet->hZdd;
+    case 1:
+
+        return _hPhyCollSet->hZdm;
+    case 3:
+
+        return _hPhyCollSet->hZdr;
+    case 2:
+
+        return _hPhyCollSet->hZde;
+    }
+
+    return NULL;
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PCS\Specif\PhysColl.c lines 162–312 */
 /* addr: 0x003178f0  size: 1596 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -275,117 +383,6 @@ extern int printf(const char* format, ...);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-/* Reconstruction notes:
- * - The retail keeps _xStartIndexInObjectTable in its parameter home slot and
- *   reloads it at both use points; 'volatile' reproduces that memory-resident
- *   handling (and the retail's 0x100 frame).  A plain 'short' parameter is
- *   kept in a register across the calls and no longer matches.
- * - The retail debug record for this function lists the parameters
- *   (_hActorSuperObject .. _xChannelIndex) and the locals uc, pNewPhysicalObject,
- *   pEndPhysicalObject, pStartPhysicalObject, mp, xFreePosition, j and
- *   xMorphListIndex; there is no uwChannel, so the (unsigned short) cast of
- *   _xChannelIndex is written as an assignment expression inside the
- *   fn_hMorphListIndex argument (MWCC then spills the cast value to 0xd0(sp)
- *   and reloads it with lhu for fn_vPutMorphElementInChannel, exactly as the
- *   retail does).
- * - The objects table element's +4 field (h_Target) is the physical object
- *   POINTER: the retail loads the field value, not its address.  The retail
- *   addresses it as (base+4)+index*20 with the load at +0, i.e. the member
- *   offset is not folded into the load displacement; the pointer-to-field
- *   spelling '((char*)&table[0].h_Target + index*sizeof(elem))' reproduces
- *   that, while table[index].h_Target folds the +4 into the load.  The loop
- *   body keeps the folded form in the retail, so only the two straight-line
- *   accesses use the idiom.
- * - TODO: the remaining residual is MWCC instruction scheduling, not source
- *   shape: the candidate is now the exact retail size (1596 bytes) with all
- *   26 relocations resolved, but the retail evaluates the start-index
- *   expression before the object-table chain (+0x21e) and reloads the volatile
- *   _xStartIndexInObjectTable at the top of the morph-task setup block
- *   (+0x374) where MWCC keeps it next to its use.  65 of 399 instructions
- *   still differ, all of them the same instructions in a different order.
- */
-
-/* The functions below are in their original source-line order (retail
- * emits them in reverse); these prototypes keep earlier calls valid. */
-short MOR_fn_xPrepareMorph(HIE_tdstSuperObject_* _hActorSuperObject, volatile short _xStartIndexInObjectTable, short* _axEndIndexInObjectTable, unsigned char _ucNbTarget, int _iNbMillisecond, float* _axStart, float* _axEnd, unsigned char _ucMorphType, short _xChannelIndex);
-COL_tdstCollideObject_* PCS_fn_hGetGeoObjOfPhysicalCollSet(unsigned char ucZoneType, tdstPhysicalCollSet_* _hPhyCollSet);
-COL_tdstCollideObject_* PCS_fn_hGetZdmGeoObjOfPhysicalCollSet(tdstPhysicalCollSet_* _hPhyCollSet);
-COL_tdstCollideObject_* PCS_fn_hGetZdrGeoObjOfPhysicalCollSet(tdstPhysicalCollSet_* _hPhyCollSet);
-COL_tdstCollideObject_* PCS_fn_hGetZdeGeoObjOfPhysicalCollSet(tdstPhysicalCollSet_* _hPhyCollSet);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PCS\Specif\PhysColl.c lines 112–130 */
-/* addr: 0x00317f30  size: 92 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 112
- *   +0x0034 -> line 115
- *   +0x003c -> line 118
- *   +0x0044 -> line 121
- *   +0x004c -> line 124
- *   +0x0054 -> line 130
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PCS\Specif\PhysColl.c lines 99–99 */
-/* addr: 0x00317f90  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 99
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PCS\Specif\PhysColl.c lines 86–86 */
-/* addr: 0x00317fa0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 86
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PCS\Specif\PhysColl.c lines 73–73 */
-/* addr: 0x00317fb0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 73
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-COL_tdstCollideObject_* PCS_fn_hGetZdeGeoObjOfPhysicalCollSet(tdstPhysicalCollSet_* _hPhyCollSet)
-{
-    return _hPhyCollSet->hZde;
-}
-
-COL_tdstCollideObject_* PCS_fn_hGetZdrGeoObjOfPhysicalCollSet(tdstPhysicalCollSet_* _hPhyCollSet)
-{
-    return _hPhyCollSet->hZdr;
-}
-
-COL_tdstCollideObject_* PCS_fn_hGetZdmGeoObjOfPhysicalCollSet(tdstPhysicalCollSet_* _hPhyCollSet)
-{
-    return _hPhyCollSet->hZdm;
-}
-
-COL_tdstCollideObject_* PCS_fn_hGetGeoObjOfPhysicalCollSet(unsigned char ucZoneType, tdstPhysicalCollSet_* _hPhyCollSet)
-{
-    switch (ucZoneType)
-    {
-    case 0:
-
-        return _hPhyCollSet->hZdd;
-    case 1:
-
-        return _hPhyCollSet->hZdm;
-    case 3:
-
-        return _hPhyCollSet->hZdr;
-    case 2:
-
-        return _hPhyCollSet->hZde;
-    }
-
-    return NULL;
-}
-
 short MOR_fn_xPrepareMorph(HIE_tdstSuperObject_* _hActorSuperObject, volatile short _xStartIndexInObjectTable, short* _axEndIndexInObjectTable, unsigned char _ucNbTarget, int _iNbMillisecond, float* _axStart, float* _axEnd, unsigned char _ucMorphType, short _xChannelIndex)
 {
     unsigned char uc;

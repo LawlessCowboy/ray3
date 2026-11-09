@@ -63,20 +63,6 @@ SAI_tdstListEntry_* fn_hSearchAnElementInList(SAI_tdstInternalStructure_* p_stIn
 
 unsigned char g_ucSAIModuleId;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\SAI_Priv.c lines 32–45 */
-/* addr: 0x003191f0  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 32
- *   +0x0004 -> line 33
- *   +0x0008 -> line 32
- *   +0x000c -> line 33
- *   +0x0024 -> line 43
- *   +0x0028 -> line 44
- *   +0x002c -> line 45
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 void SAI_fn_vFirstInit(void);
@@ -86,50 +72,105 @@ unsigned char SAI_fn_bInsertAnElementInList(SAI_tdstInternalStructure_* p_stInte
 unsigned char SAI_fn_bFreeAnElementFromList(SAI_tdstInternalStructure_* p_stInternalStructure, void* p_stData, unsigned short eUserFlags);
 SAI_tdstListEntry_* fn_hSearchAnElementInList(SAI_tdstInternalStructure_* p_stInternalStructure, void* p_vData, unsigned short eUserFlags);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\SAI_Priv.c lines 356–367 */
-/* addr: 0x00319230  size: 104 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 356
- *   +0x0010 -> line 357
- *   +0x0014 -> line 359
- *   +0x001c -> line 361
- *   +0x0038 -> line 362
- *   +0x0040 -> line 363
- *   +0x0044 -> line 364
- *   +0x0050 -> line 367
- *   +0x0058 -> line 366
- *   +0x005c -> line 367
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char SAI_fn_bRestoreAnElementFromList(SAI_tdstListEntry_* hListEntry);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\SAI_Priv.c lines 305–353 */
-/* addr: 0x003192a0  size: 268 bytes */
+/* The list search is inlined into its callers (SAI_fn_bInsertAnElementInList);
+   the pragma has to stay enabled until the end of the unit because the
+   deferred inlining pass reads the pragma state there. The out-of-line copy
+   is kept because the other modules call this function too. */
+#pragma auto_inline on
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\SAI_Priv.c lines 114–125 */
+/* addr: 0x00319820  size: 76 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 305
- *   +0x0004 -> line 311
- *   +0x0008 -> line 305
- *   +0x0014 -> line 311
- *   +0x0068 -> line 314
- *   +0x0080 -> line 315
- *   +0x0090 -> line 316
- *   +0x0098 -> line 318
- *   +0x00a0 -> line 319
- *   +0x00a8 -> line 321
- *   +0x00b0 -> line 322
- *   +0x00b8 -> line 324
- *   +0x00c0 -> line 325
- *   +0x00c8 -> line 327
- *   +0x00d0 -> line 328
- *   +0x00d8 -> line 332
- *   +0x00e0 -> line 343
- *   +0x00e8 -> line 345
- *   +0x00f8 -> line 352
- *   +0x00fc -> line 353
+ *   +0x0000 -> line 114
+ *   +0x0004 -> line 116
+ *   +0x000c -> line 118
+ *   +0x0028 -> line 119
+ *   +0x0030 -> line 121
+ *   +0x0034 -> line 122
+ *   +0x0040 -> line 124
+ *   +0x0044 -> line 125
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline reset
+#pragma auto_inline on
+SAI_tdstListEntry_* fn_hSearchAnElementInList(SAI_tdstInternalStructure_* p_stInternalStructure, void* p_vData, unsigned short eUserFlags)
+{
+    SAI_tdstListEntry_* hListEntry;
+
+    hListEntry = p_stInternalStructure->p_stFirstEntry; while (hListEntry != NULL)
+    {
+        if ((void*)hListEntry->p_vDataPointer == p_vData && (hListEntry->eFlags & 0x3ff) == eUserFlags)
+            return hListEntry;
+
+        hListEntry = hListEntry->p_stNextEntry;
+    }
+
+    return NULL;
+}
+#pragma auto_inline reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\SAI_Priv.c lines 128–174 */
+/* addr: 0x00319750  size: 208 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 128
+ *   +0x0020 -> line 131
+ *   +0x0024 -> line 128
+ *   +0x0028 -> line 130
+ *   +0x002c -> line 129
+ *   +0x0030 -> line 133
+ *   +0x0038 -> line 135
+ *   +0x0040 -> line 137
+ *   +0x0060 -> line 140
+ *   +0x0068 -> line 143
+ *   +0x006c -> line 144
+ *   +0x0070 -> line 145
+ *   +0x0078 -> line 147
+ *   +0x0080 -> line 157
+ *   +0x0094 -> line 158
+ *   +0x009c -> line 161
+ *   +0x00a8 -> line 162
+ *   +0x00ac -> line 173
+ *   +0x00b0 -> line 174
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+unsigned char SAI_fn_bFreeAnElementFromList(SAI_tdstInternalStructure_* p_stInternalStructure, void* p_stData, unsigned short eUserFlags)
+{
+    SAI_tdstListEntry_* p_stPreviousListEntry;
+    SAI_tdstListEntry_* p_stListEntry;
+    unsigned char bFound;
+
+    bFound = 0;
+    p_stListEntry = p_stInternalStructure->p_stFirstEntry;
+    p_stPreviousListEntry = NULL;
+
+    eUserFlags = SAI_fn_eVerifyFlags(eUserFlags);
+
+    while (p_stListEntry != NULL)
+    {
+        if ((void*)p_stListEntry->p_vDataPointer == p_stData && (p_stListEntry->eFlags & 0x3ff) == eUserFlags)
+        {
+            bFound = 1;
+            break;
+        }
+        p_stPreviousListEntry = p_stListEntry;
+        p_stListEntry = p_stListEntry->p_stNextEntry;
+    }
+
+    if (bFound)
+    {
+        if (p_stPreviousListEntry) p_stPreviousListEntry->p_stNextEntry = p_stListEntry->p_stNextEntry;
+        else p_stInternalStructure->p_stFirstEntry = p_stListEntry->p_stNextEntry;
+
+        if (p_stListEntry->p_stNextEntry == NULL)
+            p_stInternalStructure->p_stLastEntry = p_stPreviousListEntry;
+    }
+
+    return bFound;
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\SAI_Priv.c lines 177–302 */
 /* addr: 0x003193b0  size: 924 bytes */
@@ -192,106 +233,6 @@ unsigned char SAI_fn_bRestoreAnElementFromList(SAI_tdstListEntry_* hListEntry);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\SAI_Priv.c lines 128–174 */
-/* addr: 0x00319750  size: 208 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 128
- *   +0x0020 -> line 131
- *   +0x0024 -> line 128
- *   +0x0028 -> line 130
- *   +0x002c -> line 129
- *   +0x0030 -> line 133
- *   +0x0038 -> line 135
- *   +0x0040 -> line 137
- *   +0x0060 -> line 140
- *   +0x0068 -> line 143
- *   +0x006c -> line 144
- *   +0x0070 -> line 145
- *   +0x0078 -> line 147
- *   +0x0080 -> line 157
- *   +0x0094 -> line 158
- *   +0x009c -> line 161
- *   +0x00a8 -> line 162
- *   +0x00ac -> line 173
- *   +0x00b0 -> line 174
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\SAI_Priv.c lines 114–125 */
-/* addr: 0x00319820  size: 76 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 114
- *   +0x0004 -> line 116
- *   +0x000c -> line 118
- *   +0x0028 -> line 119
- *   +0x0030 -> line 121
- *   +0x0034 -> line 122
- *   +0x0040 -> line 124
- *   +0x0044 -> line 125
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-/* The list search is inlined into its callers (SAI_fn_bInsertAnElementInList);
-   the pragma has to stay enabled until the end of the unit because the
-   deferred inlining pass reads the pragma state there. The out-of-line copy
-   is kept because the other modules call this function too. */
-#pragma auto_inline on
-
-#pragma auto_inline reset
-#pragma auto_inline on
-SAI_tdstListEntry_* fn_hSearchAnElementInList(SAI_tdstInternalStructure_* p_stInternalStructure, void* p_vData, unsigned short eUserFlags)
-{
-    SAI_tdstListEntry_* hListEntry;
-
-    hListEntry = p_stInternalStructure->p_stFirstEntry; while (hListEntry != NULL)
-    {
-        if ((void*)hListEntry->p_vDataPointer == p_vData && (hListEntry->eFlags & 0x3ff) == eUserFlags)
-            return hListEntry;
-
-        hListEntry = hListEntry->p_stNextEntry;
-    }
-
-    return NULL;
-}
-#pragma auto_inline reset
-
-unsigned char SAI_fn_bFreeAnElementFromList(SAI_tdstInternalStructure_* p_stInternalStructure, void* p_stData, unsigned short eUserFlags)
-{
-    SAI_tdstListEntry_* p_stPreviousListEntry;
-    SAI_tdstListEntry_* p_stListEntry;
-    unsigned char bFound;
-
-    bFound = 0;
-    p_stListEntry = p_stInternalStructure->p_stFirstEntry;
-    p_stPreviousListEntry = NULL;
-
-    eUserFlags = SAI_fn_eVerifyFlags(eUserFlags);
-
-    while (p_stListEntry != NULL)
-    {
-        if ((void*)p_stListEntry->p_vDataPointer == p_stData && (p_stListEntry->eFlags & 0x3ff) == eUserFlags)
-        {
-            bFound = 1;
-            break;
-        }
-        p_stPreviousListEntry = p_stListEntry;
-        p_stListEntry = p_stListEntry->p_stNextEntry;
-    }
-
-    if (bFound)
-    {
-        if (p_stPreviousListEntry) p_stPreviousListEntry->p_stNextEntry = p_stListEntry->p_stNextEntry;
-        else p_stInternalStructure->p_stFirstEntry = p_stListEntry->p_stNextEntry;
-
-        if (p_stListEntry->p_stNextEntry == NULL)
-            p_stInternalStructure->p_stLastEntry = p_stPreviousListEntry;
-    }
-
-    return bFound;
-}
-
 unsigned char SAI_fn_bInsertAnElementInList(SAI_tdstInternalStructure_* p_stInternalStructure, void* p_stData, unsigned int ulSizeOfData, unsigned short eTypeOfData, unsigned short eUserFlags)
 {
     void* p_vBeginBloc;
@@ -425,6 +366,32 @@ ucBooleanFound:
     return bReturn;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\SAI_Priv.c lines 305–353 */
+/* addr: 0x003192a0  size: 268 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 305
+ *   +0x0004 -> line 311
+ *   +0x0008 -> line 305
+ *   +0x0014 -> line 311
+ *   +0x0068 -> line 314
+ *   +0x0080 -> line 315
+ *   +0x0090 -> line 316
+ *   +0x0098 -> line 318
+ *   +0x00a0 -> line 319
+ *   +0x00a8 -> line 321
+ *   +0x00b0 -> line 322
+ *   +0x00b8 -> line 324
+ *   +0x00c0 -> line 325
+ *   +0x00c8 -> line 327
+ *   +0x00d0 -> line 328
+ *   +0x00d8 -> line 332
+ *   +0x00e0 -> line 343
+ *   +0x00e8 -> line 345
+ *   +0x00f8 -> line 352
+ *   +0x00fc -> line 353
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char SAI_fn_bRestoreAnElementFromList(SAI_tdstListEntry_* hListEntry)
 {
     unsigned char bReturn;
@@ -463,6 +430,22 @@ unsigned char SAI_fn_bRestoreAnElementFromList(SAI_tdstListEntry_* hListEntry)
     return bReturn;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\SAI_Priv.c lines 356–367 */
+/* addr: 0x00319230  size: 104 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 356
+ *   +0x0010 -> line 357
+ *   +0x0014 -> line 359
+ *   +0x001c -> line 361
+ *   +0x0038 -> line 362
+ *   +0x0040 -> line 363
+ *   +0x0044 -> line 364
+ *   +0x0050 -> line 367
+ *   +0x0058 -> line 366
+ *   +0x005c -> line 367
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char SAI_fn_bInitAllTableWhen(SAI_tdstInternalStructure_* p_stInternalStructure, unsigned short eUserFlags)
 {
     SAI_tdstListEntry_* hListEntry;
@@ -478,6 +461,19 @@ unsigned char SAI_fn_bInitAllTableWhen(SAI_tdstInternalStructure_* p_stInternalS
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\SAI_Priv.c lines 32–45 */
+/* addr: 0x003191f0  size: 56 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 32
+ *   +0x0004 -> line 33
+ *   +0x0008 -> line 32
+ *   +0x000c -> line 33
+ *   +0x0024 -> line 43
+ *   +0x0028 -> line 44
+ *   +0x002c -> line 45
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void SAI_fn_vFirstInit(void)
 {
     if (g_ucSAIModuleId == 255)

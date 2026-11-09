@@ -838,20 +838,6 @@ unsigned char SHW_g_bCurrentlyDrawingShadow;
 
 char HIE_cDetectObjectIntersectSegmentWithSuperObject(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, HIE_tdstSuperObject_* _hSprObj, char cTypeOfSearch, int* a_lHandleOnResult, short* p_NbOfObjectsFound);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HiePick.c lines 31–38 */
-/* addr: 0x00320430  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 31
- *   +0x0004 -> line 35
- *   +0x0008 -> line 31
- *   +0x000c -> line 35
- *   +0x001c -> line 36
- *   +0x0024 -> line 37
- *   +0x0028 -> line 38
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 MAT_tdstTransformation_* GEO_fn_hCreateMatrix(void);
@@ -859,21 +845,49 @@ int HIE_bDetectIntersectSegmentWithSuperObject(MTH3D_tdstVector_* p_stVertexA, M
 char HIE_cDetectObjectIntersectSegmentWithSuperObject(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, HIE_tdstSuperObject_* _hSprObj, char cTypeOfSearch, int* a_lHandleOnResult, short* p_NbOfObjectsFound);
 unsigned char HIE_bIntersectSegmentWithFirstSuperObject(MTH3D_tdstVector_* _p_stVertexA, MTH3D_tdstVector_* _p_stVectAB, HIE_tdstSuperObject_* hSprObj, MTH3D_tdstVector_* _p_stHit, MTH3D_tdstVector_* _p_stNormal, HIE_tdstSuperObject_** _p_hSprObjHit, GMT_tdstCollideMaterial_** _p_hColMat);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HiePick.c lines 1307–1316 */
-/* addr: 0x00320470  size: 64 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HiePick.c lines 958–1023 */
+/* addr: 0x00320b50  size: 832 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1307
- *   +0x0004 -> line 1314
- *   +0x0008 -> line 1307
- *   +0x000c -> line 1314
- *   +0x0014 -> line 1309
- *   +0x0018 -> line 1314
- *   +0x0020 -> line 1316
- *   +0x0024 -> line 1314
- *   +0x0038 -> line 1316
+ *   +0x0000 -> line 958
+ *   +0x0040 -> line 966
+ *   +0x00a8 -> line 974
+ *   +0x00ac -> line 969
+ *   +0x00b0 -> line 974
+ *   +0x00c0 -> line 977
+ *   +0x00c8 -> line 980
+ *   +0x00cc -> line 983
+ *   +0x00e0 -> line 985
+ *   +0x0108 -> line 991
+ *   +0x01b4 -> line 994
+ *   +0x01b8 -> line 991
+ *   +0x01c4 -> line 994
+ *   +0x01f0 -> line 995
+ *   +0x024c -> line 996
+ *   +0x0254 -> line 999
+ *   +0x0268 -> line 1000
+ *   +0x027c -> line 1002
+ *   +0x02e0 -> line 1005
+ *   +0x02e8 -> line 1007
+ *   +0x02ec -> line 1009
+ *   +0x02fc -> line 1010
+ *   +0x0308 -> line 1012
+ *   +0x0314 -> line 1017
+ *   +0x0318 -> line 1023
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+unsigned char HIE_bIntersectSegmentWithFirstSuperObject(MTH3D_tdstVector_* _p_stVertexA, MTH3D_tdstVector_* _p_stVectAB, HIE_tdstSuperObject_* hSprObj, MTH3D_tdstVector_* _p_stHit, MTH3D_tdstVector_* _p_stNormal, HIE_tdstSuperObject_** _p_hSprObjHit, GMT_tdstCollideMaterial_** _p_hColMat)
+{
+    GMT_tdstGameMaterial_* hMaterial;
+    float xNorm;
+    MTH3D_tdstVector_ stSphereCenter;
+    MTH3D_tdstVector_ stNormal;
+    GLI_tdstDataOfElement_* p_stDataOfElement;
+    COL_tdstCollideObject_* p_stCollObject;
+    HIE_tdstPickInfo_ aDEF_stIntersInfo[3];
+    /* TODO: decompile from asm/... */
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HiePick.c lines 1081–1298 */
 /* addr: 0x003204b0  size: 1564 bytes */
@@ -976,51 +990,6 @@ unsigned char HIE_bIntersectSegmentWithFirstSuperObject(MTH3D_tdstVector_* _p_st
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HiePick.c lines 958–1023 */
-/* addr: 0x00320b50  size: 832 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 958
- *   +0x0040 -> line 966
- *   +0x00a8 -> line 974
- *   +0x00ac -> line 969
- *   +0x00b0 -> line 974
- *   +0x00c0 -> line 977
- *   +0x00c8 -> line 980
- *   +0x00cc -> line 983
- *   +0x00e0 -> line 985
- *   +0x0108 -> line 991
- *   +0x01b4 -> line 994
- *   +0x01b8 -> line 991
- *   +0x01c4 -> line 994
- *   +0x01f0 -> line 995
- *   +0x024c -> line 996
- *   +0x0254 -> line 999
- *   +0x0268 -> line 1000
- *   +0x027c -> line 1002
- *   +0x02e0 -> line 1005
- *   +0x02e8 -> line 1007
- *   +0x02ec -> line 1009
- *   +0x02fc -> line 1010
- *   +0x0308 -> line 1012
- *   +0x0314 -> line 1017
- *   +0x0318 -> line 1023
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-unsigned char HIE_bIntersectSegmentWithFirstSuperObject(MTH3D_tdstVector_* _p_stVertexA, MTH3D_tdstVector_* _p_stVectAB, HIE_tdstSuperObject_* hSprObj, MTH3D_tdstVector_* _p_stHit, MTH3D_tdstVector_* _p_stNormal, HIE_tdstSuperObject_** _p_hSprObjHit, GMT_tdstCollideMaterial_** _p_hColMat)
-{
-    GMT_tdstGameMaterial_* hMaterial;
-    float xNorm;
-    MTH3D_tdstVector_ stSphereCenter;
-    MTH3D_tdstVector_ stNormal;
-    GLI_tdstDataOfElement_* p_stDataOfElement;
-    COL_tdstCollideObject_* p_stCollObject;
-    HIE_tdstPickInfo_ aDEF_stIntersInfo[3];
-    /* TODO: decompile from asm/... */
-}
-
 char HIE_cDetectObjectIntersectSegmentWithSuperObject(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, HIE_tdstSuperObject_* _hSprObj, char cTypeOfSearch, int* a_lHandleOnResult, short* p_NbOfObjectsFound)
 {
     short i;
@@ -1048,6 +1017,21 @@ char HIE_cDetectObjectIntersectSegmentWithSuperObject(MTH3D_tdstVector_* p_stVer
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HiePick.c lines 1307–1316 */
+/* addr: 0x00320470  size: 64 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1307
+ *   +0x0004 -> line 1314
+ *   +0x0008 -> line 1307
+ *   +0x000c -> line 1314
+ *   +0x0014 -> line 1309
+ *   +0x0018 -> line 1314
+ *   +0x0020 -> line 1316
+ *   +0x0024 -> line 1314
+ *   +0x0038 -> line 1316
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int HIE_bDetectIntersectSegmentWithSuperObject(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, HIE_tdstSuperObject_* _hSprObj)
 {
     short NumberOfObjectsFound;
@@ -1058,6 +1042,19 @@ int HIE_bDetectIntersectSegmentWithSuperObject(MTH3D_tdstVector_* p_stVertexA, M
     return 1 ^ (HIE_cDetectObjectIntersectSegmentWithSuperObject(p_stVertexA, p_stVectAB, _hSprObj, 0, &lResult, &NumberOfObjectsFound) == 0);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HiePick.c lines 31–38 */
+/* addr: 0x00320430  size: 56 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 31
+ *   +0x0004 -> line 35
+ *   +0x0008 -> line 31
+ *   +0x000c -> line 35
+ *   +0x001c -> line 36
+ *   +0x0024 -> line 37
+ *   +0x0028 -> line 38
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 MAT_tdstTransformation_* GEO_fn_hCreateMatrix(void)
 {
     MAT_tdstTransformation_* hReturn;

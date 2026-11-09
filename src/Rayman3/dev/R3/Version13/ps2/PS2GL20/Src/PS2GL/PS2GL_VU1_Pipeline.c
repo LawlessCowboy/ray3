@@ -1214,23 +1214,6 @@ unsigned long PointLighting_Fast_Simple_c;
 unsigned long PointLighting_Simple_c;
 tagGScontext g_gsContext;
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 54–65 */
-/* addr: 0x00181fa0  size: 72 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 54
- *   +0x000c -> line 56
- *   +0x0014 -> line 58
- *   +0x0018 -> line 64
- *   +0x001c -> line 58
- *   +0x0020 -> line 59
- *   +0x0028 -> line 61
- *   +0x0030 -> line 62
- *   +0x0034 -> line 64
- *   +0x0040 -> line 65
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 void PS2glBufferTriangleStripToTriangle(float (*pBuf)[4], int iSrcStart, int iDstStart);
@@ -1255,26 +1238,6 @@ void VU1_FlushPreviousBuffer(void);
 void VU1_FlushCurrentBuffer(void);
 void VU1FlushBuffer(void);
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 2431–2456 */
-/* addr: 0x00181ff0  size: 596 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2431
- *   +0x0004 -> line 2432
- *   +0x0008 -> line 2431
- *   +0x001c -> line 2432
- *   +0x0028 -> line 2434
- *   +0x002c -> line 2435
- *   +0x0034 -> line 2440
- *   +0x0044 -> line 2442
- *   +0x006c -> line 2445
- *   +0x0144 -> line 2446
- *   +0x014c -> line 2448
- *   +0x0228 -> line 2451
- *   +0x0234 -> line 2455
- *   +0x023c -> line 2456
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void PS2glBufferTriangleFanToTriangle(float (*pBuf)[4], int iSrcStart, int iDstStart);
 void PS2glVU1TexCoordsCubeMappingVectorTo2D(tagGLcontext* pctx);
 void PS2glVIFSendBuffer(unsigned char bEOP);
@@ -1283,6 +1246,1465 @@ void PS2glVIFSendBuffer(unsigned char bEOP);
 
 #pragma opt_lifetimes reset
 #pragma opt_strength_reduction reset
+
+void impPS2glBegin(unsigned int mode);
+void impPS2glEnd(void);
+
+void sceVu0AddVector(float dst[4], float v0[4], float v1[4]);
+void sceVu0CopyVector(float dst[4], float src[4]);
+void sceVu0MulVector(float dst[4], float v0[4], float v1[4]);
+void sceVu0Normalize(float dst[4], float src[4]);
+void sceVu0TransposeMatrix(float dst[4][4], float src[4][4]);
+
+/* A whole 4x4 matrix copy is one 64-byte block move; the retail code emits
+ * it as four quadword loads followed by four quadword stores. */
+typedef struct tag_stMatriceBlock tag_stMatriceBlock;
+struct tag_stMatriceBlock {
+    __int128 qw0, qw1, qw2, qw3;
+};
+
+void sceVu0MulMatrix(float dest[4][4], float left[4][4], float right[4][4]);
+
+void sceVu0UnitMatrix(float m[4][4]);
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 735–763 */
+/* addr: 0x00184ea0  size: 208 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 735
+ *   +0x0004 -> line 738
+ *   +0x0008 -> line 735
+ *   +0x0014 -> line 738
+ *   +0x0018 -> line 737
+ *   +0x0020 -> line 740
+ *   +0x0054 -> line 741
+ *   +0x005c -> line 744
+ *   +0x0060 -> line 746
+ *   +0x0064 -> line 753
+ *   +0x0068 -> line 759
+ *   +0x006c -> line 746
+ *   +0x0070 -> line 749
+ *   +0x0074 -> line 750
+ *   +0x0078 -> line 752
+ *   +0x007c -> line 753
+ *   +0x0080 -> line 759
+ *   +0x0084 -> line 746
+ *   +0x0088 -> line 744
+ *   +0x0090 -> line 746
+ *   +0x0098 -> line 749
+ *   +0x009c -> line 750
+ *   +0x00a0 -> line 751
+ *   +0x00a4 -> line 752
+ *   +0x00a8 -> line 753
+ *   +0x00ac -> line 756
+ *   +0x00b4 -> line 758
+ *   +0x00b8 -> line 759
+ *   +0x00bc -> line 763
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void impPS2glFlush(void);
+
+void impPS2glFlush(void);
+void sceVu0UnitMatrix(float m[4][4]);
+void sceVu0AddVector(float dst[4], float v0[4], float v1[4]);
+
+int sceGsSyncPath(int mode, unsigned short timeout);
+int printf(const char* fmt, ...);
+void WaitDMAFromSPR(void);
+void FlushCache(int operation);
+
+/* PS2GLAUX.c VU1SendPackage, inlined here from its header definition. */
+inline void VU1SendPackage(_sceDmaTag* pTag)
+{
+    if (sceGsSyncPath(0, 0))
+        printf("In VU1SendPackage, SyncPath failure!\n");
+    if (g_stSPRInfo.uiState & 1)
+        WaitDMAFromSPR();
+    FlushCache(0);
+    *(volatile unsigned int*)0x10009020 = 0;
+    *(volatile unsigned int*)0x10009030 = (unsigned int)pTag;
+    *(volatile unsigned int*)0x1000E010 = 2;
+    *(volatile unsigned int*)0x10009000 = 0x145;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 218–261 */
+/* addr: 0x00185810  size: 280 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 218
+ *   +0x0004 -> line 220
+ *   +0x0008 -> line 218
+ *   +0x0010 -> line 220
+ *   +0x0024 -> line 226
+ *   +0x0028 -> line 227
+ *   +0x0030 -> line 237
+ *   +0x0034 -> line 228
+ *   +0x0038 -> line 237
+ *   +0x0044 -> line 227
+ *   +0x0048 -> line 228
+ *   +0x0054 -> line 229
+ *   +0x0060 -> line 230
+ *   +0x006c -> line 233
+ *   +0x008c -> line 234
+ *   +0x0094 -> line 237
+ *   +0x009c -> line 234
+ *   +0x00a0 -> line 237
+ *   +0x0108 -> line 261
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void VU1FlushBuffer(void)
+{
+    void* pVoid;
+
+    if (g_PS2glContext.pVIFIBufTail != g_PS2glContext.pVIFInBuf)
+    {
+        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->qwc = 0;
+        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->mark = 0;
+        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->id = 0x70;
+        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->p[0] = 0;
+        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->p[1] = 0;
+
+        pVoid = g_PS2glContext.pVIFInBuf;
+        g_PS2glContext.pVIFInBuf = g_PS2glContext.pVIFOutBuf;
+        g_PS2glContext.pVIFOutBuf = pVoid;
+        g_PS2glContext.pVIFIBufTail = g_PS2glContext.pVIFInBuf;
+
+        VU1SendPackage((_sceDmaTag*)((unsigned int)g_PS2glContext.pVIFOutBuf & 0xCFFFFFFF));
+    }
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 267–288 */
+/* addr: 0x001856f0  size: 288 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 267
+ *   +0x0004 -> line 268
+ *   +0x0008 -> line 267
+ *   +0x0010 -> line 268
+ *   +0x0024 -> line 274
+ *   +0x0028 -> line 275
+ *   +0x0030 -> line 286
+ *   +0x0034 -> line 276
+ *   +0x0038 -> line 284
+ *   +0x003c -> line 286
+ *   +0x0048 -> line 275
+ *   +0x004c -> line 276
+ *   +0x0058 -> line 277
+ *   +0x0064 -> line 278
+ *   +0x0070 -> line 281
+ *   +0x0078 -> line 284
+ *   +0x007c -> line 281
+ *   +0x0094 -> line 282
+ *   +0x009c -> line 286
+ *   +0x00a4 -> line 282
+ *   +0x00a8 -> line 286
+ *   +0x0110 -> line 288
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void VU1_FlushCurrentBuffer(void)
+{
+    void* pVoid;
+
+    if (g_PS2glContext.pVIFIBufTail != g_PS2glContext.pVIFInBuf)
+    {
+        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->qwc = 0;
+        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->mark = 0;
+        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->id = 0x70;
+        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->p[0] = 0;
+        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->p[1] = 0;
+
+        pVoid = g_PS2glContext.pVIFInBuf;
+        g_PS2glContext.pVIFInBuf = g_PS2glContext.pVIFOutBuf;
+        g_PS2glContext.pVIFOutBuf = pVoid;
+        g_PS2glContext.pVIFIBufTail = g_PS2glContext.pVIFInBuf;
+
+        PS2GL_G_BufferIsReady = 1;
+
+        VU1SendPackage((_sceDmaTag*)((unsigned int)g_PS2glContext.pVIFOutBuf & 0xCFFFFFFF));
+    }
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 291–298 */
+/* addr: 0x00185640  size: 164 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 291
+ *   +0x000c -> line 292
+ *   +0x0018 -> line 295
+ *   +0x0090 -> line 296
+ *   +0x0094 -> line 298
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void VU1_FlushPreviousBuffer(void)
+{
+    if (PS2GL_G_BufferIsReady)
+    {
+        VU1SendPackage((_sceDmaTag*)((unsigned int)g_PS2glContext.pVIFOutBuf & 0xCFFFFFFF));
+        PS2GL_G_BufferIsReady = 0;
+    }
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 308–313 */
+/* addr: 0x00185600  size: 52 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 308
+ *   +0x0004 -> line 311
+ *   +0x0008 -> line 308
+ *   +0x000c -> line 311
+ *   +0x0010 -> line 309
+ *   +0x0014 -> line 308
+ *   +0x0018 -> line 309
+ *   +0x001c -> line 311
+ *   +0x0020 -> line 309
+ *   +0x0024 -> line 311
+ *   +0x0028 -> line 312
+ *   +0x002c -> line 313
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void VU1StartWorkingOnFakeSwapBuffer(void)
+{
+    s_InBuf_saved = (int)g_PS2glContext.pVIFInBuf;
+    s_InBufTail_saved = (int)g_PS2glContext.pVIFIBufTail;
+    g_PS2glContext.pVIFInBuf = (float (*)[4])PS2GL_FakeSwapBuffer;
+    g_PS2glContext.pVIFIBufTail = (float (*)[4])PS2GL_FakeSwapBuffer;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 317–319 */
+/* addr: 0x001855e0  size: 28 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 317
+ *   +0x0008 -> line 318
+ *   +0x000c -> line 317
+ *   +0x0010 -> line 318
+ *   +0x0014 -> line 319
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void VU1StopWorkingOnFakeSwapBuffer(void)
+{
+    g_PS2glContext.pVIFInBuf = (float (*)[4])s_InBuf_saved;
+    g_PS2glContext.pVIFIBufTail = (float (*)[4])s_InBufTail_saved;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 322–334 */
+/* addr: 0x001854f0  size: 232 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 322
+ *   +0x0004 -> line 323
+ *   +0x0008 -> line 322
+ *   +0x0010 -> line 323
+ *   +0x0024 -> line 326
+ *   +0x0028 -> line 327
+ *   +0x0030 -> line 332
+ *   +0x0034 -> line 328
+ *   +0x0038 -> line 332
+ *   +0x0044 -> line 327
+ *   +0x0048 -> line 328
+ *   +0x0054 -> line 329
+ *   +0x0060 -> line 330
+ *   +0x006c -> line 332
+ *   +0x00d8 -> line 334
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void VU1FlushFakeSwapBuffer(void)
+{
+    if (g_PS2glContext.pVIFIBufTail != g_PS2glContext.pVIFInBuf)
+    {
+        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->qwc = 0;
+        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->mark = 0;
+        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->id = 0x70;
+        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->p[0] = 0;
+        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->p[1] = 0;
+
+        VU1SendPackage((_sceDmaTag*)((unsigned int)g_PS2glContext.pVIFInBuf & 0xCFFFFFFF));
+    }
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 340–341 */
+/* addr: 0x001854b0  size: 52 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 340
+ *   +0x002c -> line 341
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+unsigned int VU1BufferFreeSpace(void)
+{
+    return uiMaxVifDmaBufLength - (g_PS2glContext.pVIFIBufTail - g_PS2glContext.pVIFInBuf) - 1;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 512–632 */
+/* addr: 0x001851a0  size: 776 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 512
+ *   +0x0004 -> line 527
+ *   +0x0008 -> line 512
+ *   +0x0020 -> line 527
+ *   +0x0024 -> line 514
+ *   +0x0028 -> line 525
+ *   +0x002c -> line 527
+ *   +0x0038 -> line 529
+ *   +0x0040 -> line 536
+ *   +0x0044 -> line 529
+ *   +0x004c -> line 531
+ *   +0x0058 -> line 536
+ *   +0x0068 -> line 538
+ *   +0x0070 -> line 539
+ *   +0x0078 -> line 540
+ *   +0x0080 -> line 543
+ *   +0x00a0 -> line 544
+ *   +0x00c0 -> line 551
+ *   +0x00cc -> line 549
+ *   +0x00d0 -> line 551
+ *   +0x015c -> line 552
+ *   +0x0160 -> line 551
+ *   +0x0164 -> line 552
+ *   +0x01f8 -> line 554
+ *   +0x0208 -> line 556
+ *   +0x0214 -> line 557
+ *   +0x021c -> line 558
+ *   +0x022c -> line 560
+ *   +0x023c -> line 561
+ *   +0x0240 -> line 564
+ *   +0x0248 -> line 565
+ *   +0x0250 -> line 562
+ *   +0x0258 -> line 564
+ *   +0x025c -> line 565
+ *   +0x0260 -> line 566
+ *   +0x026c -> line 567
+ *   +0x0278 -> line 568
+ *   +0x0284 -> line 569
+ *   +0x0290 -> line 570
+ *   +0x029c -> line 571
+ *   +0x02a8 -> line 572
+ *   +0x02b0 -> line 573
+ *   +0x02b8 -> line 575
+ *   +0x02c8 -> line 602
+ *   +0x02cc -> line 604
+ *   +0x02d4 -> line 602
+ *   +0x02d8 -> line 604
+ *   +0x02dc -> line 605
+ *   +0x02e4 -> line 607
+ *   +0x02ec -> line 631
+ *   +0x02f0 -> line 632
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+unsigned char VU1UpdateMatriceInsideSDL(tagGLcontext* pctx, unsigned int* pMask)
+{
+    tag_stVU1MatriceTinSDL* pstMatriceTinSDL;
+    int (*pBuf)[4];
+    float (*pTexture0)[4][4];
+    float (*pTexture1)[4][4];
+    unsigned char bTexture0;
+    unsigned char bTexture1;
+    pstMatriceTinSDL = (tag_stVU1MatriceTinSDL*)pctx->pVIFIBufTail;
+    g_PS2glContext.bMatrixChanged = 0;
+    if (!(g_PS2glContext.usDontUpdateBits & 4))
+    {
+        *pMask |= 0x01000000;
+        pctx->pVIFIBufTail += sizeof(*pstMatriceTinSDL) / sizeof(*pctx->pVIFIBufTail);
+        if (g_PS2glContext.uiStaticDisplayListBits & 0x200)
+        {
+            sceVu0UnitMatrix(pstMatriceTinSDL->mLocalWorld);
+            sceVu0UnitMatrix(pstMatriceTinSDL->mNormal);
+        }
+        else
+        {
+            *(tag_stMatriceBlock*)&pstMatriceTinSDL->mLocalWorld = *(tag_stMatriceBlock*)pctx->ModelViewMatrix;
+            *(tag_stMatriceBlock*)&pstMatriceTinSDL->mNormal = *(tag_stMatriceBlock*)pctx->ModelViewMatrix;
+        }
+        pTexture0 = &pctx->TextureMatrix[0];
+        pTexture1 = &pctx->TextureMatrix[1];
+        bTexture0 = 1;
+        if (pTexture0[0][0][0] == 1.0f && pTexture0[0][0][1] == 0.0f && pTexture0[0][0][2] == 0.0f &&
+            pTexture0[0][1][0] == 0.0f && pTexture0[0][1][1] == 1.0f && pTexture0[0][1][2] == 0.0f)
+        {
+            bTexture0 = 0;
+        }
+        /* The retail code keeps the two texture flags in the last row of the
+         * normal matrix. */
+        ((int*)pstMatriceTinSDL->mNormal[3])[2] = bTexture0;
+        bTexture1 = 1;
+        if (pTexture1[0][0][0] == 1.0f && pTexture1[0][0][1] == 0.0f && pTexture1[0][0][2] == 0.0f &&
+            pTexture1[0][1][0] == 0.0f && pTexture1[0][1][1] == 1.0f && pTexture1[0][1][2] == 0.0f)
+        {
+            bTexture1 = 0;
+        }
+        ((int*)pstMatriceTinSDL->mNormal[3])[3] = bTexture1;
+        if (bTexture0 || bTexture1)
+        {
+            *pMask |= 0x02000000;
+            if (bTexture0)
+            {
+                uiPreparation |= 2;
+            }
+            else
+            {
+                uiPreparation &= ~3;
+            }
+            pBuf = (int(*)[4])pctx->pVIFIBufTail;
+            pBuf[0][0] = pBuf[0][1] = 0;
+            pBuf[0][2] = 0x01000404;
+            pBuf[0][3] = 0x6C06004A;
+            pBuf[1] = ((int(*)[4])pTexture0)[0];
+            pBuf[2] = ((int(*)[4])pTexture0)[1];
+            pBuf[3] = ((int(*)[4])pTexture0)[2];
+            pBuf[4] = ((int(*)[4])pTexture1)[0];
+            pBuf[5] = ((int(*)[4])pTexture1)[1];
+            pBuf[6] = ((int(*)[4])pTexture1)[2];
+            pctx->pVIFIBufTail += 7;
+        }
+        else
+        {
+            uiPreparation &= ~3;
+        }
+        pstMatriceTinSDL->ivUnpackCode[0] = pstMatriceTinSDL->ivUnpackCode[1] = 0;
+        pstMatriceTinSDL->ivUnpackCode[2] = 0x01000404;
+        pstMatriceTinSDL->ivUnpackCode[3] = 0x6C080000;
+        return 1;
+    }
+    return 0;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 650–651 */
+/* addr: 0x00185170  size: 36 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 650
+ *   +0x001c -> line 651
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void VU1_RE_UpdateMatriceOutsideSDL(tag_stVU1MatriceToutSDL* pstMatriceToutSDL, float (*NewModelView)[4][4])
+{
+    __int128 v3, v2, v1, v0;
+    v0 = ((const volatile __int128*)NewModelView)[0];
+    v1 = ((const volatile __int128*)NewModelView)[1];
+    v2 = ((const volatile __int128*)NewModelView)[2];
+    v3 = ((const volatile __int128*)NewModelView)[3];
+    ((__int128*)pstMatriceToutSDL->mWorldView)[0] = v0;
+    ((__int128*)pstMatriceToutSDL->mWorldView)[1] = v1;
+    ((__int128*)pstMatriceToutSDL->mWorldView)[2] = v2;
+    ((__int128*)pstMatriceToutSDL->mWorldView)[3] = v3;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 655–721 */
+/* addr: 0x00184f70  size: 504 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 655
+ *   +0x0004 -> line 663
+ *   +0x0008 -> line 655
+ *   +0x001c -> line 663
+ *   +0x0020 -> line 657
+ *   +0x0024 -> line 663
+ *   +0x002c -> line 661
+ *   +0x0030 -> line 660
+ *   +0x0034 -> line 663
+ *   +0x0038 -> line 660
+ *   +0x003c -> line 663
+ *   +0x0064 -> line 664
+ *   +0x006c -> line 666
+ *   +0x0070 -> line 679
+ *   +0x0074 -> line 666
+ *   +0x007c -> line 672
+ *   +0x009c -> line 675
+ *   +0x00bc -> line 677
+ *   +0x00d8 -> line 679
+ *   +0x00e0 -> line 680
+ *   +0x00ec -> line 682
+ *   +0x00f0 -> line 691
+ *   +0x00f8 -> line 688
+ *   +0x00fc -> line 691
+ *   +0x0100 -> line 680
+ *   +0x010c -> line 681
+ *   +0x011c -> line 682
+ *   +0x0134 -> line 683
+ *   +0x0138 -> line 685
+ *   +0x0140 -> line 686
+ *   +0x0148 -> line 687
+ *   +0x0150 -> line 691
+ *   +0x0158 -> line 693
+ *   +0x0160 -> line 694
+ *   +0x0164 -> line 706
+ *   +0x0168 -> line 695
+ *   +0x016c -> line 694
+ *   +0x0170 -> line 695
+ *   +0x0174 -> line 702
+ *   +0x0178 -> line 696
+ *   +0x017c -> line 703
+ *   +0x0180 -> line 705
+ *   +0x0184 -> line 706
+ *   +0x0188 -> line 712
+ *   +0x0190 -> line 719
+ *   +0x0198 -> line 696
+ *   +0x019c -> line 697
+ *   +0x01a0 -> line 698
+ *   +0x01a4 -> line 699
+ *   +0x01ac -> line 702
+ *   +0x01b0 -> line 703
+ *   +0x01b4 -> line 704
+ *   +0x01b8 -> line 705
+ *   +0x01bc -> line 706
+ *   +0x01c0 -> line 709
+ *   +0x01c8 -> line 711
+ *   +0x01cc -> line 712
+ *   +0x01d0 -> line 715
+ *   +0x01d8 -> line 717
+ *   +0x01dc -> line 719
+ *   +0x01e0 -> line 721
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void VU1UpdateMatriceOutsideSDL(tagGLcontext* pctx)
+{
+    tag_stVU1MatriceToutSDL* pstMatriceToutSDL;
+    float vScreenScale[4];
+    float vScreenOrg[4];
+    pstMatriceToutSDL = (tag_stVU1MatriceToutSDL*)pctx->pVIFIBufTail;
+    g_PS2glContext.bMatrixChanged = 0;
+    pst_LastUpdatedMatriceToutSDL = (int)pstMatriceToutSDL;
+    if (uiMaxVifDmaBufLength - (g_PS2glContext.pVIFIBufTail - g_PS2glContext.pVIFInBuf) - 1 < 0x1B)
+    {
+        impPS2glFlush();
+    }
+    pctx->pVIFIBufTail += sizeof(*pstMatriceToutSDL) / sizeof(*pctx->pVIFIBufTail);
+    *(tag_stMatriceBlock*)&pstMatriceToutSDL->mProjection = *(tag_stMatriceBlock*)pctx->ProjectionMatrix;
+    *(tag_stMatriceBlock*)&pstMatriceToutSDL->mGuardBandProjection = *(tag_stMatriceBlock*)pctx->GuardBandProjectionMatrix;
+    *(tag_stMatriceBlock*)&pstMatriceToutSDL->mWorldView = *(tag_stMatriceBlock*)pctx->ModelViewMatrix;
+    sceVu0UnitMatrix(pstMatriceToutSDL->mClippingScreen);
+    vScreenOrg[0] = 0.5f * pctx->ViewPort[2];
+    pstMatriceToutSDL->mClippingScreen[0][0] = vScreenOrg[0];
+    vScreenOrg[1] = 0.5f * pctx->ViewPort[3];
+    pstMatriceToutSDL->mClippingScreen[1][1] = vScreenOrg[1];
+    vScreenOrg[2] = 0.5f * (pctx->DepthRange[1] - pctx->DepthRange[0]);
+    pstMatriceToutSDL->mClippingScreen[2][2] = vScreenOrg[2];
+    vScreenOrg[3] = 0.0f;
+    vScreenScale[0] = pctx->ViewPort[0];
+    vScreenScale[1] = pctx->ViewPort[1];
+    vScreenScale[2] = pctx->DepthRange[0];
+    vScreenScale[3] = 1.0f;
+    sceVu0AddVector(pstMatriceToutSDL->mClippingScreen[3], vScreenOrg, vScreenScale);
+    sceVu0UnitMatrix(pstMatriceToutSDL->mGuardBandClippingScreen);
+    pstMatriceToutSDL->mGuardBandClippingScreen[0][0] = 2048.0f;
+    pstMatriceToutSDL->mGuardBandClippingScreen[1][1] = -2048.0f;
+    pstMatriceToutSDL->mGuardBandClippingScreen[2][2] = vScreenOrg[2];
+    pstMatriceToutSDL->mGuardBandClippingScreen[3][0] = 2048.0f;
+    pstMatriceToutSDL->mGuardBandClippingScreen[3][1] = 2048.0f;
+    pstMatriceToutSDL->mGuardBandClippingScreen[3][2] = pstMatriceToutSDL->mClippingScreen[3][2];
+    pstMatriceToutSDL->tagDMA.qwc = 26;
+    pstMatriceToutSDL->tagDMA.id = 0x10;
+    pstMatriceToutSDL->tagDMA.mark = 0;
+    pstMatriceToutSDL->tagDMA.p[0] = 0x13000000;
+    pstMatriceToutSDL->tagDMA.p[1] = 0x01000404;
+    pstMatriceToutSDL->ivUnpackCode[0] = pstMatriceToutSDL->ivUnpackCode[1] = 0;
+    pstMatriceToutSDL->ivUnpackCode[2] = 0x01000404;
+    pstMatriceToutSDL->ivUnpackCode[3] = 0x6C040008;
+    pstMatriceToutSDL->ivUnpackCode2[0] = pstMatriceToutSDL->ivUnpackCode2[1] = 0;
+    pstMatriceToutSDL->ivUnpackCode2[2] = 0x01000404;
+    pstMatriceToutSDL->ivUnpackCode2[3] = 0x6C140034;
+}
+
+float (*VU1SetCurrentFrameInDMABuffer(void))[4]
+{
+    tagGLcontext* pctx = &g_PS2glContext;
+    tag_stVU1CurrentFrame* pstCurrentFrame = (tag_stVU1CurrentFrame*)pctx->pVIFIBufTail;
+    if (uiMaxVifDmaBufLength - (pctx->pVIFIBufTail - pctx->pVIFInBuf) - 1 < 3)
+    {
+        impPS2glFlush();
+    }
+    pctx->pVIFIBufTail += sizeof(*pstCurrentFrame) / sizeof(*pctx->pVIFIBufTail);
+    *(__int128*)&pstCurrentFrame->m_CurrentFrame = *(__int128*)&PS2GL_CurrentGlobalFrameVector;
+    pstCurrentFrame->tagDMA.qwc = 2;
+    pstCurrentFrame->tagDMA.id = 0x10;
+    pstCurrentFrame->tagDMA.mark = 0;
+    pstCurrentFrame->tagDMA.p[0] = 0x13000000;
+    pstCurrentFrame->tagDMA.p[1] = 0x01000404;
+    pstCurrentFrame->ivUnpackCode[0] = pstCurrentFrame->ivUnpackCode[1] = 0;
+    pstCurrentFrame->ivUnpackCode[2] = 0x01000404;
+    pstCurrentFrame->ivUnpackCode[3] = 0x6C010048;
+    return &pstCurrentFrame->m_CurrentFrame;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 776–971 */
+/* addr: 0x001849b0  size: 1264 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 776
+ *   +0x0004 -> line 792
+ *   +0x0008 -> line 776
+ *   +0x0020 -> line 778
+ *   +0x0028 -> line 790
+ *   +0x002c -> line 794
+ *   +0x0034 -> line 796
+ *   +0x0038 -> line 797
+ *   +0x003c -> line 798
+ *   +0x005c -> line 799
+ *   +0x007c -> line 800
+ *   +0x0080 -> line 803
+ *   +0x0094 -> line 806
+ *   +0x009c -> line 808
+ *   +0x00a4 -> line 819
+ *   +0x00a8 -> line 812
+ *   +0x00ac -> line 819
+ *   +0x00b0 -> line 812
+ *   +0x00b8 -> line 817
+ *   +0x00bc -> line 812
+ *   +0x00d0 -> line 813
+ *   +0x00f0 -> line 819
+ *   +0x0180 -> line 820
+ *   +0x0184 -> line 819
+ *   +0x0188 -> line 820
+ *   +0x021c -> line 821
+ *   +0x022c -> line 823
+ *   +0x0234 -> line 824
+ *   +0x0244 -> line 826
+ *   +0x0254 -> line 827
+ *   +0x0258 -> line 830
+ *   +0x0260 -> line 831
+ *   +0x0268 -> line 828
+ *   +0x0270 -> line 830
+ *   +0x0274 -> line 831
+ *   +0x0278 -> line 832
+ *   +0x0284 -> line 833
+ *   +0x0290 -> line 834
+ *   +0x029c -> line 835
+ *   +0x02a8 -> line 836
+ *   +0x02b4 -> line 837
+ *   +0x02c0 -> line 838
+ *   +0x02c8 -> line 839
+ *   +0x02d0 -> line 841
+ *   +0x02e0 -> line 867
+ *   +0x02f0 -> line 869
+ *   +0x02f8 -> line 870
+ *   +0x0304 -> line 872
+ *   +0x0308 -> line 881
+ *   +0x0310 -> line 878
+ *   +0x0314 -> line 881
+ *   +0x0318 -> line 870
+ *   +0x0324 -> line 871
+ *   +0x0334 -> line 872
+ *   +0x034c -> line 873
+ *   +0x0350 -> line 875
+ *   +0x0358 -> line 876
+ *   +0x0360 -> line 877
+ *   +0x0368 -> line 881
+ *   +0x0370 -> line 884
+ *   +0x0380 -> line 902
+ *   +0x0394 -> line 905
+ *   +0x03c0 -> line 906
+ *   +0x03e0 -> line 907
+ *   +0x03fc -> line 908
+ *   +0x0404 -> line 909
+ *   +0x040c -> line 912
+ *   +0x0418 -> line 913
+ *   +0x0420 -> line 914
+ *   +0x0424 -> line 915
+ *   +0x0428 -> line 914
+ *   +0x042c -> line 915
+ *   +0x0430 -> line 916
+ *   +0x0438 -> line 917
+ *   +0x043c -> line 918
+ *   +0x0440 -> line 919
+ *   +0x0444 -> line 920
+ *   +0x044c -> line 923
+ *   +0x046c -> line 924
+ *   +0x048c -> line 932
+ *   +0x0490 -> line 934
+ *   +0x0498 -> line 932
+ *   +0x049c -> line 934
+ *   +0x04a0 -> line 935
+ *   +0x04a8 -> line 938
+ *   +0x04ac -> line 941
+ *   +0x04b0 -> line 938
+ *   +0x04b4 -> line 941
+ *   +0x04b8 -> line 940
+ *   +0x04bc -> line 947
+ *   +0x04c0 -> line 941
+ *   +0x04c4 -> line 944
+ *   +0x04cc -> line 946
+ *   +0x04d0 -> line 947
+ *   +0x04d4 -> line 971
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void VU1UpdateMatrice(tagGLcontext* pctx, unsigned int Mode)
+{
+    PS2GL_VU1_InterpolMatrixData_* pInterpol;
+    unsigned char bTexture1;
+    unsigned char bTexture0;
+    float (*pTexture1)[4][4];
+    float (*pTexture0)[4][4];
+    int (*pBuf)[4];
+    float vScreenScale[4];
+    float vScreenOrg[4];
+    tag_stVU1MatriceT* pstMatriceT;
+    /* TODO: decompile from asm/... */
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 975–1005 */
+/* addr: 0x00184910  size: 152 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 975
+ *   +0x0014 -> line 982
+ *   +0x0018 -> line 985
+ *   +0x001c -> line 986
+ *   +0x0020 -> line 988
+ *   +0x0028 -> line 989
+ *   +0x0030 -> line 990
+ *   +0x0038 -> line 991
+ *   +0x0040 -> line 993
+ *   +0x0044 -> line 994
+ *   +0x0048 -> line 993
+ *   +0x004c -> line 994
+ *   +0x0050 -> line 993
+ *   +0x0054 -> line 994
+ *   +0x0058 -> line 1000
+ *   +0x0060 -> line 998
+ *   +0x0064 -> line 1001
+ *   +0x0068 -> line 998
+ *   +0x006c -> line 1001
+ *   +0x0070 -> line 1000
+ *   +0x0074 -> line 1001
+ *   +0x0078 -> line 1004
+ *   +0x0084 -> line 1005
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void VU1UpdateDiffusePointLightingParam(tagGLcontext* pctx)
+{
+    tag_stVU1MatriceL* pstMatriceL;
+    pstMatriceL = (tag_stVU1MatriceL*)pctx->pVIFIBufTail;
+    pctx->bLightsChanged = 0;
+    pctx->bMaterialChanged = 0;
+    sceVu0UnitMatrix(pstMatriceL->mDiffuseLightColor);
+    sceVu0UnitMatrix(pstMatriceL->mDiffuseLightPosition);
+    sceVu0UnitMatrix(pstMatriceL->mSpecularLightColor);
+    sceVu0UnitMatrix(pstMatriceL->mSpecularLightReflection);
+    /* The packet stores the 54321.0f / 12345.0f marker bit patterns directly. */
+    *(unsigned int*)&pstMatriceL->mDiffuseLightColor[0][0] = 0x47543100;
+    *(unsigned int*)&pstMatriceL->mSpecularLightReflection[3][3] = 0x4640e400;
+    pstMatriceL->ivUnpackCode[0] = pstMatriceL->ivUnpackCode[1] = 0;
+    pstMatriceL->ivUnpackCode[2] = 0x01000404;
+    pstMatriceL->ivUnpackCode[3] = 0x6c10000c;
+    pctx->pVIFIBufTail += sizeof(*pstMatriceL) / sizeof(*pctx->pVIFIBufTail);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 1013–1045 */
+/* addr: 0x00184800  size: 260 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1013
+ *   +0x0010 -> line 1017
+ *   +0x0014 -> line 1015
+ *   +0x0018 -> line 1017
+ *   +0x0020 -> line 1019
+ *   +0x003c -> line 1020
+ *   +0x0044 -> line 1021
+ *   +0x0050 -> line 1023
+ *   +0x0060 -> line 1024
+ *   +0x0068 -> line 1027
+ *   +0x008c -> line 1032
+ *   +0x009c -> line 1035
+ *   +0x00ac -> line 1037
+ *   +0x00bc -> line 1039
+ *   +0x00c8 -> line 1040
+ *   +0x00d0 -> line 1043
+ *   +0x00f0 -> line 1045
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void VU1ReUpdateMatrice(PS2GL_VU1_InterpolMatrixData_* pInterpolData)
+{
+    tag_stVU1MatriceT* pstMatriceT;
+    pstMatriceT = pInterpolData->pstMatriceT;
+    if (pInterpolData->bStore)
+    {
+        *(tag_stMatriceBlock*)&pstMatriceT->mModelView = *(tag_stMatriceBlock*)pInterpolData->OriginalModelView;
+    }
+    else if (pInterpolData->Compute)
+    {
+        sceVu0MulMatrix(pstMatriceT->mModelView, (float(*)[4])pInterpolData->pCameraMatrix, pInterpolData->OriginalModelView);
+    }
+    else
+    {
+        *(tag_stMatriceBlock*)&pstMatriceT->mModelView = *(tag_stMatriceBlock*)*pInterpolData->pCameraMatrix;
+    }
+    sceVu0MulMatrix(pstMatriceT->mClipping, pInterpolData->ProjectionMatrix, pstMatriceT->mModelView);
+    sceVu0MulMatrix(pstMatriceT->mLocalScreen, pstMatriceT->mClippingScreen, pstMatriceT->mClipping);
+    if (pInterpolData->Mode == 5)
+    {
+        sceVu0MulMatrix(pstMatriceT->mGuardBandClipping, pInterpolData->GuardBandProjectionMatrix, pstMatriceT->mModelView);
+    }
+    else
+    {
+        *(tag_stMatriceBlock*)&pstMatriceT->mGuardBandClipping = *(tag_stMatriceBlock*)pstMatriceT->mClipping;
+    }
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 1049–1157 */
+/* addr: 0x00184560  size: 672 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1049
+ *   +0x002c -> line 1052
+ *   +0x0030 -> line 1056
+ *   +0x0034 -> line 1059
+ *   +0x0038 -> line 1060
+ *   +0x003c -> line 1062
+ *   +0x004c -> line 1070
+ *   +0x005c -> line 1080
+ *   +0x0064 -> line 1082
+ *   +0x0078 -> line 1085
+ *   +0x0090 -> line 1086
+ *   +0x00a8 -> line 1088
+ *   +0x00d0 -> line 1091
+ *   +0x00e8 -> line 1092
+ *   +0x0100 -> line 1094
+ *   +0x0118 -> line 1096
+ *   +0x0128 -> line 1097
+ *   +0x0130 -> line 1100
+ *   +0x0144 -> line 1101
+ *   +0x0154 -> line 1102
+ *   +0x0158 -> line 1104
+ *   +0x0160 -> line 1103
+ *   +0x0164 -> line 1104
+ *   +0x016c -> line 1105
+ *   +0x0174 -> line 1112
+ *   +0x0184 -> line 1119
+ *   +0x018c -> line 1121
+ *   +0x01a0 -> line 1125
+ *   +0x01c4 -> line 1126
+ *   +0x01d8 -> line 1127
+ *   +0x01e4 -> line 1129
+ *   +0x01f0 -> line 1133
+ *   +0x0204 -> line 1134
+ *   +0x0214 -> line 1135
+ *   +0x0218 -> line 1139
+ *   +0x0220 -> line 1136
+ *   +0x0224 -> line 1139
+ *   +0x022c -> line 1140
+ *   +0x0230 -> line 1144
+ *   +0x0238 -> line 1146
+ *   +0x0248 -> line 1150
+ *   +0x024c -> line 1152
+ *   +0x0254 -> line 1150
+ *   +0x0258 -> line 1152
+ *   +0x025c -> line 1153
+ *   +0x0268 -> line 1156
+ *   +0x0274 -> line 1157
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void VU1UpdateDiffuseOnlyParam(tagGLcontext* pctx)
+{
+    tag_GLmaterial* pmat;
+    unsigned int nLightBits;
+    int iLoop;
+    tag_stVU1MatriceL* pstMatriceL;
+    tag_GLlight* pLight;
+    float vTmp1[4];
+    float vTmp2[4];
+    nLightBits = pctx->nLightBits;
+    pstMatriceL = (tag_stVU1MatriceL*)pctx->pVIFIBufTail;
+    pctx->bLightsChanged = 0;
+    pctx->bMaterialChanged = 0;
+    if (pctx->nLightBits & 0x200)
+    {
+        pmat = &pctx->Materials[0];
+        sceVu0CopyVector(pctx->pvAmbient[0], pctx->vAmbient);
+        pLight = &pctx->Lights[0];
+        for (iLoop = 0; iLoop < 4; iLoop++, pLight++)
+        {
+            if (nLightBits & (1 << iLoop))
+            {
+                if (pctx->eColorMaterialMode == 0x1200 || pctx->eColorMaterialMode == 0x1602)
+                {
+                    sceVu0AddVector(pctx->pvAmbient[0], pLight->vAmbient, pctx->pvAmbient[0]);
+                }
+                else
+                {
+                    sceVu0MulVector(vTmp1, pLight->vAmbient, pmat->vAmbient);
+                    sceVu0AddVector(pctx->pvAmbient[0], vTmp1, pctx->pvAmbient[0]);
+                }
+                if (pctx->eColorMaterialMode == 0x1201 || pctx->eColorMaterialMode == 0x1602)
+                {
+                    sceVu0CopyVector(pstMatriceL->mDiffuseLightColor[iLoop], pLight->vDiffuse);
+                }
+                else
+                {
+                    sceVu0MulVector(pstMatriceL->mDiffuseLightColor[iLoop], pmat->vDiffuse, pLight->vDiffuse);
+                }
+                sceVu0CopyVector(pstMatriceL->mDiffuseLightPosition[iLoop], pLight->vPosition);
+            }
+            else
+            {
+                sceVu0CopyVector(pstMatriceL->mDiffuseLightColor[iLoop], vZero);
+                sceVu0CopyVector(pstMatriceL->mDiffuseLightPosition[iLoop], vZero);
+            }
+        }
+    }
+    else
+    {
+        pmat = &pctx->Materials[0];
+        sceVu0CopyVector(pctx->pvAmbient[0], pctx->vAmbient);
+        pLight = &pctx->Lights[0];
+        for (iLoop = 0; iLoop < 4; iLoop++, pLight++)
+        {
+            if (nLightBits & (1 << iLoop))
+            {
+                sceVu0MulVector(vTmp2, pmat->vAmbient, pLight->vAmbient);
+                sceVu0AddVector(pctx->pvAmbient[0], vTmp2, pctx->pvAmbient[0]);
+                sceVu0MulVector(pstMatriceL->mDiffuseLightColor[iLoop], pmat->vDiffuse, pLight->vDiffuse);
+                sceVu0CopyVector(pstMatriceL->mDiffuseLightPosition[iLoop], pLight->vPosition);
+            }
+            else
+            {
+                sceVu0CopyVector(pstMatriceL->mDiffuseLightPosition[iLoop], vZero);
+                sceVu0CopyVector(pstMatriceL->mDiffuseLightColor[iLoop], vZero);
+            }
+        }
+    }
+    pctx->pvAmbient[0][3] = pmat->vDiffuse[3];
+    sceVu0TransposeMatrix(pstMatriceL->mDiffuseLightPosition, pstMatriceL->mDiffuseLightPosition);
+    pstMatriceL->ivUnpackCode[0] = pstMatriceL->ivUnpackCode[1] = 0;
+    pstMatriceL->ivUnpackCode[2] = 0x01000404;
+    pstMatriceL->ivUnpackCode[3] = 0x6C08000C;
+    pctx->pVIFIBufTail += 9;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 1160–1293 */
+/* addr: 0x001841d0  size: 904 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1160
+ *   +0x0030 -> line 1163
+ *   +0x0034 -> line 1167
+ *   +0x0038 -> line 1170
+ *   +0x003c -> line 1171
+ *   +0x0040 -> line 1173
+ *   +0x004c -> line 1175
+ *   +0x005c -> line 1183
+ *   +0x006c -> line 1193
+ *   +0x0074 -> line 1195
+ *   +0x0088 -> line 1198
+ *   +0x00a0 -> line 1199
+ *   +0x00b8 -> line 1201
+ *   +0x00e0 -> line 1204
+ *   +0x00f8 -> line 1205
+ *   +0x0110 -> line 1207
+ *   +0x0128 -> line 1209
+ *   +0x0138 -> line 1212
+ *   +0x0148 -> line 1213
+ *   +0x0158 -> line 1215
+ *   +0x0168 -> line 1218
+ *   +0x0180 -> line 1219
+ *   +0x018c -> line 1220
+ *   +0x0198 -> line 1223
+ *   +0x01ac -> line 1224
+ *   +0x01bc -> line 1225
+ *   +0x01cc -> line 1226
+ *   +0x01dc -> line 1227
+ *   +0x01e0 -> line 1229
+ *   +0x01e8 -> line 1228
+ *   +0x01ec -> line 1229
+ *   +0x01f4 -> line 1230
+ *   +0x01fc -> line 1237
+ *   +0x020c -> line 1246
+ *   +0x0214 -> line 1248
+ *   +0x0228 -> line 1253
+ *   +0x024c -> line 1254
+ *   +0x0260 -> line 1255
+ *   +0x0278 -> line 1256
+ *   +0x0284 -> line 1257
+ *   +0x0294 -> line 1258
+ *   +0x02a0 -> line 1259
+ *   +0x02a8 -> line 1263
+ *   +0x02bc -> line 1264
+ *   +0x02cc -> line 1265
+ *   +0x02dc -> line 1266
+ *   +0x02ec -> line 1267
+ *   +0x02f0 -> line 1273
+ *   +0x02f8 -> line 1268
+ *   +0x02fc -> line 1273
+ *   +0x0304 -> line 1274
+ *   +0x0308 -> line 1276
+ *   +0x0310 -> line 1280
+ *   +0x0320 -> line 1281
+ *   +0x032c -> line 1286
+ *   +0x0330 -> line 1288
+ *   +0x0338 -> line 1286
+ *   +0x033c -> line 1288
+ *   +0x0340 -> line 1289
+ *   +0x034c -> line 1292
+ *   +0x0358 -> line 1293
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void VU1UpdateSimpleSpecularParam(tagGLcontext* pctx)
+{
+    tag_GLmaterial* pmat;
+    unsigned int nLightBits;
+    int iLoop;
+    tag_stVU1MatriceL* pstMatriceL;
+    tag_GLlight* pLight;
+    float vTmp1[4];
+    float vTmp2[4];
+    nLightBits = pctx->nLightBits;
+    pstMatriceL = (tag_stVU1MatriceL*)pctx->pVIFIBufTail;
+    pctx->bLightsChanged = 0;
+    pctx->bMaterialChanged = 0;
+    *(float*)pctx->pfShininess = pctx->Materials[0].fShininess;
+    if (pctx->nLightBits & 0x200)
+    {
+        pmat = &pctx->Materials[0];
+        sceVu0CopyVector(pctx->pvAmbient[0], pctx->vAmbient);
+        pLight = &pctx->Lights[0];
+        for (iLoop = 0; iLoop < 4; iLoop++, pLight++)
+        {
+            if (nLightBits & (1 << iLoop))
+            {
+                if (pctx->eColorMaterialMode == 0x1200 || pctx->eColorMaterialMode == 0x1602)
+                {
+                    sceVu0AddVector(pctx->pvAmbient[0], pLight->vAmbient, pctx->pvAmbient[0]);
+                }
+                else
+                {
+                    sceVu0MulVector(vTmp1, pLight->vAmbient, pmat->vAmbient);
+                    sceVu0AddVector(pctx->pvAmbient[0], vTmp1, pctx->pvAmbient[0]);
+                }
+                if (pctx->eColorMaterialMode == 0x1201 || pctx->eColorMaterialMode == 0x1602)
+                {
+                    sceVu0CopyVector(pstMatriceL->mDiffuseLightColor[iLoop], pLight->vDiffuse);
+                }
+                else
+                {
+                    sceVu0MulVector(pstMatriceL->mDiffuseLightColor[iLoop], pmat->vDiffuse, pLight->vDiffuse);
+                }
+                sceVu0CopyVector(pstMatriceL->mDiffuseLightPosition[iLoop], pLight->vPosition);
+                if (pctx->eColorMaterialMode == 0x1201)
+                {
+                    sceVu0CopyVector(pstMatriceL->mSpecularLightColor[iLoop], pLight->vSpecular);
+                }
+                else
+                {
+                    sceVu0MulVector(pstMatriceL->mSpecularLightColor[iLoop], pmat->vSpecular, pLight->vSpecular);
+                }
+                sceVu0AddVector(pstMatriceL->mSpecularLightReflection[iLoop], pLight->vDirection, vViewer);
+                sceVu0Normalize(pstMatriceL->mSpecularLightReflection[iLoop], pstMatriceL->mSpecularLightReflection[iLoop]);
+            }
+            else
+            {
+                sceVu0CopyVector(pstMatriceL->mDiffuseLightPosition[iLoop], vZero);
+                sceVu0CopyVector(pstMatriceL->mSpecularLightReflection[iLoop], vZero);
+                sceVu0CopyVector(pstMatriceL->mDiffuseLightColor[iLoop], vZero);
+                sceVu0CopyVector(pstMatriceL->mSpecularLightColor[iLoop], vZero);
+            }
+        }
+    }
+    else
+    {
+        pmat = &pctx->Materials[0];
+        sceVu0CopyVector(pctx->pvAmbient[0], pctx->vAmbient);
+        pLight = &pctx->Lights[0];
+        for (iLoop = 0; iLoop < 4; iLoop++, pLight++)
+        {
+            if (nLightBits & (1 << iLoop))
+            {
+                sceVu0MulVector(vTmp2, pmat->vAmbient, pLight->vAmbient);
+                sceVu0AddVector(pctx->pvAmbient[0], vTmp2, pctx->pvAmbient[0]);
+                sceVu0MulVector(pstMatriceL->mSpecularLightColor[iLoop], pmat->vSpecular, pLight->vSpecular);
+                sceVu0AddVector(pstMatriceL->mSpecularLightReflection[iLoop], pLight->vDirection, vViewer);
+                sceVu0Normalize(pstMatriceL->mSpecularLightReflection[iLoop], pstMatriceL->mSpecularLightReflection[iLoop]);
+                sceVu0MulVector(pstMatriceL->mDiffuseLightColor[iLoop], pmat->vDiffuse, pLight->vDiffuse);
+                sceVu0CopyVector(pstMatriceL->mDiffuseLightPosition[iLoop], pLight->vPosition);
+            }
+            else
+            {
+                sceVu0CopyVector(pstMatriceL->mSpecularLightReflection[iLoop], vZero);
+                sceVu0CopyVector(pstMatriceL->mSpecularLightColor[iLoop], vZero);
+                sceVu0CopyVector(pstMatriceL->mDiffuseLightColor[iLoop], vZero);
+                sceVu0CopyVector(pstMatriceL->mDiffuseLightPosition[iLoop], vZero);
+            }
+        }
+    }
+    pctx->pvAmbient[0][3] = pmat->vDiffuse[3];
+    sceVu0TransposeMatrix(pstMatriceL->mDiffuseLightPosition, pstMatriceL->mDiffuseLightPosition);
+    sceVu0TransposeMatrix(pstMatriceL->mSpecularLightReflection, pstMatriceL->mSpecularLightReflection);
+    pstMatriceL->ivUnpackCode[0] = pstMatriceL->ivUnpackCode[1] = 0;
+    pstMatriceL->ivUnpackCode[2] = 0x01000404;
+    pstMatriceL->ivUnpackCode[3] = 0x6C10000C;
+    pctx->pVIFIBufTail += sizeof(*pstMatriceL) / sizeof(*pctx->pVIFIBufTail);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 1298–1332 */
+/* addr: 0x001840b0  size: 276 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1298
+ *   +0x0004 -> line 1299
+ *   +0x0014 -> line 1301
+ *   +0x0040 -> line 1306
+ *   +0x0048 -> line 1307
+ *   +0x004c -> line 1306
+ *   +0x0050 -> line 1307
+ *   +0x0058 -> line 1308
+ *   +0x005c -> line 1309
+ *   +0x0064 -> line 1312
+ *   +0x006c -> line 1313
+ *   +0x0070 -> line 1312
+ *   +0x0074 -> line 1313
+ *   +0x007c -> line 1314
+ *   +0x0080 -> line 1315
+ *   +0x0088 -> line 1318
+ *   +0x0090 -> line 1319
+ *   +0x0094 -> line 1318
+ *   +0x0098 -> line 1319
+ *   +0x00a0 -> line 1320
+ *   +0x00a4 -> line 1321
+ *   +0x00ac -> line 1323
+ *   +0x00b4 -> line 1326
+ *   +0x00f0 -> line 1328
+ *   +0x00fc -> line 1329
+ *   +0x0104 -> line 1331
+ *   +0x010c -> line 1332
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void VU1UpdateCullFaceParam(tagGLcontext* pctx)
+{
+    pctx->bCullfaceChanged = 0;
+    if (pctx->nEnableBits & 0x2000)
+    {
+        switch (pctx->eBeginMode)
+        {
+        case 4:
+        case 7:
+            /* The retail code stores the raw word 1/2/3 in the scale slot. */
+            ((int*)pctx->pvScreenScale)[1] = 1;
+            pctx->pvScreenScale[0][2] = 1.0f;
+            pctx->pvScreenScale[0][3] = 1.0f;
+            break;
+        case 5:
+        case 8:
+            ((int*)pctx->pvScreenScale)[1] = 2;
+            pctx->pvScreenScale[0][2] = -1.0f;
+            pctx->pvScreenScale[0][3] = -1.0f;
+            break;
+        case 6:
+        case 9:
+            ((int*)pctx->pvScreenScale)[1] = 3;
+            pctx->pvScreenScale[0][2] = 1.0f;
+            pctx->pvScreenScale[0][3] = 1.0f;
+            break;
+        default:
+            ((int*)pctx->pvScreenScale)[1] = 0;
+            break;
+        }
+        if ((pctx->eCullFaceMode == 0x405 && pctx->eFrontFaceMode == 0x900) ||
+            (pctx->eCullFaceMode == 0x404 && pctx->eFrontFaceMode == 0x901))
+        {
+            pctx->pvScreenScale[0][2] = -pctx->pvScreenScale[0][2];
+        }
+    }
+    else
+    {
+        ((int*)pctx->pvScreenScale)[1] = 0;
+    }
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 1344–1353 */
+/* addr: 0x00184060  size: 76 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1344
+ *   +0x0004 -> line 1348
+ *   +0x0008 -> line 1344
+ *   +0x0010 -> line 1348
+ *   +0x0014 -> line 1346
+ *   +0x0018 -> line 1350
+ *   +0x001c -> line 1349
+ *   +0x0024 -> line 1350
+ *   +0x002c -> line 1351
+ *   +0x0034 -> line 1352
+ *   +0x003c -> line 1353
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void PS2GL_SetDestinationFrame(unsigned int DestinationFrame)
+{
+    unsigned int saved;
+    PS2GL_CurrentDestinationFrame = DestinationFrame;
+    saved = g_PS2glContext.nLightBits;
+    g_PS2glContext.nLightBits |= 0x400;
+    impPS2glBegin(4);
+    impPS2glEnd();
+    g_PS2glContext.nLightBits = saved;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 1356–1804 */
+/* addr: 0x00182e40  size: 4632 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1356
+ *   +0x0004 -> line 1368
+ *   +0x0008 -> line 1356
+ *   +0x000c -> line 1368
+ *   +0x0010 -> line 1356
+ *   +0x0014 -> line 1368
+ *   +0x0018 -> line 1356
+ *   +0x001c -> line 1368
+ *   +0x0020 -> line 1356
+ *   +0x0024 -> line 1368
+ *   +0x0028 -> line 1356
+ *   +0x002c -> line 1368
+ *   +0x0030 -> line 1356
+ *   +0x0034 -> line 1368
+ *   +0x0038 -> line 1356
+ *   +0x0044 -> line 1368
+ *   +0x0050 -> line 1365
+ *   +0x0054 -> line 1368
+ *   +0x0058 -> line 1363
+ *   +0x005c -> line 1364
+ *   +0x0060 -> line 1368
+ *   +0x0064 -> line 1369
+ *   +0x0068 -> line 1368
+ *   +0x006c -> line 1365
+ *   +0x0070 -> line 1368
+ *   +0x0080 -> line 1369
+ *   +0x00a0 -> line 1374
+ *   +0x00ac -> line 1386
+ *   +0x00d4 -> line 1388
+ *   +0x00ec -> line 1390
+ *   +0x0100 -> line 1412
+ *   +0x0118 -> line 1415
+ *   +0x011c -> line 1417
+ *   +0x0148 -> line 1415
+ *   +0x014c -> line 1417
+ *   +0x0150 -> line 1415
+ *   +0x0154 -> line 1417
+ *   +0x0298 -> line 1422
+ *   +0x02bc -> line 1423
+ *   +0x02c4 -> line 1424
+ *   +0x02d0 -> line 1425
+ *   +0x0358 -> line 1426
+ *   +0x0368 -> line 1427
+ *   +0x0398 -> line 1428
+ *   +0x03a0 -> line 1431
+ *   +0x03a4 -> line 1433
+ *   +0x03b4 -> line 1436
+ *   +0x03cc -> line 1437
+ *   +0x03d0 -> line 1438
+ *   +0x03d4 -> line 1437
+ *   +0x03d8 -> line 1438
+ *   +0x03e0 -> line 1440
+ *   +0x03e4 -> line 1438
+ *   +0x03e8 -> line 1440
+ *   +0x03f4 -> line 1442
+ *   +0x03f8 -> line 1440
+ *   +0x0400 -> line 1441
+ *   +0x0404 -> line 1442
+ *   +0x0408 -> line 1443
+ *   +0x0410 -> line 1445
+ *   +0x0414 -> line 1448
+ *   +0x0418 -> line 1450
+ *   +0x0444 -> line 1448
+ *   +0x0448 -> line 1450
+ *   +0x044c -> line 1448
+ *   +0x0450 -> line 1450
+ *   +0x0574 -> line 1453
+ *   +0x0578 -> line 1450
+ *   +0x0598 -> line 1453
+ *   +0x05a8 -> line 1455
+ *   +0x05d4 -> line 1457
+ *   +0x05e0 -> line 1458
+ *   +0x05e4 -> line 1457
+ *   +0x05e8 -> line 1458
+ *   +0x05f0 -> line 1460
+ *   +0x05f8 -> line 1463
+ *   +0x061c -> line 1468
+ *   +0x0624 -> line 1469
+ *   +0x0634 -> line 1473
+ *   +0x0640 -> line 1475
+ *   +0x0654 -> line 1476
+ *   +0x0658 -> line 1475
+ *   +0x06c8 -> line 1476
+ *   +0x06d0 -> line 1477
+ *   +0x06d8 -> line 1478
+ *   +0x06e8 -> line 1480
+ *   +0x06fc -> line 1481
+ *   +0x0700 -> line 1480
+ *   +0x0720 -> line 1481
+ *   +0x072c -> line 1484
+ *   +0x0744 -> line 1490
+ *   +0x0748 -> line 1488
+ *   +0x074c -> line 1489
+ *   +0x0750 -> line 1490
+ *   +0x0758 -> line 1491
+ *   +0x0760 -> line 1494
+ *   +0x0784 -> line 1497
+ *   +0x0794 -> line 1500
+ *   +0x07b0 -> line 1501
+ *   +0x07d0 -> line 1505
+ *   +0x07e0 -> line 1507
+ *   +0x07e4 -> line 1508
+ *   +0x080c -> line 1511
+ *   +0x0824 -> line 1515
+ *   +0x0834 -> line 1517
+ *   +0x0844 -> line 1518
+ *   +0x084c -> line 1521
+ *   +0x0858 -> line 1523
+ *   +0x0860 -> line 1527
+ *   +0x0870 -> line 1529
+ *   +0x0880 -> line 1530
+ *   +0x0888 -> line 1533
+ *   +0x0898 -> line 1535
+ *   +0x08a0 -> line 1538
+ *   +0x08bc -> line 1541
+ *   +0x08d4 -> line 1543
+ *   +0x08e8 -> line 1548
+ *   +0x0910 -> line 1551
+ *   +0x0924 -> line 1554
+ *   +0x0934 -> line 1556
+ *   +0x0944 -> line 1558
+ *   +0x0954 -> line 1559
+ *   +0x0958 -> line 1560
+ *   +0x0960 -> line 1563
+ *   +0x0964 -> line 1564
+ *   +0x0968 -> line 1563
+ *   +0x0970 -> line 1564
+ *   +0x0978 -> line 1566
+ *   +0x0984 -> line 1567
+ *   +0x0990 -> line 1569
+ *   +0x09bc -> line 1573
+ *   +0x09c4 -> line 1569
+ *   +0x09c8 -> line 1570
+ *   +0x09d4 -> line 1571
+ *   +0x09e0 -> line 1572
+ *   +0x09ec -> line 1573
+ *   +0x0a08 -> line 1576
+ *   +0x0a10 -> line 1578
+ *   +0x0a20 -> line 1580
+ *   +0x0a30 -> line 1582
+ *   +0x0a34 -> line 1583
+ *   +0x0a38 -> line 1582
+ *   +0x0a40 -> line 1583
+ *   +0x0a44 -> line 1584
+ *   +0x0a4c -> line 1587
+ *   +0x0a5c -> line 1588
+ *   +0x0a64 -> line 1591
+ *   +0x0a7c -> line 1592
+ *   +0x0a8c -> line 1594
+ *   +0x0a9c -> line 1596
+ *   +0x0ab0 -> line 1598
+ *   +0x0ab4 -> line 1600
+ *   +0x0ac0 -> line 1602
+ *   +0x0acc -> line 1603
+ *   +0x0afc -> line 1605
+ *   +0x0b24 -> line 1606
+ *   +0x0b4c -> line 1608
+ *   +0x0b58 -> line 1609
+ *   +0x0b60 -> line 1612
+ *   +0x0b6c -> line 1613
+ *   +0x0b9c -> line 1615
+ *   +0x0bc4 -> line 1616
+ *   +0x0bf0 -> line 1618
+ *   +0x0c08 -> line 1620
+ *   +0x0c10 -> line 1623
+ *   +0x0c18 -> line 1627
+ *   +0x0c20 -> line 1629
+ *   +0x0c24 -> line 1630
+ *   +0x0c30 -> line 1632
+ *   +0x0c44 -> line 1633
+ *   +0x0c74 -> line 1635
+ *   +0x0c98 -> line 1636
+ *   +0x0ca0 -> line 1639
+ *   +0x0cb0 -> line 1640
+ *   +0x0ce0 -> line 1642
+ *   +0x0d08 -> line 1644
+ *   +0x0d30 -> line 1646
+ *   +0x0d38 -> line 1649
+ *   +0x0d44 -> line 1651
+ *   +0x0d4c -> line 1652
+ *   +0x0d58 -> line 1654
+ *   +0x0d6c -> line 1655
+ *   +0x0d9c -> line 1657
+ *   +0x0dc0 -> line 1658
+ *   +0x0dc8 -> line 1661
+ *   +0x0dd8 -> line 1662
+ *   +0x0e08 -> line 1664
+ *   +0x0e30 -> line 1666
+ *   +0x0e5c -> line 1669
+ *   +0x0e74 -> line 1671
+ *   +0x0e7c -> line 1673
+ *   +0x0e84 -> line 1676
+ *   +0x0e88 -> line 1677
+ *   +0x0e94 -> line 1679
+ *   +0x0ea8 -> line 1680
+ *   +0x0ed8 -> line 1682
+ *   +0x0efc -> line 1683
+ *   +0x0f04 -> line 1686
+ *   +0x0f14 -> line 1687
+ *   +0x0f44 -> line 1689
+ *   +0x0f6c -> line 1691
+ *   +0x0f98 -> line 1694
+ *   +0x0fb0 -> line 1696
+ *   +0x0fb8 -> line 1704
+ *   +0x0fc4 -> line 1706
+ *   +0x0fec -> line 1709
+ *   +0x0ff8 -> line 1711
+ *   +0x101c -> line 1714
+ *   +0x1044 -> line 1715
+ *   +0x104c -> line 1717
+ *   +0x1074 -> line 1718
+ *   +0x107c -> line 1720
+ *   +0x10a8 -> line 1725
+ *   +0x10ac -> line 1729
+ *   +0x10bc -> line 1731
+ *   +0x10d4 -> line 1733
+ *   +0x10e4 -> line 1735
+ *   +0x10ec -> line 1752
+ *   +0x10f0 -> line 1751
+ *   +0x10f4 -> line 1752
+ *   +0x10f8 -> line 1768
+ *   +0x10fc -> line 1765
+ *   +0x1104 -> line 1735
+ *   +0x1108 -> line 1736
+ *   +0x1110 -> line 1751
+ *   +0x1114 -> line 1752
+ *   +0x1118 -> line 1763
+ *   +0x1120 -> line 1764
+ *   +0x1124 -> line 1765
+ *   +0x1128 -> line 1768
+ *   +0x1134 -> line 1772
+ *   +0x1138 -> line 1773
+ *   +0x113c -> line 1772
+ *   +0x1144 -> line 1775
+ *   +0x114c -> line 1776
+ *   +0x1154 -> line 1778
+ *   +0x1158 -> line 1779
+ *   +0x115c -> line 1778
+ *   +0x1160 -> line 1779
+ *   +0x1168 -> line 1778
+ *   +0x116c -> line 1779
+ *   +0x1190 -> line 1781
+ *   +0x11a0 -> line 1782
+ *   +0x11b4 -> line 1783
+ *   +0x11c8 -> line 1787
+ *   +0x11e4 -> line 1788
+ *   +0x11e8 -> line 1787
+ *   +0x11ec -> line 1788
+ *   +0x11f0 -> line 1804
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void VU1UpdateParameters(tagGLcontext* pctx, unsigned int Mode)
+{
+    int i;
+    int (*piUnpackCode)[4];
+    tagListData* pListData;
+    unsigned int uiMask;
+    unsigned char bSDLMatricesConjunction;
+    unsigned int eOldClippingMode;
+    unsigned int nLightBits;
+    _sceDmaTag* pTag;
+    /* TODO: decompile from asm/... */
+}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 2081–2428 */
 /* addr: 0x00182250  size: 3056 bytes */
@@ -1626,1478 +3048,6 @@ void PS2glVIFSendBuffer(unsigned char bEOP);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 1356–1804 */
-/* addr: 0x00182e40  size: 4632 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1356
- *   +0x0004 -> line 1368
- *   +0x0008 -> line 1356
- *   +0x000c -> line 1368
- *   +0x0010 -> line 1356
- *   +0x0014 -> line 1368
- *   +0x0018 -> line 1356
- *   +0x001c -> line 1368
- *   +0x0020 -> line 1356
- *   +0x0024 -> line 1368
- *   +0x0028 -> line 1356
- *   +0x002c -> line 1368
- *   +0x0030 -> line 1356
- *   +0x0034 -> line 1368
- *   +0x0038 -> line 1356
- *   +0x0044 -> line 1368
- *   +0x0050 -> line 1365
- *   +0x0054 -> line 1368
- *   +0x0058 -> line 1363
- *   +0x005c -> line 1364
- *   +0x0060 -> line 1368
- *   +0x0064 -> line 1369
- *   +0x0068 -> line 1368
- *   +0x006c -> line 1365
- *   +0x0070 -> line 1368
- *   +0x0080 -> line 1369
- *   +0x00a0 -> line 1374
- *   +0x00ac -> line 1386
- *   +0x00d4 -> line 1388
- *   +0x00ec -> line 1390
- *   +0x0100 -> line 1412
- *   +0x0118 -> line 1415
- *   +0x011c -> line 1417
- *   +0x0148 -> line 1415
- *   +0x014c -> line 1417
- *   +0x0150 -> line 1415
- *   +0x0154 -> line 1417
- *   +0x0298 -> line 1422
- *   +0x02bc -> line 1423
- *   +0x02c4 -> line 1424
- *   +0x02d0 -> line 1425
- *   +0x0358 -> line 1426
- *   +0x0368 -> line 1427
- *   +0x0398 -> line 1428
- *   +0x03a0 -> line 1431
- *   +0x03a4 -> line 1433
- *   +0x03b4 -> line 1436
- *   +0x03cc -> line 1437
- *   +0x03d0 -> line 1438
- *   +0x03d4 -> line 1437
- *   +0x03d8 -> line 1438
- *   +0x03e0 -> line 1440
- *   +0x03e4 -> line 1438
- *   +0x03e8 -> line 1440
- *   +0x03f4 -> line 1442
- *   +0x03f8 -> line 1440
- *   +0x0400 -> line 1441
- *   +0x0404 -> line 1442
- *   +0x0408 -> line 1443
- *   +0x0410 -> line 1445
- *   +0x0414 -> line 1448
- *   +0x0418 -> line 1450
- *   +0x0444 -> line 1448
- *   +0x0448 -> line 1450
- *   +0x044c -> line 1448
- *   +0x0450 -> line 1450
- *   +0x0574 -> line 1453
- *   +0x0578 -> line 1450
- *   +0x0598 -> line 1453
- *   +0x05a8 -> line 1455
- *   +0x05d4 -> line 1457
- *   +0x05e0 -> line 1458
- *   +0x05e4 -> line 1457
- *   +0x05e8 -> line 1458
- *   +0x05f0 -> line 1460
- *   +0x05f8 -> line 1463
- *   +0x061c -> line 1468
- *   +0x0624 -> line 1469
- *   +0x0634 -> line 1473
- *   +0x0640 -> line 1475
- *   +0x0654 -> line 1476
- *   +0x0658 -> line 1475
- *   +0x06c8 -> line 1476
- *   +0x06d0 -> line 1477
- *   +0x06d8 -> line 1478
- *   +0x06e8 -> line 1480
- *   +0x06fc -> line 1481
- *   +0x0700 -> line 1480
- *   +0x0720 -> line 1481
- *   +0x072c -> line 1484
- *   +0x0744 -> line 1490
- *   +0x0748 -> line 1488
- *   +0x074c -> line 1489
- *   +0x0750 -> line 1490
- *   +0x0758 -> line 1491
- *   +0x0760 -> line 1494
- *   +0x0784 -> line 1497
- *   +0x0794 -> line 1500
- *   +0x07b0 -> line 1501
- *   +0x07d0 -> line 1505
- *   +0x07e0 -> line 1507
- *   +0x07e4 -> line 1508
- *   +0x080c -> line 1511
- *   +0x0824 -> line 1515
- *   +0x0834 -> line 1517
- *   +0x0844 -> line 1518
- *   +0x084c -> line 1521
- *   +0x0858 -> line 1523
- *   +0x0860 -> line 1527
- *   +0x0870 -> line 1529
- *   +0x0880 -> line 1530
- *   +0x0888 -> line 1533
- *   +0x0898 -> line 1535
- *   +0x08a0 -> line 1538
- *   +0x08bc -> line 1541
- *   +0x08d4 -> line 1543
- *   +0x08e8 -> line 1548
- *   +0x0910 -> line 1551
- *   +0x0924 -> line 1554
- *   +0x0934 -> line 1556
- *   +0x0944 -> line 1558
- *   +0x0954 -> line 1559
- *   +0x0958 -> line 1560
- *   +0x0960 -> line 1563
- *   +0x0964 -> line 1564
- *   +0x0968 -> line 1563
- *   +0x0970 -> line 1564
- *   +0x0978 -> line 1566
- *   +0x0984 -> line 1567
- *   +0x0990 -> line 1569
- *   +0x09bc -> line 1573
- *   +0x09c4 -> line 1569
- *   +0x09c8 -> line 1570
- *   +0x09d4 -> line 1571
- *   +0x09e0 -> line 1572
- *   +0x09ec -> line 1573
- *   +0x0a08 -> line 1576
- *   +0x0a10 -> line 1578
- *   +0x0a20 -> line 1580
- *   +0x0a30 -> line 1582
- *   +0x0a34 -> line 1583
- *   +0x0a38 -> line 1582
- *   +0x0a40 -> line 1583
- *   +0x0a44 -> line 1584
- *   +0x0a4c -> line 1587
- *   +0x0a5c -> line 1588
- *   +0x0a64 -> line 1591
- *   +0x0a7c -> line 1592
- *   +0x0a8c -> line 1594
- *   +0x0a9c -> line 1596
- *   +0x0ab0 -> line 1598
- *   +0x0ab4 -> line 1600
- *   +0x0ac0 -> line 1602
- *   +0x0acc -> line 1603
- *   +0x0afc -> line 1605
- *   +0x0b24 -> line 1606
- *   +0x0b4c -> line 1608
- *   +0x0b58 -> line 1609
- *   +0x0b60 -> line 1612
- *   +0x0b6c -> line 1613
- *   +0x0b9c -> line 1615
- *   +0x0bc4 -> line 1616
- *   +0x0bf0 -> line 1618
- *   +0x0c08 -> line 1620
- *   +0x0c10 -> line 1623
- *   +0x0c18 -> line 1627
- *   +0x0c20 -> line 1629
- *   +0x0c24 -> line 1630
- *   +0x0c30 -> line 1632
- *   +0x0c44 -> line 1633
- *   +0x0c74 -> line 1635
- *   +0x0c98 -> line 1636
- *   +0x0ca0 -> line 1639
- *   +0x0cb0 -> line 1640
- *   +0x0ce0 -> line 1642
- *   +0x0d08 -> line 1644
- *   +0x0d30 -> line 1646
- *   +0x0d38 -> line 1649
- *   +0x0d44 -> line 1651
- *   +0x0d4c -> line 1652
- *   +0x0d58 -> line 1654
- *   +0x0d6c -> line 1655
- *   +0x0d9c -> line 1657
- *   +0x0dc0 -> line 1658
- *   +0x0dc8 -> line 1661
- *   +0x0dd8 -> line 1662
- *   +0x0e08 -> line 1664
- *   +0x0e30 -> line 1666
- *   +0x0e5c -> line 1669
- *   +0x0e74 -> line 1671
- *   +0x0e7c -> line 1673
- *   +0x0e84 -> line 1676
- *   +0x0e88 -> line 1677
- *   +0x0e94 -> line 1679
- *   +0x0ea8 -> line 1680
- *   +0x0ed8 -> line 1682
- *   +0x0efc -> line 1683
- *   +0x0f04 -> line 1686
- *   +0x0f14 -> line 1687
- *   +0x0f44 -> line 1689
- *   +0x0f6c -> line 1691
- *   +0x0f98 -> line 1694
- *   +0x0fb0 -> line 1696
- *   +0x0fb8 -> line 1704
- *   +0x0fc4 -> line 1706
- *   +0x0fec -> line 1709
- *   +0x0ff8 -> line 1711
- *   +0x101c -> line 1714
- *   +0x1044 -> line 1715
- *   +0x104c -> line 1717
- *   +0x1074 -> line 1718
- *   +0x107c -> line 1720
- *   +0x10a8 -> line 1725
- *   +0x10ac -> line 1729
- *   +0x10bc -> line 1731
- *   +0x10d4 -> line 1733
- *   +0x10e4 -> line 1735
- *   +0x10ec -> line 1752
- *   +0x10f0 -> line 1751
- *   +0x10f4 -> line 1752
- *   +0x10f8 -> line 1768
- *   +0x10fc -> line 1765
- *   +0x1104 -> line 1735
- *   +0x1108 -> line 1736
- *   +0x1110 -> line 1751
- *   +0x1114 -> line 1752
- *   +0x1118 -> line 1763
- *   +0x1120 -> line 1764
- *   +0x1124 -> line 1765
- *   +0x1128 -> line 1768
- *   +0x1134 -> line 1772
- *   +0x1138 -> line 1773
- *   +0x113c -> line 1772
- *   +0x1144 -> line 1775
- *   +0x114c -> line 1776
- *   +0x1154 -> line 1778
- *   +0x1158 -> line 1779
- *   +0x115c -> line 1778
- *   +0x1160 -> line 1779
- *   +0x1168 -> line 1778
- *   +0x116c -> line 1779
- *   +0x1190 -> line 1781
- *   +0x11a0 -> line 1782
- *   +0x11b4 -> line 1783
- *   +0x11c8 -> line 1787
- *   +0x11e4 -> line 1788
- *   +0x11e8 -> line 1787
- *   +0x11ec -> line 1788
- *   +0x11f0 -> line 1804
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 1344–1353 */
-/* addr: 0x00184060  size: 76 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1344
- *   +0x0004 -> line 1348
- *   +0x0008 -> line 1344
- *   +0x0010 -> line 1348
- *   +0x0014 -> line 1346
- *   +0x0018 -> line 1350
- *   +0x001c -> line 1349
- *   +0x0024 -> line 1350
- *   +0x002c -> line 1351
- *   +0x0034 -> line 1352
- *   +0x003c -> line 1353
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void impPS2glBegin(unsigned int mode);
-void impPS2glEnd(void);
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 1298–1332 */
-/* addr: 0x001840b0  size: 276 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1298
- *   +0x0004 -> line 1299
- *   +0x0014 -> line 1301
- *   +0x0040 -> line 1306
- *   +0x0048 -> line 1307
- *   +0x004c -> line 1306
- *   +0x0050 -> line 1307
- *   +0x0058 -> line 1308
- *   +0x005c -> line 1309
- *   +0x0064 -> line 1312
- *   +0x006c -> line 1313
- *   +0x0070 -> line 1312
- *   +0x0074 -> line 1313
- *   +0x007c -> line 1314
- *   +0x0080 -> line 1315
- *   +0x0088 -> line 1318
- *   +0x0090 -> line 1319
- *   +0x0094 -> line 1318
- *   +0x0098 -> line 1319
- *   +0x00a0 -> line 1320
- *   +0x00a4 -> line 1321
- *   +0x00ac -> line 1323
- *   +0x00b4 -> line 1326
- *   +0x00f0 -> line 1328
- *   +0x00fc -> line 1329
- *   +0x0104 -> line 1331
- *   +0x010c -> line 1332
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 1160–1293 */
-/* addr: 0x001841d0  size: 904 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1160
- *   +0x0030 -> line 1163
- *   +0x0034 -> line 1167
- *   +0x0038 -> line 1170
- *   +0x003c -> line 1171
- *   +0x0040 -> line 1173
- *   +0x004c -> line 1175
- *   +0x005c -> line 1183
- *   +0x006c -> line 1193
- *   +0x0074 -> line 1195
- *   +0x0088 -> line 1198
- *   +0x00a0 -> line 1199
- *   +0x00b8 -> line 1201
- *   +0x00e0 -> line 1204
- *   +0x00f8 -> line 1205
- *   +0x0110 -> line 1207
- *   +0x0128 -> line 1209
- *   +0x0138 -> line 1212
- *   +0x0148 -> line 1213
- *   +0x0158 -> line 1215
- *   +0x0168 -> line 1218
- *   +0x0180 -> line 1219
- *   +0x018c -> line 1220
- *   +0x0198 -> line 1223
- *   +0x01ac -> line 1224
- *   +0x01bc -> line 1225
- *   +0x01cc -> line 1226
- *   +0x01dc -> line 1227
- *   +0x01e0 -> line 1229
- *   +0x01e8 -> line 1228
- *   +0x01ec -> line 1229
- *   +0x01f4 -> line 1230
- *   +0x01fc -> line 1237
- *   +0x020c -> line 1246
- *   +0x0214 -> line 1248
- *   +0x0228 -> line 1253
- *   +0x024c -> line 1254
- *   +0x0260 -> line 1255
- *   +0x0278 -> line 1256
- *   +0x0284 -> line 1257
- *   +0x0294 -> line 1258
- *   +0x02a0 -> line 1259
- *   +0x02a8 -> line 1263
- *   +0x02bc -> line 1264
- *   +0x02cc -> line 1265
- *   +0x02dc -> line 1266
- *   +0x02ec -> line 1267
- *   +0x02f0 -> line 1273
- *   +0x02f8 -> line 1268
- *   +0x02fc -> line 1273
- *   +0x0304 -> line 1274
- *   +0x0308 -> line 1276
- *   +0x0310 -> line 1280
- *   +0x0320 -> line 1281
- *   +0x032c -> line 1286
- *   +0x0330 -> line 1288
- *   +0x0338 -> line 1286
- *   +0x033c -> line 1288
- *   +0x0340 -> line 1289
- *   +0x034c -> line 1292
- *   +0x0358 -> line 1293
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void sceVu0AddVector(float dst[4], float v0[4], float v1[4]);
-void sceVu0CopyVector(float dst[4], float src[4]);
-void sceVu0MulVector(float dst[4], float v0[4], float v1[4]);
-void sceVu0Normalize(float dst[4], float src[4]);
-void sceVu0TransposeMatrix(float dst[4][4], float src[4][4]);
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 1049–1157 */
-/* addr: 0x00184560  size: 672 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1049
- *   +0x002c -> line 1052
- *   +0x0030 -> line 1056
- *   +0x0034 -> line 1059
- *   +0x0038 -> line 1060
- *   +0x003c -> line 1062
- *   +0x004c -> line 1070
- *   +0x005c -> line 1080
- *   +0x0064 -> line 1082
- *   +0x0078 -> line 1085
- *   +0x0090 -> line 1086
- *   +0x00a8 -> line 1088
- *   +0x00d0 -> line 1091
- *   +0x00e8 -> line 1092
- *   +0x0100 -> line 1094
- *   +0x0118 -> line 1096
- *   +0x0128 -> line 1097
- *   +0x0130 -> line 1100
- *   +0x0144 -> line 1101
- *   +0x0154 -> line 1102
- *   +0x0158 -> line 1104
- *   +0x0160 -> line 1103
- *   +0x0164 -> line 1104
- *   +0x016c -> line 1105
- *   +0x0174 -> line 1112
- *   +0x0184 -> line 1119
- *   +0x018c -> line 1121
- *   +0x01a0 -> line 1125
- *   +0x01c4 -> line 1126
- *   +0x01d8 -> line 1127
- *   +0x01e4 -> line 1129
- *   +0x01f0 -> line 1133
- *   +0x0204 -> line 1134
- *   +0x0214 -> line 1135
- *   +0x0218 -> line 1139
- *   +0x0220 -> line 1136
- *   +0x0224 -> line 1139
- *   +0x022c -> line 1140
- *   +0x0230 -> line 1144
- *   +0x0238 -> line 1146
- *   +0x0248 -> line 1150
- *   +0x024c -> line 1152
- *   +0x0254 -> line 1150
- *   +0x0258 -> line 1152
- *   +0x025c -> line 1153
- *   +0x0268 -> line 1156
- *   +0x0274 -> line 1157
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 1013–1045 */
-/* addr: 0x00184800  size: 260 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1013
- *   +0x0010 -> line 1017
- *   +0x0014 -> line 1015
- *   +0x0018 -> line 1017
- *   +0x0020 -> line 1019
- *   +0x003c -> line 1020
- *   +0x0044 -> line 1021
- *   +0x0050 -> line 1023
- *   +0x0060 -> line 1024
- *   +0x0068 -> line 1027
- *   +0x008c -> line 1032
- *   +0x009c -> line 1035
- *   +0x00ac -> line 1037
- *   +0x00bc -> line 1039
- *   +0x00c8 -> line 1040
- *   +0x00d0 -> line 1043
- *   +0x00f0 -> line 1045
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-/* A whole 4x4 matrix copy is one 64-byte block move; the retail code emits
- * it as four quadword loads followed by four quadword stores. */
-typedef struct tag_stMatriceBlock tag_stMatriceBlock;
-struct tag_stMatriceBlock {
-    __int128 qw0, qw1, qw2, qw3;
-};
-
-void sceVu0MulMatrix(float dest[4][4], float left[4][4], float right[4][4]);
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 975–1005 */
-/* addr: 0x00184910  size: 152 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 975
- *   +0x0014 -> line 982
- *   +0x0018 -> line 985
- *   +0x001c -> line 986
- *   +0x0020 -> line 988
- *   +0x0028 -> line 989
- *   +0x0030 -> line 990
- *   +0x0038 -> line 991
- *   +0x0040 -> line 993
- *   +0x0044 -> line 994
- *   +0x0048 -> line 993
- *   +0x004c -> line 994
- *   +0x0050 -> line 993
- *   +0x0054 -> line 994
- *   +0x0058 -> line 1000
- *   +0x0060 -> line 998
- *   +0x0064 -> line 1001
- *   +0x0068 -> line 998
- *   +0x006c -> line 1001
- *   +0x0070 -> line 1000
- *   +0x0074 -> line 1001
- *   +0x0078 -> line 1004
- *   +0x0084 -> line 1005
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void sceVu0UnitMatrix(float m[4][4]);
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 776–971 */
-/* addr: 0x001849b0  size: 1264 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 776
- *   +0x0004 -> line 792
- *   +0x0008 -> line 776
- *   +0x0020 -> line 778
- *   +0x0028 -> line 790
- *   +0x002c -> line 794
- *   +0x0034 -> line 796
- *   +0x0038 -> line 797
- *   +0x003c -> line 798
- *   +0x005c -> line 799
- *   +0x007c -> line 800
- *   +0x0080 -> line 803
- *   +0x0094 -> line 806
- *   +0x009c -> line 808
- *   +0x00a4 -> line 819
- *   +0x00a8 -> line 812
- *   +0x00ac -> line 819
- *   +0x00b0 -> line 812
- *   +0x00b8 -> line 817
- *   +0x00bc -> line 812
- *   +0x00d0 -> line 813
- *   +0x00f0 -> line 819
- *   +0x0180 -> line 820
- *   +0x0184 -> line 819
- *   +0x0188 -> line 820
- *   +0x021c -> line 821
- *   +0x022c -> line 823
- *   +0x0234 -> line 824
- *   +0x0244 -> line 826
- *   +0x0254 -> line 827
- *   +0x0258 -> line 830
- *   +0x0260 -> line 831
- *   +0x0268 -> line 828
- *   +0x0270 -> line 830
- *   +0x0274 -> line 831
- *   +0x0278 -> line 832
- *   +0x0284 -> line 833
- *   +0x0290 -> line 834
- *   +0x029c -> line 835
- *   +0x02a8 -> line 836
- *   +0x02b4 -> line 837
- *   +0x02c0 -> line 838
- *   +0x02c8 -> line 839
- *   +0x02d0 -> line 841
- *   +0x02e0 -> line 867
- *   +0x02f0 -> line 869
- *   +0x02f8 -> line 870
- *   +0x0304 -> line 872
- *   +0x0308 -> line 881
- *   +0x0310 -> line 878
- *   +0x0314 -> line 881
- *   +0x0318 -> line 870
- *   +0x0324 -> line 871
- *   +0x0334 -> line 872
- *   +0x034c -> line 873
- *   +0x0350 -> line 875
- *   +0x0358 -> line 876
- *   +0x0360 -> line 877
- *   +0x0368 -> line 881
- *   +0x0370 -> line 884
- *   +0x0380 -> line 902
- *   +0x0394 -> line 905
- *   +0x03c0 -> line 906
- *   +0x03e0 -> line 907
- *   +0x03fc -> line 908
- *   +0x0404 -> line 909
- *   +0x040c -> line 912
- *   +0x0418 -> line 913
- *   +0x0420 -> line 914
- *   +0x0424 -> line 915
- *   +0x0428 -> line 914
- *   +0x042c -> line 915
- *   +0x0430 -> line 916
- *   +0x0438 -> line 917
- *   +0x043c -> line 918
- *   +0x0440 -> line 919
- *   +0x0444 -> line 920
- *   +0x044c -> line 923
- *   +0x046c -> line 924
- *   +0x048c -> line 932
- *   +0x0490 -> line 934
- *   +0x0498 -> line 932
- *   +0x049c -> line 934
- *   +0x04a0 -> line 935
- *   +0x04a8 -> line 938
- *   +0x04ac -> line 941
- *   +0x04b0 -> line 938
- *   +0x04b4 -> line 941
- *   +0x04b8 -> line 940
- *   +0x04bc -> line 947
- *   +0x04c0 -> line 941
- *   +0x04c4 -> line 944
- *   +0x04cc -> line 946
- *   +0x04d0 -> line 947
- *   +0x04d4 -> line 971
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 735–763 */
-/* addr: 0x00184ea0  size: 208 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 735
- *   +0x0004 -> line 738
- *   +0x0008 -> line 735
- *   +0x0014 -> line 738
- *   +0x0018 -> line 737
- *   +0x0020 -> line 740
- *   +0x0054 -> line 741
- *   +0x005c -> line 744
- *   +0x0060 -> line 746
- *   +0x0064 -> line 753
- *   +0x0068 -> line 759
- *   +0x006c -> line 746
- *   +0x0070 -> line 749
- *   +0x0074 -> line 750
- *   +0x0078 -> line 752
- *   +0x007c -> line 753
- *   +0x0080 -> line 759
- *   +0x0084 -> line 746
- *   +0x0088 -> line 744
- *   +0x0090 -> line 746
- *   +0x0098 -> line 749
- *   +0x009c -> line 750
- *   +0x00a0 -> line 751
- *   +0x00a4 -> line 752
- *   +0x00a8 -> line 753
- *   +0x00ac -> line 756
- *   +0x00b4 -> line 758
- *   +0x00b8 -> line 759
- *   +0x00bc -> line 763
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void impPS2glFlush(void);
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 655–721 */
-/* addr: 0x00184f70  size: 504 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 655
- *   +0x0004 -> line 663
- *   +0x0008 -> line 655
- *   +0x001c -> line 663
- *   +0x0020 -> line 657
- *   +0x0024 -> line 663
- *   +0x002c -> line 661
- *   +0x0030 -> line 660
- *   +0x0034 -> line 663
- *   +0x0038 -> line 660
- *   +0x003c -> line 663
- *   +0x0064 -> line 664
- *   +0x006c -> line 666
- *   +0x0070 -> line 679
- *   +0x0074 -> line 666
- *   +0x007c -> line 672
- *   +0x009c -> line 675
- *   +0x00bc -> line 677
- *   +0x00d8 -> line 679
- *   +0x00e0 -> line 680
- *   +0x00ec -> line 682
- *   +0x00f0 -> line 691
- *   +0x00f8 -> line 688
- *   +0x00fc -> line 691
- *   +0x0100 -> line 680
- *   +0x010c -> line 681
- *   +0x011c -> line 682
- *   +0x0134 -> line 683
- *   +0x0138 -> line 685
- *   +0x0140 -> line 686
- *   +0x0148 -> line 687
- *   +0x0150 -> line 691
- *   +0x0158 -> line 693
- *   +0x0160 -> line 694
- *   +0x0164 -> line 706
- *   +0x0168 -> line 695
- *   +0x016c -> line 694
- *   +0x0170 -> line 695
- *   +0x0174 -> line 702
- *   +0x0178 -> line 696
- *   +0x017c -> line 703
- *   +0x0180 -> line 705
- *   +0x0184 -> line 706
- *   +0x0188 -> line 712
- *   +0x0190 -> line 719
- *   +0x0198 -> line 696
- *   +0x019c -> line 697
- *   +0x01a0 -> line 698
- *   +0x01a4 -> line 699
- *   +0x01ac -> line 702
- *   +0x01b0 -> line 703
- *   +0x01b4 -> line 704
- *   +0x01b8 -> line 705
- *   +0x01bc -> line 706
- *   +0x01c0 -> line 709
- *   +0x01c8 -> line 711
- *   +0x01cc -> line 712
- *   +0x01d0 -> line 715
- *   +0x01d8 -> line 717
- *   +0x01dc -> line 719
- *   +0x01e0 -> line 721
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void impPS2glFlush(void);
-void sceVu0UnitMatrix(float m[4][4]);
-void sceVu0AddVector(float dst[4], float v0[4], float v1[4]);
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 650–651 */
-/* addr: 0x00185170  size: 36 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 650
- *   +0x001c -> line 651
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 512–632 */
-/* addr: 0x001851a0  size: 776 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 512
- *   +0x0004 -> line 527
- *   +0x0008 -> line 512
- *   +0x0020 -> line 527
- *   +0x0024 -> line 514
- *   +0x0028 -> line 525
- *   +0x002c -> line 527
- *   +0x0038 -> line 529
- *   +0x0040 -> line 536
- *   +0x0044 -> line 529
- *   +0x004c -> line 531
- *   +0x0058 -> line 536
- *   +0x0068 -> line 538
- *   +0x0070 -> line 539
- *   +0x0078 -> line 540
- *   +0x0080 -> line 543
- *   +0x00a0 -> line 544
- *   +0x00c0 -> line 551
- *   +0x00cc -> line 549
- *   +0x00d0 -> line 551
- *   +0x015c -> line 552
- *   +0x0160 -> line 551
- *   +0x0164 -> line 552
- *   +0x01f8 -> line 554
- *   +0x0208 -> line 556
- *   +0x0214 -> line 557
- *   +0x021c -> line 558
- *   +0x022c -> line 560
- *   +0x023c -> line 561
- *   +0x0240 -> line 564
- *   +0x0248 -> line 565
- *   +0x0250 -> line 562
- *   +0x0258 -> line 564
- *   +0x025c -> line 565
- *   +0x0260 -> line 566
- *   +0x026c -> line 567
- *   +0x0278 -> line 568
- *   +0x0284 -> line 569
- *   +0x0290 -> line 570
- *   +0x029c -> line 571
- *   +0x02a8 -> line 572
- *   +0x02b0 -> line 573
- *   +0x02b8 -> line 575
- *   +0x02c8 -> line 602
- *   +0x02cc -> line 604
- *   +0x02d4 -> line 602
- *   +0x02d8 -> line 604
- *   +0x02dc -> line 605
- *   +0x02e4 -> line 607
- *   +0x02ec -> line 631
- *   +0x02f0 -> line 632
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 340–341 */
-/* addr: 0x001854b0  size: 52 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 340
- *   +0x002c -> line 341
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-int sceGsSyncPath(int mode, unsigned short timeout);
-int printf(const char* fmt, ...);
-void WaitDMAFromSPR(void);
-void FlushCache(int operation);
-
-/* PS2GLAUX.c VU1SendPackage, inlined here from its header definition. */
-inline void VU1SendPackage(_sceDmaTag* pTag)
-{
-    if (sceGsSyncPath(0, 0))
-        printf("In VU1SendPackage, SyncPath failure!\n");
-    if (g_stSPRInfo.uiState & 1)
-        WaitDMAFromSPR();
-    FlushCache(0);
-    *(volatile unsigned int*)0x10009020 = 0;
-    *(volatile unsigned int*)0x10009030 = (unsigned int)pTag;
-    *(volatile unsigned int*)0x1000E010 = 2;
-    *(volatile unsigned int*)0x10009000 = 0x145;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 322–334 */
-/* addr: 0x001854f0  size: 232 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 322
- *   +0x0004 -> line 323
- *   +0x0008 -> line 322
- *   +0x0010 -> line 323
- *   +0x0024 -> line 326
- *   +0x0028 -> line 327
- *   +0x0030 -> line 332
- *   +0x0034 -> line 328
- *   +0x0038 -> line 332
- *   +0x0044 -> line 327
- *   +0x0048 -> line 328
- *   +0x0054 -> line 329
- *   +0x0060 -> line 330
- *   +0x006c -> line 332
- *   +0x00d8 -> line 334
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 317–319 */
-/* addr: 0x001855e0  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 317
- *   +0x0008 -> line 318
- *   +0x000c -> line 317
- *   +0x0010 -> line 318
- *   +0x0014 -> line 319
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 308–313 */
-/* addr: 0x00185600  size: 52 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 308
- *   +0x0004 -> line 311
- *   +0x0008 -> line 308
- *   +0x000c -> line 311
- *   +0x0010 -> line 309
- *   +0x0014 -> line 308
- *   +0x0018 -> line 309
- *   +0x001c -> line 311
- *   +0x0020 -> line 309
- *   +0x0024 -> line 311
- *   +0x0028 -> line 312
- *   +0x002c -> line 313
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 291–298 */
-/* addr: 0x00185640  size: 164 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 291
- *   +0x000c -> line 292
- *   +0x0018 -> line 295
- *   +0x0090 -> line 296
- *   +0x0094 -> line 298
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 267–288 */
-/* addr: 0x001856f0  size: 288 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 267
- *   +0x0004 -> line 268
- *   +0x0008 -> line 267
- *   +0x0010 -> line 268
- *   +0x0024 -> line 274
- *   +0x0028 -> line 275
- *   +0x0030 -> line 286
- *   +0x0034 -> line 276
- *   +0x0038 -> line 284
- *   +0x003c -> line 286
- *   +0x0048 -> line 275
- *   +0x004c -> line 276
- *   +0x0058 -> line 277
- *   +0x0064 -> line 278
- *   +0x0070 -> line 281
- *   +0x0078 -> line 284
- *   +0x007c -> line 281
- *   +0x0094 -> line 282
- *   +0x009c -> line 286
- *   +0x00a4 -> line 282
- *   +0x00a8 -> line 286
- *   +0x0110 -> line 288
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 218–261 */
-/* addr: 0x00185810  size: 280 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 218
- *   +0x0004 -> line 220
- *   +0x0008 -> line 218
- *   +0x0010 -> line 220
- *   +0x0024 -> line 226
- *   +0x0028 -> line 227
- *   +0x0030 -> line 237
- *   +0x0034 -> line 228
- *   +0x0038 -> line 237
- *   +0x0044 -> line 227
- *   +0x0048 -> line 228
- *   +0x0054 -> line 229
- *   +0x0060 -> line 230
- *   +0x006c -> line 233
- *   +0x008c -> line 234
- *   +0x0094 -> line 237
- *   +0x009c -> line 234
- *   +0x00a0 -> line 237
- *   +0x0108 -> line 261
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-void VU1FlushBuffer(void)
-{
-    void* pVoid;
-
-    if (g_PS2glContext.pVIFIBufTail != g_PS2glContext.pVIFInBuf)
-    {
-        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->qwc = 0;
-        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->mark = 0;
-        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->id = 0x70;
-        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->p[0] = 0;
-        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->p[1] = 0;
-
-        pVoid = g_PS2glContext.pVIFInBuf;
-        g_PS2glContext.pVIFInBuf = g_PS2glContext.pVIFOutBuf;
-        g_PS2glContext.pVIFOutBuf = pVoid;
-        g_PS2glContext.pVIFIBufTail = g_PS2glContext.pVIFInBuf;
-
-        VU1SendPackage((_sceDmaTag*)((unsigned int)g_PS2glContext.pVIFOutBuf & 0xCFFFFFFF));
-    }
-}
-
-void VU1_FlushCurrentBuffer(void)
-{
-    void* pVoid;
-
-    if (g_PS2glContext.pVIFIBufTail != g_PS2glContext.pVIFInBuf)
-    {
-        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->qwc = 0;
-        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->mark = 0;
-        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->id = 0x70;
-        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->p[0] = 0;
-        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->p[1] = 0;
-
-        pVoid = g_PS2glContext.pVIFInBuf;
-        g_PS2glContext.pVIFInBuf = g_PS2glContext.pVIFOutBuf;
-        g_PS2glContext.pVIFOutBuf = pVoid;
-        g_PS2glContext.pVIFIBufTail = g_PS2glContext.pVIFInBuf;
-
-        PS2GL_G_BufferIsReady = 1;
-
-        VU1SendPackage((_sceDmaTag*)((unsigned int)g_PS2glContext.pVIFOutBuf & 0xCFFFFFFF));
-    }
-}
-
-void VU1_FlushPreviousBuffer(void)
-{
-    if (PS2GL_G_BufferIsReady)
-    {
-        VU1SendPackage((_sceDmaTag*)((unsigned int)g_PS2glContext.pVIFOutBuf & 0xCFFFFFFF));
-        PS2GL_G_BufferIsReady = 0;
-    }
-}
-
-void VU1StartWorkingOnFakeSwapBuffer(void)
-{
-    s_InBuf_saved = (int)g_PS2glContext.pVIFInBuf;
-    s_InBufTail_saved = (int)g_PS2glContext.pVIFIBufTail;
-    g_PS2glContext.pVIFInBuf = (float (*)[4])PS2GL_FakeSwapBuffer;
-    g_PS2glContext.pVIFIBufTail = (float (*)[4])PS2GL_FakeSwapBuffer;
-}
-
-void VU1StopWorkingOnFakeSwapBuffer(void)
-{
-    g_PS2glContext.pVIFInBuf = (float (*)[4])s_InBuf_saved;
-    g_PS2glContext.pVIFIBufTail = (float (*)[4])s_InBufTail_saved;
-}
-
-void VU1FlushFakeSwapBuffer(void)
-{
-    if (g_PS2glContext.pVIFIBufTail != g_PS2glContext.pVIFInBuf)
-    {
-        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->qwc = 0;
-        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->mark = 0;
-        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->id = 0x70;
-        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->p[0] = 0;
-        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->p[1] = 0;
-
-        VU1SendPackage((_sceDmaTag*)((unsigned int)g_PS2glContext.pVIFInBuf & 0xCFFFFFFF));
-    }
-}
-
-unsigned int VU1BufferFreeSpace(void)
-{
-    return uiMaxVifDmaBufLength - (g_PS2glContext.pVIFIBufTail - g_PS2glContext.pVIFInBuf) - 1;
-}
-
-unsigned char VU1UpdateMatriceInsideSDL(tagGLcontext* pctx, unsigned int* pMask)
-{
-    tag_stVU1MatriceTinSDL* pstMatriceTinSDL;
-    int (*pBuf)[4];
-    float (*pTexture0)[4][4];
-    float (*pTexture1)[4][4];
-    unsigned char bTexture0;
-    unsigned char bTexture1;
-    pstMatriceTinSDL = (tag_stVU1MatriceTinSDL*)pctx->pVIFIBufTail;
-    g_PS2glContext.bMatrixChanged = 0;
-    if (!(g_PS2glContext.usDontUpdateBits & 4))
-    {
-        *pMask |= 0x01000000;
-        pctx->pVIFIBufTail += sizeof(*pstMatriceTinSDL) / sizeof(*pctx->pVIFIBufTail);
-        if (g_PS2glContext.uiStaticDisplayListBits & 0x200)
-        {
-            sceVu0UnitMatrix(pstMatriceTinSDL->mLocalWorld);
-            sceVu0UnitMatrix(pstMatriceTinSDL->mNormal);
-        }
-        else
-        {
-            *(tag_stMatriceBlock*)&pstMatriceTinSDL->mLocalWorld = *(tag_stMatriceBlock*)pctx->ModelViewMatrix;
-            *(tag_stMatriceBlock*)&pstMatriceTinSDL->mNormal = *(tag_stMatriceBlock*)pctx->ModelViewMatrix;
-        }
-        pTexture0 = &pctx->TextureMatrix[0];
-        pTexture1 = &pctx->TextureMatrix[1];
-        bTexture0 = 1;
-        if (pTexture0[0][0][0] == 1.0f && pTexture0[0][0][1] == 0.0f && pTexture0[0][0][2] == 0.0f &&
-            pTexture0[0][1][0] == 0.0f && pTexture0[0][1][1] == 1.0f && pTexture0[0][1][2] == 0.0f)
-        {
-            bTexture0 = 0;
-        }
-        /* The retail code keeps the two texture flags in the last row of the
-         * normal matrix. */
-        ((int*)pstMatriceTinSDL->mNormal[3])[2] = bTexture0;
-        bTexture1 = 1;
-        if (pTexture1[0][0][0] == 1.0f && pTexture1[0][0][1] == 0.0f && pTexture1[0][0][2] == 0.0f &&
-            pTexture1[0][1][0] == 0.0f && pTexture1[0][1][1] == 1.0f && pTexture1[0][1][2] == 0.0f)
-        {
-            bTexture1 = 0;
-        }
-        ((int*)pstMatriceTinSDL->mNormal[3])[3] = bTexture1;
-        if (bTexture0 || bTexture1)
-        {
-            *pMask |= 0x02000000;
-            if (bTexture0)
-            {
-                uiPreparation |= 2;
-            }
-            else
-            {
-                uiPreparation &= ~3;
-            }
-            pBuf = (int(*)[4])pctx->pVIFIBufTail;
-            pBuf[0][0] = pBuf[0][1] = 0;
-            pBuf[0][2] = 0x01000404;
-            pBuf[0][3] = 0x6C06004A;
-            pBuf[1] = ((int(*)[4])pTexture0)[0];
-            pBuf[2] = ((int(*)[4])pTexture0)[1];
-            pBuf[3] = ((int(*)[4])pTexture0)[2];
-            pBuf[4] = ((int(*)[4])pTexture1)[0];
-            pBuf[5] = ((int(*)[4])pTexture1)[1];
-            pBuf[6] = ((int(*)[4])pTexture1)[2];
-            pctx->pVIFIBufTail += 7;
-        }
-        else
-        {
-            uiPreparation &= ~3;
-        }
-        pstMatriceTinSDL->ivUnpackCode[0] = pstMatriceTinSDL->ivUnpackCode[1] = 0;
-        pstMatriceTinSDL->ivUnpackCode[2] = 0x01000404;
-        pstMatriceTinSDL->ivUnpackCode[3] = 0x6C080000;
-        return 1;
-    }
-    return 0;
-}
-
-void VU1_RE_UpdateMatriceOutsideSDL(tag_stVU1MatriceToutSDL* pstMatriceToutSDL, float (*NewModelView)[4][4])
-{
-    __int128 v3, v2, v1, v0;
-    v0 = ((const volatile __int128*)NewModelView)[0];
-    v1 = ((const volatile __int128*)NewModelView)[1];
-    v2 = ((const volatile __int128*)NewModelView)[2];
-    v3 = ((const volatile __int128*)NewModelView)[3];
-    ((__int128*)pstMatriceToutSDL->mWorldView)[0] = v0;
-    ((__int128*)pstMatriceToutSDL->mWorldView)[1] = v1;
-    ((__int128*)pstMatriceToutSDL->mWorldView)[2] = v2;
-    ((__int128*)pstMatriceToutSDL->mWorldView)[3] = v3;
-}
-
-void VU1UpdateMatriceOutsideSDL(tagGLcontext* pctx)
-{
-    tag_stVU1MatriceToutSDL* pstMatriceToutSDL;
-    float vScreenScale[4];
-    float vScreenOrg[4];
-    pstMatriceToutSDL = (tag_stVU1MatriceToutSDL*)pctx->pVIFIBufTail;
-    g_PS2glContext.bMatrixChanged = 0;
-    pst_LastUpdatedMatriceToutSDL = (int)pstMatriceToutSDL;
-    if (uiMaxVifDmaBufLength - (g_PS2glContext.pVIFIBufTail - g_PS2glContext.pVIFInBuf) - 1 < 0x1B)
-    {
-        impPS2glFlush();
-    }
-    pctx->pVIFIBufTail += sizeof(*pstMatriceToutSDL) / sizeof(*pctx->pVIFIBufTail);
-    *(tag_stMatriceBlock*)&pstMatriceToutSDL->mProjection = *(tag_stMatriceBlock*)pctx->ProjectionMatrix;
-    *(tag_stMatriceBlock*)&pstMatriceToutSDL->mGuardBandProjection = *(tag_stMatriceBlock*)pctx->GuardBandProjectionMatrix;
-    *(tag_stMatriceBlock*)&pstMatriceToutSDL->mWorldView = *(tag_stMatriceBlock*)pctx->ModelViewMatrix;
-    sceVu0UnitMatrix(pstMatriceToutSDL->mClippingScreen);
-    vScreenOrg[0] = 0.5f * pctx->ViewPort[2];
-    pstMatriceToutSDL->mClippingScreen[0][0] = vScreenOrg[0];
-    vScreenOrg[1] = 0.5f * pctx->ViewPort[3];
-    pstMatriceToutSDL->mClippingScreen[1][1] = vScreenOrg[1];
-    vScreenOrg[2] = 0.5f * (pctx->DepthRange[1] - pctx->DepthRange[0]);
-    pstMatriceToutSDL->mClippingScreen[2][2] = vScreenOrg[2];
-    vScreenOrg[3] = 0.0f;
-    vScreenScale[0] = pctx->ViewPort[0];
-    vScreenScale[1] = pctx->ViewPort[1];
-    vScreenScale[2] = pctx->DepthRange[0];
-    vScreenScale[3] = 1.0f;
-    sceVu0AddVector(pstMatriceToutSDL->mClippingScreen[3], vScreenOrg, vScreenScale);
-    sceVu0UnitMatrix(pstMatriceToutSDL->mGuardBandClippingScreen);
-    pstMatriceToutSDL->mGuardBandClippingScreen[0][0] = 2048.0f;
-    pstMatriceToutSDL->mGuardBandClippingScreen[1][1] = -2048.0f;
-    pstMatriceToutSDL->mGuardBandClippingScreen[2][2] = vScreenOrg[2];
-    pstMatriceToutSDL->mGuardBandClippingScreen[3][0] = 2048.0f;
-    pstMatriceToutSDL->mGuardBandClippingScreen[3][1] = 2048.0f;
-    pstMatriceToutSDL->mGuardBandClippingScreen[3][2] = pstMatriceToutSDL->mClippingScreen[3][2];
-    pstMatriceToutSDL->tagDMA.qwc = 26;
-    pstMatriceToutSDL->tagDMA.id = 0x10;
-    pstMatriceToutSDL->tagDMA.mark = 0;
-    pstMatriceToutSDL->tagDMA.p[0] = 0x13000000;
-    pstMatriceToutSDL->tagDMA.p[1] = 0x01000404;
-    pstMatriceToutSDL->ivUnpackCode[0] = pstMatriceToutSDL->ivUnpackCode[1] = 0;
-    pstMatriceToutSDL->ivUnpackCode[2] = 0x01000404;
-    pstMatriceToutSDL->ivUnpackCode[3] = 0x6C040008;
-    pstMatriceToutSDL->ivUnpackCode2[0] = pstMatriceToutSDL->ivUnpackCode2[1] = 0;
-    pstMatriceToutSDL->ivUnpackCode2[2] = 0x01000404;
-    pstMatriceToutSDL->ivUnpackCode2[3] = 0x6C140034;
-}
-
-float (*VU1SetCurrentFrameInDMABuffer(void))[4]
-{
-    tagGLcontext* pctx = &g_PS2glContext;
-    tag_stVU1CurrentFrame* pstCurrentFrame = (tag_stVU1CurrentFrame*)pctx->pVIFIBufTail;
-    if (uiMaxVifDmaBufLength - (pctx->pVIFIBufTail - pctx->pVIFInBuf) - 1 < 3)
-    {
-        impPS2glFlush();
-    }
-    pctx->pVIFIBufTail += sizeof(*pstCurrentFrame) / sizeof(*pctx->pVIFIBufTail);
-    *(__int128*)&pstCurrentFrame->m_CurrentFrame = *(__int128*)&PS2GL_CurrentGlobalFrameVector;
-    pstCurrentFrame->tagDMA.qwc = 2;
-    pstCurrentFrame->tagDMA.id = 0x10;
-    pstCurrentFrame->tagDMA.mark = 0;
-    pstCurrentFrame->tagDMA.p[0] = 0x13000000;
-    pstCurrentFrame->tagDMA.p[1] = 0x01000404;
-    pstCurrentFrame->ivUnpackCode[0] = pstCurrentFrame->ivUnpackCode[1] = 0;
-    pstCurrentFrame->ivUnpackCode[2] = 0x01000404;
-    pstCurrentFrame->ivUnpackCode[3] = 0x6C010048;
-    return &pstCurrentFrame->m_CurrentFrame;
-}
-
-void VU1UpdateMatrice(tagGLcontext* pctx, unsigned int Mode)
-{
-    PS2GL_VU1_InterpolMatrixData_* pInterpol;
-    unsigned char bTexture1;
-    unsigned char bTexture0;
-    float (*pTexture1)[4][4];
-    float (*pTexture0)[4][4];
-    int (*pBuf)[4];
-    float vScreenScale[4];
-    float vScreenOrg[4];
-    tag_stVU1MatriceT* pstMatriceT;
-    /* TODO: decompile from asm/... */
-}
-
-void VU1UpdateDiffusePointLightingParam(tagGLcontext* pctx)
-{
-    tag_stVU1MatriceL* pstMatriceL;
-    pstMatriceL = (tag_stVU1MatriceL*)pctx->pVIFIBufTail;
-    pctx->bLightsChanged = 0;
-    pctx->bMaterialChanged = 0;
-    sceVu0UnitMatrix(pstMatriceL->mDiffuseLightColor);
-    sceVu0UnitMatrix(pstMatriceL->mDiffuseLightPosition);
-    sceVu0UnitMatrix(pstMatriceL->mSpecularLightColor);
-    sceVu0UnitMatrix(pstMatriceL->mSpecularLightReflection);
-    /* The packet stores the 54321.0f / 12345.0f marker bit patterns directly. */
-    *(unsigned int*)&pstMatriceL->mDiffuseLightColor[0][0] = 0x47543100;
-    *(unsigned int*)&pstMatriceL->mSpecularLightReflection[3][3] = 0x4640e400;
-    pstMatriceL->ivUnpackCode[0] = pstMatriceL->ivUnpackCode[1] = 0;
-    pstMatriceL->ivUnpackCode[2] = 0x01000404;
-    pstMatriceL->ivUnpackCode[3] = 0x6c10000c;
-    pctx->pVIFIBufTail += sizeof(*pstMatriceL) / sizeof(*pctx->pVIFIBufTail);
-}
-
-void VU1ReUpdateMatrice(PS2GL_VU1_InterpolMatrixData_* pInterpolData)
-{
-    tag_stVU1MatriceT* pstMatriceT;
-    pstMatriceT = pInterpolData->pstMatriceT;
-    if (pInterpolData->bStore)
-    {
-        *(tag_stMatriceBlock*)&pstMatriceT->mModelView = *(tag_stMatriceBlock*)pInterpolData->OriginalModelView;
-    }
-    else if (pInterpolData->Compute)
-    {
-        sceVu0MulMatrix(pstMatriceT->mModelView, (float(*)[4])pInterpolData->pCameraMatrix, pInterpolData->OriginalModelView);
-    }
-    else
-    {
-        *(tag_stMatriceBlock*)&pstMatriceT->mModelView = *(tag_stMatriceBlock*)*pInterpolData->pCameraMatrix;
-    }
-    sceVu0MulMatrix(pstMatriceT->mClipping, pInterpolData->ProjectionMatrix, pstMatriceT->mModelView);
-    sceVu0MulMatrix(pstMatriceT->mLocalScreen, pstMatriceT->mClippingScreen, pstMatriceT->mClipping);
-    if (pInterpolData->Mode == 5)
-    {
-        sceVu0MulMatrix(pstMatriceT->mGuardBandClipping, pInterpolData->GuardBandProjectionMatrix, pstMatriceT->mModelView);
-    }
-    else
-    {
-        *(tag_stMatriceBlock*)&pstMatriceT->mGuardBandClipping = *(tag_stMatriceBlock*)pstMatriceT->mClipping;
-    }
-}
-
-void VU1UpdateDiffuseOnlyParam(tagGLcontext* pctx)
-{
-    tag_GLmaterial* pmat;
-    unsigned int nLightBits;
-    int iLoop;
-    tag_stVU1MatriceL* pstMatriceL;
-    tag_GLlight* pLight;
-    float vTmp1[4];
-    float vTmp2[4];
-    nLightBits = pctx->nLightBits;
-    pstMatriceL = (tag_stVU1MatriceL*)pctx->pVIFIBufTail;
-    pctx->bLightsChanged = 0;
-    pctx->bMaterialChanged = 0;
-    if (pctx->nLightBits & 0x200)
-    {
-        pmat = &pctx->Materials[0];
-        sceVu0CopyVector(pctx->pvAmbient[0], pctx->vAmbient);
-        pLight = &pctx->Lights[0];
-        for (iLoop = 0; iLoop < 4; iLoop++, pLight++)
-        {
-            if (nLightBits & (1 << iLoop))
-            {
-                if (pctx->eColorMaterialMode == 0x1200 || pctx->eColorMaterialMode == 0x1602)
-                {
-                    sceVu0AddVector(pctx->pvAmbient[0], pLight->vAmbient, pctx->pvAmbient[0]);
-                }
-                else
-                {
-                    sceVu0MulVector(vTmp1, pLight->vAmbient, pmat->vAmbient);
-                    sceVu0AddVector(pctx->pvAmbient[0], vTmp1, pctx->pvAmbient[0]);
-                }
-                if (pctx->eColorMaterialMode == 0x1201 || pctx->eColorMaterialMode == 0x1602)
-                {
-                    sceVu0CopyVector(pstMatriceL->mDiffuseLightColor[iLoop], pLight->vDiffuse);
-                }
-                else
-                {
-                    sceVu0MulVector(pstMatriceL->mDiffuseLightColor[iLoop], pmat->vDiffuse, pLight->vDiffuse);
-                }
-                sceVu0CopyVector(pstMatriceL->mDiffuseLightPosition[iLoop], pLight->vPosition);
-            }
-            else
-            {
-                sceVu0CopyVector(pstMatriceL->mDiffuseLightColor[iLoop], vZero);
-                sceVu0CopyVector(pstMatriceL->mDiffuseLightPosition[iLoop], vZero);
-            }
-        }
-    }
-    else
-    {
-        pmat = &pctx->Materials[0];
-        sceVu0CopyVector(pctx->pvAmbient[0], pctx->vAmbient);
-        pLight = &pctx->Lights[0];
-        for (iLoop = 0; iLoop < 4; iLoop++, pLight++)
-        {
-            if (nLightBits & (1 << iLoop))
-            {
-                sceVu0MulVector(vTmp2, pmat->vAmbient, pLight->vAmbient);
-                sceVu0AddVector(pctx->pvAmbient[0], vTmp2, pctx->pvAmbient[0]);
-                sceVu0MulVector(pstMatriceL->mDiffuseLightColor[iLoop], pmat->vDiffuse, pLight->vDiffuse);
-                sceVu0CopyVector(pstMatriceL->mDiffuseLightPosition[iLoop], pLight->vPosition);
-            }
-            else
-            {
-                sceVu0CopyVector(pstMatriceL->mDiffuseLightPosition[iLoop], vZero);
-                sceVu0CopyVector(pstMatriceL->mDiffuseLightColor[iLoop], vZero);
-            }
-        }
-    }
-    pctx->pvAmbient[0][3] = pmat->vDiffuse[3];
-    sceVu0TransposeMatrix(pstMatriceL->mDiffuseLightPosition, pstMatriceL->mDiffuseLightPosition);
-    pstMatriceL->ivUnpackCode[0] = pstMatriceL->ivUnpackCode[1] = 0;
-    pstMatriceL->ivUnpackCode[2] = 0x01000404;
-    pstMatriceL->ivUnpackCode[3] = 0x6C08000C;
-    pctx->pVIFIBufTail += 9;
-}
-
-void VU1UpdateSimpleSpecularParam(tagGLcontext* pctx)
-{
-    tag_GLmaterial* pmat;
-    unsigned int nLightBits;
-    int iLoop;
-    tag_stVU1MatriceL* pstMatriceL;
-    tag_GLlight* pLight;
-    float vTmp1[4];
-    float vTmp2[4];
-    nLightBits = pctx->nLightBits;
-    pstMatriceL = (tag_stVU1MatriceL*)pctx->pVIFIBufTail;
-    pctx->bLightsChanged = 0;
-    pctx->bMaterialChanged = 0;
-    *(float*)pctx->pfShininess = pctx->Materials[0].fShininess;
-    if (pctx->nLightBits & 0x200)
-    {
-        pmat = &pctx->Materials[0];
-        sceVu0CopyVector(pctx->pvAmbient[0], pctx->vAmbient);
-        pLight = &pctx->Lights[0];
-        for (iLoop = 0; iLoop < 4; iLoop++, pLight++)
-        {
-            if (nLightBits & (1 << iLoop))
-            {
-                if (pctx->eColorMaterialMode == 0x1200 || pctx->eColorMaterialMode == 0x1602)
-                {
-                    sceVu0AddVector(pctx->pvAmbient[0], pLight->vAmbient, pctx->pvAmbient[0]);
-                }
-                else
-                {
-                    sceVu0MulVector(vTmp1, pLight->vAmbient, pmat->vAmbient);
-                    sceVu0AddVector(pctx->pvAmbient[0], vTmp1, pctx->pvAmbient[0]);
-                }
-                if (pctx->eColorMaterialMode == 0x1201 || pctx->eColorMaterialMode == 0x1602)
-                {
-                    sceVu0CopyVector(pstMatriceL->mDiffuseLightColor[iLoop], pLight->vDiffuse);
-                }
-                else
-                {
-                    sceVu0MulVector(pstMatriceL->mDiffuseLightColor[iLoop], pmat->vDiffuse, pLight->vDiffuse);
-                }
-                sceVu0CopyVector(pstMatriceL->mDiffuseLightPosition[iLoop], pLight->vPosition);
-                if (pctx->eColorMaterialMode == 0x1201)
-                {
-                    sceVu0CopyVector(pstMatriceL->mSpecularLightColor[iLoop], pLight->vSpecular);
-                }
-                else
-                {
-                    sceVu0MulVector(pstMatriceL->mSpecularLightColor[iLoop], pmat->vSpecular, pLight->vSpecular);
-                }
-                sceVu0AddVector(pstMatriceL->mSpecularLightReflection[iLoop], pLight->vDirection, vViewer);
-                sceVu0Normalize(pstMatriceL->mSpecularLightReflection[iLoop], pstMatriceL->mSpecularLightReflection[iLoop]);
-            }
-            else
-            {
-                sceVu0CopyVector(pstMatriceL->mDiffuseLightPosition[iLoop], vZero);
-                sceVu0CopyVector(pstMatriceL->mSpecularLightReflection[iLoop], vZero);
-                sceVu0CopyVector(pstMatriceL->mDiffuseLightColor[iLoop], vZero);
-                sceVu0CopyVector(pstMatriceL->mSpecularLightColor[iLoop], vZero);
-            }
-        }
-    }
-    else
-    {
-        pmat = &pctx->Materials[0];
-        sceVu0CopyVector(pctx->pvAmbient[0], pctx->vAmbient);
-        pLight = &pctx->Lights[0];
-        for (iLoop = 0; iLoop < 4; iLoop++, pLight++)
-        {
-            if (nLightBits & (1 << iLoop))
-            {
-                sceVu0MulVector(vTmp2, pmat->vAmbient, pLight->vAmbient);
-                sceVu0AddVector(pctx->pvAmbient[0], vTmp2, pctx->pvAmbient[0]);
-                sceVu0MulVector(pstMatriceL->mSpecularLightColor[iLoop], pmat->vSpecular, pLight->vSpecular);
-                sceVu0AddVector(pstMatriceL->mSpecularLightReflection[iLoop], pLight->vDirection, vViewer);
-                sceVu0Normalize(pstMatriceL->mSpecularLightReflection[iLoop], pstMatriceL->mSpecularLightReflection[iLoop]);
-                sceVu0MulVector(pstMatriceL->mDiffuseLightColor[iLoop], pmat->vDiffuse, pLight->vDiffuse);
-                sceVu0CopyVector(pstMatriceL->mDiffuseLightPosition[iLoop], pLight->vPosition);
-            }
-            else
-            {
-                sceVu0CopyVector(pstMatriceL->mSpecularLightReflection[iLoop], vZero);
-                sceVu0CopyVector(pstMatriceL->mSpecularLightColor[iLoop], vZero);
-                sceVu0CopyVector(pstMatriceL->mDiffuseLightColor[iLoop], vZero);
-                sceVu0CopyVector(pstMatriceL->mDiffuseLightPosition[iLoop], vZero);
-            }
-        }
-    }
-    pctx->pvAmbient[0][3] = pmat->vDiffuse[3];
-    sceVu0TransposeMatrix(pstMatriceL->mDiffuseLightPosition, pstMatriceL->mDiffuseLightPosition);
-    sceVu0TransposeMatrix(pstMatriceL->mSpecularLightReflection, pstMatriceL->mSpecularLightReflection);
-    pstMatriceL->ivUnpackCode[0] = pstMatriceL->ivUnpackCode[1] = 0;
-    pstMatriceL->ivUnpackCode[2] = 0x01000404;
-    pstMatriceL->ivUnpackCode[3] = 0x6C10000C;
-    pctx->pVIFIBufTail += sizeof(*pstMatriceL) / sizeof(*pctx->pVIFIBufTail);
-}
-
-void VU1UpdateCullFaceParam(tagGLcontext* pctx)
-{
-    pctx->bCullfaceChanged = 0;
-    if (pctx->nEnableBits & 0x2000)
-    {
-        switch (pctx->eBeginMode)
-        {
-        case 4:
-        case 7:
-            /* The retail code stores the raw word 1/2/3 in the scale slot. */
-            ((int*)pctx->pvScreenScale)[1] = 1;
-            pctx->pvScreenScale[0][2] = 1.0f;
-            pctx->pvScreenScale[0][3] = 1.0f;
-            break;
-        case 5:
-        case 8:
-            ((int*)pctx->pvScreenScale)[1] = 2;
-            pctx->pvScreenScale[0][2] = -1.0f;
-            pctx->pvScreenScale[0][3] = -1.0f;
-            break;
-        case 6:
-        case 9:
-            ((int*)pctx->pvScreenScale)[1] = 3;
-            pctx->pvScreenScale[0][2] = 1.0f;
-            pctx->pvScreenScale[0][3] = 1.0f;
-            break;
-        default:
-            ((int*)pctx->pvScreenScale)[1] = 0;
-            break;
-        }
-        if ((pctx->eCullFaceMode == 0x405 && pctx->eFrontFaceMode == 0x900) ||
-            (pctx->eCullFaceMode == 0x404 && pctx->eFrontFaceMode == 0x901))
-        {
-            pctx->pvScreenScale[0][2] = -pctx->pvScreenScale[0][2];
-        }
-    }
-    else
-    {
-        ((int*)pctx->pvScreenScale)[1] = 0;
-    }
-}
-
-void PS2GL_SetDestinationFrame(unsigned int DestinationFrame)
-{
-    unsigned int saved;
-    PS2GL_CurrentDestinationFrame = DestinationFrame;
-    saved = g_PS2glContext.nLightBits;
-    g_PS2glContext.nLightBits |= 0x400;
-    impPS2glBegin(4);
-    impPS2glEnd();
-    g_PS2glContext.nLightBits = saved;
-}
-
-void VU1UpdateParameters(tagGLcontext* pctx, unsigned int Mode)
-{
-    int i;
-    int (*piUnpackCode)[4];
-    tagListData* pListData;
-    unsigned int uiMask;
-    unsigned char bSDLMatricesConjunction;
-    unsigned int eOldClippingMode;
-    unsigned int nLightBits;
-    _sceDmaTag* pTag;
-    /* TODO: decompile from asm/... */
-}
-
 void PS2glVIFSendBuffer(unsigned char bEOP)
 {
     unsigned int cbPartSize;
@@ -3117,6 +3067,26 @@ void PS2glVIFSendBuffer(unsigned char bEOP)
     /* TODO: decompile from asm/... */
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 2431–2456 */
+/* addr: 0x00181ff0  size: 596 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2431
+ *   +0x0004 -> line 2432
+ *   +0x0008 -> line 2431
+ *   +0x001c -> line 2432
+ *   +0x0028 -> line 2434
+ *   +0x002c -> line 2435
+ *   +0x0034 -> line 2440
+ *   +0x0044 -> line 2442
+ *   +0x006c -> line 2445
+ *   +0x0144 -> line 2446
+ *   +0x014c -> line 2448
+ *   +0x0228 -> line 2451
+ *   +0x0234 -> line 2455
+ *   +0x023c -> line 2456
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 #pragma opt_lifetimes off
 #pragma opt_strength_reduction off
 void PS2glFlushBuffer(unsigned char EOP)
@@ -3180,6 +3150,22 @@ void PS2glFlushBuffer(unsigned char EOP)
 #pragma opt_strength_reduction reset
 #pragma opt_lifetimes reset
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 54–65 */
+/* addr: 0x00181fa0  size: 72 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 54
+ *   +0x000c -> line 56
+ *   +0x0014 -> line 58
+ *   +0x0018 -> line 64
+ *   +0x001c -> line 58
+ *   +0x0020 -> line 59
+ *   +0x0028 -> line 61
+ *   +0x0030 -> line 62
+ *   +0x0034 -> line 64
+ *   +0x0040 -> line 65
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PS2glBufferTriangleStripToTriangle(float (*pBuf)[4], int iSrcStart, int iDstStart)
 {
     float (*pDst)[4];

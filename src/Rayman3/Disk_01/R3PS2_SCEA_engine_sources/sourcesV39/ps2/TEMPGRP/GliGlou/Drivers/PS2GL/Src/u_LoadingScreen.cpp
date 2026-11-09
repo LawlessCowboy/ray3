@@ -1161,28 +1161,6 @@ float g_ffFrameTime;
 float ambientMaterial[4];
 float light_specular0[4];
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 2655–2671 */
-/* addr: 0x002cdc10  size: 140 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2655
- *   +0x0004 -> line 2666
- *   +0x0008 -> line 2655
- *   +0x000c -> line 2663
- *   +0x0010 -> line 2656
- *   +0x0018 -> line 2657
- *   +0x0020 -> line 2658
- *   +0x0028 -> line 2659
- *   +0x0030 -> line 2660
- *   +0x0038 -> line 2661
- *   +0x0040 -> line 2666
- *   +0x0044 -> line 2662
- *   +0x004c -> line 2666
- *   +0x0064 -> line 2669
- *   +0x006c -> line 2668
- *   +0x0084 -> line 2671
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 struct LifeBarStruct_ {
     float PosRightX; /* +0x0 */
     float PosBottomY; /* +0x4 */
@@ -1206,81 +1184,253 @@ extern "C" void LS_Process(void* pData);
 extern "C" void LS_Destroy(void);
 extern "C" void LS_Create(void);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 782–786 */
-/* addr: 0x002cdca0  size: 40 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 268–300 */
+/* addr: 0x002cecd0  size: 276 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 782
- *   +0x000c -> line 784
- *   +0x0020 -> line 786
+ *   +0x0000 -> line 268
+ *   +0x0004 -> line 270
+ *   +0x0008 -> line 268
+ *   +0x000c -> line 278
+ *   +0x0010 -> line 268
+ *   +0x0014 -> line 270
+ *   +0x0018 -> line 271
+ *   +0x001c -> line 274
+ *   +0x0020 -> line 275
+ *   +0x0028 -> line 276
+ *   +0x0030 -> line 278
+ *   +0x0034 -> line 280
+ *   +0x0038 -> line 282
+ *   +0x0044 -> line 284
+ *   +0x0090 -> line 289
+ *   +0x009c -> line 291
+ *   +0x00b0 -> line 292
+ *   +0x00b8 -> line 294
+ *   +0x00cc -> line 296
+ *   +0x00e0 -> line 297
+ *   +0x00f8 -> line 299
+ *   +0x00fc -> line 300
+ *   +0x0100 -> line 299
+ *   +0x0104 -> line 300
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 765–778 */
-/* addr: 0x002cdcd0  size: 240 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 765
- *   +0x006c -> line 768
- *   +0x008c -> line 769
- *   +0x0094 -> line 770
- *   +0x00b0 -> line 771
- *   +0x00b4 -> line 775
- *   +0x00e0 -> line 776
- *   +0x00e8 -> line 778
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+C_LoadingScreen::C_LoadingScreen(void)
+{
+    char TempString[128];
+    m_FadeValue = 1.0f;
+    m_Finished = 0;
+    m_bDataIsValid = 0;
+    m_BackGroundTextureData = 0; m_ModelTextureData = 0;
+    m_BackGroundTextureName = 0; m_ModelTextureName = 0;
+    m_SemaPhore = -1;
+    m_fTime = 0;
+    if (g_iLoadingScreenBackgroundNumber == 0)
+    {
+        g_iLoadingScreenBackgroundNumber = (int)(1.0f + 7.0f * (float)rand() / 2147483648.0f);
+    }
+    g_iLoadingScreenBackgroundNumber = g_iLoadingScreenBackgroundNumber + 1;
+    if (g_iLoadingScreenBackgroundNumber <= 0 || g_iLoadingScreenBackgroundNumber > 8)
+        g_iLoadingScreenBackgroundNumber = 1;
+    sprintf(TempString, "cdrom0:\\LSBIN\\LODPS20%d.TXR", g_iLoadingScreenBackgroundNumber);
+    LoadTexture(TempString, &m_BackGroundTextureData, &m_BackGroundTextureName);
+    LoadTexture("cdrom0:\\LSBIN\\LODMECA.TXR", &m_ModelTextureData, &m_ModelTextureName);
+    m_bDataIsValid = 1;
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 726–735 */
-/* addr: 0x002cddc0  size: 132 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 304–315 */
+/* addr: 0x002cec70  size: 96 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 726
- *   +0x0004 -> line 727
- *   +0x000c -> line 729
- *   +0x0038 -> line 733
- *   +0x0050 -> line 734
- *   +0x0078 -> line 735
+ *   +0x0000 -> line 304
+ *   +0x0014 -> line 305
+ *   +0x0020 -> line 307
+ *   +0x002c -> line 308
+ *   +0x0030 -> line 310
+ *   +0x003c -> line 312
+ *   +0x0048 -> line 313
+ *   +0x004c -> line 315
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void C_LoadingScreen::FreeTexture(unsigned int** ppTextureData, unsigned int* pTextureName)
+{
+    if (*pTextureName)
+    {
+        PS2glDeleteTextures(1, pTextureName);
+        *pTextureName = 0;
+    }
+    if (*ppTextureData)
+    {
+        PS2glLiberator(*ppTextureData);
+        *ppTextureData = NULL;
+    }
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 687–715 */
-/* addr: 0x002cde50  size: 236 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 394–413 */
+/* addr: 0x002ceb40  size: 296 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 687
- *   +0x000c -> line 693
- *   +0x0018 -> line 698
- *   +0x0020 -> line 700
- *   +0x0030 -> line 706
- *   +0x0038 -> line 707
- *   +0x0040 -> line 710
- *   +0x00d4 -> line 713
- *   +0x00dc -> line 715
+ *   +0x0000 -> line 394
+ *   +0x0004 -> line 395
+ *   +0x0008 -> line 394
+ *   +0x0048 -> line 395
+ *   +0x0050 -> line 396
+ *   +0x0064 -> line 398
+ *   +0x0070 -> line 399
+ *   +0x007c -> line 400
+ *   +0x0088 -> line 401
+ *   +0x0094 -> line 402
+ *   +0x00a0 -> line 403
+ *   +0x00ac -> line 405
+ *   +0x00b8 -> line 406
+ *   +0x00c4 -> line 407
+ *   +0x00d0 -> line 408
+ *   +0x00dc -> line 409
+ *   +0x00e8 -> line 410
+ *   +0x00f4 -> line 412
+ *   +0x00fc -> line 413
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void C_LoadingScreen::DrawQuad(float X1, float Y1, float X2, float Y2, float U1, float V1, float U2, float V2, float R, float G, float B, float A)
+{
+    PS2glBegin(4);
+    PS2glColor4f(R, G, B, A);
+    PS2glTexCoord2f(U1, V1);
+    PS2glVertex2f(X1, Y1);
+    PS2glTexCoord2f(U2, V1);
+    PS2glVertex2f(X2, Y1);
+    PS2glTexCoord2f(U2, V2);
+    PS2glVertex2f(X2, Y2);
+    PS2glTexCoord2f(U1, V1);
+    PS2glVertex2f(X1, Y1);
+    PS2glTexCoord2f(U2, V2);
+    PS2glVertex2f(X2, Y2);
+    PS2glTexCoord2f(U1, V2);
+    PS2glVertex2f(X1, Y2);
+    PS2glEnd();
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 663–684 */
-/* addr: 0x002cdf40  size: 340 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 416–483 */
+/* addr: 0x002ce7b0  size: 912 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 663
- *   +0x0008 -> line 666
- *   +0x0010 -> line 667
- *   +0x0018 -> line 668
- *   +0x0040 -> line 669
- *   +0x0050 -> line 671
- *   +0x00d4 -> line 672
- *   +0x00dc -> line 674
- *   +0x00e0 -> line 676
- *   +0x00e8 -> line 674
- *   +0x00ec -> line 676
- *   +0x012c -> line 683
- *   +0x0130 -> line 681
- *   +0x0134 -> line 683
- *   +0x0144 -> line 684
+ *   +0x0000 -> line 416
+ *   +0x0030 -> line 418
+ *   +0x0034 -> line 416
+ *   +0x004c -> line 418
+ *   +0x0054 -> line 419
+ *   +0x005c -> line 420
+ *   +0x0088 -> line 421
+ *   +0x0090 -> line 422
+ *   +0x0098 -> line 423
+ *   +0x00a0 -> line 424
+ *   +0x00a8 -> line 426
+ *   +0x0108 -> line 427
+ *   +0x0114 -> line 428
+ *   +0x012c -> line 429
+ *   +0x0138 -> line 428
+ *   +0x0170 -> line 429
+ *   +0x0178 -> line 431
+ *   +0x0180 -> line 432
+ *   +0x019c -> line 442
+ *   +0x01b0 -> line 443
+ *   +0x01b4 -> line 444
+ *   +0x01b8 -> line 442
+ *   +0x01bc -> line 444
+ *   +0x01c0 -> line 443
+ *   +0x01c4 -> line 446
+ *   +0x01c8 -> line 443
+ *   +0x01d8 -> line 446
+ *   +0x01e0 -> line 447
+ *   +0x01e4 -> line 446
+ *   +0x01e8 -> line 447
+ *   +0x01f0 -> line 449
+ *   +0x01fc -> line 450
+ *   +0x0200 -> line 449
+ *   +0x0204 -> line 450
+ *   +0x020c -> line 451
+ *   +0x0210 -> line 450
+ *   +0x0214 -> line 451
+ *   +0x021c -> line 452
+ *   +0x0220 -> line 451
+ *   +0x0224 -> line 452
+ *   +0x022c -> line 454
+ *   +0x0230 -> line 452
+ *   +0x0238 -> line 457
+ *   +0x0240 -> line 460
+ *   +0x0244 -> line 457
+ *   +0x0248 -> line 460
+ *   +0x024c -> line 457
+ *   +0x0250 -> line 459
+ *   +0x0254 -> line 458
+ *   +0x0258 -> line 457
+ *   +0x0264 -> line 458
+ *   +0x026c -> line 460
+ *   +0x0274 -> line 462
+ *   +0x0280 -> line 463
+ *   +0x0294 -> line 465
+ *   +0x02a8 -> line 466
+ *   +0x02bc -> line 468
+ *   +0x02cc -> line 469
+ *   +0x02e0 -> line 472
+ *   +0x02ec -> line 473
+ *   +0x0300 -> line 475
+ *   +0x0310 -> line 476
+ *   +0x0324 -> line 478
+ *   +0x0338 -> line 479
+ *   +0x034c -> line 482
+ *   +0x0354 -> line 483
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void C_LoadingScreen::DisplayWheelWork(float XX, float YY, float fSize, float fSpeed)
+{
+    int i;
+    float c1;
+    float s1;
+    float Coords[4][2];
+    float size;
+    float y;
+    float x;
+    PS2glMatrixMode(0x1701);
+    PS2glLoadIdentity();
+    PS2glOrtho(0.0f, 640.0f, 480.0f, 0.0f, -1.0f, 1.0f);
+    PS2glMatrixMode(0x1700);
+    PS2glLoadIdentity();
+    PS2glMatrixMode(0x1702);
+    PS2glLoadIdentity();
+    g_PS2glContext.nTextureEnableBits |= (g_PS2glContext.iCurTextureSet != 0) ? 0x200 : 2;
+    g_gsContext.PRMODE.TME = 1;
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    PS2glBindTexture(0xDE1, m_ModelTextureName);
+    g_PS2glContext.nEnableBits |= 0x100;
+    g_gsContext.PRMODE.ABE = 1;
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    PS2glSetGsRegister(0x42, 0x44, 0, g_gsContext.ModFlgs.PRMODE_Modified);
+    PS2glBegin(4);
+    PS2glColor4f(0.5f, 0.5f, 0.5f, 1.0f);
+    size = (640.0f * fSize) / 100.0f;
+    x = (640.0f * XX) / 100.0f;
+    y = (480.0f * YY) / 100.0f;
+    s1 = sinf(m_fTime * fSpeed);
+    c1 = cosf(m_fTime * fSpeed);
+    Coords[0][0] = -size; Coords[0][1] = -size;
+    Coords[1][0] = size; Coords[1][1] = -size;
+    Coords[2][0] = size; Coords[2][1] = size;
+    Coords[3][0] = -size; Coords[3][1] = size;
+    for (i = 0; i < 4; i++) {
+        float x1 = Coords[i][0];
+        float y1 = Coords[i][1];
+        Coords[i][0] = x1 * c1 + y1 * s1;
+        Coords[i][1] = x1 * s1 - y1 * c1;
+    }
+    PS2glTexCoord2f(0.0f, 0.0f); PS2glVertex2f(x + Coords[0][0], y + Coords[0][1]);
+    PS2glTexCoord2f(1.0f, 0.0f); PS2glVertex2f(x + Coords[1][0], y + Coords[1][1]);
+    PS2glTexCoord2f(1.0f, 1.0f); PS2glVertex2f(x + Coords[2][0], y + Coords[2][1]);
+    PS2glTexCoord2f(0.0f, 0.0f); PS2glVertex2f(x + Coords[0][0], y + Coords[0][1]);
+    PS2glTexCoord2f(1.0f, 1.0f); PS2glVertex2f(x + Coords[2][0], y + Coords[2][1]);
+    PS2glTexCoord2f(0.0f, 1.0f); PS2glVertex2f(x + Coords[3][0], y + Coords[3][1]);
+    PS2glEnd();
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 504–640 */
 /* addr: 0x002ce0a0  size: 1804 bytes */
@@ -1434,264 +1584,33 @@ extern "C" void LS_Create(void);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 416–483 */
-/* addr: 0x002ce7b0  size: 912 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 416
- *   +0x0030 -> line 418
- *   +0x0034 -> line 416
- *   +0x004c -> line 418
- *   +0x0054 -> line 419
- *   +0x005c -> line 420
- *   +0x0088 -> line 421
- *   +0x0090 -> line 422
- *   +0x0098 -> line 423
- *   +0x00a0 -> line 424
- *   +0x00a8 -> line 426
- *   +0x0108 -> line 427
- *   +0x0114 -> line 428
- *   +0x012c -> line 429
- *   +0x0138 -> line 428
- *   +0x0170 -> line 429
- *   +0x0178 -> line 431
- *   +0x0180 -> line 432
- *   +0x019c -> line 442
- *   +0x01b0 -> line 443
- *   +0x01b4 -> line 444
- *   +0x01b8 -> line 442
- *   +0x01bc -> line 444
- *   +0x01c0 -> line 443
- *   +0x01c4 -> line 446
- *   +0x01c8 -> line 443
- *   +0x01d8 -> line 446
- *   +0x01e0 -> line 447
- *   +0x01e4 -> line 446
- *   +0x01e8 -> line 447
- *   +0x01f0 -> line 449
- *   +0x01fc -> line 450
- *   +0x0200 -> line 449
- *   +0x0204 -> line 450
- *   +0x020c -> line 451
- *   +0x0210 -> line 450
- *   +0x0214 -> line 451
- *   +0x021c -> line 452
- *   +0x0220 -> line 451
- *   +0x0224 -> line 452
- *   +0x022c -> line 454
- *   +0x0230 -> line 452
- *   +0x0238 -> line 457
- *   +0x0240 -> line 460
- *   +0x0244 -> line 457
- *   +0x0248 -> line 460
- *   +0x024c -> line 457
- *   +0x0250 -> line 459
- *   +0x0254 -> line 458
- *   +0x0258 -> line 457
- *   +0x0264 -> line 458
- *   +0x026c -> line 460
- *   +0x0274 -> line 462
- *   +0x0280 -> line 463
- *   +0x0294 -> line 465
- *   +0x02a8 -> line 466
- *   +0x02bc -> line 468
- *   +0x02cc -> line 469
- *   +0x02e0 -> line 472
- *   +0x02ec -> line 473
- *   +0x0300 -> line 475
- *   +0x0310 -> line 476
- *   +0x0324 -> line 478
- *   +0x0338 -> line 479
- *   +0x034c -> line 482
- *   +0x0354 -> line 483
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 394–413 */
-/* addr: 0x002ceb40  size: 296 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 394
- *   +0x0004 -> line 395
- *   +0x0008 -> line 394
- *   +0x0048 -> line 395
- *   +0x0050 -> line 396
- *   +0x0064 -> line 398
- *   +0x0070 -> line 399
- *   +0x007c -> line 400
- *   +0x0088 -> line 401
- *   +0x0094 -> line 402
- *   +0x00a0 -> line 403
- *   +0x00ac -> line 405
- *   +0x00b8 -> line 406
- *   +0x00c4 -> line 407
- *   +0x00d0 -> line 408
- *   +0x00dc -> line 409
- *   +0x00e8 -> line 410
- *   +0x00f4 -> line 412
- *   +0x00fc -> line 413
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 304–315 */
-/* addr: 0x002cec70  size: 96 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 304
- *   +0x0014 -> line 305
- *   +0x0020 -> line 307
- *   +0x002c -> line 308
- *   +0x0030 -> line 310
- *   +0x003c -> line 312
- *   +0x0048 -> line 313
- *   +0x004c -> line 315
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 268–300 */
-/* addr: 0x002cecd0  size: 276 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 268
- *   +0x0004 -> line 270
- *   +0x0008 -> line 268
- *   +0x000c -> line 278
- *   +0x0010 -> line 268
- *   +0x0014 -> line 270
- *   +0x0018 -> line 271
- *   +0x001c -> line 274
- *   +0x0020 -> line 275
- *   +0x0028 -> line 276
- *   +0x0030 -> line 278
- *   +0x0034 -> line 280
- *   +0x0038 -> line 282
- *   +0x0044 -> line 284
- *   +0x0090 -> line 289
- *   +0x009c -> line 291
- *   +0x00b0 -> line 292
- *   +0x00b8 -> line 294
- *   +0x00cc -> line 296
- *   +0x00e0 -> line 297
- *   +0x00f8 -> line 299
- *   +0x00fc -> line 300
- *   +0x0100 -> line 299
- *   +0x0104 -> line 300
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-C_LoadingScreen::C_LoadingScreen(void)
-{
-    char TempString[128];
-    m_FadeValue = 1.0f;
-    m_Finished = 0;
-    m_bDataIsValid = 0;
-    m_BackGroundTextureData = 0; m_ModelTextureData = 0;
-    m_BackGroundTextureName = 0; m_ModelTextureName = 0;
-    m_SemaPhore = -1;
-    m_fTime = 0;
-    if (g_iLoadingScreenBackgroundNumber == 0)
-    {
-        g_iLoadingScreenBackgroundNumber = (int)(1.0f + 7.0f * (float)rand() / 2147483648.0f);
-    }
-    g_iLoadingScreenBackgroundNumber = g_iLoadingScreenBackgroundNumber + 1;
-    if (g_iLoadingScreenBackgroundNumber <= 0 || g_iLoadingScreenBackgroundNumber > 8)
-        g_iLoadingScreenBackgroundNumber = 1;
-    sprintf(TempString, "cdrom0:\\LSBIN\\LODPS20%d.TXR", g_iLoadingScreenBackgroundNumber);
-    LoadTexture(TempString, &m_BackGroundTextureData, &m_BackGroundTextureName);
-    LoadTexture("cdrom0:\\LSBIN\\LODMECA.TXR", &m_ModelTextureData, &m_ModelTextureName);
-    m_bDataIsValid = 1;
-}
-
-void C_LoadingScreen::FreeTexture(unsigned int** ppTextureData, unsigned int* pTextureName)
-{
-    if (*pTextureName)
-    {
-        PS2glDeleteTextures(1, pTextureName);
-        *pTextureName = 0;
-    }
-    if (*ppTextureData)
-    {
-        PS2glLiberator(*ppTextureData);
-        *ppTextureData = NULL;
-    }
-}
-
-void C_LoadingScreen::DrawQuad(float X1, float Y1, float X2, float Y2, float U1, float V1, float U2, float V2, float R, float G, float B, float A)
-{
-    PS2glBegin(4);
-    PS2glColor4f(R, G, B, A);
-    PS2glTexCoord2f(U1, V1);
-    PS2glVertex2f(X1, Y1);
-    PS2glTexCoord2f(U2, V1);
-    PS2glVertex2f(X2, Y1);
-    PS2glTexCoord2f(U2, V2);
-    PS2glVertex2f(X2, Y2);
-    PS2glTexCoord2f(U1, V1);
-    PS2glVertex2f(X1, Y1);
-    PS2glTexCoord2f(U2, V2);
-    PS2glVertex2f(X2, Y2);
-    PS2glTexCoord2f(U1, V2);
-    PS2glVertex2f(X1, Y2);
-    PS2glEnd();
-}
-
-void C_LoadingScreen::DisplayWheelWork(float XX, float YY, float fSize, float fSpeed)
-{
-    int i;
-    float c1;
-    float s1;
-    float Coords[4][2];
-    float size;
-    float y;
-    float x;
-    PS2glMatrixMode(0x1701);
-    PS2glLoadIdentity();
-    PS2glOrtho(0.0f, 640.0f, 480.0f, 0.0f, -1.0f, 1.0f);
-    PS2glMatrixMode(0x1700);
-    PS2glLoadIdentity();
-    PS2glMatrixMode(0x1702);
-    PS2glLoadIdentity();
-    g_PS2glContext.nTextureEnableBits |= (g_PS2glContext.iCurTextureSet != 0) ? 0x200 : 2;
-    g_gsContext.PRMODE.TME = 1;
-    g_gsContext.ModFlgs.PRMODE_Modified = 1;
-    PS2glBindTexture(0xDE1, m_ModelTextureName);
-    g_PS2glContext.nEnableBits |= 0x100;
-    g_gsContext.PRMODE.ABE = 1;
-    g_gsContext.ModFlgs.PRMODE_Modified = 1;
-    PS2glSetGsRegister(0x42, 0x44, 0, g_gsContext.ModFlgs.PRMODE_Modified);
-    PS2glBegin(4);
-    PS2glColor4f(0.5f, 0.5f, 0.5f, 1.0f);
-    size = (640.0f * fSize) / 100.0f;
-    x = (640.0f * XX) / 100.0f;
-    y = (480.0f * YY) / 100.0f;
-    s1 = sinf(m_fTime * fSpeed);
-    c1 = cosf(m_fTime * fSpeed);
-    Coords[0][0] = -size; Coords[0][1] = -size;
-    Coords[1][0] = size; Coords[1][1] = -size;
-    Coords[2][0] = size; Coords[2][1] = size;
-    Coords[3][0] = -size; Coords[3][1] = size;
-    for (i = 0; i < 4; i++) {
-        float x1 = Coords[i][0];
-        float y1 = Coords[i][1];
-        Coords[i][0] = x1 * c1 + y1 * s1;
-        Coords[i][1] = x1 * s1 - y1 * c1;
-    }
-    PS2glTexCoord2f(0.0f, 0.0f); PS2glVertex2f(x + Coords[0][0], y + Coords[0][1]);
-    PS2glTexCoord2f(1.0f, 0.0f); PS2glVertex2f(x + Coords[1][0], y + Coords[1][1]);
-    PS2glTexCoord2f(1.0f, 1.0f); PS2glVertex2f(x + Coords[2][0], y + Coords[2][1]);
-    PS2glTexCoord2f(0.0f, 0.0f); PS2glVertex2f(x + Coords[0][0], y + Coords[0][1]);
-    PS2glTexCoord2f(1.0f, 1.0f); PS2glVertex2f(x + Coords[2][0], y + Coords[2][1]);
-    PS2glTexCoord2f(0.0f, 1.0f); PS2glVertex2f(x + Coords[3][0], y + Coords[3][1]);
-    PS2glEnd();
-}
-
 void C_LoadingScreen::Display(void)
 {
     float pRGBColor[4];
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 663–684 */
+/* addr: 0x002cdf40  size: 340 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 663
+ *   +0x0008 -> line 666
+ *   +0x0010 -> line 667
+ *   +0x0018 -> line 668
+ *   +0x0040 -> line 669
+ *   +0x0050 -> line 671
+ *   +0x00d4 -> line 672
+ *   +0x00dc -> line 674
+ *   +0x00e0 -> line 676
+ *   +0x00e8 -> line 674
+ *   +0x00ec -> line 676
+ *   +0x012c -> line 683
+ *   +0x0130 -> line 681
+ *   +0x0134 -> line 683
+ *   +0x0144 -> line 684
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void LS_Create(void)
 {
     SemaParam Semaphore;
@@ -1716,6 +1635,21 @@ void LS_Create(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 687–715 */
+/* addr: 0x002cde50  size: 236 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 687
+ *   +0x000c -> line 693
+ *   +0x0018 -> line 698
+ *   +0x0020 -> line 700
+ *   +0x0030 -> line 706
+ *   +0x0038 -> line 707
+ *   +0x0040 -> line 710
+ *   +0x00d4 -> line 713
+ *   +0x00dc -> line 715
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void LS_Destroy(void)
 {
     LoadingInProgress = 0;
@@ -1730,6 +1664,18 @@ void LS_Destroy(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 726–735 */
+/* addr: 0x002cddc0  size: 132 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 726
+ *   +0x0004 -> line 727
+ *   +0x000c -> line 729
+ *   +0x0038 -> line 733
+ *   +0x0050 -> line 734
+ *   +0x0078 -> line 735
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void LS_Process(void* pData)
 {
     while (pLS && (LoadingInProgress || !pLS->m_Finished)) {
@@ -1741,6 +1687,20 @@ void LS_Process(void* pData)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 765–778 */
+/* addr: 0x002cdcd0  size: 240 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 765
+ *   +0x006c -> line 768
+ *   +0x008c -> line 769
+ *   +0x0094 -> line 770
+ *   +0x00b0 -> line 771
+ *   +0x00b4 -> line 775
+ *   +0x00e0 -> line 776
+ *   +0x00e8 -> line 778
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void LS_FinallyIThinkIOnlyHaveThisSizeLeftToLoad(int SizeLeft)
 {
     float Percent;
@@ -1753,6 +1713,15 @@ void LS_FinallyIThinkIOnlyHaveThisSizeLeftToLoad(int SizeLeft)
     g_ProgressSizeHaveRead = g_ProgressSizeToRead - SizeLeft;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 782–786 */
+/* addr: 0x002cdca0  size: 40 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 782
+ *   +0x000c -> line 784
+ *   +0x0020 -> line 786
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int LS_fn_iRemainingSizeToLoad(void)
 {
     int iReturn;
@@ -1760,6 +1729,28 @@ int LS_fn_iRemainingSizeToLoad(void)
     return iReturn > 0 ? iReturn : 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 2655–2671 */
+/* addr: 0x002cdc10  size: 140 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2655
+ *   +0x0004 -> line 2666
+ *   +0x0008 -> line 2655
+ *   +0x000c -> line 2663
+ *   +0x0010 -> line 2656
+ *   +0x0018 -> line 2657
+ *   +0x0020 -> line 2658
+ *   +0x0028 -> line 2659
+ *   +0x0030 -> line 2660
+ *   +0x0038 -> line 2661
+ *   +0x0040 -> line 2666
+ *   +0x0044 -> line 2662
+ *   +0x004c -> line 2666
+ *   +0x0064 -> line 2669
+ *   +0x006c -> line 2668
+ *   +0x0084 -> line 2671
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vAddLifeBars(float PosRightX, float PosBottomY, float CirclePerCent, float CurrentLife, float MaxLife, float CenterIcon, GLI_tdstMaterial_* pMat, float fAlpha)
 {
     GLI_g_TheLifeBar.PosRightX = PosRightX;

@@ -1370,14 +1370,6 @@ unsigned int GLI_g_ProjectionMode;
 float g_LeftHandedIdentityMatrix[16];
 int AGO_g_VisualMaterialForAuras;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawAGO2.c lines 126–126 */
-/* addr: 0x002b3660  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 126
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 void GLD_fn_vInitSmoothSynchro(void);
@@ -1393,13 +1385,1156 @@ void GLI_v_StartDrawingRain(GLD_tdstViewportAttributes_* pViewport);
 void GLI_v_CalculateVectorsFor3DRainVU0(MAT_tdstTransformation_* pInvertedCam, float* pDirection, float sx, float sy);
 void GLI_v_CalculateVectorsFor3DRain(MAT_tdstTransformation_* param0, float* pDirection, float sx, float sy);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawAGO2.c lines 1499–1499 */
-/* addr: 0x002b3670  size: 8 bytes */
+extern void GLI_v_CalculateInverseCamMat(MAT_tdstTransformation_* pInvertedCam, GLD_tdstViewportAttributes_* pViewport);
+extern void GLI_v_CalculateVectorsFor3DRain(MAT_tdstTransformation_* pInvertedCam, float* pDirection, float sx, float sy);
+
+extern void VAC_SetMaterial(void* hContainer, GLI_tdstMaterial_* pMat);
+extern void VAC_UnAcquireAndDraw(void* hContainer, unsigned int NbSprites);
+
+int VAC_Acquire(void* hContainer, float (*pMatrix)[4][4], GLI_tdstMaterial_* pMat);
+
+/* Multiplies each column of a 4x4 matrix by a vector on VU0 (macro mode);
+   the VU0 instructions have no C form. */
+inline void PS2_M_vMulMatrixColumnsByVector(float (*_src)[4], float* _vec, float (*_dst)[4])
+{
+    asm {
+        lqc2 vf5, 0x0(_vec)
+        lqc2 vf1, 0x0(_src)
+        lqc2 vf2, 0x10(_src)
+        lqc2 vf3, 0x20(_src)
+        lqc2 vf4, 0x30(_src)
+        vmul.xyzw vf1, vf1, vf5
+        vmul.xyzw vf2, vf2, vf5
+        vmul.xyzw vf3, vf3, vf5
+        vmul.xyzw vf4, vf4, vf5
+        sqc2 vf1, 0x0(_dst)
+        sqc2 vf2, 0x10(_dst)
+        sqc2 vf3, 0x20(_dst)
+        sqc2 vf4, 0x30(_dst)
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawAGO2.c lines 313–343 */
+/* addr: 0x002b5550  size: 568 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1499
+ *   +0x0000 -> line 313
+ *   +0x0004 -> line 318
+ *   +0x0008 -> line 313
+ *   +0x000c -> line 320
+ *   +0x0010 -> line 313
+ *   +0x0020 -> line 320
+ *   +0x0028 -> line 318
+ *   +0x0030 -> line 320
+ *   +0x0034 -> line 316
+ *   +0x0038 -> line 320
+ *   +0x0040 -> line 324
+ *   +0x004c -> line 330
+ *   +0x0054 -> line 325
+ *   +0x0060 -> line 330
+ *   +0x0068 -> line 326
+ *   +0x0074 -> line 330
+ *   +0x00d4 -> line 331
+ *   +0x0124 -> line 332
+ *   +0x01a8 -> line 334
+ *   +0x01b0 -> line 335
+ *   +0x01b8 -> line 334
+ *   +0x01bc -> line 336
+ *   +0x01c4 -> line 335
+ *   +0x01c8 -> line 338
+ *   +0x01d0 -> line 336
+ *   +0x01d4 -> line 339
+ *   +0x01dc -> line 338
+ *   +0x01e0 -> line 340
+ *   +0x01e8 -> line 339
+ *   +0x01ec -> line 334
+ *   +0x01f4 -> line 335
+ *   +0x01fc -> line 336
+ *   +0x0204 -> line 338
+ *   +0x020c -> line 339
+ *   +0x0214 -> line 340
+ *   +0x0220 -> line 343
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+void GLI_v_CalculateVectorsFor3DRain(MAT_tdstTransformation_* param0, float* pDirection, float sx, float sy)
+{
+    float xNorm;
+    MTH3D_tdstVector_ V3;
+    MTH3D_tdstVector_ V2;
+    MTH3D_tdstVector_ V1;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawAGO2.c lines 347–424 */
+/* addr: 0x002b5460  size: 232 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 347
+ *   +0x0004 -> line 352
+ *   +0x000c -> line 357
+ *   +0x0014 -> line 350
+ *   +0x0018 -> line 351
+ *   +0x001c -> line 357
+ *   +0x0020 -> line 353
+ *   +0x0024 -> line 357
+ *   +0x0030 -> line 359
+ *   +0x0034 -> line 360
+ *   +0x0038 -> line 361
+ *   +0x003c -> line 362
+ *   +0x0040 -> line 363
+ *   +0x0044 -> line 364
+ *   +0x0048 -> line 365
+ *   +0x004c -> line 366
+ *   +0x0050 -> line 367
+ *   +0x0054 -> line 368
+ *   +0x0058 -> line 369
+ *   +0x005c -> line 371
+ *   +0x0060 -> line 372
+ *   +0x0064 -> line 373
+ *   +0x0068 -> line 374
+ *   +0x006c -> line 375
+ *   +0x0070 -> line 377
+ *   +0x0074 -> line 378
+ *   +0x0078 -> line 379
+ *   +0x007c -> line 380
+ *   +0x0080 -> line 382
+ *   +0x0084 -> line 383
+ *   +0x0088 -> line 384
+ *   +0x008c -> line 386
+ *   +0x0090 -> line 387
+ *   +0x0094 -> line 388
+ *   +0x0098 -> line 389
+ *   +0x009c -> line 390
+ *   +0x00a0 -> line 391
+ *   +0x00a4 -> line 392
+ *   +0x00a8 -> line 393
+ *   +0x00ac -> line 394
+ *   +0x00b0 -> line 395
+ *   +0x00b4 -> line 396
+ *   +0x00b8 -> line 400
+ *   +0x00c0 -> line 401
+ *   +0x00c4 -> line 402
+ *   +0x00c8 -> line 405
+ *   +0x00d0 -> line 406
+ *   +0x00d4 -> line 407
+ *   +0x00d8 -> line 410
+ *   +0x00dc -> line 411
+ *   +0x00e0 -> line 424
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_v_CalculateVectorsFor3DRainVU0(MAT_tdstTransformation_* pInvertedCam, float* pDirection, float sx, float sy)
+{
+    float V1[4];
+    float* pX;
+    float* pMat;
+    float* pV1;
+    float* pY;
+
+    V1[0] = 0.0f;
+    V1[1] = 0.0f;
+    V1[2] = -1.0f;
+    pMat = (float*)((char*)pInvertedCam + 0x10);
+    V1[3] = 0.0f;
+    pX = GLI_g_stXVecta;
+    pV1 = V1;
+    pY = GLI_g_stYVecta;
+
+    asm {
+        lqc2 $vf10, 0x0(pDirection)
+        vmul.xyz $vf5, $vf10, $vf10
+        vaddy.x $vf5, $vf5, $vf5y
+        vaddz.x $vf5, $vf5, $vf5z
+        vsqrt $Q, $vf5x
+        vwaitq
+        vaddq.x $vf5, $vf0, $Q
+        vdiv $Q, $vf0w, $vf5x
+        vsub.xyzw $vf6, $vf0, $vf0
+        vwaitq
+        vmulq.xyz $vf10, $vf10, $Q
+        lqc2 $vf8, 0x0(pV1)
+        lqc2 $vf4, 0x0(pMat)
+        lqc2 $vf5, 0x10(pMat)
+        lqc2 $vf6, 0x20(pMat)
+        lqc2 $vf7, 0x30(pMat)
+        vmulax.xyzw $ACC, $vf4, $vf8x
+        vmadday.xyzw $ACC, $vf5, $vf8y
+        vmaddaz.xyzw $ACC, $vf6, $vf8z
+        vmaddw.xyzw $vf9, $vf7, $vf8w
+        vopmula.xyz $ACC, $vf10, $vf9
+        vopmsub.xyz $vf13, $vf9, $vf10
+        vsub.w $vf13, $vf13, $vf13
+        vmul.xyz $vf5, $vf13, $vf13
+        vaddy.x $vf5, $vf5, $vf5y
+        vaddz.x $vf5, $vf5, $vf5z
+        vsqrt $Q, $vf5x
+        vwaitq
+        vaddq.x $vf5, $vf0, $Q
+        vdiv $Q, $vf0w, $vf5x
+        vsub.xyzw $vf6, $vf0, $vf0
+        vwaitq
+        vmulq.xyz $vf6, $vf13, $Q
+        sqc2 $vf6, 0x0(pX)
+        mfc1 $t0, sx
+        nop
+        qmtc2.ni $t0, $vf8
+        vmulx.xyzw $vf7, $vf6, $vf8x
+        mfc1 $t0, sy
+        nop
+        qmtc2.ni $t0, $vf9
+        vmulx.xyzw $vf2, $vf10, $vf9x
+        sqc2 $vf7, 0x0(pX)
+        sqc2 $vf2, 0x0(pY)
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawAGO2.c lines 435–441 */
+/* addr: 0x002b53e0  size: 124 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 435
+ *   +0x0004 -> line 439
+ *   +0x0008 -> line 435
+ *   +0x000c -> line 439
+ *   +0x0010 -> line 438
+ *   +0x0014 -> line 439
+ *   +0x0018 -> line 438
+ *   +0x0020 -> line 439
+ *   +0x005c -> line 440
+ *   +0x0060 -> line 439
+ *   +0x0068 -> line 440
+ *   +0x0070 -> line 441
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_v_StartDrawingRain(GLD_tdstViewportAttributes_* pViewport)
+{
+    float ModelView[4][4];
+
+    GLI_g_p_stCurrentCam = *(int*)pViewport->p_vSpecificToXD;
+    PS2_M_vMulMatrixColumnsByVector((float (*)[4])&((GLI_tdstCamera_*)GLI_g_p_stCurrentCam)->stMatrix.stTransformMatrix, GLI_g_NegVect, ModelView); ModelView[3][3] = 1.0f;
+    VAC_Acquire((void*)GLI_g_hVAContainer, &ModelView, NULL);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawAGO2.c lines 445–453 */
+/* addr: 0x002b5390  size: 72 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 445
+ *   +0x0004 -> line 447
+ *   +0x0008 -> line 445
+ *   +0x0010 -> line 446
+ *   +0x0014 -> line 449
+ *   +0x001c -> line 448
+ *   +0x0020 -> line 449
+ *   +0x0028 -> line 451
+ *   +0x0038 -> line 453
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_v_StopDrawingRain(void)
+{
+    float savedalpha;
+    savedalpha = GLI_BIG_GLOBALS_xGlobalAlpha;
+    GLI_BIG_GLOBALS_xGlobalAlpha = 0.5f;
+    GLI_g_CurrentStage = 0;
+    VAC_SetMaterial((void*)GLI_g_hVAContainer, (GLI_tdstMaterial_*)GLI_g_RainMaterial);
+    GLI_BIG_GLOBALS_xGlobalAlpha = savedalpha;
+    VAC_UnAcquireAndDraw((void*)GLI_g_hVAContainer, 0);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawAGO2.c lines 458–582 */
+/* addr: 0x002b5130  size: 604 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 458
+ *   +0x0028 -> line 460
+ *   +0x002c -> line 458
+ *   +0x0030 -> line 470
+ *   +0x0038 -> line 468
+ *   +0x0040 -> line 470
+ *   +0x004c -> line 472
+ *   +0x0054 -> line 475
+ *   +0x0058 -> line 480
+ *   +0x005c -> line 476
+ *   +0x0060 -> line 477
+ *   +0x0064 -> line 480
+ *   +0x006c -> line 482
+ *   +0x0080 -> line 496
+ *   +0x0084 -> line 511
+ *   +0x008c -> line 499
+ *   +0x0090 -> line 496
+ *   +0x0094 -> line 511
+ *   +0x0098 -> line 496
+ *   +0x009c -> line 511
+ *   +0x00a0 -> line 496
+ *   +0x00a4 -> line 511
+ *   +0x00a8 -> line 497
+ *   +0x00ac -> line 511
+ *   +0x00b0 -> line 499
+ *   +0x00b4 -> line 511
+ *   +0x00b8 -> line 499
+ *   +0x00bc -> line 511
+ *   +0x00c0 -> line 499
+ *   +0x00c4 -> line 500
+ *   +0x00cc -> line 501
+ *   +0x00d0 -> line 500
+ *   +0x00d8 -> line 501
+ *   +0x00e4 -> line 502
+ *   +0x00f4 -> line 512
+ *   +0x00f8 -> line 513
+ *   +0x00fc -> line 514
+ *   +0x0100 -> line 515
+ *   +0x0104 -> line 516
+ *   +0x0108 -> line 522
+ *   +0x0110 -> line 529
+ *   +0x0114 -> line 539
+ *   +0x0118 -> line 529
+ *   +0x011c -> line 539
+ *   +0x0120 -> line 529
+ *   +0x0124 -> line 524
+ *   +0x0130 -> line 526
+ *   +0x0138 -> line 529
+ *   +0x013c -> line 532
+ *   +0x0140 -> line 529
+ *   +0x0148 -> line 535
+ *   +0x0150 -> line 536
+ *   +0x0158 -> line 537
+ *   +0x0160 -> line 540
+ *   +0x0164 -> line 541
+ *   +0x0168 -> line 543
+ *   +0x016c -> line 544
+ *   +0x0170 -> line 546
+ *   +0x0174 -> line 547
+ *   +0x0178 -> line 548
+ *   +0x017c -> line 549
+ *   +0x0180 -> line 550
+ *   +0x0184 -> line 551
+ *   +0x0188 -> line 553
+ *   +0x018c -> line 554
+ *   +0x0190 -> line 555
+ *   +0x0194 -> line 556
+ *   +0x0198 -> line 557
+ *   +0x019c -> line 558
+ *   +0x01a0 -> line 560
+ *   +0x01a4 -> line 561
+ *   +0x01a8 -> line 562
+ *   +0x01ac -> line 563
+ *   +0x01b0 -> line 565
+ *   +0x01b4 -> line 566
+ *   +0x01b8 -> line 567
+ *   +0x01bc -> line 568
+ *   +0x01c0 -> line 569
+ *   +0x01c4 -> line 570
+ *   +0x01c8 -> line 575
+ *   +0x01cc -> line 576
+ *   +0x01d0 -> line 574
+ *   +0x01d4 -> line 577
+ *   +0x01d8 -> line 579
+ *   +0x01e8 -> line 581
+ *   +0x0230 -> line 582
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vDisplaySerialParticleRain(GLD_tdstViewportAttributes_* param0, AGO2_RainParticle_* pParticleArray, int NumberOfParticles, void* pMaterial, float sx, float sy)
+{
+    float Uv4[4];
+    float Uv3[4];
+    float Uv2[4];
+    float Uv1[4];
+    float Pos[4];
+    float Color[4];
+    float (*pT)[4];
+    float (*pC)[4];
+    float (*pV)[4];
+    MAT_tdstTransformation_ InvertedCam;
+    unsigned int NbSpritesReal;
+    int i;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawAGO2.c lines 654–803 */
+/* addr: 0x002b4710  size: 2580 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 654
+ *   +0x0004 -> line 670
+ *   +0x0008 -> line 654
+ *   +0x000c -> line 665
+ *   +0x0010 -> line 654
+ *   +0x0014 -> line 665
+ *   +0x0018 -> line 654
+ *   +0x001c -> line 670
+ *   +0x0020 -> line 654
+ *   +0x0024 -> line 671
+ *   +0x0028 -> line 654
+ *   +0x002c -> line 672
+ *   +0x0030 -> line 654
+ *   +0x0060 -> line 665
+ *   +0x0094 -> line 666
+ *   +0x00a4 -> line 670
+ *   +0x00a8 -> line 666
+ *   +0x00b0 -> line 670
+ *   +0x00b8 -> line 671
+ *   +0x00c4 -> line 672
+ *   +0x00d0 -> line 675
+ *   +0x00e8 -> line 678
+ *   +0x00ec -> line 675
+ *   +0x00f0 -> line 678
+ *   +0x0100 -> line 682
+ *   +0x0158 -> line 684
+ *   +0x0164 -> line 685
+ *   +0x0184 -> line 686
+ *   +0x01a0 -> line 691
+ *   +0x01ac -> line 695
+ *   +0x01b0 -> line 691
+ *   +0x01dc -> line 695
+ *   +0x01e4 -> line 696
+ *   +0x01fc -> line 698
+ *   +0x0200 -> line 700
+ *   +0x0214 -> line 704
+ *   +0x0218 -> line 700
+ *   +0x023c -> line 701
+ *   +0x0258 -> line 704
+ *   +0x0260 -> line 708
+ *   +0x0294 -> line 709
+ *   +0x02c8 -> line 712
+ *   +0x0308 -> line 713
+ *   +0x0368 -> line 716
+ *   +0x0380 -> line 719
+ *   +0x0398 -> line 720
+ *   +0x03a4 -> line 721
+ *   +0x03f8 -> line 725
+ *   +0x040c -> line 726
+ *   +0x0460 -> line 730
+ *   +0x0470 -> line 731
+ *   +0x04c4 -> line 735
+ *   +0x04d0 -> line 736
+ *   +0x0524 -> line 740
+ *   +0x0534 -> line 741
+ *   +0x0588 -> line 745
+ *   +0x059c -> line 746
+ *   +0x05f0 -> line 752
+ *   +0x05fc -> line 755
+ *   +0x0600 -> line 756
+ *   +0x0610 -> line 755
+ *   +0x0620 -> line 756
+ *   +0x0664 -> line 757
+ *   +0x0694 -> line 758
+ *   +0x06b8 -> line 760
+ *   +0x06bc -> line 758
+ *   +0x06c4 -> line 760
+ *   +0x06c8 -> line 758
+ *   +0x06cc -> line 760
+ *   +0x06d0 -> line 758
+ *   +0x06d8 -> line 760
+ *   +0x06e8 -> line 761
+ *   +0x06f4 -> line 762
+ *   +0x0700 -> line 763
+ *   +0x0754 -> line 767
+ *   +0x0768 -> line 768
+ *   +0x07bc -> line 772
+ *   +0x07d4 -> line 773
+ *   +0x07e4 -> line 774
+ *   +0x0838 -> line 778
+ *   +0x0850 -> line 779
+ *   +0x085c -> line 780
+ *   +0x08b0 -> line 784
+ *   +0x08c8 -> line 785
+ *   +0x08d8 -> line 786
+ *   +0x092c -> line 790
+ *   +0x0940 -> line 791
+ *   +0x0994 -> line 795
+ *   +0x0998 -> line 798
+ *   +0x099c -> line 799
+ *   +0x09a4 -> line 798
+ *   +0x09bc -> line 799
+ *   +0x09c4 -> line 801
+ *   +0x09cc -> line 803
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_v_DisplayLightning(GLD_tdstViewportAttributes_* pViewport, MTH3D_tdstVector_* pDestination, MTH3D_tdstVector_* pSource, float xSize)
+{
+    float xNorm;
+    int i;
+    float Length;
+    MTH3D_tdstVector_ PosCurrent;
+    MTH3D_tdstVector_ Pos3;
+    MTH3D_tdstVector_ Pos2;
+    MTH3D_tdstVector_ Pos1;
+    MTH3D_tdstVector_ DirectionStep;
+    MTH3D_tdstVector_ Direction2;
+    MTH3D_tdstVector_ Direction;
+    MAT_tdstTransformation_ InvertedCam;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawAGO2.c lines 817–921 */
+/* addr: 0x002b4430  size: 724 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 817
+ *   +0x0028 -> line 819
+ *   +0x002c -> line 817
+ *   +0x0030 -> line 829
+ *   +0x0038 -> line 827
+ *   +0x0040 -> line 829
+ *   +0x004c -> line 831
+ *   +0x0054 -> line 834
+ *   +0x0058 -> line 838
+ *   +0x005c -> line 835
+ *   +0x0060 -> line 836
+ *   +0x0064 -> line 838
+ *   +0x006c -> line 841
+ *   +0x0070 -> line 842
+ *   +0x0074 -> line 843
+ *   +0x0078 -> line 844
+ *   +0x007c -> line 845
+ *   +0x0080 -> line 846
+ *   +0x0084 -> line 841
+ *   +0x0088 -> line 842
+ *   +0x008c -> line 843
+ *   +0x0090 -> line 844
+ *   +0x0094 -> line 845
+ *   +0x0098 -> line 848
+ *   +0x00a0 -> line 853
+ *   +0x00a4 -> line 860
+ *   +0x00a8 -> line 853
+ *   +0x00b0 -> line 850
+ *   +0x00bc -> line 852
+ *   +0x00c4 -> line 853
+ *   +0x00c8 -> line 856
+ *   +0x00cc -> line 854
+ *   +0x00d0 -> line 857
+ *   +0x00d4 -> line 858
+ *   +0x00d8 -> line 853
+ *   +0x00dc -> line 860
+ *   +0x00e8 -> line 880
+ *   +0x00ec -> line 861
+ *   +0x00f0 -> line 862
+ *   +0x00f4 -> line 886
+ *   +0x00f8 -> line 862
+ *   +0x0100 -> line 863
+ *   +0x0104 -> line 864
+ *   +0x0108 -> line 881
+ *   +0x010c -> line 864
+ *   +0x0114 -> line 865
+ *   +0x0118 -> line 866
+ *   +0x011c -> line 880
+ *   +0x0120 -> line 866
+ *   +0x0128 -> line 867
+ *   +0x012c -> line 868
+ *   +0x0130 -> line 887
+ *   +0x0134 -> line 868
+ *   +0x013c -> line 869
+ *   +0x0140 -> line 870
+ *   +0x0144 -> line 881
+ *   +0x0148 -> line 870
+ *   +0x0150 -> line 871
+ *   +0x0154 -> line 873
+ *   +0x0158 -> line 882
+ *   +0x015c -> line 873
+ *   +0x0160 -> line 871
+ *   +0x0164 -> line 873
+ *   +0x016c -> line 874
+ *   +0x0170 -> line 882
+ *   +0x0174 -> line 874
+ *   +0x0180 -> line 875
+ *   +0x0184 -> line 886
+ *   +0x0188 -> line 875
+ *   +0x0194 -> line 876
+ *   +0x0198 -> line 888
+ *   +0x019c -> line 876
+ *   +0x01a8 -> line 877
+ *   +0x01ac -> line 892
+ *   +0x01b0 -> line 877
+ *   +0x01bc -> line 878
+ *   +0x01c0 -> line 910
+ *   +0x01c4 -> line 878
+ *   +0x01d0 -> line 880
+ *   +0x01d4 -> line 878
+ *   +0x01d8 -> line 881
+ *   +0x01dc -> line 882
+ *   +0x01e0 -> line 883
+ *   +0x01e4 -> line 911
+ *   +0x01e8 -> line 886
+ *   +0x01ec -> line 887
+ *   +0x01f4 -> line 888
+ *   +0x01fc -> line 889
+ *   +0x0200 -> line 893
+ *   +0x0204 -> line 892
+ *   +0x0208 -> line 894
+ *   +0x020c -> line 893
+ *   +0x0210 -> line 894
+ *   +0x0214 -> line 895
+ *   +0x0218 -> line 912
+ *   +0x021c -> line 898
+ *   +0x0220 -> line 899
+ *   +0x0224 -> line 900
+ *   +0x0228 -> line 901
+ *   +0x022c -> line 904
+ *   +0x0230 -> line 905
+ *   +0x0234 -> line 906
+ *   +0x0238 -> line 907
+ *   +0x023c -> line 910
+ *   +0x0240 -> line 911
+ *   +0x0244 -> line 912
+ *   +0x0248 -> line 913
+ *   +0x024c -> line 914
+ *   +0x0250 -> line 917
+ *   +0x0260 -> line 919
+ *   +0x02a8 -> line 921
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vDisplaySerialFlow(GLD_tdstViewportAttributes_* param0, AGO2_FlowParticle_* pParticleArray, int NumberOfParticles, void* pMaterial, float sx, float sy)
+{
+    float AlphaVal;
+    float PosX;
+    float PosY;
+    float PosZ;
+    float XVX;
+    float XVY;
+    float XVZ;
+    float YVX;
+    float YVY;
+    float YVZ;
+
+    unsigned int NbSpritesReal;
+    float (*pV)[4];
+    float (*pC)[4];
+    float (*pT)[4];
+    int i;
+    unsigned char* pPrefetch;
+    MAT_tdstTransformation_ InvertedCam;
+
+    NbSpritesReal = 0;
+    GLI_g_RainMaterial = (int)pMaterial;
+    i = (NumberOfParticles < (int)VAC_g_NbSpritesLefts) ? NumberOfParticles : (int)VAC_g_NbSpritesLefts;
+    if (i != 0)
+    {
+        pV = (float (*)[4])VAC_g_CurrentpV;
+        pC = (float (*)[4])VAC_g_CurrentpC;
+        pT = (float (*)[4])VAC_g_CurrentpT;
+        GLI_v_CalculateInverseCamMat(&InvertedCam, param0);
+        XVX = InvertedCam.stTransformMatrix.stCol_0.xX * sx;
+        XVY = InvertedCam.stTransformMatrix.stCol_0.xY * sx;
+        XVZ = InvertedCam.stTransformMatrix.stCol_0.xZ * sx;
+        YVX = InvertedCam.stTransformMatrix.stCol_1.xX * sy;
+        YVY = InvertedCam.stTransformMatrix.stCol_1.xY * sy;
+        YVZ = InvertedCam.stTransformMatrix.stCol_1.xZ * sy;
+        while (i != 0)
+        {
+            if (pParticleArray->Flags == 0)
+            {
+                pPrefetch = (unsigned char*)pParticleArray + 0x80;
+                asm {
+                    pref 0x0, 0x0(pPrefetch)
+                }
+                AlphaVal = pParticleArray->xTransparency * (1.0f / 255.0f);
+                NbSpritesReal++;
+                PosX = pParticleArray->Position[0];
+                PosY = pParticleArray->Position[1];
+                PosZ = pParticleArray->Position[2];
+                pC[0][0] = pC[0][1] = pC[0][2] = 1.0f;
+                pC[0][3] = AlphaVal;
+                pC[1][0] = pC[1][1] = pC[1][2] = 1.0f;
+                pC[1][3] = AlphaVal;
+                pC[2][0] = pC[2][1] = pC[2][2] = 1.0f;
+                pC[2][3] = AlphaVal;
+                pC[3][0] = pC[3][1] = pC[3][2] = 1.0f;
+                pC[3][3] = AlphaVal;
+                pC[4][0] = pC[4][1] = pC[4][2] = 1.0f;
+                pC[4][3] = AlphaVal;
+                pC[5][0] = pC[5][1] = pC[5][2] = 1.0f;
+                pC[5][3] = AlphaVal;
+                pC += 6;
+                pT[0][0] = 0.0f; pT[0][1] = 1.0f; pT[0][2] = 0.0f; pT[0][3] = 0.0f;
+                pT[1][0] = 1.0f; pT[1][1] = 1.0f; pT[1][2] = 0.0f; pT[1][3] = 0.0f;
+                pT[2][0] = 1.0f; pT[2][1] = 0.0f; pT[2][2] = 0.0f; pT[2][3] = 0.0f;
+                pT[3][0] = 0.0f; pT[3][1] = 1.0f; pT[3][2] = 0.0f; pT[3][3] = 0.0f;
+                pT[4][0] = 1.0f; pT[4][1] = 0.0f; pT[4][2] = 0.0f; pT[4][3] = 0.0f;
+                pT[5][0] = 0.0f; pT[5][1] = 0.0f; pT[5][2] = 0.0f; pT[5][3] = 0.0f;
+                pT += 6;
+                pV[0][0] = PosX - XVX - YVX;
+                pV[0][1] = PosY - XVY - YVY;
+                pV[0][2] = PosZ - XVZ - YVZ;
+                pV[0][3] = 1.0f;
+                pV[1][0] = PosX + XVX - YVX;
+                pV[1][1] = PosY + XVY - YVY;
+                pV[1][2] = PosZ + XVZ - YVZ;
+                pV[1][3] = 1.0f;
+                pV[2][0] = PosX + XVX + YVX;
+                pV[2][1] = PosY + XVY + YVY;
+                pV[2][2] = PosZ + XVZ + YVZ;
+                pV[2][3] = 1.0f;
+                pV[3][0] = PosX - XVX - YVX;
+                pV[3][1] = PosY - XVY - YVY;
+                pV[3][2] = PosZ - XVZ - YVZ;
+                pV[3][3] = 1.0f;
+                pV[4][0] = PosX + XVX + YVX;
+                pV[4][1] = PosY + XVY + YVY;
+                pV[4][2] = PosZ + XVZ + YVZ;
+                pV[4][3] = 1.0f;
+                pV[5][0] = PosX - XVX + YVX;
+                pV[5][1] = PosY - XVY + YVY;
+                pV[5][2] = PosZ - XVZ + YVZ;
+                pV[5][3] = 1.0f;
+                pV += 6;
+            }
+            pParticleArray++;
+            i--;
+        }
+        VAC_g_NbSpritesLefts -= NbSpritesReal;
+        VAC_g_CurrentNbSprites += NbSpritesReal;
+        VAC_g_CurrentpV = (int)((unsigned char*)VAC_g_CurrentpV + 96 * NbSpritesReal);
+        VAC_g_CurrentpC = (int)((unsigned char*)VAC_g_CurrentpC + 96 * NbSpritesReal);
+        VAC_g_CurrentpT = (int)((unsigned char*)VAC_g_CurrentpT + 96 * NbSpritesReal);
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawAGO2.c lines 930–1045 */
+/* addr: 0x002b4120  size: 780 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 930
+ *   +0x0028 -> line 932
+ *   +0x002c -> line 930
+ *   +0x0030 -> line 942
+ *   +0x0038 -> line 940
+ *   +0x0040 -> line 942
+ *   +0x004c -> line 944
+ *   +0x0054 -> line 947
+ *   +0x0058 -> line 951
+ *   +0x005c -> line 948
+ *   +0x0060 -> line 949
+ *   +0x0064 -> line 951
+ *   +0x006c -> line 954
+ *   +0x0080 -> line 956
+ *   +0x0088 -> line 957
+ *   +0x0090 -> line 958
+ *   +0x0098 -> line 959
+ *   +0x00a0 -> line 960
+ *   +0x00a8 -> line 961
+ *   +0x00ac -> line 965
+ *   +0x00b4 -> line 970
+ *   +0x00b8 -> line 981
+ *   +0x00bc -> line 970
+ *   +0x00c4 -> line 967
+ *   +0x00d0 -> line 969
+ *   +0x00d8 -> line 970
+ *   +0x00dc -> line 973
+ *   +0x00e0 -> line 971
+ *   +0x00e4 -> line 974
+ *   +0x00e8 -> line 975
+ *   +0x00ec -> line 977
+ *   +0x00f0 -> line 978
+ *   +0x00f4 -> line 970
+ *   +0x00f8 -> line 979
+ *   +0x00fc -> line 1001
+ *   +0x0104 -> line 981
+ *   +0x0110 -> line 1007
+ *   +0x0114 -> line 982
+ *   +0x0118 -> line 983
+ *   +0x011c -> line 1007
+ *   +0x0120 -> line 983
+ *   +0x0128 -> line 984
+ *   +0x012c -> line 985
+ *   +0x0130 -> line 1002
+ *   +0x0134 -> line 985
+ *   +0x013c -> line 986
+ *   +0x0140 -> line 987
+ *   +0x0144 -> line 1002
+ *   +0x0148 -> line 987
+ *   +0x0150 -> line 988
+ *   +0x0154 -> line 989
+ *   +0x0158 -> line 1008
+ *   +0x015c -> line 989
+ *   +0x0164 -> line 990
+ *   +0x0168 -> line 991
+ *   +0x016c -> line 1008
+ *   +0x0170 -> line 991
+ *   +0x0178 -> line 992
+ *   +0x017c -> line 994
+ *   +0x0180 -> line 1003
+ *   +0x0184 -> line 994
+ *   +0x0188 -> line 992
+ *   +0x018c -> line 994
+ *   +0x0194 -> line 995
+ *   +0x0198 -> line 1003
+ *   +0x019c -> line 995
+ *   +0x01a8 -> line 996
+ *   +0x01ac -> line 1009
+ *   +0x01b0 -> line 996
+ *   +0x01bc -> line 997
+ *   +0x01c0 -> line 1009
+ *   +0x01c4 -> line 997
+ *   +0x01d0 -> line 998
+ *   +0x01d4 -> line 1013
+ *   +0x01d8 -> line 998
+ *   +0x01e4 -> line 999
+ *   +0x01e8 -> line 1013
+ *   +0x01ec -> line 999
+ *   +0x01f8 -> line 1001
+ *   +0x01fc -> line 999
+ *   +0x0200 -> line 1002
+ *   +0x0204 -> line 1003
+ *   +0x0208 -> line 1004
+ *   +0x020c -> line 1031
+ *   +0x0210 -> line 1007
+ *   +0x0214 -> line 1008
+ *   +0x0218 -> line 1031
+ *   +0x021c -> line 1014
+ *   +0x0224 -> line 1009
+ *   +0x0228 -> line 1032
+ *   +0x022c -> line 1010
+ *   +0x0230 -> line 1032
+ *   +0x0234 -> line 1015
+ *   +0x023c -> line 1013
+ *   +0x0240 -> line 1014
+ *   +0x0244 -> line 1015
+ *   +0x0248 -> line 1016
+ *   +0x024c -> line 1033
+ *   +0x0250 -> line 1019
+ *   +0x0254 -> line 1020
+ *   +0x0258 -> line 1021
+ *   +0x025c -> line 1022
+ *   +0x0260 -> line 1033
+ *   +0x0264 -> line 1025
+ *   +0x0268 -> line 1026
+ *   +0x026c -> line 1027
+ *   +0x0270 -> line 1028
+ *   +0x0274 -> line 1031
+ *   +0x0278 -> line 1032
+ *   +0x027c -> line 1033
+ *   +0x0280 -> line 1034
+ *   +0x0284 -> line 1035
+ *   +0x0288 -> line 1038
+ *   +0x0298 -> line 1042
+ *   +0x02e0 -> line 1045
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vDisplaySerialFlowBlured(GLD_tdstViewportAttributes_* param0, AGO2_FlowParticle_* pParticleArray, int NumberOfParticles, void* pMaterial, float sx, float sy)
+{
+    float AlphaVal;
+    float PosX;
+    float PosY;
+    float PosZ;
+    float Pos2X;
+    float Pos2Y;
+    float Pos2Z;
+    float XVX;
+    float XVY;
+    float XVZ;
+    float YVX;
+    float YVY;
+    float YVZ;
+
+    unsigned int NbSpritesReal;
+    float (*pV)[4];
+    float (*pC)[4];
+    float (*pT)[4];
+    int i;
+    unsigned char* pPrefetch;
+    MAT_tdstTransformation_ InvertedCam;
+
+    NbSpritesReal = 0;
+    GLI_g_RainMaterial = (int)pMaterial;
+    i = (NumberOfParticles < (int)VAC_g_NbSpritesLefts) ? NumberOfParticles : (int)VAC_g_NbSpritesLefts;
+    if (i != 0)
+    {
+        pV = (float (*)[4])VAC_g_CurrentpV;
+        pC = (float (*)[4])VAC_g_CurrentpC;
+        pT = (float (*)[4])VAC_g_CurrentpT;
+        GLI_v_CalculateInverseCamMat(&InvertedCam, param0);
+        GLI_v_CalculateVectorsFor3DRain(&InvertedCam, pParticleArray->Direction, sx, sy);
+        XVX = GLI_g_stXVect.xX;
+        XVY = GLI_g_stXVect.xY;
+        XVZ = GLI_g_stXVect.xZ;
+        YVX = GLI_g_stYVect.xX;
+        YVY = GLI_g_stYVect.xY;
+        YVZ = GLI_g_stYVect.xZ;
+        while (i != 0)
+        {
+            if (pParticleArray->Flags == 0)
+            {
+                pPrefetch = (unsigned char*)pParticleArray + 0x80;
+                asm {
+                    pref 0x0, 0x0(pPrefetch)
+                }
+                AlphaVal = pParticleArray->xTransparency * (1.0f / 255.0f);
+                NbSpritesReal++;
+                PosX = pParticleArray->Position[0];
+                PosY = pParticleArray->Position[1];
+                PosZ = pParticleArray->Position[2];
+                Pos2X = pParticleArray->PreviousPosition[0];
+                Pos2Y = pParticleArray->PreviousPosition[1];
+                Pos2Z = pParticleArray->PreviousPosition[2];
+                pC[0][0] = pC[0][1] = pC[0][2] = 1.0f;
+                pC[0][3] = AlphaVal;
+                pC[1][0] = pC[1][1] = pC[1][2] = 1.0f;
+                pC[1][3] = AlphaVal;
+                pC[2][0] = pC[2][1] = pC[2][2] = 1.0f;
+                pC[2][3] = 0.0f;
+                pC[3][0] = pC[3][1] = pC[3][2] = 1.0f;
+                pC[3][3] = AlphaVal;
+                pC[4][0] = pC[4][1] = pC[4][2] = 1.0f;
+                pC[4][3] = 0.0f;
+                pC[5][0] = pC[5][1] = pC[5][2] = 1.0f;
+                pC[5][3] = 0.0f;
+                pC += 6;
+                pT[0][0] = 0.0f; pT[0][1] = 1.0f; pT[0][2] = 0.0f; pT[0][3] = 0.0f;
+                pT[1][0] = 1.0f; pT[1][1] = 1.0f; pT[1][2] = 0.0f; pT[1][3] = 0.0f;
+                pT[2][0] = 1.0f; pT[2][1] = 0.0f; pT[2][2] = 0.0f; pT[2][3] = 0.0f;
+                pT[3][0] = 0.0f; pT[3][1] = 1.0f; pT[3][2] = 0.0f; pT[3][3] = 0.0f;
+                pT[4][0] = 1.0f; pT[4][1] = 0.0f; pT[4][2] = 0.0f; pT[4][3] = 0.0f;
+                pT[5][0] = 0.0f; pT[5][1] = 0.0f; pT[5][2] = 0.0f; pT[5][3] = 0.0f;
+                pT += 6;
+                pV[0][0] = PosX - XVX - YVX;
+                pV[0][1] = PosY - XVY - YVY;
+                pV[0][2] = PosZ - XVZ - YVZ;
+                pV[0][3] = 1.0f;
+                pV[1][0] = PosX + XVX - YVX;
+                pV[1][1] = PosY + XVY - YVY;
+                pV[1][2] = PosZ + XVZ - YVZ;
+                pV[1][3] = 1.0f;
+                pV[2][0] = Pos2X + XVX + YVX;
+                pV[2][1] = Pos2Y + XVY + YVY;
+                pV[2][2] = Pos2Z + XVZ + YVZ;
+                pV[2][3] = 1.0f;
+                pV[3][0] = PosX - XVX - YVX;
+                pV[3][1] = PosY - XVY - YVY;
+                pV[3][2] = PosZ - XVZ - YVZ;
+                pV[3][3] = 1.0f;
+                pV[4][0] = Pos2X + XVX + YVX;
+                pV[4][1] = Pos2Y + XVY + YVY;
+                pV[4][2] = Pos2Z + XVZ + YVZ;
+                pV[4][3] = 1.0f;
+                pV[5][0] = Pos2X - XVX + YVX;
+                pV[5][1] = Pos2Y - XVY + YVY;
+                pV[5][2] = Pos2Z - XVZ + YVZ;
+                pV[5][3] = 1.0f;
+                pV += 6;
+            }
+            pParticleArray++;
+            i--;
+        }
+        VAC_g_NbSpritesLefts -= NbSpritesReal;
+        VAC_g_CurrentNbSprites += NbSpritesReal;
+        VAC_g_CurrentpV = (int)((unsigned char*)VAC_g_CurrentpV + 96 * NbSpritesReal);
+        VAC_g_CurrentpC = (int)((unsigned char*)VAC_g_CurrentpC + 96 * NbSpritesReal);
+        VAC_g_CurrentpT = (int)((unsigned char*)VAC_g_CurrentpT + 96 * NbSpritesReal);
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawAGO2.c lines 1071–1174 */
+/* addr: 0x002b3ec0  size: 600 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1082
+ *   +0x0004 -> line 1071
+ *   +0x0008 -> line 1080
+ *   +0x000c -> line 1082
+ *   +0x0014 -> line 1084
+ *   +0x001c -> line 1088
+ *   +0x0020 -> line 1089
+ *   +0x0024 -> line 1091
+ *   +0x002c -> line 1096
+ *   +0x0030 -> line 1110
+ *   +0x0034 -> line 1096
+ *   +0x003c -> line 1093
+ *   +0x0048 -> line 1095
+ *   +0x0050 -> line 1096
+ *   +0x0054 -> line 1099
+ *   +0x0058 -> line 1097
+ *   +0x005c -> line 1103
+ *   +0x0060 -> line 1100
+ *   +0x0064 -> line 1101
+ *   +0x0068 -> line 1104
+ *   +0x006c -> line 1105
+ *   +0x0070 -> line 1106
+ *   +0x0074 -> line 1107
+ *   +0x0078 -> line 1108
+ *   +0x007c -> line 1096
+ *   +0x0080 -> line 1110
+ *   +0x0084 -> line 1130
+ *   +0x0088 -> line 1110
+ *   +0x0090 -> line 1111
+ *   +0x0094 -> line 1112
+ *   +0x0098 -> line 1136
+ *   +0x009c -> line 1112
+ *   +0x00a4 -> line 1113
+ *   +0x00a8 -> line 1114
+ *   +0x00ac -> line 1131
+ *   +0x00b0 -> line 1114
+ *   +0x00b8 -> line 1115
+ *   +0x00bc -> line 1116
+ *   +0x00c0 -> line 1137
+ *   +0x00c4 -> line 1116
+ *   +0x00cc -> line 1117
+ *   +0x00d0 -> line 1118
+ *   +0x00d4 -> line 1130
+ *   +0x00d8 -> line 1118
+ *   +0x00e0 -> line 1119
+ *   +0x00e4 -> line 1120
+ *   +0x00e8 -> line 1160
+ *   +0x00ec -> line 1120
+ *   +0x00f4 -> line 1121
+ *   +0x00f8 -> line 1123
+ *   +0x00fc -> line 1132
+ *   +0x0100 -> line 1123
+ *   +0x0104 -> line 1121
+ *   +0x0108 -> line 1123
+ *   +0x0110 -> line 1124
+ *   +0x0114 -> line 1138
+ *   +0x0118 -> line 1124
+ *   +0x0124 -> line 1125
+ *   +0x0128 -> line 1131
+ *   +0x012c -> line 1125
+ *   +0x0138 -> line 1126
+ *   +0x013c -> line 1132
+ *   +0x0140 -> line 1126
+ *   +0x014c -> line 1127
+ *   +0x0150 -> line 1136
+ *   +0x0154 -> line 1127
+ *   +0x0160 -> line 1128
+ *   +0x0164 -> line 1142
+ *   +0x0168 -> line 1128
+ *   +0x0174 -> line 1130
+ *   +0x0178 -> line 1128
+ *   +0x017c -> line 1131
+ *   +0x0180 -> line 1132
+ *   +0x0184 -> line 1133
+ *   +0x0188 -> line 1161
+ *   +0x018c -> line 1136
+ *   +0x0190 -> line 1137
+ *   +0x0198 -> line 1138
+ *   +0x01a0 -> line 1139
+ *   +0x01a4 -> line 1143
+ *   +0x01a8 -> line 1142
+ *   +0x01ac -> line 1144
+ *   +0x01b0 -> line 1143
+ *   +0x01b4 -> line 1144
+ *   +0x01b8 -> line 1145
+ *   +0x01bc -> line 1162
+ *   +0x01c0 -> line 1148
+ *   +0x01c4 -> line 1149
+ *   +0x01c8 -> line 1150
+ *   +0x01cc -> line 1151
+ *   +0x01d0 -> line 1154
+ *   +0x01d4 -> line 1155
+ *   +0x01d8 -> line 1156
+ *   +0x01dc -> line 1157
+ *   +0x01e0 -> line 1160
+ *   +0x01e4 -> line 1161
+ *   +0x01e8 -> line 1162
+ *   +0x01ec -> line 1163
+ *   +0x01f0 -> line 1164
+ *   +0x01f4 -> line 1165
+ *   +0x01f8 -> line 1167
+ *   +0x0208 -> line 1171
+ *   +0x0250 -> line 1174
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vDisplaySerialLeaves(GLD_tdstViewportAttributes_* pViewport, AGO2_LeavesParticle_* pParticleArray, int NumberOfParticles, void* pMaterial)
+{
+    float AlphaVal;
+    float PosX;
+    float PosY;
+    float PosZ;
+    float XVX;
+    float XVY;
+    float XVZ;
+    float YVX;
+    float YVY;
+    float YVZ;
+
+    unsigned int NbSpritesReal;
+    float (*pV)[4];
+    float (*pC)[4];
+    float (*pT)[4];
+    int i;
+    unsigned char* pPrefetch;
+
+    NbSpritesReal = 0;
+    GLI_g_RainMaterial = (int)pMaterial;
+    NumberOfParticles = (NumberOfParticles < (int)VAC_g_NbSpritesLefts) ? NumberOfParticles : (int)VAC_g_NbSpritesLefts;
+    if (NumberOfParticles != 0)
+    {
+        pV = (float (*)[4])VAC_g_CurrentpV;
+        pC = (float (*)[4])VAC_g_CurrentpC;
+        pT = (float (*)[4])VAC_g_CurrentpT;
+        while (NumberOfParticles != 0)
+        {
+            if (pParticleArray->Flags == 0)
+            {
+                pPrefetch = (unsigned char*)pParticleArray + 0x120;
+                asm {
+                    pref 0x0, 0x0(pPrefetch)
+                }
+                AlphaVal = pParticleArray->xTransparency * (1.0f / 255.0f);
+                NbSpritesReal++;
+                PosX = pParticleArray->Position[0];
+                PosY = pParticleArray->Position[1];
+                PosZ = pParticleArray->Position[2];
+                XVX = pParticleArray->UsedV1[0];
+                XVY = pParticleArray->UsedV1[1];
+                XVZ = pParticleArray->UsedV1[2];
+                YVX = pParticleArray->UsedV2[0];
+                YVY = pParticleArray->UsedV2[1];
+                YVZ = pParticleArray->UsedV2[2];
+                pC[0][0] = pC[0][1] = pC[0][2] = 1.0f;
+                pC[0][3] = AlphaVal;
+                pC[1][0] = pC[1][1] = pC[1][2] = 1.0f;
+                pC[1][3] = AlphaVal;
+                pC[2][0] = pC[2][1] = pC[2][2] = 1.0f;
+                pC[2][3] = AlphaVal;
+                pC[3][0] = pC[3][1] = pC[3][2] = 1.0f;
+                pC[3][3] = AlphaVal;
+                pC[4][0] = pC[4][1] = pC[4][2] = 1.0f;
+                pC[4][3] = AlphaVal;
+                pC[5][0] = pC[5][1] = pC[5][2] = 1.0f;
+                pC[5][3] = AlphaVal;
+                pC += 6;
+                pT[0][0] = 0.0f; pT[0][1] = 1.0f; pT[0][2] = 0.0f; pT[0][3] = 0.0f;
+                pT[1][0] = 1.0f; pT[1][1] = 1.0f; pT[1][2] = 0.0f; pT[1][3] = 0.0f;
+                pT[2][0] = 1.0f; pT[2][1] = 0.0f; pT[2][2] = 0.0f; pT[2][3] = 0.0f;
+                pT[3][0] = 0.0f; pT[3][1] = 1.0f; pT[3][2] = 0.0f; pT[3][3] = 0.0f;
+                pT[4][0] = 1.0f; pT[4][1] = 0.0f; pT[4][2] = 0.0f; pT[4][3] = 0.0f;
+                pT[5][0] = 0.0f; pT[5][1] = 0.0f; pT[5][2] = 0.0f; pT[5][3] = 0.0f;
+                pT += 6;
+                pV[0][0] = PosX - XVX - YVX;
+                pV[0][1] = PosY - XVY - YVY;
+                pV[0][2] = PosZ - XVZ - YVZ;
+                pV[0][3] = 1.0f;
+                pV[1][0] = PosX + XVX - YVX;
+                pV[1][1] = PosY + XVY - YVY;
+                pV[1][2] = PosZ + XVZ - YVZ;
+                pV[1][3] = 1.0f;
+                pV[2][0] = PosX + XVX + YVX;
+                pV[2][1] = PosY + XVY + YVY;
+                pV[2][2] = PosZ + XVZ + YVZ;
+                pV[2][3] = 1.0f;
+                pV[3][0] = PosX - XVX - YVX;
+                pV[3][1] = PosY - XVY - YVY;
+                pV[3][2] = PosZ - XVZ - YVZ;
+                pV[3][3] = 1.0f;
+                pV[4][0] = PosX + XVX + YVX;
+                pV[4][1] = PosY + XVY + YVY;
+                pV[4][2] = PosZ + XVZ + YVZ;
+                pV[4][3] = 1.0f;
+                pV[5][0] = PosX - XVX + YVX;
+                pV[5][1] = PosY - XVY + YVY;
+                pV[5][2] = PosZ - XVZ + YVZ;
+                pV[5][3] = 1.0f;
+                pV += 6;
+            }
+            pParticleArray++;
+            NumberOfParticles--;
+        }
+        VAC_g_NbSpritesLefts -= NbSpritesReal;
+        VAC_g_CurrentNbSprites += NbSpritesReal;
+        VAC_g_CurrentpV = (int)((unsigned char*)VAC_g_CurrentpV + 96 * NbSpritesReal);
+        VAC_g_CurrentpC = (int)((unsigned char*)VAC_g_CurrentpC + 96 * NbSpritesReal);
+        VAC_g_CurrentpT = (int)((unsigned char*)VAC_g_CurrentpT + 96 * NbSpritesReal);
+    }
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawAGO2.c lines 1182–1458 */
 /* addr: 0x002b3680  size: 2024 bytes */
@@ -1666,1163 +2801,6 @@ void GLI_v_CalculateVectorsFor3DRain(MAT_tdstTransformation_* param0, float* pDi
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawAGO2.c lines 1071–1174 */
-/* addr: 0x002b3ec0  size: 600 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1082
- *   +0x0004 -> line 1071
- *   +0x0008 -> line 1080
- *   +0x000c -> line 1082
- *   +0x0014 -> line 1084
- *   +0x001c -> line 1088
- *   +0x0020 -> line 1089
- *   +0x0024 -> line 1091
- *   +0x002c -> line 1096
- *   +0x0030 -> line 1110
- *   +0x0034 -> line 1096
- *   +0x003c -> line 1093
- *   +0x0048 -> line 1095
- *   +0x0050 -> line 1096
- *   +0x0054 -> line 1099
- *   +0x0058 -> line 1097
- *   +0x005c -> line 1103
- *   +0x0060 -> line 1100
- *   +0x0064 -> line 1101
- *   +0x0068 -> line 1104
- *   +0x006c -> line 1105
- *   +0x0070 -> line 1106
- *   +0x0074 -> line 1107
- *   +0x0078 -> line 1108
- *   +0x007c -> line 1096
- *   +0x0080 -> line 1110
- *   +0x0084 -> line 1130
- *   +0x0088 -> line 1110
- *   +0x0090 -> line 1111
- *   +0x0094 -> line 1112
- *   +0x0098 -> line 1136
- *   +0x009c -> line 1112
- *   +0x00a4 -> line 1113
- *   +0x00a8 -> line 1114
- *   +0x00ac -> line 1131
- *   +0x00b0 -> line 1114
- *   +0x00b8 -> line 1115
- *   +0x00bc -> line 1116
- *   +0x00c0 -> line 1137
- *   +0x00c4 -> line 1116
- *   +0x00cc -> line 1117
- *   +0x00d0 -> line 1118
- *   +0x00d4 -> line 1130
- *   +0x00d8 -> line 1118
- *   +0x00e0 -> line 1119
- *   +0x00e4 -> line 1120
- *   +0x00e8 -> line 1160
- *   +0x00ec -> line 1120
- *   +0x00f4 -> line 1121
- *   +0x00f8 -> line 1123
- *   +0x00fc -> line 1132
- *   +0x0100 -> line 1123
- *   +0x0104 -> line 1121
- *   +0x0108 -> line 1123
- *   +0x0110 -> line 1124
- *   +0x0114 -> line 1138
- *   +0x0118 -> line 1124
- *   +0x0124 -> line 1125
- *   +0x0128 -> line 1131
- *   +0x012c -> line 1125
- *   +0x0138 -> line 1126
- *   +0x013c -> line 1132
- *   +0x0140 -> line 1126
- *   +0x014c -> line 1127
- *   +0x0150 -> line 1136
- *   +0x0154 -> line 1127
- *   +0x0160 -> line 1128
- *   +0x0164 -> line 1142
- *   +0x0168 -> line 1128
- *   +0x0174 -> line 1130
- *   +0x0178 -> line 1128
- *   +0x017c -> line 1131
- *   +0x0180 -> line 1132
- *   +0x0184 -> line 1133
- *   +0x0188 -> line 1161
- *   +0x018c -> line 1136
- *   +0x0190 -> line 1137
- *   +0x0198 -> line 1138
- *   +0x01a0 -> line 1139
- *   +0x01a4 -> line 1143
- *   +0x01a8 -> line 1142
- *   +0x01ac -> line 1144
- *   +0x01b0 -> line 1143
- *   +0x01b4 -> line 1144
- *   +0x01b8 -> line 1145
- *   +0x01bc -> line 1162
- *   +0x01c0 -> line 1148
- *   +0x01c4 -> line 1149
- *   +0x01c8 -> line 1150
- *   +0x01cc -> line 1151
- *   +0x01d0 -> line 1154
- *   +0x01d4 -> line 1155
- *   +0x01d8 -> line 1156
- *   +0x01dc -> line 1157
- *   +0x01e0 -> line 1160
- *   +0x01e4 -> line 1161
- *   +0x01e8 -> line 1162
- *   +0x01ec -> line 1163
- *   +0x01f0 -> line 1164
- *   +0x01f4 -> line 1165
- *   +0x01f8 -> line 1167
- *   +0x0208 -> line 1171
- *   +0x0250 -> line 1174
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawAGO2.c lines 930–1045 */
-/* addr: 0x002b4120  size: 780 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 930
- *   +0x0028 -> line 932
- *   +0x002c -> line 930
- *   +0x0030 -> line 942
- *   +0x0038 -> line 940
- *   +0x0040 -> line 942
- *   +0x004c -> line 944
- *   +0x0054 -> line 947
- *   +0x0058 -> line 951
- *   +0x005c -> line 948
- *   +0x0060 -> line 949
- *   +0x0064 -> line 951
- *   +0x006c -> line 954
- *   +0x0080 -> line 956
- *   +0x0088 -> line 957
- *   +0x0090 -> line 958
- *   +0x0098 -> line 959
- *   +0x00a0 -> line 960
- *   +0x00a8 -> line 961
- *   +0x00ac -> line 965
- *   +0x00b4 -> line 970
- *   +0x00b8 -> line 981
- *   +0x00bc -> line 970
- *   +0x00c4 -> line 967
- *   +0x00d0 -> line 969
- *   +0x00d8 -> line 970
- *   +0x00dc -> line 973
- *   +0x00e0 -> line 971
- *   +0x00e4 -> line 974
- *   +0x00e8 -> line 975
- *   +0x00ec -> line 977
- *   +0x00f0 -> line 978
- *   +0x00f4 -> line 970
- *   +0x00f8 -> line 979
- *   +0x00fc -> line 1001
- *   +0x0104 -> line 981
- *   +0x0110 -> line 1007
- *   +0x0114 -> line 982
- *   +0x0118 -> line 983
- *   +0x011c -> line 1007
- *   +0x0120 -> line 983
- *   +0x0128 -> line 984
- *   +0x012c -> line 985
- *   +0x0130 -> line 1002
- *   +0x0134 -> line 985
- *   +0x013c -> line 986
- *   +0x0140 -> line 987
- *   +0x0144 -> line 1002
- *   +0x0148 -> line 987
- *   +0x0150 -> line 988
- *   +0x0154 -> line 989
- *   +0x0158 -> line 1008
- *   +0x015c -> line 989
- *   +0x0164 -> line 990
- *   +0x0168 -> line 991
- *   +0x016c -> line 1008
- *   +0x0170 -> line 991
- *   +0x0178 -> line 992
- *   +0x017c -> line 994
- *   +0x0180 -> line 1003
- *   +0x0184 -> line 994
- *   +0x0188 -> line 992
- *   +0x018c -> line 994
- *   +0x0194 -> line 995
- *   +0x0198 -> line 1003
- *   +0x019c -> line 995
- *   +0x01a8 -> line 996
- *   +0x01ac -> line 1009
- *   +0x01b0 -> line 996
- *   +0x01bc -> line 997
- *   +0x01c0 -> line 1009
- *   +0x01c4 -> line 997
- *   +0x01d0 -> line 998
- *   +0x01d4 -> line 1013
- *   +0x01d8 -> line 998
- *   +0x01e4 -> line 999
- *   +0x01e8 -> line 1013
- *   +0x01ec -> line 999
- *   +0x01f8 -> line 1001
- *   +0x01fc -> line 999
- *   +0x0200 -> line 1002
- *   +0x0204 -> line 1003
- *   +0x0208 -> line 1004
- *   +0x020c -> line 1031
- *   +0x0210 -> line 1007
- *   +0x0214 -> line 1008
- *   +0x0218 -> line 1031
- *   +0x021c -> line 1014
- *   +0x0224 -> line 1009
- *   +0x0228 -> line 1032
- *   +0x022c -> line 1010
- *   +0x0230 -> line 1032
- *   +0x0234 -> line 1015
- *   +0x023c -> line 1013
- *   +0x0240 -> line 1014
- *   +0x0244 -> line 1015
- *   +0x0248 -> line 1016
- *   +0x024c -> line 1033
- *   +0x0250 -> line 1019
- *   +0x0254 -> line 1020
- *   +0x0258 -> line 1021
- *   +0x025c -> line 1022
- *   +0x0260 -> line 1033
- *   +0x0264 -> line 1025
- *   +0x0268 -> line 1026
- *   +0x026c -> line 1027
- *   +0x0270 -> line 1028
- *   +0x0274 -> line 1031
- *   +0x0278 -> line 1032
- *   +0x027c -> line 1033
- *   +0x0280 -> line 1034
- *   +0x0284 -> line 1035
- *   +0x0288 -> line 1038
- *   +0x0298 -> line 1042
- *   +0x02e0 -> line 1045
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-extern void GLI_v_CalculateInverseCamMat(MAT_tdstTransformation_* pInvertedCam, GLD_tdstViewportAttributes_* pViewport);
-extern void GLI_v_CalculateVectorsFor3DRain(MAT_tdstTransformation_* pInvertedCam, float* pDirection, float sx, float sy);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawAGO2.c lines 817–921 */
-/* addr: 0x002b4430  size: 724 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 817
- *   +0x0028 -> line 819
- *   +0x002c -> line 817
- *   +0x0030 -> line 829
- *   +0x0038 -> line 827
- *   +0x0040 -> line 829
- *   +0x004c -> line 831
- *   +0x0054 -> line 834
- *   +0x0058 -> line 838
- *   +0x005c -> line 835
- *   +0x0060 -> line 836
- *   +0x0064 -> line 838
- *   +0x006c -> line 841
- *   +0x0070 -> line 842
- *   +0x0074 -> line 843
- *   +0x0078 -> line 844
- *   +0x007c -> line 845
- *   +0x0080 -> line 846
- *   +0x0084 -> line 841
- *   +0x0088 -> line 842
- *   +0x008c -> line 843
- *   +0x0090 -> line 844
- *   +0x0094 -> line 845
- *   +0x0098 -> line 848
- *   +0x00a0 -> line 853
- *   +0x00a4 -> line 860
- *   +0x00a8 -> line 853
- *   +0x00b0 -> line 850
- *   +0x00bc -> line 852
- *   +0x00c4 -> line 853
- *   +0x00c8 -> line 856
- *   +0x00cc -> line 854
- *   +0x00d0 -> line 857
- *   +0x00d4 -> line 858
- *   +0x00d8 -> line 853
- *   +0x00dc -> line 860
- *   +0x00e8 -> line 880
- *   +0x00ec -> line 861
- *   +0x00f0 -> line 862
- *   +0x00f4 -> line 886
- *   +0x00f8 -> line 862
- *   +0x0100 -> line 863
- *   +0x0104 -> line 864
- *   +0x0108 -> line 881
- *   +0x010c -> line 864
- *   +0x0114 -> line 865
- *   +0x0118 -> line 866
- *   +0x011c -> line 880
- *   +0x0120 -> line 866
- *   +0x0128 -> line 867
- *   +0x012c -> line 868
- *   +0x0130 -> line 887
- *   +0x0134 -> line 868
- *   +0x013c -> line 869
- *   +0x0140 -> line 870
- *   +0x0144 -> line 881
- *   +0x0148 -> line 870
- *   +0x0150 -> line 871
- *   +0x0154 -> line 873
- *   +0x0158 -> line 882
- *   +0x015c -> line 873
- *   +0x0160 -> line 871
- *   +0x0164 -> line 873
- *   +0x016c -> line 874
- *   +0x0170 -> line 882
- *   +0x0174 -> line 874
- *   +0x0180 -> line 875
- *   +0x0184 -> line 886
- *   +0x0188 -> line 875
- *   +0x0194 -> line 876
- *   +0x0198 -> line 888
- *   +0x019c -> line 876
- *   +0x01a8 -> line 877
- *   +0x01ac -> line 892
- *   +0x01b0 -> line 877
- *   +0x01bc -> line 878
- *   +0x01c0 -> line 910
- *   +0x01c4 -> line 878
- *   +0x01d0 -> line 880
- *   +0x01d4 -> line 878
- *   +0x01d8 -> line 881
- *   +0x01dc -> line 882
- *   +0x01e0 -> line 883
- *   +0x01e4 -> line 911
- *   +0x01e8 -> line 886
- *   +0x01ec -> line 887
- *   +0x01f4 -> line 888
- *   +0x01fc -> line 889
- *   +0x0200 -> line 893
- *   +0x0204 -> line 892
- *   +0x0208 -> line 894
- *   +0x020c -> line 893
- *   +0x0210 -> line 894
- *   +0x0214 -> line 895
- *   +0x0218 -> line 912
- *   +0x021c -> line 898
- *   +0x0220 -> line 899
- *   +0x0224 -> line 900
- *   +0x0228 -> line 901
- *   +0x022c -> line 904
- *   +0x0230 -> line 905
- *   +0x0234 -> line 906
- *   +0x0238 -> line 907
- *   +0x023c -> line 910
- *   +0x0240 -> line 911
- *   +0x0244 -> line 912
- *   +0x0248 -> line 913
- *   +0x024c -> line 914
- *   +0x0250 -> line 917
- *   +0x0260 -> line 919
- *   +0x02a8 -> line 921
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawAGO2.c lines 654–803 */
-/* addr: 0x002b4710  size: 2580 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 654
- *   +0x0004 -> line 670
- *   +0x0008 -> line 654
- *   +0x000c -> line 665
- *   +0x0010 -> line 654
- *   +0x0014 -> line 665
- *   +0x0018 -> line 654
- *   +0x001c -> line 670
- *   +0x0020 -> line 654
- *   +0x0024 -> line 671
- *   +0x0028 -> line 654
- *   +0x002c -> line 672
- *   +0x0030 -> line 654
- *   +0x0060 -> line 665
- *   +0x0094 -> line 666
- *   +0x00a4 -> line 670
- *   +0x00a8 -> line 666
- *   +0x00b0 -> line 670
- *   +0x00b8 -> line 671
- *   +0x00c4 -> line 672
- *   +0x00d0 -> line 675
- *   +0x00e8 -> line 678
- *   +0x00ec -> line 675
- *   +0x00f0 -> line 678
- *   +0x0100 -> line 682
- *   +0x0158 -> line 684
- *   +0x0164 -> line 685
- *   +0x0184 -> line 686
- *   +0x01a0 -> line 691
- *   +0x01ac -> line 695
- *   +0x01b0 -> line 691
- *   +0x01dc -> line 695
- *   +0x01e4 -> line 696
- *   +0x01fc -> line 698
- *   +0x0200 -> line 700
- *   +0x0214 -> line 704
- *   +0x0218 -> line 700
- *   +0x023c -> line 701
- *   +0x0258 -> line 704
- *   +0x0260 -> line 708
- *   +0x0294 -> line 709
- *   +0x02c8 -> line 712
- *   +0x0308 -> line 713
- *   +0x0368 -> line 716
- *   +0x0380 -> line 719
- *   +0x0398 -> line 720
- *   +0x03a4 -> line 721
- *   +0x03f8 -> line 725
- *   +0x040c -> line 726
- *   +0x0460 -> line 730
- *   +0x0470 -> line 731
- *   +0x04c4 -> line 735
- *   +0x04d0 -> line 736
- *   +0x0524 -> line 740
- *   +0x0534 -> line 741
- *   +0x0588 -> line 745
- *   +0x059c -> line 746
- *   +0x05f0 -> line 752
- *   +0x05fc -> line 755
- *   +0x0600 -> line 756
- *   +0x0610 -> line 755
- *   +0x0620 -> line 756
- *   +0x0664 -> line 757
- *   +0x0694 -> line 758
- *   +0x06b8 -> line 760
- *   +0x06bc -> line 758
- *   +0x06c4 -> line 760
- *   +0x06c8 -> line 758
- *   +0x06cc -> line 760
- *   +0x06d0 -> line 758
- *   +0x06d8 -> line 760
- *   +0x06e8 -> line 761
- *   +0x06f4 -> line 762
- *   +0x0700 -> line 763
- *   +0x0754 -> line 767
- *   +0x0768 -> line 768
- *   +0x07bc -> line 772
- *   +0x07d4 -> line 773
- *   +0x07e4 -> line 774
- *   +0x0838 -> line 778
- *   +0x0850 -> line 779
- *   +0x085c -> line 780
- *   +0x08b0 -> line 784
- *   +0x08c8 -> line 785
- *   +0x08d8 -> line 786
- *   +0x092c -> line 790
- *   +0x0940 -> line 791
- *   +0x0994 -> line 795
- *   +0x0998 -> line 798
- *   +0x099c -> line 799
- *   +0x09a4 -> line 798
- *   +0x09bc -> line 799
- *   +0x09c4 -> line 801
- *   +0x09cc -> line 803
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawAGO2.c lines 458–582 */
-/* addr: 0x002b5130  size: 604 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 458
- *   +0x0028 -> line 460
- *   +0x002c -> line 458
- *   +0x0030 -> line 470
- *   +0x0038 -> line 468
- *   +0x0040 -> line 470
- *   +0x004c -> line 472
- *   +0x0054 -> line 475
- *   +0x0058 -> line 480
- *   +0x005c -> line 476
- *   +0x0060 -> line 477
- *   +0x0064 -> line 480
- *   +0x006c -> line 482
- *   +0x0080 -> line 496
- *   +0x0084 -> line 511
- *   +0x008c -> line 499
- *   +0x0090 -> line 496
- *   +0x0094 -> line 511
- *   +0x0098 -> line 496
- *   +0x009c -> line 511
- *   +0x00a0 -> line 496
- *   +0x00a4 -> line 511
- *   +0x00a8 -> line 497
- *   +0x00ac -> line 511
- *   +0x00b0 -> line 499
- *   +0x00b4 -> line 511
- *   +0x00b8 -> line 499
- *   +0x00bc -> line 511
- *   +0x00c0 -> line 499
- *   +0x00c4 -> line 500
- *   +0x00cc -> line 501
- *   +0x00d0 -> line 500
- *   +0x00d8 -> line 501
- *   +0x00e4 -> line 502
- *   +0x00f4 -> line 512
- *   +0x00f8 -> line 513
- *   +0x00fc -> line 514
- *   +0x0100 -> line 515
- *   +0x0104 -> line 516
- *   +0x0108 -> line 522
- *   +0x0110 -> line 529
- *   +0x0114 -> line 539
- *   +0x0118 -> line 529
- *   +0x011c -> line 539
- *   +0x0120 -> line 529
- *   +0x0124 -> line 524
- *   +0x0130 -> line 526
- *   +0x0138 -> line 529
- *   +0x013c -> line 532
- *   +0x0140 -> line 529
- *   +0x0148 -> line 535
- *   +0x0150 -> line 536
- *   +0x0158 -> line 537
- *   +0x0160 -> line 540
- *   +0x0164 -> line 541
- *   +0x0168 -> line 543
- *   +0x016c -> line 544
- *   +0x0170 -> line 546
- *   +0x0174 -> line 547
- *   +0x0178 -> line 548
- *   +0x017c -> line 549
- *   +0x0180 -> line 550
- *   +0x0184 -> line 551
- *   +0x0188 -> line 553
- *   +0x018c -> line 554
- *   +0x0190 -> line 555
- *   +0x0194 -> line 556
- *   +0x0198 -> line 557
- *   +0x019c -> line 558
- *   +0x01a0 -> line 560
- *   +0x01a4 -> line 561
- *   +0x01a8 -> line 562
- *   +0x01ac -> line 563
- *   +0x01b0 -> line 565
- *   +0x01b4 -> line 566
- *   +0x01b8 -> line 567
- *   +0x01bc -> line 568
- *   +0x01c0 -> line 569
- *   +0x01c4 -> line 570
- *   +0x01c8 -> line 575
- *   +0x01cc -> line 576
- *   +0x01d0 -> line 574
- *   +0x01d4 -> line 577
- *   +0x01d8 -> line 579
- *   +0x01e8 -> line 581
- *   +0x0230 -> line 582
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawAGO2.c lines 445–453 */
-/* addr: 0x002b5390  size: 72 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 445
- *   +0x0004 -> line 447
- *   +0x0008 -> line 445
- *   +0x0010 -> line 446
- *   +0x0014 -> line 449
- *   +0x001c -> line 448
- *   +0x0020 -> line 449
- *   +0x0028 -> line 451
- *   +0x0038 -> line 453
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-extern void VAC_SetMaterial(void* hContainer, GLI_tdstMaterial_* pMat);
-extern void VAC_UnAcquireAndDraw(void* hContainer, unsigned int NbSprites);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawAGO2.c lines 435–441 */
-/* addr: 0x002b53e0  size: 124 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 435
- *   +0x0004 -> line 439
- *   +0x0008 -> line 435
- *   +0x000c -> line 439
- *   +0x0010 -> line 438
- *   +0x0014 -> line 439
- *   +0x0018 -> line 438
- *   +0x0020 -> line 439
- *   +0x005c -> line 440
- *   +0x0060 -> line 439
- *   +0x0068 -> line 440
- *   +0x0070 -> line 441
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int VAC_Acquire(void* hContainer, float (*pMatrix)[4][4], GLI_tdstMaterial_* pMat);
-
-/* Multiplies each column of a 4x4 matrix by a vector on VU0 (macro mode);
-   the VU0 instructions have no C form. */
-inline void PS2_M_vMulMatrixColumnsByVector(float (*_src)[4], float* _vec, float (*_dst)[4])
-{
-    asm {
-        lqc2 vf5, 0x0(_vec)
-        lqc2 vf1, 0x0(_src)
-        lqc2 vf2, 0x10(_src)
-        lqc2 vf3, 0x20(_src)
-        lqc2 vf4, 0x30(_src)
-        vmul.xyzw vf1, vf1, vf5
-        vmul.xyzw vf2, vf2, vf5
-        vmul.xyzw vf3, vf3, vf5
-        vmul.xyzw vf4, vf4, vf5
-        sqc2 vf1, 0x0(_dst)
-        sqc2 vf2, 0x10(_dst)
-        sqc2 vf3, 0x20(_dst)
-        sqc2 vf4, 0x30(_dst)
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawAGO2.c lines 347–424 */
-/* addr: 0x002b5460  size: 232 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 347
- *   +0x0004 -> line 352
- *   +0x000c -> line 357
- *   +0x0014 -> line 350
- *   +0x0018 -> line 351
- *   +0x001c -> line 357
- *   +0x0020 -> line 353
- *   +0x0024 -> line 357
- *   +0x0030 -> line 359
- *   +0x0034 -> line 360
- *   +0x0038 -> line 361
- *   +0x003c -> line 362
- *   +0x0040 -> line 363
- *   +0x0044 -> line 364
- *   +0x0048 -> line 365
- *   +0x004c -> line 366
- *   +0x0050 -> line 367
- *   +0x0054 -> line 368
- *   +0x0058 -> line 369
- *   +0x005c -> line 371
- *   +0x0060 -> line 372
- *   +0x0064 -> line 373
- *   +0x0068 -> line 374
- *   +0x006c -> line 375
- *   +0x0070 -> line 377
- *   +0x0074 -> line 378
- *   +0x0078 -> line 379
- *   +0x007c -> line 380
- *   +0x0080 -> line 382
- *   +0x0084 -> line 383
- *   +0x0088 -> line 384
- *   +0x008c -> line 386
- *   +0x0090 -> line 387
- *   +0x0094 -> line 388
- *   +0x0098 -> line 389
- *   +0x009c -> line 390
- *   +0x00a0 -> line 391
- *   +0x00a4 -> line 392
- *   +0x00a8 -> line 393
- *   +0x00ac -> line 394
- *   +0x00b0 -> line 395
- *   +0x00b4 -> line 396
- *   +0x00b8 -> line 400
- *   +0x00c0 -> line 401
- *   +0x00c4 -> line 402
- *   +0x00c8 -> line 405
- *   +0x00d0 -> line 406
- *   +0x00d4 -> line 407
- *   +0x00d8 -> line 410
- *   +0x00dc -> line 411
- *   +0x00e0 -> line 424
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawAGO2.c lines 313–343 */
-/* addr: 0x002b5550  size: 568 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 313
- *   +0x0004 -> line 318
- *   +0x0008 -> line 313
- *   +0x000c -> line 320
- *   +0x0010 -> line 313
- *   +0x0020 -> line 320
- *   +0x0028 -> line 318
- *   +0x0030 -> line 320
- *   +0x0034 -> line 316
- *   +0x0038 -> line 320
- *   +0x0040 -> line 324
- *   +0x004c -> line 330
- *   +0x0054 -> line 325
- *   +0x0060 -> line 330
- *   +0x0068 -> line 326
- *   +0x0074 -> line 330
- *   +0x00d4 -> line 331
- *   +0x0124 -> line 332
- *   +0x01a8 -> line 334
- *   +0x01b0 -> line 335
- *   +0x01b8 -> line 334
- *   +0x01bc -> line 336
- *   +0x01c4 -> line 335
- *   +0x01c8 -> line 338
- *   +0x01d0 -> line 336
- *   +0x01d4 -> line 339
- *   +0x01dc -> line 338
- *   +0x01e0 -> line 340
- *   +0x01e8 -> line 339
- *   +0x01ec -> line 334
- *   +0x01f4 -> line 335
- *   +0x01fc -> line 336
- *   +0x0204 -> line 338
- *   +0x020c -> line 339
- *   +0x0214 -> line 340
- *   +0x0220 -> line 343
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-void GLI_v_CalculateVectorsFor3DRain(MAT_tdstTransformation_* param0, float* pDirection, float sx, float sy)
-{
-    float xNorm;
-    MTH3D_tdstVector_ V3;
-    MTH3D_tdstVector_ V2;
-    MTH3D_tdstVector_ V1;
-    /* TODO: decompile from asm/... */
-}
-
-void GLI_v_CalculateVectorsFor3DRainVU0(MAT_tdstTransformation_* pInvertedCam, float* pDirection, float sx, float sy)
-{
-    float V1[4];
-    float* pX;
-    float* pMat;
-    float* pV1;
-    float* pY;
-
-    V1[0] = 0.0f;
-    V1[1] = 0.0f;
-    V1[2] = -1.0f;
-    pMat = (float*)((char*)pInvertedCam + 0x10);
-    V1[3] = 0.0f;
-    pX = GLI_g_stXVecta;
-    pV1 = V1;
-    pY = GLI_g_stYVecta;
-
-    asm {
-        lqc2 $vf10, 0x0(pDirection)
-        vmul.xyz $vf5, $vf10, $vf10
-        vaddy.x $vf5, $vf5, $vf5y
-        vaddz.x $vf5, $vf5, $vf5z
-        vsqrt $Q, $vf5x
-        vwaitq
-        vaddq.x $vf5, $vf0, $Q
-        vdiv $Q, $vf0w, $vf5x
-        vsub.xyzw $vf6, $vf0, $vf0
-        vwaitq
-        vmulq.xyz $vf10, $vf10, $Q
-        lqc2 $vf8, 0x0(pV1)
-        lqc2 $vf4, 0x0(pMat)
-        lqc2 $vf5, 0x10(pMat)
-        lqc2 $vf6, 0x20(pMat)
-        lqc2 $vf7, 0x30(pMat)
-        vmulax.xyzw $ACC, $vf4, $vf8x
-        vmadday.xyzw $ACC, $vf5, $vf8y
-        vmaddaz.xyzw $ACC, $vf6, $vf8z
-        vmaddw.xyzw $vf9, $vf7, $vf8w
-        vopmula.xyz $ACC, $vf10, $vf9
-        vopmsub.xyz $vf13, $vf9, $vf10
-        vsub.w $vf13, $vf13, $vf13
-        vmul.xyz $vf5, $vf13, $vf13
-        vaddy.x $vf5, $vf5, $vf5y
-        vaddz.x $vf5, $vf5, $vf5z
-        vsqrt $Q, $vf5x
-        vwaitq
-        vaddq.x $vf5, $vf0, $Q
-        vdiv $Q, $vf0w, $vf5x
-        vsub.xyzw $vf6, $vf0, $vf0
-        vwaitq
-        vmulq.xyz $vf6, $vf13, $Q
-        sqc2 $vf6, 0x0(pX)
-        mfc1 $t0, sx
-        nop
-        qmtc2.ni $t0, $vf8
-        vmulx.xyzw $vf7, $vf6, $vf8x
-        mfc1 $t0, sy
-        nop
-        qmtc2.ni $t0, $vf9
-        vmulx.xyzw $vf2, $vf10, $vf9x
-        sqc2 $vf7, 0x0(pX)
-        sqc2 $vf2, 0x0(pY)
-    }
-}
-
-void GLI_v_StartDrawingRain(GLD_tdstViewportAttributes_* pViewport)
-{
-    float ModelView[4][4];
-
-    GLI_g_p_stCurrentCam = *(int*)pViewport->p_vSpecificToXD;
-    PS2_M_vMulMatrixColumnsByVector((float (*)[4])&((GLI_tdstCamera_*)GLI_g_p_stCurrentCam)->stMatrix.stTransformMatrix, GLI_g_NegVect, ModelView); ModelView[3][3] = 1.0f;
-    VAC_Acquire((void*)GLI_g_hVAContainer, &ModelView, NULL);
-}
-
-void GLI_v_StopDrawingRain(void)
-{
-    float savedalpha;
-    savedalpha = GLI_BIG_GLOBALS_xGlobalAlpha;
-    GLI_BIG_GLOBALS_xGlobalAlpha = 0.5f;
-    GLI_g_CurrentStage = 0;
-    VAC_SetMaterial((void*)GLI_g_hVAContainer, (GLI_tdstMaterial_*)GLI_g_RainMaterial);
-    GLI_BIG_GLOBALS_xGlobalAlpha = savedalpha;
-    VAC_UnAcquireAndDraw((void*)GLI_g_hVAContainer, 0);
-}
-
-void GLI_vDisplaySerialParticleRain(GLD_tdstViewportAttributes_* param0, AGO2_RainParticle_* pParticleArray, int NumberOfParticles, void* pMaterial, float sx, float sy)
-{
-    float Uv4[4];
-    float Uv3[4];
-    float Uv2[4];
-    float Uv1[4];
-    float Pos[4];
-    float Color[4];
-    float (*pT)[4];
-    float (*pC)[4];
-    float (*pV)[4];
-    MAT_tdstTransformation_ InvertedCam;
-    unsigned int NbSpritesReal;
-    int i;
-    /* TODO: decompile from asm/... */
-}
-
-void GLI_v_DisplayLightning(GLD_tdstViewportAttributes_* pViewport, MTH3D_tdstVector_* pDestination, MTH3D_tdstVector_* pSource, float xSize)
-{
-    float xNorm;
-    int i;
-    float Length;
-    MTH3D_tdstVector_ PosCurrent;
-    MTH3D_tdstVector_ Pos3;
-    MTH3D_tdstVector_ Pos2;
-    MTH3D_tdstVector_ Pos1;
-    MTH3D_tdstVector_ DirectionStep;
-    MTH3D_tdstVector_ Direction2;
-    MTH3D_tdstVector_ Direction;
-    MAT_tdstTransformation_ InvertedCam;
-    /* TODO: decompile from asm/... */
-}
-
-void GLI_vDisplaySerialFlow(GLD_tdstViewportAttributes_* param0, AGO2_FlowParticle_* pParticleArray, int NumberOfParticles, void* pMaterial, float sx, float sy)
-{
-    float AlphaVal;
-    float PosX;
-    float PosY;
-    float PosZ;
-    float XVX;
-    float XVY;
-    float XVZ;
-    float YVX;
-    float YVY;
-    float YVZ;
-
-    unsigned int NbSpritesReal;
-    float (*pV)[4];
-    float (*pC)[4];
-    float (*pT)[4];
-    int i;
-    unsigned char* pPrefetch;
-    MAT_tdstTransformation_ InvertedCam;
-
-    NbSpritesReal = 0;
-    GLI_g_RainMaterial = (int)pMaterial;
-    i = (NumberOfParticles < (int)VAC_g_NbSpritesLefts) ? NumberOfParticles : (int)VAC_g_NbSpritesLefts;
-    if (i != 0)
-    {
-        pV = (float (*)[4])VAC_g_CurrentpV;
-        pC = (float (*)[4])VAC_g_CurrentpC;
-        pT = (float (*)[4])VAC_g_CurrentpT;
-        GLI_v_CalculateInverseCamMat(&InvertedCam, param0);
-        XVX = InvertedCam.stTransformMatrix.stCol_0.xX * sx;
-        XVY = InvertedCam.stTransformMatrix.stCol_0.xY * sx;
-        XVZ = InvertedCam.stTransformMatrix.stCol_0.xZ * sx;
-        YVX = InvertedCam.stTransformMatrix.stCol_1.xX * sy;
-        YVY = InvertedCam.stTransformMatrix.stCol_1.xY * sy;
-        YVZ = InvertedCam.stTransformMatrix.stCol_1.xZ * sy;
-        while (i != 0)
-        {
-            if (pParticleArray->Flags == 0)
-            {
-                pPrefetch = (unsigned char*)pParticleArray + 0x80;
-                asm {
-                    pref 0x0, 0x0(pPrefetch)
-                }
-                AlphaVal = pParticleArray->xTransparency * (1.0f / 255.0f);
-                NbSpritesReal++;
-                PosX = pParticleArray->Position[0];
-                PosY = pParticleArray->Position[1];
-                PosZ = pParticleArray->Position[2];
-                pC[0][0] = pC[0][1] = pC[0][2] = 1.0f;
-                pC[0][3] = AlphaVal;
-                pC[1][0] = pC[1][1] = pC[1][2] = 1.0f;
-                pC[1][3] = AlphaVal;
-                pC[2][0] = pC[2][1] = pC[2][2] = 1.0f;
-                pC[2][3] = AlphaVal;
-                pC[3][0] = pC[3][1] = pC[3][2] = 1.0f;
-                pC[3][3] = AlphaVal;
-                pC[4][0] = pC[4][1] = pC[4][2] = 1.0f;
-                pC[4][3] = AlphaVal;
-                pC[5][0] = pC[5][1] = pC[5][2] = 1.0f;
-                pC[5][3] = AlphaVal;
-                pC += 6;
-                pT[0][0] = 0.0f; pT[0][1] = 1.0f; pT[0][2] = 0.0f; pT[0][3] = 0.0f;
-                pT[1][0] = 1.0f; pT[1][1] = 1.0f; pT[1][2] = 0.0f; pT[1][3] = 0.0f;
-                pT[2][0] = 1.0f; pT[2][1] = 0.0f; pT[2][2] = 0.0f; pT[2][3] = 0.0f;
-                pT[3][0] = 0.0f; pT[3][1] = 1.0f; pT[3][2] = 0.0f; pT[3][3] = 0.0f;
-                pT[4][0] = 1.0f; pT[4][1] = 0.0f; pT[4][2] = 0.0f; pT[4][3] = 0.0f;
-                pT[5][0] = 0.0f; pT[5][1] = 0.0f; pT[5][2] = 0.0f; pT[5][3] = 0.0f;
-                pT += 6;
-                pV[0][0] = PosX - XVX - YVX;
-                pV[0][1] = PosY - XVY - YVY;
-                pV[0][2] = PosZ - XVZ - YVZ;
-                pV[0][3] = 1.0f;
-                pV[1][0] = PosX + XVX - YVX;
-                pV[1][1] = PosY + XVY - YVY;
-                pV[1][2] = PosZ + XVZ - YVZ;
-                pV[1][3] = 1.0f;
-                pV[2][0] = PosX + XVX + YVX;
-                pV[2][1] = PosY + XVY + YVY;
-                pV[2][2] = PosZ + XVZ + YVZ;
-                pV[2][3] = 1.0f;
-                pV[3][0] = PosX - XVX - YVX;
-                pV[3][1] = PosY - XVY - YVY;
-                pV[3][2] = PosZ - XVZ - YVZ;
-                pV[3][3] = 1.0f;
-                pV[4][0] = PosX + XVX + YVX;
-                pV[4][1] = PosY + XVY + YVY;
-                pV[4][2] = PosZ + XVZ + YVZ;
-                pV[4][3] = 1.0f;
-                pV[5][0] = PosX - XVX + YVX;
-                pV[5][1] = PosY - XVY + YVY;
-                pV[5][2] = PosZ - XVZ + YVZ;
-                pV[5][3] = 1.0f;
-                pV += 6;
-            }
-            pParticleArray++;
-            i--;
-        }
-        VAC_g_NbSpritesLefts -= NbSpritesReal;
-        VAC_g_CurrentNbSprites += NbSpritesReal;
-        VAC_g_CurrentpV = (int)((unsigned char*)VAC_g_CurrentpV + 96 * NbSpritesReal);
-        VAC_g_CurrentpC = (int)((unsigned char*)VAC_g_CurrentpC + 96 * NbSpritesReal);
-        VAC_g_CurrentpT = (int)((unsigned char*)VAC_g_CurrentpT + 96 * NbSpritesReal);
-    }
-}
-
-void GLI_vDisplaySerialFlowBlured(GLD_tdstViewportAttributes_* param0, AGO2_FlowParticle_* pParticleArray, int NumberOfParticles, void* pMaterial, float sx, float sy)
-{
-    float AlphaVal;
-    float PosX;
-    float PosY;
-    float PosZ;
-    float Pos2X;
-    float Pos2Y;
-    float Pos2Z;
-    float XVX;
-    float XVY;
-    float XVZ;
-    float YVX;
-    float YVY;
-    float YVZ;
-
-    unsigned int NbSpritesReal;
-    float (*pV)[4];
-    float (*pC)[4];
-    float (*pT)[4];
-    int i;
-    unsigned char* pPrefetch;
-    MAT_tdstTransformation_ InvertedCam;
-
-    NbSpritesReal = 0;
-    GLI_g_RainMaterial = (int)pMaterial;
-    i = (NumberOfParticles < (int)VAC_g_NbSpritesLefts) ? NumberOfParticles : (int)VAC_g_NbSpritesLefts;
-    if (i != 0)
-    {
-        pV = (float (*)[4])VAC_g_CurrentpV;
-        pC = (float (*)[4])VAC_g_CurrentpC;
-        pT = (float (*)[4])VAC_g_CurrentpT;
-        GLI_v_CalculateInverseCamMat(&InvertedCam, param0);
-        GLI_v_CalculateVectorsFor3DRain(&InvertedCam, pParticleArray->Direction, sx, sy);
-        XVX = GLI_g_stXVect.xX;
-        XVY = GLI_g_stXVect.xY;
-        XVZ = GLI_g_stXVect.xZ;
-        YVX = GLI_g_stYVect.xX;
-        YVY = GLI_g_stYVect.xY;
-        YVZ = GLI_g_stYVect.xZ;
-        while (i != 0)
-        {
-            if (pParticleArray->Flags == 0)
-            {
-                pPrefetch = (unsigned char*)pParticleArray + 0x80;
-                asm {
-                    pref 0x0, 0x0(pPrefetch)
-                }
-                AlphaVal = pParticleArray->xTransparency * (1.0f / 255.0f);
-                NbSpritesReal++;
-                PosX = pParticleArray->Position[0];
-                PosY = pParticleArray->Position[1];
-                PosZ = pParticleArray->Position[2];
-                Pos2X = pParticleArray->PreviousPosition[0];
-                Pos2Y = pParticleArray->PreviousPosition[1];
-                Pos2Z = pParticleArray->PreviousPosition[2];
-                pC[0][0] = pC[0][1] = pC[0][2] = 1.0f;
-                pC[0][3] = AlphaVal;
-                pC[1][0] = pC[1][1] = pC[1][2] = 1.0f;
-                pC[1][3] = AlphaVal;
-                pC[2][0] = pC[2][1] = pC[2][2] = 1.0f;
-                pC[2][3] = 0.0f;
-                pC[3][0] = pC[3][1] = pC[3][2] = 1.0f;
-                pC[3][3] = AlphaVal;
-                pC[4][0] = pC[4][1] = pC[4][2] = 1.0f;
-                pC[4][3] = 0.0f;
-                pC[5][0] = pC[5][1] = pC[5][2] = 1.0f;
-                pC[5][3] = 0.0f;
-                pC += 6;
-                pT[0][0] = 0.0f; pT[0][1] = 1.0f; pT[0][2] = 0.0f; pT[0][3] = 0.0f;
-                pT[1][0] = 1.0f; pT[1][1] = 1.0f; pT[1][2] = 0.0f; pT[1][3] = 0.0f;
-                pT[2][0] = 1.0f; pT[2][1] = 0.0f; pT[2][2] = 0.0f; pT[2][3] = 0.0f;
-                pT[3][0] = 0.0f; pT[3][1] = 1.0f; pT[3][2] = 0.0f; pT[3][3] = 0.0f;
-                pT[4][0] = 1.0f; pT[4][1] = 0.0f; pT[4][2] = 0.0f; pT[4][3] = 0.0f;
-                pT[5][0] = 0.0f; pT[5][1] = 0.0f; pT[5][2] = 0.0f; pT[5][3] = 0.0f;
-                pT += 6;
-                pV[0][0] = PosX - XVX - YVX;
-                pV[0][1] = PosY - XVY - YVY;
-                pV[0][2] = PosZ - XVZ - YVZ;
-                pV[0][3] = 1.0f;
-                pV[1][0] = PosX + XVX - YVX;
-                pV[1][1] = PosY + XVY - YVY;
-                pV[1][2] = PosZ + XVZ - YVZ;
-                pV[1][3] = 1.0f;
-                pV[2][0] = Pos2X + XVX + YVX;
-                pV[2][1] = Pos2Y + XVY + YVY;
-                pV[2][2] = Pos2Z + XVZ + YVZ;
-                pV[2][3] = 1.0f;
-                pV[3][0] = PosX - XVX - YVX;
-                pV[3][1] = PosY - XVY - YVY;
-                pV[3][2] = PosZ - XVZ - YVZ;
-                pV[3][3] = 1.0f;
-                pV[4][0] = Pos2X + XVX + YVX;
-                pV[4][1] = Pos2Y + XVY + YVY;
-                pV[4][2] = Pos2Z + XVZ + YVZ;
-                pV[4][3] = 1.0f;
-                pV[5][0] = Pos2X - XVX + YVX;
-                pV[5][1] = Pos2Y - XVY + YVY;
-                pV[5][2] = Pos2Z - XVZ + YVZ;
-                pV[5][3] = 1.0f;
-                pV += 6;
-            }
-            pParticleArray++;
-            i--;
-        }
-        VAC_g_NbSpritesLefts -= NbSpritesReal;
-        VAC_g_CurrentNbSprites += NbSpritesReal;
-        VAC_g_CurrentpV = (int)((unsigned char*)VAC_g_CurrentpV + 96 * NbSpritesReal);
-        VAC_g_CurrentpC = (int)((unsigned char*)VAC_g_CurrentpC + 96 * NbSpritesReal);
-        VAC_g_CurrentpT = (int)((unsigned char*)VAC_g_CurrentpT + 96 * NbSpritesReal);
-    }
-}
-
-void GLI_vDisplaySerialLeaves(GLD_tdstViewportAttributes_* pViewport, AGO2_LeavesParticle_* pParticleArray, int NumberOfParticles, void* pMaterial)
-{
-    float AlphaVal;
-    float PosX;
-    float PosY;
-    float PosZ;
-    float XVX;
-    float XVY;
-    float XVZ;
-    float YVX;
-    float YVY;
-    float YVZ;
-
-    unsigned int NbSpritesReal;
-    float (*pV)[4];
-    float (*pC)[4];
-    float (*pT)[4];
-    int i;
-    unsigned char* pPrefetch;
-
-    NbSpritesReal = 0;
-    GLI_g_RainMaterial = (int)pMaterial;
-    NumberOfParticles = (NumberOfParticles < (int)VAC_g_NbSpritesLefts) ? NumberOfParticles : (int)VAC_g_NbSpritesLefts;
-    if (NumberOfParticles != 0)
-    {
-        pV = (float (*)[4])VAC_g_CurrentpV;
-        pC = (float (*)[4])VAC_g_CurrentpC;
-        pT = (float (*)[4])VAC_g_CurrentpT;
-        while (NumberOfParticles != 0)
-        {
-            if (pParticleArray->Flags == 0)
-            {
-                pPrefetch = (unsigned char*)pParticleArray + 0x120;
-                asm {
-                    pref 0x0, 0x0(pPrefetch)
-                }
-                AlphaVal = pParticleArray->xTransparency * (1.0f / 255.0f);
-                NbSpritesReal++;
-                PosX = pParticleArray->Position[0];
-                PosY = pParticleArray->Position[1];
-                PosZ = pParticleArray->Position[2];
-                XVX = pParticleArray->UsedV1[0];
-                XVY = pParticleArray->UsedV1[1];
-                XVZ = pParticleArray->UsedV1[2];
-                YVX = pParticleArray->UsedV2[0];
-                YVY = pParticleArray->UsedV2[1];
-                YVZ = pParticleArray->UsedV2[2];
-                pC[0][0] = pC[0][1] = pC[0][2] = 1.0f;
-                pC[0][3] = AlphaVal;
-                pC[1][0] = pC[1][1] = pC[1][2] = 1.0f;
-                pC[1][3] = AlphaVal;
-                pC[2][0] = pC[2][1] = pC[2][2] = 1.0f;
-                pC[2][3] = AlphaVal;
-                pC[3][0] = pC[3][1] = pC[3][2] = 1.0f;
-                pC[3][3] = AlphaVal;
-                pC[4][0] = pC[4][1] = pC[4][2] = 1.0f;
-                pC[4][3] = AlphaVal;
-                pC[5][0] = pC[5][1] = pC[5][2] = 1.0f;
-                pC[5][3] = AlphaVal;
-                pC += 6;
-                pT[0][0] = 0.0f; pT[0][1] = 1.0f; pT[0][2] = 0.0f; pT[0][3] = 0.0f;
-                pT[1][0] = 1.0f; pT[1][1] = 1.0f; pT[1][2] = 0.0f; pT[1][3] = 0.0f;
-                pT[2][0] = 1.0f; pT[2][1] = 0.0f; pT[2][2] = 0.0f; pT[2][3] = 0.0f;
-                pT[3][0] = 0.0f; pT[3][1] = 1.0f; pT[3][2] = 0.0f; pT[3][3] = 0.0f;
-                pT[4][0] = 1.0f; pT[4][1] = 0.0f; pT[4][2] = 0.0f; pT[4][3] = 0.0f;
-                pT[5][0] = 0.0f; pT[5][1] = 0.0f; pT[5][2] = 0.0f; pT[5][3] = 0.0f;
-                pT += 6;
-                pV[0][0] = PosX - XVX - YVX;
-                pV[0][1] = PosY - XVY - YVY;
-                pV[0][2] = PosZ - XVZ - YVZ;
-                pV[0][3] = 1.0f;
-                pV[1][0] = PosX + XVX - YVX;
-                pV[1][1] = PosY + XVY - YVY;
-                pV[1][2] = PosZ + XVZ - YVZ;
-                pV[1][3] = 1.0f;
-                pV[2][0] = PosX + XVX + YVX;
-                pV[2][1] = PosY + XVY + YVY;
-                pV[2][2] = PosZ + XVZ + YVZ;
-                pV[2][3] = 1.0f;
-                pV[3][0] = PosX - XVX - YVX;
-                pV[3][1] = PosY - XVY - YVY;
-                pV[3][2] = PosZ - XVZ - YVZ;
-                pV[3][3] = 1.0f;
-                pV[4][0] = PosX + XVX + YVX;
-                pV[4][1] = PosY + XVY + YVY;
-                pV[4][2] = PosZ + XVZ + YVZ;
-                pV[4][3] = 1.0f;
-                pV[5][0] = PosX - XVX + YVX;
-                pV[5][1] = PosY - XVY + YVY;
-                pV[5][2] = PosZ - XVZ + YVZ;
-                pV[5][3] = 1.0f;
-                pV += 6;
-            }
-            pParticleArray++;
-            NumberOfParticles--;
-        }
-        VAC_g_NbSpritesLefts -= NbSpritesReal;
-        VAC_g_CurrentNbSprites += NbSpritesReal;
-        VAC_g_CurrentpV = (int)((unsigned char*)VAC_g_CurrentpV + 96 * NbSpritesReal);
-        VAC_g_CurrentpC = (int)((unsigned char*)VAC_g_CurrentpC + 96 * NbSpritesReal);
-        VAC_g_CurrentpT = (int)((unsigned char*)VAC_g_CurrentpT + 96 * NbSpritesReal);
-    }
-}
-
 void GLI_vDisplaySerialBees(GLD_tdstViewportAttributes_* pViewport, AGO2_BeeParticle_* _pParticleArray_, int NumberOfParticles, void* pMaterial, float sx, float sy)
 {
     AGO2_BeeParticle_* pParticleArray;
@@ -2844,11 +2822,25 @@ void GLI_vDisplaySerialBees(GLD_tdstViewportAttributes_* pViewport, AGO2_BeePart
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawAGO2.c lines 1499–1499 */
+/* addr: 0x002b3670  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1499
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO2_vDisplayWall(void)
 {
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawAGO2.c lines 126–126 */
+/* addr: 0x002b3660  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 126
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLD_fn_vInitSmoothSynchro(void)
 {
     /* TODO: decompile from asm/... */

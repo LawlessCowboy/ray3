@@ -232,14 +232,6 @@ int (*vagCallbackLeft)(anon_3*, anon_1*, void*);
 int (*videoCallback)(anon_3*, anon_1*, void*);
 int SND_g_iEnoughSound;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\main.c lines 531–531 */
-/* addr: 0x001308d0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0004 -> line 531
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 void ErrMessage(char* message);
@@ -254,71 +246,6 @@ int GetThreadId(void);
 int ReferThreadStatus(int tid, ThreadParam* info);
 int RotateThreadReadyQueue(int prio);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\main.c lines 518–522 */
-/* addr: 0x001308e0  size: 44 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 518
- *   +0x0008 -> line 521
- *   +0x0024 -> line 522
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\main.c lines 372–485 */
-/* addr: 0x00130910  size: 564 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 372
- *   +0x0004 -> line 375
- *   +0x0008 -> line 372
- *   +0x000c -> line 376
- *   +0x0010 -> line 372
- *   +0x0030 -> line 375
- *   +0x0044 -> line 376
- *   +0x0048 -> line 382
- *   +0x0050 -> line 388
- *   +0x0058 -> line 394
- *   +0x0060 -> line 395
- *   +0x0090 -> line 406
- *   +0x00b0 -> line 413
- *   +0x0114 -> line 421
- *   +0x011c -> line 428
- *   +0x0124 -> line 436
- *   +0x0138 -> line 437
- *   +0x013c -> line 440
- *   +0x0148 -> line 441
- *   +0x014c -> line 442
- *   +0x0154 -> line 443
- *   +0x015c -> line 444
- *   +0x0160 -> line 445
- *   +0x0164 -> line 446
- *   +0x0168 -> line 437
- *   +0x016c -> line 440
- *   +0x0170 -> line 441
- *   +0x0178 -> line 442
- *   +0x017c -> line 443
- *   +0x0180 -> line 444
- *   +0x0184 -> line 446
- *   +0x0190 -> line 447
- *   +0x019c -> line 454
- *   +0x01a0 -> line 456
- *   +0x01a4 -> line 454
- *   +0x01a8 -> line 457
- *   +0x01ac -> line 454
- *   +0x01b0 -> line 460
- *   +0x01b4 -> line 455
- *   +0x01b8 -> line 459
- *   +0x01bc -> line 455
- *   +0x01c0 -> line 456
- *   +0x01c4 -> line 457
- *   +0x01c8 -> line 458
- *   +0x01cc -> line 460
- *   +0x01d8 -> line 461
- *   +0x01e8 -> line 476
- *   +0x0208 -> line 483
- *   +0x020c -> line 485
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int readBufCreate(anon_0* b);
 int sceMpegInit(void);
 int videoDecCreate(anon_2* vd, int mpegWork, int mpegWorkSize, int data, int tag, int tagSize, anon_12* pts, int n_pts);
@@ -333,64 +260,7 @@ void fn_vAllocBuffers64(void);
 
 void* fn_pvMallocInBinaryPreservingTheCurrentMode(unsigned int size);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\main.c lines 314–333 */
-/* addr: 0x00130b50  size: 300 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 314
- *   +0x0008 -> line 316
- *   +0x0018 -> line 317
- *   +0x0028 -> line 318
- *   +0x003c -> line 320
- *   +0x0040 -> line 319
- *   +0x0044 -> line 320
- *   +0x0054 -> line 321
- *   +0x0068 -> line 322
- *   +0x007c -> line 323
- *   +0x008c -> line 326
- *   +0x0090 -> line 323
- *   +0x0094 -> line 326
- *   +0x009c -> line 327
- *   +0x00a0 -> line 326
- *   +0x00a4 -> line 327
- *   +0x00a8 -> line 326
- *   +0x00b0 -> line 328
- *   +0x00b4 -> line 327
- *   +0x00b8 -> line 328
- *   +0x00bc -> line 327
- *   +0x00c4 -> line 329
- *   +0x00c8 -> line 328
- *   +0x00cc -> line 329
- *   +0x00d0 -> line 328
- *   +0x00d8 -> line 330
- *   +0x00dc -> line 329
- *   +0x00e0 -> line 330
- *   +0x00e4 -> line 329
- *   +0x00ec -> line 331
- *   +0x00f0 -> line 330
- *   +0x00f4 -> line 331
- *   +0x00f8 -> line 330
- *   +0x0100 -> line 332
- *   +0x0104 -> line 331
- *   +0x0108 -> line 332
- *   +0x010c -> line 331
- *   +0x0114 -> line 332
- *   +0x0120 -> line 333
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 #pragma auto_inline on
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\main.c lines 297–301 */
-/* addr: 0x00130c80  size: 48 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 297
- *   +0x0008 -> line 299
- *   +0x001c -> line 300
- *   +0x0024 -> line 301
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 #pragma auto_inline reset
 
 int scePadRead(int port, int slot, unsigned char* rdata);
@@ -410,6 +280,51 @@ unsigned int videoDecGetState(anon_2* vd);
 inline void GAM_vClearCop0Register24(void)
 {
     asm { mtbpc zero }
+}
+
+/* Retail keeps the always-zero isPaused flag live (its own callee-saved
+ * register and the two tests that read it).  MWCC 3.0.1 constant-propagates
+ * the flag away, so the scoped pragma below keeps it. */
+#pragma push
+#pragma opt_propagation off
+#pragma opt_loop_invariants off
+#pragma opt_strength_reduction off
+
+#pragma opt_loop_invariants reset
+#pragma opt_strength_reduction reset
+#pragma pop
+
+int vagStop(void);
+void readBufDelete(anon_0* b);
+int TerminateThread(int th);
+int DeleteThread(int th);
+int videoDecDelete(anon_2* vd);
+void DesinitGlDevice(void);
+int strFileClose(anon_8* file);
+void fn_vFreeInBinaryPreservingTheCurrentMode(void* p);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\main.c lines 127–139 */
+/* addr: 0x00130f90  size: 216 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 127
+ *   +0x0010 -> line 129
+ *   +0x0018 -> line 131
+ *   +0x0034 -> line 133
+ *   +0x00c0 -> line 139
+ *   +0x00cc -> line 138
+ *   +0x00d0 -> line 139
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+unsigned int movie(char* name, int interruptable, float fVolume)
+{
+    int i;
+
+    initAll(name, fVolume);
+    readMpeg(&videoDec, readBuf, &infile, interruptable);
+    vagStop(); readBufDelete(readBuf); TerminateThread(videoDecTh); DeleteThread(videoDecTh); TerminateThread(defaultTh); DeleteThread(defaultTh); videoDecDelete(&videoDec); DesinitGlDevice(); strFileClose(&infile); for (i = 0; i < 8; i++) { if (a7_p_vBuffers64_Pointers[i]) fn_vFreeInBinaryPreservingTheCurrentMode(a7_p_vBuffers64_Pointers[i]); }
+    return controller_val;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\main.c lines 151–290 */
@@ -471,51 +386,6 @@ inline void GAM_vClearCop0Register24(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-/* Retail keeps the always-zero isPaused flag live (its own callee-saved
- * register and the two tests that read it).  MWCC 3.0.1 constant-propagates
- * the flag away, so the scoped pragma below keeps it. */
-#pragma push
-#pragma opt_propagation off
-#pragma opt_loop_invariants off
-#pragma opt_strength_reduction off
-
-#pragma opt_loop_invariants reset
-#pragma opt_strength_reduction reset
-#pragma pop
-
-int vagStop(void);
-void readBufDelete(anon_0* b);
-int TerminateThread(int th);
-int DeleteThread(int th);
-int videoDecDelete(anon_2* vd);
-void DesinitGlDevice(void);
-int strFileClose(anon_8* file);
-void fn_vFreeInBinaryPreservingTheCurrentMode(void* p);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\main.c lines 127–139 */
-/* addr: 0x00130f90  size: 216 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 127
- *   +0x0010 -> line 129
- *   +0x0018 -> line 131
- *   +0x0034 -> line 133
- *   +0x00c0 -> line 139
- *   +0x00cc -> line 138
- *   +0x00d0 -> line 139
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-unsigned int movie(char* name, int interruptable, float fVolume)
-{
-    int i;
-
-    initAll(name, fVolume);
-    readMpeg(&videoDec, readBuf, &infile, interruptable);
-    vagStop(); readBufDelete(readBuf); TerminateThread(videoDecTh); DeleteThread(videoDecTh); TerminateThread(defaultTh); DeleteThread(defaultTh); videoDecDelete(&videoDec); DesinitGlDevice(); strFileClose(&infile); for (i = 0; i < 8; i++) { if (a7_p_vBuffers64_Pointers[i]) fn_vFreeInBinaryPreservingTheCurrentMode(a7_p_vBuffers64_Pointers[i]); }
-    return controller_val;
-}
-
 #pragma opt_propagation off
 #pragma opt_loop_invariants off
 #pragma opt_strength_reduction off
@@ -595,6 +465,16 @@ int readMpeg(anon_2* vd, anon_0* rb, anon_8* file, int interruptable)
 #pragma opt_loop_invariants reset
 #pragma opt_propagation reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\main.c lines 297–301 */
+/* addr: 0x00130c80  size: 48 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 297
+ *   +0x0008 -> line 299
+ *   +0x001c -> line 300
+ *   +0x0024 -> line 301
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 #pragma auto_inline on
 void switchThread(void)
 {
@@ -605,6 +485,51 @@ void switchThread(void)
 }
 #pragma auto_inline reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\main.c lines 314–333 */
+/* addr: 0x00130b50  size: 300 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 314
+ *   +0x0008 -> line 316
+ *   +0x0018 -> line 317
+ *   +0x0028 -> line 318
+ *   +0x003c -> line 320
+ *   +0x0040 -> line 319
+ *   +0x0044 -> line 320
+ *   +0x0054 -> line 321
+ *   +0x0068 -> line 322
+ *   +0x007c -> line 323
+ *   +0x008c -> line 326
+ *   +0x0090 -> line 323
+ *   +0x0094 -> line 326
+ *   +0x009c -> line 327
+ *   +0x00a0 -> line 326
+ *   +0x00a4 -> line 327
+ *   +0x00a8 -> line 326
+ *   +0x00b0 -> line 328
+ *   +0x00b4 -> line 327
+ *   +0x00b8 -> line 328
+ *   +0x00bc -> line 327
+ *   +0x00c4 -> line 329
+ *   +0x00c8 -> line 328
+ *   +0x00cc -> line 329
+ *   +0x00d0 -> line 328
+ *   +0x00d8 -> line 330
+ *   +0x00dc -> line 329
+ *   +0x00e0 -> line 330
+ *   +0x00e4 -> line 329
+ *   +0x00ec -> line 331
+ *   +0x00f0 -> line 330
+ *   +0x00f4 -> line 331
+ *   +0x00f8 -> line 330
+ *   +0x0100 -> line 332
+ *   +0x0104 -> line 331
+ *   +0x0108 -> line 332
+ *   +0x010c -> line 331
+ *   +0x0114 -> line 332
+ *   +0x0120 -> line 333
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vAllocBuffers64(void)
 {
     a7_p_vBuffers64_Pointers[0] = fn_pvMallocInBinaryPreservingTheCurrentMode(0x104F);
@@ -624,6 +549,61 @@ void fn_vAllocBuffers64(void)
     readBuf = (anon_0*)(((int)a7_p_vBuffers64_Pointers[7] + 0x3F) & ~0x3F);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\main.c lines 372–485 */
+/* addr: 0x00130910  size: 564 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 372
+ *   +0x0004 -> line 375
+ *   +0x0008 -> line 372
+ *   +0x000c -> line 376
+ *   +0x0010 -> line 372
+ *   +0x0030 -> line 375
+ *   +0x0044 -> line 376
+ *   +0x0048 -> line 382
+ *   +0x0050 -> line 388
+ *   +0x0058 -> line 394
+ *   +0x0060 -> line 395
+ *   +0x0090 -> line 406
+ *   +0x00b0 -> line 413
+ *   +0x0114 -> line 421
+ *   +0x011c -> line 428
+ *   +0x0124 -> line 436
+ *   +0x0138 -> line 437
+ *   +0x013c -> line 440
+ *   +0x0148 -> line 441
+ *   +0x014c -> line 442
+ *   +0x0154 -> line 443
+ *   +0x015c -> line 444
+ *   +0x0160 -> line 445
+ *   +0x0164 -> line 446
+ *   +0x0168 -> line 437
+ *   +0x016c -> line 440
+ *   +0x0170 -> line 441
+ *   +0x0178 -> line 442
+ *   +0x017c -> line 443
+ *   +0x0180 -> line 444
+ *   +0x0184 -> line 446
+ *   +0x0190 -> line 447
+ *   +0x019c -> line 454
+ *   +0x01a0 -> line 456
+ *   +0x01a4 -> line 454
+ *   +0x01a8 -> line 457
+ *   +0x01ac -> line 454
+ *   +0x01b0 -> line 460
+ *   +0x01b4 -> line 455
+ *   +0x01b8 -> line 459
+ *   +0x01bc -> line 455
+ *   +0x01c0 -> line 456
+ *   +0x01c4 -> line 457
+ *   +0x01c8 -> line 458
+ *   +0x01cc -> line 460
+ *   +0x01d8 -> line 461
+ *   +0x01e8 -> line 476
+ *   +0x0208 -> line 483
+ *   +0x020c -> line 485
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void initAll(char* bsfilename, float fVolume)
 {
     ThreadParam th_param;
@@ -658,6 +638,15 @@ void initAll(char* bsfilename, float fVolume)
     while (strFileOpen(&infile, bsfilename) == 0) ; g_start_it = 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\main.c lines 518–522 */
+/* addr: 0x001308e0  size: 44 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 518
+ *   +0x0008 -> line 521
+ *   +0x0024 -> line 522
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void defMain(void)
 {
     ThreadParam th_param;
@@ -668,6 +657,13 @@ void defMain(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\main.c lines 531–531 */
+/* addr: 0x001308d0  size: 16 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0004 -> line 531
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void ErrMessage(char* message)
 {
     printf("[ Error ] %s\n", message);

@@ -1617,17 +1617,6 @@ tdstEngineStructure_ g_stEngineStructure;
 unsigned char g_ucDebugCamera;
 int g_InGameMenu2DActivated;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameDisp.c lines 64–68 */
-/* addr: 0x0025f780  size: 208 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 64
- *   +0x0020 -> line 66
- *   +0x00ac -> line 67
- *   +0x00c8 -> line 68
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 void fn_vLastDesinitFamilyStructure(void);
@@ -1636,30 +1625,6 @@ void fn_vDisplayAll(unsigned char _ucViewPortIndex);
 void GAM_fn_vCheckIfDebugCamera(HIE_tdstSuperObject_** hCamera);
 void fn_vSetCinemascopeRatio(unsigned int ulRatio);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameDisp.c lines 561–815 */
-/* addr: 0x0025f850  size: 240 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 561
- *   +0x0004 -> line 568
- *   +0x0008 -> line 561
- *   +0x000c -> line 568
- *   +0x0010 -> line 561
- *   +0x001c -> line 568
- *   +0x0020 -> line 561
- *   +0x0024 -> line 568
- *   +0x0040 -> line 604
- *   +0x0048 -> line 606
- *   +0x0070 -> line 607
- *   +0x009c -> line 639
- *   +0x00a0 -> line 646
- *   +0x00ac -> line 647
- *   +0x00bc -> line 649
- *   +0x00c4 -> line 659
- *   +0x00d0 -> line 717
- *   +0x00d8 -> line 815
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_xSendListToViewport(GLD_tdstViewportAttributes_* p_stVpt);
 int GLD_bWriteToViewportFinished(int hDevice, short hVP);
 void AGO_vProcessAllParts(GLD_tdstViewportAttributes_* _p_stViewport);
@@ -1667,6 +1632,43 @@ void AGO_vReDisplayAllParts(GLD_tdstViewportAttributes_* _p_stViewport);
 void CAM_vDisplayInfo(void);
 void Erm_fn_ClearLastError();
 void Erm_fn_v_UpdateLastError();
+
+void GLI_vUpdateEffectData(unsigned int _ulDeltaT);
+void CAM_fn_vActualizeAViewport(int _lViewport);
+unsigned char GAM_MultiVP_fn_bWriteFrameToViewPort(unsigned char _ucIndex);
+void GAM_MultiVP_fn_vChangeOneVPSizeAndPositionPercent(unsigned char ucVpNum, unsigned int* a2_ulSize, unsigned int* a2_ulPos);
+unsigned char CAM_fn_bCineInfoGetIsDebugCamera(tdstInternalStructurCineinfo_* _hIntCineinfo);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameDisp.c lines 238–240 */
+/* addr: 0x0025ff00  size: 28 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 238
+ *   +0x0010 -> line 239
+ *   +0x0014 -> line 240
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void fn_vSetCinemascopeRatio(unsigned int ulRatio)
+{
+    if (ulRatio != 0 && ulRatio < 101)
+        g_ulMinSize = ulRatio;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameDisp.c lines 244–247 */
+/* addr: 0x0025fee0  size: 28 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 244
+ *   +0x000c -> line 246
+ *   +0x0014 -> line 247
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GAM_fn_vCheckIfDebugCamera(HIE_tdstSuperObject_** hCamera)
+{
+    if (g_ucDebugCamera != 0)
+        *hCamera = g_stEngineStructure.h_StdCamCaracter;
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameDisp.c lines 329–505 */
 /* addr: 0x0025fc70  size: 620 bytes */
@@ -1693,44 +1695,6 @@ void Erm_fn_v_UpdateLastError();
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vUpdateEffectData(unsigned int _ulDeltaT);
-void CAM_fn_vActualizeAViewport(int _lViewport);
-unsigned char GAM_MultiVP_fn_bWriteFrameToViewPort(unsigned char _ucIndex);
-void GAM_MultiVP_fn_vChangeOneVPSizeAndPositionPercent(unsigned char ucVpNum, unsigned int* a2_ulSize, unsigned int* a2_ulPos);
-unsigned char CAM_fn_bCineInfoGetIsDebugCamera(tdstInternalStructurCineinfo_* _hIntCineinfo);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameDisp.c lines 244–247 */
-/* addr: 0x0025fee0  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 244
- *   +0x000c -> line 246
- *   +0x0014 -> line 247
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameDisp.c lines 238–240 */
-/* addr: 0x0025ff00  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 238
- *   +0x0010 -> line 239
- *   +0x0014 -> line 240
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-void fn_vSetCinemascopeRatio(unsigned int ulRatio)
-{
-    if (ulRatio != 0 && ulRatio < 101)
-        g_ulMinSize = ulRatio;
-}
-
-void GAM_fn_vCheckIfDebugCamera(HIE_tdstSuperObject_** hCamera)
-{
-    if (g_ucDebugCamera != 0)
-        *hCamera = g_stEngineStructure.h_StdCamCaracter;
-}
-
 void fn_vDisplayAll(unsigned char _ucViewPortIndex)
 {
     tdstCineinfo_* h_CineInfo;
@@ -1780,6 +1744,30 @@ void fn_vDisplayAll(unsigned char _ucViewPortIndex)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameDisp.c lines 561–815 */
+/* addr: 0x0025f850  size: 240 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 561
+ *   +0x0004 -> line 568
+ *   +0x0008 -> line 561
+ *   +0x000c -> line 568
+ *   +0x0010 -> line 561
+ *   +0x001c -> line 568
+ *   +0x0020 -> line 561
+ *   +0x0024 -> line 568
+ *   +0x0040 -> line 604
+ *   +0x0048 -> line 606
+ *   +0x0070 -> line 607
+ *   +0x009c -> line 639
+ *   +0x00a0 -> line 646
+ *   +0x00ac -> line 647
+ *   +0x00bc -> line 649
+ *   +0x00c4 -> line 659
+ *   +0x00d0 -> line 717
+ *   +0x00d8 -> line 815
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GAM_MultiVP_fn_vDisplayAllInOneViewPort(unsigned char _ucIndex)
 {
     GLD_tdstViewportAttributes_* p_stVpt;
@@ -1801,6 +1789,16 @@ void GAM_MultiVP_fn_vDisplayAllInOneViewPort(unsigned char _ucIndex)
     CAM_vDisplayInfo();
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameDisp.c lines 64–68 */
+/* addr: 0x0025f780  size: 208 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 64
+ *   +0x0020 -> line 66
+ *   +0x00ac -> line 67
+ *   +0x00c8 -> line 68
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vLastDesinitFamilyStructure(void)
 {
     tdstFamilyList_* param0;

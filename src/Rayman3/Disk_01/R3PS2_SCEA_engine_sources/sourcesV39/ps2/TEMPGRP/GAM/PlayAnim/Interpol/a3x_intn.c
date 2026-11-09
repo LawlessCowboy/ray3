@@ -1286,23 +1286,6 @@ void HMU_fn_vFree(void* _ppBlock, int _ulMode);
 void fn_vPushAllocModeAccordingToObject(void* _p_stSuperObject);
 void GAM_fn_vPopAllocMode(void);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 45–58 */
-/* addr: 0x0027c260  size: 468 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 45
- *   +0x0018 -> line 47
- *   +0x0020 -> line 48
- *   +0x00ac -> line 49
- *   +0x00b8 -> line 50
- *   +0x0144 -> line 53
- *   +0x0150 -> line 55
- *   +0x0190 -> line 56
- *   +0x0194 -> line 55
- *   +0x01a4 -> line 56
- *   +0x01bc -> line 58
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 inline long MTH_M_xRealToLong(float x)
 {
     long r;
@@ -1336,155 +1319,1166 @@ void fn_vUpdateFrameMatrix(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tds
 void fn_vUpdateFrame(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame);
 tdstEvent_* fn_p_GetEventsAddress(tdstAnim3d_* _p_stAnim3d);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 2025–2099 */
-/* addr: 0x0027c440  size: 364 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2025
- *   +0x001c -> line 2045
- *   +0x0028 -> line 2052
- *   +0x0030 -> line 2053
- *   +0x0040 -> line 2056
- *   +0x0050 -> line 2061
- *   +0x0054 -> line 2067
- *   +0x0058 -> line 2061
- *   +0x0060 -> line 2060
- *   +0x0068 -> line 2061
- *   +0x0074 -> line 2060
- *   +0x0078 -> line 2061
- *   +0x0088 -> line 2067
- *   +0x0090 -> line 2072
- *   +0x00d0 -> line 2088
- *   +0x0120 -> line 2091
- *   +0x0128 -> line 2098
- *   +0x012c -> line 2096
- *   +0x0130 -> line 2098
- *   +0x014c -> line 2099
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int fn_v_MergePositions(tdstChannel_* p_stChannel, tdstAChannel_* p_stCurrentChannel, unsigned char bHierarchized);
 inline unsigned int fn_ulFrameFromFloat(float xFrame)
 {
     return (unsigned int)xFrame;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 1959–2018 */
-/* addr: 0x0027c5b0  size: 444 bytes */
+void fn_v_QuatToMatrix(float (*_a3a3_xMtx)[3], float* _a4_xQuat);
+void fn_v_ExpandQuat(float* _a4_xQuatD, short* _a4_xQuatS);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 303–303 */
+/* addr: 0x0027f340  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1959
- *   +0x0004 -> line 1970
- *   +0x0008 -> line 1959
- *   +0x000c -> line 1970
- *   +0x0010 -> line 1959
- *   +0x0014 -> line 1970
- *   +0x0018 -> line 1959
- *   +0x001c -> line 1970
- *   +0x0020 -> line 1959
- *   +0x0028 -> line 1970
- *   +0x006c -> line 1973
- *   +0x0078 -> line 1975
- *   +0x0080 -> line 1976
- *   +0x0088 -> line 1980
- *   +0x0090 -> line 1986
- *   +0x0094 -> line 1980
- *   +0x0098 -> line 1986
- *   +0x00a0 -> line 1988
- *   +0x00a4 -> line 1986
- *   +0x00a8 -> line 1988
- *   +0x00ac -> line 1989
- *   +0x00b4 -> line 1988
- *   +0x00bc -> line 1989
- *   +0x00d8 -> line 1993
- *   +0x00e0 -> line 1997
- *   +0x0120 -> line 2009
- *   +0x0170 -> line 2012
- *   +0x0178 -> line 2017
- *   +0x017c -> line 2016
- *   +0x0180 -> line 2017
- *   +0x019c -> line 2018
+ *   +0x0000 -> line 303
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 1784–1952 */
-/* addr: 0x0027c770  size: 1976 bytes */
+tdstEvent_* fn_p_GetEventsAddress(tdstAnim3d_* _p_stAnim3d)
+{
+    return _p_stAnim3d->d_stAnimEvent;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 355–505 */
+/* addr: 0x0027f010  size: 804 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1784
- *   +0x0004 -> line 1791
- *   +0x0008 -> line 1784
- *   +0x0028 -> line 1791
- *   +0x0034 -> line 1792
- *   +0x004c -> line 1795
- *   +0x0068 -> line 1796
- *   +0x0080 -> line 1799
- *   +0x0094 -> line 1802
- *   +0x00a4 -> line 1808
- *   +0x00b4 -> line 1810
- *   +0x011c -> line 1814
- *   +0x0164 -> line 1818
- *   +0x0170 -> line 1819
- *   +0x0178 -> line 1822
- *   +0x01f4 -> line 1828
- *   +0x0204 -> line 1829
- *   +0x020c -> line 1833
- *   +0x021c -> line 1835
- *   +0x0230 -> line 1839
- *   +0x0238 -> line 1842
- *   +0x0254 -> line 1845
- *   +0x02bc -> line 1849
- *   +0x0304 -> line 1853
- *   +0x0310 -> line 1854
- *   +0x0318 -> line 1857
- *   +0x0394 -> line 1863
- *   +0x03a4 -> line 1864
- *   +0x03ac -> line 1868
- *   +0x03bc -> line 1870
- *   +0x03d0 -> line 1874
- *   +0x03d8 -> line 1878
- *   +0x03dc -> line 1881
- *   +0x03e0 -> line 1878
- *   +0x03e4 -> line 1879
- *   +0x03e8 -> line 1878
- *   +0x03ec -> line 1880
- *   +0x03f0 -> line 1881
- *   +0x03fc -> line 1878
- *   +0x0408 -> line 1879
- *   +0x0418 -> line 1881
- *   +0x041c -> line 1879
- *   +0x0428 -> line 1880
- *   +0x0444 -> line 1881
- *   +0x0498 -> line 1885
- *   +0x04e0 -> line 1889
- *   +0x04ec -> line 1890
- *   +0x04f4 -> line 1893
- *   +0x05d4 -> line 1903
- *   +0x05e4 -> line 1904
- *   +0x05ec -> line 1908
- *   +0x0600 -> line 1912
- *   +0x0610 -> line 1914
- *   +0x0624 -> line 1926
- *   +0x0628 -> line 1927
- *   +0x0630 -> line 1928
- *   +0x0634 -> line 1930
- *   +0x0638 -> line 1928
- *   +0x063c -> line 1930
- *   +0x0648 -> line 1932
- *   +0x064c -> line 1933
- *   +0x065c -> line 1935
- *   +0x0670 -> line 1936
- *   +0x0684 -> line 1937
- *   +0x0698 -> line 1939
- *   +0x069c -> line 1937
- *   +0x06a0 -> line 1939
- *   +0x06bc -> line 1940
- *   +0x06c4 -> line 1944
- *   +0x06ec -> line 1946
- *   +0x0754 -> line 1947
- *   +0x075c -> line 1950
- *   +0x0798 -> line 1952
+ *   +0x0000 -> line 355
+ *   +0x0020 -> line 364
+ *   +0x002c -> line 366
+ *   +0x0034 -> line 367
+ *   +0x003c -> line 377
+ *   +0x0050 -> line 381
+ *   +0x0068 -> line 387
+ *   +0x006c -> line 392
+ *   +0x0070 -> line 388
+ *   +0x0074 -> line 392
+ *   +0x007c -> line 400
+ *   +0x0080 -> line 406
+ *   +0x0084 -> line 401
+ *   +0x0088 -> line 392
+ *   +0x008c -> line 401
+ *   +0x0090 -> line 400
+ *   +0x0098 -> line 401
+ *   +0x00b8 -> line 402
+ *   +0x00bc -> line 406
+ *   +0x00c4 -> line 409
+ *   +0x00d4 -> line 412
+ *   +0x00e0 -> line 415
+ *   +0x00e8 -> line 418
+ *   +0x00f0 -> line 424
+ *   +0x00fc -> line 427
+ *   +0x0108 -> line 429
+ *   +0x0120 -> line 430
+ *   +0x012c -> line 433
+ *   +0x0134 -> line 438
+ *   +0x0144 -> line 441
+ *   +0x014c -> line 444
+ *   +0x0168 -> line 449
+ *   +0x0174 -> line 451
+ *   +0x0184 -> line 452
+ *   +0x018c -> line 454
+ *   +0x0190 -> line 455
+ *   +0x0198 -> line 460
+ *   +0x01a0 -> line 462
+ *   +0x01ac -> line 463
+ *   +0x01c4 -> line 465
+ *   +0x01c8 -> line 469
+ *   +0x01f4 -> line 474
+ *   +0x0208 -> line 478
+ *   +0x0214 -> line 481
+ *   +0x0244 -> line 483
+ *   +0x024c -> line 485
+ *   +0x025c -> line 487
+ *   +0x027c -> line 489
+ *   +0x029c -> line 491
+ *   +0x02a8 -> line 494
+ *   +0x02b8 -> line 495
+ *   +0x02c0 -> line 496
+ *   +0x02d0 -> line 497
+ *   +0x02d4 -> line 498
+ *   +0x02d8 -> line 499
+ *   +0x02dc -> line 500
+ *   +0x02e0 -> line 504
+ *   +0x02e4 -> line 502
+ *   +0x02e8 -> line 503
+ *   +0x02ec -> line 504
+ *   +0x0304 -> line 505
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void fn_vUpdateFrame(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame)
+{
+    tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
+    tdstOnlyFrame_* p_stCurrentOnlyFrame;
+    unsigned short uwNumOfSavedFrame;
+    unsigned short uwFrameOffset;
+    unsigned short uwT_NTTO;
+    unsigned short uwCnt1;
+    unsigned short uwNumOfA3dGENERAL;
+    tdstElement3d_* p_stCurrentElement3d;
+    float a4_xQuatOri[4];
+    unsigned short* p_CurrentFrameNumOfNTTO;
+    tdstChannel_* p_stCurrentChannel;
+
+    if (_p_stAnim3d->ucFlagMergeAnim)
+    {
+        fn_vUpdateFrameForInterAnim(_p_stSuperObject, _p_stFrame, _p_stAnim3d, _uwFrame);
+        return;
+    }
+
+    uwNumOfA3dGENERAL = _p_stAnim3d->uwNumOfA3dGENERAL;
+
+    if (_uwFrame >= _p_stAnim3d->uwNumberOfFrames)
+        return;
+
+    if ((_p_stFrame->p_stAnim == _p_stAnim3d) && (_p_stFrame->uwFrameNumber == _uwFrame))
+        return;
+
+    _p_stFrame->p_stAnim = _p_stAnim3d;
+    _p_stFrame->uwFrameNumber = _uwFrame;
+    _p_stFrame->ucMatrixUpdated = 0;
+
+    p_stCurrentA3dGENERAL = fn_p_GetA3dGENERAL(uwNumOfA3dGENERAL, _uwFrame);
+    uwFrameOffset = _uwFrame - p_stCurrentA3dGENERAL->uwStartFrame;
+    p_stCurrentChannel = &gp_stChannels[p_stCurrentA3dGENERAL->uwNumOfFirstChannel];
+    p_stCurrentOnlyFrame = &gp_stOnlyFrames[p_stCurrentA3dGENERAL->uwNumOfFirstOnlyFrame + uwFrameOffset];
+    uwNumOfSavedFrame = p_stCurrentOnlyFrame->uwNumOfSavedFrame;
+
+    fn_vPushAllocModeAccordingToObject(_p_stSuperObject);
+
+    if (p_stCurrentOnlyFrame->uwNumOfAngularSpeedQuat == 0xFFFF)
+    {
+        if (_p_stFrame->p_stAngularSpeedMatrix != NULL)
+            HMU_fn_vFree(&_p_stFrame->p_stAngularSpeedMatrix, 1);
+        _p_stFrame->p_stAngularSpeedMatrix = NULL;
+    }
+    else
+    {
+        if (_p_stFrame->p_stAngularSpeedMatrix == NULL)
+            _p_stFrame->p_stAngularSpeedMatrix = (MTH3D_tdstMatrix_*)HMU_fn_p_vMalloc(0x24, 1);
+        fn_v_ExpandQuat(a4_xQuatOri, gp_a4_xQuaternions[p_stCurrentOnlyFrame->uwNumOfAngularSpeedQuat]);
+        fn_v_QuatToMatrix((float (*)[3])_p_stFrame->p_stAngularSpeedMatrix, a4_xQuatOri);
+    }
+
+    GAM_fn_vPopAllocMode();
+
+    if (p_stCurrentOnlyFrame->uwNumOfSpeedVector == 0xFFFF)
+        _p_stFrame->p_stLinearSpeedVector = NULL;
+    else
+        _p_stFrame->p_stLinearSpeedVector = &gp_a3_xVectors[p_stCurrentOnlyFrame->uwNumOfSpeedVector];
+
+    if (p_stCurrentOnlyFrame->uwHierarchyNbCouples != 0)
+        _p_stFrame->stHierarchy.d_stCouples = &gp_stHierarchies[p_stCurrentOnlyFrame->uwNumOfFirstHierarchyCouple];
+    else
+        _p_stFrame->stHierarchy.d_stCouples = NULL;
+
+    _p_stFrame->stHierarchy.ulNbOfCouples = p_stCurrentOnlyFrame->uwHierarchyNbCouples;
+    _p_stFrame->stDeformation.ulNbOfDeformationLinks = p_stCurrentOnlyFrame->uwDeformationNb;
+
+    if (p_stCurrentOnlyFrame->uwDeformationNb != 0)
+        _p_stFrame->stDeformation.d_stDeformationLinks = &gp_stDeformations[p_stCurrentOnlyFrame->uwNumOfFirstDeformation];
+    else
+        _p_stFrame->stDeformation.d_stDeformationLinks = NULL;
+
+    p_stCurrentElement3d = _p_stFrame->p_stArrayOfElts3d;
+    for (uwCnt1 = 0; uwCnt1 < p_stCurrentA3dGENERAL->uwNumberOfChannels; uwCnt1++)
+    {
+        p_CurrentFrameNumOfNTTO = &gp_FramesNumOfNTTO[p_stCurrentChannel->uwNumOfFirstFrame + uwNumOfSavedFrame];
+        uwT_NTTO = *p_CurrentFrameNumOfNTTO;
+        if (uwT_NTTO != 0xFFFF)
+        {
+            p_stCurrentElement3d->wElement = gp_stNTTO[*p_CurrentFrameNumOfNTTO].ucNumberInTable;
+            p_stCurrentElement3d->ucChannelNumber = p_stCurrentChannel->uwChannelNumber;
+            p_stCurrentElement3d->bf1ActiveStatus = 1;
+            p_stCurrentElement3d->eTypeOfElement = gp_stNTTO[*p_CurrentFrameNumOfNTTO].uwTypeOfObject;
+            p_stCurrentElement3d->ucTransparency = gp_stNTTO[*p_CurrentFrameNumOfNTTO].ucTransparency;
+            p_stCurrentElement3d->ucAnimLevel = 0;
+        }
+        else
+        {
+            p_stCurrentElement3d->wElement = 0xFFFF;
+            p_stCurrentElement3d->ucChannelNumber = p_stCurrentChannel->uwChannelNumber;
+            p_stCurrentElement3d->bf1ActiveStatus = 1;
+            p_stCurrentElement3d->eTypeOfElement = 2;
+            p_stCurrentElement3d->ucTransparency = 0;
+            p_stCurrentElement3d->ucAnimLevel = 0xFF;
+        }
+        p_stCurrentChannel++;
+        p_stCurrentElement3d++;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 517–654 */
+/* addr: 0x0027ec40  size: 972 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 517
+ *   +0x0038 -> line 526
+ *   +0x0044 -> line 528
+ *   +0x004c -> line 529
+ *   +0x0054 -> line 536
+ *   +0x005c -> line 542
+ *   +0x0070 -> line 544
+ *   +0x0078 -> line 546
+ *   +0x0098 -> line 551
+ *   +0x009c -> line 554
+ *   +0x00a0 -> line 551
+ *   +0x00a4 -> line 552
+ *   +0x00ac -> line 551
+ *   +0x00b4 -> line 552
+ *   +0x00cc -> line 554
+ *   +0x00dc -> line 555
+ *   +0x00e8 -> line 557
+ *   +0x00ec -> line 561
+ *   +0x00f8 -> line 573
+ *   +0x0138 -> line 581
+ *   +0x0144 -> line 588
+ *   +0x0150 -> line 581
+ *   +0x015c -> line 588
+ *   +0x017c -> line 592
+ *   +0x018c -> line 594
+ *   +0x0194 -> line 601
+ *   +0x0198 -> line 603
+ *   +0x019c -> line 601
+ *   +0x01a0 -> line 603
+ *   +0x01a4 -> line 601
+ *   +0x01b8 -> line 603
+ *   +0x020c -> line 604
+ *   +0x0218 -> line 608
+ *   +0x021c -> line 610
+ *   +0x0228 -> line 620
+ *   +0x0238 -> line 621
+ *   +0x0248 -> line 623
+ *   +0x028c -> line 624
+ *   +0x0290 -> line 627
+ *   +0x02b4 -> line 629
+ *   +0x02c0 -> line 630
+ *   +0x02c8 -> line 629
+ *   +0x02d8 -> line 630
+ *   +0x02e8 -> line 639
+ *   +0x0324 -> line 642
+ *   +0x0330 -> line 649
+ *   +0x0338 -> line 650
+ *   +0x033c -> line 649
+ *   +0x0358 -> line 650
+ *   +0x0378 -> line 653
+ *   +0x037c -> line 652
+ *   +0x0380 -> line 653
+ *   +0x039c -> line 654
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vUpdateFrameMatrix(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAnim3d, float _xFrame, unsigned char ucForceUpdate, tdstAChannel_* d_stChannelArray)
+{
+    float xTmp;
+    float xDT;
+    tdstKeyFrame_* p_stOldKeyFrame;
+    tdstKeyFrame_* p_stCurrentKeyFrame;
+    unsigned short* p_CurrentFrameNumOfNTTO;
+    float xNoInterpol;
+    unsigned char bHierarchized;
+    unsigned short uwCnt1;
+    unsigned short uwT_NTTO;
+    tdstChannel_* p_stCurrentChannel;
+    tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 667–703 */
+/* addr: 0x0027eb90  size: 176 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 667
+ *   +0x000c -> line 672
+ *   +0x0018 -> line 674
+ *   +0x0028 -> line 677
+ *   +0x003c -> line 678
+ *   +0x0044 -> line 683
+ *   +0x004c -> line 687
+ *   +0x0050 -> line 698
+ *   +0x0058 -> line 687
+ *   +0x0060 -> line 698
+ *   +0x00a0 -> line 703
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+MTH3D_tdstVector_* fn_p_stGetLinearSpeedVector(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame)
+{
+    tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
+
+    if (_p_stAnim3d->ucFlagMergeAnim)
+        return fn_p_stGetLinearSpeedVectorForInterAnim(_p_stAnim3d, _uwFrame);
+    if (_uwFrame >= _p_stAnim3d->uwNumberOfFrames)
+        return NULL;
+    p_stCurrentA3dGENERAL = fn_p_GetA3dGENERAL(_p_stAnim3d->uwNumOfA3dGENERAL, _uwFrame);
+    _uwFrame -= p_stCurrentA3dGENERAL->uwStartFrame;
+    {
+        tdstOnlyFrame_* p_stCurrentOnlyFrame = &gp_stOnlyFrames[p_stCurrentA3dGENERAL->uwNumOfFirstOnlyFrame + _uwFrame];
+        if (p_stCurrentOnlyFrame->uwNumOfSpeedVector == 0xFFFF)
+            return NULL;
+        return &gp_a3_xVectors[p_stCurrentOnlyFrame->uwNumOfSpeedVector];
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 713–749 */
+/* addr: 0x0027eae0  size: 176 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 713
+ *   +0x0014 -> line 718
+ *   +0x0028 -> line 719
+ *   +0x0030 -> line 724
+ *   +0x0038 -> line 728
+ *   +0x003c -> line 738
+ *   +0x0044 -> line 728
+ *   +0x004c -> line 738
+ *   +0x0070 -> line 739
+ *   +0x0078 -> line 744
+ *   +0x008c -> line 745
+ *   +0x0098 -> line 747
+ *   +0x009c -> line 749
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+MTH3D_tdstMatrix_* fn_p_stGetAngularSpeedMatrix(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame, MTH3D_tdstMatrix_* p_stMatrix)
+{
+    float a4_xQuatOri[4];
+    tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
+
+    if (_uwFrame >= _p_stAnim3d->uwNumberOfFrames)
+        return NULL;
+    p_stCurrentA3dGENERAL = fn_p_GetA3dGENERAL(_p_stAnim3d->uwNumOfA3dGENERAL, _uwFrame);
+    _uwFrame -= p_stCurrentA3dGENERAL->uwStartFrame;
+    {
+        tdstOnlyFrame_* p_stCurrentOnlyFrame = &gp_stOnlyFrames[p_stCurrentA3dGENERAL->uwNumOfFirstOnlyFrame + _uwFrame];
+        if (p_stCurrentOnlyFrame->uwNumOfAngularSpeedQuat == 0xFFFF)
+            return NULL;
+        fn_v_ExpandQuat(a4_xQuatOri, gp_a4_xQuaternions[p_stCurrentOnlyFrame->uwNumOfAngularSpeedQuat]);
+    }
+    fn_v_QuatToMatrix((float (*)[3])p_stMatrix, a4_xQuatOri);
+    return p_stMatrix;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 762–820 */
+/* addr: 0x0027e820  size: 696 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 762
+ *   +0x0004 -> line 773
+ *   +0x0008 -> line 762
+ *   +0x0024 -> line 773
+ *   +0x0034 -> line 774
+ *   +0x003c -> line 779
+ *   +0x0044 -> line 780
+ *   +0x0054 -> line 781
+ *   +0x0058 -> line 780
+ *   +0x005c -> line 781
+ *   +0x0064 -> line 786
+ *   +0x0068 -> line 785
+ *   +0x0074 -> line 786
+ *   +0x007c -> line 785
+ *   +0x0080 -> line 786
+ *   +0x0084 -> line 785
+ *   +0x008c -> line 786
+ *   +0x0090 -> line 785
+ *   +0x0094 -> line 789
+ *   +0x0104 -> line 791
+ *   +0x011c -> line 793
+ *   +0x0138 -> line 798
+ *   +0x0154 -> line 800
+ *   +0x0164 -> line 801
+ *   +0x016c -> line 804
+ *   +0x0190 -> line 807
+ *   +0x01ac -> line 809
+ *   +0x01b8 -> line 810
+ *   +0x01c0 -> line 813
+ *   +0x01e4 -> line 816
+ *   +0x01e8 -> line 819
+ *   +0x01ec -> line 816
+ *   +0x01f8 -> line 819
+ *   +0x01fc -> line 816
+ *   +0x0214 -> line 817
+ *   +0x021c -> line 816
+ *   +0x0228 -> line 817
+ *   +0x0230 -> line 816
+ *   +0x0238 -> line 817
+ *   +0x0250 -> line 818
+ *   +0x0258 -> line 817
+ *   +0x0264 -> line 818
+ *   +0x0268 -> line 817
+ *   +0x026c -> line 818
+ *   +0x0270 -> line 817
+ *   +0x0274 -> line 818
+ *   +0x0298 -> line 820
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+MTH3D_tdstVector_* fn_p_stGetLinearSpeedVectorForInterAnim(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame)
+{
+    tdstA3dGENERAL_ForTransitions_* p_stCurrentA3dGENERAL;
+    tdstA3dGENERAL_* p_stPreviousA3dGeneral;
+    tdstA3dGENERAL_* p_stNextA3dGeneral;
+    tdstOnlyFrame_* p_stPreviousOnlyFrame;
+    tdstOnlyFrame_* p_stCurrentOnlyFrame;
+    float fRatio;
+    MTH3D_tdstVector_ stPreviousSpeed;
+    MTH3D_tdstVector_ stNextSpeed;
+    extern tdstA3dGENERAL_ForTransitions_* fn_p_GetA3dGENERALForTransitions(unsigned short);
+
+    if (_uwFrame >= _p_stAnim3d->uwNumberOfFrames)
+        return NULL;
+
+    p_stCurrentA3dGENERAL = fn_p_GetA3dGENERALForTransitions(_p_stAnim3d->uwNumOfA3dGENERAL);
+    p_stPreviousA3dGeneral = fn_p_GetA3dGENERAL(p_stCurrentA3dGENERAL->uwPrevious, p_stCurrentA3dGENERAL->uwPreviousFrame);
+    p_stNextA3dGeneral = fn_p_GetA3dGENERAL(p_stCurrentA3dGENERAL->uwNext, 0);
+
+    p_stPreviousOnlyFrame = &gp_stOnlyFrames[p_stPreviousA3dGeneral->uwNumOfFirstOnlyFrame + p_stCurrentA3dGENERAL->uwPreviousFrame];
+    p_stCurrentOnlyFrame = &gp_stOnlyFrames[p_stNextA3dGeneral->uwNumOfFirstOnlyFrame];
+
+    fRatio = (float)_uwFrame / (float)_p_stAnim3d->uwNumberOfFrames;
+    if (fRatio != 0.0f)
+        fRatio = fRatio * ((1.0f + fRatio * p_stCurrentA3dGENERAL->xNLParameter) - p_stCurrentA3dGENERAL->xNLParameter);
+
+    if ((p_stCurrentOnlyFrame->uwNumOfSpeedVector == 0xFFFF) || (p_stCurrentA3dGENERAL->uwNoSpeed != 0))
+        memset(&stNextSpeed, 0, sizeof(stNextSpeed));
+    else
+        memcpy(&stNextSpeed, &gp_a3_xVectors[p_stCurrentOnlyFrame->uwNumOfSpeedVector], sizeof(stNextSpeed));
+
+    if ((p_stPreviousOnlyFrame->uwNumOfSpeedVector == 0xFFFF) || (p_stCurrentA3dGENERAL->uwNoSpeed != 0))
+        memset(&stPreviousSpeed, 0, sizeof(stPreviousSpeed));
+    else
+        memcpy(&stPreviousSpeed, &gp_a3_xVectors[p_stPreviousOnlyFrame->uwNumOfSpeedVector], sizeof(stPreviousSpeed));
+
+    g_stTempoVector.xX = stNextSpeed.xX - stPreviousSpeed.xX;
+    g_stTempoVector.xY = stNextSpeed.xY - stPreviousSpeed.xY;
+    g_stTempoVector.xZ = stNextSpeed.xZ - stPreviousSpeed.xZ;
+    g_stTempoVector.xX = fRatio * g_stTempoVector.xX;
+    g_stTempoVector.xY = fRatio * g_stTempoVector.xY;
+    g_stTempoVector.xZ = fRatio * g_stTempoVector.xZ;
+    g_stTempoVector.xX = stPreviousSpeed.xX + g_stTempoVector.xX;
+    g_stTempoVector.xY = stPreviousSpeed.xY + g_stTempoVector.xY;
+    g_stTempoVector.xZ = stPreviousSpeed.xZ + g_stTempoVector.xZ;
+
+    return &g_stTempoVector;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 829–961 */
+/* addr: 0x0027e500  size: 792 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 829
+ *   +0x001c -> line 844
+ *   +0x0020 -> line 829
+ *   +0x0028 -> line 844
+ *   +0x0038 -> line 848
+ *   +0x0050 -> line 853
+ *   +0x0054 -> line 854
+ *   +0x0058 -> line 858
+ *   +0x0060 -> line 859
+ *   +0x0070 -> line 864
+ *   +0x0074 -> line 869
+ *   +0x0078 -> line 864
+ *   +0x007c -> line 859
+ *   +0x0080 -> line 863
+ *   +0x0084 -> line 864
+ *   +0x0088 -> line 863
+ *   +0x008c -> line 864
+ *   +0x0094 -> line 863
+ *   +0x0098 -> line 864
+ *   +0x00a4 -> line 869
+ *   +0x00a8 -> line 865
+ *   +0x00ac -> line 869
+ *   +0x00c0 -> line 872
+ *   +0x00cc -> line 875
+ *   +0x00d4 -> line 878
+ *   +0x00dc -> line 884
+ *   +0x00e8 -> line 887
+ *   +0x00f4 -> line 889
+ *   +0x010c -> line 890
+ *   +0x0118 -> line 895
+ *   +0x0134 -> line 898
+ *   +0x013c -> line 901
+ *   +0x0158 -> line 906
+ *   +0x0164 -> line 908
+ *   +0x0174 -> line 909
+ *   +0x017c -> line 911
+ *   +0x0180 -> line 912
+ *   +0x0188 -> line 916
+ *   +0x0190 -> line 918
+ *   +0x019c -> line 919
+ *   +0x01b4 -> line 921
+ *   +0x01b8 -> line 925
+ *   +0x01e4 -> line 930
+ *   +0x01f8 -> line 934
+ *   +0x0204 -> line 937
+ *   +0x0234 -> line 939
+ *   +0x023c -> line 941
+ *   +0x024c -> line 943
+ *   +0x026c -> line 945
+ *   +0x028c -> line 947
+ *   +0x0298 -> line 950
+ *   +0x02a8 -> line 951
+ *   +0x02b0 -> line 952
+ *   +0x02c0 -> line 953
+ *   +0x02c4 -> line 954
+ *   +0x02c8 -> line 955
+ *   +0x02cc -> line 956
+ *   +0x02d0 -> line 960
+ *   +0x02d4 -> line 958
+ *   +0x02d8 -> line 959
+ *   +0x02dc -> line 960
+ *   +0x02f4 -> line 961
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vUpdateFrameForInterAnim(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame)
+{
+    float a4_xQuatOri[4];
+    unsigned short uwT_NTTO;
+    unsigned short uwCnt1;
+    tdstElement3d_* p_stCurrentElement3d;
+    unsigned short* p_CurrentFrameNumOfNTTO;
+    unsigned short uwNumOfA3dGENERAL;
+    tdstA3dGENERAL_ForTransitions_* p_stA3dGENERAL;
+    tdstA3dGENERAL_* p_stPreviousA3dGeneral;
+    tdstOnlyFrame_* p_stCurrentOnlyFrame;
+    tdstChannel_* p_stCurrentChannel;
+    unsigned short uwNumOfSavedFrame;
+    extern tdstA3dGENERAL_ForTransitions_* fn_p_GetA3dGENERALForTransitions(unsigned short);
+
+    uwNumOfA3dGENERAL = _p_stAnim3d->uwNumOfA3dGENERAL;
+
+    if (_uwFrame >= _p_stAnim3d->uwNumberOfFrames)
+        return;
+
+    if ((_p_stFrame->p_stAnim == _p_stAnim3d) && (_p_stFrame->uwFrameNumber == _uwFrame))
+        return;
+
+    _p_stFrame->p_stAnim = _p_stAnim3d;
+    _p_stFrame->uwFrameNumber = _uwFrame;
+    _p_stFrame->ucMatrixUpdated = 0;
+
+    p_stA3dGENERAL = fn_p_GetA3dGENERALForTransitions(uwNumOfA3dGENERAL);
+    p_stPreviousA3dGeneral = fn_p_GetA3dGENERAL(p_stA3dGENERAL->uwPrevious, p_stA3dGENERAL->uwPreviousFrame);
+    p_stCurrentChannel = &gp_stChannels[p_stPreviousA3dGeneral->uwNumOfFirstChannel];
+    p_stCurrentOnlyFrame = &gp_stOnlyFrames[p_stPreviousA3dGeneral->uwNumOfFirstOnlyFrame + p_stA3dGENERAL->uwPreviousFrame];
+    uwNumOfSavedFrame = p_stCurrentOnlyFrame->uwNumOfSavedFrame;
+
+    if ((p_stCurrentOnlyFrame->uwNumOfAngularSpeedQuat == 0xFFFF) || (p_stA3dGENERAL->uwNoSpeed != 0))
+    {
+        if (_p_stFrame->p_stAngularSpeedMatrix != NULL)
+            HMU_fn_vFree(&_p_stFrame->p_stAngularSpeedMatrix, 1);
+        _p_stFrame->p_stAngularSpeedMatrix = NULL;
+    }
+    else
+    {
+        if (_p_stFrame->p_stAngularSpeedMatrix == NULL)
+            _p_stFrame->p_stAngularSpeedMatrix = (MTH3D_tdstMatrix_*)HMU_fn_p_vMalloc(0x24, 1);
+        fn_v_ExpandQuat(a4_xQuatOri, gp_a4_xQuaternions[p_stCurrentOnlyFrame->uwNumOfAngularSpeedQuat]);
+        fn_v_QuatToMatrix((float (*)[3])_p_stFrame->p_stAngularSpeedMatrix, a4_xQuatOri);
+    }
+
+    if ((p_stCurrentOnlyFrame->uwNumOfSpeedVector == 0xFFFF) || (p_stA3dGENERAL->uwNoSpeed != 0))
+        _p_stFrame->p_stLinearSpeedVector = NULL;
+    else
+        _p_stFrame->p_stLinearSpeedVector = &gp_a3_xVectors[p_stCurrentOnlyFrame->uwNumOfSpeedVector];
+
+    if (p_stCurrentOnlyFrame->uwHierarchyNbCouples != 0)
+        _p_stFrame->stHierarchy.d_stCouples = &gp_stHierarchies[p_stCurrentOnlyFrame->uwNumOfFirstHierarchyCouple];
+    else
+        _p_stFrame->stHierarchy.d_stCouples = NULL;
+
+    _p_stFrame->stHierarchy.ulNbOfCouples = p_stCurrentOnlyFrame->uwHierarchyNbCouples;
+    _p_stFrame->stDeformation.ulNbOfDeformationLinks = p_stCurrentOnlyFrame->uwDeformationNb;
+
+    if (p_stCurrentOnlyFrame->uwDeformationNb != 0)
+        _p_stFrame->stDeformation.d_stDeformationLinks = &gp_stDeformations[p_stCurrentOnlyFrame->uwNumOfFirstDeformation];
+    else
+        _p_stFrame->stDeformation.d_stDeformationLinks = NULL;
+
+    p_stCurrentElement3d = _p_stFrame->p_stArrayOfElts3d;
+    for (uwCnt1 = 0; uwCnt1 < p_stPreviousA3dGeneral->uwNumberOfChannels; uwCnt1++)
+    {
+        p_CurrentFrameNumOfNTTO = &gp_FramesNumOfNTTO[p_stCurrentChannel->uwNumOfFirstFrame + uwNumOfSavedFrame];
+        uwT_NTTO = *p_CurrentFrameNumOfNTTO;
+        if (uwT_NTTO != 0xFFFF)
+        {
+            p_stCurrentElement3d->wElement = gp_stNTTO[*p_CurrentFrameNumOfNTTO].ucNumberInTable;
+            p_stCurrentElement3d->ucChannelNumber = p_stCurrentChannel->uwChannelNumber;
+            p_stCurrentElement3d->bf1ActiveStatus = 1;
+            p_stCurrentElement3d->eTypeOfElement = gp_stNTTO[*p_CurrentFrameNumOfNTTO].uwTypeOfObject;
+            p_stCurrentElement3d->ucTransparency = gp_stNTTO[*p_CurrentFrameNumOfNTTO].ucTransparency;
+            p_stCurrentElement3d->ucAnimLevel = 0;
+        }
+        else
+        {
+            p_stCurrentElement3d->wElement = 0xFFFF;
+            p_stCurrentElement3d->ucChannelNumber = p_stCurrentChannel->uwChannelNumber;
+            p_stCurrentElement3d->bf1ActiveStatus = 1;
+            p_stCurrentElement3d->eTypeOfElement = 2;
+            p_stCurrentElement3d->ucTransparency = 0;
+            p_stCurrentElement3d->ucAnimLevel = 0xFF;
+        }
+        p_stCurrentChannel++;
+        p_stCurrentElement3d++;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 970–1145 */
+/* addr: 0x0027e110  size: 1000 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 970
+ *   +0x004c -> line 988
+ *   +0x005c -> line 992
+ *   +0x0070 -> line 997
+ *   +0x0078 -> line 1004
+ *   +0x0080 -> line 1005
+ *   +0x0090 -> line 1008
+ *   +0x00a0 -> line 1013
+ *   +0x00a4 -> line 1019
+ *   +0x00a8 -> line 1013
+ *   +0x00ac -> line 1014
+ *   +0x00b0 -> line 1013
+ *   +0x00b4 -> line 1012
+ *   +0x00bc -> line 1013
+ *   +0x00c0 -> line 1014
+ *   +0x00c4 -> line 1013
+ *   +0x00cc -> line 1014
+ *   +0x00d0 -> line 1013
+ *   +0x00d4 -> line 1012
+ *   +0x00d8 -> line 1013
+ *   +0x00dc -> line 1012
+ *   +0x00e0 -> line 1013
+ *   +0x00e8 -> line 1019
+ *   +0x00f0 -> line 1036
+ *   +0x0130 -> line 1047
+ *   +0x0138 -> line 1054
+ *   +0x0148 -> line 1047
+ *   +0x0158 -> line 1054
+ *   +0x0164 -> line 1047
+ *   +0x0168 -> line 1054
+ *   +0x017c -> line 1056
+ *   +0x018c -> line 1058
+ *   +0x0194 -> line 1065
+ *   +0x01ac -> line 1067
+ *   +0x01b8 -> line 1072
+ *   +0x01c0 -> line 1087
+ *   +0x01e8 -> line 1089
+ *   +0x01f8 -> line 1091
+ *   +0x0200 -> line 1098
+ *   +0x0218 -> line 1100
+ *   +0x0220 -> line 1105
+ *   +0x0228 -> line 1112
+ *   +0x0268 -> line 1114
+ *   +0x0280 -> line 1116
+ *   +0x029c -> line 1117
+ *   +0x02a0 -> line 1122
+ *   +0x02dc -> line 1125
+ *   +0x02e8 -> line 1126
+ *   +0x02f8 -> line 1127
+ *   +0x02fc -> line 1131
+ *   +0x0300 -> line 1127
+ *   +0x0304 -> line 1131
+ *   +0x0308 -> line 1128
+ *   +0x030c -> line 1131
+ *   +0x033c -> line 1138
+ *   +0x0344 -> line 1139
+ *   +0x0348 -> line 1138
+ *   +0x0364 -> line 1139
+ *   +0x0384 -> line 1140
+ *   +0x0388 -> line 1144
+ *   +0x038c -> line 1142
+ *   +0x0390 -> line 1143
+ *   +0x0394 -> line 1144
+ *   +0x03ac -> line 1145
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vUpdateFrameMatrixForInterAnim(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAnim3d, float _xFrame, unsigned char ucForceUpdate, tdstAChannel_* d_stChannelArray)
+{
+    tdstKeyFrame_ CurrentKeyFrame2;
+    tdstKeyFrame_ OldKeyFrame2;
+    float xDT;
+    tdstKeyFrame_* p_stOldKeyFrame;
+    tdstKeyFrame_* p_stCurrentKeyFrame;
+    tdstKeyFrame_* p_stNextKeyFrame;
+    tdstKeyFrame_* p_stPreviousKeyFrame;
+    unsigned short* p_PreviousFrameNumOfNTTO;
+    unsigned char bHierarchized;
+    unsigned short uwCnt1;
+    unsigned short uwPreviousT_NTTO;
+    tdstChannel_* p_stNextChannel;
+    tdstChannel_* p_stPreviousChannel;
+    tdstA3dGENERAL_* p_stNextA3dGeneral;
+    tdstA3dGENERAL_* p_stPreviousA3dGeneral;
+    tdstA3dGENERAL_ForTransitions_* p_stA3dGENERAL;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 1149–1168 */
+/* addr: 0x0027e070  size: 156 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1149
+ *   +0x0004 -> line 1154
+ *   +0x0008 -> line 1149
+ *   +0x0018 -> line 1154
+ *   +0x0028 -> line 1155
+ *   +0x0030 -> line 1158
+ *   +0x003c -> line 1160
+ *   +0x005c -> line 1162
+ *   +0x0064 -> line 1164
+ *   +0x0070 -> line 1165
+ *   +0x0084 -> line 1167
+ *   +0x0088 -> line 1168
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstCouple_* fn_p_stGetHierarchy(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame, unsigned int* p_ulNewNbCouples)
+{
+    tdstOnlyFrame_* p_stCurrentOnlyFrame;
+    tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
+
+    if (_uwFrame >= _p_stAnim3d->uwNumberOfFrames)
+        _uwFrame = _p_stAnim3d->uwNumberOfFrames - 1;
+    p_stCurrentA3dGENERAL = fn_p_GetA3dGENERAL(_p_stAnim3d->uwNumOfA3dGENERAL, _uwFrame);
+    p_stCurrentOnlyFrame = &gp_stOnlyFrames[p_stCurrentA3dGENERAL->uwNumOfFirstOnlyFrame + _uwFrame];
+    *p_ulNewNbCouples = p_stCurrentOnlyFrame->uwHierarchyNbCouples;
+    if (p_stCurrentOnlyFrame->uwHierarchyNbCouples)
+        return &gp_stHierarchies[p_stCurrentOnlyFrame->uwNumOfFirstHierarchyCouple];
+    return NULL;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 1172–1306 */
+/* addr: 0x0027dd50  size: 800 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1172
+ *   +0x0004 -> line 1188
+ *   +0x0008 -> line 1172
+ *   +0x0048 -> line 1188
+ *   +0x0054 -> line 1195
+ *   +0x005c -> line 1200
+ *   +0x006c -> line 1203
+ *   +0x0080 -> line 1206
+ *   +0x0090 -> line 1207
+ *   +0x0098 -> line 1214
+ *   +0x00a0 -> line 1218
+ *   +0x00a4 -> line 1230
+ *   +0x00a8 -> line 1219
+ *   +0x00ac -> line 1234
+ *   +0x00b0 -> line 1235
+ *   +0x00b4 -> line 1236
+ *   +0x00c4 -> line 1219
+ *   +0x00c8 -> line 1220
+ *   +0x00d0 -> line 1221
+ *   +0x00d4 -> line 1225
+ *   +0x00d8 -> line 1230
+ *   +0x00dc -> line 1228
+ *   +0x00e0 -> line 1232
+ *   +0x00e4 -> line 1234
+ *   +0x00e8 -> line 1228
+ *   +0x00ec -> line 1230
+ *   +0x00f8 -> line 1228
+ *   +0x00fc -> line 1230
+ *   +0x0100 -> line 1232
+ *   +0x0104 -> line 1234
+ *   +0x0108 -> line 1228
+ *   +0x010c -> line 1232
+ *   +0x0110 -> line 1234
+ *   +0x0114 -> line 1230
+ *   +0x0118 -> line 1234
+ *   +0x0120 -> line 1230
+ *   +0x0124 -> line 1234
+ *   +0x0128 -> line 1230
+ *   +0x012c -> line 1234
+ *   +0x0130 -> line 1236
+ *   +0x013c -> line 1242
+ *   +0x0140 -> line 1243
+ *   +0x0144 -> line 1242
+ *   +0x0148 -> line 1246
+ *   +0x014c -> line 1242
+ *   +0x0154 -> line 1243
+ *   +0x0158 -> line 1242
+ *   +0x015c -> line 1243
+ *   +0x0160 -> line 1246
+ *   +0x0164 -> line 1243
+ *   +0x0168 -> line 1246
+ *   +0x01b8 -> line 1251
+ *   +0x01c0 -> line 1253
+ *   +0x01c4 -> line 1255
+ *   +0x01c8 -> line 1253
+ *   +0x01cc -> line 1254
+ *   +0x01d0 -> line 1260
+ *   +0x01d4 -> line 1257
+ *   +0x01dc -> line 1259
+ *   +0x01e0 -> line 1254
+ *   +0x01f8 -> line 1255
+ *   +0x01fc -> line 1259
+ *   +0x0200 -> line 1255
+ *   +0x0204 -> line 1256
+ *   +0x0208 -> line 1257
+ *   +0x020c -> line 1260
+ *   +0x0228 -> line 1264
+ *   +0x022c -> line 1262
+ *   +0x0230 -> line 1263
+ *   +0x0234 -> line 1264
+ *   +0x0258 -> line 1265
+ *   +0x0260 -> line 1266
+ *   +0x0268 -> line 1269
+ *   +0x0288 -> line 1270
+ *   +0x0294 -> line 1271
+ *   +0x029c -> line 1275
+ *   +0x02a0 -> line 1283
+ *   +0x02ac -> line 1284
+ *   +0x02b4 -> line 1286
+ *   +0x02bc -> line 1287
+ *   +0x02c8 -> line 1288
+ *   +0x02cc -> line 1289
+ *   +0x02d0 -> line 1291
+ *   +0x02d4 -> line 1292
+ *   +0x02dc -> line 1293
+ *   +0x02e0 -> line 1295
+ *   +0x02e8 -> line 1304
+ *   +0x02ec -> line 1306
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstAnim3d_* fn_p_stCreateIntermediateAnimation(tdstAnim3d_* p_stPreviousAnim, tdstAnim3d_* p_stNextAnim, unsigned short uwPreviousFrame, unsigned short uwNextFrame, unsigned int ulNumberOfFramesForIntermAnim, float xNLParameter)
+{
+    unsigned short* p_NextFrameNumOfNTTO;
+    unsigned short* p_CurrentFrameNumOfNTTO;
+    unsigned short uwCnt2;
+    unsigned short uwCnt1;
+    int iNbMorphTask;
+    unsigned short uwT_NextNTTO;
+    unsigned short uwT_CurrentNTTO;
+    tdstChannel_* p_stNextChannel;
+    tdstChannel_* p_stCurrentChannel;
+    stMorphData ax_stTempoMorphArray[64];
+    tdstA3dGENERAL_* p_stNextA3dGENERAL;
+    tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
+    tdstA3dGENERAL_ForTransitions_* p_stA3dGENERAL;
+    tdstAnim3d_* p_stNewAnim;
+    extern tdstA3dGENERAL_ForTransitions_* fn_p_stFindFreeMergeA3dGeneral(unsigned short*);
+
+    if (p_stPreviousAnim->ucFlagMergeAnim == 1)
+        return NULL;
+
+    p_stCurrentA3dGENERAL = fn_p_GetA3dGENERAL(p_stPreviousAnim->uwNumOfA3dGENERAL, uwPreviousFrame);
+    p_stNextA3dGENERAL = fn_p_GetA3dGENERAL(p_stNextAnim->uwNumOfA3dGENERAL, uwNextFrame);
+
+    p_stNewAnim = (tdstAnim3d_*)HMU_fn_p_vMalloc(sizeof(tdstAnim3d_), 1);
+    if (p_stNewAnim == NULL)
+        return NULL;
+
+    p_stNewAnim->uwNumberOfFrames = ulNumberOfFramesForIntermAnim;
+    p_stNewAnim->ucFrameRate = p_stPreviousAnim->ucFrameRate;
+    p_stNewAnim->ucMaxNumberOfElements = p_stPreviousAnim->ucMaxNumberOfElements;
+    p_stNewAnim->d_stAnimEvent = NULL;
+    p_stNewAnim->ucNumberOfEvents = 0;
+
+    iNbMorphTask = 0;
+    p_stCurrentChannel = &gp_stChannels[p_stCurrentA3dGENERAL->uwNumOfFirstChannel];
+    p_stNextChannel = &gp_stChannels[p_stNextA3dGENERAL->uwNumOfFirstChannel];
+    uwT_CurrentNTTO = gp_stOnlyFrames[p_stCurrentA3dGENERAL->uwNumOfFirstOnlyFrame + uwPreviousFrame].uwNumOfSavedFrame;
+    uwT_NextNTTO = gp_stOnlyFrames[p_stNextA3dGENERAL->uwNumOfFirstOnlyFrame + uwNextFrame].uwNumOfSavedFrame;
+
+    for (uwCnt1 = 0; (uwCnt1 < p_stCurrentA3dGENERAL->uwNumberOfChannels) && (iNbMorphTask < 64); uwCnt1++)
+    {
+        p_CurrentFrameNumOfNTTO = &gp_FramesNumOfNTTO[p_stCurrentChannel->uwNumOfFirstFrame + uwT_CurrentNTTO];
+        p_NextFrameNumOfNTTO = &gp_FramesNumOfNTTO[p_stNextChannel->uwNumOfFirstFrame + uwT_NextNTTO];
+        if (((unsigned char)gp_stNTTO[*p_CurrentFrameNumOfNTTO].uwTypeOfObject == 0) && ((unsigned char)gp_stNTTO[*p_NextFrameNumOfNTTO].uwTypeOfObject == 0)
+            && (gp_stNTTO[*p_CurrentFrameNumOfNTTO].ucNumberInTable != gp_stNTTO[*p_NextFrameNumOfNTTO].ucNumberInTable))
+        {
+            for (uwCnt2 = 0; (uwCnt2 < ulNumberOfFramesForIntermAnim) && (iNbMorphTask < 64); uwCnt2++)
+            {
+                ax_stTempoMorphArray[iNbMorphTask].ucNbTarget = 1;
+                ax_stTempoMorphArray[iNbMorphTask].a_xIndexTargetMT[0] = gp_stNTTO[*p_NextFrameNumOfNTTO].ucNumberInTable;
+                ax_stTempoMorphArray[iNbMorphTask].a_ucMorphingAmountMT[0] = (uwCnt2 * 100) / ulNumberOfFramesForIntermAnim;
+                ax_stTempoMorphArray[iNbMorphTask].uwChannelNumber = uwCnt1;
+                ax_stTempoMorphArray[iNbMorphTask].uwFrameNumber = uwCnt2;
+                iNbMorphTask++;
+            }
+        }
+        p_stCurrentChannel++;
+        p_stNextChannel++;
+    }
+
+    if (iNbMorphTask == 0)
+    {
+        p_stNewAnim->d_stMorphDataArray = NULL;
+    }
+    else
+    {
+        p_stNewAnim->d_stMorphDataArray = (stMorphData*)HMU_fn_p_vMalloc(iNbMorphTask * sizeof(stMorphData), 1);
+        if (p_stNewAnim->d_stMorphDataArray != NULL)
+            memcpy(p_stNewAnim->d_stMorphDataArray, ax_stTempoMorphArray, iNbMorphTask * sizeof(stMorphData));
+    }
+
+    p_stNewAnim->ucFlagMergeAnim = 1;
+    p_stA3dGENERAL = fn_p_stFindFreeMergeA3dGeneral(&p_stNewAnim->uwNumOfA3dGENERAL);
+    if (p_stA3dGENERAL == NULL)
+        return NULL;
+
+    p_stA3dGENERAL->uwPrevious = p_stPreviousAnim->uwNumOfA3dGENERAL;
+    p_stA3dGENERAL->uwNext = p_stNextAnim->uwNumOfA3dGENERAL;
+    p_stA3dGENERAL->uwPreviousFrame = uwPreviousFrame;
+    p_stA3dGENERAL->uwNextFrame = uwNextFrame;
+    p_stA3dGENERAL->uwNumberOfMorphData = iNbMorphTask;
+    p_stA3dGENERAL->uwNoSpeed = g_bNoSpeedForIntermAnim;
+    p_stA3dGENERAL->xNLParameter = xNLParameter;
+    return p_stNewAnim;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 1310–1315 */
+/* addr: 0x0027dd00  size: 76 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1310
+ *   +0x000c -> line 1311
+ *   +0x0018 -> line 1312
+ *   +0x002c -> line 1313
+ *   +0x0034 -> line 1314
+ *   +0x0040 -> line 1315
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vDeleteIntermediateAnimation(tdstAnim3d_* p_stTempoAnim)
+{
+    fn_vReleaseMergeA3dGeneral(p_stTempoAnim->uwNumOfA3dGENERAL);
+    if (p_stTempoAnim->d_stMorphDataArray != NULL)
+        HMU_fn_vFree(&p_stTempoAnim->d_stMorphDataArray, 1);
+    HMU_fn_vFree(&p_stTempoAnim, 1);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 1319–1324 */
+/* addr: 0x0027dce0  size: 32 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1319
+ *   +0x0008 -> line 1322
+ *   +0x0010 -> line 1324
+ *   +0x0014 -> line 1323
+ *   +0x0018 -> line 1324
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+unsigned short fn_uwGetFrameInNextAnimForIntermAnim(tdstAnim3d_* p_stTempoAnim)
+{
+    tdstA3dGENERAL_ForTransitions_* p_stA3dGENERAL;
+    extern tdstA3dGENERAL_ForTransitions_* fn_p_GetA3dGENERALForTransitions(unsigned short);
+    p_stA3dGENERAL = fn_p_GetA3dGENERALForTransitions(p_stTempoAnim->uwNumOfA3dGENERAL);
+    return p_stA3dGENERAL->uwNextFrame;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 1328–1514 */
+/* addr: 0x0027d970  size: 872 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1328
+ *   +0x002c -> line 1362
+ *   +0x003c -> line 1363
+ *   +0x004c -> line 1367
+ *   +0x0058 -> line 1368
+ *   +0x0064 -> line 1367
+ *   +0x0068 -> line 1370
+ *   +0x0074 -> line 1368
+ *   +0x0078 -> line 1370
+ *   +0x0084 -> line 1372
+ *   +0x0090 -> line 1383
+ *   +0x00bc -> line 1385
+ *   +0x00cc -> line 1387
+ *   +0x00d4 -> line 1395
+ *   +0x00ec -> line 1397
+ *   +0x00f8 -> line 1402
+ *   +0x0100 -> line 1410
+ *   +0x0108 -> line 1414
+ *   +0x010c -> line 1413
+ *   +0x0114 -> line 1414
+ *   +0x012c -> line 1417
+ *   +0x0138 -> line 1418
+ *   +0x0144 -> line 1420
+ *   +0x0154 -> line 1418
+ *   +0x0158 -> line 1420
+ *   +0x0160 -> line 1422
+ *   +0x016c -> line 1433
+ *   +0x0198 -> line 1435
+ *   +0x01a8 -> line 1437
+ *   +0x01b0 -> line 1445
+ *   +0x01c8 -> line 1447
+ *   +0x01d0 -> line 1452
+ *   +0x01d8 -> line 1460
+ *   +0x01e0 -> line 1464
+ *   +0x01e4 -> line 1463
+ *   +0x01ec -> line 1464
+ *   +0x0204 -> line 1467
+ *   +0x020c -> line 1494
+ *   +0x025c -> line 1497
+ *   +0x0264 -> line 1499
+ *   +0x0298 -> line 1502
+ *   +0x02a0 -> line 1504
+ *   +0x0318 -> line 1510
+ *   +0x0320 -> line 1512
+ *   +0x0324 -> line 1510
+ *   +0x0328 -> line 1512
+ *   +0x0344 -> line 1513
+ *   +0x0348 -> line 1514
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int fn_bTestSamePosition(tdstAnim3d_* p_stPreviousAnim, tdstAnim3d_* p_stNextAnim, unsigned short uwPreviousFrame, unsigned short uwNextFrame)
+{
+    tdstA3dGENERAL_* p_stPreviousA3dGeneral;
+    tdstA3dGENERAL_* p_stNextA3dGeneral;
+    tdstChannel_* p_stPreviousChannel;
+    tdstChannel_* p_stCurrentChannel;
+    tdstKeyFrame_* p_stOldKeyFrame;
+    tdstKeyFrame_* p_stNewKeyFrame;
+    tdstKeyFrame_* p_stPreviousKeyFrame;
+    tdstKeyFrame_* p_stNextKeyFrame;
+    tdstKeyFrame_* a256_p_stPrevKeyFrames[256];
+    tdstKeyFrame_* a256_p_stNextKeyFrames[256];
+    tdstKeyFrame_** pPrevKeyFrames;
+    tdstKeyFrame_** pNextKeyFrames;
+    unsigned short uwCnt1;
+
+    memset(a256_p_stPrevKeyFrames, 0, sizeof(a256_p_stPrevKeyFrames));
+    memset(a256_p_stNextKeyFrames, 0, sizeof(a256_p_stNextKeyFrames));
+
+    p_stPreviousA3dGeneral = fn_p_GetA3dGENERAL(p_stPreviousAnim->uwNumOfA3dGENERAL, uwPreviousFrame);
+    pPrevKeyFrames = a256_p_stPrevKeyFrames;
+    p_stPreviousChannel = &gp_stChannels[p_stPreviousA3dGeneral->uwNumOfFirstChannel];
+    for (uwCnt1 = 0; uwCnt1 < p_stPreviousA3dGeneral->uwNumberOfChannels; uwCnt1++)
+    {
+        if (p_stPreviousChannel->uwChannelNumber != 0xFFFF)
+        {
+            p_stOldKeyFrame = &gp_stKeyFrames[gp_FramesKFIndex[p_stPreviousChannel->ulNumOfFirstFrameKF + uwPreviousFrame]];
+            if ((p_stOldKeyFrame->uwMask & 0x80) && (p_stOldKeyFrame->uwMask & 0x200))
+                p_stOldKeyFrame = &gp_stKeyFrames[gp_FramesKFIndex[p_stPreviousChannel->ulNumOfFirstFrameKF]];
+            pPrevKeyFrames[uwCnt1] = p_stOldKeyFrame;
+        }
+        p_stPreviousChannel++;
+    }
+
+    p_stNextA3dGeneral = fn_p_GetA3dGENERAL(p_stNextAnim->uwNumOfA3dGENERAL, uwNextFrame);
+    pNextKeyFrames = a256_p_stNextKeyFrames;
+    p_stCurrentChannel = &gp_stChannels[p_stNextA3dGeneral->uwNumOfFirstChannel];
+    for (uwCnt1 = 0; uwCnt1 < p_stNextA3dGeneral->uwNumberOfChannels; uwCnt1++)
+    {
+        if (p_stCurrentChannel->uwChannelNumber != 0xFFFF)
+        {
+            p_stNewKeyFrame = &gp_stKeyFrames[gp_FramesKFIndex[p_stCurrentChannel->ulNumOfFirstFrameKF + uwNextFrame]];
+            if ((p_stNewKeyFrame->uwMask & 0x80) && (p_stNewKeyFrame->uwMask & 0x200))
+                p_stNewKeyFrame = &gp_stKeyFrames[gp_FramesKFIndex[p_stCurrentChannel->ulNumOfFirstFrameKF]];
+            pNextKeyFrames[uwCnt1] = p_stNewKeyFrame;
+        }
+        p_stCurrentChannel++;
+    }
+
+    for (uwCnt1 = 0; uwCnt1 < p_stPreviousA3dGeneral->uwNumberOfChannels; uwCnt1++)
+    {
+        if (memcmp(&gp_a3_xVectors[a256_p_stPrevKeyFrames[uwCnt1]->uwNumOfPosition], &gp_a3_xVectors[a256_p_stNextKeyFrames[uwCnt1]->uwNumOfPosition], sizeof(MTH3D_tdstVector_)))
+            return 0;
+        if (memcmp(&gp_a4_xQuaternions[a256_p_stPrevKeyFrames[uwCnt1]->uwNumOfQuatOri], &gp_a4_xQuaternions[a256_p_stNextKeyFrames[uwCnt1]->uwNumOfQuatOri], 8))
+            return 0;
+        if (memcmp(&gp_a3_xVectors[a256_p_stPrevKeyFrames[uwCnt1]->uwNumOfScaleValues], &gp_a3_xVectors[a256_p_stNextKeyFrames[uwCnt1]->uwNumOfScaleValues], sizeof(MTH3D_tdstVector_)) ||
+            memcmp(&gp_a4_xQuaternions[a256_p_stPrevKeyFrames[uwCnt1]->uwNumOfQuatSca], &gp_a4_xQuaternions[a256_p_stNextKeyFrames[uwCnt1]->uwNumOfQuatSca], 8))
+            return 0;
+    }
+
+    return 1;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 1521–1584 */
+/* addr: 0x0027d740  size: 552 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1521
+ *   +0x0020 -> line 1531
+ *   +0x0030 -> line 1537
+ *   +0x0038 -> line 1535
+ *   +0x003c -> line 1539
+ *   +0x0040 -> line 1537
+ *   +0x0044 -> line 1539
+ *   +0x0048 -> line 1535
+ *   +0x004c -> line 1539
+ *   +0x0060 -> line 1537
+ *   +0x0068 -> line 1535
+ *   +0x006c -> line 1537
+ *   +0x0070 -> line 1539
+ *   +0x0074 -> line 1537
+ *   +0x0078 -> line 1535
+ *   +0x007c -> line 1537
+ *   +0x0084 -> line 1539
+ *   +0x008c -> line 1549
+ *   +0x0094 -> line 1544
+ *   +0x00a0 -> line 1548
+ *   +0x00a4 -> line 1549
+ *   +0x00a8 -> line 1544
+ *   +0x00b0 -> line 1549
+ *   +0x00b8 -> line 1551
+ *   +0x00cc -> line 1556
+ *   +0x00d8 -> line 1559
+ *   +0x0118 -> line 1561
+ *   +0x0120 -> line 1563
+ *   +0x0130 -> line 1565
+ *   +0x0150 -> line 1567
+ *   +0x0170 -> line 1569
+ *   +0x0178 -> line 1572
+ *   +0x019c -> line 1573
+ *   +0x01a4 -> line 1574
+ *   +0x01b4 -> line 1575
+ *   +0x01b8 -> line 1576
+ *   +0x01bc -> line 1579
+ *   +0x01c4 -> line 1580
+ *   +0x01c8 -> line 1581
+ *   +0x01cc -> line 1579
+ *   +0x01d0 -> line 1581
+ *   +0x01e8 -> line 1583
+ *   +0x01ec -> line 1582
+ *   +0x01f0 -> line 1583
+ *   +0x020c -> line 1584
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vUpdateFrameForSubAnim(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame, unsigned char _ucAnimLevel)
+{
+    tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
+    tdstChannel_* p_stCurrentChannel;
+    unsigned short uwT_NTTO;
+    unsigned short uwCnt1;
+    unsigned short uwCnt2;
+    tdstElement3d_* p_stCurrentElement3d;
+    unsigned short* p_CurrentFrameNumOfNTTO;
+
+    p_stCurrentA3dGENERAL = fn_p_GetA3dGENERAL(_p_stAnim3d->uwNumOfA3dGENERAL, _uwFrame);
+    p_stCurrentChannel = &gp_stChannels[p_stCurrentA3dGENERAL->uwNumOfFirstChannel];
+    uwT_NTTO = *(unsigned short*)((int)gp_stOnlyFrames + (p_stCurrentA3dGENERAL->uwNumOfFirstOnlyFrame + _uwFrame) * sizeof(tdstOnlyFrame_) + 0xc);
+
+    for (uwCnt1 = 0; uwCnt1 < p_stCurrentA3dGENERAL->uwNumberOfChannels; p_stCurrentChannel++, uwCnt1++)
+    {
+        p_CurrentFrameNumOfNTTO = &gp_FramesNumOfNTTO[p_stCurrentChannel->uwNumOfFirstFrame + uwT_NTTO];
+        p_stCurrentElement3d = _p_stFrame->p_stArrayOfElts3d;
+        for (uwCnt2 = 0; uwCnt2 < _p_stFrame->p_stAnim->ucMaxNumberOfElements; uwCnt2++)
+        {
+            if (p_stCurrentChannel->uwChannelNumber == p_stCurrentElement3d[uwCnt2].ucChannelNumber)
+            {
+                if (*p_CurrentFrameNumOfNTTO != 0xFFFF)
+                {
+                    p_stCurrentElement3d = (p_stCurrentElement3d[uwCnt2].wElement = gp_stNTTO[*p_CurrentFrameNumOfNTTO].ucNumberInTable, &p_stCurrentElement3d[uwCnt2]);
+                    p_stCurrentElement3d->ucChannelNumber = p_stCurrentChannel->uwChannelNumber;
+                    p_stCurrentElement3d->bf1ActiveStatus = 1;
+                    p_stCurrentElement3d->eTypeOfElement = gp_stNTTO[*p_CurrentFrameNumOfNTTO].uwTypeOfObject;
+                    p_stCurrentElement3d->ucTransparency = gp_stNTTO[*p_CurrentFrameNumOfNTTO].ucTransparency;
+                    p_stCurrentElement3d->ucAnimLevel = _ucAnimLevel;
+                }
+                else
+                {
+                    p_stCurrentElement3d = &p_stCurrentElement3d[uwCnt2];
+                    p_stCurrentElement3d->wElement = 0xFFFF;
+                    p_stCurrentElement3d->ucChannelNumber = p_stCurrentChannel->uwChannelNumber;
+                    p_stCurrentElement3d->bf1ActiveStatus = 1;
+                    p_stCurrentElement3d->eTypeOfElement = 2;
+                    p_stCurrentElement3d->ucTransparency = 0;
+                    p_stCurrentElement3d->ucAnimLevel = 0xFF;
+                }
+                break;
+            }
+        }
+    }
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 1592–1775 */
 /* addr: 0x0027cf30  size: 2056 bytes */
@@ -1608,1028 +2602,6 @@ inline unsigned int fn_ulFrameFromFloat(float xFrame)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 1521–1584 */
-/* addr: 0x0027d740  size: 552 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1521
- *   +0x0020 -> line 1531
- *   +0x0030 -> line 1537
- *   +0x0038 -> line 1535
- *   +0x003c -> line 1539
- *   +0x0040 -> line 1537
- *   +0x0044 -> line 1539
- *   +0x0048 -> line 1535
- *   +0x004c -> line 1539
- *   +0x0060 -> line 1537
- *   +0x0068 -> line 1535
- *   +0x006c -> line 1537
- *   +0x0070 -> line 1539
- *   +0x0074 -> line 1537
- *   +0x0078 -> line 1535
- *   +0x007c -> line 1537
- *   +0x0084 -> line 1539
- *   +0x008c -> line 1549
- *   +0x0094 -> line 1544
- *   +0x00a0 -> line 1548
- *   +0x00a4 -> line 1549
- *   +0x00a8 -> line 1544
- *   +0x00b0 -> line 1549
- *   +0x00b8 -> line 1551
- *   +0x00cc -> line 1556
- *   +0x00d8 -> line 1559
- *   +0x0118 -> line 1561
- *   +0x0120 -> line 1563
- *   +0x0130 -> line 1565
- *   +0x0150 -> line 1567
- *   +0x0170 -> line 1569
- *   +0x0178 -> line 1572
- *   +0x019c -> line 1573
- *   +0x01a4 -> line 1574
- *   +0x01b4 -> line 1575
- *   +0x01b8 -> line 1576
- *   +0x01bc -> line 1579
- *   +0x01c4 -> line 1580
- *   +0x01c8 -> line 1581
- *   +0x01cc -> line 1579
- *   +0x01d0 -> line 1581
- *   +0x01e8 -> line 1583
- *   +0x01ec -> line 1582
- *   +0x01f0 -> line 1583
- *   +0x020c -> line 1584
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 1328–1514 */
-/* addr: 0x0027d970  size: 872 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1328
- *   +0x002c -> line 1362
- *   +0x003c -> line 1363
- *   +0x004c -> line 1367
- *   +0x0058 -> line 1368
- *   +0x0064 -> line 1367
- *   +0x0068 -> line 1370
- *   +0x0074 -> line 1368
- *   +0x0078 -> line 1370
- *   +0x0084 -> line 1372
- *   +0x0090 -> line 1383
- *   +0x00bc -> line 1385
- *   +0x00cc -> line 1387
- *   +0x00d4 -> line 1395
- *   +0x00ec -> line 1397
- *   +0x00f8 -> line 1402
- *   +0x0100 -> line 1410
- *   +0x0108 -> line 1414
- *   +0x010c -> line 1413
- *   +0x0114 -> line 1414
- *   +0x012c -> line 1417
- *   +0x0138 -> line 1418
- *   +0x0144 -> line 1420
- *   +0x0154 -> line 1418
- *   +0x0158 -> line 1420
- *   +0x0160 -> line 1422
- *   +0x016c -> line 1433
- *   +0x0198 -> line 1435
- *   +0x01a8 -> line 1437
- *   +0x01b0 -> line 1445
- *   +0x01c8 -> line 1447
- *   +0x01d0 -> line 1452
- *   +0x01d8 -> line 1460
- *   +0x01e0 -> line 1464
- *   +0x01e4 -> line 1463
- *   +0x01ec -> line 1464
- *   +0x0204 -> line 1467
- *   +0x020c -> line 1494
- *   +0x025c -> line 1497
- *   +0x0264 -> line 1499
- *   +0x0298 -> line 1502
- *   +0x02a0 -> line 1504
- *   +0x0318 -> line 1510
- *   +0x0320 -> line 1512
- *   +0x0324 -> line 1510
- *   +0x0328 -> line 1512
- *   +0x0344 -> line 1513
- *   +0x0348 -> line 1514
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 1319–1324 */
-/* addr: 0x0027dce0  size: 32 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1319
- *   +0x0008 -> line 1322
- *   +0x0010 -> line 1324
- *   +0x0014 -> line 1323
- *   +0x0018 -> line 1324
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 1310–1315 */
-/* addr: 0x0027dd00  size: 76 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1310
- *   +0x000c -> line 1311
- *   +0x0018 -> line 1312
- *   +0x002c -> line 1313
- *   +0x0034 -> line 1314
- *   +0x0040 -> line 1315
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 1172–1306 */
-/* addr: 0x0027dd50  size: 800 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1172
- *   +0x0004 -> line 1188
- *   +0x0008 -> line 1172
- *   +0x0048 -> line 1188
- *   +0x0054 -> line 1195
- *   +0x005c -> line 1200
- *   +0x006c -> line 1203
- *   +0x0080 -> line 1206
- *   +0x0090 -> line 1207
- *   +0x0098 -> line 1214
- *   +0x00a0 -> line 1218
- *   +0x00a4 -> line 1230
- *   +0x00a8 -> line 1219
- *   +0x00ac -> line 1234
- *   +0x00b0 -> line 1235
- *   +0x00b4 -> line 1236
- *   +0x00c4 -> line 1219
- *   +0x00c8 -> line 1220
- *   +0x00d0 -> line 1221
- *   +0x00d4 -> line 1225
- *   +0x00d8 -> line 1230
- *   +0x00dc -> line 1228
- *   +0x00e0 -> line 1232
- *   +0x00e4 -> line 1234
- *   +0x00e8 -> line 1228
- *   +0x00ec -> line 1230
- *   +0x00f8 -> line 1228
- *   +0x00fc -> line 1230
- *   +0x0100 -> line 1232
- *   +0x0104 -> line 1234
- *   +0x0108 -> line 1228
- *   +0x010c -> line 1232
- *   +0x0110 -> line 1234
- *   +0x0114 -> line 1230
- *   +0x0118 -> line 1234
- *   +0x0120 -> line 1230
- *   +0x0124 -> line 1234
- *   +0x0128 -> line 1230
- *   +0x012c -> line 1234
- *   +0x0130 -> line 1236
- *   +0x013c -> line 1242
- *   +0x0140 -> line 1243
- *   +0x0144 -> line 1242
- *   +0x0148 -> line 1246
- *   +0x014c -> line 1242
- *   +0x0154 -> line 1243
- *   +0x0158 -> line 1242
- *   +0x015c -> line 1243
- *   +0x0160 -> line 1246
- *   +0x0164 -> line 1243
- *   +0x0168 -> line 1246
- *   +0x01b8 -> line 1251
- *   +0x01c0 -> line 1253
- *   +0x01c4 -> line 1255
- *   +0x01c8 -> line 1253
- *   +0x01cc -> line 1254
- *   +0x01d0 -> line 1260
- *   +0x01d4 -> line 1257
- *   +0x01dc -> line 1259
- *   +0x01e0 -> line 1254
- *   +0x01f8 -> line 1255
- *   +0x01fc -> line 1259
- *   +0x0200 -> line 1255
- *   +0x0204 -> line 1256
- *   +0x0208 -> line 1257
- *   +0x020c -> line 1260
- *   +0x0228 -> line 1264
- *   +0x022c -> line 1262
- *   +0x0230 -> line 1263
- *   +0x0234 -> line 1264
- *   +0x0258 -> line 1265
- *   +0x0260 -> line 1266
- *   +0x0268 -> line 1269
- *   +0x0288 -> line 1270
- *   +0x0294 -> line 1271
- *   +0x029c -> line 1275
- *   +0x02a0 -> line 1283
- *   +0x02ac -> line 1284
- *   +0x02b4 -> line 1286
- *   +0x02bc -> line 1287
- *   +0x02c8 -> line 1288
- *   +0x02cc -> line 1289
- *   +0x02d0 -> line 1291
- *   +0x02d4 -> line 1292
- *   +0x02dc -> line 1293
- *   +0x02e0 -> line 1295
- *   +0x02e8 -> line 1304
- *   +0x02ec -> line 1306
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 1149–1168 */
-/* addr: 0x0027e070  size: 156 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1149
- *   +0x0004 -> line 1154
- *   +0x0008 -> line 1149
- *   +0x0018 -> line 1154
- *   +0x0028 -> line 1155
- *   +0x0030 -> line 1158
- *   +0x003c -> line 1160
- *   +0x005c -> line 1162
- *   +0x0064 -> line 1164
- *   +0x0070 -> line 1165
- *   +0x0084 -> line 1167
- *   +0x0088 -> line 1168
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 970–1145 */
-/* addr: 0x0027e110  size: 1000 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 970
- *   +0x004c -> line 988
- *   +0x005c -> line 992
- *   +0x0070 -> line 997
- *   +0x0078 -> line 1004
- *   +0x0080 -> line 1005
- *   +0x0090 -> line 1008
- *   +0x00a0 -> line 1013
- *   +0x00a4 -> line 1019
- *   +0x00a8 -> line 1013
- *   +0x00ac -> line 1014
- *   +0x00b0 -> line 1013
- *   +0x00b4 -> line 1012
- *   +0x00bc -> line 1013
- *   +0x00c0 -> line 1014
- *   +0x00c4 -> line 1013
- *   +0x00cc -> line 1014
- *   +0x00d0 -> line 1013
- *   +0x00d4 -> line 1012
- *   +0x00d8 -> line 1013
- *   +0x00dc -> line 1012
- *   +0x00e0 -> line 1013
- *   +0x00e8 -> line 1019
- *   +0x00f0 -> line 1036
- *   +0x0130 -> line 1047
- *   +0x0138 -> line 1054
- *   +0x0148 -> line 1047
- *   +0x0158 -> line 1054
- *   +0x0164 -> line 1047
- *   +0x0168 -> line 1054
- *   +0x017c -> line 1056
- *   +0x018c -> line 1058
- *   +0x0194 -> line 1065
- *   +0x01ac -> line 1067
- *   +0x01b8 -> line 1072
- *   +0x01c0 -> line 1087
- *   +0x01e8 -> line 1089
- *   +0x01f8 -> line 1091
- *   +0x0200 -> line 1098
- *   +0x0218 -> line 1100
- *   +0x0220 -> line 1105
- *   +0x0228 -> line 1112
- *   +0x0268 -> line 1114
- *   +0x0280 -> line 1116
- *   +0x029c -> line 1117
- *   +0x02a0 -> line 1122
- *   +0x02dc -> line 1125
- *   +0x02e8 -> line 1126
- *   +0x02f8 -> line 1127
- *   +0x02fc -> line 1131
- *   +0x0300 -> line 1127
- *   +0x0304 -> line 1131
- *   +0x0308 -> line 1128
- *   +0x030c -> line 1131
- *   +0x033c -> line 1138
- *   +0x0344 -> line 1139
- *   +0x0348 -> line 1138
- *   +0x0364 -> line 1139
- *   +0x0384 -> line 1140
- *   +0x0388 -> line 1144
- *   +0x038c -> line 1142
- *   +0x0390 -> line 1143
- *   +0x0394 -> line 1144
- *   +0x03ac -> line 1145
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 829–961 */
-/* addr: 0x0027e500  size: 792 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 829
- *   +0x001c -> line 844
- *   +0x0020 -> line 829
- *   +0x0028 -> line 844
- *   +0x0038 -> line 848
- *   +0x0050 -> line 853
- *   +0x0054 -> line 854
- *   +0x0058 -> line 858
- *   +0x0060 -> line 859
- *   +0x0070 -> line 864
- *   +0x0074 -> line 869
- *   +0x0078 -> line 864
- *   +0x007c -> line 859
- *   +0x0080 -> line 863
- *   +0x0084 -> line 864
- *   +0x0088 -> line 863
- *   +0x008c -> line 864
- *   +0x0094 -> line 863
- *   +0x0098 -> line 864
- *   +0x00a4 -> line 869
- *   +0x00a8 -> line 865
- *   +0x00ac -> line 869
- *   +0x00c0 -> line 872
- *   +0x00cc -> line 875
- *   +0x00d4 -> line 878
- *   +0x00dc -> line 884
- *   +0x00e8 -> line 887
- *   +0x00f4 -> line 889
- *   +0x010c -> line 890
- *   +0x0118 -> line 895
- *   +0x0134 -> line 898
- *   +0x013c -> line 901
- *   +0x0158 -> line 906
- *   +0x0164 -> line 908
- *   +0x0174 -> line 909
- *   +0x017c -> line 911
- *   +0x0180 -> line 912
- *   +0x0188 -> line 916
- *   +0x0190 -> line 918
- *   +0x019c -> line 919
- *   +0x01b4 -> line 921
- *   +0x01b8 -> line 925
- *   +0x01e4 -> line 930
- *   +0x01f8 -> line 934
- *   +0x0204 -> line 937
- *   +0x0234 -> line 939
- *   +0x023c -> line 941
- *   +0x024c -> line 943
- *   +0x026c -> line 945
- *   +0x028c -> line 947
- *   +0x0298 -> line 950
- *   +0x02a8 -> line 951
- *   +0x02b0 -> line 952
- *   +0x02c0 -> line 953
- *   +0x02c4 -> line 954
- *   +0x02c8 -> line 955
- *   +0x02cc -> line 956
- *   +0x02d0 -> line 960
- *   +0x02d4 -> line 958
- *   +0x02d8 -> line 959
- *   +0x02dc -> line 960
- *   +0x02f4 -> line 961
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 762–820 */
-/* addr: 0x0027e820  size: 696 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 762
- *   +0x0004 -> line 773
- *   +0x0008 -> line 762
- *   +0x0024 -> line 773
- *   +0x0034 -> line 774
- *   +0x003c -> line 779
- *   +0x0044 -> line 780
- *   +0x0054 -> line 781
- *   +0x0058 -> line 780
- *   +0x005c -> line 781
- *   +0x0064 -> line 786
- *   +0x0068 -> line 785
- *   +0x0074 -> line 786
- *   +0x007c -> line 785
- *   +0x0080 -> line 786
- *   +0x0084 -> line 785
- *   +0x008c -> line 786
- *   +0x0090 -> line 785
- *   +0x0094 -> line 789
- *   +0x0104 -> line 791
- *   +0x011c -> line 793
- *   +0x0138 -> line 798
- *   +0x0154 -> line 800
- *   +0x0164 -> line 801
- *   +0x016c -> line 804
- *   +0x0190 -> line 807
- *   +0x01ac -> line 809
- *   +0x01b8 -> line 810
- *   +0x01c0 -> line 813
- *   +0x01e4 -> line 816
- *   +0x01e8 -> line 819
- *   +0x01ec -> line 816
- *   +0x01f8 -> line 819
- *   +0x01fc -> line 816
- *   +0x0214 -> line 817
- *   +0x021c -> line 816
- *   +0x0228 -> line 817
- *   +0x0230 -> line 816
- *   +0x0238 -> line 817
- *   +0x0250 -> line 818
- *   +0x0258 -> line 817
- *   +0x0264 -> line 818
- *   +0x0268 -> line 817
- *   +0x026c -> line 818
- *   +0x0270 -> line 817
- *   +0x0274 -> line 818
- *   +0x0298 -> line 820
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 713–749 */
-/* addr: 0x0027eae0  size: 176 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 713
- *   +0x0014 -> line 718
- *   +0x0028 -> line 719
- *   +0x0030 -> line 724
- *   +0x0038 -> line 728
- *   +0x003c -> line 738
- *   +0x0044 -> line 728
- *   +0x004c -> line 738
- *   +0x0070 -> line 739
- *   +0x0078 -> line 744
- *   +0x008c -> line 745
- *   +0x0098 -> line 747
- *   +0x009c -> line 749
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_v_QuatToMatrix(float (*_a3a3_xMtx)[3], float* _a4_xQuat);
-void fn_v_ExpandQuat(float* _a4_xQuatD, short* _a4_xQuatS);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 667–703 */
-/* addr: 0x0027eb90  size: 176 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 667
- *   +0x000c -> line 672
- *   +0x0018 -> line 674
- *   +0x0028 -> line 677
- *   +0x003c -> line 678
- *   +0x0044 -> line 683
- *   +0x004c -> line 687
- *   +0x0050 -> line 698
- *   +0x0058 -> line 687
- *   +0x0060 -> line 698
- *   +0x00a0 -> line 703
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 517–654 */
-/* addr: 0x0027ec40  size: 972 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 517
- *   +0x0038 -> line 526
- *   +0x0044 -> line 528
- *   +0x004c -> line 529
- *   +0x0054 -> line 536
- *   +0x005c -> line 542
- *   +0x0070 -> line 544
- *   +0x0078 -> line 546
- *   +0x0098 -> line 551
- *   +0x009c -> line 554
- *   +0x00a0 -> line 551
- *   +0x00a4 -> line 552
- *   +0x00ac -> line 551
- *   +0x00b4 -> line 552
- *   +0x00cc -> line 554
- *   +0x00dc -> line 555
- *   +0x00e8 -> line 557
- *   +0x00ec -> line 561
- *   +0x00f8 -> line 573
- *   +0x0138 -> line 581
- *   +0x0144 -> line 588
- *   +0x0150 -> line 581
- *   +0x015c -> line 588
- *   +0x017c -> line 592
- *   +0x018c -> line 594
- *   +0x0194 -> line 601
- *   +0x0198 -> line 603
- *   +0x019c -> line 601
- *   +0x01a0 -> line 603
- *   +0x01a4 -> line 601
- *   +0x01b8 -> line 603
- *   +0x020c -> line 604
- *   +0x0218 -> line 608
- *   +0x021c -> line 610
- *   +0x0228 -> line 620
- *   +0x0238 -> line 621
- *   +0x0248 -> line 623
- *   +0x028c -> line 624
- *   +0x0290 -> line 627
- *   +0x02b4 -> line 629
- *   +0x02c0 -> line 630
- *   +0x02c8 -> line 629
- *   +0x02d8 -> line 630
- *   +0x02e8 -> line 639
- *   +0x0324 -> line 642
- *   +0x0330 -> line 649
- *   +0x0338 -> line 650
- *   +0x033c -> line 649
- *   +0x0358 -> line 650
- *   +0x0378 -> line 653
- *   +0x037c -> line 652
- *   +0x0380 -> line 653
- *   +0x039c -> line 654
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 355–505 */
-/* addr: 0x0027f010  size: 804 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 355
- *   +0x0020 -> line 364
- *   +0x002c -> line 366
- *   +0x0034 -> line 367
- *   +0x003c -> line 377
- *   +0x0050 -> line 381
- *   +0x0068 -> line 387
- *   +0x006c -> line 392
- *   +0x0070 -> line 388
- *   +0x0074 -> line 392
- *   +0x007c -> line 400
- *   +0x0080 -> line 406
- *   +0x0084 -> line 401
- *   +0x0088 -> line 392
- *   +0x008c -> line 401
- *   +0x0090 -> line 400
- *   +0x0098 -> line 401
- *   +0x00b8 -> line 402
- *   +0x00bc -> line 406
- *   +0x00c4 -> line 409
- *   +0x00d4 -> line 412
- *   +0x00e0 -> line 415
- *   +0x00e8 -> line 418
- *   +0x00f0 -> line 424
- *   +0x00fc -> line 427
- *   +0x0108 -> line 429
- *   +0x0120 -> line 430
- *   +0x012c -> line 433
- *   +0x0134 -> line 438
- *   +0x0144 -> line 441
- *   +0x014c -> line 444
- *   +0x0168 -> line 449
- *   +0x0174 -> line 451
- *   +0x0184 -> line 452
- *   +0x018c -> line 454
- *   +0x0190 -> line 455
- *   +0x0198 -> line 460
- *   +0x01a0 -> line 462
- *   +0x01ac -> line 463
- *   +0x01c4 -> line 465
- *   +0x01c8 -> line 469
- *   +0x01f4 -> line 474
- *   +0x0208 -> line 478
- *   +0x0214 -> line 481
- *   +0x0244 -> line 483
- *   +0x024c -> line 485
- *   +0x025c -> line 487
- *   +0x027c -> line 489
- *   +0x029c -> line 491
- *   +0x02a8 -> line 494
- *   +0x02b8 -> line 495
- *   +0x02c0 -> line 496
- *   +0x02d0 -> line 497
- *   +0x02d4 -> line 498
- *   +0x02d8 -> line 499
- *   +0x02dc -> line 500
- *   +0x02e0 -> line 504
- *   +0x02e4 -> line 502
- *   +0x02e8 -> line 503
- *   +0x02ec -> line 504
- *   +0x0304 -> line 505
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 303–303 */
-/* addr: 0x0027f340  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 303
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-tdstEvent_* fn_p_GetEventsAddress(tdstAnim3d_* _p_stAnim3d)
-{
-    return _p_stAnim3d->d_stAnimEvent;
-}
-
-void fn_vUpdateFrame(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame)
-{
-    tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
-    tdstOnlyFrame_* p_stCurrentOnlyFrame;
-    unsigned short uwNumOfSavedFrame;
-    unsigned short uwFrameOffset;
-    unsigned short uwT_NTTO;
-    unsigned short uwCnt1;
-    unsigned short uwNumOfA3dGENERAL;
-    tdstElement3d_* p_stCurrentElement3d;
-    float a4_xQuatOri[4];
-    unsigned short* p_CurrentFrameNumOfNTTO;
-    tdstChannel_* p_stCurrentChannel;
-
-    if (_p_stAnim3d->ucFlagMergeAnim)
-    {
-        fn_vUpdateFrameForInterAnim(_p_stSuperObject, _p_stFrame, _p_stAnim3d, _uwFrame);
-        return;
-    }
-
-    uwNumOfA3dGENERAL = _p_stAnim3d->uwNumOfA3dGENERAL;
-
-    if (_uwFrame >= _p_stAnim3d->uwNumberOfFrames)
-        return;
-
-    if ((_p_stFrame->p_stAnim == _p_stAnim3d) && (_p_stFrame->uwFrameNumber == _uwFrame))
-        return;
-
-    _p_stFrame->p_stAnim = _p_stAnim3d;
-    _p_stFrame->uwFrameNumber = _uwFrame;
-    _p_stFrame->ucMatrixUpdated = 0;
-
-    p_stCurrentA3dGENERAL = fn_p_GetA3dGENERAL(uwNumOfA3dGENERAL, _uwFrame);
-    uwFrameOffset = _uwFrame - p_stCurrentA3dGENERAL->uwStartFrame;
-    p_stCurrentChannel = &gp_stChannels[p_stCurrentA3dGENERAL->uwNumOfFirstChannel];
-    p_stCurrentOnlyFrame = &gp_stOnlyFrames[p_stCurrentA3dGENERAL->uwNumOfFirstOnlyFrame + uwFrameOffset];
-    uwNumOfSavedFrame = p_stCurrentOnlyFrame->uwNumOfSavedFrame;
-
-    fn_vPushAllocModeAccordingToObject(_p_stSuperObject);
-
-    if (p_stCurrentOnlyFrame->uwNumOfAngularSpeedQuat == 0xFFFF)
-    {
-        if (_p_stFrame->p_stAngularSpeedMatrix != NULL)
-            HMU_fn_vFree(&_p_stFrame->p_stAngularSpeedMatrix, 1);
-        _p_stFrame->p_stAngularSpeedMatrix = NULL;
-    }
-    else
-    {
-        if (_p_stFrame->p_stAngularSpeedMatrix == NULL)
-            _p_stFrame->p_stAngularSpeedMatrix = (MTH3D_tdstMatrix_*)HMU_fn_p_vMalloc(0x24, 1);
-        fn_v_ExpandQuat(a4_xQuatOri, gp_a4_xQuaternions[p_stCurrentOnlyFrame->uwNumOfAngularSpeedQuat]);
-        fn_v_QuatToMatrix((float (*)[3])_p_stFrame->p_stAngularSpeedMatrix, a4_xQuatOri);
-    }
-
-    GAM_fn_vPopAllocMode();
-
-    if (p_stCurrentOnlyFrame->uwNumOfSpeedVector == 0xFFFF)
-        _p_stFrame->p_stLinearSpeedVector = NULL;
-    else
-        _p_stFrame->p_stLinearSpeedVector = &gp_a3_xVectors[p_stCurrentOnlyFrame->uwNumOfSpeedVector];
-
-    if (p_stCurrentOnlyFrame->uwHierarchyNbCouples != 0)
-        _p_stFrame->stHierarchy.d_stCouples = &gp_stHierarchies[p_stCurrentOnlyFrame->uwNumOfFirstHierarchyCouple];
-    else
-        _p_stFrame->stHierarchy.d_stCouples = NULL;
-
-    _p_stFrame->stHierarchy.ulNbOfCouples = p_stCurrentOnlyFrame->uwHierarchyNbCouples;
-    _p_stFrame->stDeformation.ulNbOfDeformationLinks = p_stCurrentOnlyFrame->uwDeformationNb;
-
-    if (p_stCurrentOnlyFrame->uwDeformationNb != 0)
-        _p_stFrame->stDeformation.d_stDeformationLinks = &gp_stDeformations[p_stCurrentOnlyFrame->uwNumOfFirstDeformation];
-    else
-        _p_stFrame->stDeformation.d_stDeformationLinks = NULL;
-
-    p_stCurrentElement3d = _p_stFrame->p_stArrayOfElts3d;
-    for (uwCnt1 = 0; uwCnt1 < p_stCurrentA3dGENERAL->uwNumberOfChannels; uwCnt1++)
-    {
-        p_CurrentFrameNumOfNTTO = &gp_FramesNumOfNTTO[p_stCurrentChannel->uwNumOfFirstFrame + uwNumOfSavedFrame];
-        uwT_NTTO = *p_CurrentFrameNumOfNTTO;
-        if (uwT_NTTO != 0xFFFF)
-        {
-            p_stCurrentElement3d->wElement = gp_stNTTO[*p_CurrentFrameNumOfNTTO].ucNumberInTable;
-            p_stCurrentElement3d->ucChannelNumber = p_stCurrentChannel->uwChannelNumber;
-            p_stCurrentElement3d->bf1ActiveStatus = 1;
-            p_stCurrentElement3d->eTypeOfElement = gp_stNTTO[*p_CurrentFrameNumOfNTTO].uwTypeOfObject;
-            p_stCurrentElement3d->ucTransparency = gp_stNTTO[*p_CurrentFrameNumOfNTTO].ucTransparency;
-            p_stCurrentElement3d->ucAnimLevel = 0;
-        }
-        else
-        {
-            p_stCurrentElement3d->wElement = 0xFFFF;
-            p_stCurrentElement3d->ucChannelNumber = p_stCurrentChannel->uwChannelNumber;
-            p_stCurrentElement3d->bf1ActiveStatus = 1;
-            p_stCurrentElement3d->eTypeOfElement = 2;
-            p_stCurrentElement3d->ucTransparency = 0;
-            p_stCurrentElement3d->ucAnimLevel = 0xFF;
-        }
-        p_stCurrentChannel++;
-        p_stCurrentElement3d++;
-    }
-}
-
-void fn_vUpdateFrameMatrix(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAnim3d, float _xFrame, unsigned char ucForceUpdate, tdstAChannel_* d_stChannelArray)
-{
-    float xTmp;
-    float xDT;
-    tdstKeyFrame_* p_stOldKeyFrame;
-    tdstKeyFrame_* p_stCurrentKeyFrame;
-    unsigned short* p_CurrentFrameNumOfNTTO;
-    float xNoInterpol;
-    unsigned char bHierarchized;
-    unsigned short uwCnt1;
-    unsigned short uwT_NTTO;
-    tdstChannel_* p_stCurrentChannel;
-    tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
-    /* TODO: decompile from asm/... */
-}
-
-MTH3D_tdstVector_* fn_p_stGetLinearSpeedVector(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame)
-{
-    tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
-
-    if (_p_stAnim3d->ucFlagMergeAnim)
-        return fn_p_stGetLinearSpeedVectorForInterAnim(_p_stAnim3d, _uwFrame);
-    if (_uwFrame >= _p_stAnim3d->uwNumberOfFrames)
-        return NULL;
-    p_stCurrentA3dGENERAL = fn_p_GetA3dGENERAL(_p_stAnim3d->uwNumOfA3dGENERAL, _uwFrame);
-    _uwFrame -= p_stCurrentA3dGENERAL->uwStartFrame;
-    {
-        tdstOnlyFrame_* p_stCurrentOnlyFrame = &gp_stOnlyFrames[p_stCurrentA3dGENERAL->uwNumOfFirstOnlyFrame + _uwFrame];
-        if (p_stCurrentOnlyFrame->uwNumOfSpeedVector == 0xFFFF)
-            return NULL;
-        return &gp_a3_xVectors[p_stCurrentOnlyFrame->uwNumOfSpeedVector];
-    }
-}
-
-MTH3D_tdstMatrix_* fn_p_stGetAngularSpeedMatrix(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame, MTH3D_tdstMatrix_* p_stMatrix)
-{
-    float a4_xQuatOri[4];
-    tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
-
-    if (_uwFrame >= _p_stAnim3d->uwNumberOfFrames)
-        return NULL;
-    p_stCurrentA3dGENERAL = fn_p_GetA3dGENERAL(_p_stAnim3d->uwNumOfA3dGENERAL, _uwFrame);
-    _uwFrame -= p_stCurrentA3dGENERAL->uwStartFrame;
-    {
-        tdstOnlyFrame_* p_stCurrentOnlyFrame = &gp_stOnlyFrames[p_stCurrentA3dGENERAL->uwNumOfFirstOnlyFrame + _uwFrame];
-        if (p_stCurrentOnlyFrame->uwNumOfAngularSpeedQuat == 0xFFFF)
-            return NULL;
-        fn_v_ExpandQuat(a4_xQuatOri, gp_a4_xQuaternions[p_stCurrentOnlyFrame->uwNumOfAngularSpeedQuat]);
-    }
-    fn_v_QuatToMatrix((float (*)[3])p_stMatrix, a4_xQuatOri);
-    return p_stMatrix;
-}
-
-MTH3D_tdstVector_* fn_p_stGetLinearSpeedVectorForInterAnim(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame)
-{
-    tdstA3dGENERAL_ForTransitions_* p_stCurrentA3dGENERAL;
-    tdstA3dGENERAL_* p_stPreviousA3dGeneral;
-    tdstA3dGENERAL_* p_stNextA3dGeneral;
-    tdstOnlyFrame_* p_stPreviousOnlyFrame;
-    tdstOnlyFrame_* p_stCurrentOnlyFrame;
-    float fRatio;
-    MTH3D_tdstVector_ stPreviousSpeed;
-    MTH3D_tdstVector_ stNextSpeed;
-    extern tdstA3dGENERAL_ForTransitions_* fn_p_GetA3dGENERALForTransitions(unsigned short);
-
-    if (_uwFrame >= _p_stAnim3d->uwNumberOfFrames)
-        return NULL;
-
-    p_stCurrentA3dGENERAL = fn_p_GetA3dGENERALForTransitions(_p_stAnim3d->uwNumOfA3dGENERAL);
-    p_stPreviousA3dGeneral = fn_p_GetA3dGENERAL(p_stCurrentA3dGENERAL->uwPrevious, p_stCurrentA3dGENERAL->uwPreviousFrame);
-    p_stNextA3dGeneral = fn_p_GetA3dGENERAL(p_stCurrentA3dGENERAL->uwNext, 0);
-
-    p_stPreviousOnlyFrame = &gp_stOnlyFrames[p_stPreviousA3dGeneral->uwNumOfFirstOnlyFrame + p_stCurrentA3dGENERAL->uwPreviousFrame];
-    p_stCurrentOnlyFrame = &gp_stOnlyFrames[p_stNextA3dGeneral->uwNumOfFirstOnlyFrame];
-
-    fRatio = (float)_uwFrame / (float)_p_stAnim3d->uwNumberOfFrames;
-    if (fRatio != 0.0f)
-        fRatio = fRatio * ((1.0f + fRatio * p_stCurrentA3dGENERAL->xNLParameter) - p_stCurrentA3dGENERAL->xNLParameter);
-
-    if ((p_stCurrentOnlyFrame->uwNumOfSpeedVector == 0xFFFF) || (p_stCurrentA3dGENERAL->uwNoSpeed != 0))
-        memset(&stNextSpeed, 0, sizeof(stNextSpeed));
-    else
-        memcpy(&stNextSpeed, &gp_a3_xVectors[p_stCurrentOnlyFrame->uwNumOfSpeedVector], sizeof(stNextSpeed));
-
-    if ((p_stPreviousOnlyFrame->uwNumOfSpeedVector == 0xFFFF) || (p_stCurrentA3dGENERAL->uwNoSpeed != 0))
-        memset(&stPreviousSpeed, 0, sizeof(stPreviousSpeed));
-    else
-        memcpy(&stPreviousSpeed, &gp_a3_xVectors[p_stPreviousOnlyFrame->uwNumOfSpeedVector], sizeof(stPreviousSpeed));
-
-    g_stTempoVector.xX = stNextSpeed.xX - stPreviousSpeed.xX;
-    g_stTempoVector.xY = stNextSpeed.xY - stPreviousSpeed.xY;
-    g_stTempoVector.xZ = stNextSpeed.xZ - stPreviousSpeed.xZ;
-    g_stTempoVector.xX = fRatio * g_stTempoVector.xX;
-    g_stTempoVector.xY = fRatio * g_stTempoVector.xY;
-    g_stTempoVector.xZ = fRatio * g_stTempoVector.xZ;
-    g_stTempoVector.xX = stPreviousSpeed.xX + g_stTempoVector.xX;
-    g_stTempoVector.xY = stPreviousSpeed.xY + g_stTempoVector.xY;
-    g_stTempoVector.xZ = stPreviousSpeed.xZ + g_stTempoVector.xZ;
-
-    return &g_stTempoVector;
-}
-
-void fn_vUpdateFrameForInterAnim(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame)
-{
-    unsigned short* p_CurrentFrameNumOfNTTO;
-    float a4_xQuatOri[4];
-    tdstElement3d_* p_stCurrentElement3d;
-    unsigned short uwCnt1;
-    unsigned short uwT_NTTO;
-    unsigned short uwNumOfA3dGENERAL;
-    tdstChannel_* p_stCurrentChannel;
-    tdstOnlyFrame_* p_stCurrentOnlyFrame;
-    tdstA3dGENERAL_* p_stPreviousA3dGeneral;
-    tdstA3dGENERAL_ForTransitions_* p_stA3dGENERAL;
-    /* TODO: decompile from asm/... */
-}
-
-void fn_vUpdateFrameMatrixForInterAnim(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAnim3d, float _xFrame, unsigned char ucForceUpdate, tdstAChannel_* d_stChannelArray)
-{
-    tdstKeyFrame_ CurrentKeyFrame2;
-    tdstKeyFrame_ OldKeyFrame2;
-    float xDT;
-    tdstKeyFrame_* p_stOldKeyFrame;
-    tdstKeyFrame_* p_stCurrentKeyFrame;
-    tdstKeyFrame_* p_stNextKeyFrame;
-    tdstKeyFrame_* p_stPreviousKeyFrame;
-    unsigned short* p_PreviousFrameNumOfNTTO;
-    unsigned char bHierarchized;
-    unsigned short uwCnt1;
-    unsigned short uwPreviousT_NTTO;
-    tdstChannel_* p_stNextChannel;
-    tdstChannel_* p_stPreviousChannel;
-    tdstA3dGENERAL_* p_stNextA3dGeneral;
-    tdstA3dGENERAL_* p_stPreviousA3dGeneral;
-    tdstA3dGENERAL_ForTransitions_* p_stA3dGENERAL;
-    /* TODO: decompile from asm/... */
-}
-
-tdstCouple_* fn_p_stGetHierarchy(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame, unsigned int* p_ulNewNbCouples)
-{
-    tdstOnlyFrame_* p_stCurrentOnlyFrame;
-    tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
-
-    if (_uwFrame >= _p_stAnim3d->uwNumberOfFrames)
-        _uwFrame = _p_stAnim3d->uwNumberOfFrames - 1;
-    p_stCurrentA3dGENERAL = fn_p_GetA3dGENERAL(_p_stAnim3d->uwNumOfA3dGENERAL, _uwFrame);
-    p_stCurrentOnlyFrame = &gp_stOnlyFrames[p_stCurrentA3dGENERAL->uwNumOfFirstOnlyFrame + _uwFrame];
-    *p_ulNewNbCouples = p_stCurrentOnlyFrame->uwHierarchyNbCouples;
-    if (p_stCurrentOnlyFrame->uwHierarchyNbCouples)
-        return &gp_stHierarchies[p_stCurrentOnlyFrame->uwNumOfFirstHierarchyCouple];
-    return NULL;
-}
-
-tdstAnim3d_* fn_p_stCreateIntermediateAnimation(tdstAnim3d_* p_stPreviousAnim, tdstAnim3d_* p_stNextAnim, unsigned short uwPreviousFrame, unsigned short uwNextFrame, unsigned int ulNumberOfFramesForIntermAnim, float xNLParameter)
-{
-    unsigned short* p_NextFrameNumOfNTTO;
-    unsigned short* p_CurrentFrameNumOfNTTO;
-    unsigned short uwCnt2;
-    unsigned short uwCnt1;
-    int iNbMorphTask;
-    unsigned short uwT_NextNTTO;
-    unsigned short uwT_CurrentNTTO;
-    tdstChannel_* p_stNextChannel;
-    tdstChannel_* p_stCurrentChannel;
-    stMorphData ax_stTempoMorphArray[64];
-    tdstA3dGENERAL_* p_stNextA3dGENERAL;
-    tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
-    tdstA3dGENERAL_ForTransitions_* p_stA3dGENERAL;
-    tdstAnim3d_* p_stNewAnim;
-    /* TODO: decompile from asm/... */
-}
-
-void fn_vDeleteIntermediateAnimation(tdstAnim3d_* p_stTempoAnim)
-{
-    fn_vReleaseMergeA3dGeneral(p_stTempoAnim->uwNumOfA3dGENERAL);
-    if (p_stTempoAnim->d_stMorphDataArray != NULL)
-        HMU_fn_vFree(&p_stTempoAnim->d_stMorphDataArray, 1);
-    HMU_fn_vFree(&p_stTempoAnim, 1);
-}
-
-unsigned short fn_uwGetFrameInNextAnimForIntermAnim(tdstAnim3d_* p_stTempoAnim)
-{
-    tdstA3dGENERAL_ForTransitions_* p_stA3dGENERAL;
-    extern tdstA3dGENERAL_ForTransitions_* fn_p_GetA3dGENERALForTransitions(unsigned short);
-    p_stA3dGENERAL = fn_p_GetA3dGENERALForTransitions(p_stTempoAnim->uwNumOfA3dGENERAL);
-    return p_stA3dGENERAL->uwNextFrame;
-}
-
-int fn_bTestSamePosition(tdstAnim3d_* p_stPreviousAnim, tdstAnim3d_* p_stNextAnim, unsigned short uwPreviousFrame, unsigned short uwNextFrame)
-{
-    tdstA3dGENERAL_* p_stPreviousA3dGeneral;
-    tdstA3dGENERAL_* p_stNextA3dGeneral;
-    tdstChannel_* p_stPreviousChannel;
-    tdstChannel_* p_stCurrentChannel;
-    tdstKeyFrame_* p_stOldKeyFrame;
-    tdstKeyFrame_* p_stNewKeyFrame;
-    tdstKeyFrame_* p_stPreviousKeyFrame;
-    tdstKeyFrame_* p_stNextKeyFrame;
-    tdstKeyFrame_* a256_p_stPrevKeyFrames[256];
-    tdstKeyFrame_* a256_p_stNextKeyFrames[256];
-    tdstKeyFrame_** pPrevKeyFrames;
-    tdstKeyFrame_** pNextKeyFrames;
-    unsigned short uwCnt1;
-
-    memset(a256_p_stPrevKeyFrames, 0, sizeof(a256_p_stPrevKeyFrames));
-    memset(a256_p_stNextKeyFrames, 0, sizeof(a256_p_stNextKeyFrames));
-
-    p_stPreviousA3dGeneral = fn_p_GetA3dGENERAL(p_stPreviousAnim->uwNumOfA3dGENERAL, uwPreviousFrame);
-    pPrevKeyFrames = a256_p_stPrevKeyFrames;
-    p_stPreviousChannel = &gp_stChannels[p_stPreviousA3dGeneral->uwNumOfFirstChannel];
-    for (uwCnt1 = 0; uwCnt1 < p_stPreviousA3dGeneral->uwNumberOfChannels; uwCnt1++)
-    {
-        if (p_stPreviousChannel->uwChannelNumber != 0xFFFF)
-        {
-            p_stOldKeyFrame = &gp_stKeyFrames[gp_FramesKFIndex[p_stPreviousChannel->ulNumOfFirstFrameKF + uwPreviousFrame]];
-            if ((p_stOldKeyFrame->uwMask & 0x80) && (p_stOldKeyFrame->uwMask & 0x200))
-                p_stOldKeyFrame = &gp_stKeyFrames[gp_FramesKFIndex[p_stPreviousChannel->ulNumOfFirstFrameKF]];
-            pPrevKeyFrames[uwCnt1] = p_stOldKeyFrame;
-        }
-        p_stPreviousChannel++;
-    }
-
-    p_stNextA3dGeneral = fn_p_GetA3dGENERAL(p_stNextAnim->uwNumOfA3dGENERAL, uwNextFrame);
-    pNextKeyFrames = a256_p_stNextKeyFrames;
-    p_stCurrentChannel = &gp_stChannels[p_stNextA3dGeneral->uwNumOfFirstChannel];
-    for (uwCnt1 = 0; uwCnt1 < p_stNextA3dGeneral->uwNumberOfChannels; uwCnt1++)
-    {
-        if (p_stCurrentChannel->uwChannelNumber != 0xFFFF)
-        {
-            p_stNewKeyFrame = &gp_stKeyFrames[gp_FramesKFIndex[p_stCurrentChannel->ulNumOfFirstFrameKF + uwNextFrame]];
-            if ((p_stNewKeyFrame->uwMask & 0x80) && (p_stNewKeyFrame->uwMask & 0x200))
-                p_stNewKeyFrame = &gp_stKeyFrames[gp_FramesKFIndex[p_stCurrentChannel->ulNumOfFirstFrameKF]];
-            pNextKeyFrames[uwCnt1] = p_stNewKeyFrame;
-        }
-        p_stCurrentChannel++;
-    }
-
-    for (uwCnt1 = 0; uwCnt1 < p_stPreviousA3dGeneral->uwNumberOfChannels; uwCnt1++)
-    {
-        if (memcmp(&gp_a3_xVectors[a256_p_stPrevKeyFrames[uwCnt1]->uwNumOfPosition], &gp_a3_xVectors[a256_p_stNextKeyFrames[uwCnt1]->uwNumOfPosition], sizeof(MTH3D_tdstVector_)))
-            return 0;
-        if (memcmp(&gp_a4_xQuaternions[a256_p_stPrevKeyFrames[uwCnt1]->uwNumOfQuatOri], &gp_a4_xQuaternions[a256_p_stNextKeyFrames[uwCnt1]->uwNumOfQuatOri], 8))
-            return 0;
-        if (memcmp(&gp_a3_xVectors[a256_p_stPrevKeyFrames[uwCnt1]->uwNumOfScaleValues], &gp_a3_xVectors[a256_p_stNextKeyFrames[uwCnt1]->uwNumOfScaleValues], sizeof(MTH3D_tdstVector_)) ||
-            memcmp(&gp_a4_xQuaternions[a256_p_stPrevKeyFrames[uwCnt1]->uwNumOfQuatSca], &gp_a4_xQuaternions[a256_p_stNextKeyFrames[uwCnt1]->uwNumOfQuatSca], 8))
-            return 0;
-    }
-
-    return 1;
-}
-
-void fn_vUpdateFrameForSubAnim(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame, unsigned char _ucAnimLevel)
-{
-    tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
-    tdstChannel_* p_stCurrentChannel;
-    unsigned short uwT_NTTO;
-    unsigned short uwCnt1;
-    unsigned short uwCnt2;
-    tdstElement3d_* p_stCurrentElement3d;
-    unsigned short* p_CurrentFrameNumOfNTTO;
-
-    p_stCurrentA3dGENERAL = fn_p_GetA3dGENERAL(_p_stAnim3d->uwNumOfA3dGENERAL, _uwFrame);
-    p_stCurrentChannel = &gp_stChannels[p_stCurrentA3dGENERAL->uwNumOfFirstChannel];
-    uwT_NTTO = *(unsigned short*)((int)gp_stOnlyFrames + (p_stCurrentA3dGENERAL->uwNumOfFirstOnlyFrame + _uwFrame) * sizeof(tdstOnlyFrame_) + 0xc);
-
-    for (uwCnt1 = 0; uwCnt1 < p_stCurrentA3dGENERAL->uwNumberOfChannels; p_stCurrentChannel++, uwCnt1++)
-    {
-        p_CurrentFrameNumOfNTTO = &gp_FramesNumOfNTTO[p_stCurrentChannel->uwNumOfFirstFrame + uwT_NTTO];
-        p_stCurrentElement3d = _p_stFrame->p_stArrayOfElts3d;
-        for (uwCnt2 = 0; uwCnt2 < _p_stFrame->p_stAnim->ucMaxNumberOfElements; uwCnt2++)
-        {
-            if (p_stCurrentChannel->uwChannelNumber == p_stCurrentElement3d[uwCnt2].ucChannelNumber)
-            {
-                if (*p_CurrentFrameNumOfNTTO != 0xFFFF)
-                {
-                    p_stCurrentElement3d = (p_stCurrentElement3d[uwCnt2].wElement = gp_stNTTO[*p_CurrentFrameNumOfNTTO].ucNumberInTable, &p_stCurrentElement3d[uwCnt2]);
-                    p_stCurrentElement3d->ucChannelNumber = p_stCurrentChannel->uwChannelNumber;
-                    p_stCurrentElement3d->bf1ActiveStatus = 1;
-                    p_stCurrentElement3d->eTypeOfElement = gp_stNTTO[*p_CurrentFrameNumOfNTTO].uwTypeOfObject;
-                    p_stCurrentElement3d->ucTransparency = gp_stNTTO[*p_CurrentFrameNumOfNTTO].ucTransparency;
-                    p_stCurrentElement3d->ucAnimLevel = _ucAnimLevel;
-                }
-                else
-                {
-                    p_stCurrentElement3d = &p_stCurrentElement3d[uwCnt2];
-                    p_stCurrentElement3d->wElement = 0xFFFF;
-                    p_stCurrentElement3d->ucChannelNumber = p_stCurrentChannel->uwChannelNumber;
-                    p_stCurrentElement3d->bf1ActiveStatus = 1;
-                    p_stCurrentElement3d->eTypeOfElement = 2;
-                    p_stCurrentElement3d->ucTransparency = 0;
-                    p_stCurrentElement3d->ucAnimLevel = 0xFF;
-                }
-                break;
-            }
-        }
-    }
-}
-
 void fn_vUpdateFrameMatrixForSubAnim(void* _p_stSuperObject, tdstAnim3d_* _p_stAnim3d, float _xFrame, tdstAChannel_* d_stChannelArray, unsigned char bMergeWithMainAnim)
 {
     float xTmp;
@@ -2645,6 +2617,85 @@ void fn_vUpdateFrameMatrixForSubAnim(void* _p_stSuperObject, tdstAnim3d_* _p_stA
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 1784–1952 */
+/* addr: 0x0027c770  size: 1976 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1784
+ *   +0x0004 -> line 1791
+ *   +0x0008 -> line 1784
+ *   +0x0028 -> line 1791
+ *   +0x0034 -> line 1792
+ *   +0x004c -> line 1795
+ *   +0x0068 -> line 1796
+ *   +0x0080 -> line 1799
+ *   +0x0094 -> line 1802
+ *   +0x00a4 -> line 1808
+ *   +0x00b4 -> line 1810
+ *   +0x011c -> line 1814
+ *   +0x0164 -> line 1818
+ *   +0x0170 -> line 1819
+ *   +0x0178 -> line 1822
+ *   +0x01f4 -> line 1828
+ *   +0x0204 -> line 1829
+ *   +0x020c -> line 1833
+ *   +0x021c -> line 1835
+ *   +0x0230 -> line 1839
+ *   +0x0238 -> line 1842
+ *   +0x0254 -> line 1845
+ *   +0x02bc -> line 1849
+ *   +0x0304 -> line 1853
+ *   +0x0310 -> line 1854
+ *   +0x0318 -> line 1857
+ *   +0x0394 -> line 1863
+ *   +0x03a4 -> line 1864
+ *   +0x03ac -> line 1868
+ *   +0x03bc -> line 1870
+ *   +0x03d0 -> line 1874
+ *   +0x03d8 -> line 1878
+ *   +0x03dc -> line 1881
+ *   +0x03e0 -> line 1878
+ *   +0x03e4 -> line 1879
+ *   +0x03e8 -> line 1878
+ *   +0x03ec -> line 1880
+ *   +0x03f0 -> line 1881
+ *   +0x03fc -> line 1878
+ *   +0x0408 -> line 1879
+ *   +0x0418 -> line 1881
+ *   +0x041c -> line 1879
+ *   +0x0428 -> line 1880
+ *   +0x0444 -> line 1881
+ *   +0x0498 -> line 1885
+ *   +0x04e0 -> line 1889
+ *   +0x04ec -> line 1890
+ *   +0x04f4 -> line 1893
+ *   +0x05d4 -> line 1903
+ *   +0x05e4 -> line 1904
+ *   +0x05ec -> line 1908
+ *   +0x0600 -> line 1912
+ *   +0x0610 -> line 1914
+ *   +0x0624 -> line 1926
+ *   +0x0628 -> line 1927
+ *   +0x0630 -> line 1928
+ *   +0x0634 -> line 1930
+ *   +0x0638 -> line 1928
+ *   +0x063c -> line 1930
+ *   +0x0648 -> line 1932
+ *   +0x064c -> line 1933
+ *   +0x065c -> line 1935
+ *   +0x0670 -> line 1936
+ *   +0x0684 -> line 1937
+ *   +0x0698 -> line 1939
+ *   +0x069c -> line 1937
+ *   +0x06a0 -> line 1939
+ *   +0x06bc -> line 1940
+ *   +0x06c4 -> line 1944
+ *   +0x06ec -> line 1946
+ *   +0x0754 -> line 1947
+ *   +0x075c -> line 1950
+ *   +0x0798 -> line 1952
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int fn_v_MergePositions(tdstChannel_* p_stChannel, tdstAChannel_* p_stCurrentChannel, unsigned char bHierarchized)
 {
     float xRatio;
@@ -2656,6 +2707,43 @@ int fn_v_MergePositions(tdstChannel_* p_stChannel, tdstAChannel_* p_stCurrentCha
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 1959–2018 */
+/* addr: 0x0027c5b0  size: 444 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1959
+ *   +0x0004 -> line 1970
+ *   +0x0008 -> line 1959
+ *   +0x000c -> line 1970
+ *   +0x0010 -> line 1959
+ *   +0x0014 -> line 1970
+ *   +0x0018 -> line 1959
+ *   +0x001c -> line 1970
+ *   +0x0020 -> line 1959
+ *   +0x0028 -> line 1970
+ *   +0x006c -> line 1973
+ *   +0x0078 -> line 1975
+ *   +0x0080 -> line 1976
+ *   +0x0088 -> line 1980
+ *   +0x0090 -> line 1986
+ *   +0x0094 -> line 1980
+ *   +0x0098 -> line 1986
+ *   +0x00a0 -> line 1988
+ *   +0x00a4 -> line 1986
+ *   +0x00a8 -> line 1988
+ *   +0x00ac -> line 1989
+ *   +0x00b4 -> line 1988
+ *   +0x00bc -> line 1989
+ *   +0x00d8 -> line 1993
+ *   +0x00e0 -> line 1997
+ *   +0x0120 -> line 2009
+ *   +0x0170 -> line 2012
+ *   +0x0178 -> line 2017
+ *   +0x017c -> line 2016
+ *   +0x0180 -> line 2017
+ *   +0x019c -> line 2018
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vComputeFinalFrameMatrix(HIE_tdstSuperObject_* p_stSuperObject, tdstAnim3d_* _p_stAnim3d, float _xFrame)
 {
     unsigned short uwCnt1;
@@ -2692,6 +2780,32 @@ void fn_vComputeFinalFrameMatrix(HIE_tdstSuperObject_* p_stSuperObject, tdstAnim
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 2025–2099 */
+/* addr: 0x0027c440  size: 364 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2025
+ *   +0x001c -> line 2045
+ *   +0x0028 -> line 2052
+ *   +0x0030 -> line 2053
+ *   +0x0040 -> line 2056
+ *   +0x0050 -> line 2061
+ *   +0x0054 -> line 2067
+ *   +0x0058 -> line 2061
+ *   +0x0060 -> line 2060
+ *   +0x0068 -> line 2061
+ *   +0x0074 -> line 2060
+ *   +0x0078 -> line 2061
+ *   +0x0088 -> line 2067
+ *   +0x0090 -> line 2072
+ *   +0x00d0 -> line 2088
+ *   +0x0120 -> line 2091
+ *   +0x0128 -> line 2098
+ *   +0x012c -> line 2096
+ *   +0x0130 -> line 2098
+ *   +0x014c -> line 2099
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vComputeFinalFrameMatrixForInterAnim(HIE_tdstSuperObject_* p_stSuperObject, tdstAnim3d_* _p_stAnim3d)
 {
     unsigned char bHierarchized;
@@ -2723,6 +2837,23 @@ void fn_vComputeFinalFrameMatrixForInterAnim(HIE_tdstSuperObject_* p_stSuperObje
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 45–58 */
+/* addr: 0x0027c260  size: 468 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 45
+ *   +0x0018 -> line 47
+ *   +0x0020 -> line 48
+ *   +0x00ac -> line 49
+ *   +0x00b8 -> line 50
+ *   +0x0144 -> line 53
+ *   +0x0150 -> line 55
+ *   +0x0190 -> line 56
+ *   +0x0194 -> line 55
+ *   +0x01a4 -> line 56
+ *   +0x01bc -> line 58
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_v_InitSinTab(void)
 {
     int slCnt;

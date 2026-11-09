@@ -3350,22 +3350,6 @@ int g_lSoundObjectTypeVoice;
 int g_lSoundObjectTypeMusic;
 int g_lSoundObjectTypeAnim;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\CineDef.c lines 702–725 */
-/* addr: 0x00287740  size: 420 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 702
- *   +0x0020 -> line 709
- *   +0x0024 -> line 702
- *   +0x0030 -> line 707
- *   +0x0038 -> line 712
- *   +0x0078 -> line 715
- *   +0x00b8 -> line 718
- *   +0x00f8 -> line 721
- *   +0x0138 -> line 724
- *   +0x0178 -> line 725
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 float fn_fUncompressNumber(short n);
 
 /* The functions below are in their original source-line order (retail
@@ -3380,67 +3364,10 @@ void CINE_CheckEndCineActor(CINE_tdstCineActor_* hCineActor);
 void CINE_fn_pResetCineList(void);
 CINE_tdstCine_* CINE_fn_pFindCine(char* szName);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\CineDef.c lines 804–807 */
-/* addr: 0x002878f0  size: 64 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 804
- *   +0x0038 -> line 807
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 #pragma optimize_for_size off
 
 #pragma optimize_for_size reset
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\CineDef.c lines 677–782 */
-/* addr: 0x00287930  size: 796 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 677
- *   +0x0018 -> line 686
- *   +0x005c -> line 689
- *   +0x0060 -> line 690
- *   +0x0068 -> line 692
- *   +0x0074 -> line 698
- *   +0x0080 -> line 699
- *   +0x0084 -> line 698
- *   +0x0088 -> line 703
- *   +0x008c -> line 701
- *   +0x0090 -> line 703
- *   +0x0098 -> line 705
- *   +0x00b8 -> line 707
- *   +0x00c4 -> line 709
- *   +0x0170 -> line 711
- *   +0x017c -> line 712
- *   +0x0188 -> line 714
- *   +0x01a4 -> line 715
- *   +0x01b0 -> line 718
- *   +0x01d4 -> line 721
- *   +0x01f0 -> line 725
- *   +0x0204 -> line 726
- *   +0x0208 -> line 729
- *   +0x0224 -> line 733
- *   +0x0238 -> line 738
- *   +0x0244 -> line 740
- *   +0x0250 -> line 743
- *   +0x025c -> line 746
- *   +0x0270 -> line 747
- *   +0x027c -> line 749
- *   +0x0280 -> line 750
- *   +0x028c -> line 753
- *   +0x0298 -> line 756
- *   +0x02a4 -> line 759
- *   +0x02b8 -> line 760
- *   +0x02c8 -> line 766
- *   +0x02d0 -> line 771
- *   +0x02e4 -> line 774
- *   +0x02ec -> line 776
- *   +0x02f0 -> line 777
- *   +0x02f4 -> line 778
- *   +0x02fc -> line 780
- *   +0x0300 -> line 782
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void CINE_CheckEndCineActor(CINE_tdstCineActor_* hCineActor);
 void* HMU_fn_p_vMalloc(unsigned int uiSize);
 extern unsigned int g_ulMode;
@@ -3452,6 +3379,367 @@ void fn_vDesInitAllSubEvents(HIE_tdstSuperObject_* _hCharacter, tdstSubAnimInUse
 void HMU_fn_vFree(void** p_vPointer, unsigned char bTempMalloc);
 unsigned char PLA_fn_bSetNewState(HIE_tdstSuperObject_* p_stSuperObject, tdstState_* h_WantedState, unsigned char _bForce, unsigned char _bHandleSkippedEventsIfRelevant, unsigned char _bIgnoreTransitions, unsigned int ulNbFrameForIntermAnim, float xNLParameter, unsigned char bProportionnal);
 void fn_vInternalChangeComportProcedure(tdstIntelligence_* p_stAimedPersoIntelligenceOrReflex, tdstComport_* p_stComport, unsigned char _bContinueExecution);
+
+void HIE_fn_vUpdateGlobalMatrix(HIE_tdstSuperObject_* hSuperObject);
+void HIE_fn_vComputeNewRelativeMatrix(HIE_tdstSuperObject_* hSuperObject, HIE_tdstSuperObject_* hSuperObject2);
+void HIE_fn_vInvalidateHierarchy(HIE_tdstSuperObject_* hSuperObject);
+void HIE_fn_vRefreshHierarchy(HIE_tdstSuperObject_* hSuperObject, unsigned int ulCurrentBits);
+void fn_vInitAllSubEvents(HIE_tdstSuperObject_* _hCharacter, tdstSubAnimInUse_* hNewSubAnimInUse);
+void fn_vSetAnimInState(tdstState_* hState, unsigned short usChannel);
+void fn_vSetNextStateInState(tdstState_* hState, tdstState_* hNextState);
+void fn_vSetRepeatAnimationInState(tdstState_* hState, unsigned char ucRepeat);
+void fn_vSetSpeedInState(tdstState_* hState, signed char scSpeed);
+
+void SND_fn_vSetPan(int b_pan);
+int SND_fn_s32SendRequestSound(int s32_ObjectId, int s32_ChannelId, int s32_TypeId,
+                               _SND_tduRefEvt u_RefEvt, void* pData, void* pData2);
+HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* h_StdGame);
+
+int strcasecmp(const char*, const char*);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\CineDef.c lines 146–160 */
+/* addr: 0x00288650  size: 128 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 146
+ *   +0x0004 -> line 149
+ *   +0x0008 -> line 146
+ *   +0x0014 -> line 149
+ *   +0x0028 -> line 150
+ *   +0x0030 -> line 151
+ *   +0x0034 -> line 152
+ *   +0x003c -> line 154
+ *   +0x0050 -> line 155
+ *   +0x0058 -> line 156
+ *   +0x005c -> line 157
+ *   +0x0068 -> line 158
+ *   +0x006c -> line 160
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+CINE_tdstCine_* CINE_fn_pFindCine(char* szName)
+{
+    CINE_tdstCine_* hElement;
+
+    if ((g_stEngineStructure.stCineManager == NULL) || (szName == NULL))
+    {
+        return NULL;
+    }
+    hElement = g_stEngineStructure.stCineManager->hCineList.hFirstElementDyn;
+    while (hElement != NULL)
+    {
+        if (strcasecmp(szName, hElement->szName) == 0)
+        {
+            return hElement;
+        }
+        hElement = hElement->hNextBrotherDyn;
+    }
+    return NULL;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\CineDef.c lines 186–187 */
+/* addr: 0x00288640  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 186
+ *   +0x0004 -> line 187
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void CINE_fn_pResetCineList(void)
+{
+    g_stEngineStructure.stCineManager = NULL;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\CineDef.c lines 266–392 */
+/* addr: 0x00288320  size: 796 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 266
+ *   +0x0020 -> line 269
+ *   +0x0030 -> line 270
+ *   +0x0038 -> line 272
+ *   +0x0044 -> line 275
+ *   +0x0050 -> line 278
+ *   +0x005c -> line 285
+ *   +0x007c -> line 287
+ *   +0x008c -> line 288
+ *   +0x0090 -> line 289
+ *   +0x00b0 -> line 290
+ *   +0x00b8 -> line 293
+ *   +0x00bc -> line 296
+ *   +0x00c4 -> line 297
+ *   +0x00dc -> line 303
+ *   +0x00e0 -> line 308
+ *   +0x00e4 -> line 305
+ *   +0x00e8 -> line 308
+ *   +0x00fc -> line 309
+ *   +0x0100 -> line 312
+ *   +0x011c -> line 316
+ *   +0x0130 -> line 320
+ *   +0x014c -> line 324
+ *   +0x0160 -> line 330
+ *   +0x0174 -> line 333
+ *   +0x0184 -> line 336
+ *   +0x01b8 -> line 337
+ *   +0x01c0 -> line 342
+ *   +0x01c8 -> line 343
+ *   +0x01d0 -> line 344
+ *   +0x01d8 -> line 345
+ *   +0x01dc -> line 346
+ *   +0x01e0 -> line 345
+ *   +0x0210 -> line 346
+ *   +0x0218 -> line 353
+ *   +0x0220 -> line 355
+ *   +0x0234 -> line 362
+ *   +0x025c -> line 365
+ *   +0x026c -> line 367
+ *   +0x0278 -> line 370
+ *   +0x029c -> line 373
+ *   +0x02ac -> line 375
+ *   +0x02b8 -> line 378
+ *   +0x02e0 -> line 383
+ *   +0x02e8 -> line 386
+ *   +0x02f0 -> line 389
+ *   +0x02fc -> line 392
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void CINE_CheckEndCineActor(CINE_tdstCineActor_* hCineActor)
+{
+    tdstDynam_* hDynam;
+    tdstStandardGame_* param0;
+    unsigned char bSubAnimRun;
+    tdstSubAnimInUse_* hNextSubAnimInUse;
+    HIE_tdstSuperObject_* hCharacter;
+    unsigned char bEnd;
+    tdst3dData_* h_Current3dData;
+
+    hCharacter = fn_h_StandardGameGetSuperObject(hCineActor->p_stActor->h_StandardGame);
+    h_Current3dData = ((tdstEngineObject_*)hCharacter->hLinkedObject.p_stCharacter)->h_3dData;
+    if (h_Current3dData->h_CurrentCineActor != NULL)
+    {
+        if (h_Current3dData->h_CurrentCineActor->bPlayingAnim != 0)
+        {
+            if (hCineActor->bIsASubAnim != 0)
+            {
+                hNextSubAnimInUse = h_Current3dData->hForSubAnimInUseArray.hFirstElementDyn;
+                if (hNextSubAnimInUse != NULL)
+                {
+                    hNextSubAnimInUse = hNextSubAnimInUse->hNextBrotherDyn;
+                }
+                if (hNextSubAnimInUse != NULL)
+                {
+                    while (hNextSubAnimInUse != NULL)
+                    {
+                        if (hNextSubAnimInUse == h_Current3dData->h_CurrentCineActor->hSubAnimInUse)
+                        {
+                            bSubAnimRun = 1;
+                            break;
+                        }
+                        hNextSubAnimInUse = hNextSubAnimInUse->hNextBrotherDyn;
+                    }
+                }
+            }
+            else
+            {
+                bSubAnimRun = 1;
+            }
+            if (bSubAnimRun == 0)
+            {
+                h_Current3dData->h_CurrentCineActor->bPlayingAnim = 0;
+            }
+            else
+            {
+                if ((h_Current3dData->ucFlagEndOfAnim != 0) && (h_Current3dData->ucFlagEndState == 0))
+                {
+                    h_Current3dData->h_CurrentCineActor->bPlayingAnim = 0;
+                    if (g_stEngineStructure.stCineManager->gp_stSPOHandleCamera == hCharacter)
+                    {
+                        g_stEngineStructure.stCineManager->gp_stSPOHandleCamera = NULL;
+                    }
+                }
+            }
+            param0 = ((tdstEngineObject_*)hCharacter->hLinkedObject.p_stCharacter)->h_StandardGame;
+            if ((h_Current3dData->h_CurrentCineActor->bPreviousIAState == 0) && (h_Current3dData->h_CurrentCineActor->bSkipIA != 0))
+            {
+                param0->ulCustomBits &= 0xFFFEFFFF;
+            }
+            if ((h_Current3dData->h_CurrentCineActor->bPreviousMecaState == 0) && (h_Current3dData->h_CurrentCineActor->bSkipMeca != 0))
+            {
+                param0->ulCustomBits &= 0xFFFF7FFF;
+            }
+            param0->ulAICustomBits &= 0xFFFFBFFF;
+            if (h_Current3dData->h_CurrentCineActor->bMoveActorAtTheEnd != 0)
+            {
+                if (h_Current3dData->hArrayOfChannels != NULL)
+                {
+                    HIE_tdstSuperObject_* hSuperObj;
+                    hSuperObj = h_Current3dData->hArrayOfChannels[h_Current3dData->h_CurrentCineActor->usChannel].hSupObject;
+                    if (hSuperObj != NULL)
+                    {
+                        hDynam = ((tdstEngineObject_*)hCharacter->hLinkedObject.p_stCharacter)->h_Dynam;
+                        HIE_fn_vUpdateGlobalMatrix(hCharacter);
+                        HIE_fn_vUpdateGlobalMatrix(hSuperObj);
+                        MEC_vImposeRotationMatrix(hCharacter, hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->h_SuperObject);
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\CineDef.c lines 407–459 */
+/* addr: 0x00288200  size: 288 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 407
+ *   +0x0010 -> line 411
+ *   +0x0024 -> line 415
+ *   +0x002c -> line 419
+ *   +0x0038 -> line 421
+ *   +0x0044 -> line 423
+ *   +0x0048 -> line 425
+ *   +0x0064 -> line 429
+ *   +0x0070 -> line 431
+ *   +0x007c -> line 433
+ *   +0x0080 -> line 435
+ *   +0x009c -> line 439
+ *   +0x00a8 -> line 441
+ *   +0x00b4 -> line 443
+ *   +0x00b8 -> line 445
+ *   +0x00d4 -> line 449
+ *   +0x00e0 -> line 451
+ *   +0x00ec -> line 453
+ *   +0x00f0 -> line 455
+ *   +0x010c -> line 459
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void CINE_SendRequestsEndSounds(CINE_tdstCineActor_* hElement)
+{
+    HIE_tdstSuperObject_* p_stSuperObjCine;
+    _SND_tduRefEvt uRefEvt;
+
+    p_stSuperObjCine = fn_h_StandardGameGetSuperObject(hElement->p_stActor->h_StandardGame);
+
+    /* Reset the sound pan before sending the end requests. */
+    SND_fn_vSetPan(1);
+
+    if (hElement->bUseSoundRequestEnd)
+    {
+        if (hElement->pSoundRequestEnd != NULL)
+        {
+            uRefEvt.pstPtr = hElement->pSoundRequestEnd;
+            /* Send the end sound request. */
+            SND_fn_s32SendRequestSound((int)p_stSuperObjCine, -1, g_lSoundObjectTypeAnim, uRefEvt, 0, 0);
+        }
+    }
+
+    if (hElement->bUseMusicRequestEnd)
+    {
+        if (hElement->pMusicRequestEnd != NULL)
+        {
+            uRefEvt.pstPtr = hElement->pMusicRequestEnd;
+            /* Send the end music request. */
+            SND_fn_s32SendRequestSound(-1, -1, g_lSoundObjectTypeMusic, uRefEvt, 0, 0);
+        }
+    }
+
+    if (hElement->bUseVoiceRequestEnd)
+    {
+        if (hElement->pVoiceRequestEnd != NULL)
+        {
+            uRefEvt.pstPtr = hElement->pVoiceRequestEnd;
+            /* Send the end voice request. */
+            SND_fn_s32SendRequestSound((int)p_stSuperObjCine, -1, g_lSoundObjectTypeVoice, uRefEvt, 0, 0);
+        }
+    }
+
+    if (hElement->bUseAmbianceRequestEnd)
+    {
+        if (hElement->pAmbianceRequestEnd != NULL)
+        {
+            uRefEvt.pstPtr = hElement->pAmbianceRequestEnd;
+            /* Send the end ambiance request. */
+            SND_fn_s32SendRequestSound(-1, -1, g_lSoundObjectTypeAmbiance, uRefEvt, 0, 0);
+        }
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\CineDef.c lines 464–516 */
+/* addr: 0x002880e0  size: 284 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 464
+ *   +0x0014 -> line 470
+ *   +0x001c -> line 474
+ *   +0x0028 -> line 476
+ *   +0x0034 -> line 478
+ *   +0x0040 -> line 480
+ *   +0x0044 -> line 482
+ *   +0x0060 -> line 486
+ *   +0x006c -> line 488
+ *   +0x0078 -> line 490
+ *   +0x007c -> line 492
+ *   +0x0098 -> line 496
+ *   +0x00a4 -> line 498
+ *   +0x00b0 -> line 500
+ *   +0x00b4 -> line 502
+ *   +0x00d0 -> line 506
+ *   +0x00dc -> line 508
+ *   +0x00e8 -> line 510
+ *   +0x00ec -> line 512
+ *   +0x0108 -> line 516
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void CINE_SendRequestsBeginSounds(CINE_tdstCineActor_* hElement)
+{
+    HIE_tdstSuperObject_* p_stSuperObjCine;
+    _SND_tduRefEvt uRefEvt;
+
+    /* Reset the sound pan before sending the begin requests. */
+    SND_fn_vSetPan(0);
+
+    /* The super object of the actor drives the sound requests. */
+    p_stSuperObjCine = fn_h_StandardGameGetSuperObject(hElement->p_stActor->h_StandardGame);
+
+    if (hElement->bUseSoundRequestBegin)
+    {
+        if (hElement->pSoundRequestBegin != NULL)
+        {
+            uRefEvt.pstPtr = hElement->pSoundRequestBegin;
+            /* Send the begin sound request. */
+            SND_fn_s32SendRequestSound((int)p_stSuperObjCine, -1, g_lSoundObjectTypeAnim, uRefEvt, 0, 0);
+        }
+    }
+
+    if (hElement->bUseMusicRequestBegin)
+    {
+        if (hElement->pMusicRequestBegin != NULL)
+        {
+            uRefEvt.pstPtr = hElement->pMusicRequestBegin;
+            /* Send the begin music request. */
+            SND_fn_s32SendRequestSound(-1, -1, g_lSoundObjectTypeMusic, uRefEvt, 0, 0);
+        }
+    }
+
+    if (hElement->bUseVoiceRequestBegin)
+    {
+        if (hElement->pVoiceRequestBegin != NULL)
+        {
+            uRefEvt.pstPtr = hElement->pVoiceRequestBegin;
+            /* Send the begin voice request. */
+            SND_fn_s32SendRequestSound((int)p_stSuperObjCine, -1, g_lSoundObjectTypeVoice, uRefEvt, 0, 0);
+        }
+    }
+
+    if (hElement->bUseAmbianceRequestBegin)
+    {
+        if (hElement->pAmbianceRequestBegin != NULL)
+        {
+            uRefEvt.pstPtr = hElement->pAmbianceRequestBegin;
+            /* Send the begin ambiance request. */
+            SND_fn_s32SendRequestSound(-1, -1, g_lSoundObjectTypeAmbiance, uRefEvt, 0, 0);
+        }
+    }
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\CineDef.c lines 533–673 */
 /* addr: 0x00287c50  size: 1160 bytes */
@@ -3540,370 +3828,6 @@ void fn_vInternalChangeComportProcedure(tdstIntelligence_* p_stAimedPersoIntelli
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void HIE_fn_vUpdateGlobalMatrix(HIE_tdstSuperObject_* hSuperObject);
-void HIE_fn_vComputeNewRelativeMatrix(HIE_tdstSuperObject_* hSuperObject, HIE_tdstSuperObject_* hSuperObject2);
-void HIE_fn_vInvalidateHierarchy(HIE_tdstSuperObject_* hSuperObject);
-void HIE_fn_vRefreshHierarchy(HIE_tdstSuperObject_* hSuperObject, unsigned int ulCurrentBits);
-void fn_vInitAllSubEvents(HIE_tdstSuperObject_* _hCharacter, tdstSubAnimInUse_* hNewSubAnimInUse);
-void fn_vSetAnimInState(tdstState_* hState, unsigned short usChannel);
-void fn_vSetNextStateInState(tdstState_* hState, tdstState_* hNextState);
-void fn_vSetRepeatAnimationInState(tdstState_* hState, unsigned char ucRepeat);
-void fn_vSetSpeedInState(tdstState_* hState, signed char scSpeed);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\CineDef.c lines 464–516 */
-/* addr: 0x002880e0  size: 284 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 464
- *   +0x0014 -> line 470
- *   +0x001c -> line 474
- *   +0x0028 -> line 476
- *   +0x0034 -> line 478
- *   +0x0040 -> line 480
- *   +0x0044 -> line 482
- *   +0x0060 -> line 486
- *   +0x006c -> line 488
- *   +0x0078 -> line 490
- *   +0x007c -> line 492
- *   +0x0098 -> line 496
- *   +0x00a4 -> line 498
- *   +0x00b0 -> line 500
- *   +0x00b4 -> line 502
- *   +0x00d0 -> line 506
- *   +0x00dc -> line 508
- *   +0x00e8 -> line 510
- *   +0x00ec -> line 512
- *   +0x0108 -> line 516
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void SND_fn_vSetPan(int b_pan);
-int SND_fn_s32SendRequestSound(int s32_ObjectId, int s32_ChannelId, int s32_TypeId,
-                               _SND_tduRefEvt u_RefEvt, void* pData, void* pData2);
-HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* h_StdGame);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\CineDef.c lines 407–459 */
-/* addr: 0x00288200  size: 288 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 407
- *   +0x0010 -> line 411
- *   +0x0024 -> line 415
- *   +0x002c -> line 419
- *   +0x0038 -> line 421
- *   +0x0044 -> line 423
- *   +0x0048 -> line 425
- *   +0x0064 -> line 429
- *   +0x0070 -> line 431
- *   +0x007c -> line 433
- *   +0x0080 -> line 435
- *   +0x009c -> line 439
- *   +0x00a8 -> line 441
- *   +0x00b4 -> line 443
- *   +0x00b8 -> line 445
- *   +0x00d4 -> line 449
- *   +0x00e0 -> line 451
- *   +0x00ec -> line 453
- *   +0x00f0 -> line 455
- *   +0x010c -> line 459
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\CineDef.c lines 266–392 */
-/* addr: 0x00288320  size: 796 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 266
- *   +0x0020 -> line 269
- *   +0x0030 -> line 270
- *   +0x0038 -> line 272
- *   +0x0044 -> line 275
- *   +0x0050 -> line 278
- *   +0x005c -> line 285
- *   +0x007c -> line 287
- *   +0x008c -> line 288
- *   +0x0090 -> line 289
- *   +0x00b0 -> line 290
- *   +0x00b8 -> line 293
- *   +0x00bc -> line 296
- *   +0x00c4 -> line 297
- *   +0x00dc -> line 303
- *   +0x00e0 -> line 308
- *   +0x00e4 -> line 305
- *   +0x00e8 -> line 308
- *   +0x00fc -> line 309
- *   +0x0100 -> line 312
- *   +0x011c -> line 316
- *   +0x0130 -> line 320
- *   +0x014c -> line 324
- *   +0x0160 -> line 330
- *   +0x0174 -> line 333
- *   +0x0184 -> line 336
- *   +0x01b8 -> line 337
- *   +0x01c0 -> line 342
- *   +0x01c8 -> line 343
- *   +0x01d0 -> line 344
- *   +0x01d8 -> line 345
- *   +0x01dc -> line 346
- *   +0x01e0 -> line 345
- *   +0x0210 -> line 346
- *   +0x0218 -> line 353
- *   +0x0220 -> line 355
- *   +0x0234 -> line 362
- *   +0x025c -> line 365
- *   +0x026c -> line 367
- *   +0x0278 -> line 370
- *   +0x029c -> line 373
- *   +0x02ac -> line 375
- *   +0x02b8 -> line 378
- *   +0x02e0 -> line 383
- *   +0x02e8 -> line 386
- *   +0x02f0 -> line 389
- *   +0x02fc -> line 392
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\CineDef.c lines 186–187 */
-/* addr: 0x00288640  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 186
- *   +0x0004 -> line 187
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\CineDef.c lines 146–160 */
-/* addr: 0x00288650  size: 128 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 146
- *   +0x0004 -> line 149
- *   +0x0008 -> line 146
- *   +0x0014 -> line 149
- *   +0x0028 -> line 150
- *   +0x0030 -> line 151
- *   +0x0034 -> line 152
- *   +0x003c -> line 154
- *   +0x0050 -> line 155
- *   +0x0058 -> line 156
- *   +0x005c -> line 157
- *   +0x0068 -> line 158
- *   +0x006c -> line 160
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int strcasecmp(const char*, const char*);
-
-CINE_tdstCine_* CINE_fn_pFindCine(char* szName)
-{
-    CINE_tdstCine_* hElement;
-
-    if ((g_stEngineStructure.stCineManager == NULL) || (szName == NULL))
-    {
-        return NULL;
-    }
-    hElement = g_stEngineStructure.stCineManager->hCineList.hFirstElementDyn;
-    while (hElement != NULL)
-    {
-        if (strcasecmp(szName, hElement->szName) == 0)
-        {
-            return hElement;
-        }
-        hElement = hElement->hNextBrotherDyn;
-    }
-    return NULL;
-}
-
-void CINE_fn_pResetCineList(void)
-{
-    g_stEngineStructure.stCineManager = NULL;
-}
-
-void CINE_CheckEndCineActor(CINE_tdstCineActor_* hCineActor)
-{
-    tdstDynam_* hDynam;
-    tdstStandardGame_* param0;
-    unsigned char bSubAnimRun;
-    tdstSubAnimInUse_* hNextSubAnimInUse;
-    HIE_tdstSuperObject_* hCharacter;
-    unsigned char bEnd;
-    tdst3dData_* h_Current3dData;
-
-    hCharacter = fn_h_StandardGameGetSuperObject(hCineActor->p_stActor->h_StandardGame);
-    h_Current3dData = ((tdstEngineObject_*)hCharacter->hLinkedObject.p_stCharacter)->h_3dData;
-    if (h_Current3dData->h_CurrentCineActor != NULL)
-    {
-        if (h_Current3dData->h_CurrentCineActor->bPlayingAnim != 0)
-        {
-            if (hCineActor->bIsASubAnim != 0)
-            {
-                hNextSubAnimInUse = h_Current3dData->hForSubAnimInUseArray.hFirstElementDyn;
-                if (hNextSubAnimInUse != NULL)
-                {
-                    hNextSubAnimInUse = hNextSubAnimInUse->hNextBrotherDyn;
-                }
-                if (hNextSubAnimInUse != NULL)
-                {
-                    while (hNextSubAnimInUse != NULL)
-                    {
-                        if (hNextSubAnimInUse == h_Current3dData->h_CurrentCineActor->hSubAnimInUse)
-                        {
-                            bSubAnimRun = 1;
-                            break;
-                        }
-                        hNextSubAnimInUse = hNextSubAnimInUse->hNextBrotherDyn;
-                    }
-                }
-            }
-            else
-            {
-                bSubAnimRun = 1;
-            }
-            if (bSubAnimRun == 0)
-            {
-                h_Current3dData->h_CurrentCineActor->bPlayingAnim = 0;
-            }
-            else
-            {
-                if ((h_Current3dData->ucFlagEndOfAnim != 0) && (h_Current3dData->ucFlagEndState == 0))
-                {
-                    h_Current3dData->h_CurrentCineActor->bPlayingAnim = 0;
-                    if (g_stEngineStructure.stCineManager->gp_stSPOHandleCamera == hCharacter)
-                    {
-                        g_stEngineStructure.stCineManager->gp_stSPOHandleCamera = NULL;
-                    }
-                }
-            }
-            param0 = ((tdstEngineObject_*)hCharacter->hLinkedObject.p_stCharacter)->h_StandardGame;
-            if ((h_Current3dData->h_CurrentCineActor->bPreviousIAState == 0) && (h_Current3dData->h_CurrentCineActor->bSkipIA != 0))
-            {
-                param0->ulCustomBits &= 0xFFFEFFFF;
-            }
-            if ((h_Current3dData->h_CurrentCineActor->bPreviousMecaState == 0) && (h_Current3dData->h_CurrentCineActor->bSkipMeca != 0))
-            {
-                param0->ulCustomBits &= 0xFFFF7FFF;
-            }
-            param0->ulAICustomBits &= 0xFFFFBFFF;
-            if (h_Current3dData->h_CurrentCineActor->bMoveActorAtTheEnd != 0)
-            {
-                if (h_Current3dData->hArrayOfChannels != NULL)
-                {
-                    HIE_tdstSuperObject_* hSuperObj;
-                    hSuperObj = h_Current3dData->hArrayOfChannels[h_Current3dData->h_CurrentCineActor->usChannel].hSupObject;
-                    if (hSuperObj != NULL)
-                    {
-                        hDynam = ((tdstEngineObject_*)hCharacter->hLinkedObject.p_stCharacter)->h_Dynam;
-                        HIE_fn_vUpdateGlobalMatrix(hCharacter);
-                        HIE_fn_vUpdateGlobalMatrix(hSuperObj);
-                        MEC_vImposeRotationMatrix(hCharacter, hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->h_SuperObject);
-                    }
-                }
-            }
-        }
-    }
-}
-
-void CINE_SendRequestsEndSounds(CINE_tdstCineActor_* hElement)
-{
-    HIE_tdstSuperObject_* p_stSuperObjCine;
-    _SND_tduRefEvt uRefEvt;
-
-    p_stSuperObjCine = fn_h_StandardGameGetSuperObject(hElement->p_stActor->h_StandardGame);
-
-    /* Reset the sound pan before sending the end requests. */
-    SND_fn_vSetPan(1);
-
-    if (hElement->bUseSoundRequestEnd)
-    {
-        if (hElement->pSoundRequestEnd != NULL)
-        {
-            uRefEvt.pstPtr = hElement->pSoundRequestEnd;
-            /* Send the end sound request. */
-            SND_fn_s32SendRequestSound((int)p_stSuperObjCine, -1, g_lSoundObjectTypeAnim, uRefEvt, 0, 0);
-        }
-    }
-
-    if (hElement->bUseMusicRequestEnd)
-    {
-        if (hElement->pMusicRequestEnd != NULL)
-        {
-            uRefEvt.pstPtr = hElement->pMusicRequestEnd;
-            /* Send the end music request. */
-            SND_fn_s32SendRequestSound(-1, -1, g_lSoundObjectTypeMusic, uRefEvt, 0, 0);
-        }
-    }
-
-    if (hElement->bUseVoiceRequestEnd)
-    {
-        if (hElement->pVoiceRequestEnd != NULL)
-        {
-            uRefEvt.pstPtr = hElement->pVoiceRequestEnd;
-            /* Send the end voice request. */
-            SND_fn_s32SendRequestSound((int)p_stSuperObjCine, -1, g_lSoundObjectTypeVoice, uRefEvt, 0, 0);
-        }
-    }
-
-    if (hElement->bUseAmbianceRequestEnd)
-    {
-        if (hElement->pAmbianceRequestEnd != NULL)
-        {
-            uRefEvt.pstPtr = hElement->pAmbianceRequestEnd;
-            /* Send the end ambiance request. */
-            SND_fn_s32SendRequestSound(-1, -1, g_lSoundObjectTypeAmbiance, uRefEvt, 0, 0);
-        }
-    }
-}
-
-void CINE_SendRequestsBeginSounds(CINE_tdstCineActor_* hElement)
-{
-    HIE_tdstSuperObject_* p_stSuperObjCine;
-    _SND_tduRefEvt uRefEvt;
-
-    /* Reset the sound pan before sending the begin requests. */
-    SND_fn_vSetPan(0);
-
-    /* The super object of the actor drives the sound requests. */
-    p_stSuperObjCine = fn_h_StandardGameGetSuperObject(hElement->p_stActor->h_StandardGame);
-
-    if (hElement->bUseSoundRequestBegin)
-    {
-        if (hElement->pSoundRequestBegin != NULL)
-        {
-            uRefEvt.pstPtr = hElement->pSoundRequestBegin;
-            /* Send the begin sound request. */
-            SND_fn_s32SendRequestSound((int)p_stSuperObjCine, -1, g_lSoundObjectTypeAnim, uRefEvt, 0, 0);
-        }
-    }
-
-    if (hElement->bUseMusicRequestBegin)
-    {
-        if (hElement->pMusicRequestBegin != NULL)
-        {
-            uRefEvt.pstPtr = hElement->pMusicRequestBegin;
-            /* Send the begin music request. */
-            SND_fn_s32SendRequestSound(-1, -1, g_lSoundObjectTypeMusic, uRefEvt, 0, 0);
-        }
-    }
-
-    if (hElement->bUseVoiceRequestBegin)
-    {
-        if (hElement->pVoiceRequestBegin != NULL)
-        {
-            uRefEvt.pstPtr = hElement->pVoiceRequestBegin;
-            /* Send the begin voice request. */
-            SND_fn_s32SendRequestSound((int)p_stSuperObjCine, -1, g_lSoundObjectTypeVoice, uRefEvt, 0, 0);
-        }
-    }
-
-    if (hElement->bUseAmbianceRequestBegin)
-    {
-        if (hElement->pAmbianceRequestBegin != NULL)
-        {
-            uRefEvt.pstPtr = hElement->pAmbianceRequestBegin;
-            /* Send the begin ambiance request. */
-            SND_fn_s32SendRequestSound(-1, -1, g_lSoundObjectTypeAmbiance, uRefEvt, 0, 0);
-        }
-    }
-}
-
 void fn_vLaunchEngineCinematics(CINE_tdstCine_* hCine)
 {
     AI_tdstMind_* p_stMind;
@@ -3973,6 +3897,55 @@ void fn_vLaunchEngineCinematics(CINE_tdstCine_* hCine)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\CineDef.c lines 677–782 */
+/* addr: 0x00287930  size: 796 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 677
+ *   +0x0018 -> line 686
+ *   +0x005c -> line 689
+ *   +0x0060 -> line 690
+ *   +0x0068 -> line 692
+ *   +0x0074 -> line 698
+ *   +0x0080 -> line 699
+ *   +0x0084 -> line 698
+ *   +0x0088 -> line 703
+ *   +0x008c -> line 701
+ *   +0x0090 -> line 703
+ *   +0x0098 -> line 705
+ *   +0x00b8 -> line 707
+ *   +0x00c4 -> line 709
+ *   +0x0170 -> line 711
+ *   +0x017c -> line 712
+ *   +0x0188 -> line 714
+ *   +0x01a4 -> line 715
+ *   +0x01b0 -> line 718
+ *   +0x01d4 -> line 721
+ *   +0x01f0 -> line 725
+ *   +0x0204 -> line 726
+ *   +0x0208 -> line 729
+ *   +0x0224 -> line 733
+ *   +0x0238 -> line 738
+ *   +0x0244 -> line 740
+ *   +0x0250 -> line 743
+ *   +0x025c -> line 746
+ *   +0x0270 -> line 747
+ *   +0x027c -> line 749
+ *   +0x0280 -> line 750
+ *   +0x028c -> line 753
+ *   +0x0298 -> line 756
+ *   +0x02a4 -> line 759
+ *   +0x02b8 -> line 760
+ *   +0x02c8 -> line 766
+ *   +0x02d0 -> line 771
+ *   +0x02e4 -> line 774
+ *   +0x02ec -> line 776
+ *   +0x02f0 -> line 777
+ *   +0x02f4 -> line 778
+ *   +0x02fc -> line 780
+ *   +0x0300 -> line 782
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vStopEngineCinematics(CINE_tdstCine_* hCine)
 {
     AI_tdstMind_* p_stMind;
@@ -4088,6 +4061,14 @@ void fn_vStopEngineCinematics(CINE_tdstCine_* hCine)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\CineDef.c lines 804–807 */
+/* addr: 0x002878f0  size: 64 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 804
+ *   +0x0038 -> line 807
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 #pragma optimize_for_size off
 CINE_tdstCine_* CINE_fn_hGetCineAtIndex(int iPos)
 {
@@ -4105,6 +4086,22 @@ CINE_tdstCine_* CINE_fn_hGetCineAtIndex(int iPos)
 }
 #pragma optimize_for_size reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\CineDef.c lines 702–725 */
+/* addr: 0x00287740  size: 420 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 702
+ *   +0x0020 -> line 709
+ *   +0x0024 -> line 702
+ *   +0x0030 -> line 707
+ *   +0x0038 -> line 712
+ *   +0x0078 -> line 715
+ *   +0x00b8 -> line 718
+ *   +0x00f8 -> line 721
+ *   +0x0138 -> line 724
+ *   +0x0178 -> line 725
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vDecompressTransform(MAT_tdstTransformation_* hTransform, tdstDemoCompressedTransform_* _p_stCompressedTransform)
 {
     short* p;

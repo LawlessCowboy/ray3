@@ -113,45 +113,6 @@ struct GEO_tdstEdge_ {
     MTH3D_tdstVector_ st_VectorPoints[2]; /* +0x4 */
 };
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PO\Specif\PhObjs.c lines 185–223 */
-/* addr: 0x00317fd0  size: 520 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 185
- *   +0x000c -> line 192
- *   +0x0010 -> line 185
- *   +0x0014 -> line 192
- *   +0x0018 -> line 185
- *   +0x001c -> line 192
- *   +0x0020 -> line 185
- *   +0x0028 -> line 190
- *   +0x0034 -> line 192
- *   +0x003c -> line 187
- *   +0x0040 -> line 190
- *   +0x0060 -> line 192
- *   +0x0064 -> line 190
- *   +0x0068 -> line 192
- *   +0x0074 -> line 200
- *   +0x007c -> line 205
- *   +0x00dc -> line 207
- *   +0x00f0 -> line 205
- *   +0x0100 -> line 207
- *   +0x0108 -> line 209
- *   +0x017c -> line 213
- *   +0x01ac -> line 215
- *   +0x01b0 -> line 213
- *   +0x01b4 -> line 215
- *   +0x01b8 -> line 213
- *   +0x01bc -> line 215
- *   +0x01c0 -> line 213
- *   +0x01c4 -> line 215
- *   +0x01e0 -> line 216
- *   +0x01e4 -> line 219
- *   +0x01e8 -> line 217
- *   +0x01ec -> line 222
- *   +0x01f0 -> line 223
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 typedef struct MTH4D_tdstMatrix_ MTH4D_tdstMatrix_;
 typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;
 typedef struct GLI_tdstDataOfElement_ GLI_tdstDataOfElement_;
@@ -267,6 +228,45 @@ tdstPhysicalCollSet_* PO_fn_hGetCollideSet(PO_tdstPhysicalObject_* _hPhysicalObj
     return _hPhysicalObject->_hCollideSet;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PO\Specif\PhObjs.c lines 185–223 */
+/* addr: 0x00317fd0  size: 520 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 185
+ *   +0x000c -> line 192
+ *   +0x0010 -> line 185
+ *   +0x0014 -> line 192
+ *   +0x0018 -> line 185
+ *   +0x001c -> line 192
+ *   +0x0020 -> line 185
+ *   +0x0028 -> line 190
+ *   +0x0034 -> line 192
+ *   +0x003c -> line 187
+ *   +0x0040 -> line 190
+ *   +0x0060 -> line 192
+ *   +0x0064 -> line 190
+ *   +0x0068 -> line 192
+ *   +0x0074 -> line 200
+ *   +0x007c -> line 205
+ *   +0x00dc -> line 207
+ *   +0x00f0 -> line 205
+ *   +0x0100 -> line 207
+ *   +0x0108 -> line 209
+ *   +0x017c -> line 213
+ *   +0x01ac -> line 215
+ *   +0x01b0 -> line 213
+ *   +0x01b4 -> line 215
+ *   +0x01b8 -> line 213
+ *   +0x01bc -> line 215
+ *   +0x01c0 -> line 213
+ *   +0x01c4 -> line 215
+ *   +0x01e0 -> line 216
+ *   +0x01e4 -> line 219
+ *   +0x01e8 -> line 217
+ *   +0x01ec -> line 222
+ *   +0x01f0 -> line 223
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int PIC_bIntersectSegmentWithCollideObject(MTH3D_tdstVector_* p_stCameraPos, MTH3D_tdstVector_* p_stVertex12, COL_tdstCollideObject_* p_stObject, PIC_tdstPickedObject_* p_stPickedObject)
 {
     short i;

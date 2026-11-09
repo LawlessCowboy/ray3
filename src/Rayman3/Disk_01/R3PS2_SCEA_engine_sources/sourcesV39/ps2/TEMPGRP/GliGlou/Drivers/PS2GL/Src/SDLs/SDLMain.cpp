@@ -2289,182 +2289,11 @@ extern "C" void GLIPS2_vSetNoInterpolationForSPO(HIE_tdstSuperObject_* _hLinkedS
 extern "C" void GLIPS2_vRecurseRemoveInterpolationForSPOs(HIE_tdstSuperObject_* _hLinkedSpo, C_Sdl* pOpaqueSDL, C_Sdl* pTranspSDL);
 extern "C" void GLI_vSetOptimizedSDC(int flag);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 1320–1320 */
-/* addr: 0x002d5650  size: 20 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1320
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 1315–1315 */
-/* addr: 0x002d5670  size: 20 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1315
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 1277–1304 */
-/* addr: 0x002d5690  size: 216 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1277
- *   +0x0004 -> line 1285
- *   +0x0008 -> line 1277
- *   +0x001c -> line 1285
- *   +0x0024 -> line 1287
- *   +0x002c -> line 1288
- *   +0x0048 -> line 1291
- *   +0x0050 -> line 1292
- *   +0x0060 -> line 1295
- *   +0x0064 -> line 1298
- *   +0x0068 -> line 1301
- *   +0x00c0 -> line 1304
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern "C" void GLIPS2_vRecurseRemoveInterpolationForSPOs(HIE_tdstSuperObject_* _hLinkedSpo, C_Sdl* pOpaqueSDL, C_Sdl* pTranspSDL);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 1258–1272 */
-/* addr: 0x002d5770  size: 396 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1258
- *   +0x001c -> line 1262
- *   +0x0024 -> line 1264
- *   +0x0090 -> line 1265
- *   +0x00f8 -> line 1267
- *   +0x0104 -> line 1269
- *   +0x0160 -> line 1270
- *   +0x016c -> line 1271
- *   +0x0170 -> line 1272
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 1230–1254 */
-/* addr: 0x002d5900  size: 172 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1230
- *   +0x0004 -> line 1231
- *   +0x0010 -> line 1234
- *   +0x0014 -> line 1236
- *   +0x001c -> line 1244
- *   +0x0020 -> line 1240
- *   +0x0024 -> line 1244
- *   +0x0028 -> line 1246
- *   +0x0070 -> line 1247
- *   +0x0074 -> line 1246
- *   +0x0078 -> line 1247
- *   +0x0088 -> line 1249
- *   +0x0090 -> line 1251
- *   +0x0098 -> line 1252
- *   +0x00a0 -> line 1254
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 1201–1222 */
-/* addr: 0x002d59b0  size: 216 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1201
- *   +0x0014 -> line 1203
- *   +0x0098 -> line 1206
- *   +0x00a4 -> line 1209
- *   +0x00ac -> line 1212
- *   +0x00b4 -> line 1214
- *   +0x00b8 -> line 1215
- *   +0x00bc -> line 1216
- *   +0x00c0 -> line 1222
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern "C" void MyglDeleteLists(unsigned int DisplayList);
 extern "C" void impPS2glPartialDeleteLists(unsigned int list);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 1086–1194 */
-/* addr: 0x002d5a90  size: 1004 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1086
- *   +0x000c -> line 1088
- *   +0x0018 -> line 1097
- *   +0x0020 -> line 1098
- *   +0x0028 -> line 1102
- *   +0x0040 -> line 1105
- *   +0x0044 -> line 1106
- *   +0x004c -> line 1109
- *   +0x0054 -> line 1114
- *   +0x0074 -> line 1116
- *   +0x007c -> line 1118
- *   +0x0088 -> line 1119
- *   +0x0090 -> line 1122
- *   +0x009c -> line 1124
- *   +0x00a4 -> line 1127
- *   +0x00ac -> line 1129
- *   +0x0100 -> line 1130
- *   +0x0108 -> line 1131
- *   +0x0114 -> line 1132
- *   +0x011c -> line 1135
- *   +0x0170 -> line 1136
- *   +0x0178 -> line 1137
- *   +0x0184 -> line 1144
- *   +0x0194 -> line 1145
- *   +0x0198 -> line 1144
- *   +0x01a0 -> line 1145
- *   +0x01a8 -> line 1144
- *   +0x01b4 -> line 1145
- *   +0x01b8 -> line 1144
- *   +0x01c4 -> line 1146
- *   +0x01c8 -> line 1144
- *   +0x01d0 -> line 1145
- *   +0x01d4 -> line 1144
- *   +0x01d8 -> line 1145
- *   +0x01dc -> line 1144
- *   +0x01f4 -> line 1145
- *   +0x0200 -> line 1144
- *   +0x020c -> line 1146
- *   +0x0210 -> line 1145
- *   +0x0214 -> line 1146
- *   +0x0218 -> line 1145
- *   +0x021c -> line 1146
- *   +0x0228 -> line 1145
- *   +0x024c -> line 1146
- *   +0x0254 -> line 1147
- *   +0x0268 -> line 1148
- *   +0x0270 -> line 1149
- *   +0x0278 -> line 1153
- *   +0x0284 -> line 1155
- *   +0x0294 -> line 1156
- *   +0x02a4 -> line 1157
- *   +0x02b4 -> line 1158
- *   +0x02c4 -> line 1159
- *   +0x02cc -> line 1162
- *   +0x02d8 -> line 1163
- *   +0x02e8 -> line 1167
- *   +0x02ec -> line 1168
- *   +0x02f0 -> line 1167
- *   +0x02f4 -> line 1168
- *   +0x02fc -> line 1169
- *   +0x0308 -> line 1170
- *   +0x0350 -> line 1172
- *   +0x0354 -> line 1170
- *   +0x0358 -> line 1171
- *   +0x0360 -> line 1172
- *   +0x0364 -> line 1171
- *   +0x0368 -> line 1172
- *   +0x0370 -> line 1171
- *   +0x0378 -> line 1172
- *   +0x0380 -> line 1181
- *   +0x0388 -> line 1184
- *   +0x03a0 -> line 1189
- *   +0x03a8 -> line 1192
- *   +0x03ac -> line 1191
- *   +0x03b0 -> line 1192
- *   +0x03b4 -> line 1191
- *   +0x03b8 -> line 1192
- *   +0x03dc -> line 1194
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern "C" void fn_vAddSdlToProcessLater(C_Sdl* pSdl);
 extern "C" void GLI_vInitGLProjectionMatrix(void);
 extern "C" void PS2glLoadMatrixf(const float* m);
@@ -2496,399 +2325,171 @@ inline void PS2_M_vMulMatrixColumnsByVector(float (*_src)[4], float* _vec, float
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 1046–1083 */
-/* addr: 0x002d5e80  size: 368 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1046
- *   +0x0010 -> line 1053
- *   +0x0018 -> line 1054
- *   +0x0020 -> line 1055
- *   +0x002c -> line 1056
- *   +0x0034 -> line 1057
- *   +0x003c -> line 1058
- *   +0x0044 -> line 1059
- *   +0x004c -> line 1060
- *   +0x0054 -> line 1061
- *   +0x0058 -> line 1063
- *   +0x0060 -> line 1066
- *   +0x0064 -> line 1065
- *   +0x0068 -> line 1066
- *   +0x006c -> line 1067
- *   +0x0074 -> line 1065
- *   +0x007c -> line 1068
- *   +0x0080 -> line 1065
- *   +0x0084 -> line 1068
- *   +0x0088 -> line 1065
- *   +0x008c -> line 1068
- *   +0x00d0 -> line 1069
- *   +0x00d4 -> line 1070
- *   +0x011c -> line 1072
- *   +0x0120 -> line 1070
- *   +0x0124 -> line 1072
- *   +0x0128 -> line 1074
- *   +0x012c -> line 1072
- *   +0x0130 -> line 1071
- *   +0x0134 -> line 1075
- *   +0x0138 -> line 1071
- *   +0x013c -> line 1077
- *   +0x0144 -> line 1078
- *   +0x014c -> line 1079
- *   +0x0158 -> line 1081
- *   +0x0160 -> line 1083
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 948–1038 */
-/* addr: 0x002d5ff0  size: 336 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 948
- *   +0x000c -> line 962
- *   +0x0014 -> line 963
- *   +0x0018 -> line 962
- *   +0x001c -> line 963
- *   +0x0028 -> line 964
- *   +0x0034 -> line 966
- *   +0x0060 -> line 969
- *   +0x0064 -> line 971
- *   +0x0068 -> line 969
- *   +0x006c -> line 971
- *   +0x0070 -> line 972
- *   +0x0074 -> line 974
- *   +0x0080 -> line 977
- *   +0x0084 -> line 978
- *   +0x0088 -> line 979
- *   +0x0094 -> line 981
- *   +0x0098 -> line 983
- *   +0x00a4 -> line 986
- *   +0x00a8 -> line 995
- *   +0x00ac -> line 993
- *   +0x00b0 -> line 995
- *   +0x00b4 -> line 996
- *   +0x00b8 -> line 997
- *   +0x00bc -> line 998
- *   +0x00c0 -> line 999
- *   +0x00c4 -> line 1000
- *   +0x00c8 -> line 1001
- *   +0x00cc -> line 1005
- *   +0x00d8 -> line 1007
- *   +0x00dc -> line 1009
- *   +0x00e0 -> line 1010
- *   +0x00e4 -> line 1011
- *   +0x00e8 -> line 1012
- *   +0x00ec -> line 1014
- *   +0x00f0 -> line 1015
- *   +0x00f4 -> line 1016
- *   +0x00f8 -> line 1017
- *   +0x00fc -> line 1019
- *   +0x0100 -> line 1021
- *   +0x0104 -> line 1022
- *   +0x0108 -> line 1023
- *   +0x010c -> line 1024
- *   +0x0110 -> line 1026
- *   +0x0114 -> line 1027
- *   +0x0118 -> line 1028
- *   +0x011c -> line 1029
- *   +0x0120 -> line 1036
- *   +0x0124 -> line 1035
- *   +0x0130 -> line 1036
- *   +0x0140 -> line 1038
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 739–942 */
-/* addr: 0x002d6140  size: 544 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 750
- *   +0x0004 -> line 760
- *   +0x0008 -> line 739
- *   +0x000c -> line 755
- *   +0x0010 -> line 760
- *   +0x0014 -> line 755
- *   +0x0018 -> line 760
- *   +0x0024 -> line 762
- *   +0x0028 -> line 769
- *   +0x0030 -> line 773
- *   +0x0034 -> line 771
- *   +0x0038 -> line 773
- *   +0x003c -> line 774
- *   +0x0040 -> line 775
- *   +0x0044 -> line 776
- *   +0x0048 -> line 777
- *   +0x004c -> line 778
- *   +0x0050 -> line 779
- *   +0x0054 -> line 818
- *   +0x006c -> line 824
- *   +0x0070 -> line 825
- *   +0x0074 -> line 824
- *   +0x0078 -> line 825
- *   +0x007c -> line 824
- *   +0x0080 -> line 827
- *   +0x0084 -> line 825
- *   +0x0088 -> line 827
- *   +0x00b8 -> line 829
- *   +0x00bc -> line 830
- *   +0x00c0 -> line 832
- *   +0x00c4 -> line 833
- *   +0x00c8 -> line 835
- *   +0x00cc -> line 836
- *   +0x00d0 -> line 837
- *   +0x00d4 -> line 838
- *   +0x00d8 -> line 840
- *   +0x00dc -> line 841
- *   +0x00e0 -> line 842
- *   +0x00e4 -> line 843
- *   +0x00e8 -> line 845
- *   +0x00ec -> line 846
- *   +0x00f0 -> line 847
- *   +0x00f4 -> line 848
- *   +0x00f8 -> line 850
- *   +0x00fc -> line 851
- *   +0x0100 -> line 852
- *   +0x0104 -> line 853
- *   +0x0108 -> line 856
- *   +0x010c -> line 857
- *   +0x0110 -> line 859
- *   +0x0114 -> line 860
- *   +0x0118 -> line 861
- *   +0x011c -> line 862
- *   +0x0120 -> line 863
- *   +0x0124 -> line 864
- *   +0x0128 -> line 865
- *   +0x012c -> line 866
- *   +0x0130 -> line 868
- *   +0x0134 -> line 869
- *   +0x0138 -> line 870
- *   +0x013c -> line 871
- *   +0x0140 -> line 872
- *   +0x0144 -> line 873
- *   +0x0148 -> line 874
- *   +0x014c -> line 875
- *   +0x0150 -> line 877
- *   +0x0154 -> line 878
- *   +0x0158 -> line 879
- *   +0x015c -> line 880
- *   +0x0160 -> line 881
- *   +0x0164 -> line 882
- *   +0x0168 -> line 883
- *   +0x016c -> line 884
- *   +0x0170 -> line 885
- *   +0x0174 -> line 887
- *   +0x0178 -> line 889
- *   +0x017c -> line 890
- *   +0x0180 -> line 891
- *   +0x0184 -> line 892
- *   +0x0188 -> line 894
- *   +0x018c -> line 895
- *   +0x0190 -> line 896
- *   +0x0194 -> line 897
- *   +0x0198 -> line 903
- *   +0x01a0 -> line 906
- *   +0x01a4 -> line 909
- *   +0x01d0 -> line 911
- *   +0x01d4 -> line 913
- *   +0x01d8 -> line 914
- *   +0x01dc -> line 915
- *   +0x01e0 -> line 916
- *   +0x01e4 -> line 918
- *   +0x01e8 -> line 919
- *   +0x01ec -> line 920
- *   +0x01f0 -> line 921
- *   +0x01f4 -> line 923
- *   +0x01f8 -> line 925
- *   +0x01fc -> line 926
- *   +0x0200 -> line 927
- *   +0x0204 -> line 928
- *   +0x0208 -> line 930
- *   +0x020c -> line 931
- *   +0x0210 -> line 932
- *   +0x0214 -> line 933
- *   +0x0218 -> line 942
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 661–730 */
-/* addr: 0x002d6360  size: 888 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 661
- *   +0x0004 -> line 665
- *   +0x0008 -> line 661
- *   +0x000c -> line 668
- *   +0x0010 -> line 661
- *   +0x0014 -> line 665
- *   +0x0018 -> line 668
- *   +0x0020 -> line 670
- *   +0x0060 -> line 671
- *   +0x0064 -> line 670
- *   +0x0068 -> line 671
- *   +0x006c -> line 675
- *   +0x0070 -> line 670
- *   +0x0074 -> line 673
- *   +0x0078 -> line 670
- *   +0x007c -> line 672
- *   +0x0088 -> line 673
- *   +0x008c -> line 674
- *   +0x0090 -> line 673
- *   +0x0094 -> line 675
- *   +0x0098 -> line 674
- *   +0x00c0 -> line 680
- *   +0x00cc -> line 681
- *   +0x00d8 -> line 684
- *   +0x00e0 -> line 687
- *   +0x00e4 -> line 690
- *   +0x00f4 -> line 694
- *   +0x00fc -> line 697
- *   +0x0104 -> line 703
- *   +0x010c -> line 704
- *   +0x0118 -> line 705
- *   +0x011c -> line 704
- *   +0x0124 -> line 705
- *   +0x012c -> line 706
- *   +0x0214 -> line 707
- *   +0x021c -> line 708
- *   +0x0220 -> line 709
- *   +0x0224 -> line 708
- *   +0x0228 -> line 709
- *   +0x0230 -> line 708
- *   +0x0240 -> line 709
- *   +0x0244 -> line 708
- *   +0x027c -> line 709
- *   +0x0284 -> line 710
- *   +0x02e0 -> line 715
- *   +0x02ec -> line 716
- *   +0x02f8 -> line 718
- *   +0x0304 -> line 720
- *   +0x0314 -> line 721
- *   +0x0324 -> line 722
- *   +0x0334 -> line 723
- *   +0x0344 -> line 724
- *   +0x034c -> line 727
- *   +0x0358 -> line 728
- *   +0x0368 -> line 730
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern "C" void GLI_DRV_vSetCommonGLRenderStates(void);
 extern "C" void PS2glAlphaFunc(unsigned int func, float ref);
 extern "C" unsigned int PS2glGenLists(int range);
 extern "C" void PS2glNewList(unsigned int list, unsigned int mode);
 extern "C" void PS2glTexParameteri(unsigned int target, unsigned int pname, int param);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 605–653 */
-/* addr: 0x002d66e0  size: 828 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 85–85 */
+/* addr: 0x002d7530  size: 12 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 605
- *   +0x0004 -> line 609
- *   +0x0008 -> line 605
- *   +0x000c -> line 610
- *   +0x0010 -> line 605
- *   +0x0014 -> line 609
- *   +0x0018 -> line 610
- *   +0x0020 -> line 611
- *   +0x0064 -> line 612
- *   +0x0068 -> line 611
- *   +0x006c -> line 612
- *   +0x0070 -> line 617
- *   +0x0074 -> line 611
- *   +0x007c -> line 613
- *   +0x0088 -> line 614
- *   +0x0094 -> line 617
- *   +0x0098 -> line 616
- *   +0x00c0 -> line 622
- *   +0x00c8 -> line 623
- *   +0x00d4 -> line 624
- *   +0x00d8 -> line 623
- *   +0x00e0 -> line 624
- *   +0x00e8 -> line 625
- *   +0x01d0 -> line 626
- *   +0x01d8 -> line 627
- *   +0x01dc -> line 628
- *   +0x01e0 -> line 627
- *   +0x01e4 -> line 628
- *   +0x01ec -> line 627
- *   +0x01fc -> line 628
- *   +0x0200 -> line 627
- *   +0x0238 -> line 628
- *   +0x0240 -> line 629
- *   +0x0264 -> line 631
- *   +0x0268 -> line 632
- *   +0x026c -> line 629
- *   +0x02a4 -> line 637
- *   +0x02b0 -> line 638
- *   +0x02bc -> line 640
- *   +0x02c8 -> line 642
- *   +0x02d8 -> line 643
- *   +0x02e8 -> line 644
- *   +0x02f8 -> line 645
- *   +0x0308 -> line 647
- *   +0x0310 -> line 650
- *   +0x031c -> line 651
- *   +0x032c -> line 653
+ *   +0x0000 -> line 85
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void C_Sdl::operator delete(void* ptr)
+{
+    PS2glLiberator(ptr);
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 575–598 */
-/* addr: 0x002d6a20  size: 144 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 94–121 */
+/* addr: 0x002d74d0  size: 96 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 580
- *   +0x0004 -> line 575
- *   +0x0008 -> line 577
- *   +0x000c -> line 578
- *   +0x0010 -> line 580
- *   +0x0018 -> line 584
- *   +0x001c -> line 585
- *   +0x0020 -> line 584
- *   +0x0024 -> line 585
- *   +0x002c -> line 586
- *   +0x0030 -> line 589
- *   +0x003c -> line 591
- *   +0x005c -> line 593
- *   +0x0060 -> line 594
- *   +0x006c -> line 595
- *   +0x0078 -> line 597
- *   +0x0088 -> line 598
+ *   +0x0000 -> line 94
+ *   +0x0004 -> line 104
+ *   +0x0008 -> line 95
+ *   +0x000c -> line 105
+ *   +0x0010 -> line 96
+ *   +0x0014 -> line 108
+ *   +0x0018 -> line 97
+ *   +0x001c -> line 98
+ *   +0x0020 -> line 99
+ *   +0x0024 -> line 100
+ *   +0x0028 -> line 101
+ *   +0x002c -> line 102
+ *   +0x0030 -> line 104
+ *   +0x0034 -> line 105
+ *   +0x0038 -> line 108
+ *   +0x003c -> line 110
+ *   +0x0040 -> line 111
+ *   +0x0044 -> line 112
+ *   +0x0048 -> line 113
+ *   +0x004c -> line 114
+ *   +0x0050 -> line 116
+ *   +0x0058 -> line 121
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void C_Sdl::Init(void)
+{
+    m_DisplayList = 0;
+    m_NbRefs = 0;
+    m_NbReservedRefs = 0;
+    m_ppRefs = 0;
+    m_SDL_Size = 0;
+    m_NbFaces = 0;
+    m_NbElements = 0;
+    m_bIsTransparent = 0;
+    m_LastFrameUsed = 0;
+    m_SDL_InitSize = 0x7530;
+    m_bReduce = 1;
+    m_LastFrameInterpolated = -1;
+    m_SkinIndex = -1;
+    m_SkinMaterial = 0;
+    m_pListData = 0;
+    m_bNoInterpolation = 1;
+    m_bIsBlinking = 0;
+    GLI_g_NbSDLs++;
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 512–564 */
-/* addr: 0x002d6ab0  size: 480 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 157–174 */
+/* addr: 0x002d7460  size: 104 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 512
- *   +0x0018 -> line 515
- *   +0x003c -> line 517
- *   +0x0048 -> line 519
- *   +0x004c -> line 521
- *   +0x0058 -> line 523
- *   +0x0074 -> line 524
- *   +0x008c -> line 525
- *   +0x00a0 -> line 526
- *   +0x00a8 -> line 531
- *   +0x00b0 -> line 533
- *   +0x00cc -> line 534
- *   +0x00e4 -> line 535
- *   +0x00f8 -> line 536
- *   +0x00fc -> line 539
- *   +0x0100 -> line 540
- *   +0x0108 -> line 543
- *   +0x0114 -> line 545
- *   +0x0124 -> line 547
- *   +0x012c -> line 549
- *   +0x0148 -> line 550
- *   +0x015c -> line 551
- *   +0x0170 -> line 552
- *   +0x0174 -> line 554
- *   +0x017c -> line 557
- *   +0x0184 -> line 559
- *   +0x01a0 -> line 560
- *   +0x01b4 -> line 561
- *   +0x01c8 -> line 564
+ *   +0x0000 -> line 157
+ *   +0x0010 -> line 159
+ *   +0x0018 -> line 161
+ *   +0x0038 -> line 166
+ *   +0x0044 -> line 169
+ *   +0x004c -> line 172
+ *   +0x0060 -> line 174
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void C_Sdl::RemoveSPOInterpol(HIE_tdstSuperObject_* pSPO)
+{
+    C_SdlRef_LocalMatrix* pRef;
+    unsigned int i;
+
+    if (m_NbReservedRefs)
+    {
+        for (i = 0; i < m_NbRefs; i++)
+        {
+            if (m_ppRefs[i] && m_ppRefs[i]->m_uRefType == 1)
+            {
+                pRef = (C_SdlRef_LocalMatrix*)m_ppRefs[i];
+                if (pRef->m_vpOriginPointer == (int)pSPO)
+                    pRef->m_bNoInterpolation = 1;
+            }
+        }
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 180–197 */
+/* addr: 0x002d7380  size: 220 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 180
+ *   +0x0014 -> line 182
+ *   +0x0098 -> line 185
+ *   +0x00a4 -> line 187
+ *   +0x00ac -> line 188
+ *   +0x00b0 -> line 189
+ *   +0x00b4 -> line 190
+ *   +0x00b8 -> line 196
+ *   +0x00c4 -> line 197
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void C_Sdl::Destruct(void)
+{
+    unsigned int i;
+
+    if (m_NbReservedRefs)
+    {
+        for (i = 0; i < m_NbRefs; i++)
+        {
+            if (m_ppRefs[i])
+            {
+                delete m_ppRefs[i];
+                m_ppRefs[i] = NULL;
+            }
+        }
+        PS2glLiberator(m_ppRefs);
+        m_ppRefs = NULL;
+    }
+    m_NbReservedRefs = 0;
+    m_NbRefs = 0;
+    if (m_DisplayList)
+    {
+        MyglDeleteLists(m_DisplayList);
+        m_DisplayList = 0;
+        m_pListData = 0;
+        m_SDL_Size = 0;
+    }
+    GLI_g_NbSDLs--;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 204–213 */
+/* addr: 0x002d7300  size: 120 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 204
+ *   +0x0014 -> line 205
+ *   +0x0028 -> line 207
+ *   +0x0030 -> line 209
+ *   +0x0048 -> line 212
+ *   +0x0064 -> line 213
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void C_Sdl::AddRef(C_SdlRef* pRef)
+{
+    if (m_NbRefs >= m_NbReservedRefs)
+    {
+        m_NbReservedRefs += 16;
+        m_ppRefs = (C_SdlRef**)((void*(*)(void*, unsigned int))PS2glReallocator)(m_ppRefs, m_NbReservedRefs * sizeof(C_SdlRef*));
+    }
+    m_ppRefs[m_NbRefs++] = pRef;
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 221–485 */
 /* addr: 0x002d6c90  size: 1636 bytes */
@@ -3044,171 +2645,6 @@ extern "C" void PS2glTexParameteri(unsigned int target, unsigned int pname, int 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 204–213 */
-/* addr: 0x002d7300  size: 120 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 204
- *   +0x0014 -> line 205
- *   +0x0028 -> line 207
- *   +0x0030 -> line 209
- *   +0x0048 -> line 212
- *   +0x0064 -> line 213
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 180–197 */
-/* addr: 0x002d7380  size: 220 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 180
- *   +0x0014 -> line 182
- *   +0x0098 -> line 185
- *   +0x00a4 -> line 187
- *   +0x00ac -> line 188
- *   +0x00b0 -> line 189
- *   +0x00b4 -> line 190
- *   +0x00b8 -> line 196
- *   +0x00c4 -> line 197
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 157–174 */
-/* addr: 0x002d7460  size: 104 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 157
- *   +0x0010 -> line 159
- *   +0x0018 -> line 161
- *   +0x0038 -> line 166
- *   +0x0044 -> line 169
- *   +0x004c -> line 172
- *   +0x0060 -> line 174
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 94–121 */
-/* addr: 0x002d74d0  size: 96 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 94
- *   +0x0004 -> line 104
- *   +0x0008 -> line 95
- *   +0x000c -> line 105
- *   +0x0010 -> line 96
- *   +0x0014 -> line 108
- *   +0x0018 -> line 97
- *   +0x001c -> line 98
- *   +0x0020 -> line 99
- *   +0x0024 -> line 100
- *   +0x0028 -> line 101
- *   +0x002c -> line 102
- *   +0x0030 -> line 104
- *   +0x0034 -> line 105
- *   +0x0038 -> line 108
- *   +0x003c -> line 110
- *   +0x0040 -> line 111
- *   +0x0044 -> line 112
- *   +0x0048 -> line 113
- *   +0x004c -> line 114
- *   +0x0050 -> line 116
- *   +0x0058 -> line 121
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 85–85 */
-/* addr: 0x002d7530  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 85
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void C_Sdl::operator delete(void* ptr)
-{
-    PS2glLiberator(ptr);
-}
-
-void C_Sdl::Init(void)
-{
-    m_DisplayList = 0;
-    m_NbRefs = 0;
-    m_NbReservedRefs = 0;
-    m_ppRefs = 0;
-    m_SDL_Size = 0;
-    m_NbFaces = 0;
-    m_NbElements = 0;
-    m_bIsTransparent = 0;
-    m_LastFrameUsed = 0;
-    m_SDL_InitSize = 0x7530;
-    m_bReduce = 1;
-    m_LastFrameInterpolated = -1;
-    m_SkinIndex = -1;
-    m_SkinMaterial = 0;
-    m_pListData = 0;
-    m_bNoInterpolation = 1;
-    m_bIsBlinking = 0;
-    GLI_g_NbSDLs++;
-}
-
-void C_Sdl::RemoveSPOInterpol(HIE_tdstSuperObject_* pSPO)
-{
-    C_SdlRef_LocalMatrix* pRef;
-    unsigned int i;
-
-    if (m_NbReservedRefs)
-    {
-        for (i = 0; i < m_NbRefs; i++)
-        {
-            if (m_ppRefs[i] && m_ppRefs[i]->m_uRefType == 1)
-            {
-                pRef = (C_SdlRef_LocalMatrix*)m_ppRefs[i];
-                if (pRef->m_vpOriginPointer == (int)pSPO)
-                    pRef->m_bNoInterpolation = 1;
-            }
-        }
-    }
-}
-
-void C_Sdl::Destruct(void)
-{
-    unsigned int i;
-
-    if (m_NbReservedRefs)
-    {
-        for (i = 0; i < m_NbRefs; i++)
-        {
-            if (m_ppRefs[i])
-            {
-                delete m_ppRefs[i];
-                m_ppRefs[i] = NULL;
-            }
-        }
-        PS2glLiberator(m_ppRefs);
-        m_ppRefs = NULL;
-    }
-    m_NbReservedRefs = 0;
-    m_NbRefs = 0;
-    if (m_DisplayList)
-    {
-        MyglDeleteLists(m_DisplayList);
-        m_DisplayList = 0;
-        m_pListData = 0;
-        m_SDL_Size = 0;
-    }
-    GLI_g_NbSDLs--;
-}
-
-void C_Sdl::AddRef(C_SdlRef* pRef)
-{
-    if (m_NbRefs >= m_NbReservedRefs)
-    {
-        m_NbReservedRefs += 16;
-        m_ppRefs = (C_SdlRef**)((void*(*)(void*, unsigned int))PS2glReallocator)(m_ppRefs, m_NbReservedRefs * sizeof(C_SdlRef*));
-    }
-    m_ppRefs[m_NbRefs++] = pRef;
-}
-
 void C_Sdl::Preprocess(void)
 {
     int refindex;
@@ -3412,6 +2848,41 @@ void C_Sdl::Preprocess(void)
     m_NbRefs = refindex;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 512–564 */
+/* addr: 0x002d6ab0  size: 480 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 512
+ *   +0x0018 -> line 515
+ *   +0x003c -> line 517
+ *   +0x0048 -> line 519
+ *   +0x004c -> line 521
+ *   +0x0058 -> line 523
+ *   +0x0074 -> line 524
+ *   +0x008c -> line 525
+ *   +0x00a0 -> line 526
+ *   +0x00a8 -> line 531
+ *   +0x00b0 -> line 533
+ *   +0x00cc -> line 534
+ *   +0x00e4 -> line 535
+ *   +0x00f8 -> line 536
+ *   +0x00fc -> line 539
+ *   +0x0100 -> line 540
+ *   +0x0108 -> line 543
+ *   +0x0114 -> line 545
+ *   +0x0124 -> line 547
+ *   +0x012c -> line 549
+ *   +0x0148 -> line 550
+ *   +0x015c -> line 551
+ *   +0x0170 -> line 552
+ *   +0x0174 -> line 554
+ *   +0x017c -> line 557
+ *   +0x0184 -> line 559
+ *   +0x01a0 -> line 560
+ *   +0x01b4 -> line 561
+ *   +0x01c8 -> line 564
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void C_Sdl::ProcessAllRefs(void)
 {
     unsigned int i;
@@ -3463,6 +2934,29 @@ void C_Sdl::ProcessAllRefs(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 575–598 */
+/* addr: 0x002d6a20  size: 144 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 580
+ *   +0x0004 -> line 575
+ *   +0x0008 -> line 577
+ *   +0x000c -> line 578
+ *   +0x0010 -> line 580
+ *   +0x0018 -> line 584
+ *   +0x001c -> line 585
+ *   +0x0020 -> line 584
+ *   +0x0024 -> line 585
+ *   +0x002c -> line 586
+ *   +0x0030 -> line 589
+ *   +0x003c -> line 591
+ *   +0x005c -> line 593
+ *   +0x0060 -> line 594
+ *   +0x006c -> line 595
+ *   +0x0078 -> line 597
+ *   +0x0088 -> line 598
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void C_Sdl::UpdateFogs(void)
 {
     unsigned int FogColor;
@@ -3495,6 +2989,59 @@ void C_Sdl::UpdateFogs(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 605–653 */
+/* addr: 0x002d66e0  size: 828 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 605
+ *   +0x0004 -> line 609
+ *   +0x0008 -> line 605
+ *   +0x000c -> line 610
+ *   +0x0010 -> line 605
+ *   +0x0014 -> line 609
+ *   +0x0018 -> line 610
+ *   +0x0020 -> line 611
+ *   +0x0064 -> line 612
+ *   +0x0068 -> line 611
+ *   +0x006c -> line 612
+ *   +0x0070 -> line 617
+ *   +0x0074 -> line 611
+ *   +0x007c -> line 613
+ *   +0x0088 -> line 614
+ *   +0x0094 -> line 617
+ *   +0x0098 -> line 616
+ *   +0x00c0 -> line 622
+ *   +0x00c8 -> line 623
+ *   +0x00d4 -> line 624
+ *   +0x00d8 -> line 623
+ *   +0x00e0 -> line 624
+ *   +0x00e8 -> line 625
+ *   +0x01d0 -> line 626
+ *   +0x01d8 -> line 627
+ *   +0x01dc -> line 628
+ *   +0x01e0 -> line 627
+ *   +0x01e4 -> line 628
+ *   +0x01ec -> line 627
+ *   +0x01fc -> line 628
+ *   +0x0200 -> line 627
+ *   +0x0238 -> line 628
+ *   +0x0240 -> line 629
+ *   +0x0264 -> line 631
+ *   +0x0268 -> line 632
+ *   +0x026c -> line 629
+ *   +0x02a4 -> line 637
+ *   +0x02b0 -> line 638
+ *   +0x02bc -> line 640
+ *   +0x02c8 -> line 642
+ *   +0x02d8 -> line 643
+ *   +0x02e8 -> line 644
+ *   +0x02f8 -> line 645
+ *   +0x0308 -> line 647
+ *   +0x0310 -> line 650
+ *   +0x031c -> line 651
+ *   +0x032c -> line 653
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void C_Sdl::Start(void)
 {
     unsigned char zTst;
@@ -3537,6 +3084,67 @@ void C_Sdl::Start(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 661–730 */
+/* addr: 0x002d6360  size: 888 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 661
+ *   +0x0004 -> line 665
+ *   +0x0008 -> line 661
+ *   +0x000c -> line 668
+ *   +0x0010 -> line 661
+ *   +0x0014 -> line 665
+ *   +0x0018 -> line 668
+ *   +0x0020 -> line 670
+ *   +0x0060 -> line 671
+ *   +0x0064 -> line 670
+ *   +0x0068 -> line 671
+ *   +0x006c -> line 675
+ *   +0x0070 -> line 670
+ *   +0x0074 -> line 673
+ *   +0x0078 -> line 670
+ *   +0x007c -> line 672
+ *   +0x0088 -> line 673
+ *   +0x008c -> line 674
+ *   +0x0090 -> line 673
+ *   +0x0094 -> line 675
+ *   +0x0098 -> line 674
+ *   +0x00c0 -> line 680
+ *   +0x00cc -> line 681
+ *   +0x00d8 -> line 684
+ *   +0x00e0 -> line 687
+ *   +0x00e4 -> line 690
+ *   +0x00f4 -> line 694
+ *   +0x00fc -> line 697
+ *   +0x0104 -> line 703
+ *   +0x010c -> line 704
+ *   +0x0118 -> line 705
+ *   +0x011c -> line 704
+ *   +0x0124 -> line 705
+ *   +0x012c -> line 706
+ *   +0x0214 -> line 707
+ *   +0x021c -> line 708
+ *   +0x0220 -> line 709
+ *   +0x0224 -> line 708
+ *   +0x0228 -> line 709
+ *   +0x0230 -> line 708
+ *   +0x0240 -> line 709
+ *   +0x0244 -> line 708
+ *   +0x027c -> line 709
+ *   +0x0284 -> line 710
+ *   +0x02e0 -> line 715
+ *   +0x02ec -> line 716
+ *   +0x02f8 -> line 718
+ *   +0x0304 -> line 720
+ *   +0x0314 -> line 721
+ *   +0x0324 -> line 722
+ *   +0x0334 -> line 723
+ *   +0x0344 -> line 724
+ *   +0x034c -> line 727
+ *   +0x0358 -> line 728
+ *   +0x0368 -> line 730
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void C_CharacterSdl::Start(void)
 {
     unsigned char zTst;
@@ -3594,6 +3202,117 @@ void C_CharacterSdl::Start(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 739–942 */
+/* addr: 0x002d6140  size: 544 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 750
+ *   +0x0004 -> line 760
+ *   +0x0008 -> line 739
+ *   +0x000c -> line 755
+ *   +0x0010 -> line 760
+ *   +0x0014 -> line 755
+ *   +0x0018 -> line 760
+ *   +0x0024 -> line 762
+ *   +0x0028 -> line 769
+ *   +0x0030 -> line 773
+ *   +0x0034 -> line 771
+ *   +0x0038 -> line 773
+ *   +0x003c -> line 774
+ *   +0x0040 -> line 775
+ *   +0x0044 -> line 776
+ *   +0x0048 -> line 777
+ *   +0x004c -> line 778
+ *   +0x0050 -> line 779
+ *   +0x0054 -> line 818
+ *   +0x006c -> line 824
+ *   +0x0070 -> line 825
+ *   +0x0074 -> line 824
+ *   +0x0078 -> line 825
+ *   +0x007c -> line 824
+ *   +0x0080 -> line 827
+ *   +0x0084 -> line 825
+ *   +0x0088 -> line 827
+ *   +0x00b8 -> line 829
+ *   +0x00bc -> line 830
+ *   +0x00c0 -> line 832
+ *   +0x00c4 -> line 833
+ *   +0x00c8 -> line 835
+ *   +0x00cc -> line 836
+ *   +0x00d0 -> line 837
+ *   +0x00d4 -> line 838
+ *   +0x00d8 -> line 840
+ *   +0x00dc -> line 841
+ *   +0x00e0 -> line 842
+ *   +0x00e4 -> line 843
+ *   +0x00e8 -> line 845
+ *   +0x00ec -> line 846
+ *   +0x00f0 -> line 847
+ *   +0x00f4 -> line 848
+ *   +0x00f8 -> line 850
+ *   +0x00fc -> line 851
+ *   +0x0100 -> line 852
+ *   +0x0104 -> line 853
+ *   +0x0108 -> line 856
+ *   +0x010c -> line 857
+ *   +0x0110 -> line 859
+ *   +0x0114 -> line 860
+ *   +0x0118 -> line 861
+ *   +0x011c -> line 862
+ *   +0x0120 -> line 863
+ *   +0x0124 -> line 864
+ *   +0x0128 -> line 865
+ *   +0x012c -> line 866
+ *   +0x0130 -> line 868
+ *   +0x0134 -> line 869
+ *   +0x0138 -> line 870
+ *   +0x013c -> line 871
+ *   +0x0140 -> line 872
+ *   +0x0144 -> line 873
+ *   +0x0148 -> line 874
+ *   +0x014c -> line 875
+ *   +0x0150 -> line 877
+ *   +0x0154 -> line 878
+ *   +0x0158 -> line 879
+ *   +0x015c -> line 880
+ *   +0x0160 -> line 881
+ *   +0x0164 -> line 882
+ *   +0x0168 -> line 883
+ *   +0x016c -> line 884
+ *   +0x0170 -> line 885
+ *   +0x0174 -> line 887
+ *   +0x0178 -> line 889
+ *   +0x017c -> line 890
+ *   +0x0180 -> line 891
+ *   +0x0184 -> line 892
+ *   +0x0188 -> line 894
+ *   +0x018c -> line 895
+ *   +0x0190 -> line 896
+ *   +0x0194 -> line 897
+ *   +0x0198 -> line 903
+ *   +0x01a0 -> line 906
+ *   +0x01a4 -> line 909
+ *   +0x01d0 -> line 911
+ *   +0x01d4 -> line 913
+ *   +0x01d8 -> line 914
+ *   +0x01dc -> line 915
+ *   +0x01e0 -> line 916
+ *   +0x01e4 -> line 918
+ *   +0x01e8 -> line 919
+ *   +0x01ec -> line 920
+ *   +0x01f0 -> line 921
+ *   +0x01f4 -> line 923
+ *   +0x01f8 -> line 925
+ *   +0x01fc -> line 926
+ *   +0x0200 -> line 927
+ *   +0x0204 -> line 928
+ *   +0x0208 -> line 930
+ *   +0x020c -> line 931
+ *   +0x0210 -> line 932
+ *   +0x0214 -> line 933
+ *   +0x0218 -> line 942
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void C_CharacterSdl::PreprocessLighting(HIE_tdstSuperObject_* pSPO)
 {
     float invcoeff;
@@ -3748,6 +3467,63 @@ void C_CharacterSdl::PreprocessLighting(HIE_tdstSuperObject_* pSPO)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 948–1038 */
+/* addr: 0x002d5ff0  size: 336 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 948
+ *   +0x000c -> line 962
+ *   +0x0014 -> line 963
+ *   +0x0018 -> line 962
+ *   +0x001c -> line 963
+ *   +0x0028 -> line 964
+ *   +0x0034 -> line 966
+ *   +0x0060 -> line 969
+ *   +0x0064 -> line 971
+ *   +0x0068 -> line 969
+ *   +0x006c -> line 971
+ *   +0x0070 -> line 972
+ *   +0x0074 -> line 974
+ *   +0x0080 -> line 977
+ *   +0x0084 -> line 978
+ *   +0x0088 -> line 979
+ *   +0x0094 -> line 981
+ *   +0x0098 -> line 983
+ *   +0x00a4 -> line 986
+ *   +0x00a8 -> line 995
+ *   +0x00ac -> line 993
+ *   +0x00b0 -> line 995
+ *   +0x00b4 -> line 996
+ *   +0x00b8 -> line 997
+ *   +0x00bc -> line 998
+ *   +0x00c0 -> line 999
+ *   +0x00c4 -> line 1000
+ *   +0x00c8 -> line 1001
+ *   +0x00cc -> line 1005
+ *   +0x00d8 -> line 1007
+ *   +0x00dc -> line 1009
+ *   +0x00e0 -> line 1010
+ *   +0x00e4 -> line 1011
+ *   +0x00e8 -> line 1012
+ *   +0x00ec -> line 1014
+ *   +0x00f0 -> line 1015
+ *   +0x00f4 -> line 1016
+ *   +0x00f8 -> line 1017
+ *   +0x00fc -> line 1019
+ *   +0x0100 -> line 1021
+ *   +0x0104 -> line 1022
+ *   +0x0108 -> line 1023
+ *   +0x010c -> line 1024
+ *   +0x0110 -> line 1026
+ *   +0x0114 -> line 1027
+ *   +0x0118 -> line 1028
+ *   +0x011c -> line 1029
+ *   +0x0120 -> line 1036
+ *   +0x0124 -> line 1035
+ *   +0x0130 -> line 1036
+ *   +0x0140 -> line 1038
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void C_CharacterSdl::PreprocessLightingForCheap(HIE_tdstSuperObject_* pSPO)
 {
     float (*pMatrix)[4][4];
@@ -3832,6 +3608,48 @@ void C_CharacterSdl::PreprocessLightingForCheap(HIE_tdstSuperObject_* pSPO)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 1046–1083 */
+/* addr: 0x002d5e80  size: 368 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1046
+ *   +0x0010 -> line 1053
+ *   +0x0018 -> line 1054
+ *   +0x0020 -> line 1055
+ *   +0x002c -> line 1056
+ *   +0x0034 -> line 1057
+ *   +0x003c -> line 1058
+ *   +0x0044 -> line 1059
+ *   +0x004c -> line 1060
+ *   +0x0054 -> line 1061
+ *   +0x0058 -> line 1063
+ *   +0x0060 -> line 1066
+ *   +0x0064 -> line 1065
+ *   +0x0068 -> line 1066
+ *   +0x006c -> line 1067
+ *   +0x0074 -> line 1065
+ *   +0x007c -> line 1068
+ *   +0x0080 -> line 1065
+ *   +0x0084 -> line 1068
+ *   +0x0088 -> line 1065
+ *   +0x008c -> line 1068
+ *   +0x00d0 -> line 1069
+ *   +0x00d4 -> line 1070
+ *   +0x011c -> line 1072
+ *   +0x0120 -> line 1070
+ *   +0x0124 -> line 1072
+ *   +0x0128 -> line 1074
+ *   +0x012c -> line 1072
+ *   +0x0130 -> line 1071
+ *   +0x0134 -> line 1075
+ *   +0x0138 -> line 1071
+ *   +0x013c -> line 1077
+ *   +0x0144 -> line 1078
+ *   +0x014c -> line 1079
+ *   +0x0158 -> line 1081
+ *   +0x0160 -> line 1083
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void C_Sdl::End(void)
 {
     tagListData** ppListData;
@@ -3862,6 +3680,90 @@ void C_Sdl::End(void)
         printf("Houla NULL LIST !!!\n");
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 1086–1194 */
+/* addr: 0x002d5a90  size: 1004 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1086
+ *   +0x000c -> line 1088
+ *   +0x0018 -> line 1097
+ *   +0x0020 -> line 1098
+ *   +0x0028 -> line 1102
+ *   +0x0040 -> line 1105
+ *   +0x0044 -> line 1106
+ *   +0x004c -> line 1109
+ *   +0x0054 -> line 1114
+ *   +0x0074 -> line 1116
+ *   +0x007c -> line 1118
+ *   +0x0088 -> line 1119
+ *   +0x0090 -> line 1122
+ *   +0x009c -> line 1124
+ *   +0x00a4 -> line 1127
+ *   +0x00ac -> line 1129
+ *   +0x0100 -> line 1130
+ *   +0x0108 -> line 1131
+ *   +0x0114 -> line 1132
+ *   +0x011c -> line 1135
+ *   +0x0170 -> line 1136
+ *   +0x0178 -> line 1137
+ *   +0x0184 -> line 1144
+ *   +0x0194 -> line 1145
+ *   +0x0198 -> line 1144
+ *   +0x01a0 -> line 1145
+ *   +0x01a8 -> line 1144
+ *   +0x01b4 -> line 1145
+ *   +0x01b8 -> line 1144
+ *   +0x01c4 -> line 1146
+ *   +0x01c8 -> line 1144
+ *   +0x01d0 -> line 1145
+ *   +0x01d4 -> line 1144
+ *   +0x01d8 -> line 1145
+ *   +0x01dc -> line 1144
+ *   +0x01f4 -> line 1145
+ *   +0x0200 -> line 1144
+ *   +0x020c -> line 1146
+ *   +0x0210 -> line 1145
+ *   +0x0214 -> line 1146
+ *   +0x0218 -> line 1145
+ *   +0x021c -> line 1146
+ *   +0x0228 -> line 1145
+ *   +0x024c -> line 1146
+ *   +0x0254 -> line 1147
+ *   +0x0268 -> line 1148
+ *   +0x0270 -> line 1149
+ *   +0x0278 -> line 1153
+ *   +0x0284 -> line 1155
+ *   +0x0294 -> line 1156
+ *   +0x02a4 -> line 1157
+ *   +0x02b4 -> line 1158
+ *   +0x02c4 -> line 1159
+ *   +0x02cc -> line 1162
+ *   +0x02d8 -> line 1163
+ *   +0x02e8 -> line 1167
+ *   +0x02ec -> line 1168
+ *   +0x02f0 -> line 1167
+ *   +0x02f4 -> line 1168
+ *   +0x02fc -> line 1169
+ *   +0x0308 -> line 1170
+ *   +0x0350 -> line 1172
+ *   +0x0354 -> line 1170
+ *   +0x0358 -> line 1171
+ *   +0x0360 -> line 1172
+ *   +0x0364 -> line 1171
+ *   +0x0368 -> line 1172
+ *   +0x0370 -> line 1171
+ *   +0x0378 -> line 1172
+ *   +0x0380 -> line 1181
+ *   +0x0388 -> line 1184
+ *   +0x03a0 -> line 1189
+ *   +0x03a8 -> line 1192
+ *   +0x03ac -> line 1191
+ *   +0x03b0 -> line 1192
+ *   +0x03b4 -> line 1191
+ *   +0x03b8 -> line 1192
+ *   +0x03dc -> line 1194
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void C_Sdl::Draw(int bProcessRefs)
 {
     if (!m_pListData)
@@ -3936,6 +3838,21 @@ void C_Sdl::Draw(int bProcessRefs)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 1201–1222 */
+/* addr: 0x002d59b0  size: 216 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1201
+ *   +0x0014 -> line 1203
+ *   +0x0098 -> line 1206
+ *   +0x00a4 -> line 1209
+ *   +0x00ac -> line 1212
+ *   +0x00b4 -> line 1214
+ *   +0x00b8 -> line 1215
+ *   +0x00bc -> line 1216
+ *   +0x00c0 -> line 1222
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void C_Sdl::StealthDestroy(void)
 {
     unsigned int i;
@@ -3965,6 +3882,27 @@ void C_Sdl::StealthDestroy(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 1230–1254 */
+/* addr: 0x002d5900  size: 172 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1230
+ *   +0x0004 -> line 1231
+ *   +0x0010 -> line 1234
+ *   +0x0014 -> line 1236
+ *   +0x001c -> line 1244
+ *   +0x0020 -> line 1240
+ *   +0x0024 -> line 1244
+ *   +0x0028 -> line 1246
+ *   +0x0070 -> line 1247
+ *   +0x0074 -> line 1246
+ *   +0x0078 -> line 1247
+ *   +0x0088 -> line 1249
+ *   +0x0090 -> line 1251
+ *   +0x0098 -> line 1252
+ *   +0x00a0 -> line 1254
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vSetOptimizedSDC(int flag)
 {
     if (flag == 1)
@@ -3984,6 +3922,21 @@ void GLI_vSetOptimizedSDC(int flag)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 1258–1272 */
+/* addr: 0x002d5770  size: 396 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1258
+ *   +0x001c -> line 1262
+ *   +0x0024 -> line 1264
+ *   +0x0090 -> line 1265
+ *   +0x00f8 -> line 1267
+ *   +0x0104 -> line 1269
+ *   +0x0160 -> line 1270
+ *   +0x016c -> line 1271
+ *   +0x0170 -> line 1272
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 extern "C" void GLIPS2_vRecurseRemoveInterpolationForSPOs(HIE_tdstSuperObject_* _hLinkedSpo, C_Sdl* pOpaqueSDL, C_Sdl* pTranspSDL)
 {
     HIE_tdstSuperObject_* hChild;
@@ -4010,6 +3963,24 @@ end:
     return;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 1277–1304 */
+/* addr: 0x002d5690  size: 216 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1277
+ *   +0x0004 -> line 1285
+ *   +0x0008 -> line 1277
+ *   +0x001c -> line 1285
+ *   +0x0024 -> line 1287
+ *   +0x002c -> line 1288
+ *   +0x0048 -> line 1291
+ *   +0x0050 -> line 1292
+ *   +0x0060 -> line 1295
+ *   +0x0064 -> line 1298
+ *   +0x0068 -> line 1301
+ *   +0x00c0 -> line 1304
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLIPS2_vSetNoInterpolationForSPO(HIE_tdstSuperObject_* _hLinkedSpo)
 {
     C_Sdl* pOpaqueSDL;
@@ -4030,11 +4001,25 @@ void GLIPS2_vSetNoInterpolationForSPO(HIE_tdstSuperObject_* _hLinkedSpo)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 1315–1315 */
+/* addr: 0x002d5670  size: 20 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1315
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vPrintSDLStatsBefore(void)
 {
     printf("Before Freeing SDLs : %d SDLs, %d InstanceLists\n", GLI_g_NbSDLs, GLI_g_InstanceLists);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 1320–1320 */
+/* addr: 0x002d5650  size: 20 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1320
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vPrintSDLStatsAfter(void)
 {
     printf("After Freeing SDLs : %d SDLs, %d InstanceLists\n", GLI_g_NbSDLs, GLI_g_InstanceLists);

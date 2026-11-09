@@ -3102,14 +3102,6 @@ extern short IPT_fn_wGetVAxisForPadNumber(unsigned char);
 extern void IPT_fn_vSetHAxisForPadNumber(unsigned char, short);
 extern short IPT_fn_vGetHAxisForPadNumber(unsigned char);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 439–439 */
-/* addr: 0x00211890  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 439
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 unsigned char fn_ucSetFieldSystemTime(void);
@@ -3146,326 +3138,12 @@ unsigned char fn_ucGetFieldPrevComportReflex(HIE_tdstSuperObject_* hSuperObjPers
 unsigned char fn_ucGetFieldPrevComportIntell(HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam);
 unsigned char fn_ucSetFieldDefaultFunction(void);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 430–432 */
-/* addr: 0x002118a0  size: 20 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 430
- *   +0x0008 -> line 431
- *   +0x000c -> line 432
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 418–418 */
-/* addr: 0x002118c0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 418
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 409–411 */
-/* addr: 0x002118d0  size: 20 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 409
- *   +0x0008 -> line 410
- *   +0x000c -> line 411
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 392–396 */
-/* addr: 0x002118f0  size: 36 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 392
- *   +0x0008 -> line 394
- *   +0x0014 -> line 396
- *   +0x0018 -> line 395
- *   +0x001c -> line 396
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 385–389 */
-/* addr: 0x00211920  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 385
- *   +0x000c -> line 387
- *   +0x0024 -> line 389
- *   +0x0028 -> line 388
- *   +0x002c -> line 389
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 378–382 */
-/* addr: 0x00211960  size: 36 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 378
- *   +0x0008 -> line 380
- *   +0x0014 -> line 382
- *   +0x0018 -> line 381
- *   +0x001c -> line 382
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 371–375 */
-/* addr: 0x00211990  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 371
- *   +0x000c -> line 373
- *   +0x0024 -> line 375
- *   +0x0028 -> line 374
- *   +0x002c -> line 375
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 364–368 */
-/* addr: 0x002119d0  size: 36 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 364
- *   +0x0008 -> line 366
- *   +0x0014 -> line 368
- *   +0x0018 -> line 367
- *   +0x001c -> line 368
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 357–361 */
-/* addr: 0x00211a00  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 357
- *   +0x000c -> line 359
- *   +0x0024 -> line 361
- *   +0x0028 -> line 360
- *   +0x002c -> line 361
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 350–354 */
-/* addr: 0x00211a40  size: 36 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 350
- *   +0x0008 -> line 352
- *   +0x0014 -> line 354
- *   +0x0018 -> line 353
- *   +0x001c -> line 354
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 343–347 */
-/* addr: 0x00211a70  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 343
- *   +0x000c -> line 345
- *   +0x0024 -> line 347
- *   +0x0028 -> line 346
- *   +0x002c -> line 347
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 336–340 */
-/* addr: 0x00211ab0  size: 36 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 336
- *   +0x0008 -> line 338
- *   +0x0014 -> line 340
- *   +0x0018 -> line 339
- *   +0x001c -> line 340
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 329–333 */
-/* addr: 0x00211ae0  size: 64 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 329
- *   +0x000c -> line 331
- *   +0x002c -> line 332
- *   +0x0030 -> line 333
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 320–326 */
-/* addr: 0x00211b20  size: 36 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 320
- *   +0x0008 -> line 323
- *   +0x0014 -> line 326
- *   +0x0018 -> line 325
- *   +0x001c -> line 326
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 313–317 */
-/* addr: 0x00211b50  size: 64 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 313
- *   +0x000c -> line 315
- *   +0x002c -> line 316
- *   +0x0030 -> line 317
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 306–310 */
-/* addr: 0x00211b90  size: 32 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 306
- *   +0x0008 -> line 308
- *   +0x0010 -> line 310
- *   +0x0014 -> line 309
- *   +0x0018 -> line 310
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 297–303 */
-/* addr: 0x00211bb0  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 297
- *   +0x000c -> line 300
- *   +0x001c -> line 301
- *   +0x0024 -> line 302
- *   +0x0028 -> line 301
- *   +0x0040 -> line 303
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 void MAT_fn_vGetRotationVectors(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stVecI, MTH3D_tdstVector_* _p_stVecJ, MTH3D_tdstVector_* _p_stVecK);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 281–290 */
-/* addr: 0x00211c00  size: 88 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 281
- *   +0x0004 -> line 287
- *   +0x0008 -> line 281
- *   +0x000c -> line 287
- *   +0x0010 -> line 281
- *   +0x0014 -> line 287
- *   +0x0024 -> line 288
- *   +0x002c -> line 289
- *   +0x0030 -> line 288
- *   +0x0048 -> line 290
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 269–278 */
-/* addr: 0x00211c60  size: 88 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 269
- *   +0x0004 -> line 275
- *   +0x0008 -> line 269
- *   +0x000c -> line 275
- *   +0x0010 -> line 269
- *   +0x0014 -> line 275
- *   +0x0024 -> line 276
- *   +0x002c -> line 277
- *   +0x0030 -> line 276
- *   +0x0048 -> line 278
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 256–266 */
-/* addr: 0x00211cc0  size: 88 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 256
- *   +0x0004 -> line 262
- *   +0x0008 -> line 256
- *   +0x000c -> line 262
- *   +0x0010 -> line 256
- *   +0x0014 -> line 262
- *   +0x0024 -> line 263
- *   +0x002c -> line 265
- *   +0x0030 -> line 263
- *   +0x0048 -> line 266
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 231–252 */
-/* addr: 0x00211d20  size: 124 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 231
- *   +0x0004 -> line 236
- *   +0x0008 -> line 231
- *   +0x0010 -> line 234
- *   +0x001c -> line 238
- *   +0x0024 -> line 241
- *   +0x002c -> line 242
- *   +0x0034 -> line 245
- *   +0x004c -> line 246
- *   +0x0050 -> line 245
- *   +0x005c -> line 246
- *   +0x0064 -> line 250
- *   +0x0068 -> line 251
- *   +0x006c -> line 252
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern DNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_* h_Dynam);
 inline float MTH_xSqr3(float _x, float _y, float _z) { float _r; asm { mula.s _x, _x } asm { madda.s _y, _y } asm { madd.s _r, _z, _z } return _r; }
 inline float MTH_xSqrt(float _x) { float _r; asm { sqrt.s _r, _x } return _r; }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 207–228 */
-/* addr: 0x00211da0  size: 116 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 207
- *   +0x0004 -> line 213
- *   +0x0008 -> line 207
- *   +0x0010 -> line 211
- *   +0x001c -> line 214
- *   +0x0024 -> line 217
- *   +0x002c -> line 218
- *   +0x0034 -> line 221
- *   +0x0044 -> line 223
- *   +0x0048 -> line 221
- *   +0x004c -> line 223
- *   +0x0054 -> line 226
- *   +0x0058 -> line 227
- *   +0x005c -> line 226
- *   +0x0064 -> line 228
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 178–194 */
-/* addr: 0x00211e20  size: 360 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 178
- *   +0x0004 -> line 183
- *   +0x001c -> line 184
- *   +0x0024 -> line 183
- *   +0x0028 -> line 184
- *   +0x0094 -> line 186
- *   +0x0098 -> line 188
- *   +0x009c -> line 186
- *   +0x00a8 -> line 188
- *   +0x00ac -> line 186
- *   +0x00b0 -> line 188
- *   +0x00b4 -> line 186
- *   +0x00b8 -> line 188
- *   +0x00bc -> line 186
- *   +0x00c0 -> line 188
- *   +0x00e0 -> line 189
- *   +0x013c -> line 192
- *   +0x0144 -> line 193
- *   +0x0148 -> line 192
- *   +0x0160 -> line 194
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* MatSp.h inline: the VU0 macro-mode instructions have no C form. */
 inline void MAT_fn_vApplyOnVertex(MTH3D_tdstVector_* VectDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* VectA)
 {
@@ -3512,91 +3190,6 @@ inline MTH3D_tdstVector_* POS_fn_p_stGetTranslationVector(MAT_tdstTransformation
     return (MTH3D_tdstVector_*)&hMatrix->stTransformMatrix.stCol_3;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 169–169 */
-/* addr: 0x00211f90  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 169
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 150–154 */
-/* addr: 0x00211fa0  size: 52 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 150
- *   +0x0008 -> line 151
- *   +0x000c -> line 150
- *   +0x002c -> line 154
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 118–121 */
-/* addr: 0x00211fe0  size: 24 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 118
- *   +0x0008 -> line 120
- *   +0x000c -> line 118
- *   +0x0010 -> line 121
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 111–114 */
-/* addr: 0x00212000  size: 32 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 111
- *   +0x0008 -> line 113
- *   +0x000c -> line 111
- *   +0x0018 -> line 114
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 104–107 */
-/* addr: 0x00212020  size: 24 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 104
- *   +0x0008 -> line 106
- *   +0x000c -> line 104
- *   +0x0010 -> line 107
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 97–100 */
-/* addr: 0x00212040  size: 32 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 97
- *   +0x0008 -> line 99
- *   +0x000c -> line 97
- *   +0x0018 -> line 100
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 88–90 */
-/* addr: 0x00212060  size: 40 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 88
- *   +0x0008 -> line 89
- *   +0x000c -> line 88
- *   +0x0020 -> line 90
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 79–81 */
-/* addr: 0x00212090  size: 40 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 79
- *   +0x0008 -> line 80
- *   +0x000c -> line 79
- *   +0x0020 -> line 81
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 68–68 */
 /* addr: 0x002120c0  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3610,18 +3203,48 @@ unsigned char fn_ucSetFieldDefaultFunction(void)
     return 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 79–81 */
+/* addr: 0x00212090  size: 40 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 79
+ *   +0x0008 -> line 80
+ *   +0x000c -> line 79
+ *   +0x0020 -> line 81
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucGetFieldPrevComportIntell(HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam)
 {
     p_stGetSetParam->uDummy.uParam.pComport = hSuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stPrevComport; p_stGetSetParam->eType = E_vt_Comport;
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 88–90 */
+/* addr: 0x00212060  size: 40 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 88
+ *   +0x0008 -> line 89
+ *   +0x000c -> line 88
+ *   +0x0020 -> line 90
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucGetFieldPrevComportReflex(HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam)
 {
     p_stGetSetParam->uDummy.uParam.pComport = hSuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stReflex->p_stPrevComport; p_stGetSetParam->eType = E_vt_Comport;
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 97–100 */
+/* addr: 0x00212040  size: 32 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 97
+ *   +0x0008 -> line 99
+ *   +0x000c -> line 97
+ *   +0x0018 -> line 100
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucGetFieldShadowScaleX(HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam)
 {
     tdstEngineObject_* p_stObject;
@@ -3631,6 +3254,16 @@ unsigned char fn_ucGetFieldShadowScaleX(HIE_tdstSuperObject_* hSuperObjPerso, td
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 104–107 */
+/* addr: 0x00212020  size: 24 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 104
+ *   +0x0008 -> line 106
+ *   +0x000c -> line 104
+ *   +0x0010 -> line 107
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucSetFieldShadowScaleX(HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam)
 {
     tdstEngineObject_* p_stObject;
@@ -3639,6 +3272,16 @@ unsigned char fn_ucSetFieldShadowScaleX(HIE_tdstSuperObject_* hSuperObjPerso, td
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 111–114 */
+/* addr: 0x00212000  size: 32 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 111
+ *   +0x0008 -> line 113
+ *   +0x000c -> line 111
+ *   +0x0018 -> line 114
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucGetFieldShadowScaleY(HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam)
 {
     tdstEngineObject_* p_stObject;
@@ -3648,6 +3291,16 @@ unsigned char fn_ucGetFieldShadowScaleY(HIE_tdstSuperObject_* hSuperObjPerso, td
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 118–121 */
+/* addr: 0x00211fe0  size: 24 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 118
+ *   +0x0008 -> line 120
+ *   +0x000c -> line 118
+ *   +0x0010 -> line 121
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucSetFieldShadowScaleY(HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam)
 {
     tdstEngineObject_* p_stObject;
@@ -3656,6 +3309,16 @@ unsigned char fn_ucSetFieldShadowScaleY(HIE_tdstSuperObject_* hSuperObjPerso, td
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 150–154 */
+/* addr: 0x00211fa0  size: 52 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 150
+ *   +0x0008 -> line 151
+ *   +0x000c -> line 150
+ *   +0x002c -> line 154
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucGetFieldPosition(HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam)
 {
     ((int*)p_stGetSetParam)[0] = ((int*)&hSuperObjPerso->hGlobalMatrix->stTransformMatrix.stCol_3)[0];
@@ -3665,11 +3328,44 @@ unsigned char fn_ucGetFieldPosition(HIE_tdstSuperObject_* hSuperObjPerso, tdstGe
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 169–169 */
+/* addr: 0x00211f90  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 169
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucSetFieldOrientation(void)
 {
     return 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 178–194 */
+/* addr: 0x00211e20  size: 360 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 178
+ *   +0x0004 -> line 183
+ *   +0x001c -> line 184
+ *   +0x0024 -> line 183
+ *   +0x0028 -> line 184
+ *   +0x0094 -> line 186
+ *   +0x0098 -> line 188
+ *   +0x009c -> line 186
+ *   +0x00a8 -> line 188
+ *   +0x00ac -> line 186
+ *   +0x00b0 -> line 188
+ *   +0x00b4 -> line 186
+ *   +0x00b8 -> line 188
+ *   +0x00bc -> line 186
+ *   +0x00c0 -> line 188
+ *   +0x00e0 -> line 189
+ *   +0x013c -> line 192
+ *   +0x0144 -> line 193
+ *   +0x0148 -> line 192
+ *   +0x0160 -> line 194
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucGetFieldOrientation(HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam)
 {
     float xNorm;
@@ -3700,6 +3396,27 @@ unsigned char fn_ucGetFieldOrientation(HIE_tdstSuperObject_* hSuperObjPerso, tds
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 207–228 */
+/* addr: 0x00211da0  size: 116 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 207
+ *   +0x0004 -> line 213
+ *   +0x0008 -> line 207
+ *   +0x0010 -> line 211
+ *   +0x001c -> line 214
+ *   +0x0024 -> line 217
+ *   +0x002c -> line 218
+ *   +0x0034 -> line 221
+ *   +0x0044 -> line 223
+ *   +0x0048 -> line 221
+ *   +0x004c -> line 223
+ *   +0x0054 -> line 226
+ *   +0x0058 -> line 227
+ *   +0x005c -> line 226
+ *   +0x0064 -> line 228
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucGetFieldSpeed(HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam)
 {
     DNM_stDynamics* p_stDynamic;
@@ -3725,6 +3442,26 @@ unsigned char fn_ucGetFieldSpeed(HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSe
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 231–252 */
+/* addr: 0x00211d20  size: 124 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 231
+ *   +0x0004 -> line 236
+ *   +0x0008 -> line 231
+ *   +0x0010 -> line 234
+ *   +0x001c -> line 238
+ *   +0x0024 -> line 241
+ *   +0x002c -> line 242
+ *   +0x0034 -> line 245
+ *   +0x004c -> line 246
+ *   +0x0050 -> line 245
+ *   +0x005c -> line 246
+ *   +0x0064 -> line 250
+ *   +0x0068 -> line 251
+ *   +0x006c -> line 252
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucGetFieldNormSpeed(HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam)
 {
     MTH3D_tdstVector_* p_stCurrSpeed;
@@ -3751,6 +3488,22 @@ unsigned char fn_ucGetFieldNormSpeed(HIE_tdstSuperObject_* hSuperObjPerso, tdstG
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 256–266 */
+/* addr: 0x00211cc0  size: 88 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 256
+ *   +0x0004 -> line 262
+ *   +0x0008 -> line 256
+ *   +0x000c -> line 262
+ *   +0x0010 -> line 256
+ *   +0x0014 -> line 262
+ *   +0x0024 -> line 263
+ *   +0x002c -> line 265
+ *   +0x0030 -> line 263
+ *   +0x0048 -> line 266
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucGetFieldAbsoluteAxisX(HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam)
 {
     /* The retail code passes null axis pointers and copies through them. */
@@ -3765,6 +3518,22 @@ unsigned char fn_ucGetFieldAbsoluteAxisX(HIE_tdstSuperObject_* hSuperObjPerso, t
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 269–278 */
+/* addr: 0x00211c60  size: 88 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 269
+ *   +0x0004 -> line 275
+ *   +0x0008 -> line 269
+ *   +0x000c -> line 275
+ *   +0x0010 -> line 269
+ *   +0x0014 -> line 275
+ *   +0x0024 -> line 276
+ *   +0x002c -> line 277
+ *   +0x0030 -> line 276
+ *   +0x0048 -> line 278
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucGetFieldAbsoluteAxisY(HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam)
 {
     /* The retail code passes null axis pointers and copies through them. */
@@ -3779,6 +3548,22 @@ unsigned char fn_ucGetFieldAbsoluteAxisY(HIE_tdstSuperObject_* hSuperObjPerso, t
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 281–290 */
+/* addr: 0x00211c00  size: 88 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 281
+ *   +0x0004 -> line 287
+ *   +0x0008 -> line 281
+ *   +0x000c -> line 287
+ *   +0x0010 -> line 281
+ *   +0x0014 -> line 287
+ *   +0x0024 -> line 288
+ *   +0x002c -> line 289
+ *   +0x0030 -> line 288
+ *   +0x0048 -> line 290
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucGetFieldAbsoluteAxisZ(HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam)
 {
     /* The retail code passes null axis pointers and copies through them. */
@@ -3793,6 +3578,18 @@ unsigned char fn_ucGetFieldAbsoluteAxisZ(HIE_tdstSuperObject_* hSuperObjPerso, t
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 297–303 */
+/* addr: 0x00211bb0  size: 80 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 297
+ *   +0x000c -> line 300
+ *   +0x001c -> line 301
+ *   +0x0024 -> line 302
+ *   +0x0028 -> line 301
+ *   +0x0040 -> line 303
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucGetFieldPadGlobalVector(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
     union { MTH3D_tdstVector_ stVector; unsigned int a3_ulWord[3]; } uVector;
@@ -3802,36 +3599,100 @@ unsigned char fn_ucGetFieldPadGlobalVector(void* p_stContext, tdstGetSetParam_* 
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 306–310 */
+/* addr: 0x00211b90  size: 32 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 306
+ *   +0x0008 -> line 308
+ *   +0x0010 -> line 310
+ *   +0x0014 -> line 309
+ *   +0x0018 -> line 310
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucSetFieldPadGlobalVector(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
     IPT_fn_vSetGlobalVectorForPadNumber(AI_g_ucLastMarioPadUsed, (MTH3D_tdstVector_*)p_stGetSetParam);
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 313–317 */
+/* addr: 0x00211b50  size: 64 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 313
+ *   +0x000c -> line 315
+ *   +0x002c -> line 316
+ *   +0x0030 -> line 317
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucGetFieldPadHorizontalAxis(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
     p_stGetSetParam->uDummy.uParam.lValue = IPT_fn_vGetHAxisForPadNumber(AI_g_ucLastMarioPadUsed); p_stGetSetParam->eType = E_vt_Integer;
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 320–326 */
+/* addr: 0x00211b20  size: 36 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 320
+ *   +0x0008 -> line 323
+ *   +0x0014 -> line 326
+ *   +0x0018 -> line 325
+ *   +0x001c -> line 326
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucSetFieldPadHorizontalAxis(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
     IPT_fn_vSetHAxisForPadNumber(AI_g_ucLastMarioPadUsed, (short)p_stGetSetParam->uDummy.uParam.lValue);
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 329–333 */
+/* addr: 0x00211ae0  size: 64 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 329
+ *   +0x000c -> line 331
+ *   +0x002c -> line 332
+ *   +0x0030 -> line 333
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucGetFieldPadVerticalAxis(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
     p_stGetSetParam->uDummy.uParam.lValue = IPT_fn_wGetVAxisForPadNumber(AI_g_ucLastMarioPadUsed); p_stGetSetParam->eType = E_vt_Integer;
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 336–340 */
+/* addr: 0x00211ab0  size: 36 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 336
+ *   +0x0008 -> line 338
+ *   +0x0014 -> line 340
+ *   +0x0018 -> line 339
+ *   +0x001c -> line 340
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucSetFieldPadVerticalAxis(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
     IPT_fn_vSetVAxisForPadNumber(AI_g_ucLastMarioPadUsed, (short)p_stGetSetParam->uDummy.uParam.lValue);
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 343–347 */
+/* addr: 0x00211a70  size: 56 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 343
+ *   +0x000c -> line 345
+ *   +0x0024 -> line 347
+ *   +0x0028 -> line 346
+ *   +0x002c -> line 347
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucGetFieldPadAnalogForce(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
     *(float*)p_stGetSetParam = IPT_fn_xGetAnalogForceForPadNumber(AI_g_ucLastMarioPadUsed);
@@ -3839,12 +3700,34 @@ unsigned char fn_ucGetFieldPadAnalogForce(void* p_stContext, tdstGetSetParam_* p
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 350–354 */
+/* addr: 0x00211a40  size: 36 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 350
+ *   +0x0008 -> line 352
+ *   +0x0014 -> line 354
+ *   +0x0018 -> line 353
+ *   +0x001c -> line 354
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucSetFieldPadAnalogForce(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
     IPT_fn_vSetAnalogForceForPadNumber(AI_g_ucLastMarioPadUsed, *(float*)p_stGetSetParam);
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 357–361 */
+/* addr: 0x00211a00  size: 56 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 357
+ *   +0x000c -> line 359
+ *   +0x0024 -> line 361
+ *   +0x0028 -> line 360
+ *   +0x002c -> line 361
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucGetFieldPadTrueAnalogForce(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
     *(float*)p_stGetSetParam = IPT_fn_xGetTrueAnalogForceForPadNumber(AI_g_ucLastMarioPadUsed);
@@ -3852,12 +3735,34 @@ unsigned char fn_ucGetFieldPadTrueAnalogForce(void* p_stContext, tdstGetSetParam
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 364–368 */
+/* addr: 0x002119d0  size: 36 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 364
+ *   +0x0008 -> line 366
+ *   +0x0014 -> line 368
+ *   +0x0018 -> line 367
+ *   +0x001c -> line 368
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucSetFieldPadTrueAnalogForce(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
     IPT_fn_vSetTrueAnalogForceForPadNumber(AI_g_ucLastMarioPadUsed, *(float*)p_stGetSetParam);
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 371–375 */
+/* addr: 0x00211990  size: 56 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 371
+ *   +0x000c -> line 373
+ *   +0x0024 -> line 375
+ *   +0x0028 -> line 374
+ *   +0x002c -> line 375
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucGetFieldPadRotationAngle(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
     *(float*)p_stGetSetParam = IPT_fn_xGetRotationAngleForPadNumber(AI_g_ucLastMarioPadUsed);
@@ -3865,12 +3770,34 @@ unsigned char fn_ucGetFieldPadRotationAngle(void* p_stContext, tdstGetSetParam_*
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 378–382 */
+/* addr: 0x00211960  size: 36 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 378
+ *   +0x0008 -> line 380
+ *   +0x0014 -> line 382
+ *   +0x0018 -> line 381
+ *   +0x001c -> line 382
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucSetFieldPadRotationAngle(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
     IPT_fn_vSetRotationAngleForPadNumber(AI_g_ucLastMarioPadUsed, *(float*)p_stGetSetParam);
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 385–389 */
+/* addr: 0x00211920  size: 56 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 385
+ *   +0x000c -> line 387
+ *   +0x0024 -> line 389
+ *   +0x0028 -> line 388
+ *   +0x002c -> line 389
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucGetFieldPadSector(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
     *(int*)p_stGetSetParam = IPT_fn_xGetSectorForPadNumber(AI_g_ucLastMarioPadUsed);
@@ -3878,12 +3805,32 @@ unsigned char fn_ucGetFieldPadSector(void* p_stContext, tdstGetSetParam_* p_stGe
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 392–396 */
+/* addr: 0x002118f0  size: 36 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 392
+ *   +0x0008 -> line 394
+ *   +0x0014 -> line 396
+ *   +0x0018 -> line 395
+ *   +0x001c -> line 396
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucSetFieldPadSector(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
     IPT_fn_vSetSectorForPadNumber(AI_g_ucLastMarioPadUsed, *(int*)p_stGetSetParam);
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 409–411 */
+/* addr: 0x002118d0  size: 20 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 409
+ *   +0x0008 -> line 410
+ *   +0x000c -> line 411
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucGetFieldSystemDate(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
     (void)p_stContext;
@@ -3892,11 +3839,27 @@ unsigned char fn_ucGetFieldSystemDate(void* p_stContext, tdstGetSetParam_* p_stG
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 418–418 */
+/* addr: 0x002118c0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 418
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucSetFieldSystemDate(void)
 {
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 430–432 */
+/* addr: 0x002118a0  size: 20 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 430
+ *   +0x0008 -> line 431
+ *   +0x000c -> line 432
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucGetFieldSystemTime(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
     (void)p_stContext;
@@ -3905,6 +3868,13 @@ unsigned char fn_ucGetFieldSystemTime(void* p_stContext, tdstGetSetParam_* p_stG
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 439–439 */
+/* addr: 0x00211890  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 439
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucSetFieldSystemTime(void)
 {
     return 1;

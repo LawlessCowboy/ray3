@@ -212,27 +212,6 @@ struct GEO_tdstElementTMeshes_ {
     short xIndexOfParallelBox; /* +0x18 */
 };
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 28–49 */
-/* addr: 0x002a19e0  size: 180 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 28
- *   +0x0004 -> line 35
- *   +0x0008 -> line 28
- *   +0x0018 -> line 35
- *   +0x0024 -> line 38
- *   +0x003c -> line 40
- *   +0x0060 -> line 43
- *   +0x0068 -> line 45
- *   +0x0070 -> line 48
- *   +0x0074 -> line 45
- *   +0x0078 -> line 48
- *   +0x007c -> line 45
- *   +0x0084 -> line 46
- *   +0x0088 -> line 48
- *   +0x00a0 -> line 49
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void* GEO_p_stAllocElementIndexedTriangles(short xNbFaces, short xNbElementUV, short xNbUVStages);
 
 /* The functions below are in their original source-line order (retail
@@ -250,147 +229,9 @@ void GEO_vCreateGeometricObject(GEO_tdstGeometricObject_** p_hObject, short xNbP
 void GEO_vInitGeometricObject(GEO_tdstGeometricObject_* p_stObjectToCreate, short xNbPoints, short xNbElements);
 void GEO_xComputeIndexUsedByElements(GEO_tdstGeometricObject_* p_stObj);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 1029–1061 */
-/* addr: 0x002a1aa0  size: 288 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1029
- *   +0x003c -> line 1032
- *   +0x0054 -> line 1035
- *   +0x006c -> line 1038
- *   +0x0084 -> line 1041
- *   +0x009c -> line 1044
- *   +0x00b4 -> line 1047
- *   +0x00cc -> line 1050
- *   +0x00e4 -> line 1053
- *   +0x00fc -> line 1056
- *   +0x0114 -> line 1059
- *   +0x0118 -> line 1061
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 1012–1015 */
-/* addr: 0x002a1bc0  size: 44 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1012
- *   +0x0024 -> line 1015
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 950–974 */
-/* addr: 0x002a1bf0  size: 216 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 950
- *   +0x000c -> line 953
- *   +0x0014 -> line 955
- *   +0x0020 -> line 958
- *   +0x002c -> line 967
- *   +0x0038 -> line 969
- *   +0x003c -> line 967
- *   +0x0040 -> line 969
- *   +0x0058 -> line 971
- *   +0x005c -> line 973
- *   +0x0068 -> line 971
- *   +0x0088 -> line 972
- *   +0x00b0 -> line 973
- *   +0x00c8 -> line 974
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
 void* memset(void* dst, int c, size_t n);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 846–938 */
-/* addr: 0x002a1cd0  size: 608 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 846
- *   +0x0020 -> line 859
- *   +0x0024 -> line 846
- *   +0x0028 -> line 859
- *   +0x002c -> line 856
- *   +0x0030 -> line 859
- *   +0x0034 -> line 856
- *   +0x0040 -> line 859
- *   +0x0058 -> line 860
- *   +0x0060 -> line 863
- *   +0x0068 -> line 866
- *   +0x006c -> line 863
- *   +0x0070 -> line 866
- *   +0x0078 -> line 867
- *   +0x0098 -> line 880
- *   +0x009c -> line 878
- *   +0x00a4 -> line 883
- *   +0x00b0 -> line 884
- *   +0x00b8 -> line 887
- *   +0x00c0 -> line 891
- *   +0x00c4 -> line 887
- *   +0x00c8 -> line 891
- *   +0x00cc -> line 888
- *   +0x00d0 -> line 891
- *   +0x00d8 -> line 887
- *   +0x00dc -> line 891
- *   +0x00e0 -> line 887
- *   +0x00e8 -> line 888
- *   +0x00f4 -> line 891
- *   +0x00f8 -> line 916
- *   +0x00fc -> line 896
- *   +0x0100 -> line 916
- *   +0x0104 -> line 897
- *   +0x0108 -> line 929
- *   +0x010c -> line 892
- *   +0x0110 -> line 891
- *   +0x0114 -> line 892
- *   +0x0118 -> line 896
- *   +0x011c -> line 893
- *   +0x0120 -> line 894
- *   +0x0124 -> line 897
- *   +0x0128 -> line 892
- *   +0x0130 -> line 898
- *   +0x0134 -> line 893
- *   +0x013c -> line 897
- *   +0x0144 -> line 892
- *   +0x014c -> line 893
- *   +0x0154 -> line 910
- *   +0x0158 -> line 899
- *   +0x015c -> line 898
- *   +0x0164 -> line 910
- *   +0x0170 -> line 927
- *   +0x0174 -> line 899
- *   +0x017c -> line 911
- *   +0x0180 -> line 894
- *   +0x0184 -> line 911
- *   +0x0188 -> line 894
- *   +0x018c -> line 927
- *   +0x0190 -> line 894
- *   +0x0194 -> line 910
- *   +0x0198 -> line 894
- *   +0x019c -> line 911
- *   +0x01a4 -> line 927
- *   +0x01ac -> line 910
- *   +0x01b0 -> line 928
- *   +0x01b4 -> line 927
- *   +0x01bc -> line 928
- *   +0x01c4 -> line 914
- *   +0x01c8 -> line 928
- *   +0x01cc -> line 914
- *   +0x01d0 -> line 916
- *   +0x01d4 -> line 914
- *   +0x01d8 -> line 916
- *   +0x01e0 -> line 927
- *   +0x01e8 -> line 928
- *   +0x01ec -> line 916
- *   +0x01f0 -> line 927
- *   +0x01f4 -> line 928
- *   +0x01f8 -> line 914
- *   +0x01fc -> line 916
- *   +0x020c -> line 933
- *   +0x0238 -> line 936
- *   +0x023c -> line 933
- *   +0x0240 -> line 938
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* Partially reconstructed: the control flow, the scrolling-coefficient call and
    the determinant/gradient structure follow the target, but the floating point
    expression tree does not.  The target keeps a 0.0f constant in the callee
@@ -400,108 +241,15 @@ void* memset(void* dst, int c, size_t n);
    difference is at +0x0 (the frame size / the missing $fs0 save). */
 void GLI_xGetMaterialTextureScrollingCoef(GLI_tdstMaterial_* hMaterial, int lUnused, int* p_bSwitch, float* p_fUSpeed, float* p_fVSpeed);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 665–681 */
-/* addr: 0x002a1f30  size: 244 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 665
- *   +0x0004 -> line 667
- *   +0x0008 -> line 665
- *   +0x000c -> line 667
- *   +0x0010 -> line 665
- *   +0x0014 -> line 667
- *   +0x0040 -> line 670
- *   +0x0048 -> line 672
- *   +0x005c -> line 670
- *   +0x0064 -> line 672
- *   +0x0090 -> line 673
- *   +0x0098 -> line 676
- *   +0x00a0 -> line 678
- *   +0x00b4 -> line 676
- *   +0x00bc -> line 678
- *   +0x00ec -> line 681
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 #define MTH3D_M_vCopyVector(_d, _s) { *(int*)&(_d)->xX = *(int*)&(_s)->xX; *(int*)&(_d)->xY = *(int*)&(_s)->xY; *(int*)&(_d)->xZ = *(int*)&(_s)->xZ; }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 588–606 */
-/* addr: 0x002a2030  size: 204 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 588
- *   +0x0010 -> line 589
- *   +0x0018 -> line 590
- *   +0x0020 -> line 591
- *   +0x0078 -> line 597
- *   +0x007c -> line 600
- *   +0x0080 -> line 605
- *   +0x008c -> line 597
- *   +0x0094 -> line 598
- *   +0x00a0 -> line 599
- *   +0x00ac -> line 600
- *   +0x00b0 -> line 605
- *   +0x00b8 -> line 606
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GEO_xComputeObjectNormals(GEO_tdstGeometricObject_* hObject);
 void GEO_vComputeObjectParallelBox(GEO_tdstGeometricObject_* hObject, short xIndex);
 void GEO_fn_vAddObjectToSphere(GEO_tdstGeometricObject_* hObject, MTH4D_tdstVector_* p_stCenter, float* p_xRadius);
 void GEO_xComputeIndexUsedByElements(GEO_tdstGeometricObject_* p_stObj);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 390–391 */
-/* addr: 0x002a2100  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 390
- *   +0x0030 -> line 391
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 378–379 */
-/* addr: 0x002a2140  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 378
- *   +0x0030 -> line 379
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 347–351 */
-/* addr: 0x002a2180  size: 464 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 347
- *   +0x0018 -> line 348
- *   +0x001c -> line 347
- *   +0x0028 -> line 348
- *   +0x0098 -> line 349
- *   +0x009c -> line 348
- *   +0x00ac -> line 349
- *   +0x01ac -> line 350
- *   +0x01b4 -> line 351
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GEO_vInitGeometricObject(GEO_tdstGeometricObject_* p_stObjectToCreate, short xNbPoints, short xNbElements);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 310–338 */
-/* addr: 0x002a2350  size: 272 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0008 -> line 310
- *   +0x0024 -> line 311
- *   +0x00a8 -> line 310
- *   +0x00b0 -> line 311
- *   +0x00e8 -> line 313
- *   +0x00ec -> line 314
- *   +0x00f0 -> line 325
- *   +0x00f4 -> line 315
- *   +0x00f8 -> line 316
- *   +0x00fc -> line 325
- *   +0x0100 -> line 326
- *   +0x0104 -> line 330
- *   +0x0108 -> line 338
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 #pragma auto_inline on
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 149–227 */
@@ -610,6 +358,25 @@ void GEO_xComputeIndexUsedByElements(GEO_tdstGeometricObject_* p_stObj)
 }
 #pragma auto_inline reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 310–338 */
+/* addr: 0x002a2350  size: 272 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0008 -> line 310
+ *   +0x0024 -> line 311
+ *   +0x00a8 -> line 310
+ *   +0x00b0 -> line 311
+ *   +0x00e8 -> line 313
+ *   +0x00ec -> line 314
+ *   +0x00f0 -> line 325
+ *   +0x00f4 -> line 315
+ *   +0x00f8 -> line 316
+ *   +0x00fc -> line 325
+ *   +0x0100 -> line 326
+ *   +0x0104 -> line 330
+ *   +0x0108 -> line 338
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 #pragma auto_inline on
 void GEO_vInitGeometricObject(GEO_tdstGeometricObject_* p_stObjectToCreate, short xNbPoints, short xNbElements)
 {
@@ -629,6 +396,21 @@ void GEO_vInitGeometricObject(GEO_tdstGeometricObject_* p_stObjectToCreate, shor
 }
 #pragma auto_inline reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 347–351 */
+/* addr: 0x002a2180  size: 464 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 347
+ *   +0x0018 -> line 348
+ *   +0x001c -> line 347
+ *   +0x0028 -> line 348
+ *   +0x0098 -> line 349
+ *   +0x009c -> line 348
+ *   +0x00ac -> line 349
+ *   +0x01ac -> line 350
+ *   +0x01b4 -> line 351
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GEO_vCreateGeometricObject(GEO_tdstGeometricObject_** p_hObject, short xNbPoints, short xNbElements)
 {
     GEO_tdstGeometricObject_* p_stObj; p_stObj = (GEO_tdstGeometricObject_*)HMU_fn_p_vMalloc(sizeof(GEO_tdstGeometricObject_), 0); p_stObj->xNbElements = xNbElements; p_stObj->xNbPoints = xNbPoints; p_stObj->d_xListOfElementsTypes = (short*)HMU_fn_p_vMalloc(xNbElements * sizeof(short), 0); p_stObj->d_stListOfElements = (void**)HMU_fn_p_vMalloc(xNbElements * sizeof(void*), 0); p_stObj->d_stListOfPoints = (MTH3D_tdstVector_*)HMU_fn_p_vMalloc(xNbPoints * sizeof(MTH3D_tdstVector_), 0); p_stObj->d_stListOfPointsNormals = (MTH3D_tdstVector_*)HMU_fn_p_vMalloc(xNbPoints * sizeof(MTH3D_tdstVector_), 0); p_stObj->d_stListOfEdges = NULL; p_stObj->bIsStatic = 0; p_stObj->glDisplayList = 0; *p_hObject = p_stObj;
@@ -636,16 +418,51 @@ void GEO_vCreateGeometricObject(GEO_tdstGeometricObject_** p_hObject, short xNbP
     (*p_hObject)->xNbEdges = 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 378–379 */
+/* addr: 0x002a2140  size: 56 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 378
+ *   +0x0030 -> line 379
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GEO_vSetPointOfObject(GEO_tdstGeometricObject_* hObject, MTH3D_tdstVector_* p_stPoint, short xIndexOfPoint)
 {
     hObject->d_stListOfPoints[xIndexOfPoint] = *p_stPoint;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 390–391 */
+/* addr: 0x002a2100  size: 56 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 390
+ *   +0x0030 -> line 391
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GEO_vGetPointOfObject(GEO_tdstGeometricObject_* hObject, MTH3D_tdstVector_* p_stPoint, short xIndexOfPoint)
 {
     *p_stPoint = hObject->d_stListOfPoints[xIndexOfPoint];
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 588–606 */
+/* addr: 0x002a2030  size: 204 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 588
+ *   +0x0010 -> line 589
+ *   +0x0018 -> line 590
+ *   +0x0020 -> line 591
+ *   +0x0078 -> line 597
+ *   +0x007c -> line 600
+ *   +0x0080 -> line 605
+ *   +0x008c -> line 597
+ *   +0x0094 -> line 598
+ *   +0x00a0 -> line 599
+ *   +0x00ac -> line 600
+ *   +0x00b0 -> line 605
+ *   +0x00b8 -> line 606
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GEO_vEndModifyObject(GEO_tdstGeometricObject_* hObject)
 {
     GEO_xComputeObjectNormals(hObject);
@@ -667,6 +484,28 @@ void GEO_vEndModifyObject(GEO_tdstGeometricObject_* hObject)
     GEO_fn_vAddObjectToSphere(hObject, &hObject->xBoudingSphereCenter, &hObject->xBoudingSphereRadius);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 665–681 */
+/* addr: 0x002a1f30  size: 244 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 665
+ *   +0x0004 -> line 667
+ *   +0x0008 -> line 665
+ *   +0x000c -> line 667
+ *   +0x0010 -> line 665
+ *   +0x0014 -> line 667
+ *   +0x0040 -> line 670
+ *   +0x0048 -> line 672
+ *   +0x005c -> line 670
+ *   +0x0064 -> line 672
+ *   +0x0090 -> line 673
+ *   +0x0098 -> line 676
+ *   +0x00a0 -> line 678
+ *   +0x00b4 -> line 676
+ *   +0x00bc -> line 678
+ *   +0x00ec -> line 681
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GEO_vGetNormalOfGeometricObjectElement(GEO_tdstGeometricObject_* hObject, short xElementIndex, short xDataElementIndex, MTH3D_tdstVector_* p_stNormal)
 {
     GEO_tdstElementFaceMapDescriptors_* param0;
@@ -686,6 +525,96 @@ void GEO_vGetNormalOfGeometricObjectElement(GEO_tdstGeometricObject_* hObject, s
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 846–938 */
+/* addr: 0x002a1cd0  size: 608 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 846
+ *   +0x0020 -> line 859
+ *   +0x0024 -> line 846
+ *   +0x0028 -> line 859
+ *   +0x002c -> line 856
+ *   +0x0030 -> line 859
+ *   +0x0034 -> line 856
+ *   +0x0040 -> line 859
+ *   +0x0058 -> line 860
+ *   +0x0060 -> line 863
+ *   +0x0068 -> line 866
+ *   +0x006c -> line 863
+ *   +0x0070 -> line 866
+ *   +0x0078 -> line 867
+ *   +0x0098 -> line 880
+ *   +0x009c -> line 878
+ *   +0x00a4 -> line 883
+ *   +0x00b0 -> line 884
+ *   +0x00b8 -> line 887
+ *   +0x00c0 -> line 891
+ *   +0x00c4 -> line 887
+ *   +0x00c8 -> line 891
+ *   +0x00cc -> line 888
+ *   +0x00d0 -> line 891
+ *   +0x00d8 -> line 887
+ *   +0x00dc -> line 891
+ *   +0x00e0 -> line 887
+ *   +0x00e8 -> line 888
+ *   +0x00f4 -> line 891
+ *   +0x00f8 -> line 916
+ *   +0x00fc -> line 896
+ *   +0x0100 -> line 916
+ *   +0x0104 -> line 897
+ *   +0x0108 -> line 929
+ *   +0x010c -> line 892
+ *   +0x0110 -> line 891
+ *   +0x0114 -> line 892
+ *   +0x0118 -> line 896
+ *   +0x011c -> line 893
+ *   +0x0120 -> line 894
+ *   +0x0124 -> line 897
+ *   +0x0128 -> line 892
+ *   +0x0130 -> line 898
+ *   +0x0134 -> line 893
+ *   +0x013c -> line 897
+ *   +0x0144 -> line 892
+ *   +0x014c -> line 893
+ *   +0x0154 -> line 910
+ *   +0x0158 -> line 899
+ *   +0x015c -> line 898
+ *   +0x0164 -> line 910
+ *   +0x0170 -> line 927
+ *   +0x0174 -> line 899
+ *   +0x017c -> line 911
+ *   +0x0180 -> line 894
+ *   +0x0184 -> line 911
+ *   +0x0188 -> line 894
+ *   +0x018c -> line 927
+ *   +0x0190 -> line 894
+ *   +0x0194 -> line 910
+ *   +0x0198 -> line 894
+ *   +0x019c -> line 911
+ *   +0x01a4 -> line 927
+ *   +0x01ac -> line 910
+ *   +0x01b0 -> line 928
+ *   +0x01b4 -> line 927
+ *   +0x01bc -> line 928
+ *   +0x01c4 -> line 914
+ *   +0x01c8 -> line 928
+ *   +0x01cc -> line 914
+ *   +0x01d0 -> line 916
+ *   +0x01d4 -> line 914
+ *   +0x01d8 -> line 916
+ *   +0x01e0 -> line 927
+ *   +0x01e8 -> line 928
+ *   +0x01ec -> line 916
+ *   +0x01f0 -> line 927
+ *   +0x01f4 -> line 928
+ *   +0x01f8 -> line 914
+ *   +0x01fc -> line 916
+ *   +0x020c -> line 933
+ *   +0x0238 -> line 936
+ *   +0x023c -> line 933
+ *   +0x0240 -> line 938
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char GEO_vGetFaceSurfaceSpeed(GEO_tdstGeometricObject_* hObject, short xElement, short xFace, MTH3D_tdstVector_* p_vSpeed, int lMTIndex)
 {
     float det;
@@ -732,6 +661,26 @@ unsigned char GEO_vGetFaceSurfaceSpeed(GEO_tdstGeometricObject_* hObject, short 
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 950–974 */
+/* addr: 0x002a1bf0  size: 216 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 950
+ *   +0x000c -> line 953
+ *   +0x0014 -> line 955
+ *   +0x0020 -> line 958
+ *   +0x002c -> line 967
+ *   +0x0038 -> line 969
+ *   +0x003c -> line 967
+ *   +0x0040 -> line 969
+ *   +0x0058 -> line 971
+ *   +0x005c -> line 973
+ *   +0x0068 -> line 971
+ *   +0x0088 -> line 972
+ *   +0x00b0 -> line 973
+ *   +0x00c8 -> line 974
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GEO_vCreateObjectListOfParallelBox(GEO_tdstGeometricObject_* hObject, short xNumberOfParallelBoxes)
 {
     short xIndex;
@@ -751,6 +700,14 @@ void GEO_vCreateObjectListOfParallelBox(GEO_tdstGeometricObject_* hObject, short
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 1012–1015 */
+/* addr: 0x002a1bc0  size: 44 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1012
+ *   +0x0024 -> line 1015
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 GEO_tdstParallelBox_* GEO_hGetParallelBox(GEO_tdstGeometricObject_* hObject, short xParallelBox)
 {
     if (xParallelBox < hObject->xNbParallelBoxes)
@@ -758,6 +715,24 @@ GEO_tdstParallelBox_* GEO_hGetParallelBox(GEO_tdstGeometricObject_* hObject, sho
     return 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 1029–1061 */
+/* addr: 0x002a1aa0  size: 288 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1029
+ *   +0x003c -> line 1032
+ *   +0x0054 -> line 1035
+ *   +0x006c -> line 1038
+ *   +0x0084 -> line 1041
+ *   +0x009c -> line 1044
+ *   +0x00b4 -> line 1047
+ *   +0x00cc -> line 1050
+ *   +0x00e4 -> line 1053
+ *   +0x00fc -> line 1056
+ *   +0x0114 -> line 1059
+ *   +0x0118 -> line 1061
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 short GEO_xGetParallelBoxIndexOfElement(GEO_tdstGeometricObject_* hObject, short xIndexElement)
 {
     switch (hObject->d_xListOfElementsTypes[xIndexElement])
@@ -786,6 +761,27 @@ short GEO_xGetParallelBoxIndexOfElement(GEO_tdstGeometricObject_* hObject, short
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 28–49 */
+/* addr: 0x002a19e0  size: 180 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 28
+ *   +0x0004 -> line 35
+ *   +0x0008 -> line 28
+ *   +0x0018 -> line 35
+ *   +0x0024 -> line 38
+ *   +0x003c -> line 40
+ *   +0x0060 -> line 43
+ *   +0x0068 -> line 45
+ *   +0x0070 -> line 48
+ *   +0x0074 -> line 45
+ *   +0x0078 -> line 48
+ *   +0x007c -> line 45
+ *   +0x0084 -> line 46
+ *   +0x0088 -> line 48
+ *   +0x00a0 -> line 49
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GEO_vCreateElementIndexedTriangles(GEO_tdstGeometricObject_* hObject, short* p_hElement, short xNbFaces, short xNbElementUV, short xNbUVStages)
 {
     short xElementToBuild;

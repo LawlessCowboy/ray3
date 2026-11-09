@@ -2021,116 +2021,6 @@ extern "C" void SDL_SetNbFaces(unsigned int hSDL, unsigned int NbFaces);
 
 extern "C" void SDL_Preprocess(unsigned int hSDL);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 72–153 */
-/* addr: 0x002e9780  size: 1264 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 72
- *   +0x0004 -> line 76
- *   +0x0008 -> line 72
- *   +0x000c -> line 76
- *   +0x0010 -> line 72
- *   +0x0014 -> line 76
- *   +0x0018 -> line 72
- *   +0x001c -> line 76
- *   +0x0020 -> line 72
- *   +0x0024 -> line 76
- *   +0x0068 -> line 77
- *   +0x0070 -> line 78
- *   +0x0084 -> line 79
- *   +0x008c -> line 78
- *   +0x00b4 -> line 81
- *   +0x00b8 -> line 79
- *   +0x00bc -> line 78
- *   +0x00c0 -> line 79
- *   +0x00d0 -> line 78
- *   +0x00d4 -> line 82
- *   +0x00dc -> line 78
- *   +0x00e0 -> line 79
- *   +0x00e4 -> line 78
- *   +0x00e8 -> line 80
- *   +0x00f0 -> line 78
- *   +0x00fc -> line 82
- *   +0x0100 -> line 78
- *   +0x0104 -> line 79
- *   +0x0108 -> line 80
- *   +0x010c -> line 79
- *   +0x0110 -> line 80
- *   +0x0114 -> line 82
- *   +0x0118 -> line 79
- *   +0x0124 -> line 82
- *   +0x0128 -> line 80
- *   +0x0138 -> line 79
- *   +0x013c -> line 80
- *   +0x0140 -> line 79
- *   +0x0144 -> line 83
- *   +0x0148 -> line 79
- *   +0x015c -> line 80
- *   +0x0160 -> line 79
- *   +0x0164 -> line 80
- *   +0x0168 -> line 79
- *   +0x0178 -> line 80
- *   +0x017c -> line 79
- *   +0x0180 -> line 80
- *   +0x0184 -> line 79
- *   +0x0188 -> line 80
- *   +0x018c -> line 79
- *   +0x0190 -> line 80
- *   +0x01b8 -> line 81
- *   +0x01c0 -> line 82
- *   +0x01c4 -> line 81
- *   +0x01c8 -> line 82
- *   +0x01e8 -> line 81
- *   +0x01ec -> line 82
- *   +0x01f0 -> line 81
- *   +0x01f4 -> line 82
- *   +0x023c -> line 83
- *   +0x0244 -> line 86
- *   +0x0298 -> line 88
- *   +0x02a8 -> line 90
- *   +0x02c4 -> line 94
- *   +0x02cc -> line 98
- *   +0x02d0 -> line 96
- *   +0x02d4 -> line 98
- *   +0x02d8 -> line 97
- *   +0x02dc -> line 96
- *   +0x02e8 -> line 97
- *   +0x0300 -> line 98
- *   +0x0318 -> line 99
- *   +0x0328 -> line 101
- *   +0x0330 -> line 102
- *   +0x0350 -> line 103
- *   +0x035c -> line 104
- *   +0x0370 -> line 105
- *   +0x0380 -> line 106
- *   +0x038c -> line 107
- *   +0x039c -> line 108
- *   +0x03b0 -> line 109
- *   +0x03b8 -> line 113
- *   +0x03bc -> line 114
- *   +0x03c4 -> line 118
- *   +0x03c8 -> line 116
- *   +0x03cc -> line 118
- *   +0x03d0 -> line 117
- *   +0x03d4 -> line 116
- *   +0x03e4 -> line 117
- *   +0x0400 -> line 118
- *   +0x0418 -> line 119
- *   +0x0428 -> line 120
- *   +0x0434 -> line 122
- *   +0x0450 -> line 124
- *   +0x0458 -> line 125
- *   +0x0470 -> line 126
- *   +0x047c -> line 127
- *   +0x0490 -> line 128
- *   +0x04a0 -> line 129
- *   +0x04ac -> line 130
- *   +0x04bc -> line 131
- *   +0x04d0 -> line 132
- *   +0x04d8 -> line 153
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 extern "C" void AE_Filter_BrightNess_n_Contrast(float* AE_Bright_Cont);
@@ -2144,134 +2034,6 @@ extern "C" void WaterFx_vDestroySDLs(void);
 extern "C" void WaterFx_vInit(void);
 extern "C" void WaterFx_vProcessAndDisplay(int bTransparent);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1350–1361 */
-/* addr: 0x002e9c70  size: 96 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1350
- *   +0x0018 -> line 1353
- *   +0x001c -> line 1355
- *   +0x0024 -> line 1357
- *   +0x0034 -> line 1358
- *   +0x0038 -> line 1359
- *   +0x0048 -> line 1361
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1338–1345 */
-/* addr: 0x002e9cd0  size: 152 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1338
- *   +0x0004 -> line 1340
- *   +0x000c -> line 1342
- *   +0x0080 -> line 1343
- *   +0x0084 -> line 1344
- *   +0x0090 -> line 1345
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1321–1331 */
-/* addr: 0x002e9d70  size: 96 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1321
- *   +0x0018 -> line 1324
- *   +0x001c -> line 1326
- *   +0x0024 -> line 1328
- *   +0x0034 -> line 1329
- *   +0x0038 -> line 1330
- *   +0x0048 -> line 1331
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1303–1316 */
-/* addr: 0x002e9dd0  size: 128 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1303
- *   +0x0018 -> line 1307
- *   +0x002c -> line 1309
- *   +0x004c -> line 1311
- *   +0x0050 -> line 1313
- *   +0x005c -> line 1315
- *   +0x0068 -> line 1316
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1289–1299 */
-/* addr: 0x002e9e50  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1289
- *   +0x000c -> line 1292
- *   +0x001c -> line 1294
- *   +0x0024 -> line 1296
- *   +0x002c -> line 1297
- *   +0x0040 -> line 1299
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1282–1282 */
-/* addr: 0x002e9ea0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1282
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1276–1276 */
-/* addr: 0x002e9eb0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1276
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1248–1272 */
-/* addr: 0x002e9ec0  size: 148 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1248
- *   +0x0010 -> line 1252
- *   +0x0014 -> line 1254
- *   +0x001c -> line 1257
- *   +0x0028 -> line 1258
- *   +0x002c -> line 1259
- *   +0x0038 -> line 1261
- *   +0x003c -> line 1263
- *   +0x0044 -> line 1265
- *   +0x004c -> line 1266
- *   +0x0068 -> line 1267
- *   +0x0070 -> line 1269
- *   +0x0074 -> line 1270
- *   +0x0080 -> line 1272
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1216–1245 */
-/* addr: 0x002e9f60  size: 172 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1216
- *   +0x0010 -> line 1218
- *   +0x0014 -> line 1220
- *   +0x001c -> line 1225
- *   +0x0024 -> line 1227
- *   +0x002c -> line 1229
- *   +0x003c -> line 1232
- *   +0x0044 -> line 1233
- *   +0x0048 -> line 1234
- *   +0x004c -> line 1235
- *   +0x0068 -> line 1236
- *   +0x0070 -> line 1238
- *   +0x0078 -> line 1239
- *   +0x0080 -> line 1241
- *   +0x0088 -> line 1243
- *   +0x0090 -> line 1244
- *   +0x0098 -> line 1245
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* The target writes COP0 register 24 (mtbpc, i.e. mtc0 zero, $24) around the
  * processing and drawing; C cannot express it.  The R5900 alias mtbpc is used
  * so MWCC schedules it like an ordinary instruction (delay slots, hazard nop). */
@@ -2288,44 +2050,6 @@ extern "C" void SDL_Draw(unsigned int hSDL);
    is entered by an explicit jump, so the goto below reproduces it (and with it
    the retail line map). */
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1118–1182 */
-/* addr: 0x002ea010  size: 496 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1118
- *   +0x000c -> line 1124
- *   +0x0014 -> line 1125
- *   +0x0018 -> line 1126
- *   +0x001c -> line 1125
- *   +0x0020 -> line 1126
- *   +0x0024 -> line 1125
- *   +0x0028 -> line 1127
- *   +0x002c -> line 1125
- *   +0x0064 -> line 1127
- *   +0x006c -> line 1128
- *   +0x0074 -> line 1135
- *   +0x0080 -> line 1136
- *   +0x008c -> line 1138
- *   +0x0094 -> line 1139
- *   +0x00a0 -> line 1142
- *   +0x00ac -> line 1144
- *   +0x00b0 -> line 1145
- *   +0x00b4 -> line 1144
- *   +0x00b8 -> line 1146
- *   +0x00c8 -> line 1147
- *   +0x00d0 -> line 1149
- *   +0x00d8 -> line 1152
- *   +0x00e0 -> line 1169
- *   +0x00ec -> line 1170
- *   +0x013c -> line 1171
- *   +0x0150 -> line 1172
- *   +0x0164 -> line 1173
- *   +0x0178 -> line 1174
- *   +0x0188 -> line 1175
- *   +0x0194 -> line 1176
- *   +0x01e0 -> line 1182
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern "C" void GLI_vInitGLProjectionMatrix(void);
 extern "C" void PS2glMatrixMode(unsigned int mode);
 extern "C" void PS2glLoadMatrixf(const float* m);
@@ -2339,362 +2063,7 @@ extern "C" void impPS2glColorPointer(int size, unsigned int type, int stride, vo
 extern "C" void PS2glVertexPointer(int size, unsigned int type, int stride, void* pointer);
 extern "C" void PS2glDrawArrays(unsigned int mode, int first, int count);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 753–1111 */
-/* addr: 0x002ea200  size: 1260 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 753
- *   +0x0004 -> line 763
- *   +0x0008 -> line 753
- *   +0x0030 -> line 763
- *   +0x003c -> line 770
- *   +0x0040 -> line 781
- *   +0x004c -> line 770
- *   +0x0050 -> line 774
- *   +0x0054 -> line 771
- *   +0x0058 -> line 770
- *   +0x005c -> line 771
- *   +0x0060 -> line 770
- *   +0x0064 -> line 771
- *   +0x0068 -> line 770
- *   +0x006c -> line 771
- *   +0x0070 -> line 781
- *   +0x0078 -> line 812
- *   +0x007c -> line 808
- *   +0x0080 -> line 812
- *   +0x0084 -> line 813
- *   +0x0088 -> line 821
- *   +0x0094 -> line 823
- *   +0x0120 -> line 825
- *   +0x01ac -> line 826
- *   +0x0234 -> line 827
- *   +0x0278 -> line 828
- *   +0x02b0 -> line 829
- *   +0x02c8 -> line 830
- *   +0x02cc -> line 829
- *   +0x02f4 -> line 830
- *   +0x02fc -> line 831
- *   +0x0300 -> line 883
- *   +0x0304 -> line 885
- *   +0x0308 -> line 883
- *   +0x030c -> line 885
- *   +0x0318 -> line 890
- *   +0x0328 -> line 993
- *   +0x032c -> line 994
- *   +0x0330 -> line 995
- *   +0x0334 -> line 996
- *   +0x0338 -> line 997
- *   +0x033c -> line 998
- *   +0x0340 -> line 999
- *   +0x0344 -> line 1000
- *   +0x0348 -> line 1001
- *   +0x034c -> line 1002
- *   +0x0350 -> line 1004
- *   +0x0354 -> line 1006
- *   +0x0358 -> line 1007
- *   +0x035c -> line 1008
- *   +0x0360 -> line 1009
- *   +0x0364 -> line 1010
- *   +0x0368 -> line 1012
- *   +0x036c -> line 1013
- *   +0x0370 -> line 1014
- *   +0x0374 -> line 1015
- *   +0x0378 -> line 1016
- *   +0x037c -> line 1018
- *   +0x0380 -> line 1019
- *   +0x0384 -> line 1020
- *   +0x0388 -> line 1022
- *   +0x038c -> line 1023
- *   +0x0390 -> line 1024
- *   +0x0394 -> line 1028
- *   +0x0398 -> line 1029
- *   +0x039c -> line 1031
- *   +0x03a0 -> line 1035
- *   +0x03a4 -> line 1036
- *   +0x03a8 -> line 1038
- *   +0x03ac -> line 1039
- *   +0x03b0 -> line 1041
- *   +0x03b4 -> line 1042
- *   +0x03b8 -> line 1046
- *   +0x03bc -> line 1050
- *   +0x03c0 -> line 1051
- *   +0x03c4 -> line 1052
- *   +0x03c8 -> line 1053
- *   +0x03cc -> line 1055
- *   +0x03d0 -> line 1056
- *   +0x03d4 -> line 1058
- *   +0x03d8 -> line 1059
- *   +0x03dc -> line 1063
- *   +0x03e0 -> line 1064
- *   +0x03e4 -> line 1065
- *   +0x03e8 -> line 1066
- *   +0x03ec -> line 1067
- *   +0x03f0 -> line 1068
- *   +0x03f4 -> line 1069
- *   +0x03f8 -> line 1070
- *   +0x03fc -> line 1071
- *   +0x0400 -> line 1072
- *   +0x0404 -> line 1073
- *   +0x0408 -> line 1074
- *   +0x040c -> line 1078
- *   +0x0410 -> line 1079
- *   +0x0414 -> line 1080
- *   +0x0418 -> line 1081
- *   +0x041c -> line 1082
- *   +0x0420 -> line 1083
- *   +0x0424 -> line 1084
- *   +0x0428 -> line 1085
- *   +0x042c -> line 1086
- *   +0x0430 -> line 1087
- *   +0x0434 -> line 1088
- *   +0x0438 -> line 1098
- *   +0x043c -> line 1093
- *   +0x0440 -> line 1094
- *   +0x0444 -> line 1098
- *   +0x0450 -> line 1099
- *   +0x0460 -> line 1102
- *   +0x0474 -> line 1103
- *   +0x047c -> line 1106
- *   +0x048c -> line 1105
- *   +0x0490 -> line 1107
- *   +0x0494 -> line 1105
- *   +0x049c -> line 1106
- *   +0x04a0 -> line 1107
- *   +0x04b0 -> line 1110
- *   +0x04bc -> line 1111
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 514–746 */
-/* addr: 0x002ea6f0  size: 2028 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 514
- *   +0x0004 -> line 527
- *   +0x0008 -> line 514
- *   +0x000c -> line 552
- *   +0x0010 -> line 514
- *   +0x0014 -> line 552
- *   +0x0018 -> line 514
- *   +0x001c -> line 552
- *   +0x0020 -> line 514
- *   +0x0024 -> line 552
- *   +0x0028 -> line 514
- *   +0x002c -> line 552
- *   +0x0030 -> line 514
- *   +0x003c -> line 552
- *   +0x0040 -> line 514
- *   +0x0048 -> line 527
- *   +0x004c -> line 529
- *   +0x0054 -> line 534
- *   +0x005c -> line 535
- *   +0x006c -> line 536
- *   +0x007c -> line 537
- *   +0x008c -> line 544
- *   +0x0098 -> line 548
- *   +0x00a0 -> line 549
- *   +0x00ac -> line 550
- *   +0x00b4 -> line 552
- *   +0x00bc -> line 554
- *   +0x00d4 -> line 559
- *   +0x00d8 -> line 562
- *   +0x00dc -> line 564
- *   +0x00e4 -> line 559
- *   +0x00f0 -> line 560
- *   +0x0100 -> line 561
- *   +0x0110 -> line 562
- *   +0x0114 -> line 564
- *   +0x0120 -> line 566
- *   +0x0148 -> line 567
- *   +0x0170 -> line 568
- *   +0x0198 -> line 569
- *   +0x01c0 -> line 570
- *   +0x01d0 -> line 595
- *   +0x01d4 -> line 575
- *   +0x01d8 -> line 595
- *   +0x01dc -> line 575
- *   +0x01e8 -> line 595
- *   +0x01f4 -> line 575
- *   +0x0204 -> line 576
- *   +0x0224 -> line 579
- *   +0x0234 -> line 580
- *   +0x0244 -> line 581
- *   +0x0254 -> line 582
- *   +0x0264 -> line 583
- *   +0x0274 -> line 584
- *   +0x0284 -> line 595
- *   +0x02d0 -> line 596
- *   +0x0330 -> line 598
- *   +0x0344 -> line 604
- *   +0x0398 -> line 605
- *   +0x03ec -> line 608
- *   +0x0408 -> line 610
- *   +0x0424 -> line 612
- *   +0x0444 -> line 619
- *   +0x0448 -> line 618
- *   +0x044c -> line 619
- *   +0x0450 -> line 618
- *   +0x0458 -> line 619
- *   +0x045c -> line 618
- *   +0x0460 -> line 619
- *   +0x0468 -> line 623
- *   +0x047c -> line 625
- *   +0x0490 -> line 627
- *   +0x04a4 -> line 629
- *   +0x04ec -> line 636
- *   +0x04f8 -> line 662
- *   +0x04fc -> line 663
- *   +0x0504 -> line 665
- *   +0x0510 -> line 668
- *   +0x0524 -> line 669
- *   +0x0540 -> line 672
- *   +0x0548 -> line 673
- *   +0x0550 -> line 678
- *   +0x0564 -> line 679
- *   +0x0568 -> line 680
- *   +0x056c -> line 681
- *   +0x0580 -> line 682
- *   +0x0588 -> line 686
- *   +0x058c -> line 687
- *   +0x0590 -> line 688
- *   +0x05a8 -> line 694
- *   +0x05b4 -> line 696
- *   +0x05b8 -> line 694
- *   +0x05cc -> line 696
- *   +0x05d4 -> line 698
- *   +0x05d8 -> line 700
- *   +0x05e8 -> line 704
- *   +0x05f4 -> line 706
- *   +0x05f8 -> line 708
- *   +0x0604 -> line 704
- *   +0x0608 -> line 705
- *   +0x060c -> line 704
- *   +0x0610 -> line 708
- *   +0x0614 -> line 704
- *   +0x0620 -> line 705
- *   +0x0624 -> line 704
- *   +0x0628 -> line 705
- *   +0x062c -> line 708
- *   +0x0634 -> line 710
- *   +0x0638 -> line 712
- *   +0x063c -> line 711
- *   +0x0640 -> line 712
- *   +0x0658 -> line 715
- *   +0x0678 -> line 717
- *   +0x067c -> line 720
- *   +0x0680 -> line 717
- *   +0x0684 -> line 718
- *   +0x0688 -> line 717
- *   +0x0694 -> line 718
- *   +0x0698 -> line 717
- *   +0x069c -> line 720
- *   +0x06a0 -> line 718
- *   +0x06a4 -> line 720
- *   +0x06a8 -> line 721
- *   +0x06ac -> line 722
- *   +0x06c0 -> line 725
- *   +0x06e0 -> line 728
- *   +0x06e4 -> line 727
- *   +0x06f4 -> line 728
- *   +0x0708 -> line 729
- *   +0x070c -> line 730
- *   +0x0710 -> line 729
- *   +0x071c -> line 730
- *   +0x0730 -> line 733
- *   +0x0738 -> line 735
- *   +0x073c -> line 737
- *   +0x0740 -> line 735
- *   +0x0748 -> line 736
- *   +0x0758 -> line 737
- *   +0x0770 -> line 740
- *   +0x0790 -> line 741
- *   +0x07b0 -> line 744
- *   +0x07bc -> line 745
- *   +0x07c0 -> line 746
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 467–488 */
-/* addr: 0x002eaee0  size: 260 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 467
- *   +0x0058 -> line 473
- *   +0x0064 -> line 474
- *   +0x0074 -> line 475
- *   +0x0084 -> line 476
- *   +0x0094 -> line 477
- *   +0x00a4 -> line 478
- *   +0x00b4 -> line 480
- *   +0x00bc -> line 481
- *   +0x00c4 -> line 482
- *   +0x00cc -> line 484
- *   +0x00dc -> line 485
- *   +0x00ec -> line 486
- *   +0x00fc -> line 488
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 433–463 */
-/* addr: 0x002eaff0  size: 556 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 433
- *   +0x0024 -> line 440
- *   +0x0028 -> line 437
- *   +0x002c -> line 438
- *   +0x0030 -> line 440
- *   +0x007c -> line 443
- *   +0x0080 -> line 444
- *   +0x0084 -> line 448
- *   +0x0088 -> line 447
- *   +0x0090 -> line 444
- *   +0x0094 -> line 446
- *   +0x0098 -> line 447
- *   +0x009c -> line 446
- *   +0x00a0 -> line 447
- *   +0x00a4 -> line 448
- *   +0x011c -> line 449
- *   +0x0160 -> line 451
- *   +0x0174 -> line 455
- *   +0x0194 -> line 458
- *   +0x01b4 -> line 459
- *   +0x01d8 -> line 460
- *   +0x0208 -> line 463
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern "C" float FRR(float fMin, float fMax);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 398–430 */
-/* addr: 0x002eb220  size: 596 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 398
- *   +0x0024 -> line 406
- *   +0x0028 -> line 402
- *   +0x002c -> line 403
- *   +0x0030 -> line 404
- *   +0x0034 -> line 406
- *   +0x0094 -> line 413
- *   +0x0098 -> line 410
- *   +0x009c -> line 411
- *   +0x00a0 -> line 415
- *   +0x00a4 -> line 414
- *   +0x00ac -> line 411
- *   +0x00b0 -> line 413
- *   +0x00b4 -> line 414
- *   +0x00b8 -> line 413
- *   +0x00bc -> line 414
- *   +0x00c0 -> line 415
- *   +0x0138 -> line 416
- *   +0x017c -> line 418
- *   +0x0190 -> line 422
- *   +0x01b0 -> line 425
- *   +0x01dc -> line 426
- *   +0x0200 -> line 427
- *   +0x0230 -> line 430
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 296–395 */
 /* addr: 0x002eb480  size: 1560 bytes */
@@ -2904,17 +2273,6 @@ void JR_GetABCForInterpolation__FPfPfPfPfPf(float* p1, float* p2, float* p3, flo
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 141–144 */
-/* addr: 0x002ec310  size: 52 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 141
- *   +0x000c -> line 142
- *   +0x0020 -> line 143
- *   +0x0024 -> line 144
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 130–138 */
 /* addr: 0x002ec350  size: 272 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -2949,6 +2307,16 @@ C_WaterFx::~C_WaterFx()
         SDL_Destroy(&m_pSDL);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 141–144 */
+/* addr: 0x002ec310  size: 52 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 141
+ *   +0x000c -> line 142
+ *   +0x0020 -> line 143
+ *   +0x0024 -> line 144
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void C_WaterFx::DeleteSDLs(void)
 {
     if (m_pSDL)
@@ -2956,6 +2324,36 @@ void C_WaterFx::DeleteSDLs(void)
     m_pSDL = 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 398–430 */
+/* addr: 0x002eb220  size: 596 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 398
+ *   +0x0024 -> line 406
+ *   +0x0028 -> line 402
+ *   +0x002c -> line 403
+ *   +0x0030 -> line 404
+ *   +0x0034 -> line 406
+ *   +0x0094 -> line 413
+ *   +0x0098 -> line 410
+ *   +0x009c -> line 411
+ *   +0x00a0 -> line 415
+ *   +0x00a4 -> line 414
+ *   +0x00ac -> line 411
+ *   +0x00b0 -> line 413
+ *   +0x00b4 -> line 414
+ *   +0x00b8 -> line 413
+ *   +0x00bc -> line 414
+ *   +0x00c0 -> line 415
+ *   +0x0138 -> line 416
+ *   +0x017c -> line 418
+ *   +0x0190 -> line 422
+ *   +0x01b0 -> line 425
+ *   +0x01dc -> line 426
+ *   +0x0200 -> line 427
+ *   +0x0230 -> line 430
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void C_WaterFx::PerturbFromCharacterPosition(float* WorldPosition, float Strength)
 {
     unsigned int totalSize;
@@ -2990,6 +2388,34 @@ void C_WaterFx::PerturbFromCharacterPosition(float* WorldPosition, float Strengt
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 433–463 */
+/* addr: 0x002eaff0  size: 556 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 433
+ *   +0x0024 -> line 440
+ *   +0x0028 -> line 437
+ *   +0x002c -> line 438
+ *   +0x0030 -> line 440
+ *   +0x007c -> line 443
+ *   +0x0080 -> line 444
+ *   +0x0084 -> line 448
+ *   +0x0088 -> line 447
+ *   +0x0090 -> line 444
+ *   +0x0094 -> line 446
+ *   +0x0098 -> line 447
+ *   +0x009c -> line 446
+ *   +0x00a0 -> line 447
+ *   +0x00a4 -> line 448
+ *   +0x011c -> line 449
+ *   +0x0160 -> line 451
+ *   +0x0174 -> line 455
+ *   +0x0194 -> line 458
+ *   +0x01b4 -> line 459
+ *   +0x01d8 -> line 460
+ *   +0x0208 -> line 463
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void C_WaterFx::Perturb(float* WorldPosition, float Strength)
 {
     unsigned int totalSize;
@@ -3022,6 +2448,26 @@ void C_WaterFx::Perturb(float* WorldPosition, float Strength)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 467–488 */
+/* addr: 0x002eaee0  size: 260 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 467
+ *   +0x0058 -> line 473
+ *   +0x0064 -> line 474
+ *   +0x0074 -> line 475
+ *   +0x0084 -> line 476
+ *   +0x0094 -> line 477
+ *   +0x00a4 -> line 478
+ *   +0x00b4 -> line 480
+ *   +0x00bc -> line 481
+ *   +0x00c4 -> line 482
+ *   +0x00cc -> line 484
+ *   +0x00dc -> line 485
+ *   +0x00ec -> line 486
+ *   +0x00fc -> line 488
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void C_WaterFx::SetPosition(float* WorldPositionInWater, float* NewRelativePosition)
 {
     if (WorldPositionInWater[0] < m_OrgMaxPos[0] && WorldPositionInWater[0] > m_OrgMinPos[0] && WorldPositionInWater[1] < m_OrgMaxPos[1] && WorldPositionInWater[1] > m_OrgMinPos[1])
@@ -3043,6 +2489,154 @@ void C_WaterFx::SetPosition(float* WorldPositionInWater, float* NewRelativePosit
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 514–746 */
+/* addr: 0x002ea6f0  size: 2028 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 514
+ *   +0x0004 -> line 527
+ *   +0x0008 -> line 514
+ *   +0x000c -> line 552
+ *   +0x0010 -> line 514
+ *   +0x0014 -> line 552
+ *   +0x0018 -> line 514
+ *   +0x001c -> line 552
+ *   +0x0020 -> line 514
+ *   +0x0024 -> line 552
+ *   +0x0028 -> line 514
+ *   +0x002c -> line 552
+ *   +0x0030 -> line 514
+ *   +0x003c -> line 552
+ *   +0x0040 -> line 514
+ *   +0x0048 -> line 527
+ *   +0x004c -> line 529
+ *   +0x0054 -> line 534
+ *   +0x005c -> line 535
+ *   +0x006c -> line 536
+ *   +0x007c -> line 537
+ *   +0x008c -> line 544
+ *   +0x0098 -> line 548
+ *   +0x00a0 -> line 549
+ *   +0x00ac -> line 550
+ *   +0x00b4 -> line 552
+ *   +0x00bc -> line 554
+ *   +0x00d4 -> line 559
+ *   +0x00d8 -> line 562
+ *   +0x00dc -> line 564
+ *   +0x00e4 -> line 559
+ *   +0x00f0 -> line 560
+ *   +0x0100 -> line 561
+ *   +0x0110 -> line 562
+ *   +0x0114 -> line 564
+ *   +0x0120 -> line 566
+ *   +0x0148 -> line 567
+ *   +0x0170 -> line 568
+ *   +0x0198 -> line 569
+ *   +0x01c0 -> line 570
+ *   +0x01d0 -> line 595
+ *   +0x01d4 -> line 575
+ *   +0x01d8 -> line 595
+ *   +0x01dc -> line 575
+ *   +0x01e8 -> line 595
+ *   +0x01f4 -> line 575
+ *   +0x0204 -> line 576
+ *   +0x0224 -> line 579
+ *   +0x0234 -> line 580
+ *   +0x0244 -> line 581
+ *   +0x0254 -> line 582
+ *   +0x0264 -> line 583
+ *   +0x0274 -> line 584
+ *   +0x0284 -> line 595
+ *   +0x02d0 -> line 596
+ *   +0x0330 -> line 598
+ *   +0x0344 -> line 604
+ *   +0x0398 -> line 605
+ *   +0x03ec -> line 608
+ *   +0x0408 -> line 610
+ *   +0x0424 -> line 612
+ *   +0x0444 -> line 619
+ *   +0x0448 -> line 618
+ *   +0x044c -> line 619
+ *   +0x0450 -> line 618
+ *   +0x0458 -> line 619
+ *   +0x045c -> line 618
+ *   +0x0460 -> line 619
+ *   +0x0468 -> line 623
+ *   +0x047c -> line 625
+ *   +0x0490 -> line 627
+ *   +0x04a4 -> line 629
+ *   +0x04ec -> line 636
+ *   +0x04f8 -> line 662
+ *   +0x04fc -> line 663
+ *   +0x0504 -> line 665
+ *   +0x0510 -> line 668
+ *   +0x0524 -> line 669
+ *   +0x0540 -> line 672
+ *   +0x0548 -> line 673
+ *   +0x0550 -> line 678
+ *   +0x0564 -> line 679
+ *   +0x0568 -> line 680
+ *   +0x056c -> line 681
+ *   +0x0580 -> line 682
+ *   +0x0588 -> line 686
+ *   +0x058c -> line 687
+ *   +0x0590 -> line 688
+ *   +0x05a8 -> line 694
+ *   +0x05b4 -> line 696
+ *   +0x05b8 -> line 694
+ *   +0x05cc -> line 696
+ *   +0x05d4 -> line 698
+ *   +0x05d8 -> line 700
+ *   +0x05e8 -> line 704
+ *   +0x05f4 -> line 706
+ *   +0x05f8 -> line 708
+ *   +0x0604 -> line 704
+ *   +0x0608 -> line 705
+ *   +0x060c -> line 704
+ *   +0x0610 -> line 708
+ *   +0x0614 -> line 704
+ *   +0x0620 -> line 705
+ *   +0x0624 -> line 704
+ *   +0x0628 -> line 705
+ *   +0x062c -> line 708
+ *   +0x0634 -> line 710
+ *   +0x0638 -> line 712
+ *   +0x063c -> line 711
+ *   +0x0640 -> line 712
+ *   +0x0658 -> line 715
+ *   +0x0678 -> line 717
+ *   +0x067c -> line 720
+ *   +0x0680 -> line 717
+ *   +0x0684 -> line 718
+ *   +0x0688 -> line 717
+ *   +0x0694 -> line 718
+ *   +0x0698 -> line 717
+ *   +0x069c -> line 720
+ *   +0x06a0 -> line 718
+ *   +0x06a4 -> line 720
+ *   +0x06a8 -> line 721
+ *   +0x06ac -> line 722
+ *   +0x06c0 -> line 725
+ *   +0x06e0 -> line 728
+ *   +0x06e4 -> line 727
+ *   +0x06f4 -> line 728
+ *   +0x0708 -> line 729
+ *   +0x070c -> line 730
+ *   +0x0710 -> line 729
+ *   +0x071c -> line 730
+ *   +0x0730 -> line 733
+ *   +0x0738 -> line 735
+ *   +0x073c -> line 737
+ *   +0x0740 -> line 735
+ *   +0x0748 -> line 736
+ *   +0x0758 -> line 737
+ *   +0x0770 -> line 740
+ *   +0x0790 -> line 741
+ *   +0x07b0 -> line 744
+ *   +0x07bc -> line 745
+ *   +0x07c0 -> line 746
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void C_WaterFx::Init(void)
 {
     float (*pUVChrome)[4];
@@ -3066,6 +2660,131 @@ void C_WaterFx::Init(void)
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 753–1111 */
+/* addr: 0x002ea200  size: 1260 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 753
+ *   +0x0004 -> line 763
+ *   +0x0008 -> line 753
+ *   +0x0030 -> line 763
+ *   +0x003c -> line 770
+ *   +0x0040 -> line 781
+ *   +0x004c -> line 770
+ *   +0x0050 -> line 774
+ *   +0x0054 -> line 771
+ *   +0x0058 -> line 770
+ *   +0x005c -> line 771
+ *   +0x0060 -> line 770
+ *   +0x0064 -> line 771
+ *   +0x0068 -> line 770
+ *   +0x006c -> line 771
+ *   +0x0070 -> line 781
+ *   +0x0078 -> line 812
+ *   +0x007c -> line 808
+ *   +0x0080 -> line 812
+ *   +0x0084 -> line 813
+ *   +0x0088 -> line 821
+ *   +0x0094 -> line 823
+ *   +0x0120 -> line 825
+ *   +0x01ac -> line 826
+ *   +0x0234 -> line 827
+ *   +0x0278 -> line 828
+ *   +0x02b0 -> line 829
+ *   +0x02c8 -> line 830
+ *   +0x02cc -> line 829
+ *   +0x02f4 -> line 830
+ *   +0x02fc -> line 831
+ *   +0x0300 -> line 883
+ *   +0x0304 -> line 885
+ *   +0x0308 -> line 883
+ *   +0x030c -> line 885
+ *   +0x0318 -> line 890
+ *   +0x0328 -> line 993
+ *   +0x032c -> line 994
+ *   +0x0330 -> line 995
+ *   +0x0334 -> line 996
+ *   +0x0338 -> line 997
+ *   +0x033c -> line 998
+ *   +0x0340 -> line 999
+ *   +0x0344 -> line 1000
+ *   +0x0348 -> line 1001
+ *   +0x034c -> line 1002
+ *   +0x0350 -> line 1004
+ *   +0x0354 -> line 1006
+ *   +0x0358 -> line 1007
+ *   +0x035c -> line 1008
+ *   +0x0360 -> line 1009
+ *   +0x0364 -> line 1010
+ *   +0x0368 -> line 1012
+ *   +0x036c -> line 1013
+ *   +0x0370 -> line 1014
+ *   +0x0374 -> line 1015
+ *   +0x0378 -> line 1016
+ *   +0x037c -> line 1018
+ *   +0x0380 -> line 1019
+ *   +0x0384 -> line 1020
+ *   +0x0388 -> line 1022
+ *   +0x038c -> line 1023
+ *   +0x0390 -> line 1024
+ *   +0x0394 -> line 1028
+ *   +0x0398 -> line 1029
+ *   +0x039c -> line 1031
+ *   +0x03a0 -> line 1035
+ *   +0x03a4 -> line 1036
+ *   +0x03a8 -> line 1038
+ *   +0x03ac -> line 1039
+ *   +0x03b0 -> line 1041
+ *   +0x03b4 -> line 1042
+ *   +0x03b8 -> line 1046
+ *   +0x03bc -> line 1050
+ *   +0x03c0 -> line 1051
+ *   +0x03c4 -> line 1052
+ *   +0x03c8 -> line 1053
+ *   +0x03cc -> line 1055
+ *   +0x03d0 -> line 1056
+ *   +0x03d4 -> line 1058
+ *   +0x03d8 -> line 1059
+ *   +0x03dc -> line 1063
+ *   +0x03e0 -> line 1064
+ *   +0x03e4 -> line 1065
+ *   +0x03e8 -> line 1066
+ *   +0x03ec -> line 1067
+ *   +0x03f0 -> line 1068
+ *   +0x03f4 -> line 1069
+ *   +0x03f8 -> line 1070
+ *   +0x03fc -> line 1071
+ *   +0x0400 -> line 1072
+ *   +0x0404 -> line 1073
+ *   +0x0408 -> line 1074
+ *   +0x040c -> line 1078
+ *   +0x0410 -> line 1079
+ *   +0x0414 -> line 1080
+ *   +0x0418 -> line 1081
+ *   +0x041c -> line 1082
+ *   +0x0420 -> line 1083
+ *   +0x0424 -> line 1084
+ *   +0x0428 -> line 1085
+ *   +0x042c -> line 1086
+ *   +0x0430 -> line 1087
+ *   +0x0434 -> line 1088
+ *   +0x0438 -> line 1098
+ *   +0x043c -> line 1093
+ *   +0x0440 -> line 1094
+ *   +0x0444 -> line 1098
+ *   +0x0450 -> line 1099
+ *   +0x0460 -> line 1102
+ *   +0x0474 -> line 1103
+ *   +0x047c -> line 1106
+ *   +0x048c -> line 1105
+ *   +0x0490 -> line 1107
+ *   +0x0494 -> line 1105
+ *   +0x049c -> line 1106
+ *   +0x04a0 -> line 1107
+ *   +0x04b0 -> line 1110
+ *   +0x04bc -> line 1111
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void C_WaterFx::Process(void)
 {
     unsigned int yy;
@@ -3081,6 +2800,44 @@ void C_WaterFx::Process(void)
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1118–1182 */
+/* addr: 0x002ea010  size: 496 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1118
+ *   +0x000c -> line 1124
+ *   +0x0014 -> line 1125
+ *   +0x0018 -> line 1126
+ *   +0x001c -> line 1125
+ *   +0x0020 -> line 1126
+ *   +0x0024 -> line 1125
+ *   +0x0028 -> line 1127
+ *   +0x002c -> line 1125
+ *   +0x0064 -> line 1127
+ *   +0x006c -> line 1128
+ *   +0x0074 -> line 1135
+ *   +0x0080 -> line 1136
+ *   +0x008c -> line 1138
+ *   +0x0094 -> line 1139
+ *   +0x00a0 -> line 1142
+ *   +0x00ac -> line 1144
+ *   +0x00b0 -> line 1145
+ *   +0x00b4 -> line 1144
+ *   +0x00b8 -> line 1146
+ *   +0x00c8 -> line 1147
+ *   +0x00d0 -> line 1149
+ *   +0x00d8 -> line 1152
+ *   +0x00e0 -> line 1169
+ *   +0x00ec -> line 1170
+ *   +0x013c -> line 1171
+ *   +0x0150 -> line 1172
+ *   +0x0164 -> line 1173
+ *   +0x0178 -> line 1174
+ *   +0x0188 -> line 1175
+ *   +0x0194 -> line 1176
+ *   +0x01e0 -> line 1182
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void C_WaterFx::DisplayInSDL(void)
 {
     unsigned int hRef;
@@ -3120,6 +2877,29 @@ void C_WaterFx::DisplayInSDL(void)
     if (g_PS2glContext.uiDmaOmitDataBits & 0x600) { *(int*)g_PS2glContext.pnColorMatMasks &= ~0x200; *(int*)g_PS2glContext.pnColorMatMasks &= ~0x100; } g_PS2glContext.uiDmaOmitDataBits = 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1216–1245 */
+/* addr: 0x002e9f60  size: 172 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1216
+ *   +0x0010 -> line 1218
+ *   +0x0014 -> line 1220
+ *   +0x001c -> line 1225
+ *   +0x0024 -> line 1227
+ *   +0x002c -> line 1229
+ *   +0x003c -> line 1232
+ *   +0x0044 -> line 1233
+ *   +0x0048 -> line 1234
+ *   +0x004c -> line 1235
+ *   +0x0068 -> line 1236
+ *   +0x0070 -> line 1238
+ *   +0x0078 -> line 1239
+ *   +0x0080 -> line 1241
+ *   +0x0088 -> line 1243
+ *   +0x0090 -> line 1244
+ *   +0x0098 -> line 1245
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void WaterFx_vProcessAndDisplay(int bTransparent)
 {
     tdstBaseFxListElement_* p;
@@ -3151,6 +2931,26 @@ void WaterFx_vProcessAndDisplay(int bTransparent)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1248–1272 */
+/* addr: 0x002e9ec0  size: 148 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1248
+ *   +0x0010 -> line 1252
+ *   +0x0014 -> line 1254
+ *   +0x001c -> line 1257
+ *   +0x0028 -> line 1258
+ *   +0x002c -> line 1259
+ *   +0x0038 -> line 1261
+ *   +0x003c -> line 1263
+ *   +0x0044 -> line 1265
+ *   +0x004c -> line 1266
+ *   +0x0068 -> line 1267
+ *   +0x0070 -> line 1269
+ *   +0x0074 -> line 1270
+ *   +0x0080 -> line 1272
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void WaterFx_vInit(void)
 {
     tdstBaseFxListElement_* p;
@@ -3169,16 +2969,42 @@ void WaterFx_vInit(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1276–1276 */
+/* addr: 0x002e9eb0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1276
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void WaterFx_vDestroySDLs(void)
 {
     WaterFx_g_List.DeleteAllSDLs();
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1282–1282 */
+/* addr: 0x002e9ea0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1282
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void WaterFx_vDesinit(void)
 {
     WaterFx_g_List.DeleteAll();
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1289–1299 */
+/* addr: 0x002e9e50  size: 80 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1289
+ *   +0x000c -> line 1292
+ *   +0x001c -> line 1294
+ *   +0x0024 -> line 1296
+ *   +0x002c -> line 1297
+ *   +0x0040 -> line 1299
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void WaterFx_vAddEITToDisplay(GEO_tdstElementIndexedTriangles_* p_stEIT)
 {
     C_WaterFx* p;
@@ -3192,6 +3018,19 @@ void WaterFx_vAddEITToDisplay(GEO_tdstElementIndexedTriangles_* p_stEIT)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1303–1316 */
+/* addr: 0x002e9dd0  size: 128 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1303
+ *   +0x0018 -> line 1307
+ *   +0x002c -> line 1309
+ *   +0x004c -> line 1311
+ *   +0x0050 -> line 1313
+ *   +0x005c -> line 1315
+ *   +0x0068 -> line 1316
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void WaterFx_vAddObjectEIT(GEO_tdstGeometricObject_* pObj, GEO_tdstElementIndexedTriangles_* p_stEIT)
 {
     C_WaterFx* p;
@@ -3210,6 +3049,19 @@ void WaterFx_vAddObjectEIT(GEO_tdstGeometricObject_* pObj, GEO_tdstElementIndexe
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1321–1331 */
+/* addr: 0x002e9d70  size: 96 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1321
+ *   +0x0018 -> line 1324
+ *   +0x001c -> line 1326
+ *   +0x0024 -> line 1328
+ *   +0x0034 -> line 1329
+ *   +0x0038 -> line 1330
+ *   +0x0048 -> line 1331
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void WaterFx_Perturb(float* Position, float Strength)
 {
     tdstBaseFxListElement_* p;
@@ -3218,6 +3070,18 @@ void WaterFx_Perturb(float* Position, float Strength)
         ((C_WaterFx*)p->pFx)->Perturb(Position, Strength);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1338–1345 */
+/* addr: 0x002e9cd0  size: 152 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1338
+ *   +0x0004 -> line 1340
+ *   +0x000c -> line 1342
+ *   +0x0080 -> line 1343
+ *   +0x0084 -> line 1344
+ *   +0x0090 -> line 1345
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void WaterFx_SetPerturbationMode(float* Position, int PerturbationMode, float Strength)
 {
     C_WaterFx* pFx;
@@ -3240,6 +3104,19 @@ void WaterFx_SetPerturbationMode(float* Position, int PerturbationMode, float St
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1350–1361 */
+/* addr: 0x002e9c70  size: 96 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1350
+ *   +0x0018 -> line 1353
+ *   +0x001c -> line 1355
+ *   +0x0024 -> line 1357
+ *   +0x0034 -> line 1358
+ *   +0x0038 -> line 1359
+ *   +0x0048 -> line 1361
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void WaterFx_SetPosition(float* PositionInWater, float* NewPosition)
 {
     tdstBaseFxListElement_* p;
@@ -3248,6 +3125,115 @@ void WaterFx_SetPosition(float* PositionInWater, float* NewPosition)
         ((C_WaterFx*)p->pFx)->SetPosition(PositionInWater, NewPosition);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 72–153 */
+/* addr: 0x002e9780  size: 1264 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 72
+ *   +0x0004 -> line 76
+ *   +0x0008 -> line 72
+ *   +0x000c -> line 76
+ *   +0x0010 -> line 72
+ *   +0x0014 -> line 76
+ *   +0x0018 -> line 72
+ *   +0x001c -> line 76
+ *   +0x0020 -> line 72
+ *   +0x0024 -> line 76
+ *   +0x0068 -> line 77
+ *   +0x0070 -> line 78
+ *   +0x0084 -> line 79
+ *   +0x008c -> line 78
+ *   +0x00b4 -> line 81
+ *   +0x00b8 -> line 79
+ *   +0x00bc -> line 78
+ *   +0x00c0 -> line 79
+ *   +0x00d0 -> line 78
+ *   +0x00d4 -> line 82
+ *   +0x00dc -> line 78
+ *   +0x00e0 -> line 79
+ *   +0x00e4 -> line 78
+ *   +0x00e8 -> line 80
+ *   +0x00f0 -> line 78
+ *   +0x00fc -> line 82
+ *   +0x0100 -> line 78
+ *   +0x0104 -> line 79
+ *   +0x0108 -> line 80
+ *   +0x010c -> line 79
+ *   +0x0110 -> line 80
+ *   +0x0114 -> line 82
+ *   +0x0118 -> line 79
+ *   +0x0124 -> line 82
+ *   +0x0128 -> line 80
+ *   +0x0138 -> line 79
+ *   +0x013c -> line 80
+ *   +0x0140 -> line 79
+ *   +0x0144 -> line 83
+ *   +0x0148 -> line 79
+ *   +0x015c -> line 80
+ *   +0x0160 -> line 79
+ *   +0x0164 -> line 80
+ *   +0x0168 -> line 79
+ *   +0x0178 -> line 80
+ *   +0x017c -> line 79
+ *   +0x0180 -> line 80
+ *   +0x0184 -> line 79
+ *   +0x0188 -> line 80
+ *   +0x018c -> line 79
+ *   +0x0190 -> line 80
+ *   +0x01b8 -> line 81
+ *   +0x01c0 -> line 82
+ *   +0x01c4 -> line 81
+ *   +0x01c8 -> line 82
+ *   +0x01e8 -> line 81
+ *   +0x01ec -> line 82
+ *   +0x01f0 -> line 81
+ *   +0x01f4 -> line 82
+ *   +0x023c -> line 83
+ *   +0x0244 -> line 86
+ *   +0x0298 -> line 88
+ *   +0x02a8 -> line 90
+ *   +0x02c4 -> line 94
+ *   +0x02cc -> line 98
+ *   +0x02d0 -> line 96
+ *   +0x02d4 -> line 98
+ *   +0x02d8 -> line 97
+ *   +0x02dc -> line 96
+ *   +0x02e8 -> line 97
+ *   +0x0300 -> line 98
+ *   +0x0318 -> line 99
+ *   +0x0328 -> line 101
+ *   +0x0330 -> line 102
+ *   +0x0350 -> line 103
+ *   +0x035c -> line 104
+ *   +0x0370 -> line 105
+ *   +0x0380 -> line 106
+ *   +0x038c -> line 107
+ *   +0x039c -> line 108
+ *   +0x03b0 -> line 109
+ *   +0x03b8 -> line 113
+ *   +0x03bc -> line 114
+ *   +0x03c4 -> line 118
+ *   +0x03c8 -> line 116
+ *   +0x03cc -> line 118
+ *   +0x03d0 -> line 117
+ *   +0x03d4 -> line 116
+ *   +0x03e4 -> line 117
+ *   +0x0400 -> line 118
+ *   +0x0418 -> line 119
+ *   +0x0428 -> line 120
+ *   +0x0434 -> line 122
+ *   +0x0450 -> line 124
+ *   +0x0458 -> line 125
+ *   +0x0470 -> line 126
+ *   +0x047c -> line 127
+ *   +0x0490 -> line 128
+ *   +0x04a0 -> line 129
+ *   +0x04ac -> line 130
+ *   +0x04bc -> line 131
+ *   +0x04d0 -> line 132
+ *   +0x04d8 -> line 153
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AE_Filter_BrightNess_n_Contrast(float* AE_Bright_Cont)
 {
     unsigned int Alpha;

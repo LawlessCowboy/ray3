@@ -1506,21 +1506,6 @@ unsigned short g_DEMO_KeybTest;
 int gp_stNewDynamicWorld;
 tdstStructureHandleFunction_ g_a_stStructureHandleFunction[12];
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 81–88 */
-/* addr: 0x002593d0  size: 140 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 81
- *   +0x0008 -> line 83
- *   +0x0014 -> line 85
- *   +0x0018 -> line 83
- *   +0x001c -> line 85
- *   +0x0020 -> line 84
- *   +0x0024 -> line 85
- *   +0x0084 -> line 88
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 void InitSectorCache(void);
@@ -1549,14 +1534,6 @@ void fn_vPartiallyDestroyHierarchy(HIE_tdstSuperObject_* p_stSuperObject);
 void fn_vRemoveWorldSectInfo(void);
 void fn_vRemoveCharactersFromTransitionSector(HIE_tdstSuperObject_* _hSprObjSector);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 1003–1004 */
-/* addr: 0x00259460  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1003
- *   +0x0048 -> line 1004
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 static inline unsigned char GAM_bIsIdToLoad(stListOfFamiliesToLoad_* pList, unsigned char ucId)
 {
     unsigned char bFound = 0;
@@ -1567,18 +1544,6 @@ static inline unsigned char GAM_bIsIdToLoad(stListOfFamiliesToLoad_* pList, unsi
     return bFound;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 989–998 */
-/* addr: 0x002594b0  size: 124 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 989
- *   +0x0008 -> line 993
- *   +0x0014 -> line 997
- *   +0x0018 -> line 993
- *   +0x001c -> line 997
- *   +0x0070 -> line 998
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_ucFindPersonalIdOfPersonalType(int otObjectPersonalType);
 
 static inline void GAM_vAddIdToLoad(stListOfFamiliesToLoad_* pList, unsigned char ucId)
@@ -1591,91 +1556,9 @@ static inline void GAM_vAddIdToLoad(stListOfFamiliesToLoad_* pList, unsigned cha
     pList->a_ucId[pList->u32NbElements++] = ucId;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 984–985 */
-/* addr: 0x00259530  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 984
- *   +0x0004 -> line 985
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 972–973 */
-/* addr: 0x00259540  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 972
- *   +0x0048 -> line 973
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 958–967 */
-/* addr: 0x00259590  size: 124 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 958
- *   +0x0008 -> line 962
- *   +0x0010 -> line 966
- *   +0x0014 -> line 962
- *   +0x0018 -> line 966
- *   +0x0070 -> line 967
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_ucFindFamilyIdOfFamilyType(int otObjectFamilyType);
 static inline void GAM_vAddIdToLoad(stListOfFamiliesToLoad_* pList, unsigned char ucId);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 953–954 */
-/* addr: 0x00259610  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 953
- *   +0x0004 -> line 954
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 761–879 */
-/* addr: 0x00259620  size: 856 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 761
- *   +0x0020 -> line 771
- *   +0x0028 -> line 772
- *   +0x002c -> line 773
- *   +0x0030 -> line 772
- *   +0x0060 -> line 773
- *   +0x0068 -> line 776
- *   +0x0074 -> line 777
- *   +0x0098 -> line 779
- *   +0x00c8 -> line 782
- *   +0x00cc -> line 786
- *   +0x00e0 -> line 788
- *   +0x010c -> line 792
- *   +0x0118 -> line 794
- *   +0x0150 -> line 797
- *   +0x0158 -> line 798
- *   +0x0160 -> line 803
- *   +0x01bc -> line 817
- *   +0x01d4 -> line 818
- *   +0x01e8 -> line 820
- *   +0x01f4 -> line 821
- *   +0x01fc -> line 825
- *   +0x0208 -> line 829
- *   +0x0214 -> line 831
- *   +0x021c -> line 832
- *   +0x0220 -> line 835
- *   +0x0228 -> line 838
- *   +0x0294 -> line 854
- *   +0x02a0 -> line 855
- *   +0x02a8 -> line 859
- *   +0x02b4 -> line 861
- *   +0x02bc -> line 863
- *   +0x02e8 -> line 868
- *   +0x02f4 -> line 869
- *   +0x0324 -> line 872
- *   +0x0334 -> line 874
- *   +0x033c -> line 879
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern void HIE_fn_vPushMatrix(HIE_tdstSuperObject_* _hSprObj);
 static inline unsigned char fn_ucGetInitFlagWhenDeadOrTaken(tdstStandardGame_* h_StdGame)
 {
@@ -1688,135 +1571,21 @@ extern void Erm_fn_v_UpdateLastError(unsigned short uwStartOfWarningsId, unsigne
 void fn_vInitOneObject(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjIniType);
 void fn_vDesinitOneObject(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjIniType);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 737–741 */
-/* addr: 0x00259980  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 737
- *   +0x0008 -> line 738
- *   +0x0010 -> line 739
- *   +0x0028 -> line 740
- *   +0x0030 -> line 741
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void HIE_fn_vInitMatrixStack(void);
 void fn_vInitAlwaysModel(tdeObjectTreeInit_ eObjIniType);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 658–722 */
-/* addr: 0x002599c0  size: 664 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 658
- *   +0x0018 -> line 659
- *   +0x0028 -> line 661
- *   +0x002c -> line 659
- *   +0x0030 -> line 663
- *   +0x0040 -> line 666
- *   +0x0068 -> line 672
- *   +0x006c -> line 666
- *   +0x0090 -> line 672
- *   +0x00a8 -> line 677
- *   +0x00ac -> line 672
- *   +0x00b0 -> line 677
- *   +0x00b4 -> line 672
- *   +0x00dc -> line 678
- *   +0x00e4 -> line 679
- *   +0x00ec -> line 682
- *   +0x0114 -> line 687
- *   +0x0118 -> line 682
- *   +0x011c -> line 687
- *   +0x0120 -> line 682
- *   +0x0140 -> line 687
- *   +0x0144 -> line 690
- *   +0x015c -> line 693
- *   +0x0184 -> line 699
- *   +0x0188 -> line 693
- *   +0x018c -> line 699
- *   +0x0190 -> line 693
- *   +0x01b0 -> line 699
- *   +0x01cc -> line 704
- *   +0x01d0 -> line 699
- *   +0x01d4 -> line 704
- *   +0x01d8 -> line 699
- *   +0x0200 -> line 705
- *   +0x0208 -> line 706
- *   +0x0218 -> line 709
- *   +0x0240 -> line 714
- *   +0x0244 -> line 709
- *   +0x0248 -> line 714
- *   +0x024c -> line 709
- *   +0x026c -> line 714
- *   +0x0270 -> line 717
- *   +0x0278 -> line 721
- *   +0x0280 -> line 722
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern tdstNodeMainCharacter_* MC_fn_hGetFirstMainCharNode(void);
 extern HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(tdstNodeMainCharacter_* hMainCharNode);
 extern void* SAI_fn_p_vGetTableValuePointerOf(void* p_vValue, unsigned short eFlags);
 extern void SND_fn_vKillAllObjectTypeSound(int s32_TypeId);
 extern void fn_vChangeEngineMode(unsigned char eNewMode);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 629–637 */
-/* addr: 0x00259c60  size: 64 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 629
- *   +0x0004 -> line 631
- *   +0x0008 -> line 629
- *   +0x000c -> line 631
- *   +0x0014 -> line 632
- *   +0x0020 -> line 633
- *   +0x0024 -> line 635
- *   +0x002c -> line 636
- *   +0x0034 -> line 637
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern void MAT_fn_vSetIdentity(MAT_tdstTransformation_* _hTransform);
 extern void SND_fn_vKillAllObjectSound(void);
 extern void fn_vChangeEngineMode(unsigned char eNewMode);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 608–614 */
-/* addr: 0x00259ca0  size: 68 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 608
- *   +0x0008 -> line 609
- *   +0x0010 -> line 610
- *   +0x0028 -> line 611
- *   +0x0030 -> line 613
- *   +0x0038 -> line 614
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern void CAM_fn_vReInitCameras(void);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 548–592 */
-/* addr: 0x00259cf0  size: 264 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 548
- *   +0x001c -> line 559
- *   +0x0030 -> line 562
- *   +0x0034 -> line 563
- *   +0x003c -> line 564
- *   +0x0048 -> line 567
- *   +0x0058 -> line 570
- *   +0x0064 -> line 571
- *   +0x0068 -> line 572
- *   +0x0074 -> line 573
- *   +0x0078 -> line 574
- *   +0x0084 -> line 576
- *   +0x008c -> line 577
- *   +0x0090 -> line 578
- *   +0x00a0 -> line 582
- *   +0x00b4 -> line 585
- *   +0x00c0 -> line 586
- *   +0x00c8 -> line 587
- *   +0x00d8 -> line 588
- *   +0x00e4 -> line 590
- *   +0x00ec -> line 592
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vReInitActorsWhenSectorBecomesActive(HIE_tdstSuperObject_* _hSector);
 
 extern HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* h_StdGame);
@@ -1827,125 +1596,8 @@ extern void fn_vKillAlwaysByPersonalType(int otObjectPersonalType);
 extern void Erm_fn_v_UpdateLastError(unsigned short uwStartOfWarningsId, unsigned char ucModuleId, unsigned int ulChannelId, unsigned short uwErrNum, int lDebugInfo, unsigned char ucOpenInfoWindow, unsigned char ucStopForDebug, char* szPersonalMsg);
 void fn_vInitOneObject(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjIniType);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 511–542 */
-/* addr: 0x00259e00  size: 256 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 511
- *   +0x0014 -> line 517
- *   +0x003c -> line 520
- *   +0x0040 -> line 521
- *   +0x0044 -> line 520
- *   +0x0048 -> line 521
- *   +0x0098 -> line 534
- *   +0x00b8 -> line 539
- *   +0x00c0 -> line 541
- *   +0x00e8 -> line 542
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 504–508 */
-/* addr: 0x00259f00  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 504
- *   +0x0008 -> line 505
- *   +0x0010 -> line 506
- *   +0x0028 -> line 507
- *   +0x0030 -> line 508
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 476–494 */
-/* addr: 0x00259f40  size: 88 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 476
- *   +0x0008 -> line 477
- *   +0x0010 -> line 482
- *   +0x0020 -> line 483
- *   +0x0034 -> line 486
- *   +0x0040 -> line 493
- *   +0x004c -> line 494
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_bLevelHadTransitionMemory(void);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 473–473 */
-/* addr: 0x00259fa0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 473
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 446–456 */
-/* addr: 0x00259fb0  size: 312 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 446
- *   +0x0004 -> line 447
- *   +0x0008 -> line 446
- *   +0x0010 -> line 447
- *   +0x0020 -> line 449
- *   +0x0034 -> line 450
- *   +0x0044 -> line 452
- *   +0x0100 -> line 453
- *   +0x0108 -> line 455
- *   +0x0128 -> line 456
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 409–420 */
-/* addr: 0x0025a0f0  size: 172 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 409
- *   +0x0010 -> line 410
- *   +0x0024 -> line 411
- *   +0x0038 -> line 413
- *   +0x0074 -> line 415
- *   +0x007c -> line 416
- *   +0x008c -> line 418
- *   +0x009c -> line 420
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 359–406 */
-/* addr: 0x0025a1a0  size: 816 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 359
- *   +0x0014 -> line 364
- *   +0x001c -> line 365
- *   +0x002c -> line 367
- *   +0x0048 -> line 369
- *   +0x010c -> line 370
- *   +0x0114 -> line 373
- *   +0x01dc -> line 377
- *   +0x01ec -> line 378
- *   +0x0200 -> line 379
- *   +0x0210 -> line 378
- *   +0x0228 -> line 379
- *   +0x0288 -> line 380
- *   +0x029c -> line 381
- *   +0x02a0 -> line 384
- *   +0x02a4 -> line 381
- *   +0x02b0 -> line 382
- *   +0x02c0 -> line 384
- *   +0x02c8 -> line 385
- *   +0x02cc -> line 384
- *   +0x02d0 -> line 385
- *   +0x02dc -> line 389
- *   +0x02ec -> line 394
- *   +0x02f8 -> line 396
- *   +0x02fc -> line 397
- *   +0x0304 -> line 399
- *   +0x0308 -> line 400
- *   +0x0314 -> line 404
- *   +0x031c -> line 406
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern void fn_vSectInfoInitForSingleCharacter(HIE_tdstSuperObject_* hCharacter, MTH3D_tdstVector_* p_stPosition);
 extern void fn_vAllocArrayOfElts3d(tdst3dData_* h_3dData, unsigned char ucNbElts);
 
@@ -2000,40 +1652,127 @@ inline MTH3D_tdstVector_* POS_fn_p_stGetTranslationVector(MAT_tdstTransformation
     return (MTH3D_tdstVector_*)&hMatrix->stTransformMatrix.stCol_3;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 343–356 */
-/* addr: 0x0025a4d0  size: 276 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 343
- *   +0x0020 -> line 346
- *   +0x0038 -> line 347
- *   +0x0064 -> line 349
- *   +0x0078 -> line 350
- *   +0x00a0 -> line 352
- *   +0x00bc -> line 354
- *   +0x00e0 -> line 355
- *   +0x00f4 -> line 356
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern void Erm_fn_ClearLastError();
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 313–329 */
-/* addr: 0x0025a5f0  size: 304 bytes */
+static inline void fn_vFreeOneObject(HIE_tdstSuperObject_* p_stSuperObject)
+{
+    int i;
+    tdstEngineObject_* p_stObject;
+
+    if (p_stSuperObject->ulTypeOfLinkedObject == 2)
+    {
+        p_stObject = p_stSuperObject->hLinkedObject.p_stCharacter;
+        for (i = 10; i >= 0; i--)
+        {
+            if (((void**)p_stObject)[i] != 0)
+            {
+                g_a_stStructureHandleFunction[i].p_fn_vFreeFunction(p_stObject);
+            }
+        }
+    }
+    else
+    {
+        Erm_fn_v_UpdateLastError(0x30, g_ucGameModuleId, 0, 0x39, -1, 0xFF, 0xFF, NULL);
+    }
+}
+
+extern int fn_otFindFamilyTypeOfFamilyTypeName(char* szFamilyName);
+extern void fn_vRemoveObjectInSectorList(HIE_tdstSuperObject_* p_stSuperObject);
+extern HIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectNextBrother(HIE_tdstSuperObject_* hSuperObject);
+
+extern int fn_bIsInFix(tdstEngineObject_* p_stObject);
+
+static inline void fn_vKillEngineObject(tdstEngineObject_* p_stObject)
+{
+    PLA_fn_vDesInitAllChildOfCharacter(fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame), p_stObject);
+    if (!(unsigned char)((p_stObject->h_StandardGame->ucMiscFlags & 1) ? 1 : 0))
+    {
+        p_stObject->h_StandardGame->ucMiscFlags |= 1;
+        if (p_stObject->h_StandardGame->eInitFlagWhenDeadOrTaken == 5)
+            p_stObject->h_StandardGame->ucMiscFlags &= 0xFD;
+        else
+            p_stObject->h_StandardGame->ucMiscFlags |= 2;
+        if (p_stObject->h_StandardGame->eInitFlagWhenDeadOrTaken == 1)
+            fn_vInitOneObject(p_stObject, 4);
+        else
+            p_stObject->h_StandardGame->ucMiscFlags &= 0xFB;
+    }
+    SND_fn_vKillObjectSound2(fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame), g_lSoundObjectTypeAnim);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 140–158 */
+/* addr: 0x0025aa80  size: 656 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 313
- *   +0x0020 -> line 316
- *   +0x0038 -> line 317
- *   +0x0064 -> line 319
- *   +0x0078 -> line 320
- *   +0x00a0 -> line 322
- *   +0x00bc -> line 324
- *   +0x00e0 -> line 325
- *   +0x00f4 -> line 326
- *   +0x0100 -> line 327
- *   +0x0110 -> line 329
+ *   +0x0000 -> line 140
+ *   +0x0014 -> line 145
+ *   +0x0024 -> line 147
+ *   +0x002c -> line 148
+ *   +0x00b8 -> line 150
+ *   +0x00bc -> line 151
+ *   +0x00ec -> line 152
+ *   +0x00f8 -> line 154
+ *   +0x01e0 -> line 155
+ *   +0x01f0 -> line 156
+ *   +0x01f8 -> line 157
+ *   +0x0278 -> line 158
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void fn_vRemoveCharactersFromTransitionSector(HIE_tdstSuperObject_* _hSprObjSector)
+{
+    SECT_tdstListOfSOCharacters_* hCharacter;
+    SECT_tdstListOfSOCharacters_* hPrevChar;
+    HIE_tdstSuperObject_* hCharacterSO;
+
+    hPrevChar = NULL;
+    for (hCharacter = _hSprObjSector->hLinkedObject.p_stSector->stListOfCharacters.hFirstElementDyn; hCharacter; hCharacter = hCharacter->hNextBrotherDyn)
+    {
+        if (hPrevChar)
+        {
+            if (hPrevChar->hNextBrotherDyn) hPrevChar->hNextBrotherDyn->hPrevBrotherDyn = hPrevChar->hPrevBrotherDyn; if (hPrevChar->hPrevBrotherDyn) hPrevChar->hPrevBrotherDyn->hNextBrotherDyn = hPrevChar->hNextBrotherDyn; if (hPrevChar->hFatherDyn) { hPrevChar->hFatherDyn->lNumberOfElementsDyn--; if (hPrevChar->hFatherDyn->hFirstElementDyn == hPrevChar) hPrevChar->hFatherDyn->hFirstElementDyn = hPrevChar->hNextBrotherDyn; if (hPrevChar->hFatherDyn->hLastElementDyn == hPrevChar) hPrevChar->hFatherDyn->hLastElementDyn = hPrevChar->hPrevBrotherDyn; } hPrevChar->hNextBrotherDyn = NULL; hPrevChar->hPrevBrotherDyn = NULL; hPrevChar->hFatherDyn = NULL;
+        }
+        hPrevChar = hCharacter;
+        hCharacterSO = hCharacter->hPointerOfCharacter;
+        if (fn_bIsInFix(hCharacterSO->ulTypeOfLinkedObject != 2 ? 0 : hCharacterSO->hLinkedObject.p_stCharacter))
+            hPrevChar = NULL;
+        else
+            fn_vKillEngineObject(hCharacterSO->ulTypeOfLinkedObject != 2 ? 0 : hCharacterSO->hLinkedObject.p_stCharacter);
+    }
+    if (hPrevChar)
+    {
+        if (hPrevChar->hNextBrotherDyn) hPrevChar->hNextBrotherDyn->hPrevBrotherDyn = hPrevChar->hPrevBrotherDyn; if (hPrevChar->hPrevBrotherDyn) hPrevChar->hPrevBrotherDyn->hNextBrotherDyn = hPrevChar->hNextBrotherDyn; if (hPrevChar->hFatherDyn) { hPrevChar->hFatherDyn->lNumberOfElementsDyn--; if (hPrevChar->hFatherDyn->hFirstElementDyn == hPrevChar) hPrevChar->hFatherDyn->hFirstElementDyn = hPrevChar->hNextBrotherDyn; if (hPrevChar->hFatherDyn->hLastElementDyn == hPrevChar) hPrevChar->hFatherDyn->hLastElementDyn = hPrevChar->hPrevBrotherDyn; } hPrevChar->hNextBrotherDyn = NULL; hPrevChar->hPrevBrotherDyn = NULL; hPrevChar->hFatherDyn = NULL;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 161–173 */
+/* addr: 0x0025a9e0  size: 152 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 161
+ *   +0x0014 -> line 164
+ *   +0x002c -> line 166
+ *   +0x003c -> line 168
+ *   +0x005c -> line 169
+ *   +0x0064 -> line 170
+ *   +0x0068 -> line 172
+ *   +0x0080 -> line 173
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vRemoveWorldSectInfo(void)
+{
+    HIE_tdstSuperObject_* hNextCharacter;
+    HIE_tdstSuperObject_* hCharacter;
+    hCharacter = ((HIE_tdstSuperObject_*)gp_stDynamicWorld)->hFirstElementDyn; hNextCharacter = HIE_fn_hForceGetSuperObjectNextBrother(hCharacter); while (hCharacter)
+    {
+        if (hCharacter->ulTypeOfLinkedObject == 2)
+        {
+            if (hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->otObjectFamilyType == fn_otFindFamilyTypeOfFamilyTypeName("World"))
+            {
+                fn_vRemoveObjectInSectorList(hCharacter);
+            }
+        }
+        hCharacter = hNextCharacter; hNextCharacter = HIE_fn_hForceGetSuperObjectNextBrother(hCharacter); }
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 176–234 */
 /* addr: 0x0025a720  size: 704 bytes */
@@ -2064,126 +1803,6 @@ extern void Erm_fn_ClearLastError();
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-static inline void fn_vFreeOneObject(HIE_tdstSuperObject_* p_stSuperObject)
-{
-    int i;
-    tdstEngineObject_* p_stObject;
-
-    if (p_stSuperObject->ulTypeOfLinkedObject == 2)
-    {
-        p_stObject = p_stSuperObject->hLinkedObject.p_stCharacter;
-        for (i = 10; i >= 0; i--)
-        {
-            if (((void**)p_stObject)[i] != 0)
-            {
-                g_a_stStructureHandleFunction[i].p_fn_vFreeFunction(p_stObject);
-            }
-        }
-    }
-    else
-    {
-        Erm_fn_v_UpdateLastError(0x30, g_ucGameModuleId, 0, 0x39, -1, 0xFF, 0xFF, NULL);
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 161–173 */
-/* addr: 0x0025a9e0  size: 152 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 161
- *   +0x0014 -> line 164
- *   +0x002c -> line 166
- *   +0x003c -> line 168
- *   +0x005c -> line 169
- *   +0x0064 -> line 170
- *   +0x0068 -> line 172
- *   +0x0080 -> line 173
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-extern int fn_otFindFamilyTypeOfFamilyTypeName(char* szFamilyName);
-extern void fn_vRemoveObjectInSectorList(HIE_tdstSuperObject_* p_stSuperObject);
-extern HIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectNextBrother(HIE_tdstSuperObject_* hSuperObject);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 140–158 */
-/* addr: 0x0025aa80  size: 656 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 140
- *   +0x0014 -> line 145
- *   +0x0024 -> line 147
- *   +0x002c -> line 148
- *   +0x00b8 -> line 150
- *   +0x00bc -> line 151
- *   +0x00ec -> line 152
- *   +0x00f8 -> line 154
- *   +0x01e0 -> line 155
- *   +0x01f0 -> line 156
- *   +0x01f8 -> line 157
- *   +0x0278 -> line 158
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-extern int fn_bIsInFix(tdstEngineObject_* p_stObject);
-
-static inline void fn_vKillEngineObject(tdstEngineObject_* p_stObject)
-{
-    PLA_fn_vDesInitAllChildOfCharacter(fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame), p_stObject);
-    if (!(unsigned char)((p_stObject->h_StandardGame->ucMiscFlags & 1) ? 1 : 0))
-    {
-        p_stObject->h_StandardGame->ucMiscFlags |= 1;
-        if (p_stObject->h_StandardGame->eInitFlagWhenDeadOrTaken == 5)
-            p_stObject->h_StandardGame->ucMiscFlags &= 0xFD;
-        else
-            p_stObject->h_StandardGame->ucMiscFlags |= 2;
-        if (p_stObject->h_StandardGame->eInitFlagWhenDeadOrTaken == 1)
-            fn_vInitOneObject(p_stObject, 4);
-        else
-            p_stObject->h_StandardGame->ucMiscFlags &= 0xFB;
-    }
-    SND_fn_vKillObjectSound2(fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame), g_lSoundObjectTypeAnim);
-}
-
-void fn_vRemoveCharactersFromTransitionSector(HIE_tdstSuperObject_* _hSprObjSector)
-{
-    SECT_tdstListOfSOCharacters_* hCharacter;
-    SECT_tdstListOfSOCharacters_* hPrevChar;
-    HIE_tdstSuperObject_* hCharacterSO;
-
-    hPrevChar = NULL;
-    for (hCharacter = _hSprObjSector->hLinkedObject.p_stSector->stListOfCharacters.hFirstElementDyn; hCharacter; hCharacter = hCharacter->hNextBrotherDyn)
-    {
-        if (hPrevChar)
-        {
-            if (hPrevChar->hNextBrotherDyn) hPrevChar->hNextBrotherDyn->hPrevBrotherDyn = hPrevChar->hPrevBrotherDyn; if (hPrevChar->hPrevBrotherDyn) hPrevChar->hPrevBrotherDyn->hNextBrotherDyn = hPrevChar->hNextBrotherDyn; if (hPrevChar->hFatherDyn) { hPrevChar->hFatherDyn->lNumberOfElementsDyn--; if (hPrevChar->hFatherDyn->hFirstElementDyn == hPrevChar) hPrevChar->hFatherDyn->hFirstElementDyn = hPrevChar->hNextBrotherDyn; if (hPrevChar->hFatherDyn->hLastElementDyn == hPrevChar) hPrevChar->hFatherDyn->hLastElementDyn = hPrevChar->hPrevBrotherDyn; } hPrevChar->hNextBrotherDyn = NULL; hPrevChar->hPrevBrotherDyn = NULL; hPrevChar->hFatherDyn = NULL;
-        }
-        hPrevChar = hCharacter;
-        hCharacterSO = hCharacter->hPointerOfCharacter;
-        if (fn_bIsInFix(hCharacterSO->ulTypeOfLinkedObject != 2 ? 0 : hCharacterSO->hLinkedObject.p_stCharacter))
-            hPrevChar = NULL;
-        else
-            fn_vKillEngineObject(hCharacterSO->ulTypeOfLinkedObject != 2 ? 0 : hCharacterSO->hLinkedObject.p_stCharacter);
-    }
-    if (hPrevChar)
-    {
-        if (hPrevChar->hNextBrotherDyn) hPrevChar->hNextBrotherDyn->hPrevBrotherDyn = hPrevChar->hPrevBrotherDyn; if (hPrevChar->hPrevBrotherDyn) hPrevChar->hPrevBrotherDyn->hNextBrotherDyn = hPrevChar->hNextBrotherDyn; if (hPrevChar->hFatherDyn) { hPrevChar->hFatherDyn->lNumberOfElementsDyn--; if (hPrevChar->hFatherDyn->hFirstElementDyn == hPrevChar) hPrevChar->hFatherDyn->hFirstElementDyn = hPrevChar->hNextBrotherDyn; if (hPrevChar->hFatherDyn->hLastElementDyn == hPrevChar) hPrevChar->hFatherDyn->hLastElementDyn = hPrevChar->hPrevBrotherDyn; } hPrevChar->hNextBrotherDyn = NULL; hPrevChar->hPrevBrotherDyn = NULL; hPrevChar->hFatherDyn = NULL;
-    }
-}
-
-void fn_vRemoveWorldSectInfo(void)
-{
-    HIE_tdstSuperObject_* hNextCharacter;
-    HIE_tdstSuperObject_* hCharacter;
-    hCharacter = ((HIE_tdstSuperObject_*)gp_stDynamicWorld)->hFirstElementDyn; hNextCharacter = HIE_fn_hForceGetSuperObjectNextBrother(hCharacter); while (hCharacter)
-    {
-        if (hCharacter->ulTypeOfLinkedObject == 2)
-        {
-            if (hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->otObjectFamilyType == fn_otFindFamilyTypeOfFamilyTypeName("World"))
-            {
-                fn_vRemoveObjectInSectorList(hCharacter);
-            }
-        }
-        hCharacter = hNextCharacter; hNextCharacter = HIE_fn_hForceGetSuperObjectNextBrother(hCharacter); }
-}
-
 void fn_vPartiallyDestroyHierarchy(HIE_tdstSuperObject_* p_stSuperObject)
 {
     int type;
@@ -2256,6 +1875,23 @@ void fn_vPartiallyDestroyHierarchy(HIE_tdstSuperObject_* p_stSuperObject)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 313–329 */
+/* addr: 0x0025a5f0  size: 304 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 313
+ *   +0x0020 -> line 316
+ *   +0x0038 -> line 317
+ *   +0x0064 -> line 319
+ *   +0x0078 -> line 320
+ *   +0x00a0 -> line 322
+ *   +0x00bc -> line 324
+ *   +0x00e0 -> line 325
+ *   +0x00f4 -> line 326
+ *   +0x0100 -> line 327
+ *   +0x0110 -> line 329
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vInitOneObject(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjIniType)
 {
     int i;
@@ -2277,6 +1913,21 @@ void fn_vInitOneObject(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjIni
         p_stObject->h_StandardGame->ucMiscFlags |= 8;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 343–356 */
+/* addr: 0x0025a4d0  size: 276 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 343
+ *   +0x0020 -> line 346
+ *   +0x0038 -> line 347
+ *   +0x0064 -> line 349
+ *   +0x0078 -> line 350
+ *   +0x00a0 -> line 352
+ *   +0x00bc -> line 354
+ *   +0x00e0 -> line 355
+ *   +0x00f4 -> line 356
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vDesinitOneObject(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjIniType)
 {
     int i;
@@ -2296,6 +1947,41 @@ void fn_vDesinitOneObject(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObj
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 359–406 */
+/* addr: 0x0025a1a0  size: 816 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 359
+ *   +0x0014 -> line 364
+ *   +0x001c -> line 365
+ *   +0x002c -> line 367
+ *   +0x0048 -> line 369
+ *   +0x010c -> line 370
+ *   +0x0114 -> line 373
+ *   +0x01dc -> line 377
+ *   +0x01ec -> line 378
+ *   +0x0200 -> line 379
+ *   +0x0210 -> line 378
+ *   +0x0228 -> line 379
+ *   +0x0288 -> line 380
+ *   +0x029c -> line 381
+ *   +0x02a0 -> line 384
+ *   +0x02a4 -> line 381
+ *   +0x02b0 -> line 382
+ *   +0x02c0 -> line 384
+ *   +0x02c8 -> line 385
+ *   +0x02cc -> line 384
+ *   +0x02d0 -> line 385
+ *   +0x02dc -> line 389
+ *   +0x02ec -> line 394
+ *   +0x02f8 -> line 396
+ *   +0x02fc -> line 397
+ *   +0x0304 -> line 399
+ *   +0x0308 -> line 400
+ *   +0x0314 -> line 404
+ *   +0x031c -> line 406
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vForceActiveAnObject(tdstEngineObject_* p_stObject)
 {
     tdstAnim3d_* p_stCurrentAnim;
@@ -2340,6 +2026,20 @@ void fn_vForceActiveAnObject(tdstEngineObject_* p_stObject)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 409–420 */
+/* addr: 0x0025a0f0  size: 172 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 409
+ *   +0x0010 -> line 410
+ *   +0x0024 -> line 411
+ *   +0x0038 -> line 413
+ *   +0x0074 -> line 415
+ *   +0x007c -> line 416
+ *   +0x008c -> line 418
+ *   +0x009c -> line 420
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vDesactiveAnObject(tdstEngineObject_* p_stObject)
 {
     PLA_fn_vDesInitAllChildOfCharacter(fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame), p_stObject);
@@ -2353,6 +2053,22 @@ void fn_vDesactiveAnObject(tdstEngineObject_* p_stObject)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 446–456 */
+/* addr: 0x00259fb0  size: 312 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 446
+ *   +0x0004 -> line 447
+ *   +0x0008 -> line 446
+ *   +0x0010 -> line 447
+ *   +0x0020 -> line 449
+ *   +0x0034 -> line 450
+ *   +0x0044 -> line 452
+ *   +0x0100 -> line 453
+ *   +0x0108 -> line 455
+ *   +0x0128 -> line 456
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vKillEngineObjectOrAlwaysByPointer(tdstEngineObject_* p_stObject)
 {
     if (p_stObject->h_StandardGame->otObjectFamilyType != -1)
@@ -2383,10 +2099,30 @@ void fn_vKillEngineObjectOrAlwaysByPointer(tdstEngineObject_* p_stObject)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 473–473 */
+/* addr: 0x00259fa0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 473
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vInitAllObjectsWhenNewGameStart(void)
 {
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 476–494 */
+/* addr: 0x00259f40  size: 88 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 476
+ *   +0x0008 -> line 477
+ *   +0x0010 -> line 482
+ *   +0x0020 -> line 483
+ *   +0x0034 -> line 486
+ *   +0x0040 -> line 493
+ *   +0x004c -> line 494
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vInitAllObjectsWhenMapJustLoaded(void)
 {
     HIE_fn_vInitMatrixStack();
@@ -2398,6 +2134,17 @@ void fn_vInitAllObjectsWhenMapJustLoaded(void)
     fn_vInitAlwaysModel(OTI_MapLoaded);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 504–508 */
+/* addr: 0x00259f00  size: 60 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 504
+ *   +0x0008 -> line 505
+ *   +0x0010 -> line 506
+ *   +0x0028 -> line 507
+ *   +0x0030 -> line 508
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vInitAllObjectsWhenSavedGameJustLoaded(void)
 {
     HIE_fn_vInitMatrixStack();
@@ -2405,6 +2152,22 @@ void fn_vInitAllObjectsWhenSavedGameJustLoaded(void)
     fn_vInitAlwaysModel(OTI_LoadSavedGame);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 511–542 */
+/* addr: 0x00259e00  size: 256 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 511
+ *   +0x0014 -> line 517
+ *   +0x003c -> line 520
+ *   +0x0040 -> line 521
+ *   +0x0044 -> line 520
+ *   +0x0048 -> line 521
+ *   +0x0098 -> line 534
+ *   +0x00b8 -> line 539
+ *   +0x00c0 -> line 541
+ *   +0x00e8 -> line 542
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vReInitActorsWhenSectorBecomesActive(HIE_tdstSuperObject_* _hSector)
 {
     SECT_tdstListOfSOCharacters_* hNextCharacterList;
@@ -2425,6 +2188,34 @@ void fn_vReInitActorsWhenSectorBecomesActive(HIE_tdstSuperObject_* _hSector)
 
 /* The debug record lists only (hCurrentSector, hPreviousSector), but the retail code reads
    them from a1/a2 and both callers (SectInfo.c, Basic.c) pass the character first. */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 548–592 */
+/* addr: 0x00259cf0  size: 264 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 548
+ *   +0x001c -> line 559
+ *   +0x0030 -> line 562
+ *   +0x0034 -> line 563
+ *   +0x003c -> line 564
+ *   +0x0048 -> line 567
+ *   +0x0058 -> line 570
+ *   +0x0064 -> line 571
+ *   +0x0068 -> line 572
+ *   +0x0074 -> line 573
+ *   +0x0078 -> line 574
+ *   +0x0084 -> line 576
+ *   +0x008c -> line 577
+ *   +0x0090 -> line 578
+ *   +0x00a0 -> line 582
+ *   +0x00b4 -> line 585
+ *   +0x00c0 -> line 586
+ *   +0x00c8 -> line 587
+ *   +0x00d8 -> line 588
+ *   +0x00e4 -> line 590
+ *   +0x00ec -> line 592
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vInitObjectsWhenPlayerChangeSector(HIE_tdstSuperObject_* hCharacter, HIE_tdstSuperObject_* hCurrentSector, HIE_tdstSuperObject_* hPreviousSector)
 {
     int j;
@@ -2462,6 +2253,18 @@ void fn_vInitObjectsWhenPlayerChangeSector(HIE_tdstSuperObject_* hCharacter, HIE
         fn_vReInitActorsWhenSectorBecomesActive(hCurrentSector);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 608–614 */
+/* addr: 0x00259ca0  size: 68 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 608
+ *   +0x0008 -> line 609
+ *   +0x0010 -> line 610
+ *   +0x0028 -> line 611
+ *   +0x0030 -> line 613
+ *   +0x0038 -> line 614
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vForceReinitAllObjects(void)
 {
     HIE_fn_vInitMatrixStack();
@@ -2470,6 +2273,21 @@ void fn_vForceReinitAllObjects(void)
     CAM_fn_vReInitCameras();
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 629–637 */
+/* addr: 0x00259c60  size: 64 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 629
+ *   +0x0004 -> line 631
+ *   +0x0008 -> line 629
+ *   +0x000c -> line 631
+ *   +0x0014 -> line 632
+ *   +0x0020 -> line 633
+ *   +0x0024 -> line 635
+ *   +0x002c -> line 636
+ *   +0x0034 -> line 637
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vSnifThePlayerIsDead(void)
 {
     MAT_fn_vSetIdentity(&g_stEngineStructure.stMainCharacterPosition);
@@ -2479,6 +2297,55 @@ void fn_vSnifThePlayerIsDead(void)
     fn_vChangeEngineMode(8);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 658–722 */
+/* addr: 0x002599c0  size: 664 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 658
+ *   +0x0018 -> line 659
+ *   +0x0028 -> line 661
+ *   +0x002c -> line 659
+ *   +0x0030 -> line 663
+ *   +0x0040 -> line 666
+ *   +0x0068 -> line 672
+ *   +0x006c -> line 666
+ *   +0x0090 -> line 672
+ *   +0x00a8 -> line 677
+ *   +0x00ac -> line 672
+ *   +0x00b0 -> line 677
+ *   +0x00b4 -> line 672
+ *   +0x00dc -> line 678
+ *   +0x00e4 -> line 679
+ *   +0x00ec -> line 682
+ *   +0x0114 -> line 687
+ *   +0x0118 -> line 682
+ *   +0x011c -> line 687
+ *   +0x0120 -> line 682
+ *   +0x0140 -> line 687
+ *   +0x0144 -> line 690
+ *   +0x015c -> line 693
+ *   +0x0184 -> line 699
+ *   +0x0188 -> line 693
+ *   +0x018c -> line 699
+ *   +0x0190 -> line 693
+ *   +0x01b0 -> line 699
+ *   +0x01cc -> line 704
+ *   +0x01d0 -> line 699
+ *   +0x01d4 -> line 704
+ *   +0x01d8 -> line 699
+ *   +0x0200 -> line 705
+ *   +0x0208 -> line 706
+ *   +0x0218 -> line 709
+ *   +0x0240 -> line 714
+ *   +0x0244 -> line 709
+ *   +0x0248 -> line 714
+ *   +0x024c -> line 709
+ *   +0x026c -> line 714
+ *   +0x0270 -> line 717
+ *   +0x0278 -> line 721
+ *   +0x0280 -> line 722
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vSnifThePlayerIsDeadWithResurrectionAt(HIE_tdstSuperObject_* _hCharacterPositionOne, HIE_tdstSuperObject_* _hCharacterPositionTwo)
 {
     HIE_tdstSuperObject_* hMaincharacter;
@@ -2511,6 +2378,17 @@ void fn_vSnifThePlayerIsDeadWithResurrectionAt(HIE_tdstSuperObject_* _hCharacter
     fn_vChangeEngineMode(8);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 737–741 */
+/* addr: 0x00259980  size: 60 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 737
+ *   +0x0008 -> line 738
+ *   +0x0010 -> line 739
+ *   +0x0028 -> line 740
+ *   +0x0030 -> line 741
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vInitAllObjectsWhenPlayerDead(void)
 {
     HIE_fn_vInitMatrixStack();
@@ -2518,6 +2396,49 @@ void fn_vInitAllObjectsWhenPlayerDead(void)
     fn_vInitAlwaysModel(OTI_PlayerDead);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 761–879 */
+/* addr: 0x00259620  size: 856 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 761
+ *   +0x0020 -> line 771
+ *   +0x0028 -> line 772
+ *   +0x002c -> line 773
+ *   +0x0030 -> line 772
+ *   +0x0060 -> line 773
+ *   +0x0068 -> line 776
+ *   +0x0074 -> line 777
+ *   +0x0098 -> line 779
+ *   +0x00c8 -> line 782
+ *   +0x00cc -> line 786
+ *   +0x00e0 -> line 788
+ *   +0x010c -> line 792
+ *   +0x0118 -> line 794
+ *   +0x0150 -> line 797
+ *   +0x0158 -> line 798
+ *   +0x0160 -> line 803
+ *   +0x01bc -> line 817
+ *   +0x01d4 -> line 818
+ *   +0x01e8 -> line 820
+ *   +0x01f4 -> line 821
+ *   +0x01fc -> line 825
+ *   +0x0208 -> line 829
+ *   +0x0214 -> line 831
+ *   +0x021c -> line 832
+ *   +0x0220 -> line 835
+ *   +0x0228 -> line 838
+ *   +0x0294 -> line 854
+ *   +0x02a0 -> line 855
+ *   +0x02a8 -> line 859
+ *   +0x02b4 -> line 861
+ *   +0x02bc -> line 863
+ *   +0x02e8 -> line 868
+ *   +0x02f4 -> line 869
+ *   +0x0324 -> line 872
+ *   +0x0334 -> line 874
+ *   +0x033c -> line 879
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vInitAllObjectTree(tdeObjectTreeInit_ eObjIniType, HIE_tdstSuperObject_* p_stSupObject)
 {
     tdstEngineObject_* p_stObject;
@@ -2592,11 +2513,31 @@ void fn_vInitAllObjectTree(tdeObjectTreeInit_ eObjIniType, HIE_tdstSuperObject_*
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 953–954 */
+/* addr: 0x00259610  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 953
+ *   +0x0004 -> line 954
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GAM_fn_vInitFamiliesToLoad(void)
 {
     GAM_g_stTheListOfFamiliesToLoad.u32NbElements = 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 958–967 */
+/* addr: 0x00259590  size: 124 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 958
+ *   +0x0008 -> line 962
+ *   +0x0010 -> line 966
+ *   +0x0014 -> line 962
+ *   +0x0018 -> line 966
+ *   +0x0070 -> line 967
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GAM_fn_vSetFamilyToLoad(tdstFamilyList_* h_Family)
 {
     unsigned char ucFamilyPermanentId;
@@ -2606,16 +2547,44 @@ void GAM_fn_vSetFamilyToLoad(tdstFamilyList_* h_Family)
     GAM_vAddIdToLoad(&GAM_g_stTheListOfFamiliesToLoad, ucFamilyPermanentId);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 972–973 */
+/* addr: 0x00259540  size: 80 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 972
+ *   +0x0048 -> line 973
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char GAM_fn_bIsFamilyToLoad(unsigned char ucFamilyId)
 {
     return GAM_bIsIdToLoad(&GAM_g_stTheListOfFamiliesToLoad, ucFamilyId);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 984–985 */
+/* addr: 0x00259530  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 984
+ *   +0x0004 -> line 985
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GAM_fn_vInitActorsToLoad(void)
 {
     GAM_g_stTheListOfActorsToLoad.u32NbElements = 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 989–998 */
+/* addr: 0x002594b0  size: 124 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 989
+ *   +0x0008 -> line 993
+ *   +0x0014 -> line 997
+ *   +0x0018 -> line 993
+ *   +0x001c -> line 997
+ *   +0x0070 -> line 998
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GAM_fn_vSetActorToLoad(tdstEngineObject_* p_stEngineObject)
 {
     unsigned char ucActorPermanentId;
@@ -2625,11 +2594,33 @@ void GAM_fn_vSetActorToLoad(tdstEngineObject_* p_stEngineObject)
     GAM_vAddIdToLoad(&GAM_g_stTheListOfActorsToLoad, ucActorPermanentId);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 1003–1004 */
+/* addr: 0x00259460  size: 80 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1003
+ *   +0x0048 -> line 1004
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char GAM_fn_bIsActorToLoad(unsigned char ucActorId)
 {
     return GAM_bIsIdToLoad(&GAM_g_stTheListOfActorsToLoad, ucActorId);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 81–88 */
+/* addr: 0x002593d0  size: 140 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 81
+ *   +0x0008 -> line 83
+ *   +0x0014 -> line 85
+ *   +0x0018 -> line 83
+ *   +0x001c -> line 85
+ *   +0x0020 -> line 84
+ *   +0x0024 -> line 85
+ *   +0x0084 -> line 88
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void InitSectorCache(void)
 {
     int i;

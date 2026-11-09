@@ -54,108 +54,18 @@ anon_1 CDmode;
 unsigned char loadbuf[2048];
 unsigned char loadbufRootDir[2048];
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\fmn\sceecd.c lines 59–59 */
-/* addr: 0x00258cf0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 59
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 void CD_SetCallBack(void* FunctionPointer);
 int ReadDirInCache(stFile_* pLevel);
 int SCEECdSearchFile(anon_0* fp, char* name);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\fmn\sceecd.c lines 427–481 */
-/* addr: 0x00258d00  size: 512 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 427
- *   +0x0004 -> line 439
- *   +0x0008 -> line 427
- *   +0x000c -> line 439
- *   +0x0010 -> line 427
- *   +0x002c -> line 439
- *   +0x0030 -> line 435
- *   +0x0034 -> line 439
- *   +0x003c -> line 435
- *   +0x0040 -> line 439
- *   +0x0044 -> line 440
- *   +0x0048 -> line 443
- *   +0x0054 -> line 444
- *   +0x005c -> line 446
- *   +0x0068 -> line 449
- *   +0x007c -> line 448
- *   +0x0080 -> line 449
- *   +0x00a4 -> line 450
- *   +0x00b0 -> line 454
- *   +0x00b8 -> line 453
- *   +0x00bc -> line 454
- *   +0x00c0 -> line 456
- *   +0x00cc -> line 458
- *   +0x00e4 -> line 459
- *   +0x00e8 -> line 458
- *   +0x00f0 -> line 459
- *   +0x00f8 -> line 461
- *   +0x0100 -> line 464
- *   +0x0104 -> line 461
- *   +0x0108 -> line 464
- *   +0x0110 -> line 466
- *   +0x0118 -> line 464
- *   +0x0128 -> line 466
- *   +0x0130 -> line 468
- *   +0x0140 -> line 469
- *   +0x0144 -> line 471
- *   +0x0170 -> line 472
- *   +0x019c -> line 474
- *   +0x01a8 -> line 477
- *   +0x01b0 -> line 478
- *   +0x01c8 -> line 479
- *   +0x01d8 -> line 480
- *   +0x01dc -> line 481
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* The retail build keeps the directory-entry name copy rolled; the default
  * speed mode unrolls it by eight, so the unroller is switched off here. */
 #pragma opt_unroll_loops off
 
 #pragma opt_unroll_loops reset
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\fmn\sceecd.c lines 291–349 */
-/* addr: 0x00258f00  size: 764 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 291
- *   +0x0004 -> line 303
- *   +0x0008 -> line 291
- *   +0x0028 -> line 303
- *   +0x0034 -> line 304
- *   +0x003c -> line 306
- *   +0x0124 -> line 311
- *   +0x0128 -> line 313
- *   +0x012c -> line 315
- *   +0x0130 -> line 316
- *   +0x0134 -> line 317
- *   +0x0138 -> line 319
- *   +0x0148 -> line 320
- *   +0x0178 -> line 322
- *   +0x0188 -> line 323
- *   +0x0190 -> line 325
- *   +0x0194 -> line 327
- *   +0x01a0 -> line 330
- *   +0x021c -> line 332
- *   +0x0220 -> line 334
- *   +0x0224 -> line 332
- *   +0x0228 -> line 334
- *   +0x0230 -> line 337
- *   +0x0238 -> line 343
- *   +0x02c0 -> line 344
- *   +0x02c8 -> line 346
- *   +0x02d8 -> line 349
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* The retail build keeps the 'not found' size value in a temporary and
  * stores it only on the two failure paths, so the constant propagation that
  * would hoist the initialisation across the search loop is switched off. */
@@ -260,6 +170,39 @@ char* pBuffer;
 
 #pragma opt_unroll_loops reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\fmn\sceecd.c lines 291–349 */
+/* addr: 0x00258f00  size: 764 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 291
+ *   +0x0004 -> line 303
+ *   +0x0008 -> line 291
+ *   +0x0028 -> line 303
+ *   +0x0034 -> line 304
+ *   +0x003c -> line 306
+ *   +0x0124 -> line 311
+ *   +0x0128 -> line 313
+ *   +0x012c -> line 315
+ *   +0x0130 -> line 316
+ *   +0x0134 -> line 317
+ *   +0x0138 -> line 319
+ *   +0x0148 -> line 320
+ *   +0x0178 -> line 322
+ *   +0x0188 -> line 323
+ *   +0x0190 -> line 325
+ *   +0x0194 -> line 327
+ *   +0x01a0 -> line 330
+ *   +0x021c -> line 332
+ *   +0x0220 -> line 334
+ *   +0x0224 -> line 332
+ *   +0x0228 -> line 334
+ *   +0x0230 -> line 337
+ *   +0x0238 -> line 343
+ *   +0x02c0 -> line 344
+ *   +0x02c8 -> line 346
+ *   +0x02d8 -> line 349
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 #pragma opt_propagation off
 int SCEECdSearchFile(anon_0* fp, char* name)
 {
@@ -344,6 +287,55 @@ int SCEECdSearchFile(anon_0* fp, char* name)
 }
 #pragma opt_propagation reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\fmn\sceecd.c lines 427–481 */
+/* addr: 0x00258d00  size: 512 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 427
+ *   +0x0004 -> line 439
+ *   +0x0008 -> line 427
+ *   +0x000c -> line 439
+ *   +0x0010 -> line 427
+ *   +0x002c -> line 439
+ *   +0x0030 -> line 435
+ *   +0x0034 -> line 439
+ *   +0x003c -> line 435
+ *   +0x0040 -> line 439
+ *   +0x0044 -> line 440
+ *   +0x0048 -> line 443
+ *   +0x0054 -> line 444
+ *   +0x005c -> line 446
+ *   +0x0068 -> line 449
+ *   +0x007c -> line 448
+ *   +0x0080 -> line 449
+ *   +0x00a4 -> line 450
+ *   +0x00b0 -> line 454
+ *   +0x00b8 -> line 453
+ *   +0x00bc -> line 454
+ *   +0x00c0 -> line 456
+ *   +0x00cc -> line 458
+ *   +0x00e4 -> line 459
+ *   +0x00e8 -> line 458
+ *   +0x00f0 -> line 459
+ *   +0x00f8 -> line 461
+ *   +0x0100 -> line 464
+ *   +0x0104 -> line 461
+ *   +0x0108 -> line 464
+ *   +0x0110 -> line 466
+ *   +0x0118 -> line 464
+ *   +0x0128 -> line 466
+ *   +0x0130 -> line 468
+ *   +0x0140 -> line 469
+ *   +0x0144 -> line 471
+ *   +0x0170 -> line 472
+ *   +0x019c -> line 474
+ *   +0x01a8 -> line 477
+ *   +0x01b0 -> line 478
+ *   +0x01c8 -> line 479
+ *   +0x01d8 -> line 480
+ *   +0x01dc -> line 481
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 #pragma opt_unroll_loops off
 int ReadDirInCache(stFile_* pLevel)
 {
@@ -397,6 +389,13 @@ int ReadDirInCache(stFile_* pLevel)
 }
 #pragma opt_unroll_loops reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\fmn\sceecd.c lines 59–59 */
+/* addr: 0x00258cf0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 59
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void CD_SetCallBack(void* FunctionPointer)
 {
     CD_ProgressCallBack = (int)FunctionPointer;

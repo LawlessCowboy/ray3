@@ -1322,74 +1322,53 @@ extern "C" void FireFx_vDesinit(void);
 extern "C" void FireFx_vDisplay(void);
 extern "C" void FireFx_vProcess(void);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FireFx.cpp lines 364–373 */
-/* addr: 0x002ec4c0  size: 308 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 364
- *   +0x0020 -> line 368
- *   +0x0034 -> line 370
- *   +0x0110 -> line 372
- *   +0x011c -> line 373
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FireFx.cpp lines 350–360 */
-/* addr: 0x002ec600  size: 68 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 350
- *   +0x000c -> line 353
- *   +0x001c -> line 355
- *   +0x0024 -> line 357
- *   +0x002c -> line 358
- *   +0x0034 -> line 360
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FireFx.cpp lines 345–345 */
-/* addr: 0x002ec650  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 345
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FireFx.cpp lines 317–339 */
-/* addr: 0x002ec660  size: 120 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 317
- *   +0x000c -> line 319
- *   +0x0010 -> line 321
- *   +0x0018 -> line 328
- *   +0x0020 -> line 330
- *   +0x0040 -> line 331
- *   +0x0048 -> line 332
- *   +0x0050 -> line 334
- *   +0x0058 -> line 336
- *   +0x0060 -> line 338
- *   +0x0068 -> line 339
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern "C" void GLI_vDrawFireSpriteGroup(GLI_tdstMaterial_* param0, C_Vector* pData, unsigned int NbParticles);
 extern "C" void GLI_vEndWorldSprites(void);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FireFx.cpp lines 295–313 */
-/* addr: 0x002ec6e0  size: 88 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FireFx.cpp lines 112–130 */
+/* addr: 0x002ec9b0  size: 352 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 295
- *   +0x000c -> line 297
- *   +0x0010 -> line 299
- *   +0x0018 -> line 306
- *   +0x0020 -> line 308
- *   +0x0028 -> line 309
- *   +0x0030 -> line 310
- *   +0x0040 -> line 312
- *   +0x0048 -> line 313
+ *   +0x0000 -> line 116
+ *   +0x0004 -> line 112
+ *   +0x0008 -> line 116
+ *   +0x000c -> line 112
+ *   +0x0014 -> line 116
+ *   +0x0018 -> line 112
+ *   +0x001c -> line 116
+ *   +0x0020 -> line 112
+ *   +0x002c -> line 116
+ *   +0x0034 -> line 117
+ *   +0x004c -> line 118
+ *   +0x0070 -> line 121
+ *   +0x0080 -> line 122
+ *   +0x00a4 -> line 123
+ *   +0x00bc -> line 122
+ *   +0x00c0 -> line 123
+ *   +0x00cc -> line 127
+ *   +0x00d4 -> line 125
+ *   +0x00d8 -> line 127
+ *   +0x00e0 -> line 123
+ *   +0x00e4 -> line 127
+ *   +0x00f0 -> line 128
+ *   +0x00f4 -> line 127
+ *   +0x00fc -> line 128
+ *   +0x0104 -> line 127
+ *   +0x0108 -> line 128
+ *   +0x0118 -> line 129
+ *   +0x011c -> line 128
+ *   +0x0124 -> line 129
+ *   +0x012c -> line 128
+ *   +0x0130 -> line 129
+ *   +0x0148 -> line 130
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+void C_FireFx::InitOneParticle(C_Vector* p)
+{
+    C_Vector* pWork;
+    /* TODO: decompile from asm/... */
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FireFx.cpp lines 191–244 */
 /* addr: 0x002ec740  size: 616 bytes */
@@ -1447,52 +1426,6 @@ extern "C" void GLI_vEndWorldSprites(void);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FireFx.cpp lines 112–130 */
-/* addr: 0x002ec9b0  size: 352 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 116
- *   +0x0004 -> line 112
- *   +0x0008 -> line 116
- *   +0x000c -> line 112
- *   +0x0014 -> line 116
- *   +0x0018 -> line 112
- *   +0x001c -> line 116
- *   +0x0020 -> line 112
- *   +0x002c -> line 116
- *   +0x0034 -> line 117
- *   +0x004c -> line 118
- *   +0x0070 -> line 121
- *   +0x0080 -> line 122
- *   +0x00a4 -> line 123
- *   +0x00bc -> line 122
- *   +0x00c0 -> line 123
- *   +0x00cc -> line 127
- *   +0x00d4 -> line 125
- *   +0x00d8 -> line 127
- *   +0x00e0 -> line 123
- *   +0x00e4 -> line 127
- *   +0x00f0 -> line 128
- *   +0x00f4 -> line 127
- *   +0x00fc -> line 128
- *   +0x0104 -> line 127
- *   +0x0108 -> line 128
- *   +0x0118 -> line 129
- *   +0x011c -> line 128
- *   +0x0124 -> line 129
- *   +0x012c -> line 128
- *   +0x0130 -> line 129
- *   +0x0148 -> line 130
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-void C_FireFx::InitOneParticle(C_Vector* p)
-{
-    C_Vector* pWork;
-    /* TODO: decompile from asm/... */
-}
-
 void C_FireFx::Process(void)
 {
     unsigned int i;
@@ -1505,6 +1438,21 @@ void C_FireFx::Process(void)
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FireFx.cpp lines 295–313 */
+/* addr: 0x002ec6e0  size: 88 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 295
+ *   +0x000c -> line 297
+ *   +0x0010 -> line 299
+ *   +0x0018 -> line 306
+ *   +0x0020 -> line 308
+ *   +0x0028 -> line 309
+ *   +0x0030 -> line 310
+ *   +0x0040 -> line 312
+ *   +0x0048 -> line 313
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void FireFx_vProcess(void)
 {
     tdstBaseFxListElement_* p;
@@ -1523,6 +1471,23 @@ test:
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FireFx.cpp lines 317–339 */
+/* addr: 0x002ec660  size: 120 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 317
+ *   +0x000c -> line 319
+ *   +0x0010 -> line 321
+ *   +0x0018 -> line 328
+ *   +0x0020 -> line 330
+ *   +0x0040 -> line 331
+ *   +0x0048 -> line 332
+ *   +0x0050 -> line 334
+ *   +0x0058 -> line 336
+ *   +0x0060 -> line 338
+ *   +0x0068 -> line 339
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void FireFx_vDisplay(void)
 {
     tdstBaseFxListElement_* p;
@@ -1546,11 +1511,30 @@ test:
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FireFx.cpp lines 345–345 */
+/* addr: 0x002ec650  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 345
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void FireFx_vDesinit(void)
 {
     FireFx_g_List.DeleteAll();
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FireFx.cpp lines 350–360 */
+/* addr: 0x002ec600  size: 68 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 350
+ *   +0x000c -> line 353
+ *   +0x001c -> line 355
+ *   +0x0024 -> line 357
+ *   +0x002c -> line 358
+ *   +0x0034 -> line 360
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void FireFx_vAddObjectToDisplay(GEO_tdstGeometricObject_* pObj)
 {
     C_FireFx* p;
@@ -1563,6 +1547,17 @@ void FireFx_vAddObjectToDisplay(GEO_tdstGeometricObject_* pObj)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FireFx.cpp lines 364–373 */
+/* addr: 0x002ec4c0  size: 308 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 364
+ *   +0x0020 -> line 368
+ *   +0x0034 -> line 370
+ *   +0x0110 -> line 372
+ *   +0x011c -> line 373
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void FireFx_vAddObject(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* hVisualMaterial, GEO_tdstGeometricObject_* pObj)
 {
     /* TODO: decompile from asm/... */

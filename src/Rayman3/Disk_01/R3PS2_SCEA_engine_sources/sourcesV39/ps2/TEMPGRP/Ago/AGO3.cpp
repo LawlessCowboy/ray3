@@ -1804,8 +1804,6 @@ extern "C" void sceVu0CopyVector(void* pDest, void* pSrc);
 extern "C" void sceVu0ScaleVectorXYZ(void* pDest, void* pSrc, float fScale);
 extern "C" void sceVu0AddVector(void* pDest, void* pSrc, void* pAdd);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 51–66 */
-/* addr: 0x001ea500  size: 180 bytes */
 /* Debug signature rejected: type-record data leaked into it. */
 /* Target MWCC statement boundaries (code offset -> source line):
  *   +0x0000 -> line 51
@@ -1836,2207 +1834,4449 @@ extern "C" void AGO3_vDisplayAll(GLD_tdstViewportAttributes_* hVp);
 extern "C" void AGO3_vProcessAll(void);
 extern "C" void AGO3_vInit(void);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 7218–7218 */
-/* addr: 0x001ea5c0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 7218
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int AGO3_LinkChainComputing::m_hHandle;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 8339–8354 */
-/* addr: 0x001ea5e0  size: 132 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 8339
- *   +0x0004 -> line 8343
- *   +0x0008 -> line 8339
- *   +0x0010 -> line 8341
- *   +0x0014 -> line 8345
- *   +0x002c -> line 8348
- *   +0x0030 -> line 8347
- *   +0x0034 -> line 8349
- *   +0x0038 -> line 8347
- *   +0x003c -> line 8349
- *   +0x005c -> line 8351
- *   +0x0064 -> line 8353
- *   +0x0078 -> line 8354
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* The retail AGO3_vAddPart has C linkage and nine parameters: the debug
  * definition record only lists the referenced ones, but the target ABI shows
  * seven integer/pointer arguments (a0-a3, t0-t2) and two float arguments
  * (f12, f13). */
 extern "C" void AGO3_vAddPart(unsigned int PartNumber, MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fParam1, float fParam2, MTH3D_tdstVector_* V1, MTH3D_tdstVector_* V2, MTH3D_tdstVector_* V3);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 8311–8326 */
-/* addr: 0x001ea670  size: 136 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 8311
- *   +0x0004 -> line 8315
- *   +0x0008 -> line 8311
- *   +0x0014 -> line 8317
- *   +0x002c -> line 8319
- *   +0x0040 -> line 8320
- *   +0x0048 -> line 8321
- *   +0x0060 -> line 8323
- *   +0x0068 -> line 8325
- *   +0x0078 -> line 8326
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 8303–8303 */
-/* addr: 0x001ea700  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 8303
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 7682–8292 */
-/* addr: 0x001ea710  size: 9840 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 7682
- *   +0x002c -> line 7687
- *   +0x0030 -> line 7682
- *   +0x003c -> line 7687
- *   +0x0040 -> line 7682
- *   +0x0044 -> line 7687
- *   +0x0090 -> line 7688
- *   +0x009c -> line 7690
- *   +0x0200 -> line 7694
- *   +0x0284 -> line 7696
- *   +0x02b0 -> line 7699
- *   +0x02b8 -> line 7703
- *   +0x0348 -> line 7705
- *   +0x035c -> line 7708
- *   +0x0364 -> line 7719
- *   +0x037c -> line 7723
- *   +0x0384 -> line 7727
- *   +0x0420 -> line 7729
- *   +0x04fc -> line 7732
- *   +0x0504 -> line 7736
- *   +0x0594 -> line 7738
- *   +0x0638 -> line 7741
- *   +0x0640 -> line 7750
- *   +0x0648 -> line 7839
- *   +0x0650 -> line 7843
- *   +0x0658 -> line 7850
- *   +0x065c -> line 7852
- *   +0x069c -> line 7853
- *   +0x06d8 -> line 7854
- *   +0x06ec -> line 7855
- *   +0x06f0 -> line 7854
- *   +0x06f8 -> line 7855
- *   +0x06fc -> line 7854
- *   +0x0708 -> line 7855
- *   +0x0710 -> line 7854
- *   +0x0714 -> line 7855
- *   +0x0718 -> line 7854
- *   +0x0720 -> line 7855
- *   +0x0724 -> line 7854
- *   +0x072c -> line 7855
- *   +0x0734 -> line 7856
- *   +0x0744 -> line 7868
- *   +0x074c -> line 7872
- *   +0x07dc -> line 7874
- *   +0x082c -> line 7877
- *   +0x0834 -> line 7882
- *   +0x08c4 -> line 7884
- *   +0x09bc -> line 7887
- *   +0x09c4 -> line 7895
- *   +0x09c8 -> line 7897
- *   +0x0a08 -> line 7898
- *   +0x0a44 -> line 7899
- *   +0x0a58 -> line 7900
- *   +0x0a5c -> line 7899
- *   +0x0a64 -> line 7900
- *   +0x0a68 -> line 7899
- *   +0x0a74 -> line 7900
- *   +0x0a7c -> line 7899
- *   +0x0a80 -> line 7900
- *   +0x0a84 -> line 7899
- *   +0x0a8c -> line 7900
- *   +0x0a90 -> line 7899
- *   +0x0a98 -> line 7900
- *   +0x0aa0 -> line 7901
- *   +0x0ab0 -> line 7903
- *   +0x0ab8 -> line 7910
- *   +0x0ac4 -> line 7912
- *   +0x0b98 -> line 7915
- *   +0x0bb0 -> line 7917
- *   +0x0bb8 -> line 7919
- *   +0x0bd8 -> line 7922
- *   +0x0be0 -> line 7927
- *   +0x0c70 -> line 7929
- *   +0x0c84 -> line 7932
- *   +0x0c8c -> line 7937
- *   +0x0c98 -> line 7939
- *   +0x0d6c -> line 7942
- *   +0x0d84 -> line 7944
- *   +0x0d8c -> line 7946
- *   +0x0dac -> line 7949
- *   +0x0db4 -> line 7956
- *   +0x0dc0 -> line 7958
- *   +0x0ec8 -> line 7960
- *   +0x0edc -> line 7962
- *   +0x0ee4 -> line 7963
- *   +0x0ef4 -> line 7965
- *   +0x0efc -> line 7971
- *   +0x0f08 -> line 7973
- *   +0x1014 -> line 7976
- *   +0x102c -> line 7978
- *   +0x1034 -> line 7980
- *   +0x1054 -> line 7983
- *   +0x105c -> line 7988
- *   +0x10ec -> line 7990
- *   +0x11c4 -> line 7993
- *   +0x11cc -> line 7999
- *   +0x125c -> line 8004
- *   +0x12ac -> line 8007
- *   +0x12b4 -> line 8012
- *   +0x1344 -> line 8014
- *   +0x1358 -> line 8017
- *   +0x1360 -> line 8022
- *   +0x13f0 -> line 8024
- *   +0x1404 -> line 8027
- *   +0x140c -> line 8032
- *   +0x14d0 -> line 8034
- *   +0x14e0 -> line 8037
- *   +0x14e8 -> line 8042
- *   +0x1570 -> line 8044
- *   +0x1584 -> line 8047
- *   +0x158c -> line 8052
- *   +0x1670 -> line 8054
- *   +0x1684 -> line 8057
- *   +0x168c -> line 8062
- *   +0x1698 -> line 8064
- *   +0x1750 -> line 8066
- *   +0x1754 -> line 8067
- *   +0x17c4 -> line 8069
- *   +0x17cc -> line 8071
- *   +0x1844 -> line 8074
- *   +0x184c -> line 8082
- *   +0x1854 -> line 8083
- *   +0x1860 -> line 8095
- *   +0x1894 -> line 8097
- *   +0x1920 -> line 8099
- *   +0x1940 -> line 8100
- *   +0x1944 -> line 8099
- *   +0x1948 -> line 8100
- *   +0x1a18 -> line 8102
- *   +0x1a20 -> line 8103
- *   +0x1a44 -> line 8104
- *   +0x1a4c -> line 8106
- *   +0x1a54 -> line 8108
- *   +0x1a74 -> line 8111
- *   +0x1b4c -> line 8133
- *   +0x1b54 -> line 8138
- *   +0x1bec -> line 8140
- *   +0x1c00 -> line 8143
- *   +0x1c08 -> line 8149
- *   +0x1c98 -> line 8151
- *   +0x1cac -> line 8159
- *   +0x1cb4 -> line 8164
- *   +0x1cc0 -> line 8166
- *   +0x1dd0 -> line 8168
- *   +0x1ddc -> line 8169
- *   +0x1df8 -> line 8171
- *   +0x1e00 -> line 8173
- *   +0x1e20 -> line 8176
- *   +0x1e28 -> line 8181
- *   +0x1e34 -> line 8183
- *   +0x1f44 -> line 8185
- *   +0x1f50 -> line 8186
- *   +0x1f54 -> line 8185
- *   +0x1f58 -> line 8186
- *   +0x1f5c -> line 8185
- *   +0x1f60 -> line 8186
- *   +0x1f74 -> line 8188
- *   +0x1f7c -> line 8190
- *   +0x1f9c -> line 8193
- *   +0x1fa4 -> line 8197
- *   +0x2078 -> line 8199
- *   +0x208c -> line 8215
- *   +0x2094 -> line 8220
- *   +0x2124 -> line 8222
- *   +0x2190 -> line 8225
- *   +0x2198 -> line 8233
- *   +0x227c -> line 8239
- *   +0x2290 -> line 8244
- *   +0x2298 -> line 8250
- *   +0x2334 -> line 8252
- *   +0x23a4 -> line 8255
- *   +0x23ac -> line 8261
- *   +0x23b8 -> line 8263
- *   +0x249c -> line 8266
- *   +0x24f0 -> line 8268
- *   +0x24f8 -> line 8270
- *   +0x2554 -> line 8273
- *   +0x255c -> line 8278
- *   +0x2568 -> line 8280
- *   +0x2600 -> line 8283
- *   +0x2618 -> line 8285
- *   +0x2620 -> line 8287
- *   +0x2640 -> line 8292
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 3940–3940 */
-/* addr: 0x001ecd80  size: 36 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3940
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 7505–7643 */
-/* addr: 0x001ecff0  size: 1016 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 7505
- *   +0x0050 -> line 7506
- *   +0x0068 -> line 7508
- *   +0x0080 -> line 7539
- *   +0x0094 -> line 7541
- *   +0x0098 -> line 7542
- *   +0x009c -> line 7543
- *   +0x00a0 -> line 7545
- *   +0x00a4 -> line 7546
- *   +0x00a8 -> line 7541
- *   +0x00ac -> line 7542
- *   +0x00b4 -> line 7543
- *   +0x00b8 -> line 7550
- *   +0x00c0 -> line 7553
- *   +0x00c4 -> line 7552
- *   +0x00c8 -> line 7554
- *   +0x00cc -> line 7552
- *   +0x00d4 -> line 7556
- *   +0x00d8 -> line 7552
- *   +0x00e0 -> line 7553
- *   +0x00e8 -> line 7554
- *   +0x00f0 -> line 7556
- *   +0x00fc -> line 7558
- *   +0x0130 -> line 7559
- *   +0x0138 -> line 7563
- *   +0x013c -> line 7564
- *   +0x0140 -> line 7563
- *   +0x0144 -> line 7565
- *   +0x0148 -> line 7567
- *   +0x0150 -> line 7563
- *   +0x0158 -> line 7564
- *   +0x0168 -> line 7565
- *   +0x0178 -> line 7567
- *   +0x01b4 -> line 7570
- *   +0x01bc -> line 7571
- *   +0x01c0 -> line 7573
- *   +0x01d8 -> line 7579
- *   +0x01dc -> line 7573
- *   +0x01e0 -> line 7579
- *   +0x01e8 -> line 7576
- *   +0x01ec -> line 7577
- *   +0x01f0 -> line 7579
- *   +0x01f4 -> line 7575
- *   +0x01fc -> line 7579
- *   +0x0200 -> line 7575
- *   +0x0204 -> line 7576
- *   +0x0208 -> line 7577
- *   +0x020c -> line 7579
- *   +0x0210 -> line 7575
- *   +0x0214 -> line 7576
- *   +0x0218 -> line 7579
- *   +0x0220 -> line 7581
- *   +0x0224 -> line 7600
- *   +0x0228 -> line 7581
- *   +0x022c -> line 7582
- *   +0x0234 -> line 7583
- *   +0x023c -> line 7584
- *   +0x0244 -> line 7585
- *   +0x024c -> line 7586
- *   +0x0250 -> line 7600
- *   +0x0258 -> line 7605
- *   +0x025c -> line 7613
- *   +0x0260 -> line 7609
- *   +0x0264 -> line 7605
- *   +0x0268 -> line 7606
- *   +0x026c -> line 7605
- *   +0x0270 -> line 7606
- *   +0x0274 -> line 7607
- *   +0x0278 -> line 7606
- *   +0x027c -> line 7607
- *   +0x0284 -> line 7609
- *   +0x0288 -> line 7610
- *   +0x028c -> line 7609
- *   +0x0290 -> line 7610
- *   +0x0294 -> line 7611
- *   +0x0298 -> line 7610
- *   +0x029c -> line 7611
- *   +0x02a0 -> line 7613
- *   +0x02a8 -> line 7616
- *   +0x02e8 -> line 7619
- *   +0x02ec -> line 7623
- *   +0x02f0 -> line 7619
- *   +0x02f4 -> line 7623
- *   +0x02f8 -> line 7620
- *   +0x02fc -> line 7624
- *   +0x0300 -> line 7620
- *   +0x0304 -> line 7624
- *   +0x0308 -> line 7621
- *   +0x030c -> line 7625
- *   +0x0310 -> line 7621
- *   +0x0314 -> line 7625
- *   +0x0318 -> line 7627
- *   +0x0324 -> line 7628
- *   +0x0330 -> line 7630
- *   +0x0338 -> line 7632
- *   +0x0378 -> line 7639
- *   +0x037c -> line 7635
- *   +0x0384 -> line 7636
- *   +0x038c -> line 7637
- *   +0x0394 -> line 7640
- *   +0x03a8 -> line 7643
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 7491–7499 */
-/* addr: 0x001ed3f0  size: 76 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 7491
- *   +0x0008 -> line 7492
- *   +0x0014 -> line 7494
- *   +0x001c -> line 7495
- *   +0x0024 -> line 7494
- *   +0x0028 -> line 7495
- *   +0x0038 -> line 7496
- *   +0x0044 -> line 7499
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 7234–7486 */
-/* addr: 0x001ed440  size: 2464 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 7234
- *   +0x0038 -> line 7255
- *   +0x003c -> line 7234
- *   +0x005c -> line 7255
- *   +0x0060 -> line 7257
- *   +0x006c -> line 7260
- *   +0x0070 -> line 7262
- *   +0x0074 -> line 7263
- *   +0x0078 -> line 7260
- *   +0x007c -> line 7262
- *   +0x0080 -> line 7263
- *   +0x0098 -> line 7264
- *   +0x009c -> line 7265
- *   +0x00a4 -> line 7268
- *   +0x00a8 -> line 7269
- *   +0x00ac -> line 7270
- *   +0x00b0 -> line 7273
- *   +0x00cc -> line 7275
- *   +0x0110 -> line 7278
- *   +0x0128 -> line 7279
- *   +0x0130 -> line 7280
- *   +0x0134 -> line 7278
- *   +0x0138 -> line 7280
- *   +0x013c -> line 7279
- *   +0x0144 -> line 7280
- *   +0x0148 -> line 7281
- *   +0x0150 -> line 7310
- *   +0x0158 -> line 7309
- *   +0x015c -> line 7311
- *   +0x0164 -> line 7313
- *   +0x0168 -> line 7310
- *   +0x016c -> line 7311
- *   +0x0170 -> line 7309
- *   +0x0174 -> line 7312
- *   +0x0184 -> line 7313
- *   +0x0194 -> line 7314
- *   +0x01a0 -> line 7315
- *   +0x01ec -> line 7318
- *   +0x01f0 -> line 7315
- *   +0x01f4 -> line 7319
- *   +0x0200 -> line 7320
- *   +0x0208 -> line 7322
- *   +0x0238 -> line 7326
- *   +0x023c -> line 7334
- *   +0x0240 -> line 7326
- *   +0x024c -> line 7339
- *   +0x0250 -> line 7327
- *   +0x0254 -> line 7326
- *   +0x0258 -> line 7327
- *   +0x025c -> line 7341
- *   +0x0260 -> line 7328
- *   +0x0268 -> line 7330
- *   +0x026c -> line 7337
- *   +0x0270 -> line 7330
- *   +0x0274 -> line 7326
- *   +0x0278 -> line 7330
- *   +0x027c -> line 7338
- *   +0x0280 -> line 7334
- *   +0x0284 -> line 7326
- *   +0x0288 -> line 7334
- *   +0x028c -> line 7327
- *   +0x0294 -> line 7328
- *   +0x029c -> line 7326
- *   +0x02a0 -> line 7327
- *   +0x02a4 -> line 7328
- *   +0x02a8 -> line 7337
- *   +0x02ac -> line 7334
- *   +0x02b4 -> line 7341
- *   +0x02bc -> line 7343
- *   +0x02c0 -> line 7344
- *   +0x02c4 -> line 7343
- *   +0x02c8 -> line 7344
- *   +0x02d0 -> line 7345
- *   +0x02dc -> line 7346
- *   +0x02e0 -> line 7353
- *   +0x02e8 -> line 7355
- *   +0x02ec -> line 7363
- *   +0x02f0 -> line 7360
- *   +0x02f4 -> line 7363
- *   +0x02f8 -> line 7356
- *   +0x02fc -> line 7359
- *   +0x0300 -> line 7363
- *   +0x0304 -> line 7357
- *   +0x030c -> line 7358
- *   +0x0314 -> line 7359
- *   +0x031c -> line 7360
- *   +0x0324 -> line 7363
- *   +0x0328 -> line 7365
- *   +0x0334 -> line 7364
- *   +0x0338 -> line 7365
- *   +0x0348 -> line 7366
- *   +0x0364 -> line 7367
- *   +0x037c -> line 7370
- *   +0x03d0 -> line 7372
- *   +0x03dc -> line 7374
- *   +0x03e0 -> line 7375
- *   +0x03e4 -> line 7374
- *   +0x03e8 -> line 7375
- *   +0x03f0 -> line 7376
- *   +0x03f8 -> line 7377
- *   +0x03fc -> line 7378
- *   +0x0400 -> line 7386
- *   +0x0408 -> line 7390
- *   +0x040c -> line 7381
- *   +0x0410 -> line 7389
- *   +0x0414 -> line 7386
- *   +0x0418 -> line 7382
- *   +0x041c -> line 7381
- *   +0x0420 -> line 7382
- *   +0x042c -> line 7383
- *   +0x0434 -> line 7391
- *   +0x0440 -> line 7394
- *   +0x0444 -> line 7396
- *   +0x045c -> line 7409
- *   +0x0460 -> line 7410
- *   +0x0464 -> line 7413
- *   +0x0468 -> line 7409
- *   +0x0470 -> line 7410
- *   +0x047c -> line 7411
- *   +0x0488 -> line 7415
- *   +0x04e0 -> line 7417
- *   +0x04e8 -> line 7419
- *   +0x0540 -> line 7421
- *   +0x054c -> line 7420
- *   +0x0550 -> line 7426
- *   +0x0558 -> line 7427
- *   +0x0584 -> line 7428
- *   +0x05bc -> line 7429
- *   +0x05c0 -> line 7428
- *   +0x05c4 -> line 7429
- *   +0x05d0 -> line 7434
- *   +0x05d8 -> line 7435
- *   +0x05e0 -> line 7438
- *   +0x05f8 -> line 7439
- *   +0x05fc -> line 7438
- *   +0x0600 -> line 7439
- *   +0x0608 -> line 7440
- *   +0x0610 -> line 7438
- *   +0x0614 -> line 7440
- *   +0x0618 -> line 7438
- *   +0x0628 -> line 7439
- *   +0x0644 -> line 7440
- *   +0x065c -> line 7442
- *   +0x0664 -> line 7450
- *   +0x0670 -> line 7453
- *   +0x0674 -> line 7450
- *   +0x0678 -> line 7453
- *   +0x067c -> line 7450
- *   +0x069c -> line 7451
- *   +0x06a0 -> line 7452
- *   +0x06a4 -> line 7453
- *   +0x06a8 -> line 7450
- *   +0x06b0 -> line 7451
- *   +0x06c0 -> line 7452
- *   +0x06cc -> line 7453
- *   +0x06d4 -> line 7455
- *   +0x0748 -> line 7456
- *   +0x07bc -> line 7457
- *   +0x0830 -> line 7459
- *   +0x086c -> line 7461
- *   +0x0884 -> line 7463
- *   +0x088c -> line 7464
- *   +0x0890 -> line 7466
- *   +0x08cc -> line 7468
- *   +0x08e4 -> line 7470
- *   +0x08ec -> line 7474
- *   +0x08f4 -> line 7475
- *   +0x08f8 -> line 7482
- *   +0x0928 -> line 7483
- *   +0x093c -> line 7484
- *   +0x0950 -> line 7486
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 7130–7167 */
-/* addr: 0x001edde0  size: 596 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 7130
- *   +0x0018 -> line 7132
- *   +0x0030 -> line 7138
- *   +0x0040 -> line 7139
- *   +0x0054 -> line 7140
- *   +0x005c -> line 7146
- *   +0x0064 -> line 7147
- *   +0x00f8 -> line 7149
- *   +0x00fc -> line 7148
- *   +0x0100 -> line 7149
- *   +0x0104 -> line 7148
- *   +0x0108 -> line 7149
- *   +0x010c -> line 7148
- *   +0x0110 -> line 7147
- *   +0x0118 -> line 7148
- *   +0x011c -> line 7147
- *   +0x0120 -> line 7149
- *   +0x01b0 -> line 7150
- *   +0x01b4 -> line 7151
- *   +0x01b8 -> line 7160
- *   +0x01bc -> line 7151
- *   +0x01c0 -> line 7160
- *   +0x01c4 -> line 7151
- *   +0x01c8 -> line 7154
- *   +0x01cc -> line 7149
- *   +0x01d0 -> line 7154
- *   +0x01d4 -> line 7151
- *   +0x01d8 -> line 7149
- *   +0x01dc -> line 7154
- *   +0x01e0 -> line 7151
- *   +0x01e4 -> line 7154
- *   +0x01ec -> line 7149
- *   +0x01f0 -> line 7160
- *   +0x01f4 -> line 7154
- *   +0x01fc -> line 7155
- *   +0x0208 -> line 7156
- *   +0x0210 -> line 7160
- *   +0x0220 -> line 7163
- *   +0x023c -> line 7167
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 7095–7126 */
-/* addr: 0x001ee040  size: 260 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 7095
- *   +0x0008 -> line 7097
- *   +0x000c -> line 7095
- *   +0x0010 -> line 7097
- *   +0x0024 -> line 7101
- *   +0x0028 -> line 7103
- *   +0x002c -> line 7102
- *   +0x0030 -> line 7101
- *   +0x0034 -> line 7102
- *   +0x0038 -> line 7103
- *   +0x003c -> line 7102
- *   +0x0040 -> line 7103
- *   +0x0050 -> line 7106
- *   +0x0060 -> line 7111
- *   +0x0074 -> line 7113
- *   +0x0078 -> line 7114
- *   +0x007c -> line 7113
- *   +0x0080 -> line 7114
- *   +0x0088 -> line 7113
- *   +0x008c -> line 7114
- *   +0x009c -> line 7116
- *   +0x00a4 -> line 7117
- *   +0x00b0 -> line 7118
- *   +0x00c4 -> line 7119
- *   +0x00c8 -> line 7120
- *   +0x00d4 -> line 7122
- *   +0x00e4 -> line 7123
- *   +0x00f4 -> line 7126
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 7060–7068 */
-/* addr: 0x001ee150  size: 72 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 7060
- *   +0x0010 -> line 7063
- *   +0x0014 -> line 7064
- *   +0x001c -> line 7065
- *   +0x0030 -> line 7067
- *   +0x0038 -> line 7068
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 6849–6972 */
-/* addr: 0x001ee1a0  size: 1004 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 6849
- *   +0x0028 -> line 6860
- *   +0x0038 -> line 6861
- *   +0x0044 -> line 6862
- *   +0x0048 -> line 6865
- *   +0x004c -> line 6862
- *   +0x0060 -> line 6865
- *   +0x0068 -> line 6868
- *   +0x0070 -> line 6869
- *   +0x0074 -> line 6868
- *   +0x0078 -> line 6869
- *   +0x007c -> line 6868
- *   +0x0080 -> line 6869
- *   +0x0084 -> line 6868
- *   +0x0088 -> line 6869
- *   +0x0098 -> line 6868
- *   +0x009c -> line 6874
- *   +0x00fc -> line 6876
- *   +0x010c -> line 6879
- *   +0x0110 -> line 6880
- *   +0x0114 -> line 6881
- *   +0x0118 -> line 6883
- *   +0x011c -> line 6884
- *   +0x0120 -> line 6885
- *   +0x0138 -> line 6879
- *   +0x0140 -> line 6880
- *   +0x014c -> line 6881
- *   +0x0158 -> line 6882
- *   +0x0164 -> line 6883
- *   +0x0170 -> line 6884
- *   +0x0178 -> line 6885
- *   +0x0180 -> line 6889
- *   +0x019c -> line 6898
- *   +0x01a0 -> line 6899
- *   +0x01a4 -> line 6898
- *   +0x01a8 -> line 6899
- *   +0x01b8 -> line 6901
- *   +0x01c4 -> line 6902
- *   +0x01cc -> line 6903
- *   +0x01dc -> line 6906
- *   +0x01e8 -> line 6908
- *   +0x01f0 -> line 6907
- *   +0x0200 -> line 6908
- *   +0x0204 -> line 6907
- *   +0x020c -> line 6908
- *   +0x021c -> line 6909
- *   +0x0224 -> line 6910
- *   +0x0240 -> line 6911
- *   +0x0254 -> line 6913
- *   +0x025c -> line 6917
- *   +0x0278 -> line 6918
- *   +0x027c -> line 6920
- *   +0x0288 -> line 6930
- *   +0x028c -> line 6951
- *   +0x0290 -> line 6930
- *   +0x0294 -> line 6933
- *   +0x0298 -> line 6931
- *   +0x029c -> line 6932
- *   +0x02a0 -> line 6934
- *   +0x02a4 -> line 6935
- *   +0x02a8 -> line 6930
- *   +0x02ac -> line 6937
- *   +0x02b0 -> line 6933
- *   +0x02b4 -> line 6937
- *   +0x02c0 -> line 6938
- *   +0x02c4 -> line 6932
- *   +0x02c8 -> line 6938
- *   +0x02d4 -> line 6939
- *   +0x02d8 -> line 6935
- *   +0x02dc -> line 6939
- *   +0x02e8 -> line 6940
- *   +0x02ec -> line 6931
- *   +0x02f0 -> line 6940
- *   +0x02fc -> line 6941
- *   +0x0300 -> line 6934
- *   +0x0304 -> line 6941
- *   +0x0310 -> line 6942
- *   +0x0314 -> line 6951
- *   +0x0318 -> line 6942
- *   +0x0324 -> line 6943
- *   +0x0334 -> line 6944
- *   +0x0344 -> line 6946
- *   +0x0354 -> line 6947
- *   +0x0364 -> line 6948
- *   +0x0374 -> line 6949
- *   +0x0380 -> line 6951
- *   +0x0388 -> line 6954
- *   +0x0390 -> line 6958
- *   +0x03c0 -> line 6969
- *   +0x03c8 -> line 6972
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 6840–6843 */
-/* addr: 0x001ee590  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 6840
- *   +0x0010 -> line 6842
- *   +0x0014 -> line 6843
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern unsigned int AGO_G_CurrentVU1Frame;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 6761–6777 */
-/* addr: 0x001ee5b0  size: 208 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 6761
- *   +0x0024 -> line 6766
- *   +0x0028 -> line 6768
- *   +0x002c -> line 6766
- *   +0x003c -> line 6768
- *   +0x0044 -> line 6770
- *   +0x004c -> line 6771
- *   +0x0070 -> line 6773
- *   +0x0074 -> line 6772
- *   +0x0078 -> line 6773
- *   +0x0080 -> line 6774
- *   +0x0088 -> line 6775
- *   +0x0090 -> line 6776
- *   +0x0094 -> line 6775
- *   +0x00a0 -> line 6776
- *   +0x00b0 -> line 6777
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+int AGO3_FistSmoke::m_hHandle;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 6646–6757 */
-/* addr: 0x001ee680  size: 1052 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 6646
- *   +0x0010 -> line 6647
- *   +0x0020 -> line 6650
- *   +0x003c -> line 6653
- *   +0x0058 -> line 6655
- *   +0x0070 -> line 6656
- *   +0x0074 -> line 6657
- *   +0x0084 -> line 6659
- *   +0x0088 -> line 6660
- *   +0x0090 -> line 6665
- *   +0x00a4 -> line 6667
- *   +0x00b0 -> line 6669
- *   +0x00b8 -> line 6673
- *   +0x00c0 -> line 6669
- *   +0x00c4 -> line 6673
- *   +0x0134 -> line 6674
- *   +0x0148 -> line 6675
- *   +0x014c -> line 6680
- *   +0x0154 -> line 6687
- *   +0x0158 -> line 6683
- *   +0x015c -> line 6680
- *   +0x0160 -> line 6687
- *   +0x0164 -> line 6681
- *   +0x0168 -> line 6687
- *   +0x0174 -> line 6680
- *   +0x0178 -> line 6684
- *   +0x0188 -> line 6680
- *   +0x018c -> line 6684
- *   +0x0190 -> line 6687
- *   +0x0198 -> line 6689
- *   +0x01a4 -> line 6691
- *   +0x01ac -> line 6692
- *   +0x01b0 -> line 6695
- *   +0x01bc -> line 6698
- *   +0x01d0 -> line 6699
- *   +0x01e8 -> line 6701
- *   +0x01fc -> line 6702
- *   +0x0218 -> line 6704
- *   +0x021c -> line 6705
- *   +0x0220 -> line 6717
- *   +0x0224 -> line 6708
- *   +0x0230 -> line 6709
- *   +0x0234 -> line 6710
- *   +0x0248 -> line 6711
- *   +0x025c -> line 6712
- *   +0x0270 -> line 6715
- *   +0x0274 -> line 6718
- *   +0x0278 -> line 6716
- *   +0x027c -> line 6715
- *   +0x0280 -> line 6718
- *   +0x0288 -> line 6719
- *   +0x0290 -> line 6720
- *   +0x0298 -> line 6721
- *   +0x029c -> line 6720
- *   +0x02a8 -> line 6721
- *   +0x02b8 -> line 6723
- *   +0x02c0 -> line 6725
- *   +0x02c4 -> line 6727
- *   +0x02c8 -> line 6725
- *   +0x02d4 -> line 6727
- *   +0x02e0 -> line 6728
- *   +0x02ec -> line 6729
- *   +0x02f8 -> line 6730
- *   +0x02fc -> line 6732
- *   +0x0300 -> line 6730
- *   +0x0310 -> line 6732
- *   +0x0318 -> line 6735
- *   +0x031c -> line 6737
- *   +0x0320 -> line 6735
- *   +0x0324 -> line 6737
- *   +0x0330 -> line 6735
- *   +0x0334 -> line 6737
- *   +0x0344 -> line 6738
- *   +0x0350 -> line 6740
- *   +0x0364 -> line 6741
- *   +0x0378 -> line 6742
- *   +0x038c -> line 6743
- *   +0x0390 -> line 6744
- *   +0x03a4 -> line 6745
- *   +0x03c4 -> line 6747
- *   +0x03d8 -> line 6748
- *   +0x0400 -> line 6751
- *   +0x0408 -> line 6753
- *   +0x040c -> line 6754
- *   +0x0414 -> line 6757
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+AGO3_TurningFistSmoke* AGO3_TurningFistSmoke::m_pAGO3_TFS_Object;
+int AGO3_TurningFistSmoke::m_bInProgress[2];
+C_Vector AGO3_TurningFistSmoke::m_a_stInitialSpriteDirection[2];
+C_Vector AGO3_TurningFistSmoke::m_a_stInitialSpritePosition[2];
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 6530–6630 */
-/* addr: 0x001eeaa0  size: 1196 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 6530
- *   +0x0004 -> line 6533
- *   +0x0008 -> line 6530
- *   +0x000c -> line 6536
- *   +0x0010 -> line 6530
- *   +0x0014 -> line 6533
- *   +0x0018 -> line 6530
- *   +0x0020 -> line 6533
- *   +0x002c -> line 6536
- *   +0x0030 -> line 6533
- *   +0x0050 -> line 6536
- *   +0x0058 -> line 6538
- *   +0x005c -> line 6539
- *   +0x0060 -> line 6540
- *   +0x0068 -> line 6541
- *   +0x0078 -> line 6543
- *   +0x007c -> line 6546
- *   +0x0088 -> line 6558
- *   +0x0094 -> line 6560
- *   +0x0098 -> line 6562
- *   +0x00a0 -> line 6560
- *   +0x00a4 -> line 6561
- *   +0x00ac -> line 6562
- *   +0x00bc -> line 6563
- *   +0x00c8 -> line 6564
- *   +0x00d0 -> line 6565
- *   +0x00e8 -> line 6566
- *   +0x00f4 -> line 6567
- *   +0x00f8 -> line 6571
- *   +0x00fc -> line 6567
- *   +0x0100 -> line 6569
- *   +0x0104 -> line 6571
- *   +0x010c -> line 6567
- *   +0x0114 -> line 6569
- *   +0x011c -> line 6570
- *   +0x0128 -> line 6571
- *   +0x0168 -> line 6575
- *   +0x0174 -> line 6576
- *   +0x0178 -> line 6575
- *   +0x0188 -> line 6576
- *   +0x0198 -> line 6577
- *   +0x01a8 -> line 6580
- *   +0x0208 -> line 6581
- *   +0x0218 -> line 6582
- *   +0x021c -> line 6583
- *   +0x0280 -> line 6585
- *   +0x0284 -> line 6589
- *   +0x028c -> line 6585
- *   +0x0294 -> line 6587
- *   +0x02a0 -> line 6588
- *   +0x02b0 -> line 6589
- *   +0x02c4 -> line 6590
- *   +0x02d4 -> line 6592
- *   +0x02e0 -> line 6594
- *   +0x02f8 -> line 6600
- *   +0x0324 -> line 6603
- *   +0x0364 -> line 6606
- *   +0x03a0 -> line 6609
- *   +0x0414 -> line 6611
- *   +0x0424 -> line 6612
- *   +0x042c -> line 6613
- *   +0x0430 -> line 6614
- *   +0x0438 -> line 6618
- *   +0x0450 -> line 6623
- *   +0x0454 -> line 6624
- *   +0x045c -> line 6623
- *   +0x046c -> line 6624
- *   +0x0474 -> line 6626
- *   +0x047c -> line 6628
- *   +0x0480 -> line 6627
- *   +0x0484 -> line 6628
- *   +0x0498 -> line 6630
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+int AGO3_WaveEnvelopedFist2::m_hHandle;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 6399–6411 */
-/* addr: 0x001eef50  size: 132 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 6399
- *   +0x0008 -> line 6400
- *   +0x000c -> line 6399
- *   +0x0018 -> line 6400
- *   +0x002c -> line 6406
- *   +0x0034 -> line 6407
- *   +0x0060 -> line 6408
- *   +0x0068 -> line 6410
- *   +0x0070 -> line 6411
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+int AGO3_WaveEnvelopedFist::m_hHandle;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 6388–6395 */
-/* addr: 0x001eefe0  size: 96 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 6388
- *   +0x0018 -> line 6391
- *   +0x001c -> line 6392
- *   +0x0020 -> line 6391
- *   +0x0024 -> line 6392
- *   +0x002c -> line 6391
- *   +0x0034 -> line 6392
- *   +0x004c -> line 6394
- *   +0x0058 -> line 6395
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+/* This caller preserves the viewport/time arguments omitted from the callee's debug definition. */
+extern "C" int GLI_vDrawWorldSpriteOpt(MTH3D_tdstVector_* Pos, GLI_tdstMaterial_* Material, float SizeX, float SizeY, GLD_tdstViewportAttributes_* viewport, int AnimTime);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 6296–6330 */
-/* addr: 0x001ef040  size: 188 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 6296
- *   +0x001c -> line 6317
- *   +0x0028 -> line 6321
- *   +0x002c -> line 6322
- *   +0x0030 -> line 6321
- *   +0x0040 -> line 6322
- *   +0x0048 -> line 6324
- *   +0x0050 -> line 6326
- *   +0x0084 -> line 6327
- *   +0x0088 -> line 6328
- *   +0x00a0 -> line 6330
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+int AGO3_Transition::m_hHandle;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 6279–6292 */
-/* addr: 0x001ef100  size: 116 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 6279
- *   +0x0008 -> line 6280
- *   +0x0014 -> line 6282
- *   +0x0024 -> line 6283
- *   +0x002c -> line 6285
- *   +0x003c -> line 6286
- *   +0x0048 -> line 6288
- *   +0x0058 -> line 6289
- *   +0x0060 -> line 6291
- *   +0x0068 -> line 6292
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+int AGO3_Snowboard_SnowEffect::m_hHandle;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 6246–6275 */
-/* addr: 0x001ef180  size: 420 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 6246
- *   +0x0018 -> line 6259
- *   +0x001c -> line 6251
- *   +0x0020 -> line 6258
- *   +0x0024 -> line 6261
- *   +0x0064 -> line 6262
- *   +0x00a0 -> line 6263
- *   +0x00c4 -> line 6266
- *   +0x00c8 -> line 6263
- *   +0x00dc -> line 6264
- *   +0x00e0 -> line 6265
- *   +0x00e4 -> line 6267
- *   +0x0134 -> line 6268
- *   +0x0148 -> line 6271
- *   +0x014c -> line 6268
- *   +0x0154 -> line 6269
- *   +0x0158 -> line 6271
- *   +0x015c -> line 6268
- *   +0x0174 -> line 6269
- *   +0x0178 -> line 6271
- *   +0x0180 -> line 6273
- *   +0x0188 -> line 6274
- *   +0x018c -> line 6275
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+int AGO3_SwirlingBubbles::m_hHandle;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 6177–6242 */
-/* addr: 0x001ef330  size: 840 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 6177
- *   +0x0014 -> line 6184
- *   +0x0020 -> line 6186
- *   +0x0024 -> line 6187
- *   +0x0028 -> line 6186
- *   +0x002c -> line 6188
- *   +0x0034 -> line 6191
- *   +0x0050 -> line 6195
- *   +0x0054 -> line 6196
- *   +0x0058 -> line 6195
- *   +0x0068 -> line 6196
- *   +0x0070 -> line 6198
- *   +0x00bc -> line 6199
- *   +0x00d0 -> line 6203
- *   +0x00d4 -> line 6199
- *   +0x0110 -> line 6200
- *   +0x0120 -> line 6201
- *   +0x0134 -> line 6202
- *   +0x0138 -> line 6203
- *   +0x0148 -> line 6213
- *   +0x014c -> line 6215
- *   +0x0160 -> line 6216
- *   +0x01a8 -> line 6217
- *   +0x01f0 -> line 6218
- *   +0x0214 -> line 6220
- *   +0x0218 -> line 6218
- *   +0x0240 -> line 6220
- *   +0x0254 -> line 6221
- *   +0x0260 -> line 6222
- *   +0x0268 -> line 6223
- *   +0x02b8 -> line 6224
- *   +0x02cc -> line 6228
- *   +0x02d0 -> line 6224
- *   +0x02d8 -> line 6228
- *   +0x02dc -> line 6224
- *   +0x02f4 -> line 6225
- *   +0x02fc -> line 6226
- *   +0x030c -> line 6227
- *   +0x0314 -> line 6228
- *   +0x031c -> line 6229
- *   +0x032c -> line 6230
- *   +0x0330 -> line 6242
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+float AGO3_ScoreDisplay::m_a_fUV[12][2] =
+{
+    { 0.5f, 0.8333334f }, { 0.5f, 0.6666667f }, { 0.5f, 0.5f }, { 0.5f, 0.33333334f }, { 0.5f, 0.16666667f }, { 0.5f, 0.0f },
+    { 0.0f, 0.8333334f }, { 0.0f, 0.6666667f }, { 0.0f, 0.5f }, { 0.0f, 0.33333334f }, { 0.0f, 0.16666667f }, { 0.0f, 0.0f }
+};
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 6061–6173 */
-/* addr: 0x001ef680  size: 916 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 6106
- *   +0x0004 -> line 6061
- *   +0x0008 -> line 6106
- *   +0x000c -> line 6061
- *   +0x0014 -> line 6106
- *   +0x0018 -> line 6061
- *   +0x001c -> line 6106
- *   +0x0020 -> line 6061
- *   +0x002c -> line 6106
- *   +0x0064 -> line 6112
- *   +0x0070 -> line 6115
- *   +0x0084 -> line 6134
- *   +0x00cc -> line 6135
- *   +0x0114 -> line 6136
- *   +0x0138 -> line 6142
- *   +0x013c -> line 6136
- *   +0x0164 -> line 6142
- *   +0x0178 -> line 6143
- *   +0x0184 -> line 6144
- *   +0x018c -> line 6145
- *   +0x01dc -> line 6148
- *   +0x01f8 -> line 6149
- *   +0x01fc -> line 6154
- *   +0x0200 -> line 6148
- *   +0x0218 -> line 6149
- *   +0x021c -> line 6150
- *   +0x022c -> line 6151
- *   +0x0238 -> line 6154
- *   +0x0244 -> line 6156
- *   +0x0258 -> line 6159
- *   +0x0268 -> line 6160
- *   +0x026c -> line 6163
- *   +0x0270 -> line 6164
- *   +0x0274 -> line 6163
- *   +0x0284 -> line 6164
- *   +0x028c -> line 6166
- *   +0x02d8 -> line 6167
- *   +0x02fc -> line 6171
- *   +0x0300 -> line 6169
- *   +0x0308 -> line 6167
- *   +0x0330 -> line 6169
- *   +0x0334 -> line 6167
- *   +0x033c -> line 6168
- *   +0x034c -> line 6169
- *   +0x0360 -> line 6170
- *   +0x0364 -> line 6171
- *   +0x0378 -> line 6173
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+float AGO3_ScoreDisplay::m_a_fSize[4] = { 0.5f, 0.16666667f };
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 5924–6057 */
-/* addr: 0x001efa20  size: 1220 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5924
- *   +0x000c -> line 5927
- *   +0x0014 -> line 5930
- *   +0x0020 -> line 5934
- *   +0x0030 -> line 5935
- *   +0x0040 -> line 5936
- *   +0x0050 -> line 5938
- *   +0x0064 -> line 5939
- *   +0x0068 -> line 5938
- *   +0x006c -> line 5939
- *   +0x0070 -> line 5940
- *   +0x0074 -> line 5938
- *   +0x0078 -> line 5939
- *   +0x0084 -> line 5940
- *   +0x008c -> line 5939
- *   +0x0094 -> line 5940
- *   +0x00a4 -> line 5941
- *   +0x0120 -> line 5943
- *   +0x013c -> line 5944
- *   +0x0140 -> line 5943
- *   +0x0150 -> line 5944
- *   +0x0168 -> line 5945
- *   +0x01e4 -> line 5946
- *   +0x0204 -> line 5947
- *   +0x0288 -> line 5950
- *   +0x02a8 -> line 5953
- *   +0x02b0 -> line 5954
- *   +0x02b4 -> line 5956
- *   +0x02e8 -> line 5959
- *   +0x02f0 -> line 5960
- *   +0x02f8 -> line 5961
- *   +0x0300 -> line 5963
- *   +0x037c -> line 5967
- *   +0x0398 -> line 5972
- *   +0x039c -> line 5976
- *   +0x03a0 -> line 5972
- *   +0x03a4 -> line 5976
- *   +0x03a8 -> line 5974
- *   +0x03ac -> line 5976
- *   +0x03bc -> line 5974
- *   +0x03c0 -> line 5975
- *   +0x03c8 -> line 5976
- *   +0x03dc -> line 5977
- *   +0x03e4 -> line 5978
- *   +0x0420 -> line 5980
- *   +0x0428 -> line 5981
- *   +0x042c -> line 5982
- *   +0x0440 -> line 5983
- *   +0x046c -> line 5984
- *   +0x0474 -> line 5987
- *   +0x04bc -> line 6057
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+int AGO3_ScoreDisplay::m_a_dwScore[12] = { -1, 10, 30, 100, 250, 1500, -2, 20, 60, 200, 500, 3000 };
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 5598–5765 */
-/* addr: 0x001efef0  size: 1548 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5598
- *   +0x0004 -> line 5606
- *   +0x0008 -> line 5598
- *   +0x0048 -> line 5606
- *   +0x0060 -> line 5611
- *   +0x0064 -> line 5609
- *   +0x0068 -> line 5611
- *   +0x0074 -> line 5613
- *   +0x0084 -> line 5614
- *   +0x00d0 -> line 5617
- *   +0x00ec -> line 5621
- *   +0x00fc -> line 5622
- *   +0x0108 -> line 5624
- *   +0x0110 -> line 5625
- *   +0x0118 -> line 5626
- *   +0x011c -> line 5625
- *   +0x0120 -> line 5626
- *   +0x0140 -> line 5629
- *   +0x0150 -> line 5632
- *   +0x0158 -> line 5643
- *   +0x015c -> line 5632
- *   +0x0160 -> line 5643
- *   +0x0164 -> line 5632
- *   +0x0168 -> line 5643
- *   +0x0170 -> line 5632
- *   +0x0174 -> line 5643
- *   +0x01f0 -> line 5644
- *   +0x0214 -> line 5645
- *   +0x0220 -> line 5648
- *   +0x0230 -> line 5654
- *   +0x023c -> line 5655
- *   +0x0240 -> line 5654
- *   +0x0254 -> line 5655
- *   +0x0264 -> line 5656
- *   +0x0270 -> line 5657
- *   +0x02b4 -> line 5658
- *   +0x02e0 -> line 5659
- *   +0x02ec -> line 5661
- *   +0x02f0 -> line 5674
- *   +0x02f4 -> line 5661
- *   +0x02f8 -> line 5674
- *   +0x0304 -> line 5663
- *   +0x0310 -> line 5674
- *   +0x0320 -> line 5661
- *   +0x0324 -> line 5663
- *   +0x032c -> line 5674
- *   +0x037c -> line 5675
- *   +0x0388 -> line 5682
- *   +0x038c -> line 5697
- *   +0x0394 -> line 5682
- *   +0x0398 -> line 5697
- *   +0x039c -> line 5682
- *   +0x03ac -> line 5683
- *   +0x03b4 -> line 5697
- *   +0x03b8 -> line 5683
- *   +0x03bc -> line 5686
- *   +0x03c0 -> line 5697
- *   +0x03c4 -> line 5686
- *   +0x03c8 -> line 5682
- *   +0x03cc -> line 5686
- *   +0x03d4 -> line 5683
- *   +0x03d8 -> line 5686
- *   +0x03dc -> line 5683
- *   +0x03e0 -> line 5697
- *   +0x03ec -> line 5683
- *   +0x03f0 -> line 5697
- *   +0x0408 -> line 5683
- *   +0x040c -> line 5697
- *   +0x0434 -> line 5710
- *   +0x0494 -> line 5711
- *   +0x0498 -> line 5710
- *   +0x04a0 -> line 5712
- *   +0x04a4 -> line 5710
- *   +0x04ac -> line 5712
- *   +0x04cc -> line 5713
- *   +0x04d0 -> line 5716
- *   +0x04e0 -> line 5731
- *   +0x04e4 -> line 5718
- *   +0x04e8 -> line 5731
- *   +0x04ec -> line 5719
- *   +0x04f0 -> line 5731
- *   +0x0500 -> line 5719
- *   +0x0504 -> line 5731
- *   +0x0508 -> line 5719
- *   +0x050c -> line 5718
- *   +0x0510 -> line 5731
- *   +0x051c -> line 5719
- *   +0x0524 -> line 5731
- *   +0x0544 -> line 5732
- *   +0x0548 -> line 5731
- *   +0x055c -> line 5733
- *   +0x0574 -> line 5750
- *   +0x0584 -> line 5736
- *   +0x0588 -> line 5750
- *   +0x0594 -> line 5736
- *   +0x0598 -> line 5750
- *   +0x05c8 -> line 5765
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+/* Originally emitted under Action.c, but this C++ member must be compiled
+ * in the translation unit that declares AGO3_ScrollMatUV. */
+void AGO3_ScrollMatUV::Display(GLD_tdstViewportAttributes_* hVp)
+{
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 5378–5579 */
-/* addr: 0x001f0500  size: 2608 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2757–2760 */
+/* addr: 0x001f9f50  size: 28 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5378
- *   +0x000c -> line 5383
- *   +0x001c -> line 5385
- *   +0x0028 -> line 5387
- *   +0x0030 -> line 5388
- *   +0x0034 -> line 5387
- *   +0x0038 -> line 5388
- *   +0x0048 -> line 5390
- *   +0x004c -> line 5391
- *   +0x0050 -> line 5390
- *   +0x0054 -> line 5394
- *   +0x0058 -> line 5395
- *   +0x005c -> line 5394
- *   +0x0060 -> line 5395
- *   +0x0070 -> line 5394
- *   +0x0074 -> line 5395
- *   +0x008c -> line 5396
- *   +0x0094 -> line 5397
- *   +0x00a0 -> line 5399
- *   +0x00a8 -> line 5400
- *   +0x00ac -> line 5399
- *   +0x00b0 -> line 5400
- *   +0x00c0 -> line 5403
- *   +0x00c4 -> line 5402
- *   +0x00c8 -> line 5404
- *   +0x00cc -> line 5407
- *   +0x00d0 -> line 5408
- *   +0x00d4 -> line 5407
- *   +0x00d8 -> line 5408
- *   +0x00e8 -> line 5407
- *   +0x00ec -> line 5408
- *   +0x0104 -> line 5409
- *   +0x010c -> line 5411
- *   +0x0110 -> line 5414
- *   +0x0138 -> line 5418
- *   +0x0144 -> line 5419
- *   +0x0164 -> line 5423
- *   +0x0168 -> line 5428
- *   +0x016c -> line 5425
- *   +0x0170 -> line 5429
- *   +0x0178 -> line 5425
- *   +0x0180 -> line 5428
- *   +0x0184 -> line 5429
- *   +0x018c -> line 5434
- *   +0x0190 -> line 5425
- *   +0x01ac -> line 5428
- *   +0x01c4 -> line 5429
- *   +0x01ec -> line 5428
- *   +0x01f0 -> line 5429
- *   +0x01f4 -> line 5428
- *   +0x01f8 -> line 5429
- *   +0x0228 -> line 5428
- *   +0x022c -> line 5429
- *   +0x0230 -> line 5428
- *   +0x0234 -> line 5429
- *   +0x0264 -> line 5428
- *   +0x0268 -> line 5429
- *   +0x026c -> line 5428
- *   +0x0270 -> line 5429
- *   +0x02a0 -> line 5428
- *   +0x02a4 -> line 5429
- *   +0x02a8 -> line 5428
- *   +0x02ac -> line 5429
- *   +0x02d8 -> line 5434
- *   +0x02e4 -> line 5435
- *   +0x02ec -> line 5445
- *   +0x02f0 -> line 5440
- *   +0x02f8 -> line 5445
- *   +0x02fc -> line 5447
- *   +0x0300 -> line 5445
- *   +0x0304 -> line 5447
- *   +0x0308 -> line 5440
- *   +0x030c -> line 5445
- *   +0x0314 -> line 5446
- *   +0x031c -> line 5447
- *   +0x0354 -> line 5450
- *   +0x0358 -> line 5447
- *   +0x035c -> line 5450
- *   +0x036c -> line 5452
- *   +0x0370 -> line 5454
- *   +0x0374 -> line 5452
- *   +0x0384 -> line 5467
- *   +0x03a0 -> line 5465
- *   +0x03a8 -> line 5463
- *   +0x03ac -> line 5467
- *   +0x03b0 -> line 5463
- *   +0x03b4 -> line 5468
- *   +0x03bc -> line 5456
- *   +0x03ec -> line 5458
- *   +0x041c -> line 5459
- *   +0x0420 -> line 5461
- *   +0x042c -> line 5463
- *   +0x0454 -> line 5465
- *   +0x048c -> line 5467
- *   +0x04f0 -> line 5468
- *   +0x04f4 -> line 5469
- *   +0x04f8 -> line 5468
- *   +0x04fc -> line 5470
- *   +0x0508 -> line 5471
- *   +0x0510 -> line 5472
- *   +0x0520 -> line 5474
- *   +0x0528 -> line 5475
- *   +0x052c -> line 5477
- *   +0x0534 -> line 5478
- *   +0x0544 -> line 5480
- *   +0x0548 -> line 5482
- *   +0x054c -> line 5480
- *   +0x055c -> line 5495
- *   +0x0568 -> line 5491
- *   +0x056c -> line 5495
- *   +0x0578 -> line 5491
- *   +0x057c -> line 5495
- *   +0x0584 -> line 5484
- *   +0x05b4 -> line 5486
- *   +0x05e4 -> line 5487
- *   +0x05e8 -> line 5489
- *   +0x05f4 -> line 5491
- *   +0x061c -> line 5493
- *   +0x0654 -> line 5495
- *   +0x06b8 -> line 5496
- *   +0x06bc -> line 5497
- *   +0x06c0 -> line 5496
- *   +0x06c4 -> line 5498
- *   +0x06d0 -> line 5499
- *   +0x06d8 -> line 5500
- *   +0x06e8 -> line 5502
- *   +0x06f0 -> line 5503
- *   +0x06f8 -> line 5513
- *   +0x0710 -> line 5516
- *   +0x0714 -> line 5518
- *   +0x072c -> line 5521
- *   +0x0730 -> line 5523
- *   +0x0734 -> line 5525
- *   +0x0738 -> line 5523
- *   +0x073c -> line 5525
- *   +0x0748 -> line 5523
- *   +0x0750 -> line 5525
- *   +0x07d4 -> line 5527
- *   +0x07e0 -> line 5525
- *   +0x07e4 -> line 5527
- *   +0x07f4 -> line 5525
- *   +0x07f8 -> line 5527
- *   +0x07fc -> line 5525
- *   +0x0800 -> line 5527
- *   +0x0804 -> line 5525
- *   +0x0808 -> line 5530
- *   +0x080c -> line 5527
- *   +0x0810 -> line 5525
- *   +0x0818 -> line 5526
- *   +0x081c -> line 5527
- *   +0x0848 -> line 5530
- *   +0x0854 -> line 5532
- *   +0x0864 -> line 5536
- *   +0x0888 -> line 5539
- *   +0x088c -> line 5538
- *   +0x0894 -> line 5539
- *   +0x089c -> line 5547
- *   +0x08a0 -> line 5548
- *   +0x08a4 -> line 5547
- *   +0x08b0 -> line 5548
- *   +0x08bc -> line 5547
- *   +0x08c4 -> line 5548
- *   +0x08cc -> line 5541
- *   +0x08d0 -> line 5548
- *   +0x08d4 -> line 5549
- *   +0x08dc -> line 5548
- *   +0x08e4 -> line 5541
- *   +0x08ec -> line 5548
- *   +0x0914 -> line 5549
- *   +0x0928 -> line 5553
- *   +0x092c -> line 5551
- *   +0x0930 -> line 5554
- *   +0x0938 -> line 5551
- *   +0x093c -> line 5554
- *   +0x0944 -> line 5551
- *   +0x094c -> line 5552
- *   +0x095c -> line 5553
- *   +0x0970 -> line 5554
- *   +0x0984 -> line 5560
- *   +0x098c -> line 5562
- *   +0x0990 -> line 5563
- *   +0x09a4 -> line 5564
- *   +0x09c8 -> line 5565
- *   +0x09cc -> line 5566
- *   +0x09dc -> line 5568
- *   +0x09e0 -> line 5569
- *   +0x09e4 -> line 5574
- *   +0x09f4 -> line 5577
- *   +0x09f8 -> line 5576
- *   +0x0a08 -> line 5577
- *   +0x0a10 -> line 5576
- *   +0x0a18 -> line 5577
- *   +0x0a28 -> line 5579
+ *   +0x0000 -> line 2757
+ *   +0x0010 -> line 2759
+ *   +0x0014 -> line 2760
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void AGO3_Chain::Process(void)
+{
+    if (AGO_G_CurrentVU1Frame == 2)
+        ((AGO3_Part*)this)->m_Finished = 1;
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 5157–5371 */
-/* addr: 0x001f0f30  size: 3276 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2944–2944 */
+/* addr: 0x001f9f40  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5157
- *   +0x0004 -> line 5162
- *   +0x0008 -> line 5157
- *   +0x0020 -> line 5162
- *   +0x004c -> line 5165
- *   +0x0058 -> line 5168
- *   +0x0060 -> line 5169
- *   +0x0068 -> line 5170
- *   +0x0070 -> line 5173
- *   +0x0078 -> line 5174
- *   +0x0080 -> line 5173
- *   +0x0084 -> line 5168
- *   +0x008c -> line 5169
- *   +0x0094 -> line 5170
- *   +0x009c -> line 5174
- *   +0x00a0 -> line 5177
- *   +0x00ac -> line 5179
- *   +0x00cc -> line 5181
- *   +0x00d0 -> line 5179
- *   +0x0234 -> line 5180
- *   +0x0238 -> line 5181
- *   +0x0248 -> line 5185
- *   +0x0278 -> line 5186
- *   +0x0280 -> line 5189
- *   +0x029c -> line 5191
- *   +0x02b0 -> line 5194
- *   +0x02b8 -> line 5193
- *   +0x02bc -> line 5194
- *   +0x02c4 -> line 5198
- *   +0x02e4 -> line 5201
- *   +0x0464 -> line 5202
- *   +0x046c -> line 5204
- *   +0x0484 -> line 5206
- *   +0x0494 -> line 5208
- *   +0x04a4 -> line 5210
- *   +0x04c4 -> line 5213
- *   +0x04c8 -> line 5214
- *   +0x04cc -> line 5212
- *   +0x04d0 -> line 5213
- *   +0x04d4 -> line 5215
- *   +0x04d8 -> line 5214
- *   +0x04e0 -> line 5217
- *   +0x04e8 -> line 5218
- *   +0x04ec -> line 5219
- *   +0x04f0 -> line 5218
- *   +0x04f4 -> line 5221
- *   +0x04fc -> line 5223
- *   +0x0508 -> line 5225
- *   +0x0528 -> line 5228
- *   +0x052c -> line 5229
- *   +0x0530 -> line 5227
- *   +0x0534 -> line 5228
- *   +0x0538 -> line 5230
- *   +0x053c -> line 5229
- *   +0x0544 -> line 5232
- *   +0x054c -> line 5235
- *   +0x0554 -> line 5236
- *   +0x055c -> line 5237
- *   +0x0564 -> line 5238
- *   +0x057c -> line 5240
- *   +0x058c -> line 5242
- *   +0x0598 -> line 5244
- *   +0x05b8 -> line 5246
- *   +0x05bc -> line 5248
- *   +0x05c0 -> line 5247
- *   +0x05c4 -> line 5249
- *   +0x05c8 -> line 5248
- *   +0x05d0 -> line 5251
- *   +0x05d8 -> line 5252
- *   +0x05dc -> line 5253
- *   +0x05e4 -> line 5252
- *   +0x05e8 -> line 5255
- *   +0x05f0 -> line 5257
- *   +0x05fc -> line 5259
- *   +0x061c -> line 5263
- *   +0x0620 -> line 5261
- *   +0x0624 -> line 5263
- *   +0x0628 -> line 5262
- *   +0x062c -> line 5264
- *   +0x0630 -> line 5263
- *   +0x0638 -> line 5266
- *   +0x0640 -> line 5269
- *   +0x0648 -> line 5271
- *   +0x0650 -> line 5272
- *   +0x066c -> line 5274
- *   +0x067c -> line 5275
- *   +0x0684 -> line 5278
- *   +0x06a4 -> line 5279
- *   +0x06a8 -> line 5282
- *   +0x06c8 -> line 5285
- *   +0x0744 -> line 5286
- *   +0x074c -> line 5287
- *   +0x0764 -> line 5289
- *   +0x0768 -> line 5292
- *   +0x076c -> line 5289
- *   +0x0770 -> line 5292
- *   +0x0774 -> line 5293
- *   +0x077c -> line 5289
- *   +0x0790 -> line 5292
- *   +0x07a8 -> line 5293
- *   +0x07c8 -> line 5294
- *   +0x07cc -> line 5295
- *   +0x07d8 -> line 5297
- *   +0x07e0 -> line 5295
- *   +0x07f4 -> line 5297
- *   +0x0818 -> line 5300
- *   +0x0830 -> line 5302
- *   +0x0870 -> line 5309
- *   +0x0874 -> line 5311
- *   +0x0878 -> line 5309
- *   +0x087c -> line 5311
- *   +0x0884 -> line 5316
- *   +0x0888 -> line 5311
- *   +0x088c -> line 5317
- *   +0x0890 -> line 5311
- *   +0x0898 -> line 5309
- *   +0x089c -> line 5311
- *   +0x08a4 -> line 5309
- *   +0x08ac -> line 5311
- *   +0x0940 -> line 5319
- *   +0x097c -> line 5320
- *   +0x09a8 -> line 5323
- *   +0x09ac -> line 5324
- *   +0x09b8 -> line 5326
- *   +0x09c0 -> line 5327
- *   +0x09d0 -> line 5328
- *   +0x09d8 -> line 5329
- *   +0x09e8 -> line 5331
- *   +0x0a28 -> line 5338
- *   +0x0a2c -> line 5340
- *   +0x0a30 -> line 5338
- *   +0x0a34 -> line 5340
- *   +0x0a38 -> line 5338
- *   +0x0a3c -> line 5340
- *   +0x0a44 -> line 5345
- *   +0x0a48 -> line 5340
- *   +0x0a4c -> line 5346
- *   +0x0a50 -> line 5340
- *   +0x0a54 -> line 5338
- *   +0x0a60 -> line 5340
- *   +0x0af4 -> line 5348
- *   +0x0b30 -> line 5349
- *   +0x0b58 -> line 5351
- *   +0x0b5c -> line 5352
- *   +0x0b60 -> line 5353
- *   +0x0b68 -> line 5355
- *   +0x0b70 -> line 5356
- *   +0x0b80 -> line 5359
- *   +0x0ba0 -> line 5361
- *   +0x0bc8 -> line 5364
- *   +0x0c14 -> line 5367
- *   +0x0c44 -> line 5369
- *   +0x0c8c -> line 5370
- *   +0x0cb4 -> line 5371
+ *   +0x0000 -> line 2944
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int AGO3_HurricaneUpper::Kill_Enabled(void)
+{
+    return 0;
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 5143–5153 */
-/* addr: 0x001f1c00  size: 140 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 3571–3571 */
+/* addr: 0x001f9f30  size: 16 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5143
- *   +0x0008 -> line 5148
- *   +0x000c -> line 5144
- *   +0x0010 -> line 5149
- *   +0x0014 -> line 5150
- *   +0x0018 -> line 5151
- *   +0x001c -> line 5152
- *   +0x0020 -> line 5143
- *   +0x002c -> line 5148
- *   +0x0030 -> line 5144
- *   +0x0034 -> line 5145
- *   +0x0038 -> line 5146
- *   +0x003c -> line 5147
- *   +0x0040 -> line 5148
- *   +0x0048 -> line 5149
- *   +0x0058 -> line 5150
- *   +0x0068 -> line 5151
- *   +0x0078 -> line 5152
- *   +0x0084 -> line 5153
+ *   +0x0000 -> line 3571
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void AGO3_SwirlingBubbles::DesInit(void)
+{
+    m_hHandle = 0;
+    ((AGO3_Part*)this)->m_Finished = 1;
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 5083–5126 */
-/* addr: 0x001f1c90  size: 704 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 4346–4346 */
+/* addr: 0x001f9f20  size: 12 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5083
- *   +0x0004 -> line 5089
- *   +0x0008 -> line 5083
- *   +0x000c -> line 5089
- *   +0x0010 -> line 5083
- *   +0x0014 -> line 5089
- *   +0x0020 -> line 5091
- *   +0x0050 -> line 5092
- *   +0x0080 -> line 5093
- *   +0x00b8 -> line 5095
- *   +0x00bc -> line 5103
- *   +0x00c0 -> line 5095
- *   +0x00c4 -> line 5112
- *   +0x00c8 -> line 5096
- *   +0x00d4 -> line 5103
- *   +0x00d8 -> line 5095
- *   +0x00dc -> line 5105
- *   +0x00e4 -> line 5096
- *   +0x00f8 -> line 5098
- *   +0x0100 -> line 5096
- *   +0x0104 -> line 5098
- *   +0x010c -> line 5096
- *   +0x0110 -> line 5099
- *   +0x0118 -> line 5098
- *   +0x011c -> line 5097
- *   +0x0120 -> line 5099
- *   +0x0128 -> line 5098
- *   +0x012c -> line 5100
- *   +0x0134 -> line 5099
- *   +0x013c -> line 5100
- *   +0x0148 -> line 5098
- *   +0x0150 -> line 5099
- *   +0x0158 -> line 5100
- *   +0x0164 -> line 5102
- *   +0x0170 -> line 5103
- *   +0x0174 -> line 5104
- *   +0x017c -> line 5105
- *   +0x0180 -> line 5104
- *   +0x0188 -> line 5108
- *   +0x0190 -> line 5103
- *   +0x019c -> line 5105
- *   +0x01a0 -> line 5109
- *   +0x01a8 -> line 5105
- *   +0x01b0 -> line 5109
- *   +0x01b8 -> line 5116
- *   +0x01dc -> line 5119
- *   +0x01e0 -> line 5117
- *   +0x01e4 -> line 5116
- *   +0x01e8 -> line 5119
- *   +0x01ec -> line 5116
- *   +0x01f0 -> line 5117
- *   +0x0200 -> line 5116
- *   +0x0204 -> line 5117
- *   +0x0218 -> line 5116
- *   +0x021c -> line 5117
- *   +0x0230 -> line 5116
- *   +0x0234 -> line 5117
- *   +0x0248 -> line 5116
- *   +0x024c -> line 5117
- *   +0x0258 -> line 5119
- *   +0x0260 -> line 5122
- *   +0x0268 -> line 5123
- *   +0x0270 -> line 5122
- *   +0x0274 -> line 5124
- *   +0x027c -> line 5125
- *   +0x0284 -> line 5124
- *   +0x0288 -> line 5122
- *   +0x0290 -> line 5124
- *   +0x0298 -> line 5123
- *   +0x02a0 -> line 5125
- *   +0x02a4 -> line 5123
- *   +0x02a8 -> line 5125
- *   +0x02b0 -> line 5126
+ *   +0x0000 -> line 4346
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void AGO3_LightExplosion::DesInit(void)
+{
+    ((AGO3_Part*)this)->m_Finished = 1;
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 4966–4972 */
-/* addr: 0x001f1f50  size: 64 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 4955–4955 */
+/* addr: 0x001f9f10  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4966
- *   +0x0010 -> line 4969
- *   +0x0014 -> line 4970
- *   +0x001c -> line 4971
- *   +0x0030 -> line 4972
+ *   +0x0000 -> line 4955
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void AGO3_DigitalScoreDisplay::Display(GLD_tdstViewportAttributes_* hVp)
+{
+    /* TODO: decompile from asm/... */
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 4791–4815 */
-/* addr: 0x001f1f90  size: 192 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 5865–5865 */
+/* addr: 0x001f9f00  size: 16 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4791
- *   +0x0008 -> line 4792
- *   +0x000c -> line 4791
- *   +0x0018 -> line 4792
- *   +0x002c -> line 4795
- *   +0x0034 -> line 4799
- *   +0x009c -> line 4812
- *   +0x00a4 -> line 4814
- *   +0x00ac -> line 4815
+ *   +0x0000 -> line 5865
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void AGO3_Snowboard_SnowEffect::DesInit(void)
+{
+    m_hHandle = 0;
+    ((AGO3_Part*)this)->m_Finished = 1;
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 4780–4787 */
-/* addr: 0x001f2050  size: 96 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 6810–6810 */
+/* addr: 0x001f9ef0  size: 12 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4780
- *   +0x0018 -> line 4783
- *   +0x001c -> line 4784
- *   +0x0020 -> line 4783
- *   +0x0024 -> line 4784
- *   +0x002c -> line 4783
- *   +0x0034 -> line 4784
- *   +0x004c -> line 4786
- *   +0x0058 -> line 4787
+ *   +0x0000 -> line 6810
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void AGO3_OrientedTarget::DesInit(void)
+{
+    ((AGO3_Part*)this)->m_Finished = 1;
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 4753–4775 */
-/* addr: 0x001f20b0  size: 224 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 7047–7047 */
+/* addr: 0x001f9ee0  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4753
- *   +0x0044 -> line 4755
- *   +0x0050 -> line 4763
- *   +0x0054 -> line 4767
- *   +0x005c -> line 4755
- *   +0x0080 -> line 4757
- *   +0x0088 -> line 4758
- *   +0x0090 -> line 4759
- *   +0x0098 -> line 4761
- *   +0x009c -> line 4762
- *   +0x00a0 -> line 4763
- *   +0x00a4 -> line 4765
- *   +0x00a8 -> line 4769
- *   +0x00c0 -> line 4772
- *   +0x00c8 -> line 4774
- *   +0x00d8 -> line 4775
+ *   +0x0000 -> line 7047
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void AGO3_Transition::Display(GLD_tdstViewportAttributes_* hVp)
+{
+    /* TODO: decompile from asm/... */
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 4651–4682 */
-/* addr: 0x001f2190  size: 336 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 7045–7045 */
+/* addr: 0x001f9ed0  size: 16 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4651
- *   +0x0004 -> line 4658
- *   +0x0008 -> line 4651
- *   +0x000c -> line 4658
- *   +0x0010 -> line 4651
- *   +0x0030 -> line 4660
- *   +0x0034 -> line 4658
- *   +0x0038 -> line 4659
- *   +0x003c -> line 4658
- *   +0x0044 -> line 4662
- *   +0x0060 -> line 4664
- *   +0x0068 -> line 4665
- *   +0x0098 -> line 4668
- *   +0x00a8 -> line 4671
- *   +0x00ac -> line 4672
- *   +0x00b4 -> line 4674
- *   +0x00d0 -> line 4676
- *   +0x00e0 -> line 4677
- *   +0x00e8 -> line 4678
- *   +0x0114 -> line 4679
- *   +0x0118 -> line 4681
- *   +0x0120 -> line 4680
- *   +0x0124 -> line 4681
- *   +0x012c -> line 4682
+ *   +0x0000 -> line 7045
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void AGO3_Transition::DesInit(void)
+{
+    m_hHandle = 0;
+    ((AGO3_Part*)this)->m_Finished = 1;
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 4531–4647 */
-/* addr: 0x001f22e0  size: 2192 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 191–197 */
+/* addr: 0x001f9e20  size: 172 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4531
- *   +0x000c -> line 4533
- *   +0x0010 -> line 4535
- *   +0x0018 -> line 4536
- *   +0x0028 -> line 4538
- *   +0x0048 -> line 4540
- *   +0x004c -> line 4544
- *   +0x0054 -> line 4559
- *   +0x0058 -> line 4547
- *   +0x005c -> line 4559
- *   +0x0068 -> line 4547
- *   +0x0074 -> line 4559
- *   +0x00b8 -> line 4563
- *   +0x01a4 -> line 4565
- *   +0x01a8 -> line 4563
- *   +0x01c0 -> line 4564
- *   +0x01c4 -> line 4563
- *   +0x01d0 -> line 4564
- *   +0x01d4 -> line 4573
- *   +0x01ec -> line 4577
- *   +0x01f0 -> line 4573
- *   +0x01f4 -> line 4577
- *   +0x01f8 -> line 4568
- *   +0x01fc -> line 4579
- *   +0x0200 -> line 4568
- *   +0x0204 -> line 4579
- *   +0x0208 -> line 4568
- *   +0x0214 -> line 4569
- *   +0x0228 -> line 4570
- *   +0x023c -> line 4571
- *   +0x0240 -> line 4573
- *   +0x024c -> line 4575
- *   +0x0260 -> line 4577
- *   +0x0264 -> line 4579
- *   +0x026c -> line 4583
- *   +0x0278 -> line 4582
- *   +0x027c -> line 4583
- *   +0x036c -> line 4584
- *   +0x0370 -> line 4583
- *   +0x0394 -> line 4592
- *   +0x0398 -> line 4596
- *   +0x039c -> line 4592
- *   +0x03a0 -> line 4596
- *   +0x03a4 -> line 4587
- *   +0x03a8 -> line 4598
- *   +0x03ac -> line 4587
- *   +0x03b0 -> line 4598
- *   +0x03b4 -> line 4587
- *   +0x03c0 -> line 4588
- *   +0x03d4 -> line 4589
- *   +0x03e8 -> line 4590
- *   +0x03ec -> line 4592
- *   +0x03fc -> line 4594
- *   +0x0410 -> line 4596
- *   +0x0414 -> line 4598
- *   +0x041c -> line 4608
- *   +0x0440 -> line 4609
- *   +0x044c -> line 4611
- *   +0x0468 -> line 4612
- *   +0x0498 -> line 4614
- *   +0x04a0 -> line 4623
- *   +0x04c0 -> line 4626
- *   +0x04c4 -> line 4624
- *   +0x04c8 -> line 4629
- *   +0x04cc -> line 4626
- *   +0x04d0 -> line 4630
- *   +0x04d4 -> line 4624
- *   +0x04d8 -> line 4627
- *   +0x04e4 -> line 4626
- *   +0x04f4 -> line 4627
- *   +0x04f8 -> line 4626
- *   +0x04fc -> line 4627
- *   +0x0510 -> line 4635
- *   +0x0518 -> line 4633
- *   +0x051c -> line 4637
- *   +0x0520 -> line 4633
- *   +0x0524 -> line 4637
- *   +0x0528 -> line 4633
- *   +0x0534 -> line 4634
- *   +0x0548 -> line 4635
- *   +0x056c -> line 4636
- *   +0x0578 -> line 4633
- *   +0x0580 -> line 4636
- *   +0x058c -> line 4634
- *   +0x0594 -> line 4636
- *   +0x05a4 -> line 4635
- *   +0x05b8 -> line 4636
- *   +0x05c8 -> line 4633
- *   +0x05d0 -> line 4636
- *   +0x05dc -> line 4634
- *   +0x05e4 -> line 4636
- *   +0x05f4 -> line 4635
- *   +0x0608 -> line 4636
- *   +0x0618 -> line 4633
- *   +0x0620 -> line 4636
- *   +0x062c -> line 4634
- *   +0x0634 -> line 4636
- *   +0x0644 -> line 4635
- *   +0x0658 -> line 4636
- *   +0x0668 -> line 4633
- *   +0x0670 -> line 4636
- *   +0x067c -> line 4634
- *   +0x0684 -> line 4636
- *   +0x0694 -> line 4635
- *   +0x06a8 -> line 4636
- *   +0x06b8 -> line 4633
- *   +0x06c0 -> line 4636
- *   +0x06cc -> line 4634
- *   +0x06d4 -> line 4636
- *   +0x06e4 -> line 4635
- *   +0x06f8 -> line 4636
- *   +0x0708 -> line 4633
- *   +0x0710 -> line 4636
- *   +0x071c -> line 4634
- *   +0x0724 -> line 4636
- *   +0x0734 -> line 4635
- *   +0x0748 -> line 4636
- *   +0x0758 -> line 4633
- *   +0x0760 -> line 4636
- *   +0x076c -> line 4634
- *   +0x0774 -> line 4636
- *   +0x0784 -> line 4635
- *   +0x0798 -> line 4636
- *   +0x07a0 -> line 4637
- *   +0x07b4 -> line 4635
- *   +0x07b8 -> line 4637
- *   +0x07bc -> line 4638
- *   +0x07c0 -> line 4637
- *   +0x07c4 -> line 4638
- *   +0x07c8 -> line 4633
- *   +0x07d0 -> line 4637
- *   +0x07dc -> line 4634
- *   +0x07e4 -> line 4637
- *   +0x07f4 -> line 4635
- *   +0x0808 -> line 4637
- *   +0x0810 -> line 4638
- *   +0x0818 -> line 4645
- *   +0x0870 -> line 4646
- *   +0x0888 -> line 4647
+ *   +0x0000 -> line 191
+ *   +0x0018 -> line 192
+ *   +0x0080 -> line 193
+ *   +0x0094 -> line 197
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void AGO3_vInit(void)
+{
+    unsigned int i;
+    AGO3_Part* pPart;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 4412–4521 */
-/* addr: 0x001f2b70  size: 1516 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4412
- *   +0x0004 -> line 4420
- *   +0x0008 -> line 4412
- *   +0x0024 -> line 4420
- *   +0x0050 -> line 4422
- *   +0x005c -> line 4423
- *   +0x0064 -> line 4425
- *   +0x0068 -> line 4434
- *   +0x006c -> line 4430
- *   +0x0070 -> line 4434
- *   +0x0078 -> line 4425
- *   +0x007c -> line 4426
- *   +0x0084 -> line 4427
- *   +0x008c -> line 4429
- *   +0x0090 -> line 4430
- *   +0x0094 -> line 4434
- *   +0x00fc -> line 4435
- *   +0x0104 -> line 4434
- *   +0x0108 -> line 4435
- *   +0x0110 -> line 4437
- *   +0x0114 -> line 4435
- *   +0x0128 -> line 4436
- *   +0x012c -> line 4458
- *   +0x0130 -> line 4440
- *   +0x0134 -> line 4458
- *   +0x0138 -> line 4444
- *   +0x013c -> line 4440
- *   +0x0140 -> line 4444
- *   +0x0148 -> line 4468
- *   +0x014c -> line 4440
- *   +0x0150 -> line 4446
- *   +0x015c -> line 4456
- *   +0x0160 -> line 4475
- *   +0x016c -> line 4441
- *   +0x0178 -> line 4440
- *   +0x017c -> line 4442
- *   +0x01bc -> line 4443
- *   +0x01f4 -> line 4444
- *   +0x01f8 -> line 4446
- *   +0x01fc -> line 4443
- *   +0x0200 -> line 4446
- *   +0x020c -> line 4445
- *   +0x0210 -> line 4446
- *   +0x0214 -> line 4447
- *   +0x0218 -> line 4446
- *   +0x021c -> line 4447
- *   +0x0220 -> line 4446
- *   +0x0224 -> line 4447
- *   +0x0228 -> line 4448
- *   +0x022c -> line 4447
- *   +0x0234 -> line 4448
- *   +0x023c -> line 4446
- *   +0x0240 -> line 4451
- *   +0x0244 -> line 4448
- *   +0x024c -> line 4449
- *   +0x0250 -> line 4448
- *   +0x0254 -> line 4449
- *   +0x0258 -> line 4448
- *   +0x025c -> line 4449
- *   +0x0268 -> line 4450
- *   +0x0274 -> line 4451
- *   +0x027c -> line 4450
- *   +0x0280 -> line 4451
- *   +0x0288 -> line 4452
- *   +0x0294 -> line 4453
- *   +0x02b0 -> line 4456
- *   +0x02c0 -> line 4458
- *   +0x02d0 -> line 4459
- *   +0x02d8 -> line 4460
- *   +0x02e4 -> line 4461
- *   +0x02f0 -> line 4462
- *   +0x0300 -> line 4463
- *   +0x0310 -> line 4464
- *   +0x0320 -> line 4476
- *   +0x0324 -> line 4467
- *   +0x0328 -> line 4476
- *   +0x032c -> line 4474
- *   +0x0330 -> line 4467
- *   +0x0334 -> line 4468
- *   +0x0338 -> line 4469
- *   +0x033c -> line 4470
- *   +0x0340 -> line 4475
- *   +0x0344 -> line 4470
- *   +0x0348 -> line 4471
- *   +0x0350 -> line 4472
- *   +0x0358 -> line 4476
- *   +0x0360 -> line 4480
- *   +0x0374 -> line 4481
- *   +0x0378 -> line 4480
- *   +0x0384 -> line 4502
- *   +0x0394 -> line 4488
- *   +0x03a0 -> line 4500
- *   +0x03a4 -> line 4490
- *   +0x03ac -> line 4511
- *   +0x03b0 -> line 4490
- *   +0x03b4 -> line 4511
- *   +0x03b8 -> line 4484
- *   +0x03c4 -> line 4485
- *   +0x03d0 -> line 4484
- *   +0x03d4 -> line 4486
- *   +0x0414 -> line 4487
- *   +0x044c -> line 4488
- *   +0x0450 -> line 4490
- *   +0x0454 -> line 4487
- *   +0x0458 -> line 4490
- *   +0x0464 -> line 4489
- *   +0x0468 -> line 4490
- *   +0x046c -> line 4491
- *   +0x0470 -> line 4490
- *   +0x0474 -> line 4491
- *   +0x0478 -> line 4490
- *   +0x047c -> line 4491
- *   +0x0480 -> line 4492
- *   +0x0484 -> line 4491
- *   +0x048c -> line 4492
- *   +0x0494 -> line 4490
- *   +0x0498 -> line 4495
- *   +0x049c -> line 4492
- *   +0x04a4 -> line 4493
- *   +0x04a8 -> line 4492
- *   +0x04ac -> line 4493
- *   +0x04b0 -> line 4492
- *   +0x04b4 -> line 4493
- *   +0x04c0 -> line 4494
- *   +0x04cc -> line 4495
- *   +0x04d4 -> line 4494
- *   +0x04d8 -> line 4495
- *   +0x04e0 -> line 4496
- *   +0x04ec -> line 4497
- *   +0x0508 -> line 4500
- *   +0x0518 -> line 4502
- *   +0x052c -> line 4503
- *   +0x0534 -> line 4504
- *   +0x0540 -> line 4505
- *   +0x054c -> line 4506
- *   +0x055c -> line 4507
- *   +0x056c -> line 4508
- *   +0x057c -> line 4509
- *   +0x0580 -> line 4519
- *   +0x0584 -> line 4511
- *   +0x0588 -> line 4520
- *   +0x058c -> line 4519
- *   +0x0590 -> line 4520
- *   +0x0594 -> line 4518
- *   +0x0598 -> line 4519
- *   +0x059c -> line 4511
- *   +0x05a4 -> line 4512
- *   +0x05a8 -> line 4513
- *   +0x05ac -> line 4514
- *   +0x05b4 -> line 4515
- *   +0x05bc -> line 4516
- *   +0x05c4 -> line 4519
- *   +0x05c8 -> line 4520
- *   +0x05d0 -> line 4521
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+    for (i = 0; i < 2048; i++)
+    {
+        if (AGO3_g_Parts[i])
+        {
+            pPart = (AGO3_Part*)AGO2_MEM_GetPointerFromHandle(AGO3_g_Parts[i]);
+            if (pPart)
+            {
+                pPart->DesInit();
+                AGO2_MEM_FreeFromHandle(AGO3_g_Parts[i]);
+                AGO3_g_Parts[i] = 0;
+                g_ulNumberOfAgos3--;
+            }
+        }
+    }
+    memset(AGO3_g_Parts, 0, sizeof(AGO3_g_Parts));
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 4218–4238 */
-/* addr: 0x001f3160  size: 180 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 209–232 */
+/* addr: 0x001f9db0  size: 112 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4218
- *   +0x0020 -> line 4223
- *   +0x002c -> line 4225
- *   +0x003c -> line 4227
- *   +0x007c -> line 4236
- *   +0x0080 -> line 4237
- *   +0x0098 -> line 4238
+ *   +0x0000 -> line 209
+ *   +0x0004 -> line 214
+ *   +0x0008 -> line 209
+ *   +0x0014 -> line 211
+ *   +0x0018 -> line 214
+ *   +0x0028 -> line 223
+ *   +0x002c -> line 225
+ *   +0x0038 -> line 228
+ *   +0x0050 -> line 231
+ *   +0x005c -> line 232
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void AGO3_vProcessAll(void)
+{
+    unsigned int i;
+    unsigned int* p = AGO3_g_Parts;
+
+    if (AGO_g_PreviousCurrentFrame == g_stEngineStructure.stEngineTimer.ulCurrentTimerCount)
+        return;
+    for (i = 2048; i != 0; i--, p++)
+    {
+        if (*p)
+            ((AGO3_Part*)AGO2_MEM_GetPointerFromHandle(*p))->Process();
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 238–263 */
+/* addr: 0x001f9cf0  size: 180 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 238
+ *   +0x0018 -> line 242
+ *   +0x0024 -> line 244
+ *   +0x002c -> line 246
+ *   +0x0044 -> line 248
+ *   +0x0060 -> line 249
+ *   +0x0068 -> line 251
+ *   +0x0078 -> line 253
+ *   +0x0084 -> line 256
+ *   +0x008c -> line 259
+ *   +0x0090 -> line 262
+ *   +0x0098 -> line 263
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_vDisplayAll(GLD_tdstViewportAttributes_* hVp)
+{
+    float xAlphaTemp;
+    unsigned int i;
+
+    xAlphaTemp = GLI_vGetGlobalAlpha();
+    for (i = 0; i < 2048; i++)
+    {
+        if (AGO3_g_Parts[i])
+        {
+            ((AGO3_Part*)AGO2_MEM_GetPointerFromHandle(AGO3_g_Parts[i]))->Display(hVp);
+            GLI_vSetGlobalAlpha(xAlphaTemp);
+        }
+    }
+    if (SCT_g_DrawingMirrored)
+        AGO_g_WasDisplayedInMirror_DoNOT_Burry = 1;
+    else
+        AGO_g_WasDisplayedInMirror_DoNOT_Burry = 0;
+    GLI_vEndWorldSprites();
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 266–289 */
+/* addr: 0x001f9c40  size: 168 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 266
+ *   +0x0014 -> line 270
+ *   +0x0020 -> line 275
+ *   +0x0028 -> line 277
+ *   +0x0040 -> line 279
+ *   +0x0048 -> line 280
+ *   +0x0054 -> line 282
+ *   +0x0064 -> line 283
+ *   +0x006c -> line 284
+ *   +0x0070 -> line 285
+ *   +0x007c -> line 287
+ *   +0x0080 -> line 288
+ *   +0x0090 -> line 289
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_vBurryDiedParts(void)
+{
+    AGO3_Part* pPart;
+    unsigned int i;
+
+    if (AGO_g_WasDisplayedInMirror_DoNOT_Burry)
+        return;
+    for (i = 0; i < 2048; i++)
+    {
+        if (AGO3_g_Parts[i])
+        {
+            pPart = (AGO3_Part*)AGO2_MEM_GetPointerFromHandle(AGO3_g_Parts[i]);
+            if (pPart->m_Finished)
+            {
+                pPart->DesInit();
+                AGO2_MEM_FreeFromHandle(AGO3_g_Parts[i]);
+                AGO3_g_Parts[i] = 0;
+                g_ulNumberOfAgos3--;
+            }
+        }
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 355–355 */
+/* addr: 0x001f9c00  size: 36 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0008 -> line 355
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_Part::Display(GLD_tdstViewportAttributes_* hVp)
+{
+    GLI_vDrawWorldSpriteOpt((MTH3D_tdstVector_*)&m_Position, m_pMat1, 1.0f, 1.0f, hVp, 1);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 361–362 */
+/* addr: 0x001f9bf0  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 361
+ *   +0x0004 -> line 362
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_Part::Process(void)
+{
+    m_Finished = 1;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 395–426 */
+/* addr: 0x001f99c0  size: 548 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 395
+ *   +0x0004 -> line 402
+ *   +0x0008 -> line 395
+ *   +0x000c -> line 402
+ *   +0x0010 -> line 395
+ *   +0x0014 -> line 400
+ *   +0x0018 -> line 395
+ *   +0x001c -> line 402
+ *   +0x0020 -> line 395
+ *   +0x0038 -> line 400
+ *   +0x0060 -> line 402
+ *   +0x0094 -> line 403
+ *   +0x00a4 -> line 406
+ *   +0x00b4 -> line 407
+ *   +0x00c0 -> line 409
+ *   +0x00cc -> line 410
+ *   +0x00d8 -> line 412
+ *   +0x00e8 -> line 413
+ *   +0x00f4 -> line 412
+ *   +0x0108 -> line 414
+ *   +0x0144 -> line 415
+ *   +0x0184 -> line 416
+ *   +0x01a0 -> line 417
+ *   +0x01a4 -> line 416
+ *   +0x01a8 -> line 418
+ *   +0x01ac -> line 416
+ *   +0x01c8 -> line 417
+ *   +0x01cc -> line 418
+ *   +0x01e0 -> line 419
+ *   +0x01e8 -> line 422
+ *   +0x01ec -> line 424
+ *   +0x01f0 -> line 425
+ *   +0x01f4 -> line 424
+ *   +0x01fc -> line 425
+ *   +0x0200 -> line 426
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_SimpleSparks::Init(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMat1, MTH3D_tdstVector_* pParam, float fParameter)
+{
+    C_Vector* pVect;
+    C_Vector* pWork;
+    unsigned int i;
+    m_Finished = 0; m_Position.Vector[0] = pPosition->xX; m_Position.Vector[1] = pPosition->xY; m_Position.Vector[2] = pPosition->xZ; m_Position.Vector[3] = 1.0f; m_pMat1 = pMat1; m_fCreationTime = g_ffFrameTime;
+    m_NbParticles = (unsigned int)fParameter;
+    if (m_NbParticles == 0)
+        m_NbParticles = 1;
+    m_hArray = AGO2_MEM_Alloc(m_NbParticles << 5);
+    if (m_hArray)
+    {
+        pVect = (C_Vector*)AGO2_MEM_GetPointerFromHandle(m_hArray);
+        for (i = 0; i < m_NbParticles; i++)
+        {
+            pVect[i << 1].Vector[0] = pPosition->xX;
+            pVect[i << 1].Vector[1] = pPosition->xY;
+            pVect[i << 1].Vector[2] = pPosition->xZ;
+            pVect[i << 1].Vector[3] = 1.0f;
+            pWork = &pVect[(i << 1) + 1];
+            pWork->Vector[0] = AGO3_M_xRand(-1.0f, 1.0f);
+            pWork->Vector[1] = AGO3_M_xRand(-1.0f, 1.0f);
+            pWork->Vector[2] = AGO3_M_xRand(-1.0f, 1.0f);
+            pWork->Vector[3] = 0.0f;
+        }
+    }
+    else
+    {
+        m_Finished = 1;
+    }
+    m_fSize = 0.2f;
+    m_fTransparency = 255.0f;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 429–435 */
+/* addr: 0x001f9980  size: 56 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 429
+ *   +0x0010 -> line 430
+ *   +0x001c -> line 432
+ *   +0x0024 -> line 433
+ *   +0x0028 -> line 435
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_SimpleSparks::DesInit(void)
+{
+    if (m_hArray) {
+        AGO2_MEM_FreeFromHandle(m_hArray);
+        m_hArray = 0;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 438–466 */
+/* addr: 0x001f9830  size: 328 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 438
+ *   +0x0020 -> line 443
+ *   +0x002c -> line 445
+ *   +0x0038 -> line 446
+ *   +0x0044 -> line 448
+ *   +0x005c -> line 449
+ *   +0x006c -> line 450
+ *   +0x0080 -> line 451
+ *   +0x0094 -> line 452
+ *   +0x0098 -> line 451
+ *   +0x00a8 -> line 452
+ *   +0x00b8 -> line 454
+ *   +0x00c8 -> line 455
+ *   +0x00cc -> line 454
+ *   +0x00d4 -> line 455
+ *   +0x00e4 -> line 457
+ *   +0x00e8 -> line 458
+ *   +0x00f0 -> line 461
+ *   +0x0100 -> line 462
+ *   +0x010c -> line 461
+ *   +0x0114 -> line 462
+ *   +0x0124 -> line 464
+ *   +0x0128 -> line 466
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_SimpleSparks::Process(void)
+{
+    C_Vector* pVect;
+    C_Vector VTemp;
+    unsigned int i;
+
+    if (m_hArray)
+    {
+        pVect = (C_Vector*)AGO2_MEM_GetPointerFromHandle(m_hArray);
+        for (i = 0; i < m_NbParticles; i++)
+        {
+            sceVu0CopyVector(&VTemp, &pVect[(i << 1) + 1]);
+            sceVu0ScaleVectorXYZ(&VTemp, &VTemp, g_fTimeDifference);
+            sceVu0AddVector(&pVect[i << 1], &pVect[i << 1], &VTemp);
+            ((MTH3D_tdstVector_*)&pVect[(i << 1) + 1])->xZ -= 9.81f * g_fTimeDifference;
+        }
+        m_fTransparency -= 255.0f * g_fTimeDifference;
+        if (m_fTransparency <= 0.0f)
+        {
+            m_fTransparency = 0.0f;
+            m_Finished = 1;
+        }
+        m_fSize -= 0.5f * g_fTimeDifference;
+        if (m_fSize <= 0.01f)
+        {
+            m_fSize = 0.01f;
+        }
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 469–482 */
+/* addr: 0x001f9780  size: 168 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 469
+ *   +0x0020 -> line 473
+ *   +0x002c -> line 475
+ *   +0x0034 -> line 477
+ *   +0x0040 -> line 478
+ *   +0x004c -> line 480
+ *   +0x0070 -> line 481
+ *   +0x0088 -> line 482
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_SimpleSparks::Display(GLD_tdstViewportAttributes_* hVp)
+{
+    C_Vector* pVect;
+    unsigned int i;
+
+    if (m_hArray)
+    {
+        pVect = (C_Vector*)AGO2_MEM_GetPointerFromHandle(m_hArray);
+        GLI_vSetGlobalAlpha(m_fTransparency);
+        for (i = 0; i < m_NbParticles; i++)
+            GLI_vDrawWorldSpriteOpt((MTH3D_tdstVector_*)&pVect[i << 1], m_pMat1, m_fSize, m_fSize, hVp, 1);
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 560–573 */
+/* addr: 0x001f96f0  size: 144 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 560
+ *   +0x0008 -> line 561
+ *   +0x000c -> line 560
+ *   +0x0010 -> line 561
+ *   +0x0020 -> line 563
+ *   +0x0024 -> line 564
+ *   +0x002c -> line 569
+ *   +0x0030 -> line 568
+ *   +0x0034 -> line 569
+ *   +0x003c -> line 568
+ *   +0x0040 -> line 570
+ *   +0x0048 -> line 568
+ *   +0x0054 -> line 570
+ *   +0x005c -> line 569
+ *   +0x0064 -> line 570
+ *   +0x006c -> line 569
+ *   +0x0070 -> line 570
+ *   +0x0078 -> line 569
+ *   +0x007c -> line 570
+ *   +0x0080 -> line 569
+ *   +0x0084 -> line 570
+ *   +0x0088 -> line 573
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_GrowingUVAnimatedFireBall::Process(void)
+{
+    int CurrentFrame;
+    float TotalTime;
+
+    TotalTime = g_ffFrameTime - m_fCreationTime;
+    if (TotalTime >= m_fAnimationTime)
+    {
+        m_Finished = 1;
+        return;
+    }
+    CurrentFrame = (int)(TotalTime * (16.0f / m_fAnimationTime));
+    m_fCurrentU = 0.25f * (float)(CurrentFrame & 3);
+    m_fCurrentV = 1.0f + -0.25f * (float)(CurrentFrame >> 2);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 578–600 */
+/* addr: 0x001f95d0  size: 284 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 578
+ *   +0x000c -> line 583
+ *   +0x0014 -> line 584
+ *   +0x0018 -> line 583
+ *   +0x001c -> line 584
+ *   +0x002c -> line 586
+ *   +0x0030 -> line 587
+ *   +0x0038 -> line 591
+ *   +0x003c -> line 592
+ *   +0x0040 -> line 591
+ *   +0x0044 -> line 595
+ *   +0x0048 -> line 592
+ *   +0x004c -> line 595
+ *   +0x0050 -> line 591
+ *   +0x0054 -> line 593
+ *   +0x005c -> line 591
+ *   +0x0068 -> line 593
+ *   +0x0070 -> line 592
+ *   +0x0078 -> line 593
+ *   +0x0080 -> line 592
+ *   +0x0084 -> line 593
+ *   +0x008c -> line 592
+ *   +0x0090 -> line 593
+ *   +0x0094 -> line 592
+ *   +0x0098 -> line 595
+ *   +0x00a0 -> line 596
+ *   +0x00bc -> line 597
+ *   +0x00cc -> line 598
+ *   +0x00d0 -> line 599
+ *   +0x00d4 -> line 598
+ *   +0x00d8 -> line 599
+ *   +0x00dc -> line 598
+ *   +0x00e4 -> line 599
+ *   +0x00e8 -> line 598
+ *   +0x00f8 -> line 599
+ *   +0x010c -> line 600
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_GrowingUVAnimatedFireBallMoving::Process(void)
+{
+    C_Vector Temp;
+    int CurrentFrame;
+    float TotalTime;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 603–606 */
+/* addr: 0x001f9550  size: 128 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 603
+ *   +0x0004 -> line 604
+ *   +0x0008 -> line 603
+ *   +0x000c -> line 604
+ *   +0x0010 -> line 603
+ *   +0x001c -> line 604
+ *   +0x0024 -> line 605
+ *   +0x006c -> line 606
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_GrowingUVAnimatedFireBallMoving::Display(GLD_tdstViewportAttributes_* hVp)
+{
+    GLI_vSetGlobalAlpha(50.0f);
+    GLI_vDrawWorldSpriteWithUVsOrientedOpt((MTH3D_tdstVector_*)&m_Position, m_pMat1, m_fSize, m_fSize, m_fCurrentU, m_fCurrentV, 0.25f + m_fCurrentU, -0.25f + m_fCurrentV, hVp, 1, g_ffFrameTime * m_fAngleSpeed);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 610–614 */
+/* addr: 0x001f94d0  size: 128 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 610
+ *   +0x0004 -> line 611
+ *   +0x0008 -> line 610
+ *   +0x000c -> line 611
+ *   +0x0010 -> line 610
+ *   +0x001c -> line 611
+ *   +0x0024 -> line 613
+ *   +0x006c -> line 614
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_GrowingUVAnimatedFireBall::Display(GLD_tdstViewportAttributes_* hVp)
+{
+    GLI_vSetGlobalAlpha(50.0f);
+    GLI_vDrawWorldSpriteWithUVsOrientedOpt((MTH3D_tdstVector_*)&m_Position, m_pMat1, m_fSize, m_fSize, m_fCurrentU, m_fCurrentV, 0.25f + m_fCurrentU, -0.25f + m_fCurrentV, hVp, 1, g_ffFrameTime * m_fAngleSpeed);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 617–621 */
+/* addr: 0x001f9450  size: 116 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 617
+ *   +0x0004 -> line 618
+ *   +0x0008 -> line 617
+ *   +0x000c -> line 618
+ *   +0x0010 -> line 617
+ *   +0x001c -> line 618
+ *   +0x0024 -> line 620
+ *   +0x0060 -> line 621
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_GrowingFireBall::Display(GLD_tdstViewportAttributes_* hVp)
+{
+    GLI_vSetGlobalAlpha(255.0f);
+    GLI_vDrawWorldSpriteWithUVsOrientedOpt((MTH3D_tdstVector_*)&m_Position, m_pMat1, m_fSize, m_fSize, 0.0f, 0.0f, 1.0f, 1.0f, hVp, 1, g_ffFrameTime * m_fAngleSpeed);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 666–669 */
+/* addr: 0x001f9430  size: 28 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 666
+ *   +0x0010 -> line 668
+ *   +0x0014 -> line 669
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_Target::Process(void)
+{
+    if (AGO_G_CurrentVU1Frame == 2)
+        ((AGO3_Part*)this)->m_Finished = 1;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 686–710 */
+/* addr: 0x001f93a0  size: 144 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 686
+ *   +0x0004 -> line 689
+ *   +0x0008 -> line 686
+ *   +0x000c -> line 689
+ *   +0x0010 -> line 686
+ *   +0x001c -> line 689
+ *   +0x0024 -> line 691
+ *   +0x002c -> line 695
+ *   +0x0074 -> line 708
+ *   +0x007c -> line 710
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_Target::Display(GLD_tdstViewportAttributes_* hVp)
+{
+    GLI_vSetGlobalAlpha(255.0f);
+    GLI_vDisableDepthTest();
+    GLI_vDrawWorldSpriteWithUVsOrientedOpt((MTH3D_tdstVector_*)&m_Position, m_pMat1, m_fSize, m_fSize, 0.0f, 0.0f, 1.0f, 1.0f, hVp, 1, 5.0f * g_ffFrameTime * m_fOrientation);
+    GLI_vEnableDepthTest();
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 748–784 */
+/* addr: 0x001f9060  size: 820 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 748
+ *   +0x0004 -> line 756
+ *   +0x0008 -> line 748
+ *   +0x001c -> line 760
+ *   +0x0020 -> line 753
+ *   +0x0024 -> line 762
+ *   +0x0028 -> line 753
+ *   +0x002c -> line 754
+ *   +0x0034 -> line 755
+ *   +0x003c -> line 756
+ *   +0x0040 -> line 758
+ *   +0x006c -> line 764
+ *   +0x0088 -> line 766
+ *   +0x00c8 -> line 767
+ *   +0x0104 -> line 768
+ *   +0x0140 -> line 769
+ *   +0x014c -> line 771
+ *   +0x018c -> line 772
+ *   +0x01cc -> line 773
+ *   +0x0210 -> line 776
+ *   +0x0250 -> line 777
+ *   +0x0290 -> line 778
+ *   +0x02cc -> line 779
+ *   +0x02e0 -> line 783
+ *   +0x02e4 -> line 779
+ *   +0x02f0 -> line 783
+ *   +0x02f4 -> line 779
+ *   +0x0310 -> line 780
+ *   +0x0314 -> line 783
+ *   +0x031c -> line 784
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_Smoke::Init(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMat1, float fParameter)
+{
+    C_Vector Position;
+    unsigned int i;
+    AGO3Smoke_InternalData_* p;
+    ((MTH3D_tdstVector_*)&Position)->xX = pPosition->xX;
+    ((MTH3D_tdstVector_*)&Position)->xY = pPosition->xY;
+    ((MTH3D_tdstVector_*)&Position)->xZ = pPosition->xZ;
+    Position.Vector[3] = 1.0f;
+    m_Finished = 0; m_Position.Vector[0] = pPosition->xX; m_Position.Vector[1] = pPosition->xY; m_Position.Vector[2] = pPosition->xZ; m_Position.Vector[3] = 1.0f; m_pMat1 = pMat1; m_fCreationTime = g_ffFrameTime;
+    p = m_Sprites;
+    for (i = 0; i < 8; i++)
+    {
+        p->Position.Vector[0] = pPosition->xX;
+        p->Position.Vector[1] = pPosition->xY;
+        p->Position.Vector[2] = pPosition->xZ;
+        p->Position.Vector[3] = 1.0f;
+        p->Position.Vector[0] += AGO3_M_xRand(-1.5f, 1.5f);
+        p->Position.Vector[1] += AGO3_M_xRand(-1.5f, 1.5f);
+        p->Position.Vector[2] += AGO3_M_xRand(-1.5f, 1.5f);
+        rand();
+        p->fTransparency = 40.0f;
+        p->Direction.Vector[0] = AGO3_M_xRand(-1.5f, 1.5f);
+        p->Direction.Vector[1] = AGO3_M_xRand(-1.5f, 1.5f);
+        p->Direction.Vector[2] = AGO3_M_xRand(1.5f, 2.6f);
+        p->Direction.Vector[3] = 0.0f;
+        p->fRotationSpeed = AGO3_M_xRand(-3.0f, 3.0f);
+        p->fCurrentAngle = AGO3_M_xRand(-6.0f, 6.0f);
+        p->fSize = AGO3_M_xRand(0.75f, 1.5f);
+        p->fAnimationSpeed = AGO3_M_xRand(25.0f, 40.0f);
+        p->fCurrentAnimTime = 0.0f;
+        p++;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 787–820 */
+/* addr: 0x001f8f40  size: 288 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 787
+ *   +0x0018 -> line 793
+ *   +0x001c -> line 787
+ *   +0x0020 -> line 795
+ *   +0x0024 -> line 787
+ *   +0x0028 -> line 788
+ *   +0x002c -> line 790
+ *   +0x0034 -> line 797
+ *   +0x0050 -> line 800
+ *   +0x0058 -> line 803
+ *   +0x0064 -> line 804
+ *   +0x0074 -> line 805
+ *   +0x0084 -> line 807
+ *   +0x0094 -> line 810
+ *   +0x009c -> line 807
+ *   +0x00a4 -> line 808
+ *   +0x00a8 -> line 810
+ *   +0x00ac -> line 808
+ *   +0x00b0 -> line 810
+ *   +0x00b4 -> line 808
+ *   +0x00c0 -> line 810
+ *   +0x00cc -> line 811
+ *   +0x00e0 -> line 814
+ *   +0x00f0 -> line 816
+ *   +0x00fc -> line 818
+ *   +0x0100 -> line 820
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_Smoke::Process(void)
+{
+    AGO3Smoke_InternalData_* p;
+    C_Vector Direction;
+    float Time;
+    unsigned int i;
+    unsigned int NbFinished;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 823–851 */
+/* addr: 0x001f8e50  size: 228 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 823
+ *   +0x001c -> line 831
+ *   +0x0024 -> line 833
+ *   +0x0028 -> line 835
+ *   +0x002c -> line 837
+ *   +0x0048 -> line 839
+ *   +0x0064 -> line 840
+ *   +0x006c -> line 843
+ *   +0x0070 -> line 842
+ *   +0x0074 -> line 843
+ *   +0x007c -> line 841
+ *   +0x0080 -> line 843
+ *   +0x0084 -> line 842
+ *   +0x0088 -> line 843
+ *   +0x00a0 -> line 846
+ *   +0x00b0 -> line 848
+ *   +0x00c0 -> line 850
+ *   +0x00c8 -> line 851
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_Smoke::Display(GLD_tdstViewportAttributes_* hVp)
+{
+    float v2;
+    float v1;
+    float u2;
+    float u1;
+    unsigned int i;
+    AGO3Smoke_InternalData_* p;
+    GLI_vEndWorldSprites();
+    p = m_Sprites;
+    for (i = 0; i < 8; i++)
+    {
+        if (p->fTransparency > 0.0f)
+        {
+            GLI_vSetGlobalAlpha(p->fTransparency > 255.0f ? 255.0f : p->fTransparency);
+            GLI_vDrawWorldSpriteWithUVsOrientedOpt((MTH3D_tdstVector_*)&p->Position, m_pMat1, p->fSize, p->fSize, 0.0f, 1.0f, 1.0f, 0.0f, hVp, 1, p->fCurrentAngle);
+        }
+        p++;
+    }
+    GLI_vSetGlobalAlpha(255.0f);
+    GLI_vEndWorldSprites();
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 884–885 */
+/* addr: 0x001f8e40  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 884
+ *   +0x0004 -> line 885
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_BeamWithUVs::Process(void)
+{
+    ((AGO3_Part*)this)->m_Finished = 1;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 888–898 */
+/* addr: 0x001f8dd0  size: 100 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 888
+ *   +0x0004 -> line 891
+ *   +0x0008 -> line 888
+ *   +0x000c -> line 891
+ *   +0x0010 -> line 888
+ *   +0x001c -> line 891
+ *   +0x0024 -> line 894
+ *   +0x0050 -> line 898
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_BeamWithUVs::Display(GLD_tdstViewportAttributes_* hVp)
+{
+    GLI_vSetGlobalAlpha(255.0f);
+    GLI_vDrawWorldSemiLookatSpriteWithUVs((MTH3D_tdstVector_*)&m_Position, (MTH3D_tdstVector_*)&m_Direction, m_pMat1, hVp, m_fSize, 0.0f, 0.0f, 1.0f, m_fRepetition);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 995–1000 */
+/* addr: 0x001f8da0  size: 40 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 995
+ *   +0x0004 -> line 999
+ *   +0x0008 -> line 995
+ *   +0x000c -> line 996
+ *   +0x0014 -> line 997
+ *   +0x001c -> line 998
+ *   +0x0020 -> line 1000
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_WaveEnvelopedFist::DesInit(void)
+{
+    m_a_ulNbAGOs[0] = m_a_ulNbAGOs[1] = 0;
+    m_a_ulFirstFree[0] = m_a_ulFirstFree[1] = 0;
+    m_a_ulFirstSet[0] = m_a_ulFirstSet[1] = 0;
+    m_hHandle = 0;
+    ((AGO3_Part*)this)->m_Finished = 1;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 1004–1049 */
+/* addr: 0x001f8bc0  size: 480 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1004
+ *   +0x0004 -> line 1007
+ *   +0x0008 -> line 1004
+ *   +0x0014 -> line 1007
+ *   +0x0024 -> line 1009
+ *   +0x0028 -> line 1011
+ *   +0x0030 -> line 1012
+ *   +0x0034 -> line 1014
+ *   +0x0040 -> line 1016
+ *   +0x0044 -> line 1014
+ *   +0x0048 -> line 1016
+ *   +0x004c -> line 1014
+ *   +0x0050 -> line 1016
+ *   +0x0054 -> line 1014
+ *   +0x0068 -> line 1016
+ *   +0x0074 -> line 1018
+ *   +0x00a4 -> line 1027
+ *   +0x00b4 -> line 1030
+ *   +0x00b8 -> line 1027
+ *   +0x00c4 -> line 1031
+ *   +0x00c8 -> line 1030
+ *   +0x00cc -> line 1027
+ *   +0x00d0 -> line 1031
+ *   +0x00e0 -> line 1030
+ *   +0x00e4 -> line 1031
+ *   +0x00e8 -> line 1027
+ *   +0x00f4 -> line 1031
+ *   +0x00fc -> line 1027
+ *   +0x0100 -> line 1031
+ *   +0x0108 -> line 1027
+ *   +0x010c -> line 1036
+ *   +0x0110 -> line 1027
+ *   +0x0114 -> line 1031
+ *   +0x0118 -> line 1027
+ *   +0x011c -> line 1031
+ *   +0x0174 -> line 1035
+ *   +0x017c -> line 1042
+ *   +0x0180 -> line 1036
+ *   +0x0184 -> line 1042
+ *   +0x0188 -> line 1037
+ *   +0x0190 -> line 1038
+ *   +0x0198 -> line 1039
+ *   +0x01a0 -> line 1042
+ *   +0x01a8 -> line 1044
+ *   +0x01ac -> line 1046
+ *   +0x01bc -> line 1047
+ *   +0x01c8 -> line 1049
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_WaveEnvelopedFist::Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fColor)
+{
+    float fOneMinusColor;
+    AGO3_WEF_SpriteData* pSpriteData;
+    unsigned int ulFist;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 1053–1142 */
+/* addr: 0x001f8880  size: 832 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1053
+ *   +0x0004 -> line 1057
+ *   +0x0008 -> line 1053
+ *   +0x0020 -> line 1113
+ *   +0x0024 -> line 1121
+ *   +0x0028 -> line 1113
+ *   +0x002c -> line 1111
+ *   +0x0030 -> line 1113
+ *   +0x0034 -> line 1076
+ *   +0x0038 -> line 1121
+ *   +0x004c -> line 1076
+ *   +0x0050 -> line 1121
+ *   +0x0054 -> line 1125
+ *   +0x0058 -> line 1076
+ *   +0x005c -> line 1110
+ *   +0x0064 -> line 1081
+ *   +0x0068 -> line 1115
+ *   +0x0070 -> line 1078
+ *   +0x0074 -> line 1076
+ *   +0x0078 -> line 1081
+ *   +0x007c -> line 1060
+ *   +0x0084 -> line 1061
+ *   +0x008c -> line 1063
+ *   +0x0090 -> line 1064
+ *   +0x0094 -> line 1067
+ *   +0x0098 -> line 1063
+ *   +0x00a0 -> line 1064
+ *   +0x00b8 -> line 1067
+ *   +0x00c0 -> line 1076
+ *   +0x00c8 -> line 1073
+ *   +0x00d8 -> line 1076
+ *   +0x00dc -> line 1073
+ *   +0x00e0 -> line 1076
+ *   +0x00e4 -> line 1073
+ *   +0x00f4 -> line 1076
+ *   +0x0110 -> line 1077
+ *   +0x0120 -> line 1078
+ *   +0x0128 -> line 1081
+ *   +0x0168 -> line 1087
+ *   +0x0170 -> line 1094
+ *   +0x0178 -> line 1090
+ *   +0x0180 -> line 1091
+ *   +0x0188 -> line 1092
+ *   +0x0190 -> line 1090
+ *   +0x0194 -> line 1091
+ *   +0x0198 -> line 1092
+ *   +0x019c -> line 1094
+ *   +0x01a8 -> line 1096
+ *   +0x01b0 -> line 1100
+ *   +0x01b4 -> line 1096
+ *   +0x01b8 -> line 1101
+ *   +0x01bc -> line 1096
+ *   +0x01c4 -> line 1097
+ *   +0x01d4 -> line 1098
+ *   +0x01dc -> line 1100
+ *   +0x01e0 -> line 1098
+ *   +0x01e8 -> line 1101
+ *   +0x01f8 -> line 1106
+ *   +0x01fc -> line 1107
+ *   +0x0200 -> line 1108
+ *   +0x0204 -> line 1107
+ *   +0x0208 -> line 1108
+ *   +0x020c -> line 1107
+ *   +0x021c -> line 1108
+ *   +0x0228 -> line 1110
+ *   +0x023c -> line 1111
+ *   +0x0248 -> line 1113
+ *   +0x0258 -> line 1115
+ *   +0x0280 -> line 1117
+ *   +0x0284 -> line 1119
+ *   +0x0290 -> line 1121
+ *   +0x02c0 -> line 1124
+ *   +0x02c4 -> line 1125
+ *   +0x02cc -> line 1127
+ *   +0x02d0 -> line 1129
+ *   +0x02d8 -> line 1131
+ *   +0x02e0 -> line 1132
+ *   +0x02ec -> line 1133
+ *   +0x02f0 -> line 1134
+ *   +0x02f8 -> line 1132
+ *   +0x0300 -> line 1134
+ *   +0x0308 -> line 1137
+ *   +0x0320 -> line 1139
+ *   +0x0324 -> line 1140
+ *   +0x032c -> line 1142
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_WaveEnvelopedFist::Process(void)
+{
+    unsigned int ulFist;
+    unsigned int ulNbAGOs;
+    unsigned int ulFirstEntry;
+    unsigned int ulEntry;
+    AGO3_WEF_SpriteData* pSpriteData;
+    MTH3D_tdstVector_* pPreviousSpritePosition;
+    unsigned int i;
+    MTH3D_tdstVector_* pPosition;
+    float fMultiplier;
+    float fInterval;
+    float fDX;
+    float fDY;
+    float fDZ;
+    for (ulFist = 0; ulFist < 2; ulFist++)
+    {
+        ulNbAGOs = m_a_ulNbAGOs[ulFist];
+        if (ulNbAGOs)
+        {
+            ulEntry = (m_a_ulFirstFree[ulFist] + 63) & 63;
+            pSpriteData = &m_stSprite[ulFist][ulEntry];
+            if (ulNbAGOs > 1)
+            {
+                pPreviousSpritePosition = &m_stSprite[ulFist][(ulEntry + 63) & 63].stPosition;
+                pSpriteData->ulNbIntermediates = (int)(0.5f + 2.0f * g_fTimeDifference / g_stEngineStructure.stEngineTimer.xFrameLength) - 1;
+                if (pSpriteData->ulNbIntermediates > 10)
+                    pSpriteData->ulNbIntermediates = 10;
+                fInterval = 1.0f / (float)(pSpriteData->ulNbIntermediates + 1);
+                pPosition = &m_a_stPosition[ulFist];
+                fDX = pPreviousSpritePosition->xX - pPosition->xX;
+                fDY = pPreviousSpritePosition->xY - pPosition->xY;
+                fDZ = pPreviousSpritePosition->xZ - pPosition->xZ;
+                fMultiplier = fInterval;
+                for (i = 0; i < pSpriteData->ulNbIntermediates; i++)
+                {
+                    pSpriteData->a_stIntermediatePosition[i].xX = pPosition->xX + fDX * fMultiplier;
+                    pSpriteData->a_stIntermediatePosition[i].xY = pPosition->xY + fDY * fMultiplier;
+                    pSpriteData->a_stIntermediatePosition[i].xZ = pPosition->xZ + fDZ * fMultiplier;
+                    fMultiplier += fInterval;
+                }
+            }
+            ulEntry = m_a_ulFirstSet[ulFist];
+            pSpriteData = &m_stSprite[ulFist][ulEntry];
+            while (ulNbAGOs--)
+            {
+                if (pSpriteData->fTransparency == 300.0f)
+                    pSpriteData->fTransparency = 191.0f;
+                else
+                    pSpriteData->fTransparency -= 750.0f * g_fTimeDifference;
+                if (pSpriteData->fTransparency <= 0.0f || pSpriteData->fTransparency > 255.0f)
+                {
+                    pSpriteData->fSize = 0.0f;
+                    pSpriteData->fTransparency = 0.0f;
+                }
+                else
+                {
+                    pSpriteData->fSize = m_fMainSize * (float)AGO3_C_WaveEnvelopedFistShape[(int)(0.003921569f * (50.0f * (255.0f - pSpriteData->fTransparency)))];
+                }
+                ulEntry++;
+                if (ulEntry == 64)
+                {
+                    ulEntry = 0;
+                    pSpriteData = &m_stSprite[ulFist][0];
+                }
+                else
+                {
+                    pSpriteData++;
+                }
+            }
+        }
+    }
+    if (!m_a_ulNbAGOs[0] && !m_a_ulNbAGOs[1])
+    {
+        m_hHandle = 0;
+        m_Finished = 1;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 1146–1217 */
+/* addr: 0x001f8520  size: 852 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1146
+ *   +0x0010 -> line 1149
+ *   +0x0014 -> line 1146
+ *   +0x004c -> line 1151
+ *   +0x0060 -> line 1152
+ *   +0x0068 -> line 1156
+ *   +0x006c -> line 1154
+ *   +0x0070 -> line 1156
+ *   +0x0074 -> line 1155
+ *   +0x0078 -> line 1154
+ *   +0x007c -> line 1155
+ *   +0x00a0 -> line 1156
+ *   +0x00a8 -> line 1158
+ *   +0x00c4 -> line 1160
+ *   +0x00d8 -> line 1161
+ *   +0x00f0 -> line 1163
+ *   +0x00f8 -> line 1166
+ *   +0x0100 -> line 1169
+ *   +0x0128 -> line 1173
+ *   +0x0134 -> line 1176
+ *   +0x013c -> line 1188
+ *   +0x0188 -> line 1189
+ *   +0x01b0 -> line 1190
+ *   +0x01e8 -> line 1192
+ *   +0x01f0 -> line 1190
+ *   +0x0204 -> line 1192
+ *   +0x0210 -> line 1195
+ *   +0x0218 -> line 1194
+ *   +0x021c -> line 1195
+ *   +0x0244 -> line 1197
+ *   +0x0248 -> line 1195
+ *   +0x0268 -> line 1197
+ *   +0x0270 -> line 1198
+ *   +0x02a0 -> line 1199
+ *   +0x02b8 -> line 1204
+ *   +0x02bc -> line 1205
+ *   +0x02c8 -> line 1208
+ *   +0x02cc -> line 1207
+ *   +0x02d0 -> line 1209
+ *   +0x02d8 -> line 1211
+ *   +0x02e0 -> line 1212
+ *   +0x02ec -> line 1213
+ *   +0x02f0 -> line 1212
+ *   +0x02f4 -> line 1214
+ *   +0x02f8 -> line 1212
+ *   +0x030c -> line 1214
+ *   +0x0318 -> line 1217
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_WaveEnvelopedFist::Display(GLD_tdstViewportAttributes_* hVp)
+{
+    unsigned int ulFist;
+    unsigned int ulNbAGOs;
+    unsigned int ulEntry;
+    AGO3_WEF_SpriteData* pSpriteData;
+    float fPreviousTransparency;
+    float fTransparencyIncrement;
+    float fTransparency;
+    float fSize;
+    unsigned int i;
+
+    for (ulFist = 0; ulFist < 2; ulFist++)
+    {
+        ulNbAGOs = m_a_ulNbAGOs[ulFist];
+        if (ulNbAGOs)
+        {
+            ulEntry = m_a_ulFirstSet[ulFist];
+            pSpriteData = &m_stSprite[ulFist][ulEntry];
+            while (ulNbAGOs--)
+            {
+                if (pSpriteData->fTransparency <= 0.0f)
+                {
+                    m_a_ulNbAGOs[ulFist]--;
+                    m_a_ulFirstSet[ulFist] = (m_a_ulFirstSet[ulFist] + 1) & 0x3f;
+                    pSpriteData->fTransparency = 0.0f;
+                }
+                else
+                {
+                    GLI_vSetGlobalAlpha(pSpriteData->fTransparency);
+                    GLI_vDrawWorldOrthoPlanarSpriteColor(&pSpriteData->stPosition, m_pMat1, pSpriteData->fSize, pSpriteData->fSize, hVp, 0, &pSpriteData->stInitialPosition, &pSpriteData->stAdditionnalVector, m_a_ulColor[ulFist]);
+                }
+                if (pSpriteData->ulNbIntermediates && pSpriteData->ulNbIntermediates)
+                {
+                    fPreviousTransparency = m_stSprite[ulFist][ulEntry == 0 ? 63 : ulEntry - 1].fTransparency;
+                    if (fPreviousTransparency == 300.0f)
+                        fPreviousTransparency = 255.0f;
+                    fTransparency = pSpriteData->fTransparency;
+                    if (fTransparency == 300.0f)
+                        fTransparency = 255.0f;
+                    fTransparencyIncrement = (1.0f / (float)(pSpriteData->ulNbIntermediates + 1)) * (fPreviousTransparency - fTransparency);
+                    for (i = 0; i < pSpriteData->ulNbIntermediates; i++)
+                    {
+                        fTransparency += fTransparencyIncrement;
+                        fSize = m_fMainSize * (float)AGO3_C_WaveEnvelopedFistShape[(int)(0.003921569f * (50.0f * (255.0f - fTransparency)))];
+                        GLI_vSetGlobalAlpha(fTransparency);
+                        GLI_vDrawWorldOrthoPlanarSpriteColor(&pSpriteData->a_stIntermediatePosition[i], m_pMat1, fSize, fSize, hVp, 0, &pSpriteData->stInitialPosition, &pSpriteData->stAdditionnalVector, m_a_ulColor[ulFist]);
+                    }
+                }
+                ulEntry++;
+                if (ulEntry == 64)
+                {
+                    ulEntry = 0;
+                    pSpriteData = &m_stSprite[ulFist][0];
+                }
+                else
+                {
+                    pSpriteData++;
+                }
+            }
+        }
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 1278–1283 */
+/* addr: 0x001f84f0  size: 40 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1278
+ *   +0x0004 -> line 1282
+ *   +0x0008 -> line 1278
+ *   +0x000c -> line 1279
+ *   +0x0014 -> line 1280
+ *   +0x001c -> line 1281
+ *   +0x0020 -> line 1283
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_WaveEnvelopedFist2::DesInit(void)
+{
+    m_a_ulNbAGOs[0] = m_a_ulNbAGOs[1] = 0;
+    m_a_ulFirstFree[0] = m_a_ulFirstFree[1] = 0;
+    m_a_ulFirstSet[0] = m_a_ulFirstSet[1] = 0;
+    m_hHandle = 0;
+    ((AGO3_Part*)this)->m_Finished = 1;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 1290–1329 */
+/* addr: 0x001f8340  size: 428 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1290
+ *   +0x0018 -> line 1292
+ *   +0x001c -> line 1293
+ *   +0x0020 -> line 1297
+ *   +0x0030 -> line 1299
+ *   +0x0034 -> line 1297
+ *   +0x0038 -> line 1299
+ *   +0x0040 -> line 1297
+ *   +0x0054 -> line 1299
+ *   +0x0060 -> line 1301
+ *   +0x0090 -> line 1310
+ *   +0x009c -> line 1314
+ *   +0x00a0 -> line 1310
+ *   +0x00a4 -> line 1314
+ *   +0x00a8 -> line 1310
+ *   +0x00b4 -> line 1314
+ *   +0x00b8 -> line 1313
+ *   +0x00bc -> line 1310
+ *   +0x00c0 -> line 1313
+ *   +0x00c4 -> line 1310
+ *   +0x00c8 -> line 1314
+ *   +0x00cc -> line 1313
+ *   +0x00d0 -> line 1314
+ *   +0x00e0 -> line 1310
+ *   +0x00ec -> line 1314
+ *   +0x00f0 -> line 1310
+ *   +0x00f4 -> line 1314
+ *   +0x0100 -> line 1310
+ *   +0x0108 -> line 1319
+ *   +0x010c -> line 1314
+ *   +0x0164 -> line 1318
+ *   +0x016c -> line 1319
+ *   +0x0170 -> line 1320
+ *   +0x0178 -> line 1321
+ *   +0x0180 -> line 1322
+ *   +0x0188 -> line 1324
+ *   +0x018c -> line 1326
+ *   +0x019c -> line 1327
+ *   +0x01a4 -> line 1329
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_WaveEnvelopedFist2::Init(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMat1, float fColor)
+{
+    float fOneMinusColor;
+    AGO3_WEF_SpriteData* pSpriteData;
+    unsigned int ulFist;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 1333–1426 */
+/* addr: 0x001f8000  size: 820 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1333
+ *   +0x0004 -> line 1337
+ *   +0x0008 -> line 1333
+ *   +0x001c -> line 1393
+ *   +0x0020 -> line 1353
+ *   +0x0024 -> line 1393
+ *   +0x0028 -> line 1353
+ *   +0x0030 -> line 1404
+ *   +0x0034 -> line 1395
+ *   +0x0038 -> line 1391
+ *   +0x003c -> line 1395
+ *   +0x0040 -> line 1358
+ *   +0x0044 -> line 1395
+ *   +0x0048 -> line 1404
+ *   +0x0050 -> line 1409
+ *   +0x0054 -> line 1404
+ *   +0x0058 -> line 1353
+ *   +0x005c -> line 1404
+ *   +0x0068 -> line 1358
+ *   +0x006c -> line 1390
+ *   +0x0074 -> line 1355
+ *   +0x0078 -> line 1339
+ *   +0x0080 -> line 1340
+ *   +0x0088 -> line 1342
+ *   +0x008c -> line 1343
+ *   +0x0090 -> line 1346
+ *   +0x0094 -> line 1342
+ *   +0x009c -> line 1343
+ *   +0x00b4 -> line 1346
+ *   +0x00bc -> line 1353
+ *   +0x00e8 -> line 1354
+ *   +0x00f8 -> line 1355
+ *   +0x0100 -> line 1358
+ *   +0x0140 -> line 1367
+ *   +0x0144 -> line 1365
+ *   +0x0150 -> line 1367
+ *   +0x0154 -> line 1365
+ *   +0x0164 -> line 1370
+ *   +0x0168 -> line 1371
+ *   +0x016c -> line 1372
+ *   +0x0170 -> line 1365
+ *   +0x0178 -> line 1374
+ *   +0x017c -> line 1370
+ *   +0x0180 -> line 1371
+ *   +0x0184 -> line 1372
+ *   +0x0188 -> line 1370
+ *   +0x018c -> line 1371
+ *   +0x0190 -> line 1372
+ *   +0x0194 -> line 1374
+ *   +0x01a0 -> line 1376
+ *   +0x01a8 -> line 1380
+ *   +0x01ac -> line 1376
+ *   +0x01b0 -> line 1381
+ *   +0x01b4 -> line 1376
+ *   +0x01bc -> line 1377
+ *   +0x01cc -> line 1378
+ *   +0x01d4 -> line 1380
+ *   +0x01d8 -> line 1378
+ *   +0x01e0 -> line 1381
+ *   +0x01f0 -> line 1386
+ *   +0x01f4 -> line 1388
+ *   +0x01fc -> line 1387
+ *   +0x0214 -> line 1388
+ *   +0x0220 -> line 1390
+ *   +0x0234 -> line 1391
+ *   +0x0240 -> line 1393
+ *   +0x0250 -> line 1395
+ *   +0x0278 -> line 1397
+ *   +0x027c -> line 1399
+ *   +0x0288 -> line 1404
+ *   +0x02b8 -> line 1408
+ *   +0x02bc -> line 1409
+ *   +0x02c4 -> line 1411
+ *   +0x02c8 -> line 1413
+ *   +0x02d0 -> line 1415
+ *   +0x02d8 -> line 1416
+ *   +0x02e4 -> line 1417
+ *   +0x02e8 -> line 1418
+ *   +0x02f0 -> line 1416
+ *   +0x02f8 -> line 1418
+ *   +0x0300 -> line 1421
+ *   +0x0318 -> line 1423
+ *   +0x031c -> line 1424
+ *   +0x0324 -> line 1426
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_WaveEnvelopedFist2::Process(void)
+{
+    unsigned int ulFist;
+    unsigned int ulNbAGOs;
+    unsigned int ulEntry;
+    AGO3_WEF_SpriteData* pSpriteData;
+    unsigned int ulFirstEntry;
+    MTH3D_tdstVector_* pPosition;
+    unsigned int i;
+    float fMultiplier;
+    float fInterval;
+    float fDX;
+    float fDY;
+    float fDZ;
+    for (ulFist = 0; ulFist < 2; ulFist++)
+    {
+        ulNbAGOs = m_a_ulNbAGOs[ulFist];
+        if (ulNbAGOs)
+        {
+            ulEntry = (m_a_ulFirstFree[ulFist] + 63) & 63;
+            pSpriteData = &m_stSprite[ulFist][ulEntry];
+            if (ulNbAGOs > 1)
+            {
+                pSpriteData->ulNbIntermediates = (int)(0.5f + 4.0f * g_fTimeDifference / g_stEngineStructure.stEngineTimer.xFrameLength) - 1;
+                if (pSpriteData->ulNbIntermediates > 10)
+                    pSpriteData->ulNbIntermediates = 10;
+                fInterval = 1.0f / (float)(pSpriteData->ulNbIntermediates + 1);
+                ulFirstEntry = (ulEntry + 63) & 63;
+                pPosition = &m_a_stPosition[ulFist];
+                fDX = m_stSprite[ulFist][ulFirstEntry].stPosition.xX - pPosition->xX;
+                fDY = m_stSprite[ulFist][ulFirstEntry].stPosition.xY - pPosition->xY;
+                fDZ = m_stSprite[ulFist][ulFirstEntry].stPosition.xZ - pPosition->xZ;
+                fMultiplier = fInterval;
+                for (i = 0; i < pSpriteData->ulNbIntermediates; i++)
+                {
+                    pSpriteData->a_stIntermediatePosition[i].xX = pPosition->xX + fDX * fMultiplier;
+                    pSpriteData->a_stIntermediatePosition[i].xY = pPosition->xY + fDY * fMultiplier;
+                    pSpriteData->a_stIntermediatePosition[i].xZ = pPosition->xZ + fDZ * fMultiplier;
+                    fMultiplier += fInterval;
+                }
+            }
+            ulEntry = m_a_ulFirstSet[ulFist];
+            pSpriteData = &m_stSprite[ulFist][ulEntry];
+            while (ulNbAGOs--)
+            {
+                if (pSpriteData->fTransparency == 300.0f)
+                    pSpriteData->fTransparency = 191.0f;
+                else
+                    pSpriteData->fTransparency -= 1000.0f * g_fTimeDifference;
+                if (pSpriteData->fTransparency <= 0.0f || pSpriteData->fTransparency > 255.0f)
+                {
+                    pSpriteData->fSize = 0.0f;
+                    pSpriteData->fTransparency = 0.0f;
+                }
+                else
+                {
+                    pSpriteData->fSize = m_fMainSize * (float)AGO3_C_WaveEnvelopedFistShape[(int)(0.003921569f * (50.0f * (255.0f - pSpriteData->fTransparency)))];
+                }
+                ulEntry++;
+                if (ulEntry == 64)
+                {
+                    ulEntry = 0;
+                    pSpriteData = &m_stSprite[ulFist][0];
+                }
+                else
+                {
+                    pSpriteData++;
+                }
+            }
+        }
+    }
+    if (!m_a_ulNbAGOs[0] && !m_a_ulNbAGOs[1])
+    {
+        m_hHandle = 0;
+        m_Finished = 1;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 1430–1504 */
+/* addr: 0x001f7ca0  size: 860 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1430
+ *   +0x0010 -> line 1433
+ *   +0x0014 -> line 1430
+ *   +0x004c -> line 1435
+ *   +0x0060 -> line 1436
+ *   +0x0068 -> line 1440
+ *   +0x006c -> line 1438
+ *   +0x0070 -> line 1440
+ *   +0x0074 -> line 1439
+ *   +0x0078 -> line 1438
+ *   +0x007c -> line 1439
+ *   +0x00a0 -> line 1440
+ *   +0x00a8 -> line 1442
+ *   +0x00c4 -> line 1444
+ *   +0x00d8 -> line 1445
+ *   +0x00ec -> line 1446
+ *   +0x00f8 -> line 1447
+ *   +0x0100 -> line 1450
+ *   +0x0120 -> line 1455
+ *   +0x012c -> line 1465
+ *   +0x0134 -> line 1470
+ *   +0x0180 -> line 1471
+ *   +0x01a8 -> line 1472
+ *   +0x01e0 -> line 1474
+ *   +0x01e8 -> line 1472
+ *   +0x01fc -> line 1474
+ *   +0x0208 -> line 1477
+ *   +0x0244 -> line 1478
+ *   +0x0250 -> line 1479
+ *   +0x0258 -> line 1482
+ *   +0x026c -> line 1481
+ *   +0x0270 -> line 1482
+ *   +0x027c -> line 1483
+ *   +0x0284 -> line 1484
+ *   +0x02ac -> line 1486
+ *   +0x02c0 -> line 1491
+ *   +0x02c4 -> line 1492
+ *   +0x02d0 -> line 1495
+ *   +0x02d4 -> line 1494
+ *   +0x02d8 -> line 1496
+ *   +0x02e0 -> line 1498
+ *   +0x02e8 -> line 1499
+ *   +0x02f4 -> line 1500
+ *   +0x02f8 -> line 1499
+ *   +0x02fc -> line 1501
+ *   +0x0300 -> line 1499
+ *   +0x0314 -> line 1501
+ *   +0x0320 -> line 1504
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_WaveEnvelopedFist2::Display(GLD_tdstViewportAttributes_* hVp)
+{
+    unsigned int ulFist;
+    unsigned int ulNbAGOs;
+    unsigned int ulEntry;
+    AGO3_WEF_SpriteData* pSpriteData;
+    float fPreviousTransparency;
+    float fTransparencyIncrement;
+    float fTransparency;
+    float fSize;
+    unsigned int i;
+    unsigned int ulIndex;
+
+    for (ulFist = 0; ulFist < 2; ulFist++)
+    {
+        ulNbAGOs = m_a_ulNbAGOs[ulFist];
+        if (ulNbAGOs)
+        {
+            ulEntry = m_a_ulFirstSet[ulFist];
+            pSpriteData = &m_stSprite[ulFist][ulEntry];
+            while (ulNbAGOs--)
+            {
+                if (pSpriteData->fTransparency <= 0.0f)
+                {
+                    m_a_ulNbAGOs[ulFist]--;
+                    m_a_ulFirstSet[ulFist] = (m_a_ulFirstSet[ulFist] + 1) & 0x3f;
+                }
+                else
+                {
+                    GLI_vSetGlobalAlpha(pSpriteData->fTransparency);
+                    GLI_vDrawWorldSpriteColor(&pSpriteData->stPosition, m_pMat1, pSpriteData->fSize, pSpriteData->fSize, hVp, 0, m_a_ulColor[ulFist]);
+                }
+                if (pSpriteData->ulNbIntermediates && pSpriteData->ulNbIntermediates)
+                {
+                    fPreviousTransparency = m_stSprite[ulFist][ulEntry == 0 ? 63 : ulEntry - 1].fTransparency;
+                    if (fPreviousTransparency == 300.0f)
+                        fPreviousTransparency = 191.0f;
+                    fTransparency = pSpriteData->fTransparency;
+                    if (fTransparency == 300.0f)
+                        fTransparency = 191.0f;
+                    fTransparencyIncrement = (1.0f / (float)(pSpriteData->ulNbIntermediates + 1)) * (fPreviousTransparency - fTransparency);
+                    for (i = 0; i < pSpriteData->ulNbIntermediates; i++)
+                    {
+                        ulIndex = (int)(0.003921569f * (50.0f * (255.0f - fTransparency)));
+                        if (ulIndex >= 51)
+                            ulIndex = 50;
+                        fTransparency += fTransparencyIncrement;
+                        fSize = m_fMainSize * (float)AGO3_C_WaveEnvelopedFistShape[ulIndex];
+                        GLI_vSetGlobalAlpha(fTransparency);
+                        GLI_vDrawWorldSpriteColor(&pSpriteData->a_stIntermediatePosition[i], m_pMat1, fSize, fSize, hVp, 0, m_a_ulColor[ulFist]);
+                    }
+                }
+                ulEntry++;
+                if (ulEntry == 64)
+                {
+                    ulEntry = 0;
+                    pSpriteData = &m_stSprite[ulFist][0];
+                }
+                else
+                {
+                    pSpriteData++;
+                }
+            }
+        }
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 1553–1578 */
+/* addr: 0x001f7a50  size: 592 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1553
+ *   +0x0004 -> line 1556
+ *   +0x0008 -> line 1553
+ *   +0x000c -> line 1559
+ *   +0x0010 -> line 1553
+ *   +0x0014 -> line 1560
+ *   +0x0018 -> line 1553
+ *   +0x002c -> line 1556
+ *   +0x0038 -> line 1563
+ *   +0x003c -> line 1556
+ *   +0x0050 -> line 1563
+ *   +0x0054 -> line 1556
+ *   +0x0064 -> line 1558
+ *   +0x0068 -> line 1559
+ *   +0x006c -> line 1560
+ *   +0x0070 -> line 1563
+ *   +0x0078 -> line 1565
+ *   +0x007c -> line 1567
+ *   +0x0088 -> line 1565
+ *   +0x00cc -> line 1570
+ *   +0x0114 -> line 1571
+ *   +0x0158 -> line 1572
+ *   +0x019c -> line 1574
+ *   +0x01e4 -> line 1576
+ *   +0x01f8 -> line 1577
+ *   +0x01fc -> line 1576
+ *   +0x0204 -> line 1577
+ *   +0x0208 -> line 1576
+ *   +0x0228 -> line 1577
+ *   +0x0230 -> line 1578
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_ShootSmoke::Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fParameter)
+{
+    unsigned int i;
+    m_Finished = 0; m_Position.Vector[0] = pPosition->xX; m_Position.Vector[1] = pPosition->xY; m_Position.Vector[2] = pPosition->xZ; m_Position.Vector[3] = 1.0f; m_pMat1 = pMat1; m_fCreationTime = g_ffFrameTime;
+    m_fTime = 0.0f;
+    m_fTransparency = 255.0f;
+    m_fScale = 0.5f;
+    AGO_Define_OrthogonalVectors(pDirection, &m_stInitialPosition, &m_stAdditionnalVector);
+    m_stAxes.stCol_0 = m_stInitialPosition;
+    m_stAxes.stCol_1 = *pDirection;
+    m_stAxes.stCol_2 = m_stAdditionnalVector;
+    for (i = 0; i < 14; i++)
+    {
+        m_a_fXYNoise[i][0] = AGO3_M_xRand(-0.1f, 0.1f);
+        m_a_fXYNoise[i][1] = AGO3_M_xRand(-0.3f, 0.3f);
+        m_a_fXYNoise[i][2] = AGO3_M_xRand(-0.1f, 0.1f);
+        m_a_fScale[i] = AGO3_M_xRand(0.6f, 1.4f);
+        m_a_fTransparency[i] = AGO3_M_xRand(0.0f, 128.0f);
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 1583–1588 */
+/* addr: 0x001f7a10  size: 60 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1583
+ *   +0x0024 -> line 1585
+ *   +0x0028 -> line 1587
+ *   +0x0034 -> line 1588
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_ShootSmoke::Process(void)
+{
+    if (m_fTime > 1.3f)
+        m_Finished = 1;
+    m_fTime += g_fTimeDifference;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 1592–1650 */
+/* addr: 0x001f76e0  size: 808 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1592
+ *   +0x0004 -> line 1604
+ *   +0x0008 -> line 1592
+ *   +0x000c -> line 1604
+ *   +0x0010 -> line 1592
+ *   +0x0014 -> line 1604
+ *   +0x0018 -> line 1592
+ *   +0x0038 -> line 1604
+ *   +0x004c -> line 1608
+ *   +0x0054 -> line 1609
+ *   +0x0058 -> line 1608
+ *   +0x005c -> line 1609
+ *   +0x0060 -> line 1608
+ *   +0x0064 -> line 1610
+ *   +0x0070 -> line 1609
+ *   +0x0074 -> line 1610
+ *   +0x0078 -> line 1609
+ *   +0x007c -> line 1611
+ *   +0x0080 -> line 1610
+ *   +0x0084 -> line 1616
+ *   +0x00c0 -> line 1619
+ *   +0x00c4 -> line 1616
+ *   +0x00c8 -> line 1619
+ *   +0x00d0 -> line 1616
+ *   +0x00d8 -> line 1619
+ *   +0x00dc -> line 1616
+ *   +0x00ec -> line 1619
+ *   +0x00fc -> line 1620
+ *   +0x0114 -> line 1623
+ *   +0x0118 -> line 1624
+ *   +0x0124 -> line 1627
+ *   +0x0138 -> line 1628
+ *   +0x013c -> line 1627
+ *   +0x0140 -> line 1629
+ *   +0x0144 -> line 1627
+ *   +0x015c -> line 1629
+ *   +0x0160 -> line 1627
+ *   +0x0164 -> line 1629
+ *   +0x0168 -> line 1627
+ *   +0x016c -> line 1629
+ *   +0x0174 -> line 1627
+ *   +0x0180 -> line 1628
+ *   +0x0188 -> line 1629
+ *   +0x019c -> line 1631
+ *   +0x0210 -> line 1636
+ *   +0x0214 -> line 1631
+ *   +0x0218 -> line 1632
+ *   +0x0228 -> line 1633
+ *   +0x0238 -> line 1634
+ *   +0x0248 -> line 1636
+ *   +0x0258 -> line 1638
+ *   +0x025c -> line 1639
+ *   +0x0260 -> line 1638
+ *   +0x0264 -> line 1639
+ *   +0x026c -> line 1641
+ *   +0x02a8 -> line 1644
+ *   +0x02d8 -> line 1646
+ *   +0x02e0 -> line 1647
+ *   +0x02e4 -> line 1646
+ *   +0x02f0 -> line 1647
+ *   +0x02fc -> line 1650
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_ShootSmoke::Display(GLD_tdstViewportAttributes_* hVp)
+{
+    float fPercentage;
+    float fScale;
+    float fRayTime;
+    MTH3D_tdstVector_ stSpritePos;
+    MTH3D_tdstVector_ Vtmp;
+    float fAngle;
+    float fRay;
+    unsigned int i;
+    float* pY;
+    float* pZ;
+    float* pTable;
+    int iAngle;
+    float fX;
+    float fY;
+    float fZ;
+    fRayTime = m_fTime;
+    if (fRayTime > 0.3f)
+    {
+        fPercentage = 1.0f - (fRayTime - 0.3f);
+        m_fScale = 0.5f * fPercentage;
+        m_fTransparency = 255.0f * fPercentage;
+        fRayTime = 0.3f;
+    }
+    fRay = ((float*)p_fCosTable)[((int)(81.48733f * (0.5f * (3.1415927f * (3.3333333f * fRayTime)))) + 0x80) & 0x1ff];
+    if (m_fTime > 0.3f)
+        fRay += 0.39999998f * m_fTime;
+    fAngle = 0.0f;
+    for (i = 0; i < 14; i++)
+    {
+        pTable = (float*)p_fCosTable;
+        pY = &stSpritePos.xY;
+        pZ = &stSpritePos.xZ;
+        iAngle = (int)(81.48733f * fAngle);
+        stSpritePos.xX = m_a_fXYNoise[i][0] + fRay * pTable[iAngle & 0x1ff];
+        *pY = m_a_fXYNoise[i][1];
+        *pZ = m_a_fXYNoise[i][2] + fRay * pTable[(iAngle + 0x80) & 0x1ff];
+        ((int*)&Vtmp)[0] = ((int*)&stSpritePos)[0];
+        ((int*)&Vtmp)[1] = ((int*)&stSpritePos)[1];
+        ((int*)&Vtmp)[2] = ((int*)&stSpritePos)[2];
+        fX = Vtmp.xX;
+        fY = Vtmp.xY;
+        fZ = Vtmp.xZ;
+        stSpritePos.xX = AGO3_M_xDot3(m_stAxes.stCol_0.xX, fX, m_stAxes.stCol_1.xX, fY, m_stAxes.stCol_2.xX, fZ);
+        *pY = AGO3_M_xDot3(m_stAxes.stCol_0.xY, fX, m_stAxes.stCol_1.xY, fY, m_stAxes.stCol_2.xY, fZ);
+        *pZ = AGO3_M_xDot3(m_stAxes.stCol_0.xZ, fX, m_stAxes.stCol_1.xZ, fY, m_stAxes.stCol_2.xZ, fZ);
+        stSpritePos.xX += m_Position.Vector[0];
+        *pY += m_Position.Vector[1];
+        *pZ += m_Position.Vector[2];
+        GLI_vSetGlobalAlpha(m_fTransparency - m_a_fTransparency[i]);
+        fScale = m_fScale * m_a_fScale[i];
+        if (i < 7)
+            GLI_vDrawWorldSpriteWithUVsOpt(&stSpritePos, m_pMat1, fScale, fScale, 0.0f, 0.5f, 1.0f, 1.0f, hVp, 1);
+        else
+            GLI_vDrawWorldSpriteWithUVsOpt(&stSpritePos, m_pMat1, fScale, fScale, 0.0f, 0.0f, 1.0f, 0.5f, hVp, 1);
+        fAngle += 0.44879895f;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 1731–1842 */
+/* addr: 0x001f7120  size: 1464 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1731
+ *   +0x0008 -> line 1746
+ *   +0x000c -> line 1731
+ *   +0x0014 -> line 1746
+ *   +0x0018 -> line 1731
+ *   +0x0040 -> line 1746
+ *   +0x0054 -> line 1748
+ *   +0x006c -> line 1750
+ *   +0x0070 -> line 1751
+ *   +0x0074 -> line 1750
+ *   +0x0078 -> line 1751
+ *   +0x007c -> line 1752
+ *   +0x0080 -> line 1750
+ *   +0x0084 -> line 1751
+ *   +0x0088 -> line 1752
+ *   +0x0098 -> line 1750
+ *   +0x00bc -> line 1752
+ *   +0x00c4 -> line 1753
+ *   +0x00d4 -> line 1754
+ *   +0x00e0 -> line 1753
+ *   +0x00e4 -> line 1755
+ *   +0x00e8 -> line 1754
+ *   +0x00ec -> line 1755
+ *   +0x00f4 -> line 1754
+ *   +0x00f8 -> line 1755
+ *   +0x00fc -> line 1756
+ *   +0x0104 -> line 1757
+ *   +0x0114 -> line 1758
+ *   +0x0120 -> line 1760
+ *   +0x012c -> line 1757
+ *   +0x0130 -> line 1759
+ *   +0x0134 -> line 1758
+ *   +0x0138 -> line 1759
+ *   +0x0140 -> line 1762
+ *   +0x0144 -> line 1761
+ *   +0x0148 -> line 1762
+ *   +0x014c -> line 1761
+ *   +0x0150 -> line 1762
+ *   +0x0154 -> line 1761
+ *   +0x0158 -> line 1758
+ *   +0x015c -> line 1759
+ *   +0x0164 -> line 1760
+ *   +0x016c -> line 1761
+ *   +0x0174 -> line 1762
+ *   +0x017c -> line 1767
+ *   +0x0180 -> line 1768
+ *   +0x0184 -> line 1767
+ *   +0x018c -> line 1768
+ *   +0x019c -> line 1770
+ *   +0x01a0 -> line 1768
+ *   +0x01a4 -> line 1771
+ *   +0x01a8 -> line 1768
+ *   +0x01b8 -> line 1770
+ *   +0x01bc -> line 1771
+ *   +0x01c0 -> line 1772
+ *   +0x01c8 -> line 1773
+ *   +0x01d0 -> line 1774
+ *   +0x01d8 -> line 1777
+ *   +0x01e4 -> line 1783
+ *   +0x01e8 -> line 1780
+ *   +0x01ec -> line 1783
+ *   +0x01f0 -> line 1780
+ *   +0x01f4 -> line 1783
+ *   +0x01f8 -> line 1780
+ *   +0x0200 -> line 1783
+ *   +0x0204 -> line 1780
+ *   +0x020c -> line 1783
+ *   +0x0230 -> line 1784
+ *   +0x0240 -> line 1785
+ *   +0x0248 -> line 1788
+ *   +0x0280 -> line 1791
+ *   +0x0284 -> line 1788
+ *   +0x0298 -> line 1791
+ *   +0x02a0 -> line 1793
+ *   +0x02ac -> line 1797
+ *   +0x02b0 -> line 1798
+ *   +0x02b4 -> line 1793
+ *   +0x02c4 -> line 1794
+ *   +0x02dc -> line 1795
+ *   +0x02f0 -> line 1797
+ *   +0x02f4 -> line 1795
+ *   +0x02f8 -> line 1798
+ *   +0x0308 -> line 1804
+ *   +0x030c -> line 1803
+ *   +0x031c -> line 1804
+ *   +0x0320 -> line 1803
+ *   +0x0334 -> line 1804
+ *   +0x033c -> line 1805
+ *   +0x0340 -> line 1808
+ *   +0x034c -> line 1805
+ *   +0x0350 -> line 1806
+ *   +0x0358 -> line 1807
+ *   +0x0360 -> line 1808
+ *   +0x0364 -> line 1809
+ *   +0x0368 -> line 1808
+ *   +0x036c -> line 1809
+ *   +0x0370 -> line 1811
+ *   +0x0378 -> line 1812
+ *   +0x0394 -> line 1813
+ *   +0x0398 -> line 1812
+ *   +0x03b4 -> line 1813
+ *   +0x03b8 -> line 1812
+ *   +0x03c0 -> line 1813
+ *   +0x03c4 -> line 1815
+ *   +0x03f0 -> line 1817
+ *   +0x03f8 -> line 1815
+ *   +0x03fc -> line 1817
+ *   +0x0400 -> line 1815
+ *   +0x040c -> line 1817
+ *   +0x0414 -> line 1815
+ *   +0x0418 -> line 1817
+ *   +0x041c -> line 1815
+ *   +0x0420 -> line 1818
+ *   +0x0428 -> line 1819
+ *   +0x042c -> line 1821
+ *   +0x043c -> line 1827
+ *   +0x0444 -> line 1821
+ *   +0x0480 -> line 1822
+ *   +0x0484 -> line 1823
+ *   +0x0488 -> line 1824
+ *   +0x0490 -> line 1829
+ *   +0x049c -> line 1830
+ *   +0x04d8 -> line 1831
+ *   +0x04f4 -> line 1832
+ *   +0x0500 -> line 1834
+ *   +0x050c -> line 1832
+ *   +0x0514 -> line 1833
+ *   +0x0524 -> line 1834
+ *   +0x0540 -> line 1836
+ *   +0x0544 -> line 1834
+ *   +0x0548 -> line 1835
+ *   +0x0550 -> line 1836
+ *   +0x0554 -> line 1835
+ *   +0x0560 -> line 1836
+ *   +0x0568 -> line 1838
+ *   +0x0578 -> line 1839
+ *   +0x0584 -> line 1842
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_TurningFistSmoke::Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fForwardSpeed)
+{
+    unsigned int i;
+    float fInterval;
+    float fMultiplier;
+    float fX;
+    float fY;
+    C_Vector cvDirection;
+    C_Vector a_cvDirection[2];
+    C_Vector cvRandomDirection;
+    unsigned int ulFist;
+    unsigned int ulFirstEntry;
+    AGO3_TFS_SpriteData* pSpriteData;
+    unsigned int* pNbAGOs;
+    unsigned int* pFirstFree;
+    MTH3D_tdstVector_* pPrevious;
+
+    ulFist = fForwardSpeed < 0.0f ? 1 : 0;
+    pNbAGOs = m_a_ulNbAGOs;
+    pNbAGOs += ulFist;
+    if (*pNbAGOs == 0)
+    {
+        m_Finished = 0; m_Position.Vector[0] = pPosition->xX; m_Position.Vector[1] = pPosition->xY; m_Position.Vector[2] = pPosition->xZ; m_Position.Vector[3] = 1.0f; m_pMat1 = pMat1; m_fCreationTime = g_ffFrameTime;
+        m_bInProgress[ulFist] = 1;
+        sceVu0CopyVector(&m_a_stInitialSpritePosition[ulFist], &m_Position);
+        m_a_stInitialSpriteDirection[ulFist].Vector[0] = pDirection->xX;
+        m_a_stInitialSpriteDirection[ulFist].Vector[1] = pDirection->xY;
+        m_a_stInitialSpriteDirection[ulFist].Vector[2] = pDirection->xZ;
+    }
+    else
+    {
+        pPosition->xX = m_a_stInitialSpritePosition[ulFist].Vector[0];
+        pPosition->xY = m_a_stInitialSpritePosition[ulFist].Vector[1];
+        pPosition->xZ = m_a_stInitialSpritePosition[ulFist].Vector[2];
+        pDirection->xX = m_a_stInitialSpriteDirection[ulFist].Vector[0];
+        pDirection->xY = m_a_stInitialSpriteDirection[ulFist].Vector[1];
+        pDirection->xZ = m_a_stInitialSpriteDirection[ulFist].Vector[2];
+    }
+    pFirstFree = m_a_ulFirstFree;
+    pFirstFree += ulFist;
+    ulFirstEntry = *pFirstFree;
+    pSpriteData = &m_stSprite[ulFist][ulFirstEntry];
+    pSpriteData->fSize = m_fMainSize;
+    pSpriteData->fTransparency = 300.0f;
+    pSpriteData->stPosition = *pPosition;
+    if (*pNbAGOs)
+    {
+        pPrevious = &m_stSprite[ulFist][(ulFirstEntry + 63) & 0x3f].stPosition;
+        pSpriteData->ulNbIntermediates = (int)(0.5f + g_fTimeDifference / g_stEngineStructure.stEngineTimer.xFrameLength) - 1;
+        if (pSpriteData->ulNbIntermediates > 5)
+            pSpriteData->ulNbIntermediates = 5;
+        fInterval = 1.0f / (float)(pSpriteData->ulNbIntermediates + 1);
+        fMultiplier = fInterval;
+        for (i = 0; i < pSpriteData->ulNbIntermediates; i++)
+        {
+            pSpriteData->a_stIntermediatePosition[i].xX = pPosition->xX + fMultiplier * (pPrevious->xX - pPosition->xX);
+            pSpriteData->a_stIntermediatePosition[i].xY = pPosition->xY + fMultiplier * (pPrevious->xY - pPosition->xY);
+            pSpriteData->a_stIntermediatePosition[i].xZ = pPosition->xZ + fMultiplier * (pPrevious->xZ - pPosition->xZ);
+            fMultiplier += fInterval;
+        }
+    }
+    cvDirection.Vector[0] = pDirection->xX;
+    cvDirection.Vector[1] = pDirection->xY;
+    cvDirection.Vector[2] = pDirection->xZ;
+    cvDirection.Vector[3] = 1.0f;
+    sceVu0Normalize(&cvDirection, &cvDirection);
+    cvDirection.Vector[0] = cvDirection.Vector[0];
+    cvDirection.Vector[1] = cvDirection.Vector[1];
+    cvDirection.Vector[2] = cvDirection.Vector[2];
+    fX = 0.02f * cvDirection.Vector[0];
+    fY = 0.02f * cvDirection.Vector[1];
+    a_cvDirection[0].Vector[0] = fY;
+    a_cvDirection[0].Vector[1] = -fX;
+    a_cvDirection[0].Vector[2] = AGO3_M_xRand(0.02f, 0.1f);
+    a_cvDirection[1].Vector[0] = -fY;
+    a_cvDirection[1].Vector[1] = fX;
+    a_cvDirection[1].Vector[2] = AGO3_M_xRand(0.02f, 0.1f);
+    fX = 0.1f * cvDirection.Vector[0];
+    fY = 0.1f * cvDirection.Vector[1];
+    pSpriteData->a_stSpriteDirection[0].Vector[0] = fX;
+    pSpriteData->a_stSpriteDirection[0].Vector[1] = fY;
+    pSpriteData->a_stSpriteDirection[0].Vector[2] = AGO3_M_xRand(0.01f, 0.05f);
+    pSpriteData->a_stSpriteDirection[1].Vector[0] = fX;
+    pSpriteData->a_stSpriteDirection[1].Vector[1] = fY;
+    pSpriteData->a_stSpriteDirection[1].Vector[2] = pSpriteData->a_stSpriteDirection[0].Vector[2];
+    for (i = 0; i < 6; i++)
+    {
+        sceVu0CopyVector(&cvRandomDirection, &cvDirection);
+        sceVu0ScaleVectorXYZ(&cvRandomDirection, &cvRandomDirection, -0.5f + (float)rand() / 2147483648.0f);
+        sceVu0AddVector(&cvRandomDirection, &cvRandomDirection, (i & 1) == 0 ? &a_cvDirection[0] : &a_cvDirection[1]);
+        pSpriteData->a_stSpritePosition[0][i].xX = pPosition->xX + cvRandomDirection.Vector[0];
+        pSpriteData->a_stSpritePosition[0][i].xY = pPosition->xY + cvRandomDirection.Vector[1];
+        pSpriteData->a_ulType[i] = cvRandomDirection.Vector[2] >= 0.0f ? 0 : 1;
+        pSpriteData->a_stSpritePosition[0][i].xZ = pPosition->xZ + cvRandomDirection.Vector[2];
+    }
+    *pFirstFree = (*pFirstFree + 1) & 0x3f;
+    (*pNbAGOs)++;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 1847–1925 */
+/* addr: 0x001f6cc0  size: 1108 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1847
+ *   +0x0038 -> line 1850
+ *   +0x003c -> line 1847
+ *   +0x0044 -> line 1852
+ *   +0x0050 -> line 1853
+ *   +0x0058 -> line 1857
+ *   +0x0060 -> line 1862
+ *   +0x0064 -> line 1860
+ *   +0x0068 -> line 1862
+ *   +0x006c -> line 1858
+ *   +0x0078 -> line 1860
+ *   +0x0080 -> line 1858
+ *   +0x0090 -> line 1860
+ *   +0x0094 -> line 1858
+ *   +0x0098 -> line 1862
+ *   +0x00a0 -> line 1868
+ *   +0x00bc -> line 1870
+ *   +0x00c8 -> line 1871
+ *   +0x00d4 -> line 1872
+ *   +0x00e0 -> line 1873
+ *   +0x0148 -> line 1875
+ *   +0x0168 -> line 1876
+ *   +0x0170 -> line 1878
+ *   +0x01d0 -> line 1880
+ *   +0x01e0 -> line 1884
+ *   +0x01e8 -> line 1880
+ *   +0x0238 -> line 1884
+ *   +0x0240 -> line 1885
+ *   +0x0254 -> line 1886
+ *   +0x0264 -> line 1887
+ *   +0x0274 -> line 1889
+ *   +0x0288 -> line 1894
+ *   +0x0290 -> line 1892
+ *   +0x0294 -> line 1894
+ *   +0x0298 -> line 1896
+ *   +0x029c -> line 1898
+ *   +0x02a0 -> line 1894
+ *   +0x02a8 -> line 1895
+ *   +0x02b8 -> line 1896
+ *   +0x02d0 -> line 1894
+ *   +0x02d4 -> line 1896
+ *   +0x02e0 -> line 1895
+ *   +0x02e4 -> line 1896
+ *   +0x0300 -> line 1894
+ *   +0x0304 -> line 1896
+ *   +0x0310 -> line 1895
+ *   +0x0314 -> line 1896
+ *   +0x0324 -> line 1898
+ *   +0x0338 -> line 1900
+ *   +0x0340 -> line 1903
+ *   +0x0344 -> line 1900
+ *   +0x0348 -> line 1903
+ *   +0x034c -> line 1902
+ *   +0x0350 -> line 1900
+ *   +0x0358 -> line 1901
+ *   +0x0368 -> line 1902
+ *   +0x0374 -> line 1903
+ *   +0x0384 -> line 1904
+ *   +0x039c -> line 1907
+ *   +0x03a0 -> line 1908
+ *   +0x03ac -> line 1911
+ *   +0x03b0 -> line 1910
+ *   +0x03b4 -> line 1912
+ *   +0x03c0 -> line 1914
+ *   +0x03c8 -> line 1915
+ *   +0x03d4 -> line 1916
+ *   +0x03d8 -> line 1917
+ *   +0x03e0 -> line 1915
+ *   +0x03e4 -> line 1917
+ *   +0x03ec -> line 1920
+ *   +0x040c -> line 1923
+ *   +0x0414 -> line 1922
+ *   +0x0418 -> line 1923
+ *   +0x041c -> line 1925
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_TurningFistSmoke::Process(void)
+{
+    unsigned int ulFist;
+    unsigned int ulNbAGOs;
+    float fTimeDifference;
+    unsigned int ulEntry;
+    AGO3_TFS_SpriteData* pSpriteData;
+    unsigned int iSprite;
+    unsigned int i;
+    C_Vector a_stSpriteDirection[2];
+    float fSpeed;
+
+    for (ulFist = 0; ulFist < 2; ulFist++)
+    {
+        ulNbAGOs = m_a_ulNbAGOs[ulFist];
+        if (ulNbAGOs)
+        {
+            ulEntry = m_a_ulFirstSet[ulFist];
+            pSpriteData = &m_stSprite[ulFist][ulEntry];
+            fTimeDifference = 30.0f * g_fTimeDifference;
+            while (ulNbAGOs--)
+            {
+                if (pSpriteData->fTransparency <= 0.0f)
+                {
+                    m_a_ulNbAGOs[ulFist]--;
+                    m_a_ulFirstSet[ulFist] = (m_a_ulFirstSet[ulFist] + 1) & 0x3f;
+                }
+                else
+                {
+                    pSpriteData->fSize += 1.3f * g_fTimeDifference * AGO3_M_xRand(0.1f, 1.3f);
+                }
+                if (pSpriteData->fTransparency == 300.0f)
+                    pSpriteData->fTransparency = 255.0f;
+                else
+                    pSpriteData->fTransparency -= 500.0f * g_fTimeDifference * AGO3_M_xRand(0.5f, 1.7f);
+                fSpeed = 1.0f + ((float*)p_fCosTable)[((int)(81.48733f * (1.5707964f * (0.003921569f * pSpriteData->fTransparency))) + 128) & 0x1ff];
+                sceVu0CopyVector(&a_stSpriteDirection[0], &pSpriteData->a_stSpriteDirection[0]);
+                fSpeed = fTimeDifference * fSpeed;
+                sceVu0ScaleVectorXYZ(&a_stSpriteDirection[0], &a_stSpriteDirection[0], fSpeed);
+                sceVu0CopyVector(&a_stSpriteDirection[1], &pSpriteData->a_stSpriteDirection[1]);
+                sceVu0ScaleVectorXYZ(&a_stSpriteDirection[1], &a_stSpriteDirection[1], fSpeed);
+                for (iSprite = 0; iSprite < pSpriteData->ulNbIntermediates + 1; iSprite++)
+                {
+                    for (i = 0; i < 3; i++)
+                    {
+                        pSpriteData->a_stSpritePosition[iSprite][i].xX += a_stSpriteDirection[0].Vector[0];
+                        pSpriteData->a_stSpritePosition[iSprite][i].xY += a_stSpriteDirection[0].Vector[1];
+                        pSpriteData->a_stSpritePosition[iSprite][i].xZ += a_stSpriteDirection[0].Vector[2];
+                    }
+                    for (; i < 6; i++)
+                    {
+                        pSpriteData->a_stSpritePosition[iSprite][i].xX += a_stSpriteDirection[1].Vector[0];
+                        pSpriteData->a_stSpritePosition[iSprite][i].xY += a_stSpriteDirection[1].Vector[1];
+                        pSpriteData->a_stSpritePosition[iSprite][i].xZ += a_stSpriteDirection[1].Vector[2];
+                    }
+                }
+                ulEntry++;
+                if (ulEntry == 50)
+                {
+                    ulEntry = 0;
+                    pSpriteData = &m_stSprite[ulFist][0];
+                }
+                else
+                {
+                    pSpriteData++;
+                }
+            }
+        }
+    }
+    if (m_a_ulNbAGOs[0] == 0 && m_a_ulNbAGOs[1] == 0)
+    {
+        m_pAGO3_TFS_Object = 0;
+        m_Finished = 1;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 1929–1989 */
+/* addr: 0x001f69c0  size: 760 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1929
+ *   +0x0038 -> line 1932
+ *   +0x0044 -> line 1934
+ *   +0x0054 -> line 1935
+ *   +0x0060 -> line 1939
+ *   +0x0068 -> line 1940
+ *   +0x006c -> line 1941
+ *   +0x0070 -> line 1940
+ *   +0x0078 -> line 1941
+ *   +0x0084 -> line 1939
+ *   +0x0098 -> line 1940
+ *   +0x00ac -> line 1941
+ *   +0x00b8 -> line 1946
+ *   +0x00c0 -> line 1949
+ *   +0x00d0 -> line 1952
+ *   +0x00e0 -> line 1953
+ *   +0x0120 -> line 1955
+ *   +0x0158 -> line 1956
+ *   +0x0160 -> line 1955
+ *   +0x0164 -> line 1956
+ *   +0x016c -> line 1959
+ *   +0x0178 -> line 1961
+ *   +0x0180 -> line 1965
+ *   +0x0184 -> line 1963
+ *   +0x0190 -> line 1967
+ *   +0x01a0 -> line 1968
+ *   +0x01e0 -> line 1970
+ *   +0x0220 -> line 1971
+ *   +0x0228 -> line 1970
+ *   +0x022c -> line 1971
+ *   +0x0238 -> line 1972
+ *   +0x0254 -> line 1973
+ *   +0x0258 -> line 1975
+ *   +0x0260 -> line 1978
+ *   +0x0264 -> line 1977
+ *   +0x0268 -> line 1979
+ *   +0x0270 -> line 1981
+ *   +0x0274 -> line 1982
+ *   +0x0278 -> line 1984
+ *   +0x028c -> line 1985
+ *   +0x0290 -> line 1984
+ *   +0x02a8 -> line 1986
+ *   +0x02c4 -> line 1989
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_TurningFistSmoke::Display(GLD_tdstViewportAttributes_* hVp)
+{
+    float fSize;
+    unsigned int iSprite;
+    unsigned int i;
+    AGO3_TFS_SpriteData* pSpriteData;
+    unsigned int ulEntry;
+    unsigned int ulNbAGOs;
+    unsigned int ulFist;
+    for (ulFist = 0; ulFist < 2; ulFist++)
+    {
+        ulNbAGOs = m_a_ulNbAGOs[ulFist];
+        if (ulNbAGOs)
+        {
+            ulEntry = (m_a_ulFirstFree[ulFist] + 49) % 50;
+            pSpriteData = &m_stSprite[ulFist][ulEntry];
+            while (ulNbAGOs--)
+            {
+                GLI_vSetGlobalAlpha(pSpriteData->fTransparency);
+                for (i = 0; i < 6; i++)
+                {
+                    fSize = pSpriteData->fSize;
+                    if (pSpriteData->a_ulType[i] == 0)
+                        GLI_vDrawWorldSpriteWithUVsOpt(&pSpriteData->a_stSpritePosition[0][i], m_pMat1, fSize, fSize, 0.0f, 0.5f, 1.0f, 1.0f, hVp, 1);
+                    else
+                        GLI_vDrawWorldSpriteWithUVsOpt(&pSpriteData->a_stSpritePosition[0][i], m_pMat1, fSize, fSize, 0.0f, 0.0f, 1.0f, 0.5f, hVp, 1);
+                }
+                if (pSpriteData->ulNbIntermediates)
+                {
+                    for (iSprite = 1; iSprite < pSpriteData->ulNbIntermediates + 1; iSprite++)
+                    {
+                        fSize = pSpriteData->fSize;
+                        for (i = 0; i < 6; i++)
+                        {
+                            if (pSpriteData->a_ulType[i] == 0)
+                                GLI_vDrawWorldSpriteWithUVsOpt(&pSpriteData->a_stSpritePosition[iSprite][i], m_pMat1, fSize, fSize, 0.0f, 0.5f, 1.0f, 1.0f, hVp, 1);
+                            else
+                                GLI_vDrawWorldSpriteWithUVsOpt(&pSpriteData->a_stSpritePosition[iSprite][i], m_pMat1, fSize, fSize, 0.0f, 0.0f, 1.0f, 0.5f, hVp, 1);
+                        }
+                    }
+                }
+                if (ulEntry == 0)
+                {
+                    ulEntry = 49;
+                    pSpriteData = &m_stSprite[ulFist][49];
+                }
+                else
+                {
+                    pSpriteData--;
+                    ulEntry--;
+                }
+            }
+        }
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2064–2069 */
+/* addr: 0x001f6990  size: 40 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2064
+ *   +0x0004 -> line 2068
+ *   +0x0008 -> line 2064
+ *   +0x000c -> line 2065
+ *   +0x0014 -> line 2066
+ *   +0x001c -> line 2067
+ *   +0x0020 -> line 2069
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_FistSmoke::DesInit(void)
+{
+    m_a_ulNbAGOs[0] = m_a_ulNbAGOs[1] = 0;
+    m_a_ulFirstFree[0] = m_a_ulFirstFree[1] = 0;
+    m_a_ulFirstSet[0] = m_a_ulFirstSet[1] = 0;
+    m_hHandle = 0;
+    ((AGO3_Part*)this)->m_Finished = 1;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2073–2193 */
+/* addr: 0x001f6300  size: 1672 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2073
+ *   +0x0008 -> line 2090
+ *   +0x000c -> line 2073
+ *   +0x0014 -> line 2090
+ *   +0x0018 -> line 2073
+ *   +0x003c -> line 2090
+ *   +0x0050 -> line 2092
+ *   +0x0070 -> line 2093
+ *   +0x00a0 -> line 2095
+ *   +0x00a4 -> line 2096
+ *   +0x00a8 -> line 2095
+ *   +0x00b0 -> line 2096
+ *   +0x00b4 -> line 2095
+ *   +0x00b8 -> line 2099
+ *   +0x00bc -> line 2095
+ *   +0x00c0 -> line 2096
+ *   +0x00c8 -> line 2100
+ *   +0x00cc -> line 2096
+ *   +0x00d8 -> line 2099
+ *   +0x00dc -> line 2100
+ *   +0x00e0 -> line 2101
+ *   +0x00e8 -> line 2102
+ *   +0x00f0 -> line 2103
+ *   +0x00f8 -> line 2107
+ *   +0x0100 -> line 2108
+ *   +0x0108 -> line 2109
+ *   +0x0188 -> line 2113
+ *   +0x0198 -> line 2117
+ *   +0x01a4 -> line 2126
+ *   +0x01a8 -> line 2117
+ *   +0x01ac -> line 2126
+ *   +0x01b0 -> line 2117
+ *   +0x01b4 -> line 2126
+ *   +0x01b8 -> line 2117
+ *   +0x01c0 -> line 2126
+ *   +0x01c8 -> line 2121
+ *   +0x01d0 -> line 2126
+ *   +0x01e0 -> line 2122
+ *   +0x01e8 -> line 2126
+ *   +0x01ec -> line 2123
+ *   +0x01f4 -> line 2121
+ *   +0x01f8 -> line 2122
+ *   +0x01fc -> line 2126
+ *   +0x0200 -> line 2127
+ *   +0x0210 -> line 2128
+ *   +0x0218 -> line 2131
+ *   +0x024c -> line 2134
+ *   +0x0250 -> line 2131
+ *   +0x0264 -> line 2134
+ *   +0x026c -> line 2138
+ *   +0x0278 -> line 2144
+ *   +0x027c -> line 2143
+ *   +0x0280 -> line 2138
+ *   +0x0288 -> line 2139
+ *   +0x0298 -> line 2140
+ *   +0x02ac -> line 2143
+ *   +0x02b0 -> line 2138
+ *   +0x02b4 -> line 2140
+ *   +0x02bc -> line 2139
+ *   +0x02c0 -> line 2140
+ *   +0x02d4 -> line 2138
+ *   +0x02d8 -> line 2140
+ *   +0x02e0 -> line 2139
+ *   +0x02e4 -> line 2140
+ *   +0x02f8 -> line 2138
+ *   +0x02fc -> line 2140
+ *   +0x0304 -> line 2139
+ *   +0x0308 -> line 2140
+ *   +0x031c -> line 2138
+ *   +0x0320 -> line 2140
+ *   +0x0328 -> line 2139
+ *   +0x032c -> line 2140
+ *   +0x0340 -> line 2138
+ *   +0x0344 -> line 2140
+ *   +0x034c -> line 2139
+ *   +0x0350 -> line 2140
+ *   +0x0360 -> line 2144
+ *   +0x0374 -> line 2146
+ *   +0x037c -> line 2147
+ *   +0x0380 -> line 2151
+ *   +0x0384 -> line 2152
+ *   +0x0388 -> line 2151
+ *   +0x0390 -> line 2152
+ *   +0x0394 -> line 2151
+ *   +0x03a8 -> line 2152
+ *   +0x03b0 -> line 2153
+ *   +0x03b8 -> line 2154
+ *   +0x03bc -> line 2153
+ *   +0x03cc -> line 2154
+ *   +0x03d0 -> line 2156
+ *   +0x03d8 -> line 2157
+ *   +0x03f4 -> line 2158
+ *   +0x03f8 -> line 2157
+ *   +0x0414 -> line 2158
+ *   +0x0418 -> line 2157
+ *   +0x0420 -> line 2158
+ *   +0x0424 -> line 2160
+ *   +0x0450 -> line 2162
+ *   +0x0458 -> line 2160
+ *   +0x045c -> line 2162
+ *   +0x0460 -> line 2160
+ *   +0x046c -> line 2162
+ *   +0x0474 -> line 2160
+ *   +0x047c -> line 2163
+ *   +0x0480 -> line 2162
+ *   +0x0484 -> line 2163
+ *   +0x0488 -> line 2165
+ *   +0x048c -> line 2164
+ *   +0x0490 -> line 2166
+ *   +0x04ac -> line 2171
+ *   +0x04b0 -> line 2172
+ *   +0x04bc -> line 2166
+ *   +0x04dc -> line 2167
+ *   +0x04e0 -> line 2166
+ *   +0x04e8 -> line 2167
+ *   +0x04ec -> line 2168
+ *   +0x04f0 -> line 2169
+ *   +0x04f4 -> line 2172
+ *   +0x0500 -> line 2177
+ *   +0x050c -> line 2178
+ *   +0x055c -> line 2179
+ *   +0x0574 -> line 2180
+ *   +0x0584 -> line 2182
+ *   +0x0590 -> line 2180
+ *   +0x0598 -> line 2181
+ *   +0x05a8 -> line 2182
+ *   +0x05c4 -> line 2184
+ *   +0x05c8 -> line 2182
+ *   +0x05cc -> line 2183
+ *   +0x05d4 -> line 2184
+ *   +0x05d8 -> line 2183
+ *   +0x05e0 -> line 2184
+ *   +0x05e8 -> line 2185
+ *   +0x05f4 -> line 2186
+ *   +0x060c -> line 2188
+ *   +0x0610 -> line 2189
+ *   +0x0614 -> line 2188
+ *   +0x0624 -> line 2189
+ *   +0x063c -> line 2190
+ *   +0x0650 -> line 2193
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_FistSmoke::Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fForwardSpeed)
+{
+    unsigned int i;
+    unsigned int ulDirSwitch;
+    AGO3_FS_SpriteData* pSpriteData;
+    unsigned int ulFirstEntry;
+    int iIndex;
+    unsigned int ulFist;
+    C_Vector cvDirection;
+    C_Vector a_cvDirection[2];
+    C_Vector cvRandomDirection;
+    float fX;
+    float fY;
+    float fInterval;
+    float fMultiplier;
+    unsigned int iSprite;
+    MTH3D_tdstVector_* pPrevious;
+    unsigned int* pT;
+    unsigned int* pNb;
+    unsigned int* pFree;
+    float fDX, fDY, fDZ, fMX, fMY, fMZ;
+
+    ulFist = fForwardSpeed < 0.0f ? 1 : 0;
+    iIndex = ulFist * 4;
+    pT = m_a_ulNbAGOs;
+    pNb = (unsigned int*)((char*)pT + iIndex);
+    if (*pNb == 0)
+    {
+        m_Finished = 0; m_Position.Vector[0] = pPosition->xX; m_Position.Vector[1] = pPosition->xY; m_Position.Vector[2] = pPosition->xZ; m_Position.Vector[3] = 1.0f; m_pMat1 = pMat1; m_fCreationTime = g_ffFrameTime;
+    }
+    pT = m_a_ulFirstFree;
+    pFree = (unsigned int*)((char*)pT + iIndex);
+    ulFirstEntry = *pFree;
+    pSpriteData = &m_stSprite[ulFist][ulFirstEntry];
+    pSpriteData->fSize = m_fMainSize;
+    pSpriteData->fTransparency = 300.0f;
+    pSpriteData->stPosition = *pPosition;
+    for (i = 0; i < 6; i++)
+        pSpriteData->a_stSpritePosition[0][i] = *pPosition;
+    if (*pNb)
+    {
+        pPrevious = &m_stSprite[ulFist][ulFirstEntry == 0 ? 63 : ulFirstEntry - 1].stPosition;
+        fDX = pPrevious->xX - pPosition->xX;
+        fDY = pPrevious->xY - pPosition->xY;
+        fDZ = pPrevious->xZ - pPosition->xZ;
+        pSpriteData->ulNbIntermediates = (int)(0.5f + g_fTimeDifference / g_stEngineStructure.stEngineTimer.xFrameLength) - 1;
+        if (pSpriteData->ulNbIntermediates > 5)
+            pSpriteData->ulNbIntermediates = 5;
+        fInterval = 1.0f / (float)pSpriteData->ulNbIntermediates;
+        fMultiplier = fInterval;
+        for (iSprite = 1; iSprite < pSpriteData->ulNbIntermediates + 1; iSprite++)
+        {
+            fMX = fDX * fMultiplier;
+            fMY = fDY * fMultiplier;
+            fMZ = fDZ * fMultiplier;
+            for (i = 0; i < 6; i++)
+            {
+                pSpriteData->a_stSpritePosition[iSprite][i].xX = pPosition->xX + fMX;
+                pSpriteData->a_stSpritePosition[iSprite][i].xY = pPosition->xY + fMY;
+                pSpriteData->a_stSpritePosition[iSprite][i].xZ = pPosition->xZ + fMZ;
+            }
+            fMultiplier += fInterval;
+        }
+    }
+    else
+    {
+        pSpriteData->ulNbIntermediates = 0;
+    }
+    cvDirection.Vector[0] = pDirection->xX;
+    cvDirection.Vector[1] = pDirection->xY;
+    cvDirection.Vector[2] = pDirection->xZ;
+    cvDirection.Vector[3] = 1.0f;
+    sceVu0Normalize(&cvDirection, &cvDirection);
+    fX = 0.02f * cvDirection.Vector[0];
+    fY = 0.02f * cvDirection.Vector[1];
+    a_cvDirection[0].Vector[0] = fY;
+    a_cvDirection[0].Vector[1] = -fX;
+    a_cvDirection[0].Vector[2] = AGO3_M_xRand(0.02f, 0.1f);
+    a_cvDirection[1].Vector[0] = -fY;
+    a_cvDirection[1].Vector[1] = fX;
+    a_cvDirection[1].Vector[2] = AGO3_M_xRand(0.02f, 0.1f);
+    fX = 0.01f * cvDirection.Vector[0];
+    fY = 0.01f * cvDirection.Vector[1];
+    pSpriteData->a_stSpriteDirection[0].Vector[0] = fY;
+    pSpriteData->a_stSpriteDirection[0].Vector[1] = -fX;
+    pSpriteData->a_stSpriteDirection[0].Vector[2] = AGO3_M_xRand(0.01f, 0.05f);
+    pSpriteData->a_stSpriteDirection[1].Vector[0] = -fY;
+    pSpriteData->a_stSpriteDirection[1].Vector[1] = fX;
+    pSpriteData->a_stSpriteDirection[1].Vector[2] = pSpriteData->a_stSpriteDirection[0].Vector[2];
+    ulDirSwitch = 0;
+    for (iSprite = 0; iSprite < pSpriteData->ulNbIntermediates + 1; iSprite++)
+    {
+        for (i = 0; i < 6; i++)
+        {
+            sceVu0CopyVector(&cvRandomDirection, &cvDirection);
+            sceVu0ScaleVectorXYZ(&cvRandomDirection, &cvRandomDirection, AGO3_M_xRand(-1.1f, 1.1f));
+            sceVu0AddVector(&cvRandomDirection, &cvRandomDirection, ulDirSwitch == 0 ? &a_cvDirection[0] : &a_cvDirection[1]);
+            pSpriteData->a_stSpritePosition[iSprite][i].xX = pPosition->xX + cvRandomDirection.Vector[0];
+            pSpriteData->a_stSpritePosition[iSprite][i].xY = pPosition->xY + cvRandomDirection.Vector[1];
+            pSpriteData->a_ulType[iSprite] = cvRandomDirection.Vector[2] >= 0.0f ? 0 : 1;
+            pSpriteData->a_stSpritePosition[iSprite][i].xZ = pPosition->xZ + cvRandomDirection.Vector[2];
+        }
+        ulDirSwitch ^= 1;
+    }
+    (*pFree)++;
+    if (*pFree == 0x40)
+        *pFree = 0;
+    (*pNb)++;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2197–2274 */
+/* addr: 0x001f5f10  size: 1008 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2197
+ *   +0x0038 -> line 2200
+ *   +0x0040 -> line 2202
+ *   +0x004c -> line 2203
+ *   +0x0054 -> line 2207
+ *   +0x005c -> line 2212
+ *   +0x0060 -> line 2210
+ *   +0x0064 -> line 2212
+ *   +0x0068 -> line 2208
+ *   +0x0074 -> line 2210
+ *   +0x007c -> line 2208
+ *   +0x008c -> line 2210
+ *   +0x0090 -> line 2208
+ *   +0x0094 -> line 2212
+ *   +0x00a0 -> line 2217
+ *   +0x00bc -> line 2219
+ *   +0x00c8 -> line 2220
+ *   +0x00d4 -> line 2221
+ *   +0x00e0 -> line 2222
+ *   +0x0148 -> line 2224
+ *   +0x0168 -> line 2225
+ *   +0x0170 -> line 2227
+ *   +0x01d8 -> line 2232
+ *   +0x01e4 -> line 2233
+ *   +0x01f4 -> line 2234
+ *   +0x0204 -> line 2235
+ *   +0x0214 -> line 2237
+ *   +0x0228 -> line 2242
+ *   +0x0230 -> line 2240
+ *   +0x0234 -> line 2242
+ *   +0x0238 -> line 2244
+ *   +0x023c -> line 2246
+ *   +0x0240 -> line 2242
+ *   +0x0248 -> line 2243
+ *   +0x0258 -> line 2244
+ *   +0x0270 -> line 2242
+ *   +0x0274 -> line 2244
+ *   +0x0280 -> line 2243
+ *   +0x0284 -> line 2244
+ *   +0x02a0 -> line 2242
+ *   +0x02a4 -> line 2244
+ *   +0x02b0 -> line 2243
+ *   +0x02b4 -> line 2244
+ *   +0x02c4 -> line 2246
+ *   +0x02d8 -> line 2248
+ *   +0x02e0 -> line 2251
+ *   +0x02e4 -> line 2248
+ *   +0x02e8 -> line 2251
+ *   +0x02ec -> line 2250
+ *   +0x02f0 -> line 2248
+ *   +0x02f8 -> line 2249
+ *   +0x0308 -> line 2250
+ *   +0x0314 -> line 2251
+ *   +0x0324 -> line 2252
+ *   +0x033c -> line 2255
+ *   +0x0340 -> line 2256
+ *   +0x034c -> line 2259
+ *   +0x0350 -> line 2258
+ *   +0x0354 -> line 2260
+ *   +0x0360 -> line 2262
+ *   +0x0368 -> line 2263
+ *   +0x0374 -> line 2264
+ *   +0x0378 -> line 2265
+ *   +0x0380 -> line 2263
+ *   +0x0384 -> line 2265
+ *   +0x038c -> line 2268
+ *   +0x03ac -> line 2272
+ *   +0x03b4 -> line 2271
+ *   +0x03b8 -> line 2272
+ *   +0x03bc -> line 2274
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_FistSmoke::Process(void)
+{
+    unsigned int ulFist;
+    unsigned int ulNbAGOs;
+    float fTimeDifference;
+    unsigned int ulEntry;
+    AGO3_FS_SpriteData* pSpriteData;
+    unsigned int iSprite;
+    unsigned int i;
+    C_Vector a_stSpriteDirection[2];
+
+    for (ulFist = 0; ulFist < 2; ulFist++)
+    {
+        ulNbAGOs = m_a_ulNbAGOs[ulFist];
+        if (ulNbAGOs)
+        {
+            ulEntry = m_a_ulFirstSet[ulFist];
+            pSpriteData = &m_stSprite[ulFist][ulEntry];
+            fTimeDifference = 30.0f * g_fTimeDifference;
+            while (ulNbAGOs--)
+            {
+                if (pSpriteData->fTransparency <= 0.0f)
+                {
+                    m_a_ulNbAGOs[ulFist]--;
+                    m_a_ulFirstSet[ulFist] = (m_a_ulFirstSet[ulFist] + 1) & 0x3f;
+                }
+                else
+                {
+                    pSpriteData->fSize += 1.3f * g_fTimeDifference * AGO3_M_xRand(0.1f, 1.3f);
+                }
+                if (pSpriteData->fTransparency == 300.0f)
+                    pSpriteData->fTransparency = 255.0f;
+                else
+                    pSpriteData->fTransparency -= 2.0f * (500.0f * g_fTimeDifference) * AGO3_M_xRand(0.5f, 1.7f);
+                sceVu0CopyVector(&a_stSpriteDirection[0], &pSpriteData->a_stSpriteDirection[0]);
+                sceVu0ScaleVectorXYZ(&a_stSpriteDirection[0], &a_stSpriteDirection[0], fTimeDifference);
+                sceVu0CopyVector(&a_stSpriteDirection[1], &pSpriteData->a_stSpriteDirection[1]);
+                sceVu0ScaleVectorXYZ(&a_stSpriteDirection[1], &a_stSpriteDirection[1], fTimeDifference);
+                for (iSprite = 0; iSprite < pSpriteData->ulNbIntermediates + 1; iSprite++)
+                {
+                    for (i = 0; i < 3; i++)
+                    {
+                        pSpriteData->a_stSpritePosition[iSprite][i].xX += a_stSpriteDirection[0].Vector[0];
+                        pSpriteData->a_stSpritePosition[iSprite][i].xY += a_stSpriteDirection[0].Vector[1];
+                        pSpriteData->a_stSpritePosition[iSprite][i].xZ += a_stSpriteDirection[0].Vector[2];
+                    }
+                    for (; i < 6; i++)
+                    {
+                        pSpriteData->a_stSpritePosition[iSprite][i].xX += a_stSpriteDirection[1].Vector[0];
+                        pSpriteData->a_stSpritePosition[iSprite][i].xY += a_stSpriteDirection[1].Vector[1];
+                        pSpriteData->a_stSpritePosition[iSprite][i].xZ += a_stSpriteDirection[1].Vector[2];
+                    }
+                }
+                ulEntry++;
+                if (ulEntry == 50)
+                {
+                    ulEntry = 0;
+                    pSpriteData = &m_stSprite[ulFist][0];
+                }
+                else
+                {
+                    pSpriteData++;
+                }
+            }
+        }
+    }
+    if (m_a_ulNbAGOs[0] == 0 && m_a_ulNbAGOs[1] == 0)
+    {
+        m_hHandle = 0;
+        m_Finished = 1;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2278–2358 */
+/* addr: 0x001f5b20  size: 1004 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2278
+ *   +0x0044 -> line 2281
+ *   +0x0050 -> line 2283
+ *   +0x0060 -> line 2284
+ *   +0x006c -> line 2286
+ *   +0x0070 -> line 2287
+ *   +0x0074 -> line 2291
+ *   +0x0078 -> line 2287
+ *   +0x0080 -> line 2291
+ *   +0x008c -> line 2287
+ *   +0x00a0 -> line 2288
+ *   +0x00a4 -> line 2289
+ *   +0x00a8 -> line 2291
+ *   +0x00b0 -> line 2296
+ *   +0x00b8 -> line 2299
+ *   +0x00c8 -> line 2302
+ *   +0x00e0 -> line 2304
+ *   +0x00f0 -> line 2305
+ *   +0x0130 -> line 2307
+ *   +0x0164 -> line 2308
+ *   +0x0168 -> line 2309
+ *   +0x0170 -> line 2307
+ *   +0x0174 -> line 2309
+ *   +0x017c -> line 2312
+ *   +0x0188 -> line 2315
+ *   +0x01a8 -> line 2319
+ *   +0x01ac -> line 2315
+ *   +0x01b0 -> line 2319
+ *   +0x01f0 -> line 2323
+ *   +0x0234 -> line 2325
+ *   +0x0240 -> line 2327
+ *   +0x0244 -> line 2328
+ *   +0x024c -> line 2329
+ *   +0x0250 -> line 2331
+ *   +0x0270 -> line 2336
+ *   +0x0280 -> line 2337
+ *   +0x02c0 -> line 2339
+ *   +0x0300 -> line 2340
+ *   +0x0308 -> line 2339
+ *   +0x030c -> line 2340
+ *   +0x0314 -> line 2341
+ *   +0x0318 -> line 2340
+ *   +0x031c -> line 2342
+ *   +0x0334 -> line 2343
+ *   +0x0338 -> line 2345
+ *   +0x033c -> line 2346
+ *   +0x0348 -> line 2349
+ *   +0x034c -> line 2348
+ *   +0x0350 -> line 2350
+ *   +0x0358 -> line 2352
+ *   +0x0360 -> line 2353
+ *   +0x0374 -> line 2354
+ *   +0x0378 -> line 2353
+ *   +0x0390 -> line 2355
+ *   +0x03ac -> line 2358
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_FistSmoke::Display(GLD_tdstViewportAttributes_* hVp)
+{
+    unsigned int ulFist;
+    unsigned int ulNbAGOs;
+    unsigned int ulEntry;
+    AGO3_FS_SpriteData* pSpriteData;
+    float fTransparency;
+    float fSize;
+    unsigned int i;
+    unsigned int iSprite;
+    AGO3_FS_SpriteData* pPreviousSpriteData;
+    float fTransparencyInterval;
+    float fSizeInterval;
+
+    for (ulFist = 0; ulFist < 2; ulFist++)
+    {
+        ulNbAGOs = m_a_ulNbAGOs[ulFist];
+        if (ulNbAGOs)
+        {
+            ulEntry = m_a_ulFirstSet[ulFist];
+            pSpriteData = &m_stSprite[ulFist][ulEntry];
+            fTransparency = pSpriteData->fTransparency;
+            fSize = pSpriteData->fSize;
+            while (ulNbAGOs--)
+            {
+                GLI_vSetGlobalAlpha(fTransparency);
+                for (i = 0; i < 6; i++)
+                {
+                    if (fSize > 0.0f)
+                    {
+                        if (pSpriteData->a_ulType[i] == 0)
+                            GLI_vDrawWorldSpriteWithUVsOpt(&pSpriteData->a_stSpritePosition[0][i], m_pMat1, fSize, fSize, 0.0f, 0.5f, 1.0f, 1.0f, hVp, 1);
+                        else
+                            GLI_vDrawWorldSpriteWithUVsOpt(&pSpriteData->a_stSpritePosition[0][i], m_pMat1, fSize, fSize, 0.0f, 0.0f, 1.0f, 0.5f, hVp, 1);
+                    }
+                }
+                if (pSpriteData->ulNbIntermediates)
+                {
+                    pPreviousSpriteData = &m_stSprite[ulFist][ulEntry == 0 ? 63 : ulEntry - 1];
+                    fTransparencyInterval = (pPreviousSpriteData->fTransparency - fTransparency) / (float)pSpriteData->ulNbIntermediates;
+                    fSizeInterval = (pPreviousSpriteData->fSize - fSize) / (float)pSpriteData->ulNbIntermediates;
+                    for (iSprite = 1; iSprite < pSpriteData->ulNbIntermediates + 1; iSprite++)
+                    {
+                        fTransparency += fTransparencyInterval;
+                        GLI_vSetGlobalAlpha(fTransparency);
+                        fSize += fSizeInterval;
+                        if (fSize > 0.0f)
+                        {
+                            for (i = 0; i < 6; i++)
+                            {
+                                if (pSpriteData->a_ulType[i] == 0)
+                                    GLI_vDrawWorldSpriteWithUVsOpt(&pSpriteData->a_stSpritePosition[iSprite][i], m_pMat1, fSize, fSize, 0.0f, 0.5f, 1.0f, 1.0f, hVp, 1);
+                                else
+                                    GLI_vDrawWorldSpriteWithUVsOpt(&pSpriteData->a_stSpritePosition[iSprite][i], m_pMat1, fSize, fSize, 0.0f, 0.0f, 1.0f, 0.5f, hVp, 1);
+                            }
+                        }
+                    }
+                }
+                ulEntry++;
+                if (ulEntry == 50)
+                {
+                    ulEntry = 0;
+                    pSpriteData = &m_stSprite[ulFist][0];
+                }
+                else
+                {
+                    pSpriteData++;
+                }
+            }
+        }
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2425–2440 */
+/* addr: 0x001f5aa0  size: 128 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2425
+ *   +0x0018 -> line 2428
+ *   +0x0020 -> line 2429
+ *   +0x0028 -> line 2430
+ *   +0x003c -> line 2433
+ *   +0x004c -> line 2434
+ *   +0x0060 -> line 2435
+ *   +0x0068 -> line 2438
+ *   +0x006c -> line 2439
+ *   +0x0078 -> line 2440
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_SpriteDurationFade::Process(void)
+{
+    if (m_fCurrentTime < m_fFadeInDuration)
+        m_fTransparency = m_fCurrentTime * m_fInvFadeInDurationAlpha;
+    else if (m_fCurrentTime > m_fDisplayDuration)
+    {
+        m_fCurrentFadeOutTime += g_fTimeDifference;
+        m_fTransparency = m_fInvFadeOutDurationAlpha * (m_fFadeOutDuration - m_fCurrentFadeOutTime);
+    }
+    else
+        m_fTransparency = 255.0f;
+    m_fCurrentTime += g_fTimeDifference;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2444–2453 */
+/* addr: 0x001f5a20  size: 116 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2444
+ *   +0x0008 -> line 2445
+ *   +0x000c -> line 2444
+ *   +0x0018 -> line 2445
+ *   +0x002c -> line 2448
+ *   +0x0034 -> line 2449
+ *   +0x0050 -> line 2450
+ *   +0x0058 -> line 2452
+ *   +0x0060 -> line 2453
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_SpriteDurationFade::Display(GLD_tdstViewportAttributes_* hVp)
+{
+    if (m_fTransparency > 0.0f)
+    {
+        GLI_vSetGlobalAlpha(m_fTransparency);
+        GLI_vDrawWorldSpriteOpt((MTH3D_tdstVector_*)&m_Position, m_pMat1, m_fMainSize, m_fMainSize, hVp, 1);
+    }
+    else
+        m_Finished = 1;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2509–2526 */
+/* addr: 0x001f5960  size: 184 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2509
+ *   +0x001c -> line 2512
+ *   +0x003c -> line 2513
+ *   +0x0058 -> line 2515
+ *   +0x0070 -> line 2516
+ *   +0x0080 -> line 2519
+ *   +0x0098 -> line 2521
+ *   +0x009c -> line 2522
+ *   +0x00a4 -> line 2525
+ *   +0x00b0 -> line 2526
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_SpriteZoom::Process(void)
+{
+    if (m_fCurrentTime != 0.0f)
+    {
+        if (m_fZoomPercentage >= 1.0f)
+            m_fCurrentZoom = 1.0f + (m_fZoomPercentage - 1.0f) * (m_fCurrentTime / m_fDisplayDuration);
+        else
+            m_fCurrentZoom = 1.0f - (1.0f - m_fZoomPercentage) * (m_fCurrentTime / m_fDisplayDuration);
+        m_fCurrentSize = m_fMainSize * m_fCurrentZoom;
+        if (m_fCurrentTime > m_fDisplayDuration)
+        {
+            m_fCurrentTime = m_fDisplayDuration;
+            m_Finished = 1;
+        }
+    }
+    m_fCurrentTime += g_fTimeDifference;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2530–2534 */
+/* addr: 0x001f5900  size: 84 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2530
+ *   +0x0004 -> line 2531
+ *   +0x0008 -> line 2530
+ *   +0x000c -> line 2531
+ *   +0x0010 -> line 2530
+ *   +0x001c -> line 2531
+ *   +0x0024 -> line 2533
+ *   +0x0040 -> line 2534
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_SpriteZoom::Display(GLD_tdstViewportAttributes_* hVp)
+{
+    GLI_vSetGlobalAlpha(255.0f);
+    GLI_vDrawWorldSpriteOpt((MTH3D_tdstVector_*)&m_Position, m_pMat1, m_fCurrentSize, m_fCurrentSize, hVp, 1);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2593–2644 */
+/* addr: 0x001f5720  size: 472 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2593
+ *   +0x0004 -> line 2597
+ *   +0x0008 -> line 2593
+ *   +0x000c -> line 2607
+ *   +0x0010 -> line 2593
+ *   +0x0014 -> line 2597
+ *   +0x0018 -> line 2593
+ *   +0x001c -> line 2609
+ *   +0x0020 -> line 2593
+ *   +0x0028 -> line 2597
+ *   +0x005c -> line 2600
+ *   +0x0064 -> line 2601
+ *   +0x006c -> line 2604
+ *   +0x0074 -> line 2605
+ *   +0x007c -> line 2607
+ *   +0x0080 -> line 2609
+ *   +0x0088 -> line 2610
+ *   +0x00a4 -> line 2612
+ *   +0x00a8 -> line 2613
+ *   +0x00b0 -> line 2617
+ *   +0x00c8 -> line 2619
+ *   +0x00cc -> line 2621
+ *   +0x00e4 -> line 2622
+ *   +0x00ec -> line 2623
+ *   +0x0104 -> line 2624
+ *   +0x0110 -> line 2625
+ *   +0x012c -> line 2626
+ *   +0x0134 -> line 2629
+ *   +0x0138 -> line 2628
+ *   +0x0140 -> line 2629
+ *   +0x0144 -> line 2632
+ *   +0x0148 -> line 2634
+ *   +0x0160 -> line 2635
+ *   +0x0168 -> line 2636
+ *   +0x0180 -> line 2637
+ *   +0x018c -> line 2638
+ *   +0x01a8 -> line 2639
+ *   +0x01b0 -> line 2642
+ *   +0x01b4 -> line 2641
+ *   +0x01bc -> line 2642
+ *   +0x01c0 -> line 2644
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_ScrollMatUV::Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fDuration)
+{
+    float fAcceleration;
+    int iSwitch;
+    m_Finished = 0; m_Position.Vector[0] = pPosition->xX; m_Position.Vector[1] = pPosition->xY; m_Position.Vector[2] = pPosition->xZ; m_Position.Vector[3] = 1.0f; m_pMat1 = pMat1; m_fCreationTime = g_ffFrameTime;
+    m_a_stScroll[0].fFirstOffset = pPosition->xX;
+    m_a_stScroll[0].fFinalOffset = pPosition->xY;
+    m_a_stScroll[1].fFirstOffset = pDirection->xX;
+    m_a_stScroll[1].fFinalOffset = pDirection->xY;
+    m_fCurrentTime = 0.0f;
+    m_fDuration = fDuration;
+    if (fDuration != 0.0f)
+    {
+        m_fInverseOfDuration = 1.0f / fDuration;
+    }
+    else
+    {
+        m_fInverseOfDuration = 1.0f;
+        m_Finished = 1;
+    }
+    GLI_xGetMaterialTextureScrollingCoef(pMat1, 0, &iSwitch, &m_a_stScroll[0].fOriginalValue, &m_a_stScroll[1].fOriginalValue);
+    fAcceleration = pPosition->xZ;
+    if (fAcceleration == 0.0f)
+        m_a_stScroll[0].ulAcceleratorType = 0;
+    else if (fAcceleration == 0.5f)
+        m_a_stScroll[0].ulAcceleratorType = 1;
+    else if (fAcceleration == 1.0f)
+        m_a_stScroll[0].ulAcceleratorType = 2;
+    else
+    {
+        m_a_stScroll[0].ulAcceleratorType = 3;
+        m_a_stScroll[0].fAcceleration = fAcceleration - 1.0f;
+    }
+    fAcceleration = pDirection->xZ;
+    if (fAcceleration == 0.0f)
+        m_a_stScroll[1].ulAcceleratorType = 0;
+    else if (fAcceleration == 0.5f)
+        m_a_stScroll[1].ulAcceleratorType = 1;
+    else if (fAcceleration == 1.0f)
+        m_a_stScroll[1].ulAcceleratorType = 2;
+    else
+    {
+        m_a_stScroll[1].ulAcceleratorType = 3;
+        m_a_stScroll[1].fAcceleration = fAcceleration - 1.0f;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2649–2650 */
+/* addr: 0x001f56f0  size: 36 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2649
+ *   +0x000c -> line 2650
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_ScrollMatUV::DesInit(void)
+{
+    ((AGO3_Part*)this)->m_Finished = 1;
+    GLI_xSetMaterialTextureDecalage(m_pMat1, m_a_stScroll[0].fOriginalValue, m_a_stScroll[1].fOriginalValue, 0, 2);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2655–2701 */
+/* addr: 0x001f54a0  size: 580 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2655
+ *   +0x0004 -> line 2660
+ *   +0x0008 -> line 2655
+ *   +0x000c -> line 2660
+ *   +0x0018 -> line 2663
+ *   +0x0034 -> line 2665
+ *   +0x0038 -> line 2667
+ *   +0x003c -> line 2665
+ *   +0x0040 -> line 2666
+ *   +0x0048 -> line 2667
+ *   +0x0050 -> line 2669
+ *   +0x0058 -> line 2674
+ *   +0x0064 -> line 2676
+ *   +0x0078 -> line 2677
+ *   +0x007c -> line 2680
+ *   +0x0080 -> line 2682
+ *   +0x0084 -> line 2680
+ *   +0x0094 -> line 2687
+ *   +0x009c -> line 2684
+ *   +0x00a4 -> line 2690
+ *   +0x00ac -> line 2684
+ *   +0x00e4 -> line 2686
+ *   +0x00f8 -> line 2687
+ *   +0x0104 -> line 2688
+ *   +0x0114 -> line 2689
+ *   +0x0118 -> line 2690
+ *   +0x0120 -> line 2691
+ *   +0x0170 -> line 2692
+ *   +0x01c0 -> line 2691
+ *   +0x01c8 -> line 2692
+ *   +0x01e4 -> line 2694
+ *   +0x01e8 -> line 2696
+ *   +0x01f0 -> line 2697
+ *   +0x01f4 -> line 2696
+ *   +0x01f8 -> line 2697
+ *   +0x01fc -> line 2696
+ *   +0x0214 -> line 2697
+ *   +0x021c -> line 2698
+ *   +0x0220 -> line 2700
+ *   +0x0238 -> line 2701
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_ScrollMatUV::Process(void)
+{
+    unsigned int ulUV;
+    unsigned int ulIterator;
+    float fFinalValue[2];
+    float fValue;
+    float fAcc;
+    if (m_Finished == 1)
+        return;
+    if (m_fCurrentTime == 0.0f)
+    {
+        fFinalValue[0] = m_a_stScroll[0].fFirstOffset;
+        fFinalValue[1] = m_a_stScroll[1].fFirstOffset;
+        m_fCurrentTime += g_fTimeDifference;
+    }
+    else
+    {
+        m_fCurrentTime += g_fTimeDifference;
+        if (m_fCurrentTime >= m_fDuration)
+            m_Finished = 1;
+        fValue = m_fCurrentTime * m_fInverseOfDuration;
+        for (ulUV = 0; ulUV < 2; ulUV++)
+        {
+            switch (m_a_stScroll[ulUV].ulAcceleratorType)
+            {
+                case 0:
+                    *(float*)((int)fFinalValue + ulUV * 4) = m_a_stScroll[ulUV].fOriginalValue;
+                    break;
+                case 1:
+                    *(float*)((int)fFinalValue + ulUV * 4) = AGO3_SQRT(fValue);
+                    break;
+                case 2:
+                    *(float*)((int)fFinalValue + ulUV * 4) = fValue;
+                    break;
+                case 3:
+                    *(float*)((int)fFinalValue + ulUV * 4) = fValue;
+                    fAcc = m_a_stScroll[ulUV].fAcceleration;
+                    for (ulIterator = 0; ulIterator < (unsigned int)fAcc; ulIterator++)
+                        *(float*)((int)fFinalValue + ulUV * 4) = fValue * *(float*)((int)fFinalValue + ulUV * 4);
+                    break;
+            }
+            *(float*)((int)fFinalValue + ulUV * 4) = m_a_stScroll[ulUV].fFirstOffset + *(float*)((int)fFinalValue + ulUV * 4) * (m_a_stScroll[ulUV].fFinalOffset - m_a_stScroll[ulUV].fFirstOffset);
+        }
+    }
+    GLI_xSetMaterialTextureDecalage(m_pMat1, fFinalValue[0], fFinalValue[1], 0, 2);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2770–2832 */
+/* addr: 0x001f5210  size: 644 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2770
+ *   +0x000c -> line 2780
+ *   +0x0010 -> line 2770
+ *   +0x0038 -> line 2774
+ *   +0x0048 -> line 2775
+ *   +0x0058 -> line 2776
+ *   +0x0068 -> line 2778
+ *   +0x0088 -> line 2779
+ *   +0x0090 -> line 2780
+ *   +0x00a4 -> line 2782
+ *   +0x00b0 -> line 2783
+ *   +0x00bc -> line 2784
+ *   +0x00c8 -> line 2785
+ *   +0x00d4 -> line 2787
+ *   +0x00e0 -> line 2791
+ *   +0x00e8 -> line 2797
+ *   +0x00ec -> line 2787
+ *   +0x00f4 -> line 2788
+ *   +0x00f8 -> line 2791
+ *   +0x0110 -> line 2793
+ *   +0x0124 -> line 2794
+ *   +0x0138 -> line 2795
+ *   +0x0148 -> line 2797
+ *   +0x0150 -> line 2803
+ *   +0x015c -> line 2804
+ *   +0x0160 -> line 2803
+ *   +0x0168 -> line 2804
+ *   +0x0170 -> line 2805
+ *   +0x0174 -> line 2804
+ *   +0x017c -> line 2805
+ *   +0x018c -> line 2807
+ *   +0x01a8 -> line 2810
+ *   +0x01b4 -> line 2811
+ *   +0x01c4 -> line 2813
+ *   +0x01d0 -> line 2814
+ *   +0x01d8 -> line 2815
+ *   +0x01e4 -> line 2816
+ *   +0x01f0 -> line 2819
+ *   +0x0208 -> line 2823
+ *   +0x0210 -> line 2829
+ *   +0x0218 -> line 2823
+ *   +0x021c -> line 2824
+ *   +0x0228 -> line 2825
+ *   +0x0234 -> line 2827
+ *   +0x0238 -> line 2829
+ *   +0x023c -> line 2830
+ *   +0x0248 -> line 2831
+ *   +0x027c -> line 2832
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_Chain::Init(MTH3D_tdstVector_* p_stStartingPosition, MTH3D_tdstVector_* p_stEndingPosition, GLI_tdstMaterial_* pMat1, float fLinkType)
+{
+    float fSize;
+    float fInvSize;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2836–2852 */
+/* addr: 0x001f5160  size: 168 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2836
+ *   +0x0004 -> line 2839
+ *   +0x0008 -> line 2836
+ *   +0x0018 -> line 2839
+ *   +0x001c -> line 2841
+ *   +0x002c -> line 2843
+ *   +0x0050 -> line 2846
+ *   +0x006c -> line 2847
+ *   +0x0090 -> line 2850
+ *   +0x0094 -> line 2852
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_Chain::Display(GLD_tdstViewportAttributes_* hVp)
+{
+    GLI_g_UseAlphaTest = 1;
+    GLI_vSetGlobalAlpha(255.0f);
+    GLI_vDrawWorldOrthoPlanarSprite((MTH3D_tdstVector_*)&m_stPos, m_pMat1, m_fMainSize, m_fSize, hVp, 0, &m_stVector, &m_stDirection);
+    if (m_fLinkType != 0.0f)
+    {
+        GLI_vDrawWorldOrthoPlanarSprite((MTH3D_tdstVector_*)&m_Position, m_pMat1, m_fMainSize, m_fIntermediateSize, hVp, 0, &m_stIntermediateVector, &m_stIntermediateDirection);
+    }
+    GLI_g_UseAlphaTest = 0;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2951–2970 */
+/* addr: 0x001f4fd0  size: 388 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2951
+ *   +0x0004 -> line 2958
+ *   +0x0008 -> line 2951
+ *   +0x000c -> line 2959
+ *   +0x0010 -> line 2951
+ *   +0x0024 -> line 2954
+ *   +0x0030 -> line 2955
+ *   +0x0034 -> line 2961
+ *   +0x0038 -> line 2962
+ *   +0x003c -> line 2961
+ *   +0x0044 -> line 2963
+ *   +0x0048 -> line 2961
+ *   +0x004c -> line 2963
+ *   +0x0050 -> line 2961
+ *   +0x0054 -> line 2963
+ *   +0x0058 -> line 2961
+ *   +0x0064 -> line 2962
+ *   +0x0074 -> line 2961
+ *   +0x0078 -> line 2962
+ *   +0x008c -> line 2961
+ *   +0x0090 -> line 2962
+ *   +0x00a4 -> line 2961
+ *   +0x00a8 -> line 2962
+ *   +0x00bc -> line 2961
+ *   +0x00c0 -> line 2962
+ *   +0x00d4 -> line 2961
+ *   +0x00d8 -> line 2962
+ *   +0x00ec -> line 2961
+ *   +0x00f0 -> line 2962
+ *   +0x0104 -> line 2961
+ *   +0x0108 -> line 2962
+ *   +0x0110 -> line 2963
+ *   +0x0128 -> line 2962
+ *   +0x012c -> line 2963
+ *   +0x0134 -> line 2964
+ *   +0x0138 -> line 2963
+ *   +0x0148 -> line 2964
+ *   +0x014c -> line 2961
+ *   +0x0150 -> line 2963
+ *   +0x0158 -> line 2964
+ *   +0x0160 -> line 2965
+ *   +0x0168 -> line 2967
+ *   +0x016c -> line 2966
+ *   +0x0170 -> line 2970
+ *   +0x0174 -> line 2967
+ *   +0x0178 -> line 2968
+ *   +0x017c -> line 2970
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+AGO3_HurricaneUpper::AGO3_HurricaneUpper(void)
+{
+    AGO3_HU_SpriteData* pSpriteData;
+    unsigned int i;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2974–3064 */
+/* addr: 0x001f4cf0  size: 724 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2974
+ *   +0x0004 -> line 2984
+ *   +0x0008 -> line 2974
+ *   +0x000c -> line 2984
+ *   +0x0010 -> line 2974
+ *   +0x0038 -> line 2979
+ *   +0x003c -> line 2974
+ *   +0x0044 -> line 2979
+ *   +0x0074 -> line 2981
+ *   +0x007c -> line 2982
+ *   +0x0084 -> line 2984
+ *   +0x0090 -> line 2987
+ *   +0x009c -> line 2998
+ *   +0x00a4 -> line 2999
+ *   +0x00b4 -> line 3000
+ *   +0x00c4 -> line 3002
+ *   +0x00d4 -> line 3003
+ *   +0x00dc -> line 3004
+ *   +0x00e8 -> line 3007
+ *   +0x00f4 -> line 3008
+ *   +0x0110 -> line 3010
+ *   +0x0124 -> line 3011
+ *   +0x0134 -> line 3013
+ *   +0x0138 -> line 3018
+ *   +0x014c -> line 3020
+ *   +0x0154 -> line 3021
+ *   +0x0160 -> line 3022
+ *   +0x0168 -> line 3026
+ *   +0x0178 -> line 3031
+ *   +0x017c -> line 3035
+ *   +0x0184 -> line 3033
+ *   +0x018c -> line 3036
+ *   +0x0190 -> line 3035
+ *   +0x0194 -> line 3037
+ *   +0x019c -> line 3033
+ *   +0x01a0 -> line 3039
+ *   +0x01a4 -> line 3048
+ *   +0x01b0 -> line 3040
+ *   +0x01b4 -> line 3042
+ *   +0x01b8 -> line 3048
+ *   +0x01c4 -> line 3039
+ *   +0x01c8 -> line 3040
+ *   +0x01d0 -> line 3041
+ *   +0x01dc -> line 3042
+ *   +0x01e0 -> line 3041
+ *   +0x01f0 -> line 3042
+ *   +0x01f8 -> line 3043
+ *   +0x0200 -> line 3044
+ *   +0x020c -> line 3045
+ *   +0x0218 -> line 3048
+ *   +0x0220 -> line 3053
+ *   +0x0224 -> line 3049
+ *   +0x0228 -> line 3053
+ *   +0x022c -> line 3050
+ *   +0x0230 -> line 3053
+ *   +0x0234 -> line 3056
+ *   +0x0238 -> line 3055
+ *   +0x0240 -> line 3053
+ *   +0x0244 -> line 3054
+ *   +0x024c -> line 3056
+ *   +0x0250 -> line 3054
+ *   +0x0254 -> line 3056
+ *   +0x025c -> line 3057
+ *   +0x0264 -> line 3061
+ *   +0x0280 -> line 3062
+ *   +0x0284 -> line 3061
+ *   +0x0294 -> line 3062
+ *   +0x0298 -> line 3063
+ *   +0x029c -> line 3064
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_HurricaneUpper::Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fParameter)
+{
+    float fPositionZ;
+    float fLength;
+    MTH3D_tdstVector_ stVerticalDir;
+    unsigned int ulLayer;
+    float fDirAngle;
+    float fBend;
+    AGO3_HU_SpriteData* pSpriteData;
+    float fCos;
+    float fSin;
+
+    m_Finished = 0; AGO3_Part::m_Position.Vector[0] = pPosition->xX; AGO3_Part::m_Position.Vector[1] = pPosition->xY; AGO3_Part::m_Position.Vector[2] = pPosition->xZ; AGO3_Part::m_Position.Vector[3] = 1.0f; m_pMat1 = pMat1; m_fCreationTime = g_ffFrameTime;
+    m_Position.xX = pPosition->xX;
+    m_Position.xY = pPosition->xY;
+    m_Position.xZ = pPosition->xZ - 1.5f;
+    if (!m_bIsActive)
+    {
+        pDirection->xZ = 0;
+        fLength = pDirection->xX * pDirection->xX + pDirection->xY * pDirection->xY;
+        if (fLength)
+        {
+            fLength = 1.0f / AGO3_SQRT(fLength);
+            pDirection->xX *= fLength;
+            pDirection->xY *= fLength;
+            fDirAngle = acosf(pDirection->xX);
+            if (pDirection->xY < 0.0f)
+            {
+                if (pDirection->xX < 0.0f)
+                    fDirAngle = 6.2831855f - fDirAngle;
+                else
+                    fDirAngle = -fDirAngle;
+            }
+            fDirAngle += 2.3561945f;
+            fCos = cosf(fDirAngle);
+            fSin = sinf(fDirAngle);
+        }
+        else
+        {
+            fCos = fSin = 0.70710677f;
+        }
+        fPositionZ = m_Position.xZ;
+        stVerticalDir.xZ = 1.0f;
+        fBend = 0.34202015f;
+        pSpriteData = m_a_stSprite;
+        for (ulLayer = 0; ulLayer < 25; ulLayer++)
+        {
+            stVerticalDir.xX = fCos * fBend;
+            stVerticalDir.xY = fSin * fBend;
+            fLength = 1.0f / AGO3_SQRT(stVerticalDir.xX * stVerticalDir.xX + stVerticalDir.xY * stVerticalDir.xY + stVerticalDir.xZ * stVerticalDir.xZ);
+            stVerticalDir.xX *= fLength;
+            stVerticalDir.xY *= fLength;
+            stVerticalDir.xZ *= fLength;
+            pSpriteData->fPositionZ = fPositionZ;
+            AGO_Define_OrthogonalVectors(&stVerticalDir, &m_a_stInitialPosition[ulLayer], &m_a_stAdditionnalVector[ulLayer]);
+            pSpriteData->pstInitialPosition = &m_a_stInitialPosition[ulLayer];
+            pSpriteData->pstAdditionnalVector = &m_a_stAdditionnalVector[ulLayer];
+            fPositionZ += 0.12f;
+            fBend += 0.0065824934f;
+            pSpriteData++;
+        }
+        m_bIsActive = 1;
+    }
+    m_fMainRotation += 6.2831855f * (5.0f * g_fTimeDifference);
+    m_bAlive = 1;
+    m_fTime = 0;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 3083–3201 */
+/* addr: 0x001f4910  size: 980 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3083
+ *   +0x0008 -> line 3086
+ *   +0x0014 -> line 3091
+ *   +0x0018 -> line 3093
+ *   +0x001c -> line 3091
+ *   +0x0020 -> line 3093
+ *   +0x0024 -> line 3088
+ *   +0x0028 -> line 3093
+ *   +0x002c -> line 3091
+ *   +0x0030 -> line 3088
+ *   +0x0038 -> line 3091
+ *   +0x003c -> line 3093
+ *   +0x0048 -> line 3094
+ *   +0x0058 -> line 3095
+ *   +0x005c -> line 3098
+ *   +0x0060 -> line 3096
+ *   +0x0070 -> line 3099
+ *   +0x0080 -> line 3101
+ *   +0x0088 -> line 3107
+ *   +0x00a4 -> line 3108
+ *   +0x00b4 -> line 3110
+ *   +0x00c4 -> line 3112
+ *   +0x00c8 -> line 3113
+ *   +0x00cc -> line 3115
+ *   +0x00d4 -> line 3116
+ *   +0x00e0 -> line 3118
+ *   +0x00f0 -> line 3119
+ *   +0x00f8 -> line 3118
+ *   +0x0104 -> line 3119
+ *   +0x0114 -> line 3120
+ *   +0x0118 -> line 3123
+ *   +0x0124 -> line 3131
+ *   +0x0128 -> line 3123
+ *   +0x0138 -> line 3128
+ *   +0x013c -> line 3123
+ *   +0x0150 -> line 3127
+ *   +0x0154 -> line 3128
+ *   +0x0158 -> line 3152
+ *   +0x015c -> line 3137
+ *   +0x0160 -> line 3152
+ *   +0x0164 -> line 3136
+ *   +0x0168 -> line 3152
+ *   +0x016c -> line 3136
+ *   +0x0170 -> line 3137
+ *   +0x0178 -> line 3157
+ *   +0x017c -> line 3154
+ *   +0x0180 -> line 3157
+ *   +0x0188 -> line 3143
+ *   +0x018c -> line 3133
+ *   +0x01a0 -> line 3136
+ *   +0x01c0 -> line 3137
+ *   +0x01e4 -> line 3139
+ *   +0x01fc -> line 3142
+ *   +0x0200 -> line 3143
+ *   +0x0210 -> line 3144
+ *   +0x0214 -> line 3145
+ *   +0x0218 -> line 3146
+ *   +0x022c -> line 3147
+ *   +0x0230 -> line 3148
+ *   +0x0234 -> line 3149
+ *   +0x0238 -> line 3153
+ *   +0x024c -> line 3154
+ *   +0x0254 -> line 3155
+ *   +0x0258 -> line 3156
+ *   +0x0260 -> line 3158
+ *   +0x0264 -> line 3156
+ *   +0x0268 -> line 3158
+ *   +0x026c -> line 3156
+ *   +0x0270 -> line 3157
+ *   +0x0278 -> line 3158
+ *   +0x0280 -> line 3160
+ *   +0x0288 -> line 3161
+ *   +0x02ac -> line 3166
+ *   +0x02b0 -> line 3170
+ *   +0x02b4 -> line 3174
+ *   +0x02b8 -> line 3172
+ *   +0x02bc -> line 3174
+ *   +0x02c0 -> line 3173
+ *   +0x02c4 -> line 3177
+ *   +0x02c8 -> line 3178
+ *   +0x02cc -> line 3166
+ *   +0x02d0 -> line 3179
+ *   +0x02d4 -> line 3168
+ *   +0x02d8 -> line 3170
+ *   +0x02dc -> line 3173
+ *   +0x02e4 -> line 3170
+ *   +0x02e8 -> line 3168
+ *   +0x02f4 -> line 3169
+ *   +0x02f8 -> line 3172
+ *   +0x02fc -> line 3169
+ *   +0x0308 -> line 3172
+ *   +0x030c -> line 3169
+ *   +0x0310 -> line 3172
+ *   +0x032c -> line 3173
+ *   +0x0330 -> line 3172
+ *   +0x0338 -> line 3174
+ *   +0x0340 -> line 3173
+ *   +0x0344 -> line 3174
+ *   +0x0354 -> line 3184
+ *   +0x0358 -> line 3183
+ *   +0x035c -> line 3181
+ *   +0x0360 -> line 3182
+ *   +0x0364 -> line 3181
+ *   +0x0368 -> line 3183
+ *   +0x037c -> line 3184
+ *   +0x0384 -> line 3185
+ *   +0x0388 -> line 3186
+ *   +0x0390 -> line 3187
+ *   +0x0394 -> line 3186
+ *   +0x039c -> line 3187
+ *   +0x03a8 -> line 3190
+ *   +0x03b8 -> line 3192
+ *   +0x03bc -> line 3197
+ *   +0x03c8 -> line 3199
+ *   +0x03cc -> line 3201
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_HurricaneUpper::Process(void)
+{
+    unsigned int ulSprite;
+    unsigned int ulSprite2;
+    AGO3_HU_SpriteData* pSpriteData;
+    float fPositionZ;
+    float fMultiplier;
+    float fMultiplier2;
+    float fOneMinusMultiplier;
+    unsigned int ulDying;
+    float fPercentageUntilDeath;
+    float fPercentageUntilTop;
+    float* pTime;
+    float* pEndTime;
+    MTH3D_tdstVector_* pInitialPos;
+    MTH3D_tdstVector_* pAdditionalVect;
+
+    fMultiplier2 = 1.0f;
+    pTime = &m_fTime;
+    if (m_bIsActive)
+    {
+        ulDying = (m_bAlive != 0) ^ 1;
+        *pTime += g_fTimeDifference;
+        fPercentageUntilTop = *pTime / 0.025f;
+        fMultiplier = fPercentageUntilTop;
+        if (fMultiplier > fMultiplier2)
+            fMultiplier = fMultiplier2;
+        fOneMinusMultiplier = 1.0f - fMultiplier;
+        pSpriteData = &m_a_stSprite[m_ulFirstSprite];
+        ulSprite2 = m_ulFirstSprite;
+        if (ulDying)
+        {
+            pEndTime = &m_fEndTime;
+            if (m_fEndTime == 0.0f)
+            {
+                *pEndTime = 0.6f;
+            }
+            else if (m_fEndTime <= 0.0f)
+            {
+                m_bIsActive = 0;
+                *pEndTime = 0.0f;
+                m_fMainRotation = 0.0f;
+            }
+            else
+            {
+                *pEndTime = m_fEndTime - g_fTimeDifference;
+            }
+            fMultiplier2 = *pEndTime / 0.6f;
+            if (fMultiplier2 > 1.0f)
+                fMultiplier2 = 1.0f;
+        }
+        m_fMainRotation += 6.2831855f * (5.0f * g_fTimeDifference);
+        fPositionZ = m_Position.xZ;
+        fPercentageUntilDeath = 1.0f;
+        for (ulSprite = 0; ulSprite < 25; ulSprite++)
+        {
+            if (pSpriteData->fTransparency != 0.0f)
+            {
+                pSpriteData->fSize = m_fMainSize * ((float)AGO3_C_HUShape[ulSprite] * fOneMinusMultiplier + (float)AGO3_C_HUShape[ulSprite + 1] * fMultiplier);
+                pSpriteData->fTransparency = ulSprite == 0 ? 255.0f * fMultiplier : ulSprite == 24 ? 255.0f * fOneMinusMultiplier : 255.0f;
+                if (ulDying && !(fPercentageUntilDeath < fMultiplier2))
+                {
+                    pSpriteData->fTransparency = 255.0f * (fMultiplier2 - fPercentageUntilDeath);
+                    if (pSpriteData->fTransparency <= 0.0f)
+                        pSpriteData->fTransparency = 0.0f;
+                }
+                if (pSpriteData->fTransparency > 255.0f)
+                    pSpriteData->fTransparency = 255.0f;
+                pSpriteData->fPositionZ = fPositionZ;
+            }
+            fPositionZ += 0.12f;
+            ulSprite2 = ulSprite2 == 24 ? 0 : ulSprite2 + 1;
+            ulSprite2 = ulSprite2 == 25 ? 0 : ulSprite2;
+            pSpriteData = &m_a_stSprite[ulSprite2];
+            fPercentageUntilDeath -= 1.0f / 24.0f;
+        }
+        if (!ulDying && !(*pTime < 0.025f))
+        {
+            *pTime -= 0.025f;
+            fMultiplier = fPercentageUntilTop - 1.0f;
+            fOneMinusMultiplier = 1.0f - fMultiplier;
+            ulSprite2 = (m_ulFirstSprite + 24) & 24;
+            m_ulFirstSprite = ulSprite2;
+            pSpriteData = &m_a_stSprite[ulSprite2];
+            pSpriteData->fSize = m_fMainSize * ((float)AGO3_C_HUShape[0] * fOneMinusMultiplier + (float)AGO3_C_HUShape[1] * fMultiplier);
+            pSpriteData->fTransparency = 255.0f * fMultiplier;
+            pSpriteData->fPositionZ = m_Position.xZ + 0.12f * fMultiplier;
+            pInitialPos = m_a_stInitialPosition;
+            pAdditionalVect = m_a_stAdditionnalVector;
+            for (ulSprite = 0; ulSprite < 25; ulSprite++)
+            {
+                pSpriteData->pstInitialPosition = pInitialPos++;
+                pSpriteData->pstAdditionnalVector = pAdditionalVect++;
+                ulSprite2 = ulSprite2 == 24 ? 0 : ulSprite2 + 1;
+                ulSprite2 = ulSprite2 == 25 ? 0 : ulSprite2;
+                pSpriteData = &m_a_stSprite[ulSprite2];
+            }
+        }
+        if (AGO_G_CurrentVU1Frame == 2)
+            m_bAlive = 0;
+    }
+    if (!m_bIsActive)
+        m_bIsActive = 0;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 3205–3236 */
+/* addr: 0x001f4820  size: 240 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3205
+ *   +0x0020 -> line 3212
+ *   +0x002c -> line 3216
+ *   +0x0030 -> line 3220
+ *   +0x0034 -> line 3222
+ *   +0x0038 -> line 3216
+ *   +0x003c -> line 3217
+ *   +0x0044 -> line 3219
+ *   +0x004c -> line 3224
+ *   +0x0050 -> line 3225
+ *   +0x0058 -> line 3224
+ *   +0x005c -> line 3225
+ *   +0x0070 -> line 3227
+ *   +0x0078 -> line 3228
+ *   +0x009c -> line 3229
+ *   +0x00a0 -> line 3230
+ *   +0x00a8 -> line 3232
+ *   +0x00ac -> line 3230
+ *   +0x00b0 -> line 3231
+ *   +0x00b4 -> line 3232
+ *   +0x00c0 -> line 3233
+ *   +0x00c8 -> line 3234
+ *   +0x00d0 -> line 3236
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_HurricaneUpper::Display(GLD_tdstViewportAttributes_* hVp)
+{
+    AGO3_HU_SpriteData* pSpriteData;
+    float fAngle;
+    unsigned int ulLayer;
+    MTH3D_tdstVector_ Position;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 3332–3370 */
+/* addr: 0x001f46c0  size: 344 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3332
+ *   +0x0004 -> line 3335
+ *   +0x0008 -> line 3332
+ *   +0x0020 -> line 3335
+ *   +0x002c -> line 3338
+ *   +0x0030 -> line 3335
+ *   +0x0044 -> line 3338
+ *   +0x0048 -> line 3335
+ *   +0x0058 -> line 3338
+ *   +0x0060 -> line 3341
+ *   +0x00a0 -> line 3349
+ *   +0x00b8 -> line 3351
+ *   +0x00bc -> line 3352
+ *   +0x00c0 -> line 3353
+ *   +0x00c8 -> line 3354
+ *   +0x00e4 -> line 3356
+ *   +0x00e8 -> line 3357
+ *   +0x00f0 -> line 3358
+ *   +0x0108 -> line 3363
+ *   +0x010c -> line 3364
+ *   +0x0110 -> line 3363
+ *   +0x011c -> line 3366
+ *   +0x012c -> line 3368
+ *   +0x0134 -> line 3367
+ *   +0x0138 -> line 3368
+ *   +0x0140 -> line 3370
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_CanRipple::Init(MTH3D_tdstVector_* p_stStartingPosition, MTH3D_tdstVector_* p_stDirection, GLI_tdstMaterial_* pMat1, float fStartStop)
+{
+    unsigned int ulSprite;
+    AGO3_CR_SpriteData* pSpriteData;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 3386–3463 */
+/* addr: 0x001f4440  size: 628 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3386
+ *   +0x0004 -> line 3389
+ *   +0x0008 -> line 3386
+ *   +0x000c -> line 3389
+ *   +0x0014 -> line 3386
+ *   +0x0018 -> line 3389
+ *   +0x002c -> line 3392
+ *   +0x0030 -> line 3394
+ *   +0x0034 -> line 3392
+ *   +0x0048 -> line 3394
+ *   +0x0050 -> line 3396
+ *   +0x0058 -> line 3400
+ *   +0x0060 -> line 3396
+ *   +0x0064 -> line 3400
+ *   +0x00d0 -> line 3401
+ *   +0x00dc -> line 3402
+ *   +0x00e0 -> line 3407
+ *   +0x00ec -> line 3408
+ *   +0x00f0 -> line 3407
+ *   +0x00f4 -> line 3411
+ *   +0x00f8 -> line 3407
+ *   +0x00fc -> line 3415
+ *   +0x0100 -> line 3407
+ *   +0x0104 -> line 3408
+ *   +0x0108 -> line 3409
+ *   +0x0110 -> line 3407
+ *   +0x0114 -> line 3408
+ *   +0x0118 -> line 3409
+ *   +0x011c -> line 3408
+ *   +0x0120 -> line 3412
+ *   +0x012c -> line 3408
+ *   +0x0130 -> line 3409
+ *   +0x0134 -> line 3408
+ *   +0x0138 -> line 3422
+ *   +0x013c -> line 3420
+ *   +0x0140 -> line 3422
+ *   +0x014c -> line 3417
+ *   +0x0158 -> line 3419
+ *   +0x0160 -> line 3420
+ *   +0x0168 -> line 3422
+ *   +0x016c -> line 3423
+ *   +0x0170 -> line 3425
+ *   +0x017c -> line 3426
+ *   +0x0180 -> line 3436
+ *   +0x0184 -> line 3429
+ *   +0x0188 -> line 3437
+ *   +0x018c -> line 3439
+ *   +0x0190 -> line 3438
+ *   +0x0194 -> line 3434
+ *   +0x0198 -> line 3439
+ *   +0x019c -> line 3438
+ *   +0x01a0 -> line 3429
+ *   +0x01a8 -> line 3430
+ *   +0x01ac -> line 3433
+ *   +0x01b0 -> line 3438
+ *   +0x01b4 -> line 3439
+ *   +0x01bc -> line 3441
+ *   +0x01c4 -> line 3443
+ *   +0x01dc -> line 3445
+ *   +0x01ec -> line 3446
+ *   +0x01f0 -> line 3448
+ *   +0x01f4 -> line 3446
+ *   +0x01fc -> line 3448
+ *   +0x0204 -> line 3451
+ *   +0x0208 -> line 3453
+ *   +0x0210 -> line 3454
+ *   +0x0214 -> line 3453
+ *   +0x0218 -> line 3454
+ *   +0x021c -> line 3455
+ *   +0x0220 -> line 3451
+ *   +0x0224 -> line 3453
+ *   +0x0234 -> line 3454
+ *   +0x023c -> line 3455
+ *   +0x0258 -> line 3457
+ *   +0x0260 -> line 3459
+ *   +0x0264 -> line 3460
+ *   +0x026c -> line 3463
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_CanRipple::Process(void)
+{
+    int bGenerateNewSprite;
+    unsigned int ulSpriteLimit;
+    unsigned int ulSprite2;
+    float fTransparency;
+    float fPosition;
+    float fMultiplier;
+    float fPercentage;
+    unsigned int ulSprite;
+    AGO3_CR_SpriteData* pSpriteData;
+    bGenerateNewSprite = 1;
+    m_fTime += g_fTimeDifference;
+    if (m_fTime < 0.5f)
+        bGenerateNewSprite = 0;
+    fPercentage = m_fTime / 0.5f;
+    if (!m_bRegeneration)
+    {
+        m_fTime2 += g_fTimeDifference;
+        ulSpriteLimit = m_fTime2 > 0.0f ? (unsigned int)(m_fTime2 / 0.5f) : 0;
+        if (ulSpriteLimit >= 3)
+            m_Finished = 1;
+    }
+    fMultiplier = 1.0f + 0.6666667f * fPercentage;
+    fTransparency = 340.0f - 85.0f * fPercentage;
+    fPosition = 0.33333334f * fPercentage;
+    ulSprite = m_ulFirstSprite;
+    pSpriteData = &m_a_stSprite[ulSprite];
+    for (ulSprite2 = 0; ulSprite2 < 4; ulSprite2++)
+    {
+        if (pSpriteData->ulType == 0)
+        {
+            if (bGenerateNewSprite)
+                pSpriteData->ulType = 1;
+            else
+                pSpriteData->fTransparency = 255.0f * fPercentage;
+        }
+        if (pSpriteData->ulType == 1)
+            pSpriteData->fTransparency = fTransparency;
+        pSpriteData->fSize = m_fMainSize * fMultiplier;
+        pSpriteData->fPosition = fPosition;
+        fMultiplier += 0.6666667f;
+        fTransparency -= 85.0f;
+        fPosition += 0.33333334f;
+        ulSprite++;
+        ulSprite &= 3;
+        pSpriteData = &m_a_stSprite[ulSprite];
+    }
+    if (bGenerateNewSprite)
+    {
+        m_fTime -= 0.5f;
+        m_ulFirstSprite = (m_ulFirstSprite + 3) & 3;
+        pSpriteData = &m_a_stSprite[m_ulFirstSprite];
+        if (m_bRegeneration)
+        {
+            fPercentage = m_fTime / 0.5f;
+            pSpriteData->fSize = m_fMainSize * (1.0f + 0.6666667f * fPercentage);
+            pSpriteData->fTransparency = 255.0f * fPercentage;
+            pSpriteData->fPosition = 0.33333334f * fPercentage + m_Position.Vector[m_ulDirection];
+            pSpriteData->ulType = 0;
+        }
+        else
+        {
+            pSpriteData->fTransparency = 0.0f;
+            pSpriteData->ulType = 2;
+        }
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 3467–3508 */
+/* addr: 0x001f42f0  size: 328 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3467
+ *   +0x0010 -> line 3478
+ *   +0x0014 -> line 3467
+ *   +0x0028 -> line 3487
+ *   +0x002c -> line 3467
+ *   +0x0030 -> line 3489
+ *   +0x0034 -> line 3467
+ *   +0x0038 -> line 3488
+ *   +0x003c -> line 3467
+ *   +0x0040 -> line 3489
+ *   +0x0044 -> line 3467
+ *   +0x0048 -> line 3476
+ *   +0x004c -> line 3488
+ *   +0x0050 -> line 3476
+ *   +0x0054 -> line 3477
+ *   +0x005c -> line 3478
+ *   +0x0064 -> line 3479
+ *   +0x0070 -> line 3489
+ *   +0x0078 -> line 3491
+ *   +0x0084 -> line 3492
+ *   +0x0088 -> line 3491
+ *   +0x00a4 -> line 3492
+ *   +0x00a8 -> line 3494
+ *   +0x00b8 -> line 3495
+ *   +0x00c0 -> line 3496
+ *   +0x00e4 -> line 3497
+ *   +0x00e8 -> line 3500
+ *   +0x00ec -> line 3498
+ *   +0x00f0 -> line 3500
+ *   +0x00f4 -> line 3499
+ *   +0x00fc -> line 3500
+ *   +0x0104 -> line 3501
+ *   +0x0108 -> line 3502
+ *   +0x010c -> line 3501
+ *   +0x0110 -> line 3502
+ *   +0x0118 -> line 3508
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_CanRipple::Display(GLD_tdstViewportAttributes_* hVp)
+{
+    float fFirstPosition;
+    float fWay;
+    unsigned int ulNumRipples;
+    unsigned int ulSprite2;
+    MTH3D_tdstVector_ stposition;
+    unsigned int ulSprite;
+    AGO3_CR_SpriteData* pSpriteData;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 3613–3824 */
+/* addr: 0x001f3bd0  size: 1816 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3613
+ *   +0x0050 -> line 3614
+ *   +0x005c -> line 3624
+ *   +0x0068 -> line 3626
+ *   +0x006c -> line 3630
+ *   +0x0070 -> line 3624
+ *   +0x0074 -> line 3627
+ *   +0x0078 -> line 3628
+ *   +0x007c -> line 3630
+ *   +0x0084 -> line 3635
+ *   +0x0094 -> line 3636
+ *   +0x009c -> line 3635
+ *   +0x00b4 -> line 3636
+ *   +0x00ec -> line 3638
+ *   +0x00f4 -> line 3640
+ *   +0x00fc -> line 3639
+ *   +0x0104 -> line 3637
+ *   +0x0108 -> line 3638
+ *   +0x010c -> line 3640
+ *   +0x0110 -> line 3639
+ *   +0x0114 -> line 3638
+ *   +0x0118 -> line 3640
+ *   +0x011c -> line 3641
+ *   +0x0120 -> line 3639
+ *   +0x0124 -> line 3641
+ *   +0x0128 -> line 3642
+ *   +0x0130 -> line 3643
+ *   +0x0134 -> line 3644
+ *   +0x013c -> line 3648
+ *   +0x0140 -> line 3647
+ *   +0x0144 -> line 3648
+ *   +0x0148 -> line 3649
+ *   +0x0150 -> line 3650
+ *   +0x0158 -> line 3657
+ *   +0x015c -> line 3656
+ *   +0x0160 -> line 3657
+ *   +0x0170 -> line 3659
+ *   +0x0180 -> line 3660
+ *   +0x018c -> line 3664
+ *   +0x0198 -> line 3669
+ *   +0x019c -> line 3670
+ *   +0x01a8 -> line 3669
+ *   +0x01ac -> line 3670
+ *   +0x01d0 -> line 3678
+ *   +0x01d4 -> line 3670
+ *   +0x01d8 -> line 3711
+ *   +0x01dc -> line 3678
+ *   +0x01e0 -> line 3676
+ *   +0x01e4 -> line 3689
+ *   +0x01ec -> line 3695
+ *   +0x01f0 -> line 3670
+ *   +0x01f4 -> line 3695
+ *   +0x01f8 -> line 3670
+ *   +0x01fc -> line 3689
+ *   +0x0208 -> line 3676
+ *   +0x0210 -> line 3695
+ *   +0x021c -> line 3689
+ *   +0x0224 -> line 3676
+ *   +0x0228 -> line 3689
+ *   +0x022c -> line 3677
+ *   +0x0234 -> line 3689
+ *   +0x0238 -> line 3677
+ *   +0x023c -> line 3689
+ *   +0x0240 -> line 3690
+ *   +0x0244 -> line 3689
+ *   +0x0248 -> line 3690
+ *   +0x0250 -> line 3678
+ *   +0x0254 -> line 3690
+ *   +0x0258 -> line 3678
+ *   +0x025c -> line 3679
+ *   +0x0268 -> line 3695
+ *   +0x0270 -> line 3690
+ *   +0x0274 -> line 3695
+ *   +0x0278 -> line 3689
+ *   +0x027c -> line 3695
+ *   +0x0288 -> line 3696
+ *   +0x0298 -> line 3697
+ *   +0x02a8 -> line 3696
+ *   +0x02ac -> line 3697
+ *   +0x02b0 -> line 3698
+ *   +0x02b4 -> line 3699
+ *   +0x02b8 -> line 3700
+ *   +0x02bc -> line 3711
+ *   +0x02c0 -> line 3713
+ *   +0x02c4 -> line 3716
+ *   +0x02c8 -> line 3717
+ *   +0x02cc -> line 3718
+ *   +0x02d0 -> line 3713
+ *   +0x02e0 -> line 3716
+ *   +0x02e4 -> line 3713
+ *   +0x02e8 -> line 3716
+ *   +0x02ec -> line 3717
+ *   +0x02f8 -> line 3718
+ *   +0x0304 -> line 3720
+ *   +0x0310 -> line 3721
+ *   +0x031c -> line 3722
+ *   +0x0324 -> line 3723
+ *   +0x0338 -> line 3724
+ *   +0x033c -> line 3723
+ *   +0x0344 -> line 3728
+ *   +0x0348 -> line 3723
+ *   +0x035c -> line 3725
+ *   +0x0360 -> line 3723
+ *   +0x0380 -> line 3724
+ *   +0x0384 -> line 3725
+ *   +0x0388 -> line 3726
+ *   +0x0398 -> line 3727
+ *   +0x03a0 -> line 3728
+ *   +0x03a8 -> line 3731
+ *   +0x03b0 -> line 3733
+ *   +0x03b4 -> line 3736
+ *   +0x03b8 -> line 3737
+ *   +0x03bc -> line 3733
+ *   +0x03cc -> line 3736
+ *   +0x03d0 -> line 3733
+ *   +0x03d4 -> line 3736
+ *   +0x03d8 -> line 3738
+ *   +0x03dc -> line 3737
+ *   +0x03e0 -> line 3738
+ *   +0x03e4 -> line 3740
+ *   +0x03f0 -> line 3741
+ *   +0x03fc -> line 3742
+ *   +0x0404 -> line 3743
+ *   +0x0428 -> line 3744
+ *   +0x042c -> line 3743
+ *   +0x0430 -> line 3748
+ *   +0x0434 -> line 3745
+ *   +0x0438 -> line 3743
+ *   +0x0460 -> line 3744
+ *   +0x0464 -> line 3745
+ *   +0x0468 -> line 3746
+ *   +0x0478 -> line 3747
+ *   +0x0480 -> line 3748
+ *   +0x0488 -> line 3750
+ *   +0x0498 -> line 3752
+ *   +0x04a4 -> line 3753
+ *   +0x04b0 -> line 3754
+ *   +0x04bc -> line 3755
+ *   +0x04c0 -> line 3757
+ *   +0x04cc -> line 3759
+ *   +0x04d0 -> line 3761
+ *   +0x04d8 -> line 3764
+ *   +0x04e4 -> line 3767
+ *   +0x04f4 -> line 3770
+ *   +0x04fc -> line 3775
+ *   +0x0500 -> line 3782
+ *   +0x0508 -> line 3775
+ *   +0x0518 -> line 3782
+ *   +0x0520 -> line 3787
+ *   +0x0528 -> line 3788
+ *   +0x052c -> line 3787
+ *   +0x0530 -> line 3788
+ *   +0x0540 -> line 3791
+ *   +0x0544 -> line 3793
+ *   +0x054c -> line 3794
+ *   +0x055c -> line 3791
+ *   +0x0560 -> line 3794
+ *   +0x0564 -> line 3791
+ *   +0x056c -> line 3792
+ *   +0x0574 -> line 3795
+ *   +0x057c -> line 3796
+ *   +0x0580 -> line 3797
+ *   +0x058c -> line 3798
+ *   +0x059c -> line 3799
+ *   +0x05a0 -> line 3807
+ *   +0x05a4 -> line 3808
+ *   +0x05f0 -> line 3809
+ *   +0x0604 -> line 3810
+ *   +0x0608 -> line 3809
+ *   +0x0614 -> line 3810
+ *   +0x0618 -> line 3809
+ *   +0x061c -> line 3810
+ *   +0x0620 -> line 3813
+ *   +0x0628 -> line 3814
+ *   +0x062c -> line 3809
+ *   +0x0630 -> line 3814
+ *   +0x0638 -> line 3809
+ *   +0x063c -> line 3814
+ *   +0x0640 -> line 3809
+ *   +0x0650 -> line 3810
+ *   +0x0654 -> line 3809
+ *   +0x0658 -> line 3810
+ *   +0x065c -> line 3809
+ *   +0x0664 -> line 3810
+ *   +0x0668 -> line 3809
+ *   +0x0670 -> line 3810
+ *   +0x0698 -> line 3814
+ *   +0x069c -> line 3815
+ *   +0x06b0 -> line 3821
+ *   +0x06c0 -> line 3823
+ *   +0x06c4 -> line 3824
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_SwirlingBubbles::Process(void)
+{
+    float fDelay;
+    float fBackwardMultiplier;
+    unsigned int ulNbBubbles;
+    unsigned int ulBubble2;
+    MTH3D_tdstVector_* pV1;
+    float fV1Y;
+    float fV1Z;
+    float fV1X;
+    float fDX;
+    float fDY;
+    float fDZ;
+    float fOffY;
+    float fOffX;
+    float fNegX;
+    float fOffZ;
+    float fNegY;
+    float fNegZ;
+    float fSin;
+    float fCos;
+    float fNorm1;
+    unsigned int ulNbNewBubbles;
+    float fInvNbRaws;
+    float fAngle;
+    unsigned int ulNbRaws;
+    AGO3_SB_SpriteData* pSpriteData;
+    MTH3D_tdstVector_ stPosition;
+    unsigned int ulBubble;
+
+    pV1 = &stPosition;
+    if (m_bAlive)
+    {
+        fAngle = 25.132742f * g_fTimeDifference;
+        fDX = fDY = fDZ = 0.0f;
+        if (m_bGenerationInProgress)
+        {
+            ulNbRaws = 2 * (int)(0.5f + g_fTimeDifference / g_stEngineStructure.stEngineTimer.xFrameLength);
+            fInvNbRaws = 1.0f / (float)ulNbRaws;
+            fAngle *= fInvNbRaws;
+            fDX = fInvNbRaws * (m_Position.Vector[0] - m_stLastPos.xX);
+            fDY = fInvNbRaws * (m_Position.Vector[1] - m_stLastPos.xY);
+            fDZ = fInvNbRaws * (m_Position.Vector[2] - m_stLastPos.xZ);
+            stPosition.xX = m_stLastPos.xX + fDX;
+            stPosition.xY = m_stLastPos.xY + fDY;
+            stPosition.xZ = m_stLastPos.xZ + fDZ;
+        }
+        else
+        {
+            ulNbRaws = 1;
+            stPosition.xX = m_Position.Vector[0];
+            stPosition.xY = m_Position.Vector[1];
+            stPosition.xZ = m_Position.Vector[2];
+        }
+        ulNbNewBubbles = ulNbRaws * 4;
+        if (m_ulNbBubbles + ulNbNewBubbles >= 0x200)
+        {
+            m_ulFirstSet = (m_ulFirstSet + ulNbNewBubbles) & 0x1ff;
+            m_ulNbBubbles -= ulNbNewBubbles;
+        }
+        while (ulNbRaws--)
+        {
+            m_fAngle += fAngle;
+            if (m_fAngle >= 6.2831855f)
+                fCos = 6.2831855f;
+            else
+                fCos = 0.0f;
+            m_fAngle -= fCos;
+            fV1X = -m_stDirection.xY;
+            fV1Y = m_stDirection.xX;
+            fV1Z = 0.0f;
+            fNorm1 = 1.0f / AGO3_SQRT(fV1Z + (fV1X * fV1X + fV1Y * fV1Y));
+            fV1X *= fNorm1;
+            fV1Y *= fNorm1;
+            fV1Z *= fNorm1;
+            fSin = ((float*)p_fCosTable)[(int)(81.48733f * m_fAngle) & 0x1ff];
+            fCos = ((float*)p_fCosTable)[((int)(81.48733f * m_fAngle) + 0x80) & 0x1ff];
+            fOffX = 0.9f * (fCos * (m_stDirection.xY * fV1Z - m_stDirection.xZ * fV1Y) + fSin * fV1X);
+            fOffY = 0.9f * (fCos * (m_stDirection.xZ * fV1X - m_stDirection.xX * fV1Z) + fSin * fV1Y);
+            fOffZ = 0.9f * (fCos * (m_stDirection.xX * fV1Y - m_stDirection.xY * fV1X) + fSin * fV1Z);
+            fNegX = -fOffX;
+            fNegY = -fOffY;
+            fNegZ = -fOffZ;
+            for (ulBubble = 0; ulBubble < 1; ulBubble++)
+            {
+                pSpriteData = &m_stSprite[m_ulFirstFree];
+                pSpriteData->stPosition.xX = stPosition.xX + fOffX;
+                pSpriteData->stPosition.xY = stPosition.xY + fOffY;
+                pSpriteData->stPosition.xZ = stPosition.xZ + fOffZ;
+                pSpriteData->stDirection.xX = -m_stDirection.xX;
+                pSpriteData->stDirection.xY = -m_stDirection.xY;
+                pSpriteData->stDirection.xZ = -m_stDirection.xZ;
+                pSpriteData->fSize = 0.04f * AGO3_M_xRand(0.5f, 2.0f);
+                pSpriteData->fDelay = 1.0f;
+                pSpriteData->fTimeBeforeDeath = 10.0f;
+                m_ulFirstFree = (m_ulFirstFree + 1) & 0x1ff;
+                m_ulNbBubbles++;
+            }
+            for (ulBubble = 0; ulBubble < 1; ulBubble++)
+            {
+                pSpriteData = &m_stSprite[m_ulFirstFree];
+                pSpriteData->stPosition.xX = stPosition.xX + fNegX;
+                pSpriteData->stPosition.xY = stPosition.xY + fNegY;
+                pSpriteData->stPosition.xZ = stPosition.xZ + fNegZ;
+                pSpriteData->stDirection.xX = -m_stDirection.xX;
+                pSpriteData->stDirection.xY = -m_stDirection.xY;
+                pSpriteData->stDirection.xZ = -m_stDirection.xZ;
+                pSpriteData->fSize = 0.04f * AGO3_M_xRand(0.5f, 2.0f);
+                pSpriteData->fDelay = 1.0f;
+                pSpriteData->fTimeBeforeDeath = 10.0f;
+                m_ulFirstFree = (m_ulFirstFree + 1) & 0x1ff;
+                m_ulNbBubbles++;
+            }
+            if (m_bGenerationInProgress & ulNbRaws)
+            {
+                stPosition.xX += fDX;
+                stPosition.xY += fDY;
+                stPosition.xZ += fDZ;
+            }
+        }
+    }
+    m_bGenerationInProgress = m_bAlive;
+    ulNbBubbles = m_ulNbBubbles;
+    if (ulNbBubbles == 0)
+    {
+        if (AGO_G_CurrentVU1Frame == 2)
+            m_Finished = 1;
+    }
+    else
+    {
+        ulBubble = m_ulFirstSet;
+        pSpriteData = &m_stSprite[ulBubble];
+        for (ulBubble2 = 0; ulBubble2 < ulNbBubbles; ulBubble2++)
+        {
+            pSpriteData->fTimeBeforeDeath -= g_fTimeDifference;
+            if (pSpriteData->fTimeBeforeDeath <= 0.0f)
+            {
+                m_ulFirstSet = (m_ulFirstSet + 1) & 0x200;
+                ulBubble = (ulBubble + 1) & 0x1ff;
+                pSpriteData = &m_stSprite[ulBubble];
+                m_ulNbBubbles--;
+            }
+            else
+            {
+                pSpriteData->fDelay -= g_fTimeDifference;
+                fDelay = pSpriteData->fDelay;
+                if (fDelay < 0.0f)
+                    fDelay = 0.0f;
+                fBackwardMultiplier = fDelay * g_fTimeDifference;
+                pSpriteData->stPosition.xX += AGO3_M_xRand(-0.02f, 0.02f) + pSpriteData->stDirection.xX * fBackwardMultiplier;
+                pSpriteData->stPosition.xY += AGO3_M_xRand(-0.02f, 0.02f) + pSpriteData->stDirection.xY * fBackwardMultiplier;
+                pSpriteData->stPosition.xZ += pSpriteData->stDirection.xZ * fBackwardMultiplier + (1.0f - fDelay) * g_fTimeDifference + 0.1f * pSpriteData->fSize;
+                ulBubble = (ulBubble + 1) & 0x1ff;
+                pSpriteData = &m_stSprite[ulBubble];
+            }
+        }
+    }
+    if (AGO_G_CurrentVU1Frame == 2)
+        m_bAlive = 0;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 3828–3840 */
+/* addr: 0x001f3b20  size: 164 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3828
+ *   +0x0020 -> line 3829
+ *   +0x0024 -> line 3834
+ *   +0x0028 -> line 3829
+ *   +0x0038 -> line 3834
+ *   +0x0040 -> line 3836
+ *   +0x0058 -> line 3837
+ *   +0x005c -> line 3839
+ *   +0x0060 -> line 3837
+ *   +0x0064 -> line 3838
+ *   +0x0078 -> line 3839
+ *   +0x0088 -> line 3840
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void AGO3_SwirlingBubbles::Display(GLD_tdstViewportAttributes_* hVp)
+{
+    unsigned int ulBubble;
+    unsigned int ulBubble2;
+    AGO3_SB_SpriteData* pSpriteData;
+
+    ulBubble2 = m_ulFirstSet;
+    ulBubble = 0;
+    pSpriteData = &m_stSprite[ulBubble2];
+    while (ulBubble < m_ulNbBubbles)
+    {
+        GLI_vDrawWorldSpriteOpt((MTH3D_tdstVector_*)&pSpriteData->stPosition, m_pMat1, pSpriteData->fSize, pSpriteData->fSize, hVp, 1);
+        ulBubble2 = (ulBubble2 + 1) & 511;
+        ulBubble++;
+        pSpriteData = &m_stSprite[ulBubble2];
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 3950–3999 */
+/* addr: 0x001f39e0  size: 316 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3950
+ *   +0x0018 -> line 3953
+ *   +0x0020 -> line 3954
+ *   +0x002c -> line 3955
+ *   +0x0034 -> line 3957
+ *   +0x0040 -> line 3960
+ *   +0x0044 -> line 3961
+ *   +0x0050 -> line 3960
+ *   +0x0054 -> line 3961
+ *   +0x0070 -> line 3964
+ *   +0x007c -> line 3965
+ *   +0x0088 -> line 3968
+ *   +0x0090 -> line 3969
+ *   +0x0098 -> line 3971
+ *   +0x009c -> line 3972
+ *   +0x00a0 -> line 3975
+ *   +0x00a4 -> line 3976
+ *   +0x00a8 -> line 3979
+ *   +0x00ac -> line 3982
+ *   +0x00b8 -> line 3986
+ *   +0x00bc -> line 3982
+ *   +0x00c4 -> line 3984
+ *   +0x00c8 -> line 3986
+ *   +0x00d8 -> line 3987
+ *   +0x00e0 -> line 3988
+ *   +0x00f8 -> line 3989
+ *   +0x0104 -> line 3990
+ *   +0x0114 -> line 3991
+ *   +0x0120 -> line 3993
+ *   +0x0128 -> line 3994
+ *   +0x012c -> line 3997
+ *   +0x0130 -> line 3999
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+AGO3_SphericalRadiance::AGO3_SphericalRadiance(void)
+{
+    float fAcceleration;
+    /* TODO: decompile from asm/... */
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 4026–4214 */
 /* addr: 0x001f3220  size: 1980 bytes */
@@ -4243,4501 +6483,6 @@ extern unsigned int AGO_G_CurrentVU1Frame;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 3950–3999 */
-/* addr: 0x001f39e0  size: 316 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3950
- *   +0x0018 -> line 3953
- *   +0x0020 -> line 3954
- *   +0x002c -> line 3955
- *   +0x0034 -> line 3957
- *   +0x0040 -> line 3960
- *   +0x0044 -> line 3961
- *   +0x0050 -> line 3960
- *   +0x0054 -> line 3961
- *   +0x0070 -> line 3964
- *   +0x007c -> line 3965
- *   +0x0088 -> line 3968
- *   +0x0090 -> line 3969
- *   +0x0098 -> line 3971
- *   +0x009c -> line 3972
- *   +0x00a0 -> line 3975
- *   +0x00a4 -> line 3976
- *   +0x00a8 -> line 3979
- *   +0x00ac -> line 3982
- *   +0x00b8 -> line 3986
- *   +0x00bc -> line 3982
- *   +0x00c4 -> line 3984
- *   +0x00c8 -> line 3986
- *   +0x00d8 -> line 3987
- *   +0x00e0 -> line 3988
- *   +0x00f8 -> line 3989
- *   +0x0104 -> line 3990
- *   +0x0114 -> line 3991
- *   +0x0120 -> line 3993
- *   +0x0128 -> line 3994
- *   +0x012c -> line 3997
- *   +0x0130 -> line 3999
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 3828–3840 */
-/* addr: 0x001f3b20  size: 164 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3828
- *   +0x0020 -> line 3829
- *   +0x0024 -> line 3834
- *   +0x0028 -> line 3829
- *   +0x0038 -> line 3834
- *   +0x0040 -> line 3836
- *   +0x0058 -> line 3837
- *   +0x005c -> line 3839
- *   +0x0060 -> line 3837
- *   +0x0064 -> line 3838
- *   +0x0078 -> line 3839
- *   +0x0088 -> line 3840
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 3613–3824 */
-/* addr: 0x001f3bd0  size: 1816 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3613
- *   +0x0050 -> line 3614
- *   +0x005c -> line 3624
- *   +0x0068 -> line 3626
- *   +0x006c -> line 3630
- *   +0x0070 -> line 3624
- *   +0x0074 -> line 3627
- *   +0x0078 -> line 3628
- *   +0x007c -> line 3630
- *   +0x0084 -> line 3635
- *   +0x0094 -> line 3636
- *   +0x009c -> line 3635
- *   +0x00b4 -> line 3636
- *   +0x00ec -> line 3638
- *   +0x00f4 -> line 3640
- *   +0x00fc -> line 3639
- *   +0x0104 -> line 3637
- *   +0x0108 -> line 3638
- *   +0x010c -> line 3640
- *   +0x0110 -> line 3639
- *   +0x0114 -> line 3638
- *   +0x0118 -> line 3640
- *   +0x011c -> line 3641
- *   +0x0120 -> line 3639
- *   +0x0124 -> line 3641
- *   +0x0128 -> line 3642
- *   +0x0130 -> line 3643
- *   +0x0134 -> line 3644
- *   +0x013c -> line 3648
- *   +0x0140 -> line 3647
- *   +0x0144 -> line 3648
- *   +0x0148 -> line 3649
- *   +0x0150 -> line 3650
- *   +0x0158 -> line 3657
- *   +0x015c -> line 3656
- *   +0x0160 -> line 3657
- *   +0x0170 -> line 3659
- *   +0x0180 -> line 3660
- *   +0x018c -> line 3664
- *   +0x0198 -> line 3669
- *   +0x019c -> line 3670
- *   +0x01a8 -> line 3669
- *   +0x01ac -> line 3670
- *   +0x01d0 -> line 3678
- *   +0x01d4 -> line 3670
- *   +0x01d8 -> line 3711
- *   +0x01dc -> line 3678
- *   +0x01e0 -> line 3676
- *   +0x01e4 -> line 3689
- *   +0x01ec -> line 3695
- *   +0x01f0 -> line 3670
- *   +0x01f4 -> line 3695
- *   +0x01f8 -> line 3670
- *   +0x01fc -> line 3689
- *   +0x0208 -> line 3676
- *   +0x0210 -> line 3695
- *   +0x021c -> line 3689
- *   +0x0224 -> line 3676
- *   +0x0228 -> line 3689
- *   +0x022c -> line 3677
- *   +0x0234 -> line 3689
- *   +0x0238 -> line 3677
- *   +0x023c -> line 3689
- *   +0x0240 -> line 3690
- *   +0x0244 -> line 3689
- *   +0x0248 -> line 3690
- *   +0x0250 -> line 3678
- *   +0x0254 -> line 3690
- *   +0x0258 -> line 3678
- *   +0x025c -> line 3679
- *   +0x0268 -> line 3695
- *   +0x0270 -> line 3690
- *   +0x0274 -> line 3695
- *   +0x0278 -> line 3689
- *   +0x027c -> line 3695
- *   +0x0288 -> line 3696
- *   +0x0298 -> line 3697
- *   +0x02a8 -> line 3696
- *   +0x02ac -> line 3697
- *   +0x02b0 -> line 3698
- *   +0x02b4 -> line 3699
- *   +0x02b8 -> line 3700
- *   +0x02bc -> line 3711
- *   +0x02c0 -> line 3713
- *   +0x02c4 -> line 3716
- *   +0x02c8 -> line 3717
- *   +0x02cc -> line 3718
- *   +0x02d0 -> line 3713
- *   +0x02e0 -> line 3716
- *   +0x02e4 -> line 3713
- *   +0x02e8 -> line 3716
- *   +0x02ec -> line 3717
- *   +0x02f8 -> line 3718
- *   +0x0304 -> line 3720
- *   +0x0310 -> line 3721
- *   +0x031c -> line 3722
- *   +0x0324 -> line 3723
- *   +0x0338 -> line 3724
- *   +0x033c -> line 3723
- *   +0x0344 -> line 3728
- *   +0x0348 -> line 3723
- *   +0x035c -> line 3725
- *   +0x0360 -> line 3723
- *   +0x0380 -> line 3724
- *   +0x0384 -> line 3725
- *   +0x0388 -> line 3726
- *   +0x0398 -> line 3727
- *   +0x03a0 -> line 3728
- *   +0x03a8 -> line 3731
- *   +0x03b0 -> line 3733
- *   +0x03b4 -> line 3736
- *   +0x03b8 -> line 3737
- *   +0x03bc -> line 3733
- *   +0x03cc -> line 3736
- *   +0x03d0 -> line 3733
- *   +0x03d4 -> line 3736
- *   +0x03d8 -> line 3738
- *   +0x03dc -> line 3737
- *   +0x03e0 -> line 3738
- *   +0x03e4 -> line 3740
- *   +0x03f0 -> line 3741
- *   +0x03fc -> line 3742
- *   +0x0404 -> line 3743
- *   +0x0428 -> line 3744
- *   +0x042c -> line 3743
- *   +0x0430 -> line 3748
- *   +0x0434 -> line 3745
- *   +0x0438 -> line 3743
- *   +0x0460 -> line 3744
- *   +0x0464 -> line 3745
- *   +0x0468 -> line 3746
- *   +0x0478 -> line 3747
- *   +0x0480 -> line 3748
- *   +0x0488 -> line 3750
- *   +0x0498 -> line 3752
- *   +0x04a4 -> line 3753
- *   +0x04b0 -> line 3754
- *   +0x04bc -> line 3755
- *   +0x04c0 -> line 3757
- *   +0x04cc -> line 3759
- *   +0x04d0 -> line 3761
- *   +0x04d8 -> line 3764
- *   +0x04e4 -> line 3767
- *   +0x04f4 -> line 3770
- *   +0x04fc -> line 3775
- *   +0x0500 -> line 3782
- *   +0x0508 -> line 3775
- *   +0x0518 -> line 3782
- *   +0x0520 -> line 3787
- *   +0x0528 -> line 3788
- *   +0x052c -> line 3787
- *   +0x0530 -> line 3788
- *   +0x0540 -> line 3791
- *   +0x0544 -> line 3793
- *   +0x054c -> line 3794
- *   +0x055c -> line 3791
- *   +0x0560 -> line 3794
- *   +0x0564 -> line 3791
- *   +0x056c -> line 3792
- *   +0x0574 -> line 3795
- *   +0x057c -> line 3796
- *   +0x0580 -> line 3797
- *   +0x058c -> line 3798
- *   +0x059c -> line 3799
- *   +0x05a0 -> line 3807
- *   +0x05a4 -> line 3808
- *   +0x05f0 -> line 3809
- *   +0x0604 -> line 3810
- *   +0x0608 -> line 3809
- *   +0x0614 -> line 3810
- *   +0x0618 -> line 3809
- *   +0x061c -> line 3810
- *   +0x0620 -> line 3813
- *   +0x0628 -> line 3814
- *   +0x062c -> line 3809
- *   +0x0630 -> line 3814
- *   +0x0638 -> line 3809
- *   +0x063c -> line 3814
- *   +0x0640 -> line 3809
- *   +0x0650 -> line 3810
- *   +0x0654 -> line 3809
- *   +0x0658 -> line 3810
- *   +0x065c -> line 3809
- *   +0x0664 -> line 3810
- *   +0x0668 -> line 3809
- *   +0x0670 -> line 3810
- *   +0x0698 -> line 3814
- *   +0x069c -> line 3815
- *   +0x06b0 -> line 3821
- *   +0x06c0 -> line 3823
- *   +0x06c4 -> line 3824
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 3467–3508 */
-/* addr: 0x001f42f0  size: 328 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3467
- *   +0x0010 -> line 3478
- *   +0x0014 -> line 3467
- *   +0x0028 -> line 3487
- *   +0x002c -> line 3467
- *   +0x0030 -> line 3489
- *   +0x0034 -> line 3467
- *   +0x0038 -> line 3488
- *   +0x003c -> line 3467
- *   +0x0040 -> line 3489
- *   +0x0044 -> line 3467
- *   +0x0048 -> line 3476
- *   +0x004c -> line 3488
- *   +0x0050 -> line 3476
- *   +0x0054 -> line 3477
- *   +0x005c -> line 3478
- *   +0x0064 -> line 3479
- *   +0x0070 -> line 3489
- *   +0x0078 -> line 3491
- *   +0x0084 -> line 3492
- *   +0x0088 -> line 3491
- *   +0x00a4 -> line 3492
- *   +0x00a8 -> line 3494
- *   +0x00b8 -> line 3495
- *   +0x00c0 -> line 3496
- *   +0x00e4 -> line 3497
- *   +0x00e8 -> line 3500
- *   +0x00ec -> line 3498
- *   +0x00f0 -> line 3500
- *   +0x00f4 -> line 3499
- *   +0x00fc -> line 3500
- *   +0x0104 -> line 3501
- *   +0x0108 -> line 3502
- *   +0x010c -> line 3501
- *   +0x0110 -> line 3502
- *   +0x0118 -> line 3508
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 3386–3463 */
-/* addr: 0x001f4440  size: 628 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3386
- *   +0x0004 -> line 3389
- *   +0x0008 -> line 3386
- *   +0x000c -> line 3389
- *   +0x0014 -> line 3386
- *   +0x0018 -> line 3389
- *   +0x002c -> line 3392
- *   +0x0030 -> line 3394
- *   +0x0034 -> line 3392
- *   +0x0048 -> line 3394
- *   +0x0050 -> line 3396
- *   +0x0058 -> line 3400
- *   +0x0060 -> line 3396
- *   +0x0064 -> line 3400
- *   +0x00d0 -> line 3401
- *   +0x00dc -> line 3402
- *   +0x00e0 -> line 3407
- *   +0x00ec -> line 3408
- *   +0x00f0 -> line 3407
- *   +0x00f4 -> line 3411
- *   +0x00f8 -> line 3407
- *   +0x00fc -> line 3415
- *   +0x0100 -> line 3407
- *   +0x0104 -> line 3408
- *   +0x0108 -> line 3409
- *   +0x0110 -> line 3407
- *   +0x0114 -> line 3408
- *   +0x0118 -> line 3409
- *   +0x011c -> line 3408
- *   +0x0120 -> line 3412
- *   +0x012c -> line 3408
- *   +0x0130 -> line 3409
- *   +0x0134 -> line 3408
- *   +0x0138 -> line 3422
- *   +0x013c -> line 3420
- *   +0x0140 -> line 3422
- *   +0x014c -> line 3417
- *   +0x0158 -> line 3419
- *   +0x0160 -> line 3420
- *   +0x0168 -> line 3422
- *   +0x016c -> line 3423
- *   +0x0170 -> line 3425
- *   +0x017c -> line 3426
- *   +0x0180 -> line 3436
- *   +0x0184 -> line 3429
- *   +0x0188 -> line 3437
- *   +0x018c -> line 3439
- *   +0x0190 -> line 3438
- *   +0x0194 -> line 3434
- *   +0x0198 -> line 3439
- *   +0x019c -> line 3438
- *   +0x01a0 -> line 3429
- *   +0x01a8 -> line 3430
- *   +0x01ac -> line 3433
- *   +0x01b0 -> line 3438
- *   +0x01b4 -> line 3439
- *   +0x01bc -> line 3441
- *   +0x01c4 -> line 3443
- *   +0x01dc -> line 3445
- *   +0x01ec -> line 3446
- *   +0x01f0 -> line 3448
- *   +0x01f4 -> line 3446
- *   +0x01fc -> line 3448
- *   +0x0204 -> line 3451
- *   +0x0208 -> line 3453
- *   +0x0210 -> line 3454
- *   +0x0214 -> line 3453
- *   +0x0218 -> line 3454
- *   +0x021c -> line 3455
- *   +0x0220 -> line 3451
- *   +0x0224 -> line 3453
- *   +0x0234 -> line 3454
- *   +0x023c -> line 3455
- *   +0x0258 -> line 3457
- *   +0x0260 -> line 3459
- *   +0x0264 -> line 3460
- *   +0x026c -> line 3463
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 3332–3370 */
-/* addr: 0x001f46c0  size: 344 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3332
- *   +0x0004 -> line 3335
- *   +0x0008 -> line 3332
- *   +0x0020 -> line 3335
- *   +0x002c -> line 3338
- *   +0x0030 -> line 3335
- *   +0x0044 -> line 3338
- *   +0x0048 -> line 3335
- *   +0x0058 -> line 3338
- *   +0x0060 -> line 3341
- *   +0x00a0 -> line 3349
- *   +0x00b8 -> line 3351
- *   +0x00bc -> line 3352
- *   +0x00c0 -> line 3353
- *   +0x00c8 -> line 3354
- *   +0x00e4 -> line 3356
- *   +0x00e8 -> line 3357
- *   +0x00f0 -> line 3358
- *   +0x0108 -> line 3363
- *   +0x010c -> line 3364
- *   +0x0110 -> line 3363
- *   +0x011c -> line 3366
- *   +0x012c -> line 3368
- *   +0x0134 -> line 3367
- *   +0x0138 -> line 3368
- *   +0x0140 -> line 3370
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 3205–3236 */
-/* addr: 0x001f4820  size: 240 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3205
- *   +0x0020 -> line 3212
- *   +0x002c -> line 3216
- *   +0x0030 -> line 3220
- *   +0x0034 -> line 3222
- *   +0x0038 -> line 3216
- *   +0x003c -> line 3217
- *   +0x0044 -> line 3219
- *   +0x004c -> line 3224
- *   +0x0050 -> line 3225
- *   +0x0058 -> line 3224
- *   +0x005c -> line 3225
- *   +0x0070 -> line 3227
- *   +0x0078 -> line 3228
- *   +0x009c -> line 3229
- *   +0x00a0 -> line 3230
- *   +0x00a8 -> line 3232
- *   +0x00ac -> line 3230
- *   +0x00b0 -> line 3231
- *   +0x00b4 -> line 3232
- *   +0x00c0 -> line 3233
- *   +0x00c8 -> line 3234
- *   +0x00d0 -> line 3236
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 3083–3201 */
-/* addr: 0x001f4910  size: 980 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3083
- *   +0x0008 -> line 3086
- *   +0x0014 -> line 3091
- *   +0x0018 -> line 3093
- *   +0x001c -> line 3091
- *   +0x0020 -> line 3093
- *   +0x0024 -> line 3088
- *   +0x0028 -> line 3093
- *   +0x002c -> line 3091
- *   +0x0030 -> line 3088
- *   +0x0038 -> line 3091
- *   +0x003c -> line 3093
- *   +0x0048 -> line 3094
- *   +0x0058 -> line 3095
- *   +0x005c -> line 3098
- *   +0x0060 -> line 3096
- *   +0x0070 -> line 3099
- *   +0x0080 -> line 3101
- *   +0x0088 -> line 3107
- *   +0x00a4 -> line 3108
- *   +0x00b4 -> line 3110
- *   +0x00c4 -> line 3112
- *   +0x00c8 -> line 3113
- *   +0x00cc -> line 3115
- *   +0x00d4 -> line 3116
- *   +0x00e0 -> line 3118
- *   +0x00f0 -> line 3119
- *   +0x00f8 -> line 3118
- *   +0x0104 -> line 3119
- *   +0x0114 -> line 3120
- *   +0x0118 -> line 3123
- *   +0x0124 -> line 3131
- *   +0x0128 -> line 3123
- *   +0x0138 -> line 3128
- *   +0x013c -> line 3123
- *   +0x0150 -> line 3127
- *   +0x0154 -> line 3128
- *   +0x0158 -> line 3152
- *   +0x015c -> line 3137
- *   +0x0160 -> line 3152
- *   +0x0164 -> line 3136
- *   +0x0168 -> line 3152
- *   +0x016c -> line 3136
- *   +0x0170 -> line 3137
- *   +0x0178 -> line 3157
- *   +0x017c -> line 3154
- *   +0x0180 -> line 3157
- *   +0x0188 -> line 3143
- *   +0x018c -> line 3133
- *   +0x01a0 -> line 3136
- *   +0x01c0 -> line 3137
- *   +0x01e4 -> line 3139
- *   +0x01fc -> line 3142
- *   +0x0200 -> line 3143
- *   +0x0210 -> line 3144
- *   +0x0214 -> line 3145
- *   +0x0218 -> line 3146
- *   +0x022c -> line 3147
- *   +0x0230 -> line 3148
- *   +0x0234 -> line 3149
- *   +0x0238 -> line 3153
- *   +0x024c -> line 3154
- *   +0x0254 -> line 3155
- *   +0x0258 -> line 3156
- *   +0x0260 -> line 3158
- *   +0x0264 -> line 3156
- *   +0x0268 -> line 3158
- *   +0x026c -> line 3156
- *   +0x0270 -> line 3157
- *   +0x0278 -> line 3158
- *   +0x0280 -> line 3160
- *   +0x0288 -> line 3161
- *   +0x02ac -> line 3166
- *   +0x02b0 -> line 3170
- *   +0x02b4 -> line 3174
- *   +0x02b8 -> line 3172
- *   +0x02bc -> line 3174
- *   +0x02c0 -> line 3173
- *   +0x02c4 -> line 3177
- *   +0x02c8 -> line 3178
- *   +0x02cc -> line 3166
- *   +0x02d0 -> line 3179
- *   +0x02d4 -> line 3168
- *   +0x02d8 -> line 3170
- *   +0x02dc -> line 3173
- *   +0x02e4 -> line 3170
- *   +0x02e8 -> line 3168
- *   +0x02f4 -> line 3169
- *   +0x02f8 -> line 3172
- *   +0x02fc -> line 3169
- *   +0x0308 -> line 3172
- *   +0x030c -> line 3169
- *   +0x0310 -> line 3172
- *   +0x032c -> line 3173
- *   +0x0330 -> line 3172
- *   +0x0338 -> line 3174
- *   +0x0340 -> line 3173
- *   +0x0344 -> line 3174
- *   +0x0354 -> line 3184
- *   +0x0358 -> line 3183
- *   +0x035c -> line 3181
- *   +0x0360 -> line 3182
- *   +0x0364 -> line 3181
- *   +0x0368 -> line 3183
- *   +0x037c -> line 3184
- *   +0x0384 -> line 3185
- *   +0x0388 -> line 3186
- *   +0x0390 -> line 3187
- *   +0x0394 -> line 3186
- *   +0x039c -> line 3187
- *   +0x03a8 -> line 3190
- *   +0x03b8 -> line 3192
- *   +0x03bc -> line 3197
- *   +0x03c8 -> line 3199
- *   +0x03cc -> line 3201
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2974–3064 */
-/* addr: 0x001f4cf0  size: 724 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2974
- *   +0x0004 -> line 2984
- *   +0x0008 -> line 2974
- *   +0x000c -> line 2984
- *   +0x0010 -> line 2974
- *   +0x0038 -> line 2979
- *   +0x003c -> line 2974
- *   +0x0044 -> line 2979
- *   +0x0074 -> line 2981
- *   +0x007c -> line 2982
- *   +0x0084 -> line 2984
- *   +0x0090 -> line 2987
- *   +0x009c -> line 2998
- *   +0x00a4 -> line 2999
- *   +0x00b4 -> line 3000
- *   +0x00c4 -> line 3002
- *   +0x00d4 -> line 3003
- *   +0x00dc -> line 3004
- *   +0x00e8 -> line 3007
- *   +0x00f4 -> line 3008
- *   +0x0110 -> line 3010
- *   +0x0124 -> line 3011
- *   +0x0134 -> line 3013
- *   +0x0138 -> line 3018
- *   +0x014c -> line 3020
- *   +0x0154 -> line 3021
- *   +0x0160 -> line 3022
- *   +0x0168 -> line 3026
- *   +0x0178 -> line 3031
- *   +0x017c -> line 3035
- *   +0x0184 -> line 3033
- *   +0x018c -> line 3036
- *   +0x0190 -> line 3035
- *   +0x0194 -> line 3037
- *   +0x019c -> line 3033
- *   +0x01a0 -> line 3039
- *   +0x01a4 -> line 3048
- *   +0x01b0 -> line 3040
- *   +0x01b4 -> line 3042
- *   +0x01b8 -> line 3048
- *   +0x01c4 -> line 3039
- *   +0x01c8 -> line 3040
- *   +0x01d0 -> line 3041
- *   +0x01dc -> line 3042
- *   +0x01e0 -> line 3041
- *   +0x01f0 -> line 3042
- *   +0x01f8 -> line 3043
- *   +0x0200 -> line 3044
- *   +0x020c -> line 3045
- *   +0x0218 -> line 3048
- *   +0x0220 -> line 3053
- *   +0x0224 -> line 3049
- *   +0x0228 -> line 3053
- *   +0x022c -> line 3050
- *   +0x0230 -> line 3053
- *   +0x0234 -> line 3056
- *   +0x0238 -> line 3055
- *   +0x0240 -> line 3053
- *   +0x0244 -> line 3054
- *   +0x024c -> line 3056
- *   +0x0250 -> line 3054
- *   +0x0254 -> line 3056
- *   +0x025c -> line 3057
- *   +0x0264 -> line 3061
- *   +0x0280 -> line 3062
- *   +0x0284 -> line 3061
- *   +0x0294 -> line 3062
- *   +0x0298 -> line 3063
- *   +0x029c -> line 3064
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2951–2970 */
-/* addr: 0x001f4fd0  size: 388 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2951
- *   +0x0004 -> line 2958
- *   +0x0008 -> line 2951
- *   +0x000c -> line 2959
- *   +0x0010 -> line 2951
- *   +0x0024 -> line 2954
- *   +0x0030 -> line 2955
- *   +0x0034 -> line 2961
- *   +0x0038 -> line 2962
- *   +0x003c -> line 2961
- *   +0x0044 -> line 2963
- *   +0x0048 -> line 2961
- *   +0x004c -> line 2963
- *   +0x0050 -> line 2961
- *   +0x0054 -> line 2963
- *   +0x0058 -> line 2961
- *   +0x0064 -> line 2962
- *   +0x0074 -> line 2961
- *   +0x0078 -> line 2962
- *   +0x008c -> line 2961
- *   +0x0090 -> line 2962
- *   +0x00a4 -> line 2961
- *   +0x00a8 -> line 2962
- *   +0x00bc -> line 2961
- *   +0x00c0 -> line 2962
- *   +0x00d4 -> line 2961
- *   +0x00d8 -> line 2962
- *   +0x00ec -> line 2961
- *   +0x00f0 -> line 2962
- *   +0x0104 -> line 2961
- *   +0x0108 -> line 2962
- *   +0x0110 -> line 2963
- *   +0x0128 -> line 2962
- *   +0x012c -> line 2963
- *   +0x0134 -> line 2964
- *   +0x0138 -> line 2963
- *   +0x0148 -> line 2964
- *   +0x014c -> line 2961
- *   +0x0150 -> line 2963
- *   +0x0158 -> line 2964
- *   +0x0160 -> line 2965
- *   +0x0168 -> line 2967
- *   +0x016c -> line 2966
- *   +0x0170 -> line 2970
- *   +0x0174 -> line 2967
- *   +0x0178 -> line 2968
- *   +0x017c -> line 2970
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2836–2852 */
-/* addr: 0x001f5160  size: 168 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2836
- *   +0x0004 -> line 2839
- *   +0x0008 -> line 2836
- *   +0x0018 -> line 2839
- *   +0x001c -> line 2841
- *   +0x002c -> line 2843
- *   +0x0050 -> line 2846
- *   +0x006c -> line 2847
- *   +0x0090 -> line 2850
- *   +0x0094 -> line 2852
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2770–2832 */
-/* addr: 0x001f5210  size: 644 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2770
- *   +0x000c -> line 2780
- *   +0x0010 -> line 2770
- *   +0x0038 -> line 2774
- *   +0x0048 -> line 2775
- *   +0x0058 -> line 2776
- *   +0x0068 -> line 2778
- *   +0x0088 -> line 2779
- *   +0x0090 -> line 2780
- *   +0x00a4 -> line 2782
- *   +0x00b0 -> line 2783
- *   +0x00bc -> line 2784
- *   +0x00c8 -> line 2785
- *   +0x00d4 -> line 2787
- *   +0x00e0 -> line 2791
- *   +0x00e8 -> line 2797
- *   +0x00ec -> line 2787
- *   +0x00f4 -> line 2788
- *   +0x00f8 -> line 2791
- *   +0x0110 -> line 2793
- *   +0x0124 -> line 2794
- *   +0x0138 -> line 2795
- *   +0x0148 -> line 2797
- *   +0x0150 -> line 2803
- *   +0x015c -> line 2804
- *   +0x0160 -> line 2803
- *   +0x0168 -> line 2804
- *   +0x0170 -> line 2805
- *   +0x0174 -> line 2804
- *   +0x017c -> line 2805
- *   +0x018c -> line 2807
- *   +0x01a8 -> line 2810
- *   +0x01b4 -> line 2811
- *   +0x01c4 -> line 2813
- *   +0x01d0 -> line 2814
- *   +0x01d8 -> line 2815
- *   +0x01e4 -> line 2816
- *   +0x01f0 -> line 2819
- *   +0x0208 -> line 2823
- *   +0x0210 -> line 2829
- *   +0x0218 -> line 2823
- *   +0x021c -> line 2824
- *   +0x0228 -> line 2825
- *   +0x0234 -> line 2827
- *   +0x0238 -> line 2829
- *   +0x023c -> line 2830
- *   +0x0248 -> line 2831
- *   +0x027c -> line 2832
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2655–2701 */
-/* addr: 0x001f54a0  size: 580 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2655
- *   +0x0004 -> line 2660
- *   +0x0008 -> line 2655
- *   +0x000c -> line 2660
- *   +0x0018 -> line 2663
- *   +0x0034 -> line 2665
- *   +0x0038 -> line 2667
- *   +0x003c -> line 2665
- *   +0x0040 -> line 2666
- *   +0x0048 -> line 2667
- *   +0x0050 -> line 2669
- *   +0x0058 -> line 2674
- *   +0x0064 -> line 2676
- *   +0x0078 -> line 2677
- *   +0x007c -> line 2680
- *   +0x0080 -> line 2682
- *   +0x0084 -> line 2680
- *   +0x0094 -> line 2687
- *   +0x009c -> line 2684
- *   +0x00a4 -> line 2690
- *   +0x00ac -> line 2684
- *   +0x00e4 -> line 2686
- *   +0x00f8 -> line 2687
- *   +0x0104 -> line 2688
- *   +0x0114 -> line 2689
- *   +0x0118 -> line 2690
- *   +0x0120 -> line 2691
- *   +0x0170 -> line 2692
- *   +0x01c0 -> line 2691
- *   +0x01c8 -> line 2692
- *   +0x01e4 -> line 2694
- *   +0x01e8 -> line 2696
- *   +0x01f0 -> line 2697
- *   +0x01f4 -> line 2696
- *   +0x01f8 -> line 2697
- *   +0x01fc -> line 2696
- *   +0x0214 -> line 2697
- *   +0x021c -> line 2698
- *   +0x0220 -> line 2700
- *   +0x0238 -> line 2701
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2649–2650 */
-/* addr: 0x001f56f0  size: 36 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2649
- *   +0x000c -> line 2650
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2593–2644 */
-/* addr: 0x001f5720  size: 472 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2593
- *   +0x0004 -> line 2597
- *   +0x0008 -> line 2593
- *   +0x000c -> line 2607
- *   +0x0010 -> line 2593
- *   +0x0014 -> line 2597
- *   +0x0018 -> line 2593
- *   +0x001c -> line 2609
- *   +0x0020 -> line 2593
- *   +0x0028 -> line 2597
- *   +0x005c -> line 2600
- *   +0x0064 -> line 2601
- *   +0x006c -> line 2604
- *   +0x0074 -> line 2605
- *   +0x007c -> line 2607
- *   +0x0080 -> line 2609
- *   +0x0088 -> line 2610
- *   +0x00a4 -> line 2612
- *   +0x00a8 -> line 2613
- *   +0x00b0 -> line 2617
- *   +0x00c8 -> line 2619
- *   +0x00cc -> line 2621
- *   +0x00e4 -> line 2622
- *   +0x00ec -> line 2623
- *   +0x0104 -> line 2624
- *   +0x0110 -> line 2625
- *   +0x012c -> line 2626
- *   +0x0134 -> line 2629
- *   +0x0138 -> line 2628
- *   +0x0140 -> line 2629
- *   +0x0144 -> line 2632
- *   +0x0148 -> line 2634
- *   +0x0160 -> line 2635
- *   +0x0168 -> line 2636
- *   +0x0180 -> line 2637
- *   +0x018c -> line 2638
- *   +0x01a8 -> line 2639
- *   +0x01b0 -> line 2642
- *   +0x01b4 -> line 2641
- *   +0x01bc -> line 2642
- *   +0x01c0 -> line 2644
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2530–2534 */
-/* addr: 0x001f5900  size: 84 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2530
- *   +0x0004 -> line 2531
- *   +0x0008 -> line 2530
- *   +0x000c -> line 2531
- *   +0x0010 -> line 2530
- *   +0x001c -> line 2531
- *   +0x0024 -> line 2533
- *   +0x0040 -> line 2534
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2509–2526 */
-/* addr: 0x001f5960  size: 184 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2509
- *   +0x001c -> line 2512
- *   +0x003c -> line 2513
- *   +0x0058 -> line 2515
- *   +0x0070 -> line 2516
- *   +0x0080 -> line 2519
- *   +0x0098 -> line 2521
- *   +0x009c -> line 2522
- *   +0x00a4 -> line 2525
- *   +0x00b0 -> line 2526
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2444–2453 */
-/* addr: 0x001f5a20  size: 116 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2444
- *   +0x0008 -> line 2445
- *   +0x000c -> line 2444
- *   +0x0018 -> line 2445
- *   +0x002c -> line 2448
- *   +0x0034 -> line 2449
- *   +0x0050 -> line 2450
- *   +0x0058 -> line 2452
- *   +0x0060 -> line 2453
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2425–2440 */
-/* addr: 0x001f5aa0  size: 128 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2425
- *   +0x0018 -> line 2428
- *   +0x0020 -> line 2429
- *   +0x0028 -> line 2430
- *   +0x003c -> line 2433
- *   +0x004c -> line 2434
- *   +0x0060 -> line 2435
- *   +0x0068 -> line 2438
- *   +0x006c -> line 2439
- *   +0x0078 -> line 2440
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2278–2358 */
-/* addr: 0x001f5b20  size: 1004 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2278
- *   +0x0044 -> line 2281
- *   +0x0050 -> line 2283
- *   +0x0060 -> line 2284
- *   +0x006c -> line 2286
- *   +0x0070 -> line 2287
- *   +0x0074 -> line 2291
- *   +0x0078 -> line 2287
- *   +0x0080 -> line 2291
- *   +0x008c -> line 2287
- *   +0x00a0 -> line 2288
- *   +0x00a4 -> line 2289
- *   +0x00a8 -> line 2291
- *   +0x00b0 -> line 2296
- *   +0x00b8 -> line 2299
- *   +0x00c8 -> line 2302
- *   +0x00e0 -> line 2304
- *   +0x00f0 -> line 2305
- *   +0x0130 -> line 2307
- *   +0x0164 -> line 2308
- *   +0x0168 -> line 2309
- *   +0x0170 -> line 2307
- *   +0x0174 -> line 2309
- *   +0x017c -> line 2312
- *   +0x0188 -> line 2315
- *   +0x01a8 -> line 2319
- *   +0x01ac -> line 2315
- *   +0x01b0 -> line 2319
- *   +0x01f0 -> line 2323
- *   +0x0234 -> line 2325
- *   +0x0240 -> line 2327
- *   +0x0244 -> line 2328
- *   +0x024c -> line 2329
- *   +0x0250 -> line 2331
- *   +0x0270 -> line 2336
- *   +0x0280 -> line 2337
- *   +0x02c0 -> line 2339
- *   +0x0300 -> line 2340
- *   +0x0308 -> line 2339
- *   +0x030c -> line 2340
- *   +0x0314 -> line 2341
- *   +0x0318 -> line 2340
- *   +0x031c -> line 2342
- *   +0x0334 -> line 2343
- *   +0x0338 -> line 2345
- *   +0x033c -> line 2346
- *   +0x0348 -> line 2349
- *   +0x034c -> line 2348
- *   +0x0350 -> line 2350
- *   +0x0358 -> line 2352
- *   +0x0360 -> line 2353
- *   +0x0374 -> line 2354
- *   +0x0378 -> line 2353
- *   +0x0390 -> line 2355
- *   +0x03ac -> line 2358
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2197–2274 */
-/* addr: 0x001f5f10  size: 1008 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2197
- *   +0x0038 -> line 2200
- *   +0x0040 -> line 2202
- *   +0x004c -> line 2203
- *   +0x0054 -> line 2207
- *   +0x005c -> line 2212
- *   +0x0060 -> line 2210
- *   +0x0064 -> line 2212
- *   +0x0068 -> line 2208
- *   +0x0074 -> line 2210
- *   +0x007c -> line 2208
- *   +0x008c -> line 2210
- *   +0x0090 -> line 2208
- *   +0x0094 -> line 2212
- *   +0x00a0 -> line 2217
- *   +0x00bc -> line 2219
- *   +0x00c8 -> line 2220
- *   +0x00d4 -> line 2221
- *   +0x00e0 -> line 2222
- *   +0x0148 -> line 2224
- *   +0x0168 -> line 2225
- *   +0x0170 -> line 2227
- *   +0x01d8 -> line 2232
- *   +0x01e4 -> line 2233
- *   +0x01f4 -> line 2234
- *   +0x0204 -> line 2235
- *   +0x0214 -> line 2237
- *   +0x0228 -> line 2242
- *   +0x0230 -> line 2240
- *   +0x0234 -> line 2242
- *   +0x0238 -> line 2244
- *   +0x023c -> line 2246
- *   +0x0240 -> line 2242
- *   +0x0248 -> line 2243
- *   +0x0258 -> line 2244
- *   +0x0270 -> line 2242
- *   +0x0274 -> line 2244
- *   +0x0280 -> line 2243
- *   +0x0284 -> line 2244
- *   +0x02a0 -> line 2242
- *   +0x02a4 -> line 2244
- *   +0x02b0 -> line 2243
- *   +0x02b4 -> line 2244
- *   +0x02c4 -> line 2246
- *   +0x02d8 -> line 2248
- *   +0x02e0 -> line 2251
- *   +0x02e4 -> line 2248
- *   +0x02e8 -> line 2251
- *   +0x02ec -> line 2250
- *   +0x02f0 -> line 2248
- *   +0x02f8 -> line 2249
- *   +0x0308 -> line 2250
- *   +0x0314 -> line 2251
- *   +0x0324 -> line 2252
- *   +0x033c -> line 2255
- *   +0x0340 -> line 2256
- *   +0x034c -> line 2259
- *   +0x0350 -> line 2258
- *   +0x0354 -> line 2260
- *   +0x0360 -> line 2262
- *   +0x0368 -> line 2263
- *   +0x0374 -> line 2264
- *   +0x0378 -> line 2265
- *   +0x0380 -> line 2263
- *   +0x0384 -> line 2265
- *   +0x038c -> line 2268
- *   +0x03ac -> line 2272
- *   +0x03b4 -> line 2271
- *   +0x03b8 -> line 2272
- *   +0x03bc -> line 2274
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2073–2193 */
-/* addr: 0x001f6300  size: 1672 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2073
- *   +0x0008 -> line 2090
- *   +0x000c -> line 2073
- *   +0x0014 -> line 2090
- *   +0x0018 -> line 2073
- *   +0x003c -> line 2090
- *   +0x0050 -> line 2092
- *   +0x0070 -> line 2093
- *   +0x00a0 -> line 2095
- *   +0x00a4 -> line 2096
- *   +0x00a8 -> line 2095
- *   +0x00b0 -> line 2096
- *   +0x00b4 -> line 2095
- *   +0x00b8 -> line 2099
- *   +0x00bc -> line 2095
- *   +0x00c0 -> line 2096
- *   +0x00c8 -> line 2100
- *   +0x00cc -> line 2096
- *   +0x00d8 -> line 2099
- *   +0x00dc -> line 2100
- *   +0x00e0 -> line 2101
- *   +0x00e8 -> line 2102
- *   +0x00f0 -> line 2103
- *   +0x00f8 -> line 2107
- *   +0x0100 -> line 2108
- *   +0x0108 -> line 2109
- *   +0x0188 -> line 2113
- *   +0x0198 -> line 2117
- *   +0x01a4 -> line 2126
- *   +0x01a8 -> line 2117
- *   +0x01ac -> line 2126
- *   +0x01b0 -> line 2117
- *   +0x01b4 -> line 2126
- *   +0x01b8 -> line 2117
- *   +0x01c0 -> line 2126
- *   +0x01c8 -> line 2121
- *   +0x01d0 -> line 2126
- *   +0x01e0 -> line 2122
- *   +0x01e8 -> line 2126
- *   +0x01ec -> line 2123
- *   +0x01f4 -> line 2121
- *   +0x01f8 -> line 2122
- *   +0x01fc -> line 2126
- *   +0x0200 -> line 2127
- *   +0x0210 -> line 2128
- *   +0x0218 -> line 2131
- *   +0x024c -> line 2134
- *   +0x0250 -> line 2131
- *   +0x0264 -> line 2134
- *   +0x026c -> line 2138
- *   +0x0278 -> line 2144
- *   +0x027c -> line 2143
- *   +0x0280 -> line 2138
- *   +0x0288 -> line 2139
- *   +0x0298 -> line 2140
- *   +0x02ac -> line 2143
- *   +0x02b0 -> line 2138
- *   +0x02b4 -> line 2140
- *   +0x02bc -> line 2139
- *   +0x02c0 -> line 2140
- *   +0x02d4 -> line 2138
- *   +0x02d8 -> line 2140
- *   +0x02e0 -> line 2139
- *   +0x02e4 -> line 2140
- *   +0x02f8 -> line 2138
- *   +0x02fc -> line 2140
- *   +0x0304 -> line 2139
- *   +0x0308 -> line 2140
- *   +0x031c -> line 2138
- *   +0x0320 -> line 2140
- *   +0x0328 -> line 2139
- *   +0x032c -> line 2140
- *   +0x0340 -> line 2138
- *   +0x0344 -> line 2140
- *   +0x034c -> line 2139
- *   +0x0350 -> line 2140
- *   +0x0360 -> line 2144
- *   +0x0374 -> line 2146
- *   +0x037c -> line 2147
- *   +0x0380 -> line 2151
- *   +0x0384 -> line 2152
- *   +0x0388 -> line 2151
- *   +0x0390 -> line 2152
- *   +0x0394 -> line 2151
- *   +0x03a8 -> line 2152
- *   +0x03b0 -> line 2153
- *   +0x03b8 -> line 2154
- *   +0x03bc -> line 2153
- *   +0x03cc -> line 2154
- *   +0x03d0 -> line 2156
- *   +0x03d8 -> line 2157
- *   +0x03f4 -> line 2158
- *   +0x03f8 -> line 2157
- *   +0x0414 -> line 2158
- *   +0x0418 -> line 2157
- *   +0x0420 -> line 2158
- *   +0x0424 -> line 2160
- *   +0x0450 -> line 2162
- *   +0x0458 -> line 2160
- *   +0x045c -> line 2162
- *   +0x0460 -> line 2160
- *   +0x046c -> line 2162
- *   +0x0474 -> line 2160
- *   +0x047c -> line 2163
- *   +0x0480 -> line 2162
- *   +0x0484 -> line 2163
- *   +0x0488 -> line 2165
- *   +0x048c -> line 2164
- *   +0x0490 -> line 2166
- *   +0x04ac -> line 2171
- *   +0x04b0 -> line 2172
- *   +0x04bc -> line 2166
- *   +0x04dc -> line 2167
- *   +0x04e0 -> line 2166
- *   +0x04e8 -> line 2167
- *   +0x04ec -> line 2168
- *   +0x04f0 -> line 2169
- *   +0x04f4 -> line 2172
- *   +0x0500 -> line 2177
- *   +0x050c -> line 2178
- *   +0x055c -> line 2179
- *   +0x0574 -> line 2180
- *   +0x0584 -> line 2182
- *   +0x0590 -> line 2180
- *   +0x0598 -> line 2181
- *   +0x05a8 -> line 2182
- *   +0x05c4 -> line 2184
- *   +0x05c8 -> line 2182
- *   +0x05cc -> line 2183
- *   +0x05d4 -> line 2184
- *   +0x05d8 -> line 2183
- *   +0x05e0 -> line 2184
- *   +0x05e8 -> line 2185
- *   +0x05f4 -> line 2186
- *   +0x060c -> line 2188
- *   +0x0610 -> line 2189
- *   +0x0614 -> line 2188
- *   +0x0624 -> line 2189
- *   +0x063c -> line 2190
- *   +0x0650 -> line 2193
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2064–2069 */
-/* addr: 0x001f6990  size: 40 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2064
- *   +0x0004 -> line 2068
- *   +0x0008 -> line 2064
- *   +0x000c -> line 2065
- *   +0x0014 -> line 2066
- *   +0x001c -> line 2067
- *   +0x0020 -> line 2069
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int AGO3_FistSmoke::m_hHandle;
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 1929–1989 */
-/* addr: 0x001f69c0  size: 760 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1929
- *   +0x0038 -> line 1932
- *   +0x0044 -> line 1934
- *   +0x0054 -> line 1935
- *   +0x0060 -> line 1939
- *   +0x0068 -> line 1940
- *   +0x006c -> line 1941
- *   +0x0070 -> line 1940
- *   +0x0078 -> line 1941
- *   +0x0084 -> line 1939
- *   +0x0098 -> line 1940
- *   +0x00ac -> line 1941
- *   +0x00b8 -> line 1946
- *   +0x00c0 -> line 1949
- *   +0x00d0 -> line 1952
- *   +0x00e0 -> line 1953
- *   +0x0120 -> line 1955
- *   +0x0158 -> line 1956
- *   +0x0160 -> line 1955
- *   +0x0164 -> line 1956
- *   +0x016c -> line 1959
- *   +0x0178 -> line 1961
- *   +0x0180 -> line 1965
- *   +0x0184 -> line 1963
- *   +0x0190 -> line 1967
- *   +0x01a0 -> line 1968
- *   +0x01e0 -> line 1970
- *   +0x0220 -> line 1971
- *   +0x0228 -> line 1970
- *   +0x022c -> line 1971
- *   +0x0238 -> line 1972
- *   +0x0254 -> line 1973
- *   +0x0258 -> line 1975
- *   +0x0260 -> line 1978
- *   +0x0264 -> line 1977
- *   +0x0268 -> line 1979
- *   +0x0270 -> line 1981
- *   +0x0274 -> line 1982
- *   +0x0278 -> line 1984
- *   +0x028c -> line 1985
- *   +0x0290 -> line 1984
- *   +0x02a8 -> line 1986
- *   +0x02c4 -> line 1989
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 1847–1925 */
-/* addr: 0x001f6cc0  size: 1108 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1847
- *   +0x0038 -> line 1850
- *   +0x003c -> line 1847
- *   +0x0044 -> line 1852
- *   +0x0050 -> line 1853
- *   +0x0058 -> line 1857
- *   +0x0060 -> line 1862
- *   +0x0064 -> line 1860
- *   +0x0068 -> line 1862
- *   +0x006c -> line 1858
- *   +0x0078 -> line 1860
- *   +0x0080 -> line 1858
- *   +0x0090 -> line 1860
- *   +0x0094 -> line 1858
- *   +0x0098 -> line 1862
- *   +0x00a0 -> line 1868
- *   +0x00bc -> line 1870
- *   +0x00c8 -> line 1871
- *   +0x00d4 -> line 1872
- *   +0x00e0 -> line 1873
- *   +0x0148 -> line 1875
- *   +0x0168 -> line 1876
- *   +0x0170 -> line 1878
- *   +0x01d0 -> line 1880
- *   +0x01e0 -> line 1884
- *   +0x01e8 -> line 1880
- *   +0x0238 -> line 1884
- *   +0x0240 -> line 1885
- *   +0x0254 -> line 1886
- *   +0x0264 -> line 1887
- *   +0x0274 -> line 1889
- *   +0x0288 -> line 1894
- *   +0x0290 -> line 1892
- *   +0x0294 -> line 1894
- *   +0x0298 -> line 1896
- *   +0x029c -> line 1898
- *   +0x02a0 -> line 1894
- *   +0x02a8 -> line 1895
- *   +0x02b8 -> line 1896
- *   +0x02d0 -> line 1894
- *   +0x02d4 -> line 1896
- *   +0x02e0 -> line 1895
- *   +0x02e4 -> line 1896
- *   +0x0300 -> line 1894
- *   +0x0304 -> line 1896
- *   +0x0310 -> line 1895
- *   +0x0314 -> line 1896
- *   +0x0324 -> line 1898
- *   +0x0338 -> line 1900
- *   +0x0340 -> line 1903
- *   +0x0344 -> line 1900
- *   +0x0348 -> line 1903
- *   +0x034c -> line 1902
- *   +0x0350 -> line 1900
- *   +0x0358 -> line 1901
- *   +0x0368 -> line 1902
- *   +0x0374 -> line 1903
- *   +0x0384 -> line 1904
- *   +0x039c -> line 1907
- *   +0x03a0 -> line 1908
- *   +0x03ac -> line 1911
- *   +0x03b0 -> line 1910
- *   +0x03b4 -> line 1912
- *   +0x03c0 -> line 1914
- *   +0x03c8 -> line 1915
- *   +0x03d4 -> line 1916
- *   +0x03d8 -> line 1917
- *   +0x03e0 -> line 1915
- *   +0x03e4 -> line 1917
- *   +0x03ec -> line 1920
- *   +0x040c -> line 1923
- *   +0x0414 -> line 1922
- *   +0x0418 -> line 1923
- *   +0x041c -> line 1925
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-AGO3_TurningFistSmoke* AGO3_TurningFistSmoke::m_pAGO3_TFS_Object;
-int AGO3_TurningFistSmoke::m_bInProgress[2];
-C_Vector AGO3_TurningFistSmoke::m_a_stInitialSpriteDirection[2];
-C_Vector AGO3_TurningFistSmoke::m_a_stInitialSpritePosition[2];
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 1731–1842 */
-/* addr: 0x001f7120  size: 1464 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1731
- *   +0x0008 -> line 1746
- *   +0x000c -> line 1731
- *   +0x0014 -> line 1746
- *   +0x0018 -> line 1731
- *   +0x0040 -> line 1746
- *   +0x0054 -> line 1748
- *   +0x006c -> line 1750
- *   +0x0070 -> line 1751
- *   +0x0074 -> line 1750
- *   +0x0078 -> line 1751
- *   +0x007c -> line 1752
- *   +0x0080 -> line 1750
- *   +0x0084 -> line 1751
- *   +0x0088 -> line 1752
- *   +0x0098 -> line 1750
- *   +0x00bc -> line 1752
- *   +0x00c4 -> line 1753
- *   +0x00d4 -> line 1754
- *   +0x00e0 -> line 1753
- *   +0x00e4 -> line 1755
- *   +0x00e8 -> line 1754
- *   +0x00ec -> line 1755
- *   +0x00f4 -> line 1754
- *   +0x00f8 -> line 1755
- *   +0x00fc -> line 1756
- *   +0x0104 -> line 1757
- *   +0x0114 -> line 1758
- *   +0x0120 -> line 1760
- *   +0x012c -> line 1757
- *   +0x0130 -> line 1759
- *   +0x0134 -> line 1758
- *   +0x0138 -> line 1759
- *   +0x0140 -> line 1762
- *   +0x0144 -> line 1761
- *   +0x0148 -> line 1762
- *   +0x014c -> line 1761
- *   +0x0150 -> line 1762
- *   +0x0154 -> line 1761
- *   +0x0158 -> line 1758
- *   +0x015c -> line 1759
- *   +0x0164 -> line 1760
- *   +0x016c -> line 1761
- *   +0x0174 -> line 1762
- *   +0x017c -> line 1767
- *   +0x0180 -> line 1768
- *   +0x0184 -> line 1767
- *   +0x018c -> line 1768
- *   +0x019c -> line 1770
- *   +0x01a0 -> line 1768
- *   +0x01a4 -> line 1771
- *   +0x01a8 -> line 1768
- *   +0x01b8 -> line 1770
- *   +0x01bc -> line 1771
- *   +0x01c0 -> line 1772
- *   +0x01c8 -> line 1773
- *   +0x01d0 -> line 1774
- *   +0x01d8 -> line 1777
- *   +0x01e4 -> line 1783
- *   +0x01e8 -> line 1780
- *   +0x01ec -> line 1783
- *   +0x01f0 -> line 1780
- *   +0x01f4 -> line 1783
- *   +0x01f8 -> line 1780
- *   +0x0200 -> line 1783
- *   +0x0204 -> line 1780
- *   +0x020c -> line 1783
- *   +0x0230 -> line 1784
- *   +0x0240 -> line 1785
- *   +0x0248 -> line 1788
- *   +0x0280 -> line 1791
- *   +0x0284 -> line 1788
- *   +0x0298 -> line 1791
- *   +0x02a0 -> line 1793
- *   +0x02ac -> line 1797
- *   +0x02b0 -> line 1798
- *   +0x02b4 -> line 1793
- *   +0x02c4 -> line 1794
- *   +0x02dc -> line 1795
- *   +0x02f0 -> line 1797
- *   +0x02f4 -> line 1795
- *   +0x02f8 -> line 1798
- *   +0x0308 -> line 1804
- *   +0x030c -> line 1803
- *   +0x031c -> line 1804
- *   +0x0320 -> line 1803
- *   +0x0334 -> line 1804
- *   +0x033c -> line 1805
- *   +0x0340 -> line 1808
- *   +0x034c -> line 1805
- *   +0x0350 -> line 1806
- *   +0x0358 -> line 1807
- *   +0x0360 -> line 1808
- *   +0x0364 -> line 1809
- *   +0x0368 -> line 1808
- *   +0x036c -> line 1809
- *   +0x0370 -> line 1811
- *   +0x0378 -> line 1812
- *   +0x0394 -> line 1813
- *   +0x0398 -> line 1812
- *   +0x03b4 -> line 1813
- *   +0x03b8 -> line 1812
- *   +0x03c0 -> line 1813
- *   +0x03c4 -> line 1815
- *   +0x03f0 -> line 1817
- *   +0x03f8 -> line 1815
- *   +0x03fc -> line 1817
- *   +0x0400 -> line 1815
- *   +0x040c -> line 1817
- *   +0x0414 -> line 1815
- *   +0x0418 -> line 1817
- *   +0x041c -> line 1815
- *   +0x0420 -> line 1818
- *   +0x0428 -> line 1819
- *   +0x042c -> line 1821
- *   +0x043c -> line 1827
- *   +0x0444 -> line 1821
- *   +0x0480 -> line 1822
- *   +0x0484 -> line 1823
- *   +0x0488 -> line 1824
- *   +0x0490 -> line 1829
- *   +0x049c -> line 1830
- *   +0x04d8 -> line 1831
- *   +0x04f4 -> line 1832
- *   +0x0500 -> line 1834
- *   +0x050c -> line 1832
- *   +0x0514 -> line 1833
- *   +0x0524 -> line 1834
- *   +0x0540 -> line 1836
- *   +0x0544 -> line 1834
- *   +0x0548 -> line 1835
- *   +0x0550 -> line 1836
- *   +0x0554 -> line 1835
- *   +0x0560 -> line 1836
- *   +0x0568 -> line 1838
- *   +0x0578 -> line 1839
- *   +0x0584 -> line 1842
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 1592–1650 */
-/* addr: 0x001f76e0  size: 808 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1592
- *   +0x0004 -> line 1604
- *   +0x0008 -> line 1592
- *   +0x000c -> line 1604
- *   +0x0010 -> line 1592
- *   +0x0014 -> line 1604
- *   +0x0018 -> line 1592
- *   +0x0038 -> line 1604
- *   +0x004c -> line 1608
- *   +0x0054 -> line 1609
- *   +0x0058 -> line 1608
- *   +0x005c -> line 1609
- *   +0x0060 -> line 1608
- *   +0x0064 -> line 1610
- *   +0x0070 -> line 1609
- *   +0x0074 -> line 1610
- *   +0x0078 -> line 1609
- *   +0x007c -> line 1611
- *   +0x0080 -> line 1610
- *   +0x0084 -> line 1616
- *   +0x00c0 -> line 1619
- *   +0x00c4 -> line 1616
- *   +0x00c8 -> line 1619
- *   +0x00d0 -> line 1616
- *   +0x00d8 -> line 1619
- *   +0x00dc -> line 1616
- *   +0x00ec -> line 1619
- *   +0x00fc -> line 1620
- *   +0x0114 -> line 1623
- *   +0x0118 -> line 1624
- *   +0x0124 -> line 1627
- *   +0x0138 -> line 1628
- *   +0x013c -> line 1627
- *   +0x0140 -> line 1629
- *   +0x0144 -> line 1627
- *   +0x015c -> line 1629
- *   +0x0160 -> line 1627
- *   +0x0164 -> line 1629
- *   +0x0168 -> line 1627
- *   +0x016c -> line 1629
- *   +0x0174 -> line 1627
- *   +0x0180 -> line 1628
- *   +0x0188 -> line 1629
- *   +0x019c -> line 1631
- *   +0x0210 -> line 1636
- *   +0x0214 -> line 1631
- *   +0x0218 -> line 1632
- *   +0x0228 -> line 1633
- *   +0x0238 -> line 1634
- *   +0x0248 -> line 1636
- *   +0x0258 -> line 1638
- *   +0x025c -> line 1639
- *   +0x0260 -> line 1638
- *   +0x0264 -> line 1639
- *   +0x026c -> line 1641
- *   +0x02a8 -> line 1644
- *   +0x02d8 -> line 1646
- *   +0x02e0 -> line 1647
- *   +0x02e4 -> line 1646
- *   +0x02f0 -> line 1647
- *   +0x02fc -> line 1650
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 1583–1588 */
-/* addr: 0x001f7a10  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1583
- *   +0x0024 -> line 1585
- *   +0x0028 -> line 1587
- *   +0x0034 -> line 1588
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 1553–1578 */
-/* addr: 0x001f7a50  size: 592 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1553
- *   +0x0004 -> line 1556
- *   +0x0008 -> line 1553
- *   +0x000c -> line 1559
- *   +0x0010 -> line 1553
- *   +0x0014 -> line 1560
- *   +0x0018 -> line 1553
- *   +0x002c -> line 1556
- *   +0x0038 -> line 1563
- *   +0x003c -> line 1556
- *   +0x0050 -> line 1563
- *   +0x0054 -> line 1556
- *   +0x0064 -> line 1558
- *   +0x0068 -> line 1559
- *   +0x006c -> line 1560
- *   +0x0070 -> line 1563
- *   +0x0078 -> line 1565
- *   +0x007c -> line 1567
- *   +0x0088 -> line 1565
- *   +0x00cc -> line 1570
- *   +0x0114 -> line 1571
- *   +0x0158 -> line 1572
- *   +0x019c -> line 1574
- *   +0x01e4 -> line 1576
- *   +0x01f8 -> line 1577
- *   +0x01fc -> line 1576
- *   +0x0204 -> line 1577
- *   +0x0208 -> line 1576
- *   +0x0228 -> line 1577
- *   +0x0230 -> line 1578
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 1430–1504 */
-/* addr: 0x001f7ca0  size: 860 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1430
- *   +0x0010 -> line 1433
- *   +0x0014 -> line 1430
- *   +0x004c -> line 1435
- *   +0x0060 -> line 1436
- *   +0x0068 -> line 1440
- *   +0x006c -> line 1438
- *   +0x0070 -> line 1440
- *   +0x0074 -> line 1439
- *   +0x0078 -> line 1438
- *   +0x007c -> line 1439
- *   +0x00a0 -> line 1440
- *   +0x00a8 -> line 1442
- *   +0x00c4 -> line 1444
- *   +0x00d8 -> line 1445
- *   +0x00ec -> line 1446
- *   +0x00f8 -> line 1447
- *   +0x0100 -> line 1450
- *   +0x0120 -> line 1455
- *   +0x012c -> line 1465
- *   +0x0134 -> line 1470
- *   +0x0180 -> line 1471
- *   +0x01a8 -> line 1472
- *   +0x01e0 -> line 1474
- *   +0x01e8 -> line 1472
- *   +0x01fc -> line 1474
- *   +0x0208 -> line 1477
- *   +0x0244 -> line 1478
- *   +0x0250 -> line 1479
- *   +0x0258 -> line 1482
- *   +0x026c -> line 1481
- *   +0x0270 -> line 1482
- *   +0x027c -> line 1483
- *   +0x0284 -> line 1484
- *   +0x02ac -> line 1486
- *   +0x02c0 -> line 1491
- *   +0x02c4 -> line 1492
- *   +0x02d0 -> line 1495
- *   +0x02d4 -> line 1494
- *   +0x02d8 -> line 1496
- *   +0x02e0 -> line 1498
- *   +0x02e8 -> line 1499
- *   +0x02f4 -> line 1500
- *   +0x02f8 -> line 1499
- *   +0x02fc -> line 1501
- *   +0x0300 -> line 1499
- *   +0x0314 -> line 1501
- *   +0x0320 -> line 1504
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 1333–1426 */
-/* addr: 0x001f8000  size: 820 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1333
- *   +0x0004 -> line 1337
- *   +0x0008 -> line 1333
- *   +0x001c -> line 1393
- *   +0x0020 -> line 1353
- *   +0x0024 -> line 1393
- *   +0x0028 -> line 1353
- *   +0x0030 -> line 1404
- *   +0x0034 -> line 1395
- *   +0x0038 -> line 1391
- *   +0x003c -> line 1395
- *   +0x0040 -> line 1358
- *   +0x0044 -> line 1395
- *   +0x0048 -> line 1404
- *   +0x0050 -> line 1409
- *   +0x0054 -> line 1404
- *   +0x0058 -> line 1353
- *   +0x005c -> line 1404
- *   +0x0068 -> line 1358
- *   +0x006c -> line 1390
- *   +0x0074 -> line 1355
- *   +0x0078 -> line 1339
- *   +0x0080 -> line 1340
- *   +0x0088 -> line 1342
- *   +0x008c -> line 1343
- *   +0x0090 -> line 1346
- *   +0x0094 -> line 1342
- *   +0x009c -> line 1343
- *   +0x00b4 -> line 1346
- *   +0x00bc -> line 1353
- *   +0x00e8 -> line 1354
- *   +0x00f8 -> line 1355
- *   +0x0100 -> line 1358
- *   +0x0140 -> line 1367
- *   +0x0144 -> line 1365
- *   +0x0150 -> line 1367
- *   +0x0154 -> line 1365
- *   +0x0164 -> line 1370
- *   +0x0168 -> line 1371
- *   +0x016c -> line 1372
- *   +0x0170 -> line 1365
- *   +0x0178 -> line 1374
- *   +0x017c -> line 1370
- *   +0x0180 -> line 1371
- *   +0x0184 -> line 1372
- *   +0x0188 -> line 1370
- *   +0x018c -> line 1371
- *   +0x0190 -> line 1372
- *   +0x0194 -> line 1374
- *   +0x01a0 -> line 1376
- *   +0x01a8 -> line 1380
- *   +0x01ac -> line 1376
- *   +0x01b0 -> line 1381
- *   +0x01b4 -> line 1376
- *   +0x01bc -> line 1377
- *   +0x01cc -> line 1378
- *   +0x01d4 -> line 1380
- *   +0x01d8 -> line 1378
- *   +0x01e0 -> line 1381
- *   +0x01f0 -> line 1386
- *   +0x01f4 -> line 1388
- *   +0x01fc -> line 1387
- *   +0x0214 -> line 1388
- *   +0x0220 -> line 1390
- *   +0x0234 -> line 1391
- *   +0x0240 -> line 1393
- *   +0x0250 -> line 1395
- *   +0x0278 -> line 1397
- *   +0x027c -> line 1399
- *   +0x0288 -> line 1404
- *   +0x02b8 -> line 1408
- *   +0x02bc -> line 1409
- *   +0x02c4 -> line 1411
- *   +0x02c8 -> line 1413
- *   +0x02d0 -> line 1415
- *   +0x02d8 -> line 1416
- *   +0x02e4 -> line 1417
- *   +0x02e8 -> line 1418
- *   +0x02f0 -> line 1416
- *   +0x02f8 -> line 1418
- *   +0x0300 -> line 1421
- *   +0x0318 -> line 1423
- *   +0x031c -> line 1424
- *   +0x0324 -> line 1426
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 1290–1329 */
-/* addr: 0x001f8340  size: 428 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1290
- *   +0x0018 -> line 1292
- *   +0x001c -> line 1293
- *   +0x0020 -> line 1297
- *   +0x0030 -> line 1299
- *   +0x0034 -> line 1297
- *   +0x0038 -> line 1299
- *   +0x0040 -> line 1297
- *   +0x0054 -> line 1299
- *   +0x0060 -> line 1301
- *   +0x0090 -> line 1310
- *   +0x009c -> line 1314
- *   +0x00a0 -> line 1310
- *   +0x00a4 -> line 1314
- *   +0x00a8 -> line 1310
- *   +0x00b4 -> line 1314
- *   +0x00b8 -> line 1313
- *   +0x00bc -> line 1310
- *   +0x00c0 -> line 1313
- *   +0x00c4 -> line 1310
- *   +0x00c8 -> line 1314
- *   +0x00cc -> line 1313
- *   +0x00d0 -> line 1314
- *   +0x00e0 -> line 1310
- *   +0x00ec -> line 1314
- *   +0x00f0 -> line 1310
- *   +0x00f4 -> line 1314
- *   +0x0100 -> line 1310
- *   +0x0108 -> line 1319
- *   +0x010c -> line 1314
- *   +0x0164 -> line 1318
- *   +0x016c -> line 1319
- *   +0x0170 -> line 1320
- *   +0x0178 -> line 1321
- *   +0x0180 -> line 1322
- *   +0x0188 -> line 1324
- *   +0x018c -> line 1326
- *   +0x019c -> line 1327
- *   +0x01a4 -> line 1329
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 1278–1283 */
-/* addr: 0x001f84f0  size: 40 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1278
- *   +0x0004 -> line 1282
- *   +0x0008 -> line 1278
- *   +0x000c -> line 1279
- *   +0x0014 -> line 1280
- *   +0x001c -> line 1281
- *   +0x0020 -> line 1283
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int AGO3_WaveEnvelopedFist2::m_hHandle;
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 1146–1217 */
-/* addr: 0x001f8520  size: 852 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1146
- *   +0x0010 -> line 1149
- *   +0x0014 -> line 1146
- *   +0x004c -> line 1151
- *   +0x0060 -> line 1152
- *   +0x0068 -> line 1156
- *   +0x006c -> line 1154
- *   +0x0070 -> line 1156
- *   +0x0074 -> line 1155
- *   +0x0078 -> line 1154
- *   +0x007c -> line 1155
- *   +0x00a0 -> line 1156
- *   +0x00a8 -> line 1158
- *   +0x00c4 -> line 1160
- *   +0x00d8 -> line 1161
- *   +0x00f0 -> line 1163
- *   +0x00f8 -> line 1166
- *   +0x0100 -> line 1169
- *   +0x0128 -> line 1173
- *   +0x0134 -> line 1176
- *   +0x013c -> line 1188
- *   +0x0188 -> line 1189
- *   +0x01b0 -> line 1190
- *   +0x01e8 -> line 1192
- *   +0x01f0 -> line 1190
- *   +0x0204 -> line 1192
- *   +0x0210 -> line 1195
- *   +0x0218 -> line 1194
- *   +0x021c -> line 1195
- *   +0x0244 -> line 1197
- *   +0x0248 -> line 1195
- *   +0x0268 -> line 1197
- *   +0x0270 -> line 1198
- *   +0x02a0 -> line 1199
- *   +0x02b8 -> line 1204
- *   +0x02bc -> line 1205
- *   +0x02c8 -> line 1208
- *   +0x02cc -> line 1207
- *   +0x02d0 -> line 1209
- *   +0x02d8 -> line 1211
- *   +0x02e0 -> line 1212
- *   +0x02ec -> line 1213
- *   +0x02f0 -> line 1212
- *   +0x02f4 -> line 1214
- *   +0x02f8 -> line 1212
- *   +0x030c -> line 1214
- *   +0x0318 -> line 1217
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 1053–1142 */
-/* addr: 0x001f8880  size: 832 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1053
- *   +0x0004 -> line 1057
- *   +0x0008 -> line 1053
- *   +0x0020 -> line 1113
- *   +0x0024 -> line 1121
- *   +0x0028 -> line 1113
- *   +0x002c -> line 1111
- *   +0x0030 -> line 1113
- *   +0x0034 -> line 1076
- *   +0x0038 -> line 1121
- *   +0x004c -> line 1076
- *   +0x0050 -> line 1121
- *   +0x0054 -> line 1125
- *   +0x0058 -> line 1076
- *   +0x005c -> line 1110
- *   +0x0064 -> line 1081
- *   +0x0068 -> line 1115
- *   +0x0070 -> line 1078
- *   +0x0074 -> line 1076
- *   +0x0078 -> line 1081
- *   +0x007c -> line 1060
- *   +0x0084 -> line 1061
- *   +0x008c -> line 1063
- *   +0x0090 -> line 1064
- *   +0x0094 -> line 1067
- *   +0x0098 -> line 1063
- *   +0x00a0 -> line 1064
- *   +0x00b8 -> line 1067
- *   +0x00c0 -> line 1076
- *   +0x00c8 -> line 1073
- *   +0x00d8 -> line 1076
- *   +0x00dc -> line 1073
- *   +0x00e0 -> line 1076
- *   +0x00e4 -> line 1073
- *   +0x00f4 -> line 1076
- *   +0x0110 -> line 1077
- *   +0x0120 -> line 1078
- *   +0x0128 -> line 1081
- *   +0x0168 -> line 1087
- *   +0x0170 -> line 1094
- *   +0x0178 -> line 1090
- *   +0x0180 -> line 1091
- *   +0x0188 -> line 1092
- *   +0x0190 -> line 1090
- *   +0x0194 -> line 1091
- *   +0x0198 -> line 1092
- *   +0x019c -> line 1094
- *   +0x01a8 -> line 1096
- *   +0x01b0 -> line 1100
- *   +0x01b4 -> line 1096
- *   +0x01b8 -> line 1101
- *   +0x01bc -> line 1096
- *   +0x01c4 -> line 1097
- *   +0x01d4 -> line 1098
- *   +0x01dc -> line 1100
- *   +0x01e0 -> line 1098
- *   +0x01e8 -> line 1101
- *   +0x01f8 -> line 1106
- *   +0x01fc -> line 1107
- *   +0x0200 -> line 1108
- *   +0x0204 -> line 1107
- *   +0x0208 -> line 1108
- *   +0x020c -> line 1107
- *   +0x021c -> line 1108
- *   +0x0228 -> line 1110
- *   +0x023c -> line 1111
- *   +0x0248 -> line 1113
- *   +0x0258 -> line 1115
- *   +0x0280 -> line 1117
- *   +0x0284 -> line 1119
- *   +0x0290 -> line 1121
- *   +0x02c0 -> line 1124
- *   +0x02c4 -> line 1125
- *   +0x02cc -> line 1127
- *   +0x02d0 -> line 1129
- *   +0x02d8 -> line 1131
- *   +0x02e0 -> line 1132
- *   +0x02ec -> line 1133
- *   +0x02f0 -> line 1134
- *   +0x02f8 -> line 1132
- *   +0x0300 -> line 1134
- *   +0x0308 -> line 1137
- *   +0x0320 -> line 1139
- *   +0x0324 -> line 1140
- *   +0x032c -> line 1142
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 1004–1049 */
-/* addr: 0x001f8bc0  size: 480 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1004
- *   +0x0004 -> line 1007
- *   +0x0008 -> line 1004
- *   +0x0014 -> line 1007
- *   +0x0024 -> line 1009
- *   +0x0028 -> line 1011
- *   +0x0030 -> line 1012
- *   +0x0034 -> line 1014
- *   +0x0040 -> line 1016
- *   +0x0044 -> line 1014
- *   +0x0048 -> line 1016
- *   +0x004c -> line 1014
- *   +0x0050 -> line 1016
- *   +0x0054 -> line 1014
- *   +0x0068 -> line 1016
- *   +0x0074 -> line 1018
- *   +0x00a4 -> line 1027
- *   +0x00b4 -> line 1030
- *   +0x00b8 -> line 1027
- *   +0x00c4 -> line 1031
- *   +0x00c8 -> line 1030
- *   +0x00cc -> line 1027
- *   +0x00d0 -> line 1031
- *   +0x00e0 -> line 1030
- *   +0x00e4 -> line 1031
- *   +0x00e8 -> line 1027
- *   +0x00f4 -> line 1031
- *   +0x00fc -> line 1027
- *   +0x0100 -> line 1031
- *   +0x0108 -> line 1027
- *   +0x010c -> line 1036
- *   +0x0110 -> line 1027
- *   +0x0114 -> line 1031
- *   +0x0118 -> line 1027
- *   +0x011c -> line 1031
- *   +0x0174 -> line 1035
- *   +0x017c -> line 1042
- *   +0x0180 -> line 1036
- *   +0x0184 -> line 1042
- *   +0x0188 -> line 1037
- *   +0x0190 -> line 1038
- *   +0x0198 -> line 1039
- *   +0x01a0 -> line 1042
- *   +0x01a8 -> line 1044
- *   +0x01ac -> line 1046
- *   +0x01bc -> line 1047
- *   +0x01c8 -> line 1049
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 995–1000 */
-/* addr: 0x001f8da0  size: 40 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 995
- *   +0x0004 -> line 999
- *   +0x0008 -> line 995
- *   +0x000c -> line 996
- *   +0x0014 -> line 997
- *   +0x001c -> line 998
- *   +0x0020 -> line 1000
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int AGO3_WaveEnvelopedFist::m_hHandle;
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 888–898 */
-/* addr: 0x001f8dd0  size: 100 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 888
- *   +0x0004 -> line 891
- *   +0x0008 -> line 888
- *   +0x000c -> line 891
- *   +0x0010 -> line 888
- *   +0x001c -> line 891
- *   +0x0024 -> line 894
- *   +0x0050 -> line 898
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 884–885 */
-/* addr: 0x001f8e40  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 884
- *   +0x0004 -> line 885
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 823–851 */
-/* addr: 0x001f8e50  size: 228 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 823
- *   +0x001c -> line 831
- *   +0x0024 -> line 833
- *   +0x0028 -> line 835
- *   +0x002c -> line 837
- *   +0x0048 -> line 839
- *   +0x0064 -> line 840
- *   +0x006c -> line 843
- *   +0x0070 -> line 842
- *   +0x0074 -> line 843
- *   +0x007c -> line 841
- *   +0x0080 -> line 843
- *   +0x0084 -> line 842
- *   +0x0088 -> line 843
- *   +0x00a0 -> line 846
- *   +0x00b0 -> line 848
- *   +0x00c0 -> line 850
- *   +0x00c8 -> line 851
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 787–820 */
-/* addr: 0x001f8f40  size: 288 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 787
- *   +0x0018 -> line 793
- *   +0x001c -> line 787
- *   +0x0020 -> line 795
- *   +0x0024 -> line 787
- *   +0x0028 -> line 788
- *   +0x002c -> line 790
- *   +0x0034 -> line 797
- *   +0x0050 -> line 800
- *   +0x0058 -> line 803
- *   +0x0064 -> line 804
- *   +0x0074 -> line 805
- *   +0x0084 -> line 807
- *   +0x0094 -> line 810
- *   +0x009c -> line 807
- *   +0x00a4 -> line 808
- *   +0x00a8 -> line 810
- *   +0x00ac -> line 808
- *   +0x00b0 -> line 810
- *   +0x00b4 -> line 808
- *   +0x00c0 -> line 810
- *   +0x00cc -> line 811
- *   +0x00e0 -> line 814
- *   +0x00f0 -> line 816
- *   +0x00fc -> line 818
- *   +0x0100 -> line 820
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 748–784 */
-/* addr: 0x001f9060  size: 820 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 748
- *   +0x0004 -> line 756
- *   +0x0008 -> line 748
- *   +0x001c -> line 760
- *   +0x0020 -> line 753
- *   +0x0024 -> line 762
- *   +0x0028 -> line 753
- *   +0x002c -> line 754
- *   +0x0034 -> line 755
- *   +0x003c -> line 756
- *   +0x0040 -> line 758
- *   +0x006c -> line 764
- *   +0x0088 -> line 766
- *   +0x00c8 -> line 767
- *   +0x0104 -> line 768
- *   +0x0140 -> line 769
- *   +0x014c -> line 771
- *   +0x018c -> line 772
- *   +0x01cc -> line 773
- *   +0x0210 -> line 776
- *   +0x0250 -> line 777
- *   +0x0290 -> line 778
- *   +0x02cc -> line 779
- *   +0x02e0 -> line 783
- *   +0x02e4 -> line 779
- *   +0x02f0 -> line 783
- *   +0x02f4 -> line 779
- *   +0x0310 -> line 780
- *   +0x0314 -> line 783
- *   +0x031c -> line 784
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 686–710 */
-/* addr: 0x001f93a0  size: 144 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 686
- *   +0x0004 -> line 689
- *   +0x0008 -> line 686
- *   +0x000c -> line 689
- *   +0x0010 -> line 686
- *   +0x001c -> line 689
- *   +0x0024 -> line 691
- *   +0x002c -> line 695
- *   +0x0074 -> line 708
- *   +0x007c -> line 710
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 666–669 */
-/* addr: 0x001f9430  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 666
- *   +0x0010 -> line 668
- *   +0x0014 -> line 669
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 617–621 */
-/* addr: 0x001f9450  size: 116 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 617
- *   +0x0004 -> line 618
- *   +0x0008 -> line 617
- *   +0x000c -> line 618
- *   +0x0010 -> line 617
- *   +0x001c -> line 618
- *   +0x0024 -> line 620
- *   +0x0060 -> line 621
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 610–614 */
-/* addr: 0x001f94d0  size: 128 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 610
- *   +0x0004 -> line 611
- *   +0x0008 -> line 610
- *   +0x000c -> line 611
- *   +0x0010 -> line 610
- *   +0x001c -> line 611
- *   +0x0024 -> line 613
- *   +0x006c -> line 614
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 603–606 */
-/* addr: 0x001f9550  size: 128 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 603
- *   +0x0004 -> line 604
- *   +0x0008 -> line 603
- *   +0x000c -> line 604
- *   +0x0010 -> line 603
- *   +0x001c -> line 604
- *   +0x0024 -> line 605
- *   +0x006c -> line 606
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 578–600 */
-/* addr: 0x001f95d0  size: 284 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 578
- *   +0x000c -> line 583
- *   +0x0014 -> line 584
- *   +0x0018 -> line 583
- *   +0x001c -> line 584
- *   +0x002c -> line 586
- *   +0x0030 -> line 587
- *   +0x0038 -> line 591
- *   +0x003c -> line 592
- *   +0x0040 -> line 591
- *   +0x0044 -> line 595
- *   +0x0048 -> line 592
- *   +0x004c -> line 595
- *   +0x0050 -> line 591
- *   +0x0054 -> line 593
- *   +0x005c -> line 591
- *   +0x0068 -> line 593
- *   +0x0070 -> line 592
- *   +0x0078 -> line 593
- *   +0x0080 -> line 592
- *   +0x0084 -> line 593
- *   +0x008c -> line 592
- *   +0x0090 -> line 593
- *   +0x0094 -> line 592
- *   +0x0098 -> line 595
- *   +0x00a0 -> line 596
- *   +0x00bc -> line 597
- *   +0x00cc -> line 598
- *   +0x00d0 -> line 599
- *   +0x00d4 -> line 598
- *   +0x00d8 -> line 599
- *   +0x00dc -> line 598
- *   +0x00e4 -> line 599
- *   +0x00e8 -> line 598
- *   +0x00f8 -> line 599
- *   +0x010c -> line 600
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 560–573 */
-/* addr: 0x001f96f0  size: 144 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 560
- *   +0x0008 -> line 561
- *   +0x000c -> line 560
- *   +0x0010 -> line 561
- *   +0x0020 -> line 563
- *   +0x0024 -> line 564
- *   +0x002c -> line 569
- *   +0x0030 -> line 568
- *   +0x0034 -> line 569
- *   +0x003c -> line 568
- *   +0x0040 -> line 570
- *   +0x0048 -> line 568
- *   +0x0054 -> line 570
- *   +0x005c -> line 569
- *   +0x0064 -> line 570
- *   +0x006c -> line 569
- *   +0x0070 -> line 570
- *   +0x0078 -> line 569
- *   +0x007c -> line 570
- *   +0x0080 -> line 569
- *   +0x0084 -> line 570
- *   +0x0088 -> line 573
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 469–482 */
-/* addr: 0x001f9780  size: 168 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 469
- *   +0x0020 -> line 473
- *   +0x002c -> line 475
- *   +0x0034 -> line 477
- *   +0x0040 -> line 478
- *   +0x004c -> line 480
- *   +0x0070 -> line 481
- *   +0x0088 -> line 482
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 438–466 */
-/* addr: 0x001f9830  size: 328 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 438
- *   +0x0020 -> line 443
- *   +0x002c -> line 445
- *   +0x0038 -> line 446
- *   +0x0044 -> line 448
- *   +0x005c -> line 449
- *   +0x006c -> line 450
- *   +0x0080 -> line 451
- *   +0x0094 -> line 452
- *   +0x0098 -> line 451
- *   +0x00a8 -> line 452
- *   +0x00b8 -> line 454
- *   +0x00c8 -> line 455
- *   +0x00cc -> line 454
- *   +0x00d4 -> line 455
- *   +0x00e4 -> line 457
- *   +0x00e8 -> line 458
- *   +0x00f0 -> line 461
- *   +0x0100 -> line 462
- *   +0x010c -> line 461
- *   +0x0114 -> line 462
- *   +0x0124 -> line 464
- *   +0x0128 -> line 466
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 429–435 */
-/* addr: 0x001f9980  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 429
- *   +0x0010 -> line 430
- *   +0x001c -> line 432
- *   +0x0024 -> line 433
- *   +0x0028 -> line 435
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 395–426 */
-/* addr: 0x001f99c0  size: 548 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 395
- *   +0x0004 -> line 402
- *   +0x0008 -> line 395
- *   +0x000c -> line 402
- *   +0x0010 -> line 395
- *   +0x0014 -> line 400
- *   +0x0018 -> line 395
- *   +0x001c -> line 402
- *   +0x0020 -> line 395
- *   +0x0038 -> line 400
- *   +0x0060 -> line 402
- *   +0x0094 -> line 403
- *   +0x00a4 -> line 406
- *   +0x00b4 -> line 407
- *   +0x00c0 -> line 409
- *   +0x00cc -> line 410
- *   +0x00d8 -> line 412
- *   +0x00e8 -> line 413
- *   +0x00f4 -> line 412
- *   +0x0108 -> line 414
- *   +0x0144 -> line 415
- *   +0x0184 -> line 416
- *   +0x01a0 -> line 417
- *   +0x01a4 -> line 416
- *   +0x01a8 -> line 418
- *   +0x01ac -> line 416
- *   +0x01c8 -> line 417
- *   +0x01cc -> line 418
- *   +0x01e0 -> line 419
- *   +0x01e8 -> line 422
- *   +0x01ec -> line 424
- *   +0x01f0 -> line 425
- *   +0x01f4 -> line 424
- *   +0x01fc -> line 425
- *   +0x0200 -> line 426
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 361–362 */
-/* addr: 0x001f9bf0  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 361
- *   +0x0004 -> line 362
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 355–355 */
-/* addr: 0x001f9c00  size: 36 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0008 -> line 355
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-/* This caller preserves the viewport/time arguments omitted from the callee's debug definition. */
-extern "C" int GLI_vDrawWorldSpriteOpt(MTH3D_tdstVector_* Pos, GLI_tdstMaterial_* Material, float SizeX, float SizeY, GLD_tdstViewportAttributes_* viewport, int AnimTime);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 266–289 */
-/* addr: 0x001f9c40  size: 168 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 266
- *   +0x0014 -> line 270
- *   +0x0020 -> line 275
- *   +0x0028 -> line 277
- *   +0x0040 -> line 279
- *   +0x0048 -> line 280
- *   +0x0054 -> line 282
- *   +0x0064 -> line 283
- *   +0x006c -> line 284
- *   +0x0070 -> line 285
- *   +0x007c -> line 287
- *   +0x0080 -> line 288
- *   +0x0090 -> line 289
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 238–263 */
-/* addr: 0x001f9cf0  size: 180 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 238
- *   +0x0018 -> line 242
- *   +0x0024 -> line 244
- *   +0x002c -> line 246
- *   +0x0044 -> line 248
- *   +0x0060 -> line 249
- *   +0x0068 -> line 251
- *   +0x0078 -> line 253
- *   +0x0084 -> line 256
- *   +0x008c -> line 259
- *   +0x0090 -> line 262
- *   +0x0098 -> line 263
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 209–232 */
-/* addr: 0x001f9db0  size: 112 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 209
- *   +0x0004 -> line 214
- *   +0x0008 -> line 209
- *   +0x0014 -> line 211
- *   +0x0018 -> line 214
- *   +0x0028 -> line 223
- *   +0x002c -> line 225
- *   +0x0038 -> line 228
- *   +0x0050 -> line 231
- *   +0x005c -> line 232
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 191–197 */
-/* addr: 0x001f9e20  size: 172 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 191
- *   +0x0018 -> line 192
- *   +0x0080 -> line 193
- *   +0x0094 -> line 197
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 7045–7045 */
-/* addr: 0x001f9ed0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 7045
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int AGO3_Transition::m_hHandle;
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 7047–7047 */
-/* addr: 0x001f9ee0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 7047
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 6810–6810 */
-/* addr: 0x001f9ef0  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 6810
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 5865–5865 */
-/* addr: 0x001f9f00  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5865
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int AGO3_Snowboard_SnowEffect::m_hHandle;
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 4955–4955 */
-/* addr: 0x001f9f10  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4955
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 4346–4346 */
-/* addr: 0x001f9f20  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4346
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 3571–3571 */
-/* addr: 0x001f9f30  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3571
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int AGO3_SwirlingBubbles::m_hHandle;
-
-float AGO3_ScoreDisplay::m_a_fUV[12][2] =
-{
-    { 0.5f, 0.8333334f }, { 0.5f, 0.6666667f }, { 0.5f, 0.5f }, { 0.5f, 0.33333334f }, { 0.5f, 0.16666667f }, { 0.5f, 0.0f },
-    { 0.0f, 0.8333334f }, { 0.0f, 0.6666667f }, { 0.0f, 0.5f }, { 0.0f, 0.33333334f }, { 0.0f, 0.16666667f }, { 0.0f, 0.0f }
-};
-
-float AGO3_ScoreDisplay::m_a_fSize[4] = { 0.5f, 0.16666667f };
-
-int AGO3_ScoreDisplay::m_a_dwScore[12] = { -1, 10, 30, 100, 250, 1500, -2, 20, 60, 200, 500, 3000 };
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2944–2944 */
-/* addr: 0x001f9f40  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2944
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2757–2760 */
-/* addr: 0x001f9f50  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2757
- *   +0x0010 -> line 2759
- *   +0x0014 -> line 2760
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* Originally emitted under Action.c, but this C++ member must be compiled
- * in the translation unit that declares AGO3_ScrollMatUV. */
-void AGO3_ScrollMatUV::Display(GLD_tdstViewportAttributes_* hVp)
-{
-}
-
-void AGO3_Chain::Process(void)
-{
-    if (AGO_G_CurrentVU1Frame == 2)
-        ((AGO3_Part*)this)->m_Finished = 1;
-}
-
-int AGO3_HurricaneUpper::Kill_Enabled(void)
-{
-    return 0;
-}
-
-void AGO3_SwirlingBubbles::DesInit(void)
-{
-    m_hHandle = 0;
-    ((AGO3_Part*)this)->m_Finished = 1;
-}
-
-void AGO3_LightExplosion::DesInit(void)
-{
-    ((AGO3_Part*)this)->m_Finished = 1;
-}
-
-void AGO3_DigitalScoreDisplay::Display(GLD_tdstViewportAttributes_* hVp)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void AGO3_Snowboard_SnowEffect::DesInit(void)
-{
-    m_hHandle = 0;
-    ((AGO3_Part*)this)->m_Finished = 1;
-}
-
-void AGO3_OrientedTarget::DesInit(void)
-{
-    ((AGO3_Part*)this)->m_Finished = 1;
-}
-
-void AGO3_Transition::Display(GLD_tdstViewportAttributes_* hVp)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void AGO3_Transition::DesInit(void)
-{
-    m_hHandle = 0;
-    ((AGO3_Part*)this)->m_Finished = 1;
-}
-
-void AGO3_vInit(void)
-{
-    unsigned int i;
-    AGO3_Part* pPart;
-
-    for (i = 0; i < 2048; i++)
-    {
-        if (AGO3_g_Parts[i])
-        {
-            pPart = (AGO3_Part*)AGO2_MEM_GetPointerFromHandle(AGO3_g_Parts[i]);
-            if (pPart)
-            {
-                pPart->DesInit();
-                AGO2_MEM_FreeFromHandle(AGO3_g_Parts[i]);
-                AGO3_g_Parts[i] = 0;
-                g_ulNumberOfAgos3--;
-            }
-        }
-    }
-    memset(AGO3_g_Parts, 0, sizeof(AGO3_g_Parts));
-}
-
-void AGO3_vProcessAll(void)
-{
-    unsigned int i;
-    unsigned int* p = AGO3_g_Parts;
-
-    if (AGO_g_PreviousCurrentFrame == g_stEngineStructure.stEngineTimer.ulCurrentTimerCount)
-        return;
-    for (i = 2048; i != 0; i--, p++)
-    {
-        if (*p)
-            ((AGO3_Part*)AGO2_MEM_GetPointerFromHandle(*p))->Process();
-    }
-}
-
-void AGO3_vDisplayAll(GLD_tdstViewportAttributes_* hVp)
-{
-    float xAlphaTemp;
-    unsigned int i;
-
-    xAlphaTemp = GLI_vGetGlobalAlpha();
-    for (i = 0; i < 2048; i++)
-    {
-        if (AGO3_g_Parts[i])
-        {
-            ((AGO3_Part*)AGO2_MEM_GetPointerFromHandle(AGO3_g_Parts[i]))->Display(hVp);
-            GLI_vSetGlobalAlpha(xAlphaTemp);
-        }
-    }
-    if (SCT_g_DrawingMirrored)
-        AGO_g_WasDisplayedInMirror_DoNOT_Burry = 1;
-    else
-        AGO_g_WasDisplayedInMirror_DoNOT_Burry = 0;
-    GLI_vEndWorldSprites();
-}
-
-void AGO3_vBurryDiedParts(void)
-{
-    AGO3_Part* pPart;
-    unsigned int i;
-
-    if (AGO_g_WasDisplayedInMirror_DoNOT_Burry)
-        return;
-    for (i = 0; i < 2048; i++)
-    {
-        if (AGO3_g_Parts[i])
-        {
-            pPart = (AGO3_Part*)AGO2_MEM_GetPointerFromHandle(AGO3_g_Parts[i]);
-            if (pPart->m_Finished)
-            {
-                pPart->DesInit();
-                AGO2_MEM_FreeFromHandle(AGO3_g_Parts[i]);
-                AGO3_g_Parts[i] = 0;
-                g_ulNumberOfAgos3--;
-            }
-        }
-    }
-}
-
-void AGO3_Part::Display(GLD_tdstViewportAttributes_* hVp)
-{
-    GLI_vDrawWorldSpriteOpt((MTH3D_tdstVector_*)&m_Position, m_pMat1, 1.0f, 1.0f, hVp, 1);
-}
-
-void AGO3_Part::Process(void)
-{
-    m_Finished = 1;
-}
-
-void AGO3_SimpleSparks::Init(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMat1, MTH3D_tdstVector_* pParam, float fParameter)
-{
-    C_Vector* pVect;
-    C_Vector* pWork;
-    unsigned int i;
-    m_Finished = 0; m_Position.Vector[0] = pPosition->xX; m_Position.Vector[1] = pPosition->xY; m_Position.Vector[2] = pPosition->xZ; m_Position.Vector[3] = 1.0f; m_pMat1 = pMat1; m_fCreationTime = g_ffFrameTime;
-    m_NbParticles = (unsigned int)fParameter;
-    if (m_NbParticles == 0)
-        m_NbParticles = 1;
-    m_hArray = AGO2_MEM_Alloc(m_NbParticles << 5);
-    if (m_hArray)
-    {
-        pVect = (C_Vector*)AGO2_MEM_GetPointerFromHandle(m_hArray);
-        for (i = 0; i < m_NbParticles; i++)
-        {
-            pVect[i << 1].Vector[0] = pPosition->xX;
-            pVect[i << 1].Vector[1] = pPosition->xY;
-            pVect[i << 1].Vector[2] = pPosition->xZ;
-            pVect[i << 1].Vector[3] = 1.0f;
-            pWork = &pVect[(i << 1) + 1];
-            pWork->Vector[0] = AGO3_M_xRand(-1.0f, 1.0f);
-            pWork->Vector[1] = AGO3_M_xRand(-1.0f, 1.0f);
-            pWork->Vector[2] = AGO3_M_xRand(-1.0f, 1.0f);
-            pWork->Vector[3] = 0.0f;
-        }
-    }
-    else
-    {
-        m_Finished = 1;
-    }
-    m_fSize = 0.2f;
-    m_fTransparency = 255.0f;
-}
-
-void AGO3_SimpleSparks::DesInit(void)
-{
-    if (m_hArray) {
-        AGO2_MEM_FreeFromHandle(m_hArray);
-        m_hArray = 0;
-    }
-}
-
-void AGO3_SimpleSparks::Process(void)
-{
-    C_Vector* pVect;
-    C_Vector VTemp;
-    unsigned int i;
-
-    if (m_hArray)
-    {
-        pVect = (C_Vector*)AGO2_MEM_GetPointerFromHandle(m_hArray);
-        for (i = 0; i < m_NbParticles; i++)
-        {
-            sceVu0CopyVector(&VTemp, &pVect[(i << 1) + 1]);
-            sceVu0ScaleVectorXYZ(&VTemp, &VTemp, g_fTimeDifference);
-            sceVu0AddVector(&pVect[i << 1], &pVect[i << 1], &VTemp);
-            ((MTH3D_tdstVector_*)&pVect[(i << 1) + 1])->xZ -= 9.81f * g_fTimeDifference;
-        }
-        m_fTransparency -= 255.0f * g_fTimeDifference;
-        if (m_fTransparency <= 0.0f)
-        {
-            m_fTransparency = 0.0f;
-            m_Finished = 1;
-        }
-        m_fSize -= 0.5f * g_fTimeDifference;
-        if (m_fSize <= 0.01f)
-        {
-            m_fSize = 0.01f;
-        }
-    }
-}
-
-void AGO3_SimpleSparks::Display(GLD_tdstViewportAttributes_* hVp)
-{
-    C_Vector* pVect;
-    unsigned int i;
-
-    if (m_hArray)
-    {
-        pVect = (C_Vector*)AGO2_MEM_GetPointerFromHandle(m_hArray);
-        GLI_vSetGlobalAlpha(m_fTransparency);
-        for (i = 0; i < m_NbParticles; i++)
-            GLI_vDrawWorldSpriteOpt((MTH3D_tdstVector_*)&pVect[i << 1], m_pMat1, m_fSize, m_fSize, hVp, 1);
-    }
-}
-
-void AGO3_GrowingUVAnimatedFireBall::Process(void)
-{
-    int CurrentFrame;
-    float TotalTime;
-
-    TotalTime = g_ffFrameTime - m_fCreationTime;
-    if (TotalTime >= m_fAnimationTime)
-    {
-        m_Finished = 1;
-        return;
-    }
-    CurrentFrame = (int)(TotalTime * (16.0f / m_fAnimationTime));
-    m_fCurrentU = 0.25f * (float)(CurrentFrame & 3);
-    m_fCurrentV = 1.0f + -0.25f * (float)(CurrentFrame >> 2);
-}
-
-void AGO3_GrowingUVAnimatedFireBallMoving::Process(void)
-{
-    C_Vector Temp;
-    int CurrentFrame;
-    float TotalTime;
-    /* TODO: decompile from asm/... */
-}
-
-void AGO3_GrowingUVAnimatedFireBallMoving::Display(GLD_tdstViewportAttributes_* hVp)
-{
-    GLI_vSetGlobalAlpha(50.0f);
-    GLI_vDrawWorldSpriteWithUVsOrientedOpt((MTH3D_tdstVector_*)&m_Position, m_pMat1, m_fSize, m_fSize, m_fCurrentU, m_fCurrentV, 0.25f + m_fCurrentU, -0.25f + m_fCurrentV, hVp, 1, g_ffFrameTime * m_fAngleSpeed);
-}
-
-void AGO3_GrowingUVAnimatedFireBall::Display(GLD_tdstViewportAttributes_* hVp)
-{
-    GLI_vSetGlobalAlpha(50.0f);
-    GLI_vDrawWorldSpriteWithUVsOrientedOpt((MTH3D_tdstVector_*)&m_Position, m_pMat1, m_fSize, m_fSize, m_fCurrentU, m_fCurrentV, 0.25f + m_fCurrentU, -0.25f + m_fCurrentV, hVp, 1, g_ffFrameTime * m_fAngleSpeed);
-}
-
-void AGO3_GrowingFireBall::Display(GLD_tdstViewportAttributes_* hVp)
-{
-    GLI_vSetGlobalAlpha(255.0f);
-    GLI_vDrawWorldSpriteWithUVsOrientedOpt((MTH3D_tdstVector_*)&m_Position, m_pMat1, m_fSize, m_fSize, 0.0f, 0.0f, 1.0f, 1.0f, hVp, 1, g_ffFrameTime * m_fAngleSpeed);
-}
-
-void AGO3_Target::Process(void)
-{
-    if (AGO_G_CurrentVU1Frame == 2)
-        ((AGO3_Part*)this)->m_Finished = 1;
-}
-
-void AGO3_Target::Display(GLD_tdstViewportAttributes_* hVp)
-{
-    GLI_vSetGlobalAlpha(255.0f);
-    GLI_vDisableDepthTest();
-    GLI_vDrawWorldSpriteWithUVsOrientedOpt((MTH3D_tdstVector_*)&m_Position, m_pMat1, m_fSize, m_fSize, 0.0f, 0.0f, 1.0f, 1.0f, hVp, 1, 5.0f * g_ffFrameTime * m_fOrientation);
-    GLI_vEnableDepthTest();
-}
-
-void AGO3_Smoke::Init(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMat1, float fParameter)
-{
-    C_Vector Position;
-    unsigned int i;
-    AGO3Smoke_InternalData_* p;
-    ((MTH3D_tdstVector_*)&Position)->xX = pPosition->xX;
-    ((MTH3D_tdstVector_*)&Position)->xY = pPosition->xY;
-    ((MTH3D_tdstVector_*)&Position)->xZ = pPosition->xZ;
-    Position.Vector[3] = 1.0f;
-    m_Finished = 0; m_Position.Vector[0] = pPosition->xX; m_Position.Vector[1] = pPosition->xY; m_Position.Vector[2] = pPosition->xZ; m_Position.Vector[3] = 1.0f; m_pMat1 = pMat1; m_fCreationTime = g_ffFrameTime;
-    p = m_Sprites;
-    for (i = 0; i < 8; i++)
-    {
-        p->Position.Vector[0] = pPosition->xX;
-        p->Position.Vector[1] = pPosition->xY;
-        p->Position.Vector[2] = pPosition->xZ;
-        p->Position.Vector[3] = 1.0f;
-        p->Position.Vector[0] += AGO3_M_xRand(-1.5f, 1.5f);
-        p->Position.Vector[1] += AGO3_M_xRand(-1.5f, 1.5f);
-        p->Position.Vector[2] += AGO3_M_xRand(-1.5f, 1.5f);
-        rand();
-        p->fTransparency = 40.0f;
-        p->Direction.Vector[0] = AGO3_M_xRand(-1.5f, 1.5f);
-        p->Direction.Vector[1] = AGO3_M_xRand(-1.5f, 1.5f);
-        p->Direction.Vector[2] = AGO3_M_xRand(1.5f, 2.6f);
-        p->Direction.Vector[3] = 0.0f;
-        p->fRotationSpeed = AGO3_M_xRand(-3.0f, 3.0f);
-        p->fCurrentAngle = AGO3_M_xRand(-6.0f, 6.0f);
-        p->fSize = AGO3_M_xRand(0.75f, 1.5f);
-        p->fAnimationSpeed = AGO3_M_xRand(25.0f, 40.0f);
-        p->fCurrentAnimTime = 0.0f;
-        p++;
-    }
-}
-
-void AGO3_Smoke::Process(void)
-{
-    AGO3Smoke_InternalData_* p;
-    C_Vector Direction;
-    float Time;
-    unsigned int i;
-    unsigned int NbFinished;
-    /* TODO: decompile from asm/... */
-}
-
-void AGO3_Smoke::Display(GLD_tdstViewportAttributes_* hVp)
-{
-    float v2;
-    float v1;
-    float u2;
-    float u1;
-    unsigned int i;
-    AGO3Smoke_InternalData_* p;
-    GLI_vEndWorldSprites();
-    p = m_Sprites;
-    for (i = 0; i < 8; i++)
-    {
-        if (p->fTransparency > 0.0f)
-        {
-            GLI_vSetGlobalAlpha(p->fTransparency > 255.0f ? 255.0f : p->fTransparency);
-            GLI_vDrawWorldSpriteWithUVsOrientedOpt((MTH3D_tdstVector_*)&p->Position, m_pMat1, p->fSize, p->fSize, 0.0f, 1.0f, 1.0f, 0.0f, hVp, 1, p->fCurrentAngle);
-        }
-        p++;
-    }
-    GLI_vSetGlobalAlpha(255.0f);
-    GLI_vEndWorldSprites();
-}
-
-void AGO3_BeamWithUVs::Process(void)
-{
-    ((AGO3_Part*)this)->m_Finished = 1;
-}
-
-void AGO3_BeamWithUVs::Display(GLD_tdstViewportAttributes_* hVp)
-{
-    GLI_vSetGlobalAlpha(255.0f);
-    GLI_vDrawWorldSemiLookatSpriteWithUVs((MTH3D_tdstVector_*)&m_Position, (MTH3D_tdstVector_*)&m_Direction, m_pMat1, hVp, m_fSize, 0.0f, 0.0f, 1.0f, m_fRepetition);
-}
-
-void AGO3_WaveEnvelopedFist::DesInit(void)
-{
-    m_a_ulNbAGOs[0] = m_a_ulNbAGOs[1] = 0;
-    m_a_ulFirstFree[0] = m_a_ulFirstFree[1] = 0;
-    m_a_ulFirstSet[0] = m_a_ulFirstSet[1] = 0;
-    m_hHandle = 0;
-    ((AGO3_Part*)this)->m_Finished = 1;
-}
-
-void AGO3_WaveEnvelopedFist::Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fColor)
-{
-    float fOneMinusColor;
-    AGO3_WEF_SpriteData* pSpriteData;
-    unsigned int ulFist;
-    /* TODO: decompile from asm/... */
-}
-
-void AGO3_WaveEnvelopedFist::Process(void)
-{
-    unsigned int ulFist;
-    unsigned int ulNbAGOs;
-    unsigned int ulFirstEntry;
-    unsigned int ulEntry;
-    AGO3_WEF_SpriteData* pSpriteData;
-    MTH3D_tdstVector_* pPreviousSpritePosition;
-    unsigned int i;
-    MTH3D_tdstVector_* pPosition;
-    float fMultiplier;
-    float fInterval;
-    float fDX;
-    float fDY;
-    float fDZ;
-    for (ulFist = 0; ulFist < 2; ulFist++)
-    {
-        ulNbAGOs = m_a_ulNbAGOs[ulFist];
-        if (ulNbAGOs)
-        {
-            ulEntry = (m_a_ulFirstFree[ulFist] + 63) & 63;
-            pSpriteData = &m_stSprite[ulFist][ulEntry];
-            if (ulNbAGOs > 1)
-            {
-                pPreviousSpritePosition = &m_stSprite[ulFist][(ulEntry + 63) & 63].stPosition;
-                pSpriteData->ulNbIntermediates = (int)(0.5f + 2.0f * g_fTimeDifference / g_stEngineStructure.stEngineTimer.xFrameLength) - 1;
-                if (pSpriteData->ulNbIntermediates > 10)
-                    pSpriteData->ulNbIntermediates = 10;
-                fInterval = 1.0f / (float)(pSpriteData->ulNbIntermediates + 1);
-                pPosition = &m_a_stPosition[ulFist];
-                fDX = pPreviousSpritePosition->xX - pPosition->xX;
-                fDY = pPreviousSpritePosition->xY - pPosition->xY;
-                fDZ = pPreviousSpritePosition->xZ - pPosition->xZ;
-                fMultiplier = fInterval;
-                for (i = 0; i < pSpriteData->ulNbIntermediates; i++)
-                {
-                    pSpriteData->a_stIntermediatePosition[i].xX = pPosition->xX + fDX * fMultiplier;
-                    pSpriteData->a_stIntermediatePosition[i].xY = pPosition->xY + fDY * fMultiplier;
-                    pSpriteData->a_stIntermediatePosition[i].xZ = pPosition->xZ + fDZ * fMultiplier;
-                    fMultiplier += fInterval;
-                }
-            }
-            ulEntry = m_a_ulFirstSet[ulFist];
-            pSpriteData = &m_stSprite[ulFist][ulEntry];
-            while (ulNbAGOs--)
-            {
-                if (pSpriteData->fTransparency == 300.0f)
-                    pSpriteData->fTransparency = 191.0f;
-                else
-                    pSpriteData->fTransparency -= 750.0f * g_fTimeDifference;
-                if (pSpriteData->fTransparency <= 0.0f || pSpriteData->fTransparency > 255.0f)
-                {
-                    pSpriteData->fSize = 0.0f;
-                    pSpriteData->fTransparency = 0.0f;
-                }
-                else
-                {
-                    pSpriteData->fSize = m_fMainSize * (float)AGO3_C_WaveEnvelopedFistShape[(int)(0.003921569f * (50.0f * (255.0f - pSpriteData->fTransparency)))];
-                }
-                ulEntry++;
-                if (ulEntry == 64)
-                {
-                    ulEntry = 0;
-                    pSpriteData = &m_stSprite[ulFist][0];
-                }
-                else
-                {
-                    pSpriteData++;
-                }
-            }
-        }
-    }
-    if (!m_a_ulNbAGOs[0] && !m_a_ulNbAGOs[1])
-    {
-        m_hHandle = 0;
-        m_Finished = 1;
-    }
-}
-
-void AGO3_WaveEnvelopedFist::Display(GLD_tdstViewportAttributes_* hVp)
-{
-    unsigned int ulFist;
-    unsigned int ulNbAGOs;
-    unsigned int ulEntry;
-    AGO3_WEF_SpriteData* pSpriteData;
-    float fPreviousTransparency;
-    float fTransparencyIncrement;
-    float fTransparency;
-    float fSize;
-    unsigned int i;
-
-    for (ulFist = 0; ulFist < 2; ulFist++)
-    {
-        ulNbAGOs = m_a_ulNbAGOs[ulFist];
-        if (ulNbAGOs)
-        {
-            ulEntry = m_a_ulFirstSet[ulFist];
-            pSpriteData = &m_stSprite[ulFist][ulEntry];
-            while (ulNbAGOs--)
-            {
-                if (pSpriteData->fTransparency <= 0.0f)
-                {
-                    m_a_ulNbAGOs[ulFist]--;
-                    m_a_ulFirstSet[ulFist] = (m_a_ulFirstSet[ulFist] + 1) & 0x3f;
-                    pSpriteData->fTransparency = 0.0f;
-                }
-                else
-                {
-                    GLI_vSetGlobalAlpha(pSpriteData->fTransparency);
-                    GLI_vDrawWorldOrthoPlanarSpriteColor(&pSpriteData->stPosition, m_pMat1, pSpriteData->fSize, pSpriteData->fSize, hVp, 0, &pSpriteData->stInitialPosition, &pSpriteData->stAdditionnalVector, m_a_ulColor[ulFist]);
-                }
-                if (pSpriteData->ulNbIntermediates && pSpriteData->ulNbIntermediates)
-                {
-                    fPreviousTransparency = m_stSprite[ulFist][ulEntry == 0 ? 63 : ulEntry - 1].fTransparency;
-                    if (fPreviousTransparency == 300.0f)
-                        fPreviousTransparency = 255.0f;
-                    fTransparency = pSpriteData->fTransparency;
-                    if (fTransparency == 300.0f)
-                        fTransparency = 255.0f;
-                    fTransparencyIncrement = (1.0f / (float)(pSpriteData->ulNbIntermediates + 1)) * (fPreviousTransparency - fTransparency);
-                    for (i = 0; i < pSpriteData->ulNbIntermediates; i++)
-                    {
-                        fTransparency += fTransparencyIncrement;
-                        fSize = m_fMainSize * (float)AGO3_C_WaveEnvelopedFistShape[(int)(0.003921569f * (50.0f * (255.0f - fTransparency)))];
-                        GLI_vSetGlobalAlpha(fTransparency);
-                        GLI_vDrawWorldOrthoPlanarSpriteColor(&pSpriteData->a_stIntermediatePosition[i], m_pMat1, fSize, fSize, hVp, 0, &pSpriteData->stInitialPosition, &pSpriteData->stAdditionnalVector, m_a_ulColor[ulFist]);
-                    }
-                }
-                ulEntry++;
-                if (ulEntry == 64)
-                {
-                    ulEntry = 0;
-                    pSpriteData = &m_stSprite[ulFist][0];
-                }
-                else
-                {
-                    pSpriteData++;
-                }
-            }
-        }
-    }
-}
-
-void AGO3_WaveEnvelopedFist2::DesInit(void)
-{
-    m_a_ulNbAGOs[0] = m_a_ulNbAGOs[1] = 0;
-    m_a_ulFirstFree[0] = m_a_ulFirstFree[1] = 0;
-    m_a_ulFirstSet[0] = m_a_ulFirstSet[1] = 0;
-    m_hHandle = 0;
-    ((AGO3_Part*)this)->m_Finished = 1;
-}
-
-void AGO3_WaveEnvelopedFist2::Init(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMat1, float fColor)
-{
-    float fOneMinusColor;
-    AGO3_WEF_SpriteData* pSpriteData;
-    unsigned int ulFist;
-    /* TODO: decompile from asm/... */
-}
-
-void AGO3_WaveEnvelopedFist2::Process(void)
-{
-    unsigned int ulFist;
-    unsigned int ulNbAGOs;
-    unsigned int ulEntry;
-    AGO3_WEF_SpriteData* pSpriteData;
-    unsigned int ulFirstEntry;
-    MTH3D_tdstVector_* pPosition;
-    unsigned int i;
-    float fMultiplier;
-    float fInterval;
-    float fDX;
-    float fDY;
-    float fDZ;
-    for (ulFist = 0; ulFist < 2; ulFist++)
-    {
-        ulNbAGOs = m_a_ulNbAGOs[ulFist];
-        if (ulNbAGOs)
-        {
-            ulEntry = (m_a_ulFirstFree[ulFist] + 63) & 63;
-            pSpriteData = &m_stSprite[ulFist][ulEntry];
-            if (ulNbAGOs > 1)
-            {
-                pSpriteData->ulNbIntermediates = (int)(0.5f + 4.0f * g_fTimeDifference / g_stEngineStructure.stEngineTimer.xFrameLength) - 1;
-                if (pSpriteData->ulNbIntermediates > 10)
-                    pSpriteData->ulNbIntermediates = 10;
-                fInterval = 1.0f / (float)(pSpriteData->ulNbIntermediates + 1);
-                ulFirstEntry = (ulEntry + 63) & 63;
-                pPosition = &m_a_stPosition[ulFist];
-                fDX = m_stSprite[ulFist][ulFirstEntry].stPosition.xX - pPosition->xX;
-                fDY = m_stSprite[ulFist][ulFirstEntry].stPosition.xY - pPosition->xY;
-                fDZ = m_stSprite[ulFist][ulFirstEntry].stPosition.xZ - pPosition->xZ;
-                fMultiplier = fInterval;
-                for (i = 0; i < pSpriteData->ulNbIntermediates; i++)
-                {
-                    pSpriteData->a_stIntermediatePosition[i].xX = pPosition->xX + fDX * fMultiplier;
-                    pSpriteData->a_stIntermediatePosition[i].xY = pPosition->xY + fDY * fMultiplier;
-                    pSpriteData->a_stIntermediatePosition[i].xZ = pPosition->xZ + fDZ * fMultiplier;
-                    fMultiplier += fInterval;
-                }
-            }
-            ulEntry = m_a_ulFirstSet[ulFist];
-            pSpriteData = &m_stSprite[ulFist][ulEntry];
-            while (ulNbAGOs--)
-            {
-                if (pSpriteData->fTransparency == 300.0f)
-                    pSpriteData->fTransparency = 191.0f;
-                else
-                    pSpriteData->fTransparency -= 1000.0f * g_fTimeDifference;
-                if (pSpriteData->fTransparency <= 0.0f || pSpriteData->fTransparency > 255.0f)
-                {
-                    pSpriteData->fSize = 0.0f;
-                    pSpriteData->fTransparency = 0.0f;
-                }
-                else
-                {
-                    pSpriteData->fSize = m_fMainSize * (float)AGO3_C_WaveEnvelopedFistShape[(int)(0.003921569f * (50.0f * (255.0f - pSpriteData->fTransparency)))];
-                }
-                ulEntry++;
-                if (ulEntry == 64)
-                {
-                    ulEntry = 0;
-                    pSpriteData = &m_stSprite[ulFist][0];
-                }
-                else
-                {
-                    pSpriteData++;
-                }
-            }
-        }
-    }
-    if (!m_a_ulNbAGOs[0] && !m_a_ulNbAGOs[1])
-    {
-        m_hHandle = 0;
-        m_Finished = 1;
-    }
-}
-
-void AGO3_WaveEnvelopedFist2::Display(GLD_tdstViewportAttributes_* hVp)
-{
-    unsigned int ulFist;
-    unsigned int ulNbAGOs;
-    unsigned int ulEntry;
-    AGO3_WEF_SpriteData* pSpriteData;
-    float fPreviousTransparency;
-    float fTransparencyIncrement;
-    float fTransparency;
-    float fSize;
-    unsigned int i;
-    unsigned int ulIndex;
-
-    for (ulFist = 0; ulFist < 2; ulFist++)
-    {
-        ulNbAGOs = m_a_ulNbAGOs[ulFist];
-        if (ulNbAGOs)
-        {
-            ulEntry = m_a_ulFirstSet[ulFist];
-            pSpriteData = &m_stSprite[ulFist][ulEntry];
-            while (ulNbAGOs--)
-            {
-                if (pSpriteData->fTransparency <= 0.0f)
-                {
-                    m_a_ulNbAGOs[ulFist]--;
-                    m_a_ulFirstSet[ulFist] = (m_a_ulFirstSet[ulFist] + 1) & 0x3f;
-                }
-                else
-                {
-                    GLI_vSetGlobalAlpha(pSpriteData->fTransparency);
-                    GLI_vDrawWorldSpriteColor(&pSpriteData->stPosition, m_pMat1, pSpriteData->fSize, pSpriteData->fSize, hVp, 0, m_a_ulColor[ulFist]);
-                }
-                if (pSpriteData->ulNbIntermediates && pSpriteData->ulNbIntermediates)
-                {
-                    fPreviousTransparency = m_stSprite[ulFist][ulEntry == 0 ? 63 : ulEntry - 1].fTransparency;
-                    if (fPreviousTransparency == 300.0f)
-                        fPreviousTransparency = 191.0f;
-                    fTransparency = pSpriteData->fTransparency;
-                    if (fTransparency == 300.0f)
-                        fTransparency = 191.0f;
-                    fTransparencyIncrement = (1.0f / (float)(pSpriteData->ulNbIntermediates + 1)) * (fPreviousTransparency - fTransparency);
-                    for (i = 0; i < pSpriteData->ulNbIntermediates; i++)
-                    {
-                        ulIndex = (int)(0.003921569f * (50.0f * (255.0f - fTransparency)));
-                        if (ulIndex >= 51)
-                            ulIndex = 50;
-                        fTransparency += fTransparencyIncrement;
-                        fSize = m_fMainSize * (float)AGO3_C_WaveEnvelopedFistShape[ulIndex];
-                        GLI_vSetGlobalAlpha(fTransparency);
-                        GLI_vDrawWorldSpriteColor(&pSpriteData->a_stIntermediatePosition[i], m_pMat1, fSize, fSize, hVp, 0, m_a_ulColor[ulFist]);
-                    }
-                }
-                ulEntry++;
-                if (ulEntry == 64)
-                {
-                    ulEntry = 0;
-                    pSpriteData = &m_stSprite[ulFist][0];
-                }
-                else
-                {
-                    pSpriteData++;
-                }
-            }
-        }
-    }
-}
-
-void AGO3_ShootSmoke::Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fParameter)
-{
-    unsigned int i;
-    m_Finished = 0; m_Position.Vector[0] = pPosition->xX; m_Position.Vector[1] = pPosition->xY; m_Position.Vector[2] = pPosition->xZ; m_Position.Vector[3] = 1.0f; m_pMat1 = pMat1; m_fCreationTime = g_ffFrameTime;
-    m_fTime = 0.0f;
-    m_fTransparency = 255.0f;
-    m_fScale = 0.5f;
-    AGO_Define_OrthogonalVectors(pDirection, &m_stInitialPosition, &m_stAdditionnalVector);
-    m_stAxes.stCol_0 = m_stInitialPosition;
-    m_stAxes.stCol_1 = *pDirection;
-    m_stAxes.stCol_2 = m_stAdditionnalVector;
-    for (i = 0; i < 14; i++)
-    {
-        m_a_fXYNoise[i][0] = AGO3_M_xRand(-0.1f, 0.1f);
-        m_a_fXYNoise[i][1] = AGO3_M_xRand(-0.3f, 0.3f);
-        m_a_fXYNoise[i][2] = AGO3_M_xRand(-0.1f, 0.1f);
-        m_a_fScale[i] = AGO3_M_xRand(0.6f, 1.4f);
-        m_a_fTransparency[i] = AGO3_M_xRand(0.0f, 128.0f);
-    }
-}
-
-void AGO3_ShootSmoke::Process(void)
-{
-    if (m_fTime > 1.3f)
-        m_Finished = 1;
-    m_fTime += g_fTimeDifference;
-}
-
-void AGO3_ShootSmoke::Display(GLD_tdstViewportAttributes_* hVp)
-{
-    float fPercentage;
-    float fScale;
-    float fRayTime;
-    MTH3D_tdstVector_ stSpritePos;
-    MTH3D_tdstVector_ Vtmp;
-    float fAngle;
-    float fRay;
-    unsigned int i;
-    float* pY;
-    float* pZ;
-    float* pTable;
-    int iAngle;
-    float fX;
-    float fY;
-    float fZ;
-    fRayTime = m_fTime;
-    if (fRayTime > 0.3f)
-    {
-        fPercentage = 1.0f - (fRayTime - 0.3f);
-        m_fScale = 0.5f * fPercentage;
-        m_fTransparency = 255.0f * fPercentage;
-        fRayTime = 0.3f;
-    }
-    fRay = ((float*)p_fCosTable)[((int)(81.48733f * (0.5f * (3.1415927f * (3.3333333f * fRayTime)))) + 0x80) & 0x1ff];
-    if (m_fTime > 0.3f)
-        fRay += 0.39999998f * m_fTime;
-    fAngle = 0.0f;
-    for (i = 0; i < 14; i++)
-    {
-        pTable = (float*)p_fCosTable;
-        pY = &stSpritePos.xY;
-        pZ = &stSpritePos.xZ;
-        iAngle = (int)(81.48733f * fAngle);
-        stSpritePos.xX = m_a_fXYNoise[i][0] + fRay * pTable[iAngle & 0x1ff];
-        *pY = m_a_fXYNoise[i][1];
-        *pZ = m_a_fXYNoise[i][2] + fRay * pTable[(iAngle + 0x80) & 0x1ff];
-        ((int*)&Vtmp)[0] = ((int*)&stSpritePos)[0];
-        ((int*)&Vtmp)[1] = ((int*)&stSpritePos)[1];
-        ((int*)&Vtmp)[2] = ((int*)&stSpritePos)[2];
-        fX = Vtmp.xX;
-        fY = Vtmp.xY;
-        fZ = Vtmp.xZ;
-        stSpritePos.xX = AGO3_M_xDot3(m_stAxes.stCol_0.xX, fX, m_stAxes.stCol_1.xX, fY, m_stAxes.stCol_2.xX, fZ);
-        *pY = AGO3_M_xDot3(m_stAxes.stCol_0.xY, fX, m_stAxes.stCol_1.xY, fY, m_stAxes.stCol_2.xY, fZ);
-        *pZ = AGO3_M_xDot3(m_stAxes.stCol_0.xZ, fX, m_stAxes.stCol_1.xZ, fY, m_stAxes.stCol_2.xZ, fZ);
-        stSpritePos.xX += m_Position.Vector[0];
-        *pY += m_Position.Vector[1];
-        *pZ += m_Position.Vector[2];
-        GLI_vSetGlobalAlpha(m_fTransparency - m_a_fTransparency[i]);
-        fScale = m_fScale * m_a_fScale[i];
-        if (i < 7)
-            GLI_vDrawWorldSpriteWithUVsOpt(&stSpritePos, m_pMat1, fScale, fScale, 0.0f, 0.5f, 1.0f, 1.0f, hVp, 1);
-        else
-            GLI_vDrawWorldSpriteWithUVsOpt(&stSpritePos, m_pMat1, fScale, fScale, 0.0f, 0.0f, 1.0f, 0.5f, hVp, 1);
-        fAngle += 0.44879895f;
-    }
-}
-
-void AGO3_TurningFistSmoke::Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fForwardSpeed)
-{
-    unsigned int i;
-    float fInterval;
-    float fMultiplier;
-    float fX;
-    float fY;
-    C_Vector cvDirection;
-    C_Vector a_cvDirection[2];
-    C_Vector cvRandomDirection;
-    unsigned int ulFist;
-    unsigned int ulFirstEntry;
-    AGO3_TFS_SpriteData* pSpriteData;
-    unsigned int* pNbAGOs;
-    unsigned int* pFirstFree;
-    MTH3D_tdstVector_* pPrevious;
-
-    ulFist = fForwardSpeed < 0.0f ? 1 : 0;
-    pNbAGOs = m_a_ulNbAGOs;
-    pNbAGOs += ulFist;
-    if (*pNbAGOs == 0)
-    {
-        m_Finished = 0; m_Position.Vector[0] = pPosition->xX; m_Position.Vector[1] = pPosition->xY; m_Position.Vector[2] = pPosition->xZ; m_Position.Vector[3] = 1.0f; m_pMat1 = pMat1; m_fCreationTime = g_ffFrameTime;
-        m_bInProgress[ulFist] = 1;
-        sceVu0CopyVector(&m_a_stInitialSpritePosition[ulFist], &m_Position);
-        m_a_stInitialSpriteDirection[ulFist].Vector[0] = pDirection->xX;
-        m_a_stInitialSpriteDirection[ulFist].Vector[1] = pDirection->xY;
-        m_a_stInitialSpriteDirection[ulFist].Vector[2] = pDirection->xZ;
-    }
-    else
-    {
-        pPosition->xX = m_a_stInitialSpritePosition[ulFist].Vector[0];
-        pPosition->xY = m_a_stInitialSpritePosition[ulFist].Vector[1];
-        pPosition->xZ = m_a_stInitialSpritePosition[ulFist].Vector[2];
-        pDirection->xX = m_a_stInitialSpriteDirection[ulFist].Vector[0];
-        pDirection->xY = m_a_stInitialSpriteDirection[ulFist].Vector[1];
-        pDirection->xZ = m_a_stInitialSpriteDirection[ulFist].Vector[2];
-    }
-    pFirstFree = m_a_ulFirstFree;
-    pFirstFree += ulFist;
-    ulFirstEntry = *pFirstFree;
-    pSpriteData = &m_stSprite[ulFist][ulFirstEntry];
-    pSpriteData->fSize = m_fMainSize;
-    pSpriteData->fTransparency = 300.0f;
-    pSpriteData->stPosition = *pPosition;
-    if (*pNbAGOs)
-    {
-        pPrevious = &m_stSprite[ulFist][(ulFirstEntry + 63) & 0x3f].stPosition;
-        pSpriteData->ulNbIntermediates = (int)(0.5f + g_fTimeDifference / g_stEngineStructure.stEngineTimer.xFrameLength) - 1;
-        if (pSpriteData->ulNbIntermediates > 5)
-            pSpriteData->ulNbIntermediates = 5;
-        fInterval = 1.0f / (float)(pSpriteData->ulNbIntermediates + 1);
-        fMultiplier = fInterval;
-        for (i = 0; i < pSpriteData->ulNbIntermediates; i++)
-        {
-            pSpriteData->a_stIntermediatePosition[i].xX = pPosition->xX + fMultiplier * (pPrevious->xX - pPosition->xX);
-            pSpriteData->a_stIntermediatePosition[i].xY = pPosition->xY + fMultiplier * (pPrevious->xY - pPosition->xY);
-            pSpriteData->a_stIntermediatePosition[i].xZ = pPosition->xZ + fMultiplier * (pPrevious->xZ - pPosition->xZ);
-            fMultiplier += fInterval;
-        }
-    }
-    cvDirection.Vector[0] = pDirection->xX;
-    cvDirection.Vector[1] = pDirection->xY;
-    cvDirection.Vector[2] = pDirection->xZ;
-    cvDirection.Vector[3] = 1.0f;
-    sceVu0Normalize(&cvDirection, &cvDirection);
-    cvDirection.Vector[0] = cvDirection.Vector[0];
-    cvDirection.Vector[1] = cvDirection.Vector[1];
-    cvDirection.Vector[2] = cvDirection.Vector[2];
-    fX = 0.02f * cvDirection.Vector[0];
-    fY = 0.02f * cvDirection.Vector[1];
-    a_cvDirection[0].Vector[0] = fY;
-    a_cvDirection[0].Vector[1] = -fX;
-    a_cvDirection[0].Vector[2] = AGO3_M_xRand(0.02f, 0.1f);
-    a_cvDirection[1].Vector[0] = -fY;
-    a_cvDirection[1].Vector[1] = fX;
-    a_cvDirection[1].Vector[2] = AGO3_M_xRand(0.02f, 0.1f);
-    fX = 0.1f * cvDirection.Vector[0];
-    fY = 0.1f * cvDirection.Vector[1];
-    pSpriteData->a_stSpriteDirection[0].Vector[0] = fX;
-    pSpriteData->a_stSpriteDirection[0].Vector[1] = fY;
-    pSpriteData->a_stSpriteDirection[0].Vector[2] = AGO3_M_xRand(0.01f, 0.05f);
-    pSpriteData->a_stSpriteDirection[1].Vector[0] = fX;
-    pSpriteData->a_stSpriteDirection[1].Vector[1] = fY;
-    pSpriteData->a_stSpriteDirection[1].Vector[2] = pSpriteData->a_stSpriteDirection[0].Vector[2];
-    for (i = 0; i < 6; i++)
-    {
-        sceVu0CopyVector(&cvRandomDirection, &cvDirection);
-        sceVu0ScaleVectorXYZ(&cvRandomDirection, &cvRandomDirection, -0.5f + (float)rand() / 2147483648.0f);
-        sceVu0AddVector(&cvRandomDirection, &cvRandomDirection, (i & 1) == 0 ? &a_cvDirection[0] : &a_cvDirection[1]);
-        pSpriteData->a_stSpritePosition[0][i].xX = pPosition->xX + cvRandomDirection.Vector[0];
-        pSpriteData->a_stSpritePosition[0][i].xY = pPosition->xY + cvRandomDirection.Vector[1];
-        pSpriteData->a_ulType[i] = cvRandomDirection.Vector[2] >= 0.0f ? 0 : 1;
-        pSpriteData->a_stSpritePosition[0][i].xZ = pPosition->xZ + cvRandomDirection.Vector[2];
-    }
-    *pFirstFree = (*pFirstFree + 1) & 0x3f;
-    (*pNbAGOs)++;
-}
-
-void AGO3_TurningFistSmoke::Process(void)
-{
-    unsigned int ulFist;
-    unsigned int ulNbAGOs;
-    float fTimeDifference;
-    unsigned int ulEntry;
-    AGO3_TFS_SpriteData* pSpriteData;
-    unsigned int iSprite;
-    unsigned int i;
-    C_Vector a_stSpriteDirection[2];
-    float fSpeed;
-
-    for (ulFist = 0; ulFist < 2; ulFist++)
-    {
-        ulNbAGOs = m_a_ulNbAGOs[ulFist];
-        if (ulNbAGOs)
-        {
-            ulEntry = m_a_ulFirstSet[ulFist];
-            pSpriteData = &m_stSprite[ulFist][ulEntry];
-            fTimeDifference = 30.0f * g_fTimeDifference;
-            while (ulNbAGOs--)
-            {
-                if (pSpriteData->fTransparency <= 0.0f)
-                {
-                    m_a_ulNbAGOs[ulFist]--;
-                    m_a_ulFirstSet[ulFist] = (m_a_ulFirstSet[ulFist] + 1) & 0x3f;
-                }
-                else
-                {
-                    pSpriteData->fSize += 1.3f * g_fTimeDifference * AGO3_M_xRand(0.1f, 1.3f);
-                }
-                if (pSpriteData->fTransparency == 300.0f)
-                    pSpriteData->fTransparency = 255.0f;
-                else
-                    pSpriteData->fTransparency -= 500.0f * g_fTimeDifference * AGO3_M_xRand(0.5f, 1.7f);
-                fSpeed = 1.0f + ((float*)p_fCosTable)[((int)(81.48733f * (1.5707964f * (0.003921569f * pSpriteData->fTransparency))) + 128) & 0x1ff];
-                sceVu0CopyVector(&a_stSpriteDirection[0], &pSpriteData->a_stSpriteDirection[0]);
-                fSpeed = fTimeDifference * fSpeed;
-                sceVu0ScaleVectorXYZ(&a_stSpriteDirection[0], &a_stSpriteDirection[0], fSpeed);
-                sceVu0CopyVector(&a_stSpriteDirection[1], &pSpriteData->a_stSpriteDirection[1]);
-                sceVu0ScaleVectorXYZ(&a_stSpriteDirection[1], &a_stSpriteDirection[1], fSpeed);
-                for (iSprite = 0; iSprite < pSpriteData->ulNbIntermediates + 1; iSprite++)
-                {
-                    for (i = 0; i < 3; i++)
-                    {
-                        pSpriteData->a_stSpritePosition[iSprite][i].xX += a_stSpriteDirection[0].Vector[0];
-                        pSpriteData->a_stSpritePosition[iSprite][i].xY += a_stSpriteDirection[0].Vector[1];
-                        pSpriteData->a_stSpritePosition[iSprite][i].xZ += a_stSpriteDirection[0].Vector[2];
-                    }
-                    for (; i < 6; i++)
-                    {
-                        pSpriteData->a_stSpritePosition[iSprite][i].xX += a_stSpriteDirection[1].Vector[0];
-                        pSpriteData->a_stSpritePosition[iSprite][i].xY += a_stSpriteDirection[1].Vector[1];
-                        pSpriteData->a_stSpritePosition[iSprite][i].xZ += a_stSpriteDirection[1].Vector[2];
-                    }
-                }
-                ulEntry++;
-                if (ulEntry == 50)
-                {
-                    ulEntry = 0;
-                    pSpriteData = &m_stSprite[ulFist][0];
-                }
-                else
-                {
-                    pSpriteData++;
-                }
-            }
-        }
-    }
-    if (m_a_ulNbAGOs[0] == 0 && m_a_ulNbAGOs[1] == 0)
-    {
-        m_pAGO3_TFS_Object = 0;
-        m_Finished = 1;
-    }
-}
-
-void AGO3_TurningFistSmoke::Display(GLD_tdstViewportAttributes_* hVp)
-{
-    float fSize;
-    unsigned int iSprite;
-    unsigned int i;
-    AGO3_TFS_SpriteData* pSpriteData;
-    unsigned int ulEntry;
-    unsigned int ulNbAGOs;
-    unsigned int ulFist;
-    for (ulFist = 0; ulFist < 2; ulFist++)
-    {
-        ulNbAGOs = m_a_ulNbAGOs[ulFist];
-        if (ulNbAGOs)
-        {
-            ulEntry = (m_a_ulFirstFree[ulFist] + 49) % 50;
-            pSpriteData = &m_stSprite[ulFist][ulEntry];
-            while (ulNbAGOs--)
-            {
-                GLI_vSetGlobalAlpha(pSpriteData->fTransparency);
-                for (i = 0; i < 6; i++)
-                {
-                    fSize = pSpriteData->fSize;
-                    if (pSpriteData->a_ulType[i] == 0)
-                        GLI_vDrawWorldSpriteWithUVsOpt(&pSpriteData->a_stSpritePosition[0][i], m_pMat1, fSize, fSize, 0.0f, 0.5f, 1.0f, 1.0f, hVp, 1);
-                    else
-                        GLI_vDrawWorldSpriteWithUVsOpt(&pSpriteData->a_stSpritePosition[0][i], m_pMat1, fSize, fSize, 0.0f, 0.0f, 1.0f, 0.5f, hVp, 1);
-                }
-                if (pSpriteData->ulNbIntermediates)
-                {
-                    for (iSprite = 1; iSprite < pSpriteData->ulNbIntermediates + 1; iSprite++)
-                    {
-                        fSize = pSpriteData->fSize;
-                        for (i = 0; i < 6; i++)
-                        {
-                            if (pSpriteData->a_ulType[i] == 0)
-                                GLI_vDrawWorldSpriteWithUVsOpt(&pSpriteData->a_stSpritePosition[iSprite][i], m_pMat1, fSize, fSize, 0.0f, 0.5f, 1.0f, 1.0f, hVp, 1);
-                            else
-                                GLI_vDrawWorldSpriteWithUVsOpt(&pSpriteData->a_stSpritePosition[iSprite][i], m_pMat1, fSize, fSize, 0.0f, 0.0f, 1.0f, 0.5f, hVp, 1);
-                        }
-                    }
-                }
-                if (ulEntry == 0)
-                {
-                    ulEntry = 49;
-                    pSpriteData = &m_stSprite[ulFist][49];
-                }
-                else
-                {
-                    pSpriteData--;
-                    ulEntry--;
-                }
-            }
-        }
-    }
-}
-
-void AGO3_FistSmoke::DesInit(void)
-{
-    m_a_ulNbAGOs[0] = m_a_ulNbAGOs[1] = 0;
-    m_a_ulFirstFree[0] = m_a_ulFirstFree[1] = 0;
-    m_a_ulFirstSet[0] = m_a_ulFirstSet[1] = 0;
-    m_hHandle = 0;
-    ((AGO3_Part*)this)->m_Finished = 1;
-}
-
-void AGO3_FistSmoke::Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fForwardSpeed)
-{
-    unsigned int i;
-    unsigned int ulDirSwitch;
-    AGO3_FS_SpriteData* pSpriteData;
-    unsigned int ulFirstEntry;
-    int iIndex;
-    unsigned int ulFist;
-    C_Vector cvDirection;
-    C_Vector a_cvDirection[2];
-    C_Vector cvRandomDirection;
-    float fX;
-    float fY;
-    float fInterval;
-    float fMultiplier;
-    unsigned int iSprite;
-    MTH3D_tdstVector_* pPrevious;
-    unsigned int* pT;
-    unsigned int* pNb;
-    unsigned int* pFree;
-    float fDX, fDY, fDZ, fMX, fMY, fMZ;
-
-    ulFist = fForwardSpeed < 0.0f ? 1 : 0;
-    iIndex = ulFist * 4;
-    pT = m_a_ulNbAGOs;
-    pNb = (unsigned int*)((char*)pT + iIndex);
-    if (*pNb == 0)
-    {
-        m_Finished = 0; m_Position.Vector[0] = pPosition->xX; m_Position.Vector[1] = pPosition->xY; m_Position.Vector[2] = pPosition->xZ; m_Position.Vector[3] = 1.0f; m_pMat1 = pMat1; m_fCreationTime = g_ffFrameTime;
-    }
-    pT = m_a_ulFirstFree;
-    pFree = (unsigned int*)((char*)pT + iIndex);
-    ulFirstEntry = *pFree;
-    pSpriteData = &m_stSprite[ulFist][ulFirstEntry];
-    pSpriteData->fSize = m_fMainSize;
-    pSpriteData->fTransparency = 300.0f;
-    pSpriteData->stPosition = *pPosition;
-    for (i = 0; i < 6; i++)
-        pSpriteData->a_stSpritePosition[0][i] = *pPosition;
-    if (*pNb)
-    {
-        pPrevious = &m_stSprite[ulFist][ulFirstEntry == 0 ? 63 : ulFirstEntry - 1].stPosition;
-        fDX = pPrevious->xX - pPosition->xX;
-        fDY = pPrevious->xY - pPosition->xY;
-        fDZ = pPrevious->xZ - pPosition->xZ;
-        pSpriteData->ulNbIntermediates = (int)(0.5f + g_fTimeDifference / g_stEngineStructure.stEngineTimer.xFrameLength) - 1;
-        if (pSpriteData->ulNbIntermediates > 5)
-            pSpriteData->ulNbIntermediates = 5;
-        fInterval = 1.0f / (float)pSpriteData->ulNbIntermediates;
-        fMultiplier = fInterval;
-        for (iSprite = 1; iSprite < pSpriteData->ulNbIntermediates + 1; iSprite++)
-        {
-            fMX = fDX * fMultiplier;
-            fMY = fDY * fMultiplier;
-            fMZ = fDZ * fMultiplier;
-            for (i = 0; i < 6; i++)
-            {
-                pSpriteData->a_stSpritePosition[iSprite][i].xX = pPosition->xX + fMX;
-                pSpriteData->a_stSpritePosition[iSprite][i].xY = pPosition->xY + fMY;
-                pSpriteData->a_stSpritePosition[iSprite][i].xZ = pPosition->xZ + fMZ;
-            }
-            fMultiplier += fInterval;
-        }
-    }
-    else
-    {
-        pSpriteData->ulNbIntermediates = 0;
-    }
-    cvDirection.Vector[0] = pDirection->xX;
-    cvDirection.Vector[1] = pDirection->xY;
-    cvDirection.Vector[2] = pDirection->xZ;
-    cvDirection.Vector[3] = 1.0f;
-    sceVu0Normalize(&cvDirection, &cvDirection);
-    fX = 0.02f * cvDirection.Vector[0];
-    fY = 0.02f * cvDirection.Vector[1];
-    a_cvDirection[0].Vector[0] = fY;
-    a_cvDirection[0].Vector[1] = -fX;
-    a_cvDirection[0].Vector[2] = AGO3_M_xRand(0.02f, 0.1f);
-    a_cvDirection[1].Vector[0] = -fY;
-    a_cvDirection[1].Vector[1] = fX;
-    a_cvDirection[1].Vector[2] = AGO3_M_xRand(0.02f, 0.1f);
-    fX = 0.01f * cvDirection.Vector[0];
-    fY = 0.01f * cvDirection.Vector[1];
-    pSpriteData->a_stSpriteDirection[0].Vector[0] = fY;
-    pSpriteData->a_stSpriteDirection[0].Vector[1] = -fX;
-    pSpriteData->a_stSpriteDirection[0].Vector[2] = AGO3_M_xRand(0.01f, 0.05f);
-    pSpriteData->a_stSpriteDirection[1].Vector[0] = -fY;
-    pSpriteData->a_stSpriteDirection[1].Vector[1] = fX;
-    pSpriteData->a_stSpriteDirection[1].Vector[2] = pSpriteData->a_stSpriteDirection[0].Vector[2];
-    ulDirSwitch = 0;
-    for (iSprite = 0; iSprite < pSpriteData->ulNbIntermediates + 1; iSprite++)
-    {
-        for (i = 0; i < 6; i++)
-        {
-            sceVu0CopyVector(&cvRandomDirection, &cvDirection);
-            sceVu0ScaleVectorXYZ(&cvRandomDirection, &cvRandomDirection, AGO3_M_xRand(-1.1f, 1.1f));
-            sceVu0AddVector(&cvRandomDirection, &cvRandomDirection, ulDirSwitch == 0 ? &a_cvDirection[0] : &a_cvDirection[1]);
-            pSpriteData->a_stSpritePosition[iSprite][i].xX = pPosition->xX + cvRandomDirection.Vector[0];
-            pSpriteData->a_stSpritePosition[iSprite][i].xY = pPosition->xY + cvRandomDirection.Vector[1];
-            pSpriteData->a_ulType[iSprite] = cvRandomDirection.Vector[2] >= 0.0f ? 0 : 1;
-            pSpriteData->a_stSpritePosition[iSprite][i].xZ = pPosition->xZ + cvRandomDirection.Vector[2];
-        }
-        ulDirSwitch ^= 1;
-    }
-    (*pFree)++;
-    if (*pFree == 0x40)
-        *pFree = 0;
-    (*pNb)++;
-}
-
-void AGO3_FistSmoke::Process(void)
-{
-    unsigned int ulFist;
-    unsigned int ulNbAGOs;
-    float fTimeDifference;
-    unsigned int ulEntry;
-    AGO3_FS_SpriteData* pSpriteData;
-    unsigned int iSprite;
-    unsigned int i;
-    C_Vector a_stSpriteDirection[2];
-
-    for (ulFist = 0; ulFist < 2; ulFist++)
-    {
-        ulNbAGOs = m_a_ulNbAGOs[ulFist];
-        if (ulNbAGOs)
-        {
-            ulEntry = m_a_ulFirstSet[ulFist];
-            pSpriteData = &m_stSprite[ulFist][ulEntry];
-            fTimeDifference = 30.0f * g_fTimeDifference;
-            while (ulNbAGOs--)
-            {
-                if (pSpriteData->fTransparency <= 0.0f)
-                {
-                    m_a_ulNbAGOs[ulFist]--;
-                    m_a_ulFirstSet[ulFist] = (m_a_ulFirstSet[ulFist] + 1) & 0x3f;
-                }
-                else
-                {
-                    pSpriteData->fSize += 1.3f * g_fTimeDifference * AGO3_M_xRand(0.1f, 1.3f);
-                }
-                if (pSpriteData->fTransparency == 300.0f)
-                    pSpriteData->fTransparency = 255.0f;
-                else
-                    pSpriteData->fTransparency -= 2.0f * (500.0f * g_fTimeDifference) * AGO3_M_xRand(0.5f, 1.7f);
-                sceVu0CopyVector(&a_stSpriteDirection[0], &pSpriteData->a_stSpriteDirection[0]);
-                sceVu0ScaleVectorXYZ(&a_stSpriteDirection[0], &a_stSpriteDirection[0], fTimeDifference);
-                sceVu0CopyVector(&a_stSpriteDirection[1], &pSpriteData->a_stSpriteDirection[1]);
-                sceVu0ScaleVectorXYZ(&a_stSpriteDirection[1], &a_stSpriteDirection[1], fTimeDifference);
-                for (iSprite = 0; iSprite < pSpriteData->ulNbIntermediates + 1; iSprite++)
-                {
-                    for (i = 0; i < 3; i++)
-                    {
-                        pSpriteData->a_stSpritePosition[iSprite][i].xX += a_stSpriteDirection[0].Vector[0];
-                        pSpriteData->a_stSpritePosition[iSprite][i].xY += a_stSpriteDirection[0].Vector[1];
-                        pSpriteData->a_stSpritePosition[iSprite][i].xZ += a_stSpriteDirection[0].Vector[2];
-                    }
-                    for (; i < 6; i++)
-                    {
-                        pSpriteData->a_stSpritePosition[iSprite][i].xX += a_stSpriteDirection[1].Vector[0];
-                        pSpriteData->a_stSpritePosition[iSprite][i].xY += a_stSpriteDirection[1].Vector[1];
-                        pSpriteData->a_stSpritePosition[iSprite][i].xZ += a_stSpriteDirection[1].Vector[2];
-                    }
-                }
-                ulEntry++;
-                if (ulEntry == 50)
-                {
-                    ulEntry = 0;
-                    pSpriteData = &m_stSprite[ulFist][0];
-                }
-                else
-                {
-                    pSpriteData++;
-                }
-            }
-        }
-    }
-    if (m_a_ulNbAGOs[0] == 0 && m_a_ulNbAGOs[1] == 0)
-    {
-        m_hHandle = 0;
-        m_Finished = 1;
-    }
-}
-
-void AGO3_FistSmoke::Display(GLD_tdstViewportAttributes_* hVp)
-{
-    unsigned int ulFist;
-    unsigned int ulNbAGOs;
-    unsigned int ulEntry;
-    AGO3_FS_SpriteData* pSpriteData;
-    float fTransparency;
-    float fSize;
-    unsigned int i;
-    unsigned int iSprite;
-    AGO3_FS_SpriteData* pPreviousSpriteData;
-    float fTransparencyInterval;
-    float fSizeInterval;
-
-    for (ulFist = 0; ulFist < 2; ulFist++)
-    {
-        ulNbAGOs = m_a_ulNbAGOs[ulFist];
-        if (ulNbAGOs)
-        {
-            ulEntry = m_a_ulFirstSet[ulFist];
-            pSpriteData = &m_stSprite[ulFist][ulEntry];
-            fTransparency = pSpriteData->fTransparency;
-            fSize = pSpriteData->fSize;
-            while (ulNbAGOs--)
-            {
-                GLI_vSetGlobalAlpha(fTransparency);
-                for (i = 0; i < 6; i++)
-                {
-                    if (fSize > 0.0f)
-                    {
-                        if (pSpriteData->a_ulType[i] == 0)
-                            GLI_vDrawWorldSpriteWithUVsOpt(&pSpriteData->a_stSpritePosition[0][i], m_pMat1, fSize, fSize, 0.0f, 0.5f, 1.0f, 1.0f, hVp, 1);
-                        else
-                            GLI_vDrawWorldSpriteWithUVsOpt(&pSpriteData->a_stSpritePosition[0][i], m_pMat1, fSize, fSize, 0.0f, 0.0f, 1.0f, 0.5f, hVp, 1);
-                    }
-                }
-                if (pSpriteData->ulNbIntermediates)
-                {
-                    pPreviousSpriteData = &m_stSprite[ulFist][ulEntry == 0 ? 63 : ulEntry - 1];
-                    fTransparencyInterval = (pPreviousSpriteData->fTransparency - fTransparency) / (float)pSpriteData->ulNbIntermediates;
-                    fSizeInterval = (pPreviousSpriteData->fSize - fSize) / (float)pSpriteData->ulNbIntermediates;
-                    for (iSprite = 1; iSprite < pSpriteData->ulNbIntermediates + 1; iSprite++)
-                    {
-                        fTransparency += fTransparencyInterval;
-                        GLI_vSetGlobalAlpha(fTransparency);
-                        fSize += fSizeInterval;
-                        if (fSize > 0.0f)
-                        {
-                            for (i = 0; i < 6; i++)
-                            {
-                                if (pSpriteData->a_ulType[i] == 0)
-                                    GLI_vDrawWorldSpriteWithUVsOpt(&pSpriteData->a_stSpritePosition[iSprite][i], m_pMat1, fSize, fSize, 0.0f, 0.5f, 1.0f, 1.0f, hVp, 1);
-                                else
-                                    GLI_vDrawWorldSpriteWithUVsOpt(&pSpriteData->a_stSpritePosition[iSprite][i], m_pMat1, fSize, fSize, 0.0f, 0.0f, 1.0f, 0.5f, hVp, 1);
-                            }
-                        }
-                    }
-                }
-                ulEntry++;
-                if (ulEntry == 50)
-                {
-                    ulEntry = 0;
-                    pSpriteData = &m_stSprite[ulFist][0];
-                }
-                else
-                {
-                    pSpriteData++;
-                }
-            }
-        }
-    }
-}
-
-void AGO3_SpriteDurationFade::Process(void)
-{
-    if (m_fCurrentTime < m_fFadeInDuration)
-        m_fTransparency = m_fCurrentTime * m_fInvFadeInDurationAlpha;
-    else if (m_fCurrentTime > m_fDisplayDuration)
-    {
-        m_fCurrentFadeOutTime += g_fTimeDifference;
-        m_fTransparency = m_fInvFadeOutDurationAlpha * (m_fFadeOutDuration - m_fCurrentFadeOutTime);
-    }
-    else
-        m_fTransparency = 255.0f;
-    m_fCurrentTime += g_fTimeDifference;
-}
-
-void AGO3_SpriteDurationFade::Display(GLD_tdstViewportAttributes_* hVp)
-{
-    if (m_fTransparency > 0.0f)
-    {
-        GLI_vSetGlobalAlpha(m_fTransparency);
-        GLI_vDrawWorldSpriteOpt((MTH3D_tdstVector_*)&m_Position, m_pMat1, m_fMainSize, m_fMainSize, hVp, 1);
-    }
-    else
-        m_Finished = 1;
-}
-
-void AGO3_SpriteZoom::Process(void)
-{
-    if (m_fCurrentTime != 0.0f)
-    {
-        if (m_fZoomPercentage >= 1.0f)
-            m_fCurrentZoom = 1.0f + (m_fZoomPercentage - 1.0f) * (m_fCurrentTime / m_fDisplayDuration);
-        else
-            m_fCurrentZoom = 1.0f - (1.0f - m_fZoomPercentage) * (m_fCurrentTime / m_fDisplayDuration);
-        m_fCurrentSize = m_fMainSize * m_fCurrentZoom;
-        if (m_fCurrentTime > m_fDisplayDuration)
-        {
-            m_fCurrentTime = m_fDisplayDuration;
-            m_Finished = 1;
-        }
-    }
-    m_fCurrentTime += g_fTimeDifference;
-}
-
-void AGO3_SpriteZoom::Display(GLD_tdstViewportAttributes_* hVp)
-{
-    GLI_vSetGlobalAlpha(255.0f);
-    GLI_vDrawWorldSpriteOpt((MTH3D_tdstVector_*)&m_Position, m_pMat1, m_fCurrentSize, m_fCurrentSize, hVp, 1);
-}
-
-void AGO3_ScrollMatUV::Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fDuration)
-{
-    float fAcceleration;
-    int iSwitch;
-    m_Finished = 0; m_Position.Vector[0] = pPosition->xX; m_Position.Vector[1] = pPosition->xY; m_Position.Vector[2] = pPosition->xZ; m_Position.Vector[3] = 1.0f; m_pMat1 = pMat1; m_fCreationTime = g_ffFrameTime;
-    m_a_stScroll[0].fFirstOffset = pPosition->xX;
-    m_a_stScroll[0].fFinalOffset = pPosition->xY;
-    m_a_stScroll[1].fFirstOffset = pDirection->xX;
-    m_a_stScroll[1].fFinalOffset = pDirection->xY;
-    m_fCurrentTime = 0.0f;
-    m_fDuration = fDuration;
-    if (fDuration != 0.0f)
-    {
-        m_fInverseOfDuration = 1.0f / fDuration;
-    }
-    else
-    {
-        m_fInverseOfDuration = 1.0f;
-        m_Finished = 1;
-    }
-    GLI_xGetMaterialTextureScrollingCoef(pMat1, 0, &iSwitch, &m_a_stScroll[0].fOriginalValue, &m_a_stScroll[1].fOriginalValue);
-    fAcceleration = pPosition->xZ;
-    if (fAcceleration == 0.0f)
-        m_a_stScroll[0].ulAcceleratorType = 0;
-    else if (fAcceleration == 0.5f)
-        m_a_stScroll[0].ulAcceleratorType = 1;
-    else if (fAcceleration == 1.0f)
-        m_a_stScroll[0].ulAcceleratorType = 2;
-    else
-    {
-        m_a_stScroll[0].ulAcceleratorType = 3;
-        m_a_stScroll[0].fAcceleration = fAcceleration - 1.0f;
-    }
-    fAcceleration = pDirection->xZ;
-    if (fAcceleration == 0.0f)
-        m_a_stScroll[1].ulAcceleratorType = 0;
-    else if (fAcceleration == 0.5f)
-        m_a_stScroll[1].ulAcceleratorType = 1;
-    else if (fAcceleration == 1.0f)
-        m_a_stScroll[1].ulAcceleratorType = 2;
-    else
-    {
-        m_a_stScroll[1].ulAcceleratorType = 3;
-        m_a_stScroll[1].fAcceleration = fAcceleration - 1.0f;
-    }
-}
-
-void AGO3_ScrollMatUV::DesInit(void)
-{
-    ((AGO3_Part*)this)->m_Finished = 1;
-    GLI_xSetMaterialTextureDecalage(m_pMat1, m_a_stScroll[0].fOriginalValue, m_a_stScroll[1].fOriginalValue, 0, 2);
-}
-
-void AGO3_ScrollMatUV::Process(void)
-{
-    unsigned int ulUV;
-    unsigned int ulIterator;
-    float fFinalValue[2];
-    float fValue;
-    float fAcc;
-    if (m_Finished == 1)
-        return;
-    if (m_fCurrentTime == 0.0f)
-    {
-        fFinalValue[0] = m_a_stScroll[0].fFirstOffset;
-        fFinalValue[1] = m_a_stScroll[1].fFirstOffset;
-        m_fCurrentTime += g_fTimeDifference;
-    }
-    else
-    {
-        m_fCurrentTime += g_fTimeDifference;
-        if (m_fCurrentTime >= m_fDuration)
-            m_Finished = 1;
-        fValue = m_fCurrentTime * m_fInverseOfDuration;
-        for (ulUV = 0; ulUV < 2; ulUV++)
-        {
-            switch (m_a_stScroll[ulUV].ulAcceleratorType)
-            {
-                case 0:
-                    *(float*)((int)fFinalValue + ulUV * 4) = m_a_stScroll[ulUV].fOriginalValue;
-                    break;
-                case 1:
-                    *(float*)((int)fFinalValue + ulUV * 4) = AGO3_SQRT(fValue);
-                    break;
-                case 2:
-                    *(float*)((int)fFinalValue + ulUV * 4) = fValue;
-                    break;
-                case 3:
-                    *(float*)((int)fFinalValue + ulUV * 4) = fValue;
-                    fAcc = m_a_stScroll[ulUV].fAcceleration;
-                    for (ulIterator = 0; ulIterator < (unsigned int)fAcc; ulIterator++)
-                        *(float*)((int)fFinalValue + ulUV * 4) = fValue * *(float*)((int)fFinalValue + ulUV * 4);
-                    break;
-            }
-            *(float*)((int)fFinalValue + ulUV * 4) = m_a_stScroll[ulUV].fFirstOffset + *(float*)((int)fFinalValue + ulUV * 4) * (m_a_stScroll[ulUV].fFinalOffset - m_a_stScroll[ulUV].fFirstOffset);
-        }
-    }
-    GLI_xSetMaterialTextureDecalage(m_pMat1, fFinalValue[0], fFinalValue[1], 0, 2);
-}
-
-void AGO3_Chain::Init(MTH3D_tdstVector_* p_stStartingPosition, MTH3D_tdstVector_* p_stEndingPosition, GLI_tdstMaterial_* pMat1, float fLinkType)
-{
-    float fSize;
-    float fInvSize;
-    /* TODO: decompile from asm/... */
-}
-
-void AGO3_Chain::Display(GLD_tdstViewportAttributes_* hVp)
-{
-    GLI_g_UseAlphaTest = 1;
-    GLI_vSetGlobalAlpha(255.0f);
-    GLI_vDrawWorldOrthoPlanarSprite((MTH3D_tdstVector_*)&m_stPos, m_pMat1, m_fMainSize, m_fSize, hVp, 0, &m_stVector, &m_stDirection);
-    if (m_fLinkType != 0.0f)
-    {
-        GLI_vDrawWorldOrthoPlanarSprite((MTH3D_tdstVector_*)&m_Position, m_pMat1, m_fMainSize, m_fIntermediateSize, hVp, 0, &m_stIntermediateVector, &m_stIntermediateDirection);
-    }
-    GLI_g_UseAlphaTest = 0;
-}
-
-AGO3_HurricaneUpper::AGO3_HurricaneUpper(void)
-{
-    AGO3_HU_SpriteData* pSpriteData;
-    unsigned int i;
-    /* TODO: decompile from asm/... */
-}
-
-void AGO3_HurricaneUpper::Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fParameter)
-{
-    float fPositionZ;
-    float fLength;
-    MTH3D_tdstVector_ stVerticalDir;
-    unsigned int ulLayer;
-    float fDirAngle;
-    float fBend;
-    AGO3_HU_SpriteData* pSpriteData;
-    float fCos;
-    float fSin;
-
-    m_Finished = 0; AGO3_Part::m_Position.Vector[0] = pPosition->xX; AGO3_Part::m_Position.Vector[1] = pPosition->xY; AGO3_Part::m_Position.Vector[2] = pPosition->xZ; AGO3_Part::m_Position.Vector[3] = 1.0f; m_pMat1 = pMat1; m_fCreationTime = g_ffFrameTime;
-    m_Position.xX = pPosition->xX;
-    m_Position.xY = pPosition->xY;
-    m_Position.xZ = pPosition->xZ - 1.5f;
-    if (!m_bIsActive)
-    {
-        pDirection->xZ = 0;
-        fLength = pDirection->xX * pDirection->xX + pDirection->xY * pDirection->xY;
-        if (fLength)
-        {
-            fLength = 1.0f / AGO3_SQRT(fLength);
-            pDirection->xX *= fLength;
-            pDirection->xY *= fLength;
-            fDirAngle = acosf(pDirection->xX);
-            if (pDirection->xY < 0.0f)
-            {
-                if (pDirection->xX < 0.0f)
-                    fDirAngle = 6.2831855f - fDirAngle;
-                else
-                    fDirAngle = -fDirAngle;
-            }
-            fDirAngle += 2.3561945f;
-            fCos = cosf(fDirAngle);
-            fSin = sinf(fDirAngle);
-        }
-        else
-        {
-            fCos = fSin = 0.70710677f;
-        }
-        fPositionZ = m_Position.xZ;
-        stVerticalDir.xZ = 1.0f;
-        fBend = 0.34202015f;
-        pSpriteData = m_a_stSprite;
-        for (ulLayer = 0; ulLayer < 25; ulLayer++)
-        {
-            stVerticalDir.xX = fCos * fBend;
-            stVerticalDir.xY = fSin * fBend;
-            fLength = 1.0f / AGO3_SQRT(stVerticalDir.xX * stVerticalDir.xX + stVerticalDir.xY * stVerticalDir.xY + stVerticalDir.xZ * stVerticalDir.xZ);
-            stVerticalDir.xX *= fLength;
-            stVerticalDir.xY *= fLength;
-            stVerticalDir.xZ *= fLength;
-            pSpriteData->fPositionZ = fPositionZ;
-            AGO_Define_OrthogonalVectors(&stVerticalDir, &m_a_stInitialPosition[ulLayer], &m_a_stAdditionnalVector[ulLayer]);
-            pSpriteData->pstInitialPosition = &m_a_stInitialPosition[ulLayer];
-            pSpriteData->pstAdditionnalVector = &m_a_stAdditionnalVector[ulLayer];
-            fPositionZ += 0.12f;
-            fBend += 0.0065824934f;
-            pSpriteData++;
-        }
-        m_bIsActive = 1;
-    }
-    m_fMainRotation += 6.2831855f * (5.0f * g_fTimeDifference);
-    m_bAlive = 1;
-    m_fTime = 0;
-}
-
-void AGO3_HurricaneUpper::Process(void)
-{
-    unsigned int ulSprite;
-    unsigned int ulSprite2;
-    AGO3_HU_SpriteData* pSpriteData;
-    float fPositionZ;
-    float fMultiplier;
-    float fMultiplier2;
-    float fOneMinusMultiplier;
-    unsigned int ulDying;
-    float fPercentageUntilDeath;
-    float fPercentageUntilTop;
-    float* pTime;
-    float* pEndTime;
-    MTH3D_tdstVector_* pInitialPos;
-    MTH3D_tdstVector_* pAdditionalVect;
-
-    fMultiplier2 = 1.0f;
-    pTime = &m_fTime;
-    if (m_bIsActive)
-    {
-        ulDying = (m_bAlive != 0) ^ 1;
-        *pTime += g_fTimeDifference;
-        fPercentageUntilTop = *pTime / 0.025f;
-        fMultiplier = fPercentageUntilTop;
-        if (fMultiplier > fMultiplier2)
-            fMultiplier = fMultiplier2;
-        fOneMinusMultiplier = 1.0f - fMultiplier;
-        pSpriteData = &m_a_stSprite[m_ulFirstSprite];
-        ulSprite2 = m_ulFirstSprite;
-        if (ulDying)
-        {
-            pEndTime = &m_fEndTime;
-            if (m_fEndTime == 0.0f)
-            {
-                *pEndTime = 0.6f;
-            }
-            else if (m_fEndTime <= 0.0f)
-            {
-                m_bIsActive = 0;
-                *pEndTime = 0.0f;
-                m_fMainRotation = 0.0f;
-            }
-            else
-            {
-                *pEndTime = m_fEndTime - g_fTimeDifference;
-            }
-            fMultiplier2 = *pEndTime / 0.6f;
-            if (fMultiplier2 > 1.0f)
-                fMultiplier2 = 1.0f;
-        }
-        m_fMainRotation += 6.2831855f * (5.0f * g_fTimeDifference);
-        fPositionZ = m_Position.xZ;
-        fPercentageUntilDeath = 1.0f;
-        for (ulSprite = 0; ulSprite < 25; ulSprite++)
-        {
-            if (pSpriteData->fTransparency != 0.0f)
-            {
-                pSpriteData->fSize = m_fMainSize * ((float)AGO3_C_HUShape[ulSprite] * fOneMinusMultiplier + (float)AGO3_C_HUShape[ulSprite + 1] * fMultiplier);
-                pSpriteData->fTransparency = ulSprite == 0 ? 255.0f * fMultiplier : ulSprite == 24 ? 255.0f * fOneMinusMultiplier : 255.0f;
-                if (ulDying && !(fPercentageUntilDeath < fMultiplier2))
-                {
-                    pSpriteData->fTransparency = 255.0f * (fMultiplier2 - fPercentageUntilDeath);
-                    if (pSpriteData->fTransparency <= 0.0f)
-                        pSpriteData->fTransparency = 0.0f;
-                }
-                if (pSpriteData->fTransparency > 255.0f)
-                    pSpriteData->fTransparency = 255.0f;
-                pSpriteData->fPositionZ = fPositionZ;
-            }
-            fPositionZ += 0.12f;
-            ulSprite2 = ulSprite2 == 24 ? 0 : ulSprite2 + 1;
-            ulSprite2 = ulSprite2 == 25 ? 0 : ulSprite2;
-            pSpriteData = &m_a_stSprite[ulSprite2];
-            fPercentageUntilDeath -= 1.0f / 24.0f;
-        }
-        if (!ulDying && !(*pTime < 0.025f))
-        {
-            *pTime -= 0.025f;
-            fMultiplier = fPercentageUntilTop - 1.0f;
-            fOneMinusMultiplier = 1.0f - fMultiplier;
-            ulSprite2 = (m_ulFirstSprite + 24) & 24;
-            m_ulFirstSprite = ulSprite2;
-            pSpriteData = &m_a_stSprite[ulSprite2];
-            pSpriteData->fSize = m_fMainSize * ((float)AGO3_C_HUShape[0] * fOneMinusMultiplier + (float)AGO3_C_HUShape[1] * fMultiplier);
-            pSpriteData->fTransparency = 255.0f * fMultiplier;
-            pSpriteData->fPositionZ = m_Position.xZ + 0.12f * fMultiplier;
-            pInitialPos = m_a_stInitialPosition;
-            pAdditionalVect = m_a_stAdditionnalVector;
-            for (ulSprite = 0; ulSprite < 25; ulSprite++)
-            {
-                pSpriteData->pstInitialPosition = pInitialPos++;
-                pSpriteData->pstAdditionnalVector = pAdditionalVect++;
-                ulSprite2 = ulSprite2 == 24 ? 0 : ulSprite2 + 1;
-                ulSprite2 = ulSprite2 == 25 ? 0 : ulSprite2;
-                pSpriteData = &m_a_stSprite[ulSprite2];
-            }
-        }
-        if (AGO_G_CurrentVU1Frame == 2)
-            m_bAlive = 0;
-    }
-    if (!m_bIsActive)
-        m_bIsActive = 0;
-}
-
-void AGO3_HurricaneUpper::Display(GLD_tdstViewportAttributes_* hVp)
-{
-    AGO3_HU_SpriteData* pSpriteData;
-    float fAngle;
-    unsigned int ulLayer;
-    MTH3D_tdstVector_ Position;
-    /* TODO: decompile from asm/... */
-}
-
-void AGO3_CanRipple::Init(MTH3D_tdstVector_* p_stStartingPosition, MTH3D_tdstVector_* p_stDirection, GLI_tdstMaterial_* pMat1, float fStartStop)
-{
-    unsigned int ulSprite;
-    AGO3_CR_SpriteData* pSpriteData;
-    /* TODO: decompile from asm/... */
-}
-
-void AGO3_CanRipple::Process(void)
-{
-    int bGenerateNewSprite;
-    unsigned int ulSpriteLimit;
-    unsigned int ulSprite2;
-    float fTransparency;
-    float fPosition;
-    float fMultiplier;
-    float fPercentage;
-    unsigned int ulSprite;
-    AGO3_CR_SpriteData* pSpriteData;
-    bGenerateNewSprite = 1;
-    m_fTime += g_fTimeDifference;
-    if (m_fTime < 0.5f)
-        bGenerateNewSprite = 0;
-    fPercentage = m_fTime / 0.5f;
-    if (!m_bRegeneration)
-    {
-        m_fTime2 += g_fTimeDifference;
-        ulSpriteLimit = m_fTime2 > 0.0f ? (unsigned int)(m_fTime2 / 0.5f) : 0;
-        if (ulSpriteLimit >= 3)
-            m_Finished = 1;
-    }
-    fMultiplier = 1.0f + 0.6666667f * fPercentage;
-    fTransparency = 340.0f - 85.0f * fPercentage;
-    fPosition = 0.33333334f * fPercentage;
-    ulSprite = m_ulFirstSprite;
-    pSpriteData = &m_a_stSprite[ulSprite];
-    for (ulSprite2 = 0; ulSprite2 < 4; ulSprite2++)
-    {
-        if (pSpriteData->ulType == 0)
-        {
-            if (bGenerateNewSprite)
-                pSpriteData->ulType = 1;
-            else
-                pSpriteData->fTransparency = 255.0f * fPercentage;
-        }
-        if (pSpriteData->ulType == 1)
-            pSpriteData->fTransparency = fTransparency;
-        pSpriteData->fSize = m_fMainSize * fMultiplier;
-        pSpriteData->fPosition = fPosition;
-        fMultiplier += 0.6666667f;
-        fTransparency -= 85.0f;
-        fPosition += 0.33333334f;
-        ulSprite++;
-        ulSprite &= 3;
-        pSpriteData = &m_a_stSprite[ulSprite];
-    }
-    if (bGenerateNewSprite)
-    {
-        m_fTime -= 0.5f;
-        m_ulFirstSprite = (m_ulFirstSprite + 3) & 3;
-        pSpriteData = &m_a_stSprite[m_ulFirstSprite];
-        if (m_bRegeneration)
-        {
-            fPercentage = m_fTime / 0.5f;
-            pSpriteData->fSize = m_fMainSize * (1.0f + 0.6666667f * fPercentage);
-            pSpriteData->fTransparency = 255.0f * fPercentage;
-            pSpriteData->fPosition = 0.33333334f * fPercentage + m_Position.Vector[m_ulDirection];
-            pSpriteData->ulType = 0;
-        }
-        else
-        {
-            pSpriteData->fTransparency = 0.0f;
-            pSpriteData->ulType = 2;
-        }
-    }
-}
-
-void AGO3_CanRipple::Display(GLD_tdstViewportAttributes_* hVp)
-{
-    float fFirstPosition;
-    float fWay;
-    unsigned int ulNumRipples;
-    unsigned int ulSprite2;
-    MTH3D_tdstVector_ stposition;
-    unsigned int ulSprite;
-    AGO3_CR_SpriteData* pSpriteData;
-    /* TODO: decompile from asm/... */
-}
-
-void AGO3_SwirlingBubbles::Process(void)
-{
-    float fDelay;
-    float fBackwardMultiplier;
-    unsigned int ulNbBubbles;
-    unsigned int ulBubble2;
-    MTH3D_tdstVector_* pV1;
-    float fV1Y;
-    float fV1Z;
-    float fV1X;
-    float fDX;
-    float fDY;
-    float fDZ;
-    float fOffY;
-    float fOffX;
-    float fNegX;
-    float fOffZ;
-    float fNegY;
-    float fNegZ;
-    float fSin;
-    float fCos;
-    float fNorm1;
-    unsigned int ulNbNewBubbles;
-    float fInvNbRaws;
-    float fAngle;
-    unsigned int ulNbRaws;
-    AGO3_SB_SpriteData* pSpriteData;
-    MTH3D_tdstVector_ stPosition;
-    unsigned int ulBubble;
-
-    pV1 = &stPosition;
-    if (m_bAlive)
-    {
-        fAngle = 25.132742f * g_fTimeDifference;
-        fDX = fDY = fDZ = 0.0f;
-        if (m_bGenerationInProgress)
-        {
-            ulNbRaws = 2 * (int)(0.5f + g_fTimeDifference / g_stEngineStructure.stEngineTimer.xFrameLength);
-            fInvNbRaws = 1.0f / (float)ulNbRaws;
-            fAngle *= fInvNbRaws;
-            fDX = fInvNbRaws * (m_Position.Vector[0] - m_stLastPos.xX);
-            fDY = fInvNbRaws * (m_Position.Vector[1] - m_stLastPos.xY);
-            fDZ = fInvNbRaws * (m_Position.Vector[2] - m_stLastPos.xZ);
-            stPosition.xX = m_stLastPos.xX + fDX;
-            stPosition.xY = m_stLastPos.xY + fDY;
-            stPosition.xZ = m_stLastPos.xZ + fDZ;
-        }
-        else
-        {
-            ulNbRaws = 1;
-            stPosition.xX = m_Position.Vector[0];
-            stPosition.xY = m_Position.Vector[1];
-            stPosition.xZ = m_Position.Vector[2];
-        }
-        ulNbNewBubbles = ulNbRaws * 4;
-        if (m_ulNbBubbles + ulNbNewBubbles >= 0x200)
-        {
-            m_ulFirstSet = (m_ulFirstSet + ulNbNewBubbles) & 0x1ff;
-            m_ulNbBubbles -= ulNbNewBubbles;
-        }
-        while (ulNbRaws--)
-        {
-            m_fAngle += fAngle;
-            if (m_fAngle >= 6.2831855f)
-                fCos = 6.2831855f;
-            else
-                fCos = 0.0f;
-            m_fAngle -= fCos;
-            fV1X = -m_stDirection.xY;
-            fV1Y = m_stDirection.xX;
-            fV1Z = 0.0f;
-            fNorm1 = 1.0f / AGO3_SQRT(fV1Z + (fV1X * fV1X + fV1Y * fV1Y));
-            fV1X *= fNorm1;
-            fV1Y *= fNorm1;
-            fV1Z *= fNorm1;
-            fSin = ((float*)p_fCosTable)[(int)(81.48733f * m_fAngle) & 0x1ff];
-            fCos = ((float*)p_fCosTable)[((int)(81.48733f * m_fAngle) + 0x80) & 0x1ff];
-            fOffX = 0.9f * (fCos * (m_stDirection.xY * fV1Z - m_stDirection.xZ * fV1Y) + fSin * fV1X);
-            fOffY = 0.9f * (fCos * (m_stDirection.xZ * fV1X - m_stDirection.xX * fV1Z) + fSin * fV1Y);
-            fOffZ = 0.9f * (fCos * (m_stDirection.xX * fV1Y - m_stDirection.xY * fV1X) + fSin * fV1Z);
-            fNegX = -fOffX;
-            fNegY = -fOffY;
-            fNegZ = -fOffZ;
-            for (ulBubble = 0; ulBubble < 1; ulBubble++)
-            {
-                pSpriteData = &m_stSprite[m_ulFirstFree];
-                pSpriteData->stPosition.xX = stPosition.xX + fOffX;
-                pSpriteData->stPosition.xY = stPosition.xY + fOffY;
-                pSpriteData->stPosition.xZ = stPosition.xZ + fOffZ;
-                pSpriteData->stDirection.xX = -m_stDirection.xX;
-                pSpriteData->stDirection.xY = -m_stDirection.xY;
-                pSpriteData->stDirection.xZ = -m_stDirection.xZ;
-                pSpriteData->fSize = 0.04f * AGO3_M_xRand(0.5f, 2.0f);
-                pSpriteData->fDelay = 1.0f;
-                pSpriteData->fTimeBeforeDeath = 10.0f;
-                m_ulFirstFree = (m_ulFirstFree + 1) & 0x1ff;
-                m_ulNbBubbles++;
-            }
-            for (ulBubble = 0; ulBubble < 1; ulBubble++)
-            {
-                pSpriteData = &m_stSprite[m_ulFirstFree];
-                pSpriteData->stPosition.xX = stPosition.xX + fNegX;
-                pSpriteData->stPosition.xY = stPosition.xY + fNegY;
-                pSpriteData->stPosition.xZ = stPosition.xZ + fNegZ;
-                pSpriteData->stDirection.xX = -m_stDirection.xX;
-                pSpriteData->stDirection.xY = -m_stDirection.xY;
-                pSpriteData->stDirection.xZ = -m_stDirection.xZ;
-                pSpriteData->fSize = 0.04f * AGO3_M_xRand(0.5f, 2.0f);
-                pSpriteData->fDelay = 1.0f;
-                pSpriteData->fTimeBeforeDeath = 10.0f;
-                m_ulFirstFree = (m_ulFirstFree + 1) & 0x1ff;
-                m_ulNbBubbles++;
-            }
-            if (m_bGenerationInProgress & ulNbRaws)
-            {
-                stPosition.xX += fDX;
-                stPosition.xY += fDY;
-                stPosition.xZ += fDZ;
-            }
-        }
-    }
-    m_bGenerationInProgress = m_bAlive;
-    ulNbBubbles = m_ulNbBubbles;
-    if (ulNbBubbles == 0)
-    {
-        if (AGO_G_CurrentVU1Frame == 2)
-            m_Finished = 1;
-    }
-    else
-    {
-        ulBubble = m_ulFirstSet;
-        pSpriteData = &m_stSprite[ulBubble];
-        for (ulBubble2 = 0; ulBubble2 < ulNbBubbles; ulBubble2++)
-        {
-            pSpriteData->fTimeBeforeDeath -= g_fTimeDifference;
-            if (pSpriteData->fTimeBeforeDeath <= 0.0f)
-            {
-                m_ulFirstSet = (m_ulFirstSet + 1) & 0x200;
-                ulBubble = (ulBubble + 1) & 0x1ff;
-                pSpriteData = &m_stSprite[ulBubble];
-                m_ulNbBubbles--;
-            }
-            else
-            {
-                pSpriteData->fDelay -= g_fTimeDifference;
-                fDelay = pSpriteData->fDelay;
-                if (fDelay < 0.0f)
-                    fDelay = 0.0f;
-                fBackwardMultiplier = fDelay * g_fTimeDifference;
-                pSpriteData->stPosition.xX += AGO3_M_xRand(-0.02f, 0.02f) + pSpriteData->stDirection.xX * fBackwardMultiplier;
-                pSpriteData->stPosition.xY += AGO3_M_xRand(-0.02f, 0.02f) + pSpriteData->stDirection.xY * fBackwardMultiplier;
-                pSpriteData->stPosition.xZ += pSpriteData->stDirection.xZ * fBackwardMultiplier + (1.0f - fDelay) * g_fTimeDifference + 0.1f * pSpriteData->fSize;
-                ulBubble = (ulBubble + 1) & 0x1ff;
-                pSpriteData = &m_stSprite[ulBubble];
-            }
-        }
-    }
-    if (AGO_G_CurrentVU1Frame == 2)
-        m_bAlive = 0;
-}
-
-void AGO3_SwirlingBubbles::Display(GLD_tdstViewportAttributes_* hVp)
-{
-    unsigned int ulBubble;
-    unsigned int ulBubble2;
-    AGO3_SB_SpriteData* pSpriteData;
-
-    ulBubble2 = m_ulFirstSet;
-    ulBubble = 0;
-    pSpriteData = &m_stSprite[ulBubble2];
-    while (ulBubble < m_ulNbBubbles)
-    {
-        GLI_vDrawWorldSpriteOpt((MTH3D_tdstVector_*)&pSpriteData->stPosition, m_pMat1, pSpriteData->fSize, pSpriteData->fSize, hVp, 1);
-        ulBubble2 = (ulBubble2 + 1) & 511;
-        ulBubble++;
-        pSpriteData = &m_stSprite[ulBubble2];
-    }
-}
-
-AGO3_SphericalRadiance::AGO3_SphericalRadiance(void)
-{
-    float fAcceleration;
-    /* TODO: decompile from asm/... */
-}
-
 void AGO3_SphericalRadiance::Process(void)
 {
     unsigned int ulIterator;
@@ -8896,6 +6641,19 @@ void AGO3_SphericalRadiance::Process(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 4218–4238 */
+/* addr: 0x001f3160  size: 180 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4218
+ *   +0x0020 -> line 4223
+ *   +0x002c -> line 4225
+ *   +0x003c -> line 4227
+ *   +0x007c -> line 4236
+ *   +0x0080 -> line 4237
+ *   +0x0098 -> line 4238
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_SphericalRadiance::Display(GLD_tdstViewportAttributes_* hVp)
 {
     AGO3_SR_SpriteData* pstSprite;
@@ -8910,6 +6668,166 @@ void AGO3_SphericalRadiance::Display(GLD_tdstViewportAttributes_* hVp)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 4412–4521 */
+/* addr: 0x001f2b70  size: 1516 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4412
+ *   +0x0004 -> line 4420
+ *   +0x0008 -> line 4412
+ *   +0x0024 -> line 4420
+ *   +0x0050 -> line 4422
+ *   +0x005c -> line 4423
+ *   +0x0064 -> line 4425
+ *   +0x0068 -> line 4434
+ *   +0x006c -> line 4430
+ *   +0x0070 -> line 4434
+ *   +0x0078 -> line 4425
+ *   +0x007c -> line 4426
+ *   +0x0084 -> line 4427
+ *   +0x008c -> line 4429
+ *   +0x0090 -> line 4430
+ *   +0x0094 -> line 4434
+ *   +0x00fc -> line 4435
+ *   +0x0104 -> line 4434
+ *   +0x0108 -> line 4435
+ *   +0x0110 -> line 4437
+ *   +0x0114 -> line 4435
+ *   +0x0128 -> line 4436
+ *   +0x012c -> line 4458
+ *   +0x0130 -> line 4440
+ *   +0x0134 -> line 4458
+ *   +0x0138 -> line 4444
+ *   +0x013c -> line 4440
+ *   +0x0140 -> line 4444
+ *   +0x0148 -> line 4468
+ *   +0x014c -> line 4440
+ *   +0x0150 -> line 4446
+ *   +0x015c -> line 4456
+ *   +0x0160 -> line 4475
+ *   +0x016c -> line 4441
+ *   +0x0178 -> line 4440
+ *   +0x017c -> line 4442
+ *   +0x01bc -> line 4443
+ *   +0x01f4 -> line 4444
+ *   +0x01f8 -> line 4446
+ *   +0x01fc -> line 4443
+ *   +0x0200 -> line 4446
+ *   +0x020c -> line 4445
+ *   +0x0210 -> line 4446
+ *   +0x0214 -> line 4447
+ *   +0x0218 -> line 4446
+ *   +0x021c -> line 4447
+ *   +0x0220 -> line 4446
+ *   +0x0224 -> line 4447
+ *   +0x0228 -> line 4448
+ *   +0x022c -> line 4447
+ *   +0x0234 -> line 4448
+ *   +0x023c -> line 4446
+ *   +0x0240 -> line 4451
+ *   +0x0244 -> line 4448
+ *   +0x024c -> line 4449
+ *   +0x0250 -> line 4448
+ *   +0x0254 -> line 4449
+ *   +0x0258 -> line 4448
+ *   +0x025c -> line 4449
+ *   +0x0268 -> line 4450
+ *   +0x0274 -> line 4451
+ *   +0x027c -> line 4450
+ *   +0x0280 -> line 4451
+ *   +0x0288 -> line 4452
+ *   +0x0294 -> line 4453
+ *   +0x02b0 -> line 4456
+ *   +0x02c0 -> line 4458
+ *   +0x02d0 -> line 4459
+ *   +0x02d8 -> line 4460
+ *   +0x02e4 -> line 4461
+ *   +0x02f0 -> line 4462
+ *   +0x0300 -> line 4463
+ *   +0x0310 -> line 4464
+ *   +0x0320 -> line 4476
+ *   +0x0324 -> line 4467
+ *   +0x0328 -> line 4476
+ *   +0x032c -> line 4474
+ *   +0x0330 -> line 4467
+ *   +0x0334 -> line 4468
+ *   +0x0338 -> line 4469
+ *   +0x033c -> line 4470
+ *   +0x0340 -> line 4475
+ *   +0x0344 -> line 4470
+ *   +0x0348 -> line 4471
+ *   +0x0350 -> line 4472
+ *   +0x0358 -> line 4476
+ *   +0x0360 -> line 4480
+ *   +0x0374 -> line 4481
+ *   +0x0378 -> line 4480
+ *   +0x0384 -> line 4502
+ *   +0x0394 -> line 4488
+ *   +0x03a0 -> line 4500
+ *   +0x03a4 -> line 4490
+ *   +0x03ac -> line 4511
+ *   +0x03b0 -> line 4490
+ *   +0x03b4 -> line 4511
+ *   +0x03b8 -> line 4484
+ *   +0x03c4 -> line 4485
+ *   +0x03d0 -> line 4484
+ *   +0x03d4 -> line 4486
+ *   +0x0414 -> line 4487
+ *   +0x044c -> line 4488
+ *   +0x0450 -> line 4490
+ *   +0x0454 -> line 4487
+ *   +0x0458 -> line 4490
+ *   +0x0464 -> line 4489
+ *   +0x0468 -> line 4490
+ *   +0x046c -> line 4491
+ *   +0x0470 -> line 4490
+ *   +0x0474 -> line 4491
+ *   +0x0478 -> line 4490
+ *   +0x047c -> line 4491
+ *   +0x0480 -> line 4492
+ *   +0x0484 -> line 4491
+ *   +0x048c -> line 4492
+ *   +0x0494 -> line 4490
+ *   +0x0498 -> line 4495
+ *   +0x049c -> line 4492
+ *   +0x04a4 -> line 4493
+ *   +0x04a8 -> line 4492
+ *   +0x04ac -> line 4493
+ *   +0x04b0 -> line 4492
+ *   +0x04b4 -> line 4493
+ *   +0x04c0 -> line 4494
+ *   +0x04cc -> line 4495
+ *   +0x04d4 -> line 4494
+ *   +0x04d8 -> line 4495
+ *   +0x04e0 -> line 4496
+ *   +0x04ec -> line 4497
+ *   +0x0508 -> line 4500
+ *   +0x0518 -> line 4502
+ *   +0x052c -> line 4503
+ *   +0x0534 -> line 4504
+ *   +0x0540 -> line 4505
+ *   +0x054c -> line 4506
+ *   +0x055c -> line 4507
+ *   +0x056c -> line 4508
+ *   +0x057c -> line 4509
+ *   +0x0580 -> line 4519
+ *   +0x0584 -> line 4511
+ *   +0x0588 -> line 4520
+ *   +0x058c -> line 4519
+ *   +0x0590 -> line 4520
+ *   +0x0594 -> line 4518
+ *   +0x0598 -> line 4519
+ *   +0x059c -> line 4511
+ *   +0x05a4 -> line 4512
+ *   +0x05a8 -> line 4513
+ *   +0x05ac -> line 4514
+ *   +0x05b4 -> line 4515
+ *   +0x05bc -> line 4516
+ *   +0x05c4 -> line 4519
+ *   +0x05c8 -> line 4520
+ *   +0x05d0 -> line 4521
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_LightExplosion::Init(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, GLI_tdstMaterial_* pMat1, float fSize)
 {
     float fNorm;
@@ -9006,6 +6924,151 @@ void AGO3_LightExplosion::Init(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 4531–4647 */
+/* addr: 0x001f22e0  size: 2192 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4531
+ *   +0x000c -> line 4533
+ *   +0x0010 -> line 4535
+ *   +0x0018 -> line 4536
+ *   +0x0028 -> line 4538
+ *   +0x0048 -> line 4540
+ *   +0x004c -> line 4544
+ *   +0x0054 -> line 4559
+ *   +0x0058 -> line 4547
+ *   +0x005c -> line 4559
+ *   +0x0068 -> line 4547
+ *   +0x0074 -> line 4559
+ *   +0x00b8 -> line 4563
+ *   +0x01a4 -> line 4565
+ *   +0x01a8 -> line 4563
+ *   +0x01c0 -> line 4564
+ *   +0x01c4 -> line 4563
+ *   +0x01d0 -> line 4564
+ *   +0x01d4 -> line 4573
+ *   +0x01ec -> line 4577
+ *   +0x01f0 -> line 4573
+ *   +0x01f4 -> line 4577
+ *   +0x01f8 -> line 4568
+ *   +0x01fc -> line 4579
+ *   +0x0200 -> line 4568
+ *   +0x0204 -> line 4579
+ *   +0x0208 -> line 4568
+ *   +0x0214 -> line 4569
+ *   +0x0228 -> line 4570
+ *   +0x023c -> line 4571
+ *   +0x0240 -> line 4573
+ *   +0x024c -> line 4575
+ *   +0x0260 -> line 4577
+ *   +0x0264 -> line 4579
+ *   +0x026c -> line 4583
+ *   +0x0278 -> line 4582
+ *   +0x027c -> line 4583
+ *   +0x036c -> line 4584
+ *   +0x0370 -> line 4583
+ *   +0x0394 -> line 4592
+ *   +0x0398 -> line 4596
+ *   +0x039c -> line 4592
+ *   +0x03a0 -> line 4596
+ *   +0x03a4 -> line 4587
+ *   +0x03a8 -> line 4598
+ *   +0x03ac -> line 4587
+ *   +0x03b0 -> line 4598
+ *   +0x03b4 -> line 4587
+ *   +0x03c0 -> line 4588
+ *   +0x03d4 -> line 4589
+ *   +0x03e8 -> line 4590
+ *   +0x03ec -> line 4592
+ *   +0x03fc -> line 4594
+ *   +0x0410 -> line 4596
+ *   +0x0414 -> line 4598
+ *   +0x041c -> line 4608
+ *   +0x0440 -> line 4609
+ *   +0x044c -> line 4611
+ *   +0x0468 -> line 4612
+ *   +0x0498 -> line 4614
+ *   +0x04a0 -> line 4623
+ *   +0x04c0 -> line 4626
+ *   +0x04c4 -> line 4624
+ *   +0x04c8 -> line 4629
+ *   +0x04cc -> line 4626
+ *   +0x04d0 -> line 4630
+ *   +0x04d4 -> line 4624
+ *   +0x04d8 -> line 4627
+ *   +0x04e4 -> line 4626
+ *   +0x04f4 -> line 4627
+ *   +0x04f8 -> line 4626
+ *   +0x04fc -> line 4627
+ *   +0x0510 -> line 4635
+ *   +0x0518 -> line 4633
+ *   +0x051c -> line 4637
+ *   +0x0520 -> line 4633
+ *   +0x0524 -> line 4637
+ *   +0x0528 -> line 4633
+ *   +0x0534 -> line 4634
+ *   +0x0548 -> line 4635
+ *   +0x056c -> line 4636
+ *   +0x0578 -> line 4633
+ *   +0x0580 -> line 4636
+ *   +0x058c -> line 4634
+ *   +0x0594 -> line 4636
+ *   +0x05a4 -> line 4635
+ *   +0x05b8 -> line 4636
+ *   +0x05c8 -> line 4633
+ *   +0x05d0 -> line 4636
+ *   +0x05dc -> line 4634
+ *   +0x05e4 -> line 4636
+ *   +0x05f4 -> line 4635
+ *   +0x0608 -> line 4636
+ *   +0x0618 -> line 4633
+ *   +0x0620 -> line 4636
+ *   +0x062c -> line 4634
+ *   +0x0634 -> line 4636
+ *   +0x0644 -> line 4635
+ *   +0x0658 -> line 4636
+ *   +0x0668 -> line 4633
+ *   +0x0670 -> line 4636
+ *   +0x067c -> line 4634
+ *   +0x0684 -> line 4636
+ *   +0x0694 -> line 4635
+ *   +0x06a8 -> line 4636
+ *   +0x06b8 -> line 4633
+ *   +0x06c0 -> line 4636
+ *   +0x06cc -> line 4634
+ *   +0x06d4 -> line 4636
+ *   +0x06e4 -> line 4635
+ *   +0x06f8 -> line 4636
+ *   +0x0708 -> line 4633
+ *   +0x0710 -> line 4636
+ *   +0x071c -> line 4634
+ *   +0x0724 -> line 4636
+ *   +0x0734 -> line 4635
+ *   +0x0748 -> line 4636
+ *   +0x0758 -> line 4633
+ *   +0x0760 -> line 4636
+ *   +0x076c -> line 4634
+ *   +0x0774 -> line 4636
+ *   +0x0784 -> line 4635
+ *   +0x0798 -> line 4636
+ *   +0x07a0 -> line 4637
+ *   +0x07b4 -> line 4635
+ *   +0x07b8 -> line 4637
+ *   +0x07bc -> line 4638
+ *   +0x07c0 -> line 4637
+ *   +0x07c4 -> line 4638
+ *   +0x07c8 -> line 4633
+ *   +0x07d0 -> line 4637
+ *   +0x07dc -> line 4634
+ *   +0x07e4 -> line 4637
+ *   +0x07f4 -> line 4635
+ *   +0x0808 -> line 4637
+ *   +0x0810 -> line 4638
+ *   +0x0818 -> line 4645
+ *   +0x0870 -> line 4646
+ *   +0x0888 -> line 4647
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_LightExplosion::Process(void)
 {
     float fParticlePercentage;
@@ -9020,6 +7083,36 @@ void AGO3_LightExplosion::Process(void)
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 4651–4682 */
+/* addr: 0x001f2190  size: 336 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4651
+ *   +0x0004 -> line 4658
+ *   +0x0008 -> line 4651
+ *   +0x000c -> line 4658
+ *   +0x0010 -> line 4651
+ *   +0x0030 -> line 4660
+ *   +0x0034 -> line 4658
+ *   +0x0038 -> line 4659
+ *   +0x003c -> line 4658
+ *   +0x0044 -> line 4662
+ *   +0x0060 -> line 4664
+ *   +0x0068 -> line 4665
+ *   +0x0098 -> line 4668
+ *   +0x00a8 -> line 4671
+ *   +0x00ac -> line 4672
+ *   +0x00b4 -> line 4674
+ *   +0x00d0 -> line 4676
+ *   +0x00e0 -> line 4677
+ *   +0x00e8 -> line 4678
+ *   +0x0114 -> line 4679
+ *   +0x0118 -> line 4681
+ *   +0x0120 -> line 4680
+ *   +0x0124 -> line 4681
+ *   +0x012c -> line 4682
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_LightExplosion::Display(GLD_tdstViewportAttributes_* hVp)
 {
     float* pfUV;
@@ -9049,6 +7142,28 @@ void AGO3_LightExplosion::Display(GLD_tdstViewportAttributes_* hVp)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 4753–4775 */
+/* addr: 0x001f20b0  size: 224 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4753
+ *   +0x0044 -> line 4755
+ *   +0x0050 -> line 4763
+ *   +0x0054 -> line 4767
+ *   +0x005c -> line 4755
+ *   +0x0080 -> line 4757
+ *   +0x0088 -> line 4758
+ *   +0x0090 -> line 4759
+ *   +0x0098 -> line 4761
+ *   +0x009c -> line 4762
+ *   +0x00a0 -> line 4763
+ *   +0x00a4 -> line 4765
+ *   +0x00a8 -> line 4769
+ *   +0x00c0 -> line 4772
+ *   +0x00c8 -> line 4774
+ *   +0x00d8 -> line 4775
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_ScoreDisplay::Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fScore)
 {
     unsigned int dwScoreID;
@@ -9073,6 +7188,21 @@ void AGO3_ScoreDisplay::Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pD
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 4780–4787 */
+/* addr: 0x001f2050  size: 96 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4780
+ *   +0x0018 -> line 4783
+ *   +0x001c -> line 4784
+ *   +0x0020 -> line 4783
+ *   +0x0024 -> line 4784
+ *   +0x002c -> line 4783
+ *   +0x0034 -> line 4784
+ *   +0x004c -> line 4786
+ *   +0x0058 -> line 4787
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_ScoreDisplay::Process(void)
 {
     if (m_fCurrentTime > m_fDisplayDuration)
@@ -9083,6 +7213,21 @@ void AGO3_ScoreDisplay::Process(void)
     m_fCurrentTime += g_fTimeDifference;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 4791–4815 */
+/* addr: 0x001f1f90  size: 192 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4791
+ *   +0x0008 -> line 4792
+ *   +0x000c -> line 4791
+ *   +0x0018 -> line 4792
+ *   +0x002c -> line 4795
+ *   +0x0034 -> line 4799
+ *   +0x009c -> line 4812
+ *   +0x00a4 -> line 4814
+ *   +0x00ac -> line 4815
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_ScoreDisplay::Display(GLD_tdstViewportAttributes_* hVp)
 {
     if (m_fTransparency > 0.0f)
@@ -9096,12 +7241,102 @@ void AGO3_ScoreDisplay::Display(GLD_tdstViewportAttributes_* hVp)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 4966–4972 */
+/* addr: 0x001f1f50  size: 64 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4966
+ *   +0x0010 -> line 4969
+ *   +0x0014 -> line 4970
+ *   +0x001c -> line 4971
+ *   +0x0030 -> line 4972
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_DisplayDigitalScore(GLD_tdstViewportAttributes_* hVp)
 {
     if (AGO3_DigitalScoreDisplay::m_a_hHandle[1])
         ((AGO3_DigitalScoreDisplay*)AGO2_MEM_GetPointerFromHandle(AGO3_DigitalScoreDisplay::m_a_hHandle[1]))->DisplayScore(hVp);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 5083–5126 */
+/* addr: 0x001f1c90  size: 704 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 5083
+ *   +0x0004 -> line 5089
+ *   +0x0008 -> line 5083
+ *   +0x000c -> line 5089
+ *   +0x0010 -> line 5083
+ *   +0x0014 -> line 5089
+ *   +0x0020 -> line 5091
+ *   +0x0050 -> line 5092
+ *   +0x0080 -> line 5093
+ *   +0x00b8 -> line 5095
+ *   +0x00bc -> line 5103
+ *   +0x00c0 -> line 5095
+ *   +0x00c4 -> line 5112
+ *   +0x00c8 -> line 5096
+ *   +0x00d4 -> line 5103
+ *   +0x00d8 -> line 5095
+ *   +0x00dc -> line 5105
+ *   +0x00e4 -> line 5096
+ *   +0x00f8 -> line 5098
+ *   +0x0100 -> line 5096
+ *   +0x0104 -> line 5098
+ *   +0x010c -> line 5096
+ *   +0x0110 -> line 5099
+ *   +0x0118 -> line 5098
+ *   +0x011c -> line 5097
+ *   +0x0120 -> line 5099
+ *   +0x0128 -> line 5098
+ *   +0x012c -> line 5100
+ *   +0x0134 -> line 5099
+ *   +0x013c -> line 5100
+ *   +0x0148 -> line 5098
+ *   +0x0150 -> line 5099
+ *   +0x0158 -> line 5100
+ *   +0x0164 -> line 5102
+ *   +0x0170 -> line 5103
+ *   +0x0174 -> line 5104
+ *   +0x017c -> line 5105
+ *   +0x0180 -> line 5104
+ *   +0x0188 -> line 5108
+ *   +0x0190 -> line 5103
+ *   +0x019c -> line 5105
+ *   +0x01a0 -> line 5109
+ *   +0x01a8 -> line 5105
+ *   +0x01b0 -> line 5109
+ *   +0x01b8 -> line 5116
+ *   +0x01dc -> line 5119
+ *   +0x01e0 -> line 5117
+ *   +0x01e4 -> line 5116
+ *   +0x01e8 -> line 5119
+ *   +0x01ec -> line 5116
+ *   +0x01f0 -> line 5117
+ *   +0x0200 -> line 5116
+ *   +0x0204 -> line 5117
+ *   +0x0218 -> line 5116
+ *   +0x021c -> line 5117
+ *   +0x0230 -> line 5116
+ *   +0x0234 -> line 5117
+ *   +0x0248 -> line 5116
+ *   +0x024c -> line 5117
+ *   +0x0258 -> line 5119
+ *   +0x0260 -> line 5122
+ *   +0x0268 -> line 5123
+ *   +0x0270 -> line 5122
+ *   +0x0274 -> line 5124
+ *   +0x027c -> line 5125
+ *   +0x0284 -> line 5124
+ *   +0x0288 -> line 5122
+ *   +0x0290 -> line 5124
+ *   +0x0298 -> line 5123
+ *   +0x02a0 -> line 5125
+ *   +0x02a4 -> line 5123
+ *   +0x02a8 -> line 5125
+ *   +0x02b0 -> line 5126
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_DigitalScoreDisplay::SetSizes(float fContainerWidthPercentage)
 {
     unsigned int dwScoreID;
@@ -9145,6 +7380,31 @@ void AGO3_DigitalScoreDisplay::SetSizes(float fContainerWidthPercentage)
     m_a_fDigitSizeOnScreen[3] = m_a_fDigitSizeOnContainer[3] * m_fYPixelToScreen;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 5143–5153 */
+/* addr: 0x001f1c00  size: 140 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 5143
+ *   +0x0008 -> line 5148
+ *   +0x000c -> line 5144
+ *   +0x0010 -> line 5149
+ *   +0x0014 -> line 5150
+ *   +0x0018 -> line 5151
+ *   +0x001c -> line 5152
+ *   +0x0020 -> line 5143
+ *   +0x002c -> line 5148
+ *   +0x0030 -> line 5144
+ *   +0x0034 -> line 5145
+ *   +0x0038 -> line 5146
+ *   +0x003c -> line 5147
+ *   +0x0040 -> line 5148
+ *   +0x0048 -> line 5149
+ *   +0x0058 -> line 5150
+ *   +0x0068 -> line 5151
+ *   +0x0078 -> line 5152
+ *   +0x0084 -> line 5153
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_DigitalScoreDisplay::DesInit(void)
 {
     m_a_hHandle[m_hHandleID] = 0;
@@ -9159,6 +7419,166 @@ void AGO3_DigitalScoreDisplay::DesInit(void)
     m_a_fScoreToAddPerSec[m_hHandleID] = 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 5157–5371 */
+/* addr: 0x001f0f30  size: 3276 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 5157
+ *   +0x0004 -> line 5162
+ *   +0x0008 -> line 5157
+ *   +0x0020 -> line 5162
+ *   +0x004c -> line 5165
+ *   +0x0058 -> line 5168
+ *   +0x0060 -> line 5169
+ *   +0x0068 -> line 5170
+ *   +0x0070 -> line 5173
+ *   +0x0078 -> line 5174
+ *   +0x0080 -> line 5173
+ *   +0x0084 -> line 5168
+ *   +0x008c -> line 5169
+ *   +0x0094 -> line 5170
+ *   +0x009c -> line 5174
+ *   +0x00a0 -> line 5177
+ *   +0x00ac -> line 5179
+ *   +0x00cc -> line 5181
+ *   +0x00d0 -> line 5179
+ *   +0x0234 -> line 5180
+ *   +0x0238 -> line 5181
+ *   +0x0248 -> line 5185
+ *   +0x0278 -> line 5186
+ *   +0x0280 -> line 5189
+ *   +0x029c -> line 5191
+ *   +0x02b0 -> line 5194
+ *   +0x02b8 -> line 5193
+ *   +0x02bc -> line 5194
+ *   +0x02c4 -> line 5198
+ *   +0x02e4 -> line 5201
+ *   +0x0464 -> line 5202
+ *   +0x046c -> line 5204
+ *   +0x0484 -> line 5206
+ *   +0x0494 -> line 5208
+ *   +0x04a4 -> line 5210
+ *   +0x04c4 -> line 5213
+ *   +0x04c8 -> line 5214
+ *   +0x04cc -> line 5212
+ *   +0x04d0 -> line 5213
+ *   +0x04d4 -> line 5215
+ *   +0x04d8 -> line 5214
+ *   +0x04e0 -> line 5217
+ *   +0x04e8 -> line 5218
+ *   +0x04ec -> line 5219
+ *   +0x04f0 -> line 5218
+ *   +0x04f4 -> line 5221
+ *   +0x04fc -> line 5223
+ *   +0x0508 -> line 5225
+ *   +0x0528 -> line 5228
+ *   +0x052c -> line 5229
+ *   +0x0530 -> line 5227
+ *   +0x0534 -> line 5228
+ *   +0x0538 -> line 5230
+ *   +0x053c -> line 5229
+ *   +0x0544 -> line 5232
+ *   +0x054c -> line 5235
+ *   +0x0554 -> line 5236
+ *   +0x055c -> line 5237
+ *   +0x0564 -> line 5238
+ *   +0x057c -> line 5240
+ *   +0x058c -> line 5242
+ *   +0x0598 -> line 5244
+ *   +0x05b8 -> line 5246
+ *   +0x05bc -> line 5248
+ *   +0x05c0 -> line 5247
+ *   +0x05c4 -> line 5249
+ *   +0x05c8 -> line 5248
+ *   +0x05d0 -> line 5251
+ *   +0x05d8 -> line 5252
+ *   +0x05dc -> line 5253
+ *   +0x05e4 -> line 5252
+ *   +0x05e8 -> line 5255
+ *   +0x05f0 -> line 5257
+ *   +0x05fc -> line 5259
+ *   +0x061c -> line 5263
+ *   +0x0620 -> line 5261
+ *   +0x0624 -> line 5263
+ *   +0x0628 -> line 5262
+ *   +0x062c -> line 5264
+ *   +0x0630 -> line 5263
+ *   +0x0638 -> line 5266
+ *   +0x0640 -> line 5269
+ *   +0x0648 -> line 5271
+ *   +0x0650 -> line 5272
+ *   +0x066c -> line 5274
+ *   +0x067c -> line 5275
+ *   +0x0684 -> line 5278
+ *   +0x06a4 -> line 5279
+ *   +0x06a8 -> line 5282
+ *   +0x06c8 -> line 5285
+ *   +0x0744 -> line 5286
+ *   +0x074c -> line 5287
+ *   +0x0764 -> line 5289
+ *   +0x0768 -> line 5292
+ *   +0x076c -> line 5289
+ *   +0x0770 -> line 5292
+ *   +0x0774 -> line 5293
+ *   +0x077c -> line 5289
+ *   +0x0790 -> line 5292
+ *   +0x07a8 -> line 5293
+ *   +0x07c8 -> line 5294
+ *   +0x07cc -> line 5295
+ *   +0x07d8 -> line 5297
+ *   +0x07e0 -> line 5295
+ *   +0x07f4 -> line 5297
+ *   +0x0818 -> line 5300
+ *   +0x0830 -> line 5302
+ *   +0x0870 -> line 5309
+ *   +0x0874 -> line 5311
+ *   +0x0878 -> line 5309
+ *   +0x087c -> line 5311
+ *   +0x0884 -> line 5316
+ *   +0x0888 -> line 5311
+ *   +0x088c -> line 5317
+ *   +0x0890 -> line 5311
+ *   +0x0898 -> line 5309
+ *   +0x089c -> line 5311
+ *   +0x08a4 -> line 5309
+ *   +0x08ac -> line 5311
+ *   +0x0940 -> line 5319
+ *   +0x097c -> line 5320
+ *   +0x09a8 -> line 5323
+ *   +0x09ac -> line 5324
+ *   +0x09b8 -> line 5326
+ *   +0x09c0 -> line 5327
+ *   +0x09d0 -> line 5328
+ *   +0x09d8 -> line 5329
+ *   +0x09e8 -> line 5331
+ *   +0x0a28 -> line 5338
+ *   +0x0a2c -> line 5340
+ *   +0x0a30 -> line 5338
+ *   +0x0a34 -> line 5340
+ *   +0x0a38 -> line 5338
+ *   +0x0a3c -> line 5340
+ *   +0x0a44 -> line 5345
+ *   +0x0a48 -> line 5340
+ *   +0x0a4c -> line 5346
+ *   +0x0a50 -> line 5340
+ *   +0x0a54 -> line 5338
+ *   +0x0a60 -> line 5340
+ *   +0x0af4 -> line 5348
+ *   +0x0b30 -> line 5349
+ *   +0x0b58 -> line 5351
+ *   +0x0b5c -> line 5352
+ *   +0x0b60 -> line 5353
+ *   +0x0b68 -> line 5355
+ *   +0x0b70 -> line 5356
+ *   +0x0b80 -> line 5359
+ *   +0x0ba0 -> line 5361
+ *   +0x0bc8 -> line 5364
+ *   +0x0c14 -> line 5367
+ *   +0x0c44 -> line 5369
+ *   +0x0c8c -> line 5370
+ *   +0x0cb4 -> line 5371
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_DigitalScoreDisplay::Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fScoreToAdd)
 {
     unsigned int iCarry;
@@ -9370,6 +7790,205 @@ void AGO3_DigitalScoreDisplay::Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVect
     m_fCurrentHalfFrequency = 0.5f * m_a_fVibrationFrequency[m_dwVibrationType];
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 5378–5579 */
+/* addr: 0x001f0500  size: 2608 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 5378
+ *   +0x000c -> line 5383
+ *   +0x001c -> line 5385
+ *   +0x0028 -> line 5387
+ *   +0x0030 -> line 5388
+ *   +0x0034 -> line 5387
+ *   +0x0038 -> line 5388
+ *   +0x0048 -> line 5390
+ *   +0x004c -> line 5391
+ *   +0x0050 -> line 5390
+ *   +0x0054 -> line 5394
+ *   +0x0058 -> line 5395
+ *   +0x005c -> line 5394
+ *   +0x0060 -> line 5395
+ *   +0x0070 -> line 5394
+ *   +0x0074 -> line 5395
+ *   +0x008c -> line 5396
+ *   +0x0094 -> line 5397
+ *   +0x00a0 -> line 5399
+ *   +0x00a8 -> line 5400
+ *   +0x00ac -> line 5399
+ *   +0x00b0 -> line 5400
+ *   +0x00c0 -> line 5403
+ *   +0x00c4 -> line 5402
+ *   +0x00c8 -> line 5404
+ *   +0x00cc -> line 5407
+ *   +0x00d0 -> line 5408
+ *   +0x00d4 -> line 5407
+ *   +0x00d8 -> line 5408
+ *   +0x00e8 -> line 5407
+ *   +0x00ec -> line 5408
+ *   +0x0104 -> line 5409
+ *   +0x010c -> line 5411
+ *   +0x0110 -> line 5414
+ *   +0x0138 -> line 5418
+ *   +0x0144 -> line 5419
+ *   +0x0164 -> line 5423
+ *   +0x0168 -> line 5428
+ *   +0x016c -> line 5425
+ *   +0x0170 -> line 5429
+ *   +0x0178 -> line 5425
+ *   +0x0180 -> line 5428
+ *   +0x0184 -> line 5429
+ *   +0x018c -> line 5434
+ *   +0x0190 -> line 5425
+ *   +0x01ac -> line 5428
+ *   +0x01c4 -> line 5429
+ *   +0x01ec -> line 5428
+ *   +0x01f0 -> line 5429
+ *   +0x01f4 -> line 5428
+ *   +0x01f8 -> line 5429
+ *   +0x0228 -> line 5428
+ *   +0x022c -> line 5429
+ *   +0x0230 -> line 5428
+ *   +0x0234 -> line 5429
+ *   +0x0264 -> line 5428
+ *   +0x0268 -> line 5429
+ *   +0x026c -> line 5428
+ *   +0x0270 -> line 5429
+ *   +0x02a0 -> line 5428
+ *   +0x02a4 -> line 5429
+ *   +0x02a8 -> line 5428
+ *   +0x02ac -> line 5429
+ *   +0x02d8 -> line 5434
+ *   +0x02e4 -> line 5435
+ *   +0x02ec -> line 5445
+ *   +0x02f0 -> line 5440
+ *   +0x02f8 -> line 5445
+ *   +0x02fc -> line 5447
+ *   +0x0300 -> line 5445
+ *   +0x0304 -> line 5447
+ *   +0x0308 -> line 5440
+ *   +0x030c -> line 5445
+ *   +0x0314 -> line 5446
+ *   +0x031c -> line 5447
+ *   +0x0354 -> line 5450
+ *   +0x0358 -> line 5447
+ *   +0x035c -> line 5450
+ *   +0x036c -> line 5452
+ *   +0x0370 -> line 5454
+ *   +0x0374 -> line 5452
+ *   +0x0384 -> line 5467
+ *   +0x03a0 -> line 5465
+ *   +0x03a8 -> line 5463
+ *   +0x03ac -> line 5467
+ *   +0x03b0 -> line 5463
+ *   +0x03b4 -> line 5468
+ *   +0x03bc -> line 5456
+ *   +0x03ec -> line 5458
+ *   +0x041c -> line 5459
+ *   +0x0420 -> line 5461
+ *   +0x042c -> line 5463
+ *   +0x0454 -> line 5465
+ *   +0x048c -> line 5467
+ *   +0x04f0 -> line 5468
+ *   +0x04f4 -> line 5469
+ *   +0x04f8 -> line 5468
+ *   +0x04fc -> line 5470
+ *   +0x0508 -> line 5471
+ *   +0x0510 -> line 5472
+ *   +0x0520 -> line 5474
+ *   +0x0528 -> line 5475
+ *   +0x052c -> line 5477
+ *   +0x0534 -> line 5478
+ *   +0x0544 -> line 5480
+ *   +0x0548 -> line 5482
+ *   +0x054c -> line 5480
+ *   +0x055c -> line 5495
+ *   +0x0568 -> line 5491
+ *   +0x056c -> line 5495
+ *   +0x0578 -> line 5491
+ *   +0x057c -> line 5495
+ *   +0x0584 -> line 5484
+ *   +0x05b4 -> line 5486
+ *   +0x05e4 -> line 5487
+ *   +0x05e8 -> line 5489
+ *   +0x05f4 -> line 5491
+ *   +0x061c -> line 5493
+ *   +0x0654 -> line 5495
+ *   +0x06b8 -> line 5496
+ *   +0x06bc -> line 5497
+ *   +0x06c0 -> line 5496
+ *   +0x06c4 -> line 5498
+ *   +0x06d0 -> line 5499
+ *   +0x06d8 -> line 5500
+ *   +0x06e8 -> line 5502
+ *   +0x06f0 -> line 5503
+ *   +0x06f8 -> line 5513
+ *   +0x0710 -> line 5516
+ *   +0x0714 -> line 5518
+ *   +0x072c -> line 5521
+ *   +0x0730 -> line 5523
+ *   +0x0734 -> line 5525
+ *   +0x0738 -> line 5523
+ *   +0x073c -> line 5525
+ *   +0x0748 -> line 5523
+ *   +0x0750 -> line 5525
+ *   +0x07d4 -> line 5527
+ *   +0x07e0 -> line 5525
+ *   +0x07e4 -> line 5527
+ *   +0x07f4 -> line 5525
+ *   +0x07f8 -> line 5527
+ *   +0x07fc -> line 5525
+ *   +0x0800 -> line 5527
+ *   +0x0804 -> line 5525
+ *   +0x0808 -> line 5530
+ *   +0x080c -> line 5527
+ *   +0x0810 -> line 5525
+ *   +0x0818 -> line 5526
+ *   +0x081c -> line 5527
+ *   +0x0848 -> line 5530
+ *   +0x0854 -> line 5532
+ *   +0x0864 -> line 5536
+ *   +0x0888 -> line 5539
+ *   +0x088c -> line 5538
+ *   +0x0894 -> line 5539
+ *   +0x089c -> line 5547
+ *   +0x08a0 -> line 5548
+ *   +0x08a4 -> line 5547
+ *   +0x08b0 -> line 5548
+ *   +0x08bc -> line 5547
+ *   +0x08c4 -> line 5548
+ *   +0x08cc -> line 5541
+ *   +0x08d0 -> line 5548
+ *   +0x08d4 -> line 5549
+ *   +0x08dc -> line 5548
+ *   +0x08e4 -> line 5541
+ *   +0x08ec -> line 5548
+ *   +0x0914 -> line 5549
+ *   +0x0928 -> line 5553
+ *   +0x092c -> line 5551
+ *   +0x0930 -> line 5554
+ *   +0x0938 -> line 5551
+ *   +0x093c -> line 5554
+ *   +0x0944 -> line 5551
+ *   +0x094c -> line 5552
+ *   +0x095c -> line 5553
+ *   +0x0970 -> line 5554
+ *   +0x0984 -> line 5560
+ *   +0x098c -> line 5562
+ *   +0x0990 -> line 5563
+ *   +0x09a4 -> line 5564
+ *   +0x09c8 -> line 5565
+ *   +0x09cc -> line 5566
+ *   +0x09dc -> line 5568
+ *   +0x09e0 -> line 5569
+ *   +0x09e4 -> line 5574
+ *   +0x09f4 -> line 5577
+ *   +0x09f8 -> line 5576
+ *   +0x0a08 -> line 5577
+ *   +0x0a10 -> line 5576
+ *   +0x0a18 -> line 5577
+ *   +0x0a28 -> line 5579
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_DigitalScoreDisplay::Process(void)
 {
     float fGlowingStrength;
@@ -9530,6 +8149,109 @@ void AGO3_DigitalScoreDisplay::Process(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 5598–5765 */
+/* addr: 0x001efef0  size: 1548 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 5598
+ *   +0x0004 -> line 5606
+ *   +0x0008 -> line 5598
+ *   +0x0048 -> line 5606
+ *   +0x0060 -> line 5611
+ *   +0x0064 -> line 5609
+ *   +0x0068 -> line 5611
+ *   +0x0074 -> line 5613
+ *   +0x0084 -> line 5614
+ *   +0x00d0 -> line 5617
+ *   +0x00ec -> line 5621
+ *   +0x00fc -> line 5622
+ *   +0x0108 -> line 5624
+ *   +0x0110 -> line 5625
+ *   +0x0118 -> line 5626
+ *   +0x011c -> line 5625
+ *   +0x0120 -> line 5626
+ *   +0x0140 -> line 5629
+ *   +0x0150 -> line 5632
+ *   +0x0158 -> line 5643
+ *   +0x015c -> line 5632
+ *   +0x0160 -> line 5643
+ *   +0x0164 -> line 5632
+ *   +0x0168 -> line 5643
+ *   +0x0170 -> line 5632
+ *   +0x0174 -> line 5643
+ *   +0x01f0 -> line 5644
+ *   +0x0214 -> line 5645
+ *   +0x0220 -> line 5648
+ *   +0x0230 -> line 5654
+ *   +0x023c -> line 5655
+ *   +0x0240 -> line 5654
+ *   +0x0254 -> line 5655
+ *   +0x0264 -> line 5656
+ *   +0x0270 -> line 5657
+ *   +0x02b4 -> line 5658
+ *   +0x02e0 -> line 5659
+ *   +0x02ec -> line 5661
+ *   +0x02f0 -> line 5674
+ *   +0x02f4 -> line 5661
+ *   +0x02f8 -> line 5674
+ *   +0x0304 -> line 5663
+ *   +0x0310 -> line 5674
+ *   +0x0320 -> line 5661
+ *   +0x0324 -> line 5663
+ *   +0x032c -> line 5674
+ *   +0x037c -> line 5675
+ *   +0x0388 -> line 5682
+ *   +0x038c -> line 5697
+ *   +0x0394 -> line 5682
+ *   +0x0398 -> line 5697
+ *   +0x039c -> line 5682
+ *   +0x03ac -> line 5683
+ *   +0x03b4 -> line 5697
+ *   +0x03b8 -> line 5683
+ *   +0x03bc -> line 5686
+ *   +0x03c0 -> line 5697
+ *   +0x03c4 -> line 5686
+ *   +0x03c8 -> line 5682
+ *   +0x03cc -> line 5686
+ *   +0x03d4 -> line 5683
+ *   +0x03d8 -> line 5686
+ *   +0x03dc -> line 5683
+ *   +0x03e0 -> line 5697
+ *   +0x03ec -> line 5683
+ *   +0x03f0 -> line 5697
+ *   +0x0408 -> line 5683
+ *   +0x040c -> line 5697
+ *   +0x0434 -> line 5710
+ *   +0x0494 -> line 5711
+ *   +0x0498 -> line 5710
+ *   +0x04a0 -> line 5712
+ *   +0x04a4 -> line 5710
+ *   +0x04ac -> line 5712
+ *   +0x04cc -> line 5713
+ *   +0x04d0 -> line 5716
+ *   +0x04e0 -> line 5731
+ *   +0x04e4 -> line 5718
+ *   +0x04e8 -> line 5731
+ *   +0x04ec -> line 5719
+ *   +0x04f0 -> line 5731
+ *   +0x0500 -> line 5719
+ *   +0x0504 -> line 5731
+ *   +0x0508 -> line 5719
+ *   +0x050c -> line 5718
+ *   +0x0510 -> line 5731
+ *   +0x051c -> line 5719
+ *   +0x0524 -> line 5731
+ *   +0x0544 -> line 5732
+ *   +0x0548 -> line 5731
+ *   +0x055c -> line 5733
+ *   +0x0574 -> line 5750
+ *   +0x0584 -> line 5736
+ *   +0x0588 -> line 5750
+ *   +0x0594 -> line 5736
+ *   +0x0598 -> line 5750
+ *   +0x05c8 -> line 5765
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_DigitalScoreDisplay::DisplayScore(GLD_tdstViewportAttributes_* hVp)
 {
     float fY;
@@ -9620,6 +8342,63 @@ void AGO3_DigitalScoreDisplay::DisplayScore(GLD_tdstViewportAttributes_* hVp)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 5924–6057 */
+/* addr: 0x001efa20  size: 1220 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 5924
+ *   +0x000c -> line 5927
+ *   +0x0014 -> line 5930
+ *   +0x0020 -> line 5934
+ *   +0x0030 -> line 5935
+ *   +0x0040 -> line 5936
+ *   +0x0050 -> line 5938
+ *   +0x0064 -> line 5939
+ *   +0x0068 -> line 5938
+ *   +0x006c -> line 5939
+ *   +0x0070 -> line 5940
+ *   +0x0074 -> line 5938
+ *   +0x0078 -> line 5939
+ *   +0x0084 -> line 5940
+ *   +0x008c -> line 5939
+ *   +0x0094 -> line 5940
+ *   +0x00a4 -> line 5941
+ *   +0x0120 -> line 5943
+ *   +0x013c -> line 5944
+ *   +0x0140 -> line 5943
+ *   +0x0150 -> line 5944
+ *   +0x0168 -> line 5945
+ *   +0x01e4 -> line 5946
+ *   +0x0204 -> line 5947
+ *   +0x0288 -> line 5950
+ *   +0x02a8 -> line 5953
+ *   +0x02b0 -> line 5954
+ *   +0x02b4 -> line 5956
+ *   +0x02e8 -> line 5959
+ *   +0x02f0 -> line 5960
+ *   +0x02f8 -> line 5961
+ *   +0x0300 -> line 5963
+ *   +0x037c -> line 5967
+ *   +0x0398 -> line 5972
+ *   +0x039c -> line 5976
+ *   +0x03a0 -> line 5972
+ *   +0x03a4 -> line 5976
+ *   +0x03a8 -> line 5974
+ *   +0x03ac -> line 5976
+ *   +0x03bc -> line 5974
+ *   +0x03c0 -> line 5975
+ *   +0x03c8 -> line 5976
+ *   +0x03dc -> line 5977
+ *   +0x03e4 -> line 5978
+ *   +0x0420 -> line 5980
+ *   +0x0428 -> line 5981
+ *   +0x042c -> line 5982
+ *   +0x0440 -> line 5983
+ *   +0x046c -> line 5984
+ *   +0x0474 -> line 5987
+ *   +0x04bc -> line 6057
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_Snowboard_SnowEffect::Init(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, GLI_tdstMaterial_* pMat1, float fParameter)
 {
     float xNorm;
@@ -9700,6 +8479,59 @@ void AGO3_Snowboard_SnowEffect::Init(MTH3D_tdstVector_* p_stPosition, MTH3D_tdst
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 6061–6173 */
+/* addr: 0x001ef680  size: 916 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 6106
+ *   +0x0004 -> line 6061
+ *   +0x0008 -> line 6106
+ *   +0x000c -> line 6061
+ *   +0x0014 -> line 6106
+ *   +0x0018 -> line 6061
+ *   +0x001c -> line 6106
+ *   +0x0020 -> line 6061
+ *   +0x002c -> line 6106
+ *   +0x0064 -> line 6112
+ *   +0x0070 -> line 6115
+ *   +0x0084 -> line 6134
+ *   +0x00cc -> line 6135
+ *   +0x0114 -> line 6136
+ *   +0x0138 -> line 6142
+ *   +0x013c -> line 6136
+ *   +0x0164 -> line 6142
+ *   +0x0178 -> line 6143
+ *   +0x0184 -> line 6144
+ *   +0x018c -> line 6145
+ *   +0x01dc -> line 6148
+ *   +0x01f8 -> line 6149
+ *   +0x01fc -> line 6154
+ *   +0x0200 -> line 6148
+ *   +0x0218 -> line 6149
+ *   +0x021c -> line 6150
+ *   +0x022c -> line 6151
+ *   +0x0238 -> line 6154
+ *   +0x0244 -> line 6156
+ *   +0x0258 -> line 6159
+ *   +0x0268 -> line 6160
+ *   +0x026c -> line 6163
+ *   +0x0270 -> line 6164
+ *   +0x0274 -> line 6163
+ *   +0x0284 -> line 6164
+ *   +0x028c -> line 6166
+ *   +0x02d8 -> line 6167
+ *   +0x02fc -> line 6171
+ *   +0x0300 -> line 6169
+ *   +0x0308 -> line 6167
+ *   +0x0330 -> line 6169
+ *   +0x0334 -> line 6167
+ *   +0x033c -> line 6168
+ *   +0x034c -> line 6169
+ *   +0x0360 -> line 6170
+ *   +0x0364 -> line 6171
+ *   +0x0378 -> line 6173
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_Snowboard_SnowEffect::GeneratePartsOnGround(void)
 {
     AGO3_SBS_tdstSnowPart_* pPart;
@@ -9739,6 +8571,54 @@ void AGO3_Snowboard_SnowEffect::GeneratePartsOnGround(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 6177–6242 */
+/* addr: 0x001ef330  size: 840 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 6177
+ *   +0x0014 -> line 6184
+ *   +0x0020 -> line 6186
+ *   +0x0024 -> line 6187
+ *   +0x0028 -> line 6186
+ *   +0x002c -> line 6188
+ *   +0x0034 -> line 6191
+ *   +0x0050 -> line 6195
+ *   +0x0054 -> line 6196
+ *   +0x0058 -> line 6195
+ *   +0x0068 -> line 6196
+ *   +0x0070 -> line 6198
+ *   +0x00bc -> line 6199
+ *   +0x00d0 -> line 6203
+ *   +0x00d4 -> line 6199
+ *   +0x0110 -> line 6200
+ *   +0x0120 -> line 6201
+ *   +0x0134 -> line 6202
+ *   +0x0138 -> line 6203
+ *   +0x0148 -> line 6213
+ *   +0x014c -> line 6215
+ *   +0x0160 -> line 6216
+ *   +0x01a8 -> line 6217
+ *   +0x01f0 -> line 6218
+ *   +0x0214 -> line 6220
+ *   +0x0218 -> line 6218
+ *   +0x0240 -> line 6220
+ *   +0x0254 -> line 6221
+ *   +0x0260 -> line 6222
+ *   +0x0268 -> line 6223
+ *   +0x02b8 -> line 6224
+ *   +0x02cc -> line 6228
+ *   +0x02d0 -> line 6224
+ *   +0x02d8 -> line 6228
+ *   +0x02dc -> line 6224
+ *   +0x02f4 -> line 6225
+ *   +0x02fc -> line 6226
+ *   +0x030c -> line 6227
+ *   +0x0314 -> line 6228
+ *   +0x031c -> line 6229
+ *   +0x032c -> line 6230
+ *   +0x0330 -> line 6242
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_Snowboard_SnowEffect::GeneratePartsOnAir(void)
 {
     AGO3_SBS_tdstSnowPart_* pPart;
@@ -9781,6 +8661,35 @@ void AGO3_Snowboard_SnowEffect::GeneratePartsOnAir(void)
         m_dwNumSnowParts = 64;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 6246–6275 */
+/* addr: 0x001ef180  size: 420 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 6246
+ *   +0x0018 -> line 6259
+ *   +0x001c -> line 6251
+ *   +0x0020 -> line 6258
+ *   +0x0024 -> line 6261
+ *   +0x0064 -> line 6262
+ *   +0x00a0 -> line 6263
+ *   +0x00c4 -> line 6266
+ *   +0x00c8 -> line 6263
+ *   +0x00dc -> line 6264
+ *   +0x00e0 -> line 6265
+ *   +0x00e4 -> line 6267
+ *   +0x0134 -> line 6268
+ *   +0x0148 -> line 6271
+ *   +0x014c -> line 6268
+ *   +0x0154 -> line 6269
+ *   +0x0158 -> line 6271
+ *   +0x015c -> line 6268
+ *   +0x0174 -> line 6269
+ *   +0x0178 -> line 6271
+ *   +0x0180 -> line 6273
+ *   +0x0188 -> line 6274
+ *   +0x018c -> line 6275
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_Snowboard_SnowEffect::GeneratePartsOnLanding(void)
 {
     AGO3_SBS_tdstSnowPart_* pPart;
@@ -9804,6 +8713,22 @@ void AGO3_Snowboard_SnowEffect::GeneratePartsOnLanding(void)
     m_dwFirstFreePart = 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 6279–6292 */
+/* addr: 0x001ef100  size: 116 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 6279
+ *   +0x0008 -> line 6280
+ *   +0x0014 -> line 6282
+ *   +0x0024 -> line 6283
+ *   +0x002c -> line 6285
+ *   +0x003c -> line 6286
+ *   +0x0048 -> line 6288
+ *   +0x0058 -> line 6289
+ *   +0x0060 -> line 6291
+ *   +0x0068 -> line 6292
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_Snowboard_SnowEffect::Process(void)
 {
     if (m_dwEffectID == 0)
@@ -9816,6 +8741,23 @@ void AGO3_Snowboard_SnowEffect::Process(void)
         m_Finished = 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 6296–6330 */
+/* addr: 0x001ef040  size: 188 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 6296
+ *   +0x001c -> line 6317
+ *   +0x0028 -> line 6321
+ *   +0x002c -> line 6322
+ *   +0x0030 -> line 6321
+ *   +0x0040 -> line 6322
+ *   +0x0048 -> line 6324
+ *   +0x0050 -> line 6326
+ *   +0x0084 -> line 6327
+ *   +0x0088 -> line 6328
+ *   +0x00a0 -> line 6330
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_Snowboard_SnowEffect::Display(GLD_tdstViewportAttributes_* hVp)
 {
     unsigned int iPart;
@@ -9830,6 +8772,21 @@ void AGO3_Snowboard_SnowEffect::Display(GLD_tdstViewportAttributes_* hVp)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 6388–6395 */
+/* addr: 0x001eefe0  size: 96 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 6388
+ *   +0x0018 -> line 6391
+ *   +0x001c -> line 6392
+ *   +0x0020 -> line 6391
+ *   +0x0024 -> line 6392
+ *   +0x002c -> line 6391
+ *   +0x0034 -> line 6392
+ *   +0x004c -> line 6394
+ *   +0x0058 -> line 6395
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_SpriteDurationFade2::Process(void)
 {
     if (m_fCurrentTime > m_fDisplayDuration)
@@ -9840,6 +8797,21 @@ void AGO3_SpriteDurationFade2::Process(void)
     m_fCurrentTime += g_fTimeDifference;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 6399–6411 */
+/* addr: 0x001eef50  size: 132 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 6399
+ *   +0x0008 -> line 6400
+ *   +0x000c -> line 6399
+ *   +0x0018 -> line 6400
+ *   +0x002c -> line 6406
+ *   +0x0034 -> line 6407
+ *   +0x0060 -> line 6408
+ *   +0x0068 -> line 6410
+ *   +0x0070 -> line 6411
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_SpriteDurationFade2::Display(GLD_tdstViewportAttributes_* hVp)
 {
     if (m_fTransparency > 0.0f)
@@ -9851,6 +8823,84 @@ void AGO3_SpriteDurationFade2::Display(GLD_tdstViewportAttributes_* hVp)
         m_Finished = 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 6530–6630 */
+/* addr: 0x001eeaa0  size: 1196 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 6530
+ *   +0x0004 -> line 6533
+ *   +0x0008 -> line 6530
+ *   +0x000c -> line 6536
+ *   +0x0010 -> line 6530
+ *   +0x0014 -> line 6533
+ *   +0x0018 -> line 6530
+ *   +0x0020 -> line 6533
+ *   +0x002c -> line 6536
+ *   +0x0030 -> line 6533
+ *   +0x0050 -> line 6536
+ *   +0x0058 -> line 6538
+ *   +0x005c -> line 6539
+ *   +0x0060 -> line 6540
+ *   +0x0068 -> line 6541
+ *   +0x0078 -> line 6543
+ *   +0x007c -> line 6546
+ *   +0x0088 -> line 6558
+ *   +0x0094 -> line 6560
+ *   +0x0098 -> line 6562
+ *   +0x00a0 -> line 6560
+ *   +0x00a4 -> line 6561
+ *   +0x00ac -> line 6562
+ *   +0x00bc -> line 6563
+ *   +0x00c8 -> line 6564
+ *   +0x00d0 -> line 6565
+ *   +0x00e8 -> line 6566
+ *   +0x00f4 -> line 6567
+ *   +0x00f8 -> line 6571
+ *   +0x00fc -> line 6567
+ *   +0x0100 -> line 6569
+ *   +0x0104 -> line 6571
+ *   +0x010c -> line 6567
+ *   +0x0114 -> line 6569
+ *   +0x011c -> line 6570
+ *   +0x0128 -> line 6571
+ *   +0x0168 -> line 6575
+ *   +0x0174 -> line 6576
+ *   +0x0178 -> line 6575
+ *   +0x0188 -> line 6576
+ *   +0x0198 -> line 6577
+ *   +0x01a8 -> line 6580
+ *   +0x0208 -> line 6581
+ *   +0x0218 -> line 6582
+ *   +0x021c -> line 6583
+ *   +0x0280 -> line 6585
+ *   +0x0284 -> line 6589
+ *   +0x028c -> line 6585
+ *   +0x0294 -> line 6587
+ *   +0x02a0 -> line 6588
+ *   +0x02b0 -> line 6589
+ *   +0x02c4 -> line 6590
+ *   +0x02d4 -> line 6592
+ *   +0x02e0 -> line 6594
+ *   +0x02f8 -> line 6600
+ *   +0x0324 -> line 6603
+ *   +0x0364 -> line 6606
+ *   +0x03a0 -> line 6609
+ *   +0x0414 -> line 6611
+ *   +0x0424 -> line 6612
+ *   +0x042c -> line 6613
+ *   +0x0430 -> line 6614
+ *   +0x0438 -> line 6618
+ *   +0x0450 -> line 6623
+ *   +0x0454 -> line 6624
+ *   +0x045c -> line 6623
+ *   +0x046c -> line 6624
+ *   +0x0474 -> line 6626
+ *   +0x047c -> line 6628
+ *   +0x0480 -> line 6627
+ *   +0x0484 -> line 6628
+ *   +0x0498 -> line 6630
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_CustomRipple::Init(MTH3D_tdstVector_* p_stStartingPosition, MTH3D_tdstVector_* p_stDirection, GLI_tdstMaterial_* pMat1, float fStartStop)
 {
     unsigned int ulSprite;
@@ -9947,6 +8997,97 @@ void AGO3_CustomRipple::Init(MTH3D_tdstVector_* p_stStartingPosition, MTH3D_tdst
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 6646–6757 */
+/* addr: 0x001ee680  size: 1052 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 6646
+ *   +0x0010 -> line 6647
+ *   +0x0020 -> line 6650
+ *   +0x003c -> line 6653
+ *   +0x0058 -> line 6655
+ *   +0x0070 -> line 6656
+ *   +0x0074 -> line 6657
+ *   +0x0084 -> line 6659
+ *   +0x0088 -> line 6660
+ *   +0x0090 -> line 6665
+ *   +0x00a4 -> line 6667
+ *   +0x00b0 -> line 6669
+ *   +0x00b8 -> line 6673
+ *   +0x00c0 -> line 6669
+ *   +0x00c4 -> line 6673
+ *   +0x0134 -> line 6674
+ *   +0x0148 -> line 6675
+ *   +0x014c -> line 6680
+ *   +0x0154 -> line 6687
+ *   +0x0158 -> line 6683
+ *   +0x015c -> line 6680
+ *   +0x0160 -> line 6687
+ *   +0x0164 -> line 6681
+ *   +0x0168 -> line 6687
+ *   +0x0174 -> line 6680
+ *   +0x0178 -> line 6684
+ *   +0x0188 -> line 6680
+ *   +0x018c -> line 6684
+ *   +0x0190 -> line 6687
+ *   +0x0198 -> line 6689
+ *   +0x01a4 -> line 6691
+ *   +0x01ac -> line 6692
+ *   +0x01b0 -> line 6695
+ *   +0x01bc -> line 6698
+ *   +0x01d0 -> line 6699
+ *   +0x01e8 -> line 6701
+ *   +0x01fc -> line 6702
+ *   +0x0218 -> line 6704
+ *   +0x021c -> line 6705
+ *   +0x0220 -> line 6717
+ *   +0x0224 -> line 6708
+ *   +0x0230 -> line 6709
+ *   +0x0234 -> line 6710
+ *   +0x0248 -> line 6711
+ *   +0x025c -> line 6712
+ *   +0x0270 -> line 6715
+ *   +0x0274 -> line 6718
+ *   +0x0278 -> line 6716
+ *   +0x027c -> line 6715
+ *   +0x0280 -> line 6718
+ *   +0x0288 -> line 6719
+ *   +0x0290 -> line 6720
+ *   +0x0298 -> line 6721
+ *   +0x029c -> line 6720
+ *   +0x02a8 -> line 6721
+ *   +0x02b8 -> line 6723
+ *   +0x02c0 -> line 6725
+ *   +0x02c4 -> line 6727
+ *   +0x02c8 -> line 6725
+ *   +0x02d4 -> line 6727
+ *   +0x02e0 -> line 6728
+ *   +0x02ec -> line 6729
+ *   +0x02f8 -> line 6730
+ *   +0x02fc -> line 6732
+ *   +0x0300 -> line 6730
+ *   +0x0310 -> line 6732
+ *   +0x0318 -> line 6735
+ *   +0x031c -> line 6737
+ *   +0x0320 -> line 6735
+ *   +0x0324 -> line 6737
+ *   +0x0330 -> line 6735
+ *   +0x0334 -> line 6737
+ *   +0x0344 -> line 6738
+ *   +0x0350 -> line 6740
+ *   +0x0364 -> line 6741
+ *   +0x0378 -> line 6742
+ *   +0x038c -> line 6743
+ *   +0x0390 -> line 6744
+ *   +0x03a4 -> line 6745
+ *   +0x03c4 -> line 6747
+ *   +0x03d8 -> line 6748
+ *   +0x0400 -> line 6751
+ *   +0x0408 -> line 6753
+ *   +0x040c -> line 6754
+ *   +0x0414 -> line 6757
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_CustomRipple::Process(void)
 {
     float fPosition;
@@ -10053,6 +9194,28 @@ void AGO3_CustomRipple::Process(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 6761–6777 */
+/* addr: 0x001ee5b0  size: 208 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 6761
+ *   +0x0024 -> line 6766
+ *   +0x0028 -> line 6768
+ *   +0x002c -> line 6766
+ *   +0x003c -> line 6768
+ *   +0x0044 -> line 6770
+ *   +0x004c -> line 6771
+ *   +0x0070 -> line 6773
+ *   +0x0074 -> line 6772
+ *   +0x0078 -> line 6773
+ *   +0x0080 -> line 6774
+ *   +0x0088 -> line 6775
+ *   +0x0090 -> line 6776
+ *   +0x0094 -> line 6775
+ *   +0x00a0 -> line 6776
+ *   +0x00b0 -> line 6777
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_CustomRipple::Display(GLD_tdstViewportAttributes_* hVp)
 {
     unsigned int ulSprite2;
@@ -10071,12 +9234,117 @@ void AGO3_CustomRipple::Display(GLD_tdstViewportAttributes_* hVp)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 6840–6843 */
+/* addr: 0x001ee590  size: 28 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 6840
+ *   +0x0010 -> line 6842
+ *   +0x0014 -> line 6843
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_OrientedTarget::Process(void)
 {
     if (AGO_G_CurrentVU1Frame == 2)
         ((AGO3_Part*)this)->m_Finished = 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 6849–6972 */
+/* addr: 0x001ee1a0  size: 1004 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 6849
+ *   +0x0028 -> line 6860
+ *   +0x0038 -> line 6861
+ *   +0x0044 -> line 6862
+ *   +0x0048 -> line 6865
+ *   +0x004c -> line 6862
+ *   +0x0060 -> line 6865
+ *   +0x0068 -> line 6868
+ *   +0x0070 -> line 6869
+ *   +0x0074 -> line 6868
+ *   +0x0078 -> line 6869
+ *   +0x007c -> line 6868
+ *   +0x0080 -> line 6869
+ *   +0x0084 -> line 6868
+ *   +0x0088 -> line 6869
+ *   +0x0098 -> line 6868
+ *   +0x009c -> line 6874
+ *   +0x00fc -> line 6876
+ *   +0x010c -> line 6879
+ *   +0x0110 -> line 6880
+ *   +0x0114 -> line 6881
+ *   +0x0118 -> line 6883
+ *   +0x011c -> line 6884
+ *   +0x0120 -> line 6885
+ *   +0x0138 -> line 6879
+ *   +0x0140 -> line 6880
+ *   +0x014c -> line 6881
+ *   +0x0158 -> line 6882
+ *   +0x0164 -> line 6883
+ *   +0x0170 -> line 6884
+ *   +0x0178 -> line 6885
+ *   +0x0180 -> line 6889
+ *   +0x019c -> line 6898
+ *   +0x01a0 -> line 6899
+ *   +0x01a4 -> line 6898
+ *   +0x01a8 -> line 6899
+ *   +0x01b8 -> line 6901
+ *   +0x01c4 -> line 6902
+ *   +0x01cc -> line 6903
+ *   +0x01dc -> line 6906
+ *   +0x01e8 -> line 6908
+ *   +0x01f0 -> line 6907
+ *   +0x0200 -> line 6908
+ *   +0x0204 -> line 6907
+ *   +0x020c -> line 6908
+ *   +0x021c -> line 6909
+ *   +0x0224 -> line 6910
+ *   +0x0240 -> line 6911
+ *   +0x0254 -> line 6913
+ *   +0x025c -> line 6917
+ *   +0x0278 -> line 6918
+ *   +0x027c -> line 6920
+ *   +0x0288 -> line 6930
+ *   +0x028c -> line 6951
+ *   +0x0290 -> line 6930
+ *   +0x0294 -> line 6933
+ *   +0x0298 -> line 6931
+ *   +0x029c -> line 6932
+ *   +0x02a0 -> line 6934
+ *   +0x02a4 -> line 6935
+ *   +0x02a8 -> line 6930
+ *   +0x02ac -> line 6937
+ *   +0x02b0 -> line 6933
+ *   +0x02b4 -> line 6937
+ *   +0x02c0 -> line 6938
+ *   +0x02c4 -> line 6932
+ *   +0x02c8 -> line 6938
+ *   +0x02d4 -> line 6939
+ *   +0x02d8 -> line 6935
+ *   +0x02dc -> line 6939
+ *   +0x02e8 -> line 6940
+ *   +0x02ec -> line 6931
+ *   +0x02f0 -> line 6940
+ *   +0x02fc -> line 6941
+ *   +0x0300 -> line 6934
+ *   +0x0304 -> line 6941
+ *   +0x0310 -> line 6942
+ *   +0x0314 -> line 6951
+ *   +0x0318 -> line 6942
+ *   +0x0324 -> line 6943
+ *   +0x0334 -> line 6944
+ *   +0x0344 -> line 6946
+ *   +0x0354 -> line 6947
+ *   +0x0364 -> line 6948
+ *   +0x0374 -> line 6949
+ *   +0x0380 -> line 6951
+ *   +0x0388 -> line 6954
+ *   +0x0390 -> line 6958
+ *   +0x03c0 -> line 6969
+ *   +0x03c8 -> line 6972
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_OrientedTarget::Display(GLD_tdstViewportAttributes_* hVp)
 {
     union { MTH3D_tdstVector_ v; int i[3]; } uCameraPosition;
@@ -10183,6 +9451,18 @@ void AGO3_OrientedTarget::Display(GLD_tdstViewportAttributes_* hVp)
     GLI_vEnableDepthTest();
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 7060–7068 */
+/* addr: 0x001ee150  size: 72 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 7060
+ *   +0x0010 -> line 7063
+ *   +0x0014 -> line 7064
+ *   +0x001c -> line 7065
+ *   +0x0030 -> line 7067
+ *   +0x0038 -> line 7068
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_DisplayTransitionMessage(GLD_tdstViewportAttributes_* hVp)
 {
     if (AGO3_Transition::m_hHandle)
@@ -10190,6 +9470,40 @@ void AGO3_DisplayTransitionMessage(GLD_tdstViewportAttributes_* hVp)
     GLI_vEndWorldSprites();
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 7095–7126 */
+/* addr: 0x001ee040  size: 260 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 7095
+ *   +0x0008 -> line 7097
+ *   +0x000c -> line 7095
+ *   +0x0010 -> line 7097
+ *   +0x0024 -> line 7101
+ *   +0x0028 -> line 7103
+ *   +0x002c -> line 7102
+ *   +0x0030 -> line 7101
+ *   +0x0034 -> line 7102
+ *   +0x0038 -> line 7103
+ *   +0x003c -> line 7102
+ *   +0x0040 -> line 7103
+ *   +0x0050 -> line 7106
+ *   +0x0060 -> line 7111
+ *   +0x0074 -> line 7113
+ *   +0x0078 -> line 7114
+ *   +0x007c -> line 7113
+ *   +0x0080 -> line 7114
+ *   +0x0088 -> line 7113
+ *   +0x008c -> line 7114
+ *   +0x009c -> line 7116
+ *   +0x00a4 -> line 7117
+ *   +0x00b0 -> line 7118
+ *   +0x00c4 -> line 7119
+ *   +0x00c8 -> line 7120
+ *   +0x00d4 -> line 7122
+ *   +0x00e4 -> line 7123
+ *   +0x00f4 -> line 7126
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_Transition::Process(void)
 {
     MTH3D_tdstVector_ stColorVect;
@@ -10197,6 +9511,51 @@ void AGO3_Transition::Process(void)
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 7130–7167 */
+/* addr: 0x001edde0  size: 596 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 7130
+ *   +0x0018 -> line 7132
+ *   +0x0030 -> line 7138
+ *   +0x0040 -> line 7139
+ *   +0x0054 -> line 7140
+ *   +0x005c -> line 7146
+ *   +0x0064 -> line 7147
+ *   +0x00f8 -> line 7149
+ *   +0x00fc -> line 7148
+ *   +0x0100 -> line 7149
+ *   +0x0104 -> line 7148
+ *   +0x0108 -> line 7149
+ *   +0x010c -> line 7148
+ *   +0x0110 -> line 7147
+ *   +0x0118 -> line 7148
+ *   +0x011c -> line 7147
+ *   +0x0120 -> line 7149
+ *   +0x01b0 -> line 7150
+ *   +0x01b4 -> line 7151
+ *   +0x01b8 -> line 7160
+ *   +0x01bc -> line 7151
+ *   +0x01c0 -> line 7160
+ *   +0x01c4 -> line 7151
+ *   +0x01c8 -> line 7154
+ *   +0x01cc -> line 7149
+ *   +0x01d0 -> line 7154
+ *   +0x01d4 -> line 7151
+ *   +0x01d8 -> line 7149
+ *   +0x01dc -> line 7154
+ *   +0x01e0 -> line 7151
+ *   +0x01e4 -> line 7154
+ *   +0x01ec -> line 7149
+ *   +0x01f0 -> line 7160
+ *   +0x01f4 -> line 7154
+ *   +0x01fc -> line 7155
+ *   +0x0208 -> line 7156
+ *   +0x0210 -> line 7160
+ *   +0x0220 -> line 7163
+ *   +0x023c -> line 7167
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_Transition::DisplayLoadingMessage(GLD_tdstViewportAttributes_* hVp)
 {
     float fMessageLenght;
@@ -10229,6 +9588,183 @@ void AGO3_Transition::DisplayLoadingMessage(GLD_tdstViewportAttributes_* hVp)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 7234–7486 */
+/* addr: 0x001ed440  size: 2464 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 7234
+ *   +0x0038 -> line 7255
+ *   +0x003c -> line 7234
+ *   +0x005c -> line 7255
+ *   +0x0060 -> line 7257
+ *   +0x006c -> line 7260
+ *   +0x0070 -> line 7262
+ *   +0x0074 -> line 7263
+ *   +0x0078 -> line 7260
+ *   +0x007c -> line 7262
+ *   +0x0080 -> line 7263
+ *   +0x0098 -> line 7264
+ *   +0x009c -> line 7265
+ *   +0x00a4 -> line 7268
+ *   +0x00a8 -> line 7269
+ *   +0x00ac -> line 7270
+ *   +0x00b0 -> line 7273
+ *   +0x00cc -> line 7275
+ *   +0x0110 -> line 7278
+ *   +0x0128 -> line 7279
+ *   +0x0130 -> line 7280
+ *   +0x0134 -> line 7278
+ *   +0x0138 -> line 7280
+ *   +0x013c -> line 7279
+ *   +0x0144 -> line 7280
+ *   +0x0148 -> line 7281
+ *   +0x0150 -> line 7310
+ *   +0x0158 -> line 7309
+ *   +0x015c -> line 7311
+ *   +0x0164 -> line 7313
+ *   +0x0168 -> line 7310
+ *   +0x016c -> line 7311
+ *   +0x0170 -> line 7309
+ *   +0x0174 -> line 7312
+ *   +0x0184 -> line 7313
+ *   +0x0194 -> line 7314
+ *   +0x01a0 -> line 7315
+ *   +0x01ec -> line 7318
+ *   +0x01f0 -> line 7315
+ *   +0x01f4 -> line 7319
+ *   +0x0200 -> line 7320
+ *   +0x0208 -> line 7322
+ *   +0x0238 -> line 7326
+ *   +0x023c -> line 7334
+ *   +0x0240 -> line 7326
+ *   +0x024c -> line 7339
+ *   +0x0250 -> line 7327
+ *   +0x0254 -> line 7326
+ *   +0x0258 -> line 7327
+ *   +0x025c -> line 7341
+ *   +0x0260 -> line 7328
+ *   +0x0268 -> line 7330
+ *   +0x026c -> line 7337
+ *   +0x0270 -> line 7330
+ *   +0x0274 -> line 7326
+ *   +0x0278 -> line 7330
+ *   +0x027c -> line 7338
+ *   +0x0280 -> line 7334
+ *   +0x0284 -> line 7326
+ *   +0x0288 -> line 7334
+ *   +0x028c -> line 7327
+ *   +0x0294 -> line 7328
+ *   +0x029c -> line 7326
+ *   +0x02a0 -> line 7327
+ *   +0x02a4 -> line 7328
+ *   +0x02a8 -> line 7337
+ *   +0x02ac -> line 7334
+ *   +0x02b4 -> line 7341
+ *   +0x02bc -> line 7343
+ *   +0x02c0 -> line 7344
+ *   +0x02c4 -> line 7343
+ *   +0x02c8 -> line 7344
+ *   +0x02d0 -> line 7345
+ *   +0x02dc -> line 7346
+ *   +0x02e0 -> line 7353
+ *   +0x02e8 -> line 7355
+ *   +0x02ec -> line 7363
+ *   +0x02f0 -> line 7360
+ *   +0x02f4 -> line 7363
+ *   +0x02f8 -> line 7356
+ *   +0x02fc -> line 7359
+ *   +0x0300 -> line 7363
+ *   +0x0304 -> line 7357
+ *   +0x030c -> line 7358
+ *   +0x0314 -> line 7359
+ *   +0x031c -> line 7360
+ *   +0x0324 -> line 7363
+ *   +0x0328 -> line 7365
+ *   +0x0334 -> line 7364
+ *   +0x0338 -> line 7365
+ *   +0x0348 -> line 7366
+ *   +0x0364 -> line 7367
+ *   +0x037c -> line 7370
+ *   +0x03d0 -> line 7372
+ *   +0x03dc -> line 7374
+ *   +0x03e0 -> line 7375
+ *   +0x03e4 -> line 7374
+ *   +0x03e8 -> line 7375
+ *   +0x03f0 -> line 7376
+ *   +0x03f8 -> line 7377
+ *   +0x03fc -> line 7378
+ *   +0x0400 -> line 7386
+ *   +0x0408 -> line 7390
+ *   +0x040c -> line 7381
+ *   +0x0410 -> line 7389
+ *   +0x0414 -> line 7386
+ *   +0x0418 -> line 7382
+ *   +0x041c -> line 7381
+ *   +0x0420 -> line 7382
+ *   +0x042c -> line 7383
+ *   +0x0434 -> line 7391
+ *   +0x0440 -> line 7394
+ *   +0x0444 -> line 7396
+ *   +0x045c -> line 7409
+ *   +0x0460 -> line 7410
+ *   +0x0464 -> line 7413
+ *   +0x0468 -> line 7409
+ *   +0x0470 -> line 7410
+ *   +0x047c -> line 7411
+ *   +0x0488 -> line 7415
+ *   +0x04e0 -> line 7417
+ *   +0x04e8 -> line 7419
+ *   +0x0540 -> line 7421
+ *   +0x054c -> line 7420
+ *   +0x0550 -> line 7426
+ *   +0x0558 -> line 7427
+ *   +0x0584 -> line 7428
+ *   +0x05bc -> line 7429
+ *   +0x05c0 -> line 7428
+ *   +0x05c4 -> line 7429
+ *   +0x05d0 -> line 7434
+ *   +0x05d8 -> line 7435
+ *   +0x05e0 -> line 7438
+ *   +0x05f8 -> line 7439
+ *   +0x05fc -> line 7438
+ *   +0x0600 -> line 7439
+ *   +0x0608 -> line 7440
+ *   +0x0610 -> line 7438
+ *   +0x0614 -> line 7440
+ *   +0x0618 -> line 7438
+ *   +0x0628 -> line 7439
+ *   +0x0644 -> line 7440
+ *   +0x065c -> line 7442
+ *   +0x0664 -> line 7450
+ *   +0x0670 -> line 7453
+ *   +0x0674 -> line 7450
+ *   +0x0678 -> line 7453
+ *   +0x067c -> line 7450
+ *   +0x069c -> line 7451
+ *   +0x06a0 -> line 7452
+ *   +0x06a4 -> line 7453
+ *   +0x06a8 -> line 7450
+ *   +0x06b0 -> line 7451
+ *   +0x06c0 -> line 7452
+ *   +0x06cc -> line 7453
+ *   +0x06d4 -> line 7455
+ *   +0x0748 -> line 7456
+ *   +0x07bc -> line 7457
+ *   +0x0830 -> line 7459
+ *   +0x086c -> line 7461
+ *   +0x0884 -> line 7463
+ *   +0x088c -> line 7464
+ *   +0x0890 -> line 7466
+ *   +0x08cc -> line 7468
+ *   +0x08e4 -> line 7470
+ *   +0x08ec -> line 7474
+ *   +0x08f4 -> line 7475
+ *   +0x08f8 -> line 7482
+ *   +0x0928 -> line 7483
+ *   +0x093c -> line 7484
+ *   +0x0950 -> line 7486
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_LinkChainComputing::Init(MTH3D_tdstVector_* p_stStartingPosition, MTH3D_tdstVector_* p_stEndingDirection, GLI_tdstMaterial_* pMat1, float fFist)
 {
     MTH3D_tdstVector_ v0;
@@ -10390,6 +9926,20 @@ void AGO3_LinkChainComputing::Init(MTH3D_tdstVector_* p_stStartingPosition, MTH3
     *(float*)((char*)&m_stInitialFistPosition[0].xZ + ulFist * 12) = *(float*)((char*)&m_stInitialFistPosition[0].xZ + ulFist * 12) * 0.1f + p_stStartingPosition->xZ * 0.9f;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 7491–7499 */
+/* addr: 0x001ed3f0  size: 76 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 7491
+ *   +0x0008 -> line 7492
+ *   +0x0014 -> line 7494
+ *   +0x001c -> line 7495
+ *   +0x0024 -> line 7494
+ *   +0x0028 -> line 7495
+ *   +0x0038 -> line 7496
+ *   +0x0044 -> line 7499
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_LinkChainComputing::Process(void)
 {
     m_bCanDisplay = m_bInitWasDone;
@@ -10402,6 +9952,113 @@ void AGO3_LinkChainComputing::Process(void)
     m_bInitWasDone = 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 7505–7643 */
+/* addr: 0x001ecff0  size: 1016 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 7505
+ *   +0x0050 -> line 7506
+ *   +0x0068 -> line 7508
+ *   +0x0080 -> line 7539
+ *   +0x0094 -> line 7541
+ *   +0x0098 -> line 7542
+ *   +0x009c -> line 7543
+ *   +0x00a0 -> line 7545
+ *   +0x00a4 -> line 7546
+ *   +0x00a8 -> line 7541
+ *   +0x00ac -> line 7542
+ *   +0x00b4 -> line 7543
+ *   +0x00b8 -> line 7550
+ *   +0x00c0 -> line 7553
+ *   +0x00c4 -> line 7552
+ *   +0x00c8 -> line 7554
+ *   +0x00cc -> line 7552
+ *   +0x00d4 -> line 7556
+ *   +0x00d8 -> line 7552
+ *   +0x00e0 -> line 7553
+ *   +0x00e8 -> line 7554
+ *   +0x00f0 -> line 7556
+ *   +0x00fc -> line 7558
+ *   +0x0130 -> line 7559
+ *   +0x0138 -> line 7563
+ *   +0x013c -> line 7564
+ *   +0x0140 -> line 7563
+ *   +0x0144 -> line 7565
+ *   +0x0148 -> line 7567
+ *   +0x0150 -> line 7563
+ *   +0x0158 -> line 7564
+ *   +0x0168 -> line 7565
+ *   +0x0178 -> line 7567
+ *   +0x01b4 -> line 7570
+ *   +0x01bc -> line 7571
+ *   +0x01c0 -> line 7573
+ *   +0x01d8 -> line 7579
+ *   +0x01dc -> line 7573
+ *   +0x01e0 -> line 7579
+ *   +0x01e8 -> line 7576
+ *   +0x01ec -> line 7577
+ *   +0x01f0 -> line 7579
+ *   +0x01f4 -> line 7575
+ *   +0x01fc -> line 7579
+ *   +0x0200 -> line 7575
+ *   +0x0204 -> line 7576
+ *   +0x0208 -> line 7577
+ *   +0x020c -> line 7579
+ *   +0x0210 -> line 7575
+ *   +0x0214 -> line 7576
+ *   +0x0218 -> line 7579
+ *   +0x0220 -> line 7581
+ *   +0x0224 -> line 7600
+ *   +0x0228 -> line 7581
+ *   +0x022c -> line 7582
+ *   +0x0234 -> line 7583
+ *   +0x023c -> line 7584
+ *   +0x0244 -> line 7585
+ *   +0x024c -> line 7586
+ *   +0x0250 -> line 7600
+ *   +0x0258 -> line 7605
+ *   +0x025c -> line 7613
+ *   +0x0260 -> line 7609
+ *   +0x0264 -> line 7605
+ *   +0x0268 -> line 7606
+ *   +0x026c -> line 7605
+ *   +0x0270 -> line 7606
+ *   +0x0274 -> line 7607
+ *   +0x0278 -> line 7606
+ *   +0x027c -> line 7607
+ *   +0x0284 -> line 7609
+ *   +0x0288 -> line 7610
+ *   +0x028c -> line 7609
+ *   +0x0290 -> line 7610
+ *   +0x0294 -> line 7611
+ *   +0x0298 -> line 7610
+ *   +0x029c -> line 7611
+ *   +0x02a0 -> line 7613
+ *   +0x02a8 -> line 7616
+ *   +0x02e8 -> line 7619
+ *   +0x02ec -> line 7623
+ *   +0x02f0 -> line 7619
+ *   +0x02f4 -> line 7623
+ *   +0x02f8 -> line 7620
+ *   +0x02fc -> line 7624
+ *   +0x0300 -> line 7620
+ *   +0x0304 -> line 7624
+ *   +0x0308 -> line 7621
+ *   +0x030c -> line 7625
+ *   +0x0310 -> line 7621
+ *   +0x0314 -> line 7625
+ *   +0x0318 -> line 7627
+ *   +0x0324 -> line 7628
+ *   +0x0330 -> line 7630
+ *   +0x0338 -> line 7632
+ *   +0x0378 -> line 7639
+ *   +0x037c -> line 7635
+ *   +0x0384 -> line 7636
+ *   +0x038c -> line 7637
+ *   +0x0394 -> line 7640
+ *   +0x03a8 -> line 7643
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_LinkChainComputing::Display(GLD_tdstViewportAttributes_* hVp)
 {
     MAT_tdstTransformation_ TempMatrix;
@@ -10519,12 +10176,208 @@ void AGO3_LinkChainComputing::Display(GLD_tdstViewportAttributes_* hVp)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 3940–3940 */
+/* addr: 0x001ecd80  size: 36 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3940
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_SphericalRadiance::DesInit(void)
 {
     ((AGO3_Part*)this)->m_Finished = 1;
     m_a_hHandle[m_hHandleID] = 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 7682–8292 */
+/* addr: 0x001ea710  size: 9840 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 7682
+ *   +0x002c -> line 7687
+ *   +0x0030 -> line 7682
+ *   +0x003c -> line 7687
+ *   +0x0040 -> line 7682
+ *   +0x0044 -> line 7687
+ *   +0x0090 -> line 7688
+ *   +0x009c -> line 7690
+ *   +0x0200 -> line 7694
+ *   +0x0284 -> line 7696
+ *   +0x02b0 -> line 7699
+ *   +0x02b8 -> line 7703
+ *   +0x0348 -> line 7705
+ *   +0x035c -> line 7708
+ *   +0x0364 -> line 7719
+ *   +0x037c -> line 7723
+ *   +0x0384 -> line 7727
+ *   +0x0420 -> line 7729
+ *   +0x04fc -> line 7732
+ *   +0x0504 -> line 7736
+ *   +0x0594 -> line 7738
+ *   +0x0638 -> line 7741
+ *   +0x0640 -> line 7750
+ *   +0x0648 -> line 7839
+ *   +0x0650 -> line 7843
+ *   +0x0658 -> line 7850
+ *   +0x065c -> line 7852
+ *   +0x069c -> line 7853
+ *   +0x06d8 -> line 7854
+ *   +0x06ec -> line 7855
+ *   +0x06f0 -> line 7854
+ *   +0x06f8 -> line 7855
+ *   +0x06fc -> line 7854
+ *   +0x0708 -> line 7855
+ *   +0x0710 -> line 7854
+ *   +0x0714 -> line 7855
+ *   +0x0718 -> line 7854
+ *   +0x0720 -> line 7855
+ *   +0x0724 -> line 7854
+ *   +0x072c -> line 7855
+ *   +0x0734 -> line 7856
+ *   +0x0744 -> line 7868
+ *   +0x074c -> line 7872
+ *   +0x07dc -> line 7874
+ *   +0x082c -> line 7877
+ *   +0x0834 -> line 7882
+ *   +0x08c4 -> line 7884
+ *   +0x09bc -> line 7887
+ *   +0x09c4 -> line 7895
+ *   +0x09c8 -> line 7897
+ *   +0x0a08 -> line 7898
+ *   +0x0a44 -> line 7899
+ *   +0x0a58 -> line 7900
+ *   +0x0a5c -> line 7899
+ *   +0x0a64 -> line 7900
+ *   +0x0a68 -> line 7899
+ *   +0x0a74 -> line 7900
+ *   +0x0a7c -> line 7899
+ *   +0x0a80 -> line 7900
+ *   +0x0a84 -> line 7899
+ *   +0x0a8c -> line 7900
+ *   +0x0a90 -> line 7899
+ *   +0x0a98 -> line 7900
+ *   +0x0aa0 -> line 7901
+ *   +0x0ab0 -> line 7903
+ *   +0x0ab8 -> line 7910
+ *   +0x0ac4 -> line 7912
+ *   +0x0b98 -> line 7915
+ *   +0x0bb0 -> line 7917
+ *   +0x0bb8 -> line 7919
+ *   +0x0bd8 -> line 7922
+ *   +0x0be0 -> line 7927
+ *   +0x0c70 -> line 7929
+ *   +0x0c84 -> line 7932
+ *   +0x0c8c -> line 7937
+ *   +0x0c98 -> line 7939
+ *   +0x0d6c -> line 7942
+ *   +0x0d84 -> line 7944
+ *   +0x0d8c -> line 7946
+ *   +0x0dac -> line 7949
+ *   +0x0db4 -> line 7956
+ *   +0x0dc0 -> line 7958
+ *   +0x0ec8 -> line 7960
+ *   +0x0edc -> line 7962
+ *   +0x0ee4 -> line 7963
+ *   +0x0ef4 -> line 7965
+ *   +0x0efc -> line 7971
+ *   +0x0f08 -> line 7973
+ *   +0x1014 -> line 7976
+ *   +0x102c -> line 7978
+ *   +0x1034 -> line 7980
+ *   +0x1054 -> line 7983
+ *   +0x105c -> line 7988
+ *   +0x10ec -> line 7990
+ *   +0x11c4 -> line 7993
+ *   +0x11cc -> line 7999
+ *   +0x125c -> line 8004
+ *   +0x12ac -> line 8007
+ *   +0x12b4 -> line 8012
+ *   +0x1344 -> line 8014
+ *   +0x1358 -> line 8017
+ *   +0x1360 -> line 8022
+ *   +0x13f0 -> line 8024
+ *   +0x1404 -> line 8027
+ *   +0x140c -> line 8032
+ *   +0x14d0 -> line 8034
+ *   +0x14e0 -> line 8037
+ *   +0x14e8 -> line 8042
+ *   +0x1570 -> line 8044
+ *   +0x1584 -> line 8047
+ *   +0x158c -> line 8052
+ *   +0x1670 -> line 8054
+ *   +0x1684 -> line 8057
+ *   +0x168c -> line 8062
+ *   +0x1698 -> line 8064
+ *   +0x1750 -> line 8066
+ *   +0x1754 -> line 8067
+ *   +0x17c4 -> line 8069
+ *   +0x17cc -> line 8071
+ *   +0x1844 -> line 8074
+ *   +0x184c -> line 8082
+ *   +0x1854 -> line 8083
+ *   +0x1860 -> line 8095
+ *   +0x1894 -> line 8097
+ *   +0x1920 -> line 8099
+ *   +0x1940 -> line 8100
+ *   +0x1944 -> line 8099
+ *   +0x1948 -> line 8100
+ *   +0x1a18 -> line 8102
+ *   +0x1a20 -> line 8103
+ *   +0x1a44 -> line 8104
+ *   +0x1a4c -> line 8106
+ *   +0x1a54 -> line 8108
+ *   +0x1a74 -> line 8111
+ *   +0x1b4c -> line 8133
+ *   +0x1b54 -> line 8138
+ *   +0x1bec -> line 8140
+ *   +0x1c00 -> line 8143
+ *   +0x1c08 -> line 8149
+ *   +0x1c98 -> line 8151
+ *   +0x1cac -> line 8159
+ *   +0x1cb4 -> line 8164
+ *   +0x1cc0 -> line 8166
+ *   +0x1dd0 -> line 8168
+ *   +0x1ddc -> line 8169
+ *   +0x1df8 -> line 8171
+ *   +0x1e00 -> line 8173
+ *   +0x1e20 -> line 8176
+ *   +0x1e28 -> line 8181
+ *   +0x1e34 -> line 8183
+ *   +0x1f44 -> line 8185
+ *   +0x1f50 -> line 8186
+ *   +0x1f54 -> line 8185
+ *   +0x1f58 -> line 8186
+ *   +0x1f5c -> line 8185
+ *   +0x1f60 -> line 8186
+ *   +0x1f74 -> line 8188
+ *   +0x1f7c -> line 8190
+ *   +0x1f9c -> line 8193
+ *   +0x1fa4 -> line 8197
+ *   +0x2078 -> line 8199
+ *   +0x208c -> line 8215
+ *   +0x2094 -> line 8220
+ *   +0x2124 -> line 8222
+ *   +0x2190 -> line 8225
+ *   +0x2198 -> line 8233
+ *   +0x227c -> line 8239
+ *   +0x2290 -> line 8244
+ *   +0x2298 -> line 8250
+ *   +0x2334 -> line 8252
+ *   +0x23a4 -> line 8255
+ *   +0x23ac -> line 8261
+ *   +0x23b8 -> line 8263
+ *   +0x249c -> line 8266
+ *   +0x24f0 -> line 8268
+ *   +0x24f8 -> line 8270
+ *   +0x2554 -> line 8273
+ *   +0x255c -> line 8278
+ *   +0x2568 -> line 8280
+ *   +0x2600 -> line 8283
+ *   +0x2618 -> line 8285
+ *   +0x2620 -> line 8287
+ *   +0x2640 -> line 8292
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 extern "C" void AGO3_vAddPart(unsigned int PartNumber, MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fParam1, float fParam2, MTH3D_tdstVector_* V1, MTH3D_tdstVector_* V2, MTH3D_tdstVector_* V3)
 {
     int iParam1;
@@ -10535,11 +10388,34 @@ extern "C" void AGO3_vAddPart(unsigned int PartNumber, MTH3D_tdstVector_* pPosit
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 8303–8303 */
+/* addr: 0x001ea700  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 8303
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned int AGO3_dwGetLastHandle(void)
 {
     return g_hLastAllocatedAGO3;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 8311–8326 */
+/* addr: 0x001ea670  size: 136 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 8311
+ *   +0x0004 -> line 8315
+ *   +0x0008 -> line 8311
+ *   +0x0014 -> line 8317
+ *   +0x002c -> line 8319
+ *   +0x0040 -> line 8320
+ *   +0x0048 -> line 8321
+ *   +0x0060 -> line 8323
+ *   +0x0068 -> line 8325
+ *   +0x0078 -> line 8326
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_vKill(int iHandle)
 {
     AGO3_Part* pPart;
@@ -10557,6 +10433,25 @@ void AGO3_vKill(int iHandle)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 8339–8354 */
+/* addr: 0x001ea5e0  size: 132 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 8339
+ *   +0x0004 -> line 8343
+ *   +0x0008 -> line 8339
+ *   +0x0010 -> line 8341
+ *   +0x0014 -> line 8345
+ *   +0x002c -> line 8348
+ *   +0x0030 -> line 8347
+ *   +0x0034 -> line 8349
+ *   +0x0038 -> line 8347
+ *   +0x003c -> line 8349
+ *   +0x005c -> line 8351
+ *   +0x0064 -> line 8353
+ *   +0x0078 -> line 8354
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_ReInit(unsigned int dwHandle, unsigned int dwPartNumber, MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fParameter)
 {
     int i;
@@ -10575,12 +10470,21 @@ void AGO3_ReInit(unsigned int dwHandle, unsigned int dwPartNumber, MTH3D_tdstVec
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 7218–7218 */
+/* addr: 0x001ea5c0  size: 16 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 7218
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AGO3_LinkChainComputing::DesInit(void)
 {
     m_hHandle = 0;
     ((AGO3_Part*)this)->m_Finished = 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 51–66 */
+/* addr: 0x001ea500  size: 180 bytes */
 void Toby_DestroyAll(void)
 {
     unsigned int i;

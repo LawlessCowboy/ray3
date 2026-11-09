@@ -38,3 +38,8 @@ src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/TextFrm
 # aMenu2DPages[page].abGrayed[sel] as %lo(+0x22e) + row, 'addiu r,r,0', + sel);
 # all 30 other recorded matches still MATCH, 0 lost.
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c
+# GliGlou/Drivers/PS2GL/Src/VUSprites.cpp: +1 (CSpriteController::Draw_Simple, retail
+# keeps the m_SpBufferVC/VT +8/+0x10 member offsets unfolded before adding the frame
+# index); all 37 other recorded matches still MATCH, 0 lost.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/PS2MC/PS2MemoryCard.cpp

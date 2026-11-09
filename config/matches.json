@@ -49658,6 +49658,197 @@
           "type": 7
         }
       ]
+    },
+    {
+      "address": "0x002d5300",
+      "candidate_size": 496,
+      "first_difference": 60,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "StartSpriteList__17CSpriteControllerFP17GLI_tdstMaterial_UiUi",
+      "reason": "Pointer setup now matches (VP/VC/VT via m_SpBuffer*[frame] + idx*N, m_pCurrentMaterial stored before if). Residual: early-return layout - retail's 'return 0'/'return 1' paths branch to the epilogue ld ra (and the texture-equal case to the final li v0,1), MWCC emits separate b+ld ra exits; tried two ifs, else-if, flattened &&.",
+      "size": 484,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MISMATCH",
+      "target_size": 484,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002d2fd0",
+      "candidate_size": 400,
+      "first_difference": 78,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "SemiLookatSprite__17CSpriteControllerFP17MTH3D_tdstVector_P17MTH3D_tdstVector_P17GLI_tdstMaterial_fiff",
+      "reason": "Size/structure match (400/400). Body: colors, UVs, Position1/2 copies, then a VU0 asm block (mfc1/qmtc2 0.5f, lqc2, vadd, vmulx.xyz, sqc2 x4, swc1 fSizeX) - retail one line per asm instruction (983-1006). MWCC rejects arrays and float literals as asm operands, so this uses extra locals fHalf/p1/p2 not in the debug list; residual is register-only (Alpha kept in t2 separate from ColorOut, asm pointers t3/t4, 0.5f in f1). Permuter can't run on an asm body.",
+      "size": 400,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MISMATCH",
+      "target_size": 400,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002d21d0",
+      "candidate_size": 704,
+      "first_difference": 126,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "WorldQuadWithUVAndFade__17CSpriteControllerFP27GLD_tdstViewportAttributes_PfPfPfPfffffP17GLI_tdstMaterial_ff",
+      "reason": "Full reconstruction, size 704/704: colors, UV rows with vTmp=(v2-v1)*fPercentage, 4 corner vertices, VU0 asm interpolation (mfc1/ctc2 vi21 + vsub/vmuli/vadd, sqc2 rows 2-5), fADC W. Residual is FP/GPR allocation and scheduling: retail puts 127.0f in f3 and 4096.0f in f2 (ours reversed) and hoists the 4096 constant above the 0x808080 constant; statement-order sweeps don't move it.",
+      "size": 704,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MISMATCH",
+      "target_size": 704,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0031df90",
+      "candidate_size": 2980,
+      "first_difference": 30,
+      "implementation": "void HIE_fn_vSendCharacterToViewportPS2(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask, int _lCullingResult);\nvoid HIE_fn_vSendCharacterModulesToViewPortPS2(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask);\nGEO_tdstGeometricObject_* HIE_fn_p_stGetGeometricObjectFromSuperObject(HIE_tdstSuperObject_* h_SuperObject);\nunsigned char HIE_fn_bSendSPOToFixViewport(GLD_tdstViewportAttributes_* p_stFixViewportAttr, int _lDrawMask);\nvoid HIE_fn_vSendSPOToFixViewport(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask, int _lCullingResult);\nvoid HIE_fn_hFindAllMirrorsInHierarchy(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, HIE_tdstSuperObject_** p_hHandleOfMirror, GEO_tdstGeometricObject_** p_hHandleOfGeometricMirror, short* p_shNbOfMirrors, short shNbMaxOfMirrors);\nint HIE_fn_bFindMirrorInHierarchy(HIE_tdstSuperObject_* _hSprObj);\nvoid HIE_fn_vSendCharacterDynShadowToViewPort(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask);\nvoid HIE_fn_vSendStaticWorldToViewport(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask, int _lCullingResult);\n\n/* The retail code drives the VU0 directly: MWCC PS2 cannot emit lqc2/sqc2 or\n * the macro-mode vmulax/vmadday/vmaddz/vmaddw sequence from C, so the two\n * matrix helpers below are reproduced with statement-level asm blocks. */\n#define HIE_VU_COPY_MATRIX(m_src, m_dst)                                   \\\n    asm { lqc2 vf1, 0x0(m_src); lqc2 vf2, 0x10(m_src);                     \\\n          lqc2 vf3, 0x20(m_src); lqc2 vf4, 0x30(m_src);                    \\\n          sqc2 vf1, 0x0(m_dst); sqc2 vf2, 0x10(m_dst);                     \\\n          sqc2 vf3, 0x20(m_dst); sqc2 vf4, 0x30(m_dst); }",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "HIE_fn_vSendCharacterToViewportPS2",
+      "reason": "Full reconstruction rewritten from retail evidence (inline HIE_fn_vFastPS2PushMatrix/PopMatrix helpers, _DrawMask recomputed in place, bDisplayed vs bDynamicShadowOn split, h_Current3dData reload, p_stLightDir local, MTH_M_xMin min.s, real GLIPS2_vManageLightsForThisCharacter signature, reversed debug declaration order). Under the unit's 3.0.3-pad7b: 2980/3044, 54 rows; float registers and all relocations match. Residual is compiler-build: retail keeps unreachable copies of delay-slot-filled branch-target instructions (+0x84, +0x124, +0x16c, +0x5b0, +0x680, +0x6b8) and leaves the +0x394 slot unfilled, which only 3.0.1 does (3.0.1 gives 3036/3044), yet retail has min.s without 3.0.1's trailing nop (3.0.3 behaviour). Remaining non-compiler residual: g_aListOfCheapCharacterList base hoisted to s5 in the prologue, spill-slot numbering, and the ucMiscFlags&4 early return as beq-over + b-to-epilogue.",
+      "size": 3044,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SPO/HieDraw.c",
+      "status": "MISMATCH",
+      "target_size": 3044,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0031eb80",
+      "candidate_size": 884,
+      "first_difference": 617,
+      "implementation": "void HIE_fn_vSendCharacterModulesToViewPortPS2(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask);\nGEO_tdstGeometricObject_* HIE_fn_p_stGetGeometricObjectFromSuperObject(HIE_tdstSuperObject_* h_SuperObject);\nunsigned char HIE_fn_bSendSPOToFixViewport(GLD_tdstViewportAttributes_* p_stFixViewportAttr, int _lDrawMask);\nvoid HIE_fn_vSendSPOToFixViewport(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask, int _lCullingResult);\nvoid HIE_fn_hFindAllMirrorsInHierarchy(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, HIE_tdstSuperObject_** p_hHandleOfMirror, GEO_tdstGeometricObject_** p_hHandleOfGeometricMirror, short* p_shNbOfMirrors, short shNbMaxOfMirrors);\nint HIE_fn_bFindMirrorInHierarchy(HIE_tdstSuperObject_* _hSprObj);\nvoid HIE_fn_vSendCharacterDynShadowToViewPort(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask);\nvoid HIE_fn_vSendStaticWorldToViewport(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask, int _lCullingResult);\n\n/* The retail code drives the VU0 directly: MWCC PS2 cannot emit lqc2/sqc2 or\n * the macro-mode vmulax/vmadday/vmaddz/vmaddw sequence from C, so the two\n * matrix helpers below are reproduced with statement-level asm blocks. */\n#define HIE_VU_COPY_MATRIX(m_src, m_dst)                                   \\\n    asm { lqc2 vf1, 0x0(m_src); lqc2 vf2, 0x10(m_src);                     \\\n          lqc2 vf3, 0x20(m_src); lqc2 vf4, 0x30(m_src);                    \\\n          sqc2 vf1, 0x0(m_dst); sqc2 vf2, 0x10(m_dst);                     \\\n          sqc2 vf3, 0x20(m_dst); sqc2 vf4, 0x30(m_dst); }",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "HIE_fn_vSendCharacterModulesToViewPortPS2",
+      "reason": "884/884, relocs 38/38; inline push/pop and module-draw helpers reconstructed. Only residual: +0x268 mul.s operand order (retail mul.s f12,f0,f2 = ZFarTransparencyLevel()*fTransparenceLevel, candidate f2,f0). Both operand orders, temps, getters, flattened body, comparison spellings and ~4.7k permuter iterations leave it unchanged.",
+      "size": 884,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SPO/HieDraw.c",
+      "status": "MISMATCH",
+      "target_size": 884,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00258720",
+      "candidate_size": 624,
+      "first_difference": 74,
+      "implementation": "int CD_Read(int FileHandle, char* Buffer, int Size);\nunsigned int CD_Seek(int FileHandle, int Position, int WhereFrom);\nunsigned int CD_Length(int FileHandle);\nint CD_OpenFile(char* FileName);\nvoid CD_Init(void);\n\n/* Debug info says void, but the result is passed on to CD_OpenFile. */\nchar* FMN_SCE_ConvertPath2DVD(char* buffer);\n\n/* E:\\Rayman3\\Disk_01\\R3PS2_SCEA_engine_sources\\sourcesV39\\ps2\\TEMPGRP\\fmn\\cdread.c lines 64\u201379 */\n/* addr: 0x00258c40  size: 172 bytes */\n/* Target MWCC statement boundaries (code offset -> source line):\n *   +0x0000 -> line 64\n *   +0x0008 -> line 69\n *   +0x0010 -> line 71\n *   +0x0018 -> line 72\n *   +0x0020 -> line 73\n *   +0x0028 -> line 75\n *   +0x0030 -> line 77\n *   +0x0084 -> line 78\n *   +0x0088 -> line 77\n *   +0x0090 -> line 78\n *   +0x00a0 -> line 79\n * Place reconstructed statements at these boundaries;\n * compare a candidate object's line table as an extra checkpoint.\n */\n\nvoid CD_Init(void)\n{\n    int Handle;\n\n    CD_ProgressCallBack = 0; InitSectorCache();\n    sceCdInit(0);\n    sceSifInitRpc(0);\n    sceCdMmode(2);\n    for (Handle = 0; Handle < 20; Handle++) {\n        gs_CD_Files[Handle].FirstLogicalSector = 0;\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "sonnet-5.5",
+      "name": "CD_Read",
+      "reason": "Control flow, mtbpc writes and stack layout right (624/620 bytes). Residuals: loop entry (retail jumps to a bottom test with no pre-test; ours emits pre-test slt/beqz), ReadMode+1..3 stores need int-cast address to avoid CSE'd addiu but still unfold, saved-register numbering (SizeToRead s4 vs s0), min() temp kept in v0 by retail.",
+      "size": 620,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/fmn/cdread.c",
+      "status": "MISMATCH",
+      "target_size": 620,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0027dd50",
+      "candidate_size": 804,
+      "first_difference": 0,
+      "implementation": "tdstAnim3d_* fn_p_stCreateIntermediateAnimation(tdstAnim3d_* p_stPreviousAnim, tdstAnim3d_* p_stNextAnim, unsigned short uwPreviousFrame, unsigned short uwNextFrame, unsigned int ulNumberOfFramesForIntermAnim, float xNLParameter);\ntdstCouple_* fn_p_stGetHierarchy(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame, unsigned int* p_ulNewNbCouples);\nvoid fn_vUpdateFrameMatrixForInterAnim(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAnim3d, float _xFrame, unsigned char ucForceUpdate, tdstAChannel_* d_stChannelArray);\nvoid fn_vUpdateFrameForInterAnim(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame);\nMTH3D_tdstVector_* fn_p_stGetLinearSpeedVectorForInterAnim(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame);\nMTH3D_tdstMatrix_* fn_p_stGetAngularSpeedMatrix(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame, MTH3D_tdstMatrix_* p_stMatrix);\nMTH3D_tdstVector_* fn_p_stGetLinearSpeedVector(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame);\nvoid fn_vUpdateFrameMatrix(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAnim3d, float _xFrame, unsigned char ucForceUpdate, tdstAChannel_* d_stChannelArray);\nvoid fn_vUpdateFrame(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame);\ntdstEvent_* fn_p_GetEventsAddress(tdstAnim3d_* _p_stAnim3d);\n\nint fn_v_MergePositions(tdstChannel_* p_stChannel, tdstAChannel_* p_stCurrentChannel, unsigned char bHierarchized);\ninline unsigned int fn_ulFrameFromFloat(float xFrame)\n{\n    return (unsigned int)xFrame;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-sonnet-5-5",
+      "name": "fn_p_stCreateIntermediateAnimation",
+      "reason": "Full reconstruction, 804/800 bytes, relocs ok. Residual: target spills p_stNextAnim to stack (sw a1,0xbc(sp)) and keeps &ax_stTempoMorphArray in a2 (unfolded addiu a2,sp,0xc0; addu s5,a2,t7); we fold sp+0xb0. int-cast array addressing and pointer local did not change it; try unfold compiler list (needs approval).",
+      "size": 800,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/Interpol/a3x_intn.c",
+      "status": "MISMATCH",
+      "target_size": 800,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0031df90",
+      "candidate_size": 3028,
+      "first_difference": 236,
+      "implementation": "void HIE_fn_vSendCharacterToViewportPS2(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask, int _lCullingResult);\nvoid HIE_fn_vSendCharacterModulesToViewPortPS2(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask);\nGEO_tdstGeometricObject_* HIE_fn_p_stGetGeometricObjectFromSuperObject(HIE_tdstSuperObject_* h_SuperObject);\nunsigned char HIE_fn_bSendSPOToFixViewport(GLD_tdstViewportAttributes_* p_stFixViewportAttr, int _lDrawMask);\nvoid HIE_fn_vSendSPOToFixViewport(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask, int _lCullingResult);\nvoid HIE_fn_hFindAllMirrorsInHierarchy(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, HIE_tdstSuperObject_** p_hHandleOfMirror, GEO_tdstGeometricObject_** p_hHandleOfGeometricMirror, short* p_shNbOfMirrors, short shNbMaxOfMirrors);\nint HIE_fn_bFindMirrorInHierarchy(HIE_tdstSuperObject_* _hSprObj);\nvoid HIE_fn_vSendCharacterDynShadowToViewPort(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask);\nvoid HIE_fn_vSendStaticWorldToViewport(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask, int _lCullingResult);\n\n/* The retail code drives the VU0 directly: MWCC PS2 cannot emit lqc2/sqc2 or\n * the macro-mode vmulax/vmadday/vmaddz/vmaddw sequence from C, so the two\n * matrix helpers below are reproduced with statement-level asm blocks. */\n#define HIE_VU_COPY_MATRIX(m_src, m_dst)                                   \\\n    asm { lqc2 vf1, 0x0(m_src); lqc2 vf2, 0x10(m_src);                     \\\n          lqc2 vf3, 0x20(m_src); lqc2 vf4, 0x30(m_src);                    \\\n          sqc2 vf1, 0x0(m_dst); sqc2 vf2, 0x10(m_dst);                     \\\n          sqc2 vf3, 0x20(m_dst); sqc2 vf4, 0x30(m_dst); }",
+      "line_offsets_equal": false,
+      "model": "sonnet-5.5",
+      "name": "HIE_fn_vSendCharacterToViewportPS2",
+      "reason": "Source-shape fixes applied (pCharListArray local hoists list base and matches loop 1 exactly; if(cond==1){call}else return; declaration order fixes all stack slots). Residual under pad7b: 3028/3044, ~17 rows: second early return emits 'bne a0,v1,epilogue' where retail has 'beq a0,v1,L; move a0,s3; b epilogue' with arg move not in jal delay slot; h_Current3dData/p_stLightDir s0/s1 swap at +0x8ac; retail also keeps hoisted delay-slot copy at +0x5b0 (b 604 vs 5f8). Earlier 'compiler-build residual' diagnosis was premature.",
+      "size": 3044,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SPO/HieDraw.c",
+      "status": "MISMATCH",
+      "target_size": 3044,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0032bf80",
+      "candidate_size": 1328,
+      "first_difference": 766,
+      "implementation": "",
+      "line_offsets_equal": true,
+      "model": "claude-opus-5-5",
+      "name": "ManageLoadScreenShot__15C_PS2MC_ManagerFv",
+      "reason": "register-only: checksum compare byte-combine regs (a0 ptr/v1 sum in retail); fill helper PS2MC_vFillTestPattern fixed loop shape",
+      "size": 1328,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/PS2MC/PS2MemoryCard.cpp",
+      "status": "MISMATCH",
+      "target_size": 1328,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0032c4b0",
+      "candidate_size": 1392,
+      "first_difference": 514,
+      "implementation": "",
+      "line_offsets_equal": true,
+      "model": "claude-opus-5-5",
+      "name": "ManageLoadGame__15C_PS2MC_ManagerFv",
+      "reason": "register-only: checksum compare regs and InvalidDCache arg order, same cause as ManageLoadScreenShot",
+      "size": 1392,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/PS2MC/PS2MemoryCard.cpp",
+      "status": "MISMATCH",
+      "target_size": 1392,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0032f660",
+      "candidate_size": 2324,
+      "first_difference": 661,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "ManageGetScreenshotsEntries__15C_PS2MC_ManagerFv",
+      "reason": "register-only: itob/btoi result reg (retail accumulates into first operand reg); layout, sort and stack all match",
+      "size": 2324,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/PS2MC/PS2MemoryCard.cpp",
+      "status": "MISMATCH",
+      "target_size": 2324,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0032ff80",
+      "candidate_size": 3444,
+      "first_difference": 648,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "ManageGetSavedGamesEntries__15C_PS2MC_ManagerFv",
+      "reason": "register/scheduling: same itob/btoi residual plus constant scheduling at +0x2b0",
+      "size": 3444,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/PS2MC/PS2MemoryCard.cpp",
+      "status": "MISMATCH",
+      "target_size": 3444,
+      "unresolved_relocations": [
+        {
+          "offset": 1704,
+          "symbol": "@2351",
+          "type": 5
+        },
+        {
+          "offset": 1720,
+          "symbol": "@2351",
+          "type": 6
+        }
+      ]
     }
   ],
   "data": {},
@@ -70166,6 +70357,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/fmn/cdread.c",
       "status": "MATCH"
     },
+    "0x00258720": {
+      "address": "0x00258720",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CD_Read",
+      "size": 620,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/fmn/cdread.c",
+      "status": "MATCH"
+    },
     "0x00258990": {
       "address": "0x00258990",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -70179,6 +70378,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "CD_Length",
       "size": 24,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/fmn/cdread.c",
+      "status": "MATCH"
+    },
+    "0x00258a40": {
+      "address": "0x00258a40",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CD_OpenFile",
+      "size": 508,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/fmn/cdread.c",
       "status": "MATCH"
     },
@@ -74571,6 +74778,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_p_stGetHierarchy",
       "size": 156,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/Interpol/a3x_intn.c",
+      "status": "MATCH"
+    },
+    "0x0027e500": {
+      "address": "0x0027e500",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "fn_vUpdateFrameForInterAnim",
+      "size": 792,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/Interpol/a3x_intn.c",
       "status": "MATCH"
     },
@@ -80406,11 +80621,27 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
       "status": "MATCH"
     },
+    "0x002d1370": {
+      "address": "0x002d1370",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "Draw2DRectangleWithColor__17CSpriteControllerFffffP17GLI_tdstMaterial_Ui",
+      "size": 524,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MATCH"
+    },
     "0x002d1bf0": {
       "address": "0x002d1bf0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "Sprite2DWithUV__17CSpriteControllerFP27GLD_tdstViewportAttributes_ffffffffP17GLI_tdstMaterial_",
       "size": 604,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MATCH"
+    },
+    "0x002d1e50": {
+      "address": "0x002d1e50",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "DrawWorldQuadWithUVsAndAlpha__17CSpriteControllerFP27GLD_tdstViewportAttributes_PfPfPfPfffffffffP17GLI_tdstMaterial_",
+      "size": 884,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
       "status": "MATCH"
     },
@@ -80430,11 +80661,91 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
       "status": "MATCH"
     },
+    "0x002d3720": {
+      "address": "0x002d3720",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "SimpleSpriteColor__17CSpriteControllerFP17GLI_tdstMaterial_P17MTH3D_tdstVector_ffUi",
+      "size": 328,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MATCH"
+    },
+    "0x002d3870": {
+      "address": "0x002d3870",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "DrawFireSpriteGroup__17CSpriteControllerFP17GLI_tdstMaterial_PA4_fUi",
+      "size": 356,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MATCH"
+    },
     "0x002d39e0": {
       "address": "0x002d39e0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "SimpleSprite__17CSpriteControllerFP17GLI_tdstMaterial_P17MTH3D_tdstVector_ff",
       "size": 320,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MATCH"
+    },
+    "0x002d3b20": {
+      "address": "0x002d3b20",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "Draw_2D__17CSpriteControllerFv",
+      "size": 732,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MATCH"
+    },
+    "0x002d3e00": {
+      "address": "0x002d3e00",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "Draw_3D__17CSpriteControllerFv",
+      "size": 732,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MATCH"
+    },
+    "0x002d40e0": {
+      "address": "0x002d40e0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "Draw_SemiLookat__17CSpriteControllerFv",
+      "size": 992,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MATCH"
+    },
+    "0x002d44c0": {
+      "address": "0x002d44c0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "Draw_Simple_Oriented__17CSpriteControllerFv",
+      "size": 992,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MATCH"
+    },
+    "0x002d48a0": {
+      "address": "0x002d48a0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "Draw_Simple__17CSpriteControllerFv",
+      "size": 1008,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MATCH"
+    },
+    "0x002d4c90": {
+      "address": "0x002d4c90",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "InitSpritesForViewport__17CSpriteControllerFP27GLD_tdstViewportAttributes_",
+      "size": 720,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MATCH"
+    },
+    "0x002d4f60": {
+      "address": "0x002d4f60",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "SendMaterial__17CSpriteControllerFv",
+      "size": 344,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MATCH"
+    },
+    "0x002d50c0": {
+      "address": "0x002d50c0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "EndDraw__17CSpriteControllerFv",
+      "size": 384,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
       "status": "MATCH"
     },
@@ -84974,6 +85285,30 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SHW/ShadDraw.c",
       "status": "MATCH"
     },
+    "0x0031ddf0": {
+      "address": "0x0031ddf0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "SHW_fn_vInitShadow",
+      "size": 408,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SPO/HieDraw.c",
+      "status": "MATCH"
+    },
+    "0x0031df90": {
+      "address": "0x0031df90",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "HIE_fn_vSendCharacterToViewportPS2",
+      "size": 3044,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SPO/HieDraw.c",
+      "status": "MATCH"
+    },
+    "0x0031eb80": {
+      "address": "0x0031eb80",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "HIE_fn_vSendCharacterModulesToViewPortPS2",
+      "size": 884,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SPO/HieDraw.c",
+      "status": "MATCH"
+    },
     "0x0031ef00": {
       "address": "0x0031ef00",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -84982,11 +85317,51 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SPO/HieDraw.c",
       "status": "MATCH"
     },
+    "0x0031efa0": {
+      "address": "0x0031efa0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "HIE_fn_bSendSPOToFixViewport",
+      "size": 312,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SPO/HieDraw.c",
+      "status": "MATCH"
+    },
+    "0x0031f0e0": {
+      "address": "0x0031f0e0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "HIE_fn_vSendSPOToFixViewport",
+      "size": 1392,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SPO/HieDraw.c",
+      "status": "MATCH"
+    },
+    "0x0031f650": {
+      "address": "0x0031f650",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "HIE_fn_hFindAllMirrorsInHierarchy",
+      "size": 740,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SPO/HieDraw.c",
+      "status": "MATCH"
+    },
     "0x0031f940": {
       "address": "0x0031f940",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "HIE_fn_bFindMirrorInHierarchy",
       "size": 200,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SPO/HieDraw.c",
+      "status": "MATCH"
+    },
+    "0x0031fa10": {
+      "address": "0x0031fa10",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "HIE_fn_vSendCharacterDynShadowToViewPort",
+      "size": 768,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SPO/HieDraw.c",
+      "status": "MATCH"
+    },
+    "0x0031fd10": {
+      "address": "0x0031fd10",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "HIE_fn_vSendStaticWorldToViewport",
+      "size": 932,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SPO/HieDraw.c",
       "status": "MATCH"
     },
@@ -85798,6 +86173,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/PS2MC/PS2MemoryCard.cpp",
       "status": "MATCH"
     },
+    "0x0032b2f0": {
+      "address": "0x0032b2f0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "SaveGame__15C_PS2MC_ManagerFPcPc",
+      "size": 448,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/PS2MC/PS2MemoryCard.cpp",
+      "status": "MATCH"
+    },
     "0x0032b4b0": {
       "address": "0x0032b4b0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -85806,11 +86189,75 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/PS2MC/PS2MemoryCard.cpp",
       "status": "MATCH"
     },
+    "0x0032b510": {
+      "address": "0x0032b510",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "ManageSaveScreenShot__15C_PS2MC_ManagerFv",
+      "size": 2672,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/PS2MC/PS2MemoryCard.cpp",
+      "status": "MATCH"
+    },
+    "0x0032ca20": {
+      "address": "0x0032ca20",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "ManageSaveGame__15C_PS2MC_ManagerFv",
+      "size": 3356,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/PS2MC/PS2MemoryCard.cpp",
+      "status": "MATCH"
+    },
+    "0x0032d740": {
+      "address": "0x0032d740",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "ManageAreYouSureBeforeSave__15C_PS2MC_ManagerFv",
+      "size": 528,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/PS2MC/PS2MemoryCard.cpp",
+      "status": "MATCH"
+    },
+    "0x0032d950": {
+      "address": "0x0032d950",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "ManageAutoSaveGame__15C_PS2MC_ManagerFv",
+      "size": 920,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/PS2MC/PS2MemoryCard.cpp",
+      "status": "MATCH"
+    },
+    "0x0032dcf0": {
+      "address": "0x0032dcf0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "ManageFormatting__15C_PS2MC_ManagerFv",
+      "size": 1284,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/PS2MC/PS2MemoryCard.cpp",
+      "status": "MATCH"
+    },
+    "0x0032e200": {
+      "address": "0x0032e200",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "ManageBootCheck__15C_PS2MC_ManagerFv",
+      "size": 4748,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/PS2MC/PS2MemoryCard.cpp",
+      "status": "MATCH"
+    },
     "0x0032f490": {
       "address": "0x0032f490",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "ManagePreBootCheck__15C_PS2MC_ManagerFv",
       "size": 452,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/PS2MC/PS2MemoryCard.cpp",
+      "status": "MATCH"
+    },
+    "0x00330d00": {
+      "address": "0x00330d00",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "ManageCheckOneDirectory__15C_PS2MC_ManagerFv",
+      "size": 1016,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/PS2MC/PS2MemoryCard.cpp",
+      "status": "MATCH"
+    },
+    "0x00331100": {
+      "address": "0x00331100",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "UpdateStatus__15C_PS2MC_ManagerFv",
+      "size": 1664,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/PS2MC/PS2MemoryCard.cpp",
       "status": "MATCH"
     },
@@ -85827,6 +86274,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "FillIconSys__15C_PS2MC_ManagerFPcc",
       "size": 432,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/PS2MC/PS2MemoryCard.cpp",
+      "status": "MATCH"
+    },
+    "0x00331bc0": {
+      "address": "0x00331bc0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "Init__15C_PS2MC_ManagerFUiUi",
+      "size": 528,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/PS2MC/PS2MemoryCard.cpp",
       "status": "MATCH"
     },

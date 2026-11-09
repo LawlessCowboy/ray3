@@ -1109,106 +1109,6 @@ struct LST2_tdstAnchorToCINE_tdxHandleToCineDyn {
 
 int g_a_stObstacle;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 24–161 */
-/* addr: 0x002fea00  size: 372 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 24
- *   +0x0004 -> line 25
- *   +0x0008 -> line 26
- *   +0x000c -> line 27
- *   +0x0010 -> line 29
- *   +0x0014 -> line 31
- *   +0x0018 -> line 32
- *   +0x001c -> line 33
- *   +0x0020 -> line 34
- *   +0x0024 -> line 36
- *   +0x0028 -> line 37
- *   +0x002c -> line 38
- *   +0x0030 -> line 39
- *   +0x0034 -> line 40
- *   +0x0038 -> line 41
- *   +0x003c -> line 42
- *   +0x0040 -> line 43
- *   +0x0044 -> line 44
- *   +0x0048 -> line 45
- *   +0x004c -> line 46
- *   +0x0050 -> line 47
- *   +0x0054 -> line 49
- *   +0x0058 -> line 50
- *   +0x005c -> line 52
- *   +0x0060 -> line 53
- *   +0x0064 -> line 54
- *   +0x0068 -> line 55
- *   +0x006c -> line 56
- *   +0x0070 -> line 57
- *   +0x0074 -> line 58
- *   +0x0078 -> line 59
- *   +0x007c -> line 60
- *   +0x0080 -> line 61
- *   +0x0084 -> line 62
- *   +0x0088 -> line 63
- *   +0x008c -> line 64
- *   +0x0090 -> line 65
- *   +0x0094 -> line 66
- *   +0x0098 -> line 67
- *   +0x009c -> line 69
- *   +0x00a0 -> line 70
- *   +0x00a4 -> line 71
- *   +0x00a8 -> line 72
- *   +0x00ac -> line 74
- *   +0x00b0 -> line 75
- *   +0x00b4 -> line 77
- *   +0x00b8 -> line 78
- *   +0x00bc -> line 86
- *   +0x00c0 -> line 87
- *   +0x00c4 -> line 88
- *   +0x00c8 -> line 89
- *   +0x00cc -> line 90
- *   +0x00d0 -> line 91
- *   +0x00d4 -> line 93
- *   +0x00d8 -> line 95
- *   +0x00dc -> line 96
- *   +0x00e0 -> line 97
- *   +0x00e4 -> line 98
- *   +0x00e8 -> line 99
- *   +0x00ec -> line 100
- *   +0x00f0 -> line 102
- *   +0x00f4 -> line 103
- *   +0x00f8 -> line 105
- *   +0x00fc -> line 106
- *   +0x0100 -> line 107
- *   +0x0104 -> line 108
- *   +0x0108 -> line 110
- *   +0x010c -> line 111
- *   +0x0110 -> line 112
- *   +0x0114 -> line 113
- *   +0x0118 -> line 115
- *   +0x011c -> line 116
- *   +0x0120 -> line 118
- *   +0x0124 -> line 119
- *   +0x0128 -> line 121
- *   +0x012c -> line 122
- *   +0x0130 -> line 130
- *   +0x0134 -> line 131
- *   +0x0138 -> line 135
- *   +0x013c -> line 136
- *   +0x0140 -> line 137
- *   +0x0144 -> line 138
- *   +0x0148 -> line 139
- *   +0x014c -> line 140
- *   +0x0150 -> line 141
- *   +0x0154 -> line 143
- *   +0x0158 -> line 145
- *   +0x015c -> line 146
- *   +0x0160 -> line 147
- *   +0x0164 -> line 148
- *   +0x0168 -> line 152
- *   +0x016c -> line 160
- *   +0x0170 -> line 161
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 asm void MTH4D_fn_vSerialMul4DMatrix3DVertexTo4DAlignedDest_VU0(void);
@@ -1222,58 +1122,458 @@ void DNM_fn_vDynamicsCameraPositionParsing(float _xSpeed, float _xIncSpeed, floa
 void DNM_fn_vDynamicsTakeCareOfLastMove(MTH3D_tdstVector_* _p_stShiftingResult, MTH3D_tdstVector_* _p_stLastShifting, float _xCutAngleFactor);
 float CAM_fn_xComputeVerticalAngle(MTH3D_tdstVector_* _p_stOrgVector, MTH3D_tdstVector_* _p_stDestVector, MTH3D_tdstVector_* _p_stAxisZ);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 1359–1432 */
-/* addr: 0x002feb80  size: 520 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 113–186 */
+/* addr: 0x003016a0  size: 1256 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1359
- *   +0x003c -> line 1378
- *   +0x0044 -> line 1394
- *   +0x0050 -> line 1395
- *   +0x006c -> line 1394
- *   +0x0084 -> line 1395
- *   +0x0094 -> line 1408
- *   +0x009c -> line 1409
- *   +0x00a0 -> line 1415
- *   +0x00a8 -> line 1409
- *   +0x00bc -> line 1415
- *   +0x00dc -> line 1416
- *   +0x01a8 -> line 1428
- *   +0x01b0 -> line 1429
- *   +0x01b4 -> line 1431
- *   +0x01b8 -> line 1429
- *   +0x01d4 -> line 1432
+ *   +0x0000 -> line 113
+ *   +0x0018 -> line 127
+ *   +0x001c -> line 113
+ *   +0x0020 -> line 127
+ *   +0x0024 -> line 113
+ *   +0x0028 -> line 125
+ *   +0x002c -> line 113
+ *   +0x0030 -> line 125
+ *   +0x0034 -> line 113
+ *   +0x0038 -> line 120
+ *   +0x0050 -> line 125
+ *   +0x0068 -> line 127
+ *   +0x00b0 -> line 128
+ *   +0x00bc -> line 131
+ *   +0x00d0 -> line 134
+ *   +0x0170 -> line 136
+ *   +0x01d8 -> line 137
+ *   +0x023c -> line 139
+ *   +0x024c -> line 140
+ *   +0x0250 -> line 143
+ *   +0x0260 -> line 145
+ *   +0x0284 -> line 147
+ *   +0x028c -> line 150
+ *   +0x0290 -> line 157
+ *   +0x02a8 -> line 159
+ *   +0x02e4 -> line 160
+ *   +0x02ec -> line 163
+ *   +0x02fc -> line 164
+ *   +0x039c -> line 166
+ *   +0x0404 -> line 167
+ *   +0x0468 -> line 169
+ *   +0x0478 -> line 170
+ *   +0x047c -> line 173
+ *   +0x048c -> line 175
+ *   +0x04b0 -> line 177
+ *   +0x04b8 -> line 180
+ *   +0x04bc -> line 185
+ *   +0x04c0 -> line 186
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 1236–1265 */
-/* addr: 0x002fed90  size: 1016 bytes */
+float CAM_fn_xComputeVerticalAngle(MTH3D_tdstVector_* _p_stOrgVector, MTH3D_tdstVector_* _p_stDestVector, MTH3D_tdstVector_* _p_stAxisZ)
+{
+    float xNorm;
+    MTH_stRotation stRotation;
+    float xDestAngle;
+    float xOrgAngle;
+    MTH3D_tdstVector_ stProj;
+    MTH3D_tdstVector_ stAxisZ;
+    MTH3D_tdstVector_ stVector;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 207–237 */
+/* addr: 0x003014b0  size: 496 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1236
- *   +0x0004 -> line 1245
- *   +0x0008 -> line 1236
- *   +0x000c -> line 1245
- *   +0x0010 -> line 1236
- *   +0x0014 -> line 1245
- *   +0x0018 -> line 1236
- *   +0x0030 -> line 1241
- *   +0x0064 -> line 1244
- *   +0x007c -> line 1245
- *   +0x0110 -> line 1246
- *   +0x0170 -> line 1249
- *   +0x0184 -> line 1251
- *   +0x01c0 -> line 1252
- *   +0x01cc -> line 1255
- *   +0x0220 -> line 1256
- *   +0x0264 -> line 1258
- *   +0x0270 -> line 1259
- *   +0x02c4 -> line 1261
- *   +0x0328 -> line 1263
- *   +0x037c -> line 1264
- *   +0x03dc -> line 1265
+ *   +0x0000 -> line 207
+ *   +0x0004 -> line 214
+ *   +0x0008 -> line 207
+ *   +0x000c -> line 214
+ *   +0x0010 -> line 207
+ *   +0x0028 -> line 214
+ *   +0x0038 -> line 217
+ *   +0x0054 -> line 218
+ *   +0x006c -> line 220
+ *   +0x0070 -> line 218
+ *   +0x0074 -> line 220
+ *   +0x00b8 -> line 229
+ *   +0x00c4 -> line 228
+ *   +0x00cc -> line 230
+ *   +0x00d4 -> line 228
+ *   +0x00f8 -> line 229
+ *   +0x0118 -> line 230
+ *   +0x0124 -> line 232
+ *   +0x0128 -> line 233
+ *   +0x0134 -> line 232
+ *   +0x0140 -> line 233
+ *   +0x0148 -> line 234
+ *   +0x01ac -> line 235
+ *   +0x01d0 -> line 237
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void DNM_fn_vDynamicsTakeCareOfLastMove(MTH3D_tdstVector_* _p_stShiftingResult, MTH3D_tdstVector_* _p_stLastShifting, float _xCutAngleFactor)
+{
+    MTH_stRotation stRotation;
+    MTH3D_tdstVector_ stTempVector1;
+    MTH3D_tdstVector_ stTempVector;
+    {
+        float xNorm;
+        float xNormLast;
+        float xNormRot;
+        float xInv;
+        float xSqrNorm;
+        float aX, aY, aZ;
+        float xX, xY, xZ;
+
+        if (_xCutAngleFactor == 1.0f)
+        {
+            return;
+        }
+        xX = _p_stShiftingResult->xX; xY = _p_stShiftingResult->xY; xZ = _p_stShiftingResult->xZ;
+        MTH_SQR3_TO(xSqrNorm, xX, xY, xZ);
+        MTH_SQRT_TO(xNorm, xSqrNorm);
+        aX = _p_stLastShifting->xX; aY = _p_stLastShifting->xY; aZ = _p_stLastShifting->xZ;
+        MTH_SQR3_TO(xSqrNorm, aX, aY, aZ);
+        MTH_SQRT_TO(xNormLast, xSqrNorm);
+        if (xNorm <= 0.1f) return;
+        if (xNormLast <= 0.1f) return;
+        if (_xCutAngleFactor <= 0.0f) return;
+        xInv = 1.0f / xNorm;
+        stTempVector1.xX = xInv * xX; stTempVector1.xY = xInv * _p_stShiftingResult->xY; stTempVector1.xZ = xInv * _p_stShiftingResult->xZ;
+        xInv = 1.0f / xNormLast;
+        stTempVector.xX = xInv * _p_stLastShifting->xX; stTempVector.xY = xInv * _p_stLastShifting->xY; stTempVector.xZ = xInv * _p_stLastShifting->xZ;
+        MTH_p_stRotationComputeRotationWith2Vectors(&stRotation, &stTempVector, &stTempVector1);
+        stRotation.m_xAngle = stRotation.m_xAngle / _xCutAngleFactor;
+        MTH_p_stRotationMulVector(&stRotation, &stTempVector, &stTempVector1);
+        MTH_NORM3_TO(xSqrNorm, &stTempVector1);
+        MTH_SQRT_TO(xNormRot, xSqrNorm);
+        if (xNormRot != 0.0f)
+        {
+            xInv = 1.0f / xNormRot;
+            stTempVector1.xX = xInv * stTempVector1.xX; stTempVector1.xY = xInv * stTempVector1.xY; stTempVector1.xZ = xInv * stTempVector1.xZ;
+        }
+        _p_stShiftingResult->xX = xNorm * stTempVector1.xX; _p_stShiftingResult->xY = xNorm * stTempVector1.xY; _p_stShiftingResult->xZ = xNorm * stTempVector1.xZ;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 262–354 */
+/* addr: 0x00301280  size: 552 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 274
+ *   +0x0004 -> line 262
+ *   +0x0008 -> line 274
+ *   +0x0028 -> line 276
+ *   +0x0050 -> line 278
+ *   +0x007c -> line 279
+ *   +0x0090 -> line 280
+ *   +0x0098 -> line 286
+ *   +0x00b0 -> line 288
+ *   +0x00c8 -> line 289
+ *   +0x00d0 -> line 290
+ *   +0x00d8 -> line 298
+ *   +0x00dc -> line 299
+ *   +0x00e0 -> line 298
+ *   +0x00f0 -> line 299
+ *   +0x00f8 -> line 301
+ *   +0x00fc -> line 302
+ *   +0x0100 -> line 309
+ *   +0x0108 -> line 315
+ *   +0x0120 -> line 318
+ *   +0x0130 -> line 320
+ *   +0x013c -> line 321
+ *   +0x016c -> line 324
+ *   +0x0170 -> line 323
+ *   +0x0174 -> line 332
+ *   +0x018c -> line 336
+ *   +0x01b0 -> line 339
+ *   +0x01b4 -> line 338
+ *   +0x01b8 -> line 344
+ *   +0x01c0 -> line 346
+ *   +0x01f0 -> line 353
+ *   +0x0220 -> line 354
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void DNM_fn_vDynamicsCameraPositionParsing(float _xSpeed, float _xIncSpeed, float _xDecSpeed, float _xLastNorm, char _cIgnoreParsing, char _cIgnoreInertia, MTH3D_tdstVector_* _p_stActualPos, MTH3D_tdstVector_* _p_stShiftingSrc, MTH3D_tdstVector_* _p_stDestPos, MTH3D_tdstVector_* _p_stShiftingResult)
+{
+    unsigned char bNormWantedIsModified;
+    float xNormWanted;
+    float xTmpNorm;
+    float xNormSrc;
+    float xNorm;
+    float xScale;
+    float xSqrNorm;
+    float x, y, z;
+
+    bNormWantedIsModified = 0;
+    x = _p_stShiftingSrc->xX; y = _p_stShiftingSrc->xY; z = _p_stShiftingSrc->xZ; MTH_SQR3_TO(xSqrNorm, x, y, z); asm { sqrt.s xNorm, xSqrNorm } asm { nop } asm { nop }
+    xNormSrc = xNorm;
+    if (_cIgnoreParsing || xNorm <= 0.001f)
+    {
+        _p_stDestPos->xX = _p_stActualPos->xX + _p_stShiftingSrc->xX; _p_stDestPos->xY = _p_stActualPos->xY + _p_stShiftingSrc->xY; _p_stDestPos->xZ = _p_stActualPos->xZ + _p_stShiftingSrc->xZ;
+        MTH_COPY_VECTOR_WORDS(_p_stShiftingResult, _p_stShiftingSrc);
+        return;
+    }
+    if (_xSpeed == 0.0f)
+    {
+        MTH_COPY_VECTOR_WORDS(_p_stDestPos, _p_stActualPos);
+        _p_stShiftingSrc->xX = 0.0f; _p_stShiftingSrc->xY = 0.0f; _p_stShiftingSrc->xZ = 0.0f;
+        return;
+    }
+    MTH_COPY_VECTOR_WORDS(_p_stShiftingResult, _p_stShiftingSrc);
+    if (xNorm > _xSpeed)
+    {
+        xNormSrc = _xSpeed;
+        bNormWantedIsModified = 1;
+    }
+    if (!_cIgnoreInertia)
+    {
+        if (_xDecSpeed != 0.0f)
+        {
+            if (xNorm < _xSpeed * _xDecSpeed)
+            {
+                xTmpNorm = xNorm / _xDecSpeed;
+                if (xTmpNorm > 0.001f && xTmpNorm < xNormSrc)
+                {
+                    bNormWantedIsModified = 1;
+                    xNormSrc = xTmpNorm;
+                }
+            }
+        }
+        if (_xIncSpeed != 0.0f)
+        {
+            xNormWanted = _xLastNorm + _xSpeed / _xIncSpeed; if (xNormSrc > xNormWanted)
+            {
+                bNormWantedIsModified = 1;
+                xNormSrc = xNormWanted;
+            }
+        }
+    }
+    if (bNormWantedIsModified)
+    {
+        xScale = xNormSrc / xNorm; _p_stShiftingResult->xX = _p_stShiftingResult->xX * xScale; _p_stShiftingResult->xY = _p_stShiftingResult->xY * xScale; _p_stShiftingResult->xZ = _p_stShiftingResult->xZ * xScale;
+    }
+    _p_stDestPos->xX = _p_stActualPos->xX + _p_stShiftingResult->xX; _p_stDestPos->xY = _p_stActualPos->xY + _p_stShiftingResult->xY; _p_stDestPos->xZ = _p_stActualPos->xZ + _p_stShiftingResult->xZ;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 380–417 */
+/* addr: 0x003011c0  size: 184 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 380
+ *   +0x0028 -> line 382
+ *   +0x0034 -> line 391
+ *   +0x0044 -> line 392
+ *   +0x0048 -> line 398
+ *   +0x0050 -> line 402
+ *   +0x0060 -> line 404
+ *   +0x0074 -> line 405
+ *   +0x0084 -> line 406
+ *   +0x0088 -> line 410
+ *   +0x00ac -> line 412
+ *   +0x00b0 -> line 417
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+float DNM_fn_xDynamicsCameraAngleParsing(float _xSpeed, float _xIncSpeed, float _xDecSpeed, float _xRequestAngle, float _xLastAngle, char _cIgnoreParsing, char _cIgnoreInertia)
+{
+    float xAngle;
+    float xRetAngle;
+
+    if (_cIgnoreParsing || _xRequestAngle < 0.001f)
+    {
+        return _xRequestAngle;
+    }
+    xAngle = _xRequestAngle;
+    if (_xRequestAngle > _xSpeed)
+        xAngle = _xSpeed;
+    if (!_cIgnoreInertia)
+    {
+        if (_xRequestAngle < _xSpeed * _xDecSpeed)
+        {
+            _xRequestAngle = _xRequestAngle / _xDecSpeed;
+            if (xAngle > _xRequestAngle)
+                xAngle = _xRequestAngle;
+        }
+        xRetAngle = _xLastAngle + _xSpeed / _xIncSpeed; if (xAngle > xRetAngle)
+        {
+            xAngle = xRetAngle;
+        }
+    }
+    return xAngle;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 444–666 */
+/* addr: 0x00300a60  size: 1884 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 444
+ *   +0x0028 -> line 502
+ *   +0x002c -> line 444
+ *   +0x0030 -> line 502
+ *   +0x0034 -> line 444
+ *   +0x0038 -> line 503
+ *   +0x003c -> line 444
+ *   +0x0040 -> line 503
+ *   +0x0044 -> line 444
+ *   +0x0048 -> line 478
+ *   +0x004c -> line 444
+ *   +0x0054 -> line 485
+ *   +0x005c -> line 477
+ *   +0x0060 -> line 486
+ *   +0x0090 -> line 491
+ *   +0x00a8 -> line 496
+ *   +0x00ac -> line 502
+ *   +0x00b4 -> line 497
+ *   +0x00b8 -> line 502
+ *   +0x00c8 -> line 503
+ *   +0x00e8 -> line 505
+ *   +0x013c -> line 519
+ *   +0x015c -> line 525
+ *   +0x016c -> line 536
+ *   +0x0170 -> line 537
+ *   +0x0174 -> line 536
+ *   +0x0178 -> line 537
+ *   +0x017c -> line 530
+ *   +0x0180 -> line 537
+ *   +0x0184 -> line 536
+ *   +0x0188 -> line 537
+ *   +0x0190 -> line 536
+ *   +0x01b4 -> line 537
+ *   +0x0248 -> line 539
+ *   +0x02a8 -> line 542
+ *   +0x02ac -> line 545
+ *   +0x02b4 -> line 542
+ *   +0x02d0 -> line 543
+ *   +0x02d4 -> line 545
+ *   +0x02d8 -> line 543
+ *   +0x02e0 -> line 545
+ *   +0x02e4 -> line 543
+ *   +0x02e8 -> line 545
+ *   +0x02ec -> line 543
+ *   +0x02f0 -> line 545
+ *   +0x02f4 -> line 543
+ *   +0x02f8 -> line 545
+ *   +0x0318 -> line 546
+ *   +0x0334 -> line 547
+ *   +0x034c -> line 549
+ *   +0x0378 -> line 552
+ *   +0x0388 -> line 558
+ *   +0x03bc -> line 573
+ *   +0x03d4 -> line 576
+ *   +0x03dc -> line 575
+ *   +0x03e0 -> line 576
+ *   +0x03e8 -> line 579
+ *   +0x040c -> line 580
+ *   +0x0430 -> line 582
+ *   +0x0460 -> line 586
+ *   +0x0478 -> line 592
+ *   +0x0488 -> line 593
+ *   +0x048c -> line 592
+ *   +0x04b4 -> line 593
+ *   +0x04c0 -> line 594
+ *   +0x04f0 -> line 605
+ *   +0x0500 -> line 608
+ *   +0x0508 -> line 609
+ *   +0x0514 -> line 615
+ *   +0x051c -> line 609
+ *   +0x053c -> line 610
+ *   +0x055c -> line 612
+ *   +0x058c -> line 614
+ *   +0x0594 -> line 615
+ *   +0x059c -> line 614
+ *   +0x05a0 -> line 615
+ *   +0x05b0 -> line 616
+ *   +0x05c4 -> line 617
+ *   +0x05cc -> line 627
+ *   +0x05d0 -> line 632
+ *   +0x05d4 -> line 643
+ *   +0x05dc -> line 627
+ *   +0x05f8 -> line 632
+ *   +0x062c -> line 637
+ *   +0x0630 -> line 643
+ *   +0x0638 -> line 638
+ *   +0x063c -> line 643
+ *   +0x064c -> line 644
+ *   +0x066c -> line 645
+ *   +0x06c0 -> line 660
+ *   +0x06d0 -> line 661
+ *   +0x0704 -> line 662
+ *   +0x071c -> line 665
+ *   +0x0720 -> line 666
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+DNM_stDynamics* DNM_p_stDynamicsCameraParsing(DNM_stDynamics* _p_stDynamics, HIE_tdstSuperObject_* _h_SupObj, DNM_stParsingDatas* _p_stExternData, float _xDT)
+{
+    float xNorm;
+    MTH3D_tdstVector_ stDNMTempVector;
+    MTH_stRotation stRotation;
+    MTH3D_tdstVector_ stTempVector2;
+    MTH3D_tdstVector_ stTempVector1;
+    float xSpeed;
+    MTH3D_tdstVector_ stYVector;
+    MTH3D_tdstVector_ stTempVector;
+    MTH3D_tdstVector_ stShiftingResult;
+    MTH3D_tdstVector_ stShiftingSrc;
+    MTH3D_tdstVector_ stPreviousPos;
+    DNM_stReport* p_stReport;
+    stMACDPID* p_stDNMMACDPID;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 691–757 */
+/* addr: 0x00300820  size: 568 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 691
+ *   +0x0014 -> line 700
+ *   +0x0018 -> line 691
+ *   +0x0030 -> line 695
+ *   +0x0034 -> line 691
+ *   +0x0038 -> line 703
+ *   +0x003c -> line 706
+ *   +0x0040 -> line 703
+ *   +0x0054 -> line 704
+ *   +0x0068 -> line 706
+ *   +0x0074 -> line 708
+ *   +0x0084 -> line 712
+ *   +0x0088 -> line 710
+ *   +0x008c -> line 712
+ *   +0x0090 -> line 715
+ *   +0x0094 -> line 716
+ *   +0x00a4 -> line 718
+ *   +0x00ac -> line 719
+ *   +0x00b8 -> line 721
+ *   +0x00c4 -> line 722
+ *   +0x00cc -> line 724
+ *   +0x00d0 -> line 726
+ *   +0x00d8 -> line 728
+ *   +0x0110 -> line 729
+ *   +0x014c -> line 731
+ *   +0x0160 -> line 733
+ *   +0x0198 -> line 738
+ *   +0x01b8 -> line 739
+ *   +0x01c0 -> line 745
+ *   +0x01c4 -> line 744
+ *   +0x01c8 -> line 749
+ *   +0x01d8 -> line 751
+ *   +0x01e0 -> line 753
+ *   +0x0204 -> line 754
+ *   +0x0208 -> line 757
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int CAM_lHaveITakeSThgIntoTheMug(DNM_stMecObstacle* _p_stResultObstacle, HIE_tdstSuperObject_* _p_stSupObj, MAT_tdstTransformation_* _p_stStartPosition, MAT_tdstTransformation_* _p_stEndPosition)
+{
+    MTH3D_tdstVector_ stTempVec;
+    MTH3D_tdstVector_ stStartVec;
+    char bLessDetected;
+    unsigned char bWater;
+    unsigned short xCollMask;
+    GMT_tdstCollideMaterial_* hCollMat;
+    GMT_tdstGameMaterial_* hGameMat;
+    DNM_stMecObstacle* p_stReturnObstacle;
+    DNM_stMecObstacle* p_stObstacle;
+    int lCollision;
+    int lCounter;
+    /* TODO: decompile from asm/... */
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 829–1209 */
 /* addr: 0x002ff190  size: 5772 bytes */
@@ -1487,465 +1787,6 @@ float CAM_fn_xComputeVerticalAngle(MTH3D_tdstVector_* _p_stOrgVector, MTH3D_tdst
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 691–757 */
-/* addr: 0x00300820  size: 568 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 691
- *   +0x0014 -> line 700
- *   +0x0018 -> line 691
- *   +0x0030 -> line 695
- *   +0x0034 -> line 691
- *   +0x0038 -> line 703
- *   +0x003c -> line 706
- *   +0x0040 -> line 703
- *   +0x0054 -> line 704
- *   +0x0068 -> line 706
- *   +0x0074 -> line 708
- *   +0x0084 -> line 712
- *   +0x0088 -> line 710
- *   +0x008c -> line 712
- *   +0x0090 -> line 715
- *   +0x0094 -> line 716
- *   +0x00a4 -> line 718
- *   +0x00ac -> line 719
- *   +0x00b8 -> line 721
- *   +0x00c4 -> line 722
- *   +0x00cc -> line 724
- *   +0x00d0 -> line 726
- *   +0x00d8 -> line 728
- *   +0x0110 -> line 729
- *   +0x014c -> line 731
- *   +0x0160 -> line 733
- *   +0x0198 -> line 738
- *   +0x01b8 -> line 739
- *   +0x01c0 -> line 745
- *   +0x01c4 -> line 744
- *   +0x01c8 -> line 749
- *   +0x01d8 -> line 751
- *   +0x01e0 -> line 753
- *   +0x0204 -> line 754
- *   +0x0208 -> line 757
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 444–666 */
-/* addr: 0x00300a60  size: 1884 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 444
- *   +0x0028 -> line 502
- *   +0x002c -> line 444
- *   +0x0030 -> line 502
- *   +0x0034 -> line 444
- *   +0x0038 -> line 503
- *   +0x003c -> line 444
- *   +0x0040 -> line 503
- *   +0x0044 -> line 444
- *   +0x0048 -> line 478
- *   +0x004c -> line 444
- *   +0x0054 -> line 485
- *   +0x005c -> line 477
- *   +0x0060 -> line 486
- *   +0x0090 -> line 491
- *   +0x00a8 -> line 496
- *   +0x00ac -> line 502
- *   +0x00b4 -> line 497
- *   +0x00b8 -> line 502
- *   +0x00c8 -> line 503
- *   +0x00e8 -> line 505
- *   +0x013c -> line 519
- *   +0x015c -> line 525
- *   +0x016c -> line 536
- *   +0x0170 -> line 537
- *   +0x0174 -> line 536
- *   +0x0178 -> line 537
- *   +0x017c -> line 530
- *   +0x0180 -> line 537
- *   +0x0184 -> line 536
- *   +0x0188 -> line 537
- *   +0x0190 -> line 536
- *   +0x01b4 -> line 537
- *   +0x0248 -> line 539
- *   +0x02a8 -> line 542
- *   +0x02ac -> line 545
- *   +0x02b4 -> line 542
- *   +0x02d0 -> line 543
- *   +0x02d4 -> line 545
- *   +0x02d8 -> line 543
- *   +0x02e0 -> line 545
- *   +0x02e4 -> line 543
- *   +0x02e8 -> line 545
- *   +0x02ec -> line 543
- *   +0x02f0 -> line 545
- *   +0x02f4 -> line 543
- *   +0x02f8 -> line 545
- *   +0x0318 -> line 546
- *   +0x0334 -> line 547
- *   +0x034c -> line 549
- *   +0x0378 -> line 552
- *   +0x0388 -> line 558
- *   +0x03bc -> line 573
- *   +0x03d4 -> line 576
- *   +0x03dc -> line 575
- *   +0x03e0 -> line 576
- *   +0x03e8 -> line 579
- *   +0x040c -> line 580
- *   +0x0430 -> line 582
- *   +0x0460 -> line 586
- *   +0x0478 -> line 592
- *   +0x0488 -> line 593
- *   +0x048c -> line 592
- *   +0x04b4 -> line 593
- *   +0x04c0 -> line 594
- *   +0x04f0 -> line 605
- *   +0x0500 -> line 608
- *   +0x0508 -> line 609
- *   +0x0514 -> line 615
- *   +0x051c -> line 609
- *   +0x053c -> line 610
- *   +0x055c -> line 612
- *   +0x058c -> line 614
- *   +0x0594 -> line 615
- *   +0x059c -> line 614
- *   +0x05a0 -> line 615
- *   +0x05b0 -> line 616
- *   +0x05c4 -> line 617
- *   +0x05cc -> line 627
- *   +0x05d0 -> line 632
- *   +0x05d4 -> line 643
- *   +0x05dc -> line 627
- *   +0x05f8 -> line 632
- *   +0x062c -> line 637
- *   +0x0630 -> line 643
- *   +0x0638 -> line 638
- *   +0x063c -> line 643
- *   +0x064c -> line 644
- *   +0x066c -> line 645
- *   +0x06c0 -> line 660
- *   +0x06d0 -> line 661
- *   +0x0704 -> line 662
- *   +0x071c -> line 665
- *   +0x0720 -> line 666
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 380–417 */
-/* addr: 0x003011c0  size: 184 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 380
- *   +0x0028 -> line 382
- *   +0x0034 -> line 391
- *   +0x0044 -> line 392
- *   +0x0048 -> line 398
- *   +0x0050 -> line 402
- *   +0x0060 -> line 404
- *   +0x0074 -> line 405
- *   +0x0084 -> line 406
- *   +0x0088 -> line 410
- *   +0x00ac -> line 412
- *   +0x00b0 -> line 417
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 262–354 */
-/* addr: 0x00301280  size: 552 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 274
- *   +0x0004 -> line 262
- *   +0x0008 -> line 274
- *   +0x0028 -> line 276
- *   +0x0050 -> line 278
- *   +0x007c -> line 279
- *   +0x0090 -> line 280
- *   +0x0098 -> line 286
- *   +0x00b0 -> line 288
- *   +0x00c8 -> line 289
- *   +0x00d0 -> line 290
- *   +0x00d8 -> line 298
- *   +0x00dc -> line 299
- *   +0x00e0 -> line 298
- *   +0x00f0 -> line 299
- *   +0x00f8 -> line 301
- *   +0x00fc -> line 302
- *   +0x0100 -> line 309
- *   +0x0108 -> line 315
- *   +0x0120 -> line 318
- *   +0x0130 -> line 320
- *   +0x013c -> line 321
- *   +0x016c -> line 324
- *   +0x0170 -> line 323
- *   +0x0174 -> line 332
- *   +0x018c -> line 336
- *   +0x01b0 -> line 339
- *   +0x01b4 -> line 338
- *   +0x01b8 -> line 344
- *   +0x01c0 -> line 346
- *   +0x01f0 -> line 353
- *   +0x0220 -> line 354
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 207–237 */
-/* addr: 0x003014b0  size: 496 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 207
- *   +0x0004 -> line 214
- *   +0x0008 -> line 207
- *   +0x000c -> line 214
- *   +0x0010 -> line 207
- *   +0x0028 -> line 214
- *   +0x0038 -> line 217
- *   +0x0054 -> line 218
- *   +0x006c -> line 220
- *   +0x0070 -> line 218
- *   +0x0074 -> line 220
- *   +0x00b8 -> line 229
- *   +0x00c4 -> line 228
- *   +0x00cc -> line 230
- *   +0x00d4 -> line 228
- *   +0x00f8 -> line 229
- *   +0x0118 -> line 230
- *   +0x0124 -> line 232
- *   +0x0128 -> line 233
- *   +0x0134 -> line 232
- *   +0x0140 -> line 233
- *   +0x0148 -> line 234
- *   +0x01ac -> line 235
- *   +0x01d0 -> line 237
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 113–186 */
-/* addr: 0x003016a0  size: 1256 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 113
- *   +0x0018 -> line 127
- *   +0x001c -> line 113
- *   +0x0020 -> line 127
- *   +0x0024 -> line 113
- *   +0x0028 -> line 125
- *   +0x002c -> line 113
- *   +0x0030 -> line 125
- *   +0x0034 -> line 113
- *   +0x0038 -> line 120
- *   +0x0050 -> line 125
- *   +0x0068 -> line 127
- *   +0x00b0 -> line 128
- *   +0x00bc -> line 131
- *   +0x00d0 -> line 134
- *   +0x0170 -> line 136
- *   +0x01d8 -> line 137
- *   +0x023c -> line 139
- *   +0x024c -> line 140
- *   +0x0250 -> line 143
- *   +0x0260 -> line 145
- *   +0x0284 -> line 147
- *   +0x028c -> line 150
- *   +0x0290 -> line 157
- *   +0x02a8 -> line 159
- *   +0x02e4 -> line 160
- *   +0x02ec -> line 163
- *   +0x02fc -> line 164
- *   +0x039c -> line 166
- *   +0x0404 -> line 167
- *   +0x0468 -> line 169
- *   +0x0478 -> line 170
- *   +0x047c -> line 173
- *   +0x048c -> line 175
- *   +0x04b0 -> line 177
- *   +0x04b8 -> line 180
- *   +0x04bc -> line 185
- *   +0x04c0 -> line 186
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-float CAM_fn_xComputeVerticalAngle(MTH3D_tdstVector_* _p_stOrgVector, MTH3D_tdstVector_* _p_stDestVector, MTH3D_tdstVector_* _p_stAxisZ)
-{
-    float xNorm;
-    MTH_stRotation stRotation;
-    float xDestAngle;
-    float xOrgAngle;
-    MTH3D_tdstVector_ stProj;
-    MTH3D_tdstVector_ stAxisZ;
-    MTH3D_tdstVector_ stVector;
-    /* TODO: decompile from asm/... */
-}
-
-void DNM_fn_vDynamicsTakeCareOfLastMove(MTH3D_tdstVector_* _p_stShiftingResult, MTH3D_tdstVector_* _p_stLastShifting, float _xCutAngleFactor)
-{
-    MTH_stRotation stRotation;
-    MTH3D_tdstVector_ stTempVector1;
-    MTH3D_tdstVector_ stTempVector;
-    {
-        float xNorm;
-        float xNormLast;
-        float xNormRot;
-        float xInv;
-        float xSqrNorm;
-        float aX, aY, aZ;
-        float xX, xY, xZ;
-
-        if (_xCutAngleFactor == 1.0f)
-        {
-            return;
-        }
-        xX = _p_stShiftingResult->xX; xY = _p_stShiftingResult->xY; xZ = _p_stShiftingResult->xZ;
-        MTH_SQR3_TO(xSqrNorm, xX, xY, xZ);
-        MTH_SQRT_TO(xNorm, xSqrNorm);
-        aX = _p_stLastShifting->xX; aY = _p_stLastShifting->xY; aZ = _p_stLastShifting->xZ;
-        MTH_SQR3_TO(xSqrNorm, aX, aY, aZ);
-        MTH_SQRT_TO(xNormLast, xSqrNorm);
-        if (xNorm <= 0.1f) return;
-        if (xNormLast <= 0.1f) return;
-        if (_xCutAngleFactor <= 0.0f) return;
-        xInv = 1.0f / xNorm;
-        stTempVector1.xX = xInv * xX; stTempVector1.xY = xInv * _p_stShiftingResult->xY; stTempVector1.xZ = xInv * _p_stShiftingResult->xZ;
-        xInv = 1.0f / xNormLast;
-        stTempVector.xX = xInv * _p_stLastShifting->xX; stTempVector.xY = xInv * _p_stLastShifting->xY; stTempVector.xZ = xInv * _p_stLastShifting->xZ;
-        MTH_p_stRotationComputeRotationWith2Vectors(&stRotation, &stTempVector, &stTempVector1);
-        stRotation.m_xAngle = stRotation.m_xAngle / _xCutAngleFactor;
-        MTH_p_stRotationMulVector(&stRotation, &stTempVector, &stTempVector1);
-        MTH_NORM3_TO(xSqrNorm, &stTempVector1);
-        MTH_SQRT_TO(xNormRot, xSqrNorm);
-        if (xNormRot != 0.0f)
-        {
-            xInv = 1.0f / xNormRot;
-            stTempVector1.xX = xInv * stTempVector1.xX; stTempVector1.xY = xInv * stTempVector1.xY; stTempVector1.xZ = xInv * stTempVector1.xZ;
-        }
-        _p_stShiftingResult->xX = xNorm * stTempVector1.xX; _p_stShiftingResult->xY = xNorm * stTempVector1.xY; _p_stShiftingResult->xZ = xNorm * stTempVector1.xZ;
-    }
-}
-
-void DNM_fn_vDynamicsCameraPositionParsing(float _xSpeed, float _xIncSpeed, float _xDecSpeed, float _xLastNorm, char _cIgnoreParsing, char _cIgnoreInertia, MTH3D_tdstVector_* _p_stActualPos, MTH3D_tdstVector_* _p_stShiftingSrc, MTH3D_tdstVector_* _p_stDestPos, MTH3D_tdstVector_* _p_stShiftingResult)
-{
-    unsigned char bNormWantedIsModified;
-    float xNormWanted;
-    float xTmpNorm;
-    float xNormSrc;
-    float xNorm;
-    float xScale;
-    float xSqrNorm;
-    float x, y, z;
-
-    bNormWantedIsModified = 0;
-    x = _p_stShiftingSrc->xX; y = _p_stShiftingSrc->xY; z = _p_stShiftingSrc->xZ; MTH_SQR3_TO(xSqrNorm, x, y, z); asm { sqrt.s xNorm, xSqrNorm } asm { nop } asm { nop }
-    xNormSrc = xNorm;
-    if (_cIgnoreParsing || xNorm <= 0.001f)
-    {
-        _p_stDestPos->xX = _p_stActualPos->xX + _p_stShiftingSrc->xX; _p_stDestPos->xY = _p_stActualPos->xY + _p_stShiftingSrc->xY; _p_stDestPos->xZ = _p_stActualPos->xZ + _p_stShiftingSrc->xZ;
-        MTH_COPY_VECTOR_WORDS(_p_stShiftingResult, _p_stShiftingSrc);
-        return;
-    }
-    if (_xSpeed == 0.0f)
-    {
-        MTH_COPY_VECTOR_WORDS(_p_stDestPos, _p_stActualPos);
-        _p_stShiftingSrc->xX = 0.0f; _p_stShiftingSrc->xY = 0.0f; _p_stShiftingSrc->xZ = 0.0f;
-        return;
-    }
-    MTH_COPY_VECTOR_WORDS(_p_stShiftingResult, _p_stShiftingSrc);
-    if (xNorm > _xSpeed)
-    {
-        xNormSrc = _xSpeed;
-        bNormWantedIsModified = 1;
-    }
-    if (!_cIgnoreInertia)
-    {
-        if (_xDecSpeed != 0.0f)
-        {
-            if (xNorm < _xSpeed * _xDecSpeed)
-            {
-                xTmpNorm = xNorm / _xDecSpeed;
-                if (xTmpNorm > 0.001f && xTmpNorm < xNormSrc)
-                {
-                    bNormWantedIsModified = 1;
-                    xNormSrc = xTmpNorm;
-                }
-            }
-        }
-        if (_xIncSpeed != 0.0f)
-        {
-            xNormWanted = _xLastNorm + _xSpeed / _xIncSpeed; if (xNormSrc > xNormWanted)
-            {
-                bNormWantedIsModified = 1;
-                xNormSrc = xNormWanted;
-            }
-        }
-    }
-    if (bNormWantedIsModified)
-    {
-        xScale = xNormSrc / xNorm; _p_stShiftingResult->xX = _p_stShiftingResult->xX * xScale; _p_stShiftingResult->xY = _p_stShiftingResult->xY * xScale; _p_stShiftingResult->xZ = _p_stShiftingResult->xZ * xScale;
-    }
-    _p_stDestPos->xX = _p_stActualPos->xX + _p_stShiftingResult->xX; _p_stDestPos->xY = _p_stActualPos->xY + _p_stShiftingResult->xY; _p_stDestPos->xZ = _p_stActualPos->xZ + _p_stShiftingResult->xZ;
-}
-
-float DNM_fn_xDynamicsCameraAngleParsing(float _xSpeed, float _xIncSpeed, float _xDecSpeed, float _xRequestAngle, float _xLastAngle, char _cIgnoreParsing, char _cIgnoreInertia)
-{
-    float xAngle;
-    float xRetAngle;
-
-    if (_cIgnoreParsing || _xRequestAngle < 0.001f)
-    {
-        return _xRequestAngle;
-    }
-    xAngle = _xRequestAngle;
-    if (_xRequestAngle > _xSpeed)
-        xAngle = _xSpeed;
-    if (!_cIgnoreInertia)
-    {
-        if (_xRequestAngle < _xSpeed * _xDecSpeed)
-        {
-            _xRequestAngle = _xRequestAngle / _xDecSpeed;
-            if (xAngle > _xRequestAngle)
-                xAngle = _xRequestAngle;
-        }
-        xRetAngle = _xLastAngle + _xSpeed / _xIncSpeed; if (xAngle > xRetAngle)
-        {
-            xAngle = xRetAngle;
-        }
-    }
-    return xAngle;
-}
-
-DNM_stDynamics* DNM_p_stDynamicsCameraParsing(DNM_stDynamics* _p_stDynamics, HIE_tdstSuperObject_* _h_SupObj, DNM_stParsingDatas* _p_stExternData, float _xDT)
-{
-    float xNorm;
-    MTH3D_tdstVector_ stDNMTempVector;
-    MTH_stRotation stRotation;
-    MTH3D_tdstVector_ stTempVector2;
-    MTH3D_tdstVector_ stTempVector1;
-    float xSpeed;
-    MTH3D_tdstVector_ stYVector;
-    MTH3D_tdstVector_ stTempVector;
-    MTH3D_tdstVector_ stShiftingResult;
-    MTH3D_tdstVector_ stShiftingSrc;
-    MTH3D_tdstVector_ stPreviousPos;
-    DNM_stReport* p_stReport;
-    stMACDPID* p_stDNMMACDPID;
-    /* TODO: decompile from asm/... */
-}
-
-int CAM_lHaveITakeSThgIntoTheMug(DNM_stMecObstacle* _p_stResultObstacle, HIE_tdstSuperObject_* _p_stSupObj, MAT_tdstTransformation_* _p_stStartPosition, MAT_tdstTransformation_* _p_stEndPosition)
-{
-    MTH3D_tdstVector_ stTempVec;
-    MTH3D_tdstVector_ stStartVec;
-    char bLessDetected;
-    unsigned char bWater;
-    unsigned short xCollMask;
-    GMT_tdstCollideMaterial_* hCollMat;
-    GMT_tdstGameMaterial_* hGameMat;
-    DNM_stMecObstacle* p_stReturnObstacle;
-    DNM_stMecObstacle* p_stObstacle;
-    int lCollision;
-    int lCounter;
-    /* TODO: decompile from asm/... */
-}
-
 DNM_stMecObstacle* DNM_p_stObstacleCameraObstacle(DNM_stMecObstacle* _p_stObstacle, DNM_stDynamics* _p_stDynamics, DNM_stParsingDatas* _p_stExternData, HIE_tdstSuperObject_* _hSupObj, MTH3D_tdstVector_* _p_stWantedPosition, MTH3D_tdstVector_* _p_stNewPosition)
 {
     float xNorm;
@@ -1973,6 +1814,34 @@ DNM_stMecObstacle* DNM_p_stObstacleCameraObstacle(DNM_stMecObstacle* _p_stObstac
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 1236–1265 */
+/* addr: 0x002fed90  size: 1016 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1236
+ *   +0x0004 -> line 1245
+ *   +0x0008 -> line 1236
+ *   +0x000c -> line 1245
+ *   +0x0010 -> line 1236
+ *   +0x0014 -> line 1245
+ *   +0x0018 -> line 1236
+ *   +0x0030 -> line 1241
+ *   +0x0064 -> line 1244
+ *   +0x007c -> line 1245
+ *   +0x0110 -> line 1246
+ *   +0x0170 -> line 1249
+ *   +0x0184 -> line 1251
+ *   +0x01c0 -> line 1252
+ *   +0x01cc -> line 1255
+ *   +0x0220 -> line 1256
+ *   +0x0264 -> line 1258
+ *   +0x0270 -> line 1259
+ *   +0x02c4 -> line 1261
+ *   +0x0328 -> line 1263
+ *   +0x037c -> line 1264
+ *   +0x03dc -> line 1265
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void CAM_fn_vComputeCameraSystemAxis(DNM_stDynamics* _p_stDynamics, HIE_tdstSuperObject_* _h_SupObj, MTH3D_tdstVector_* _p_stNewPosition, MTH3D_tdstVector_* _p_stNewTarget, MTH3D_tdstVector_* _p_stAxisX, MTH3D_tdstVector_* _p_stAxisY, MTH3D_tdstVector_* _p_stAxisZ)
 {
     float xYValue;
@@ -2120,6 +1989,29 @@ void CAM_fn_vComputeCameraSystemAxis(DNM_stDynamics* _p_stDynamics, HIE_tdstSupe
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 1359–1432 */
+/* addr: 0x002feb80  size: 520 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1359
+ *   +0x003c -> line 1378
+ *   +0x0044 -> line 1394
+ *   +0x0050 -> line 1395
+ *   +0x006c -> line 1394
+ *   +0x0084 -> line 1395
+ *   +0x0094 -> line 1408
+ *   +0x009c -> line 1409
+ *   +0x00a0 -> line 1415
+ *   +0x00a8 -> line 1409
+ *   +0x00bc -> line 1415
+ *   +0x00dc -> line 1416
+ *   +0x01a8 -> line 1428
+ *   +0x01b0 -> line 1429
+ *   +0x01b4 -> line 1431
+ *   +0x01b8 -> line 1429
+ *   +0x01d4 -> line 1432
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 DNM_stDynamics* DNM_p_stDynamicsCameraMechanics(DNM_stDynamics* _p_stDynamics, HIE_tdstSuperObject_* _hSupObj, DNM_stParsingDatas* _p_stParsingDatas, void* _h_MecIdCard, float _xDT)
 {
     MTH3D_tdstVector_ stPosition1;
@@ -2134,6 +2026,106 @@ DNM_stDynamics* DNM_p_stDynamicsCameraMechanics(DNM_stDynamics* _p_stDynamics, H
    cannot emit from C, and the retail line table has one entry per instruction.
    The arguments arrive in a0 (destination), a1 (matrix), a2 (vector) and a3
    (vertex count). */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 24–161 */
+/* addr: 0x002fea00  size: 372 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 24
+ *   +0x0004 -> line 25
+ *   +0x0008 -> line 26
+ *   +0x000c -> line 27
+ *   +0x0010 -> line 29
+ *   +0x0014 -> line 31
+ *   +0x0018 -> line 32
+ *   +0x001c -> line 33
+ *   +0x0020 -> line 34
+ *   +0x0024 -> line 36
+ *   +0x0028 -> line 37
+ *   +0x002c -> line 38
+ *   +0x0030 -> line 39
+ *   +0x0034 -> line 40
+ *   +0x0038 -> line 41
+ *   +0x003c -> line 42
+ *   +0x0040 -> line 43
+ *   +0x0044 -> line 44
+ *   +0x0048 -> line 45
+ *   +0x004c -> line 46
+ *   +0x0050 -> line 47
+ *   +0x0054 -> line 49
+ *   +0x0058 -> line 50
+ *   +0x005c -> line 52
+ *   +0x0060 -> line 53
+ *   +0x0064 -> line 54
+ *   +0x0068 -> line 55
+ *   +0x006c -> line 56
+ *   +0x0070 -> line 57
+ *   +0x0074 -> line 58
+ *   +0x0078 -> line 59
+ *   +0x007c -> line 60
+ *   +0x0080 -> line 61
+ *   +0x0084 -> line 62
+ *   +0x0088 -> line 63
+ *   +0x008c -> line 64
+ *   +0x0090 -> line 65
+ *   +0x0094 -> line 66
+ *   +0x0098 -> line 67
+ *   +0x009c -> line 69
+ *   +0x00a0 -> line 70
+ *   +0x00a4 -> line 71
+ *   +0x00a8 -> line 72
+ *   +0x00ac -> line 74
+ *   +0x00b0 -> line 75
+ *   +0x00b4 -> line 77
+ *   +0x00b8 -> line 78
+ *   +0x00bc -> line 86
+ *   +0x00c0 -> line 87
+ *   +0x00c4 -> line 88
+ *   +0x00c8 -> line 89
+ *   +0x00cc -> line 90
+ *   +0x00d0 -> line 91
+ *   +0x00d4 -> line 93
+ *   +0x00d8 -> line 95
+ *   +0x00dc -> line 96
+ *   +0x00e0 -> line 97
+ *   +0x00e4 -> line 98
+ *   +0x00e8 -> line 99
+ *   +0x00ec -> line 100
+ *   +0x00f0 -> line 102
+ *   +0x00f4 -> line 103
+ *   +0x00f8 -> line 105
+ *   +0x00fc -> line 106
+ *   +0x0100 -> line 107
+ *   +0x0104 -> line 108
+ *   +0x0108 -> line 110
+ *   +0x010c -> line 111
+ *   +0x0110 -> line 112
+ *   +0x0114 -> line 113
+ *   +0x0118 -> line 115
+ *   +0x011c -> line 116
+ *   +0x0120 -> line 118
+ *   +0x0124 -> line 119
+ *   +0x0128 -> line 121
+ *   +0x012c -> line 122
+ *   +0x0130 -> line 130
+ *   +0x0134 -> line 131
+ *   +0x0138 -> line 135
+ *   +0x013c -> line 136
+ *   +0x0140 -> line 137
+ *   +0x0144 -> line 138
+ *   +0x0148 -> line 139
+ *   +0x014c -> line 140
+ *   +0x0150 -> line 141
+ *   +0x0154 -> line 143
+ *   +0x0158 -> line 145
+ *   +0x015c -> line 146
+ *   +0x0160 -> line 147
+ *   +0x0164 -> line 148
+ *   +0x0168 -> line 152
+ *   +0x016c -> line 160
+ *   +0x0170 -> line 161
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 asm void MTH4D_fn_vSerialMul4DMatrix3DVertexTo4DAlignedDest_VU0(void)
 {
     pref 0x0, 0x0($a1);

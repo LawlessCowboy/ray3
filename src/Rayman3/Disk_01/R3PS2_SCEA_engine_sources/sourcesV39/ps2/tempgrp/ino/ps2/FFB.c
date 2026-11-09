@@ -64,18 +64,6 @@ signed char INO_fn_cCreateAndLaunchConstantFFBEffect(unsigned int ulCurrentTime,
 int INO_fn_bIsSmallActuatorActivated(unsigned int ulCurrentTime, INO_stForceFeedBack* p_stFFB);
 unsigned char fn_ucFFBIntensityAtTime(INO_stForceFeedBack* p_stFFB, unsigned int ulCurrentTime);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 212–224 */
-/* addr: 0x002f0080  size: 272 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 212
- *   +0x001c -> line 217
- *   +0x0030 -> line 220
- *   +0x0038 -> line 221
- *   +0x00f8 -> line 224
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 int INOPS2_fn_iWaitCmd(int _iPort, int _iSlot, int time_to_wait);
@@ -95,254 +83,6 @@ void INO_fn_vDeleteAllPreCreatedConstantFFBEffectForAllDevices(void);
 void INO_fn_vDeleteAllPreCreatedConstantFFBEffectForDevice(stDevice* hDev);
 void INO_fn_vDeletePreCreatedConstantFFBEffect(stDevice* hDev, signed char cEffectNumber);
 signed char INO_fn_cPreCreateConstantFFBEffect(stDevice* hDev, float xFadeInStartValue, float xFadeInTime, float xConstantValue, float xConstantTime, float xFadeOutStopValue, float xFadeOutTime);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 559–564 */
-/* addr: 0x002f0190  size: 32 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 559
- *   +0x000c -> line 560
- *   +0x0014 -> line 562
- *   +0x0018 -> line 564
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 551–552 */
-/* addr: 0x002f01b0  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 551
- *   +0x0004 -> line 552
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 504–545 */
-/* addr: 0x002f01c0  size: 712 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 504
- *   +0x0024 -> line 506
- *   +0x0028 -> line 504
- *   +0x0030 -> line 513
- *   +0x005c -> line 515
- *   +0x0060 -> line 519
- *   +0x0064 -> line 515
- *   +0x0068 -> line 519
- *   +0x0074 -> line 523
- *   +0x00fc -> line 524
- *   +0x0108 -> line 528
- *   +0x019c -> line 530
- *   +0x0208 -> line 537
- *   +0x0234 -> line 539
- *   +0x0254 -> line 542
- *   +0x0274 -> line 543
- *   +0x0278 -> line 544
- *   +0x0280 -> line 542
- *   +0x0284 -> line 544
- *   +0x029c -> line 545
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 473–497 */
-/* addr: 0x002f0490  size: 220 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 473
- *   +0x0018 -> line 474
- *   +0x001c -> line 477
- *   +0x0048 -> line 481
- *   +0x0054 -> line 483
- *   +0x0070 -> line 486
- *   +0x0084 -> line 487
- *   +0x00b0 -> line 493
- *   +0x00c4 -> line 496
- *   +0x00d4 -> line 497
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 421–461 */
-/* addr: 0x002f0570  size: 1052 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 421
- *   +0x000c -> line 422
- *   +0x0014 -> line 425
- *   +0x002c -> line 426
- *   +0x0030 -> line 429
- *   +0x005c -> line 433
- *   +0x0068 -> line 435
- *   +0x0084 -> line 438
- *   +0x0234 -> line 444
- *   +0x0260 -> line 450
- *   +0x0268 -> line 453
- *   +0x0414 -> line 461
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 389–410 */
-/* addr: 0x002f0990  size: 380 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 389
- *   +0x0024 -> line 395
- *   +0x0050 -> line 397
- *   +0x006c -> line 398
- *   +0x0078 -> line 404
- *   +0x00d0 -> line 406
- *   +0x00d4 -> line 404
- *   +0x00d8 -> line 406
- *   +0x00e0 -> line 404
- *   +0x00e8 -> line 406
- *   +0x00f8 -> line 407
- *   +0x0160 -> line 410
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 377–381 */
-/* addr: 0x002f0b10  size: 156 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 377
- *   +0x0018 -> line 379
- *   +0x0074 -> line 380
- *   +0x0094 -> line 381
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 366–371 */
-/* addr: 0x002f0bb0  size: 172 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 366
- *   +0x002c -> line 368
- *   +0x0030 -> line 370
- *   +0x0034 -> line 368
- *   +0x0038 -> line 370
- *   +0x00a4 -> line 371
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 340–348 */
-/* addr: 0x002f0c60  size: 164 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 340
- *   +0x002c -> line 342
- *   +0x004c -> line 343
- *   +0x0054 -> line 347
- *   +0x009c -> line 348
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 264–313 */
-/* addr: 0x002f0d10  size: 1384 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 264
- *   +0x0004 -> line 268
- *   +0x0030 -> line 270
- *   +0x0034 -> line 273
- *   +0x0038 -> line 270
- *   +0x003c -> line 273
- *   +0x0064 -> line 275
- *   +0x0078 -> line 276
- *   +0x0080 -> line 277
- *   +0x0088 -> line 276
- *   +0x008c -> line 277
- *   +0x00b0 -> line 278
- *   +0x00c4 -> line 279
- *   +0x00cc -> line 281
- *   +0x00e4 -> line 284
- *   +0x00e8 -> line 281
- *   +0x00fc -> line 282
- *   +0x0100 -> line 284
- *   +0x0104 -> line 282
- *   +0x010c -> line 284
- *   +0x0110 -> line 282
- *   +0x0124 -> line 284
- *   +0x0310 -> line 285
- *   +0x0360 -> line 286
- *   +0x03b4 -> line 287
- *   +0x0408 -> line 288
- *   +0x045c -> line 291
- *   +0x0460 -> line 288
- *   +0x0464 -> line 291
- *   +0x0474 -> line 293
- *   +0x0478 -> line 295
- *   +0x0480 -> line 298
- *   +0x04d0 -> line 299
- *   +0x0528 -> line 302
- *   +0x052c -> line 303
- *   +0x0538 -> line 304
- *   +0x0558 -> line 310
- *   +0x0560 -> line 313
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 241–251 */
-/* addr: 0x002f1280  size: 136 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 241
- *   +0x002c -> line 243
- *   +0x004c -> line 244
- *   +0x0054 -> line 250
- *   +0x0080 -> line 251
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 212–230 */
-/* addr: 0x002f1310  size: 184 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 212
- *   +0x002c -> line 214
- *   +0x004c -> line 215
- *   +0x0054 -> line 219
- *   +0x007c -> line 221
- *   +0x0080 -> line 222
- *   +0x008c -> line 223
- *   +0x00ac -> line 229
- *   +0x00b0 -> line 230
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 198–201 */
-/* addr: 0x002f13d0  size: 156 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 198
- *   +0x0014 -> line 199
- *   +0x0028 -> line 200
- *   +0x0094 -> line 201
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 186–190 */
-/* addr: 0x002f1470  size: 172 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 186
- *   +0x002c -> line 187
- *   +0x0030 -> line 188
- *   +0x0034 -> line 187
- *   +0x0038 -> line 188
- *   +0x005c -> line 189
- *   +0x00a4 -> line 190
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 170–178 */
-/* addr: 0x002f1520  size: 312 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 170
- *   +0x002c -> line 172
- *   +0x004c -> line 173
- *   +0x0054 -> line 177
- *   +0x0130 -> line 178
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 122–161 */
 /* addr: 0x002f1660  size: 1268 bytes */
@@ -432,6 +172,17 @@ signed char INO_fn_cPreCreateConstantFFBEffect(stDevice* hDev, float xFadeInStar
     return (signed char)wEffectNumber;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 170–178 */
+/* addr: 0x002f1520  size: 312 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 170
+ *   +0x002c -> line 172
+ *   +0x004c -> line 173
+ *   +0x0054 -> line 177
+ *   +0x0130 -> line 178
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void INO_fn_vDeletePreCreatedConstantFFBEffect(stDevice* hDev, signed char cEffectNumber)
 {
     if (hDev != NULL) {
@@ -456,6 +207,19 @@ void INO_fn_vDeletePreCreatedConstantFFBEffect(stDevice* hDev, signed char cEffe
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 186–190 */
+/* addr: 0x002f1470  size: 172 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 186
+ *   +0x002c -> line 187
+ *   +0x0030 -> line 188
+ *   +0x0034 -> line 187
+ *   +0x0038 -> line 188
+ *   +0x005c -> line 189
+ *   +0x00a4 -> line 190
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void INO_fn_vDeleteAllPreCreatedConstantFFBEffectForDevice(stDevice* hDev)
 {
     short i;
@@ -477,6 +241,16 @@ void INO_fn_vDeleteAllPreCreatedConstantFFBEffectForDevice(stDevice* hDev)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 198–201 */
+/* addr: 0x002f13d0  size: 156 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 198
+ *   +0x0014 -> line 199
+ *   +0x0028 -> line 200
+ *   +0x0094 -> line 201
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void INO_fn_vDeleteAllPreCreatedConstantFFBEffectForAllDevices(void)
 {
     short j;
@@ -496,6 +270,21 @@ void INO_fn_vDeleteAllPreCreatedConstantFFBEffectForAllDevices(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 212–230 */
+/* addr: 0x002f1310  size: 184 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 212
+ *   +0x002c -> line 214
+ *   +0x004c -> line 215
+ *   +0x0054 -> line 219
+ *   +0x007c -> line 221
+ *   +0x0080 -> line 222
+ *   +0x008c -> line 223
+ *   +0x00ac -> line 229
+ *   +0x00b0 -> line 230
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void INO_fn_vStartPreCreatedFFBEffect(unsigned int ulCurrentTime, stDevice* hDev, signed char cEffectNumber)
 {
     INO_stForceFeedBack* p_stUsedForceFeedBack;
@@ -521,6 +310,17 @@ void INO_fn_vStartPreCreatedFFBEffect(unsigned int ulCurrentTime, stDevice* hDev
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 241–251 */
+/* addr: 0x002f1280  size: 136 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 241
+ *   +0x002c -> line 243
+ *   +0x004c -> line 244
+ *   +0x0054 -> line 250
+ *   +0x0080 -> line 251
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void INO_fn_vStopPreCreatedFFBEffect(unsigned int ulCurrentTime, stDevice* hDev, signed char cEffectNumber)
 {
     if (hDev != NULL) {
@@ -538,6 +338,50 @@ void INO_fn_vStopPreCreatedFFBEffect(unsigned int ulCurrentTime, stDevice* hDev,
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 264–313 */
+/* addr: 0x002f0d10  size: 1384 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 264
+ *   +0x0004 -> line 268
+ *   +0x0030 -> line 270
+ *   +0x0034 -> line 273
+ *   +0x0038 -> line 270
+ *   +0x003c -> line 273
+ *   +0x0064 -> line 275
+ *   +0x0078 -> line 276
+ *   +0x0080 -> line 277
+ *   +0x0088 -> line 276
+ *   +0x008c -> line 277
+ *   +0x00b0 -> line 278
+ *   +0x00c4 -> line 279
+ *   +0x00cc -> line 281
+ *   +0x00e4 -> line 284
+ *   +0x00e8 -> line 281
+ *   +0x00fc -> line 282
+ *   +0x0100 -> line 284
+ *   +0x0104 -> line 282
+ *   +0x010c -> line 284
+ *   +0x0110 -> line 282
+ *   +0x0124 -> line 284
+ *   +0x0310 -> line 285
+ *   +0x0360 -> line 286
+ *   +0x03b4 -> line 287
+ *   +0x0408 -> line 288
+ *   +0x045c -> line 291
+ *   +0x0460 -> line 288
+ *   +0x0464 -> line 291
+ *   +0x0474 -> line 293
+ *   +0x0478 -> line 295
+ *   +0x0480 -> line 298
+ *   +0x04d0 -> line 299
+ *   +0x0528 -> line 302
+ *   +0x052c -> line 303
+ *   +0x0538 -> line 304
+ *   +0x0558 -> line 310
+ *   +0x0560 -> line 313
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 signed char INO_fn_cCreateAndLaunchConstantFFBEffect(unsigned int ulCurrentTime, stDevice* hDev, float xFadeInStartValue, float xFadeInTime, float xConstantValue, float xConstantTime, float xFadeOutStopValue, float xFadeOutTime)
 {
     unsigned char ucSmallActuator;
@@ -588,6 +432,17 @@ signed char INO_fn_cCreateAndLaunchConstantFFBEffect(unsigned int ulCurrentTime,
     return (signed char)wEffectNumber;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 340–348 */
+/* addr: 0x002f0c60  size: 164 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 340
+ *   +0x002c -> line 342
+ *   +0x004c -> line 343
+ *   +0x0054 -> line 347
+ *   +0x009c -> line 348
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void INO_fn_vStopFFBEffect(unsigned int ulCurrentTime, stDevice* hDev, signed char cEffectNumber)
 {
     if (hDev != NULL) {
@@ -611,6 +466,18 @@ void INO_fn_vStopFFBEffect(unsigned int ulCurrentTime, stDevice* hDev, signed ch
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 366–371 */
+/* addr: 0x002f0bb0  size: 172 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 366
+ *   +0x002c -> line 368
+ *   +0x0030 -> line 370
+ *   +0x0034 -> line 368
+ *   +0x0038 -> line 370
+ *   +0x00a4 -> line 371
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void INO_fn_vStopAllFFBEffectForDevice(unsigned int ulCurrentTime, stDevice* hDev)
 {
     short wDev;
@@ -627,6 +494,16 @@ void INO_fn_vStopAllFFBEffectForDevice(unsigned int ulCurrentTime, stDevice* hDe
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 377–381 */
+/* addr: 0x002f0b10  size: 156 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 377
+ *   +0x0018 -> line 379
+ *   +0x0074 -> line 380
+ *   +0x0094 -> line 381
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void INO_fn_vStopAllFFBEffectForAllDevice(unsigned int ulCurrentTime)
 {
     signed char i;
@@ -642,6 +519,24 @@ void INO_fn_vStopAllFFBEffectForAllDevice(unsigned int ulCurrentTime)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 389–410 */
+/* addr: 0x002f0990  size: 380 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 389
+ *   +0x0024 -> line 395
+ *   +0x0050 -> line 397
+ *   +0x006c -> line 398
+ *   +0x0078 -> line 404
+ *   +0x00d0 -> line 406
+ *   +0x00d4 -> line 404
+ *   +0x00d8 -> line 406
+ *   +0x00e0 -> line 404
+ *   +0x00e8 -> line 406
+ *   +0x00f8 -> line 407
+ *   +0x0160 -> line 410
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 signed char INO_fn_cStopFFBEffectWithFade(unsigned int ulCurrentTime, stDevice* hDev, signed char cEffectNumber, float xFadeOutStopValue, float xFadeOutTime)
 {
     float xConstantValue;
@@ -675,6 +570,24 @@ signed char INO_fn_cStopFFBEffectWithFade(unsigned int ulCurrentTime, stDevice* 
     return cNewEffectNumber;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 421–461 */
+/* addr: 0x002f0570  size: 1052 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 421
+ *   +0x000c -> line 422
+ *   +0x0014 -> line 425
+ *   +0x002c -> line 426
+ *   +0x0030 -> line 429
+ *   +0x005c -> line 433
+ *   +0x0068 -> line 435
+ *   +0x0084 -> line 438
+ *   +0x0234 -> line 444
+ *   +0x0260 -> line 450
+ *   +0x0268 -> line 453
+ *   +0x0414 -> line 461
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucFFBIntensityAtTime(INO_stForceFeedBack* _p_stFFB, unsigned int _ulCurrentTime)
 {
     if (INO_gs_EffectsArePaused) {
@@ -710,6 +623,22 @@ unsigned char fn_ucFFBIntensityAtTime(INO_stForceFeedBack* _p_stFFB, unsigned in
                            (float)_p_stFFB->m_ucConstantValue);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 473–497 */
+/* addr: 0x002f0490  size: 220 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 473
+ *   +0x0018 -> line 474
+ *   +0x001c -> line 477
+ *   +0x0048 -> line 481
+ *   +0x0054 -> line 483
+ *   +0x0070 -> line 486
+ *   +0x0084 -> line 487
+ *   +0x00b0 -> line 493
+ *   +0x00c4 -> line 496
+ *   +0x00d4 -> line 497
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int INO_fn_bIsSmallActuatorActivated(unsigned int _ulCurrentTime, INO_stForceFeedBack* _p_stFFB)
 {
     if ((_p_stFFB->m_ulInUseSince >= _ulCurrentTime) && (_p_stFFB->m_ulInUseSince != (unsigned int)-1)) {
@@ -734,6 +663,32 @@ int INO_fn_bIsSmallActuatorActivated(unsigned int _ulCurrentTime, INO_stForceFee
     return 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 504–545 */
+/* addr: 0x002f01c0  size: 712 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 504
+ *   +0x0024 -> line 506
+ *   +0x0028 -> line 504
+ *   +0x0030 -> line 513
+ *   +0x005c -> line 515
+ *   +0x0060 -> line 519
+ *   +0x0064 -> line 515
+ *   +0x0068 -> line 519
+ *   +0x0074 -> line 523
+ *   +0x00fc -> line 524
+ *   +0x0108 -> line 528
+ *   +0x019c -> line 530
+ *   +0x0208 -> line 537
+ *   +0x0234 -> line 539
+ *   +0x0254 -> line 542
+ *   +0x0274 -> line 543
+ *   +0x0278 -> line 544
+ *   +0x0280 -> line 542
+ *   +0x0284 -> line 544
+ *   +0x029c -> line 545
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void INO_fn_vForceFeedBackRunTime(unsigned int ulCurrentTime, stDevice* hDev)
 {
     static unsigned char act_direct[6];
@@ -781,11 +736,29 @@ void INO_fn_vForceFeedBackRunTime(unsigned int ulCurrentTime, stDevice* hDev)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 551–552 */
+/* addr: 0x002f01b0  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 551
+ *   +0x0004 -> line 552
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void INO_fn_vPauseAllFFBEffectForAllDevice(void)
 {
     INO_gs_EffectsArePaused = 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 559–564 */
+/* addr: 0x002f0190  size: 32 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 559
+ *   +0x000c -> line 560
+ *   +0x0014 -> line 562
+ *   +0x0018 -> line 564
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void INO_fn_vResumeAllFFBEffectForAllDevice(void)
 {
     if (MENU_g_bVibration) {
@@ -795,6 +768,17 @@ void INO_fn_vResumeAllFFBEffectForAllDevice(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 212–224 */
+/* addr: 0x002f0080  size: 272 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 212
+ *   +0x001c -> line 217
+ *   +0x0030 -> line 220
+ *   +0x0038 -> line 221
+ *   +0x00f8 -> line 224
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int INOPS2_fn_iWaitCmd(int _iPort, int _iSlot, int time_to_wait)
 {
     int iSceInfo;

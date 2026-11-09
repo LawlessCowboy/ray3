@@ -958,6 +958,786 @@ int g_NbTrameSinceLastCanFall;
 MTH3D_tdstVector_ g_stPersoMoveForCollision;
 DNM_stMecReport g_stReport;
 
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void MEC_fn_vCollideBaseMechanic(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, int lObstacle, DNM_stMecObstacle* a_stObstacle, float xDT);
+void MEC_fn_vCrashAnalysis(DNM_stDynamics* p_stDynamic, int lObstacle, DNM_stMecObstacle* p_stObstacle);
+void MEC_fn_vEdgeAnalysis(DNM_stDynamics* p_stDynamic, int lObstacle, DNM_stMecObstacle* p_stObstacle, DNM_stMecObstacle* p_stGround);
+unsigned char MEC_fn_vComputeAdjustVector(MTH3D_tdstVector_* p_stAdjustVector, int lObstacle, DNM_stMecObstacle* p_stObstacle, int lObstacleMin);
+void MEC_fn_vFillCollisionReport(DNM_stDynamics* p_stDynamic);
+void MEC_fn_vReportCollision(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, int lNbObstacle, DNM_stMecObstacle* a_stObstacle, int lObstacle);
+void MEC_fn_vReportCollideActor(HIE_tdstSuperObject_* hCollideSupObj, DNM_stMecObstacle* p_stCollideObstacle);
+
+int MEC_fn_bCeilObstacle(DNM_stDynamics* p_stDynamic, DNM_stMecObstacle* p_stObstacle);
+int MEC_fn_bGroundNormal(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stNormal);
+unsigned char MEC_fn_bCanCrashActor(DNM_stMecObstacle* p_stCollideObstacle);
+
+void MEC_fn_vReportCollideActor(HIE_tdstSuperObject_* hCollideSupObj, DNM_stMecObstacle* p_stCollideObstacle);
+
+inline unsigned char MEC_fn_bIsEntity7or8(short xEntity)
+{
+    int bResult = 1;
+    if ((unsigned int)(xEntity - 7) > 1)
+        bResult = 0;
+    return bResult;
+}
+
+inline unsigned char MEC_fn_bMaterialHasType(GMT_tdstGameMaterial_* hMaterial, unsigned short uwType)
+{
+    GMT_tdstCollideMaterial_* hCollideMaterial = hMaterial->hCollideMaterial;
+    return (hCollideMaterial != (GMT_tdstCollideMaterial_*)-1) && ((hCollideMaterial->xIdentifier & uwType) == uwType);
+}
+
+inline unsigned char MEC_fn_bMaterialsHaveType(DNM_stMecObstacle* p_stObstacle, unsigned short uwType)
+{
+    int bResult = MEC_fn_bMaterialHasType(p_stObstacle->hCollidedMaterial, uwType) != 0;
+    if (bResult)
+        bResult = MEC_fn_bMaterialHasType(p_stObstacle->hMyMaterial, uwType) != 0;
+    return bResult;
+}
+
+HIE_tdstSuperObject_* MEC_fn_hGetFatherActor(HIE_tdstSuperObject_* hSupObj);
+DNM_stDynamics* fn_p_stDynamGetDynamicsSO(HIE_tdstSuperObject_* hSupObj);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECCol.c lines 256–285 */
+/* addr: 0x0030e880  size: 228 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 256
+ *   +0x0014 -> line 262
+ *   +0x0018 -> line 264
+ *   +0x0020 -> line 265
+ *   +0x0028 -> line 267
+ *   +0x0030 -> line 268
+ *   +0x0038 -> line 271
+ *   +0x0050 -> line 274
+ *   +0x0060 -> line 277
+ *   +0x0064 -> line 278
+ *   +0x0068 -> line 279
+ *   +0x0078 -> line 280
+ *   +0x007c -> line 279
+ *   +0x0090 -> line 280
+ *   +0x00a4 -> line 281
+ *   +0x00bc -> line 282
+ *   +0x00c0 -> line 283
+ *   +0x00c8 -> line 284
+ *   +0x00d0 -> line 285
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void MEC_fn_vReportCollideActor(HIE_tdstSuperObject_* hCollideSupObj, DNM_stMecObstacle* p_stCollideObstacle)
+{
+    HIE_tdstSuperObject_* hSupObj;
+    union { MTH3D_tdstVector_ v; int i[3]; } stVector;
+    DNM_stObstacle* p_stObstacle;
+    DNM_stDynamics* p_stDynamic;
+
+    hSupObj = p_stCollideObstacle->mp_stSupObj;
+
+    if (hSupObj)
+    {
+        hSupObj = MEC_fn_hGetFatherActor(hSupObj);
+
+        p_stDynamic = fn_p_stDynamGetDynamicsSO(hSupObj);
+        if (p_stDynamic)
+        {
+            if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000) ? 1 : 0)
+            {
+                p_stDynamic->m_tdstDynamicsBaseBlock.m_pstReport->m_ulCurrSurfaceState |= 0x80;
+
+                p_stObstacle = &p_stDynamic->m_tdstDynamicsBaseBlock.m_pstReport->m_stCharacter;
+                p_stObstacle->m_xRate = 0.0f;
+                stVector.v.xX = -p_stCollideObstacle->m_stNorm.xX; stVector.v.xY = -p_stCollideObstacle->m_stNorm.xY; stVector.v.xZ = -p_stCollideObstacle->m_stNorm.xZ;
+                *(int*)&p_stObstacle->m_stNorm.xX = stVector.i[0]; *(int*)&p_stObstacle->m_stNorm.xY = stVector.i[1]; *(int*)&p_stObstacle->m_stNorm.xZ = stVector.i[2];
+                *(int*)&p_stObstacle->m_stContact.xX = *(int*)&p_stCollideObstacle->m_stContact.xX; *(int*)&p_stObstacle->m_stContact.xY = *(int*)&p_stCollideObstacle->m_stContact.xY; *(int*)&p_stObstacle->m_stContact.xZ = *(int*)&p_stCollideObstacle->m_stContact.xZ;
+                p_stObstacle->mp_stSupObj = hCollideSupObj;
+                p_stObstacle->hCollidedMaterial = p_stCollideObstacle->hMyMaterial;
+                p_stObstacle->hMyMaterial = p_stCollideObstacle->hCollidedMaterial;
+            }
+        }
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECCol.c lines 298–494 */
+/* addr: 0x0030e2e0  size: 1432 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 298
+ *   +0x0004 -> line 325
+ *   +0x0008 -> line 298
+ *   +0x0014 -> line 318
+ *   +0x0018 -> line 298
+ *   +0x001c -> line 319
+ *   +0x0020 -> line 298
+ *   +0x0024 -> line 311
+ *   +0x0028 -> line 298
+ *   +0x0040 -> line 327
+ *   +0x0044 -> line 298
+ *   +0x004c -> line 325
+ *   +0x0060 -> line 305
+ *   +0x0064 -> line 307
+ *   +0x0068 -> line 308
+ *   +0x006c -> line 309
+ *   +0x0070 -> line 310
+ *   +0x0074 -> line 312
+ *   +0x0078 -> line 314
+ *   +0x007c -> line 315
+ *   +0x0080 -> line 316
+ *   +0x0084 -> line 327
+ *   +0x008c -> line 329
+ *   +0x0094 -> line 331
+ *   +0x00a8 -> line 335
+ *   +0x00c8 -> line 338
+ *   +0x00d0 -> line 337
+ *   +0x00d4 -> line 338
+ *   +0x00e0 -> line 343
+ *   +0x00e4 -> line 338
+ *   +0x00e8 -> line 343
+ *   +0x00f0 -> line 345
+ *   +0x0104 -> line 346
+ *   +0x010c -> line 347
+ *   +0x0110 -> line 348
+ *   +0x0118 -> line 349
+ *   +0x012c -> line 351
+ *   +0x013c -> line 352
+ *   +0x0140 -> line 357
+ *   +0x0160 -> line 363
+ *   +0x0168 -> line 365
+ *   +0x0178 -> line 366
+ *   +0x017c -> line 368
+ *   +0x0188 -> line 369
+ *   +0x0198 -> line 371
+ *   +0x01a8 -> line 372
+ *   +0x01ac -> line 374
+ *   +0x01b0 -> line 377
+ *   +0x021c -> line 391
+ *   +0x0228 -> line 393
+ *   +0x0238 -> line 395
+ *   +0x023c -> line 394
+ *   +0x0240 -> line 396
+ *   +0x0248 -> line 397
+ *   +0x0258 -> line 399
+ *   +0x0268 -> line 402
+ *   +0x0270 -> line 407
+ *   +0x0294 -> line 409
+ *   +0x02a8 -> line 411
+ *   +0x02d0 -> line 416
+ *   +0x02e4 -> line 417
+ *   +0x02e8 -> line 421
+ *   +0x02f4 -> line 423
+ *   +0x0304 -> line 424
+ *   +0x030c -> line 425
+ *   +0x0310 -> line 426
+ *   +0x0318 -> line 427
+ *   +0x032c -> line 429
+ *   +0x033c -> line 432
+ *   +0x0348 -> line 434
+ *   +0x035c -> line 437
+ *   +0x0368 -> line 439
+ *   +0x0378 -> line 440
+ *   +0x0380 -> line 441
+ *   +0x0384 -> line 442
+ *   +0x0390 -> line 443
+ *   +0x03a4 -> line 445
+ *   +0x03b4 -> line 448
+ *   +0x03c0 -> line 452
+ *   +0x03cc -> line 454
+ *   +0x03dc -> line 455
+ *   +0x03e4 -> line 456
+ *   +0x03e8 -> line 457
+ *   +0x03f0 -> line 458
+ *   +0x0404 -> line 460
+ *   +0x0414 -> line 465
+ *   +0x0420 -> line 466
+ *   +0x042c -> line 468
+ *   +0x0450 -> line 470
+ *   +0x0458 -> line 473
+ *   +0x045c -> line 472
+ *   +0x0464 -> line 473
+ *   +0x046c -> line 472
+ *   +0x0474 -> line 473
+ *   +0x047c -> line 476
+ *   +0x0488 -> line 477
+ *   +0x0498 -> line 479
+ *   +0x04a4 -> line 482
+ *   +0x04a8 -> line 481
+ *   +0x04b8 -> line 482
+ *   +0x04f0 -> line 485
+ *   +0x04fc -> line 488
+ *   +0x0500 -> line 487
+ *   +0x0510 -> line 488
+ *   +0x0548 -> line 491
+ *   +0x0554 -> line 492
+ *   +0x0564 -> line 494
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void MEC_fn_vReportCollision(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, int lNbObstacle, DNM_stMecObstacle* a_stObstacle, int lObstacle)
+{
+    unsigned char bStop;
+    unsigned char bObstacle;
+    unsigned char bCeil;
+    unsigned char bWall;
+    unsigned char bGround;
+    unsigned char bActor;
+    unsigned char bWater;
+    unsigned char bObstacleEdge;
+    unsigned char bCeilEdge;
+    unsigned char bWallEdge;
+    unsigned char bGroundEdge;
+    unsigned char bActorEdge;
+    unsigned char bWaterEdge;
+    MTH3D_tdstVector_* p_stNormalVector;
+    DNM_stMecObstacle* p_stTmpObstacle;
+    int lCounter;
+    float xCurrentRate;
+    float xRate;
+    unsigned char bEdge;
+
+    bStop = 0;
+    bObstacle = 0;
+    bCeil = 0;
+    bWall = 0;
+    bGround = 0;
+    bWater = 0;
+    bObstacleEdge = 0;
+    bCeilEdge = 0;
+    bWallEdge = 0;
+    bGroundEdge = 0;
+    bActor = 0;
+    bActorEdge = 0;
+    bWaterEdge = 0;
+    xCurrentRate = 2.0f;
+
+    for (lCounter = 0; (lCounter < lNbObstacle) && !bStop; lCounter++)
+    {
+        p_stTmpObstacle = a_stObstacle + lCounter;
+
+        if ((unsigned char)(p_stTmpObstacle->m_xCollidedEntity != 99))
+        {
+            xRate = p_stTmpObstacle->m_xRate;
+            if ((lCounter <= lObstacle) || (xCurrentRate == xRate))
+            {
+                p_stNormalVector = &p_stTmpObstacle->m_stNorm;
+
+                bEdge = MEC_fn_bIsEntity7or8(p_stTmpObstacle->m_xCollidedEntity);
+                xCurrentRate = xRate;
+
+                if (!bObstacle)
+                {
+                    memcpy(&g_stReport.m_stObstacle, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
+                    bObstacleEdge = bEdge;
+                    bObstacle = 1;
+                }
+                else if (bObstacleEdge && !bEdge)
+                {
+                    memcpy(&g_stReport.m_stObstacle, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
+                    bObstacleEdge = 0;
+                }
+
+                if (((p_stTmpObstacle->m_eType & 2) == 2) || ((p_stTmpObstacle->m_eType & 9) == 9))
+                {
+                    if (!bActor)
+                    {
+                        memcpy(&g_stReport.m_stCharacter, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
+                        bActorEdge = bEdge;
+                        bActor = 1;
+                    }
+                    else if (bActorEdge && !bEdge)
+                    {
+                        memcpy(&g_stReport.m_stCharacter, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
+                        bActorEdge = 0;
+                    }
+                }
+
+                if (MEC_fn_bMaterialHasType(p_stTmpObstacle->hCollidedMaterial, 0x4000) && MEC_fn_bMaterialHasType(p_stTmpObstacle->hMyMaterial, 0x4000))
+                {
+                    if (!bWater)
+                    {
+                        memcpy(&g_stReport.m_stWater, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
+                        bWaterEdge = bEdge;
+                        bWater = 1;
+                    }
+                    else if (bWaterEdge && !bEdge)
+                    {
+                        memcpy(&g_stReport.m_stWater, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
+                        bWaterEdge = 0;
+                    }
+                }
+                else
+                {
+                    float xDot;
+                    float xX = p_stNormalVector->xX;
+                    float xY = p_stNormalVector->xY;
+                    float xZ = p_stNormalVector->xZ;
+                    float xOne = 1.0f;
+                    float xZero = 0.0f;
+                    MTH_DOT3_TO(xDot, xX, xY, xZ, xZero, xZero, xOne);
+
+                    if (xDot > p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope)
+                    {
+                        if (MEC_fn_bMaterialHasType(p_stTmpObstacle->hCollidedMaterial, 1))
+                        {
+                            p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = (p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags |= 0x8000000);
+                        }
+
+                        if (!bGround)
+                        {
+                            memcpy(&g_stReport.m_stGround, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
+                            bGroundEdge = bEdge;
+                            bGround = 1;
+                        }
+                        else if (bGroundEdge && !bEdge)
+                        {
+                            memcpy(&g_stReport.m_stGround, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
+                            bGroundEdge = 0;
+                        }
+                    }
+
+                    else
+                    {
+                        if (xDot > -p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope)
+                        {
+                            if (!bWall)
+                            {
+                                memcpy(&g_stReport.m_stWall, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
+                                bWallEdge = bEdge;
+                                bWall = 1;
+                            }
+                            else if (bWallEdge && !bEdge)
+                            {
+                                memcpy(&g_stReport.m_stWall, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
+                                bWallEdge = 0;
+                            }
+                        }
+                        else
+                        {
+                            if (!bCeil)
+                            {
+                                memcpy(&g_stReport.m_stCeil, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
+                                bCeilEdge = bEdge;
+                                bCeil = 1;
+                            }
+                            else if (bCeilEdge && !bEdge)
+                            {
+                                memcpy(&g_stReport.m_stCeil, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
+                                bCeilEdge = 0;
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                bStop = 1;
+            }
+        }
+    }
+
+    if (bActor)
+    {
+        g_stReport.m_ulCurrSurfaceState |= 0x10000;
+        MEC_fn_vReportCollideActor(hSupObj, &g_stReport.m_stCharacter);
+    }
+    if (bWater)
+    {
+        g_stReport.m_ulCurrSurfaceState |= 0x40;
+    }
+    if (bGround)
+    {
+        g_stReport.m_ulCurrSurfaceState |= 0x1;
+        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x2) ? 1 : 0)
+        {
+            ((unsigned int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stGroundNormal)[0] = ((unsigned int*)&g_stReport.m_stGround.m_stNorm)[0];
+            ((unsigned int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stGroundNormal)[1] = ((unsigned int*)&g_stReport.m_stGround.m_stNorm)[1];
+            ((unsigned int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stGroundNormal)[2] = ((unsigned int*)&g_stReport.m_stGround.m_stNorm)[2];
+        }
+    }
+    if (bWall)
+    {
+        g_stReport.m_ulCurrSurfaceState |= 0x4;
+        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x2) ? 1 : 0)
+        {
+            ((unsigned int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stWallNormal)[0] = ((unsigned int*)&g_stReport.m_stWall.m_stNorm)[0];
+            ((unsigned int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stWallNormal)[1] = ((unsigned int*)&g_stReport.m_stWall.m_stNorm)[1];
+            ((unsigned int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stWallNormal)[2] = ((unsigned int*)&g_stReport.m_stWall.m_stNorm)[2];
+        }
+    }
+    if (bCeil)
+    {
+        g_stReport.m_ulCurrSurfaceState |= 0x10;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECCol.c lines 505–545 */
+/* addr: 0x0030e180  size: 352 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 505
+ *   +0x0004 -> line 508
+ *   +0x0008 -> line 505
+ *   +0x0010 -> line 508
+ *   +0x0024 -> line 509
+ *   +0x0030 -> line 511
+ *   +0x0034 -> line 513
+ *   +0x0048 -> line 515
+ *   +0x0060 -> line 517
+ *   +0x0064 -> line 518
+ *   +0x0074 -> line 517
+ *   +0x0078 -> line 518
+ *   +0x0080 -> line 521
+ *   +0x0094 -> line 523
+ *   +0x0098 -> line 524
+ *   +0x00a8 -> line 523
+ *   +0x00ac -> line 524
+ *   +0x00b4 -> line 527
+ *   +0x00c8 -> line 529
+ *   +0x00cc -> line 530
+ *   +0x00dc -> line 529
+ *   +0x00e0 -> line 530
+ *   +0x00e8 -> line 533
+ *   +0x00fc -> line 535
+ *   +0x0100 -> line 536
+ *   +0x0110 -> line 535
+ *   +0x0114 -> line 536
+ *   +0x011c -> line 539
+ *   +0x0130 -> line 541
+ *   +0x0134 -> line 542
+ *   +0x0144 -> line 541
+ *   +0x0148 -> line 542
+ *   +0x0150 -> line 545
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void MEC_fn_vFillCollisionReport(DNM_stDynamics* p_stDynamic)
+{
+    DNM_stReport* p_stReport;
+
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000) ? 1 : 0)
+    if (g_stReport.m_ulCurrSurfaceState)
+    {
+        p_stReport = p_stDynamic->m_tdstDynamicsBaseBlock.m_pstReport;
+
+        memcpy(&p_stReport->m_stObstacle, &g_stReport.m_stObstacle, sizeof(DNM_stObstacle));
+
+        if (g_stReport.m_ulCurrSurfaceState & 0x10000)
+        {
+            p_stReport->m_ulCurrSurfaceState |= 0x10000;
+            memcpy(&p_stReport->m_stCharacter, &g_stReport.m_stCharacter, sizeof(DNM_stObstacle));
+        }
+
+        if (g_stReport.m_ulCurrSurfaceState & 0x40)
+        {
+            p_stReport->m_ulCurrSurfaceState |= 0x40;
+            memcpy(&p_stReport->m_stWater, &g_stReport.m_stWater, sizeof(DNM_stObstacle));
+        }
+
+        if (g_stReport.m_ulCurrSurfaceState & 0x1)
+        {
+            p_stReport->m_ulCurrSurfaceState |= 0x1;
+            memcpy(&p_stReport->m_stGround, &g_stReport.m_stGround, sizeof(DNM_stObstacle));
+        }
+
+        if (g_stReport.m_ulCurrSurfaceState & 0x4)
+        {
+            p_stReport->m_ulCurrSurfaceState |= 0x4;
+            memcpy(&p_stReport->m_stWall, &g_stReport.m_stWall, sizeof(DNM_stObstacle));
+        }
+
+        if (g_stReport.m_ulCurrSurfaceState & 0x10)
+        {
+            p_stReport->m_ulCurrSurfaceState |= 0x10;
+            memcpy(&p_stReport->m_stCeil, &g_stReport.m_stCeil, sizeof(DNM_stObstacle));
+        }
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECCol.c lines 799–919 */
+/* addr: 0x0030da60  size: 1824 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 799
+ *   +0x0004 -> line 821
+ *   +0x0008 -> line 799
+ *   +0x000c -> line 821
+ *   +0x0010 -> line 799
+ *   +0x0028 -> line 802
+ *   +0x002c -> line 799
+ *   +0x0048 -> line 819
+ *   +0x0054 -> line 807
+ *   +0x005c -> line 821
+ *   +0x0064 -> line 823
+ *   +0x006c -> line 824
+ *   +0x00f4 -> line 825
+ *   +0x00fc -> line 826
+ *   +0x0118 -> line 828
+ *   +0x0128 -> line 830
+ *   +0x012c -> line 832
+ *   +0x0138 -> line 834
+ *   +0x0140 -> line 836
+ *   +0x0150 -> line 841
+ *   +0x0154 -> line 842
+ *   +0x0160 -> line 844
+ *   +0x0168 -> line 845
+ *   +0x0180 -> line 846
+ *   +0x01b0 -> line 849
+ *   +0x01e8 -> line 851
+ *   +0x0274 -> line 853
+ *   +0x027c -> line 856
+ *   +0x0280 -> line 857
+ *   +0x0288 -> line 856
+ *   +0x028c -> line 858
+ *   +0x0290 -> line 856
+ *   +0x0294 -> line 858
+ *   +0x0298 -> line 857
+ *   +0x029c -> line 858
+ *   +0x02a0 -> line 856
+ *   +0x02b4 -> line 857
+ *   +0x02d8 -> line 858
+ *   +0x03f0 -> line 859
+ *   +0x0408 -> line 861
+ *   +0x042c -> line 868
+ *   +0x0444 -> line 870
+ *   +0x0478 -> line 874
+ *   +0x04a8 -> line 875
+ *   +0x04b0 -> line 878
+ *   +0x04c4 -> line 880
+ *   +0x04d0 -> line 883
+ *   +0x04d8 -> line 884
+ *   +0x04e0 -> line 888
+ *   +0x0518 -> line 891
+ *   +0x0520 -> line 894
+ *   +0x0524 -> line 896
+ *   +0x0528 -> line 897
+ *   +0x052c -> line 896
+ *   +0x0534 -> line 894
+ *   +0x0548 -> line 896
+ *   +0x0568 -> line 901
+ *   +0x0570 -> line 902
+ *   +0x0574 -> line 903
+ *   +0x0578 -> line 902
+ *   +0x057c -> line 904
+ *   +0x0598 -> line 905
+ *   +0x05a8 -> line 909
+ *   +0x05b4 -> line 911
+ *   +0x0640 -> line 912
+ *   +0x0664 -> line 913
+ *   +0x067c -> line 914
+ *   +0x06a4 -> line 915
+ *   +0x06e0 -> line 918
+ *   +0x06e4 -> line 919
+ *   +0x06f8 -> line 918
+ *   +0x06fc -> line 919
+ *   +0x0700 -> line 918
+ *   +0x0704 -> line 919
+ *   +0x070c -> line 918
+ *   +0x0710 -> line 919
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+unsigned char MEC_fn_vComputeAdjustVector(MTH3D_tdstVector_* p_stAdjustVector, int lObstacle, DNM_stMecObstacle* p_stObstacle, int lObstacleMin)
+{
+    float xNorm;
+    HIE_tdstSuperObject_* hTmp;
+    MTH3D_tdstVector_ stAdjustAxis;
+    MTH3D_tdstVector_ stVector;
+    DNM_stMecObstacle* p_stWaterObstacle;
+    DNM_stMecObstacle* p_stTmpObstacle;
+    unsigned char bConflict;
+    unsigned char bContinue;
+    unsigned char bAdjustVector;
+    anon_enum_00bcf890 xObstacleType;
+    int lCounter;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECCol.c lines 923–1095 */
+/* addr: 0x0030d0c0  size: 2452 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 923
+ *   +0x0008 -> line 932
+ *   +0x000c -> line 923
+ *   +0x0018 -> line 927
+ *   +0x001c -> line 923
+ *   +0x0044 -> line 929
+ *   +0x0048 -> line 932
+ *   +0x004c -> line 928
+ *   +0x0050 -> line 932
+ *   +0x005c -> line 933
+ *   +0x006c -> line 935
+ *   +0x0074 -> line 939
+ *   +0x0080 -> line 941
+ *   +0x00a4 -> line 943
+ *   +0x00cc -> line 944
+ *   +0x00d8 -> line 947
+ *   +0x00e0 -> line 949
+ *   +0x0100 -> line 952
+ *   +0x0108 -> line 953
+ *   +0x0110 -> line 958
+ *   +0x0138 -> line 962
+ *   +0x0150 -> line 968
+ *   +0x0154 -> line 974
+ *   +0x015c -> line 968
+ *   +0x0170 -> line 973
+ *   +0x01a8 -> line 974
+ *   +0x01e0 -> line 975
+ *   +0x0250 -> line 978
+ *   +0x025c -> line 983
+ *   +0x0278 -> line 987
+ *   +0x0288 -> line 989
+ *   +0x02b0 -> line 991
+ *   +0x02b4 -> line 992
+ *   +0x02b8 -> line 991
+ *   +0x02bc -> line 992
+ *   +0x02c0 -> line 991
+ *   +0x02c4 -> line 992
+ *   +0x02c8 -> line 991
+ *   +0x02d4 -> line 992
+ *   +0x02d8 -> line 991
+ *   +0x02e0 -> line 992
+ *   +0x035c -> line 995
+ *   +0x0368 -> line 998
+ *   +0x0370 -> line 1002
+ *   +0x0384 -> line 1005
+ *   +0x0388 -> line 1006
+ *   +0x038c -> line 1005
+ *   +0x0390 -> line 1006
+ *   +0x0394 -> line 1005
+ *   +0x0398 -> line 1006
+ *   +0x039c -> line 1005
+ *   +0x03a8 -> line 1006
+ *   +0x03ac -> line 1005
+ *   +0x03b4 -> line 1006
+ *   +0x0434 -> line 1008
+ *   +0x0454 -> line 1010
+ *   +0x0478 -> line 1011
+ *   +0x0498 -> line 1017
+ *   +0x04c0 -> line 1019
+ *   +0x04e0 -> line 1023
+ *   +0x04e4 -> line 1026
+ *   +0x04f0 -> line 1028
+ *   +0x0518 -> line 1031
+ *   +0x0530 -> line 1032
+ *   +0x0534 -> line 1031
+ *   +0x0538 -> line 1032
+ *   +0x0540 -> line 1031
+ *   +0x0548 -> line 1032
+ *   +0x0554 -> line 1033
+ *   +0x056c -> line 1037
+ *   +0x0584 -> line 1038
+ *   +0x05a4 -> line 1044
+ *   +0x05a8 -> line 1045
+ *   +0x05b8 -> line 1047
+ *   +0x05c4 -> line 1051
+ *   +0x05d0 -> line 1054
+ *   +0x05d4 -> line 1056
+ *   +0x05d8 -> line 1054
+ *   +0x05dc -> line 1056
+ *   +0x05e4 -> line 1054
+ *   +0x0614 -> line 1056
+ *   +0x06ac -> line 1059
+ *   +0x071c -> line 1061
+ *   +0x0750 -> line 1063
+ *   +0x0768 -> line 1069
+ *   +0x07c4 -> line 1075
+ *   +0x07c8 -> line 1079
+ *   +0x07cc -> line 1075
+ *   +0x07d8 -> line 1076
+ *   +0x07dc -> line 1079
+ *   +0x07f0 -> line 1082
+ *   +0x07f4 -> line 1085
+ *   +0x0800 -> line 1083
+ *   +0x0808 -> line 1085
+ *   +0x0898 -> line 1087
+ *   +0x0908 -> line 1088
+ *   +0x0930 -> line 1089
+ *   +0x0938 -> line 1091
+ *   +0x094c -> line 1092
+ *   +0x0964 -> line 1095
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void MEC_fn_vEdgeAnalysis(DNM_stDynamics* p_stDynamic, int lObstacle, DNM_stMecObstacle* p_stObstacle, DNM_stMecObstacle* p_stGround)
+{
+    float xNorm;
+    float R;
+    int lGround;
+    unsigned char bNotGround;
+    DNM_stMecObstacle* p_stNotGround;
+    DNM_stMecObstacle* p_stTmpObstacle;
+    MTH3D_tdstVector_ stVector1;
+    MTH3D_tdstVector_ stEdgeVector;
+    MTH3D_tdstVector_ stContact;
+    int lCounter;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECCol.c lines 1105–1144 */
+/* addr: 0x0030cf70  size: 336 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1105
+ *   +0x0004 -> line 1112
+ *   +0x0008 -> line 1105
+ *   +0x000c -> line 1112
+ *   +0x0010 -> line 1105
+ *   +0x0028 -> line 1115
+ *   +0x002c -> line 1105
+ *   +0x0030 -> line 1110
+ *   +0x0034 -> line 1105
+ *   +0x0038 -> line 1114
+ *   +0x003c -> line 1112
+ *   +0x0040 -> line 1111
+ *   +0x0044 -> line 1115
+ *   +0x0048 -> line 1112
+ *   +0x0050 -> line 1115
+ *   +0x0058 -> line 1117
+ *   +0x006c -> line 1119
+ *   +0x0088 -> line 1120
+ *   +0x0090 -> line 1122
+ *   +0x00ac -> line 1123
+ *   +0x00b0 -> line 1126
+ *   +0x00c0 -> line 1128
+ *   +0x00d0 -> line 1129
+ *   +0x00d8 -> line 1131
+ *   +0x0118 -> line 1143
+ *   +0x012c -> line 1144
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void MEC_fn_vCrashAnalysis(DNM_stDynamics* p_stDynamic, int lObstacle, DNM_stMecObstacle* p_stObstacle)
+{
+    int lCounter = 0;
+    DNM_stMecObstacle* p_stTmpObstacle = p_stObstacle;
+    DNM_stMecObstacle* p_stGroundObstacle = NULL;
+    DNM_stMecObstacle* p_stCeilObstacle = NULL;
+
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags &= 0xFFF7FFFF;
+
+    for (lCounter = 0; lCounter < lObstacle; lCounter++)
+    {
+        if ((unsigned char)(p_stTmpObstacle->m_xCollidedEntity != 99))
+        {
+            if ((p_stGroundObstacle == NULL) && MEC_fn_bGroundNormal(p_stDynamic, &p_stTmpObstacle->m_stNorm))
+            {
+                p_stGroundObstacle = p_stTmpObstacle;
+            }
+            if ((p_stCeilObstacle == NULL) && MEC_fn_bCeilObstacle(p_stDynamic, p_stTmpObstacle))
+            {
+                p_stCeilObstacle = p_stTmpObstacle;
+            }
+        }
+        p_stTmpObstacle++;
+    }
+
+    if ((p_stCeilObstacle != NULL) && (p_stGroundObstacle != NULL))
+    {
+        if ((p_stGroundObstacle->m_eType & 2) && MEC_fn_bCanCrashActor(p_stGroundObstacle))
+        {
+            p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags |= 0x80000;
+        }
+        else if ((p_stCeilObstacle->m_eType & 2) && MEC_fn_bCanCrashActor(p_stCeilObstacle))
+        {
+            p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags |= 0x80000;
+        }
+    }
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECCol.c lines 63–466 */
 /* addr: 0x0030b810  size: 5980 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1199,790 +1979,6 @@ DNM_stMecReport g_stReport;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* The functions below are in their original source-line order (retail
- * emits them in reverse); these prototypes keep earlier calls valid. */
-void MEC_fn_vCollideBaseMechanic(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, int lObstacle, DNM_stMecObstacle* a_stObstacle, float xDT);
-void MEC_fn_vCrashAnalysis(DNM_stDynamics* p_stDynamic, int lObstacle, DNM_stMecObstacle* p_stObstacle);
-void MEC_fn_vEdgeAnalysis(DNM_stDynamics* p_stDynamic, int lObstacle, DNM_stMecObstacle* p_stObstacle, DNM_stMecObstacle* p_stGround);
-unsigned char MEC_fn_vComputeAdjustVector(MTH3D_tdstVector_* p_stAdjustVector, int lObstacle, DNM_stMecObstacle* p_stObstacle, int lObstacleMin);
-void MEC_fn_vFillCollisionReport(DNM_stDynamics* p_stDynamic);
-void MEC_fn_vReportCollision(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, int lNbObstacle, DNM_stMecObstacle* a_stObstacle, int lObstacle);
-void MEC_fn_vReportCollideActor(HIE_tdstSuperObject_* hCollideSupObj, DNM_stMecObstacle* p_stCollideObstacle);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECCol.c lines 1105–1144 */
-/* addr: 0x0030cf70  size: 336 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1105
- *   +0x0004 -> line 1112
- *   +0x0008 -> line 1105
- *   +0x000c -> line 1112
- *   +0x0010 -> line 1105
- *   +0x0028 -> line 1115
- *   +0x002c -> line 1105
- *   +0x0030 -> line 1110
- *   +0x0034 -> line 1105
- *   +0x0038 -> line 1114
- *   +0x003c -> line 1112
- *   +0x0040 -> line 1111
- *   +0x0044 -> line 1115
- *   +0x0048 -> line 1112
- *   +0x0050 -> line 1115
- *   +0x0058 -> line 1117
- *   +0x006c -> line 1119
- *   +0x0088 -> line 1120
- *   +0x0090 -> line 1122
- *   +0x00ac -> line 1123
- *   +0x00b0 -> line 1126
- *   +0x00c0 -> line 1128
- *   +0x00d0 -> line 1129
- *   +0x00d8 -> line 1131
- *   +0x0118 -> line 1143
- *   +0x012c -> line 1144
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int MEC_fn_bCeilObstacle(DNM_stDynamics* p_stDynamic, DNM_stMecObstacle* p_stObstacle);
-int MEC_fn_bGroundNormal(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stNormal);
-unsigned char MEC_fn_bCanCrashActor(DNM_stMecObstacle* p_stCollideObstacle);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECCol.c lines 923–1095 */
-/* addr: 0x0030d0c0  size: 2452 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 923
- *   +0x0008 -> line 932
- *   +0x000c -> line 923
- *   +0x0018 -> line 927
- *   +0x001c -> line 923
- *   +0x0044 -> line 929
- *   +0x0048 -> line 932
- *   +0x004c -> line 928
- *   +0x0050 -> line 932
- *   +0x005c -> line 933
- *   +0x006c -> line 935
- *   +0x0074 -> line 939
- *   +0x0080 -> line 941
- *   +0x00a4 -> line 943
- *   +0x00cc -> line 944
- *   +0x00d8 -> line 947
- *   +0x00e0 -> line 949
- *   +0x0100 -> line 952
- *   +0x0108 -> line 953
- *   +0x0110 -> line 958
- *   +0x0138 -> line 962
- *   +0x0150 -> line 968
- *   +0x0154 -> line 974
- *   +0x015c -> line 968
- *   +0x0170 -> line 973
- *   +0x01a8 -> line 974
- *   +0x01e0 -> line 975
- *   +0x0250 -> line 978
- *   +0x025c -> line 983
- *   +0x0278 -> line 987
- *   +0x0288 -> line 989
- *   +0x02b0 -> line 991
- *   +0x02b4 -> line 992
- *   +0x02b8 -> line 991
- *   +0x02bc -> line 992
- *   +0x02c0 -> line 991
- *   +0x02c4 -> line 992
- *   +0x02c8 -> line 991
- *   +0x02d4 -> line 992
- *   +0x02d8 -> line 991
- *   +0x02e0 -> line 992
- *   +0x035c -> line 995
- *   +0x0368 -> line 998
- *   +0x0370 -> line 1002
- *   +0x0384 -> line 1005
- *   +0x0388 -> line 1006
- *   +0x038c -> line 1005
- *   +0x0390 -> line 1006
- *   +0x0394 -> line 1005
- *   +0x0398 -> line 1006
- *   +0x039c -> line 1005
- *   +0x03a8 -> line 1006
- *   +0x03ac -> line 1005
- *   +0x03b4 -> line 1006
- *   +0x0434 -> line 1008
- *   +0x0454 -> line 1010
- *   +0x0478 -> line 1011
- *   +0x0498 -> line 1017
- *   +0x04c0 -> line 1019
- *   +0x04e0 -> line 1023
- *   +0x04e4 -> line 1026
- *   +0x04f0 -> line 1028
- *   +0x0518 -> line 1031
- *   +0x0530 -> line 1032
- *   +0x0534 -> line 1031
- *   +0x0538 -> line 1032
- *   +0x0540 -> line 1031
- *   +0x0548 -> line 1032
- *   +0x0554 -> line 1033
- *   +0x056c -> line 1037
- *   +0x0584 -> line 1038
- *   +0x05a4 -> line 1044
- *   +0x05a8 -> line 1045
- *   +0x05b8 -> line 1047
- *   +0x05c4 -> line 1051
- *   +0x05d0 -> line 1054
- *   +0x05d4 -> line 1056
- *   +0x05d8 -> line 1054
- *   +0x05dc -> line 1056
- *   +0x05e4 -> line 1054
- *   +0x0614 -> line 1056
- *   +0x06ac -> line 1059
- *   +0x071c -> line 1061
- *   +0x0750 -> line 1063
- *   +0x0768 -> line 1069
- *   +0x07c4 -> line 1075
- *   +0x07c8 -> line 1079
- *   +0x07cc -> line 1075
- *   +0x07d8 -> line 1076
- *   +0x07dc -> line 1079
- *   +0x07f0 -> line 1082
- *   +0x07f4 -> line 1085
- *   +0x0800 -> line 1083
- *   +0x0808 -> line 1085
- *   +0x0898 -> line 1087
- *   +0x0908 -> line 1088
- *   +0x0930 -> line 1089
- *   +0x0938 -> line 1091
- *   +0x094c -> line 1092
- *   +0x0964 -> line 1095
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECCol.c lines 799–919 */
-/* addr: 0x0030da60  size: 1824 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 799
- *   +0x0004 -> line 821
- *   +0x0008 -> line 799
- *   +0x000c -> line 821
- *   +0x0010 -> line 799
- *   +0x0028 -> line 802
- *   +0x002c -> line 799
- *   +0x0048 -> line 819
- *   +0x0054 -> line 807
- *   +0x005c -> line 821
- *   +0x0064 -> line 823
- *   +0x006c -> line 824
- *   +0x00f4 -> line 825
- *   +0x00fc -> line 826
- *   +0x0118 -> line 828
- *   +0x0128 -> line 830
- *   +0x012c -> line 832
- *   +0x0138 -> line 834
- *   +0x0140 -> line 836
- *   +0x0150 -> line 841
- *   +0x0154 -> line 842
- *   +0x0160 -> line 844
- *   +0x0168 -> line 845
- *   +0x0180 -> line 846
- *   +0x01b0 -> line 849
- *   +0x01e8 -> line 851
- *   +0x0274 -> line 853
- *   +0x027c -> line 856
- *   +0x0280 -> line 857
- *   +0x0288 -> line 856
- *   +0x028c -> line 858
- *   +0x0290 -> line 856
- *   +0x0294 -> line 858
- *   +0x0298 -> line 857
- *   +0x029c -> line 858
- *   +0x02a0 -> line 856
- *   +0x02b4 -> line 857
- *   +0x02d8 -> line 858
- *   +0x03f0 -> line 859
- *   +0x0408 -> line 861
- *   +0x042c -> line 868
- *   +0x0444 -> line 870
- *   +0x0478 -> line 874
- *   +0x04a8 -> line 875
- *   +0x04b0 -> line 878
- *   +0x04c4 -> line 880
- *   +0x04d0 -> line 883
- *   +0x04d8 -> line 884
- *   +0x04e0 -> line 888
- *   +0x0518 -> line 891
- *   +0x0520 -> line 894
- *   +0x0524 -> line 896
- *   +0x0528 -> line 897
- *   +0x052c -> line 896
- *   +0x0534 -> line 894
- *   +0x0548 -> line 896
- *   +0x0568 -> line 901
- *   +0x0570 -> line 902
- *   +0x0574 -> line 903
- *   +0x0578 -> line 902
- *   +0x057c -> line 904
- *   +0x0598 -> line 905
- *   +0x05a8 -> line 909
- *   +0x05b4 -> line 911
- *   +0x0640 -> line 912
- *   +0x0664 -> line 913
- *   +0x067c -> line 914
- *   +0x06a4 -> line 915
- *   +0x06e0 -> line 918
- *   +0x06e4 -> line 919
- *   +0x06f8 -> line 918
- *   +0x06fc -> line 919
- *   +0x0700 -> line 918
- *   +0x0704 -> line 919
- *   +0x070c -> line 918
- *   +0x0710 -> line 919
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECCol.c lines 505–545 */
-/* addr: 0x0030e180  size: 352 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 505
- *   +0x0004 -> line 508
- *   +0x0008 -> line 505
- *   +0x0010 -> line 508
- *   +0x0024 -> line 509
- *   +0x0030 -> line 511
- *   +0x0034 -> line 513
- *   +0x0048 -> line 515
- *   +0x0060 -> line 517
- *   +0x0064 -> line 518
- *   +0x0074 -> line 517
- *   +0x0078 -> line 518
- *   +0x0080 -> line 521
- *   +0x0094 -> line 523
- *   +0x0098 -> line 524
- *   +0x00a8 -> line 523
- *   +0x00ac -> line 524
- *   +0x00b4 -> line 527
- *   +0x00c8 -> line 529
- *   +0x00cc -> line 530
- *   +0x00dc -> line 529
- *   +0x00e0 -> line 530
- *   +0x00e8 -> line 533
- *   +0x00fc -> line 535
- *   +0x0100 -> line 536
- *   +0x0110 -> line 535
- *   +0x0114 -> line 536
- *   +0x011c -> line 539
- *   +0x0130 -> line 541
- *   +0x0134 -> line 542
- *   +0x0144 -> line 541
- *   +0x0148 -> line 542
- *   +0x0150 -> line 545
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECCol.c lines 298–494 */
-/* addr: 0x0030e2e0  size: 1432 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 298
- *   +0x0004 -> line 325
- *   +0x0008 -> line 298
- *   +0x0014 -> line 318
- *   +0x0018 -> line 298
- *   +0x001c -> line 319
- *   +0x0020 -> line 298
- *   +0x0024 -> line 311
- *   +0x0028 -> line 298
- *   +0x0040 -> line 327
- *   +0x0044 -> line 298
- *   +0x004c -> line 325
- *   +0x0060 -> line 305
- *   +0x0064 -> line 307
- *   +0x0068 -> line 308
- *   +0x006c -> line 309
- *   +0x0070 -> line 310
- *   +0x0074 -> line 312
- *   +0x0078 -> line 314
- *   +0x007c -> line 315
- *   +0x0080 -> line 316
- *   +0x0084 -> line 327
- *   +0x008c -> line 329
- *   +0x0094 -> line 331
- *   +0x00a8 -> line 335
- *   +0x00c8 -> line 338
- *   +0x00d0 -> line 337
- *   +0x00d4 -> line 338
- *   +0x00e0 -> line 343
- *   +0x00e4 -> line 338
- *   +0x00e8 -> line 343
- *   +0x00f0 -> line 345
- *   +0x0104 -> line 346
- *   +0x010c -> line 347
- *   +0x0110 -> line 348
- *   +0x0118 -> line 349
- *   +0x012c -> line 351
- *   +0x013c -> line 352
- *   +0x0140 -> line 357
- *   +0x0160 -> line 363
- *   +0x0168 -> line 365
- *   +0x0178 -> line 366
- *   +0x017c -> line 368
- *   +0x0188 -> line 369
- *   +0x0198 -> line 371
- *   +0x01a8 -> line 372
- *   +0x01ac -> line 374
- *   +0x01b0 -> line 377
- *   +0x021c -> line 391
- *   +0x0228 -> line 393
- *   +0x0238 -> line 395
- *   +0x023c -> line 394
- *   +0x0240 -> line 396
- *   +0x0248 -> line 397
- *   +0x0258 -> line 399
- *   +0x0268 -> line 402
- *   +0x0270 -> line 407
- *   +0x0294 -> line 409
- *   +0x02a8 -> line 411
- *   +0x02d0 -> line 416
- *   +0x02e4 -> line 417
- *   +0x02e8 -> line 421
- *   +0x02f4 -> line 423
- *   +0x0304 -> line 424
- *   +0x030c -> line 425
- *   +0x0310 -> line 426
- *   +0x0318 -> line 427
- *   +0x032c -> line 429
- *   +0x033c -> line 432
- *   +0x0348 -> line 434
- *   +0x035c -> line 437
- *   +0x0368 -> line 439
- *   +0x0378 -> line 440
- *   +0x0380 -> line 441
- *   +0x0384 -> line 442
- *   +0x0390 -> line 443
- *   +0x03a4 -> line 445
- *   +0x03b4 -> line 448
- *   +0x03c0 -> line 452
- *   +0x03cc -> line 454
- *   +0x03dc -> line 455
- *   +0x03e4 -> line 456
- *   +0x03e8 -> line 457
- *   +0x03f0 -> line 458
- *   +0x0404 -> line 460
- *   +0x0414 -> line 465
- *   +0x0420 -> line 466
- *   +0x042c -> line 468
- *   +0x0450 -> line 470
- *   +0x0458 -> line 473
- *   +0x045c -> line 472
- *   +0x0464 -> line 473
- *   +0x046c -> line 472
- *   +0x0474 -> line 473
- *   +0x047c -> line 476
- *   +0x0488 -> line 477
- *   +0x0498 -> line 479
- *   +0x04a4 -> line 482
- *   +0x04a8 -> line 481
- *   +0x04b8 -> line 482
- *   +0x04f0 -> line 485
- *   +0x04fc -> line 488
- *   +0x0500 -> line 487
- *   +0x0510 -> line 488
- *   +0x0548 -> line 491
- *   +0x0554 -> line 492
- *   +0x0564 -> line 494
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void MEC_fn_vReportCollideActor(HIE_tdstSuperObject_* hCollideSupObj, DNM_stMecObstacle* p_stCollideObstacle);
-
-inline unsigned char MEC_fn_bIsEntity7or8(short xEntity)
-{
-    int bResult = 1;
-    if ((unsigned int)(xEntity - 7) > 1)
-        bResult = 0;
-    return bResult;
-}
-
-inline unsigned char MEC_fn_bMaterialHasType(GMT_tdstGameMaterial_* hMaterial, unsigned short uwType)
-{
-    GMT_tdstCollideMaterial_* hCollideMaterial = hMaterial->hCollideMaterial;
-    return (hCollideMaterial != (GMT_tdstCollideMaterial_*)-1) && ((hCollideMaterial->xIdentifier & uwType) == uwType);
-}
-
-inline unsigned char MEC_fn_bMaterialsHaveType(DNM_stMecObstacle* p_stObstacle, unsigned short uwType)
-{
-    int bResult = MEC_fn_bMaterialHasType(p_stObstacle->hCollidedMaterial, uwType) != 0;
-    if (bResult)
-        bResult = MEC_fn_bMaterialHasType(p_stObstacle->hMyMaterial, uwType) != 0;
-    return bResult;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECCol.c lines 256–285 */
-/* addr: 0x0030e880  size: 228 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 256
- *   +0x0014 -> line 262
- *   +0x0018 -> line 264
- *   +0x0020 -> line 265
- *   +0x0028 -> line 267
- *   +0x0030 -> line 268
- *   +0x0038 -> line 271
- *   +0x0050 -> line 274
- *   +0x0060 -> line 277
- *   +0x0064 -> line 278
- *   +0x0068 -> line 279
- *   +0x0078 -> line 280
- *   +0x007c -> line 279
- *   +0x0090 -> line 280
- *   +0x00a4 -> line 281
- *   +0x00bc -> line 282
- *   +0x00c0 -> line 283
- *   +0x00c8 -> line 284
- *   +0x00d0 -> line 285
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-HIE_tdstSuperObject_* MEC_fn_hGetFatherActor(HIE_tdstSuperObject_* hSupObj);
-DNM_stDynamics* fn_p_stDynamGetDynamicsSO(HIE_tdstSuperObject_* hSupObj);
-
-void MEC_fn_vReportCollideActor(HIE_tdstSuperObject_* hCollideSupObj, DNM_stMecObstacle* p_stCollideObstacle)
-{
-    HIE_tdstSuperObject_* hSupObj;
-    union { MTH3D_tdstVector_ v; int i[3]; } stVector;
-    DNM_stObstacle* p_stObstacle;
-    DNM_stDynamics* p_stDynamic;
-
-    hSupObj = p_stCollideObstacle->mp_stSupObj;
-
-    if (hSupObj)
-    {
-        hSupObj = MEC_fn_hGetFatherActor(hSupObj);
-
-        p_stDynamic = fn_p_stDynamGetDynamicsSO(hSupObj);
-        if (p_stDynamic)
-        {
-            if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000) ? 1 : 0)
-            {
-                p_stDynamic->m_tdstDynamicsBaseBlock.m_pstReport->m_ulCurrSurfaceState |= 0x80;
-
-                p_stObstacle = &p_stDynamic->m_tdstDynamicsBaseBlock.m_pstReport->m_stCharacter;
-                p_stObstacle->m_xRate = 0.0f;
-                stVector.v.xX = -p_stCollideObstacle->m_stNorm.xX; stVector.v.xY = -p_stCollideObstacle->m_stNorm.xY; stVector.v.xZ = -p_stCollideObstacle->m_stNorm.xZ;
-                *(int*)&p_stObstacle->m_stNorm.xX = stVector.i[0]; *(int*)&p_stObstacle->m_stNorm.xY = stVector.i[1]; *(int*)&p_stObstacle->m_stNorm.xZ = stVector.i[2];
-                *(int*)&p_stObstacle->m_stContact.xX = *(int*)&p_stCollideObstacle->m_stContact.xX; *(int*)&p_stObstacle->m_stContact.xY = *(int*)&p_stCollideObstacle->m_stContact.xY; *(int*)&p_stObstacle->m_stContact.xZ = *(int*)&p_stCollideObstacle->m_stContact.xZ;
-                p_stObstacle->mp_stSupObj = hCollideSupObj;
-                p_stObstacle->hCollidedMaterial = p_stCollideObstacle->hMyMaterial;
-                p_stObstacle->hMyMaterial = p_stCollideObstacle->hCollidedMaterial;
-            }
-        }
-    }
-}
-
-void MEC_fn_vReportCollision(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, int lNbObstacle, DNM_stMecObstacle* a_stObstacle, int lObstacle)
-{
-    unsigned char bStop;
-    unsigned char bObstacle;
-    unsigned char bCeil;
-    unsigned char bWall;
-    unsigned char bGround;
-    unsigned char bActor;
-    unsigned char bWater;
-    unsigned char bObstacleEdge;
-    unsigned char bCeilEdge;
-    unsigned char bWallEdge;
-    unsigned char bGroundEdge;
-    unsigned char bActorEdge;
-    unsigned char bWaterEdge;
-    MTH3D_tdstVector_* p_stNormalVector;
-    DNM_stMecObstacle* p_stTmpObstacle;
-    int lCounter;
-    float xCurrentRate;
-    float xRate;
-    unsigned char bEdge;
-
-    bStop = 0;
-    bObstacle = 0;
-    bCeil = 0;
-    bWall = 0;
-    bGround = 0;
-    bWater = 0;
-    bObstacleEdge = 0;
-    bCeilEdge = 0;
-    bWallEdge = 0;
-    bGroundEdge = 0;
-    bActor = 0;
-    bActorEdge = 0;
-    bWaterEdge = 0;
-    xCurrentRate = 2.0f;
-
-    for (lCounter = 0; (lCounter < lNbObstacle) && !bStop; lCounter++)
-    {
-        p_stTmpObstacle = a_stObstacle + lCounter;
-
-        if ((unsigned char)(p_stTmpObstacle->m_xCollidedEntity != 99))
-        {
-            xRate = p_stTmpObstacle->m_xRate;
-            if ((lCounter <= lObstacle) || (xCurrentRate == xRate))
-            {
-                p_stNormalVector = &p_stTmpObstacle->m_stNorm;
-
-                bEdge = MEC_fn_bIsEntity7or8(p_stTmpObstacle->m_xCollidedEntity);
-                xCurrentRate = xRate;
-
-                if (!bObstacle)
-                {
-                    memcpy(&g_stReport.m_stObstacle, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
-                    bObstacleEdge = bEdge;
-                    bObstacle = 1;
-                }
-                else if (bObstacleEdge && !bEdge)
-                {
-                    memcpy(&g_stReport.m_stObstacle, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
-                    bObstacleEdge = 0;
-                }
-
-                if (((p_stTmpObstacle->m_eType & 2) == 2) || ((p_stTmpObstacle->m_eType & 9) == 9))
-                {
-                    if (!bActor)
-                    {
-                        memcpy(&g_stReport.m_stCharacter, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
-                        bActorEdge = bEdge;
-                        bActor = 1;
-                    }
-                    else if (bActorEdge && !bEdge)
-                    {
-                        memcpy(&g_stReport.m_stCharacter, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
-                        bActorEdge = 0;
-                    }
-                }
-
-                if (MEC_fn_bMaterialHasType(p_stTmpObstacle->hCollidedMaterial, 0x4000) && MEC_fn_bMaterialHasType(p_stTmpObstacle->hMyMaterial, 0x4000))
-                {
-                    if (!bWater)
-                    {
-                        memcpy(&g_stReport.m_stWater, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
-                        bWaterEdge = bEdge;
-                        bWater = 1;
-                    }
-                    else if (bWaterEdge && !bEdge)
-                    {
-                        memcpy(&g_stReport.m_stWater, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
-                        bWaterEdge = 0;
-                    }
-                }
-                else
-                {
-                    float xDot;
-                    float xX = p_stNormalVector->xX;
-                    float xY = p_stNormalVector->xY;
-                    float xZ = p_stNormalVector->xZ;
-                    float xOne = 1.0f;
-                    float xZero = 0.0f;
-                    MTH_DOT3_TO(xDot, xX, xY, xZ, xZero, xZero, xOne);
-
-                    if (xDot > p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope)
-                    {
-                        if (MEC_fn_bMaterialHasType(p_stTmpObstacle->hCollidedMaterial, 1))
-                        {
-                            p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = (p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags |= 0x8000000);
-                        }
-
-                        if (!bGround)
-                        {
-                            memcpy(&g_stReport.m_stGround, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
-                            bGroundEdge = bEdge;
-                            bGround = 1;
-                        }
-                        else if (bGroundEdge && !bEdge)
-                        {
-                            memcpy(&g_stReport.m_stGround, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
-                            bGroundEdge = 0;
-                        }
-                    }
-
-                    else
-                    {
-                        if (xDot > -p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope)
-                        {
-                            if (!bWall)
-                            {
-                                memcpy(&g_stReport.m_stWall, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
-                                bWallEdge = bEdge;
-                                bWall = 1;
-                            }
-                            else if (bWallEdge && !bEdge)
-                            {
-                                memcpy(&g_stReport.m_stWall, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
-                                bWallEdge = 0;
-                            }
-                        }
-                        else
-                        {
-                            if (!bCeil)
-                            {
-                                memcpy(&g_stReport.m_stCeil, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
-                                bCeilEdge = bEdge;
-                                bCeil = 1;
-                            }
-                            else if (bCeilEdge && !bEdge)
-                            {
-                                memcpy(&g_stReport.m_stCeil, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
-                                bCeilEdge = 0;
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-                bStop = 1;
-            }
-        }
-    }
-
-    if (bActor)
-    {
-        g_stReport.m_ulCurrSurfaceState |= 0x10000;
-        MEC_fn_vReportCollideActor(hSupObj, &g_stReport.m_stCharacter);
-    }
-    if (bWater)
-    {
-        g_stReport.m_ulCurrSurfaceState |= 0x40;
-    }
-    if (bGround)
-    {
-        g_stReport.m_ulCurrSurfaceState |= 0x1;
-        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x2) ? 1 : 0)
-        {
-            ((unsigned int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stGroundNormal)[0] = ((unsigned int*)&g_stReport.m_stGround.m_stNorm)[0];
-            ((unsigned int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stGroundNormal)[1] = ((unsigned int*)&g_stReport.m_stGround.m_stNorm)[1];
-            ((unsigned int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stGroundNormal)[2] = ((unsigned int*)&g_stReport.m_stGround.m_stNorm)[2];
-        }
-    }
-    if (bWall)
-    {
-        g_stReport.m_ulCurrSurfaceState |= 0x4;
-        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x2) ? 1 : 0)
-        {
-            ((unsigned int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stWallNormal)[0] = ((unsigned int*)&g_stReport.m_stWall.m_stNorm)[0];
-            ((unsigned int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stWallNormal)[1] = ((unsigned int*)&g_stReport.m_stWall.m_stNorm)[1];
-            ((unsigned int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stWallNormal)[2] = ((unsigned int*)&g_stReport.m_stWall.m_stNorm)[2];
-        }
-    }
-    if (bCeil)
-    {
-        g_stReport.m_ulCurrSurfaceState |= 0x10;
-    }
-}
-
-void MEC_fn_vFillCollisionReport(DNM_stDynamics* p_stDynamic)
-{
-    DNM_stReport* p_stReport;
-
-    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000) ? 1 : 0)
-    if (g_stReport.m_ulCurrSurfaceState)
-    {
-        p_stReport = p_stDynamic->m_tdstDynamicsBaseBlock.m_pstReport;
-
-        memcpy(&p_stReport->m_stObstacle, &g_stReport.m_stObstacle, sizeof(DNM_stObstacle));
-
-        if (g_stReport.m_ulCurrSurfaceState & 0x10000)
-        {
-            p_stReport->m_ulCurrSurfaceState |= 0x10000;
-            memcpy(&p_stReport->m_stCharacter, &g_stReport.m_stCharacter, sizeof(DNM_stObstacle));
-        }
-
-        if (g_stReport.m_ulCurrSurfaceState & 0x40)
-        {
-            p_stReport->m_ulCurrSurfaceState |= 0x40;
-            memcpy(&p_stReport->m_stWater, &g_stReport.m_stWater, sizeof(DNM_stObstacle));
-        }
-
-        if (g_stReport.m_ulCurrSurfaceState & 0x1)
-        {
-            p_stReport->m_ulCurrSurfaceState |= 0x1;
-            memcpy(&p_stReport->m_stGround, &g_stReport.m_stGround, sizeof(DNM_stObstacle));
-        }
-
-        if (g_stReport.m_ulCurrSurfaceState & 0x4)
-        {
-            p_stReport->m_ulCurrSurfaceState |= 0x4;
-            memcpy(&p_stReport->m_stWall, &g_stReport.m_stWall, sizeof(DNM_stObstacle));
-        }
-
-        if (g_stReport.m_ulCurrSurfaceState & 0x10)
-        {
-            p_stReport->m_ulCurrSurfaceState |= 0x10;
-            memcpy(&p_stReport->m_stCeil, &g_stReport.m_stCeil, sizeof(DNM_stObstacle));
-        }
-    }
-}
-
-unsigned char MEC_fn_vComputeAdjustVector(MTH3D_tdstVector_* p_stAdjustVector, int lObstacle, DNM_stMecObstacle* p_stObstacle, int lObstacleMin)
-{
-    float xNorm;
-    HIE_tdstSuperObject_* hTmp;
-    MTH3D_tdstVector_ stAdjustAxis;
-    MTH3D_tdstVector_ stVector;
-    DNM_stMecObstacle* p_stWaterObstacle;
-    DNM_stMecObstacle* p_stTmpObstacle;
-    unsigned char bConflict;
-    unsigned char bContinue;
-    unsigned char bAdjustVector;
-    anon_enum_00bcf890 xObstacleType;
-    int lCounter;
-    /* TODO: decompile from asm/... */
-}
-
-void MEC_fn_vEdgeAnalysis(DNM_stDynamics* p_stDynamic, int lObstacle, DNM_stMecObstacle* p_stObstacle, DNM_stMecObstacle* p_stGround)
-{
-    float xNorm;
-    float R;
-    int lGround;
-    unsigned char bNotGround;
-    DNM_stMecObstacle* p_stNotGround;
-    DNM_stMecObstacle* p_stTmpObstacle;
-    MTH3D_tdstVector_ stVector1;
-    MTH3D_tdstVector_ stEdgeVector;
-    MTH3D_tdstVector_ stContact;
-    int lCounter;
-    /* TODO: decompile from asm/... */
-}
-
-void MEC_fn_vCrashAnalysis(DNM_stDynamics* p_stDynamic, int lObstacle, DNM_stMecObstacle* p_stObstacle)
-{
-    int lCounter = 0;
-    DNM_stMecObstacle* p_stTmpObstacle = p_stObstacle;
-    DNM_stMecObstacle* p_stGroundObstacle = NULL;
-    DNM_stMecObstacle* p_stCeilObstacle = NULL;
-
-    p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags &= 0xFFF7FFFF;
-
-    for (lCounter = 0; lCounter < lObstacle; lCounter++)
-    {
-        if ((unsigned char)(p_stTmpObstacle->m_xCollidedEntity != 99))
-        {
-            if ((p_stGroundObstacle == NULL) && MEC_fn_bGroundNormal(p_stDynamic, &p_stTmpObstacle->m_stNorm))
-            {
-                p_stGroundObstacle = p_stTmpObstacle;
-            }
-            if ((p_stCeilObstacle == NULL) && MEC_fn_bCeilObstacle(p_stDynamic, p_stTmpObstacle))
-            {
-                p_stCeilObstacle = p_stTmpObstacle;
-            }
-        }
-        p_stTmpObstacle++;
-    }
-
-    if ((p_stCeilObstacle != NULL) && (p_stGroundObstacle != NULL))
-    {
-        if ((p_stGroundObstacle->m_eType & 2) && MEC_fn_bCanCrashActor(p_stGroundObstacle))
-        {
-            p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags |= 0x80000;
-        }
-        else if ((p_stCeilObstacle->m_eType & 2) && MEC_fn_bCanCrashActor(p_stCeilObstacle))
-        {
-            p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags |= 0x80000;
-        }
-    }
-}
-
 void MEC_fn_vCollideBaseMechanic(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, int lObstacle, DNM_stMecObstacle* a_stObstacle, float xDT)
 {
     float xNorm;

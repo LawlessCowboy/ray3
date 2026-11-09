@@ -30,78 +30,6 @@ struct stFile_ {
     unsigned int nb_sons;
 };
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\initeng.cxx lines 1110–1292 */
-/* addr: 0x00262f30  size: 1116 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1110
- *   +0x0010 -> line 1116
- *   +0x0018 -> line 1118
- *   +0x0020 -> line 1122
- *   +0x0028 -> line 1138
- *   +0x0040 -> line 1140
- *   +0x0048 -> line 1143
- *   +0x0050 -> line 1144
- *   +0x0058 -> line 1147
- *   +0x0060 -> line 1163
- *   +0x0068 -> line 1167
- *   +0x0078 -> line 1176
- *   +0x0088 -> line 1177
- *   +0x0098 -> line 1187
- *   +0x00a0 -> line 1191
- *   +0x00bc -> line 1193
- *   +0x00cc -> line 1195
- *   +0x00e4 -> line 1196
- *   +0x00ec -> line 1197
- *   +0x00f0 -> line 1198
- *   +0x0108 -> line 1201
- *   +0x011c -> line 1204
- *   +0x0124 -> line 1207
- *   +0x0130 -> line 1209
- *   +0x0144 -> line 1210
- *   +0x0158 -> line 1211
- *   +0x016c -> line 1213
- *   +0x023c -> line 1214
- *   +0x0240 -> line 1213
- *   +0x0248 -> line 1214
- *   +0x0258 -> line 1218
- *   +0x0268 -> line 1220
- *   +0x0270 -> line 1221
- *   +0x0274 -> line 1222
- *   +0x0278 -> line 1223
- *   +0x027c -> line 1220
- *   +0x0280 -> line 1221
- *   +0x0284 -> line 1222
- *   +0x028c -> line 1223
- *   +0x0290 -> line 1220
- *   +0x02c0 -> line 1221
- *   +0x02f4 -> line 1222
- *   +0x032c -> line 1223
- *   +0x035c -> line 1224
- *   +0x0364 -> line 1230
- *   +0x036c -> line 1235
- *   +0x0374 -> line 1236
- *   +0x037c -> line 1240
- *   +0x0390 -> line 1247
- *   +0x03a0 -> line 1249
- *   +0x03b8 -> line 1251
- *   +0x03bc -> line 1254
- *   +0x03c0 -> line 1251
- *   +0x03c4 -> line 1254
- *   +0x03c8 -> line 1251
- *   +0x03d4 -> line 1254
- *   +0x03dc -> line 1261
- *   +0x03ec -> line 1264
- *   +0x03f4 -> line 1266
- *   +0x03fc -> line 1267
- *   +0x0404 -> line 1268
- *   +0x040c -> line 1271
- *   +0x0414 -> line 1277
- *   +0x041c -> line 1284
- *   +0x043c -> line 1285
- *   +0x0444 -> line 1292
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern tdstEngineStructure_ g_stEngineStructure;
 extern HIE_tdstSuperObject_* gp_stActualWorld;
 extern HIE_tdstSuperObject_* gp_stDynamicWorld;
@@ -229,6 +157,363 @@ void fn_vFirstInitEngine(void);
 void fn_vTVS(void);
 void GAM_fn_vLoadTextures(void);
 
+extern tdstEngineStructure_ g_stEngineStructure;
+extern unsigned char g_ucGameModuleId;
+extern unsigned int g_FixMemHasBeenSet;
+
+void HMU_fn_vFirstInit(void);
+unsigned char Erm_fn_ucInitErrMsg(void);
+void GAM_fn_vReadUbiIniFileForGame(void);
+void GAM_fn_vTreatExeParameters(void);
+void GEO_xInitGEOError(void);
+void IPT_fn_vFirstInitInput(void);
+void RND_fn_vFirstInitRandom(void);
+void SAI_fn_vFirstInit(void);
+void FIL_fn_vFirstInit(void);
+void FON_fn_vFirstInit(void);
+void AI_fn_vFirstInit(void);
+void SAV2_fn_vFirstInit(void);
+void fn_vInitAndRegisterAllScriptSections(void);
+void HMU_fn_vInitNormalFixMemory(unsigned int ulSize);
+void HMU_fn_vInitTempFixMemory(unsigned int ulSize);
+void HMU_fn_vInitBinaryMemory(unsigned int ulSize);
+void GAM_fn_vSetEngineInFixMode(void);
+
+/* fn_vTVS walks the file tree returned by pFD.  The retail lowers the
+   "x / 2 * 2" idiom to "x" for non-negative x and to a logical shift plus a
+   sign fix-up for negative x; see the attempt note for this function. */
+extern int g_iArraySizes;
+stFile_* pFD(char* format, char* name, int mode1, int mode2);
+float GetDS(stFile_* pCache);
+
+void GLI_fn_vCloseBigFileTextures(void);
+/* Pointer return/argument roles are established by this wrapper's target ABI;
+ * the recovered callee scaffolds currently omit them. */
+char* MNC_fn_pcGetCurrentDirectory(void);
+char* FMN_SCE_ConvertPath2DVD(char* buffer);
+void GLI_fn_vOpenBigFileTextures(char* filename);
+int sprintf(char*, const char*, ...);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\initeng.cxx lines 82–99 */
+/* addr: 0x00264780  size: 80 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 82
+ *   +0x0008 -> line 89
+ *   +0x0010 -> line 92
+ *   +0x0034 -> line 96
+ *   +0x0044 -> line 99
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GAM_fn_vLoadTextures(void)
+{
+    char Texture_BF_Name[255];
+    GLI_fn_vCloseBigFileTextures();
+    sprintf(Texture_BF_Name, "%s\\%s", MNC_fn_pcGetCurrentDirectory(), "TEXTURES.CNT;1");
+    GLI_fn_vOpenBigFileTextures(FMN_SCE_ConvertPath2DVD(Texture_BF_Name));
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\initeng.cxx lines 148–163 */
+/* addr: 0x00263e00  size: 720 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 148
+ *   +0x0004 -> line 151
+ *   +0x0008 -> line 148
+ *   +0x000c -> line 156
+ *   +0x0010 -> line 148
+ *   +0x0014 -> line 151
+ *   +0x0018 -> line 148
+ *   +0x001c -> line 151
+ *   +0x0020 -> line 148
+ *   +0x0024 -> line 153
+ *   +0x0028 -> line 148
+ *   +0x002c -> line 156
+ *   +0x0030 -> line 151
+ *   +0x0034 -> line 156
+ *   +0x0038 -> line 151
+ *   +0x003c -> line 156
+ *   +0x0040 -> line 151
+ *   +0x0044 -> line 155
+ *   +0x0048 -> line 151
+ *   +0x004c -> line 153
+ *   +0x0050 -> line 156
+ *   +0x0058 -> line 157
+ *   +0x0290 -> line 158
+ *   +0x02b0 -> line 161
+ *   +0x02b4 -> line 163
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vTVS(void)
+{
+    char format[10] = ".I%sE%c%c";
+    stFile_* pCache;
+    stFile_* pCur;
+    stFile_* pFirst;
+    stFile_* pMid;
+    stFile_* pFile;
+    float fTotal;
+    float fVal;
+    int i;
+
+    format[0] = 'V';
+
+    pFile = pFD(format, "D", 'O', 'S');
+    g_iArraySizes = 0x4D8;
+    fTotal = 0.0f;
+
+    if (pFile != NULL)
+    {
+        pCache = pFile->pChild;
+
+        if (pCache != NULL)
+        {
+            if (pFile->nb_sons != 0)
+            {
+                pFirst = (stFile_*)((unsigned int)pCache | 0x20000000);
+                pCur = pFirst;
+
+                for (i = pFile->nb_sons - 1; i != 0; i--)
+                {
+                    fVal = (float)(pCur->length / 2) * 2.0f;
+                    fTotal += fVal;
+
+                    if (pCur->nb_sons != 0)
+                    {
+                        fTotal += GetDS(pCur);
+                    }
+
+                    if (pFirst < pCur)
+                    {
+                        for (pMid = pFirst; pMid < pCur; pMid++)
+                        {
+                            if (pMid->sector < pCur->sector)
+                            {
+                                if ((2048.0f * ((float)(pMid->sector / 2) * 2.0f) + ((float)(pMid->length / 2) * 2.0f)) > (2048.0f * ((float)(pCur->sector / 2) * 2.0f)))
+                                {
+                                    fTotal = 0.0f;
+                                    goto theEnd;
+                                }
+                            }
+                            else
+                            {
+                                if ((2048.0f * ((float)(pCur->sector / 2) * 2.0f) + ((float)(pCur->length / 2) * 2.0f)) > (2048.0f * ((float)(pMid->sector / 2) * 2.0f)))
+                                {
+                                    fTotal = 0.0f;
+                                    goto theEnd;
+                                }
+                            }
+                        }
+                    }
+
+                    pCur++;
+                }
+            }
+        }
+    }
+
+theEnd:
+    if (fTotal < 1316448357.0f)
+    {
+    }
+    else
+    {
+        g_iArraySizes = 0;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\initeng.cxx lines 171–534 */
+/* addr: 0x00263840  size: 1468 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 171
+ *   +0x0008 -> line 178
+ *   +0x0010 -> line 180
+ *   +0x0018 -> line 182
+ *   +0x001c -> line 207
+ *   +0x0020 -> line 182
+ *   +0x0024 -> line 183
+ *   +0x002c -> line 207
+ *   +0x0030 -> line 183
+ *   +0x0034 -> line 207
+ *   +0x0038 -> line 185
+ *   +0x003c -> line 203
+ *   +0x0040 -> line 185
+ *   +0x0054 -> line 190
+ *   +0x006c -> line 192
+ *   +0x0084 -> line 194
+ *   +0x008c -> line 195
+ *   +0x0094 -> line 196
+ *   +0x009c -> line 203
+ *   +0x00a4 -> line 204
+ *   +0x00ac -> line 205
+ *   +0x00b0 -> line 207
+ *   +0x00b8 -> line 208
+ *   +0x00e0 -> line 223
+ *   +0x00e8 -> line 226
+ *   +0x0188 -> line 229
+ *   +0x038c -> line 244
+ *   +0x0394 -> line 251
+ *   +0x039c -> line 253
+ *   +0x03a4 -> line 260
+ *   +0x03ac -> line 263
+ *   +0x03b4 -> line 267
+ *   +0x03bc -> line 268
+ *   +0x03c8 -> line 269
+ *   +0x03d0 -> line 278
+ *   +0x03d8 -> line 290
+ *   +0x03e0 -> line 306
+ *   +0x03e8 -> line 307
+ *   +0x03f0 -> line 323
+ *   +0x03f8 -> line 377
+ *   +0x0400 -> line 381
+ *   +0x0414 -> line 392
+ *   +0x041c -> line 394
+ *   +0x0424 -> line 396
+ *   +0x042c -> line 399
+ *   +0x0438 -> line 400
+ *   +0x0444 -> line 405
+ *   +0x0448 -> line 410
+ *   +0x0450 -> line 413
+ *   +0x0460 -> line 415
+ *   +0x0468 -> line 421
+ *   +0x04a4 -> line 444
+ *   +0x04ac -> line 446
+ *   +0x04b4 -> line 448
+ *   +0x04bc -> line 451
+ *   +0x04d8 -> line 455
+ *   +0x04e0 -> line 456
+ *   +0x04f0 -> line 458
+ *   +0x04f8 -> line 466
+ *   +0x0504 -> line 469
+ *   +0x050c -> line 472
+ *   +0x0520 -> line 474
+ *   +0x0528 -> line 476
+ *   +0x053c -> line 484
+ *   +0x0544 -> line 490
+ *   +0x054c -> line 525
+ *   +0x0598 -> line 527
+ *   +0x05a0 -> line 528
+ *   +0x05a8 -> line 529
+ *   +0x05b0 -> line 534
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vFirstInitEngine(void)
+{
+    unsigned char i;
+    _SND_tdstInitStruct st_SoundInit;
+    int FirstCine;
+    /* TODO: decompile from asm/...
+     *
+     * Structure recovered from the retail disassembly (0x263840, 1468 bytes):
+     *
+     *   178-205  a run of global initialisations: fn_vBbInit(),
+     *            fn_vInitDefaultValuesForSoundVolumes(), the engine-structure
+     *            list handles (hCameraList at +0x5f8, hMainCharacterList at
+     *            +0x620, hAlwaysActiveCharactersList at +0x614) and three
+     *            bytes at -0x6192/-0x6191/-0x6190 are cleared.
+     *   207-215  a four-iteration loop that clears the four words of
+     *            D_5383F4 (the counter is an unsigned char, the index is
+     *            strength reduced to a byte offset).
+     *   223-229  fn_vFirstInitEngineClock(), then a check of the six
+     *            globals D_00346138..D_0034614C against 1..6; a mismatch
+     *            calls Erm_fn_ClearLastError(0) and
+     *            Erm_fn_v_UpdateLastError(0x30, ..., 0, 0x15).
+     *   229      one source line holds a ~500 byte scan of the whole
+     *            __text_start..__text_end range that looks for the word
+     *            0x4080c000 and counts matches; it uses 64-bit shifts
+     *            (dsll32/dsrl32) and writes to the DMAlike area at
+     *            0x1000d400..0x1000d480.
+     *   244-529  the engine start-up call chain: GLI_xInitGli,
+     *            fn_vInitFrameLenght, GAM_fn_vCreateGameDeviceAndViewPorts,
+     *            FON_fn_vInitFonts, DEMO_fn_vAllocateMemory,
+     *            HMU_fn_vSetMemoriesInBinaryMode,
+     *            fn_vInitTransitionAllocPools(0x1e000),
+     *            HMU_fn_vSetMemoriesInFixMode, fn_v_InitInterpol,
+     *            SND_fn_iInitSound, GAM_fn_bInitSoundTypes,
+     *            fn_vInitMicrosFunction, fn_vFirstInitObjectTypeStructure,
+     *            PLD_fn_vLoadFix, IPT_fn_vInitInput(0xf,0,0,0),
+     *            fn_bLoadCurrentGameOptions, PLA_fn_vCreateAndInitHeaps,
+     *            fn_vFirstTimeInitCollisionGeometricObject,
+     *            MAT_fn_vSetIdentity(&D_538940), MAT_fn_vSetIdentity(&D_5389A0),
+     *            fn_vInitWaterStreakEffect,
+     *            SHW_fn_vInitShadow(g_stEngineStructure.hGLDDevice, 1),
+     *            HIE_fn_vCreateMatrixStack, GLI_fn_vCloseBigFileTextures,
+     *            sprintf(sp+0x30, "@897", MNC_fn_pcGetCurrentDirectory(),
+     *            "@898"), FMN_SCE_ConvertPath2DVD, GLI_fn_vOpenBigFileTextures,
+     *            GLI_vSetLoadingFix(1), GLI_vEndofGeometricLoad,
+     *            GLI_vSetLoadingFix(0),
+     *            TFMT_vSetDefaultValuesCharacter(1.0f, 0.0f, 2.0f),
+     *            GLI_xCreateMaterial, GLI_xSetMaterialType(..., 0x4ddc47f6),
+     *            GLI_fn_vDoCompleteFadeOut(4), the optional video start-up
+     *            (sceSifInitIopHeap, VID_fn_vNextVideoToPlay,
+     *            VID_fn_vSetVideoSoundVolume(0x7f), VIDSPE_fn_vPlayVideoNow),
+     *            fn_vInitInGameMenu2D and DEMO_fn_vReadDemoTableFile.
+     *   525-529  a VU0 block that cannot be emitted from C: mtsab, lqc2
+     *            vf27, qmfc2.ni, qfsrv and vcallms.  The retail line map puts
+     *            the whole block on one source line, so the original used a
+     *            statement-level asm block (or a macro expanding to one).
+     *            It is followed by VU0_fn_vLoadPrgPlayAnim and
+     *            VU0_fn_vWaitEndLoadVU0.
+     */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\initeng.cxx lines 554–628 */
+/* addr: 0x00263770  size: 200 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 554
+ *   +0x0008 -> line 556
+ *   +0x0010 -> line 561
+ *   +0x002c -> line 565
+ *   +0x0034 -> line 566
+ *   +0x003c -> line 568
+ *   +0x0044 -> line 575
+ *   +0x004c -> line 576
+ *   +0x0054 -> line 577
+ *   +0x005c -> line 580
+ *   +0x0064 -> line 581
+ *   +0x006c -> line 582
+ *   +0x0074 -> line 583
+ *   +0x007c -> line 586
+ *   +0x0084 -> line 602
+ *   +0x008c -> line 614
+ *   +0x0098 -> line 615
+ *   +0x00a4 -> line 617
+ *   +0x00b0 -> line 620
+ *   +0x00b4 -> line 627
+ *   +0x00bc -> line 628
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vInitEngineWhenInitApplication(void)
+{
+    HMU_fn_vFirstInit();
+
+    if (g_ucGameModuleId == 0xFF)
+        g_ucGameModuleId = Erm_fn_ucInitErrMsg();
+
+    GAM_fn_vReadUbiIniFileForGame();
+    GAM_fn_vTreatExeParameters();
+
+    g_stEngineStructure.eEngineMode = 1;
+
+    GEO_xInitGEOError();
+    IPT_fn_vFirstInitInput();
+    RND_fn_vFirstInitRandom();
+    SAI_fn_vFirstInit();
+    FIL_fn_vFirstInit();
+    FON_fn_vFirstInit();
+    AI_fn_vFirstInit();
+    SAV2_fn_vFirstInit();
+    fn_vInitAndRegisterAllScriptSections();
+
+    HMU_fn_vInitNormalFixMemory(460000);
+    HMU_fn_vInitTempFixMemory(1400000);
+    HMU_fn_vInitBinaryMemory(13841203);
+    g_FixMemHasBeenSet = 1;
+    GAM_fn_vSetEngineInFixMode();
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\initeng.cxx lines 671–1070 */
 /* addr: 0x00263390  size: 992 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -317,365 +602,6 @@ void GAM_fn_vLoadTextures(void);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\initeng.cxx lines 554–628 */
-/* addr: 0x00263770  size: 200 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 554
- *   +0x0008 -> line 556
- *   +0x0010 -> line 561
- *   +0x002c -> line 565
- *   +0x0034 -> line 566
- *   +0x003c -> line 568
- *   +0x0044 -> line 575
- *   +0x004c -> line 576
- *   +0x0054 -> line 577
- *   +0x005c -> line 580
- *   +0x0064 -> line 581
- *   +0x006c -> line 582
- *   +0x0074 -> line 583
- *   +0x007c -> line 586
- *   +0x0084 -> line 602
- *   +0x008c -> line 614
- *   +0x0098 -> line 615
- *   +0x00a4 -> line 617
- *   +0x00b0 -> line 620
- *   +0x00b4 -> line 627
- *   +0x00bc -> line 628
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-extern tdstEngineStructure_ g_stEngineStructure;
-extern unsigned char g_ucGameModuleId;
-extern unsigned int g_FixMemHasBeenSet;
-
-void HMU_fn_vFirstInit(void);
-unsigned char Erm_fn_ucInitErrMsg(void);
-void GAM_fn_vReadUbiIniFileForGame(void);
-void GAM_fn_vTreatExeParameters(void);
-void GEO_xInitGEOError(void);
-void IPT_fn_vFirstInitInput(void);
-void RND_fn_vFirstInitRandom(void);
-void SAI_fn_vFirstInit(void);
-void FIL_fn_vFirstInit(void);
-void FON_fn_vFirstInit(void);
-void AI_fn_vFirstInit(void);
-void SAV2_fn_vFirstInit(void);
-void fn_vInitAndRegisterAllScriptSections(void);
-void HMU_fn_vInitNormalFixMemory(unsigned int ulSize);
-void HMU_fn_vInitTempFixMemory(unsigned int ulSize);
-void HMU_fn_vInitBinaryMemory(unsigned int ulSize);
-void GAM_fn_vSetEngineInFixMode(void);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\initeng.cxx lines 171–534 */
-/* addr: 0x00263840  size: 1468 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 171
- *   +0x0008 -> line 178
- *   +0x0010 -> line 180
- *   +0x0018 -> line 182
- *   +0x001c -> line 207
- *   +0x0020 -> line 182
- *   +0x0024 -> line 183
- *   +0x002c -> line 207
- *   +0x0030 -> line 183
- *   +0x0034 -> line 207
- *   +0x0038 -> line 185
- *   +0x003c -> line 203
- *   +0x0040 -> line 185
- *   +0x0054 -> line 190
- *   +0x006c -> line 192
- *   +0x0084 -> line 194
- *   +0x008c -> line 195
- *   +0x0094 -> line 196
- *   +0x009c -> line 203
- *   +0x00a4 -> line 204
- *   +0x00ac -> line 205
- *   +0x00b0 -> line 207
- *   +0x00b8 -> line 208
- *   +0x00e0 -> line 223
- *   +0x00e8 -> line 226
- *   +0x0188 -> line 229
- *   +0x038c -> line 244
- *   +0x0394 -> line 251
- *   +0x039c -> line 253
- *   +0x03a4 -> line 260
- *   +0x03ac -> line 263
- *   +0x03b4 -> line 267
- *   +0x03bc -> line 268
- *   +0x03c8 -> line 269
- *   +0x03d0 -> line 278
- *   +0x03d8 -> line 290
- *   +0x03e0 -> line 306
- *   +0x03e8 -> line 307
- *   +0x03f0 -> line 323
- *   +0x03f8 -> line 377
- *   +0x0400 -> line 381
- *   +0x0414 -> line 392
- *   +0x041c -> line 394
- *   +0x0424 -> line 396
- *   +0x042c -> line 399
- *   +0x0438 -> line 400
- *   +0x0444 -> line 405
- *   +0x0448 -> line 410
- *   +0x0450 -> line 413
- *   +0x0460 -> line 415
- *   +0x0468 -> line 421
- *   +0x04a4 -> line 444
- *   +0x04ac -> line 446
- *   +0x04b4 -> line 448
- *   +0x04bc -> line 451
- *   +0x04d8 -> line 455
- *   +0x04e0 -> line 456
- *   +0x04f0 -> line 458
- *   +0x04f8 -> line 466
- *   +0x0504 -> line 469
- *   +0x050c -> line 472
- *   +0x0520 -> line 474
- *   +0x0528 -> line 476
- *   +0x053c -> line 484
- *   +0x0544 -> line 490
- *   +0x054c -> line 525
- *   +0x0598 -> line 527
- *   +0x05a0 -> line 528
- *   +0x05a8 -> line 529
- *   +0x05b0 -> line 534
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\initeng.cxx lines 148–163 */
-/* addr: 0x00263e00  size: 720 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 148
- *   +0x0004 -> line 151
- *   +0x0008 -> line 148
- *   +0x000c -> line 156
- *   +0x0010 -> line 148
- *   +0x0014 -> line 151
- *   +0x0018 -> line 148
- *   +0x001c -> line 151
- *   +0x0020 -> line 148
- *   +0x0024 -> line 153
- *   +0x0028 -> line 148
- *   +0x002c -> line 156
- *   +0x0030 -> line 151
- *   +0x0034 -> line 156
- *   +0x0038 -> line 151
- *   +0x003c -> line 156
- *   +0x0040 -> line 151
- *   +0x0044 -> line 155
- *   +0x0048 -> line 151
- *   +0x004c -> line 153
- *   +0x0050 -> line 156
- *   +0x0058 -> line 157
- *   +0x0290 -> line 158
- *   +0x02b0 -> line 161
- *   +0x02b4 -> line 163
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-/* fn_vTVS walks the file tree returned by pFD.  The retail lowers the
-   "x / 2 * 2" idiom to "x" for non-negative x and to a logical shift plus a
-   sign fix-up for negative x; see the attempt note for this function. */
-extern int g_iArraySizes;
-stFile_* pFD(char* format, char* name, int mode1, int mode2);
-float GetDS(stFile_* pCache);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\initeng.cxx lines 82–99 */
-/* addr: 0x00264780  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 82
- *   +0x0008 -> line 89
- *   +0x0010 -> line 92
- *   +0x0034 -> line 96
- *   +0x0044 -> line 99
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GLI_fn_vCloseBigFileTextures(void);
-/* Pointer return/argument roles are established by this wrapper's target ABI;
- * the recovered callee scaffolds currently omit them. */
-char* MNC_fn_pcGetCurrentDirectory(void);
-char* FMN_SCE_ConvertPath2DVD(char* buffer);
-void GLI_fn_vOpenBigFileTextures(char* filename);
-int sprintf(char*, const char*, ...);
-
-void GAM_fn_vLoadTextures(void)
-{
-    char Texture_BF_Name[255];
-    GLI_fn_vCloseBigFileTextures();
-    sprintf(Texture_BF_Name, "%s\\%s", MNC_fn_pcGetCurrentDirectory(), "TEXTURES.CNT;1");
-    GLI_fn_vOpenBigFileTextures(FMN_SCE_ConvertPath2DVD(Texture_BF_Name));
-}
-
-void fn_vTVS(void)
-{
-    char format[10] = ".I%sE%c%c";
-    stFile_* pCache;
-    stFile_* pCur;
-    stFile_* pFirst;
-    stFile_* pMid;
-    stFile_* pFile;
-    float fTotal;
-    float fVal;
-    int i;
-
-    format[0] = 'V';
-
-    pFile = pFD(format, "D", 'O', 'S');
-    g_iArraySizes = 0x4D8;
-    fTotal = 0.0f;
-
-    if (pFile != NULL)
-    {
-        pCache = pFile->pChild;
-
-        if (pCache != NULL)
-        {
-            if (pFile->nb_sons != 0)
-            {
-                pFirst = (stFile_*)((unsigned int)pCache | 0x20000000);
-                pCur = pFirst;
-
-                for (i = pFile->nb_sons - 1; i != 0; i--)
-                {
-                    fVal = (float)(pCur->length / 2) * 2.0f;
-                    fTotal += fVal;
-
-                    if (pCur->nb_sons != 0)
-                    {
-                        fTotal += GetDS(pCur);
-                    }
-
-                    if (pFirst < pCur)
-                    {
-                        for (pMid = pFirst; pMid < pCur; pMid++)
-                        {
-                            if (pMid->sector < pCur->sector)
-                            {
-                                if ((2048.0f * ((float)(pMid->sector / 2) * 2.0f) + ((float)(pMid->length / 2) * 2.0f)) > (2048.0f * ((float)(pCur->sector / 2) * 2.0f)))
-                                {
-                                    fTotal = 0.0f;
-                                    goto theEnd;
-                                }
-                            }
-                            else
-                            {
-                                if ((2048.0f * ((float)(pCur->sector / 2) * 2.0f) + ((float)(pCur->length / 2) * 2.0f)) > (2048.0f * ((float)(pMid->sector / 2) * 2.0f)))
-                                {
-                                    fTotal = 0.0f;
-                                    goto theEnd;
-                                }
-                            }
-                        }
-                    }
-
-                    pCur++;
-                }
-            }
-        }
-    }
-
-theEnd:
-    if (fTotal < 1316448357.0f)
-    {
-    }
-    else
-    {
-        g_iArraySizes = 0;
-    }
-}
-
-void fn_vFirstInitEngine(void)
-{
-    unsigned char i;
-    _SND_tdstInitStruct st_SoundInit;
-    int FirstCine;
-    /* TODO: decompile from asm/...
-     *
-     * Structure recovered from the retail disassembly (0x263840, 1468 bytes):
-     *
-     *   178-205  a run of global initialisations: fn_vBbInit(),
-     *            fn_vInitDefaultValuesForSoundVolumes(), the engine-structure
-     *            list handles (hCameraList at +0x5f8, hMainCharacterList at
-     *            +0x620, hAlwaysActiveCharactersList at +0x614) and three
-     *            bytes at -0x6192/-0x6191/-0x6190 are cleared.
-     *   207-215  a four-iteration loop that clears the four words of
-     *            D_5383F4 (the counter is an unsigned char, the index is
-     *            strength reduced to a byte offset).
-     *   223-229  fn_vFirstInitEngineClock(), then a check of the six
-     *            globals D_00346138..D_0034614C against 1..6; a mismatch
-     *            calls Erm_fn_ClearLastError(0) and
-     *            Erm_fn_v_UpdateLastError(0x30, ..., 0, 0x15).
-     *   229      one source line holds a ~500 byte scan of the whole
-     *            __text_start..__text_end range that looks for the word
-     *            0x4080c000 and counts matches; it uses 64-bit shifts
-     *            (dsll32/dsrl32) and writes to the DMAlike area at
-     *            0x1000d400..0x1000d480.
-     *   244-529  the engine start-up call chain: GLI_xInitGli,
-     *            fn_vInitFrameLenght, GAM_fn_vCreateGameDeviceAndViewPorts,
-     *            FON_fn_vInitFonts, DEMO_fn_vAllocateMemory,
-     *            HMU_fn_vSetMemoriesInBinaryMode,
-     *            fn_vInitTransitionAllocPools(0x1e000),
-     *            HMU_fn_vSetMemoriesInFixMode, fn_v_InitInterpol,
-     *            SND_fn_iInitSound, GAM_fn_bInitSoundTypes,
-     *            fn_vInitMicrosFunction, fn_vFirstInitObjectTypeStructure,
-     *            PLD_fn_vLoadFix, IPT_fn_vInitInput(0xf,0,0,0),
-     *            fn_bLoadCurrentGameOptions, PLA_fn_vCreateAndInitHeaps,
-     *            fn_vFirstTimeInitCollisionGeometricObject,
-     *            MAT_fn_vSetIdentity(&D_538940), MAT_fn_vSetIdentity(&D_5389A0),
-     *            fn_vInitWaterStreakEffect,
-     *            SHW_fn_vInitShadow(g_stEngineStructure.hGLDDevice, 1),
-     *            HIE_fn_vCreateMatrixStack, GLI_fn_vCloseBigFileTextures,
-     *            sprintf(sp+0x30, "@897", MNC_fn_pcGetCurrentDirectory(),
-     *            "@898"), FMN_SCE_ConvertPath2DVD, GLI_fn_vOpenBigFileTextures,
-     *            GLI_vSetLoadingFix(1), GLI_vEndofGeometricLoad,
-     *            GLI_vSetLoadingFix(0),
-     *            TFMT_vSetDefaultValuesCharacter(1.0f, 0.0f, 2.0f),
-     *            GLI_xCreateMaterial, GLI_xSetMaterialType(..., 0x4ddc47f6),
-     *            GLI_fn_vDoCompleteFadeOut(4), the optional video start-up
-     *            (sceSifInitIopHeap, VID_fn_vNextVideoToPlay,
-     *            VID_fn_vSetVideoSoundVolume(0x7f), VIDSPE_fn_vPlayVideoNow),
-     *            fn_vInitInGameMenu2D and DEMO_fn_vReadDemoTableFile.
-     *   525-529  a VU0 block that cannot be emitted from C: mtsab, lqc2
-     *            vf27, qmfc2.ni, qfsrv and vcallms.  The retail line map puts
-     *            the whole block on one source line, so the original used a
-     *            statement-level asm block (or a macro expanding to one).
-     *            It is followed by VU0_fn_vLoadPrgPlayAnim and
-     *            VU0_fn_vWaitEndLoadVU0.
-     */
-}
-
-void fn_vInitEngineWhenInitApplication(void)
-{
-    HMU_fn_vFirstInit();
-
-    if (g_ucGameModuleId == 0xFF)
-        g_ucGameModuleId = Erm_fn_ucInitErrMsg();
-
-    GAM_fn_vReadUbiIniFileForGame();
-    GAM_fn_vTreatExeParameters();
-
-    g_stEngineStructure.eEngineMode = 1;
-
-    GEO_xInitGEOError();
-    IPT_fn_vFirstInitInput();
-    RND_fn_vFirstInitRandom();
-    SAI_fn_vFirstInit();
-    FIL_fn_vFirstInit();
-    FON_fn_vFirstInit();
-    AI_fn_vFirstInit();
-    SAV2_fn_vFirstInit();
-    fn_vInitAndRegisterAllScriptSections();
-
-    HMU_fn_vInitNormalFixMemory(460000);
-    HMU_fn_vInitTempFixMemory(1400000);
-    HMU_fn_vInitBinaryMemory(13841203);
-    g_FixMemHasBeenSet = 1;
-    GAM_fn_vSetEngineInFixMode();
-}
-
 void fn_vInitLevelLoop(void)
 {
     char cDoInit;
@@ -796,6 +722,79 @@ void fn_vInitLevelLoop(void)
    retail line map puts the same statement groups on one line each (the
    target line map in the comment above), and MWCC emits one line-table row
    per source line, so the grouping is what makes the line offsets match. */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\initeng.cxx lines 1110–1292 */
+/* addr: 0x00262f30  size: 1116 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1110
+ *   +0x0010 -> line 1116
+ *   +0x0018 -> line 1118
+ *   +0x0020 -> line 1122
+ *   +0x0028 -> line 1138
+ *   +0x0040 -> line 1140
+ *   +0x0048 -> line 1143
+ *   +0x0050 -> line 1144
+ *   +0x0058 -> line 1147
+ *   +0x0060 -> line 1163
+ *   +0x0068 -> line 1167
+ *   +0x0078 -> line 1176
+ *   +0x0088 -> line 1177
+ *   +0x0098 -> line 1187
+ *   +0x00a0 -> line 1191
+ *   +0x00bc -> line 1193
+ *   +0x00cc -> line 1195
+ *   +0x00e4 -> line 1196
+ *   +0x00ec -> line 1197
+ *   +0x00f0 -> line 1198
+ *   +0x0108 -> line 1201
+ *   +0x011c -> line 1204
+ *   +0x0124 -> line 1207
+ *   +0x0130 -> line 1209
+ *   +0x0144 -> line 1210
+ *   +0x0158 -> line 1211
+ *   +0x016c -> line 1213
+ *   +0x023c -> line 1214
+ *   +0x0240 -> line 1213
+ *   +0x0248 -> line 1214
+ *   +0x0258 -> line 1218
+ *   +0x0268 -> line 1220
+ *   +0x0270 -> line 1221
+ *   +0x0274 -> line 1222
+ *   +0x0278 -> line 1223
+ *   +0x027c -> line 1220
+ *   +0x0280 -> line 1221
+ *   +0x0284 -> line 1222
+ *   +0x028c -> line 1223
+ *   +0x0290 -> line 1220
+ *   +0x02c0 -> line 1221
+ *   +0x02f4 -> line 1222
+ *   +0x032c -> line 1223
+ *   +0x035c -> line 1224
+ *   +0x0364 -> line 1230
+ *   +0x036c -> line 1235
+ *   +0x0374 -> line 1236
+ *   +0x037c -> line 1240
+ *   +0x0390 -> line 1247
+ *   +0x03a0 -> line 1249
+ *   +0x03b8 -> line 1251
+ *   +0x03bc -> line 1254
+ *   +0x03c0 -> line 1251
+ *   +0x03c4 -> line 1254
+ *   +0x03c8 -> line 1251
+ *   +0x03d4 -> line 1254
+ *   +0x03dc -> line 1261
+ *   +0x03ec -> line 1264
+ *   +0x03f4 -> line 1266
+ *   +0x03fc -> line 1267
+ *   +0x0404 -> line 1268
+ *   +0x040c -> line 1271
+ *   +0x0414 -> line 1277
+ *   +0x041c -> line 1284
+ *   +0x043c -> line 1285
+ *   +0x0444 -> line 1292
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vDesInitLevelLoop(void)
 {
     int i;

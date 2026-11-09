@@ -44,6 +44,352 @@ extern void free(void*);
 extern void TBF_ChangeCacheSize(int);
 extern int GetTotalSizeWithMipMaps(int);
 
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void GLI_vUpdateCharacterVAReal(float (*pDestPV)[4], GEO_tdstElementIndexedTriangles_* p_stEIT, MTH3D_tdstVector_* p_stPoints, unsigned int NbPoints, unsigned int NbDestPoints);
+void* TBF_pReadLevelTRSBloc(char* LevelName);
+void* TBF_pReadLevel(char* LevelName);
+void* TBF_pReadFix(void);
+void TBF_vCreateEmptyTexture(void);
+void TBF_vWriteTexture(void* pTextureData, unsigned int SizeX, unsigned int SizeY, unsigned int Flags);
+void TBF_vClose(void);
+void TBF_vCreateLevelTRSBloc(void);
+void TBF_vCreateLevel(void);
+void TBF_vCreateFix(void);
+
+typedef void* (*transition_allocator_t)(unsigned int);
+extern int sprintf(char* s, const char* format, ...);
+extern char* PLD_szPrependGamedataName(char*);
+extern int CD_OpenFileWithNameConversion(char*);
+extern unsigned int CD_Length(int FileHandle);
+extern unsigned int CD_Seek(int FileHandle, int Position, int WhereFrom);
+extern int CD_Read(int FileHandle, char* Buffer, int Size);
+extern void CD_Close(int FileHandle);
+extern void* fn_pvMallocInBinaryPreservingTheCurrentMode(unsigned int size);
+extern void LS_FinallyIThinkIOnlyHaveThisSizeLeftToLoad(int SizeLeft);
+extern transition_allocator_t fn_pfnCurrentTransitionAllocator(void);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_texture.c lines 150–183 */
+/* addr: 0x002be770  size: 40 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 150
+ *   +0x0004 -> line 158
+ *   +0x0008 -> line 150
+ *   +0x000c -> line 158
+ *   +0x0014 -> line 159
+ *   +0x001c -> line 183
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void TBF_vCreateFix(void)
+{
+
+    printf("\n\nOULA !! MasterPS2 mode, and no Fix Big texture file !!\n\n");
+    TBF_g_CurrentFile = -1;
+
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_texture.c lines 186–216 */
+/* addr: 0x002be740  size: 40 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 186
+ *   +0x0004 -> line 193
+ *   +0x0008 -> line 186
+ *   +0x000c -> line 193
+ *   +0x0014 -> line 194
+ *   +0x001c -> line 216
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void TBF_vCreateLevel(void)
+{
+
+    printf("\n\nOULA !! MasterPS2 mode, and no Fix Big texture file !!\n\n");
+    TBF_g_CurrentFile = -1;
+
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_texture.c lines 219–251 */
+/* addr: 0x002be710  size: 40 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 219
+ *   +0x0004 -> line 226
+ *   +0x0008 -> line 219
+ *   +0x000c -> line 226
+ *   +0x0014 -> line 227
+ *   +0x001c -> line 251
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void TBF_vCreateLevelTRSBloc(void)
+{
+
+    printf("\n\nOULA !! MasterPS2 mode, and no Fix Big texture file !!\n\n");
+    TBF_g_CurrentFile = -1;
+
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_texture.c lines 258–265 */
+/* addr: 0x002be6a0  size: 108 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 258
+ *   +0x0008 -> line 259
+ *   +0x0014 -> line 261
+ *   +0x0050 -> line 262
+ *   +0x0058 -> line 264
+ *   +0x0060 -> line 265
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void TBF_vClose(void) {
+    int Result; Result = -1; if (TBF_g_CurrentFile >= 0) {
+        if (TBF_g_CurrentFile >= 0) { if (TBF_g_UseTBFWriteCache != 0 && TBF_g_CurrentFileBuffer != 0) { sceWrite(TBF_g_CurrentFile, (void*)TBF_g_CurrentFileBuffer, TBF_g_CurrentFileSize); free((void*)TBF_g_CurrentFileBuffer); TBF_g_CurrentFileBuffer = 0; TBF_g_CurrentFileAllocation = 0; TBF_g_CurrentFileSize = 0; } }
+        sceClose(TBF_g_CurrentFile);
+        Result = -1; } TBF_g_CurrentFile = Result;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_texture.c lines 272–315 */
+/* addr: 0x002be500  size: 412 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 272
+ *   +0x002c -> line 276
+ *   +0x0038 -> line 278
+ *   +0x0070 -> line 282
+ *   +0x0074 -> line 281
+ *   +0x0078 -> line 283
+ *   +0x0080 -> line 287
+ *   +0x0084 -> line 288
+ *   +0x0090 -> line 290
+ *   +0x0098 -> line 293
+ *   +0x00a0 -> line 295
+ *   +0x00a4 -> line 297
+ *   +0x00ac -> line 299
+ *   +0x00b0 -> line 300
+ *   +0x00b4 -> line 304
+ *   +0x00b8 -> line 305
+ *   +0x00bc -> line 304
+ *   +0x00c0 -> line 306
+ *   +0x00c4 -> line 304
+ *   +0x00c8 -> line 310
+ *   +0x0120 -> line 314
+ *   +0x0178 -> line 315
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void TBF_vWriteTexture(void* pTextureData, unsigned int SizeX, unsigned int SizeY, unsigned int Flags)
+{
+    S_TXR_Header_ Header;
+    int iPaletteSize;
+    int iDataSize;
+    if (TBF_g_CurrentFile < 0)
+        return;
+    switch (Flags & 0xF) {
+    case 1:
+        iPaletteSize = 0x40;
+        iDataSize = (SizeX * SizeY) >> 1;
+        break;
+    case 2:
+        iDataSize = SizeX * SizeY;
+        iPaletteSize = 0x400;
+        if (Flags & 0x1000) {
+            iDataSize = GetTotalSizeWithMipMaps(iDataSize);
+        }
+        break;
+    case 3:
+        iPaletteSize = 0;
+        iDataSize = (SizeX * SizeY) * 2;
+        break;
+    case 4:
+        iPaletteSize = 0;
+        iDataSize = (SizeX * SizeY) * 4;
+        break;
+    }
+    Header.VersionID = 0x0AB9FC72;
+    Header.Flags = Flags;
+    Header.SizeX = SizeX;
+    Header.SizeY = SizeY;
+    if (TBF_g_UseTBFWriteCache != 0) { TBF_ChangeCacheSize(0x10); } if (TBF_g_UseTBFWriteCache != 0) { memcpy((char*)TBF_g_CurrentFileBuffer + TBF_g_CurrentFileSize, &Header, 0x10); TBF_g_CurrentFileSize += 0x10; } else { sceWrite(TBF_g_CurrentFile, &Header, 0x10); }
+    iDataSize += iPaletteSize;
+    if (TBF_g_UseTBFWriteCache != 0) { TBF_ChangeCacheSize(iDataSize); } if (TBF_g_UseTBFWriteCache != 0) { memcpy((char*)TBF_g_CurrentFileBuffer + TBF_g_CurrentFileSize, pTextureData, iDataSize); TBF_g_CurrentFileSize += iDataSize; } else { sceWrite(TBF_g_CurrentFile, pTextureData, iDataSize); }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_texture.c lines 322–334 */
+/* addr: 0x002be470  size: 140 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 322
+ *   +0x0008 -> line 325
+ *   +0x0014 -> line 327
+ *   +0x0018 -> line 328
+ *   +0x001c -> line 327
+ *   +0x0020 -> line 329
+ *   +0x0024 -> line 327
+ *   +0x0028 -> line 333
+ *   +0x0080 -> line 334
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void TBF_vCreateEmptyTexture(void)
+{
+    S_TXR_Header_ Header;
+    if (TBF_g_CurrentFile >= 0) {
+        Header.VersionID = 0x0AB9FC72;
+        Header.Flags = 0;
+        Header.SizeX = 0;
+        Header.SizeY = 0;
+        if (TBF_g_UseTBFWriteCache != 0) { TBF_ChangeCacheSize(0x10); } if (TBF_g_UseTBFWriteCache != 0) { memcpy((char*)TBF_g_CurrentFileBuffer + TBF_g_CurrentFileSize, &Header, 0x10); TBF_g_CurrentFileSize += 0x10; } else { sceWrite(TBF_g_CurrentFile, &Header, 0x10); }
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_texture.c lines 344–369 */
+/* addr: 0x002be3c0  size: 176 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 344
+ *   +0x0004 -> line 350
+ *   +0x0008 -> line 344
+ *   +0x000c -> line 350
+ *   +0x0010 -> line 344
+ *   +0x0018 -> line 350
+ *   +0x0020 -> line 352
+ *   +0x0038 -> line 353
+ *   +0x0048 -> line 355
+ *   +0x0054 -> line 356
+ *   +0x0064 -> line 359
+ *   +0x0070 -> line 362
+ *   +0x0080 -> line 364
+ *   +0x0088 -> line 366
+ *   +0x0094 -> line 368
+ *   +0x0098 -> line 369
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void* TBF_pReadFix(void)
+{
+    int TBF_File;
+    unsigned int Length;
+    char* Buffer;
+
+    printf("Reading FIX textures...\n");
+
+    TBF_File = CD_OpenFileWithNameConversion(PLD_szPrependGamedataName("FIX.TBF"));
+    if (TBF_File < 0)
+        return NULL;
+
+    Length = CD_Length(TBF_File);
+    CD_Seek(TBF_File, 0, 0);
+
+    Buffer = fn_pvMallocInBinaryPreservingTheCurrentMode(Length + 127);
+
+    CD_Read(TBF_File, Buffer, Length);
+
+    CD_Close(TBF_File);
+
+    printf("Done reading FIX textures !\n");
+
+    return Buffer;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_texture.c lines 380–408 */
+/* addr: 0x002be2f0  size: 208 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 380
+ *   +0x0018 -> line 386
+ *   +0x0024 -> line 388
+ *   +0x003c -> line 390
+ *   +0x0050 -> line 391
+ *   +0x0060 -> line 393
+ *   +0x006c -> line 394
+ *   +0x007c -> line 397
+ *   +0x0088 -> line 400
+ *   +0x0090 -> line 401
+ *   +0x00a0 -> line 403
+ *   +0x00a8 -> line 405
+ *   +0x00b4 -> line 407
+ *   +0x00b8 -> line 408
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void* TBF_pReadLevel(char* LevelName)
+{
+    char FileName[1024];
+    int TBF_File;
+    unsigned int Length;
+    char* Buffer;
+
+    printf("Reading Level textures ....\n");
+
+    sprintf(FileName, "%s\\%s.TBF", LevelName, LevelName);
+
+    Buffer = PLD_szPrependGamedataName(FileName);
+    TBF_File = CD_OpenFileWithNameConversion(Buffer);
+    if (TBF_File < 0)
+        return NULL;
+
+    Length = CD_Length(TBF_File);
+    CD_Seek(TBF_File, 0, 0);
+
+    Buffer = fn_pvMallocInBinaryPreservingTheCurrentMode(Length + 127);
+
+    LS_FinallyIThinkIOnlyHaveThisSizeLeftToLoad(Length);
+    CD_Read(TBF_File, Buffer, Length);
+
+    CD_Close(TBF_File);
+
+    printf("Done reading Level textures !\n");
+
+    return Buffer;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_texture.c lines 413–446 */
+/* addr: 0x002be220  size: 208 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 413
+ *   +0x0018 -> line 419
+ *   +0x0024 -> line 423
+ *   +0x0038 -> line 425
+ *   +0x004c -> line 426
+ *   +0x005c -> line 428
+ *   +0x0068 -> line 429
+ *   +0x0078 -> line 432
+ *   +0x0088 -> line 438
+ *   +0x0090 -> line 439
+ *   +0x00a0 -> line 441
+ *   +0x00a8 -> line 443
+ *   +0x00b4 -> line 445
+ *   +0x00b8 -> line 446
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void* TBF_pReadLevelTRSBloc(char* LevelName)
+{
+    char FileName[1024];
+    int TBF_File;
+    unsigned int Length;
+    char* Buffer;
+
+    printf("Reading Level textures ....\n");
+
+    sprintf(FileName, "%s\\transit.TBF", LevelName);
+
+    TBF_File = CD_OpenFileWithNameConversion(PLD_szPrependGamedataName(FileName));
+    if (TBF_File < 0)
+        return NULL;
+
+    Length = CD_Length(TBF_File);
+    CD_Seek(TBF_File, 0, 0);
+
+    Buffer = fn_pfnCurrentTransitionAllocator()(Length + 127);
+
+    if (Length)
+        CD_Read(TBF_File, Buffer, Length);
+
+    CD_Close(TBF_File);
+
+    printf("Done reading Level textures !\n");
+
+    return Buffer;
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_texture.c lines 89–401 */
 /* addr: 0x002bdcd0  size: 1356 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -246,360 +592,6 @@ extern int GetTotalSizeWithMipMaps(int);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* The functions below are in their original source-line order (retail
- * emits them in reverse); these prototypes keep earlier calls valid. */
-void GLI_vUpdateCharacterVAReal(float (*pDestPV)[4], GEO_tdstElementIndexedTriangles_* p_stEIT, MTH3D_tdstVector_* p_stPoints, unsigned int NbPoints, unsigned int NbDestPoints);
-void* TBF_pReadLevelTRSBloc(char* LevelName);
-void* TBF_pReadLevel(char* LevelName);
-void* TBF_pReadFix(void);
-void TBF_vCreateEmptyTexture(void);
-void TBF_vWriteTexture(void* pTextureData, unsigned int SizeX, unsigned int SizeY, unsigned int Flags);
-void TBF_vClose(void);
-void TBF_vCreateLevelTRSBloc(void);
-void TBF_vCreateLevel(void);
-void TBF_vCreateFix(void);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_texture.c lines 413–446 */
-/* addr: 0x002be220  size: 208 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 413
- *   +0x0018 -> line 419
- *   +0x0024 -> line 423
- *   +0x0038 -> line 425
- *   +0x004c -> line 426
- *   +0x005c -> line 428
- *   +0x0068 -> line 429
- *   +0x0078 -> line 432
- *   +0x0088 -> line 438
- *   +0x0090 -> line 439
- *   +0x00a0 -> line 441
- *   +0x00a8 -> line 443
- *   +0x00b4 -> line 445
- *   +0x00b8 -> line 446
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-typedef void* (*transition_allocator_t)(unsigned int);
-extern int sprintf(char* s, const char* format, ...);
-extern char* PLD_szPrependGamedataName(char*);
-extern int CD_OpenFileWithNameConversion(char*);
-extern unsigned int CD_Length(int FileHandle);
-extern unsigned int CD_Seek(int FileHandle, int Position, int WhereFrom);
-extern int CD_Read(int FileHandle, char* Buffer, int Size);
-extern void CD_Close(int FileHandle);
-extern void* fn_pvMallocInBinaryPreservingTheCurrentMode(unsigned int size);
-extern void LS_FinallyIThinkIOnlyHaveThisSizeLeftToLoad(int SizeLeft);
-extern transition_allocator_t fn_pfnCurrentTransitionAllocator(void);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_texture.c lines 380–408 */
-/* addr: 0x002be2f0  size: 208 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 380
- *   +0x0018 -> line 386
- *   +0x0024 -> line 388
- *   +0x003c -> line 390
- *   +0x0050 -> line 391
- *   +0x0060 -> line 393
- *   +0x006c -> line 394
- *   +0x007c -> line 397
- *   +0x0088 -> line 400
- *   +0x0090 -> line 401
- *   +0x00a0 -> line 403
- *   +0x00a8 -> line 405
- *   +0x00b4 -> line 407
- *   +0x00b8 -> line 408
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_texture.c lines 344–369 */
-/* addr: 0x002be3c0  size: 176 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 344
- *   +0x0004 -> line 350
- *   +0x0008 -> line 344
- *   +0x000c -> line 350
- *   +0x0010 -> line 344
- *   +0x0018 -> line 350
- *   +0x0020 -> line 352
- *   +0x0038 -> line 353
- *   +0x0048 -> line 355
- *   +0x0054 -> line 356
- *   +0x0064 -> line 359
- *   +0x0070 -> line 362
- *   +0x0080 -> line 364
- *   +0x0088 -> line 366
- *   +0x0094 -> line 368
- *   +0x0098 -> line 369
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_texture.c lines 322–334 */
-/* addr: 0x002be470  size: 140 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 322
- *   +0x0008 -> line 325
- *   +0x0014 -> line 327
- *   +0x0018 -> line 328
- *   +0x001c -> line 327
- *   +0x0020 -> line 329
- *   +0x0024 -> line 327
- *   +0x0028 -> line 333
- *   +0x0080 -> line 334
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_texture.c lines 272–315 */
-/* addr: 0x002be500  size: 412 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 272
- *   +0x002c -> line 276
- *   +0x0038 -> line 278
- *   +0x0070 -> line 282
- *   +0x0074 -> line 281
- *   +0x0078 -> line 283
- *   +0x0080 -> line 287
- *   +0x0084 -> line 288
- *   +0x0090 -> line 290
- *   +0x0098 -> line 293
- *   +0x00a0 -> line 295
- *   +0x00a4 -> line 297
- *   +0x00ac -> line 299
- *   +0x00b0 -> line 300
- *   +0x00b4 -> line 304
- *   +0x00b8 -> line 305
- *   +0x00bc -> line 304
- *   +0x00c0 -> line 306
- *   +0x00c4 -> line 304
- *   +0x00c8 -> line 310
- *   +0x0120 -> line 314
- *   +0x0178 -> line 315
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_texture.c lines 258–265 */
-/* addr: 0x002be6a0  size: 108 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 258
- *   +0x0008 -> line 259
- *   +0x0014 -> line 261
- *   +0x0050 -> line 262
- *   +0x0058 -> line 264
- *   +0x0060 -> line 265
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_texture.c lines 219–251 */
-/* addr: 0x002be710  size: 40 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 219
- *   +0x0004 -> line 226
- *   +0x0008 -> line 219
- *   +0x000c -> line 226
- *   +0x0014 -> line 227
- *   +0x001c -> line 251
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_texture.c lines 186–216 */
-/* addr: 0x002be740  size: 40 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 186
- *   +0x0004 -> line 193
- *   +0x0008 -> line 186
- *   +0x000c -> line 193
- *   +0x0014 -> line 194
- *   +0x001c -> line 216
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_texture.c lines 150–183 */
-/* addr: 0x002be770  size: 40 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 150
- *   +0x0004 -> line 158
- *   +0x0008 -> line 150
- *   +0x000c -> line 158
- *   +0x0014 -> line 159
- *   +0x001c -> line 183
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-void TBF_vCreateFix(void)
-{
-
-    printf("\n\nOULA !! MasterPS2 mode, and no Fix Big texture file !!\n\n");
-    TBF_g_CurrentFile = -1;
-
-}
-
-void TBF_vCreateLevel(void)
-{
-
-    printf("\n\nOULA !! MasterPS2 mode, and no Fix Big texture file !!\n\n");
-    TBF_g_CurrentFile = -1;
-
-}
-
-void TBF_vCreateLevelTRSBloc(void)
-{
-
-    printf("\n\nOULA !! MasterPS2 mode, and no Fix Big texture file !!\n\n");
-    TBF_g_CurrentFile = -1;
-
-}
-
-void TBF_vClose(void) {
-    int Result; Result = -1; if (TBF_g_CurrentFile >= 0) {
-        if (TBF_g_CurrentFile >= 0) { if (TBF_g_UseTBFWriteCache != 0 && TBF_g_CurrentFileBuffer != 0) { sceWrite(TBF_g_CurrentFile, (void*)TBF_g_CurrentFileBuffer, TBF_g_CurrentFileSize); free((void*)TBF_g_CurrentFileBuffer); TBF_g_CurrentFileBuffer = 0; TBF_g_CurrentFileAllocation = 0; TBF_g_CurrentFileSize = 0; } }
-        sceClose(TBF_g_CurrentFile);
-        Result = -1; } TBF_g_CurrentFile = Result;
-}
-
-void TBF_vWriteTexture(void* pTextureData, unsigned int SizeX, unsigned int SizeY, unsigned int Flags)
-{
-    S_TXR_Header_ Header;
-    int iPaletteSize;
-    int iDataSize;
-    if (TBF_g_CurrentFile < 0)
-        return;
-    switch (Flags & 0xF) {
-    case 1:
-        iPaletteSize = 0x40;
-        iDataSize = (SizeX * SizeY) >> 1;
-        break;
-    case 2:
-        iDataSize = SizeX * SizeY;
-        iPaletteSize = 0x400;
-        if (Flags & 0x1000) {
-            iDataSize = GetTotalSizeWithMipMaps(iDataSize);
-        }
-        break;
-    case 3:
-        iPaletteSize = 0;
-        iDataSize = (SizeX * SizeY) * 2;
-        break;
-    case 4:
-        iPaletteSize = 0;
-        iDataSize = (SizeX * SizeY) * 4;
-        break;
-    }
-    Header.VersionID = 0x0AB9FC72;
-    Header.Flags = Flags;
-    Header.SizeX = SizeX;
-    Header.SizeY = SizeY;
-    if (TBF_g_UseTBFWriteCache != 0) { TBF_ChangeCacheSize(0x10); } if (TBF_g_UseTBFWriteCache != 0) { memcpy((char*)TBF_g_CurrentFileBuffer + TBF_g_CurrentFileSize, &Header, 0x10); TBF_g_CurrentFileSize += 0x10; } else { sceWrite(TBF_g_CurrentFile, &Header, 0x10); }
-    iDataSize += iPaletteSize;
-    if (TBF_g_UseTBFWriteCache != 0) { TBF_ChangeCacheSize(iDataSize); } if (TBF_g_UseTBFWriteCache != 0) { memcpy((char*)TBF_g_CurrentFileBuffer + TBF_g_CurrentFileSize, pTextureData, iDataSize); TBF_g_CurrentFileSize += iDataSize; } else { sceWrite(TBF_g_CurrentFile, pTextureData, iDataSize); }
-}
-
-void TBF_vCreateEmptyTexture(void)
-{
-    S_TXR_Header_ Header;
-    if (TBF_g_CurrentFile >= 0) {
-        Header.VersionID = 0x0AB9FC72;
-        Header.Flags = 0;
-        Header.SizeX = 0;
-        Header.SizeY = 0;
-        if (TBF_g_UseTBFWriteCache != 0) { TBF_ChangeCacheSize(0x10); } if (TBF_g_UseTBFWriteCache != 0) { memcpy((char*)TBF_g_CurrentFileBuffer + TBF_g_CurrentFileSize, &Header, 0x10); TBF_g_CurrentFileSize += 0x10; } else { sceWrite(TBF_g_CurrentFile, &Header, 0x10); }
-    }
-}
-
-void* TBF_pReadFix(void)
-{
-    int TBF_File;
-    unsigned int Length;
-    char* Buffer;
-
-    printf("Reading FIX textures...\n");
-
-    TBF_File = CD_OpenFileWithNameConversion(PLD_szPrependGamedataName("FIX.TBF"));
-    if (TBF_File < 0)
-        return NULL;
-
-    Length = CD_Length(TBF_File);
-    CD_Seek(TBF_File, 0, 0);
-
-    Buffer = fn_pvMallocInBinaryPreservingTheCurrentMode(Length + 127);
-
-    CD_Read(TBF_File, Buffer, Length);
-
-    CD_Close(TBF_File);
-
-    printf("Done reading FIX textures !\n");
-
-    return Buffer;
-}
-
-void* TBF_pReadLevel(char* LevelName)
-{
-    char FileName[1024];
-    int TBF_File;
-    unsigned int Length;
-    char* Buffer;
-
-    printf("Reading Level textures ....\n");
-
-    sprintf(FileName, "%s\\%s.TBF", LevelName, LevelName);
-
-    Buffer = PLD_szPrependGamedataName(FileName);
-    TBF_File = CD_OpenFileWithNameConversion(Buffer);
-    if (TBF_File < 0)
-        return NULL;
-
-    Length = CD_Length(TBF_File);
-    CD_Seek(TBF_File, 0, 0);
-
-    Buffer = fn_pvMallocInBinaryPreservingTheCurrentMode(Length + 127);
-
-    LS_FinallyIThinkIOnlyHaveThisSizeLeftToLoad(Length);
-    CD_Read(TBF_File, Buffer, Length);
-
-    CD_Close(TBF_File);
-
-    printf("Done reading Level textures !\n");
-
-    return Buffer;
-}
-
-void* TBF_pReadLevelTRSBloc(char* LevelName)
-{
-    char FileName[1024];
-    int TBF_File;
-    unsigned int Length;
-    char* Buffer;
-
-    printf("Reading Level textures ....\n");
-
-    sprintf(FileName, "%s\\transit.TBF", LevelName);
-
-    TBF_File = CD_OpenFileWithNameConversion(PLD_szPrependGamedataName(FileName));
-    if (TBF_File < 0)
-        return NULL;
-
-    Length = CD_Length(TBF_File);
-    CD_Seek(TBF_File, 0, 0);
-
-    Buffer = fn_pfnCurrentTransitionAllocator()(Length + 127);
-
-    if (Length)
-        CD_Read(TBF_File, Buffer, Length);
-
-    CD_Close(TBF_File);
-
-    printf("Done reading Level textures !\n");
-
-    return Buffer;
-}
-
 void GLI_vUpdateCharacterVAReal(float (*pDestPV)[4], GEO_tdstElementIndexedTriangles_* p_stEIT, MTH3D_tdstVector_* p_stPoints, unsigned int NbPoints, unsigned int NbDestPoints)
 {
     volatile unsigned int* puGs;

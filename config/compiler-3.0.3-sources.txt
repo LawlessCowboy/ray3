@@ -258,3 +258,7 @@ src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Objinit
 # and +SAV2_fn_bUpdateAllDataFromLoadedFile (register allocation; 3.0.1 misses it). The 23
 # matches recorded before the move still MATCH under both builds (-0/+2).
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GamSave2.c
+# HieDraw.c: HIE_fn_vSendCharacterDynShadowToViewPort inlines the same VU0 push
+# as HieMtStk.c and matches only under 3.0.3 (3.0.1 leaves its branch delay
+# slots unfilled); every other recorded match in the file still verifies.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SPO/HieDraw.c

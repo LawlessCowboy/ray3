@@ -468,35 +468,6 @@ inline float MTH_xSqrt(float _xValue)
     return xResult;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMDynam.c lines 66–100 */
-/* addr: 0x00301b90  size: 776 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 66
- *   +0x0008 -> line 72
- *   +0x0020 -> line 78
- *   +0x0024 -> line 73
- *   +0x003c -> line 78
- *   +0x0040 -> line 74
- *   +0x0054 -> line 78
- *   +0x0058 -> line 74
- *   +0x005c -> line 78
- *   +0x0064 -> line 80
- *   +0x0104 -> line 81
- *   +0x0170 -> line 83
- *   +0x017c -> line 84
- *   +0x0190 -> line 85
- *   +0x0230 -> line 86
- *   +0x029c -> line 88
- *   +0x02a8 -> line 93
- *   +0x02b8 -> line 96
- *   +0x02d0 -> line 94
- *   +0x02d4 -> line 96
- *   +0x02f8 -> line 97
- *   +0x02fc -> line 100
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 float CAM_fn_xComputeHorizontalAngle(MTH3D_tdstVector_* _p_stOrgVector, MTH3D_tdstVector_* _p_stDestVector, MTH3D_tdstVector_* _p_stAxisZ);
@@ -505,141 +476,7 @@ void DNM_fn_vChangeIdCard(DNM_stDynamics* _p_stDynamics, void* _hNewIdCard);
 void DNM_fn_vInitDynamic(DNM_stDynamics* p_stDynamic, void* hIdCard);
 void DNM_fn_vInitBaseMechanic(DNM_stDynamics* p_stDynamic);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMDynam.c lines 412–432 */
-/* addr: 0x00301ea0  size: 236 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 412
- *   +0x0004 -> line 415
- *   +0x0008 -> line 412
- *   +0x0020 -> line 415
- *   +0x0034 -> line 418
- *   +0x003c -> line 422
- *   +0x006c -> line 423
- *   +0x0094 -> line 424
- *   +0x00a0 -> line 426
- *   +0x00a8 -> line 428
- *   +0x00ac -> line 429
- *   +0x00c4 -> line 430
- *   +0x00d4 -> line 432
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMDynam.c lines 370–407 */
-/* addr: 0x00301f90  size: 68 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 370
- *   +0x0004 -> line 403
- *   +0x0008 -> line 370
- *   +0x0018 -> line 403
- *   +0x0024 -> line 405
- *   +0x002c -> line 406
- *   +0x0030 -> line 407
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void DNM_fn_vInitDynamic(DNM_stDynamics* p_stDynamic, void* hIdCard);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMDynam.c lines 314–362 */
-/* addr: 0x00301fe0  size: 1316 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 314
- *   +0x003c -> line 315
- *   +0x0078 -> line 316
- *   +0x00b4 -> line 317
- *   +0x00f0 -> line 318
- *   +0x012c -> line 319
- *   +0x0168 -> line 320
- *   +0x01a4 -> line 321
- *   +0x01e0 -> line 322
- *   +0x021c -> line 323
- *   +0x0264 -> line 324
- *   +0x02a0 -> line 325
- *   +0x02dc -> line 326
- *   +0x0318 -> line 327
- *   +0x0354 -> line 328
- *   +0x0390 -> line 329
- *   +0x03cc -> line 330
- *   +0x0408 -> line 335
- *   +0x040c -> line 331
- *   +0x0410 -> line 334
- *   +0x0418 -> line 335
- *   +0x041c -> line 338
- *   +0x0420 -> line 341
- *   +0x0424 -> line 338
- *   +0x042c -> line 331
- *   +0x0430 -> line 332
- *   +0x0438 -> line 333
- *   +0x0448 -> line 334
- *   +0x0458 -> line 335
- *   +0x0468 -> line 338
- *   +0x0480 -> line 341
- *   +0x0494 -> line 343
- *   +0x049c -> line 344
- *   +0x04a4 -> line 345
- *   +0x04ac -> line 346
- *   +0x04b4 -> line 347
- *   +0x04bc -> line 348
- *   +0x04d4 -> line 351
- *   +0x04e8 -> line 353
- *   +0x04f0 -> line 356
- *   +0x0504 -> line 358
- *   +0x050c -> line 359
- *   +0x0514 -> line 360
- *   +0x051c -> line 362
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMDynam.c lines 314–362 */
-/* addr: 0x00301fe0  size: 1316 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 314
- *   +0x003c -> line 315
- *   +0x0078 -> line 316
- *   +0x00b4 -> line 317
- *   +0x00f0 -> line 318
- *   +0x012c -> line 319
- *   +0x0168 -> line 320
- *   +0x01a4 -> line 321
- *   +0x01e0 -> line 322
- *   +0x021c -> line 323
- *   +0x0264 -> line 324
- *   +0x02a0 -> line 325
- *   +0x02dc -> line 326
- *   +0x0318 -> line 327
- *   +0x0354 -> line 328
- *   +0x0390 -> line 329
- *   +0x03cc -> line 330
- *   +0x0408 -> line 335
- *   +0x040c -> line 331
- *   +0x0410 -> line 334
- *   +0x0418 -> line 335
- *   +0x041c -> line 338
- *   +0x0420 -> line 341
- *   +0x0424 -> line 338
- *   +0x042c -> line 331
- *   +0x0430 -> line 332
- *   +0x0438 -> line 333
- *   +0x0448 -> line 334
- *   +0x0458 -> line 335
- *   +0x0468 -> line 338
- *   +0x0480 -> line 341
- *   +0x0494 -> line 343
- *   +0x049c -> line 344
- *   +0x04a4 -> line 345
- *   +0x04ac -> line 346
- *   +0x04b4 -> line 347
- *   +0x04bc -> line 348
- *   +0x04d4 -> line 351
- *   +0x04e8 -> line 353
- *   +0x04f0 -> line 356
- *   +0x0504 -> line 358
- *   +0x050c -> line 359
- *   +0x0514 -> line 360
- *   +0x051c -> line 362
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMDynam.c lines 306–306 */
 /* addr: 0x00302510  size: 8 bytes */
@@ -654,6 +491,106 @@ void DNM_fn_vInitBaseMechanic(DNM_stDynamics* p_stDynamic)
     DNM_fn_vDynamicsInitDefault(p_stDynamic);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMDynam.c lines 314–362 */
+/* addr: 0x00301fe0  size: 1316 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 314
+ *   +0x003c -> line 315
+ *   +0x0078 -> line 316
+ *   +0x00b4 -> line 317
+ *   +0x00f0 -> line 318
+ *   +0x012c -> line 319
+ *   +0x0168 -> line 320
+ *   +0x01a4 -> line 321
+ *   +0x01e0 -> line 322
+ *   +0x021c -> line 323
+ *   +0x0264 -> line 324
+ *   +0x02a0 -> line 325
+ *   +0x02dc -> line 326
+ *   +0x0318 -> line 327
+ *   +0x0354 -> line 328
+ *   +0x0390 -> line 329
+ *   +0x03cc -> line 330
+ *   +0x0408 -> line 335
+ *   +0x040c -> line 331
+ *   +0x0410 -> line 334
+ *   +0x0418 -> line 335
+ *   +0x041c -> line 338
+ *   +0x0420 -> line 341
+ *   +0x0424 -> line 338
+ *   +0x042c -> line 331
+ *   +0x0430 -> line 332
+ *   +0x0438 -> line 333
+ *   +0x0448 -> line 334
+ *   +0x0458 -> line 335
+ *   +0x0468 -> line 338
+ *   +0x0480 -> line 341
+ *   +0x0494 -> line 343
+ *   +0x049c -> line 344
+ *   +0x04a4 -> line 345
+ *   +0x04ac -> line 346
+ *   +0x04b4 -> line 347
+ *   +0x04bc -> line 348
+ *   +0x04d4 -> line 351
+ *   +0x04e8 -> line 353
+ *   +0x04f0 -> line 356
+ *   +0x0504 -> line 358
+ *   +0x050c -> line 359
+ *   +0x0514 -> line 360
+ *   +0x051c -> line 362
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMDynam.c lines 314–362 */
+/* addr: 0x00301fe0  size: 1316 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 314
+ *   +0x003c -> line 315
+ *   +0x0078 -> line 316
+ *   +0x00b4 -> line 317
+ *   +0x00f0 -> line 318
+ *   +0x012c -> line 319
+ *   +0x0168 -> line 320
+ *   +0x01a4 -> line 321
+ *   +0x01e0 -> line 322
+ *   +0x021c -> line 323
+ *   +0x0264 -> line 324
+ *   +0x02a0 -> line 325
+ *   +0x02dc -> line 326
+ *   +0x0318 -> line 327
+ *   +0x0354 -> line 328
+ *   +0x0390 -> line 329
+ *   +0x03cc -> line 330
+ *   +0x0408 -> line 335
+ *   +0x040c -> line 331
+ *   +0x0410 -> line 334
+ *   +0x0418 -> line 335
+ *   +0x041c -> line 338
+ *   +0x0420 -> line 341
+ *   +0x0424 -> line 338
+ *   +0x042c -> line 331
+ *   +0x0430 -> line 332
+ *   +0x0438 -> line 333
+ *   +0x0448 -> line 334
+ *   +0x0458 -> line 335
+ *   +0x0468 -> line 338
+ *   +0x0480 -> line 341
+ *   +0x0494 -> line 343
+ *   +0x049c -> line 344
+ *   +0x04a4 -> line 345
+ *   +0x04ac -> line 346
+ *   +0x04b4 -> line 347
+ *   +0x04bc -> line 348
+ *   +0x04d4 -> line 351
+ *   +0x04e8 -> line 353
+ *   +0x04f0 -> line 356
+ *   +0x0504 -> line 358
+ *   +0x050c -> line 359
+ *   +0x0514 -> line 360
+ *   +0x051c -> line 362
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void DNM_fn_vInitDynamic(DNM_stDynamics* p_stDynamic, void* hIdCard)
 {
     DNM_stMecBaseIdCard* p_IdCard = (DNM_stMecBaseIdCard*)hIdCard;
@@ -702,6 +639,19 @@ void DNM_fn_vInitDynamic(DNM_stDynamics* p_stDynamic, void* hIdCard)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMDynam.c lines 370–407 */
+/* addr: 0x00301f90  size: 68 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 370
+ *   +0x0004 -> line 403
+ *   +0x0008 -> line 370
+ *   +0x0018 -> line 403
+ *   +0x0024 -> line 405
+ *   +0x002c -> line 406
+ *   +0x0030 -> line 407
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void DNM_fn_vChangeIdCard(DNM_stDynamics* _p_stDynamics, void* _hNewIdCard)
 {
     DNM_stMecBaseIdCard* pIdCard = (DNM_stMecBaseIdCard*)_hNewIdCard;
@@ -710,6 +660,25 @@ void DNM_fn_vChangeIdCard(DNM_stDynamics* _p_stDynamics, void* _hNewIdCard)
     _p_stDynamics->m_tdstDynamicsBaseBlock.m_pCurrentIdCard = (int)_hNewIdCard;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMDynam.c lines 412–432 */
+/* addr: 0x00301ea0  size: 236 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 412
+ *   +0x0004 -> line 415
+ *   +0x0008 -> line 412
+ *   +0x0020 -> line 415
+ *   +0x0034 -> line 418
+ *   +0x003c -> line 422
+ *   +0x006c -> line 423
+ *   +0x0094 -> line 424
+ *   +0x00a0 -> line 426
+ *   +0x00a8 -> line 428
+ *   +0x00ac -> line 429
+ *   +0x00c4 -> line 430
+ *   +0x00d4 -> line 432
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void DNM_fn_vDynamicsCopyClone(DNM_stDynamics* _p_stDst, DNM_stDynamics* _p_stSrc)
 {
     DNM_stReport* p_stReport = NULL;
@@ -729,6 +698,34 @@ void DNM_fn_vDynamicsCopyClone(DNM_stDynamics* _p_stDst, DNM_stDynamics* _p_stSr
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMDynam.c lines 66–100 */
+/* addr: 0x00301b90  size: 776 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 66
+ *   +0x0008 -> line 72
+ *   +0x0020 -> line 78
+ *   +0x0024 -> line 73
+ *   +0x003c -> line 78
+ *   +0x0040 -> line 74
+ *   +0x0054 -> line 78
+ *   +0x0058 -> line 74
+ *   +0x005c -> line 78
+ *   +0x0064 -> line 80
+ *   +0x0104 -> line 81
+ *   +0x0170 -> line 83
+ *   +0x017c -> line 84
+ *   +0x0190 -> line 85
+ *   +0x0230 -> line 86
+ *   +0x029c -> line 88
+ *   +0x02a8 -> line 93
+ *   +0x02b8 -> line 96
+ *   +0x02d0 -> line 94
+ *   +0x02d4 -> line 96
+ *   +0x02f8 -> line 97
+ *   +0x02fc -> line 100
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 float CAM_fn_xComputeHorizontalAngle(MTH3D_tdstVector_* _p_stOrgVector, MTH3D_tdstVector_* _p_stDestVector, MTH3D_tdstVector_* _p_stAxisZ)
 {
     float xNorm;

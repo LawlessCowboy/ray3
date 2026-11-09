@@ -2339,47 +2339,6 @@ void* C_InstanceList::__nw(unsigned int Size)
     return PS2glAllocator64(Size);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCheap.cpp lines 1290–1332 */
-/* addr: 0x002d8b70  size: 372 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1290
- *   +0x0020 -> line 1297
- *   +0x0024 -> line 1290
- *   +0x0028 -> line 1297
- *   +0x002c -> line 1290
- *   +0x0030 -> line 1299
- *   +0x003c -> line 1301
- *   +0x0048 -> line 1303
- *   +0x0050 -> line 1304
- *   +0x0068 -> line 1306
- *   +0x006c -> line 1309
- *   +0x0070 -> line 1310
- *   +0x0080 -> line 1312
- *   +0x0088 -> line 1313
- *   +0x009c -> line 1315
- *   +0x00a0 -> line 1318
- *   +0x00a4 -> line 1315
- *   +0x00a8 -> line 1316
- *   +0x00b0 -> line 1317
- *   +0x00b8 -> line 1318
- *   +0x00bc -> line 1319
- *   +0x00c0 -> line 1320
- *   +0x00c4 -> line 1321
- *   +0x00d4 -> line 1323
- *   +0x00d8 -> line 1321
- *   +0x00e0 -> line 1322
- *   +0x00e4 -> line 1324
- *   +0x00e8 -> line 1323
- *   +0x00ec -> line 1325
- *   +0x0100 -> line 1327
- *   +0x010c -> line 1328
- *   +0x012c -> line 1330
- *   +0x0130 -> line 1328
- *   +0x0134 -> line 1331
- *   +0x0148 -> line 1332
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern "C" float FRR(float fMin, float fMax);
 /* Not original source, needs cleaning up: the extractor spells this C++ function by its mangled name. */
 extern "C" void CHEAP_DrawAuras__FP17GLI_tdstMaterial_PA4_fUiPff(GLI_tdstMaterial_* pMat, float (*pParticleList)[4], unsigned int NbSprites, float* pSizes, float SizeRange);
@@ -2394,6 +2353,39 @@ extern "C" void CHEAP_DisplayAllSDLs(int bTransparent);
 void CHEAP_SendModulesToViewportRT(HIE_tdstSuperObject_* _hSprObj, MTH4D_tdstMatrix_** ppCurrentMatrix);
 void CHEAP_SendModulesToViewport(HIE_tdstSuperObject_* _hSprObj, MTH4D_tdstMatrix_** ppCurrentMatrix, char* p_cActivity);
 void HIE_fn_vFastPS2ForcedRefreshHierarchy(HIE_tdstSuperObject_* _hSprObj);
+
+/* Not original source, needs cleaning up: the extractor spells this C++ function by its mangled name. */
+extern "C" void CHEAP_DrawAuras__FP17GLI_tdstMaterial_PA4_fUiPff(GLI_tdstMaterial_* pMat, float (*pParticleList)[4], unsigned int NbSprites, float* pSizes, float SizeRange);
+extern "C" void GLI_vInitGLProjectionMatrix(void);
+extern "C" void GLI_AddNormalInterpolation(void* pMatrix);
+extern "C" unsigned char GLI_DRV_IsMaterialTransparent(GLI_tdstMaterial_* pMat);
+extern "C" void GLI_vClearSendMatStates(void);
+extern "C" void GLI_DRV_SendMaterialToViewport(GLI_tdstMaterial_* pMat);
+extern "C" void PS2glInternalDrawSpriteArray(unsigned int NbSprites);
+extern "C" void PS2glMatrixMode(unsigned int mode);
+extern "C" void PS2glLoadMatrixf(const float* m);
+extern "C" void PS2glVertexPointer(int size, unsigned int type, int stride, void* pointer);
+
+/* Multiplies each column of a 4x4 matrix by a vector on VU0 (macro mode);
+   the VU0 instructions have no C form (same helper as u_drawAGO2.c). */
+inline void PS2_M_vMulMatrixColumnsByVector(float (*_src)[4], float* _vec, float (*_dst)[4])
+{
+    asm {
+        lqc2 vf5, 0x0(_vec)
+        lqc2 vf1, 0x0(_src)
+        lqc2 vf2, 0x10(_src)
+        lqc2 vf3, 0x20(_src)
+        lqc2 vf4, 0x30(_src)
+        vmul.xyzw vf1, vf1, vf5
+        vmul.xyzw vf2, vf2, vf5
+        vmul.xyzw vf3, vf3, vf5
+        vmul.xyzw vf4, vf4, vf5
+        sqc2 vf1, 0x0(_dst)
+        sqc2 vf2, 0x10(_dst)
+        sqc2 vf3, 0x20(_dst)
+        sqc2 vf4, 0x30(_dst)
+    }
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCheap.cpp lines 1188–1285 */
 /* addr: 0x002d8cf0  size: 832 bytes */
@@ -2462,39 +2454,6 @@ void HIE_fn_vFastPS2ForcedRefreshHierarchy(HIE_tdstSuperObject_* _hSprObj);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-/* Not original source, needs cleaning up: the extractor spells this C++ function by its mangled name. */
-extern "C" void CHEAP_DrawAuras__FP17GLI_tdstMaterial_PA4_fUiPff(GLI_tdstMaterial_* pMat, float (*pParticleList)[4], unsigned int NbSprites, float* pSizes, float SizeRange);
-extern "C" void GLI_vInitGLProjectionMatrix(void);
-extern "C" void GLI_AddNormalInterpolation(void* pMatrix);
-extern "C" unsigned char GLI_DRV_IsMaterialTransparent(GLI_tdstMaterial_* pMat);
-extern "C" void GLI_vClearSendMatStates(void);
-extern "C" void GLI_DRV_SendMaterialToViewport(GLI_tdstMaterial_* pMat);
-extern "C" void PS2glInternalDrawSpriteArray(unsigned int NbSprites);
-extern "C" void PS2glMatrixMode(unsigned int mode);
-extern "C" void PS2glLoadMatrixf(const float* m);
-extern "C" void PS2glVertexPointer(int size, unsigned int type, int stride, void* pointer);
-
-/* Multiplies each column of a 4x4 matrix by a vector on VU0 (macro mode);
-   the VU0 instructions have no C form (same helper as u_drawAGO2.c). */
-inline void PS2_M_vMulMatrixColumnsByVector(float (*_src)[4], float* _vec, float (*_dst)[4])
-{
-    asm {
-        lqc2 vf5, 0x0(_vec)
-        lqc2 vf1, 0x0(_src)
-        lqc2 vf2, 0x10(_src)
-        lqc2 vf3, 0x20(_src)
-        lqc2 vf4, 0x30(_src)
-        vmul.xyzw vf1, vf1, vf5
-        vmul.xyzw vf2, vf2, vf5
-        vmul.xyzw vf3, vf3, vf5
-        vmul.xyzw vf4, vf4, vf5
-        sqc2 vf1, 0x0(_dst)
-        sqc2 vf2, 0x10(_dst)
-        sqc2 vf3, 0x20(_dst)
-        sqc2 vf4, 0x30(_dst)
-    }
-}
-
 void CHEAP_DrawAuras__FP17GLI_tdstMaterial_PA4_fUiPff(GLI_tdstMaterial_* pMat, float (*pParticleList)[4], unsigned int NbSprites, float* pSizes, float SizeRange)
 {
     unsigned char zTst;
@@ -2553,195 +2512,9 @@ void CHEAP_DrawAuras__FP17GLI_tdstMaterial_PA4_fUiPff(GLI_tdstMaterial_* pMat, f
     PS2glInternalDrawSpriteArray(NbSprites);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCheap.cpp lines 753–1179 */
-/* addr: 0x002d9030  size: 2516 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 753
- *   +0x0024 -> line 764
- *   +0x0030 -> line 766
- *   +0x0048 -> line 768
- *   +0x0050 -> line 772
- *   +0x0054 -> line 776
- *   +0x0058 -> line 774
- *   +0x005c -> line 776
- *   +0x0068 -> line 778
- *   +0x006c -> line 781
- *   +0x0070 -> line 778
- *   +0x0074 -> line 781
- *   +0x0084 -> line 784
- *   +0x0088 -> line 781
- *   +0x008c -> line 784
- *   +0x0094 -> line 785
- *   +0x0098 -> line 786
- *   +0x009c -> line 789
- *   +0x00a0 -> line 792
- *   +0x00ac -> line 793
- *   +0x00bc -> line 794
- *   +0x00e0 -> line 798
- *   +0x00f0 -> line 801
- *   +0x00fc -> line 806
- *   +0x0100 -> line 807
- *   +0x0148 -> line 808
- *   +0x0158 -> line 811
- *   +0x0174 -> line 818
- *   +0x0178 -> line 812
- *   +0x017c -> line 818
- *   +0x0190 -> line 819
- *   +0x01a4 -> line 821
- *   +0x01b0 -> line 823
- *   +0x01bc -> line 824
- *   +0x01c0 -> line 826
- *   +0x01c8 -> line 828
- *   +0x01d4 -> line 830
- *   +0x01dc -> line 832
- *   +0x01e4 -> line 834
- *   +0x01f0 -> line 844
- *   +0x0230 -> line 849
- *   +0x0234 -> line 845
- *   +0x0238 -> line 848
- *   +0x023c -> line 846
- *   +0x0240 -> line 845
- *   +0x0244 -> line 848
- *   +0x0248 -> line 849
- *   +0x0250 -> line 850
- *   +0x0258 -> line 851
- *   +0x026c -> line 854
- *   +0x0274 -> line 857
- *   +0x027c -> line 858
- *   +0x0288 -> line 868
- *   +0x028c -> line 875
- *   +0x0290 -> line 868
- *   +0x0294 -> line 870
- *   +0x0298 -> line 875
- *   +0x02a0 -> line 877
- *   +0x02bc -> line 878
- *   +0x02c0 -> line 879
- *   +0x02c4 -> line 883
- *   +0x02cc -> line 884
- *   +0x02d8 -> line 885
- *   +0x02e8 -> line 886
- *   +0x0318 -> line 887
- *   +0x0350 -> line 888
- *   +0x0368 -> line 890
- *   +0x0374 -> line 892
- *   +0x037c -> line 934
- *   +0x0388 -> line 935
- *   +0x03a0 -> line 938
- *   +0x03d4 -> line 939
- *   +0x03d8 -> line 940
- *   +0x03dc -> line 942
- *   +0x03e4 -> line 945
- *   +0x03f0 -> line 948
- *   +0x0404 -> line 949
- *   +0x0418 -> line 951
- *   +0x0424 -> line 953
- *   +0x0430 -> line 955
- *   +0x0434 -> line 958
- *   +0x043c -> line 961
- *   +0x0440 -> line 964
- *   +0x0450 -> line 967
- *   +0x0458 -> line 970
- *   +0x045c -> line 971
- *   +0x04a0 -> line 973
- *   +0x04b8 -> line 975
- *   +0x04c4 -> line 977
- *   +0x04cc -> line 981
- *   +0x04d4 -> line 993
- *   +0x04d8 -> line 994
- *   +0x04dc -> line 995
- *   +0x04e4 -> line 996
- *   +0x04e8 -> line 997
- *   +0x04ec -> line 999
- *   +0x04f4 -> line 1010
- *   +0x0500 -> line 1012
- *   +0x050c -> line 1016
- *   +0x0514 -> line 1019
- *   +0x0520 -> line 1020
- *   +0x0524 -> line 1019
- *   +0x0528 -> line 1031
- *   +0x052c -> line 1019
- *   +0x0530 -> line 1020
- *   +0x0534 -> line 1019
- *   +0x0538 -> line 1029
- *   +0x053c -> line 1031
- *   +0x0540 -> line 1019
- *   +0x0548 -> line 1020
- *   +0x0550 -> line 1021
- *   +0x0554 -> line 1023
- *   +0x0560 -> line 1024
- *   +0x0568 -> line 1029
- *   +0x056c -> line 1024
- *   +0x0570 -> line 1025
- *   +0x0574 -> line 1027
- *   +0x0578 -> line 1028
- *   +0x057c -> line 1031
- *   +0x0588 -> line 1033
- *   +0x05a4 -> line 1034
- *   +0x05a8 -> line 1035
- *   +0x05ac -> line 1041
- *   +0x05b4 -> line 1042
- *   +0x05c0 -> line 1043
- *   +0x05d0 -> line 1045
- *   +0x0674 -> line 1046
- *   +0x0688 -> line 1047
- *   +0x068c -> line 1048
- *   +0x0690 -> line 1047
- *   +0x0698 -> line 1048
- *   +0x06a8 -> line 1051
- *   +0x06b0 -> line 1065
- *   +0x06b4 -> line 1063
- *   +0x06b8 -> line 1065
- *   +0x06bc -> line 1066
- *   +0x06c0 -> line 1070
- *   +0x06c8 -> line 1071
- *   +0x06d4 -> line 1072
- *   +0x06e4 -> line 1074
- *   +0x078c -> line 1075
- *   +0x07a0 -> line 1076
- *   +0x07a4 -> line 1082
- *   +0x07a8 -> line 1077
- *   +0x07ac -> line 1076
- *   +0x07b0 -> line 1082
- *   +0x07b8 -> line 1085
- *   +0x07cc -> line 1086
- *   +0x07d0 -> line 1089
- *   +0x07d8 -> line 1091
- *   +0x07dc -> line 1092
- *   +0x07e0 -> line 1093
- *   +0x07e4 -> line 1094
- *   +0x07e8 -> line 1095
- *   +0x07ec -> line 1096
- *   +0x07f0 -> line 1097
- *   +0x07f4 -> line 1098
- *   +0x07f8 -> line 1099
- *   +0x07fc -> line 1100
- *   +0x0800 -> line 1104
- *   +0x0804 -> line 1103
- *   +0x0810 -> line 1104
- *   +0x081c -> line 1105
- *   +0x0830 -> line 1111
- *   +0x0838 -> line 1113
- *   +0x0840 -> line 1117
- *   +0x0844 -> line 1118
- *   +0x0848 -> line 1119
- *   +0x084c -> line 1121
- *   +0x085c -> line 1122
- *   +0x0860 -> line 1148
- *   +0x0868 -> line 1150
- *   +0x0878 -> line 1152
- *   +0x0884 -> line 1156
- *   +0x0894 -> line 1159
- *   +0x089c -> line 1163
- *   +0x08cc -> line 1164
- *   +0x08d4 -> line 1169
- *   +0x08e0 -> line 1170
- *   +0x08e4 -> line 1171
- *   +0x08e8 -> line 1174
- *   +0x09a4 -> line 1178
- *   +0x09ac -> line 1179
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+extern "C" GEO_tdstVisualSet_* PO_fn_hGetVisualSet(PO_tdstPhysicalObject_* hPhysicalObject);
+/* Not original source, needs cleaning up: the extractor spells this C++ function by its mangled name. */
+extern "C" void CHEAP_SearchMaterial__FP20HIE_tdstSuperObject_PP17MTH4D_tdstMatrix_Pc(HIE_tdstSuperObject_* _hSprObj, MTH4D_tdstMatrix_** ppCurrentMatrix, char* p_cActivity);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCheap.cpp lines 707–748 */
 /* addr: 0x002d9a10  size: 208 bytes */
@@ -2765,10 +2538,6 @@ void CHEAP_DrawAuras__FP17GLI_tdstMaterial_PA4_fUiPff(GLI_tdstMaterial_* pMat, f
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-extern "C" GEO_tdstVisualSet_* PO_fn_hGetVisualSet(PO_tdstPhysicalObject_* hPhysicalObject);
-/* Not original source, needs cleaning up: the extractor spells this C++ function by its mangled name. */
-extern "C" void CHEAP_SearchMaterial__FP20HIE_tdstSuperObject_PP17MTH4D_tdstMatrix_Pc(HIE_tdstSuperObject_* _hSprObj, MTH4D_tdstMatrix_** ppCurrentMatrix, char* p_cActivity);
-
 void CHEAP_SearchMaterial__FP20HIE_tdstSuperObject_PP17MTH4D_tdstMatrix_Pc(HIE_tdstSuperObject_* _hSprObj, MTH4D_tdstMatrix_** ppCurrentMatrix, char* p_cActivity)
 {
     SDC_VertexArrays_* pSDC;
@@ -2803,26 +2572,10 @@ void CHEAP_SearchMaterial__FP20HIE_tdstSuperObject_PP17MTH4D_tdstMatrix_Pc(HIE_t
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCheap.cpp lines 682–702 */
-/* addr: 0x002d9ae0  size: 204 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 682
- *   +0x0024 -> line 684
- *   +0x002c -> line 687
- *   +0x0034 -> line 689
- *   +0x0040 -> line 692
- *   +0x0068 -> line 693
- *   +0x006c -> line 694
- *   +0x0078 -> line 696
- *   +0x0084 -> line 697
- *   +0x0088 -> line 698
- *   +0x008c -> line 700
- *   +0x0090 -> line 698
- *   +0x0094 -> line 701
- *   +0x00a8 -> line 702
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+/* Not original source, needs cleaning up: the extractor spells this C++ function by its mangled name. */
+extern "C" void CHEAP_UpdateDeformation__FP20HIE_tdstSuperObject_(HIE_tdstSuperObject_* _hSprObj);
+extern "C" void GLI_vGetVertexPointersFromSDCStructure(SDC_VertexArrays_* pSDC, unsigned int iElement, float (**pVOrg)[4], float (**pUV1)[4], float (**pUV2)[4], float (**pUVChrome)[4], float (**pNormals)[4]);
+extern "C" void GLI_vUpdateCharacterVA(float (*pDestPV)[4], GEO_tdstElementIndexedTriangles_* p_stEIT, MTH3D_tdstVector_* p_stPoints, unsigned int NbPoints, unsigned int NbDestPoints, unsigned int bNoInterpol);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCheap.cpp lines 645–678 */
 /* addr: 0x002d9bb0  size: 324 bytes */
@@ -2852,11 +2605,6 @@ void CHEAP_SearchMaterial__FP20HIE_tdstSuperObject_PP17MTH4D_tdstMatrix_Pc(HIE_t
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-/* Not original source, needs cleaning up: the extractor spells this C++ function by its mangled name. */
-extern "C" void CHEAP_UpdateDeformation__FP20HIE_tdstSuperObject_(HIE_tdstSuperObject_* _hSprObj);
-extern "C" void GLI_vGetVertexPointersFromSDCStructure(SDC_VertexArrays_* pSDC, unsigned int iElement, float (**pVOrg)[4], float (**pUV1)[4], float (**pUV2)[4], float (**pUVChrome)[4], float (**pNormals)[4]);
-extern "C" void GLI_vUpdateCharacterVA(float (*pDestPV)[4], GEO_tdstElementIndexedTriangles_* p_stEIT, MTH3D_tdstVector_* p_stPoints, unsigned int NbPoints, unsigned int NbDestPoints, unsigned int bNoInterpol);
-
 void CHEAP_UpdateDeformation__FP20HIE_tdstSuperObject_(HIE_tdstSuperObject_* _hSprObj)
 {
     /* Not original source, needs cleaning up: retail gives each address-taken
@@ -2904,108 +2652,20 @@ void CHEAP_UpdateDeformation__FP20HIE_tdstSuperObject_(HIE_tdstSuperObject_* _hS
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCheap.cpp lines 631–642 */
-/* addr: 0x002d9d00  size: 104 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 631
- *   +0x0014 -> line 633
- *   +0x001c -> line 635
- *   +0x0030 -> line 636
- *   +0x003c -> line 637
- *   +0x0050 -> line 641
- *   +0x0054 -> line 642
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCheap.cpp lines 591–627 */
-/* addr: 0x002d9d70  size: 136 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 591
- *   +0x0014 -> line 605
- *   +0x0020 -> line 607
- *   +0x002c -> line 609
- *   +0x0044 -> line 615
- *   +0x004c -> line 616
- *   +0x0050 -> line 615
- *   +0x0054 -> line 617
- *   +0x0068 -> line 621
- *   +0x0070 -> line 627
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCheap.cpp lines 551–578 */
-/* addr: 0x002d9e00  size: 428 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 551
- *   +0x0018 -> line 557
- *   +0x0020 -> line 559
- *   +0x0030 -> line 561
- *   +0x0038 -> line 562
- *   +0x0048 -> line 564
- *   +0x0068 -> line 566
- *   +0x00bc -> line 571
- *   +0x00c8 -> line 572
- *   +0x00d8 -> line 574
- *   +0x0174 -> line 575
- *   +0x0188 -> line 577
- *   +0x0194 -> line 578
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* Not original source, needs cleaning up: the extractor spells these C++ functions by their mangled names. */
 extern "C" void CHEAP_StoreMatrix__FPP17MTH4D_tdstMatrix_(MTH4D_tdstMatrix_** pCurrentMatrix);
 extern "C" void HIE_fn_vFastPS2ForcedPushMatrixRT__FP20HIE_tdstSuperObject_(HIE_tdstSuperObject_* _hSprObj);
 
 #pragma auto_inline on
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCheap.cpp lines 460–547 */
-/* addr: 0x002d9fb0  size: 596 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 460
- *   +0x001c -> line 469
- *   +0x0028 -> line 477
- *   +0x0030 -> line 480
- *   +0x0034 -> line 481
- *   +0x0044 -> line 483
- *   +0x004c -> line 485
- *   +0x0054 -> line 487
- *   +0x005c -> line 489
- *   +0x0060 -> line 490
- *   +0x0068 -> line 492
- *   +0x007c -> line 495
- *   +0x0088 -> line 497
- *   +0x0090 -> line 501
- *   +0x0094 -> line 502
- *   +0x00a4 -> line 503
- *   +0x00d8 -> line 504
- *   +0x00e0 -> line 511
- *   +0x00ec -> line 513
- *   +0x00f0 -> line 512
- *   +0x00f4 -> line 513
- *   +0x0124 -> line 514
- *   +0x012c -> line 521
- *   +0x0138 -> line 523
- *   +0x0144 -> line 525
- *   +0x0148 -> line 524
- *   +0x014c -> line 525
- *   +0x017c -> line 526
- *   +0x0184 -> line 532
- *   +0x0190 -> line 534
- *   +0x01c4 -> line 535
- *   +0x01cc -> line 540
- *   +0x01d8 -> line 541
- *   +0x01e8 -> line 543
- *   +0x01f8 -> line 544
- *   +0x0208 -> line 546
- *   +0x023c -> line 547
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern "C" int printf(const char*, ...);
 extern "C" void HIE_fn_vFastPS2ForcedPushMatrix__FP20HIE_tdstSuperObject_(HIE_tdstSuperObject_* _hSprObj);
 extern "C" void CHEAP_DrawActorInstance__FP24GEO_tdstGeometricObject_PP17MTH4D_tdstMatrix_Pc(GEO_tdstGeometricObject_* p_stObj, MTH4D_tdstMatrix_** ppCurrentMatrix, char* p_cActivity);
+
+/* Not original source, needs cleaning up: the extractor spells this C++ function by its mangled name. */
+extern "C" void CHEAP_DrawActorInstance__FP24GEO_tdstGeometricObject_PP17MTH4D_tdstMatrix_Pc(GEO_tdstGeometricObject_* p_stObj, MTH4D_tdstMatrix_** ppCurrentMatrix, char* p_cActivity);
+extern "C" void PS2glEnable(unsigned int cap);
+extern "C" void PS2glDrawArrays(unsigned int mode, int first, int count);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCheap.cpp lines 346–457 */
 /* addr: 0x002da210  size: 1180 bytes */
@@ -3096,11 +2756,6 @@ extern "C" void CHEAP_DrawActorInstance__FP24GEO_tdstGeometricObject_PP17MTH4D_t
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-/* Not original source, needs cleaning up: the extractor spells this C++ function by its mangled name. */
-extern "C" void CHEAP_DrawActorInstance__FP24GEO_tdstGeometricObject_PP17MTH4D_tdstMatrix_Pc(GEO_tdstGeometricObject_* p_stObj, MTH4D_tdstMatrix_** ppCurrentMatrix, char* p_cActivity);
-extern "C" void PS2glEnable(unsigned int cap);
-extern "C" void PS2glDrawArrays(unsigned int mode, int first, int count);
-
 void CHEAP_DrawActorInstance__FP24GEO_tdstGeometricObject_PP17MTH4D_tdstMatrix_Pc(GEO_tdstGeometricObject_* p_stObj, MTH4D_tdstMatrix_** ppCurrentMatrix, char* p_cActivity)
 {
     /* Not original source, needs cleaning up: 16-byte vertex-pointer slots, see CHEAP_UpdateDeformation. */
@@ -3200,6 +2855,9 @@ void CHEAP_DrawActorInstance__FP24GEO_tdstGeometricObject_PP17MTH4D_tdstMatrix_P
     }
 }
 
+/* Not original source, needs cleaning up: the extractor spells this C++ function by its mangled name. */
+extern "C" void CHEAP_DrawLastSDC__Fv(void);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCheap.cpp lines 226–342 */
 /* addr: 0x002da6b0  size: 656 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3267,9 +2925,6 @@ void CHEAP_DrawActorInstance__FP24GEO_tdstGeometricObject_PP17MTH4D_tdstMatrix_P
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-/* Not original source, needs cleaning up: the extractor spells this C++ function by its mangled name. */
-extern "C" void CHEAP_DrawLastSDC__Fv(void);
-
 void CHEAP_DrawLastSDC__Fv(void)
 {
     /* Not original source, needs cleaning up: 16-byte vertex-pointer slots, see CHEAP_UpdateDeformation. */
@@ -3337,18 +2992,6 @@ void CHEAP_DrawLastSDC__Fv(void)
     ((C_Sdl*)pCheapSDL)->m_NbFaces += NbVertices / 3;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCheap.cpp lines 203–213 */
-/* addr: 0x002da940  size: 320 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 203
- *   +0x0014 -> line 207
- *   +0x001c -> line 209
- *   +0x0028 -> line 210
- *   +0x00f8 -> line 212
- *   +0x0128 -> line 213
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* Not original source, needs cleaning up: the extractor spells these C++ functions by their mangled names. */
 extern "C" void HIE_fn_vFastPS2ForcedPushMatrix__FP20HIE_tdstSuperObject_(HIE_tdstSuperObject_* _hSprObj);
 void HIE_fn_vFastPS2ForcedRefreshHierarchy(HIE_tdstSuperObject_* _hSprObj);
@@ -3601,6 +3244,18 @@ void CHEAP_StoreMatrix__FPP17MTH4D_tdstMatrix_(MTH4D_tdstMatrix_** pCurrentMatri
     (*pCurrentMatrix)++;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCheap.cpp lines 203–213 */
+/* addr: 0x002da940  size: 320 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 203
+ *   +0x0014 -> line 207
+ *   +0x001c -> line 209
+ *   +0x0028 -> line 210
+ *   +0x00f8 -> line 212
+ *   +0x0128 -> line 213
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 #pragma auto_inline reset
 #pragma auto_inline on
 void HIE_fn_vFastPS2ForcedRefreshHierarchy(HIE_tdstSuperObject_* _hSprObj)
@@ -3614,6 +3269,49 @@ void HIE_fn_vFastPS2ForcedRefreshHierarchy(HIE_tdstSuperObject_* _hSprObj)
 }
 #pragma auto_inline reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCheap.cpp lines 460–547 */
+/* addr: 0x002d9fb0  size: 596 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 460
+ *   +0x001c -> line 469
+ *   +0x0028 -> line 477
+ *   +0x0030 -> line 480
+ *   +0x0034 -> line 481
+ *   +0x0044 -> line 483
+ *   +0x004c -> line 485
+ *   +0x0054 -> line 487
+ *   +0x005c -> line 489
+ *   +0x0060 -> line 490
+ *   +0x0068 -> line 492
+ *   +0x007c -> line 495
+ *   +0x0088 -> line 497
+ *   +0x0090 -> line 501
+ *   +0x0094 -> line 502
+ *   +0x00a4 -> line 503
+ *   +0x00d8 -> line 504
+ *   +0x00e0 -> line 511
+ *   +0x00ec -> line 513
+ *   +0x00f0 -> line 512
+ *   +0x00f4 -> line 513
+ *   +0x0124 -> line 514
+ *   +0x012c -> line 521
+ *   +0x0138 -> line 523
+ *   +0x0144 -> line 525
+ *   +0x0148 -> line 524
+ *   +0x014c -> line 525
+ *   +0x017c -> line 526
+ *   +0x0184 -> line 532
+ *   +0x0190 -> line 534
+ *   +0x01c4 -> line 535
+ *   +0x01cc -> line 540
+ *   +0x01d8 -> line 541
+ *   +0x01e8 -> line 543
+ *   +0x01f8 -> line 544
+ *   +0x0208 -> line 546
+ *   +0x023c -> line 547
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 #pragma auto_inline on
 void CHEAP_SendModulesToViewport(HIE_tdstSuperObject_* _hSprObj, MTH4D_tdstMatrix_** ppCurrentMatrix, char* p_cActivity)
 {
@@ -3682,6 +3380,25 @@ void CHEAP_SendModulesToViewport(HIE_tdstSuperObject_* _hSprObj, MTH4D_tdstMatri
 }
 #pragma auto_inline reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCheap.cpp lines 551–578 */
+/* addr: 0x002d9e00  size: 428 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 551
+ *   +0x0018 -> line 557
+ *   +0x0020 -> line 559
+ *   +0x0030 -> line 561
+ *   +0x0038 -> line 562
+ *   +0x0048 -> line 564
+ *   +0x0068 -> line 566
+ *   +0x00bc -> line 571
+ *   +0x00c8 -> line 572
+ *   +0x00d8 -> line 574
+ *   +0x0174 -> line 575
+ *   +0x0188 -> line 577
+ *   +0x0194 -> line 578
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 #pragma auto_inline on
 void CHEAP_SendModulesToViewportRT(HIE_tdstSuperObject_* _hSprObj, MTH4D_tdstMatrix_** ppCurrentMatrix)
 {
@@ -3711,6 +3428,22 @@ void CHEAP_SendModulesToViewportRT(HIE_tdstSuperObject_* _hSprObj, MTH4D_tdstMat
 }
 #pragma auto_inline reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCheap.cpp lines 591–627 */
+/* addr: 0x002d9d70  size: 136 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 591
+ *   +0x0014 -> line 605
+ *   +0x0020 -> line 607
+ *   +0x002c -> line 609
+ *   +0x0044 -> line 615
+ *   +0x004c -> line 616
+ *   +0x0050 -> line 615
+ *   +0x0054 -> line 617
+ *   +0x0068 -> line 621
+ *   +0x0070 -> line 627
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void CHEAP_DisplayAllSDLs(int bTransparent)
 {
     unsigned int i;
@@ -3726,6 +3459,19 @@ void CHEAP_DisplayAllSDLs(int bTransparent)
     GLI_vSetOptimizedSDC(0);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCheap.cpp lines 631–642 */
+/* addr: 0x002d9d00  size: 104 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 631
+ *   +0x0014 -> line 633
+ *   +0x001c -> line 635
+ *   +0x0030 -> line 636
+ *   +0x003c -> line 637
+ *   +0x0050 -> line 641
+ *   +0x0054 -> line 642
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void CHEAP_UpdateAllRefs(void)
 {
     unsigned int i;
@@ -3739,6 +3485,26 @@ void CHEAP_UpdateAllRefs(void)
     GLI_g_CurrentNbCheapSDLsForViewport = 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCheap.cpp lines 682–702 */
+/* addr: 0x002d9ae0  size: 204 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 682
+ *   +0x0024 -> line 684
+ *   +0x002c -> line 687
+ *   +0x0034 -> line 689
+ *   +0x0040 -> line 692
+ *   +0x0068 -> line 693
+ *   +0x006c -> line 694
+ *   +0x0078 -> line 696
+ *   +0x0084 -> line 697
+ *   +0x0088 -> line 698
+ *   +0x008c -> line 700
+ *   +0x0090 -> line 698
+ *   +0x0094 -> line 701
+ *   +0x00a8 -> line 702
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void HIE_fn_CleanAllListOfFakeInstanceToViewport(void)
 {
     unsigned int i;
@@ -3763,6 +3529,195 @@ void HIE_fn_CleanAllListOfFakeInstanceToViewport(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCheap.cpp lines 753–1179 */
+/* addr: 0x002d9030  size: 2516 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 753
+ *   +0x0024 -> line 764
+ *   +0x0030 -> line 766
+ *   +0x0048 -> line 768
+ *   +0x0050 -> line 772
+ *   +0x0054 -> line 776
+ *   +0x0058 -> line 774
+ *   +0x005c -> line 776
+ *   +0x0068 -> line 778
+ *   +0x006c -> line 781
+ *   +0x0070 -> line 778
+ *   +0x0074 -> line 781
+ *   +0x0084 -> line 784
+ *   +0x0088 -> line 781
+ *   +0x008c -> line 784
+ *   +0x0094 -> line 785
+ *   +0x0098 -> line 786
+ *   +0x009c -> line 789
+ *   +0x00a0 -> line 792
+ *   +0x00ac -> line 793
+ *   +0x00bc -> line 794
+ *   +0x00e0 -> line 798
+ *   +0x00f0 -> line 801
+ *   +0x00fc -> line 806
+ *   +0x0100 -> line 807
+ *   +0x0148 -> line 808
+ *   +0x0158 -> line 811
+ *   +0x0174 -> line 818
+ *   +0x0178 -> line 812
+ *   +0x017c -> line 818
+ *   +0x0190 -> line 819
+ *   +0x01a4 -> line 821
+ *   +0x01b0 -> line 823
+ *   +0x01bc -> line 824
+ *   +0x01c0 -> line 826
+ *   +0x01c8 -> line 828
+ *   +0x01d4 -> line 830
+ *   +0x01dc -> line 832
+ *   +0x01e4 -> line 834
+ *   +0x01f0 -> line 844
+ *   +0x0230 -> line 849
+ *   +0x0234 -> line 845
+ *   +0x0238 -> line 848
+ *   +0x023c -> line 846
+ *   +0x0240 -> line 845
+ *   +0x0244 -> line 848
+ *   +0x0248 -> line 849
+ *   +0x0250 -> line 850
+ *   +0x0258 -> line 851
+ *   +0x026c -> line 854
+ *   +0x0274 -> line 857
+ *   +0x027c -> line 858
+ *   +0x0288 -> line 868
+ *   +0x028c -> line 875
+ *   +0x0290 -> line 868
+ *   +0x0294 -> line 870
+ *   +0x0298 -> line 875
+ *   +0x02a0 -> line 877
+ *   +0x02bc -> line 878
+ *   +0x02c0 -> line 879
+ *   +0x02c4 -> line 883
+ *   +0x02cc -> line 884
+ *   +0x02d8 -> line 885
+ *   +0x02e8 -> line 886
+ *   +0x0318 -> line 887
+ *   +0x0350 -> line 888
+ *   +0x0368 -> line 890
+ *   +0x0374 -> line 892
+ *   +0x037c -> line 934
+ *   +0x0388 -> line 935
+ *   +0x03a0 -> line 938
+ *   +0x03d4 -> line 939
+ *   +0x03d8 -> line 940
+ *   +0x03dc -> line 942
+ *   +0x03e4 -> line 945
+ *   +0x03f0 -> line 948
+ *   +0x0404 -> line 949
+ *   +0x0418 -> line 951
+ *   +0x0424 -> line 953
+ *   +0x0430 -> line 955
+ *   +0x0434 -> line 958
+ *   +0x043c -> line 961
+ *   +0x0440 -> line 964
+ *   +0x0450 -> line 967
+ *   +0x0458 -> line 970
+ *   +0x045c -> line 971
+ *   +0x04a0 -> line 973
+ *   +0x04b8 -> line 975
+ *   +0x04c4 -> line 977
+ *   +0x04cc -> line 981
+ *   +0x04d4 -> line 993
+ *   +0x04d8 -> line 994
+ *   +0x04dc -> line 995
+ *   +0x04e4 -> line 996
+ *   +0x04e8 -> line 997
+ *   +0x04ec -> line 999
+ *   +0x04f4 -> line 1010
+ *   +0x0500 -> line 1012
+ *   +0x050c -> line 1016
+ *   +0x0514 -> line 1019
+ *   +0x0520 -> line 1020
+ *   +0x0524 -> line 1019
+ *   +0x0528 -> line 1031
+ *   +0x052c -> line 1019
+ *   +0x0530 -> line 1020
+ *   +0x0534 -> line 1019
+ *   +0x0538 -> line 1029
+ *   +0x053c -> line 1031
+ *   +0x0540 -> line 1019
+ *   +0x0548 -> line 1020
+ *   +0x0550 -> line 1021
+ *   +0x0554 -> line 1023
+ *   +0x0560 -> line 1024
+ *   +0x0568 -> line 1029
+ *   +0x056c -> line 1024
+ *   +0x0570 -> line 1025
+ *   +0x0574 -> line 1027
+ *   +0x0578 -> line 1028
+ *   +0x057c -> line 1031
+ *   +0x0588 -> line 1033
+ *   +0x05a4 -> line 1034
+ *   +0x05a8 -> line 1035
+ *   +0x05ac -> line 1041
+ *   +0x05b4 -> line 1042
+ *   +0x05c0 -> line 1043
+ *   +0x05d0 -> line 1045
+ *   +0x0674 -> line 1046
+ *   +0x0688 -> line 1047
+ *   +0x068c -> line 1048
+ *   +0x0690 -> line 1047
+ *   +0x0698 -> line 1048
+ *   +0x06a8 -> line 1051
+ *   +0x06b0 -> line 1065
+ *   +0x06b4 -> line 1063
+ *   +0x06b8 -> line 1065
+ *   +0x06bc -> line 1066
+ *   +0x06c0 -> line 1070
+ *   +0x06c8 -> line 1071
+ *   +0x06d4 -> line 1072
+ *   +0x06e4 -> line 1074
+ *   +0x078c -> line 1075
+ *   +0x07a0 -> line 1076
+ *   +0x07a4 -> line 1082
+ *   +0x07a8 -> line 1077
+ *   +0x07ac -> line 1076
+ *   +0x07b0 -> line 1082
+ *   +0x07b8 -> line 1085
+ *   +0x07cc -> line 1086
+ *   +0x07d0 -> line 1089
+ *   +0x07d8 -> line 1091
+ *   +0x07dc -> line 1092
+ *   +0x07e0 -> line 1093
+ *   +0x07e4 -> line 1094
+ *   +0x07e8 -> line 1095
+ *   +0x07ec -> line 1096
+ *   +0x07f0 -> line 1097
+ *   +0x07f4 -> line 1098
+ *   +0x07f8 -> line 1099
+ *   +0x07fc -> line 1100
+ *   +0x0800 -> line 1104
+ *   +0x0804 -> line 1103
+ *   +0x0810 -> line 1104
+ *   +0x081c -> line 1105
+ *   +0x0830 -> line 1111
+ *   +0x0838 -> line 1113
+ *   +0x0840 -> line 1117
+ *   +0x0844 -> line 1118
+ *   +0x0848 -> line 1119
+ *   +0x084c -> line 1121
+ *   +0x085c -> line 1122
+ *   +0x0860 -> line 1148
+ *   +0x0868 -> line 1150
+ *   +0x0878 -> line 1152
+ *   +0x0884 -> line 1156
+ *   +0x0894 -> line 1159
+ *   +0x089c -> line 1163
+ *   +0x08cc -> line 1164
+ *   +0x08d4 -> line 1169
+ *   +0x08e0 -> line 1170
+ *   +0x08e4 -> line 1171
+ *   +0x08e8 -> line 1174
+ *   +0x09a4 -> line 1178
+ *   +0x09ac -> line 1179
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void HIE_fn_SendListOfFakeInstanceToViewport(_tdstCheapCharacterList* CharacterList)
 {
     MTH3D_tdstVector_ stVecK;
@@ -3782,6 +3737,47 @@ void HIE_fn_SendListOfFakeInstanceToViewport(_tdstCheapCharacterList* CharacterL
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCheap.cpp lines 1290–1332 */
+/* addr: 0x002d8b70  size: 372 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1290
+ *   +0x0020 -> line 1297
+ *   +0x0024 -> line 1290
+ *   +0x0028 -> line 1297
+ *   +0x002c -> line 1290
+ *   +0x0030 -> line 1299
+ *   +0x003c -> line 1301
+ *   +0x0048 -> line 1303
+ *   +0x0050 -> line 1304
+ *   +0x0068 -> line 1306
+ *   +0x006c -> line 1309
+ *   +0x0070 -> line 1310
+ *   +0x0080 -> line 1312
+ *   +0x0088 -> line 1313
+ *   +0x009c -> line 1315
+ *   +0x00a0 -> line 1318
+ *   +0x00a4 -> line 1315
+ *   +0x00a8 -> line 1316
+ *   +0x00b0 -> line 1317
+ *   +0x00b8 -> line 1318
+ *   +0x00bc -> line 1319
+ *   +0x00c0 -> line 1320
+ *   +0x00c4 -> line 1321
+ *   +0x00d4 -> line 1323
+ *   +0x00d8 -> line 1321
+ *   +0x00e0 -> line 1322
+ *   +0x00e4 -> line 1324
+ *   +0x00e8 -> line 1323
+ *   +0x00ec -> line 1325
+ *   +0x0100 -> line 1327
+ *   +0x010c -> line 1328
+ *   +0x012c -> line 1330
+ *   +0x0130 -> line 1328
+ *   +0x0134 -> line 1331
+ *   +0x0148 -> line 1332
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void CHEAP_DisplayAllAuras(void)
 {
     _tdstCheapCharacter* param0;

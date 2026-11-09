@@ -1547,6 +1547,28 @@ void J_DrawSpriteGenList(GLI_tdstMaterial_* pMat, J_ParticleSprite_* pParticleLi
     /* TODO: decompile from asm/... */
 }
 
+void PS2glColor4f(float red, float green, float blue, float alpha);
+extern void PS2glMatrixMode(unsigned int mode);
+extern void PS2glLoadMatrixf(const void* matrix);
+extern void PS2glBegin(unsigned int mode);
+extern void PS2glTexCoord2f(float u, float v);
+extern void PS2glVertex3f(float x, float y, float z);
+extern void GLI_vInitGLProjectionMatrix(void);
+extern void GLI_DRV_SendMaterialToViewport(GLI_tdstMaterial_* pMat);
+
+/* Reconstructed from the retail disassembly (asm/.../u_drawSprites.s,
+   0x002bcb80).
+   Notes on the recovered shape:
+   - the pending-sprite block (colour, end, and the three flag resets) is one
+     source line;
+   - the world matrix is built by a VU0 block that scales every column of the
+     viewport's world matrix by GLI_g_NegVect (MWCC cannot emit the VU
+     instructions from C, so the block is reproduced verbatim);
+   - the depth-function block is the PS2GL library's impPS2glDepthFunc switch
+     (cases 0x200/0x207/0x203/0x201 in that order), and the GS context is
+     updated through byte accesses;
+   - the draw mask is saved, forced to -0x409 and restored at the end. */
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawSprites.c lines 1855–1937 */
 /* addr: 0x002bcb80  size: 700 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1598,27 +1620,6 @@ void J_DrawSpriteGenList(GLI_tdstMaterial_* pMat, J_ParticleSprite_* pParticleLi
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glColor4f(float red, float green, float blue, float alpha);
-extern void PS2glMatrixMode(unsigned int mode);
-extern void PS2glLoadMatrixf(const void* matrix);
-extern void PS2glBegin(unsigned int mode);
-extern void PS2glTexCoord2f(float u, float v);
-extern void PS2glVertex3f(float x, float y, float z);
-extern void GLI_vInitGLProjectionMatrix(void);
-extern void GLI_DRV_SendMaterialToViewport(GLI_tdstMaterial_* pMat);
-
-/* Reconstructed from the retail disassembly (asm/.../u_drawSprites.s,
-   0x002bcb80).
-   Notes on the recovered shape:
-   - the pending-sprite block (colour, end, and the three flag resets) is one
-     source line;
-   - the world matrix is built by a VU0 block that scales every column of the
-     viewport's world matrix by GLI_g_NegVect (MWCC cannot emit the VU
-     instructions from C, so the block is reproduced verbatim);
-   - the depth-function block is the PS2GL library's impPS2glDepthFunc switch
-     (cases 0x200/0x207/0x203/0x201 in that order), and the GS context is
-     updated through byte accesses;
-   - the draw mask is saved, forced to -0x409 and restored at the end. */
 void GLI_vDisplayWorldTriangle(GLD_tdstViewportAttributes_* _p_stViewport, float (*coordinates)[3], float (*uvs)[2], void* pVisualMaterial)
 {
     unsigned char zTst;
@@ -1733,8 +1734,6 @@ void GLI_vEndWorldSprites(void)
 {
 
 
-
-
     GLI_vEndNewSprite();
 
     if (PS2_gs_glBeginPending2)
@@ -1746,6 +1745,20 @@ void GLI_vEndWorldSprites(void)
         PS2_gs_glBeginPendingCounter2 = 0;
     }
 }
+
+/* Reconstructed from the retail disassembly (asm/.../u_drawSprites.s,
+   0x002bceb0).
+   Notes on the recovered shape:
+   - the sprite's draw mode is tested as a short: bit 2 skips the whole
+     function, bit 4 skips it after the half-size vectors are computed;
+   - the viewport's world matrix is inverted into a local transformation and
+     its first two columns are scaled by the sprite's half size;
+   - the centre point is taken from the object's point list (indexed by the
+     sprite's centre-point index), copied into a 4-float vector and multiplied
+     by the current matrix with a VU0 block (MWCC cannot emit the VU
+     instructions from C, so the block is reproduced verbatim);
+   - the four corners are then expanded around that centre point and appended
+     to GLI_g_IndexedSpriteList. */
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawSprites.c lines 184–272 */
 /* addr: 0x002bceb0  size: 872 bytes */
@@ -1830,19 +1843,6 @@ void GLI_vEndWorldSprites(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-/* Reconstructed from the retail disassembly (asm/.../u_drawSprites.s,
-   0x002bceb0).
-   Notes on the recovered shape:
-   - the sprite's draw mode is tested as a short: bit 2 skips the whole
-     function, bit 4 skips it after the half-size vectors are computed;
-   - the viewport's world matrix is inverted into a local transformation and
-     its first two columns are scaled by the sprite's half size;
-   - the centre point is taken from the object's point list (indexed by the
-     sprite's centre-point index), copied into a 4-float vector and multiplied
-     by the current matrix with a VU0 block (MWCC cannot emit the VU
-     instructions from C, so the block is reproduced verbatim);
-   - the four corners are then expanded around that centre point and appended
-     to GLI_g_IndexedSpriteList. */
 void GLI_vDrawIndexedSprite(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstGeometricObject_* p_stObj, GEO_tdstIndexedSprite_* p_stISpr)
 {
     MAT_tdstTransformation_ TempMatrix;
@@ -1942,6 +1942,26 @@ void GLI_vDrawIndexedSprite(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstGeomet
     }
 }
 
+extern void PS2glMatrixMode(unsigned int mode);
+extern void PS2glLoadMatrixf(const void* matrix);
+extern void GLI_AddNormalInterpolation(void* pMatrix);
+extern void GLI_DRV_SendMaterialToViewport(GLI_tdstMaterial_* pMat);
+extern void PS2glBegin(unsigned int mode);
+extern void PS2glTexCoord2f(float u, float v);
+extern void PS2glVertex3f(float x, float y, float z);
+extern void GLI_vClearSendMatStates(void);
+
+/* Reconstructed from the retail disassembly (asm/.../u_drawSprites.s,
+   0x002bd220).
+   Notes on the recovered shape:
+   - the whole body is guarded by the number of indexed sprites; the counter
+     is reset to zero at the very end.
+   - the depth-function block is the PS2GL library's impPS2glDepthFunc switch
+     (cases 0x200/0x207/0x203/0x201 in that order), and the GS context is
+     updated through byte accesses.
+   - each indexed sprite is drawn as two triangles sharing the 0-2 diagonal,
+     with the quad's (0,0) (1,0) (1,1) (0,1) texture coordinates. */
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawSprites.c lines 106–176 */
 /* addr: 0x002bd220  size: 668 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1986,25 +2006,6 @@ void GLI_vDrawIndexedSprite(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstGeomet
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-extern void PS2glMatrixMode(unsigned int mode);
-extern void PS2glLoadMatrixf(const void* matrix);
-extern void GLI_AddNormalInterpolation(void* pMatrix);
-extern void GLI_DRV_SendMaterialToViewport(GLI_tdstMaterial_* pMat);
-extern void PS2glBegin(unsigned int mode);
-extern void PS2glTexCoord2f(float u, float v);
-extern void PS2glVertex3f(float x, float y, float z);
-extern void GLI_vClearSendMatStates(void);
-
-/* Reconstructed from the retail disassembly (asm/.../u_drawSprites.s,
-   0x002bd220).
-   Notes on the recovered shape:
-   - the whole body is guarded by the number of indexed sprites; the counter
-     is reset to zero at the very end.
-   - the depth-function block is the PS2GL library's impPS2glDepthFunc switch
-     (cases 0x200/0x207/0x203/0x201 in that order), and the GS context is
-     updated through byte accesses.
-   - each indexed sprite is drawn as two triangles sharing the 0-2 diagonal,
-     with the quad's (0,0) (1,0) (1,1) (0,1) texture coordinates. */
 void DrawAllIndexedSprites(void)
 {
     unsigned char zTst;

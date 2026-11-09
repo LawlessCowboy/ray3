@@ -1090,99 +1090,12 @@ typedef struct tag_int4 {
 tagGLcontext g_PS2glContext;
 tagGScontext g_gsContext;
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Fog.c lines 79–113 */
-/* addr: 0x00179b10  size: 820 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 79
- *   +0x0004 -> line 81
- *   +0x0008 -> line 79
- *   +0x0010 -> line 80
- *   +0x0014 -> line 82
- *   +0x0018 -> line 83
- *   +0x001c -> line 82
- *   +0x0020 -> line 83
- *   +0x0024 -> line 82
- *   +0x0030 -> line 79
- *   +0x0034 -> line 82
- *   +0x0038 -> line 79
- *   +0x003c -> line 80
- *   +0x0040 -> line 79
- *   +0x0044 -> line 80
- *   +0x004c -> line 81
- *   +0x0054 -> line 82
- *   +0x0060 -> line 85
- *   +0x0064 -> line 83
- *   +0x0068 -> line 85
- *   +0x006c -> line 80
- *   +0x0078 -> line 81
- *   +0x0088 -> line 82
- *   +0x0098 -> line 83
- *   +0x00a4 -> line 85
- *   +0x00b0 -> line 86
- *   +0x00dc -> line 88
- *   +0x00e4 -> line 89
- *   +0x00ec -> line 91
- *   +0x00f4 -> line 93
- *   +0x0114 -> line 95
- *   +0x0134 -> line 96
- *   +0x0154 -> line 97
- *   +0x0178 -> line 98
- *   +0x0198 -> line 99
- *   +0x01bc -> line 100
- *   +0x01dc -> line 101
- *   +0x0200 -> line 102
- *   +0x0220 -> line 103
- *   +0x0244 -> line 104
- *   +0x0264 -> line 105
- *   +0x0288 -> line 106
- *   +0x02a8 -> line 107
- *   +0x02cc -> line 108
- *   +0x02ec -> line 109
- *   +0x0310 -> line 110
- *   +0x032c -> line 113
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 void gifSetTag(anon_1* pTag, unsigned short nLoop, unsigned char EOP, unsigned char PRE, unsigned short PRIM, unsigned short FLG, unsigned char nReg, unsigned char* pRegs);
 void impPS2glFogiv(unsigned int pname, int* params);
 void impPS2glFogi(unsigned int pname, int param);
 void impPS2glFogfv(unsigned int pname, float* params);
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Fog.c lines 68–80 */
-/* addr: 0x00179e50  size: 312 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 68
- *   +0x000c -> line 70
- *   +0x0018 -> line 72
- *   +0x0024 -> line 70
- *   +0x0028 -> line 72
- *   +0x0048 -> line 73
- *   +0x006c -> line 74
- *   +0x008c -> line 75
- *   +0x0094 -> line 78
- *   +0x0130 -> line 80
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Fog.c lines 53–63 */
-/* addr: 0x00179f90  size: 176 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 53
- *   +0x003c -> line 55
- *   +0x0044 -> line 56
- *   +0x0058 -> line 57
- *   +0x006c -> line 58
- *   +0x0080 -> line 59
- *   +0x0094 -> line 60
- *   +0x009c -> line 62
- *   +0x00a8 -> line 63
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 
 /* Clamp a colour component to the [0, 1] range the GS fog register expects. */
 #pragma auto_inline on
@@ -1302,6 +1215,21 @@ void impPS2glFogfv(unsigned int pname, float* params)
     }
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Fog.c lines 53–63 */
+/* addr: 0x00179f90  size: 176 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 53
+ *   +0x003c -> line 55
+ *   +0x0044 -> line 56
+ *   +0x0058 -> line 57
+ *   +0x006c -> line 58
+ *   +0x0080 -> line 59
+ *   +0x0094 -> line 60
+ *   +0x009c -> line 62
+ *   +0x00a8 -> line 63
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glFogi(unsigned int pname, int param)
 {
     switch (pname)
@@ -1327,6 +1255,22 @@ void impPS2glFogi(unsigned int pname, int param)
     g_PS2glContext.bFogChanged = 1;
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Fog.c lines 68–80 */
+/* addr: 0x00179e50  size: 312 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 68
+ *   +0x000c -> line 70
+ *   +0x0018 -> line 72
+ *   +0x0024 -> line 70
+ *   +0x0028 -> line 72
+ *   +0x0048 -> line 73
+ *   +0x006c -> line 74
+ *   +0x008c -> line 75
+ *   +0x0094 -> line 78
+ *   +0x0130 -> line 80
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glFogiv(unsigned int pname, int* params)
 {
     if (pname == 0x0B66) /* GL_FOG_COLOR */
@@ -1369,6 +1313,59 @@ void impPS2glFogiv(unsigned int pname, int* params)
     }
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Fog.c lines 79–113 */
+/* addr: 0x00179b10  size: 820 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 79
+ *   +0x0004 -> line 81
+ *   +0x0008 -> line 79
+ *   +0x0010 -> line 80
+ *   +0x0014 -> line 82
+ *   +0x0018 -> line 83
+ *   +0x001c -> line 82
+ *   +0x0020 -> line 83
+ *   +0x0024 -> line 82
+ *   +0x0030 -> line 79
+ *   +0x0034 -> line 82
+ *   +0x0038 -> line 79
+ *   +0x003c -> line 80
+ *   +0x0040 -> line 79
+ *   +0x0044 -> line 80
+ *   +0x004c -> line 81
+ *   +0x0054 -> line 82
+ *   +0x0060 -> line 85
+ *   +0x0064 -> line 83
+ *   +0x0068 -> line 85
+ *   +0x006c -> line 80
+ *   +0x0078 -> line 81
+ *   +0x0088 -> line 82
+ *   +0x0098 -> line 83
+ *   +0x00a4 -> line 85
+ *   +0x00b0 -> line 86
+ *   +0x00dc -> line 88
+ *   +0x00e4 -> line 89
+ *   +0x00ec -> line 91
+ *   +0x00f4 -> line 93
+ *   +0x0114 -> line 95
+ *   +0x0134 -> line 96
+ *   +0x0154 -> line 97
+ *   +0x0178 -> line 98
+ *   +0x0198 -> line 99
+ *   +0x01bc -> line 100
+ *   +0x01dc -> line 101
+ *   +0x0200 -> line 102
+ *   +0x0220 -> line 103
+ *   +0x0244 -> line 104
+ *   +0x0264 -> line 105
+ *   +0x0288 -> line 106
+ *   +0x02a8 -> line 107
+ *   +0x02cc -> line 108
+ *   +0x02ec -> line 109
+ *   +0x0310 -> line 110
+ *   +0x032c -> line 113
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void gifSetTag(anon_1* pTag, unsigned short nLoop, unsigned char EOP, unsigned char PRE, unsigned short PRIM, unsigned short FLG, unsigned char nReg, unsigned char* pRegs)
 {
     pTag->NLOOP = nLoop;

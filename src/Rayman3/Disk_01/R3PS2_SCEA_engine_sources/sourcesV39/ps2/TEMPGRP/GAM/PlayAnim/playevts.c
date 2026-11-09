@@ -1218,30 +1218,6 @@ void fn_vPlayEvent(tdstEvent_* p_stEvent, int iMode, HIE_tdstSuperObject_* p_stS
 tdstEvent_* fn_p_GetEventsAddress(tdstAnim3d_* _p_stAnim3d, int lParam1, tdstObjectsTablesList_* p_stObjectsTable);
 tdstAnim3d_* fn_p_stGetAnimInState(tdstState_* p_stState);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 194–206 */
-/* addr: 0x0027ad30  size: 320 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 194
- *   +0x0004 -> line 196
- *   +0x0008 -> line 194
- *   +0x000c -> line 196
- *   +0x0010 -> line 194
- *   +0x0024 -> line 197
- *   +0x0028 -> line 196
- *   +0x002c -> line 197
- *   +0x0030 -> line 199
- *   +0x0038 -> line 201
- *   +0x00d0 -> line 202
- *   +0x00e0 -> line 203
- *   +0x00e8 -> line 204
- *   +0x0108 -> line 205
- *   +0x0120 -> line 206
- *   +0x012c -> line 205
- *   +0x0130 -> line 206
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 unsigned char PLA_bCheckDistForMorph(HIE_tdstSuperObject_* p_stActorSO);
@@ -1257,112 +1233,11 @@ void fn_vPlayLastEventsBeforeRestart(HIE_tdstSuperObject_* p_stSuperObject);
 void fn_vPlayEventsSinceLastOneNoLoop(HIE_tdstSuperObject_* p_stSuperObject);
 void fn_vDesInitAllEvents(HIE_tdstSuperObject_* p_stSuperObject, tdstState_* hNextState, int bStopEvents);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 847–876 */
-/* addr: 0x0027ae70  size: 276 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 847
- *   +0x0004 -> line 850
- *   +0x0008 -> line 847
- *   +0x0034 -> line 850
- *   +0x0048 -> line 852
- *   +0x0050 -> line 854
- *   +0x0054 -> line 858
- *   +0x0058 -> line 854
- *   +0x0064 -> line 858
- *   +0x0070 -> line 861
- *   +0x0088 -> line 863
- *   +0x0098 -> line 864
- *   +0x00a8 -> line 865
- *   +0x00b0 -> line 869
- *   +0x00bc -> line 870
- *   +0x00c0 -> line 872
- *   +0x00c4 -> line 870
- *   +0x00c8 -> line 872
- *   +0x00e4 -> line 874
- *   +0x00e8 -> line 876
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 812–842 */
-/* addr: 0x0027af90  size: 324 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 812
- *   +0x0004 -> line 815
- *   +0x0008 -> line 812
- *   +0x0024 -> line 815
- *   +0x0038 -> line 817
- *   +0x0040 -> line 819
- *   +0x0048 -> line 821
- *   +0x0050 -> line 824
- *   +0x0064 -> line 827
- *   +0x0070 -> line 829
- *   +0x0094 -> line 830
- *   +0x00a0 -> line 834
- *   +0x00ac -> line 835
- *   +0x00b0 -> line 839
- *   +0x00bc -> line 840
- *   +0x0124 -> line 841
- *   +0x0128 -> line 842
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 784–807 */
-/* addr: 0x0027b0e0  size: 196 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 784
- *   +0x0020 -> line 785
- *   +0x002c -> line 788
- *   +0x0030 -> line 792
- *   +0x0034 -> line 788
- *   +0x003c -> line 792
- *   +0x0048 -> line 794
- *   +0x0050 -> line 796
- *   +0x0064 -> line 798
- *   +0x0070 -> line 800
- *   +0x0094 -> line 803
- *   +0x009c -> line 804
- *   +0x00a0 -> line 805
- *   +0x00a4 -> line 807
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vPlayEvent(tdstEvent_* p_stEvent, int iMode, HIE_tdstSuperObject_* p_stSuperObject);
 tdstEvent_* fn_p_GetEventsAddress(tdstAnim3d_* _p_stAnim3d, int lParam1, tdstObjectsTablesList_* p_stObjectsTable);
 tdstAnim3d_* fn_p_stGetAnimInState(tdstState_* p_stState);
 void HMU_fn_vFree(void** p_vPointer, unsigned char bTempMalloc);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 728–779 */
-/* addr: 0x0027b1b0  size: 384 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 728
- *   +0x0004 -> line 735
- *   +0x0008 -> line 728
- *   +0x0020 -> line 733
- *   +0x0024 -> line 728
- *   +0x0028 -> line 735
- *   +0x0064 -> line 737
- *   +0x006c -> line 738
- *   +0x0074 -> line 739
- *   +0x0078 -> line 743
- *   +0x0090 -> line 746
- *   +0x0098 -> line 752
- *   +0x00b4 -> line 757
- *   +0x00c0 -> line 758
- *   +0x00f8 -> line 759
- *   +0x0100 -> line 762
- *   +0x0104 -> line 763
- *   +0x0108 -> line 767
- *   +0x0110 -> line 769
- *   +0x0124 -> line 770
- *   +0x0134 -> line 772
- *   +0x0148 -> line 773
- *   +0x0158 -> line 775
- *   +0x0160 -> line 779
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_bIsInFix(tdstEngineObject_* p_stObject);
 unsigned char GAM_fn_bIsEngineInFixMode(void);
 unsigned char HMU_fn_ucGetActualNormalMemoryBlockUsed(void);
@@ -1377,153 +1252,19 @@ void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
 tdstEvent_* fn_p_GetEventsAddress(tdstAnim3d_* _p_stAnim3d, int lParam1, tdstObjectsTablesList_* p_stObjectsTable);
 #endif
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 677–678 */
-/* addr: 0x0027b330  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 677
- *   +0x0004 -> line 678
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 651–652 */
-/* addr: 0x0027b340  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 651
- *   +0x0004 -> line 652
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 638–639 */
-/* addr: 0x0027b350  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 638
- *   +0x0008 -> line 639
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 468–634 */
-/* addr: 0x0027b360  size: 560 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 468
- *   +0x0004 -> line 475
- *   +0x0008 -> line 468
- *   +0x0020 -> line 475
- *   +0x0048 -> line 487
- *   +0x0054 -> line 489
- *   +0x0094 -> line 490
- *   +0x009c -> line 491
- *   +0x00a0 -> line 498
- *   +0x00a4 -> line 508
- *   +0x00a8 -> line 498
- *   +0x00ac -> line 508
- *   +0x00dc -> line 512
- *   +0x00e4 -> line 515
- *   +0x00ec -> line 518
- *   +0x00f4 -> line 520
- *   +0x00fc -> line 530
- *   +0x0100 -> line 535
- *   +0x010c -> line 536
- *   +0x0114 -> line 538
- *   +0x0120 -> line 543
- *   +0x0134 -> line 562
- *   +0x013c -> line 569
- *   +0x0150 -> line 571
- *   +0x015c -> line 572
- *   +0x0160 -> line 575
- *   +0x0168 -> line 584
- *   +0x0180 -> line 588
- *   +0x01bc -> line 589
- *   +0x01c4 -> line 591
- *   +0x01d0 -> line 594
- *   +0x01dc -> line 596
- *   +0x01e4 -> line 597
- *   +0x01ec -> line 598
- *   +0x01f8 -> line 601
- *   +0x0214 -> line 634
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 389–453 */
-/* addr: 0x0027b590  size: 508 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 389
- *   +0x002c -> line 397
- *   +0x0034 -> line 398
- *   +0x0038 -> line 399
- *   +0x0040 -> line 400
- *   +0x0048 -> line 402
- *   +0x004c -> line 400
- *   +0x0050 -> line 402
- *   +0x0070 -> line 404
- *   +0x0078 -> line 406
- *   +0x0090 -> line 409
- *   +0x00a4 -> line 412
- *   +0x00c0 -> line 414
- *   +0x00d0 -> line 415
- *   +0x00e0 -> line 416
- *   +0x00e8 -> line 420
- *   +0x00f4 -> line 421
- *   +0x00f8 -> line 423
- *   +0x0100 -> line 421
- *   +0x0104 -> line 423
- *   +0x0120 -> line 426
- *   +0x0128 -> line 431
- *   +0x0138 -> line 433
- *   +0x014c -> line 436
- *   +0x0168 -> line 438
- *   +0x0178 -> line 439
- *   +0x0188 -> line 440
- *   +0x0190 -> line 444
- *   +0x019c -> line 445
- *   +0x01a0 -> line 447
- *   +0x01a8 -> line 445
- *   +0x01ac -> line 447
- *   +0x01c0 -> line 450
- *   +0x01cc -> line 453
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 310–373 */
-/* addr: 0x0027b790  size: 556 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 310
- *   +0x0020 -> line 317
- *   +0x0028 -> line 318
- *   +0x002c -> line 319
- *   +0x0034 -> line 320
- *   +0x003c -> line 322
- *   +0x0040 -> line 320
- *   +0x0044 -> line 322
- *   +0x0060 -> line 324
- *   +0x0068 -> line 326
- *   +0x0080 -> line 329
- *   +0x0088 -> line 332
- *   +0x009c -> line 335
- *   +0x00a8 -> line 337
- *   +0x00cc -> line 338
- *   +0x00d8 -> line 342
- *   +0x00e4 -> line 343
- *   +0x00f0 -> line 346
- *   +0x00fc -> line 347
- *   +0x0144 -> line 348
- *   +0x014c -> line 356
- *   +0x0160 -> line 358
- *   +0x016c -> line 359
- *   +0x0190 -> line 360
- *   +0x0198 -> line 364
- *   +0x01a4 -> line 365
- *   +0x01b0 -> line 367
- *   +0x01bc -> line 370
- *   +0x0204 -> line 372
- *   +0x0208 -> line 373
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+/* Engine float-to-int conversion: the retail converts through $f30 ("cvt.w.s
+ * $f30, x; mfc1 r, $f30"), a callee-saved register MWCC never picks for its
+ * own conversions. */
+inline long MTH_M_xRealToLong(float _xValue)
+{
+    long _lResult;
+    asm
+    {
+        cvt.w.s f30, _xValue
+        mfc1 _lResult, f30
+    }
+    return _lResult;
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 171–295 */
 /* addr: 0x0027b9c0  size: 680 bytes */
@@ -1581,20 +1322,6 @@ tdstEvent_* fn_p_GetEventsAddress(tdstAnim3d_* _p_stAnim3d, int lParam1, tdstObj
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-/* Engine float-to-int conversion: the retail converts through $f30 ("cvt.w.s
- * $f30, x; mfc1 r, $f30"), a callee-saved register MWCC never picks for its
- * own conversions. */
-inline long MTH_M_xRealToLong(float _xValue)
-{
-    long _lResult;
-    asm
-    {
-        cvt.w.s f30, _xValue
-        mfc1 _lResult, f30
-    }
-    return _lResult;
-}
-
 void fn_vDesInitAllEvents(HIE_tdstSuperObject_* p_stSuperObject, tdstState_* hNextState, int bStopEvents)
 {
     tdst3dData_* h_3dData;
@@ -1677,6 +1404,42 @@ Cleanup:
     h_3dData->d_ucEventActivation = 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 310–373 */
+/* addr: 0x0027b790  size: 556 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 310
+ *   +0x0020 -> line 317
+ *   +0x0028 -> line 318
+ *   +0x002c -> line 319
+ *   +0x0034 -> line 320
+ *   +0x003c -> line 322
+ *   +0x0040 -> line 320
+ *   +0x0044 -> line 322
+ *   +0x0060 -> line 324
+ *   +0x0068 -> line 326
+ *   +0x0080 -> line 329
+ *   +0x0088 -> line 332
+ *   +0x009c -> line 335
+ *   +0x00a8 -> line 337
+ *   +0x00cc -> line 338
+ *   +0x00d8 -> line 342
+ *   +0x00e4 -> line 343
+ *   +0x00f0 -> line 346
+ *   +0x00fc -> line 347
+ *   +0x0144 -> line 348
+ *   +0x014c -> line 356
+ *   +0x0160 -> line 358
+ *   +0x016c -> line 359
+ *   +0x0190 -> line 360
+ *   +0x0198 -> line 364
+ *   +0x01a4 -> line 365
+ *   +0x01b0 -> line 367
+ *   +0x01bc -> line 370
+ *   +0x0204 -> line 372
+ *   +0x0208 -> line 373
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vPlayEventsSinceLastOneNoLoop(HIE_tdstSuperObject_* p_stSuperObject)
 {
     tdstEvent_* p_stEvent;
@@ -1685,6 +1448,46 @@ void fn_vPlayEventsSinceLastOneNoLoop(HIE_tdstSuperObject_* p_stSuperObject)
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 389–453 */
+/* addr: 0x0027b590  size: 508 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 389
+ *   +0x002c -> line 397
+ *   +0x0034 -> line 398
+ *   +0x0038 -> line 399
+ *   +0x0040 -> line 400
+ *   +0x0048 -> line 402
+ *   +0x004c -> line 400
+ *   +0x0050 -> line 402
+ *   +0x0070 -> line 404
+ *   +0x0078 -> line 406
+ *   +0x0090 -> line 409
+ *   +0x00a4 -> line 412
+ *   +0x00c0 -> line 414
+ *   +0x00d0 -> line 415
+ *   +0x00e0 -> line 416
+ *   +0x00e8 -> line 420
+ *   +0x00f4 -> line 421
+ *   +0x00f8 -> line 423
+ *   +0x0100 -> line 421
+ *   +0x0104 -> line 423
+ *   +0x0120 -> line 426
+ *   +0x0128 -> line 431
+ *   +0x0138 -> line 433
+ *   +0x014c -> line 436
+ *   +0x0168 -> line 438
+ *   +0x0178 -> line 439
+ *   +0x0188 -> line 440
+ *   +0x0190 -> line 444
+ *   +0x019c -> line 445
+ *   +0x01a0 -> line 447
+ *   +0x01a8 -> line 445
+ *   +0x01ac -> line 447
+ *   +0x01c0 -> line 450
+ *   +0x01cc -> line 453
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vPlayLastEventsBeforeRestart(HIE_tdstSuperObject_* p_stSuperObject)
 {
     char i;
@@ -1694,6 +1497,48 @@ void fn_vPlayLastEventsBeforeRestart(HIE_tdstSuperObject_* p_stSuperObject)
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 468–634 */
+/* addr: 0x0027b360  size: 560 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 468
+ *   +0x0004 -> line 475
+ *   +0x0008 -> line 468
+ *   +0x0020 -> line 475
+ *   +0x0048 -> line 487
+ *   +0x0054 -> line 489
+ *   +0x0094 -> line 490
+ *   +0x009c -> line 491
+ *   +0x00a0 -> line 498
+ *   +0x00a4 -> line 508
+ *   +0x00a8 -> line 498
+ *   +0x00ac -> line 508
+ *   +0x00dc -> line 512
+ *   +0x00e4 -> line 515
+ *   +0x00ec -> line 518
+ *   +0x00f4 -> line 520
+ *   +0x00fc -> line 530
+ *   +0x0100 -> line 535
+ *   +0x010c -> line 536
+ *   +0x0114 -> line 538
+ *   +0x0120 -> line 543
+ *   +0x0134 -> line 562
+ *   +0x013c -> line 569
+ *   +0x0150 -> line 571
+ *   +0x015c -> line 572
+ *   +0x0160 -> line 575
+ *   +0x0168 -> line 584
+ *   +0x0180 -> line 588
+ *   +0x01bc -> line 589
+ *   +0x01c4 -> line 591
+ *   +0x01d0 -> line 594
+ *   +0x01dc -> line 596
+ *   +0x01e4 -> line 597
+ *   +0x01ec -> line 598
+ *   +0x01f8 -> line 601
+ *   +0x0214 -> line 634
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vPlayEvent(tdstEvent_* p_stEvent, int iMode, HIE_tdstSuperObject_* p_stSuperObject)
 {
     unsigned int ulCustomBits;
@@ -1705,6 +1550,14 @@ void fn_vPlayEvent(tdstEvent_* p_stEvent, int iMode, HIE_tdstSuperObject_* p_stS
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 638–639 */
+/* addr: 0x0027b350  size: 16 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 638
+ *   +0x0008 -> line 639
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned short fn_uwGetNbEngineFrameSinceLastMechEvent(HIE_tdstSuperObject_* p_stSuperObject)
 {
     tdstEngineObject_* p_stCharacter = (tdstEngineObject_ *)p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData;
@@ -1712,16 +1565,62 @@ unsigned short fn_uwGetNbEngineFrameSinceLastMechEvent(HIE_tdstSuperObject_* p_s
     return *(unsigned short *)((char *)p_stCharacter + 0x102);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 651–652 */
+/* addr: 0x0027b340  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 651
+ *   +0x0004 -> line 652
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char GAM_fn_ucGetTypeOfEvent(tdstEvent_* _p_stEvent)
 {
     return _p_stEvent->p_stfEventInTBL->ucTypeOfEvent;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 677–678 */
+/* addr: 0x0027b330  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 677
+ *   +0x0004 -> line 678
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char GAM_fn_ucGetFirstCallOfEvent(tdstEvent_* _p_stEvent)
 {
     return _p_stEvent->p_stfEventInTBL->ucFirstCall;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 728–779 */
+/* addr: 0x0027b1b0  size: 384 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 728
+ *   +0x0004 -> line 735
+ *   +0x0008 -> line 728
+ *   +0x0020 -> line 733
+ *   +0x0024 -> line 728
+ *   +0x0028 -> line 735
+ *   +0x0064 -> line 737
+ *   +0x006c -> line 738
+ *   +0x0074 -> line 739
+ *   +0x0078 -> line 743
+ *   +0x0090 -> line 746
+ *   +0x0098 -> line 752
+ *   +0x00b4 -> line 757
+ *   +0x00c0 -> line 758
+ *   +0x00f8 -> line 759
+ *   +0x0100 -> line 762
+ *   +0x0104 -> line 763
+ *   +0x0108 -> line 767
+ *   +0x0110 -> line 769
+ *   +0x0124 -> line 770
+ *   +0x0134 -> line 772
+ *   +0x0148 -> line 773
+ *   +0x0158 -> line 775
+ *   +0x0160 -> line 779
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vInitAllSubEvents(HIE_tdstSuperObject_* _hCharacter, tdstSubAnimInUse_* hNewSubAnimInUse)
 {
     tdstEvent_* p_stEvent;
@@ -1763,6 +1662,26 @@ void fn_vInitAllSubEvents(HIE_tdstSuperObject_* _hCharacter, tdstSubAnimInUse_* 
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 784–807 */
+/* addr: 0x0027b0e0  size: 196 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 784
+ *   +0x0020 -> line 785
+ *   +0x002c -> line 788
+ *   +0x0030 -> line 792
+ *   +0x0034 -> line 788
+ *   +0x003c -> line 792
+ *   +0x0048 -> line 794
+ *   +0x0050 -> line 796
+ *   +0x0064 -> line 798
+ *   +0x0070 -> line 800
+ *   +0x0094 -> line 803
+ *   +0x009c -> line 804
+ *   +0x00a0 -> line 805
+ *   +0x00a4 -> line 807
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vDesInitAllSubEvents(HIE_tdstSuperObject_* _hCharacter, tdstSubAnimInUse_* hNewSubAnimInUse)
 {
     tdstEvent_* p_stEvent;
@@ -1784,6 +1703,29 @@ void fn_vDesInitAllSubEvents(HIE_tdstSuperObject_* _hCharacter, tdstSubAnimInUse
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 812–842 */
+/* addr: 0x0027af90  size: 324 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 812
+ *   +0x0004 -> line 815
+ *   +0x0008 -> line 812
+ *   +0x0024 -> line 815
+ *   +0x0038 -> line 817
+ *   +0x0040 -> line 819
+ *   +0x0048 -> line 821
+ *   +0x0050 -> line 824
+ *   +0x0064 -> line 827
+ *   +0x0070 -> line 829
+ *   +0x0094 -> line 830
+ *   +0x00a0 -> line 834
+ *   +0x00ac -> line 835
+ *   +0x00b0 -> line 839
+ *   +0x00bc -> line 840
+ *   +0x0124 -> line 841
+ *   +0x0128 -> line 842
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vPlaySubEventsSinceLastOneNoLoop(HIE_tdstSuperObject_* _hCharacter, tdstSubAnimInUse_* hNewSubAnimInUse)
 {
     tdstEvent_* p_stEvent;
@@ -1816,6 +1758,32 @@ void fn_vPlaySubEventsSinceLastOneNoLoop(HIE_tdstSuperObject_* _hCharacter, tdst
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 847–876 */
+/* addr: 0x0027ae70  size: 276 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 847
+ *   +0x0004 -> line 850
+ *   +0x0008 -> line 847
+ *   +0x0034 -> line 850
+ *   +0x0048 -> line 852
+ *   +0x0050 -> line 854
+ *   +0x0054 -> line 858
+ *   +0x0058 -> line 854
+ *   +0x0064 -> line 858
+ *   +0x0070 -> line 861
+ *   +0x0088 -> line 863
+ *   +0x0098 -> line 864
+ *   +0x00a8 -> line 865
+ *   +0x00b0 -> line 869
+ *   +0x00bc -> line 870
+ *   +0x00c0 -> line 872
+ *   +0x00c4 -> line 870
+ *   +0x00c8 -> line 872
+ *   +0x00e4 -> line 874
+ *   +0x00e8 -> line 876
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vPlayLastSubEventsBeforeRestart(HIE_tdstSuperObject_* _hCharacter, tdstSubAnimInUse_* hNewSubAnimInUse)
 {
     tdstEvent_* p_stEvent;
@@ -1842,6 +1810,29 @@ void fn_vPlayLastSubEventsBeforeRestart(HIE_tdstSuperObject_* _hCharacter, tdstS
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 194–206 */
+/* addr: 0x0027ad30  size: 320 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 194
+ *   +0x0004 -> line 196
+ *   +0x0008 -> line 194
+ *   +0x000c -> line 196
+ *   +0x0010 -> line 194
+ *   +0x0024 -> line 197
+ *   +0x0028 -> line 196
+ *   +0x002c -> line 197
+ *   +0x0030 -> line 199
+ *   +0x0038 -> line 201
+ *   +0x00d0 -> line 202
+ *   +0x00e0 -> line 203
+ *   +0x00e8 -> line 204
+ *   +0x0108 -> line 205
+ *   +0x0120 -> line 206
+ *   +0x012c -> line 205
+ *   +0x0130 -> line 206
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char PLA_bCheckDistForMorph(HIE_tdstSuperObject_* p_stActorSO)
 {
     unsigned char i;

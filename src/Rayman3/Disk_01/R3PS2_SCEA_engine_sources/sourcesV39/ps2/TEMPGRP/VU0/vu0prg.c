@@ -12,29 +12,11 @@ extern unsigned int PlayAnimMPG[];
 
 #pragma optimization_level 1
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VU0\vu0prg.c lines 115–116 */
-/* addr: 0x0013b7f0  size: 96 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 115
- *   +0x0058 -> line 116
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 void VU0_fn_vLoadPrgCollision(void);
 void VU0_fn_vLoadPrgPlayAnim(void);
 void VU0_fn_vWaitEndLoadVU0(void);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VU0\vu0prg.c lines 107–108 */
-/* addr: 0x0013b850  size: 96 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 107
- *   +0x0058 -> line 108
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 
 #pragma optimization_level reset
 
@@ -80,6 +62,14 @@ void VU0_fn_vWaitEndLoadVU0(void)
 }
 #pragma optimization_level reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VU0\vu0prg.c lines 107–108 */
+/* addr: 0x0013b850  size: 96 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 107
+ *   +0x0058 -> line 108
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void VU0_fn_vLoadPrgPlayAnim(void)
 {
     if (VU0_gs_LastMPRGLoaded != (unsigned int)&PlayAnimMPG) {
@@ -91,6 +81,14 @@ void VU0_fn_vLoadPrgPlayAnim(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VU0\vu0prg.c lines 115–116 */
+/* addr: 0x0013b7f0  size: 96 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 115
+ *   +0x0058 -> line 116
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void VU0_fn_vLoadPrgCollision(void)
 {
     if (VU0_gs_LastMPRGLoaded != (unsigned int)&CollideVu0Microcode) {

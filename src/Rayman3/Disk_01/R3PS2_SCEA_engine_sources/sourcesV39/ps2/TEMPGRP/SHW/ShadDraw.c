@@ -878,15 +878,6 @@ int HIE_g_hCurrentMatrix;
 int HIE_g_a_hMatrixStack[50];
 int HIE_g_lNbMatrixInStack;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SHW\ShadDraw.c lines 181–182 */
-/* addr: 0x0031d070  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 181
- *   +0x0014 -> line 182
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 void SECT_fn_vGetMinPointInBorder(SECT_tdstSector_* _hSector, MTH3D_tdstVector_* _p_stMinPoint);
@@ -896,6 +887,210 @@ unsigned char SHW_bDidCharacterHaveAShadowLastFrame(HIE_tdstSuperObject_* _hHand
 void SHW_fn_vSentToViewPort(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hHandleOfCharacter, void* _p_vUnused, int _lSectorDrawmask, GEO_tdstGeometricObject_* _hHandleOfGeometricShadowObject);
 void SHW_fn_vInitShadowCounter(void);
 void SHW_fn_vGlobalInitShadowCounter(void);
+
+unsigned int fn_ulStandardGameGetCustomBitsSO(HIE_tdstSuperObject_* hSupObj);
+unsigned char fn_bIsTransitionInProgress(void);
+/* Target +0x54 and +0x6c contain COP0 writes (mtc0 zero, $24), which cannot
+ * be expressed in C. The first has no hazard nop after it, so it keeps the
+ * .set noreorder spelling that MWCC leaves untouched. The second carries its
+ * hazard nop explicitly; the mtbpc spelling was tried and loses that nop. */
+inline void SHW_vClearCop0Register24(void)
+{
+    asm {
+    .set noreorder
+    mtc0 zero, $24
+    }
+}
+inline void SHW_vClearCop0Register24Sync(void)
+{
+    asm {
+    .set noreorder
+    mtc0 zero, $24
+    nop
+    }
+}
+
+void GEO_vSetVisualMaterialOfIndexedTriangles(GEO_tdstGeometricObject_* hObject, short hElement, GLI_tdstMaterial_* hVisualMaterial);
+unsigned char HIE_fn_bLoadIdentity(void);
+float GLI_vGetGlobalAlpha(void);
+float GEO_xGetZFarTransparencyLevel(void);
+void GLI_vSetGlobalAlpha(float Alpha);
+void GLI_fn_vApplyChangesToObjectVerticesAndUvs(GEO_tdstGeometricObject_* _p_stObj);
+void GLI_SendShadowElementToViewport(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstGeometricObject_* p_stObj, int lDrawModeMask);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SHW\ShadDraw.c lines 527–527 */
+/* addr: 0x0031dde0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 527
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void SHW_fn_vGlobalInitShadowCounter(void)
+{
+    g_xIndexOfShadow = 0;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SHW\ShadDraw.c lines 543–543 */
+/* addr: 0x0031ddd0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 543
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void SHW_fn_vInitShadowCounter(void)
+{
+    g_xIndexOfShadow = 0;
+}
+
+/* Retail reads the draw mask from a3 and the shadow object from t0: the debug
+ * definition drops an unreferenced third parameter. */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SHW\ShadDraw.c lines 559–648 */
+/* addr: 0x0031dc40  size: 392 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 559
+ *   +0x0004 -> line 565
+ *   +0x0008 -> line 559
+ *   +0x000c -> line 565
+ *   +0x0010 -> line 559
+ *   +0x0038 -> line 565
+ *   +0x003c -> line 559
+ *   +0x0040 -> line 564
+ *   +0x0044 -> line 565
+ *   +0x0048 -> line 564
+ *   +0x004c -> line 565
+ *   +0x0054 -> line 564
+ *   +0x005c -> line 565
+ *   +0x0068 -> line 567
+ *   +0x0070 -> line 573
+ *   +0x0088 -> line 575
+ *   +0x0090 -> line 576
+ *   +0x00a4 -> line 582
+ *   +0x00a8 -> line 584
+ *   +0x00ac -> line 582
+ *   +0x00b0 -> line 585
+ *   +0x00b8 -> line 587
+ *   +0x00c8 -> line 592
+ *   +0x00cc -> line 594
+ *   +0x00d4 -> line 595
+ *   +0x00e0 -> line 597
+ *   +0x00e8 -> line 601
+ *   +0x00f0 -> line 602
+ *   +0x0100 -> line 603
+ *   +0x0104 -> line 607
+ *   +0x0108 -> line 622
+ *   +0x0110 -> line 625
+ *   +0x0120 -> line 644
+ *   +0x0128 -> line 645
+ *   +0x0130 -> line 647
+ *   +0x0160 -> line 648
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void SHW_fn_vSentToViewPort(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hHandleOfCharacter, void* _p_vUnused, int _lSectorDrawmask, GEO_tdstGeometricObject_* _hHandleOfGeometricShadowObject)
+{
+    unsigned char bTransparenceSetting;
+    int lAdditionnalDrawMask;
+    float fGlobalAlphaTemp;
+    float fTransparenceLevel;
+    GLI_tdstMaterial_* hShadowMaterial;
+
+    bTransparenceSetting = 0;
+    lAdditionnalDrawMask = 0;
+    hShadowMaterial = (GLI_tdstMaterial_*)_hHandleOfCharacter->hLinkedObject.p_stCharacter->h_3dData->p_stShadowVisualMaterial;
+    g_hShadowPolygonVisualMaterial = (int)hShadowMaterial;
+    GEO_vSetVisualMaterialOfIndexedTriangles(_hHandleOfGeometricShadowObject, g_p_hHandleOfElementForShadow[g_xIndexOfShadow], hShadowMaterial);
+    HIE_fn_bLoadIdentity();
+    if (fn_ulStandardGameGetCustomBitsSO(_hHandleOfCharacter) & 0x200000)
+    {
+        fGlobalAlphaTemp = GLI_vGetGlobalAlpha();
+        fTransparenceLevel = _hHandleOfCharacter->fTransparenceLevel;
+        GLI_vSetGlobalAlpha(fTransparenceLevel * GEO_xGetZFarTransparencyLevel());
+        bTransparenceSetting = 1;
+        _lSectorDrawmask &= 0xFFFBFFF7;
+    }
+    else if (!(_hHandleOfCharacter->lDrawModeMask & 8))
+    {
+        _lSectorDrawmask &= 0xFFFBFFF7;
+        fGlobalAlphaTemp = GLI_vGetGlobalAlpha();
+        GLI_vSetGlobalAlpha(_hHandleOfCharacter->fTransparenceLevel);
+        bTransparenceSetting = 1;
+    }
+    else
+    {
+        fGlobalAlphaTemp = GLI_vGetGlobalAlpha();
+        GLI_vSetGlobalAlpha(255.0f);
+        bTransparenceSetting = 1;
+        lAdditionnalDrawMask = 0xF7FC0000;
+    }
+    GLI_fn_vApplyChangesToObjectVerticesAndUvs(_hHandleOfGeometricShadowObject);
+    GLI_SendShadowElementToViewport(_p_stVpt, _hHandleOfGeometricShadowObject, _lSectorDrawmask | lAdditionnalDrawMask);
+    if (bTransparenceSetting)
+        GLI_vSetGlobalAlpha(fGlobalAlphaTemp);
+    if (HIE_g_lNbMatrixInStack)
+    {
+        HIE_g_lNbMatrixInStack--;
+        g_p_stCurrentMatrix = HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1];
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SHW\ShadDraw.c lines 684–695 */
+/* addr: 0x0031dbf0  size: 80 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 685
+ *   +0x0008 -> line 684
+ *   +0x0010 -> line 685
+ *   +0x0018 -> line 687
+ *   +0x0024 -> line 690
+ *   +0x0030 -> line 692
+ *   +0x0034 -> line 693
+ *   +0x0044 -> line 694
+ *   +0x0048 -> line 695
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+unsigned char SHW_bDidCharacterHaveAShadowLastFrame(HIE_tdstSuperObject_* _hHandleOfCharacter)
+{
+    int i;
+    i = 0;
+    while (i < g_xIndexOfShadow) {
+        if ((HIE_tdstSuperObject_*)p_hHandleOfShadowedSuperObject[i] == _hHandleOfCharacter) {
+            return 1;
+        }
+        i++;
+    }
+    return 0;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SHW\ShadDraw.c lines 717–773 */
+/* addr: 0x0031db50  size: 148 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 717
+ *   +0x0028 -> line 727
+ *   +0x0038 -> line 736
+ *   +0x0040 -> line 740
+ *   +0x004c -> line 742
+ *   +0x0054 -> line 747
+ *   +0x0058 -> line 757
+ *   +0x006c -> line 763
+ *   +0x0074 -> line 773
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void SHW_fn_vDrawShadow(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hHandleOfCharacter, HIE_tdstSuperObject_* _hSprObjSector, int _lSectorDrawmask)
+{
+    short xLevelOfQualityOfShadows;
+    int bTransitionInProgress;
+    unsigned long ulCustomBits;
+    ulCustomBits = fn_ulStandardGameGetCustomBitsSO(_hHandleOfCharacter);
+    bTransitionInProgress = fn_bIsTransitionInProgress();
+    if ((ulCustomBits & 0x100) && !bTransitionInProgress) {
+        SHW_vClearCop0Register24();
+        shw_fn_vInternalDrawShadow(_p_stVpt, _hHandleOfCharacter, _hSprObjSector, _lSectorDrawmask);
+        SHW_vClearCop0Register24Sync();
+    }
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SHW\ShadDraw.c lines 802–1214 */
 /* addr: 0x0031d090  size: 2740 bytes */
@@ -1116,212 +1311,6 @@ void SHW_fn_vGlobalInitShadowCounter(void);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SHW\ShadDraw.c lines 717–773 */
-/* addr: 0x0031db50  size: 148 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 717
- *   +0x0028 -> line 727
- *   +0x0038 -> line 736
- *   +0x0040 -> line 740
- *   +0x004c -> line 742
- *   +0x0054 -> line 747
- *   +0x0058 -> line 757
- *   +0x006c -> line 763
- *   +0x0074 -> line 773
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned int fn_ulStandardGameGetCustomBitsSO(HIE_tdstSuperObject_* hSupObj);
-unsigned char fn_bIsTransitionInProgress(void);
-/* Target +0x54 and +0x6c contain COP0 writes (mtc0 zero, $24), which cannot
- * be expressed in C. The first has no hazard nop after it, so it keeps the
- * .set noreorder spelling that MWCC leaves untouched. The second carries its
- * hazard nop explicitly; the mtbpc spelling was tried and loses that nop. */
-inline void SHW_vClearCop0Register24(void)
-{
-    asm {
-    .set noreorder
-    mtc0 zero, $24
-    }
-}
-inline void SHW_vClearCop0Register24Sync(void)
-{
-    asm {
-    .set noreorder
-    mtc0 zero, $24
-    nop
-    }
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SHW\ShadDraw.c lines 684–695 */
-/* addr: 0x0031dbf0  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 685
- *   +0x0008 -> line 684
- *   +0x0010 -> line 685
- *   +0x0018 -> line 687
- *   +0x0024 -> line 690
- *   +0x0030 -> line 692
- *   +0x0034 -> line 693
- *   +0x0044 -> line 694
- *   +0x0048 -> line 695
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SHW\ShadDraw.c lines 559–648 */
-/* addr: 0x0031dc40  size: 392 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 559
- *   +0x0004 -> line 565
- *   +0x0008 -> line 559
- *   +0x000c -> line 565
- *   +0x0010 -> line 559
- *   +0x0038 -> line 565
- *   +0x003c -> line 559
- *   +0x0040 -> line 564
- *   +0x0044 -> line 565
- *   +0x0048 -> line 564
- *   +0x004c -> line 565
- *   +0x0054 -> line 564
- *   +0x005c -> line 565
- *   +0x0068 -> line 567
- *   +0x0070 -> line 573
- *   +0x0088 -> line 575
- *   +0x0090 -> line 576
- *   +0x00a4 -> line 582
- *   +0x00a8 -> line 584
- *   +0x00ac -> line 582
- *   +0x00b0 -> line 585
- *   +0x00b8 -> line 587
- *   +0x00c8 -> line 592
- *   +0x00cc -> line 594
- *   +0x00d4 -> line 595
- *   +0x00e0 -> line 597
- *   +0x00e8 -> line 601
- *   +0x00f0 -> line 602
- *   +0x0100 -> line 603
- *   +0x0104 -> line 607
- *   +0x0108 -> line 622
- *   +0x0110 -> line 625
- *   +0x0120 -> line 644
- *   +0x0128 -> line 645
- *   +0x0130 -> line 647
- *   +0x0160 -> line 648
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GEO_vSetVisualMaterialOfIndexedTriangles(GEO_tdstGeometricObject_* hObject, short hElement, GLI_tdstMaterial_* hVisualMaterial);
-unsigned char HIE_fn_bLoadIdentity(void);
-float GLI_vGetGlobalAlpha(void);
-float GEO_xGetZFarTransparencyLevel(void);
-void GLI_vSetGlobalAlpha(float Alpha);
-void GLI_fn_vApplyChangesToObjectVerticesAndUvs(GEO_tdstGeometricObject_* _p_stObj);
-void GLI_SendShadowElementToViewport(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstGeometricObject_* p_stObj, int lDrawModeMask);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SHW\ShadDraw.c lines 543–543 */
-/* addr: 0x0031ddd0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 543
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SHW\ShadDraw.c lines 527–527 */
-/* addr: 0x0031dde0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 527
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-void SHW_fn_vGlobalInitShadowCounter(void)
-{
-    g_xIndexOfShadow = 0;
-}
-
-void SHW_fn_vInitShadowCounter(void)
-{
-    g_xIndexOfShadow = 0;
-}
-
-/* Retail reads the draw mask from a3 and the shadow object from t0: the debug
- * definition drops an unreferenced third parameter. */
-void SHW_fn_vSentToViewPort(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hHandleOfCharacter, void* _p_vUnused, int _lSectorDrawmask, GEO_tdstGeometricObject_* _hHandleOfGeometricShadowObject)
-{
-    unsigned char bTransparenceSetting;
-    int lAdditionnalDrawMask;
-    float fGlobalAlphaTemp;
-    float fTransparenceLevel;
-    GLI_tdstMaterial_* hShadowMaterial;
-
-    bTransparenceSetting = 0;
-    lAdditionnalDrawMask = 0;
-    hShadowMaterial = (GLI_tdstMaterial_*)_hHandleOfCharacter->hLinkedObject.p_stCharacter->h_3dData->p_stShadowVisualMaterial;
-    g_hShadowPolygonVisualMaterial = (int)hShadowMaterial;
-    GEO_vSetVisualMaterialOfIndexedTriangles(_hHandleOfGeometricShadowObject, g_p_hHandleOfElementForShadow[g_xIndexOfShadow], hShadowMaterial);
-    HIE_fn_bLoadIdentity();
-    if (fn_ulStandardGameGetCustomBitsSO(_hHandleOfCharacter) & 0x200000)
-    {
-        fGlobalAlphaTemp = GLI_vGetGlobalAlpha();
-        fTransparenceLevel = _hHandleOfCharacter->fTransparenceLevel;
-        GLI_vSetGlobalAlpha(fTransparenceLevel * GEO_xGetZFarTransparencyLevel());
-        bTransparenceSetting = 1;
-        _lSectorDrawmask &= 0xFFFBFFF7;
-    }
-    else if (!(_hHandleOfCharacter->lDrawModeMask & 8))
-    {
-        _lSectorDrawmask &= 0xFFFBFFF7;
-        fGlobalAlphaTemp = GLI_vGetGlobalAlpha();
-        GLI_vSetGlobalAlpha(_hHandleOfCharacter->fTransparenceLevel);
-        bTransparenceSetting = 1;
-    }
-    else
-    {
-        fGlobalAlphaTemp = GLI_vGetGlobalAlpha();
-        GLI_vSetGlobalAlpha(255.0f);
-        bTransparenceSetting = 1;
-        lAdditionnalDrawMask = 0xF7FC0000;
-    }
-    GLI_fn_vApplyChangesToObjectVerticesAndUvs(_hHandleOfGeometricShadowObject);
-    GLI_SendShadowElementToViewport(_p_stVpt, _hHandleOfGeometricShadowObject, _lSectorDrawmask | lAdditionnalDrawMask);
-    if (bTransparenceSetting)
-        GLI_vSetGlobalAlpha(fGlobalAlphaTemp);
-    if (HIE_g_lNbMatrixInStack)
-    {
-        HIE_g_lNbMatrixInStack--;
-        g_p_stCurrentMatrix = HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1];
-    }
-}
-
-unsigned char SHW_bDidCharacterHaveAShadowLastFrame(HIE_tdstSuperObject_* _hHandleOfCharacter)
-{
-    int i;
-    i = 0;
-    while (i < g_xIndexOfShadow) {
-        if ((HIE_tdstSuperObject_*)p_hHandleOfShadowedSuperObject[i] == _hHandleOfCharacter) {
-            return 1;
-        }
-        i++;
-    }
-    return 0;
-}
-
-void SHW_fn_vDrawShadow(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hHandleOfCharacter, HIE_tdstSuperObject_* _hSprObjSector, int _lSectorDrawmask)
-{
-    short xLevelOfQualityOfShadows;
-    int bTransitionInProgress;
-    unsigned long ulCustomBits;
-    ulCustomBits = fn_ulStandardGameGetCustomBitsSO(_hHandleOfCharacter);
-    bTransitionInProgress = fn_bIsTransitionInProgress();
-    if ((ulCustomBits & 0x100) && !bTransitionInProgress) {
-        SHW_vClearCop0Register24();
-        shw_fn_vInternalDrawShadow(_p_stVpt, _hHandleOfCharacter, _hSprObjSector, _lSectorDrawmask);
-        SHW_vClearCop0Register24Sync();
-    }
-}
-
 void shw_fn_vInternalDrawShadow(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hHandleOfCharacter, HIE_tdstSuperObject_* _hSprObjSector, int _lSectorDrawmask)
 {
     float xNorm;
@@ -1353,6 +1342,14 @@ void shw_fn_vInternalDrawShadow(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstS
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SHW\ShadDraw.c lines 181–182 */
+/* addr: 0x0031d070  size: 28 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 181
+ *   +0x0014 -> line 182
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void SECT_fn_vGetMinPointInBorder(SECT_tdstSector_* _hSector, MTH3D_tdstVector_* _p_stMinPoint)
 {
     *(unsigned int*)&_p_stMinPoint->xX = *(unsigned int*)&_hSector->stMinMaxPoints[0].xX;

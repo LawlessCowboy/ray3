@@ -116,17 +116,6 @@ struct GLI_tdstAnimatedTextureNode_ {
     GLI_tdstAnimatedTextureNode_* p_stNextDisplayNode; /* +0x8 */
 };
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLUtils.cpp lines 17–19 */
-/* addr: 0x002db1a0  size: 72 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 17
- *   +0x0004 -> line 18
- *   +0x0008 -> line 17
- *   +0x000c -> line 18
- *   +0x0038 -> line 19
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 struct C_Sdl {
     int m_SDL_Size; /* +0x0 */
     unsigned int m_SDL_InitSize; /* +0x4 */
@@ -160,24 +149,6 @@ extern "C" unsigned int SDL_GetNew(void);
 extern "C" void GLI_vGetVertexPointersFromSDCStructureSpriteGens(SDC_VertexArrays_* pSDC, unsigned int iElement, float ** pVOrg, float ** pUV1, float ** pUnused1, float ** pUnused2, float ** pNormals);
 extern "C" void GLI_vGetVertexPointersFromSDCStructureForSinus(SDC_VertexArrays_* pSDC, unsigned int iElement, float ** pVOrg[4], float** pVTSinus);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLUtils.cpp lines 167–189 */
-/* addr: 0x002db1f0  size: 64 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 167
- *   +0x0004 -> line 172
- *   +0x0008 -> line 167
- *   +0x000c -> line 172
- *   +0x0010 -> line 167
- *   +0x0018 -> line 172
- *   +0x001c -> line 167
- *   +0x0020 -> line 175
- *   +0x0024 -> line 167
- *   +0x0028 -> line 177
- *   +0x0030 -> line 186
- *   +0x0038 -> line 189
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* The retail caller (u_SDL.s) passes seven arguments (a0,a1,a2,a3,t0,t1,t2) and
  * the target body stores into the 3rd, 4th and 7th of them; the two unreferenced
  * middle parameters were dropped by the debug extractor, so the recovered
@@ -235,6 +206,24 @@ void GLI_vGetVertexPointersFromSDCStructureForSinus(SDC_VertexArrays_* pSDC, uns
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLUtils.cpp lines 167–189 */
+/* addr: 0x002db1f0  size: 64 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 167
+ *   +0x0004 -> line 172
+ *   +0x0008 -> line 167
+ *   +0x000c -> line 172
+ *   +0x0010 -> line 167
+ *   +0x0018 -> line 172
+ *   +0x001c -> line 167
+ *   +0x0020 -> line 175
+ *   +0x0024 -> line 167
+ *   +0x0028 -> line 177
+ *   +0x0030 -> line 186
+ *   +0x0038 -> line 189
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vGetVertexPointersFromSDCStructureSpriteGens(SDC_VertexArrays_* pSDC, unsigned int iElement, float ** pVOrg, float ** pUV1, float ** pUnused1, float ** pUnused2, float ** pNormals)
 {
     float (*pVA)[4];
@@ -247,6 +236,17 @@ void GLI_vGetVertexPointersFromSDCStructureSpriteGens(SDC_VertexArrays_* pSDC, u
     pUV1[0] = (float*)pUV; pNormals[0] = (float*)(pUV + NbVertices);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLUtils.cpp lines 17–19 */
+/* addr: 0x002db1a0  size: 72 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 17
+ *   +0x0004 -> line 18
+ *   +0x0008 -> line 17
+ *   +0x000c -> line 18
+ *   +0x0038 -> line 19
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned int SDL_GetNew(void)
 {
     return (unsigned int)new C_Sdl;

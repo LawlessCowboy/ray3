@@ -1139,14 +1139,6 @@ int g_p_stRawRLIsForThisObject;
 unsigned int AGO_g_ulNbLights;
 char g_cSinusEffectState;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Object.c lines 100–100 */
-/* addr: 0x002aa2b0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 100
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 void GLI_fn_vInitMenuBackground(void);
@@ -1158,6 +1150,209 @@ void GLI_xSendObjectToViewportWithLights(GLD_tdstViewportAttributes_* p_stVpt, G
 void GLI_vSetViewportVars(GLD_tdstViewportAttributes_* p_stVpt);
 void GLI_xSendObjectElement(GLD_tdstViewportAttributes_* p_stVpt);
 float GLI_vGetGlobalAlpha(void);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Object.c lines 224–225 */
+/* addr: 0x002aac60  size: 20 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 224
+ *   +0x000c -> line 225
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+float GLI_vGetGlobalAlpha(void)
+{
+    return GLI_BIG_GLOBALS_xGlobalAlpha * 255.0f;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Object.c lines 375–431 */
+/* addr: 0x002aaac0  size: 408 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 375
+ *   +0x0020 -> line 384
+ *   +0x0024 -> line 387
+ *   +0x002c -> line 389
+ *   +0x0034 -> line 391
+ *   +0x0054 -> line 393
+ *   +0x0064 -> line 397
+ *   +0x006c -> line 398
+ *   +0x0074 -> line 402
+ *   +0x007c -> line 404
+ *   +0x0084 -> line 407
+ *   +0x0098 -> line 410
+ *   +0x00a0 -> line 411
+ *   +0x00a8 -> line 416
+ *   +0x00b8 -> line 420
+ *   +0x00bc -> line 421
+ *   +0x00c0 -> line 420
+ *   +0x00c8 -> line 421
+ *   +0x00d0 -> line 424
+ *   +0x00e0 -> line 425
+ *   +0x00e8 -> line 426
+ *   +0x00f4 -> line 428
+ *   +0x0140 -> line 430
+ *   +0x0148 -> line 428
+ *   +0x0150 -> line 430
+ *   +0x0174 -> line 431
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_xSendObjectElement(GLD_tdstViewportAttributes_* p_stVpt)
+{
+    SDC_VertexArrays_* pSDC;
+    int iElementType;
+    short xElementCounter;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Object.c lines 438–445 */
+/* addr: 0x002aaa90  size: 44 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 438
+ *   +0x0004 -> line 442
+ *   +0x0008 -> line 440
+ *   +0x0010 -> line 442
+ *   +0x0014 -> line 443
+ *   +0x0020 -> line 444
+ *   +0x0024 -> line 445
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vSetViewportVars(GLD_tdstViewportAttributes_* p_stVpt)
+{
+    GLI_tdstSpecificAttributesFor3D_* p_stSpecifAttrib3D;
+    p_stSpecifAttrib3D = (GLI_tdstSpecificAttributesFor3D_*)p_stVpt->p_vSpecificToXD;
+    GLI_BIG_GLOBALS_p_stVpt = (int)p_stVpt;
+    g_p_stCurrentViewport = (int)p_stVpt;
+    GLI_BIG_GLOBALS_gs_st_CurrentMatrix = (int)g_p_stCurrentMatrix;
+    GLI_BIG_GLOBALS_gs_st_CameraMatrix = (int)p_stSpecifAttrib3D->p_stCam + 0x10;
+    GLI_BIG_GLOBALS_p_stCurrentCamera = (int)p_stSpecifAttrib3D->p_stCam;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Object.c lines 458–561 */
+/* addr: 0x002aa850  size: 576 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 458
+ *   +0x0004 -> line 464
+ *   +0x0008 -> line 458
+ *   +0x001c -> line 464
+ *   +0x0020 -> line 466
+ *   +0x0030 -> line 479
+ *   +0x005c -> line 481
+ *   +0x006c -> line 483
+ *   +0x00b8 -> line 487
+ *   +0x00c0 -> line 490
+ *   +0x00cc -> line 492
+ *   +0x00d4 -> line 494
+ *   +0x00dc -> line 496
+ *   +0x00e8 -> line 498
+ *   +0x00f0 -> line 499
+ *   +0x00f8 -> line 519
+ *   +0x00fc -> line 532
+ *   +0x0100 -> line 525
+ *   +0x0104 -> line 522
+ *   +0x0108 -> line 525
+ *   +0x010c -> line 521
+ *   +0x0110 -> line 524
+ *   +0x0114 -> line 526
+ *   +0x0120 -> line 527
+ *   +0x0124 -> line 532
+ *   +0x0134 -> line 534
+ *   +0x013c -> line 535
+ *   +0x0148 -> line 534
+ *   +0x0174 -> line 535
+ *   +0x017c -> line 536
+ *   +0x0190 -> line 537
+ *   +0x0198 -> line 540
+ *   +0x01d0 -> line 549
+ *   +0x01dc -> line 554
+ *   +0x01ec -> line 556
+ *   +0x0224 -> line 559
+ *   +0x0228 -> line 561
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_xSendObjectToViewportWithLights(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstGeometricObject_* p_stObj, int lDrawModeMask)
+{
+    MAT_tdstTransformation_ stPrevMatrix;
+    GLI_tdstSpecificAttributesFor3D_* p_stSpecifAttrib3D;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Object.c lines 565–677 */
+/* addr: 0x002aa690  size: 440 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 565
+ *   +0x0004 -> line 571
+ *   +0x0008 -> line 565
+ *   +0x001c -> line 571
+ *   +0x0020 -> line 573
+ *   +0x0030 -> line 586
+ *   +0x005c -> line 594
+ *   +0x0060 -> line 607
+ *   +0x0064 -> line 600
+ *   +0x0068 -> line 597
+ *   +0x006c -> line 600
+ *   +0x0070 -> line 596
+ *   +0x0074 -> line 599
+ *   +0x0078 -> line 601
+ *   +0x0084 -> line 602
+ *   +0x0088 -> line 607
+ *   +0x0098 -> line 609
+ *   +0x00a0 -> line 610
+ *   +0x00ac -> line 609
+ *   +0x00d8 -> line 610
+ *   +0x00e0 -> line 611
+ *   +0x00f4 -> line 612
+ *   +0x00fc -> line 615
+ *   +0x0134 -> line 643
+ *   +0x0140 -> line 653
+ *   +0x014c -> line 658
+ *   +0x0154 -> line 667
+ *   +0x0168 -> line 669
+ *   +0x019c -> line 672
+ *   +0x01a0 -> line 677
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_xSendObjectToViewportWithLightsFlag(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstGeometricObject_* p_stObj, int lDrawModeMask)
+{
+    MAT_tdstTransformation_ stPrevMatrix;
+    GLI_tdstSpecificAttributesFor3D_* p_stSpecifAttrib3D;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Object.c lines 687–687 */
+/* addr: 0x002aa680  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 687
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vCreateObjectsReference(void)
+{
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Object.c lines 722–730 */
+/* addr: 0x002aa650  size: 36 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 722
+ *   +0x0004 -> line 724
+ *   +0x000c -> line 727
+ *   +0x0018 -> line 728
+ *   +0x001c -> line 730
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLIPS2_vPrepareDisplay(GLD_tdstViewportAttributes_* p_stVpt)
+{
+    GLI_tdstSpecificAttributesFor3D_* p_stSpecifAttrib3D;
+    p_stSpecifAttrib3D = (GLI_tdstSpecificAttributesFor3D_*)p_stVpt->p_vSpecificToXD;
+    GLI_BIG_GLOBALS_p_stVpt = (int)p_stVpt;
+    g_p_stCurrentViewport = (int)p_stVpt;
+    GLI_BIG_GLOBALS_gs_st_CameraMatrix = (int)p_stSpecifAttrib3D->p_stCam + 0x10;
+    GLI_BIG_GLOBALS_p_stCurrentCamera = (int)p_stSpecifAttrib3D->p_stCam;
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Object.c lines 739–851 */
 /* addr: 0x002aa2c0  size: 900 bytes */
@@ -1223,216 +1418,6 @@ float GLI_vGetGlobalAlpha(void);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Object.c lines 722–730 */
-/* addr: 0x002aa650  size: 36 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 722
- *   +0x0004 -> line 724
- *   +0x000c -> line 727
- *   +0x0018 -> line 728
- *   +0x001c -> line 730
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Object.c lines 687–687 */
-/* addr: 0x002aa680  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 687
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Object.c lines 565–677 */
-/* addr: 0x002aa690  size: 440 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 565
- *   +0x0004 -> line 571
- *   +0x0008 -> line 565
- *   +0x001c -> line 571
- *   +0x0020 -> line 573
- *   +0x0030 -> line 586
- *   +0x005c -> line 594
- *   +0x0060 -> line 607
- *   +0x0064 -> line 600
- *   +0x0068 -> line 597
- *   +0x006c -> line 600
- *   +0x0070 -> line 596
- *   +0x0074 -> line 599
- *   +0x0078 -> line 601
- *   +0x0084 -> line 602
- *   +0x0088 -> line 607
- *   +0x0098 -> line 609
- *   +0x00a0 -> line 610
- *   +0x00ac -> line 609
- *   +0x00d8 -> line 610
- *   +0x00e0 -> line 611
- *   +0x00f4 -> line 612
- *   +0x00fc -> line 615
- *   +0x0134 -> line 643
- *   +0x0140 -> line 653
- *   +0x014c -> line 658
- *   +0x0154 -> line 667
- *   +0x0168 -> line 669
- *   +0x019c -> line 672
- *   +0x01a0 -> line 677
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Object.c lines 458–561 */
-/* addr: 0x002aa850  size: 576 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 458
- *   +0x0004 -> line 464
- *   +0x0008 -> line 458
- *   +0x001c -> line 464
- *   +0x0020 -> line 466
- *   +0x0030 -> line 479
- *   +0x005c -> line 481
- *   +0x006c -> line 483
- *   +0x00b8 -> line 487
- *   +0x00c0 -> line 490
- *   +0x00cc -> line 492
- *   +0x00d4 -> line 494
- *   +0x00dc -> line 496
- *   +0x00e8 -> line 498
- *   +0x00f0 -> line 499
- *   +0x00f8 -> line 519
- *   +0x00fc -> line 532
- *   +0x0100 -> line 525
- *   +0x0104 -> line 522
- *   +0x0108 -> line 525
- *   +0x010c -> line 521
- *   +0x0110 -> line 524
- *   +0x0114 -> line 526
- *   +0x0120 -> line 527
- *   +0x0124 -> line 532
- *   +0x0134 -> line 534
- *   +0x013c -> line 535
- *   +0x0148 -> line 534
- *   +0x0174 -> line 535
- *   +0x017c -> line 536
- *   +0x0190 -> line 537
- *   +0x0198 -> line 540
- *   +0x01d0 -> line 549
- *   +0x01dc -> line 554
- *   +0x01ec -> line 556
- *   +0x0224 -> line 559
- *   +0x0228 -> line 561
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Object.c lines 438–445 */
-/* addr: 0x002aaa90  size: 44 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 438
- *   +0x0004 -> line 442
- *   +0x0008 -> line 440
- *   +0x0010 -> line 442
- *   +0x0014 -> line 443
- *   +0x0020 -> line 444
- *   +0x0024 -> line 445
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Object.c lines 375–431 */
-/* addr: 0x002aaac0  size: 408 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 375
- *   +0x0020 -> line 384
- *   +0x0024 -> line 387
- *   +0x002c -> line 389
- *   +0x0034 -> line 391
- *   +0x0054 -> line 393
- *   +0x0064 -> line 397
- *   +0x006c -> line 398
- *   +0x0074 -> line 402
- *   +0x007c -> line 404
- *   +0x0084 -> line 407
- *   +0x0098 -> line 410
- *   +0x00a0 -> line 411
- *   +0x00a8 -> line 416
- *   +0x00b8 -> line 420
- *   +0x00bc -> line 421
- *   +0x00c0 -> line 420
- *   +0x00c8 -> line 421
- *   +0x00d0 -> line 424
- *   +0x00e0 -> line 425
- *   +0x00e8 -> line 426
- *   +0x00f4 -> line 428
- *   +0x0140 -> line 430
- *   +0x0148 -> line 428
- *   +0x0150 -> line 430
- *   +0x0174 -> line 431
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Object.c lines 224–225 */
-/* addr: 0x002aac60  size: 20 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 224
- *   +0x000c -> line 225
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-float GLI_vGetGlobalAlpha(void)
-{
-    return GLI_BIG_GLOBALS_xGlobalAlpha * 255.0f;
-}
-
-void GLI_xSendObjectElement(GLD_tdstViewportAttributes_* p_stVpt)
-{
-    SDC_VertexArrays_* pSDC;
-    int iElementType;
-    short xElementCounter;
-    /* TODO: decompile from asm/... */
-}
-
-void GLI_vSetViewportVars(GLD_tdstViewportAttributes_* p_stVpt)
-{
-    GLI_tdstSpecificAttributesFor3D_* p_stSpecifAttrib3D;
-    p_stSpecifAttrib3D = (GLI_tdstSpecificAttributesFor3D_*)p_stVpt->p_vSpecificToXD;
-    GLI_BIG_GLOBALS_p_stVpt = (int)p_stVpt;
-    g_p_stCurrentViewport = (int)p_stVpt;
-    GLI_BIG_GLOBALS_gs_st_CurrentMatrix = (int)g_p_stCurrentMatrix;
-    GLI_BIG_GLOBALS_gs_st_CameraMatrix = (int)p_stSpecifAttrib3D->p_stCam + 0x10;
-    GLI_BIG_GLOBALS_p_stCurrentCamera = (int)p_stSpecifAttrib3D->p_stCam;
-}
-
-void GLI_xSendObjectToViewportWithLights(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstGeometricObject_* p_stObj, int lDrawModeMask)
-{
-    MAT_tdstTransformation_ stPrevMatrix;
-    GLI_tdstSpecificAttributesFor3D_* p_stSpecifAttrib3D;
-    /* TODO: decompile from asm/... */
-}
-
-void GLI_xSendObjectToViewportWithLightsFlag(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstGeometricObject_* p_stObj, int lDrawModeMask)
-{
-    MAT_tdstTransformation_ stPrevMatrix;
-    GLI_tdstSpecificAttributesFor3D_* p_stSpecifAttrib3D;
-    /* TODO: decompile from asm/... */
-}
-
-void GLI_vCreateObjectsReference(void)
-{
-}
-
-void GLIPS2_vPrepareDisplay(GLD_tdstViewportAttributes_* p_stVpt)
-{
-    GLI_tdstSpecificAttributesFor3D_* p_stSpecifAttrib3D;
-    p_stSpecifAttrib3D = (GLI_tdstSpecificAttributesFor3D_*)p_stVpt->p_vSpecificToXD;
-    GLI_BIG_GLOBALS_p_stVpt = (int)p_stVpt;
-    g_p_stCurrentViewport = (int)p_stVpt;
-    GLI_BIG_GLOBALS_gs_st_CameraMatrix = (int)p_stSpecifAttrib3D->p_stCam + 0x10;
-    GLI_BIG_GLOBALS_p_stCurrentCamera = (int)p_stSpecifAttrib3D->p_stCam;
-}
-
 void GLIPS2_vSendCharacterVisualSetToViewport(GEO_tdstVisualSet_* p_stVisualSet, int lDrawModeMask)
 {
     float* pScale;
@@ -1443,6 +1428,13 @@ void GLIPS2_vSendCharacterVisualSetToViewport(GEO_tdstVisualSet_* p_stVisualSet,
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Object.c lines 100–100 */
+/* addr: 0x002aa2b0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 100
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_fn_vInitMenuBackground(void)
 {
 }

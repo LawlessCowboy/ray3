@@ -1402,14 +1402,6 @@ void AE_InternalGetBPandPSMFromID(int BufferID, unsigned long* pDestBP, unsigned
         internalFullScreenQuadJeff(0x4000, (x1), (y1), (x2), (y2), (r), (g), (b), (a), fU1, fV1, fU2, fV2); \
     }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 507–507 */
-/* addr: 0x00161b20  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 507
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 void plyPS2glAccum(anon_29* param0);
@@ -1470,1521 +1462,67 @@ void internalPS2glDrawRgbaPixels(int x, int y, int width, int height, unsigned i
 void impPS2glDrawBuffer(unsigned int mode);
 void PS2glClearLastBits(void);
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1897–1904 */
-/* addr: 0x00161b30  size: 1280 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1897
- *   +0x0004 -> line 1898
- *   +0x0008 -> line 1897
- *   +0x0010 -> line 1898
- *   +0x0080 -> line 1899
- *   +0x0090 -> line 1898
- *   +0x009c -> line 1899
- *   +0x013c -> line 1900
- *   +0x0144 -> line 1899
- *   +0x0158 -> line 1900
- *   +0x01e4 -> line 1901
- *   +0x0214 -> line 1902
- *   +0x0218 -> line 1901
- *   +0x0260 -> line 1902
- *   +0x0264 -> line 1901
- *   +0x0268 -> line 1902
- *   +0x0270 -> line 1901
- *   +0x0274 -> line 1902
- *   +0x0278 -> line 1901
- *   +0x027c -> line 1902
- *   +0x0294 -> line 1901
- *   +0x02a4 -> line 1902
- *   +0x02a8 -> line 1901
- *   +0x02b0 -> line 1902
- *   +0x02b4 -> line 1901
- *   +0x0320 -> line 1902
- *   +0x03ac -> line 1903
- *   +0x04f0 -> line 1904
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1833–1892 */
-/* addr: 0x00162030  size: 1232 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1833
- *   +0x0004 -> line 1844
- *   +0x0008 -> line 1833
- *   +0x0014 -> line 1844
- *   +0x001c -> line 1846
- *   +0x002c -> line 1849
- *   +0x0038 -> line 1850
- *   +0x0044 -> line 1849
- *   +0x0048 -> line 1850
- *   +0x0058 -> line 1849
- *   +0x0060 -> line 1850
- *   +0x0064 -> line 1849
- *   +0x007c -> line 1851
- *   +0x0080 -> line 1854
- *   +0x0088 -> line 1856
- *   +0x008c -> line 1849
- *   +0x00a0 -> line 1854
- *   +0x00a4 -> line 1849
- *   +0x00a8 -> line 1854
- *   +0x00ac -> line 1850
- *   +0x00bc -> line 1854
- *   +0x00c0 -> line 1851
- *   +0x00c4 -> line 1850
- *   +0x00d4 -> line 1854
- *   +0x00d8 -> line 1852
- *   +0x00dc -> line 1850
- *   +0x00e0 -> line 1852
- *   +0x00e4 -> line 1850
- *   +0x00e8 -> line 1854
- *   +0x00fc -> line 1852
- *   +0x0104 -> line 1854
- *   +0x0110 -> line 1850
- *   +0x0120 -> line 1854
- *   +0x0128 -> line 1851
- *   +0x012c -> line 1854
- *   +0x0130 -> line 1851
- *   +0x0134 -> line 1854
- *   +0x013c -> line 1851
- *   +0x0144 -> line 1854
- *   +0x014c -> line 1852
- *   +0x0150 -> line 1854
- *   +0x0154 -> line 1852
- *   +0x0158 -> line 1854
- *   +0x0170 -> line 1851
- *   +0x017c -> line 1852
- *   +0x0180 -> line 1851
- *   +0x0194 -> line 1859
- *   +0x0198 -> line 1852
- *   +0x01a0 -> line 1854
- *   +0x01a4 -> line 1852
- *   +0x01a8 -> line 1854
- *   +0x01b4 -> line 1857
- *   +0x01b8 -> line 1852
- *   +0x01bc -> line 1854
- *   +0x01c0 -> line 1852
- *   +0x01c4 -> line 1854
- *   +0x01c8 -> line 1859
- *   +0x01cc -> line 1854
- *   +0x01d0 -> line 1852
- *   +0x01d4 -> line 1854
- *   +0x01d8 -> line 1852
- *   +0x01dc -> line 1854
- *   +0x01e0 -> line 1859
- *   +0x01e4 -> line 1854
- *   +0x01f4 -> line 1852
- *   +0x01fc -> line 1854
- *   +0x0260 -> line 1857
- *   +0x0264 -> line 1859
- *   +0x026c -> line 1860
- *   +0x02c8 -> line 1861
- *   +0x02cc -> line 1860
- *   +0x02d0 -> line 1861
- *   +0x02d4 -> line 1860
- *   +0x02dc -> line 1861
- *   +0x02e4 -> line 1862
- *   +0x02e8 -> line 1864
- *   +0x02ec -> line 1863
- *   +0x02f0 -> line 1864
- *   +0x0300 -> line 1869
- *   +0x032c -> line 1870
- *   +0x0330 -> line 1869
- *   +0x0334 -> line 1870
- *   +0x0338 -> line 1869
- *   +0x033c -> line 1870
- *   +0x034c -> line 1871
- *   +0x0350 -> line 1870
- *   +0x0354 -> line 1871
- *   +0x0358 -> line 1870
- *   +0x035c -> line 1872
- *   +0x0360 -> line 1871
- *   +0x0364 -> line 1872
- *   +0x0368 -> line 1871
- *   +0x036c -> line 1869
- *   +0x037c -> line 1870
- *   +0x0384 -> line 1871
- *   +0x038c -> line 1870
- *   +0x03a4 -> line 1871
- *   +0x03b8 -> line 1872
- *   +0x03c0 -> line 1873
- *   +0x0408 -> line 1875
- *   +0x044c -> line 1877
- *   +0x0454 -> line 1878
- *   +0x047c -> line 1879
- *   +0x0484 -> line 1881
- *   +0x0498 -> line 1883
- *   +0x04a0 -> line 1884
- *   +0x04a8 -> line 1887
- *   +0x04b0 -> line 1890
- *   +0x04b8 -> line 1892
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1813–1825 */
-/* addr: 0x00162500  size: 164 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1813
- *   +0x0008 -> line 1819
- *   +0x0014 -> line 1822
- *   +0x0024 -> line 1823
- *   +0x0028 -> line 1822
- *   +0x0030 -> line 1823
- *   +0x0034 -> line 1822
- *   +0x0048 -> line 1823
- *   +0x0050 -> line 1822
- *   +0x0054 -> line 1823
- *   +0x0058 -> line 1822
- *   +0x0060 -> line 1823
- *   +0x0064 -> line 1822
- *   +0x0068 -> line 1823
- *   +0x006c -> line 1822
- *   +0x0074 -> line 1823
- *   +0x0090 -> line 1824
- *   +0x0098 -> line 1825
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1793–1810 */
-/* addr: 0x001625b0  size: 220 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1793
- *   +0x0008 -> line 1802
- *   +0x000c -> line 1793
- *   +0x0010 -> line 1802
- *   +0x0014 -> line 1799
- *   +0x0018 -> line 1800
- *   +0x001c -> line 1802
- *   +0x0024 -> line 1803
- *   +0x0040 -> line 1805
- *   +0x0044 -> line 1803
- *   +0x0048 -> line 1805
- *   +0x0050 -> line 1803
- *   +0x0078 -> line 1805
- *   +0x0080 -> line 1806
- *   +0x0084 -> line 1807
- *   +0x0098 -> line 1808
- *   +0x00a0 -> line 1809
- *   +0x00cc -> line 1810
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1772–1789 */
-/* addr: 0x00162690  size: 224 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1772
- *   +0x0008 -> line 1781
- *   +0x000c -> line 1772
- *   +0x0010 -> line 1781
- *   +0x0014 -> line 1778
- *   +0x0018 -> line 1779
- *   +0x001c -> line 1781
- *   +0x0024 -> line 1782
- *   +0x0040 -> line 1784
- *   +0x0044 -> line 1782
- *   +0x0048 -> line 1784
- *   +0x0050 -> line 1782
- *   +0x0078 -> line 1784
- *   +0x0080 -> line 1785
- *   +0x0084 -> line 1786
- *   +0x0088 -> line 1785
- *   +0x008c -> line 1786
- *   +0x009c -> line 1787
- *   +0x00a4 -> line 1788
- *   +0x00d0 -> line 1789
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1752–1769 */
-/* addr: 0x00162770  size: 220 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1752
- *   +0x0008 -> line 1761
- *   +0x000c -> line 1752
- *   +0x0010 -> line 1761
- *   +0x0014 -> line 1758
- *   +0x0018 -> line 1759
- *   +0x001c -> line 1761
- *   +0x0024 -> line 1762
- *   +0x0040 -> line 1764
- *   +0x0044 -> line 1762
- *   +0x0048 -> line 1764
- *   +0x004c -> line 1762
- *   +0x0074 -> line 1764
- *   +0x007c -> line 1765
- *   +0x0080 -> line 1766
- *   +0x0084 -> line 1765
- *   +0x0088 -> line 1766
- *   +0x0098 -> line 1767
- *   +0x00a0 -> line 1768
- *   +0x00cc -> line 1769
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1748–1749 */
-/* addr: 0x00162850  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1748
- *   +0x0008 -> line 1749
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1689–1744 */
-/* addr: 0x00162860  size: 296 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1689
- *   +0x0040 -> line 1693
- *   +0x0044 -> line 1694
- *   +0x0048 -> line 1693
- *   +0x004c -> line 1694
- *   +0x0054 -> line 1695
- *   +0x0058 -> line 1694
- *   +0x0060 -> line 1695
- *   +0x0064 -> line 1697
- *   +0x006c -> line 1700
- *   +0x0070 -> line 1701
- *   +0x0074 -> line 1700
- *   +0x0078 -> line 1701
- *   +0x0080 -> line 1702
- *   +0x0084 -> line 1701
- *   +0x008c -> line 1702
- *   +0x0090 -> line 1704
- *   +0x0098 -> line 1708
- *   +0x009c -> line 1709
- *   +0x00a0 -> line 1711
- *   +0x00a8 -> line 1716
- *   +0x00ac -> line 1715
- *   +0x00b0 -> line 1716
- *   +0x00c0 -> line 1717
- *   +0x00cc -> line 1720
- *   +0x00d8 -> line 1721
- *   +0x00e0 -> line 1724
- *   +0x00e8 -> line 1728
- *   +0x00f0 -> line 1729
- *   +0x00f4 -> line 1728
- *   +0x00f8 -> line 1729
- *   +0x0100 -> line 1730
- *   +0x0108 -> line 1732
- *   +0x0110 -> line 1737
- *   +0x0118 -> line 1742
- *   +0x011c -> line 1743
- *   +0x0120 -> line 1744
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1660–1681 */
-/* addr: 0x00162990  size: 344 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1660
- *   +0x0004 -> line 1661
- *   +0x0008 -> line 1660
- *   +0x000c -> line 1661
- *   +0x0038 -> line 1662
- *   +0x003c -> line 1665
- *   +0x0040 -> line 1661
- *   +0x0044 -> line 1665
- *   +0x0048 -> line 1662
- *   +0x004c -> line 1667
- *   +0x0050 -> line 1663
- *   +0x0054 -> line 1667
- *   +0x0058 -> line 1661
- *   +0x005c -> line 1668
- *   +0x0064 -> line 1662
- *   +0x0070 -> line 1663
- *   +0x0074 -> line 1661
- *   +0x0078 -> line 1662
- *   +0x007c -> line 1661
- *   +0x0080 -> line 1662
- *   +0x0084 -> line 1661
- *   +0x008c -> line 1662
- *   +0x0090 -> line 1663
- *   +0x0094 -> line 1662
- *   +0x0098 -> line 1663
- *   +0x00a4 -> line 1662
- *   +0x00ac -> line 1663
- *   +0x00c0 -> line 1662
- *   +0x00c4 -> line 1673
- *   +0x00c8 -> line 1662
- *   +0x00d0 -> line 1663
- *   +0x00d4 -> line 1662
- *   +0x00d8 -> line 1663
- *   +0x00f8 -> line 1673
- *   +0x0100 -> line 1674
- *   +0x0108 -> line 1675
- *   +0x0124 -> line 1676
- *   +0x0140 -> line 1677
- *   +0x0148 -> line 1680
- *   +0x014c -> line 1681
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1646–1657 */
-/* addr: 0x00162af0  size: 148 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1646
- *   +0x0004 -> line 1647
- *   +0x0008 -> line 1646
- *   +0x000c -> line 1647
- *   +0x0010 -> line 1648
- *   +0x0014 -> line 1647
- *   +0x0018 -> line 1648
- *   +0x001c -> line 1647
- *   +0x0020 -> line 1649
- *   +0x0024 -> line 1648
- *   +0x0028 -> line 1649
- *   +0x002c -> line 1648
- *   +0x0030 -> line 1652
- *   +0x0034 -> line 1649
- *   +0x0038 -> line 1652
- *   +0x003c -> line 1649
- *   +0x0044 -> line 1652
- *   +0x004c -> line 1653
- *   +0x0054 -> line 1654
- *   +0x0060 -> line 1655
- *   +0x0068 -> line 1656
- *   +0x0088 -> line 1657
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1617–1622 */
-/* addr: 0x00162b90  size: 280 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1621
- *   +0x0004 -> line 1618
- *   +0x0008 -> line 1621
- *   +0x000c -> line 1618
- *   +0x0010 -> line 1617
- *   +0x0014 -> line 1619
- *   +0x0018 -> line 1617
- *   +0x001c -> line 1619
- *   +0x0020 -> line 1620
- *   +0x0024 -> line 1617
- *   +0x002c -> line 1620
- *   +0x0030 -> line 1617
- *   +0x0038 -> line 1618
- *   +0x003c -> line 1619
- *   +0x0040 -> line 1620
- *   +0x0044 -> line 1617
- *   +0x006c -> line 1618
- *   +0x009c -> line 1619
- *   +0x00cc -> line 1620
- *   +0x00fc -> line 1621
- *   +0x0110 -> line 1622
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1595–1612 */
-/* addr: 0x00162cb0  size: 200 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1595
- *   +0x0004 -> line 1596
- *   +0x0008 -> line 1595
- *   +0x000c -> line 1599
- *   +0x0014 -> line 1596
- *   +0x0018 -> line 1599
- *   +0x001c -> line 1596
- *   +0x0020 -> line 1597
- *   +0x0024 -> line 1599
- *   +0x0028 -> line 1601
- *   +0x0030 -> line 1599
- *   +0x0034 -> line 1600
- *   +0x0038 -> line 1599
- *   +0x0040 -> line 1600
- *   +0x0044 -> line 1595
- *   +0x004c -> line 1599
- *   +0x0050 -> line 1601
- *   +0x0058 -> line 1603
- *   +0x0074 -> line 1605
- *   +0x007c -> line 1608
- *   +0x0098 -> line 1609
- *   +0x009c -> line 1611
- *   +0x00bc -> line 1612
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1573–1590 */
-/* addr: 0x00162d80  size: 200 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1573
- *   +0x0004 -> line 1574
- *   +0x0008 -> line 1573
- *   +0x000c -> line 1577
- *   +0x0014 -> line 1574
- *   +0x0018 -> line 1577
- *   +0x001c -> line 1574
- *   +0x0020 -> line 1575
- *   +0x0024 -> line 1577
- *   +0x0028 -> line 1579
- *   +0x0030 -> line 1577
- *   +0x0034 -> line 1578
- *   +0x0038 -> line 1577
- *   +0x0040 -> line 1578
- *   +0x0044 -> line 1573
- *   +0x004c -> line 1577
- *   +0x0050 -> line 1579
- *   +0x0058 -> line 1581
- *   +0x0074 -> line 1583
- *   +0x007c -> line 1586
- *   +0x0098 -> line 1587
- *   +0x009c -> line 1589
- *   +0x00bc -> line 1590
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1526–1559 */
-/* addr: 0x00162e50  size: 1232 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1526
- *   +0x0004 -> line 1530
- *   +0x0008 -> line 1526
- *   +0x000c -> line 1530
- *   +0x0010 -> line 1526
- *   +0x0014 -> line 1530
- *   +0x00d8 -> line 1534
- *   +0x0198 -> line 1538
- *   +0x01a4 -> line 1541
- *   +0x0268 -> line 1545
- *   +0x032c -> line 1549
- *   +0x0338 -> line 1552
- *   +0x03fc -> line 1556
- *   +0x04c0 -> line 1559
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1489–1522 */
-/* addr: 0x00163320  size: 1232 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1489
- *   +0x0004 -> line 1493
- *   +0x0008 -> line 1489
- *   +0x000c -> line 1493
- *   +0x0010 -> line 1489
- *   +0x0014 -> line 1493
- *   +0x00d8 -> line 1497
- *   +0x0198 -> line 1501
- *   +0x01a4 -> line 1504
- *   +0x0268 -> line 1508
- *   +0x032c -> line 1512
- *   +0x0338 -> line 1515
- *   +0x03fc -> line 1519
- *   +0x04c0 -> line 1522
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1468–1470 */
-/* addr: 0x001637f0  size: 204 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1468
- *   +0x0004 -> line 1469
- *   +0x0008 -> line 1468
- *   +0x000c -> line 1469
- *   +0x00c0 -> line 1470
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1283–1427 */
-/* addr: 0x001638c0  size: 3680 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1283
- *   +0x0004 -> line 1288
- *   +0x0008 -> line 1283
- *   +0x001c -> line 1288
- *   +0x0028 -> line 1290
- *   +0x0078 -> line 1294
- *   +0x007c -> line 1295
- *   +0x0080 -> line 1294
- *   +0x0084 -> line 1296
- *   +0x008c -> line 1297
- *   +0x0090 -> line 1296
- *   +0x0094 -> line 1299
- *   +0x0098 -> line 1300
- *   +0x00a0 -> line 1296
- *   +0x00a4 -> line 1294
- *   +0x00a8 -> line 1296
- *   +0x00ac -> line 1295
- *   +0x00b0 -> line 1296
- *   +0x00b4 -> line 1297
- *   +0x00b8 -> line 1295
- *   +0x00bc -> line 1301
- *   +0x00c4 -> line 1296
- *   +0x00e0 -> line 1302
- *   +0x00e8 -> line 1297
- *   +0x00ec -> line 1296
- *   +0x00f0 -> line 1297
- *   +0x00f4 -> line 1296
- *   +0x00fc -> line 1297
- *   +0x0100 -> line 1296
- *   +0x0104 -> line 1297
- *   +0x0108 -> line 1296
- *   +0x010c -> line 1303
- *   +0x0110 -> line 1296
- *   +0x0114 -> line 1297
- *   +0x0118 -> line 1299
- *   +0x011c -> line 1297
- *   +0x0120 -> line 1299
- *   +0x0124 -> line 1297
- *   +0x0138 -> line 1304
- *   +0x013c -> line 1297
- *   +0x0140 -> line 1300
- *   +0x0144 -> line 1299
- *   +0x0148 -> line 1304
- *   +0x014c -> line 1303
- *   +0x0150 -> line 1306
- *   +0x0154 -> line 1299
- *   +0x0160 -> line 1304
- *   +0x0164 -> line 1300
- *   +0x017c -> line 1306
- *   +0x0180 -> line 1300
- *   +0x0184 -> line 1306
- *   +0x0188 -> line 1300
- *   +0x019c -> line 1301
- *   +0x01cc -> line 1302
- *   +0x01fc -> line 1303
- *   +0x022c -> line 1304
- *   +0x0240 -> line 1306
- *   +0x0284 -> line 1308
- *   +0x0290 -> line 1306
- *   +0x02b4 -> line 1308
- *   +0x02bc -> line 1309
- *   +0x02c0 -> line 1310
- *   +0x02d4 -> line 1311
- *   +0x02e8 -> line 1312
- *   +0x02ec -> line 1311
- *   +0x0300 -> line 1312
- *   +0x0374 -> line 1316
- *   +0x0388 -> line 1318
- *   +0x03d0 -> line 1320
- *   +0x03d4 -> line 1318
- *   +0x03d8 -> line 1320
- *   +0x03dc -> line 1318
- *   +0x03e0 -> line 1322
- *   +0x03e4 -> line 1319
- *   +0x03e8 -> line 1322
- *   +0x03ec -> line 1323
- *   +0x03f4 -> line 1318
- *   +0x03f8 -> line 1319
- *   +0x03fc -> line 1318
- *   +0x0400 -> line 1319
- *   +0x0408 -> line 1318
- *   +0x040c -> line 1319
- *   +0x0410 -> line 1318
- *   +0x0418 -> line 1319
- *   +0x041c -> line 1318
- *   +0x0420 -> line 1319
- *   +0x0424 -> line 1318
- *   +0x042c -> line 1319
- *   +0x0448 -> line 1328
- *   +0x0450 -> line 1329
- *   +0x0458 -> line 1335
- *   +0x045c -> line 1331
- *   +0x0460 -> line 1333
- *   +0x0464 -> line 1337
- *   +0x0468 -> line 1332
- *   +0x0474 -> line 1335
- *   +0x047c -> line 1337
- *   +0x0480 -> line 1332
- *   +0x0488 -> line 1333
- *   +0x048c -> line 1332
- *   +0x0490 -> line 1331
- *   +0x0498 -> line 1332
- *   +0x04b4 -> line 1333
- *   +0x04b8 -> line 1332
- *   +0x04bc -> line 1333
- *   +0x04c0 -> line 1332
- *   +0x04c8 -> line 1333
- *   +0x04cc -> line 1332
- *   +0x04d0 -> line 1333
- *   +0x04d4 -> line 1332
- *   +0x04dc -> line 1333
- *   +0x04fc -> line 1335
- *   +0x0508 -> line 1337
- *   +0x0510 -> line 1339
- *   +0x0524 -> line 1340
- *   +0x052c -> line 1339
- *   +0x0554 -> line 1340
- *   +0x0580 -> line 1341
- *   +0x0588 -> line 1344
- *   +0x058c -> line 1345
- *   +0x0590 -> line 1344
- *   +0x0598 -> line 1345
- *   +0x059c -> line 1344
- *   +0x05a4 -> line 1345
- *   +0x05a8 -> line 1346
- *   +0x05ac -> line 1344
- *   +0x05d4 -> line 1345
- *   +0x0604 -> line 1348
- *   +0x0608 -> line 1350
- *   +0x060c -> line 1348
- *   +0x0620 -> line 1349
- *   +0x0628 -> line 1348
- *   +0x0630 -> line 1351
- *   +0x0638 -> line 1350
- *   +0x0640 -> line 1348
- *   +0x0660 -> line 1349
- *   +0x0690 -> line 1350
- *   +0x06a4 -> line 1351
- *   +0x0708 -> line 1355
- *   +0x071c -> line 1357
- *   +0x0758 -> line 1358
- *   +0x075c -> line 1357
- *   +0x0764 -> line 1358
- *   +0x0768 -> line 1357
- *   +0x0778 -> line 1358
- *   +0x0780 -> line 1357
- *   +0x0784 -> line 1358
- *   +0x0788 -> line 1357
- *   +0x0790 -> line 1358
- *   +0x0794 -> line 1357
- *   +0x0798 -> line 1358
- *   +0x079c -> line 1357
- *   +0x07a4 -> line 1358
- *   +0x07c0 -> line 1359
- *   +0x07c8 -> line 1360
- *   +0x07d0 -> line 1366
- *   +0x07d4 -> line 1362
- *   +0x07d8 -> line 1364
- *   +0x07dc -> line 1363
- *   +0x07e8 -> line 1366
- *   +0x07f0 -> line 1367
- *   +0x07f4 -> line 1363
- *   +0x07f8 -> line 1368
- *   +0x07fc -> line 1363
- *   +0x0800 -> line 1364
- *   +0x0804 -> line 1363
- *   +0x0808 -> line 1362
- *   +0x0810 -> line 1368
- *   +0x0814 -> line 1363
- *   +0x0830 -> line 1369
- *   +0x0838 -> line 1364
- *   +0x083c -> line 1363
- *   +0x0840 -> line 1364
- *   +0x0844 -> line 1363
- *   +0x084c -> line 1364
- *   +0x0850 -> line 1363
- *   +0x0854 -> line 1364
- *   +0x0858 -> line 1363
- *   +0x085c -> line 1371
- *   +0x0860 -> line 1363
- *   +0x0864 -> line 1371
- *   +0x0868 -> line 1364
- *   +0x086c -> line 1370
- *   +0x0870 -> line 1364
- *   +0x0874 -> line 1371
- *   +0x0878 -> line 1370
- *   +0x087c -> line 1371
- *   +0x0880 -> line 1364
- *   +0x0894 -> line 1367
- *   +0x0898 -> line 1364
- *   +0x089c -> line 1366
- *   +0x08a0 -> line 1367
- *   +0x08a4 -> line 1366
- *   +0x08b0 -> line 1371
- *   +0x08b4 -> line 1367
- *   +0x08c0 -> line 1373
- *   +0x08c8 -> line 1371
- *   +0x08d0 -> line 1367
- *   +0x08f0 -> line 1368
- *   +0x0920 -> line 1369
- *   +0x0950 -> line 1370
- *   +0x0980 -> line 1371
- *   +0x0994 -> line 1373
- *   +0x09f8 -> line 1377
- *   +0x0a0c -> line 1379
- *   +0x0a48 -> line 1380
- *   +0x0a4c -> line 1379
- *   +0x0a54 -> line 1380
- *   +0x0a58 -> line 1379
- *   +0x0a68 -> line 1380
- *   +0x0a70 -> line 1379
- *   +0x0a74 -> line 1380
- *   +0x0a78 -> line 1379
- *   +0x0a80 -> line 1380
- *   +0x0a84 -> line 1379
- *   +0x0a88 -> line 1380
- *   +0x0a8c -> line 1379
- *   +0x0a94 -> line 1380
- *   +0x0ab0 -> line 1381
- *   +0x0ab8 -> line 1382
- *   +0x0ac0 -> line 1384
- *   +0x0ad0 -> line 1385
- *   +0x0b1c -> line 1386
- *   +0x0b24 -> line 1388
- *   +0x0b28 -> line 1387
- *   +0x0b2c -> line 1388
- *   +0x0b30 -> line 1387
- *   +0x0b34 -> line 1388
- *   +0x0b38 -> line 1390
- *   +0x0b3c -> line 1388
- *   +0x0b48 -> line 1390
- *   +0x0b4c -> line 1387
- *   +0x0b50 -> line 1388
- *   +0x0b5c -> line 1390
- *   +0x0b60 -> line 1388
- *   +0x0b8c -> line 1390
- *   +0x0b94 -> line 1391
- *   +0x0b98 -> line 1392
- *   +0x0bac -> line 1393
- *   +0x0bd0 -> line 1394
- *   +0x0bd8 -> line 1393
- *   +0x0bdc -> line 1394
- *   +0x0c40 -> line 1405
- *   +0x0c44 -> line 1397
- *   +0x0c48 -> line 1405
- *   +0x0c50 -> line 1397
- *   +0x0c58 -> line 1399
- *   +0x0c60 -> line 1400
- *   +0x0c64 -> line 1405
- *   +0x0c6c -> line 1406
- *   +0x0cbc -> line 1407
- *   +0x0cc4 -> line 1408
- *   +0x0ccc -> line 1416
- *   +0x0cd0 -> line 1413
- *   +0x0cd4 -> line 1415
- *   +0x0cd8 -> line 1417
- *   +0x0cdc -> line 1414
- *   +0x0ce8 -> line 1416
- *   +0x0cf0 -> line 1417
- *   +0x0cf4 -> line 1414
- *   +0x0cf8 -> line 1415
- *   +0x0cfc -> line 1414
- *   +0x0d00 -> line 1413
- *   +0x0d08 -> line 1414
- *   +0x0d24 -> line 1415
- *   +0x0d28 -> line 1414
- *   +0x0d2c -> line 1415
- *   +0x0d30 -> line 1414
- *   +0x0d38 -> line 1415
- *   +0x0d3c -> line 1414
- *   +0x0d40 -> line 1415
- *   +0x0d44 -> line 1414
- *   +0x0d4c -> line 1415
- *   +0x0d6c -> line 1416
- *   +0x0d74 -> line 1417
- *   +0x0d78 -> line 1418
- *   +0x0d80 -> line 1419
- *   +0x0d88 -> line 1420
- *   +0x0d98 -> line 1421
- *   +0x0d9c -> line 1420
- *   +0x0da0 -> line 1421
- *   +0x0dd8 -> line 1422
- *   +0x0ddc -> line 1421
- *   +0x0de4 -> line 1422
- *   +0x0de8 -> line 1421
- *   +0x0df8 -> line 1422
- *   +0x0e00 -> line 1421
- *   +0x0e04 -> line 1422
- *   +0x0e08 -> line 1421
- *   +0x0e10 -> line 1422
- *   +0x0e14 -> line 1421
- *   +0x0e18 -> line 1422
- *   +0x0e1c -> line 1421
- *   +0x0e24 -> line 1422
- *   +0x0e40 -> line 1423
- *   +0x0e48 -> line 1427
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1258–1280 */
-/* addr: 0x00164720  size: 68 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1260
- *   +0x0004 -> line 1258
- *   +0x0008 -> line 1260
- *   +0x0030 -> line 1275
- *   +0x0038 -> line 1280
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void internalReadFastRgbaPixels(int x, int y, int width, int height, unsigned int format, unsigned int type, void* pixels);
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1148–1251 */
-/* addr: 0x00164770  size: 1168 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1148
- *   +0x0004 -> line 1151
- *   +0x0008 -> line 1148
- *   +0x000c -> line 1150
- *   +0x0010 -> line 1148
- *   +0x0020 -> line 1149
- *   +0x0024 -> line 1148
- *   +0x0028 -> line 1149
- *   +0x002c -> line 1148
- *   +0x0040 -> line 1158
- *   +0x0044 -> line 1148
- *   +0x0048 -> line 1149
- *   +0x004c -> line 1151
- *   +0x0050 -> line 1149
- *   +0x0058 -> line 1151
- *   +0x0064 -> line 1158
- *   +0x0068 -> line 1161
- *   +0x0070 -> line 1163
- *   +0x0074 -> line 1164
- *   +0x0078 -> line 1165
- *   +0x007c -> line 1166
- *   +0x0080 -> line 1168
- *   +0x0090 -> line 1171
- *   +0x0094 -> line 1170
- *   +0x0098 -> line 1171
- *   +0x009c -> line 1173
- *   +0x00a4 -> line 1177
- *   +0x00ac -> line 1179
- *   +0x00b0 -> line 1180
- *   +0x00b4 -> line 1181
- *   +0x00b8 -> line 1183
- *   +0x00c8 -> line 1185
- *   +0x00d0 -> line 1187
- *   +0x00d8 -> line 1198
- *   +0x00f4 -> line 1204
- *   +0x0100 -> line 1206
- *   +0x0108 -> line 1208
- *   +0x0114 -> line 1210
- *   +0x0130 -> line 1213
- *   +0x024c -> line 1214
- *   +0x0254 -> line 1215
- *   +0x0258 -> line 1216
- *   +0x02a8 -> line 1219
- *   +0x02b0 -> line 1221
- *   +0x02c0 -> line 1222
- *   +0x02c8 -> line 1225
- *   +0x02e8 -> line 1228
- *   +0x040c -> line 1229
- *   +0x0414 -> line 1231
- *   +0x0464 -> line 1251
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1144–1145 */
-/* addr: 0x00164c00  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1144
- *   +0x0004 -> line 1145
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1060–1069 */
-/* addr: 0x00164c10  size: 104 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1060
- *   +0x0008 -> line 1064
- *   +0x001c -> line 1065
- *   +0x0030 -> line 1066
- *   +0x0044 -> line 1067
- *   +0x004c -> line 1068
- *   +0x0050 -> line 1067
- *   +0x0054 -> line 1068
- *   +0x005c -> line 1069
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1048–1057 */
-/* addr: 0x00164c80  size: 84 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1054
- *   +0x0004 -> line 1048
- *   +0x0008 -> line 1053
- *   +0x000c -> line 1048
- *   +0x0010 -> line 1054
- *   +0x0018 -> line 1053
- *   +0x001c -> line 1055
- *   +0x0024 -> line 1053
- *   +0x0028 -> line 1055
- *   +0x002c -> line 1052
- *   +0x0034 -> line 1055
- *   +0x0038 -> line 1052
- *   +0x003c -> line 1056
- *   +0x0048 -> line 1057
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1036–1045 */
-/* addr: 0x00164ce0  size: 76 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1036
- *   +0x0008 -> line 1040
- *   +0x0014 -> line 1041
- *   +0x0020 -> line 1042
- *   +0x002c -> line 1043
- *   +0x0034 -> line 1044
- *   +0x0040 -> line 1045
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1024–1033 */
-/* addr: 0x00164d30  size: 84 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1030
- *   +0x0004 -> line 1024
- *   +0x0008 -> line 1029
- *   +0x000c -> line 1024
- *   +0x0010 -> line 1030
- *   +0x0018 -> line 1029
- *   +0x001c -> line 1031
- *   +0x0024 -> line 1029
- *   +0x0028 -> line 1031
- *   +0x002c -> line 1028
- *   +0x0034 -> line 1031
- *   +0x0038 -> line 1028
- *   +0x003c -> line 1032
- *   +0x0048 -> line 1033
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 939–1021 */
-/* addr: 0x00164d90  size: 688 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 939
- *   +0x0004 -> line 950
- *   +0x0008 -> line 939
- *   +0x000c -> line 950
- *   +0x0010 -> line 939
- *   +0x0014 -> line 950
- *   +0x0018 -> line 939
- *   +0x0020 -> line 945
- *   +0x0028 -> line 946
- *   +0x0030 -> line 947
- *   +0x0038 -> line 948
- *   +0x0040 -> line 950
- *   +0x0048 -> line 953
- *   +0x00c0 -> line 956
- *   +0x00c8 -> line 959
- *   +0x00cc -> line 963
- *   +0x00d0 -> line 959
- *   +0x00dc -> line 963
- *   +0x00e8 -> line 959
- *   +0x00fc -> line 963
- *   +0x0104 -> line 966
- *   +0x0188 -> line 968
- *   +0x018c -> line 969
- *   +0x0194 -> line 992
- *   +0x019c -> line 1002
- *   +0x01a0 -> line 992
- *   +0x01a4 -> line 995
- *   +0x01a8 -> line 997
- *   +0x01ac -> line 994
- *   +0x01b0 -> line 998
- *   +0x01b4 -> line 994
- *   +0x01b8 -> line 999
- *   +0x01bc -> line 993
- *   +0x01c0 -> line 999
- *   +0x01c4 -> line 993
- *   +0x01c8 -> line 1000
- *   +0x01cc -> line 992
- *   +0x01d0 -> line 993
- *   +0x01d4 -> line 992
- *   +0x01d8 -> line 1002
- *   +0x01e0 -> line 1003
- *   +0x01ec -> line 1006
- *   +0x01f0 -> line 1003
- *   +0x01f4 -> line 1006
- *   +0x01fc -> line 1005
- *   +0x0204 -> line 1004
- *   +0x020c -> line 1003
- *   +0x0210 -> line 1004
- *   +0x0214 -> line 1003
- *   +0x0218 -> line 1006
- *   +0x0220 -> line 1008
- *   +0x0230 -> line 1010
- *   +0x023c -> line 1019
- *   +0x0240 -> line 1015
- *   +0x024c -> line 1011
- *   +0x0250 -> line 1010
- *   +0x0254 -> line 1019
- *   +0x025c -> line 1018
- *   +0x0260 -> line 1017
- *   +0x0264 -> line 1015
- *   +0x026c -> line 1017
- *   +0x0270 -> line 1018
- *   +0x0274 -> line 1011
- *   +0x0280 -> line 1015
- *   +0x028c -> line 1017
- *   +0x0298 -> line 1021
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 927–936 */
-/* addr: 0x00165040  size: 44 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 927
- *   +0x0008 -> line 935
- *   +0x000c -> line 931
- *   +0x0010 -> line 932
- *   +0x0014 -> line 933
- *   +0x0018 -> line 935
- *   +0x0020 -> line 936
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 915–924 */
-/* addr: 0x00165070  size: 88 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 915
- *   +0x0010 -> line 919
- *   +0x001c -> line 920
- *   +0x0028 -> line 921
- *   +0x0034 -> line 922
- *   +0x0040 -> line 923
- *   +0x0048 -> line 924
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 903–912 */
-/* addr: 0x001650d0  size: 108 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 903
- *   +0x001c -> line 907
- *   +0x0024 -> line 908
- *   +0x0030 -> line 909
- *   +0x003c -> line 910
- *   +0x004c -> line 911
- *   +0x0054 -> line 912
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 891–900 */
-/* addr: 0x00165140  size: 92 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 891
- *   +0x0004 -> line 898
- *   +0x0008 -> line 891
- *   +0x000c -> line 895
- *   +0x0020 -> line 896
- *   +0x0034 -> line 897
- *   +0x003c -> line 898
- *   +0x0040 -> line 899
- *   +0x0044 -> line 897
- *   +0x0048 -> line 899
- *   +0x0050 -> line 900
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 879–888 */
-/* addr: 0x001651a0  size: 76 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 885
- *   +0x0004 -> line 879
- *   +0x0008 -> line 884
- *   +0x000c -> line 879
- *   +0x0010 -> line 885
- *   +0x0014 -> line 886
- *   +0x001c -> line 885
- *   +0x0020 -> line 883
- *   +0x0028 -> line 884
- *   +0x002c -> line 887
- *   +0x0030 -> line 883
- *   +0x0034 -> line 884
- *   +0x0038 -> line 887
- *   +0x0040 -> line 888
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 867–876 */
-/* addr: 0x001651f0  size: 72 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 867
- *   +0x0004 -> line 874
- *   +0x0008 -> line 867
- *   +0x000c -> line 871
- *   +0x0018 -> line 872
- *   +0x0024 -> line 873
- *   +0x002c -> line 874
- *   +0x0030 -> line 875
- *   +0x003c -> line 876
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 855–864 */
-/* addr: 0x00165240  size: 76 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 861
- *   +0x0004 -> line 855
- *   +0x0008 -> line 860
- *   +0x000c -> line 855
- *   +0x0010 -> line 861
- *   +0x0014 -> line 862
- *   +0x001c -> line 861
- *   +0x0020 -> line 859
- *   +0x0028 -> line 860
- *   +0x002c -> line 863
- *   +0x0030 -> line 859
- *   +0x0034 -> line 860
- *   +0x0038 -> line 863
- *   +0x0040 -> line 864
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 843–852 */
-/* addr: 0x00165290  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 843
- *   +0x0004 -> line 850
- *   +0x0008 -> line 843
- *   +0x000c -> line 847
- *   +0x0014 -> line 848
- *   +0x001c -> line 849
- *   +0x0024 -> line 851
- *   +0x0030 -> line 852
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 831–840 */
-/* addr: 0x001652d0  size: 48 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 831
- *   +0x0004 -> line 838
- *   +0x0008 -> line 831
- *   +0x000c -> line 839
- *   +0x0010 -> line 835
- *   +0x0014 -> line 838
- *   +0x0018 -> line 836
- *   +0x001c -> line 839
- *   +0x0024 -> line 840
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 819–828 */
-/* addr: 0x00165300  size: 84 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 819
- *   +0x0010 -> line 823
- *   +0x001c -> line 824
- *   +0x0028 -> line 825
- *   +0x0030 -> line 826
- *   +0x0034 -> line 827
- *   +0x0038 -> line 825
- *   +0x003c -> line 827
- *   +0x0044 -> line 828
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 807–816 */
-/* addr: 0x00165360  size: 92 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 807
- *   +0x0014 -> line 811
- *   +0x001c -> line 812
- *   +0x0028 -> line 813
- *   +0x0034 -> line 814
- *   +0x0038 -> line 815
- *   +0x003c -> line 813
- *   +0x0040 -> line 815
- *   +0x0048 -> line 816
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 795–804 */
-/* addr: 0x001653c0  size: 76 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 795
- *   +0x0004 -> line 802
- *   +0x0008 -> line 795
- *   +0x000c -> line 799
- *   +0x0020 -> line 800
- *   +0x0028 -> line 802
- *   +0x002c -> line 803
- *   +0x0030 -> line 801
- *   +0x0034 -> line 800
- *   +0x0038 -> line 803
- *   +0x0040 -> line 804
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 783–792 */
-/* addr: 0x00165410  size: 68 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 788
- *   +0x0004 -> line 783
- *   +0x000c -> line 787
- *   +0x0014 -> line 788
- *   +0x0018 -> line 790
- *   +0x0020 -> line 791
- *   +0x0024 -> line 789
- *   +0x0028 -> line 788
- *   +0x002c -> line 787
- *   +0x0030 -> line 791
- *   +0x0038 -> line 792
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 771–780 */
-/* addr: 0x00165460  size: 64 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 771
- *   +0x0004 -> line 778
- *   +0x0008 -> line 771
- *   +0x000c -> line 775
- *   +0x0018 -> line 776
- *   +0x0020 -> line 778
- *   +0x0024 -> line 779
- *   +0x0028 -> line 777
- *   +0x002c -> line 779
- *   +0x0034 -> line 780
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 759–768 */
-/* addr: 0x001654a0  size: 68 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 764
- *   +0x0004 -> line 759
- *   +0x000c -> line 763
- *   +0x0014 -> line 764
- *   +0x0018 -> line 766
- *   +0x0020 -> line 767
- *   +0x0024 -> line 765
- *   +0x0028 -> line 764
- *   +0x002c -> line 763
- *   +0x0030 -> line 767
- *   +0x0038 -> line 768
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 747–756 */
-/* addr: 0x001654f0  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 747
- *   +0x0004 -> line 754
- *   +0x0008 -> line 747
- *   +0x000c -> line 751
- *   +0x0014 -> line 752
- *   +0x001c -> line 755
- *   +0x0020 -> line 754
- *   +0x0024 -> line 755
- *   +0x002c -> line 756
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 735–744 */
-/* addr: 0x00165530  size: 48 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 735
- *   +0x0004 -> line 742
- *   +0x0008 -> line 735
- *   +0x000c -> line 743
- *   +0x0010 -> line 739
- *   +0x0014 -> line 742
- *   +0x0018 -> line 740
- *   +0x001c -> line 743
- *   +0x0024 -> line 744
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 723–732 */
-/* addr: 0x00165560  size: 76 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 723
- *   +0x0010 -> line 727
- *   +0x001c -> line 728
- *   +0x0024 -> line 730
- *   +0x0028 -> line 731
- *   +0x002c -> line 728
- *   +0x0030 -> line 730
- *   +0x0034 -> line 731
- *   +0x003c -> line 732
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 711–720 */
-/* addr: 0x001655b0  size: 72 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 711
- *   +0x000c -> line 715
- *   +0x0014 -> line 716
- *   +0x0020 -> line 718
- *   +0x0024 -> line 719
- *   +0x0028 -> line 716
- *   +0x002c -> line 718
- *   +0x0030 -> line 719
- *   +0x0038 -> line 720
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 708–708 */
-/* addr: 0x00165600  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 708
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 702–702 */
-/* addr: 0x00165610  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 702
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 696–696 */
-/* addr: 0x00165620  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 696
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 690–690 */
-/* addr: 0x00165630  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 690
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 684–684 */
-/* addr: 0x00165640  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 684
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 678–678 */
-/* addr: 0x00165650  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 678
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 672–672 */
-/* addr: 0x00165660  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 672
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 666–666 */
-/* addr: 0x00165670  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 666
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 
 void internalPS2glDrawRgbaPixels(int x, int y, int width, int height, unsigned int format, unsigned int type, void* pixels);
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 632–660 */
-/* addr: 0x00165680  size: 156 bytes */
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 111–120 */
+/* addr: 0x00167330  size: 344 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 632
- *   +0x0004 -> line 636
- *   +0x0008 -> line 632
- *   +0x0010 -> line 636
- *   +0x0028 -> line 639
- *   +0x0038 -> line 642
- *   +0x003c -> line 640
- *   +0x0044 -> line 639
- *   +0x004c -> line 642
- *   +0x0050 -> line 640
- *   +0x0058 -> line 639
- *   +0x005c -> line 640
- *   +0x0060 -> line 642
- *   +0x0080 -> line 657
- *   +0x0090 -> line 660
+ *   +0x0000 -> line 111
+ *   +0x0004 -> line 115
+ *   +0x0008 -> line 111
+ *   +0x000c -> line 116
+ *   +0x0010 -> line 111
+ *   +0x0014 -> line 113
+ *   +0x001c -> line 115
+ *   +0x0020 -> line 113
+ *   +0x0024 -> line 115
+ *   +0x002c -> line 113
+ *   +0x0030 -> line 115
+ *   +0x0034 -> line 113
+ *   +0x0038 -> line 115
+ *   +0x003c -> line 113
+ *   +0x0040 -> line 115
+ *   +0x0044 -> line 113
+ *   +0x0054 -> line 116
+ *   +0x0060 -> line 114
+ *   +0x0064 -> line 113
+ *   +0x0068 -> line 114
+ *   +0x006c -> line 115
+ *   +0x0070 -> line 113
+ *   +0x0078 -> line 114
+ *   +0x007c -> line 113
+ *   +0x0080 -> line 114
+ *   +0x0084 -> line 113
+ *   +0x0088 -> line 115
+ *   +0x008c -> line 113
+ *   +0x0090 -> line 115
+ *   +0x00b8 -> line 114
+ *   +0x00bc -> line 115
+ *   +0x00d0 -> line 116
+ *   +0x00d8 -> line 117
+ *   +0x00e0 -> line 118
+ *   +0x00e8 -> line 119
+ *   +0x0148 -> line 120
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 526–629 */
-/* addr: 0x00165720  size: 1160 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 526
- *   +0x0004 -> line 536
- *   +0x0008 -> line 526
- *   +0x000c -> line 529
- *   +0x0010 -> line 526
- *   +0x0014 -> line 527
- *   +0x0018 -> line 526
- *   +0x0024 -> line 527
- *   +0x0028 -> line 526
- *   +0x002c -> line 528
- *   +0x0030 -> line 526
- *   +0x0044 -> line 527
- *   +0x0048 -> line 526
- *   +0x004c -> line 527
- *   +0x0050 -> line 529
- *   +0x0054 -> line 527
- *   +0x0058 -> line 529
- *   +0x005c -> line 536
- *   +0x0060 -> line 539
- *   +0x0068 -> line 541
- *   +0x006c -> line 542
- *   +0x0070 -> line 543
- *   +0x0074 -> line 544
- *   +0x0078 -> line 546
- *   +0x0088 -> line 549
- *   +0x008c -> line 548
- *   +0x0090 -> line 549
- *   +0x0094 -> line 551
- *   +0x009c -> line 555
- *   +0x00a4 -> line 557
- *   +0x00a8 -> line 558
- *   +0x00ac -> line 559
- *   +0x00b0 -> line 561
- *   +0x00c0 -> line 563
- *   +0x00c8 -> line 565
- *   +0x00d0 -> line 575
- *   +0x00ec -> line 581
- *   +0x00f8 -> line 583
- *   +0x0100 -> line 585
- *   +0x010c -> line 587
- *   +0x0128 -> line 590
- *   +0x0244 -> line 591
- *   +0x024c -> line 592
- *   +0x0250 -> line 593
- *   +0x02a0 -> line 597
- *   +0x02a8 -> line 599
- *   +0x02b8 -> line 600
- *   +0x02c0 -> line 603
- *   +0x02e0 -> line 606
- *   +0x0404 -> line 607
- *   +0x040c -> line 609
- *   +0x045c -> line 629
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+void PS2glClearLastBits(void)
+{
+    unsigned int iOldMask;
+    g_gsContext.COLCLAMP.CLAMP = 1;
+    g_gsContext.ModFlgs.COLCLAMP_Modified = 1;
+    iOldMask = g_gsContext.FRAME_1.FBMSK;
+    g_gsContext.FRAME_1.FBMSK = 0x80808080;
+    g_gsContext.ModFlgs.FRAME_1_Modified = 1;
+    impPS2glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    GsUpdate();
+    impPS2glClear(0x4000);
+    g_gsContext.FRAME_1.FBMSK = iOldMask;
+    g_gsContext.ModFlgs.FRAME_1_Modified = 1;
+}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 123–454 */
 /* addr: 0x00165bb0  size: 6008 bytes */
@@ -3716,65 +2254,6 @@ void internalPS2glDrawRgbaPixels(int x, int y, int width, int height, unsigned i
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 111–120 */
-/* addr: 0x00167330  size: 344 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 111
- *   +0x0004 -> line 115
- *   +0x0008 -> line 111
- *   +0x000c -> line 116
- *   +0x0010 -> line 111
- *   +0x0014 -> line 113
- *   +0x001c -> line 115
- *   +0x0020 -> line 113
- *   +0x0024 -> line 115
- *   +0x002c -> line 113
- *   +0x0030 -> line 115
- *   +0x0034 -> line 113
- *   +0x0038 -> line 115
- *   +0x003c -> line 113
- *   +0x0040 -> line 115
- *   +0x0044 -> line 113
- *   +0x0054 -> line 116
- *   +0x0060 -> line 114
- *   +0x0064 -> line 113
- *   +0x0068 -> line 114
- *   +0x006c -> line 115
- *   +0x0070 -> line 113
- *   +0x0078 -> line 114
- *   +0x007c -> line 113
- *   +0x0080 -> line 114
- *   +0x0084 -> line 113
- *   +0x0088 -> line 115
- *   +0x008c -> line 113
- *   +0x0090 -> line 115
- *   +0x00b8 -> line 114
- *   +0x00bc -> line 115
- *   +0x00d0 -> line 116
- *   +0x00d8 -> line 117
- *   +0x00e0 -> line 118
- *   +0x00e8 -> line 119
- *   +0x0148 -> line 120
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-void PS2glClearLastBits(void)
-{
-    unsigned int iOldMask;
-    g_gsContext.COLCLAMP.CLAMP = 1;
-    g_gsContext.ModFlgs.COLCLAMP_Modified = 1;
-    iOldMask = g_gsContext.FRAME_1.FBMSK;
-    g_gsContext.FRAME_1.FBMSK = 0x80808080;
-    g_gsContext.ModFlgs.FRAME_1_Modified = 1;
-    impPS2glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    GsUpdate();
-    impPS2glClear(0x4000);
-    g_gsContext.FRAME_1.FBMSK = iOldMask;
-    g_gsContext.ModFlgs.FRAME_1_Modified = 1;
-}
-
 void impPS2glDrawBuffer(unsigned int mode)
 {
     float iOldA;
@@ -3797,6 +2276,65 @@ void impPS2glDrawBuffer(unsigned int mode)
 
 /* The debug record lists six parameters, but the retail body reads pixels from t2 (the seventh EABI
  * argument register) and the caller passes type in t1, so type is restored here as an unused parameter. */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 526–629 */
+/* addr: 0x00165720  size: 1160 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 526
+ *   +0x0004 -> line 536
+ *   +0x0008 -> line 526
+ *   +0x000c -> line 529
+ *   +0x0010 -> line 526
+ *   +0x0014 -> line 527
+ *   +0x0018 -> line 526
+ *   +0x0024 -> line 527
+ *   +0x0028 -> line 526
+ *   +0x002c -> line 528
+ *   +0x0030 -> line 526
+ *   +0x0044 -> line 527
+ *   +0x0048 -> line 526
+ *   +0x004c -> line 527
+ *   +0x0050 -> line 529
+ *   +0x0054 -> line 527
+ *   +0x0058 -> line 529
+ *   +0x005c -> line 536
+ *   +0x0060 -> line 539
+ *   +0x0068 -> line 541
+ *   +0x006c -> line 542
+ *   +0x0070 -> line 543
+ *   +0x0074 -> line 544
+ *   +0x0078 -> line 546
+ *   +0x0088 -> line 549
+ *   +0x008c -> line 548
+ *   +0x0090 -> line 549
+ *   +0x0094 -> line 551
+ *   +0x009c -> line 555
+ *   +0x00a4 -> line 557
+ *   +0x00a8 -> line 558
+ *   +0x00ac -> line 559
+ *   +0x00b0 -> line 561
+ *   +0x00c0 -> line 563
+ *   +0x00c8 -> line 565
+ *   +0x00d0 -> line 575
+ *   +0x00ec -> line 581
+ *   +0x00f8 -> line 583
+ *   +0x0100 -> line 585
+ *   +0x010c -> line 587
+ *   +0x0128 -> line 590
+ *   +0x0244 -> line 591
+ *   +0x024c -> line 592
+ *   +0x0250 -> line 593
+ *   +0x02a0 -> line 597
+ *   +0x02a8 -> line 599
+ *   +0x02b8 -> line 600
+ *   +0x02c0 -> line 603
+ *   +0x02e0 -> line 606
+ *   +0x0404 -> line 607
+ *   +0x040c -> line 609
+ *   +0x045c -> line 629
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void internalPS2glDrawRgbaPixels(int x, int y, int width, int height, unsigned int format, unsigned int type, void* pixels)
 {
     unsigned char* src;
@@ -3813,6 +2351,27 @@ void internalPS2glDrawRgbaPixels(int x, int y, int width, int height, unsigned i
     /* TODO: decompile from asm/... */
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 632–660 */
+/* addr: 0x00165680  size: 156 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 632
+ *   +0x0004 -> line 636
+ *   +0x0008 -> line 632
+ *   +0x0010 -> line 636
+ *   +0x0028 -> line 639
+ *   +0x0038 -> line 642
+ *   +0x003c -> line 640
+ *   +0x0044 -> line 639
+ *   +0x004c -> line 642
+ *   +0x0050 -> line 640
+ *   +0x0058 -> line 639
+ *   +0x005c -> line 640
+ *   +0x0060 -> line 642
+ *   +0x0080 -> line 657
+ *   +0x0090 -> line 660
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glDrawPixels(int width, int height, unsigned int format, unsigned int type, void* pixels)
 {
     int y;
@@ -3843,46 +2402,117 @@ void impPS2glDrawPixels(int width, int height, unsigned int format, unsigned int
     }
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 666–666 */
+/* addr: 0x00165670  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 666
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glPixelMapfv(void)
 {
     /* TODO: decompile from asm/... */
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 672–672 */
+/* addr: 0x00165660  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 672
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glPixelMapuiv(void)
 {
     /* TODO: decompile from asm/... */
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 678–678 */
+/* addr: 0x00165650  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 678
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glPixelMapusv(void)
 {
     /* TODO: decompile from asm/... */
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 684–684 */
+/* addr: 0x00165640  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 684
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glPixelStoref(void)
 {
     /* TODO: decompile from asm/... */
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 690–690 */
+/* addr: 0x00165630  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 690
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glPixelStorei(void)
 {
     /* TODO: decompile from asm/... */
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 696–696 */
+/* addr: 0x00165620  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 696
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glPixelTransferf(void)
 {
     /* TODO: decompile from asm/... */
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 702–702 */
+/* addr: 0x00165610  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 702
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glPixelTransferi(void)
 {
     /* TODO: decompile from asm/... */
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 708–708 */
+/* addr: 0x00165600  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 708
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glPixelZoom(void)
 {
     /* TODO: decompile from asm/... */
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 711–720 */
+/* addr: 0x001655b0  size: 72 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 711
+ *   +0x000c -> line 715
+ *   +0x0014 -> line 716
+ *   +0x0020 -> line 718
+ *   +0x0024 -> line 719
+ *   +0x0028 -> line 716
+ *   +0x002c -> line 718
+ *   +0x0030 -> line 719
+ *   +0x0038 -> line 720
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glRasterPos2d(double x, double y)
 {
     float v1[4];
@@ -3893,6 +2523,21 @@ void impPS2glRasterPos2d(double x, double y)
     impPS2glRasterPos4fv(v1);
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 723–732 */
+/* addr: 0x00165560  size: 76 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 723
+ *   +0x0010 -> line 727
+ *   +0x001c -> line 728
+ *   +0x0024 -> line 730
+ *   +0x0028 -> line 731
+ *   +0x002c -> line 728
+ *   +0x0030 -> line 730
+ *   +0x0034 -> line 731
+ *   +0x003c -> line 732
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glRasterPos2dv(double* v)
 {
     float v1[4];
@@ -3903,6 +2548,21 @@ void impPS2glRasterPos2dv(double* v)
     impPS2glRasterPos4fv(v1);
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 735–744 */
+/* addr: 0x00165530  size: 48 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 735
+ *   +0x0004 -> line 742
+ *   +0x0008 -> line 735
+ *   +0x000c -> line 743
+ *   +0x0010 -> line 739
+ *   +0x0014 -> line 742
+ *   +0x0018 -> line 740
+ *   +0x001c -> line 743
+ *   +0x0024 -> line 744
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glRasterPos2f(float x, float y)
 {
     float v1[4];
@@ -3913,6 +2573,21 @@ void impPS2glRasterPos2f(float x, float y)
     impPS2glRasterPos4fv(v1);
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 747–756 */
+/* addr: 0x001654f0  size: 56 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 747
+ *   +0x0004 -> line 754
+ *   +0x0008 -> line 747
+ *   +0x000c -> line 751
+ *   +0x0014 -> line 752
+ *   +0x001c -> line 755
+ *   +0x0020 -> line 754
+ *   +0x0024 -> line 755
+ *   +0x002c -> line 756
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glRasterPos2fv(float* v)
 {
     float v1[4];
@@ -3923,6 +2598,23 @@ void impPS2glRasterPos2fv(float* v)
     impPS2glRasterPos4fv(v1);
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 759–768 */
+/* addr: 0x001654a0  size: 68 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 764
+ *   +0x0004 -> line 759
+ *   +0x000c -> line 763
+ *   +0x0014 -> line 764
+ *   +0x0018 -> line 766
+ *   +0x0020 -> line 767
+ *   +0x0024 -> line 765
+ *   +0x0028 -> line 764
+ *   +0x002c -> line 763
+ *   +0x0030 -> line 767
+ *   +0x0038 -> line 768
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glRasterPos2i(int x, int y)
 {
     float v1[4];
@@ -3933,6 +2625,22 @@ void impPS2glRasterPos2i(int x, int y)
     impPS2glRasterPos4fv(v1);
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 771–780 */
+/* addr: 0x00165460  size: 64 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 771
+ *   +0x0004 -> line 778
+ *   +0x0008 -> line 771
+ *   +0x000c -> line 775
+ *   +0x0018 -> line 776
+ *   +0x0020 -> line 778
+ *   +0x0024 -> line 779
+ *   +0x0028 -> line 777
+ *   +0x002c -> line 779
+ *   +0x0034 -> line 780
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glRasterPos2iv(int* v)
 {
     float v1[4];
@@ -3943,6 +2651,23 @@ void impPS2glRasterPos2iv(int* v)
     impPS2glRasterPos4fv(v1);
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 783–792 */
+/* addr: 0x00165410  size: 68 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 788
+ *   +0x0004 -> line 783
+ *   +0x000c -> line 787
+ *   +0x0014 -> line 788
+ *   +0x0018 -> line 790
+ *   +0x0020 -> line 791
+ *   +0x0024 -> line 789
+ *   +0x0028 -> line 788
+ *   +0x002c -> line 787
+ *   +0x0030 -> line 791
+ *   +0x0038 -> line 792
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glRasterPos2s(short x, short y)
 {
     float v1[4];
@@ -3953,6 +2678,23 @@ void impPS2glRasterPos2s(short x, short y)
     impPS2glRasterPos4fv(v1);
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 795–804 */
+/* addr: 0x001653c0  size: 76 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 795
+ *   +0x0004 -> line 802
+ *   +0x0008 -> line 795
+ *   +0x000c -> line 799
+ *   +0x0020 -> line 800
+ *   +0x0028 -> line 802
+ *   +0x002c -> line 803
+ *   +0x0030 -> line 801
+ *   +0x0034 -> line 800
+ *   +0x0038 -> line 803
+ *   +0x0040 -> line 804
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glRasterPos2sv(short* v)
 {
     float v1[4];
@@ -3963,6 +2705,21 @@ void impPS2glRasterPos2sv(short* v)
     impPS2glRasterPos4fv(v1);
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 807–816 */
+/* addr: 0x00165360  size: 92 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 807
+ *   +0x0014 -> line 811
+ *   +0x001c -> line 812
+ *   +0x0028 -> line 813
+ *   +0x0034 -> line 814
+ *   +0x0038 -> line 815
+ *   +0x003c -> line 813
+ *   +0x0040 -> line 815
+ *   +0x0048 -> line 816
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glRasterPos3d(double x, double y, double z)
 {
     float v1[4];
@@ -3973,6 +2730,21 @@ void impPS2glRasterPos3d(double x, double y, double z)
     impPS2glRasterPos4fv(v1);
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 819–828 */
+/* addr: 0x00165300  size: 84 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 819
+ *   +0x0010 -> line 823
+ *   +0x001c -> line 824
+ *   +0x0028 -> line 825
+ *   +0x0030 -> line 826
+ *   +0x0034 -> line 827
+ *   +0x0038 -> line 825
+ *   +0x003c -> line 827
+ *   +0x0044 -> line 828
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glRasterPos3dv(double* v)
 {
     float v1[4];
@@ -3983,6 +2755,21 @@ void impPS2glRasterPos3dv(double* v)
     impPS2glRasterPos4fv(v1);
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 831–840 */
+/* addr: 0x001652d0  size: 48 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 831
+ *   +0x0004 -> line 838
+ *   +0x0008 -> line 831
+ *   +0x000c -> line 839
+ *   +0x0010 -> line 835
+ *   +0x0014 -> line 838
+ *   +0x0018 -> line 836
+ *   +0x001c -> line 839
+ *   +0x0024 -> line 840
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glRasterPos3f(float x, float y, float z)
 {
     float v1[4];
@@ -3993,6 +2780,20 @@ void impPS2glRasterPos3f(float x, float y, float z)
     impPS2glRasterPos4fv(v1);
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 843–852 */
+/* addr: 0x00165290  size: 60 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 843
+ *   +0x0004 -> line 850
+ *   +0x0008 -> line 843
+ *   +0x000c -> line 847
+ *   +0x0014 -> line 848
+ *   +0x001c -> line 849
+ *   +0x0024 -> line 851
+ *   +0x0030 -> line 852
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glRasterPos3fv(float* v)
 {
     float v1[4];
@@ -4003,6 +2804,26 @@ void impPS2glRasterPos3fv(float* v)
     impPS2glRasterPos4fv(v1);
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 855–864 */
+/* addr: 0x00165240  size: 76 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 861
+ *   +0x0004 -> line 855
+ *   +0x0008 -> line 860
+ *   +0x000c -> line 855
+ *   +0x0010 -> line 861
+ *   +0x0014 -> line 862
+ *   +0x001c -> line 861
+ *   +0x0020 -> line 859
+ *   +0x0028 -> line 860
+ *   +0x002c -> line 863
+ *   +0x0030 -> line 859
+ *   +0x0034 -> line 860
+ *   +0x0038 -> line 863
+ *   +0x0040 -> line 864
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glRasterPos3i(int x, int y, int z)
 {
     float v1[4];
@@ -4013,6 +2834,21 @@ void impPS2glRasterPos3i(int x, int y, int z)
     impPS2glRasterPos4fv(v1);
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 867–876 */
+/* addr: 0x001651f0  size: 72 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 867
+ *   +0x0004 -> line 874
+ *   +0x0008 -> line 867
+ *   +0x000c -> line 871
+ *   +0x0018 -> line 872
+ *   +0x0024 -> line 873
+ *   +0x002c -> line 874
+ *   +0x0030 -> line 875
+ *   +0x003c -> line 876
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glRasterPos3iv(int* v)
 {
     float v1[4];
@@ -4023,6 +2859,26 @@ void impPS2glRasterPos3iv(int* v)
     impPS2glRasterPos4fv(v1);
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 879–888 */
+/* addr: 0x001651a0  size: 76 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 885
+ *   +0x0004 -> line 879
+ *   +0x0008 -> line 884
+ *   +0x000c -> line 879
+ *   +0x0010 -> line 885
+ *   +0x0014 -> line 886
+ *   +0x001c -> line 885
+ *   +0x0020 -> line 883
+ *   +0x0028 -> line 884
+ *   +0x002c -> line 887
+ *   +0x0030 -> line 883
+ *   +0x0034 -> line 884
+ *   +0x0038 -> line 887
+ *   +0x0040 -> line 888
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glRasterPos3s(short x, short y, short z)
 {
     float v1[4];
@@ -4033,6 +2889,23 @@ void impPS2glRasterPos3s(short x, short y, short z)
     impPS2glRasterPos4fv(v1);
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 891–900 */
+/* addr: 0x00165140  size: 92 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 891
+ *   +0x0004 -> line 898
+ *   +0x0008 -> line 891
+ *   +0x000c -> line 895
+ *   +0x0020 -> line 896
+ *   +0x0034 -> line 897
+ *   +0x003c -> line 898
+ *   +0x0040 -> line 899
+ *   +0x0044 -> line 897
+ *   +0x0048 -> line 899
+ *   +0x0050 -> line 900
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glRasterPos3sv(short* v)
 {
     float v1[4];
@@ -4043,6 +2916,19 @@ void impPS2glRasterPos3sv(short* v)
     impPS2glRasterPos4fv(v1);
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 903–912 */
+/* addr: 0x001650d0  size: 108 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 903
+ *   +0x001c -> line 907
+ *   +0x0024 -> line 908
+ *   +0x0030 -> line 909
+ *   +0x003c -> line 910
+ *   +0x004c -> line 911
+ *   +0x0054 -> line 912
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glRasterPos4d(double x, double y, double z, double w)
 {
     float v1[4];
@@ -4053,6 +2939,19 @@ void impPS2glRasterPos4d(double x, double y, double z, double w)
     impPS2glRasterPos4fv(v1);
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 915–924 */
+/* addr: 0x00165070  size: 88 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 915
+ *   +0x0010 -> line 919
+ *   +0x001c -> line 920
+ *   +0x0028 -> line 921
+ *   +0x0034 -> line 922
+ *   +0x0040 -> line 923
+ *   +0x0048 -> line 924
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glRasterPos4dv(double* v)
 {
     float v1[4];
@@ -4063,6 +2962,19 @@ void impPS2glRasterPos4dv(double* v)
     impPS2glRasterPos4fv(v1);
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 927–936 */
+/* addr: 0x00165040  size: 44 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 927
+ *   +0x0008 -> line 935
+ *   +0x000c -> line 931
+ *   +0x0010 -> line 932
+ *   +0x0014 -> line 933
+ *   +0x0018 -> line 935
+ *   +0x0020 -> line 936
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glRasterPos4f(float x, float y, float z, float w)
 {
     float v1[4];
@@ -4073,6 +2985,78 @@ void impPS2glRasterPos4f(float x, float y, float z, float w)
     impPS2glRasterPos4fv(v1);
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 939–1021 */
+/* addr: 0x00164d90  size: 688 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 939
+ *   +0x0004 -> line 950
+ *   +0x0008 -> line 939
+ *   +0x000c -> line 950
+ *   +0x0010 -> line 939
+ *   +0x0014 -> line 950
+ *   +0x0018 -> line 939
+ *   +0x0020 -> line 945
+ *   +0x0028 -> line 946
+ *   +0x0030 -> line 947
+ *   +0x0038 -> line 948
+ *   +0x0040 -> line 950
+ *   +0x0048 -> line 953
+ *   +0x00c0 -> line 956
+ *   +0x00c8 -> line 959
+ *   +0x00cc -> line 963
+ *   +0x00d0 -> line 959
+ *   +0x00dc -> line 963
+ *   +0x00e8 -> line 959
+ *   +0x00fc -> line 963
+ *   +0x0104 -> line 966
+ *   +0x0188 -> line 968
+ *   +0x018c -> line 969
+ *   +0x0194 -> line 992
+ *   +0x019c -> line 1002
+ *   +0x01a0 -> line 992
+ *   +0x01a4 -> line 995
+ *   +0x01a8 -> line 997
+ *   +0x01ac -> line 994
+ *   +0x01b0 -> line 998
+ *   +0x01b4 -> line 994
+ *   +0x01b8 -> line 999
+ *   +0x01bc -> line 993
+ *   +0x01c0 -> line 999
+ *   +0x01c4 -> line 993
+ *   +0x01c8 -> line 1000
+ *   +0x01cc -> line 992
+ *   +0x01d0 -> line 993
+ *   +0x01d4 -> line 992
+ *   +0x01d8 -> line 1002
+ *   +0x01e0 -> line 1003
+ *   +0x01ec -> line 1006
+ *   +0x01f0 -> line 1003
+ *   +0x01f4 -> line 1006
+ *   +0x01fc -> line 1005
+ *   +0x0204 -> line 1004
+ *   +0x020c -> line 1003
+ *   +0x0210 -> line 1004
+ *   +0x0214 -> line 1003
+ *   +0x0218 -> line 1006
+ *   +0x0220 -> line 1008
+ *   +0x0230 -> line 1010
+ *   +0x023c -> line 1019
+ *   +0x0240 -> line 1015
+ *   +0x024c -> line 1011
+ *   +0x0250 -> line 1010
+ *   +0x0254 -> line 1019
+ *   +0x025c -> line 1018
+ *   +0x0260 -> line 1017
+ *   +0x0264 -> line 1015
+ *   +0x026c -> line 1017
+ *   +0x0270 -> line 1018
+ *   +0x0274 -> line 1011
+ *   +0x0280 -> line 1015
+ *   +0x028c -> line 1017
+ *   +0x0298 -> line 1021
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glRasterPos4fv(float* v1)
 {
     float mViewScreen[4][4];
@@ -4085,6 +3069,26 @@ void impPS2glRasterPos4fv(float* v1)
     /* TODO: decompile from asm/... */
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1024–1033 */
+/* addr: 0x00164d30  size: 84 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1030
+ *   +0x0004 -> line 1024
+ *   +0x0008 -> line 1029
+ *   +0x000c -> line 1024
+ *   +0x0010 -> line 1030
+ *   +0x0018 -> line 1029
+ *   +0x001c -> line 1031
+ *   +0x0024 -> line 1029
+ *   +0x0028 -> line 1031
+ *   +0x002c -> line 1028
+ *   +0x0034 -> line 1031
+ *   +0x0038 -> line 1028
+ *   +0x003c -> line 1032
+ *   +0x0048 -> line 1033
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glRasterPos4i(int x, int y, int z, int w)
 {
     float v1[4];
@@ -4095,6 +3099,19 @@ void impPS2glRasterPos4i(int x, int y, int z, int w)
     impPS2glRasterPos4fv(v1);
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1036–1045 */
+/* addr: 0x00164ce0  size: 76 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1036
+ *   +0x0008 -> line 1040
+ *   +0x0014 -> line 1041
+ *   +0x0020 -> line 1042
+ *   +0x002c -> line 1043
+ *   +0x0034 -> line 1044
+ *   +0x0040 -> line 1045
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glRasterPos4iv(int* v)
 {
     float v1[4];
@@ -4105,6 +3122,26 @@ void impPS2glRasterPos4iv(int* v)
     impPS2glRasterPos4fv(v1);
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1048–1057 */
+/* addr: 0x00164c80  size: 84 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1054
+ *   +0x0004 -> line 1048
+ *   +0x0008 -> line 1053
+ *   +0x000c -> line 1048
+ *   +0x0010 -> line 1054
+ *   +0x0018 -> line 1053
+ *   +0x001c -> line 1055
+ *   +0x0024 -> line 1053
+ *   +0x0028 -> line 1055
+ *   +0x002c -> line 1052
+ *   +0x0034 -> line 1055
+ *   +0x0038 -> line 1052
+ *   +0x003c -> line 1056
+ *   +0x0048 -> line 1057
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glRasterPos4s(short x, short y, short z, short w)
 {
     float v1[4];
@@ -4115,6 +3152,21 @@ void impPS2glRasterPos4s(short x, short y, short z, short w)
     impPS2glRasterPos4fv(v1);
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1060–1069 */
+/* addr: 0x00164c10  size: 104 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1060
+ *   +0x0008 -> line 1064
+ *   +0x001c -> line 1065
+ *   +0x0030 -> line 1066
+ *   +0x0044 -> line 1067
+ *   +0x004c -> line 1068
+ *   +0x0050 -> line 1067
+ *   +0x0054 -> line 1068
+ *   +0x005c -> line 1069
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glRasterPos4sv(short* v)
 {
     float v1[4];
@@ -4125,6 +3177,14 @@ void impPS2glRasterPos4sv(short* v)
     impPS2glRasterPos4fv(v1);
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1144–1145 */
+/* addr: 0x00164c00  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1144
+ *   +0x0004 -> line 1145
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glReadBuffer(unsigned int mode)
 {
     g_PS2glContext.eBufferReadMode = mode;
@@ -4132,6 +3192,63 @@ void impPS2glReadBuffer(unsigned int mode)
 
 /* As with internalPS2glDrawRgbaPixels, the debug record drops the unused type parameter: the retail body
  * reads pixels from t2 (the seventh EABI argument register). */
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1148–1251 */
+/* addr: 0x00164770  size: 1168 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1148
+ *   +0x0004 -> line 1151
+ *   +0x0008 -> line 1148
+ *   +0x000c -> line 1150
+ *   +0x0010 -> line 1148
+ *   +0x0020 -> line 1149
+ *   +0x0024 -> line 1148
+ *   +0x0028 -> line 1149
+ *   +0x002c -> line 1148
+ *   +0x0040 -> line 1158
+ *   +0x0044 -> line 1148
+ *   +0x0048 -> line 1149
+ *   +0x004c -> line 1151
+ *   +0x0050 -> line 1149
+ *   +0x0058 -> line 1151
+ *   +0x0064 -> line 1158
+ *   +0x0068 -> line 1161
+ *   +0x0070 -> line 1163
+ *   +0x0074 -> line 1164
+ *   +0x0078 -> line 1165
+ *   +0x007c -> line 1166
+ *   +0x0080 -> line 1168
+ *   +0x0090 -> line 1171
+ *   +0x0094 -> line 1170
+ *   +0x0098 -> line 1171
+ *   +0x009c -> line 1173
+ *   +0x00a4 -> line 1177
+ *   +0x00ac -> line 1179
+ *   +0x00b0 -> line 1180
+ *   +0x00b4 -> line 1181
+ *   +0x00b8 -> line 1183
+ *   +0x00c8 -> line 1185
+ *   +0x00d0 -> line 1187
+ *   +0x00d8 -> line 1198
+ *   +0x00f4 -> line 1204
+ *   +0x0100 -> line 1206
+ *   +0x0108 -> line 1208
+ *   +0x0114 -> line 1210
+ *   +0x0130 -> line 1213
+ *   +0x024c -> line 1214
+ *   +0x0254 -> line 1215
+ *   +0x0258 -> line 1216
+ *   +0x02a8 -> line 1219
+ *   +0x02b0 -> line 1221
+ *   +0x02c0 -> line 1222
+ *   +0x02c8 -> line 1225
+ *   +0x02e8 -> line 1228
+ *   +0x040c -> line 1229
+ *   +0x0414 -> line 1231
+ *   +0x0464 -> line 1251
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void internalReadFastRgbaPixels(int x, int y, int width, int height, unsigned int format, unsigned int type, void* pixels)
 {
     unsigned char* src;
@@ -4148,6 +3265,17 @@ void internalReadFastRgbaPixels(int x, int y, int width, int height, unsigned in
     /* TODO: decompile from asm/... */
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1258–1280 */
+/* addr: 0x00164720  size: 68 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1260
+ *   +0x0004 -> line 1258
+ *   +0x0008 -> line 1260
+ *   +0x0030 -> line 1275
+ *   +0x0038 -> line 1280
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glReadPixels(int x, int y, int width, int height, unsigned int format, unsigned int type, void* pixels)
 {
     switch (format)
@@ -4169,6 +3297,308 @@ void impPS2glReadPixels(int x, int y, int width, int height, unsigned int format
     }
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1283–1427 */
+/* addr: 0x001638c0  size: 3680 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1283
+ *   +0x0004 -> line 1288
+ *   +0x0008 -> line 1283
+ *   +0x001c -> line 1288
+ *   +0x0028 -> line 1290
+ *   +0x0078 -> line 1294
+ *   +0x007c -> line 1295
+ *   +0x0080 -> line 1294
+ *   +0x0084 -> line 1296
+ *   +0x008c -> line 1297
+ *   +0x0090 -> line 1296
+ *   +0x0094 -> line 1299
+ *   +0x0098 -> line 1300
+ *   +0x00a0 -> line 1296
+ *   +0x00a4 -> line 1294
+ *   +0x00a8 -> line 1296
+ *   +0x00ac -> line 1295
+ *   +0x00b0 -> line 1296
+ *   +0x00b4 -> line 1297
+ *   +0x00b8 -> line 1295
+ *   +0x00bc -> line 1301
+ *   +0x00c4 -> line 1296
+ *   +0x00e0 -> line 1302
+ *   +0x00e8 -> line 1297
+ *   +0x00ec -> line 1296
+ *   +0x00f0 -> line 1297
+ *   +0x00f4 -> line 1296
+ *   +0x00fc -> line 1297
+ *   +0x0100 -> line 1296
+ *   +0x0104 -> line 1297
+ *   +0x0108 -> line 1296
+ *   +0x010c -> line 1303
+ *   +0x0110 -> line 1296
+ *   +0x0114 -> line 1297
+ *   +0x0118 -> line 1299
+ *   +0x011c -> line 1297
+ *   +0x0120 -> line 1299
+ *   +0x0124 -> line 1297
+ *   +0x0138 -> line 1304
+ *   +0x013c -> line 1297
+ *   +0x0140 -> line 1300
+ *   +0x0144 -> line 1299
+ *   +0x0148 -> line 1304
+ *   +0x014c -> line 1303
+ *   +0x0150 -> line 1306
+ *   +0x0154 -> line 1299
+ *   +0x0160 -> line 1304
+ *   +0x0164 -> line 1300
+ *   +0x017c -> line 1306
+ *   +0x0180 -> line 1300
+ *   +0x0184 -> line 1306
+ *   +0x0188 -> line 1300
+ *   +0x019c -> line 1301
+ *   +0x01cc -> line 1302
+ *   +0x01fc -> line 1303
+ *   +0x022c -> line 1304
+ *   +0x0240 -> line 1306
+ *   +0x0284 -> line 1308
+ *   +0x0290 -> line 1306
+ *   +0x02b4 -> line 1308
+ *   +0x02bc -> line 1309
+ *   +0x02c0 -> line 1310
+ *   +0x02d4 -> line 1311
+ *   +0x02e8 -> line 1312
+ *   +0x02ec -> line 1311
+ *   +0x0300 -> line 1312
+ *   +0x0374 -> line 1316
+ *   +0x0388 -> line 1318
+ *   +0x03d0 -> line 1320
+ *   +0x03d4 -> line 1318
+ *   +0x03d8 -> line 1320
+ *   +0x03dc -> line 1318
+ *   +0x03e0 -> line 1322
+ *   +0x03e4 -> line 1319
+ *   +0x03e8 -> line 1322
+ *   +0x03ec -> line 1323
+ *   +0x03f4 -> line 1318
+ *   +0x03f8 -> line 1319
+ *   +0x03fc -> line 1318
+ *   +0x0400 -> line 1319
+ *   +0x0408 -> line 1318
+ *   +0x040c -> line 1319
+ *   +0x0410 -> line 1318
+ *   +0x0418 -> line 1319
+ *   +0x041c -> line 1318
+ *   +0x0420 -> line 1319
+ *   +0x0424 -> line 1318
+ *   +0x042c -> line 1319
+ *   +0x0448 -> line 1328
+ *   +0x0450 -> line 1329
+ *   +0x0458 -> line 1335
+ *   +0x045c -> line 1331
+ *   +0x0460 -> line 1333
+ *   +0x0464 -> line 1337
+ *   +0x0468 -> line 1332
+ *   +0x0474 -> line 1335
+ *   +0x047c -> line 1337
+ *   +0x0480 -> line 1332
+ *   +0x0488 -> line 1333
+ *   +0x048c -> line 1332
+ *   +0x0490 -> line 1331
+ *   +0x0498 -> line 1332
+ *   +0x04b4 -> line 1333
+ *   +0x04b8 -> line 1332
+ *   +0x04bc -> line 1333
+ *   +0x04c0 -> line 1332
+ *   +0x04c8 -> line 1333
+ *   +0x04cc -> line 1332
+ *   +0x04d0 -> line 1333
+ *   +0x04d4 -> line 1332
+ *   +0x04dc -> line 1333
+ *   +0x04fc -> line 1335
+ *   +0x0508 -> line 1337
+ *   +0x0510 -> line 1339
+ *   +0x0524 -> line 1340
+ *   +0x052c -> line 1339
+ *   +0x0554 -> line 1340
+ *   +0x0580 -> line 1341
+ *   +0x0588 -> line 1344
+ *   +0x058c -> line 1345
+ *   +0x0590 -> line 1344
+ *   +0x0598 -> line 1345
+ *   +0x059c -> line 1344
+ *   +0x05a4 -> line 1345
+ *   +0x05a8 -> line 1346
+ *   +0x05ac -> line 1344
+ *   +0x05d4 -> line 1345
+ *   +0x0604 -> line 1348
+ *   +0x0608 -> line 1350
+ *   +0x060c -> line 1348
+ *   +0x0620 -> line 1349
+ *   +0x0628 -> line 1348
+ *   +0x0630 -> line 1351
+ *   +0x0638 -> line 1350
+ *   +0x0640 -> line 1348
+ *   +0x0660 -> line 1349
+ *   +0x0690 -> line 1350
+ *   +0x06a4 -> line 1351
+ *   +0x0708 -> line 1355
+ *   +0x071c -> line 1357
+ *   +0x0758 -> line 1358
+ *   +0x075c -> line 1357
+ *   +0x0764 -> line 1358
+ *   +0x0768 -> line 1357
+ *   +0x0778 -> line 1358
+ *   +0x0780 -> line 1357
+ *   +0x0784 -> line 1358
+ *   +0x0788 -> line 1357
+ *   +0x0790 -> line 1358
+ *   +0x0794 -> line 1357
+ *   +0x0798 -> line 1358
+ *   +0x079c -> line 1357
+ *   +0x07a4 -> line 1358
+ *   +0x07c0 -> line 1359
+ *   +0x07c8 -> line 1360
+ *   +0x07d0 -> line 1366
+ *   +0x07d4 -> line 1362
+ *   +0x07d8 -> line 1364
+ *   +0x07dc -> line 1363
+ *   +0x07e8 -> line 1366
+ *   +0x07f0 -> line 1367
+ *   +0x07f4 -> line 1363
+ *   +0x07f8 -> line 1368
+ *   +0x07fc -> line 1363
+ *   +0x0800 -> line 1364
+ *   +0x0804 -> line 1363
+ *   +0x0808 -> line 1362
+ *   +0x0810 -> line 1368
+ *   +0x0814 -> line 1363
+ *   +0x0830 -> line 1369
+ *   +0x0838 -> line 1364
+ *   +0x083c -> line 1363
+ *   +0x0840 -> line 1364
+ *   +0x0844 -> line 1363
+ *   +0x084c -> line 1364
+ *   +0x0850 -> line 1363
+ *   +0x0854 -> line 1364
+ *   +0x0858 -> line 1363
+ *   +0x085c -> line 1371
+ *   +0x0860 -> line 1363
+ *   +0x0864 -> line 1371
+ *   +0x0868 -> line 1364
+ *   +0x086c -> line 1370
+ *   +0x0870 -> line 1364
+ *   +0x0874 -> line 1371
+ *   +0x0878 -> line 1370
+ *   +0x087c -> line 1371
+ *   +0x0880 -> line 1364
+ *   +0x0894 -> line 1367
+ *   +0x0898 -> line 1364
+ *   +0x089c -> line 1366
+ *   +0x08a0 -> line 1367
+ *   +0x08a4 -> line 1366
+ *   +0x08b0 -> line 1371
+ *   +0x08b4 -> line 1367
+ *   +0x08c0 -> line 1373
+ *   +0x08c8 -> line 1371
+ *   +0x08d0 -> line 1367
+ *   +0x08f0 -> line 1368
+ *   +0x0920 -> line 1369
+ *   +0x0950 -> line 1370
+ *   +0x0980 -> line 1371
+ *   +0x0994 -> line 1373
+ *   +0x09f8 -> line 1377
+ *   +0x0a0c -> line 1379
+ *   +0x0a48 -> line 1380
+ *   +0x0a4c -> line 1379
+ *   +0x0a54 -> line 1380
+ *   +0x0a58 -> line 1379
+ *   +0x0a68 -> line 1380
+ *   +0x0a70 -> line 1379
+ *   +0x0a74 -> line 1380
+ *   +0x0a78 -> line 1379
+ *   +0x0a80 -> line 1380
+ *   +0x0a84 -> line 1379
+ *   +0x0a88 -> line 1380
+ *   +0x0a8c -> line 1379
+ *   +0x0a94 -> line 1380
+ *   +0x0ab0 -> line 1381
+ *   +0x0ab8 -> line 1382
+ *   +0x0ac0 -> line 1384
+ *   +0x0ad0 -> line 1385
+ *   +0x0b1c -> line 1386
+ *   +0x0b24 -> line 1388
+ *   +0x0b28 -> line 1387
+ *   +0x0b2c -> line 1388
+ *   +0x0b30 -> line 1387
+ *   +0x0b34 -> line 1388
+ *   +0x0b38 -> line 1390
+ *   +0x0b3c -> line 1388
+ *   +0x0b48 -> line 1390
+ *   +0x0b4c -> line 1387
+ *   +0x0b50 -> line 1388
+ *   +0x0b5c -> line 1390
+ *   +0x0b60 -> line 1388
+ *   +0x0b8c -> line 1390
+ *   +0x0b94 -> line 1391
+ *   +0x0b98 -> line 1392
+ *   +0x0bac -> line 1393
+ *   +0x0bd0 -> line 1394
+ *   +0x0bd8 -> line 1393
+ *   +0x0bdc -> line 1394
+ *   +0x0c40 -> line 1405
+ *   +0x0c44 -> line 1397
+ *   +0x0c48 -> line 1405
+ *   +0x0c50 -> line 1397
+ *   +0x0c58 -> line 1399
+ *   +0x0c60 -> line 1400
+ *   +0x0c64 -> line 1405
+ *   +0x0c6c -> line 1406
+ *   +0x0cbc -> line 1407
+ *   +0x0cc4 -> line 1408
+ *   +0x0ccc -> line 1416
+ *   +0x0cd0 -> line 1413
+ *   +0x0cd4 -> line 1415
+ *   +0x0cd8 -> line 1417
+ *   +0x0cdc -> line 1414
+ *   +0x0ce8 -> line 1416
+ *   +0x0cf0 -> line 1417
+ *   +0x0cf4 -> line 1414
+ *   +0x0cf8 -> line 1415
+ *   +0x0cfc -> line 1414
+ *   +0x0d00 -> line 1413
+ *   +0x0d08 -> line 1414
+ *   +0x0d24 -> line 1415
+ *   +0x0d28 -> line 1414
+ *   +0x0d2c -> line 1415
+ *   +0x0d30 -> line 1414
+ *   +0x0d38 -> line 1415
+ *   +0x0d3c -> line 1414
+ *   +0x0d40 -> line 1415
+ *   +0x0d44 -> line 1414
+ *   +0x0d4c -> line 1415
+ *   +0x0d6c -> line 1416
+ *   +0x0d74 -> line 1417
+ *   +0x0d78 -> line 1418
+ *   +0x0d80 -> line 1419
+ *   +0x0d88 -> line 1420
+ *   +0x0d98 -> line 1421
+ *   +0x0d9c -> line 1420
+ *   +0x0da0 -> line 1421
+ *   +0x0dd8 -> line 1422
+ *   +0x0ddc -> line 1421
+ *   +0x0de4 -> line 1422
+ *   +0x0de8 -> line 1421
+ *   +0x0df8 -> line 1422
+ *   +0x0e00 -> line 1421
+ *   +0x0e04 -> line 1422
+ *   +0x0e08 -> line 1421
+ *   +0x0e10 -> line 1422
+ *   +0x0e14 -> line 1421
+ *   +0x0e18 -> line 1422
+ *   +0x0e1c -> line 1421
+ *   +0x0e24 -> line 1422
+ *   +0x0e40 -> line 1423
+ *   +0x0e48 -> line 1427
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glAccum(unsigned int op, float value)
 {
     float vOldColor[4];
@@ -4178,11 +3608,42 @@ void impPS2glAccum(unsigned int op, float value)
     /* TODO: decompile from asm/... */
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1468–1470 */
+/* addr: 0x001637f0  size: 204 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1468
+ *   +0x0004 -> line 1469
+ *   +0x0008 -> line 1468
+ *   +0x000c -> line 1469
+ *   +0x00c0 -> line 1470
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AE_CopyScreen(void)
 {
     AE_DrawWindow(0.0f, 0.0f, 100.0f, 100.0f, 0.5f, 0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f);
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1489–1522 */
+/* addr: 0x00163320  size: 1232 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1489
+ *   +0x0004 -> line 1493
+ *   +0x0008 -> line 1489
+ *   +0x000c -> line 1493
+ *   +0x0010 -> line 1489
+ *   +0x0014 -> line 1493
+ *   +0x00d8 -> line 1497
+ *   +0x0198 -> line 1501
+ *   +0x01a4 -> line 1504
+ *   +0x0268 -> line 1508
+ *   +0x032c -> line 1512
+ *   +0x0338 -> line 1515
+ *   +0x03fc -> line 1519
+ *   +0x04c0 -> line 1522
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AE_SimpleBlur(int Counter)
 {
     AE_BLUR_QUAD(0.0f, 99.33036041259766f, 100.0f, -0.6696395874023438f, 0.5f, 0.5f, 0.5f, 0.5f);
@@ -4201,6 +3662,26 @@ void AE_SimpleBlur(int Counter)
     }
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1526–1559 */
+/* addr: 0x00162e50  size: 1232 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1526
+ *   +0x0004 -> line 1530
+ *   +0x0008 -> line 1526
+ *   +0x000c -> line 1530
+ *   +0x0010 -> line 1526
+ *   +0x0014 -> line 1530
+ *   +0x00d8 -> line 1534
+ *   +0x0198 -> line 1538
+ *   +0x01a4 -> line 1541
+ *   +0x0268 -> line 1545
+ *   +0x032c -> line 1549
+ *   +0x0338 -> line 1552
+ *   +0x03fc -> line 1556
+ *   +0x04c0 -> line 1559
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AE_SimpleBlurWithOptimization(int Counter)
 {
     AE_BLUR_QUAD_OPT(0.0f, 99.33036041259766f, 100.0f, -0.6696395874023438f, 0.5f, 0.5f, 0.5f, 0.5f);
@@ -4219,6 +3700,35 @@ void AE_SimpleBlurWithOptimization(int Counter)
     }
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1573–1590 */
+/* addr: 0x00162d80  size: 200 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1573
+ *   +0x0004 -> line 1574
+ *   +0x0008 -> line 1573
+ *   +0x000c -> line 1577
+ *   +0x0014 -> line 1574
+ *   +0x0018 -> line 1577
+ *   +0x001c -> line 1574
+ *   +0x0020 -> line 1575
+ *   +0x0024 -> line 1577
+ *   +0x0028 -> line 1579
+ *   +0x0030 -> line 1577
+ *   +0x0034 -> line 1578
+ *   +0x0038 -> line 1577
+ *   +0x0040 -> line 1578
+ *   +0x0044 -> line 1573
+ *   +0x004c -> line 1577
+ *   +0x0050 -> line 1579
+ *   +0x0058 -> line 1581
+ *   +0x0074 -> line 1583
+ *   +0x007c -> line 1586
+ *   +0x0098 -> line 1587
+ *   +0x009c -> line 1589
+ *   +0x00bc -> line 1590
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AE_DrawWindow(float x1, float y1, float x2, float y2, float r, float g, float b, float a, float u1, float v1, float u2, float v2)
 {
     y1 = 100.0f - y1;
@@ -4238,6 +3748,35 @@ void AE_DrawWindow(float x1, float y1, float x2, float y2, float r, float g, flo
     internalFullScreenQuadJeff(0x4000, x1, y1, x2, y2, r, g, b, a, u1, v1, u2, v2);
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1595–1612 */
+/* addr: 0x00162cb0  size: 200 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1595
+ *   +0x0004 -> line 1596
+ *   +0x0008 -> line 1595
+ *   +0x000c -> line 1599
+ *   +0x0014 -> line 1596
+ *   +0x0018 -> line 1599
+ *   +0x001c -> line 1596
+ *   +0x0020 -> line 1597
+ *   +0x0024 -> line 1599
+ *   +0x0028 -> line 1601
+ *   +0x0030 -> line 1599
+ *   +0x0034 -> line 1600
+ *   +0x0038 -> line 1599
+ *   +0x0040 -> line 1600
+ *   +0x0044 -> line 1595
+ *   +0x004c -> line 1599
+ *   +0x0050 -> line 1601
+ *   +0x0058 -> line 1603
+ *   +0x0074 -> line 1605
+ *   +0x007c -> line 1608
+ *   +0x0098 -> line 1609
+ *   +0x009c -> line 1611
+ *   +0x00bc -> line 1612
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AE_DrawWindowWithoutOptimization(float x1, float y1, float x2, float y2, float r, float g, float b, float a, float u1, float v1, float u2, float v2)
 {
     y1 = 100.0f - y1;
@@ -4257,6 +3796,33 @@ void AE_DrawWindowWithoutOptimization(float x1, float y1, float x2, float y2, fl
     internalFullScreenQuadJeffWithoutOptimization(0x4000, x1, y1, x2, y2, r, g, b, a, u1, v1, u2, v2);
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1617–1622 */
+/* addr: 0x00162b90  size: 280 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1621
+ *   +0x0004 -> line 1618
+ *   +0x0008 -> line 1621
+ *   +0x000c -> line 1618
+ *   +0x0010 -> line 1617
+ *   +0x0014 -> line 1619
+ *   +0x0018 -> line 1617
+ *   +0x001c -> line 1619
+ *   +0x0020 -> line 1620
+ *   +0x0024 -> line 1617
+ *   +0x002c -> line 1620
+ *   +0x0030 -> line 1617
+ *   +0x0038 -> line 1618
+ *   +0x003c -> line 1619
+ *   +0x0040 -> line 1620
+ *   +0x0044 -> line 1617
+ *   +0x006c -> line 1618
+ *   +0x009c -> line 1619
+ *   +0x00cc -> line 1620
+ *   +0x00fc -> line 1621
+ *   +0x0110 -> line 1622
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AE_SetGS(int vA, int vB, int vC, int vD, unsigned int vFIX)
 {
     g_gsContext.ALPHA_1.A = vA; g_gsContext.ModFlgs.ALPHA_1_Modified = 1;
@@ -4266,6 +3832,34 @@ void AE_SetGS(int vA, int vB, int vC, int vD, unsigned int vFIX)
     g_gsContext.ALPHA_1.FIX = vFIX; g_gsContext.ModFlgs.ALPHA_1_Modified = 1;
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1646–1657 */
+/* addr: 0x00162af0  size: 148 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1646
+ *   +0x0004 -> line 1647
+ *   +0x0008 -> line 1646
+ *   +0x000c -> line 1647
+ *   +0x0010 -> line 1648
+ *   +0x0014 -> line 1647
+ *   +0x0018 -> line 1648
+ *   +0x001c -> line 1647
+ *   +0x0020 -> line 1649
+ *   +0x0024 -> line 1648
+ *   +0x0028 -> line 1649
+ *   +0x002c -> line 1648
+ *   +0x0030 -> line 1652
+ *   +0x0034 -> line 1649
+ *   +0x0038 -> line 1652
+ *   +0x003c -> line 1649
+ *   +0x0044 -> line 1652
+ *   +0x004c -> line 1653
+ *   +0x0054 -> line 1654
+ *   +0x0060 -> line 1655
+ *   +0x0068 -> line 1656
+ *   +0x0088 -> line 1657
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AE_Begin(void)
 {
     AE_g_iOldPSM = g_gsContext.FRAME_1.PSM;
@@ -4278,6 +3872,52 @@ void AE_Begin(void)
     AE_g_qOldAlpha = *(anon_3*)&g_gsContext.ALPHA_1;
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1660–1681 */
+/* addr: 0x00162990  size: 344 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1660
+ *   +0x0004 -> line 1661
+ *   +0x0008 -> line 1660
+ *   +0x000c -> line 1661
+ *   +0x0038 -> line 1662
+ *   +0x003c -> line 1665
+ *   +0x0040 -> line 1661
+ *   +0x0044 -> line 1665
+ *   +0x0048 -> line 1662
+ *   +0x004c -> line 1667
+ *   +0x0050 -> line 1663
+ *   +0x0054 -> line 1667
+ *   +0x0058 -> line 1661
+ *   +0x005c -> line 1668
+ *   +0x0064 -> line 1662
+ *   +0x0070 -> line 1663
+ *   +0x0074 -> line 1661
+ *   +0x0078 -> line 1662
+ *   +0x007c -> line 1661
+ *   +0x0080 -> line 1662
+ *   +0x0084 -> line 1661
+ *   +0x008c -> line 1662
+ *   +0x0090 -> line 1663
+ *   +0x0094 -> line 1662
+ *   +0x0098 -> line 1663
+ *   +0x00a4 -> line 1662
+ *   +0x00ac -> line 1663
+ *   +0x00c0 -> line 1662
+ *   +0x00c4 -> line 1673
+ *   +0x00c8 -> line 1662
+ *   +0x00d0 -> line 1663
+ *   +0x00d4 -> line 1662
+ *   +0x00d8 -> line 1663
+ *   +0x00f8 -> line 1673
+ *   +0x0100 -> line 1674
+ *   +0x0108 -> line 1675
+ *   +0x0124 -> line 1676
+ *   +0x0140 -> line 1677
+ *   +0x0148 -> line 1680
+ *   +0x014c -> line 1681
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AE_End(void)
 {
     g_gsContext.FRAME_1.FBP = AE_g_iOldBP; g_gsContext.ModFlgs.FRAME_1_Modified = 1;
@@ -4294,6 +3934,49 @@ void AE_End(void)
     AE_g_UseAlphaTestValues = 0;
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1689–1744 */
+/* addr: 0x00162860  size: 296 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1689
+ *   +0x0040 -> line 1693
+ *   +0x0044 -> line 1694
+ *   +0x0048 -> line 1693
+ *   +0x004c -> line 1694
+ *   +0x0054 -> line 1695
+ *   +0x0058 -> line 1694
+ *   +0x0060 -> line 1695
+ *   +0x0064 -> line 1697
+ *   +0x006c -> line 1700
+ *   +0x0070 -> line 1701
+ *   +0x0074 -> line 1700
+ *   +0x0078 -> line 1701
+ *   +0x0080 -> line 1702
+ *   +0x0084 -> line 1701
+ *   +0x008c -> line 1702
+ *   +0x0090 -> line 1704
+ *   +0x0098 -> line 1708
+ *   +0x009c -> line 1709
+ *   +0x00a0 -> line 1711
+ *   +0x00a8 -> line 1716
+ *   +0x00ac -> line 1715
+ *   +0x00b0 -> line 1716
+ *   +0x00c0 -> line 1717
+ *   +0x00cc -> line 1720
+ *   +0x00d8 -> line 1721
+ *   +0x00e0 -> line 1724
+ *   +0x00e8 -> line 1728
+ *   +0x00f0 -> line 1729
+ *   +0x00f4 -> line 1728
+ *   +0x00f8 -> line 1729
+ *   +0x0100 -> line 1730
+ *   +0x0108 -> line 1732
+ *   +0x0110 -> line 1737
+ *   +0x0118 -> line 1742
+ *   +0x011c -> line 1743
+ *   +0x0120 -> line 1744
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AE_InternalGetBPandPSMFromID(int BufferID, unsigned long* pDestBP, unsigned long* pDestPSM)
 {
     unsigned long DestPSM;
@@ -4342,11 +4025,45 @@ void AE_InternalGetBPandPSMFromID(int BufferID, unsigned long* pDestBP, unsigned
     *pDestPSM = DestPSM;
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1748–1749 */
+/* addr: 0x00162850  size: 16 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1748
+ *   +0x0008 -> line 1749
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int AE_GetZBufferBase(void)
 {
     return g_stDoubleBuf.draw01.zbuf1.ZBP;
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1752–1769 */
+/* addr: 0x00162770  size: 220 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1752
+ *   +0x0008 -> line 1761
+ *   +0x000c -> line 1752
+ *   +0x0010 -> line 1761
+ *   +0x0014 -> line 1758
+ *   +0x0018 -> line 1759
+ *   +0x001c -> line 1761
+ *   +0x0024 -> line 1762
+ *   +0x0040 -> line 1764
+ *   +0x0044 -> line 1762
+ *   +0x0048 -> line 1764
+ *   +0x004c -> line 1762
+ *   +0x0074 -> line 1764
+ *   +0x007c -> line 1765
+ *   +0x0080 -> line 1766
+ *   +0x0084 -> line 1765
+ *   +0x0088 -> line 1766
+ *   +0x0098 -> line 1767
+ *   +0x00a0 -> line 1768
+ *   +0x00cc -> line 1769
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AE_SetTexture(int BufferID)
 {
     anon_3 qword;
@@ -4366,6 +4083,32 @@ void AE_SetTexture(int BufferID)
     g_gsContext.TEXFLUSH.DATA = 1; g_gsContext.ModFlgs.TEXFLUSH_Modified = 1;
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1772–1789 */
+/* addr: 0x00162690  size: 224 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1772
+ *   +0x0008 -> line 1781
+ *   +0x000c -> line 1772
+ *   +0x0010 -> line 1781
+ *   +0x0014 -> line 1778
+ *   +0x0018 -> line 1779
+ *   +0x001c -> line 1781
+ *   +0x0024 -> line 1782
+ *   +0x0040 -> line 1784
+ *   +0x0044 -> line 1782
+ *   +0x0048 -> line 1784
+ *   +0x0050 -> line 1782
+ *   +0x0078 -> line 1784
+ *   +0x0080 -> line 1785
+ *   +0x0084 -> line 1786
+ *   +0x0088 -> line 1785
+ *   +0x008c -> line 1786
+ *   +0x009c -> line 1787
+ *   +0x00a4 -> line 1788
+ *   +0x00d0 -> line 1789
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AE_SetTextureNoAlpha(int BufferID)
 {
     anon_3 qword;
@@ -4385,6 +4128,30 @@ void AE_SetTextureNoAlpha(int BufferID)
     g_gsContext.TEXFLUSH.DATA = 1; g_gsContext.ModFlgs.TEXFLUSH_Modified = 1;
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1793–1810 */
+/* addr: 0x001625b0  size: 220 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1793
+ *   +0x0008 -> line 1802
+ *   +0x000c -> line 1793
+ *   +0x0010 -> line 1802
+ *   +0x0014 -> line 1799
+ *   +0x0018 -> line 1800
+ *   +0x001c -> line 1802
+ *   +0x0024 -> line 1803
+ *   +0x0040 -> line 1805
+ *   +0x0044 -> line 1803
+ *   +0x0048 -> line 1805
+ *   +0x0050 -> line 1803
+ *   +0x0078 -> line 1805
+ *   +0x0080 -> line 1806
+ *   +0x0084 -> line 1807
+ *   +0x0098 -> line 1808
+ *   +0x00a0 -> line 1809
+ *   +0x00cc -> line 1810
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AE_SetTextureNoBilinear(int BufferID)
 {
     anon_3 qword;
@@ -4404,6 +4171,30 @@ void AE_SetTextureNoBilinear(int BufferID)
     g_gsContext.TEXFLUSH.DATA = 1; g_gsContext.ModFlgs.TEXFLUSH_Modified = 1;
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1813–1825 */
+/* addr: 0x00162500  size: 164 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1813
+ *   +0x0008 -> line 1819
+ *   +0x0014 -> line 1822
+ *   +0x0024 -> line 1823
+ *   +0x0028 -> line 1822
+ *   +0x0030 -> line 1823
+ *   +0x0034 -> line 1822
+ *   +0x0048 -> line 1823
+ *   +0x0050 -> line 1822
+ *   +0x0054 -> line 1823
+ *   +0x0058 -> line 1822
+ *   +0x0060 -> line 1823
+ *   +0x0064 -> line 1822
+ *   +0x0068 -> line 1823
+ *   +0x006c -> line 1822
+ *   +0x0074 -> line 1823
+ *   +0x0090 -> line 1824
+ *   +0x0098 -> line 1825
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AE_SetDrawTarget(int BufferID)
 {
     unsigned long DestBP;
@@ -4414,6 +4205,121 @@ void AE_SetDrawTarget(int BufferID)
     GsUpdate();
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1833–1892 */
+/* addr: 0x00162030  size: 1232 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1833
+ *   +0x0004 -> line 1844
+ *   +0x0008 -> line 1833
+ *   +0x0014 -> line 1844
+ *   +0x001c -> line 1846
+ *   +0x002c -> line 1849
+ *   +0x0038 -> line 1850
+ *   +0x0044 -> line 1849
+ *   +0x0048 -> line 1850
+ *   +0x0058 -> line 1849
+ *   +0x0060 -> line 1850
+ *   +0x0064 -> line 1849
+ *   +0x007c -> line 1851
+ *   +0x0080 -> line 1854
+ *   +0x0088 -> line 1856
+ *   +0x008c -> line 1849
+ *   +0x00a0 -> line 1854
+ *   +0x00a4 -> line 1849
+ *   +0x00a8 -> line 1854
+ *   +0x00ac -> line 1850
+ *   +0x00bc -> line 1854
+ *   +0x00c0 -> line 1851
+ *   +0x00c4 -> line 1850
+ *   +0x00d4 -> line 1854
+ *   +0x00d8 -> line 1852
+ *   +0x00dc -> line 1850
+ *   +0x00e0 -> line 1852
+ *   +0x00e4 -> line 1850
+ *   +0x00e8 -> line 1854
+ *   +0x00fc -> line 1852
+ *   +0x0104 -> line 1854
+ *   +0x0110 -> line 1850
+ *   +0x0120 -> line 1854
+ *   +0x0128 -> line 1851
+ *   +0x012c -> line 1854
+ *   +0x0130 -> line 1851
+ *   +0x0134 -> line 1854
+ *   +0x013c -> line 1851
+ *   +0x0144 -> line 1854
+ *   +0x014c -> line 1852
+ *   +0x0150 -> line 1854
+ *   +0x0154 -> line 1852
+ *   +0x0158 -> line 1854
+ *   +0x0170 -> line 1851
+ *   +0x017c -> line 1852
+ *   +0x0180 -> line 1851
+ *   +0x0194 -> line 1859
+ *   +0x0198 -> line 1852
+ *   +0x01a0 -> line 1854
+ *   +0x01a4 -> line 1852
+ *   +0x01a8 -> line 1854
+ *   +0x01b4 -> line 1857
+ *   +0x01b8 -> line 1852
+ *   +0x01bc -> line 1854
+ *   +0x01c0 -> line 1852
+ *   +0x01c4 -> line 1854
+ *   +0x01c8 -> line 1859
+ *   +0x01cc -> line 1854
+ *   +0x01d0 -> line 1852
+ *   +0x01d4 -> line 1854
+ *   +0x01d8 -> line 1852
+ *   +0x01dc -> line 1854
+ *   +0x01e0 -> line 1859
+ *   +0x01e4 -> line 1854
+ *   +0x01f4 -> line 1852
+ *   +0x01fc -> line 1854
+ *   +0x0260 -> line 1857
+ *   +0x0264 -> line 1859
+ *   +0x026c -> line 1860
+ *   +0x02c8 -> line 1861
+ *   +0x02cc -> line 1860
+ *   +0x02d0 -> line 1861
+ *   +0x02d4 -> line 1860
+ *   +0x02dc -> line 1861
+ *   +0x02e4 -> line 1862
+ *   +0x02e8 -> line 1864
+ *   +0x02ec -> line 1863
+ *   +0x02f0 -> line 1864
+ *   +0x0300 -> line 1869
+ *   +0x032c -> line 1870
+ *   +0x0330 -> line 1869
+ *   +0x0334 -> line 1870
+ *   +0x0338 -> line 1869
+ *   +0x033c -> line 1870
+ *   +0x034c -> line 1871
+ *   +0x0350 -> line 1870
+ *   +0x0354 -> line 1871
+ *   +0x0358 -> line 1870
+ *   +0x035c -> line 1872
+ *   +0x0360 -> line 1871
+ *   +0x0364 -> line 1872
+ *   +0x0368 -> line 1871
+ *   +0x036c -> line 1869
+ *   +0x037c -> line 1870
+ *   +0x0384 -> line 1871
+ *   +0x038c -> line 1870
+ *   +0x03a4 -> line 1871
+ *   +0x03b8 -> line 1872
+ *   +0x03c0 -> line 1873
+ *   +0x0408 -> line 1875
+ *   +0x044c -> line 1877
+ *   +0x0454 -> line 1878
+ *   +0x047c -> line 1879
+ *   +0x0484 -> line 1881
+ *   +0x0498 -> line 1883
+ *   +0x04a0 -> line 1884
+ *   +0x04a8 -> line 1887
+ *   +0x04b0 -> line 1890
+ *   +0x04b8 -> line 1892
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AE_MoveGreenToAlpha(void)
 {
     anon_3 qword;
@@ -4422,11 +4328,52 @@ void AE_MoveGreenToAlpha(void)
     /* TODO: decompile from asm/... */
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1897–1904 */
+/* addr: 0x00161b30  size: 1280 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1897
+ *   +0x0004 -> line 1898
+ *   +0x0008 -> line 1897
+ *   +0x0010 -> line 1898
+ *   +0x0080 -> line 1899
+ *   +0x0090 -> line 1898
+ *   +0x009c -> line 1899
+ *   +0x013c -> line 1900
+ *   +0x0144 -> line 1899
+ *   +0x0158 -> line 1900
+ *   +0x01e4 -> line 1901
+ *   +0x0214 -> line 1902
+ *   +0x0218 -> line 1901
+ *   +0x0260 -> line 1902
+ *   +0x0264 -> line 1901
+ *   +0x0268 -> line 1902
+ *   +0x0270 -> line 1901
+ *   +0x0274 -> line 1902
+ *   +0x0278 -> line 1901
+ *   +0x027c -> line 1902
+ *   +0x0294 -> line 1901
+ *   +0x02a4 -> line 1902
+ *   +0x02a8 -> line 1901
+ *   +0x02b0 -> line 1902
+ *   +0x02b4 -> line 1901
+ *   +0x0320 -> line 1902
+ *   +0x03ac -> line 1903
+ *   +0x04f0 -> line 1904
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AE_CopyBackBufferOnScreen(void)
 {
     /* TODO: decompile from asm/... */
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 507–507 */
+/* addr: 0x00161b20  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 507
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void plyPS2glAccum(anon_29* param0)
 {
     impPS2glAccum(*(unsigned int*)param0, ((float*)param0)[1]);

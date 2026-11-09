@@ -170,28 +170,6 @@ void GEO_vInitGeometricObject(GEO_tdstGeometricObject_* p_stObjectToCreate, shor
 void MAT_fn_vInvertRotation(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hSource);
 void MAT_fn_vSetRotationVectors(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stVecI, MTH3D_tdstVector_* _p_stVecJ, MTH3D_tdstVector_* _p_stVecK);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\GeoObjEd.c lines 187–207 */
-/* addr: 0x002a4530  size: 276 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 187
- *   +0x0024 -> line 188
- *   +0x0038 -> line 189
- *   +0x004c -> line 191
- *   +0x0064 -> line 193
- *   +0x006c -> line 195
- *   +0x007c -> line 197
- *   +0x0094 -> line 199
- *   +0x009c -> line 203
- *   +0x00ac -> line 205
- *   +0x00b0 -> line 203
- *   +0x00c4 -> line 204
- *   +0x00d4 -> line 205
- *   +0x00d8 -> line 204
- *   +0x0108 -> line 205
- *   +0x010c -> line 207
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* Recovered PS2 MTH scalar helpers: sqrt.s and the R5900 accumulator ops
    have no C form under the baseline. */
 #define MTH_SQRT_TO(_result, _value) \
@@ -209,6 +187,61 @@ void GEO_vTurnLookAt(GEO_tdstGeometricObject_* p_stObj, GLD_tdstViewportAttribut
 unsigned char GEO_bIsLookAt(GEO_tdstGeometricObject_* p_stObj);
 void GEO_vCreateTMPGeometricObjectWithEdges(GEO_tdstGeometricObject_** p_hObject, short xNbPoints, short xNbElements, short xNbEdges);
 void GEO_vCreateTMPGeometricObject(GEO_tdstGeometricObject_** p_hObject, short xNbPoints, short xNbElements);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\GeoObjEd.c lines 140–144 */
+/* addr: 0x002a4c40  size: 228 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 140
+ *   +0x0028 -> line 141
+ *   +0x00a0 -> line 142
+ *   +0x00a4 -> line 141
+ *   +0x00b0 -> line 142
+ *   +0x00bc -> line 143
+ *   +0x00c4 -> line 144
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void GEO_vCreateTMPGeometricObject(GEO_tdstGeometricObject_** p_hObject, short xNbPoints, short xNbElements)
+{
+    GEO_tdstGeometricObject_* p_stObj;
+
+    p_stObj = (GEO_tdstGeometricObject_*)HMU_fn_p_vMalloc(sizeof(GEO_tdstGeometricObject_), 1); p_stObj->xNbElements = xNbElements; p_stObj->xNbPoints = xNbPoints; p_stObj->d_xListOfElementsTypes = (short*)HMU_fn_p_vMalloc(xNbElements * sizeof(short), 1); p_stObj->d_stListOfElements = (void**)HMU_fn_p_vMalloc(xNbElements * sizeof(void*), 1); p_stObj->d_stListOfPoints = (MTH3D_tdstVector_*)HMU_fn_p_vMalloc(xNbPoints * sizeof(MTH3D_tdstVector_), 1); memset(p_stObj->d_stListOfPoints, 0, xNbPoints * sizeof(MTH3D_tdstVector_)); p_stObj->d_stListOfPointsNormals = NULL; p_stObj->d_dfVertexTransparency = 0; p_stObj->d_stListOfEdges = NULL; *p_hObject = p_stObj;
+    GEO_vInitGeometricObject(*p_hObject, xNbPoints, xNbElements);
+    (*p_hObject)->xNbEdges = 0;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\GeoObjEd.c lines 147–151 */
+/* addr: 0x002a4ba0  size: 152 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 147
+ *   +0x0028 -> line 148
+ *   +0x005c -> line 149
+ *   +0x0060 -> line 148
+ *   +0x0064 -> line 149
+ *   +0x0070 -> line 150
+ *   +0x0078 -> line 151
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GEO_vCreateTMPGeometricObjectWithEdges(GEO_tdstGeometricObject_** p_hObject, short xNbPoints, short xNbElements, short xNbEdges)
+{
+    GEO_tdstGeometricObject_* p_stObj = GEO_hAllocTMPGeometricObject(xNbPoints, xNbElements); p_stObj->d_stListOfEdges = (GEO_tdstEdge_*)HMU_fn_p_vMalloc(xNbEdges * sizeof(GEO_tdstEdge_), 1); *p_hObject = p_stObj;
+    GEO_vInitGeometricObject(*p_hObject, xNbPoints, xNbElements);
+    (*p_hObject)->xNbEdges = xNbEdges;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\GeoObjEd.c lines 868–868 */
+/* addr: 0x002a4b90  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 868
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+unsigned char GEO_bIsLookAt(GEO_tdstGeometricObject_* p_stObj)
+{
+    return p_stObj->ulType;
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\GeoObjEd.c lines 875–966 */
 /* addr: 0x002a4650  size: 1332 bytes */
@@ -266,64 +299,6 @@ void GEO_vCreateTMPGeometricObject(GEO_tdstGeometricObject_** p_hObject, short x
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\GeoObjEd.c lines 868–868 */
-/* addr: 0x002a4b90  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 868
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\GeoObjEd.c lines 147–151 */
-/* addr: 0x002a4ba0  size: 152 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 147
- *   +0x0028 -> line 148
- *   +0x005c -> line 149
- *   +0x0060 -> line 148
- *   +0x0064 -> line 149
- *   +0x0070 -> line 150
- *   +0x0078 -> line 151
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\GeoObjEd.c lines 140–144 */
-/* addr: 0x002a4c40  size: 228 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 140
- *   +0x0028 -> line 141
- *   +0x00a0 -> line 142
- *   +0x00a4 -> line 141
- *   +0x00b0 -> line 142
- *   +0x00bc -> line 143
- *   +0x00c4 -> line 144
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-void GEO_vCreateTMPGeometricObject(GEO_tdstGeometricObject_** p_hObject, short xNbPoints, short xNbElements)
-{
-    GEO_tdstGeometricObject_* p_stObj;
-
-    p_stObj = (GEO_tdstGeometricObject_*)HMU_fn_p_vMalloc(sizeof(GEO_tdstGeometricObject_), 1); p_stObj->xNbElements = xNbElements; p_stObj->xNbPoints = xNbPoints; p_stObj->d_xListOfElementsTypes = (short*)HMU_fn_p_vMalloc(xNbElements * sizeof(short), 1); p_stObj->d_stListOfElements = (void**)HMU_fn_p_vMalloc(xNbElements * sizeof(void*), 1); p_stObj->d_stListOfPoints = (MTH3D_tdstVector_*)HMU_fn_p_vMalloc(xNbPoints * sizeof(MTH3D_tdstVector_), 1); memset(p_stObj->d_stListOfPoints, 0, xNbPoints * sizeof(MTH3D_tdstVector_)); p_stObj->d_stListOfPointsNormals = NULL; p_stObj->d_dfVertexTransparency = 0; p_stObj->d_stListOfEdges = NULL; *p_hObject = p_stObj;
-    GEO_vInitGeometricObject(*p_hObject, xNbPoints, xNbElements);
-    (*p_hObject)->xNbEdges = 0;
-}
-
-void GEO_vCreateTMPGeometricObjectWithEdges(GEO_tdstGeometricObject_** p_hObject, short xNbPoints, short xNbElements, short xNbEdges)
-{
-    GEO_tdstGeometricObject_* p_stObj = GEO_hAllocTMPGeometricObject(xNbPoints, xNbElements); p_stObj->d_stListOfEdges = (GEO_tdstEdge_*)HMU_fn_p_vMalloc(xNbEdges * sizeof(GEO_tdstEdge_), 1); *p_hObject = p_stObj;
-    GEO_vInitGeometricObject(*p_hObject, xNbPoints, xNbElements);
-    (*p_hObject)->xNbEdges = xNbEdges;
-}
-
-unsigned char GEO_bIsLookAt(GEO_tdstGeometricObject_* p_stObj)
-{
-    return p_stObj->ulType;
-}
-
 void GEO_vTurnLookAt(GEO_tdstGeometricObject_* p_stObj, GLD_tdstViewportAttributes_* hVpt, GLI_tdstCamera_* _pstCameraFromPushBuffer, MAT_tdstTransformation_* p_stCurrentMatrix)
 {
     MAT_tdstTransformation_ hCameraPosInv;
@@ -398,6 +373,28 @@ void GEO_vTurnLookAt(GEO_tdstGeometricObject_* p_stObj, GLD_tdstViewportAttribut
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\GeoObjEd.c lines 187–207 */
+/* addr: 0x002a4530  size: 276 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 187
+ *   +0x0024 -> line 188
+ *   +0x0038 -> line 189
+ *   +0x004c -> line 191
+ *   +0x0064 -> line 193
+ *   +0x006c -> line 195
+ *   +0x007c -> line 197
+ *   +0x0094 -> line 199
+ *   +0x009c -> line 203
+ *   +0x00ac -> line 205
+ *   +0x00b0 -> line 203
+ *   +0x00c4 -> line 204
+ *   +0x00d4 -> line 205
+ *   +0x00d8 -> line 204
+ *   +0x0108 -> line 205
+ *   +0x010c -> line 207
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GEO_fn_vComputeBoundingSphereOfTwoSpheres(MTH3D_tdstVector_* _p_stReturnedSphereCenter, float* _p_xReturnedSphereRadius, MTH3D_tdstVector_* _p_stFirstSphereCenter, float _xFirstSphereRadius, MTH3D_tdstVector_* _p_stSecondSphereCenter, float _xSecondSphereRadius)
 {
     float xAlpha;

@@ -799,14 +799,6 @@ struct tdstFrame3d_ {
 unsigned char g_bShowLight;
 unsigned char g_ucGameModuleId;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 168–168 */
-/* addr: 0x0026fde0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 168
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 unsigned int fn_ulDynamSizeOf(void);
@@ -840,303 +832,6 @@ void fn_vLightAlloc(tdstEngineObject_* p_stObject);
 unsigned int fn_ulLightSizeOf(void);
 GEO_tdstGeometricObject_* fn_pCreateCone(float xS, float yS, float zS, float xRadius);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1344–1353 */
-/* addr: 0x0026fdf0  size: 104 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1344
- *   +0x0010 -> line 1348
- *   +0x002c -> line 1350
- *   +0x005c -> line 1352
- *   +0x0060 -> line 1353
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1327–1333 */
-/* addr: 0x0026fe60  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1327
- *   +0x0008 -> line 1328
- *   +0x000c -> line 1331
- *   +0x0010 -> line 1329
- *   +0x0014 -> line 1331
- *   +0x0048 -> line 1333
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1308–1313 */
-/* addr: 0x0026feb0  size: 92 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1308
- *   +0x0010 -> line 1309
- *   +0x0054 -> line 1313
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1159–1256 */
-/* addr: 0x0026ff10  size: 1780 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1159
- *   +0x0004 -> line 1160
- *   +0x0008 -> line 1159
- *   +0x0034 -> line 1160
- *   +0x0094 -> line 1170
- *   +0x009c -> line 1171
- *   +0x00a0 -> line 1172
- *   +0x00a4 -> line 1178
- *   +0x00a8 -> line 1172
- *   +0x00d8 -> line 1178
- *   +0x0108 -> line 1180
- *   +0x0110 -> line 1181
- *   +0x0138 -> line 1182
- *   +0x0140 -> line 1181
- *   +0x015c -> line 1182
- *   +0x0164 -> line 1183
- *   +0x0168 -> line 1185
- *   +0x016c -> line 1188
- *   +0x0170 -> line 1183
- *   +0x0174 -> line 1185
- *   +0x0178 -> line 1183
- *   +0x0188 -> line 1185
- *   +0x01a0 -> line 1186
- *   +0x01d0 -> line 1188
- *   +0x01f0 -> line 1189
- *   +0x01f4 -> line 1188
- *   +0x020c -> line 1189
- *   +0x0214 -> line 1190
- *   +0x0220 -> line 1191
- *   +0x023c -> line 1192
- *   +0x0244 -> line 1194
- *   +0x0284 -> line 1196
- *   +0x0290 -> line 1198
- *   +0x0294 -> line 1200
- *   +0x0298 -> line 1198
- *   +0x02a0 -> line 1200
- *   +0x02a8 -> line 1201
- *   +0x02c8 -> line 1202
- *   +0x02cc -> line 1201
- *   +0x02e0 -> line 1202
- *   +0x02ec -> line 1203
- *   +0x02f8 -> line 1204
- *   +0x0304 -> line 1211
- *   +0x0334 -> line 1213
- *   +0x0354 -> line 1214
- *   +0x0358 -> line 1213
- *   +0x035c -> line 1214
- *   +0x0364 -> line 1216
- *   +0x0370 -> line 1217
- *   +0x037c -> line 1219
- *   +0x0398 -> line 1220
- *   +0x039c -> line 1219
- *   +0x03b4 -> line 1220
- *   +0x03dc -> line 1221
- *   +0x03ec -> line 1220
- *   +0x03f0 -> line 1221
- *   +0x0400 -> line 1223
- *   +0x0404 -> line 1225
- *   +0x042c -> line 1231
- *   +0x045c -> line 1233
- *   +0x0490 -> line 1234
- *   +0x0494 -> line 1233
- *   +0x0498 -> line 1234
- *   +0x04b8 -> line 1235
- *   +0x04bc -> line 1234
- *   +0x04c0 -> line 1236
- *   +0x04c4 -> line 1235
- *   +0x04c8 -> line 1234
- *   +0x04cc -> line 1235
- *   +0x04d0 -> line 1236
- *   +0x0520 -> line 1237
- *   +0x0524 -> line 1238
- *   +0x0528 -> line 1237
- *   +0x052c -> line 1238
- *   +0x0544 -> line 1240
- *   +0x056c -> line 1241
- *   +0x05a0 -> line 1244
- *   +0x05d0 -> line 1247
- *   +0x05dc -> line 1250
- *   +0x05e0 -> line 1249
- *   +0x05f8 -> line 1250
- *   +0x0688 -> line 1251
- *   +0x068c -> line 1250
- *   +0x0694 -> line 1251
- *   +0x06c4 -> line 1256
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1116–1142 */
-/* addr: 0x00270610  size: 308 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1116
- *   +0x0008 -> line 1120
- *   +0x000c -> line 1116
- *   +0x0010 -> line 1120
- *   +0x0020 -> line 1121
- *   +0x0024 -> line 1124
- *   +0x0054 -> line 1126
- *   +0x0070 -> line 1127
- *   +0x0088 -> line 1128
- *   +0x0098 -> line 1129
- *   +0x00b0 -> line 1130
- *   +0x00c4 -> line 1131
- *   +0x00e0 -> line 1133
- *   +0x00e8 -> line 1136
- *   +0x0100 -> line 1137
- *   +0x0114 -> line 1139
- *   +0x0124 -> line 1142
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1099–1099 */
-/* addr: 0x00270750  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1099
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1091–1094 */
-/* addr: 0x00270760  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1091
- *   +0x0004 -> line 1092
- *   +0x0008 -> line 1094
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1087–1087 */
-/* addr: 0x00270770  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1087
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1080–1082 */
-/* addr: 0x00270780  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1080
- *   +0x0004 -> line 1082
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1076–1076 */
-/* addr: 0x00270790  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1076
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1072–1072 */
-/* addr: 0x002707a0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1072
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1068–1068 */
-/* addr: 0x002707b0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1068
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1064–1064 */
-/* addr: 0x002707c0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1064
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1060–1060 */
-/* addr: 0x002707d0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1060
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1047–1055 */
-/* addr: 0x002707e0  size: 48 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1047
- *   +0x0008 -> line 1050
- *   +0x000c -> line 1051
- *   +0x0010 -> line 1052
- *   +0x0014 -> line 1053
- *   +0x0018 -> line 1054
- *   +0x0024 -> line 1055
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1035–1039 */
-/* addr: 0x00270810  size: 76 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1035
- *   +0x0008 -> line 1037
- *   +0x000c -> line 1035
- *   +0x0010 -> line 1037
- *   +0x0014 -> line 1035
- *   +0x001c -> line 1037
- *   +0x0028 -> line 1038
- *   +0x0038 -> line 1039
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1028–1032 */
-/* addr: 0x00270860  size: 76 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1028
- *   +0x0008 -> line 1030
- *   +0x000c -> line 1028
- *   +0x0010 -> line 1030
- *   +0x0014 -> line 1028
- *   +0x001c -> line 1030
- *   +0x0028 -> line 1031
- *   +0x0038 -> line 1032
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1017–1017 */
-/* addr: 0x002708b0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1017
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1012–1012 */
-/* addr: 0x002708c0  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1012
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1003–1008 */
-/* addr: 0x002708d0  size: 36 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1003
- *   +0x0008 -> line 1006
- *   +0x0014 -> line 1007
- *   +0x0018 -> line 1008
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 714–714 */
 /* addr: 0x00270910  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1148,99 +843,8 @@ GEO_tdstGeometricObject_* fn_pCreateCone(float xS, float yS, float zS, float xRa
 void* memcpy(void*, const void*, unsigned int);
 void GLI_vCopyLight(GLI_tdstLight_* p_stDest, GLI_tdstLight_* p_stSrc);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 685–698 */
-/* addr: 0x00270920  size: 120 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 685
- *   +0x0020 -> line 689
- *   +0x0024 -> line 692
- *   +0x0028 -> line 689
- *   +0x002c -> line 690
- *   +0x0030 -> line 692
- *   +0x0038 -> line 694
- *   +0x0040 -> line 696
- *   +0x0054 -> line 697
- *   +0x005c -> line 698
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 652–671 */
-/* addr: 0x002709a0  size: 140 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 652
- *   +0x0010 -> line 653
- *   +0x0018 -> line 654
- *   +0x0044 -> line 656
- *   +0x0050 -> line 657
- *   +0x007c -> line 671
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 552–597 */
-/* addr: 0x00270a30  size: 480 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 552
- *   +0x0014 -> line 556
- *   +0x001c -> line 557
- *   +0x0048 -> line 559
- *   +0x0054 -> line 560
- *   +0x0080 -> line 562
- *   +0x00a4 -> line 565
- *   +0x012c -> line 568
- *   +0x0148 -> line 571
- *   +0x016c -> line 573
- *   +0x0174 -> line 577
- *   +0x0198 -> line 587
- *   +0x01a0 -> line 588
- *   +0x01a8 -> line 591
- *   +0x01b4 -> line 592
- *   +0x01bc -> line 593
- *   +0x01cc -> line 597
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 void GLI_vRemoveLightForInit(GLI_tdstLight_* p_stLight, unsigned short eUserFlags);
 int SAI_fn_bRemoveValueFromTable(void* _p_vValue, int _eFlags);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 525–538 */
-/* addr: 0x00270c10  size: 276 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 525
- *   +0x0010 -> line 526
- *   +0x0018 -> line 527
- *   +0x0044 -> line 529
- *   +0x0050 -> line 530
- *   +0x007c -> line 532
- *   +0x0104 -> line 538
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 486–497 */
-/* addr: 0x00270d30  size: 340 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 486
- *   +0x0010 -> line 487
- *   +0x0018 -> line 488
- *   +0x0044 -> line 490
- *   +0x0050 -> line 491
- *   +0x007c -> line 494
- *   +0x00b8 -> line 496
- *   +0x0140 -> line 497
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 472–472 */
-/* addr: 0x00270e90  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 472
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 234–288 */
 /* addr: 0x00270ea0  size: 432 bytes */
@@ -1337,11 +941,32 @@ GEO_tdstGeometricObject_* fn_pCreateCone(float xS, float yS, float zS, float xRa
     return p_stSphere;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 472–472 */
+/* addr: 0x00270e90  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 472
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned int fn_ulLightSizeOf(void)
 {
     return 0x40;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 486–497 */
+/* addr: 0x00270d30  size: 340 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 486
+ *   +0x0010 -> line 487
+ *   +0x0018 -> line 488
+ *   +0x0044 -> line 490
+ *   +0x0050 -> line 491
+ *   +0x007c -> line 494
+ *   +0x00b8 -> line 496
+ *   +0x0140 -> line 497
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vLightAlloc(tdstEngineObject_* p_stObject)
 {
     tdstMSLight_* hMSLight;
@@ -1356,6 +981,19 @@ void fn_vLightAlloc(tdstEngineObject_* p_stObject)
     hMSLight = p_stObject->h_MSLight; GLI_vStoreLightForInit(hMSLight->p_stLight, 0x32); SAI_fn_bInsertMTHVectorInTable(&hMSLight->stOffsetVect, 0x32); SAI_fn_bInsertMTHVectorInTable(&hMSLight->stAngle, 0x32); SAI_fn_bInsertCharInTable(&hMSLight->bPulsing, 0x32); SAI_fn_bInsertMTHRealInTable(&hMSLight->xStepPulse, 0x32); SAI_fn_bInsertMTHRealInTable(&hMSLight->xMaxRangePulse, 0x32); SAI_fn_bInsertCharInTable(&hMSLight->bLocalLight, 0x32); SAI_fn_bInsertCharInTable(&hMSLight->bOnlyLocalLight, 0x32); SAI_fn_bInsertCharInTable(&hMSLight->bGiroPhare, 0x32); SAI_fn_bInsertMTHRealInTable(&hMSLight->xStepGiro, 0x32); SAI_fn_bInsertMTHRealInTable(&hMSLight->xGiroAngle, 0x32);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 525–538 */
+/* addr: 0x00270c10  size: 276 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 525
+ *   +0x0010 -> line 526
+ *   +0x0018 -> line 527
+ *   +0x0044 -> line 529
+ *   +0x0050 -> line 530
+ *   +0x007c -> line 532
+ *   +0x0104 -> line 538
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vLightFree(tdstEngineObject_* p_stObject)
 {
     if (!p_stObject) {
@@ -1381,6 +1019,29 @@ void fn_vLightFree(tdstEngineObject_* p_stObject)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 552–597 */
+/* addr: 0x00270a30  size: 480 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 552
+ *   +0x0014 -> line 556
+ *   +0x001c -> line 557
+ *   +0x0048 -> line 559
+ *   +0x0054 -> line 560
+ *   +0x0080 -> line 562
+ *   +0x00a4 -> line 565
+ *   +0x012c -> line 568
+ *   +0x0148 -> line 571
+ *   +0x016c -> line 573
+ *   +0x0174 -> line 577
+ *   +0x0198 -> line 587
+ *   +0x01a0 -> line 588
+ *   +0x01a8 -> line 591
+ *   +0x01b4 -> line 592
+ *   +0x01bc -> line 593
+ *   +0x01cc -> line 597
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vLightInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
 {
     HIE_tdstSuperObject_* hSuperObjFather;
@@ -1425,6 +1086,18 @@ void fn_vLightInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 652–671 */
+/* addr: 0x002709a0  size: 140 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 652
+ *   +0x0010 -> line 653
+ *   +0x0018 -> line 654
+ *   +0x0044 -> line 656
+ *   +0x0050 -> line 657
+ *   +0x007c -> line 671
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vLightDesinit(tdstEngineObject_* p_stObject)
 {
     if (!p_stObject) {
@@ -1435,6 +1108,22 @@ void fn_vLightDesinit(tdstEngineObject_* p_stObject)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 685–698 */
+/* addr: 0x00270920  size: 120 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 685
+ *   +0x0020 -> line 689
+ *   +0x0024 -> line 692
+ *   +0x0028 -> line 689
+ *   +0x002c -> line 690
+ *   +0x0030 -> line 692
+ *   +0x0038 -> line 694
+ *   +0x0040 -> line 696
+ *   +0x0054 -> line 697
+ *   +0x005c -> line 698
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vLightCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc)
 {
     GLI_tdstLight_* p_stLight;
@@ -1463,6 +1152,16 @@ void fn_vMSLightSetTypeOfLight(tdstMSLight_* h_MSLight, unsigned short lTypeOfLi
     GLI_vSetLightType(h_MSLight->p_stLight, lTypeOfLight);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1003–1008 */
+/* addr: 0x002708d0  size: 36 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1003
+ *   +0x0008 -> line 1006
+ *   +0x0014 -> line 1007
+ *   +0x0018 -> line 1008
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucMSLightGetOnOff(tdstMSLight_* h_MSLight)
 {
     int lOnOff;
@@ -1470,16 +1169,44 @@ unsigned char fn_ucMSLightGetOnOff(tdstMSLight_* h_MSLight)
     return lOnOff;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1012–1012 */
+/* addr: 0x002708c0  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1012
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vMSLightSetOnOff(tdstMSLight_* h_MSLight, unsigned char ucOnOff)
 {
     GLI_xSetLightState(h_MSLight->p_stLight, (int)ucOnOff);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1017–1017 */
+/* addr: 0x002708b0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1017
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vMSLightSetNearFar(tdstMSLight_* h_MSLight, float xNear, float xFar)
 {
     GLI_vSetLightNearFar(h_MSLight->p_stLight, xNear, xFar);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1028–1032 */
+/* addr: 0x00270860  size: 76 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1028
+ *   +0x0008 -> line 1030
+ *   +0x000c -> line 1028
+ *   +0x0010 -> line 1030
+ *   +0x0014 -> line 1028
+ *   +0x001c -> line 1030
+ *   +0x0028 -> line 1031
+ *   +0x0038 -> line 1032
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vMSLightSetLittleAlpha(tdstMSLight_* h_MSLight, float xLittleAlpha)
 {
     float xLittleIni;
@@ -1488,6 +1215,20 @@ void fn_vMSLightSetLittleAlpha(tdstMSLight_* h_MSLight, float xLittleAlpha)
     GLI_vSetLightAlphas(h_MSLight->p_stLight, xLittleAlpha, xBigIni);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1035–1039 */
+/* addr: 0x00270810  size: 76 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1035
+ *   +0x0008 -> line 1037
+ *   +0x000c -> line 1035
+ *   +0x0010 -> line 1037
+ *   +0x0014 -> line 1035
+ *   +0x001c -> line 1037
+ *   +0x0028 -> line 1038
+ *   +0x0038 -> line 1039
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vMSLightSetBigAlpha(tdstMSLight_* h_MSLight, float xBigAlpha)
 {
     float xLittleIni;
@@ -1496,6 +1237,19 @@ void fn_vMSLightSetBigAlpha(tdstMSLight_* h_MSLight, float xBigAlpha)
     GLI_vSetLightAlphas(h_MSLight->p_stLight, xLittleIni, xBigAlpha);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1047–1055 */
+/* addr: 0x002707e0  size: 48 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1047
+ *   +0x0008 -> line 1050
+ *   +0x000c -> line 1051
+ *   +0x0010 -> line 1052
+ *   +0x0014 -> line 1053
+ *   +0x0018 -> line 1054
+ *   +0x0024 -> line 1055
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vMSLightSetColorRGBA(tdstMSLight_* h_MSLight, float xR, float xG, float xB, float xA)
 {
     GEO_tdstColor_ stColor;
@@ -1506,42 +1260,101 @@ void fn_vMSLightSetColorRGBA(tdstMSLight_* h_MSLight, float xR, float xG, float 
     GLI_xSetLightColor(h_MSLight->p_stLight, &stColor);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1060–1060 */
+/* addr: 0x002707d0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1060
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 GLI_tdstLight_* fn_p_stMSLightGetLight(tdstMSLight_* h_MSLight)
 {
     return h_MSLight->p_stLight;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1064–1064 */
+/* addr: 0x002707c0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1064
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vMSLightSetLocalLight(tdstMSLight_* h_MSLight, unsigned char bLocalLight)
 {
     h_MSLight->bLocalLight = bLocalLight;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1068–1068 */
+/* addr: 0x002707b0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1068
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_bMSLightGetLocalLight(tdstMSLight_* h_MSLight)
 {
     return h_MSLight->bLocalLight;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1072–1072 */
+/* addr: 0x002707a0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1072
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vMSLightSetOnlyLocalLight(tdstMSLight_* h_MSLight, unsigned char bOnlyLocalLight)
 {
     h_MSLight->bOnlyLocalLight = bOnlyLocalLight;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1076–1076 */
+/* addr: 0x00270790  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1076
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_bMSLightGetOnlyLocalLight(tdstMSLight_* h_MSLight)
 {
     return h_MSLight->bOnlyLocalLight;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1080–1082 */
+/* addr: 0x00270780  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1080
+ *   +0x0004 -> line 1082
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vMSLightSetGiroPhare(tdstMSLight_* h_MSLight, unsigned char bOnOff, float xStep)
 {
     h_MSLight->bGiroPhare = bOnOff;
     h_MSLight->xStepGiro = xStep;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1087–1087 */
+/* addr: 0x00270770  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1087
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_bMSLightGetGiroPhare(tdstMSLight_* h_MSLight)
 {
     return h_MSLight->bGiroPhare;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1091–1094 */
+/* addr: 0x00270760  size: 16 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1091
+ *   +0x0004 -> line 1092
+ *   +0x0008 -> line 1094
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vMSLightSetPulse(tdstMSLight_* h_MSLight, unsigned char bOnOff, float xStep, float xMaxRange)
 {
     h_MSLight->bPulsing = bOnOff;
@@ -1549,11 +1362,41 @@ void fn_vMSLightSetPulse(tdstMSLight_* h_MSLight, unsigned char bOnOff, float xS
     h_MSLight->xMaxRangePulse = xMaxRange;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1099–1099 */
+/* addr: 0x00270750  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1099
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_bMSLightGetPulse(tdstMSLight_* h_MSLight)
 {
     return h_MSLight->bPulsing;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1116–1142 */
+/* addr: 0x00270610  size: 308 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1116
+ *   +0x0008 -> line 1120
+ *   +0x000c -> line 1116
+ *   +0x0010 -> line 1120
+ *   +0x0020 -> line 1121
+ *   +0x0024 -> line 1124
+ *   +0x0054 -> line 1126
+ *   +0x0070 -> line 1127
+ *   +0x0088 -> line 1128
+ *   +0x0098 -> line 1129
+ *   +0x00b0 -> line 1130
+ *   +0x00c4 -> line 1131
+ *   +0x00e0 -> line 1133
+ *   +0x00e8 -> line 1136
+ *   +0x0100 -> line 1137
+ *   +0x0114 -> line 1139
+ *   +0x0124 -> line 1142
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 float fn_xComputeAngleOfPerso(HIE_tdstSuperObject_* p_SuperObjPerso)
 {
     MTH3D_tdstVector_ p_stI;
@@ -1592,6 +1435,97 @@ float fn_xComputeAngleOfPerso(HIE_tdstSuperObject_* p_SuperObjPerso)
     return xAngle;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1159–1256 */
+/* addr: 0x0026ff10  size: 1780 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1159
+ *   +0x0004 -> line 1160
+ *   +0x0008 -> line 1159
+ *   +0x0034 -> line 1160
+ *   +0x0094 -> line 1170
+ *   +0x009c -> line 1171
+ *   +0x00a0 -> line 1172
+ *   +0x00a4 -> line 1178
+ *   +0x00a8 -> line 1172
+ *   +0x00d8 -> line 1178
+ *   +0x0108 -> line 1180
+ *   +0x0110 -> line 1181
+ *   +0x0138 -> line 1182
+ *   +0x0140 -> line 1181
+ *   +0x015c -> line 1182
+ *   +0x0164 -> line 1183
+ *   +0x0168 -> line 1185
+ *   +0x016c -> line 1188
+ *   +0x0170 -> line 1183
+ *   +0x0174 -> line 1185
+ *   +0x0178 -> line 1183
+ *   +0x0188 -> line 1185
+ *   +0x01a0 -> line 1186
+ *   +0x01d0 -> line 1188
+ *   +0x01f0 -> line 1189
+ *   +0x01f4 -> line 1188
+ *   +0x020c -> line 1189
+ *   +0x0214 -> line 1190
+ *   +0x0220 -> line 1191
+ *   +0x023c -> line 1192
+ *   +0x0244 -> line 1194
+ *   +0x0284 -> line 1196
+ *   +0x0290 -> line 1198
+ *   +0x0294 -> line 1200
+ *   +0x0298 -> line 1198
+ *   +0x02a0 -> line 1200
+ *   +0x02a8 -> line 1201
+ *   +0x02c8 -> line 1202
+ *   +0x02cc -> line 1201
+ *   +0x02e0 -> line 1202
+ *   +0x02ec -> line 1203
+ *   +0x02f8 -> line 1204
+ *   +0x0304 -> line 1211
+ *   +0x0334 -> line 1213
+ *   +0x0354 -> line 1214
+ *   +0x0358 -> line 1213
+ *   +0x035c -> line 1214
+ *   +0x0364 -> line 1216
+ *   +0x0370 -> line 1217
+ *   +0x037c -> line 1219
+ *   +0x0398 -> line 1220
+ *   +0x039c -> line 1219
+ *   +0x03b4 -> line 1220
+ *   +0x03dc -> line 1221
+ *   +0x03ec -> line 1220
+ *   +0x03f0 -> line 1221
+ *   +0x0400 -> line 1223
+ *   +0x0404 -> line 1225
+ *   +0x042c -> line 1231
+ *   +0x045c -> line 1233
+ *   +0x0490 -> line 1234
+ *   +0x0494 -> line 1233
+ *   +0x0498 -> line 1234
+ *   +0x04b8 -> line 1235
+ *   +0x04bc -> line 1234
+ *   +0x04c0 -> line 1236
+ *   +0x04c4 -> line 1235
+ *   +0x04c8 -> line 1234
+ *   +0x04cc -> line 1235
+ *   +0x04d0 -> line 1236
+ *   +0x0520 -> line 1237
+ *   +0x0524 -> line 1238
+ *   +0x0528 -> line 1237
+ *   +0x052c -> line 1238
+ *   +0x0544 -> line 1240
+ *   +0x056c -> line 1241
+ *   +0x05a0 -> line 1244
+ *   +0x05d0 -> line 1247
+ *   +0x05dc -> line 1250
+ *   +0x05e0 -> line 1249
+ *   +0x05f8 -> line 1250
+ *   +0x0688 -> line 1251
+ *   +0x068c -> line 1250
+ *   +0x0694 -> line 1251
+ *   +0x06c4 -> line 1256
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vUpdateLight(HIE_tdstSuperObject_* hSupObject)
 {
     float xAnglePerso;
@@ -1608,6 +1542,15 @@ void fn_vUpdateLight(HIE_tdstSuperObject_* hSupObject)
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1308–1313 */
+/* addr: 0x0026feb0  size: 92 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1308
+ *   +0x0010 -> line 1309
+ *   +0x0054 -> line 1313
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucGetNumberOfRLIFromCharacter(HIE_tdstSuperObject_* hSprObj, unsigned char* p_ucIndex1, unsigned char* p_ucIndex2, float* p_xPercent)
 {
     int new_var;
@@ -1619,6 +1562,18 @@ unsigned char fn_ucGetNumberOfRLIFromCharacter(HIE_tdstSuperObject_* hSprObj, un
     }
     return 0; }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1327–1333 */
+/* addr: 0x0026fe60  size: 80 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1327
+ *   +0x0008 -> line 1328
+ *   +0x000c -> line 1331
+ *   +0x0010 -> line 1329
+ *   +0x0014 -> line 1331
+ *   +0x0048 -> line 1333
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vMSLightSetRLIParameter(tdstMSLight_* hMSLight, int lNbRLI, int lIndex1, int lIndex2, int lPercent)
 {
     if (hMSLight != NULL) {
@@ -1629,6 +1584,17 @@ void fn_vMSLightSetRLIParameter(tdstMSLight_* hMSLight, int lNbRLI, int lIndex1,
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1344–1353 */
+/* addr: 0x0026fdf0  size: 104 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1344
+ *   +0x0010 -> line 1348
+ *   +0x002c -> line 1350
+ *   +0x005c -> line 1352
+ *   +0x0060 -> line 1353
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 GLI_tdstLight_* HIE_fn_hGetSuperObjectLight(HIE_tdstSuperObject_* p_SuperObjPerso)
 {
     tdstMSLight_* hMSLight;
@@ -1651,6 +1617,13 @@ GLI_tdstLight_* HIE_fn_hGetSuperObjectLight(HIE_tdstSuperObject_* p_SuperObjPers
     return NULL;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 168–168 */
+/* addr: 0x0026fde0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 168
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned int fn_ulDynamSizeOf(void)
 {
     return 0x0C;

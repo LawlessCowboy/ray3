@@ -1152,14 +1152,6 @@ short iRegisterTable[128];
 tagGScontext g_gsContext;
 tagGLcontext g_PS2glContext;
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GSPackage.c lines 7–7 */
-/* addr: 0x001765b0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 7
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 void impPS2glBitmap(void);
@@ -1173,133 +1165,281 @@ void GsFlushBuffer(void);
 void impPS2glGetGsRegister(int address, unsigned long* pValue);
 void impPS2glSetGsRegister(int address, unsigned long value, unsigned long mask);
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GSPackage.c lines 559–643 */
-/* addr: 0x001765c0  size: 4756 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 559
- *   +0x0004 -> line 591
- *   +0x0008 -> line 559
- *   +0x0010 -> line 583
- *   +0x0018 -> line 591
- *   +0x0070 -> line 592
- *   +0x00cc -> line 593
- *   +0x011c -> line 594
- *   +0x0178 -> line 595
- *   +0x01d4 -> line 596
- *   +0x0228 -> line 597
- *   +0x0284 -> line 598
- *   +0x02e0 -> line 599
- *   +0x033c -> line 600
- *   +0x0398 -> line 601
- *   +0x03f4 -> line 602
- *   +0x0450 -> line 603
- *   +0x04ac -> line 604
- *   +0x0500 -> line 605
- *   +0x055c -> line 606
- *   +0x05b8 -> line 607
- *   +0x0614 -> line 608
- *   +0x0670 -> line 609
- *   +0x06cc -> line 610
- *   +0x0720 -> line 611
- *   +0x077c -> line 612
- *   +0x07d8 -> line 613
- *   +0x0834 -> line 614
- *   +0x0890 -> line 615
- *   +0x08ec -> line 616
- *   +0x0948 -> line 617
- *   +0x099c -> line 618
- *   +0x09f8 -> line 619
- *   +0x0a54 -> line 620
- *   +0x0ab0 -> line 621
- *   +0x0b0c -> line 622
- *   +0x0b68 -> line 623
- *   +0x0bc4 -> line 624
- *   +0x0c20 -> line 625
- *   +0x0c74 -> line 626
- *   +0x0cd0 -> line 627
- *   +0x0d2c -> line 628
- *   +0x0d88 -> line 629
- *   +0x0de4 -> line 630
- *   +0x0e40 -> line 631
- *   +0x0e9c -> line 632
- *   +0x0ef8 -> line 633
- *   +0x0f4c -> line 634
- *   +0x0fa8 -> line 635
- *   +0x1004 -> line 636
- *   +0x1060 -> line 637
- *   +0x10bc -> line 638
- *   +0x1118 -> line 639
- *   +0x1174 -> line 640
- *   +0x11d0 -> line 641
- *   +0x122c -> line 642
- *   +0x1284 -> line 643
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+#pragma auto_inline on
+#pragma auto_inline reset
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GSPackage.c lines 509–546 */
-/* addr: 0x00177860  size: 984 bytes */
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GSPackage.c lines 136–148 */
+/* addr: 0x00179a80  size: 132 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 509
- *   +0x0004 -> line 511
- *   +0x0008 -> line 509
- *   +0x0014 -> line 516
- *   +0x0018 -> line 509
- *   +0x0024 -> line 511
- *   +0x0028 -> line 510
- *   +0x002c -> line 516
- *   +0x0030 -> line 512
- *   +0x0034 -> line 516
- *   +0x0038 -> line 518
- *   +0x004c -> line 519
- *   +0x0054 -> line 521
- *   +0x0064 -> line 523
- *   +0x0068 -> line 521
- *   +0x006c -> line 523
- *   +0x0074 -> line 521
- *   +0x0078 -> line 523
- *   +0x00d8 -> line 524
- *   +0x0144 -> line 525
- *   +0x01a8 -> line 526
- *   +0x020c -> line 529
- *   +0x0210 -> line 533
- *   +0x0214 -> line 530
- *   +0x0218 -> line 533
- *   +0x021c -> line 531
- *   +0x0224 -> line 543
- *   +0x0228 -> line 531
- *   +0x022c -> line 538
- *   +0x0230 -> line 532
- *   +0x0238 -> line 533
- *   +0x023c -> line 534
- *   +0x0244 -> line 535
- *   +0x024c -> line 531
- *   +0x0250 -> line 540
- *   +0x0254 -> line 543
- *   +0x025c -> line 531
- *   +0x0264 -> line 542
- *   +0x0268 -> line 532
- *   +0x026c -> line 541
- *   +0x0270 -> line 542
- *   +0x0274 -> line 532
- *   +0x0280 -> line 533
- *   +0x0290 -> line 534
- *   +0x02a0 -> line 535
- *   +0x02b0 -> line 538
- *   +0x02b4 -> line 539
- *   +0x02b8 -> line 540
- *   +0x02bc -> line 541
- *   +0x02c0 -> line 542
- *   +0x02c4 -> line 543
- *   +0x02c8 -> line 545
- *   +0x02cc -> line 543
- *   +0x02d0 -> line 545
- *   +0x02d4 -> line 543
- *   +0x02dc -> line 545
- *   +0x03b8 -> line 546
+ *   +0x0000 -> line 136
+ *   +0x0004 -> line 137
+ *   +0x0008 -> line 136
+ *   +0x000c -> line 141
+ *   +0x0010 -> line 136
+ *   +0x0014 -> line 142
+ *   +0x0018 -> line 137
+ *   +0x0020 -> line 143
+ *   +0x002c -> line 145
+ *   +0x0030 -> line 139
+ *   +0x0034 -> line 145
+ *   +0x0038 -> line 140
+ *   +0x003c -> line 145
+ *   +0x0040 -> line 141
+ *   +0x0044 -> line 142
+ *   +0x0048 -> line 145
+ *   +0x0050 -> line 147
+ *   +0x0074 -> line 148
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
+void dmaSendGsPackage(anon_10* pPackage, unsigned long ulLength)
+{
+    _sceDmaTag* pDmaTag;
+    pDmaTag = (_sceDmaTag*)g_PS2glContext.pVIFIBufTail;
+    pDmaTag->qwc = ulLength;
+    pDmaTag->mark = 0;
+    pDmaTag->id = 0x10;
+    pDmaTag->p[0] = 0x11000000;
+    pDmaTag->p[1] = 0x50000000 | ulLength;
+    memcpy(pDmaTag + 1, pPackage, ulLength * 16);
+    g_PS2glContext.pVIFIBufTail += ulLength + 1;
+}
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GSPackage.c lines 312–331 */
+/* addr: 0x001799c0  size: 180 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 312
+ *   +0x0004 -> line 315
+ *   +0x0018 -> line 316
+ *   +0x0020 -> line 317
+ *   +0x0034 -> line 318
+ *   +0x003c -> line 320
+ *   +0x0048 -> line 321
+ *   +0x004c -> line 320
+ *   +0x005c -> line 321
+ *   +0x0064 -> line 320
+ *   +0x0070 -> line 321
+ *   +0x007c -> line 322
+ *   +0x0084 -> line 327
+ *   +0x0088 -> line 328
+ *   +0x008c -> line 327
+ *   +0x0094 -> line 329
+ *   +0x0098 -> line 328
+ *   +0x009c -> line 329
+ *   +0x00a8 -> line 331
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void impPS2glSetGsRegister(int address, unsigned long value, unsigned long mask)
+{
+    anon_10 qwTemp;
+    int iOffset;
+    if (address < 0 || address >= 128)
+        return;
+    iOffset = iRegisterTable[address];
+    if (iOffset >= 0) {
+        *(unsigned long*)((unsigned int)&g_gsContext + (iOffset << 3)) = (value & ~mask) | (mask & *(unsigned long*)((unsigned int)&g_gsContext + (iOffset << 3)));
+        g_gsContext.ModFlgs.flags |= 1UL << iOffset;
+    } else {
+        qwTemp.u64Data[0] = value & ~mask;
+        qwTemp.u64Data[1] = 0;
+        qwTemp.ubData[8] = address; GsSendData(14, &qwTemp);
+    }
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GSPackage.c lines 337–344 */
+/* addr: 0x00179960  size: 96 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 337
+ *   +0x0014 -> line 338
+ *   +0x001c -> line 339
+ *   +0x0030 -> line 340
+ *   +0x0038 -> line 341
+ *   +0x0054 -> line 343
+ *   +0x0058 -> line 344
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void impPS2glGetGsRegister(int address, unsigned long* pValue)
+{
+    int iOffset;
+    if (address < 0 || address >= 128)
+        return;
+    iOffset = iRegisterTable[address];
+    if (iOffset >= 0)
+        *pValue = *(unsigned long*)((unsigned int)&g_gsContext + (iOffset << 3));
+    else
+        *pValue = 0;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GSPackage.c lines 350–354 */
+/* addr: 0x00179900  size: 88 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 352
+ *   +0x0004 -> line 351
+ *   +0x0008 -> line 352
+ *   +0x000c -> line 351
+ *   +0x0014 -> line 350
+ *   +0x0018 -> line 351
+ *   +0x001c -> line 354
+ *   +0x0020 -> line 353
+ *   +0x002c -> line 354
+ *   +0x0030 -> line 353
+ *   +0x0034 -> line 354
+ *   +0x0038 -> line 350
+ *   +0x003c -> line 354
+ *   +0x0040 -> line 350
+ *   +0x0044 -> line 354
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+#pragma auto_inline on
+void GsResetBuffer(void)
+{
+    g_gsContext.iBufCount = 1;
+    g_gsContext.pqCurrent = &g_gsContext.PackageBuffer[1];
+    g_gsContext.iRegs = 0;
+    g_gsContext.pCurTag = (anon_1*)&g_gsContext.PackageBuffer[0];
+    gifSetTag(g_gsContext.pCurTag, 1, 0, 0, 0, 0, 0, 0);
+}
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GSPackage.c lines 358–369 */
+/* addr: 0x001797e0  size: 276 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 358
+ *   +0x0004 -> line 359
+ *   +0x0008 -> line 358
+ *   +0x0010 -> line 359
+ *   +0x0020 -> line 361
+ *   +0x0024 -> line 362
+ *   +0x0028 -> line 361
+ *   +0x0034 -> line 362
+ *   +0x0044 -> line 361
+ *   +0x0048 -> line 362
+ *   +0x004c -> line 361
+ *   +0x0058 -> line 362
+ *   +0x00ac -> line 368
+ *   +0x0104 -> line 369
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GsFlushBuffer(void)
+{
+    if (g_gsContext.iBufCount > 1) {
+        g_gsContext.pCurTag->EOP = 1;
+        dmaSendGsPackage(g_gsContext.PackageBuffer, g_gsContext.iBufCount);
+    }
+    GsResetBuffer();
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GSPackage.c lines 372–399 */
+/* addr: 0x00179450  size: 912 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 372
+ *   +0x0004 -> line 374
+ *   +0x0008 -> line 372
+ *   +0x001c -> line 374
+ *   +0x002c -> line 375
+ *   +0x011c -> line 378
+ *   +0x0130 -> line 380
+ *   +0x0144 -> line 381
+ *   +0x023c -> line 385
+ *   +0x0240 -> line 384
+ *   +0x0244 -> line 385
+ *   +0x0258 -> line 384
+ *   +0x026c -> line 385
+ *   +0x027c -> line 386
+ *   +0x0284 -> line 387
+ *   +0x0298 -> line 393
+ *   +0x02ac -> line 394
+ *   +0x02b0 -> line 395
+ *   +0x02b8 -> line 393
+ *   +0x02d4 -> line 394
+ *   +0x02d8 -> line 393
+ *   +0x02ec -> line 394
+ *   +0x0310 -> line 395
+ *   +0x0314 -> line 394
+ *   +0x032c -> line 395
+ *   +0x0334 -> line 397
+ *   +0x0338 -> line 395
+ *   +0x0344 -> line 397
+ *   +0x0348 -> line 398
+ *   +0x034c -> line 397
+ *   +0x0350 -> line 398
+ *   +0x0354 -> line 397
+ *   +0x035c -> line 398
+ *   +0x0378 -> line 399
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GsSendData(signed char type, anon_10* pdata)
+{
+    unsigned long ulCount;
+    signed char cIndex;
+    anon_10* pTagRaw;
+    anon_10* pDest;
+    if (g_gsContext.iBufCount >= 512) {
+        if (g_gsContext.iBufCount > 1) {
+            _sceDmaTag* pTag;
+            g_gsContext.pCurTag->EOP = 1;
+            ulCount = g_gsContext.iBufCount;
+            pTag = (_sceDmaTag*)g_PS2glContext.pVIFIBufTail;
+            pTag->qwc = ulCount;
+            pTag->mark = 0;
+            pTag->id = 0x10;
+            pTag->p[0] = 0x11000000;
+            pTag->p[1] = ulCount | 0x50000000;
+            memcpy(pTag + 1, g_gsContext.PackageBuffer, ulCount * 16);
+            g_PS2glContext.pVIFIBufTail = g_PS2glContext.pVIFIBufTail + (ulCount + 1);
+        }
+        g_gsContext.iRegs = 0;
+        g_gsContext.iBufCount = 1;
+        g_gsContext.pqCurrent = &g_gsContext.PackageBuffer[1];
+        g_gsContext.pCurTag = (anon_1*)&g_gsContext.PackageBuffer[0];
+        gifSetTag(g_gsContext.pCurTag, 1, 0, 0, 0, 0, 0, 0);
+    }
+    if (g_gsContext.iRegs >= 16) {
+        if (g_gsContext.iBufCount >= 511) {
+            if (g_gsContext.iBufCount > 1) {
+                _sceDmaTag* pTag;
+                g_gsContext.pCurTag->EOP = 1;
+                ulCount = g_gsContext.iBufCount;
+                pTag = (_sceDmaTag*)g_PS2glContext.pVIFIBufTail;
+                pTag->qwc = ulCount;
+                pTag->mark = 0;
+                pTag->id = 0x10;
+                pTag->p[0] = 0x11000000;
+                pTag->p[1] = ulCount | 0x50000000;
+                memcpy(pTag + 1, g_gsContext.PackageBuffer, ulCount * 16);
+                g_PS2glContext.pVIFIBufTail = g_PS2glContext.pVIFIBufTail + (ulCount + 1);
+            }
+            g_gsContext.iRegs = 0;
+            g_gsContext.iBufCount = 1;
+            g_gsContext.pqCurrent = &g_gsContext.PackageBuffer[1];
+            g_gsContext.pCurTag = (anon_1*)&g_gsContext.PackageBuffer[0];
+            gifSetTag(g_gsContext.pCurTag, 1, 0, 0, 0, 0, 0, 0);
+        } else {
+            g_gsContext.pCurTag = (anon_1*)g_gsContext.pqCurrent;
+            g_gsContext.pqCurrent++;
+            gifSetTag(g_gsContext.pCurTag, 1, 0, 0, 0, 0, 0, 0);
+            g_gsContext.iRegs = 0;
+            g_gsContext.iBufCount++;
+        }
+    }
+    cIndex = g_gsContext.iRegs;
+    pTagRaw = (anon_10*)g_gsContext.pCurTag;
+    pTagRaw->u64Data[1] &= ~((unsigned long)0xF << (cIndex * 4));
+    pTagRaw->u64Data[1] |= ((unsigned long)type) << (cIndex * 4);
+    g_gsContext.pCurTag->NREG = (++g_gsContext.iRegs) & 0xF;
+    g_gsContext.pCurTag->NLOOP = 1;
+    pDest = g_gsContext.pqCurrent;
+    g_gsContext.iBufCount++;
+    g_gsContext.pqCurrent = g_gsContext.pqCurrent + 16;
+    *pDest = *pdata;
+}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GSPackage.c lines 415–505 */
 /* addr: 0x00177c40  size: 6156 bytes */
@@ -1413,288 +1553,6 @@ void impPS2glSetGsRegister(int address, unsigned long value, unsigned long mask)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GSPackage.c lines 372–399 */
-/* addr: 0x00179450  size: 912 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 372
- *   +0x0004 -> line 374
- *   +0x0008 -> line 372
- *   +0x001c -> line 374
- *   +0x002c -> line 375
- *   +0x011c -> line 378
- *   +0x0130 -> line 380
- *   +0x0144 -> line 381
- *   +0x023c -> line 385
- *   +0x0240 -> line 384
- *   +0x0244 -> line 385
- *   +0x0258 -> line 384
- *   +0x026c -> line 385
- *   +0x027c -> line 386
- *   +0x0284 -> line 387
- *   +0x0298 -> line 393
- *   +0x02ac -> line 394
- *   +0x02b0 -> line 395
- *   +0x02b8 -> line 393
- *   +0x02d4 -> line 394
- *   +0x02d8 -> line 393
- *   +0x02ec -> line 394
- *   +0x0310 -> line 395
- *   +0x0314 -> line 394
- *   +0x032c -> line 395
- *   +0x0334 -> line 397
- *   +0x0338 -> line 395
- *   +0x0344 -> line 397
- *   +0x0348 -> line 398
- *   +0x034c -> line 397
- *   +0x0350 -> line 398
- *   +0x0354 -> line 397
- *   +0x035c -> line 398
- *   +0x0378 -> line 399
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-#pragma auto_inline on
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GSPackage.c lines 350–354 */
-/* addr: 0x00179900  size: 88 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 352
- *   +0x0004 -> line 351
- *   +0x0008 -> line 352
- *   +0x000c -> line 351
- *   +0x0014 -> line 350
- *   +0x0018 -> line 351
- *   +0x001c -> line 354
- *   +0x0020 -> line 353
- *   +0x002c -> line 354
- *   +0x0030 -> line 353
- *   +0x0034 -> line 354
- *   +0x0038 -> line 350
- *   +0x003c -> line 354
- *   +0x0040 -> line 350
- *   +0x0044 -> line 354
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GSPackage.c lines 136–148 */
-/* addr: 0x00179a80  size: 132 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 136
- *   +0x0004 -> line 137
- *   +0x0008 -> line 136
- *   +0x000c -> line 141
- *   +0x0010 -> line 136
- *   +0x0014 -> line 142
- *   +0x0018 -> line 137
- *   +0x0020 -> line 143
- *   +0x002c -> line 145
- *   +0x0030 -> line 139
- *   +0x0034 -> line 145
- *   +0x0038 -> line 140
- *   +0x003c -> line 145
- *   +0x0040 -> line 141
- *   +0x0044 -> line 142
- *   +0x0048 -> line 145
- *   +0x0050 -> line 147
- *   +0x0074 -> line 148
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-#pragma auto_inline reset
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GSPackage.c lines 358–369 */
-/* addr: 0x001797e0  size: 276 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 358
- *   +0x0004 -> line 359
- *   +0x0008 -> line 358
- *   +0x0010 -> line 359
- *   +0x0020 -> line 361
- *   +0x0024 -> line 362
- *   +0x0028 -> line 361
- *   +0x0034 -> line 362
- *   +0x0044 -> line 361
- *   +0x0048 -> line 362
- *   +0x004c -> line 361
- *   +0x0058 -> line 362
- *   +0x00ac -> line 368
- *   +0x0104 -> line 369
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GSPackage.c lines 337–344 */
-/* addr: 0x00179960  size: 96 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 337
- *   +0x0014 -> line 338
- *   +0x001c -> line 339
- *   +0x0030 -> line 340
- *   +0x0038 -> line 341
- *   +0x0054 -> line 343
- *   +0x0058 -> line 344
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GSPackage.c lines 312–331 */
-/* addr: 0x001799c0  size: 180 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 312
- *   +0x0004 -> line 315
- *   +0x0018 -> line 316
- *   +0x0020 -> line 317
- *   +0x0034 -> line 318
- *   +0x003c -> line 320
- *   +0x0048 -> line 321
- *   +0x004c -> line 320
- *   +0x005c -> line 321
- *   +0x0064 -> line 320
- *   +0x0070 -> line 321
- *   +0x007c -> line 322
- *   +0x0084 -> line 327
- *   +0x0088 -> line 328
- *   +0x008c -> line 327
- *   +0x0094 -> line 329
- *   +0x0098 -> line 328
- *   +0x009c -> line 329
- *   +0x00a8 -> line 331
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-#pragma auto_inline on
-void dmaSendGsPackage(anon_10* pPackage, unsigned long ulLength)
-{
-    _sceDmaTag* pDmaTag;
-    pDmaTag = (_sceDmaTag*)g_PS2glContext.pVIFIBufTail;
-    pDmaTag->qwc = ulLength;
-    pDmaTag->mark = 0;
-    pDmaTag->id = 0x10;
-    pDmaTag->p[0] = 0x11000000;
-    pDmaTag->p[1] = 0x50000000 | ulLength;
-    memcpy(pDmaTag + 1, pPackage, ulLength * 16);
-    g_PS2glContext.pVIFIBufTail += ulLength + 1;
-}
-#pragma auto_inline reset
-
-void impPS2glSetGsRegister(int address, unsigned long value, unsigned long mask)
-{
-    anon_10 qwTemp;
-    int iOffset;
-    if (address < 0 || address >= 128)
-        return;
-    iOffset = iRegisterTable[address];
-    if (iOffset >= 0) {
-        *(unsigned long*)((unsigned int)&g_gsContext + (iOffset << 3)) = (value & ~mask) | (mask & *(unsigned long*)((unsigned int)&g_gsContext + (iOffset << 3)));
-        g_gsContext.ModFlgs.flags |= 1UL << iOffset;
-    } else {
-        qwTemp.u64Data[0] = value & ~mask;
-        qwTemp.u64Data[1] = 0;
-        qwTemp.ubData[8] = address; GsSendData(14, &qwTemp);
-    }
-}
-
-void impPS2glGetGsRegister(int address, unsigned long* pValue)
-{
-    int iOffset;
-    if (address < 0 || address >= 128)
-        return;
-    iOffset = iRegisterTable[address];
-    if (iOffset >= 0)
-        *pValue = *(unsigned long*)((unsigned int)&g_gsContext + (iOffset << 3));
-    else
-        *pValue = 0;
-}
-
-#pragma auto_inline on
-void GsResetBuffer(void)
-{
-    g_gsContext.iBufCount = 1;
-    g_gsContext.pqCurrent = &g_gsContext.PackageBuffer[1];
-    g_gsContext.iRegs = 0;
-    g_gsContext.pCurTag = (anon_1*)&g_gsContext.PackageBuffer[0];
-    gifSetTag(g_gsContext.pCurTag, 1, 0, 0, 0, 0, 0, 0);
-}
-#pragma auto_inline reset
-
-void GsFlushBuffer(void)
-{
-    if (g_gsContext.iBufCount > 1) {
-        g_gsContext.pCurTag->EOP = 1;
-        dmaSendGsPackage(g_gsContext.PackageBuffer, g_gsContext.iBufCount);
-    }
-    GsResetBuffer();
-}
-
-void GsSendData(signed char type, anon_10* pdata)
-{
-    unsigned long ulCount;
-    signed char cIndex;
-    anon_10* pTagRaw;
-    anon_10* pDest;
-    if (g_gsContext.iBufCount >= 512) {
-        if (g_gsContext.iBufCount > 1) {
-            _sceDmaTag* pTag;
-            g_gsContext.pCurTag->EOP = 1;
-            ulCount = g_gsContext.iBufCount;
-            pTag = (_sceDmaTag*)g_PS2glContext.pVIFIBufTail;
-            pTag->qwc = ulCount;
-            pTag->mark = 0;
-            pTag->id = 0x10;
-            pTag->p[0] = 0x11000000;
-            pTag->p[1] = ulCount | 0x50000000;
-            memcpy(pTag + 1, g_gsContext.PackageBuffer, ulCount * 16);
-            g_PS2glContext.pVIFIBufTail = g_PS2glContext.pVIFIBufTail + (ulCount + 1);
-        }
-        g_gsContext.iRegs = 0;
-        g_gsContext.iBufCount = 1;
-        g_gsContext.pqCurrent = &g_gsContext.PackageBuffer[1];
-        g_gsContext.pCurTag = (anon_1*)&g_gsContext.PackageBuffer[0];
-        gifSetTag(g_gsContext.pCurTag, 1, 0, 0, 0, 0, 0, 0);
-    }
-    if (g_gsContext.iRegs >= 16) {
-        if (g_gsContext.iBufCount >= 511) {
-            if (g_gsContext.iBufCount > 1) {
-                _sceDmaTag* pTag;
-                g_gsContext.pCurTag->EOP = 1;
-                ulCount = g_gsContext.iBufCount;
-                pTag = (_sceDmaTag*)g_PS2glContext.pVIFIBufTail;
-                pTag->qwc = ulCount;
-                pTag->mark = 0;
-                pTag->id = 0x10;
-                pTag->p[0] = 0x11000000;
-                pTag->p[1] = ulCount | 0x50000000;
-                memcpy(pTag + 1, g_gsContext.PackageBuffer, ulCount * 16);
-                g_PS2glContext.pVIFIBufTail = g_PS2glContext.pVIFIBufTail + (ulCount + 1);
-            }
-            g_gsContext.iRegs = 0;
-            g_gsContext.iBufCount = 1;
-            g_gsContext.pqCurrent = &g_gsContext.PackageBuffer[1];
-            g_gsContext.pCurTag = (anon_1*)&g_gsContext.PackageBuffer[0];
-            gifSetTag(g_gsContext.pCurTag, 1, 0, 0, 0, 0, 0, 0);
-        } else {
-            g_gsContext.pCurTag = (anon_1*)g_gsContext.pqCurrent;
-            g_gsContext.pqCurrent++;
-            gifSetTag(g_gsContext.pCurTag, 1, 0, 0, 0, 0, 0, 0);
-            g_gsContext.iRegs = 0;
-            g_gsContext.iBufCount++;
-        }
-    }
-    cIndex = g_gsContext.iRegs;
-    pTagRaw = (anon_10*)g_gsContext.pCurTag;
-    pTagRaw->u64Data[1] &= ~((unsigned long)0xF << (cIndex * 4));
-    pTagRaw->u64Data[1] |= ((unsigned long)type) << (cIndex * 4);
-    g_gsContext.pCurTag->NREG = (++g_gsContext.iRegs) & 0xF;
-    g_gsContext.pCurTag->NLOOP = 1;
-    pDest = g_gsContext.pqCurrent;
-    g_gsContext.iBufCount++;
-    g_gsContext.pqCurrent = g_gsContext.pqCurrent + 16;
-    *pDest = *pdata;
-}
-
 void GsUpdate(void)
 {
     anon_10 qword;
@@ -1705,6 +1563,69 @@ void GsUpdate(void)
     /* TODO: decompile from asm/... */
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GSPackage.c lines 509–546 */
+/* addr: 0x00177860  size: 984 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 509
+ *   +0x0004 -> line 511
+ *   +0x0008 -> line 509
+ *   +0x0014 -> line 516
+ *   +0x0018 -> line 509
+ *   +0x0024 -> line 511
+ *   +0x0028 -> line 510
+ *   +0x002c -> line 516
+ *   +0x0030 -> line 512
+ *   +0x0034 -> line 516
+ *   +0x0038 -> line 518
+ *   +0x004c -> line 519
+ *   +0x0054 -> line 521
+ *   +0x0064 -> line 523
+ *   +0x0068 -> line 521
+ *   +0x006c -> line 523
+ *   +0x0074 -> line 521
+ *   +0x0078 -> line 523
+ *   +0x00d8 -> line 524
+ *   +0x0144 -> line 525
+ *   +0x01a8 -> line 526
+ *   +0x020c -> line 529
+ *   +0x0210 -> line 533
+ *   +0x0214 -> line 530
+ *   +0x0218 -> line 533
+ *   +0x021c -> line 531
+ *   +0x0224 -> line 543
+ *   +0x0228 -> line 531
+ *   +0x022c -> line 538
+ *   +0x0230 -> line 532
+ *   +0x0238 -> line 533
+ *   +0x023c -> line 534
+ *   +0x0244 -> line 535
+ *   +0x024c -> line 531
+ *   +0x0250 -> line 540
+ *   +0x0254 -> line 543
+ *   +0x025c -> line 531
+ *   +0x0264 -> line 542
+ *   +0x0268 -> line 532
+ *   +0x026c -> line 541
+ *   +0x0270 -> line 542
+ *   +0x0274 -> line 532
+ *   +0x0280 -> line 533
+ *   +0x0290 -> line 534
+ *   +0x02a0 -> line 535
+ *   +0x02b0 -> line 538
+ *   +0x02b4 -> line 539
+ *   +0x02b8 -> line 540
+ *   +0x02bc -> line 541
+ *   +0x02c0 -> line 542
+ *   +0x02c4 -> line 543
+ *   +0x02c8 -> line 545
+ *   +0x02cc -> line 543
+ *   +0x02d0 -> line 545
+ *   +0x02d4 -> line 543
+ *   +0x02dc -> line 545
+ *   +0x03b8 -> line 546
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GsUpdateLimited(void)
 {
     anon_10 qword;
@@ -1742,12 +1663,82 @@ void GsUpdateLimited(void)
     if (g_gsContext.iBufCount > 1) { unsigned long iCount; _sceDmaTag* pNewTag; g_gsContext.pCurTag->EOP = 1; iCount = g_gsContext.iBufCount; pNewTag = (_sceDmaTag*)g_PS2glContext.pVIFIBufTail; pNewTag->qwc = iCount; pNewTag->mark = 0; pNewTag->id = 0x10; pNewTag->p[0] = 0x11000000; pNewTag->p[1] = iCount | 0x50000000; memcpy(pNewTag + 1, g_gsContext.PackageBuffer, iCount * 16); g_PS2glContext.pVIFIBufTail = g_PS2glContext.pVIFIBufTail + (iCount + 1); } g_gsContext.iRegs = 0; g_gsContext.iBufCount = 1; g_gsContext.pqCurrent = &g_gsContext.PackageBuffer[1]; g_gsContext.pCurTag = (anon_1*)&g_gsContext.PackageBuffer[0]; gifSetTag(g_gsContext.pCurTag, 1, 0, 0, 0, 0, 0, 0);
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GSPackage.c lines 559–643 */
+/* addr: 0x001765c0  size: 4756 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 559
+ *   +0x0004 -> line 591
+ *   +0x0008 -> line 559
+ *   +0x0010 -> line 583
+ *   +0x0018 -> line 591
+ *   +0x0070 -> line 592
+ *   +0x00cc -> line 593
+ *   +0x011c -> line 594
+ *   +0x0178 -> line 595
+ *   +0x01d4 -> line 596
+ *   +0x0228 -> line 597
+ *   +0x0284 -> line 598
+ *   +0x02e0 -> line 599
+ *   +0x033c -> line 600
+ *   +0x0398 -> line 601
+ *   +0x03f4 -> line 602
+ *   +0x0450 -> line 603
+ *   +0x04ac -> line 604
+ *   +0x0500 -> line 605
+ *   +0x055c -> line 606
+ *   +0x05b8 -> line 607
+ *   +0x0614 -> line 608
+ *   +0x0670 -> line 609
+ *   +0x06cc -> line 610
+ *   +0x0720 -> line 611
+ *   +0x077c -> line 612
+ *   +0x07d8 -> line 613
+ *   +0x0834 -> line 614
+ *   +0x0890 -> line 615
+ *   +0x08ec -> line 616
+ *   +0x0948 -> line 617
+ *   +0x099c -> line 618
+ *   +0x09f8 -> line 619
+ *   +0x0a54 -> line 620
+ *   +0x0ab0 -> line 621
+ *   +0x0b0c -> line 622
+ *   +0x0b68 -> line 623
+ *   +0x0bc4 -> line 624
+ *   +0x0c20 -> line 625
+ *   +0x0c74 -> line 626
+ *   +0x0cd0 -> line 627
+ *   +0x0d2c -> line 628
+ *   +0x0d88 -> line 629
+ *   +0x0de4 -> line 630
+ *   +0x0e40 -> line 631
+ *   +0x0e9c -> line 632
+ *   +0x0ef8 -> line 633
+ *   +0x0f4c -> line 634
+ *   +0x0fa8 -> line 635
+ *   +0x1004 -> line 636
+ *   +0x1060 -> line 637
+ *   +0x10bc -> line 638
+ *   +0x1118 -> line 639
+ *   +0x1174 -> line 640
+ *   +0x11d0 -> line 641
+ *   +0x122c -> line 642
+ *   +0x1284 -> line 643
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GsUpdateRegisters(void)
 {
     anon_10 qword;
     /* TODO: decompile from asm/... */
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GSPackage.c lines 7–7 */
+/* addr: 0x001765b0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 7
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glBitmap(void)
 {
     /* TODO: decompile from asm/... */

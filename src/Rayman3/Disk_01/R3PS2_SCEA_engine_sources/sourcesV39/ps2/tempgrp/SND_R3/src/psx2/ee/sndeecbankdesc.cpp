@@ -124,13 +124,6 @@ struct spair {
     unsigned char second; /* +0x4 */
 };
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeecbankdesc.cpp lines 57–57 */
-/* addr: 0x0018af90  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 57
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern "C" void HMU_fn_pvSndMalloc(unsigned int u32Size);
 
 /* The functions below are in their original source-line order (retail
@@ -175,6 +168,13 @@ CResData* CBankDesc::mfn_poAddCResDataAlone(CUUID* ro_cuuid)
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeecbankdesc.cpp lines 57–57 */
+/* addr: 0x0018af90  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 57
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void usnd_malloc(unsigned int uiSize)
 {
     return HMU_fn_pvSndMalloc(uiSize);

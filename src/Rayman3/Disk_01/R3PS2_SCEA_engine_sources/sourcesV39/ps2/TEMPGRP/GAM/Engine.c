@@ -1406,14 +1406,6 @@ extern char szLastFixLoaded[256];
 tdstDataPath_ g_stDataPath;
 unsigned char g_bFrozenWhenStart;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Engine.c lines 121–121 */
-/* addr: 0x0025f0a0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 121
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 void fn_vInitWaterStreakEffect(void);
@@ -1423,64 +1415,6 @@ void fn_vChooseTheGoodInit(void);
 unsigned char fn_bEndOfOneStep(void);
 unsigned char fn_bEndOfGame(void);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Engine.c lines 1686–2076 */
-/* addr: 0x0025f0b0  size: 548 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1686
- *   +0x000c -> line 1699
- *   +0x0010 -> line 1706
- *   +0x001c -> line 1736
- *   +0x0020 -> line 1706
- *   +0x0024 -> line 1736
- *   +0x0040 -> line 1749
- *   +0x004c -> line 1750
- *   +0x0054 -> line 1752
- *   +0x0068 -> line 1780
- *   +0x0070 -> line 1781
- *   +0x0078 -> line 1795
- *   +0x0080 -> line 1835
- *   +0x0084 -> line 1840
- *   +0x008c -> line 1855
- *   +0x00a0 -> line 1863
- *   +0x00ac -> line 1867
- *   +0x00b4 -> line 1870
- *   +0x00b8 -> line 1869
- *   +0x00bc -> line 1870
- *   +0x00c0 -> line 1869
- *   +0x00c4 -> line 1870
- *   +0x00d0 -> line 1873
- *   +0x00dc -> line 1874
- *   +0x00e0 -> line 1875
- *   +0x00f4 -> line 1876
- *   +0x00fc -> line 1880
- *   +0x0120 -> line 1882
- *   +0x0124 -> line 1886
- *   +0x0130 -> line 1889
- *   +0x0140 -> line 1890
- *   +0x0160 -> line 1893
- *   +0x0178 -> line 1895
- *   +0x017c -> line 1896
- *   +0x0188 -> line 1898
- *   +0x0198 -> line 1899
- *   +0x019c -> line 1904
- *   +0x01a0 -> line 1905
- *   +0x01a8 -> line 1906
- *   +0x01b0 -> line 1907
- *   +0x01b8 -> line 1908
- *   +0x01c4 -> line 1924
- *   +0x01cc -> line 1927
- *   +0x01d4 -> line 1933
- *   +0x01d8 -> line 1944
- *   +0x01e0 -> line 1960
- *   +0x01e8 -> line 1968
- *   +0x01f0 -> line 1994
- *   +0x01fc -> line 2001
- *   +0x0204 -> line 2006
- *   +0x020c -> line 2009
- *   +0x0214 -> line 2076
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 short fn_hGetGLDDevice(int param0);
 void AI_vBatchProccessOrder(void);
 void GLI_vEndOfAI(void);
@@ -1514,30 +1448,6 @@ inline unsigned char ENG_bIsModeDeadLoop(void)
     return b;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Engine.c lines 1472–1546 */
-/* addr: 0x0025f2e0  size: 216 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1472
- *   +0x0004 -> line 1480
- *   +0x0008 -> line 1472
- *   +0x000c -> line 1480
- *   +0x0038 -> line 1484
- *   +0x0040 -> line 1490
- *   +0x0048 -> line 1493
- *   +0x0050 -> line 1497
- *   +0x0058 -> line 1527
- *   +0x0060 -> line 1531
- *   +0x0068 -> line 1532
- *   +0x0078 -> line 1533
- *   +0x0080 -> line 1537
- *   +0x0088 -> line 1539
- *   +0x0090 -> line 1540
- *   +0x0098 -> line 1541
- *   +0x00a0 -> line 1543
- *   +0x00cc -> line 1546
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vDesInitLevelLoop(void);
 void PLD_fn_vUnLoadFix(void);
 void fn_vLastDesinitEngine(void);
@@ -1548,6 +1458,66 @@ void fn_vChangeEngineMode(unsigned char eNewMode);
 void fn_vDesInitDeadLoop(void);
 void Erm_fn_ClearLastError();
 void Erm_fn_v_UpdateLastError();
+
+void fn_vFirstInitEngine(void);
+void fn_vFreeNextLevelName(void);
+void GAM_fn_vActualizeAllGameViewportSize(void);
+void fn_vInitGameLoop(void);
+void fn_vValidateAllOption(void);
+void fn_vStartEngineClock(void);
+void fn_vSaveEngineClock(void);
+void GLI_fn_vInitInstantFadeIn(unsigned int ulNumberOfFrame);
+void SAV2_fn_vUpdateVibrations(void);
+void IPT_fn_vDesinitInput(void);
+void PLD_fn_vLoadFix(void);
+void IPT_fn_vInitInput();
+void GLI_fn_vCloseBigFileTextures(void);
+void GAM_fn_vLoadTextures(void);
+void fn_vInitLevelLoop(void);
+void fn_vInitDeadLoop(void);
+int sprintf(char* s, const char* format, ...);
+int strcasecmp(const char* s1, const char* s2);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Engine.c lines 404–408 */
+/* addr: 0x0025f610  size: 32 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 404
+ *   +0x0014 -> line 405
+ *   +0x0018 -> line 408
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+unsigned char fn_bEndOfGame(void)
+{
+    unsigned char ucReturn;
+    ucReturn = 0;
+    if (g_stEngineStructure.eEngineMode == 2)
+        ucReturn = 1;
+    return ucReturn;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Engine.c lines 439–450 */
+/* addr: 0x0025f5d0  size: 52 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 439
+ *   +0x0028 -> line 443
+ *   +0x002c -> line 450
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+unsigned char fn_bEndOfOneStep(void)
+{
+    unsigned char ucReturn;
+    ucReturn = 0;
+    if ((g_stEngineStructure.eEngineMode == 2) ||
+        (g_stEngineStructure.eEngineMode == 6) ||
+        (g_stEngineStructure.eEngineMode == 8))
+    {
+        ucReturn = 1;
+    }
+    return ucReturn;
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Engine.c lines 1227–1456 */
 /* addr: 0x0025f3c0  size: 524 bytes */
@@ -1607,67 +1577,6 @@ void Erm_fn_v_UpdateLastError();
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vFirstInitEngine(void);
-void fn_vFreeNextLevelName(void);
-void GAM_fn_vActualizeAllGameViewportSize(void);
-void fn_vInitGameLoop(void);
-void fn_vValidateAllOption(void);
-void fn_vStartEngineClock(void);
-void fn_vSaveEngineClock(void);
-void GLI_fn_vInitInstantFadeIn(unsigned int ulNumberOfFrame);
-void SAV2_fn_vUpdateVibrations(void);
-void IPT_fn_vDesinitInput(void);
-void PLD_fn_vLoadFix(void);
-void IPT_fn_vInitInput();
-void GLI_fn_vCloseBigFileTextures(void);
-void GAM_fn_vLoadTextures(void);
-void fn_vInitLevelLoop(void);
-void fn_vInitDeadLoop(void);
-int sprintf(char* s, const char* format, ...);
-int strcasecmp(const char* s1, const char* s2);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Engine.c lines 439–450 */
-/* addr: 0x0025f5d0  size: 52 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 439
- *   +0x0028 -> line 443
- *   +0x002c -> line 450
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Engine.c lines 404–408 */
-/* addr: 0x0025f610  size: 32 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 404
- *   +0x0014 -> line 405
- *   +0x0018 -> line 408
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-unsigned char fn_bEndOfGame(void)
-{
-    unsigned char ucReturn;
-    ucReturn = 0;
-    if (g_stEngineStructure.eEngineMode == 2)
-        ucReturn = 1;
-    return ucReturn;
-}
-
-unsigned char fn_bEndOfOneStep(void)
-{
-    unsigned char ucReturn;
-    ucReturn = 0;
-    if ((g_stEngineStructure.eEngineMode == 2) ||
-        (g_stEngineStructure.eEngineMode == 6) ||
-        (g_stEngineStructure.eEngineMode == 8))
-    {
-        ucReturn = 1;
-    }
-    return ucReturn;
-}
-
 void fn_vChooseTheGoodInit(void)
 {
     char a256_cDataDirectory[255];
@@ -1733,6 +1642,30 @@ void fn_vChooseTheGoodInit(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Engine.c lines 1472–1546 */
+/* addr: 0x0025f2e0  size: 216 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1472
+ *   +0x0004 -> line 1480
+ *   +0x0008 -> line 1472
+ *   +0x000c -> line 1480
+ *   +0x0038 -> line 1484
+ *   +0x0040 -> line 1490
+ *   +0x0048 -> line 1493
+ *   +0x0050 -> line 1497
+ *   +0x0058 -> line 1527
+ *   +0x0060 -> line 1531
+ *   +0x0068 -> line 1532
+ *   +0x0078 -> line 1533
+ *   +0x0080 -> line 1537
+ *   +0x0088 -> line 1539
+ *   +0x0090 -> line 1540
+ *   +0x0098 -> line 1541
+ *   +0x00a0 -> line 1543
+ *   +0x00cc -> line 1546
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vChooseTheGoodDesInit(void)
 {
     switch (g_stEngineStructure.eEngineMode)
@@ -1761,6 +1694,64 @@ void fn_vChooseTheGoodDesInit(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Engine.c lines 1686–2076 */
+/* addr: 0x0025f0b0  size: 548 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1686
+ *   +0x000c -> line 1699
+ *   +0x0010 -> line 1706
+ *   +0x001c -> line 1736
+ *   +0x0020 -> line 1706
+ *   +0x0024 -> line 1736
+ *   +0x0040 -> line 1749
+ *   +0x004c -> line 1750
+ *   +0x0054 -> line 1752
+ *   +0x0068 -> line 1780
+ *   +0x0070 -> line 1781
+ *   +0x0078 -> line 1795
+ *   +0x0080 -> line 1835
+ *   +0x0084 -> line 1840
+ *   +0x008c -> line 1855
+ *   +0x00a0 -> line 1863
+ *   +0x00ac -> line 1867
+ *   +0x00b4 -> line 1870
+ *   +0x00b8 -> line 1869
+ *   +0x00bc -> line 1870
+ *   +0x00c0 -> line 1869
+ *   +0x00c4 -> line 1870
+ *   +0x00d0 -> line 1873
+ *   +0x00dc -> line 1874
+ *   +0x00e0 -> line 1875
+ *   +0x00f4 -> line 1876
+ *   +0x00fc -> line 1880
+ *   +0x0120 -> line 1882
+ *   +0x0124 -> line 1886
+ *   +0x0130 -> line 1889
+ *   +0x0140 -> line 1890
+ *   +0x0160 -> line 1893
+ *   +0x0178 -> line 1895
+ *   +0x017c -> line 1896
+ *   +0x0188 -> line 1898
+ *   +0x0198 -> line 1899
+ *   +0x019c -> line 1904
+ *   +0x01a0 -> line 1905
+ *   +0x01a8 -> line 1906
+ *   +0x01b0 -> line 1907
+ *   +0x01b8 -> line 1908
+ *   +0x01c4 -> line 1924
+ *   +0x01cc -> line 1927
+ *   +0x01d4 -> line 1933
+ *   +0x01d8 -> line 1944
+ *   +0x01e0 -> line 1960
+ *   +0x01e8 -> line 1968
+ *   +0x01f0 -> line 1994
+ *   +0x01fc -> line 2001
+ *   +0x0204 -> line 2006
+ *   +0x020c -> line 2009
+ *   +0x0214 -> line 2076
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vOneTrame(void)
 {
     int i;
@@ -1846,6 +1837,13 @@ void fn_vOneTrame(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Engine.c lines 121–121 */
+/* addr: 0x0025f0a0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 121
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vInitWaterStreakEffect(void)
 {
 }

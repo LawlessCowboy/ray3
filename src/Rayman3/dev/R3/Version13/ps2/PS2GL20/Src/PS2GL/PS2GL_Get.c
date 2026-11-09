@@ -710,45 +710,6 @@ struct tagstVIFCode {
 tagGLcontext g_PS2glContext;
 _GL_BUFFERINFO g_stBufferInfo;
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 17–39 */
-/* addr: 0x0017da50  size: 292 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 21
- *   +0x0004 -> line 24
- *   +0x0008 -> line 21
- *   +0x000c -> line 17
- *   +0x0010 -> line 18
- *   +0x0014 -> line 22
- *   +0x0018 -> line 18
- *   +0x001c -> line 22
- *   +0x0020 -> line 18
- *   +0x0024 -> line 24
- *   +0x0028 -> line 18
- *   +0x0038 -> line 24
- *   +0x005c -> line 26
- *   +0x0064 -> line 27
- *   +0x006c -> line 28
- *   +0x0074 -> line 29
- *   +0x007c -> line 30
- *   +0x0084 -> line 31
- *   +0x008c -> line 32
- *   +0x0094 -> line 33
- *   +0x0098 -> line 36
- *   +0x009c -> line 37
- *   +0x00a0 -> line 36
- *   +0x00a4 -> line 37
- *   +0x00a8 -> line 36
- *   +0x00ac -> line 37
- *   +0x00b0 -> line 36
- *   +0x00b8 -> line 37
- *   +0x00bc -> line 36
- *   +0x00c4 -> line 37
- *   +0x00c8 -> line 36
- *   +0x00f0 -> line 37
- *   +0x011c -> line 39
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* GS context: only the TEST_1 register and its modified flag are used here
  * (layout from PS2GL_PixelOperation.c's tagGScontext). */
 typedef struct tagGsTest {
@@ -811,145 +772,154 @@ void impPS2glGetFloatv(unsigned int pname, float* params);
 void impPS2glGetIntegerv(unsigned int pname, int* params);
 void impPS2glGetBooleanv(unsigned int pname, unsigned char* params);
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1530–1530 */
-/* addr: 0x0017db80  size: 8 bytes */
+int printf(const char* format, ...);
+
+void PS2glGet(unsigned int type, unsigned int pname, void* params);
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1308–1308 */
+/* addr: 0x0017e050  size: 20 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1530
+ *   +0x0008 -> line 1308
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1525–1525 */
-/* addr: 0x0017db90  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1525
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+void impPS2glGetBooleanv(unsigned int pname, unsigned char* params)
+{
+    PS2glGet(0x140B, pname, params);
+}
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1520–1520 */
-/* addr: 0x0017dba0  size: 8 bytes */
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1313–1313 */
+/* addr: 0x0017e030  size: 20 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1520
+ *   +0x0008 -> line 1313
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void impPS2glGetIntegerv(unsigned int pname, int* params)
+{
+    PS2glGet(0x1404, pname, params);
+}
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1515–1515 */
-/* addr: 0x0017dbb0  size: 8 bytes */
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1318–1318 */
+/* addr: 0x0017e010  size: 20 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1515
+ *   +0x0008 -> line 1318
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void impPS2glGetFloatv(unsigned int pname, float* params)
+{
+    PS2glGet(0x1406, pname, params);
+}
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1510–1510 */
-/* addr: 0x0017dbc0  size: 8 bytes */
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1323–1323 */
+/* addr: 0x0017dff0  size: 20 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1510
+ *   +0x0008 -> line 1323
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void impPS2glGetDoublev(unsigned int pname, double* params)
+{
+    PS2glGet(0x140A, pname, params);
+}
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1505–1505 */
-/* addr: 0x0017dbd0  size: 8 bytes */
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1329–1329 */
+/* addr: 0x0017dfe0  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1505
+ *   +0x0000 -> line 1329
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+unsigned int impPS2glGetError(void)
+{
+    return 0;
+}
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1500–1500 */
-/* addr: 0x0017dbe0  size: 8 bytes */
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1334–1334 */
+/* addr: 0x0017dfd0  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1500
+ *   +0x0000 -> line 1334
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void impPS2glGetLightfv(void)
+{
+    /* TODO: decompile from asm/... */
+}
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1495–1495 */
-/* addr: 0x0017dbf0  size: 8 bytes */
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1339–1339 */
+/* addr: 0x0017dfc0  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1495
+ *   +0x0000 -> line 1339
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void impPS2glGetLightiv(void)
+{
+    /* TODO: decompile from asm/... */
+}
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1490–1490 */
-/* addr: 0x0017dc00  size: 8 bytes */
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1344–1344 */
+/* addr: 0x0017dfb0  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1490
+ *   +0x0000 -> line 1344
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void impPS2glGetMapdv(void)
+{
+    /* TODO: decompile from asm/... */
+}
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1485–1485 */
-/* addr: 0x0017dc10  size: 8 bytes */
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1349–1349 */
+/* addr: 0x0017dfa0  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1485
+ *   +0x0000 -> line 1349
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void impPS2glGetMapfv(void)
+{
+    /* TODO: decompile from asm/... */
+}
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1480–1480 */
-/* addr: 0x0017dc20  size: 8 bytes */
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1354–1354 */
+/* addr: 0x0017df90  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1480
+ *   +0x0000 -> line 1354
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void impPS2glGetMapiv(void)
+{
+    /* TODO: decompile from asm/... */
+}
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1475–1475 */
-/* addr: 0x0017dc30  size: 8 bytes */
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1359–1359 */
+/* addr: 0x0017df80  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1475
+ *   +0x0000 -> line 1359
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void impPS2glGetMaterialfv(void)
+{
+    /* TODO: decompile from asm/... */
+}
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1441–1470 */
-/* addr: 0x0017dc40  size: 192 bytes */
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1364–1364 */
+/* addr: 0x0017df70  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1441
- *   +0x0034 -> line 1444
- *   +0x003c -> line 1445
- *   +0x0044 -> line 1447
- *   +0x004c -> line 1448
- *   +0x0054 -> line 1451
- *   +0x0070 -> line 1455
- *   +0x0078 -> line 1457
- *   +0x0080 -> line 1458
- *   +0x0088 -> line 1461
- *   +0x00a4 -> line 1465
- *   +0x00ac -> line 1467
- *   +0x00b8 -> line 1470
+ *   +0x0000 -> line 1364
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1437–1437 */
-/* addr: 0x0017dd00  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1437
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1432–1432 */
-/* addr: 0x0017dd10  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1432
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1427–1427 */
-/* addr: 0x0017dd20  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1427
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+void impPS2glGetMaterialiv(void)
+{
+    /* TODO: decompile from asm/... */
+}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1368–1422 */
 /* addr: 0x0017dd30  size: 572 bytes */
@@ -989,165 +959,6 @@ void impPS2glGetBooleanv(unsigned int pname, unsigned char* params);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int printf(const char* format, ...);
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1364–1364 */
-/* addr: 0x0017df70  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1364
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1359–1359 */
-/* addr: 0x0017df80  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1359
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1354–1354 */
-/* addr: 0x0017df90  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1354
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1349–1349 */
-/* addr: 0x0017dfa0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1349
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1344–1344 */
-/* addr: 0x0017dfb0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1344
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1339–1339 */
-/* addr: 0x0017dfc0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1339
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1334–1334 */
-/* addr: 0x0017dfd0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1334
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1329–1329 */
-/* addr: 0x0017dfe0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1329
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1323–1323 */
-/* addr: 0x0017dff0  size: 20 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0008 -> line 1323
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void PS2glGet(unsigned int type, unsigned int pname, void* params);
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1318–1318 */
-/* addr: 0x0017e010  size: 20 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0008 -> line 1318
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1313–1313 */
-/* addr: 0x0017e030  size: 20 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0008 -> line 1313
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1308–1308 */
-/* addr: 0x0017e050  size: 20 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0008 -> line 1308
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-void impPS2glGetBooleanv(unsigned int pname, unsigned char* params)
-{
-    PS2glGet(0x140B, pname, params);
-}
-
-void impPS2glGetIntegerv(unsigned int pname, int* params)
-{
-    PS2glGet(0x1404, pname, params);
-}
-
-void impPS2glGetFloatv(unsigned int pname, float* params)
-{
-    PS2glGet(0x1406, pname, params);
-}
-
-void impPS2glGetDoublev(unsigned int pname, double* params)
-{
-    PS2glGet(0x140A, pname, params);
-}
-
-unsigned int impPS2glGetError(void)
-{
-    return 0;
-}
-
-void impPS2glGetLightfv(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glGetLightiv(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glGetMapdv(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glGetMapfv(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glGetMapiv(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glGetMaterialfv(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void impPS2glGetMaterialiv(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
 void PS2glSetInteger(unsigned int pname, int param)
 {
     int iRealBlockCount;
@@ -1203,21 +1014,61 @@ void PS2glSetInteger(unsigned int pname, int param)
     }
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1427–1427 */
+/* addr: 0x0017dd20  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1427
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glGetPixelMapfv(void)
 {
     /* TODO: decompile from asm/... */
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1432–1432 */
+/* addr: 0x0017dd10  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1432
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glGetPixelMapuiv(void)
 {
     /* TODO: decompile from asm/... */
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1437–1437 */
+/* addr: 0x0017dd00  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1437
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glGetPixelMapusv(void)
 {
     /* TODO: decompile from asm/... */
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1441–1470 */
+/* addr: 0x0017dc40  size: 192 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1441
+ *   +0x0034 -> line 1444
+ *   +0x003c -> line 1445
+ *   +0x0044 -> line 1447
+ *   +0x004c -> line 1448
+ *   +0x0054 -> line 1451
+ *   +0x0070 -> line 1455
+ *   +0x0078 -> line 1457
+ *   +0x0080 -> line 1458
+ *   +0x0088 -> line 1461
+ *   +0x00a4 -> line 1465
+ *   +0x00ac -> line 1467
+ *   +0x00b8 -> line 1470
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glGetPointerv(unsigned int pname, void** params)
 {
     switch (pname)
@@ -1243,66 +1094,189 @@ void impPS2glGetPointerv(unsigned int pname, void** params)
     }
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1475–1475 */
+/* addr: 0x0017dc30  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1475
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glGetPolygonStipple(void)
 {
     /* TODO: decompile from asm/... */
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1480–1480 */
+/* addr: 0x0017dc20  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1480
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned int impPS2glGetString(void)
 {
     return 0;
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1485–1485 */
+/* addr: 0x0017dc10  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1485
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glGetTexEnvfv(void)
 {
     /* TODO: decompile from asm/... */
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1490–1490 */
+/* addr: 0x0017dc00  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1490
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glGetTexEnviv(void)
 {
     /* TODO: decompile from asm/... */
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1495–1495 */
+/* addr: 0x0017dbf0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1495
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glGetTexGendv(void)
 {
     /* TODO: decompile from asm/... */
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1500–1500 */
+/* addr: 0x0017dbe0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1500
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glGetTexGenfv(void)
 {
     /* TODO: decompile from asm/... */
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1505–1505 */
+/* addr: 0x0017dbd0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1505
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glGetTexGeniv(void)
 {
     /* TODO: decompile from asm/... */
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1510–1510 */
+/* addr: 0x0017dbc0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1510
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glGetTexImage(void)
 {
     /* TODO: decompile from asm/... */
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1515–1515 */
+/* addr: 0x0017dbb0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1515
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glGetTexLevelParameterfv(void)
 {
     /* TODO: decompile from asm/... */
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1520–1520 */
+/* addr: 0x0017dba0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1520
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glGetTexLevelParameteriv(void)
 {
     /* TODO: decompile from asm/... */
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1525–1525 */
+/* addr: 0x0017db90  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1525
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glGetTexParameterfv(void)
 {
     /* TODO: decompile from asm/... */
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1530–1530 */
+/* addr: 0x0017db80  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1530
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glGetTexParameteriv(void)
 {
     /* TODO: decompile from asm/... */
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 17–39 */
+/* addr: 0x0017da50  size: 292 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 21
+ *   +0x0004 -> line 24
+ *   +0x0008 -> line 21
+ *   +0x000c -> line 17
+ *   +0x0010 -> line 18
+ *   +0x0014 -> line 22
+ *   +0x0018 -> line 18
+ *   +0x001c -> line 22
+ *   +0x0020 -> line 18
+ *   +0x0024 -> line 24
+ *   +0x0028 -> line 18
+ *   +0x0038 -> line 24
+ *   +0x005c -> line 26
+ *   +0x0064 -> line 27
+ *   +0x006c -> line 28
+ *   +0x0074 -> line 29
+ *   +0x007c -> line 30
+ *   +0x0084 -> line 31
+ *   +0x008c -> line 32
+ *   +0x0094 -> line 33
+ *   +0x0098 -> line 36
+ *   +0x009c -> line 37
+ *   +0x00a0 -> line 36
+ *   +0x00a4 -> line 37
+ *   +0x00a8 -> line 36
+ *   +0x00ac -> line 37
+ *   +0x00b0 -> line 36
+ *   +0x00b8 -> line 37
+ *   +0x00bc -> line 36
+ *   +0x00c4 -> line 37
+ *   +0x00c8 -> line 36
+ *   +0x00f0 -> line 37
+ *   +0x011c -> line 39
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glAlphaFunc(unsigned int func, float ref)
 {
     signed char bGsFunc;

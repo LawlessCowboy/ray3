@@ -1670,14 +1670,6 @@ inline void MAT_M_vSetTranslation(MAT_tdstTransformation_* _hMatrix, MTH3D_tdstV
     _hMatrix->stTransformMatrix.stCol_3.xW = 1.0f;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 861–861 */
-/* addr: 0x00280f00  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 861
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 void GAM_fn_vWriteStringInUbiIniFile(void);
@@ -1706,182 +1698,518 @@ void GAM_fn_vReAllocSOL(tdstSuperObjectLinks_* _hSOL, unsigned int Increment);
 unsigned char GAM_fn_bIsMovedOne(HIE_tdstSuperObject_* _hSpo, MTH3D_tdstVector_* _p_stMove);
 void GAM_fn_vAddMovedOneToTable(HIE_tdstSuperObject_* _hSpo, MTH3D_tdstVector_* _p_stMove);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 1117–1120 */
-/* addr: 0x00280f10  size: 44 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1117
- *   +0x000c -> line 1118
- *   +0x0014 -> line 1119
- *   +0x001c -> line 1120
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vReinitSOLRotation(tdstSuperObjectLinks_* _hSOL);
 void fn_vReinitSOLTranslation(tdstSuperObjectLinks_* _hSOL);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 1084–1113 */
-/* addr: 0x00280f40  size: 444 bytes */
+/* MatSp.h inline: the VU0 macro-mode instructions have no C form. */
+inline void MAT_vApplyOnVertexOnVU0(MTH3D_tdstVector_* VectDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* VectA)
+{
+    MTH4D_tdstVector_ Vtmp;
+    MTH4D_tdstVector_* p_stVtmp;
+    MTH4D_tdstMatrix_* p_stMatrix;
+
+    p_stVtmp = &Vtmp; p_stMatrix = &_hTransform->stTransformMatrix;
+    *(unsigned int*)&Vtmp.xX = *(unsigned int*)&VectA->xX; *(unsigned int*)&Vtmp.xY = *(unsigned int*)&VectA->xY; *(unsigned int*)&Vtmp.xZ = *(unsigned int*)&VectA->xZ;
+    asm {
+        lqc2 vf1, 0x0(p_stVtmp)
+        lqc2 vf2, 0x0(p_stMatrix)
+        lqc2 vf3, 0x10(p_stMatrix)
+        lqc2 vf4, 0x20(p_stMatrix)
+        lqc2 vf5, 0x30(p_stMatrix)
+        vmulax.xyzw ACC, vf2, vf1x
+        vmadday.xyzw ACC, vf3, vf1y
+        vmaddaz.xyzw ACC, vf4, vf1z
+        vmaddw.xyzw vf6, vf5, vf0w
+        nop
+        nop
+        sqc2 vf6, 0x0(p_stVtmp)
+    }
+    *(unsigned int*)&VectDest->xX = *(unsigned int*)&Vtmp.xX; *(unsigned int*)&VectDest->xY = *(unsigned int*)&Vtmp.xY; *(unsigned int*)&VectDest->xZ = *(unsigned int*)&Vtmp.xZ;
+}
+
+unsigned int GAM_AlreadyReferencedInSOLinks(tdstSuperObjectLinks_* _hSOL, void* _pLinkedObj);
+void GAM_fn_vReAllocSOL(tdstSuperObjectLinks_* _hSOL, unsigned int Increment);
+
+#pragma auto_inline on
+
+#pragma optimize_for_size off
+
+#pragma optimize_for_size reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 42–50 */
+/* addr: 0x00282a10  size: 144 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1084
- *   +0x0008 -> line 1088
- *   +0x000c -> line 1084
- *   +0x0010 -> line 1088
- *   +0x0014 -> line 1084
- *   +0x0018 -> line 1088
- *   +0x001c -> line 1084
- *   +0x0028 -> line 1088
- *   +0x002c -> line 1084
- *   +0x0030 -> line 1088
- *   +0x0038 -> line 1089
- *   +0x0050 -> line 1091
- *   +0x0060 -> line 1093
- *   +0x0088 -> line 1096
- *   +0x00a0 -> line 1097
- *   +0x00c0 -> line 1098
- *   +0x00c8 -> line 1102
- *   +0x00e0 -> line 1103
- *   +0x00e8 -> line 1105
- *   +0x0100 -> line 1106
- *   +0x0174 -> line 1110
- *   +0x0178 -> line 1106
- *   +0x0180 -> line 1111
- *   +0x0198 -> line 1113
+ *   +0x0000 -> line 42
+ *   +0x0010 -> line 44
+ *   +0x0020 -> line 47
+ *   +0x0024 -> line 44
+ *   +0x0028 -> line 47
+ *   +0x007c -> line 48
+ *   +0x0088 -> line 50
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 1044–1080 */
-/* addr: 0x00281100  size: 860 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1044
- *   +0x0004 -> line 1050
- *   +0x0008 -> line 1044
- *   +0x0014 -> line 1049
- *   +0x0018 -> line 1044
- *   +0x001c -> line 1049
- *   +0x0020 -> line 1044
- *   +0x0038 -> line 1049
- *   +0x0050 -> line 1050
- *   +0x0094 -> line 1053
- *   +0x00a4 -> line 1055
- *   +0x00d4 -> line 1057
- *   +0x00d8 -> line 1058
- *   +0x00f8 -> line 1059
- *   +0x0144 -> line 1060
- *   +0x014c -> line 1061
- *   +0x0150 -> line 1064
- *   +0x0168 -> line 1065
- *   +0x0170 -> line 1067
- *   +0x0190 -> line 1068
- *   +0x0264 -> line 1071
- *   +0x026c -> line 1072
- *   +0x0270 -> line 1073
- *   +0x0290 -> line 1074
- *   +0x0300 -> line 1075
- *   +0x0308 -> line 1076
- *   +0x0318 -> line 1078
- *   +0x0330 -> line 1080
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+#pragma auto_inline reset
+#pragma auto_inline on
+void GAM_fn_vAddMovedOneToTable(HIE_tdstSuperObject_* _hSpo, MTH3D_tdstVector_* _p_stMove)
+{
+    if (GAM_g_ucNbMovedOnes < 150) {
+        GAM_a_hSolTableOfMovedOnesInTrame[GAM_g_ucNbMovedOnes] = (int)_hSpo;
+        MTH3D_M_vCopyVector(&GAM_a_stSolTableOfMoves[GAM_g_ucNbMovedOnes], _p_stMove);
+        GAM_g_ucNbMovedOnes++;
+    }
+}
+#pragma auto_inline reset
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 1009–1039 */
-/* addr: 0x00281530  size: 860 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 56–67 */
+/* addr: 0x00282980  size: 132 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1009
- *   +0x0028 -> line 1012
- *   +0x00bc -> line 1015
- *   +0x00c8 -> line 1017
- *   +0x00fc -> line 1019
- *   +0x0100 -> line 1020
- *   +0x019c -> line 1021
- *   +0x01a4 -> line 1022
- *   +0x01a8 -> line 1025
- *   +0x01c0 -> line 1026
- *   +0x01c8 -> line 1028
- *   +0x025c -> line 1031
- *   +0x0264 -> line 1032
- *   +0x0268 -> line 1033
- *   +0x0310 -> line 1034
- *   +0x0318 -> line 1035
- *   +0x0324 -> line 1037
- *   +0x0338 -> line 1039
+ *   +0x0000 -> line 56
+ *   +0x0018 -> line 58
+ *   +0x0024 -> line 62
+ *   +0x0038 -> line 63
+ *   +0x003c -> line 62
+ *   +0x0058 -> line 63
+ *   +0x0064 -> line 65
+ *   +0x0078 -> line 66
+ *   +0x007c -> line 67
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
+#pragma optimize_for_size off
+unsigned char GAM_fn_bIsMovedOne(HIE_tdstSuperObject_* _hSpo, MTH3D_tdstVector_* _p_stMove)
+{
+    unsigned char i;
+    for (i = 0; i < GAM_g_ucNbMovedOnes; i++) {
+        if ((int)_hSpo == GAM_a_hSolTableOfMovedOnesInTrame[i]) {
+            MTH3D_M_vCopyVector(_p_stMove, &GAM_a_stSolTableOfMoves[i]);
+            return 1;
+        }
+    }
+    return 0;
+}
+#pragma optimize_for_size reset
+#pragma auto_inline reset
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 994–1001 */
-/* addr: 0x00281890  size: 188 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 133–168 */
+/* addr: 0x002827b0  size: 460 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 994
- *   +0x0018 -> line 997
- *   +0x002c -> line 998
- *   +0x0078 -> line 1000
- *   +0x00a0 -> line 1001
+ *   +0x0000 -> line 133
+ *   +0x0024 -> line 135
+ *   +0x0028 -> line 133
+ *   +0x0034 -> line 143
+ *   +0x0038 -> line 134
+ *   +0x003c -> line 143
+ *   +0x0050 -> line 144
+ *   +0x0068 -> line 145
+ *   +0x0080 -> line 146
+ *   +0x00a4 -> line 148
+ *   +0x00b0 -> line 150
+ *   +0x00b8 -> line 151
+ *   +0x00bc -> line 152
+ *   +0x00c0 -> line 153
+ *   +0x00c4 -> line 154
+ *   +0x00c8 -> line 150
+ *   +0x00d4 -> line 151
+ *   +0x00e4 -> line 152
+ *   +0x00f0 -> line 153
+ *   +0x00f4 -> line 152
+ *   +0x00f8 -> line 153
+ *   +0x0134 -> line 154
+ *   +0x0148 -> line 156
+ *   +0x0154 -> line 157
+ *   +0x0160 -> line 158
+ *   +0x016c -> line 159
+ *   +0x0178 -> line 161
+ *   +0x017c -> line 162
+ *   +0x0180 -> line 163
+ *   +0x0184 -> line 164
+ *   +0x0188 -> line 166
+ *   +0x0194 -> line 167
+ *   +0x01a0 -> line 168
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
+void GAM_fn_vReAllocSOL(tdstSuperObjectLinks_* _hSOL, unsigned int Increment)
+{
+    unsigned int* p_ulNbLinkedObjects;
+    void** NewLinkedObj;
+    tdeSOL_ObjType_* eTypeOfNewLinkedObj;
+    tdeSOL_ObjPersistence_* ePersistenceOfNewLinkedObj;
+    MAT_tdstTransformation_* POS_NewInitOfLinkedObj;
+    unsigned int ul;
+    unsigned int* p_ulNbLinksAllocated;
+    p_ulNbLinkedObjects = &_hSOL->ulNbLinkedObjects;
+    p_ulNbLinksAllocated = &_hSOL->ulNbLinksAllocated;
+    NewLinkedObj = (void**)HMU_fn_p_vMalloc((*p_ulNbLinksAllocated + Increment) * sizeof(void*), 0);
+    eTypeOfNewLinkedObj = (tdeSOL_ObjType_*)HMU_fn_p_vMalloc((*p_ulNbLinksAllocated + Increment) * sizeof(tdeSOL_ObjType_), 0);
+    ePersistenceOfNewLinkedObj = (tdeSOL_ObjPersistence_*)HMU_fn_p_vMalloc((*p_ulNbLinksAllocated + Increment) * sizeof(tdeSOL_ObjPersistence_), 0);
+    POS_NewInitOfLinkedObj = (MAT_tdstTransformation_*)HMU_fn_p_vMalloc((*p_ulNbLinksAllocated + Increment) * sizeof(MAT_tdstTransformation_), 0);
+    for (ul = 0; ul < *p_ulNbLinkedObjects; ul++) {
+        NewLinkedObj[ul] = ((void**)_hSOL->LinkedObj)[ul];
+        eTypeOfNewLinkedObj[ul] = _hSOL->eTypeOfLinkedObj[ul];
+        ePersistenceOfNewLinkedObj[ul] = _hSOL->ePersistenceOfLinkedObj[ul];
+        POS_NewInitOfLinkedObj[ul] = _hSOL->POS_InitOfLinkedObj[ul];
+    }
+    HMU_fn_vFree((void**)&_hSOL->LinkedObj, 0);
+    HMU_fn_vFree((void**)&_hSOL->eTypeOfLinkedObj, 0);
+    HMU_fn_vFree((void**)&_hSOL->ePersistenceOfLinkedObj, 0);
+    HMU_fn_vFree((void**)&_hSOL->POS_InitOfLinkedObj, 0);
+    _hSOL->LinkedObj = (int)NewLinkedObj;
+    _hSOL->eTypeOfLinkedObj = eTypeOfNewLinkedObj;
+    _hSOL->ePersistenceOfLinkedObj = ePersistenceOfNewLinkedObj;
+    _hSOL->POS_InitOfLinkedObj = POS_NewInitOfLinkedObj;
+    *p_ulNbLinkedObjects += Increment;
+    *p_ulNbLinksAllocated += Increment;
+}
+#pragma auto_inline reset
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 984–991 */
-/* addr: 0x00281950  size: 400 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 178–184 */
+/* addr: 0x00282760  size: 76 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 984
- *   +0x0018 -> line 987
- *   +0x0028 -> line 988
- *   +0x00e0 -> line 990
- *   +0x0178 -> line 991
+ *   +0x0000 -> line 178
+ *   +0x0010 -> line 180
+ *   +0x0024 -> line 181
+ *   +0x0030 -> line 182
+ *   +0x0044 -> line 184
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
+unsigned int GAM_AlreadyReferencedInSOLinks(tdstSuperObjectLinks_* _hSOL, void* _pLinkedObj)
+{
+    unsigned int ul;
+    for (ul = 0; ul < _hSOL->ulNbLinkedObjects; ul++) {
+        if (((void**)_hSOL->LinkedObj)[ul] == _pLinkedObj)
+            return ul + 1;
+    }
+    return 0;
+}
+#pragma auto_inline reset
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 925–940 */
-/* addr: 0x00281ae0  size: 232 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 190–216 */
+/* addr: 0x002825c0  size: 416 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 925
- *   +0x0018 -> line 929
- *   +0x0028 -> line 930
- *   +0x002c -> line 929
- *   +0x0030 -> line 934
- *   +0x0034 -> line 932
- *   +0x0044 -> line 933
- *   +0x0048 -> line 932
- *   +0x0050 -> line 933
- *   +0x0054 -> line 932
- *   +0x0058 -> line 933
- *   +0x0080 -> line 934
- *   +0x009c -> line 937
- *   +0x00a0 -> line 934
- *   +0x00b8 -> line 936
- *   +0x00bc -> line 937
- *   +0x00c4 -> line 938
- *   +0x00d0 -> line 940
+ *   +0x0000 -> line 190
+ *   +0x0034 -> line 193
+ *   +0x0038 -> line 192
+ *   +0x003c -> line 193
+ *   +0x0088 -> line 196
+ *   +0x00a8 -> line 199
+ *   +0x00b4 -> line 200
+ *   +0x00bc -> line 203
+ *   +0x00cc -> line 204
+ *   +0x00dc -> line 208
+ *   +0x00e4 -> line 212
+ *   +0x0100 -> line 213
+ *   +0x0118 -> line 214
+ *   +0x0130 -> line 215
+ *   +0x017c -> line 216
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void GAM_fn_vAddObjetToSOLinks(tdstSuperObjectLinks_* _hSOL, void* _pLinkedObj, tdeSOL_ObjType_ _eType, MAT_tdstTransformation_* p_MatrixInit, tdeSOL_ObjPersistence_ _ePersistence)
+{
+    unsigned int* p_ulNbLinkedObjects;
+    unsigned int i;
+    unsigned int ulFound;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 894–921 */
-/* addr: 0x00281bd0  size: 200 bytes */
+    p_ulNbLinkedObjects = &_hSOL->ulNbLinkedObjects;
+    if (GAM_AlreadyReferencedInSOLinks(_hSOL, _pLinkedObj))
+        return;
+    switch (_ePersistence)
+    {
+    case eSOL_Persistent:
+        GAM_fn_vReAllocSOL(_hSOL, 1);
+        break;
+    case eSOL_NonPersistent:
+        if (_hSOL->ulNbLinksAllocated <= _hSOL->ulNbLinkedObjects)
+            return;
+        (*p_ulNbLinkedObjects)++;
+        break;
+    default:
+        return;
+    }
+    (((void**)_hSOL->LinkedObj) - 1)[*p_ulNbLinkedObjects] = _pLinkedObj;
+    (_hSOL->eTypeOfLinkedObj - 1)[*p_ulNbLinkedObjects] = _eType;
+    (_hSOL->ePersistenceOfLinkedObj - 1)[*p_ulNbLinkedObjects] = _ePersistence;
+    MAT_M_vCopyMatrix(&_hSOL->POS_InitOfLinkedObj[*p_ulNbLinkedObjects - 1], p_MatrixInit);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 226–241 */
+/* addr: 0x002824f0  size: 208 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 894
- *   +0x0004 -> line 897
- *   +0x0008 -> line 894
- *   +0x001c -> line 897
- *   +0x0030 -> line 900
- *   +0x0034 -> line 901
- *   +0x0040 -> line 902
- *   +0x0048 -> line 905
- *   +0x004c -> line 906
- *   +0x005c -> line 907
- *   +0x0064 -> line 910
- *   +0x007c -> line 913
- *   +0x008c -> line 914
- *   +0x0094 -> line 916
- *   +0x0098 -> line 917
- *   +0x00a8 -> line 918
- *   +0x00b0 -> line 921
+ *   +0x0000 -> line 226
+ *   +0x0010 -> line 230
+ *   +0x0020 -> line 232
+ *   +0x0024 -> line 235
+ *   +0x002c -> line 238
+ *   +0x0030 -> line 235
+ *   +0x0038 -> line 232
+ *   +0x0048 -> line 233
+ *   +0x005c -> line 234
+ *   +0x0068 -> line 235
+ *   +0x006c -> line 234
+ *   +0x0070 -> line 235
+ *   +0x00b0 -> line 238
+ *   +0x00c0 -> line 240
+ *   +0x00c8 -> line 241
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void GAM_fn_vDeleteObjetFromSOLinks(tdstSuperObjectLinks_* _hSOL, unsigned int ulPos)
+{
+    unsigned int ul;
+    unsigned int* p_ulNbLinkedObjects;
+    p_ulNbLinkedObjects = &_hSOL->ulNbLinkedObjects;
+    if (ulPos) {
+        for (ul = ulPos; ul < *p_ulNbLinkedObjects; ul++) {
+            ((void**)_hSOL->LinkedObj)[ul - 1] = ((void**)_hSOL->LinkedObj)[ul];
+            _hSOL->eTypeOfLinkedObj[ul - 1] = _hSOL->eTypeOfLinkedObj[ul];
+            _hSOL->ePersistenceOfLinkedObj[ul - 1] = _hSOL->ePersistenceOfLinkedObj[ul];
+            MAT_M_vCopyMatrix(&_hSOL->POS_InitOfLinkedObj[ul - 1], &_hSOL->POS_InitOfLinkedObj[ul]);
+        }
+        (*p_ulNbLinkedObjects)--;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 576–592 */
+/* addr: 0x00282490  size: 88 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 579
+ *   +0x0004 -> line 576
+ *   +0x0008 -> line 579
+ *   +0x001c -> line 581
+ *   +0x0020 -> line 582
+ *   +0x002c -> line 584
+ *   +0x0038 -> line 588
+ *   +0x003c -> line 590
+ *   +0x004c -> line 591
+ *   +0x0050 -> line 592
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstSuperObjectLinks_* SOL_SearchSOLFromSPO(HIE_tdstSuperObject_* _hSPO)
+{
+    tdstSuperObjectLinks_* hSOL;
+    unsigned int i;
+    for (i = 0; i < g_stEngineStructure.ulNumberOfSOLLoaded; i++) {
+        hSOL = g_stEngineStructure.p_hSOL[i];
+        if (hSOL->h_SPORef == _hSPO)
+            return hSOL;
+    }
+    return NULL;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 607–616 */
+/* addr: 0x00282440  size: 72 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 607
+ *   +0x0004 -> line 608
+ *   +0x0008 -> line 609
+ *   +0x0010 -> line 611
+ *   +0x0020 -> line 612
+ *   +0x002c -> line 613
+ *   +0x0030 -> line 614
+ *   +0x0040 -> line 616
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int fn_b_ObjectAlreadyTreatedWithSPO(int _iNbOfTreatedObjects, void** _p_a_TreatedObjects, void* hObject)
+{
+    int n_obj;
+    int bAlreadyDone;
+    bAlreadyDone = 0;
+    for (n_obj = 0; !bAlreadyDone && n_obj < _iNbOfTreatedObjects; n_obj++) {
+        if (hObject == _p_a_TreatedObjects[n_obj]) {
+            bAlreadyDone = 1;
+        }
+    }
+    return bAlreadyDone;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 624–626 */
+/* addr: 0x002823f0  size: 68 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 624
+ *   +0x0038 -> line 625
+ *   +0x003c -> line 626
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_v_SetOneSpoImmediateTeleportation(HIE_tdstSuperObject_* _hLinkedSpo, MTH3D_tdstVector_* _p_stTranslation)
+{
+    unsigned int* pMatrix = (unsigned int*)_hLinkedSpo->hGlobalMatrix; if (pMatrix[0] == MAT_eTransform_Identity) pMatrix[0] = MAT_eTransform_Translation; pMatrix[16] = ((unsigned int*)_p_stTranslation)[0]; pMatrix[17] = ((unsigned int*)_p_stTranslation)[1]; pMatrix[18] = ((unsigned int*)_p_stTranslation)[2]; pMatrix[19] = 0x3f800000;
+    _hLinkedSpo->lLastComputeFrame = HIE_gs_lCurrentFrame;
+    HIE_fn_vComputeNewRelativeMatrix(_hLinkedSpo);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 707–730 */
+/* addr: 0x00282330  size: 188 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 707
+ *   +0x0004 -> line 710
+ *   +0x0008 -> line 707
+ *   +0x0028 -> line 710
+ *   +0x003c -> line 714
+ *   +0x0050 -> line 718
+ *   +0x0064 -> line 721
+ *   +0x007c -> line 724
+ *   +0x008c -> line 727
+ *   +0x00a0 -> line 730
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_v_SetRotationMechanicsImmediateTeleportation(DNM_stDynamics* _p_stDynamic, HIE_tdstSuperObject_* _p_stSpo, MTH3D_tdstVector_* _p_stI, MTH3D_tdstVector_* _p_stJ, MTH3D_tdstVector_* _p_stK)
+{
+    if (!((_p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x80) ? 1 : 0)) {
+        MAT_fn_vSetRotationVectors(&_p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix, _p_stI, _p_stJ, _p_stK);
+        MAT_fn_vSetRotationVectors(&_p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix, _p_stI, _p_stJ, _p_stK);
+        if ((_p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0) {
+            MAT_fn_vSetRotationVectors(&_p_stDynamic->m_tdstDynamicsComplexBlock.m_stAbsolutePreviousMatrix, _p_stI, _p_stJ, _p_stK);
+            MAT_fn_vSetRotationVectors(&_p_stDynamic->m_tdstDynamicsComplexBlock.m_stPrevPreviousMatrix, _p_stI, _p_stJ, _p_stK);
+        }
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 756–763 */
+/* addr: 0x00282280  size: 176 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 756
+ *   +0x0028 -> line 759
+ *   +0x0038 -> line 760
+ *   +0x0080 -> line 762
+ *   +0x0090 -> line 763
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_v_SetRotationOneCharacterImmediateTeleportation(HIE_tdstSuperObject_* _hPerso, MTH3D_tdstVector_* _p_stI, MTH3D_tdstVector_* _p_stJ, MTH3D_tdstVector_* _p_stK)
+{
+    DNM_stDynamics* p_stDynamics;
+    if (_hPerso->hLinkedObject.p_stCharacter->h_Dynam) { p_stDynamics = fn_p_stDynamGetDynamics(_hPerso->hLinkedObject.p_stCharacter->h_Dynam); MAT_fn_vSetRotationVectors(_hPerso->hGlobalMatrix, _p_stI, _p_stJ, _p_stK); HIE_fn_vComputeNewRelativeMatrix(_hPerso); fn_v_SetRotationMechanicsImmediateTeleportation(p_stDynamics, _hPerso, _p_stI, _p_stJ, _p_stK); } else { MAT_fn_vSetRotationVectors(_hPerso->hGlobalMatrix, _p_stI, _p_stJ, _p_stK); HIE_fn_vComputeNewRelativeMatrix(_hPerso); }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 790–804 */
+/* addr: 0x002821b0  size: 208 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 790
+ *   +0x0018 -> line 795
+ *   +0x001c -> line 792
+ *   +0x0034 -> line 795
+ *   +0x003c -> line 798
+ *   +0x0044 -> line 802
+ *   +0x0048 -> line 803
+ *   +0x004c -> line 802
+ *   +0x0078 -> line 803
+ *   +0x00bc -> line 804
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_v_TranslateOneSpoImmediateTeleportation(HIE_tdstSuperObject_* _hLinkedSpo, MTH3D_tdstVector_* _p_stTranslation)
+{
+    MTH3D_tdstVector_ stV1;
+    MTH3D_tdstVector_ stV2;
+    { MAT_tdstTransformation_* pGlobal = _hLinkedSpo->hGlobalMatrix; MTH3D_M_vCopyVector((MTH3D_tdstVector_*)&stV1, (MTH3D_tdstVector_*)&pGlobal->stTransformMatrix.stCol_3); }
+    if (g_bNoInterpolationForThisSPOMove)
+        GLIPS2_vSetNoInterpolationForSPO(_hLinkedSpo);
+    stV2.xX = stV1.xX + _p_stTranslation->xX; stV2.xY = stV1.xY + _p_stTranslation->xY; stV2.xZ = stV1.xZ + _p_stTranslation->xZ;
+    { MAT_tdstTransformation_* pGlobal = _hLinkedSpo->hGlobalMatrix; if (pGlobal->eType == MAT_eTransform_Identity) pGlobal->eType = MAT_eTransform_Translation; MTH3D_M_vCopyVector((MTH3D_tdstVector_*)&pGlobal->stTransformMatrix.stCol_3, (MTH3D_tdstVector_*)&stV2); pGlobal->stTransformMatrix.stCol_3.xW = 1.0f; _hLinkedSpo->lLastComputeFrame = HIE_gs_lCurrentFrame; HIE_fn_vComputeNewRelativeMatrix(_hLinkedSpo); }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 807–817 */
+/* addr: 0x00282160  size: 80 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 807
+ *   +0x0014 -> line 810
+ *   +0x0018 -> line 811
+ *   +0x0024 -> line 812
+ *   +0x002c -> line 814
+ *   +0x0030 -> line 815
+ *   +0x003c -> line 817
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_v_RotateOneSpoLinkedToOneSPO(HIE_tdstSuperObject_* _hLinkedSpo, MAT_tdstTransformation_* p_Transformation)
+{
+    MAT_tdstTransformation_* pGlobal = _hLinkedSpo->hGlobalMatrix;
+    MAT_fn_vCompose(pGlobal, p_Transformation, pGlobal);
+    MAT_fn_vNormalize(pGlobal);
+    _hLinkedSpo->lLastComputeFrame = HIE_gs_lCurrentFrame;
+    HIE_fn_vComputeNewRelativeMatrix(_hLinkedSpo);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 820–825 */
+/* addr: 0x00282090  size: 200 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 820
+ *   +0x0018 -> line 822
+ *   +0x0020 -> line 823
+ *   +0x0050 -> line 824
+ *   +0x00b4 -> line 825
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_v_TranslateOneWaypointImmediateTeleportation(WP_tdstWayPoint_* _hWP, MTH3D_tdstVector_* _p_stTranslation)
+{
+    MTH3D_tdstVector_ stV1;
+    MTH3D_tdstVector_ stV2;
+    WP_fnv_WayPoint_ComputeLocation(_hWP, &stV1);
+    stV2.xX = stV1.xX + _p_stTranslation->xX; stV2.xY = stV1.xY + _p_stTranslation->xY; stV2.xZ = stV1.xZ + _p_stTranslation->xZ;
+    if (_hWP->m_hSuperObject) { MAT_tdstTransformation_ stInverse; MTH3D_tdstVector_ stLocal; MTH3D_tdstVector_* pLocal; MAT_fn_vInvert(&stInverse, _hWP->m_hSuperObject->hGlobalMatrix); pLocal = &stLocal; MAT_fn_vApplyOnVertex(pLocal, &stInverse, &stV2); _hWP->m_stVertex = *pLocal; } else { _hWP->m_stVertex = stV2; }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 828–854 */
+/* addr: 0x00281f00  size: 400 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 828
+ *   +0x0028 -> line 833
+ *   +0x0030 -> line 835
+ *   +0x0038 -> line 836
+ *   +0x0050 -> line 839
+ *   +0x0054 -> line 836
+ *   +0x0058 -> line 839
+ *   +0x005c -> line 836
+ *   +0x0068 -> line 839
+ *   +0x006c -> line 836
+ *   +0x0088 -> line 839
+ *   +0x0090 -> line 840
+ *   +0x00a8 -> line 842
+ *   +0x00b4 -> line 846
+ *   +0x00c0 -> line 847
+ *   +0x011c -> line 848
+ *   +0x0120 -> line 847
+ *   +0x0134 -> line 848
+ *   +0x0148 -> line 849
+ *   +0x0150 -> line 852
+ *   +0x016c -> line 854
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_v_RotateOneWayPointLinkedToOneSPO(WP_tdstWayPoint_* _hWP, MAT_tdstTransformation_* p_Transformation)
+{
+    MAT_tdstTransformation_ stTemp;
+    MTH3D_tdstVector_ stV1;
+    WP_fnv_WayPoint_ComputeLocation(_hWP, &stV1);
+    MAT_fn_vSetIdentity(&stTemp);
+    if (stTemp.eType == MAT_eTransform_Identity) stTemp.eType = MAT_eTransform_Translation;
+    MTH3D_M_vCopyVector((MTH3D_tdstVector_*)&stTemp.stTransformMatrix.stCol_3, &stV1); stTemp.stTransformMatrix.stCol_3.xW = 1.0f;
+    MAT_fn_vCompose(&stTemp, p_Transformation, &stTemp);
+    MTH3D_M_vCopyVector(&stV1, (MTH3D_tdstVector_*)&stTemp.stTransformMatrix.stCol_3);
+    if (_hWP->m_hSuperObject) {
+        MAT_tdstTransformation_ stInverse;
+        MTH4D_tdstVector_ stVtmp;
+        MTH4D_tdstMatrix_* p_stMatrix;
+        MTH4D_tdstVector_* p_stVtmp;
+        MAT_fn_vInvert(&stInverse, _hWP->m_hSuperObject->hGlobalMatrix);
+        p_stVtmp = &stVtmp; p_stMatrix = &stInverse.stTransformMatrix; *(unsigned int*)&stVtmp.xX = *(unsigned int*)&stV1.xX; *(unsigned int*)&stVtmp.xY = *(unsigned int*)&stV1.xY; *(unsigned int*)&stVtmp.xZ = *(unsigned int*)&stV1.xZ; asm { lqc2 vf1, 0x0(p_stVtmp); lqc2 vf2, 0x0(p_stMatrix); lqc2 vf3, 0x10(p_stMatrix); lqc2 vf4, 0x20(p_stMatrix); lqc2 vf5, 0x30(p_stMatrix); vmulax.xyzw ACC, vf2, vf1x; vmadday.xyzw ACC, vf3, vf1y; vmaddaz.xyzw ACC, vf4, vf1z; vmaddw.xyzw vf6, vf5, vf0w; nop; nop; sqc2 vf6, 0x0(p_stVtmp); } *(unsigned int*)&stV1.xX = *(unsigned int*)&stVtmp.xX; *(unsigned int*)&stV1.xY = *(unsigned int*)&stVtmp.xY; *(unsigned int*)&stV1.xZ = *(unsigned int*)&stVtmp.xZ;
+        _hWP->m_stVertex = stV1;
+    } else {
+        _hWP->m_stVertex = stV1;
+    }
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 864–891 */
 /* addr: 0x00281ca0  size: 608 bytes */
@@ -1923,527 +2251,6 @@ void fn_vReinitSOLTranslation(tdstSuperObjectLinks_* _hSOL);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 828–854 */
-/* addr: 0x00281f00  size: 400 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 828
- *   +0x0028 -> line 833
- *   +0x0030 -> line 835
- *   +0x0038 -> line 836
- *   +0x0050 -> line 839
- *   +0x0054 -> line 836
- *   +0x0058 -> line 839
- *   +0x005c -> line 836
- *   +0x0068 -> line 839
- *   +0x006c -> line 836
- *   +0x0088 -> line 839
- *   +0x0090 -> line 840
- *   +0x00a8 -> line 842
- *   +0x00b4 -> line 846
- *   +0x00c0 -> line 847
- *   +0x011c -> line 848
- *   +0x0120 -> line 847
- *   +0x0134 -> line 848
- *   +0x0148 -> line 849
- *   +0x0150 -> line 852
- *   +0x016c -> line 854
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-/* MatSp.h inline: the VU0 macro-mode instructions have no C form. */
-inline void MAT_vApplyOnVertexOnVU0(MTH3D_tdstVector_* VectDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* VectA)
-{
-    MTH4D_tdstVector_ Vtmp;
-    MTH4D_tdstVector_* p_stVtmp;
-    MTH4D_tdstMatrix_* p_stMatrix;
-
-    p_stVtmp = &Vtmp; p_stMatrix = &_hTransform->stTransformMatrix;
-    *(unsigned int*)&Vtmp.xX = *(unsigned int*)&VectA->xX; *(unsigned int*)&Vtmp.xY = *(unsigned int*)&VectA->xY; *(unsigned int*)&Vtmp.xZ = *(unsigned int*)&VectA->xZ;
-    asm {
-        lqc2 vf1, 0x0(p_stVtmp)
-        lqc2 vf2, 0x0(p_stMatrix)
-        lqc2 vf3, 0x10(p_stMatrix)
-        lqc2 vf4, 0x20(p_stMatrix)
-        lqc2 vf5, 0x30(p_stMatrix)
-        vmulax.xyzw ACC, vf2, vf1x
-        vmadday.xyzw ACC, vf3, vf1y
-        vmaddaz.xyzw ACC, vf4, vf1z
-        vmaddw.xyzw vf6, vf5, vf0w
-        nop
-        nop
-        sqc2 vf6, 0x0(p_stVtmp)
-    }
-    *(unsigned int*)&VectDest->xX = *(unsigned int*)&Vtmp.xX; *(unsigned int*)&VectDest->xY = *(unsigned int*)&Vtmp.xY; *(unsigned int*)&VectDest->xZ = *(unsigned int*)&Vtmp.xZ;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 820–825 */
-/* addr: 0x00282090  size: 200 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 820
- *   +0x0018 -> line 822
- *   +0x0020 -> line 823
- *   +0x0050 -> line 824
- *   +0x00b4 -> line 825
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 807–817 */
-/* addr: 0x00282160  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 807
- *   +0x0014 -> line 810
- *   +0x0018 -> line 811
- *   +0x0024 -> line 812
- *   +0x002c -> line 814
- *   +0x0030 -> line 815
- *   +0x003c -> line 817
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 790–804 */
-/* addr: 0x002821b0  size: 208 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 790
- *   +0x0018 -> line 795
- *   +0x001c -> line 792
- *   +0x0034 -> line 795
- *   +0x003c -> line 798
- *   +0x0044 -> line 802
- *   +0x0048 -> line 803
- *   +0x004c -> line 802
- *   +0x0078 -> line 803
- *   +0x00bc -> line 804
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 756–763 */
-/* addr: 0x00282280  size: 176 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 756
- *   +0x0028 -> line 759
- *   +0x0038 -> line 760
- *   +0x0080 -> line 762
- *   +0x0090 -> line 763
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 707–730 */
-/* addr: 0x00282330  size: 188 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 707
- *   +0x0004 -> line 710
- *   +0x0008 -> line 707
- *   +0x0028 -> line 710
- *   +0x003c -> line 714
- *   +0x0050 -> line 718
- *   +0x0064 -> line 721
- *   +0x007c -> line 724
- *   +0x008c -> line 727
- *   +0x00a0 -> line 730
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 624–626 */
-/* addr: 0x002823f0  size: 68 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 624
- *   +0x0038 -> line 625
- *   +0x003c -> line 626
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 607–616 */
-/* addr: 0x00282440  size: 72 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 607
- *   +0x0004 -> line 608
- *   +0x0008 -> line 609
- *   +0x0010 -> line 611
- *   +0x0020 -> line 612
- *   +0x002c -> line 613
- *   +0x0030 -> line 614
- *   +0x0040 -> line 616
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 576–592 */
-/* addr: 0x00282490  size: 88 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 579
- *   +0x0004 -> line 576
- *   +0x0008 -> line 579
- *   +0x001c -> line 581
- *   +0x0020 -> line 582
- *   +0x002c -> line 584
- *   +0x0038 -> line 588
- *   +0x003c -> line 590
- *   +0x004c -> line 591
- *   +0x0050 -> line 592
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 226–241 */
-/* addr: 0x002824f0  size: 208 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 226
- *   +0x0010 -> line 230
- *   +0x0020 -> line 232
- *   +0x0024 -> line 235
- *   +0x002c -> line 238
- *   +0x0030 -> line 235
- *   +0x0038 -> line 232
- *   +0x0048 -> line 233
- *   +0x005c -> line 234
- *   +0x0068 -> line 235
- *   +0x006c -> line 234
- *   +0x0070 -> line 235
- *   +0x00b0 -> line 238
- *   +0x00c0 -> line 240
- *   +0x00c8 -> line 241
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 190–216 */
-/* addr: 0x002825c0  size: 416 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 190
- *   +0x0034 -> line 193
- *   +0x0038 -> line 192
- *   +0x003c -> line 193
- *   +0x0088 -> line 196
- *   +0x00a8 -> line 199
- *   +0x00b4 -> line 200
- *   +0x00bc -> line 203
- *   +0x00cc -> line 204
- *   +0x00dc -> line 208
- *   +0x00e4 -> line 212
- *   +0x0100 -> line 213
- *   +0x0118 -> line 214
- *   +0x0130 -> line 215
- *   +0x017c -> line 216
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned int GAM_AlreadyReferencedInSOLinks(tdstSuperObjectLinks_* _hSOL, void* _pLinkedObj);
-void GAM_fn_vReAllocSOL(tdstSuperObjectLinks_* _hSOL, unsigned int Increment);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 178–184 */
-/* addr: 0x00282760  size: 76 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 178
- *   +0x0010 -> line 180
- *   +0x0024 -> line 181
- *   +0x0030 -> line 182
- *   +0x0044 -> line 184
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-#pragma auto_inline on
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 133–168 */
-/* addr: 0x002827b0  size: 460 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 133
- *   +0x0024 -> line 135
- *   +0x0028 -> line 133
- *   +0x0034 -> line 143
- *   +0x0038 -> line 134
- *   +0x003c -> line 143
- *   +0x0050 -> line 144
- *   +0x0068 -> line 145
- *   +0x0080 -> line 146
- *   +0x00a4 -> line 148
- *   +0x00b0 -> line 150
- *   +0x00b8 -> line 151
- *   +0x00bc -> line 152
- *   +0x00c0 -> line 153
- *   +0x00c4 -> line 154
- *   +0x00c8 -> line 150
- *   +0x00d4 -> line 151
- *   +0x00e4 -> line 152
- *   +0x00f0 -> line 153
- *   +0x00f4 -> line 152
- *   +0x00f8 -> line 153
- *   +0x0134 -> line 154
- *   +0x0148 -> line 156
- *   +0x0154 -> line 157
- *   +0x0160 -> line 158
- *   +0x016c -> line 159
- *   +0x0178 -> line 161
- *   +0x017c -> line 162
- *   +0x0180 -> line 163
- *   +0x0184 -> line 164
- *   +0x0188 -> line 166
- *   +0x0194 -> line 167
- *   +0x01a0 -> line 168
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 56–67 */
-/* addr: 0x00282980  size: 132 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 56
- *   +0x0018 -> line 58
- *   +0x0024 -> line 62
- *   +0x0038 -> line 63
- *   +0x003c -> line 62
- *   +0x0058 -> line 63
- *   +0x0064 -> line 65
- *   +0x0078 -> line 66
- *   +0x007c -> line 67
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-#pragma optimize_for_size off
-
-#pragma optimize_for_size reset
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 42–50 */
-/* addr: 0x00282a10  size: 144 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 42
- *   +0x0010 -> line 44
- *   +0x0020 -> line 47
- *   +0x0024 -> line 44
- *   +0x0028 -> line 47
- *   +0x007c -> line 48
- *   +0x0088 -> line 50
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-#pragma auto_inline reset
-#pragma auto_inline on
-void GAM_fn_vAddMovedOneToTable(HIE_tdstSuperObject_* _hSpo, MTH3D_tdstVector_* _p_stMove)
-{
-    if (GAM_g_ucNbMovedOnes < 150) {
-        GAM_a_hSolTableOfMovedOnesInTrame[GAM_g_ucNbMovedOnes] = (int)_hSpo;
-        MTH3D_M_vCopyVector(&GAM_a_stSolTableOfMoves[GAM_g_ucNbMovedOnes], _p_stMove);
-        GAM_g_ucNbMovedOnes++;
-    }
-}
-#pragma auto_inline reset
-
-#pragma auto_inline on
-#pragma optimize_for_size off
-unsigned char GAM_fn_bIsMovedOne(HIE_tdstSuperObject_* _hSpo, MTH3D_tdstVector_* _p_stMove)
-{
-    unsigned char i;
-    for (i = 0; i < GAM_g_ucNbMovedOnes; i++) {
-        if ((int)_hSpo == GAM_a_hSolTableOfMovedOnesInTrame[i]) {
-            MTH3D_M_vCopyVector(_p_stMove, &GAM_a_stSolTableOfMoves[i]);
-            return 1;
-        }
-    }
-    return 0;
-}
-#pragma optimize_for_size reset
-#pragma auto_inline reset
-
-#pragma auto_inline on
-void GAM_fn_vReAllocSOL(tdstSuperObjectLinks_* _hSOL, unsigned int Increment)
-{
-    unsigned int* p_ulNbLinkedObjects;
-    void** NewLinkedObj;
-    tdeSOL_ObjType_* eTypeOfNewLinkedObj;
-    tdeSOL_ObjPersistence_* ePersistenceOfNewLinkedObj;
-    MAT_tdstTransformation_* POS_NewInitOfLinkedObj;
-    unsigned int ul;
-    unsigned int* p_ulNbLinksAllocated;
-    p_ulNbLinkedObjects = &_hSOL->ulNbLinkedObjects;
-    p_ulNbLinksAllocated = &_hSOL->ulNbLinksAllocated;
-    NewLinkedObj = (void**)HMU_fn_p_vMalloc((*p_ulNbLinksAllocated + Increment) * sizeof(void*), 0);
-    eTypeOfNewLinkedObj = (tdeSOL_ObjType_*)HMU_fn_p_vMalloc((*p_ulNbLinksAllocated + Increment) * sizeof(tdeSOL_ObjType_), 0);
-    ePersistenceOfNewLinkedObj = (tdeSOL_ObjPersistence_*)HMU_fn_p_vMalloc((*p_ulNbLinksAllocated + Increment) * sizeof(tdeSOL_ObjPersistence_), 0);
-    POS_NewInitOfLinkedObj = (MAT_tdstTransformation_*)HMU_fn_p_vMalloc((*p_ulNbLinksAllocated + Increment) * sizeof(MAT_tdstTransformation_), 0);
-    for (ul = 0; ul < *p_ulNbLinkedObjects; ul++) {
-        NewLinkedObj[ul] = ((void**)_hSOL->LinkedObj)[ul];
-        eTypeOfNewLinkedObj[ul] = _hSOL->eTypeOfLinkedObj[ul];
-        ePersistenceOfNewLinkedObj[ul] = _hSOL->ePersistenceOfLinkedObj[ul];
-        POS_NewInitOfLinkedObj[ul] = _hSOL->POS_InitOfLinkedObj[ul];
-    }
-    HMU_fn_vFree((void**)&_hSOL->LinkedObj, 0);
-    HMU_fn_vFree((void**)&_hSOL->eTypeOfLinkedObj, 0);
-    HMU_fn_vFree((void**)&_hSOL->ePersistenceOfLinkedObj, 0);
-    HMU_fn_vFree((void**)&_hSOL->POS_InitOfLinkedObj, 0);
-    _hSOL->LinkedObj = (int)NewLinkedObj;
-    _hSOL->eTypeOfLinkedObj = eTypeOfNewLinkedObj;
-    _hSOL->ePersistenceOfLinkedObj = ePersistenceOfNewLinkedObj;
-    _hSOL->POS_InitOfLinkedObj = POS_NewInitOfLinkedObj;
-    *p_ulNbLinkedObjects += Increment;
-    *p_ulNbLinksAllocated += Increment;
-}
-#pragma auto_inline reset
-
-#pragma auto_inline on
-unsigned int GAM_AlreadyReferencedInSOLinks(tdstSuperObjectLinks_* _hSOL, void* _pLinkedObj)
-{
-    unsigned int ul;
-    for (ul = 0; ul < _hSOL->ulNbLinkedObjects; ul++) {
-        if (((void**)_hSOL->LinkedObj)[ul] == _pLinkedObj)
-            return ul + 1;
-    }
-    return 0;
-}
-#pragma auto_inline reset
-
-void GAM_fn_vAddObjetToSOLinks(tdstSuperObjectLinks_* _hSOL, void* _pLinkedObj, tdeSOL_ObjType_ _eType, MAT_tdstTransformation_* p_MatrixInit, tdeSOL_ObjPersistence_ _ePersistence)
-{
-    unsigned int* p_ulNbLinkedObjects;
-    unsigned int i;
-    unsigned int ulFound;
-
-    p_ulNbLinkedObjects = &_hSOL->ulNbLinkedObjects;
-    if (GAM_AlreadyReferencedInSOLinks(_hSOL, _pLinkedObj))
-        return;
-    switch (_ePersistence)
-    {
-    case eSOL_Persistent:
-        GAM_fn_vReAllocSOL(_hSOL, 1);
-        break;
-    case eSOL_NonPersistent:
-        if (_hSOL->ulNbLinksAllocated <= _hSOL->ulNbLinkedObjects)
-            return;
-        (*p_ulNbLinkedObjects)++;
-        break;
-    default:
-        return;
-    }
-    (((void**)_hSOL->LinkedObj) - 1)[*p_ulNbLinkedObjects] = _pLinkedObj;
-    (_hSOL->eTypeOfLinkedObj - 1)[*p_ulNbLinkedObjects] = _eType;
-    (_hSOL->ePersistenceOfLinkedObj - 1)[*p_ulNbLinkedObjects] = _ePersistence;
-    MAT_M_vCopyMatrix(&_hSOL->POS_InitOfLinkedObj[*p_ulNbLinkedObjects - 1], p_MatrixInit);
-}
-
-void GAM_fn_vDeleteObjetFromSOLinks(tdstSuperObjectLinks_* _hSOL, unsigned int ulPos)
-{
-    unsigned int ul;
-    unsigned int* p_ulNbLinkedObjects;
-    p_ulNbLinkedObjects = &_hSOL->ulNbLinkedObjects;
-    if (ulPos) {
-        for (ul = ulPos; ul < *p_ulNbLinkedObjects; ul++) {
-            ((void**)_hSOL->LinkedObj)[ul - 1] = ((void**)_hSOL->LinkedObj)[ul];
-            _hSOL->eTypeOfLinkedObj[ul - 1] = _hSOL->eTypeOfLinkedObj[ul];
-            _hSOL->ePersistenceOfLinkedObj[ul - 1] = _hSOL->ePersistenceOfLinkedObj[ul];
-            MAT_M_vCopyMatrix(&_hSOL->POS_InitOfLinkedObj[ul - 1], &_hSOL->POS_InitOfLinkedObj[ul]);
-        }
-        (*p_ulNbLinkedObjects)--;
-    }
-}
-
-tdstSuperObjectLinks_* SOL_SearchSOLFromSPO(HIE_tdstSuperObject_* _hSPO)
-{
-    tdstSuperObjectLinks_* hSOL;
-    unsigned int i;
-    for (i = 0; i < g_stEngineStructure.ulNumberOfSOLLoaded; i++) {
-        hSOL = g_stEngineStructure.p_hSOL[i];
-        if (hSOL->h_SPORef == _hSPO)
-            return hSOL;
-    }
-    return NULL;
-}
-
-int fn_b_ObjectAlreadyTreatedWithSPO(int _iNbOfTreatedObjects, void** _p_a_TreatedObjects, void* hObject)
-{
-    int n_obj;
-    int bAlreadyDone;
-    bAlreadyDone = 0;
-    for (n_obj = 0; !bAlreadyDone && n_obj < _iNbOfTreatedObjects; n_obj++) {
-        if (hObject == _p_a_TreatedObjects[n_obj]) {
-            bAlreadyDone = 1;
-        }
-    }
-    return bAlreadyDone;
-}
-
-void fn_v_SetOneSpoImmediateTeleportation(HIE_tdstSuperObject_* _hLinkedSpo, MTH3D_tdstVector_* _p_stTranslation)
-{
-    unsigned int* pMatrix = (unsigned int*)_hLinkedSpo->hGlobalMatrix; if (pMatrix[0] == MAT_eTransform_Identity) pMatrix[0] = MAT_eTransform_Translation; pMatrix[16] = ((unsigned int*)_p_stTranslation)[0]; pMatrix[17] = ((unsigned int*)_p_stTranslation)[1]; pMatrix[18] = ((unsigned int*)_p_stTranslation)[2]; pMatrix[19] = 0x3f800000;
-    _hLinkedSpo->lLastComputeFrame = HIE_gs_lCurrentFrame;
-    HIE_fn_vComputeNewRelativeMatrix(_hLinkedSpo);
-}
-
-void fn_v_SetRotationMechanicsImmediateTeleportation(DNM_stDynamics* _p_stDynamic, HIE_tdstSuperObject_* _p_stSpo, MTH3D_tdstVector_* _p_stI, MTH3D_tdstVector_* _p_stJ, MTH3D_tdstVector_* _p_stK)
-{
-    if (!((_p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x80) ? 1 : 0)) {
-        MAT_fn_vSetRotationVectors(&_p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix, _p_stI, _p_stJ, _p_stK);
-        MAT_fn_vSetRotationVectors(&_p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix, _p_stI, _p_stJ, _p_stK);
-        if ((_p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0) {
-            MAT_fn_vSetRotationVectors(&_p_stDynamic->m_tdstDynamicsComplexBlock.m_stAbsolutePreviousMatrix, _p_stI, _p_stJ, _p_stK);
-            MAT_fn_vSetRotationVectors(&_p_stDynamic->m_tdstDynamicsComplexBlock.m_stPrevPreviousMatrix, _p_stI, _p_stJ, _p_stK);
-        }
-    }
-}
-
-void fn_v_SetRotationOneCharacterImmediateTeleportation(HIE_tdstSuperObject_* _hPerso, MTH3D_tdstVector_* _p_stI, MTH3D_tdstVector_* _p_stJ, MTH3D_tdstVector_* _p_stK)
-{
-    DNM_stDynamics* p_stDynamics;
-    if (_hPerso->hLinkedObject.p_stCharacter->h_Dynam) { p_stDynamics = fn_p_stDynamGetDynamics(_hPerso->hLinkedObject.p_stCharacter->h_Dynam); MAT_fn_vSetRotationVectors(_hPerso->hGlobalMatrix, _p_stI, _p_stJ, _p_stK); HIE_fn_vComputeNewRelativeMatrix(_hPerso); fn_v_SetRotationMechanicsImmediateTeleportation(p_stDynamics, _hPerso, _p_stI, _p_stJ, _p_stK); } else { MAT_fn_vSetRotationVectors(_hPerso->hGlobalMatrix, _p_stI, _p_stJ, _p_stK); HIE_fn_vComputeNewRelativeMatrix(_hPerso); }
-}
-
-void fn_v_TranslateOneSpoImmediateTeleportation(HIE_tdstSuperObject_* _hLinkedSpo, MTH3D_tdstVector_* _p_stTranslation)
-{
-    MTH3D_tdstVector_ stV1;
-    MTH3D_tdstVector_ stV2;
-    { MAT_tdstTransformation_* pGlobal = _hLinkedSpo->hGlobalMatrix; MTH3D_M_vCopyVector((MTH3D_tdstVector_*)&stV1, (MTH3D_tdstVector_*)&pGlobal->stTransformMatrix.stCol_3); }
-    if (g_bNoInterpolationForThisSPOMove)
-        GLIPS2_vSetNoInterpolationForSPO(_hLinkedSpo);
-    stV2.xX = stV1.xX + _p_stTranslation->xX; stV2.xY = stV1.xY + _p_stTranslation->xY; stV2.xZ = stV1.xZ + _p_stTranslation->xZ;
-    { MAT_tdstTransformation_* pGlobal = _hLinkedSpo->hGlobalMatrix; if (pGlobal->eType == MAT_eTransform_Identity) pGlobal->eType = MAT_eTransform_Translation; MTH3D_M_vCopyVector((MTH3D_tdstVector_*)&pGlobal->stTransformMatrix.stCol_3, (MTH3D_tdstVector_*)&stV2); pGlobal->stTransformMatrix.stCol_3.xW = 1.0f; _hLinkedSpo->lLastComputeFrame = HIE_gs_lCurrentFrame; HIE_fn_vComputeNewRelativeMatrix(_hLinkedSpo); }
-}
-
-void fn_v_RotateOneSpoLinkedToOneSPO(HIE_tdstSuperObject_* _hLinkedSpo, MAT_tdstTransformation_* p_Transformation)
-{
-    MAT_tdstTransformation_* pGlobal = _hLinkedSpo->hGlobalMatrix;
-    MAT_fn_vCompose(pGlobal, p_Transformation, pGlobal);
-    MAT_fn_vNormalize(pGlobal);
-    _hLinkedSpo->lLastComputeFrame = HIE_gs_lCurrentFrame;
-    HIE_fn_vComputeNewRelativeMatrix(_hLinkedSpo);
-}
-
-void fn_v_TranslateOneWaypointImmediateTeleportation(WP_tdstWayPoint_* _hWP, MTH3D_tdstVector_* _p_stTranslation)
-{
-    MTH3D_tdstVector_ stV1;
-    MTH3D_tdstVector_ stV2;
-    WP_fnv_WayPoint_ComputeLocation(_hWP, &stV1);
-    stV2.xX = stV1.xX + _p_stTranslation->xX; stV2.xY = stV1.xY + _p_stTranslation->xY; stV2.xZ = stV1.xZ + _p_stTranslation->xZ;
-    if (_hWP->m_hSuperObject) { MAT_tdstTransformation_ stInverse; MTH3D_tdstVector_ stLocal; MTH3D_tdstVector_* pLocal; MAT_fn_vInvert(&stInverse, _hWP->m_hSuperObject->hGlobalMatrix); pLocal = &stLocal; MAT_fn_vApplyOnVertex(pLocal, &stInverse, &stV2); _hWP->m_stVertex = *pLocal; } else { _hWP->m_stVertex = stV2; }
-}
-
-void fn_v_RotateOneWayPointLinkedToOneSPO(WP_tdstWayPoint_* _hWP, MAT_tdstTransformation_* p_Transformation)
-{
-    MAT_tdstTransformation_ stTemp;
-    MTH3D_tdstVector_ stV1;
-    WP_fnv_WayPoint_ComputeLocation(_hWP, &stV1);
-    MAT_fn_vSetIdentity(&stTemp);
-    if (stTemp.eType == MAT_eTransform_Identity) stTemp.eType = MAT_eTransform_Translation;
-    MTH3D_M_vCopyVector((MTH3D_tdstVector_*)&stTemp.stTransformMatrix.stCol_3, &stV1); stTemp.stTransformMatrix.stCol_3.xW = 1.0f;
-    MAT_fn_vCompose(&stTemp, p_Transformation, &stTemp);
-    MTH3D_M_vCopyVector(&stV1, (MTH3D_tdstVector_*)&stTemp.stTransformMatrix.stCol_3);
-    if (_hWP->m_hSuperObject) {
-        MAT_tdstTransformation_ stInverse;
-        MTH4D_tdstVector_ stVtmp;
-        MTH4D_tdstMatrix_* p_stMatrix;
-        MTH4D_tdstVector_* p_stVtmp;
-        MAT_fn_vInvert(&stInverse, _hWP->m_hSuperObject->hGlobalMatrix);
-        p_stVtmp = &stVtmp; p_stMatrix = &stInverse.stTransformMatrix; *(unsigned int*)&stVtmp.xX = *(unsigned int*)&stV1.xX; *(unsigned int*)&stVtmp.xY = *(unsigned int*)&stV1.xY; *(unsigned int*)&stVtmp.xZ = *(unsigned int*)&stV1.xZ; asm { lqc2 vf1, 0x0(p_stVtmp); lqc2 vf2, 0x0(p_stMatrix); lqc2 vf3, 0x10(p_stMatrix); lqc2 vf4, 0x20(p_stMatrix); lqc2 vf5, 0x30(p_stMatrix); vmulax.xyzw ACC, vf2, vf1x; vmadday.xyzw ACC, vf3, vf1y; vmaddaz.xyzw ACC, vf4, vf1z; vmaddw.xyzw vf6, vf5, vf0w; nop; nop; sqc2 vf6, 0x0(p_stVtmp); } *(unsigned int*)&stV1.xX = *(unsigned int*)&stVtmp.xX; *(unsigned int*)&stV1.xY = *(unsigned int*)&stVtmp.xY; *(unsigned int*)&stV1.xZ = *(unsigned int*)&stVtmp.xZ;
-        _hWP->m_stVertex = stV1;
-    } else {
-        _hWP->m_stVertex = stV1;
-    }
-}
-
 void fn_v_TranslateMechanicsImmediateTeleportation(DNM_stDynamics* _p_stDynamic, MTH3D_tdstVector_* _p_stVector)
 {
     MAT_tdstTransformation_* hCurrentMatrix;
@@ -2477,6 +2284,29 @@ void fn_v_TranslateMechanicsImmediateTeleportation(DNM_stDynamics* _p_stDynamic,
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 894–921 */
+/* addr: 0x00281bd0  size: 200 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 894
+ *   +0x0004 -> line 897
+ *   +0x0008 -> line 894
+ *   +0x001c -> line 897
+ *   +0x0030 -> line 900
+ *   +0x0034 -> line 901
+ *   +0x0040 -> line 902
+ *   +0x0048 -> line 905
+ *   +0x004c -> line 906
+ *   +0x005c -> line 907
+ *   +0x0064 -> line 910
+ *   +0x007c -> line 913
+ *   +0x008c -> line 914
+ *   +0x0094 -> line 916
+ *   +0x0098 -> line 917
+ *   +0x00a8 -> line 918
+ *   +0x00b0 -> line 921
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_v_RotateMechanicsLinkedToOneSPO(DNM_stDynamics* _p_stDynamic, MAT_tdstTransformation_* _p_Transformation)
 {
     MAT_tdstTransformation_* hCurrentMatrix;
@@ -2505,6 +2335,30 @@ void fn_v_RotateMechanicsLinkedToOneSPO(DNM_stDynamics* _p_stDynamic, MAT_tdstTr
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 925–940 */
+/* addr: 0x00281ae0  size: 232 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 925
+ *   +0x0018 -> line 929
+ *   +0x0028 -> line 930
+ *   +0x002c -> line 929
+ *   +0x0030 -> line 934
+ *   +0x0034 -> line 932
+ *   +0x0044 -> line 933
+ *   +0x0048 -> line 932
+ *   +0x0050 -> line 933
+ *   +0x0054 -> line 932
+ *   +0x0058 -> line 933
+ *   +0x0080 -> line 934
+ *   +0x009c -> line 937
+ *   +0x00a0 -> line 934
+ *   +0x00b8 -> line 936
+ *   +0x00bc -> line 937
+ *   +0x00c4 -> line 938
+ *   +0x00d0 -> line 940
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_v_TranslateOneCharacterWithMechanicsImmediateTeleportation(HIE_tdstSuperObject_* _hPerso, MTH3D_tdstVector_* _p_stTranslation)
 {
     DNM_stDynamics* p_stDynamics;
@@ -2521,6 +2375,17 @@ void fn_v_TranslateOneCharacterWithMechanicsImmediateTeleportation(HIE_tdstSuper
     fn_v_TranslateMechanicsImmediateTeleportation(p_stDynamics, _p_stTranslation);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 984–991 */
+/* addr: 0x00281950  size: 400 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 984
+ *   +0x0018 -> line 987
+ *   +0x0028 -> line 988
+ *   +0x00e0 -> line 990
+ *   +0x0178 -> line 991
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_v_TranslateOneCharacterImmediateTeleportation(HIE_tdstSuperObject_* _hPerso, MTH3D_tdstVector_* _p_stTranslation)
 {
     DNM_stDynamics* p_stDynamics;
@@ -2531,6 +2396,17 @@ void fn_v_TranslateOneCharacterImmediateTeleportation(HIE_tdstSuperObject_* _hPe
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 994–1001 */
+/* addr: 0x00281890  size: 188 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 994
+ *   +0x0018 -> line 997
+ *   +0x002c -> line 998
+ *   +0x0078 -> line 1000
+ *   +0x00a0 -> line 1001
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_v_RotateOneCharacterLinkedToOneSPO(HIE_tdstSuperObject_* _hPerso, MAT_tdstTransformation_* _p_Transformation)
 {
     if (_hPerso->hLinkedObject.p_stCharacter->h_Dynam) {
@@ -2539,6 +2415,30 @@ void fn_v_RotateOneCharacterLinkedToOneSPO(HIE_tdstSuperObject_* _hPerso, MAT_td
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 1009–1039 */
+/* addr: 0x00281530  size: 860 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1009
+ *   +0x0028 -> line 1012
+ *   +0x00bc -> line 1015
+ *   +0x00c8 -> line 1017
+ *   +0x00fc -> line 1019
+ *   +0x0100 -> line 1020
+ *   +0x019c -> line 1021
+ *   +0x01a4 -> line 1022
+ *   +0x01a8 -> line 1025
+ *   +0x01c0 -> line 1026
+ *   +0x01c8 -> line 1028
+ *   +0x025c -> line 1031
+ *   +0x0264 -> line 1032
+ *   +0x0268 -> line 1033
+ *   +0x0310 -> line 1034
+ *   +0x0318 -> line 1035
+ *   +0x0324 -> line 1037
+ *   +0x0338 -> line 1039
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_v_TranslateSOL(tdstSuperObjectLinks_* _hSOL, MTH3D_tdstVector_* _p_stTranslation)
 {
     MAT_tdstTransformation_ stInverse;
@@ -2575,6 +2475,40 @@ void fn_v_TranslateSOL(tdstSuperObjectLinks_* _hSOL, MTH3D_tdstVector_* _p_stTra
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 1044–1080 */
+/* addr: 0x00281100  size: 860 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1044
+ *   +0x0004 -> line 1050
+ *   +0x0008 -> line 1044
+ *   +0x0014 -> line 1049
+ *   +0x0018 -> line 1044
+ *   +0x001c -> line 1049
+ *   +0x0020 -> line 1044
+ *   +0x0038 -> line 1049
+ *   +0x0050 -> line 1050
+ *   +0x0094 -> line 1053
+ *   +0x00a4 -> line 1055
+ *   +0x00d4 -> line 1057
+ *   +0x00d8 -> line 1058
+ *   +0x00f8 -> line 1059
+ *   +0x0144 -> line 1060
+ *   +0x014c -> line 1061
+ *   +0x0150 -> line 1064
+ *   +0x0168 -> line 1065
+ *   +0x0170 -> line 1067
+ *   +0x0190 -> line 1068
+ *   +0x0264 -> line 1071
+ *   +0x026c -> line 1072
+ *   +0x0270 -> line 1073
+ *   +0x0290 -> line 1074
+ *   +0x0300 -> line 1075
+ *   +0x0308 -> line 1076
+ *   +0x0318 -> line 1078
+ *   +0x0330 -> line 1080
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vReinitSOLTranslation(tdstSuperObjectLinks_* _hSOL)
 {
     MAT_tdstTransformation_ stInverse;
@@ -2626,6 +2560,36 @@ void fn_vReinitSOLTranslation(tdstSuperObjectLinks_* _hSOL)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 1084–1113 */
+/* addr: 0x00280f40  size: 444 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1084
+ *   +0x0008 -> line 1088
+ *   +0x000c -> line 1084
+ *   +0x0010 -> line 1088
+ *   +0x0014 -> line 1084
+ *   +0x0018 -> line 1088
+ *   +0x001c -> line 1084
+ *   +0x0028 -> line 1088
+ *   +0x002c -> line 1084
+ *   +0x0030 -> line 1088
+ *   +0x0038 -> line 1089
+ *   +0x0050 -> line 1091
+ *   +0x0060 -> line 1093
+ *   +0x0088 -> line 1096
+ *   +0x00a0 -> line 1097
+ *   +0x00c0 -> line 1098
+ *   +0x00c8 -> line 1102
+ *   +0x00e0 -> line 1103
+ *   +0x00e8 -> line 1105
+ *   +0x0100 -> line 1106
+ *   +0x0174 -> line 1110
+ *   +0x0178 -> line 1106
+ *   +0x0180 -> line 1111
+ *   +0x0198 -> line 1113
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vReinitSOLRotation(tdstSuperObjectLinks_* _hSOL)
 {
     MTH4D_tdstVector_ stI;
@@ -2652,12 +2616,29 @@ void fn_vReinitSOLRotation(tdstSuperObjectLinks_* _hSOL)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 1117–1120 */
+/* addr: 0x00280f10  size: 44 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1117
+ *   +0x000c -> line 1118
+ *   +0x0014 -> line 1119
+ *   +0x001c -> line 1120
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vReinitSOL(tdstSuperObjectLinks_* _hSOL)
 {
     fn_vReinitSOLTranslation(_hSOL);
     fn_vReinitSOLRotation(_hSOL);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 861–861 */
+/* addr: 0x00280f00  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 861
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GAM_fn_vWriteStringInUbiIniFile(void)
 {
     /* TODO: decompile from asm/... */

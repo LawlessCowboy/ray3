@@ -1430,14 +1430,6 @@ unsigned char g_ucGameModuleId;
 
 void fn_vInitAveragePositionDatasIfNecessary(tdstCineinfo_* _hCineinfo);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 140–140 */
-/* addr: 0x0026d3e0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 140
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 unsigned int fn_ulBrainSizeOf(void);
@@ -1475,475 +1467,47 @@ void CAM_fn_vCineinfoFree(tdstEngineObject_* _p_stObject);
 void CAM_fn_vCineinfoAlloc(tdstEngineObject_* _p_stObject);
 unsigned int CAM_fn_ulCineinfoSizeOf(void);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1278–1278 */
-/* addr: 0x0026d3f0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1278
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1272–1272 */
-/* addr: 0x0026d400  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1272
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1264–1264 */
-/* addr: 0x0026d410  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1264
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1259–1259 */
-/* addr: 0x0026d420  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1259
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1254–1254 */
-/* addr: 0x0026d430  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1254
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1249–1249 */
-/* addr: 0x0026d440  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1249
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1233–1244 */
-/* addr: 0x0026d450  size: 96 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1233
- *   +0x0004 -> line 1234
- *   +0x0018 -> line 1236
- *   +0x0024 -> line 1238
- *   +0x0030 -> line 1240
- *   +0x0038 -> line 1241
- *   +0x0044 -> line 1242
- *   +0x0048 -> line 1243
- *   +0x0058 -> line 1244
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1197–1229 */
-/* addr: 0x0026d4b0  size: 320 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1198
- *   +0x0004 -> line 1201
- *   +0x000c -> line 1197
- *   +0x0010 -> line 1198
- *   +0x001c -> line 1201
- *   +0x0050 -> line 1203
- *   +0x005c -> line 1213
- *   +0x0060 -> line 1225
- *   +0x0064 -> line 1213
- *   +0x0068 -> line 1205
- *   +0x0074 -> line 1207
- *   +0x0080 -> line 1209
- *   +0x00ac -> line 1210
- *   +0x00b8 -> line 1213
- *   +0x00dc -> line 1214
- *   +0x00ec -> line 1219
- *   +0x00f4 -> line 1222
- *   +0x0100 -> line 1223
- *   +0x010c -> line 1225
- *   +0x011c -> line 1226
- *   +0x0128 -> line 1228
- *   +0x0138 -> line 1229
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* Not original source, needs cleaning up: stand-ins for the engine min/max macros. */
 #define MAXF(a, b) ((a) > (b) ? (a) : (b))
 #define MINF(a, b) ((a) < (b) ? (a) : (b))
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1185–1192 */
-/* addr: 0x0026d5f0  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1185
- *   +0x0004 -> line 1186
- *   +0x0018 -> line 1188
- *   +0x0024 -> line 1190
- *   +0x0028 -> line 1191
- *   +0x0048 -> line 1192
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1156–1156 */
-/* addr: 0x0026d640  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1156
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 951–977 */
-/* addr: 0x0026d650  size: 344 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 951
- *   +0x001c -> line 956
- *   +0x0024 -> line 959
- *   +0x0028 -> line 958
- *   +0x002c -> line 959
- *   +0x0030 -> line 961
- *   +0x0034 -> line 959
- *   +0x0040 -> line 966
- *   +0x0044 -> line 963
- *   +0x0048 -> line 964
- *   +0x004c -> line 963
- *   +0x0050 -> line 966
- *   +0x00a0 -> line 969
- *   +0x00b4 -> line 968
- *   +0x00b8 -> line 969
- *   +0x00d0 -> line 971
- *   +0x00d4 -> line 969
- *   +0x00dc -> line 971
- *   +0x00e4 -> line 973
- *   +0x00e8 -> line 974
- *   +0x00f0 -> line 971
- *   +0x00f4 -> line 974
- *   +0x0100 -> line 975
- *   +0x0118 -> line 976
- *   +0x0140 -> line 977
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 919–946 */
-/* addr: 0x0026d7b0  size: 344 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 919
- *   +0x001c -> line 924
- *   +0x0024 -> line 927
- *   +0x0028 -> line 926
- *   +0x002c -> line 927
- *   +0x0030 -> line 929
- *   +0x0034 -> line 927
- *   +0x0040 -> line 935
- *   +0x0044 -> line 931
- *   +0x0048 -> line 933
- *   +0x004c -> line 931
- *   +0x0050 -> line 935
- *   +0x00a0 -> line 938
- *   +0x00b4 -> line 937
- *   +0x00b8 -> line 938
- *   +0x00d0 -> line 940
- *   +0x00d4 -> line 938
- *   +0x00dc -> line 940
- *   +0x00e4 -> line 942
- *   +0x00e8 -> line 943
- *   +0x00f0 -> line 940
- *   +0x00f4 -> line 943
- *   +0x0100 -> line 944
- *   +0x0118 -> line 945
- *   +0x0140 -> line 946
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 911–914 */
-/* addr: 0x0026d910  size: 64 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 911
- *   +0x0004 -> line 912
- *   +0x0008 -> line 911
- *   +0x0018 -> line 912
- *   +0x0028 -> line 913
- *   +0x002c -> line 914
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 902–905 */
-/* addr: 0x0026d950  size: 84 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 902
- *   +0x0004 -> line 903
- *   +0x0008 -> line 902
- *   +0x001c -> line 903
- *   +0x0028 -> line 904
- *   +0x0040 -> line 905
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 #define CAM_M_vCopyHistoryVector(dst, src) do { \
     *(unsigned int*)&(dst).xX = *(unsigned int*)&(src).xX; \
     *(unsigned int*)&(dst).xY = *(unsigned int*)&(src).xY; \
     *(unsigned int*)&(dst).xZ = *(unsigned int*)&(src).xZ; \
 } while (0)
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 893–896 */
-/* addr: 0x0026d9b0  size: 84 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 893
- *   +0x0004 -> line 894
- *   +0x0008 -> line 893
- *   +0x001c -> line 894
- *   +0x0028 -> line 895
- *   +0x0040 -> line 896
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 868–886 */
-/* addr: 0x0026da10  size: 180 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 868
- *   +0x0008 -> line 869
- *   +0x0024 -> line 870
- *   +0x0038 -> line 873
- *   +0x0044 -> line 877
- *   +0x0048 -> line 880
- *   +0x0054 -> line 877
- *   +0x0060 -> line 882
- *   +0x006c -> line 883
- *   +0x0070 -> line 882
- *   +0x0074 -> line 885
- *   +0x0078 -> line 883
- *   +0x007c -> line 885
- *   +0x0080 -> line 883
- *   +0x0084 -> line 884
- *   +0x0088 -> line 883
- *   +0x008c -> line 884
- *   +0x00a4 -> line 885
- *   +0x00ac -> line 886
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 855–858 */
-/* addr: 0x0026dad0  size: 76 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 855
- *   +0x0018 -> line 856
- *   +0x0030 -> line 857
- *   +0x0044 -> line 858
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 750–759 */
-/* addr: 0x0026db20  size: 280 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 750
- *   +0x0004 -> line 755
- *   +0x0008 -> line 750
- *   +0x0014 -> line 755
- *   +0x001c -> line 756
- *   +0x0020 -> line 757
- *   +0x002c -> line 758
- *   +0x0108 -> line 759
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 732–732 */
-/* addr: 0x0026dc40  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 732
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 725–728 */
-/* addr: 0x0026dc50  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 725
- *   +0x0010 -> line 726
- *   +0x0020 -> line 727
- *   +0x002c -> line 728
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 716–722 */
-/* addr: 0x0026dc90  size: 72 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 716
- *   +0x000c -> line 717
- *   +0x001c -> line 719
- *   +0x002c -> line 720
- *   +0x0038 -> line 722
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 706–713 */
-/* addr: 0x0026dce0  size: 64 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 706
- *   +0x000c -> line 708
- *   +0x001c -> line 710
- *   +0x0024 -> line 711
- *   +0x0034 -> line 713
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 669–669 */
-/* addr: 0x0026dd20  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 669
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 650–650 */
-/* addr: 0x0026dd30  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 650
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 632–632 */
-/* addr: 0x0026dd40  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 632
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 614–614 */
-/* addr: 0x0026dd50  size: 24 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 614
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 584–605 */
-/* addr: 0x0026dd70  size: 140 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 584
- *   +0x0010 -> line 585
- *   +0x0018 -> line 586
- *   +0x0044 -> line 588
- *   +0x0050 -> line 589
- *   +0x007c -> line 605
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 526–576 */
-/* addr: 0x0026de00  size: 340 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 526
- *   +0x0018 -> line 533
- *   +0x0020 -> line 534
- *   +0x004c -> line 536
- *   +0x0050 -> line 538
- *   +0x0058 -> line 539
- *   +0x0084 -> line 542
- *   +0x00a8 -> line 552
- *   +0x00b8 -> line 553
- *   +0x00bc -> line 554
- *   +0x00c8 -> line 555
- *   +0x00d0 -> line 562
- *   +0x00dc -> line 563
- *   +0x00e4 -> line 564
- *   +0x0110 -> line 566
- *   +0x011c -> line 571
- *   +0x012c -> line 572
- *   +0x0130 -> line 573
- *   +0x013c -> line 576
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void CAM_fn_vInitCompleteCineinfo(tdstCineinfo_* _hCineinfo);
 HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* _hStdGame);
 void* MC_fn_hGetFirstMainCharNode(void);
 HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(void* hMainCharNode);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 500–518 */
-/* addr: 0x0026df60  size: 212 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 500
- *   +0x000c -> line 505
- *   +0x001c -> line 507
- *   +0x002c -> line 508
- *   +0x003c -> line 509
- *   +0x004c -> line 511
- *   +0x0064 -> line 512
- *   +0x007c -> line 513
- *   +0x0088 -> line 514
- *   +0x00a0 -> line 515
- *   +0x00ac -> line 516
- *   +0x00c4 -> line 518
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 #define MTH3D_M_vSetVectorElements(_p, _x, _y, _z) { (_p)->xX = (_x); (_p)->xY = (_y); (_p)->xZ = (_z); }
 #define MTH3D_M_vCopyVector(_d, _s) { *(int*)&(_d)->xX = *(int*)&(_s)->xX; *(int*)&(_d)->xY = *(int*)&(_s)->xY; *(int*)&(_d)->xZ = *(int*)&(_s)->xZ; }
 void* memset(void* dst, int c, unsigned int n);
 void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 456–493 */
-/* addr: 0x0026e040  size: 304 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 303–303 */
+/* addr: 0x0026e600  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 456
- *   +0x0010 -> line 457
- *   +0x001c -> line 459
- *   +0x0020 -> line 482
- *   +0x0024 -> line 459
- *   +0x002c -> line 460
- *   +0x0038 -> line 462
- *   +0x0044 -> line 463
- *   +0x0050 -> line 464
- *   +0x005c -> line 465
- *   +0x0068 -> line 467
- *   +0x006c -> line 468
- *   +0x0070 -> line 470
- *   +0x0074 -> line 472
- *   +0x0078 -> line 473
- *   +0x007c -> line 474
- *   +0x0080 -> line 475
- *   +0x0084 -> line 477
- *   +0x0088 -> line 478
- *   +0x008c -> line 480
- *   +0x0090 -> line 484
- *   +0x0098 -> line 487
- *   +0x00d4 -> line 491
- *   +0x011c -> line 493
+ *   +0x0000 -> line 303
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 409–448 */
-/* addr: 0x0026e170  size: 380 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 409
- *   +0x0010 -> line 410
- *   +0x0018 -> line 411
- *   +0x0044 -> line 413
- *   +0x0050 -> line 414
- *   +0x007c -> line 416
- *   +0x008c -> line 417
- *   +0x00b8 -> line 424
- *   +0x00c8 -> line 425
- *   +0x00f4 -> line 431
- *   +0x0104 -> line 432
- *   +0x0130 -> line 438
- *   +0x0140 -> line 439
- *   +0x016c -> line 448
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
+unsigned int CAM_fn_ulCineinfoSizeOf(void)
+{
+    return 0x258;
+}
+
+/* The retail loop over a10_stTransparentSuperObjectForCamera is a rolled
+ * pointer walk (sltu against base + 0xC8): an index loop is unrolled by the
+ * -O3,p game baseline, so the source walks the array with p_stFirst/p_stEnd.
+ * The local declaration order is part of the match: MWCC allocates a1/a2/a3
+ * in that order, and retail keeps h_Cineinfo in a3 across the loop so that
+ * xNumberOfTransparentSuperObjectForCamera is stored without a reload.
  */
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 317–385 */
@@ -2012,27 +1576,6 @@ void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 303–303 */
-/* addr: 0x0026e600  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 303
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-unsigned int CAM_fn_ulCineinfoSizeOf(void)
-{
-    return 0x258;
-}
-
-/* The retail loop over a10_stTransparentSuperObjectForCamera is a rolled
- * pointer walk (sltu against base + 0xC8): an index loop is unrolled by the
- * -O3,p game baseline, so the source walks the array with p_stFirst/p_stEnd.
- * The local declaration order is part of the match: MWCC allocates a1/a2/a3
- * in that order, and retail keeps h_Cineinfo in a3 across the loop so that
- * xNumberOfTransparentSuperObjectForCamera is stored without a reload.
- */
 void CAM_fn_vCineinfoAlloc(tdstEngineObject_* _p_stObject)
 {
     tdstTransparentSuperObjectForCamera_* p_stEnd;
@@ -2088,6 +1631,27 @@ void CAM_fn_vCineinfoAlloc(tdstEngineObject_* _p_stObject)
  * it only reports the six error cases (14 for the missing object, 15 for a
  * missing cineinfo or one of its four internal structures).
  */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 409–448 */
+/* addr: 0x0026e170  size: 380 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 409
+ *   +0x0010 -> line 410
+ *   +0x0018 -> line 411
+ *   +0x0044 -> line 413
+ *   +0x0050 -> line 414
+ *   +0x007c -> line 416
+ *   +0x008c -> line 417
+ *   +0x00b8 -> line 424
+ *   +0x00c8 -> line 425
+ *   +0x00f4 -> line 431
+ *   +0x0104 -> line 432
+ *   +0x0130 -> line 438
+ *   +0x0140 -> line 439
+ *   +0x016c -> line 448
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void CAM_fn_vCineinfoFree(tdstEngineObject_* _p_stObject)
 {
     if (!_p_stObject) {
@@ -2110,6 +1674,36 @@ void CAM_fn_vCineinfoFree(tdstEngineObject_* _p_stObject)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 456–493 */
+/* addr: 0x0026e040  size: 304 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 456
+ *   +0x0010 -> line 457
+ *   +0x001c -> line 459
+ *   +0x0020 -> line 482
+ *   +0x0024 -> line 459
+ *   +0x002c -> line 460
+ *   +0x0038 -> line 462
+ *   +0x0044 -> line 463
+ *   +0x0050 -> line 464
+ *   +0x005c -> line 465
+ *   +0x0068 -> line 467
+ *   +0x006c -> line 468
+ *   +0x0070 -> line 470
+ *   +0x0074 -> line 472
+ *   +0x0078 -> line 473
+ *   +0x007c -> line 474
+ *   +0x0080 -> line 475
+ *   +0x0084 -> line 477
+ *   +0x0088 -> line 478
+ *   +0x008c -> line 480
+ *   +0x0090 -> line 484
+ *   +0x0098 -> line 487
+ *   +0x00d4 -> line 491
+ *   +0x011c -> line 493
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void CAM_fn_vInitCompleteCineinfo(tdstCineinfo_* _hCineinfo)
 {
     if (g_ucIsEdInGhostMode)
@@ -2147,6 +1741,24 @@ void CAM_fn_vInitCompleteCineinfo(tdstCineinfo_* _hCineinfo)
     { HIE_tdstSuperObject_* hSave = NULL; if (g_ucIsEdInGhostMode) hSave = _hCineinfo->hCurrent->hSuperObjectTargeted; memcpy(_hCineinfo->hCurrent, _hCineinfo->hInit, sizeof(tdstInternalStructurCineinfo_)); _hCineinfo->ucVolIAFlags |= 2; if (g_ucIsEdInGhostMode) _hCineinfo->hCurrent->hSuperObjectTargeted = hSave; }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 500–518 */
+/* addr: 0x0026df60  size: 212 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 500
+ *   +0x000c -> line 505
+ *   +0x001c -> line 507
+ *   +0x002c -> line 508
+ *   +0x003c -> line 509
+ *   +0x004c -> line 511
+ *   +0x0064 -> line 512
+ *   +0x007c -> line 513
+ *   +0x0088 -> line 514
+ *   +0x00a0 -> line 515
+ *   +0x00ac -> line 516
+ *   +0x00c4 -> line 518
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void CAM_fn_vUpdateTargetPosition(tdstCineinfo_* _hCineinfo)
 {
     MTH3D_tdstVector_ Axis;
@@ -2166,6 +1778,31 @@ void CAM_fn_vUpdateTargetPosition(tdstCineinfo_* _hCineinfo)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 526–576 */
+/* addr: 0x0026de00  size: 340 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 526
+ *   +0x0018 -> line 533
+ *   +0x0020 -> line 534
+ *   +0x004c -> line 536
+ *   +0x0050 -> line 538
+ *   +0x0058 -> line 539
+ *   +0x0084 -> line 542
+ *   +0x00a8 -> line 552
+ *   +0x00b8 -> line 553
+ *   +0x00bc -> line 554
+ *   +0x00c8 -> line 555
+ *   +0x00d0 -> line 562
+ *   +0x00dc -> line 563
+ *   +0x00e4 -> line 564
+ *   +0x0110 -> line 566
+ *   +0x011c -> line 571
+ *   +0x012c -> line 572
+ *   +0x0130 -> line 573
+ *   +0x013c -> line 576
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void CAM_fn_vCineinfoInit(tdstEngineObject_* _p_stObject, tdeObjectTreeInit_ eObjectInit)
 {
     HIE_tdstSuperObject_* hSupObjectCamera;
@@ -2211,6 +1848,18 @@ void CAM_fn_vCineinfoInit(tdstEngineObject_* _p_stObject, tdeObjectTreeInit_ eOb
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 584–605 */
+/* addr: 0x0026dd70  size: 140 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 584
+ *   +0x0010 -> line 585
+ *   +0x0018 -> line 586
+ *   +0x0044 -> line 588
+ *   +0x0050 -> line 589
+ *   +0x007c -> line 605
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void CAM_fn_vCineinfoDesinit(tdstEngineObject_* _p_stObject)
 {
     if (!_p_stObject) {
@@ -2221,26 +1870,65 @@ void CAM_fn_vCineinfoDesinit(tdstEngineObject_* _p_stObject)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 614–614 */
+/* addr: 0x0026dd50  size: 24 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 614
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void CAM_fn_vCineinfoCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc)
 {
     memcpy(_p_stObjectDest->h_Cineinfo->hInit, _p_stObjectSrc->h_Cineinfo->hInit, sizeof(tdstInternalStructurCineinfo_));
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 632–632 */
+/* addr: 0x0026dd40  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 632
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 HIE_tdstSuperObject_* CAM_fn_hCineInfoGetSuperObjectTargeted(tdstInternalStructurCineinfo_* _hIntCineinfo)
 {
     return _hIntCineinfo->hSuperObjectTargeted;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 650–650 */
+/* addr: 0x0026dd30  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 650
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 char CAM_fn_cCineInfoGetChannel(tdstInternalStructurCineinfo_* _hIntCineinfo)
 {
     return _hIntCineinfo->cChannel;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 669–669 */
+/* addr: 0x0026dd20  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 669
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char CAM_fn_bCineInfoGetIsDebugCamera(tdstInternalStructurCineinfo_* _hIntCineinfo)
 {
     return _hIntCineinfo->bDebugCamera;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 706–713 */
+/* addr: 0x0026dce0  size: 64 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 706
+ *   +0x000c -> line 708
+ *   +0x001c -> line 710
+ *   +0x0024 -> line 711
+ *   +0x0034 -> line 713
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void CAM_fn_vSetCineinfoWorkFromCurrent(tdstCineinfo_* _hCineinfo)
 {
     if (!(_hCineinfo->ucVolIAFlags & 1)) {
@@ -2249,6 +1937,17 @@ void CAM_fn_vSetCineinfoWorkFromCurrent(tdstCineinfo_* _hCineinfo)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 716–722 */
+/* addr: 0x0026dc90  size: 72 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 716
+ *   +0x000c -> line 717
+ *   +0x001c -> line 719
+ *   +0x002c -> line 720
+ *   +0x0038 -> line 722
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void CAM_fn_vSetCineinfoVisibilityFromCurrent(tdstCineinfo_* _hCineinfo)
 {
     if (!(_hCineinfo->ucPerIAFlags & 2)) {
@@ -2257,17 +1956,48 @@ void CAM_fn_vSetCineinfoVisibilityFromCurrent(tdstCineinfo_* _hCineinfo)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 725–728 */
+/* addr: 0x0026dc50  size: 60 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 725
+ *   +0x0010 -> line 726
+ *   +0x0020 -> line 727
+ *   +0x002c -> line 728
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void CAM_fn_vSetCineinfoCurrentFromVisibility(tdstCineinfo_* _hCineinfo)
 {
     memcpy(_hCineinfo->hCurrent, _hCineinfo->hVisibility, sizeof(tdstInternalStructurCineinfo_));
     _hCineinfo->ucPerIAFlags &= 0xfd;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 732–732 */
+/* addr: 0x0026dc40  size: 16 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 732
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void CAM_fn_vSetCineinfoWorkFromVisibility(tdstCineinfo_* param0)
 {
     memcpy(param0->hWork, param0->hVisibility, sizeof(tdstInternalStructurCineinfo_));
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 750–759 */
+/* addr: 0x0026db20  size: 280 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 750
+ *   +0x0004 -> line 755
+ *   +0x0008 -> line 750
+ *   +0x0014 -> line 755
+ *   +0x001c -> line 756
+ *   +0x0020 -> line 757
+ *   +0x002c -> line 758
+ *   +0x0108 -> line 759
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void CAM_fn_vSetCameraInList(HIE_tdstSuperObject_* _hSupObjectCamera)
 {
     tdstNodeCamera_* p_stTempNodeCamera;
@@ -2278,6 +2008,16 @@ void CAM_fn_vSetCameraInList(HIE_tdstSuperObject_* _hSupObjectCamera)
     if (p_stTempNodeCamera->hNextBrotherDyn) p_stTempNodeCamera->hNextBrotherDyn->hPrevBrotherDyn = p_stTempNodeCamera->hPrevBrotherDyn; if (p_stTempNodeCamera->hPrevBrotherDyn) p_stTempNodeCamera->hPrevBrotherDyn->hNextBrotherDyn = p_stTempNodeCamera->hNextBrotherDyn; if (p_stTempNodeCamera->hFatherDyn) { p_stTempNodeCamera->hFatherDyn->lNumberOfElementsDyn--; if (p_stTempNodeCamera->hFatherDyn->hFirstElementDyn == p_stTempNodeCamera) p_stTempNodeCamera->hFatherDyn->hFirstElementDyn = p_stTempNodeCamera->hNextBrotherDyn; if (p_stTempNodeCamera->hFatherDyn->hLastElementDyn == p_stTempNodeCamera) p_stTempNodeCamera->hFatherDyn->hLastElementDyn = p_stTempNodeCamera->hPrevBrotherDyn; } p_stTempNodeCamera->hNextBrotherDyn = NULL; p_stTempNodeCamera->hPrevBrotherDyn = NULL; p_stTempNodeCamera->hFatherDyn = NULL; p_stTempNodeCamera->hNextBrotherDyn = NULL; p_stTempNodeCamera->hPrevBrotherDyn = g_stEngineStructure.hCameraList.hLastElementDyn; p_stTempNodeCamera->hFatherDyn = &g_stEngineStructure.hCameraList; if (g_stEngineStructure.hCameraList.hFirstElementDyn == NULL) g_stEngineStructure.hCameraList.hFirstElementDyn = p_stTempNodeCamera; else g_stEngineStructure.hCameraList.hLastElementDyn->hNextBrotherDyn = p_stTempNodeCamera; g_stEngineStructure.hCameraList.hLastElementDyn = p_stTempNodeCamera; g_stEngineStructure.hCameraList.lNumberOfElementsDyn++;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 855–858 */
+/* addr: 0x0026dad0  size: 76 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 855
+ *   +0x0018 -> line 856
+ *   +0x0030 -> line 857
+ *   +0x0044 -> line 858
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vGetPersoSightAxisSystem(tdstCineinfo_* _hCineinfo, MTH3D_tdstVector_* _p_stSightAxis, MTH3D_tdstVector_* _p_stFirstComplementaryAxis, MTH3D_tdstVector_* _p_stSecondComplementaryAxis)
 {
     *(unsigned int*)&_p_stSightAxis->xX = *(unsigned int*)&_hCineinfo->stSightAxisSystem.SightAxis.xX;
@@ -2291,6 +2031,31 @@ void fn_vGetPersoSightAxisSystem(tdstCineinfo_* _hCineinfo, MTH3D_tdstVector_* _
     *(unsigned int*)&_p_stSecondComplementaryAxis->xZ = *(unsigned int*)&_hCineinfo->stSightAxisSystem.SecondComplementaryAxis.xZ;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 868–886 */
+/* addr: 0x0026da10  size: 180 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 868
+ *   +0x0008 -> line 869
+ *   +0x0024 -> line 870
+ *   +0x0038 -> line 873
+ *   +0x0044 -> line 877
+ *   +0x0048 -> line 880
+ *   +0x0054 -> line 877
+ *   +0x0060 -> line 882
+ *   +0x006c -> line 883
+ *   +0x0070 -> line 882
+ *   +0x0074 -> line 885
+ *   +0x0078 -> line 883
+ *   +0x007c -> line 885
+ *   +0x0080 -> line 883
+ *   +0x0084 -> line 884
+ *   +0x0088 -> line 883
+ *   +0x008c -> line 884
+ *   +0x00a4 -> line 885
+ *   +0x00ac -> line 886
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vInitAveragePositionDatasIfNecessary(tdstCineinfo_* _hCineinfo)
 {
     unsigned int ulIndex;
@@ -2308,24 +2073,91 @@ void fn_vInitAveragePositionDatasIfNecessary(tdstCineinfo_* _hCineinfo)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 893–896 */
+/* addr: 0x0026d9b0  size: 84 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 893
+ *   +0x0004 -> line 894
+ *   +0x0008 -> line 893
+ *   +0x001c -> line 894
+ *   +0x0028 -> line 895
+ *   +0x0040 -> line 896
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void CAM_fn_vRemindSpeed(tdstCineinfo_* _hCineinfo, MTH_stMove* _p_Speed)
 {
     memcpy(&_hCineinfo->AveragePosition.a_CheckedSpeed[0], &_hCineinfo->AveragePosition.a_CheckedSpeed[1], 7 * sizeof(MTH3D_tdstVector_));
     CAM_M_vCopyHistoryVector(_hCineinfo->AveragePosition.a_CheckedSpeed[7], _p_Speed->m_stLinear);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 902–905 */
+/* addr: 0x0026d950  size: 84 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 902
+ *   +0x0004 -> line 903
+ *   +0x0008 -> line 902
+ *   +0x001c -> line 903
+ *   +0x0028 -> line 904
+ *   +0x0040 -> line 905
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void CAM_fn_vRemindPos(tdstCineinfo_* _hCineinfo, MTH_stMove* _p_Pos)
 {
     memcpy(&_hCineinfo->AveragePosition.a_CheckedPos[0], &_hCineinfo->AveragePosition.a_CheckedPos[1], 7 * sizeof(MTH3D_tdstVector_));
     CAM_M_vCopyHistoryVector(_hCineinfo->AveragePosition.a_CheckedPos[7], _p_Pos->m_stLinear);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 911–914 */
+/* addr: 0x0026d910  size: 64 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 911
+ *   +0x0004 -> line 912
+ *   +0x0008 -> line 911
+ *   +0x0018 -> line 912
+ *   +0x0028 -> line 913
+ *   +0x002c -> line 914
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void CAM_fn_vRemindTime(tdstCineinfo_* _hCineinfo, float _dt)
 {
     memcpy(&_hCineinfo->AveragePosition.a_CheckedTime[0], &_hCineinfo->AveragePosition.a_CheckedTime[1], 7 * sizeof(float));
     _hCineinfo->AveragePosition.a_CheckedTime[7] = _dt;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 919–946 */
+/* addr: 0x0026d7b0  size: 344 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 919
+ *   +0x001c -> line 924
+ *   +0x0024 -> line 927
+ *   +0x0028 -> line 926
+ *   +0x002c -> line 927
+ *   +0x0030 -> line 929
+ *   +0x0034 -> line 927
+ *   +0x0040 -> line 935
+ *   +0x0044 -> line 931
+ *   +0x0048 -> line 933
+ *   +0x004c -> line 931
+ *   +0x0050 -> line 935
+ *   +0x00a0 -> line 938
+ *   +0x00b4 -> line 937
+ *   +0x00b8 -> line 938
+ *   +0x00d0 -> line 940
+ *   +0x00d4 -> line 938
+ *   +0x00dc -> line 940
+ *   +0x00e4 -> line 942
+ *   +0x00e8 -> line 943
+ *   +0x00f0 -> line 940
+ *   +0x00f4 -> line 943
+ *   +0x0100 -> line 944
+ *   +0x0118 -> line 945
+ *   +0x0140 -> line 946
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void CAM_fn_vAverageSpeed(tdstCineinfo_* _hCineinfo, float xTimeWindow, MTH3D_tdstVector_* p_result)
 {
     MTH3D_tdstVector_* p_stTmp;
@@ -2348,6 +2180,37 @@ void CAM_fn_vAverageSpeed(tdstCineinfo_* _hCineinfo, float xTimeWindow, MTH3D_td
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 951–977 */
+/* addr: 0x0026d650  size: 344 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 951
+ *   +0x001c -> line 956
+ *   +0x0024 -> line 959
+ *   +0x0028 -> line 958
+ *   +0x002c -> line 959
+ *   +0x0030 -> line 961
+ *   +0x0034 -> line 959
+ *   +0x0040 -> line 966
+ *   +0x0044 -> line 963
+ *   +0x0048 -> line 964
+ *   +0x004c -> line 963
+ *   +0x0050 -> line 966
+ *   +0x00a0 -> line 969
+ *   +0x00b4 -> line 968
+ *   +0x00b8 -> line 969
+ *   +0x00d0 -> line 971
+ *   +0x00d4 -> line 969
+ *   +0x00dc -> line 971
+ *   +0x00e4 -> line 973
+ *   +0x00e8 -> line 974
+ *   +0x00f0 -> line 971
+ *   +0x00f4 -> line 974
+ *   +0x0100 -> line 975
+ *   +0x0118 -> line 976
+ *   +0x0140 -> line 977
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void CAM_fn_vAveragePosition(tdstCineinfo_* _hCineinfo, float xTimeWindow, MTH3D_tdstVector_* p_result)
 {
     unsigned int ulIndex;
@@ -2370,11 +2233,30 @@ void CAM_fn_vAveragePosition(tdstCineinfo_* _hCineinfo, float xTimeWindow, MTH3D
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1156–1156 */
+/* addr: 0x0026d640  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1156
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void CAM_fn_vCineInfoSetSuperObjectTargeted(tdstInternalStructurCineinfo_* _hIntCineinfo, HIE_tdstSuperObject_* _hSuperObject)
 {
     _hIntCineinfo->hSuperObjectTargeted = _hSuperObject;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1185–1192 */
+/* addr: 0x0026d5f0  size: 80 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1185
+ *   +0x0004 -> line 1186
+ *   +0x0018 -> line 1188
+ *   +0x0024 -> line 1190
+ *   +0x0028 -> line 1191
+ *   +0x0048 -> line 1192
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void CAM_fn_vResetArrayOfTransparentSuperObject(tdstCineinfo_* _hCineinfo)
 {
     tdstTransparentSuperObjectForCamera_* param0;
@@ -2389,6 +2271,34 @@ void CAM_fn_vResetArrayOfTransparentSuperObject(tdstCineinfo_* _hCineinfo)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1197–1229 */
+/* addr: 0x0026d4b0  size: 320 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1198
+ *   +0x0004 -> line 1201
+ *   +0x000c -> line 1197
+ *   +0x0010 -> line 1198
+ *   +0x001c -> line 1201
+ *   +0x0050 -> line 1203
+ *   +0x005c -> line 1213
+ *   +0x0060 -> line 1225
+ *   +0x0064 -> line 1213
+ *   +0x0068 -> line 1205
+ *   +0x0074 -> line 1207
+ *   +0x0080 -> line 1209
+ *   +0x00ac -> line 1210
+ *   +0x00b8 -> line 1213
+ *   +0x00dc -> line 1214
+ *   +0x00ec -> line 1219
+ *   +0x00f4 -> line 1222
+ *   +0x0100 -> line 1223
+ *   +0x010c -> line 1225
+ *   +0x011c -> line 1226
+ *   +0x0128 -> line 1228
+ *   +0x0138 -> line 1229
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void CAM_fn_vApplyTransparencyOnSuperObject(tdstCineinfo_* _hCineinfo)
 {
     float fDelta;
@@ -2426,6 +2336,21 @@ void CAM_fn_vApplyTransparencyOnSuperObject(tdstCineinfo_* _hCineinfo)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1233–1244 */
+/* addr: 0x0026d450  size: 96 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1233
+ *   +0x0004 -> line 1234
+ *   +0x0018 -> line 1236
+ *   +0x0024 -> line 1238
+ *   +0x0030 -> line 1240
+ *   +0x0038 -> line 1241
+ *   +0x0044 -> line 1242
+ *   +0x0048 -> line 1243
+ *   +0x0058 -> line 1244
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void CAM_fn_vRestoreTransparencyOnSuperObject(tdstCineinfo_* _hCineinfo)
 {
     tdstTransparentSuperObjectForCamera_* param0;
@@ -2443,36 +2368,85 @@ void CAM_fn_vRestoreTransparencyOnSuperObject(tdstCineinfo_* _hCineinfo)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1249–1249 */
+/* addr: 0x0026d440  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1249
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void CAM_fn_vSetTransparencyFlag(tdstCineinfo_* _hCineinfo, unsigned char _ucValue)
 {
     _hCineinfo->ucTransparencyFlag = _ucValue;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1254–1254 */
+/* addr: 0x0026d430  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1254
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char CAM_fn_ucGetTransparencyFlag(tdstCineinfo_* _hCineinfo)
 {
     return _hCineinfo->ucTransparencyFlag;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1259–1259 */
+/* addr: 0x0026d420  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1259
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void CAM_fn_vSetMirrorFlag(tdstCineinfo_* _hCineinfo, unsigned char _bFlag)
 {
     _hCineinfo->bCameraIsMirrored = _bFlag;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1264–1264 */
+/* addr: 0x0026d410  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1264
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char CAM_fn_bGetMirrorFlag(tdstCineinfo_* _hCineinfo)
 {
     return _hCineinfo->bCameraIsMirrored;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1272–1272 */
+/* addr: 0x0026d400  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1272
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char CAM_fn_bGetLightComputation(tdstCineinfo_* _hCineinfo)
 {
     return _hCineinfo->bLightComputation;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1278–1278 */
+/* addr: 0x0026d3f0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1278
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void CAM_fn_vSetLightComputation(tdstCineinfo_* _hCineinfo, unsigned char _bLightComputation)
 {
     _hCineinfo->bLightComputation = _bLightComputation;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 140–140 */
+/* addr: 0x0026d3e0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 140
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned int fn_ulBrainSizeOf(void)
 {
     return 0xC;

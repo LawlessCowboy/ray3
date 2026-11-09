@@ -526,8 +526,6 @@ char g_cIsLevelOk;
 tdstEngineStructure_ g_stEngineStructure;
 /* aggregate */ int g_st3DOSLinkTable;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMain.c lines 376–584 */
-/* addr: 0x00261f70  size: 1040 bytes */
 /* Debug signature and locals from the HitPts.c debug copy (GameMain.c
  * lines 371-592 were compiled into that object). */
 unsigned char MC_fn_ucIsCharacterInMainCharacterList(HIE_tdstSuperObject_* hCharacter);
@@ -571,6 +569,8 @@ inline void GAM_vClearCop0Register24Sync(void)
 inline int DNM_bIsEnd(DNM_stDynamics* p) { int b = 0; if (p->m_tdstDynamicsBaseBlock.ulEndFlags & 2) b = 1; return b; }
 inline int DNM_bIsFlag(DNM_stDynamics* p) { int b = 0; if (p->m_tdstDynamicsBaseBlock.ulFlags & 2) b = 1; return b; }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMain.c lines 376–584 */
+/* addr: 0x00261f70  size: 1040 bytes */
 void fn_vTreatCharactersInSector(HIE_tdstSuperObject_* hCharacter)
 {
     unsigned char bSectorChange = 1;

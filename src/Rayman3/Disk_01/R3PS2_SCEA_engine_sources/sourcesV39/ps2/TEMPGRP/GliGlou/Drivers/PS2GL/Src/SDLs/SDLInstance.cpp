@@ -1165,15 +1165,6 @@ struct LST2_tdstAnchorToCINE_tdxHandleToCineDyn {
     int lNumberOfElementsDyn; /* +0x8 */
 };
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLInstance.cpp lines 36–38 */
-/* addr: 0x002d8500  size: 100 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 36
- *   +0x0030 -> line 37
- *   +0x005c -> line 38
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern "C" float GLI_g_SDL_pNonInterpolatedCameraMatrix[4][4];
 extern "C" float GLI_g_SDL_pNonInterpolatedCameraMatrixMirror[4][4];
 extern "C" float GLI_g_PreviousCameraMatrix[4][4];
@@ -1197,111 +1188,6 @@ inline void PS2_M_vCopyMatrix(float (*_src)[4], float (*_dst)[4])
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 extern "C" void GLI_vSaveCameraMatrix(void);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLInstance.cpp lines 193–224 */
-/* addr: 0x002d8570  size: 312 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 193
- *   +0x0020 -> line 196
- *   +0x0024 -> line 194
- *   +0x0028 -> line 196
- *   +0x0058 -> line 197
- *   +0x0060 -> line 199
- *   +0x006c -> line 201
- *   +0x0078 -> line 203
- *   +0x007c -> line 205
- *   +0x0088 -> line 207
- *   +0x0094 -> line 209
- *   +0x0098 -> line 212
- *   +0x00a4 -> line 214
- *   +0x00ac -> line 216
- *   +0x00d0 -> line 217
- *   +0x00d4 -> line 219
- *   +0x00e0 -> line 221
- *   +0x0118 -> line 223
- *   +0x011c -> line 224
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLInstance.cpp lines 173–181 */
-/* addr: 0x002d86b0  size: 136 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 173
- *   +0x000c -> line 175
- *   +0x0050 -> line 177
- *   +0x0060 -> line 179
- *   +0x0080 -> line 181
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLInstance.cpp lines 150–164 */
-/* addr: 0x002d8740  size: 184 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 150
- *   +0x0004 -> line 151
- *   +0x0008 -> line 150
- *   +0x0014 -> line 153
- *   +0x0020 -> line 155
- *   +0x0058 -> line 157
- *   +0x0068 -> line 159
- *   +0x007c -> line 160
- *   +0x0090 -> line 162
- *   +0x00a4 -> line 164
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLInstance.cpp lines 110–142 */
-/* addr: 0x002d8800  size: 304 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 110
- *   +0x0020 -> line 113
- *   +0x0024 -> line 111
- *   +0x0028 -> line 113
- *   +0x0058 -> line 114
- *   +0x0060 -> line 116
- *   +0x006c -> line 118
- *   +0x0078 -> line 120
- *   +0x0080 -> line 122
- *   +0x008c -> line 124
- *   +0x0094 -> line 126
- *   +0x0098 -> line 127
- *   +0x009c -> line 129
- *   +0x00a8 -> line 131
- *   +0x00c8 -> line 132
- *   +0x00cc -> line 134
- *   +0x00d8 -> line 136
- *   +0x0110 -> line 138
- *   +0x0114 -> line 142
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLInstance.cpp lines 84–104 */
-/* addr: 0x002d8930  size: 220 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 84
- *   +0x0034 -> line 87
- *   +0x0044 -> line 88
- *   +0x0048 -> line 89
- *   +0x004c -> line 87
- *   +0x0050 -> line 90
- *   +0x0054 -> line 91
- *   +0x0058 -> line 92
- *   +0x0060 -> line 93
- *   +0x0068 -> line 94
- *   +0x006c -> line 95
- *   +0x0070 -> line 97
- *   +0x007c -> line 100
- *   +0x0098 -> line 101
- *   +0x009c -> line 103
- *   +0x00a0 -> line 101
- *   +0x00b8 -> line 104
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLInstance.cpp lines 44–76 */
 /* addr: 0x002d8a10  size: 332 bytes */
@@ -1370,6 +1256,29 @@ C_InstanceList::~C_InstanceList(void)
     GLI_g_InstanceLists--;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLInstance.cpp lines 84–104 */
+/* addr: 0x002d8930  size: 220 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 84
+ *   +0x0034 -> line 87
+ *   +0x0044 -> line 88
+ *   +0x0048 -> line 89
+ *   +0x004c -> line 87
+ *   +0x0050 -> line 90
+ *   +0x0054 -> line 91
+ *   +0x0058 -> line 92
+ *   +0x0060 -> line 93
+ *   +0x0068 -> line 94
+ *   +0x006c -> line 95
+ *   +0x0070 -> line 97
+ *   +0x007c -> line 100
+ *   +0x0098 -> line 101
+ *   +0x009c -> line 103
+ *   +0x00a0 -> line 101
+ *   +0x00b8 -> line 104
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 _SDC_Instance_* C_InstanceList::AddInstance(HIE_tdstSuperObject_* pSPO, float (*pVertexArray)[4], unsigned int* pInstanceNormals, C_Sdl* pSDL, unsigned int ulElementNumber)
 {
     _SDC_Instance_* pInstance;
@@ -1389,6 +1298,31 @@ _SDC_Instance_* C_InstanceList::AddInstance(HIE_tdstSuperObject_* pSPO, float (*
     return pInstance;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLInstance.cpp lines 110–142 */
+/* addr: 0x002d8800  size: 304 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 110
+ *   +0x0020 -> line 113
+ *   +0x0024 -> line 111
+ *   +0x0028 -> line 113
+ *   +0x0058 -> line 114
+ *   +0x0060 -> line 116
+ *   +0x006c -> line 118
+ *   +0x0078 -> line 120
+ *   +0x0080 -> line 122
+ *   +0x008c -> line 124
+ *   +0x0094 -> line 126
+ *   +0x0098 -> line 127
+ *   +0x009c -> line 129
+ *   +0x00a8 -> line 131
+ *   +0x00c8 -> line 132
+ *   +0x00cc -> line 134
+ *   +0x00d8 -> line 136
+ *   +0x0110 -> line 138
+ *   +0x0114 -> line 142
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void C_InstanceList::DeleteInstance(_SDC_Instance_* pInstance)
 {
     unsigned int i = 0;
@@ -1418,6 +1352,22 @@ void C_InstanceList::DeleteInstance(_SDC_Instance_* pInstance)
     m_NbInstances--;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLInstance.cpp lines 150–164 */
+/* addr: 0x002d8740  size: 184 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 150
+ *   +0x0004 -> line 151
+ *   +0x0008 -> line 150
+ *   +0x0014 -> line 153
+ *   +0x0020 -> line 155
+ *   +0x0058 -> line 157
+ *   +0x0068 -> line 159
+ *   +0x007c -> line 160
+ *   +0x0090 -> line 162
+ *   +0x00a4 -> line 164
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned int C_InstanceList::SearchAndDestroyInstanceForThisSPO(HIE_tdstSuperObject_* pSPO)
 {
     unsigned int i = 0;
@@ -1431,6 +1381,17 @@ unsigned int C_InstanceList::SearchAndDestroyInstanceForThisSPO(HIE_tdstSuperObj
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLInstance.cpp lines 173–181 */
+/* addr: 0x002d86b0  size: 136 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 173
+ *   +0x000c -> line 175
+ *   +0x0050 -> line 177
+ *   +0x0060 -> line 179
+ *   +0x0080 -> line 181
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 _SDC_Instance_* C_InstanceList::SearchInstance(HIE_tdstSuperObject_* pSPO, unsigned int ulElementNumber)
 {
     unsigned int i = 0;
@@ -1446,6 +1407,31 @@ _SDC_Instance_* C_InstanceList::SearchInstance(HIE_tdstSuperObject_* pSPO, unsig
     return m_pList[i];
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLInstance.cpp lines 193–224 */
+/* addr: 0x002d8570  size: 312 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 193
+ *   +0x0020 -> line 196
+ *   +0x0024 -> line 194
+ *   +0x0028 -> line 196
+ *   +0x0058 -> line 197
+ *   +0x0060 -> line 199
+ *   +0x006c -> line 201
+ *   +0x0078 -> line 203
+ *   +0x007c -> line 205
+ *   +0x0088 -> line 207
+ *   +0x0094 -> line 209
+ *   +0x0098 -> line 212
+ *   +0x00a4 -> line 214
+ *   +0x00ac -> line 216
+ *   +0x00d0 -> line 217
+ *   +0x00d4 -> line 219
+ *   +0x00e0 -> line 221
+ *   +0x0118 -> line 223
+ *   +0x011c -> line 224
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void C_InstanceList::Stealth_RemoveAndDeleteInstance(_SDC_Instance_* pInstance)
 {
     unsigned int i = 0;
@@ -1475,6 +1461,15 @@ void C_InstanceList::Stealth_RemoveAndDeleteInstance(_SDC_Instance_* pInstance)
     m_NbInstances--;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLInstance.cpp lines 36–38 */
+/* addr: 0x002d8500  size: 100 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 36
+ *   +0x0030 -> line 37
+ *   +0x005c -> line 38
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vSaveCameraMatrix(void)
 {
     PS2_M_vCopyMatrix(GLI_g_SDL_pNonInterpolatedCameraMatrix, GLI_g_PreviousCameraMatrix);

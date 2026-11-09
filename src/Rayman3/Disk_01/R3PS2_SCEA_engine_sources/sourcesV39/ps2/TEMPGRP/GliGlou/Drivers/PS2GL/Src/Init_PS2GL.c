@@ -2416,13 +2416,6 @@ int g_InGameMenu2DActivated;
 unsigned int GLI_g_NumberOfSDLsCreatedInThisFrame;
 unsigned int LoadingInProgress;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 94–94 */
-/* addr: 0x002a50f0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 94
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern int g_lNumberOfBlackTriangles;
 
 /* The functions below are in their original source-line order (retail
@@ -2461,37 +2454,6 @@ int MyDMAInterruptHandler(void);
 void GLI_vEndSoundCounter(void);
 void GLI_vStartSoundCounter(void);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 4327–4342 */
-/* addr: 0x002a5100  size: 388 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4327
- *   +0x0004 -> line 4328
- *   +0x0008 -> line 4327
- *   +0x000c -> line 4329
- *   +0x0038 -> line 4335
- *   +0x00d0 -> line 4336
- *   +0x00d8 -> line 4338
- *   +0x0174 -> line 4341
- *   +0x0178 -> line 4342
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 4315–4324 */
-/* addr: 0x002a5290  size: 192 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4315
- *   +0x0004 -> line 4316
- *   +0x0008 -> line 4315
- *   +0x000c -> line 4317
- *   +0x0010 -> line 4316
- *   +0x0014 -> line 4321
- *   +0x00b0 -> line 4323
- *   +0x00b4 -> line 4324
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 void PS2glColorMask(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha);
 void PS2glClearColor(float red, float green, float blue, float alpha);
 void PS2glClear(unsigned int mask);
@@ -2502,183 +2464,8 @@ void GLI_DRV_vSetCommonGLRenderStates(void);
 void GLI_fn_vEndOfDisplay(void);
 void GLI_vEndOfAI(void);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 4297–4310 */
-/* addr: 0x002a5350  size: 172 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4297
- *   +0x0004 -> line 4299
- *   +0x0008 -> line 4297
- *   +0x000c -> line 4298
- *   +0x0014 -> line 4299
- *   +0x0024 -> line 4300
- *   +0x003c -> line 4301
- *   +0x0044 -> line 4302
- *   +0x004c -> line 4303
- *   +0x0054 -> line 4304
- *   +0x0068 -> line 4305
- *   +0x0080 -> line 4306
- *   +0x0088 -> line 4307
- *   +0x0090 -> line 4308
- *   +0x0098 -> line 4309
- *   +0x00a0 -> line 4310
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 4275–4275 */
-/* addr: 0x002a5400  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4275
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 4244–4257 */
-/* addr: 0x002a5410  size: 180 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4244
- *   +0x0004 -> line 4245
- *   +0x0008 -> line 4244
- *   +0x000c -> line 4245
- *   +0x0018 -> line 4247
- *   +0x0020 -> line 4250
- *   +0x0024 -> line 4248
- *   +0x0028 -> line 4250
- *   +0x002c -> line 4248
- *   +0x0030 -> line 4251
- *   +0x0038 -> line 4253
- *   +0x0070 -> line 4254
- *   +0x00a8 -> line 4257
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 void GLIPS2_vChangeResolutionNTSC(void);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 4228–4241 */
-/* addr: 0x002a54d0  size: 180 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4228
- *   +0x0004 -> line 4229
- *   +0x0008 -> line 4228
- *   +0x000c -> line 4229
- *   +0x0018 -> line 4231
- *   +0x0020 -> line 4234
- *   +0x0024 -> line 4232
- *   +0x0028 -> line 4234
- *   +0x002c -> line 4232
- *   +0x0030 -> line 4235
- *   +0x0038 -> line 4237
- *   +0x0070 -> line 4238
- *   +0x00a8 -> line 4241
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 4184–4215 */
-/* addr: 0x002a5590  size: 880 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4184
- *   +0x0004 -> line 4185
- *   +0x0008 -> line 4184
- *   +0x000c -> line 4185
- *   +0x0010 -> line 4184
- *   +0x0014 -> line 4185
- *   +0x0018 -> line 4184
- *   +0x0030 -> line 4185
- *   +0x0038 -> line 4186
- *   +0x0040 -> line 4191
- *   +0x0048 -> line 4193
- *   +0x004c -> line 4194
- *   +0x0050 -> line 4193
- *   +0x0054 -> line 4194
- *   +0x00a8 -> line 4195
- *   +0x00b0 -> line 4196
- *   +0x00d0 -> line 4198
- *   +0x00e0 -> line 4197
- *   +0x00e4 -> line 4199
- *   +0x00e8 -> line 4196
- *   +0x00f4 -> line 4197
- *   +0x00f8 -> line 4196
- *   +0x00fc -> line 4199
- *   +0x0100 -> line 4196
- *   +0x010c -> line 4197
- *   +0x0114 -> line 4196
- *   +0x011c -> line 4197
- *   +0x0120 -> line 4196
- *   +0x0124 -> line 4197
- *   +0x0128 -> line 4196
- *   +0x012c -> line 4197
- *   +0x0130 -> line 4196
- *   +0x014c -> line 4197
- *   +0x0158 -> line 4196
- *   +0x015c -> line 4197
- *   +0x0160 -> line 4196
- *   +0x0168 -> line 4199
- *   +0x016c -> line 4196
- *   +0x0174 -> line 4198
- *   +0x0178 -> line 4197
- *   +0x017c -> line 4198
- *   +0x0180 -> line 4197
- *   +0x0184 -> line 4198
- *   +0x01a0 -> line 4196
- *   +0x01a4 -> line 4198
- *   +0x01a8 -> line 4196
- *   +0x01ac -> line 4198
- *   +0x01b0 -> line 4197
- *   +0x01b4 -> line 4201
- *   +0x01b8 -> line 4197
- *   +0x01bc -> line 4198
- *   +0x01c0 -> line 4204
- *   +0x01c4 -> line 4198
- *   +0x01cc -> line 4204
- *   +0x01d0 -> line 4198
- *   +0x01d8 -> line 4201
- *   +0x01dc -> line 4198
- *   +0x01e0 -> line 4204
- *   +0x01e4 -> line 4197
- *   +0x01ec -> line 4199
- *   +0x01f0 -> line 4197
- *   +0x01f4 -> line 4199
- *   +0x01f8 -> line 4197
- *   +0x01fc -> line 4199
- *   +0x0218 -> line 4200
- *   +0x0220 -> line 4201
- *   +0x0224 -> line 4200
- *   +0x0228 -> line 4201
- *   +0x023c -> line 4197
- *   +0x0244 -> line 4199
- *   +0x0254 -> line 4200
- *   +0x025c -> line 4201
- *   +0x0260 -> line 4199
- *   +0x0264 -> line 4201
- *   +0x0268 -> line 4199
- *   +0x028c -> line 4201
- *   +0x0290 -> line 4199
- *   +0x0294 -> line 4201
- *   +0x0298 -> line 4199
- *   +0x029c -> line 4201
- *   +0x02a8 -> line 4199
- *   +0x02ac -> line 4201
- *   +0x02b0 -> line 4199
- *   +0x02b4 -> line 4201
- *   +0x02b8 -> line 4199
- *   +0x02c0 -> line 4201
- *   +0x02d0 -> line 4204
- *   +0x02d8 -> line 4205
- *   +0x02f0 -> line 4206
- *   +0x02f8 -> line 4207
- *   +0x0300 -> line 4208
- *   +0x0308 -> line 4209
- *   +0x0310 -> line 4210
- *   +0x0324 -> line 4211
- *   +0x032c -> line 4212
- *   +0x0334 -> line 4213
- *   +0x033c -> line 4214
- *   +0x0344 -> line 4215
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern void PS2glDepthRange(double zNear, double zFar);
 extern void PS2glEnable(unsigned int cap);
 extern void PS2glDepthMask(unsigned char flag);
@@ -2697,62 +2484,6 @@ void PS2glViewport(int x, int y, int width, int height);
 void PS2auxInitWindow(const char* title);
 void GLIPS2_vCleanReinitForResChange(void);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 4140–4159 */
-/* addr: 0x002a5900  size: 184 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4140
- *   +0x0008 -> line 4143
- *   +0x0010 -> line 4144
- *   +0x0018 -> line 4145
- *   +0x0020 -> line 4146
- *   +0x0028 -> line 4147
- *   +0x0030 -> line 4148
- *   +0x0038 -> line 4149
- *   +0x0040 -> line 4150
- *   +0x0054 -> line 4151
- *   +0x0068 -> line 4152
- *   +0x0074 -> line 4153
- *   +0x0078 -> line 4154
- *   +0x007c -> line 4153
- *   +0x0080 -> line 4154
- *   +0x0084 -> line 4155
- *   +0x0088 -> line 4156
- *   +0x008c -> line 4155
- *   +0x0090 -> line 4157
- *   +0x0098 -> line 4158
- *   +0x00ac -> line 4159
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 4116–4136 */
-/* addr: 0x002a59c0  size: 184 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4116
- *   +0x0008 -> line 4119
- *   +0x0010 -> line 4120
- *   +0x0018 -> line 4121
- *   +0x0020 -> line 4122
- *   +0x0028 -> line 4123
- *   +0x0030 -> line 4124
- *   +0x0038 -> line 4125
- *   +0x0040 -> line 4126
- *   +0x0054 -> line 4127
- *   +0x0068 -> line 4128
- *   +0x0074 -> line 4129
- *   +0x0078 -> line 4130
- *   +0x007c -> line 4129
- *   +0x0080 -> line 4130
- *   +0x0084 -> line 4131
- *   +0x0088 -> line 4132
- *   +0x008c -> line 4131
- *   +0x0090 -> line 4133
- *   +0x0098 -> line 4134
- *   +0x00ac -> line 4136
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 void PS2glFinish(void);
 void GLI_vCleanAllSDLs(void);
 void VAC_Destroy(void* hContainer);
@@ -2765,142 +2496,6 @@ void GLI_vInitSdlCache(void);
 void BuildAllSDLs(void);
 void WaterFx_vInit(void);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 4084–4113 */
-/* addr: 0x002a5a80  size: 180 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4084
- *   +0x0008 -> line 4085
- *   +0x0010 -> line 4086
- *   +0x0018 -> line 4087
- *   +0x0020 -> line 4088
- *   +0x0028 -> line 4090
- *   +0x0030 -> line 4092
- *   +0x0038 -> line 4093
- *   +0x0040 -> line 4095
- *   +0x0048 -> line 4096
- *   +0x0050 -> line 4101
- *   +0x0058 -> line 4103
- *   +0x0060 -> line 4104
- *   +0x0068 -> line 4105
- *   +0x0070 -> line 4106
- *   +0x0078 -> line 4107
- *   +0x0080 -> line 4108
- *   +0x0088 -> line 4109
- *   +0x0090 -> line 4110
- *   +0x0098 -> line 4111
- *   +0x00a0 -> line 4112
- *   +0x00a8 -> line 4113
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 4016–4022 */
-/* addr: 0x002a5b40  size: 44 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4016
- *   +0x0008 -> line 4018
- *   +0x0010 -> line 4020
- *   +0x0018 -> line 4021
- *   +0x0020 -> line 4022
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 3940–3955 */
-/* addr: 0x002a5b70  size: 184 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3940
- *   +0x0010 -> line 3941
- *   +0x0018 -> line 3943
- *   +0x0070 -> line 3944
- *   +0x0080 -> line 3947
- *   +0x0088 -> line 3950
- *   +0x0098 -> line 3951
- *   +0x009c -> line 3953
- *   +0x00a0 -> line 3954
- *   +0x00a4 -> line 3955
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 1349–1379 */
-/* addr: 0x002a5c30  size: 176 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1349
- *   +0x0014 -> line 1355
- *   +0x0018 -> line 1364
- *   +0x001c -> line 1355
- *   +0x0044 -> line 1358
- *   +0x004c -> line 1359
- *   +0x0050 -> line 1360
- *   +0x005c -> line 1363
- *   +0x0060 -> line 1364
- *   +0x0078 -> line 1367
- *   +0x0088 -> line 1370
- *   +0x0098 -> line 1375
- *   +0x009c -> line 1370
- *   +0x00a0 -> line 1375
- *   +0x00a8 -> line 1379
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 2695–2920 */
-/* addr: 0x002a5ce0  size: 1308 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2695
- *   +0x0014 -> line 2711
- *   +0x0020 -> line 2715
- *   +0x0028 -> line 2718
- *   +0x002c -> line 2722
- *   +0x0038 -> line 2724
- *   +0x0040 -> line 2725
- *   +0x0044 -> line 2793
- *   +0x004c -> line 2799
- *   +0x0064 -> line 2807
- *   +0x006c -> line 2808
- *   +0x00ac -> line 2809
- *   +0x00b0 -> line 2808
- *   +0x00c0 -> line 2811
- *   +0x00c4 -> line 2809
- *   +0x00c8 -> line 2808
- *   +0x00d0 -> line 2811
- *   +0x0128 -> line 2812
- *   +0x01c8 -> line 2813
- *   +0x0294 -> line 2815
- *   +0x02b0 -> line 2816
- *   +0x02d8 -> line 2817
- *   +0x02f4 -> line 2818
- *   +0x031c -> line 2825
- *   +0x0378 -> line 2826
- *   +0x03d4 -> line 2829
- *   +0x03d8 -> line 2830
- *   +0x03e0 -> line 2831
- *   +0x03e8 -> line 2833
- *   +0x0400 -> line 2837
- *   +0x0404 -> line 2838
- *   +0x040c -> line 2839
- *   +0x0414 -> line 2842
- *   +0x041c -> line 2845
- *   +0x0424 -> line 2847
- *   +0x0478 -> line 2849
- *   +0x047c -> line 2850
- *   +0x0488 -> line 2854
- *   +0x0494 -> line 2856
- *   +0x049c -> line 2859
- *   +0x04a4 -> line 2861
- *   +0x04ac -> line 2875
- *   +0x04b4 -> line 2876
- *   +0x04bc -> line 2901
- *   +0x04d0 -> line 2905
- *   +0x04dc -> line 2907
- *   +0x04ec -> line 2910
- *   +0x04f4 -> line 2911
- *   +0x04f8 -> line 2917
- *   +0x0504 -> line 2920
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void TXT_vAfficheSimple(int stVpt, char *String, float x, float y, float z);
 void PS2glInternalSetScreenCalebration(unsigned int target, unsigned int uiNewValue);
 void TR_Report(void);
@@ -2920,42 +2515,903 @@ static inline unsigned int TR_ulEndAfterStart(unsigned int ulEnd, unsigned int u
     return ulEnd;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 2622–2673 */
-/* addr: 0x002a6200  size: 432 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2622
- *   +0x0008 -> line 2623
- *   +0x000c -> line 2625
- *   +0x0014 -> line 2627
- *   +0x0028 -> line 2630
- *   +0x0078 -> line 2632
- *   +0x0080 -> line 2633
- *   +0x0084 -> line 2635
- *   +0x011c -> line 2637
- *   +0x0124 -> line 2638
- *   +0x012c -> line 2639
- *   +0x0134 -> line 2648
- *   +0x013c -> line 2650
- *   +0x0144 -> line 2652
- *   +0x0148 -> line 2658
- *   +0x014c -> line 2652
- *   +0x0150 -> line 2658
- *   +0x0160 -> line 2661
- *   +0x0168 -> line 2662
- *   +0x0170 -> line 2663
- *   +0x0178 -> line 2664
- *   +0x0180 -> line 2665
- *   +0x0188 -> line 2666
- *   +0x0190 -> line 2668
- *   +0x019c -> line 2670
- *   +0x01a4 -> line 2673
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 static inline unsigned int TR_ulDelta(unsigned int ulEnd, unsigned int ulStart)
 {
     if (ulEnd < ulStart) return ulEnd;
     return ulEnd - ulStart;
+}
+
+extern void PS2glBlendFunc(unsigned int sfactor, unsigned int dfactor);
+extern void PS2glBegin(unsigned int mode);
+extern void PS2glEnd(void);
+extern void PS2glColor4f(float red, float green, float blue, float alpha);
+extern void PS2glVertex2f(float x, float y);
+
+extern void GLI_vDisplayLogo(void);
+extern int scePadRead(int port, int slot, unsigned char* rdata);
+extern char* AskForLevelStartWithName(void);
+void GLI_vProcessColoredFade(void);
+
+static inline unsigned int TR_ulDeltaSE(unsigned int s, unsigned int e)
+{
+    if (e < s) return e;
+    return e - s;
+}
+
+#define GLI_M_READ_PAD() Oldpaddata = paddata; if (scePadRead(0, 0, rdata) > 0) { paddata = 0xffff ^ ((rdata[2] << 8) | rdata[3]); CheckData(); } else { paddata = 0; }
+
+static inline unsigned int TR_ulDiff(unsigned int e, unsigned int s)
+{
+    if (s > e) return e;
+    return e - s;
+}
+
+extern int GLI_xIsGliInit(void);
+extern void PS2glDepthMask(unsigned char flag);
+
+extern unsigned int PS2glGenLists(int range);
+extern void GLI_vAllocateTempLists(void);
+extern void ClearScreenAfterInit(void);
+extern void PS2glSwapBufferNotifyFunc(void (*Func)(void));
+extern void GLI_fn_vInitRenderParameters(void);
+void GLI_fn_vSwapBufferCallback(void);
+
+/* COP0 Count read: mfc0 has no C form under MWCC; only that instruction is asm. */
+
+extern void HIE_fn_vInitPS2MatStack(void);
+extern void InitNormalPacker(void);
+extern void GLI_vInitDelayedFrees(void);
+extern void GLI_vInitSpriteController(void);
+extern void impPS2glScissor(int x, int y, int width, int height);
+extern void PS2glScissor(int x, int y, int width, int height);
+extern void PS2glHint(unsigned int target, unsigned int mode);
+extern int AddDmacHandler(int channel, int (*handler)(int), int next);
+extern int EnableDmac(int channel);
+extern int printf(const char* format, ...);
+int DummyDMAHandler(void);
+int MyDMAInterruptHandler(void);
+
+/* mfc0 (COP0 Count), sync and ei have no C form under MWCC; only those
+ * instructions are asm. */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 378–378 */
+/* addr: 0x002a8500  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 378
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void GLI_vStartSoundCounter(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 385–385 */
+/* addr: 0x002a84f0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 385
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vEndSoundCounter(void)
+{
+
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 430–434 */
+/* addr: 0x002a84c0  size: 36 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 430
+ *   +0x0008 -> line 431
+ *   +0x0014 -> line 432
+ *   +0x001c -> line 434
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int MyDMAInterruptHandler(void)
+{
+    register unsigned int counter;
+    asm { mfc0 counter, $9 }
+    VU1FinishCounter = counter;
+    Vu1CallCounter++;
+    asm { sync }
+    asm { ei }
+    return 0;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 437–441 */
+/* addr: 0x002a8490  size: 44 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 437
+ *   +0x0004 -> line 438
+ *   +0x0008 -> line 437
+ *   +0x000c -> line 438
+ *   +0x0014 -> line 439
+ *   +0x001c -> line 441
+ *   +0x0020 -> line 440
+ *   +0x0024 -> line 441
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int DummyDMAHandler(void)
+{
+    scePrintf("DMA HANDLER CALLED !!!\n");
+    sceGsResetPath();
+    return 0;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 462–600 */
+/* addr: 0x002a7f00  size: 1420 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 462
+ *   +0x0014 -> line 467
+ *   +0x001c -> line 468
+ *   +0x0024 -> line 481
+ *   +0x002c -> line 485
+ *   +0x0034 -> line 487
+ *   +0x003c -> line 492
+ *   +0x0050 -> line 494
+ *   +0x005c -> line 496
+ *   +0x0064 -> line 498
+ *   +0x006c -> line 501
+ *   +0x0074 -> line 512
+ *   +0x0088 -> line 514
+ *   +0x0098 -> line 518
+ *   +0x009c -> line 519
+ *   +0x00a0 -> line 518
+ *   +0x00a4 -> line 519
+ *   +0x00dc -> line 529
+ *   +0x00e0 -> line 519
+ *   +0x00e4 -> line 529
+ *   +0x00e8 -> line 519
+ *   +0x0100 -> line 531
+ *   +0x0108 -> line 532
+ *   +0x0120 -> line 533
+ *   +0x0124 -> line 532
+ *   +0x0128 -> line 533
+ *   +0x012c -> line 532
+ *   +0x0130 -> line 535
+ *   +0x0134 -> line 532
+ *   +0x014c -> line 533
+ *   +0x0150 -> line 532
+ *   +0x015c -> line 533
+ *   +0x0164 -> line 532
+ *   +0x0168 -> line 533
+ *   +0x016c -> line 532
+ *   +0x0174 -> line 533
+ *   +0x0178 -> line 532
+ *   +0x017c -> line 534
+ *   +0x0180 -> line 532
+ *   +0x0184 -> line 534
+ *   +0x0188 -> line 532
+ *   +0x0194 -> line 533
+ *   +0x0198 -> line 534
+ *   +0x019c -> line 533
+ *   +0x01a4 -> line 532
+ *   +0x01a8 -> line 533
+ *   +0x01ac -> line 532
+ *   +0x01b4 -> line 534
+ *   +0x01b8 -> line 532
+ *   +0x01c0 -> line 535
+ *   +0x01c4 -> line 534
+ *   +0x01c8 -> line 533
+ *   +0x01cc -> line 534
+ *   +0x01d0 -> line 533
+ *   +0x01d4 -> line 534
+ *   +0x01f0 -> line 532
+ *   +0x01f4 -> line 534
+ *   +0x01f8 -> line 532
+ *   +0x01fc -> line 534
+ *   +0x0200 -> line 533
+ *   +0x0208 -> line 534
+ *   +0x0214 -> line 537
+ *   +0x0218 -> line 534
+ *   +0x0220 -> line 537
+ *   +0x0224 -> line 534
+ *   +0x0228 -> line 535
+ *   +0x022c -> line 533
+ *   +0x0234 -> line 535
+ *   +0x0238 -> line 533
+ *   +0x023c -> line 535
+ *   +0x0240 -> line 533
+ *   +0x0244 -> line 535
+ *   +0x0260 -> line 536
+ *   +0x0268 -> line 537
+ *   +0x0278 -> line 533
+ *   +0x0280 -> line 535
+ *   +0x028c -> line 536
+ *   +0x0290 -> line 535
+ *   +0x0294 -> line 536
+ *   +0x0298 -> line 537
+ *   +0x029c -> line 536
+ *   +0x02a0 -> line 537
+ *   +0x02a8 -> line 535
+ *   +0x02ac -> line 537
+ *   +0x02b0 -> line 535
+ *   +0x02d4 -> line 537
+ *   +0x02d8 -> line 535
+ *   +0x02dc -> line 537
+ *   +0x02e0 -> line 535
+ *   +0x02e4 -> line 537
+ *   +0x02f0 -> line 535
+ *   +0x02f4 -> line 537
+ *   +0x02f8 -> line 535
+ *   +0x02fc -> line 537
+ *   +0x0300 -> line 535
+ *   +0x0308 -> line 537
+ *   +0x031c -> line 539
+ *   +0x0374 -> line 540
+ *   +0x0398 -> line 542
+ *   +0x03ac -> line 543
+ *   +0x03c4 -> line 545
+ *   +0x03cc -> line 546
+ *   +0x03e0 -> line 548
+ *   +0x03e8 -> line 549
+ *   +0x03f0 -> line 550
+ *   +0x0404 -> line 551
+ *   +0x041c -> line 553
+ *   +0x0424 -> line 554
+ *   +0x0438 -> line 556
+ *   +0x0440 -> line 557
+ *   +0x0448 -> line 559
+ *   +0x0450 -> line 566
+ *   +0x045c -> line 570
+ *   +0x0468 -> line 571
+ *   +0x0474 -> line 572
+ *   +0x047c -> line 576
+ *   +0x0480 -> line 574
+ *   +0x0484 -> line 576
+ *   +0x0498 -> line 577
+ *   +0x04a4 -> line 580
+ *   +0x04ac -> line 582
+ *   +0x04d8 -> line 583
+ *   +0x04f0 -> line 584
+ *   +0x04f8 -> line 585
+ *   +0x0500 -> line 589
+ *   +0x0538 -> line 590
+ *   +0x0570 -> line 600
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_fn_vFirstInitOpenGL(void)
+{
+    HIE_fn_vInitPS2MatStack();
+    InitNormalPacker();
+    GLI_vInitDelayedFrees();
+    PS2auxInitDisplayMode(0x992);
+    PS2GL_SetProgressiveScanMode(0);
+    PS2auxInitPosition(100, 100, 640, 448);
+    PS2auxInitWindow("Stencil Test");
+    PS2glEnable(0xF02);
+    PS2glEnable(0xF04);
+    PS2glEnable(0xF03);
+    PS2glViewport(0, 0, 640, 448);
+    PS2glDepthRange(0.0, 1.0);
+    g_PS2glContext.bAlphaChannelReduce = 0;
+    g_PS2glContext.nEnableBits &= ~0x200; g_gsContext.DTHE.DTHE = 0; g_gsContext.ModFlgs.DTHE_Modified = 1;
+    g_PS2glContext.uiFastPathBits = 1;
+    PS2glDepthMask(1);
+    g_PS2glContext.nTextureEnableBits &= (g_PS2glContext.iCurTextureSet == 0) ? ~2 : ~0x200; g_gsContext.PRMODE.TME = (g_PS2glContext.nTextureEnableBits & 0xF) ? 1 : 0; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    g_PS2glContext.nEnableBits &= ~0x100; g_gsContext.PRMODE.ABE = 0; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    g_PS2glContext.nEnableBits &= ~0x400; g_gsContext.TEST_1.ATE = 0; g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    g_PS2glContext.nEnableBits &= ~0x800; g_gsContext.TEST_1.ZTE = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1; g_gsContext.TEST_1.ZTST = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    g_PS2glContext.nLightBits &= ~0x400;
+    g_PS2glContext.nEnableBits &= ~0x80; g_gsContext.PRMODE.FGE = 0; g_gsContext.ModFlgs.PRMODE_Modified = 1; *(unsigned char*)g_PS2glContext.pbFogging = 0;
+
+    g_PS2glContext.nEnableBits |= 0x20; impPS2glScissor((int)g_PS2glContext.vScissorBox[0], (int)g_PS2glContext.vScissorBox[1], (int)g_PS2glContext.vScissorBox[2], (int)g_PS2glContext.vScissorBox[3]);
+    PS2glScissor(0, 0, (int)XRESf, (int)YRESf);
+
+    PS2glColorMask(1, 1, 1, 1);
+    PS2glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    PS2glClear(0x4100);
+    PS2glColorMask(1, 1, 1, 0);
+    PS2glFinish();
+    PS2auxSwapBuffers();
+    PS2glColorMask(1, 1, 1, 1);
+    PS2glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    PS2glClear(0x4100);
+    PS2glColorMask(1, 1, 1, 0);
+    PS2glFinish();
+    PS2auxSwapBuffers();
+    PS2glFinish();
+
+    PS2glHint(0x441, 0x180000);
+    PS2glHint(0x443, 0);
+    PS2glHint(0x442, 0);
+    PS2glDepthMask(0);
+    g_PS2glContext.eTexConvMode = 0;
+    PS2glHint(0xF40, (unsigned int)myColorRange);
+    PS2glHint(0xF41, (unsigned int)myColorRange);
+
+    GLI_vInitSpriteController();
+
+    if ((gs_iIH_VIF1 = AddDmacHandler(1, (int (*)(int))MyDMAInterruptHandler, 0)) == -1)
+        printf("Couldn't set DMA handler\n");
+    gs_iIH_BEIS = AddDmacHandler(0xF, (int (*)(int))DummyDMAHandler, -1);
+    EnableDmac(0xF);
+    EnableDmac(1);
+
+    GLI_g_ScreenPos_DXBase = (float)PS2glInternalGetScreenCalebration(0xf43);
+    GLI_g_ScreenPos_DYBase = (float)PS2glInternalGetScreenCalebration(0xf44);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 618–622 */
+/* addr: 0x002a7ec0  size: 60 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 618
+ *   +0x0008 -> line 619
+ *   +0x0010 -> line 620
+ *   +0x0028 -> line 621
+ *   +0x0030 -> line 622
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_fn_vSwapBufferCallback(void)
+{
+    register unsigned int counter;
+    asm { mfc0 counter, $9 }
+    StartFrame = counter;
+    if (GLI_g_EnableSwapBufferCallback && GLI_p_fn_vClientSwapBufferCallback)
+        GLI_p_fn_vClientSwapBufferCallback();
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 627–627 */
+/* addr: 0x002a7eb0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 627
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_fn_vSetSwapBufferCallback(void (*f)(void))
+{
+    GLI_p_fn_vClientSwapBufferCallback = f;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 638–645 */
+/* addr: 0x002a7e70  size: 64 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 638
+ *   +0x0008 -> line 641
+ *   +0x002c -> line 644
+ *   +0x0034 -> line 645
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_DRV_xInitDriver(void)
+{
+    GLI_g_GeneralDisplayList = PS2glGenLists(1);
+    GLI_vAllocateTempLists();
+    ClearScreenAfterInit();
+    PS2glSwapBufferNotifyFunc(GLI_fn_vSwapBufferCallback);
+    GLI_fn_vInitRenderParameters();
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 651–702 */
+/* addr: 0x002a7c00  size: 612 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 651
+ *   +0x001c -> line 653
+ *   +0x002c -> line 672
+ *   +0x0034 -> line 673
+ *   +0x0050 -> line 675
+ *   +0x0054 -> line 673
+ *   +0x0064 -> line 675
+ *   +0x0068 -> line 673
+ *   +0x0078 -> line 674
+ *   +0x007c -> line 673
+ *   +0x0080 -> line 674
+ *   +0x0084 -> line 673
+ *   +0x0088 -> line 675
+ *   +0x008c -> line 674
+ *   +0x0090 -> line 675
+ *   +0x0094 -> line 673
+ *   +0x0098 -> line 675
+ *   +0x009c -> line 673
+ *   +0x00a0 -> line 675
+ *   +0x00b0 -> line 673
+ *   +0x00c0 -> line 674
+ *   +0x00c4 -> line 675
+ *   +0x00c8 -> line 674
+ *   +0x00cc -> line 675
+ *   +0x00d0 -> line 678
+ *   +0x00d4 -> line 675
+ *   +0x00e4 -> line 678
+ *   +0x00ec -> line 675
+ *   +0x010c -> line 678
+ *   +0x0114 -> line 688
+ *   +0x01fc -> line 690
+ *   +0x0208 -> line 691
+ *   +0x0220 -> line 699
+ *   +0x0238 -> line 700
+ *   +0x024c -> line 702
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_DRV_vClearDevice(int ZBuffer, int ColorBuffer, unsigned int Color)
+{
+    if (GLI_xIsGliInit())
+    {
+        PS2glDepthMask(1);
+        g_PS2glContext.nEnableBits &= ~0x400; g_gsContext.TEST_1.ATE = 0; g_gsContext.ModFlgs.TEST_1_Modified = 1;
+        g_PS2glContext.nLightBits &= ~0x400;
+        g_PS2glContext.nEnableBits &= ~0x80; g_gsContext.PRMODE.FGE = 0; g_gsContext.ModFlgs.PRMODE_Modified = 1; *(unsigned char*)g_PS2glContext.pbFogging = 0;
+
+        PS2glColorMask(1, 1, 1, 1);
+        PS2glClearColor((float)(Color & 0xFF) / 255.0f, (float)((Color >> 8) & 0xFF) / 255.0f, (float)((Color >> 16) & 0xFF) / 255.0f, 0.0f);
+        if (GLI_g_RecoverMode)
+            PS2glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        PS2glClear((ZBuffer ? 0x100 : 0) | (ColorBuffer ? 0x4000 : 0));
+        PS2glColorMask(1, 1, 1, 0);
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 802–802 */
+/* addr: 0x002a7bf0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 802
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vSecondInitPS2GL(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 1096–1147 */
+/* addr: 0x002a7800  size: 1000 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1096
+ *   +0x0008 -> line 1097
+ *   +0x0014 -> line 1100
+ *   +0x0018 -> line 1101
+ *   +0x001c -> line 1100
+ *   +0x0020 -> line 1104
+ *   +0x0024 -> line 1102
+ *   +0x0028 -> line 1101
+ *   +0x002c -> line 1104
+ *   +0x0034 -> line 1105
+ *   +0x003c -> line 1106
+ *   +0x0064 -> line 1107
+ *   +0x006c -> line 1108
+ *   +0x0074 -> line 1110
+ *   +0x0134 -> line 1111
+ *   +0x013c -> line 1110
+ *   +0x014c -> line 1111
+ *   +0x0158 -> line 1110
+ *   +0x015c -> line 1111
+ *   +0x0160 -> line 1110
+ *   +0x0164 -> line 1111
+ *   +0x0180 -> line 1110
+ *   +0x0184 -> line 1111
+ *   +0x0188 -> line 1110
+ *   +0x018c -> line 1111
+ *   +0x0190 -> line 1110
+ *   +0x0194 -> line 1112
+ *   +0x0198 -> line 1110
+ *   +0x019c -> line 1111
+ *   +0x01b0 -> line 1112
+ *   +0x01bc -> line 1113
+ *   +0x01dc -> line 1114
+ *   +0x01e0 -> line 1113
+ *   +0x01f4 -> line 1116
+ *   +0x01fc -> line 1113
+ *   +0x020c -> line 1114
+ *   +0x0214 -> line 1113
+ *   +0x0218 -> line 1114
+ *   +0x021c -> line 1113
+ *   +0x0220 -> line 1114
+ *   +0x0230 -> line 1113
+ *   +0x023c -> line 1114
+ *   +0x0240 -> line 1113
+ *   +0x0244 -> line 1114
+ *   +0x0254 -> line 1113
+ *   +0x025c -> line 1114
+ *   +0x026c -> line 1113
+ *   +0x0270 -> line 1114
+ *   +0x0274 -> line 1113
+ *   +0x0278 -> line 1114
+ *   +0x0284 -> line 1113
+ *   +0x028c -> line 1114
+ *   +0x0290 -> line 1113
+ *   +0x029c -> line 1116
+ *   +0x02a4 -> line 1117
+ *   +0x02a8 -> line 1116
+ *   +0x02b4 -> line 1117
+ *   +0x02bc -> line 1118
+ *   +0x02c4 -> line 1120
+ *   +0x02dc -> line 1121
+ *   +0x02e8 -> line 1122
+ *   +0x02fc -> line 1123
+ *   +0x030c -> line 1125
+ *   +0x0318 -> line 1126
+ *   +0x0328 -> line 1127
+ *   +0x033c -> line 1128
+ *   +0x0344 -> line 1130
+ *   +0x034c -> line 1132
+ *   +0x0354 -> line 1134
+ *   +0x036c -> line 1135
+ *   +0x0378 -> line 1136
+ *   +0x038c -> line 1137
+ *   +0x039c -> line 1139
+ *   +0x03a8 -> line 1140
+ *   +0x03b8 -> line 1141
+ *   +0x03cc -> line 1142
+ *   +0x03d4 -> line 1144
+ *   +0x03dc -> line 1147
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_v_InformJustLoadedLevel(void)
+{
+    unsigned char zTst;
+
+    if (LoadingInProgress)
+        return;
+
+    GLI_g_FadeIsOn = 1;
+    GLI_g_FadeTransparency = 1.0f;
+    g_BlackScreenUntilNextMap = 5;
+
+    PS2glMatrixMode(0x1701);
+    PS2glLoadIdentity();
+    PS2glOrtho(0.0f, 100.0f, 100.0f, 0.0f, -1.0f, 1.0f);
+    PS2glMatrixMode(0x1700);
+    PS2glLoadIdentity();
+
+    g_PS2glContext.nEnableBits |= 0x800; g_gsContext.TEST_1.ZTE = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1; zTst = 1; switch (g_PS2glContext.eDepthFunc) { case 0x200: zTst = 0; break; case 0x207: zTst = 1; break; case 0x203: zTst = 2; break; case 0x201: zTst = 3; break; case 0x202: case 0x204: case 0x205: case 0x206: break; } g_gsContext.TEST_1.ZTST = zTst; g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    g_PS2glContext.nEnableBits |= 0x100; g_gsContext.PRMODE.ABE = 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    PS2glBlendFunc(0x302, 0x303);
+    g_PS2glContext.nTextureEnableBits &= (g_PS2glContext.iCurTextureSet == 0) ? ~2 : ~0x200; g_gsContext.PRMODE.TME = (g_PS2glContext.nTextureEnableBits & 0xF) ? 1 : 0; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    g_PS2glContext.nEnableBits &= ~0x400; g_gsContext.TEST_1.ATE = 0; g_gsContext.ModFlgs.TEST_1_Modified = 1;
+
+    g_PS2glContext.bCullfaceChanged = 1; g_PS2glContext.nEnableBits &= ~0x2000;
+    PS2glDepthMask(0);
+    PS2glBegin(4);
+
+    PS2glColor4f(0.0f, 0.0f, 0.0f, GLI_g_FadeTransparency);
+    PS2glVertex2f(0.0f, 0.0f);
+    PS2glVertex2f(100.0f, 0.0f);
+    PS2glVertex2f(100.0f, 100.0f);
+
+    PS2glVertex2f(0.0f, 0.0f);
+    PS2glVertex2f(100.0f, 100.0f);
+    PS2glVertex2f(0.0f, 100.0f);
+    PS2glEnd();
+
+    PS2auxSwapBuffers();
+
+    PS2glBegin(4);
+
+    PS2glColor4f(0.0f, 0.0f, 0.0f, GLI_g_FadeTransparency);
+    PS2glVertex2f(0.0f, 0.0f);
+    PS2glVertex2f(100.0f, 0.0f);
+    PS2glVertex2f(100.0f, 100.0f);
+
+    PS2glVertex2f(0.0f, 0.0f);
+    PS2glVertex2f(100.0f, 100.0f);
+    PS2glVertex2f(0.0f, 100.0f);
+    PS2glEnd();
+
+    PS2auxSwapBuffers();
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 1442–1467 */
+/* addr: 0x002a76c0  size: 312 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1442
+ *   +0x00a4 -> line 1444
+ *   +0x00bc -> line 1446
+ *   +0x00c0 -> line 1449
+ *   +0x00dc -> line 1452
+ *   +0x00e4 -> line 1459
+ *   +0x00e8 -> line 1460
+ *   +0x00ec -> line 1461
+ *   +0x00f0 -> line 1463
+ *   +0x00f4 -> line 1455
+ *   +0x00f8 -> line 1456
+ *   +0x00fc -> line 1459
+ *   +0x0100 -> line 1460
+ *   +0x0104 -> line 1464
+ *   +0x0108 -> line 1457
+ *   +0x010c -> line 1458
+ *   +0x0110 -> line 1462
+ *   +0x0114 -> line 1455
+ *   +0x0118 -> line 1456
+ *   +0x011c -> line 1464
+ *   +0x0120 -> line 1457
+ *   +0x0124 -> line 1458
+ *   +0x0128 -> line 1462
+ *   +0x012c -> line 1465
+ *   +0x0130 -> line 1467
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void TR_Report(void)
+{
+    static int Wait;
+    unsigned int ulNbFrames;
+    unsigned int ulTime;
+
+    ulTime = TR_ulDiff(TR_EndFrame, TR_StartFrame);ulNbFrames = (unsigned int)((float)ulTime / 4915200.0f);
+    if ((ulNbFrames < 2) || (ulNbFrames > 2))
+    {
+        Wait = 20;
+    }
+    if ((Wait != 0) && !((ulNbFrames < 2) || (ulNbFrames > 2)))
+    {
+        Wait = Wait - 1;
+        return;
+    }
+    TR_IAMeca_Copy = TR_IAMeca;
+    TR_EndDisp1VU1_Copy = TR_EndDisp1VU1;
+    TR_IAMecaPlusDisp1_Copy = TR_IAMecaPlusDisp1;
+    TR_UpdateDisp2_Copy = TR_UpdateDisp2;
+    TR_EndDisplayCPU_Copy = TR_EndDisplayCPU;
+    TR_EndDisp2_Copy = TR_EndDisp2;
+    TR_StartFrame_Copy = TR_StartFrame;
+    TR_InterpolDisp1_Copy = TR_InterpolDisp1;
+    TR_EndFrame_Copy = TR_EndFrame;
+    GLI_g_NumberOfSDLsCreatedInThisFrame_Copy = GLI_g_NumberOfSDLsCreatedInThisFrame;
+    GLI_g_NumberOfSDLsCreatedInThisFrame = 0;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 1636–1648 */
+/* addr: 0x002a7600  size: 184 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1636
+ *   +0x0004 -> line 1637
+ *   +0x0008 -> line 1636
+ *   +0x000c -> line 1637
+ *   +0x0014 -> line 1638
+ *   +0x0064 -> line 1639
+ *   +0x006c -> line 1640
+ *   +0x0074 -> line 1641
+ *   +0x007c -> line 1642
+ *   +0x0084 -> line 1643
+ *   +0x008c -> line 1644
+ *   +0x0094 -> line 1645
+ *   +0x009c -> line 1646
+ *   +0x00a4 -> line 1647
+ *   +0x00ac -> line 1648
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vCleanInterpolData(void)
+{
+    sceGsSyncPath(0,0);
+    Fog_RandomValue = (float)rand() / 2147483648.0f;
+    GLI_g_ulDynShadowCpt = 0;
+    PS2_fn_vSignalEndOfDisplay();
+    PS2GL_thingsToDoWhenYoureDead = (int)GLI_vRecomputeNormalsWhileWaitingForVBL;
+    GLI_g_EnableSwapBufferCallback = 1;
+    PS2glFakeSwapBuffers();
+    GLI_g_EnableSwapBufferCallback = 0;
+    PS2GL_thingsToDoWhenYoureDead = 0;
+    GLI_vRemoveRefs();
+    GLI_vReinitFrame(1);
+    PS2glGsSyncPath();
+    VU1_FlushPreviousBuffer();
+    GLI_vDeleteAllWaitingPointers();
+    fn_vClearPlayanimTempGeometricObjects();
+    MOR_fn_vTerminateMorphsForThisFrame();
+    GLI_vSaveCameraMatrix();
+    PS2glGsSyncPath();
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 1659–1675 */
+/* addr: 0x002a7580  size: 120 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1659
+ *   +0x000c -> line 1660
+ *   +0x0018 -> line 1661
+ *   +0x0020 -> line 1662
+ *   +0x0028 -> line 1665
+ *   +0x002c -> line 1664
+ *   +0x0030 -> line 1665
+ *   +0x0044 -> line 1666
+ *   +0x004c -> line 1670
+ *   +0x0050 -> line 1669
+ *   +0x0054 -> line 1670
+ *   +0x0058 -> line 1669
+ *   +0x005c -> line 1670
+ *   +0x0064 -> line 1672
+ *   +0x0068 -> line 1673
+ *   +0x006c -> line 1672
+ *   +0x0070 -> line 1675
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vDoCompleteFade(int bFadeOut, float* pRGBColor, float fTimeInSeconds)
+{
+    GLI_g_a3_fFadeColor[0] = pRGBColor[0];
+    GLI_g_a3_fFadeColor[1] = pRGBColor[1];
+    GLI_g_a3_fFadeColor[2] = pRGBColor[2];
+    if (bFadeOut)
+    {
+        GLI_g_fCurrentColoredFadeValue = 0.0f;
+        GLI_g_fCurrentColoredFadeDirection = 1.0f / fTimeInSeconds;
+    }
+    else
+    {
+        GLI_g_fCurrentColoredFadeValue = 1.0f;
+        GLI_g_fCurrentColoredFadeDirection = -1.0f / fTimeInSeconds;
+    }
+    GLI_g_fInitialColoredFadeValue = GLI_g_fCurrentColoredFadeValue;
+    GLI_g_fInitialColoredFadeTime = g_ffFrameTime;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 1679–1681 */
+/* addr: 0x002a7570  size: 16 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1680
+ *   +0x0004 -> line 1679
+ *   +0x0008 -> line 1681
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLIPS2_vActualizeClock(void)
+{
+    GLI_g_fInitialColoredFadeTime = 0;
+    g_BlackScreenUntilNextMap = 5;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 1690–1757 */
+/* addr: 0x002a7080  size: 1264 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1690
+ *   +0x0024 -> line 1692
+ *   +0x0030 -> line 1706
+ *   +0x004c -> line 1708
+ *   +0x0050 -> line 1709
+ *   +0x0054 -> line 1708
+ *   +0x0060 -> line 1709
+ *   +0x0064 -> line 1708
+ *   +0x0074 -> line 1709
+ *   +0x0098 -> line 1711
+ *   +0x009c -> line 1713
+ *   +0x00d4 -> line 1715
+ *   +0x00dc -> line 1716
+ *   +0x00e4 -> line 1717
+ *   +0x010c -> line 1718
+ *   +0x0114 -> line 1719
+ *   +0x011c -> line 1721
+ *   +0x0124 -> line 1723
+ *   +0x0128 -> line 1726
+ *   +0x012c -> line 1723
+ *   +0x0150 -> line 1725
+ *   +0x0154 -> line 1726
+ *   +0x0158 -> line 1725
+ *   +0x015c -> line 1723
+ *   +0x0168 -> line 1724
+ *   +0x016c -> line 1728
+ *   +0x0174 -> line 1730
+ *   +0x0178 -> line 1723
+ *   +0x0188 -> line 1724
+ *   +0x018c -> line 1723
+ *   +0x0190 -> line 1724
+ *   +0x0194 -> line 1723
+ *   +0x0198 -> line 1724
+ *   +0x019c -> line 1723
+ *   +0x01a0 -> line 1724
+ *   +0x01a4 -> line 1725
+ *   +0x01a8 -> line 1724
+ *   +0x01ac -> line 1723
+ *   +0x01d0 -> line 1724
+ *   +0x01d4 -> line 1725
+ *   +0x01d8 -> line 1724
+ *   +0x01dc -> line 1731
+ *   +0x01e0 -> line 1723
+ *   +0x01e4 -> line 1731
+ *   +0x01e8 -> line 1723
+ *   +0x0200 -> line 1731
+ *   +0x0204 -> line 1723
+ *   +0x0208 -> line 1724
+ *   +0x020c -> line 1725
+ *   +0x0210 -> line 1724
+ *   +0x0218 -> line 1725
+ *   +0x0240 -> line 1726
+ *   +0x025c -> line 1727
+ *   +0x0264 -> line 1725
+ *   +0x027c -> line 1726
+ *   +0x0280 -> line 1725
+ *   +0x0288 -> line 1726
+ *   +0x0298 -> line 1727
+ *   +0x029c -> line 1726
+ *   +0x02a0 -> line 1727
+ *   +0x02a4 -> line 1725
+ *   +0x02a8 -> line 1727
+ *   +0x02ac -> line 1725
+ *   +0x02b0 -> line 1726
+ *   +0x02c0 -> line 1725
+ *   +0x02c4 -> line 1728
+ *   +0x02cc -> line 1725
+ *   +0x02d4 -> line 1728
+ *   +0x02f0 -> line 1725
+ *   +0x02f8 -> line 1728
+ *   +0x0324 -> line 1730
+ *   +0x033c -> line 1731
+ *   +0x0344 -> line 1732
+ *   +0x034c -> line 1733
+ *   +0x0364 -> line 1734
+ *   +0x036c -> line 1733
+ *   +0x03a4 -> line 1734
+ *   +0x03ac -> line 1736
+ *   +0x03c4 -> line 1737
+ *   +0x03c8 -> line 1736
+ *   +0x0400 -> line 1737
+ *   +0x0408 -> line 1738
+ *   +0x0428 -> line 1739
+ *   +0x0434 -> line 1740
+ *   +0x0448 -> line 1741
+ *   +0x0458 -> line 1742
+ *   +0x0464 -> line 1743
+ *   +0x0474 -> line 1744
+ *   +0x0488 -> line 1745
+ *   +0x0490 -> line 1747
+ *   +0x04a4 -> line 1748
+ *   +0x04ac -> line 1751
+ *   +0x04b4 -> line 1756
+ *   +0x04c8 -> line 1757
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vProcessColoredFade(void)
+{
+    if (!g_InGameMenu2DActivated)
+    {
+        if (GLI_g_fCurrentColoredFadeValue >= 0.0f)
+        {
+            GLI_g_fCurrentColoredFadeValue = GLI_g_fInitialColoredFadeValue + GLI_g_fCurrentColoredFadeDirection * (g_ffFrameTime - GLI_g_fInitialColoredFadeTime);
+            if ((GLI_g_fCurrentColoredFadeValue >= 1.0f) && (GLI_g_fCurrentColoredFadeDirection > 0.0f))
+            {
+                GLI_g_fCurrentColoredFadeValue = 1.0f;
+            }
+            if ((GLI_g_fCurrentColoredFadeValue <= 1.0f) && (GLI_g_fCurrentColoredFadeValue > 0.0f))
+            {
+                PS2glMatrixMode(0x1701);
+                PS2glLoadIdentity();
+                PS2glOrtho(0.0f, 100.0f, 100.0f, 0.0f, -1.0f, 1.0f);
+                PS2glMatrixMode(0x1700);
+                PS2glLoadIdentity();
+                GLI_DRV_vSetCommonGLRenderStates();
+
+                g_PS2glContext.nEnableBits &= ~0x800; g_gsContext.TEST_1.ZTE = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1;
+                g_PS2glContext.nLightBits &= ~0x200; g_gsContext.TEST_1.ZTST = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1; *(unsigned int*)g_PS2glContext.pnColorMatMasks &= ~1;
+                g_PS2glContext.nTextureEnableBits &= (g_PS2glContext.iCurTextureSet == 0) ? ~2 : ~0x200; g_gsContext.PRMODE.TME = (g_PS2glContext.nTextureEnableBits & 0xF) ? 1 : 0; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+                g_PS2glContext.nEnableBits &= ~0x400; g_gsContext.TEST_1.ATE = 0; g_gsContext.ModFlgs.TEST_1_Modified = 1;
+                g_PS2glContext.nLightBits &= ~0x400;
+                g_PS2glContext.nEnableBits &= ~0x80; g_gsContext.PRMODE.FGE = 0; g_gsContext.ModFlgs.PRMODE_Modified = 1; *(unsigned char*)g_PS2glContext.pbFogging = 0;
+
+                g_PS2glContext.bCullfaceChanged = 1; g_PS2glContext.nEnableBits &= ~0x2000;
+                PS2glColorMask(1, 1, 1, 0);
+                PS2glDepthMask(0);
+                g_PS2glContext.nEnableBits |= 0x100; g_gsContext.PRMODE.ABE = 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+                PS2glBlendFunc(0x302, 0x303);
+
+                g_PS2glContext.nEnableBits |= 0x100; g_gsContext.PRMODE.ABE = 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+                PS2glBegin(4);
+                PS2glColor4f(GLI_g_a3_fFadeColor[0], GLI_g_a3_fFadeColor[1], GLI_g_a3_fFadeColor[2], GLI_g_fCurrentColoredFadeValue);
+                PS2glVertex2f(0.0f, 0.0f);
+                PS2glVertex2f(100.0f, 0.0f);
+                PS2glVertex2f(100.0f, 100.0f);
+                PS2glVertex2f(0.0f, 0.0f);
+                PS2glVertex2f(100.0f, 100.0f);
+                PS2glVertex2f(0.0f, 100.0f);
+                PS2glEnd();
+
+                PS2glColorMask(1, 1, 1, 0);
+            }
+            else
+            {
+                GLI_g_fCurrentColoredFadeValue = -1.0f;
+            }
+        }
+    }
+    if (g_p_stCurrentViewport)
+    {
+        AGO3_DisplayTransitionMessage();
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 1760–2506 */
@@ -3174,908 +3630,6 @@ static inline unsigned int TR_ulDelta(unsigned int ulEnd, unsigned int ulStart)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-extern void PS2glBlendFunc(unsigned int sfactor, unsigned int dfactor);
-extern void PS2glBegin(unsigned int mode);
-extern void PS2glEnd(void);
-extern void PS2glColor4f(float red, float green, float blue, float alpha);
-extern void PS2glVertex2f(float x, float y);
-
-extern void GLI_vDisplayLogo(void);
-extern int scePadRead(int port, int slot, unsigned char* rdata);
-extern char* AskForLevelStartWithName(void);
-void GLI_vProcessColoredFade(void);
-
-static inline unsigned int TR_ulDeltaSE(unsigned int s, unsigned int e)
-{
-    if (e < s) return e;
-    return e - s;
-}
-
-#define GLI_M_READ_PAD() Oldpaddata = paddata; if (scePadRead(0, 0, rdata) > 0) { paddata = 0xffff ^ ((rdata[2] << 8) | rdata[3]); CheckData(); } else { paddata = 0; }
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 1690–1757 */
-/* addr: 0x002a7080  size: 1264 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1690
- *   +0x0024 -> line 1692
- *   +0x0030 -> line 1706
- *   +0x004c -> line 1708
- *   +0x0050 -> line 1709
- *   +0x0054 -> line 1708
- *   +0x0060 -> line 1709
- *   +0x0064 -> line 1708
- *   +0x0074 -> line 1709
- *   +0x0098 -> line 1711
- *   +0x009c -> line 1713
- *   +0x00d4 -> line 1715
- *   +0x00dc -> line 1716
- *   +0x00e4 -> line 1717
- *   +0x010c -> line 1718
- *   +0x0114 -> line 1719
- *   +0x011c -> line 1721
- *   +0x0124 -> line 1723
- *   +0x0128 -> line 1726
- *   +0x012c -> line 1723
- *   +0x0150 -> line 1725
- *   +0x0154 -> line 1726
- *   +0x0158 -> line 1725
- *   +0x015c -> line 1723
- *   +0x0168 -> line 1724
- *   +0x016c -> line 1728
- *   +0x0174 -> line 1730
- *   +0x0178 -> line 1723
- *   +0x0188 -> line 1724
- *   +0x018c -> line 1723
- *   +0x0190 -> line 1724
- *   +0x0194 -> line 1723
- *   +0x0198 -> line 1724
- *   +0x019c -> line 1723
- *   +0x01a0 -> line 1724
- *   +0x01a4 -> line 1725
- *   +0x01a8 -> line 1724
- *   +0x01ac -> line 1723
- *   +0x01d0 -> line 1724
- *   +0x01d4 -> line 1725
- *   +0x01d8 -> line 1724
- *   +0x01dc -> line 1731
- *   +0x01e0 -> line 1723
- *   +0x01e4 -> line 1731
- *   +0x01e8 -> line 1723
- *   +0x0200 -> line 1731
- *   +0x0204 -> line 1723
- *   +0x0208 -> line 1724
- *   +0x020c -> line 1725
- *   +0x0210 -> line 1724
- *   +0x0218 -> line 1725
- *   +0x0240 -> line 1726
- *   +0x025c -> line 1727
- *   +0x0264 -> line 1725
- *   +0x027c -> line 1726
- *   +0x0280 -> line 1725
- *   +0x0288 -> line 1726
- *   +0x0298 -> line 1727
- *   +0x029c -> line 1726
- *   +0x02a0 -> line 1727
- *   +0x02a4 -> line 1725
- *   +0x02a8 -> line 1727
- *   +0x02ac -> line 1725
- *   +0x02b0 -> line 1726
- *   +0x02c0 -> line 1725
- *   +0x02c4 -> line 1728
- *   +0x02cc -> line 1725
- *   +0x02d4 -> line 1728
- *   +0x02f0 -> line 1725
- *   +0x02f8 -> line 1728
- *   +0x0324 -> line 1730
- *   +0x033c -> line 1731
- *   +0x0344 -> line 1732
- *   +0x034c -> line 1733
- *   +0x0364 -> line 1734
- *   +0x036c -> line 1733
- *   +0x03a4 -> line 1734
- *   +0x03ac -> line 1736
- *   +0x03c4 -> line 1737
- *   +0x03c8 -> line 1736
- *   +0x0400 -> line 1737
- *   +0x0408 -> line 1738
- *   +0x0428 -> line 1739
- *   +0x0434 -> line 1740
- *   +0x0448 -> line 1741
- *   +0x0458 -> line 1742
- *   +0x0464 -> line 1743
- *   +0x0474 -> line 1744
- *   +0x0488 -> line 1745
- *   +0x0490 -> line 1747
- *   +0x04a4 -> line 1748
- *   +0x04ac -> line 1751
- *   +0x04b4 -> line 1756
- *   +0x04c8 -> line 1757
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 1679–1681 */
-/* addr: 0x002a7570  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1680
- *   +0x0004 -> line 1679
- *   +0x0008 -> line 1681
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 1659–1675 */
-/* addr: 0x002a7580  size: 120 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1659
- *   +0x000c -> line 1660
- *   +0x0018 -> line 1661
- *   +0x0020 -> line 1662
- *   +0x0028 -> line 1665
- *   +0x002c -> line 1664
- *   +0x0030 -> line 1665
- *   +0x0044 -> line 1666
- *   +0x004c -> line 1670
- *   +0x0050 -> line 1669
- *   +0x0054 -> line 1670
- *   +0x0058 -> line 1669
- *   +0x005c -> line 1670
- *   +0x0064 -> line 1672
- *   +0x0068 -> line 1673
- *   +0x006c -> line 1672
- *   +0x0070 -> line 1675
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 1636–1648 */
-/* addr: 0x002a7600  size: 184 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1636
- *   +0x0004 -> line 1637
- *   +0x0008 -> line 1636
- *   +0x000c -> line 1637
- *   +0x0014 -> line 1638
- *   +0x0064 -> line 1639
- *   +0x006c -> line 1640
- *   +0x0074 -> line 1641
- *   +0x007c -> line 1642
- *   +0x0084 -> line 1643
- *   +0x008c -> line 1644
- *   +0x0094 -> line 1645
- *   +0x009c -> line 1646
- *   +0x00a4 -> line 1647
- *   +0x00ac -> line 1648
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 1442–1467 */
-/* addr: 0x002a76c0  size: 312 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1442
- *   +0x00a4 -> line 1444
- *   +0x00bc -> line 1446
- *   +0x00c0 -> line 1449
- *   +0x00dc -> line 1452
- *   +0x00e4 -> line 1459
- *   +0x00e8 -> line 1460
- *   +0x00ec -> line 1461
- *   +0x00f0 -> line 1463
- *   +0x00f4 -> line 1455
- *   +0x00f8 -> line 1456
- *   +0x00fc -> line 1459
- *   +0x0100 -> line 1460
- *   +0x0104 -> line 1464
- *   +0x0108 -> line 1457
- *   +0x010c -> line 1458
- *   +0x0110 -> line 1462
- *   +0x0114 -> line 1455
- *   +0x0118 -> line 1456
- *   +0x011c -> line 1464
- *   +0x0120 -> line 1457
- *   +0x0124 -> line 1458
- *   +0x0128 -> line 1462
- *   +0x012c -> line 1465
- *   +0x0130 -> line 1467
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-static inline unsigned int TR_ulDiff(unsigned int e, unsigned int s)
-{
-    if (s > e) return e;
-    return e - s;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 1096–1147 */
-/* addr: 0x002a7800  size: 1000 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1096
- *   +0x0008 -> line 1097
- *   +0x0014 -> line 1100
- *   +0x0018 -> line 1101
- *   +0x001c -> line 1100
- *   +0x0020 -> line 1104
- *   +0x0024 -> line 1102
- *   +0x0028 -> line 1101
- *   +0x002c -> line 1104
- *   +0x0034 -> line 1105
- *   +0x003c -> line 1106
- *   +0x0064 -> line 1107
- *   +0x006c -> line 1108
- *   +0x0074 -> line 1110
- *   +0x0134 -> line 1111
- *   +0x013c -> line 1110
- *   +0x014c -> line 1111
- *   +0x0158 -> line 1110
- *   +0x015c -> line 1111
- *   +0x0160 -> line 1110
- *   +0x0164 -> line 1111
- *   +0x0180 -> line 1110
- *   +0x0184 -> line 1111
- *   +0x0188 -> line 1110
- *   +0x018c -> line 1111
- *   +0x0190 -> line 1110
- *   +0x0194 -> line 1112
- *   +0x0198 -> line 1110
- *   +0x019c -> line 1111
- *   +0x01b0 -> line 1112
- *   +0x01bc -> line 1113
- *   +0x01dc -> line 1114
- *   +0x01e0 -> line 1113
- *   +0x01f4 -> line 1116
- *   +0x01fc -> line 1113
- *   +0x020c -> line 1114
- *   +0x0214 -> line 1113
- *   +0x0218 -> line 1114
- *   +0x021c -> line 1113
- *   +0x0220 -> line 1114
- *   +0x0230 -> line 1113
- *   +0x023c -> line 1114
- *   +0x0240 -> line 1113
- *   +0x0244 -> line 1114
- *   +0x0254 -> line 1113
- *   +0x025c -> line 1114
- *   +0x026c -> line 1113
- *   +0x0270 -> line 1114
- *   +0x0274 -> line 1113
- *   +0x0278 -> line 1114
- *   +0x0284 -> line 1113
- *   +0x028c -> line 1114
- *   +0x0290 -> line 1113
- *   +0x029c -> line 1116
- *   +0x02a4 -> line 1117
- *   +0x02a8 -> line 1116
- *   +0x02b4 -> line 1117
- *   +0x02bc -> line 1118
- *   +0x02c4 -> line 1120
- *   +0x02dc -> line 1121
- *   +0x02e8 -> line 1122
- *   +0x02fc -> line 1123
- *   +0x030c -> line 1125
- *   +0x0318 -> line 1126
- *   +0x0328 -> line 1127
- *   +0x033c -> line 1128
- *   +0x0344 -> line 1130
- *   +0x034c -> line 1132
- *   +0x0354 -> line 1134
- *   +0x036c -> line 1135
- *   +0x0378 -> line 1136
- *   +0x038c -> line 1137
- *   +0x039c -> line 1139
- *   +0x03a8 -> line 1140
- *   +0x03b8 -> line 1141
- *   +0x03cc -> line 1142
- *   +0x03d4 -> line 1144
- *   +0x03dc -> line 1147
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 802–802 */
-/* addr: 0x002a7bf0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 802
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 651–702 */
-/* addr: 0x002a7c00  size: 612 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 651
- *   +0x001c -> line 653
- *   +0x002c -> line 672
- *   +0x0034 -> line 673
- *   +0x0050 -> line 675
- *   +0x0054 -> line 673
- *   +0x0064 -> line 675
- *   +0x0068 -> line 673
- *   +0x0078 -> line 674
- *   +0x007c -> line 673
- *   +0x0080 -> line 674
- *   +0x0084 -> line 673
- *   +0x0088 -> line 675
- *   +0x008c -> line 674
- *   +0x0090 -> line 675
- *   +0x0094 -> line 673
- *   +0x0098 -> line 675
- *   +0x009c -> line 673
- *   +0x00a0 -> line 675
- *   +0x00b0 -> line 673
- *   +0x00c0 -> line 674
- *   +0x00c4 -> line 675
- *   +0x00c8 -> line 674
- *   +0x00cc -> line 675
- *   +0x00d0 -> line 678
- *   +0x00d4 -> line 675
- *   +0x00e4 -> line 678
- *   +0x00ec -> line 675
- *   +0x010c -> line 678
- *   +0x0114 -> line 688
- *   +0x01fc -> line 690
- *   +0x0208 -> line 691
- *   +0x0220 -> line 699
- *   +0x0238 -> line 700
- *   +0x024c -> line 702
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-extern int GLI_xIsGliInit(void);
-extern void PS2glDepthMask(unsigned char flag);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 638–645 */
-/* addr: 0x002a7e70  size: 64 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 638
- *   +0x0008 -> line 641
- *   +0x002c -> line 644
- *   +0x0034 -> line 645
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-extern unsigned int PS2glGenLists(int range);
-extern void GLI_vAllocateTempLists(void);
-extern void ClearScreenAfterInit(void);
-extern void PS2glSwapBufferNotifyFunc(void (*Func)(void));
-extern void GLI_fn_vInitRenderParameters(void);
-void GLI_fn_vSwapBufferCallback(void);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 627–627 */
-/* addr: 0x002a7eb0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 627
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 618–622 */
-/* addr: 0x002a7ec0  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 618
- *   +0x0008 -> line 619
- *   +0x0010 -> line 620
- *   +0x0028 -> line 621
- *   +0x0030 -> line 622
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-/* COP0 Count read: mfc0 has no C form under MWCC; only that instruction is asm. */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 462–600 */
-/* addr: 0x002a7f00  size: 1420 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 462
- *   +0x0014 -> line 467
- *   +0x001c -> line 468
- *   +0x0024 -> line 481
- *   +0x002c -> line 485
- *   +0x0034 -> line 487
- *   +0x003c -> line 492
- *   +0x0050 -> line 494
- *   +0x005c -> line 496
- *   +0x0064 -> line 498
- *   +0x006c -> line 501
- *   +0x0074 -> line 512
- *   +0x0088 -> line 514
- *   +0x0098 -> line 518
- *   +0x009c -> line 519
- *   +0x00a0 -> line 518
- *   +0x00a4 -> line 519
- *   +0x00dc -> line 529
- *   +0x00e0 -> line 519
- *   +0x00e4 -> line 529
- *   +0x00e8 -> line 519
- *   +0x0100 -> line 531
- *   +0x0108 -> line 532
- *   +0x0120 -> line 533
- *   +0x0124 -> line 532
- *   +0x0128 -> line 533
- *   +0x012c -> line 532
- *   +0x0130 -> line 535
- *   +0x0134 -> line 532
- *   +0x014c -> line 533
- *   +0x0150 -> line 532
- *   +0x015c -> line 533
- *   +0x0164 -> line 532
- *   +0x0168 -> line 533
- *   +0x016c -> line 532
- *   +0x0174 -> line 533
- *   +0x0178 -> line 532
- *   +0x017c -> line 534
- *   +0x0180 -> line 532
- *   +0x0184 -> line 534
- *   +0x0188 -> line 532
- *   +0x0194 -> line 533
- *   +0x0198 -> line 534
- *   +0x019c -> line 533
- *   +0x01a4 -> line 532
- *   +0x01a8 -> line 533
- *   +0x01ac -> line 532
- *   +0x01b4 -> line 534
- *   +0x01b8 -> line 532
- *   +0x01c0 -> line 535
- *   +0x01c4 -> line 534
- *   +0x01c8 -> line 533
- *   +0x01cc -> line 534
- *   +0x01d0 -> line 533
- *   +0x01d4 -> line 534
- *   +0x01f0 -> line 532
- *   +0x01f4 -> line 534
- *   +0x01f8 -> line 532
- *   +0x01fc -> line 534
- *   +0x0200 -> line 533
- *   +0x0208 -> line 534
- *   +0x0214 -> line 537
- *   +0x0218 -> line 534
- *   +0x0220 -> line 537
- *   +0x0224 -> line 534
- *   +0x0228 -> line 535
- *   +0x022c -> line 533
- *   +0x0234 -> line 535
- *   +0x0238 -> line 533
- *   +0x023c -> line 535
- *   +0x0240 -> line 533
- *   +0x0244 -> line 535
- *   +0x0260 -> line 536
- *   +0x0268 -> line 537
- *   +0x0278 -> line 533
- *   +0x0280 -> line 535
- *   +0x028c -> line 536
- *   +0x0290 -> line 535
- *   +0x0294 -> line 536
- *   +0x0298 -> line 537
- *   +0x029c -> line 536
- *   +0x02a0 -> line 537
- *   +0x02a8 -> line 535
- *   +0x02ac -> line 537
- *   +0x02b0 -> line 535
- *   +0x02d4 -> line 537
- *   +0x02d8 -> line 535
- *   +0x02dc -> line 537
- *   +0x02e0 -> line 535
- *   +0x02e4 -> line 537
- *   +0x02f0 -> line 535
- *   +0x02f4 -> line 537
- *   +0x02f8 -> line 535
- *   +0x02fc -> line 537
- *   +0x0300 -> line 535
- *   +0x0308 -> line 537
- *   +0x031c -> line 539
- *   +0x0374 -> line 540
- *   +0x0398 -> line 542
- *   +0x03ac -> line 543
- *   +0x03c4 -> line 545
- *   +0x03cc -> line 546
- *   +0x03e0 -> line 548
- *   +0x03e8 -> line 549
- *   +0x03f0 -> line 550
- *   +0x0404 -> line 551
- *   +0x041c -> line 553
- *   +0x0424 -> line 554
- *   +0x0438 -> line 556
- *   +0x0440 -> line 557
- *   +0x0448 -> line 559
- *   +0x0450 -> line 566
- *   +0x045c -> line 570
- *   +0x0468 -> line 571
- *   +0x0474 -> line 572
- *   +0x047c -> line 576
- *   +0x0480 -> line 574
- *   +0x0484 -> line 576
- *   +0x0498 -> line 577
- *   +0x04a4 -> line 580
- *   +0x04ac -> line 582
- *   +0x04d8 -> line 583
- *   +0x04f0 -> line 584
- *   +0x04f8 -> line 585
- *   +0x0500 -> line 589
- *   +0x0538 -> line 590
- *   +0x0570 -> line 600
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-extern void HIE_fn_vInitPS2MatStack(void);
-extern void InitNormalPacker(void);
-extern void GLI_vInitDelayedFrees(void);
-extern void GLI_vInitSpriteController(void);
-extern void impPS2glScissor(int x, int y, int width, int height);
-extern void PS2glScissor(int x, int y, int width, int height);
-extern void PS2glHint(unsigned int target, unsigned int mode);
-extern int AddDmacHandler(int channel, int (*handler)(int), int next);
-extern int EnableDmac(int channel);
-extern int printf(const char* format, ...);
-int DummyDMAHandler(void);
-int MyDMAInterruptHandler(void);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 437–441 */
-/* addr: 0x002a8490  size: 44 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 437
- *   +0x0004 -> line 438
- *   +0x0008 -> line 437
- *   +0x000c -> line 438
- *   +0x0014 -> line 439
- *   +0x001c -> line 441
- *   +0x0020 -> line 440
- *   +0x0024 -> line 441
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 430–434 */
-/* addr: 0x002a84c0  size: 36 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 430
- *   +0x0008 -> line 431
- *   +0x0014 -> line 432
- *   +0x001c -> line 434
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-/* mfc0 (COP0 Count), sync and ei have no C form under MWCC; only those
- * instructions are asm. */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 385–385 */
-/* addr: 0x002a84f0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 385
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 378–378 */
-/* addr: 0x002a8500  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 378
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-void GLI_vStartSoundCounter(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void GLI_vEndSoundCounter(void)
-{
-
-}
-
-int MyDMAInterruptHandler(void)
-{
-    register unsigned int counter;
-    asm { mfc0 counter, $9 }
-    VU1FinishCounter = counter;
-    Vu1CallCounter++;
-    asm { sync }
-    asm { ei }
-    return 0;
-}
-
-int DummyDMAHandler(void)
-{
-    scePrintf("DMA HANDLER CALLED !!!\n");
-    sceGsResetPath();
-    return 0;
-}
-
-void GLI_fn_vFirstInitOpenGL(void)
-{
-    HIE_fn_vInitPS2MatStack();
-    InitNormalPacker();
-    GLI_vInitDelayedFrees();
-    PS2auxInitDisplayMode(0x992);
-    PS2GL_SetProgressiveScanMode(0);
-    PS2auxInitPosition(100, 100, 640, 448);
-    PS2auxInitWindow("Stencil Test");
-    PS2glEnable(0xF02);
-    PS2glEnable(0xF04);
-    PS2glEnable(0xF03);
-    PS2glViewport(0, 0, 640, 448);
-    PS2glDepthRange(0.0, 1.0);
-    g_PS2glContext.bAlphaChannelReduce = 0;
-    g_PS2glContext.nEnableBits &= ~0x200; g_gsContext.DTHE.DTHE = 0; g_gsContext.ModFlgs.DTHE_Modified = 1;
-    g_PS2glContext.uiFastPathBits = 1;
-    PS2glDepthMask(1);
-    g_PS2glContext.nTextureEnableBits &= (g_PS2glContext.iCurTextureSet == 0) ? ~2 : ~0x200; g_gsContext.PRMODE.TME = (g_PS2glContext.nTextureEnableBits & 0xF) ? 1 : 0; g_gsContext.ModFlgs.PRMODE_Modified = 1;
-    g_PS2glContext.nEnableBits &= ~0x100; g_gsContext.PRMODE.ABE = 0; g_gsContext.ModFlgs.PRMODE_Modified = 1;
-    g_PS2glContext.nEnableBits &= ~0x400; g_gsContext.TEST_1.ATE = 0; g_gsContext.ModFlgs.TEST_1_Modified = 1;
-    g_PS2glContext.nEnableBits &= ~0x800; g_gsContext.TEST_1.ZTE = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1; g_gsContext.TEST_1.ZTST = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1;
-    g_PS2glContext.nLightBits &= ~0x400;
-    g_PS2glContext.nEnableBits &= ~0x80; g_gsContext.PRMODE.FGE = 0; g_gsContext.ModFlgs.PRMODE_Modified = 1; *(unsigned char*)g_PS2glContext.pbFogging = 0;
-
-    g_PS2glContext.nEnableBits |= 0x20; impPS2glScissor((int)g_PS2glContext.vScissorBox[0], (int)g_PS2glContext.vScissorBox[1], (int)g_PS2glContext.vScissorBox[2], (int)g_PS2glContext.vScissorBox[3]);
-    PS2glScissor(0, 0, (int)XRESf, (int)YRESf);
-
-    PS2glColorMask(1, 1, 1, 1);
-    PS2glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    PS2glClear(0x4100);
-    PS2glColorMask(1, 1, 1, 0);
-    PS2glFinish();
-    PS2auxSwapBuffers();
-    PS2glColorMask(1, 1, 1, 1);
-    PS2glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    PS2glClear(0x4100);
-    PS2glColorMask(1, 1, 1, 0);
-    PS2glFinish();
-    PS2auxSwapBuffers();
-    PS2glFinish();
-
-    PS2glHint(0x441, 0x180000);
-    PS2glHint(0x443, 0);
-    PS2glHint(0x442, 0);
-    PS2glDepthMask(0);
-    g_PS2glContext.eTexConvMode = 0;
-    PS2glHint(0xF40, (unsigned int)myColorRange);
-    PS2glHint(0xF41, (unsigned int)myColorRange);
-
-    GLI_vInitSpriteController();
-
-    if ((gs_iIH_VIF1 = AddDmacHandler(1, (int (*)(int))MyDMAInterruptHandler, 0)) == -1)
-        printf("Couldn't set DMA handler\n");
-    gs_iIH_BEIS = AddDmacHandler(0xF, (int (*)(int))DummyDMAHandler, -1);
-    EnableDmac(0xF);
-    EnableDmac(1);
-
-    GLI_g_ScreenPos_DXBase = (float)PS2glInternalGetScreenCalebration(0xf43);
-    GLI_g_ScreenPos_DYBase = (float)PS2glInternalGetScreenCalebration(0xf44);
-}
-
-void GLI_fn_vSwapBufferCallback(void)
-{
-    register unsigned int counter;
-    asm { mfc0 counter, $9 }
-    StartFrame = counter;
-    if (GLI_g_EnableSwapBufferCallback && GLI_p_fn_vClientSwapBufferCallback)
-        GLI_p_fn_vClientSwapBufferCallback();
-}
-
-void GLI_fn_vSetSwapBufferCallback(void (*f)(void))
-{
-    GLI_p_fn_vClientSwapBufferCallback = f;
-}
-
-void GLI_DRV_xInitDriver(void)
-{
-    GLI_g_GeneralDisplayList = PS2glGenLists(1);
-    GLI_vAllocateTempLists();
-    ClearScreenAfterInit();
-    PS2glSwapBufferNotifyFunc(GLI_fn_vSwapBufferCallback);
-    GLI_fn_vInitRenderParameters();
-}
-
-void GLI_DRV_vClearDevice(int ZBuffer, int ColorBuffer, unsigned int Color)
-{
-    if (GLI_xIsGliInit())
-    {
-        PS2glDepthMask(1);
-        g_PS2glContext.nEnableBits &= ~0x400; g_gsContext.TEST_1.ATE = 0; g_gsContext.ModFlgs.TEST_1_Modified = 1;
-        g_PS2glContext.nLightBits &= ~0x400;
-        g_PS2glContext.nEnableBits &= ~0x80; g_gsContext.PRMODE.FGE = 0; g_gsContext.ModFlgs.PRMODE_Modified = 1; *(unsigned char*)g_PS2glContext.pbFogging = 0;
-
-        PS2glColorMask(1, 1, 1, 1);
-        PS2glClearColor((float)(Color & 0xFF) / 255.0f, (float)((Color >> 8) & 0xFF) / 255.0f, (float)((Color >> 16) & 0xFF) / 255.0f, 0.0f);
-        if (GLI_g_RecoverMode)
-            PS2glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        PS2glClear((ZBuffer ? 0x100 : 0) | (ColorBuffer ? 0x4000 : 0));
-        PS2glColorMask(1, 1, 1, 0);
-    }
-}
-
-void GLI_vSecondInitPS2GL(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void GLI_v_InformJustLoadedLevel(void)
-{
-    unsigned char zTst;
-
-    if (LoadingInProgress)
-        return;
-
-    GLI_g_FadeIsOn = 1;
-    GLI_g_FadeTransparency = 1.0f;
-    g_BlackScreenUntilNextMap = 5;
-
-    PS2glMatrixMode(0x1701);
-    PS2glLoadIdentity();
-    PS2glOrtho(0.0f, 100.0f, 100.0f, 0.0f, -1.0f, 1.0f);
-    PS2glMatrixMode(0x1700);
-    PS2glLoadIdentity();
-
-    g_PS2glContext.nEnableBits |= 0x800; g_gsContext.TEST_1.ZTE = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1; zTst = 1; switch (g_PS2glContext.eDepthFunc) { case 0x200: zTst = 0; break; case 0x207: zTst = 1; break; case 0x203: zTst = 2; break; case 0x201: zTst = 3; break; case 0x202: case 0x204: case 0x205: case 0x206: break; } g_gsContext.TEST_1.ZTST = zTst; g_gsContext.ModFlgs.TEST_1_Modified = 1;
-    g_PS2glContext.nEnableBits |= 0x100; g_gsContext.PRMODE.ABE = 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;
-    PS2glBlendFunc(0x302, 0x303);
-    g_PS2glContext.nTextureEnableBits &= (g_PS2glContext.iCurTextureSet == 0) ? ~2 : ~0x200; g_gsContext.PRMODE.TME = (g_PS2glContext.nTextureEnableBits & 0xF) ? 1 : 0; g_gsContext.ModFlgs.PRMODE_Modified = 1;
-    g_PS2glContext.nEnableBits &= ~0x400; g_gsContext.TEST_1.ATE = 0; g_gsContext.ModFlgs.TEST_1_Modified = 1;
-
-    g_PS2glContext.bCullfaceChanged = 1; g_PS2glContext.nEnableBits &= ~0x2000;
-    PS2glDepthMask(0);
-    PS2glBegin(4);
-
-    PS2glColor4f(0.0f, 0.0f, 0.0f, GLI_g_FadeTransparency);
-    PS2glVertex2f(0.0f, 0.0f);
-    PS2glVertex2f(100.0f, 0.0f);
-    PS2glVertex2f(100.0f, 100.0f);
-
-    PS2glVertex2f(0.0f, 0.0f);
-    PS2glVertex2f(100.0f, 100.0f);
-    PS2glVertex2f(0.0f, 100.0f);
-    PS2glEnd();
-
-    PS2auxSwapBuffers();
-
-    PS2glBegin(4);
-
-    PS2glColor4f(0.0f, 0.0f, 0.0f, GLI_g_FadeTransparency);
-    PS2glVertex2f(0.0f, 0.0f);
-    PS2glVertex2f(100.0f, 0.0f);
-    PS2glVertex2f(100.0f, 100.0f);
-
-    PS2glVertex2f(0.0f, 0.0f);
-    PS2glVertex2f(100.0f, 100.0f);
-    PS2glVertex2f(0.0f, 100.0f);
-    PS2glEnd();
-
-    PS2auxSwapBuffers();
-}
-
-void TR_Report(void)
-{
-    static int Wait;
-    unsigned int ulNbFrames;
-    unsigned int ulTime;
-
-    ulTime = TR_ulDiff(TR_EndFrame, TR_StartFrame);ulNbFrames = (unsigned int)((float)ulTime / 4915200.0f);
-    if ((ulNbFrames < 2) || (ulNbFrames > 2))
-    {
-        Wait = 20;
-    }
-    if ((Wait != 0) && !((ulNbFrames < 2) || (ulNbFrames > 2)))
-    {
-        Wait = Wait - 1;
-        return;
-    }
-    TR_IAMeca_Copy = TR_IAMeca;
-    TR_EndDisp1VU1_Copy = TR_EndDisp1VU1;
-    TR_IAMecaPlusDisp1_Copy = TR_IAMecaPlusDisp1;
-    TR_UpdateDisp2_Copy = TR_UpdateDisp2;
-    TR_EndDisplayCPU_Copy = TR_EndDisplayCPU;
-    TR_EndDisp2_Copy = TR_EndDisp2;
-    TR_StartFrame_Copy = TR_StartFrame;
-    TR_InterpolDisp1_Copy = TR_InterpolDisp1;
-    TR_EndFrame_Copy = TR_EndFrame;
-    GLI_g_NumberOfSDLsCreatedInThisFrame_Copy = GLI_g_NumberOfSDLsCreatedInThisFrame;
-    GLI_g_NumberOfSDLsCreatedInThisFrame = 0;
-}
-
-void GLI_vCleanInterpolData(void)
-{
-    sceGsSyncPath(0,0);
-    Fog_RandomValue = (float)rand() / 2147483648.0f;
-    GLI_g_ulDynShadowCpt = 0;
-    PS2_fn_vSignalEndOfDisplay();
-    PS2GL_thingsToDoWhenYoureDead = (int)GLI_vRecomputeNormalsWhileWaitingForVBL;
-    GLI_g_EnableSwapBufferCallback = 1;
-    PS2glFakeSwapBuffers();
-    GLI_g_EnableSwapBufferCallback = 0;
-    PS2GL_thingsToDoWhenYoureDead = 0;
-    GLI_vRemoveRefs();
-    GLI_vReinitFrame(1);
-    PS2glGsSyncPath();
-    VU1_FlushPreviousBuffer();
-    GLI_vDeleteAllWaitingPointers();
-    fn_vClearPlayanimTempGeometricObjects();
-    MOR_fn_vTerminateMorphsForThisFrame();
-    GLI_vSaveCameraMatrix();
-    PS2glGsSyncPath();
-}
-
-void GLI_vDoCompleteFade(int bFadeOut, float* pRGBColor, float fTimeInSeconds)
-{
-    GLI_g_a3_fFadeColor[0] = pRGBColor[0];
-    GLI_g_a3_fFadeColor[1] = pRGBColor[1];
-    GLI_g_a3_fFadeColor[2] = pRGBColor[2];
-    if (bFadeOut)
-    {
-        GLI_g_fCurrentColoredFadeValue = 0.0f;
-        GLI_g_fCurrentColoredFadeDirection = 1.0f / fTimeInSeconds;
-    }
-    else
-    {
-        GLI_g_fCurrentColoredFadeValue = 1.0f;
-        GLI_g_fCurrentColoredFadeDirection = -1.0f / fTimeInSeconds;
-    }
-    GLI_g_fInitialColoredFadeValue = GLI_g_fCurrentColoredFadeValue;
-    GLI_g_fInitialColoredFadeTime = g_ffFrameTime;
-}
-
-void GLIPS2_vActualizeClock(void)
-{
-    GLI_g_fInitialColoredFadeTime = 0;
-    g_BlackScreenUntilNextMap = 5;
-}
-
-void GLI_vProcessColoredFade(void)
-{
-    if (!g_InGameMenu2DActivated)
-    {
-        if (GLI_g_fCurrentColoredFadeValue >= 0.0f)
-        {
-            GLI_g_fCurrentColoredFadeValue = GLI_g_fInitialColoredFadeValue + GLI_g_fCurrentColoredFadeDirection * (g_ffFrameTime - GLI_g_fInitialColoredFadeTime);
-            if ((GLI_g_fCurrentColoredFadeValue >= 1.0f) && (GLI_g_fCurrentColoredFadeDirection > 0.0f))
-            {
-                GLI_g_fCurrentColoredFadeValue = 1.0f;
-            }
-            if ((GLI_g_fCurrentColoredFadeValue <= 1.0f) && (GLI_g_fCurrentColoredFadeValue > 0.0f))
-            {
-                PS2glMatrixMode(0x1701);
-                PS2glLoadIdentity();
-                PS2glOrtho(0.0f, 100.0f, 100.0f, 0.0f, -1.0f, 1.0f);
-                PS2glMatrixMode(0x1700);
-                PS2glLoadIdentity();
-                GLI_DRV_vSetCommonGLRenderStates();
-
-                g_PS2glContext.nEnableBits &= ~0x800; g_gsContext.TEST_1.ZTE = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1;
-                g_PS2glContext.nLightBits &= ~0x200; g_gsContext.TEST_1.ZTST = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1; *(unsigned int*)g_PS2glContext.pnColorMatMasks &= ~1;
-                g_PS2glContext.nTextureEnableBits &= (g_PS2glContext.iCurTextureSet == 0) ? ~2 : ~0x200; g_gsContext.PRMODE.TME = (g_PS2glContext.nTextureEnableBits & 0xF) ? 1 : 0; g_gsContext.ModFlgs.PRMODE_Modified = 1;
-                g_PS2glContext.nEnableBits &= ~0x400; g_gsContext.TEST_1.ATE = 0; g_gsContext.ModFlgs.TEST_1_Modified = 1;
-                g_PS2glContext.nLightBits &= ~0x400;
-                g_PS2glContext.nEnableBits &= ~0x80; g_gsContext.PRMODE.FGE = 0; g_gsContext.ModFlgs.PRMODE_Modified = 1; *(unsigned char*)g_PS2glContext.pbFogging = 0;
-
-                g_PS2glContext.bCullfaceChanged = 1; g_PS2glContext.nEnableBits &= ~0x2000;
-                PS2glColorMask(1, 1, 1, 0);
-                PS2glDepthMask(0);
-                g_PS2glContext.nEnableBits |= 0x100; g_gsContext.PRMODE.ABE = 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;
-                PS2glBlendFunc(0x302, 0x303);
-
-                g_PS2glContext.nEnableBits |= 0x100; g_gsContext.PRMODE.ABE = 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;
-                PS2glBegin(4);
-                PS2glColor4f(GLI_g_a3_fFadeColor[0], GLI_g_a3_fFadeColor[1], GLI_g_a3_fFadeColor[2], GLI_g_fCurrentColoredFadeValue);
-                PS2glVertex2f(0.0f, 0.0f);
-                PS2glVertex2f(100.0f, 0.0f);
-                PS2glVertex2f(100.0f, 100.0f);
-                PS2glVertex2f(0.0f, 0.0f);
-                PS2glVertex2f(100.0f, 100.0f);
-                PS2glVertex2f(0.0f, 100.0f);
-                PS2glEnd();
-
-                PS2glColorMask(1, 1, 1, 0);
-            }
-            else
-            {
-                GLI_g_fCurrentColoredFadeValue = -1.0f;
-            }
-        }
-    }
-    if (g_p_stCurrentViewport)
-    {
-        AGO3_DisplayTransitionMessage();
-    }
-}
-
 void GLI_vManageStuffForRasters(void)
 {
     unsigned char zTst;
@@ -4240,6 +3794,38 @@ void GLI_vManageStuffForRasters(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 2622–2673 */
+/* addr: 0x002a6200  size: 432 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2622
+ *   +0x0008 -> line 2623
+ *   +0x000c -> line 2625
+ *   +0x0014 -> line 2627
+ *   +0x0028 -> line 2630
+ *   +0x0078 -> line 2632
+ *   +0x0080 -> line 2633
+ *   +0x0084 -> line 2635
+ *   +0x011c -> line 2637
+ *   +0x0124 -> line 2638
+ *   +0x012c -> line 2639
+ *   +0x0134 -> line 2648
+ *   +0x013c -> line 2650
+ *   +0x0144 -> line 2652
+ *   +0x0148 -> line 2658
+ *   +0x014c -> line 2652
+ *   +0x0150 -> line 2658
+ *   +0x0160 -> line 2661
+ *   +0x0168 -> line 2662
+ *   +0x0170 -> line 2663
+ *   +0x0178 -> line 2664
+ *   +0x0180 -> line 2665
+ *   +0x0188 -> line 2666
+ *   +0x0190 -> line 2668
+ *   +0x019c -> line 2670
+ *   +0x01a4 -> line 2673
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vEndOfAI(void)
 {
     TR_IAMeca = TR_ulGetCount();
@@ -4268,6 +3854,62 @@ void GLI_vEndOfAI(void)
     TR_UpdateDisp2 = TR_ulGetCount();
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 2695–2920 */
+/* addr: 0x002a5ce0  size: 1308 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2695
+ *   +0x0014 -> line 2711
+ *   +0x0020 -> line 2715
+ *   +0x0028 -> line 2718
+ *   +0x002c -> line 2722
+ *   +0x0038 -> line 2724
+ *   +0x0040 -> line 2725
+ *   +0x0044 -> line 2793
+ *   +0x004c -> line 2799
+ *   +0x0064 -> line 2807
+ *   +0x006c -> line 2808
+ *   +0x00ac -> line 2809
+ *   +0x00b0 -> line 2808
+ *   +0x00c0 -> line 2811
+ *   +0x00c4 -> line 2809
+ *   +0x00c8 -> line 2808
+ *   +0x00d0 -> line 2811
+ *   +0x0128 -> line 2812
+ *   +0x01c8 -> line 2813
+ *   +0x0294 -> line 2815
+ *   +0x02b0 -> line 2816
+ *   +0x02d8 -> line 2817
+ *   +0x02f4 -> line 2818
+ *   +0x031c -> line 2825
+ *   +0x0378 -> line 2826
+ *   +0x03d4 -> line 2829
+ *   +0x03d8 -> line 2830
+ *   +0x03e0 -> line 2831
+ *   +0x03e8 -> line 2833
+ *   +0x0400 -> line 2837
+ *   +0x0404 -> line 2838
+ *   +0x040c -> line 2839
+ *   +0x0414 -> line 2842
+ *   +0x041c -> line 2845
+ *   +0x0424 -> line 2847
+ *   +0x0478 -> line 2849
+ *   +0x047c -> line 2850
+ *   +0x0488 -> line 2854
+ *   +0x0494 -> line 2856
+ *   +0x049c -> line 2859
+ *   +0x04a4 -> line 2861
+ *   +0x04ac -> line 2875
+ *   +0x04b4 -> line 2876
+ *   +0x04bc -> line 2901
+ *   +0x04d0 -> line 2905
+ *   +0x04dc -> line 2907
+ *   +0x04ec -> line 2910
+ *   +0x04f4 -> line 2911
+ *   +0x04f8 -> line 2917
+ *   +0x0504 -> line 2920
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_fn_vEndOfDisplay(void)
 {
     unsigned int iS;
@@ -4331,6 +3973,27 @@ void GLI_fn_vEndOfDisplay(void)
     PS2GL_SetDestinationFrame(0);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 1349–1379 */
+/* addr: 0x002a5c30  size: 176 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1349
+ *   +0x0014 -> line 1355
+ *   +0x0018 -> line 1364
+ *   +0x001c -> line 1355
+ *   +0x0044 -> line 1358
+ *   +0x004c -> line 1359
+ *   +0x0050 -> line 1360
+ *   +0x005c -> line 1363
+ *   +0x0060 -> line 1364
+ *   +0x0078 -> line 1367
+ *   +0x0088 -> line 1370
+ *   +0x0098 -> line 1375
+ *   +0x009c -> line 1370
+ *   +0x00a0 -> line 1375
+ *   +0x00a8 -> line 1379
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void CheckData(void)
 {
     int i;
@@ -4367,6 +4030,22 @@ void CheckData(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 3940–3955 */
+/* addr: 0x002a5b70  size: 184 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3940
+ *   +0x0010 -> line 3941
+ *   +0x0018 -> line 3943
+ *   +0x0070 -> line 3944
+ *   +0x0080 -> line 3947
+ *   +0x0088 -> line 3950
+ *   +0x0098 -> line 3951
+ *   +0x009c -> line 3953
+ *   +0x00a0 -> line 3954
+ *   +0x00a4 -> line 3955
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_HysteresisLevelStart(char* levelname)
 {
     char buffer[256];
@@ -4389,6 +4068,17 @@ void GLI_HysteresisLevelStart(char* levelname)
     GLI_g_NbHysteresisFrames = 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 4016–4022 */
+/* addr: 0x002a5b40  size: 44 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4016
+ *   +0x0008 -> line 4018
+ *   +0x0010 -> line 4020
+ *   +0x0018 -> line 4021
+ *   +0x0020 -> line 4022
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void MC_SwapBuffers(void)
 {
     SND_fn_vSynchroSound();
@@ -4396,6 +4086,34 @@ void MC_SwapBuffers(void)
     GLI_vReinitFrame(1);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 4084–4113 */
+/* addr: 0x002a5a80  size: 180 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4084
+ *   +0x0008 -> line 4085
+ *   +0x0010 -> line 4086
+ *   +0x0018 -> line 4087
+ *   +0x0020 -> line 4088
+ *   +0x0028 -> line 4090
+ *   +0x0030 -> line 4092
+ *   +0x0038 -> line 4093
+ *   +0x0040 -> line 4095
+ *   +0x0048 -> line 4096
+ *   +0x0050 -> line 4101
+ *   +0x0058 -> line 4103
+ *   +0x0060 -> line 4104
+ *   +0x0068 -> line 4105
+ *   +0x0070 -> line 4106
+ *   +0x0078 -> line 4107
+ *   +0x0080 -> line 4108
+ *   +0x0088 -> line 4109
+ *   +0x0090 -> line 4110
+ *   +0x0098 -> line 4111
+ *   +0x00a0 -> line 4112
+ *   +0x00a8 -> line 4113
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLIPS2_vCleanReinitForResChange(void)
 {
     GLIPS2_vInitOtherVideoStuff();
@@ -4422,6 +4140,33 @@ void GLIPS2_vCleanReinitForResChange(void)
     PS2auxSwapBuffers();
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 4116–4136 */
+/* addr: 0x002a59c0  size: 184 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4116
+ *   +0x0008 -> line 4119
+ *   +0x0010 -> line 4120
+ *   +0x0018 -> line 4121
+ *   +0x0020 -> line 4122
+ *   +0x0028 -> line 4123
+ *   +0x0030 -> line 4124
+ *   +0x0038 -> line 4125
+ *   +0x0040 -> line 4126
+ *   +0x0054 -> line 4127
+ *   +0x0068 -> line 4128
+ *   +0x0074 -> line 4129
+ *   +0x0078 -> line 4130
+ *   +0x007c -> line 4129
+ *   +0x0080 -> line 4130
+ *   +0x0084 -> line 4131
+ *   +0x0088 -> line 4132
+ *   +0x008c -> line 4131
+ *   +0x0090 -> line 4133
+ *   +0x0098 -> line 4134
+ *   +0x00ac -> line 4136
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLIPS2_vChangeResolutionNTSC(void)
 {
     GLI_vUpdateAllRefs(0);
@@ -4443,6 +4188,33 @@ void GLIPS2_vChangeResolutionNTSC(void)
         GLIPS2_vCleanReinitForResChange();
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 4140–4159 */
+/* addr: 0x002a5900  size: 184 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4140
+ *   +0x0008 -> line 4143
+ *   +0x0010 -> line 4144
+ *   +0x0018 -> line 4145
+ *   +0x0020 -> line 4146
+ *   +0x0028 -> line 4147
+ *   +0x0030 -> line 4148
+ *   +0x0038 -> line 4149
+ *   +0x0040 -> line 4150
+ *   +0x0054 -> line 4151
+ *   +0x0068 -> line 4152
+ *   +0x0074 -> line 4153
+ *   +0x0078 -> line 4154
+ *   +0x007c -> line 4153
+ *   +0x0080 -> line 4154
+ *   +0x0084 -> line 4155
+ *   +0x0088 -> line 4156
+ *   +0x008c -> line 4155
+ *   +0x0090 -> line 4157
+ *   +0x0098 -> line 4158
+ *   +0x00ac -> line 4159
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLIPS2_vChangeResolutionNTSCProgressive(void)
 {
     GLI_vUpdateAllRefs(0);
@@ -4464,6 +4236,110 @@ void GLIPS2_vChangeResolutionNTSCProgressive(void)
         GLIPS2_vCleanReinitForResChange();
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 4184–4215 */
+/* addr: 0x002a5590  size: 880 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4184
+ *   +0x0004 -> line 4185
+ *   +0x0008 -> line 4184
+ *   +0x000c -> line 4185
+ *   +0x0010 -> line 4184
+ *   +0x0014 -> line 4185
+ *   +0x0018 -> line 4184
+ *   +0x0030 -> line 4185
+ *   +0x0038 -> line 4186
+ *   +0x0040 -> line 4191
+ *   +0x0048 -> line 4193
+ *   +0x004c -> line 4194
+ *   +0x0050 -> line 4193
+ *   +0x0054 -> line 4194
+ *   +0x00a8 -> line 4195
+ *   +0x00b0 -> line 4196
+ *   +0x00d0 -> line 4198
+ *   +0x00e0 -> line 4197
+ *   +0x00e4 -> line 4199
+ *   +0x00e8 -> line 4196
+ *   +0x00f4 -> line 4197
+ *   +0x00f8 -> line 4196
+ *   +0x00fc -> line 4199
+ *   +0x0100 -> line 4196
+ *   +0x010c -> line 4197
+ *   +0x0114 -> line 4196
+ *   +0x011c -> line 4197
+ *   +0x0120 -> line 4196
+ *   +0x0124 -> line 4197
+ *   +0x0128 -> line 4196
+ *   +0x012c -> line 4197
+ *   +0x0130 -> line 4196
+ *   +0x014c -> line 4197
+ *   +0x0158 -> line 4196
+ *   +0x015c -> line 4197
+ *   +0x0160 -> line 4196
+ *   +0x0168 -> line 4199
+ *   +0x016c -> line 4196
+ *   +0x0174 -> line 4198
+ *   +0x0178 -> line 4197
+ *   +0x017c -> line 4198
+ *   +0x0180 -> line 4197
+ *   +0x0184 -> line 4198
+ *   +0x01a0 -> line 4196
+ *   +0x01a4 -> line 4198
+ *   +0x01a8 -> line 4196
+ *   +0x01ac -> line 4198
+ *   +0x01b0 -> line 4197
+ *   +0x01b4 -> line 4201
+ *   +0x01b8 -> line 4197
+ *   +0x01bc -> line 4198
+ *   +0x01c0 -> line 4204
+ *   +0x01c4 -> line 4198
+ *   +0x01cc -> line 4204
+ *   +0x01d0 -> line 4198
+ *   +0x01d8 -> line 4201
+ *   +0x01dc -> line 4198
+ *   +0x01e0 -> line 4204
+ *   +0x01e4 -> line 4197
+ *   +0x01ec -> line 4199
+ *   +0x01f0 -> line 4197
+ *   +0x01f4 -> line 4199
+ *   +0x01f8 -> line 4197
+ *   +0x01fc -> line 4199
+ *   +0x0218 -> line 4200
+ *   +0x0220 -> line 4201
+ *   +0x0224 -> line 4200
+ *   +0x0228 -> line 4201
+ *   +0x023c -> line 4197
+ *   +0x0244 -> line 4199
+ *   +0x0254 -> line 4200
+ *   +0x025c -> line 4201
+ *   +0x0260 -> line 4199
+ *   +0x0264 -> line 4201
+ *   +0x0268 -> line 4199
+ *   +0x028c -> line 4201
+ *   +0x0290 -> line 4199
+ *   +0x0294 -> line 4201
+ *   +0x0298 -> line 4199
+ *   +0x029c -> line 4201
+ *   +0x02a8 -> line 4199
+ *   +0x02ac -> line 4201
+ *   +0x02b0 -> line 4199
+ *   +0x02b4 -> line 4201
+ *   +0x02b8 -> line 4199
+ *   +0x02c0 -> line 4201
+ *   +0x02d0 -> line 4204
+ *   +0x02d8 -> line 4205
+ *   +0x02f0 -> line 4206
+ *   +0x02f8 -> line 4207
+ *   +0x0300 -> line 4208
+ *   +0x0308 -> line 4209
+ *   +0x0310 -> line 4210
+ *   +0x0324 -> line 4211
+ *   +0x032c -> line 4212
+ *   +0x0334 -> line 4213
+ *   +0x033c -> line 4214
+ *   +0x0344 -> line 4215
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLIPS2_vInitOtherVideoStuff(void)
 {
     PS2glDepthRange(0.0, 1.0);
@@ -4492,6 +4368,25 @@ void GLIPS2_vInitOtherVideoStuff(void)
     PS2auxSwapBuffers();
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 4228–4241 */
+/* addr: 0x002a54d0  size: 180 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4228
+ *   +0x0004 -> line 4229
+ *   +0x0008 -> line 4228
+ *   +0x000c -> line 4229
+ *   +0x0018 -> line 4231
+ *   +0x0020 -> line 4234
+ *   +0x0024 -> line 4232
+ *   +0x0028 -> line 4234
+ *   +0x002c -> line 4232
+ *   +0x0030 -> line 4235
+ *   +0x0038 -> line 4237
+ *   +0x0070 -> line 4238
+ *   +0x00a8 -> line 4241
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_fn_vSwitchTo60Hz(void)
 {
     if (GLI_g_50_or_60_HzMode != 60)
@@ -4507,6 +4402,25 @@ void GLI_fn_vSwitchTo60Hz(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 4244–4257 */
+/* addr: 0x002a5410  size: 180 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4244
+ *   +0x0004 -> line 4245
+ *   +0x0008 -> line 4244
+ *   +0x000c -> line 4245
+ *   +0x0018 -> line 4247
+ *   +0x0020 -> line 4250
+ *   +0x0024 -> line 4248
+ *   +0x0028 -> line 4250
+ *   +0x002c -> line 4248
+ *   +0x0030 -> line 4251
+ *   +0x0038 -> line 4253
+ *   +0x0070 -> line 4254
+ *   +0x00a8 -> line 4257
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_fn_vSwitchToProgressive60Hz(void)
 {
     if (GLI_g_50_or_60_HzMode != 0x46)
@@ -4523,11 +4437,40 @@ void GLI_fn_vSwitchToProgressive60Hz(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 4275–4275 */
+/* addr: 0x002a5400  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4275
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_fn_vSwitchTo50Hz(void)
 {
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 4297–4310 */
+/* addr: 0x002a5350  size: 172 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4297
+ *   +0x0004 -> line 4299
+ *   +0x0008 -> line 4297
+ *   +0x000c -> line 4298
+ *   +0x0014 -> line 4299
+ *   +0x0024 -> line 4300
+ *   +0x003c -> line 4301
+ *   +0x0044 -> line 4302
+ *   +0x004c -> line 4303
+ *   +0x0054 -> line 4304
+ *   +0x0068 -> line 4305
+ *   +0x0080 -> line 4306
+ *   +0x0088 -> line 4307
+ *   +0x0090 -> line 4308
+ *   +0x0098 -> line 4309
+ *   +0x00a0 -> line 4310
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void ClearScreenAndWait2Frames(void)
 {
     g_BlackScreenUntilNextMap = 5;
@@ -4544,6 +4487,20 @@ void ClearScreenAndWait2Frames(void)
     g_BlackScreenUntilNextMap = 5;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 4315–4324 */
+/* addr: 0x002a5290  size: 192 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4315
+ *   +0x0004 -> line 4316
+ *   +0x0008 -> line 4315
+ *   +0x000c -> line 4317
+ *   +0x0010 -> line 4316
+ *   +0x0014 -> line 4321
+ *   +0x00b0 -> line 4323
+ *   +0x00b4 -> line 4324
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vChangeVideoModeForVideos(void)
 {
     g_ResChangeVideo = 1;
@@ -4552,6 +4509,21 @@ void GLI_vChangeVideoModeForVideos(void)
     g_ResChangeVideo = 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 4327–4342 */
+/* addr: 0x002a5100  size: 388 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4327
+ *   +0x0004 -> line 4328
+ *   +0x0008 -> line 4327
+ *   +0x000c -> line 4329
+ *   +0x0038 -> line 4335
+ *   +0x00d0 -> line 4336
+ *   +0x00d8 -> line 4338
+ *   +0x0174 -> line 4341
+ *   +0x0178 -> line 4342
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vRestoreVideoModeAfterVideos(void)
 {
     g_ResChangeVideo = 1;
@@ -4569,6 +4541,13 @@ void GLI_vRestoreVideoModeAfterVideos(void)
     g_ResChangeVideo = 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 94–94 */
+/* addr: 0x002a50f0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 94
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_DRV_vNoBlackPolygon(void)
 {
     g_lNumberOfBlackTriangles = 0;
