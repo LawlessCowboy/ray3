@@ -380,8 +380,20 @@ extern "C" int sceScfGetLocalTimefromRTC(sceCdCLOCK*);
 extern "C" size_t strlen(const char*);
 
 /* BCD <-> binary, as in the Sony libscf samples. */
-#define itob(i) ((i) / 10 * 16 + (i) % 10)
-#define btoi(b) (((b) >> 4) * 10 + ((b) & 0x0F))
+/* BCD conversions build the result in a local with += so the sum lands in the
+ * low digit's register, as in retail. */
+static inline int itob(int i)
+{
+    int r = i % 10;
+    r += i / 10 * 16;
+    return r;
+}
+static inline int btoi(int b)
+{
+    int r = b & 0x0F;
+    r += (b >> 4) * 10;
+    return r;
+}
 extern "C" ESceeResult sceeMemCardLoadFile(unsigned int, unsigned int, char*, char*, void*, unsigned int);
 extern "C" void InvalidDCache(void*, void*);
 extern "C" ESceeResult sceeMemCardFormat(unsigned int, unsigned int);
@@ -409,6 +421,21 @@ static inline void PS2MC_vFillTestPattern(char* pBuffer, unsigned int ulSize)
     for (i = 0; i < ulSize; i++) pBuffer[i] = i & 0x7F;
 }
 
+/* Retail inlines the checksum loop into the load state machines (one line in
+ * the line map) with an unsigned counter, unlike the out-of-line member. */
+static inline void PS2MC_vComputeCheckSum(C_PS2MC_Manager* p, char* pDataOrg, unsigned int ulSize)
+{
+    unsigned int i;
+    unsigned char* pData;
+    pData = (unsigned char*)pDataOrg;
+    p->m_ulCheckSum = 0;
+    i = ulSize - 4;
+    if (i != 0) {
+        do {
+            p->m_ulCheckSum = p->m_ulCheckSum * 3 + ((i & 1) + 1) * ((unsigned int)*pData++ + (i & 1));
+        } while (--i != 0);
+    }
+}
 static inline void PS2MC_vAcknowledgeChange(C_PS2MC_Manager* p)
 {
     if (p->m_MemoryCardInternalStatus.type != -10)
@@ -1449,7 +1476,9 @@ void C_PS2MC_Manager::ManageGetSavedGamesEntries(void)
                 LocalTime.hour = itob(m_pDirInfo[i]._Modify.Hour % 100);
                 LocalTime.day = itob(m_pDirInfo[i]._Modify.Day % 100);
                 LocalTime.month = itob(m_pDirInfo[i]._Modify.Month % 100);
-                Century = m_pDirInfo[i]._Modify.Year / 100 * 100;
+                /* Permuter-found: Century in two statements fixes register allocation. */
+                Century = m_pDirInfo[i]._Modify.Year / 100;
+                Century = Century * 100;
                 LocalTime.year = itob((unsigned char)(m_pDirInfo[i]._Modify.Year - Century) % 100);
                 sceScfGetLocalTimefromRTC(&LocalTime);
                 LocalTime.second = btoi(LocalTime.second);
@@ -3951,7 +3980,7 @@ void C_PS2MC_Manager::ManageLoadGame(void)
         {
             PS2MC_vFillTestPattern((char*)m_pLoadSaveBuffer, 0x3DE);
             FlushCache(0);
-            InvalidDCache(m_pLoadSaveBuffer, m_pLoadSaveBuffer + 0x3DE);
+            InvalidDCache((char*)m_pLoadSaveBuffer, (char*)m_pLoadSaveBuffer + 0x3DE);
             Result = sceeMemCardLoadFile(m_uiPort, m_uiSlot, m_aDirExtension, m_aFullFileName, m_pLoadSaveBuffer, 0x3DE);
             if (Result == E_FAIL)
             {
@@ -3969,9 +3998,9 @@ void C_PS2MC_Manager::ManageLoadGame(void)
             sceeMemCardGetFunctionResult(8, &functionResult);
             if (functionResult.success == E_SUCCESS)
             {
-                unsigned char* pSum = m_pLoadSaveBuffer; m_ulCheckSum = 0; int i = 0x3DA; if (i != 0) { do { m_ulCheckSum = m_ulCheckSum * 3 + ((i & 1) + 1) * (*pSum++ + (i & 1)); } while (--i != 0); }
+                PS2MC_vComputeCheckSum(this, (char*)m_pLoadSaveBuffer, 0x3DE);
                 unsigned char* pData = m_pLoadSaveBuffer;
-                if (((pData[0x3DA] << 24) | (pData[0x3DB] << 16) | (pData[0x3DC] << 8) | pData[0x3DD]) == m_ulCheckSum)
+                unsigned int ulStored = (pData[0x3DA] << 24) | (pData[0x3DB] << 16) | (pData[0x3DC] << 8) | pData[0x3DD]; if (ulStored == m_ulCheckSum)
                 {
                     PS2MC_SetDisplayMessage(MC_eLoadOk, m_RequiredGameDataSize);
                     m_uiSubState = 20;
@@ -4200,9 +4229,9 @@ void C_PS2MC_Manager::ManageLoadScreenShot(void)
             sceeMemCardGetFunctionResult(8, &functionResult);
             if (functionResult.success == E_SUCCESS)
             {
-                unsigned char* pSum = (unsigned char*)m_pScreenShotLoadBuffer; m_ulCheckSum = 0; int i = 0x14000; if (i != 0) { do { m_ulCheckSum = m_ulCheckSum * 3 + ((i & 1) + 1) * (*pSum++ + (i & 1)); } while (--i != 0); }
+                PS2MC_vComputeCheckSum(this, (char*)m_pScreenShotLoadBuffer, 0x14004);
                 unsigned char* pData = (unsigned char*)m_pScreenShotLoadBuffer;
-                if (((pData[0x14000] << 24) | (pData[0x14001] << 16) | (pData[0x14002] << 8) | pData[0x14003]) == m_ulCheckSum)
+                unsigned int ulStored = (pData[0x14000] << 24) | (pData[0x14001] << 16) | (pData[0x14002] << 8) | pData[0x14003]; if (ulStored == m_ulCheckSum)
                 {
                     PS2MC_RemoveCurrentMessage();
                     m_Flags[7] = 1;

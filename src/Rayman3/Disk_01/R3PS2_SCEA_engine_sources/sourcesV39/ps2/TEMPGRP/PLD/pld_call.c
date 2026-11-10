@@ -4643,7 +4643,7 @@ void fn_v_Transition_CorrectTextureChannel(GLI_tdstTexture_* p_stTexture);
 void debug_printf(char* format, ...);
 void CheckForTutorial(char* Name);
 void PLD_fn_vClearAnimationsBanks(int iStartBank, int iNumberOfBanks);
-void PLD_fn_vReadAnimationsBanks(char** _ppcCMBAddress, unsigned short iStartBank, int iNumberOfBanks);
+void PLD_fn_vReadAnimationsBanks(char** _ppcCMBAddress, int iStartBank, int iNumberOfBanks);
 void PLD_fn_vLoadFix(void);
 char* PLD_fn_pcLoadArea(_tdeAreaName _eAreaId, char* _szAreaName);
 unsigned char PLD_fn_bIsInFix(void* Ptr);
@@ -4725,7 +4725,7 @@ int printf(const char* format, ...);
 int sprintf(char* s, const char* format, ...);
 void CheckForTutorial(char* Name);
 char* PLD_fn_pcLoadArea(_tdeAreaName _eAreaId, char* _szAreaName);
-void PLD_fn_vReadAnimationsBanks(char** _ppcCMBAddress, unsigned short iStartBank, int iNumberOfBanks);
+void PLD_fn_vReadAnimationsBanks(char** _ppcCMBAddress, int iStartBank, int iNumberOfBanks);
 void fn_v_Transition_CorrectTextureChannelTable(void);
 
 /* The target writes COP0 register 24 (mtc0 zero, $24); C cannot express it.
@@ -5242,12 +5242,36 @@ L_SndTest:
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PLD_fn_vReadAnimationsBanks(char** _ppcCMBAddress, unsigned short iStartBank, int iNumberOfBanks)
+/* The retail debug types iStartBank as unsigned short, but the code never
+ * masks it to 16 bits (MWCC would emit andi on every use), so the build used int. */
+void PLD_fn_vReadAnimationsBanks(char** _ppcCMBAddress, int iStartBank, int iNumberOfBanks)
 {
     char* pcCMBStartAddress;
-    int iEndBank;
     int i;
-    /* TODO: decompile from asm/... */
+    int iEndBank;
+
+    pcCMBStartAddress = *_ppcCMBAddress;
+    { volatile stStructDef_* p_stDef = &g_stStructArray[159]; if (&g_tdstStackInfos[iStartBank]) { unsigned int uN = p_stDef->u32ActualSize; memcpy(&g_tdstStackInfos[iStartBank], *_ppcCMBAddress, uN * (13 * iNumberOfBanks)); } { unsigned int uS = p_stDef->u32ActualSize * (13 * iNumberOfBanks); *_ppcCMBAddress += uS; } }
+
+    iEndBank = iStartBank + iNumberOfBanks;
+
+    for (i = iStartBank; i < iEndBank; i++) {
+        if (g_tdstStackInfos[i][0].ulMaxPos) g_ax_pA3dGENERAL[i] = *((int*)*_ppcCMBAddress)++;
+        if (g_tdstStackInfos[i][1].ulMaxPos) g_ax_pVectors[i] = *((int*)*_ppcCMBAddress)++;
+        if (g_tdstStackInfos[i][2].ulMaxPos) g_ax_pQuaternions[i] = *((int*)*_ppcCMBAddress)++;
+        if (g_tdstStackInfos[i][3].ulMaxPos) g_ax_pHierarchies[i] = *((int*)*_ppcCMBAddress)++;
+        if (g_tdstStackInfos[i][4].ulMaxPos) g_ax_pNTTO[i] = *((int*)*_ppcCMBAddress)++;
+        if (g_tdstStackInfos[i][5].ulMaxPos) g_ax_pOnlyFrames[i] = *((int*)*_ppcCMBAddress)++;
+        if (g_tdstStackInfos[i][6].ulMaxPos) g_ax_pChannels[i] = *((int*)*_ppcCMBAddress)++;
+        if (g_tdstStackInfos[i][7].ulMaxPos) g_ax_pFramesNumOfNTTO[i] = *((int*)*_ppcCMBAddress)++;
+        if (g_tdstStackInfos[i][8].ulMaxPos) g_ax_pFramesKFIndex[i] = *((int*)*_ppcCMBAddress)++;
+        if (g_tdstStackInfos[i][9].ulMaxPos) g_ax_pKeyFrames[i] = *((int*)*_ppcCMBAddress)++;
+        if (g_tdstStackInfos[i][10].ulMaxPos) g_ax_pEvents[i] = *((int*)*_ppcCMBAddress)++;
+        if (g_tdstStackInfos[i][11].ulMaxPos) g_ax_pMorphData[i] = *((int*)*_ppcCMBAddress)++;
+        if (g_tdstStackInfos[i][12].ulMaxPos) g_ax_pDeformations[i] = *((int*)*_ppcCMBAddress)++;
+    }
+
+    printf("PLD_fn_vReadAnimationsBanks(iStartBank=%d,iNumberOfBanks=%d): block is %d bytes\n", iStartBank, iNumberOfBanks, (long)(*_ppcCMBAddress - pcCMBStartAddress));
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 1200–1220 */
@@ -5531,7 +5555,7 @@ void fn_v_Transition_CorrectTextureChannelTable(void)
     int j;
 
     *(int*)(gs_aDEFTableOfTextureMemoryChannels + g_lNumberOfTexturesInFix * 4) = 2;
-    *(int*)(gs_aDEFTableOfTextureMemoryChannels + 4 + g_lNumberOfTexturesInFix * 4) = 2;
+    *(int*)(gs_aDEFTableOfTextureMemoryChannels + (g_lNumberOfTexturesInFix + 1) * 4) = 2;
 
     for (i = PLD_g_ulNumberOfFixVisualMaterials; i < PLD_g_ulNumberOfTransitionVisualMaterials; i++)
     {
@@ -6259,7 +6283,7 @@ L_FamBody:
             if (!g_ax_pA3dGENERAL[p_stThisFamily->ucStorageBank] &&
                 GAM_fn_bIsFamilyToLoad(ucFamilyId))
             {
-                { unsigned char ucBank = p_stThisFamily->ucStorageBank; char szAnimName[40]; char* pcFamilyAnimCMBAddress; sprintf(szAnimName, "%s\\ani%d", _szLevelName, ucBank - 5); pcFamilyAnimCMBAddress = PLD_fn_pcLoadArea((unsigned char)ucBank + 102, szAnimName); if (pcFamilyAnimCMBAddress) { g_pcAnimationsTimeStamp = (int)pcFamilyAnimCMBAddress; pcFamilyAnimCMBAddress += 40; pcFamilyAnimCMBAddress += 4; PLD_fn_vReadAnimationsBanks(&pcFamilyAnimCMBAddress, ucBank, 1); } }
+                { unsigned char ucBank = p_stThisFamily->ucStorageBank; char szAnimName[40]; char* pcFamilyAnimCMBAddress; sprintf(szAnimName, "%s\\ani%d", _szLevelName, ucBank - 5); pcFamilyAnimCMBAddress = PLD_fn_pcLoadArea((unsigned char)ucBank + 102, szAnimName); if (pcFamilyAnimCMBAddress) { g_pcAnimationsTimeStamp = (int)pcFamilyAnimCMBAddress; pcFamilyAnimCMBAddress += 40; pcFamilyAnimCMBAddress += 4; PLD_fn_vReadAnimationsBanks(&pcFamilyAnimCMBAddress, (unsigned short)ucBank, 1); } }
 
                 { static char s_szNumericName[4]; sprintf(s_szNumericName, "%d", ucFamilyId); SND_fn_bLoadBank(s_szNumericName); }
             }

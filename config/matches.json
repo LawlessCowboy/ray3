@@ -49849,6 +49849,21 @@
           "type": 6
         }
       ]
+    },
+    {
+      "address": "0x002fed90",
+      "candidate_size": 1016,
+      "first_difference": 48,
+      "implementation": "void CAM_fn_vComputeCameraSystemAxis(DNM_stDynamics* _p_stDynamics, HIE_tdstSuperObject_* _h_SupObj, MTH3D_tdstVector_* _p_stNewPosition, MTH3D_tdstVector_* _p_stNewTarget, MTH3D_tdstVector_* _p_stAxisX, MTH3D_tdstVector_* _p_stAxisY, MTH3D_tdstVector_* _p_stAxisZ);\nDNM_stMecObstacle* DNM_p_stObstacleCameraObstacle(DNM_stMecObstacle* _p_stObstacle, DNM_stDynamics* _p_stDynamics, DNM_stParsingDatas* _p_stExternData, HIE_tdstSuperObject_* _hSupObj, MTH3D_tdstVector_* _p_stWantedPosition, MTH3D_tdstVector_* _p_stNewPosition);\nint CAM_lHaveITakeSThgIntoTheMug(DNM_stMecObstacle* _p_stResultObstacle, HIE_tdstSuperObject_* _p_stSupObj, MAT_tdstTransformation_* _p_stStartPosition, MAT_tdstTransformation_* _p_stEndPosition);\nDNM_stDynamics* DNM_p_stDynamicsCameraParsing(DNM_stDynamics* _p_stDynamics, HIE_tdstSuperObject_* _h_SupObj, DNM_stParsingDatas* _p_stExternData, float _xDT);\nfloat DNM_fn_xDynamicsCameraAngleParsing(float _xSpeed, float _xIncSpeed, float _xDecSpeed, float _xRequestAngle, float _xLastAngle, char _cIgnoreParsing, char _cIgnoreInertia);\nvoid DNM_fn_vDynamicsCameraPositionParsing(float _xSpeed, float _xIncSpeed, float _xDecSpeed, float _xLastNorm, char _cIgnoreParsing, char _cIgnoreInertia, MTH3D_tdstVector_* _p_stActualPos, MTH3D_tdstVector_* _p_stShiftingSrc, MTH3D_tdstVector_* _p_stDestPos, MTH3D_tdstVector_* _p_stShiftingResult);\nvoid DNM_fn_vDynamicsTakeCareOfLastMove(MTH3D_tdstVector_* _p_stShiftingResult, MTH3D_tdstVector_* _p_stLastShifting, float _xCutAngleFactor);\nfloat CAM_fn_xComputeVerticalAngle(MTH3D_tdstVector_* _p_stOrgVector, MTH3D_tdstVector_* _p_stDestVector, MTH3D_tdstVector_* _p_stAxisZ);\n\n/* E:\\Rayman3\\Disk_01\\R3PS2_SCEA_engine_sources\\sourcesV39\\ps2\\TEMPGRP\\MEC\\DNMCame.c lines 113\u2013186 */\n/* addr: 0x003016a0  size: 1256 bytes */\n/* Target MWCC statement boundaries (code offset -> source line):\n *   +0x0000 -> line 113\n *   +0x0018 -> line 127\n *   +0x001c -> line 113\n *   +0x0020 -> line 127\n *   +0x0024 -> line 113\n *   +0x0028 -> line 125\n *   +0x002c -> line 113\n *   +0x0030 -> line 125\n *   +0x0034 -> line 113\n *   +0x0038 -> line 120\n *   +0x0050 -> line 125\n *   +0x0068 -> line 127\n *   +0x00b0 -> line 128\n *   +0x00bc -> line 131\n *   +0x00d0 -> line 134\n *   +0x0170 -> line 136\n *   +0x01d8 -> line 137\n *   +0x023c -> line 139\n *   +0x024c -> line 140\n *   +0x0250 -> line 143\n *   +0x0260 -> line 145\n *   +0x0284 -> line 147\n *   +0x028c -> line 150\n *   +0x0290 -> line 157\n *   +0x02a8 -> line 159\n *   +0x02e4 -> line 160\n *   +0x02ec -> line 163\n *   +0x02fc -> line 164\n *   +0x039c -> line 166\n *   +0x0404 -> line 167\n *   +0x0468 -> line 169\n *   +0x0478 -> line 170\n *   +0x047c -> line 173\n *   +0x048c -> line 175\n *   +0x04b0 -> line 177\n *   +0x04b8 -> line 180\n *   +0x04bc -> line 185\n *   +0x04c0 -> line 186\n * Place reconstructed statements at these boundaries;\n * compare a candidate object's line table as an extra checkpoint.\n */\n\nfloat CAM_fn_xComputeVerticalAngle(MTH3D_tdstVector_* _p_stOrgVector, MTH3D_tdstVector_* _p_stDestVector, MTH3D_tdstVector_* _p_stAxisZ)\n{\n    float xNorm;\n    MTH_stRotation stRotation;\n    float xDestAngle;\n    float xOrgAngle;\n    MTH3D_tdstVector_ stProj;\n    MTH3D_tdstVector_ stAxisZ;\n    MTH3D_tdstVector_ stVector;\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "CAM_fn_vComputeCameraSystemAxis",
+      "reason": "1016/1016. Plain-C cross products (a*b-c*d in every operand order) are worse under 3.0.1 and 3.0.3: MWCC canonicalises the contracted mula/msub load order, so the asm MTH_CROSS_COMPONENT_TO macro is right. Under 3.0.3-020716 the base source drops to 15 register rows (prologue t1 use fixed); remaining residual is the null-vector flag block (retail: sltu normalisation after the second test, andi v0 in the beqz delay slot). Inline int helpers with '(unsigned char)(A && B && C)' or 'v1 = A && B; v0 = (uchar)(v1 && C)' reach 8 register rows under 3.0.3 but not a match.",
+      "size": 1016,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/DNMCame.c",
+      "status": "MISMATCH",
+      "target_size": 1016,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -50074,6 +50089,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "PLD_fn_vClearAnimationsBanks",
       "size": 420,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/PLD/pld_call.c",
+      "status": "MATCH"
+    },
+    "0x0012e290": {
+      "address": "0x0012e290",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "PLD_fn_vReadAnimationsBanks",
+      "size": 928,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/PLD/pld_call.c",
       "status": "MATCH"
     },
@@ -60573,6 +60596,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/snd3d.cpp",
       "status": "MATCH"
     },
+    "0x00186920": {
+      "address": "0x00186920",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SND_fn_vSynchroSound",
+      "size": 444,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/snd3d.cpp",
+      "status": "MATCH"
+    },
     "0x00186d00": {
       "address": "0x00186d00",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -60610,6 +60641,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "SND_fn_s32GetSoundHandleState",
       "size": 204,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/snd3d.cpp",
+      "status": "MATCH"
+    },
+    "0x00186fe0": {
+      "address": "0x00186fe0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SND_fn_s32SendRequestSound",
+      "size": 940,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/snd3d.cpp",
       "status": "MATCH"
     },
@@ -60682,6 +60721,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_bLockSound__Fb",
       "size": 104,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/snd3d.cpp",
+      "status": "MATCH"
+    },
+    "0x00187870": {
+      "address": "0x00187870",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SND_fn_vSaveLastTheme",
+      "size": 272,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/snd3d.cpp",
       "status": "MATCH"
     },
@@ -65245,6 +65292,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Fnct.c",
       "status": "MATCH"
     },
+    "0x00206440": {
+      "address": "0x00206440",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "CAM_fn_p_stGetBestPos",
+      "size": 420,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Fnct.c",
+      "status": "MATCH"
+    },
     "0x002065f0": {
       "address": "0x002065f0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -65290,6 +65345,22 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "CAM_fn_p_stGetTargetedSuperObject",
       "size": 296,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Fnct.c",
+      "status": "MATCH"
+    },
+    "0x00206b80": {
+      "address": "0x00206b80",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "CAM_fn_p_stGetRealParameter",
+      "size": 1040,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Fnct.c",
+      "status": "MATCH"
+    },
+    "0x00206f90": {
+      "address": "0x00206f90",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "CAM_fn_p_stGetVectorParameter",
+      "size": 516,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Fnct.c",
       "status": "MATCH"
     },
@@ -74749,6 +74820,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/Interpol/a3x_intn.c",
       "status": "MATCH"
     },
+    "0x0027c770": {
+      "address": "0x0027c770",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "fn_v_MergePositions",
+      "size": 1976,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/Interpol/a3x_intn.c",
+      "status": "MATCH"
+    },
+    "0x0027cf30": {
+      "address": "0x0027cf30",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "fn_vUpdateFrameMatrixForSubAnim",
+      "size": 2056,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/Interpol/a3x_intn.c",
+      "status": "MATCH"
+    },
     "0x0027d740": {
       "address": "0x0027d740",
       "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
@@ -74810,6 +74897,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_p_stGetLinearSpeedVector",
       "size": 176,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/Interpol/a3x_intn.c",
+      "status": "MATCH"
+    },
+    "0x0027ec40": {
+      "address": "0x0027ec40",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "fn_vUpdateFrameMatrix",
+      "size": 972,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/Interpol/a3x_intn.c",
       "status": "MATCH"
     },
@@ -86197,6 +86292,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/PS2MC/PS2MemoryCard.cpp",
       "status": "MATCH"
     },
+    "0x0032bf80": {
+      "address": "0x0032bf80",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "ManageLoadScreenShot__15C_PS2MC_ManagerFv",
+      "size": 1328,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/PS2MC/PS2MemoryCard.cpp",
+      "status": "MATCH"
+    },
     "0x0032ca20": {
       "address": "0x0032ca20",
       "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
@@ -86242,6 +86345,22 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "ManagePreBootCheck__15C_PS2MC_ManagerFv",
       "size": 452,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/PS2MC/PS2MemoryCard.cpp",
+      "status": "MATCH"
+    },
+    "0x0032f660": {
+      "address": "0x0032f660",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "ManageGetScreenshotsEntries__15C_PS2MC_ManagerFv",
+      "size": 2324,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/PS2MC/PS2MemoryCard.cpp",
+      "status": "MATCH"
+    },
+    "0x0032ff80": {
+      "address": "0x0032ff80",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "ManageGetSavedGamesEntries__15C_PS2MC_ManagerFv",
+      "size": 3444,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/PS2MC/PS2MemoryCard.cpp",
       "status": "MATCH"
     },

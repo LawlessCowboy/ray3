@@ -262,3 +262,9 @@ src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GamSave
 # as HieMtStk.c and matches only under 3.0.3 (3.0.1 leaves its branch delay
 # slots unfilled); every other recorded match in the file still verifies.
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SPO/HieDraw.c
+# AI/AIGame/CAM_Fnct.c: CAM_fn_p_stGetBestPos copies its stVec local with
+# '((unsigned int*)&stVec)[i]' word stores. 3.0.3 folds the stack address into
+# 'sw r,0x110(sp)' but still treats each store as a pointer store, so it
+# reloads stStruct.hCineinfo between words as retail does. 3.0.1 instead puts
+# the address in a register. Measured 13/13 under 3.0.3, 12/13 under 3.0.1.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Fnct.c

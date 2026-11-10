@@ -1286,9 +1286,9 @@ void HMU_fn_vFree(void* _ppBlock, int _ulMode);
 void fn_vPushAllocModeAccordingToObject(void* _p_stSuperObject);
 void GAM_fn_vPopAllocMode(void);
 
-inline long MTH_M_xRealToLong(float x)
+inline int MTH_M_xRealToLong(float x)
 {
-    long r;
+    int r;
     asm
     {
         cvt.w.s f30, x
@@ -1303,7 +1303,7 @@ void fn_v_InitSinTab(void);
 void fn_vComputeFinalFrameMatrixForInterAnim(HIE_tdstSuperObject_* p_stSuperObject, tdstAnim3d_* _p_stAnim3d);
 void fn_vComputeFinalFrameMatrix(HIE_tdstSuperObject_* p_stSuperObject, tdstAnim3d_* _p_stAnim3d, float _xFrame);
 int fn_v_MergePositions(tdstChannel_* p_stChannel, tdstAChannel_* p_stCurrentChannel, unsigned char bHierarchized);
-void fn_vUpdateFrameMatrixForSubAnim(void* _p_stSuperObject, tdstAnim3d_* _p_stAnim3d, float _xFrame, tdstAChannel_* d_stChannelArray, unsigned char bMergeWithMainAnim);
+void fn_vUpdateFrameMatrixForSubAnim(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAnim3d, float _xFrame, tdstAChannel_* d_stChannelArray, unsigned char _ucAnimLevel, unsigned char bMergeWithMainAnim);
 void fn_vUpdateFrameForSubAnim(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame, unsigned char _ucAnimLevel);
 int fn_bTestSamePosition(tdstAnim3d_* p_stPreviousAnim, tdstAnim3d_* p_stNextAnim, unsigned short uwPreviousFrame, unsigned short uwNextFrame);
 unsigned short fn_uwGetFrameInNextAnimForIntermAnim(tdstAnim3d_* p_stTempoAnim);
@@ -1327,6 +1327,33 @@ inline unsigned int fn_ulFrameFromFloat(float xFrame)
 
 void fn_v_QuatToMatrix(float (*_a3a3_xMtx)[3], float* _a4_xQuat);
 void fn_v_ExpandQuat(float* _a4_xQuatD, short* _a4_xQuatS);
+unsigned char PLA_bCheckDistForInterpol(HIE_tdstSuperObject_* p_stActorSO);
+inline float MTH_xAbs(float _x) { float _r; asm { abs.s _r, _x } return _r; }
+inline void MAT_fn_vSetTranslationVector(MAT_tdstTransformation_* _hMatrix, MTH3D_tdstVector_* _p_stTrans)
+{
+    if (_hMatrix->eType == 1)
+        _hMatrix->eType = 2;
+    ((int*)&_hMatrix->stTransformMatrix.stCol_3)[0] = ((int*)_p_stTrans)[0];
+    ((int*)&_hMatrix->stTransformMatrix.stCol_3)[1] = ((int*)_p_stTrans)[1];
+    ((int*)&_hMatrix->stTransformMatrix.stCol_3)[2] = ((int*)_p_stTrans)[2];
+    _hMatrix->stTransformMatrix.stCol_3.xW = 1.0f;
+}
+inline void MAT_fn_vSetTranslationSub(MAT_tdstTransformation_* _hMatrix, MTH3D_tdstVector_* _p_stA, MTH3D_tdstVector_* _p_stB)
+{
+    MTH3D_tdstVector_ stTranslation;
+    stTranslation.xX = _p_stA->xX - _p_stB->xX;
+    stTranslation.xY = _p_stA->xY - _p_stB->xY;
+    stTranslation.xZ = _p_stA->xZ - _p_stB->xZ;
+    MAT_fn_vSetTranslationVector(_hMatrix, &stTranslation);
+}
+void MAT_fn_vZoom(MAT_tdstTransformation_* _hTransform, float _xZoomFactor);
+void MAT_fn_vSetScale(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stScale);
+void MAT_fn_vInitTransformationWithNormQuaternion(MAT_tdstTransformation_* _hTransform, float* _a_xQuaternion);
+void MAT_fn_vInitTransformationWithNonDiagonalScale(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stScale, float* _a_xQuaternion);
+void MAT_fn_vCompose(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hA, MAT_tdstTransformation_* _hB);
+void MAT_fn_vApplyOnVector(MTH3D_tdstVector_* _p_stDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stSource);
+void fn_v_QuatSlerp(float* _a4_xQuatD, float* _a4_xQuatS1, float* _a4_xQuatS2, float _xT);
+void fn_v_InterpolBetweenKeys(tdstKeyFrame_* _p_stKey1, tdstKeyFrame_* _p_stKey2, tdstChannel_* _p_stChannel, stInterpolatedPosition* _p_stResult, float _xT, int _bHierarchized);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 303–303 */
 /* addr: 0x0027f340  size: 8 bytes */
@@ -1571,18 +1598,86 @@ void fn_vUpdateFrame(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3
  */
 void fn_vUpdateFrameMatrix(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAnim3d, float _xFrame, unsigned char ucForceUpdate, tdstAChannel_* d_stChannelArray)
 {
-    float xTmp;
-    float xDT;
-    tdstKeyFrame_* p_stOldKeyFrame;
-    tdstKeyFrame_* p_stCurrentKeyFrame;
-    unsigned short* p_CurrentFrameNumOfNTTO;
-    float xNoInterpol;
-    unsigned char bHierarchized;
-    unsigned short uwCnt1;
-    unsigned short uwT_NTTO;
-    tdstChannel_* p_stCurrentChannel;
     tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
-    /* TODO: decompile from asm/... */
+    tdstChannel_* p_stCurrentChannel;
+    unsigned short uwNumOfSavedFrame;
+    unsigned short uwFrameOffset;
+    unsigned short uwT_NTTO;
+    unsigned short uwCnt1;
+    unsigned char bHierarchized;
+    float xNoInterpol;
+    unsigned short* p_CurrentFrameNumOfNTTO;
+    tdstKeyFrame_* p_stCurrentKeyFrame;
+    tdstKeyFrame_* p_stOldKeyFrame;
+    float xDT;
+    float xTmp;
+
+    if (_p_stAnim3d->ucFlagMergeAnim)
+    {
+        fn_vUpdateFrameMatrixForInterAnim(_p_stSuperObject, _p_stFrame, _p_stAnim3d, _xFrame, ucForceUpdate, d_stChannelArray);
+        return;
+    }
+
+    _p_stFrame->ucMatrixUpdated = 1;
+
+    p_stCurrentA3dGENERAL = fn_p_GetA3dGENERAL(_p_stAnim3d->uwNumOfA3dGENERAL, (int)_xFrame);
+    uwFrameOffset = (unsigned short)(int)MTH_M_xRealToLong(_xFrame);
+    uwFrameOffset -= p_stCurrentA3dGENERAL->uwStartFrame;
+    if (uwFrameOffset >= _p_stAnim3d->uwNumberOfFrames)
+        return;
+
+    p_stCurrentChannel = &gp_stChannels[p_stCurrentA3dGENERAL->uwNumOfFirstChannel];
+    uwNumOfSavedFrame = gp_stOnlyFrames[p_stCurrentA3dGENERAL->uwNumOfFirstOnlyFrame + uwFrameOffset].uwNumOfSavedFrame;
+
+    if (!PLA_bCheckDistForInterpol((HIE_tdstSuperObject_*)_p_stSuperObject))
+        xNoInterpol = 0.0f;
+    else
+        xNoInterpol = 1.0f;
+
+    for (uwCnt1 = 0; uwCnt1 < p_stCurrentA3dGENERAL->uwNumberOfChannels; uwCnt1++)
+    {
+        if ((p_stCurrentChannel->uwChannelNumber != 0xFFFF) && !d_stChannelArray[p_stCurrentChannel->uwChannelNumber].bControlledChannel && !d_stChannelArray[p_stCurrentChannel->uwChannelNumber].bLipsChannel)
+        {
+            p_CurrentFrameNumOfNTTO = &gp_FramesNumOfNTTO[p_stCurrentChannel->uwNumOfFirstFrame + uwNumOfSavedFrame];
+            p_stOldKeyFrame = &gp_stKeyFrames[gp_FramesKFIndex[p_stCurrentChannel->ulNumOfFirstFrameKF + uwFrameOffset]];
+
+            if (p_stOldKeyFrame->uwMask & 0x80)
+            {
+                if (p_stOldKeyFrame->uwMask & 0x200)
+                {
+                    p_stCurrentKeyFrame = &gp_stKeyFrames[gp_FramesKFIndex[p_stCurrentChannel->ulNumOfFirstFrameKF]];
+                    xDT = (_xFrame - p_stOldKeyFrame->uwFrameNumber) / (float)(p_stCurrentA3dGENERAL->uwNumberOfFrames + p_stCurrentKeyFrame->uwFrameNumber - p_stOldKeyFrame->uwFrameNumber);
+                }
+                else
+                {
+                    xDT = 0.0f;
+                    p_stCurrentKeyFrame = p_stOldKeyFrame;
+                }
+            }
+            else
+            {
+                p_stCurrentKeyFrame = p_stOldKeyFrame + 1;
+                if (p_stCurrentKeyFrame->uwFrameNumber == p_stOldKeyFrame->uwFrameNumber)
+                    xDT = 0.0f;
+                else
+                    xDT = (_xFrame - p_stOldKeyFrame->uwFrameNumber) / (float)(p_stCurrentKeyFrame->uwFrameNumber - p_stOldKeyFrame->uwFrameNumber);
+            }
+
+            if ((p_stOldKeyFrame->swInterpolationParameter != 0) && (xDT != 0.0f))
+            {
+                xTmp = 0.00012207031f * (float)p_stCurrentKeyFrame->swInterpolationParameter;
+                xDT = xDT * (1.0f + xDT * xTmp - xTmp);
+            }
+
+            xDT *= xNoInterpol;
+            bHierarchized = (gp_stNTTO[*p_CurrentFrameNumOfNTTO].uwTypeOfObject != 0xFFFF) ? (unsigned char)(gp_stNTTO[*p_CurrentFrameNumOfNTTO].uwTypeOfObject & 0x800) : 0;
+            fn_v_InterpolBetweenKeys(p_stOldKeyFrame, p_stCurrentKeyFrame, p_stCurrentChannel, &d_stChannelArray[p_stCurrentChannel->uwChannelNumber].ax_InterpolatedPositions[0], xDT, bHierarchized);
+
+            d_stChannelArray[p_stCurrentChannel->uwChannelNumber].ax_InterpolatedPositions[0].xPercent = 1.0f;
+            d_stChannelArray[p_stCurrentChannel->uwChannelNumber].ucNbInterpolatedPositions = 1;
+        }
+        p_stCurrentChannel++;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 667–703 */
@@ -1993,23 +2088,88 @@ void fn_vUpdateFrameForInterAnim(void* _p_stSuperObject, tdstFrame3d_* _p_stFram
  */
 void fn_vUpdateFrameMatrixForInterAnim(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAnim3d, float _xFrame, unsigned char ucForceUpdate, tdstAChannel_* d_stChannelArray)
 {
-    tdstKeyFrame_ CurrentKeyFrame2;
     tdstKeyFrame_ OldKeyFrame2;
-    float xDT;
-    tdstKeyFrame_* p_stOldKeyFrame;
-    tdstKeyFrame_* p_stCurrentKeyFrame;
-    tdstKeyFrame_* p_stNextKeyFrame;
-    tdstKeyFrame_* p_stPreviousKeyFrame;
-    unsigned short* p_PreviousFrameNumOfNTTO;
-    unsigned char bHierarchized;
-    unsigned short uwCnt1;
-    unsigned short uwPreviousT_NTTO;
-    tdstChannel_* p_stNextChannel;
-    tdstChannel_* p_stPreviousChannel;
-    tdstA3dGENERAL_* p_stNextA3dGeneral;
-    tdstA3dGENERAL_* p_stPreviousA3dGeneral;
+    tdstKeyFrame_ CurrentKeyFrame2;
     tdstA3dGENERAL_ForTransitions_* p_stA3dGENERAL;
-    /* TODO: decompile from asm/... */
+    tdstA3dGENERAL_* p_stPreviousA3dGeneral;
+    tdstA3dGENERAL_* p_stNextA3dGeneral;
+    tdstChannel_* p_stPreviousChannel;
+    tdstChannel_* p_stNextChannel;
+    unsigned short uwPreviousT_NTTO;
+    unsigned short uwCnt1;
+    unsigned char bHierarchized;
+    unsigned short* p_PreviousFrameNumOfNTTO;
+    tdstKeyFrame_* p_stPreviousKeyFrame;
+    tdstKeyFrame_* p_stNextKeyFrame;
+    tdstKeyFrame_* p_stCurrentKeyFrame;
+    tdstKeyFrame_* p_stOldKeyFrame;
+    float xDT;
+    extern tdstA3dGENERAL_ForTransitions_* fn_p_GetA3dGENERALForTransitions(unsigned short);
+
+    fn_vUpdateFrameForInterAnim(_p_stSuperObject, _p_stFrame, _p_stAnim3d, (unsigned short)MTH_M_xRealToLong(_xFrame));
+
+    if (_p_stFrame->ucMatrixUpdated && !ucForceUpdate)
+        return;
+
+    _p_stFrame->ucMatrixUpdated = 1;
+
+    p_stA3dGENERAL = fn_p_GetA3dGENERALForTransitions(_p_stAnim3d->uwNumOfA3dGENERAL);
+    p_stPreviousA3dGeneral = fn_p_GetA3dGENERAL(p_stA3dGENERAL->uwPrevious, p_stA3dGENERAL->uwPreviousFrame);
+    p_stNextA3dGeneral = fn_p_GetA3dGENERAL(p_stA3dGENERAL->uwNext, p_stA3dGENERAL->uwNextFrame);
+
+    p_stPreviousChannel = &gp_stChannels[p_stPreviousA3dGeneral->uwNumOfFirstChannel];
+    uwPreviousT_NTTO = gp_stOnlyFrames[p_stPreviousA3dGeneral->uwNumOfFirstOnlyFrame + p_stA3dGENERAL->uwPreviousFrame].uwNumOfSavedFrame;
+    p_stNextChannel = &gp_stChannels[p_stNextA3dGeneral->uwNumOfFirstChannel];
+
+    for (uwCnt1 = 0; uwCnt1 < p_stPreviousA3dGeneral->uwNumberOfChannels; uwCnt1++)
+    {
+        if ((p_stPreviousChannel->uwChannelNumber != 0xFFFF) && !d_stChannelArray[p_stPreviousChannel->uwChannelNumber].bControlledChannel && !d_stChannelArray[p_stPreviousChannel->uwChannelNumber].bLipsChannel)
+        {
+            p_PreviousFrameNumOfNTTO = &gp_FramesNumOfNTTO[p_stPreviousChannel->uwNumOfFirstFrame + uwPreviousT_NTTO];
+            p_stOldKeyFrame = &gp_stKeyFrames[gp_FramesKFIndex[p_stPreviousChannel->ulNumOfFirstFrameKF + p_stA3dGENERAL->uwPreviousFrame]];
+
+            if (p_stOldKeyFrame->uwMask & 0x80)
+            {
+                if (p_stOldKeyFrame->uwMask & 0x200)
+                    p_stPreviousKeyFrame = &gp_stKeyFrames[gp_FramesKFIndex[p_stPreviousChannel->ulNumOfFirstFrameKF]];
+                else
+                    p_stPreviousKeyFrame = p_stOldKeyFrame;
+            }
+            else
+                p_stPreviousKeyFrame = p_stOldKeyFrame;
+
+            p_stCurrentKeyFrame = &gp_stKeyFrames[gp_FramesKFIndex[p_stNextChannel->ulNumOfFirstFrameKF + p_stA3dGENERAL->uwNextFrame]];
+
+            if (p_stCurrentKeyFrame->uwMask & 0x80)
+            {
+                if (p_stCurrentKeyFrame->uwMask & 0x200)
+                    p_stNextKeyFrame = &gp_stKeyFrames[gp_FramesKFIndex[p_stNextChannel->ulNumOfFirstFrameKF]];
+                else
+                    p_stNextKeyFrame = p_stCurrentKeyFrame;
+            }
+            else
+                p_stNextKeyFrame = p_stCurrentKeyFrame;
+
+            xDT = _xFrame / _p_stAnim3d->uwNumberOfFrames;
+
+            if (xDT != 0.0f)
+                xDT = xDT * (1.0f + xDT * p_stA3dGENERAL->xNLParameter - p_stA3dGENERAL->xNLParameter);
+
+            bHierarchized = (gp_stNTTO[*p_PreviousFrameNumOfNTTO].uwTypeOfObject != 0xFFFF) ? (unsigned char)(gp_stNTTO[*p_PreviousFrameNumOfNTTO].uwTypeOfObject & 0x800) : (unsigned char)0;
+
+            memcpy(&OldKeyFrame2, p_stPreviousKeyFrame, sizeof(tdstKeyFrame_));
+            memcpy(&CurrentKeyFrame2, p_stNextKeyFrame, sizeof(tdstKeyFrame_));
+            OldKeyFrame2.uwMask = 0x380;
+            CurrentKeyFrame2.uwMask = 0x380;
+
+            fn_v_InterpolBetweenKeys(&OldKeyFrame2, &CurrentKeyFrame2, p_stPreviousChannel, &d_stChannelArray[p_stPreviousChannel->uwChannelNumber].ax_InterpolatedPositions[0], xDT, bHierarchized);
+
+            d_stChannelArray[p_stPreviousChannel->uwChannelNumber].ax_InterpolatedPositions[0].xPercent = 1.0f;
+            d_stChannelArray[p_stPreviousChannel->uwChannelNumber].ucNbInterpolatedPositions = 1;
+        }
+        p_stPreviousChannel++;
+        p_stNextChannel++;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 1149–1168 */
@@ -2602,19 +2762,129 @@ void fn_vUpdateFrameForSubAnim(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vUpdateFrameMatrixForSubAnim(void* _p_stSuperObject, tdstAnim3d_* _p_stAnim3d, float _xFrame, tdstAChannel_* d_stChannelArray, unsigned char bMergeWithMainAnim)
+void fn_vUpdateFrameMatrixForSubAnim(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAnim3d, float _xFrame, tdstAChannel_* d_stChannelArray, unsigned char _ucAnimLevel, unsigned char bMergeWithMainAnim)
 {
-    float xTmp;
-    float xDT;
-    tdstKeyFrame_* p_stOldKeyFrame;
-    tdstKeyFrame_* p_stCurrentKeyFrame;
-    unsigned short* p_CurrentFrameNumOfNTTO;
-    unsigned char bHierarchized;
-    unsigned short uwCnt1;
-    unsigned short uwT_NTTO;
     tdstChannel_* p_stCurrentChannel;
+    tdstKeyFrame_* p_stCurrentKeyFrame;
+    float xDT;
+    unsigned short* p_CurrentFrameNumOfNTTO;
+    unsigned short uwT_NTTO;
+    float xTmp;
     tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
-    /* TODO: decompile from asm/... */
+    unsigned short uwCnt1;
+    tdstKeyFrame_* p_stOldKeyFrame;
+    unsigned char bHierarchized;
+
+    p_stCurrentA3dGENERAL = fn_p_GetA3dGENERAL(_p_stAnim3d->uwNumOfA3dGENERAL, MTH_M_xRealToLong(_xFrame));
+    p_stCurrentChannel = &gp_stChannels[p_stCurrentA3dGENERAL->uwNumOfFirstChannel];
+    uwT_NTTO = gp_stOnlyFrames[p_stCurrentA3dGENERAL->uwNumOfFirstOnlyFrame + (unsigned short)fn_ulFrameFromFloat(_xFrame)].uwNumOfSavedFrame;
+
+    for (uwCnt1 = 0; uwCnt1 < p_stCurrentA3dGENERAL->uwNumberOfChannels; uwCnt1++)
+    {
+        if ((p_stCurrentChannel->uwChannelNumber != 0xFFFF) && !d_stChannelArray[p_stCurrentChannel->uwChannelNumber].bControlledChannel && !d_stChannelArray[p_stCurrentChannel->uwChannelNumber].bLipsChannel)
+        {
+            p_CurrentFrameNumOfNTTO = &gp_FramesNumOfNTTO[p_stCurrentChannel->uwNumOfFirstFrame + uwT_NTTO];
+            p_stOldKeyFrame = &gp_stKeyFrames[gp_FramesKFIndex[p_stCurrentChannel->ulNumOfFirstFrameKF + (unsigned short)fn_ulFrameFromFloat(_xFrame)]];
+
+            if (p_stOldKeyFrame->uwMask & 0x80)
+            {
+                if (p_stOldKeyFrame->uwMask & 0x200)
+                {
+                    p_stCurrentKeyFrame = &gp_stKeyFrames[gp_FramesKFIndex[p_stCurrentChannel->ulNumOfFirstFrameKF]];
+                    xDT = (_xFrame - p_stOldKeyFrame->uwFrameNumber) / (float)(p_stCurrentA3dGENERAL->uwNumberOfFrames + p_stCurrentKeyFrame->uwFrameNumber - p_stOldKeyFrame->uwFrameNumber);
+                }
+                else
+                {
+                    xDT = 0.0f;
+                    p_stCurrentKeyFrame = p_stOldKeyFrame;
+                }
+            }
+            else
+            {
+                p_stCurrentKeyFrame = p_stOldKeyFrame + 1;
+                if (p_stCurrentKeyFrame->uwFrameNumber == p_stOldKeyFrame->uwFrameNumber)
+                    xDT = 0.0f;
+                else
+                    xDT = (_xFrame - p_stOldKeyFrame->uwFrameNumber) / (float)(p_stCurrentKeyFrame->uwFrameNumber - p_stOldKeyFrame->uwFrameNumber);
+            }
+
+            if ((p_stOldKeyFrame->swInterpolationParameter != 0) && (xDT != 0.0f))
+            {
+                xTmp = 0.00012207031f * (float)p_stCurrentKeyFrame->swInterpolationParameter;
+                xDT = xDT * (1.0f + xDT * xTmp - xTmp);
+            }
+
+            bHierarchized = (gp_stNTTO[*p_CurrentFrameNumOfNTTO].uwTypeOfObject != 0xFFFF) ? (unsigned char)(gp_stNTTO[*p_CurrentFrameNumOfNTTO].uwTypeOfObject & 0x800) : (unsigned char)0;
+
+            if (!PLA_bCheckDistForInterpol((HIE_tdstSuperObject_*)_p_stSuperObject))
+                xDT = 0.0f;
+
+            fn_v_InterpolBetweenKeys(p_stOldKeyFrame, p_stCurrentKeyFrame, p_stCurrentChannel, &d_stChannelArray[p_stCurrentChannel->uwChannelNumber].ax_InterpolatedPositions[1], xDT, bHierarchized);
+
+            if (bMergeWithMainAnim & 1)
+            {
+                switch ((unsigned short)fn_ulFrameFromFloat(_xFrame))
+                {
+                case 0:
+                d_stChannelArray[p_stCurrentChannel->uwChannelNumber].ax_InterpolatedPositions[0].xPercent = 0.8f;
+                d_stChannelArray[p_stCurrentChannel->uwChannelNumber].ax_InterpolatedPositions[1].xPercent = 0.2f;
+                break;
+                case 1:
+                d_stChannelArray[p_stCurrentChannel->uwChannelNumber].ax_InterpolatedPositions[0].xPercent = 0.6f;
+                d_stChannelArray[p_stCurrentChannel->uwChannelNumber].ax_InterpolatedPositions[1].xPercent = 0.4f;
+                break;
+                case 2:
+                d_stChannelArray[p_stCurrentChannel->uwChannelNumber].ax_InterpolatedPositions[0].xPercent = 0.4f;
+                d_stChannelArray[p_stCurrentChannel->uwChannelNumber].ax_InterpolatedPositions[1].xPercent = 0.6f;
+                break;
+                case 3:
+                d_stChannelArray[p_stCurrentChannel->uwChannelNumber].ax_InterpolatedPositions[0].xPercent = 0.2f;
+                d_stChannelArray[p_stCurrentChannel->uwChannelNumber].ax_InterpolatedPositions[1].xPercent = 0.8f;
+                break;
+                default:
+                d_stChannelArray[p_stCurrentChannel->uwChannelNumber].ax_InterpolatedPositions[0].xPercent = 0.0f;
+                d_stChannelArray[p_stCurrentChannel->uwChannelNumber].ax_InterpolatedPositions[1].xPercent = 1.0f;
+                break;
+                }
+            }
+
+            if (bMergeWithMainAnim & 2)
+            {
+                switch (_p_stAnim3d->uwNumberOfFrames - (unsigned short)fn_ulFrameFromFloat(_xFrame))
+                {
+                case 1:
+                d_stChannelArray[p_stCurrentChannel->uwChannelNumber].ax_InterpolatedPositions[0].xPercent = 0.8f;
+                d_stChannelArray[p_stCurrentChannel->uwChannelNumber].ax_InterpolatedPositions[1].xPercent = 0.2f;
+                break;
+                case 2:
+                d_stChannelArray[p_stCurrentChannel->uwChannelNumber].ax_InterpolatedPositions[0].xPercent = 0.6f;
+                d_stChannelArray[p_stCurrentChannel->uwChannelNumber].ax_InterpolatedPositions[1].xPercent = 0.4f;
+                break;
+                case 3:
+                d_stChannelArray[p_stCurrentChannel->uwChannelNumber].ax_InterpolatedPositions[0].xPercent = 0.4f;
+                d_stChannelArray[p_stCurrentChannel->uwChannelNumber].ax_InterpolatedPositions[1].xPercent = 0.6f;
+                break;
+                case 4:
+                d_stChannelArray[p_stCurrentChannel->uwChannelNumber].ax_InterpolatedPositions[0].xPercent = 0.2f;
+                d_stChannelArray[p_stCurrentChannel->uwChannelNumber].ax_InterpolatedPositions[1].xPercent = 0.8f;
+                break;
+                default:
+                d_stChannelArray[p_stCurrentChannel->uwChannelNumber].ax_InterpolatedPositions[0].xPercent = 0.0f;
+                d_stChannelArray[p_stCurrentChannel->uwChannelNumber].ax_InterpolatedPositions[1].xPercent = 1.0f;
+                break;
+                }
+            }
+
+            if (bMergeWithMainAnim == 0)
+            {
+                d_stChannelArray[p_stCurrentChannel->uwChannelNumber].ax_InterpolatedPositions[0].xPercent = 0.0f;
+                d_stChannelArray[p_stCurrentChannel->uwChannelNumber].ax_InterpolatedPositions[1].xPercent = 1.0f;
+            }
+
+            d_stChannelArray[p_stCurrentChannel->uwChannelNumber].ucNbInterpolatedPositions = 2;
+        }
+        p_stCurrentChannel++;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 1784–1952 */
@@ -2699,12 +2969,94 @@ void fn_vUpdateFrameMatrixForSubAnim(void* _p_stSuperObject, tdstAnim3d_* _p_stA
 int fn_v_MergePositions(tdstChannel_* p_stChannel, tdstAChannel_* p_stCurrentChannel, unsigned char bHierarchized)
 {
     float xRatio;
-    MAT_tdstTransformation_ stTempTransform;
-    MTH3D_tdstVector_ stVector2;
     MTH3D_tdstVector_ stVector;
+    MTH3D_tdstVector_ stVector2;
     float a4_xQuat[4];
+    MAT_tdstTransformation_ stTempTransform;
     unsigned char i;
-    /* TODO: decompile from asm/... */
+
+    if (p_stCurrentChannel->ucNbInterpolatedPositions == 1)
+        MAT_fn_vInitTransformationWithNormQuaternion(p_stCurrentChannel->hSupObject->hLocalMatrix, p_stCurrentChannel->ax_InterpolatedPositions[0].stRot);
+    else if (p_stCurrentChannel->ax_InterpolatedPositions[0].xPercent == 0.0f)
+        MAT_fn_vInitTransformationWithNormQuaternion(p_stCurrentChannel->hSupObject->hLocalMatrix, p_stCurrentChannel->ax_InterpolatedPositions[1].stRot);
+    else
+    {
+        fn_v_QuatSlerp(a4_xQuat, p_stCurrentChannel->ax_InterpolatedPositions[0].stRot, p_stCurrentChannel->ax_InterpolatedPositions[1].stRot, p_stCurrentChannel->ax_InterpolatedPositions[1].xPercent);
+        MAT_fn_vInitTransformationWithNormQuaternion(p_stCurrentChannel->hSupObject->hLocalMatrix, a4_xQuat);
+    }
+
+    if (p_stCurrentChannel->ucNbInterpolatedPositions == 1)
+    {
+        if (!((MTH_xAbs(p_stCurrentChannel->ax_InterpolatedPositions[0].stVecSca.xX - 1.0f) < 0.005f) && (MTH_xAbs(p_stCurrentChannel->ax_InterpolatedPositions[0].stVecSca.xY - 1.0f) < 0.005f) && (MTH_xAbs(p_stCurrentChannel->ax_InterpolatedPositions[0].stVecSca.xZ - 1.0f) < 0.005f)))
+        {
+            if ((MTH_xAbs(p_stCurrentChannel->ax_InterpolatedPositions[0].stVecSca.xX - p_stCurrentChannel->ax_InterpolatedPositions[0].stVecSca.xY) < 0.005f) && (MTH_xAbs(p_stCurrentChannel->ax_InterpolatedPositions[0].stVecSca.xX - p_stCurrentChannel->ax_InterpolatedPositions[0].stVecSca.xZ) < 0.005f))
+                MAT_fn_vZoom(p_stCurrentChannel->hSupObject->hLocalMatrix, p_stCurrentChannel->ax_InterpolatedPositions[0].stVecSca.xX);
+            else if ((MTH_xAbs(p_stCurrentChannel->ax_InterpolatedPositions[0].stRotSca[0]) < 0.005f) && (MTH_xAbs(p_stCurrentChannel->ax_InterpolatedPositions[0].stRotSca[1]) < 0.005f) && (MTH_xAbs(p_stCurrentChannel->ax_InterpolatedPositions[0].stRotSca[2]) < 0.005f) && (MTH_xAbs(p_stCurrentChannel->ax_InterpolatedPositions[0].stRotSca[3] - 1.0f) < 0.005f))
+                MAT_fn_vSetScale(p_stCurrentChannel->hSupObject->hLocalMatrix, &p_stCurrentChannel->ax_InterpolatedPositions[0].stVecSca);
+            else
+            {
+                MAT_fn_vInitTransformationWithNonDiagonalScale(&stTempTransform, &p_stCurrentChannel->ax_InterpolatedPositions[0].stVecSca, p_stCurrentChannel->ax_InterpolatedPositions[0].stRotSca);
+                MAT_fn_vCompose(p_stCurrentChannel->hSupObject->hLocalMatrix, p_stCurrentChannel->hSupObject->hLocalMatrix, &stTempTransform);
+            }
+        }
+    }
+    else if (p_stCurrentChannel->ax_InterpolatedPositions[0].xPercent == 0.0f)
+    {
+        if (!((MTH_xAbs(p_stCurrentChannel->ax_InterpolatedPositions[1].stVecSca.xX - 1.0f) < 0.005f) && (MTH_xAbs(p_stCurrentChannel->ax_InterpolatedPositions[1].stVecSca.xY - 1.0f) < 0.005f) && (MTH_xAbs(p_stCurrentChannel->ax_InterpolatedPositions[1].stVecSca.xZ - 1.0f) < 0.005f)))
+        {
+            if ((MTH_xAbs(p_stCurrentChannel->ax_InterpolatedPositions[1].stVecSca.xX - p_stCurrentChannel->ax_InterpolatedPositions[1].stVecSca.xY) < 0.005f) && (MTH_xAbs(p_stCurrentChannel->ax_InterpolatedPositions[1].stVecSca.xX - p_stCurrentChannel->ax_InterpolatedPositions[1].stVecSca.xZ) < 0.005f))
+                MAT_fn_vZoom(p_stCurrentChannel->hSupObject->hLocalMatrix, p_stCurrentChannel->ax_InterpolatedPositions[1].stVecSca.xX);
+            else if ((MTH_xAbs(p_stCurrentChannel->ax_InterpolatedPositions[1].stRotSca[0]) < 0.005f) && (MTH_xAbs(p_stCurrentChannel->ax_InterpolatedPositions[1].stRotSca[1]) < 0.005f) && (MTH_xAbs(p_stCurrentChannel->ax_InterpolatedPositions[1].stRotSca[2]) < 0.005f) && (MTH_xAbs(p_stCurrentChannel->ax_InterpolatedPositions[1].stRotSca[3] - 1.0f) < 0.005f))
+                MAT_fn_vSetScale(p_stCurrentChannel->hSupObject->hLocalMatrix, &p_stCurrentChannel->ax_InterpolatedPositions[1].stVecSca);
+            else
+            {
+                MAT_fn_vInitTransformationWithNonDiagonalScale(&stTempTransform, &p_stCurrentChannel->ax_InterpolatedPositions[1].stVecSca, p_stCurrentChannel->ax_InterpolatedPositions[1].stRotSca);
+                MAT_fn_vCompose(p_stCurrentChannel->hSupObject->hLocalMatrix, p_stCurrentChannel->hSupObject->hLocalMatrix, &stTempTransform);
+            }
+        }
+    }
+    else
+    {
+        stVector.xX = p_stCurrentChannel->ax_InterpolatedPositions[0].stVecSca.xX * p_stCurrentChannel->ax_InterpolatedPositions[0].xPercent + p_stCurrentChannel->ax_InterpolatedPositions[1].stVecSca.xX * p_stCurrentChannel->ax_InterpolatedPositions[1].xPercent;
+        stVector.xY = p_stCurrentChannel->ax_InterpolatedPositions[0].stVecSca.xY * p_stCurrentChannel->ax_InterpolatedPositions[0].xPercent + p_stCurrentChannel->ax_InterpolatedPositions[1].stVecSca.xY * p_stCurrentChannel->ax_InterpolatedPositions[1].xPercent;
+        stVector.xZ = p_stCurrentChannel->ax_InterpolatedPositions[0].stVecSca.xZ * p_stCurrentChannel->ax_InterpolatedPositions[0].xPercent + p_stCurrentChannel->ax_InterpolatedPositions[1].stVecSca.xZ * p_stCurrentChannel->ax_InterpolatedPositions[1].xPercent;
+        if (!((MTH_xAbs(stVector.xX - 1.0f) < 0.005f) && (MTH_xAbs(stVector.xY - 1.0f) < 0.005f) && (MTH_xAbs(stVector.xZ - 1.0f) < 0.005f)))
+        {
+            if ((MTH_xAbs(stVector.xX - stVector.xY) < 0.005f) && (MTH_xAbs(stVector.xX - stVector.xZ) < 0.005f))
+                MAT_fn_vZoom(p_stCurrentChannel->hSupObject->hLocalMatrix, stVector.xX);
+            else if ((MTH_xAbs(p_stCurrentChannel->ax_InterpolatedPositions[1].stRotSca[0]) < 0.005f) && (MTH_xAbs(p_stCurrentChannel->ax_InterpolatedPositions[1].stRotSca[1]) < 0.005f) && (MTH_xAbs(p_stCurrentChannel->ax_InterpolatedPositions[1].stRotSca[2]) < 0.005f) && (MTH_xAbs(p_stCurrentChannel->ax_InterpolatedPositions[1].stRotSca[3] - 1.0f) < 0.005f)
+                  && (MTH_xAbs(p_stCurrentChannel->ax_InterpolatedPositions[0].stRotSca[0]) < 0.005f) && (MTH_xAbs(p_stCurrentChannel->ax_InterpolatedPositions[0].stRotSca[1]) < 0.005f) && (MTH_xAbs(p_stCurrentChannel->ax_InterpolatedPositions[0].stRotSca[2]) < 0.005f) && (MTH_xAbs(p_stCurrentChannel->ax_InterpolatedPositions[0].stRotSca[3] - 1.0f) < 0.005f))
+                MAT_fn_vSetScale(p_stCurrentChannel->hSupObject->hLocalMatrix, &stVector);
+            else
+            {
+                fn_v_QuatSlerp(a4_xQuat, p_stCurrentChannel->ax_InterpolatedPositions[0].stRotSca, p_stCurrentChannel->ax_InterpolatedPositions[1].stRotSca, p_stCurrentChannel->ax_InterpolatedPositions[1].xPercent);
+                MAT_fn_vInitTransformationWithNonDiagonalScale(&stTempTransform, &stVector, a4_xQuat);
+                MAT_fn_vCompose(p_stCurrentChannel->hSupObject->hLocalMatrix, p_stCurrentChannel->hSupObject->hLocalMatrix, &stTempTransform);
+            }
+        }
+    }
+
+    stVector.xX = 0.0f;
+    stVector.xY = 0.0f;
+    stVector.xZ = 0.0f;
+    for (i = 0; i < p_stCurrentChannel->ucNbInterpolatedPositions; i++)
+    {
+        xRatio = p_stCurrentChannel->ax_InterpolatedPositions[i].xPercent;
+        if (xRatio > 0.0f)
+        {
+            stVector.xX += p_stCurrentChannel->ax_InterpolatedPositions[i].stPos.xX * xRatio;
+            stVector.xY += p_stCurrentChannel->ax_InterpolatedPositions[i].stPos.xY * xRatio;
+            stVector.xZ += p_stCurrentChannel->ax_InterpolatedPositions[i].stPos.xZ * xRatio;
+        }
+    }
+
+    if (!bHierarchized)
+    {
+        MAT_fn_vApplyOnVector(&stVector2, p_stCurrentChannel->hSupObject->hLocalMatrix, &gp_a3_xVectors[p_stChannel->uwNumOfLocalPivotPos]);
+        MAT_fn_vSetTranslationSub(p_stCurrentChannel->hSupObject->hLocalMatrix, &stVector, &stVector2);
+    }
+    else
+        MAT_fn_vSetTranslationVector(p_stCurrentChannel->hSupObject->hLocalMatrix, &stVector);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 1959–2018 */
@@ -2754,29 +3106,30 @@ void fn_vComputeFinalFrameMatrix(HIE_tdstSuperObject_* p_stSuperObject, tdstAnim
     unsigned char bHierarchized;
 
     uwT_NTTO = (unsigned short)fn_ulFrameFromFloat(_xFrame);
-    if (uwT_NTTO < _p_stAnim3d->uwNumberOfFrames)
+    if (uwT_NTTO >= _p_stAnim3d->uwNumberOfFrames)
+        return;
+
+    if (_p_stAnim3d->ucFlagMergeAnim)
     {
-        if (_p_stAnim3d->ucFlagMergeAnim)
+        fn_vComputeFinalFrameMatrixForInterAnim(p_stSuperObject, _p_stAnim3d);
+        return;
+    }
+
+    hArrayOfChannels = p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData->hArrayOfChannels;
+
+    p_stCurrentA3dGENERAL = fn_p_GetA3dGENERAL(_p_stAnim3d->uwNumOfA3dGENERAL, 0);
+    p_stCurrentChannel = &gp_stChannels[p_stCurrentA3dGENERAL->uwNumOfFirstChannel];
+    uwT_NTTO = gp_stOnlyFrames[p_stCurrentA3dGENERAL->uwNumOfFirstOnlyFrame + uwT_NTTO].uwNumOfSavedFrame;
+
+    for (uwCnt1 = 0; uwCnt1 < p_stCurrentA3dGENERAL->uwNumberOfChannels; uwCnt1++)
+    {
+        if ((p_stCurrentChannel->uwChannelNumber != 0xFFFF) && !hArrayOfChannels[p_stCurrentChannel->uwChannelNumber].bControlledChannel && !hArrayOfChannels[p_stCurrentChannel->uwChannelNumber].bLipsChannel)
         {
-            fn_vComputeFinalFrameMatrixForInterAnim(p_stSuperObject, _p_stAnim3d);
-            return;
+            bHierarchized = (gp_stNTTO[gp_FramesNumOfNTTO[p_stCurrentChannel->uwNumOfFirstFrame + uwT_NTTO]].uwTypeOfObject != 0xFFFF) ? (unsigned char)(gp_stNTTO[gp_FramesNumOfNTTO[p_stCurrentChannel->uwNumOfFirstFrame + uwT_NTTO]].uwTypeOfObject & 0x800) : 0;
+
+            fn_v_MergePositions(p_stCurrentChannel, &hArrayOfChannels[p_stCurrentChannel->uwChannelNumber], bHierarchized);
         }
-
-        hArrayOfChannels = p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData->hArrayOfChannels;
-
-        p_stCurrentA3dGENERAL = fn_p_GetA3dGENERAL(_p_stAnim3d->uwNumOfA3dGENERAL, 0);
-        p_stCurrentChannel = &gp_stChannels[p_stCurrentA3dGENERAL->uwNumOfFirstChannel];
-        uwT_NTTO = *(unsigned short*)((int)gp_stOnlyFrames + (p_stCurrentA3dGENERAL->uwNumOfFirstOnlyFrame + uwT_NTTO) * sizeof(tdstOnlyFrame_) + 0xc);
-
-        for (uwCnt1 = 0; uwCnt1 < p_stCurrentA3dGENERAL->uwNumberOfChannels; uwCnt1++, p_stCurrentChannel++)
-        {
-            if ((p_stCurrentChannel->uwChannelNumber != 0xFFFF) && !hArrayOfChannels[p_stCurrentChannel->uwChannelNumber].bControlledChannel && !hArrayOfChannels[p_stCurrentChannel->uwChannelNumber].bLipsChannel)
-            {
-                bHierarchized = (gp_stNTTO[gp_FramesNumOfNTTO[p_stCurrentChannel->uwNumOfFirstFrame + uwT_NTTO]].uwTypeOfObject != 0xFFFF) ? (unsigned char)(gp_stNTTO[gp_FramesNumOfNTTO[p_stCurrentChannel->uwNumOfFirstFrame + uwT_NTTO]].uwTypeOfObject & 0x800) : 0;
-
-                fn_v_MergePositions(p_stCurrentChannel, &hArrayOfChannels[p_stCurrentChannel->uwChannelNumber], bHierarchized);
-            }
-        }
+        p_stCurrentChannel++;
     }
 }
 
@@ -2809,11 +3162,11 @@ void fn_vComputeFinalFrameMatrix(HIE_tdstSuperObject_* p_stSuperObject, tdstAnim
 void fn_vComputeFinalFrameMatrixForInterAnim(HIE_tdstSuperObject_* p_stSuperObject, tdstAnim3d_* _p_stAnim3d)
 {
     unsigned char bHierarchized;
-    unsigned short uwCnt1;
-    unsigned short uwPreviousT_NTTO;
-    tdstChannel_* p_stPreviousChannel;
-    tdstA3dGENERAL_* p_stPreviousA3dGeneral;
     tdstA3dGENERAL_ForTransitions_* p_stA3dGENERAL;
+    tdstA3dGENERAL_* p_stPreviousA3dGeneral;
+    tdstChannel_* p_stPreviousChannel;
+    unsigned short uwPreviousT_NTTO;
+    unsigned short uwCnt1;
     /* Not original source, needs cleaning up: retail loads the channel array before the first call; debug lists no local for it. */
     tdstAChannel_* hArrayOfChannels;
     extern tdstA3dGENERAL_ForTransitions_* fn_p_GetA3dGENERALForTransitions(unsigned short);
@@ -2825,8 +3178,10 @@ void fn_vComputeFinalFrameMatrixForInterAnim(HIE_tdstSuperObject_* p_stSuperObje
 
     fn_p_GetA3dGENERAL(p_stA3dGENERAL->uwNext, p_stA3dGENERAL->uwNextFrame);
 
+    p_stPreviousChannel = &gp_stChannels[p_stPreviousA3dGeneral->uwNumOfFirstChannel];
     uwPreviousT_NTTO = gp_stOnlyFrames[p_stPreviousA3dGeneral->uwNumOfFirstOnlyFrame + p_stA3dGENERAL->uwPreviousFrame].uwNumOfSavedFrame;
-    for (uwCnt1 = 0, p_stPreviousChannel = &gp_stChannels[p_stPreviousA3dGeneral->uwNumOfFirstChannel]; uwCnt1 < p_stPreviousA3dGeneral->uwNumberOfChannels; uwCnt1++, p_stPreviousChannel++)
+
+    for (uwCnt1 = 0; uwCnt1 < p_stPreviousA3dGeneral->uwNumberOfChannels; uwCnt1++)
     {
         if ((p_stPreviousChannel->uwChannelNumber != 0xFFFF) && !hArrayOfChannels[p_stPreviousChannel->uwChannelNumber].bControlledChannel && !hArrayOfChannels[p_stPreviousChannel->uwChannelNumber].bLipsChannel)
         {
@@ -2834,6 +3189,7 @@ void fn_vComputeFinalFrameMatrixForInterAnim(HIE_tdstSuperObject_* p_stSuperObje
 
             fn_v_MergePositions(p_stPreviousChannel, &hArrayOfChannels[p_stPreviousChannel->uwChannelNumber], bHierarchized);
         }
+        p_stPreviousChannel++;
     }
 }
 

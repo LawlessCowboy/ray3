@@ -2641,12 +2641,12 @@ unsigned char MEC_fn_EdgeAnalysisForCliff(DNM_stDynamics* p_stDynamic, int lObst
 
 DNM_stMecObstacle* MEC_fn_pSelectGround(DNM_stDynamics* p_stDynamic, int lObstacle, DNM_stMecObstacle* p_stObstacle, MTH3D_tdstVector_* p_stTangentMove, unsigned char* bFirstGround)
 {
-    int lCounter;
     float xCos;
     float xDelta;
     float xGroundDeltaRate;
     DNM_stMecObstacle* p_stGroundObstacle;
     DNM_stMecObstacle* p_stTmpObstacle;
+    int lCounter;
 
     xGroundDeltaRate = 0.0f;
     p_stGroundObstacle = NULL;
@@ -2677,10 +2677,7 @@ DNM_stMecObstacle* MEC_fn_pSelectGround(DNM_stDynamics* p_stDynamic, int lObstac
                         xCos = MTH_xSqrt(MTH_xSqr3(p_stTangentMove->xX, p_stTangentMove->xY, p_stTangentMove->xZ));
                         xDelta = MTH_xAbs(xDelta);
                         xDelta = MTH_xSqrt(MTH_xSqr2(xCos, xDelta));
-                        if (xDelta == 0.0f)
-                            xCos = 1.0f;
-                        else
-                            xCos = xCos / xDelta;
+                        xCos = (xDelta == 0.0f) ? 1.0f : xCos / xDelta;
                         xDelta = MTH_xDot3(p_stGroundObstacle->m_stNorm.xX, p_stTmpObstacle->m_stNorm.xX, p_stGroundObstacle->m_stNorm.xY, p_stTmpObstacle->m_stNorm.xY, p_stGroundObstacle->m_stNorm.xZ, p_stTmpObstacle->m_stNorm.xZ);
                         if (xDelta > xCos)
                         {

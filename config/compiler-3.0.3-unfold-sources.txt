@@ -43,3 +43,7 @@ src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMen
 # index); all 37 other recorded matches still MATCH, 0 lost.
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/PS2MC/PS2MemoryCard.cpp
+# GAM/PlayAnim/Interpol/a3x_intn.c: +1 (fn_vUpdateFrameMatrix, retail keeps the
+# gp_stOnlyFrames[...].uwNumOfSavedFrame +0xc member offset unfolded before adding the
+# index); all 12 other recorded matches still MATCH, 0 lost.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/Interpol/a3x_intn.c
