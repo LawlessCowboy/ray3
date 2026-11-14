@@ -31,7 +31,7 @@ try:
     import spimdisasm
 except ImportError:
     spimdisasm = None
-from dataclasses import dataclass
+from dataclasses import dataclass, replace as dataclass_replace
 from datetime import date
 from collections import Counter
 from pathlib import Path
@@ -596,7 +596,56 @@ def _load_target_context() -> tuple[list[Section], list[Symbol], Section, dict[i
             names[symbol.name] = symbol
         if symbol.value and symbol.type in {STT_FUNC, STT_OBJECT}:
             addresses.setdefault(symbol.value, symbol)
+    resolve_vu_microcode_labels(sections, symbols, names)
     return sections, symbols, main, addresses, names
+
+
+VIF_MPG = 0x4A
+
+
+def resolve_vu_microcode_labels(sections: list[Section], symbols: list[Symbol],
+                                names: dict[str, Symbol]) -> None:
+    """Give undefined retail VU microcode labels their VU-local addresses.
+
+    C code names VU1 microprogram labels (``NoLighting_Nurbs``,
+    ``MATRICES_CONJUNCTION``, ...) to pass their microprogram addresses to VU1.
+    The retail ELF keeps those references as undefined (value 0) symbols, but
+    the linker resolved them to the label's address in VU micro memory, and
+    the VU assembler's ``_$NAME`` twin gives the label's EE address inside the
+    uploaded microcode.  The VU address is the load address of the VIF MPG
+    command in front of that code (its immediate, in doublewords) plus the
+    label's offset from the code the command uploads.
+    """
+    image = TARGET_PATH.read_bytes()
+
+    def word(address: int) -> int | None:
+        for section in sections:
+            if section.addr and section.type != 8 and section.addr <= address < section.addr + section.size:
+                return struct.unpack_from('<I', image, section.offset + address - section.addr)[0]
+        return None
+
+    vif_starts = sorted(symbol.value for symbol in symbols
+                        if symbol.name.startswith('.vif.') and symbol.value)
+    for name, symbol in list(names.items()):
+        if symbol.shndx != 0 or symbol.value != 0:
+            continue
+        twin = names.get('_$' + name)
+        if twin is None or not twin.value:
+            continue
+        start = max((address for address in vif_starts if address <= twin.value), default=None)
+        if start is None:
+            continue
+        resolved = None
+        for address in range(start, twin.value, 4):
+            code = word(address)
+            if code is None or (code >> 24) & 0x7F != VIF_MPG:
+                continue
+            count = (code >> 16) & 0xFF or 256
+            upload = address + 4
+            if upload <= twin.value < upload + count * 8:
+                resolved = (code & 0xFFFF) * 8 + twin.value - upload
+        if resolved is not None:
+            names[name] = dataclass_replace(symbol, value=resolved)
 
 
 def find_entry(query: str, entries: list[dict]) -> dict:
@@ -1622,14 +1671,30 @@ def compare_data_object(address: int, item: dict, retail: bytes, obj_sections: l
     name = item['name']
     anonymous = name.startswith('@')
     if anonymous:
-        # @N numbering differs per compilation, so a literal pairs by content.
+        # @N numbering differs per compilation, so a literal pairs by content,
+        # and a relocated table (a switch table of code labels, a pointer
+        # list) pairs when every word resolves to the retail word.
         for symbol in obj_symbols:
-            if (symbol.name.startswith('@') and symbol.size == item['size']
+            if (symbol.name.startswith('@') and 0 < symbol.size < item['size']
+                    and item['size'] - symbol.size < 16
                     and 0 < symbol.shndx < len(obj_sections)
                     and obj_sections[symbol.shndx].type != 8
-                    and _object_bytes(symbol, obj_sections) == retail):
+                    and not _has_relocations(symbol, obj_sections)
+                    and _object_bytes(symbol, obj_sections) == retail[:symbol.size]
+                    and not any(retail[symbol.size:])):
+                # The retail symbol size includes the alignment padding
+                # after a string literal; our object sizes the literal alone.
                 return 'MATCH', ''
-        return 'MISMATCH', 'no byte-identical literal in this unit (or a relocated table)'
+            if (symbol.name.startswith('@') and symbol.size == item['size']
+                    and 0 < symbol.shndx < len(obj_sections)
+                    and obj_sections[symbol.shndx].type != 8):
+                if _object_bytes(symbol, obj_sections) == retail:
+                    return 'MATCH', ''
+                if (_has_relocations(symbol, obj_sections)
+                        and _compare_relocated(symbol, retail, obj_sections, obj_symbols,
+                                               target_names, target_symbols, sections)[0] == 'MATCH'):
+                    return 'MATCH', ''
+        return 'MISMATCH', 'no literal or relocated table in this unit has these contents'
     symbol = next((entry for entry in obj_symbols if entry.name == name), None)
     if symbol is None and '$' in name:
         statics = [entry for entry in obj_symbols if '$' in entry.name and entry.size == item['size']
@@ -1641,6 +1706,33 @@ def compare_data_object(address: int, item: dict, retail: bytes, obj_sections: l
         return 'SKIP', 'declared here without an initialiser'
     if symbol.size != item['size']:
         return 'MISMATCH', f"size {symbol.size}, retail {item['size']}"
+    return _compare_relocated(symbol, retail, obj_sections, obj_symbols, target_names,
+                              target_symbols, sections)
+
+
+def _has_relocations(symbol: Symbol, obj_sections: list[Section]) -> bool:
+    return any(section.type == 9 and section.info == symbol.shndx
+               and any(symbol.value <= offset < symbol.value + symbol.size
+                       for offset, _, _ in parse_relocations(section))
+               for section in obj_sections)
+
+
+def _section_relative_target(referent: Symbol, addend: int, obj_symbols: list[Symbol],
+                             target_names: dict[str, Symbol]) -> int | None:
+    """Linked address of a section-relative word (a switch table's code label):
+    the named function or object in that section that holds the offset."""
+    for entry in obj_symbols:
+        if (entry.shndx == referent.shndx and entry.name and entry.type in (STT_OBJECT, 2)
+                and entry.value <= addend < entry.value + max(entry.size, 1)):
+            linked = target_names.get(entry.name)
+            if linked is not None:
+                return (linked.value + addend - entry.value) & 0xFFFFFFFF
+    return None
+
+
+def _compare_relocated(symbol: Symbol, retail: bytes, obj_sections: list[Section],
+                       obj_symbols: list[Symbol], target_names: dict[str, Symbol],
+                       target_symbols: list[Symbol], sections: list[Section]) -> tuple[str, str]:
     candidate = bytearray(_object_bytes(symbol, obj_sections))
     expected = bytearray(retail)
     for section in obj_sections:
@@ -1656,7 +1748,11 @@ def compare_data_object(address: int, item: dict, retail: bytes, obj_sections: l
             addend = struct.unpack_from('<I', candidate, position)[0]
             retail_word = struct.unpack_from('<I', retail, position)[0]
             linked = target_names.get(referent.name)
-            if referent.name.startswith('@') or not referent.name:
+            if not referent.name and referent.type == 3:  # STT_SECTION
+                if _section_relative_target(referent, addend, obj_symbols,
+                                            target_names) != retail_word:
+                    return 'MISMATCH', f'+{position:#x} points to a different code or data label'
+            elif referent.name.startswith('@') or not referent.name:
                 if not anonymous_object_matches(referent.name, (retail_word - addend) & 0xFFFFFFFF,
                                                 obj_sections, obj_symbols, sections):
                     return 'MISMATCH', f'+{position:#x} points to a different literal'

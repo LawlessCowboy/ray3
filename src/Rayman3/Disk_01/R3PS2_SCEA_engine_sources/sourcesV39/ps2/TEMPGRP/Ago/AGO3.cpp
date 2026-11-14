@@ -212,6 +212,7 @@ struct AGO3_Chain : AGO3_Part {
     float m_fIntermediateSize; /* +0x70 */
     float m_fLinkType; /* +0x74 */
     float m_fMainSize; /* +0x78 */
+    static MTH3D_tdstVector_ m_stLastPosition;
     void Display(GLD_tdstViewportAttributes_* hVp);
     void Init(MTH3D_tdstVector_* p_stStartingPosition, MTH3D_tdstVector_* p_stEndingPosition, GLI_tdstMaterial_* pMat1, float fLinkType);
     void Process(void);
@@ -915,7 +916,8 @@ struct AGO3_WaveEnvelopedFist2 : AGO3_Part {
     static int m_hHandle;
     void Display(GLD_tdstViewportAttributes_* hVp);
     void Process(void);
-    void Init(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMat1, float fColor);
+    /* The retail mangled name takes a direction too (debug lists 3 parameters). */
+    void Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fColor);
     void DesInit(void);
 };
 
@@ -1752,12 +1754,14 @@ extern "C" float AGO_gExtraFloatParameter;
 extern "C" float AGO_gExtraParameter1[3];
 extern "C" float AGO_gExtraParameter2[3];
 extern "C" void GLI_vSetGlobalAlpha(float Alpha);
+extern "C" void GLI_vDrawWorldOrthoPlanarOrientedSprite(float* param0, void* pMaterial, float fscaleX, float fscaleY, GLD_tdstViewportAttributes_* _p_stViewport, MTH3D_tdstVector_* p_stV1, MTH3D_tdstVector_* p_stV2, float fAngle);
 extern "C" void GLI_xGetMaterialTextureScrollingCoef(GLI_tdstMaterial_* hMaterial, int lUnused, int* p_bSwitch, float* p_fUSpeed, float* p_fVSpeed);
 extern "C" char* FON_fn_szGetTextPointerForHandle(int hString);
 extern "C" void TXT_vAfficheSimpleWithColor(GLD_tdstViewportAttributes_* stVpt, char* String, float x, float y, float z, unsigned int ulTextColor);
 extern "C" void TXT_fn_fComputePixelLengthOfString(char* _szText, float* W, float* H);
 extern "C" void TXT_vReinitStates(void);
 extern "C" int sprintf(char* s, const char* format, ...);
+extern "C" void AGO_vAddParticle(unsigned int PartType, MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial, float parameter);
 extern "C" GLD_tdstViewportAttributes_* g_p_stVpt;
 extern "C" _tdstBinarizedDataForMenu g_aBinDataForMenu[105];
 extern "C" int GLD_bGetDeviceAttributes(short hDev, GLD_tdstDeviceAttributes_* pstDevAttrib);
@@ -1852,6 +1856,7 @@ C_Vector AGO3_TurningFistSmoke::m_a_stInitialSpriteDirection[2];
 C_Vector AGO3_TurningFistSmoke::m_a_stInitialSpritePosition[2];
 
 int AGO3_WaveEnvelopedFist2::m_hHandle;
+MTH3D_tdstVector_ AGO3_Chain::m_stLastPosition;
 
 int AGO3_WaveEnvelopedFist::m_hHandle;
 
@@ -2434,7 +2439,22 @@ void AGO3_GrowingUVAnimatedFireBallMoving::Process(void)
     C_Vector Temp;
     int CurrentFrame;
     float TotalTime;
-    /* TODO: decompile from asm/... */
+
+    TotalTime = g_ffFrameTime - m_fCreationTime;
+    if (TotalTime >= m_fAnimationTime)
+    {
+        m_Finished = 1;
+        return;
+    }
+    CurrentFrame = (int)(TotalTime * (16.0f / m_fAnimationTime));
+    m_fCurrentU = 0.25f * (float)(CurrentFrame & 3);
+    m_fCurrentV = 1.0f + -0.25f * (float)(CurrentFrame >> 2);
+
+    sceVu0CopyVector(&Temp, &m_Direction);
+    sceVu0ScaleVectorXYZ(&Temp, &Temp, 8.0f * g_fTimeDifference);
+    sceVu0AddVector(&m_Position, &m_Position, &Temp);
+    m_Position.Vector[2] += UpMul * (g_ffFrameTime - m_fCreationTime);
+    m_fSize += 0.7f * g_fTimeDifference;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 603–606 */
@@ -2641,12 +2661,32 @@ void AGO3_Smoke::Init(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMat1, fl
  */
 void AGO3_Smoke::Process(void)
 {
-    AGO3Smoke_InternalData_* p;
     C_Vector Direction;
     float Time;
-    unsigned int i;
     unsigned int NbFinished;
-    /* TODO: decompile from asm/... */
+    unsigned int i;
+    AGO3Smoke_InternalData_* p;
+
+    NbFinished = 0;
+    Time = g_fTimeDifference;
+    p = m_Sprites;
+    for (i = 0; i < 8; i++, p++)
+    {
+        if (p->fTransparency <= 0.0f)
+        {
+            NbFinished++;
+            continue;
+        }
+        sceVu0CopyVector(&Direction, &p->Direction);
+        sceVu0ScaleVectorXYZ(&Direction, &Direction, Time);
+        sceVu0AddVector(&p->Position, &p->Position, &Direction);
+        p->fTransparency -= 20.0f * Time;
+        p->fCurrentAngle += Time * p->fRotationSpeed;
+        p->fSize += 0.4f * Time;
+        p->fCurrentAnimTime += p->fAnimationSpeed * Time;
+    }
+    if (NbFinished == 8)
+        m_Finished = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 823–851 */
@@ -2809,7 +2849,37 @@ void AGO3_WaveEnvelopedFist::Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector
     float fOneMinusColor;
     AGO3_WEF_SpriteData* pSpriteData;
     unsigned int ulFist;
-    /* TODO: decompile from asm/... */
+
+    if (fColor < 0.0f)
+    {
+        ulFist = 1;
+        fColor = -fColor;
+    }
+    else
+        ulFist = 0;
+    /* Word copy: retail moves the vector with lw/sw, not lwc1/swc1. */
+    ((unsigned int*)&m_a_stPosition[ulFist])[0] = ((unsigned int*)pPosition)[0];
+    ((unsigned int*)&m_a_stPosition[ulFist])[1] = ((unsigned int*)pPosition)[1];
+    ((unsigned int*)&m_a_stPosition[ulFist])[2] = ((unsigned int*)pPosition)[2];
+    if (m_a_ulNbAGOs[ulFist] == 0)
+    {
+        m_Finished = 0; m_Position.Vector[0] = pPosition->xX; m_Position.Vector[1] = pPosition->xY; m_Position.Vector[2] = pPosition->xZ; m_Position.Vector[3] = 1.0f; m_pMat1 = pMat1; m_fCreationTime = g_ffFrameTime;
+    }
+    pSpriteData = &m_stSprite[ulFist][m_a_ulFirstFree[ulFist]];
+    fOneMinusColor = 1.0f - fColor;
+    m_a_ulColor[ulFist] = 0xFF000000 |
+                          ((150 - (int)(21.5f * fOneMinusColor)) << 16) |
+                          ((150 - (int)(25.0f * fOneMinusColor + 59.0f * fColor)) << 8) |
+                          (150 - (int)(92.5f * fColor));
+    pSpriteData->fSize = m_fMainSize;
+    pSpriteData->fTransparency = 300.0f;
+    pSpriteData->stPosition.xX = pPosition->xX;
+    pSpriteData->stPosition.xY = pPosition->xY;
+    pSpriteData->stPosition.xZ = pPosition->xZ;
+    AGO_Define_OrthogonalVectors(pDirection, &pSpriteData->stInitialPosition, &pSpriteData->stAdditionnalVector);
+    pSpriteData->ulNbIntermediates = 0;
+    m_a_ulFirstFree[ulFist] = (m_a_ulFirstFree[ulFist] + 1) & 63;
+    m_a_ulNbAGOs[ulFist]++;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 1053–1142 */
@@ -3166,12 +3236,41 @@ void AGO3_WaveEnvelopedFist2::DesInit(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO3_WaveEnvelopedFist2::Init(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMat1, float fColor)
+void AGO3_WaveEnvelopedFist2::Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fColor)
 {
     float fOneMinusColor;
     AGO3_WEF_SpriteData* pSpriteData;
     unsigned int ulFist;
-    /* TODO: decompile from asm/... */
+
+    if (fColor < 0.0f)
+    {
+        ulFist = 1;
+        fColor = -fColor;
+    }
+    else
+        ulFist = 0;
+    /* Word copy: retail moves the vector with lw/sw, not lwc1/swc1. */
+    ((unsigned int*)&m_a_stPosition[ulFist])[0] = ((unsigned int*)pPosition)[0];
+    ((unsigned int*)&m_a_stPosition[ulFist])[1] = ((unsigned int*)pPosition)[1];
+    ((unsigned int*)&m_a_stPosition[ulFist])[2] = ((unsigned int*)pPosition)[2];
+    if (m_a_ulNbAGOs[ulFist] == 0)
+    {
+        m_Finished = 0; m_Position.Vector[0] = pPosition->xX; m_Position.Vector[1] = pPosition->xY; m_Position.Vector[2] = pPosition->xZ; m_Position.Vector[3] = 1.0f; m_pMat1 = pMat1; m_fCreationTime = g_ffFrameTime;
+    }
+    pSpriteData = &m_stSprite[ulFist][m_a_ulFirstFree[ulFist]];
+    fOneMinusColor = 1.0f - fColor;
+    m_a_ulColor[ulFist] = 0xFF000000 |
+                          ((150 - (int)(21.5f * fOneMinusColor)) << 16) |
+                          ((150 - (int)(25.0f * fOneMinusColor + 59.0f * fColor)) << 8) |
+                          (150 - (int)(92.5f * fColor));
+    pSpriteData->fSize = m_fMainSize;
+    pSpriteData->fTransparency = 300.0f;
+    pSpriteData->stPosition.xX = pPosition->xX;
+    pSpriteData->stPosition.xY = pPosition->xY;
+    pSpriteData->stPosition.xZ = pPosition->xZ;
+    pSpriteData->ulNbIntermediates = 0;
+    m_a_ulFirstFree[ulFist] = (m_a_ulFirstFree[ulFist] + 1) & 63;
+    m_a_ulNbAGOs[ulFist]++;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 1333–1426 */
@@ -5097,7 +5196,54 @@ void AGO3_Chain::Init(MTH3D_tdstVector_* p_stStartingPosition, MTH3D_tdstVector_
 {
     float fSize;
     float fInvSize;
-    /* TODO: decompile from asm/... */
+    m_Finished = 0; m_Position.Vector[0] = p_stStartingPosition->xX; m_Position.Vector[1] = p_stStartingPosition->xY; m_Position.Vector[2] = p_stStartingPosition->xZ; m_Position.Vector[3] = 1.0f; m_pMat1 = pMat1; m_fCreationTime = g_ffFrameTime;
+    m_stDirection.xX = p_stEndingPosition->xX - p_stStartingPosition->xX;
+    m_stDirection.xY = p_stEndingPosition->xY - p_stStartingPosition->xY;
+    m_stDirection.xZ = p_stEndingPosition->xZ - p_stStartingPosition->xZ;
+    m_fSize = m_stDirection.xX * m_stDirection.xX + m_stDirection.xY * m_stDirection.xY + m_stDirection.xZ * m_stDirection.xZ;
+    m_fSize = AGO3_SQRT(m_fSize);
+    if (m_fSize != 0.0f)
+    {
+        fInvSize = 1.0f / m_fSize;
+        m_stDirection.xX *= fInvSize;
+        m_stDirection.xY *= fInvSize;
+        m_stDirection.xZ *= fInvSize;
+    }
+    m_fSize *= 0.5f;
+    m_fIntermediateSize = m_fSize;
+    m_stVector.xX = -m_stDirection.xY; m_stVector.xY = m_stDirection.xX; m_stVector.xZ = 0.0f;
+    m_stPos.xX = 0.5f * (p_stStartingPosition->xX + p_stEndingPosition->xX);
+    m_stPos.xY = 0.5f * (p_stStartingPosition->xY + p_stEndingPosition->xY);
+    m_stPos.xZ = 0.5f * (p_stStartingPosition->xZ + p_stEndingPosition->xZ);
+    if (fLinkType != 0.0f)
+    {
+        m_stIntermediateDirection.xX = p_stEndingPosition->xX - m_stLastPosition.xX;
+        m_stIntermediateDirection.xY = p_stEndingPosition->xY - m_stLastPosition.xY;
+        m_stIntermediateDirection.xZ = p_stEndingPosition->xZ - m_stLastPosition.xZ;
+        fSize = m_stIntermediateDirection.xX * m_stIntermediateDirection.xX + m_stIntermediateDirection.xY * m_stIntermediateDirection.xY + m_stIntermediateDirection.xZ * m_stIntermediateDirection.xZ;
+        fSize = AGO3_SQRT(fSize);
+        if (fSize != 0.0f)
+        {
+            fInvSize = 1.0f / fSize;
+            m_stIntermediateDirection.xX *= fInvSize;
+            m_stIntermediateDirection.xY *= fInvSize;
+            m_stIntermediateDirection.xZ *= fInvSize;
+        }
+        m_stIntermediateVector.xX = -m_stIntermediateDirection.xZ; m_stIntermediateVector.xY = 0.0f; m_stIntermediateVector.xZ = m_stIntermediateDirection.xX;
+    }
+    m_stLastPosition.xX = p_stStartingPosition->xX;
+    m_stLastPosition.xY = p_stStartingPosition->xY;
+    m_stLastPosition.xZ = p_stStartingPosition->xZ;
+    m_fLinkType = fLinkType;
+    m_fMainSize = 0.2f;
+    if (AGO_bPrevAGOWasExtraParam)
+    {
+        if (AGO_gExtraFloatParameter != 0.0f)
+            fInvSize = AGO_gExtraFloatParameter;
+        else
+            fInvSize = 1.0f;
+        m_fMainSize *= fInvSize;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2836–2852 */
@@ -5183,9 +5329,23 @@ void AGO3_Chain::Display(GLD_tdstViewportAttributes_* hVp)
  */
 AGO3_HurricaneUpper::AGO3_HurricaneUpper(void)
 {
-    AGO3_HU_SpriteData* pSpriteData;
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    AGO3_HU_SpriteData* pSpriteData;
+
+    m_fMainSize = 0.058333334f;
+    m_fMainRotation = 0.0f;
+    pSpriteData = m_a_stSprite;
+    for (i = 0; i < 25; i++)
+    {
+        pSpriteData->fSize = m_fMainSize * (float)AGO3_C_HUShape[i];
+        pSpriteData->fTransparency = 255.0f;
+        pSpriteData++;
+    }
+    m_bAlive = 1;
+    m_bIsActive = 0;
+    m_fTime = 1.0f;
+    m_fEndTime = 0.0f;
+    m_ulFirstSprite = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2974–3064 */
@@ -5588,11 +5748,29 @@ void AGO3_HurricaneUpper::Process(void)
  */
 void AGO3_HurricaneUpper::Display(GLD_tdstViewportAttributes_* hVp)
 {
-    AGO3_HU_SpriteData* pSpriteData;
-    float fAngle;
-    unsigned int ulLayer;
     MTH3D_tdstVector_ Position;
-    /* TODO: decompile from asm/... */
+    unsigned int ulLayer;
+    float fAngle;
+    AGO3_HU_SpriteData* pSpriteData;
+
+    if (m_bIsActive) {
+        Position.xX = m_Position.xX;
+        Position.xY = m_Position.xY;
+        fAngle = m_fMainRotation;
+        pSpriteData = m_a_stSprite;
+        ulLayer = 0;
+        do {
+            Position.xZ = pSpriteData->fPositionZ;
+            if (pSpriteData->fTransparency >= 0.0f) {
+                GLI_vSetGlobalAlpha(pSpriteData->fTransparency);
+                GLI_vDrawWorldOrthoPlanarOrientedSprite((float*)&Position, m_pMat1, pSpriteData->fSize, pSpriteData->fSize, hVp, pSpriteData->pstInitialPosition, pSpriteData->pstAdditionnalVector, fAngle);
+            }
+            fAngle += 0.34906587f;
+            pSpriteData++;
+        } while (++ulLayer < 25);
+    } else {
+        m_Finished = 1;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 3332–3370 */
@@ -5629,9 +5807,29 @@ void AGO3_HurricaneUpper::Display(GLD_tdstViewportAttributes_* hVp)
  */
 void AGO3_CanRipple::Init(MTH3D_tdstVector_* p_stStartingPosition, MTH3D_tdstVector_* p_stDirection, GLI_tdstMaterial_* pMat1, float fStartStop)
 {
-    unsigned int ulSprite;
     AGO3_CR_SpriteData* pSpriteData;
-    /* TODO: decompile from asm/... */
+    unsigned int ulSprite;
+    m_Finished = 0; m_Position.Vector[0] = p_stStartingPosition->xX; m_Position.Vector[1] = p_stStartingPosition->xY; m_Position.Vector[2] = p_stStartingPosition->xZ; m_Position.Vector[3] = 1.0f; m_pMat1 = pMat1; m_fCreationTime = g_ffFrameTime;
+    AGO_Define_OrthogonalVectors(p_stDirection, &m_stInitialPosition, &m_stAdditionnalVector);
+    m_ulDirection = (p_stDirection->xX != 0.0f) ? 0 : ((p_stDirection->xY != 0.0f) ? 1 : 2);
+    if (fStartStop == 0.0f)
+    {
+        m_bRegeneration = 0;
+        m_fTime2 = m_fTime;
+    }
+    else if (fStartStop == 1.0f)
+    {
+        m_bRegeneration = 1;
+    }
+    else if (fStartStop == 2.0f)
+    {
+        pSpriteData = &m_a_stSprite[m_ulFirstSprite];
+        for (ulSprite = 0; ulSprite < 4; ulSprite++)
+        {
+            pSpriteData->ulType = (ulSprite == 0) ? 0 : 2;
+            pSpriteData++;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 3386–3463 */
@@ -5830,14 +6028,35 @@ void AGO3_CanRipple::Process(void)
  */
 void AGO3_CanRipple::Display(GLD_tdstViewportAttributes_* hVp)
 {
-    float fFirstPosition;
+    MTH3D_tdstVector_ stposition;
+    AGO3_CR_SpriteData* pSpriteData;
+    unsigned int ulSprite2;
+    unsigned int ulSprite;
     float fWay;
     unsigned int ulNumRipples;
-    unsigned int ulSprite2;
-    MTH3D_tdstVector_ stposition;
-    unsigned int ulSprite;
-    AGO3_CR_SpriteData* pSpriteData;
-    /* TODO: decompile from asm/... */
+    float fFirstPosition;
+
+    stposition.xX = m_Position.Vector[0];
+    stposition.xY = m_Position.Vector[1];
+    stposition.xZ = m_Position.Vector[2];
+    ulSprite = m_ulFirstSprite;
+    pSpriteData = &m_a_stSprite[ulSprite];
+    ulNumRipples = 2;
+    fWay = 1.0f;
+    while (ulNumRipples--)
+    {
+        fFirstPosition = m_Position.Vector[m_ulDirection] + 0.2f * fWay;
+        for (ulSprite2 = 0; ulSprite2 < 4; ulSprite2++)
+        {
+            stposition.xZ = fFirstPosition + pSpriteData->fPosition * fWay;
+            GLI_vSetGlobalAlpha(pSpriteData->fTransparency);
+            GLI_vDrawWorldOrthoPlanarSprite(&stposition, m_pMat1, pSpriteData->fSize, pSpriteData->fSize, hVp, 0, &m_stInitialPosition, &m_stAdditionnalVector);
+            ulSprite++;
+            ulSprite &= 3;
+            pSpriteData = &m_a_stSprite[ulSprite];
+        }
+        fWay = -1.0f;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 3613–3824 */
@@ -6275,7 +6494,41 @@ void AGO3_SwirlingBubbles::Display(GLD_tdstViewportAttributes_* hVp)
 AGO3_SphericalRadiance::AGO3_SphericalRadiance(void)
 {
     float fAcceleration;
-    /* TODO: decompile from asm/... */
+
+    m_ulNumRays = 25;
+    m_fInnerRadius = 1.0f;
+    m_fOuterRadius = 3.0f;
+    if (AGO_bPrevAGOWasExtraParam)
+    {
+        m_fDuration = AGO_gExtraFloatParameter;
+        m_bHalfSphere = (AGO_gExtraParameter1[0] == 0.0f) ? 0 : 1;
+        m_a_stScroll[1].fFirstOffset = AGO_gExtraParameter2[0];
+        m_a_stScroll[1].fFinalOffset = AGO_gExtraParameter2[1];
+        m_a_stScroll[1].fAcceleration = AGO_gExtraParameter2[2];
+    }
+    else
+    {
+        m_fDuration = 1.0f;
+        m_bHalfSphere = 0;
+        m_a_stScroll[1].fFirstOffset = 0.0f;
+        m_a_stScroll[1].fFinalOffset = 0.0f;
+        m_a_stScroll[1].fAcceleration = 1.0f;
+    }
+    m_fInverseOfDuration = 1.0f / m_fDuration;
+    fAcceleration = m_a_stScroll[1].fAcceleration;
+    if (fAcceleration == 0.0f)
+        m_a_stScroll[1].ulAcceleratorType = 0;
+    else if (fAcceleration == 0.5f)
+        m_a_stScroll[1].ulAcceleratorType = 1;
+    else if (fAcceleration == 1.0f)
+        m_a_stScroll[1].ulAcceleratorType = 2;
+    else
+    {
+        m_a_stScroll[1].ulAcceleratorType = 3;
+        m_a_stScroll[1].fAcceleration = fAcceleration - 1.0f;
+    }
+    m_fCurrentTime = 0.0f;
+    m_Finished = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 4026–4214 */
@@ -9508,7 +9761,27 @@ void AGO3_Transition::Process(void)
 {
     MTH3D_tdstVector_ stColorVect;
     MTH3D_tdstVector_ stFadeVect;
-    /* TODO: decompile from asm/... */
+
+    if (m_fTime == 0.0f) {
+        stColorVect.xX = 1.0f;
+        stFadeVect.xX = 0.0f;
+        stFadeVect.xY = 0.0f;
+        stFadeVect.xZ = 0.0f;
+        AGO_vAddParticle(0x106, &stColorVect, &stFadeVect, NULL, m_fFadeDelay);
+    }
+    m_fTime += g_fTimeDifference;
+    if (m_fTime >= m_fDelayBeforeMessage) {
+        m_fTimeSinceLoadingMessage += g_fTimeDifference;
+        if (m_fTimeSinceLoadingMessage > 0.33333334f) {
+            m_fTimeSinceLoadingMessage -= 0.33333334f;
+            m_dwNbDisplayedDots++;
+            if (m_dwNbDisplayedDots > m_dwNbDots)
+                m_dwNbDisplayedDots = 0;
+            if (m_dwNbDisplayedDots)
+                sprintf(m_szDots, "\\z306:%s", m_szThreeDots);
+            m_szDots[m_dwNbDisplayedDots + 6] = 0;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 7130–7167 */

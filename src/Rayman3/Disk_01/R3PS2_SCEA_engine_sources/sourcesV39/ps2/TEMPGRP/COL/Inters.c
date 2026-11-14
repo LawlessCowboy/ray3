@@ -10,6 +10,14 @@
     asm { madda.s _y, _y }                 \
     asm { madd.s _result, _z, _z }
 
+/* sqrt.s has no C form under the baseline. */
+inline float MTH_xSqrt(float _x)
+{
+    float _r;
+    asm { sqrt.s _r, _x }
+    return _r;
+}
+
 /* R5900 accumulator dot product (as MECBhv.c's MTH_xDot3). */
 inline float MTH_xDot3(float _x1, float _x2, float _y1, float _y2, float _z1, float _z2)
 {
@@ -17,6 +25,16 @@ inline float MTH_xDot3(float _x1, float _x2, float _y1, float _y2, float _z1, fl
     asm { madda.s _y1, _y2 }
     asm { madd.s _z2, _z1, _z2 }
     return _z2;
+}
+
+/* Dot product into a separate result (as MECTools.c's MTH_xDot3). */
+inline float MTH_xDot3R(float _x1, float _x2, float _y1, float _y2, float _z1, float _z2)
+{
+    float _r;
+    asm { mula.s _x1, _x2 }
+    asm { madda.s _y1, _y2 }
+    asm { madd.s _r, _z1, _z2 }
+    return _r;
 }
 
 /* R5900 absolute value (abs.s has no C form). */
@@ -103,7 +121,27 @@ short INT_fn_xTrinomeResolution(float xA, float xB, float xC, float* p_xT1, floa
 {
     float xDiv;
     float xDelta;
-    /* TODO: decompile from asm/... */
+
+    if (xA != 0.0f) {
+        xDelta = xB * xB - 4.0f * (xA * xC);
+        if (xDelta > 0.0f) {
+            xDelta = MTH_xSqrt(xDelta);
+            xDiv = 1.0f / (xA + xA);
+            *p_xT1 = xDiv * (-xB + xDelta);
+            *p_xT2 = xDiv * (-xB - xDelta);
+            return 2;
+        }
+        if (xDelta < 0.0f)
+            return 0;
+        if (xDelta == 0.0f) {
+            *p_xT1 = -(xB / (xA + xA));
+            return 1;
+        }
+    } else if (xB != 0.0f) {
+        *p_xT1 = -(xC / xB);
+        return 1;
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 108–120 */
@@ -777,7 +815,27 @@ unsigned char INT_fn_bIntersectSegmentWithTriangle2(MTH3D_tdstVector_* p_stVerte
 unsigned char INT_fn_bDetectIntersectSegmentWithTriangle(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3, MTH3D_tdstVector_* p_stNormal, float xDPlan)
 {
     MTH3D_tdstVector_ stHit;
-    /* TODO: decompile from asm/... */
+    float xDot;
+    float xDivid;
+
+    if (!INT_fn_bFastRejectIntersectSegmentWithTriangle(p_stVertexA, p_stVectAB, p_stVertex1, p_stVertex2, p_stVertex3))
+        return 0;
+
+    xDot = MTH_xDot3(p_stNormal->xX, p_stVectAB->xX, p_stNormal->xY, p_stVectAB->xY, p_stNormal->xZ, p_stVectAB->xZ);
+    if (xDot < 0.0f)
+    {
+        xDivid = MTH_xDot3R(p_stNormal->xX, p_stVertexA->xX, p_stNormal->xY, p_stVertexA->xY, p_stNormal->xZ, p_stVertexA->xZ);
+        xDivid = -((xDPlan + xDivid) / xDot);
+        if ((xDivid >= 0.0f) && (xDivid <= 1.0f))
+        {
+            stHit.xX = p_stVertexA->xX + xDivid * p_stVectAB->xX;
+            stHit.xY = p_stVertexA->xY + xDivid * p_stVectAB->xY;
+            stHit.xZ = p_stVertexA->xZ + xDivid * p_stVectAB->xZ;
+            return INT_fn_bGetPointInTriangle(&stHit, p_stVertex1, p_stVertex2, p_stVertex3, p_stNormal);
+        }
+        return 0;
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 1514–1515 */

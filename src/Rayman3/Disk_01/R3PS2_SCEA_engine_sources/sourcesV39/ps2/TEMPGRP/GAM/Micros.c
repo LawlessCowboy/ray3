@@ -3,6 +3,9 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+char* strncpy(char*, const char*, size_t);
+char* strncat(char*, const char*, size_t);
+size_t strlen(const char*);
 
 /* R5900 accumulator multiply-add, as in MECBhv.c / DNMCame.c. */
 #define MTH_SQR3_TO(_result, _x, _y, _z) \
@@ -1959,12 +1962,57 @@ int fn_bObjectTypeAnimationInfo(int s32_ObjectId, int s32_Unused, char* pch_Stri
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+inline HIE_tdstSuperObject_* fn_hGetActorInline(int s32_ObjectId)
+{
+    HIE_tdstSuperObject_* h_Object;
+    HIE_tdstSuperObject_* h_Answer;
+
+    h_Answer = NULL;
+    if (s32_ObjectId != 0 && s32_ObjectId != -1)
+    {
+        for (h_Object = (HIE_tdstSuperObject_*)s32_ObjectId; h_Object != NULL; h_Object = h_Object->hFatherDyn)
+        {
+            if (h_Object->ulTypeOfLinkedObject == 2)
+            {
+                h_Answer = h_Object;
+                break;
+            }
+        }
+    }
+    return h_Answer;
+}
+
 int fn_bObjectTypeVoiceInfo(int s32_ObjectId, int s32_Unused, char* pch_String, int s32_Size)
 {
-    char* pch_StringToCat;
+    HIE_tdstSuperObject_* h_Actor;
     HIE_tduLinkedObject_ h_LinkedObj;
+    char* pch_StringToCat;
     int b_Answer;
-    /* TODO: decompile from asm/... */
+
+    b_Answer = 0;
+    if (s32_ObjectId != -1)
+    {
+        h_Actor = fn_hGetActorInline(s32_ObjectId);
+        if (h_Actor != NULL)
+        {
+            h_LinkedObj = h_Actor->hLinkedObject;
+            if (strncpy(pch_String, "Lips:", s32_Size) != NULL)
+            {
+                if (((HIE_tdstSuperObject_*)s32_ObjectId)->ulTypeOfLinkedObject == 2)
+                {
+                    pch_StringToCat = "Always";
+                    if (!fn_ucIsAnAlwaysObject(h_LinkedObj.p_stSuperObject))
+                        pch_StringToCat = "";
+                    b_Answer = strncat(pch_String, pch_StringToCat, s32_Size - strlen(pch_String)) != NULL;
+                }
+            }
+        }
+    }
+    else
+    {
+        b_Answer = strncpy(pch_String, "Ghost Object", s32_Size) != NULL;
+    }
+    return b_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 580–583 */

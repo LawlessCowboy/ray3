@@ -299,11 +299,38 @@ void IPT_fn_vInitInput(short _sHistoricSize, void* hInstance, int* hWindow);
  * compare a candidate object's line table as an extra checkpoint.
  */
 
+void IPT_fn_vInitCommandLines(void);
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+void* memset(void* s, int c, unsigned int n);
+short INO_fn_wInit(void* hInstance, int* hWindow);
+stDevice* INO_fn_hCreateDevice(int eType, short wIndex, int eMode);
+
 void IPT_fn_vInitInput(short _sHistoricSize, void* hInstance, int* hWindow)
 {
     stDevice* hDev;
     int i;
-    /* TODO: decompile from asm/... */
+
+    IPT_fn_vInitCommandLines();
+    IPT_g_hInputStructure.sEventHistoricSize = _sHistoricSize;
+    IPT_g_hInputStructure.hEventHistoric = (IPT_tdstHistoricElement_*)HMU_fn_p_vMalloc(_sHistoricSize * sizeof(IPT_tdstHistoricElement_), 0);
+    memset(IPT_g_hInputStructure.hEventHistoric, 0, _sHistoricSize * sizeof(IPT_tdstHistoricElement_));
+    memset(IPT_g_hInputStructure.p_ucKeyboardCounter, 0, sizeof(IPT_g_hInputStructure.p_ucKeyboardCounter));
+    memset(IPT_g_hInputStructure.a_stDevice, 0, sizeof(IPT_g_hInputStructure.a_stDevice));
+    memset(IPT_g_hInputStructure.p_ucMouseButtonsCounter, 0, sizeof(IPT_g_hInputStructure.p_ucMouseButtonsCounter));
+    IPT_g_hInputStructure.ucOnePadActivate = 0;
+    if (INO_fn_wInit(hInstance, hWindow))
+    {
+        IPT_g_hInputStructure.ucOnePadActivate = 1;
+        for (i = 0; i < 2; i++)
+        {
+            hDev = INO_fn_hCreateDevice(16, (short)i, 2);
+            if (hDev)
+            {
+                IPT_g_hInputStructure.a_stDevice[i + 2].hDeviceHandle = hDev;
+                IPT_g_hInputStructure.a_stDevice[i + 2].ucValideAndActiveDevice = 1;
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 382–405 */
@@ -602,7 +629,49 @@ unsigned char IPT_fn_bChangeIPTValue(IPT_tdstEntryElement_* _hElement, unsigned 
     unsigned int i;
     unsigned char ucReturn;
     short swPadNumber;
-    /* TODO: decompile from asm/... */
+
+    ucReturn = 0;
+    bFlag = 0;
+    hNextElement = _hElement->d_stKeyWordElementArray;
+    if (hNextElement->u_ElementUnion.swKeyWord == -4074)
+    {
+        swPadNumber = hNextElement[1].u_ElementUnion.swPadNumber;
+        hPad = IPT_g_hInputStructure.a_stDevice[swPadNumber + 2].hDeviceHandle;
+        if (hPad)
+        {
+            for (i = 12; i < 28 && !(((IPT_g_ulPadAndJoyButtonFlag[i - 12] & ((IPT_tdstJoystickState_*)hPad->m_p_stState)->ulButtons) ^ IPT_g_ulPadAndJoyButtonFlag[i - 12]) == 0 && ((IPT_g_ulPadAndJoyButtonFlag[i - 12] & INO_fn_ulJoyPreviousButtons(hPad)) ^ IPT_g_ulPadAndJoyButtonFlag[i - 12]) != 0); i++)
+                ;
+            if (i < 28)
+            {
+                hExchangeEntry = IPT_fn_hSearchElementInOptionWithKeyWord(-4074, swPadNumber, IPT_g_hScriptPadValue[i].swKeyValue);
+                if (ucWhichTest == 0)
+                {
+                    bFlag = 1;
+                }
+                else if (ucWhichTest == 2)
+                {
+                    if (!hExchangeEntry || hExchangeEntry == _hElement)
+                        bFlag = 1;
+                }
+                else if (ucWhichTest == 1)
+                {
+                    bFlag = 1;
+                    if (hExchangeEntry && hExchangeEntry != _hElement)
+                        hExchangeEntry->d_stKeyWordElementArray[2].u_ElementUnion.swKey = hNextElement[2].u_ElementUnion.swKey;
+                }
+                if (bFlag)
+                {
+                    hNextElement[2].u_ElementUnion.swKey = IPT_g_hScriptPadValue[i].swKeyValue;
+                    ucReturn = 1;
+                }
+            }
+        }
+        else
+        {
+            ucReturn = 1;
+        }
+    }
+    return ucReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 878–882 */

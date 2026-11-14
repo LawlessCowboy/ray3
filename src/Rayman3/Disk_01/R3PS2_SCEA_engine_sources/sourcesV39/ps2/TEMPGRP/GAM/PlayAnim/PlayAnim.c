@@ -1678,13 +1678,13 @@ struct tdstEngineStructure_ {
 
 int g_bAnimConstantSpeed;
 unsigned char gbUseDeformation;
-static int gp_stActorSO;
+static HIE_tdstSuperObject_* gp_stActorSO;
 static unsigned int gulNumberOfChannels;
 tdst3dData_* gh_st3dData;
 static unsigned int gulSwapAllocationIndex;
 static unsigned int gulVectorAllocationIndex;
 static stSwapInfo_ gax_stSwapInfo[256];
-/*type_0x38*/ int stVectorStack;
+MTH3D_tdstVector_ stVectorStack[11000];
 static int PLA_g_d_stMatrixHeap;
 static unsigned int PLA_g_ulNbAllocInSupObjHeap;
 static unsigned int PLA_g_ulCurrentPosInSupObjHeap;
@@ -3947,20 +3947,200 @@ void fn_vGetDeformationInfoForChannel(unsigned int ulChannelNumber, tdstPLA_Defo
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void* memcpy(void* dst, const void* src, unsigned int n);
+void FastPS2Copy(void* pDest_, void* pSrc_, unsigned int NbChars);
+unsigned char MOR_fn_bIsCharacterMorphed(HIE_tdstSuperObject_* _hActorSuperObject);
+short MOR_fn_xGetMorphTaskIndex(HIE_tdstSuperObject_* _hActorSuperObject, short _xChannelIndex);
+void MOR_fn_vDoMorph(short _xIndex);
+PO_tdstPhysicalObject_* MOR_fn_hGetMorphedObject(short _xIndex);
+void GLI_vApplyChangesToObjectVertices(GEO_tdstGeometricObject_* p_stObject, unsigned char bWithShadow);
+void GLI_vSetObjectDeformed(GEO_tdstGeometricObject_* pObj);
+void fn_vComputeDeformationPS2(GEO_tdstGeometricObject_* p_stGeoObj, unsigned int ulNbVertices, unsigned int ulChannelNumber, tdstPLA_Deformation_* p_stDeformation, GEO_tdstElementDeformationSetInfo_* p_stDeformationSetInfo);
+
+/* Not original source: retail inlines this distance test on one line, in the
+   same form as PLA_bCheckDistForInterpol but against xDistNoDEnv. */
+inline unsigned char PLA_bCheckDistForDEnv(HIE_tdstSuperObject_* p_stActorSO)
+{
+    unsigned char i;
+    float xResult;
+    tdst3dData_* h_Current3dData;
+    float xZ, xY, xX;
+    float xSqrNorm, xNorm;
+    UV3 stDiff;
+    UV3 stCamPos;
+    HIE_tdstSuperObject_* hCam;
+
+    xResult = 3.402822e38f;
+    h_Current3dData = p_stActorSO->hLinkedObject.p_stCharacter->h_3dData;
+    for (i = 0; i < g_stEngineStructure.ucNumberOfPlayersInMultiMode; i++)
+    {
+        float *pZ;
+        float *pY;
+        hCam = CAM_fn_hGetActiveCamera(i);
+        {
+            int *pPos = (int *)&p_stActorSO->hGlobalMatrix->stTransformMatrix.stCol_3;
+            stDiff.i[0] = pPos[0];
+            stDiff.i[1] = pPos[1];
+            stDiff.i[2] = pPos[2];
+        }
+        {
+            int *pPos = (int *)&hCam->hGlobalMatrix->stTransformMatrix.stCol_3;
+            stCamPos.i[0] = pPos[0];
+            stCamPos.i[1] = pPos[1];
+            stCamPos.i[2] = pPos[2];
+        }
+        pY = &stDiff.v.xY;
+        pZ = &stDiff.v.xZ;
+        stDiff.v.xX -= stCamPos.v.xX;
+        *pY -= stCamPos.v.xY;
+        *pZ -= stCamPos.v.xZ;
+        xZ = *pZ; xY = *pY; xX = stDiff.v.xX;
+        MTH_SQR3_TO(xSqrNorm, xX, xY, xZ) MTH_SQRT_TO(xNorm, xSqrNorm)
+        if (xNorm < xResult)
+            xResult = xNorm;
+    }
+    return (xResult < h_Current3dData->xDistNoDEnv);
+}
+
+/* Not original source: retail inlines this element search on one line. */
+inline GEO_tdstElementDeformationSetInfo_* PLA_fn_hGetDeformationSetInfo(GEO_tdstGeometricObject_* p_stGeoObj)
+{
+    short xIndex;
+
+    for (xIndex = 0; xIndex < p_stGeoObj->xNbElements; xIndex++)
+    {
+        if (((short*)p_stGeoObj->d_xListOfElementsTypes)[xIndex] == 13)
+            return ((GEO_tdstElementDeformationSetInfo_**)p_stGeoObj->d_stListOfElements)[xIndex];
+    }
+    return NULL;
+}
+
+/* Not original source: retail inlines the temporary vertex allocation on one line. */
+inline void PLA_fn_vAllocTempVertices(GEO_tdstGeometricObject_* p_stGeoObj, unsigned int ulNbVertices, int bWithShadow)
+{
+    unsigned int ulSize = (ulNbVertices + 3) & ~3;
+
+    p_stGeoObj->d_stListOfPoints = &stVectorStack[gulVectorAllocationIndex];
+    gulVectorAllocationIndex += ulSize;
+    if (bWithShadow)
+    {
+        p_stGeoObj->d_stListOfPointsNormals = &stVectorStack[gulVectorAllocationIndex];
+        gulVectorAllocationIndex += ulSize;
+    }
+}
+
 void fn_vComputeGeometricJobs(HIE_tdstSuperObject_* p_stActorSO)
 {
-    tdstPLA_Deformation_ stDeformation;
-    unsigned int Found;
-    unsigned int index;
-    PO_tdstPhysicalObject_* hPhysicalObject;
-    GEO_tdstGeometricObject_* p_GeoObjToChange;
-    short xMorphTask;
-    unsigned char bDeformationInAnim;
-    unsigned short uwCurrentChannel;
-    unsigned int ulNbVertices;
-    PO_tdstPhysicalObject_** pp_stPhysicalObject;
+    GEO_tdstElementDeformationSetInfo_* p_stDeformationSetInfo;
+    unsigned char bWithShadow;
     HIE_tdstSuperObject_* p_stWorkSO;
-    /* TODO: decompile from asm/... */
+    PO_tdstPhysicalObject_** pp_stPhysicalObject;
+    unsigned int ulNbVertices;
+    unsigned short uwCurrentChannel;
+    unsigned char bDeformationInAnim;
+    short xMorphTask;
+    GEO_tdstGeometricObject_* p_GeoObjToChange;
+    PO_tdstPhysicalObject_* hPhysicalObject;
+    unsigned int index;
+    unsigned int Found;
+    tdstPLA_Deformation_ stDeformation;
+
+    bWithShadow = (p_stActorSO->ulFlags & 0x200000) ? 1 : 0;
+    gp_stActorSO = p_stActorSO;
+    gh_st3dData = p_stActorSO->hLinkedObject.p_stCharacter->h_3dData;
+    gulNumberOfChannels = gh_st3dData->ulNumberOfChannels;
+    uwCurrentChannel = 0;
+
+    if (gh_st3dData->stFrame3d.stDeformation.ulNbOfDeformationLinks && PLA_bCheckDistForDEnv(p_stActorSO))
+        bDeformationInAnim = 1;
+    else
+        bDeformationInAnim = 0;
+
+    if (MOR_fn_bIsCharacterMorphed(p_stActorSO) || bDeformationInAnim)
+    {
+    while (1)
+    {
+        p_GeoObjToChange = NULL;
+        if (uwCurrentChannel >= gulNumberOfChannels)
+            break;
+        if (gh_st3dData->hArrayOfChannels[uwCurrentChannel].hZoomSupObject)
+            p_stWorkSO = gh_st3dData->hArrayOfChannels[uwCurrentChannel].hZoomSupObject;
+        else if (gh_st3dData->hArrayOfChannels[uwCurrentChannel].hSupObject)
+            p_stWorkSO = gh_st3dData->hArrayOfChannels[uwCurrentChannel].hSupObject;
+        else
+        {
+            uwCurrentChannel++;
+            continue;
+        }
+
+        xMorphTask = MOR_fn_xGetMorphTaskIndex(p_stActorSO, uwCurrentChannel);
+        if (xMorphTask != -1)
+        {
+            MOR_fn_vDoMorph(xMorphTask);
+            hPhysicalObject = MOR_fn_hGetMorphedObject(xMorphTask);
+            p_stWorkSO->ulTypeOfLinkedObject = hPhysicalObject ? 8 : 1;
+            p_stWorkSO->hLinkedObject.p_stPhysicalObject = hPhysicalObject;
+            p_GeoObjToChange = hPhysicalObject->_hVisualSet->d_p_stLodDefinitions->p_stGeometricObject;
+        }
+
+        if (p_stWorkSO->ulTypeOfLinkedObject != 8)
+        {
+            uwCurrentChannel++;
+            continue;
+        }
+
+        pp_stPhysicalObject = &p_stWorkSO->hLinkedObject.p_stPhysicalObject;
+        Found = 0;
+        index = 0;
+        while (!Found && index < gulSwapAllocationIndex)
+        {
+            if (gax_stSwapInfo[index].p_stSuperObject == p_stActorSO && gax_stSwapInfo[index].pp_stPhysicalObject == pp_stPhysicalObject)
+                Found++;
+            else
+                index++;
+        }
+
+        if (Found)
+        {
+            GLI_vApplyChangesToObjectVertices(&gax_stSwapInfo[index].stGeoObjTemp, bWithShadow);
+            uwCurrentChannel++;
+            continue;
+        }
+
+        ulNbVertices = p_stWorkSO->hLinkedObject.p_stPhysicalObject->_hVisualSet->d_p_stLodDefinitions->p_stGeometricObject->xNbPoints;
+        p_stDeformationSetInfo = PLA_fn_hGetDeformationSetInfo(p_stWorkSO->hLinkedObject.p_stPhysicalObject->_hVisualSet->d_p_stLodDefinitions->p_stGeometricObject);
+
+        if (p_stDeformationSetInfo)
+        {
+            fn_vGetDeformationInfoForChannel(uwCurrentChannel, &stDeformation);
+            if (stDeformation.ulNbOfDeformationLinks)
+            {
+                stSwapInfo_* p_stSwapInfo = &gax_stSwapInfo[gulSwapAllocationIndex++];
+                p_GeoObjToChange = &p_stSwapInfo->stGeoObjTemp;
+                p_stSwapInfo->pp_stPhysicalObject = pp_stPhysicalObject;
+                p_stSwapInfo->p_stPhysicalObject = *pp_stPhysicalObject;
+                p_stSwapInfo->p_stSuperObject = p_stActorSO;
+                memcpy(&p_stSwapInfo->stPhysicalObject, *pp_stPhysicalObject, sizeof(PO_tdstPhysicalObject_));
+                p_stSwapInfo->stPhysicalObject._hVisualSet = &p_stSwapInfo->stVisualSet;
+                memcpy(&p_stSwapInfo->stVisualSet, (*pp_stPhysicalObject)->_hVisualSet, 0x18);
+                p_stSwapInfo->stVisualSet.xNbLodDefinitions = 1;
+                p_stSwapInfo->ax_pstGeoObjTemp[0] = (int)&p_stSwapInfo->stGeoObjTemp;
+                p_stSwapInfo->ax_pstGeoObjTemp[1] = (int)&p_stSwapInfo->stGeoObjTempSHW;
+                p_stSwapInfo->stVisualSet.d_p_stLodDefinitions = (GEO_tduVSObject_*)p_stSwapInfo->ax_pstGeoObjTemp;
+                memcpy(&p_stSwapInfo->stGeoObjTemp, (*pp_stPhysicalObject)->_hVisualSet->d_p_stLodDefinitions->p_stGeometricObject, sizeof(GEO_tdstGeometricObject_));
+                *pp_stPhysicalObject = &p_stSwapInfo->stPhysicalObject;
+                PLA_fn_vAllocTempVertices(p_GeoObjToChange, ulNbVertices, bWithShadow);
+                FastPS2Copy(p_GeoObjToChange->d_stListOfPoints, p_stSwapInfo->p_stPhysicalObject->_hVisualSet->d_p_stLodDefinitions->p_stGeometricObject->d_stListOfPoints, ulNbVertices * sizeof(MTH3D_tdstVector_));
+                fn_vComputeDeformationPS2(p_GeoObjToChange, ulNbVertices, uwCurrentChannel, &stDeformation, p_stDeformationSetInfo);
+                GLI_vSetObjectDeformed(p_GeoObjToChange);
+            }
+        }
+
+        if (p_GeoObjToChange)
+            GLI_vApplyChangesToObjectVertices(p_GeoObjToChange, bWithShadow);
+        uwCurrentChannel++;
+    }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\PlayAnim.c lines 4450–4597 */

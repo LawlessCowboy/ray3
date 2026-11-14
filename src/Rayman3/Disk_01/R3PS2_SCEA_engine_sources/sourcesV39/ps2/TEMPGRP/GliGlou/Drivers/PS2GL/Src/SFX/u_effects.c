@@ -1376,7 +1376,7 @@ void ClipTriangleOverXHigh(float* Pos0, float* Pos1, float* Pos2, float* U0, flo
 void ClipTriangleOverYLow(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2);
 void ClipTriangleOverYHigh(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2);
 void GLIPS2_Water2D_DisplayClippedTriangle(float* Pos2D0, float* Pos2D1, float* Pos2D2, float* Pos2D0u, float* Pos2D1u, float* Pos2D2u, float* C0, float* C1, float* C2);
-void GLIPS2_vMakeWaterEffect(void);
+void GLIPS2_vMakeWaterEffect();
 void GLIPS2_vWaterFXProcess(void);
 void GLIPS2_vProcessMatrixDeformations(void);
 void GLIPS2_vReinitMatrixDeformations(void);
@@ -1412,6 +1412,14 @@ void AE_DrawWindow(float x1, float y1, float x2, float y2, float r, float g, flo
 void GLIPS2_vWaterFXProcess(void);
 
 float FRR(float param0, float param1);
+void GLI_vSetFIXFullScreenOrthoProjection(void);
+void PS2glSetGsRegister(int address, unsigned long value, unsigned long mask);
+void PS2glBegin(unsigned int mode);
+void PS2glEnd(void);
+void PS2glColor4f(float r, float g, float b, float a);
+void PS2glVertex2f(float x, float y);
+void PS2glTexCoord2f(float s, float t);
+void GLI_DRV_SendMaterialToViewport(void* pMat);
 
 void GsSendData(unsigned int reg, anon_1* pdata);
 void GsFlushBuffer(void);
@@ -1599,11 +1607,89 @@ void AE_Filter_BlurUsingDestAlpha2(void)
  */
 void ProcessOldTV(void)
 {
-    float x;
-    float Lum;
-    float startV;
     float startU;
-    /* TODO: decompile from asm/... */
+    float startV;
+    float Lum;
+    float x;
+
+    if (GLI_g_OldTV)
+    {
+
+        Lum = FRR(0.4f, 0.55f);
+
+        startU = FRR(0.0f, 1.0f);
+        startV = FRR(0.0f, 1.0f);
+
+
+
+
+
+        GLI_vSetFIXFullScreenOrthoProjection();
+
+        PS2glSetGsRegister(0x42, ((unsigned long)0x80 << 32) | 0x89, 0);
+
+        if (FRR(0.0f, 1.0f) > 0.5f)
+        {
+            x = FRR(0.0f, 100.0f);
+
+
+            PS2glBegin(4);
+            PS2glColor4f(0.0f, 0.0f, 0.0f, 0.0f);
+            PS2glVertex2f(x, 0.0f);
+            PS2glVertex2f(x + 0.1f, 0.0f);
+            PS2glVertex2f(x + 0.1f, 100.0f);
+            PS2glVertex2f(x, 0.0f);
+            PS2glVertex2f(x + 0.1f, 100.0f);
+            PS2glVertex2f(x, 100.0f);
+            PS2glEnd();
+        }
+
+
+        AE_Filter_Glow(Lum, Lum, Lum, Lum);
+
+        GLI_vSetFIXFullScreenOrthoProjection();
+
+        GLI_DRV_SendMaterialToViewport((void*)GLI_g_OldTV);
+
+
+
+        PS2glSetGsRegister(0x42, ((unsigned long)0x80 << 32) | 0x62, 0);
+
+        PS2glBegin(4);
+        PS2glColor4f(0.5f, 0.45f, 0.45f, 1.0f);
+
+        PS2glTexCoord2f(startU, startV);
+        PS2glVertex2f(0.0f, 0.0f);
+        PS2glTexCoord2f(startU + 6.0f, startV);
+        PS2glVertex2f(100.0f, 0.0f);
+        PS2glTexCoord2f(startU + 6.0f, startV + 5.0f);
+        PS2glVertex2f(100.0f, 100.0f);
+
+        PS2glTexCoord2f(startU, startV);
+        PS2glVertex2f(0.0f, 0.0f);
+        PS2glTexCoord2f(startU + 6.0f, startV + 5.0f);
+        PS2glVertex2f(100.0f, 100.0f);
+        PS2glTexCoord2f(startU, startV + 5.0f);
+        PS2glVertex2f(0.0f, 100.0f);
+
+        PS2glColor4f(0.0f, 0.0f, 0.0f, 0.0f);
+
+        PS2glVertex2f(0.0f, 0.0f);
+        PS2glVertex2f(100.0f, 0.0f);
+        PS2glVertex2f(100.0f, 10.0f);
+        PS2glVertex2f(0.0f, 0.0f);
+        PS2glVertex2f(100.0f, 10.0f);
+        PS2glVertex2f(0.0f, 10.0f);
+
+        PS2glVertex2f(0.0f, 90.0f);
+        PS2glVertex2f(100.0f, 90.0f);
+        PS2glVertex2f(100.0f, 100.0f);
+        PS2glVertex2f(0.0f, 90.0f);
+        PS2glVertex2f(100.0f, 100.0f);
+        PS2glVertex2f(0.0f, 100.0f);
+
+        PS2glEnd();
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 585–585 */
@@ -1617,6 +1703,10 @@ void GLIPS2_vSetMirrorBlur(void)
 {
     GLI_g_MirrorAfterEffect = 0;
 }
+
+void AE_SimpleBlur(int Counter);
+void PS2glClear(unsigned int mask);
+void AE_Filter_BrightNess_n_Contrast(float* pParams);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 608–671 */
 /* addr: 0x002e8e90  size: 708 bytes */
@@ -1672,7 +1762,69 @@ void GLIPS2_vSetMirrorBlur(void)
  */
 void GLI_vProcessMirrorAfterEffect(void)
 {
-    /* TODO: decompile from asm/... */
+    if (AE_MirrorFX)
+    {
+        if (AE_MirrorFX & 8)
+        {
+            DoFullScreenWaterEffectForMirror();
+        }
+        if (AE_MirrorFX & 1)
+        {
+            AE_Begin();
+            PS2glDepthMask(0);
+            AE_SetDrawTarget(0);
+            AE_SetTexture(0);
+            if (AE_Blur_M > 4.0f)
+            {
+                AE_SetGS(0, 2, 2, 1, 0x20);
+                AE_SimpleBlur(2);
+                AE_SetGS(0, 1, 2, 1, 0x40);
+                AE_SimpleBlur(2);
+                AE_End();
+            }
+            else if (AE_Blur_M > 3.0f)
+            {
+                AE_SetGS(0, 2, 2, 1, 0x40);
+                AE_SimpleBlur(1);
+                AE_SetGS(0, 1, 2, 1, 0x40);
+                AE_SimpleBlur(1);
+            }
+            else if (AE_Blur_M > 2.0f)
+            {
+                AE_SetGS(0, 2, 2, 1, 0x20);
+                AE_SimpleBlur(1);
+                AE_SetGS(0, 1, 2, 1, 0x40);
+                AE_SimpleBlur(1);
+            }
+            else if (AE_Blur_M > 1.0f)
+            {
+                AE_SetDrawTarget(0);
+                AE_SetTexture(0);
+                AE_SetGS(0, 1, 2, 1, 0x40);
+                AE_SimpleBlur(1);
+                AE_End();
+            }
+            else
+            {
+                AE_SetDrawTarget(0);
+                AE_SetTexture(0);
+                AE_SetGS(0, 1, 2, 1, 0x40);
+                AE_DrawWindow(0.2f, 0.3f, 100.2f, 100.3f, 0.5f, 0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f);
+                AE_End();
+            }
+        }
+
+        if (AE_MirrorFX & 2)
+        {
+            AE_Filter_Glow(AE_Glow_M[0], AE_Glow_M[1], AE_Glow_M[2], AE_Glow_M[3]);
+            PS2glClear(0x100);
+        }
+
+        if (AE_MirrorFX & 4)
+        {
+            AE_Filter_BrightNess_n_Contrast(AE_Bright_Cont_M);
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 760–925 */
@@ -2092,9 +2244,181 @@ void GLI_vProcessPSX_FX(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+unsigned char GAM_MultiVP_fn_ucGetNumberOfPlayers(void);
+void ProcessSky(void);
+void AE_Filter_BrightNess_n_Contrast(float* pParams);
+void PS2glClearColor(float red, float green, float blue, float alpha);
+void PS2glClear(unsigned int mask);
+
+static inline void AE_Filter_MotionBlur(void)
+{
+    if (GLI_g_MotionBlurIntensity > 0.001f)
+    {
+        AE_Begin();
+        PS2glDepthMask(0);
+        AE_SetDrawTarget(0);
+        AE_SetTexture(1);
+        AE_SetGS(0, 1, 2, 1, (unsigned int)(64.0f * GLI_g_MotionBlurIntensity));
+        AE_DrawWindow(0.0f, 0.0f, 100.0f, 100.0f, 0.5f, 0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f);
+        AE_End();
+    }
+}
+
+static inline void AE_Filter_ZoomBlur(float Intensity)
+{
+    int i;
+    float Ofs;
+
+    Ofs = 0.01f;
+    AE_Begin();
+    PS2glDepthMask(0);
+    AE_SetDrawTarget(0);
+    AE_SetTexture(0);
+    AE_SetGS(0, 1, 2, 1, (unsigned int)(64.0f * Intensity));
+    for (i = 0; i < 4; i++)
+    {
+        AE_DrawWindow(0.0f, 0.0f, 100.0f, 100.0f, 0.5f, 0.5f, 0.5f, 0.5f, Ofs, Ofs, 1.0f - Ofs, 1.0f - Ofs);
+        Ofs += 0.005f;
+    }
+    AE_End();
+}
+
+static inline void AE_StereoVisionMask(void)
+{
+    PS2glColorMask(1, 0, 0, 0);
+    PS2glBegin(4);
+    PS2glVertex2f(0.0f, 0.0f);
+    PS2glVertex2f(0.0f, 0.0f);
+    PS2glVertex2f(0.0f, 0.0f);
+    PS2glEnd();
+    AE_Begin();
+    PS2glDepthMask(0);
+    AE_SetDrawTarget(0);
+    AE_SetTexture(0);
+    AE_SetGS(0, 2, 2, 2, 0x80);
+    AE_DrawWindow(0.0f, 0.0f, 94.0f, 100.0f, 0.5f, 0.5f, 0.5f, 0.5f, 0.06f, 0.0f, 0.94f, 1.0f);
+    AE_End();
+}
+
 void GLI_vProcessFilters(void)
 {
-    /* TODO: decompile from asm/... */
+
+
+
+
+
+
+
+
+    if (GLI_g_ChristianSlaterMode)
+        GLI_vProcessPSX_FX();
+
+    GLIPS2_vProcessRedEnviromentEffect();
+
+    if (g_bHasWaterEffect)
+
+        GLIPS2_vMakeWaterEffect(0);
+
+
+    GLIPS2_vProcessMatrixDeformations();
+
+
+
+    if (GLI_g_HadHeatFx)
+    {
+        GLI_g_HadHeatFx = 0;
+
+        PS2glColorMask(1, 1, 1, 0);
+        g_PS2glContext.nEnableBits &= ~0x800; g_gsContext.TEST_1.ZTE = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1; g_gsContext.TEST_1.ZTST = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1;
+        g_PS2glContext.nLightBits &= ~0x400;
+        g_PS2glContext.nEnableBits &= ~0x80; g_gsContext.PRMODE.FGE = 0; g_gsContext.ModFlgs.PRMODE_Modified = 1; *(unsigned char*)g_PS2glContext.pbFogging = 0;
+        AE_Filter_BlurUsingDestAlpha2();
+    }
+
+
+    if (GLI_g_bFullScreenWaterEffect)
+        DoFullScreenWaterEffect();
+
+
+
+
+
+
+
+
+
+
+
+
+    if (GAM_MultiVP_fn_ucGetNumberOfPlayers() < 2)
+    {
+
+
+
+        ProcessSky();
+
+        AE_Filter_MotionBlur();
+
+
+
+
+
+
+
+
+
+
+
+        switch (GLI_g_AfterEffect)
+        {
+        case 0:
+            return;
+        case 1:
+            break;
+        case 2:
+            AE_Filter_ZoomBlur(AE_ZoomBlurIntensity);
+            break;
+        case 3:
+            AE_Filter_Glow(AE_Glow[0], AE_Glow[1], AE_Glow[2], AE_Glow[3]);
+            break;
+        case 6:
+            AE_Filter_BrightNess_n_Contrast(AE_Bright_Cont);
+            break;
+        case 8:
+            AE_Filter_AutoGlowDown(AE_Glow[0], AE_Glow[1], AE_Glow[2], AE_Glow[3]);
+            break;
+        case 10:
+            GLI_vProcessMedalionAfterEffect();
+            break;
+        }
+
+
+        if (GLI_g_AfterEffect == 4)
+        {
+            if (GLI_g_StereoVisionMode == 1)
+            {
+                PS2glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
+                PS2glDepthMask(1);
+                PS2glClear(0x100);
+                PS2glDepthMask(0);
+            }
+            else if (GLI_g_StereoVisionMode == 2)
+            {
+                AE_StereoVisionMask();
+                PS2glColorMask(1, 1, 1, 0);
+
+                PS2glDepthMask(0);
+            }
+        }
+
+
+        if (GLI_g_AfterEffect == 5)
+        {
+            ProcessOldTV();
+            PS2glDepthMask(0);
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 1216–1234 */
@@ -2231,9 +2555,54 @@ void GLI_vRestoreSavedFrameBuffer(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void PS2glClearLastBits(void);
+void AE_SimpleBlurWithOptimization(int Counter);
+void GLI_vInitGLProjectionMatrix(void);
+void GLI_vClearSendMatStates(void);
+
 void AE_PostProcessShadow(void)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.nEnableBits &= ~0x400; g_gsContext.TEST_1.ATE = 0; g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    g_PS2glContext.nEnableBits &= ~0x800; g_gsContext.TEST_1.ZTE = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1; g_gsContext.TEST_1.ZTST = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    PS2glDepthMask(0);
+    g_PS2glContext.nEnableBits &= ~0x80; g_gsContext.PRMODE.FGE = 0; g_gsContext.ModFlgs.PRMODE_Modified = 1; *(unsigned char*)g_PS2glContext.pbFogging = 0;
+    g_PS2glContext.nLightBits &= ~0x400;
+    g_PS2glContext.nEnableBits |= 0x100; g_gsContext.PRMODE.ABE = 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    PS2glSetGsRegister(0x46, 1, 0);
+
+    PS2glBegin(4);
+    PS2glEnd();
+
+
+    PS2glClearLastBits();
+
+
+    AE_Begin();
+
+    AE_SetDrawTarget(0);
+    AE_SetTexture(0);
+    AE_SetGS(0, 1, 2, 1, 0x40);
+    AE_SimpleBlurWithOptimization(1);
+
+
+    AE_SetDrawTarget(0);
+    AE_SetTexture(2);
+
+
+
+
+    AE_SetGS(2, 1, 2, 0, 0x40);
+    AE_CopyScreen();
+
+
+
+    AE_End();
+
+
+    GLI_g_ProjectionMode = 2;
+    GLI_vInitGLProjectionMatrix();
+    g_PS2glContext.nEnableBits &= ~0x20; g_gsContext.SCISSOR_1.SCAX0 = 0; g_gsContext.ModFlgs.SCISSOR_1_Modified = 1; g_gsContext.SCISSOR_1.SCAX1 = g_stBufferInfo.iScreenWidth - 1; g_gsContext.ModFlgs.SCISSOR_1_Modified = 1; g_gsContext.SCISSOR_1.SCAY0 = 0; g_gsContext.ModFlgs.SCISSOR_1_Modified = 1; if (g_PS2glContext.bFrameMode == 1) { g_gsContext.SCISSOR_1.SCAY1 = (g_stBufferInfo.iScreenHeight >> 1) - 1; g_gsContext.ModFlgs.SCISSOR_1_Modified = 1; } else { g_gsContext.SCISSOR_1.SCAY1 = g_stBufferInfo.iScreenHeight - 1; g_gsContext.ModFlgs.SCISSOR_1_Modified = 1; }
+    GLI_vClearSendMatStates();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 1550–1568 */
@@ -3253,6 +3622,51 @@ void GLIPS2_vReinitMatrixDeformations(void)
     WaterFrame ^= 1;
 }
 
+/* The target writes COP0 register 24 (mtbpc, i.e. mtc0 zero, $24) around the
+ * matrix deformation pass; C cannot express it.  The R5900 alias mtbpc lets
+ * MWCC schedule it like an ordinary instruction (delay slots, hazard nop). */
+inline void GLI_vClearCop0Register24(void)
+{
+    asm volatile { mtbpc zero }
+}
+inline void GLI_vClearCop0Register24NoReorder(void)
+{
+    asm {
+    .set noreorder
+    mtc0 zero, $24
+    }
+}
+inline void GLI_vClearCop0Register24Sync(void)
+{
+    asm {
+    .set noreorder
+    mtc0 zero, $24
+    nop
+    }
+}
+inline void GLI_vMulMatrixByNegVect(float* pDst, float* pSrc)
+{
+    float* pNeg = GLI_g_NegVect;
+    asm {
+        lqc2 $vf5, 0x0(pNeg)
+        lqc2 $vf1, 0x0(pSrc)
+        lqc2 $vf2, 0x10(pSrc)
+        lqc2 $vf3, 0x20(pSrc)
+        lqc2 $vf4, 0x30(pSrc)
+        vmul.xyzw $vf1, $vf1, $vf5
+        vmul.xyzw $vf2, $vf2, $vf5
+        vmul.xyzw $vf3, $vf3, $vf5
+        vmul.xyzw $vf4, $vf4, $vf5
+        sqc2 $vf1, 0x0(pDst)
+        sqc2 $vf2, 0x10(pDst)
+        sqc2 $vf3, 0x20(pDst)
+        sqc2 $vf4, 0x30(pDst)
+    }
+}
+void sceVu0ApplyMatrix(float* v0, float m[4][4], float* v1);
+void AE_SetTextureNoAlpha(int BufferID);
+void PS2glGetFloatv(unsigned int pname, float* params);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 2344–2496 */
 /* addr: 0x002e4cd0  size: 1236 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3353,19 +3767,92 @@ void GLIPS2_vReinitMatrixDeformations(void)
  */
 void GLIPS2_vProcessMatrixDeformations(void)
 {
-    unsigned char zTst;
-    float fInv;
-    float (*pPos2D)[4];
-    unsigned int Found;
-    float fUvSizey;
-    float fUvSizex;
-    float UVs[4];
-    float fSizey;
-    float fSizex;
-    unsigned int i;
-    float a16_fProjectionMatrix[4][4];
     float a16_fWorldMatrix[4][4];
-    /* TODO: decompile from asm/... */
+    float a16_fProjectionMatrix[4][4];
+    unsigned int i;
+    float fSizex;
+    float fSizey;
+    float UVs[4];
+    float fUvSizex;
+    float fUvSizey;
+    unsigned int Found;
+    float (*pPos2D)[4];
+    float fInv;
+    unsigned char zTst;
+
+    Found = 0;
+    GLI_vClearCop0Register24NoReorder();
+
+    GLI_vMulMatrixByNegVect((float*)a16_fWorldMatrix, (float*)(*(int*)((GLD_tdstViewportAttributes_*)g_p_stCurrentViewport)->p_vSpecificToXD + 0x20));
+    a16_fWorldMatrix[3][3] = 1.0f;
+    GLI_g_ProjectionMode = 11;
+    GLI_vInitGLProjectionMatrix();
+
+    PS2glGetFloatv(0xBA7, a16_fProjectionMatrix[0]);
+
+    for (i = 0; i < 200; i++)
+    {
+        if (GLI_g_MatrixDeformations[i].AlphaVal > 0.1f)
+        {
+            Found = 1;
+            pPos2D = (float (*)[4])GLI_g_MatrixDeformations[i].Pos2D;
+            sceVu0ApplyMatrix(*pPos2D, a16_fWorldMatrix, GLI_g_MatrixDeformations[i].Position);
+            sceVu0ApplyMatrix(*pPos2D, a16_fProjectionMatrix, *pPos2D);
+            if ((*pPos2D)[3] != 0.0f)
+            {
+                fInv = 1.0f / (*pPos2D)[3];
+                (*pPos2D)[0] *= fInv;
+                (*pPos2D)[1] *= fInv;
+                (*pPos2D)[2] *= fInv;
+                (*pPos2D)[3] = 1.0f;
+            }
+            (*pPos2D)[0] = 50.0f + 50.0f * (*pPos2D)[0];
+            (*pPos2D)[1] = 50.0f + -50.0f * (*pPos2D)[1];
+            (*pPos2D)[2] = g_PS2glContext.DepthRange[0] + 0.5f * ((1.0f + (*pPos2D)[2]) * (g_PS2glContext.DepthRange[1] - g_PS2glContext.DepthRange[0]));
+        }
+    }
+
+    if (!Found)
+        GLIPS2_vProcessWater2DEffect();
+
+    GLI_vClearCop0Register24();
+    if (Found)
+    {
+        GLI_vClearCop0Register24NoReorder();
+        g_PS2glContext.nEnableBits |= 0x800; g_gsContext.TEST_1.ZTE = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1; zTst = 1; switch (g_PS2glContext.eDepthFunc) { case 0x200: zTst = 0; break; case 0x207: zTst = 1; break; case 0x203: zTst = 2; break; case 0x201: zTst = 3; break; case 0x202: case 0x204: case 0x205: case 0x206: break; } g_gsContext.TEST_1.ZTST = zTst; g_gsContext.ModFlgs.TEST_1_Modified = 1;
+        PS2glColorMask(1, 1, 1, 0);
+        PS2glBegin(4);
+        PS2glEnd();
+        AE_Begin();
+        AE_SetTextureNoAlpha(0);
+        AE_SetDrawTarget(0);
+        AE_SetGS(0, 1, 0, 1, 0x40);
+        AE_PrepareMatrixEffect();
+        for (i = 0; i < 200; i++)
+        {
+            if (GLI_g_MatrixDeformations[i].AlphaVal > 0.1f)
+            {
+                UVs[0] = 0.01f * GLI_g_MatrixDeformations[i].Pos2D[0];
+                UVs[1] = 0.01f * GLI_g_MatrixDeformations[i].Pos2D[1];
+                fSizex = GLI_g_MatrixDeformations[i].fSize;
+                fSizey = 1.333333f * fSizex;
+                fUvSizex = 1.1f * (0.01f * fSizex);
+                fUvSizey = 1.1f * (0.01f * fSizey);
+                AE_DrawMatrixDeformation(GLI_g_MatrixDeformations[i].Pos2D[2], GLI_g_MatrixDeformations[i].Pos2D[0], GLI_g_MatrixDeformations[i].Pos2D[1], fSizex, fSizey, UVs[0], UVs[1], fUvSizex, fUvSizey, GLI_g_MatrixDeformations[i].AlphaVal, g_ffFrameTime * GLI_g_MatrixDeformations[i].AngleSpeed);
+                GLI_g_MatrixDeformations[i].AlphaVal -= 0.025f;
+                if (GLI_g_MatrixDeformations[i].Type == 1)
+                    GLI_g_MatrixDeformations[i].AlphaVal = 0.0f;
+            }
+            else
+            {
+                GLI_g_MatrixDeformations[i].AlphaVal = 0.0f;
+            }
+        }
+        AE_EndMatrixEffect();
+        AE_End();
+        GLIPS2_vProcessWater2DEffect();
+        GLI_vClearCop0Register24Sync();
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 2554–2571 */
@@ -3756,6 +4243,20 @@ void GLIPS2_Water2D_DisplayClippedTriangle(float* Pos2D0, float* Pos2D1, float* 
     /* TODO: decompile from asm/... */
 }
 
+inline void GLIPS2_vStoreVF9(float* p) { asm { sqc2 $vf9, 0x0(p) } }
+inline void GLIPS2_vStoreVF12(float* p) { asm { sqc2 $vf12, 0x0(p) } }
+inline void GLIPS2_vStoreVF13(float* p) { asm { sqc2 $vf13, 0x0(p) } }
+inline void GLIPS2_vStoreVF14(float* p) { asm { sqc2 $vf14, 0x0(p) } }
+#define GLIPS2_M_CLIP_EDGE(A, B, UA, UB, CA, CB, RPos, RU, RC, Limit, Axis) { \
+    asm { lqc2 $vf1, 0x0(A); lqc2 $vf2, 0x0(B); lqc2 $vf3, 0x0(UA); lqc2 $vf4, 0x0(UB); lqc2 $vf5, 0x0(CA); lqc2 $vf6, 0x0(CB); \
+          vsub.xyzw $vf8, $vf1, $vf2; vsub.xyzw $vf9, $vf3, $vf4; vsub.xyzw $vf10, $vf5, $vf6 } \
+    GLIPS2_vStoreVF9(DirU); \
+    fValue = (Limit - (UB)[Axis]) / DirU[Axis]; \
+    asm { mfc1 $t0, fValue; qmtc2 $t0, $vf11; vmulx.xyz $vf8, $vf8, $vf11x; vadd.xyzw $vf12, $vf8, $vf2; vmulx.xyz $vf9, $vf9, $vf11x; \
+          vadd.xyzw $vf13, $vf9, $vf4; vmulx.xyzw $vf10, $vf10, $vf11x; vadd.xyzw $vf14, $vf10, $vf6; vsubw.w $vf14, $vf14, $vf14 } \
+    GLIPS2_vStoreVF12(RPos); GLIPS2_vStoreVF13(RU); GLIPS2_vStoreVF14(RC); }
+
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 3067–3199 */
 /* addr: 0x002e3a30  size: 2156 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -4057,23 +4558,91 @@ void ClipTriangleOverXHigh(float* Pos0, float* Pos1, float* Pos2, float* U0, flo
  */
 void ClipTriangleOverXLow(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2)
 {
-    float fValue;
-    float DirU[4];
-    float Pos2x[4];
-    float Pos1x[4];
-    float Pos0x[4];
-    float U2x[4];
-    float U1x[4];
-    float U0x[4];
-    float C2x[4];
-    float C1x[4];
-    float C0x[4];
-    unsigned int Edge;
-    unsigned int Total;
-    unsigned int p2;
-    unsigned int p1;
     unsigned int p0;
-    /* TODO: decompile from asm/... */
+    unsigned int p1;
+    unsigned int p2;
+    unsigned int Total;
+    unsigned int Edge;
+    float C0x[4];
+    float C1x[4];
+    float C2x[4];
+    float U0x[4];
+    float U1x[4];
+    float U2x[4];
+    float Pos0x[4];
+    float Pos1x[4];
+    float Pos2x[4];
+    float DirU[4];
+    float fValue;
+
+    if (*(int*)U0 < 0) p0 = 1; else p0 = 0;
+    if (*(int*)U1 < 0) p1 = 1; else p1 = 0;
+    if (*(int*)U2 < 0) p2 = 1; else p2 = 0;
+
+    Total = p0 + p1 + p2;
+
+    if (Total == 3)
+        return;
+
+    if (Total == 0)
+    {
+        ClipTriangleOverXHigh(Pos0, Pos1, Pos2, U0, U1, U2, C0, C1, C2);
+        return;
+    }
+
+    if (Total == 2)
+    {
+        if (p0)
+        {
+            if (p1) Edge = 0;
+            else if (p2)
+                Edge = 2;
+        }
+        else Edge = 1;
+
+        if (Edge == 0)
+        {
+            GLIPS2_M_CLIP_EDGE(Pos0, Pos2, U0, U2, C0, C2, Pos0x, U0x, C0x, 0.0f, 0)
+            GLIPS2_M_CLIP_EDGE(Pos1, Pos2, U1, U2, C1, C2, Pos1x, U1x, C1x, 0.0f, 0)
+            ClipTriangleOverXHigh(Pos2, Pos0x, Pos1x, U2, U0x, U1x, C2, C0x, C1x);
+        }
+        else if (Edge == 1)
+        {
+            GLIPS2_M_CLIP_EDGE(Pos1, Pos0, U1, U0, C1, C0, Pos1x, U1x, C1x, 0.0f, 0)
+            GLIPS2_M_CLIP_EDGE(Pos2, Pos0, U2, U0, C2, C0, Pos2x, U2x, C2x, 0.0f, 0)
+            ClipTriangleOverXHigh(Pos0, Pos1x, Pos2x, U0, U1x, U2x, C0, C1x, C2x);
+        }
+        else
+        {
+            GLIPS2_M_CLIP_EDGE(Pos0, Pos1, U0, U1, C0, C1, Pos0x, U0x, C0x, 0.0f, 0)
+            GLIPS2_M_CLIP_EDGE(Pos2, Pos1, U2, U1, C2, C1, Pos2x, U2x, C2x, 0.0f, 0)
+            ClipTriangleOverXHigh(Pos1, Pos0x, Pos2x, U1, U0x, U2x, C1, C0x, C2x);
+        }
+    }
+    else if (Total == 1)
+    {
+        if (p0)
+        {
+            GLIPS2_M_CLIP_EDGE(Pos0, Pos1, U0, U1, C0, C1, Pos0x, U0x, C0x, 0.0f, 0)
+            GLIPS2_M_CLIP_EDGE(Pos2, Pos0, U2, U0, C2, C0, Pos2x, U2x, C2x, 0.0f, 0)
+            ClipTriangleOverXHigh(Pos0x, Pos1, Pos2, U0x, U1, U2, C0x, C1, C2);
+            ClipTriangleOverXHigh(Pos0x, Pos2, Pos2x, U0x, U2, U2x, C0x, C2, C2x);
+        }
+        else if (p1)
+        {
+            GLIPS2_M_CLIP_EDGE(Pos1, Pos0, U1, U0, C1, C0, Pos1x, U1x, C1x, 0.0f, 0)
+            GLIPS2_M_CLIP_EDGE(Pos2, Pos1, U2, U1, C2, C1, Pos2x, U2x, C2x, 0.0f, 0)
+            ClipTriangleOverXHigh(Pos1x, Pos0, Pos2, U1x, U0, U2, C1x, C0, C2);
+            ClipTriangleOverXHigh(Pos1x, Pos2, Pos2x, U1x, U2, U2x, C1x, C2, C2x);
+        }
+        else
+        {
+            GLIPS2_M_CLIP_EDGE(Pos2, Pos0, U2, U0, C2, C0, Pos2x, U2x, C2x, 0.0f, 0)
+            GLIPS2_M_CLIP_EDGE(Pos1, Pos2, U1, U2, C1, C2, Pos1x, U1x, C1x, 0.0f, 0)
+            ClipTriangleOverXHigh(Pos2x, Pos0, Pos1, U2x, U0, U1, C2x, C0, C1);
+            ClipTriangleOverXHigh(Pos2x, Pos1, Pos1x, U2x, U1, U1x, C2x, C1, C1x);
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 3612–3744 */
@@ -4160,13 +4729,115 @@ void ClipTriangleOverXLow(float* Pos0, float* Pos1, float* Pos2, float* U0, floa
  */
 void GLIPS2_Water2D_DisplayNearClippedTriangle(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2)
 {
-    float Pos2D2u[4];
-    float Pos2D1u[4];
-    float Pos2D0u[4];
-    float Pos2D2[4];
-    float Pos2D1[4];
     float Pos2D0[4];
-    /* TODO: decompile from asm/... */
+    float Pos2D1[4];
+    float Pos2D2[4];
+    float Pos2D0u[4];
+    float Pos2D1u[4];
+    float Pos2D2u[4];
+    float* p0;
+    float* p1;
+    float* p2;
+    float* p0u;
+    float* p1u;
+    float* p2u;
+
+    /* Hand-written VU0 code (one line-map entry per instruction): project the
+     * three positions and three UVs with the matrix preloaded in vf22-vf25. */
+    p0 = Pos2D0; p1 = Pos2D1; p2 = Pos2D2;
+    asm {
+        lqc2 $vf1, 0x0(Pos0)
+        lqc2 $vf2, 0x0(Pos1)
+        lqc2 $vf3, 0x0(Pos2)
+        vmulax.xyzw $ACC, $vf22, $vf1x
+        vmadday.xyzw $ACC, $vf23, $vf1y
+        vmaddaz.xyzw $ACC, $vf24, $vf1z
+        vmaddw.xyzw $vf1, $vf25, $vf1w
+
+        vdiv $Q, $vf0w, $vf1w
+        vmulax.xyzw $ACC, $vf22, $vf2x
+        vmadday.xyzw $ACC, $vf23, $vf2y
+        vmaddaz.xyzw $ACC, $vf24, $vf2z
+        vmaddw.xyzw $vf2, $vf25, $vf2w
+
+        vwaitq
+        vmulq.xyzw $vf1, $vf1, $Q
+
+        vadd.xyzw $vf1, $vf1, $vf19
+        vmul.xyzw $vf1, $vf1, $vf20
+        vadd.xyzw $vf1, $vf1, $vf21
+        sqc2 $vf1, 0x0(p0)
+
+        vdiv $Q, $vf0w, $vf2w
+
+        vmulax.xyzw $ACC, $vf22, $vf3x
+        vmadday.xyzw $ACC, $vf23, $vf3y
+        vmaddaz.xyzw $ACC, $vf24, $vf3z
+        vmaddw.xyzw $vf3, $vf25, $vf3w
+
+        vwaitq
+        vmulq.xyzw $vf2, $vf2, $Q
+        vadd.xyzw $vf2, $vf2, $vf19
+        vmul.xyzw $vf2, $vf2, $vf20
+        vadd.xyzw $vf2, $vf2, $vf21
+        sqc2 $vf2, 0x0(p1)
+
+        vdiv $Q, $vf0w, $vf3w
+        nop
+        vwaitq
+        vmulq.xyzw $vf3, $vf3, $Q
+        vadd.xyzw $vf3, $vf3, $vf19
+        vmul.xyzw $vf3, $vf3, $vf20
+        vadd.xyzw $vf3, $vf3, $vf21
+        sqc2 $vf3, 0x0(p2)
+    }
+
+    p0u = Pos2D0u; p1u = Pos2D1u; p2u = Pos2D2u;
+    asm {
+        lqc2 $vf1, 0x0(U0)
+        lqc2 $vf2, 0x0(U1)
+        lqc2 $vf3, 0x0(U2)
+        vmulax.xyzw $ACC, $vf22, $vf1x
+        vmadday.xyzw $ACC, $vf23, $vf1y
+        vmaddaz.xyzw $ACC, $vf24, $vf1z
+        vmaddw.xyzw $vf1, $vf25, $vf1w
+
+        vdiv $Q, $vf0w, $vf1w
+        vmulax.xyzw $ACC, $vf22, $vf2x
+        vmadday.xyzw $ACC, $vf23, $vf2y
+        vmaddaz.xyzw $ACC, $vf24, $vf2z
+        vmaddw.xyzw $vf2, $vf25, $vf2w
+
+        vwaitq
+        vmulq.xyzw $vf1, $vf1, $Q
+
+        vmul.xyzw $vf1, $vf1, $vf17
+        vadd.xyzw $vf1, $vf1, $vf18
+        sqc2 $vf1, 0x0(p0u)
+
+        vdiv $Q, $vf0w, $vf2w
+
+        vmulax.xyzw $ACC, $vf22, $vf3x
+        vmadday.xyzw $ACC, $vf23, $vf3y
+        vmaddaz.xyzw $ACC, $vf24, $vf3z
+        vmaddw.xyzw $vf3, $vf25, $vf3w
+
+        vwaitq
+        vmulq.xyzw $vf2, $vf2, $Q
+        vmul.xyzw $vf2, $vf2, $vf17
+        vadd.xyzw $vf2, $vf2, $vf18
+        sqc2 $vf2, 0x0(p1u)
+
+        vdiv $Q, $vf0w, $vf3w
+        nop
+        vwaitq
+        vmulq.xyzw $vf3, $vf3, $Q
+        vmul.xyzw $vf3, $vf3, $vf17
+        vadd.xyzw $vf3, $vf3, $vf18
+        sqc2 $vf3, 0x0(p2u)
+    }
+
+    ClipTriangleOverXLow(p0, p1, p2, p0u, p1u, p2u, C0, C1, C2);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 3807–3901 */
@@ -5166,7 +5837,62 @@ void AE_SimpleBlurWINDOWEDNoOptWithDirectionPAL(int Counter)
  */
 void AE_Filter_Glow(float r, float g, float b, float Brightness)
 {
-    /* TODO: decompile from asm/... */
+
+    if ((r == 0.0f) && (g == 0.0f) && (b == 0.0f) && (Brightness == 1.0f)) return;
+
+    g_PS2glContext.nEnableBits |= 0x100; g_gsContext.PRMODE.ABE = 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    AE_Begin();
+
+    PS2glColorMask(1, 1, 1, 0);
+    PS2glDepthMask(0);
+    PS2glDisable(0xB71);
+
+    AE_SetDrawTarget(4);
+    AE_SetTexture(0);
+    AE_SetGS(0, 2, 2, 2, 0x80);
+
+    AE_DrawWindow(9.0f, 9.0f, 61.0f, 61.0f, 0.5f, 0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f);
+
+    AE_SetTexture(4);
+    AE_SetGS(0, 1, 2, 1, 0x40);
+    AE_SimpleBlurWINDOWED(2);
+
+    AE_End();
+
+    if (Brightness != 1.0f)
+    {
+        GLI_vSetFIXFullScreenOrthoProjection();
+        g_PS2glContext.nEnableBits |= 0x100; g_gsContext.PRMODE.ABE = 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        g_PS2glContext.nTextureEnableBits &= (g_PS2glContext.iCurTextureSet == 0) ? ~0x2 : ~0x200; g_gsContext.PRMODE.TME = (g_PS2glContext.nTextureEnableBits & 0xF) ? 1 : 0; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        g_PS2glContext.nEnableBits &= ~0x80; g_gsContext.PRMODE.FGE = 0; g_gsContext.ModFlgs.PRMODE_Modified = 1; *(unsigned char*)g_PS2glContext.pbFogging = 0;
+        g_PS2glContext.nLightBits &= ~0x400;
+        g_PS2glContext.nEnableBits &= ~0x800; g_gsContext.TEST_1.ZTE = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1; g_gsContext.TEST_1.ZTST = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1;
+        PS2glDepthMask(0);
+
+
+        PS2glSetGsRegister(0x42, ((unsigned long)(unsigned int)(128.0f * Brightness) << 32) | 0xA9, 0);
+
+
+        PS2glBegin(4);
+        PS2glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+        PS2glVertex2f(0.0f, 0.0f);
+        PS2glVertex2f(100.0f, 0.0f);
+        PS2glVertex2f(100.0f, 100.0f);
+        PS2glVertex2f(0.0f, 0.0f);
+        PS2glVertex2f(100.0f, 100.0f);
+        PS2glVertex2f(0.0f, 100.0f);
+        PS2glEnd();
+    }
+
+    AE_Begin();
+    AE_SetDrawTarget(0);
+    AE_SetTexture(4);
+    AE_SetGS(0, 2, 2, 1, 0x80);
+
+
+    AE_DrawWindow(2.0f, 2.0f, 102.0f, 102.0f, r, g, b, 0.5f, 0.6045f - 0.5f, 0.6045f - 0.5f, 0.6045f, 0.6045f);
+
+    AE_End();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5483–5483 */
@@ -5241,7 +5967,78 @@ void AE_Filter_AutoGlowDown(float r, float g, float b, float Brightness)
  */
 void AE_Filter_AutoGlow(float r, float g, float b, float Brightness)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.nEnableBits |= 0x100; g_gsContext.PRMODE.ABE = 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    AE_Begin();
+
+    PS2glColorMask(1, 1, 1, 0);
+    PS2glDepthMask(0);
+    PS2glDisable(0xB71);
+    PS2glDisable(0xBD0);
+
+    AE_SetDrawTarget(4);
+    AE_SetTexture(0);
+    AE_SetGS(0, 2, 2, 2, 0x80);
+
+    if (AE_GlowDirection < 0.0f)
+    {
+        AE_DrawWindow(10.0f, 10.0f + 0.0f, 60.0f, 60.0f + 0.0f, 0.5f, 0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f);
+    }
+    else
+    {
+        AE_DrawWindow(10.0f, 10.0f, 60.0f, 60.0f, 0.5f, 0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f);
+    }
+
+    AE_SetDrawTarget(4);
+    AE_SetTexture(4);
+
+    AE_SetGS(2, 1, 2, 1, (unsigned int)(3.0f * Brightness) + 124);
+    AE_DrawWindowWithoutOptimization(0.0f, 0.0f, 100.0f, 100.0f, 0.5f, 0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f);
+
+    AE_SetDrawTarget(4);
+    AE_SetTexture(4);
+
+    if (AE_GlowDirection == 0.0f)
+        AE_SetGS(0, 2, 2, 1, 0x90);
+    else
+        AE_SetGS(0, 2, 2, 1, 0x60);
+
+    if (XRES == 512)
+    {
+        if (AE_GlowDirection == 0.0f)
+        {
+            AE_SimpleBlurWINDOWEDNoOptPAL(2);
+        }
+        else
+        {
+            AE_SimpleBlurWINDOWEDNoOptWithDirectionPAL(2);
+        }
+    }
+    else
+    {
+        if (AE_GlowDirection == 0.0f)
+        {
+            AE_SimpleBlurWINDOWEDNoOpt(2);
+        }
+        else
+        {
+            AE_SimpleBlurWINDOWEDNoOptWithDirection(2);
+        }
+    }
+
+    AE_SetDrawTarget(0);
+    AE_SetTexture(4);
+    AE_SetGS(1, 2, 2, 0, (int)(96.0f + 32.0f * Brightness));
+
+    if (AE_GlowDirection < 0.0f)
+    {
+        AE_DrawWindowWithoutOptimization(0.0f, 100.0f, 100.0f, 0.0f, r, g, b, 0.5f, 0.6045f - 0.5f, 0.6045f - 0.5f, 0.6045f, 0.6045f);
+    }
+    else
+    {
+        AE_DrawWindowWithoutOptimization(0.0f, 0.0f, 100.0f, 100.0f, r, g, b, 0.5f, 0.6045f - 0.5f, 0.6045f - 0.5f, 0.6045f, 0.6045f);
+    }
+
+    AE_End();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5680–5685 */
@@ -5863,7 +6660,80 @@ void GLIPS2_vProcessWater2DEffect(void)
 void GLIPS2_vAE_PushPop(unsigned int param)
 {
     float* pStack;
-    /* TODO: decompile from asm/... */
+
+    if (param == 0)
+    {
+        AE_StackNext = 0;
+    }
+    else if (param == 1)
+    {
+        if (AE_StackNext < 79)
+        {
+            pStack = &AE_Stack[AE_StackNext];
+            pStack[0] = G_DEPTH_BLUR_DISTNEAR;
+            pStack[1] = G_DEPTH_BLUR_DISTFAR;
+            pStack[2] = G_DEPTH_BLUR_MAX_ALPHA;
+            pStack[3] = AE_Glow[0];
+            pStack[4] = AE_Glow[1];
+            pStack[5] = AE_Glow[2];
+            pStack[6] = AE_Glow[3];
+            pStack[7] = GLI_g_bFullScreenWaterEffect;
+            pStack[8] = AE_GlowDirection;
+            pStack[9] = GLI_g_AfterEffect;
+            pStack[10] = AE_ZoomBlurIntensity;
+            pStack[11] = AE_MirrorFX;
+            pStack[12] = AE_Bright_Cont_M[0];
+            pStack[13] = AE_Bright_Cont_M[1];
+            pStack[14] = AE_Bright_Cont_M[2];
+            pStack[15] = AE_Bright_Cont_M[3];
+            pStack[16] = AE_Bright_Cont_M[4];
+            pStack[17] = AE_MirrorWaterFX_Speed;
+            pStack[18] = AE_MirrorWaterFX_Ampl;
+            pStack[19] = AE_Blur_M;
+            pStack[20] = AE_Bright_Cont[0];
+            pStack[21] = AE_Bright_Cont[1];
+            pStack[22] = AE_Bright_Cont[2];
+            pStack[23] = AE_Bright_Cont[3];
+            pStack[24] = GLI_g_CartoonBlendVal;
+
+            AE_StackNext += 26;
+        }
+    }
+    else
+    {
+        if (AE_StackNext >= 26)
+        {
+            AE_StackNext -= 26;
+
+            pStack = &AE_Stack[AE_StackNext];
+
+            G_DEPTH_BLUR_DISTNEAR = pStack[0];
+            G_DEPTH_BLUR_DISTFAR = pStack[1];
+            G_DEPTH_BLUR_MAX_ALPHA = pStack[2];
+            AE_Glow[0] = pStack[3];
+            AE_Glow[1] = pStack[4];
+            AE_Glow[2] = pStack[5];
+            AE_Glow[3] = pStack[6];
+            GLI_g_bFullScreenWaterEffect = pStack[7];
+            AE_GlowDirection = pStack[8];
+            GLI_g_AfterEffect = pStack[9];
+            AE_ZoomBlurIntensity = pStack[10];
+            AE_MirrorFX = pStack[11];
+            AE_Bright_Cont_M[0] = pStack[12];
+            AE_Bright_Cont_M[1] = pStack[13];
+            AE_Bright_Cont_M[2] = pStack[14];
+            AE_Bright_Cont_M[3] = pStack[15];
+            AE_Bright_Cont_M[4] = pStack[16];
+            AE_MirrorWaterFX_Speed = pStack[17];
+            AE_MirrorWaterFX_Ampl = pStack[18];
+            AE_Blur_M = pStack[19];
+            AE_Bright_Cont[0] = pStack[20];
+            AE_Bright_Cont[1] = pStack[21];
+            AE_Bright_Cont[2] = pStack[22];
+            AE_Bright_Cont[3] = pStack[23];
+            GLI_g_CartoonBlendVal = pStack[24];
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 6135–6263 */

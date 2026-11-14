@@ -3556,6 +3556,13 @@ unsigned char IPO_fn_ucGetRLITableIndex(char* _szRLITableName);
 unsigned char fn_ucGetFunctionUltraOperator(tdeFuncId_ eFuncId);
 void fn_vGetUltraOperatorPerso(unsigned char bYouHaveRightToUseThisFunction, HIE_tdstSuperObject_* hCurrentSuperObjPerso, HIE_tdstSuperObject_** hNewSuperObjPerso);
 char* fn_szGetStringFromTextOrStringParam(tdstGetSetParam_* p_stValue);
+void IPT_fn_vGetGlobalVectorForPadNumber(unsigned char ucPadNumber, MTH3D_tdstVector_* p_stGlobalVector);
+short IPT_fn_vGetHAxisForPadNumber(unsigned char ucPadNumber);
+short IPT_fn_wGetVAxisForPadNumber(unsigned char ucPadNumber);
+float IPT_fn_xGetAnalogForceForPadNumber(unsigned char ucPadNumber);
+float IPT_fn_xGetTrueAnalogForceForPadNumber(unsigned char ucPadNumber);
+float IPT_fn_xGetRotationAngleForPadNumber(unsigned char ucPadNumber);
+int IPT_fn_xGetSectorForPadNumber(unsigned char ucPadNumber);
 unsigned char SAV2_fn_ucGetNumberOfExistingSave(void);
 void SAV2_fn_xGetAValueAtIndex(char* p_szElementName, unsigned int ulElementNumber, void* p_stParam);
 void SAV2_fn_xGetASingleValue(char* p_szElementName, void* p_stParam);
@@ -3633,6 +3640,8 @@ tdstNodeInterpret_* fn_p_st_PAD2_Function(HIE_tdstSuperObject_* p_SuperObjPerso,
 tdstNodeInterpret_* fn_p_st_RLIFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
 tdstNodeInterpret_* fn_p_st_GetActiveMainActors(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
 int fn_iGetActiveMainActors(HIE_tdstSuperObject_** pp_SuperObjArray);
+unsigned char fn_ucGetDsgVar(unsigned char ucId, unsigned char ucIndex, AI_tdstMind_* p_stPerso, tdstGetSetParam_* p_stGetSetParam);
+unsigned char fn_ucSetDsgVar(unsigned char ucVarId, unsigned char ucValue, AI_tdstMind_* p_stMind, tdstGetSetParam_* p_stValue);
 tdstNodeInterpret_* fn_p_st_MultiPlayerFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
 void fn_vReinitActors(HIE_tdstSuperObject_* hSuperObj);
 void fn_vReInitAllDynamicActors(void);
@@ -5658,15 +5667,47 @@ int fn_iGetActiveMainActors(HIE_tdstSuperObject_** pp_SuperObjArray)
  */
 tdstNodeInterpret_* fn_p_st_GetActiveMainActors(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    HIE_tdstSuperObject_* p_stResultOwnerPerso;
-    int i;
-    unsigned char ucVarId;
-    AI_tdstMind_* p_stMind;
-    int NumberOfActiveSPO;
-    int pp_SuperObjArray[5];
-    tdstGetSetParam_ stParam;
     tdeFuncId_ eFuncId;
-    /* TODO: decompile from asm/... */
+    tdstGetSetParam_ stParam;
+    int pp_SuperObjArray[5];
+    int NumberOfActiveSPO;
+    AI_tdstMind_* p_stMind;
+    unsigned char ucVarId;
+    int i;
+    HIE_tdstSuperObject_* p_stResultOwnerPerso;
+
+    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
+
+    switch (eFuncId)
+    {
+    case eFunc_MP_GetActiveMainActors:
+        NumberOfActiveSPO = fn_iGetActiveMainActors((HIE_tdstSuperObject_**)pp_SuperObjArray);
+
+        for (i = 0; i < 4; i++)
+        {
+            if (p_stTree->eType == 2) p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree + 1, &p_stResultOwnerPerso); else p_stResultOwnerPerso = p_SuperObjPerso;
+
+            p_stMind = p_stResultOwnerPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind; ucVarId = p_stTree->uDummy.uParam.ucValue; p_stTree++;
+            if (fn_ucGetDsgVar(ucVarId, 0, p_stMind, &stParam) == 1)
+            {
+                if (((int*)(int)pp_SuperObjArray)[i] == 0)
+                {
+                    stParam.uDummy.uParam.p_stEngObjValue = NULL;
+                }
+                else
+                {
+                    stParam.uDummy.uParam.p_stEngObjValue = (((HIE_tdstSuperObject_*)((int*)(int)pp_SuperObjArray)[i])->ulTypeOfLinkedObject != 2) ? NULL : ((HIE_tdstSuperObject_*)((int*)(int)pp_SuperObjArray)[i])->hLinkedObject.p_stCharacter;
+                }
+                fn_ucSetDsgVar(ucVarId, 0, p_stMind, &stParam);
+            }
+        }
+
+        p_stValue->uDummy.uParam.lValue = NumberOfActiveSPO;
+        p_stValue->eType = (tdeVariableType_)6;
+        break;
+    }
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 2417–2437 */
@@ -5740,7 +5781,47 @@ tdstNodeInterpret_* fn_p_st_PAD2_Function(HIE_tdstSuperObject_* p_SuperObjPerso,
     unsigned char ucPadNumber;
     tdstGetSetParam_ stParam;
     tdeFuncId_ eFuncId;
-    /* TODO: decompile from asm/... */
+
+    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    ucPadNumber = stParam.uDummy.uParam.ucValue;
+    if (ucPadNumber > 15)
+        ucPadNumber = 0;
+
+    switch (eFuncId)
+    {
+    case eFunc_PAD2_GetGlobalVector:
+        IPT_fn_vGetGlobalVectorForPadNumber(ucPadNumber, &stVector);
+        *(int*)&p_stValue->uDummy.uParam.stVectorValue.xX = *(int*)&stVector.xX; *(int*)&p_stValue->uDummy.uParam.stVectorValue.xY = *(int*)&stVector.xY; *(int*)&p_stValue->uDummy.uParam.stVectorValue.xZ = *(int*)&stVector.xZ;
+        p_stValue->eType = E_vt_Vector;
+        break;
+    case eFunc_PAD2_GetHorizontalAxis:
+        p_stValue->uDummy.uParam.lValue = IPT_fn_vGetHAxisForPadNumber(ucPadNumber);
+        p_stValue->eType = E_vt_Integer;
+        break;
+    case eFunc_PAD2_GetVerticalAxis:
+        p_stValue->uDummy.uParam.lValue = IPT_fn_wGetVAxisForPadNumber(ucPadNumber);
+        p_stValue->eType = E_vt_Integer;
+        break;
+    case eFunc_PAD2_GetAnalogForce:
+        p_stValue->uDummy.uParam.xValue = IPT_fn_xGetAnalogForceForPadNumber(ucPadNumber);
+        p_stValue->eType = E_vt_Float;
+        break;
+    case eFunc_PAD2_GetTrueAnalogForce:
+        p_stValue->uDummy.uParam.xValue = IPT_fn_xGetTrueAnalogForceForPadNumber(ucPadNumber);
+        p_stValue->eType = E_vt_Float;
+        break;
+    case eFunc_PAD2_GetRotationAngle:
+        p_stValue->uDummy.uParam.xValue = IPT_fn_xGetRotationAngleForPadNumber(ucPadNumber);
+        p_stValue->eType = E_vt_Float;
+        break;
+    case eFunc_PAD2_GetPadSector:
+        p_stValue->uDummy.uParam.lValue = IPT_fn_xGetSectorForPadNumber(ucPadNumber);
+        p_stValue->eType = E_vt_Integer;
+        break;
+    }
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 2483–2521 */

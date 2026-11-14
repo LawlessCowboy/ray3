@@ -4122,10 +4122,31 @@ void fn_InsertCutPoint(LinkActorType_* p_link, MTH3D_tdstVector_* p_vPosition, M
  */
 void fn_DeleteCutPoint(LinkActorType_* p_link, unsigned char uiStart, unsigned char uiEnd)
 {
-    int nDeletedCutPoints;
-    int k;
     unsigned char* p_uiCutPointNb;
-    /* TODO: decompile from asm/... */
+    int k;
+    int nDeletedCutPoints;
+
+    nDeletedCutPoints = uiEnd - uiStart + 1;
+
+    if (uiStart <= uiEnd)
+    {
+        p_uiCutPointNb = &p_link->ui_CutPointNb;
+        if (*p_uiCutPointNb > 0)
+        {
+            *p_uiCutPointNb -= nDeletedCutPoints;
+
+            for (k = uiStart; k <= uiEnd; k++)
+                fn_NetSendEvent(p_link, LNE_DeleteCP, k, &vNullVector, 0);
+
+            if (uiStart != *p_uiCutPointNb)
+            {
+                for (k = uiStart; k < *p_uiCutPointNb; k++)
+                    memcpy(&p_link->a_Cutpoint[k], &p_link->a_Cutpoint[nDeletedCutPoints + k], sizeof(LNK_CutPoint_));
+
+                p_link->a_Cutpoint[*p_uiCutPointNb].Position.xX = 0; p_link->a_Cutpoint[*p_uiCutPointNb].Position.xY = 0; p_link->a_Cutpoint[*p_uiCutPointNb].Position.xZ = 0;
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1254–1329 */
@@ -4595,19 +4616,77 @@ void fn_Mechanics(LinkActorType_* p_link)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* mula.s/madda.s/madd.s has no C form under MWCC; only those instructions
+   are asm. */
+inline float LNK_xDot3(float _x1, float _x2, float _y1, float _y2, float _z1, float _z2)
+{
+    float _r;
+    asm { mula.s _x1, _x2 }
+    asm { madda.s _y1, _y2 }
+    asm { madd.s _r, _z1, _z2 }
+    return _r;
+}
+
+
 IntersectionPoint_* fn_stSegmentDistance(LinkActorType_* p_link, unsigned short k, unsigned short i)
 {
-    float det;
-    float e;
-    float b;
-    float t;
-    float s;
-    MTH3D_tdstVector_* p3;
-    MTH3D_tdstVector_* p2;
-    MTH3D_tdstVector_* p1;
+    static IntersectionPoint_ DP;
     MTH3D_tdstVector_* p0;
-    IntersectionPoint_ DP;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_* p1;
+    MTH3D_tdstVector_* p2;
+    MTH3D_tdstVector_* p3;
+    float s;
+    float t;
+    float b;
+    float e;
+    float det;
+    MTH3D_tdstVector_ u, v, w;
+    float a, c, d, f;
+
+    p0 = &p_link->a_Cutpoint[k].Position;
+    p1 = &p_link->a_Cutpoint[k + 1].Position;
+    p2 = &p_link->a_Cutpoint[i].Position;
+    p3 = &p_link->a_Cutpoint[i + 1].Position;
+
+    u.xX = p1->xX - p0->xX; u.xY = p1->xY - p0->xY; u.xZ = p1->xZ - p0->xZ;
+    v.xX = p3->xX - p2->xX; v.xY = p3->xY - p2->xY; v.xZ = p3->xZ - p2->xZ;
+    w.xX = p0->xX - p2->xX; w.xY = p0->xY - p2->xY; w.xZ = p0->xZ - p2->xZ;
+
+    a = LNK_xDot3(u.xX, u.xX, u.xY, u.xY, u.xZ, u.xZ);
+    b = -LNK_xDot3(u.xX, v.xX, u.xY, v.xY, u.xZ, v.xZ);
+    c = LNK_xDot3(v.xX, v.xX, v.xY, v.xY, v.xZ, v.xZ);
+    d = LNK_xDot3(u.xX, w.xX, u.xY, w.xY, u.xZ, w.xZ);
+    e = -LNK_xDot3(v.xX, w.xX, v.xY, w.xY, v.xZ, w.xZ);
+    f = LNK_xDot3(w.xX, w.xX, w.xY, w.xY, w.xZ, w.xZ);
+
+    det = a * c - b * b;
+
+    if (det > 0.0f)
+    {
+        s = (b * e - c * d) / det;
+        t = (b * d - a * e) / det;
+        if (s >= 0.0f && s <= 1.0f && t >= 0.0f && t <= 1.0f)
+        {
+            DP.xDist = a * s * s + 2.0f * (b * s * t + d * s + e * t) + c * t * t + f;
+
+            u.xX = s * u.xX; u.xY = s * u.xY; u.xZ = s * u.xZ;
+            v.xX = t * v.xX; v.xY = t * v.xY; v.xZ = t * v.xZ;
+            u.xX = p0->xX + u.xX; u.xY = p0->xY + u.xY; u.xZ = p0->xZ + u.xZ;
+            v.xX = p2->xX + v.xX; v.xY = p2->xY + v.xY; v.xZ = p2->xZ + v.xZ;
+
+            DP.Point.xX = u.xX + v.xX; DP.Point.xY = u.xY + v.xY; DP.Point.xZ = u.xZ + v.xZ; DP.Point.xX = 0.5f * DP.Point.xX; DP.Point.xY = 0.5f * DP.Point.xY; DP.Point.xZ = 0.5f * DP.Point.xZ;
+        }
+        else
+        {
+            DP.xDist = -1.0f;
+        }
+    }
+    else
+    {
+        DP.xDist = -1.0f;
+    }
+
+    return &DP;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1628–1672 */

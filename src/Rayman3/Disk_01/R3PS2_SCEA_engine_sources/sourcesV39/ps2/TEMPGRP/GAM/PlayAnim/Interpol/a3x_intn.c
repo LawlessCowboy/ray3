@@ -2335,8 +2335,8 @@ tdstAnim3d_* fn_p_stCreateIntermediateAnimation(tdstAnim3d_* p_stPreviousAnim, t
 
     iNbMorphTask = 0;
     p_stCurrentChannel = &gp_stChannels[p_stCurrentA3dGENERAL->uwNumOfFirstChannel];
-    p_stNextChannel = &gp_stChannels[p_stNextA3dGENERAL->uwNumOfFirstChannel];
     uwT_CurrentNTTO = gp_stOnlyFrames[p_stCurrentA3dGENERAL->uwNumOfFirstOnlyFrame + uwPreviousFrame].uwNumOfSavedFrame;
+    p_stNextChannel = &gp_stChannels[p_stNextA3dGENERAL->uwNumOfFirstChannel];
     uwT_NextNTTO = gp_stOnlyFrames[p_stNextA3dGENERAL->uwNumOfFirstOnlyFrame + uwNextFrame].uwNumOfSavedFrame;
 
     for (uwCnt1 = 0; (uwCnt1 < p_stCurrentA3dGENERAL->uwNumberOfChannels) && (iNbMorphTask < 64); uwCnt1++)
@@ -2348,11 +2348,11 @@ tdstAnim3d_* fn_p_stCreateIntermediateAnimation(tdstAnim3d_* p_stPreviousAnim, t
         {
             for (uwCnt2 = 0; (uwCnt2 < ulNumberOfFramesForIntermAnim) && (iNbMorphTask < 64); uwCnt2++)
             {
-                ax_stTempoMorphArray[iNbMorphTask].ucNbTarget = 1;
-                ax_stTempoMorphArray[iNbMorphTask].a_xIndexTargetMT[0] = gp_stNTTO[*p_NextFrameNumOfNTTO].ucNumberInTable;
-                ax_stTempoMorphArray[iNbMorphTask].a_ucMorphingAmountMT[0] = (uwCnt2 * 100) / ulNumberOfFramesForIntermAnim;
-                ax_stTempoMorphArray[iNbMorphTask].uwChannelNumber = uwCnt1;
-                ax_stTempoMorphArray[iNbMorphTask].uwFrameNumber = uwCnt2;
+                ((stMorphData*)(int)ax_stTempoMorphArray)[iNbMorphTask].ucNbTarget = 1;
+                ((stMorphData*)(int)ax_stTempoMorphArray)[iNbMorphTask].a_xIndexTargetMT[0] = gp_stNTTO[*p_NextFrameNumOfNTTO].ucNumberInTable;
+                ((stMorphData*)(int)ax_stTempoMorphArray)[iNbMorphTask].a_ucMorphingAmountMT[0] = (uwCnt2 * 100) / ulNumberOfFramesForIntermAnim;
+                ((stMorphData*)(int)ax_stTempoMorphArray)[iNbMorphTask].uwChannelNumber = uwCnt1;
+                ((stMorphData*)(int)ax_stTempoMorphArray)[iNbMorphTask].uwFrameNumber = uwCnt2;
                 iNbMorphTask++;
             }
         }
@@ -2373,17 +2373,18 @@ tdstAnim3d_* fn_p_stCreateIntermediateAnimation(tdstAnim3d_* p_stPreviousAnim, t
 
     p_stNewAnim->ucFlagMergeAnim = 1;
     p_stA3dGENERAL = fn_p_stFindFreeMergeA3dGeneral(&p_stNewAnim->uwNumOfA3dGENERAL);
-    if (p_stA3dGENERAL == NULL)
-        return NULL;
-
-    p_stA3dGENERAL->uwPrevious = p_stPreviousAnim->uwNumOfA3dGENERAL;
-    p_stA3dGENERAL->uwNext = p_stNextAnim->uwNumOfA3dGENERAL;
-    p_stA3dGENERAL->uwPreviousFrame = uwPreviousFrame;
-    p_stA3dGENERAL->uwNextFrame = uwNextFrame;
-    p_stA3dGENERAL->uwNumberOfMorphData = iNbMorphTask;
-    p_stA3dGENERAL->uwNoSpeed = g_bNoSpeedForIntermAnim;
-    p_stA3dGENERAL->xNLParameter = xNLParameter;
-    return p_stNewAnim;
+    if (p_stA3dGENERAL != NULL)
+    {
+        p_stA3dGENERAL->uwPrevious = p_stPreviousAnim->uwNumOfA3dGENERAL;
+        p_stA3dGENERAL->uwNext = p_stNextAnim->uwNumOfA3dGENERAL;
+        p_stA3dGENERAL->uwPreviousFrame = uwPreviousFrame;
+        p_stA3dGENERAL->uwNextFrame = uwNextFrame;
+        p_stA3dGENERAL->uwNumberOfMorphData = iNbMorphTask;
+        p_stA3dGENERAL->uwNoSpeed = g_bNoSpeedForIntermAnim;
+        p_stA3dGENERAL->xNLParameter = xNLParameter;
+        return p_stNewAnim;
+    }
+    return NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 1310–1315 */
@@ -2489,53 +2490,63 @@ int fn_bTestSamePosition(tdstAnim3d_* p_stPreviousAnim, tdstAnim3d_* p_stNextAni
     tdstKeyFrame_* p_stNewKeyFrame;
     tdstKeyFrame_* p_stPreviousKeyFrame;
     tdstKeyFrame_* p_stNextKeyFrame;
-    tdstKeyFrame_* a256_p_stPrevKeyFrames[256];
-    tdstKeyFrame_* a256_p_stNextKeyFrames[256];
-    tdstKeyFrame_** pPrevKeyFrames;
-    tdstKeyFrame_** pNextKeyFrames;
+    int a256_p_stPrevKeyFrames[256];
+    int a256_p_stNextKeyFrames[256];
     unsigned short uwCnt1;
 
     memset(a256_p_stPrevKeyFrames, 0, sizeof(a256_p_stPrevKeyFrames));
     memset(a256_p_stNextKeyFrames, 0, sizeof(a256_p_stNextKeyFrames));
 
     p_stPreviousA3dGeneral = fn_p_GetA3dGENERAL(p_stPreviousAnim->uwNumOfA3dGENERAL, uwPreviousFrame);
-    pPrevKeyFrames = a256_p_stPrevKeyFrames;
     p_stPreviousChannel = &gp_stChannels[p_stPreviousA3dGeneral->uwNumOfFirstChannel];
     for (uwCnt1 = 0; uwCnt1 < p_stPreviousA3dGeneral->uwNumberOfChannels; uwCnt1++)
     {
         if (p_stPreviousChannel->uwChannelNumber != 0xFFFF)
         {
             p_stOldKeyFrame = &gp_stKeyFrames[gp_FramesKFIndex[p_stPreviousChannel->ulNumOfFirstFrameKF + uwPreviousFrame]];
-            if ((p_stOldKeyFrame->uwMask & 0x80) && (p_stOldKeyFrame->uwMask & 0x200))
-                p_stOldKeyFrame = &gp_stKeyFrames[gp_FramesKFIndex[p_stPreviousChannel->ulNumOfFirstFrameKF]];
-            pPrevKeyFrames[uwCnt1] = p_stOldKeyFrame;
+            if (p_stOldKeyFrame->uwMask & 0x80)
+            {
+                if (p_stOldKeyFrame->uwMask & 0x200)
+                    p_stPreviousKeyFrame = &gp_stKeyFrames[gp_FramesKFIndex[p_stPreviousChannel->ulNumOfFirstFrameKF]];
+                else
+                    p_stPreviousKeyFrame = p_stOldKeyFrame;
+            }
+            else
+                p_stPreviousKeyFrame = p_stOldKeyFrame;
+            ((int*)(int)a256_p_stPrevKeyFrames)[uwCnt1] = (int)p_stPreviousKeyFrame;
         }
         p_stPreviousChannel++;
     }
 
     p_stNextA3dGeneral = fn_p_GetA3dGENERAL(p_stNextAnim->uwNumOfA3dGENERAL, uwNextFrame);
-    pNextKeyFrames = a256_p_stNextKeyFrames;
     p_stCurrentChannel = &gp_stChannels[p_stNextA3dGeneral->uwNumOfFirstChannel];
     for (uwCnt1 = 0; uwCnt1 < p_stNextA3dGeneral->uwNumberOfChannels; uwCnt1++)
     {
         if (p_stCurrentChannel->uwChannelNumber != 0xFFFF)
         {
             p_stNewKeyFrame = &gp_stKeyFrames[gp_FramesKFIndex[p_stCurrentChannel->ulNumOfFirstFrameKF + uwNextFrame]];
-            if ((p_stNewKeyFrame->uwMask & 0x80) && (p_stNewKeyFrame->uwMask & 0x200))
-                p_stNewKeyFrame = &gp_stKeyFrames[gp_FramesKFIndex[p_stCurrentChannel->ulNumOfFirstFrameKF]];
-            pNextKeyFrames[uwCnt1] = p_stNewKeyFrame;
+            if (p_stNewKeyFrame->uwMask & 0x80)
+            {
+                if (p_stNewKeyFrame->uwMask & 0x200)
+                    p_stNextKeyFrame = &gp_stKeyFrames[gp_FramesKFIndex[p_stCurrentChannel->ulNumOfFirstFrameKF]];
+                else
+                    p_stNextKeyFrame = p_stNewKeyFrame;
+            }
+            else
+                p_stNextKeyFrame = p_stNewKeyFrame;
+            ((int*)(int)a256_p_stNextKeyFrames)[uwCnt1] = (int)p_stNextKeyFrame;
         }
         p_stCurrentChannel++;
     }
 
     for (uwCnt1 = 0; uwCnt1 < p_stPreviousA3dGeneral->uwNumberOfChannels; uwCnt1++)
     {
-        if (memcmp(&gp_a3_xVectors[a256_p_stPrevKeyFrames[uwCnt1]->uwNumOfPosition], &gp_a3_xVectors[a256_p_stNextKeyFrames[uwCnt1]->uwNumOfPosition], sizeof(MTH3D_tdstVector_)))
+        if (memcmp(&gp_a3_xVectors[((tdstKeyFrame_*)((int*)(int)a256_p_stPrevKeyFrames)[uwCnt1])->uwNumOfPosition], &gp_a3_xVectors[((tdstKeyFrame_*)((int*)(int)a256_p_stNextKeyFrames)[uwCnt1])->uwNumOfPosition], sizeof(MTH3D_tdstVector_)))
             return 0;
-        if (memcmp(&gp_a4_xQuaternions[a256_p_stPrevKeyFrames[uwCnt1]->uwNumOfQuatOri], &gp_a4_xQuaternions[a256_p_stNextKeyFrames[uwCnt1]->uwNumOfQuatOri], 8))
+        if (memcmp(&gp_a4_xQuaternions[((tdstKeyFrame_*)((int*)(int)a256_p_stPrevKeyFrames)[uwCnt1])->uwNumOfQuatOri], &gp_a4_xQuaternions[((tdstKeyFrame_*)((int*)(int)a256_p_stNextKeyFrames)[uwCnt1])->uwNumOfQuatOri], 8))
             return 0;
-        if (memcmp(&gp_a3_xVectors[a256_p_stPrevKeyFrames[uwCnt1]->uwNumOfScaleValues], &gp_a3_xVectors[a256_p_stNextKeyFrames[uwCnt1]->uwNumOfScaleValues], sizeof(MTH3D_tdstVector_)) ||
-            memcmp(&gp_a4_xQuaternions[a256_p_stPrevKeyFrames[uwCnt1]->uwNumOfQuatSca], &gp_a4_xQuaternions[a256_p_stNextKeyFrames[uwCnt1]->uwNumOfQuatSca], 8))
+        if (memcmp(&gp_a3_xVectors[((tdstKeyFrame_*)((int*)(int)a256_p_stPrevKeyFrames)[uwCnt1])->uwNumOfScaleValues], &gp_a3_xVectors[((tdstKeyFrame_*)((int*)(int)a256_p_stNextKeyFrames)[uwCnt1])->uwNumOfScaleValues], sizeof(MTH3D_tdstVector_)) ||
+            memcmp(&gp_a4_xQuaternions[((tdstKeyFrame_*)((int*)(int)a256_p_stPrevKeyFrames)[uwCnt1])->uwNumOfQuatSca], &gp_a4_xQuaternions[((tdstKeyFrame_*)((int*)(int)a256_p_stNextKeyFrames)[uwCnt1])->uwNumOfQuatSca], 8))
             return 0;
     }
 
@@ -3104,6 +3115,9 @@ void fn_vComputeFinalFrameMatrix(HIE_tdstSuperObject_* p_stSuperObject, tdstAnim
     tdstAChannel_* hArrayOfChannels;
     unsigned short uwT_NTTO;
     unsigned char bHierarchized;
+    /* Retail keeps _xFrame live in $f12 across the call below, so the
+       prototype in scope here took a trailing float the definition lacks. */
+    extern void fn_vComputeFinalFrameMatrixForInterAnim(HIE_tdstSuperObject_*, tdstAnim3d_*, float);
 
     uwT_NTTO = (unsigned short)fn_ulFrameFromFloat(_xFrame);
     if (uwT_NTTO >= _p_stAnim3d->uwNumberOfFrames)
@@ -3111,7 +3125,7 @@ void fn_vComputeFinalFrameMatrix(HIE_tdstSuperObject_* p_stSuperObject, tdstAnim
 
     if (_p_stAnim3d->ucFlagMergeAnim)
     {
-        fn_vComputeFinalFrameMatrixForInterAnim(p_stSuperObject, _p_stAnim3d);
+        fn_vComputeFinalFrameMatrixForInterAnim(p_stSuperObject, _p_stAnim3d, _xFrame);
         return;
     }
 

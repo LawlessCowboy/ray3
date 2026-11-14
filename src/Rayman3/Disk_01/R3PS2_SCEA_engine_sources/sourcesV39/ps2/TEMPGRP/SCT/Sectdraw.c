@@ -1075,7 +1075,7 @@ void SECT_fn_vAddSectorInList(HIE_tdstSuperObject_* _hSectorSO);
 void SCT_fn_vSendSectorWhereIAmToViewport(MTH3D_tdstVector_* _p_stAbsolutePositionOfCamera, GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, int _lDrawMask);
 void SCT_fn_vSendSectorToViewportDynamic(MTH3D_tdstVector_* _p_stAbsolutePositionOfCamera, GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, int _lDrawMask, int _lCullingResult);
 int SCT_fn_lSendSectorToViewportStatic(MTH3D_tdstVector_* _p_stAbsolutePositionOfCamera, GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, int _lDrawMask);
-void SECT_fn_vSendFogToViewport(HIE_tdstSuperObject_* _hSprObjSector);
+void SECT_fn_vSendFogToViewport(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector);
 void SECT_fn_vSendDynamicLightsFromWhereIAmToViewport(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector);
 
 /* Target writes COP0 register 24 (mtc0 zero, $24) several times; C cannot
@@ -1138,7 +1138,7 @@ void GEO_vSetZFarTransparencyZone(float _xZ);
 void GEO_xReinitZFarTransparencyLevel(void);
 void HIE_fn_vSendCharacterToViewportPS2(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask, int _lCullingResult);
 void SHW_fn_vDrawShadow(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hHandleOfCharacter, HIE_tdstSuperObject_* _hSprObjSector, int _lSectorDrawmask);
-void SECT_fn_vSendFogToViewport(HIE_tdstSuperObject_* _hSprObjSector);
+void SECT_fn_vSendFogToViewport(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectdraw.c lines 102–138 */
 /* addr: 0x0031a8f0  size: 92 bytes */
@@ -1161,7 +1161,7 @@ void GLI_vAddLightToViewport(GLD_tdstViewportAttributes_* p_stVpt, GLI_tdstLight
  * emits them in reverse); these prototypes keep earlier calls valid. */
 void SECT_fn_vAddSectorInList(HIE_tdstSuperObject_* _hSectorSO);
 void SECT_fn_vSendDynamicLightsFromWhereIAmToViewport(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector);
-void SECT_fn_vSendFogToViewport(HIE_tdstSuperObject_* _hSprObjSector);
+void SECT_fn_vSendFogToViewport(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector);
 int SCT_fn_lSendSectorToViewportStatic(MTH3D_tdstVector_* _p_stAbsolutePositionOfCamera, GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, int _lDrawMask);
 void SCT_fn_vSendSectorToViewportDynamic(MTH3D_tdstVector_* _p_stAbsolutePositionOfCamera, GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, int _lDrawMask, int _lCullingResult);
 void SCT_fn_vSendSectorWhereIAmToViewport(MTH3D_tdstVector_* _p_stAbsolutePositionOfCamera, GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, int _lDrawMask);
@@ -1184,6 +1184,11 @@ SECT_tdstSector_* _hSectorObject;
     }
 }
 
+/* The dynamic-light loop of SECT_fn_vSendDynamicLightsOfASector, expanded in
+ * place (retail inlines it twice, each copy on one source line). */
+#define SECT_M_vSendDynamicLightsOfASector(_p_stVpt, _hSectorObject) \
+    { SECT_tdstListOfDNMLights_* hPrevDNMLightsElement = NULL; SECT_tdstListOfDNMLights_* hDNMLightsElement; for (hDNMLightsElement = (_hSectorObject)->stListOfDNMLights.hFirstElementDyn; hDNMLightsElement; hDNMLightsElement = hDNMLightsElement->hNextBrotherDyn) { if (hDNMLightsElement == hPrevDNMLightsElement) break; GLI_vAddLightToViewport(_p_stVpt, hDNMLightsElement->hDNMLights); hPrevDNMLightsElement = hDNMLightsElement; } }
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectdraw.c lines 149–181 */
 /* addr: 0x0031a7f0  size: 248 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1202,10 +1207,20 @@ SECT_tdstSector_* _hSectorObject;
  */
 void SECT_fn_vSendDynamicLightsFromWhereIAmToViewport(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector)
 {
-    short xI;
-    SECT_tdstListOfSOSectorsInGraphicInteraction_* hGraphicInteractionChild;
     SECT_tdstSector_* hSectorObject;
-    /* TODO: decompile from asm/... */
+    SECT_tdstListOfSOSectorsInGraphicInteraction_* hGraphicInteractionChild;
+    short xI;
+
+    hSectorObject = _hSprObjSector->hLinkedObject.p_stSector;
+    SECT_M_vSendDynamicLightsOfASector(_p_stVpt, hSectorObject);
+    if (!fn_bIsTransitionInProgress())
+    {
+        hGraphicInteractionChild = hSectorObject->stListOfSectorsInGraphicInteraction.hFirstElementOpt;
+        for (xI = 0; xI < hSectorObject->stListOfSectorsInGraphicInteraction.lNumberOfElementsOpt; xI++, hGraphicInteractionChild++)
+        {
+            SECT_M_vSendDynamicLightsOfASector(_p_stVpt, hGraphicInteractionChild->hPointerOfSectorSO->hLinkedObject.p_stSector);
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectdraw.c lines 251–295 */
@@ -1229,14 +1244,43 @@ void SECT_fn_vSendDynamicLightsFromWhereIAmToViewport(GLD_tdstViewportAttributes
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SECT_fn_vSendFogToViewport(HIE_tdstSuperObject_* _hSprObjSector)
+void GLI_vFogOn(void);
+void GLI_vFogOff(void);
+unsigned short GLI_lGetLightType(GLI_tdstLight_* p_stLight);
+void GLI_xGetLightColor(GLI_tdstLight_* p_stLight, GEO_tdstColor_* p_stColor);
+float GLI_fn_xFogGetBlendNear(GLI_tdstLight_* p_stLight);
+float GLI_fn_xFogGetNear(GLI_tdstLight_* p_stLight);
+float GLI_fn_xFogGetBlendFar(GLI_tdstLight_* p_stLight);
+float GLI_fn_xFogGetFar(GLI_tdstLight_* p_stLight);
+float GLI_fn_xFogGetInfinite(GLI_tdstLight_* p_stLight);
+void GLI_vSetFog2(float xBlendNear, float xNear, float xBlendFar, float xFar, float xInfinite, GEO_tdstColor_* p_stColor);
+extern char GLI_cGlobalFogIsOn;
+void SECT_fn_vSendFogToViewport(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector)
 {
     GLI_tdstLight_* hStaticLight;
+    short xI;
+    SECT_tdstSector_* hSectorObject;
     GEO_tdstColor_ stColor;
     SECT_tdstListOfStaticLights_* hStaticLightsElement;
-    SECT_tdstSector_* hSectorObject;
-    short xI;
-    /* TODO: decompile from asm/... */
+
+    if (GLI_cGlobalFogIsOn)
+    {
+        GLI_vFogOn();
+        return;
+    }
+    hSectorObject = _hSprObjSector->hLinkedObject.p_stSector;
+    for (hStaticLightsElement = hSectorObject->stListOfStaticLights.hFirstElementOpt, xI = 0; xI < hSectorObject->stListOfStaticLights.lNumberOfElementsOpt; xI++, hStaticLightsElement++)
+    {
+        hStaticLight = hStaticLightsElement->hStaticLights;
+        if (GLI_lGetLightType(hStaticLight) == 6)
+        {
+            GLI_vFogOn();
+            GLI_xGetLightColor(hStaticLight, &stColor);
+            GLI_vSetFog2(GLI_fn_xFogGetBlendNear(hStaticLight), GLI_fn_xFogGetNear(hStaticLight), GLI_fn_xFogGetBlendFar(hStaticLight), GLI_fn_xFogGetFar(hStaticLight), GLI_fn_xFogGetInfinite(hStaticLight), &stColor);
+            return;
+        }
+    }
+    GLI_vFogOff();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectdraw.c lines 323–483 */
@@ -1361,7 +1405,7 @@ void SCT_fn_vSendSectorToViewportDynamic(MTH3D_tdstVector_* _p_stAbsolutePositio
     {
     GLI_vResetTableOfActiveLightsForChar(1);
     xNbLights = 0;
-    SECT_fn_vSendFogToViewport(_hSprObjSector);
+    SECT_fn_vSendFogToViewport(_p_stVpt, _hSprObjSector);
     if ((_lDrawMask & 0x8000) && (_hSprObjSector->lDrawModeMask & 0x8000))
     {
         SECT_tdstSector_* hLightSector = _hSprObjSector->hLinkedObject.p_stSector;

@@ -242,6 +242,7 @@ unsigned int fn_ulSizeOfDsgVar(tdeDsgVarTypeId_ eDsgVarTypeId, unsigned char ucN
     case eDsgVarType_WayPointArray:
     case eDsgVarType_GraphArray:
     case eDsgVarType_TextArray:
+    case eDsgVarType_SuperObjectArray:
     case eDsgVarType_SOLinksArray:
     case eDsgVarType_SoundEventArray:
     case eDsgVarType_VisualMatArray:

@@ -165,7 +165,7 @@ def strip_asm_blocks(source: str) -> str:
     """Replace MWCC `asm { ... }` statements with empty statements."""
     pieces = []
     pos = 0
-    for match_ in re.finditer(r'\basm\s*\{', source):
+    for match_ in re.finditer(r'\basm\s*(?:volatile\s*)?\{', source):
         if match_.start() < pos:
             continue
         pieces.append(source[pos:match_.start()])
@@ -385,7 +385,7 @@ def splice_candidate(entry: dict, candidate: Path, output_dir: Path) -> Path:
 
 
 def has_asm_blocks(source: str) -> bool:
-    return re.search(r'\basm\s*\{', source) is not None
+    return re.search(r'\basm\s*(?:volatile\s*)?\{', source) is not None
 
 
 def uses_splice(entry: dict) -> bool:

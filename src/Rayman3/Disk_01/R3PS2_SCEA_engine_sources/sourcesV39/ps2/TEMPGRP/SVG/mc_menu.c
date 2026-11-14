@@ -54,7 +54,40 @@ struct SVG_stMCStatus_ {
 };
 
 int MC_OLDBackupStrings[16];
-char* MC_BackupStrings[32];
+char* MC_BackupStrings[32] = {
+    "\\jcCaution! If you wish to save your game data,\\l \tinsert a memory card (8MB) (for PlayStation\2562)\\l\twith at least %dKB of free space or press \\l\t\270 Button to continue without saving.",
+    "\\jcInsufficient space on memory card (8MB) (for PlayStation\2562).\\l Insert a memory card (8MB) (for PlayStation\2562)\\l with at least %dKB of free space, \\l or create some space using the console\222s internal browser.\\l\267 Button  or  \270 Button to continue without saving...",
+    "\\jcMemory card unformatted.\\lAre you sure you wish to format \\l\tmemory card (8MB) (for PlayStation\2562) in MEMORY CARD slot 1?\\l\tyes \267 Button     no \270 Button",
+    "\\jcMemory card unformatted.\\lFormat memory card now?\\lyes \267 Button     no \270 Button",
+    "\\jcFormatting memory card (8MB) (for PlayStation\2562)\\l\tin MEMORY CARD slot 1. \\l\tDo not remove memory card (8MB) (for PlayStation\2562),\\l\treset, or switch off console.",
+    "\\jcFormat Successful\\l\267 Button",
+    "\\jcFormat failed! Please check memory card (8MB) (for PlayStation\2562)\\l and try again.\\l\267 Button",
+    "\\jcCancel format?\\lyes \267 Button     no \270 Button",
+    "\\jcChange memory card (8MB) (for PlayStation\2562)\\land try again.\\lyes \267 Button   no \270 Button",
+    "\\jcSaving data.\\lDo not remove memory card (8MB) (for PlayStation\2562)\\lin MEMORY CARD slot 1,reset,\\lor switch off the console.",
+    "\\jcSave Successful\\lok \267 Button",
+    "\\jcSave failed! Memory card (8MB) (for PlayStation\2562)\\lin MEMORY CARD slot 1 error!\\lRetry \267 Button     Abort \270 Button",
+    "\\jcCaution !\\lMemory Card (8MB)(for Playstation\2562) in MEMORY CARD slot %s\\lalready includes Rayman M saved data\\lDo you really want to overwrite it ?\\l(All Rayman M data on Memory Card (8MB)(for Playstation\2562)\\lin MEMORY CARD slot 1 will be lost)\\lyes \267 Button   no \270 Button",
+    "\\jcNo memory card (8MB) (for PlayStation\2562)\\lin MEMORY CARD slot 1.\\lInsert a memory card or press \270 Button to cancel load",
+    "\\jcLoad failed!\\lCheck memory card (8MB) (for PlayStation\2562)\\lin MEMORY CARD slot 1 and please try again.\\lRetry \267 Button       Cancel \270 Button",
+    "\\jcNo RaymanM save data present on\\lmemory card (8MB) (for PlayStation\2562)\\lin MEMORY CARD slot 1.\\lRetry \267 Button   Cancel Load \270 Button",
+    "\\jcLoad Successful\\lok \267 Button",
+    "\\jcLoading data.\\lDo not remove memory card (8MB) (for PlayStation\2562) in MEMORY CARD slot 1,\\lreset, or switch off the console.",
+    "\\jcController in controller port %s has been removed.\\lPlease insert a controller into controller port %s\\land press Start Button to continue",
+    "\\jcPlease insert the original memory card (8MB) (for PlayStation\2562)\\lin MEMORY CARD slot 1\\lor press \270 Button to cancel save",
+    "\\jcYou need a memory card (8MB) (for PlayStation\2562)\\lwith at least %dKB of free space",
+    "\\jcCancel Save?\\lARE YOU REALLY SURE\\lyes \267 Button   No \270 Button",
+    "\\jcRayman M saved data on the memory card (8MB) (for PlayStation\2562)\\lin MEMORY CARD slot %s appears to be corrupted.\\lRetry \267  X Button     Triangle Button = Cancel load",
+    "\\jcCaution !\\lMemory Card (8MB)(for Playstation\2562) in MEMORY CARD slot %s\\lalready includes Rayman M Settings\\lDo you really want to overwrite it ?\\lyes \267 Button   no \270 Button",
+    "\\jcDS String required3",
+    "\\jcDS String required4",
+    "\\jcDS String required5",
+    "\\jcDS String required6",
+    "\\jcDS String required7",
+    "\\jcDS String required8",
+    "\\jcDS String required9",
+    "\\jcDS String requireda",
+};
 int MC_ManagmentState;
 char MC_Strings[32][768];
 int MC_g_MemoryCardOperationBackGroundTexture;
@@ -76,6 +109,8 @@ anon_enum_0003f5a6 MC_Messages;
 /* The SVG unit calls the C library through non-prototype declarations, which
  * reproduces the retail argument evaluation order. */
 char* strcpy();
+char* strstr(const char* s1, const char* s2);
+char* Strcat(char* s1, char* s2);
 int SVG_fn_s32ReadNextName(int _iPort, int _iSlot, char* _szFileName, int _not_first, char* _pRes);
 
 /* The functions below are in their original source-line order (retail
@@ -105,9 +140,10 @@ int MC_AskForInsertion(void);
 int MC_LoadAskForInsertion(void);
 int MC_ManageFormatting(void);
 int MC_AreYouSure(void);
-int MC_Changed(void);
-int MC_NotEnoughtSpace(char* p_szUnused);
-int MC_NotEnoughtSpaceBoot(void);
+/* Declared without a prototype: retail callers pass port, slot and name. */
+int MC_Changed();
+int MC_NotEnoughtSpace(int iUnused);
+int MC_NotEnoughtSpaceBoot(int iUnused);
 int MC_AskForOverwrite(char* SavingName);
 int MC_AskForOverwriteSettings(char* SavingName);
 int MC_AskToReconnectPad(int PadNumber);
@@ -121,16 +157,16 @@ int MC_SaveGameAlreadyExist(char* SavingName);
 int MC_Format(void);
 int MC_CheckNeededSize(char* p_szUnused, int iUnused);
 int MC_HasEnoughtSpace(void);
-int MC_Boot(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize);
-int MC_NewGameLoad(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize);
-int MC_NewGameSaveOnLock(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize);
-int MC_NewGameSaveOnEmpty(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize);
-int MC_LoadGame(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize);
-int MC_LoadSettings(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize);
-int MC_SaveSettingsPart1(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize);
-int MC_SaveSettingsOnEmpty(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize);
-int MC_SaveSettingsOnLock(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize);
-int MC_CheckLanguages(void);
+int MC_Boot(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize, char* SavingName, int bSavingOptions);
+int MC_NewGameLoad(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize, char* SavingName, int bSavingOptions);
+int MC_NewGameSaveOnLock(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize, char* SavingName, int bSavingOptions);
+int MC_NewGameSaveOnEmpty(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize, char* SavingName, int bSavingOptions);
+int MC_LoadGame(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize, char* SavingName, int bSavingOptions);
+int MC_LoadSettings(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize, char* SavingName, int bSavingOptions);
+int MC_SaveSettingsPart1(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize, char* SavingName, int bSavingOptions);
+int MC_SaveSettingsOnEmpty(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize, char* SavingName, int bSavingOptions);
+int MC_SaveSettingsOnLock(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize, char* SavingName, int bSavingOptions);
+int MC_CheckLanguages();
 int LoadPartieMenu(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize, char* SavingName, int bSavingOptions);
 int SauvePartieMenu(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize, char* SavingName, int bSavingOptions);
 
@@ -302,11 +338,102 @@ int SauvePartieMenu(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _s
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma peephole off
 int LoadPartieMenu(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize, char* SavingName, int bSavingOptions)
 {
     int RetVal;
-    /* TODO: decompile from asm/... */
+    GLI_vSaveCurrentFrameBuffer();
+    MC_CheckStrings();
+    switch (MC_ManagmentState)
+    {
+    case 1:
+        MC_ManagmentState = 0;
+        RetVal = MC_Boot(_iPort, _iSlot, _szSonyCompliantName, _szTitle, _pData, _u32DataSize, SavingName, bSavingOptions);
+        GLI_vRestoreSavedFrameBuffer();
+        MC_SwapBuffers();
+        GLI_vRestoreSavedFrameBuffer();
+        MC_SwapBuffers();
+        return RetVal;
+    case 2:
+        MC_ManagmentState = 0;
+        RetVal = MC_NewGameLoad(_iPort, _iSlot, _szSonyCompliantName, _szTitle, _pData, _u32DataSize, SavingName, bSavingOptions);
+        GLI_vRestoreSavedFrameBuffer();
+        MC_SwapBuffers();
+        GLI_vRestoreSavedFrameBuffer();
+        MC_SwapBuffers();
+        return RetVal;
+    case 3:
+        MC_ManagmentState = 0;
+        RetVal = MC_NewGameSaveOnLock(_iPort, _iSlot, _szSonyCompliantName, _szTitle, _pData, _u32DataSize, SavingName, bSavingOptions);
+        GLI_vRestoreSavedFrameBuffer();
+        MC_SwapBuffers();
+        GLI_vRestoreSavedFrameBuffer();
+        MC_SwapBuffers();
+        return RetVal;
+    case 4:
+        MC_ManagmentState = 0;
+        RetVal = MC_NewGameSaveOnEmpty(_iPort, _iSlot, _szSonyCompliantName, _szTitle, _pData, _u32DataSize, SavingName, bSavingOptions);
+        GLI_vRestoreSavedFrameBuffer();
+        MC_SwapBuffers();
+        GLI_vRestoreSavedFrameBuffer();
+        MC_SwapBuffers();
+        return RetVal;
+    case 5:
+        MC_ManagmentState = 0;
+        RetVal = MC_LoadGame(_iPort, _iSlot, _szSonyCompliantName, _szTitle, _pData, _u32DataSize, SavingName, bSavingOptions);
+        GLI_vRestoreSavedFrameBuffer();
+        MC_SwapBuffers();
+        GLI_vRestoreSavedFrameBuffer();
+        MC_SwapBuffers();
+        return RetVal;
+    case 6:
+        MC_ManagmentState = 0;
+        RetVal = MC_LoadSettings(_iPort, _iSlot, _szSonyCompliantName, _szTitle, _pData, _u32DataSize, SavingName, bSavingOptions);
+        GLI_vRestoreSavedFrameBuffer();
+        MC_SwapBuffers();
+        GLI_vRestoreSavedFrameBuffer();
+        MC_SwapBuffers();
+        return RetVal;
+    case 7:
+        MC_ManagmentState = 0;
+        RetVal = MC_SaveSettingsPart1(_iPort, _iSlot, _szSonyCompliantName, _szTitle, _pData, _u32DataSize, SavingName, bSavingOptions);
+        GLI_vRestoreSavedFrameBuffer();
+        MC_SwapBuffers();
+        GLI_vRestoreSavedFrameBuffer();
+        MC_SwapBuffers();
+        return RetVal;
+    case 9:
+        MC_ManagmentState = 0;
+        RetVal = MC_SaveSettingsOnEmpty(_iPort, _iSlot, _szSonyCompliantName, _szTitle, _pData, _u32DataSize, SavingName, bSavingOptions);
+        GLI_vRestoreSavedFrameBuffer();
+        MC_SwapBuffers();
+        GLI_vRestoreSavedFrameBuffer();
+        MC_SwapBuffers();
+        return RetVal;
+    case 8:
+        MC_ManagmentState = 0;
+        RetVal = MC_SaveSettingsOnLock(_iPort, _iSlot, _szSonyCompliantName, _szTitle, _pData, _u32DataSize, SavingName, bSavingOptions);
+        GLI_vRestoreSavedFrameBuffer();
+        MC_SwapBuffers();
+        GLI_vRestoreSavedFrameBuffer();
+        MC_SwapBuffers();
+        return RetVal;
+    case 10:
+        MC_ManagmentState = 0;
+        RetVal = MC_CheckLanguages(_iPort, _iSlot, _szSonyCompliantName, _szTitle, _pData, _u32DataSize, SavingName, bSavingOptions);
+        GLI_vRestoreSavedFrameBuffer();
+        MC_SwapBuffers();
+        GLI_vRestoreSavedFrameBuffer();
+        MC_SwapBuffers();
+        return RetVal;
+    default:
+        while (1)
+        {
+            printf("\nMEMORY CARD MANAGER: Case invalid... value=%d", MC_ManagmentState);
+        }
+    }
 }
+#pragma peephole reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 3133–3174 */
 /* addr: 0x0013aac0  size: 364 bytes */
@@ -344,11 +471,50 @@ int LoadPartieMenu(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _sz
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_CheckLanguages(void)
+/* Eight unused parameters: LoadPartieMenu passes all eight of its arguments
+ * and the 0xb0 frame homes them (the debug record lists none). An old-style
+ * definition reproduces retail's argument evaluation order for MC_DrawString;
+ * a prototype-style one evaluates the 450.0f first. */
+int MC_CheckLanguages(_iPort, _iSlot, _szSonyCompliantName, _szTitle, _pData, _u32DataSize, SavingName, bSavingOptions)
+int _iPort; int _iSlot; char* _szSonyCompliantName; char* _szTitle; void* _pData; unsigned int _u32DataSize; char* SavingName; int bSavingOptions;
 {
     int Button;
     int i;
-    /* TODO: decompile from asm/... */
+    Button = -1;
+    while (Button != 5)
+    {
+        GLI_vRestoreSavedFrameBuffer();
+        MC_SwapBuffers();
+        GLI_vRestoreSavedFrameBuffer();
+        MC_SwapBuffers();
+        MC_WaitForXAndOButtonRelease();
+        MC_WaitForTriangleButtonRelease();
+        do
+        {
+            GLI_vRestoreSavedFrameBuffer();
+            MC_DrawString(MC_Strings[i], 450.0f);
+            MC_SwapBuffers();
+            GLI_vRestoreSavedFrameBuffer();
+            MC_DrawString(MC_Strings[i], 450.0f);
+            MC_SwapBuffers();
+        } while (!(Button = MC_XorTriangleButtonsPressed()) && !MC_SquareButtonPressed());
+        if (Button == 4)
+        {
+            i--;
+            if (i < 0)
+                i += 32;
+        }
+        else if (Button == 1)
+        {
+            i++;
+            if (i >= 32)
+                i -= 32;
+        }
+        else
+        {
+            return 0;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 3035–3130 */
@@ -399,7 +565,10 @@ int MC_CheckLanguages(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_SaveSettingsOnLock(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
+/* Two trailing unused parameters: LoadPartieMenu passes all eight of its arguments
+ * and the 0x2e0 frame homes them (the debug record lists six). */
+#pragma peephole off
+int MC_SaveSettingsOnLock(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize, char* SavingName, int bSavingOptions)
 {
     int Exit;
     int Retry;
@@ -407,8 +576,69 @@ int MC_SaveSettingsOnLock(int _iPort, int _iSlot, char* _szSonyCompliantName, ch
     unsigned int ulValue;
     int ReturnValue;
     char str[512];
-    /* TODO: decompile from asm/... */
+    Bidon = 0;
+    ulValue = 0;
+    Exit = 0; Retry = 0;
+    sprintf(str, "%s/%s", _szSonyCompliantName, _szSonyCompliantName);
+    do
+    {
+        MC_AknowledgeMemoryCard();
+        Exit = 0;
+        Retry = 0;
+        ReturnValue = 0;
+        if (!MC_Present() && MC_LoadAskForInsertion() == 4 && MC_AreYouSure() == 2)
+        {
+            return 0;
+        }
+        if (MC_Formatted() && MC_Present())
+        {
+            if (!SVG_fn_s32GetFileCoherence2(_iPort, _iSlot, _szSonyCompliantName))
+            {
+                ReturnValue = MC_Changed(_iPort, _iSlot, _szSonyCompliantName);
+                if (ReturnValue == 2 && MC_AreYouSure() == 2)
+                {
+                    return 0;
+                }
+            }
+            else if (MC_SaveGameAlreadyExist(str))
+            {
+                if ((ReturnValue = MC_AskForOverwriteSettings(str)) == 2)
+                {
+                    if (MC_AreYouSure() == 2)
+                    {
+                        return 0;
+                    }
+                    ReturnValue = 2;
+                }
+            }
+            if (ReturnValue != 2 && ReturnValue != 3)
+            {
+                ReturnValue = MC_Save(_iPort, _iSlot, _szSonyCompliantName, _szTitle, _pData, _u32DataSize);
+                MC_AknowledgeMemoryCard();
+                SVG_fn_vSetMC0AsChanged();
+                if (ReturnValue == 1)
+                {
+                    SVG_fn_s32SetFileCoherence2(_iPort, _iSlot, _szSonyCompliantName);
+                    return 1;
+                }
+                if (ReturnValue == 2 && MC_AreYouSure() == 2)
+                {
+                    return 0;
+                }
+            }
+        }
+        else
+        {
+            ReturnValue = MC_Changed(_iPort, _iSlot, _szSonyCompliantName);
+            if (ReturnValue == 2 && MC_AreYouSure() == 2)
+            {
+                return 0;
+            }
+        }
+    } while (!Retry && !Exit);
+    return 0;
 }
+#pragma peephole reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 2943–3031 */
 /* addr: 0x0013a530  size: 716 bytes */
@@ -458,15 +688,73 @@ int MC_SaveSettingsOnLock(int _iPort, int _iSlot, char* _szSonyCompliantName, ch
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_SaveSettingsOnEmpty(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
+/* Two trailing unused parameters: LoadPartieMenu passes all eight of its arguments
+ * and the 0x2d0 frame homes them (the debug record lists six). */
+#pragma peephole off
+int MC_SaveSettingsOnEmpty(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize, char* SavingName, int bSavingOptions)
 {
     char str[512];
     int Exit;
     int Retry;
     unsigned int ulValue;
     int ReturnValue;
-    /* TODO: decompile from asm/... */
+    ulValue = 0;
+    Exit = 0; Retry = 0;
+    do
+    {
+        Exit = 0;
+        Retry = 0;
+        ReturnValue = 0;
+        if (!MC_Present())
+        {
+            if (MC_AskForInsertion() == 4 && MC_AreYouSure() == 2)
+            {
+                return 0;
+            }
+        }
+        else
+        {
+            MC_AknowledgeMemoryCard();
+        }
+        if (!MC_Formatted() && !MC_ManageFormatting() && MC_AreYouSure() == 2)
+        {
+            return 0;
+        }
+        if (!MC_HasEnoughtSpace() && MC_Formatted() && MC_Present() && MC_CheckNeededSize(0, 0) == 2 && MC_AreYouSure() == 2)
+        {
+            return 0;
+        }
+        if (MC_Formatted() && MC_Present() && MC_HasEnoughtSpace())
+        {
+            sprintf(str, "%s/%s", _szSonyCompliantName, _szSonyCompliantName);
+            if (MC_SaveGameAlreadyExist(str) && MC_AskForOverwrite(str) == 2)
+            {
+                if (MC_AreYouSure() == 2)
+                {
+                    return 0;
+                }
+                ReturnValue = 2;
+            }
+            if (ReturnValue != 2 && MC_Present())
+            {
+                ReturnValue = MC_Save(_iPort, _iSlot, _szSonyCompliantName, _szTitle, _pData, _u32DataSize);
+                MC_AknowledgeMemoryCard();
+                SVG_fn_vSetMC0AsChanged();
+                if (ReturnValue == 1)
+                {
+                    SVG_fn_s32SetFileCoherence2(_iPort, _iSlot, _szSonyCompliantName);
+                    return 1;
+                }
+                if (ReturnValue == 2 && MC_AreYouSure() == 2)
+                {
+                    return 0;
+                }
+            }
+        }
+    } while (!Retry && !Exit);
+    return 0;
 }
+#pragma peephole reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 2863–2940 */
 /* addr: 0x0013a300  size: 548 bytes */
@@ -510,15 +798,69 @@ int MC_SaveSettingsOnEmpty(int _iPort, int _iSlot, char* _szSonyCompliantName, c
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_SaveSettingsPart1(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
+/* Two trailing unused parameters: LoadPartieMenu passes all eight of its arguments
+ * and the 0x2d0 frame homes them (the debug record lists six). */
+#pragma peephole off
+int MC_SaveSettingsPart1(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize, char* SavingName, int bSavingOptions)
 {
     char str[512];
     int Exit;
     int Retry;
     unsigned int ulValue;
     int ReturnValue;
-    /* TODO: decompile from asm/... */
+    ulValue = 0;
+    Exit = 0; Retry = 0;
+    do
+    {
+        Exit = 0;
+        Retry = 0;
+        ReturnValue = 0;
+        if (!MC_Present())
+        {
+            if (MC_AskForInsertion() == 4 && MC_AreYouSure() == 2)
+            {
+                return 2;
+            }
+        }
+        else
+        {
+            MC_AknowledgeMemoryCard();
+        }
+        if (!MC_Formatted())
+        {
+            return 0;
+        }
+        if (MC_Formatted() && MC_Present())
+        {
+            sprintf(str, "%s/%s", _szSonyCompliantName, _szSonyCompliantName);
+            if (ReturnValue != 3 && MC_Present())
+            {
+                if (!SVG_fn_s32GetFileAttributes(_iPort, _iSlot, str))
+                {
+                    return 0;
+                }
+                ReturnValue = MC_Load(_iPort, _iSlot, _szSonyCompliantName, _szTitle, _pData, _u32DataSize);
+                MC_AknowledgeMemoryCard();
+                SVG_fn_vSetMC0AsChanged();
+                if (ReturnValue == 1 && MC_Present())
+                {
+                    SVG_fn_s32SetFileCoherence2(_iPort, _iSlot, _szSonyCompliantName);
+                    return 1;
+                }
+                if (ReturnValue == 0)
+                {
+                    return 2;
+                }
+                if (ReturnValue == 2 && MC_AreYouSure() == 2)
+                {
+                    return 0;
+                }
+            }
+        }
+    } while (!Retry && !Exit);
+    return 0;
 }
+#pragma peephole reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 2765–2860 */
 /* addr: 0x0013a070  size: 644 bytes */
@@ -564,15 +906,87 @@ int MC_SaveSettingsPart1(int _iPort, int _iSlot, char* _szSonyCompliantName, cha
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_LoadSettings(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
+/* Two trailing unused parameters: LoadPartieMenu passes all eight of its arguments
+ * and the 0x2d0 frame homes them (the debug record lists six). */
+#pragma peephole off
+int MC_LoadSettings(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize, char* SavingName, int bSavingOptions)
 {
     char str[512];
     int Exit;
     int Retry;
     unsigned int ulValue;
     int ReturnValue;
-    /* TODO: decompile from asm/... */
+    ulValue = 0;
+    Exit = 0; Retry = 0;
+    do
+    {
+        Exit = 0;
+        Retry = 0;
+        ReturnValue = 0;
+        if (!MC_Present())
+        {
+            if (MC_LoadAskForInsertion() == 4)
+            {
+                return 0;
+            }
+        }
+        else
+        {
+            MC_AknowledgeMemoryCard();
+        }
+        if (!MC_Formatted())
+        {
+            if (MC_PrintMessageAndWaitForYesNoMC(MC_Strings[15], 450.0f) == 4)
+            {
+                return 0;
+            }
+        }
+        if (MC_Formatted() && MC_Present())
+        {
+            if (ReturnValue != 3 && MC_Present())
+            {
+                sprintf(str, "%s/%s", _szSonyCompliantName, _szSonyCompliantName);
+                if (!MC_SaveGameAlreadyExist(str))
+                {
+                    if (MC_PrintMessageAndWaitForYesNoMC(MC_Strings[15], 450.0f) == 4)
+                    {
+                        return 0;
+                    }
+                }
+                else if (!SVG_fn_s32GetFileAttributes(_iPort, _iSlot, str))
+                {
+                    if (MC_PrintMessageAndWaitForYesNoMC(MC_Strings[22], 450.0f) == 4)
+                    {
+                        return 0;
+                    }
+                }
+                else
+                {
+                    ReturnValue = MC_Load(_iPort, _iSlot, _szSonyCompliantName, _szTitle, _pData, _u32DataSize);
+                    MC_AknowledgeMemoryCard();
+                    SVG_fn_vSetMC0AsChanged();
+                    if (ReturnValue == 1)
+                    {
+                        return 1;
+                    }
+                    if (ReturnValue == 0)
+                    {
+                        if (MC_PrintMessageAndWaitForYesNo(MC_Strings[14], 450.0f) == 4)
+                        {
+                            return 0;
+                        }
+                    }
+                    else if (ReturnValue == 2)
+                    {
+                        return 0;
+                    }
+                }
+            }
+        }
+    } while (!Retry && !Exit);
+    return 0;
 }
+#pragma peephole reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 2657–2762 */
 /* addr: 0x00139d50  size: 796 bytes */
@@ -622,15 +1036,98 @@ int MC_LoadSettings(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _s
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_LoadGame(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
+/* Two trailing unused parameters: LoadPartieMenu passes all eight of its arguments
+ * and the 0x2d0 frame homes them (the debug record lists six). */
+#pragma peephole off
+int MC_LoadGame(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize, char* SavingName, int bSavingOptions)
 {
     char str[512];
     int Exit;
     int Retry;
     unsigned int ulValue;
     int ReturnValue;
-    /* TODO: decompile from asm/... */
+    ulValue = 0;
+    Exit = 0; Retry = 0;
+    do
+    {
+        Exit = 0;
+        Retry = 0;
+        ReturnValue = 0;
+        if (!MC_Present())
+        {
+            if (MC_LoadAskForInsertion() == 4)
+            {
+                return 0;
+            }
+        }
+        else
+        {
+            MC_AknowledgeMemoryCard();
+        }
+        if (!MC_Formatted())
+        {
+            if (MC_PrintMessageAndWaitForYesNoMC(MC_Strings[15], 450.0f) == 4)
+            {
+                return 0;
+            }
+        }
+        if (MC_Formatted() && MC_Present())
+        {
+            sprintf(str, "%s/%s", _szSonyCompliantName, _szSonyCompliantName);
+            if (!MC_SaveGameAlreadyExist(str) || !SVG_fn_s32GetFileAttributes(_iPort, _iSlot, str))
+            {
+                if (!SVG_fn_s32GetFileAttributes(_iPort, _iSlot, str))
+                {
+                    if (!MC_SaveGameAlreadyExist(str))
+                    {
+                        if (MC_PrintMessageAndWaitForYesNoMC(MC_Strings[15], 450.0f) == 4)
+                        {
+                            return 0;
+                        }
+                    }
+                    else
+                    {
+                        if (MC_PrintMessageAndWaitForYesNoMC(MC_Strings[22], 450.0f) == 4)
+                        {
+                            return 0;
+                        }
+                    }
+                }
+                else
+                {
+                    if (MC_PrintMessageAndWaitForYesNoMC(MC_Strings[15], 450.0f) == 4)
+                    {
+                        return 0;
+                    }
+                }
+            }
+            else if (ReturnValue != 3 && MC_Present())
+            {
+                ReturnValue = MC_Load(_iPort, _iSlot, _szSonyCompliantName, _szTitle, _pData, _u32DataSize);
+                MC_AknowledgeMemoryCard();
+                SVG_fn_vSetMC0AsChanged();
+                if (ReturnValue == 1 && MC_Present())
+                {
+                    SVG_fn_s32SetFileCoherence(_iPort, _iSlot, _szSonyCompliantName);
+                    return 1;
+                }
+                if (ReturnValue == 0)
+                {
+                    if (MC_PrintMessageAndWaitForYesNo(MC_Strings[14], 450.0f) == 4)
+                    {
+                        return 0;
+                    }
+                }
+                else if (ReturnValue == 2 && MC_AreYouSure() == 2)
+                {
+                    return 0;
+                }
+            }
+        }
+    } while (!Retry && !Exit);
+    return 0;
 }
+#pragma peephole reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 2558–2653 */
 /* addr: 0x00139a80  size: 716 bytes */
@@ -680,15 +1177,79 @@ int MC_LoadGame(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTit
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_NewGameSaveOnEmpty(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
+/* Two trailing unused parameters: LoadPartieMenu passes all eight of its arguments
+ * and the 0x2d0 frame homes them (the debug record lists six). */
+#pragma peephole off
+int MC_NewGameSaveOnEmpty(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize, char* SavingName, int bSavingOptions)
 {
     char str[512];
     int Exit;
     int Retry;
     unsigned int ulValue;
     int ReturnValue;
-    /* TODO: decompile from asm/... */
+    ulValue = 0;
+    Exit = 0; Retry = 0;
+    sprintf(str, "%s/%s", _szSonyCompliantName, _szSonyCompliantName);
+    do
+    {
+        Exit = 0;
+        Retry = 0;
+        ReturnValue = 0;
+        if (!MC_Present())
+        {
+            if (MC_AskForInsertion() == 4 && MC_AreYouSure() == 2)
+            {
+                return 0;
+            }
+        }
+        else
+        {
+            MC_AknowledgeMemoryCard();
+        }
+        if (!MC_Formatted() && !MC_ManageFormatting() && MC_AreYouSure() == 2)
+        {
+            return 0;
+        }
+        if (!MC_HasEnoughtSpace() && MC_Formatted() && MC_Present() && MC_CheckNeededSize(0, 0) == 2 && MC_AreYouSure() == 2)
+        {
+            return 0;
+        }
+        if (MC_Formatted() && MC_Present() && MC_HasEnoughtSpace())
+        {
+            if (MC_SaveGameAlreadyExist(str))
+            {
+                if ((ReturnValue = MC_AskForOverwrite(str)) == 2)
+                {
+                    if ((ReturnValue = MC_AreYouSure()) == 2)
+                    {
+                        return 0;
+                    }
+                }
+                else if (ReturnValue != 4)
+                {
+                    ReturnValue = 3;
+                }
+            }
+            if (ReturnValue != 3)
+            {
+                ReturnValue = MC_Save(_iPort, _iSlot, _szSonyCompliantName, _szTitle, _pData, _u32DataSize);
+                MC_AknowledgeMemoryCard();
+                SVG_fn_vSetMC0AsChanged();
+                if (ReturnValue == 1)
+                {
+                    SVG_fn_s32SetFileCoherence(_iPort, _iSlot, _szSonyCompliantName);
+                    return 1;
+                }
+                if (ReturnValue == 2 && MC_AreYouSure() == 2)
+                {
+                    return 0;
+                }
+            }
+        }
+    } while (!Retry && !Exit);
+    return 0;
 }
+#pragma peephole reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 2331–2435 */
 /* addr: 0x00139780  size: 756 bytes */
@@ -740,15 +1301,83 @@ int MC_NewGameSaveOnEmpty(int _iPort, int _iSlot, char* _szSonyCompliantName, ch
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_NewGameSaveOnLock(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
+/* Two trailing unused parameters: LoadPartieMenu passes all eight of its arguments
+ * and the 0x2d0 frame homes them (the debug record lists six). */
+#pragma peephole off
+int MC_NewGameSaveOnLock(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize, char* SavingName, int bSavingOptions)
 {
     char str[512];
     int Exit;
     int Retry;
     unsigned int ulValue;
     int ReturnValue;
-    /* TODO: decompile from asm/... */
+    ulValue = 0;
+    Exit = 0; Retry = 0;
+    sprintf(str, "%s/%s", _szSonyCompliantName, _szSonyCompliantName);
+    do
+    {
+        Exit = 0;
+        Retry = 0;
+        ReturnValue = 0;
+        if (!MC_Present())
+        {
+            if (MC_AskForInsertion() == 4 && MC_AreYouSure() == 2)
+            {
+                return 0;
+            }
+        }
+        else
+        {
+            MC_AknowledgeMemoryCard();
+        }
+        if (!MC_Formatted() && !MC_ManageFormatting() && MC_AreYouSure() == 2)
+        {
+            return 0;
+        }
+        if (!MC_HasEnoughtSpace() && MC_Formatted() && MC_Present() && MC_CheckNeededSize(0, 0) == 2 && MC_AreYouSure() == 2)
+        {
+            return 0;
+        }
+        if (MC_Formatted() && MC_Present() && MC_HasEnoughtSpace())
+        {
+            if (MC_SaveGameAlreadyExist(str))
+            {
+                if (SVG_fn_s32GetFileCoherence(_iPort, _iSlot, _szSonyCompliantName))
+                {
+                    ReturnValue = 4;
+                }
+                else if ((ReturnValue = MC_AskForOverwrite(str)) == 2)
+                {
+                    if ((ReturnValue = MC_AreYouSure()) == 2)
+                    {
+                        return 0;
+                    }
+                }
+                else if (ReturnValue != 4)
+                {
+                    ReturnValue = 3;
+                }
+            }
+            if (ReturnValue != 3)
+            {
+                ReturnValue = MC_Save(_iPort, _iSlot, _szSonyCompliantName, _szTitle, _pData, _u32DataSize);
+                MC_AknowledgeMemoryCard();
+                SVG_fn_vSetMC0AsChanged();
+                if (ReturnValue == 1)
+                {
+                    SVG_fn_s32SetFileCoherence(_iPort, _iSlot, _szSonyCompliantName);
+                    return 1;
+                }
+                if (ReturnValue == 2 && MC_AreYouSure() == 2)
+                {
+                    return 0;
+                }
+            }
+        }
+    } while (!Retry && !Exit);
+    return 0;
 }
+#pragma peephole reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 2221–2328 */
 /* addr: 0x00139490  size: 752 bytes */
@@ -800,7 +1429,10 @@ int MC_NewGameSaveOnLock(int _iPort, int _iSlot, char* _szSonyCompliantName, cha
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_NewGameLoad(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
+/* Two trailing unused parameters: LoadPartieMenu passes all eight of its arguments
+ * and the 0x1e0 frame homes them (the debug record lists six). */
+#pragma peephole off
+int MC_NewGameLoad(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize, char* SavingName, int bSavingOptions)
 {
     int Exit;
     int Retry;
@@ -808,8 +1440,81 @@ int MC_NewGameLoad(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _sz
     unsigned int ulValue;
     int ReturnValue;
     char str[255];
-    /* TODO: decompile from asm/... */
+    Bidon = 0;
+    ulValue = 0;
+    Exit = 0; Retry = 0;
+    sprintf(str, "%s/%s", _szSonyCompliantName, _szSonyCompliantName);
+    do
+    {
+        do
+        {
+            Exit = 0;
+            Retry = 0;
+            if (!MC_Formatted())
+            {
+                return 0;
+            }
+            if (!MC_Present())
+            {
+                return 0;
+            }
+            if (!(MC_Present() && MC_HasEnoughtSpace()))
+            {
+                if (MC_Formatted())
+                {
+                    if (!SVG_fn_s32GetFileAttributes(_iPort, _iSlot, str) && MC_HasEnoughtSpace())
+                    {
+                        if (MC_PrintMessageAndWaitForYesNoMC(MC_Strings[22], 450.0f) == 4)
+                        {
+                            return 0;
+                        }
+                        Exit = 1;
+                    }
+                    else if (!MC_SaveGameAlreadyExist(str))
+                    {
+                        if (!MC_NotEnoughtSpace(223))
+                        {
+                            if (MC_AreYouSure() == 2)
+                            {
+                                return 2;
+                            }
+                            Exit = 1;
+                        }
+                        else
+                        {
+                            Exit = 1;
+                        }
+                    }
+                }
+            }
+        } while (Exit == 1);
+        if (!SVG_fn_s32GetFileAttributes(_iPort, _iSlot, str))
+        {
+            if (!MC_SaveGameAlreadyExist(str))
+            {
+                return 0;
+            }
+            if (MC_PrintMessageAndWaitForYesNoMC(MC_Strings[22], 450.0f) == 4)
+            {
+                return 0;
+            }
+        }
+        else if (MC_Formatted() && MC_Present() && !Retry)
+        {
+            ReturnValue = MC_Load(_iPort, _iSlot, _szSonyCompliantName, _szTitle, _pData, _u32DataSize);
+            MC_AknowledgeMemoryCard();
+            SVG_fn_vSetMC0AsChanged();
+            if (ReturnValue == 1)
+            {
+                SVG_fn_s32SetFileCoherence(_iPort, _iSlot, _szSonyCompliantName);
+                return 1;
+            }
+            return 0;
+        }
+    } while (!Retry && !Exit);
+    return 2;
 }
+#pragma peephole reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 2126–2218 */
 /* addr: 0x00139250  size: 576 bytes */
@@ -856,15 +1561,73 @@ int MC_NewGameLoad(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _sz
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_Boot(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize)
+/* Two trailing unused parameters: LoadPartieMenu passes all eight of its arguments
+ * and the 0x3d0 frame homes them (the debug record lists six). */
+#pragma peephole off
+int MC_Boot(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize, char* SavingName, int bSavingOptions)
 {
-    char str[512];
+    char str[768]; /* debug says 512; the retail frame and str+256 need 768 */
     int Retry;
     int Bidon;
     unsigned int ulValue;
     int ReturnValue;
-    /* TODO: decompile from asm/... */
+    Bidon = 0;
+    ulValue = 0;
+    Retry = 0;
+    sprintf(str, "%s/%s", _szSonyCompliantName, _szSonyCompliantName);
+    if (MC_Present())
+    {
+        MC_AknowledgeMemoryCard();
+        do
+        {
+            Retry = 0;
+            if (!MC_Present() && MC_LoadAskForInsertion() == 4)
+            {
+                return 0;
+            }
+            if (!MC_Formatted())
+            {
+                return 0;
+            }
+            if (MC_SaveGameAlreadyExist(str))
+            {
+                sprintf(&str[256], "%s/%s", _szSonyCompliantName, _szSonyCompliantName);
+                if (!SVG_fn_s32GetFileAttributes(_iPort, _iSlot, &str[256]))
+                {
+                    return 0;
+                }
+                ReturnValue = MC_Load(_iPort, _iSlot, _szSonyCompliantName, _szTitle, _pData, _u32DataSize);
+                MC_AknowledgeMemoryCard();
+                SVG_fn_vSetMC0AsChanged();
+                if (ReturnValue == 1 && MC_Present())
+                {
+                    SVG_fn_s32SetFileCoherence(_iPort, _iSlot, _szSonyCompliantName);
+                    return 1;
+                }
+                if (ReturnValue == 0)
+                {
+                    return 0;
+                }
+                return ReturnValue;
+            }
+            else
+            {
+                Bidon = 223;
+                if (!MC_HasEnoughtSpace())
+                {
+                    ReturnValue = MC_NotEnoughtSpaceBoot(Bidon);
+                }
+                else
+                {
+                    ReturnValue = 0;
+                }
+            }
+        } while (ReturnValue == 3 && ReturnValue != 1);
+        return ReturnValue;
+    }
+    return 0;
 }
+#pragma peephole reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 2108–2123 */
 /* addr: 0x001391e0  size: 104 bytes */
@@ -989,6 +1752,7 @@ int MC_Format(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma peephole off
 int MC_SaveGameAlreadyExist(char* SavingName)
 {
     int iIsAGamePresent;
@@ -1003,6 +1767,7 @@ int MC_SaveGameAlreadyExist(char* SavingName)
     }
     return 0;
 }
+#pragma peephole reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 1654–1657 */
 /* addr: 0x00139000  size: 32 bytes */
@@ -1277,11 +2042,35 @@ int MC_AskForOverwrite(char* SavingName)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_NotEnoughtSpaceBoot(void)
+#pragma peephole off
+/* Unused parameter: it accounts for the retail 0x30 frame (debug lists none). */
+int MC_NotEnoughtSpaceBoot(int iUnused)
 {
     int Button;
-    /* TODO: decompile from asm/... */
+    MC_WaitForXButtonRelease();
+    MC_DrawString(MC_Strings[20], 450.0f);
+    MC_SwapBuffers();
+    GLI_vRestoreSavedFrameBuffer();
+    MC_DrawString(MC_Strings[20], 450.0f);
+    MC_SwapBuffers();
+    MC_WaitForXButtonRelease();
+    do
+    {
+        GLI_vRestoreSavedFrameBuffer();
+        MC_DrawString(MC_Strings[20], 450.0f);
+        MC_SwapBuffers();
+    } while (!(Button = MC_XorTriangleButtonsPressed()) && !MC_HasEnoughtSpace());
+    if (MC_HasEnoughtSpace())
+    {
+        Button = 1;
+    }
+    if (Button == 4)
+    {
+        return 0;
+    }
+    return 3;
 }
+#pragma peephole reset
 
 /* The debug record lists no parameters, but the retail frame reserves a home
  * for one leading parameter the body never reads (see MC_AskForOverwrite). */
@@ -1310,7 +2099,7 @@ int MC_NotEnoughtSpaceBoot(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int MC_NotEnoughtSpace(char* p_szUnused)
+int MC_NotEnoughtSpace(int iUnused)
 {
     int Button;
     MC_WaitForXButtonRelease();
@@ -1416,7 +2205,28 @@ int MC_Changed(void)
 int MC_AreYouSure(void)
 {
     int Button;
-    /* TODO: decompile from asm/... */
+    MC_WaitForXButtonRelease();
+    MC_WaitForTriangleButtonRelease();
+    GLI_vRestoreSavedFrameBuffer();
+    MC_DrawString(MC_Strings[21], 450.0f);
+    MC_SwapBuffers();
+    GLI_vRestoreSavedFrameBuffer();
+    MC_DrawString(MC_Strings[21], 450.0f);
+    MC_SwapBuffers();
+    MC_WaitForXButtonRelease();
+    while (!(Button = MC_XorTriangleButtonsPressed()))
+    {
+        GLI_vRestoreSavedFrameBuffer();
+        MC_DrawString(MC_Strings[21], 450.0f);
+        MC_SwapBuffers();
+    }
+    MC_WaitForXButtonRelease();
+    MC_WaitForTriangleButtonRelease();
+    if (Button == 4)
+    {
+        return 3;
+    }
+    return 2;
 }
 #pragma peephole reset
 
@@ -1452,7 +2262,54 @@ int MC_AreYouSure(void)
 #pragma peephole off
 int MC_ManageFormatting(void)
 {
-    /* TODO: decompile from asm/... */
+    MC_AknowledgeMemoryCard();
+    if (MC_PrintMessageAndWaitForYesNoFormat(MC_Strings[3], 400.0f) == 5)
+    {
+        if (!MC_Present() || MC_MemoryCardChanged())
+        {
+            return 1;
+        }
+        if (MC_PrintMessageAndWaitForYesNoFormat(MC_Strings[2], 400.0f) == 5)
+        {
+            if (!MC_Present() || MC_MemoryCardChanged())
+            {
+                return 1;
+            }
+            MC_PrintMessage(MC_Strings[4], 400.0f);
+            switch (MC_Format())
+            {
+            case 0:
+                return 1;
+            case 1:
+                if (MC_Present())
+                {
+                    return 1;
+                }
+                if (MC_PrintMessageAndWaitForYesNo(MC_Strings[6], 400.0f) == 1)
+                {
+                    return 1;
+                }
+                if (MC_AreYouSure() == 2)
+                {
+                    return 0;
+                }
+                break;
+            }
+        }
+        else
+        {
+            return 1;
+        }
+    }
+    else
+    {
+        if (!MC_Present() || MC_MemoryCardChanged())
+        {
+            return 1;
+        }
+        MC_AknowledgeMemoryCard();
+    }
+    return 0;
 }
 #pragma peephole reset
 
@@ -2225,7 +3082,45 @@ void MC_AddString(int Number, char* String)
     char* pDest;
     char* psrc;
     char* p;
-    /* TODO: decompile from asm/... */
+    if (Number < 32)
+    {
+        p = strstr(String, "Rayman");
+        if (p == NULL)
+        {
+            strcpy(MC_Strings[Number], String);
+        }
+        else
+        {
+            psrc = String;
+            pDest = MC_Strings[Number];
+            do
+            {
+                p = strstr(psrc, "Rayman");
+                if (p != NULL)
+                {
+                    p += 6;
+                    while (psrc != p)
+                    {
+                        *pDest++ = *psrc++;
+                    }
+                    while (*psrc != 'M' && *psrc != 'm')
+                        psrc++;
+                    psrc++;
+                    *pDest = 0;
+                    Strcat(pDest, " Arena");
+                    pDest += 6;
+                }
+                else
+                {
+                    while (*psrc != '\0')
+                    {
+                        *pDest++ = *psrc++;
+                    }
+                    *pDest = 0;
+                }
+            } while (p != NULL);
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 295–304 */

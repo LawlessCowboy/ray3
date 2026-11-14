@@ -47,3 +47,11 @@ src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/PS2MC/PS2Me
 # gp_stOnlyFrames[...].uwNumOfSavedFrame +0xc member offset unfolded before adding the
 # index); all 12 other recorded matches still MATCH, 0 lost.
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/Interpol/a3x_intn.c
+# Ago/AGO3.cpp (was 3.0.3-pad7b): +1 (AGO3_Transition::Process, retail keeps the
+# m_szDots+6 member offset unfolded, addiu v1,s0,0x72; addu v1,v1,n; sb 0(v1));
+# every other recorded match still MATCH, 0 lost.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp
+# AI/AIGame/LNK_Proc.c (was 3.0.3-pad7b): +1 (fn_DeleteCutPoint, retail keeps the
+# a_Cutpoint[n].Position +0x34/+0x38/+0x3c member offsets unfolded, addiu a1,s5,0x34;
+# addu a1,a1,n*52; sw zero,0(a1)); all 13 other recorded matches still MATCH, 0 lost.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/LNK_Proc.c

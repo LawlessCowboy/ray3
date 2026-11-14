@@ -1190,29 +1190,32 @@ unsigned int uiMaxVifDmaBufLength;
 int MY_MSCNT[4];
 int MY_UNPACKR[4];
 tagSPRInfo g_stSPRInfo;
-unsigned long OBJECT_PREPARATION_START;
-unsigned long MATRICES_CONJUNCTION;
+extern unsigned long OBJECT_PREPARATION_START __attribute__((section(".vutext")));
+extern unsigned long MATRICES_CONJUNCTION __attribute__((section(".vutext")));
 unsigned int PS2GL_SpecialMode;
-unsigned long Beginning_Of_T_and_L;
-unsigned long CST_SpritesSemiLookat;
-unsigned long CST_SimpleSpritesOriented;
-unsigned long CST_SimpleSprites;
-unsigned long SimpleSprites;
-unsigned long WithSpecular_Nurbs;
-unsigned long NoSpecular_Fast_Simple;
-unsigned long WithSpecular_Fast;
-unsigned long NoSpecular_Simple;
-unsigned long WithSpecular;
-unsigned long NoSpecular_Nurbs;
-unsigned long NoSpecular_Fast;
-unsigned long NoSpecular;
-unsigned long NoLighting_Nurbs;
-unsigned long NoLighting_Fast_Simple;
-unsigned long NoLighting_Fast_Simple_c;
-unsigned long NoLighting_Simple_c;
-unsigned long PointLighting_Fast_Simple_c;
-unsigned long PointLighting_Simple_c;
+extern unsigned long Beginning_Of_T_and_L __attribute__((section(".vutext")));
+extern unsigned long CST_SpritesSemiLookat __attribute__((section(".vutext")));
+extern unsigned long CST_SimpleSpritesOriented __attribute__((section(".vutext")));
+extern unsigned long CST_SimpleSprites __attribute__((section(".vutext")));
+extern unsigned long SimpleSprites __attribute__((section(".vutext")));
+extern unsigned long WithSpecular_Nurbs __attribute__((section(".vutext")));
+extern unsigned long NoSpecular_Fast_Simple __attribute__((section(".vutext")));
+extern unsigned long WithSpecular_Fast __attribute__((section(".vutext")));
+extern unsigned long NoSpecular_Simple __attribute__((section(".vutext")));
+extern unsigned long WithSpecular __attribute__((section(".vutext")));
+extern unsigned long NoSpecular_Nurbs __attribute__((section(".vutext")));
+extern unsigned long NoSpecular_Fast __attribute__((section(".vutext")));
+extern unsigned long NoSpecular __attribute__((section(".vutext")));
+extern unsigned long NoLighting_Nurbs __attribute__((section(".vutext")));
+extern unsigned long NoLighting_Fast_Simple __attribute__((section(".vutext")));
+extern unsigned long NoLighting_Fast_Simple_c __attribute__((section(".vutext")));
+extern unsigned long NoLighting_Simple_c __attribute__((section(".vutext")));
+extern unsigned long PointLighting_Fast_Simple_c __attribute__((section(".vutext")));
+extern unsigned long PointLighting_Simple_c __attribute__((section(".vutext")));
 tagGScontext g_gsContext;
+
+/* The VU1 microcode labels above are defined by the VU assembler, outside
+ * the small-data area, so they are addressed with %hi/%lo pairs. */
 
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
@@ -1266,6 +1269,16 @@ struct tag_stMatriceBlock {
 void sceVu0MulMatrix(float dest[4][4], float left[4][4], float right[4][4]);
 
 void sceVu0UnitMatrix(float m[4][4]);
+
+void PS2glUpdateNormalMatrix(void);
+void PS2glComputeBS(float* pfvBS, float (*pV)[4], int iCount, float* pBB, unsigned char bDivQ);
+void* memset(void* dst, int c, size_t n);
+void* memcpy(void* dst, const void* src, size_t n);
+
+#define SCE_GIF_SET_TAG(nloop, eop, pre, prim, flg, nreg) \
+    ((unsigned long)(nloop) | ((unsigned long)(eop) << 15) | ((unsigned long)(pre) << 46) | \
+     ((unsigned long)(prim) << 47) | ((unsigned long)(flg) << 58) | ((unsigned long)(nreg) << 60))
+void PS2glGenOrthoMatrix(float (*m)[4], float left, float right, float bottom, float top, float zNear, float zFar);
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 735–763 */
 /* addr: 0x00184ea0  size: 208 bytes */
@@ -1593,6 +1606,13 @@ unsigned int VU1BufferFreeSpace(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+inline unsigned char IsNotIdentity(float (*m)[4][4])
+{
+    if ((*m)[0][0] == 1.0f && (*m)[0][1] == 0.0f && (*m)[0][2] == 0.0f && (*m)[1][0] == 0.0f && (*m)[1][1] == 1.0f && (*m)[1][2] == 0.0f)
+        return 0;
+    return 1;
+}
+
 unsigned char VU1UpdateMatriceInsideSDL(tagGLcontext* pctx, unsigned int* pMask)
 {
     tag_stVU1MatriceTinSDL* pstMatriceTinSDL;
@@ -1619,22 +1639,10 @@ unsigned char VU1UpdateMatriceInsideSDL(tagGLcontext* pctx, unsigned int* pMask)
         }
         pTexture0 = &pctx->TextureMatrix[0];
         pTexture1 = &pctx->TextureMatrix[1];
-        bTexture0 = 1;
-        if (pTexture0[0][0][0] == 1.0f && pTexture0[0][0][1] == 0.0f && pTexture0[0][0][2] == 0.0f &&
-            pTexture0[0][1][0] == 0.0f && pTexture0[0][1][1] == 1.0f && pTexture0[0][1][2] == 0.0f)
-        {
-            bTexture0 = 0;
-        }
         /* The retail code keeps the two texture flags in the last row of the
          * normal matrix. */
-        ((int*)pstMatriceTinSDL->mNormal[3])[2] = bTexture0;
-        bTexture1 = 1;
-        if (pTexture1[0][0][0] == 1.0f && pTexture1[0][0][1] == 0.0f && pTexture1[0][0][2] == 0.0f &&
-            pTexture1[0][1][0] == 0.0f && pTexture1[0][1][1] == 1.0f && pTexture1[0][1][2] == 0.0f)
-        {
-            bTexture1 = 0;
-        }
-        ((int*)pstMatriceTinSDL->mNormal[3])[3] = bTexture1;
+        *(int*)&pstMatriceTinSDL->mNormal[3][2] = bTexture0 = IsNotIdentity(pTexture0);
+        *(int*)&pstMatriceTinSDL->mNormal[3][3] = bTexture1 = IsNotIdentity(pTexture1);
         if (bTexture0 || bTexture1)
         {
             *pMask |= 0x02000000;
@@ -1644,23 +1652,23 @@ unsigned char VU1UpdateMatriceInsideSDL(tagGLcontext* pctx, unsigned int* pMask)
             }
             else
             {
-                uiPreparation &= ~3;
+                uiPreparation &= ~2;
             }
             pBuf = (int(*)[4])pctx->pVIFIBufTail;
             pBuf[0][0] = pBuf[0][1] = 0;
             pBuf[0][2] = 0x01000404;
             pBuf[0][3] = 0x6C06004A;
-            pBuf[1] = ((int(*)[4])pTexture0)[0];
-            pBuf[2] = ((int(*)[4])pTexture0)[1];
-            pBuf[3] = ((int(*)[4])pTexture0)[2];
-            pBuf[4] = ((int(*)[4])pTexture1)[0];
-            pBuf[5] = ((int(*)[4])pTexture1)[1];
-            pBuf[6] = ((int(*)[4])pTexture1)[2];
+            *(__int128*)(++pBuf) = *(__int128*)(*pTexture0)[0];
+            *(__int128*)(++pBuf) = *(__int128*)(*pTexture0)[1];
+            *(__int128*)(++pBuf) = *(__int128*)(*pTexture0)[2];
+            *(__int128*)(++pBuf) = *(__int128*)(*pTexture1)[0];
+            *(__int128*)(++pBuf) = *(__int128*)(*pTexture1)[1];
+            *(__int128*)(++pBuf) = *(__int128*)(*pTexture1)[2];
             pctx->pVIFIBufTail += 7;
         }
         else
         {
-            uiPreparation &= ~3;
+            uiPreparation &= ~2;
         }
         pstMatriceTinSDL->ivUnpackCode[0] = pstMatriceTinSDL->ivUnpackCode[1] = 0;
         pstMatriceTinSDL->ivUnpackCode[2] = 0x01000404;
@@ -1775,12 +1783,9 @@ void VU1UpdateMatriceOutsideSDL(tagGLcontext* pctx)
     *(tag_stMatriceBlock*)&pstMatriceToutSDL->mGuardBandProjection = *(tag_stMatriceBlock*)pctx->GuardBandProjectionMatrix;
     *(tag_stMatriceBlock*)&pstMatriceToutSDL->mWorldView = *(tag_stMatriceBlock*)pctx->ModelViewMatrix;
     sceVu0UnitMatrix(pstMatriceToutSDL->mClippingScreen);
-    vScreenOrg[0] = 0.5f * pctx->ViewPort[2];
-    pstMatriceToutSDL->mClippingScreen[0][0] = vScreenOrg[0];
-    vScreenOrg[1] = 0.5f * pctx->ViewPort[3];
-    pstMatriceToutSDL->mClippingScreen[1][1] = vScreenOrg[1];
-    vScreenOrg[2] = 0.5f * (pctx->DepthRange[1] - pctx->DepthRange[0]);
-    pstMatriceToutSDL->mClippingScreen[2][2] = vScreenOrg[2];
+    pstMatriceToutSDL->mClippingScreen[0][0] = vScreenOrg[0] = 0.5f * pctx->ViewPort[2];
+    pstMatriceToutSDL->mClippingScreen[1][1] = vScreenOrg[1] = 0.5f * pctx->ViewPort[3];
+    pstMatriceToutSDL->mClippingScreen[2][2] = vScreenOrg[2] = 0.5f * (pctx->DepthRange[1] - pctx->DepthRange[0]);
     vScreenOrg[3] = 0.0f;
     vScreenScale[0] = pctx->ViewPort[0];
     vScreenScale[1] = pctx->ViewPort[1];
@@ -1934,13 +1939,99 @@ void VU1UpdateMatrice(tagGLcontext* pctx, unsigned int Mode)
     PS2GL_VU1_InterpolMatrixData_* pInterpol;
     unsigned char bTexture1;
     unsigned char bTexture0;
-    float (*pTexture1)[4][4];
     float (*pTexture0)[4][4];
+    float (*pTexture1)[4][4];
     int (*pBuf)[4];
     float vScreenScale[4];
     float vScreenOrg[4];
     tag_stVU1MatriceT* pstMatriceT;
-    /* TODO: decompile from asm/... */
+    pstMatriceT = (tag_stVU1MatriceT*)pctx->pVIFIBufTail;
+    pInterpol = (PS2GL_VU1_InterpolMatrixData_*)PS2GL_g_pInterpol;
+    g_PS2glContext.bMatrixChanged = 0;
+    if (pInterpol)
+    {
+        pInterpol->Mode = Mode;
+        pInterpol->pstMatriceT = pstMatriceT;
+        *(tag_stMatriceBlock*)pInterpol->ProjectionMatrix = *(tag_stMatriceBlock*)pctx->ProjectionMatrix;
+        *(tag_stMatriceBlock*)pInterpol->GuardBandProjectionMatrix = *(tag_stMatriceBlock*)pctx->GuardBandProjectionMatrix;
+        PS2GL_g_pInterpol = 0;
+    }
+    if (!(g_PS2glContext.usDontUpdateBits & 4))
+    {
+        pctx->pVIFIBufTail += sizeof(*pstMatriceT) / sizeof(*pctx->pVIFIBufTail);
+        PS2glUpdateNormalMatrix();
+        *(tag_stMatriceBlock*)&pstMatriceT->mModelView = *(tag_stMatriceBlock*)pctx->ModelViewMatrix;
+        *(tag_stMatriceBlock*)&pstMatriceT->mNormal = *(tag_stMatriceBlock*)pctx->NormalMatrix;
+        pTexture0 = &pctx->TextureMatrix[0];
+        pTexture1 = &pctx->TextureMatrix[1];
+        *(int*)&pstMatriceT->mNormal[3][2] = bTexture0 = IsNotIdentity(pTexture0);
+        *(int*)&pstMatriceT->mNormal[3][3] = bTexture1 = IsNotIdentity(pTexture1);
+        if (bTexture0 || bTexture1)
+        {
+            if (bTexture0)
+                uiPreparation |= 2;
+            else
+                uiPreparation &= ~2;
+            pBuf = (int(*)[4])pctx->pVIFIBufTail;
+            (*pBuf)[0] = (*pBuf)[1] = 0;
+            (*pBuf)[2] = 0x01000404;
+            (*pBuf)[3] = 0x6c06004a;
+            *(__int128*)(++pBuf) = *(__int128*)(*pTexture0)[0];
+            *(__int128*)(++pBuf) = *(__int128*)(*pTexture0)[1];
+            *(__int128*)(++pBuf) = *(__int128*)(*pTexture0)[2];
+            *(__int128*)(++pBuf) = *(__int128*)(*pTexture1)[0];
+            *(__int128*)(++pBuf) = *(__int128*)(*pTexture1)[1];
+            *(__int128*)(++pBuf) = *(__int128*)(*pTexture1)[2];
+            pctx->pVIFIBufTail += 7;
+        }
+        else
+        {
+            uiPreparation &= ~2;
+        }
+        sceVu0MulMatrix(pstMatriceT->mClipping, pctx->ProjectionMatrix, pctx->ModelViewMatrix);
+        sceVu0UnitMatrix(pstMatriceT->mClippingScreen);
+        pstMatriceT->mClippingScreen[0][0] = vScreenOrg[0] = 0.5f * pctx->ViewPort[2];
+        pstMatriceT->mClippingScreen[1][1] = vScreenOrg[1] = 0.5f * pctx->ViewPort[3];
+        pstMatriceT->mClippingScreen[2][2] = vScreenOrg[2] = 0.5f * (pctx->DepthRange[1] - pctx->DepthRange[0]);
+        vScreenOrg[3] = 0.0f;
+        vScreenScale[0] = pctx->ViewPort[0];
+        vScreenScale[1] = pctx->ViewPort[1];
+        vScreenScale[2] = pctx->DepthRange[0];
+        vScreenScale[3] = 1.0f;
+        sceVu0AddVector(pstMatriceT->mClippingScreen[3], vScreenOrg, vScreenScale);
+        sceVu0MulMatrix(pstMatriceT->mLocalScreen, pstMatriceT->mClippingScreen, pstMatriceT->mClipping);
+        if (*(int*)pctx->peClippingMode == 1)
+        {
+            PS2glGenOrthoMatrix(pstMatriceT->mClipping, 0.0f, 4095.9375f, 0.0f, 4095.9375f, 0.0f, -pctx->DepthRange[0]);
+            *(tag_stMatriceBlock*)&pstMatriceT->mGuardBandClipping = *(tag_stMatriceBlock*)pstMatriceT->mClipping;
+            *(tag_stMatriceBlock*)&pstMatriceT->mGuardBandClippingScreen = *(tag_stMatriceBlock*)pstMatriceT->mClippingScreen;
+        }
+        else if (Mode == 5)
+        {
+            sceVu0MulMatrix(pstMatriceT->mGuardBandClipping, pctx->GuardBandProjectionMatrix, pctx->ModelViewMatrix);
+            sceVu0UnitMatrix(pstMatriceT->mGuardBandClippingScreen);
+            pstMatriceT->mGuardBandClippingScreen[0][0] = 2048.0f;
+            pstMatriceT->mGuardBandClippingScreen[1][1] = -2048.0f;
+            pstMatriceT->mGuardBandClippingScreen[2][2] = vScreenOrg[2];
+            pstMatriceT->mGuardBandClippingScreen[3][0] = 2048.0f;
+            pstMatriceT->mGuardBandClippingScreen[3][1] = 2048.0f;
+            pstMatriceT->mGuardBandClippingScreen[3][2] = pstMatriceT->mClippingScreen[3][2];
+        }
+        else
+        {
+            *(tag_stMatriceBlock*)&pstMatriceT->mGuardBandClipping = *(tag_stMatriceBlock*)pstMatriceT->mClipping;
+            *(tag_stMatriceBlock*)&pstMatriceT->mGuardBandClippingScreen = *(tag_stMatriceBlock*)pstMatriceT->mClippingScreen;
+        }
+        pstMatriceT->ivUnpackCode[0] = pstMatriceT->ivUnpackCode[1] = 0;
+        pstMatriceT->ivUnpackCode[2] = 0x01000404;
+        pstMatriceT->ivUnpackCode[3] = 0x6c0c0000;
+        pstMatriceT->ivUnpackCode2[0] = pstMatriceT->ivUnpackCode2[1] = 0;
+        pstMatriceT->ivUnpackCode2[2] = 0x01000404;
+        pstMatriceT->ivUnpackCode2[3] = 0x6c080024;
+        pstMatriceT->ivUnpackCode3[0] = pstMatriceT->ivUnpackCode3[1] = 0;
+        pstMatriceT->ivUnpackCode3[2] = 0x01000404;
+        pstMatriceT->ivUnpackCode3[3] = 0x6c080040;
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 975–1005 */
@@ -2095,6 +2186,12 @@ void VU1ReUpdateMatrice(PS2GL_VU1_InterpolMatrixData_* pInterpolData)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+inline void MulAddVector(float* dst, float* tmp, float* a, float* b)
+{
+    sceVu0MulVector(tmp, a, b);
+    sceVu0AddVector(dst, tmp, dst);
+}
+
 void VU1UpdateDiffuseOnlyParam(tagGLcontext* pctx)
 {
     tag_GLmaterial* pmat;
@@ -2108,12 +2205,12 @@ void VU1UpdateDiffuseOnlyParam(tagGLcontext* pctx)
     pstMatriceL = (tag_stVU1MatriceL*)pctx->pVIFIBufTail;
     pctx->bLightsChanged = 0;
     pctx->bMaterialChanged = 0;
+    pmat = &pctx->Materials[0];
     if (pctx->nLightBits & 0x200)
     {
-        pmat = &pctx->Materials[0];
-        sceVu0CopyVector(pctx->pvAmbient[0], pctx->vAmbient);
         pLight = &pctx->Lights[0];
-        for (iLoop = 0; iLoop < 4; iLoop++, pLight++)
+        sceVu0CopyVector(pctx->pvAmbient[0], pctx->vAmbient);
+        for (iLoop = 0; iLoop < 4; pLight++, iLoop++)
         {
             if (nLightBits & (1 << iLoop))
             {
@@ -2123,8 +2220,7 @@ void VU1UpdateDiffuseOnlyParam(tagGLcontext* pctx)
                 }
                 else
                 {
-                    sceVu0MulVector(vTmp1, pLight->vAmbient, pmat->vAmbient);
-                    sceVu0AddVector(pctx->pvAmbient[0], vTmp1, pctx->pvAmbient[0]);
+                    MulAddVector(pctx->pvAmbient[0], vTmp1, pLight->vAmbient, pmat->vAmbient);
                 }
                 if (pctx->eColorMaterialMode == 0x1201 || pctx->eColorMaterialMode == 0x1602)
                 {
@@ -2145,15 +2241,13 @@ void VU1UpdateDiffuseOnlyParam(tagGLcontext* pctx)
     }
     else
     {
-        pmat = &pctx->Materials[0];
-        sceVu0CopyVector(pctx->pvAmbient[0], pctx->vAmbient);
         pLight = &pctx->Lights[0];
-        for (iLoop = 0; iLoop < 4; iLoop++, pLight++)
+        sceVu0CopyVector(pctx->pvAmbient[0], pctx->vAmbient);
+        for (iLoop = 0; iLoop < 4; pLight++, iLoop++)
         {
             if (nLightBits & (1 << iLoop))
             {
-                sceVu0MulVector(vTmp2, pmat->vAmbient, pLight->vAmbient);
-                sceVu0AddVector(pctx->pvAmbient[0], vTmp2, pctx->pvAmbient[0]);
+                MulAddVector(pctx->pvAmbient[0], vTmp2, pmat->vAmbient, pLight->vAmbient);
                 sceVu0MulVector(pstMatriceL->mDiffuseLightColor[iLoop], pmat->vDiffuse, pLight->vDiffuse);
                 sceVu0CopyVector(pstMatriceL->mDiffuseLightPosition[iLoop], pLight->vPosition);
             }
@@ -2253,12 +2347,12 @@ void VU1UpdateSimpleSpecularParam(tagGLcontext* pctx)
     pctx->bLightsChanged = 0;
     pctx->bMaterialChanged = 0;
     *(float*)pctx->pfShininess = pctx->Materials[0].fShininess;
+    pmat = &pctx->Materials[0];
     if (pctx->nLightBits & 0x200)
     {
-        pmat = &pctx->Materials[0];
-        sceVu0CopyVector(pctx->pvAmbient[0], pctx->vAmbient);
         pLight = &pctx->Lights[0];
-        for (iLoop = 0; iLoop < 4; iLoop++, pLight++)
+        sceVu0CopyVector(pctx->pvAmbient[0], pctx->vAmbient);
+        for (iLoop = 0; iLoop < 4; pLight++, iLoop++)
         {
             if (nLightBits & (1 << iLoop))
             {
@@ -2268,8 +2362,7 @@ void VU1UpdateSimpleSpecularParam(tagGLcontext* pctx)
                 }
                 else
                 {
-                    sceVu0MulVector(vTmp1, pLight->vAmbient, pmat->vAmbient);
-                    sceVu0AddVector(pctx->pvAmbient[0], vTmp1, pctx->pvAmbient[0]);
+                    MulAddVector(pctx->pvAmbient[0], vTmp1, pLight->vAmbient, pmat->vAmbient);
                 }
                 if (pctx->eColorMaterialMode == 0x1201 || pctx->eColorMaterialMode == 0x1602)
                 {
@@ -2288,7 +2381,7 @@ void VU1UpdateSimpleSpecularParam(tagGLcontext* pctx)
                 {
                     sceVu0MulVector(pstMatriceL->mSpecularLightColor[iLoop], pmat->vSpecular, pLight->vSpecular);
                 }
-                sceVu0AddVector(pstMatriceL->mSpecularLightReflection[iLoop], pLight->vDirection, vViewer);
+                sceVu0AddVector(pstMatriceL->mSpecularLightReflection[iLoop], pLight->vPosition, vViewer);
                 sceVu0Normalize(pstMatriceL->mSpecularLightReflection[iLoop], pstMatriceL->mSpecularLightReflection[iLoop]);
             }
             else
@@ -2302,17 +2395,15 @@ void VU1UpdateSimpleSpecularParam(tagGLcontext* pctx)
     }
     else
     {
-        pmat = &pctx->Materials[0];
-        sceVu0CopyVector(pctx->pvAmbient[0], pctx->vAmbient);
         pLight = &pctx->Lights[0];
-        for (iLoop = 0; iLoop < 4; iLoop++, pLight++)
+        sceVu0CopyVector(pctx->pvAmbient[0], pctx->vAmbient);
+        for (iLoop = 0; iLoop < 4; pLight++, iLoop++)
         {
             if (nLightBits & (1 << iLoop))
             {
-                sceVu0MulVector(vTmp2, pmat->vAmbient, pLight->vAmbient);
-                sceVu0AddVector(pctx->pvAmbient[0], vTmp2, pctx->pvAmbient[0]);
+                MulAddVector(pctx->pvAmbient[0], vTmp2, pmat->vAmbient, pLight->vAmbient);
                 sceVu0MulVector(pstMatriceL->mSpecularLightColor[iLoop], pmat->vSpecular, pLight->vSpecular);
-                sceVu0AddVector(pstMatriceL->mSpecularLightReflection[iLoop], pLight->vDirection, vViewer);
+                sceVu0AddVector(pstMatriceL->mSpecularLightReflection[iLoop], pLight->vPosition, vViewer);
                 sceVu0Normalize(pstMatriceL->mSpecularLightReflection[iLoop], pstMatriceL->mSpecularLightReflection[iLoop]);
                 sceVu0MulVector(pstMatriceL->mDiffuseLightColor[iLoop], pmat->vDiffuse, pLight->vDiffuse);
                 sceVu0CopyVector(pstMatriceL->mDiffuseLightPosition[iLoop], pLight->vPosition);
@@ -2693,17 +2784,377 @@ void PS2GL_SetDestinationFrame(unsigned int DestinationFrame)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+inline void VU1AddFrameParams(tagGLcontext* pctx)
+{
+    ((int*)pctx->pVIFIBufTail)[0] = 0;
+    ((int*)pctx->pVIFIBufTail)[1] = 0;
+    ((int*)pctx->pVIFIBufTail)[2] = 0;
+    ((int*)pctx->pVIFIBufTail)[3] = 0x6C0600AE;
+    pctx->pVIFIBufTail++;
+    (*pctx->pVIFIBufTail)[0] = g_PS2glContext.TextureMatrix[1][3][0];
+    (*pctx->pVIFIBufTail)[1] = g_PS2glContext.TextureMatrix[1][3][1];
+    ((int*)pctx->pVIFIBufTail)[2] = (g_PS2glContext.nTextureEnableBits & 0x200) ? 1 : 0;
+    pctx->pVIFIBufTail++;
+    (*pctx->pVIFIBufTail)[0] = g_PS2glContext.TextureMatrix[0][3][0];
+    (*pctx->pVIFIBufTail)[1] = g_PS2glContext.TextureMatrix[0][3][1];
+    ((unsigned long*)pctx->pVIFIBufTail)[1] = *(unsigned long*)&g_gsContext.PRMODE;
+    ((int*)pctx->pVIFIBufTail)[3] = (((int*)pctx->pVIFIBufTail)[2] & ~0x20) | 0x240 | (((g_PS2glContext.nTextureEnableBits & 0x200) ? 1 : 0) << 4);
+    pctx->pVIFIBufTail++;
+    ((unsigned long*)pctx->pVIFIBufTail)[0] = SCE_GIF_SET_TAG(1, 1, 0, 0, 0, 1);
+    ((unsigned long*)pctx->pVIFIBufTail)[1] = 0xE;
+    ((unsigned long*)pctx->pVIFIBufTail)[2] = ((unsigned int*)pctx->pVIFIBufTail)[-1];
+    ((unsigned long*)pctx->pVIFIBufTail)[3] = 0x1B;
+    pctx->pVIFIBufTail += 2;
+    ((unsigned long*)pctx->pVIFIBufTail)[0] = SCE_GIF_SET_TAG(1, 1, 0, 0, 0, 1);
+    ((unsigned long*)pctx->pVIFIBufTail)[1] = 0xE;
+    ((unsigned long*)pctx->pVIFIBufTail)[2] = *(unsigned long*)&g_gsContext.PRMODE;
+    ((int*)pctx->pVIFIBufTail)[5] = 1;
+    ((unsigned long*)pctx->pVIFIBufTail)[3] = 0x1B;
+    pctx->pVIFIBufTail += 2;
+}
+
+inline void VU1UpdateBSParam(tagGLcontext* pctx)
+{
+    tag_stVU1MatriceBS* pstMatriceBS;
+    pstMatriceBS = (tag_stVU1MatriceBS*)pctx->pVIFIBufTail;
+    pctx->bBSParamChanged = 0;
+    pctx->pVIFIBufTail += sizeof(*pstMatriceBS) / sizeof(*pctx->pVIFIBufTail);
+    *(tag_stMatriceBlock*)&pstMatriceBS->mFrustumNormal = *(tag_stMatriceBlock*)pctx->mFrustumNormal;
+    *(tag_stMatriceBlock*)&pstMatriceBS->mGuardBandNormal = *(tag_stMatriceBlock*)pctx->mGuardBandNormal;
+    *(__int128*)pstMatriceBS->mFrustumNormal[3] = *(__int128*)pctx->vZNearFar;
+    *(__int128*)pstMatriceBS->mGuardBandNormal[3] = *(__int128*)pctx->vObjectBS;
+    pstMatriceBS->ivUnpackCode[0] = pstMatriceBS->ivUnpackCode[1] = 0;
+    pstMatriceBS->ivUnpackCode[2] = 0x01000404;
+    pstMatriceBS->ivUnpackCode[3] = 0x6C08002C;
+}
+
+inline void VU1UpdateObjectBSParam(tagGLcontext* pctx)
+{
+    tag_stVU1ObjectBS* pstObjectBS;
+    pstObjectBS = (tag_stVU1ObjectBS*)pctx->pVIFIBufTail;
+    pctx->pVIFIBufTail += sizeof(*pstObjectBS) / sizeof(*pctx->pVIFIBufTail);
+    *(__int128*)pstObjectBS->vObjectBS = *(__int128*)pctx->vObjectBS;
+    pstObjectBS->ivUnpackCode[0] = pstObjectBS->ivUnpackCode[1] = 0;
+    pstObjectBS->ivUnpackCode[2] = 0x01000404;
+    pstObjectBS->ivUnpackCode[3] = 0x6C010033;
+}
+
+typedef struct tag_stVectorBlock { __int128 qw; } tag_stVectorBlock;
+
 void VU1UpdateParameters(tagGLcontext* pctx, unsigned int Mode)
 {
-    int i;
-    int (*piUnpackCode)[4];
-    tagListData* pListData;
-    unsigned int uiMask;
-    unsigned char bSDLMatricesConjunction;
-    unsigned int eOldClippingMode;
-    unsigned int nLightBits;
     _sceDmaTag* pTag;
-    /* TODO: decompile from asm/... */
+    unsigned int nLightBits;
+    unsigned int eOldClippingMode;
+    unsigned char bSDLMatricesConjunction;
+    unsigned int uiMask;
+    tagListData* pListData;
+    int (*piUnpackCode)[4];
+    int i;
+    pTag = (_sceDmaTag*)pctx->pVIFIBufTail;
+    nLightBits = pctx->nLightBits;
+    eOldClippingMode = *(unsigned int*)pctx->peClippingMode;
+    pctx->pGifTagBuf0->PRIM = *(unsigned short*)&g_gsContext.PRIM;
+    pctx->pGifTagBuf1->PRIM = *(unsigned short*)&g_gsContext.PRIM;
+    *(unsigned int*)pctx->pvEmission = PS2GL_CurrentDestinationFrame;
+    bSDLMatricesConjunction = 0;
+    if (*(int*)&pctx->eClippingFunction >= 2 && pctx->eBeginMode != 4 && pctx->eBeginMode != 5)
+    {
+        *(int*)pctx->peUseClippingMode = *(int*)pctx->peClippingMode = 1;
+    }
+    else
+    {
+        *(int*)pctx->peUseClippingMode = *(int*)pctx->peClippingMode = pctx->eClippingFunction;
+    }
+    if (!(g_PS2glContext.uiStaticDisplayListBits & 0x01000000))
+    {
+        pctx->pVIFIBufTail += 10;
+        VU1AddFrameParams(pctx);
+        if (pctx->bMatrixChanged || (eOldClippingMode >> 1) != (*(unsigned int*)pctx->peClippingMode >> 1))
+            VU1UpdateMatrice(pctx, Mode);
+        if (pctx->bBSParamChanged)
+            VU1UpdateBSParam(pctx);
+        else if (pctx->uiBoundingSphereBits & 3)
+            VU1UpdateObjectBSParam(pctx);
+    }
+    else
+    {
+        pListData = g_PS2glContext.pCurListData;
+        if (g_PS2glContext.ucSDLObjectReserveSize)
+        {
+            memset(pTag, 0, g_PS2glContext.ucSDLObjectReserveSize * 16);
+            pTag->id = 0x10;
+            pTag->qwc = g_PS2glContext.ucSDLObjectReserveSize - 1;
+            pctx->pVIFIBufTail += g_PS2glContext.ucSDLObjectReserveSize;
+            pTag = (_sceDmaTag*)pctx->pVIFIBufTail;
+            uiMask = (unsigned char)g_PS2glContext.ucSDLObjectReserveSize;
+        }
+        else
+        {
+            uiMask = 0;
+        }
+        pctx->pVIFIBufTail += 10;
+        VU1AddFrameParams(pctx);
+        if (g_PS2glContext.uiStaticDisplayListBits & 0x100)
+        {
+            if (pctx->bMatrixChanged || (eOldClippingMode >> 1) != (*(unsigned int*)pctx->peClippingMode >> 1) || (g_PS2glContext.uiStaticDisplayListBits & 0x400))
+            {
+                bSDLMatricesConjunction = VU1UpdateMatriceInsideSDL(pctx, &uiMask);
+                uiMask |= 0x01000000;
+            }
+        }
+        else
+        {
+            if (pctx->bMatrixChanged || (eOldClippingMode >> 1) != (*(unsigned int*)pctx->peClippingMode >> 1))
+            {
+                VU1UpdateMatrice(pctx, Mode);
+                uiMask |= 0x00100000;
+            }
+        }
+        if (pctx->bBSParamChanged)
+        {
+            VU1UpdateBSParam(pctx);
+            uiMask |= 0x04000000;
+        }
+        else if (pctx->uiBoundingSphereBits & 3)
+        {
+            VU1UpdateObjectBSParam(pctx);
+            uiMask |= 0x08000000;
+        }
+        if (pctx->bPointLighting && !(nLightBits & 0x400))
+        {
+            nLightBits &= ~0x400;
+            pctx->nLightBits = nLightBits;
+            uiMask |= 0x00200000;
+        }
+        else if ((nLightBits & 0x400) && (pctx->bLightsChanged || pctx->bMaterialChanged))
+        {
+            uiMask |= 0x00200000;
+        }
+        ((int*)pListData->pSDLIndices)[pListData->uiSDLIndicesSize++] = (int)pTag;
+        ((int*)pListData->pSDLIndices)[pListData->uiSDLIndicesSize++] = uiMask;
+    }
+    if (pctx->eBeginMode != pctx->eOldBeginMode)
+    {
+        pctx->bCullfaceChanged = 1;
+        switch (pctx->eBeginMode)
+        {
+        case 4:
+        case 7:
+            *(int*)pctx->piClipStep = 3;
+            *(int*)pctx->pnClipMask = 0;
+            break;
+        case 5:
+            if (pctx->nTextureEnableBits & 8)
+            {
+                *(int*)pctx->piClipStep = 3;
+                *(int*)pctx->pnClipMask = 0;
+            }
+            else
+            {
+                *(int*)pctx->piClipStep = 1;
+                *(int*)pctx->pnClipMask = 0;
+            }
+            break;
+        case 6:
+            if (pctx->nTextureEnableBits & 8)
+            {
+                *(int*)pctx->piClipStep = 3;
+                *(int*)pctx->pnClipMask = 0;
+            }
+            else
+            {
+                *(int*)pctx->piClipStep = 1;
+                *(int*)pctx->pnClipMask = 0xFFF;
+            }
+            break;
+        case 1:
+        case 10:
+            *(int*)pctx->piClipStep = 2;
+            *(int*)pctx->pnClipMask = 0xFFF;
+            break;
+        case 2:
+        case 3:
+            *(int*)pctx->piClipStep = 1;
+            *(int*)pctx->pnClipMask = 0xFFF;
+            break;
+        case 0:
+            *(int*)pctx->piClipStep = 1;
+            *(int*)pctx->pnClipMask = 0x3F;
+            break;
+        }
+    }
+    *(unsigned char*)pctx->pbTriangleFan = pctx->eBeginMode == 6 && *(int*)pctx->peClippingMode != 0;
+    if (pctx->bCullfaceChanged)
+        VU1UpdateCullFaceParam(pctx);
+    if (pctx->nEnableBits & 0x80)
+    {
+        if (g_PS2glContext.uiFastPathBits & 1)
+        {
+            uiPreparation &= ~1;
+            *(unsigned char*)pctx->pbFogging = 0;
+        }
+        else
+        {
+            uiPreparation |= 1;
+            *(unsigned char*)pctx->pbFogging = 1;
+        }
+        uiPreparation |= 1;
+        if (pctx->bFogChanged)
+        {
+            *(int*)pctx->peFogMode = (pctx->eFogMode == 0x2601) ? 0 : ((pctx->eFogMode == 0x800) ? 1 : 2);
+            *(float*)pctx->pfFogDensity = pctx->fFogDensity;
+            *(float*)pctx->pfFogLinearStart = pctx->fFogLinearStart;
+            *(float*)pctx->pfFogLinearEnd = pctx->fFogLinearEnd;
+            *(float*)pctx->pfFogLinearStart = 1.0f / (*(float*)pctx->pfFogLinearStart - *(float*)pctx->pfFogLinearEnd);
+            pctx->bFogChanged = 0;
+        }
+    }
+    else
+    {
+        uiPreparation &= ~1;
+    }
+    if (pctx->uiBoundingSphereBits & 0xC)
+    {
+        uiPreparation |= 4;
+        *(int*)pctx->pvScreenScale = 1;
+    }
+    else
+    {
+        uiPreparation &= ~4;
+        *(int*)pctx->pvScreenScale = 0;
+    }
+    if (*(int*)g_PS2glContext.pnColorMatMasks & 0x300)
+        uiPreparation |= 8;
+    else
+        uiPreparation &= ~8;
+    if (g_PS2glContext.uiDmaOmitDataBits & 0x100)
+    {
+        pctx->iLightModel = 0;
+        if (pctx->bPointLighting)
+        {
+            if (uiPreparation)
+                pctx->pMSCAL->IMMEDIATE = &PointLighting_Simple_c - &Beginning_Of_T_and_L;
+            else
+                pctx->pMSCAL->IMMEDIATE = &PointLighting_Fast_Simple_c - &Beginning_Of_T_and_L;
+            *(int*)pctx->piEntryAddress = &NoLighting_Nurbs - &Beginning_Of_T_and_L;
+            VU1UpdateDiffusePointLightingParam(pctx);
+        }
+        else
+        {
+            if (uiPreparation)
+                pctx->pMSCAL->IMMEDIATE = &NoLighting_Simple_c - &Beginning_Of_T_and_L;
+            else
+                pctx->pMSCAL->IMMEDIATE = &NoLighting_Fast_Simple_c - &Beginning_Of_T_and_L;
+            *(int*)pctx->piEntryAddress = &NoLighting_Nurbs - &Beginning_Of_T_and_L;
+            if (pctx->bLightsChanged || pctx->bMaterialChanged)
+                VU1UpdateDiffuseOnlyParam(pctx);
+        }
+    }
+    else if (!(nLightBits & 0x400))
+    {
+        pctx->iLightModel = 0;
+        if (uiPreparation)
+        {
+            if (g_PS2glContext.uiFastPathBits & 1)
+                pctx->pMSCAL->IMMEDIATE = &NoLighting_Nurbs - &Beginning_Of_T_and_L;
+            else
+                pctx->pMSCAL->IMMEDIATE = &NoLighting_Nurbs - &Beginning_Of_T_and_L;
+        }
+        else
+        {
+            if (g_PS2glContext.uiFastPathBits & 1)
+                pctx->pMSCAL->IMMEDIATE = &NoLighting_Fast_Simple - &Beginning_Of_T_and_L;
+            else
+                pctx->pMSCAL->IMMEDIATE = &NoLighting_Nurbs - &Beginning_Of_T_and_L;
+        }
+        *(int*)pctx->piEntryAddress = &NoLighting_Nurbs - &Beginning_Of_T_and_L;
+    }
+    else if (pctx->bLightModelDiffuseOnly)
+    {
+        pctx->iLightModel = 1;
+        if (uiPreparation)
+        {
+            if (g_PS2glContext.uiFastPathBits & 1)
+                pctx->pMSCAL->IMMEDIATE = &NoSpecular_Simple - &Beginning_Of_T_and_L;
+            else
+                pctx->pMSCAL->IMMEDIATE = &NoSpecular - &Beginning_Of_T_and_L;
+        }
+        else
+        {
+            if (g_PS2glContext.uiFastPathBits & 1)
+                pctx->pMSCAL->IMMEDIATE = &NoSpecular_Fast_Simple - &Beginning_Of_T_and_L;
+            else
+                pctx->pMSCAL->IMMEDIATE = &NoSpecular_Fast - &Beginning_Of_T_and_L;
+        }
+        *(int*)pctx->piEntryAddress = &NoSpecular_Nurbs - &Beginning_Of_T_and_L;
+        if (pctx->bLightsChanged || pctx->bMaterialChanged)
+            VU1UpdateDiffuseOnlyParam(pctx);
+    }
+    else
+    {
+        pctx->iLightModel = 2;
+        if (uiPreparation)
+        {
+            if (!(g_PS2glContext.uiFastPathBits & 1))
+                pctx->pMSCAL->IMMEDIATE = &WithSpecular - &Beginning_Of_T_and_L;
+            else
+                pctx->pMSCAL->IMMEDIATE = &NoSpecular_Simple - &Beginning_Of_T_and_L;
+        }
+        else
+        {
+            if (!(g_PS2glContext.uiFastPathBits & 1))
+                pctx->pMSCAL->IMMEDIATE = &WithSpecular_Fast - &Beginning_Of_T_and_L;
+            else
+                pctx->pMSCAL->IMMEDIATE = &NoSpecular_Fast_Simple - &Beginning_Of_T_and_L;
+        }
+        *(int*)pctx->piEntryAddress = &WithSpecular_Nurbs - &Beginning_Of_T_and_L;
+        if (pctx->bLightsChanged || pctx->bMaterialChanged)
+            VU1UpdateSimpleSpecularParam(pctx);
+    }
+    if (PS2GL_bOptimizedSprite)
+        pctx->pMSCAL->IMMEDIATE = &SimpleSprites - &Beginning_Of_T_and_L;
+    if (PS2GL_SpecialMode)
+    {
+        switch (PS2GL_SpecialMode)
+        {
+        case 0x1000:
+            pctx->pMSCAL->IMMEDIATE = &CST_SimpleSprites - &Beginning_Of_T_and_L;
+            break;
+        case 0x2000:
+            pctx->pMSCAL->IMMEDIATE = &CST_SimpleSpritesOriented - &Beginning_Of_T_and_L;
+            break;
+        case 0x3000:
+            pctx->pMSCAL->IMMEDIATE = &CST_SpritesSemiLookat - &Beginning_Of_T_and_L;
+            break;
+        }
+        PS2GL_SpecialMode = 0;
+    }
+    if (pctx->nTextureEnableBits & 0xF)
+        *(tag_stVectorBlock*)*pctx->pvColorRange = *(tag_stVectorBlock*)vColorLimit128;
+    else
+        *(tag_stVectorBlock*)*pctx->pvColorRange = *(tag_stVectorBlock*)vColorLimit255;
+    pctx->pMSCAL->CMD = 0x14;
+    *(int*)pctx->piReturnAddress = 0;
+    pTag->p[0] = 0x13000000;
+    pTag->p[1] = 0x01000404;
+    ((int*)pTag)[4] = ((int*)pTag)[5] = 0;
+    ((int*)pTag)[6] = 0x01000404;
+    ((int*)pTag)[7] = 0x6C08001C;
+    memcpy(pTag + 2, pctx->pvAmbient, 0x80);
+    piUnpackCode = (int(*)[4])pctx->pVIFIBufTail++;
+    i = 0;
+    (*piUnpackCode)[1] = (*piUnpackCode)[2] = (*piUnpackCode)[3] = 0;
+    if (bSDLMatricesConjunction)
+    {
+        (*piUnpackCode)[i] = 0x1400076C;
+        ((tagstVIFCode*)&(*piUnpackCode)[i++])->IMMEDIATE = (&MATRICES_CONJUNCTION - &OBJECT_PREPARATION_START) + 0x76C;
+    }
+    if (pctx->uiBoundingSphereBits & 3)
+        (*piUnpackCode)[i++] = 0x1400076C;
+    (*piUnpackCode)[i] = *(int*)pctx->pMSCAL;
+    pTag->qwc = (pctx->pVIFIBufTail - (float(*)[4])pTag) - 1;
+    pTag->id = 0x10;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 2081–2428 */
@@ -3064,7 +3515,200 @@ void PS2glVIFSendBuffer(unsigned char bEOP)
     float (*pVBufSend)[4];
     float (*pBuf)[4];
     unsigned char bPackageBoundingSphere;
-    /* TODO: decompile from asm/... */
+    iBufSize = (g_PS2glContext.iBufCount < 60) ? g_PS2glContext.iBufCount * 4 + 6 : g_PS2glContext.pVU1_DMA_buf1 - g_PS2glContext.pVU1_DMA_buf0;
+    if (g_PS2glContext.pVBuf < g_PS2glContext.pVBuf1)
+    {
+        pDmaTagSend = g_PS2glContext.pVU1_DMA_buf0;
+        pGifTagSend = g_PS2glContext.pGifTagBuf0;
+        pVBufSend = g_PS2glContext.pVBuf0;
+        pNBufSend = g_PS2glContext.pNBuf0;
+        pTBufSend = g_PS2glContext.pTBuf0;
+        pCBufSend = g_PS2glContext.pCBuf0;
+        pTBufSend_b = g_PS2glContext.pTBuf0_b;
+        pCBufSend_b = g_PS2glContext.pCBuf0_b;
+        g_PS2glContext.pVBuf = g_PS2glContext.pVBuf1;
+        g_PS2glContext.pNBuf = g_PS2glContext.pNBuf1;
+        g_PS2glContext.pTBuf = g_PS2glContext.pTBuf1;
+        g_PS2glContext.pCBuf = g_PS2glContext.pCBuf1;
+        g_PS2glContext.pTBuf_b = g_PS2glContext.pTBuf1_b;
+        g_PS2glContext.pCBuf_b = g_PS2glContext.pCBuf1_b;
+    }
+    else
+    {
+        pDmaTagSend = g_PS2glContext.pVU1_DMA_buf1;
+        pGifTagSend = g_PS2glContext.pGifTagBuf1;
+        pVBufSend = g_PS2glContext.pVBuf1;
+        pNBufSend = g_PS2glContext.pNBuf1;
+        pTBufSend = g_PS2glContext.pTBuf1;
+        pCBufSend = g_PS2glContext.pCBuf1;
+        pTBufSend_b = g_PS2glContext.pTBuf1_b;
+        pCBufSend_b = g_PS2glContext.pCBuf1_b;
+        g_PS2glContext.pVBuf = g_PS2glContext.pVBuf0;
+        g_PS2glContext.pNBuf = g_PS2glContext.pNBuf0;
+        g_PS2glContext.pTBuf = g_PS2glContext.pTBuf0;
+        g_PS2glContext.pCBuf = g_PS2glContext.pCBuf0;
+        g_PS2glContext.pTBuf_b = g_PS2glContext.pTBuf0_b;
+        g_PS2glContext.pCBuf_b = g_PS2glContext.pCBuf0_b;
+    }
+    pGifTagSend->NLOOP = g_PS2glContext.iBufCount;
+    pGifTagSend->EOP = 1;
+    if (g_PS2glContext.uiBoundingSphereBits & 0xC)
+    {
+        bPackageBoundingSphere = 1;
+        iBufSize += 2;
+        if (g_PS2glContext.uiBoundingSphereBits & 8)
+        {
+            PS2glComputeBS(fvPackageBS, pVBufSend, g_PS2glContext.iBufCount, NULL, 0);
+        }
+        else
+        {
+            *(__int128*)fvPackageBS = *(__int128*)g_PS2glContext.pfvPackaeBSs[g_PS2glContext.iPackageBSIndex];
+            g_PS2glContext.iPackageBSIndex++;
+        }
+    }
+    else
+    {
+        bPackageBoundingSphere = 0;
+    }
+    if (uiMaxVifDmaBufLength - (g_PS2glContext.pVIFIBufTail - g_PS2glContext.pVIFInBuf) - 1 < iBufSize)
+    {
+        impPS2glFlush();
+    }
+    pBuf = g_PS2glContext.pVIFIBufTail;
+    if (g_PS2glContext.iBufCount < 60 || bPackageBoundingSphere)
+    {
+        cbPartSize = g_PS2glContext.iBufCount * sizeof(*pBuf);
+        ((_sceDmaTag*)pBuf)->qwc = g_PS2glContext.iBufCount * 4 + 5;
+        if (bPackageBoundingSphere)
+            ((_sceDmaTag*)pBuf)->qwc += 2;
+        ((_sceDmaTag*)pBuf)->mark = 0;
+        ((_sceDmaTag*)pBuf)->id = 0x10;
+        ((_sceDmaTag*)pBuf)->p[0] = 0x01000404;
+        ((_sceDmaTag*)pBuf)->p[1] = 0x6CC78000;
+        ((tagstVIFCode*)&((_sceDmaTag*)pBuf)->p[1])->NUM = g_PS2glContext.iBufCount + 1;
+        *(__int128*)pBuf[1] = *(__int128*)pGifTagSend;
+        ((int*)pBuf[1])[3] = (unsigned char)((g_PS2glContext.nTextureEnableBits & 0x200) ? 1 : 0);
+        pBuf += 2;
+        memcpy(pBuf, pVBufSend, cbPartSize);
+        pBuf += g_PS2glContext.iBufCount;
+        *(__int128*)pBuf = *(__int128*)MY_UNPACKR;
+        ((tagstVIFCode*)&((int*)pBuf)[3])->NUM = g_PS2glContext.iBufCount;
+        ((tagstVIFCode*)&((int*)pBuf)[3])->IMMEDIATE = 0x803D;
+        pBuf++;
+        memcpy(pBuf, pNBufSend, cbPartSize);
+        pBuf += g_PS2glContext.iBufCount;
+        *(__int128*)pBuf = *(__int128*)MY_UNPACKR;
+        ((tagstVIFCode*)&((int*)pBuf)[3])->NUM = g_PS2glContext.iBufCount;
+        ((tagstVIFCode*)&((int*)pBuf)[3])->IMMEDIATE = 0x8079;
+        pBuf++;
+        memcpy(pBuf, pTBufSend, cbPartSize);
+        pBuf += g_PS2glContext.iBufCount;
+        *(__int128*)pBuf = *(__int128*)MY_UNPACKR;
+        ((tagstVIFCode*)&((int*)pBuf)[3])->NUM = g_PS2glContext.iBufCount;
+        ((tagstVIFCode*)&((int*)pBuf)[3])->IMMEDIATE = 0x80B5;
+        pBuf++;
+        memcpy(pBuf, pCBufSend, cbPartSize);
+        pBuf += g_PS2glContext.iBufCount;
+        if (bPackageBoundingSphere)
+        {
+            *(__int128*)pBuf = *(__int128*)MY_UNPACKR;
+            ((tagstVIFCode*)&((int*)pBuf)[3])->NUM = 1;
+            ((tagstVIFCode*)&((int*)pBuf)[3])->IMMEDIATE = 0x80F2;
+            *(__int128*)pBuf[1] = *(__int128*)fvPackageBS;
+            pBuf += 2;
+        }
+        *(__int128*)pBuf = *(__int128*)MY_MSCNT;
+        g_PS2glContext.pVIFIBufTail = pBuf + 1;
+        if (g_PS2glContext.nTextureEnableBits & 0x200)
+        {
+            cbPartSize = g_PS2glContext.iBufCount * sizeof(*pBuf);
+            if (uiMaxVifDmaBufLength - (g_PS2glContext.pVIFIBufTail - g_PS2glContext.pVIFInBuf) - 1 < iBufSize)
+            {
+                impPS2glFlush();
+            }
+            iTbufOffset = iBufSize - 1 - (g_PS2glContext.iBufCount + 1) - g_PS2glContext.iBufCount;
+            memcpy(g_PS2glContext.pVIFIBufTail, g_PS2glContext.pVIFIBufTail - iBufSize, iBufSize * sizeof(*pBuf));
+            memcpy(g_PS2glContext.pVIFIBufTail + iTbufOffset, pTBufSend_b, cbPartSize);
+            memcpy(&g_PS2glContext.pVIFIBufTail[iTbufOffset + g_PS2glContext.iBufCount + 1], pCBufSend_b, cbPartSize);
+            g_PS2glContext.pVIFIBufTail += iBufSize;
+            ((int*)(g_PS2glContext.pVIFIBufTail - (g_PS2glContext.iBufCount * 4 + 5)))[3] = (unsigned char)(((g_PS2glContext.nTextureEnableBits & 0x200) ? 1 : 0) | 0x10);
+        }
+    }
+    else
+    {
+        memcpy(g_PS2glContext.pVIFIBufTail, pDmaTagSend, (char*)g_PS2glContext.pVU1_DMA_buf1 - (char*)g_PS2glContext.pVU1_DMA_buf0);
+        ((int*)g_PS2glContext.pVIFIBufTail[1])[3] = (unsigned char)((g_PS2glContext.nTextureEnableBits & 0x200) ? 1 : 0);
+        g_PS2glContext.pVIFIBufTail += g_PS2glContext.pVU1_DMA_buf1 - g_PS2glContext.pVU1_DMA_buf0;
+        if (g_PS2glContext.nTextureEnableBits & 0x200)
+        {
+            cbPartSize = g_PS2glContext.iBufCount * sizeof(*pBuf);
+            if (uiMaxVifDmaBufLength - (g_PS2glContext.pVIFIBufTail - g_PS2glContext.pVIFInBuf) - 1 < iBufSize)
+            {
+                impPS2glFlush();
+            }
+            iTbufOffset = iBufSize - 1 - g_PS2glContext.iBufCount * 2;
+            memcpy(g_PS2glContext.pVIFIBufTail, g_PS2glContext.pVIFIBufTail - iBufSize, iBufSize * sizeof(*pBuf));
+            memcpy(g_PS2glContext.pVIFIBufTail + iTbufOffset, pTBufSend_b, cbPartSize);
+            memcpy(&g_PS2glContext.pVIFIBufTail[iTbufOffset + g_PS2glContext.iBufCount], pCBufSend_b, cbPartSize);
+            ((int*)g_PS2glContext.pVIFIBufTail[1])[3] = (unsigned char)(((g_PS2glContext.nTextureEnableBits & 0x200) ? 1 : 0) | 0x10);
+            g_PS2glContext.pVIFIBufTail += iBufSize;
+        }
+    }
+    if (!bEOP && !g_PS2glContext.bInDisplayListExecution)
+    {
+        switch (g_PS2glContext.eBeginMode)
+        {
+        case 5:
+            *(__int128*)g_PS2glContext.pVBuf[0] = *(__int128*)pVBufSend[g_PS2glContext.iBufCount - 2];
+            *(__int128*)g_PS2glContext.pNBuf[0] = *(__int128*)pNBufSend[g_PS2glContext.iBufCount - 2];
+            *(__int128*)g_PS2glContext.pTBuf[0] = *(__int128*)pTBufSend[g_PS2glContext.iBufCount - 2];
+            *(__int128*)g_PS2glContext.pCBuf[0] = *(__int128*)pCBufSend[g_PS2glContext.iBufCount - 2];
+            *(__int128*)g_PS2glContext.pTBuf_b[0] = *(__int128*)pTBufSend_b[g_PS2glContext.iBufCount - 2];
+            *(__int128*)g_PS2glContext.pCBuf_b[0] = *(__int128*)pCBufSend_b[g_PS2glContext.iBufCount - 2];
+            *(__int128*)g_PS2glContext.pVBuf[1] = *(__int128*)pVBufSend[g_PS2glContext.iBufCount - 1];
+            *(__int128*)g_PS2glContext.pNBuf[1] = *(__int128*)pNBufSend[g_PS2glContext.iBufCount - 1];
+            *(__int128*)g_PS2glContext.pTBuf[1] = *(__int128*)pTBufSend[g_PS2glContext.iBufCount - 1];
+            *(__int128*)g_PS2glContext.pCBuf[1] = *(__int128*)pCBufSend[g_PS2glContext.iBufCount - 1];
+            *(__int128*)g_PS2glContext.pTBuf_b[1] = *(__int128*)pTBufSend_b[g_PS2glContext.iBufCount - 1];
+            *(__int128*)g_PS2glContext.pCBuf_b[1] = *(__int128*)pCBufSend_b[g_PS2glContext.iBufCount - 1];
+            g_PS2glContext.pVBuf += 2;
+            g_PS2glContext.pNBuf += 2;
+            g_PS2glContext.pTBuf += 2;
+            g_PS2glContext.pCBuf += 2;
+            g_PS2glContext.pTBuf_b += 2;
+            g_PS2glContext.pCBuf_b += 2;
+            g_PS2glContext.iBufCount = 2;
+            break;
+        case 6:
+            *(__int128*)g_PS2glContext.pVBuf[0] = *(__int128*)pVBufSend[0];
+            *(__int128*)g_PS2glContext.pNBuf[0] = *(__int128*)pNBufSend[0];
+            *(__int128*)g_PS2glContext.pTBuf[0] = *(__int128*)pTBufSend[0];
+            *(__int128*)g_PS2glContext.pCBuf[0] = *(__int128*)pCBufSend[0];
+            *(__int128*)g_PS2glContext.pTBuf_b[0] = *(__int128*)pTBufSend_b[0];
+            *(__int128*)g_PS2glContext.pCBuf_b[0] = *(__int128*)pCBufSend_b[0];
+            *(__int128*)g_PS2glContext.pVBuf[1] = *(__int128*)pVBufSend[g_PS2glContext.iBufCount - 1];
+            *(__int128*)g_PS2glContext.pNBuf[1] = *(__int128*)pNBufSend[g_PS2glContext.iBufCount - 1];
+            *(__int128*)g_PS2glContext.pTBuf[1] = *(__int128*)pTBufSend[g_PS2glContext.iBufCount - 1];
+            *(__int128*)g_PS2glContext.pCBuf[1] = *(__int128*)pCBufSend[g_PS2glContext.iBufCount - 1];
+            *(__int128*)g_PS2glContext.pTBuf_b[1] = *(__int128*)pTBufSend_b[g_PS2glContext.iBufCount - 1];
+            *(__int128*)g_PS2glContext.pCBuf_b[1] = *(__int128*)pCBufSend_b[g_PS2glContext.iBufCount - 1];
+            g_PS2glContext.pVBuf += 2;
+            g_PS2glContext.pNBuf += 2;
+            g_PS2glContext.pTBuf += 2;
+            g_PS2glContext.pCBuf += 2;
+            g_PS2glContext.pTBuf_b += 2;
+            g_PS2glContext.pCBuf_b += 2;
+            g_PS2glContext.iBufCount = 2;
+            break;
+        default:
+            g_PS2glContext.iBufCount = 0;
+            break;
+        }
+    }
+    else
+    {
+        g_PS2glContext.iBufCount = 0;
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 2431–2456 */

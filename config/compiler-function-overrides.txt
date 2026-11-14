@@ -9,3 +9,42 @@
 # unit matches 26/27, but TXT_vDrawAStringOnLine fails because 3.0.3 folds
 # szNum's stack address into its terminator stores and retail does not.
 TXT_vAfficheSpecialWithTransparency 3.0.3-pad7b
+#
+# GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c (3.0.1): GLIPS2_vAE_PushPop inlines
+# its two (unsigned int)float conversions, where 3.0.1 calls fptoui, and
+# AE_PrepareMatrixEffect only matches under 3.0.3 too. Under pad7b the unit's
+# recorded matches all hold except DoFullScreenWaterEffect and
+# DoFullScreenWaterEffectForMirror (3.0.3 schedules their int-to-float and
+# stack-array address setup differently), so the unit stays on 3.0.1.
+GLIPS2_vAE_PushPop 3.0.3-pad7b
+AE_PrepareMatrixEffect 3.0.3-pad7b
+# GLIPS2_Water2D_DisplayNearClippedTriangle is hand-written VU0 asm followed by
+# the ClipTriangleOverXLow call; 3.0.1 loads the stack argument C2 before the
+# register argument moves, 3.0.3 after them as retail does (364/364 MATCH).
+GLIPS2_Water2D_DisplayNearClippedTriangle 3.0.3-pad7b
+#
+# dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_VU1_Pipeline.c (library 3.0.1):
+# VU1UpdateParameters matches byte for byte under pad7b. Under 3.0.1 its two
+# '*(unsigned short*)&g_gsContext.PRIM' reads and the PRMODE copies share one
+# materialised &g_gsContext, and the pListData->pSDLIndices[size++] stores load
+# the base before storing the size (about 300 diff rows). The rest of the unit
+# needs 3.0.1 (PS2glFlushBuffer is 596/596 only there), so it stays on 3.0.1.
+VU1UpdateParameters 3.0.3-pad7b
+#
+# Ago/AGO.c (3.0.3-pad7b): CreateType52AGO matched under 3.0.1 before AGO.c
+# moved to 3.0.3 for the rest of the unit. 3.0.3 folds sp+0x70 into the loop's
+# swc1 offset (addu v0,s1,sp; swc1 0x70(v0)) where retail materialises
+# addiu v0,sp,0x70 first; 3.0.1 reproduces that, so only this function uses it.
+CreateType52AGO 3.0.1
+#
+# dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_DataInput.c (library 3.0):
+# impPS2glVertex4f matches only under pad7b (3.0 and 3.0.1 both mismatch).
+# Moving the unit to pad7b loses about 75 recorded matches (the TexCoord,
+# Normal and Color wrappers), so it stays on 3.0. Same case as VU1UpdateParameters.
+impPS2glVertex4f 3.0.3-pad7b
+#
+# dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Matrix.c (library 3.0):
+# impPS2glMatrixMode matches only under pad7b-unfold (retail keeps the array
+# member offset unfolded); plain pad7b, 3.0.1 and 3.0 all mismatch. Moving the
+# unit would lose impPS2glLoadIdentity and impPS2glLoadMatrixd, so it stays on 3.0.
+impPS2glMatrixMode 3.0.3-pad7b-unfold

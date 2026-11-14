@@ -742,6 +742,7 @@ struct C_FireFx : C_BaseFx {
     GLI_tdstMaterial_* m_pMat1; /* +0x40 */
     C_Vector* m_pData; /* +0x44 */
     unsigned int m_NbParticles; /* +0x48 */
+    C_FireFx(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* hVisualMaterial, GEO_tdstGeometricObject_* pObj);
     void Process(void);
     void InitOneParticle(C_Vector* p);
 };
@@ -1256,9 +1257,7 @@ struct tdstEngineObject_ {
 
 C_FxList FireFx_g_List;
 C_FxList FireFx_g_ListToDisplay;
-anon_1 __vt__8C_FireFx;
 int PS2glAllocator64;
-anon_0 __vt__8C_BaseFx;
 float GLI_BIG_GLOBALS_xGlobalAlpha;
 tdstEngineStructure_ g_stEngineStructure;
 int PS2glLiberator;
@@ -1324,6 +1323,8 @@ extern "C" void FireFx_vProcess(void);
 
 extern "C" void GLI_vDrawFireSpriteGroup(GLI_tdstMaterial_* param0, C_Vector* pData, unsigned int NbParticles);
 extern "C" void GLI_vEndWorldSprites(void);
+extern "C" float FRR(float fMin, float fMax);
+extern "C" void sceVu0CopyVector(void* pDest, void* pSrc);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FireFx.cpp lines 112–130 */
 /* addr: 0x002ec9b0  size: 352 bytes */
@@ -1367,7 +1368,21 @@ extern "C" void GLI_vEndWorldSprites(void);
 void C_FireFx::InitOneParticle(C_Vector* p)
 {
     C_Vector* pWork;
-    /* TODO: decompile from asm/... */
+
+    pWork = p + 1;
+    pWork->Vector[0] = FRR(-2.0f, 2.0f);
+    pWork->Vector[1] = FRR(-2.0f, 2.0f);
+    pWork->Vector[2] = FRR(4.3f, 7.2f);
+    pWork->Vector[3] = 0.0f;
+
+    sceVu0CopyVector(p, &m_Position);
+    p->Vector[0] += FRR(-0.2f, 0.2f);
+    p->Vector[1] = p->Vector[1] + FRR(-0.2f, 0.2f);
+
+    pWork = p + 2;
+    pWork->Vector[0] = FRR(50.0f, 80.0f) * (127.0f / 255.0f);
+    pWork->Vector[1] = (127.0f / 255.0f) * FRR(50.0f, 100.0f);
+    pWork->Vector[2] = FRR(0.6f, 0.85f);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FireFx.cpp lines 191–244 */
@@ -1558,9 +1573,30 @@ void FireFx_vAddObjectToDisplay(GEO_tdstGeometricObject_* pObj)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+inline C_FireFx::C_FireFx(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* hVisualMaterial, GEO_tdstGeometricObject_* pObj)
+{
+    unsigned int i;
+    unsigned int j;
+
+    m_NbParticles = 30;
+    m_Position.Vector[0] = pPosition->xX;
+    m_Position.Vector[1] = pPosition->xY;
+    m_Position.Vector[2] = pPosition->xZ;
+    m_Position.Vector[3] = 1.0f;
+    m_pMat1 = hVisualMaterial;
+    m_pSearchKey = (int)pObj;
+    m_pData = (C_Vector*)((void* (*)(unsigned int))PS2glAllocator64)(m_NbParticles * 3 * sizeof(C_Vector));
+    /* The doubled assignment only changes MWCC's register colouring (s1 counter, s0 index). */
+    for (i = (i = m_NbParticles), j = 0; i != 0; i--, j += 3)
+        InitOneParticle(&m_pData[j]);
+}
+
 void FireFx_vAddObject(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* hVisualMaterial, GEO_tdstGeometricObject_* pObj)
 {
-    /* TODO: decompile from asm/... */
+    if (FireFx_g_List.SearchElement(pObj))
+        return;
+
+    FireFx_g_List.vAddElement(new C_FireFx(pPosition, hVisualMaterial, pObj));
 }
 
 C_WaterFx::C_WaterFx()

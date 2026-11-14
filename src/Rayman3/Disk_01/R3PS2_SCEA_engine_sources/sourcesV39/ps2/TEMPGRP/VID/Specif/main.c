@@ -225,11 +225,11 @@ static int mpegWork;
 static int viBufTag;
 int zeFrame;
 void* a7_p_vBuffers64_Pointers[8];
-extern int _gp;
-void (*videoDecMain)(anon_2*);
+extern volatile int _gp;
+void videoDecMain(anon_2*);
 void (*defMainPtr)(void);
-int (*vagCallbackLeft)(anon_3*, anon_1*, void*);
-int (*videoCallback)(anon_3*, anon_1*, void*);
+int vagCallbackLeft(anon_3*, anon_1*, void*);
+int videoCallback(anon_3*, anon_1*, void*);
 int SND_g_iEnoughSound;
 
 /* The functions below are in their original source-line order (retail
@@ -249,11 +249,11 @@ int RotateThreadReadyQueue(int prio);
 int readBufCreate(anon_0* b);
 int sceMpegInit(void);
 int videoDecCreate(anon_2* vd, int mpegWork, int mpegWorkSize, int data, int tag, int tagSize, anon_12* pts, int n_pts);
-int videoDecSetStream(anon_2* vd, int strType, int ch, void* cb);
+int videoDecSetStream(anon_2* vd, int strType, int ch, int (*cb)(anon_3*, anon_1*, void*), void* data);
 int GAM_fn_iGetCurrentLanguageNb(void);
 int vagInit(float fVolume);
 void InitGlDevice(void);
-int CreateThread(ThreadParam* param, int stackSize, void* entry, int priority);
+int CreateThread(ThreadParam* param);
 int StartThread(int th, void* arg);
 int strFileOpen(anon_8* file, char* filename);
 void fn_vAllocBuffers64(void);
@@ -615,9 +615,11 @@ void initAll(char* bsfilename, float fVolume)
     readBufCreate(readBuf);
     sceMpegInit();
     videoDecCreate(&videoDec, mpegWork, 0x196768, viBufData, viBufTag, 0x100, timeStamp, 0x200);
-    videoDecSetStream(&videoDec, 0, 0, &videoCallback);
-    lang = GAM_fn_iGetCurrentLanguageNb(); VID_g_iHasAudio = 0; switch (lang) { case 0: case 1: case 2: case 3: case 4: break; default: lang = 1; break; }
-    videoDecSetStream(&videoDec, 4, lang, &vagCallbackLeft);
+    videoDecSetStream(&videoDec, 0, 0, videoCallback, readBuf);
+    VID_g_iHasAudio = 0;
+    lang = GAM_fn_iGetCurrentLanguageNb();
+    switch (lang) { case 0: case 1: case 2: case 3: case 4: break; default: lang = 1; break; }
+    videoDecSetStream(&videoDec, 4, lang, vagCallbackLeft, readBuf);
     vagInit(fVolume); InitGlDevice();
     ReferThreadStatus(GetThreadId(), &th_param);
     th_param.initPriority = th_param.currentPriority;
@@ -626,14 +628,16 @@ void initAll(char* bsfilename, float fVolume)
     th_param.stackSize = 0x800;
     th_param.gpReg = (int)&_gp;
     th_param.option = 0;
-    defaultTh = CreateThread(&th_param, 0x800, (void*)defMain, th_param.currentPriority);
+    th_param.status = 0x10;
+    defaultTh = CreateThread(&th_param);
     StartThread(defaultTh, 0);
     th_param.entry = (void (*)(void*))videoDecMain;
     th_param.stack = videoDecStack;
     th_param.stackSize = 0x4000;
     th_param.gpReg = (int)&_gp;
     th_param.option = 0;
-    videoDecTh = CreateThread(&th_param, 0x4000, (void*)videoDecMain, th_param.currentPriority);
+    th_param.status = 0x10;
+    videoDecTh = CreateThread(&th_param);
     StartThread(videoDecTh, &videoDec);
     while (strFileOpen(&infile, bsfilename) == 0) ; g_start_it = 0;
 }

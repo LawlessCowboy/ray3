@@ -2491,6 +2491,8 @@ void GLI_vSetFIXFullScreenOrthoProjection(void);
 void GLI_vSetFullScreenOrthoProjection(void);
 void GLI_vInitGLProjectionMatrix(void);
 void TakeCareOfCinemascopePS2(void);
+void sceVu0ApplyMatrix(float* v0, float m[4][4], float* v1);
+void PS2glGetFloatv(unsigned int pname, float* params);
 void GLI_vReinitViewport(void);
 void glFrustumf(float left, float right, float bottom, float top, float zNear, float zFar);
 GLI_tdstTexture_* GLI_xRefreshAnimatedTextureIfNeeded(GLI_tdstMaterial_* hVisualMaterial);
@@ -2686,7 +2688,37 @@ void GLI_vSetScissors(GLD_tdstViewportAttributes_* _p_stFixViewportAttr)
 void GLI_vRemoveScissors(void)
 {
     unsigned char zTst;
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.nEnableBits &= ~0x20;
+    g_gsContext.SCISSOR_1.SCAX0 = 0;
+    g_gsContext.ModFlgs.SCISSOR_1_Modified = 1;
+    g_gsContext.SCISSOR_1.SCAX1 = g_stBufferInfo.iScreenWidth - 1;
+    g_gsContext.ModFlgs.SCISSOR_1_Modified = 1;
+    g_gsContext.SCISSOR_1.SCAY0 = 0;
+    g_gsContext.ModFlgs.SCISSOR_1_Modified = 1;
+    if (g_PS2glContext.bFrameMode == 1) {
+        g_gsContext.SCISSOR_1.SCAY1 = (g_stBufferInfo.iScreenHeight >> 1) - 1;
+        g_gsContext.ModFlgs.SCISSOR_1_Modified = 1;
+    } else {
+        g_gsContext.SCISSOR_1.SCAY1 = g_stBufferInfo.iScreenHeight - 1;
+        g_gsContext.ModFlgs.SCISSOR_1_Modified = 1;
+    }
+    g_PS2glContext.nEnableBits |= 0x800;
+    g_gsContext.TEST_1.ZTE = 1;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    zTst = 1;
+    switch (g_PS2glContext.eDepthFunc) {
+    case 0x200: zTst = 0; break;
+    case 0x207: zTst = 1; break;
+    case 0x203: zTst = 2; break;
+    case 0x201: zTst = 3; break;
+    case 0x202:
+    case 0x204:
+    case 0x205:
+    case 0x206:
+        break;
+    }
+    g_gsContext.TEST_1.ZTST = zTst;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 285–286 */
@@ -3560,6 +3592,27 @@ void GLI_vSetFIXFullScreenOrthoProjection(void)
     GLI_g_ProjectionMode = 2;
 }
 
+/* Multiplies each column of a 4x4 matrix by a vector on VU0 (macro mode);
+   the VU0 instructions have no C form. */
+inline void PS2_M_vMulMatrixColumnsByVector(float (*_src)[4], float* _vec, float (*_dst)[4])
+{
+    asm {
+        lqc2 vf5, 0x0(_vec)
+        lqc2 vf1, 0x0(_src)
+        lqc2 vf2, 0x10(_src)
+        lqc2 vf3, 0x20(_src)
+        lqc2 vf4, 0x30(_src)
+        vmul.xyzw vf1, vf1, vf5
+        vmul.xyzw vf2, vf2, vf5
+        vmul.xyzw vf3, vf3, vf5
+        vmul.xyzw vf4, vf4, vf5
+        sqc2 vf1, 0x0(_dst)
+        sqc2 vf2, 0x10(_dst)
+        sqc2 vf3, 0x20(_dst)
+        sqc2 vf4, 0x30(_dst)
+    }
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 1164–1218 */
 /* addr: 0x002ae460  size: 320 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3599,12 +3652,37 @@ void GLI_vSetFIXFullScreenOrthoProjection(void)
  */
 void GLI_vGet2DPercentPointFrom3DWorldPoint(GLD_tdstViewportAttributes_* p_stVpt, MTH3D_tdstVector_* pDestination2D, MTH3D_tdstVector_* pSource3D)
 {
-    float fInv;
-    float a4_fCameraVector[4];
-    float a4_fWorldVector[4];
-    float a16_fProjectionMatrix[4][4];
     float a16_fWorldMatrix[4][4];
-    /* TODO: decompile from asm/... */
+    float a16_fProjectionMatrix[4][4];
+    float a4_fWorldVector[4];
+    float a4_fCameraVector[4];
+    float fInv;
+
+    PS2_M_vMulMatrixColumnsByVector((float (*)[4])&((GLI_tdstCamera_*)*(int*)p_stVpt->p_vSpecificToXD)->stMatrix.stTransformMatrix, GLI_g_NegVect, a16_fWorldMatrix); a16_fWorldMatrix[3][3] = 1.0f;
+
+    a4_fWorldVector[0] = pSource3D->xX;
+    a4_fWorldVector[1] = pSource3D->xY;
+    a4_fWorldVector[2] = pSource3D->xZ;
+    a4_fWorldVector[3] = 1.0f;
+
+    sceVu0ApplyMatrix(a4_fCameraVector, a16_fWorldMatrix, a4_fWorldVector);
+
+    GLI_g_ProjectionMode = 11;
+    GLI_vInitGLProjectionMatrix();
+
+    PS2glGetFloatv(0xba7, &a16_fProjectionMatrix[0][0]);
+
+    sceVu0ApplyMatrix(a4_fCameraVector, a16_fProjectionMatrix, a4_fCameraVector);
+
+    if (a4_fCameraVector[3] != 0.0f) {
+        fInv = 1.0f / a4_fCameraVector[3];
+        a4_fCameraVector[0] *= fInv;
+        a4_fCameraVector[1] *= fInv;
+    }
+
+    pDestination2D->xX = 50.0f + 50.0f * a4_fCameraVector[0];
+    pDestination2D->xY = 100.0f - (50.0f + 50.0f * a4_fCameraVector[1]);
+    pDestination2D->xZ = a4_fCameraVector[2];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 1327–1334 */

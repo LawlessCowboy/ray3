@@ -125,6 +125,7 @@ int (*g_mpegRestartDMA)(anon_2*, anon_3*, void*);
 int (*g_mpegStopDMA)(anon_2*, anon_3*, void*);
 int (*g_mpegNodata)(anon_2*, anon_3*, void*);
 int (*g_mpegError)(anon_2*, anon_5*, void*);
+extern void* memcpy(void*, const void*, unsigned int);
 extern int printf(const char*, ...);
 extern void switchThread(void);
 extern int sceMpegIsEnd(anon_2* mp);
@@ -356,23 +357,50 @@ int videoDecFlush(anon_0* vd)
 {
     int d1;
     int d0;
-    unsigned char seq_end_code[4];
+    float seq_f;
+    unsigned char* seq_end_code = (unsigned char*)&seq_f;
     unsigned char* pd1Unc;
     unsigned char* pd0Unc;
     unsigned char* pd1;
     unsigned char* pd0;
+    int size;
 
-    /* The retail seeds the sequence-end code with the float bit pattern
-     * 0xB7010000 (-7.689e-06) and asks the video buffer for the two write
-     * counters and the two (unaligned) data pointers.  The remainder is a
-     * bit-field copy loop: the low 16 bits of each counter are OR-ed with the
-     * 0x20000000 tag, and the two halves are memcpy'd in four-byte chunks
-     * around the end-of-sequence code. */
-    *(int*)seq_end_code = 0xB7010000;
-    viBufBeginPut((anon_4*)((unsigned char*)vd + 0x48), &pd0, &d1, &pd1, &d0);
-    pd0Unc = pd0;
-    pd1Unc = pd1;
-    return 0;
+    seq_f = -7.68899917602539e-06f;
+    viBufBeginPut(&vd->vibuf, &pd0, &d0, &pd1, &d1);
+    if (d0 + d1 < 4)
+        return 0;
+
+    pd0Unc = (unsigned char*)(((unsigned int)pd0 & 0xFFFFFFF) | 0x20000000);
+    pd1Unc = (unsigned char*)(((unsigned int)pd1 & 0xFFFFFFF) | 0x20000000);
+    if (d0 + d1 < 4)
+    {
+        size = 0;
+    }
+    else if (d0 < 5)
+    {
+        memcpy(pd0Unc, seq_end_code, d0);
+        memcpy(pd1Unc, seq_end_code + d0, 4 - d0);
+        memcpy(pd1Unc + 4 - d0, 0, 0);
+        size = 4;
+    }
+    else if (d0 - 4 <= 0)
+    {
+        memcpy(pd0Unc, seq_end_code, 4);
+        memcpy(pd0Unc + 4, 0, d0 - 4);
+        memcpy(pd1Unc, 0, -(d0 - 4));
+        size = 4;
+    }
+    else
+    {
+        memcpy(pd0Unc, seq_end_code, 4);
+        memcpy(pd0Unc + 4, 0, 0);
+        size = 4;
+    }
+    viBufEndPut(&videoDec.vibuf, size);
+    viBufFlush(&vd->vibuf);
+    if (vd->state == 0)
+        vd->state = 2;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 259–262 */

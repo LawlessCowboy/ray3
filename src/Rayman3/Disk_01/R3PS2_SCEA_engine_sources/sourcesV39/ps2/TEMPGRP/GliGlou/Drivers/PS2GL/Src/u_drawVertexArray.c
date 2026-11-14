@@ -323,12 +323,41 @@ void FastPS2Copy(void* pDest_, void* pSrc_, unsigned int NbChars)
     unsigned int* pSrc;
     unsigned int* pDest;
     unsigned int NbQW;
-    /* TODO: decompile from asm/...
-     * The retail body is an aligned memmove: it rounds the destination up to
-     * 64 bytes, copies whole words up to that boundary, then copies 64-byte
-     * blocks (four lq/sq quadword pairs) and finally the remaining words.
-     * The block copy is written one instruction per source line (the PS2GL
-     * hand-asm pattern), so it needs an asm block to be reproduced. */
+
+    pSrc = (unsigned int*)pSrc_;
+    pAlignedDestStart = (unsigned int*)(((unsigned int)pDest_ + 0x3F) & ~0x3F);
+    pAlignedDestEnd = (unsigned int*)(((unsigned int)pDest_ + NbChars) & ~0x3F);
+    pDest = (unsigned int*)pDest_;
+    while ((unsigned int*)pDest_ < pAlignedDestStart)
+        *((unsigned int*)pDest_)++ = *pSrc++;
+    NbQW = (pAlignedDestEnd - pAlignedDestStart) >> 4;
+    if (NbQW != 0) {
+        pSrcEnd = pSrc + NbQW * 16;
+        /* 64-byte blocks: lq/sq are 128-bit and have no C form; retail's
+           line map gives one source line per instruction. */
+        do {
+            asm {
+                lq v0, 0x0(pSrc)
+                lq v1, 0x10(pSrc)
+                lq a0, 0x20(pSrc)
+                lq a1, 0x30(pSrc)
+                addiu pSrc, pSrc, 0x40
+            }
+            asm {
+                sq v0, 0x0(pAlignedDestStart)
+                sq v1, 0x10(pAlignedDestStart)
+                sq a0, 0x20(pAlignedDestStart)
+                sq a1, 0x30(pAlignedDestStart)
+            }
+            pAlignedDestStart += 16;
+        } while (pSrc != pSrcEnd);
+    }
+    pSrc = (unsigned int*)((char*)pSrc_ + ((char*)pAlignedDestEnd - (char*)pDest));
+    lWordsToCopy = (NbChars - ((char*)pAlignedDestEnd - (char*)pDest)) >> 2;
+    while (lWordsToCopy != 0) {
+        *pAlignedDestEnd++ = *pSrc++;
+        lWordsToCopy--;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawVertexArray.c lines 891–891 */

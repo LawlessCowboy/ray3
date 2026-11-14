@@ -448,7 +448,7 @@ int GLD_bCreateDevice(GLD_tdstDeviceAttributes_* pstDevAttrib, short* phDev)
 {
     static int bFirstTime;
     GLD_stDevice* pstDev;
-    int i;
+    short i;
     int bOk;
 
     if (bFirstTime)
@@ -464,9 +464,15 @@ int GLD_bCreateDevice(GLD_tdstDeviceAttributes_* pstDevAttrib, short* phDev)
         if (TMR_fn_wInitLibrary() == 0x7FFF)
         {
             Erm_fn_v_UpdateLastError(0x34, g_ucGLDModuleId, 0, 0x36, -1, 0xFF, 0xFF, "V5.9.0 - August 11th 1997");
-            return 0;
+            bOk = 0;
         }
-        GLD_fn_vInitSmoothSynchro();
+        else
+        {
+            GLD_fn_vInitSmoothSynchro();
+            bOk = 1;
+        }
+        if (!bOk)
+            return 0;
         bFirstTime = 0;
     }
     Mmg_fn_v_SetModeAlloc(g_ucGLDModuleId, 0xFF, 0);

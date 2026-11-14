@@ -4,6 +4,10 @@
 
 #include <stddef.h>
 
+extern "C" char* strchr(const char* s, int c);
+extern "C" unsigned int strlen(const char* pch_Str);
+extern "C" void usnd_free(void* pv_Ptr);
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 namespace usnd
 {
@@ -37,50 +41,96 @@ typedef enum anon_enum_001bafd7 {
 } anon_enum_001bafd7;
 
 struct usnd::sstring {
-    int m_pcData; /* +0x0 */
+    char* m_pcData; /* +0x0 */
+    static char* ms_czNil;
+    void _Init(const char* pch_Str, unsigned int ui_Length);
+    sstring& operator=(const char* pch_Str)
+    {
+        unsigned int ui_Length = strlen(pch_Str);
+        char* pch_Old = m_pcData;
+        _Init(pch_Str, ui_Length);
+        if (pch_Old != ms_czNil)
+            usnd_free(pch_Old);
+        return *this;
+    }
+    unsigned short length(void) const { return m_pcData ? (unsigned short)strlen(m_pcData) : 0; }
 };
 
-struct CTextFileSrc {
-    /* C++ base CTextFile at +0x0 (defined below; 0x34 bytes). */
-    unsigned char _base_CTextFile[0x34]; /* +0x0 */
-    anon_enum_001bafd7 eCTextFileSrc; /* +0x34 */
-    int mpchBuffer1; /* +0x38 */
-    int mpchBuffer2; /* +0x3c */
-    int mpchBufferEnd; /* +0x40 */
-    char mchBuffer[2048]; /* +0x44 */
-    int mpchCurrent; /* +0x844 */
-    unsigned int mdwPosition; /* +0x848 */
-    unsigned char mfn_bRead(sstring& ro_Sentence);
-    char* mfn_pchParseChar(void) const;
-    unsigned char mfn_bOpen(const char* pch_FilePath);
+typedef enum _ERamLocation {
+    E_RamLocation_RAM = 0,
+} _ERamLocation;
+
+namespace usnd {
+
+class CFlow {
+public:
+    virtual bool fv_bIsEnd(void);
 };
 
-struct CPS2FileSrcFlow {
-    /* C++ base CSrcFlow at +0x0. */
+class CSrcFlow : public virtual CFlow {
+public:
+    virtual ~CSrcFlow();
+    virtual unsigned int fv_uiRead(void* p_Buffer, unsigned int ui_Size, unsigned int ui_Nb) = 0;
+};
+
+class CPS2FileSrcFlow : public CSrcFlow {
+public:
+    CPS2FileSrcFlow(void);
+    virtual bool fv_bIsEnd(void);
+    virtual unsigned int fv_uiRead(void* p_Buffer, unsigned int ui_Size, unsigned int ui_Nb);
+    virtual ~CPS2FileSrcFlow();
     unsigned int m_uiFileHandle; /* +0x8 */
     unsigned int m_uiFileOffset; /* +0xc */
     unsigned int m_uiSize; /* +0x10 */
     unsigned int m_uiPos; /* +0x14 */
     unsigned int m_uiEndPos; /* +0x18 */
     unsigned char m_bUseCache; /* +0x1c */
+    bool f_bOpen(const char* pch_FilePath, _ERamLocation e_RamLocation);
 };
+
+}
 
 struct CTextFile {
-    CPS2FileSrcFlow m_File; /* +0x0 */
-    sstring mostringName; /* +0x28 */
+    usnd::CPS2FileSrcFlow m_File; /* +0x0 */
+    usnd::sstring mostringName; /* +0x28 */
     unsigned char m_bOpened; /* +0x2c */
     anon_enum_001bafa4 eState; /* +0x30 */
+    unsigned char mfn_bOpen(const char* pch_FilePath)
+    {
+        if (!m_bOpened)
+        {
+            mostringName = pch_FilePath;
+            if (mostringName.length())
+                m_bOpened = m_File.f_bOpen(mostringName.m_pcData, E_RamLocation_RAM);
+            return m_bOpened;
+        }
+        return 0;
+    }
+    bool mfn_bRead(void* p_Buffer, unsigned int dw_Size)
+    {
+        bool b_Answer = false;
+        if (m_bOpened)
+            b_Answer = m_File.fv_uiRead(p_Buffer, 1, dw_Size) == dw_Size;
+        return b_Answer;
+    }
 };
 
-struct CSrcFlow {
-    /* C++ base CFlow at +0x0. */
-    CFlow CFlow; /* +0x8 */
+struct CTextFileSrc : CTextFile {
+    anon_enum_001bafd7 eCTextFileSrc; /* +0x34 */
+    char* mpchBuffer1; /* +0x38 */
+    char* mpchBuffer2; /* +0x3c */
+    char* mpchBufferEnd; /* +0x40 */
+    char mchBuffer[2048]; /* +0x44 */
+    char* mpchCurrent; /* +0x844 */
+    unsigned int mdwPosition; /* +0x848 */
+    unsigned char mfn_bRead(sstring& ro_Sentence);
+    char* mfn_pchParseChar(void) const;
+    unsigned char mfn_bOpen(const char* pch_FilePath);
 };
 
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 
-extern "C" char* strchr(const char* s, int c);
 
 #define M_MIN(a, b) (((a) < (b)) ? (a) : (b))
 
@@ -102,7 +152,18 @@ extern "C" char* strchr(const char* s, int c);
 
 unsigned char CTextFileSrc::mfn_bOpen(const char* pch_FilePath)
 {
-    /* TODO: decompile from asm/... */
+    if (CTextFile::mfn_bOpen(pch_FilePath))
+    {
+        mdwPosition = 0;
+        mpchCurrent = mpchBuffer1;
+        if (CTextFile::mfn_bRead(mpchBuffer1, E_BUFFER_SIZE))
+        {
+            CTextFile::mfn_bRead(mpchBuffer2, E_BUFFER_SIZE);
+        }
+        return 1;
+    }
+
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeectextfilesrc.cpp lines 83–145 */

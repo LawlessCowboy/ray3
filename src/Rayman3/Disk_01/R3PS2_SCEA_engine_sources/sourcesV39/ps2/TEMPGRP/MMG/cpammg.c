@@ -102,7 +102,10 @@ void fn_vStaFree(void* p_vMemBlock, unsigned char ucChannel);
 void* fn_p_vStaAlloc(unsigned int ulSize, unsigned char ucChannel);
 unsigned long long* fn_p_vDynAlloc(unsigned int ulSize);
 void Mmg_fn_vDeleteBlock(unsigned char ucBlockId, unsigned char ucMode, tdstBlockInfoPriv_* p_stMyBlocksInfo);
-void Mmg_fn_vInitSpecificBlock(unsigned char _ucBlockId, tdstBlockInfoPriv_* _p_stMyBlocksInfo, unsigned int _ulSize, unsigned char _ucAlignment, unsigned char _ucMode);
+/* Retail callers pass seven arguments (a0..a3, t0..t2) and the callee reads a2 as
+   the module's block table, t1 as the alignment and t2 as the mode; the five-parameter
+   debug declaration drops the module id and the malloc-count limit (unused here). */
+void Mmg_fn_vInitSpecificBlock(unsigned char _ucBlockId, unsigned char _ucModuleId, tdstBlockInfoPriv_* _p_stMyBlocksInfo, unsigned int _ulSize, unsigned int _ulMaxNbOfMalloc, unsigned char _ucAlignment, unsigned char _ucMode);
 
 void fn_vStaFree(void* p_vMemBlock, unsigned char ucChannel);
 void PS2_fn_vEnterCriticalSection(_stCriticalSection* p_stCS);
@@ -186,7 +189,7 @@ unsigned long long* fn_p_vDynAlloc(unsigned int ulSize);
  * compare a candidate object's line table as an extra checkpoint.
  */
 
-void Mmg_fn_vInitSpecificBlock(unsigned char _ucBlockId, tdstBlockInfoPriv_* _p_stMyBlocksInfo, unsigned int _ulSize, unsigned char _ucAlignment, unsigned char _ucMode)
+void Mmg_fn_vInitSpecificBlock(unsigned char _ucBlockId, unsigned char _ucModuleId, tdstBlockInfoPriv_* _p_stMyBlocksInfo, unsigned int _ulSize, unsigned int _ulMaxNbOfMalloc, unsigned char _ucAlignment, unsigned char _ucMode)
 {
     tdstInformationHeaderOfBolckWithoutFree_* param0;
     unsigned int lTemporaryValue;
@@ -195,7 +198,88 @@ void Mmg_fn_vInitSpecificBlock(unsigned char _ucBlockId, tdstBlockInfoPriv_* _p_
     long double* p_uaPtr;
     unsigned int ulI;
     char* p_cBegin;
-    /* TODO: decompile from asm/... */
+
+    if (_ucAlignment > 16) {
+        _ucAlignment = 16;
+    }
+    p_stMyBlockInfo = &_p_stMyBlocksInfo[_ucBlockId];
+    if (_ucMode & 1) {
+        ucAlignment = _ucAlignment;
+        if (_ulSize & (ucAlignment - 1)) {
+            _ulSize = ucAlignment + (_ulSize & ~(ucAlignment - 1));
+        }
+        _ulSize += 3;
+    } else {
+        ucAlignment = 16;
+    }
+    if (_ulSize & (ucAlignment - 1)) {
+        _ulSize = ucAlignment + (_ulSize & ~(ucAlignment - 1));
+    }
+    p_cBegin = (char*)malloc(_ulSize);
+    lTemporaryValue = (unsigned int)p_cBegin;
+    if (lTemporaryValue & (ucAlignment - 1)) {
+        lTemporaryValue = ucAlignment + (lTemporaryValue & ~(ucAlignment - 1));
+    }
+    if ((unsigned int)p_cBegin != lTemporaryValue) {
+        Erm_fn_v_UpdateLastError(0x1D, g_ucMmgModuleId, 0, 2, -1, 0xFF, 0xFF, 0);
+    }
+    if (p_cBegin == NULL) {
+        Erm_fn_v_UpdateLastError(0x1D, g_ucMmgModuleId, 0, 0x1F, -1, 0xFF, 0xFF, 0);
+        return;
+    }
+    p_stMyBlockInfo->p_cBeginBlock = (int)p_cBegin;
+    p_stMyBlockInfo->p_cEndBlock = (int)p_cBegin + _ulSize - 1;
+    if (!(_ucMode & 1)) {
+        p_stMyBlockInfo->p_cFirstFree = (int)p_cBegin;
+        p_stMyBlockInfo->p_cMaxMem = (int)p_cBegin;
+        ((tdstFreeCell_*)p_cBegin)[0] = (unsigned int)(_ulSize >> 4);
+        ((tdstFreeCell_*)p_cBegin)[1] = 0;
+        if (_ucMode & 2) {
+            _ulSize -= ucAlignment * 2;
+            if (_ulSize) {
+                tdstFreeCell_* p_stCell = (tdstFreeCell_*)(p_cBegin + 0x20);
+                do {
+                    *p_stCell = 0xAAAAAAAA;
+                    _ulSize -= ucAlignment;
+                    p_stCell++;
+                } while (_ulSize);
+            }
+        }
+    } else {
+        p_stMyBlockInfo->p_cMaxMem = (int)p_cBegin + 3;
+        lTemporaryValue = p_stMyBlockInfo->p_cMaxMem;
+        if (lTemporaryValue & (ucAlignment - 1)) {
+            lTemporaryValue = ucAlignment + (lTemporaryValue & ~(ucAlignment - 1));
+        }
+        p_stMyBlockInfo->p_cMaxMem = lTemporaryValue;
+        p_stMyBlockInfo->p_cMaxMem = p_stMyBlockInfo->p_cMaxMem - 1;
+        p_stMyBlockInfo->p_cFirstFree = -1;
+        if (_ucMode & 2) {
+            char* p_cFill = (char*)(p_stMyBlockInfo->p_cMaxMem + 1);
+            while (p_cFill <= (char*)p_stMyBlockInfo->p_cEndBlock) {
+                *p_cFill = (char)0xAA;
+                p_cFill++;
+            }
+        }
+        param0 = (tdstInformationHeaderOfBolckWithoutFree_*)p_stMyBlockInfo->p_cBeginBlock;
+        param0->ucBoundededHeaderSize = 3;
+        if ((ucAlignment - 1) & 3) {
+            param0->ucBoundededHeaderSize = ucAlignment + (~(ucAlignment - 1) & 3);
+        }
+        param0->ucAlignment = ucAlignment;
+        param0->ucMode = _ucMode;
+        if ((unsigned int)(p_stMyBlockInfo->p_cEndBlock - p_stMyBlockInfo->p_cMaxMem) >= 4) {
+            unsigned int ulPattern = 0xE123456E;
+            char* p_cPattern = (char*)&ulPattern;
+            char* p_cDst = (char*)(p_stMyBlockInfo->p_cMaxMem + 1);
+            char* p_cEnd = p_cDst + 4;
+            while (p_cDst < p_cEnd) {
+                *p_cDst = *p_cPattern;
+                p_cDst++;
+                p_cPattern++;
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 544–576 */
@@ -544,12 +628,55 @@ void* fn_p_vStaAlloc(unsigned int ulSize, unsigned char ucChannel)
  */
 void fn_vStaFree(void* p_vMemBlock, unsigned char ucChannel)
 {
-    long double* param0;
-    long double* p_uaAfterFreeSpace;
-    long double* p_uaSizeMalloc;
-    long double* p_uaNextFree;
+    tdstFreeCell_* param0;
+    tdstFreeCell_* p_stThis;
+    tdstFreeCell_* p_uaAfterFreeSpace;
+    tdstFreeCell_* p_uaSizeMalloc;
+    tdstFreeCell_* p_uaNextFree;
     tdstBlockInfoPriv_* p_stMyBlockInfo;
-    /* TODO: decompile from asm/... */
+
+    p_stMyBlockInfo = *((tdstBlockInfoPriv_**)&((tdstCurrentModeInfo_*)g_d_stCurrentModeInfo)->p_vTdstBlockInfoOrTdstDynInfo + ucChannel * 2);
+    if (p_stMyBlockInfo->p_cFirstFree == -1) {
+        Erm_fn_v_UpdateLastError(0x1D, g_ucMmgModuleId, 0, 0x2C, -1, 0xFF, 0xFF, 0);
+    }
+    PS2_fn_vEnterCriticalSection(&g_MmgCriticalSection);
+    p_uaAfterFreeSpace = (tdstFreeCell_*)p_stMyBlockInfo->p_cFirstFree;
+    p_uaSizeMalloc = p_uaAfterFreeSpace;
+    while (p_uaAfterFreeSpace != NULL && (unsigned int)p_uaAfterFreeSpace < (unsigned int)p_vMemBlock) {
+        p_uaNextFree = (tdstFreeCell_*)(int)p_uaAfterFreeSpace[1];
+        p_uaSizeMalloc = p_uaAfterFreeSpace;
+        if (p_uaAfterFreeSpace == p_uaNextFree || (char*)p_uaAfterFreeSpace == (char*)p_vMemBlock - 0x10) {
+            return;
+        }
+        p_uaAfterFreeSpace = p_uaNextFree;
+    }
+    param0 = (tdstFreeCell_*)p_vMemBlock - 1;
+    p_stThis = (tdstFreeCell_*)p_vMemBlock;
+    if (p_uaSizeMalloc == p_uaAfterFreeSpace) {
+        if (param0 + (int)param0[0] == p_uaAfterFreeSpace) {
+            p_stThis[-1] = (tdstFreeCell_)(unsigned int)((int)p_stThis[-1] + (int)p_uaAfterFreeSpace[0]);
+            p_stThis[0] = p_uaAfterFreeSpace[1];
+        } else {
+            p_stThis[0] = (tdstFreeCell_)(unsigned int)p_uaAfterFreeSpace;
+        }
+        p_stMyBlockInfo->p_cFirstFree = (int)param0;
+    } else {
+        int lPrevSize;
+        if (param0 + (int)param0[0] == p_uaAfterFreeSpace) {
+            p_stThis[-1] = (tdstFreeCell_)(unsigned int)((int)p_stThis[-1] + (int)p_uaAfterFreeSpace[0]);
+            p_stThis[0] = p_uaAfterFreeSpace[1];
+        } else {
+            p_stThis[0] = p_uaSizeMalloc[1];
+        }
+        lPrevSize = (int)p_uaSizeMalloc[0];
+        if (p_uaSizeMalloc + lPrevSize == param0) {
+            p_uaSizeMalloc[0] = (tdstFreeCell_)(unsigned int)(lPrevSize + (int)p_stThis[-1]);
+            p_uaSizeMalloc[1] = p_stThis[0];
+        } else {
+            p_uaSizeMalloc[1] = (tdstFreeCell_)(unsigned int)param0;
+        }
+    }
+    PS2_fn_vLeaveCriticalSection(&g_MmgCriticalSection);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 2632–2745 */
